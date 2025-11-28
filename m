@@ -4,170 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 37FDDD116EA
-	for <kexec@archiver.kernel.org>; Fri, 28 Nov 2025 08:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E46CED116EA
+	for <kexec@archiver.kernel.org>; Fri, 28 Nov 2025 08:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:
-	Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=PJFsH7LT9BwWzOqhrKXMoZYlIvwSA3hk6OvzCt4VDHg=; b=Bt/o+n1MB/rASSKFKE3rKNLln8
-	7qc2PiMyOKqvTuxRlNkT9dXELsDI1kwDjDasiX4xWLg+Qqdnzbo/xSJBAmpwCol1qYqGKfJddOK0S
-	Jg0N+bncufNyvN9E1MiE5IyNrxjYhCuRThfJ7OLbD4G/wbJfpjWuNzfX7k+hM/w5xL70Ad0XWazd6
-	siC6GgeLWBOTm53pW+02nVvnphxtqvo/9J0Mj6TDHp+9ncxjk7zg8xGMZSPYKYXXmGfBk2UL+3ZO8
-	nD+Of0zorg1CQ61ZCYC44RvTKLzQ4hLKy4r9558AOYlbrqQ071xLxXekx5ajlTUNb6lNc0XBAZK0a
-	buoh6KGA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=xOwiFCph9kB5nDhUyFfKIY6K5xsYWX8zoXXWOUISfAA=; b=Cc6ZC1/wigLq/svbgdh/1htvzv
+	6TXLA/c1zlsTcuO0k/2dOovcqIa0Gn0O9Cd4DTn/a6FIK/2OIcU0pvkiWCIK7Ydat1Fya2ykue70+
+	2FCWtzLTWOfO2rItxL7wvcWnK8B4vhyc84hYfgSB3T3iELg/lmf2rH+vp5OePnOyBNYQhWiGmZnZM
+	q/lUtNblnhLbaecH56P1VVl8fjKbi5X69BDlq2V0QsgwVewSDZcdccCh6s34ULHHiABNAmnLasfCV
+	tnQJlA5ZrKsoIptp/nmxUFSOT6e8FMDBHBdqA4xgK9xuHZzJFrBJ+RyXL+WaMG9WgNuQZ0DPpOdya
+	tbl9CBSQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vOtT7-000000007lM-3zbR;
-	Fri, 28 Nov 2025 08:04:41 +0000
-Received: from mail-japanwestazon11011054.outbound.protection.outlook.com ([40.107.74.54] helo=OS0P286CU010.outbound.protection.outlook.com)
+	id 1vOtZ2-0000000083e-32md;
+	Fri, 28 Nov 2025 08:10:48 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vOtT2-000000007kc-3ktF
+	id 1vOtYy-0000000082f-08H8
 	for kexec@lists.infradead.org;
-	Fri, 28 Nov 2025 08:04:38 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KUQRxrlT8qz8zbWI0gUSiBQNfhFWf4QL5x5EpLnpnttA9vj+8DxPHrV/wtHqk8Eb3LwQnSIADcISzY3K8p3rsmSJGTkNeAZpZ3Woza0u+g9FNEHHHMVrlzCkcT/rBTU3YPy3M8Xdxvr47hEzy7n1C3Fz8KZPgbugoHXxSPFiQxHYqSFFmGUBTWdr+c+nIR+JlrrFUN3DsCpey/D1q0aaQoJulXDA0Yc2jQVNHDkxI+dVO1CApSY4xG9g7SFkg4GS6CjrFou1EI+3/BQ18NRFrGihEeRTi4mSWchHfWs7+ugp+nge1pH7RODN1cJu2vmfk1wGYaS6JdlhQq4WRyjHsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PJFsH7LT9BwWzOqhrKXMoZYlIvwSA3hk6OvzCt4VDHg=;
- b=kQCfMWbf1ITfDTbbg0HS59QCKs36eJ3YpBVMgQtNpucqJskZxaXwH/fRRLPnywBKkIPW48bbzSMmug+rmPZHiEuZgBSgDk2d1rBOtERSGyI4Si/+em99ScZrheuKWZqBOO2Bl4jijiShPlSap5Wgwi+xNZ3fPAyOUUpzYUgRr8N2pqYqtu6DNekBT1jeqMNh4qFRMmv5tC34Mcf7AS/AvLjBhHjUkWFwYNsdzBqOt9J13Y+kmMZHyPY1k5cOcDerBsPi3EQhB588JmV93eaggUgpS0GEQbl96plZbpXF3+dz4e2sIJ1idPCsXAl6uuGrooqGKxD4HShyGmEWxnvpVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
- header.d=nec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PJFsH7LT9BwWzOqhrKXMoZYlIvwSA3hk6OvzCt4VDHg=;
- b=c8uERorhktH2PMMNUo8zYLwtUhxKXY6s39/FaomzSWRjfIUui2ZhyCh/eDlI0w+EW7ME3JKLunVl7F02adqUWmvkJtU2YCuAvQ4kF3OxHOuiGAXVSlwkT5jeY30YIAlTm9YR9GMZmM9p1GvWUff56V9c32WbLEm+AkDXzeNdToARGVoBLr2thP0KUPkNh3xrjXO7cGygmA9FBFXBoRJrQ5AdudEAE56ROPLZ418jp68MnerLPRDA7MxEL/VmJ4rt62rV8aD85f34JbQrk+e4Qww1FeRz07vXcQmpWjfNePycfYbg5g9b9+IKUW4O+N220PRDBHD4KRYImaargUojHA==
-Received: from TY7PR01MB14510.jpnprd01.prod.outlook.com
- (2603:1096:405:245::11) by OS3PR01MB7706.jpnprd01.prod.outlook.com
- (2603:1096:604:17b::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9366.12; Fri, 28 Nov
- 2025 08:04:24 +0000
-Received: from TY7PR01MB14510.jpnprd01.prod.outlook.com
- ([fe80::2ab8:58c8:b276:9f7d]) by TY7PR01MB14510.jpnprd01.prod.outlook.com
- ([fe80::2ab8:58c8:b276:9f7d%4]) with mapi id 15.20.9388.003; Fri, 28 Nov 2025
- 08:04:24 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
-	<k-hagio-ab@nec.com>
-To: Tao Liu <ltao@redhat.com>,
-	=?utf-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0juOAgOecn+WFiSk=?=
-	<yamazaki-msmt@nec.com>, "kexec@lists.infradead.org"
-	<kexec@lists.infradead.org>
+	Fri, 28 Nov 2025 08:10:47 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1764317441;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xOwiFCph9kB5nDhUyFfKIY6K5xsYWX8zoXXWOUISfAA=;
+	b=CipKwVwVkv1YdE36hLfxMywntr6D2UeaKcfAQQd0bu88fkP/1t4IK0q7mUhRnV/LAW0Agl
+	q8Ir/iOoQoYAqbISBnt6gVRkH5VE2ctwC2aP9Qj/01H/OxVgo6of3R8/pAhdkq47rC/9Um
+	wkVIzUT1RjVpsdVQZ+K55DMy/2oKU58=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-224-QJJ0tb_sPv25vcLQRrn05g-1; Fri, 28 Nov 2025 03:10:39 -0500
+X-MC-Unique: QJJ0tb_sPv25vcLQRrn05g-1
+X-Mimecast-MFC-AGG-ID: QJJ0tb_sPv25vcLQRrn05g_1764317438
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-8805c2acd64so32672946d6.3
+        for <kexec@lists.infradead.org>; Fri, 28 Nov 2025 00:10:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764317438; x=1764922238;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=xOwiFCph9kB5nDhUyFfKIY6K5xsYWX8zoXXWOUISfAA=;
+        b=hGlZTJMA/zxkH0t1ctWUdzQOCdrrCuuAFDstJwOm8p1jDBxvM1t9XzQN43c/RpgbZQ
+         FSXHyPyBMNAXjqDyKC9EPzwId6LrlhSFV+4vC2hZapN4tHjzI3riz7ssDg2Oq7a/CMW/
+         UHvrx7WVf9W23odLWodShtxEkuaim2IuftBNfPfTKbqBzTmpduwFtcfsSnTovM0EG06K
+         RBwKYOLraaal01gzMh5R8tWaKQR1Mfj5IZP085u2/AHERm04B+OrhDMRidGAqIZMhWtU
+         xACVYdBN6Lp1bc+Xq/MwVlkAIb8j2qdZqfvIVeh4eLWAQx9vZOpfl4xmb6h8kAqoPSJg
+         Sn6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVkkLCWaOBsr2H0JuQk70WTBo/pxz8toQy3gRvTnUPmmtkq/Pf2SAHw0LaIawt/Kq9QA3SCmQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyqlhcUqvhqqE3p14I1ufTEUVKMOWck+cgthiX6vO9I84AaHVoR
+	DPm6DuYz6xCdqVMmMBG3fVBPUG5Gnml1N8eKlZKbfCto+HeNqfekm78acViZESfro4ih9k48Vqy
+	utpHD0i+W9kiCIQ+BUCE6203JSZyk3kMVD3BCLENCuwypBGP3psi6IEQJ4tljn2lbhLh06A3ljz
+	xNaNBO+cmP/lFTmPjbIz9gskt8PfhqQ13wAMVpgjQ87nkE
+X-Gm-Gg: ASbGncsMYYJ+px73RdR7+jreIMalMPYzB3Tx97ET3Lb1fcC1/QiYwUUwmk9MdqbtMAF
+	lolYuWMk35UI6BKSzvSuycxGDhWYr2Ja2QQ8mDGLD8hnaLcFnRJiolOCNQJffyARljvLR9Jr5pj
+	uXPR54ScGI1ZUWqEHeezXcSLBvzVnnmHgaS9srMIqLrH8LzWrndi2LILef5K5qecy8fQ==
+X-Received: by 2002:a05:622a:1393:b0:4ed:42a2:1293 with SMTP id d75a77b69052e-4ee58841b1emr308132261cf.1.1764317438162;
+        Fri, 28 Nov 2025 00:10:38 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG0SFQP6ykoOoIklHyxOsyq5BSfz49dvoMx2CYeX1FWtvQe3nLupoYp97iFFo9PLbX1Z1x8C/JashKrz/GZdzY=
+X-Received: by 2002:a05:622a:1393:b0:4ed:42a2:1293 with SMTP id
+ d75a77b69052e-4ee58841b1emr308132111cf.1.1764317437735; Fri, 28 Nov 2025
+ 00:10:37 -0800 (PST)
+MIME-Version: 1.0
+References: <20251020222410.8235-1-ltao@redhat.com> <CAO7dBbVLPv3LZTd31XdPvnYFFTfQ3PVaMTS_h3uRgE4sJsS1PA@mail.gmail.com>
+ <8b5c5913-34bc-444f-8ffe-9457bde0649c@nec.com>
+In-Reply-To: <8b5c5913-34bc-444f-8ffe-9457bde0649c@nec.com>
+From: Tao Liu <ltao@redhat.com>
+Date: Fri, 28 Nov 2025 21:10:01 +1300
+X-Gm-Features: AWmQ_bn-2i3vE_XUlfASaguHlrDeYpMRiq0WCxMMD-YcdQhb1Pcwmt82zZsVbwk
+Message-ID: <CAO7dBbX942TTzxKySZzHeo2QuTTeNT7N87Mvsd+nAH0KUv3J2g@mail.gmail.com>
 Subject: Re: [PATCH v2][makedumpfile 00/14] btf/kallsyms based eppic extension
  for mm page filtering
-Thread-Topic: [PATCH v2][makedumpfile 00/14] btf/kallsyms based eppic
- extension for mm page filtering
-Thread-Index: AQHcQhBRI/5MCsYoz0mfOyPcEpoea7UBdoGAgAaAcAA=
-Date: Fri, 28 Nov 2025 08:04:24 +0000
-Message-ID: <8b5c5913-34bc-444f-8ffe-9457bde0649c@nec.com>
-References: <20251020222410.8235-1-ltao@redhat.com>
- <CAO7dBbVLPv3LZTd31XdPvnYFFTfQ3PVaMTS_h3uRgE4sJsS1PA@mail.gmail.com>
-In-Reply-To: <CAO7dBbVLPv3LZTd31XdPvnYFFTfQ3PVaMTS_h3uRgE4sJsS1PA@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nec.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY7PR01MB14510:EE_|OS3PR01MB7706:EE_
-x-ms-office365-filtering-correlation-id: 973fc9c4-c340-4ccc-23aa-08de2e54beba
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700021;
-x-microsoft-antispam-message-info: =?utf-8?B?SFlGenl1QlIvZmN4MHZFMjVvRjNvVUpTRTM0N3RxV2NpbUlNZW1jTWdidit0?=
- =?utf-8?B?NWtHY3crUW5zY2F2RElZSlc0UWhxOEF3YUpZZndQdWM3YVdjMkhTMUlyVXpq?=
- =?utf-8?B?YVZlMVAzOFhZd3F2UlZGRHhmdU5TSkswU0VjbTgvVGVtbUhzSUwxak4vK0JW?=
- =?utf-8?B?NGZuS2ErWGI4R2ovOWpaQWt1a051QTIrV05FdjdKUGRrSDZyR082M1NTQUdp?=
- =?utf-8?B?MHRQMW5QdEtpMTVGcTJ4UlpmdGZlV2sxM1RWaXg3a0pOelpoM3lPV0tFRm5z?=
- =?utf-8?B?ZlpVMXZqM3Boby8wSGgwd01zYkM3R2xDN045TElMcVJXYjJUbVJnU2twWnVx?=
- =?utf-8?B?SlBwWTJodmp1eUdUUFNNSWw5WGhZOTg0Sk81U08zOG96N0tNRXJFMncrZzUz?=
- =?utf-8?B?cG9yWldhaVAxa2d2WVVqVVNPWk9tV2dqbzRBMnN2RFdzZjV2SlI5Nkh2Z3Ba?=
- =?utf-8?B?WDJiZXFZVFFRRHQvalBrTk1IeUNKYkdmeTZUelB6M0ZBUnN3YWtzQUtMcWlD?=
- =?utf-8?B?elowNy8yVSs5YjkvMzlsWHZKSTFvYytZUmlYb3k2T1hDUS9sWmJGTnVmYXFV?=
- =?utf-8?B?clNBOFRkKy95VC9ZQnJFbDdLZG1SU3dCUHRoWnlhSDduTnFDTHNXS2xzVVJX?=
- =?utf-8?B?ZGxZS05DTVR1VEs1b2ltTG5pUS80T0pDSG0rMlhpS0F0WiswYnREM0dXQVNy?=
- =?utf-8?B?SkRRYlZaVW1SMVpyU2V3SGthQ0psMzlBeWZsRGVybDIyRGQ3KzlZUWlwTU94?=
- =?utf-8?B?RmNpQjNwVit0QWdFYzNMWnVQdm1aY0ZxUHpHVTdZaUIzaGU0YnBBYUhRWEMw?=
- =?utf-8?B?bDdzdGU2bTFmT2NMZlFOOXdHTUV1SE16Z2l4azFpVzRYcWo4bUNwSTBONVR1?=
- =?utf-8?B?U296dmt2REVPMGdDZTNrQmh5aVdiZjJHSnA3NmgzSlIxeUZudHBHSGJtSUVJ?=
- =?utf-8?B?a05YdFhLNWlYMU9WMWhHNGRtd2luUXFKUXhHRWpJYjFHbHB6VFFsUUdTM2lP?=
- =?utf-8?B?MWZFcnR1NVlRZCtwTlNSd1ZCWnlrSmwweUMyOXNOTnhKOXk1ZXJhb2tYZTd2?=
- =?utf-8?B?VENRZUdxbWtaQ0RHMEFKTGoxMEhsV214SS9XM1pWMWZLRzErRkFyRnhyTXVr?=
- =?utf-8?B?ekdoVlJDSHRXSXBNOFJFaG9ieC9BS1FJcHY1TkgzRnVRbWFlM1ZxOW0xaVh1?=
- =?utf-8?B?a0x4d2RkN2VGaTJaTU5QNXZIek1EQjVmMiszWnlpMEw3Ymd2Nm9tNTlNK3Uz?=
- =?utf-8?B?SFQzOEI1MVZoSmhhbmpxYnBSVE5HTlZ1NSs1Z251dUZlWWhCZTdlbDcvOTBU?=
- =?utf-8?B?L2ZaOWVhOHFua0J6UmdVL1ZhRjJWanZKandFYStwSHFFK3NSa2VFbGU0cGMx?=
- =?utf-8?B?OFJEU3VhejRBU0UwOHZ2RjdSZENvZUxocGNPSUdRSy9zTUlXRnlORjM5RFJu?=
- =?utf-8?B?YkVFM3p3QVFXNjdxZmF3ejN6YlZ4cGh1YUxYVlk1Zlh4YUJ4Y01MeHJHUkpu?=
- =?utf-8?B?ZjlXODBYRDRWQVNwbG5QSFlCNWRpSGxwazdZYWtVcnJ6MWpNVmxyTThLRXVV?=
- =?utf-8?B?L2xqNElpdHBNV21raWpHeFl6d2laU2NJRjlJRUE0NU9YRXdVdkMvQ2VDdnFU?=
- =?utf-8?B?QStyL1V2ejhKUVlsaE1QZW9QMDRrc0R1amZOa3BxMnB3K2JvRkY0dCtxZXIy?=
- =?utf-8?B?K1pWZ3pMU0Z3dWlGYmU5amVSSUVEanNGdmpTTHNDeEJOUHhFVGNTVGkxVUdD?=
- =?utf-8?B?eUQ2aGlmekdOd0dhT2IwaEtvZi8yQTF5R2srN2VEbEZhTm1sb3lsSHAyYXlq?=
- =?utf-8?B?WisyMWJuZzFRT1hPZWM2WkdTRTdYL2RPdFVpcXBuMks2eDVKdXZWejh3a3l5?=
- =?utf-8?B?UUJYK0tXV2RhNU10d3E1bWZSNmVUemtYTjU1UEVGY0RkOU43bDVqdDNCVVdn?=
- =?utf-8?B?RUhtbDB6aVVWSFhMdjRBekkxSktZRDNIZWZkU0pLQ0RiUEQ4MnQ1eHVBaFYx?=
- =?utf-8?B?WDBCN0d6NXNRPT0=?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY7PR01MB14510.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?U0FzbWZodnptOFhVNEoxKy9vVm1RS2lYM0ZYb01DR2E4Wk41RGtqenBtQWts?=
- =?utf-8?B?UW9WZ2RNazl2ZXlzNzNWWUc5eTlSN3VKenU2VWVQRFcyM01CWXFqZ0YrV3JP?=
- =?utf-8?B?WXFxeDl0VDVMb0d5cFkrNmdWQzZBclVrY2d6N1hPZUVXU2M1djlIbEFDVDlh?=
- =?utf-8?B?dUxXZnV6M2t4Q2J5U3FVcmY1c2xGUVlXN1B4Tk1ubHZWTGg1eCtDWG9QWkNs?=
- =?utf-8?B?dFhPRTMwMVZVUlBxczFlYUhvTUhxKzB3OVRVWHV4L21hUnBGZkRTejlqMm9m?=
- =?utf-8?B?ZHNEUThxUTNxalpFN3BGb1RvUFgxRUt0NFlKQkRrck9sV2dIQStCWmZqeEc2?=
- =?utf-8?B?VnNTV3ZJQk5BUldsRzJsRnpxbSs3VXZlOFdwM0tRcFp0TXd5TzZ4aFpWckZ4?=
- =?utf-8?B?ejQ5WXhOMjYraElyeUc5VVIrRXJUVGhDcWJqUlFQN1IzakpJUGRaZWxhSXA2?=
- =?utf-8?B?SFU2OFNYaGFJWlR3c0xpaWtjald4dFNXNWxYSFVMT1VRd083RXZnY25VUHVL?=
- =?utf-8?B?NmhHa3htcjBTZWhOS0IwV2RjcjdzR1F2NmlES1hoL2dRVHZhZGY2Q0ZVM0Fz?=
- =?utf-8?B?bCtJcDVXTG1pRit3UkhqYmUrMzhWQUplb3p0K0Z0enR4cTRRblR3c0duR2lI?=
- =?utf-8?B?cXRLTnEvUHg5K0xZL1paWlBYUWlvMEJ5MXZkVlk0UlNsbG9HSEFHS25YaTdz?=
- =?utf-8?B?UGdCR1F0MlNIaW1zSGRjbmYrMEFoTDl2d1ZyVnluRE1Sc3VpVW5xdFJuRVlP?=
- =?utf-8?B?Y1R1Mklsb2Myc0RTK0FMTE9wUitxU0dBVEFDK25YSmFwd0I0VE02dXRSSDlX?=
- =?utf-8?B?eVY0czRxSWxNQWpNTVI2aGZ5eWVncmc0SWpwWVNZTnN6K2ZvVmVtR1hHZito?=
- =?utf-8?B?S0JOSXRLcW9QbmNrNjZ0cHlaaHB1dlBKOHRZenZhK0NGL2d6THFYWWRyeW5M?=
- =?utf-8?B?WFRTVkpiNW1FTnVqOTByd3hLbWhuUFZkVjRPTDloTFRGRG9uQkMxT29DaDc0?=
- =?utf-8?B?VFNmbmhaNks1TUl4UUUwc2dQcnRKaUdmc1o0MHJQclhNNStRUENFWVNId2xs?=
- =?utf-8?B?dytjc2FmL3pyaE1Ld3o4dFVEeklJeHdQMjNLczAyNUNtM0FIbDYrck9XUHFj?=
- =?utf-8?B?Qmt4ZW1ndVEyZlpyV0EwSjh3KzZaeDJLNUE2YXNoSXdTazBHdFFTMWJQdjBv?=
- =?utf-8?B?bWlySUtZVUdWRGxDWUtWVXk4aEQ2bmIxYjYyc1FkWXIyd2paSG9MOEJtWERu?=
- =?utf-8?B?ZzBBaFBGa1BlUmlVbm5GS0s4MmpYZCtPdWpSUm1rTS8rcVhxYlZNWFBrNW5N?=
- =?utf-8?B?Z2QxT09sQWJudk8wVUhaeFpBYU5JUS9ybWcwUmI2OWp5Z2gvd3Y2dDMyMmY0?=
- =?utf-8?B?R05vbnczajhGQjJrcUVJWStJaE81ZE9TVE1IV25jdS92YzBLUjZ0Vko1SmJC?=
- =?utf-8?B?R25vOW1wczg1eXZ3WmlFMlE0ZjhFaVFpQUVaaUFXNG4yOUN4cFc0d2JzOGR0?=
- =?utf-8?B?cUdrSTZkanYyR0ZaYm83SHZkVURvUE9mVVAzbXlKTVM2Y2o3V2p6cUMxUjBv?=
- =?utf-8?B?WGQzNXJPK0NXWHhodXl0M1N4YU1aZCtuckxoNnVZNUpZbkduT1d5bS9pczRG?=
- =?utf-8?B?dEpSUTB0QTBBTThiS3BVMlhhdG1mZkhpVHVuM0huNGFmS3VOaURJOWYwYjBC?=
- =?utf-8?B?NGFGKzhIb2hpZnlCbjhsT1R6bVRYbXI5R1RLdVpRUFJlZU55RlB1WnJ4ZndD?=
- =?utf-8?B?ckJHd3AzZ1pvSjB1SmU0Q1lSVVArai9qdTJqcXJRVG5uRTJuekFNQ3ozVFdG?=
- =?utf-8?B?aURsMVNvY1ZHZThIRmgycmh4Z0ZYYzNiaC9xVDR1bUN3czI3V1lIVXhNNnlM?=
- =?utf-8?B?eFplWWRMY2krWUg2cnBuTnFsQTY3RkpTUDA2Um5ncFdXSC9hN2kzYmFQb3h1?=
- =?utf-8?B?ZmQrdmpWWGVqdHFwNG5ZY2hkbXg1UEpjNy9DU2U5VXNFREZFTitxZDRVN2g5?=
- =?utf-8?B?L1o0cWJJWGpiL3cyeWdlZ2h3R0J2SFBqK2dlc3ExNi9NSWpwK1ozQmkxcHkr?=
- =?utf-8?B?UFhnWmR1aGtRTWtvazJMVFQ5UXVwZThKanl3VFhuRlA2QUZMUWVUdkFYeXBB?=
- =?utf-8?Q?5VOngrXijdmBGfngoict3uUi8?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F200E481A49C0E46A25AD7DC323F62EC@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nec.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY7PR01MB14510.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 973fc9c4-c340-4ccc-23aa-08de2e54beba
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Nov 2025 08:04:24.4815
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lIKxGW8/jQ2x1rBu5B+5uVQmk+WHmRh3ciwSNttCkYC0ajKgE4nnOmc1wdo6xoucBmMQFc66OJbR/t8NWcLPOw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB7706
+To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
+Cc: =?UTF-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0jiDnnJ/lhYkp?= <yamazaki-msmt@nec.com>, 
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: hasu9anB7sEq6S2qmIoJHv1k1SgTAI_aKk2C-JZcU_I_1764317438
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251128_000437_334437_F31D6D2F 
-X-CRM114-Status: GOOD (  18.62  )
+X-CRM114-CacheID: sfid-20251128_001044_212394_CFA2F8B0 
+X-CRM114-Status: GOOD (  42.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -182,179 +106,277 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gMjAyNS8xMS8yNCAxMzo0NiwgVGFvIExpdSB3cm90ZToNCj4gS2luZGx5IHBpbmcuLi4gQW55
-IGNvbW1lbnRzIG9uIHRoaXM/DQoNCkhpIFRhbywNCg0KSSdtIHNvcnJ5IGZvciB0aGUgZGVsYXku
-IEkgdGhpbmsgSSBjYW4gbG9vayBpbnRvIHRoaXMgbmV4dCBtb250aC4NCg0KVGhhbmtzLA0KS2F6
-dQ0KDQo+IA0KPiBUaGFua3MsDQo+IFRhbyBMaXUNCj4gDQo+IE9uIFR1ZSwgT2N0IDIxLCAyMDI1
-IGF0IDExOjI04oCvQU0gVGFvIExpdSA8bHRhb0ByZWRoYXQuY29tPiB3cm90ZToNCj4+DQo+PiBB
-KSBUaGlzIHBhdGNoc2V0IHdpbGwgaW50cm9kdWNlIHRoZSBmb2xsb3dpbmcgZmVhdHVyZXMgdG8g
-bWFrZWR1bXBmaWxlOg0KPj4NCj4+ICAgIDEpIEVuYWJsZSBlcHBpYyBzY3JpcHQgZm9yIG1lbW9y
-eSBwYWdlcyBmaWx0ZXJpbmcuDQo+PiAgICAyKSBFbmFibGUgYnRmIGFuZCBrYWxsc3ltcyBmb3Ig
-c3ltYm9sIHR5cGUgYW5kIGFkZHJlc3MgcmVzb2x2aW5nLg0KPj4NCj4+IEIpIFRoZSBwdXJwb3Nl
-IG9mIHRoZSBmZWF0dXJlcyBhcmU6DQo+Pg0KPj4gICAgMSkgQ3VycmVudGx5IG1ha2VkdW1wZmls
-ZSBmaWx0ZXJzIG1tIHBhZ2VzIGJhc2VkIG9uIHBhZ2UgZmxhZ3MsIGJlY2F1c2UgZmxhZ3MNCj4+
-ICAgICAgIGNhbiBoZWxwIHRvIGRldGVybWluZSBvbmUgcGFnZSdzIHVzYWdlLiBCdXQgdGhpcyBw
-YWdlLWZsYWctY2hlY2tpbmcgbWV0aG9kDQo+PiAgICAgICBsYWNrcyBvZiBmbGV4aWJpbGl0eSBp
-biBjZXJ0YWluIGNhc2VzLCBlLmcuIGlmIHdlIHdhbnQgdG8gZmlsdGVyIHRob3NlIG1tDQo+PiAg
-ICAgICBwYWdlcyBvY2N1cGllZCBieSBHUFUgZHVyaW5nIHZtY29yZSBkdW1waW5nIGR1ZSB0bzoN
-Cj4+DQo+PiAgICAgICBhKSBHUFUgbWF5IGJlIHRha2luZyBhIGxhcmdlIG1lbW9yeSBhbmQgY29u
-dGFpbnMgc2Vuc2l0aXZlIGRhdGE7DQo+PiAgICAgICBiKSBHUFUgbW0gcGFnZXMgaGF2ZSBubyBy
-ZWxhdGlvbnMgdG8ga2VybmVsIGNyYXNoIGFuZCB1c2VsZXNzIGZvciB2bWNvcmUNCj4+ICAgICAg
-ICAgIGFuYWx5c2lzLg0KPj4NCj4+ICAgICAgIEJ1dCB0aGVyZSBpcyBubyBHUFUgbW0gcGFnZSBz
-cGVjaWZpYyBmbGFncywgYW5kIGFwcGFyZW50bHkgd2UgZG9uJ3QgbmVlZA0KPj4gICAgICAgdG8g
-Y3JlYXRlIG9uZSBqdXN0IGZvciBrZHVtcCB1c2UuIEEgcHJvZ3JhbW1hYmxlIGZpbHRlcmluZyB0
-b29sIGlzIG1vcmUNCj4+ICAgICAgIHN1aXRhYmxlIGZvciBzdWNoIGNhc2VzLiBJbiBhZGRpdGlv
-biwgZGlmZmVyZW50IEdQVSB2ZW5kb3JzIG1heSB1c2UNCj4+ICAgICAgIGRpZmZlcmVudCB3YXlz
-IGZvciBtbSBwYWdlcyBhbGxvY2F0aW5nLCBwcm9ncmFtbWFibGUgZmlsdGVyaW5nIGlzIGJldHRl
-cg0KPj4gICAgICAgdGhhbiBoYXJkIGNvZGluZyB0aGVzZSBHUFUgc3BlY2lmaWMgbG9naWNzIGlu
-dG8gbWFrZWR1bXBmaWxlIGluIHRoaXMgY2FzZS4NCj4+DQo+PiAgICAyKSBDdXJyZW50bHkgbWFr
-ZWR1bXBmaWxlIGFscmVhZHkgY29udGFpbnMgYSBwcm9ncmFtbWFibGUgZmlsdGVyaW5nIHRvb2ws
-IGFrYQ0KPj4gICAgICAgZXBwaWMgc2NyaXB0LCB3aGljaCBhbGxvd3MgdXNlciB0byB3cml0ZSBj
-dXN0b21pemVkIGNvZGUgZm9yIGRhdGEgZXJhc2luZy4NCj4+ICAgICAgIEhvd2V2ZXIgaXQgaGFz
-IHRoZSBmb2xsb3dpbmcgZHJhd2JhY2tzOg0KPj4NCj4+ICAgICAgIGEpIGNhbm5vdCBkbyBtbSBw
-YWdlIGZpbHRlcmluZy4NCj4+ICAgICAgIGIpIG5lZWQgdG8gYWNjZXNzIHRvIGRlYnVnaW5mbyBv
-ZiBib3RoIGtlcm5lbCBhbmQgbW9kdWxlcywgd2hpY2ggaXMgbm90DQo+PiAgICAgICAgICBhcHBs
-aWNhYmxlIGluIHRoZSAybmQga2VybmVsLg0KPj4gICAgICAgYykgUG9vciBwZXJmb3JtYW5jZSwg
-bWFraW5nIHZtY29yZSBkdW1waW5nIHRpbWUgdW5hY2NlcHRhYmxlIChTZWUNCj4+ICAgICAgICAg
-IHRoZSBmb2xsb3dpbmcgcGVyZm9ybWFuY2UgdGVzdGluZykuDQo+Pg0KPj4gICAgICAgbWFrZWR1
-bXBmaWxlIG5lZWQgdG8gcmVzb2x2ZSB0aGUgZHdhcmYgZGF0YSBmcm9tIGRlYnVnaW5mbywgdG8g
-Z2V0IHN5bWJvbHMNCj4+ICAgICAgIHR5cGVzIGFuZCBhZGRyZXNzZXMuIEluIHJlY2VudCBrZXJu
-ZWwgdGhlcmUgYXJlIGR3YXJmIGFsdGVybmF0aXZlcyBzdWNoDQo+PiAgICAgICBhcyBidGYva2Fs
-bHN5bXMgd2hpY2ggY2FuIGJlIHVzZWQgZm9yIHRoaXMgcHVycG9zZS4gQW5kIGJ0Zi9rYWxsc3lt
-cyBpbmZvDQo+PiAgICAgICBhcmUgYWxyZWFkeSBwYWNrZWQgd2l0aGluIHZtY29yZSwgc28gd2Ug
-Y2FuIHVzZSBpdCBkaXJlY3RseS4NCj4+DQo+PiAgICBXaXRoIHRoZXNlLCB0aGlzIHBhdGNoc2V0
-IGludHJvZHVjZXMgYW4gdXBncmFkZWQgZXBwaWMsIHdoaWNoIGlzIGJhc2VkIG9uDQo+PiAgICBi
-dGYva2FsbHN5bXMgc3ltYm9sIHJlc29sdmluZywgYW5kIGlzIHByb2dyYW1tYWJsZSBmb3IgbW0g
-cGFnZSBmaWx0ZXJpbmcuDQo+PiAgICBUaGUgZm9sbG93aW5nIGluZm8gc2hvd3MgaXRzIHVzYWdl
-IGFuZCBwZXJmb3JtYW5jZSwgcGxlYXNlIG5vdGUgdGhlIHRlc3RzDQo+PiAgICBhcmUgcGVyZm9y
-bWVkIGluIDFzdCBrZXJuZWw6DQo+Pg0KPj4gICAgJCB0aW1lIC4vbWFrZWR1bXBmaWxlIC1kIDMx
-IC1sIC92YXIvY3Jhc2gvMTI3LjAuMC4xLTIwMjUtMDYtMTAtMThcOjAzXDoxMi92bWNvcmUNCj4+
-ICAgICAgL3RtcC9kd2FyZi5vdXQgLXggL2xpYi9kZWJ1Zy9saWIvbW9kdWxlcy82LjExLjgtMzAw
-LmZjNDEueDg2XzY0L3ZtbGludXgNCj4+ICAgICAgLS1lcHBpYyBlcHBpY19zY3JpcHRzL2ZpbHRl
-cl9hbWRncHVfbW1fcGFnZXMuYw0KPj4gICAgICAgICAgcmVhbCAgICAxNG02Ljg5NHMNCj4+ICAg
-ICAgICAgIHVzZXIgICAgNG0xNi45MDBzDQo+PiAgICAgICAgICBzeXMgICAgIDltNDQuNjk1cw0K
-Pj4NCj4+ICAgICQgdGltZSAuL21ha2VkdW1wZmlsZSAtZCAzMSAtbCAvdmFyL2NyYXNoLzEyNy4w
-LjAuMS0yMDI1LTA2LTEwLTE4XDowM1w6MTIvdm1jb3JlDQo+PiAgICAgIC90bXAvYnRmLm91dCAt
-LWVwcGljIGVwcGljX3NjcmlwdHMvZmlsdGVyX2FtZGdwdV9tbV9wYWdlcy5jDQo+PiAgICAgICAg
-ICByZWFsICAgIDBtMTAuNjcycw0KPj4gICAgICAgICAgdXNlciAgICAwbTkuMjcwcw0KPj4gICAg
-ICAgICAgc3lzICAgICAwbTEuMTMwcw0KPj4NCj4+ICAgIC1ydy0tLS0tLS0gMSByb290IHJvb3Qg
-MzY3NDc1MDc0IEp1biAxMCAxODowNiBidGYub3V0DQo+PiAgICAtcnctLS0tLS0tIDEgcm9vdCBy
-b290IDM2NzQ3NTA3NCBKdW4gMTAgMjE6MDUgZHdhcmYub3V0DQo+PiAgICAtcnctcnctcnctIDEg
-cm9vdCByb290IDM4NzE4MTQxOCBKdW4gMTAgMTg6MDMgL3Zhci9jcmFzaC8xMjcuMC4wLjEtMjAy
-NS0wNi0xMC0xODowMzoxMi92bWNvcmUNCj4+DQo+PiBDKSBEaXNjdXNzaW9uOg0KPj4NCj4+ICAg
-IDEpIEdQVSB0eXBlczogQ3VycmVudGx5IG9ubHkgdGVzdGVkIHdpdGggYW1kZ3B1J3MgbW0gcGFn
-ZSBmaWx0ZXJpbmcsIG90aGVycw0KPj4gICAgICAgYXJlIG5vdCB0ZXN0ZWQuDQo+PiAgICAyKSBP
-UzogVGhlIGNvZGUgY2FuIHdvcmsgb24gcmhlbC0xMCsvcmhlbDkuNSsgb24geDg2XzY0L2FybTY0
-L3MzOTAvcHBjNjQuDQo+PiAgICAgICBPdGhlcnMgYXJlIG5vdCB0ZXN0ZWQuDQo+Pg0KPj4gRCkg
-VGVzdGluZzoNCj4+DQo+PiAgICAxKSBJZiB5b3UgZG9uJ3Qgd2FudCB0byBjcmVhdGUgeW91ciB2
-bWNvcmUsIHlvdSBjYW4gZmluZCBhIHZtY29yZSB3aGljaCBJDQo+PiAgICAgICBjcmVhdGVkIHdp
-dGggYW1kZ3B1IG1tIHBhZ2VzIHVuZmlsdGVyZWQgWzFdLCB0aGUgYW1kZ3B1IG1tIHBhZ2VzIGFy
-ZQ0KPj4gICAgICAgYWxsb2NhdGVkIGJ5IHByb2dyYW0gWzJdLiBZb3UgY2FuIHVzZSB0aGUgdm1j
-b3JlIGluIDFzdCBrZXJuZWwgdG8gZmlsdGVyDQo+PiAgICAgICB0aGUgYW1kZ3B1IG1tIHBhZ2Vz
-IGJ5IHRoZSBwcmV2aW91cyBwZXJmb3JtYW5jZSB0ZXN0aW5nIGNtZGxpbmUuIFRvDQo+PiAgICAg
-ICB2ZXJpZnkgdGhlIHBhZ2VzIGFyZSBmaWx0ZXJlZCBpbiBjcmFzaDoNCj4+DQo+PiAgICAgICBV
-bmZpbHRlcmVkOg0KPj4gICAgICAgY3Jhc2g+IHNlYXJjaCAtYyAiIVFBWlhTV0AjRURDIg0KPj4g
-ICAgICAgZmZmZjk2YjdmYTgwMDAwMDogIVFBWlhTV0AjRURDWFhYWFhYWFhYWFhYWFhYWFhYWFhY
-WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFgNCj4+ICAgICAgIGZmZmY5NmI4N2M4MDAwMDA6ICFRQVpY
-U1dAI0VEQ1hYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYDQo+PiAg
-ICAgICBjcmFzaD4gcmQgZmZmZjk2YjdmYTgwMDAwMA0KPj4gICAgICAgZmZmZjk2YjdmYTgwMDAw
-MDogIDQwNTc1MzU4NWE0MTUxMjEgICAgICAgICAgICAgICAgICAgICFRQVpYU1dADQo+PiAgICAg
-ICBjcmFzaD4gcmQgZmZmZjk2Yjg3YzgwMDAwMA0KPj4gICAgICAgZmZmZjk2Yjg3YzgwMDAwMDog
-IDQwNTc1MzU4NWE0MTUxMjEgICAgICAgICAgICAgICAgICAgICFRQVpYU1dADQo+Pg0KPj4gICAg
-ICAgRmlsdGVyZWQ6DQo+PiAgICAgICBjcmFzaD4gc2VhcmNoIC1jICIhUUFaWFNXQCNFREMiDQo+
-PiAgICAgICBjcmFzaD4gcmQgZmZmZjk2YjdmYTgwMDAwMA0KPj4gICAgICAgcmQ6IHBhZ2UgZXhj
-bHVkZWQ6IGtlcm5lbCB2aXJ0dWFsIGFkZHJlc3M6IGZmZmY5NmI3ZmE4MDAwMDAgIHR5cGU6ICI2
-NC1iaXQgS1ZBRERSIg0KPj4gICAgICAgY3Jhc2g+IHJkIGZmZmY5NmI4N2M4MDAwMDANCj4+ICAg
-ICAgIHJkOiBwYWdlIGV4Y2x1ZGVkOiBrZXJuZWwgdmlydHVhbCBhZGRyZXNzOiBmZmZmOTZiODdj
-ODAwMDAwICB0eXBlOiAiNjQtYml0IEtWQUREUiINCj4+DQo+PiAgICAyKSBZb3UgY2FuIHVzZSBl
-cHBpY19zY3JpcHRzL3ByaW50X2FsbF92bWEuYyBhZ2FpbnN0IGFuIG9yZGluYXJ5IHZtY29yZSB0
-bw0KPj4gICAgICAgdGVzdCBvbmx5IGJ0Zi9rYWxsc3ltcyBmdW5jdGlvbnMgYnkgb3V0cHV0IGFs
-bCBWTUFzIGlmIG5vIGFtZGdwdQ0KPj4gICAgICAgdm1jb3Jlcy9tYWNoaW5lIGF2YWxpYWJsZS4N
-Cj4+DQo+PiBbMV06IGh0dHBzOi8vcGVvcGxlLnJlZGhhdC5jb20vfmx0YW8vY29yZS8NCj4+IFsy
-XTogaHR0cHM6Ly9naXN0LmdpdGh1Yi5jb20vbGl1dGdudS9hOGNiY2UxYzY2NjQ1MmYxNTMwZTE0
-MTBkMWYzNTJkZg0KPj4NCj4+IHYyIC0+IHYxOg0KPj4NCj4+IDEpIE1vdmVkIG1hcGxlIHRyZWUg
-cmVsYXRlZCBjb2RlKGZvciBWTUEgaXRlcmF0aW9uKSBpbnRvIGVwcGljIHNjcmlwdCwgc28gd2UN
-Cj4+ICAgICBkb24ndCBuZWVkIHRvIHBvcnQgbWFwbGUgdHJlZSBjb2RlIHRvIG1ha2VkdW1wZmls
-ZS4NCj4+DQo+PiAyKSBSZW9yZ2FuaXplZCB0aGUgcGF0Y2hzZXQgYXMgZm9sbG93czoNCj4+DQo+
-PiAgICAgIC0tLSA8Y29tbW9uIG1vZGlmaWNhdGlvbj4gLS0tDQo+PiAgICAgIDEuQWRkIHBhZ2Ug
-ZmlsdGVyaW5nIGZ1bmN0aW9uDQo+PiAgICAgIDIuU3VwcG9ydGluZyBtYWluKCkgYXMgdGhlIGVu
-dHJ5IG9mIGVwcGljIHNjcmlwdA0KPj4NCj4+ICAgICAgLS0tIDxkd2FyZiByZWxhdGVkIG1vZGlm
-aWNhdGlvbj4gLS0tDQo+PiAgICAgIDMuZHdhcmZfaW5mbzogU3VwcG9ydCBrZXJuZWwgYWRkcmVz
-cyByYW5kb21pemF0aW9uDQo+PiAgICAgIDQuZHdhcmZfaW5mbzogRml4IGEgaW5maW5pdGUgcmVj
-dXJzaW9uIGJ1ZyBmb3IgcnVzdA0KPj4gICAgICA1LmVwcGljIGR3YXJmOiBzdXBwb3J0IGFub255
-bW91cyBzdHJ1Y3RzIG1lbWJlciByZXNvbHZpbmcNCj4+ICAgICAgNi5FbmFibGUgcGFnZSBmaWx0
-ZXJpbmcgZm9yIGR3YXJmIGVwcGljDQo+Pg0KPj4gICAgICAtLS0gPGJ0ZiAmIGthbGxzeW1zIHJl
-bGF0ZWQgbW9kaWZpY2F0aW9uPiAtLS0NCj4+ICAgICAgNy5JbXBsZW1lbnQga2VybmVsIGthbGxz
-eW1zIHJlc29sdmluZw0KPj4gICAgICA4LkltcGxlbWVudCBrZXJuZWwgYnRmIHJlc29sdmluZw0K
-Pj4gICAgICA5LkltcGxlbWVudCBrZXJuZWwgbW9kdWxlJ3Mga2FsbHN5bXMgcmVzb2x2aW5nDQo+
-PiAgICAgIDEwLkltcGxlbWVudCBrZXJuZWwgbW9kdWxlJ3MgYnRmIHJlc29sdmluZw0KPj4gICAg
-ICAxMS5FeHBvcnQgbmVjZXNzYXJ5IGJ0Zi9rYWxsc3ltcyBmdW5jdGlvbnMgdG8gZXBwaWMgZXh0
-ZW5zaW9uDQo+PiAgICAgIDEyLkVuYWJsZSBwYWdlIGZpbHRlcmluZyBmb3IgYnRmL2thbGxzeW1z
-IGVwcGljDQo+PiAgICAgIDEzLkRvY3M6IFVwZGF0ZSBlcHBpYyByZWxhdGVkIGVudHJpZXMNCj4+
-DQo+PiAgICAgIC0tLSA8b25seSBmb3IgdGVzdCBwdXJwb3NlLCBkb24ndCBtZXJnZT4gLS0tDQo+
-PiAgICAgIDE0LkludHJvZHVjaW5nIDIgZXBwaWMgc2NyaXB0cyB0byB0ZXN0IHRoZSBkd2FyZi9i
-dGYgZXBwaWMgZXh0ZW5zaW9uDQo+Pg0KPj4gICAgIFRoZSBtb2RpZmljYXRpb24gb24gZHdhcmYg
-aXMgcHJpbWFyeSBmb3IgY29tcGFyaXNpb24gcHVycG9zZSwgdGhhdA0KPj4gICAgIGZvciB0aGUg
-c2FtZSBlcHBpYyBwcm9ncmFtLCBtbSBwYWdlIGZpbHRlcmluZyBzaG91bGQgZ2V0IGV4YWN0IHNh
-bWUNCj4+ICAgICBvdXRwdXRzIGZvciBkd2FyZiAmIGthbGxzeW1zL2J0ZiBiYXNlZCBhcHByb2Fj
-aGVzLiBJZiBvdXRwdXRzIHVubWF0Y2gsDQo+PiAgICAgdGhpcyBpbmRpY2F0ZXMgYnVncy4gSW4g
-ZmFjdCwgd2Ugd2lsbCBuZXZlciB0YWtlIGR3YXJmIG1tIHBhZ2VzIGZpbHRlcmluZw0KPj4gICAg
-IGluIHJlYWwgdXNlLCBkdWUgdG8gaXRzIHBvb3IgcGVyZm9ybWFuY2UgYXMgd2VsbCBhcyBpbmFj
-Y2Vzc2liaWxpdHkNCj4+ICAgICBvZiBkZWJ1Z2luZm8gZHVyaW5nIGtkdW1wIGluIDJuZCBrZXJu
-ZWwuIFNvIHBhdGNoIDMvNC81IHdvbid0IGFmZmVjdA0KPj4gICAgIHRoZSBmdW5jdGlvbiBvZiBi
-dGYva2FsbHN5bXMgZXBwaWMgbW0gcGFnZSBmaWx0ZXJpbmcsIGJ1dCB0aGVyZSBhcmUNCj4+ICAg
-ICBmdW5jdGlvbnMgc2hhcmVkIGluIHBhdGNoIDYsIHNvIGl0IGlzIGEgbXVzdC1oYXZlIG9uZS4g
-UGF0Y2ggMTQgaXMNCj4+ICAgICBvbmx5IGZvciB0ZXN0IHB1cnBvc2UsIHRvIGRlbW9uc3RyYXRl
-IGhvdyB0byB3cml0ZSBlcHBpYyBzY3JpcHQgZm9yDQo+PiAgICAgbW0gcGFnZSBmaWx0ZXJpbmcs
-IHNvIGl0IGlzbid0IGEgbXVzdC1oYXZlIHBhdGNoLg0KPj4NCj4+ICAgICBQbGVhc2Ugbm90ZSwg
-aW4gcGF0Y2ggMTQsIEkgaGF2ZSBkZWxpYmVyYXRlbHkgY29udmVydGVkIGFsbCBhcnJheQ0KPj4g
-ICAgIG9wZXJhdGlvbiBpbnRvIHBvaW50ZXIgb3BlcmF0aW9uLCBlLmcuIG1vZGlmaWVkICJub2Rl
-LT5zbG90W2ldIiBpbnRvDQo+PiAgICAgIiooKHVuc2lnbmVkIGxvbmcgKikmKG5vZGUtPnNsb3Qp
-ICsgaSkiLiBUaGlzIGlzIGJlY2F1c2UgdGhlcmUgYXJlDQo+PiAgICAgYnVncyBmb3IgYXJyYXkg
-b3BlcmF0aW9uIHN1cHBvcnQgaW4gZXh0ZW5zaW9uX2VwcGljLmMuIEkgZGlkbid0IGhhdmUNCj4+
-ICAgICBlZmZvcnQgdG8gdGVzdCBhbmQgZml4IHRoZW0gYWxsIGJlY2F1c2UgYXMgSSBtZW50aW9u
-ZWQgcHJldmlvdXNseSwNCj4+ICAgICBtbSBwYWdlIGZpbHRlcmluZyBpbiBkd2FyZiBzaWRlIGlz
-IG9ubHkgZm9yIGNvbXBhcmlzaW9uIGFuZCB3aWxsDQo+PiAgICAgbmV2ZXIgYmUgdXNlZCBpbiBy
-ZWFsIHVzZS4gVGhlcmUgaXMgbm8gc3VjaCBpc3N1ZSBmb3Iga2FsbHN5bXMvYnRmDQo+PiAgICAg
-ZXBwaWMgc2lkZS4NCj4+DQo+PiAzKSBTaW5jZSB3ZSBwb3J0ZWQgbWFwbGUgdHJlZSBjb2RlIHRv
-IGVwcGljIHNjcmlwdCwgc2V2ZXJhbCBidWdzIGZvdW5kDQo+PiAgICAgYm90aCBmb3IgZXBwaWMg
-bGlicmFyeSAmIGVwcGljIGJ0ZiBzdXBwb3J0LiBQbGVhc2UgdXNlIG1hc3RlciBicmFuY2gNCj4+
-ICAgICBvZiBlcHBpYyBsaWJyYXJ5IHRvIGNvLWNvbXBpbGUgd2l0aCB0aGlzIHBhdGNoc2V0Lg0K
-Pj4NCj4+IFRhbyBMaXUgKDE0KToNCj4+ICAgIEFkZCBwYWdlIGZpbHRlcmluZyBmdW5jdGlvbg0K
-Pj4gICAgU3VwcG9ydGluZyBtYWluKCkgYXMgdGhlIGVudHJ5IG9mIGVwcGljIHNjcmlwdA0KPj4g
-ICAgZHdhcmZfaW5mbzogU3VwcG9ydCBrZXJuZWwgYWRkcmVzcyByYW5kb21pemF0aW9uDQo+PiAg
-ICBkd2FyZl9pbmZvOiBGaXggYSBpbmZpbml0ZSByZWN1cnNpb24gYnVnIGZvciBydXN0DQo+PiAg
-ICBlcHBpYyBkd2FyZjogc3VwcG9ydCBhbm9ueW1vdXMgc3RydWN0cyBtZW1iZXIgcmVzb2x2aW5n
-DQo+PiAgICBFbmFibGUgcGFnZSBmaWx0ZXJpbmcgZm9yIGR3YXJmIGVwcGljDQo+PiAgICBJbXBs
-ZW1lbnQga2VybmVsIGthbGxzeW1zIHJlc29sdmluZw0KPj4gICAgSW1wbGVtZW50IGtlcm5lbCBi
-dGYgcmVzb2x2aW5nDQo+PiAgICBJbXBsZW1lbnQga2VybmVsIG1vZHVsZSdzIGthbGxzeW1zIHJl
-c29sdmluZw0KPj4gICAgSW1wbGVtZW50IGtlcm5lbCBtb2R1bGUncyBidGYgcmVzb2x2aW5nDQo+
-PiAgICBFeHBvcnQgbmVjZXNzYXJ5IGJ0Zi9rYWxsc3ltcyBmdW5jdGlvbnMgdG8gZXBwaWMgZXh0
-ZW5zaW9uDQo+PiAgICBFbmFibGUgcGFnZSBmaWx0ZXJpbmcgZm9yIGJ0Zi9rYWxsc3ltcyBlcHBp
-Yw0KPj4gICAgRG9jczogVXBkYXRlIGVwcGljIHJlbGF0ZWQgZW50cmllcw0KPj4gICAgSW50cm9k
-dWNpbmcgMiBlcHBpYyBzY3JpcHRzIHRvIHRlc3QgdGhlIGR3YXJmL2J0ZiBlcHBpYyBleHRlbnNp
-b24NCj4+DQo+PiAgIE1ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA2
-ICstDQo+PiAgIGJ0Zi5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgOTE5ICsr
-KysrKysrKysrKysrKysrKysrKysrKysNCj4+ICAgYnRmLmggICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfCAxNzcgKysrKysNCj4+ICAgZHdhcmZfaW5mby5jICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfCAgIDcgKw0KPj4gICBlcHBpY19zY3JpcHRzL2ZpbHRlcl9hbWRncHVfbW1f
-cGFnZXMuYyB8IDI1NSArKysrKysrDQo+PiAgIGVwcGljX3NjcmlwdHMvcHJpbnRfYWxsX3ZtYS5j
-ICAgICAgICAgIHwgMjM5ICsrKysrKysNCj4+ICAgZXJhc2VfaW5mby5jICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfCAxMjAgKysrLQ0KPj4gICBlcmFzZV9pbmZvLmggICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8ICAxOSArDQo+PiAgIGV4dGVuc2lvbl9idGYuYyAgICAgICAgICAgICAgICAg
-ICAgICAgIHwgMjU4ICsrKysrKysNCj4+ICAgZXh0ZW5zaW9uX2VwcGljLmMgICAgICAgICAgICAg
-ICAgICAgICAgfCAxMDYgKystDQo+PiAgIGV4dGVuc2lvbl9lcHBpYy5oICAgICAgICAgICAgICAg
-ICAgICAgIHwgICA2ICstDQo+PiAgIGthbGxzeW1zLmMgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHwgMzkyICsrKysrKysrKysrDQo+PiAgIGthbGxzeW1zLmggICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgIDQxICsrDQo+PiAgIG1ha2VkdW1wZmlsZS44LmluICAgICAgICAgICAgICAg
-ICAgICAgIHwgIDI0ICstDQo+PiAgIG1ha2VkdW1wZmlsZS5jICAgICAgICAgICAgICAgICAgICAg
-ICAgIHwgIDIxICstDQo+PiAgIG1ha2VkdW1wZmlsZS5oICAgICAgICAgICAgICAgICAgICAgICAg
-IHwgIDExICsNCj4+ICAgcHJpbnRfaW5mby5jICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAg
-MTEgKy0NCj4+ICAgMTcgZmlsZXMgY2hhbmdlZCwgMjU1MCBpbnNlcnRpb25zKCspLCA2MiBkZWxl
-dGlvbnMoLSkNCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGJ0Zi5jDQo+PiAgIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBidGYuaA0KPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZXBwaWNfc2NyaXB0cy9maWx0
-ZXJfYW1kZ3B1X21tX3BhZ2VzLmMNCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGVwcGljX3Njcmlw
-dHMvcHJpbnRfYWxsX3ZtYS5jDQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBleHRlbnNpb25fYnRm
-LmMNCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGthbGxzeW1zLmMNCj4+ICAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IGthbGxzeW1zLmgNCj4+DQo+PiAtLQ0KPj4gMi40Ny4wDQo+Pg==
+Hi Kazu,
+
+On Fri, Nov 28, 2025 at 9:04=E2=80=AFPM HAGIO KAZUHITO(=E8=90=A9=E5=B0=BE=
+=E3=80=80=E4=B8=80=E4=BB=81)
+<k-hagio-ab@nec.com> wrote:
+>
+> On 2025/11/24 13:46, Tao Liu wrote:
+> > Kindly ping... Any comments on this?
+>
+> Hi Tao,
+>
+> I'm sorry for the delay. I think I can look into this next month.
+
+No worries, please take your time :)
+
+Thanks,
+Tao Liu
+
+>
+> Thanks,
+> Kazu
+>
+> >
+> > Thanks,
+> > Tao Liu
+> >
+> > On Tue, Oct 21, 2025 at 11:24=E2=80=AFAM Tao Liu <ltao@redhat.com> wrot=
+e:
+> >>
+> >> A) This patchset will introduce the following features to makedumpfile=
+:
+> >>
+> >>    1) Enable eppic script for memory pages filtering.
+> >>    2) Enable btf and kallsyms for symbol type and address resolving.
+> >>
+> >> B) The purpose of the features are:
+> >>
+> >>    1) Currently makedumpfile filters mm pages based on page flags, bec=
+ause flags
+> >>       can help to determine one page's usage. But this page-flag-check=
+ing method
+> >>       lacks of flexibility in certain cases, e.g. if we want to filter=
+ those mm
+> >>       pages occupied by GPU during vmcore dumping due to:
+> >>
+> >>       a) GPU may be taking a large memory and contains sensitive data;
+> >>       b) GPU mm pages have no relations to kernel crash and useless fo=
+r vmcore
+> >>          analysis.
+> >>
+> >>       But there is no GPU mm page specific flags, and apparently we do=
+n't need
+> >>       to create one just for kdump use. A programmable filtering tool =
+is more
+> >>       suitable for such cases. In addition, different GPU vendors may =
+use
+> >>       different ways for mm pages allocating, programmable filtering i=
+s better
+> >>       than hard coding these GPU specific logics into makedumpfile in =
+this case.
+> >>
+> >>    2) Currently makedumpfile already contains a programmable filtering=
+ tool, aka
+> >>       eppic script, which allows user to write customized code for dat=
+a erasing.
+> >>       However it has the following drawbacks:
+> >>
+> >>       a) cannot do mm page filtering.
+> >>       b) need to access to debuginfo of both kernel and modules, which=
+ is not
+> >>          applicable in the 2nd kernel.
+> >>       c) Poor performance, making vmcore dumping time unacceptable (Se=
+e
+> >>          the following performance testing).
+> >>
+> >>       makedumpfile need to resolve the dwarf data from debuginfo, to g=
+et symbols
+> >>       types and addresses. In recent kernel there are dwarf alternativ=
+es such
+> >>       as btf/kallsyms which can be used for this purpose. And btf/kall=
+syms info
+> >>       are already packed within vmcore, so we can use it directly.
+> >>
+> >>    With these, this patchset introduces an upgraded eppic, which is ba=
+sed on
+> >>    btf/kallsyms symbol resolving, and is programmable for mm page filt=
+ering.
+> >>    The following info shows its usage and performance, please note the=
+ tests
+> >>    are performed in 1st kernel:
+> >>
+> >>    $ time ./makedumpfile -d 31 -l /var/crash/127.0.0.1-2025-06-10-18\:=
+03\:12/vmcore
+> >>      /tmp/dwarf.out -x /lib/debug/lib/modules/6.11.8-300.fc41.x86_64/v=
+mlinux
+> >>      --eppic eppic_scripts/filter_amdgpu_mm_pages.c
+> >>          real    14m6.894s
+> >>          user    4m16.900s
+> >>          sys     9m44.695s
+> >>
+> >>    $ time ./makedumpfile -d 31 -l /var/crash/127.0.0.1-2025-06-10-18\:=
+03\:12/vmcore
+> >>      /tmp/btf.out --eppic eppic_scripts/filter_amdgpu_mm_pages.c
+> >>          real    0m10.672s
+> >>          user    0m9.270s
+> >>          sys     0m1.130s
+> >>
+> >>    -rw------- 1 root root 367475074 Jun 10 18:06 btf.out
+> >>    -rw------- 1 root root 367475074 Jun 10 21:05 dwarf.out
+> >>    -rw-rw-rw- 1 root root 387181418 Jun 10 18:03 /var/crash/127.0.0.1-=
+2025-06-10-18:03:12/vmcore
+> >>
+> >> C) Discussion:
+> >>
+> >>    1) GPU types: Currently only tested with amdgpu's mm page filtering=
+, others
+> >>       are not tested.
+> >>    2) OS: The code can work on rhel-10+/rhel9.5+ on x86_64/arm64/s390/=
+ppc64.
+> >>       Others are not tested.
+> >>
+> >> D) Testing:
+> >>
+> >>    1) If you don't want to create your vmcore, you can find a vmcore w=
+hich I
+> >>       created with amdgpu mm pages unfiltered [1], the amdgpu mm pages=
+ are
+> >>       allocated by program [2]. You can use the vmcore in 1st kernel t=
+o filter
+> >>       the amdgpu mm pages by the previous performance testing cmdline.=
+ To
+> >>       verify the pages are filtered in crash:
+> >>
+> >>       Unfiltered:
+> >>       crash> search -c "!QAZXSW@#EDC"
+> >>       ffff96b7fa800000: !QAZXSW@#EDCXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=
+XXXXXXXXXX
+> >>       ffff96b87c800000: !QAZXSW@#EDCXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=
+XXXXXXXXXX
+> >>       crash> rd ffff96b7fa800000
+> >>       ffff96b7fa800000:  405753585a415121                    !QAZXSW@
+> >>       crash> rd ffff96b87c800000
+> >>       ffff96b87c800000:  405753585a415121                    !QAZXSW@
+> >>
+> >>       Filtered:
+> >>       crash> search -c "!QAZXSW@#EDC"
+> >>       crash> rd ffff96b7fa800000
+> >>       rd: page excluded: kernel virtual address: ffff96b7fa800000  typ=
+e: "64-bit KVADDR"
+> >>       crash> rd ffff96b87c800000
+> >>       rd: page excluded: kernel virtual address: ffff96b87c800000  typ=
+e: "64-bit KVADDR"
+> >>
+> >>    2) You can use eppic_scripts/print_all_vma.c against an ordinary vm=
+core to
+> >>       test only btf/kallsyms functions by output all VMAs if no amdgpu
+> >>       vmcores/machine avaliable.
+> >>
+> >> [1]: https://people.redhat.com/~ltao/core/
+> >> [2]: https://gist.github.com/liutgnu/a8cbce1c666452f1530e1410d1f352df
+> >>
+> >> v2 -> v1:
+> >>
+> >> 1) Moved maple tree related code(for VMA iteration) into eppic script,=
+ so we
+> >>     don't need to port maple tree code to makedumpfile.
+> >>
+> >> 2) Reorganized the patchset as follows:
+> >>
+> >>      --- <common modification> ---
+> >>      1.Add page filtering function
+> >>      2.Supporting main() as the entry of eppic script
+> >>
+> >>      --- <dwarf related modification> ---
+> >>      3.dwarf_info: Support kernel address randomization
+> >>      4.dwarf_info: Fix a infinite recursion bug for rust
+> >>      5.eppic dwarf: support anonymous structs member resolving
+> >>      6.Enable page filtering for dwarf eppic
+> >>
+> >>      --- <btf & kallsyms related modification> ---
+> >>      7.Implement kernel kallsyms resolving
+> >>      8.Implement kernel btf resolving
+> >>      9.Implement kernel module's kallsyms resolving
+> >>      10.Implement kernel module's btf resolving
+> >>      11.Export necessary btf/kallsyms functions to eppic extension
+> >>      12.Enable page filtering for btf/kallsyms eppic
+> >>      13.Docs: Update eppic related entries
+> >>
+> >>      --- <only for test purpose, don't merge> ---
+> >>      14.Introducing 2 eppic scripts to test the dwarf/btf eppic extens=
+ion
+> >>
+> >>     The modification on dwarf is primary for comparision purpose, that
+> >>     for the same eppic program, mm page filtering should get exact sam=
+e
+> >>     outputs for dwarf & kallsyms/btf based approaches. If outputs unma=
+tch,
+> >>     this indicates bugs. In fact, we will never take dwarf mm pages fi=
+ltering
+> >>     in real use, due to its poor performance as well as inaccessibilit=
+y
+> >>     of debuginfo during kdump in 2nd kernel. So patch 3/4/5 won't affe=
+ct
+> >>     the function of btf/kallsyms eppic mm page filtering, but there ar=
+e
+> >>     functions shared in patch 6, so it is a must-have one. Patch 14 is
+> >>     only for test purpose, to demonstrate how to write eppic script fo=
+r
+> >>     mm page filtering, so it isn't a must-have patch.
+> >>
+> >>     Please note, in patch 14, I have deliberately converted all array
+> >>     operation into pointer operation, e.g. modified "node->slot[i]" in=
+to
+> >>     "*((unsigned long *)&(node->slot) + i)". This is because there are
+> >>     bugs for array operation support in extension_eppic.c. I didn't ha=
+ve
+> >>     effort to test and fix them all because as I mentioned previously,
+> >>     mm page filtering in dwarf side is only for comparision and will
+> >>     never be used in real use. There is no such issue for kallsyms/btf
+> >>     eppic side.
+> >>
+> >> 3) Since we ported maple tree code to eppic script, several bugs found
+> >>     both for eppic library & eppic btf support. Please use master bran=
+ch
+> >>     of eppic library to co-compile with this patchset.
+> >>
+> >> Tao Liu (14):
+> >>    Add page filtering function
+> >>    Supporting main() as the entry of eppic script
+> >>    dwarf_info: Support kernel address randomization
+> >>    dwarf_info: Fix a infinite recursion bug for rust
+> >>    eppic dwarf: support anonymous structs member resolving
+> >>    Enable page filtering for dwarf eppic
+> >>    Implement kernel kallsyms resolving
+> >>    Implement kernel btf resolving
+> >>    Implement kernel module's kallsyms resolving
+> >>    Implement kernel module's btf resolving
+> >>    Export necessary btf/kallsyms functions to eppic extension
+> >>    Enable page filtering for btf/kallsyms eppic
+> >>    Docs: Update eppic related entries
+> >>    Introducing 2 eppic scripts to test the dwarf/btf eppic extension
+> >>
+> >>   Makefile                               |   6 +-
+> >>   btf.c                                  | 919 +++++++++++++++++++++++=
+++
+> >>   btf.h                                  | 177 +++++
+> >>   dwarf_info.c                           |   7 +
+> >>   eppic_scripts/filter_amdgpu_mm_pages.c | 255 +++++++
+> >>   eppic_scripts/print_all_vma.c          | 239 +++++++
+> >>   erase_info.c                           | 120 +++-
+> >>   erase_info.h                           |  19 +
+> >>   extension_btf.c                        | 258 +++++++
+> >>   extension_eppic.c                      | 106 ++-
+> >>   extension_eppic.h                      |   6 +-
+> >>   kallsyms.c                             | 392 +++++++++++
+> >>   kallsyms.h                             |  41 ++
+> >>   makedumpfile.8.in                      |  24 +-
+> >>   makedumpfile.c                         |  21 +-
+> >>   makedumpfile.h                         |  11 +
+> >>   print_info.c                           |  11 +-
+> >>   17 files changed, 2550 insertions(+), 62 deletions(-)
+> >>   create mode 100644 btf.c
+> >>   create mode 100644 btf.h
+> >>   create mode 100644 eppic_scripts/filter_amdgpu_mm_pages.c
+> >>   create mode 100644 eppic_scripts/print_all_vma.c
+> >>   create mode 100644 extension_btf.c
+> >>   create mode 100644 kallsyms.c
+> >>   create mode 100644 kallsyms.h
+> >>
+> >> --
+> >> 2.47.0
+> >>
+
 
