@@ -4,94 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E46CED116EA
-	for <kexec@archiver.kernel.org>; Fri, 28 Nov 2025 08:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8C24ECFD376
+	for <kexec@archiver.kernel.org>; Fri, 28 Nov 2025 09:42:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xOwiFCph9kB5nDhUyFfKIY6K5xsYWX8zoXXWOUISfAA=; b=Cc6ZC1/wigLq/svbgdh/1htvzv
-	6TXLA/c1zlsTcuO0k/2dOovcqIa0Gn0O9Cd4DTn/a6FIK/2OIcU0pvkiWCIK7Ydat1Fya2ykue70+
-	2FCWtzLTWOfO2rItxL7wvcWnK8B4vhyc84hYfgSB3T3iELg/lmf2rH+vp5OePnOyBNYQhWiGmZnZM
-	q/lUtNblnhLbaecH56P1VVl8fjKbi5X69BDlq2V0QsgwVewSDZcdccCh6s34ULHHiABNAmnLasfCV
-	tnQJlA5ZrKsoIptp/nmxUFSOT6e8FMDBHBdqA4xgK9xuHZzJFrBJ+RyXL+WaMG9WgNuQZ0DPpOdya
-	tbl9CBSQ==;
+	bh=XJbUF3PC+6PhrqHIyLW1sFUYcX2axr+GelTZvCRV694=; b=zoC/Hr5+Sn0BrJ6WcmTmKdOC+S
+	n3/k9aNU4siqtPry6oOVgrXt3chyaHEgyWDdbVVGByt5pWl5GevR0tppxaFNfZlIb9vxsKgzz6NOz
+	W/9pC6vpSDLD4bwtp3KzPzIyZy+yoSFdSYCfSqITrLmfY5/kW84WIKYa9fXAtFDMDogXLr8Plprij
+	Ov275EqXi/35G0ZNgBJv5Wz5Keek3XmtN2G9p9WQ7lu6WUA+CRqiQzhxFU0EA18BNoLJyifvrlWiw
+	Isl58JLqmuCgaHkezSDB6BIpwKwpdsODiKl5GVlLjEx+TSNPVfqKm5NzK+Vz3B5ygaspRAQLLyXsG
+	yFfxBm/g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vOtZ2-0000000083e-32md;
-	Fri, 28 Nov 2025 08:10:48 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1vOuzQ-00000000F00-2FXc;
+	Fri, 28 Nov 2025 09:42:08 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vOtYy-0000000082f-08H8
+	id 1vOuzO-00000000Eze-01YW
 	for kexec@lists.infradead.org;
-	Fri, 28 Nov 2025 08:10:47 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764317441;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xOwiFCph9kB5nDhUyFfKIY6K5xsYWX8zoXXWOUISfAA=;
-	b=CipKwVwVkv1YdE36hLfxMywntr6D2UeaKcfAQQd0bu88fkP/1t4IK0q7mUhRnV/LAW0Agl
-	q8Ir/iOoQoYAqbISBnt6gVRkH5VE2ctwC2aP9Qj/01H/OxVgo6of3R8/pAhdkq47rC/9Um
-	wkVIzUT1RjVpsdVQZ+K55DMy/2oKU58=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-224-QJJ0tb_sPv25vcLQRrn05g-1; Fri, 28 Nov 2025 03:10:39 -0500
-X-MC-Unique: QJJ0tb_sPv25vcLQRrn05g-1
-X-Mimecast-MFC-AGG-ID: QJJ0tb_sPv25vcLQRrn05g_1764317438
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-8805c2acd64so32672946d6.3
-        for <kexec@lists.infradead.org>; Fri, 28 Nov 2025 00:10:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764317438; x=1764922238;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=xOwiFCph9kB5nDhUyFfKIY6K5xsYWX8zoXXWOUISfAA=;
-        b=hGlZTJMA/zxkH0t1ctWUdzQOCdrrCuuAFDstJwOm8p1jDBxvM1t9XzQN43c/RpgbZQ
-         FSXHyPyBMNAXjqDyKC9EPzwId6LrlhSFV+4vC2hZapN4tHjzI3riz7ssDg2Oq7a/CMW/
-         UHvrx7WVf9W23odLWodShtxEkuaim2IuftBNfPfTKbqBzTmpduwFtcfsSnTovM0EG06K
-         RBwKYOLraaal01gzMh5R8tWaKQR1Mfj5IZP085u2/AHERm04B+OrhDMRidGAqIZMhWtU
-         xACVYdBN6Lp1bc+Xq/MwVlkAIb8j2qdZqfvIVeh4eLWAQx9vZOpfl4xmb6h8kAqoPSJg
-         Sn6A==
-X-Forwarded-Encrypted: i=1; AJvYcCVkkLCWaOBsr2H0JuQk70WTBo/pxz8toQy3gRvTnUPmmtkq/Pf2SAHw0LaIawt/Kq9QA3SCmQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyqlhcUqvhqqE3p14I1ufTEUVKMOWck+cgthiX6vO9I84AaHVoR
-	DPm6DuYz6xCdqVMmMBG3fVBPUG5Gnml1N8eKlZKbfCto+HeNqfekm78acViZESfro4ih9k48Vqy
-	utpHD0i+W9kiCIQ+BUCE6203JSZyk3kMVD3BCLENCuwypBGP3psi6IEQJ4tljn2lbhLh06A3ljz
-	xNaNBO+cmP/lFTmPjbIz9gskt8PfhqQ13wAMVpgjQ87nkE
-X-Gm-Gg: ASbGncsMYYJ+px73RdR7+jreIMalMPYzB3Tx97ET3Lb1fcC1/QiYwUUwmk9MdqbtMAF
-	lolYuWMk35UI6BKSzvSuycxGDhWYr2Ja2QQ8mDGLD8hnaLcFnRJiolOCNQJffyARljvLR9Jr5pj
-	uXPR54ScGI1ZUWqEHeezXcSLBvzVnnmHgaS9srMIqLrH8LzWrndi2LILef5K5qecy8fQ==
-X-Received: by 2002:a05:622a:1393:b0:4ed:42a2:1293 with SMTP id d75a77b69052e-4ee58841b1emr308132261cf.1.1764317438162;
-        Fri, 28 Nov 2025 00:10:38 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG0SFQP6ykoOoIklHyxOsyq5BSfz49dvoMx2CYeX1FWtvQe3nLupoYp97iFFo9PLbX1Z1x8C/JashKrz/GZdzY=
-X-Received: by 2002:a05:622a:1393:b0:4ed:42a2:1293 with SMTP id
- d75a77b69052e-4ee58841b1emr308132111cf.1.1764317437735; Fri, 28 Nov 2025
- 00:10:37 -0800 (PST)
+	Fri, 28 Nov 2025 09:42:07 +0000
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AS8SClO011027;
+	Fri, 28 Nov 2025 09:42:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=XJbUF3
+	PC+6PhrqHIyLW1sFUYcX2axr+GelTZvCRV694=; b=VqidQv1EfcOUdtMhyVhKTX
+	aJy7mVzUsluFIhla9c5QCurZZTw0R8MPg+5s7WC1ifrucM/hrJ5DvEF6sZJ7R2g8
+	7yNXb8Zv2xoGa/QK/uxDua0BJRARS8lfO/jlefuL02aCa8ViDNfU1bCpjfAWIXpX
+	y6uaRPJY8f8uTizpto2jok9Hak66dWSvlKKihAXiSfqh69QDunoLM6zaLII+yxWS
+	BQ8JubR5K6c3IpPi0PUuDx86o6B23A3qcNyBDW9yIsqOiOK1dfUbQqhRkLL2kv5X
+	s9SiEuxluNiycMavhd8F4Oo/QqHvDKrK3y9JHQti5Z5yIFEvHTz+wHZqCQ4XmJ1w
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ak4w9wqm7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Nov 2025 09:42:04 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AS86rZf013866;
+	Fri, 28 Nov 2025 09:42:03 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4akrgnmbaf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Nov 2025 09:42:03 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AS9g1L244499244
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 28 Nov 2025 09:42:01 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 71E3720043;
+	Fri, 28 Nov 2025 09:42:01 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A397220040;
+	Fri, 28 Nov 2025 09:41:59 +0000 (GMT)
+Received: from [9.124.217.199] (unknown [9.124.217.199])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 28 Nov 2025 09:41:59 +0000 (GMT)
+Message-ID: <77ce0329-1f82-49be-b18a-73c9e5c3e85e@linux.ibm.com>
+Date: Fri, 28 Nov 2025 15:11:54 +0530
 MIME-Version: 1.0
-References: <20251020222410.8235-1-ltao@redhat.com> <CAO7dBbVLPv3LZTd31XdPvnYFFTfQ3PVaMTS_h3uRgE4sJsS1PA@mail.gmail.com>
- <8b5c5913-34bc-444f-8ffe-9457bde0649c@nec.com>
-In-Reply-To: <8b5c5913-34bc-444f-8ffe-9457bde0649c@nec.com>
-From: Tao Liu <ltao@redhat.com>
-Date: Fri, 28 Nov 2025 21:10:01 +1300
-X-Gm-Features: AWmQ_bn-2i3vE_XUlfASaguHlrDeYpMRiq0WCxMMD-YcdQhb1Pcwmt82zZsVbwk
-Message-ID: <CAO7dBbX942TTzxKySZzHeo2QuTTeNT7N87Mvsd+nAH0KUv3J2g@mail.gmail.com>
-Subject: Re: [PATCH v2][makedumpfile 00/14] btf/kallsyms based eppic extension
- for mm page filtering
-To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
-Cc: =?UTF-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0jiDnnJ/lhYkp?= <yamazaki-msmt@nec.com>, 
-	"kexec@lists.infradead.org" <kexec@lists.infradead.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: hasu9anB7sEq6S2qmIoJHv1k1SgTAI_aKk2C-JZcU_I_1764317438
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/3] kexec: print out debugging message if required for
+ kexec_load
+To: Baoquan He <bhe@redhat.com>, akpm@linux-foundation.org
+Cc: Qiang Ma <maqianga@uniontech.com>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        shivang upadhyay <shivangu@linux.ibm.com>
+References: <20251126084427.3222212-1-maqianga@uniontech.com>
+ <7aadda55-d2a4-40f9-95ef-d284ec358646@linux.ibm.com>
+ <aShunGBgVbEZmCxO@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <aShunGBgVbEZmCxO@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTIyMDAyMSBTYWx0ZWRfX5XX70ou46Zsx
+ mZ/WXonb0vde463KzqWkYjswKl9LR/h9hBiAh6bINP0ZNiYmh3O86rE0884kkP9gPmOUMRsGkvB
+ aA5rCyxBBVJjhBNFH5rpaGeexEvaRFVPSHWAMai+3TmB1dq55lVDKypdaLak3cdnxj9SAP/G3i0
+ 6aUFLzj4hEPT6XmAHlVnpH6msdcG/k/3QTWFnzcf8W0H1XDPrmtfj1wcJ7JLa3tjt9eGhirVOrS
+ 6jttEsZKDZ0/8GloD0ZxGxIhLY45wFOOyOlnKV92r1STyPAVZsPNJ+Bmigl2sn2m/35uREcD5EW
+ ZcbzaLF2KYLU07zPjSsmYzaM+GKPFIelMr23JZngfiVdkGxcQBtastOOnnH9C0vHx16qFAlqgeA
+ tE2OQWifwV4GqcICwnOaIJmpL8DXdA==
+X-Proofpoint-ORIG-GUID: INLe5-JqZhpqCIFXmK4uliFg1H0IrZ7-
+X-Proofpoint-GUID: INLe5-JqZhpqCIFXmK4uliFg1H0IrZ7-
+X-Authority-Analysis: v=2.4 cv=TMJIilla c=1 sm=1 tr=0 ts=69296e6c cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=EDK4Qq837apMNDcd4w8A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-28_03,2025-11-27_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 spamscore=0 phishscore=0 impostorscore=0 clxscore=1015
+ adultscore=0 bulkscore=0 suspectscore=0 malwarescore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511220021
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251128_001044_212394_CFA2F8B0 
-X-CRM114-Status: GOOD (  42.77  )
+X-CRM114-CacheID: sfid-20251128_014206_057539_02C8D66F 
+X-CRM114-Status: GOOD (  17.21  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,277 +121,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Kazu,
+Hello Baoquan,
 
-On Fri, Nov 28, 2025 at 9:04=E2=80=AFPM HAGIO KAZUHITO(=E8=90=A9=E5=B0=BE=
-=E3=80=80=E4=B8=80=E4=BB=81)
-<k-hagio-ab@nec.com> wrote:
->
-> On 2025/11/24 13:46, Tao Liu wrote:
-> > Kindly ping... Any comments on this?
->
-> Hi Tao,
->
-> I'm sorry for the delay. I think I can look into this next month.
+On 27/11/25 21:00, Baoquan He wrote:
+> On 11/27/25 at 05:31pm, Sourabh Jain wrote:
+>> Hello All,
+>>
+>> Do we have plan to support KEXEC_DEBUG flag?
+>>
+>> Because upstream kexec-tools already added support for KEXEC_DEBUG flag
+>> and that breaks the kexec_load with -d option.
+>>
+>> - kexec: add kexec flag to support debug printing
+>>    https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=71d6fd99af7e
+> I think we should revert that kexec-tools commit.
 
-No worries, please take your time :)
+Yeah, userspace changes shouldn't go in until the kernel patches are
+finalized. It seems that there are disagreements regarding the approach
+and usefulness of this patch series, so reverting the kexec-tools patch
+might be the right thing to avoid breaking anything for now.
+
+I have one question: should the kernel advertise KEXEC_DEBUG so that
+backward compatibility can be maintained between the kernel and
+kexec-tools? Or is that too much for a debugging flag? How was backward
+compatibility handled when we added the KEXEC_FILE_DEBUG flag?
+
+> This whole patchset is
+> non-sense. Because of my carelessness, that userspace patch was merged.
+>
+> Hi Sourabh,
+>
+> Could you go through this patchset and help check if they are really
+> needed? I can't find anything to convince myself. Thanks.
+
+Sure I will review this patch series.
 
 Thanks,
-Tao Liu
-
->
-> Thanks,
-> Kazu
->
-> >
-> > Thanks,
-> > Tao Liu
-> >
-> > On Tue, Oct 21, 2025 at 11:24=E2=80=AFAM Tao Liu <ltao@redhat.com> wrot=
-e:
-> >>
-> >> A) This patchset will introduce the following features to makedumpfile=
-:
-> >>
-> >>    1) Enable eppic script for memory pages filtering.
-> >>    2) Enable btf and kallsyms for symbol type and address resolving.
-> >>
-> >> B) The purpose of the features are:
-> >>
-> >>    1) Currently makedumpfile filters mm pages based on page flags, bec=
-ause flags
-> >>       can help to determine one page's usage. But this page-flag-check=
-ing method
-> >>       lacks of flexibility in certain cases, e.g. if we want to filter=
- those mm
-> >>       pages occupied by GPU during vmcore dumping due to:
-> >>
-> >>       a) GPU may be taking a large memory and contains sensitive data;
-> >>       b) GPU mm pages have no relations to kernel crash and useless fo=
-r vmcore
-> >>          analysis.
-> >>
-> >>       But there is no GPU mm page specific flags, and apparently we do=
-n't need
-> >>       to create one just for kdump use. A programmable filtering tool =
-is more
-> >>       suitable for such cases. In addition, different GPU vendors may =
-use
-> >>       different ways for mm pages allocating, programmable filtering i=
-s better
-> >>       than hard coding these GPU specific logics into makedumpfile in =
-this case.
-> >>
-> >>    2) Currently makedumpfile already contains a programmable filtering=
- tool, aka
-> >>       eppic script, which allows user to write customized code for dat=
-a erasing.
-> >>       However it has the following drawbacks:
-> >>
-> >>       a) cannot do mm page filtering.
-> >>       b) need to access to debuginfo of both kernel and modules, which=
- is not
-> >>          applicable in the 2nd kernel.
-> >>       c) Poor performance, making vmcore dumping time unacceptable (Se=
-e
-> >>          the following performance testing).
-> >>
-> >>       makedumpfile need to resolve the dwarf data from debuginfo, to g=
-et symbols
-> >>       types and addresses. In recent kernel there are dwarf alternativ=
-es such
-> >>       as btf/kallsyms which can be used for this purpose. And btf/kall=
-syms info
-> >>       are already packed within vmcore, so we can use it directly.
-> >>
-> >>    With these, this patchset introduces an upgraded eppic, which is ba=
-sed on
-> >>    btf/kallsyms symbol resolving, and is programmable for mm page filt=
-ering.
-> >>    The following info shows its usage and performance, please note the=
- tests
-> >>    are performed in 1st kernel:
-> >>
-> >>    $ time ./makedumpfile -d 31 -l /var/crash/127.0.0.1-2025-06-10-18\:=
-03\:12/vmcore
-> >>      /tmp/dwarf.out -x /lib/debug/lib/modules/6.11.8-300.fc41.x86_64/v=
-mlinux
-> >>      --eppic eppic_scripts/filter_amdgpu_mm_pages.c
-> >>          real    14m6.894s
-> >>          user    4m16.900s
-> >>          sys     9m44.695s
-> >>
-> >>    $ time ./makedumpfile -d 31 -l /var/crash/127.0.0.1-2025-06-10-18\:=
-03\:12/vmcore
-> >>      /tmp/btf.out --eppic eppic_scripts/filter_amdgpu_mm_pages.c
-> >>          real    0m10.672s
-> >>          user    0m9.270s
-> >>          sys     0m1.130s
-> >>
-> >>    -rw------- 1 root root 367475074 Jun 10 18:06 btf.out
-> >>    -rw------- 1 root root 367475074 Jun 10 21:05 dwarf.out
-> >>    -rw-rw-rw- 1 root root 387181418 Jun 10 18:03 /var/crash/127.0.0.1-=
-2025-06-10-18:03:12/vmcore
-> >>
-> >> C) Discussion:
-> >>
-> >>    1) GPU types: Currently only tested with amdgpu's mm page filtering=
-, others
-> >>       are not tested.
-> >>    2) OS: The code can work on rhel-10+/rhel9.5+ on x86_64/arm64/s390/=
-ppc64.
-> >>       Others are not tested.
-> >>
-> >> D) Testing:
-> >>
-> >>    1) If you don't want to create your vmcore, you can find a vmcore w=
-hich I
-> >>       created with amdgpu mm pages unfiltered [1], the amdgpu mm pages=
- are
-> >>       allocated by program [2]. You can use the vmcore in 1st kernel t=
-o filter
-> >>       the amdgpu mm pages by the previous performance testing cmdline.=
- To
-> >>       verify the pages are filtered in crash:
-> >>
-> >>       Unfiltered:
-> >>       crash> search -c "!QAZXSW@#EDC"
-> >>       ffff96b7fa800000: !QAZXSW@#EDCXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=
-XXXXXXXXXX
-> >>       ffff96b87c800000: !QAZXSW@#EDCXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=
-XXXXXXXXXX
-> >>       crash> rd ffff96b7fa800000
-> >>       ffff96b7fa800000:  405753585a415121                    !QAZXSW@
-> >>       crash> rd ffff96b87c800000
-> >>       ffff96b87c800000:  405753585a415121                    !QAZXSW@
-> >>
-> >>       Filtered:
-> >>       crash> search -c "!QAZXSW@#EDC"
-> >>       crash> rd ffff96b7fa800000
-> >>       rd: page excluded: kernel virtual address: ffff96b7fa800000  typ=
-e: "64-bit KVADDR"
-> >>       crash> rd ffff96b87c800000
-> >>       rd: page excluded: kernel virtual address: ffff96b87c800000  typ=
-e: "64-bit KVADDR"
-> >>
-> >>    2) You can use eppic_scripts/print_all_vma.c against an ordinary vm=
-core to
-> >>       test only btf/kallsyms functions by output all VMAs if no amdgpu
-> >>       vmcores/machine avaliable.
-> >>
-> >> [1]: https://people.redhat.com/~ltao/core/
-> >> [2]: https://gist.github.com/liutgnu/a8cbce1c666452f1530e1410d1f352df
-> >>
-> >> v2 -> v1:
-> >>
-> >> 1) Moved maple tree related code(for VMA iteration) into eppic script,=
- so we
-> >>     don't need to port maple tree code to makedumpfile.
-> >>
-> >> 2) Reorganized the patchset as follows:
-> >>
-> >>      --- <common modification> ---
-> >>      1.Add page filtering function
-> >>      2.Supporting main() as the entry of eppic script
-> >>
-> >>      --- <dwarf related modification> ---
-> >>      3.dwarf_info: Support kernel address randomization
-> >>      4.dwarf_info: Fix a infinite recursion bug for rust
-> >>      5.eppic dwarf: support anonymous structs member resolving
-> >>      6.Enable page filtering for dwarf eppic
-> >>
-> >>      --- <btf & kallsyms related modification> ---
-> >>      7.Implement kernel kallsyms resolving
-> >>      8.Implement kernel btf resolving
-> >>      9.Implement kernel module's kallsyms resolving
-> >>      10.Implement kernel module's btf resolving
-> >>      11.Export necessary btf/kallsyms functions to eppic extension
-> >>      12.Enable page filtering for btf/kallsyms eppic
-> >>      13.Docs: Update eppic related entries
-> >>
-> >>      --- <only for test purpose, don't merge> ---
-> >>      14.Introducing 2 eppic scripts to test the dwarf/btf eppic extens=
-ion
-> >>
-> >>     The modification on dwarf is primary for comparision purpose, that
-> >>     for the same eppic program, mm page filtering should get exact sam=
-e
-> >>     outputs for dwarf & kallsyms/btf based approaches. If outputs unma=
-tch,
-> >>     this indicates bugs. In fact, we will never take dwarf mm pages fi=
-ltering
-> >>     in real use, due to its poor performance as well as inaccessibilit=
-y
-> >>     of debuginfo during kdump in 2nd kernel. So patch 3/4/5 won't affe=
-ct
-> >>     the function of btf/kallsyms eppic mm page filtering, but there ar=
-e
-> >>     functions shared in patch 6, so it is a must-have one. Patch 14 is
-> >>     only for test purpose, to demonstrate how to write eppic script fo=
-r
-> >>     mm page filtering, so it isn't a must-have patch.
-> >>
-> >>     Please note, in patch 14, I have deliberately converted all array
-> >>     operation into pointer operation, e.g. modified "node->slot[i]" in=
-to
-> >>     "*((unsigned long *)&(node->slot) + i)". This is because there are
-> >>     bugs for array operation support in extension_eppic.c. I didn't ha=
-ve
-> >>     effort to test and fix them all because as I mentioned previously,
-> >>     mm page filtering in dwarf side is only for comparision and will
-> >>     never be used in real use. There is no such issue for kallsyms/btf
-> >>     eppic side.
-> >>
-> >> 3) Since we ported maple tree code to eppic script, several bugs found
-> >>     both for eppic library & eppic btf support. Please use master bran=
-ch
-> >>     of eppic library to co-compile with this patchset.
-> >>
-> >> Tao Liu (14):
-> >>    Add page filtering function
-> >>    Supporting main() as the entry of eppic script
-> >>    dwarf_info: Support kernel address randomization
-> >>    dwarf_info: Fix a infinite recursion bug for rust
-> >>    eppic dwarf: support anonymous structs member resolving
-> >>    Enable page filtering for dwarf eppic
-> >>    Implement kernel kallsyms resolving
-> >>    Implement kernel btf resolving
-> >>    Implement kernel module's kallsyms resolving
-> >>    Implement kernel module's btf resolving
-> >>    Export necessary btf/kallsyms functions to eppic extension
-> >>    Enable page filtering for btf/kallsyms eppic
-> >>    Docs: Update eppic related entries
-> >>    Introducing 2 eppic scripts to test the dwarf/btf eppic extension
-> >>
-> >>   Makefile                               |   6 +-
-> >>   btf.c                                  | 919 +++++++++++++++++++++++=
-++
-> >>   btf.h                                  | 177 +++++
-> >>   dwarf_info.c                           |   7 +
-> >>   eppic_scripts/filter_amdgpu_mm_pages.c | 255 +++++++
-> >>   eppic_scripts/print_all_vma.c          | 239 +++++++
-> >>   erase_info.c                           | 120 +++-
-> >>   erase_info.h                           |  19 +
-> >>   extension_btf.c                        | 258 +++++++
-> >>   extension_eppic.c                      | 106 ++-
-> >>   extension_eppic.h                      |   6 +-
-> >>   kallsyms.c                             | 392 +++++++++++
-> >>   kallsyms.h                             |  41 ++
-> >>   makedumpfile.8.in                      |  24 +-
-> >>   makedumpfile.c                         |  21 +-
-> >>   makedumpfile.h                         |  11 +
-> >>   print_info.c                           |  11 +-
-> >>   17 files changed, 2550 insertions(+), 62 deletions(-)
-> >>   create mode 100644 btf.c
-> >>   create mode 100644 btf.h
-> >>   create mode 100644 eppic_scripts/filter_amdgpu_mm_pages.c
-> >>   create mode 100644 eppic_scripts/print_all_vma.c
-> >>   create mode 100644 extension_btf.c
-> >>   create mode 100644 kallsyms.c
-> >>   create mode 100644 kallsyms.h
-> >>
-> >> --
-> >> 2.47.0
-> >>
-
+Sourabh Jain
 
