@@ -4,101 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AA9EECFD376
-	for <kexec@archiver.kernel.org>; Tue,  2 Dec 2025 10:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 36372CFD2F6
+	for <kexec@archiver.kernel.org>; Tue,  2 Dec 2025 13:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=4Vo2f7uWgbg8qKIfrlf+n1Rw7dAMuO46RLqn3KQuEdg=; b=gqUOW3w20wyQ85XCgl+YDYk1G7
-	Zue7M+YN1mfFA9mc1oMHixWDwl0+NiwCfJujPllVcpns/d5eklj5X/4akkf/IYu2FHCn4l/Cl1Gao
-	9lbI0v7E1cxYvwiupjVVbCkVSOtw6WM1bxo1BSaGpNmmcnERp9R2ZTVJxH+Or+JS0o4UFx+R6q486
-	OXwWF8KJq5G1c8wzejVkcD4tBASidLJodUu3FsEmWIdMmv3sxDaRZKeilIfUp4ZX7R0u8GFSYN3uV
-	roKr4fHaMzlvkX/x8GsewFPCgWcl3u7Xn9oorCMulMg6GDs1Cv/aEW9GbYRRxmT7OAtEC+77kmiQc
-	gP3+kXsw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=JsdSONDsYowfbOUGFHoi6ZdWvnnwkrdvfymRkfV+MPY=; b=UvRa/IiqLAqnnxMw/oyc/+LlN7
+	EhV9hoi/F4JQt9AXv8xUQ457F31+019SC9AKSFQAIIycMcMvnvBPNugy9k6IbFnwtv38jwRE+ChS+
+	lZSGJz6ejuQSmS8ro2CtYHhE/YpPIHTPCKZfJs/PnW5vnPX/7qm3mL7bnFdJqIA5DTdW5WdrJtcl4
+	Y74dFvKvu4+KIoWQ+Wo4sHm/r8nRVi8zGOz1Itz3DjWYW9QqCKfcHkIb3xXbUzpv3psA974EQHk0n
+	m5ORT/ICX3alawqaGPmkDSR03dpg/vb0yN/BK5naC+Qf1MYfs1aV7aWcY592vtLjGIsF7smc25fU9
+	2INnmvvg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vQNXI-00000005FFq-191W;
-	Tue, 02 Dec 2025 10:23:08 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1vQQCM-00000005Q8e-1hLH;
+	Tue, 02 Dec 2025 13:13:42 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vQNXD-00000005FFF-06hR
+	id 1vQQCK-00000005Q7o-1YFz
 	for kexec@lists.infradead.org;
-	Tue, 02 Dec 2025 10:23:04 +0000
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B26UtVX010434;
-	Tue, 2 Dec 2025 10:22:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=4Vo2f7uWgbg8qKIfrlf+n1Rw7dAMuO46RLqn3KQuE
-	dg=; b=rxS8X0bFeFDF23psXXbzfxVcBtz7hY1UMN4GGdanST4j3/WI503nN1sNV
-	ij8zbAfEDRNoPEo1OjivZ31rIMdu++D7ac/ZZI8Low/nlCYcdVOlVgHCNmoCVaqa
-	tTukcl36bzigdBkmhT0nJ4h5G/n0krhW+qbxKZuxBR6VHb3FxeKuriZ8boy2rr6j
-	4NPlemgLZi2EEfzXa5z6DITSSL1Iir/z4dGZkIK16Jrcbaz1CTcL1d2tkvrvSuh/
-	3fkKJUoKjeBposHN+N//HA5Y85EPVmB+HnQ3WXDtogAKejMXk03dSrSvA1H2nBWY
-	zVvGdiqGOBIQiI3mSglCh0a4PPtxA==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aqrh6ve47-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Dec 2025 10:22:59 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B27XC3p010361;
-	Tue, 2 Dec 2025 10:22:58 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4arcnk3nhy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Dec 2025 10:22:58 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B2AMsMW45744384
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 2 Dec 2025 10:22:54 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 75F6720075;
-	Tue,  2 Dec 2025 10:22:54 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 229F520073;
-	Tue,  2 Dec 2025 10:22:52 +0000 (GMT)
-Received: from shivang.com (unknown [9.124.219.246])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  2 Dec 2025 10:22:51 +0000 (GMT)
-From: Shivang Upadhyay <shivangu@linux.ibm.com>
-To: horms@kernel.org
-Cc: shivangu@linux.ibm.com, kexec@lists.infradead.org,
-        Sourabh Jain <sourabhjain@linux.ibm.com>
-Subject: [PATCH kexec-tools] ppc64: Fix minor build warnings
-Date: Tue,  2 Dec 2025 15:52:36 +0530
-Message-ID: <20251202102236.244985-1-shivangu@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
+	Tue, 02 Dec 2025 13:13:41 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1764681218;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JsdSONDsYowfbOUGFHoi6ZdWvnnwkrdvfymRkfV+MPY=;
+	b=E6NDEt/WlW4I5DzIA9C7v91IPKDFnfslqKZ+W+MQUjYNIt2/eoEUq58UGlo0duB0j7+osv
+	hShmDHbSauZpvVkVmskmQ+zxhRkLfImWcDLsI6q2ue0ReV1IzV+6BisXBMRGfy2n6yFO90
+	1Tnr92dJ1Sy6IvhouEAzw7swbMDT7wc=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-604-q8bW6AE0Mo2R_347Dw_DuA-1; Tue,
+ 02 Dec 2025 08:13:35 -0500
+X-MC-Unique: q8bW6AE0Mo2R_347Dw_DuA-1
+X-Mimecast-MFC-AGG-ID: q8bW6AE0Mo2R_347Dw_DuA_1764681211
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 61C7C1977016;
+	Tue,  2 Dec 2025 13:13:23 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.62])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C472918009A9;
+	Tue,  2 Dec 2025 13:13:20 +0000 (UTC)
+Date: Tue, 2 Dec 2025 21:13:14 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: linux-mm@kvack.org, ryabinin.a.a@gmail.com, andreyknvl@gmail.com,
+	glider@google.com, dvyukov@google.com, vincenzo.frascino@arm.com,
+	akpm@linux-foundation.org, kasan-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	elver@google.com, sj@kernel.org, lorenzo.stoakes@oracle.com,
+	snovitoll@gmail.com, christophe.leroy@csgroup.eu,
+	linux-um@lists.infradead.org
+Subject: Re: [PATCH v4 11/12] arch/um: don't initialize kasan if it's disabled
+Message-ID: <aS7l6gfOWvVpFWy9@MiWiFi-R3L-srv>
+References: <20251128033320.1349620-1-bhe@redhat.com>
+ <20251128033320.1349620-12-bhe@redhat.com>
+ <86d982368a85ab9dde17e52b45e77f5f76efea08.camel@sipsolutions.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=dK+rWeZb c=1 sm=1 tr=0 ts=692ebe03 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
- a=73XDS4RdMMiQ3h7TP-sA:9
-X-Proofpoint-GUID: s8YBPhNNaJz1-FUymG-kNnBclioabNK_
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI5MDAyMCBTYWx0ZWRfX8/mEpdXRiUGw
- TuBav0CF+/gimN4qXx0/OnvzZrokGrNC0ODrDlwDq0qnh0g/nFmvjJtEvmoHQI8nT4zP8Ea/YRx
- OQrBz1AFactdkMzar7NSgbRv7R+TSpUcJr78lyvnuRU7St1UN3SUTdYGPDsv9hekQ4ZvyOijgY6
- NN+foDOX9YvcJEoSLWXA3LC32D+0LgIRYJTHEd/AKBNd4qK9KVwqyfxLWuNhhReWt6sAV1ALndx
- T3gPwmdZ9+cGNPamTUXcqO+bnzWZ/34CFQoPjqqDbDpCkLSG4md8Fl0ynfPNoV3fubYSn7mgLiM
- ttgcRWKvGjX5SWloEEUlxcFlOjGaMb4isXD1IHcH993LgHwmoVEDkLi8he3b9pnsm3zc8F0KJYr
- Bkrgt++FHvCgA9/ux/k8ZFtjpoYpbA==
-X-Proofpoint-ORIG-GUID: s8YBPhNNaJz1-FUymG-kNnBclioabNK_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-01_01,2025-11-27_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
- bulkscore=0 adultscore=0 phishscore=0 impostorscore=0 spamscore=0
- malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
- definitions=main-2511290020
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86d982368a85ab9dde17e52b45e77f5f76efea08.camel@sipsolutions.net>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251202_022303_436128_9BA1D1A0 
-X-CRM114-Status: GOOD (  12.96  )
+X-CRM114-CacheID: sfid-20251202_051340_469893_7B7AE76A 
+X-CRM114-Status: GOOD (  14.28  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,42 +89,33 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-ppc64 target compiles warning free now.
+On 12/01/25 at 11:56am, Johannes Berg wrote:
+> On Fri, 2025-11-28 at 11:33 +0800, Baoquan He wrote:
+> > And also do the kasan_arg_disabled chekcing before kasan_flag_enabled
+>                                      ^^^^^^^^
+> 
+> typo
 
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
-Signed-off-by: Shivang Upadhyay <shivangu@linux.ibm.com>
----
- kexec/arch/ppc64/fdt.c                 | 2 +-
- kexec/arch/ppc64/kexec-elf-rel-ppc64.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Thanks, will fix.
 
-diff --git a/kexec/arch/ppc64/fdt.c b/kexec/arch/ppc64/fdt.c
-index 879240f..bb57b3e 100644
---- a/kexec/arch/ppc64/fdt.c
-+++ b/kexec/arch/ppc64/fdt.c
-@@ -140,7 +140,7 @@ static int get_threads_per_cpu(char *path)
-  *
-  * Returns total number of present CPUs on success, -1 on failure.
-  */
--static int get_present_cpus()
-+static int get_present_cpus(void)
- {
- 	char *range;
- 	char buf[1024];
-diff --git a/kexec/arch/ppc64/kexec-elf-rel-ppc64.c b/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
-index 51b1354..4e00848 100644
---- a/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
-+++ b/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
-@@ -104,7 +104,7 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *sym,
- 		break;
- 
- 	case R_PPC64_REL32:
--		*(uint32_t *)location = value - (uint32_t)location;
-+		*(uint32_t *)location = value - (uintptr_t)location;
- 		break;
- 
- 	case R_PPC64_TOC:
--- 
-2.51.0
+> 
+> > enabling to make sure kernel parameter kasan=on|off has been parsed.
+> 
+> But I'm not sure how to understand that sentence.
+> 
+> And I have no idea what to do with this patch, with it being random CC
+> of the middle of the series.
+
+Sorry for the inconvenience. I am worried several rounds of posting
+could bomb receivers's mail box, so only add arch's mailing list to 
+CC in each arch's relevant patch. The whole patchset can be found at
+below link. And the whole patchset are sent to linux-mm, lkml and kexec
+mailing lists if subscribed any of them.
+
+[PATCH v4 00/12] mm/kasan: make kasan=on|off work for all three modes
+https://lore.kernel.org/all/20251128033320.1349620-1-bhe@redhat.com/T/#u
+
+Thanks
+Baoquan
 
 
