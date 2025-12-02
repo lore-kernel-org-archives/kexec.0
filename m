@@ -4,62 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 15A7ED116F3
-	for <kexec@archiver.kernel.org>; Mon,  1 Dec 2025 13:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AA9EECFD376
+	for <kexec@archiver.kernel.org>; Tue,  2 Dec 2025 10:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=5S7rehuYscd/hErv8J5+olzkbmCgkfxJ3MreqUx/Zmo=; b=4H0ZKP3gbCdAOX1v3kcGN9AYPu
-	xJcuVTOSnPQzzGGSLoGlYGvvpA39SnsHWOjbs25qEBkqqgECuUgRTFq+dtEsRyMPcseQL+gxYLjUO
-	rq56h+Hjs6WZCxj17OOAcadJKW3a1JIgWv931Ev7lZuwCsAAkNwxOZl55CIt11+kh0G/9M2oIuXnl
-	dYf/MW5VzkizxymX2nxWsAUXnkyVvVuxhU7AXvJDFhNxGU9qlNOV6Nh9Jbgf8eP7erKUI41OWyqk/
-	pihOaaoSkWXBtupaGVGL+N1VvPSFU1AvPg81WA6uhNlbLwrq1ZbJ0lVz4RuSVLzFXIJILnZGSyyum
-	mWnq0BtQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=4Vo2f7uWgbg8qKIfrlf+n1Rw7dAMuO46RLqn3KQuEdg=; b=gqUOW3w20wyQ85XCgl+YDYk1G7
+	Zue7M+YN1mfFA9mc1oMHixWDwl0+NiwCfJujPllVcpns/d5eklj5X/4akkf/IYu2FHCn4l/Cl1Gao
+	9lbI0v7E1cxYvwiupjVVbCkVSOtw6WM1bxo1BSaGpNmmcnERp9R2ZTVJxH+Or+JS0o4UFx+R6q486
+	OXwWF8KJq5G1c8wzejVkcD4tBASidLJodUu3FsEmWIdMmv3sxDaRZKeilIfUp4ZX7R0u8GFSYN3uV
+	roKr4fHaMzlvkX/x8GsewFPCgWcl3u7Xn9oorCMulMg6GDs1Cv/aEW9GbYRRxmT7OAtEC+77kmiQc
+	gP3+kXsw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vQ42Z-000000040s3-3AQy;
-	Mon, 01 Dec 2025 13:34:07 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1vQNXI-00000005FFq-191W;
+	Tue, 02 Dec 2025 10:23:08 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vQ3s1-00000003rx8-3wT0
+	id 1vQNXD-00000005FFF-06hR
 	for kexec@lists.infradead.org;
-	Mon, 01 Dec 2025 13:23:13 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id E9B296001D;
-	Mon,  1 Dec 2025 13:23:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37675C4CEF1;
-	Mon,  1 Dec 2025 13:23:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764595392;
-	bh=/5hgmbNcBuxVVJJcYDy7YeTK1UEsFT0pKtlTdyuekFg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=cqxUaKnE+6gErEu/ml7xQrLCDayT1lGoVeW+FyRqEBgt4BU85HzSBSkUzkCD/+jEF
-	 ho5xpl3kOJ958YyyK/XrrbdbajYrOBAqLuR7wft337hLePDckCAlatmd6MOQ4r9Am/
-	 XJ7sxb1WcR5HGlxtU7X9u0xuB7gmYo1Ivb+qmndiJgIJws3GobRae5/vxPXLRS0faf
-	 MWVSL0+2tP06OZYoPc9xN2Jk5Ubw5jfd0ACuqDgSxcMyM1BZAOsYziU8FSTr/liGU4
-	 wtdMN+XanBsT4Fg/MwzvHjsE+46k2nOOa4hrgRxW8dcNxi6Iqw1+E0C4odvn6t+ofA
-	 aq3YfXg/D7NbQ==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Andrew Morton
- <akpm@linux-foundation.org>,  Alexander Graf <graf@amazon.com>,  Pasha
- Tatashin <pasha.tatashin@soleen.com>,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] kho: fix restoring of contiguous ranges of order-0
- pages
-In-Reply-To: <aS07racwRsh4ep_L@kernel.org> (Mike Rapoport's message of "Mon, 1
-	Dec 2025 08:54:37 +0200")
-References: <20251125110917.843744-1-rppt@kernel.org>
-	<20251125110917.843744-3-rppt@kernel.org> <mafs0pl96w7hk.fsf@kernel.org>
-	<aS07racwRsh4ep_L@kernel.org>
-Date: Mon, 01 Dec 2025 14:23:07 +0100
-Message-ID: <86ms42mj44.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Tue, 02 Dec 2025 10:23:04 +0000
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B26UtVX010434;
+	Tue, 2 Dec 2025 10:22:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=4Vo2f7uWgbg8qKIfrlf+n1Rw7dAMuO46RLqn3KQuE
+	dg=; b=rxS8X0bFeFDF23psXXbzfxVcBtz7hY1UMN4GGdanST4j3/WI503nN1sNV
+	ij8zbAfEDRNoPEo1OjivZ31rIMdu++D7ac/ZZI8Low/nlCYcdVOlVgHCNmoCVaqa
+	tTukcl36bzigdBkmhT0nJ4h5G/n0krhW+qbxKZuxBR6VHb3FxeKuriZ8boy2rr6j
+	4NPlemgLZi2EEfzXa5z6DITSSL1Iir/z4dGZkIK16Jrcbaz1CTcL1d2tkvrvSuh/
+	3fkKJUoKjeBposHN+N//HA5Y85EPVmB+HnQ3WXDtogAKejMXk03dSrSvA1H2nBWY
+	zVvGdiqGOBIQiI3mSglCh0a4PPtxA==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aqrh6ve47-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Dec 2025 10:22:59 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B27XC3p010361;
+	Tue, 2 Dec 2025 10:22:58 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4arcnk3nhy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Dec 2025 10:22:58 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B2AMsMW45744384
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 2 Dec 2025 10:22:54 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 75F6720075;
+	Tue,  2 Dec 2025 10:22:54 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 229F520073;
+	Tue,  2 Dec 2025 10:22:52 +0000 (GMT)
+Received: from shivang.com (unknown [9.124.219.246])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  2 Dec 2025 10:22:51 +0000 (GMT)
+From: Shivang Upadhyay <shivangu@linux.ibm.com>
+To: horms@kernel.org
+Cc: shivangu@linux.ibm.com, kexec@lists.infradead.org,
+        Sourabh Jain <sourabhjain@linux.ibm.com>
+Subject: [PATCH kexec-tools] ppc64: Fix minor build warnings
+Date: Tue,  2 Dec 2025 15:52:36 +0530
+Message-ID: <20251202102236.244985-1-shivangu@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=dK+rWeZb c=1 sm=1 tr=0 ts=692ebe03 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
+ a=73XDS4RdMMiQ3h7TP-sA:9
+X-Proofpoint-GUID: s8YBPhNNaJz1-FUymG-kNnBclioabNK_
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI5MDAyMCBTYWx0ZWRfX8/mEpdXRiUGw
+ TuBav0CF+/gimN4qXx0/OnvzZrokGrNC0ODrDlwDq0qnh0g/nFmvjJtEvmoHQI8nT4zP8Ea/YRx
+ OQrBz1AFactdkMzar7NSgbRv7R+TSpUcJr78lyvnuRU7St1UN3SUTdYGPDsv9hekQ4ZvyOijgY6
+ NN+foDOX9YvcJEoSLWXA3LC32D+0LgIRYJTHEd/AKBNd4qK9KVwqyfxLWuNhhReWt6sAV1ALndx
+ T3gPwmdZ9+cGNPamTUXcqO+bnzWZ/34CFQoPjqqDbDpCkLSG4md8Fl0ynfPNoV3fubYSn7mgLiM
+ ttgcRWKvGjX5SWloEEUlxcFlOjGaMb4isXD1IHcH993LgHwmoVEDkLi8he3b9pnsm3zc8F0KJYr
+ Bkrgt++FHvCgA9/ux/k8ZFtjpoYpbA==
+X-Proofpoint-ORIG-GUID: s8YBPhNNaJz1-FUymG-kNnBclioabNK_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-01_01,2025-11-27_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
+ bulkscore=0 adultscore=0 phishscore=0 impostorscore=0 spamscore=0
+ malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
+ definitions=main-2511290020
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251202_022303_436128_9BA1D1A0 
+X-CRM114-Status: GOOD (  12.96  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,46 +113,42 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Dec 01 2025, Mike Rapoport wrote:
+ppc64 target compiles warning free now.
 
-> Hi Pratyush,
->
-> On Tue, Nov 25, 2025 at 02:45:59PM +0100, Pratyush Yadav wrote:
->> On Tue, Nov 25 2025, Mike Rapoport wrote:
->
-> ...
->
->> > @@ -243,11 +243,16 @@ static struct page *kho_restore_page(phys_addr_t phys)
->> >  	/* Head page gets refcount of 1. */
->> >  	set_page_count(page, 1);
->> >  
->> > -	/* For higher order folios, tail pages get a page count of zero. */
->> > +	/*
->> > +	 * For higher order folios, tail pages get a page count of zero.
->> > +	 * For physically contiguous order-0 pages every pages gets a page
->> > +	 * count of 1
->> > +	 */
->> > +	ref_cnt = is_folio ? 0 : 1;
->> >  	for (unsigned int i = 1; i < nr_pages; i++)
->> > -		set_page_count(page + i, 0);
->> > +		set_page_count(page + i, ref_cnt);
->> >  
->> > -	if (info.order > 0)
->> > +	if (is_folio && info.order)
->> 
->> This is getting a bit difficult to parse. Let's separate out folio and
->> page initialization to separate helpers:
->  
-> Sorry, I've missed this earlier and now the patches are in akpm's -stable
-> branch.
-> Let's postpone these changes for the next cycle, maybe along with support
-> for deferred initialization of struct page.
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+Signed-off-by: Shivang Upadhyay <shivangu@linux.ibm.com>
+---
+ kexec/arch/ppc64/fdt.c                 | 2 +-
+ kexec/arch/ppc64/kexec-elf-rel-ppc64.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Sure, no problem.
-
-[...]
-
+diff --git a/kexec/arch/ppc64/fdt.c b/kexec/arch/ppc64/fdt.c
+index 879240f..bb57b3e 100644
+--- a/kexec/arch/ppc64/fdt.c
++++ b/kexec/arch/ppc64/fdt.c
+@@ -140,7 +140,7 @@ static int get_threads_per_cpu(char *path)
+  *
+  * Returns total number of present CPUs on success, -1 on failure.
+  */
+-static int get_present_cpus()
++static int get_present_cpus(void)
+ {
+ 	char *range;
+ 	char buf[1024];
+diff --git a/kexec/arch/ppc64/kexec-elf-rel-ppc64.c b/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
+index 51b1354..4e00848 100644
+--- a/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
++++ b/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
+@@ -104,7 +104,7 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *sym,
+ 		break;
+ 
+ 	case R_PPC64_REL32:
+-		*(uint32_t *)location = value - (uint32_t)location;
++		*(uint32_t *)location = value - (uintptr_t)location;
+ 		break;
+ 
+ 	case R_PPC64_TOC:
 -- 
-Regards,
-Pratyush Yadav
+2.51.0
+
 
