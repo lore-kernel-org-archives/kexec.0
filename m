@@ -4,107 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 216F9D1F9D3
-	for <kexec@archiver.kernel.org>; Thu,  4 Dec 2025 12:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 579E8D216B5
+	for <kexec@archiver.kernel.org>; Thu,  4 Dec 2025 16:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=F+kCI+cSwBA6MYzwzTGn/+WusjYfWIJ4f6CQzyP67rI=; b=Hn+/Kx+MjiHcY0MbAkPv4QcX8M
-	0/4q0+u1d5x3TV9JI5FPvWaY+Ern7TzORJHIUZQygKuPR08G98SEvZlWUfT1pikYqo/dXXHyVA7zX
-	bVMYsmsNrspKp7U/4qmXFeuC2F5vGYBn4Uf2JuaoFBMUbXwd4+aotnBt98SfTCCadcXXZ2a5YMepF
-	jOMMiNDOiNjV6FqTG++YczZMaeJRm1GQgkFEXyLzPI1tRFdPVbdGM3APTCMa9kFC/7oAuJ0cUydTu
-	g8OD2AJYAjL0J7SLmREwdiA9ElmAVnPbWDzi+32AYQkXR82f8fcyJdPTXke6whYVnnb7ohVkqcziR
-	aq63XpKA==;
+	bh=rUx19gRPJQTm4oWcB8wA8j6Dup+z8ZZpv7z/N3R45CY=; b=bU0INtkwkwoESTmss/zMJeLpxg
+	bAbqmH934HdFo8nfDGy1eu+CG8bomSM/xvTE5oI43KHjOzUIsz4Ax9+knqibHnOn8xVSX5sxSkxME
+	DPP/vOEnpdBMwUMFKZ2uS4rnSnl/P5zFyZiUvx3c64OSf/qm+qFZYap3CuSWVrW6Maq7PWIUCB7lR
+	b+yaHpgeHv2i7DARCniO6KvrbG0xmDbm+v9wPuo/aWqMBDEA9b1K//Cko7AtAEL3GQc2GHn3b9gER
+	KrTo7RChusaYjmCUNJlzRZ9yBQpADGD5z2RYxcJUWagzsu2ooBzuPvWUNxBOYdS74L8vLKceUfoAI
+	sFr3beMw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vR8Hp-00000007yP2-13gb;
-	Thu, 04 Dec 2025 12:18:17 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1vRCME-00000008Ibi-3zVN;
+	Thu, 04 Dec 2025 16:39:06 +0000
+Received: from mail-wr1-x434.google.com ([2a00:1450:4864:20::434])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vR8Hm-00000007yOc-3Uqa
+	id 1vRCMC-00000008Iaj-2xVj
 	for kexec@lists.infradead.org;
-	Thu, 04 Dec 2025 12:18:15 +0000
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B4BM0pI016686;
-	Thu, 4 Dec 2025 12:18:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=F+kCI+
-	cSwBA6MYzwzTGn/+WusjYfWIJ4f6CQzyP67rI=; b=g3S21gArcn4OBzd5/RUvKr
-	YoL7pGJw4rY/UfsOFMCanvz6iIh0gbsU8C+GnHFol3PGtKxYhxQ8JKWzRcFW0lsH
-	lLsUEYDvwyDJFRr8Rf9ojpRE8DKw9YE2OVNeFhJQUK+On+yGg7BLinWpgcSb0ivZ
-	J+AHyUzkzDpsfNI++PjVYyN+iadrdm0E3vJsJzfWLR4S/ZQUrYtrAaBR2QmeBirh
-	YmfbvH0HyU5hCj4nF86B15iOVUPCjuIZB1ipBaSMkPJ99ZWF6mzG6rJF8sMGls/T
-	eB8CqgBkn4QAayAKhGn8XBfbV3zZnNFnNRkgIGosbD2uljm0vLjZivavZVM7e3EQ
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aqrbggcva-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Dec 2025 12:18:10 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B4BUxda019035;
-	Thu, 4 Dec 2025 12:18:09 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4arbhy7qex-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Dec 2025 12:18:09 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B4CI73k61473272
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 4 Dec 2025 12:18:07 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 64AD820040;
-	Thu,  4 Dec 2025 12:18:07 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EDDDC2004B;
-	Thu,  4 Dec 2025 12:18:05 +0000 (GMT)
-Received: from [9.109.204.116] (unknown [9.109.204.116])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  4 Dec 2025 12:18:05 +0000 (GMT)
-Message-ID: <5be9a0d7-f014-41a7-97a2-75a3ba23f1d9@linux.ibm.com>
-Date: Thu, 4 Dec 2025 17:48:04 +0530
+	Thu, 04 Dec 2025 16:39:06 +0000
+Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-42e2b78d45bso580950f8f.0
+        for <kexec@lists.infradead.org>; Thu, 04 Dec 2025 08:39:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764866342; x=1765471142; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rUx19gRPJQTm4oWcB8wA8j6Dup+z8ZZpv7z/N3R45CY=;
+        b=kFjSLn01+k3/RZ9yZAGfU3GzFadUdaD6R2YDasOc6FO1/3sewRzobKH69K6YJ3hv88
+         GnbYHNw7v1/eenhn8N7em/S4b8zvWzHnBdCEilp32S5EAARdeHW1NQvXXLaHuNghSbhD
+         QuCg/Vd8fsRyw/X18Oi8UqUaZ7Z99nMb1/IxJsZ85/dgdUPgk3jV5p+KxZuLyXD/atT6
+         2m3/EWexLqvPkE0S6qZOwrZbdMGgNPyzwH9TioCz9v3h/S+MmTqY26f7nDhS5Kefsa9x
+         GwOqbpHT17Svw2mfIdlUvtVt9A9rIso6/G708WRF0Tgh2h1myLVwtrkcTzqWwqbMh4bc
+         QSWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764866342; x=1765471142;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=rUx19gRPJQTm4oWcB8wA8j6Dup+z8ZZpv7z/N3R45CY=;
+        b=arTjdoVprCdcI5qhSRtW6eGlwoKa/GZlj5HtupM1ylj7okPBdcfwBjYQInFu+D7Pa8
+         rWt02D8tj+hK42b5J8WITsld5Q/qtqAKJKzHH07CCfq+8DQUXNVN4zPFWyUol4Q6yPq2
+         FYxu5qSsuCX5yKBRRJ9/e9ImYdAXijzLfs8B9rPwcmWW0SoIkks7q5b1vuxDgsimsgVh
+         RaRztyQKP9zhztkqOFGfoPMhxT6jH7va6JpCGsDYcOKiCLUo7KK/AmABs5UfBBgeEErv
+         9IaSM9tIryNmMubZuMoYiaqHNzst23O6VU4AuLebJUxO+mNvXsCn8UkmL50hWx2cvRL+
+         CuKg==
+X-Forwarded-Encrypted: i=1; AJvYcCWmIyo7OgIuyWtKF8lxn1vWVAV5nrXx7tl0farHHU1DrtZ+0+Hkibi4mbCepej/XzVxkPRjdw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YynFd++ckieCItVP+lVwMNR2I5nQrwQBIBMRKBSewdqBNHNUYZO
+	p+Bdf20Hfrnor1E73Ko+xY3Z349bHMEp/IbetIsEGmEuJB6Yyp5hEnB1NdO4+HUMvSrYVL+jVA2
+	QR8R3AVLnF0y2J4u7t9mc50GrlqnNUtc=
+X-Gm-Gg: ASbGncsATkDvsfLs+khE5Kj+XFWqyeo/6EMycc5VpQgJHAHbeG+5CXY/ZFTnBRnQrke
+	iLE0vs7vQooHrdZwymwtxRsiE7SueeuEtog7g4IHqlUKBg4OYW0hPrGlp7ThzFi8749xPKyC2mM
+	uETcM0sPAyedLZlNx4cJqjhSFEB4Gspaqjs92Vv2lqZbttE+oN87VD9nz+6wPWGHBcxGg+PmgVj
+	CYz/OE3IW4R9EffR+zl7W8BnJnHtMyCzESj8zeBQ5X8deNtrVCV+N+uFF5defWcryWlOGms379w
+	EbgoEh93T62KwD6oQ0wsA7XWsBSl
+X-Google-Smtp-Source: AGHT+IGchSnUrQ/wDgunFbKiGCgSohOTthx/72He3/1KfLAp2MSCE2NdUITIhsFDOGle4TG+EFrRDmD4Qe376vybhIo=
+X-Received: by 2002:a5d:64c5:0:b0:42b:383d:9c8e with SMTP id
+ ffacd0b85a97d-42f731c2e72mr7003661f8f.41.1764866342105; Thu, 04 Dec 2025
+ 08:39:02 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] kexec: print out debugging message if required for
- kexec_load
-To: Qiang Ma <maqianga@uniontech.com>, akpm@linux-foundation.org,
-        bhe@redhat.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Simon Horman <horms@kernel.org>
-References: <20251126084427.3222212-1-maqianga@uniontech.com>
-Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <20251126084427.3222212-1-maqianga@uniontech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: _jFrXzjMXe-o0GbKWS5D07tWTHgcAvq8
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI5MDAxNiBTYWx0ZWRfXyrZvT9Ggy6WA
- +z1RjHGJW/84ifiEO1CFrCyUiTqucjP0GTsmrAcHAchEppNhAod0xkfNU1OQaorlbAkw6MXLMyc
- XujGBBSVRwsLT4WTufpsCV16Lyq7p4wvir1AgHMfH0GuqQcCwkzFJl3f7kakuOvq9z7x2Ac3lbu
- 4UFuwbX1SFOh2nSIPKis3BvY7WhN+V93k8oRW7yBP4McfDP05CRK8o3omnhV3fcZ6+R4mxSZ57Q
- ccXXYd9h7DWqLpeO3DvrvilfMQano7WuB5XCK/+xSFyH6cwFM1HAQKax8BkYECMPwrQupX25fUs
- iDCp4rMJLWCKjNb0sG88QLJc0AoQRSKXfHdS0xautJQpFGxzEKNXaiGMnyRVWZhj8mXNSjh0Hes
- azjHZhC3RkUm/p02WV1lV1qUpkc75g==
-X-Authority-Analysis: v=2.4 cv=UO7Q3Sfy c=1 sm=1 tr=0 ts=69317c02 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
- a=HhvaSgjEsw3fMc6jZ2oA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: _jFrXzjMXe-o0GbKWS5D07tWTHgcAvq8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-04_03,2025-12-03_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 malwarescore=0 bulkscore=0 adultscore=0 priorityscore=1501
- impostorscore=0 spamscore=0 phishscore=0 clxscore=1011 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511290016
+References: <20251128033320.1349620-1-bhe@redhat.com>
+In-Reply-To: <20251128033320.1349620-1-bhe@redhat.com>
+From: Andrey Konovalov <andreyknvl@gmail.com>
+Date: Thu, 4 Dec 2025 17:38:49 +0100
+X-Gm-Features: AWmQ_bmhKUWGLOGRduhfezxTuPYTkb1LvtYgmV18KfelSCQT0T4sQ7pI9eJTnYc
+Message-ID: <CA+fCnZcVV5=AJUNfy6G2T-UZCbAL=7NivmWkBr6LMSnzzTZ8Kg@mail.gmail.com>
+Subject: Re: [PATCH v4 00/12] mm/kasan: make kasan=on|off work for all three modes
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-mm@kvack.org, ryabinin.a.a@gmail.com, glider@google.com, 
+	dvyukov@google.com, vincenzo.frascino@arm.com, akpm@linux-foundation.org, 
+	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	kexec@lists.infradead.org, elver@google.com, sj@kernel.org, 
+	lorenzo.stoakes@oracle.com, snovitoll@gmail.com, christophe.leroy@csgroup.eu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251204_041814_904167_748AE653 
-X-CRM114-Status: GOOD (  32.40  )
+X-CRM114-CacheID: sfid-20251204_083904_784598_500D9490 
+X-CRM114-Status: GOOD (  38.29  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -119,121 +99,168 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello All,
-
-I read this patch series, including the older versions, and this is what I
-think about the changes.
-
-There are two main reasons I see for why this patch series is proposed
-(these were not mentioned in the cover letter or commit messages):
-
-1. Commit eb7622d908a09 ("kexec_file, riscv: print out debugging message
-    if required") and commit 6f8c1da071a4 ("kexec_file, arm64: print out
-    debugging message if required") moved some kexec-related debug prints to
-    kexec_dprintk instead of pr_debug or pr_notice.
-
-    These commits made it easier to control the updated debug prints using
-    the -d option of kexec tool for kexec_file_load system call. But since
-    kexec_dprintk is not available for the kexec_load system call, those 
-prints
-    are no longer available for kexec_load at all. So patch series try 
-to bring
-    those logs for kexec_load system call.
-
-2. Patch 03/03 prints additional logs about the kexec image type, start,
-     head, and flags via kexec_dprintk for the kexec_load system call.
-
-This is done by enabling the kexec_dprintk for kexec_load, so that logs
-from point 1 and the new logs from point 2 can be printed for kexec_load
-system call.
-
-However, the patch series does not explain why these additional debug logs
-are needed for kexec_load. Since most of the work involved in loading
-kexec images through kexec_load happens in the kexec userspace tool, and
-the tool already provides enough logs to debug issues, the need for these
-extra kernel logs is not clear.
-
-So adding the need for the additional debug logs in the cover letter or
-commit message is needed to decide whether it is worth adding the code
-change proposed in this patch series Also, I found it hard to map the 
-commit message to the changes introduced in the commits. And finally If 
-I review the patches only based on the code changes: 01/03 The commit 
-message refers to kexec_dbg_print as kexec_core_dbg_print. 02/03 I think 
-kexec_dbg_print should be set to false at the end of kimage_free, not at 
-the start. 03/03 There is duplication of debug logs for architectures 
-that already print the same information. For example, arm64. - Sourabh Jain
-On 26/11/25 14:14, Qiang Ma wrote:
-> Overview:
-> =========
-> The commit a85ee18c7900 ("kexec_file: print out debugging message
-> if required") has added general code printing in kexec_file_load(),
-> but not in kexec_load().
->      
-> Since kexec_load and kexec_file_load are not triggered simultaneously,
-> we can unify the debug flag of kexec and kexec_file as kexec_dbg_print.
->      
-> Next, we need to do some things in this patchset:
->      
-> 1. rename kexec_file_dbg_print to kexec_dbg_print
-> 2. Add KEXEC_DEBUG
-> 3. Initialize kexec_dbg_print for kexec
-> 4. Fix uninitialized struct kimage *image pointer
-> 5. Set the reset of kexec_dbg_print to kimage_free
+On Fri, Nov 28, 2025 at 4:33=E2=80=AFAM Baoquan He <bhe@redhat.com> wrote:
+>
+> Currently only hw_tags mode of kasan can be enabled or disabled with
+> kernel parameter kasan=3Don|off for built kernel. For kasan generic and
+> sw_tags mode, there's no way to disable them once kernel is built.
+>
+> This is not convenient sometime, e.g in system kdump is configured.
+> When the 1st kernel has KASAN enabled and crash triggered to switch to
+> kdump kernel, the generic or sw_tags mode will cost much extra memory
+> while in fact it's meaningless to have kasan in kdump kernel
+>
+> There are two parts of big amount of memory requiring for kasan enabed
+> kernel. One is the direct memory mapping shadow of kasan, which is 1/8
+> of system RAM in generic mode and 1/16 of system RAM in sw_tags mode;
+> the other is the shadow meomry for vmalloc which causes big meomry
+> usage in kdump kernel because of lazy vmap freeing. By introducing
+> "kasan=3Doff|on", if we specify 'kasan=3Doff', the former is avoided by s=
+kipping
+> the kasan_init(), and the latter is avoided by not building the vmalloc
+> shadow for vmalloc.
+>
+> So this patchset moves the kasan=3Don|off out of hw_tags scope and into
+> common code to make it visible in generic and sw_tags mode too. Then we
+> can add kasan=3Doff in kdump kernel to reduce the unneeded meomry cost fo=
+r
+> kasan.
 >
 > Testing:
-> =========
-> I did testing on x86_64, arm64 and loongarch. On x86_64, the printed messages
-> look like below:
+> =3D=3D=3D=3D=3D=3D=3D=3D
+> - Testing on x86_64 and arm64 for generic mode passed when kasan=3Don or
+>   kasan=3Doff.
 >
-> unset CONFIG_KEXEC_FILE:
-> [   81.502374] kexec: kexec_load: type:0, start:0x23fff7700 head:0x10a4b9002 flags:0x3e0010
->
-> set CONFIG_KEXEC_FILE
-> [   36.774228] kexec_file: kernel: 0000000066c386c8 kernel_size: 0xd78400
-> [   36.821814] kexec-bzImage64: Loaded purgatory at 0x23fffb000
-> [   36.821826] kexec-bzImage64: Loaded boot_param, command line and misc at 0x23fff9000 bufsz=0x12d0 memsz=0x2000
-> [   36.821829] kexec-bzImage64: Loaded 64bit kernel at 0x23d400000 bufsz=0xd73400 memsz=0x2ab7000
-> [   36.821918] kexec-bzImage64: Loaded initrd at 0x23bd0b000 bufsz=0x16f40a8 memsz=0x16f40a8
-> [   36.821920] kexec-bzImage64: Final command line is: root=/dev/mapper/test-root crashkernel=auto rd.lvm.lv=test/root
-> [   36.821925] kexec-bzImage64: E820 memmap:
-> [   36.821926] kexec-bzImage64: 0000000000000000-000000000009ffff (1)
-> [   36.821928] kexec-bzImage64: 0000000000100000-0000000000811fff (1)
-> [   36.821930] kexec-bzImage64: 0000000000812000-0000000000812fff (2)
-> [   36.821931] kexec-bzImage64: 0000000000813000-00000000bee38fff (1)
-> [   36.821933] kexec-bzImage64: 00000000bee39000-00000000beec2fff (2)
-> [   36.821934] kexec-bzImage64: 00000000beec3000-00000000bf8ecfff (1)
-> [   36.821935] kexec-bzImage64: 00000000bf8ed000-00000000bfb6cfff (2)
-> [   36.821936] kexec-bzImage64: 00000000bfb6d000-00000000bfb7efff (3)
-> [   36.821937] kexec-bzImage64: 00000000bfb7f000-00000000bfbfefff (4)
-> [   36.821938] kexec-bzImage64: 00000000bfbff000-00000000bff7bfff (1)
-> [   36.821939] kexec-bzImage64: 00000000bff7c000-00000000bfffffff (2)
-> [   36.821940] kexec-bzImage64: 00000000feffc000-00000000feffffff (2)
-> [   36.821941] kexec-bzImage64: 00000000ffc00000-00000000ffffffff (2)
-> [   36.821942] kexec-bzImage64: 0000000100000000-000000023fffffff (1)
-> [   36.872348] kexec_file: nr_segments = 4
-> [   36.872356] kexec_file: segment[0]: buf=0x000000005314ece7 bufsz=0x4000 mem=0x23fffb000 memsz=0x5000
-> [   36.872370] kexec_file: segment[1]: buf=0x000000006e59b143 bufsz=0x12d0 mem=0x23fff9000 memsz=0x2000
-> [   36.872374] kexec_file: segment[2]: buf=0x00000000eb7b1fc3 bufsz=0xd73400 mem=0x23d400000 memsz=0x2ab7000
-> [   36.882172] kexec_file: segment[3]: buf=0x000000006af76441 bufsz=0x16f40a8 mem=0x23bd0b000 memsz=0x16f5000
-> [   36.889113] kexec_file: kexec_file_load: type:0, start:0x23fffb150 head:0x101a2e002 flags:0x8
->
-> Changes in v3:
-> ==========
-> - Rename kexec_core_dbg_print to kexec_dbg_print
-> - Remove unnecessary segments prints
-> - Remove patch "kexec_file: Fix the issue of mismatch between loop variable types"
->
-> Qiang Ma (3):
->    kexec: Fix uninitialized struct kimage *image pointer
->    kexec: add kexec flag to control debug printing
->    kexec: print out debugging message if required for kexec_load
->
->   include/linux/kexec.h      | 9 +++++----
->   include/uapi/linux/kexec.h | 1 +
->   kernel/kexec.c             | 8 +++++++-
->   kernel/kexec_core.c        | 4 +++-
->   kernel/kexec_file.c        | 4 +---
->   5 files changed, 17 insertions(+), 9 deletions(-)
->
+> - Testing on arm64 with sw_tags mode passed when kasan=3Doff is set. But
+>   when I tried to test sw_tags on arm64, the system bootup failed. It's
+>   not introduced by my patchset, the original code has the bug. I have
+>   reported it to upstream.
+>   - System is broken in KASAN sw_tags mode during bootup
+>     - https://lore.kernel.org/all/aSXKqJTkZPNskFop@MiWiFi-R3L-srv/T/#u
 
+This will hopefully be fixed soon, so you'll be able to test.
+
+>
+> - Haven't found hardware to test hw_tags. If anybody has the system,
+>   please help take a test.
+
+You don't need hardware to run the HW_TAGS mode, just pass -machine
+virt,mte=3Don to QEMU.
+
+I also wonder if we should keep this kasan=3Doff functionality
+conservative and limit it to x86 and arm64 (since these are the only
+two tested architectures).
+
+>
+> Changelog:
+> =3D=3D=3D=3D
+> v3->v4:
+> - Rebase code to the latest linux-next/master to make the whole patchset
+>   set on top of
+>   [PATCH 0/2] kasan: cleanups for kasan_enabled() checks
+>   [PATCH v6 0/2] kasan: unify kasan_enabled() and remove arch-specific im=
+plementations
+
+Note that are also:
+
+[PATCH 1/2] kasan: remove __kasan_save_free_info wrapper
+[PATCH 2/2] kasan: cleanup of kasan_enabled() checks
+
+But I don't know if there will be any conflicts with these.
+
+>
+> v2->v3:
+> - Fix a building error on UML ARCH when CONFIG_KASAN is not set. The
+>   change of fixing is appended into patch patch 11. This is reported
+>   by LKP, thanks to them.
+>
+> v1->v2:
+> - Add __ro_after_init for kasan_arg_disabled, and remove redundant blank
+>   lines in mm/kasan/common.c. Thanks to Marco.
+> - Fix a code bug in <linux/kasan-enabled.h> when CONFIG_KASAN is unset,
+>   this is found out by SeongJae and Lorenzo, and also reported by LKP
+>   report, thanks to them.
+> - Add a missing kasan_enabled() checking in kasan_report(). This will
+>   cause below KASAN report info even though kasan=3Doff is set:
+>      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>      BUG: KASAN: stack-out-of-bounds in tick_program_event+0x130/0x150
+>      Read of size 4 at addr ffff00005f747778 by task swapper/0/1
+>
+>      CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.16.0+ #8 PREEMPT(=
+voluntary)
+>      Hardware name: GIGABYTE R272-P30-JG/MP32-AR0-JG, BIOS F31n (SCP: 2.1=
+0.20220810) 09/30/2022
+>      Call trace:
+>       show_stack+0x30/0x90 (C)
+>       dump_stack_lvl+0x7c/0xa0
+>       print_address_description.constprop.0+0x90/0x310
+>       print_report+0x104/0x1f0
+>       kasan_report+0xc8/0x110
+>       __asan_report_load4_noabort+0x20/0x30
+>       tick_program_event+0x130/0x150
+>       ......snip...
+>      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> - Add jump_label_init() calling before kasan_init() in setup_arch() in th=
+ese
+>   architectures: xtensa, arm. Because they currenly rely on
+>   jump_label_init() in main() which is a little late. Then the early stat=
+ic
+>   key kasan_flag_enabled in kasan_init() won't work.
+>
+> - In UML architecture, change to enable kasan_flag_enabled in arch_mm_pre=
+init()
+>   because kasan_init() is enabled before main(), there's no chance to ope=
+rate
+>   on static key in kasan_init().
+>
+> Baoquan He (12):
+>   mm/kasan: add conditional checks in functions to return directly if
+>     kasan is disabled
+>   mm/kasan: move kasan=3D code to common place
+>   mm/kasan/sw_tags: don't initialize kasan if it's disabled
+>   arch/arm: don't initialize kasan if it's disabled
+>   arch/arm64: don't initialize kasan if it's disabled
+>   arch/loongarch: don't initialize kasan if it's disabled
+>   arch/powerpc: don't initialize kasan if it's disabled
+>   arch/riscv: don't initialize kasan if it's disabled
+>   arch/x86: don't initialize kasan if it's disabled
+>   arch/xtensa: don't initialize kasan if it's disabled
+>   arch/um: don't initialize kasan if it's disabled
+>   mm/kasan: make kasan=3Don|off take effect for all three modes
+>
+>  arch/arm/kernel/setup.c                |  6 ++++++
+>  arch/arm/mm/kasan_init.c               |  2 ++
+>  arch/arm64/mm/kasan_init.c             |  6 ++++++
+>  arch/loongarch/mm/kasan_init.c         |  2 ++
+>  arch/powerpc/mm/kasan/init_32.c        |  5 ++++-
+>  arch/powerpc/mm/kasan/init_book3e_64.c |  3 +++
+>  arch/powerpc/mm/kasan/init_book3s_64.c |  3 +++
+>  arch/riscv/mm/kasan_init.c             |  3 +++
+>  arch/um/kernel/mem.c                   |  5 ++++-
+>  arch/x86/mm/kasan_init_64.c            |  3 +++
+>  arch/xtensa/kernel/setup.c             |  1 +
+>  arch/xtensa/mm/kasan_init.c            |  3 +++
+>  include/linux/kasan-enabled.h          |  6 ++++--
+>  mm/kasan/common.c                      | 20 ++++++++++++++++--
+>  mm/kasan/generic.c                     | 17 ++++++++++++++--
+>  mm/kasan/hw_tags.c                     | 28 ++------------------------
+>  mm/kasan/init.c                        |  6 ++++++
+>  mm/kasan/quarantine.c                  |  3 +++
+>  mm/kasan/report.c                      |  4 +++-
+>  mm/kasan/shadow.c                      | 11 +++++++++-
+>  mm/kasan/sw_tags.c                     |  6 ++++++
+>  21 files changed, 107 insertions(+), 36 deletions(-)
+
+One part that's still missing is a Documentation change.
+
+
+>
+> --
+> 2.41.0
+>
 
