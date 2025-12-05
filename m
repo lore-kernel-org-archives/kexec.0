@@ -4,84 +4,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E9808D2F7C7
-	for <kexec@archiver.kernel.org>; Fri,  5 Dec 2025 09:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C737D2E006
+	for <kexec@archiver.kernel.org>; Fri,  5 Dec 2025 11:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=cgtijbrOnH0Ezq4FjBcJ4gYpYInic5EP4ZCg9mmBXzE=; b=kD+vrsVp6vzWY2/A+YbnG4i9aA
-	w+H8CUoXSsfp5QOt+RJwR1Yqaj0BpBHxnN0EnUbO8r62na1YKiBuQ9T0JnTUZafgtdr1ZegNoc/Ez
-	enSbpBpKTKVuM/mRPKWEWi7i0mfrjZH7idtK8V4dtPr0hvsGWPBFQH7Y5sgVWWPJDAeia6AiyqeS0
-	GztHAejCZYU9dtYVTLgssK3mX7u5TfWI52pDlLJugyoGzQRogEKhHATxhCO8/jiyWgRU6PENprfma
-	n3XjjypuWDozVucDiFL/UQsl3ze/yMwQm7wB67CUyWbr7QlacctceHdEPOOwsRUNeYG7/0kRFLUZ9
-	tAdJb3nw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=FJmrnVAWmxW9nZlblGKQ8BQKPdrOnw9FZ2cIhgKrb+M=; b=vBSQfW+He/pTse/SSV0PSj6s5A
+	Rl3ZQXSImb18njlgWYHpI0AkgEO19tzWyneyEw9pQSTWmx1Ib+a3Xqf8fUGQ373bO0Kq41JDgM4Jm
+	9pqVyuICaFuJVWXCpwNyrV+jIV82Q/BSGdw7OSWTaKcSjcIA39gl1ETGSsnykP32ZwnfTiAwSc+NC
+	TbR7/OxkJiC9eU4Ew0LDm5c0ubw5fY33yJRqOv6TtFAP3lRrOHMnEwKahxZYg2s2hNT2+1zFIV4+2
+	GJYTN8QSUhDHTrJJRfcf2uCPaxyhsrxlZ7ewlntqEWpzRxkSAEO8sxUrALXXfYJQNILcvtQ9bE1Nk
+	PQ6aNSrQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vRS11-00000009I4w-3Brk;
-	Fri, 05 Dec 2025 09:22:15 +0000
-Received: from smtpbgeu2.qq.com ([18.194.254.142])
+	id 1vRTb2-00000009PvR-3wVL;
+	Fri, 05 Dec 2025 11:03:32 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vRS0u-00000009I4A-1tBa
+	id 1vRTb1-00000009Pv3-1AgA
 	for kexec@lists.infradead.org;
-	Fri, 05 Dec 2025 09:22:14 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1764926456;
-	bh=cgtijbrOnH0Ezq4FjBcJ4gYpYInic5EP4ZCg9mmBXzE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=EBSt5/f7LweS1yHuEeN9KN8J5LrTxvgUWeB5IJmJ+EQDETF/Seby+cR54u9zKzt7N
-	 GK+5mtmLP2tgUGM18kDExZwe7LiXc7DQVwfLJP4ZJ1WXQqgHrgyTSsYaye4PL+Tbg0
-	 LrQbTOC/GRhkEiJV7501XK+QvmebfOPql1BSKlTU=
-X-QQ-mid: esmtpsz16t1764926448t7642b181
-X-QQ-Originating-IP: 25sTiplx55a9oIa9Uyt7aniRWWrZzT/qG4MW+e2/qrg=
-Received: from [10.10.74.117] ( [123.114.60.34])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 05 Dec 2025 17:20:46 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 1852198581106936330
-Message-ID: <ED6B71C237EB49E8+8e70fa30-f5fe-4d26-91c9-8498938a55b1@uniontech.com>
-Date: Fri, 5 Dec 2025 17:20:46 +0800
+	Fri, 05 Dec 2025 11:03:32 +0000
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5B50btS0008539;
+	Fri, 5 Dec 2025 11:03:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=FJmrnV
+	AWmxW9nZlblGKQ8BQKPdrOnw9FZ2cIhgKrb+M=; b=Jlk/tWqS+Mvj2GkJTqEjsM
+	h9JHlqR5fEVkln5EC/D2gFobE6oWQM+eMTBuqtfHCReBQbKKZwfNixChaxcKFHVi
+	06kSgn33U02ZgilNM0ivacYLVYJkoC9cHyA4hmTXfEb5hLxAzLUdyRx6Tdq3cBc5
+	I+VNu4igdYJnX9erV55EV5oyGojlhMQ+vChL+dWOl1CcOuTahrLZHNLTX+dNJH0e
+	y6WcSI6T2/WYbPWceKUdF+cOmK3fmmDezXYOx8oAqUP+gL5VjlTn7agxDxnLCipe
+	ss2wPr0K9hTUzK+fdeUGb+YSF9tKRI93s0QLxRPefWUvvDILyMnJYRvZ+NI1MHyQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aqq8v4kq3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 05 Dec 2025 11:03:17 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5B5B3Gk8027460;
+	Fri, 5 Dec 2025 11:03:17 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aqq8v4kpy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 05 Dec 2025 11:03:16 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5B5A8Tdb024045;
+	Fri, 5 Dec 2025 11:03:15 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4arb5sw0m3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 05 Dec 2025 11:03:15 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5B5B3EQ738666604
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 5 Dec 2025 11:03:14 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 10EF320049;
+	Fri,  5 Dec 2025 11:03:14 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2CED22004B;
+	Fri,  5 Dec 2025 11:03:13 +0000 (GMT)
+Received: from osiris (unknown [9.87.131.209])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri,  5 Dec 2025 11:03:13 +0000 (GMT)
+Date: Fri, 5 Dec 2025 12:03:11 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>, linux-mm@kvack.org,
+        ryabinin.a.a@gmail.com, glider@google.com, dvyukov@google.com,
+        vincenzo.frascino@arm.com, akpm@linux-foundation.org,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        kexec@lists.infradead.org, elver@google.com, sj@kernel.org,
+        lorenzo.stoakes@oracle.com, snovitoll@gmail.com,
+        christophe.leroy@csgroup.eu, Mikhail Zaslonko <zaslonko@linux.ibm.com>
+Subject: Re: [PATCH v4 00/12] mm/kasan: make kasan=on|off work for all three
+ modes
+Message-ID: <20251205110311.11813A10-hca@linux.ibm.com>
+References: <20251128033320.1349620-1-bhe@redhat.com>
+ <CA+fCnZcVV5=AJUNfy6G2T-UZCbAL=7NivmWkBr6LMSnzzTZ8Kg@mail.gmail.com>
+ <aTKGYzREbj/6Hwz6@fedora>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] kexec: print out debugging message if required for
- kexec_load
-To: Sourabh Jain <sourabhjain@linux.ibm.com>, akpm@linux-foundation.org,
- bhe@redhat.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
- Simon Horman <horms@kernel.org>
-References: <20251126084427.3222212-1-maqianga@uniontech.com>
- <5be9a0d7-f014-41a7-97a2-75a3ba23f1d9@linux.ibm.com>
-Content-Language: en-US
-From: Qiang Ma <maqianga@uniontech.com>
-In-Reply-To: <5be9a0d7-f014-41a7-97a2-75a3ba23f1d9@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
-X-QQ-XMAILINFO: NWujniBqiFoNBAaCB52u+pFq8JU6McjttiCIYHrnEoP2O1RhCRENxESE
-	rVLG2IPNjgNGKpUhCyHVXmuhGiNSKAHpvdifrFD5bdGpG9b1JAp9PTRGs5YdTZItpErQw0A
-	jdLEcAbFcy7bpJRu1gfp4i/bD6qjZWfnZe8eU9AsFwmWTZc4qwY78WSo24Jm9feKkVkwnNn
-	3DCzJ0WlGnWwHdR9ytTzOcNH7pF/WtLoXcwxxAIuEC9S0XXppbUaqAG1gY0JQW0f4MXCIFR
-	Kn1XtUrU419ze2Uw4rfE0rUr0ECVvVy1w1/1E1y0u4vN1CRSDYSxpRcbzwxcG+by1SVpLYj
-	Aqr5KHxE6ACpepPGSygQh1VVKEJkcxAdnRTwVbNDlKRWsK/9cG3Zr/bnqtRi+NAq7hG2I3+
-	b+Ik+n/rwNV2OcHjVmuKFysIN8z01StjvO6ozirwhccCmbVeHCc7wB4mRNLv4dAolUQDE+D
-	Bho7tDHisuRmmKuUXXERiEfFSJgn+B8gq2Aly/PqePChWNGScgYGf9zFvpQrmDMEkpdmxS1
-	3g+fAtzIfzptOida3o6DEMNDtml8/oHwnE4wRysTgMGSx5Z8YufTI15SkxawsEgXcdEoy6d
-	NqdGj39edMY8uzM+tInG4KD+kmCITBx3gyfGs7G95H1fA4DhZOlIb0BSKL4cM2xVCU2aabW
-	REJKeSX9u3nIthYuScwQ+YNs1uKup6XvKDYfmIGUOWr72neoxlPIeNui0O96uGA/pG25XNb
-	mSbMuoUcKtNWnKHpPvFUbfrzUCZyPTDfBTA56XbfozKAN79F1mKKUHYgT/roJO3aElR7irP
-	7w5SZEN0K+dGuiviVjY8MuAxF2eu0S3cW4UVdvqZh2eBGDLc5aN6eI04FRYR2ie3POnPwSN
-	+VnZI9+NqDbOL3RtIRQO2Zd639fW9BcFU5qT9BdoPkTitg1mP4A8ycx7m/2gb8xvgcl6ceW
-	ZZmnYINcRUkIQVxCQpXW59uh5dHIHtgWXtOw5Gj+n6+S51UkctR50Jc4e6qbYIze2yw0wvA
-	T4QkP9Ba3h5Fp6ZJ+YcpN61ZpyzXc=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
+In-Reply-To: <aTKGYzREbj/6Hwz6@fedora>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Eym7r3xetcUFAk65KHhR67Lgmhyr4aUZ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI5MDAwOCBTYWx0ZWRfX7B7O4z0hwN0F
+ PgOIq4ByAtB986RdaLRKvfuMymJWSwBG8yT17AQ+IHImaU5V4iKH22yS3C5KzddRnwhm3s5zhty
+ J8dz5GSoaKbQ+QWsxQ/IMQIucT0AWhv6MkKp+FXlGEa9GYbg7YSn+ENTKp/TTwFRLBsoSbxTllb
+ qvSSpl3oy3rGiW3WU8mRJyX4vV194CHOR93yKCJvGX2OKBr1BLyZUfduF/1ZL7Jy0g0ahlzhDGL
+ q9S00qZyEdjOetvG31YFmuuXki4r0/7SHZr/UJeTmmxjCri8M+QGhX4rmnWXPlxoZICqVXOmPH9
+ J1Sd2B/Ip0yIec6pnApVTgi8T9oMnMA+jxyng5MunAgiMX4gDXab2LXyFkn+hoMmV1m+DlossCy
+ o4l0uJ04VKST6L6MWkGhMoRvN53nfQ==
+X-Authority-Analysis: v=2.4 cv=Scz6t/Ru c=1 sm=1 tr=0 ts=6932bbf5 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=IkcTkHD0fZMA:10 a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=20KFwNOVAAAA:8 a=40HSkAYmfyoHoQYM2uIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: oD0qT5z5etYDFvofq45rGIQq18lrpDXv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-05_04,2025-12-04_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 phishscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0
+ clxscore=1011 spamscore=0 impostorscore=0 priorityscore=1501 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511290008
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251205_012209_460966_64358DDF 
-X-CRM114-Status: GOOD (  38.92  )
+X-CRM114-CacheID: sfid-20251205_030331_465239_FCB3F708 
+X-CRM114-Status: GOOD (  22.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,179 +131,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Fri, Dec 05, 2025 at 03:14:43PM +0800, Baoquan He wrote:
+> On 12/04/25 at 05:38pm, Andrey Konovalov wrote:
+> > On Fri, Nov 28, 2025 at 4:33 AM Baoquan He <bhe@redhat.com> wrote:
+> > I also wonder if we should keep this kasan=off functionality
+> > conservative and limit it to x86 and arm64 (since these are the only
+> > two tested architectures).
+> 
+> We may not need to do that. I tested on arm64 because it has sw_tags and
+> hw_tags. And if x86_64 and arm64 works well with kasan=off in generic
+> mode, it should be fine on other architectures. I am a little more
+> familiar with operations on x86/arm64 than others.  I can manage to get
+> power system to test kasan=off in generic mode, if that is required.
+> From my side, I would like to see x86_64/arm64/s390/power to have
+> kasan=off because RHEL support these architectures. I need consult people
+> to make clear how to change in s390. Will post patch later or ask other
+> people to help do that.
 
-在 2025/12/4 20:18, Sourabh Jain 写道:
-> Hello All,
->
-> I read this patch series, including the older versions, and this is 
-> what I
-> think about the changes.
->
-> There are two main reasons I see for why this patch series is proposed
-> (these were not mentioned in the cover letter or commit messages):
->
-> 1. Commit eb7622d908a09 ("kexec_file, riscv: print out debugging message
->    if required") and commit 6f8c1da071a4 ("kexec_file, arm64: print out
->    debugging message if required") moved some kexec-related debug 
-> prints to
->    kexec_dprintk instead of pr_debug or pr_notice.
->
->    These commits made it easier to control the updated debug prints using
->    the -d option of kexec tool for kexec_file_load system call. But since
->    kexec_dprintk is not available for the kexec_load system call, 
-> those prints
->    are no longer available for kexec_load at all. So patch series try 
-> to bring
->    those logs for kexec_load system call.
->
-> 2. Patch 03/03 prints additional logs about the kexec image type, start,
->     head, and flags via kexec_dprintk for the kexec_load system call.
->
-> This is done by enabling the kexec_dprintk for kexec_load, so that logs
-> from point 1 and the new logs from point 2 can be printed for kexec_load
-> system call.
->
-> However, the patch series does not explain why these additional debug 
-> logs
-> are needed for kexec_load. Since most of the work involved in loading
-> kexec images through kexec_load happens in the kexec userspace tool, and
-> the tool already provides enough logs to debug issues, the need for these
-> extra kernel logs is not clear.
-As pointed out in the point 1, these two commits not only move some
-kexec-related debug prints to kexec_dprintk instead of pr_debug or 
-pr_notice,
-but also respectively remove and delete the debug print in kexec_image_info.
-These debug print initially existed for both kexec_load and 
-kexec_file_load in kernel space.
-Just commit cbc2fe9d9cb2 ("kexec_file: The "add kexec_file flag to 
-control debug printing")
-series of patches removed or deleted some parts, but this series of 
-patches only added them
-to the generic code under the kexec_file_load path, not to the 
-kexec_load path.
-Therefore, the reason for adding this part of the debug print is to add 
-this deleted debug print
-to the kexec_load generic code. Regarding duplicate prints related to 
-architecture, as mentioned
-in previous posts[1], I want remove the print(type/head of kimage) in 
-arm64, and then add it
-to the general code.
-
-[1]: 
-https://lore.kernel.org/lkml/4D709A5E16BE5DEC+04521049-61de-411f-85c1-cfc049ff04c5@uniontech.com/
-
-If commit cbc2fe9d9cb2 ("kexec_file: The "add kexec_file flag to control 
-debug printing" series of patches
-is indeed intended to remove those kexec_image_info in kexec_load, not 
-to lose them.
-I think patch 3 can be removed, but patch 1, 2 are still required.
-As Sourabh Jain mentioned in the point 1, the debugging print that uses 
-kexec_dprintk
-in the kexec_load path currently existing under arm64 is equivalent to 
-being unavailable.
->
-> So adding the need for the additional debug logs in the cover letter or
-> commit message is needed to decide whether it is worth adding the code
-> change proposed in this patch series Also, I found it hard to map the 
-> commit message to the changes introduced in the commits. And finally 
-> If I review the patches only based on the code changes: 01/03 The 
-> commit message refers to kexec_dbg_print 
-There is an error in the patch description. It should be 
-kexec_file_dbg_print. I will fix it.
-> as kexec_core_dbg_print. 02/03 I think kexec_dbg_print should be set 
-> to false at the end of kimage_free, not at the start. 03/03 There is 
-> duplication of debug logs for architectures that already print the 
-> same information. For example, arm64. - 
-In the kimage_file_alloc_init()/kimage_alloc_init(), if there is an 
-abnormal exit before executing *rimage = image,
-the image is empty, but kexec_dbg_print has been initialized.
-In this case, It needs to be placed at the beginning of kimage_free to 
-reset it.
-> Sourabh Jain
-> On 26/11/25 14:14, Qiang Ma wrote:
->> Overview:
->> =========
->> The commit a85ee18c7900 ("kexec_file: print out debugging message
->> if required") has added general code printing in kexec_file_load(),
->> but not in kexec_load().
->>      Since kexec_load and kexec_file_load are not triggered 
->> simultaneously,
->> we can unify the debug flag of kexec and kexec_file as kexec_dbg_print.
->>      Next, we need to do some things in this patchset:
->>      1. rename kexec_file_dbg_print to kexec_dbg_print
->> 2. Add KEXEC_DEBUG
->> 3. Initialize kexec_dbg_print for kexec
->> 4. Fix uninitialized struct kimage *image pointer
->> 5. Set the reset of kexec_dbg_print to kimage_free
->>
->> Testing:
->> =========
->> I did testing on x86_64, arm64 and loongarch. On x86_64, the printed 
->> messages
->> look like below:
->>
->> unset CONFIG_KEXEC_FILE:
->> [   81.502374] kexec: kexec_load: type:0, start:0x23fff7700 
->> head:0x10a4b9002 flags:0x3e0010
->>
->> set CONFIG_KEXEC_FILE
->> [   36.774228] kexec_file: kernel: 0000000066c386c8 kernel_size: 
->> 0xd78400
->> [   36.821814] kexec-bzImage64: Loaded purgatory at 0x23fffb000
->> [   36.821826] kexec-bzImage64: Loaded boot_param, command line and 
->> misc at 0x23fff9000 bufsz=0x12d0 memsz=0x2000
->> [   36.821829] kexec-bzImage64: Loaded 64bit kernel at 0x23d400000 
->> bufsz=0xd73400 memsz=0x2ab7000
->> [   36.821918] kexec-bzImage64: Loaded initrd at 0x23bd0b000 
->> bufsz=0x16f40a8 memsz=0x16f40a8
->> [   36.821920] kexec-bzImage64: Final command line is: 
->> root=/dev/mapper/test-root crashkernel=auto rd.lvm.lv=test/root
->> [   36.821925] kexec-bzImage64: E820 memmap:
->> [   36.821926] kexec-bzImage64: 0000000000000000-000000000009ffff (1)
->> [   36.821928] kexec-bzImage64: 0000000000100000-0000000000811fff (1)
->> [   36.821930] kexec-bzImage64: 0000000000812000-0000000000812fff (2)
->> [   36.821931] kexec-bzImage64: 0000000000813000-00000000bee38fff (1)
->> [   36.821933] kexec-bzImage64: 00000000bee39000-00000000beec2fff (2)
->> [   36.821934] kexec-bzImage64: 00000000beec3000-00000000bf8ecfff (1)
->> [   36.821935] kexec-bzImage64: 00000000bf8ed000-00000000bfb6cfff (2)
->> [   36.821936] kexec-bzImage64: 00000000bfb6d000-00000000bfb7efff (3)
->> [   36.821937] kexec-bzImage64: 00000000bfb7f000-00000000bfbfefff (4)
->> [   36.821938] kexec-bzImage64: 00000000bfbff000-00000000bff7bfff (1)
->> [   36.821939] kexec-bzImage64: 00000000bff7c000-00000000bfffffff (2)
->> [   36.821940] kexec-bzImage64: 00000000feffc000-00000000feffffff (2)
->> [   36.821941] kexec-bzImage64: 00000000ffc00000-00000000ffffffff (2)
->> [   36.821942] kexec-bzImage64: 0000000100000000-000000023fffffff (1)
->> [   36.872348] kexec_file: nr_segments = 4
->> [   36.872356] kexec_file: segment[0]: buf=0x000000005314ece7 
->> bufsz=0x4000 mem=0x23fffb000 memsz=0x5000
->> [   36.872370] kexec_file: segment[1]: buf=0x000000006e59b143 
->> bufsz=0x12d0 mem=0x23fff9000 memsz=0x2000
->> [   36.872374] kexec_file: segment[2]: buf=0x00000000eb7b1fc3 
->> bufsz=0xd73400 mem=0x23d400000 memsz=0x2ab7000
->> [   36.882172] kexec_file: segment[3]: buf=0x000000006af76441 
->> bufsz=0x16f40a8 mem=0x23bd0b000 memsz=0x16f5000
->> [   36.889113] kexec_file: kexec_file_load: type:0, start:0x23fffb150 
->> head:0x101a2e002 flags:0x8
->>
->> Changes in v3:
->> ==========
->> - Rename kexec_core_dbg_print to kexec_dbg_print
->> - Remove unnecessary segments prints
->> - Remove patch "kexec_file: Fix the issue of mismatch between loop 
->> variable types"
->>
->> Qiang Ma (3):
->>    kexec: Fix uninitialized struct kimage *image pointer
->>    kexec: add kexec flag to control debug printing
->>    kexec: print out debugging message if required for kexec_load
->>
->>   include/linux/kexec.h      | 9 +++++----
->>   include/uapi/linux/kexec.h | 1 +
->>   kernel/kexec.c             | 8 +++++++-
->>   kernel/kexec_core.c        | 4 +++-
->>   kernel/kexec_file.c        | 4 +---
->>   5 files changed, 17 insertions(+), 9 deletions(-)
->>
->
->
+We are aware that s390 support is missing / does not work, and will
+provide something. I guess something based on this series would be
+good, or are you planning to send a new version anytime soon?
 
