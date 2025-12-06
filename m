@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9E48ED3B7E6
-	for <kexec@archiver.kernel.org>; Sat,  6 Dec 2025 23:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1FE96D3B7E5
+	for <kexec@archiver.kernel.org>; Sat,  6 Dec 2025 23:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=vIEXiWIZmPCWkeOZ/5Z4AQAsFZvFVPzGTa+khDHoR1k=; b=s86RM8x83iArkUNPpOBYEk7yEd
-	Ny8+3nTuhuQn11xI39DlGK7TTeGOfoWmysjtOLDhA3QB9irNhxkcDpBgD7PPp6671xYV4XsuAsxWf
-	/may+u3aeOxA9snqjFSLuv8jrxjscau8H/gIDlEIFIYuWucpJe3G51boKLEYHt8m6gEIh2AgCXkXw
-	M74o+YCSmVW8W6Of/LXx1DSYjA5jZ/Q0JQzofJDbKyz+VFtPXzV0rCkvfXwly07j5IDxVn4BlZPUL
-	1G6ft1S9JNBS2ieTKqGDikBSPbIgUndPJtmAePsOTRa//LPQwdi92ZUqvNSk2K/69DnBbVmlAy7Nt
-	0tEffdXg==;
+	bh=EKAEEiFJgIdASU/B+GZlPyvBV0AGHYeBWxkZujJmE+E=; b=Jpn6Ig7xdrwoxMfeu+SWJu7Bce
+	gUr0OPJDzKsEUMR2jHGAPzGCN9vfsr3g0foE5Jl99i7nZgln9k2vEDBLGSKLGRABaXuHwsQYQ16/J
+	/IESUrFus/3ByETtpWbvlJv8D0unQIxHL/iEN57Zv7vvn0xrDbRl5JbkdJcjkw2yvDAU3Y+Kp0k23
+	klTi21oQlRvTyUJrPmIYtIpqyl4dC8l6jyGUDjgDhXE0VKApGQgAjYm2QTStjOqxKooWK0P/lE6Ol
+	EmrMGKYuywNa73YQygzUd2wZiGHI8Top1asS8PERN5iQBZvKyWSSNxwrPugRFfuvQ2kWXcnlzqMDd
+	D2gFpDgg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vS1JY-0000000BHti-03EU;
-	Sat, 06 Dec 2025 23:03:44 +0000
+	id 1vS1Jg-0000000BHx1-2E6w;
+	Sat, 06 Dec 2025 23:03:52 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vS1JV-0000000BHst-2QT4
+	id 1vS1Jd-0000000BHvd-3rOX
 	for kexec@lists.infradead.org;
-	Sat, 06 Dec 2025 23:03:42 +0000
+	Sat, 06 Dec 2025 23:03:51 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 3872E443FA;
+	by sea.source.kernel.org (Postfix) with ESMTP id 9A0A743CEA;
+	Sat,  6 Dec 2025 23:03:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5ED7C4CEF5;
 	Sat,  6 Dec 2025 23:03:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 120C8C4CEF5;
-	Sat,  6 Dec 2025 23:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765062221;
-	bh=WHJfnX03Qhe5MAHXckJ6+iBYj5iKhcYCByHpge4YFyY=;
+	s=k20201202; t=1765062229;
+	bh=ep+jrIbVv9vGa6SgBSTj5ivMOs2gsXD3lJ0J4ipWtJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=onRjUf4SEmz0B3nt48kd8t3Vqy52/EYfETxZQFdsGM3bA3ifU00K0VYA++NOLhNB/
-	 05znO/xTpxZEQnzCjrodNKx8hfBGf9kS1wHIUHIrknBvweyHAQdkPUATgPPf00oHqc
-	 DA1wtxA6qD8BxNb2+FYy6BNr3eBcIITovaOWqnN6n4/kxA/LBzgYZtpv7EFNlbUGBv
-	 xsL6hqBZrPBl2Vl4woWJXSFTKZsgz6mqoa7HRRCwXKXvqWA7PbwnidQCA4i3dtQTXw
-	 qnNXHt42cbKem1jy7IH0GiyHsLFL5O2zqH8yDMlsUDPKw5eAyL131d3bRZ/vrZhCY9
-	 y83T4yMMJslFw==
+	b=pRMaTXNPuKpEz/bwr3yXklWljScvY8Jj5BQFKIAxjk2h0Dms2ugjoSTkH+4VcK1pG
+	 i1Ai1LIN5A1c0f69RUgbYPpxvrSr3j7B88iR/40S7Lp5TeF7eozVr2jBLcghpIRdfd
+	 /bvn5NfR8DMyi+2hcVDyY+awVnxHJYRxidOpE3RssOTu/Hjp2v1o8P8BPxOA4TSCgk
+	 /WVrS+pMMcmEhIiyCPZPzzKU7WVzkGlQJOA7X/Mp/mlUCQeuVuFTa+dfb9Lja/gxGk
+	 ZMjxWcn9ubImioTY5hhg/RkWq5DfVPu8dVpk7zdLWbaJ4Mdgn9mJc2HPLSm08L7v6K
+	 kSaDK0M9Vnq3A==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>,
 	Mike Rapoport <rppt@kernel.org>,
@@ -73,17 +73,17 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-doc@vger.kernel.org,
 	kexec@lists.infradead.org
-Subject: [RFC PATCH 06/10] liveupdate: hugetlb subsystem FLB state preservation
-Date: Sun,  7 Dec 2025 00:02:16 +0100
-Message-ID: <20251206230222.853493-7-pratyush@kernel.org>
+Subject: [RFC PATCH 07/10] mm: hugetlb: don't allocate pages already in live update
+Date: Sun,  7 Dec 2025 00:02:17 +0100
+Message-ID: <20251206230222.853493-8-pratyush@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251206230222.853493-1-pratyush@kernel.org>
 References: <20251206230222.853493-1-pratyush@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251206_150341_664991_035D7343 
-X-CRM114-Status: GOOD (  37.01  )
+X-CRM114-CacheID: sfid-20251206_150349_999155_F2A3A42B 
+X-CRM114-Status: GOOD (  23.34  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,9 +98,6 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-HugeTLB manages its own pages. It allocates them on boot and uses those
-to fulfill hugepage requests.
-
 To support live update for a hugetlb-backed memfd, it is necessary to
 track how many pages of each hstate are coming from live update. This is
 needed to ensure the boot time allocations don't over-allocate huge
@@ -110,406 +107,225 @@ For example, say the system has 100G memory and it uses 90 1G huge
 pages, with 10G put aside for other processes. Now say 5 of those pages
 are preserved via KHO for live updating a huge memfd.
 
-But during boot, the system will still see that it needs 90 huge pages,
-so it will attempt to allocate those. When the file is later retrieved,
+But during boot, hugetlb will still see that it needs 90 huge pages, so
+it will attempt to allocate those. When the file is later retrieved,
 those 5 pages also get added to the huge page pool, resulting in 95
 total huge pages. This exceeds the original expectation of 90 pages, and
 ends up wasting memory.
 
-LUO has file-lifecycle-bound (FLB) data to keep track of global state of
-a subsystem. Use it to track how many huge pages are used up for each
-hstate. When a file is preserved, it will increment to the counter, and
-when it is unpreserved, it will decrement it. During boot time
-allocations, this data can be used to calculate how many hugepages
-actually need to be allocated.
+Check the number of hugepages for the hstate already coming from live
+update using hstate_liveupdate_pages(). Subtract that number from
+h->max_huge_pages and pass that to the allocation functions. The
+allocation functions currently directly use h->max_huge_pages, so update
+them to take a parameter for number of pages to allocate instead.
 
-Design note: another way of doing this would be to preserve the entire
-set of hugepages using the FLB, skip boot time allocation, and restore
-them all on FLB retrieve. The pain problem with that approach is that it
-would need to freeze all hstates after serializing them. This will need
-a lot more invasive changes in hugetlb since there are many ways folios
-can be added to or removed from a hstate. Doing it this way is simpler
-and less invasive.
+Also update the error and status reporting function to deal with
+liveupdated pages, report the right number, and handle errors.
+
+Node-specific allocation is not supported with liveupdate currently.
+This is because the liveupdate FLB data does not contain per-node
+allocation numbers, so it is not possible to know how many live updated
+pages each node has.
 
 Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
 ---
- Documentation/mm/memfd_preservation.rst |   9 ++
- MAINTAINERS                             |   1 +
- include/linux/kho/abi/hugetlb.h         |  66 +++++++++
- kernel/liveupdate/Kconfig               |  12 ++
- mm/Makefile                             |   1 +
- mm/hugetlb.c                            |   1 +
- mm/hugetlb_internal.h                   |  15 ++
- mm/hugetlb_luo.c                        | 179 ++++++++++++++++++++++++
- 8 files changed, 284 insertions(+)
- create mode 100644 include/linux/kho/abi/hugetlb.h
- create mode 100644 mm/hugetlb_luo.c
+ mm/hugetlb.c | 79 +++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 59 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/mm/memfd_preservation.rst b/Documentation/mm/memfd_preservation.rst
-index 66e0fb6d5ef0..6068dd55f4fb 100644
---- a/Documentation/mm/memfd_preservation.rst
-+++ b/Documentation/mm/memfd_preservation.rst
-@@ -16,6 +16,15 @@ Memfd Preservation ABI
- .. kernel-doc:: include/linux/kho/abi/memfd.h
-    :internal:
- 
-+HugeTLB-backed memfd Preservation ABI
-+=====================================
-+
-+.. kernel-doc:: include/linux/kho/abi/hugetlb.h
-+   :doc: hugetlb-backed memfd live update ABI
-+
-+.. kernel-doc:: include/linux/kho/abi/hugetlb.h
-+   :internal:
-+
- See Also
- ========
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fc23a0381e19..55ef24e80ae5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14481,6 +14481,7 @@ F:	include/linux/liveupdate/
- F:	include/uapi/linux/liveupdate.h
- F:	kernel/liveupdate/
- F:	lib/tests/liveupdate.c
-+F:	mm/hugetlb_luo.c
- F:	mm/memfd_luo.c
- F:	tools/testing/selftests/liveupdate/
- 
-diff --git a/include/linux/kho/abi/hugetlb.h b/include/linux/kho/abi/hugetlb.h
-new file mode 100644
-index 000000000000..55e833569c48
---- /dev/null
-+++ b/include/linux/kho/abi/hugetlb.h
-@@ -0,0 +1,66 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Copyright (C) 2025 Amazon.com Inc. or its affiliates.
-+ * Pratyush Yadav <pratyush@kernel.org>
-+ */
-+
-+#ifndef _LINUX_KHO_ABI_HUGETLB_H
-+#define _LINUX_KHO_ABI_HUGETLB_H
-+
-+#include <linux/hugetlb.h>
-+
-+/**
-+ * DOC: hugetlb-backed memfd live update ABI
-+ *
-+ * This header defines the ABI for preserving the state of the hugetlb subsystem
-+ * and a hugetlb-backed memfd across a kexec reboot using LUO.
-+ *
-+ * This interface is a contract. Any modification to the structure layout
-+ * constitutes a breaking change. Such changes require incrementing the version
-+ * number in the HUGETLB_FLB_COMPATIBLE or HUGE_MEMFD_COMPATIBLE strings for
-+ * hugetlb FLB or hugetlb-backed memfd, respectively.
-+ */
-+
-+/*
-+ * Keep the serialized max hstates separate from the kernel's HUGE_MAX_HSTATE to
-+ * keep the value stable.
-+ *
-+ * Currently x86 and arm64 are supported. x86 has HUGE_MAX_HSTATE as 2 and arm64
-+ * has 4. Pick 4 as the number to start with.
-+ */
-+#define HUGETLB_SER_MAX_HSTATES		4
-+
-+static_assert(HUGETLB_SER_MAX_HSTATES >= HUGE_MAX_HSTATE);
-+
-+/**
-+ * struct hugetlb_hstate_ser: Serialized state of a hstate.
-+ * @nr_pages:     Number of preserved pages in the hstate.
-+ * @order:        Order of the hstate this struct describes.
-+ *
-+ * The only state needed for hstates is the number of pages that are preserved
-+ * from this hstate. The preserved pages are added to the hstate when the file
-+ * is retrieved. This information gets used in early boot to calculate the
-+ * remaining pages that must be allocated by the normal path.
-+ */
-+struct hugetlb_hstate_ser {
-+	/* Number of _preserved_ pages in the hstate. */
-+	u64 nr_pages;
-+	u8 order;
-+} __packed;
-+
-+/**
-+ * struct hugetlb_ser - The main serialization structure for HugeTLB FLB.
-+ * @hstates:      Array of serialized hstates.
-+ * @nr_hstates:   Number of serialized hstates in the array.
-+ */
-+struct hugetlb_ser {
-+	struct hugetlb_hstate_ser hstates[HUGETLB_SER_MAX_HSTATES];
-+	u8 nr_hstates;
-+} __packed;
-+
-+static_assert(sizeof(struct hugetlb_ser) <= PAGE_SIZE);
-+
-+#define HUGETLB_FLB_COMPATIBLE "hugetlb-v1"
-+
-+#endif /* _LINUX_KHO_ABI_HUGETLB_H */
-diff --git a/kernel/liveupdate/Kconfig b/kernel/liveupdate/Kconfig
-index 9b2515f31afb..86e76aed8a93 100644
---- a/kernel/liveupdate/Kconfig
-+++ b/kernel/liveupdate/Kconfig
-@@ -72,4 +72,16 @@ config LIVEUPDATE
- 
- 	  If unsure, say N.
- 
-+config LIVEUPDATE_HUGETLB
-+	bool "Live update support for HugeTLB"
-+	depends on LIVEUPDATE && HUGETLBFS
-+	help
-+
-+	  Enable live update support for the HugeTLB subsystem. This allows live
-+	  updating memfd backed by huge pages. This can be used by hypervisors that
-+	  use hugetlb memfd to back VM memory, or for other user workloads needing
-+	  to live update huge pages.
-+
-+	  If unsure, say N.
-+
- endmenu
-diff --git a/mm/Makefile b/mm/Makefile
-index 7738ec416f00..753bc1e3f3fd 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -101,6 +101,7 @@ obj-$(CONFIG_DEVICE_MIGRATION) += migrate_device.o
- obj-$(CONFIG_TRANSPARENT_HUGEPAGE) += huge_memory.o khugepaged.o
- obj-$(CONFIG_PAGE_COUNTER) += page_counter.o
- obj-$(CONFIG_LIVEUPDATE) += memfd_luo.o
-+obj-$(CONFIG_LIVEUPDATE_HUGETLB) += hugetlb_luo.o
- obj-$(CONFIG_MEMCG_V1) += memcontrol-v1.o
- obj-$(CONFIG_MEMCG) += memcontrol.o vmpressure.o
- ifdef CONFIG_SWAP
 diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 0f818086bf4f..ff90ceacf62c 100644
+index ff90ceacf62c..22af2e56772e 100644
 --- a/mm/hugetlb.c
 +++ b/mm/hugetlb.c
-@@ -4702,6 +4702,7 @@ static int __init hugetlb_init(void)
- 	hugetlb_sysfs_init();
- 	hugetlb_cgroup_file_init();
- 	hugetlb_sysctl_init();
-+	hugetlb_luo_init();
- 
- #ifdef CONFIG_SMP
- 	num_fault_mutexes = roundup_pow_of_two(8 * num_possible_cpus());
-diff --git a/mm/hugetlb_internal.h b/mm/hugetlb_internal.h
-index edfb4eb75828..b7b149c56567 100644
---- a/mm/hugetlb_internal.h
-+++ b/mm/hugetlb_internal.h
-@@ -9,6 +9,7 @@
- #include <linux/hugetlb.h>
- #include <linux/hugetlb_cgroup.h>
- #include <linux/list.h>
+@@ -39,6 +39,7 @@
+ #include <linux/memory.h>
+ #include <linux/mm_inline.h>
+ #include <linux/padata.h>
 +#include <linux/liveupdate.h>
  
- void init_new_hugetlb_folio(struct folio *folio);
- void account_new_hugetlb_folio(struct hstate *h, struct folio *folio);
-@@ -32,4 +33,18 @@ static inline struct resv_map *inode_resv_map(struct inode *inode)
- 	return (struct resv_map *)(&inode->i_data)->i_private_data;
+ #include <asm/page.h>
+ #include <asm/pgalloc.h>
+@@ -64,6 +65,7 @@ struct hstate hstates[HUGE_MAX_HSTATE];
+ __initdata nodemask_t hugetlb_bootmem_nodes;
+ __initdata struct list_head huge_boot_pages[MAX_NUMNODES];
+ static unsigned long hstate_boot_nrinvalid[HUGE_MAX_HSTATE] __initdata;
++static unsigned long hstate_boot_nrliveupdated[HUGE_MAX_HSTATE] __initdata;
+ 
+ /*
+  * Due to ordering constraints across the init code for various
+@@ -3484,13 +3486,19 @@ static void __init hugetlb_hstate_alloc_pages_onenode(struct hstate *h, int nid)
+ 	h->max_huge_pages_node[nid] = i;
  }
  
-+#ifdef CONFIG_LIVEUPDATE_HUGETLB
-+void hugetlb_luo_init(void);
-+unsigned long hstate_liveupdate_pages(struct hstate *h);
-+#else
-+static inline void hugetlb_luo_init(void)
-+{
-+}
+-static bool __init hugetlb_hstate_alloc_pages_specific_nodes(struct hstate *h)
++static bool __init hugetlb_hstate_alloc_pages_specific_nodes(struct hstate *h,
++							     unsigned long liveupdated)
+ {
+ 	int i;
+ 	bool node_specific_alloc = false;
+ 
+ 	for_each_online_node(i) {
+ 		if (h->max_huge_pages_node[i] > 0) {
++			if (liveupdated) {
++				pr_warn("HugeTLB: node-specific allocation not supported with liveupdate. Defaulting to normal\n");
++				return false;
++			}
 +
-+static inline unsigned long hstate_liveupdate_pages(struct hstate *h)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_LIVEUPDATE_HUGETLB */
+ 			hugetlb_hstate_alloc_pages_onenode(h, i);
+ 			node_specific_alloc = true;
+ 		}
+@@ -3499,15 +3507,25 @@ static bool __init hugetlb_hstate_alloc_pages_specific_nodes(struct hstate *h)
+ 	return node_specific_alloc;
+ }
+ 
+-static void __init hugetlb_hstate_alloc_pages_errcheck(unsigned long allocated, struct hstate *h)
++static void __init hugetlb_hstate_alloc_pages_errcheck(unsigned long allocated,
++						       unsigned long liveupdated,
++						       struct hstate *h)
+ {
+-	if (allocated < h->max_huge_pages) {
+-		char buf[32];
++	char buf[32];
+ 
+-		string_get_size(huge_page_size(h), 1, STRING_UNITS_2, buf, 32);
++	string_get_size(huge_page_size(h), 1, STRING_UNITS_2, buf, 32);
 +
- #endif /* __HUGETLB_INTERNAL_H */
-diff --git a/mm/hugetlb_luo.c b/mm/hugetlb_luo.c
-new file mode 100644
-index 000000000000..80e3e015eca5
---- /dev/null
-+++ b/mm/hugetlb_luo.c
-@@ -0,0 +1,179 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2025 Amazon.com Inc. or its affiliates.
-+ * Copyright (C) 2025 Pratyush Yadav <pratyush@kernel.org>
-+ */
-+
-+/* The documentation for this is in mm/memfd_luo.c */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/liveupdate.h>
-+#include <linux/kexec_handover.h>
-+#include <linux/hugetlb.h>
-+#include <linux/kho/abi/hugetlb.h>
-+#include <linux/spinlock.h>
-+
-+#include "hugetlb_internal.h"
-+
-+struct hugetlb_flb_obj {
-+	/* Serializes access to ser and its hstates. */
-+	spinlock_t lock;
-+	struct hugetlb_ser *ser;
-+};
-+
-+static int hugetlb_flb_preserve(struct liveupdate_flb_op_args *args)
-+{
-+	struct hugetlb_ser *hugetlb_ser;
-+	struct hugetlb_flb_obj *obj;
-+	u8 nr_hstates = 0;
-+	struct hstate *h;
-+
-+	obj = kmalloc(sizeof(*obj), GFP_KERNEL);
-+	if (!obj)
-+		return -ENOMEM;
-+
-+	hugetlb_ser = kho_alloc_preserve(sizeof(*hugetlb_ser));
-+	if (!hugetlb_ser) {
-+		kfree(obj);
-+		return -ENOMEM;
-+	}
-+
-+	spin_lock_init(&obj->lock);
-+	obj->ser = hugetlb_ser;
-+
-+	for_each_hstate(h) {
-+		struct hugetlb_hstate_ser *hser = &hugetlb_ser->hstates[nr_hstates];
-+
-+		hser->nr_pages = 0;
-+		hser->order = h->order;
-+		nr_hstates++;
-+	}
-+
-+	hugetlb_ser->nr_hstates = nr_hstates;
-+
-+	args->obj = obj;
-+	args->data = virt_to_phys(hugetlb_ser);
-+
-+	return 0;
-+}
-+
-+static void hugetlb_flb_unpreserve(struct liveupdate_flb_op_args *args)
-+{
-+	kho_unpreserve_free(phys_to_virt(args->data));
-+	kfree(args->obj);
-+}
-+
-+static void hugetlb_flb_finish(struct liveupdate_flb_op_args *args)
-+{
-+	/* No live state on the retrieve side. */
-+}
-+
-+static int hugetlb_flb_retrieve(struct liveupdate_flb_op_args *args)
-+{
++	if (liveupdated > h->max_huge_pages) {
++		pr_warn("HugeTLB: got %lu of page size %s from liveupdate, requested pages are %lu\n",
++			liveupdated, buf, h->max_huge_pages);
++		h->max_huge_pages = liveupdated;
++	} else  if (liveupdated + allocated < h->max_huge_pages) {
+ 		pr_warn("HugeTLB: allocating %lu of page size %s failed.  Only allocated %lu hugepages.\n",
+-			h->max_huge_pages, buf, allocated);
+-		h->max_huge_pages = allocated;
++			h->max_huge_pages - liveupdated, buf, allocated);
++		if (liveupdated)
++			pr_warn("HugeTLB: %lu of page size %s are from liveupdate\n",
++				liveupdated, buf);
++		h->max_huge_pages = allocated + liveupdated;
+ 	}
+ }
+ 
+@@ -3542,11 +3560,12 @@ static void __init hugetlb_pages_alloc_boot_node(unsigned long start, unsigned l
+ 	prep_and_add_allocated_folios(h, &folio_list);
+ }
+ 
+-static unsigned long __init hugetlb_gigantic_pages_alloc_boot(struct hstate *h)
++static unsigned long __init hugetlb_gigantic_pages_alloc_boot(struct hstate *h,
++							      unsigned long nr)
+ {
+ 	unsigned long i;
+ 
+-	for (i = 0; i < h->max_huge_pages; ++i) {
++	for (i = 0; i < nr; ++i) {
+ 		if (!alloc_bootmem_huge_page(h, NUMA_NO_NODE))
+ 			break;
+ 		cond_resched();
+@@ -3555,7 +3574,8 @@ static unsigned long __init hugetlb_gigantic_pages_alloc_boot(struct hstate *h)
+ 	return i;
+ }
+ 
+-static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
++static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h,
++						     unsigned long nr)
+ {
+ 	struct padata_mt_job job = {
+ 		.fn_arg		= h,
+@@ -3594,14 +3614,14 @@ static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
+ 
+ 	jiffies_start = jiffies;
+ 	do {
+-		remaining = h->max_huge_pages - h->nr_huge_pages;
++		remaining = nr - h->nr_huge_pages;
+ 
+ 		job.start     = h->nr_huge_pages;
+ 		job.size      = remaining;
+ 		job.min_chunk = remaining / hugepage_allocation_threads;
+ 		padata_do_multithreaded(&job);
+ 
+-		if (h->nr_huge_pages == h->max_huge_pages)
++		if (h->nr_huge_pages == nr)
+ 			break;
+ 
+ 		/*
+@@ -3612,7 +3632,7 @@ static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
+ 			break;
+ 
+ 		/* Continue if progress was made in last iteration */
+-	} while (remaining != (h->max_huge_pages - h->nr_huge_pages));
++	} while (remaining != (nr - h->nr_huge_pages));
+ 
+ 	jiffies_end = jiffies;
+ 
+@@ -3636,7 +3656,7 @@ static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
+  */
+ static void __init hugetlb_hstate_alloc_pages(struct hstate *h)
+ {
+-	unsigned long allocated;
++	unsigned long allocated, liveupdated, nr_alloc;
+ 
+ 	/*
+ 	 * Skip gigantic hugepages allocation if early CMA
+@@ -3648,20 +3668,31 @@ static void __init hugetlb_hstate_alloc_pages(struct hstate *h)
+ 		return;
+ 	}
+ 
+-	if (!h->max_huge_pages)
 +	/*
-+	 * The FLB is only needed for boot-time calculation of how many
-+	 * hugepages are needed. This is done by early boot handlers already.
-+	 * Free the serialized state now.
++	 * Some huge pages might come from live update. They will get added to
++	 * the hstate when liveupdate retrieves its files. To avoid
++	 * over-allocating, subtract the liveupdated pages from the total number
++	 * of pages to allocate.
 +	 */
-+	kho_restore_free(phys_to_virt(args->data));
-+
-+	/*
-+	 * HACK: But since LUO FLB still needs an obj, use ZERO_SIZE_PTR to
-+	 * satisfy it.
-+	 */
-+	args->obj = ZERO_SIZE_PTR;
-+	return 0;
-+}
-+
-+static struct liveupdate_flb_ops hugetlb_luo_flb_ops = {
-+	.preserve = hugetlb_flb_preserve,
-+	.unpreserve = hugetlb_flb_unpreserve,
-+	.finish = hugetlb_flb_finish,
-+	.retrieve = hugetlb_flb_retrieve,
-+};
-+
-+static struct liveupdate_flb hugetlb_luo_flb = {
-+	.ops = &hugetlb_luo_flb_ops,
-+	.compatible = HUGETLB_FLB_COMPATIBLE,
-+};
-+
-+static struct hugetlb_hstate_ser
-+*hugetlb_flb_get_hser(struct hugetlb_ser *hugetlb_ser, unsigned int order)
-+{
-+	for (u8 i = 0; i < hugetlb_ser->nr_hstates; i++) {
-+		if (hugetlb_ser->hstates[i].order == order)
-+			return &hugetlb_ser->hstates[i];
++	liveupdated = hstate_liveupdate_pages(h);
++	hstate_boot_nrliveupdated[hstate_index(h)] = liveupdated;
++	if (liveupdated >= h->max_huge_pages) {
++		hugetlb_hstate_alloc_pages_errcheck(0, liveupdated, h);
+ 		return;
 +	}
++	nr_alloc = h->max_huge_pages - liveupdated;
+ 
+ 	/* do node specific alloc */
+-	if (hugetlb_hstate_alloc_pages_specific_nodes(h))
++	if (hugetlb_hstate_alloc_pages_specific_nodes(h, liveupdated))
+ 		return;
+ 
+ 	/* below will do all node balanced alloc */
+ 	if (hstate_is_gigantic(h))
+-		allocated = hugetlb_gigantic_pages_alloc_boot(h);
++		allocated = hugetlb_gigantic_pages_alloc_boot(h, nr_alloc);
+ 	else
+-		allocated = hugetlb_pages_alloc_boot(h);
++		allocated = hugetlb_pages_alloc_boot(h, nr_alloc);
+ 
+-	hugetlb_hstate_alloc_pages_errcheck(allocated, h);
++	hugetlb_hstate_alloc_pages_errcheck(allocated, liveupdated, h);
+ }
+ 
+ static void __init hugetlb_init_hstates(void)
+@@ -3710,14 +3741,22 @@ static void __init report_hugepages(void)
+ 	unsigned long nrinvalid;
+ 
+ 	for_each_hstate(h) {
++		unsigned long liveupdated;
+ 		char buf[32];
+ 
+ 		nrinvalid = hstate_boot_nrinvalid[hstate_index(h)];
+ 		h->max_huge_pages -= nrinvalid;
+ 
+ 		string_get_size(huge_page_size(h), 1, STRING_UNITS_2, buf, 32);
+-		pr_info("HugeTLB: registered %s page size, pre-allocated %ld pages\n",
++		pr_info("HugeTLB: registered %s page size, pre-allocated %ld pages",
+ 			buf, h->nr_huge_pages);
 +
-+	return NULL;
-+}
++		liveupdated = hstate_boot_nrliveupdated[hstate_index(h)];
++		if (liveupdated)
++			pr_info(KERN_CONT ", %ld pages from liveupdate\n", liveupdated);
++		else
++			pr_info(KERN_CONT "\n");
 +
-+static int hugetlb_flb_add_folio(struct hstate *h)
-+{
-+	struct hugetlb_ser *hugetlb_ser;
-+	struct hugetlb_hstate_ser *hser;
-+	struct hugetlb_flb_obj *obj;
-+	int err;
-+
-+	err = liveupdate_flb_get_outgoing(&hugetlb_luo_flb, (void **)&obj);
-+	if (err)
-+		return err;
-+
-+	hugetlb_ser = obj->ser;
-+
-+	guard(spinlock)(&obj->lock);
-+	hser = hugetlb_flb_get_hser(hugetlb_ser, h->order);
-+	if (!hser)
-+		return -ENOENT;
-+
-+	hser->nr_pages++;
-+	return 0;
-+}
-+
-+static int hugetlb_flb_del_folio(struct hstate *h)
-+{
-+	struct hugetlb_ser *hugetlb_ser;
-+	struct hugetlb_hstate_ser *hser;
-+	struct hugetlb_flb_obj *obj;
-+	int err;
-+
-+	err = liveupdate_flb_get_outgoing(&hugetlb_luo_flb, (void **)&obj);
-+	if (err)
-+		return err;
-+
-+	hugetlb_ser = obj->ser;
-+
-+	guard(spinlock)(&obj->lock);
-+	hser = hugetlb_flb_get_hser(hugetlb_ser, h->order);
-+	if (!hser)
-+		return -ENOENT;
-+
-+	hser->nr_pages--;
-+	return 0;
-+}
-+
-+unsigned long __init hstate_liveupdate_pages(struct hstate *h)
-+{
-+	struct hugetlb_hstate_ser *hser;
-+	struct hugetlb_ser *hugetlb_ser;
-+	u64 data;
-+	int err;
-+
-+	err = liveupdate_flb_incoming_early(&hugetlb_luo_flb, &data);
-+	if (err)
-+		/* If FLB can't be fetched, assume no pages from liveupdate. */
-+		return 0;
-+
-+	hugetlb_ser = phys_to_virt(data);
-+
-+	/* NOTE: No need for locking since this is read-only on incoming side. */
-+	hser = hugetlb_flb_get_hser(hugetlb_ser, h->order);
-+	return hser ? hser->nr_pages : 0;
-+}
-+
-+void __init hugetlb_luo_init(void)
-+{
-+	if (!liveupdate_enabled())
-+		return;
-+}
+ 		if (nrinvalid)
+ 			pr_info("HugeTLB: %s page size: %lu invalid page%s discarded\n",
+ 					buf, nrinvalid, str_plural(nrinvalid));
 -- 
 2.43.0
 
