@@ -4,83 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F1D9D3B7E9
-	for <kexec@archiver.kernel.org>; Sat,  6 Dec 2025 23:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id ED5F1D3B7E1
+	for <kexec@archiver.kernel.org>; Mon,  8 Dec 2025 06:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=CpoZyP+1SG9BKyQwUOnCTZSlFvru+q/ODzEUbF+jE24=; b=JyMkCslZm5RBCIoX9PDyV13cZH
-	4k1X8N/ErON8chRW6zteHG8PwdNS+2T+NFLoVcwX7/feKaMx8t9QbmoaEvwT0xvhscHUQ6YbW2PoQ
-	e3NfbnyVTy8xcJ+9JE3si41tmqKSg2tyiHfcDEnfhV4+kyA84fXRTM7LQz9i37c4GncaU1D1AMymK
-	vhI2NaGWAX8a6PvgDGjX6vsGu1aAG+RGzRIZB1+yS3CPjaSNq5BZePICPQ3nmYdYk0uDKk69yz9fm
-	pF0IJjd33N9+gaVTdoyWPHZElBe9GWG5LFRLdu3lgOEC1Wm4dKxkb8knWf6aLGBQP95fa+fP6SL6C
-	xVCM1Jxw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:To:From:Subject
+	:Message-ID:Mime-Version:Date:Reply-To:Cc:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=ZqyNPlmDIsr9igOdfXIDir5SMEz9QXEH46sRqM37UGQ=; b=ErXaBRLIgGOZmEps9rn805zf4y
+	j7vwXLW7soQIOK2MAkGJ5Bxri5ZQ8kk6wk09R0DfUl1jRx6INe7UwAvUnN3FmybWX5/1tbpIuv9qW
+	xkbMJltb/DEFkgSbzcXRghuYRpJiHrCNhKb3/RcgyN+wgiejQRD/hqbaVS1m5ym3L/s/OhbzWvFib
+	w64r2B6sWJMA+SMweH/s6y92wopIckbFxY3DLe0p9vrfau7ngL2B/tLp542dqIkig6MROaNdfLttw
+	DGjFoAWD3NCdgG34Q3IbGkSfpXx0zYkVLK1SU8lLMHf1u0e8vh/07nnVSVOHVTNbYwH2kNlx26LH/
+	dKNZ39cA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vS1K4-0000000BI7a-1crF;
-	Sat, 06 Dec 2025 23:04:16 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1vSUqI-0000000ChVT-2yH2;
+	Mon, 08 Dec 2025 06:35:30 +0000
+Received: from mail-pg1-x54a.google.com ([2607:f8b0:4864:20::54a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vS1K3-0000000BI7G-0f5M
+	id 1vSUqB-0000000ChUO-3dg5
 	for kexec@lists.infradead.org;
-	Sat, 06 Dec 2025 23:04:15 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 43BA56014A;
-	Sat,  6 Dec 2025 23:04:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93EA2C4CEF5;
-	Sat,  6 Dec 2025 23:04:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765062254;
-	bh=NDHeVCuUjDMmNIZKthIG4Frfufso0cF/L4lCH7VKr1o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BTVmtdkfJVFbk7of3/cAI+SikpIYzLre/FrKdmQ2NO9INoXAkvWyQTSnrhDFUDc6/
-	 p36RX5mTEsLT7bDlnJ7mwsSDiT/CYvDIlcFifYNATmHMtWANZfviBDmdV3MlJtWqsf
-	 OavD/RgTRzloFRGqbmR5TntM5Othq+rh77uoyL8lsERmn/+ENPBK/b+LthU4XzUjB+
-	 8oQotyYmx8QlAw+RDZ9yeHpl/kjLbBDIAcMrQuIGyTmQi77Q9vzbd5wXkh7+taJBed
-	 cAXd75mqGcnh544HhAONsBeU6fvkYLeID7Kq5MkTVggbfkrZGLq9VtRBuAZiGPovoR
-	 U/4fotMm/m4Ww==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	Alexander Graf <graf@amazon.com>,
-	David Matlack <dmatlack@google.com>,
-	David Rientjes <rientjes@google.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Vipin Sharma <vipinsh@google.com>,
-	Zhu Yanjun <yanjun.zhu@linux.dev>
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	kexec@lists.infradead.org
-Subject: [RFC PATCH 10/10] liveupdate: allow preserving hugetlb-backed memfd
-Date: Sun,  7 Dec 2025 00:02:20 +0100
-Message-ID: <20251206230222.853493-11-pratyush@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251206230222.853493-1-pratyush@kernel.org>
-References: <20251206230222.853493-1-pratyush@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+	Mon, 08 Dec 2025 06:35:25 +0000
+Received: by mail-pg1-x54a.google.com with SMTP id 41be03b00d2f7-b630b4d8d52so4258372a12.3
+        for <kexec@lists.infradead.org>; Sun, 07 Dec 2025 22:35:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1765175722; x=1765780522; darn=lists.infradead.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZqyNPlmDIsr9igOdfXIDir5SMEz9QXEH46sRqM37UGQ=;
+        b=yVCpkSL1twI4gjgT6jjAHtyu41vMRs/xnYPLjbbh5f72JrSWxwN+ELkuRWPmE6Q0Yg
+         Viel3f2jFH4gh0plD7sW8vKqImUnUWsEBEzS+JpatfTPjn69N3KueMlX+2sLWVSIAKBe
+         FVEP4j2ifoFzoUzKuR+AZyTlzHKrWEiiJiG+kQj4lG+HbjKlgcCqmNJGnAj+av1RIhyB
+         VxDljsxOBzKCe4N9tBXQHOqNs9VBbZ9n69pk6zHeYDZGav8NnyGfbGU9IHY57q0KvF9F
+         VR+N4M8E2MIgTIVOmBTUXEl0o+KJuT3ynFhtsut3eWpeVHgQXCv/qekRzBcOFI8f1bxa
+         aRJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765175722; x=1765780522;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZqyNPlmDIsr9igOdfXIDir5SMEz9QXEH46sRqM37UGQ=;
+        b=E2UO9rpqAXbZXwa3iGxXBLH4d09M15chxebht5c+Q2nkamFXmESynb88/AqEQbfpYE
+         sKm5WhNfeV7w1m/jXDnx0eRhYko/uKqDpD8+wcMVpXemBqX3TLLjxIlsuG7QUA67p26/
+         jBs/eGfLC3rAuy1cexHBblGfz3Xx8uzDTVv4VNjCq8jcvwhe1aKmjivn3UEA0EtCQmQK
+         B/B36UAr/mCeqqlPPZpPRP3+mMuHhPiD0BHQUoSFSiNYwuqLXAidWnTvbvGYazHtXq1q
+         jkOmo1E9udfOmIcp2OmsDhrUVQI7X+T5pxbUYOQiDeysaATQlvkDgCFLpBSMhQYfkE7m
+         mVNg==
+X-Forwarded-Encrypted: i=1; AJvYcCWjj1hhHrHrlnIjqi+dS2o3JQ6EVtrW3G5huSaBlJRsif9l3JJl7WHp895OJ+byvfO1zRAikw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzwyLjocE3Ht4gPJMfAED9jGZvCriXJDfj3PpQHHf8Afv8RPlk8
+	dr0LEgru/eMOvyvYW6/nWQYz/j+1D59NWB57eDEoEwk1Yz5u+RIoJjqlReM3HBsq0mEfDIR2nSJ
+	9XdOE6sQ/fhU/kQ==
+X-Google-Smtp-Source: AGHT+IHAI3z1pMXzyBPNpREzJHkOBRWhaGBqjtnbPcPl9gXNFuPCdYXbJdbTdfH/iA28L93uYP4ZI3E2jt+oqw==
+X-Received: from dygg16.prod.google.com ([2002:a05:693c:80d0:b0:2ab:9753:da7])
+ (user=jasonmiu job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:7301:7187:b0:2a4:3593:ddd4 with SMTP id 5a478bee46e88-2abc70f78e9mr2666178eec.1.1765175722204;
+ Sun, 07 Dec 2025 22:35:22 -0800 (PST)
+Date: Sun,  7 Dec 2025 22:35:09 -0800
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.52.0.223.gf5cc29aaa4-goog
+Message-ID: <20251208063513.3633942-1-jasonmiu@google.com>
+Subject: [PATCH 0/4] Make KHO Stateless
+From: Jason Miu <jasonmiu@google.com>
+To: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>, 
+	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Jason Miu <jasonmiu@google.com>, Mike Rapoport <rppt@kernel.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251207_223523_970147_5D8ED5E0 
+X-CRM114-Status: GOOD (  13.56  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,652 +90,86 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hugetlb-backed memfds can be used to improve performance by reducing TLB
-pressure, page faults, and save memory when using HVO. They are also
-commonly used to back VM memory, which is one of the primary users of
-live update.
+This series transitions KHO from an xarray-based metadata tracking system
+with serialization to using a radix tree data structure that can be
+passed directly to the next kernel.
 
-Add support for preserving a hugetlb-backed memfd across a live update.
-The serialized data takes similar form to shmem-backed memfds. See
-include/linux/kho/abi/memfd.h for more details. There is an additional
-field for the file order to identify its hstate.
+The key motivations for this change are to:
+- Eliminate the need for data serialization before kexec.
+- Remove the KHO finalize state.
+- Pass preservation metadata more directly to the next kernel via the FDT.
 
-The behaviour of the file is also similar to shmem-backed memfds. The
-file cannot grow or shrink once preserved, and all its pages are pinned
-to avoid migration.
+The new approach uses a radix tree to mark preserved pages. A
+page's physical address and its order are encoded into a single
+value. The tree is composed of multiple levels of page-sized tables,
+with leaf nodes being bitmap tables where each set bit represents a
+preserved page. The physical address of the radix trees root is passed
+in the FDT, allowing the next kernel to reconstruct the preserved
+memory map.
 
-In addition, the preservation logic reports preserved hugepages to the
-FLB so the right number of huge pages can be allocated on the next boot.
+This series is broken down into the following patches:
 
-On file retrieve, the reservations are set up, the folios are first
-prepped and added to the hstate, and then the folios are added to the
-page cache.
+1.  kho: Introduce KHO FDT ABI header:
+    Adds a dedicated ABI header to define the FDT interface.
 
-Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
+2.  kho: Relocate vmalloc preservation structure to KHO ABI header
+    Adds `struct kho_vmalloc` and related structs to the ABI header.
+
+3.  kho: Adopt radix tree for preserved memory tracking:    
+    Replaces the xarray-based tracker with the new radix tree
+    implementation and increments the ABI version.
+
+4.  kho: Remove finalize state and clients:
+    Removes the now-obsolete kho_finalize() function and its usage
+    from client code and debugfs.
+
 ---
- include/linux/kho/abi/hugetlb.h |  32 ++
- mm/hugetlb_luo.c                | 520 ++++++++++++++++++++++++++++++++
- mm/memfd_luo.c                  |   4 -
- 3 files changed, 552 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/kho/abi/hugetlb.h b/include/linux/kho/abi/hugetlb.h
-index 55e833569c48..dad4358da062 100644
---- a/include/linux/kho/abi/hugetlb.h
-+++ b/include/linux/kho/abi/hugetlb.h
-@@ -9,6 +9,7 @@
- #define _LINUX_KHO_ABI_HUGETLB_H
- 
- #include <linux/hugetlb.h>
-+#include <linux/kexec_handover.h>
- 
- /**
-  * DOC: hugetlb-backed memfd live update ABI
-@@ -63,4 +64,35 @@ static_assert(sizeof(struct hugetlb_ser) <= PAGE_SIZE);
- 
- #define HUGETLB_FLB_COMPATIBLE "hugetlb-v1"
- 
-+/**
-+ * struct hugemfd_folio_ser - Serialized state of a single folio.
-+ * @pfn:          The page frame number of the folio.
-+ * @reserved:     Reserved bits. Might be used for flags later.
-+ * @index:        The page offset of the folio in the original file.
-+ */
-+struct hugemfd_folio_ser {
-+	u64 pfn:52;
-+	u64 reserved:12;
-+	u64 index;
-+} __packed;
-+
-+/**
-+ * struct hugemfd_ser - Main serialization structure of a HugeTLB-backed memfd.
-+ * @pos:          The file's current position (f_pos).
-+ * @size:         The total size of the file in bytes (i_size).
-+ * @nr_folios:    Number of folios in the folios array.
-+ * @folios:       KHO vmalloc descriptor pointing to the array of
-+ *                struct hugemfd_folio_ser.
-+ * @order:        Order of the hugepages that back this file.
-+ */
-+struct hugemfd_ser {
-+	u64 size;
-+	u64 pos;
-+	u64 nr_folios;
-+	struct kho_vmalloc folios;
-+	u8 order;
-+} __packed;
-+
-+#define HUGE_MEMFD_COMPATIBLE "huge-memfd-v1"
-+
- #endif /* _LINUX_KHO_ABI_HUGETLB_H */
-diff --git a/mm/hugetlb_luo.c b/mm/hugetlb_luo.c
-index 80e3e015eca5..6454f8955d18 100644
---- a/mm/hugetlb_luo.c
-+++ b/mm/hugetlb_luo.c
-@@ -8,13 +8,17 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <linux/file.h>
- #include <linux/liveupdate.h>
- #include <linux/kexec_handover.h>
- #include <linux/hugetlb.h>
-+#include <linux/hugetlb_cgroup.h>
-+#include <linux/vmalloc.h>
- #include <linux/kho/abi/hugetlb.h>
- #include <linux/spinlock.h>
- 
- #include "hugetlb_internal.h"
-+#include "hugetlb_vmemmap.h"
- 
- struct hugetlb_flb_obj {
- 	/* Serializes access to ser and its hstates. */
-@@ -22,6 +26,11 @@ struct hugetlb_flb_obj {
- 	struct hugetlb_ser *ser;
- };
- 
-+struct hugemfd_private {
-+	struct hugemfd_folio_ser *folios_ser;
-+	unsigned long nr_folios;
-+};
-+
- static int hugetlb_flb_preserve(struct liveupdate_flb_op_args *args)
- {
- 	struct hugetlb_ser *hugetlb_ser;
-@@ -172,8 +181,519 @@ unsigned long __init hstate_liveupdate_pages(struct hstate *h)
- 	return hser ? hser->nr_pages : 0;
- }
- 
-+static bool hugemfd_can_preserve(struct liveupdate_file_handler *handler,
-+				 struct file *file)
-+{
-+	struct inode *inode = file_inode(file);
-+
-+	return is_file_hugepages(file) && !inode->i_nlink;
-+}
-+
-+static void hugemfd_unpreserve_folio(struct hstate *h, struct folio *folio)
-+{
-+	hugetlb_flb_del_folio(h);
-+	kho_unpreserve_folio(folio);
-+}
-+
-+static int hugemfd_preserve_folio(struct hstate *h, struct folio *folio,
-+				  struct hugemfd_folio_ser *folio_ser)
-+{
-+	int err;
-+
-+	err = kho_preserve_folio(folio);
-+	if (err)
-+		return err;
-+
-+	err = hugetlb_flb_add_folio(h);
-+	if (err)
-+		goto err_unpreserve;
-+
-+	folio_ser->pfn = folio_pfn(folio);
-+	folio_ser->index = folio->index;
-+	return 0;
-+
-+err_unpreserve:
-+	kho_unpreserve_folio(folio);
-+	return err;
-+}
-+
-+static int
-+hugemfd_preserve_folios(struct hugemfd_ser *memfd_ser, struct file *file,
-+			unsigned long *nr_foliosp,
-+			struct hugemfd_folio_ser **out_folios_ser)
-+{
-+	struct hugemfd_folio_ser *folios_ser;
-+	struct inode *inode = file_inode(file);
-+	struct hstate *h = hstate_inode(inode);
-+	unsigned int max_folios;
-+	long i, nr_folios, size;
-+	struct folio **folios;
-+	pgoff_t offset;
-+	int err;
-+
-+	size = i_size_read(inode);
-+
-+	if (!size) {
-+		*nr_foliosp = 0;
-+		*out_folios_ser = NULL;
-+		memset(&memfd_ser->folios, 0, sizeof(memfd_ser->folios));
-+		return 0;
-+	}
-+
-+	/* Calculate number of folios in the file based on its size. */
-+	max_folios = size / huge_page_size(h);
-+	folios = kvmalloc_array(max_folios, sizeof(*folios), GFP_KERNEL);
-+	if (!folios)
-+		return -ENOMEM;
-+
-+	/*
-+	 * Pin the folios so they don't move around behind our back. This also
-+	 * ensures none of the folios are in CMA -- which ensures they don't
-+	 * fall in KHO scratch memory. It also moves swapped out folios back to
-+	 * memory.
-+	 *
-+	 * A side effect of doing this is that it allocates a folio for all
-+	 * indices in the file. This might waste memory on sparse memfds. If
-+	 * that is really a problem in the future, we can have a
-+	 * memfd_pin_folios() variant that does not allocate a page on empty
-+	 * slots.
-+	 */
-+	nr_folios = memfd_pin_folios(file, 0, size - 1, folios, max_folios, &offset);
-+	if (nr_folios < 0) {
-+		err = nr_folios;
-+		goto err_free_folios;
-+	}
-+
-+	folios_ser = vcalloc(nr_folios, sizeof(*folios_ser));
-+	if (!folios_ser) {
-+		err = -ENOMEM;
-+		goto err_unpin;
-+	}
-+
-+	for (i = 0; i < nr_folios; i++) {
-+		err = hugemfd_preserve_folio(h, folios[i], &folios_ser[i]);
-+		if (err)
-+			goto err_unpreserve;
-+	}
-+
-+	err = kho_preserve_vmalloc(folios_ser, &memfd_ser->folios);
-+	if (err)
-+		goto err_unpreserve;
-+
-+	kvfree(folios);
-+
-+	memfd_ser->nr_folios = nr_folios;
-+	*nr_foliosp = nr_folios;
-+	*out_folios_ser = folios_ser;
-+	return 0;
-+
-+err_unpreserve:
-+	for (i = i - 1; i >= 0; i--)
-+		hugemfd_unpreserve_folio(h, folios[i]);
-+	vfree(folios_ser);
-+err_unpin:
-+	unpin_folios(folios, nr_folios);
-+err_free_folios:
-+	kvfree(folios);
-+	return err;
-+}
-+
-+static int hugemfd_preserve(struct liveupdate_file_op_args *args)
-+{
-+	struct file *file = args->file;
-+	struct inode *inode = file_inode(file);
-+	struct hstate *h = hstate_inode(inode);
-+	struct hugemfd_folio_ser *folios_ser;
-+	struct hugemfd_private *private;
-+	struct hugemfd_ser *memfd_ser;
-+	unsigned long nr_folios;
-+	int err;
-+
-+	private = kmalloc(sizeof(*private), GFP_KERNEL);
-+	if (!private)
-+		return -ENOMEM;
-+
-+	memfd_ser = kho_alloc_preserve(sizeof(*memfd_ser));
-+	if (!memfd_ser) {
-+		err = -ENOMEM;
-+		goto err_free_private;
-+	}
-+
-+	inode_lock(inode);
-+
-+	hugetlb_i_freeze(inode, true);
-+
-+	memfd_ser->size = i_size_read(inode);
-+	memfd_ser->pos = file->f_pos;
-+	memfd_ser->order = h->order;
-+
-+	err = hugemfd_preserve_folios(memfd_ser, file, &nr_folios, &folios_ser);
-+	if (err)
-+		goto err_unlock;
-+
-+	inode_unlock(inode);
-+
-+	private->folios_ser = folios_ser;
-+	private->nr_folios = nr_folios;
-+	args->private_data = private;
-+	args->serialized_data = virt_to_phys(memfd_ser);
-+
-+	return 0;
-+
-+err_unlock:
-+	hugetlb_i_freeze(inode, false);
-+	inode_unlock(inode);
-+	kho_unpreserve_free(memfd_ser);
-+err_free_private:
-+	kfree(private);
-+	return err;
-+}
-+
-+static void hugemfd_unpreserve_folios(struct hugemfd_ser *memfd_ser,
-+				      struct hugemfd_folio_ser *folios_ser,
-+				      unsigned long nr_folios,
-+				      struct hstate *h)
-+{
-+	if (!nr_folios)
-+		return;
-+
-+	kho_unpreserve_vmalloc(&memfd_ser->folios);
-+
-+	for (long i = 0; i < nr_folios; i++) {
-+		struct folio *folio = pfn_folio(folios_ser[i].pfn);
-+
-+		hugemfd_unpreserve_folio(h, folio);
-+		unpin_folio(folio);
-+	}
-+
-+	vfree(folios_ser);
-+}
-+
-+static void hugemfd_unpreserve(struct liveupdate_file_op_args *args)
-+{
-+	struct hugemfd_ser *memfd_ser = phys_to_virt(args->serialized_data);
-+	struct hugemfd_private *private = args->private_data;
-+	struct inode *inode = file_inode(args->file);
-+	struct hstate *h = hstate_inode(inode);
-+
-+	inode_lock(inode);
-+	hugemfd_unpreserve_folios(memfd_ser, private->folios_ser,
-+				  private->nr_folios, h);
-+	hugetlb_i_freeze(inode, false);
-+	kho_unpreserve_free(memfd_ser);
-+	kfree(private);
-+	inode_unlock(inode);
-+}
-+
-+static int hugemfd_freeze(struct liveupdate_file_op_args *args)
-+{
-+	struct hugemfd_ser *memfd_ser = phys_to_virt(args->serialized_data);
-+
-+	/*
-+	 * The pos might have changed since prepare. Everything else stays the
-+	 * same.
-+	 */
-+	memfd_ser->pos = args->file->f_pos;
-+	return 0;
-+}
-+
-+static void hugemfd_finish(struct liveupdate_file_op_args *args)
-+{
-+	struct hugemfd_ser *memfd_ser = phys_to_virt(args->serialized_data);
-+	struct hugemfd_folio_ser *folios_ser;
-+	LIST_HEAD(folio_list);
-+	struct hstate *h;
-+
-+	if (args->retrieved)
-+		return;
-+
-+	folios_ser = kho_restore_vmalloc(&memfd_ser->folios);
-+	if (WARN_ON_ONCE(!folios_ser))
-+		return;
-+
-+	h = size_to_hstate(PAGE_SIZE << memfd_ser->order);
-+	if (!h) {
-+		pr_warn("no hstate found for order %u\n", memfd_ser->order);
-+		goto err_free_all;
-+	}
-+
-+	/* Return the folios back to the hstate. */
-+	for (u64 i = 0; i < memfd_ser->nr_folios; i++) {
-+		struct folio *folio;
-+
-+		folio = kho_restore_folio(PFN_PHYS(folios_ser[i].pfn));
-+		if (!folio)
-+			continue;
-+
-+		if (!folio_ref_freeze(folio, 1)) {
-+			pr_warn("unexpected refcount on PFN 0x%lx\n",
-+				folio_pfn(folio));
-+			continue;
-+		}
-+
-+		init_new_hugetlb_folio(folio);
-+		list_add(&folio->lru, &folio_list);
-+	}
-+
-+	prep_and_add_allocated_folios(h, &folio_list);
-+	vfree(folios_ser);
-+	return;
-+
-+err_free_all:
-+	for (u64 i = 0; i < memfd_ser->nr_folios; i++) {
-+		struct folio *folio;
-+
-+		folio = kho_restore_folio(PFN_PHYS(folios_ser[i].pfn));
-+		if (folio)
-+			folio_put(folio);
-+	}
-+	vfree(folios_ser);
-+}
-+
-+static int hugemfd_setup_rsrv(struct inode *inode)
-+{
-+	struct hstate *h = hstate_inode(inode);
-+	long chg, regions_needed, add = -1;
-+	/*
-+	 * NOTE: Setting up the reservations for the whole file works right now
-+	 * because during preserve all the folios are filled in when pinning.
-+	 * Whenever that changes, this needs to be updated as well.
-+	 */
-+	long from = 0, to = inode->i_size >> huge_page_shift(h);
-+	struct resv_map *resv_map;
-+	struct hugetlb_cgroup *h_cg = NULL;
-+	int err;
-+
-+	resv_map = inode_resv_map(inode);
-+	chg = region_chg(resv_map, from, to, &regions_needed);
-+	if (chg < 0)
-+		return chg;
-+
-+	if (hugetlb_cgroup_charge_cgroup_rsvd(hstate_index(h),
-+					      chg * pages_per_huge_page(h),
-+					      &h_cg) < 0) {
-+		err = -ENOMEM;
-+		goto err_region_abort;
-+	}
-+
-+	/*
-+	 * No need for hugetlb_acct_memory() to update h->resv_huge_pages since
-+	 * the reserved pages we added here will get used immediately after in
-+	 * hugemfd_retrieve_folios().
-+	 *
-+	 * No need for subpool reservations as well since the memfds come from
-+	 * the internal mounts of hugetlbfs and that doesn't have subpools.
-+	 */
-+	add = region_add(resv_map, from, to, regions_needed, h, h_cg);
-+	if (add < 0) {
-+		err = add;
-+		goto err_uncharge_cgroup;
-+	}
-+
-+	hugetlb_cgroup_put_rsvd_cgroup(h_cg);
-+
-+	return 0;
-+
-+err_uncharge_cgroup:
-+	hugetlb_cgroup_uncharge_cgroup_rsvd(hstate_index(h),
-+					    chg * pages_per_huge_page(h), h_cg);
-+err_region_abort:
-+	region_abort(resv_map, from, to, regions_needed);
-+	return err;
-+}
-+
-+static struct folio *hugemfd_retrieve_folio(struct hugemfd_folio_ser *folio_ser)
-+{
-+	struct folio *folio;
-+
-+	folio = kho_restore_folio(PFN_PHYS(folio_ser->pfn));
-+	if (!folio)
-+		return NULL;
-+
-+	init_new_hugetlb_folio(folio);
-+	__folio_mark_uptodate(folio);
-+	folio_ref_freeze(folio, 1);
-+
-+	return folio;
-+}
-+
-+static void hugemfd_add_folios(struct hstate *h, struct list_head *folio_list)
-+{
-+	unsigned long flags;
-+	struct folio *folio, *tmp_f;
-+
-+	/* Send list for bulk vmemmap optimization processing */
-+	hugetlb_vmemmap_optimize_folios(h, folio_list);
-+
-+	spin_lock_irqsave(&hugetlb_lock, flags);
-+	list_for_each_entry_safe(folio, tmp_f, folio_list, lru) {
-+		account_new_hugetlb_folio(h, folio);
-+		folio_clear_hugetlb_freed(folio);
-+		list_move(&folio->lru, &h->hugepage_activelist);
-+	}
-+	spin_unlock_irqrestore(&hugetlb_lock, flags);
-+}
-+
-+static int hugemfd_retrieve_folios(struct file *file,
-+				   struct hugemfd_ser *memfd_ser)
-+{
-+	struct hugemfd_folio_ser *folios_ser;
-+	struct inode *inode = file_inode(file);
-+	struct hstate *h = hstate_inode(inode);
-+	int err, hidx = hstate_index(h);
-+	gfp_t gfp = htlb_alloc_mask(h) | __GFP_RETRY_MAYFAIL;
-+	struct address_space *mapping;
-+	struct hugetlb_cgroup *h_cg;
-+	struct folio *folio;
-+	LIST_HEAD(list);
-+	u64 nr_folios;
-+
-+	if (!memfd_ser->size)
-+		return 0;
-+
-+	folios_ser = kho_restore_vmalloc(&memfd_ser->folios);
-+	if (!folios_ser)
-+		return -ENOMEM;
-+
-+	nr_folios = memfd_ser->nr_folios;
-+	mapping = inode->i_mapping;
-+
-+	/* First prepare the folios and add them to the hstate. */
-+	for (u64 i = 0; i < nr_folios; i++) {
-+		struct hugemfd_folio_ser *folio_ser = &folios_ser[i];
-+
-+		folio = hugemfd_retrieve_folio(folio_ser);
-+		if (!folio) {
-+			err = -EINVAL;
-+			goto err_free_folios_ser;
-+		}
-+
-+		list_add(&folio->lru, &list);
-+	}
-+
-+	hugemfd_add_folios(h, &list);
-+
-+	/* Now that all the folios are prepared, add them to the file. */
-+	for (u64 i = 0; i < nr_folios; i++) {
-+		folio = pfn_folio(folios_ser[i].pfn);
-+		folio_ref_unfreeze(folio, 1);
-+
-+		err = hugetlb_add_to_page_cache(folio, mapping,
-+						folios_ser[i].index >> memfd_ser->order);
-+		if (err) {
-+			pr_err("failed to add to page cache: %pe\n", ERR_PTR(err));
-+			goto err_free_folios_ser;
-+		}
-+
-+		spin_lock_irq(&hugetlb_lock);
-+		err = hugetlb_cgroup_charge_cgroup(hidx, pages_per_huge_page(h),
-+						   &h_cg);
-+		if (err) {
-+			spin_unlock_irq(&hugetlb_lock);
-+			folio_unlock(folio);
-+			goto err_free_folios_ser;
-+		}
-+		hugetlb_cgroup_commit_charge(hidx, pages_per_huge_page(h), h_cg, folio);
-+		spin_unlock_irq(&hugetlb_lock);
-+
-+		err = mem_cgroup_charge_hugetlb(folio, gfp);
-+		if (err) {
-+			folio_unlock(folio);
-+			goto err_free_folios_ser;
-+		}
-+
-+		folio_unlock(folio);
-+		folio_put(folio);
-+	}
-+
-+	vfree(folios_ser);
-+	return 0;
-+
-+err_free_folios_ser:
-+	/*
-+	 * NOTE: The folios of the file might be in use for DMA or other
-+	 * things. It is unsafe to free them. Leak them, and let userspace get
-+	 * the error code and decide what to do.
-+	 */
-+	vfree(folios_ser);
-+	return err;
-+}
-+
-+/*
-+ * NOTE: Leaking the file in the error paths is intentional here. The memory
-+ * might be in use by devices, and it is unsafe to release it. Return the error
-+ * to userspace and let it decide how to recover, usually by rebooting the
-+ * system.
-+ */
-+static int hugemfd_retrieve(struct liveupdate_file_op_args *args)
-+{
-+	struct hugemfd_ser *memfd_ser;
-+	struct file *file;
-+	int err;
-+
-+	memfd_ser = phys_to_virt(args->serialized_data);
-+
-+	file = hugetlb_file_setup("", 0, VM_NORESERVE, HUGETLB_ANONHUGE_INODE,
-+				  memfd_ser->order + PAGE_SHIFT);
-+	if (IS_ERR(file)) {
-+		err = PTR_ERR(file);
-+		goto err_free_memfd_ser;
-+	}
-+
-+	vfs_setpos(file, memfd_ser->pos, MAX_LFS_FILESIZE);
-+	file->f_inode->i_size = memfd_ser->size;
-+
-+	err = hugemfd_setup_rsrv(file_inode(file));
-+	if (err)
-+		goto err_free_memfd_ser;
-+
-+	if (memfd_ser->nr_folios) {
-+		err = hugemfd_retrieve_folios(file, memfd_ser);
-+		if (err)
-+			goto err_free_memfd_ser;
-+	}
-+
-+	args->file = file;
-+	kho_restore_free(memfd_ser);
-+	return 0;
-+
-+err_free_memfd_ser:
-+	kho_restore_free(memfd_ser);
-+	return err;
-+}
-+
-+static const struct liveupdate_file_ops hugemfd_luo_ops = {
-+	.can_preserve = hugemfd_can_preserve,
-+	.preserve = hugemfd_preserve,
-+	.unpreserve = hugemfd_unpreserve,
-+	.freeze = hugemfd_freeze,
-+	.finish = hugemfd_finish,
-+	.retrieve = hugemfd_retrieve,
-+	.owner = THIS_MODULE,
-+};
-+
-+static struct liveupdate_file_handler hugemfd_handler = {
-+	.ops = &hugemfd_luo_ops,
-+	.compatible = HUGE_MEMFD_COMPATIBLE,
-+};
-+
- void __init hugetlb_luo_init(void)
- {
-+	int err;
-+
- 	if (!liveupdate_enabled())
- 		return;
-+
-+	err = liveupdate_register_file_handler(&hugemfd_handler);
-+	if (err) {
-+		pr_err("could not register file handler: %pe\n", ERR_PTR(err));
-+		return;
-+	}
-+
-+	err = liveupdate_register_flb(&hugemfd_handler, &hugetlb_luo_flb);
-+	if (err) {
-+		pr_err("could not register hugetlb FLB handler: %pe\n", ERR_PTR(err));
-+		liveupdate_unregister_file_handler(&hugemfd_handler);
-+		return;
-+	}
- }
-diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-index 4f6ba63b4310..de715d67d543 100644
---- a/mm/memfd_luo.c
-+++ b/mm/memfd_luo.c
-@@ -26,10 +26,6 @@
-  *    The LUO API is not stabilized yet, so the preserved properties of a memfd
-  *    are also not stable and are subject to backwards incompatible changes.
-  *
-- * .. note::
-- *    Currently a memfd backed by Hugetlb is not supported. Memfds created
-- *    with ``MFD_HUGETLB`` will be rejected.
-- *
-  * Preserved Properties
-  * ====================
-  *
+Changes in v3:
+- The preserved memory tracking data structures is defined in the ABI header.
+- Relocate the `kho_vmalloc` struct and its helper macro to the KHO ABI
+  header to formalize its status as a stable ABI.
+- Export the core radix tree manipulation functions as a public API to
+  support broader use by other kernel subsystems.
+- Update the documents.
+- Inline comments have been cleaned up.
+
+---
+
+Jason Miu (4):
+  kho: Introduce KHO FDT ABI header
+  kho: Relocate vmalloc preservation structure to KHO ABI header
+  kho: Adopt radix tree for preserved memory tracking
+  kho: Remove finalize state and clients
+
+ Documentation/admin-guide/mm/kho.rst          |  46 +-
+ Documentation/core-api/kho/bindings/kho.yaml  |  43 --
+ .../core-api/kho/bindings/sub-fdt.yaml        |  27 -
+ Documentation/core-api/kho/concepts.rst       |  28 +-
+ Documentation/core-api/kho/fdt.rst            |  84 +--
+ Documentation/core-api/kho/index.rst          |   1 +
+ Documentation/core-api/kho/radix_tree.rst     |  17 +
+ include/linux/kexec_handover.h                |  27 +-
+ include/linux/kho/abi/kexec_handover.h        | 268 +++++++
+ include/linux/kho/abi/memfd.h                 |   2 +-
+ include/linux/kho_radix_tree.h                |  81 ++
+ kernel/liveupdate/kexec_handover.c            | 694 +++++++++---------
+ kernel/liveupdate/kexec_handover_debugfs.c    |  20 -
+ kernel/liveupdate/kexec_handover_internal.h   |   3 -
+ kernel/liveupdate/luo_core.c                  |  12 +-
+ kernel/liveupdate/luo_flb.c                   |   2 +-
+ lib/test_kho.c                                |   1 +
+ tools/testing/selftests/kho/init.c            |  20 -
+ 18 files changed, 765 insertions(+), 611 deletions(-)
+ delete mode 100644 Documentation/core-api/kho/bindings/kho.yaml
+ delete mode 100644 Documentation/core-api/kho/bindings/sub-fdt.yaml
+ create mode 100644 Documentation/core-api/kho/radix_tree.rst
+ create mode 100644 include/linux/kho/abi/kexec_handover.h
+ create mode 100644 include/linux/kho_radix_tree.h
+
+
+base-commit: 7d31f578f3230f3b7b33b0930b08f9afd8429817
 -- 
-2.43.0
+2.52.0.223.gf5cc29aaa4-goog
 
 
