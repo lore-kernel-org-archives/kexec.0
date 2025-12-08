@@ -4,69 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 94E75D3B7E7
-	for <kexec@archiver.kernel.org>; Mon,  8 Dec 2025 06:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 88138D3B7E9
+	for <kexec@archiver.kernel.org>; Mon,  8 Dec 2025 06:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:To:From:Subject
 	:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:Cc:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=fWGLthrm17VZY/kZ1kLIqDTWzrsbdUmIFsSZPiZHtvE=; b=Acr8MpqgmogJ+8VfzHmhjN7o0H
-	W+hbA4bDxeYbuLJf7iM8w7c97hCcY44fzpaPNOW43JLOgjIAZQSz9CfWu2tRsRPAI6EHaqK00yvt+
-	1FCdIRthQ8TKm7VO4YH6HjFrthr52X0hX/dxk5OuwLlMrQtbjLUf2O+p1+hTX7S5qr/dv/ZfCrlhJ
-	UtJq3aAF8WkB7ShQpTDcAjsx3pbCSEA8+Vm3Lj7RM5A4Ys1s31SVpXdWvWvaB1gKiRpiKM0dIaWJK
-	ewNfLUhqjsydF4r3CRXDAcjbn3qunHkw7gXkiNsArkj4mcRfzjMvxTluz8UUKGcGn4m7RrOPm7/HO
-	t6YdB3hA==;
+	bh=KshiYXV7msSpU9cl75Ojt3IGhY+gwGaRSdjYRirqx3s=; b=T7WC2Fl4XFoxLgJQYwPl9yvKd4
+	UFn471c0G5lh+VHzqCGM34LdwJsnCqWVDXZvMuhAlkxaZz29fWVKzYAQFBborso/Rz8QP/lS7Y2Ti
+	ZZ6MOPufYGrty14wHB94MXBNUfs1F8ICDwYz14ACa3QwRm6nxVeZ9G0gX26pD8/JpMJvCRCMURQR6
+	oTHL6KznyllDZUj1CEWTtAIeXbiIXvQQaw2ZwX6Mx422ACQXDDrWc/J/clWloqtOLxX0JqP4sVkTx
+	XRx8xPTMCdr/4i0LtmYuoBeJbGVvmGEwOBw7PhoW76TN7SLXbwTOks9b7+UyQ2elb25wu4ZKOXjjI
+	sH+YVr1Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vSUqJ-0000000ChWq-0Jth;
-	Mon, 08 Dec 2025 06:35:31 +0000
-Received: from mail-dl1-x1249.google.com ([2607:f8b0:4864:20::1249])
+	id 1vSUqL-0000000ChY4-2hVS;
+	Mon, 08 Dec 2025 06:35:33 +0000
+Received: from mail-pg1-x54a.google.com ([2607:f8b0:4864:20::54a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vSUqD-0000000ChUj-2rNF
+	id 1vSUqJ-0000000ChWV-08Nj
 	for kexec@lists.infradead.org;
-	Mon, 08 Dec 2025 06:35:29 +0000
-Received: by mail-dl1-x1249.google.com with SMTP id a92af1059eb24-11bd7a827fdso4547480c88.1
-        for <kexec@lists.infradead.org>; Sun, 07 Dec 2025 22:35:24 -0800 (PST)
+	Mon, 08 Dec 2025 06:35:32 +0000
+Received: by mail-pg1-x54a.google.com with SMTP id 41be03b00d2f7-b969f3f5bb1so7094497a12.0
+        for <kexec@lists.infradead.org>; Sun, 07 Dec 2025 22:35:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1765175724; x=1765780524; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1765175730; x=1765780530; darn=lists.infradead.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=fWGLthrm17VZY/kZ1kLIqDTWzrsbdUmIFsSZPiZHtvE=;
-        b=KcNOLdYFWukpSTdBgCcmmYU03g4s/vnIjdqAgSf+3AieynaedXfSOavOaVv0y0UDPa
-         6VmzB0YGASRzFY0Unxk4/akh/Br5KNX4cVJoy4qGGkh/9WlJcZ4cZuvGbMNnJ0pWsK29
-         g/ZO9bfuDtRjvCMN37B4I2EKdm3Zk7VdtrPEsTZKHMClMUWKkHGxIGghLp1dzwWyaoM7
-         BUlOK01Wz/PIjeUhoeUqNGbRNeIUfjiuwIYNa6dI075pK6HAlpwidMiEsm4AWIpAvLfV
-         5YesiiVckAlHyJwZ8BTintNK/1Urd1oa25tr2BWXvIfNQhuPaoEy9q6EncQWGD4pMz3x
-         A/Vg==
+        bh=KshiYXV7msSpU9cl75Ojt3IGhY+gwGaRSdjYRirqx3s=;
+        b=HHQeB0jQulVIcywLcoMJiqPWTM1w0hqpxZXtqIvXv9+rTQ0B77OE85rx8CmgNd9GwV
+         N5fP8AQipzyJNexP5R+4dX5rcmv77qd15bozqruoeSM6Qp7vq/KJXNosS4pYIow5vBM9
+         m6eIWFFzNqma11lhO0wo/3FEQEBNxXs/NuPAEg4GaH+oE1cLM6vZHPutdSAuFWmbo9bU
+         0Egc4GQ4xDAafK7AfQRHMcqXqguBjSzvmaryZVMMI/7ERsZTF4vHCgkeIPtGdS+ljw0w
+         JpOGJEVwb8b+zjwScQGwjiNsKadRrj/oas6jfdLNAzCbulc/M21wLSe6ZIOK3sofFN+W
+         Zn5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765175724; x=1765780524;
+        d=1e100.net; s=20230601; t=1765175730; x=1765780530;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fWGLthrm17VZY/kZ1kLIqDTWzrsbdUmIFsSZPiZHtvE=;
-        b=lT9gHV2ki3fEgl5raNqeWARQ1GYj0n5xailDsW3/UlAYniBA1hnSauQqMJ3ugbvHHu
-         7ZMKGDrLEHCQzE2p5sAHBherTjg7w5onO57HgS7MAsEcqmS1r+5qhdwOuoWdtUwp7YQ9
-         N/aVYiJSQ5eAuSTPpQGLNRBIJfAhu8YHUa7a0VhvRvglDLSdgWMXTizgEneR0XspNTLB
-         AlALnF05RZCug38qrb8Hf48pF5JvYAhfGYPGzfaJLnh38slSHBUQy/lsP2XNwpSQ7X6H
-         1CGpILq9mkwNp4C/yUI4wIb4N0Twbfx6gWSzcQFx7Vbh2eaNEZlVsYKZoJ4+pPJ1hzj6
-         gG6w==
-X-Forwarded-Encrypted: i=1; AJvYcCWD4E2suqkSHQ4xmw33cESbsq6B3iVrybwUUhuowWopErxmXdnReyAwPzaoNLNHHmGE2EDeEw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzdaS2To0NFqcx0LsT1uWqMGUmdrRGpqC+Uzh4PY6ewAQiSirM2
-	C0LrYNdQ+wr1x/bv7Myn8opyCT0XleT3tFb/zvjCWi7bSsl9krEMMPRltdTZBlWmGPC8tbOc3r1
-	iyFp+sdGwN7xfYA==
-X-Google-Smtp-Source: AGHT+IE52W/7TLCYcpmlAdIuWyjwOhdTqcu4K+TbfvCAqg+fup4VReiWzpmBimfJipR5TfiJCImuAU4n5P+1rw==
-X-Received: from dlbsy3.prod.google.com ([2002:a05:7022:fa03:b0:11b:1966:8735])
+        bh=KshiYXV7msSpU9cl75Ojt3IGhY+gwGaRSdjYRirqx3s=;
+        b=DH6Hjnp0Ky8brbIX2hIfSIE2HjpLk92g7dRE5S6UVMsqZWkZShGt5uczeVidXdMROr
+         Y7EAImAPT4FwUhSVrhcXwYWvhg8giEw0ow38dy1aPbYy73sFdqz6togViq1qZ742btY3
+         QzWtwLDKZgNF9gs9ZabQQZD9VEYs1X1Lf+UV/1xG1T8o/VOrtuI6bd6DO4XgG/MeILLD
+         Davc8760+OXZ71RLmM8jopysT/eubXAgvmME6fRepvjVLeSekEL5qB79TXK9F/zBbTgO
+         TGgxXiGtCGFPnfuwneU8BjjAa8Brgk3ixho17+rwkwHTTwRrzdXHQWv+NpQnwo344Tsu
+         gdaA==
+X-Forwarded-Encrypted: i=1; AJvYcCW8B149sLHrtaUcQORYd7IHLVVKDEUd6A5iK+rc4KhXHRSLbicJAgSbd6yPPrXVhTULOsIH4w==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yz4YRMyh/FxKQTm/R4Zuc5ZyQOadyutgFNWsBWJENgcZBuiag3v
+	q1F16M8tAop9In2NGydF4ZAuVD4P0x24wMMvx7ysxB4khqsLPr9a3hYQPcf5M74VI/HZLAYZhyP
+	FBVKx0On4jl7W/A==
+X-Google-Smtp-Source: AGHT+IFMU7AuW4YSMGBBVS7LMeWXqgqOlXfXkmhWt8KWVMRO66QTJ5hB8/bvb8GxcMq3/EW/k0GLaCk1evDr4Q==
+X-Received: from dybia15.prod.google.com ([2002:a05:7301:30f:b0:2ab:cd21:c657])
  (user=jasonmiu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:7023:d04:b0:119:e569:f85b with SMTP id a92af1059eb24-11df601cb27mr9499750c88.18.1765175724135;
- Sun, 07 Dec 2025 22:35:24 -0800 (PST)
-Date: Sun,  7 Dec 2025 22:35:10 -0800
+ 2002:a05:7300:d40d:b0:2a4:3593:c7cc with SMTP id 5a478bee46e88-2abc712e394mr3049842eec.12.1765175729835;
+ Sun, 07 Dec 2025 22:35:29 -0800 (PST)
+Date: Sun,  7 Dec 2025 22:35:13 -0800
 In-Reply-To: <20251208063513.3633942-1-jasonmiu@google.com>
 Mime-Version: 1.0
 References: <20251208063513.3633942-1-jasonmiu@google.com>
 X-Mailer: git-send-email 2.52.0.223.gf5cc29aaa4-goog
-Message-ID: <20251208063513.3633942-2-jasonmiu@google.com>
-Subject: [PATCH 1/4] kho: Introduce KHO FDT ABI header
+Message-ID: <20251208063513.3633942-5-jasonmiu@google.com>
+Subject: [PATCH 4/4] kho: Remove finalize state and clients
 From: Jason Miu <jasonmiu@google.com>
 To: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
 	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>, 
@@ -76,8 +76,8 @@ To: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
 	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251207_223525_782511_373C92ED 
-X-CRM114-Status: GOOD (  29.21  )
+X-CRM114-CacheID: sfid-20251207_223531_086216_DED64D04 
+X-CRM114-Status: GOOD (  29.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,397 +92,294 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Introduce the `include/linux/kho/abi/kexec_handover.h` header file,
-which defines the stable ABI for the KHO mechanism. This header specifies
-how preserved data is passed between kernels using an FDT.
+Eliminate the `kho_finalize()` function and its associated state from
+the KHO subsystem. The transition to a radix tree for memory tracking
+makes the explicit "finalize" state and its serialization step
+obsolete.
 
-The ABI contract includes the FDT structure, node properties, and the
-"kho-v1" compatible string. By centralizing these definitions, this
-header serves as the foundational agreement for inter-kernel
-communication of preserved states, ensuring forward compatibility and
-preventing misinterpretation of data across kexec transitions.
+Remove the `kho_finalize()` and `kho_finalized()` APIs and their stub
+implementations. Update KHO client code and the debugfs interface to
+no longer call or depend on the `kho_finalize()` mechanism.
 
-Since the ABI definitions are now centralized in the header files, the
-YAML files that previously described the FDT interfaces are
-redundant. These redundant files have therefore been removed.
+Complete the move towards a stateless KHO, simplifying the overall
+design by removing unnecessary state management.
 
 Signed-off-by: Jason Miu <jasonmiu@google.com>
 ---
- Documentation/core-api/kho/bindings/kho.yaml  | 43 ----------
- .../core-api/kho/bindings/sub-fdt.yaml        | 27 ------
- Documentation/core-api/kho/concepts.rst       | 13 +++
- Documentation/core-api/kho/fdt.rst            | 79 +++--------------
- include/linux/kho/abi/kexec_handover.h        | 84 +++++++++++++++++++
- kernel/liveupdate/kexec_handover.c            | 19 ++---
- 6 files changed, 116 insertions(+), 149 deletions(-)
- delete mode 100644 Documentation/core-api/kho/bindings/kho.yaml
- delete mode 100644 Documentation/core-api/kho/bindings/sub-fdt.yaml
- create mode 100644 include/linux/kho/abi/kexec_handover.h
+ Documentation/admin-guide/mm/kho.rst        | 46 ++++-----------------
+ Documentation/core-api/kho/concepts.rst     | 13 +-----
+ kernel/liveupdate/kexec_handover.c          | 10 -----
+ kernel/liveupdate/kexec_handover_debugfs.c  | 20 ---------
+ kernel/liveupdate/kexec_handover_internal.h |  3 --
+ kernel/liveupdate/luo_core.c                | 12 +-----
+ kernel/liveupdate/luo_flb.c                 |  2 +-
+ tools/testing/selftests/kho/init.c          | 20 ---------
+ 8 files changed, 10 insertions(+), 116 deletions(-)
 
-diff --git a/Documentation/core-api/kho/bindings/kho.yaml b/Documentation/core-api/kho/bindings/kho.yaml
-deleted file mode 100644
-index 11e8ab7b219d..000000000000
---- a/Documentation/core-api/kho/bindings/kho.yaml
-+++ /dev/null
-@@ -1,43 +0,0 @@
--# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
--%YAML 1.2
-----
--title: Kexec HandOver (KHO) root tree
+diff --git a/Documentation/admin-guide/mm/kho.rst b/Documentation/admin-guide/mm/kho.rst
+index 6dc18ed4b886..13910bc68efe 100644
+--- a/Documentation/admin-guide/mm/kho.rst
++++ b/Documentation/admin-guide/mm/kho.rst
+@@ -28,17 +28,7 @@ per NUMA node scratch regions on boot.
+ Perform a KHO kexec
+ ===================
+ 
+-First, before you perform a KHO kexec, you need to move the system into
+-the :ref:`KHO finalization phase <kho-finalization-phase>` ::
 -
--maintainers:
--  - Mike Rapoport <rppt@kernel.org>
--  - Changyuan Lyu <changyuanl@google.com>
+-  $ echo 1 > /sys/kernel/debug/kho/out/finalize
 -
--description: |
--  System memory preserved by KHO across kexec.
+-After this command, the KHO FDT is available in
+-``/sys/kernel/debug/kho/out/fdt``. Other subsystems may also register
+-their own preserved sub FDTs under
+-``/sys/kernel/debug/kho/out/sub_fdts/``.
 -
--properties:
--  compatible:
--    enum:
--      - kho-v1
+-Next, load the target payload and kexec into it. It is important that you
++To perform a KHO kexec, load the target payload and kexec into it. It is important that you
+ use the ``-s`` parameter to use the in-kernel kexec file loader, as user
+ space kexec tooling currently has no support for KHO with the user space
+ based file loader ::
+@@ -52,40 +42,19 @@ For example, if you used ``reserve_mem`` command line parameter to create
+ an early memory reservation, the new kernel will have that memory at the
+ same physical address as the old kernel.
+ 
+-Abort a KHO exec
+-================
 -
--  preserved-memory-map:
--    description: |
--      physical address (u64) of an in-memory structure describing all preserved
--      folios and memory ranges.
+-You can move the system out of KHO finalization phase again by calling ::
 -
--patternProperties:
--  "$[0-9a-f_]+^":
--    $ref: sub-fdt.yaml#
--    description: physical address of a KHO user's own FDT.
+-  $ echo 0 > /sys/kernel/debug/kho/out/active
 -
--required:
--  - compatible
--  - preserved-memory-map
+-After this command, the KHO FDT is no longer available in
+-``/sys/kernel/debug/kho/out/fdt``.
 -
--additionalProperties: false
+ debugfs Interfaces
+ ==================
+ 
++These debugfs interfaces are available when the kernel is compiled with
++``CONFIG_KEXEC_HANDOVER_DEBUGFS`` set to y.
++
+ Currently KHO creates the following debugfs interfaces. Notice that these
+ interfaces may change in the future. They will be moved to sysfs once KHO is
+ stabilized.
+ 
+-``/sys/kernel/debug/kho/out/finalize``
+-    Kexec HandOver (KHO) allows Linux to transition the state of
+-    compatible drivers into the next kexec'ed kernel. To do so,
+-    device drivers will instruct KHO to preserve memory regions,
+-    which could contain serialized kernel state.
+-    While the state is serialized, they are unable to perform
+-    any modifications to state that was serialized, such as
+-    handed over memory allocations.
 -
--examples:
--  - |
--    kho {
--        compatible = "kho-v1";
--        preserved-memory-map = <0xf0be16 0x1000000>;
+-    When this file contains "1", the system is in the transition
+-    state. When contains "0", it is not. To switch between the
+-    two states, echo the respective number into this file.
 -
--        memblock {
--                fdt = <0x80cc16 0x1000000>;
--        };
--    };
-diff --git a/Documentation/core-api/kho/bindings/sub-fdt.yaml b/Documentation/core-api/kho/bindings/sub-fdt.yaml
-deleted file mode 100644
-index b9a3d2d24850..000000000000
---- a/Documentation/core-api/kho/bindings/sub-fdt.yaml
-+++ /dev/null
-@@ -1,27 +0,0 @@
--# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
--%YAML 1.2
-----
--title: KHO users' FDT address
--
--maintainers:
--  - Mike Rapoport <rppt@kernel.org>
--  - Changyuan Lyu <changyuanl@google.com>
--
--description: |
--  Physical address of an FDT blob registered by a KHO user.
--
--properties:
--  fdt:
--    description: |
--      physical address (u64) of an FDT blob.
--
--required:
--  - fdt
--
--additionalProperties: false
--
--examples:
--  - |
--    memblock {
--            fdt = <0x80cc16 0x1000000>;
--    };
+ ``/sys/kernel/debug/kho/out/fdt``
+-    When KHO state tree is finalized, the kernel exposes the
+-    flattened device tree blob that carries its current KHO
+-    state in this file. Kexec user space tooling can use this
++    The kernel exposes the flattened device tree blob that carries its
++    current KHO state in this file. Kexec user space tooling can use this
+     as input file for the KHO payload image.
+ 
+ ``/sys/kernel/debug/kho/out/scratch_len``
+@@ -100,8 +69,7 @@ stabilized.
+     it should place its payload images.
+ 
+ ``/sys/kernel/debug/kho/out/sub_fdts/``
+-    In the KHO finalization phase, KHO producers register their own
+-    FDT blob under this directory.
++    KHO producers can register their own FDT blob under this directory.
+ 
+ ``/sys/kernel/debug/kho/in/fdt``
+     When the kernel was booted with Kexec HandOver (KHO),
 diff --git a/Documentation/core-api/kho/concepts.rst b/Documentation/core-api/kho/concepts.rst
-index d626d1dbd678..e96893937286 100644
+index d38bcaa951e4..0ac01760db18 100644
 --- a/Documentation/core-api/kho/concepts.rst
 +++ b/Documentation/core-api/kho/concepts.rst
-@@ -72,3 +72,16 @@ Public API
+@@ -6,7 +6,7 @@ Kexec Handover Concepts
+ =======================
+ 
+ Kexec HandOver (KHO) is a mechanism that allows Linux to preserve memory
+-regions, which could contain serialized system states, across kexec.
++regions, containing kernel data structures in their live, in-memory format, across kexec.
+ 
+ It introduces multiple concepts:
+ 
+@@ -56,17 +56,6 @@ for boot memory allocations and as target memory for kexec blobs, some parts
+ of that memory region may be reserved. These reservations are irrelevant for
+ the next KHO, because kexec can overwrite even the original kernel.
+ 
+-.. _kho-finalization-phase:
+-
+-KHO finalization phase
+-======================
+-
+-To enable user space based kexec file loader, the kernel needs to be able to
+-provide the FDT that describes the current kernel's state before
+-performing the actual kexec. The process of generating that FDT is
+-called serialization. When the FDT is generated, some properties
+-of the system may become immutable because they are already written down
+-in the FDT. That state is called the KHO finalization phase.
+ 
+ Public API
  ==========
- .. kernel-doc:: kernel/liveupdate/kexec_handover.c
-    :export:
-+
-+Internal API
-+============
-+.. kernel-doc:: kernel/liveupdate/kexec_handover_internal.h
-+
-+.. kernel-doc:: kernel/liveupdate/kexec_handover.c
-+   :internal:
-+
-+.. kernel-doc:: kernel/liveupdate/kexec_handover_debugfs.c
-+   :internal:
-+
-+.. kernel-doc:: kernel/liveupdate/kexec_handover_debug.c
-+   :internal:
-diff --git a/Documentation/core-api/kho/fdt.rst b/Documentation/core-api/kho/fdt.rst
-index 62505285d60d..4e080ccc420e 100644
---- a/Documentation/core-api/kho/fdt.rst
-+++ b/Documentation/core-api/kho/fdt.rst
-@@ -4,77 +4,18 @@
- KHO FDT
- =======
- 
--KHO uses the flattened device tree (FDT) container format and libfdt
--library to create and parse the data that is passed between the
--kernels. The properties in KHO FDT are stored in native format.
--It includes the physical address of an in-memory structure describing
--all preserved memory regions, as well as physical addresses of KHO users'
--own FDTs. Interpreting those sub FDTs is the responsibility of KHO users.
-+Kexec Handover ABI
-+==================
- 
--KHO nodes and properties
--========================
-+KHO uses the FDT to pass data between kernels. The exact structure of
-+this FDT is a stable contract between kernels and is documented
-+directly in the ABI header file.
- 
--Property ``preserved-memory-map``
-----------------------------------
-+.. kernel-doc:: include/linux/kho/abi/kexec_handover.h
-+   :doc: Kexec Handover ABI
- 
--KHO saves a special property named ``preserved-memory-map`` under the root node.
--This node contains the physical address of an in-memory structure for KHO to
--preserve memory regions across kexec.
--
--Property ``compatible``
-------------------------
--
--The ``compatible`` property determines compatibility between the kernel
--that created the KHO FDT and the kernel that attempts to load it.
--If the kernel that loads the KHO FDT is not compatible with it, the entire
--KHO process will be bypassed.
--
--Property ``fdt``
------------------
--
--Generally, a KHO user serialize its state into its own FDT and instructs
--KHO to preserve the underlying memory, such that after kexec, the new kernel
--can recover its state from the preserved FDT.
--
--A KHO user thus can create a node in KHO root tree and save the physical address
--of its own FDT in that node's property ``fdt`` .
--
--Examples
-+See Also
- ========
- 
--The following example demonstrates KHO FDT that preserves two memory
--regions created with ``reserve_mem`` kernel command line parameter::
--
--  /dts-v1/;
--
--  / {
--  	compatible = "kho-v1";
--
--	preserved-memory-map = <0x40be16 0x1000000>;
--
--  	memblock {
--		fdt = <0x1517 0x1000000>;
--  	};
--  };
--
--where the ``memblock`` node contains an FDT that is requested by the
--subsystem memblock for preservation. The FDT contains the following
--serialized data::
--
--  /dts-v1/;
--
--  / {
--  	compatible = "memblock-v1";
--
--  	n1 {
--  		compatible = "reserve-mem-v1";
--  		start = <0xc06b 0x4000000>;
--  		size = <0x04 0x00>;
--  	};
--
--  	n2 {
--  		compatible = "reserve-mem-v1";
--  		start = <0xc067 0x4000000>;
--  		size = <0x04 0x00>;
--  	};
--  };
-+- :doc:`/admin-guide/mm/kho`
-+- :doc:`/core-api/kho/concepts`
-diff --git a/include/linux/kho/abi/kexec_handover.h b/include/linux/kho/abi/kexec_handover.h
-new file mode 100644
-index 000000000000..d78df2d44cb6
---- /dev/null
-+++ b/include/linux/kho/abi/kexec_handover.h
-@@ -0,0 +1,84 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+/*
-+ * Copyright (C) 2023 Alexander Graf <graf@amazon.com>
-+ * Copyright (C) 2025 Microsoft Corporation, Mike Rapoport <rppt@kernel.org>
-+ * Copyright (C) 2025 Google LLC, Changyuan Lyu <changyuanl@google.com>
-+ * Copyright (C) 2025 Google LLC, Jason Miu <jasonmiu@google.com>
-+ */
-+
-+#ifndef _LINUX_KHO_ABI_KEXEC_HANDOVER_H
-+#define _LINUX_KHO_ABI_KEXEC_HANDOVER_H
-+
-+/**
-+ * DOC: Kexec Handover ABI
-+ *
-+ * This header defines the stable ABI for passing preserved data from one kernel
-+ * to the next using a Flattened Device Tree (FDT). The first kernel creates an
-+ * FDT which is then passed to the next kernel during a kexec handover.
-+ *
-+ * This interface is a contract. Any modification to the FDT structure, node
-+ * properties, compatible string, or the layout of the data structures
-+ * referenced here constitutes a breaking change. Such changes require
-+ * incrementing the version number in KHO_FDT_COMPATIBLE to prevent a new kernel
-+ * from misinterpreting data from an older kernel. Changes are allowed provided
-+ * the compatibility version is incremented; however, backward/forward
-+ * compatibility is only guaranteed for kernels supporting the same ABI version.
-+ *
-+ * FDT Structure Overview:
-+ *   The FDT serves as a central registry for physical
-+ *   addresses of preserved data structures and sub-FDTs. The first kernel
-+ *   populates this FDT with references to memory regions and other FDTs that
-+ *   need to persist across the kexec transition. The subsequent kernel then
-+ *   parses this FDT to locate and restore the preserved data.::
-+ *
-+ *     / {
-+ *         compatible = "kho-v1";
-+ *
-+ *         preserved-memory-map = <0x...>;
-+ *
-+ *         <subnode-name-1> {
-+ *             fdt = <0x...>;
-+ *         };
-+ *
-+ *         <subnode-name-2> {
-+ *             fdt = <0x...>;
-+ *         };
-+ *               ... ...
-+ *         <subnode-name-N> {
-+ *             fdt = <0x...>;
-+ *         };
-+ *     };
-+ *
-+ *   Root KHO Node (/):
-+ *     - compatible: "kho-v1"
-+ *
-+ *       Indentifies the overall KHO ABI version.
-+ *
-+ *     - preserved-memory-map: u64
-+ *
-+ *       Physical memory address pointing to the root of the
-+ *       preserved memory map data structure.
-+ *
-+ *   Subnodes (<subnode-name-N>):
-+ *     Subnodes can also be added to the root node to
-+ *     describe other preserved data blobs. The <subnode-name-N>
-+ *     is provided by the subsystem that uses KHO for preserving its
-+ *     data.
-+ *
-+ *     - fdt: u64
-+ *
-+ *       Physical address pointing to a subnode FDT blob that is also
-+ *       being preserved.
-+ */
-+
-+/* The compatible string for the KHO FDT root node. */
-+#define KHO_FDT_COMPATIBLE "kho-v1"
-+
-+/* The FDT property for the preserved memory map. */
-+#define KHO_FDT_MEMORY_MAP_PROP_NAME "preserved-memory-map"
-+
-+/* The FDT property for sub-FDTs. */
-+#define KHO_FDT_SUB_TREE_PROP_NAME "fdt"
-+
-+#endif	/* _LINUX_KHO_ABI_KEXEC_HANDOVER_H */
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 9dc51fab604f..d3d02a9ea391 100644
+index 81bac82c8672..92b052450ce4 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -15,6 +15,7 @@
- #include <linux/count_zeros.h>
- #include <linux/kexec.h>
- #include <linux/kexec_handover.h>
-+#include <linux/kho/abi/kexec_handover.h>
- #include <linux/libfdt.h>
- #include <linux/list.h>
- #include <linux/memblock.h>
-@@ -33,10 +34,7 @@
- #include "../kexec_internal.h"
- #include "kexec_handover_internal.h"
+@@ -1212,16 +1212,6 @@ void kho_restore_free(void *mem)
+ }
+ EXPORT_SYMBOL_GPL(kho_restore_free);
  
--#define KHO_FDT_COMPATIBLE "kho-v1"
--#define PROP_PRESERVED_MEMORY_MAP "preserved-memory-map"
--#define PROP_SUB_FDT "fdt"
+-int kho_finalize(void)
+-{
+-	return 0;
+-}
 -
-+/* The magic token for preserved pages */
- #define KHO_PAGE_MAGIC 0x4b484f50U /* ASCII for 'KHOP' */
- 
- /*
-@@ -378,7 +376,7 @@ static void kho_update_memory_map(struct khoser_mem_chunk *first_chunk)
- 	void *ptr;
- 	u64 phys;
- 
--	ptr = fdt_getprop_w(kho_out.fdt, 0, PROP_PRESERVED_MEMORY_MAP, NULL);
-+	ptr = fdt_getprop_w(kho_out.fdt, 0, KHO_FDT_MEMORY_MAP_PROP_NAME, NULL);
- 
- 	/* Check and discard previous memory map */
- 	phys = get_unaligned((u64 *)ptr);
-@@ -468,7 +466,7 @@ static bool __init kho_mem_deserialize(const void *fdt)
- 	u64 mem;
- 	int len;
- 
--	mem_ptr = fdt_getprop(fdt, 0, PROP_PRESERVED_MEMORY_MAP, &len);
-+	mem_ptr = fdt_getprop(fdt, 0, KHO_FDT_MEMORY_MAP_PROP_NAME, &len);
- 	if (!mem_ptr || len != sizeof(u64)) {
- 		pr_err("failed to get preserved memory bitmaps\n");
- 		return false;
-@@ -733,7 +731,8 @@ int kho_add_subtree(const char *name, void *fdt)
- 		goto out_pack;
+-bool kho_finalized(void)
+-{
+-	return false;
+-}
+-
+ struct kho_in {
+ 	phys_addr_t fdt_phys;
+ 	phys_addr_t scratch_phys;
+diff --git a/kernel/liveupdate/kexec_handover_debugfs.c b/kernel/liveupdate/kexec_handover_debugfs.c
+index 2abbf62ba942..2f70d9c41831 100644
+--- a/kernel/liveupdate/kexec_handover_debugfs.c
++++ b/kernel/liveupdate/kexec_handover_debugfs.c
+@@ -75,24 +75,6 @@ void kho_debugfs_fdt_remove(struct kho_debugfs *dbg, void *fdt)
  	}
+ }
  
--	err = fdt_setprop(root_fdt, off, PROP_SUB_FDT, &phys, sizeof(phys));
-+	err = fdt_setprop(root_fdt, off, KHO_FDT_SUB_TREE_PROP_NAME,
-+			  &phys, sizeof(phys));
- 	if (err < 0)
- 		goto out_pack;
+-static int kho_out_finalize_get(void *data, u64 *val)
+-{
+-	*val = kho_finalized();
+-
+-	return 0;
+-}
+-
+-static int kho_out_finalize_set(void *data, u64 val)
+-{
+-	if (val)
+-		return kho_finalize();
+-	else
+-		return -EINVAL;
+-}
+-
+-DEFINE_DEBUGFS_ATTRIBUTE(kho_out_finalize_fops, kho_out_finalize_get,
+-			 kho_out_finalize_set, "%llu\n");
+-
+ static int scratch_phys_show(struct seq_file *m, void *v)
+ {
+ 	for (int i = 0; i < kho_scratch_cnt; i++)
+@@ -198,8 +180,6 @@ __init int kho_out_debugfs_init(struct kho_debugfs *dbg)
+ 	if (IS_ERR(f))
+ 		goto err_rmdir;
  
-@@ -764,7 +763,7 @@ void kho_remove_subtree(void *fdt)
- 		const u64 *val;
- 		int len;
+-	f = debugfs_create_file("finalize", 0600, dir, NULL,
+-				&kho_out_finalize_fops);
+ 	if (IS_ERR(f))
+ 		goto err_rmdir;
  
--		val = fdt_getprop(root_fdt, off, PROP_SUB_FDT, &len);
-+		val = fdt_getprop(root_fdt, off, KHO_FDT_SUB_TREE_PROP_NAME, &len);
- 		if (!val || len != sizeof(phys_addr_t))
- 			continue;
+diff --git a/kernel/liveupdate/kexec_handover_internal.h b/kernel/liveupdate/kexec_handover_internal.h
+index 0202c85ad14f..9a832a35254c 100644
+--- a/kernel/liveupdate/kexec_handover_internal.h
++++ b/kernel/liveupdate/kexec_handover_internal.h
+@@ -22,9 +22,6 @@ struct kho_debugfs {};
+ extern struct kho_scratch *kho_scratch;
+ extern unsigned int kho_scratch_cnt;
  
-@@ -1310,7 +1309,7 @@ int kho_retrieve_subtree(const char *name, phys_addr_t *phys)
- 	if (offset < 0)
- 		return -ENOENT;
+-bool kho_finalized(void);
+-int kho_finalize(void);
+-
+ #ifdef CONFIG_KEXEC_HANDOVER_DEBUGFS
+ int kho_debugfs_init(void);
+ void kho_in_debugfs_init(struct kho_debugfs *dbg, const void *fdt);
+diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
+index 69298d82f404..e4db15d81f89 100644
+--- a/kernel/liveupdate/luo_core.c
++++ b/kernel/liveupdate/luo_core.c
+@@ -231,17 +231,7 @@ int liveupdate_reboot(void)
  
--	val = fdt_getprop(fdt, offset, PROP_SUB_FDT, &len);
-+	val = fdt_getprop(fdt, offset, KHO_FDT_SUB_TREE_PROP_NAME, &len);
- 	if (!val || len != sizeof(*val))
- 		return -EINVAL;
+ 	luo_flb_serialize();
  
-@@ -1330,7 +1329,7 @@ static __init int kho_out_fdt_setup(void)
- 	err |= fdt_finish_reservemap(root);
- 	err |= fdt_begin_node(root, "");
- 	err |= fdt_property_string(root, "compatible", KHO_FDT_COMPATIBLE);
--	err |= fdt_property(root, PROP_PRESERVED_MEMORY_MAP, &empty_mem_map,
-+	err |= fdt_property(root, KHO_FDT_MEMORY_MAP_PROP_NAME, &empty_mem_map,
- 			    sizeof(empty_mem_map));
- 	err |= fdt_end_node(root);
- 	err |= fdt_finish(root);
+-	err = kho_finalize();
+-	if (err) {
+-		pr_err("kho_finalize failed %d\n", err);
+-		/*
+-		 * kho_finalize() may return libfdt errors, to aboid passing to
+-		 * userspace unknown errors, change this to EAGAIN.
+-		 */
+-		err = -EAGAIN;
+-	}
+-
+-	return err;
++	return 0;
+ }
+ 
+ /**
+diff --git a/kernel/liveupdate/luo_flb.c b/kernel/liveupdate/luo_flb.c
+index e80ac5b575ec..92d35eb5e6ee 100644
+--- a/kernel/liveupdate/luo_flb.c
++++ b/kernel/liveupdate/luo_flb.c
+@@ -632,7 +632,7 @@ int __init luo_flb_setup_incoming(void *fdt_in)
+  * data handle, and the final reference count. This allows the new kernel to
+  * find the appropriate handler and reconstruct the FLB's state.
+  *
+- * Context: Called from liveupdate_reboot() just before kho_finalize().
++ * Context: Called from liveupdate_reboot() just before return.
+  */
+ void luo_flb_serialize(void)
+ {
+diff --git a/tools/testing/selftests/kho/init.c b/tools/testing/selftests/kho/init.c
+index 6d9e91d55d68..88a41b6eba95 100644
+--- a/tools/testing/selftests/kho/init.c
++++ b/tools/testing/selftests/kho/init.c
+@@ -11,7 +11,6 @@
+ /* from arch/x86/include/asm/setup.h */
+ #define COMMAND_LINE_SIZE	2048
+ 
+-#define KHO_FINALIZE "/debugfs/kho/out/finalize"
+ #define KERNEL_IMAGE "/kernel"
+ 
+ static int mount_filesystems(void)
+@@ -22,22 +21,6 @@ static int mount_filesystems(void)
+ 	return mount("proc", "/proc", "proc", 0, NULL);
+ }
+ 
+-static int kho_enable(void)
+-{
+-	const char enable[] = "1";
+-	int fd;
+-
+-	fd = open(KHO_FINALIZE, O_RDWR);
+-	if (fd < 0)
+-		return -1;
+-
+-	if (write(fd, enable, sizeof(enable)) != sizeof(enable))
+-		return 1;
+-
+-	close(fd);
+-	return 0;
+-}
+-
+ static long kexec_file_load(int kernel_fd, int initrd_fd,
+ 			    unsigned long cmdline_len, const char *cmdline,
+ 			    unsigned long flags)
+@@ -78,9 +61,6 @@ int main(int argc, char *argv[])
+ 	if (mount_filesystems())
+ 		goto err_reboot;
+ 
+-	if (kho_enable())
+-		goto err_reboot;
+-
+ 	if (kexec_load())
+ 		goto err_reboot;
+ 
 -- 
 2.52.0.223.gf5cc29aaa4-goog
 
