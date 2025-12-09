@@ -4,78 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7C281D3B7E2
-	for <kexec@archiver.kernel.org>; Tue,  9 Dec 2025 03:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C6B27D3B7EA
+	for <kexec@archiver.kernel.org>; Tue,  9 Dec 2025 04:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=NbFVdOXb1Nr6+8TD5KZltub496iqTHAYaOUL7OnbUgQ=; b=HmohIObeKmZPufmJ7FdSD7FLSD
-	d6XFIYsevTfyBOzQi/LweUMFC652SpWDWivH2Vpv5dMi3KSP4PBU8aML9uhTPBpvV03mj2GpHWFDW
-	M2c/G/f/jjIRquIRrxJ1gsbwmLgZCzBwhwxIVCzfbfqptTjFPcIqnlFO339wuRyuGLhwjirXQCTke
-	9t7Plnd3iePg9qQbr1J7768R6eD8ppiincQXok7U2YO9ltKmWBgQ+pQUtTXz+dimwgCH1Q8xQ1BBe
-	6djvY3Frlmpcxtos09r1SpLhaxFZGn4BwCgPkjEa1s6RuS5u6uCHWeeoXpz2pvg/XJVr2izwdbcvY
-	4MEMjLTw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=oHaNF3NLkUcld+qJXROnyemM10ER7BqRqDwEKLhFDTo=; b=JmB4LBXCnPk4k3BlCHAvfOVJxz
+	rF0ikT+ulgMcVA934bMB+iIXxjC+4DK5CVPyuhb4x18KtJ9LTmz8VZSr3q8KNEy3TKjjWKzYLv/p+
+	HJpIkhUgghL6uz6n7IBNVn/tcUVsQ3GGn/HiZIpMcW2Bqm5XcVCfTt1XV/AvZX1MgvscJM5sSWaNl
+	lIB/MDU2TFy62bX/jFj0U+Cpw05Wl3oZ2UofJngnukHMbgWOoVvcJ3XJKrwAzB9PPThaij7aci9Kv
+	4AsA8JUqSexH0l0uBfyLuUpZ3O9/MsWft139qhN1NjPDM8FzgxPYHp2seg7cKl+ZEv0wmW8ThVjpx
+	z/dXgbSA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vSoOZ-0000000DlrN-2AfU;
-	Tue, 09 Dec 2025 03:28:11 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1vSpZf-0000000Doga-3hji;
+	Tue, 09 Dec 2025 04:43:43 +0000
+Received: from out-180.mta0.migadu.com ([2001:41d0:1004:224b::b4])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vSoOW-0000000Dlqu-3Rxm
+	id 1vSpZc-0000000Dog9-2Ays
 	for kexec@lists.infradead.org;
-	Tue, 09 Dec 2025 03:28:11 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1765250887;
+	Tue, 09 Dec 2025 04:43:42 +0000
+Message-ID: <48d0b46e-2b82-44b6-a717-94bc258a508d@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1765255412;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NbFVdOXb1Nr6+8TD5KZltub496iqTHAYaOUL7OnbUgQ=;
-	b=UE1Q/njYzWeAztwQXFKi4qEtvrWLaUlbjy1+8/tN0tg5eWz4J+DOP4eDvEzP21mW9v5Tkr
-	IFNUm1QIorU8BSS2f/mtEtAh6/u6l4DnuF7rS+vxIuEi2iDEBqXOtgQetpQa2o/vmXDYSq
-	GWcagEruGIUSknrmhbV/008Fnkp4ZGU=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-251-P4iN0WunM0CoN3RLOuYODw-1; Mon,
- 08 Dec 2025 22:28:00 -0500
-X-MC-Unique: P4iN0WunM0CoN3RLOuYODw-1
-X-Mimecast-MFC-AGG-ID: P4iN0WunM0CoN3RLOuYODw_1765250878
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A24091956088;
-	Tue,  9 Dec 2025 03:27:57 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.51])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2678719560AD;
-	Tue,  9 Dec 2025 03:27:54 +0000 (UTC)
-Date: Tue, 9 Dec 2025 11:27:50 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: linux-mm@kvack.org, ryabinin.a.a@gmail.com, glider@google.com,
-	dvyukov@google.com, vincenzo.frascino@arm.com,
-	akpm@linux-foundation.org, kasan-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	elver@google.com, sj@kernel.org, lorenzo.stoakes@oracle.com,
-	snovitoll@gmail.com, christophe.leroy@csgroup.eu
-Subject: Re: [PATCH v4 02/12] mm/kasan: move kasan= code to common place
-Message-ID: <aTeXNkWx/U8MB9hf@MiWiFi-R3L-srv>
-References: <20251128033320.1349620-1-bhe@redhat.com>
- <20251128033320.1349620-3-bhe@redhat.com>
- <CA+fCnZeHZ4+8GOn0untumM0TE9TeSHqja9kAsbEb-+jbEFNQQQ@mail.gmail.com>
+	bh=oHaNF3NLkUcld+qJXROnyemM10ER7BqRqDwEKLhFDTo=;
+	b=Z4RaZnHR0fIYk8Sv17Zr2mt78F7d5wPSTnieVtot08w35Gl9cmheLnXS1geWFqfwS5eRjd
+	1dTnwFOYF2fDWvGYEP78fX93UW/XAMectuyHfrIbLeXZ/1SUE3Wvlt7Wf38yfm1OVCIGG1
+	TiwkOIHMVpMwzQZpKOK079f7PElyX4c=
+Date: Mon, 8 Dec 2025 20:43:22 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: Re: [RFC PATCH 00/10] liveupdate: hugetlb support
+To: Pratyush Yadav <pratyush@kernel.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ Alexander Graf <graf@amazon.com>, David Matlack <dmatlack@google.com>,
+ David Rientjes <rientjes@google.com>, Jason Gunthorpe <jgg@nvidia.com>,
+ Samiullah Khawaja <skhawaja@google.com>, Vipin Sharma <vipinsh@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, kexec@lists.infradead.org
+References: <20251206230222.853493-1-pratyush@kernel.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20251206230222.853493-1-pratyush@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+fCnZeHZ4+8GOn0untumM0TE9TeSHqja9kAsbEb-+jbEFNQQQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251208_192808_938348_025E09F5 
-X-CRM114-Status: GOOD (  32.72  )
+X-CRM114-CacheID: sfid-20251208_204340_920997_E748B414 
+X-CRM114-Status: GOOD (  32.34  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,184 +82,133 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/04/25 at 05:39pm, Andrey Konovalov wrote:
-> On Fri, Nov 28, 2025 at 4:33 AM Baoquan He <bhe@redhat.com> wrote:
-> >
-> > This allows generic and sw_tags to be set in kernel cmdline too.
-> >
-> > When at it, rename 'kasan_arg' to 'kasan_arg_disabled' as a bool
-> > variable. And expose 'kasan_flag_enabled' to kasan common place
-> > too.
-> 
-> This asks to be two separate patches.
 
-Makes sense to me, thanks..
+在 2025/12/6 15:02, Pratyush Yadav 写道:
+> This series adds support for live updating hugetlb-backed memfd,
+> including support for 1G huge pages. This allows live updating VMs which
+> use hugepages to back VM memory.
+>
+> Please take a look at this patch series [0] to know more about the Live
+> Update Orchestrator (LUO). It also includes patches for live updating a
+> shmem-backed memfd. This series is a follow up to that, adding huge page
+> support as well.
+>
+> You can also read this LWN article [1] to learn more about KHO and Live
+> Update Orchestrator, though do note that this article is a bit
+> out-of-date. LUO has since evolved. For example, subsystems have been
+> replaced with FLB, and the state machine has been simplified.
+>
+> This series is based on top of mm-non-unstable, which includes the LUO
+> FLB patches [2].
+>
+> This series uses LUO FLB to track how many pages are preserved for each
+> hstate, to ensure the live updated kernel does not over-allocate
+> hugepages.
 
-> 
-> >
-> > This is prepared for later adding kernel parameter kasan=on|off for
-> > all three kasan modes.
-> >
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > ---
-> >  include/linux/kasan-enabled.h |  4 +++-
-> >  mm/kasan/common.c             | 20 ++++++++++++++++++--
-> >  mm/kasan/hw_tags.c            | 28 ++--------------------------
-> >  3 files changed, 23 insertions(+), 29 deletions(-)
-> >
-> > diff --git a/include/linux/kasan-enabled.h b/include/linux/kasan-enabled.h
-> > index 9eca967d8526..b05ec6329fbe 100644
-> > --- a/include/linux/kasan-enabled.h
-> > +++ b/include/linux/kasan-enabled.h
-> > @@ -4,13 +4,15 @@
-> >
-> >  #include <linux/static_key.h>
-> >
-> > -#if defined(CONFIG_ARCH_DEFER_KASAN) || defined(CONFIG_KASAN_HW_TAGS)
-> 
-> These changes of moving/removing CONFIG_ARCH_DEFER_KASAN also seem to
-> belong to a separate patch (or should be combined with patch 12?); the
-> commit message does not even mention them.
 
-Yes, combining tit with patch 12 sounds great. I will move patch 12 to
-earlier oder.
+Is this patch serise based on the patches in the link 
+https://lkml.org/lkml/2025/11/26/1665?
 
-> 
-> > +extern bool kasan_arg_disabled;
-> > +
-> >  /*
-> >   * Global runtime flag for KASAN modes that need runtime control.
-> >   * Used by ARCH_DEFER_KASAN architectures and HW_TAGS mode.
-> >   */
-> >  DECLARE_STATIC_KEY_FALSE(kasan_flag_enabled);
-> 
-> So kasan_flag_enabled is now always exposed here...
-> 
-> >
-> > +#if defined(CONFIG_ARCH_DEFER_KASAN) || defined(CONFIG_KASAN_HW_TAGS)
-> 
-> but the functions that use it are not. Why?
+Thanks,
 
-Good question. I didn't consider this reasonably. At the beginning, I
-thought it could cause problem if people has specified 'kasan=off'
-before patch 12 when bisecting. That's why put kasan_arg_disabled and
-kasan_flag_enabled declaration outside of any ifdeffery scope. Now after
-reconsiderring, putting patch 12 earlier can solve the problem.
+Yanjun.Zhu
 
-Thanks for careful reivewing, all suggestions are good and taken.
 
-> 
-> 
-> >  /*
-> >   * Runtime control for shadow memory initialization or HW_TAGS mode.
-> >   * Uses static key for architectures that need deferred KASAN or HW_TAGS.
-> > diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-> > index 1d27f1bd260b..ac14956986ee 100644
-> > --- a/mm/kasan/common.c
-> > +++ b/mm/kasan/common.c
-> > @@ -32,14 +32,30 @@
-> >  #include "kasan.h"
-> >  #include "../slab.h"
-> >
-> > -#if defined(CONFIG_ARCH_DEFER_KASAN) || defined(CONFIG_KASAN_HW_TAGS)
-> >  /*
-> >   * Definition of the unified static key declared in kasan-enabled.h.
-> >   * This provides consistent runtime enable/disable across KASAN modes.
-> >   */
-> >  DEFINE_STATIC_KEY_FALSE(kasan_flag_enabled);
-> >  EXPORT_SYMBOL_GPL(kasan_flag_enabled);
-> > -#endif
-> > +
-> > +bool kasan_arg_disabled __ro_after_init;
-> > +/* kasan=off/on */
-> > +static int __init early_kasan_flag(char *arg)
-> > +{
-> > +       if (!arg)
-> > +               return -EINVAL;
-> > +
-> > +       if (!strcmp(arg, "off"))
-> > +               kasan_arg_disabled = true;
-> > +       else if (!strcmp(arg, "on"))
-> > +               kasan_arg_disabled = false;
-> > +       else
-> > +               return -EINVAL;
-> > +
-> > +       return 0;
-> > +}
-> > +early_param("kasan", early_kasan_flag);
-> >
-> >  struct slab *kasan_addr_to_slab(const void *addr)
-> >  {
-> > diff --git a/mm/kasan/hw_tags.c b/mm/kasan/hw_tags.c
-> > index 1c373cc4b3fa..709c91abc1b1 100644
-> > --- a/mm/kasan/hw_tags.c
-> > +++ b/mm/kasan/hw_tags.c
-> > @@ -22,12 +22,6 @@
-> >
-> >  #include "kasan.h"
-> >
-> > -enum kasan_arg {
-> > -       KASAN_ARG_DEFAULT,
-> > -       KASAN_ARG_OFF,
-> > -       KASAN_ARG_ON,
-> > -};
-> > -
-> >  enum kasan_arg_mode {
-> >         KASAN_ARG_MODE_DEFAULT,
-> >         KASAN_ARG_MODE_SYNC,
-> > @@ -41,7 +35,6 @@ enum kasan_arg_vmalloc {
-> >         KASAN_ARG_VMALLOC_ON,
-> >  };
-> >
-> > -static enum kasan_arg kasan_arg __ro_after_init;
-> >  static enum kasan_arg_mode kasan_arg_mode __ro_after_init;
-> >  static enum kasan_arg_vmalloc kasan_arg_vmalloc __initdata;
-> >
-> > @@ -81,23 +74,6 @@ unsigned int kasan_page_alloc_sample_order = PAGE_ALLOC_SAMPLE_ORDER_DEFAULT;
-> >
-> >  DEFINE_PER_CPU(long, kasan_page_alloc_skip);
-> >
-> > -/* kasan=off/on */
-> > -static int __init early_kasan_flag(char *arg)
-> > -{
-> > -       if (!arg)
-> > -               return -EINVAL;
-> > -
-> > -       if (!strcmp(arg, "off"))
-> > -               kasan_arg = KASAN_ARG_OFF;
-> > -       else if (!strcmp(arg, "on"))
-> > -               kasan_arg = KASAN_ARG_ON;
-> > -       else
-> > -               return -EINVAL;
-> > -
-> > -       return 0;
-> > -}
-> > -early_param("kasan", early_kasan_flag);
-> > -
-> >  /* kasan.mode=sync/async/asymm */
-> >  static int __init early_kasan_mode(char *arg)
-> >  {
-> > @@ -222,7 +198,7 @@ void kasan_init_hw_tags_cpu(void)
-> >          * When this function is called, kasan_flag_enabled is not yet
-> >          * set by kasan_init_hw_tags(). Thus, check kasan_arg instead.
-> >          */
-> > -       if (kasan_arg == KASAN_ARG_OFF)
-> > +       if (kasan_arg_disabled)
-> >                 return;
-> >
-> >         /*
-> > @@ -240,7 +216,7 @@ void __init kasan_init_hw_tags(void)
-> >                 return;
-> >
-> >         /* If KASAN is disabled via command line, don't initialize it. */
-> > -       if (kasan_arg == KASAN_ARG_OFF)
-> > +       if (kasan_arg_disabled)
-> >                 return;
-> >
-> >         switch (kasan_arg_mode) {
-> > --
-> > 2.41.0
-> >
-> 
+>
+> Areas for Discussion
+> ====================
+>
+> Why is this an RFC?
+> -------------------
+>
+> While I believe the code is in decent shape, I have only done some basic
+> testing and have not put it through more intensive testing, including
+> testing on ARM64. I am also not completely confident on the handling of
+> reservations and cgroup charging, even though it appears to work on the
+> surface.
+>
+> The goal of this is to start discussion at high level points so we can
+> at least agree on the general direction. This also gives people some
+> time to see the code, before the session discussing this at LPC 2025
+> [3].
+>
+> Disabling scratch-only earlier in boot
+> --------------------------------------
+>
+> Patch 2 moves KHO memory initialization to earlier in boot. Detailed
+> discussion on the topic is in patch 2's message.
+>
+> Allocating gigantic hugepages after paging_init() on x86
+> --------------------------------------------------------
+>
+> To allow KHO to work with gigantic hugepages on x86, patch 2 moves
+> gigantic huge page allocation after paging_init(). This can have some
+> impact on ability to allocate gigantic pages, but I believe the impact
+> should not be severe. See patch 2 for more detailed discussion and test
+> results.
+>
+> Early-boot access to LUO FLB data
+> ---------------------------------
+>
+> To work with gigantic page allocation, LUO FLB data is needed in early
+> boot, before LUO is fully initialized. Patch 3 adds support for fetching
+> LUO FLB data in early boot.
+>
+> Preserving the entire huge page pool vs only used
+> -------------------------------------------------
+>
+> This series makes a design decision on preserving only the number of
+> preserved huge pages for each hstate, instead of preserving the entire
+> huge page pool. Both approaches were brought up in the Live Update
+> meetings. Patch 6 discusses the reasoning in more detail.
+>
+> [0] https://lore.kernel.org/linux-mm/20251125165850.3389713-1-pasha.tatashin@soleen.com/T/#u
+> [1] https://lwn.net/Articles/1033364/
+> [2] https://lore.kernel.org/linux-mm/20251125225006.3722394-1-pasha.tatashin@soleen.com/T/#u
+> [3] https://lpc.events/event/19/contributions/2044/
+>
+> Pratyush Yadav (10):
+>    kho: drop restriction on maximum page order
+>    kho: disable scratch-only earlier in boot
+>    liveupdate: do early initialization before hugepages are allocated
+>    liveupdate: flb: allow getting FLB data in early boot
+>    mm: hugetlb: export some functions to hugetlb-internal header
+>    liveupdate: hugetlb subsystem FLB state preservation
+>    mm: hugetlb: don't allocate pages already in live update
+>    mm: hugetlb: disable CMA if liveupdate is enabled
+>    mm: hugetlb: allow freezing the inode
+>    liveupdate: allow preserving hugetlb-backed memfd
+>
+>   Documentation/mm/memfd_preservation.rst |   9 +
+>   MAINTAINERS                             |   2 +
+>   arch/x86/kernel/setup.c                 |  19 +-
+>   fs/hugetlbfs/inode.c                    |  14 +-
+>   include/linux/hugetlb.h                 |   8 +
+>   include/linux/kho/abi/hugetlb.h         |  98 ++++
+>   include/linux/liveupdate.h              |  12 +
+>   kernel/liveupdate/Kconfig               |  15 +
+>   kernel/liveupdate/kexec_handover.c      |  13 +-
+>   kernel/liveupdate/luo_core.c            |  30 +-
+>   kernel/liveupdate/luo_flb.c             |  69 ++-
+>   kernel/liveupdate/luo_internal.h        |   2 +
+>   mm/Makefile                             |   1 +
+>   mm/hugetlb.c                            | 113 ++--
+>   mm/hugetlb_cma.c                        |   7 +
+>   mm/hugetlb_internal.h                   |  50 ++
+>   mm/hugetlb_luo.c                        | 699 ++++++++++++++++++++++++
+>   mm/memblock.c                           |   1 -
+>   mm/memfd_luo.c                          |   4 -
+>   mm/mm_init.c                            |  15 +-
+>   20 files changed, 1099 insertions(+), 82 deletions(-)
+>   create mode 100644 include/linux/kho/abi/hugetlb.h
+>   create mode 100644 mm/hugetlb_internal.h
+>   create mode 100644 mm/hugetlb_luo.c
+>
+>
+> base-commit: 55b7d75112c25b3e2a5eadc11244c330a5c00a41
+
+-- 
+Best Regards,
+Yanjun.Zhu
 
 
