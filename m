@@ -4,70 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A865BD3B7FB
-	for <kexec@archiver.kernel.org>; Tue,  9 Dec 2025 02:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AF55DD3B7FB
+	for <kexec@archiver.kernel.org>; Tue,  9 Dec 2025 02:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:To:From:Subject
 	:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:Cc:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=7YniVUU6/+lQD/EVhfTXqpFE+9KZzpnPEHhqtMsCQi8=; b=O8KyeraQl/mu2av/yTwEGGfaNv
-	pVOW7G/tsyZbsQaYm3Z0fP2G3gFxkLX60PY+qXXZIjudmWXQ3s6orsVj24vhAf2n8QfGpGNpB+T18
-	4aoDh7JYfpx19n4OLarmQjPysOkKi9FeqQXAehSZvZr/kTzsyBgdBxCbXlb+TTVbSCn8BofUya6W0
-	ned85i1KfiqmZxtyxb0Hd1LuDDX7DpAUunAcHaqWU/O07DQFol/R59uQJUTpFbu+dXCVMH5OmZIwd
-	kzAsyYHQ8EouABrDcL6A5x1teNbUGLNND36nzq5xvcdiEWxK56j6D55dKrggDXtUibccFGAFLz8XN
-	6Addb/SQ==;
+	bh=KshiYXV7msSpU9cl75Ojt3IGhY+gwGaRSdjYRirqx3s=; b=wJ7uEt9w4cgb2bOh5iLr/r8kPr
+	cz3rASZmWGQwF6wGM2IiMZnvlyai0MZQIpka5Np19SwqWJgTuhyG5VJgQvsR22b4AB0meGbfEctfQ
+	/vkdesmHCd4J9d3wib91bz6Dj1oLVNh7KTqATz9KnXTk5IRQpBV+e7QrOo6ac9Zvtn6DRr8HTETh5
+	zNJCAo7gjnFvxd/stoSImCDP66WIk8oC4BpRbJmunK+tDkVmRm5LS0QDkkOH7oHGnxGSgfzsKOu1q
+	UtVapp0QxQ8SZZr4LdPSXd6SM8ybiXo6J7LfTiE+uiRdvWLHVahPGgTNafLgnOam3IY/2A587/bsV
+	+VBaVWSg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vSnr0-0000000DkZ5-0HaU;
-	Tue, 09 Dec 2025 02:53:30 +0000
+	id 1vSnr3-0000000Dkc0-3lq6;
+	Tue, 09 Dec 2025 02:53:33 +0000
 Received: from mail-pg1-x54a.google.com ([2607:f8b0:4864:20::54a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vSnqx-0000000DkWv-0pFl
+	id 1vSnr0-0000000DkZs-43cm
 	for kexec@lists.infradead.org;
-	Tue, 09 Dec 2025 02:53:28 +0000
-Received: by mail-pg1-x54a.google.com with SMTP id 41be03b00d2f7-b9b9e8b0812so7880640a12.0
-        for <kexec@lists.infradead.org>; Mon, 08 Dec 2025 18:53:26 -0800 (PST)
+	Tue, 09 Dec 2025 02:53:32 +0000
+Received: by mail-pg1-x54a.google.com with SMTP id 41be03b00d2f7-b62da7602a0so5382162a12.2
+        for <kexec@lists.infradead.org>; Mon, 08 Dec 2025 18:53:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1765248806; x=1765853606; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1765248810; x=1765853610; darn=lists.infradead.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=7YniVUU6/+lQD/EVhfTXqpFE+9KZzpnPEHhqtMsCQi8=;
-        b=CUyfXdjFs6idgP6YeixP6nXdOXvAlvXZxjId2RHl035KhFjXTcG5VTeCL8o8GUCsUK
-         htCJxUBIjBe78EKcMkd6zct4DJ+x5KG+YQyrKidQHwP7nayRzpkQexeQ/wUyQ3kdU80p
-         oqGYN9/xsE5vCyZ0JPcNrUgIgiqbyF+EPIp+xQXZjq9XtfWlHS/wA6TLP0In2xxSzuMS
-         rIb4Ak6b6r9eD0qN4+qt8l14sROaO1cuNlHEYMo2XFqg6LhuLUykJs3mk+3OfDh2JHvj
-         TW8aPNwLRylLcrPn8yUYR35fJSLOQUaYoxwODkYhG7XKSF2sedmLqrbiyUH19f0SB8+N
-         mDHw==
+        bh=KshiYXV7msSpU9cl75Ojt3IGhY+gwGaRSdjYRirqx3s=;
+        b=hCkdIAyAS4IUSoCLRQTKA5EuUEOulGdrsaPIsA70nBhbunOyghs5RD04RtJWlDYhks
+         qAou6aHjfp0o56/smlT6vOlkfXvTKQcjajBBxy00d5Koml/XC6qfYzLKkYbVJWwZSQJs
+         jptSj1XgcwEFgUWJdspqbyG4kNM3ffEht0NnxNHhjr24UjDcmv+19oAOCYPBMS6yQymc
+         t0M1YPH9SiRPFwR2ktWk3qzOaM9SRpXONCpO05aAtEz1Aqg/QdOPqi84sONok5TaFjFc
+         KRe9rE4huJVU3vDwBtPKYfHcPhda/ttXYhrfev2Gn0p+2FsbaeH9RTAmXJB++zbqNcvO
+         PMgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765248806; x=1765853606;
+        d=1e100.net; s=20230601; t=1765248810; x=1765853610;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7YniVUU6/+lQD/EVhfTXqpFE+9KZzpnPEHhqtMsCQi8=;
-        b=Fz1oush5GEYzrvWi/8d2P4NaGyjDPx5CZm4t2dqDu4RXb/clqhXATGQMnMgw4tUK/c
-         aDT3Q6A1ZNvHCRdNF7jEK/sU1UE0lTjqZa7A2w+ZfCg4eSpuTigEt9O+ioyVz/frGjJ5
-         qL4SXEoeiADdCDABWpnml7tVdF/G4CGEBPXzp5aGJtzUokaiBr+BHdOBVyhCkjhGrNhX
-         oim4d9dGUwM4GOkkqpLH4i9ZJJVvqIuCdI01aJT4ITAmL+rPEhiKWewbGJQ/PIWo96lB
-         XWb2/0XIwOfJMWr2h7uiedT4yzUmEH6VDJDvb2ILlW1odn7IV8dklF+w38EV00xBOjUz
-         9CHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsMfm4MH8obTcPqVS88njuoWNtpS7xja3U3sgXynq8rExRrDuqeI8kDmmOcOpBTh4fqXjpDg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxI4kXdsX2p8vaZ+YOO0W9KgxTdOyyhe6cD9hnzYgZeJoPDcEqg
-	ybc0GSS6eIICPxQaistAUMRyzWXa6y3ZrlM5/YdvnocDaFu3szvMdPIAiTxXvxTOXVN0DXYysbg
-	N/ngkQjZP/LkfIA==
-X-Google-Smtp-Source: AGHT+IEE2+RzFDmhYi3sZJMC5POuF7uEYIA0RYOQQ5LbZQGlmWpKy+l52MCfZMJi+695a5er1FB0tS6NzuXitg==
-X-Received: from dychz10.prod.google.com ([2002:a05:7301:860a:b0:2a4:7a56:1730])
+        bh=KshiYXV7msSpU9cl75Ojt3IGhY+gwGaRSdjYRirqx3s=;
+        b=geqDIOCkdAhc/UkI390uxQkxhW9B+jhzKWqXf8rQA4TTbDdXYO6fk+doK9x3arO85f
+         dbza98WhlAvppJbq4SoGUyJS5tSnly0wID+bpJdotabngUs+JQcHomjfNQfi7aXHxWWC
+         OFLQjbspMfH9opeMMjCCUOpbDksHhGy0aXPB4HcptpvyFM9bvH/CoJRXvWk3PJTOcQFP
+         K1/x4lGSJKByHdK0veN6RoPAAMGSgdnRi7LT7/ZISEyHyHvUPIDHldadBguz/vTk6zB6
+         s3FgMPytAgqB23d7+9700rnP6VEVjzQlRywEqRcKBC9cykATK3w8JJfudTehLLuN+WTU
+         addA==
+X-Forwarded-Encrypted: i=1; AJvYcCXSzPuDrWuAv7D24gxeVd3QWGvUmqS0qmxmGlWJ6mMx970rhqbzrP/jsM7kw+xt1dFJ4mCCmw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yx/Z5+2E+btJ4UlRcc1qdnhXisF56q3ptv3BTBQBSMQ6pgUiuM4
+	CuKcNVBsP/T/Qhi9ichoCi+1VG96zkh7YwgQYEqVTBQodLfBudG/eohtDiu6TgBGItqxllrwgp5
+	QpiRfA86zJoPEqQ==
+X-Google-Smtp-Source: AGHT+IFClP5phTsaQmpFtJ4A14CfMylc4B7SYp/2612GMMu8hUh6AsMjFy4WJ9S94iPvuBTuGOQmw234CmrEmA==
+X-Received: from dybno7.prod.google.com ([2002:a05:7300:e607:b0:2a4:7587:4d39])
  (user=jasonmiu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:7301:6589:b0:2a4:3594:72d7 with SMTP id 5a478bee46e88-2abc710d8f1mr7325213eec.6.1765248806192;
- Mon, 08 Dec 2025 18:53:26 -0800 (PST)
-Date: Mon,  8 Dec 2025 18:53:14 -0800
+ 2002:a05:7300:4312:b0:2a4:3593:ddd9 with SMTP id 5a478bee46e88-2abc70f79c7mr7581649eec.6.1765248810012;
+ Mon, 08 Dec 2025 18:53:30 -0800 (PST)
+Date: Mon,  8 Dec 2025 18:53:16 -0800
 In-Reply-To: <20251209025317.3846938-1-jasonmiu@google.com>
 Mime-Version: 1.0
 References: <20251209025317.3846938-1-jasonmiu@google.com>
 X-Mailer: git-send-email 2.52.0.223.gf5cc29aaa4-goog
-Message-ID: <20251209025317.3846938-3-jasonmiu@google.com>
-Subject: [PATCH v3 2/4] kho: Relocate vmalloc preservation structure to KHO
- ABI header
+Message-ID: <20251209025317.3846938-5-jasonmiu@google.com>
+Subject: [PATCH v3 4/4] kho: Remove finalize state and clients
 From: Jason Miu <jasonmiu@google.com>
 To: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
 	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>, 
@@ -77,8 +76,8 @@ To: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
 	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251208_185327_236933_ACCF1C61 
-X-CRM114-Status: GOOD (  20.72  )
+X-CRM114-CacheID: sfid-20251208_185331_015016_763B6DF4 
+X-CRM114-Status: GOOD (  30.62  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,230 +92,293 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The `struct kho_vmalloc` defines the in-memory layout for preserving
-vmalloc regions across kexec. This layout is a contract between kernels
-and part of the KHO ABI.
+Eliminate the `kho_finalize()` function and its associated state from
+the KHO subsystem. The transition to a radix tree for memory tracking
+makes the explicit "finalize" state and its serialization step
+obsolete.
 
-To reflect this relationship, the related structs and helper macros are
-relocated to the ABI header, `include/linux/kho/abi/kexec_handover.h`.
-This move places the structure's definition under the protection of the
-KHO_FDT_COMPATIBLE version string.
+Remove the `kho_finalize()` and `kho_finalized()` APIs and their stub
+implementations. Update KHO client code and the debugfs interface to
+no longer call or depend on the `kho_finalize()` mechanism.
 
-The structure and its components are now also documented within the
-ABI header to describe the contract and prevent ABI breaks.
+Complete the move towards a stateless KHO, simplifying the overall
+design by removing unnecessary state management.
 
 Signed-off-by: Jason Miu <jasonmiu@google.com>
 ---
- Documentation/core-api/kho/fdt.rst     |  6 ++
- include/linux/kexec_handover.h         | 27 +--------
- include/linux/kho/abi/kexec_handover.h | 78 ++++++++++++++++++++++++++
- include/linux/kho/abi/memfd.h          |  2 +-
- kernel/liveupdate/kexec_handover.c     | 15 -----
- lib/test_kho.c                         |  1 +
- 6 files changed, 88 insertions(+), 41 deletions(-)
+ Documentation/admin-guide/mm/kho.rst        | 46 ++++-----------------
+ Documentation/core-api/kho/concepts.rst     | 13 +-----
+ kernel/liveupdate/kexec_handover.c          | 10 -----
+ kernel/liveupdate/kexec_handover_debugfs.c  | 20 ---------
+ kernel/liveupdate/kexec_handover_internal.h |  3 --
+ kernel/liveupdate/luo_core.c                | 12 +-----
+ kernel/liveupdate/luo_flb.c                 |  2 +-
+ tools/testing/selftests/kho/init.c          | 20 ---------
+ 8 files changed, 10 insertions(+), 116 deletions(-)
 
-diff --git a/Documentation/core-api/kho/fdt.rst b/Documentation/core-api/kho/fdt.rst
-index 4e080ccc420e..4202b67fcdf9 100644
---- a/Documentation/core-api/kho/fdt.rst
-+++ b/Documentation/core-api/kho/fdt.rst
-@@ -14,6 +14,12 @@ directly in the ABI header file.
- .. kernel-doc:: include/linux/kho/abi/kexec_handover.h
-    :doc: Kexec Handover ABI
+diff --git a/Documentation/admin-guide/mm/kho.rst b/Documentation/admin-guide/mm/kho.rst
+index 6dc18ed4b886..13910bc68efe 100644
+--- a/Documentation/admin-guide/mm/kho.rst
++++ b/Documentation/admin-guide/mm/kho.rst
+@@ -28,17 +28,7 @@ per NUMA node scratch regions on boot.
+ Perform a KHO kexec
+ ===================
  
-+Kexec Handover ABI for vmalloc Preservation
-+===========================================
-+
-+.. kernel-doc:: include/linux/kho/abi/kexec_handover.h
-+   :doc: Kexec Handover ABI for vmalloc Preservation
-+
- See Also
- ========
- 
-diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
-index 5f7b9de97e8d..a56ff3ffaf17 100644
---- a/include/linux/kexec_handover.h
-+++ b/include/linux/kexec_handover.h
-@@ -11,34 +11,11 @@ struct kho_scratch {
- 	phys_addr_t size;
- };
- 
-+struct kho_vmalloc;
-+
- struct folio;
- struct page;
- 
--#define DECLARE_KHOSER_PTR(name, type) \
--	union {                        \
--		phys_addr_t phys;      \
--		type ptr;              \
--	} name
--#define KHOSER_STORE_PTR(dest, val)               \
--	({                                        \
--		typeof(val) v = val;              \
--		typecheck(typeof((dest).ptr), v); \
--		(dest).phys = virt_to_phys(v);    \
--	})
--#define KHOSER_LOAD_PTR(src)                                                 \
--	({                                                                   \
--		typeof(src) s = src;                                         \
--		(typeof((s).ptr))((s).phys ? phys_to_virt((s).phys) : NULL); \
--	})
+-First, before you perform a KHO kexec, you need to move the system into
+-the :ref:`KHO finalization phase <kho-finalization-phase>` ::
 -
--struct kho_vmalloc_chunk;
--struct kho_vmalloc {
--	DECLARE_KHOSER_PTR(first, struct kho_vmalloc_chunk *);
--	unsigned int total_pages;
--	unsigned short flags;
--	unsigned short order;
--};
+-  $ echo 1 > /sys/kernel/debug/kho/out/finalize
 -
- #ifdef CONFIG_KEXEC_HANDOVER
- bool kho_is_enabled(void);
- bool is_kho_boot(void);
-diff --git a/include/linux/kho/abi/kexec_handover.h b/include/linux/kho/abi/kexec_handover.h
-index d78df2d44cb6..74f4fa67e458 100644
---- a/include/linux/kho/abi/kexec_handover.h
-+++ b/include/linux/kho/abi/kexec_handover.h
-@@ -10,6 +10,8 @@
- #ifndef _LINUX_KHO_ABI_KEXEC_HANDOVER_H
- #define _LINUX_KHO_ABI_KEXEC_HANDOVER_H
+-After this command, the KHO FDT is available in
+-``/sys/kernel/debug/kho/out/fdt``. Other subsystems may also register
+-their own preserved sub FDTs under
+-``/sys/kernel/debug/kho/out/sub_fdts/``.
+-
+-Next, load the target payload and kexec into it. It is important that you
++To perform a KHO kexec, load the target payload and kexec into it. It is important that you
+ use the ``-s`` parameter to use the in-kernel kexec file loader, as user
+ space kexec tooling currently has no support for KHO with the user space
+ based file loader ::
+@@ -52,40 +42,19 @@ For example, if you used ``reserve_mem`` command line parameter to create
+ an early memory reservation, the new kernel will have that memory at the
+ same physical address as the old kernel.
  
-+#include <linux/types.h>
-+
- /**
-  * DOC: Kexec Handover ABI
-  *
-@@ -81,4 +83,80 @@
- /* The FDT property for sub-FDTs. */
- #define KHO_FDT_SUB_TREE_PROP_NAME "fdt"
+-Abort a KHO exec
+-================
+-
+-You can move the system out of KHO finalization phase again by calling ::
+-
+-  $ echo 0 > /sys/kernel/debug/kho/out/active
+-
+-After this command, the KHO FDT is no longer available in
+-``/sys/kernel/debug/kho/out/fdt``.
+-
+ debugfs Interfaces
+ ==================
  
-+/**
-+ * DOC: Kexec Handover ABI for vmalloc Preservation
-+ *
-+ * The Kexec Handover ABI for preserving vmalloc'ed memory is defined by
-+ * a set of structures and helper macros. The layout of these structures is a
-+ * stable contract between kernels and is versioned by the KHO_FDT_COMPATIBLE
-+ * string.
-+ *
-+ * The preservation is managed through a main descriptor struct (`kho_vmalloc`),
-+ * which points to a linked list of `kho_vmalloc_chunk` structures. These
-+ * chunks contain the physical addresses of the preserved pages, allowing the
-+ * next kernel to reconstruct the vmalloc area with the same content and layout.
-+ * Helper macros are also defined for storing and loading pointers within
-+ * these structures.
-+ */
++These debugfs interfaces are available when the kernel is compiled with
++``CONFIG_KEXEC_HANDOVER_DEBUGFS`` set to y.
 +
-+/* Helper macro to define a union for a serializable pointer. */
-+#define DECLARE_KHOSER_PTR(name, type)	\
-+	union {                        \
-+		u64 phys;              \
-+		type ptr;              \
-+	} name
-+
-+/* Stores the physical address of a serializable pointer. */
-+#define KHOSER_STORE_PTR(dest, val)               \
-+	({                                        \
-+		typeof(val) v = val;              \
-+		typecheck(typeof((dest).ptr), v); \
-+		(dest).phys = virt_to_phys(v);    \
-+	})
-+
-+/* Loads the stored physical address back to a pointer. */
-+#define KHOSER_LOAD_PTR(src)						\
-+	({                                                                   \
-+		typeof(src) s = src;                                         \
-+		(typeof((s).ptr))((s).phys ? phys_to_virt((s).phys) : NULL); \
-+	})
-+
-+/*
-+ * This header is embedded at the beginning of each `kho_vmalloc_chunk`
-+ * and contains a pointer to the next chunk in the linked list,
-+ * stored as a physical address for handover.
-+ */
-+struct kho_vmalloc_hdr {
-+	DECLARE_KHOSER_PTR(next, struct kho_vmalloc_chunk *);
-+};
-+
-+#define KHO_VMALLOC_SIZE				\
-+	((PAGE_SIZE - sizeof(struct kho_vmalloc_hdr)) / \
-+	 sizeof(u64))
-+
-+/*
-+ * Each chunk is a single page and is part of a linked list that describes
-+ * a preserved vmalloc area. It contains the header with the link to the next
-+ * chunk and an array of physical addresses of the pages that make up the
-+ * preserved vmalloc area.
-+ */
-+struct kho_vmalloc_chunk {
-+	struct kho_vmalloc_hdr hdr;
-+	u64 phys[KHO_VMALLOC_SIZE];
-+};
-+
-+static_assert(sizeof(struct kho_vmalloc_chunk) == PAGE_SIZE);
-+
-+/*
-+ * Describes a preserved vmalloc memory area, including the
-+ * total number of pages, allocation flags, page order, and a pointer to the
-+ * first chunk of physical page addresses.
-+ */
-+struct kho_vmalloc {
-+	DECLARE_KHOSER_PTR(first, struct kho_vmalloc_chunk *);
-+	unsigned int total_pages;
-+	unsigned short flags;
-+	unsigned short order;
-+};
-+
- #endif	/* _LINUX_KHO_ABI_KEXEC_HANDOVER_H */
-diff --git a/include/linux/kho/abi/memfd.h b/include/linux/kho/abi/memfd.h
-index da7d063474a1..1af4c9dc5a06 100644
---- a/include/linux/kho/abi/memfd.h
-+++ b/include/linux/kho/abi/memfd.h
-@@ -12,7 +12,7 @@
- #define _LINUX_KHO_ABI_MEMFD_H
+ Currently KHO creates the following debugfs interfaces. Notice that these
+ interfaces may change in the future. They will be moved to sysfs once KHO is
+ stabilized.
  
- #include <linux/types.h>
--#include <linux/kexec_handover.h>
-+#include <linux/kho/abi/kexec_handover.h>
+-``/sys/kernel/debug/kho/out/finalize``
+-    Kexec HandOver (KHO) allows Linux to transition the state of
+-    compatible drivers into the next kexec'ed kernel. To do so,
+-    device drivers will instruct KHO to preserve memory regions,
+-    which could contain serialized kernel state.
+-    While the state is serialized, they are unable to perform
+-    any modifications to state that was serialized, such as
+-    handed over memory allocations.
+-
+-    When this file contains "1", the system is in the transition
+-    state. When contains "0", it is not. To switch between the
+-    two states, echo the respective number into this file.
+-
+ ``/sys/kernel/debug/kho/out/fdt``
+-    When KHO state tree is finalized, the kernel exposes the
+-    flattened device tree blob that carries its current KHO
+-    state in this file. Kexec user space tooling can use this
++    The kernel exposes the flattened device tree blob that carries its
++    current KHO state in this file. Kexec user space tooling can use this
+     as input file for the KHO payload image.
  
- /**
-  * DOC: memfd Live Update ABI
+ ``/sys/kernel/debug/kho/out/scratch_len``
+@@ -100,8 +69,7 @@ stabilized.
+     it should place its payload images.
+ 
+ ``/sys/kernel/debug/kho/out/sub_fdts/``
+-    In the KHO finalization phase, KHO producers register their own
+-    FDT blob under this directory.
++    KHO producers can register their own FDT blob under this directory.
+ 
+ ``/sys/kernel/debug/kho/in/fdt``
+     When the kernel was booted with Kexec HandOver (KHO),
+diff --git a/Documentation/core-api/kho/concepts.rst b/Documentation/core-api/kho/concepts.rst
+index d38bcaa951e4..0ac01760db18 100644
+--- a/Documentation/core-api/kho/concepts.rst
++++ b/Documentation/core-api/kho/concepts.rst
+@@ -6,7 +6,7 @@ Kexec Handover Concepts
+ =======================
+ 
+ Kexec HandOver (KHO) is a mechanism that allows Linux to preserve memory
+-regions, which could contain serialized system states, across kexec.
++regions, containing kernel data structures in their live, in-memory format, across kexec.
+ 
+ It introduces multiple concepts:
+ 
+@@ -56,17 +56,6 @@ for boot memory allocations and as target memory for kexec blobs, some parts
+ of that memory region may be reserved. These reservations are irrelevant for
+ the next KHO, because kexec can overwrite even the original kernel.
+ 
+-.. _kho-finalization-phase:
+-
+-KHO finalization phase
+-======================
+-
+-To enable user space based kexec file loader, the kernel needs to be able to
+-provide the FDT that describes the current kernel's state before
+-performing the actual kexec. The process of generating that FDT is
+-called serialization. When the FDT is generated, some properties
+-of the system may become immutable because they are already written down
+-in the FDT. That state is called the KHO finalization phase.
+ 
+ Public API
+ ==========
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index d3d02a9ea391..a180b3367e8f 100644
+index 81bac82c8672..92b052450ce4 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -882,21 +882,6 @@ void kho_unpreserve_pages(struct page *page, unsigned int nr_pages)
+@@ -1212,16 +1212,6 @@ void kho_restore_free(void *mem)
  }
- EXPORT_SYMBOL_GPL(kho_unpreserve_pages);
+ EXPORT_SYMBOL_GPL(kho_restore_free);
  
--struct kho_vmalloc_hdr {
--	DECLARE_KHOSER_PTR(next, struct kho_vmalloc_chunk *);
--};
+-int kho_finalize(void)
+-{
+-	return 0;
+-}
 -
--#define KHO_VMALLOC_SIZE				\
--	((PAGE_SIZE - sizeof(struct kho_vmalloc_hdr)) / \
--	 sizeof(phys_addr_t))
+-bool kho_finalized(void)
+-{
+-	return false;
+-}
 -
--struct kho_vmalloc_chunk {
--	struct kho_vmalloc_hdr hdr;
--	phys_addr_t phys[KHO_VMALLOC_SIZE];
--};
--
--static_assert(sizeof(struct kho_vmalloc_chunk) == PAGE_SIZE);
--
- /* vmalloc flags KHO supports */
- #define KHO_VMALLOC_SUPPORTED_FLAGS	(VM_ALLOC | VM_ALLOW_HUGE_VMAP)
+ struct kho_in {
+ 	phys_addr_t fdt_phys;
+ 	phys_addr_t scratch_phys;
+diff --git a/kernel/liveupdate/kexec_handover_debugfs.c b/kernel/liveupdate/kexec_handover_debugfs.c
+index 2abbf62ba942..2f70d9c41831 100644
+--- a/kernel/liveupdate/kexec_handover_debugfs.c
++++ b/kernel/liveupdate/kexec_handover_debugfs.c
+@@ -75,24 +75,6 @@ void kho_debugfs_fdt_remove(struct kho_debugfs *dbg, void *fdt)
+ 	}
+ }
  
-diff --git a/lib/test_kho.c b/lib/test_kho.c
-index 47de56280795..3431daca6968 100644
---- a/lib/test_kho.c
-+++ b/lib/test_kho.c
-@@ -19,6 +19,7 @@
- #include <linux/printk.h>
- #include <linux/vmalloc.h>
- #include <linux/kexec_handover.h>
-+#include <linux/kho/abi/kexec_handover.h>
+-static int kho_out_finalize_get(void *data, u64 *val)
+-{
+-	*val = kho_finalized();
+-
+-	return 0;
+-}
+-
+-static int kho_out_finalize_set(void *data, u64 val)
+-{
+-	if (val)
+-		return kho_finalize();
+-	else
+-		return -EINVAL;
+-}
+-
+-DEFINE_DEBUGFS_ATTRIBUTE(kho_out_finalize_fops, kho_out_finalize_get,
+-			 kho_out_finalize_set, "%llu\n");
+-
+ static int scratch_phys_show(struct seq_file *m, void *v)
+ {
+ 	for (int i = 0; i < kho_scratch_cnt; i++)
+@@ -198,8 +180,6 @@ __init int kho_out_debugfs_init(struct kho_debugfs *dbg)
+ 	if (IS_ERR(f))
+ 		goto err_rmdir;
  
- #include <net/checksum.h>
+-	f = debugfs_create_file("finalize", 0600, dir, NULL,
+-				&kho_out_finalize_fops);
+ 	if (IS_ERR(f))
+ 		goto err_rmdir;
+ 
+diff --git a/kernel/liveupdate/kexec_handover_internal.h b/kernel/liveupdate/kexec_handover_internal.h
+index 0202c85ad14f..9a832a35254c 100644
+--- a/kernel/liveupdate/kexec_handover_internal.h
++++ b/kernel/liveupdate/kexec_handover_internal.h
+@@ -22,9 +22,6 @@ struct kho_debugfs {};
+ extern struct kho_scratch *kho_scratch;
+ extern unsigned int kho_scratch_cnt;
+ 
+-bool kho_finalized(void);
+-int kho_finalize(void);
+-
+ #ifdef CONFIG_KEXEC_HANDOVER_DEBUGFS
+ int kho_debugfs_init(void);
+ void kho_in_debugfs_init(struct kho_debugfs *dbg, const void *fdt);
+diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
+index 69298d82f404..e4db15d81f89 100644
+--- a/kernel/liveupdate/luo_core.c
++++ b/kernel/liveupdate/luo_core.c
+@@ -231,17 +231,7 @@ int liveupdate_reboot(void)
+ 
+ 	luo_flb_serialize();
+ 
+-	err = kho_finalize();
+-	if (err) {
+-		pr_err("kho_finalize failed %d\n", err);
+-		/*
+-		 * kho_finalize() may return libfdt errors, to aboid passing to
+-		 * userspace unknown errors, change this to EAGAIN.
+-		 */
+-		err = -EAGAIN;
+-	}
+-
+-	return err;
++	return 0;
+ }
+ 
+ /**
+diff --git a/kernel/liveupdate/luo_flb.c b/kernel/liveupdate/luo_flb.c
+index e80ac5b575ec..92d35eb5e6ee 100644
+--- a/kernel/liveupdate/luo_flb.c
++++ b/kernel/liveupdate/luo_flb.c
+@@ -632,7 +632,7 @@ int __init luo_flb_setup_incoming(void *fdt_in)
+  * data handle, and the final reference count. This allows the new kernel to
+  * find the appropriate handler and reconstruct the FLB's state.
+  *
+- * Context: Called from liveupdate_reboot() just before kho_finalize().
++ * Context: Called from liveupdate_reboot() just before return.
+  */
+ void luo_flb_serialize(void)
+ {
+diff --git a/tools/testing/selftests/kho/init.c b/tools/testing/selftests/kho/init.c
+index 6d9e91d55d68..88a41b6eba95 100644
+--- a/tools/testing/selftests/kho/init.c
++++ b/tools/testing/selftests/kho/init.c
+@@ -11,7 +11,6 @@
+ /* from arch/x86/include/asm/setup.h */
+ #define COMMAND_LINE_SIZE	2048
+ 
+-#define KHO_FINALIZE "/debugfs/kho/out/finalize"
+ #define KERNEL_IMAGE "/kernel"
+ 
+ static int mount_filesystems(void)
+@@ -22,22 +21,6 @@ static int mount_filesystems(void)
+ 	return mount("proc", "/proc", "proc", 0, NULL);
+ }
+ 
+-static int kho_enable(void)
+-{
+-	const char enable[] = "1";
+-	int fd;
+-
+-	fd = open(KHO_FINALIZE, O_RDWR);
+-	if (fd < 0)
+-		return -1;
+-
+-	if (write(fd, enable, sizeof(enable)) != sizeof(enable))
+-		return 1;
+-
+-	close(fd);
+-	return 0;
+-}
+-
+ static long kexec_file_load(int kernel_fd, int initrd_fd,
+ 			    unsigned long cmdline_len, const char *cmdline,
+ 			    unsigned long flags)
+@@ -78,9 +61,6 @@ int main(int argc, char *argv[])
+ 	if (mount_filesystems())
+ 		goto err_reboot;
+ 
+-	if (kho_enable())
+-		goto err_reboot;
+-
+ 	if (kexec_load())
+ 		goto err_reboot;
  
 -- 
 2.52.0.223.gf5cc29aaa4-goog
