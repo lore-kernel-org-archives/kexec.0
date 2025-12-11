@@ -4,85 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 044EFD3E788
-	for <kexec@archiver.kernel.org>; Thu, 11 Dec 2025 02:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AED0ED3E78D
+	for <kexec@archiver.kernel.org>; Thu, 11 Dec 2025 04:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=54bOQMjE86a3OvBo4Z5xX+IGN2GAizUFzbeuDsoGB3k=; b=ULCM/tZFzB/Zl5A8ekiz0xq+pf
-	wJY3Mudm8YvuXenGaxHgkAGAGzjxOkaOfi63W3iBaK4TG2kSBM+v54u8DYWq8kAitJ4tgUdZ8xtxy
-	3fJ52IcRimWIPHPdlX8/fG57nq61f8HETr5+pO6eSwvRUW1A6/VtFZ94umuQL0Gm9fHg1y74rUwvh
-	WE2rMyD7Z9mpbD1bgeRjagX22NJHHVNgdOlz4IeopOualNHUkMrV7wTxuxTsbEeOhKct8DdmlkYIw
-	iFnzzqpuLDSnTVRE/KW3kxpfYuyuqrJGQxtllxpjyQzQudRE2QB5cwoxUL2NbU5fSGyhRuDuYggOM
-	/j4uHhBA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=eKXTOc/qyTfcN5X1gBtb5g7Xq4iw49a+Kau6321RZIA=; b=pgxY5evL4LdAHyj4WVPpDiGAAG
+	2NCycovGys9P2oXpH2JFCiC/vTbqpi5mSOHAYMBOgIjZQIMzDsS7tbmPLzitQuKAiNTC4z/9gsh2/
+	RH7yU2lQTyIBBi7udcjHaJPmmt2G5e9F7t47WEngylIS1NlTmsyZ9EfVZ1mtkflKBFCBAa9oMyemq
+	5gmaQQQ78BY6A5CejILCdPEiLFb/QxqxT7v4F9PzVtv6ZitPDN9Fozs0Wa/WKl2mxD0ztoqbZbTw9
+	E8yOiytlzQp1J1zV4Op1O6N5/QWXxhlC5k7h4PmSlYXACbdCSSIZdJgLf7xd6gYGTrKs9OSfoMdWK
+	znQpOKvQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vTWo1-0000000G8Tl-2Not;
-	Thu, 11 Dec 2025 02:53:25 +0000
-Received: from mgamail.intel.com ([192.198.163.10])
+	id 1vTYGm-0000000GD4K-2E5n;
+	Thu, 11 Dec 2025 04:27:12 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vTWny-0000000G8TN-3Lw3;
-	Thu, 11 Dec 2025 02:53:24 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765421603; x=1796957603;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nCP4Qrkpz8bVZqCHE4sJmyUXXrSPtXg/5yZwtOzX+cg=;
-  b=J08opOngke1umBZevExKoS8Q+VvpR/LnN3aELgMmGqYPtpvZ4a10x9JD
-   1/Rn6r98ozf7YZO/q6VPvpHBC4W4GDTnqyHBtXr45V3E6V6/dio0IVWUA
-   GBUNMR1LGy47QxNZs3DvTZW+wEgNEXqhUCPUjfpeN0y+65C7IKBcaPqcz
-   9fcN75jBTxHu9Z8ANXu3hWa2h8F0hy0Ji1mwqorVhK5gPzExY2XJoRoqW
-   dNWx2R76Qb1r1EJpWF2bAUMGTOdjMNDHQOzqm9M1mLCb+Ha3+muJDU9CQ
-   vY2geRZ3O05OljZxkV+EjvpfLnCVlOle7sVto3RzoU9voT6YOHnsv/Kfd
-   A==;
-X-CSE-ConnectionGUID: j9TeoBg0SsyOyewDu/PgGQ==
-X-CSE-MsgGUID: 6bBdp/I2Roi5wx9j74+CFg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11638"; a="78765560"
-X-IronPort-AV: E=Sophos;i="6.20,265,1758610800"; 
-   d="scan'208";a="78765560"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2025 18:53:20 -0800
-X-CSE-ConnectionGUID: Zev6oIoBRpaOqU2xDpbw4g==
-X-CSE-MsgGUID: oROrgDILQmSBZQ6XsbXTuA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,265,1758610800"; 
-   d="scan'208";a="196738003"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2025 18:53:20 -0800
-Date: Wed, 10 Dec 2025 19:00:06 -0800
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: Changyuan Lyu <changyuanl@google.com>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
-	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
-	corbet@lwn.net, dave.hansen@linux.intel.com,
-	devicetree@vger.kernel.org, dwmw2@infradead.org,
-	ebiederm@xmission.com, graf@amazon.com, hpa@zytor.com,
-	jgowans@amazon.com, kexec@lists.infradead.org, krzk@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-mm@kvack.org, luto@kernel.org, mark.rutland@arm.com,
-	mingo@redhat.com, pasha.tatashin@soleen.com, pbonzini@redhat.com,
-	peterz@infradead.org, ptyadav@amazon.de, robh@kernel.org,
-	rostedt@goodmis.org, rppt@kernel.org, saravanak@google.com,
-	skinsburskii@linux.microsoft.com, tglx@linutronix.de,
-	thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
-Subject: Re: [PATCH v8 17/17] Documentation: KHO: Add memblock bindings
-Message-ID: <20251211030006.GA9333@ranerica-svr.sc.intel.com>
-References: <20250509074635.3187114-1-changyuanl@google.com>
- <20250509074635.3187114-18-changyuanl@google.com>
+	id 1vTYGh-0000000GD3p-164M
+	for kexec@lists.infradead.org;
+	Thu, 11 Dec 2025 04:27:11 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id F3C3143E84;
+	Thu, 11 Dec 2025 04:27:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B448EC4CEFB;
+	Thu, 11 Dec 2025 04:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765427224;
+	bh=xpkKIG9FMryb6P12ow/DNTd5Jc1/Y/mhnvtHiSrrxfc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TzEXc4txHsbtptaVuuDDJvsSdK4q9CA+1T++9wgdK60nWiPaodxe5xZuV5yE45TC6
+	 LdMueM5iAF+Lx4gkH87EUZmBc/+Czs4gTzcgeX/I15yhBL4njM9duiE2JOpTT3K55v
+	 Lv7Ty2KdcASnmjbhnDmIeJzrESlF+VyPQ3cjQ5AS4ELsoSI9VWJutjgmXV0VBmV0qC
+	 g91EjdDdlGA1v5EIj+wVhQtl6r0BH/ubL+vyKT2Wh1zTM+C2SURNGc6yDMORqXbSvt
+	 bK37cHL0bnYdxlw3vO14L4LQLZnF5X5OUPfnKAL7ttBQZoJJ+1WxzPG1y0NCEXdv9+
+	 7o3TjfsdRNHyw==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	David Matlack <dmatlack@google.com>,
+	David Rientjes <rientjes@google.com>,
+	Jason Miu <jasonmiu@google.com>
+Cc: linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	kexec@lists.infradead.org
+Subject: [RFC PATCH] liveupdate: list all file handler versions in vmlinux section
+Date: Thu, 11 Dec 2025 13:26:22 +0900
+Message-ID: <20251211042624.175517-1-pratyush@kernel.org>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250509074635.3187114-18-changyuanl@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251210_185322_884934_CCDF1F96 
-X-CRM114-Status: GOOD (  28.71  )
+X-CRM114-CacheID: sfid-20251210_202707_340934_4E57CA8E 
+X-CRM114-Status: GOOD (  27.44  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,104 +81,202 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, May 09, 2025 at 12:46:35AM -0700, Changyuan Lyu wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> 
-> We introduced KHO into Linux: A framework that allows Linux to pass
-> metadata and memory across kexec from Linux to Linux. KHO reuses fdt
-> as file format and shares a lot of the same properties of firmware-to-
-> Linux boot formats: It needs a stable, documented ABI that allows for
-> forward and backward compatibility as well as versioning.
-> 
-> As first user of KHO, we introduced memblock which can now preserve
-> memory ranges reserved with reserve_mem command line options contents
-> across kexec, so you can use the post-kexec kernel to read traces from
-> the pre-kexec kernel.
-> 
-> This patch adds memblock schemas similar to "device" device tree ones to
-> a new kho bindings directory. This allows us to force contributors to
-> document the data that moves across KHO kexecs and catch breaking change
-> during review.
-> 
-> Co-developed-by: Alexander Graf <graf@amazon.com>
-> Signed-off-by: Alexander Graf <graf@amazon.com>
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Signed-off-by: Changyuan Lyu <changyuanl@google.com>
-> ---
->  .../kho/bindings/memblock/memblock.yaml       | 39 ++++++++++++++++++
->  .../kho/bindings/memblock/reserve-mem.yaml    | 40 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  3 files changed, 80 insertions(+)
->  create mode 100644 Documentation/core-api/kho/bindings/memblock/memblock.yaml
->  create mode 100644 Documentation/core-api/kho/bindings/memblock/reserve-mem.yaml
-> 
-> diff --git a/Documentation/core-api/kho/bindings/memblock/memblock.yaml b/Documentation/core-api/kho/bindings/memblock/memblock.yaml
-> new file mode 100644
-> index 0000000000000..d388c28eb91d1
-> --- /dev/null
-> +++ b/Documentation/core-api/kho/bindings/memblock/memblock.yaml
-> @@ -0,0 +1,39 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +title: Memblock reserved memory
-> +
-> +maintainers:
-> +  - Mike Rapoport <rppt@kernel.org>
-> +
-> +description: |
-> +  Memblock can serialize its current memory reservations created with
-> +  reserve_mem command line option across kexec through KHO.
-> +  The post-KHO kernel can then consume these reservations and they are
-> +  guaranteed to have the same physical address.
+As live update evolves, there will be a need to update the serialization
+formats for the different file types. This could be for adding new
+features, for supporting a change in behaviour, or to fix bugs.
 
-Hi Changyuan, Mike,
+If the current kernel does not understand the same set of versions as
+the next kernel, live update will inevitably fail. The next kernel will
+be unable to understand the handed over data and will be unable to
+restore memory, devices, IOMMU page tables, etc.
 
-I am sorry I am late to this patchset. I am working on a patchset to use
-KHO to pass reserved memory regions to a driver after kexec and I have a
-few questions.
+List the set of versions the kernel understands in a section in vmlinux.
+This can then be used by userspace tooling to make sure the set of file
+descriptors it uses have the same version between both kernels. If there
+is a mismatch, the tooling can catch this early and abort live update
+before it is too late.
 
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - reserve-mem-v1
+The versions are listed in a section called ".liveupdate_versions". The
+section has a header that contains a magic number and the version of the
+data format. The list of version strings directly follow this header.
+Only the version strings are listed, and it is up to userspace to map
+them to file descriptor types.
 
-Shouldn't this be "memblock-v1". IIUC, the compatible "reserve-mem-v1" is
-to be used for the memblock reserved memory regions, not the memblock node.
+The format of the section has the same ABI rules as the rest of LUO ABI.
 
+Introduce a LIVEUPDATE_FILE_HANDLER macro that makes it easy to define a
+file handler while also adding its version string to the right section.
 
-> +
-> +patternProperties:
-> +  "$[0-9a-f_]+^":
+Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
+---
 
-Shouldn't this be "^[0-9a-f_]+$": ^ at the start of the pattern and $ at
-the end of it? Or is this a KHO-specific rule?
+Notes:
+    I also wrote a small tool [0] to parse this section and list all the
+    versions it contains to demonstrate how it can be used.
+    
+    This topic will also be discussed at an upcoming session at the Linux
+    Plumbers Conference 2025 [1].
+    
+    [0] https://github.com/prati0100/luo_section_parser
+    [1] https://lpc.events/event/19/contributions/2049/
 
-Also, IIUC, this means that names of the nodes are hexadecimal numbers
-whereas the example below has a "membloc" name. I assume this does not
-refer to the subnode named "n1" as this does not follow the pattern
-either Moreover, it should have been documented in the reserve-mem binding.
+ include/asm-generic/vmlinux.lds.h | 12 +++++++++++
+ include/linux/kho/abi/luo.h       | 34 +++++++++++++++++++++++++++++++
+ include/linux/liveupdate.h        | 23 +++++++++++++++++++++
+ kernel/liveupdate/luo_core.c      | 14 +++++++++++++
+ mm/memfd_luo.c                    |  6 ++----
+ 5 files changed, 85 insertions(+), 4 deletions(-)
 
-> +    $ref: reserve-mem.yaml#
-> +    description: reserved memory regions
-> +
-> +required:
-> +  - compatible
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    memblock {
-> +      compatible = "memblock-v1";
-> +      n1 {
-> +        compatible = "reserve-mem-v1";
-> +        start = <0xc06b 0x4000000>;
-> +        size = <0x04 0x00>;
-> +      };
-> +    };
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index e04d56a5332e..a474c9529a5f 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -342,6 +342,17 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
+ #define THERMAL_TABLE(name)
+ #endif
+ 
++#ifdef CONFIG_LIVEUPDATE
++#define LIVEUPDATE_VERSIONS						\
++	. = ALIGN(8);							\
++	.liveupdate_versions : AT(ADDR(.liveupdate_versions) - LOAD_OFFSET) {	\
++		KEEP(*(.liveupdate_sec_hdr))				\
++		KEEP(*(.liveupdate_versions))				\
++	}
++#else
++#define LIVEUPDATE_VERSIONS
++#endif
++
+ #define KERNEL_DTB()							\
+ 	STRUCT_ALIGN();							\
+ 	__dtb_start = .;						\
+@@ -544,6 +555,7 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
+ 	RO_EXCEPTION_TABLE						\
+ 	NOTES								\
+ 	BTF								\
++	LIVEUPDATE_VERSIONS						\
+ 									\
+ 	. = ALIGN((align));						\
+ 	__end_rodata = .;
+diff --git a/include/linux/kho/abi/luo.h b/include/linux/kho/abi/luo.h
+index 4a1cc6a5f3f8..57ef75695f62 100644
+--- a/include/linux/kho/abi/luo.h
++++ b/include/linux/kho/abi/luo.h
+@@ -244,4 +244,38 @@ struct luo_flb_ser {
+ #define LIVEUPDATE_TEST_FLB_COMPATIBLE(i)	"liveupdate-test-flb-v" #i
+ #endif
+ 
++#define LIVEUPDATE_VER_HDR_MAGIC 0x4c565550 /* 'LVUP' */
++#define LIVEUPDATE_VER_HDR_VER   1
++
++/**
++ * struct liveupdate_ver_hdr - Header of vmlinux section with version lists
++ * @magic:     Magic number.
++ * @version:   Version of the header format.
++ *
++ * This struct is the header for the vmlinux section ".liveupdate_versions". The
++ * section contains the list of file handler versions that the kernel can
++ * support.
++ */
++struct liveupdate_ver_hdr {
++	u32 magic;
++	u32 version;
++};
++
++/**
++ * struct liveupdate_ver_table - Table of file handler versions that the kernel
++ * can support.
++ *
++ * @hdr:        Table header.
++ * @versions:   List of versions the kernel supports. The strings ate
++ *              NUL-terminated, but to keep the format simpler always take up
++ *              LIVEUPDATE_HNDL_COMPAT_LENGTH bytes.
++ *
++ * The list of versions immediately follows the header. The number of versions
++ * are determined by section length.
++ */
++struct liveupdate_ver_table {
++	struct liveupdate_ver_hdr hdr;
++	char versions[][LIVEUPDATE_HNDL_COMPAT_LENGTH];
++};
++
+ #endif /* _LINUX_KHO_ABI_LUO_H */
+diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
+index ed81e7b31a9f..5a8305595fe5 100644
+--- a/include/linux/liveupdate.h
++++ b/include/linux/liveupdate.h
+@@ -212,6 +212,29 @@ struct liveupdate_flb {
+ 	struct luo_flb_private __private private;
+ };
+ 
++#define LIVEUPDATE_SEC_VERSION(_name, _ver)				\
++	static const char __ ## _name ## _vers[LIVEUPDATE_HNDL_COMPAT_LENGTH] \
++	__used __section(".liveupdate_versions")			\
++	__aligned(1) = _ver
++
++/**
++ * LIVEUPDATE_FILE_HANDLER - Define a live update file handler.
++ * @_name:        The name for the variable.
++ * @_compatible:  The compatible string for the file handler.
++ * @ops:          The file handler operations.
++ *
++ * Defines a struct liveupdate_file_handler called _name. It also makes sure the
++ * compatible of the handler gets added to the liveupdate versions section. All
++ * file handler must be defined using this macro.
++ */
++#define LIVEUPDATE_FILE_HANDLER(_name, _compatible, _ops)		\
++	static struct liveupdate_file_handler _name = {\
++		.compatible = _compatible,				\
++		.ops = _ops,						\
++	};								\
++									\
++	LIVEUPDATE_SEC_VERSION(_name, _compatible)
++
+ #ifdef CONFIG_LIVEUPDATE
+ 
+ /* Return true if live update orchestrator is enabled */
+diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
+index 7a9ef16b37d8..f44ed6019367 100644
+--- a/kernel/liveupdate/luo_core.c
++++ b/kernel/liveupdate/luo_core.c
+@@ -62,6 +62,20 @@
+ #include "kexec_handover_internal.h"
+ #include "luo_internal.h"
+ 
++/*
++ * This is the header for the ".liveupdate_versions" section in vmlinux. See
++ * struct liveupdate_ver_table for more info. The linker makes sure that the
++ * this header precedes the compatibles added by LIVEUPDATE_FILE_HANDLER().
++ */
++static const struct liveupdate_ver_hdr ver_hdr
++	__used __section(".liveupdate_sec_hdr") __aligned(8) = {
++	.magic = LIVEUPDATE_VER_HDR_MAGIC,
++	.version = LIVEUPDATE_VER_HDR_VER,
++};
++
++/* Also list the LUO core version. */
++LIVEUPDATE_SEC_VERSION(luo_ver, LUO_FDT_COMPATIBLE);
++
+ static struct {
+ 	bool enabled;
+ 	void *fdt_out;
+diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
+index 4f6ba63b4310..23c7f1dd7d8e 100644
+--- a/mm/memfd_luo.c
++++ b/mm/memfd_luo.c
+@@ -495,10 +495,8 @@ static const struct liveupdate_file_ops memfd_luo_file_ops = {
+ 	.owner = THIS_MODULE,
+ };
+ 
+-static struct liveupdate_file_handler memfd_luo_handler = {
+-	.ops = &memfd_luo_file_ops,
+-	.compatible = MEMFD_LUO_FH_COMPATIBLE,
+-};
++LIVEUPDATE_FILE_HANDLER(memfd_luo_handler, MEMFD_LUO_FH_COMPATIBLE,
++			&memfd_luo_file_ops);
+ 
+ static int __init memfd_luo_init(void)
+ {
+-- 
+2.43.0
 
-Thanks and BR,
-Ricardo
 
