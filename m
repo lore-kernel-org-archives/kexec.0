@@ -4,81 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E44CED4336B
-	for <kexec@archiver.kernel.org>; Fri, 12 Dec 2025 07:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7CA05D4415B
+	for <kexec@archiver.kernel.org>; Fri, 12 Dec 2025 09:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=xqDNPQMA0ZXb9beqvbbiNQ2l/epurNxInDyeK+Wd+xQ=; b=SRhQ57rswUN7Hpk5Zo02jhGATv
-	7cgx2i7DM/5mxtMjg/+9nmFc2qWROzxhWZ+LG51bD8KVnqbFswiEroM0tcXnykxp4uu/MFoldigxd
-	qhrs+cCqeI8KDNL0MDEOQs/pGAExVb5z7C4OOx1KMhFm1jPM2aorVlgrsFsAXlZX/sr/eyvHGRPA+
-	JzRcaH8jIX1oOeX2EIPX+lci+3xyO07eFGxe8uLJV0T53DjnZQajkXyPn1EmpnB+oYVCIRi3ZpiQ+
-	R/TK0yzVMSczlTxgjJ/6T/av0fOScSqscL5L6aXwCZuZUn60lGyfZ5eUz0VWv9zrRsCNFNuXcnJwL
-	Y0tYwu+A==;
+	bh=8t5l/NtY1SYKroL5Up7y+J2/044lu/7/n00xq6dNOOA=; b=0qtkU+d/5W0lllxVpPRd3PfZ3e
+	a5jAJ7JgQzS5jwOMbMvFY0SVPYJ2s1fib2PkerDj2w3UYvJY2p5QdRn9/2dOOc3BCMWrVAQR+RcOd
+	NRzSrpaF7kY9QyK1nOewpovLQqIpRCJYHgx/PW+eGvwTOo5DCnd+qh4lVhLHwu9DrEDhZ24s60Oxv
+	xJ7W2F1V8hWBm1laPwrRjvqudWy4t+ulQmsLYnG+vbUhQQjZOg3yfPEMbZe7lHqn98sfcTKhjfHyh
+	GrOW9TAnr3974y5PSCk6dIngtmurX3NjdRZ0MxlseA5+6RYZfwiABHLhcqskNgbDpZC0egP1Z+eNs
+	jnewGbKg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vTxQ2-00000000CFi-33I8;
-	Fri, 12 Dec 2025 07:18:26 +0000
-Received: from smtpbgau2.qq.com ([54.206.34.216])
+	id 1vTzvQ-00000000O9G-3lep;
+	Fri, 12 Dec 2025 09:59:00 +0000
+Received: from smtpbguseast2.qq.com ([54.204.34.130])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vTxPz-00000000CE9-2OvV
-	for kexec@lists.infradead.org;
-	Fri, 12 Dec 2025 07:18:25 +0000
+	id 1vTzvN-00000000O4i-0HnT;
+	Fri, 12 Dec 2025 09:58:59 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1765523873;
-	bh=xqDNPQMA0ZXb9beqvbbiNQ2l/epurNxInDyeK+Wd+xQ=;
+	s=onoh2408; t=1765533469;
+	bh=8t5l/NtY1SYKroL5Up7y+J2/044lu/7/n00xq6dNOOA=;
 	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=N8NbqwK9GwWGSMFJxoCYEr4s/Izl8lVKjIJTBYcN5/wFmpGYZVVjgppMI5NFHopKX
-	 zW2GpYfHeXdBk6abeT4HOJsCmkHOuwcixnX+m+oQht8RVOWpyHYmMI973dRHmxxytA
-	 /ZJOEh7BsMIo22QaF8I+o5rFzIU/IDuRpyrxQAkE=
-X-QQ-mid: zesmtpgz3t1765523868t4cd87e0f
-X-QQ-Originating-IP: Yg3483df6YQga4Ka682rLXb/HS16D3bbdDLlND/VZow=
+	b=DLxKrj+YXIWP60bu95WlRRF7s9/8R98UORz0fnvunJct8vR4r7mJzx9t8/FmyLN/j
+	 sV6dWSNm8wehYylKpeJDddBm/XeqJ4MGIG/h9ztuFJDKmq9vu5fJ5S1uXgQZxt612T
+	 /eofNkNFANv39kgIAYcKfAur3dCnRjTcgZr3UIpw=
+X-QQ-mid: esmtpsz10t1765533451t8d6bfcab
+X-QQ-Originating-IP: 2LL2NMRf384R8803vL8zyY/tfZxKKcLdRzEhyMActVE=
 Received: from localhost.localdomain ( [123.114.60.34])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 12 Dec 2025 15:17:46 +0800 (CST)
+	id ; Fri, 12 Dec 2025 17:57:29 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 6577007258687033009
-EX-QQ-RecipientCnt: 5
+X-BIZMAIL-ID: 17493561031985165414
+EX-QQ-RecipientCnt: 8
 From: Qiang Ma <maqianga@uniontech.com>
 To: akpm@linux-foundation.org,
-	bhe@redhat.com
+	bhe@redhat.com,
+	catalin.marinas@arm.com,
+	will@kernel.org
 Cc: kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Qiang Ma <maqianga@uniontech.com>
-Subject: [PATCH] kexec: Fix uninitialized struct kimage *image pointer
-Date: Fri, 12 Dec 2025 15:16:56 +0800
-Message-Id: <20251212071656.834079-1-maqianga@uniontech.com>
+Subject: [PATCH v1 0/3] kexec: add kexec flag to control debug printing
+Date: Fri, 12 Dec 2025 17:56:46 +0800
+Message-Id: <20251212095649.857796-1-maqianga@uniontech.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
-X-QQ-XMAILINFO: M5AoSkhGr8pk9OXVH0aNOypp7UmeW5dgMh83rLQvnTULcORfb3UGs1wj
-	8F0heAm2bSqPxbk5UaKBuPkEXj404m3d8hDQLfsnBKZuyqQz66C2vNYywqtTGDlpwXsNXa9
-	K9CjGDxzfmpLDBEz10RUn7KeE8Ca0+sr2Ta+2goRFrIIYkmuqEqgZDnfeE6hrrzHaC8HWtA
-	2QFdHkbw6Xhp2dSQVu9jbodbYTjWd3+Hv58Z6H2yJodUAUA1hAR5sf3QK6OMVWam/tbX05V
-	0FUwCdQn1JsmdmFfTmajAWKenuecjQC3N76Yd7fFaVn36uaQvsNeAltxx6apa0Sx4EchAwr
-	93mud9cSbpUJKHQqomVuyYSy/OUAbyyZRTEUy1zJnE6MKl3MqEDjqCErVWRPzB4aKy+Q1uP
-	TtAhnWYK9b6GSPgmPd+JF8EtCaZreLDsTVbd+v4zvikKYgHUsUCra7ZIFLnUY2pFG6DoigK
-	1XvvXCxREFQo/uUfT9ioEEqrcm1LUvRTttmBazivD/6lXpv7GpVQxGycKgv6xG6aoXKYbDj
-	m1C2g/UAe+FYf7JewFFJ+TwnU0+BAQdPzRmpaxsKHWup66r92G+7Ma4K/MEX6HJdOd6hXGO
-	SESsY6zMRbh2AjJjoisGF2S3290P+EspiFyyWQGuDptRNSss88EtEi/0A9D5AfXQOsAWAzN
-	voC+IsF45GJ1MX0+Y6gyq/l+iVnBLPXXAlIByi+ulmB/KUEz2mf6cdxjEZtQ1pkofZVCBUH
-	sHs62kEyPPXuCLNtsJQQ0IpleH0wFPMvni3IZxEXfo1am1W1pMeBKKxejUSqp5+L29L8idw
-	Upflo0S97BAslDas18EFUewR6X5ZG054DeAaT7RMfgPFd12IvsLrA6HWGd6dUGPmfPJbe7m
-	tLmxHrAh27ZklIFop8YCs1GrmKW1Q+zzl4EHRTjlYIz/5iXqF5BJhVMBftuRhqijBLsjKJo
-	5trgOj0obZLo36OE2pIQoklFJEgRSAoHn3th0pBtwWv8DkwbOMF2ddA0FA2u6zfGLKdF0vf
-	B0PTwHbcfRj161RE/KjLvJav7M8DQ=
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+Feedback-ID: esmtpsz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
+X-QQ-XMAILINFO: OBgljwTFJiVqCzOE8KnwiL0jG8W2ZXx20S8b1PlVL1mca18tbtopOIpL
+	SJCHcJgvD3rJBViW1W22+qsAwExdGoRRym75xgRZmIpT9kD6E03WDDI8nUBedCPY5TBMHf3
+	XupTms+QB+iG8r8iNOy03aOQtTrTbsKvOZNUP9Sj7cwlm4ilv3hCquwmfWdaVqrywcLToSu
+	xZQJ2jkvuxlYU7fTrSRyRPOXqnZ0o39iyBg+ayJJCm77OR4S/tcyYY+4ciZDnmhhgkMNyMV
+	Xg/U3S7l4KUs+nKbpHM3wVXY5WISD6IvxidnQROz2xWvqQbN10M54Q/ajqob0HLfeX7jdaC
+	BHeuXetCJQB7lUiqd0wjiNqaEYcD2Q7O8IDvp8IMZQGXNVm6BIBHgecgVpkrjSno0xUZTYW
+	UOiMPebB3KfBnFOXu+NKeQw9gvhUdhKIBFLY6Fqw6CAXm+Oa3mnUA7YZT1oWuzFejaW2Y0Z
+	PLR252QfdFCdMqhRGvX329Knl8PLyhuJ17i5FmBVAJRGEA3d594hGJ79HCyhBpDT7qFl8B7
+	tWKWlrPLdCIIXzIXW0q93/NHiIW5i1iSICAsLbFW9LcVW+ut5KC6JgIh6Dcl2HT2VBi4qDN
+	1TWeoBicG4Xwp6stQhOuSg0F3ua5kk9e5llSbpp/aYPIBkJDd2/T5sgdHxocEvrVzDkcq+S
+	KjRdU8VTQw4o3WapJxlLNfk40c8QZkZGBEUeE/vtpm7nPb9IiqN578yp3mwx9QSed/D+Ar+
+	RszpodW7wW6PlHF7HCzZgYEGpAIspRo1DvRla7EHKZAQIRtmc+JWjUknHfZN3e6RyPe+zT+
+	zfXngBTmrvtV+vsRdZ9inNVGq2hEmsvP0ctsLIxkTbZBj+/gpIiQw0Jf5GWMhJSVhOTgfPd
+	W8JK2SbH8qZlI/CL+iEZF1jVkDk7La5amgdFFKhv1ZIpvdAUYQZgTwS1cvGKBhuaoDRRa/3
+	XN90xkgbYttDFOeFxe7BP9OA4N5FilMARd9FYyRKJd/WsT3M7CVYuBiwWgpjyfzAJXh7QYT
+	xPgTfWBX8QIOsLSFE4RyFUwJiUFxD6Rjd+VI1vOl+4/WjSfnpTv7amFW3h4Js0JLbvRbRtO
+	A==
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
 X-QQ-RECHKSPAM: 0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251211_231824_472003_F719A7F1 
-X-CRM114-Status: UNSURE (   9.20  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20251212_015858_237987_12047E60 
+X-CRM114-Status: GOOD (  11.85  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,37 +95,122 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The image is initialized to NULL. Then, after calling kimage_alloc_init,
-we can directly goto 'out' because at this time, the kimage_free will
-determine whether image is a NULL pointer.
+Overview:
+=========
+The commit cbc2fe9d9cb2 ("kexec_file: add kexec_file flag to control
+debug printing") added the kexec_file flag to control debug printing.
+However, for arm64, after commit 6f8c1da071a4 ("kexec_file, arm64: print
+out debugging message if required"), when using the kexec_load interface,
+the kexec_image_info function is called to print debug message, but
+it uses kexec_dprintk, which is only available under kexec_file,
+then when specifying 'kexec -d', kexec_load interface will print nothing.
 
-Signed-off-by: Qiang Ma <maqianga@uniontech.com>
----
- kernel/kexec.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+For riscv, commit eb7622d908a09 ("kexec_file, riscv: print out debugging
+message if required") remove kexec_image_info(), because the content has
+been printed out in generic code in kexec_file_load, but not in kexec_load.
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 28008e3d462e..9bb1f2b6b268 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -95,6 +95,8 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
- 	unsigned long i;
- 	int ret;
- 
-+	image = NULL;
-+
- 	/*
- 	 * Because we write directly to the reserved memory region when loading
- 	 * crash kernels we need a serialization here to prevent multiple crash
-@@ -129,7 +131,7 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
- 
- 	ret = kimage_alloc_init(&image, entry, nr_segments, segments, flags);
- 	if (ret)
--		goto out_unlock;
-+		goto out;
- 
- 	if (flags & KEXEC_PRESERVE_CONTEXT)
- 		image->preserve_context = 1;
+Therefore, in order to solve the two problems mentioned above, for this
+patchset, several things need to be done:
+
+1. Enabling kexec_dprintk is available for kexec_load.
+2. Add some debugging message of the deleted kexec_image_info
+   to generic code.
+3. Remove duplicate debugging prints for arm64.
+
+Since kexec_load and kexec_file_load are not triggered simultaneously,
+we can unify the debug flag of kexec and kexec_file as kexec_dbg_print.
+
+In this way, kexec_dprintk is available for kexec_load and kexec_file_load.
+
+Then when specifying 'kexec -d', the debugging message using kexec_dprintk in
+kexec_image_info can be printed normally.
+
+The following are the key points of the specific changes:
+
+1. rename kexec_file_dbg_print to kexec_dbg_print
+2. Add KEXEC_DEBUG
+3. Initialize kexec_dbg_print for kexec
+4. Set the reset of kexec_dbg_print to kimage_free
+
+Testing:
+=========
+I did testing on x86_64, arm64 and loongarch. On x86_64, the printed messages
+look like below:
+
+Unset CONFIG_KEXEC_FILE:
+[   36.774228] kexec_file: kernel: 0000000066c386c8 kernel_size: 0xd78400
+[   36.821814] kexec-bzImage64: Loaded purgatory at 0x23fffb000
+[   36.821826] kexec-bzImage64: Loaded boot_param, command line and misc at 0x23fff9000 bufsz=0x12d0 memsz=0x2000
+[   36.821829] kexec-bzImage64: Loaded 64bit kernel at 0x23d400000 bufsz=0xd73400 memsz=0x2ab7000
+[   36.821918] kexec-bzImage64: Loaded initrd at 0x23bd0b000 bufsz=0x16f40a8 memsz=0x16f40a8
+[   36.821920] kexec-bzImage64: Final command line is: root=/dev/mapper/test-root crashkernel=auto rd.lvm.lv=test/root
+[   36.821925] kexec-bzImage64: E820 memmap:
+[   36.821926] kexec-bzImage64: 0000000000000000-000000000009ffff (1)
+[   36.821928] kexec-bzImage64: 0000000000100000-0000000000811fff (1)
+[   36.821930] kexec-bzImage64: 0000000000812000-0000000000812fff (2)
+[   36.821931] kexec-bzImage64: 0000000000813000-00000000bee38fff (1)
+[   36.821933] kexec-bzImage64: 00000000bee39000-00000000beec2fff (2)
+[   36.821934] kexec-bzImage64: 00000000beec3000-00000000bf8ecfff (1)
+[   36.821935] kexec-bzImage64: 00000000bf8ed000-00000000bfb6cfff (2)
+[   36.821936] kexec-bzImage64: 00000000bfb6d000-00000000bfb7efff (3)
+[   36.821937] kexec-bzImage64: 00000000bfb7f000-00000000bfbfefff (4)
+[   36.821938] kexec-bzImage64: 00000000bfbff000-00000000bff7bfff (1)
+[   36.821939] kexec-bzImage64: 00000000bff7c000-00000000bfffffff (2)
+[   36.821940] kexec-bzImage64: 00000000feffc000-00000000feffffff (2)
+[   36.821941] kexec-bzImage64: 00000000ffc00000-00000000ffffffff (2)
+[   36.821942] kexec-bzImage64: 0000000100000000-000000023fffffff (1)
+[   36.872348] kexec_file: nr_segments = 4
+[   36.872356] kexec_file: segment[0]: buf=0x000000005314ece7 bufsz=0x4000 mem=0x23fffb000 memsz=0x5000
+[   36.872370] kexec_file: segment[1]: buf=0x000000006e59b143 bufsz=0x12d0 mem=0x23fff9000 memsz=0x2000
+[   36.872374] kexec_file: segment[2]: buf=0x00000000eb7b1fc3 bufsz=0xd73400 mem=0x23d400000 memsz=0x2ab7000
+[   36.882172] kexec_file: segment[3]: buf=0x000000006af76441 bufsz=0x16f40a8 mem=0x23bd0b000 memsz=0x16f5000
+[   36.889113] kexec_file: kexec_file_load: type:0, start:0x23fffb150 head:0x101a2e002 flags:0x8
+
+On aarch64, the printed messages look like below:
+
+Set CONFIG_KEXEC_FILE
+[   39.033203] kexec_file: kernel: 0000000073414684 kernel_size: 0x3123a00
+[   39.047010] kexec_file: Loaded initrd at 0x43cf0000 bufsz=0x17e0e19 memsz=0x17e1000
+[   39.047054] kexec_file: Loaded dtb at 0x23ec00000 bufsz=0x386 memsz=0x1000
+[   39.047056] kexec_file(Image): Loaded kernel at 0x40000000 bufsz=0x3123a00 memsz=0x3cf0000
+[   39.047063] kexec_file: nr_segments = 3
+[   39.047064] kexec_file: segment[0]: buf=0x0000000073414684 bufsz=0x3123a00 mem=0x40000000 memsz=0x3cf0000
+[   39.073612] kexec_file: segment[1]: buf=0x000000005cd5746b bufsz=0x17e0e19 mem=0x43cf0000 memsz=0x17e1000
+[   39.085309] kexec_file: segment[2]: buf=0x0000000084c4a0f1 bufsz=0x386 mem=0x23ec00000 memsz=0x1000
+[   39.085459] machine_kexec_post_load:155:
+[   39.085463]   kexec kimage info:
+[   39.085467]     kern_reloc: 0x00000001620e2000
+[   39.085468]     el2_vectors: 0x0000000000000000
+[   39.085470] kexec_file: kexec_file_load: type:0, start:0x40000000 head:0x1620e4002 flags:0x8
+
+Unset CONFIG_KEXEC_FILE:
+
+With this patch:
+[   35.156088] machine_kexec_post_load:155:
+[   35.156097]   kexec kimage info:
+[   35.156101]     kern_reloc: 0x000000011c134000
+[   35.156102]     el2_vectors: 0x0000000000000000
+[   35.156104] kexec: kexec_load: type:0, start:0x454d26b0 head:0x105c14002 flags:0xb70010
+
+Without this patch:
+There is no kexec print in dmesg.
+
+Previous posts:
+Link: https://lore.kernel.org/all/aTdxEvqY6Bcy7Wa1@MiWiFi-R3L-srv/
+
+Qiang Ma (3):
+  kexec: add kexec flag to control debug printing
+  kexec: print out debugging message if required for kexec_load
+  arm64: kexec: Adjust the debug print of kexec_image_info
+
+ arch/arm64/kernel/machine_kexec.c | 2 --
+ include/linux/kexec.h             | 9 +++++----
+ include/uapi/linux/kexec.h        | 1 +
+ kernel/kexec.c                    | 4 ++++
+ kernel/kexec_core.c               | 4 +++-
+ kernel/kexec_file.c               | 4 +---
+ 6 files changed, 14 insertions(+), 10 deletions(-)
+
 -- 
 2.20.1
 
