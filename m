@@ -4,68 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CB711D41D74
-	for <kexec@archiver.kernel.org>; Mon, 15 Dec 2025 07:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A7A7BD41D74
+	for <kexec@archiver.kernel.org>; Mon, 15 Dec 2025 08:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=dFAONnQ5m69r6NkpaANqpuLgGiHSbRBwF3vJTNGcH2Y=; b=enE4a4M9h3ljjp2tMut1iiVqJx
-	GaM701uTS/nYzeBrHcGiTaexFrv4PeHDJSJIpB3tgbTas4hdepTZs40vkmTo/NmGf068rAadBNtYx
-	zKeVTVr3qHLFO7gfa920MiMRKEGJJzvYVAYztTTN+XnXFV+Q4Ubkoi8+R7U686aWEhdqCYSFP8ZKX
-	qJm+l9zYmebiT9TyWo2izeOg/+SfJSmJ1d4Joid/QVFhY/EC3LJAZfsWyhmy6+yrC8Gt/juHJXnsB
-	tC/99KW26suIkHtCgjMCfsfgMBQUQlEBUBBHdC9iHl3DKFTVwK+PWEpdG1ntQ9t7v5i9jx40lXbSx
-	cMX2MLkw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=iqS8vgdM/pXRgmehW35ywc17iyd/2eXl+mmS1YO1Ya4=; b=o9N7EVNORNDkxY/SW5OPj4iVu1
+	DmYk8bruIkEzYApLm5keXmbFbYPqCfz4aFfuAuqoZPEufR90449UmzNVFI9dXwqBx/4iuoWAyUYmn
+	51249gp57offvaJbV1k7Hg/3qq6g1JEETBLlHBSEN46AFQDxMa9x6hWBam1+4WBWOAbFiGB6j2rTV
+	/IzzxKYybLcg7zdd/JmxQ3Ct0FR34pKG71XlpfpEZLX7LtdWBvmbMTlQvaVTtDAUKjrkQ0QPoFuDY
+	8Ue0GDz2SjeEKnv2tWuAyHPD4GAXXD/sdtgu3R6PXQGRU6UqLKK5k2SmqDKzqPkNgBNLEKAAYFTMy
+	tp4hetNw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vV2rx-00000003Bt9-1WyH;
-	Mon, 15 Dec 2025 07:19:45 +0000
-Received: from smtp-78.smtpout.orange.fr ([80.12.242.78] helo=smtp.smtpout.orange.fr)
+	id 1vV4Hs-00000003IgM-1191;
+	Mon, 15 Dec 2025 08:50:36 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vV2rs-00000003BsZ-3pVr
+	id 1vV4Hp-00000003Ifx-0cvU
 	for kexec@lists.infradead.org;
-	Mon, 15 Dec 2025 07:19:44 +0000
-Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
- ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id V2rnvp18I8HTFV2rov1Yqo; Mon, 15 Dec 2025 08:19:37 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1765783177;
-	bh=dFAONnQ5m69r6NkpaANqpuLgGiHSbRBwF3vJTNGcH2Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=NLdMi3Id7CvtEhX2k9KpnPyqRTuhQs5MwDg5+h4TejkOt9EKonmcRoeENZwhQd5mk
-	 gB0ft64LlIhRK8+hcl+0o0oMzmd3CWrmq78V8xd7NSwXqBytxRyJPVlPoOOXf6YWBo
-	 TCSBwWUzMKUAh2EU/ZdJ1j45umzm7iLJV1QokufDKGECRuvsxsxpz6WI/oUaKOO0Yr
-	 MrCG8Ps3Xqkkfeon0PDgF1sGPZPAU4JF+kUofRCmNAZUBRK6THe0jxxtxApyd/pa5y
-	 U2uWJdXowiBu2xpxtPnAdXT9s2UfRf60DzGTlrgrfkGyB+EgRsk0i5xh+5SSFpzTKd
-	 mIaqQzmnJmUNg==
-X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 15 Dec 2025 08:19:37 +0100
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-Message-ID: <b1c7b612-5c5e-4234-9aa5-a83105d01c52@wanadoo.fr>
-Date: Mon, 15 Dec 2025 08:19:33 +0100
+	Mon, 15 Dec 2025 08:50:34 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1765788631;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iqS8vgdM/pXRgmehW35ywc17iyd/2eXl+mmS1YO1Ya4=;
+	b=W30j/E+ewleUVRq+sYEP70FRC1YFiPUhOnjn9mB4N80GdqPsaiiY+oiFwFyhIyfhCAnswF
+	rY1j1JAIyUdbfKZRQmusTsUZEVuHdvljtExyD6snMb33PEnnfOn5JGAQ5aJIJ9BVXSLVg3
+	hzN29HrelgFZPP7NWP2mN+LuNQITCFY=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-22-GK6b0kyxN5CKldTZLk9MoA-1; Mon,
+ 15 Dec 2025 03:50:29 -0500
+X-MC-Unique: GK6b0kyxN5CKldTZLk9MoA-1
+X-Mimecast-MFC-AGG-ID: GK6b0kyxN5CKldTZLk9MoA_1765788628
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2CAB018001FE;
+	Mon, 15 Dec 2025 08:50:28 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.95])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4EB7819560A7;
+	Mon, 15 Dec 2025 08:50:25 +0000 (UTC)
+Date: Mon, 15 Dec 2025 16:50:21 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Qiang Ma <maqianga@uniontech.com>
+Cc: akpm@linux-foundation.org, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kexec: Fix uninitialized struct kimage *image pointer
+Message-ID: <aT/LzbCZ2io2YBBX@MiWiFi-R3L-srv>
+References: <20251212071656.834079-1-maqianga@uniontech.com>
+ <aTv0G4BYQv9J8ytY@MiWiFi-R3L-srv>
+ <84FB6FCADDAE5EBE+e11782ba-7483-40f4-8a40-a5e26f51183d@uniontech.com>
+ <aT9h54lX3J+cO0gf@MiWiFi-R3L-srv>
+ <C2FBF39E1F0503D4+8030be33-fd88-4f18-b631-a4fecaf62c5a@uniontech.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] crash_dump: Constify struct configfs_item_operations and
- configfs_group_operations
-To: Baoquan He <bhe@redhat.com>, coxu@redhat.com
-Cc: Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal
- <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- kexec@lists.infradead.org
-References: <d046ee5666d2f6b1a48ca1a222dfbd2f7c44462f.1765735035.git.christophe.jaillet@wanadoo.fr>
- <aT9uwXK8XFdXei/L@MiWiFi-R3L-srv>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <aT9uwXK8XFdXei/L@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <C2FBF39E1F0503D4+8030be33-fd88-4f18-b631-a4fecaf62c5a@uniontech.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251214_231941_885275_6F2544D3 
-X-CRM114-Status: GOOD (  15.96  )
+X-CRM114-CacheID: sfid-20251215_005033_533532_1C92033A 
+X-CRM114-Status: GOOD (  28.37  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,90 +88,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Le 15/12/2025 à 03:13, Baoquan He a écrit :
-> On 12/14/25 at 06:57pm, Christophe JAILLET wrote:
->> 'struct configfs_item_operations' and 'configfs_group_operations' are not
->> modified in this driver.
->>
->> Constifying these structures moves some data to a read-only section, so
->> increases overall security, especially when the structure holds some
->> function pointers.
->>
->> On a x86_64, with allmodconfig, as an example:
->> Before:
->> ======
->>     text	   data	    bss	    dec	    hex	filename
->>    16339	  11001	    384	  27724	   6c4c	kernel/crash_dump_dm_crypt.o
->>
->> After:
->> =====
->>     text	   data	    bss	    dec	    hex	filename
->>    16499	  10841	    384	  27724	   6c4c	kernel/crash_dump_dm_crypt.o
->>
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+On 12/15/25 at 12:41pm, Qiang Ma wrote:
 > 
-> Sounds not bad, leave this to Coiby to test.
+> 在 2025/12/15 09:18, Baoquan He 写道:
+> > On 12/14/25 at 07:35pm, Qiang Ma wrote:
+> > > 在 2025/12/12 18:53, Baoquan He 写道:
+> > > > On 12/12/25 at 03:16pm, Qiang Ma wrote:
+> > > > > The image is initialized to NULL. Then, after calling kimage_alloc_init,
+> > > > > we can directly goto 'out' because at this time, the kimage_free will
+> > > > > determine whether image is a NULL pointer.
+> > > > Rechecked the code flow, in kimage_alloc_init(), if anything wrong, the
+> > > > allocated memory are all freed via out_free_control_pages and
+> > > > out_free_image accordingly, any place missed? If no, I think the current
+> > > > code is correctly handled.
+> > > I rechecked the code and found no omissions.
+> > Hmm, my bad, I didn't say my question clearly. I checked code, didn't
+> > find anything wrong in the current code. In kimage_alloc_init(), the
+> > allocated memory are all freed on failure, no memory leaked. Means you
+> > are fixing correct code.
+> Oh, I see. I recalled that this fix was in preparation for patch
+> "kexec: add kexec flag to control debug printing" for kexec_dbg_print
+> to be reset to false in kimage_free.
 > 
->> ---
->> Compile tested only.
->>
->> This change is possible since commits f2f36500a63b and f7f78098690d.
-> 
-> I don't follow here, why do these two commits have anything with this
-> patch?
+> In that case, I don't think this patch should be posted separately.
 
-Without these patches, it won't compile because "struct 
-config_item_type" needs to be tweaked to accept some const field. It is 
-what is done by these patches that have landed 2 weeks ago or so.
+If it's prepared for later patch, it should not be saying it's fixing
+issue. People may be confused and try to add it to stable kernel.
 
-
-Without these 2 commits, you would get (with French messages, sorry):
-
-   CC      kernel/crash_dump_dm_crypt.o
-kernel/crash_dump_dm_crypt.c:231:24: erreur: l'initialisation abandonne 
-le qualificatif « const » du type pointé [-Werror=discarded-qualifiers]
-   231 |         .ct_item_ops = &config_key_item_ops,
-       |                        ^
-kernel/crash_dump_dm_crypt.c:306:25: erreur: l'initialisation abandonne 
-le qualificatif « const » du type pointé [-Werror=discarded-qualifiers]
-   306 |         .ct_group_ops = &config_keys_group_ops,
-       |                         ^
-
-CJ
-
-> 
->> ---
->>   kernel/crash_dump_dm_crypt.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
->> index 401423ba477d..0d23dc1de67c 100644
->> --- a/kernel/crash_dump_dm_crypt.c
->> +++ b/kernel/crash_dump_dm_crypt.c
->> @@ -223,7 +223,7 @@ static void config_key_release(struct config_item *item)
->>   	key_count--;
->>   }
->>   
->> -static struct configfs_item_operations config_key_item_ops = {
->> +static const struct configfs_item_operations config_key_item_ops = {
->>   	.release = config_key_release,
->>   };
->>   
->> @@ -298,7 +298,7 @@ static struct configfs_attribute *config_keys_attrs[] = {
->>    * Note that, since no extra work is required on ->drop_item(),
->>    * no ->drop_item() is provided.
->>    */
->> -static struct configfs_group_operations config_keys_group_ops = {
->> +static const struct configfs_group_operations config_keys_group_ops = {
->>   	.make_item = config_keys_make_item,
->>   };
->>   
->> -- 
->> 2.52.0
->>
->>
-> 
-> 
+> > 
+> > > > > Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+> > > > > ---
+> > > > >    kernel/kexec.c | 4 +++-
+> > > > >    1 file changed, 3 insertions(+), 1 deletion(-)
+> > > > Acked-by: Baoquan He <bhe@redhat.com>
+> > > > 
+> > > > > diff --git a/kernel/kexec.c b/kernel/kexec.c
+> > > > > index 28008e3d462e..9bb1f2b6b268 100644
+> > > > > --- a/kernel/kexec.c
+> > > > > +++ b/kernel/kexec.c
+> > > > > @@ -95,6 +95,8 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+> > > > >    	unsigned long i;
+> > > > >    	int ret;
+> > > > > +	image = NULL;
+> > > > > +
+> > > > >    	/*
+> > > > >    	 * Because we write directly to the reserved memory region when loading
+> > > > >    	 * crash kernels we need a serialization here to prevent multiple crash
+> > > > > @@ -129,7 +131,7 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+> > > > >    	ret = kimage_alloc_init(&image, entry, nr_segments, segments, flags);
+> > > > >    	if (ret)
+> > > > > -		goto out_unlock;
+> > > > > +		goto out;
+> > > > >    	if (flags & KEXEC_PRESERVE_CONTEXT)
+> > > > >    		image->preserve_context = 1;
+> > > > > -- 
+> > > > > 2.20.1
+> > > > > 
+> > 
 > 
 
 
