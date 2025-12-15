@@ -4,77 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 05ACBD59D99
-	for <kexec@archiver.kernel.org>; Mon, 15 Dec 2025 09:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2F467D5B87A
+	for <kexec@archiver.kernel.org>; Mon, 15 Dec 2025 23:40:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=H6JuG3oC6UyZ6UYfFXXU2BOdbDcpLEkG2dlhV74t068=; b=zKha4E+02WyBKPPgNDYrNzS2cc
-	hi/9yORPQR+eu/gHVt4e1CLqKaq0SNxsN+k6PPIbnsngDKp5V837gZc1pwMeei72IHFknqbE0Pnyq
-	0ich3rvFHv6QCZlpw6xCUdyiWj97zcnvAyPc55ji2aegi+JbNF4xCGJ4QpykLrWpP0eDdEV+4P4nq
-	XuJlLjGeZs0pmQash1f892eSmGsh9KRbarHEGDWt7gYAdLxq0jsyvrcz2vqszrEp134k683E2QYGt
-	C1npQ0ixifAR6Qi4ovzPwkzN2K/dgTecq2lUoCNgBjYQBXMSjg3BY2IEMjmuFQZbXGY40mFQ3doBr
-	gRQTgJNg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=1aDAWnpglHlTmAYME09TSd6vTy9ZhcE6yHNh8PepkOM=; b=ZQZTgIk10UETQp97ZL2qEvUyvJ
+	n6Xl5P7DpvZk85nbIJZJJxIE8TMCeHr+3DQ7jRKhGDr3dI4FEGd0315eLOb+jCY0QT68219bcQHuD
+	s7i+kCl9R1NZIKiVisl5dmoK3p24dqqteVkfkZZfQ726wKRi0Z1+BIFmBjySDwKf6R8Kxo7Nl3C62
+	xIgChpqDAW/kdz3co1aLx/YPEecL+8Vh30icrOPG1lLOlrQvQIi5zGYA64XY/7SWjcPedUMcWw4EK
+	RSy9KUpLTnijl9daWq8WjiNnyDv6vossHqIylkdP/FgiXCJj5vsEoC9fZLxxCY8eYeRREdK+QtGfd
+	JnYA2+4Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vV59i-00000003Ocx-1joW;
-	Mon, 15 Dec 2025 09:46:14 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1vVIB7-00000004PHE-0TDz;
+	Mon, 15 Dec 2025 23:40:33 +0000
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vV59a-00000003Obw-0pQn
+	id 1vVIB3-00000004PG3-1SCG
 	for kexec@lists.infradead.org;
-	Mon, 15 Dec 2025 09:46:10 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1765791965;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H6JuG3oC6UyZ6UYfFXXU2BOdbDcpLEkG2dlhV74t068=;
-	b=MkFSk+Ge1jwCMnq1u/u9TWMaZdZnlWRsKpk5PhwRMbOpQ3YRdpdikBFrdEyP5dqXEg2NrV
-	cypmSX2snyQ/bj5tz6f//cxLq1Y02OIbIeLcZryi0raIBjQ+yBEUg4WotpnZKARlCF+SQu
-	SxEMCQqn79zkGuCKK/mWb/RDtrdhsKg=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-80-XQ5UHsUTOs6KeEbIa0Ilig-1; Mon,
- 15 Dec 2025 04:46:01 -0500
-X-MC-Unique: XQ5UHsUTOs6KeEbIa0Ilig-1
-X-Mimecast-MFC-AGG-ID: XQ5UHsUTOs6KeEbIa0Ilig_1765791960
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A812C180062E;
-	Mon, 15 Dec 2025 09:45:59 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.95])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AF45919560A7;
-	Mon, 15 Dec 2025 09:45:57 +0000 (UTC)
-Date: Mon, 15 Dec 2025 17:45:53 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: coxu@redhat.com, Andrew Morton <akpm@linux-foundation.org>,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	kexec@lists.infradead.org
-Subject: Re: [PATCH] crash_dump: Constify struct configfs_item_operations and
- configfs_group_operations
-Message-ID: <aT/Y0UjrIdij7f5X@MiWiFi-R3L-srv>
-References: <d046ee5666d2f6b1a48ca1a222dfbd2f7c44462f.1765735035.git.christophe.jaillet@wanadoo.fr>
- <aT9uwXK8XFdXei/L@MiWiFi-R3L-srv>
- <b1c7b612-5c5e-4234-9aa5-a83105d01c52@wanadoo.fr>
+	Mon, 15 Dec 2025 23:40:32 +0000
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BFJCNhn2886214;
+	Mon, 15 Dec 2025 23:39:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=1aDAWnpglHlTmAYME09TSd6vTy9Zh
+	cE6yHNh8PepkOM=; b=g4z01K43dyop9WWWP2Q08dTheOWlJgImc0KzOEVuJnLrp
+	43SOSUGYWNkCHqxOEcAvfV0ZpwpaHfXrObpI8XULSApgTNF/J1HG27SZRlgszCmx
+	xTovNG+5Ld9SFI7Oj0VBHhCXbGSNNXE0siFqLZrQ1KKGzU9GqRTTgb2Y0vUkSMAM
+	orl1WWZVN0mQJFaA2Mr9ollt0xDMggyzpqcqhkn7GVb9PuyfGFXMLlVfivWBMOyG
+	KmvudDnIOJsKAwWD4yd0ARvCZLJrXn3HiHVNcKGDM2izmsfFm6+slzzRsgtfsmQs
+	RfsYjF7s0lNz5BXvzeamW/Vt/1Tn9WmFd9QsWanjg==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4b1015u17j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 15 Dec 2025 23:39:47 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5BFMLLAc025849;
+	Mon, 15 Dec 2025 23:39:46 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4b0xk9tpjw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 15 Dec 2025 23:39:46 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5BFNdjaA032200;
+	Mon, 15 Dec 2025 23:39:45 GMT
+Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4b0xk9tphu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 15 Dec 2025 23:39:45 +0000
+From: Ross Philipson <ross.philipson@oracle.com>
+To: linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+        linux-efi@vger.kernel.org, iommu@lists.linux.dev
+Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
+        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
+        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
+        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
+        dwmw2@infradead.org, baolu.lu@linux.intel.com,
+        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
+        trenchboot-devel@googlegroups.com
+Subject: [PATCH v15 00/28] x86: Secure Launch support for Intel TXT
+Date: Mon, 15 Dec 2025 15:32:48 -0800
+Message-ID: <20251215233316.1076248-1-ross.philipson@oracle.com>
+X-Mailer: git-send-email 2.43.7
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b1c7b612-5c5e-4234-9aa5-a83105d01c52@wanadoo.fr>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-12-15_05,2025-12-15_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 mlxscore=0 adultscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
+ definitions=main-2512150204
+X-Proofpoint-GUID: 4FhHdJi6T6vATHKJJ7jROPih8qlOdfgR
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjE1MDIwMyBTYWx0ZWRfX2b2dOp31KcwQ
+ ehD+y6RORFYwj6r9M8/N/pnG6+Uo6oKjhOHSWzaTSE9Eekmc7IdqPOvmIm0Rie7au8aHpKHqy3U
+ Vmj8q59yeYSVYPUb20CFZ0mq1Zhw4DRIaJVSWLYwtxGWI7UlxWiqqLF+N7mpKZzsRLM+kTW8+WO
+ HZGX0ab0k2IVLaaPDIj+cka9TqR/tLhncscE0dnVMKtNGq54lH2EI6FSOHMTqKRnf3HuYJBrrtg
+ 2PnwC88I8CQ6potLLwb0+M+rJ6JdOwpsnnmiZlne5cDWQ974fcCDXf0Ht0Wby7hNTjYTKYmvKit
+ Vh/5vBTF3NaxzPcllO9P7vhQ48OID5p5GLZQvIlUVmSYt6QG9M6g5DkNSYkHIrIsDFYpKhoSH/z
+ 0qYmQZRorea/2fPkHZ1EJerZK4Z9Uw==
+X-Authority-Analysis: v=2.4 cv=GbUaXAXL c=1 sm=1 tr=0 ts=69409c43 cx=c_pps
+ a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
+ a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=nwmgzXUKAAAA:8 a=VwQbUJbxAAAA:8
+ a=TN4aJMRXFS8IVmGCrUIA:9 a=8YVojpJ189lmoD23kkcf:22
+X-Proofpoint-ORIG-GUID: 4FhHdJi6T6vATHKJJ7jROPih8qlOdfgR
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251215_014606_365614_9DEC1CC0 
-X-CRM114-Status: GOOD (  26.84  )
+X-CRM114-CacheID: sfid-20251215_154029_604281_003FE4A8 
+X-CRM114-Status: GOOD (  23.31  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,90 +115,177 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/15/25 at 08:19am, Christophe JAILLET wrote:
-> Le 15/12/2025 à 03:13, Baoquan He a écrit :
-> > On 12/14/25 at 06:57pm, Christophe JAILLET wrote:
-> > > 'struct configfs_item_operations' and 'configfs_group_operations' are not
-> > > modified in this driver.
-> > > 
-> > > Constifying these structures moves some data to a read-only section, so
-> > > increases overall security, especially when the structure holds some
-> > > function pointers.
-> > > 
-> > > On a x86_64, with allmodconfig, as an example:
-> > > Before:
-> > > ======
-> > >     text	   data	    bss	    dec	    hex	filename
-> > >    16339	  11001	    384	  27724	   6c4c	kernel/crash_dump_dm_crypt.o
-> > > 
-> > > After:
-> > > =====
-> > >     text	   data	    bss	    dec	    hex	filename
-> > >    16499	  10841	    384	  27724	   6c4c	kernel/crash_dump_dm_crypt.o
-> > > 
-> > > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> > 
-> > Sounds not bad, leave this to Coiby to test.
-> > 
-> > > ---
-> > > Compile tested only.
-> > > 
-> > > This change is possible since commits f2f36500a63b and f7f78098690d.
-> > 
-> > I don't follow here, why do these two commits have anything with this
-> > patch?
-> 
-> Without these patches, it won't compile because "struct config_item_type"
-> needs to be tweaked to accept some const field. It is what is done by these
-> patches that have landed 2 weeks ago or so.
-> 
-> 
-> Without these 2 commits, you would get (with French messages, sorry):
-> 
->   CC      kernel/crash_dump_dm_crypt.o
-> kernel/crash_dump_dm_crypt.c:231:24: erreur: l'initialisation abandonne le
-> qualificatif « const » du type pointé [-Werror=discarded-qualifiers]
->   231 |         .ct_item_ops = &config_key_item_ops,
->       |                        ^
-> kernel/crash_dump_dm_crypt.c:306:25: erreur: l'initialisation abandonne le
-> qualificatif « const » du type pointé [-Werror=discarded-qualifiers]
->   306 |         .ct_group_ops = &config_keys_group_ops,
->       |                         ^
+Secure Launch is a vendor-neutral approach to implementing TGC Dynamic
+Root of Trust (DRTM) support in the kernel. This is complementary to
+better known Static Root of Trust (SRTM) schemes such as UEFI SecureBoot.
 
-Ah, I see now. Thanks for the information.
+This series provides the common infrastructure along with Intel TXT
+support, without needing the tboot exokernel. Support for AMD SKINIT is
+pending the common infrastructure getting nailed down, and ARM are
+looking to build on it too.
 
-> 
-> > 
-> > > ---
-> > >   kernel/crash_dump_dm_crypt.c | 4 ++--
-> > >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
-> > > index 401423ba477d..0d23dc1de67c 100644
-> > > --- a/kernel/crash_dump_dm_crypt.c
-> > > +++ b/kernel/crash_dump_dm_crypt.c
-> > > @@ -223,7 +223,7 @@ static void config_key_release(struct config_item *item)
-> > >   	key_count--;
-> > >   }
-> > > -static struct configfs_item_operations config_key_item_ops = {
-> > > +static const struct configfs_item_operations config_key_item_ops = {
-> > >   	.release = config_key_release,
-> > >   };
-> > > @@ -298,7 +298,7 @@ static struct configfs_attribute *config_keys_attrs[] = {
-> > >    * Note that, since no extra work is required on ->drop_item(),
-> > >    * no ->drop_item() is provided.
-> > >    */
-> > > -static struct configfs_group_operations config_keys_group_ops = {
-> > > +static const struct configfs_group_operations config_keys_group_ops = {
-> > >   	.make_item = config_keys_make_item,
-> > >   };
-> > > -- 
-> > > 2.52.0
-> > > 
-> > > 
-> > 
-> > 
-> > 
-> 
+Originally, tboot were approached to see if they'd take support for
+other vendors, but they elected not to. Hence this approach instead.
+
+Work is being coordinated by the Trenchboot project, https://trenchboot.org/,
+organising Secure Launch support for upstream open source projects including
+Grub, iPXE and Xen. The goal of the Trenchboot project is to make DTRM easy
+to use.  e.g. for Grub, it's simply adding "slaunch" as a command in the boot
+stanza.  See https://trenchboot.org/user-docs/QUICKSTART/#linux-quick-start-guide
+for more details
+
+Patch set based on commit:
+torvalds/master/fd57572253bc356330dbe5b233c2e1d8426c66fd
+
+Depends on v3 of the following TPM patch set (note this patch
+set is being actively worked on separately):
+[PATCH v3 00/10]  tpm: Decouple Trenchboot dependencies
+Message ID: 20250929194832.2913286-1-jarkko@kernel.org
+
+Finally we would like to thank everyone for their input and
+assistance. It has all been very helpful in improving the quality of
+our solution and in reviewing/strengthening our security posture.
+
+Thanks
+Ross Philipson and Daniel P. Smith
+
+Changes in v15:
+
+ - Rewriting and reformatting of the cover letter, commit message and
+   code comments per requests from maintainers.
+ - Introduction of a early TPM driver in the x86 setup kernel to allow
+   TPM extend command very early in the boot.
+ - Remove previous TPM extending architecture that attempted to update
+   the TPM PCRs later in the boot process.
+ - Split slaunch.h into 2 files, with a new txt.h. The former contains
+   platform agnostic definitions for the SL feature. The new txt.h file
+   contains Intel TXT definitions from the public specs.
+ - Split TPM headers up following the specifications where the
+   technologies are defined.
+ - Include set of split up TPM header files to allow TPM driver reuse
+   in other environments (e.g. early kernel, x86).
+ - Fix code formatting and type-os.
+
+
+Alec Brown (1):
+  tpm: Remove main TPM header from TPM event log header
+
+Daniel P. Smith (6):
+  tpm/tpm_tis: Close all localities
+  tpm/tpm_tis: Address positive localities in tpm_tis_request_locality()
+  Documentation/x86: Secure Launch kernel documentation
+  x86: Add early SHA-1 support for Secure Launch early measurements
+  x86: Add early SHA-256 support for Secure Launch early measurements
+  x86: Secure Launch late initcall platform module
+
+Ross Philipson (21):
+  tpm: Initial step to reorganize TPM public headers
+  tpm: Move TPM1 specific definitions and functions to new headers
+  tpm: Move TPM2 specific definitions and functions to new headers
+  tpm: Move TPM common base definitions to new public common header
+  tpm: Move platform specific definitions to the new PTP header
+  tpm: Add TPM buffer support header for standalone reuse
+  tpm/tpm_tis: Allow locality to be set to a different value
+  tpm/sysfs: Show locality used by kernel
+  x86: Secure Launch Kconfig
+  x86: Secure Launch Resource Table header file
+  x86: Secure Launch main header file
+  x86/txt: Intel Trusted eXecution Technology (TXT) definitions
+  x86/tpm: Early TPM PCR extending driver
+  x86/msr: Add variable MTRR base/mask and x2apic ID registers
+  x86/boot: Place TXT MLE header in the kernel_info section
+  x86: Secure Launch kernel early boot stub
+  x86: Secure Launch kernel late boot stub
+  x86: Secure Launch SMP bringup support
+  kexec: Secure Launch kexec SEXIT support
+  x86/reboot: Secure Launch SEXIT support on reboot paths
+  x86/efi: EFI stub DRTM launch support for Secure Launch
+
+ Documentation/arch/x86/boot.rst               |  21 +
+ Documentation/security/index.rst              |   1 +
+ .../security/launch-integrity/index.rst       |  11 +
+ .../security/launch-integrity/principles.rst  | 308 +++++++
+ .../secure_launch_details.rst                 | 587 +++++++++++++
+ .../secure_launch_overview.rst                | 240 ++++++
+ arch/x86/Kconfig                              |  14 +
+ arch/x86/boot/compressed/Makefile             |   8 +
+ arch/x86/boot/compressed/early_tpm_extend.c   | 601 ++++++++++++++
+ arch/x86/boot/compressed/head_64.S            |  29 +
+ arch/x86/boot/compressed/kernel_info.S        |  50 +-
+ arch/x86/boot/compressed/sha1.c               |   7 +
+ arch/x86/boot/compressed/sha256.c             |   6 +
+ arch/x86/boot/compressed/sl_main.c            | 638 +++++++++++++++
+ arch/x86/boot/compressed/sl_stub.S            | 770 ++++++++++++++++++
+ arch/x86/boot/compressed/tpm.h                |  42 +
+ arch/x86/boot/compressed/vmlinux.lds.S        |   7 +
+ arch/x86/include/asm/msr-index.h              |   5 +
+ arch/x86/include/asm/realmode.h               |   3 +
+ arch/x86/include/asm/txt.h                    | 330 ++++++++
+ arch/x86/include/uapi/asm/bootparam.h         |   1 +
+ arch/x86/kernel/Makefile                      |   2 +
+ arch/x86/kernel/asm-offsets.c                 |  20 +
+ arch/x86/kernel/reboot.c                      |  14 +
+ arch/x86/kernel/setup.c                       |   3 +
+ arch/x86/kernel/slaunch.c                     | 615 ++++++++++++++
+ arch/x86/kernel/slmodule.c                    | 348 ++++++++
+ arch/x86/kernel/smpboot.c                     |  47 +-
+ arch/x86/realmode/init.c                      |   8 +
+ arch/x86/realmode/rm/header.S                 |   3 +
+ arch/x86/realmode/rm/trampoline_64.S          |  32 +
+ drivers/char/tpm/tpm-buf.c                    |  10 +-
+ drivers/char/tpm/tpm-chip.c                   |  34 +-
+ drivers/char/tpm/tpm-sysfs.c                  |  10 +
+ drivers/char/tpm/tpm.h                        | 180 +---
+ drivers/char/tpm/tpm1-cmd.c                   |  18 +-
+ drivers/char/tpm/tpm1_structs.h               |  97 +++
+ drivers/char/tpm/tpm2-cmd.c                   |  32 +-
+ drivers/char/tpm/tpm2-space.c                 |  13 -
+ drivers/char/tpm/tpm2_structs.h               |  58 ++
+ drivers/char/tpm/tpm_tis_core.c               |  21 +-
+ drivers/char/tpm/tpm_tis_core.h               |  64 +-
+ drivers/firmware/efi/libstub/efistub.h        |   8 +
+ drivers/firmware/efi/libstub/x86-stub.c       | 100 +++
+ drivers/iommu/intel/dmar.c                    |   4 +
+ include/keys/trusted_tpm.h                    |   1 -
+ include/linux/slaunch.h                       | 251 ++++++
+ include/linux/slr_table.h                     | 308 +++++++
+ include/linux/tpm.h                           | 240 +-----
+ include/linux/tpm1.h                          |  87 ++
+ include/linux/tpm2.h                          | 247 ++++++
+ include/linux/tpm_buf.h                       |  57 ++
+ include/linux/tpm_command.h                   |  30 -
+ include/linux/tpm_common.h                    |  99 +++
+ include/linux/tpm_eventlog.h                  |   4 +-
+ include/linux/tpm_ptp.h                       | 139 ++++
+ kernel/kexec_core.c                           |   8 +
+ security/keys/trusted-keys/trusted_tpm1.c     |   1 -
+ security/keys/trusted-keys/trusted_tpm2.c     |   1 -
+ 59 files changed, 6319 insertions(+), 574 deletions(-)
+ create mode 100644 Documentation/security/launch-integrity/index.rst
+ create mode 100644 Documentation/security/launch-integrity/principles.rst
+ create mode 100644 Documentation/security/launch-integrity/secure_launch_details.rst
+ create mode 100644 Documentation/security/launch-integrity/secure_launch_overview.rst
+ create mode 100644 arch/x86/boot/compressed/early_tpm_extend.c
+ create mode 100644 arch/x86/boot/compressed/sha1.c
+ create mode 100644 arch/x86/boot/compressed/sha256.c
+ create mode 100644 arch/x86/boot/compressed/sl_main.c
+ create mode 100644 arch/x86/boot/compressed/sl_stub.S
+ create mode 100644 arch/x86/boot/compressed/tpm.h
+ create mode 100644 arch/x86/include/asm/txt.h
+ create mode 100644 arch/x86/kernel/slaunch.c
+ create mode 100644 arch/x86/kernel/slmodule.c
+ create mode 100644 drivers/char/tpm/tpm1_structs.h
+ create mode 100644 drivers/char/tpm/tpm2_structs.h
+ create mode 100644 include/linux/slaunch.h
+ create mode 100644 include/linux/slr_table.h
+ create mode 100644 include/linux/tpm1.h
+ create mode 100644 include/linux/tpm2.h
+ create mode 100644 include/linux/tpm_buf.h
+ delete mode 100644 include/linux/tpm_command.h
+ create mode 100644 include/linux/tpm_common.h
+ create mode 100644 include/linux/tpm_ptp.h
+
+-- 
+2.43.7
 
 
