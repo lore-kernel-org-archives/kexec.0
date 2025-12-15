@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3B2CCD5B87D
-	for <kexec@archiver.kernel.org>; Mon, 15 Dec 2025 23:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 469CED5B874
+	for <kexec@archiver.kernel.org>; Mon, 15 Dec 2025 23:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=3u/XqoToiD6XAJ/AVKI4/QImR0Kahdw+sYg3F9Fi74w=; b=KBHIQJO9Vt7PidASXSuvwGCij0
-	dkb0XnqzIBUlA2kVAy7Uw1x++2tPTTedL9pIC2YNHFfk1rJS5R8u2FxNSRAWyFDu1mXuTFPPCuPnH
-	KzY5ja6s489/bJ/DXQAjuhXzuj+4bC/E5VpUJ0E8I19dWj5EeNisn9h2R8EnFUutuHf5dkkGsVNGP
-	GR1Dm9aD3deiFPpRb47/hZztkaClD/y9JnqDZDLSZSE/g3uWqHpGHLY2hrZ+/ccJrOlzDy0pqXV4L
-	rSsO6CsCNQetG3XZyVKnmu4q+UKnU3uYdWt5EFR09BNMiupeqXZZ4HQF1+CI/T8YPPKgSuaMZ+NaO
-	2AeL6VAw==;
+	bh=xMCEuKI2lWfN3lUjsFBQjiZjX/vUiVKxKEJMU2EayHA=; b=334oYhm4ZA0qofIGNol+18t53Q
+	9QBnI2FJfxaaGbZ9ORPq4a8J4gF/xQFRHu2Jzz4psrlXAX7oFmfhBd+/qNUsSVjutm18Nv/hTKAr3
+	xG+2JBvD4MmsEk0MdAsw32hZN5GXHHL4G5brzv4L6/33URqW1ss7MRQw9S8dE+Y2xxko4btMrXIGL
+	mckDENuZg7LeBISbcMWWVfxX3hOXHf3lSR66rf9iGdNT/Iq0k73NJYaMyqBDgKolnQVVfDVh19TOO
+	03WuEFxdxMZbvxkyasB48Trfgxlo1ApBVpAEyd0rP8iacSq1jLS+QWj+Ewy74uan1RmC8EfdEJ4nG
+	1cpBac9g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVIBY-00000004PWF-0UsK;
-	Mon, 15 Dec 2025 23:41:00 +0000
+	id 1vVIBW-00000004PU2-0rRf;
+	Mon, 15 Dec 2025 23:40:58 +0000
 Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVIBQ-00000004PS8-0xoz
+	id 1vVIBN-00000004PPt-31Ib
 	for kexec@lists.infradead.org;
-	Mon, 15 Dec 2025 23:40:58 +0000
+	Mon, 15 Dec 2025 23:40:55 +0000
 Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BFJCGOB2854637;
-	Mon, 15 Dec 2025 23:40:17 GMT
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BFJCK6g2854678;
+	Mon, 15 Dec 2025 23:40:13 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2025-04-25; bh=3u/Xq
-	oToiD6XAJ/AVKI4/QImR0Kahdw+sYg3F9Fi74w=; b=dm2h+eMoCSGKcALaLTFj0
-	XG0VCGB8f6MY7DWE2/nFKtxQ8HNWJ3bmVJmiRIMyH0B7XbsdV81X4h/xaSfMSpz1
-	5eB9uhXdUrh5d0jZdRWkElfHerawiDWRwTq9AHaCSBbZVCjXvtboUjLtov9LZEcx
-	nlSHrW38vRBgGsUVmiHK8hp1t+zv05/oMCRyozvftMN8SUqgg2LlgGz2m+TXGFdl
-	mVeAjaNY/xVu0oOnVi/kNLr3XWUeRZ93gsWUePq7trFHD9iyZwDy4E5vR8AJeV0f
-	b4LfopwH7aLjMl1m2DLWmk52+xQ6wjDQISRxw9lG40NuCwZ68dtK2vSt91QjPgjE
-	Q==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4b0y28b33v-1
+	:mime-version:references:subject:to; s=corp-2025-04-25; bh=xMCEu
+	KI2lWfN3lUjsFBQjiZjX/vUiVKxKEJMU2EayHA=; b=QDzWMRHGRpu5ZAWGYiAFn
+	ug+uL1pDbNe4CYYDImaPKIEsTDrlGnR0F3EAJ82eE9IKekq0kBsTwdB5Zx5KHwli
+	UHfbQJ6x6yG07ZPas23TYKxC6Elyu1iozflKK4CQ8Qi0BWnNlgY65reyZWP+o10V
+	BszWPVN9k+3jBcaa5a/NCDdrQvALyIN7kFKlxlA9075ivSCu9zIVI1w6/2cBhxda
+	VUBMXWMpc+amnJPuj52P8ifxuLf7/2PX+PHopjl1rR2wmgRozUpjQiFl2qyw4dX/
+	ZVISOPXdwm5KceyzdygmDppb3KwDitd7UqcAqPv4q30JrcmGZPbWA/lKoURN9gva
+	g==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4b0y28b33t-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Dec 2025 23:40:16 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5BFNF88N006142;
-	Mon, 15 Dec 2025 23:40:15 GMT
+	Mon, 15 Dec 2025 23:40:13 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5BFMt0pK025232;
+	Mon, 15 Dec 2025 23:40:12 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4b0xkck8v3-1
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4b0xk9tptx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 15 Dec 2025 23:40:15 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5BFNeERf023429;
-	Mon, 15 Dec 2025 23:40:14 GMT
+	Mon, 15 Dec 2025 23:40:12 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5BFNaCmN025641;
+	Mon, 15 Dec 2025 23:40:11 GMT
 Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4b0xkck8u3-1
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4b0xk9tpse-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 15 Dec 2025 23:40:14 +0000
+	Mon, 15 Dec 2025 23:40:11 +0000
 From: Ross Philipson <ross.philipson@oracle.com>
 To: linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
         dwmw2@infradead.org, baolu.lu@linux.intel.com,
         kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
         trenchboot-devel@googlegroups.com
-Subject: [PATCH v15 06/28] tpm: Add TPM buffer support header for standalone reuse
-Date: Mon, 15 Dec 2025 15:32:54 -0800
-Message-ID: <20251215233316.1076248-7-ross.philipson@oracle.com>
+Subject: [PATCH v15 05/28] tpm: Move platform specific definitions to the new PTP header
+Date: Mon, 15 Dec 2025 15:32:53 -0800
+Message-ID: <20251215233316.1076248-6-ross.philipson@oracle.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20251215233316.1076248-1-ross.philipson@oracle.com>
 References: <20251215233316.1076248-1-ross.philipson@oracle.com>
@@ -84,27 +84,28 @@ Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2025-12-15_05,2025-12-15_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 malwarescore=0
- adultscore=0 mlxlogscore=999 mlxscore=0 spamscore=0 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 mlxscore=0 adultscore=0 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
  definitions=main-2512150204
-X-Proofpoint-GUID: HC6eybbroLLc0WBVHZNHV7BpA8y_MjW2
-X-Proofpoint-ORIG-GUID: HC6eybbroLLc0WBVHZNHV7BpA8y_MjW2
-X-Authority-Analysis: v=2.4 cv=fOQ0HJae c=1 sm=1 tr=0 ts=69409c60 b=1 cx=c_pps
- a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
- a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=UN5060LkAAAA:8 a=yPCof4ZbAAAA:8
- a=VnNF1IyMAAAA:8 a=FP58Ms26AAAA:8 a=xt6ew7UTAAAA:8 a=aY4EUbk01JFM1SX_nzkA:9
- a=E6eXv-vVeS7VqOnxGRGn:22 a=tn93DeGZTgJ6DdWMtdD4:22 cc=ntf awl=host:12109
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjE1MDIwMyBTYWx0ZWRfX/238StPAK7c4
- V51SxpZhHFzQkUvPN0AyJ8Cl+Gsn5jAOGjY79JHzXW+jvNtJsMpZICeWt4M8DxjmzIiPG9e9qvK
- PGIZrgurEE4r7d6ezjC2hUlOjzFYsz5J/MLM/zOddmQMO8XWJsrZ1wQkckdMGMEY4FobGn8xj3y
- TpHVMMrYdJdfDjSJrHxNkCWLGnU9d7pT8v8tUfnvIv+XQQdrvHBEPI/x04S07j4U5qvO2Y36enC
- Iwyd+qnAY5uBm7tuGRqqct9QmDith4rlWBzTm8R2v6IImBqKniMuMW82jF2eTw3kXqMrxttr/m9
- CIkGG+gotJj6TSc/PvQAZl6xRSNvFP/9a4nVzKN8bBT7x25mX1IgPCtEJZlZNMVp/B57P6Ji996
- oCCqARWv6Z/5gOdn/WRlJ2fN7VRXrxEITgqRSIBlPO66rTYzaTQ=
+X-Proofpoint-GUID: 4aOvwS_tyzvcVdaWKa_FoFQHq5jOaFKr
+X-Proofpoint-ORIG-GUID: 4aOvwS_tyzvcVdaWKa_FoFQHq5jOaFKr
+X-Authority-Analysis: v=2.4 cv=fOQ0HJae c=1 sm=1 tr=0 ts=69409c5d cx=c_pps
+ a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
+ a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=xt6ew7UTAAAA:8 a=UN5060LkAAAA:8
+ a=yPCof4ZbAAAA:8 a=VnNF1IyMAAAA:8 a=FP58Ms26AAAA:8 a=QE0NePTOvqx61Eo5uxoA:9
+ a=dMjLEnNuu+1HN+MEBeouubInGVw=:19 a=tn93DeGZTgJ6DdWMtdD4:22
+ a=E6eXv-vVeS7VqOnxGRGn:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjE1MDIwMyBTYWx0ZWRfX4OX+0QUXubug
+ oCJOCFwA+E1Hzar6MR4e2Ib8Dt/v1WoDqD+U93rNQ77ck1x/7N77a1P22FG/A5aucuYUQG3bfsB
+ Jmw/I4XohQiiNROQpicj/t9y4T5I8K8LLRUcGGwsk56rEE8L1EYJrl5mFNeT/rYZILRReXEmdBt
+ 8j87fWyKXAF+lSu64TcslE/gJAfW+ak4xcxzT6bvQXLq98yCTKiq6ZlNzBFgHMLnKccnHXqNqG5
+ tANxN5VR55gNW6HG0X8KmxVdWkt0H5EJOnW85Wibq1vHve6npFQDFdCC5qgE3mhG5ss6OMnIWSF
+ adCzPh9wcB+4WgLFsEAH/PnX3wDtRz3sdTROxhdpMA3tX4ldblebqvzlU9FmF5OQeJe3xVAx6M9
+ ch6VvcEHYjPAbd2CM0Te6wFMg23s9A==
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251215_154052_271426_E8E806AE 
-X-CRM114-Status: GOOD (  19.31  )
+X-CRM114-CacheID: sfid-20251215_154050_016197_661A12E5 
+X-CRM114-Status: GOOD (  16.34  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -119,119 +120,103 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Extact all the functions and definitions for the TPM buffer handling
-and separate them into their own header. TPM buf functionality was
-decoupled throughout the TPM code base in an earlier commit.
+These are definitions for the TPM interface and interactions with
+the platform as defined in the TCG specification:
+
+TCG PC Client Platform TPM Profile (PTP) Specification
+ - https://trustedcomputinggroup.org/resource/pc-client-platform-tpm-profile-ptp-specification/
 
 Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 ---
- drivers/char/tpm/tpm-buf.c |  7 ++++-
- include/linux/tpm.h        | 44 +----------------------------
- include/linux/tpm_buf.h    | 57 ++++++++++++++++++++++++++++++++++++++
- include/linux/tpm_common.h | 10 +++++++
- 4 files changed, 74 insertions(+), 44 deletions(-)
- create mode 100644 include/linux/tpm_buf.h
+ drivers/char/tpm/tpm_tis_core.h |  64 +--------------
+ include/linux/tpm_ptp.h         | 139 ++++++++++++++++++++++++++++++++
+ 2 files changed, 140 insertions(+), 63 deletions(-)
+ create mode 100644 include/linux/tpm_ptp.h
 
-diff --git a/drivers/char/tpm/tpm-buf.c b/drivers/char/tpm/tpm-buf.c
-index dae23e6de269..f0b6a7453edd 100644
---- a/drivers/char/tpm/tpm-buf.c
-+++ b/drivers/char/tpm/tpm-buf.c
-@@ -3,8 +3,13 @@
-  * Handling of TPM command and other buffers.
-  */
+diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+index 6c3aa480396b..be68883ed399 100644
+--- a/drivers/char/tpm/tpm_tis_core.h
++++ b/drivers/char/tpm/tpm_tis_core.h
+@@ -19,71 +19,9 @@
+ #ifndef __TPM_TIS_CORE_H__
+ #define __TPM_TIS_CORE_H__
  
-+#include <linux/types.h>
- #include <linux/module.h>
--#include <linux/tpm.h>
-+#include <crypto/sha2.h>
-+#include <linux/tpm_common.h>
-+#include <linux/tpm1.h>
-+#include <linux/tpm2.h>
-+#include <linux/tpm_buf.h>
++#include <linux/tpm_ptp.h>
+ #include "tpm.h"
  
- static void __tpm_buf_size_invariant(struct tpm_buf *buf, u16 buf_size)
- {
-diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-index 8a778bcc2dd5..4c02076a8c39 100644
---- a/include/linux/tpm.h
-+++ b/include/linux/tpm.h
-@@ -28,6 +28,7 @@
- #include "tpm_common.h"
- #include "tpm1.h"
- #include "tpm2.h"
-+#include "tpm_buf.h"
- 
- struct tpm_chip;
- struct trusted_key_payload;
-@@ -35,12 +36,6 @@ struct trusted_key_options;
- /* opaque structure, holds auth session parameters like the session key */
- struct tpm2_auth;
- 
--struct tpm_bank_info {
--	u16 alg_id;
--	u16 digest_size;
--	u16 crypto_id;
+-enum tis_access {
+-	TPM_ACCESS_VALID = 0x80,
+-	TPM_ACCESS_ACTIVE_LOCALITY = 0x20,
+-	TPM_ACCESS_REQUEST_PENDING = 0x04,
+-	TPM_ACCESS_REQUEST_USE = 0x02,
 -};
 -
- enum TPM_OPS_FLAGS {
- 	TPM_OPS_AUTO_STARTUP = BIT(0),
- };
-@@ -208,48 +203,11 @@ enum tpm_chip_flags {
- 
- #define to_tpm_chip(d) container_of(d, struct tpm_chip, dev)
- 
--enum tpm_buf_flags {
--	/* TPM2B format: */
--	TPM_BUF_TPM2B		= BIT(0),
--	/* The buffer is in invalid and unusable state: */
--	TPM_BUF_INVALID		= BIT(1),
+-enum tis_status {
+-	TPM_STS_VALID = 0x80,
+-	TPM_STS_COMMAND_READY = 0x40,
+-	TPM_STS_GO = 0x20,
+-	TPM_STS_DATA_AVAIL = 0x10,
+-	TPM_STS_DATA_EXPECT = 0x08,
+-	TPM_STS_RESPONSE_RETRY = 0x02,
+-	TPM_STS_READ_ZERO = 0x23, /* bits that must be zero on read */
 -};
 -
--/*
-- * A buffer for constructing and parsing TPM commands, responses and sized
-- * (TPM2B) buffers.
+-enum tis_int_flags {
+-	TPM_GLOBAL_INT_ENABLE = 0x80000000,
+-	TPM_INTF_BURST_COUNT_STATIC = 0x100,
+-	TPM_INTF_CMD_READY_INT = 0x080,
+-	TPM_INTF_INT_EDGE_FALLING = 0x040,
+-	TPM_INTF_INT_EDGE_RISING = 0x020,
+-	TPM_INTF_INT_LEVEL_LOW = 0x010,
+-	TPM_INTF_INT_LEVEL_HIGH = 0x008,
+-	TPM_INTF_LOCALITY_CHANGE_INT = 0x004,
+-	TPM_INTF_STS_VALID_INT = 0x002,
+-	TPM_INTF_DATA_AVAIL_INT = 0x001,
+-};
+-
+-enum tis_defaults {
+-	TIS_MEM_LEN = 0x5000,
+-	TIS_SHORT_TIMEOUT = 750,	/* ms */
+-	TIS_LONG_TIMEOUT = 4000,	/* 4 secs */
+-	TIS_TIMEOUT_MIN_ATML = 14700,	/* usecs */
+-	TIS_TIMEOUT_MAX_ATML = 15000,	/* usecs */
+-};
+-
+-/* Some timeout values are needed before it is known whether the chip is
+- * TPM 1.0 or TPM 2.0.
 - */
--struct tpm_buf {
--	u8 flags;
--	u8 handles;
--	u16 length;
--	u16 capacity;
--	u8 data[];
--};
+-#define TIS_TIMEOUT_A_MAX	max_t(int, TIS_SHORT_TIMEOUT, TPM2_TIMEOUT_A)
+-#define TIS_TIMEOUT_B_MAX	max_t(int, TIS_LONG_TIMEOUT, TPM2_TIMEOUT_B)
+-#define TIS_TIMEOUT_C_MAX	max_t(int, TIS_SHORT_TIMEOUT, TPM2_TIMEOUT_C)
+-#define TIS_TIMEOUT_D_MAX	max_t(int, TIS_SHORT_TIMEOUT, TPM2_TIMEOUT_D)
 -
- struct tpm2_hash {
- 	unsigned int crypto_id;
- 	unsigned int tpm_id;
- };
- 
--void tpm_buf_init(struct tpm_buf *buf, u16 buf_size);
--void tpm_buf_init_sized(struct tpm_buf *buf, u16 buf_size);
--void tpm_buf_reset(struct tpm_buf *buf, u16 tag, u32 ordinal);
--void tpm_buf_reset_sized(struct tpm_buf *buf);
--u32 tpm_buf_length(struct tpm_buf *buf);
--void tpm_buf_append(struct tpm_buf *buf, const u8 *new_data, u16 new_length);
--void tpm_buf_append_u8(struct tpm_buf *buf, const u8 value);
--void tpm_buf_append_u16(struct tpm_buf *buf, const u16 value);
--void tpm_buf_append_u32(struct tpm_buf *buf, const u32 value);
--u8 tpm_buf_read_u8(struct tpm_buf *buf, off_t *offset);
--u16 tpm_buf_read_u16(struct tpm_buf *buf, off_t *offset);
--u32 tpm_buf_read_u32(struct tpm_buf *buf, off_t *offset);
--void tpm_buf_append_handle(struct tpm_buf *buf, u32 handle);
--void tpm1_buf_append_extend(struct tpm_buf *buf, u32 pcr_idx, const u8 *hash);
--void tpm2_buf_append_pcr_extend(struct tpm_buf *buf, struct tpm_digest *digests,
--				struct tpm_bank_info *banks,
--				unsigned int nr_banks);
+-#define	TPM_ACCESS(l)			(0x0000 | ((l) << 12))
+-#define	TPM_INT_ENABLE(l)		(0x0008 | ((l) << 12))
+-#define	TPM_INT_VECTOR(l)		(0x000C | ((l) << 12))
+-#define	TPM_INT_STATUS(l)		(0x0010 | ((l) << 12))
+-#define	TPM_INTF_CAPS(l)		(0x0014 | ((l) << 12))
+-#define	TPM_STS(l)			(0x0018 | ((l) << 12))
+-#define	TPM_STS3(l)			(0x001b | ((l) << 12))
+-#define	TPM_DATA_FIFO(l)		(0x0024 | ((l) << 12))
 -
- /*
-  * Check if TPM device is in the firmware upgrade mode.
-  */
-diff --git a/include/linux/tpm_buf.h b/include/linux/tpm_buf.h
+-#define	TPM_DID_VID(l)			(0x0F00 | ((l) << 12))
+-#define	TPM_RID(l)			(0x0F04 | ((l) << 12))
+-
+-#define LPC_CNTRL_OFFSET		0x84
+-#define LPC_CLKRUN_EN			(1 << 2)
+-#define INTEL_LEGACY_BLK_BASE_ADDR	0xFED08000
+-#define ILB_REMAP_SIZE			0x100
+-
+ enum tpm_tis_flags {
+ 	TPM_TIS_ITPM_WORKAROUND		= 0,
+ 	TPM_TIS_INVALID_STATUS		= 1,
+diff --git a/include/linux/tpm_ptp.h b/include/linux/tpm_ptp.h
 new file mode 100644
-index 000000000000..648fec72e490
+index 000000000000..9b75a54089a5
 --- /dev/null
-+++ b/include/linux/tpm_buf.h
-@@ -0,0 +1,57 @@
++++ b/include/linux/tpm_ptp.h
+@@ -0,0 +1,139 @@
 +/* SPDX-License-Identifier: GPL-2.0-only */
 +/*
 + * Copyright (C) 2004,2007,2008 IBM Corporation
@@ -248,68 +233,129 @@ index 000000000000..648fec72e490
 + * Device driver for TCG/TCPA TPM (trusted platform module).
 + * Specifications at www.trustedcomputinggroup.org
 + */
-+#ifndef __LINUX_TPM_BUF_H__
-+#define __LINUX_TPM_BUF_H__
++#ifndef __LINUX_TPM_PTP_H__
++#define __LINUX_TPM_PTP_H__
 +
-+enum tpm_buf_flags {
-+	/* TPM2B format: */
-+	TPM_BUF_TPM2B		= BIT(0),
-+	/* The buffer is in invalid and unusable state: */
-+	TPM_BUF_INVALID		= BIT(1),
++/*
++ * TCG PC Client Platform TPM Profile (PTP) Specification
++ * https://trustedcomputinggroup.org/resource/pc-client-platform-tpm-profile-ptp-specification/
++ */
++
++enum tis_access {
++	TPM_ACCESS_VALID		= 0x80,
++	TPM_ACCESS_ACTIVE_LOCALITY	= 0x20,	/* (R) */
++	TPM_ACCESS_RELINQUISH_LOCALITY	= 0x20, /* (W) */
++	TPM_ACCESS_REQUEST_PENDING	= 0x04,	/* (W) */
++	TPM_ACCESS_REQUEST_USE		= 0x02,	/* (W) */
++};
++
++enum tis_status {
++	TPM_STS_VALID		= 0x80, /* (R) */
++	TPM_STS_COMMAND_READY	= 0x40, /* (R) */
++	TPM_STS_DATA_AVAIL	= 0x10, /* (R) */
++	TPM_STS_DATA_EXPECT	= 0x08, /* (R) */
++	TPM_STS_GO		= 0x20, /* (W) */
++	TPM_STS_RESPONSE_RETRY	= 0x02, /* (R) */
++	TPM_STS_READ_ZERO	= 0x23, /* bits that must be zero on read */
++};
++
++enum tis_int_flags {
++	TPM_GLOBAL_INT_ENABLE		= 0x80000000,
++	TPM_INTF_BURST_COUNT_STATIC	= 0x100,
++	TPM_INTF_CMD_READY_INT		= 0x080,
++	TPM_INTF_INT_EDGE_FALLING	= 0x040,
++	TPM_INTF_INT_EDGE_RISING	= 0x020,
++	TPM_INTF_INT_LEVEL_LOW		= 0x010,
++	TPM_INTF_INT_LEVEL_HIGH		= 0x008,
++	TPM_INTF_LOCALITY_CHANGE_INT	= 0x004,
++	TPM_INTF_STS_VALID_INT		= 0x002,
++	TPM_INTF_DATA_AVAIL_INT		= 0x001,
++};
++
++enum tis_defaults {
++	TIS_MEM_LEN		= 0x5000,
++	TIS_SHORT_TIMEOUT	= 750,   /* ms */
++	TIS_LONG_TIMEOUT	= 4000,  /* 4 secs */
++	TIS_TIMEOUT_MIN_ATML	= 14700, /* usecs */
++	TIS_TIMEOUT_MAX_ATML	= 15000, /* usecs */
 +};
 +
 +/*
-+ * A buffer for constructing and parsing TPM commands, responses and sized
-+ * (TPM2B) buffers.
++ * Some timeout values are needed before it is known whether the chip is
++ * TPM 1.0 or TPM 2.0.
 + */
-+struct tpm_buf {
-+	u8 flags;
-+	u8 handles;
-+	u16 length;
-+	u16 capacity;
-+	u8 data[];
-+};
++#define TIS_TIMEOUT_A_MAX	max_t(int, TIS_SHORT_TIMEOUT, TPM2_TIMEOUT_A)
++#define TIS_TIMEOUT_B_MAX	max_t(int, TIS_LONG_TIMEOUT, TPM2_TIMEOUT_B)
++#define TIS_TIMEOUT_C_MAX	max_t(int, TIS_SHORT_TIMEOUT, TPM2_TIMEOUT_C)
++#define TIS_TIMEOUT_D_MAX	max_t(int, TIS_SHORT_TIMEOUT, TPM2_TIMEOUT_D)
 +
-+void tpm_buf_init(struct tpm_buf *buf, u16 buf_size);
-+void tpm_buf_init_sized(struct tpm_buf *buf, u16 buf_size);
-+void tpm_buf_reset(struct tpm_buf *buf, u16 tag, u32 ordinal);
-+void tpm_buf_reset_sized(struct tpm_buf *buf);
-+u32 tpm_buf_length(struct tpm_buf *buf);
-+void tpm_buf_append(struct tpm_buf *buf, const u8 *new_data, u16 new_length);
-+void tpm_buf_append_u8(struct tpm_buf *buf, const u8 value);
-+void tpm_buf_append_u16(struct tpm_buf *buf, const u16 value);
-+void tpm_buf_append_u32(struct tpm_buf *buf, const u32 value);
-+u8 tpm_buf_read_u8(struct tpm_buf *buf, off_t *offset);
-+u16 tpm_buf_read_u16(struct tpm_buf *buf, off_t *offset);
-+u32 tpm_buf_read_u32(struct tpm_buf *buf, off_t *offset);
-+void tpm_buf_append_handle(struct tpm_buf *buf, u32 handle);
-+void tpm1_buf_append_extend(struct tpm_buf *buf, u32 pcr_idx, const u8 *hash);
-+void tpm2_buf_append_pcr_extend(struct tpm_buf *buf, struct tpm_digest *digests,
-+				struct tpm_bank_info *banks,
-+				unsigned int nr_banks);
++#define	TPM_ACCESS(l)			(0x0000 | ((l) << 12))
++#define	TPM_INT_ENABLE(l)		(0x0008 | ((l) << 12))
++#define	TPM_INT_VECTOR(l)		(0x000C | ((l) << 12))
++#define	TPM_INT_STATUS(l)		(0x0010 | ((l) << 12))
++#define	TPM_INTF_CAPS(l)		(0x0014 | ((l) << 12))
++#define	TPM_STS(l)			(0x0018 | ((l) << 12))
++#define	TPM_STS3(l)			(0x001b | ((l) << 12))
++#define	TPM_DATA_FIFO(l)		(0x0024 | ((l) << 12))
++#define	TPM_INTF_ID(l)			(0x0030 | ((l) << 12))
++
++#define	TPM_DID_VID(l)			(0x0F00 | ((l) << 12))
++#define	TPM_RID(l)			(0x0F04 | ((l) << 12))
++
++#define LPC_CNTRL_OFFSET		0x84
++#define LPC_CLKRUN_EN			(1 << 2)
++#define INTEL_LEGACY_BLK_BASE_ADDR	0xFED08000
++#define ILB_REMAP_SIZE			0x100
++
++/* TPM HW Interface and Capabilities */
++#define TPM_TIS_INTF_ACTIVE	0x00
++#define TPM_CRB_INTF_ACTIVE	0x01
++
++struct tpm_interface_id {
++	union {
++		u32 val;
++		struct {
++			u32 interface_type:4;
++			u32 interface_version:4;
++			u32 cap_locality:1;
++			u32 reserved1:4;
++			u32 cap_tis:1;
++			u32 cap_crb:1;
++			u32 cap_if_res:2;
++			u32 interface_selector:2;
++			u32 intf_sel_lock:1;
++			u32 reserved2:4;
++			u32 reserved3:8;
++		};
++	};
++} __packed;
++
++#define TPM_TIS_INTF_12		0x00
++#define TPM_TIS_INTF_13		0x02
++#define TPM2_TIS_INTF_13	0x03
++
++struct tpm_intf_capability {
++	union {
++		u32 val;
++		struct {
++			u32 data_avail_int_support:1;
++			u32 sts_valid_int_support:1;
++			u32 locality_change_int_support:1;
++			u32 interrupt_level_high:1;
++			u32 interrupt_level_low:1;
++			u32 interrupt_edge_rising:1;
++			u32 interrupt_edge_falling:1;
++			u32 command_ready_int_support:1;
++			u32 burst_count_static:1;
++			u32 data_transfer_size_support:2;
++			u32 reserved1:17;
++			u32 interface_version:3;
++			u32 reserved2:1;
++		};
++	};
++} __packed;
 +
 +#endif
-diff --git a/include/linux/tpm_common.h b/include/linux/tpm_common.h
-index b5c6b2c1e517..0577f8182f67 100644
---- a/include/linux/tpm_common.h
-+++ b/include/linux/tpm_common.h
-@@ -56,6 +56,16 @@ enum tpm_localities {
- 	TPM_MAX_LOCALITY	= TPM_LOCALITY_4
- };
- 
-+/*
-+ * Structure to represent active PCR algorithm banks usable by the
-+ * TPM.
-+ */
-+struct tpm_bank_info {
-+	u16 alg_id;
-+	u16 digest_size;
-+	u16 crypto_id;
-+};
-+
- /*
-  * 128 bytes is an arbitrary cap. This could be as large as TPM_BUFSIZE - 18
-  * bytes, but 128 is still a relatively large number of random bytes and
 -- 
 2.43.7
 
