@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 028A9D5E14E
-	for <kexec@archiver.kernel.org>; Tue, 16 Dec 2025 13:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5432FD5E14E
+	for <kexec@archiver.kernel.org>; Tue, 16 Dec 2025 13:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=vSY7wQKntypHc5vZ+H2tOs9E59MY74VNKOCe0oScgtI=; b=OWrVpNkNvjEMPVq4NnkblysX/k
-	GASjnKcktSIPPDMhgqfLv08RVKmsnCrWsbUZUvMRHdgqIrHnb7ylKYYGMLrEn/UewNsIgBkNiqZrm
-	/ejsHYCig9xrIxAHIYkryVDOLGuVpKQ+Pgzys8q4ILZPD70yJ1QW8ZYGJzVyKl5t2vj7YZpiWbnGz
-	NYcIkYllOz9N1P5UwE636cTwFv9rwITe3egUwZIAanUVS8WKc2NmD1H26JWDzFVifDpYE2eyzeQif
-	MPvlHcUvwdkZ0EcoMrSlbcya2bWY0KuBmffKwkUPmSpvkJFTHkf2payH2nc1DXrENbFs4c3TfdjO4
-	p810Tw2w==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=5iGeiX4E1s5Zpw7ekJuj9LnluOt2w5YNk4ehhCKOiRE=; b=h0yKkTPp480TDi8L/b21HQUFz9
+	OMWIDIYptraBxztBiN4Qjieq/ie+5dfK8jtQX5elJ9dQFj1NRtKdvFT6qaSiaFg+VzG8vKKZEUFiL
+	jslwPX1tEiOhSRokk9WipYhAJvyT4a3U9yk/wt/S73PKcb6L204zB8t3p3dmL59Sc60q983Y3GyfI
+	kJanaeCaDxKbaNH/O0AyehuNoGWMOOoMk+U5ABbkY4sw3lFgE4igb+NINREwmKOO+tPDP32Zg0AzN
+	66nDkeYE+QQFeeMlLBrUY1Lc/Z/bgIk1/NMI19F7mFGHw5vQ4kqJ0aNDydNcReJVViUXefY5+zRJg
+	DkU6THuA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVV6I-00000005FfB-04Xl;
-	Tue, 16 Dec 2025 13:28:26 +0000
-Received: from esa4.hc555-34.eu.iphmx.com ([207.54.77.171])
+	id 1vVV6W-00000005Fmk-3S91;
+	Tue, 16 Dec 2025 13:28:40 +0000
+Received: from esa1.hc555-34.eu.iphmx.com ([23.90.104.144])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVV6A-00000005Fb1-2igc
+	id 1vVV6U-00000005Fkm-1WNY
 	for kexec@lists.infradead.org;
-	Tue, 16 Dec 2025 13:28:24 +0000
+	Tue, 16 Dec 2025 13:28:39 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1765891698; x=1797427698;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=gi4khvtwgbMqqNuNGAAzKa3KN3NP/O6F46myC8nPl94=;
-  b=WjqAoEW9+uQqJKPd3bc2Q98m7kow4mXJAQOKuf7BWHAdfswu7B85AxFE
-   IJ2SavfAFRC+xFQr3z9qfE7+bSyyq7aji4ZrNEcv67e/oKrUHZmgrzpW6
-   r40dsueXzAx/fOJjUsH7xyBp9Bh29VUA2Rg/gancUTt30gmmRo1eBNtUt
-   cojnGA4IDMdEDiMbS21VXH2jxtQwjkg44nWlRwX+8wTmpYiF8lLpb6dLu
-   dEPqeip3sTvgYe8XxDxYjWwMYVeXlg3aQvQ8dVOHgtYtYB/EYk2qZkr2n
-   ci9VIUN2f1ksrrl0mOrjkI6hHAgETxXGBZjqjp/A2WnBs98HLid9ZNkDX
+  t=1765891718; x=1797427718;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=+k+9060VbjZlu9Xk37ggzq9agHSaf6TFpI6uV0BnxcM=;
+  b=me/a1saDzmQa++LtPmZbdTJP31tYnffrc0AGlR1uYcU+poIHp0PWrNSi
+   HPXMDwz0YrmM9YtMeIiqbM2bccTp2sBrbrlX0Tra/7geeFCGiwK4qASAv
+   QpSCDHbjwCwwaCP7/Tqh5Bgb5MSAdoQ9OljpdidbaNqCo+4SMMPJyjJ0V
+   gL4d9IH6Hx8A3ZwPGI8nSV9ka5pk0gqvC2K1C1ARCLTq0cWNyKTfxCkZ3
+   njQGD66ThgIOlA9tcNqEgPwSCRQp9aaUURQCgb3ys1vUxbERCpu60c2PT
+   gq2RqoCCcAFxFGjxlbUaLpzbxOb5eGyMmcAQXYH8pV6HTNlE4/WvWlcJI
    w==;
-X-CSE-ConnectionGUID: KabgYPC0QN26nMkiJh7SEg==
-X-CSE-MsgGUID: Gc44OxbVR62XIEIN6hPiMA==
+X-CSE-ConnectionGUID: bEc8fFZATzio54K2avTJug==
+X-CSE-MsgGUID: oAufUdp8TNadW5+O/WWUvg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces04_data.me-crop.lan) ([146.255.191.134])
-  by esa4.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 15:28:14 +0200
-X-CSE-ConnectionGUID: A/1ufcHVSFuB9DQOz2R8JA==
-X-CSE-MsgGUID: NeFqLJ+vQbqDHa0Fo1ziCg==
-Received: from unknown (HELO epgd034.me-corp.lan) ([10.154.54.2])
-  by ces04_data.me-crop.lan with SMTP; 16 Dec 2025 15:29:22 +0200
-Received: by epgd034.me-corp.lan (sSMTP sendmail emulation); Tue, 16 Dec 2025 15:28:12 +0200
+Received: from unknown (HELO ces01_data.me-corp.lan) ([146.255.191.134])
+  by esa1.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 15:28:36 +0200
+X-CSE-ConnectionGUID: qDu5oNm+RT+I2zFZyqnFsA==
+X-CSE-MsgGUID: n5AbACJbStS91yR4szaKew==
+Received: from unknown (HELO epgd034.me-corp.lan) ([10.154.54.6])
+  by ces01_data.me-corp.lan with SMTP; 16 Dec 2025 15:29:45 +0200
+Received: by epgd034.me-corp.lan (sSMTP sendmail emulation); Tue, 16 Dec 2025 15:28:34 +0200
 From: Pnina Feder <pnina.feder@mobileye.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Baoquan He <bhe@redhat.com>
@@ -59,15 +59,16 @@ Cc: Vivek Goyal <vgoyal@redhat.com>,
 	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Pnina Feder <pnina.feder@mobileye.com>
-Subject: [PATCH 0/2] vmcoreinfo: support VMCOREINFO_BYTES larger than PAGE_SIZE
-Date: Tue, 16 Dec 2025 15:27:59 +0200
-Message-ID: <20251216132801.807260-1-pnina.feder@mobileye.com>
+Subject: [PATCH 1/2] kernel: vmcoreinfo: allocate vmcoreinfo_data based on VMCOREINFO_BYTES
+Date: Tue, 16 Dec 2025 15:28:00 +0200
+Message-ID: <20251216132801.807260-2-pnina.feder@mobileye.com>
+In-Reply-To: <20251216132801.807260-1-pnina.feder@mobileye.com>
+References: <20251216132801.807260-1-pnina.feder@mobileye.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251216_052819_122148_085E39A4 
-X-CRM114-Status: UNSURE (   8.42  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20251216_052838_710082_6023A138 
+X-CRM114-Status: GOOD (  11.30  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,31 +83,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-VMCOREINFO_BYTES is defined as a configurable size, but multiple
-code paths implicitly assume it always fits into a single page.
+VMCOREINFO_BYTES defines the size of vmcoreinfo data, but the current
+implementation assumes a single page allocation.
 
-This series removes that assumption by allocating and mapping
-vmcoreinfo based on its actual size.
+Allocate vmcoreinfo_data using get_order(VMCOREINFO_BYTES) so that
+vmcoreinfo can safely grow beyond PAGE_SIZE.
 
-Patch 1 updates vmcoreinfo allocation to use get_order(VMCOREINFO_BYTES).
-Patch 2 updates crash kernel handling to correctly allocate and map
-multiple pages when copying vmcoreinfo.
+This avoids hidden assumptions and keeps vmcoreinfo size consistent
+across the kernel.
 
-This makes vmcoreinfo size consistent across the kernel and avoids
-future breakage if VMCOREINFO_BYTES grows.
+Signed-off-by: Pnina Feder <pnina.feder@mobileye.com>
+---
+ kernel/vmcore_info.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Tested on riscv64.
-
-(No functional change when VMCOREINFO_BYTES == PAGE_SIZE.)
-
-Pnina Feder (2):
-  kernel: vmcoreinfo: allocate vmcoreinfo_data based on VMCOREINFO_BYTES
-  kernel/crash: handle multi-page vmcoreinfo in crash kernel copy
-
- kernel/crash_core.c  | 17 +++++++++++++----
- kernel/vmcore_info.c |  6 ++++--
- 2 files changed, 17 insertions(+), 6 deletions(-)
-
+diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
+index fe9bf8db1922..22b3205dd4dc 100644
+--- a/kernel/vmcore_info.c
++++ b/kernel/vmcore_info.c
+@@ -137,7 +137,9 @@ EXPORT_SYMBOL_GPL(hwerr_log_error_type);
+ 
+ static int __init crash_save_vmcoreinfo_init(void)
+ {
+-	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
++	int order;
++	order = get_order(VMCOREINFO_BYTES);
++	vmcoreinfo_data = (unsigned char *)__get_free_pages(GFP_KERNEL | __GFP_ZERO, order);
+ 	if (!vmcoreinfo_data) {
+ 		pr_warn("Memory allocation for vmcoreinfo_data failed\n");
+ 		return -ENOMEM;
+@@ -146,7 +148,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	vmcoreinfo_note = alloc_pages_exact(VMCOREINFO_NOTE_SIZE,
+ 						GFP_KERNEL | __GFP_ZERO);
+ 	if (!vmcoreinfo_note) {
+-		free_page((unsigned long)vmcoreinfo_data);
++		free_pages((unsigned long)vmcoreinfo_data, order);
+ 		vmcoreinfo_data = NULL;
+ 		pr_warn("Memory allocation for vmcoreinfo_note failed\n");
+ 		return -ENOMEM;
 -- 
 2.43.0
 
