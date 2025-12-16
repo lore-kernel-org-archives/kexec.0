@@ -4,68 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 29A49D5B87C
-	for <kexec@archiver.kernel.org>; Tue, 16 Dec 2025 06:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F1431D5B161
+	for <kexec@archiver.kernel.org>; Tue, 16 Dec 2025 07:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=EeUCktEk7tKcuhscgHtGmG1MIpsx+ua5mmBnZ9Rv1gA=; b=aiXqm8VSrsyQQOknzIqHuKIKie
-	V6NWeIEWtKK2rfXFOhgyN6di0Q75RYQHX3tHGOsLI2GQeE5qfpYrQuhrmgOL1VHdmwWIoNEcPHnE4
-	dC1FUgrpkUfeKJ1j43N2ZjrY/lbwotR5X2TjAkLWvNdN3zuJNLT7yOzlCTdTQSPJ8U50X7H/+fXRu
-	vhjKSxHg5kNLPL9Z0fK6ZfyAC9o7q7w3rLr+SlnOfi652IHfG87f5XzNkXzHsj6EhwaIUklEXIkqz
-	hhkpCduQjj9iz6nBYjykH4wwNWcX6oRvv/jRphCWHcoRVj3Wnom7ZqPt8fg+LrmPdILIc9X9PWw33
-	YE9od0Ag==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=nlC4H+HZu5TOOreu4OEbcwwZ6SLR8CCJXl93GTnllT4=; b=piy8gvRgv+FsBCji3vyHqke6OV
+	7kp9mH6nJcxhp9MpbeUoEd6gq9HVtwcjDmDItwKzits6mRvW4+6oGuFg4aVtQWT+mtLIA77cVQork
+	B9mIEFWl1gXGJv5BbuqSoQdE+Pw1Zcb0dC4PwRx995C8kMF7NoFeMuU1n0CmIC1Qz2AkdKH5LpKx/
+	Wwex3v0zUqFfEqUTCOcHW2RaecKcXcDxXEsFobkrfxLPalBSogK9v6MbQApb1mBSrvpkhubGjpdpV
+	ypLaO//Zn/8+pWUt8113DypSF1kicNKB5VZ4nDYwrkll400LWiEGddIKn1PPR0K+Qcd49GQciBHy6
+	gHccnfbg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVOot-00000004nbG-42WT;
-	Tue, 16 Dec 2025 06:46:03 +0000
-Received: from canpmsgout10.his.huawei.com ([113.46.200.225])
+	id 1vVPuy-00000004soV-0mpB;
+	Tue, 16 Dec 2025 07:56:24 +0000
+Received: from smtpbg150.qq.com ([18.132.163.193])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVOoo-00000004nai-32Xj
+	id 1vVPuv-00000004slr-0USB
 	for kexec@lists.infradead.org;
-	Tue, 16 Dec 2025 06:46:00 +0000
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=EeUCktEk7tKcuhscgHtGmG1MIpsx+ua5mmBnZ9Rv1gA=;
-	b=NXgMllGaL1TKTZ8uCvN2uRDDsx2iCirRKHs/ksSTjTmysbZse6exWdUiEAP1zGEBQG9L3B2dC
-	Xy5mq5tYLbJCVCDPIrndcjL+EX59eh+yLGAVkf2AsC1tHAyPB/ANCiw2TYZhvp2CWj3wWi8MzPN
-	/4nge9PfgLGh6k8rJVvih18=
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by canpmsgout10.his.huawei.com (SkyGuard) with ESMTPS id 4dVnRr01Dnz1K96V;
-	Tue, 16 Dec 2025 14:42:47 +0800 (CST)
-Received: from kwepemk100009.china.huawei.com (unknown [7.202.194.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id E49E7140203;
-	Tue, 16 Dec 2025 14:45:47 +0800 (CST)
-Received: from huawei.com (10.50.159.234) by kwepemk100009.china.huawei.com
- (7.202.194.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 16 Dec
- 2025 14:45:47 +0800
-From: l00580197 <longwei27@huawei.com>
-To: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, Pasha
- Tatashin <pasha.tatashin@soleen.com>
-CC: Pratyush Yadav <pratyush@kernel.org>, <kexec@lists.infradead.org>,
-	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	<hewenliang4@huawei.com>, Long Wei <longwei27@huawei.com>
-Subject: [PATCH v2] kho: Remove duplicate header file references
-Date: Tue, 16 Dec 2025 14:45:20 +0800
-Message-ID: <20251216064520.1529635-1-longwei27@huawei.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251215091150.4094334-1-longwei27@huawei.com>
-References: <20251215091150.4094334-1-longwei27@huawei.com>
+	Tue, 16 Dec 2025 07:56:23 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1765871739;
+	bh=nlC4H+HZu5TOOreu4OEbcwwZ6SLR8CCJXl93GTnllT4=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=dGeKnEuuutmmStpt9Sl73pswPcxaTofKezDXddRgof9yU5f6nhwxuWlzwT50tU1io
+	 JvnQhPdkpdehQdXg5Hw7HI17E0jXxtWrwt4PddbNHe1c5c2e8dK2hRI4gxhKYQPwiL
+	 f+tG+SJ2XNYh8UgxOB/GCQiEtRsHmJYfAmRecU2w=
+X-QQ-mid: zesmtpsz6t1765871734tf0651cde
+X-QQ-Originating-IP: 6wjONADb7Dmiyy2GRLdVye8RdImTzi7oyW57IZANijM=
+Received: from localhost.localdomain ( [123.114.60.34])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 16 Dec 2025 15:55:32 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 11387274927920160015
+EX-QQ-RecipientCnt: 5
+From: Qiang Ma <maqianga@uniontech.com>
+To: akpm@linux-foundation.org,
+	bhe@redhat.com
+Cc: kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Qiang Ma <maqianga@uniontech.com>
+Subject: [PATCH v2] kexec: Replace the goto out_unlock with out
+Date: Tue, 16 Dec 2025 15:55:18 +0800
+Message-Id: <20251216075518.1626114-1-maqianga@uniontech.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.50.159.234]
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemk100009.china.huawei.com (7.202.194.57)
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
+X-QQ-XMAILINFO: NFNrK8KlcSCR9EA66xMf7tIj8cl/Y9r1WzmwQ3y/nVI6t7O3selnbLVH
+	EpbusAwj9vdFDIlPuIvXG6t5BHxi1Gbnqq0jWHhZeVSwVZfxED9KfQo5c4yGc9RZ7t4q7A2
+	jjbHRPF9FXhgTmiXarcuieoLwKD84GvKRcFLCyM9yB/eRc4fibMuCQJlgYjHJ8u1v5Z7d44
+	RgiERkbhPHVIsgAayePQPClecF6A7DGwiPkjJUGUJzqIbHnBVd4m6R8BVP9ILME478QdFCl
+	w+07FRaRZiW5k6GVA28BaHiU8iocQgSh+auvzh4nMAx9Giqr/pBi9ba/w6iToyNG+rCXN8E
+	tLS40yn+KANKlX4BWSXCxqMIv6JntRGW8tL5C1IKndts0z54+kaqWIFa1bvp5rd9YwcOLPN
+	ccOkFBvLWrwwC/Wa0yc8hq6rcv2TpGAjLEubysm6ycFXyMpAPF66BYrLunjk3EzU+2kP4j3
+	VQK+c5R8doHvInRzVwqCssSjHi7VoHGW47zO8c94q4LEesIOuJDSrL4Cql91y7+MPv2kL4F
+	es5YZAmNunS/JGuQSbCSXB4YzO3CL4yb6RLETOAucz5JfbJYg0JNtjJjuxBGSmxrAF9Z240
+	LHlhbgpXf/WjSHyE1XP4RyhhM5FcqWzV6IR3mRqqeKbMwuIFSP4cHWyasmS0CpBlL4X99wz
+	LhDg1D+ZPhNIRkLmbnaBU4W9FfpjYrcq0hbvrcvm2hK9DdnJt50qd+b2m6BWbdb4imySIal
+	fFDVYDI6nu92jd1wuTFdOjHCxfQIChj02aJ1NX69g/73JluDNgsxtICKmY+td7CZNtAarwe
+	HokHeOEpn5bU2I/LRR2GZpxTWMxBxhyTQdYuRJ8L5qV+B3eeEzzbI2TppSpqb52EFgLxbuh
+	a70yXKotYr3RXdjd4z41pZauZdZJ6NDT+n+ZKvqNbwNGZG7ZC3fcwn9KlkuOXlgnDho0UgC
+	0K55b3pbm7XRggcgtFm8PFEcHJ967/QVjZhUUC5M+U0NNfatw+NQUnEA3LICK/bivM7ASGm
+	++3gUjpl0FvsNXPxVm7lurFm8HQgskTKOiwN3l7w==
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251215_224559_548796_CF268C31 
-X-CRM114-Status: UNSURE (   7.80  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20251215_235621_910727_98A7FD6D 
+X-CRM114-Status: GOOD (  10.50  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,32 +92,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Long Wei <longwei27@huawei.com>
+The image is initialized to NULL. Then, after calling kimage_alloc_init,
+we can directly goto 'out' because at this time, the kimage_free will
+determine whether image is a NULL pointer.
 
-Changes in v2:
-- Fixed the malformed commit message header (removed duplicate 'From:' line).
-- Added module prefix 'kho:' to the subject.
+This will prepare for the subsequent patch to reset the variable in
+kimage_free.
 
-kexec_handover_internal.h is included twice in kexec_handover.c.
-Remove the redundant first inclusion to eliminate the duplication.
-
-Signed-off-by: Long Wei <longwei27@huawei.com>
+Signed-off-by: Qiang Ma <maqianga@uniontech.com>
 ---
- kernel/liveupdate/kexec_handover.c | 1 -
- 1 file changed, 1 deletion(-)
+ kernel/kexec.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 9dc51fab604f..1962b6052840 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -24,7 +24,6 @@
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 28008e3d462e..9bb1f2b6b268 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -95,6 +95,8 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+ 	unsigned long i;
+ 	int ret;
+ 
++	image = NULL;
++
+ 	/*
+ 	 * Because we write directly to the reserved memory region when loading
+ 	 * crash kernels we need a serialization here to prevent multiple crash
+@@ -129,7 +131,7 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+ 
+ 	ret = kimage_alloc_init(&image, entry, nr_segments, segments, flags);
+ 	if (ret)
+-		goto out_unlock;
++		goto out;
+ 
+ 	if (flags & KEXEC_PRESERVE_CONTEXT)
+ 		image->preserve_context = 1;
+-- 
+2.20.1
 
- #include <asm/early_ioremap.h>
-
--#include "kexec_handover_internal.h"
- /*
-  * KHO is tightly coupled with mm init and needs access to some of mm
-  * internal APIs.
---
-2.43.0
 
