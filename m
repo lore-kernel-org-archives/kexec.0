@@ -4,80 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F1431D5B161
-	for <kexec@archiver.kernel.org>; Tue, 16 Dec 2025 07:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1B06FD5C0F2
+	for <kexec@archiver.kernel.org>; Tue, 16 Dec 2025 08:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From:Reply-To:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=nlC4H+HZu5TOOreu4OEbcwwZ6SLR8CCJXl93GTnllT4=; b=piy8gvRgv+FsBCji3vyHqke6OV
-	7kp9mH6nJcxhp9MpbeUoEd6gq9HVtwcjDmDItwKzits6mRvW4+6oGuFg4aVtQWT+mtLIA77cVQork
-	B9mIEFWl1gXGJv5BbuqSoQdE+Pw1Zcb0dC4PwRx995C8kMF7NoFeMuU1n0CmIC1Qz2AkdKH5LpKx/
-	Wwex3v0zUqFfEqUTCOcHW2RaecKcXcDxXEsFobkrfxLPalBSogK9v6MbQApb1mBSrvpkhubGjpdpV
-	ypLaO//Zn/8+pWUt8113DypSF1kicNKB5VZ4nDYwrkll400LWiEGddIKn1PPR0K+Qcd49GQciBHy6
-	gHccnfbg==;
+	bh=t9GVMSE5QYBAq5Na9iKzheEhYI2L9XOqJpGx0SGLtLw=; b=Aropj3ctVcRPmftQAV9LOKIN+B
+	nkbl57mKW+6KrTtg9prLhqnqsSxMIT6ZxL5LFinaeLtozv7AuAmm8b/6Y4Mg6mrw6ItT7Sx3immul
+	YF+R5NKaDliqGVSCCSvWM2DBSH+m1piJZiay94O1vfpsmVLqQrlhhvskQ3c78fzGNJPgJ+KUOC2PU
+	rHrH6rc7tFdhBhoOtbPjCKedFVs3CJEwaBnWnPM7OkJI90mpQ+hL3CS77fiS6o9Yf4HcrMrSDJYKg
+	IPgRJDJXo5ITyuGHJTu7U6zx1FAfEWh5ImuyYwiCFgMXvgm9S/8U6cm/9in3MRJSdVkD3NGYsBBvs
+	mcujavUQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVPuy-00000004soV-0mpB;
-	Tue, 16 Dec 2025 07:56:24 +0000
-Received: from smtpbg150.qq.com ([18.132.163.193])
+	id 1vVQkU-00000004wye-0IYZ;
+	Tue, 16 Dec 2025 08:49:38 +0000
+Received: from pdx-out-003.esa.us-west-2.outbound.mail-perimeter.amazon.com ([44.246.68.102])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVPuv-00000004slr-0USB
+	id 1vVQkP-00000004wyH-00wh
 	for kexec@lists.infradead.org;
-	Tue, 16 Dec 2025 07:56:23 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1765871739;
-	bh=nlC4H+HZu5TOOreu4OEbcwwZ6SLR8CCJXl93GTnllT4=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=dGeKnEuuutmmStpt9Sl73pswPcxaTofKezDXddRgof9yU5f6nhwxuWlzwT50tU1io
-	 JvnQhPdkpdehQdXg5Hw7HI17E0jXxtWrwt4PddbNHe1c5c2e8dK2hRI4gxhKYQPwiL
-	 f+tG+SJ2XNYh8UgxOB/GCQiEtRsHmJYfAmRecU2w=
-X-QQ-mid: zesmtpsz6t1765871734tf0651cde
-X-QQ-Originating-IP: 6wjONADb7Dmiyy2GRLdVye8RdImTzi7oyW57IZANijM=
-Received: from localhost.localdomain ( [123.114.60.34])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 16 Dec 2025 15:55:32 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 11387274927920160015
-EX-QQ-RecipientCnt: 5
-From: Qiang Ma <maqianga@uniontech.com>
-To: akpm@linux-foundation.org,
-	bhe@redhat.com
-Cc: kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Qiang Ma <maqianga@uniontech.com>
-Subject: [PATCH v2] kexec: Replace the goto out_unlock with out
-Date: Tue, 16 Dec 2025 15:55:18 +0800
-Message-Id: <20251216075518.1626114-1-maqianga@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+	Tue, 16 Dec 2025 08:49:34 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1765874973; x=1797410973;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=t9GVMSE5QYBAq5Na9iKzheEhYI2L9XOqJpGx0SGLtLw=;
+  b=K2XYOvdqLUHj4+KLQ7OdpkpBWVMZ5NHyHK/4IwVpgm4ao1K3BIAA8Nw6
+   a+milhV98qsRAt6Vw9AL+YDS8EO/xWxSR2A5CB+UJObIS6EIEdMEKxuta
+   6+Tr3/al9M1LBjiiQbciXX0eAqo8ZGW3kRaO4d25RXvq3JUZcE0TIK9Vd
+   Lm4CNQi0YdVTZqobYYw6zCVnIvwSnWEMItuiLRyK6JDrzjl/OSSGNvz2k
+   CTmqE1jo2eDSvL1f6hfU9/RtdRdKmlzePyOXr6DIkQvMesw5nNksILU9K
+   1smMoSAt7WFCtjLwpK0YfO1Vm3EAGd++Kyx93h9p2XH2K4PjGesxQi8kw
+   w==;
+X-CSE-ConnectionGUID: AB8P62TDTxCVBKRB7W9YBA==
+X-CSE-MsgGUID: giJnBZetQTewkmJV4jC3yw==
+X-IronPort-AV: E=Sophos;i="6.21,152,1763424000"; 
+   d="scan'208";a="9165717"
+Received: from ip-10-5-0-115.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.0.115])
+  by internal-pdx-out-003.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 08:49:25 +0000
+Received: from EX19MTAUWA001.ant.amazon.com [205.251.233.236:20952]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.21.145:2525] with esmtp (Farcaster)
+ id e256b7ba-6e38-433a-93d4-84c8c1e4bf24; Tue, 16 Dec 2025 08:49:25 +0000 (UTC)
+X-Farcaster-Flow-ID: e256b7ba-6e38-433a-93d4-84c8c1e4bf24
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.29;
+ Tue, 16 Dec 2025 08:49:25 +0000
+Received: from dev-dsk-epetron-1c-1d4d9719.eu-west-1.amazon.com
+ (10.253.109.105) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.29; Tue, 16 Dec 2025
+ 08:49:23 +0000
+From: Evangelos Petrongonas <epetron@amazon.de>
+To: Mike Rapoport <rppt@kernel.org>
+CC: Evangelos Petrongonas <epetron@amazon.de>, Pasha Tatashin
+	<pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, "Alexander
+ Graf" <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, Jason Miu
+	<jasonmiu@google.com>, <linux-kernel@vger.kernel.org>,
+	<kexec@lists.infradead.org>, <linux-mm@kvack.org>,
+	<nh-open-source@amazon.com>
+Subject: [PATCH] kho: add support for deferred struct page init
+Date: Tue, 16 Dec 2025 08:49:12 +0000
+Message-ID: <20251216084913.86342-1-epetron@amazon.de>
+X-Mailer: git-send-email 2.47.3
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
-X-QQ-XMAILINFO: NFNrK8KlcSCR9EA66xMf7tIj8cl/Y9r1WzmwQ3y/nVI6t7O3selnbLVH
-	EpbusAwj9vdFDIlPuIvXG6t5BHxi1Gbnqq0jWHhZeVSwVZfxED9KfQo5c4yGc9RZ7t4q7A2
-	jjbHRPF9FXhgTmiXarcuieoLwKD84GvKRcFLCyM9yB/eRc4fibMuCQJlgYjHJ8u1v5Z7d44
-	RgiERkbhPHVIsgAayePQPClecF6A7DGwiPkjJUGUJzqIbHnBVd4m6R8BVP9ILME478QdFCl
-	w+07FRaRZiW5k6GVA28BaHiU8iocQgSh+auvzh4nMAx9Giqr/pBi9ba/w6iToyNG+rCXN8E
-	tLS40yn+KANKlX4BWSXCxqMIv6JntRGW8tL5C1IKndts0z54+kaqWIFa1bvp5rd9YwcOLPN
-	ccOkFBvLWrwwC/Wa0yc8hq6rcv2TpGAjLEubysm6ycFXyMpAPF66BYrLunjk3EzU+2kP4j3
-	VQK+c5R8doHvInRzVwqCssSjHi7VoHGW47zO8c94q4LEesIOuJDSrL4Cql91y7+MPv2kL4F
-	es5YZAmNunS/JGuQSbCSXB4YzO3CL4yb6RLETOAucz5JfbJYg0JNtjJjuxBGSmxrAF9Z240
-	LHlhbgpXf/WjSHyE1XP4RyhhM5FcqWzV6IR3mRqqeKbMwuIFSP4cHWyasmS0CpBlL4X99wz
-	LhDg1D+ZPhNIRkLmbnaBU4W9FfpjYrcq0hbvrcvm2hK9DdnJt50qd+b2m6BWbdb4imySIal
-	fFDVYDI6nu92jd1wuTFdOjHCxfQIChj02aJ1NX69g/73JluDNgsxtICKmY+td7CZNtAarwe
-	HokHeOEpn5bU2I/LRR2GZpxTWMxBxhyTQdYuRJ8L5qV+B3eeEzzbI2TppSpqb52EFgLxbuh
-	a70yXKotYr3RXdjd4z41pZauZdZJ6NDT+n+ZKvqNbwNGZG7ZC3fcwn9KlkuOXlgnDho0UgC
-	0K55b3pbm7XRggcgtFm8PFEcHJ967/QVjZhUUC5M+U0NNfatw+NQUnEA3LICK/bivM7ASGm
-	++3gUjpl0FvsNXPxVm7lurFm8HQgskTKOiwN3l7w==
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-RECHKSPAM: 0
+X-Originating-IP: [10.253.109.105]
+X-ClientProxiedBy: EX19D042UWB002.ant.amazon.com (10.13.139.175) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251215_235621_910727_98A7FD6D 
-X-CRM114-Status: GOOD (  10.50  )
+X-CRM114-CacheID: sfid-20251216_004933_116179_729A7DBD 
+X-CRM114-Status: GOOD (  18.28  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,41 +94,122 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The image is initialized to NULL. Then, after calling kimage_alloc_init,
-we can directly goto 'out' because at this time, the kimage_free will
-determine whether image is a NULL pointer.
+When `CONFIG_DEFERRED_STRUCT_PAGE_INIT` is enabled, struct page
+initialization is deferred to parallel kthreads that run later
+in the boot process.
 
-This will prepare for the subsequent patch to reset the variable in
-kimage_free.
+During KHO restoration, `deserialize_bitmap()` writes metadata for
+each preserved memory region. However, if the struct page has not been
+initialized, this write targets uninitialized memory, potentially
+leading to errors like:
+```
+BUG: unable to handle page fault for address: ...
+```
 
-Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+Fix this by introducing `kho_get_preserved_page()`,  which ensures
+all struct pages in a preserved region are initialized by calling
+`init_deferred_page()` which is a no-op when deferred init is disabled
+or when the struct page is already initialized.
+
+Fixes: 8b66ed2c3f42 ("kho: mm: don't allow deferred struct page with KHO")
+Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
 ---
- kernel/kexec.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+### Notes
+@Jason, this patch should act as a temporary fix to make KHO play nice
+with deferred struct page init until you post your ideas about splitting
+"Physical Reservation" from "Metadata Restoration".
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 28008e3d462e..9bb1f2b6b268 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -95,6 +95,8 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
- 	unsigned long i;
- 	int ret;
+### Testing
+In order to test the fix, I modified the KHO selftest, to allocate more
+memory and do so from higher memory to trigger the incompatibility. The
+branch with those changes can be found in:
+https://git.infradead.org/?p=users/vpetrog/linux.git;a=shortlog;h=refs/heads/kho-deferred-struct-page-init
+
+In future patches, we might want to enhance the selftest to cover
+this case as well. However, properly adopting the test for this
+is much more work than the actual fix, therefore it can be deferred to a
+follow-up series.
+
+In addition attempting to run the selftest for arm (without my changes)
+fails with:
+```
+ERROR:target/arm/internals.h:767:regime_is_user: code should not be reached
+Bail out! ERROR:target/arm/internals.h:767:regime_is_user: code should not be reached
+./tools/testing/selftests/kho/vmtest.sh: line 113: 61609 Aborted
+```
+I have not looked it up further, but can also do so as part of a
+selftest follow-up.
+
+ kernel/liveupdate/Kconfig          |  2 --
+ kernel/liveupdate/kexec_handover.c | 19 ++++++++++++++++++-
+ 2 files changed, 18 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/liveupdate/Kconfig b/kernel/liveupdate/Kconfig
+index d2aeaf13c3ac..9394a608f939 100644
+--- a/kernel/liveupdate/Kconfig
++++ b/kernel/liveupdate/Kconfig
+@@ -1,12 +1,10 @@
+ # SPDX-License-Identifier: GPL-2.0-only
  
-+	image = NULL;
+ menu "Live Update and Kexec HandOver"
+-	depends on !DEFERRED_STRUCT_PAGE_INIT
+ 
+ config KEXEC_HANDOVER
+ 	bool "kexec handover"
+ 	depends on ARCH_SUPPORTS_KEXEC_HANDOVER && ARCH_SUPPORTS_KEXEC_FILE
+-	depends on !DEFERRED_STRUCT_PAGE_INIT
+ 	select MEMBLOCK_KHO_SCRATCH
+ 	select KEXEC_FILE
+ 	select LIBFDT
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 9dc51fab604f..78cfe71e6107 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -439,6 +439,23 @@ static int kho_mem_serialize(struct kho_out *kho_out)
+ 	return err;
+ }
+ 
++/*
++ * With CONFIG_DEFERRED_STRUCT_PAGE_INIT, struct pages in higher memory
++ * regions may not be initialized yet at the time KHO deserializes preserved
++ * memory. This function ensures all struct pages in the region are initialized.
++ */
++static struct page *__init kho_get_preserved_page(phys_addr_t phys,
++						  unsigned int order)
++{
++	unsigned long pfn = PHYS_PFN(phys);
++	int nid = early_pfn_to_nid(pfn);
 +
- 	/*
- 	 * Because we write directly to the reserved memory region when loading
- 	 * crash kernels we need a serialization here to prevent multiple crash
-@@ -129,7 +131,7 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
++	for (int i = 0; i < (1 << order); i++)
++		init_deferred_page(pfn + i, nid);
++
++	return pfn_to_page(pfn);
++}
++
+ static void __init deserialize_bitmap(unsigned int order,
+ 				      struct khoser_mem_bitmap_ptr *elm)
+ {
+@@ -449,7 +466,7 @@ static void __init deserialize_bitmap(unsigned int order,
+ 		int sz = 1 << (order + PAGE_SHIFT);
+ 		phys_addr_t phys =
+ 			elm->phys_start + (bit << (order + PAGE_SHIFT));
+-		struct page *page = phys_to_page(phys);
++		struct page *page = kho_get_preserved_page(phys, order);
+ 		union kho_page_info info;
  
- 	ret = kimage_alloc_init(&image, entry, nr_segments, segments, flags);
- 	if (ret)
--		goto out_unlock;
-+		goto out;
- 
- 	if (flags & KEXEC_PRESERVE_CONTEXT)
- 		image->preserve_context = 1;
+ 		memblock_reserve(phys, sz);
 -- 
-2.20.1
+2.43.0
+
+
+
+
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christof Hellmis, Andreas Stieger
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
 
 
