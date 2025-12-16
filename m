@@ -4,61 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 402E2D637DB
-	for <kexec@archiver.kernel.org>; Tue, 16 Dec 2025 22:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DCC4CD637B3
+	for <kexec@archiver.kernel.org>; Tue, 16 Dec 2025 22:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=w7b/e76hAR5ZqOBnJxoTW1IFOT+jD+ZCWdt3eoWorFg=; b=PoKL7FyZnP07T1ByymbaeEhL4v
-	A/G2x43wknMB06O0+4aRbfoXOuWOKLt+b1eNTPP5e1JhveHWG+pgNLwcCQBJhTFK0a1/TFWyoIgFi
-	k0ztjeEUQCmN0yW3afPDnSW1NwkWSWwJ+aScYURu2QwNLMJ9PhKDQ7wYrSQSzh+AfQ0/7g/olHy1f
-	FaKg/yjuzuW1zPFSye8rvUNB0kZ2od9R7DRAlmW2sNsEDRWkDFwc1o67kU6CcBkPmMrQIYg/4gG6U
-	deJ5qMsCLCV7lGKjS6w2BMoOWJzNDncMn2Z2pSY+fl/ScrI7w6+V7ijnG6hBzzuU6huegEfmgaUr4
-	GmZVrLzQ==;
+	bh=uLAenGXiVnMiWblcu2j/ehIPSOsRYvRuHFxsslIkii0=; b=yhycO0F2ds0QpPMCeViCHNqvjG
+	GJjbXCjr7MqbkC5DwMRRvAq4/rgEwroobXg6jmo+7izbbiPlCSy3+iJ1UeRDfbmFNWY1NNgJamkSC
+	k8dxDSYDGWYkXRDO7dIfmj/szguah5v+A9rh86wD64yxb2DPQ3gsIdP2qgY6feLp6fqFzWotR2Tbk
+	w+0QbMEyq71zT4EdY3XTv7gzoAq5R9/ai5qnei0CJElvIkOH1OxNkj/SzWvWF1q604QmTiQ4A4XOF
+	ScDwgwuccF9eJrgmjrtjITLv+CRvOF9upR68wXNakphjjX4XD4CoiYuBLffixtphcn+/xNtWgQjsn
+	IUsLcaXw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVdJn-00000005t78-06eA;
-	Tue, 16 Dec 2025 22:14:55 +0000
+	id 1vVdJu-00000005t96-1GCq;
+	Tue, 16 Dec 2025 22:15:02 +0000
 Received: from mgamail.intel.com ([192.198.163.18])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVdJk-00000005t6M-0pNB
+	id 1vVdJq-00000005t8A-3yxn
 	for kexec@lists.infradead.org;
-	Tue, 16 Dec 2025 22:14:53 +0000
+	Tue, 16 Dec 2025 22:15:00 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765923292; x=1797459292;
+  t=1765923299; x=1797459299;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=w7b/e76hAR5ZqOBnJxoTW1IFOT+jD+ZCWdt3eoWorFg=;
-  b=clLET4uX3cooMZyP2OWXtCMubDr13NC/ZFFIQcSMbZa0gekauXfZuzyW
-   +HjjghxaI4K7aih2/LxMJRkS6z85DFWMt6oFOS2O8RaNJA7R5fDDgZJVb
-   IawmS4rdmf9jtimLwu0VRximh8WDvwLesWBwSdIQmxYE10xfJ76CZ2kV9
-   Vbhe8V7fhQ4My7LlMTU8EC+SKLUejoRw1pb5q4Tz3gRXfBH6NcxYOU+Iv
-   h7vrUfuM1g3AtFupOKDWeaq2vzcovQAq+3gRqSIQuq5HobwHnzYLQmebl
-   3JSnKdFaAGcRXc7QUQsE8/h1BtmpegVQpxcu6D/7OEOgOtb+jLXmZodmD
-   A==;
-X-CSE-ConnectionGUID: IIQZR/JbTFebyWpc6t/5eA==
-X-CSE-MsgGUID: LR+R0aDHRW2FJp7kgOM3LA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11644"; a="67047963"
+  bh=CKnV6C7sQb0snXwV77QbYvVGmF3VEDViWTVpf4sksU8=;
+  b=B6SPeW1IzSoNAR0OWnSMv+KHd4UrdkvcTmpUAbYHpfLpz6L7UjbdTc61
+   yznU2sU4ts0Nq6R98px+12zRLbkwoDE1UJEKCXjPsT680Pt8fcmQnyqVy
+   PLXRDLiGneg37/qa6Z4x4caYIjY2cLZtRQM4ugaWfgwFG2UxEoeUfkKE0
+   Q5/evN/Z06vlgKbQCCh2KNMpmVQ8LGuun3ag+G0N6L2YFfGwtAMr9VwFl
+   45CgcdkuqB0OQxIju3gbZh1YQ0CTbkwn3MNxviDrgCK2nAEQMhRBZSbVQ
+   e0R3XyfIxkAo61Dzc8gJ5qwkTN5XAIAb1BcHrZdiRLT4FKtHKazgsxPHF
+   Q==;
+X-CSE-ConnectionGUID: QPTOHdR9QRmveeEQKTUQSw==
+X-CSE-MsgGUID: cRmkSquGQK2M51ifV1iByg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11644"; a="67047991"
 X-IronPort-AV: E=Sophos;i="6.21,154,1763452800"; 
-   d="scan'208";a="67047963"
+   d="scan'208";a="67047991"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 14:14:50 -0800
-X-CSE-ConnectionGUID: BxFHyn8qQcGac3NxdIToCQ==
-X-CSE-MsgGUID: aWSUZNYVQEmgbVjvKP3GtA==
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 14:14:56 -0800
+X-CSE-ConnectionGUID: yxbySMJnQAinm/ScGKa28w==
+X-CSE-MsgGUID: HI87zTRWSlSkyXM/k5m2rg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,154,1763452800"; 
-   d="scan'208";a="198379940"
+   d="scan'208";a="198379955"
 Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.125.110.199]) ([10.125.110.199])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 14:14:49 -0800
-Message-ID: <0cff620d-9be4-487d-8eb1-19375ca58a70@intel.com>
-Date: Tue, 16 Dec 2025 14:14:48 -0800
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 14:14:55 -0800
+Message-ID: <9febdd36-9c23-458a-8d7e-2bc39849e188@intel.com>
+Date: Tue, 16 Dec 2025 14:14:54 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 00/28] x86: Secure Launch support for Intel TXT
+Subject: Re: [PATCH v15 16/28] x86/txt: Intel Trusted eXecution Technology
+ (TXT) definitions
 To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
  x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
@@ -72,6 +73,7 @@ Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
  baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
  andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
 References: <20251215233316.1076248-1-ross.philipson@oracle.com>
+ <20251215233316.1076248-17-ross.philipson@oracle.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -117,12 +119,12 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20251215233316.1076248-1-ross.philipson@oracle.com>
+In-Reply-To: <20251215233316.1076248-17-ross.philipson@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251216_141452_256993_80F4D90A 
-X-CRM114-Status: UNSURE (   2.81  )
+X-CRM114-CacheID: sfid-20251216_141459_011109_D354E2E9 
+X-CRM114-Status: UNSURE (   8.52  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -138,9 +140,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/15/25 15:32, Ross Philipson wrote:
-> Patch set based on commit:
-> torvalds/master/fd57572253bc356330dbe5b233c2e1d8426c66fd
+On 12/15/25 15:33, Ross Philipson wrote:
+> +static inline struct txt_heap_event_log_pointer2_1_element*
+> +txt_find_log2_1_element(struct txt_os_sinit_data *os_sinit_data)
+> +{
+> +	struct txt_heap_ext_data_element *ext_elem;
+> +
+> +	/* The extended element array is at the end of this table */
+> +	ext_elem = (struct txt_heap_ext_data_element *)
+> +		((u8 *)os_sinit_data + sizeof(struct txt_os_sinit_data));
 
-That's an interesting place to pick. What was the reasoning behind it?
+I'd really honestly see a helper for this kind of thing:
+
+#define ptr_after(foo)	((void *)foo + sizeof(foo))
+
+resulting in:
+
+	ext_elem = ptr_after(os_sinit_data);
+
+would be a billion times easier to read than what's there. I honestly
+don't even see why this bothers with the u8 and cast to 'struct
+txt_heap_ext_data_element *' versus just using void* and being done with it.
+
+There's no type safety here in the first place so why bother?
+
+> +	while (ext_elem->type != TXT_HEAP_EXTDATA_TYPE_END) {
+> +		if (ext_elem->type == TXT_HEAP_EXTDATA_TYPE_EVENT_LOG_POINTER2_1) {
+> +			return (struct txt_heap_event_log_pointer2_1_element *)
+> +				((u8 *)ext_elem + sizeof(struct txt_heap_ext_data_element));
+> +		}
+> +		ext_elem = (struct txt_heap_ext_data_element *)
+> +			    ((u8 *)ext_elem + ext_elem->size);
+> +	}
 
