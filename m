@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5CD8DD637B3
-	for <kexec@archiver.kernel.org>; Tue, 16 Dec 2025 21:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 402E2D637DB
+	for <kexec@archiver.kernel.org>; Tue, 16 Dec 2025 22:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=l/TAcCmwEAlnR+SG6asxxGJorCkfoNdqKxt7sxJ6Mw8=; b=3Mp/CRXFLS4XIrTAjvHePOsigm
-	iq5N2Q4+aj9I93MZw8gqMR4eYSkgREabeTtae1eDtQKyqJwltQPzE1FauUi9QRhU/x0eiw9ELy17K
-	xUjiXXU09/PbK2Za38n5IItYozVYt4rzucqFofbeAF6nfW1Uwh2ICdkQq3UPcPOonmI8aTcQ4hR2k
-	rLpsQP6bPO/YKdpEfTPTOUXNv9SxmpzxayWVAESxPBDEl38KfNrw53kIUli2h+kwupLx/X8ybgF9s
-	gsBYY6EKpqHeCEtVj1cU3wyPNPfjNsSrn6uAx1FhGWF4DfoN1NKqvwJNwX3WXFsqLaarm+0gx6i6M
-	zZQaaJXA==;
+	bh=w7b/e76hAR5ZqOBnJxoTW1IFOT+jD+ZCWdt3eoWorFg=; b=PoKL7FyZnP07T1ByymbaeEhL4v
+	A/G2x43wknMB06O0+4aRbfoXOuWOKLt+b1eNTPP5e1JhveHWG+pgNLwcCQBJhTFK0a1/TFWyoIgFi
+	k0ztjeEUQCmN0yW3afPDnSW1NwkWSWwJ+aScYURu2QwNLMJ9PhKDQ7wYrSQSzh+AfQ0/7g/olHy1f
+	FaKg/yjuzuW1zPFSye8rvUNB0kZ2od9R7DRAlmW2sNsEDRWkDFwc1o67kU6CcBkPmMrQIYg/4gG6U
+	deJ5qMsCLCV7lGKjS6w2BMoOWJzNDncMn2Z2pSY+fl/ScrI7w6+V7ijnG6hBzzuU6huegEfmgaUr4
+	GmZVrLzQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVczG-00000005rss-0xvj;
-	Tue, 16 Dec 2025 21:53:42 +0000
-Received: from mgamail.intel.com ([192.198.163.19])
+	id 1vVdJn-00000005t78-06eA;
+	Tue, 16 Dec 2025 22:14:55 +0000
+Received: from mgamail.intel.com ([192.198.163.18])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVczC-00000005rsP-28Kx
+	id 1vVdJk-00000005t6M-0pNB
 	for kexec@lists.infradead.org;
-	Tue, 16 Dec 2025 21:53:40 +0000
+	Tue, 16 Dec 2025 22:14:53 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765922019; x=1797458019;
+  t=1765923292; x=1797459292;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=BCk1z+n4t1aGaqZ/BTXTCFErniFsz8hfx3uLoM+C9Fo=;
-  b=nYUt2B95v5EmUCvbn+QZOzOzC76HOVCcJ70JmeBaod8sTz+6YQaYpy9d
-   66UIyboqa1mL0iFzsZDP1rsPFi29zs8LXmpm9dY3vJSiAlydm2Xbeg0Gd
-   PUeYLuhPSmlElrC9BuaGJ8Y+c6mEOBvMIq7fuOwIg499k36YG9jnnXKam
-   /s0uU4hOnoD8QN932MZ5cNiUZw794h0WN6Kw8gxxNEGwNMtTkdACEjtES
-   qfJ7J+EZgksFzeky9a2dA323a7yIXvE7OXGe5pjL2UWVnpUHlCDAMI4v/
-   MEAnN67ZP2B5GCGbneqcqXwY7ieKYritdBPwxb66AKzUf1Kq8bwOdeC5K
-   Q==;
-X-CSE-ConnectionGUID: +setrLIXTTiSTbeo7d4xwA==
-X-CSE-MsgGUID: NjZ9a/HQT5utCZa7KM16xA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11644"; a="66839454"
+  bh=w7b/e76hAR5ZqOBnJxoTW1IFOT+jD+ZCWdt3eoWorFg=;
+  b=clLET4uX3cooMZyP2OWXtCMubDr13NC/ZFFIQcSMbZa0gekauXfZuzyW
+   +HjjghxaI4K7aih2/LxMJRkS6z85DFWMt6oFOS2O8RaNJA7R5fDDgZJVb
+   IawmS4rdmf9jtimLwu0VRximh8WDvwLesWBwSdIQmxYE10xfJ76CZ2kV9
+   Vbhe8V7fhQ4My7LlMTU8EC+SKLUejoRw1pb5q4Tz3gRXfBH6NcxYOU+Iv
+   h7vrUfuM1g3AtFupOKDWeaq2vzcovQAq+3gRqSIQuq5HobwHnzYLQmebl
+   3JSnKdFaAGcRXc7QUQsE8/h1BtmpegVQpxcu6D/7OEOgOtb+jLXmZodmD
+   A==;
+X-CSE-ConnectionGUID: IIQZR/JbTFebyWpc6t/5eA==
+X-CSE-MsgGUID: LR+R0aDHRW2FJp7kgOM3LA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11644"; a="67047963"
 X-IronPort-AV: E=Sophos;i="6.21,154,1763452800"; 
-   d="scan'208";a="66839454"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 13:53:37 -0800
-X-CSE-ConnectionGUID: MuHVZirMQBWFrzeuQtaT0Q==
-X-CSE-MsgGUID: BGkMrOwZQRm6jxep5Zx8cw==
+   d="scan'208";a="67047963"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 14:14:50 -0800
+X-CSE-ConnectionGUID: BxFHyn8qQcGac3NxdIToCQ==
+X-CSE-MsgGUID: aWSUZNYVQEmgbVjvKP3GtA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,154,1763452800"; 
-   d="scan'208";a="198185330"
+   d="scan'208";a="198379940"
 Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.125.110.199]) ([10.125.110.199])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 13:53:37 -0800
-Message-ID: <56929e8b-a7cf-4390-b4ec-0b4c2c32b311@intel.com>
-Date: Tue, 16 Dec 2025 13:53:35 -0800
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2025 14:14:49 -0800
+Message-ID: <0cff620d-9be4-487d-8eb1-19375ca58a70@intel.com>
+Date: Tue, 16 Dec 2025 14:14:48 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 19/28] x86/tpm: Early TPM PCR extending driver
+Subject: Re: [PATCH v15 00/28] x86: Secure Launch support for Intel TXT
 To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
  x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
@@ -72,7 +72,6 @@ Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
  baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
  andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
 References: <20251215233316.1076248-1-ross.philipson@oracle.com>
- <20251215233316.1076248-20-ross.philipson@oracle.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -118,12 +117,13 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20251215233316.1076248-20-ross.philipson@oracle.com>
+In-Reply-To: <20251215233316.1076248-1-ross.philipson@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251216_135338_600773_9F9852EE 
-X-CRM114-Status: GOOD (  28.99  )
+X-CRM114-CacheID: sfid-20251216_141452_256993_80F4D90A 
+X-CRM114-Status: UNSURE (   2.81  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -138,140 +138,9 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-I'm mostly spot-checking this to see what kind of shape it's in and how
-much work and diligence has been applied in the last 8 months since v14.
+On 12/15/25 15:32, Ross Philipson wrote:
+> Patch set based on commit:
+> torvalds/master/fd57572253bc356330dbe5b233c2e1d8426c66fd
 
-On 12/15/25 15:33, Ross Philipson wrote:
-...
-> The driver could be extended for further operations if needed. This
-> TPM dirver implementation relies as much as possible on existing mainline
-
-<sigh>
-
-v15 and no spell checking. :(
-
-> --- /dev/null
-> +++ b/arch/x86/boot/compressed/early_tpm_extend.c
-> @@ -0,0 +1,601 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2010-2012 United States Government, as represented by
-> + * the Secretary of Defense.  All rights reserved.
-
-IANAL, but this looks fishy.
-
-It's theoretically fine to go grab random code off the Internet and
-submit it to the kernel, given the correct license. But I do want to
-know what its story is and where it came from.
-
-I also seem to remember that there are special rules around the US
-federal government's inability to hold copyrights. This seems worth at
-least a mention ... somewhere.
-
-This is helpful, for instance:
-
-> + * based off of the original tools/vtpm_manager code base which is:
-> + * Copyright (c) 2005, Intel Corp.
-> + * All rights reserved.
-
-so thanks for that one.
-
-> + * Redistribution and use in source and binary forms, with or without
-> + * modification, are permitted provided that the following conditions
-> + * are met:
-> + *
-> + *   * Redistributions of source code must retain the above copyright
-> + *     notice, this list of conditions and the following disclaimer.
-> + *   * Redistributions in binary form must reproduce the above
-> + *     copyright notice, this list of conditions and the following
-> + *     disclaimer in the documentation and/or other materials provided
-> + *     with the distribution.
-> + *   * Neither the name of Intel Corporation nor the names of its
-> + *     contributors may be used to endorse or promote products derived
-> + *     from this software without specific prior written permission.
-> + *
-> + * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-> + * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-> + * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-> + * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-> + * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-> + * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-> + * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-> + * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-> + * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
-> + * OF THE POSSIBILITY OF SUCH DAMAGE.
-> + */
-
-Also, IANAL, but this looks BSD-ish.
-
-I would have kinda expected the SPDX header to say BSD-blah-blah and not
-GPL-2.0-only.
-
-I'd really appreciate if you could go have a huddle with your corporate
-Open Source folks and make sure this is all proper. To me, it looks
-fishy at _best_.
-
-...
-> +/*
-> + * We're far too early to calibrate time.  Assume a 5GHz processor (the upper
-> + * end of the Fam19h range), which causes us to be wrong in the safe direction
-> + * on slower systems.
-> + */
-
-https://docs.kernel.org/process/maintainer-tip.html#changelog
-
-Imperative voice please.
-
-...
-> +static int __tis_recv_data(struct tpm_chip *chip, u8 *buf, int count)
-> +{
-> +	int size = 0;
-> +	int burstcnt;
-> +
-> +	while (size < count && __tis_wait_for_stat(chip, TPM_STS_DATA_AVAIL | TPM_STS_VALID, chip->timeout_c) == 0) {
-> +		burstcnt = __tis_get_burstcount(chip);
-> +
-> +		for ( ; burstcnt > 0 && size < count; --burstcnt)
-> +			buf[size++] = tpm_read8(chip, TPM_DATA_FIFO(chip->locality));
-> +	}
-> +
-> +	return size;
-> +}
-> +
-> +/**
-> + * tpm_tis_check_locality - Check if the given locality is the active one
-> + * @chip:	The TPM chip instance
-> + * @loc:	The locality to check
-> + *
-> + * Return: true - locality active, false - not active
-> + */
-> +bool tpm_tis_check_locality(struct tpm_chip *chip, int loc)
-> +{
-> +	if ((tpm_read8(chip, TPM_ACCESS(loc)) & (TPM_ACCESS_ACTIVE_LOCALITY | TPM_ACCESS_VALID)) == (TPM_ACCESS_ACTIVE_LOCALITY | TPM_ACCESS_VALID)) {
-> +		chip->locality = loc;
-> +		return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +/**
-> + * tpm_tis_release_locality - Release the active locality
-> + * @chip:	The TPM chip instance
-> + */
-> +void tpm_tis_release_locality(struct tpm_chip *chip)
-> +{
-> +	if ((tpm_read8(chip, TPM_ACCESS(chip->locality)) & (TPM_ACCESS_REQUEST_PENDING | TPM_ACCESS_VALID)) == (TPM_ACCESS_REQUEST_PENDING | TPM_ACCESS_VALID))
-> +		tpm_write8(chip, TPM_ACCESS(chip->locality), TPM_ACCESS_RELINQUISH_LOCALITY);
-> +
-> +	chip->locality = 0;
-> +}
-
-I guess some folks aren't enforcing the 80-column limits. But this is
-not even close. It's almost 80x2.
-
-Has there even been an attempt to make this conform to kernel coding
-style? What other checkpatch.pl warnings are being ignored?
+That's an interesting place to pick. What was the reasoning behind it?
 
