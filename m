@@ -4,106 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B8661D5B87A
-	for <kexec@archiver.kernel.org>; Mon, 15 Dec 2025 23:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7EB47D5B87B
+	for <kexec@archiver.kernel.org>; Tue, 16 Dec 2025 00:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=lxPozmTfEztdP2kf7k8psJZLAewCgMEY9vm17wI4UoQ=; b=HXRyxS93N+/6LpeZTWjQB6IBwy
-	/CZeN/Eco3YbTEqB+JnW1cuG2PSqx8RCr2vojrKAgUjX+LGYisEJe7LhgL8qVlOdflX/z4Xc/9Vta
-	cstngvJ94Rvy2AtMBgFWy+fi+2miqF2Y3lZipcipxggv0i0uz3MlQlmTwwm5Lzm9MyyIyU5RTM8o/
-	Jh+ZjkG2V030jjnGQiIbSfpPeKibGa+OI7c6e18v+qB1Q7PEDW5WVdYNgdqvz1w8KCXMan2JoOpdx
-	phkZiecPe5Lq40Lp+3w5VUELwOtJyaIcvrTYi1i5iILDRSzDSC9LvEOjgWgZZ/ska8j2kwInyfbFB
-	A63GjW5g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=NqTbZAD+H4crQV3J0wq/aDyv2BesH6WqnyEdYxszB4c=; b=lCCsHCwNFfNO2XkFbrEBYQHoA7
+	8Jc/UkUKmip05HkNrgLJhKXwidOPNpxaxVUIC7Tow4LLq/VUEWHjVKO/cDRmEnM0/ACfmqDKGUyeD
+	4O0OvIwHO4Hcx2bwc3A1PHOI82Nby22DiLc+yNN2q9R9M3fZOL7Hsf33eEVEnQQGAbMKZtkHzjJ50
+	llb82KfJTVQU4q7RMHBlZdstGCxy8gEmCWw3+RRx4UYw2r09VXlDqLz0192s6SC+hdgGPX9A4FcJx
+	Ry4WBkmt3Lu1d/cJl/kMbi5R8o26XOfqP/6CC8gEyHs6ITkthrzL723/2r2HE4NX6fEH1/qSyM91V
+	gYTqBtBQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVICx-00000004QFl-1OOT;
-	Mon, 15 Dec 2025 23:42:27 +0000
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
+	id 1vVIpB-00000004Rmo-106K;
+	Tue, 16 Dec 2025 00:21:57 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVICs-00000004QDh-2PHR
+	id 1vVIp9-00000004Rmg-2PlZ
 	for kexec@lists.infradead.org;
-	Mon, 15 Dec 2025 23:42:26 +0000
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BFJC47e2788343;
-	Mon, 15 Dec 2025 23:41:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2025-04-25; bh=lxPoz
-	mTfEztdP2kf7k8psJZLAewCgMEY9vm17wI4UoQ=; b=SqjoxRdO0kJCsc8V0wSlQ
-	7l8/oaqjlmEt9WRKTrN6gKg/EReN471QO1/qTSNvE08KYcTYuLKzx//ajATne6kr
-	zd9NWR2WowxAUG0KxM1vFaVpA+f3ZLeqIhU68cPvKcYZxCzGu4i/FfcROeQqnl19
-	OKvUcTF4cxJum66P8v97kGNeJaF/w2plFl9ZMn+eRsX6P/CbyEaguNSdGXFrkTdd
-	1IxyOSbF7Ym7W0JZSD3mUBQlEvT6+apK1/OcZ7NYGGaPBLjQzSpJbSklmKgn9PjE
-	Sa6mVNJPTkijjPOx1dkqQvEhcNt6J4OHSw9wpsHOl9J2uwTDhXICxjvtl1uqQr3Z
-	w==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4b10prk14h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Dec 2025 23:41:40 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5BFL609e024479;
-	Mon, 15 Dec 2025 23:41:40 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4b0xk9t90g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 15 Dec 2025 23:41:40 +0000
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5BFNfdlF030553;
-	Mon, 15 Dec 2025 23:41:39 GMT
-Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4b0xk9t8y9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 15 Dec 2025 23:41:39 +0000
-From: Ross Philipson <ross.philipson@oracle.com>
-To: linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
-        linux-efi@vger.kernel.org, iommu@lists.linux.dev
-Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
-        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
-        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
-        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
-        dwmw2@infradead.org, baolu.lu@linux.intel.com,
-        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
-        trenchboot-devel@googlegroups.com
-Subject: [PATCH v15 26/28] x86/reboot: Secure Launch SEXIT support on reboot paths
-Date: Mon, 15 Dec 2025 15:33:14 -0800
-Message-ID: <20251215233316.1076248-27-ross.philipson@oracle.com>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20251215233316.1076248-1-ross.philipson@oracle.com>
+	Tue, 16 Dec 2025 00:21:55 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 8C26760183;
+	Tue, 16 Dec 2025 00:21:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 898EFC4CEF5;
+	Tue, 16 Dec 2025 00:21:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765844514;
+	bh=z7MdUNUaRKCiy4iD/ii8h4a2sO4D40lQOJuu8ZMUmQI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uud8KB6Aa9O+kjvVpEhb/RRnDZ1AX3q5MyR0beQMzjcU6yg3C2ZPUijntGDpl4DBX
+	 bczgXj3m//LaoOfshv2kGIAS/E3PV+sj+NUnvieTwslTqTZF6fC02v2cQ0QI3YMIsM
+	 1OP7fv+6MwXr91COlAR5qHh3CdZxjf9ExeRszHX78BNS+054yM2fcHMLGxHNl31aSN
+	 AqF2KEm9f+Drd/oM6g+0X5UGXtTJvVg4dKPJcG2Y9wqHoxX8cMPOUbCZWWjZfFGaGj
+	 JfMGJE7SqkAt1AJsjrAlEyl4V+1uYefx7Qr8jLpw1/+R/NCfeKMv47bnzFEgyTiDbz
+	 /qkUhaSSuSVLw==
+Date: Mon, 15 Dec 2025 16:21:50 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: Ross Philipson <ross.philipson@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+	linux-efi@vger.kernel.org, iommu@lists.linux.dev,
+	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+	ardb@kernel.org, mjg59@srcf.ucam.org,
+	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
+	jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+	nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
+	davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
+	dwmw2@infradead.org, baolu.lu@linux.intel.com,
+	kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
+	trenchboot-devel@googlegroups.com
+Subject: Re: [PATCH v15 17/28] x86: Add early SHA-1 support for Secure Launch
+ early measurements
+Message-ID: <20251216002150.GA11579@quark>
 References: <20251215233316.1076248-1-ross.philipson@oracle.com>
+ <20251215233316.1076248-18-ross.philipson@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-15_05,2025-12-15_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 bulkscore=0
- suspectscore=0 phishscore=0 adultscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
- definitions=main-2512150204
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjE1MDIwNCBTYWx0ZWRfX6bmXC1p55Kh/
- CfYpKdRrnPuQz1CeFkvkdovvoF/mXdPtBhm2bnaEmSNuxuapBqPcKcRlEsZA81/dlgbsznIFnCg
- dFkbbP7/1QYpk6gsqCm5RN1iu2jodq00N24spA206yXEKAkv+OOG+lnEsoAuUC71uLoTLC6HVHl
- GjpfYoa9o4MYdGPSiiwNyrPdHDfmaW57aBRWjQPMZGnbxLYAEG3wdkVIVyOKNor2dF80yoHlGXe
- kaYdFkVibhQuvsjVcTpY6QdlpCn7cBJCJM5tvWYa+NzeB73k54p1peyzsrexjhFbgb+wpDNK/Fg
- vF6KHAiAGK0r9L77H5tIsy6/89qCX12sWm+kO09C4JzkmM4Eno2Ye9mSNm0RfPSOnuytzmLC6L4
- U3SUHDOEIMpBF22ZGn4MweUHY1rEcA==
-X-Proofpoint-GUID: VhoepOIlXnL9UnCBcbwy61aTfxl7VuwO
-X-Proofpoint-ORIG-GUID: VhoepOIlXnL9UnCBcbwy61aTfxl7VuwO
-X-Authority-Analysis: v=2.4 cv=dParWeZb c=1 sm=1 tr=0 ts=69409cb5 cx=c_pps
- a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17
- a=wP3pNCr1ah4A:10 a=VkNPw1HP01LnGYTKEx00:22 a=yPCof4ZbAAAA:8 a=UN5060LkAAAA:8
- a=9nggSWBoCkqLOezBdQMA:9 a=E6eXv-vVeS7VqOnxGRGn:22
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251215_154225_043648_8E6D0F54 
-X-CRM114-Status: GOOD (  14.86  )
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251215233316.1076248-18-ross.philipson@oracle.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -118,76 +82,26 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-If the MLE kernel is being powered off, rebooted or halted,
-then SEXIT must be called. Note that the GETSEC[SEXIT] leaf
-can only be called after a machine_shutdown() has been done on
-these paths. The machine_shutdown() is not called on a few paths
-like when poweroff action does not have a poweroff callback (into
-ACPI code) or when an emergency reset is done. In these cases,
-just the TXT registers are finalized but SEXIT is skipped.
+On Mon, Dec 15, 2025 at 03:33:05PM -0800, Ross Philipson wrote:
+> diff --git a/arch/x86/boot/compressed/sha1.c b/arch/x86/boot/compressed/sha1.c
+> new file mode 100644
+> index 000000000000..dd1b4cf5caf5
+> --- /dev/null
+> +++ b/arch/x86/boot/compressed/sha1.c
+> @@ -0,0 +1,7 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2025 Apertus Solutions, LLC.
+> + */
+> +
+> +#undef CONFIG_CRYPTO_LIB_SHA1_ARCH
+> +#include "../../../../lib/crypto/sha1.c"
 
-Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
-Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
----
- arch/x86/kernel/reboot.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+CONFIG_* options shouldn't be undefined like this.  It seems that you're
+trying to build the SHA-1 code into a pre-boot environment.  This
+problem was already solved in the SHA-256 code, by making
+lib/crypto/sha256.c aware of __DISABLE_EXPORTS.  The SHA-1 code should
+use the same solution.
 
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 964f6b0a3d68..b1e6c1972f0b 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -13,6 +13,7 @@
- #include <linux/objtool.h>
- #include <linux/pgtable.h>
- #include <linux/kexec.h>
-+#include <linux/slaunch.h>
- #include <acpi/reboot.h>
- #include <asm/io.h>
- #include <asm/apic.h>
-@@ -778,6 +779,12 @@ static void native_machine_restart(char *__unused)
- 
- 	if (!reboot_force)
- 		machine_shutdown();
-+	/*
-+	 * The comments for slaunch_finalize() provides the explanation for the
-+	 * conditions required to do the SEXIT op reflected in the conditional
-+	 * parameter do_sexit.
-+	 */
-+	slaunch_finalize(!reboot_force);
- 	__machine_emergency_restart(0);
- }
- 
-@@ -788,6 +795,8 @@ static void native_machine_halt(void)
- 
- 	tboot_shutdown(TB_SHUTDOWN_HALT);
- 
-+	slaunch_finalize(1);
-+
- 	stop_this_cpu(NULL);
- }
- 
-@@ -796,8 +805,12 @@ static void native_machine_power_off(void)
- 	if (kernel_can_power_off()) {
- 		if (!reboot_force)
- 			machine_shutdown();
-+		slaunch_finalize(!reboot_force);
- 		do_kernel_power_off();
-+	} else {
-+		slaunch_finalize(0);
- 	}
-+
- 	/* A fallback in case there is no PM info available */
- 	tboot_shutdown(TB_SHUTDOWN_HALT);
- }
-@@ -825,6 +838,7 @@ void machine_shutdown(void)
- 
- void machine_emergency_restart(void)
- {
-+	slaunch_finalize(0);
- 	__machine_emergency_restart(1);
- }
- 
--- 
-2.43.7
-
+- Eric
 
