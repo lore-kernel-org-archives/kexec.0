@@ -4,128 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2DE0FD6ACDD
-	for <kexec@archiver.kernel.org>; Thu, 18 Dec 2025 16:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9148DD6E2D8
+	for <kexec@archiver.kernel.org>; Thu, 18 Dec 2025 18:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zpQGiNZQ+qblk6fLiPHcTHUvFw1yeUXDS1VP+eL24MU=; b=C4xrQHDuFD/PzPPKE6CrF/68Jb
-	NLzf7MGj1FV7qwBXm03JWRJ+HleZSaBM5J6ILsvI2ZhofjplAyysM3Ko6HfFMQWSlMFMeC056qvRp
-	GyWamYQf4fxFsEHF92+Gd5xc+r2j8lDvDplVksWqZf3aPQg2Pq8d5QA8PJzDmScm1rf6nt84C2QW3
-	P9MCS9q2/YqSpBBpEq861PaEFybj4r1mOr14dOV/Kuz+qg9+0VBExsUAaStDFWs14j3/iUvSP+ih+
-	HEKOdClHINzMbmEhR2AonYPapEZpnNvNuhud44pMMv9oDMojT7wsQgSIKFo+pKlvuwzfwaJuBW1Nv
-	qO8emw/w==;
+	bh=GC3r3DONuA6YiYHbbshOdJ1QdT9pjrS4H1t+Tf2/8Dc=; b=jcsUsDDnRdpsehWleU2JLLXIC+
+	c2r/jEIidz0Re3fbwrUZekh9i+OjrIo6iwvCz9LEewgFfc5zvQcMv49MV7+YTsaI0prbRXu6dCwd3
+	4SmnlK1Tz15CBvXQR4PQ8hzPFTKvx9CAfKiw9xcMYRqK9HZof6R0i3KveVLl8DigH/FESgJmNy6Hc
+	3YtSIZt5v7eil9+XanjYodLZXr6qcSbTUv0HdTAQ+KLPOv3Dhwbby6F72JfPcWuw+YUDl+II09hmK
+	5OeDfm5uLiWEEi1PVMnaVWp7SqovLROTWJr7r+Q8vuK5PU3K3ezoOri8USUa+412V3BJq1E5H8GB9
+	BmLMITbQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vWGxg-00000008pqj-1d5N;
-	Thu, 18 Dec 2025 16:34:44 +0000
-Received: from mgamail.intel.com ([192.198.163.7])
+	id 1vWIhc-00000008zL3-3Qkg;
+	Thu, 18 Dec 2025 18:26:16 +0000
+Received: from mail-ej1-x630.google.com ([2a00:1450:4864:20::630])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vWGxe-00000008pqM-2CQg
+	id 1vWIhX-00000008zKg-0dXM
 	for kexec@lists.infradead.org;
-	Thu, 18 Dec 2025 16:34:43 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766075682; x=1797611682;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VbEZ0jE8XPrfDNLq0G7nf0a8uF3thjekVdzkvacdeeY=;
-  b=hEi4IRhiAMQIru6Ms9m3sav0mgKb/wH71XS8dBMJfQ82jZXu1lZuPdQi
-   vni/QI0BQAryu9nOODbmRw6At0rpP8KWwpEZft5JLNHf2h0VBIlcWAJr/
-   b5c0EL/UilaTgtExOJtiXN8LShD/p+lDDt8lR2Ad3cf+HkCwTfaBogpCh
-   RYrnDhrvPdOaCGmGbsuXWEpLTlFdQqHhSkWaCVCdxUnhk1wwNTdJSXn5I
-   j4lKTr8W89SHwof97n9tLmnN7Mrn+f7i5Pu897Qso69mSiFUcBnsK6Uo1
-   z9oKIk1LWaTQCH740ZeVniFI7Vr+ygcSav7GRgBeOPK4iZ08gbLeGuI15
-   Q==;
-X-CSE-ConnectionGUID: Ib4lxr4+TNSeVBlSIZxS3w==
-X-CSE-MsgGUID: hpidmlcrTm6UoovCb2q4Cw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11646"; a="93508945"
-X-IronPort-AV: E=Sophos;i="6.21,158,1763452800"; 
-   d="scan'208";a="93508945"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2025 08:34:38 -0800
-X-CSE-ConnectionGUID: km/MzlcvQMSKtMba/hbKFQ==
-X-CSE-MsgGUID: 4LrMg2ZbSVqF+gAWjo3O8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,158,1763452800"; 
-   d="scan'208";a="203525480"
-Received: from spandruv-mobl4.amr.corp.intel.com (HELO [10.125.111.56]) ([10.125.111.56])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2025 08:34:37 -0800
-Message-ID: <6ddb3366-31a8-4d18-a553-908a035f7cf2@intel.com>
-Date: Thu, 18 Dec 2025 08:34:36 -0800
+	Thu, 18 Dec 2025 18:26:12 +0000
+Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-b7697e8b01aso164370866b.2
+        for <kexec@lists.infradead.org>; Thu, 18 Dec 2025 10:26:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1766082369; x=1766687169; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GC3r3DONuA6YiYHbbshOdJ1QdT9pjrS4H1t+Tf2/8Dc=;
+        b=X61QLPxvrpTadOArlZCnz6QA+qjeuZv5BpUr2torvNRQzNcgXIT69C/9LCeNB8eMRY
+         DcopBj/midRiu9rsyCsLjACqFq5Y5YRpoC18YRS0oNXu0vlZOcvOqvt2+O2BNtj/daKW
+         xikpBg2rXSCMeRC0Kaymz5Li9FHVW9NTM+47qGht5/GIyFAkuT73MlVBYpMiRtjO2N1S
+         lpME/CMqcyIL0gjf+Dv+Mhd1A5KtbhbDSUhXqfP+mFFwlclEP1Ce36BVAT2jC6mceGnW
+         +IeJQ9XcUCdWUqd7JPzcM5cqIXXTpF+JhSjRFshb4/crVMnVXkT1NlS72E6JtF+vm8rD
+         VgJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766082369; x=1766687169;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=GC3r3DONuA6YiYHbbshOdJ1QdT9pjrS4H1t+Tf2/8Dc=;
+        b=hUILqQD5N3rBryab1RWdJIhpvK/eqSHCnPjtIPQonZ1ewYioatjzTnA6rGroUeOYN1
+         QKEF6BvUkShjIYLyd9+hMu3sMQUnf+xCFJvxeR6uC21/HgqzieXiWC/Si69ckYz0cYHw
+         wKDLbR51CYboIYgAykOr2sfdnL6KzkkPbAdAUNbBiyicFtqkV4u80ykGrGACSlIkd48M
+         VK8B1c2ZBBYiNJR07T8W569Z8ojJKED6M9P6f3Jm6kcsIs3MedD2tqxoP8vQHIQCe1Ib
+         viDb/mF6onOj+he9+2ZZraYDdM00N004F7+eibMmvh7HBZrm43gXbk05OBD9ylstf551
+         bgHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWLb3hoEh3HfkoGz1gPrlzHRvllwXlLjvE3R6JRPZqo9PYKNKy8LDI65DKUup1oU8en7hchrA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzFHOVVKk4QUx4rhEpGABr/gfw+XQy+K/9DXTqsFp0U6NdzkVud
+	eTXBJNJRdeGRbT5oTx3pp/B8Vof8PLZHdnyXx+Yc5oAuukdIVeTdEZK/dAgvHAzI592qquf3Q2U
+	HDofXHmp+3MJVV+SGSQgMGmySBaCn72ioT12EIKT4Yw==
+X-Gm-Gg: AY/fxX6i3rIBeAuFSY3Xx4VpNGMuxdimxloUZtxjJR07URdSTfAxbxTfF3Tx3sgQToQ
+	SbCW2l+AGdTFDHJA2VPPECpVyIXDREKY3aEH4QES2pZq3aEPSfr8Givj72nF3V9M0LCnLdzCEyy
+	IrGfuaqv66A9vb0lvtO7r3pOYKMRQcwzg2/kjM0DhjQtp2o0fK2w3+OEGePij1rmgI7m8ZNns3o
+	rpsCnkg4JhjTFEeZw9oReKBToRTjuxSCI+6/vxuMQujnvquNNNAEphfOIZkTm1vGpL2ld+Vs8Ba
+	nwwXBHmLlOaK39aXBvuuS/gh
+X-Google-Smtp-Source: AGHT+IFh20zE9m6KKsAOG3M+Pqif8xuWAkUFhwAc91SRRrHGiKgAdsW/CjK47Vzc8ueDX+KUR1WPj1KgEP2GVUpEGTU=
+X-Received: by 2002:a17:907:96a7:b0:b7a:1bde:a01c with SMTP id
+ a640c23a62f3a-b8037218276mr24148166b.64.1766082368907; Thu, 18 Dec 2025
+ 10:26:08 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 16/28] x86/txt: Intel Trusted eXecution Technology
- (TXT) definitions
-To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev
-Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
- mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
- nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
- corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
- baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
- andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
-References: <20251215233316.1076248-1-ross.philipson@oracle.com>
- <20251215233316.1076248-17-ross.philipson@oracle.com>
-Content-Language: en-US
-From: Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzUVEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
- LmNvbT7CwXgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
- lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
- MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
- IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
- aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
- I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
- E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
- F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
- CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
- P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
- 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lczsFNBFRjzmoBEACyAxbvUEhd
- GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
- MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
- Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
- lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
- 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
- qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
- BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
- 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
- vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
- FCRl0Bvyj1YZUql+ZkptgGjikQARAQABwsFfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
- l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
- yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
- +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
- asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
- WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
- sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
- KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
- MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
- hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
- vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20251215233316.1076248-17-ross.philipson@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20251206230222.853493-1-pratyush@kernel.org> <20251206230222.853493-5-pratyush@kernel.org>
+In-Reply-To: <20251206230222.853493-5-pratyush@kernel.org>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Thu, 18 Dec 2025 13:25:32 -0500
+X-Gm-Features: AQt7F2qAhKKkrVYXVy4sUEw468IovytUHMMiamVn3JrQ0uPWSbbBGhs6jJM9oIk
+Message-ID: <CA+CK2bAV1y_LySjyj-wcn1cdSuVBdC+r+zQL7AQTY64nk3OxuQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 04/10] liveupdate: flb: allow getting FLB data in
+ early boot
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Muchun Song <muchun.song@linux.dev>, 
+	Oscar Salvador <osalvador@suse.de>, Alexander Graf <graf@amazon.com>, David Matlack <dmatlack@google.com>, 
+	David Rientjes <rientjes@google.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Samiullah Khawaja <skhawaja@google.com>, Vipin Sharma <vipinsh@google.com>, 
+	Zhu Yanjun <yanjun.zhu@linux.dev>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-doc@vger.kernel.org, kexec@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251218_083442_609024_3DFFFC7B 
-X-CRM114-Status: UNSURE (   7.81  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20251218_102611_217620_D3F84B3F 
+X-CRM114-Status: GOOD (  21.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -140,53 +107,56 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/15/25 15:33, Ross Philipson wrote:
-> +static inline void *txt_sinit_mle_data_start(void *heap)
-> +{
-> +	return heap + txt_bios_data_size(heap) +
-> +		txt_os_mle_data_size(heap) +
-> +		txt_os_sinit_data_size(heap) + sizeof(u64);
-> +}
+On Sat, Dec 6, 2025 at 6:03=E2=80=AFPM Pratyush Yadav <pratyush@kernel.org>=
+ wrote:
+>
+> To support hugepage preservation using LUO, the hugetlb subsystem needs
+> to get liveupdate data when it allocates the hugepages to find out how
+> many pages are coming from live update. This data is preserved via LUO
+> FLB.
+>
+> Since gigantic hugepage allocations happen before LUO (and much of the
+> rest of the system) is initialized, the usual
+> liveupdate_flb_get_incoming() can not work.
+>
+> Add a read-only variant that fetches the FLB data but does not trigger
+> its retrieve or do any locking or reference counting. It is the caller's
+> responsibility to make sure there are no side effects of using this data
+> to the proper retrieve call that would happen later.
+>
+> Refactor the logic to find the right FLB in the serialized data in a
+> helper that can be used from both luo_flb_retrieve_one() (called from
+> luo_flb_get_incoming()), and from luo_flb_get_incoming_early().
+>
+> Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
+> ---
+>  include/linux/liveupdate.h  |  6 ++++
+>  kernel/liveupdate/luo_flb.c | 69 +++++++++++++++++++++++++++++--------
+>  2 files changed, 60 insertions(+), 15 deletions(-)
+>
+> diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
+> index 78e8c529e4e7..39b429d2c62c 100644
+> --- a/include/linux/liveupdate.h
+> +++ b/include/linux/liveupdate.h
+> @@ -232,6 +232,7 @@ int liveupdate_unregister_flb(struct liveupdate_file_=
+handler *fh,
+>
+>  int liveupdate_flb_get_incoming(struct liveupdate_flb *flb, void **objp)=
+;
+>  int liveupdate_flb_get_outgoing(struct liveupdate_flb *flb, void **objp)=
+;
+> +int liveupdate_flb_incoming_early(struct liveupdate_flb *flb, u64 *datap=
+);
 
-So each one of these walks through the entire table?
+Hi Pratyush,
 
-Maybe I'm naive, but wouldn't this all be a lot more sane if it was just
-parsed *once* into a table of pointers?
+[Follow-up from LPC discussion]
 
-enum {
-	FIELD1,
-	FIELD2,
-	FIELD3,
-	MAX_NR
-};
+This patch is not needed, you can use liveupdate_flb_get_incoming()
+directly in early boot. The main concern is that we take mutex in that
+function, but that I think is safe. The might_sleep() has the proper
+handling to be called early in boot, it has "system_state =3D=3D
+SYSTEM_BOOTING" check to silence warning during boot.
 
-void *parseit(u8 *heap)
-{
-	void *ptr_array[MAX_NR] = {};
-	void *place = heap;
-
-	for (int i = 0; i < MAX_NR; i++) {
-		// The buffer starts with the length:
-		u32 *size_ptr = place;
-
-		// Consume the length:
-		place += sizeof(*size_ptr);
-
-		// Point at the data:
-		ptr_array[i] = place;
-		// Consume the data:
-		place += *size_ptr;
-	}
-	// along with some sanity checks
-}
-
-Then, to access FIELDs you do:
-
-	struct field1_struct *f1s = ptr_array[FIELD1];
-	struct field2_struct *f1s = ptr_array[FIELD2];
-
-Yeah, it means keeping that pointer array around. But <shrug>. It's also
-not about performance. That ^ is a billion times easier to understand
-because it lays out the "heap" logic in one place. You don't have to
-recurse through half a dozen helpers to figure things out.
+Pasha
 
