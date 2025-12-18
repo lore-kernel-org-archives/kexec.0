@@ -4,63 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 674CFD65C40
-	for <kexec@archiver.kernel.org>; Wed, 17 Dec 2025 19:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2DE0FD6ACDD
+	for <kexec@archiver.kernel.org>; Thu, 18 Dec 2025 16:34:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6SMkmJbWHRJIq6pohbhxU72ot4LFQTJAIH0MMPg+1C4=; b=RnCOUNDLQsVPJECh8mfzz09UN5
-	ArxhkJS80YKop8PyvZHCKMGRXxxZdEr+hsh2Qb4qcHM0jUqqicpTHtJ9mUoZ2s04FJaATEWE3Q546
-	sOX5TGCzlVT3E+1FREIoEGo9BvVlcVizm+kSWWtvrdoWAZXjjIWZGiwy5X2RHpsOe28vkbsvsO6zv
-	S7g2JkvEgEHo2J6Ib2n0hAkChPzqK9sDtIH81uyDPOsJWk1towAZmbv/McJgaAKZrzHrSkAW0FPYH
-	wM0XPB0jKE/uoLkzmAmTEsYTF+xXI8cJkPmRVowCDjpit0mA/6CIWFnwuaeng+B6KjC5os13zeFF5
-	I9AViRcA==;
+	bh=zpQGiNZQ+qblk6fLiPHcTHUvFw1yeUXDS1VP+eL24MU=; b=C4xrQHDuFD/PzPPKE6CrF/68Jb
+	NLzf7MGj1FV7qwBXm03JWRJ+HleZSaBM5J6ILsvI2ZhofjplAyysM3Ko6HfFMQWSlMFMeC056qvRp
+	GyWamYQf4fxFsEHF92+Gd5xc+r2j8lDvDplVksWqZf3aPQg2Pq8d5QA8PJzDmScm1rf6nt84C2QW3
+	P9MCS9q2/YqSpBBpEq861PaEFybj4r1mOr14dOV/Kuz+qg9+0VBExsUAaStDFWs14j3/iUvSP+ih+
+	HEKOdClHINzMbmEhR2AonYPapEZpnNvNuhud44pMMv9oDMojT7wsQgSIKFo+pKlvuwzfwaJuBW1Nv
+	qO8emw/w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVwrH-00000007J5x-3qwQ;
-	Wed, 17 Dec 2025 19:06:47 +0000
-Received: from mgamail.intel.com ([192.198.163.8])
+	id 1vWGxg-00000008pqj-1d5N;
+	Thu, 18 Dec 2025 16:34:44 +0000
+Received: from mgamail.intel.com ([192.198.163.7])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVwrF-00000007J5b-0cCo
+	id 1vWGxe-00000008pqM-2CQg
 	for kexec@lists.infradead.org;
-	Wed, 17 Dec 2025 19:06:46 +0000
+	Thu, 18 Dec 2025 16:34:43 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765998405; x=1797534405;
+  t=1766075682; x=1797611682;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=6SMkmJbWHRJIq6pohbhxU72ot4LFQTJAIH0MMPg+1C4=;
-  b=MbvkRkfpEbez3d1ZlkDVE87CvdOhEHY1/KCzw6qeyJvL95hyacFe6tG1
-   9xH5H17lRePBIWXtYzk0Jbfe5OaZyZuPbF4AnuxIJuRk09p3e5st38D20
-   YC4YjNUza5l6S/m3whsClOUjzTDrCpdwegn6jLGdeVDHJWn919iZ9zBeZ
-   4YVmiW9/H+QdZUt7P15GxImSPs5o3xpvfGcFTvjxPHZ4VkMIND2V+z47V
-   ARDZpr70zPIIcp7lih4OsYrKb1wD7nx/ezgNHLlzjKDi3daNCcDB1g1Kc
-   Ky1t3YAKnOuK/UsuqCgMAg3wGajH7ABF31GVN55banJssIK8HzIPY6Mfz
-   w==;
-X-CSE-ConnectionGUID: Z49w71qsSW6EsBfI2z6ivg==
-X-CSE-MsgGUID: iLjVpMkcTPufNkKnhJDcng==
-X-IronPort-AV: E=McAfee;i="6800,10657,11645"; a="85533261"
-X-IronPort-AV: E=Sophos;i="6.21,156,1763452800"; 
-   d="scan'208";a="85533261"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2025 11:06:40 -0800
-X-CSE-ConnectionGUID: MYzx92BtRNyi62EUw6MXvg==
-X-CSE-MsgGUID: Ie2UjZu2TMeytQadu2PnKQ==
+  bh=VbEZ0jE8XPrfDNLq0G7nf0a8uF3thjekVdzkvacdeeY=;
+  b=hEi4IRhiAMQIru6Ms9m3sav0mgKb/wH71XS8dBMJfQ82jZXu1lZuPdQi
+   vni/QI0BQAryu9nOODbmRw6At0rpP8KWwpEZft5JLNHf2h0VBIlcWAJr/
+   b5c0EL/UilaTgtExOJtiXN8LShD/p+lDDt8lR2Ad3cf+HkCwTfaBogpCh
+   RYrnDhrvPdOaCGmGbsuXWEpLTlFdQqHhSkWaCVCdxUnhk1wwNTdJSXn5I
+   j4lKTr8W89SHwof97n9tLmnN7Mrn+f7i5Pu897Qso69mSiFUcBnsK6Uo1
+   z9oKIk1LWaTQCH740ZeVniFI7Vr+ygcSav7GRgBeOPK4iZ08gbLeGuI15
+   Q==;
+X-CSE-ConnectionGUID: Ib4lxr4+TNSeVBlSIZxS3w==
+X-CSE-MsgGUID: hpidmlcrTm6UoovCb2q4Cw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11646"; a="93508945"
+X-IronPort-AV: E=Sophos;i="6.21,158,1763452800"; 
+   d="scan'208";a="93508945"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2025 08:34:38 -0800
+X-CSE-ConnectionGUID: km/MzlcvQMSKtMba/hbKFQ==
+X-CSE-MsgGUID: 4LrMg2ZbSVqF+gAWjo3O8g==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,156,1763452800"; 
-   d="scan'208";a="199204526"
-Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.111.19]) ([10.125.111.19])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2025 11:06:40 -0800
-Message-ID: <6595893c-66c5-4267-9b1a-4f0d69cb2765@intel.com>
-Date: Wed, 17 Dec 2025 11:06:39 -0800
+X-IronPort-AV: E=Sophos;i="6.21,158,1763452800"; 
+   d="scan'208";a="203525480"
+Received: from spandruv-mobl4.amr.corp.intel.com (HELO [10.125.111.56]) ([10.125.111.56])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2025 08:34:37 -0800
+Message-ID: <6ddb3366-31a8-4d18-a553-908a035f7cf2@intel.com>
+Date: Thu, 18 Dec 2025 08:34:36 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 19/28] x86/tpm: Early TPM PCR extending driver
-To: ross.philipson@oracle.com, linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+Subject: Re: [PATCH v15 16/28] x86/txt: Intel Trusted eXecution Technology
+ (TXT) definitions
+To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
  linux-efi@vger.kernel.org, iommu@lists.linux.dev
 Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
@@ -72,9 +73,7 @@ Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
  baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
  andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
 References: <20251215233316.1076248-1-ross.philipson@oracle.com>
- <20251215233316.1076248-20-ross.philipson@oracle.com>
- <56929e8b-a7cf-4390-b4ec-0b4c2c32b311@intel.com>
- <c1436289-372f-4aff-b315-0bb5750d7fe6@oracle.com>
+ <20251215233316.1076248-17-ross.philipson@oracle.com>
 Content-Language: en-US
 From: Dave Hansen <dave.hansen@intel.com>
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -120,12 +119,12 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <c1436289-372f-4aff-b315-0bb5750d7fe6@oracle.com>
+In-Reply-To: <20251215233316.1076248-17-ross.philipson@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251217_110645_239241_8D0C1EAA 
-X-CRM114-Status: UNSURE (   5.53  )
+X-CRM114-CacheID: sfid-20251218_083442_609024_3DFFFC7B 
+X-CRM114-Status: UNSURE (   7.81  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -141,22 +140,53 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/17/25 10:40, ross.philipson@oracle.com wrote:
-> But ultimately I will format the code in whatever manner is requested.
+On 12/15/25 15:33, Ross Philipson wrote:
+> +static inline void *txt_sinit_mle_data_start(void *heap)
+> +{
+> +	return heap + txt_bios_data_size(heap) +
+> +		txt_os_mle_data_size(heap) +
+> +		txt_os_sinit_data_size(heap) + sizeof(u64);
+> +}
 
-Honestly, it looks like folks just copied the code from wherever it came
-and completely ignored _any_ sane column limits.
+So each one of these walks through the entire table?
 
-It's not about $FOO columns or $BAR columns. It's about having code
-that's readable and maintainable. The key issue here is that there's
-been no apparent effort to try to make the code readable and maintainable.
+Maybe I'm naive, but wouldn't this all be a lot more sane if it was just
+parsed *once* into a table of pointers?
 
-Am I wrong?
+enum {
+	FIELD1,
+	FIELD2,
+	FIELD3,
+	MAX_NR
+};
 
-Next steps: First, try to make the code readable and maintainable. If
-you can do that under 80 columns, great. Aim for 80. If doing 85 or 100
-makes the code more readable or maintainable, that's OK too.
+void *parseit(u8 *heap)
+{
+	void *ptr_array[MAX_NR] = {};
+	void *place = heap;
 
-But I'm a little discouraged that we're at v15 and talking about
-"readable and maintainable". That's RFC fodder, not v15.
+	for (int i = 0; i < MAX_NR; i++) {
+		// The buffer starts with the length:
+		u32 *size_ptr = place;
+
+		// Consume the length:
+		place += sizeof(*size_ptr);
+
+		// Point at the data:
+		ptr_array[i] = place;
+		// Consume the data:
+		place += *size_ptr;
+	}
+	// along with some sanity checks
+}
+
+Then, to access FIELDs you do:
+
+	struct field1_struct *f1s = ptr_array[FIELD1];
+	struct field2_struct *f1s = ptr_array[FIELD2];
+
+Yeah, it means keeping that pointer array around. But <shrug>. It's also
+not about performance. That ^ is a billion times easier to understand
+because it lays out the "heap" logic in one place. You don't have to
+recurse through half a dozen helpers to figure things out.
 
