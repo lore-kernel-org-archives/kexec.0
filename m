@@ -4,225 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 85B9BD6E2D8
-	for <kexec@archiver.kernel.org>; Thu, 18 Dec 2025 18:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C3A58D711C7
+	for <kexec@archiver.kernel.org>; Thu, 18 Dec 2025 21:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=T5jAUnb4v7l7ueAOcVYgKgB7FmcJ3ymTNcMHkklaVzI=; b=Nfk5K8cxoDRihLIawEfRBe9hcz
-	oYobhsWgEb0GDytWe6WLyzysqIC8iYzIYxKlH1H16fFWXyNdIQsYgIcxZJaSXl3EwnHDg5Lc1viVF
-	Tf7+fO/ncI09GiS/Mnb4K7u2YDfzqxiDd5R06vXIS2OqlkAunjbtGpr/qWjuHtg+mOOhmHoMHkrsO
-	ZRku/XK0Rg1Vi7baYWCZRIFtBIb6zAYOp2y6Lus48thlLrMsbOXhn06j0wUEWk1+AwCjNQHP/RWIu
-	7hxArkJQz3wVigzVMVNNv0qinSi23PHgtsBharqZFOnJ2tgex31CiR+NrMJz2wAC6y1saJ0hDszG0
-	dke05Aow==;
+	bh=FSUSXWk89hI9/EDnvyCElvY9u46O/v34cM58Hh3o7v8=; b=ZxrMBMrxiRPyh58qD+qkAoawAG
+	v5MNWSf6OolbL1zYBSvRsS2uIHba0253VePXSd0PEHYfqkVgz8aUJz0vAjsaqKET7WuNu1QACqgeZ
+	HmYxmtCMYXKhenxSkRYBXaK/UrusZSofSuGILYbusPPLEWEhEbgsqNw2L1+yZwymH8PXtjVWjCdqY
+	5IqEeQSKyCvrOvq2nOHJsWIXKNSpaFA691UpzH/gnUDb1CzEWOSUxN65sbWaqIZCpI6ZxA38rQc0e
+	du0xbhc36Fico10d5gh7NHmUhxRqDbapsM3eL1fci5Oi28FBbaY8U4OnLPVAGxxUBXm1QrL5YBBd6
+	4Hco003w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vWIlf-00000008zWy-1njF;
-	Thu, 18 Dec 2025 18:30:27 +0000
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
+	id 1vWLsQ-00000009Elp-3jwi;
+	Thu, 18 Dec 2025 21:49:38 +0000
+Received: from mgamail.intel.com ([192.198.163.12])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vWIlc-00000008zWY-3pNl
+	id 1vWLsN-00000009ElM-3FMP
 	for kexec@lists.infradead.org;
-	Thu, 18 Dec 2025 18:30:26 +0000
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5BIHfulo1798666;
-	Thu, 18 Dec 2025 18:29:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=T5jAUnb4v7l7ueAOcVYgKgB7FmcJ3ymTNcMHkklaVzI=; b=
-	MVqmp1AJ9pyLcXu5p+a4TwHFISgcDNjpOl9Ubxfrk04BhYKPQS3gUBn4PTOy5Uof
-	uL4oa4vjD/eyWHKc7hpU+0WLJGsMcWbJXsumA0ZklIzDr/DHpO5/GU+lZ1Oh0Gkw
-	/r/mMp/neQkk3p8RRRCegh26+b5JGbprEOZaCZlBqIYRCJ5nF0mOXqSocWequN/g
-	gkjr+I7jUpJalJdX0dKv0xQYPBOTycbD+W6VXfExXBCHad2ER1eaWpBGjNcChb+c
-	/3rbe40Gd3OMQQ93p+ThXI24u7uts8Huu3jnmhTqjzckYWyukRFdU56oNvHbS+08
-	OrKCa0q77dQUlApVUGob3g==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4b47qps7ew-6
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 18 Dec 2025 18:29:30 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5BIIGBfw022658;
-	Thu, 18 Dec 2025 18:17:18 GMT
-Received: from ch5pr02cu005.outbound.protection.outlook.com (mail-northcentralusazon11012003.outbound.protection.outlook.com [40.107.200.3])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4b0xkpa04y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 18 Dec 2025 18:17:17 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CoGwxv8lF9V0ac3zl+50cKzYAXXMEyC2I7LRs0xWKtuoIqRcoIOxD2gedUKG6l4OHcV4craxPBl79W/cUeVbyuxX7WIpoM6D7ZquAzbLM+6sIZjaxAkDfInS8rJhx1yM9mJKeGpcLP1lvAZK4D98pKEFytZT+ouBuA8ukOakSynaGfoQW3FnFYDecjmpMSSBFC20QrkaB/CFLAVoMk2IBxxFxWG1gboOMyjOgtfyKf+BgNmOsUF8HGFL7M9W93SfzhHmPdHItjfXuWeBESOExob2WGRhq339baumFsAUIRqhWqe2GoQHEMmyxih5Xhfd6i5rumeF6Y+/Y9nMN36foA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=T5jAUnb4v7l7ueAOcVYgKgB7FmcJ3ymTNcMHkklaVzI=;
- b=q0Oa+1s9giJCZixDTGWbEsjLLdJDWls73O5hZt+72JIjHKwqYvDtDaj+X1CkrHb3BbPlLZhwueDq2Vj2+sXelwBPQKau61KhB7/cK4puu00ua4GqCEasmGsZJYxGgTN7YIVTJEeIr4PXJ5s5TW+Kzyk51Mgg64lHqADWuzI5E3VkfcJrH9mSZ+OsZVGEfUoa5MPFNvynREW4sCwxaO2PrEF3zCJjaqP9Cs6Oj/+I1pV831ISwP7757jXl0xM8Cc6qpDw/JgmZ8f9NcVDNxGfXRNUYSCNwX5xomJodVX8qud4QkYfvpwg36x/PF36R0ePKZZjSkPwZIvO8GSa7UkNfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T5jAUnb4v7l7ueAOcVYgKgB7FmcJ3ymTNcMHkklaVzI=;
- b=oNu+JlM1AkKpDWliMPh8fa6lUsSYIl0f/EJGA9BFLTEmONUf7QdCnmmNj9LS84CbWiYQ2cmA7/+Ae5fbeZPE1evzLhnrKwbLsM4f/LvRsyj1GALe5TZc8y8CH7Y66Jckmjg4HlXxYoIMLD/wKbjXeXL9cqpck2m56NcdrnB27Q8=
-Received: from DS0PR10MB7224.namprd10.prod.outlook.com (2603:10b6:8:f5::14) by
- SA1PR10MB997712.namprd10.prod.outlook.com (2603:10b6:806:4c0::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9434.6; Thu, 18 Dec
- 2025 18:17:15 +0000
-Received: from DS0PR10MB7224.namprd10.prod.outlook.com
- ([fe80::c57:383f:cfb2:47f8]) by DS0PR10MB7224.namprd10.prod.outlook.com
- ([fe80::c57:383f:cfb2:47f8%4]) with mapi id 15.20.9434.001; Thu, 18 Dec 2025
- 18:17:15 +0000
-Message-ID: <2c0074fa-4f58-4895-9c2e-e1fca59d3bdb@oracle.com>
-Date: Thu, 18 Dec 2025 10:17:11 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 16/28] x86/txt: Intel Trusted eXecution Technology
- (TXT) definitions
-To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-integrity@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-crypto@vger.kernel.org,
-        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
-        iommu@lists.linux.dev
-Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-        ardb@kernel.org, mjg59@srcf.ucam.org,
-        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
-        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
-        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
-        dwmw2@infradead.org, baolu.lu@linux.intel.com,
-        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
-        trenchboot-devel@googlegroups.com
-References: <20251215233316.1076248-1-ross.philipson@oracle.com>
- <20251215233316.1076248-17-ross.philipson@oracle.com>
- <6ddb3366-31a8-4d18-a553-908a035f7cf2@intel.com>
-Content-Language: en-US
-From: ross.philipson@oracle.com
-In-Reply-To: <6ddb3366-31a8-4d18-a553-908a035f7cf2@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PH0PR07CA0112.namprd07.prod.outlook.com
- (2603:10b6:510:4::27) To DS0PR10MB7224.namprd10.prod.outlook.com
- (2603:10b6:8:f5::14)
+	Thu, 18 Dec 2025 21:49:37 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1766094576; x=1797630576;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=M06MCaIb8PWS7kX0AksYLwEq4wJXXsnFR5/EpfqCjgQ=;
+  b=kGXbX+z8GCId7nNsvHUDNDRrGkl4rbTqQVFJJUVqJcxO2zp/mmjWhaKW
+   AoCr/9IpgLywqyU+7fviomx/FkGGnkCnsdgWcLa8lUdscxeQ44LdQzPNx
+   5eugbV8HY+c47pS8LcojlMcDgZwY8eGK3prDTXoCuVJ83RZ7u04+FPLlg
+   hp2QNqKHoECynsS8Ej+t4PqjWX8Zwd33+YtwRlIM2KNi+MY13p4ZKjSk3
+   0aCiwef6SKNOFd1NKFKz8gh26pVMG1qkoWjY0XzU7PW6OiWG/8GXLz3MB
+   Y7CQQT3YV2/qN3ME6/1biiJ6u7daptv+JGrqXX8rR54OxVeumRCbBP78l
+   g==;
+X-CSE-ConnectionGUID: 4lpRw5CDSDGsQYbRLKjwYA==
+X-CSE-MsgGUID: Pi16prT5SjWPq1BdQUW00Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11646"; a="71918908"
+X-IronPort-AV: E=Sophos;i="6.21,159,1763452800"; 
+   d="scan'208";a="71918908"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2025 13:49:33 -0800
+X-CSE-ConnectionGUID: 2Rmht5HYTJ6BZFsCRCf/fA==
+X-CSE-MsgGUID: vLF7f0OOR4uyXFAXQ/ODSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,159,1763452800"; 
+   d="scan'208";a="197953858"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2025 13:49:33 -0800
+Date: Thu, 18 Dec 2025 13:56:13 -0800
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: akpm@linux-foundation.org, bhe@redhat.com, rppt@kernel.org,
+	jasonmiu@google.com, arnd@arndb.de, coxu@redhat.com,
+	dave@vasilevsky.ca, ebiggers@google.com, graf@amazon.com,
+	kees@kernel.org, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, linux-mm@kvack.org,
+	ricardo.neri@intel.com
+Subject: Re: [PATCH v2 11/13] kho: Allow kexec load before KHO finalization
+Message-ID: <20251218215613.GA17304@ranerica-svr.sc.intel.com>
+References: <20251114190002.3311679-1-pasha.tatashin@soleen.com>
+ <20251114190002.3311679-12-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR10MB7224:EE_|SA1PR10MB997712:EE_
-X-MS-Office365-Filtering-Correlation-Id: 511ada56-0dc3-4a2e-59cd-08de3e61abe3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?YlRoVUU4MXgrbXY1QS9iV0RKaHpxcllzNjhMV3M5eUE5UUhJZGdnSGxmQnNF?=
- =?utf-8?B?anY5bnVaYmpIVzJCU2wyQUk4YW9OU214emUzUlBpd01FZTQrRmIyQUhDQVVv?=
- =?utf-8?B?dStZVERQTDltY1JXbHBNQjFHcDBEUk9RSUxJU2xJNVNaMTNYbFhVSDdXVFRv?=
- =?utf-8?B?Mi9zMk5WbklBeTQvcUpQZTJvczZ6REtENWdnaHE3ZWcyejJ0NmZweWhod1lI?=
- =?utf-8?B?UW9xSURkRDVZN0MrSDdRaDFKb1I2UW1MQXU0cTJ3T2w4TnlwUFUwc1FGV29W?=
- =?utf-8?B?WU9sYXhEc2w3YWl4UDBJcm1uajN5bmVXWDdpRlgwdnZFUjI0ZHdSNnd1bEo2?=
- =?utf-8?B?bzVUSG5XK1BYbWN4TGJVYlozSWg4UkQxa0N4akFUc2dZLzNNcGVmSGl0WmtV?=
- =?utf-8?B?SEhPMGNQNzdZZDJjV05WVHNmM1Z2S1RMbkE2NGRZVWJUOWYrM1dXMFcrekRF?=
- =?utf-8?B?MWpDK2xBY0NPMWo4bjdBVC9rZU5rejR6VTVmdzgxWmJURzh6RUhRTkU2RXhK?=
- =?utf-8?B?eFVuUExldDhBRHlOQXo0YUMrbncwTGMrYndzQnB3Y0dDQTJ1WU94K0d3M0w1?=
- =?utf-8?B?TjNwOVRpRTR2eFdKTGZyRnQxQWJqWnkzaHJSdUtxT2o4RUNLTFV3Y2NwNHZz?=
- =?utf-8?B?Unp3dE9ReFN2RkVuanQrS3gwZG5iT2ZmVW8vN1ZNYkNHQkFzdzc2OHlLWWF5?=
- =?utf-8?B?N3BXcW9qZ3R1WktjbzBUWG1IK3lieUIrY1hvN3ZtZnhZNGx4YVBjNDIrYUor?=
- =?utf-8?B?REw3YjZiNHBwenpIbTI0VGVsZ2VlTmZXV3VnT3V5c2ZaWHoyR01jbFZjL1c2?=
- =?utf-8?B?QzUxa0hFZ05SQjcrdklRQWVITjRCQUUzYlZRZWZUVDVLWTZJQktuZUhQVjJl?=
- =?utf-8?B?blJFZlQrZUxnRWk4V1lyUkM4N3FHRVppdHI4aU9vbkIxTEU3dHF4emI1Y1h4?=
- =?utf-8?B?d0FoMWxzQzZBcVJHdi9nSlBxTlgyZUNnQm9NM3YwMEdkSnZLZGVMT1orYWlh?=
- =?utf-8?B?TW8zNWI2NGJRbnpIVDlCUzRHb0ZEellSZFJNaXdyK0JhOWdmNUdrV25lNXNE?=
- =?utf-8?B?Tmd1RGE4cjFQZlFrelB1a2xWQmgxZVRyUHFJajNsR0VJZk9OTW4rK2g5b3hk?=
- =?utf-8?B?blZreVhBNDhrdEp2cVpzVzZRYnB2TVptMU1VcEhYOW1ZVXlSZ3pWc0c4Szl3?=
- =?utf-8?B?NnhDeWJFZVQxWTMyYmJBMHc1WGJCQVRsK0Focm5GeDFncHJ2TUVtMU4weDhG?=
- =?utf-8?B?c0FGd0d6ZjNvNHlQVjN0a1VYVlA1SklwNis2ektRRkJKa0RvZTEydXhIOWlt?=
- =?utf-8?B?S21jMkp2NUJZdmlCRTMrZ0RhRzh1S0FJeDgxaXVCZTh6ZVJCeUFEWGtmN3k2?=
- =?utf-8?B?b2xXR0s4SXBaeUdXQWRzanc5ZmxObVpzZ0xSbW9JMmZmYVM3cklyeFpjakJz?=
- =?utf-8?B?K3FidFlWb0pLU2Z6Nk1KazNueWFsMVR2d2NEQWttdUJCY0RBY0lYMHNHMTVN?=
- =?utf-8?B?WHBtTjlVcUFlSUNhMmtrUGQvemFoM296Q0JyMkE4VUppckZ5SVdKRVBkMkR4?=
- =?utf-8?B?WGt2Sks1N0ZZWG0xcjM4dm9hK2trVVhjeTJ4MnhLTXRHb2VxRE9QdkF5aklX?=
- =?utf-8?B?dW80MTZ0eUFJMlFGZURzUExKb01wUlVWUFpwNjZScDBSODBVWXQvQUlmNEN5?=
- =?utf-8?B?N3A2YytLTndYRDhLZnNtcGF4VC8wRTZ1RmJUeDg4cWkvNlpVWGQ5OHAyNGtU?=
- =?utf-8?B?NXhxSmdkK2s4bzBpUjB3ZVNQZWpHR1BOcENLT2dabi9rSTZVMzlWTTdsYjJF?=
- =?utf-8?B?YVFWaVBMaC9DMGU5ckp1Yld0c0J3OVhSSmYwaHB5MGlGSGM3SktzTlYydzlD?=
- =?utf-8?B?RnpvMDlPWFV1d1J3UHhEL2JnTkNYK3RrQVVWdEh1N252V1dFTWZNbDFJZWY1?=
- =?utf-8?Q?+PURR13/RH5wFiV4xO+wjBBvBHzyGcQb?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7224.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WEdHcE1ZRHExdm43bDhRSEhsV0UrQ3FsS2hkMmFUNGE4djVsVzZSbFNEQTJL?=
- =?utf-8?B?S2tPUm0vZVhvanRrK1Fibk15cEt6dkhUcHJGaTVCTW9XTTlYQlpCNDFIY1Js?=
- =?utf-8?B?b2lHb0F3NWRIQTNNbW9jWm42RzhlS3QxOEhDT2NFdVBaY1IxdHlkalQreUUw?=
- =?utf-8?B?cUY2azZjSTdndzdUR09UQXZXQkw5ZEdtY1BMQ3VJR0UzamdIYW54Smo3M05z?=
- =?utf-8?B?UG9jMHF4K21iZitvb20rWHVJLzc1WjVmdUpIenFBanpsbG9zSlFzNVF2L3dp?=
- =?utf-8?B?cm9EZnFWZkpqa3lSbUt2UkYrQmhRSVFLODFDYXNuanhCS040enpacngzY1Vv?=
- =?utf-8?B?UTJFZGEwcUlycGUrelNwSGFzWHY4ZkFwai9VWXZsOXEyNUFSdHZiZEtQYUhw?=
- =?utf-8?B?blBxWlBGdmRMeS81dlZ3cEIrMUZRSDBVemJ0clZmZDVoOWg0Q1hVTE5rN214?=
- =?utf-8?B?dzE4WTNaY0ZqNDQ4NXIwRStLVkdxMW96Q1FHZzJidHh3d2FuNkdtamhzR1BR?=
- =?utf-8?B?QU00THkrZzRwZStyN3MyU1hVRDkzaEp0Myt5bng0Um5samxnN0xlWFRnZjV1?=
- =?utf-8?B?dXZYY1ZjWXBNWGRxOTVGaVRGVjRDUVpKRjdXZ1p3cnJOellKR3psYWN4cUpv?=
- =?utf-8?B?OVo3VjFJQk5ocEM5ZVNpdExyVWxMSGtKaUFWUXlpenJaL1BWMXJ3bTNMR1ow?=
- =?utf-8?B?NkJXTHZ2ZW9kbVpMM2tHZmZENWg5N1JXTUFITjFCNzZPWGVrZGtDQ0EwZ0RO?=
- =?utf-8?B?b3J6aVlhT1FPbmhXQjBGTzVOVGZTaitJbXluUVdzOUQyTHcxRDRjSEdaNFNh?=
- =?utf-8?B?bUpkelh5R0hQVWg2WFBOYWVJZHJVRldQMmt1ZnozTlExOGNLUG5oRWs5TkQ4?=
- =?utf-8?B?S3lpclZMczgyMnBTNFhKcjA2WDdVVjFVelBJZ2ZwV1ZCMTFhODdHdWRDKzVV?=
- =?utf-8?B?QjAraUo3WUtXM21aa09rdGRxSG9qOHFQbG1pQU81VUdDSVZqVXZ3eERkUHJN?=
- =?utf-8?B?ODI1L0ZnSnI4dEoyaUxFSzlBMDNvenNXVldKM09RaWNWMk95aEZScGIyYy9I?=
- =?utf-8?B?SHQ2RkZqK3pFUnVCbGtGNnZyZHNhOFIwdGFSd0UwWExaekg4Y3ZKaWdua2Rn?=
- =?utf-8?B?TVpIS25TWjNQUG1venJmWlFGSFRjTEVoblkybWFMTlNFakN1SFQ1K1RYWUFr?=
- =?utf-8?B?YXJINUlhVmlwTHoyK2dNRGlHOFZsMm93TnlwOG1IeEE4U1M0QlUzalA4SlZQ?=
- =?utf-8?B?YUJuUWNtRE9qUmYvYWpMZENQNGFaQy83SnZGTWVWN1pYeHRVQXVWemZkSHB1?=
- =?utf-8?B?N1ZwZ2swTW9XaTJOU3ljZzZwVVZXQ1UxVE5NT2ZhWmJ2emlhUjlMRlZkSXFt?=
- =?utf-8?B?VldlelEyOXFybGh4SHJucXJDY1NqSkpJNXpLMzNqSU94eWYzRzhTZ1FHY3Er?=
- =?utf-8?B?RWVWVnZFYTRjbzU1SXBpaTllVjRkR2lxSUFYQUFkbVZhTlBkWnU1YmFUMGFw?=
- =?utf-8?B?dWRkYzNmd0NjS2U5VE1CS1EwMmJjQ0N1QVJYeHJBUiszdXJUMHd2OXpPSUVu?=
- =?utf-8?B?Y05ENUtjV2I3dU1lTGlVdUdxZWwweTIzcTg4aGNWVkhHbHdoRFhvVnB2NVh0?=
- =?utf-8?B?N3F4MTg4VDdXQUJmeE1qS3BxUGx4MjNuTjNpbS9PcDNQUHVOY1QzUnlqejkx?=
- =?utf-8?B?UkVReUM5eTArOXhuZmFsdEN3Y0RrWXlUTEdUNVNpbnN1bFNsNjR0RTNzdEt1?=
- =?utf-8?B?alZwakIxMGF3L2FQc1BwUkREb0Ztamwza210R2craTJXeVd4TEpjOFJFbUV5?=
- =?utf-8?B?Q2NGQ3FXdzVBZzBaazExTm56a2dmVzZSM040WGZrZ0oyZGtDcXczZWNqQ2lF?=
- =?utf-8?B?WnBIajFZb1hmS0xwTVdZcjVNTy9nZjZQNmpiLzhRVFhjcTBVN28vZ20yT2h3?=
- =?utf-8?B?VUNjMEpja0ZxSE5KMEtGMHU2YzdtVHFhQllHNDNSZ1FIVkFOdkJOSkQ5ejhV?=
- =?utf-8?B?VFdmZGY4VHArSFJrNHdOREZnL2VMWGpOV0JZQkhLQ2dsZVZwV3ZVYWR6R092?=
- =?utf-8?B?SkV2Y2pDZDkxK1pSazZuRnZHRmtPazZPeEY1MzFtT3NLUHRTTkd0VTB0NHAx?=
- =?utf-8?B?Wmlvb1E5YTcvSldtb1JCbk5OY2ZvSXZDa2orQk1HZk1wOXVBbHJET3hZbXNT?=
- =?utf-8?B?R0E9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: AIjesjXwESdWUEneKk+NozF5Wnpl0sWjNIsZM1UBvgTMgAXGwF2b32P1L05FeducZBklBMZ7TMGI81XcMYdUmpu5pJ+P77onxaTX3ZFuR5kn2XoA5ewBXJxLpfDKacigsxIrn8+IMPdJ2BXuUxES0MJaKHEJhLUYLmAqJrMApnO7LtPZCY0Celga56meV8WLoo5qG7gys5drNBb6v5us7adiwCDePTr8DYb2PORCdIXYhK1+esWsBwlY56XwQ96k2BnVT1Nfb7L+aArVoG+m1p+yJ+8MtY3DYDf5OUyFsOHogH3ZBV90B4aB092pRCWgK6WFhHx01hi7q+I9F69Qq4aybDu5lfYCUr7g12VTEUlxWr4U1dCcgZBWUL7eWHhPJpSIl7Qbcmfox1+XzVee3SejxxmCN+w61bLqnhmi8B7VcgmiTM2D/Jx1RILlUTZswpKyDDh2gDrx2rD2ieuqcivCAjeaok8uk/U+M7Ko9kMGcPVx0DEcaK+z9TP4i9a29vFTU0KrSPUB+13mpPoMg+wbwgNCpe302okVBBBK25xR8ehzsoMp7nd1FKhZlW3LYLjeR5E1BUbDsF/566v+irLx404BZ3fs7nWa27a5yuI=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 511ada56-0dc3-4a2e-59cd-08de3e61abe3
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7224.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2025 18:17:15.1398
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XcNAr+JLWpiREsdlugA4zxUAfoG8j2qt6waY2stx58nQ85uHBWmJCNQSWVe/Dt0pZDrNtBcIdjR2PmzM9+EbYb/Ub7vRSgsUkIj9stmLyjU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB997712
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-12-18_02,2025-12-17_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 adultscore=0
- mlxscore=0 malwarescore=0 mlxlogscore=999 phishscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2510240000
- definitions=main-2512180151
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMjE4MDE1MiBTYWx0ZWRfXxhut1fLSUUba
- v1POaANuoWzOzJsdx7oOiNiMBMax84IVc3+vj+520A2bRPqcUtQxJnfp81CCeNPlEkTOL4PLpoU
- hSNbgtTVLV86FcE0vvwt9qnayhvTfsVXoNxqVDpmn3FkyLTcWAdD9RDMJ7bzzXDkJ5fC3jUXIjQ
- hkwCjpLIbeuCxJbeWIy2vfmHGLFzwLeFu9+ecSQD9OvwBCFbskwZPdD9j7ILrXz1b0n5yt4oQs6
- POZ3dSdu8vbxL07wWZEZ7Qu9I8MiB5DuAKfcUuWwtKNzYME2BGQYY9rCS5fh8mTzdoiNRBoVAf3
- WmKwXolImc7sxok/mHtLqS/0gtdhm6x6BNhpTFIRBGe2YJdhK8ajzHopVnzM7Cu4GNQ5az1AFCx
- oTYRBH71vTCrMyo0B5Z0dcXx2wbM6T/7LnJtlwwLRLUOjoMz97k=
-X-Proofpoint-GUID: AD-jzlLSmfZ1RK31M_82gIC1usJJSCiU
-X-Authority-Analysis: v=2.4 cv=ePkeTXp1 c=1 sm=1 tr=0 ts=6944480a b=1 cx=c_pps
- a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=wP3pNCr1ah4A:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=EjwGXyRj3iqX5iog8PsA:9 a=QEXdDO2ut3YA:10 cc=ntf awl=host:13654
-X-Proofpoint-ORIG-GUID: AD-jzlLSmfZ1RK31M_82gIC1usJJSCiU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251114190002.3311679-12-pasha.tatashin@soleen.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251218_103024_996082_414A5F37 
-X-CRM114-Status: GOOD (  17.29  )
+X-CRM114-CacheID: sfid-20251218_134935_861413_E88A5AF4 
+X-CRM114-Status: GOOD (  25.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -237,64 +89,173 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/18/25 8:34 AM, Dave Hansen wrote:
-> On 12/15/25 15:33, Ross Philipson wrote:
->> +static inline void *txt_sinit_mle_data_start(void *heap)
->> +{
->> +	return heap + txt_bios_data_size(heap) +
->> +		txt_os_mle_data_size(heap) +
->> +		txt_os_sinit_data_size(heap) + sizeof(u64);
->> +}
+On Fri, Nov 14, 2025 at 02:00:00PM -0500, Pasha Tatashin wrote:
+> Currently, kho_fill_kimage() checks kho_out.finalized and returns
+> early if KHO is not yet finalized. This enforces a strict ordering where
+> userspace must finalize KHO *before* loading the kexec image.
 > 
-> So each one of these walks through the entire table?
+> This is restrictive, as standard workflows often involve loading the
+> target kernel early in the lifecycle and finalizing the state (FDT)
+> only immediately before the reboot.
 > 
-> Maybe I'm naive, but wouldn't this all be a lot more sane if it was just
-> parsed *once* into a table of pointers?
+> Since the KHO FDT resides at a physical address allocated during boot
+> (kho_init), its location is stable. We can attach this stable address
+> to the kimage regardless of whether the content has been finalized yet.
 > 
-> enum {
-> 	FIELD1,
-> 	FIELD2,
-> 	FIELD3,
-> 	MAX_NR
-> };
+> Relax the check to only require kho_enable, allowing kexec_file_load
+> to proceed at any time.
 > 
-> void *parseit(u8 *heap)
-> {
-> 	void *ptr_array[MAX_NR] = {};
-> 	void *place = heap;
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+> ---
+>  kernel/liveupdate/kexec_handover.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> 	for (int i = 0; i < MAX_NR; i++) {
-> 		// The buffer starts with the length:
-> 		u32 *size_ptr = place;
-> 
-> 		// Consume the length:
-> 		place += sizeof(*size_ptr);
-> 
-> 		// Point at the data:
-> 		ptr_array[i] = place;
-> 		// Consume the data:
-> 		place += *size_ptr;
-> 	}
-> 	// along with some sanity checks
-> }
-> 
-> Then, to access FIELDs you do:
-> 
-> 	struct field1_struct *f1s = ptr_array[FIELD1];
-> 	struct field2_struct *f1s = ptr_array[FIELD2];
-> 
-> Yeah, it means keeping that pointer array around. But <shrug>. It's also
-> not about performance. That ^ is a billion times easier to understand
-> because it lays out the "heap" logic in one place. You don't have to
-> recurse through half a dozen helpers to figure things out.
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> index 461d96084c12..4596e67de832 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
+> @@ -1550,7 +1550,7 @@ int kho_fill_kimage(struct kimage *image)
+>  	int err = 0;
+>  	struct kexec_buf scratch;
+>  
+> -	if (!kho_out.finalized)
+> +	if (!kho_enable)
+>  		return 0;
 
-That is an excellent idea, we will do that. I may be able to use the 
-same the index scheme when I do the early remap operations too. That 
-walks the heap each time but does not have to. It just wants a pointer 
-to what to map.
+Hi Pasha,
 
-Thank you,
-Ross
+Using v6.19-rc1 (which has this changeset) and with:
+
+CONFIG_KEXEC_HANDOVER=y
+CONFIG_KEXEC_HANDOVER_ENABLE_DEFAULT=y
+CONFIG_LIVEUPDATE=n (i.e., nobody calling kho_finalize())
+no reserve_mem= entries in the kernel command line
+
+I omit doing
+
+echo 1 > /sys/kernel/debug/kho/out/finalize
+
+before doing
+
+kexec -l <kernel> --initrd=<initrd> --commandline="$(cat /proc/cmdline)"
+kexec -e
+
+After the kexec reboot, I see endless warnings about list corruption [1]
+and from _text_poke() [2] (see below).
+
+The post-kexec kernel finds KHO data but it obviously is empty because
+nobody was using it.
+
+I was expecting that KHO would handle this use case gracefully. What if a
+distro does not finalize KHO before kexec and are no in-kernel users?
+
+Am I missing anything?
+
+Thanks and BR,
+Ricardo
+
+[1]. https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/lib/list_debug.c?h=v6.19-rc1#n56
+[2]. https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kernel/alternative.c?h=v6.19-rc1#n2506
+
+[   10.730845] ------------[ cut here ]------------
+[   10.734848] list_del corruption, ffffd143c1330008->next is LIST_POISON1 (dead000000000100)
+[   10.742846] WARNING: lib/list_debug.c:56 at __list_del_entry_valid_or_report+0x91/0x110, CPU#12: swapper/0/1
+[   10.750845] Modules linked in:
+[   10.754845] CPU: 12 UID: 0 PID: 1 Comm: swapper/0 Tainted: G S  B   W           6.19.0-rc1-ranerica-vanilla #1440 PREEMPT(voluntary)
+[   10.766845] Tainted: [S]=CPU_OUT_OF_SPEC, [B]=BAD_PAGE, [W]=WARN
+[   10.786846] RIP: 0010:__list_del_entry_valid_or_report+0x97/0x110
+[   10.790845] Code: eb e2 48 8d 3d 9a 0a 5a 01 48 89 de 67 48 0f b9 3a 31 c0 eb cf 4c 89 e7 e8 b6 d9 b8 ff 48 8d 3d 8f 0a 5a 01 4c 89 e2 48 89 de <67> 48 0f b9 3a 31 c0 eb b1 4c 89 ef e8 98 d9 b8 ff 48 8d 3d 81 0a
+[   10.810845] RSP: 0000:ffff960b000b3c20 EFLAGS: 00010046
+[   10.814845] RAX: 0000000000000011 RBX: ffffd143c1330008 RCX: 0000000000000000
+[   10.822845] RDX: dead000000000100 RSI: ffffd143c1330008 RDI: ffffffffa11c0cb0
+[   10.830845] RBP: ffff960b000b3c38 R08: 0000000000000000 R09: 0000000000000003
+[   10.838845] R10: ffff960b000b3a80 R11: ffffffffa0f470e8 R12: dead000000000100
+[   10.842862] R13: dead000000000122 R14: ffffd143c1338000 R15: 0000000000000004
+[   10.850845] FS:  0000000000000000(0000) GS:ffff8af4bc88d000(0000) knlGS:0000000000000000
+[   10.858861] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   10.866845] CR2: 0000000000000000 CR3: 0000000428c3a001 CR4: 0000000000370ef0
+[   10.870845] Call Trace:
+[   10.874845]  <TASK>
+[   10.878845]  __free_one_page+0x2b5/0x840
+[   10.882845]  free_pcppages_bulk+0x1cd/0x2f0
+[   10.886845]  free_frozen_page_commit.isra.0+0x219/0x460
+[   10.890845]  __free_frozen_pages+0x37b/0x700
+[   10.894845]  ___free_pages+0xa0/0xb0
+[   10.898845]  __free_pages+0x10/0x20
+[   10.902845]  init_cma_reserved_pageblock+0x4f/0x90
+[   10.906845]  kho_init+0x1ef/0x250
+[   10.910845]  ? __pfx_kho_init+0x10/0x10
+[   10.914845]  do_one_initcall+0x6a/0x3c0
+[   10.918845]  kernel_init_freeable+0x1c8/0x3b0
+[   10.922845]  ? __pfx_kernel_init+0x10/0x10
+[   10.926845]  kernel_init+0x1a/0x1c0
+[   10.930857]  ret_from_fork+0x256/0x2e0
+[   10.934845]  ? __pfx_kernel_init+0x10/0x10
+[   10.938845]  ret_from_fork_asm+0x1a/0x30
+[   10.942844]  </TASK>
+[   10.942846] irq event stamp: 926677
+[   10.946845] hardirqs last  enabled at (926677): [<ffffffffa04064d2>] dump_stack_lvl+0xb2/0xe0
+[   10.954845] hardirqs last disabled at (926676): [<ffffffffa0406475>] dump_stack_lvl+0x55/0xe0
+[   10.962845] softirqs last  enabled at (926576): [<ffffffff9f4b6383>] __irq_exit_rcu+0xc3/0x120
+[   10.970850] softirqs last disabled at (926571): [<ffffffff9f4b6383>] __irq_exit_rcu+0xc3/0x120
+[   10.982845] ---[ end trace 0000000000000000 ]---
+[   10.986845]  non-paged memory
+[   10.986845] ------------[ cut here ]------------
+
+[   49.243722] ------------[ cut here ]------------
+[   49.243723] WARNING: arch/x86/kernel/alternative.c:2506 at __text_poke+0x42b/0x470, CPU#20: kworker/20:0/104
+[   49.243725] Modules linked in:
+[   49.243726] CPU: 20 UID: 0 PID: 104 Comm: kworker/20:0 Tainted: G S  B   W           6.19.0-rc1-ranerica-vanilla #1440 PREEMPT(voluntary)
+[   49.243728] Tainted: [S]=CPU_OUT_OF_SPEC, [B]=BAD_PAGE, [W]=WARN
+[   49.243730] Workqueue: events intel_pstste_sched_itmt_work_fn
+[   49.243732] RIP: 0010:__text_poke+0x42b/0x470
+[   49.243733] Code: 21 d0 49 09 c0 e9 06 ff ff ff 4c 8b 45 98 4c 2b 05 9a db 7f 01 49 c1 e0 06 49 21 d0 e9 ef fe ff ff 0f 0b 0f 0b e9 58 fd ff ff <0f> 0b e9 6c fc ff ff e8 89 9a ff 00 e9 07 fe ff ff 0f 0b e9 b2 fe
+[   49.243734] RSP: 0000:ffffae7dc054bbe8 EFLAGS: 00010246
+[   49.243736] RAX: fffffa9c10d9d000 RBX: ffffffff8ed40a4d RCX: fffffa9c00000000
+[   49.243736] RDX: 4000000000000000 RSI: ffffffff8ed40a4d RDI: ffffffff8ed40a4d
+[   49.243737] RBP: ffffae7dc054bc58 R08: 0000000000000000 R09: 0000000000000001
+[   49.243738] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
+[   49.243739] R13: ffffffff8ec43830 R14: 0000000000000a4d R15: 0000000000000a4e
+[   49.243740] FS:  0000000000000000(0000) GS:ffff9dc10ca8d000(0000) knlGS:0000000000000000
+[   49.243741] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   49.243742] CR2: 0000000000000000 CR3: 000000043803a001 CR4: 0000000000370ef0
+[   49.243743] Call Trace:
+[   49.243743]  <TASK>
+[   49.243745]  ? partition_sched_domains+0x15d/0x520
+[   49.243748]  smp_text_poke_batch_finish+0xd5/0x3f0
+[   49.243751]  arch_jump_label_transform_apply+0x1c/0x30
+[   49.243753]  __jump_label_update+0xcf/0x110
+[   49.243757]  jump_label_update+0x134/0x200
+[   49.243760]  __static_key_slow_dec_cpuslocked.part.0+0x5b/0x70
+[   49.243763]  static_key_slow_dec_cpuslocked+0x45/0x80
+[   49.243765]  partition_sched_domains+0x3b7/0x520
+[   49.243768]  ? partition_sched_domains+0x7c/0x520
+[   49.243771]  sched_set_itmt_support+0xe2/0x110
+[   49.243773]  intel_pstste_sched_itmt_work_fn+0xe/0x20
+[   49.243775]  process_one_work+0x238/0x6f0
+[   49.243780]  worker_thread+0x1e8/0x3c0
+[   49.243783]  ? __pfx_worker_thread+0x10/0x10
+[   49.243786]  kthread+0x12e/0x260
+[   49.243788]  ? __pfx_kthread+0x10/0x10
+[   49.243791]  ret_from_fork+0x256/0x2e0
+[   49.243793]  ? __pfx_kthread+0x10/0x10
+[   49.243795]  ret_from_fork_asm+0x1a/0x30
+[   49.243801]  </TASK>
+[   49.243802] irq event stamp: 80
+[   49.243802] hardirqs last  enabled at (79): [<ffffffff8fc513f7>] _raw_spin_unlock_irq+0x27/0x60
+[   49.243805] hardirqs last disabled at (80): [<ffffffff8fc45581>] __schedule+0xb31/0x1210
+[   49.243808] softirqs last  enabled at (0): [<ffffffff8eca82fd>] copy_process+0xadd/0x21d0
+[   49.243810] softirqs last disabled at (0): [<0000000000000000>] 0x0
+[   49.243811] ---[ end trace 0000000000000000 ]---
+[   49.244076] ------------[ cut here ]------------
 
 
+
+>  
+>  	image->kho.fdt = virt_to_phys(kho_out.fdt);
+> -- 
+> 2.52.0.rc1.455.g30608eb744-goog
+> 
 
