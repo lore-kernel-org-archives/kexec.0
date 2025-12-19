@@ -4,86 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 17FCCD74970
-	for <kexec@archiver.kernel.org>; Fri, 19 Dec 2025 09:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 358E6D78773
+	for <kexec@archiver.kernel.org>; Fri, 19 Dec 2025 13:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=UDF4h3Jh9GgHGMLVFPx83dqWDttLVLJuGGw2qG0PEFE=; b=W6DHkQmCUsul+N3Zz98Fr4nbJE
-	OWKafeYp/MphDeBuH+DVewCji6AfZfPSg5GEfDL9Muwu9dfJXJxr2U96z/mtO+idMAdPW+t3MHeHU
-	QVX/J3RIvWLr6MUL4z5mbFZxt9pD4HpNo6883AXyyAq8B6E68FyqFaU4z7jCuXVXqgZakZezMxPru
-	FEub/h4DjnmUXMG8/HaBa4e+ftRSM1Usc23mGqPYCDVR9TVlMX/njjIIBhlvrwn/Dxv42GlfegI1P
-	7/ffMOHGuJOC1evwPcI7z8YHDdGK7W0Aiayro+aNAcXR1I+U8I9ub8ojmxtcELWNuFyGN02AAQPbY
-	bTJSW9IA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=DNnsrT+xqjSs+eoJ714r3VZyZ8ePN/6D90yOcvKqJTo=; b=Hxeqv1Wddmk3HhnS+T8Mu4uTHi
+	S/AXY2028MlZyck3UGEP1fqnbd5TqnudVACpelfPk3Ia/gXelkZ1Mv2BwQ2fMg/fwmb0Hf96WBHlV
+	u3PHDwHnnMUMyWaxCy/89Ld0JXGJsJJPpac4UHsGhk6Y5ZaXN7zTD355CG0hIAHj5Bi3M1qVNPawe
+	qvQaJCu7kNyQiJa5whJ8iGixaqZF5vU4vAgMAsD2lw7sQeVdJnF0lS8jdF301vqzx6f/3KYxFwhk0
+	rcDY/TfFbEbB3WF+EN+b2Q2Eb18Ic3qaIv0p2d/atcqYKDLfqsLHKcCEBKD38OYXu0p/rug3b+H5g
+	wq2rR2oA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vWWsl-00000009xrZ-2Cf0;
-	Fri, 19 Dec 2025 09:34:43 +0000
-Received: from smtpbgeu2.qq.com ([18.194.254.142])
+	id 1vWaPi-0000000ALQR-19dN;
+	Fri, 19 Dec 2025 13:20:58 +0000
+Received: from mgamail.intel.com ([198.175.65.19])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vWWsd-00000009xeQ-3Uh3;
-	Fri, 19 Dec 2025 09:34:42 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1766136816;
-	bh=UDF4h3Jh9GgHGMLVFPx83dqWDttLVLJuGGw2qG0PEFE=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=pdJp5wN7z4eFeVowqCWVpB/vKYmjXGxHpgxzUwQrHm6pc6wTZH/8WsR/gtDxfUqq4
-	 kimGm/kk69stHppXjFLHlHZIrF7fVFges+AuXiGEzmBG+q1FqxafPD9mIQXjhERn27
-	 Y2nHGOZw4TL+oNugQ+xSIjzqkUue63ywDbrL1Tlg=
-X-QQ-mid: zesmtpsz5t1766136798t48f4f980
-X-QQ-Originating-IP: FPwl8qTGfn+61UlViOYpcJHqZAzjuxj54MRGHmXIgaE=
-Received: from localhost.localdomain ( [123.114.60.34])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 19 Dec 2025 17:33:15 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 3273388139071314314
-EX-QQ-RecipientCnt: 8
-From: Qiang Ma <maqianga@uniontech.com>
-To: akpm@linux-foundation.org,
-	bhe@redhat.com,
-	catalin.marinas@arm.com,
-	will@kernel.org
-Cc: kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Qiang Ma <maqianga@uniontech.com>
-Subject: [PATCH v2 4/4] arm64: kexec: Adjust the debug print of kexec_image_info
-Date: Fri, 19 Dec 2025 17:31:34 +0800
-Message-Id: <20251219093134.2268620-5-maqianga@uniontech.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20251219093134.2268620-1-maqianga@uniontech.com>
-References: <20251219093134.2268620-1-maqianga@uniontech.com>
+	id 1vWaPd-0000000ALPx-2Fos
+	for kexec@lists.infradead.org;
+	Fri, 19 Dec 2025 13:20:57 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1766150453; x=1797686453;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=f0sb46hShgEmBn++3KKU6DlH/HUmKOnchsckBopK7AI=;
+  b=ZWEFgbAc78a2/CND5/deA/CzwtqmHSqtYw5bobtnV7zN1q9mP2+HiiV1
+   OzMLckf2MDL3d+xqrAHNtUHdzIkmnDs8Z+P7w4xHjo0IeSB9fpjtZOg00
+   ytM2gkndU1USlGbVGaQpmyN9n55KAmBdLBcw6KquoAxBJN2uXuNOFcnLY
+   sJRa8qxx26CsvUjkjkpuDDUGnHi7IuVx4CqkEWB701daysT91XnVMKAMa
+   jsOzCpv5a8axKTbc0Or4aYjAC/VX1187tq6WCZo09dnw8s5hBoiwlqy2/
+   vqTuLYM67FVV6+Bez8oa2w2DFTvkJ8OD6fr5HNZbWz652ZnIHJwiuWT4w
+   A==;
+X-CSE-ConnectionGUID: CY2WYiMRQRKx39twXpFDrw==
+X-CSE-MsgGUID: 8e2sGh7tTxe3AkKlR4BcfQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11646"; a="68005921"
+X-IronPort-AV: E=Sophos;i="6.21,161,1763452800"; 
+   d="scan'208";a="68005921"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2025 05:20:51 -0800
+X-CSE-ConnectionGUID: cgKRPYbxTeqSA8bqcKwKWw==
+X-CSE-MsgGUID: jlI0wWT2TOeRGNdaDL8Png==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,161,1763452800"; 
+   d="scan'208";a="229544196"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2025 05:20:51 -0800
+Date: Fri, 19 Dec 2025 05:27:31 -0800
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: akpm@linux-foundation.org, rppt@kernel.org, graf@amazon.com,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-mm@kvack.org, pratyush@kernel.org
+Subject: Re: [PATCH v3] kho: validate preserved memory map during population
+Message-ID: <20251219132731.GA18378@ranerica-svr.sc.intel.com>
+References: <20251219071209.3696755-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz3b-0
-X-QQ-XMAILINFO: NSukcgWmJNd8BYYCvQ+Z4AU7BbL32JoK30KTc31XPVU0YecuYp1Bd/jk
-	ZBRDoGHjHhW/kjmhyvQ7ynPo8q3YEeua5oNtbzpUhiyHzbaK1r/o5b8IN87GcozGeXWQh28
-	gvVIcV/HNYp1OXDrskrPffUB+EdlY2nJPw4sElaEQY6qrjPCOKnK15bp22IADHOHeNv8Rp8
-	xXf28bA5sCcHz9RbIq8okKg6VtP5dxhOz0xoI9BVrIEeCxKQQNdkLMFxZVKvxYUtYoTIDzs
-	+1OUOAEjABcXIPooQoJ7B234gBceh8TELNwAnAAdi/jnkOW/UFn5fBGycffY3J8OnUtzIF+
-	eMh2/Mbv7Qkw8ZLD5qfPct+28WiD+D4KYiDkhSd6eni6Pp3xTDeZz19NNeCny/K7ly67HZ3
-	GYtTR42uM+y/iKdOzl0POxSPr3z4oTgq/+X4QVwr7vfq+kPdFa8q353l/p5psRweuUHmqvN
-	y4NiZvZpmzb3zCizfyW8SaGadAtdSpkzYLQVEN24VTqAMnXy3udf2ACwBFiWLJXmj+1lyTI
-	qJ9SGsn3E3R920QoA+EET0lD1w5nE7nimnWkEcPZkbG0DNIsjGPBq9tBu3dHzX2I+PPKccI
-	hv/X/D09vgSe2b+rqLJe6dlj6HaQN4OJLN5uB/SOEICHRoJ30t3r4VMTSehQwnbZuAPzMga
-	wjI2o4+FgZFZ3dJuj9vtRhyzeUpZOe7EeJ6PDn1WlL9M7Ce4IQXYqy8eW5UyDAsbgBI6zUU
-	n0fA8KYmMMokSh99d744QhUWUJa/2SRFmBJQUOXAy/AOngWSzc9UevWMu4GDXrdVm2H6/Nz
-	jKj0LuRp+Jw6TUWbZ4qRDCLvNU6bqoQY98KQ8VHzcAtrYS4QEQM0s7gaqn99rS5fpOXEGVq
-	tqTeY9iksJQGSOKHvJFmAZY6RxFChEZxqoHV2I9SKLKfvx7lE5ktW3m9+1JYfwtsmJYcA6p
-	Dew55sT1KvaLrHrx2CjoTlLdPBwh4Q1fj6pG5LRLpnRddfAtWTNEEWGeik5D0B+0OFU0/CQ
-	AiKnPNE3wBltG7241CAFtYVje6ezFCydGWD/Eb0Pxj+DQk6zoJ5HtfFvTFoFnylnZk9blUl
-	w==
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251219071209.3696755-1-pasha.tatashin@soleen.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251219_013436_328189_462FB8A7 
-X-CRM114-Status: UNSURE (   7.97  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20251219_052055_499788_1D2A6DFE 
+X-CRM114-Status: GOOD (  11.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,28 +85,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-In the previous patch, we move start/head of kimage to the
-generic code, so, we remove them to avoid duplicate printing.
+On Fri, Dec 19, 2025 at 02:12:09AM -0500, Pasha Tatashin wrote:
+> If the previous kernel enabled KHO but did not call kho_finalize()
+> (e.g., CONFIG_LIVEUPDATE=n or userspace skipped the finalization step),
+> the 'preserved-memory-map' property in the FDT remains empty/zero.
+> 
+> Previously, kho_populate() would succeed regardless of the memory map's
+> state, reserving the incoming scratch regions in memblock. However,
+> kho_memory_init() would later fail to deserialize the empty map. By that
+> time, the scratch regions were already registered, leading to partial
+> initialization and subsequent list corruption (double-free) during
+> kho_init().
+> 
+> Move the validation of the preserved memory map earlier into
+> kho_populate(). If the memory map is empty/NULL:
+> 1. Abort kho_populate() immediately with -ENOENT.
+> 2. Do not register or reserve the incoming scratch memory, allowing the new
+>    kernel to reclaim those pages as standard free memory.
+> 3. Leave the global 'kho_in' state uninitialized.
+> 
+> Consequently, kho_memory_init() sees no active KHO context
+> (kho_in.mem_chunks_phys is 0) and falls back to kho_reserve_scratch(),
+> allocating fresh scratch memory as if it were a standard cold boot.
+> 
+> Fixes: de51999e687c ("kho: allow memory preservation state updates after finalization")
+> Reported-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> Closes: https://lore.kernel.org/all/20251218215613.GA17304@ranerica-svr.sc.intel.com
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-Signed-off-by: Qiang Ma <maqianga@uniontech.com>
----
- arch/arm64/kernel/machine_kexec.c | 2 --
- 1 file changed, 2 deletions(-)
+Thanks for the patch (and fixing my e-mail ;)). This fixes the reported
+issue and now I can kexec reboot correctly with an empty, unfinalized KHO
+FDT.
 
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 239c16e3d02f..0896e3e6a811 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -34,8 +34,6 @@ static void _kexec_image_info(const char *func, int line,
- {
- 	kexec_dprintk("%s:%d:\n", func, line);
- 	kexec_dprintk("  kexec kimage info:\n");
--	kexec_dprintk("    type:        %d\n", kimage->type);
--	kexec_dprintk("    head:        %lx\n", kimage->head);
- 	kexec_dprintk("    kern_reloc: %pa\n", &kimage->arch.kern_reloc);
- 	kexec_dprintk("    el2_vectors: %pa\n", &kimage->arch.el2_vectors);
- }
--- 
-2.20.1
-
+Tested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 
