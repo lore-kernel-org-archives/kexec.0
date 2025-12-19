@@ -4,77 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C3A58D711C7
-	for <kexec@archiver.kernel.org>; Thu, 18 Dec 2025 21:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7844BD711CE
+	for <kexec@archiver.kernel.org>; Fri, 19 Dec 2025 00:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=FSUSXWk89hI9/EDnvyCElvY9u46O/v34cM58Hh3o7v8=; b=ZxrMBMrxiRPyh58qD+qkAoawAG
-	v5MNWSf6OolbL1zYBSvRsS2uIHba0253VePXSd0PEHYfqkVgz8aUJz0vAjsaqKET7WuNu1QACqgeZ
-	HmYxmtCMYXKhenxSkRYBXaK/UrusZSofSuGILYbusPPLEWEhEbgsqNw2L1+yZwymH8PXtjVWjCdqY
-	5IqEeQSKyCvrOvq2nOHJsWIXKNSpaFA691UpzH/gnUDb1CzEWOSUxN65sbWaqIZCpI6ZxA38rQc0e
-	du0xbhc36Fico10d5gh7NHmUhxRqDbapsM3eL1fci5Oi28FBbaY8U4OnLPVAGxxUBXm1QrL5YBBd6
-	4Hco003w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=VRLIZ+Id1A3SMxQgIBWSqDdOfJhpJaefDTuwxeIWUn4=; b=cbe+KV+EZDp/9bXTXNSI44r4mL
+	1jvzWVBH74ZbhHN6C2Ndd3+n/wniFp9bKMwq/MP3YLW2/Pz0hN5+JgHiXny+q+dpqvX08SeurKA+A
+	j9QlYXye+zNJ1nvMWEegFOF8uze0M+NuEuOihKBJJFhlzMuPaqZb8MemwOZen31tYnu44GAK9fRsN
+	4Lh6YvX0kTUH1GJKaykePmUxA0frkpOTCLgOgp+MfG9mBuovn4+l8karr7yTPFaO5txdJN1ijSN5a
+	SpXJcMXzhZf5XWYn0QC2a1PwyDO8Dfc7op65vquJyfjKP5Kcm3oFBXs+TO2PZrY1sgXa7jzhM/NtZ
+	fkLOD2Ag==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vWLsQ-00000009Elp-3jwi;
-	Thu, 18 Dec 2025 21:49:38 +0000
-Received: from mgamail.intel.com ([192.198.163.12])
+	id 1vWOHr-00000009OFU-1zkH;
+	Fri, 19 Dec 2025 00:24:03 +0000
+Received: from mail-yx1-xb144.google.com ([2607:f8b0:4864:20::b144])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vWLsN-00000009ElM-3FMP
+	id 1vWOHp-00000009OF9-1Wbj
 	for kexec@lists.infradead.org;
-	Thu, 18 Dec 2025 21:49:37 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766094576; x=1797630576;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=M06MCaIb8PWS7kX0AksYLwEq4wJXXsnFR5/EpfqCjgQ=;
-  b=kGXbX+z8GCId7nNsvHUDNDRrGkl4rbTqQVFJJUVqJcxO2zp/mmjWhaKW
-   AoCr/9IpgLywqyU+7fviomx/FkGGnkCnsdgWcLa8lUdscxeQ44LdQzPNx
-   5eugbV8HY+c47pS8LcojlMcDgZwY8eGK3prDTXoCuVJ83RZ7u04+FPLlg
-   hp2QNqKHoECynsS8Ej+t4PqjWX8Zwd33+YtwRlIM2KNi+MY13p4ZKjSk3
-   0aCiwef6SKNOFd1NKFKz8gh26pVMG1qkoWjY0XzU7PW6OiWG/8GXLz3MB
-   Y7CQQT3YV2/qN3ME6/1biiJ6u7daptv+JGrqXX8rR54OxVeumRCbBP78l
-   g==;
-X-CSE-ConnectionGUID: 4lpRw5CDSDGsQYbRLKjwYA==
-X-CSE-MsgGUID: Pi16prT5SjWPq1BdQUW00Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11646"; a="71918908"
-X-IronPort-AV: E=Sophos;i="6.21,159,1763452800"; 
-   d="scan'208";a="71918908"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2025 13:49:33 -0800
-X-CSE-ConnectionGUID: 2Rmht5HYTJ6BZFsCRCf/fA==
-X-CSE-MsgGUID: vLF7f0OOR4uyXFAXQ/ODSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,159,1763452800"; 
-   d="scan'208";a="197953858"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2025 13:49:33 -0800
-Date: Thu, 18 Dec 2025 13:56:13 -0800
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: akpm@linux-foundation.org, bhe@redhat.com, rppt@kernel.org,
-	jasonmiu@google.com, arnd@arndb.de, coxu@redhat.com,
-	dave@vasilevsky.ca, ebiggers@google.com, graf@amazon.com,
-	kees@kernel.org, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, linux-mm@kvack.org,
-	ricardo.neri@intel.com
-Subject: Re: [PATCH v2 11/13] kho: Allow kexec load before KHO finalization
-Message-ID: <20251218215613.GA17304@ranerica-svr.sc.intel.com>
-References: <20251114190002.3311679-1-pasha.tatashin@soleen.com>
- <20251114190002.3311679-12-pasha.tatashin@soleen.com>
+	Fri, 19 Dec 2025 00:24:02 +0000
+Received: by mail-yx1-xb144.google.com with SMTP id 956f58d0204a3-6432842cafdso1098973d50.2
+        for <kexec@lists.infradead.org>; Thu, 18 Dec 2025 16:24:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1766103840; x=1766708640; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VRLIZ+Id1A3SMxQgIBWSqDdOfJhpJaefDTuwxeIWUn4=;
+        b=Q4t7GBLBK9HJUh/KaVUV1XJmptepblpIdnL+RBVxTaOdBgJI+Z3+GKKj+Cd+G/Ecw6
+         Yaa8wWvyhY5jDVv3Zq/d7eSISiR+Yoy7EnyClhuFyxHvicuVntXmtnPMXzHuCmj8yACz
+         kd7TLD6B9BRHTzpQRbCDL1aXaw4+XPk+S6qa5peynYHviLgq1uBO5p23Y1SOM8pQLcVj
+         GAZZx30MQFa0r+mAvjOcEb4r1StRoumEOVwaJMu/I+peWUNocfToUtz8K0O+Okz1bySM
+         Nhr5f6/AftA9cWuLdGjdwlTvHF8SMIBzbyk8sXDzM9vvpU8mHB6S8B+P9FnZD522UJWW
+         kKCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766103840; x=1766708640;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VRLIZ+Id1A3SMxQgIBWSqDdOfJhpJaefDTuwxeIWUn4=;
+        b=asPeGwubQeTL9qtFo1kYp6qMuOb/GoFtgtDB55Fy0oWzdjHnPrBsISrlWm+kIaGACb
+         cNXqnJ5+w7o9n4pKwQDow0axm+hM6vPu4y2ZuxTuK4OOTYCeXlvCd4yRsgKH4WRMj64R
+         djx7t5c+PN5+A57N3rLAcd8oT10YMKAJ7EYpd14KqnONU6xsSZRJN6VjUw1vK8gpiJ8d
+         AnA/d5MijFOFyESDSL3yAHkOdCqMekhwUNOXeeM1RB9/J6LiFRiVuc7yiQYTzl7gYf5m
+         8ZbLJaqFBK9CaOwu2UaYoKbH39MlXTcH14PNtg0MSZ+Mx31rxQ52puCYgPgQ1vCY6vN0
+         ruPw==
+X-Forwarded-Encrypted: i=1; AJvYcCWFi6u6ekMCsWdvls2oe3c25aArN972tsZUZ3aCiicyZZNhv7iscZ1NfvDZWAywDMQNtauNGA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzkOd/ZSJXc7CZYUmm3V9cx+w8nDN/oWqhnF9nFY16Emg7dQvpD
+	J6zIq/rUL15ZxFFNf3cGlsSRPIU8RelWPRoKPXf2NzAiGn4etjIpRIolZDjj2JOwPCM=
+X-Gm-Gg: AY/fxX5dNMB3aXXs4ULMB6F/eo2WXPue1kBQ6GGjZKtEKujdh+928GSAhBcZUY4J4Wz
+	tC0n9X4oOFaYq4SZblitCFc4KdAVKJlx91fsASAj/Extq6tU5ru9bcZSb6EL1owMNi3+GpvtXy1
+	cVa5KnWXBusbLR3wyKyHcKBeFwW+3W82D+TxADXvi9L0KUpfLCAKg6MgsNIQ45jtdLn2abWArJv
+	EPKLPknH8ohHYf7Ssd1D+TFKP+dZ997B/TvAHmR1BNdu12Ruy/IYqjmOf/DGLqk6D66RX1Kx72E
+	RDARJHySuRi07y54wY61xeLQ7ZzAZJ728hHsfbczU3Dq5mLS6OtTu6q/puEqaWHprKDSyiAOZ10
+	XwTLXOOpbG+Ui+D4fzSEiGKbwVqzzJ7yyG2PuMCswk3xRjvaNU/rpe6T1CxDHkQ6sh5k8wkqWfi
+	KIWK8fP9KK2Gfc0/IAgNExtlQJTqaVLwC+AUSGk4jjJPTrnxcgfILgiB0KYZK+zTwCu3oGrk0kn
+	5DDzNuto2AYeYIF+5G+6n4Ko7LOpcsAFXF2iw==
+X-Google-Smtp-Source: AGHT+IEFAtXPoKS1+Zlj4yJmeQNwxl11BdgyoU/smQ241gIO6ZqWceiGoF12B4JGc5G8V13yPkNL6g==
+X-Received: by 2002:a05:690e:169e:b0:640:fabf:565d with SMTP id 956f58d0204a3-6466a87e489mr1003195d50.43.1766103839999;
+        Thu, 18 Dec 2025 16:23:59 -0800 (PST)
+Received: from soleen.c.googlers.com.com (182.221.85.34.bc.googleusercontent.com. [34.85.221.182])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-78fb452c471sm3599487b3.45.2025.12.18.16.23.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Dec 2025 16:23:59 -0800 (PST)
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: akpm@linux-foundation.org,
+	pasha.tatashin@soleen.com,
+	rppt@kernel.org,
+	graf@amazon.com,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	pratyush@kernel.org,
+	ricardo.neri-calderon@linux.intel.com
+Subject: [PATCH] kho: validate preserved memory map during population
+Date: Thu, 18 Dec 2025 19:23:55 -0500
+Message-ID: <20251219002355.3323896-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.52.0.322.g1dd061c0dc-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251114190002.3311679-12-pasha.tatashin@soleen.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251218_134935_861413_E88A5AF4 
-X-CRM114-Status: GOOD (  25.06  )
+X-CRM114-CacheID: sfid-20251218_162401_430849_C7B513F3 
+X-CRM114-Status: GOOD (  13.52  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,173 +103,142 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Nov 14, 2025 at 02:00:00PM -0500, Pasha Tatashin wrote:
-> Currently, kho_fill_kimage() checks kho_out.finalized and returns
-> early if KHO is not yet finalized. This enforces a strict ordering where
-> userspace must finalize KHO *before* loading the kexec image.
-> 
-> This is restrictive, as standard workflows often involve loading the
-> target kernel early in the lifecycle and finalizing the state (FDT)
-> only immediately before the reboot.
-> 
-> Since the KHO FDT resides at a physical address allocated during boot
-> (kho_init), its location is stable. We can attach this stable address
-> to the kimage regardless of whether the content has been finalized yet.
-> 
-> Relax the check to only require kho_enable, allowing kexec_file_load
-> to proceed at any time.
-> 
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
-> ---
->  kernel/liveupdate/kexec_handover.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> index 461d96084c12..4596e67de832 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -1550,7 +1550,7 @@ int kho_fill_kimage(struct kimage *image)
->  	int err = 0;
->  	struct kexec_buf scratch;
->  
-> -	if (!kho_out.finalized)
-> +	if (!kho_enable)
->  		return 0;
+If the previous kernel enabled KHO but did not call kho_finalize()
+(e.g., CONFIG_LIVEUPDATE=n or userspace skipped the finalization step),
+the 'preserved-memory-map' property in the FDT remains empty/zero.
 
-Hi Pasha,
+Previously, kho_populate() would succeed regardless of the memory map's
+state, reserving the incoming scratch regions in memblock. However,
+kho_memory_init() would later fail to deserialize the empty map. By that
+time, the scratch regions were already registered, leading to partial
+initialization and subsequent list corruption (double-free) during
+kho_init().
 
-Using v6.19-rc1 (which has this changeset) and with:
+Move the validation of the preserved memory map earlier into
+kho_populate(). If the memory map is empty/NULL:
+1. Abort kho_populate() immediately with -ENOENT.
+2. Do not register or reserve the incoming scratch memory, allowing the new
+   kernel to reclaim those pages as standard free memory.
+3. Leave the global 'kho_in' state uninitialized.
 
-CONFIG_KEXEC_HANDOVER=y
-CONFIG_KEXEC_HANDOVER_ENABLE_DEFAULT=y
-CONFIG_LIVEUPDATE=n (i.e., nobody calling kho_finalize())
-no reserve_mem= entries in the kernel command line
+Consequently, kho_memory_init() sees no active KHO context
+(kho_in.mem_chunks is NULL) and falls back to kho_reserve_scratch(),
+allocating fresh scratch memory as if it were a standard cold boot.
 
-I omit doing
+Fixes: de51999e687c ("kho: allow memory preservation state updates after finalization")
+Reported-by: Ricardo <ricardo@example.com>
+Closes: https://lore.kernel.org/all/20251218215613.GA17304@ranerica-svr.sc.intel.com
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+---
+ kernel/liveupdate/kexec_handover.c | 36 +++++++++++++++++-------------
+ 1 file changed, 21 insertions(+), 15 deletions(-)
 
-echo 1 > /sys/kernel/debug/kho/out/finalize
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 9dc51fab604f..96c708f753d4 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -460,10 +460,9 @@ static void __init deserialize_bitmap(unsigned int order,
+ 	}
+ }
+ 
+-/* Return true if memory was deserizlied */
+-static bool __init kho_mem_deserialize(const void *fdt)
++/* Returns head of preserved physical memory chunks pointer from FDT */
++static struct khoser_mem_chunk * __init kho_get_mem_chunks(const void *fdt)
+ {
+-	struct khoser_mem_chunk *chunk;
+ 	const void *mem_ptr;
+ 	u64 mem;
+ 	int len;
+@@ -471,16 +470,16 @@ static bool __init kho_mem_deserialize(const void *fdt)
+ 	mem_ptr = fdt_getprop(fdt, 0, PROP_PRESERVED_MEMORY_MAP, &len);
+ 	if (!mem_ptr || len != sizeof(u64)) {
+ 		pr_err("failed to get preserved memory bitmaps\n");
+-		return false;
++		return NULL;
+ 	}
+ 
+ 	mem = get_unaligned((const u64 *)mem_ptr);
+-	chunk = mem ? phys_to_virt(mem) : NULL;
+ 
+-	/* No preserved physical pages were passed, no deserialization */
+-	if (!chunk)
+-		return false;
++	return mem ? phys_to_virt(mem) : NULL;
++}
+ 
++static void __init kho_mem_deserialize(struct khoser_mem_chunk *chunk)
++{
+ 	while (chunk) {
+ 		unsigned int i;
+ 
+@@ -489,8 +488,6 @@ static bool __init kho_mem_deserialize(const void *fdt)
+ 					   &chunk->bitmaps[i]);
+ 		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
+ 	}
+-
+-	return true;
+ }
+ 
+ /*
+@@ -1253,6 +1250,7 @@ bool kho_finalized(void)
+ struct kho_in {
+ 	phys_addr_t fdt_phys;
+ 	phys_addr_t scratch_phys;
++	struct khoser_mem_chunk *mem_chunks;
+ 	struct kho_debugfs dbg;
+ };
+ 
+@@ -1434,12 +1432,10 @@ static void __init kho_release_scratch(void)
+ 
+ void __init kho_memory_init(void)
+ {
+-	if (kho_in.scratch_phys) {
++	if (kho_in.mem_chunks) {
+ 		kho_scratch = phys_to_virt(kho_in.scratch_phys);
+ 		kho_release_scratch();
+-
+-		if (!kho_mem_deserialize(kho_get_fdt()))
+-			kho_in.fdt_phys = 0;
++		kho_mem_deserialize(kho_in.mem_chunks);
+ 	} else {
+ 		kho_reserve_scratch();
+ 	}
+@@ -1448,8 +1444,9 @@ void __init kho_memory_init(void)
+ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 			 phys_addr_t scratch_phys, u64 scratch_len)
+ {
+-	void *fdt = NULL;
++	struct khoser_mem_chunk *mem_chunks;
+ 	struct kho_scratch *scratch = NULL;
++	void *fdt = NULL;
+ 	int err = 0;
+ 	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
+ 
+@@ -1475,6 +1472,14 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 		goto out;
+ 	}
+ 
++	mem_chunks = kho_get_mem_chunks(fdt);
++	if (!mem_chunks) {
++		pr_warn("setup: handover FDT (0x%llx) present but no preserved memory found\n",
++			fdt_phys);
++		err = -ENOENT;
++		goto out;
++	}
++
+ 	scratch = early_memremap(scratch_phys, scratch_len);
+ 	if (!scratch) {
+ 		pr_warn("setup: failed to memremap scratch (phys=0x%llx, len=%lld)\n",
+@@ -1515,6 +1520,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 
+ 	kho_in.fdt_phys = fdt_phys;
+ 	kho_in.scratch_phys = scratch_phys;
++	kho_in.mem_chunks = mem_chunks;
+ 	kho_scratch_cnt = scratch_cnt;
+ 	pr_info("found kexec handover data.\n");
+ 
+-- 
+2.52.0.322.g1dd061c0dc-goog
 
-before doing
-
-kexec -l <kernel> --initrd=<initrd> --commandline="$(cat /proc/cmdline)"
-kexec -e
-
-After the kexec reboot, I see endless warnings about list corruption [1]
-and from _text_poke() [2] (see below).
-
-The post-kexec kernel finds KHO data but it obviously is empty because
-nobody was using it.
-
-I was expecting that KHO would handle this use case gracefully. What if a
-distro does not finalize KHO before kexec and are no in-kernel users?
-
-Am I missing anything?
-
-Thanks and BR,
-Ricardo
-
-[1]. https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/lib/list_debug.c?h=v6.19-rc1#n56
-[2]. https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kernel/alternative.c?h=v6.19-rc1#n2506
-
-[   10.730845] ------------[ cut here ]------------
-[   10.734848] list_del corruption, ffffd143c1330008->next is LIST_POISON1 (dead000000000100)
-[   10.742846] WARNING: lib/list_debug.c:56 at __list_del_entry_valid_or_report+0x91/0x110, CPU#12: swapper/0/1
-[   10.750845] Modules linked in:
-[   10.754845] CPU: 12 UID: 0 PID: 1 Comm: swapper/0 Tainted: G S  B   W           6.19.0-rc1-ranerica-vanilla #1440 PREEMPT(voluntary)
-[   10.766845] Tainted: [S]=CPU_OUT_OF_SPEC, [B]=BAD_PAGE, [W]=WARN
-[   10.786846] RIP: 0010:__list_del_entry_valid_or_report+0x97/0x110
-[   10.790845] Code: eb e2 48 8d 3d 9a 0a 5a 01 48 89 de 67 48 0f b9 3a 31 c0 eb cf 4c 89 e7 e8 b6 d9 b8 ff 48 8d 3d 8f 0a 5a 01 4c 89 e2 48 89 de <67> 48 0f b9 3a 31 c0 eb b1 4c 89 ef e8 98 d9 b8 ff 48 8d 3d 81 0a
-[   10.810845] RSP: 0000:ffff960b000b3c20 EFLAGS: 00010046
-[   10.814845] RAX: 0000000000000011 RBX: ffffd143c1330008 RCX: 0000000000000000
-[   10.822845] RDX: dead000000000100 RSI: ffffd143c1330008 RDI: ffffffffa11c0cb0
-[   10.830845] RBP: ffff960b000b3c38 R08: 0000000000000000 R09: 0000000000000003
-[   10.838845] R10: ffff960b000b3a80 R11: ffffffffa0f470e8 R12: dead000000000100
-[   10.842862] R13: dead000000000122 R14: ffffd143c1338000 R15: 0000000000000004
-[   10.850845] FS:  0000000000000000(0000) GS:ffff8af4bc88d000(0000) knlGS:0000000000000000
-[   10.858861] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   10.866845] CR2: 0000000000000000 CR3: 0000000428c3a001 CR4: 0000000000370ef0
-[   10.870845] Call Trace:
-[   10.874845]  <TASK>
-[   10.878845]  __free_one_page+0x2b5/0x840
-[   10.882845]  free_pcppages_bulk+0x1cd/0x2f0
-[   10.886845]  free_frozen_page_commit.isra.0+0x219/0x460
-[   10.890845]  __free_frozen_pages+0x37b/0x700
-[   10.894845]  ___free_pages+0xa0/0xb0
-[   10.898845]  __free_pages+0x10/0x20
-[   10.902845]  init_cma_reserved_pageblock+0x4f/0x90
-[   10.906845]  kho_init+0x1ef/0x250
-[   10.910845]  ? __pfx_kho_init+0x10/0x10
-[   10.914845]  do_one_initcall+0x6a/0x3c0
-[   10.918845]  kernel_init_freeable+0x1c8/0x3b0
-[   10.922845]  ? __pfx_kernel_init+0x10/0x10
-[   10.926845]  kernel_init+0x1a/0x1c0
-[   10.930857]  ret_from_fork+0x256/0x2e0
-[   10.934845]  ? __pfx_kernel_init+0x10/0x10
-[   10.938845]  ret_from_fork_asm+0x1a/0x30
-[   10.942844]  </TASK>
-[   10.942846] irq event stamp: 926677
-[   10.946845] hardirqs last  enabled at (926677): [<ffffffffa04064d2>] dump_stack_lvl+0xb2/0xe0
-[   10.954845] hardirqs last disabled at (926676): [<ffffffffa0406475>] dump_stack_lvl+0x55/0xe0
-[   10.962845] softirqs last  enabled at (926576): [<ffffffff9f4b6383>] __irq_exit_rcu+0xc3/0x120
-[   10.970850] softirqs last disabled at (926571): [<ffffffff9f4b6383>] __irq_exit_rcu+0xc3/0x120
-[   10.982845] ---[ end trace 0000000000000000 ]---
-[   10.986845]  non-paged memory
-[   10.986845] ------------[ cut here ]------------
-
-[   49.243722] ------------[ cut here ]------------
-[   49.243723] WARNING: arch/x86/kernel/alternative.c:2506 at __text_poke+0x42b/0x470, CPU#20: kworker/20:0/104
-[   49.243725] Modules linked in:
-[   49.243726] CPU: 20 UID: 0 PID: 104 Comm: kworker/20:0 Tainted: G S  B   W           6.19.0-rc1-ranerica-vanilla #1440 PREEMPT(voluntary)
-[   49.243728] Tainted: [S]=CPU_OUT_OF_SPEC, [B]=BAD_PAGE, [W]=WARN
-[   49.243730] Workqueue: events intel_pstste_sched_itmt_work_fn
-[   49.243732] RIP: 0010:__text_poke+0x42b/0x470
-[   49.243733] Code: 21 d0 49 09 c0 e9 06 ff ff ff 4c 8b 45 98 4c 2b 05 9a db 7f 01 49 c1 e0 06 49 21 d0 e9 ef fe ff ff 0f 0b 0f 0b e9 58 fd ff ff <0f> 0b e9 6c fc ff ff e8 89 9a ff 00 e9 07 fe ff ff 0f 0b e9 b2 fe
-[   49.243734] RSP: 0000:ffffae7dc054bbe8 EFLAGS: 00010246
-[   49.243736] RAX: fffffa9c10d9d000 RBX: ffffffff8ed40a4d RCX: fffffa9c00000000
-[   49.243736] RDX: 4000000000000000 RSI: ffffffff8ed40a4d RDI: ffffffff8ed40a4d
-[   49.243737] RBP: ffffae7dc054bc58 R08: 0000000000000000 R09: 0000000000000001
-[   49.243738] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-[   49.243739] R13: ffffffff8ec43830 R14: 0000000000000a4d R15: 0000000000000a4e
-[   49.243740] FS:  0000000000000000(0000) GS:ffff9dc10ca8d000(0000) knlGS:0000000000000000
-[   49.243741] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   49.243742] CR2: 0000000000000000 CR3: 000000043803a001 CR4: 0000000000370ef0
-[   49.243743] Call Trace:
-[   49.243743]  <TASK>
-[   49.243745]  ? partition_sched_domains+0x15d/0x520
-[   49.243748]  smp_text_poke_batch_finish+0xd5/0x3f0
-[   49.243751]  arch_jump_label_transform_apply+0x1c/0x30
-[   49.243753]  __jump_label_update+0xcf/0x110
-[   49.243757]  jump_label_update+0x134/0x200
-[   49.243760]  __static_key_slow_dec_cpuslocked.part.0+0x5b/0x70
-[   49.243763]  static_key_slow_dec_cpuslocked+0x45/0x80
-[   49.243765]  partition_sched_domains+0x3b7/0x520
-[   49.243768]  ? partition_sched_domains+0x7c/0x520
-[   49.243771]  sched_set_itmt_support+0xe2/0x110
-[   49.243773]  intel_pstste_sched_itmt_work_fn+0xe/0x20
-[   49.243775]  process_one_work+0x238/0x6f0
-[   49.243780]  worker_thread+0x1e8/0x3c0
-[   49.243783]  ? __pfx_worker_thread+0x10/0x10
-[   49.243786]  kthread+0x12e/0x260
-[   49.243788]  ? __pfx_kthread+0x10/0x10
-[   49.243791]  ret_from_fork+0x256/0x2e0
-[   49.243793]  ? __pfx_kthread+0x10/0x10
-[   49.243795]  ret_from_fork_asm+0x1a/0x30
-[   49.243801]  </TASK>
-[   49.243802] irq event stamp: 80
-[   49.243802] hardirqs last  enabled at (79): [<ffffffff8fc513f7>] _raw_spin_unlock_irq+0x27/0x60
-[   49.243805] hardirqs last disabled at (80): [<ffffffff8fc45581>] __schedule+0xb31/0x1210
-[   49.243808] softirqs last  enabled at (0): [<ffffffff8eca82fd>] copy_process+0xadd/0x21d0
-[   49.243810] softirqs last disabled at (0): [<0000000000000000>] 0x0
-[   49.243811] ---[ end trace 0000000000000000 ]---
-[   49.244076] ------------[ cut here ]------------
-
-
-
->  
->  	image->kho.fdt = virt_to_phys(kho_out.fdt);
-> -- 
-> 2.52.0.rc1.455.g30608eb744-goog
-> 
 
