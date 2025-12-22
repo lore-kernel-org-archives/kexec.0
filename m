@@ -4,78 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D047DE674BE
-	for <kexec@archiver.kernel.org>; Mon, 22 Dec 2025 14:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D23DFE677EE
+	for <kexec@archiver.kernel.org>; Mon, 22 Dec 2025 15:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=RI6wkzq9art1PUr+oZHEIShCAnFL/nfJWig5oY9a9H4=; b=k6u9OYFjudPN1EnugQHzb4JR4t
-	8uUdqRhFrcvzCuScSkBZ4q8Cs5HKRuCO1EqOY/g5lcVXjLUWEb4SMN8fK+oYX1zutgjj/haCseaIG
-	UJfXexWscYcPx83D1UARlY7TnyZZVH2ZIsap2mKim8dQ4JMaS1V5QhT8TcpP2/03n3PvNNBrqeu+t
-	fV0wdvYYCIfVntUcCZmKGTzGdR2dQvndd7JK1FFy5+wzeVr5N+r2tJWsE1FAysplDvPflUZdyRE6g
-	xBYHfAWKqVvKELCR8DqH2EGoqlX++OmGmCloQQGD5ixK31v1eShdOlP2e142f2gSBRqXcALXw0yo0
-	meJuqC/w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=xol217Co56ag81VF5MHRvQYoROn7jopXXGSlBbVTHhQ=; b=W84phbG9sgzjAXdnVYT4N3tHyU
+	e3ORAQtjDNLpRHqE65KsirZuueNtMO/i5Yo1Rj/1jx6YsABXPUUEtjXqYnGzZERuTh541dZtCxqDJ
+	/USjv6B7/MpuJ6ZkWwOtq4d3oCmXpZbR+slhv/VVGT2zvNATclDaZVIquXtZ5BHriJhadoDyyvVjW
+	CFSoxRGyg5NvtZP7zRxaIAfWpa5S8ZDvh5j+BNNGU9TuWiPJP/PdYgizGCKYDkTz6HYIzlrxM81xB
+	3XmshfvCOdZCFIP6o2cLvhrUC9oi35xtFf3aqIQ5MTrE7JVnzeb6pu34/sjvPLiBjmO4A1cg1DyXA
+	ba3COb1A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vXhNC-0000000DszK-0SKe;
-	Mon, 22 Dec 2025 14:58:58 +0000
+	id 1vXhvA-0000000Dvef-3KDP;
+	Mon, 22 Dec 2025 15:34:04 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vXhN9-0000000Dsyd-17An
+	id 1vXhv7-0000000DveG-2fxz
 	for kexec@lists.infradead.org;
-	Mon, 22 Dec 2025 14:58:56 +0000
+	Mon, 22 Dec 2025 15:34:02 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id E756740684;
-	Mon, 22 Dec 2025 14:58:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95BA5C4CEF1;
-	Mon, 22 Dec 2025 14:58:46 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 679C8419F6;
+	Mon, 22 Dec 2025 15:34:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F8DEC4CEF1;
+	Mon, 22 Dec 2025 15:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766415533;
-	bh=b4wwckHCSEHA9/WsH/82v8iyuGooOfYc2si289h0qdk=;
+	s=k20201202; t=1766417640;
+	bh=n3hXQxXElFRU5pq8HpCn5TZiWmvSa3ILDsLsLX0GpK8=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Sf8cvv973Ocy86SIfrhCawHgAShUAwMSVQXJmWzuodPbT41k1EQD8ytVx625GsbjA
-	 SW8CeuEhVcF9igA8P6YYwwKKILnQ4wtjZ9NJUZC8GVOJy1YFzowIKCHG9Wpke6Cd3p
-	 4hlh6ZLKMflh9K4G4Fn2woo7rNi6d3jEcqdrNbRMhKV4lClYGgNb/eEA1oF9C9q53H
-	 PjiLu8ZRc9IoV32IPqFBobyygCnl0aDln4g75qhv3K1GZNkghCwfXPs4qohTcHGSXW
-	 Mqh2ghyKhw/orybk4h09OSXMzd0E0OMiPtbla5X7ljWCIHF1WJ1K2PrewNZlPqPMoN
-	 ptWtwVifEgDeQ==
+	b=BrDj17wm8KyH6Yy5TyHwiSjKNrwVmN6lVXTLojFPl8mt0y88NuDv44OZw5ZAwo1c3
+	 iQE5XWXo1hKW3l/sFSCIsth+VT2YIJl+CcYGHDkaloZMci50o06F96mhI52gBxf0DO
+	 SRVRu79umAfq+gzZ/dHZkppdaMuZdRQYDFg3Q49jKocFxy1ldBrfQqiB4mZtebRrZI
+	 NiZmAZzpKbY/1b1oWMhYUIoWBB7Ox60if77yxHLFyAdo/gHCNjpv+MbpSCkWXTgOvc
+	 4tBplfV48Cw63cd6VC3t54yeO3R/ljcWXIo0ILxMahYJbeaiNBSXnztDPmmlEKcbVZ
+	 OVfdagKYnJA3w==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>
 Cc: Pratyush Yadav <pratyush@kernel.org>,  Mike Rapoport <rppt@kernel.org>,
-  Andrew Morton <akpm@linux-foundation.org>,  David Hildenbrand
- <david@kernel.org>,  Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,  "Liam
- R. Howlett" <Liam.Howlett@oracle.com>,  Vlastimil Babka <vbabka@suse.cz>,
-  Suren Baghdasaryan <surenb@google.com>,  Michal Hocko <mhocko@suse.com>,
-  Jonathan Corbet <corbet@lwn.net>,  Thomas Gleixner <tglx@linutronix.de>,
-  Ingo Molnar <mingo@redhat.com>,  Borislav Petkov <bp@alien8.de>,  Dave
- Hansen <dave.hansen@linux.intel.com>,  x86@kernel.org,  "H. Peter Anvin"
- <hpa@zytor.com>,  Muchun Song <muchun.song@linux.dev>,  Oscar Salvador
- <osalvador@suse.de>,  Alexander Graf <graf@amazon.com>,  David Matlack
- <dmatlack@google.com>,  David Rientjes <rientjes@google.com>,  Jason
- Gunthorpe <jgg@nvidia.com>,  Samiullah Khawaja <skhawaja@google.com>,
-  Vipin Sharma <vipinsh@google.com>,  Zhu Yanjun <yanjun.zhu@linux.dev>,
-  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
-  linux-doc@vger.kernel.org,  kexec@lists.infradead.org
-Subject: Re: [RFC PATCH 04/10] liveupdate: flb: allow getting FLB data in
- early boot
-In-Reply-To: <CA+CK2bDWF6pbNQRkJFa+WcD1pwUOr3yQdrRUs-mgLWu5ght+7A@mail.gmail.com>
-	(Pasha Tatashin's message of "Sat, 20 Dec 2025 10:11:34 -0500")
-References: <20251206230222.853493-1-pratyush@kernel.org>
-	<20251206230222.853493-5-pratyush@kernel.org>
-	<CA+CK2bAV1y_LySjyj-wcn1cdSuVBdC+r+zQL7AQTY64nk3OxuQ@mail.gmail.com>
-	<86wm2hj0ky.fsf@kernel.org>
-	<CA+CK2bDWF6pbNQRkJFa+WcD1pwUOr3yQdrRUs-mgLWu5ght+7A@mail.gmail.com>
-Date: Mon, 22 Dec 2025 23:58:43 +0900
-Message-ID: <86o6nqd0m4.fsf@kernel.org>
+  Evangelos Petrongonas <epetron@amazon.de>,  Alexander Graf
+ <graf@amazon.com>,  Andrew Morton <akpm@linux-foundation.org>,  Jason Miu
+ <jasonmiu@google.com>,  linux-kernel@vger.kernel.org,
+  kexec@lists.infradead.org,  linux-mm@kvack.org,
+  nh-open-source@amazon.com
+Subject: Re: [PATCH] kho: add support for deferred struct page init
+In-Reply-To: <CA+CK2bA1kYCf0BwhX3Sg9Ur82nK-7HPzs0sg6xbVWFAJaZLhpw@mail.gmail.com>
+	(Pasha Tatashin's message of "Sat, 20 Dec 2025 09:49:44 -0500")
+References: <20251216084913.86342-1-epetron@amazon.de>
+	<aUFJH9xzJXYOt_X8@kernel.org>
+	<CA+CK2bDGvgcGJijAtSSa2k_FWjnZXm2jRiFd6Z9-XjEQ-Y68DQ@mail.gmail.com>
+	<aUF4fsWwD9BswkFh@kernel.org>
+	<CA+CK2bB2mn5b0N9gs1UavYLUQhbpVvdo702oHZa15E9OaZkKWg@mail.gmail.com>
+	<aUUYprAotKYMiEs0@kernel.org>
+	<CA+CK2bD101cSC_7+OWkMei2QvUVjSaRLy+LboLe8Sz7KS3by4g@mail.gmail.com>
+	<861pkpkffh.fsf@kernel.org>
+	<CA+CK2bA1kYCf0BwhX3Sg9Ur82nK-7HPzs0sg6xbVWFAJaZLhpw@mail.gmail.com>
+Date: Tue, 23 Dec 2025 00:33:54 +0900
+Message-ID: <86jyyecyzh.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251222_065855_364699_5D745EB9 
-X-CRM114-Status: GOOD (  21.83  )
+X-CRM114-CacheID: sfid-20251222_073401_727566_F3DE050F 
+X-CRM114-Status: GOOD (  39.45  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,36 +87,119 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On Sat, Dec 20 2025, Pasha Tatashin wrote:
 
->> > [Follow-up from LPC discussion]
+> On Fri, Dec 19, 2025 at 10:20=E2=80=AFPM Pratyush Yadav <pratyush@kernel.=
+org> wrote:
+>>
+>> On Fri, Dec 19 2025, Pasha Tatashin wrote:
+[...]
+>> > Let's do the lazy tail initialization that I proposed to you in a
+>> > chat: we initialize only the head struct page during
+>> > deserialize_bitmap(). Since this happens while memblock is still
+>> > active, we can safely use early_pfn_to_nid() to set the nid in the
+>> > head page's flags, and also preserve order as we do today.
 >> >
->> > This patch is not needed, you can use liveupdate_flb_get_incoming()
->> > directly in early boot. The main concern is that we take mutex in that
->> > function, but that I think is safe. The might_sleep() has the proper
->> > handling to be called early in boot, it has "system_state ==
->> > SYSTEM_BOOTING" check to silence warning during boot.
+>> > Then, we can defer the initialization of all tail pages to
+>> > kho_restore_folio(). At that stage, we no longer need memblock or
+>> > early_pfn_to_nid(); we can simply inherit the nid from the head page
+>> > using page_to_nid(head).
 >>
->> Right. I will give it a try. For hugetlb, this works fine since it
->> doesn't really need to do much in FLB retrieve anyway, it just needs to
->> parse some data structures.
->>
->> If other subsystems end up needing a two-part retrieve, one in early
->> boot and one later, then I think it would be a good idea to model that
->> properly instead of leaving it up to the subsystem to manage it.
->>
->> Anyway, that isn't a real problem today so let's look at it when it does
->> show up.
+>> Does that assumption always hold? Does every contiguous chunk of memory
+>> always have to be in the same node? For folios it would hold, but what
+>> about kho_preserve_pages()?
 >
-> FLB has exactly one .retrieve() lifecycle event. Once called, the data
-> is considered fully available and cached in private->incoming.obj.
+> NUMA node boundaries are SECTION_SIZE aligned. Since SECTION_SIZE is
+> larger than MAX_PAGE_ORDER it is mathematically impossible for a
+> single chunk to span multiple nodes.
+
+For folios, yes. The whole folio should only be in a single node. But we
+also have kho_preserve_pages() (formerly kho_preserve_phys()) which can
+be used to preserve an arbitrary size of memory and _that_ doesn't have
+to be in the same section. And if the memory is properly aligned, then
+it will end up being just one higher-order preservation in KHO.
+
 >
-> If a subsystem has a requirement where it needs a specific state
-> available very early and other state available much later, the clean
-> solution is simply to register two separate FLBs.
+>> > This approach seems to give us the best of both worlds: It avoids the
+>> > memblock dependency during restoration. It keeps the serial work in
+>> > deserialize_bitmap() to a minimum (O(1)O(1) per region). It allows the
+>> > heavy lifting of tail page initialization to be done later in the boot
+>> > process, potentially in parallel, as you suggested.
+>>
+>> Here's another idea I have been thinking about, but never dug deep
+>> enough to figure out if it actually works.
+>>
+>> __init_page_from_nid() loops through all the zones for the node to find
+>> the zone id for the page. We can flip it the other way round and loop
+>> through all zones (on all nodes) to find out if the PFN spans that zone.
+>> Once we find the zone, we can directly call __init_single_page() on it.
+>> If a contiguous chunk of preserved memory lands in one zone, we can
+>> batch the init to save some time.
+>>
+>> Something like the below (completely untested):
+>>
+>>
+>>         static void kho_init_page(struct page *page)
+>>         {
+>>                 unsigned long pfn =3D page_to_pfn(page);
+>>                 struct zone *zone;
+>>
+>>                 for_each_zone(zone) {
+>>                         if (zone_spans_pfn(zone, pfn))
+>>                                 break;
+>>                 }
+>>
+>>                 __init_single_page(page, pfn, zone_idx(zone), zone_to_ni=
+d(zone));
+>>         }
+>>
+>> It doesn't do the batching I mentioned, but I think it at least gets the
+>> point across. And I think even this simple version would be a good first
+>> step.
+>>
+>> This lets us initialize the page from kho_restore_folio() without having
+>> to rely of memblock being alive, and saves us from doing work during
+>> early boot. We should only have a handful of zones and nodes in
+>> practice, so I think it should perform fairly well too.
+>>
+>> We would of course need to see how it performs in practice. If it works,
+>> I think it would be cleaner and simpler than splitting the
+>> initialization into two separate parts.
+>
+> I think your idea is clever and would work. However, consider the
+> cache efficiency: in deserialize_bitmap(), we must write to the head
+> struct page anyway to preserve the order. Since we are already
+> bringing that 64-byte cacheline in and dirtying it, and since memblock
+> is available and fast at this stage, it makes sense to fully
+> initialize the head page right then.
 
-Hmm, that can work too. Anyway, let's figure that out when there is a
-real use case. For now, the current FLB design works fine.
+You will also bring in the cache line and dirty it during
+kho_restore_folio() since you need to write the page refcounts. So I
+don't think the cache efficiency makes any difference between either
+approach.
 
--- 
+> If we do that, we get the nid for "free" (cache-wise) and we avoid the
+> overhead of iterating zones during the restore phase. We can then
+> simply inherit the nid from the head page when initializing the tail
+> pages later.
+
+To get the nid, you would need to call early_pfn_to_nid(). This takes a
+spinlock and searches through all memblock memory regions. I don't think
+it is too expensive, but it isn't free either. And all this would be
+done serially. With the zone search, you at least have some room for
+concurrency.
+
+I think either approach only makes a difference when we have a large
+number of low-order preservations. If we have a handful of high-order
+preservations, I suppose the overhead of nid search would be negligible.
+
+Long term, I think we should hook this into page_alloc_init_late() so
+that all the KHO pages also get initalized along with all the other
+pages. This will result in better integration of KHO with rest of MM
+init, and also have more consistent page restore performance.
+
+Jason's radix tree patches will make that a bit easier to do I think.
+The zone search will scale better I reckon.
+
+--=20
 Regards,
 Pratyush Yadav
 
