@@ -4,71 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7865DE677ED
-	for <kexec@archiver.kernel.org>; Mon, 22 Dec 2025 16:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F33FEE6B261
+	for <kexec@archiver.kernel.org>; Tue, 23 Dec 2025 04:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=j/JDjTyJFVUo7vfeacCyOxZOxyDerTlslTj9N9ct22Q=; b=qIYqSVRxQ8Vm/lhsUWn6sF/WjT
-	Ke/tLKXR9OgWn8waaoBFUnZuVGiBW7ZpdeD7ZzM+gZWTBWhjbRBwSWWuv+XK1CObALfmX9N2e//WM
-	L/zSjvxgtFlAhEnTJvFPwxl0Vo8UtRz/33iFO0vVVU0DZs5zI2XDziBpT4tIUEN2oDSEepp02Gr8T
-	dCy1THMWF7jquNRxuoXDyox1hN6RDAZScqTeMWfRkWiHnd3XMMqClh7k7oyWjcFRya1DcsdQPpYfZ
-	cNx+yfKjwoo/Wd1M7OFMQDsqpsNM48pgBLV6iktuC8dOUcDErzYyQqmauo+VHESVS5Eu+ZlAZ88+N
-	/rvgiA+A==;
+	bh=TZcCotV/QfG6wRX3tVqdLU94aUxGvWejw2TKi4N7jYo=; b=mWHZ8JfXXewt9CnPtKjqKWMHsa
+	ZV3Fb4RD2bH57ep3yTYEsCTYqivgaTR5mAKkQnZW1VH0gOjcMlT3sq1NYds0aehudD5p8ahbPFk1V
+	7yYTXsVu6ndAb8axO1itRo3zx+4WATaq1rR+Ti094yVW5FWTRB2/lP1J88TUp8FIwqt5qSEfnVS63
+	7gNNesSpftN3dBrR4RihNOqkVEX9JQgPhP9a9WLpOtJ9INq48jyYp4lNHipCS+8F5oLgjMFT0AzAM
+	hp/gSY+EYtyMGjr4OhHg40VK2dnk0e6lwkqeA3Z6q6dVDcVYK7pdKop2ckuIDytPq72SfVzKAhAla
+	kXbQqlVg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vXihk-0000000Dxup-3Q5Z;
-	Mon, 22 Dec 2025 16:24:16 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1vXtbG-0000000EUJ2-2uwP;
+	Tue, 23 Dec 2025 04:02:18 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vXihj-0000000DxuR-1o6S
+	id 1vXtbA-0000000EUIR-0rZz
 	for kexec@lists.infradead.org;
-	Mon, 22 Dec 2025 16:24:15 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 69F436014C;
-	Mon, 22 Dec 2025 16:24:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB14EC4CEF1;
-	Mon, 22 Dec 2025 16:24:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766420654;
-	bh=Bho3Ephj/9Cu96QbuGoz94Bq/j6VeyHgvvqBBYHo8T8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=i48/qyaHpO3sQRwas4fTznSqsEt2K7OlmhRVXNV5Fw6tW3bXOJ1e0vqBhOsb46hJI
-	 yrmjZfUquyFJN/Ql2caT5qoUTjFhgd2XaVVNB//7DoSKLW35DNB/KKVtTlxk3S/cug
-	 GZHKr9n/0jv35PnSXraG/hBWPjnOgM6PBn2TkNz4rtxMr0/gEPJw7Q9kVI+M3Qq7X2
-	 WCHBGaQOUt+J0qtHbQNPbBAdwUGKXWrnmBVI8PPzdt0q05sZG/jdCnlewxBXsIMKSO
-	 S2JEmnmQW+eozWBsgRIbg9qFTgOpOKJA9L8N7+bVDSpivhjp0MrBZPyVc16+GzdMRj
-	 mIgv8dxfOOu5g==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Mike Rapoport <rppt@kernel.org>,
-  Evangelos Petrongonas <epetron@amazon.de>,  Alexander Graf
- <graf@amazon.com>,  Andrew Morton <akpm@linux-foundation.org>,  Jason Miu
- <jasonmiu@google.com>,  linux-kernel@vger.kernel.org,
-  kexec@lists.infradead.org,  linux-mm@kvack.org,
-  nh-open-source@amazon.com
-Subject: Re: [PATCH] kho: add support for deferred struct page init
-In-Reply-To: <CA+CK2bDxnTEe9Ohq5zLuyF-jqgD0DPhfdq6z=yztUsXU5p5fSQ@mail.gmail.com>
-	(Pasha Tatashin's message of "Mon, 22 Dec 2025 10:55:34 -0500")
-References: <20251216084913.86342-1-epetron@amazon.de>
-	<aUFJH9xzJXYOt_X8@kernel.org>
-	<CA+CK2bDGvgcGJijAtSSa2k_FWjnZXm2jRiFd6Z9-XjEQ-Y68DQ@mail.gmail.com>
-	<aUF4fsWwD9BswkFh@kernel.org>
-	<CA+CK2bB2mn5b0N9gs1UavYLUQhbpVvdo702oHZa15E9OaZkKWg@mail.gmail.com>
-	<aUUYprAotKYMiEs0@kernel.org>
-	<CA+CK2bD101cSC_7+OWkMei2QvUVjSaRLy+LboLe8Sz7KS3by4g@mail.gmail.com>
-	<861pkpkffh.fsf@kernel.org>
-	<CA+CK2bA1kYCf0BwhX3Sg9Ur82nK-7HPzs0sg6xbVWFAJaZLhpw@mail.gmail.com>
-	<86jyyecyzh.fsf@kernel.org>
-	<CA+CK2bDxnTEe9Ohq5zLuyF-jqgD0DPhfdq6z=yztUsXU5p5fSQ@mail.gmail.com>
-Date: Mon, 22 Dec 2025 17:24:07 +0100
-Message-ID: <863452cwns.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Tue, 23 Dec 2025 04:02:14 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1766462530;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TZcCotV/QfG6wRX3tVqdLU94aUxGvWejw2TKi4N7jYo=;
+	b=EseLCy1JPeQwHwv7Uwiy+SNCsVI1zc2ImeyEVRfckBk40ZxttxMDzSwm0NactoJ/S8iAFS
+	uT4Iugquo3fYyCl0oUKiFWGPbzddPyAgeHRtRssZA1umBra6AkxxDorV4Klzyt/Lk+VJfB
+	ES/2zPZ6MonCoMl2D910KGGgwdpcYsc=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-676-W3_UWaYHP2i0oo5ZUxMFBA-1; Mon, 22 Dec 2025 23:00:33 -0500
+X-MC-Unique: W3_UWaYHP2i0oo5ZUxMFBA-1
+X-Mimecast-MFC-AGG-ID: W3_UWaYHP2i0oo5ZUxMFBA_1766462432
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2a0f0c7a06eso90053065ad.2
+        for <kexec@lists.infradead.org>; Mon, 22 Dec 2025 20:00:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766462432; x=1767067232;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TZcCotV/QfG6wRX3tVqdLU94aUxGvWejw2TKi4N7jYo=;
+        b=utWBqTwvIxM+wihqYKqJ0PD79XsJr626cUibIA0y1iivTei65vvaElAYMZwp6uZLPS
+         7J19ILq6oV4G1aQuD8AvqSW6miXz2Gbey/x1gmzlNBE8PDsFYUX0OK//umaY+TFR4RFo
+         ss2gzl3U6G3/V9rq47xPmYJN+1xfeAqAlVp6N0hBzH1oLiOEB5vlXJaR8D0dot4ZupBB
+         oHhErFXbEuCcNRMZC40hqCYJV5aEvuMidp47nWolBNbZDjhpXneOi9BrJ0lmXR8sZtx3
+         /4oS+iIeQvmigA1/mJcNxKAf4YGyM9sJeH5/L9K/axU6F4PFF7dI35NOXNeSgkorapaq
+         WaDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUoHTUJNl6Lv+utqhfpuqo1tsz7IL6/qKC1eu6aol2MvszNP0abvl7RAndtk9VKHgyYtHhexw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwI4cAyI9LEPsPnaEdjFV7HlhB0+OK1qT+SrKowV5tWY6ajHGx/
+	9xiu63YGMkqtTuiDVdig/cBJwp2s7hYe7RYFbxEwcrxGzOqgLGo1Me4eiEVcp8atJ1XtpmrchuK
+	or+DZLIeE+Z7sglRb+umaKWpdZx3XktkRDUFgpS6ZqgwuctvRS6IGJBSHHXZRzQ==
+X-Gm-Gg: AY/fxX7KBu5+HaWr+cfqih6jy6AB/oFCuN6vdRcPyI+tusHIH0CtwzpjsrkXAT0YZKF
+	uRguH/u/rVqNgpYkGsu69kanmwk0yChzmJaYGP09yUE2y9bwBfarVCnKFkWQQf+WqcmSZ3+r4/o
+	xWghkY7VJAoy5XgL/6FzFygmnF+GrIjQC1YGOgwhS0rGC+/HAff1t+bdNJUxir9ohFrPHubO66K
+	V7tpJ3O4k4M0Ur76pCcsOL4VVb6ctteBNQ1WgnxcCBqjTs7tgeVmISuYRJx5NggnKdUazLa2sCP
+	KH+CuE04hjDR1lvRJOHg606M/37vv+kILcvseLfCtUrY9usTW3tGOHOBBatDGKCfD4zsS/NKX1X
+	m
+X-Received: by 2002:a17:902:dac8:b0:2a0:ba6d:d0ff with SMTP id d9443c01a7336-2a2f223177dmr127364765ad.16.1766462431695;
+        Mon, 22 Dec 2025 20:00:31 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEzwF5m/iHyn55LEilssrWhhc0HpYjAI8bNeQoZneyKJRrnoEXNFbeVjwUfxPQct8rWlymXvg==
+X-Received: by 2002:a17:902:dac8:b0:2a0:ba6d:d0ff with SMTP id d9443c01a7336-2a2f223177dmr127364375ad.16.1766462431140;
+        Mon, 22 Dec 2025 20:00:31 -0800 (PST)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a2f3d4cbcfsm113540215ad.50.2025.12.22.20.00.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Dec 2025 20:00:30 -0800 (PST)
+Date: Tue, 23 Dec 2025 11:56:02 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org, kexec@lists.infradead.org
+Subject: Re: [PATCH] crash_dump: Constify struct configfs_item_operations and
+ configfs_group_operations
+Message-ID: <xygbee3xw72kjitwo6xas6cxoqnx4zmny35tqc4anypqdxiow6@ahoenkvggcv2>
+References: <d046ee5666d2f6b1a48ca1a222dfbd2f7c44462f.1765735035.git.christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <d046ee5666d2f6b1a48ca1a222dfbd2f7c44462f.1765735035.git.christophe.jaillet@wanadoo.fr>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 72lpEGHgOvhRg2HsnEHpcmUCEiTgQWpjgNuVIV1DUNg_1766462432
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251222_200212_318760_0486C44C 
+X-CRM114-Status: GOOD (  15.58  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,166 +109,66 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Dec 22 2025, Pasha Tatashin wrote:
-
->> > NUMA node boundaries are SECTION_SIZE aligned. Since SECTION_SIZE is
->> > larger than MAX_PAGE_ORDER it is mathematically impossible for a
->> > single chunk to span multiple nodes.
->>
->> For folios, yes. The whole folio should only be in a single node. But we
->> also have kho_preserve_pages() (formerly kho_preserve_phys()) which can
->> be used to preserve an arbitrary size of memory and _that_ doesn't have
->> to be in the same section. And if the memory is properly aligned, then
->> it will end up being just one higher-order preservation in KHO.
+On Sun, Dec 14, 2025 at 06:57:30PM +0100, Christophe JAILLET wrote:
+>'struct configfs_item_operations' and 'configfs_group_operations' are not
+>modified in this driver.
 >
-> Both restore pages and folios we use: kho_restore_page() which has the
-> following:
+>Constifying these structures moves some data to a read-only section, so
+>increases overall security, especially when the structure holds some
+>function pointers.
 >
-> /*
-> * deserialize_bitmap() only sets the magic on the head page. This magic
-> * check also implicitly makes sure phys is order-aligned since for
-> * non-order-aligned phys addresses, magic will never be set.
-> */
-> if (WARN_ON_ONCE(info.magic != KHO_PAGE_MAGIC || info.order > MAX_PAGE_ORDER))
-> return NULL;
-
-See my patch that drops this restriction:
-https://lore.kernel.org/linux-mm/20251206230222.853493-2-pratyush@kernel.org/
-
-I think it was wrong to add it in the first place.
-
+>On a x86_64, with allmodconfig, as an example:
+>Before:
+>======
+>   text	   data	    bss	    dec	    hex	filename
+>  16339	  11001	    384	  27724	   6c4c	kernel/crash_dump_dm_crypt.o
 >
-> My understanding the head page can never be more than MAX_PAGE_ORDER
-> hence why I am saying it will be less than SECTION_SIZE. With HugeTLB
-> the order can be more than MAX_PAGE_ORDER, but in that case it still
-> has to be within a single NID, since a huge page cannot be split
-> across multiple nodes.
-
-For a "proper" page/folio, that either comes from the page allocator or
-from HugeTLB, you are right. But see again how kho_preserve_pages()
-works:
-
-	while (pfn < end_pfn) {
-		const unsigned int order =
-			min(count_trailing_zeros(pfn), ilog2(end_pfn - pfn));
-	
-		err = __kho_preserve_order(track, pfn, order);
-		[...]
-
-It combines contiguous order-aligned pages into one KHO preservation.
-
-So say I have two nodes, each 64G. If I call kho_preserve_pages() for
-62G to 66G, I will get _one_ 4G preservation at 62G. kho_restore_page()
-will split it into 0-order pages on restore.
-
+>After:
+>=====
+>   text	   data	    bss	    dec	    hex	filename
+>  16499	  10841	    384	  27724	   6c4c	kernel/crash_dump_dm_crypt.o
 >
->> >> > This approach seems to give us the best of both worlds: It avoids the
->> >> > memblock dependency during restoration. It keeps the serial work in
->> >> > deserialize_bitmap() to a minimum (O(1)O(1) per region). It allows the
->> >> > heavy lifting of tail page initialization to be done later in the boot
->> >> > process, potentially in parallel, as you suggested.
->> >>
->> >> Here's another idea I have been thinking about, but never dug deep
->> >> enough to figure out if it actually works.
->> >>
->> >> __init_page_from_nid() loops through all the zones for the node to find
->> >> the zone id for the page. We can flip it the other way round and loop
->> >> through all zones (on all nodes) to find out if the PFN spans that zone.
->> >> Once we find the zone, we can directly call __init_single_page() on it.
->> >> If a contiguous chunk of preserved memory lands in one zone, we can
->> >> batch the init to save some time.
->> >>
->> >> Something like the below (completely untested):
->> >>
->> >>
->> >>         static void kho_init_page(struct page *page)
->> >>         {
->> >>                 unsigned long pfn = page_to_pfn(page);
->> >>                 struct zone *zone;
->> >>
->> >>                 for_each_zone(zone) {
->> >>                         if (zone_spans_pfn(zone, pfn))
->> >>                                 break;
->> >>                 }
->> >>
->> >>                 __init_single_page(page, pfn, zone_idx(zone), zone_to_nid(zone));
->> >>         }
->> >>
->> >> It doesn't do the batching I mentioned, but I think it at least gets the
->> >> point across. And I think even this simple version would be a good first
->> >> step.
->> >>
->> >> This lets us initialize the page from kho_restore_folio() without having
->> >> to rely of memblock being alive, and saves us from doing work during
->> >> early boot. We should only have a handful of zones and nodes in
->> >> practice, so I think it should perform fairly well too.
->> >>
->> >> We would of course need to see how it performs in practice. If it works,
->> >> I think it would be cleaner and simpler than splitting the
->> >> initialization into two separate parts.
->> >
->> > I think your idea is clever and would work. However, consider the
->> > cache efficiency: in deserialize_bitmap(), we must write to the head
->> > struct page anyway to preserve the order. Since we are already
->> > bringing that 64-byte cacheline in and dirtying it, and since memblock
->> > is available and fast at this stage, it makes sense to fully
->> > initialize the head page right then.
->>
->> You will also bring in the cache line and dirty it during
->> kho_restore_folio() since you need to write the page refcounts. So I
->> don't think the cache efficiency makes any difference between either
->> approach.
->>
->> > If we do that, we get the nid for "free" (cache-wise) and we avoid the
->> > overhead of iterating zones during the restore phase. We can then
->> > simply inherit the nid from the head page when initializing the tail
->> > pages later.
->>
->> To get the nid, you would need to call early_pfn_to_nid(). This takes a
->> spinlock and searches through all memblock memory regions. I don't think
->> it is too expensive, but it isn't free either. And all this would be
->> done serially. With the zone search, you at least have some room for
->> concurrency.
->>
->> I think either approach only makes a difference when we have a large
->> number of low-order preservations. If we have a handful of high-order
->> preservations, I suppose the overhead of nid search would be negligible.
+>Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>---
+>Compile tested only.
 >
-> We should be targeting a situation where the vast majority of the
-> preserved memory is HugeTLB, but I am still worried about lower order
-> preservation efficiency for IOMMU page tables, etc.
-
-Yep. Plus we might get VMMs stashing some of their state in a memfd too.
-
+>This change is possible since commits f2f36500a63b and f7f78098690d.
+>---
+> kernel/crash_dump_dm_crypt.c | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
 >
->> Long term, I think we should hook this into page_alloc_init_late() so
->> that all the KHO pages also get initalized along with all the other
->> pages. This will result in better integration of KHO with rest of MM
->> init, and also have more consistent page restore performance.
+>diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+>index 401423ba477d..0d23dc1de67c 100644
+>--- a/kernel/crash_dump_dm_crypt.c
+>+++ b/kernel/crash_dump_dm_crypt.c
+>@@ -223,7 +223,7 @@ static void config_key_release(struct config_item *item)
+> 	key_count--;
+> }
 >
-> But we keep KHO as reserved memory, and hooking it up into
-> page_alloc_init_late() would make it very different, since that memory
-> is part of the buddy allocator memory...
-
-The idea I have is to have a separate call in page_alloc_init_late()
-that initalizes KHO pages. It would traverse the radix tree (probably in
-parallel by distributing the address space across multiple threads?) and
-initialize all the pages. Then kho_restore_page() would only have to
-double-check the magic and it can directly return the page.
-
-Radix tree makes parallelism easier than the linked lists we have now.
-
+>-static struct configfs_item_operations config_key_item_ops = {
+>+static const struct configfs_item_operations config_key_item_ops = {
+> 	.release = config_key_release,
+> };
 >
->> Jason's radix tree patches will make that a bit easier to do I think.
->> The zone search will scale better I reckon.
+>@@ -298,7 +298,7 @@ static struct configfs_attribute *config_keys_attrs[] = {
+>  * Note that, since no extra work is required on ->drop_item(),
+>  * no ->drop_item() is provided.
+>  */
+>-static struct configfs_group_operations config_keys_group_ops = {
+>+static const struct configfs_group_operations config_keys_group_ops = {
+> 	.make_item = config_keys_make_item,
+> };
 >
-> It could, perhaps early in boot we should reserve the radix tree, and
-> use it as a source of truth look-ups later in boot?
+>-- 
+>2.52.0
 
-Yep. I think the radix tree should mark its own pages as preserved too
-so they stick around later in boot.
+Thanks for the patch!
+
+Reviewed-and-tested-by: Coiby Xu <coxu@redhat.com>
+
 
 -- 
-Regards,
-Pratyush Yadav
+Best regards,
+Coiby
+
 
