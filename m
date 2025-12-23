@@ -4,59 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9F7F3E6F084
-	for <kexec@archiver.kernel.org>; Tue, 23 Dec 2025 10:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 46A87E6F090
+	for <kexec@archiver.kernel.org>; Tue, 23 Dec 2025 13:40:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=9IYOnHMXqXm+Tf4oCMVqcfeNEvc4/yNfUdZAwxsTL8g=; b=OZiPPSV95Y4DVXKa3n+qabFcaj
-	+MSaHMbgvRlKfhdtlnkiSQBcSqEAUnAPDFETPFnqa362Gq5evLQwV6ptqjoLul1e9XrMUVMwx5HkE
-	YBK6p7Hndu7KRaeW/8LRMD2te9fv3fIGxWigyjslZdJtmezx3yhwc3hYTNagraoVmKk+kJKCn4DPM
-	Vo71MyNI6DVsbaUydMEboZTHYs4xgvbHrDM+hdo6kwzy6zD/r/zt0ETJSUr3CtWKZNwA2UDFLVHmb
-	JGTozwcQ7p/ZMRW863fpc3andVkjHq4Rl0/axTnksKQ1ogDkSNogCTil8IZ2an5TP6kgtdeYI1WZy
-	hvKxLFZQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
+	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=/I6XlXAEilN0X40BgO/Y75hBFwj9rzVL3WYipFqiWfY=; b=j5DkpzlCJv4QokJZEz6XLHdp2+
+	blS7lDegeBabdjuzIFGM97KmFgnWrmFIDuKBGQE0mOg/HDMxvOIZyawsHSUqrsOIQ2iK4GqU7oRch
+	N/j78Yz6TyZAedCFsDs3DzJjIub539pR1dPGCghsn8nXi8xdunOiNJbqMrLrFiPpOxI7r7M/WHdiV
+	T4WA2Ab+N4TxvndX24cv7R1t+wdKxFE+AMabBvhYYfOt9FyVXXMlQbjomw0vibJiHmw97O4CHOMXk
+	pZEQUS70UqTAjkDYSn1mll0pAH2c5iFn53Fg8DUD+lUPB5Lr7Ky+ykgOQ/U961dq9I296/RB1f6GK
+	KP+pf+GQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vXzt1-0000000Eu6Q-0VCA;
-	Tue, 23 Dec 2025 10:45:03 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1vY2cp-0000000FXvO-2hFZ;
+	Tue, 23 Dec 2025 13:40:31 +0000
+Received: from mail-ed1-x52f.google.com ([2a00:1450:4864:20::52f])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vXzsz-0000000Eu6F-2VdO
+	id 1vY2cn-0000000FXuz-1Agv
 	for kexec@lists.infradead.org;
-	Tue, 23 Dec 2025 10:45:01 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 059D1600CB;
-	Tue, 23 Dec 2025 10:45:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E4CCC113D0;
-	Tue, 23 Dec 2025 10:44:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766486700;
-	bh=OvvBh3rBFu8/YoqGW0OVMvMC2gUrUjk3BKp4jAKJ5cY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=jON0z822WBdoyLOJjLlvfkXrkqu6HzPdAhG8rpHn/N9eKY3CAu/hCCf7Mc4j2i/3l
-	 hQiirZPJNV6uayyXXW51Barhq2M0Oa6KnLSM/vQeC+Y6KjefyvIhwaEuAR5pqK3AoZ
-	 3DlDLXkZQkezL9+VkCxrIL0bM/oonhQU2/sIVyLQjQXFHPRysv/bBvCBRsrMcS+vzp
-	 S6Z2SQNs8mupbsAA0VwpK3E0LXKHx/2ycceFBxo7wGY3f4Wv80blA2g97eD8TDzUyq
-	 jDiJ2DAupbad9j42rzqQjqjaS/lPfm8t8D654SsZM6Dor5tQ8iFxzCBQ7Gn+oO//u7
-	 kEvymJfuv8F7A==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Graf <graf@amazon.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>
-Cc: kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] kho: simplify page initialization in kho_restore_page()
-Date: Tue, 23 Dec 2025 11:44:46 +0100
-Message-ID: <20251223104448.195589-1-pratyush@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	Tue, 23 Dec 2025 13:40:30 +0000
+Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-64d80a47491so3579765a12.1
+        for <kexec@lists.infradead.org>; Tue, 23 Dec 2025 05:40:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1766497227; x=1767102027; darn=lists.infradead.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/I6XlXAEilN0X40BgO/Y75hBFwj9rzVL3WYipFqiWfY=;
+        b=VYoqgzt3E/X9y1tBBjxnGUNB8/+b76Jnxh/8r0wKQHCUBa0C7dSkgIkpS0exqdMUxB
+         FE3W84d2MZqWGlAZFP+acuDJ2hPjIgXxTqC0Jlr8/RXD+5gzvaa86raFw+lypMrfwBpR
+         LhH3iiGG6xqwR1A7Sad7gKEh8Z2E2Z5ZaBMqGhAoo29qQaK6gCO041BBqMdU0Z1VedCj
+         VsrZgE1pQPkwBFpfxXbOvKj3R7Sw43phVHcAOAKIHsHIK4btkLszchcRrUXtilPQB4bX
+         q3naEQx96jFlfr4Gz9R7BxW//HIuAQTeEPXo/1AzEngxDI4N2SNubaqBtOSOvjlFH4jY
+         tfig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766497227; x=1767102027;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/I6XlXAEilN0X40BgO/Y75hBFwj9rzVL3WYipFqiWfY=;
+        b=Chr7jHl49Pvv17cU3cUwOV1nbfV33+LXouVcTG+31Klb9Vy+PgLF2gRfKj6jP4tsz1
+         cxZxZF90gUy0FzPbq0B7Hx4WcV3GML86+YylhQlFGlwdMKXAbwFgHVuHNjnA/WhNqhk7
+         AWtZwQYZU28x24phOTRh5tBe9XlsuUJ4ld1ayg7WwWyVgj6MxETWeAplVO8H28YIO1hW
+         lZCJopu6Ih+OEhDbH8OhDLRe/2gl5L8TlKPU6eA1m3q3+SQNMnL4bctt/9c0gR1GFqLF
+         qxAXrK7B/eRAb1qFuFde4uhlB70RAiRIW/y3FH14UNtaKS3+p76QIYSc9I3DbKeZd4PI
+         aH5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWoQkJXXGRsc0gIfR5FpRwTysMNADwGkUqRcs62OGVoqiQZ6E4iIox22qZ+73VX+dCfdEbjjw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyHuPOE5UsJiNxBQvX9DaIlvcHhi5Yo4nnkUscSd2Lku7BY5cuK
+	g2CH4fzYRKOdpvYR7w++ef+H7dICHFAN2aQoHywFBkavcaIzVc8Ww1yYVuzp9fuRz/vVi9oCWDW
+	zBYh/prLEEVBlfL8klXEZ2AxdPcPIo2tnZXv/lVDb+kX9aTsKG+wb
+X-Gm-Gg: AY/fxX7MfeQAsK+guYZyvBWXt8ReXU2tBhB3SpPPyJR4k/nRLkjU3O8uV/a8FbCa+rl
+	uFGimdINC60X6Ntd0GrdBxDmf2nmPYExkdR+hXgpxIgLY0ZVfi0+s8M89Wos68ry4JfbwUQrneM
+	BdWZP604SSJrjQjtdusI9SEe5GNbTijiiq+Ppy38bRk1sLkAywJ6vAYgcOEhYIy/DMq6TIan3Ol
+	QU3T3CyJ63tWhAGjakjZJy6AomITR9NdLOzmBP2eLWde7ua1/KyKfiABcMjYCs1bsvR78us1IHU
+	GF26yRklfqvoCEmmxrkPAHAv
+X-Google-Smtp-Source: AGHT+IEFQU33sVmeVFLErlX5wqjQ/4hBqKHnBwdxQHFQ80Xv+FpUyXlCV3CzWOpTQJ3IoFiUA/3yOMoYcOwx4IV8FXE=
+X-Received: by 2002:a05:6402:13c9:b0:64d:1294:42e8 with SMTP id
+ 4fb4d7f45d1cf-64d12944806mr11460426a12.6.1766497226898; Tue, 23 Dec 2025
+ 05:40:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251219071209.3696755-1-pasha.tatashin@soleen.com> <867buecxll.fsf@kernel.org>
+In-Reply-To: <867buecxll.fsf@kernel.org>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Tue, 23 Dec 2025 08:39:50 -0500
+X-Gm-Features: AQt7F2rhzmWJRK8-ihyTcUhLpQ6OBksFDfKd9ZX8sznEaOMe2EFoKSqVAgzv50g
+Message-ID: <CA+CK2bC2BQBgtgudZ3-Tpc9ctJEaiFJjx9gNuysXLU1LGpf6OA@mail.gmail.com>
+Subject: Re: [PATCH v3] kho: validate preserved memory map during population
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: akpm@linux-foundation.org, rppt@kernel.org, graf@amazon.com, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org, 
+	ricardo.neri-calderon@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20251223_054029_339534_E7EDBF72 
+X-CRM114-Status: GOOD (  17.53  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -71,98 +95,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When restoring a page (from kho_restore_pages()) or folio (from
-kho_restore_folio()), KHO must initialize the struct page. The
-initialization differs slightly depending on if a folio is requested or
-a set of 0-order pages is requested.
+> > Previously, kho_populate() would succeed regardless of the memory map's
+> > state, reserving the incoming scratch regions in memblock. However,
+> > kho_memory_init() would later fail to deserialize the empty map. By that
+> > time, the scratch regions were already registered, leading to partial
+> > initialization and subsequent list corruption (double-free) during
+> > kho_init().
+>
+> Nit: I am guessing the double-free is the scratch regions being freed
+> twice? Can you please write that out explicitly?
 
-Conceptually, it is quite simple to understand. When restoring 0-order
-pages, each page gets a refcount of 1 and that's it. When restoring a
-folio, head page gets a refcount of 1 and tail pages get 0.
+Sure.
 
-kho_restore_page() tries to combine the two separate initialization flow
-into one piece of code. While it works fine, it is more complicated to
-read than it needs to be. Make the code simpler by splitting the two
-initalization paths into two separate functions. This improves
-readability by clearly showing how each type must be initialized.
+> > +     mem_map_phys = kho_get_mem_map_phys(fdt);
+> > +     if (!mem_map_phys) {
+> > +             pr_warn("setup: handover FDT (0x%llx) present but no preserved memory found\n",
+> > +                     fdt_phys);
+>
+> Enabling KHO but not using it is a perfectly normal use case. This
+> should not be a warning. I don't think we should print anything here
+> TBH.
 
-Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
----
+That is fair, I considered pr_info(), but I think you are right, lets
+just remove print.
 
-Notes:
-    This patch is a follow up from
-    https://lore.kernel.org/linux-mm/86ms42mj44.fsf@kernel.org/
+>
+> > +             err = -ENOENT;
+> > +             goto out;
+> > +     }
+> > +
+> >       scratch = early_memremap(scratch_phys, scratch_len);
+> >       if (!scratch) {
+> >               pr_warn("setup: failed to memremap scratch (phys=0x%llx, len=%lld)\n",
+> > @@ -1515,6 +1517,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+> >
+> >       kho_in.fdt_phys = fdt_phys;
+> >       kho_in.scratch_phys = scratch_phys;
+> > +     kho_in.mem_map_phys = mem_map_phys;
+>
+> Nit: not a fan of duplicating information. This is already contained in
+> the FDT. Perhaps make kho_memory_init() also call
+> kho_get_mem_map_phys()? And while at it, perhaps make it
+> kho_get_mem_map() and the return type struct khoser_mem_chunk * ?
 
- kernel/liveupdate/kexec_handover.c | 41 ++++++++++++++++++++----------
- 1 file changed, 27 insertions(+), 14 deletions(-)
+I prefer the current approach, fetch from FDT once, it is just a single address.
 
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 2d9ce33c63dc..304c26fd5ee6 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -219,11 +219,33 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
- 	return 0;
- }
- 
-+/* For physically contiguous 0-order pages. */
-+static void kho_init_pages(struct page *page, unsigned int nr_pages)
-+{
-+	for (unsigned int i = 0; i < nr_pages; i++)
-+		set_page_count(page + i, 1);
-+}
-+
-+static void kho_init_folio(struct page *page, unsigned int order)
-+{
-+	unsigned int nr_pages = (1 << order);
-+
-+	/* Head page gets refcount of 1. */
-+	set_page_count(page, 1);
-+
-+	/* For higher order folios, tail pages get a page count of zero. */
-+	for (unsigned int i = 1; i < nr_pages; i++)
-+		set_page_count(page + i, 0);
-+
-+	if (order > 0)
-+		prep_compound_page(page, order);
-+}
-+
- static struct page *kho_restore_page(phys_addr_t phys, bool is_folio)
- {
- 	struct page *page = pfn_to_online_page(PHYS_PFN(phys));
--	unsigned int nr_pages, ref_cnt;
- 	union kho_page_info info;
-+	unsigned int nr_pages;
- 
- 	if (!page)
- 		return NULL;
-@@ -240,20 +262,11 @@ static struct page *kho_restore_page(phys_addr_t phys, bool is_folio)
- 
- 	/* Clear private to make sure later restores on this page error out. */
- 	page->private = 0;
--	/* Head page gets refcount of 1. */
--	set_page_count(page, 1);
- 
--	/*
--	 * For higher order folios, tail pages get a page count of zero.
--	 * For physically contiguous order-0 pages every pages gets a page
--	 * count of 1
--	 */
--	ref_cnt = is_folio ? 0 : 1;
--	for (unsigned int i = 1; i < nr_pages; i++)
--		set_page_count(page + i, ref_cnt);
--
--	if (is_folio && info.order)
--		prep_compound_page(page, info.order);
-+	if (is_folio)
-+		kho_init_folio(page, info.order);
-+	else
-+		kho_init_pages(page, nr_pages);
- 
- 	adjust_managed_page_count(page, nr_pages);
- 	return page;
+> No strong opinion, so fine either way, but I do think it is cleaner.
 
-base-commit: 9f7b37a7c250baf3092719d4ebc9a8edaa79a7b4
--- 
-2.43.0
+Thank you for the review.
 
+Pasha
 
