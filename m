@@ -4,83 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 46A87E6F090
-	for <kexec@archiver.kernel.org>; Tue, 23 Dec 2025 13:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6C822E6F093
+	for <kexec@archiver.kernel.org>; Tue, 23 Dec 2025 14:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=/I6XlXAEilN0X40BgO/Y75hBFwj9rzVL3WYipFqiWfY=; b=j5DkpzlCJv4QokJZEz6XLHdp2+
-	blS7lDegeBabdjuzIFGM97KmFgnWrmFIDuKBGQE0mOg/HDMxvOIZyawsHSUqrsOIQ2iK4GqU7oRch
-	N/j78Yz6TyZAedCFsDs3DzJjIub539pR1dPGCghsn8nXi8xdunOiNJbqMrLrFiPpOxI7r7M/WHdiV
-	T4WA2Ab+N4TxvndX24cv7R1t+wdKxFE+AMabBvhYYfOt9FyVXXMlQbjomw0vibJiHmw97O4CHOMXk
-	pZEQUS70UqTAjkDYSn1mll0pAH2c5iFn53Fg8DUD+lUPB5Lr7Ky+ykgOQ/U961dq9I296/RB1f6GK
-	KP+pf+GQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=vshIKu39IbphKk1hyt1uS5BaulPgmjMjuk5AnSSvw9w=; b=Oz+R0NU9lj7S5uuh/VQ4hQMA6F
+	i6Df8Oq+e1QEDY7A2Pn+a4ofU9cdoktnQfNiNGpTGK8PW8DwZHJ7GPHvCGocBZFfYxm62zXIJPTLg
+	MwqQYdajobhRSSFmXVkJcxAM0XHXOqwJq4tuSO3VCSf0nUConiEIV87lbgw72SXoQONjkR113Pxgf
+	whPKxqctGAu2RK5F5zByt9y74G3Jj37/IVs2YX74VTrM59DlomGsCZl4eBMz0F1F0ZfdJhJiWrBzq
+	DvHDHGDNxSJhEKzKuDvPLlQ9CMyUymizO7eCF7q+KMY33bT6S435KM+X0+We6D3T4iV9Fg5i4Z4l9
+	tS6e2t6Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vY2cp-0000000FXvO-2hFZ;
-	Tue, 23 Dec 2025 13:40:31 +0000
-Received: from mail-ed1-x52f.google.com ([2a00:1450:4864:20::52f])
+	id 1vY2xT-0000000FZbz-08Et;
+	Tue, 23 Dec 2025 14:01:51 +0000
+Received: from mail-yw1-x1132.google.com ([2607:f8b0:4864:20::1132])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vY2cn-0000000FXuz-1Agv
+	id 1vY2xP-0000000FZbH-34VD
 	for kexec@lists.infradead.org;
-	Tue, 23 Dec 2025 13:40:30 +0000
-Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-64d80a47491so3579765a12.1
-        for <kexec@lists.infradead.org>; Tue, 23 Dec 2025 05:40:28 -0800 (PST)
+	Tue, 23 Dec 2025 14:01:49 +0000
+Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-78fb7ab7562so28732817b3.2
+        for <kexec@lists.infradead.org>; Tue, 23 Dec 2025 06:01:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1766497227; x=1767102027; darn=lists.infradead.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/I6XlXAEilN0X40BgO/Y75hBFwj9rzVL3WYipFqiWfY=;
-        b=VYoqgzt3E/X9y1tBBjxnGUNB8/+b76Jnxh/8r0wKQHCUBa0C7dSkgIkpS0exqdMUxB
-         FE3W84d2MZqWGlAZFP+acuDJ2hPjIgXxTqC0Jlr8/RXD+5gzvaa86raFw+lypMrfwBpR
-         LhH3iiGG6xqwR1A7Sad7gKEh8Z2E2Z5ZaBMqGhAoo29qQaK6gCO041BBqMdU0Z1VedCj
-         VsrZgE1pQPkwBFpfxXbOvKj3R7Sw43phVHcAOAKIHsHIK4btkLszchcRrUXtilPQB4bX
-         q3naEQx96jFlfr4Gz9R7BxW//HIuAQTeEPXo/1AzEngxDI4N2SNubaqBtOSOvjlFH4jY
-         tfig==
+        d=soleen.com; s=google; t=1766498506; x=1767103306; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vshIKu39IbphKk1hyt1uS5BaulPgmjMjuk5AnSSvw9w=;
+        b=cpAO1Ss/fJuIzam3c6Ftv5O7Ct/+8KArzX16WKzmBNvpuRzTXFlmmNDmsfZA8XCwhG
+         sN2erkcEcxlVTiDmg1mkW6tTjUF2U5gq2mbRUAGjkT9gyMvZDCVT5Rvd9HnZOiIEeP1U
+         jxx4331K5+XH8cngdl3uRewXFhwVHkLZZsqscdhQJ4jnjTGFQMqZ9R2z8QRydE7zUpX/
+         a7udNFEd0AGDdACKpGhze52uAd9jemyP/ZSXH7GToeZqG0jl4BZOFkrimy0CqxEY5xfX
+         PRTMX6j5BCeVhEhqpx8GAboDhEX6IVR9MaZRSxRW3+ssw0Iy6p32h8cuPENgpgzJy96z
+         Pf4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766497227; x=1767102027;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/I6XlXAEilN0X40BgO/Y75hBFwj9rzVL3WYipFqiWfY=;
-        b=Chr7jHl49Pvv17cU3cUwOV1nbfV33+LXouVcTG+31Klb9Vy+PgLF2gRfKj6jP4tsz1
-         cxZxZF90gUy0FzPbq0B7Hx4WcV3GML86+YylhQlFGlwdMKXAbwFgHVuHNjnA/WhNqhk7
-         AWtZwQYZU28x24phOTRh5tBe9XlsuUJ4ld1ayg7WwWyVgj6MxETWeAplVO8H28YIO1hW
-         lZCJopu6Ih+OEhDbH8OhDLRe/2gl5L8TlKPU6eA1m3q3+SQNMnL4bctt/9c0gR1GFqLF
-         qxAXrK7B/eRAb1qFuFde4uhlB70RAiRIW/y3FH14UNtaKS3+p76QIYSc9I3DbKeZd4PI
-         aH5A==
-X-Forwarded-Encrypted: i=1; AJvYcCWoQkJXXGRsc0gIfR5FpRwTysMNADwGkUqRcs62OGVoqiQZ6E4iIox22qZ+73VX+dCfdEbjjw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyHuPOE5UsJiNxBQvX9DaIlvcHhi5Yo4nnkUscSd2Lku7BY5cuK
-	g2CH4fzYRKOdpvYR7w++ef+H7dICHFAN2aQoHywFBkavcaIzVc8Ww1yYVuzp9fuRz/vVi9oCWDW
-	zBYh/prLEEVBlfL8klXEZ2AxdPcPIo2tnZXv/lVDb+kX9aTsKG+wb
-X-Gm-Gg: AY/fxX7MfeQAsK+guYZyvBWXt8ReXU2tBhB3SpPPyJR4k/nRLkjU3O8uV/a8FbCa+rl
-	uFGimdINC60X6Ntd0GrdBxDmf2nmPYExkdR+hXgpxIgLY0ZVfi0+s8M89Wos68ry4JfbwUQrneM
-	BdWZP604SSJrjQjtdusI9SEe5GNbTijiiq+Ppy38bRk1sLkAywJ6vAYgcOEhYIy/DMq6TIan3Ol
-	QU3T3CyJ63tWhAGjakjZJy6AomITR9NdLOzmBP2eLWde7ua1/KyKfiABcMjYCs1bsvR78us1IHU
-	GF26yRklfqvoCEmmxrkPAHAv
-X-Google-Smtp-Source: AGHT+IEFQU33sVmeVFLErlX5wqjQ/4hBqKHnBwdxQHFQ80Xv+FpUyXlCV3CzWOpTQJ3IoFiUA/3yOMoYcOwx4IV8FXE=
-X-Received: by 2002:a05:6402:13c9:b0:64d:1294:42e8 with SMTP id
- 4fb4d7f45d1cf-64d12944806mr11460426a12.6.1766497226898; Tue, 23 Dec 2025
- 05:40:26 -0800 (PST)
-MIME-Version: 1.0
-References: <20251219071209.3696755-1-pasha.tatashin@soleen.com> <867buecxll.fsf@kernel.org>
-In-Reply-To: <867buecxll.fsf@kernel.org>
+        d=1e100.net; s=20230601; t=1766498506; x=1767103306;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vshIKu39IbphKk1hyt1uS5BaulPgmjMjuk5AnSSvw9w=;
+        b=GDGwiAlmbT1mFqIc0XPFIdm3ZK8VCFv08unQrxh5DfwUxvTR2NBVz1QwL5syVvbEJL
+         nC+7KVQMEbcdYH96gERrqI2xgcWc0ME+BwpOLzweGh0YyMWrf4NljRAoIU7OMau9sfgI
+         JWPTttd6TT0zQF0XJEYzxucnbzYvOLyNBwQ2fkwK+JO/kf4W29xdNHD9S5UKgChssVdO
+         E5le5vN9WLXv5LwxEKm7q4D884QMY5ylX6hFX4M52OK7CwAdO7SFlY0PfaMOVOjz9EkK
+         vjLIEYXkC6kEOVltJvmdZQTuXanv5wwR158TDKLZZZPSXjnGynfpjnB2m6s9WvC9ZF3S
+         PTYw==
+X-Forwarded-Encrypted: i=1; AJvYcCXKCHsOaYJvZXTacIDPDNR3VW0Rrrc2IIpELWHD4UhIODmkDvcSHghrJHO1JPlxI52PewS6wQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwjXVPE8nQeYhd/ZYAXv5MAujrxIRS4tuOyoUuFehWvuShm8meD
+	daCXgQId3wrZ4eGtBbr7e8ymMP4jfijh/5cpCq1RuofHNMDbnG+nFAgmiDAiEodFV9U=
+X-Gm-Gg: AY/fxX5W+2GrB1baGp/GbFZHeBawFuPe6YWi57ypQz9Hu4YkmzoQ1B1jUH6Wo79Jd2r
+	bqfRKIiXYfFFUKPr0BBWBDiVMoVbPo5O8DQEni3k5vdx6T0oAkitHx0AZsLJD+/oH/qI9mGq1lh
+	Xjfrt553Z+vuu1GNgTLOebxhtzC45ddHywwe6eay5e542ydISakejVPDaasc31VCYTDscA05g6X
+	0LJQwvR1LW4Wdc+giZk2zizouDrmvkZb+Tq82ON6EAvzfz2mk57TzTLTwh/ZT5VEdhnAAMCxCqt
+	7BNTMmvXnfkMWMoStJykDrbXQOrzPMTfSyjq2tLlrPXiTQ0UAt73fSJlq8zVKxCqXzUMeXbeKm7
+	I7fnFtS7coIOeE7CNSQ+5TUI246M2aQhJRj+rlxPeZFKMcd832qFdSCk1sze1nFshFkhoy8R3Xg
+	5iayFJ4RwZTRdOs2IVoDR0VHkKUfYDquvhS2y+gzcBx6U3JZbQFXYq6feKWHRaGtKShHhIP3tRc
+	lnuWw2Qj46Nk9jo6b+3QTudlEDcPzIYN8PINQ==
+X-Google-Smtp-Source: AGHT+IH5CPaJf1hFF18a7CLmrmSafeqmgYVCXu6LIDTysGZNKbl/h5bcqgxuwkcD9gwaFkH2YgNd4A==
+X-Received: by 2002:a05:690c:4b88:b0:78c:6664:3104 with SMTP id 00721157ae682-78fb3f05364mr244887467b3.5.1766498506252;
+        Tue, 23 Dec 2025 06:01:46 -0800 (PST)
+Received: from soleen.c.googlers.com.com (182.221.85.34.bc.googleusercontent.com. [34.85.221.182])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-78ffebd2690sm1244367b3.15.2025.12.23.06.01.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Dec 2025 06:01:45 -0800 (PST)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Tue, 23 Dec 2025 08:39:50 -0500
-X-Gm-Features: AQt7F2rhzmWJRK8-ihyTcUhLpQ6OBksFDfKd9ZX8sznEaOMe2EFoKSqVAgzv50g
-Message-ID: <CA+CK2bC2BQBgtgudZ3-Tpc9ctJEaiFJjx9gNuysXLU1LGpf6OA@mail.gmail.com>
-Subject: Re: [PATCH v3] kho: validate preserved memory map during population
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: akpm@linux-foundation.org, rppt@kernel.org, graf@amazon.com, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org, 
+To: akpm@linux-foundation.org,
+	pasha.tatashin@soleen.com,
+	rppt@kernel.org,
+	graf@amazon.com,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	pratyush@kernel.org,
 	ricardo.neri-calderon@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH v4] kho: validate preserved memory map during population
+Date: Tue, 23 Dec 2025 09:01:40 -0500
+Message-ID: <20251223140140.2090337-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.52.0.351.gbe84eed79e-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251223_054029_339534_E7EDBF72 
-X-CRM114-Status: GOOD (  17.53  )
+X-CRM114-CacheID: sfid-20251223_060147_817523_9AD4EB4D 
+X-CRM114-Status: GOOD (  13.43  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,54 +103,148 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> > Previously, kho_populate() would succeed regardless of the memory map's
-> > state, reserving the incoming scratch regions in memblock. However,
-> > kho_memory_init() would later fail to deserialize the empty map. By that
-> > time, the scratch regions were already registered, leading to partial
-> > initialization and subsequent list corruption (double-free) during
-> > kho_init().
->
-> Nit: I am guessing the double-free is the scratch regions being freed
-> twice? Can you please write that out explicitly?
+If the previous kernel enabled KHO but did not call kho_finalize()
+(e.g., CONFIG_LIVEUPDATE=n or userspace skipped the finalization step),
+the 'preserved-memory-map' property in the FDT remains empty/zero.
 
-Sure.
+Previously, kho_populate() would succeed regardless of the memory map's
+state, reserving the incoming scratch regions in memblock. However,
+kho_memory_init() would later fail to deserialize the empty map. By that
+time, the scratch regions were already registered, leading to partial
+initialization and subsequent list corruption (freeing scratch area
+twice) during kho_init().
 
-> > +     mem_map_phys = kho_get_mem_map_phys(fdt);
-> > +     if (!mem_map_phys) {
-> > +             pr_warn("setup: handover FDT (0x%llx) present but no preserved memory found\n",
-> > +                     fdt_phys);
->
-> Enabling KHO but not using it is a perfectly normal use case. This
-> should not be a warning. I don't think we should print anything here
-> TBH.
+Move the validation of the preserved memory map earlier into
+kho_populate(). If the memory map is empty/NULL:
+1. Abort kho_populate() immediately with -ENOENT.
+2. Do not register or reserve the incoming scratch memory, allowing the new
+   kernel to reclaim those pages as standard free memory.
+3. Leave the global 'kho_in' state uninitialized.
 
-That is fair, I considered pr_info(), but I think you are right, lets
-just remove print.
+Consequently, kho_memory_init() sees no active KHO context
+(kho_in.mem_chunks_phys is 0) and falls back to kho_reserve_scratch(),
+allocating fresh scratch memory as if it were a standard cold boot.
 
->
-> > +             err = -ENOENT;
-> > +             goto out;
-> > +     }
-> > +
-> >       scratch = early_memremap(scratch_phys, scratch_len);
-> >       if (!scratch) {
-> >               pr_warn("setup: failed to memremap scratch (phys=0x%llx, len=%lld)\n",
-> > @@ -1515,6 +1517,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
-> >
-> >       kho_in.fdt_phys = fdt_phys;
-> >       kho_in.scratch_phys = scratch_phys;
-> > +     kho_in.mem_map_phys = mem_map_phys;
->
-> Nit: not a fan of duplicating information. This is already contained in
-> the FDT. Perhaps make kho_memory_init() also call
-> kho_get_mem_map_phys()? And while at it, perhaps make it
-> kho_get_mem_map() and the return type struct khoser_mem_chunk * ?
+Fixes: de51999e687c ("kho: allow memory preservation state updates after finalization")
+Reported-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Closes: https://lore.kernel.org/all/20251218215613.GA17304@ranerica-svr.sc.intel.com
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Tested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+---
+Changes v4:
+- Addressed Tested-by
+- Addressed review comments from Pratyush.
 
-I prefer the current approach, fetch from FDT once, it is just a single address.
+ kernel/liveupdate/kexec_handover.c | 37 +++++++++++++++---------------
+ 1 file changed, 19 insertions(+), 18 deletions(-)
 
-> No strong opinion, so fine either way, but I do think it is cleaner.
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 9dc51fab604f..d4482b6e3cae 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -460,27 +460,23 @@ static void __init deserialize_bitmap(unsigned int order,
+ 	}
+ }
+ 
+-/* Return true if memory was deserizlied */
+-static bool __init kho_mem_deserialize(const void *fdt)
++/* Returns physical address of the preserved memory map from FDT */
++static phys_addr_t __init kho_get_mem_map_phys(const void *fdt)
+ {
+-	struct khoser_mem_chunk *chunk;
+ 	const void *mem_ptr;
+-	u64 mem;
+ 	int len;
+ 
+ 	mem_ptr = fdt_getprop(fdt, 0, PROP_PRESERVED_MEMORY_MAP, &len);
+ 	if (!mem_ptr || len != sizeof(u64)) {
+ 		pr_err("failed to get preserved memory bitmaps\n");
+-		return false;
++		return 0;
+ 	}
+ 
+-	mem = get_unaligned((const u64 *)mem_ptr);
+-	chunk = mem ? phys_to_virt(mem) : NULL;
+-
+-	/* No preserved physical pages were passed, no deserialization */
+-	if (!chunk)
+-		return false;
++	return get_unaligned((const u64 *)mem_ptr);
++}
+ 
++static void __init kho_mem_deserialize(struct khoser_mem_chunk *chunk)
++{
+ 	while (chunk) {
+ 		unsigned int i;
+ 
+@@ -489,8 +485,6 @@ static bool __init kho_mem_deserialize(const void *fdt)
+ 					   &chunk->bitmaps[i]);
+ 		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
+ 	}
+-
+-	return true;
+ }
+ 
+ /*
+@@ -1253,6 +1247,7 @@ bool kho_finalized(void)
+ struct kho_in {
+ 	phys_addr_t fdt_phys;
+ 	phys_addr_t scratch_phys;
++	phys_addr_t mem_map_phys;
+ 	struct kho_debugfs dbg;
+ };
+ 
+@@ -1434,12 +1429,10 @@ static void __init kho_release_scratch(void)
+ 
+ void __init kho_memory_init(void)
+ {
+-	if (kho_in.scratch_phys) {
++	if (kho_in.mem_map_phys) {
+ 		kho_scratch = phys_to_virt(kho_in.scratch_phys);
+ 		kho_release_scratch();
+-
+-		if (!kho_mem_deserialize(kho_get_fdt()))
+-			kho_in.fdt_phys = 0;
++		kho_mem_deserialize(phys_to_virt(kho_in.mem_map_phys));
+ 	} else {
+ 		kho_reserve_scratch();
+ 	}
+@@ -1448,8 +1441,9 @@ void __init kho_memory_init(void)
+ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 			 phys_addr_t scratch_phys, u64 scratch_len)
+ {
+-	void *fdt = NULL;
+ 	struct kho_scratch *scratch = NULL;
++	phys_addr_t mem_map_phys;
++	void *fdt = NULL;
+ 	int err = 0;
+ 	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
+ 
+@@ -1475,6 +1469,12 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 		goto out;
+ 	}
+ 
++	mem_map_phys = kho_get_mem_map_phys(fdt);
++	if (!mem_map_phys) {
++		err = -ENOENT;
++		goto out;
++	}
++
+ 	scratch = early_memremap(scratch_phys, scratch_len);
+ 	if (!scratch) {
+ 		pr_warn("setup: failed to memremap scratch (phys=0x%llx, len=%lld)\n",
+@@ -1515,6 +1515,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 
+ 	kho_in.fdt_phys = fdt_phys;
+ 	kho_in.scratch_phys = scratch_phys;
++	kho_in.mem_map_phys = mem_map_phys;
+ 	kho_scratch_cnt = scratch_cnt;
+ 	pr_info("found kexec handover data.\n");
+ 
 
-Thank you for the review.
+base-commit: cc3aa43b44bdb43dfbac0fcb51c56594a11338a8
+-- 
+2.52.0.351.gbe84eed79e-goog
 
-Pasha
 
