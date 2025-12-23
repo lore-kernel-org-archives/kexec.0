@@ -4,90 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E0CE5E6FE23
-	for <kexec@archiver.kernel.org>; Tue, 23 Dec 2025 17:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 29B84E6FE24
+	for <kexec@archiver.kernel.org>; Tue, 23 Dec 2025 17:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=TTLC7OEVGIoEXEyvllrnolAl7aW+wPLOmIrEw4xjfLQ=; b=SaNAgSgwYzmNr+kiwRXDaHdySH
-	coKJsHuQ/e4PK1MrH58iwKKSNbPsZ8MdL1e4RSbaVFFZCcinq0P/yO68e/T/2X3XkrhjSpXM07EJT
-	kYLPqEaDrZGd5o8anRpg/3S6XVpwI3Sskjr49tCN3hbMS1vuS2LuXE8bdmY803XPMI8FzHznqHm6O
-	xFCeq1kNgrb4aIBuI/8R9fVQ4Oa31k/hnuz7UIxc+bgPzD2bcXND4THk9615zJ4Fxdxqk1vRUZp7Z
-	jCnGdf2X+AA1h6gai+bl4G0M8JWq1f1IcrwtwBlEKr1Hgvxq1q5x2mZzgFggRhRxu8jUnjUiU9esB
-	+C3K/7cw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ok3Aj/qyWRE1hCf9QqFvj0/4fcSMjg0OoyQuUL19KWU=; b=gXuKyut7zS6fI1bFnqpuxR3blb
+	ECYQMHLWDVDu6z3VTDloBYeki5fsdGUw6PCaENmQX5fd01bak+AfkGq+YOS4SiBzXhAm97/OcCl6q
+	8FtT1tB/iah9VDmPMfcQjYLmpVkNhEpr+tc62uf2Vk03nGRGOeShZnFel0aIAJDw+ZhJrfU64wJUW
+	S+YdqNLX9Dm+q0LfcQ5xGLA+SV4haDJ1h7/T/yuxHSqBsafI7nfxzzjRL+tJcY4hxO/CfOCQy1+/B
+	FWNXk7bRCW3QByh7AvkEtmdF+bbqWG4PNTyWfqXT2nwmfWW0HxlU80ky46bcxubJtiVzCJHbFQYMc
+	4qwcugBA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vY6Ku-0000000FqBn-4ARx;
-	Tue, 23 Dec 2025 17:38:16 +0000
-Received: from mail-ed1-x535.google.com ([2a00:1450:4864:20::535])
+	id 1vY6Wb-0000000FrtC-0al0;
+	Tue, 23 Dec 2025 17:50:21 +0000
+Received: from mail-ej1-x62b.google.com ([2a00:1450:4864:20::62b])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vY6Ks-0000000FqBN-188W
+	id 1vY6WY-0000000Frsn-0MIi
 	for kexec@lists.infradead.org;
-	Tue, 23 Dec 2025 17:38:15 +0000
-Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-64b791b5584so7476035a12.0
-        for <kexec@lists.infradead.org>; Tue, 23 Dec 2025 09:38:13 -0800 (PST)
+	Tue, 23 Dec 2025 17:50:19 +0000
+Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-b7cee045187so935427966b.0
+        for <kexec@lists.infradead.org>; Tue, 23 Dec 2025 09:50:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1766511492; x=1767116292; darn=lists.infradead.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=TTLC7OEVGIoEXEyvllrnolAl7aW+wPLOmIrEw4xjfLQ=;
-        b=Lq/nmdNjfWIPYBN1mpZlT/6yaO8w27/61uX92FXYFyk/TqflXQaiBP+uFz9ziYGV4N
-         iisO5NtQ8kLkxgP2hzMVvOkZAIZBNWFrUprKamin4FGMChd7VGVujiSC1OJYinz1PVYC
-         S6XoVCBZAFCEtf0UK9yV8QNmPl7FdNDGSmcdh+Q0XO6/2uSAU7XtkZC+Y6NaVTtrKYb5
-         9V0K+14Rf+BIRAqxW8PN0HTky1h8ip9QdIp1KTUJRcmfnFFjNhGTxwRYZTs+06rOEvpx
-         qznfEujxK49Q7sqiYshYbPpLawq5OG1QuI13NHDk70M9LwnbQrFG9hG15ZOut5REcKuO
-         v6NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766511492; x=1767116292;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=soleen.com; s=google; t=1766512216; x=1767117016; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TTLC7OEVGIoEXEyvllrnolAl7aW+wPLOmIrEw4xjfLQ=;
-        b=quR8l1gNgxnc5bt61rwrwpW0W2BLH1gpprBf/JDtM3WKeI/tROAtR4GO0XootQ0abO
-         lCVRgCIdjF0DxvK8iLifYiT90TmPDQL9sqIs3988aC3qqmx3B4dwCpgCG/rr1MAFliGU
-         BL0ohM+GVQ6PccoUH9f6OPTJpcXO5O87iptoZKHqWpxNhVRPsTmAe7az5sZ0/m1hQU7N
-         srph88f9UhjWZItpErHJBo9jptbwbywGbbUQXBvicF2PPxmBjNI+EXFgbuvEgiKBC1Yo
-         GZlp82JJUUBAuWjfusz1bC4gSEnzOB8tF0Z2lEWUb/U6UUdlIlxXSSSkj4pnpSKR7Kjw
-         oOpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXAlWkCLwY1IR38KymbTKq+M+/NiuSE2agZIu5PFmxcRzNSAsxYNB1u58+rMOHxG2NSgKe1cA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxHIkFfBXWHgKKOpcgrjlmuFkcAham06ezdpHcuQKKhtDZpv5WD
-	FEacL1TqKjZzL4Raq2g+m8K7N8RW1sF51053KATtcNBLj57dTKS80GyccizfhiMqRrQdbIfhuUY
-	WKlrlub0Hu2s6Vszij2BFWXIUhEuc+EFRlZg6xexFKA==
-X-Gm-Gg: AY/fxX4Ck5JFzi7SnKXEk7GjRtNlZnvrDa43v+CBMNUckzcuG6aCwdYbKSm2qQwf79Y
-	cqjP+3zPWfWv5ulF9c4US/TYE/7Hx7wtdCUfeZPYy9hYOyIlyfK7919qvP7/fdv4DNY0Kp2+uGX
-	DyY+2FscsNCgEKXrysSN9GKJ53LVnDQj/W7BmuIq4UaiK8Ugyqjc7/0g5Z7XqbG3RSD2WC/Ot81
-	6eNlXEXO5mEp/j+XaLdPMFFR9RrWtDDmGcqGacN7oPGS0FVrdmWT5KzDn+cPzKqDqcvZV+g6F6q
-	FZR0Vz1/wcJKE+1MX638iD2jJg==
-X-Google-Smtp-Source: AGHT+IE124uBCZCPJySJNjN/QHQdpyXa77YXFpY55orIImpDxYcMb4oh90L3OIkReSgyrytjfimRLEMoj5BCtx1k5Zs=
-X-Received: by 2002:a05:6402:34cc:b0:64d:498b:aee7 with SMTP id
- 4fb4d7f45d1cf-64d498bb3ccmr7158286a12.9.1766511491347; Tue, 23 Dec 2025
- 09:38:11 -0800 (PST)
+        bh=ok3Aj/qyWRE1hCf9QqFvj0/4fcSMjg0OoyQuUL19KWU=;
+        b=HwCUdoSEJCVH91Nplcyqb8Q2CrSxESMw2qnEfnYYuooE9lygW49nV3vsojeJfhx5Ls
+         lVIv1z19V5wIa1nRnedU4DO18vSVYjtahob5HxOFdVSJstTsaaFWz05eSlsUr2cKN1V9
+         I71zXqKiViGC3o4vuVha2c6Ry2D/TjuyroXYan9jJL2aFzwwY3soewL5Cx46XzqcTBHV
+         cAinGnTATKJ9Nfd15ApcqVPYSS3f4GeepAulouZwPhWM3uA4tsojGkV9xtmNy9IZXDrW
+         3mYgcNAldd6eVxN68OBWO4j47jlc8RsX3B2EmaENoeZCqSQWV1mWzCsWJTp3Frciofsl
+         2Oew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766512216; x=1767117016;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ok3Aj/qyWRE1hCf9QqFvj0/4fcSMjg0OoyQuUL19KWU=;
+        b=J52t5uwTp43jR9OpsoFpCKgU9DS6tZawesZ8g+mLCJH05BWG3ZaDtKUoxSY1ZkMvlu
+         /7uXwhUwFr3VqH7mV7AuT5yzXwHoO4f3DvV6bQdyhpXLJj6IjxJrOxo4grirWRsd/4TS
+         rioqN4uVmALWrvcv7CNrrtdZSOORyD0XKifwp0XgsfbZsY152sZluhsOUajgMemjzybG
+         ZbFkD2UsaJF5N3NHre9/IqqrSufY027gA4xac9Z/lAVG/YfUt5Babq1myC9HGUas7v8O
+         qjzfx8uE0gZ7ODKbo6urdCsAqNGNj3qrfBXLmJdWxzVoZjQOHokOivmnbGUQZEJrq+aH
+         QVKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPBrnBF4ZD4TW6gfGa9exekKUm+Bd1h2faPwr3dNBKvab2t/UBk87sdHGX2drHRwjDxxClig==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yx7+SeX9hyCJV/TQdG1VBTyVd9UAz59aaFbvCGjuS/yL3kxHdEQ
+	o53w1xwJ7uoQ9p5tBYYiYuoXqSPu/n47I4dFnrSdkKTlxX/8N1W8RfrcZLY0vLbPc2lt7Ik/5+e
+	PX5JvinMwoFMNxffQpe/4R33UL+MdQ7buLdRnZ/topA==
+X-Gm-Gg: AY/fxX62UU+S0dvmHekupkdwsFCAYPMSM45HoiZWGngBlCx1qF2oi/I1Tz0cg9E0ZWP
+	vGBIrRRr7DbjzmizzFrCZ4Fh/J7ZNkOwGFxTWwSnqjZIaH1Mn4G/vcO4Dof54bZxE6scGIKmsL0
+	OttabRs1R/jHrwlJG4u8qIwo9GRJirGZdlo+0y11blJ8rdZgISOl/C/mob365R1p+gzi7k4dp3l
+	NgOXWb+YQdJvy4m+dM8QfM28Jjz61MNOfa1tbfHv3o18mNuO+gxchxYNS/wHXxVf8toIYROmZJI
+	d0c7vNTKrnvn6fCK7KL3d/5PmQ==
+X-Google-Smtp-Source: AGHT+IHpM1t2D8hom0JAjvCmVAh1r2zpdM9beyI1kYn99D4aa5g9AkslkSjbRb3fRBVIViB0dpMOcMDXtwKoyXUcSf0=
+X-Received: by 2002:a17:907:61a2:b0:b80:3fb7:8e68 with SMTP id
+ a640c23a62f3a-b803fb78ef2mr933875966b.21.1766512215920; Tue, 23 Dec 2025
+ 09:50:15 -0800 (PST)
 MIME-Version: 1.0
-References: <20251216084913.86342-1-epetron@amazon.de> <aUFJH9xzJXYOt_X8@kernel.org>
- <CA+CK2bDGvgcGJijAtSSa2k_FWjnZXm2jRiFd6Z9-XjEQ-Y68DQ@mail.gmail.com>
- <aUF4fsWwD9BswkFh@kernel.org> <CA+CK2bB2mn5b0N9gs1UavYLUQhbpVvdo702oHZa15E9OaZkKWg@mail.gmail.com>
- <aUUYprAotKYMiEs0@kernel.org> <CA+CK2bD101cSC_7+OWkMei2QvUVjSaRLy+LboLe8Sz7KS3by4g@mail.gmail.com>
- <861pkpkffh.fsf@kernel.org> <CA+CK2bA1kYCf0BwhX3Sg9Ur82nK-7HPzs0sg6xbVWFAJaZLhpw@mail.gmail.com>
- <86jyyecyzh.fsf@kernel.org> <CA+CK2bDxnTEe9Ohq5zLuyF-jqgD0DPhfdq6z=yztUsXU5p5fSQ@mail.gmail.com>
- <863452cwns.fsf@kernel.org>
-In-Reply-To: <863452cwns.fsf@kernel.org>
+References: <20251223104448.195589-1-pratyush@kernel.org>
+In-Reply-To: <20251223104448.195589-1-pratyush@kernel.org>
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Tue, 23 Dec 2025 12:37:34 -0500
-X-Gm-Features: AQt7F2qaH0m0VJoMuoVXVcmA15RsVJHyeu9_tkkVe-fDVNFSdl7k8MrpDozG4X8
-Message-ID: <CA+CK2bCjJWZG_rPoPsHWSxirmUCTOuFQzTCss2AKf9UqpThrdw@mail.gmail.com>
-Subject: Re: [PATCH] kho: add support for deferred struct page init
+Date: Tue, 23 Dec 2025 12:49:39 -0500
+X-Gm-Features: AQt7F2pf8XmLmwqluLaF5vHB_10yuSQHlsbc1JXgZTMDrcOQxJTZMuXQmSFqybE
+Message-ID: <CA+CK2bBv2wpduYQF_fwzciH4HxZ6eFjwZMSpZwW0AC6KXL4msg@mail.gmail.com>
+Subject: Re: [PATCH] kho: simplify page initialization in kho_restore_page()
 To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>, Evangelos Petrongonas <epetron@amazon.de>, Alexander Graf <graf@amazon.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Jason Miu <jasonmiu@google.com>, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org, 
-	nh-open-source@amazon.com
+Cc: Andrew Morton <akpm@linux-foundation.org>, Alexander Graf <graf@amazon.com>, 
+	Mike Rapoport <rppt@kernel.org>, kexec@lists.infradead.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251223_093814_346773_7207199C 
-X-CRM114-Status: GOOD (  39.37  )
+X-CRM114-CacheID: sfid-20251223_095018_153140_4ED4846A 
+X-CRM114-Status: GOOD (  27.56  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,91 +97,108 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> > if (WARN_ON_ONCE(info.magic != KHO_PAGE_MAGIC || info.order > MAX_PAGE_ORDER))
-> > return NULL;
+On Tue, Dec 23, 2025 at 5:45=E2=80=AFAM Pratyush Yadav <pratyush@kernel.org=
+> wrote:
 >
-> See my patch that drops this restriction:
-> https://lore.kernel.org/linux-mm/20251206230222.853493-2-pratyush@kernel.org/
+> When restoring a page (from kho_restore_pages()) or folio (from
+> kho_restore_folio()), KHO must initialize the struct page. The
+> initialization differs slightly depending on if a folio is requested or
+> a set of 0-order pages is requested.
 >
-> I think it was wrong to add it in the first place.
-
-Agree, the restriction can be removed. Indeed, it is wrong as it is
-not enforced during preservation.
-
-However, I think we are going to be in a world of pain if we allow
-preserving memory from different topologies within the same order. In
-kho_preserve_pages(), we have to check if the first and last page are
-from the same nid; if not, reduce the order by 1 and repeat until they
-are. It is just wrong to intermix different memory into the same
-order, so in addition to removing that restriction, I think we should
-implement this enforcement.
-
-Also, perhaps we should pass the NID in the Jason's radix tree
-together with the order. We could have a single tree that encodes both
-order and NID information in the top level, or we can have one tree
-per NID. It does not really matter to me, but that should help us with
-faster struct page initialization.
-
-> >> To get the nid, you would need to call early_pfn_to_nid(). This takes a
-> >> spinlock and searches through all memblock memory regions. I don't think
-> >> it is too expensive, but it isn't free either. And all this would be
-> >> done serially. With the zone search, you at least have some room for
-> >> concurrency.
-> >>
-> >> I think either approach only makes a difference when we have a large
-> >> number of low-order preservations. If we have a handful of high-order
-> >> preservations, I suppose the overhead of nid search would be negligible.
-> >
-> > We should be targeting a situation where the vast majority of the
-> > preserved memory is HugeTLB, but I am still worried about lower order
-> > preservation efficiency for IOMMU page tables, etc.
+> Conceptually, it is quite simple to understand. When restoring 0-order
+> pages, each page gets a refcount of 1 and that's it. When restoring a
+> folio, head page gets a refcount of 1 and tail pages get 0.
 >
-> Yep. Plus we might get VMMs stashing some of their state in a memfd too.
-
-Yes, that is true, but hopefully those are tiny compared to everything else.
-
-> >> Long term, I think we should hook this into page_alloc_init_late() so
-> >> that all the KHO pages also get initalized along with all the other
-> >> pages. This will result in better integration of KHO with rest of MM
-> >> init, and also have more consistent page restore performance.
-> >
-> > But we keep KHO as reserved memory, and hooking it up into
-> > page_alloc_init_late() would make it very different, since that memory
-> > is part of the buddy allocator memory...
+> kho_restore_page() tries to combine the two separate initialization flow
+> into one piece of code. While it works fine, it is more complicated to
+> read than it needs to be. Make the code simpler by splitting the two
+> initalization paths into two separate functions. This improves
+> readability by clearly showing how each type must be initialized.
 >
-> The idea I have is to have a separate call in page_alloc_init_late()
-> that initalizes KHO pages. It would traverse the radix tree (probably in
-> parallel by distributing the address space across multiple threads?) and
-> initialize all the pages. Then kho_restore_page() would only have to
-> double-check the magic and it can directly return the page.
-
-I kind of do not like relying on magic to decide whether to initialize
-the struct page. I would prefer to avoid this magic marker altogether:
-i.e. struct page is either initialized or not, not halfway
-initialized, etc.
-
-Magic is not reliable. During machine reset in many firmware
-implementations, and in every kexec reboot, memory is not zeroed. The
-kernel usually allocates vmemmap using exactly the same pages, so
-there is just too high a chance of getting magic values accidentally
-inherited from the previous boot.
-
-> Radix tree makes parallelism easier than the linked lists we have now.
-
-Agree, radix tree can absolutely help with parallelism.
-
-> >> Jason's radix tree patches will make that a bit easier to do I think.
-> >> The zone search will scale better I reckon.
-> >
-> > It could, perhaps early in boot we should reserve the radix tree, and
-> > use it as a source of truth look-ups later in boot?
+> Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
+> ---
 >
-> Yep. I think the radix tree should mark its own pages as preserved too
-> so they stick around later in boot.
+> Notes:
+>     This patch is a follow up from
+>     https://lore.kernel.org/linux-mm/86ms42mj44.fsf@kernel.org/
+>
+>  kernel/liveupdate/kexec_handover.c | 41 ++++++++++++++++++++----------
+>  1 file changed, 27 insertions(+), 14 deletions(-)
+>
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec=
+_handover.c
+> index 2d9ce33c63dc..304c26fd5ee6 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
+> @@ -219,11 +219,33 @@ static int __kho_preserve_order(struct kho_mem_trac=
+k *track, unsigned long pfn,
+>         return 0;
+>  }
+>
+> +/* For physically contiguous 0-order pages. */
+> +static void kho_init_pages(struct page *page, unsigned int nr_pages)
 
-Unfortunately, this can only be done in the new kernel, not in the old
-kernel; otherwise we can end up with a recursive dependency that may
-never be satisfied.
+Here and in other places below, it is better for nr_pages to be
+unsigned long. This is consistent with other places in mm, where we
+have gradually moved on from int/unsigned int to unsigned long for
+npages (see gup.c for example). Otherwise, LGTM.
 
+> +{
+> +       for (unsigned int i =3D 0; i < nr_pages; i++)
+> +               set_page_count(page + i, 1);
+> +}
+> +
+> +static void kho_init_folio(struct page *page, unsigned int order)
+> +{
+> +       unsigned int nr_pages =3D (1 << order);
+> +
+> +       /* Head page gets refcount of 1. */
+> +       set_page_count(page, 1);
+> +
+> +       /* For higher order folios, tail pages get a page count of zero. =
+*/
+> +       for (unsigned int i =3D 1; i < nr_pages; i++)
+> +               set_page_count(page + i, 0);
+> +
+> +       if (order > 0)
+> +               prep_compound_page(page, order);
+> +}
+> +
+>  static struct page *kho_restore_page(phys_addr_t phys, bool is_folio)
+>  {
+>         struct page *page =3D pfn_to_online_page(PHYS_PFN(phys));
+> -       unsigned int nr_pages, ref_cnt;
+>         union kho_page_info info;
+> +       unsigned int nr_pages;
+>
+>         if (!page)
+>                 return NULL;
+> @@ -240,20 +262,11 @@ static struct page *kho_restore_page(phys_addr_t ph=
+ys, bool is_folio)
+>
+>         /* Clear private to make sure later restores on this page error o=
+ut. */
+>         page->private =3D 0;
+> -       /* Head page gets refcount of 1. */
+> -       set_page_count(page, 1);
+>
+> -       /*
+> -        * For higher order folios, tail pages get a page count of zero.
+> -        * For physically contiguous order-0 pages every pages gets a pag=
+e
+> -        * count of 1
+> -        */
+> -       ref_cnt =3D is_folio ? 0 : 1;
+> -       for (unsigned int i =3D 1; i < nr_pages; i++)
+> -               set_page_count(page + i, ref_cnt);
+> -
+> -       if (is_folio && info.order)
+> -               prep_compound_page(page, info.order);
+> +       if (is_folio)
+> +               kho_init_folio(page, info.order);
+> +       else
+> +               kho_init_pages(page, nr_pages);
+
+Thanks,
 Pasha
 
