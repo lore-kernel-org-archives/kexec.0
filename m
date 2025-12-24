@@ -4,54 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E3816E74ADE
-	for <kexec@archiver.kernel.org>; Wed, 24 Dec 2025 07:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 08C08E7544E
+	for <kexec@archiver.kernel.org>; Wed, 24 Dec 2025 12:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Subject:Cc:From:To:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=L7myHmzOMTw/2xm1kgAsRVeuED4ov4P3tQNk8d4OzlY=; b=luAyAvCbTILj7BEGhG9pBooUBk
-	c979HUk05bwYGS9dvI3WJi0k4un51gX/3GHqOGaiK3UnilB0XZ9nva6wGE11WYfHG6ATuRN1kU61G
-	vdcZmEeRJSALtd8LgwGILIYF37A2D0isT9AhrpfysgBWk/7r2oul0SX8FlRT/1zInu1oC4/iVawDQ
-	+g+a346wcXOIdqSwSbd1n5U8sZQriLTotwi3C4G4NIIA9dEES7iK397Kj0zqXEy5yMKtv+h5wlJ4v
-	Xrd95NVsBzS/5NAIudoJFVKOs+2PWPWk6vQpTZHF+w07IaXBfL/KmFzAzU19htD7d6R5B1hdnRkHS
-	ooH763+Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=kFaMyaLN7ofb8ca0IqdWrpz34r7dd+k0wM2WCDT3KaE=; b=NBfGFZ85JfpvCSDyoaLUlAqYIG
+	ZWgxaX5V0YL9+7037sYkUCsX5tnUY6krst6/9XHXALsvVrsQu+nx/6sXTrNg1HxPK5LX0kXV9gjx4
+	6XecScX7f7qHCe81DtAXBNP5c2OTE7CcbxlJRQgEBtlcW745Fp2sZwYsCMomDbwbXlcpHkh0ayk3/
+	MEDxkDC9aaUkfJk4QNGqgY3aGx5Z0fMAjE/TsCKZ/RAUGwtpT42V1G/TGgFLfzLozgNozoa5EToGH
+	4rKvgJcf9vcIWnD+ijyQLF+Miqb0cICkqNluMUli17kQgJOKzcnpDa793G0HP9NpqrBEbPu/hdtA3
+	aLMzJBvQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vYJNz-0000000GYCj-3QuS;
-	Wed, 24 Dec 2025 07:34:19 +0000
-Received: from mail-4316.protonmail.ch ([185.70.43.16])
+	id 1vYNwa-0000000Gn4H-3WMX;
+	Wed, 24 Dec 2025 12:26:20 +0000
+Received: from mail-wm1-x32c.google.com ([2a00:1450:4864:20::32c])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vYJNw-0000000GYC9-0kUA
+	id 1vYNwX-0000000Gn3s-3o6Q
 	for kexec@lists.infradead.org;
-	Wed, 24 Dec 2025 07:34:18 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1766561650; x=1766820850;
-	bh=L7myHmzOMTw/2xm1kgAsRVeuED4ov4P3tQNk8d4OzlY=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=Dy1ObVw1vbQ0Z06UiT8eeC6tyjrwcDCHZtkpovaAeL+BLn9TmGvlMnORIMYmJctYw
-	 jSrGbX3s8/k+YRoLJLjY0vS252GzLt3gAMZ5pD+Hf+MYorhfib9WhpGlEHQXUAwon6
-	 eOfzD6giXQ99U1wWb6XEPBlz9o4UWEm6fz5Y8h+FqCeFfuS71hNaRFtQ0DNYoBTEa0
-	 60I1rktrFF42LMHXg4NGOSGH+3mVCAoH20HpK6XlY9QpOKlAboa/rTWeAHPno97CqQ
-	 cOJyTgbYXslRIP09LGwl3K9nszXDmPGSykhyZurdowqn7vAkAAXfSu3D5AUt+qG6oe
-	 QN2aBy1MmuUfg==
-Date: Wed, 24 Dec 2025 07:34:04 +0000
-To: Evangelos Petrongonas <epetron@amazon.de>, Mike Rapoport <rppt@kernel.org>
-From: Fadouse <fadouse@proton.me>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, Jason Miu <jasonmiu@google.com>, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org, nh-open-source@amazon.com
-Subject: Re: [PATCH] kho: add support for deferred struct page init
-Message-ID: <7024cefd-bf27-430b-b8fa-04e1457e0eb8@proton.me>
-Feedback-ID: 105244773:user:proton
-X-Pm-Message-ID: 2dd8c5fc83aeca573f67212e6c86fd605a27696e
+	Wed, 24 Dec 2025 12:26:19 +0000
+Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-4779b49d724so6762365e9.0
+        for <kexec@lists.infradead.org>; Wed, 24 Dec 2025 04:26:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766579175; x=1767183975; darn=lists.infradead.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kFaMyaLN7ofb8ca0IqdWrpz34r7dd+k0wM2WCDT3KaE=;
+        b=gYRTmty856xjwHKXcLlIqkw3uHeVxlLYvc2M3FflrC5vEyz8kLeLWm1DpD8fzAM9qP
+         bgf9ucLLvgNiiKaZPsGykGN7KBCsdLBnq9+169J9WxlDWINeFkRJB/OxvYjvnFl52cDp
+         Bd3EGwMaEQ/jb5Yk5oLtnDWX8eE45Xb7jRMOdCFpGzOaMo+5hMUEj+tNbroVgBYNAapp
+         rorgkWTlh9XkwGRx2GSeXI0ingZSRbs/rZrW9SAgcFUBqv5GjHEeIhIKCBfEJAa5OZ8L
+         c4K23XwZf6Y5uKvEl7ohohPFuKZ263RTMQP+5SJYvJROAf8Sey6mQwHHZZRhDv5ru8oe
+         iKdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766579175; x=1767183975;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kFaMyaLN7ofb8ca0IqdWrpz34r7dd+k0wM2WCDT3KaE=;
+        b=HIu+lg+skpeZoMKZ/tAtPYVfBZuwSTXQaz2SuhjTU8yUxuhosW0NyfV3Pu/rmr2wBd
+         AhPcbWFFCTe7sIo32Qfc3banvuphJ/gxHjrLmi4AMv5LlDTgeXJ9cbbrPd0JBpRbrGrd
+         IpUXvqA5PFCG7C1ZEwQml0HEOtIjjmVhvFT2vQVOHV4+bbomBJu8zw6UPb0nZF0o99I+
+         F/h9HTgnG3RGVcS8smTYFCRwaVSt7swAIL1oO+27l/9pF0u8C1LH9n0gWimsFNXyhxrl
+         7ky5HKSGFojTfF7kYxhWpjG5Xjk+aBIoGatbCVi8pes5BkoHV0MQhiL0voocuCCs2lY5
+         sIzA==
+X-Forwarded-Encrypted: i=1; AJvYcCXXkoTIhNmnR7h3VHga+t+BuEoweuIjWWBc1m7mR8DdZqxRwb3vRUHhAst7RUjLnanB2/9rFA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwkLHLPLPWZMafHsw5izy3KnJ3UHvIqlTSuuRZLfn+E9SbWEfNM
+	DIbL/X7W9zeNclYqA1bYy8yfdAMZDXls/b8NUa1gTMpy14/p/o7rmt28
+X-Gm-Gg: AY/fxX5x4MfB7YpLvwl6AJl+V7vWsMLduQPRf8Z0Cqi53InNZMZKxfIxle06Ot1nkhb
+	vEk3jznGDYVQr1EmcjLGtIlkEnh/KghFLMVgnIqWzmtzI3QOXZGdXLWTcGVZu8bRjGWOoQPQewr
+	KiZhO5Z54HRjDLq1uByNLuUZJ0krNEt3+BkV5Mwq4eflugtNX4sAU6cOoMt58tZ7hi/AjYzaUtj
+	FdhWNI6Q3PX1gE1Rgpulapbw2sPXaiGr2XZX2Y0k8lD8YGi/LrGteCgAQDkZduaOH2QN2fRyk5Q
+	aszgAcq78oWKw3qCNPVaEh+dBWFqoUANwxXdZ8IBBH4jyFyX406/jCtRTBtC36dbJ+rs5jdgQCO
+	jaQC27scNQL7+3hl6VQHe1BIJFNdT4GPZDptaD020CPRg/I8AOqEsttD/6askpz0n8jEmWbjKnF
+	30a7WEdsABmmLK7DNNrQ==
+X-Google-Smtp-Source: AGHT+IHCVi5vf+JW7cs0UQI/61lI+ftkhC5OET7bLF5lpXMP/9qG0WkJH6kguXir7jmsMYCcLoJ1nw==
+X-Received: by 2002:a05:600c:348e:b0:477:5b01:7d42 with SMTP id 5b1f17b1804b1-47d19599f8cmr103586685e9.5.1766579175264;
+        Wed, 24 Dec 2025 04:26:15 -0800 (PST)
+Received: from [172.22.153.25] ([80.93.240.67])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47be3a204e9sm132695265e9.2.2025.12.24.04.26.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Dec 2025 04:26:14 -0800 (PST)
+Message-ID: <edd6e350-5482-4551-aa94-e1ab8d2f9774@gmail.com>
+Date: Wed, 24 Dec 2025 13:25:50 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha256; boundary="------2c35dbb789baa2eece3de1188c6281b855389a5f3da6cb9053721f6fa8184591"; charset=utf-8
-X-Bad-Reply: 'Re:' in Subject but no References or In-Reply-To headers
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 00/12] mm/kasan: make kasan=on|off work for all three
+ modes
+To: Baoquan He <bhe@redhat.com>, Andrey Konovalov <andreyknvl@gmail.com>
+Cc: linux-mm@kvack.org, glider@google.com, dvyukov@google.com,
+ vincenzo.frascino@arm.com, akpm@linux-foundation.org,
+ kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, elver@google.com, sj@kernel.org,
+ lorenzo.stoakes@oracle.com, snovitoll@gmail.com, christophe.leroy@csgroup.eu
+References: <20251128033320.1349620-1-bhe@redhat.com>
+ <CA+fCnZcVV5=AJUNfy6G2T-UZCbAL=7NivmWkBr6LMSnzzTZ8Kg@mail.gmail.com>
+ <aUtd6es8UC0lNf/9@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+In-Reply-To: <aUtd6es8UC0lNf/9@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251223_233416_970009_F96523F6 
-X-CRM114-Status: GOOD (  36.59  )
+X-CRM114-CacheID: sfid-20251224_042617_961591_4FD5B06E 
+X-CRM114-Status: GOOD (  18.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -66,164 +108,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------2c35dbb789baa2eece3de1188c6281b855389a5f3da6cb9053721f6fa8184591
-Content-Type: multipart/mixed;
- boundary=c749eb314327cf0f04a30d9934ec9e45f7b59c6346bdeeb802cba5c25168
-Message-ID: <7024cefd-bf27-430b-b8fa-04e1457e0eb8@proton.me>
-Date: Wed, 24 Dec 2025 15:33:56 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kho: add support for deferred struct page init
-To: Evangelos Petrongonas <epetron@amazon.de>, Mike Rapoport <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jason Miu <jasonmiu@google.com>,
- linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org,
- nh-open-source@amazon.com
-References: <20251216084913.86342-1-epetron@amazon.de>
-Content-Language: en-US
-From: Fadouse <fadouse@proton.me>
-In-Reply-To: <20251216084913.86342-1-epetron@amazon.de>
-
---c749eb314327cf0f04a30d9934ec9e45f7b59c6346bdeeb802cba5c25168
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8; format=flowed
-
-SGkgRXZhbmdlbG9zLCBNaWtlLCBQYXNoYSwgUHJhdHl1c2gsDQoNCkkgaW5kZXBlbmRlbnRseSBo
-aXQgYSBjcmFzaCBpbiB0aGUgTFVPL21lbWZkIHJlc3RvcmUgcGF0aCB3aXRoDQpDT05GSUdfREVG
-RVJSRURfU1RSVUNUX1BBR0VfSU5JVD15LCBvbiBhIGxvY2FsIGJ1aWxkIGJhc2VkIG9uIGRkOWIw
-MDRiN2ZmMw0KKHg4Nl82NCBRRU1VLCA2LjE5LjAtcmMxIHRpbWVmcmFtZSkuDQoNCkluIG15IHJl
-cHJvZHVjZXIsIHN0YWdlMSBwcmVzZXJ2ZXMgYSBtZW1mZCB2aWEgTFVPIGFuZCBrZXhlY3MgaW50
-byBzdGFnZTI7DQpzdGFnZTIgY2FsbHMgTElWRVVQREFURV9TRVNTSU9OX0ZJTklTSCB3aXRob3V0
-IHJldHJpZXZpbmcgZmlsZXMuIEkgb2JzZXJ2ZWQNCmEgcmVsaWFibGUgY3Jhc2ggaW4gYWRqdXN0
-X21hbmFnZWRfcGFnZV9jb3VudCgpIGZyb20ga2hvX3Jlc3RvcmVfcGFnZSgpLg0KDQpNaW5pbWFs
-IGV4Y2VycHQ6DQoNCnN0YWdlMjogc3RhcnQNCnN0YWdlMjogcmV0cmlldmVkIHNlc3Npb24gZmQ9
-NA0KQlVHOiB1bmFibGUgdG8gaGFuZGxlIHBhZ2UgZmF1bHQgZm9yIGFkZHJlc3M6IDAwMDAwMDAw
-MDAwMDE0MTANClJJUDogYWRqdXN0X21hbmFnZWRfcGFnZV9jb3VudCsweDI5LzB4NDANCkNhbGwg
-VHJhY2U6DQogwqAga2hvX3Jlc3RvcmVfcGFnZSsweDE4YS8weDFjMA0KIMKgIGtob19yZXN0b3Jl
-X2ZvbGlvKzB4ZS8weDYwDQogwqAgbWVtZmRfbHVvX2ZpbmlzaCsweGU2LzB4MTYwDQogwqAgbHVv
-X2ZpbGVfZmluaXNoKzB4MTg4LzB4MjQwDQogwqAgbHVvX3Nlc3Npb25fZmluaXNoKzB4MmMvMHg4
-MA0KIMKgIGx1b19zZXNzaW9uX2lvY3RsKzB4ZjUvMHgxNzANCiDCoCBfX3g2NF9zeXNfaW9jdGwr
-MHg5MS8weGUwDQoNCkFwcGx5aW5nIHRoZSBwYXRjaCBpbiA8MjAyNTEyMTYwODQ5MTMuODYzNDIt
-MS1lcGV0cm9uQGFtYXpvbi5kZT4gbWFrZXMgdGhlDQppc3N1ZSBubyBsb25nZXIgcmVwcm9kdWNl
-IGZvciBtZS4NCg0KSSBjYW4gc2hhcmUgZnVsbCBsb2dzIGFuZCB0aGUgc21hbGwgdHdvLXN0YWdl
-IGluaXRyYW1mcyByZXByb2R1Y2VyIGlmIA0KbmVlZGVkLg0KDQpUaGFua3MsDQpZYW5YaW4gTGkN
-Cg0KVGVzdGVkLWJ5OiBZYW5YaW4gTGkgPGZhZG91c2VAcHJvdG9uLm1lPg0KDQpPbiAxMi8xNi8y
-MDI1IDQ6NDkgUE0sIEV2YW5nZWxvcyBQZXRyb25nb25hcyB3cm90ZToNCj4gV2hlbiBgQ09ORklH
-X0RFRkVSUkVEX1NUUlVDVF9QQUdFX0lOSVRgIGlzIGVuYWJsZWQsIHN0cnVjdCBwYWdlDQo+IGlu
-aXRpYWxpemF0aW9uIGlzIGRlZmVycmVkIHRvIHBhcmFsbGVsIGt0aHJlYWRzIHRoYXQgcnVuIGxh
-dGVyDQo+IGluIHRoZSBib290IHByb2Nlc3MuDQo+DQo+IER1cmluZyBLSE8gcmVzdG9yYXRpb24s
-IGBkZXNlcmlhbGl6ZV9iaXRtYXAoKWAgd3JpdGVzIG1ldGFkYXRhIGZvcg0KPiBlYWNoIHByZXNl
-cnZlZCBtZW1vcnkgcmVnaW9uLiBIb3dldmVyLCBpZiB0aGUgc3RydWN0IHBhZ2UgaGFzIG5vdCBi
-ZWVuDQo+IGluaXRpYWxpemVkLCB0aGlzIHdyaXRlIHRhcmdldHMgdW5pbml0aWFsaXplZCBtZW1v
-cnksIHBvdGVudGlhbGx5DQo+IGxlYWRpbmcgdG8gZXJyb3JzIGxpa2U6DQo+IGBgYA0KPiBCVUc6
-IHVuYWJsZSB0byBoYW5kbGUgcGFnZSBmYXVsdCBmb3IgYWRkcmVzczogLi4uDQo+IGBgYA0KPg0K
-PiBGaXggdGhpcyBieSBpbnRyb2R1Y2luZyBga2hvX2dldF9wcmVzZXJ2ZWRfcGFnZSgpYCwgIHdo
-aWNoIGVuc3VyZXMNCj4gYWxsIHN0cnVjdCBwYWdlcyBpbiBhIHByZXNlcnZlZCByZWdpb24gYXJl
-IGluaXRpYWxpemVkIGJ5IGNhbGxpbmcNCj4gYGluaXRfZGVmZXJyZWRfcGFnZSgpYCB3aGljaCBp
-cyBhIG5vLW9wIHdoZW4gZGVmZXJyZWQgaW5pdCBpcyBkaXNhYmxlZA0KPiBvciB3aGVuIHRoZSBz
-dHJ1Y3QgcGFnZSBpcyBhbHJlYWR5IGluaXRpYWxpemVkLg0KPg0KPiBGaXhlczogOGI2NmVkMmMz
-ZjQyICgia2hvOiBtbTogZG9uJ3QgYWxsb3cgZGVmZXJyZWQgc3RydWN0IHBhZ2Ugd2l0aCBLSE8i
-KQ0KPiBTaWduZWQtb2ZmLWJ5OiBFdmFuZ2Vsb3MgUGV0cm9uZ29uYXMgPGVwZXRyb25AYW1hem9u
-LmRlPg0KPiAtLS0NCj4gIyMjIE5vdGVzDQo+IEBKYXNvbiwgdGhpcyBwYXRjaCBzaG91bGQgYWN0
-IGFzIGEgdGVtcG9yYXJ5IGZpeCB0byBtYWtlIEtITyBwbGF5IG5pY2UNCj4gd2l0aCBkZWZlcnJl
-ZCBzdHJ1Y3QgcGFnZSBpbml0IHVudGlsIHlvdSBwb3N0IHlvdXIgaWRlYXMgYWJvdXQgc3BsaXR0
-aW5nDQo+ICJQaHlzaWNhbCBSZXNlcnZhdGlvbiIgZnJvbSAiTWV0YWRhdGEgUmVzdG9yYXRpb24i
-Lg0KPg0KPiAjIyMgVGVzdGluZw0KPiBJbiBvcmRlciB0byB0ZXN0IHRoZSBmaXgsIEkgbW9kaWZp
-ZWQgdGhlIEtITyBzZWxmdGVzdCwgdG8gYWxsb2NhdGUgbW9yZQ0KPiBtZW1vcnkgYW5kIGRvIHNv
-IGZyb20gaGlnaGVyIG1lbW9yeSB0byB0cmlnZ2VyIHRoZSBpbmNvbXBhdGliaWxpdHkuIFRoZQ0K
-PiBicmFuY2ggd2l0aCB0aG9zZSBjaGFuZ2VzIGNhbiBiZSBmb3VuZCBpbjoNCj4gaHR0cHM6Ly9n
-aXQuaW5mcmFkZWFkLm9yZy8/cD11c2Vycy92cGV0cm9nL2xpbnV4LmdpdDthPXNob3J0bG9nO2g9
-cmVmcy9oZWFkcy9raG8tZGVmZXJyZWQtc3RydWN0LXBhZ2UtaW5pdA0KPg0KPiBJbiBmdXR1cmUg
-cGF0Y2hlcywgd2UgbWlnaHQgd2FudCB0byBlbmhhbmNlIHRoZSBzZWxmdGVzdCB0byBjb3Zlcg0K
-PiB0aGlzIGNhc2UgYXMgd2VsbC4gSG93ZXZlciwgcHJvcGVybHkgYWRvcHRpbmcgdGhlIHRlc3Qg
-Zm9yIHRoaXMNCj4gaXMgbXVjaCBtb3JlIHdvcmsgdGhhbiB0aGUgYWN0dWFsIGZpeCwgdGhlcmVm
-b3JlIGl0IGNhbiBiZSBkZWZlcnJlZCB0byBhDQo+IGZvbGxvdy11cCBzZXJpZXMuDQo+DQo+IElu
-IGFkZGl0aW9uIGF0dGVtcHRpbmcgdG8gcnVuIHRoZSBzZWxmdGVzdCBmb3IgYXJtICh3aXRob3V0
-IG15IGNoYW5nZXMpDQo+IGZhaWxzIHdpdGg6DQo+IGBgYA0KPiBFUlJPUjp0YXJnZXQvYXJtL2lu
-dGVybmFscy5oOjc2NzpyZWdpbWVfaXNfdXNlcjogY29kZSBzaG91bGQgbm90IGJlIHJlYWNoZWQN
-Cj4gQmFpbCBvdXQhIEVSUk9SOnRhcmdldC9hcm0vaW50ZXJuYWxzLmg6NzY3OnJlZ2ltZV9pc191
-c2VyOiBjb2RlIHNob3VsZCBub3QgYmUgcmVhY2hlZA0KPiAuL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRl
-c3RzL2toby92bXRlc3Quc2g6IGxpbmUgMTEzOiA2MTYwOSBBYm9ydGVkDQo+IGBgYA0KPiBJIGhh
-dmUgbm90IGxvb2tlZCBpdCB1cCBmdXJ0aGVyLCBidXQgY2FuIGFsc28gZG8gc28gYXMgcGFydCBv
-ZiBhDQo+IHNlbGZ0ZXN0IGZvbGxvdy11cC4NCj4NCj4gICBrZXJuZWwvbGl2ZXVwZGF0ZS9LY29u
-ZmlnICAgICAgICAgIHwgIDIgLS0NCj4gICBrZXJuZWwvbGl2ZXVwZGF0ZS9rZXhlY19oYW5kb3Zl
-ci5jIHwgMTkgKysrKysrKysrKysrKysrKysrLQ0KPiAgIDIgZmlsZXMgY2hhbmdlZCwgMTggaW5z
-ZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4NCj4gZGlmZiAtLWdpdCBhL2tlcm5lbC9saXZl
-dXBkYXRlL0tjb25maWcgYi9rZXJuZWwvbGl2ZXVwZGF0ZS9LY29uZmlnDQo+IGluZGV4IGQyYWVh
-ZjEzYzNhYy4uOTM5NGE2MDhmOTM5IDEwMDY0NA0KPiAtLS0gYS9rZXJuZWwvbGl2ZXVwZGF0ZS9L
-Y29uZmlnDQo+ICsrKyBiL2tlcm5lbC9saXZldXBkYXRlL0tjb25maWcNCj4gQEAgLTEsMTIgKzEs
-MTAgQEANCj4gICAjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wLW9ubHkNCj4gICAN
-Cj4gICBtZW51ICJMaXZlIFVwZGF0ZSBhbmQgS2V4ZWMgSGFuZE92ZXIiDQo+IC0JZGVwZW5kcyBv
-biAhREVGRVJSRURfU1RSVUNUX1BBR0VfSU5JVA0KPiAgIA0KPiAgIGNvbmZpZyBLRVhFQ19IQU5E
-T1ZFUg0KPiAgIAlib29sICJrZXhlYyBoYW5kb3ZlciINCj4gICAJZGVwZW5kcyBvbiBBUkNIX1NV
-UFBPUlRTX0tFWEVDX0hBTkRPVkVSICYmIEFSQ0hfU1VQUE9SVFNfS0VYRUNfRklMRQ0KPiAtCWRl
-cGVuZHMgb24gIURFRkVSUkVEX1NUUlVDVF9QQUdFX0lOSVQNCj4gICAJc2VsZWN0IE1FTUJMT0NL
-X0tIT19TQ1JBVENIDQo+ICAgCXNlbGVjdCBLRVhFQ19GSUxFDQo+ICAgCXNlbGVjdCBMSUJGRFQN
-Cj4gZGlmZiAtLWdpdCBhL2tlcm5lbC9saXZldXBkYXRlL2tleGVjX2hhbmRvdmVyLmMgYi9rZXJu
-ZWwvbGl2ZXVwZGF0ZS9rZXhlY19oYW5kb3Zlci5jDQo+IGluZGV4IDlkYzUxZmFiNjA0Zi4uNzhj
-ZmU3MWU2MTA3IDEwMDY0NA0KPiAtLS0gYS9rZXJuZWwvbGl2ZXVwZGF0ZS9rZXhlY19oYW5kb3Zl
-ci5jDQo+ICsrKyBiL2tlcm5lbC9saXZldXBkYXRlL2tleGVjX2hhbmRvdmVyLmMNCj4gQEAgLTQz
-OSw2ICs0MzksMjMgQEAgc3RhdGljIGludCBraG9fbWVtX3NlcmlhbGl6ZShzdHJ1Y3Qga2hvX291
-dCAqa2hvX291dCkNCj4gICAJcmV0dXJuIGVycjsNCj4gICB9DQo+ICAgDQo+ICsvKg0KPiArICog
-V2l0aCBDT05GSUdfREVGRVJSRURfU1RSVUNUX1BBR0VfSU5JVCwgc3RydWN0IHBhZ2VzIGluIGhp
-Z2hlciBtZW1vcnkNCj4gKyAqIHJlZ2lvbnMgbWF5IG5vdCBiZSBpbml0aWFsaXplZCB5ZXQgYXQg
-dGhlIHRpbWUgS0hPIGRlc2VyaWFsaXplcyBwcmVzZXJ2ZWQNCj4gKyAqIG1lbW9yeS4gVGhpcyBm
-dW5jdGlvbiBlbnN1cmVzIGFsbCBzdHJ1Y3QgcGFnZXMgaW4gdGhlIHJlZ2lvbiBhcmUgaW5pdGlh
-bGl6ZWQuDQo+ICsgKi8NCj4gK3N0YXRpYyBzdHJ1Y3QgcGFnZSAqX19pbml0IGtob19nZXRfcHJl
-c2VydmVkX3BhZ2UocGh5c19hZGRyX3QgcGh5cywNCj4gKwkJCQkJCSAgdW5zaWduZWQgaW50IG9y
-ZGVyKQ0KPiArew0KPiArCXVuc2lnbmVkIGxvbmcgcGZuID0gUEhZU19QRk4ocGh5cyk7DQo+ICsJ
-aW50IG5pZCA9IGVhcmx5X3Bmbl90b19uaWQocGZuKTsNCj4gKw0KPiArCWZvciAoaW50IGkgPSAw
-OyBpIDwgKDEgPDwgb3JkZXIpOyBpKyspDQo+ICsJCWluaXRfZGVmZXJyZWRfcGFnZShwZm4gKyBp
-LCBuaWQpOw0KPiArDQo+ICsJcmV0dXJuIHBmbl90b19wYWdlKHBmbik7DQo+ICt9DQo+ICsNCj4g
-ICBzdGF0aWMgdm9pZCBfX2luaXQgZGVzZXJpYWxpemVfYml0bWFwKHVuc2lnbmVkIGludCBvcmRl
-ciwNCj4gICAJCQkJICAgICAgc3RydWN0IGtob3Nlcl9tZW1fYml0bWFwX3B0ciAqZWxtKQ0KPiAg
-IHsNCj4gQEAgLTQ0OSw3ICs0NjYsNyBAQCBzdGF0aWMgdm9pZCBfX2luaXQgZGVzZXJpYWxpemVf
-Yml0bWFwKHVuc2lnbmVkIGludCBvcmRlciwNCj4gICAJCWludCBzeiA9IDEgPDwgKG9yZGVyICsg
-UEFHRV9TSElGVCk7DQo+ICAgCQlwaHlzX2FkZHJfdCBwaHlzID0NCj4gICAJCQllbG0tPnBoeXNf
-c3RhcnQgKyAoYml0IDw8IChvcmRlciArIFBBR0VfU0hJRlQpKTsNCj4gLQkJc3RydWN0IHBhZ2Ug
-KnBhZ2UgPSBwaHlzX3RvX3BhZ2UocGh5cyk7DQo+ICsJCXN0cnVjdCBwYWdlICpwYWdlID0ga2hv
-X2dldF9wcmVzZXJ2ZWRfcGFnZShwaHlzLCBvcmRlcik7DQo+ICAgCQl1bmlvbiBraG9fcGFnZV9p
-bmZvIGluZm87DQo+ICAgDQo+ICAgCQltZW1ibG9ja19yZXNlcnZlKHBoeXMsIHN6KTsNCg==
---c749eb314327cf0f04a30d9934ec9e45f7b59c6346bdeeb802cba5c25168
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="publickey - fadouse@proton.me -
- 0xFD2A1679.asc"; name="publickey - fadouse@proton.me - 0xFD2A1679.asc"
-Content-Type: application/pgp-keys; filename="publickey - fadouse@proton.me
- - 0xFD2A1679.asc"; name="publickey - fadouse@proton.me - 0xFD2A1679.asc"
-
-LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCkNvbW1lbnQ6IGh0dHBzOi8vZ29w
-ZW5wZ3Aub3JnClZlcnNpb246IEdvcGVuUEdQIDIuOC4yCgp4ak1FWmdOdThoWUpLd1lCQkFIYVJ3
-OEJBUWRBZWE0a2RKOFJOUU5vMjNQRW5FRzUveDBydnlKa1B1TlZMTG9ZCndTY2xLRzdOSldaaFpH
-OTFjMlZBY0hKdmRHOXVMbTFsSUR4bVlXUnZkWE5sUUhCeWIzUnZiaTV0WlQ3Q2pBUVEKRmdvQVBn
-V0NaZ051OGdRTENRY0lDWkFPcUxUYkhwdW01QU1WQ0FvRUZnQUNBUUlaQVFLYkF3SWVBUlloQlAw
-cQpGbmx2ZHNrSHB0SFFsZzZvdE5zZW02YmtBQUFmcGdFQWpMSmx3dmY5anIvOFRpUDZyZkxDZ1JG
-ZjlEZ0N3VUlCCnRmeWNyeDV0NzkwQkFMQlFXZnhzajVDN1FSTmpwbEpqQzJWOTdVZTh6OUd6TS9O
-TGxVMWxrdFFMempnRVpnTnUKOGhJS0t3WUJCQUdYVlFFRkFRRUhRTG94ZnhxTjgwSlZtUTY2OUY4
-QjdwMUQ2ci9zdThSUDZFZ3dUMkl2V0VnbApBd0VJQjhKNEJCZ1dDZ0FxQllKbUEyN3lDWkFPcUxU
-YkhwdW01QUtiREJZaEJQMHFGbmx2ZHNrSHB0SFFsZzZvCnROc2VtNmJrQUFBNm5nRUE0R25CT2J0
-bzZaaEtEWlh0TVhrdmlyZFlrVHh4cDFFaWZ3MEFGV3d3Q3FvQkFOM1kKTEZHT1lvdzVzRENIVTNr
-QzRKZzVnMG5PUnE3cHBZWmd4czNKM05FUAo9UnRVSQotLS0tLUVORCBQR1AgUFVCTElDIEtFWSBC
-TE9DSy0tLS0t
---c749eb314327cf0f04a30d9934ec9e45f7b59c6346bdeeb802cba5c25168--
-
---------2c35dbb789baa2eece3de1188c6281b855389a5f3da6cb9053721f6fa8184591
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: ProtonMail
-
-wqsEARYIAF0FgmlLl2kJkA6otNsem6bkNRQAAAAAABwAEHNhbHRAbm90YXRp
-b25zLm9wZW5wZ3Bqcy5vcmc67kEGs2G7V/tBuXO2hr7gFiEE/SoWeW92yQem
-0dCWDqi02x6bpuQAAOIDAP9zcdRmo8KQLbmVydTrHt0LtFHjASYm9cz/K3gr
-Uxyi8AEA3NZcjVmJbYmSDW0O2XVyinAq0H61GlV6/S26I2gbQQU=
-=+T4s
------END PGP SIGNATURE-----
 
 
---------2c35dbb789baa2eece3de1188c6281b855389a5f3da6cb9053721f6fa8184591--
+On 12/24/25 4:28 AM, Baoquan He wrote:
+> Hi Andrey,
+> 
+> On 12/04/25 at 05:38pm, Andrey Konovalov wrote:
+>> On Fri, Nov 28, 2025 at 4:33 AM Baoquan He <bhe@redhat.com> wrote:
+>>>
+> ...snip...
+>>> Testing:
+>>> ========
+>>> - Testing on x86_64 and arm64 for generic mode passed when kasan=on or
+>>>   kasan=off.
+>>>
+>>> - Testing on arm64 with sw_tags mode passed when kasan=off is set. But
+>>>   when I tried to test sw_tags on arm64, the system bootup failed. It's
+>>>   not introduced by my patchset, the original code has the bug. I have
+>>>   reported it to upstream.
+>>>   - System is broken in KASAN sw_tags mode during bootup
+>>>     - https://lore.kernel.org/all/aSXKqJTkZPNskFop@MiWiFi-R3L-srv/T/#u
+>>
+>> This will hopefully be fixed soon, so you'll be able to test.
+> 
+> Do you have the patch link of the fix on sw_tags breakage?
+
+I think this one  should fix it - https://lkml.kernel.org/r/cover.1765978969.git.m.wieczorretman@pm.me
+
+> 
+> I am organizing patches and testing them for reposting, but still see
+> the sw_tags breakage during boot on arm64 system. If you have the
+> pointer about the fix, I can grab the possible unmature code change to
+> make sw_tags mode work to finish my testing.
+> 
+> Thanks
+> Baoquan
+> 
 
 
