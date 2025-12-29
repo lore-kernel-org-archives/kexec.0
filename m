@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 935E2E92FE0
-	for <kexec@archiver.kernel.org>; Mon, 29 Dec 2025 21:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EC411E92FE0
+	for <kexec@archiver.kernel.org>; Mon, 29 Dec 2025 21:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=dZdbrUESDGegj1EpDSVze6upNzve1+O4BQD6xug9By4=; b=H9lxX2CZkqLt0oi2NIDtuSFC24
-	KY6q41j7+Ep8smBFzGg24F2t/c3yb+oO6Cf600EfLTG7W+9LeSUXJC+8thq8Qi6dHHWPHwJp9sjDU
-	C3jUsKL00nJcdvnuJo65iyYGaFTumu3PD+AVJ0oSxstvI9fyX4pEiLWSic21dA1r5WzjEsx5G3lnG
-	e0sK8bXixZe+6bIzWQUTC1ZEWOzOMx+wnxfsDjjdNpvORbvJ8Yu3p22lc4r+lqbuJr+bNq30pFfWM
-	GAHQo4/nNpYe5TXPTJ5qFcLB7odWCgO7uEoGepioHK2F/TCAGbE8eEQ7qAwKW0l8y9brIlJ6vlOwY
-	xsRGv//A==;
+	bh=hzQxvCy96Xx16IuJDlzp/I3CvO+EN61+BaDrkAXVybM=; b=ZWG3WPIt7yG6FUdMWRKt6dX+G9
+	MBw8ouauwtVaQ9LMAr7Je4Az8z3vr3fLt0nlHHO4TvWauWQXSJeQV3V9uembxNHgq9IbiJT+VDorU
+	Mw3YxVrg9ievXx2aRoul1tXzmSR3HMAF9CRv3Vryhkek6AHFk+OWKTVgCS/pgugGIsHJtm+215Wb1
+	tGP+HJyT7oMaYYQYfnHmMgZoqGH1WPwp4KQmLYxeUwbg22wBlsyFKekwofuoW1bcgmeZRVoTAfEIG
+	EdDy8lZL18415z1CSIufmxwTJBxYokV4xv0i+K5vaxo6ByVCtvHF94V5YoQtbeeZKGNKCW/XBwbiE
+	KRhva/nA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vaKgQ-000000044u5-310l;
-	Mon, 29 Dec 2025 21:21:42 +0000
+	id 1vaKhx-000000044y7-1TFN;
+	Mon, 29 Dec 2025 21:23:17 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vaKgO-000000044tv-3ygF
+	id 1vaKhw-000000044xz-3Cbv
 	for kexec@lists.infradead.org;
-	Mon, 29 Dec 2025 21:21:41 +0000
+	Mon, 29 Dec 2025 21:23:16 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id CC92B6000A;
-	Mon, 29 Dec 2025 21:21:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B153C4CEF7;
-	Mon, 29 Dec 2025 21:21:31 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 34E4B6000A;
+	Mon, 29 Dec 2025 21:23:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 315C8C4CEF7;
+	Mon, 29 Dec 2025 21:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767043299;
-	bh=Fy6E0Djyl440LbC4IsN3A4KkNoyDnp/oyxzUqc5PaTs=;
+	s=k20201202; t=1767043395;
+	bh=ppbBQjEpvh2+LXrZY1d3Kq7C72kmO3Q+fdDz1wTrWH0=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=bnicmMwnC8Hz+Av7KUh2lvvxIjCzkBDY/wzSKfrzAyvWuKx1NSG9v8jBEtVzSsX3w
-	 rwdxxewgywMsoi1ZrGqKx7F7AikHrXQOnfXgj7xngJrBzXoBO4L0Yiu8vkGfpHHjPR
-	 3aF0hR53w77goVJU+qbgq+wJL8JUqj4vs3mfxermslBt/VCOrYeFStvIc9Un7/Aa7L
-	 3dgAwFcsTgU7uKfxheS2cHtjtYbURNI/oaSs90kbX/FvpZa2wNQTL/0JTextbhpjZn
-	 JMvHCDLcQwJSdwx3dOqwIZ1A0xUryUeCx+BbhDS7BMH50ZX358EnPNpat75V81nPY3
-	 CZPwpD4Tn3v/w==
+	b=K+BO6T7ZA/dB4XxZl8TWSFjrd2UrZeO0W5RIQspSlmSzzh6put6N1vexWIWXKnrzb
+	 TADtYVxjYVpDETlpAa/4Z9qSvx45Z7eK1UclXHAaFZ4E2gVXKe6iVSO6GiqFsNw2Eh
+	 e9Z/5uGzlliUj1KPcZo6QdZUxbuMD+VcHzznm9inCudN6vmWgET38bLfNiHcB4wVHZ
+	 YaJiDhm4bmhAOPoTjXuTI5/HEBM9gt6T79Prj8wr7yjs+wvz9mkMeNPzex5F+EBE2n
+	 +u5UPnzxdaCSD8lmraoutlNAXbOYdj0ObEFYt9Ut5Vm8hre+1ubmR/qJvCsdixVI8w
+	 UCrU015z6iuOw==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>
 Cc: Pratyush Yadav <pratyush@kernel.org>,  Mike Rapoport <rppt@kernel.org>,
@@ -59,15 +59,15 @@ Cc: Pratyush Yadav <pratyush@kernel.org>,  Mike Rapoport <rppt@kernel.org>,
   Vipin Sharma <vipinsh@google.com>,  Zhu Yanjun <yanjun.zhu@linux.dev>,
   linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
   linux-doc@vger.kernel.org,  kexec@lists.infradead.org
-Subject: Re: [RFC PATCH 06/10] liveupdate: hugetlb subsystem FLB state
- preservation
-In-Reply-To: <CA+CK2bAVuHG1cVPQz8Wafe8o2TtitrqJjqfHOT7Xun=zWMoo2Q@mail.gmail.com>
-	(Pasha Tatashin's message of "Tue, 23 Dec 2025 13:15:31 -0500")
+Subject: Re: [RFC PATCH 03/10] liveupdate: do early initialization before
+ hugepages are allocated
+In-Reply-To: <CA+CK2bApV4A-hCO3eHX7-1QdjDX=FpnrVHfa8TQBt_1JStY-BA@mail.gmail.com>
+	(Pasha Tatashin's message of "Tue, 23 Dec 2025 13:08:59 -0500")
 References: <20251206230222.853493-1-pratyush@kernel.org>
-	<20251206230222.853493-7-pratyush@kernel.org>
-	<CA+CK2bAVuHG1cVPQz8Wafe8o2TtitrqJjqfHOT7Xun=zWMoo2Q@mail.gmail.com>
-Date: Mon, 29 Dec 2025 22:21:29 +0100
-Message-ID: <86qzsd7zmu.fsf@kernel.org>
+	<20251206230222.853493-4-pratyush@kernel.org>
+	<CA+CK2bApV4A-hCO3eHX7-1QdjDX=FpnrVHfa8TQBt_1JStY-BA@mail.gmail.com>
+Date: Mon, 29 Dec 2025 22:23:06 +0100
+Message-ID: <86ms317zk5.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -91,100 +91,203 @@ On Tue, Dec 23 2025, Pasha Tatashin wrote:
 > On Sat, Dec 6, 2025 at 6:03=E2=80=AFPM Pratyush Yadav <pratyush@kernel.or=
 g> wrote:
 >>
->> HugeTLB manages its own pages. It allocates them on boot and uses those
->> to fulfill hugepage requests.
+>> To support hugepage preservation using LUO, the hugetlb subsystem needs
+>> to get liveupdate data when it allocates the hugepages to find out how
+>> many pages are coming from live update.
 >>
->> To support live update for a hugetlb-backed memfd, it is necessary to
->> track how many pages of each hstate are coming from live update. This is
->> needed to ensure the boot time allocations don't over-allocate huge
->> pages, causing the rest of the system unexpected memory pressure.
+>> Move early LUO init from early_initcall to mm_core_init(). This is where
+>> gigantic hugepages are allocated on ARM64. On x86, they are allocated in
+>> setup_arch(), so have a call there as well. Keep track of whether the
+>> function was already called to avoid double-init.
 >>
->> For example, say the system has 100G memory and it uses 90 1G huge
->> pages, with 10G put aside for other processes. Now say 5 of those pages
->> are preserved via KHO for live updating a huge memfd.
->>
->> But during boot, the system will still see that it needs 90 huge pages,
->> so it will attempt to allocate those. When the file is later retrieved,
->> those 5 pages also get added to the huge page pool, resulting in 95
->> total huge pages. This exceeds the original expectation of 90 pages, and
->> ends up wasting memory.
->>
->> LUO has file-lifecycle-bound (FLB) data to keep track of global state of
->> a subsystem. Use it to track how many huge pages are used up for each
->> hstate. When a file is preserved, it will increment to the counter, and
->> when it is unpreserved, it will decrement it. During boot time
->> allocations, this data can be used to calculate how many hugepages
->> actually need to be allocated.
->>
->> Design note: another way of doing this would be to preserve the entire
->> set of hugepages using the FLB, skip boot time allocation, and restore
->> them all on FLB retrieve. The pain problem with that approach is that it
->> would need to freeze all hstates after serializing them. This will need
->> a lot more invasive changes in hugetlb since there are many ways folios
->> can be added to or removed from a hstate. Doing it this way is simpler
->> and less invasive.
+>> liveupdate_early_init() only gets the KHO subtree and validates the data
+>> to ensure it is valid and understood. These are read-only operations and
+>> do not need much from the system, so it is safe to call early in boot.
 >>
 >> Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
 >> ---
->>  Documentation/mm/memfd_preservation.rst |   9 ++
->>  MAINTAINERS                             |   1 +
->>  include/linux/kho/abi/hugetlb.h         |  66 +++++++++
->>  kernel/liveupdate/Kconfig               |  12 ++
->>  mm/Makefile                             |   1 +
->>  mm/hugetlb.c                            |   1 +
->>  mm/hugetlb_internal.h                   |  15 ++
->>  mm/hugetlb_luo.c                        | 179 ++++++++++++++++++++++++
->>  8 files changed, 284 insertions(+)
->>  create mode 100644 include/linux/kho/abi/hugetlb.h
->>  create mode 100644 mm/hugetlb_luo.c
+>>  arch/x86/kernel/setup.c          |  7 +++++++
+>>  include/linux/liveupdate.h       |  6 ++++++
+>>  kernel/liveupdate/luo_core.c     | 30 ++++++++++++++++++++++++++----
+>>  kernel/liveupdate/luo_internal.h |  2 ++
+>>  mm/mm_init.c                     |  7 +++++++
+>>  5 files changed, 48 insertions(+), 4 deletions(-)
 >>
-[...]
->> +static int hugetlb_flb_retrieve(struct liveupdate_flb_op_args *args)
->> +{
+>> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+>> index 9bf00287c408..e2ec779afc2c 100644
+>> --- a/arch/x86/kernel/setup.c
+>> +++ b/arch/x86/kernel/setup.c
+>> @@ -26,6 +26,7 @@
+>>  #include <linux/tboot.h>
+>>  #include <linux/usb/xhci-dbgp.h>
+>>  #include <linux/vmalloc.h>
+>> +#include <linux/liveupdate.h>
+>>
+>>  #include <uapi/linux/mount.h>
+>>
+>> @@ -1216,6 +1217,12 @@ void __init setup_arch(char **cmdline_p)
+>>
+>>         kho_memory_init();
+>>
 >> +       /*
->> +        * The FLB is only needed for boot-time calculation of how many
->> +        * hugepages are needed. This is done by early boot handlers alr=
-eady.
->> +        * Free the serialized state now.
+>> +        * Hugepages might be preserved from a liveupdate. Make sure it =
+is
+>> +        * initialized so hugetlb can query its state.
 >> +        */
->
-> It should be done in this function.
-
-The calculations can't be done in retrieve. Retrieve happens only once
-and for the whole FLB. They will need to come from
-hugetlb_hstate_alloc_pages().
-
-Maybe you mean getting rid of liveupdate_flb_incoming_early()? Yeah,
-that I can do. It will make this function a no-op once we move the
-kho_restore_free() to finish().
-
->
->> +       kho_restore_free(phys_to_virt(args->data));
->
-> This should be moved to finish() after blackout.
-
-Sure.
-
->
+>> +       liveupdate_early_init();
 >> +
->> +       /*
->> +        * HACK: But since LUO FLB still needs an obj, use ZERO_SIZE_PTR=
- to
->> +        * satisfy it.
->> +        */
->> +       args->obj =3D ZERO_SIZE_PTR;
->
-> Hopefully this is not needed any more with the updated FLB, please check =
-:-)
-
-Yep. IIRC when I sent this series the older version of FLB was in
-mm-nonmm-unstable.
-
->
->> +       return 0;
+>>         if (boot_cpu_has(X86_FEATURE_GBPAGES)) {
+>>                 hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
+>>                 hugetlb_bootmem_alloc();
+>> diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
+>> index ed81e7b31a9f..78e8c529e4e7 100644
+>> --- a/include/linux/liveupdate.h
+>> +++ b/include/linux/liveupdate.h
+>> @@ -214,6 +214,8 @@ struct liveupdate_flb {
+>>
+>>  #ifdef CONFIG_LIVEUPDATE
+>>
+>> +void __init liveupdate_early_init(void);
+>> +
+>>  /* Return true if live update orchestrator is enabled */
+>>  bool liveupdate_enabled(void);
+>>
+>> @@ -233,6 +235,10 @@ int liveupdate_flb_get_outgoing(struct liveupdate_f=
+lb *flb, void **objp);
+>>
+>>  #else /* CONFIG_LIVEUPDATE */
+>>
+>> +static inline void liveupdate_early_init(void)
+>> +{
 >> +}
 >> +
-[...]
+>>  static inline bool liveupdate_enabled(void)
+>>  {
+>>         return false;
+>> diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
+>> index 7a9ef16b37d8..2c740ecad8e6 100644
+>> --- a/kernel/liveupdate/luo_core.c
+>> +++ b/kernel/liveupdate/luo_core.c
+>> @@ -69,6 +69,13 @@ static struct {
+>>         u64 liveupdate_num;
+>>  } luo_global;
+>>
+>> +static bool __luo_early_initialized __initdata;
+>> +
+>> +bool __init luo_early_initialized(void)
+>> +{
+>> +       return __luo_early_initialized;
+>> +}
+>
+> I think the above is not needed, both the global variable, and a new func=
+tion.
+
+The function is used by liveupdate_flb_incoming_early() for
+sanity-checking. Since we are getting rid of that, I can drop the
+function too.
+
+>
+>> +
+>>  static int __init early_liveupdate_param(char *buf)
+>>  {
+>>         return kstrtobool(buf, &luo_global.enabled);
+>> @@ -133,20 +140,35 @@ static int __init luo_early_startup(void)
+>>         return err;
+>>  }
+>>
+>> -static int __init liveupdate_early_init(void)
+>> +/*
+>> + * This should only be called after KHO FDT is known. It gets the LUO s=
+ubtree
+>> + * and does initial validation, making early boot read-only access poss=
+ible.
+>> + */
+>> +void __init liveupdate_early_init(void)
+>>  {
+>>         int err;
+>>
+>> +       /*
+>> +        * HugeTLB needs LUO to be initialized early in boot, before gig=
+antic
+>> +        * hugepages are allocated. On x86, that happens in setup_arch()=
+, but on
+>> +        * ARM64 (and other architectures) that happens in mm_core_init(=
+).
+>> +        *
+>> +        * Since the code in mm_core_init() is shared between all archit=
+ectures,
+>> +        * this can lead to the init being called twice. Skip if initial=
+ization
+>> +        * was already done.
+>> +        */
+>> +       if (__luo_early_initialized)
+>> +               return;
+>> +
+>> +       __luo_early_initialized =3D true;
+>
+> Please, make __luo_early_initialized static local.
+
+Sure, will do.
+
+>
+>> +
+>>         err =3D luo_early_startup();
+>>         if (err) {
+>>                 luo_global.enabled =3D false;
+>>                 luo_restore_fail("The incoming tree failed to initialize=
+ properly [%pe], disabling live update\n",
+>>                                  ERR_PTR(err));
+>>         }
+>> -
+>> -       return err;
+>>  }
+>> -early_initcall(liveupdate_early_init);
+>>
+>>  /* Called during boot to create outgoing LUO fdt tree */
+>>  static int __init luo_fdt_setup(void)
+>> diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_in=
+ternal.h
+>> index 6115d6a4054d..171c54af7b38 100644
+>> --- a/kernel/liveupdate/luo_internal.h
+>> +++ b/kernel/liveupdate/luo_internal.h
+>> @@ -114,6 +114,8 @@ int __init luo_flb_setup_outgoing(void *fdt);
+>>  int __init luo_flb_setup_incoming(void *fdt);
+>>  void luo_flb_serialize(void);
+>>
+>> +bool __init luo_early_initialized(void);
+>> +
+>>  #ifdef CONFIG_LIVEUPDATE_TEST
+>>  void liveupdate_test_register(struct liveupdate_file_handler *fh);
+>>  void liveupdate_test_unregister(struct liveupdate_file_handler *fh);
+>> diff --git a/mm/mm_init.c b/mm/mm_init.c
+>> index 93cec06c1c8a..9a5b06a93622 100644
+>> --- a/mm/mm_init.c
+>> +++ b/mm/mm_init.c
+>> @@ -31,6 +31,7 @@
+>>  #include <linux/execmem.h>
+>>  #include <linux/vmstat.h>
+>>  #include <linux/kexec_handover.h>
+>> +#include <linux/liveupdate.h>
+>>  #include <linux/hugetlb.h>
+>>  #include "internal.h"
+>>  #include "slab.h"
+>> @@ -2681,6 +2682,12 @@ void __init mm_core_init(void)
+>>         arch_mm_preinit();
+>>
+>>         kho_memory_init();
+>> +       /*
+>> +        * Hugepages might be preserved from a liveupdate. Make sure it =
+is
+>> +        * initialized so hugetlb can query its state.
+>> +        */
+>> +       liveupdate_early_init();
+>> +
+>>         hugetlb_bootmem_alloc();
+>>
+>>         /* Initializations relying on SMP setup */
+>> --
+>> 2.43.0
+>>
 
 --=20
 Regards,
