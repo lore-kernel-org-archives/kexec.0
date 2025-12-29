@@ -4,65 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B3F5CE92FDA
-	for <kexec@archiver.kernel.org>; Mon, 29 Dec 2025 21:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6BA71E92FE0
+	for <kexec@archiver.kernel.org>; Mon, 29 Dec 2025 21:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=VUVk1CmbFBfYMnd+onKI6dHabioivTyCBsvilOrGEbo=; b=3CwY3F6orEaXiPQwyqRpcMn1LW
-	8jZjYLAw64TsdYnDvewx9o5rWTR2GS9EaIfj2LmnCIpeWV3iw/IhpBmb+KfC2K+e3NDMWXq2sdQik
-	1omHAy4KkRkI4a8rhRbQGbnRK+LXg0Y+IjeWLY8+7Xh+xFofimnPvUQggX5Oaj1k2v9beaf5GEp0J
-	frg/qSQAoofGx1EQWJKSctx3Dd8srpnDhqOWXOkr5TyR+D7v96ehyzLZfRUs8BEPiU+BIvcQG+jrc
-	BPDfriE75qDUy3B5B/u/UdJSroqNsdGY2woQlCpLYbxSGAyxW1vCZx7wJqNWIxNxEdU+VbUc/rltT
-	F1tdYwxQ==;
+	bh=+0hKzidYvfWG+s9TtusbziTKi6XLXUnZ4Y1pxbN7Jvc=; b=dRY5QUougy5fXgT66OhKq08FxR
+	PbXlPzuZZVbN73fsPdpbNdNn3uOJvYtYCRPOvnq1nr/zBWbgsqpY/MvxpOmQGiDSiT8AIyFfppC1R
+	XaII8Tl5EeYRv/4L2gvAmVyRYtKwC2WLRWhIx1CqhbwCtz7FRsB4A4XBvTrrTQhJlzRiCs2nAZmbH
+	LzTXvXxXtnqKJr4tK/PZw7QZiRqeVP+ZhFERv6fxHTq+woy8sGCdYLI74h6bsb5SaBXo7WaqyUORz
+	BBWen139mkThaT7Ri4HIqk+LzOyqGVWBA+s7dGKo6JlRwiSUKIr8IST+DrDY7o+QbtqidL1fdiMWt
+	ZUeAUJ1g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vaKUe-000000044WU-0fkR;
-	Mon, 29 Dec 2025 21:09:32 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1vaKZz-000000044ih-3hBx;
+	Mon, 29 Dec 2025 21:15:03 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vaKUa-000000044W6-1SPP
+	id 1vaKZz-000000044iZ-1S9V
 	for kexec@lists.infradead.org;
-	Mon, 29 Dec 2025 21:09:30 +0000
+	Mon, 29 Dec 2025 21:15:03 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 7FD78440B1;
-	Mon, 29 Dec 2025 21:09:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4386CC116D0;
-	Mon, 29 Dec 2025 21:09:23 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 58F116000A;
+	Mon, 29 Dec 2025 21:15:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9E38C4CEF7;
+	Mon, 29 Dec 2025 21:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767042567;
-	bh=VUVk1CmbFBfYMnd+onKI6dHabioivTyCBsvilOrGEbo=;
+	s=k20201202; t=1767042902;
+	bh=+0hKzidYvfWG+s9TtusbziTKi6XLXUnZ4Y1pxbN7Jvc=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=N9e8bCrVuBEncQY6DY/pq7L587pcxnuZNkUiX7jAH7g7gNTO0y0pXZPeInuYaf0m9
-	 812ZhsV0+TyJogWbd9NPmIeqMpvofs98qURaj9WiG48AwIN7WvvmvCmSzSWgXie0KA
-	 CCAy5b26YL9gzrOmAo6bPMUaYRtYNsuJiVy5YWpxZpJRA+eh0vBVaHHKkn+5dTKB9q
-	 XCga1hD5U5zBXosGvPjHHU92N6xxbsFtWsf+67cUv/sWP/Ntbxl5dUA7cPwVE3XsMH
-	 a77CArbgngll92iBlUHc4ILjqjWsepe7/hqHpU9yHYBS6tEI+xdWwAPg1YhKoLEg35
-	 nTP6Pz7wt0lBQ==
+	b=jKY9UZlsTOJCp8mrSaW/YOoqI/r+yyNyFf2huGx4VFftVsJRCMpS4UchEWmSNJU2+
+	 mmW/SR65hRZs3p/IS7waf1NjQ9aTDSyuxztBD1pNzRqCoQF95mGqFK75bOE8qiOsTh
+	 r/34jl6+cJGesKLtTSrG0wiDLX0xjY3kxFF0yDM8QokptRaq8I7jRQ4niRqABeII49
+	 A8Rz7bg+1ZrAHDw6vrD56WZ/IhNI7SrXFPMEOUt9GgTg5RArbxf9AqMyAQ0D8X7rC8
+	 ZOtaBzMp1jsL14bwuklPgimM0VCDonLAQ3ZKPaY9/XbQn4TXWFX/cGXEO9V0n2jsnv
+	 Kjh2IexLkouyA==
 From: Pratyush Yadav <pratyush@kernel.org>
-To: Fadouse <fadouse@proton.me>
-Cc: Evangelos Petrongonas <epetron@amazon.de>,  Mike Rapoport
- <rppt@kernel.org>,  Pasha Tatashin <pasha.tatashin@soleen.com>,  Pratyush
- Yadav <pratyush@kernel.org>,  Alexander Graf <graf@amazon.com>,  Andrew
- Morton <akpm@linux-foundation.org>,  Jason Miu <jasonmiu@google.com>,
-  linux-kernel@vger.kernel.org,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  nh-open-source@amazon.com
-Subject: Re: [PATCH] kho: add support for deferred struct page init
-In-Reply-To: <7024cefd-bf27-430b-b8fa-04e1457e0eb8@proton.me>
-	(fadouse@proton.me's message of "Wed, 24 Dec 2025 07:34:04 +0000")
-References: <7024cefd-bf27-430b-b8fa-04e1457e0eb8@proton.me>
-Date: Mon, 29 Dec 2025 22:09:21 +0100
-Message-ID: <86zf718072.fsf@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Mike Rapoport <rppt@kernel.org>,
+  Andrew Morton <akpm@linux-foundation.org>,  David Hildenbrand
+ <david@kernel.org>,  Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,  "Liam
+ R. Howlett" <Liam.Howlett@oracle.com>,  Vlastimil Babka <vbabka@suse.cz>,
+  Suren Baghdasaryan <surenb@google.com>,  Michal Hocko <mhocko@suse.com>,
+  Jonathan Corbet <corbet@lwn.net>,  Thomas Gleixner <tglx@linutronix.de>,
+  Ingo Molnar <mingo@redhat.com>,  Borislav Petkov <bp@alien8.de>,  Dave
+ Hansen <dave.hansen@linux.intel.com>,  x86@kernel.org,  "H. Peter Anvin"
+ <hpa@zytor.com>,  Muchun Song <muchun.song@linux.dev>,  Oscar Salvador
+ <osalvador@suse.de>,  Alexander Graf <graf@amazon.com>,  David Matlack
+ <dmatlack@google.com>,  David Rientjes <rientjes@google.com>,  Jason
+ Gunthorpe <jgg@nvidia.com>,  Samiullah Khawaja <skhawaja@google.com>,
+  Vipin Sharma <vipinsh@google.com>,  Zhu Yanjun <yanjun.zhu@linux.dev>,
+  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
+  linux-doc@vger.kernel.org,  kexec@lists.infradead.org
+Subject: Re: [RFC PATCH 08/10] mm: hugetlb: disable CMA if liveupdate is
+ enabled
+In-Reply-To: <CA+CK2bBeJwACBiKsuXLcbzC4m0zLhu0yNg2HDGR=AQGeEVCJjg@mail.gmail.com>
+	(Pasha Tatashin's message of "Tue, 23 Dec 2025 13:16:57 -0500")
+References: <20251206230222.853493-1-pratyush@kernel.org>
+	<20251206230222.853493-9-pratyush@kernel.org>
+	<CA+CK2bBeJwACBiKsuXLcbzC4m0zLhu0yNg2HDGR=AQGeEVCJjg@mail.gmail.com>
+Date: Mon, 29 Dec 2025 22:14:50 +0100
+Message-ID: <86v7hp7zxx.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251229_130929_964281_7FE914E8 
-X-CRM114-Status: GOOD (  12.64  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,52 +86,26 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Dec 24 2025, Fadouse wrote:
+On Tue, Dec 23 2025, Pasha Tatashin wrote:
 
-> Hi Evangelos, Mike, Pasha, Pratyush,
+> On Sat, Dec 6, 2025 at 6:03=E2=80=AFPM Pratyush Yadav <pratyush@kernel.or=
+g> wrote:
+>>
+>> Hugetlb live update support does not yet work with CMA. Print a warning
+>> and disable CMA if the config for live updating hugetlb is enabled, and
+>> liveupdate is enabled at runtime.
 >
-> I independently hit a crash in the LUO/memfd restore path with
-> CONFIG_DEFERRED_STRUCT_PAGE_INIT=3Dy, on a local build based on dd9b004b7=
-ff3
-> (x86_64 QEMU, 6.19.0-rc1 timeframe).
+> Could you please elaborate this commit to explain why it is not
+> supported, and what it would take to support CMA.
 
-How? config KEXEC_HANDOVER depends on !DEFERRED_STRUCT_PAGE_INIT. So you
-shouldn't even be able to enable KHO or LUO with
-CONFIG_DEFERRED_STRUCT_PAGE_INIT=3Dy. Are you sure it is enabled?
+The main reason is that when HugeTLB CMA is enabled, the huge pages come
+from CMA. If we have preserved pages, we would need to "insert" those
+pages into the CMA when they are restored.
 
->
-> In my reproducer, stage1 preserves a memfd via LUO and kexecs into stage2;
-> stage2 calls LIVEUPDATE_SESSION_FINISH without retrieving files. I observ=
-ed
-> a reliable crash in adjust_managed_page_count() from kho_restore_page().
->
-> Minimal excerpt:
->
-> stage2: start
-> stage2: retrieved session fd=3D4
-> BUG: unable to handle page fault for address: 0000000000001410
-> RIP: adjust_managed_page_count+0x29/0x40
-> Call Trace:
-> =C2=A0 kho_restore_page+0x18a/0x1c0
-> =C2=A0 kho_restore_folio+0xe/0x60
-> =C2=A0 memfd_luo_finish+0xe6/0x160
-> =C2=A0 luo_file_finish+0x188/0x240
-> =C2=A0 luo_session_finish+0x2c/0x80
-> =C2=A0 luo_session_ioctl+0xf5/0x170
-> =C2=A0 __x64_sys_ioctl+0x91/0xe0
->
-> Applying the patch in <20251216084913.86342-1-epetron@amazon.de> makes the
-> issue no longer reproduce for me.
->
-> I can share full logs and the small two-stage initramfs reproducer if nee=
-ded.
->
-> Thanks,
-> YanXin Li
->
-> Tested-by: YanXin Li <fadouse@proton.me>
->
-[...]
+CMA does support multiple ranges, so I suppose it can be done, but it
+needs some plumbing to work properly.
+
+Will add this in the next revision.
 
 --=20
 Regards,
