@@ -4,68 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C3A97E9410F
-	for <kexec@archiver.kernel.org>; Tue, 30 Dec 2025 05:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CC528E94120
+	for <kexec@archiver.kernel.org>; Tue, 30 Dec 2025 08:50:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=1e9uUTBz+40NmI3fTdEqfK4QSWJZfTGjPJYHjncr7mA=; b=ilv47J820YGkeyqd1Dmfr7w9uY
-	YmNU8fi5Xh2teN5PrC84mAOSyc8FcuO1ga4bFc7q6Zt6Q+e0Ptu1b90HWCd3RHlNqTZz5BzgR+PrW
-	JMLHEalXdwUa1B2Wri5BDyt2rUDu06ySkH2sJ23l4LT5qZ5h3nDwg4rKh5ZRadl3yYcptGSiWvuPS
-	jTWETTzCbPy79pRbBRCq3kz5sCY+nvVJ/q97ZWFlMLVNpYlYIVaK5gEAgvGZJ4qrdcdWzTZwu7Nd9
-	8uIWJLMH8pNZ+1syw50qRuR1oaN+L6DFcqS+XS3a0fgvQKqthFUXiNXgfIdMlfd1Q55xYiN4tLZpF
-	fDQSaGpw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=TKytMjDcx2cEgvRyAJOuwCgpAgUbSodYKmBemClDjaM=; b=PDCOHbA8nF9sTWA4KDXqlyqLWB
+	wd8g6UeUmOhi56MPqsTqpM8vo6nOod8CaOpI+Q2el2fvKmsdZvhjCg7N8IQaM0D7PHdKcntejWrEi
+	OzeQ+72ILuygW+BnhxRw7xXGWx5I5gp6zKsWktRQhrgC+V8wyNnC/+ec19upjwRf6wdE6KkKjYwoo
+	kubTOCA3zowgPYT59AM5iDCge0ncHTgj4Js91NqmMM+Y+FbRdt0Yi2raKyGaGpxTr+TZdCHX7m4rv
+	Y74Y/AYKXIJ8cYUa5g+r40oB+OjBteN4x4ivkRId0XvLrbxboI7lBF33ahEFJHK63N+QYiYdyZaJ0
+	c0t5gTQA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vaSgD-00000004RTA-3sqp;
-	Tue, 30 Dec 2025 05:54:01 +0000
-Received: from sender4-pp-f112.zoho.com ([136.143.188.112])
+	id 1vaVRB-00000004bIn-054B;
+	Tue, 30 Dec 2025 08:50:41 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vaSgC-00000004RSm-0RVd
+	id 1vaVR7-00000004bI5-0BQk
 	for kexec@lists.infradead.org;
-	Tue, 30 Dec 2025 05:54:01 +0000
-ARC-Seal: i=1; a=rsa-sha256; t=1767074035; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=F3LqCm8Wah5SBnBGInhkixRT8PUDVR2E15M73CB8WywTLJSMDzNgCe6FVWotXanoYQeZzamIjDpy+CxMh0VU6a+GEtMM6On8v78MeQL9Xmk07DwcflUna9e2FNcQ+ahFgYD4kEYRytVCQxpWU3DM7IssI+RzN6psRKcXspy0BTc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1767074035; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=1e9uUTBz+40NmI3fTdEqfK4QSWJZfTGjPJYHjncr7mA=; 
-	b=aabst8O1DRV87rkCvI+Ifr1GD9xnXvDzDYgX66zJkTSgM3sCFBwgiGRUdXdk5hq47G+gyMVQE6pf4e0pNCOtsFQB9NXF147493f6M7mlx6/133nNk2eFOET710657yZ0rr40QO5RSaTI+a3ImYHUweHueqWp59xLPs2CMsfPWgg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=linux.beauty;
-	spf=pass  smtp.mailfrom=me@linux.beauty;
-	dmarc=pass header.from=<me@linux.beauty>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1767074035;
-	s=zmail; d=linux.beauty; i=me@linux.beauty;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=1e9uUTBz+40NmI3fTdEqfK4QSWJZfTGjPJYHjncr7mA=;
-	b=kEwyYJ+ECDAUV1X7n4SwslKEQ85vASPzYdmhkXNGkZXzuI8Rvho6xHz70H4YDWOs
-	4s07dPdxdeFuOxz4KAKEo5ZgT0sB9sKWCUqd75EKOsVA2bC6cqEPjZyoScDWk2QQCKu
-	QrFcPol/o0Q/sTpIhLvTTL4W4X4IWvwtj3BgyxfI=
-Received: by mx.zohomail.com with SMTPS id 1767074032492365.5149488909235;
-	Mon, 29 Dec 2025 21:53:52 -0800 (PST)
-From: Li Chen <me@linux.beauty>
-To: Alexander Graf <graf@amazon.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: Li Chen <me@linux.beauty>
-Subject: [PATCH] liveupdate/kho: Warn when kho_scratch is insufficient for sparsemem
-Date: Tue, 30 Dec 2025 13:53:45 +0800
-Message-ID: <20251230055345.70035-1-me@linux.beauty>
-X-Mailer: git-send-email 2.52.0
+	Tue, 30 Dec 2025 08:50:39 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1767084635;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TKytMjDcx2cEgvRyAJOuwCgpAgUbSodYKmBemClDjaM=;
+	b=C2LiL2M+EJeHZpFxaZPm0nkqGYDkIgp8IupEgl3c/Dq6YsrarIr/R+JWH9iH2Ik9E9QYVD
+	UqQxjdgBaK80eB3kqpsv6M9KYjcBCsjEvCdWEgDgCT/f7yrQUmUuRMIc9JNe8F9klnLD33
+	o5sXh84NWWoM1R+6MPRLEVFe4ysT8u0=
+Received: from mail-oa1-f70.google.com (mail-oa1-f70.google.com
+ [209.85.160.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-505-ZTLaQKSFNpiT-yReWebuMQ-1; Tue, 30 Dec 2025 03:50:32 -0500
+X-MC-Unique: ZTLaQKSFNpiT-yReWebuMQ-1
+X-Mimecast-MFC-AGG-ID: ZTLaQKSFNpiT-yReWebuMQ_1767084631
+Received: by mail-oa1-f70.google.com with SMTP id 586e51a60fabf-3f509212de4so7303587fac.3
+        for <kexec@lists.infradead.org>; Tue, 30 Dec 2025 00:50:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767084631; x=1767689431;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TKytMjDcx2cEgvRyAJOuwCgpAgUbSodYKmBemClDjaM=;
+        b=UcgYKHjsveIXHUXfubh4IneNK2I8SkM8jXEVjA+RYaRN7AcLk1T88r2KCcrDhBlm8Q
+         0UBcfvEuTkRmBsTPxyIB3iyH7mtn2cLQQ9Ln/SMIi2rczdUAHGzFmZTwYZJoNtIruYg5
+         0VMa04YxFFYkL3SUEyKr3LzChAG10JYZXEHmZEiacytnAYQc7r9pJF2WKpRDqEqCV43S
+         42wlKtJp2mKM9e4w13j77L/JE2RgW86SR1/6ktGz/RnTg/nHndQI7iHKF1m2k1zDB7Di
+         f4g8WeYjbP9CiA6khc5VeYW8cnEaBUTdPM36kIIlg0M2tX0CyUimd5c/94fXB/qSWZ8a
+         SeMw==
+X-Gm-Message-State: AOJu0YwNTtclUllJKx8dOnAX4WIqOQjw7J4hYuSuGW4EeJDurx6ZsEX/
+	JOGYRZ0pVRCDO+7gd48xvRsTe9ImWErszAu9CtlykwsBcHqPv0VPQNAQfc/JmnejhbdAmVcLdNU
+	p2HKV3ZcyRDtty099Xdxu44i5h+he4ziZPnztpHJBCzI9ugJuvDN8Qt1TPwh75Q==
+X-Gm-Gg: AY/fxX4rqy0csr7ywanhPIFdhgLjUfbJE7bQDouesxS0R+qdgvgs0kmoEDfK2cAD+Ug
+	MGTrKes2xjHx/WJcTGXDz4PEOJPZfEO/vG3a5WbTG9NczKP3yyoGtve6TwwYrJrW1gqS4Y/D9Rv
+	TUfZB7IoOQtcvw6XuBhEXVI9nvo1ejfNxt1LGtUtaZsr5Sy6YdlvcXOmal3r/4o/cudvhWtMe2n
+	4EaaIIRCu/F8vvsiZLwS5WCeTwiIeWXbKPnUSHqpqY3AOFRY3druMoMsl+rjxfZ+PjSZkBJnGbp
+	67Wid54J7lXIEuVURPagInJl73tNTwDATnTDj4BH/Q6GA4hC7BdOXKbsczdeGZCetwe6rcfP4gx
+	z
+X-Received: by 2002:a05:6870:7d8a:b0:3e9:35d4:213f with SMTP id 586e51a60fabf-3fda56056b2mr15471534fac.10.1767084631238;
+        Tue, 30 Dec 2025 00:50:31 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGMfpvG2CCJxNM6ePOW5CvdhtIiGZOipOUwNDSwmNEEJmtJ5IiPBkGWUWkmOkbvP8RoitQvSQ==
+X-Received: by 2002:a05:6870:7d8a:b0:3e9:35d4:213f with SMTP id 586e51a60fabf-3fda56056b2mr15471513fac.10.1767084630711;
+        Tue, 30 Dec 2025 00:50:30 -0800 (PST)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3fdaa92b5basm19742429fac.6.2025.12.30.00.50.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Dec 2025 00:50:30 -0800 (PST)
+Date: Tue, 30 Dec 2025 16:48:14 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>, Baoquan he <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	Kairui Song <ryncsn@gmail.com>, Pingfan Liu <kernelfans@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH] arm64/kdump: pass dm-crypt keys to kdump kernel
+Message-ID: <aVIR84RJSv42YEP1@Rk>
+References: <20251226141116.1379601-1-coxu@redhat.com>
+ <20251227-funky-swallow-from-pluto-910b9d@quoll>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+In-Reply-To: <20251227-funky-swallow-from-pluto-910b9d@quoll>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ZSm1hYN8_Ad6b1nKBenGWfVFEBIMbqcqBNoGM2-XMW8_1767084631
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251229_215400_195626_5DA6B079 
-X-CRM114-Status: GOOD (  22.96  )
+X-CRM114-CacheID: sfid-20251230_005037_145081_5D1B6D24 
+X-CRM114-Status: GOOD (  15.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,463 +112,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-With KHO enabled, the successor kernel can temporarily run memblock in
-scratch-only mode during early boot. In that mode, SPARSEMEM may allocate
-a per-node scratch buffer via sparse_buffer_init(map_count *
-section_map_size()), which requires a single contiguous, aligned memblock
-allocation.
+Hi Krzysztof,
 
-If the maximum usable scratch range in a node is smaller than the
-estimated buffer size, kexec handover can hang very early in the
-successor kernel, and we may even have no chance to see the error on
-the console.
+Thanks for your prompt feedback!
 
-Estimate the worst-case per-node requirement from the running kernel's
-sparsemem layout and compare it against the reserved scratch list by
-splitting scratch ranges per nid, sorting and merging them, and applying
-the section_map_size() alignment constraint. Warn once when scratch
-appears too small.
+On Sat, Dec 27, 2025 at 02:14:16PM +0100, Krzysztof Kozlowski wrote:
+>On Fri, Dec 26, 2025 at 10:11:15PM +0800, Coiby Xu wrote:
+>> Based on the CONFIG_CRASH_DM_CRYPT feature, this patch adds
+>
+>Don't use "this patch". See submitting patches.
 
-This check is a heuristic based on the running kernel's sparsemem layout
-and cannot account for all differences in a successor kernel. Keep it as
-a warning instead of rejecting kexec loads to avoid false positives
-causing unexpected regressions. Users can adjust kho_scratch accordingly
-before attempting a handover.
+I'll use imperative mood in next version, thanks for the reminder!
 
-To reduce boot-time overhead(particularly on large NUMA servers), run
-the check from a late initcall via system_long_wq instead of in
-kho_reserve_scratch().
+>
+>> LUKS-encrypted device dump target support to ARM64 by addressing two
+>> challenges [1],
+>
+>
+>...
+>
+>> +static void __init early_init_dt_check_for_dmcryptkeys(unsigned long node)
+>> +{
+>> +	const __be32 *prop;
+>> +
+>> +	if (!IS_ENABLED(CONFIG_CRASH_DM_CRYPT))
+>> +		return;
+>> +
+>> +	pr_debug("Looking for dmcryptkeys property... ");
+>> +
+>> +	prop = of_get_flat_dt_prop(node, "linux,dmcryptkeys", NULL);
+>
+>Where did you document the ABI?
 
-Signed-off-by: Li Chen <me@linux.beauty>
----
- kernel/liveupdate/kexec_handover.c | 396 +++++++++++++++++++++++++++++
- 1 file changed, 396 insertions(+)
+Thanks for raising the concern! I'll send a PR to  
+https://github.com/devicetree-org/dt-schema
+and include the link in next version.
 
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 9dc51fab604f..69f9b8461043 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -18,9 +18,14 @@
- #include <linux/libfdt.h>
- #include <linux/list.h>
- #include <linux/memblock.h>
-+#include <linux/math64.h>
-+#include <linux/mmzone.h>
- #include <linux/page-isolation.h>
-+#include <linux/slab.h>
-+#include <linux/sort.h>
- #include <linux/unaligned.h>
- #include <linux/vmalloc.h>
-+#include <linux/workqueue.h>
- 
- #include <asm/early_ioremap.h>
- 
-@@ -504,6 +509,353 @@ static bool __init kho_mem_deserialize(const void *fdt)
- struct kho_scratch *kho_scratch;
- unsigned int kho_scratch_cnt;
- 
-+#ifdef CONFIG_SPARSEMEM
-+/*
-+ * These are half-open physical ranges: [start, end).
-+ */
-+struct kho_phys_range {
-+	phys_addr_t start;
-+	phys_addr_t end;
-+};
-+
-+static u64 kho_section_map_size_bytes(void)
-+{
-+	u64 size;
-+
-+	size = (u64)sizeof(struct page) * PAGES_PER_SECTION;
-+	if (IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP)) {
-+#ifdef PMD_SIZE
-+		return ALIGN(size, PMD_SIZE);
-+#else
-+		return PAGE_ALIGN(size);
-+#endif
-+	}
-+
-+	return PAGE_ALIGN(size);
-+}
-+
-+static u64 kho_phys_range_aligned_usable(phys_addr_t start, phys_addr_t end, u64 align)
-+{
-+	phys_addr_t aligned_start;
-+
-+	if (end <= start)
-+		return 0;
-+
-+	if (!align)
-+		return end - start;
-+
-+	aligned_start = (phys_addr_t)(DIV64_U64_ROUND_UP((u64)start, align) * align);
-+	if (aligned_start >= end)
-+		return 0;
-+
-+	return end - aligned_start;
-+}
-+
-+static int kho_phys_range_cmp(const void *a, const void *b)
-+{
-+	const struct kho_phys_range *ra = a;
-+	const struct kho_phys_range *rb = b;
-+
-+	if (ra->start < rb->start)
-+		return -1;
-+	if (ra->start > rb->start)
-+		return 1;
-+
-+	if (ra->end < rb->end)
-+		return -1;
-+	if (ra->end > rb->end)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static unsigned int kho_scratch_count_pieces_in_nid(phys_addr_t start, phys_addr_t end, int nid)
-+{
-+	unsigned long start_sec;
-+	unsigned long end_sec;
-+	unsigned long sec;
-+	unsigned int pieces = 0;
-+	phys_addr_t piece_start = start;
-+	int piece_nid = pfn_to_nid(PFN_DOWN(start));
-+
-+	if (end <= start)
-+		return 0;
-+
-+	start_sec = pfn_to_section_nr(PFN_DOWN(start));
-+	end_sec = pfn_to_section_nr(PFN_DOWN(end - 1));
-+
-+	/*
-+	 * Split at sparsemem section boundaries and classify pieces by nid.
-+	 * This assumes nid ownership is section-granular, consistent with
-+	 * SPARSEMEM grouping and sparse_init() run detection.
-+	 */
-+	for (sec = start_sec + 1; sec <= end_sec; sec++) {
-+		phys_addr_t boundary = PFN_PHYS(section_nr_to_pfn(sec));
-+		int this_nid = pfn_to_nid(section_nr_to_pfn(sec));
-+
-+		if (this_nid != piece_nid) {
-+			if (piece_nid == nid && piece_start < boundary)
-+				pieces++;
-+			piece_start = boundary;
-+			piece_nid = this_nid;
-+		}
-+	}
-+
-+	if (piece_nid == nid && piece_start < end)
-+		pieces++;
-+
-+	return pieces;
-+}
-+
-+static void kho_scratch_add_pieces_in_nid(struct kho_phys_range *ranges,
-+					  unsigned int *nr, phys_addr_t start,
-+					  phys_addr_t end, int nid)
-+{
-+	unsigned long start_sec;
-+	unsigned long end_sec;
-+	unsigned long sec;
-+	phys_addr_t piece_start = start;
-+	int piece_nid = pfn_to_nid(PFN_DOWN(start));
-+
-+	if (end <= start)
-+		return;
-+
-+	start_sec = pfn_to_section_nr(PFN_DOWN(start));
-+	end_sec = pfn_to_section_nr(PFN_DOWN(end - 1));
-+
-+	/* See comment in kho_scratch_count_pieces_in_nid(). */
-+	for (sec = start_sec + 1; sec <= end_sec; sec++) {
-+		phys_addr_t boundary = PFN_PHYS(section_nr_to_pfn(sec));
-+		int this_nid = pfn_to_nid(section_nr_to_pfn(sec));
-+
-+		if (this_nid != piece_nid) {
-+			if (piece_nid == nid && piece_start < boundary)
-+				ranges[(*nr)++] = (struct kho_phys_range){
-+					.start = piece_start,
-+					.end = boundary,
-+				};
-+			piece_start = boundary;
-+			piece_nid = this_nid;
-+		}
-+	}
-+
-+	if (piece_nid == nid && piece_start < end)
-+		ranges[(*nr)++] = (struct kho_phys_range){
-+			.start = piece_start,
-+			.end = end,
-+		};
-+}
-+
-+static u64 kho_scratch_max_usable_for_nid(int nid, u64 align, bool *skipped)
-+{
-+	struct kho_phys_range *ranges;
-+	unsigned int nr_ranges = 0;
-+	unsigned int i;
-+	u64 max_usable = 0;
-+
-+	if (!kho_scratch || !kho_scratch_cnt)
-+		return 0;
-+
-+	/*
-+	 * All scratch regions (lowmem/global/per-node) are represented in
-+	 * kho_scratch[]. For @nid, split each region into per-nid pieces,
-+	 * then:
-+	 *   - sort pieces by start address
-+	 *   - merge overlapping/adjacent pieces into contiguous ranges
-+	 *   - apply @align to compute the maximum usable contiguous bytes
-+	 */
-+	for (i = 0; i < kho_scratch_cnt; i++) {
-+		phys_addr_t start;
-+		phys_addr_t end;
-+
-+		if (!kho_scratch[i].size)
-+			continue;
-+
-+		start = kho_scratch[i].addr;
-+		end = start + kho_scratch[i].size;
-+		nr_ranges += kho_scratch_count_pieces_in_nid(start, end, nid);
-+	}
-+
-+	if (!nr_ranges)
-+		return 0;
-+
-+	ranges = kvcalloc(nr_ranges, sizeof(*ranges), GFP_KERNEL);
-+	if (!ranges) {
-+		*skipped = true;
-+		return 0;
-+	}
-+
-+	nr_ranges = 0;
-+	for (i = 0; i < kho_scratch_cnt; i++) {
-+		phys_addr_t start;
-+		phys_addr_t end;
-+
-+		if (!kho_scratch[i].size)
-+			continue;
-+
-+		start = kho_scratch[i].addr;
-+		end = start + kho_scratch[i].size;
-+		kho_scratch_add_pieces_in_nid(ranges, &nr_ranges, start, end, nid);
-+	}
-+
-+	/* ranges[] is half-open [start, end). */
-+	sort(ranges, nr_ranges, sizeof(*ranges), kho_phys_range_cmp, NULL);
-+
-+	if (nr_ranges) {
-+		phys_addr_t cur_start = ranges[0].start;
-+		phys_addr_t cur_end = ranges[0].end;
-+
-+		for (i = 1; i < nr_ranges; i++) {
-+			if (ranges[i].start <= cur_end) {
-+				cur_end = max(cur_end, ranges[i].end);
-+				continue;
-+			}
-+
-+			/* Finalize a merged range and start a new one. */
-+			max_usable = max(max_usable,
-+					 kho_phys_range_aligned_usable(cur_start, cur_end, align));
-+			cur_start = ranges[i].start;
-+			cur_end = ranges[i].end;
-+		}
-+
-+		/* Finalize last merged range. */
-+		max_usable = max(max_usable,
-+				 kho_phys_range_aligned_usable(cur_start, cur_end, align));
-+	}
-+
-+	kvfree(ranges);
-+	return max_usable;
-+}
-+
-+static int kho_check_scratch_for_sparse(int *bad_nid, u64 *required_bytes,
-+					u64 *max_usable_bytes, u64 *map_count,
-+					u64 *section_map_size_bytes, bool *skipped)
-+{
-+	unsigned long sec_nr;
-+	u64 section_map_size;
-+	u64 *max_run_sections;
-+	int prev_nid = NUMA_NO_NODE;
-+	int nid;
-+	u64 run_sections = 0;
-+	u64 worst_required = 0;
-+	u64 worst_deficit = 0;
-+	int ret = 0;
-+
-+	*skipped = false;
-+
-+	section_map_size = kho_section_map_size_bytes();
-+	if (!section_map_size)
-+		return 0;
-+
-+	*bad_nid = NUMA_NO_NODE;
-+	*required_bytes = 0;
-+	*max_usable_bytes = 0;
-+	*map_count = 0;
-+	*section_map_size_bytes = section_map_size;
-+
-+	max_run_sections = kvcalloc(nr_node_ids, sizeof(*max_run_sections),
-+				    GFP_KERNEL);
-+	if (!max_run_sections) {
-+		*skipped = true;
-+		return 0;
-+	}
-+
-+	/*
-+	 * Keep the run detection consistent with sparse_init(): it walks present
-+	 * sections and breaks runs on nid changes only.
-+	 */
-+	for_each_present_section_nr(0, sec_nr) {
-+		unsigned long pfn = section_nr_to_pfn(sec_nr);
-+
-+		nid = pfn_to_nid(pfn);
-+		if (nid != prev_nid) {
-+			if (prev_nid != NUMA_NO_NODE)
-+				max_run_sections[prev_nid] = max(max_run_sections[prev_nid],
-+								 run_sections);
-+			prev_nid = nid;
-+			run_sections = 0;
-+		}
-+
-+		run_sections++;
-+	}
-+
-+	if (prev_nid != NUMA_NO_NODE)
-+		max_run_sections[prev_nid] = max(max_run_sections[prev_nid],
-+						 run_sections);
-+
-+	for_each_online_node(nid) {
-+		u64 max_run = max_run_sections[nid];
-+		u64 required;
-+		u64 max_usable;
-+		u64 deficit;
-+
-+		required = max_run * section_map_size;
-+		if (!required)
-+			continue;
-+
-+		max_usable = kho_scratch_max_usable_for_nid(nid, section_map_size,
-+							    skipped);
-+		if (*skipped)
-+			break;
-+		if (max_usable >= required)
-+			continue;
-+
-+		/*
-+		 * Pick the "worst" node by deficit ratio using MiB units to
-+		 * avoid overflow; this is a warning-only heuristic.
-+		 */
-+		deficit = required - max_usable;
-+		if (ret) {
-+			u64 required_mib = max_t(u64, 1, required >> 20);
-+			u64 deficit_mib = max_t(u64, 1, deficit >> 20);
-+			u64 worst_required_mib = max_t(u64, 1, worst_required >> 20);
-+			u64 worst_deficit_mib = max_t(u64, 1, worst_deficit >> 20);
-+
-+			if (deficit_mib * worst_required_mib <
-+			    worst_deficit_mib * required_mib)
-+				continue;
-+			if (deficit_mib * worst_required_mib ==
-+			    worst_deficit_mib * required_mib &&
-+			    deficit < worst_deficit)
-+				continue;
-+		}
-+
-+		worst_required = required;
-+		worst_deficit = deficit;
-+		*bad_nid = nid;
-+		*required_bytes = required;
-+		*max_usable_bytes = max_usable;
-+		*map_count = max_run;
-+		*section_map_size_bytes = section_map_size;
-+		ret = -ENOMEM;
-+	}
-+
-+	kvfree(max_run_sections);
-+	return ret;
-+}
-+
-+#else /* CONFIG_SPARSEMEM */
-+
-+static u64 kho_section_map_size_bytes(void)
-+{
-+	return 0;
-+}
-+
-+static int kho_check_scratch_for_sparse(int *bad_nid, u64 *required_bytes,
-+					u64 *max_usable_bytes, u64 *map_count,
-+					u64 *section_map_size_bytes, bool *skipped)
-+{
-+	(void)bad_nid;
-+	(void)required_bytes;
-+	(void)max_usable_bytes;
-+	(void)map_count;
-+	(void)section_map_size_bytes;
-+	(void)skipped;
-+	return 0;
-+}
-+
-+#endif /* CONFIG_SPARSEMEM */
-+
- /*
-  * The scratch areas are scaled by default as percent of memory allocated from
-  * memblock. A user can override the scale with command line parameter:
-@@ -1259,6 +1611,50 @@ struct kho_in {
- static struct kho_in kho_in = {
- };
- 
-+static void kho_scratch_sanity_workfn(struct work_struct *work)
-+{
-+	int bad_nid;
-+	u64 required_bytes;
-+	u64 section_map_size;
-+	u64 map_count;
-+	u64 max_usable_bytes;
-+	bool skipped;
-+	int err;
-+
-+	if (!kho_enable || kho_in.scratch_phys)
-+		return;
-+
-+	err = kho_check_scratch_for_sparse(&bad_nid, &required_bytes,
-+					   &max_usable_bytes, &map_count,
-+					   &section_map_size, &skipped);
-+	if (skipped) {
-+		pr_warn_once("scratch: sparsemem sanity skipped (temp alloc unavailable)\n");
-+		return;
-+	}
-+
-+	if (err != -ENOMEM)
-+		return;
-+
-+	pr_warn_once("scratch: node%d max=%lluMiB need=%lluMiB for sparse_buffer_init(map_count=%llu section_map_size=%lluKiB); kexec may fail\n",
-+		     bad_nid,
-+		     (unsigned long long)(max_usable_bytes >> 20),
-+		     (unsigned long long)(required_bytes >> 20),
-+		     (unsigned long long)map_count,
-+		     (unsigned long long)(section_map_size >> 10));
-+}
-+
-+static DECLARE_WORK(kho_scratch_sanity_work, kho_scratch_sanity_workfn);
-+
-+static int __init kho_scratch_sanity_init(void)
-+{
-+	if (!kho_enable || kho_in.scratch_phys)
-+		return 0;
-+
-+	queue_work(system_long_wq, &kho_scratch_sanity_work);
-+	return 0;
-+}
-+late_initcall(kho_scratch_sanity_init);
-+
- static const void *kho_get_fdt(void)
- {
- 	return kho_in.fdt_phys ? phys_to_virt(kho_in.fdt_phys) : NULL;
+>
+>
+>Best regards,
+>Krzysztof
+>
+>
+
 -- 
-2.52.0
+Best regards,
+Coiby
 
 
