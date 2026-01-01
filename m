@@ -4,74 +4,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EAB49EE57FA
-	for <kexec@archiver.kernel.org>; Wed, 31 Dec 2025 09:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B7604EEB57C
+	for <kexec@archiver.kernel.org>; Thu,  1 Jan 2026 15:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=puWMIkCqzvcukNc6entSGSZYTJ90NDZmrdy+34MYr64=; b=iIOmk6MAMujt6oQVEIwMR80oYi
-	wtd/MWIC+3er/V9KcYwEzvAAkwqMKdXA7Y4czC2TLMSphlzWrZ+qT7hwJ3+jKhET5E2qOPkHVBJsY
-	SkKP5Vl3jtPFyjHTj9A+8WcKD3Bx3q7rTfR1So5UWRZR9wdV2mgQw13UtnqR21kR2K7B2RGgjMKOZ
-	xvX+eZqVxlFZQRJnqXKXRfbeNZPa860ch+/obz+vrNJfvV0LUfTLkeL+qWfaBDJQi1J2kuLTev+Pn
-	v6PoYzrs0VxDXksteVGsYFiwimwoa59rQGxRGgXaaFLXVbEiA6NEpPxAbtAZWulpZPdT9eIj0QKOc
-	mGH7rQWg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=d8fcVgmWcefeU0P9LyRd0h37t+Vi86TuMkESe/9Atms=; b=HKbYlYGNXn42TgYAcJ/CmGiq+e
+	kX3Vbr2Ay65puCDMzk109Un9xq0NJQnprOK7msjikpLG0GGAjm2fb3DAqYAFjwDZ0ijOxcziAldPS
+	o7nqz4DmLG3S4QkMB+U5i0ZwAb8zP9qfJOqTWR6NgybpzOSrHZj5ENiwMPgwPQObDE9a00xX8WtdP
+	6AiPUygUX89vJWXB6l5w55lnQmQmjoUaWkOnBSIS8FPycjrLhx4wU7vfqmVNlbz5N+DOXEm+kdeyE
+	Tt8oINNnNZBXSSrlH60fVKh7OQUDzLZL9pG04xqJydwzlwv3bcvDBxO9Gw/m7Fo7QNmKXvbBY7dRy
+	OooxExXQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vasn6-00000005qOE-2ST5;
-	Wed, 31 Dec 2025 09:46:52 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1vbKGB-00000007Ik2-2HJ1;
+	Thu, 01 Jan 2026 15:06:43 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vasn1-00000005qNs-3LSx
+	id 1vbKG1-00000007Id6-0VkI
 	for kexec@lists.infradead.org;
-	Wed, 31 Dec 2025 09:46:48 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 90D0C40289;
-	Wed, 31 Dec 2025 09:46:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05723C113D0;
-	Wed, 31 Dec 2025 09:46:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767174406;
-	bh=Js4gGVpGtn7C+f3YQhPLQtxd+Rpk3HniIelYKQQwOw4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VSe/zxSDWx34KjwRibmxVhaeoXwJc7vuj1CDNSJId3c2TQLzK6sKsUapbmCiuwwvR
-	 fyJpfMDnR8SDywH+tRLlataLTsKEeSz8BqXp8Jaw+nWFiWCqO415Jjvm1xnRncfgaf
-	 suBdOV+DX3COyxwr9fW360XBr/n01Hd3E4ULQoykp4RHuEc9JGdjsLPI3rd2pdLnGB
-	 7z24kT3OG3AkMlWMQJPEOL9Zmxlhh7CPMXOhnGTc2E+E7t1OL2gL0l5lAKuE/pt2/y
-	 kvg9uD40StmRSVnI1EfCiqw2nWitUEvF9Rh8kjXV9/2/TXGZMPXUtPzaAW80yIhbkt
-	 DYSG5Henp/leQ==
-Date: Wed, 31 Dec 2025 11:46:39 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>,
-	Evangelos Petrongonas <epetron@amazon.de>,
-	Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jason Miu <jasonmiu@google.com>, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, linux-mm@kvack.org,
-	nh-open-source@amazon.com
-Subject: Re: [PATCH] kho: add support for deferred struct page init
-Message-ID: <aVTw_08W7zXR7Y0F@kernel.org>
-References: <86jyyecyzh.fsf@kernel.org>
- <CA+CK2bDxnTEe9Ohq5zLuyF-jqgD0DPhfdq6z=yztUsXU5p5fSQ@mail.gmail.com>
- <863452cwns.fsf@kernel.org>
- <CA+CK2bCjJWZG_rPoPsHWSxirmUCTOuFQzTCss2AKf9UqpThrdw@mail.gmail.com>
- <864ip99f1a.fsf@kernel.org>
- <CA+CK2bDDEZ5a+LJNDVMtKFtQ1D9rP6rJqU064eoru=a9eHpaAQ@mail.gmail.com>
- <aVP6wBYoHJQsplIl@kernel.org>
- <CA+CK2bDZPwYpUhksDLSbfVdVm5TYbh0XrOKRV=q4YjGpqH+Fwg@mail.gmail.com>
- <aVQJUPOn85WlJaM9@kernel.org>
- <CA+CK2bCm=AGDSLTbs6etbqveFUHU80okE-bCT2zg20nrHXgHRQ@mail.gmail.com>
+	Thu, 01 Jan 2026 15:06:38 +0000
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 6012Ebau004564;
+	Thu, 1 Jan 2026 15:06:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=d8fcVg
+	mWcefeU0P9LyRd0h37t+Vi86TuMkESe/9Atms=; b=g4nQrIOUWruThZPTKuBOHt
+	1TBbPozQQdu8ekoG5n9wxShcp4toV5cCPsSEguNiwITZQUj7Dn5vJmWfIZV+X8vv
+	pM4yUFae8eeH5WyTcCTqIe13PAdZNsZfIfv7IiaTp4GyniFOS8y4OJu4/0BsNlPz
+	pbqszUkSbNYPpgBosJnCcYorPb6J80P7sJIHQPaZnMqkr0bVY/x8Rac6t0F2v0FB
+	q2jtJpIhECWvaWlz9dTMB7Jucug0ZNJJ00cYGB/jW7HWfgp/wLMPj7b+P4xjJZ0P
+	cgM+lZb+cX55iFhm6BwxlyIt5zdTeBvQ/rfz4XqHJhkBnezBEBucfrl1x/IiaKVw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ba73w1t40-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 Jan 2026 15:06:19 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 601F6JK9030222;
+	Thu, 1 Jan 2026 15:06:19 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ba73w1t3x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 Jan 2026 15:06:19 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 601BA6EK026897;
+	Thu, 1 Jan 2026 15:06:18 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4batsnk1gs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 Jan 2026 15:06:18 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 601F6EFH62063034
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 1 Jan 2026 15:06:14 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 374B720043;
+	Thu,  1 Jan 2026 15:06:14 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3D86420040;
+	Thu,  1 Jan 2026 15:06:11 +0000 (GMT)
+Received: from [9.124.212.98] (unknown [9.124.212.98])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  1 Jan 2026 15:06:11 +0000 (GMT)
+Message-ID: <e32554c8-774e-416d-92e4-306aec42b953@linux.ibm.com>
+Date: Thu, 1 Jan 2026 20:36:09 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+CK2bCm=AGDSLTbs6etbqveFUHU80okE-bCT2zg20nrHXgHRQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] powerpc/kdump: pass dm-crypt keys to kdump kernel
+To: Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc: Thomas Staudt <tstaudt@de.ibm.com>,
+        Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>,
+        Baoquan he <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+        Kairui Song <ryncsn@gmail.com>, Pingfan Liu <kernelfans@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20251226140636.1378505-1-coxu@redhat.com>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <20251226140636.1378505-1-coxu@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: AqNKOzqNRkU4VMUSvfbYuc_8_4dJmaxA
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTAxMDEzMyBTYWx0ZWRfX+6xO0L6FIz73
+ +yY54B+bJYx3KwCfKTS62ljwirEOrxDt4tPQsE+EsCrteBGlX2EAaY9N5wkecIGuEBibBgZQdF0
+ B37BoYztVxwxDs8snrKfA407hHaNgT08DnrGOi2VYR+NBqw5wLFbriJ9ttPDBPa4syalfVdMdPu
+ CbPGWcsciiURYNNoA97b0JrZZBIRfBmsVTBRMAlzQqsIFLWrZgl8F5st4/neGcxyGvjTryHg5ib
+ XuNrYOkj0r2qYSWU/R8CcZHiLNhkTNVCAhYHYqFdKtFYTgMHC3xj9xQST9AHoihiMElnluvogbJ
+ VblKAxo79gmRPFJfpovd2BelH0UPxSvQjJdnKJUrN+H3rjjgQsEjmYGqK9kAhi3JW0oiS+gP/qJ
+ aVen6ssDRE3a3lKtvob3S/HGKeI6uIq9SWQSFrLhsoxkgPjanbAFaSssFH4EywujCFpz7Qdxx1Z
+ pAtuVo5CHshKXITyv7w==
+X-Authority-Analysis: v=2.4 cv=fobRpV4f c=1 sm=1 tr=0 ts=69568d6b cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=VnNF1IyMAAAA:8 a=b2T7Ds_qAAAA:8
+ a=pGLkceISAAAA:8 a=Z4Rwk6OoAAAA:8 a=llR5IeLaMymARZ-qTl0A:9 a=QEXdDO2ut3YA:10
+ a=thWvoDmNLqknv6kuXhLH:22 a=HkZW87K1Qel5hWWM3VKY:22
+X-Proofpoint-GUID: 2aPxOHtFQDWOjuA52_GD-Nwi5EMnNm78
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2026-01-01_05,2025-12-31_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 suspectscore=0 phishscore=0 adultscore=0 malwarescore=0
+ spamscore=0 bulkscore=0 impostorscore=0 priorityscore=1501 clxscore=1011
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2512120000 definitions=main-2601010133
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20251231_014647_895516_30E542BB 
-X-CRM114-Status: GOOD (  31.48  )
+X-CRM114-CacheID: sfid-20260101_070633_315976_F09A1086 
+X-CRM114-Status: GOOD (  32.52  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,81 +136,163 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Dec 30, 2025 at 01:21:31PM -0500, Pasha Tatashin wrote:
-> On Tue, Dec 30, 2025 at 12:18 PM Mike Rapoport <rppt@kernel.org> wrote:
-> >
-> > On Tue, Dec 30, 2025 at 11:18:12AM -0500, Pasha Tatashin wrote:
-> > > On Tue, Dec 30, 2025 at 11:16 AM Mike Rapoport <rppt@kernel.org> wrote:
-> > > >
-> > > > On Tue, Dec 30, 2025 at 11:05:05AM -0500, Pasha Tatashin wrote:
-> > > > > On Mon, Dec 29, 2025 at 4:03 PM Pratyush Yadav <pratyush@kernel.org> wrote:
-> > > > > >
-> > > > > > The magic is purely sanity checking. It is not used to decide anything
-> > > > > > other than to make sure this is actually a KHO page. I don't intend to
-> > > > > > change that. My point is, if we make sure the KHO pages are properly
-> > > > > > initialized during MM init, then restoring can actually be a very cheap
-> > > > > > operation, where you only do the sanity checking. You can even put the
-> > > > > > magic check behind CONFIG_KEXEC_HANDOVER_DEBUG if you want, but I think
-> > > > > > it is useful enough to keep in production systems too.
-> > > > >
-> > > > > It is part of a critical hotpath during blackout, should really be
-> > > > > behind CONFIG_KEXEC_HANDOVER_DEBUG
-> > > >
-> > > > Do you have the numbers? ;-)
-> > >
-> > > The fastest reboot we can achieve is ~0.4s on ARM
-> >
-> > I meant the difference between assigning info.magic and skipping it.
-> 
-> It is proportional to the amount of preserved memory. Extra assignment
-> for each page. In our fleet we have observed IOMMU page tables to be
-> 20G in size. So, let's just assume it is 20G. That is: 20 * 1024^3 /
 
-Do you see 400ms reboot times on machines that have 20G of IOMMU page
-tables? That's impressive presuming the overall size of those machines. 
 
-> 4096 = 5.24 million pages. If we access "struct page" only for the
-> magic purpose, we fetch full 64-byte cacheline, which is 5.24 million
-> * 64 bytes = 335 M, that is ~13ms with ~25G/s DRAM; and also each TLB
-> miss will add some latency, 5.2M * 10ns = ~50ms. In total we can get
-> 15ms ~ 50ms regression compared to 400ms, that is 4-12%. It will be
-> less if we also access "struct page" for another reason at the same
-> time, but still it adds up.
+On 26/12/25 19:36, Coiby Xu wrote:
+> Based on the CONFIG_CRASH_DM_CRYPT feature, this patch adds
+> LUKS-encrypted device dump target support to PowerPC by addressing two
+> challenges [1],
+>   - Kdump kernel may not be able to decrypt the LUKS partition. For some
+>     machines, a system administrator may not have a chance to enter the
+>     password to decrypt the device in kdump initramfs after the 1st kernel
+>     crashes
+>
+>   - LUKS2 by default use the memory-hard Argon2 key derivation function
+>     which is quite memory-consuming compared to the limited memory reserved
+>     for kdump.
+>
+> 1st kernel will build up the kernel command parameter dmcryptkeys as
+> similar to elfcorehdr to pass the memory address of the stored info of
+> dm-crypt keys to the kdump kernel.
+>
+> [1] https://lore.kernel.org/all/20250502011246.99238-1-coxu@redhat.com/
+>
+> Cc: Thomas Staudt <tstaudt@de.ibm.com>
+> Cc: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>
+> Cc: Baoquan he <bhe@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Kairui Song <ryncsn@gmail.com>
+> Cc: Pingfan Liu <kernelfans@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
+> ---
+>   arch/powerpc/include/asm/kexec.h |  3 ++-
+>   arch/powerpc/kexec/elf_64.c      | 26 +++++++++++++++++++++++++-
+>   arch/powerpc/kexec/file_load.c   | 19 +++++++++++--------
+>   3 files changed, 38 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+> index bd4a6c42a5f3..f3d098d543b4 100644
+> --- a/arch/powerpc/include/asm/kexec.h
+> +++ b/arch/powerpc/include/asm/kexec.h
+> @@ -80,7 +80,8 @@ struct kimage_arch {
+>   };
+>   
+>   char *setup_kdump_cmdline(struct kimage *image, char *cmdline,
+> -			  unsigned long cmdline_len);
+> +			  unsigned long cmdline_len,
+> +			  char *name, unsigned long addr);
+>   int setup_purgatory(struct kimage *image, const void *slave_code,
+>   		    const void *fdt, unsigned long kernel_load_addr,
+>   		    unsigned long fdt_load_addr);
+> diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
+> index 5d6d616404cf..57cb3361d91b 100644
+> --- a/arch/powerpc/kexec/elf_64.c
+> +++ b/arch/powerpc/kexec/elf_64.c
+> @@ -81,13 +81,37 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+>   
+>   		/* Setup cmdline for kdump kernel case */
+>   		modified_cmdline = setup_kdump_cmdline(image, cmdline,
+> -						       cmdline_len);
+> +						       cmdline_len,
+> +						       "elfcorehdr",
+> +						       image->elf_load_addr);
+>   		if (!modified_cmdline) {
+>   			pr_err("Setting up cmdline for kdump kernel failed\n");
+>   			ret = -EINVAL;
+>   			goto out;
+>   		}
+>   		cmdline = modified_cmdline;
+> +		cmdline_len = strlen(cmdline) + 1;
+> +
+> +		ret = crash_load_dm_crypt_keys(image);
+> +		if (ret == -ENOENT) {
+> +			kexec_dprintk("No dm crypt key to load\n");
+> +		} else if (ret) {
+> +			pr_err("Failed to load dm crypt keys\n");
+> +			return ERR_PTR(ret);
+> +		}
+> +
+> +		if (image->dm_crypt_keys_addr != 0) {
+> +			modified_cmdline = setup_kdump_cmdline(image, cmdline,
+> +							       cmdline_len,
+> +							       "dmcryptkeys",
+> +							       image->dm_crypt_keys_addr);
+> +			if (!modified_cmdline) {
+> +				pr_err("Setting up cmdline for kdump kernel failed\n");
+> +				ret = -EINVAL;
+> +				goto out;
+> +			}
+> +			cmdline = modified_cmdline;
+> +		}
+>   	}
+>   
+>   	if (initrd != NULL) {
+> diff --git a/arch/powerpc/kexec/file_load.c b/arch/powerpc/kexec/file_load.c
+> index 4284f76cbef5..e1c08050286d 100644
+> --- a/arch/powerpc/kexec/file_load.c
+> +++ b/arch/powerpc/kexec/file_load.c
+> @@ -23,38 +23,41 @@
+>   #define SLAVE_CODE_SIZE		256	/* First 0x100 bytes */
+>   
+>   /**
+> - * setup_kdump_cmdline - Prepend "elfcorehdr=<addr> " to command line
+> + * setup_kdump_cmdline - Prepend "<name>=<addr> " to command line
+>    *                       of kdump kernel for exporting the core.
+>    * @image:               Kexec image
+>    * @cmdline:             Command line parameters to update.
+>    * @cmdline_len:         Length of the cmdline parameters.
+> + * @name:                Name e.g elfcorehdr.
+> + * @addr:                Memory address.
+>    *
+>    * kdump segment must be setup before calling this function.
+>    *
+>    * Returns new cmdline buffer for kdump kernel on success, NULL otherwise.
+>    */
+>   char *setup_kdump_cmdline(struct kimage *image, char *cmdline,
+> -			  unsigned long cmdline_len)
+> +			  unsigned long cmdline_len,
+> +			  char *name, unsigned long addr)
+>   {
+> -	int elfcorehdr_strlen;
+> +	unsigned long parameter_len;
+>   	char *cmdline_ptr;
+>   
+>   	cmdline_ptr = kzalloc(COMMAND_LINE_SIZE, GFP_KERNEL);
+>   	if (!cmdline_ptr)
+>   		return NULL;
+>   
+> -	elfcorehdr_strlen = sprintf(cmdline_ptr, "elfcorehdr=0x%lx ",
+> -				    image->elf_load_addr);
+> +	parameter_len = sprintf(cmdline_ptr, "%s=0x%lx ", name, addr);
+>   
+> -	if (elfcorehdr_strlen + cmdline_len > COMMAND_LINE_SIZE) {
+> -		pr_err("Appending elfcorehdr=<addr> exceeds cmdline size\n");
+> +	if (parameter_len + cmdline_len > COMMAND_LINE_SIZE) {
+> +		pr_err("Appending %s=<addr> exceeds cmdline size\n", name);
+>   		kfree(cmdline_ptr);
+>   		return NULL;
+>   	}
+>   
+> -	memcpy(cmdline_ptr + elfcorehdr_strlen, cmdline, cmdline_len);
+> +	memcpy(cmdline_ptr + parameter_len, cmdline, cmdline_len);
+>   	// Ensure it's nul terminated
+>   	cmdline_ptr[COMMAND_LINE_SIZE - 1] = '\0';
+> +	kfree(cmdline);
 
-Your overhead calculations are based on the assumption that we don't
-access struct page, but we do. We assign page->private during
-deserialization and then initialize struct page during restore.
-We get the hit of cache fetches and TLB misses anyway.
+When setup_kdump_cmdline() is called for elfcorehdr, cmdline holds the
+same pointer as image->cmdline_buf. Freeing it here may therefore
+cause issues, right?
 
-It would be interesting to see the difference *measured* on those large
-systems.
+Currently, image->cmdline_buf is not used after calling the
+architecture-specific load function (elf64_load on powerpc).
+However, kimage_file_post_load_cleanup() later calls kfree() on
+the same address.
 
-> > > (shutdown+purgatory+boot), let's not add anything to regress, as every
-> > > microsecond counts during blackout.
-> >
-> > Any added functionality adds cycles, this is inevitable. And neither KHO
-> > nor LUO are near the completion, so we'll have to add functionality to both
-> > of them. And the added functionality should be correct first and foremost.
-> > And magic sanity check seems pretty useful and presumably cheap enough to
-> > always keep it unless you see a real slowdown because of it.
-> 
-> Magic check is proportional to the amount of preserved memory. It is
-> not a required functionality, only a sanity checking. I really do not
-> see a reason to enable it in production. All other sanity struct page,
-> and pg_flags related sanity checking are usually enabled with
-> CONFIG_DEBUG_VM, so enabling it only with CONFIG_KEXEC_HANDOVER_DEBUG
-> is better.
+>   	return cmdline_ptr;
+>   }
+>   
+>
+> base-commit: ccd1cdca5cd433c8a5dff78b69a79b31d9b77ee1
 
-Having sanity checks in production could be useful because some errors
-could be hard to reproduce in controlled environment with debug kernel.
-
-Just last cycle there was commit 83c8f7b5e194 ("mm/mm_init: Introduce a
-boot parameter for check_pages") that allows enabling page sanity checks in
-production.
-
-So my take is to keep the magic check until KHO/LUO mature at least.
-
--- 
-Sincerely yours,
-Mike.
 
