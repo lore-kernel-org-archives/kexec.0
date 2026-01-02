@@ -4,72 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E803EFA3748
-	for <kexec@archiver.kernel.org>; Fri,  2 Jan 2026 14:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B9B4CFA374F
+	for <kexec@archiver.kernel.org>; Fri,  2 Jan 2026 14:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=fAtafWg1sFBzBjGB7d+SGUoSzDz5D9BUwo+weGX2YLg=; b=d5WKq/Hg4zt+xOSsHGR0vhSmR5
-	OPORxX4HImKdfcnMQeS9U94ggnc87Sl4gGDzFhgOyET+G1LPIT3+PKtkqQOcn9D4agiUaBQileF6Q
-	7VTbLZkpPO+kA5qQDFRsAKVHjK9Oy/fC1YfFXrUIZQJKeNs12VxhEKwkKCyQkXKrWrLshtCOXxBce
-	8JPk+jHykmR8IcNVXbuhn6V0f4Ittj5COhzLzGt4cPPOOR812/T9zDtXOih+IpcVQgGJ/g89Xnr+L
-	PKzAxX28trXe7aqI4KubxJk9+adfaM51LxR4TaHaLK0th00XWRNCNARd8cHdDsW0pcsexV+x310s0
-	IijtUI/g==;
+	bh=yBZj2F93B0VknEVYf7xGk1WgByUhBAGZQZsBhmv5asg=; b=Xq00kPtTDts8/Y0kZoDkI/B9xw
+	15rtEbouEELHxea3JafKXxW6evJhs4HU2wl3DEYENVgZMjksRGp67Rr/MjM8u8LLg+KxldOVk6sOZ
+	3qf7sd4Mx4KeMqEZiLAJeCxYnfvA4A8xCWEpUTathH/kFpqxDzwOijniogiqNMUHO7TKwNJpwrFJE
+	rlY3NsTJh8rPMQYdNkemA0tT4M5AvdWrelp7s8X1aIJvVaEOprRWD3lINLyRBoPES6Q2975zHzsKr
+	ayVHtbFRgcurcUsvHzdbV2vYT60vMr9hkyWYa0rS4YozV+5isuP7Ajnsmkx0xE+g0KsFfalvf7E7D
+	Rbo8Lv9Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vbg4o-00000008MGw-2A5t;
-	Fri, 02 Jan 2026 14:24:26 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1vbgXD-00000008OIx-3C9H;
+	Fri, 02 Jan 2026 14:53:47 +0000
+Received: from mail-oa1-f52.google.com ([209.85.160.52])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vbg4n-00000008MGP-2Tws
+	id 1vbgXB-00000008OI0-16Pc
 	for kexec@lists.infradead.org;
-	Fri, 02 Jan 2026 14:24:25 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 8073E60017;
-	Fri,  2 Jan 2026 14:24:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42226C116B1;
-	Fri,  2 Jan 2026 14:24:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767363864;
-	bh=fAtafWg1sFBzBjGB7d+SGUoSzDz5D9BUwo+weGX2YLg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=L0we59nDG+Q3GO+jsNtxGY9fMPViX52grgVcLoYYogLiRu0tpcWBslFf5vCdovms0
-	 jAZGfkNETBQOZJyw03RwzQyCxjmF8CGIzfhFKihnFxTSondniZaSRsC6aNtytG2pJ9
-	 laaVkcVXzn9NczWdabf8Rk3cUuuKSPVQmn8DVlvBbHXT3ee944ykDzxaOkHpbMPzFg
-	 24mwMcVKhvB5rCloyErmB8LjDtfa8jvARawIIlSwcy1AHh5JXL+NiGEDrHi1PdVf1k
-	 19DmldnbzoIsY/IYkz5W4aGv8oRimtMl33ZnaW4baB3T96NBSCJz69fNwuQSfj4TTW
-	 BN/2JbRLlBlFw==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  Pratyush Yadav
- <pratyush@kernel.org>,  Evangelos Petrongonas <epetron@amazon.de>,
-  Alexander Graf <graf@amazon.com>,  Andrew Morton
- <akpm@linux-foundation.org>,  Jason Miu <jasonmiu@google.com>,
-  linux-kernel@vger.kernel.org,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  nh-open-source@amazon.com
-Subject: Re: [PATCH] kho: add support for deferred struct page init
-In-Reply-To: <aVTw_08W7zXR7Y0F@kernel.org> (Mike Rapoport's message of "Wed,
-	31 Dec 2025 11:46:39 +0200")
-References: <86jyyecyzh.fsf@kernel.org>
-	<CA+CK2bDxnTEe9Ohq5zLuyF-jqgD0DPhfdq6z=yztUsXU5p5fSQ@mail.gmail.com>
-	<863452cwns.fsf@kernel.org>
-	<CA+CK2bCjJWZG_rPoPsHWSxirmUCTOuFQzTCss2AKf9UqpThrdw@mail.gmail.com>
-	<864ip99f1a.fsf@kernel.org>
-	<CA+CK2bDDEZ5a+LJNDVMtKFtQ1D9rP6rJqU064eoru=a9eHpaAQ@mail.gmail.com>
-	<aVP6wBYoHJQsplIl@kernel.org>
-	<CA+CK2bDZPwYpUhksDLSbfVdVm5TYbh0XrOKRV=q4YjGpqH+Fwg@mail.gmail.com>
-	<aVQJUPOn85WlJaM9@kernel.org>
-	<CA+CK2bCm=AGDSLTbs6etbqveFUHU80okE-bCT2zg20nrHXgHRQ@mail.gmail.com>
-	<aVTw_08W7zXR7Y0F@kernel.org>
-Date: Fri, 02 Jan 2026 15:24:18 +0100
-Message-ID: <86wm206qjx.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Fri, 02 Jan 2026 14:53:46 +0000
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-3e89d226c3aso9523414fac.2
+        for <kexec@lists.infradead.org>; Fri, 02 Jan 2026 06:53:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767365624; x=1767970424;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yBZj2F93B0VknEVYf7xGk1WgByUhBAGZQZsBhmv5asg=;
+        b=APo6CjwU5irgT4Xaf4JeySInHD+/Sn/IvNPZx3d5OTRZDfkYcvrgmU+zCnBxxVEEa1
+         3zz52Z+otGSYQXTv513T2aWwXmXThbIe+i2uFDmID6rzm2ZL4o7eub1i2ln46t8hJJVD
+         9ScOEWFJ6vX0EJp9EoAjqZ4NmjdtRqrq6xuMtnn2DWjKPkIIw3D8LW23UgjVvpxL1FKG
+         T62W3E+8oKXaW341Ug0mdri2c5NgMctEF4KDQf0JdD3Vvcx2aNgh65TD4X85yXPV1WMA
+         vo7deH1cYddb5qU0cK7vqF51npmGwR5/YFBTZ0sbYxuqtOpF5CFUvwTsSYm3gm7C0rvU
+         I/xg==
+X-Forwarded-Encrypted: i=1; AJvYcCXEPaoVwDjpsEZONoSl9ca8z2e8c1zuuNydWtBfD93mJ82MODvg97dV+7vncHqtCmTGRDUSzg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxjcjtoCJ/B46Oz+CGGWBgxViRCbjDkGXQVlUCp0qArPIpUPzf3
+	C07xlNoEXBZxg0QuvUsuAzrqev4Hlfzdh8IFPGCR4pczd8FHhvMTPDNb
+X-Gm-Gg: AY/fxX7jDgcjdDNFud3FImeBTpgXSPtWFWQFpv3Kbe+SB8Mcl6KDcMICONiVRJWn+ZT
+	Wf/53u1A0d6P8d7i++wSmwLc0v2sK3RGDBf3gexIyc78ofUrCaJOWjDiX74Ds4J6Mjx2j9toNk4
+	EE+pQJBIjV1XDkk7EMxr2cuk7aF9dAy9BPe5V2xduuYgId5JMtCQCvLbmyYaKXhfFDJHG913Nxd
+	vLSIlviemJn61ZbD0tvlQf9ethSxEof+4ZFwwaa5J8BjMTsjRH5IUvaD2RlRBhqF9Prb6A4ml97
+	rT3m45OWJVKObJHpaPVd3zqYZ9a+ST3S33zaKvidk8JSfJuBtgYI/Bj4Gec9GT/J8tC+hjYOFCN
+	J0gqcvPP8RFOQaw34HwqxlzNbMZBnHlbv0Iz6Il+7ZUMogO1SLCr5X5S2bG2v4eZ9seN9FLumpr
+	FxdQPHV9xqHxMmig==
+X-Google-Smtp-Source: AGHT+IFOaVirBFIVBZXp+VZPeHS4wt8YP6E5VjPc88CEkvgr+k+wnwNlOhaQTCbgaVjjYSCBS7oZqQ==
+X-Received: by 2002:a05:6871:3607:b0:3f5:4172:17 with SMTP id 586e51a60fabf-3fda5481b05mr24323475fac.56.1767365623867;
+        Fri, 02 Jan 2026 06:53:43 -0800 (PST)
+Received: from localhost ([2a03:2880:10ff:50::])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3fdaac145bcsm23292303fac.22.2026.01.02.06.53.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Jan 2026 06:53:43 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+Date: Fri, 02 Jan 2026 06:53:23 -0800
+Subject: [PATCH v2 1/2] kexec: history: track previous kernel version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260102-kho-v2-1-1747b1a3a1d6@debian.org>
+References: <20260102-kho-v2-0-1747b1a3a1d6@debian.org>
+In-Reply-To: <20260102-kho-v2-0-1747b1a3a1d6@debian.org>
+To: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+ linux-mm@kvack.org, usamaarif642@gmail.com, rmikey@meta.com, clm@fb.com, 
+ riel@surriel.com, Breno Leitao <leitao@debian.org>, kernel-team@meta.com
+X-Mailer: b4 0.15-dev-47773
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3988; i=leitao@debian.org;
+ h=from:subject:message-id; bh=wkabXvOflaMtjicTrJd388Qj/w3vpwAMxUhL5Eu01do=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBpV9v1U6zJLO/ry+WPczyFJZR1wa6NiK54DUKmT
+ /oKNSxUEUWJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaVfb9QAKCRA1o5Of/Hh3
+ bRJyD/4sYGh1GsPWiH6s8aw30fI88MqDBiSHTaYzpuOZCJMhkh1im4Uqn0+m95TXj5JEClEJV8d
+ gIardAHHIJ8vnaLCm2ex+aTkT3SWIUoHp74QgDp0VtP6QHqbsp+RK+cCyNokL89rWx2/RsJfwzp
+ n1Hoc5m1P4F8MJjksTjNdceX2C1zrJ8iLlzjnlUiTDQKZQng+7nJz2LhzeoXFLU9PqW0kJ5Vhtp
+ epab9wfi+G4uEFf4GCU2h5xLiBBenVW/woOk6XXfMSi8QchtXwx/6qQ3LBKNZX0xHEQkOO9GUrl
+ WkYdO3KVJ1x6joMJcins4nEPiantJViFgi4EW22q8TcuMTAQZZZCDdlJI2fBTm3+g1XboDOjZSh
+ 8bA2PBGH2BnpccZffEraNywxbyK3hROLRsxrKvcJw+vDHnLRk7pU24j/tVPwUEw/v+ca+qC4gMO
+ xOQjHJc7sv6QO1+ug+/gys3oM8FU6KpKiV2yHoxrLgv1FEx1wT5VTbCX4lA6ncA20QFfwDYFgdf
+ b7yptHQN0RsyLF6WC/YxU0snOsIO95kx/E54y6SRO8lJuLp15Vh8pvD+ni/uRYUSYRX3/I5W179
+ JM9EXTiuctOk+dk78FPHuCWSXV5kV0wA0tmuHpnz7xgj/09oQNH7pZJ9bJC59NEi7/Wihbbx8lA
+ 5iKY0CP3fzn2maw==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260102_065345_309545_7AAF3B8B 
+X-CRM114-Status: GOOD (  17.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,79 +107,128 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Dec 31 2025, Mike Rapoport wrote:
+Add CONFIG_KEXEC_HISTORY to store and display the kernel version from
+the previous kexec boot.
 
-> On Tue, Dec 30, 2025 at 01:21:31PM -0500, Pasha Tatashin wrote:
->> On Tue, Dec 30, 2025 at 12:18=E2=80=AFPM Mike Rapoport <rppt@kernel.org>=
- wrote:
->> >
->> > On Tue, Dec 30, 2025 at 11:18:12AM -0500, Pasha Tatashin wrote:
->> > > On Tue, Dec 30, 2025 at 11:16=E2=80=AFAM Mike Rapoport <rppt@kernel.=
-org> wrote:
->> > > >
->> > > > On Tue, Dec 30, 2025 at 11:05:05AM -0500, Pasha Tatashin wrote:
->> > > > > On Mon, Dec 29, 2025 at 4:03=E2=80=AFPM Pratyush Yadav <pratyush=
-@kernel.org> wrote:
->> > > > > >
->> > > > > > The magic is purely sanity checking. It is not used to decide =
-anything
->> > > > > > other than to make sure this is actually a KHO page. I don't i=
-ntend to
->> > > > > > change that. My point is, if we make sure the KHO pages are pr=
-operly
->> > > > > > initialized during MM init, then restoring can actually be a v=
-ery cheap
->> > > > > > operation, where you only do the sanity checking. You can even=
- put the
->> > > > > > magic check behind CONFIG_KEXEC_HANDOVER_DEBUG if you want, bu=
-t I think
->> > > > > > it is useful enough to keep in production systems too.
->> > > > >
->> > > > > It is part of a critical hotpath during blackout, should really =
-be
->> > > > > behind CONFIG_KEXEC_HANDOVER_DEBUG
->> > > >
->> > > > Do you have the numbers? ;-)
->> > >
->> > > The fastest reboot we can achieve is ~0.4s on ARM
->> >
->> > I meant the difference between assigning info.magic and skipping it.
->>=20
->> It is proportional to the amount of preserved memory. Extra assignment
->> for each page. In our fleet we have observed IOMMU page tables to be
->> 20G in size. So, let's just assume it is 20G. That is: 20 * 1024^3 /
+When enabled, the current kernel's release string is saved to the
+"previous-release" property in the KHO device tree before kexec. On
+the next boot, if this property exists, the previous kernel version
+is retrieved and printed during early boot.
 
-The magic check is done for each preservation, not for each page. So if
-the 20G of preserved memory is 1G huge pages, then you only need 20 to
-check the magic 20 times.
+This helps diagnose bugs that only manifest when kexecing from
+specific kernel versions, making it easier to correlate crashes with
+the kernel that initiated the kexec.
 
->
-> Do you see 400ms reboot times on machines that have 20G of IOMMU page
-> tables? That's impressive presuming the overall size of those machines.=20
->
->> 4096 =3D 5.24 million pages. If we access "struct page" only for the
->> magic purpose, we fetch full 64-byte cacheline, which is 5.24 million
->> * 64 bytes =3D 335 M, that is ~13ms with ~25G/s DRAM; and also each TLB
->> miss will add some latency, 5.2M * 10ns =3D ~50ms. In total we can get
->> 15ms ~ 50ms regression compared to 400ms, that is 4-12%. It will be
->> less if we also access "struct page" for another reason at the same
->> time, but still it adds up.
->
-> Your overhead calculations are based on the assumption that we don't
-> access struct page, but we do. We assign page->private during
-> deserialization and then initialize struct page during restore.
-> We get the hit of cache fetches and TLB misses anyway.
+Disabled by default to avoid overhead for users who don't need this
+information.
 
-Exactly. The cache line will be fetched anyway. So I think the real
-overhead is a fetch and compare.
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ kernel/Kconfig.kexec               | 13 +++++++++++++
+ kernel/liveupdate/kexec_handover.c | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 42 insertions(+)
 
->
-> It would be interesting to see the difference *measured* on those large
-> systems.
->
-[...]
+diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+index 15632358bcf7..b770c68a3800 100644
+--- a/kernel/Kconfig.kexec
++++ b/kernel/Kconfig.kexec
+@@ -94,6 +94,19 @@ config KEXEC_JUMP
+ 	  Jump between original kernel and kexeced kernel and invoke
+ 	  code in physical address mode via KEXEC
+ 
++config KEXEC_HISTORY
++	bool "Track kexec kernel history"
++	depends on KEXEC_HANDOVER
++	help
++	  When enabled, the kernel will store its release version in the
++	  KHO FDT before kexec, and the newly booted kernel will read and
++	  print this information during early boot.
++
++	  This is useful for debugging and auditing to know which kernel
++	  version performed the kexec that booted the current kernel.
++
++	  If unsure, say N.
++
+ config CRASH_DUMP
+ 	bool "kernel crash dumps"
+ 	default ARCH_DEFAULT_CRASH_DUMP
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 73da00aeaa99..06d99627bb3c 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -21,6 +21,7 @@
+ #include <linux/page-isolation.h>
+ #include <linux/unaligned.h>
+ #include <linux/vmalloc.h>
++#include <linux/utsname.h>
+ 
+ #include <asm/early_ioremap.h>
+ 
+@@ -36,6 +37,7 @@
+ #define KHO_FDT_COMPATIBLE "kho-v1"
+ #define PROP_PRESERVED_MEMORY_MAP "preserved-memory-map"
+ #define PROP_SUB_FDT "fdt"
++#define PROP_PREVIOUS_RELEASE "previous-release"
+ 
+ #define KHO_PAGE_MAGIC 0x4b484f50U /* ASCII for 'KHOP' */
+ 
+@@ -1253,6 +1255,9 @@ bool kho_finalized(void)
+ struct kho_in {
+ 	phys_addr_t fdt_phys;
+ 	phys_addr_t scratch_phys;
++#ifdef CONFIG_KEXEC_HISTORY
++	char previous_release[__NEW_UTS_LEN + 1];
++#endif
+ 	struct kho_debugfs dbg;
+ };
+ 
+@@ -1332,6 +1337,10 @@ static __init int kho_out_fdt_setup(void)
+ 	err |= fdt_property_string(root, "compatible", KHO_FDT_COMPATIBLE);
+ 	err |= fdt_property(root, PROP_PRESERVED_MEMORY_MAP, &empty_mem_map,
+ 			    sizeof(empty_mem_map));
++#ifdef CONFIG_KEXEC_HISTORY
++	err |= fdt_property_string(root, PROP_PREVIOUS_RELEASE,
++				   init_uts_ns.name.release);
++#endif
+ 	err |= fdt_end_node(root);
+ 	err |= fdt_finish(root);
+ 
+@@ -1455,6 +1464,25 @@ void __init kho_memory_init(void)
+ 	}
+ }
+ 
++#ifdef CONFIG_KEXEC_HISTORY
++static void __init kho_print_previous_kernel(const void *fdt)
++{
++	const char *prev_release;
++	int len;
++
++	prev_release = fdt_getprop(fdt, 0, PROP_PREVIOUS_RELEASE, &len);
++	if (!prev_release || len <= 0)
++		return;
++
++	strscpy(kho_in.previous_release, prev_release,
++		sizeof(kho_in.previous_release));
++	pr_info("This kernel was kexec'ed from kernel release: %s\n",
++		kho_in.previous_release);
++}
++#else
++static void __init kho_print_previous_kernel(const void *fdt) { }
++#endif
++
+ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 			 phys_addr_t scratch_phys, u64 scratch_len)
+ {
+@@ -1527,6 +1555,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 	kho_in.scratch_phys = scratch_phys;
+ 	kho_scratch_cnt = scratch_cnt;
+ 	pr_info("found kexec handover data.\n");
++	kho_print_previous_kernel(fdt);
+ 
+ out:
+ 	if (fdt)
 
---=20
-Regards,
-Pratyush Yadav
+-- 
+2.47.3
+
 
