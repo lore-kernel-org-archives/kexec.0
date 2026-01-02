@@ -4,86 +4,159 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6187EFA3728
-	for <kexec@archiver.kernel.org>; Fri,  2 Jan 2026 16:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 55F2BFA3753
+	for <kexec@archiver.kernel.org>; Fri,  2 Jan 2026 18:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=FeZaCTR83z0zU9PAa5SGiNPoY7YhOVNF5fZwh0fGq9E=; b=P33G4OcZDYEcRKJrls2T1BWpxF
-	HXdQZd+vgBRLuTPkrvAReLgRGXKExqKQQBDTmQ1OwqBxae1fm9VeG3LH8w7Q4cxPNTGOvASkbBQIy
-	GOzYmx/H4T1uUA4ehPuJwVBcLRMHSxdu/Vx0z1NEE1diWdG/54XScfxZ8ZaJbjhauYA/UKdFmeT9z
-	13a1ZpviG2ClHhhIsEktvt/jcG9GeXa1t2IUP7MbOvGaEox2w75F+FDRjkLGTA2BGhC3DCHzPf0ZL
-	6nXCey9qOJN0Vxm94gPoSb3B4stqFCqjQXlnLe3xfI/YszmDvzMbZL1Jyrff/OMrqM9DhFY4yo9vB
-	jV3NNO/g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=3s4rmC6euQE/0DADKFwWvfzb9ZpCyeKjuzQePEDApiA=; b=ZI3MUWcgoNDdIvBScx7q7COL5a
+	qrO22Re230UM3prOdwXRUjxrG2L/F51wp4Lh5yuwG65DN2rTuCJQiBE/IfnBz9umyS8w8R47Oe+jK
+	goZr9+BA9GXNfUUXCJfRUY+cKjfHEVf2S4VqgcSFnpQeN7LtjhOX1kzwcDlgT0QIssbSfkBU9sHfk
+	A82cPrHVDFJuWgriiD/hrDZLHtd0dFBNMzVONphTjiQWBtal1n8tJq1Qa8szVRjHOhCgHYfEVGpLU
+	fI+NHFJRCcZF37JXbn9nVaqe48ynggz+mF/AJxo8ISyMFHVuTd3d/af6sX+b29HCEgUDQODVdRint
+	AflFfKWA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vbhu9-00000008Uiy-19jR;
-	Fri, 02 Jan 2026 16:21:33 +0000
-Received: from mail-ed1-x530.google.com ([2a00:1450:4864:20::530])
+	id 1vbkMM-00000008egH-3keJ;
+	Fri, 02 Jan 2026 18:58:50 +0000
+Received: from mail-southcentralusazlp170120001.outbound.protection.outlook.com ([2a01:111:f403:c10d::1] helo=SN4PR2101CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vbhu6-00000008UiR-0LKT
+	id 1vbkMK-00000008efl-0woM
 	for kexec@lists.infradead.org;
-	Fri, 02 Jan 2026 16:21:31 +0000
-Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-64fabaf9133so1029189a12.3
-        for <kexec@lists.infradead.org>; Fri, 02 Jan 2026 08:21:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1767370888; x=1767975688; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FeZaCTR83z0zU9PAa5SGiNPoY7YhOVNF5fZwh0fGq9E=;
-        b=YfVZ7+WtTv30Ts6Ma+kfTDJyAoyxnlqrLOPw2tai4LLWKo05SYbU+LZg1nxsPdefvi
-         Nv9Ikpwb/9v/RWCY+KLNwk3mTbZRaWBQ+hbFZYtbXTqvllOGAfHN8xyK6cfVoleNoMhd
-         dED8zLqlZoQYxbCnYlMV+rGr3sWYbkjT4v02dW0hPPQk5B7LmvT1v0KHtGAIdWHz4tRH
-         xNJI1WaIb9DYL9W9Gi4IILX/WV3QfI5j5lzpaD01SffGHj48BtG1xqKUDR3hJ2O9yogF
-         ++0+7dGgHcPpM9EnrnWUN2+Asxx/0dYVGdFwWI/aIa4PiU001SkR0sE1M+q5j2wbfrXm
-         ZbrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767370888; x=1767975688;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=FeZaCTR83z0zU9PAa5SGiNPoY7YhOVNF5fZwh0fGq9E=;
-        b=TBYu4w6llVyN/FMzcA3GtzbaUZmz1Bf5EUNxCjo96sawA4qIxHbc0hOvPSQTLmJomy
-         ZSjmKMrf+uqR0bOHZ++cL9IGFs9dAjRRAWhGaah8hPgaUnhdoCKEWAX0cbYTsNkYkSOm
-         rfOThUBbbbb4Os8KaaAR+W8+poWWv7kJEEQpDzezJrt7GjOWCo0vPO0hmIcLG2VDKK94
-         mOqZ6le0zShuNQmWIyMswvQ6X/0GfijivXPLooOLATB7q+zhHfG9SyTEO7DTY6rHsG8B
-         kyZ8EIpH9jbl5c+HXKJyAOsmSDMx83gx2CigezlBHoEChRGgGJcKyRFqSfpMf2TmDJ1h
-         mwGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUEUpUS8IT8WeLWc5p2oRUdRrZP/JrWjiGC+ISWrP2mr83l4cZAYV76rTLvwJIEZL+T0iX6lA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwdTxBPJuYGF+Zg9EUbjwHa3MI3JB2oJ+9Q/nqZo8IaOQ+SdO5S
-	qJRG+r2LunYXV4e9kFDarq4M7z5EIn9PbXxc93uQlB4GP6VV5Le/lbzISTvCvdRwZlh2B8bL/OB
-	Vy2LlW/SZk3EiXwPFKeKOVsG7hYvrdEAB8gDXYGiO6A==
-X-Gm-Gg: AY/fxX6svs0CiVM9yjlzYVxvR28sRCNHbwgWxhw50LP+AZBmQRKHg9WtcndBFAQxf5g
-	HpMw5rnoDJpjxwoZ5Ga4eGhw0tnFS03cX3ulsx/jiK3+9tifAjhPG66vxdn0kGIJ43dq89PbJN2
-	yZj12IpeDjRZZuIH9MwVLfdtRLSfYLvaDQ+51ARAF9bCyFCwe1SPvoY+uDiAsMAdpVTGvcMVYqr
-	q1xGpnvP46sklhm6Y9AGaFvUMIHK9uofW2zPhKRLJp61s1MIw496yEv4vJ1BzhvdFkpSWmpjzOQ
-	Cwf12e6yPD1Q7JF+K6VB8BnDcA==
-X-Google-Smtp-Source: AGHT+IG7pmsPoAofQfznQM6e2Gh/kun3kkcPtsdi4WWJd7drsOJjX7U23lVDS62/R4Qi/xosq4n1IxN1VMCakePPrbw=
-X-Received: by 2002:aa7:c243:0:b0:64b:60e4:f898 with SMTP id
- 4fb4d7f45d1cf-64b8ea51482mr31916241a12.15.1767370887834; Fri, 02 Jan 2026
- 08:21:27 -0800 (PST)
+	Fri, 02 Jan 2026 18:58:49 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gli7L9jxepcRZQMhedEH1PVVoYQIrGbkDJrf7eVd3NN0QsHVBONs8DfBguOTroxHR1Yg2dpiX0DL5p8eCS84/rMf1Cm5eKCUT47Kd/JAp0c32ykZUzpkM72FemMIAgc98Jd/dQBCUbduDCUE4ctd4JQ/SJmrf2UNDfB5KzcFaTDrYAxCBUxZf7DRh1lBjULpzPkJCtWNXtY+99JS1Ew2kFEt+VQErV32CcXqf7Tld/36ok1UdkWWOQlXY5Xvg9mP+tslDqsKzjObwY2vsHpmH7XBNv8R1aXFwHIxiC3tTGa2WVAdyGSj66agtye1UNz5kA92K6n4fIDcMqU4a9V7Gg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3s4rmC6euQE/0DADKFwWvfzb9ZpCyeKjuzQePEDApiA=;
+ b=aZaqi8/F6n8zqQovsonQC5ssErWGSQutp8aFfw5UlgyYAY4P7DZtDiNaS7xPkeyu/Njxr+hzUYzFSAlTiWrvAl65OqQcjBP8TED2cJVOQwr1Mj3jCBvRBek0r21PGH8NWjGRSOpdLkszkLyWLBXoBtLVF6O9nbL0eLYWmCu0W4WruYRZ2C382IplyC/izwPVhju1ob8t7l6HCiLIfZC0vafDvr5Uqrwpx+ibaJjTA8nWmOfExWt/gf1+argzreP66SxoFJ8l7rCLIoRdTKFUY+Gzhpc/GjbJqd20kNpDt1IE1fXny9g9Ac17QXhnYvtwCjyvkXM+YufaRuoE0vDbXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3s4rmC6euQE/0DADKFwWvfzb9ZpCyeKjuzQePEDApiA=;
+ b=K32N86G0BuAnOhJwZuZPCfcxHIQQ7vlzK116wx+An6tEbvdlRj6ZwpfXFaMcmAuHTsbUnShRzRlAm/lu161K1sDYcVDflqvFMBZDlibli6n5TgueWFwg4opKG2yO3NiILDuyrdKT/3AqjLE7Korkzcbh3W0krar2BHmGxmbIilobCsCRbWLzsy7nxKC3k2DmMOc4Ds+KPaHipb0oQUgnqWuvJTuJdOewy/Eei0mmb1DpFkJ9m+xWEm5JUoTduMdciTSHlmfHwyjBGdD7bCVVUtzhWeTS+VzsB+eWNaedYkLADJ0Bqjx7yc1Ms6x52qdjY7R5L34E9GITV4LoqC5Mbw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by MN0PR12MB6055.namprd12.prod.outlook.com (2603:10b6:208:3cd::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Fri, 2 Jan
+ 2026 18:58:43 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c%3]) with mapi id 15.20.9478.004; Fri, 2 Jan 2026
+ 18:58:43 +0000
+Date: Fri, 2 Jan 2026 14:58:42 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Alexander Graf <graf@amazon.com>, Arnd Bergmann <arnd@arndb.de>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	David Matlack <dmatlack@google.com>,
+	David Rientjes <rientjes@google.com>,
+	Jason Miu <jasonmiu@google.com>, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kexec@lists.infradead.org
+Subject: Re: [RFC PATCH] liveupdate: list all file handler versions in
+ vmlinux section
+Message-ID: <20260102185842.GE125162@nvidia.com>
+References: <20251211042624.175517-1-pratyush@kernel.org>
+ <e4d1c333-7e22-47ee-81a0-2efc4ca6b17c@amazon.com>
+ <86ecod7zb3.fsf@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86ecod7zb3.fsf@kernel.org>
+X-ClientProxiedBy: BL6PEPF00013E0B.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:22e:400:0:1001:0:10) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
 MIME-Version: 1.0
-References: <20260102-kho-v2-0-1747b1a3a1d6@debian.org> <20260102-kho-v2-2-1747b1a3a1d6@debian.org>
-In-Reply-To: <20260102-kho-v2-2-1747b1a3a1d6@debian.org>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 2 Jan 2026 11:20:49 -0500
-X-Gm-Features: AQt7F2oOU_yPnIxT4iWmDlamG3MPvPG4XuJIPEA1lsvAsNmoyAWk5nXnBh5YsIA
-Message-ID: <CA+CK2bCnBD6afWcbdmqPFBmybeH8BKLo8YSbSCUEJEY+hOij4w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] kexec: history: track kexec boot counter
-To: Breno Leitao <leitao@debian.org>
-Cc: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pratyush Yadav <pratyush@kernel.org>, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, usamaarif642@gmail.com, 
-	rmikey@meta.com, clm@fb.com, riel@surriel.com, kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|MN0PR12MB6055:EE_
+X-MS-Office365-Filtering-Correlation-Id: f9657ce3-a3d4-4697-fcb5-08de4a30f317
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?A3YoHCMhg2O4S+fKBhomI+1vOvCqSMFfH2THk5nEdmuuqIXidp6zWkollBWA?=
+ =?us-ascii?Q?FOjztEbqqWV8kkwchEEGxnZM1htDVmngVRGQxtq9F9rzC2QQEXYUQm/f27K1?=
+ =?us-ascii?Q?tPlht9czsO2YVmEPi657h1+jNjy6yc2xMCLgEusXgZZkmmYbwe/1C1yrAO8E?=
+ =?us-ascii?Q?RVnzbkx8XSelfolWmgeYkFm+/Cte4NeWZ5guSQhSG2nSCAkbGu9Zpx2iczj/?=
+ =?us-ascii?Q?YJvEm2eVc9JZY08fP6GltqgCRV4pwWdmELtzhazhw9FZG3Ym/T/J5VBupBOp?=
+ =?us-ascii?Q?PwrskOuYnEpAVioz7dqm6H7kV4VveESaooSUl75S+rdI2CdwCaxvgz8MeIhk?=
+ =?us-ascii?Q?ZyE+VBZqDQ+UK5zUQlJNo1e8zPRn0PX+2lCmejI58Jz8Jp+SUv745BxCZP5Y?=
+ =?us-ascii?Q?YPhGYQxWuCQvOlltobOrNsv+I8f4YA7iYwZHq2osg2sxE4wHnNhRotBiKwgk?=
+ =?us-ascii?Q?5K7Kf4eTgaTa3ACHnC+AkUrW6dtZLwQiYBFPiHnGVDIfdMoYEysyNfhRfwlK?=
+ =?us-ascii?Q?tg91RcminipzGfoGW0Bjzrn8T0+dnvoSmIGofxHshmsqPLjGgr2N3P4To7/D?=
+ =?us-ascii?Q?B0wOU9UfziZpFQ1zcIO8LCx+5znIg2fBkGshjFYGuJxUpfLtiVNrn44onX3G?=
+ =?us-ascii?Q?OgPgIkm0BkZN64M+F/PG8qoNvM6bTLqsPG0iBpsy6pyOr9Y1WqPnsgZmMhf7?=
+ =?us-ascii?Q?H8Ab/d1Cy4R3MLsDz6ITeVFbHHumn63rMViIAton536AIMCJGclxB+T6riNX?=
+ =?us-ascii?Q?EQCHB8x3pEjKqKZikuzUik/X1rbDb+TwsKv557k2o7wx5fAklPhMdk8Z/FPw?=
+ =?us-ascii?Q?4Un6dK/WU5IBXfEIKFd0OVRH1URcG2m5HtzQHblASHP7PQU9ho2ibamZ0KPt?=
+ =?us-ascii?Q?E6xkkn+LGK+lTvTY90sG/dD8UFgibrgIvWYM3UvG4gqCEMsbZp6slLFMlhme?=
+ =?us-ascii?Q?BxK9ZBGHJu0Hx/fS7fDF2CoGaty7DliM0h6FV2VGBc4brFX3rBJq6C4KaE+o?=
+ =?us-ascii?Q?daBSojV/KXL6uB0GPPawQmbvffIEbM5aUTRBoL44p20FkahITPWeMA+YO8d/?=
+ =?us-ascii?Q?8iiMhVzWcd0U27NlijBScfmCA9Ng/TeWpsj2Izp0WQUtNj9zk8X8mBwvIlEf?=
+ =?us-ascii?Q?o6psIwrPXnJu/I8yJP0Dm1rwsJ2DHLzCturTuBA5bESrxXPyUHxaPzaW97fF?=
+ =?us-ascii?Q?6hkLQXoapiJ0iptdt7ZC2KPe4ID10wuAR7KNdaNxz3xJ/Ah6+tP2UrEQuRlb?=
+ =?us-ascii?Q?ifWYSDuZNDOxCyQ5qhcGlevr5NKrMQIcOloLFfqFQO5V6jEK97mSTPbGdVa/?=
+ =?us-ascii?Q?YCvEHZ4DpBdVo8airdge2Q9/unz4/VW2DViJjyPDE44+3bTe+b54Z+XXvkaR?=
+ =?us-ascii?Q?UcMTsZPX0MkEzFGdGcOQ452vgOcj+NFzu1NDtNjrptzoVpoOmFD3vSCxrCts?=
+ =?us-ascii?Q?3ey300q+FwwqC58TUesHDKzpYORElEU7?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?rGc3alB3KuvObve26vNbdB4GxzebVtfN0BA8n5vAwQd12I/zDx2K//zqvoIp?=
+ =?us-ascii?Q?iFcBozY7196QXRHWar1fAOOQvrmQL7jNn+E9RUqBlxbqFGdlOvNOqjop+hlU?=
+ =?us-ascii?Q?9hVmIli/UqY+dp0+cV5Oogqe9Lk1IT9oMUkLeUNwCEaXkB03EN80LUN/vGj4?=
+ =?us-ascii?Q?pbfMO2Ov6J3UCFktdwtjso9HwY7LAVCADT+8k4/GiQZOX8OlJ6SGIfyNJbjE?=
+ =?us-ascii?Q?yInHbs+T04SWF8ZH6W1tTrMPdK/uaTAZ54WLc5YLPYURT7gJLC9co0dTL40r?=
+ =?us-ascii?Q?WW6bCvTl7J3jUurfvwtxdnQXj0QRdAPuQH+eJroZXnoaKD4MrQIknOfp2UtN?=
+ =?us-ascii?Q?25KzD4InTOjvDzrGW9/sntcLyG5YClkSepYEbjs/evDwC9AWYKcswsYCRs7f?=
+ =?us-ascii?Q?R7Uf4Nxpn7RGkZrDAB2gVBw74mdcmkfdl4R/+wQyUUa3/E9Uffu4Ei0RLqKj?=
+ =?us-ascii?Q?uo7XBdQuJFgVodMVTsEu1jfSd8jp4aVv09O5+x1nhZkv4v65TFGO/lGt3+fz?=
+ =?us-ascii?Q?SgvV6GNFnqS6p39YUMG0Rkg7MX/ZyQEzoGACaHg5EMCax+7A7+pimdTdbJu4?=
+ =?us-ascii?Q?qjiZBWZ32v0SKhIRQiM5WaGL2LM/vP0d77eNLqprfeARF4ZTXG/kKZYleQIB?=
+ =?us-ascii?Q?7hRUg6y0+Farf9AsdV1SsANMrXYl2vAjTCbgk+yySAnSV5jtK6fXC/aRaAJc?=
+ =?us-ascii?Q?8p90c50zwXIjJevS36A/YA4luBDcE/hkzL7GWlq8Yl2qPOdhy2vhO2+iZCUU?=
+ =?us-ascii?Q?ZE/y24e0QHQ9bGaWDUy/XppGBKOvnkqBb49RM6FdXBOwFaK55Lbqvf/p69R5?=
+ =?us-ascii?Q?oLr6A7UcX2kg7RKrLl494XXBWHUlVicDPmdSuW84qzK4SD2ptT2FbJe0t7It?=
+ =?us-ascii?Q?6o7hXXlRGHFx3QYkMF6TVv+77AZj2P8AEzxeLHK3QMPy0rGuAUGN37VRtHv+?=
+ =?us-ascii?Q?0spnkG0voa/iE/0OIIayhuLzRUhRQxQr/9f4BWF+MeXq0N09KFZ9gdK/iakx?=
+ =?us-ascii?Q?U6CKtycC7OgKVljM8krhi8L3w/AhYEr7nBbSeVPonsQIrrJSPrJcqZ0Hru+z?=
+ =?us-ascii?Q?nw8pEmQVzWrY+7AMsRrLRthkAfnBptt2UJRv1sLkZtFriLmwcqdf+D4Bk6zG?=
+ =?us-ascii?Q?FMQWNiGRjf/zo+RBuYBAcCgnVgrFHr1s0xITqIgA1hLkn5PnDtcJmiRIvc9u?=
+ =?us-ascii?Q?/gbS7GU2/w7gm7ZBxmHO4JFpzt1V1mSd+lSW7Aqb3sV3HQaRC9ab2c3rZ75b?=
+ =?us-ascii?Q?tVetFQHIwY66T0F26ECaOyqSPLFKSxd1jc8QT39Ok+hGEa4xJZWU8awVyPg8?=
+ =?us-ascii?Q?iujFO66WTm0ISwo5HjuFJZpF+Fn8OEuN/G6Q9VfBFsf3ZMyVFxPYD1RGU9Vi?=
+ =?us-ascii?Q?YxcIv2MR4Thw6fpHB5kxAqCb/WRBxXgEB31ifMBQ/9SOdUYyATBFxWStnMS/?=
+ =?us-ascii?Q?bNvr2+ijCCnYBVTIGwBid3CclFlXOvRAdc0tJWxodDUicAcEkvlIaP8YMlUI?=
+ =?us-ascii?Q?LqENCSEaOxiPW/tCP/VR5+dLEqBqrVhr/RvfvCi6UtmxkApRqho7vhpTnvlo?=
+ =?us-ascii?Q?Eudfpg+ozFh5Q4ZkHpMDQjFOyr/lMzoHMbAQ7Ertz//tjp1qyCIF12YOqofP?=
+ =?us-ascii?Q?pU4zvshCYxQ9EBLAJpAsAYY/VaK6VZTTdCttmJjJcP/yPsfta3U1+F/rUYEj?=
+ =?us-ascii?Q?DomW0VZMVJPVuOk2IjCdno0Vx6vrFseXngQ+EIjfy3aTgeXQ62hD4yTmLH45?=
+ =?us-ascii?Q?JE5RhNBqHA=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9657ce3-a3d4-4697-fcb5-08de4a30f317
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jan 2026 18:58:43.2599
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UFJaNsHHJymirIh7jCFWvVeOdLjmtRC6WvIi1aikyG6rJsXg0rzBDIeQYj16LgVg
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6055
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260102_082130_153882_C62CAC36 
-X-CRM114-Status: GOOD (  24.98  )
+X-CRM114-CacheID: sfid-20260102_105848_272540_7D69B90E 
+X-CRM114-Status: GOOD (  36.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,117 +171,81 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jan 2, 2026 at 9:53=E2=80=AFAM Breno Leitao <leitao@debian.org> wro=
-te:
->
-> Track and display the number of kexec boots since the last cold reboot
-> when CONFIG_KEXEC_HISTORY is enabled.
->
-> This extends the previous kernel release tracking feature by adding
-> a counter that increments with each kexec boot. The counter provides
-> visibility into the kexec chain depth, which is useful for understanding
-> boot history in production environments.
->
-> Add a new property, "kexec-count" in KHO FDT alongside the existing
-> "previous-release" property. The counter is:
->
->  - Initialized to 0 when kho_in is instantiated.
->  - Incremented by 1 on each subsequent kexec.
->  - Printed alongside the previous kernel release version.
->
-> The counter is stored as a 32-bit unsigned integer in FDT format and is
-> only active when CONFIG_KEXEC_HISTORY is enabled.
->
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> Suggested-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> ---
->  kernel/liveupdate/kexec_handover.c | 25 +++++++++++++++++++++++--
->  1 file changed, 23 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec=
-_handover.c
-> index 06d99627bb3c..fe5a2c5c4c86 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -38,6 +38,7 @@
->  #define PROP_PRESERVED_MEMORY_MAP "preserved-memory-map"
->  #define PROP_SUB_FDT "fdt"
->  #define PROP_PREVIOUS_RELEASE "previous-release"
-> +#define PROP_KEXEC_COUNT "kexec-count"
->
->  #define KHO_PAGE_MAGIC 0x4b484f50U /* ASCII for 'KHOP' */
->
-> @@ -1257,6 +1258,7 @@ struct kho_in {
->         phys_addr_t scratch_phys;
->  #ifdef CONFIG_KEXEC_HISTORY
->         char previous_release[__NEW_UTS_LEN + 1];
-> +       u32 kexec_count;
->  #endif
->         struct kho_debugfs dbg;
->  };
-> @@ -1330,6 +1332,9 @@ static __init int kho_out_fdt_setup(void)
->         void *root =3D kho_out.fdt;
->         u64 empty_mem_map =3D 0;
->         int err;
-> +#ifdef CONFIG_KEXEC_HISTORY
-> +       u32 kexec_count;
-> +#endif
->
->         err =3D fdt_create(root, PAGE_SIZE);
->         err |=3D fdt_finish_reservemap(root);
-> @@ -1340,6 +1345,10 @@ static __init int kho_out_fdt_setup(void)
->  #ifdef CONFIG_KEXEC_HISTORY
->         err |=3D fdt_property_string(root, PROP_PREVIOUS_RELEASE,
->                                    init_uts_ns.name.release);
-> +       /* kho_in.kexec_count is set to 0 on cold boot */
-> +       kexec_count =3D cpu_to_fdt32(kho_in.kexec_count + 1);
+On Mon, Dec 29, 2025 at 10:28:32PM +0100, Pratyush Yadav wrote:
+> On Sat, Dec 13 2025, Alexander Graf wrote:
+> 
+> > Hi Pratyush,
+> >
+> > On 10.12.25 20:26, Pratyush Yadav wrote:
+> >> As live update evolves, there will be a need to update the serialization
+> >> formats for the different file types. This could be for adding new
+> >> features, for supporting a change in behaviour, or to fix bugs.
+> >>
+> >> If the current kernel does not understand the same set of versions as
+> >> the next kernel, live update will inevitably fail. The next kernel will
+> >> be unable to understand the handed over data and will be unable to
+> >> restore memory, devices, IOMMU page tables, etc.
+> >>
+> >> List the set of versions the kernel understands in a section in vmlinux.
+> >> This can then be used by userspace tooling to make sure the set of file
+> >> descriptors it uses have the same version between both kernels. If there
+> >> is a mismatch, the tooling can catch this early and abort live update
+> >> before it is too late.
+> >>
+> >> The versions are listed in a section called ".liveupdate_versions". The
+> >> section has a header that contains a magic number and the version of the
+> >> data format. The list of version strings directly follow this header.
+> >> Only the version strings are listed, and it is up to userspace to map
+> >> them to file descriptor types.
+> >>
+> >> The format of the section has the same ABI rules as the rest of LUO ABI.
+> >>
+> >> Introduce a LIVEUPDATE_FILE_HANDLER macro that makes it easy to define a
+> >> file handler while also adding its version string to the right section.
+> >>
+> >> Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
+> >
+> > To support multi-version preservation and resume, how about you add a "profile"
+> > hint to the handlers? Then you can tag the handlers with "current" and a
+> > "previous". You then expose one section table with supported versions per
+> > profile. And that means you can from user space select the local profile to
+> > serialize and match that against the target profile of the target system.
+> >
+> > It also allows you to support more "profiles", such as elaborate downstream
+> > version combinations, that upstream will not have to care about.
+> 
+> So in essence you want to tie the versions into a "version set"? If you
+> want to use a new version even for one component, you would create a new
+> version set.
+> 
+> Interesting idea, but I am curious. Do you see a reason for grouping
+> versions together in this fashion? Why not let each version be changed
+> independently?
 
-For KHO preserved data we use native endiness, so do not bother with
-cpu_to_fdt32.
+I don't quite get the point either..
 
-> +       err |=3D fdt_property(root, PROP_KEXEC_COUNT, &kexec_count,
-> +                           sizeof(kexec_count));
->  #endif
->         err |=3D fdt_end_node(root);
->         err |=3D fdt_finish(root);
-> @@ -1468,6 +1477,7 @@ void __init kho_memory_init(void)
->  static void __init kho_print_previous_kernel(const void *fdt)
->  {
->         const char *prev_release;
-> +       const u32 *count_ptr;
->         int len;
->
->         prev_release =3D fdt_getprop(fdt, 0, PROP_PREVIOUS_RELEASE, &len)=
-;
-> @@ -1476,8 +1486,19 @@ static void __init kho_print_previous_kernel(const=
- void *fdt)
->
->         strscpy(kho_in.previous_release, prev_release,
->                 sizeof(kho_in.previous_release));
-> -       pr_info("This kernel was kexec'ed from kernel release: %s\n",
-> -               kho_in.previous_release);
-> +
-> +       /* Read the kexec count from the previous kernel */
-> +       count_ptr =3D fdt_getprop(fdt, 0, PROP_KEXEC_COUNT, &len);
-> +       if (WARN_ON_ONCE(!count_ptr || len <=3D 0))
+I think the ELF annotations are intended to give information to the
+userspace, but ultimately I think we should just rely on the userspace
+to implement anything complicated about compatibility policy.
 
-This function is called only once anway.
+We also have the issue that not all versions *at runtime* are going to
+be supportable. Older versions may be information loosing and cannot
+be emitted based on the current system configuration.
 
-> +               /*
-> +                * PROP_KEXEC_COUNT should exist if PROP_PREVIOUS_RELEASE
-> +                * exists.
-> +                */
-> +               return;
-> +       kho_in.kexec_count =3D fdt32_to_cpu(*count_ptr);
-> +
-> +       pr_info("This kernel was kexec'ed from kernel release: %s (kexec =
-count: %u)\n",
-> +               kho_in.previous_release, kho_in.kexec_count);
->  }
->  #else
->  static void __init kho_print_previous_kernel(const void *fdt) { }
->
-> --
-> 2.47.3
->
+So to really make this work you have to dynamically query the current
+kernel, and cross that with the elf data from the next and try to
+cobble together a working set.
+
+IMHO most likely real users are going to want to latch onto fixed
+"profiles" and globally bump the profile cluster wide along with
+activating VMMs to consume new features enabled by the newer versions.
+
+There may be an early churn when we bump versions because we are
+messing things up, but the long term steady state will probably be new
+version = required if new features were used by the VMM
+
+Thus the version used for serializing and the features active in the
+VMMs should be linked together by the operator.
+
+Jason
 
