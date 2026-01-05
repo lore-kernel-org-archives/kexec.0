@@ -4,67 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 499CEC79FA7
-	for <kexec@archiver.kernel.org>; Mon,  5 Jan 2026 16:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6529BC98335
+	for <kexec@archiver.kernel.org>; Mon,  5 Jan 2026 20:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=jgLz2wb6YzYAtKdul4NZXCNshaZWhEAbs1WVt1GJJA8=; b=HM/A2npgPAjBs2qIiLVLVekJOD
-	J37oCSwCIPrNLnYCIlSQBIAdgLHsHBDLox21/m+cgAtxMeZtSLnFpoxnt+9mo50IISXRD7klx23AX
-	8+D7ucKXjX1dj55G7A6Ek545dVnB8bpKvFzQyLemhM8xRJmuqdwG+7bV7nz0ez8c/gETPbCmNb23a
-	pWPoz+ENnLKuAK32B7age/T4ML1acRMhkJc+OkAmOCRemhlWHWMubZN64tMBJG4WrlxMPGNR3dYDk
-	hamIsU+/OzbMDIGfraUOlFwgove3EIMAOBBiaDDk/64kpRqYeinPW6WEGX5NGNZhkKf1yEm4FyPWs
-	VqB4aAJg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=+aO3Ebr2jGnru13EE9csHxWpIIPD1Zup/NJRG9MgAX8=; b=vcChELzy8gyXMl5K7AOa/IT1Qq
+	T3noRsBeTbCw7SiZvmTuxcSOL46FedFKaBaaFn3Z04TXGw/1zeDKTxpPmKqGZMpUq2zxisRm7avp5
+	Vega/hExI3jfnxG448cmRj5obZAbQIJAWDzhkm0lgnpz5HrMHZVvu5YoJuOd0dfy5zVD1Jz/ACB11
+	h/Np8juvhDiPM0odQaSKcg3wYwEZWOfUs6BVMKAYO9KMLEmQ7e67i15MaCvrlYWUarUhuLbnXtBrp
+	DTeMEXSFLPtbD7AvDnWRuhYgvN1MkD7lYqJBiUHpYnHibohjHZ/R/6/CbzJdKY0iR0i9U5qj+isaR
+	oYiVyOBA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vcnvC-0000000BlxC-0aaC;
-	Mon, 05 Jan 2026 16:59:10 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1vcrOt-0000000C4Cg-3XTG;
+	Mon, 05 Jan 2026 20:42:03 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vcnv8-0000000BluV-0aNX
-	for kexec@lists.infradead.org;
-	Mon, 05 Jan 2026 16:59:07 +0000
+	id 1vcrOr-0000000C4C6-0ehj;
+	Mon, 05 Jan 2026 20:42:02 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id BFA1541522;
-	Mon,  5 Jan 2026 16:59:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1201C116D0;
-	Mon,  5 Jan 2026 16:59:02 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id D031340B04;
+	Mon,  5 Jan 2026 20:42:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34C9CC116D0;
+	Mon,  5 Jan 2026 20:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767632345;
-	bh=C6eql9p/ad94rcfI0wx8v7YVZgYVcqqRLJPOYgSXxaU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KTXXkEaSn1qSxmg3X/H4hpPTj0ClyfZ0VysM8X/evDibdhBNIEqIpqRTQiHLfPSjQ
-	 O7cxUL8dwnJPNV259iK2NZZUMClYbezs/R9K+JVV2srthxxDylExf3BuBp+3F3/GgF
-	 OSIAlUaW5DCi2dZ4sAijlXSrA6oEVkWVQAq/MQZwjsMjjrtQ+hMCrFbqca/GnfLPpN
-	 MfJicZnI0UTrfyEtipvhHGOkYeOLG1rGZTYXneZMG8ubqf6oFNYu1ZSZmlMYraCajg
-	 44v/uE4G6GkGajG4xib9kC19CZgwZSBUyC41Y8ZY1WYAtWUZYmgfHtbHep7r9zOmDt
-	 L+LgHDoV0hiDg==
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Graf <graf@amazon.com>,
-	Jason Miu <jasonmiu@google.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH 6/6] kho/abi: add memblock ABI header
-Date: Mon,  5 Jan 2026 18:58:39 +0200
-Message-ID: <20260105165839.285270-7-rppt@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260105165839.285270-1-rppt@kernel.org>
-References: <20260105165839.285270-1-rppt@kernel.org>
+	s=k20201202; t=1767645720;
+	bh=adEcWXAy0LZcvoVkWmyVj5xf/ztM+dJW91uYUT/32rA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UhE8zMi6wocrFARofw/nNpROVtJ0tI4m1LHQxXbIHpXCi84Uwsv0EkpEvRXk49Zsb
+	 FBILt6PqviIqbH2CgHt2ICHGXICt18aznepv1UpweHgda2RJz2F2kIg5dqBZIH8j0k
+	 WGI+nztJc4lCYjks1iMyYaPf7o8MebOiNR9iXQkjt9si32LwrKSGpZG1KCAHy+ZBSZ
+	 U7mizZ/ojJadjRsgett9JaCHRBK6jVDstGjA/Rs06rYteZe03ukMw8Z36GfCrSx6wl
+	 DL6XmDfhYn6R0j8U7NGyKyR95B1MM3KbdQzchBFmOY/CloJ24Xw5OIqUD6/Hwx1DdP
+	 QtSotSjrrET4w==
+Date: Mon, 5 Jan 2026 20:41:55 +0000
+From: Will Deacon <will@kernel.org>
+To: Qiang Ma <maqianga@uniontech.com>
+Cc: akpm@linux-foundation.org, bhe@redhat.com, catalin.marinas@arm.com,
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] arm64: kexec: Adjust the debug print of
+ kexec_image_info
+Message-ID: <aVwiE-eeD-rCrO54@willie-the-truck>
+References: <20251219093134.2268620-1-maqianga@uniontech.com>
+ <20251219093134.2268620-5-maqianga@uniontech.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251219093134.2268620-5-maqianga@uniontech.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260105_085906_247421_0F744211 
-X-CRM114-Status: GOOD (  20.28  )
+X-CRM114-CacheID: sfid-20260105_124201_507724_34AB023B 
+X-CRM114-Status: GOOD (  13.19  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,232 +73,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On Fri, Dec 19, 2025 at 05:31:34PM +0800, Qiang Ma wrote:
+> In the previous patch, we move start/head of kimage to the
+> generic code, so, we remove them to avoid duplicate printing.
+> 
+> Signed-off-by: Qiang Ma <maqianga@uniontech.com>
+> ---
+>  arch/arm64/kernel/machine_kexec.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> index 239c16e3d02f..0896e3e6a811 100644
+> --- a/arch/arm64/kernel/machine_kexec.c
+> +++ b/arch/arm64/kernel/machine_kexec.c
+> @@ -34,8 +34,6 @@ static void _kexec_image_info(const char *func, int line,
+>  {
+>  	kexec_dprintk("%s:%d:\n", func, line);
+>  	kexec_dprintk("  kexec kimage info:\n");
+> -	kexec_dprintk("    type:        %d\n", kimage->type);
+> -	kexec_dprintk("    head:        %lx\n", kimage->head);
+>  	kexec_dprintk("    kern_reloc: %pa\n", &kimage->arch.kern_reloc);
+>  	kexec_dprintk("    el2_vectors: %pa\n", &kimage->arch.el2_vectors);
+>  }
+> -- 
+> 2.20.1
 
-Introduce KHO ABI header describing preservation ABI for memblock's
-reserve_mem regions and link the relevant documentation to KHO docs.
+Acked-by: Will Deacon <will@kernel.org>
 
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
- Documentation/core-api/kho/abi.rst            |  6 ++
- .../kho/bindings/memblock/memblock.yaml       | 39 ----------
- .../kho/bindings/memblock/reserve-mem.yaml    | 40 -----------
- include/linux/kho/abi/memblock.h              | 72 +++++++++++++++++++
- mm/memblock.c                                 |  4 +-
- 5 files changed, 79 insertions(+), 82 deletions(-)
- delete mode 100644 Documentation/core-api/kho/bindings/memblock/memblock.yaml
- delete mode 100644 Documentation/core-api/kho/bindings/memblock/reserve-mem.yaml
- create mode 100644 include/linux/kho/abi/memblock.h
-
-diff --git a/Documentation/core-api/kho/abi.rst b/Documentation/core-api/kho/abi.rst
-index 1d9916adee23..2e63be3486cf 100644
---- a/Documentation/core-api/kho/abi.rst
-+++ b/Documentation/core-api/kho/abi.rst
-@@ -16,6 +16,12 @@ vmalloc preservation ABI
- .. kernel-doc:: include/linux/kho/abi/kexec_handover.h
-    :doc: Kexec Handover ABI for vmalloc Preservation
- 
-+memblock preservation ABI
-+=========================
-+
-+.. kernel-doc:: include/linux/kho/abi/memblock.h
-+   :doc: memblock kexec handover ABI
-+
- See Also
- ========
- 
-diff --git a/Documentation/core-api/kho/bindings/memblock/memblock.yaml b/Documentation/core-api/kho/bindings/memblock/memblock.yaml
-deleted file mode 100644
-index d388c28eb91d..000000000000
---- a/Documentation/core-api/kho/bindings/memblock/memblock.yaml
-+++ /dev/null
-@@ -1,39 +0,0 @@
--# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
--%YAML 1.2
-----
--title: Memblock reserved memory
--
--maintainers:
--  - Mike Rapoport <rppt@kernel.org>
--
--description: |
--  Memblock can serialize its current memory reservations created with
--  reserve_mem command line option across kexec through KHO.
--  The post-KHO kernel can then consume these reservations and they are
--  guaranteed to have the same physical address.
--
--properties:
--  compatible:
--    enum:
--      - reserve-mem-v1
--
--patternProperties:
--  "$[0-9a-f_]+^":
--    $ref: reserve-mem.yaml#
--    description: reserved memory regions
--
--required:
--  - compatible
--
--additionalProperties: false
--
--examples:
--  - |
--    memblock {
--      compatible = "memblock-v1";
--      n1 {
--        compatible = "reserve-mem-v1";
--        start = <0xc06b 0x4000000>;
--        size = <0x04 0x00>;
--      };
--    };
-diff --git a/Documentation/core-api/kho/bindings/memblock/reserve-mem.yaml b/Documentation/core-api/kho/bindings/memblock/reserve-mem.yaml
-deleted file mode 100644
-index 10282d3d1bcd..000000000000
---- a/Documentation/core-api/kho/bindings/memblock/reserve-mem.yaml
-+++ /dev/null
-@@ -1,40 +0,0 @@
--# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
--%YAML 1.2
-----
--title: Memblock reserved memory regions
--
--maintainers:
--  - Mike Rapoport <rppt@kernel.org>
--
--description: |
--  Memblock can serialize its current memory reservations created with
--  reserve_mem command line option across kexec through KHO.
--  This object describes each such region.
--
--properties:
--  compatible:
--    enum:
--      - reserve-mem-v1
--
--  start:
--    description: |
--      physical address (u64) of the reserved memory region.
--
--  size:
--    description: |
--      size (u64) of the reserved memory region.
--
--required:
--  - compatible
--  - start
--  - size
--
--additionalProperties: false
--
--examples:
--  - |
--    n1 {
--      compatible = "reserve-mem-v1";
--      start = <0xc06b 0x4000000>;
--      size = <0x04 0x00>;
--    };
-diff --git a/include/linux/kho/abi/memblock.h b/include/linux/kho/abi/memblock.h
-new file mode 100644
-index 000000000000..fbfb2eb1b1cf
---- /dev/null
-+++ b/include/linux/kho/abi/memblock.h
-@@ -0,0 +1,72 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef _LINUX_KHO_ABI_MEMBLOCK_H
-+#define _LINUX_KHO_ABI_MEMBLOCK_H
-+
-+/**
-+ * DOC: memblock kexec handover ABI
-+ *
-+ * Memblock can serialize its current memory reservations created with
-+ * reserve_mem command line option across kexec through KHO.
-+ * The post-KHO kernel can then consume these reservations and they are
-+ * guaranteed to have the same physical address.
-+ *
-+ * The state is serialized using Flattened Device Tree (FDT) format. Any
-+ * modification to the FDT structure, node properties, or the compatible
-+ * strings constitutes a breaking change. Such changes require incrementing the
-+ * version number in the relevant `_COMPATIBLE` string to prevent a new kernel
-+ * from misinterpreting data from an old kernel.
-+ *
-+ * Changes are allowed provided the compatibility version is incremented.
-+ * However, backward/forward compatibility is only guaranteed for kernels
-+ * supporting the same ABI version.
-+ *
-+ * FDT Structure Overview:
-+ *   The entire memblock state is encapsulated within a single KHO entry named
-+ *   "memblock".
-+ *   This entry contains an FDT with the following layout:
-+ *
-+ *   .. code-block:: none
-+ *
-+ *	/ {
-+ *		compatible = "memblock-v1";
-+ *
-+ *		n1 {
-+ *			compatible = "reserve-mem-v1";
-+ *			start = <0xc06b 0x4000000>;
-+ *			size = <0x04 0x00>;
-+ *		};
-+ *	};
-+ *
-+ * Main memblock node (/):
-+ *
-+ *   - compatible: "memblock-v1"
-+
-+ *     Identifies the overall memblock ABI version.
-+ *
-+ * reserved_mem node:
-+ *   These nodes describe all reserve_mem regions.
-+ *
-+ *   - compatible: "reserve-mem-v1"
-+ *
-+ *     Identifies the ABI version of reserve_mem descriptions
-+ *
-+ *   - start: u64
-+ *
-+ *     Physical address of the reserved memory region.
-+ *
-+ *   - size: u64
-+ *
-+ *     size in bytes of the reserved memory region.
-+ */
-+
-+/* Top level memblock FDT node name. */
-+#define MEMBLOCK_KHO_FDT "memblock"
-+
-+/* The compatible string for the memblock FDT root node. */
-+#define MEMBLOCK_KHO_NODE_COMPATIBLE "memblock-v1"
-+
-+/* The compatible string for the reserve_mem FDT nodes. */
-+#define RESERVE_MEM_KHO_NODE_COMPATIBLE "reserve-mem-v1"
-+
-+#endif /* _LINUX_KHO_ABI_MEMBLOCK_H */
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 905d06b16348..6cff515d82f4 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -21,6 +21,7 @@
- #ifdef CONFIG_KEXEC_HANDOVER
- #include <linux/libfdt.h>
- #include <linux/kexec_handover.h>
-+#include <linux/kho/abi/memblock.h>
- #endif /* CONFIG_KEXEC_HANDOVER */
- 
- #include <asm/sections.h>
-@@ -2442,9 +2443,6 @@ int reserve_mem_release_by_name(const char *name)
- }
- 
- #ifdef CONFIG_KEXEC_HANDOVER
--#define MEMBLOCK_KHO_FDT "memblock"
--#define MEMBLOCK_KHO_NODE_COMPATIBLE "memblock-v1"
--#define RESERVE_MEM_KHO_NODE_COMPATIBLE "reserve-mem-v1"
- 
- static int __init reserved_mem_preserve(void)
- {
--- 
-2.51.0
-
+Will
 
