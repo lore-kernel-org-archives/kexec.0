@@ -4,101 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 74C6CC47BC5
-	for <kexec@archiver.kernel.org>; Tue,  6 Jan 2026 08:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 52014C47BD5
+	for <kexec@archiver.kernel.org>; Tue,  6 Jan 2026 09:51:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=V867c7UphVGnIeOy7W0Ae1g0VsKH1KFb8UYnFs0q7vQ=; b=4Kzzn+FvkD02Jo9gxu3ZCfbSTO
-	XB50jUup9OsVWjYRW+l/z8E/09+DJZxOfiNjsz99+gDkO8lYA83We+TY12zLjWRTgnVx6NrAyh1TI
-	c/5R1GKI4f2exXtqCI5gtzDlqWwYGd1VvqQDdrtGQwrMYXfL8YOh8CH4Q5e8xdEl/F6ib3qJCQLzT
-	sexpnAITue/PG5tfbN88pakTSeHxCCB49VJhfSL17S8TG0Qfm/3t8xRYpKo7aFv0uWyQ5WE7+B1Uy
-	3FnqrEuDpba9IT21wMwinPOMmzTtIR2zQmsVPG+ct5XVI9IIZseRoZPrURqJVriqlVKyFYZhhGW9p
-	pEmrrLQg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=1VAthTqfFeFGWMBFAfA704DCQEXxs1WMWSw2j401xyA=; b=W4/H9iP8Pmy+I4nCcBfOi/BGbZ
+	FekfvCZVhPNL00sEF1EZ8V5LZrZZGzsbEP2X/8BVNWM/8Cf32WT9pLTCcUxlTOR559H4LWw28rUmg
+	2aoTh2UHExCmqQE22r2VHWrErj+e15yTIPkXJpi56yKZLuqbTuiLS/QIJAexg5WoSsHiiAMxGM3jM
+	Xqva1fDmWkEssToGhfa7yAbFACMyK+aXcFgwttUwx2+uB5+ftCc7gN3lE7rdiYxTEUOewQ5PejAeB
+	fPjCYoB6GulA0SGMCCe42moIPrM1jUWSa4adD4Qu77Hd4p1jMZVkfseiaOB3+aIVTaBxghNmCxMbc
+	HUjnXFvg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vd2h1-0000000CdOa-07KS;
-	Tue, 06 Jan 2026 08:45:31 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1vd3ii-0000000Ck0V-3K8m;
+	Tue, 06 Jan 2026 09:51:20 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vd2gy-0000000CdNN-1mfu
+	id 1vd3iW-0000000Cjzj-0giC
 	for kexec@lists.infradead.org;
-	Tue, 06 Jan 2026 08:45:29 +0000
+	Tue, 06 Jan 2026 09:51:10 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1767689127;
+	s=mimecast20190719; t=1767693066;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V867c7UphVGnIeOy7W0Ae1g0VsKH1KFb8UYnFs0q7vQ=;
-	b=DnrVrbKYIhHQaXAiR4bCpMJCMS9rBtyNe/R5RkCCb4bUkWGFE5qIIVQ47U9Lihdc1t67Qk
-	eN6rXSPzFu47S6P8A+ig5lg26ig98XDt3o76z1aDV6GEF5NjX5K/MV9Ps8iWKG+Tg23j4o
-	LDIVr1v5mNhS7kG/5XPve8qfQKeozO8=
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
- [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=1VAthTqfFeFGWMBFAfA704DCQEXxs1WMWSw2j401xyA=;
+	b=SSym4jk5e2hqTbXU2sRnex29Z8DDeoTK7jo7xx+cnOURbvWN9u8Cn2bMmk1JpqH63r/Oi0
+	siuzQv322Xssb2ZPO9SBPV+vnYl2l+8cideIwqXrO8iaQUgFEg7Npt1jkkWBBG9XcNjrkt
+	Q66tTf2xAkS/TwpbLkZT6zC4e9rNo/o=
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
+ [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-513-Z8B_t0-oMB227JFE8x3aeg-1; Tue, 06 Jan 2026 03:45:24 -0500
-X-MC-Unique: Z8B_t0-oMB227JFE8x3aeg-1
-X-Mimecast-MFC-AGG-ID: Z8B_t0-oMB227JFE8x3aeg_1767689123
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-29f1450189eso8553935ad.1
-        for <kexec@lists.infradead.org>; Tue, 06 Jan 2026 00:45:23 -0800 (PST)
+ us-mta-554-imf8gJbuPUa4JntysOE-Ow-1; Tue, 06 Jan 2026 04:51:05 -0500
+X-MC-Unique: imf8gJbuPUa4JntysOE-Ow-1
+X-Mimecast-MFC-AGG-ID: imf8gJbuPUa4JntysOE-Ow_1767693065
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-7dd05696910so1229417b3a.2
+        for <kexec@lists.infradead.org>; Tue, 06 Jan 2026 01:51:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767689123; x=1768293923;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V867c7UphVGnIeOy7W0Ae1g0VsKH1KFb8UYnFs0q7vQ=;
-        b=Bne7hL10rXwj37N7VyKEpoTPCen50w1l2CNhbyAuuCfWFDEyHzjo6Hs62P9xNZiWpy
-         4h1ZgnfzLutBY6nrIg85eM5Y4v6b4D4a4S+wSKLz9OqShSkV/FN7Lcy8Cgfpyawe+687
-         KbqhYXduskYEb53sR7LjpCMHoNAbsLSZ6u9ZRhqYA5uSpCD/2sOrG3vY++2TUl89dTZ5
-         6AI/JPjA6WXeHKNCkK3+YTDnWbEt+5fC6Z6LXdJBhinVD6mkKp0rJUnaK0N2IBM5t+lk
-         Lau8ABVXfOZXhZHfpQR5aRa5VXeCgHaU9a9/xuMc+qGHQB0rUGtjubsayCTsYoPYvHp8
-         TlAg==
-X-Gm-Message-State: AOJu0Yw0xf9EoHkcVmcLStkc4g3A7eGTKIw7DtrZwyEClYFK3zFD7231
-	kVLSnSXmoouzR7hJsTIUmpYmwQGjbryTo4fAquZXq7bP771aQogVinZP7DmDP0ONOrcpG3S16OD
-	KlDFFgHo6d4ZlRUdcP4o+V4a78sfNiUhgopxZU/oZl5y1qkhldEeB8pzDR+06/g==
-X-Gm-Gg: AY/fxX5kOW3suet5CoXKP2ljO7qgc6zGnuIfRcsZS8yNF2XivW0bE9qhdjaltmNN3P2
-	5inS815JFFHkqkT3NmUtfV/DKoEwH+ebtkc15tS0/DhtTTFZCNWkHXQQR5IgeiTBoHLuEUJkkvx
-	osnpFR39r0JsKVaj+lbj5OCielz9VUc/gbC9RoMLIOYLWlKWpUVvwkst86PP44bqdxcNdowhsPI
-	Yv+57Nycjfv6L/xuHcYiyiR130k+AHvwS3EVwN1RfrseaKXeZwAos6Zc+mq4DyW5W/LPuMG1vPA
-	XAbkmFZvNAAvrRaFz/O+5P/By7dIykFMyw/kj3u9D3NO0/wbFRRH8WXdtEMTt+mjMl8FqhLYxZ3
-	1
-X-Received: by 2002:a17:902:e542:b0:2a0:acb8:9e80 with SMTP id d9443c01a7336-2a3e39fe508mr21174975ad.29.1767689122762;
-        Tue, 06 Jan 2026 00:45:22 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHj87y/LvUuXsPTTHYyxl210tNMFszmP1mS+zOvYjb5dokYHtO6c1eZkb9GIqFdBLOfAwoSIw==
-X-Received: by 2002:a17:902:e542:b0:2a0:acb8:9e80 with SMTP id d9443c01a7336-2a3e39fe508mr21174665ad.29.1767689122205;
-        Tue, 06 Jan 2026 00:45:22 -0800 (PST)
+        d=1e100.net; s=20230601; t=1767693064; x=1768297864;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1VAthTqfFeFGWMBFAfA704DCQEXxs1WMWSw2j401xyA=;
+        b=dGU6kn4UKxeW8ZZLI0tLYvwFBeAw1fdG8eozwzyOGFK+CU0NuVrQ59bzr5/V3s3dcB
+         lgX3gTGC7aot42JJSG7yBZyeJLdojvN2jFSYKUxOjmyQ+bm9DPpsTF7AFRmnqiMYsXUt
+         bKdG6HvEf7U2tSyYDX7hvr89RE/xKZ7+bGB5resdqI8g5l08uGtp/Hh4RcgtpjLOYJY4
+         WeUAOyu9LTTptAjW0Rx1MBRwJWg1zYGeuh8TNbG6aa804dbZy7xd+YFcF/aLQ4e8uAf2
+         RFNNAyznLKMHxLL7Ey+J6lfZV9xf/fgai725tvL1y0fF47aKJc0Ma4YKpkPmj3vq/L21
+         Pu+Q==
+X-Gm-Message-State: AOJu0YzqFtmlI6yVAEF6U9D8XN8lFPGptzdNojG3YQcZRqTtZa0xXgLF
+	duWvrOTSWgUjnmlHHMyBu3akvM8rMOa54ZknPwPRTYWRa1/zfCkJMXuHmlaVCBJ0Opy2mIBx+Vs
+	js+dF2RTsPDucLh1hILkM11cRD7sHOZdwmCAeiVVKS3aD+yGFplD/mP49vK79HOTSlhZv3L8Sqj
+	y9FLfSn9oliwyXOVUtzWsTIvM24aKOLjC/LzpnIDK+S4s=
+X-Gm-Gg: AY/fxX6RpVoSN7bY89CnselK1uviz2Kfmn8bCDPht66bW3/TqPVzcVoA83JWDBhuP1F
+	7u3TZH7suSuwb1gGzFQ82VqKJsRWeAW09z2WTbA0x933Yoz2VcWBZQToBQWcAQPS+ivr612A8yP
+	2+QTSfjo1IkquagCWa2nKkIhWvz9PULNC3ztNV/CiB9w7ceB14xFY1wDRe2rUZj4slGCH05Nuzx
+	te5WDZGgRfsxwKlkG+oLG8o8c64i7vXNr1TXeMej8mZoiPd4MfJi5ljlD4qu1618jScorIWc+dz
+	/IV70HjeaUeBDR904MztBVjTWB9gDPF7BBda0q/+FbzRFjdLBEayXISeAq8w3L9EVVHMBa/O021
+	C
+X-Received: by 2002:a05:6a21:99a9:b0:341:9db0:61f1 with SMTP id adf61e73a8af0-38982240e0emr1899660637.16.1767693064292;
+        Tue, 06 Jan 2026 01:51:04 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFW6UciVCI9w9mQUigR54W6222QfqtLANzt59XYt+mRd6KxY8zOI3U/iWfxx4J5aahqo2YANQ==
+X-Received: by 2002:a05:6a21:99a9:b0:341:9db0:61f1 with SMTP id adf61e73a8af0-38982240e0emr1899640637.16.1767693063637;
+        Tue, 06 Jan 2026 01:51:03 -0800 (PST)
 Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3cb2c0fsm15249925ad.66.2026.01.06.00.45.20
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c4cc9e7e8afsm1868963a12.29.2026.01.06.01.51.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jan 2026 00:45:21 -0800 (PST)
-Date: Tue, 6 Jan 2026 16:41:14 +0800
+        Tue, 06 Jan 2026 01:51:03 -0800 (PST)
 From: Coiby Xu <coxu@redhat.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>, Baoquan he <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
-	Kairui Song <ryncsn@gmail.com>, Pingfan Liu <kernelfans@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2] arm64/kdump: pass dm-crypt keys to kdump kernel
-Message-ID: <aVzFW1_32EwyE2kj@Rk>
-References: <20251226141116.1379601-1-coxu@redhat.com>
- <20260106062231.448170-1-coxu@redhat.com>
- <20260106-mammoth-of-wondrous-blizzard-e30d62@quoll>
+To: kexec@lists.infradead.org,
+	x86@kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+Subject: [PATCH 1/2] x86/crash: Use set_memory_p instead of __set_memory_prot
+Date: Tue,  6 Jan 2026 17:50:58 +0800
+Message-ID: <20260106095100.656292-1-coxu@redhat.com>
+X-Mailer: git-send-email 2.52.0
 MIME-Version: 1.0
-In-Reply-To: <20260106-mammoth-of-wondrous-blizzard-e30d62@quoll>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: MslAL2_TuMlM-K_Wp8yMFwRIm5RvZqRminF1zjWTaFQ_1767689123
+X-Mimecast-MFC-PROC-ID: fYBGt7CtAf1ZAXS9SfAUxkPZWXNWcOyB2rbzXTzcUaM_1767693065
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260106_004528_528353_882F0FAF 
-X-CRM114-Status: GOOD (  21.58  )
+X-CRM114-CacheID: sfid-20260106_015109_333289_3684C7D7 
+X-CRM114-Status: GOOD (  10.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,71 +112,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jan 06, 2026 at 09:05:49AM +0100, Krzysztof Kozlowski wrote:
->On Tue, Jan 06, 2026 at 02:22:30PM +0800, Coiby Xu wrote:
->> CONFIG_CRASH_DM_CRYPT has been introduced to support LUKS-encrypted
->> device dump target by addressing two challenges [1],
->>  - Kdump kernel may not be able to decrypt the LUKS partition. For some
->>    machines, a system administrator may not have a chance to enter the
->>    password to decrypt the device in kdump initramfs after the 1st kernel
->>    crashes
->>
->>  - LUKS2 by default use the memory-hard Argon2 key derivation function
->>    which is quite memory-consuming compared to the limited memory reserved
->>    for kdump.
->>
->> To also enable this feature for ARM64, we only need to add device tree
->> property dmcryptkeys [2] as similar to elfcorehdr to pass the memory
->> address of the stored info of dm-crypt keys to the kdump kernel.
->>
->> [1] https://lore.kernel.org/all/20250502011246.99238-1-coxu@redhat.com/
->> [2] https://github.com/devicetree-org/dt-schema/pull/181
->>
->> Cc: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>
->> Cc: Baoquan he <bhe@redhat.com>
->> Cc: Dave Young <dyoung@redhat.com>
->> Cc: Kairui Song <ryncsn@gmail.com>
->> Cc: Pingfan Liu <kernelfans@gmail.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Krzysztof Kozlowski <krzk@kernel.org>
->> Signed-off-by: Coiby Xu <coxu@redhat.com>
->> ---
->> v2
->> - Krzysztof
->>   - Use imperative mood for commit message
->>   - Add dt-schema ABI Documentation
->> - Don't print dm-crypt keys address via pr_debug
->
->Your changelog should explicitly document that this has external
->dependency on dtschema pull request, so that maintainers know that.
+set_memory_p has been introduced since commit 030ad7af9437 ("x86/mm:
+Regularize set_memory_p() parameters and make non-static"). There is no
+need to use __set_memory_prot.
 
-Thanks for the lightning-fast reply!
+Signed-off-by: Coiby Xu <coxu@redhat.com>
+---
+ arch/x86/kernel/machine_kexec_64.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-And thanks for the reminder! I didn't know the dtschema pull request is
-regarded as a dependency. Currently, I only add the dtschema pull
-request URL to the commit message. I'll also include it in the
-changelog.
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 201137b98fb8..0590d399d4f1 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -673,10 +673,7 @@ static void kexec_mark_dm_crypt_keys(bool protect)
+ 		if (protect)
+ 			set_memory_np((unsigned long)phys_to_virt(start_paddr), nr_pages);
+ 		else
+-			__set_memory_prot(
+-				(unsigned long)phys_to_virt(start_paddr),
+-				nr_pages,
+-				__pgprot(_PAGE_PRESENT | _PAGE_NX | _PAGE_RW));
++			set_memory_p((unsigned long)phys_to_virt(start_paddr), nr_pages);
+ 	}
+ }
+ 
 
->
->Also, in the future:
->Do not attach (thread) your patchsets to some other threads (unrelated
->or older versions). This buries them deep in the mailbox and might
->interfere with applying entire sets. See also:
->https://elixir.bootlin.com/linux/v6.16-rc2/source/Documentation/process/submitting-patches.rst#L830
-
-Thanks for pointing me to the above documentation! I thought adding
-In-Reply-To to the V1 patch can provide better context since it's a
-single patch. It seems this is not true for Devicetree. Is it because of
-the documentation change thus we should treat it more like a multi-patch
-series?
-
->
->Best regards,
->Krzysztof
->
-
+base-commit: 7f98ab9da046865d57c102fd3ca9669a29845f67
 -- 
-Best regards,
-Coiby
+2.52.0
 
 
