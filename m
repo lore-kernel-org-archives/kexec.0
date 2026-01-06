@@ -4,105 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 99C5FC47BD0
-	for <kexec@archiver.kernel.org>; Tue,  6 Jan 2026 09:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8782DC47BE2
+	for <kexec@archiver.kernel.org>; Tue,  6 Jan 2026 11:04:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=cZgrTjb26V9hHLjA734rJjLqTVSsFQ/64lxp+Kz3lkM=; b=DQbFtGH9/6n0/ZO8a93CGOPs5K
-	glLbD0apJth5w2EpFpW3WBvxFs1khs//qErAk5kS5gIguehLQvNdE5uaxzcJRtAMaiVov4CzsfZMF
-	Egk2DNygjpDxybDmnOrpkIcsn26RSuhK9gxvANT5//LENAHNdCaQDOT8wZp0icLdODtJQfdi6TKb1
-	fINMCRqVghgoVR7D3zr1LPlrJaSzWh6bu3JdrqDAYRs3vju3iFogo1E+23eFbl9rJoaO0QaQHN67M
-	Fx9tTL2M9jYBYQwxc8Yf6OPcxmPdNRCZSQxFdpgadON9PLymuhJ5ykQKm6ARm/l9658TQujuQ6Op0
-	uXQMKOuw==;
+	bh=LY3dq+rPSxH2w2Pft71eabEVZpzDqJkYbf4EA1mCTNA=; b=YFYS9OUGRbRgI+ec/pZbSyJx7t
+	b0QSUkK7DUA6+MBzYfo3EZUSKKQXpWc62Ljmkwvw5vtQALWvTJ769lINJsIGayp9SbantRP5NElzf
+	eD6tGJ4h6vJWbGpyvSzXKXV6kWCtUULba9QqN6W6zn+mn+E9dxuOU7nBxHT+AYytWaIST+lQi7u5q
+	q2XXd7/3hI0quQ7RyPOoaqgjNoZm269aqq1yAxGWKqjultjTMLkW8svAOmxqDjJDD6Id2EzUdQu2m
+	cPs8ccQdhmiu7+/sYpfV0h1vaNoQNrVN9pL7f5JMldZi7e6+LJk4l6HdxcTZyuZtp2urJoXIi7uqE
+	KAjxQqVQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vd3ij-0000000Ck1M-0EAa;
-	Tue, 06 Jan 2026 09:51:21 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1vd4rb-0000000CqMc-1hr2;
+	Tue, 06 Jan 2026 11:04:35 +0000
+Received: from mail-oi1-f179.google.com ([209.85.167.179])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vd3iZ-0000000Ck0D-2gMM
+	id 1vd4rY-0000000CqMG-3vLK
 	for kexec@lists.infradead.org;
-	Tue, 06 Jan 2026 09:51:14 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1767693070;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cZgrTjb26V9hHLjA734rJjLqTVSsFQ/64lxp+Kz3lkM=;
-	b=B9ZkORU/pSObTviFZPEZmE7E7KdzuHSLf5ZYLPTnIpoa2gDpq6FHtByCIqZdcJ7Gk1JdOM
-	NyfmGLjqWtrKPAaFO0Xg/bxrVtFwOpdyfTvPbiHlr/pqn+jI3PH9jx5zbw6wZdPwdBkYqH
-	RUeDHwkLaymuxTtu2Rpr/8Vzyhe2Qys=
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
- [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-680--lVcNnvRM_qnKAzyvZAjDg-1; Tue, 06 Jan 2026 04:51:09 -0500
-X-MC-Unique: -lVcNnvRM_qnKAzyvZAjDg-1
-X-Mimecast-MFC-AGG-ID: -lVcNnvRM_qnKAzyvZAjDg_1767693069
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2a0fe4ade9eso10826885ad.0
-        for <kexec@lists.infradead.org>; Tue, 06 Jan 2026 01:51:09 -0800 (PST)
+	Tue, 06 Jan 2026 11:04:34 +0000
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-459a6261428so516204b6e.1
+        for <kexec@lists.infradead.org>; Tue, 06 Jan 2026 03:04:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767693068; x=1768297868;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=cZgrTjb26V9hHLjA734rJjLqTVSsFQ/64lxp+Kz3lkM=;
-        b=wifTjSGakld+tjHy791ksIqBHteFqvPawOa5/d+GoJmxZp3E7rWqd9T1GzvFZQIZkB
-         n/XS3QfCBEY5o5PyoF2R3qviGbTXmlLT4V31KJJLdjE9q/0BDVY+bFNHtcISgmXvvCq/
-         Zyj6J9nAbhFKWrbPjDxMLLQxDyOxGk0sxx25OXTmczMkcQ3PZWn1TRquT5HUymDFixNX
-         DZ3ysFlQKipkPczuQ/vr4ot/gpK52n/y5vULKoqe4Ih2ZsatpgDqKa/Ilq+jG0z1JQeQ
-         KBNygLNOrGj1AtprfDJe0WyoGk+CeZENefDid5cFFxoo0NLVQfFSwkHIf/N33XUnM7xq
-         kvuA==
-X-Gm-Message-State: AOJu0YwqqwHhEKNZ96BjLw2JwFgfsUQSPpkClM7Ug3uwgN5sKpGVQ3E5
-	KlBQkhh3x8Pv8XH+0d+OcLnpl/vrqJCII8/fL598xo7WtZLtYpRBaC6lpnYkw6A4I1Z1kdZ860g
-	4XKX7V+1wz8duxwjWY7MgSUM5DuCtJfGFoxJ4z+uhtam8V9sV3DQS7YCoJGXEL3wX0EwDeyRS3+
-	a5OyOlXz6ug/RysLUxqT6LBaVWbWPaCto8QZmHmcp1cu0=
-X-Gm-Gg: AY/fxX4a2gLtndySbJBvtaujmf6hPsYyUIqJmWT/K/GOC8AC9H7+C/r3DEBUP5iJCaw
-	r1vxnVLhHHGLSk+yG03poivN0Z+XlQidEeD2thzTapHb+ytSIaI54FIcvD9JtnU3Ch6fC5UOrXc
-	wgLqzWuHDHvlRGiuy7CPqT9riabkzLa5658fSszPJow16iJlBy6yPPIglvdiwd5DCP6tSlvhiaJ
-	bKfbqyRIFSmTBgJ7/FitFuWQnfWGeWua8vYNUmTGTF+Q7CBXcKRIrrcNtdjCYl3dYB3X8rChKON
-	FkyF/3cnednrV+7m2cbHWFw8ZG9iA/nr4kp+jATrE/rH5g/ds+cGgU/SZ4igRvCn7+MInxN918S
-	i
-X-Received: by 2002:a17:902:f685:b0:2a0:d629:903f with SMTP id d9443c01a7336-2a3e2c8e298mr16968025ad.9.1767693068394;
-        Tue, 06 Jan 2026 01:51:08 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG8NbRx4BSQbdF0wpyEd4iUJI5Lk3MVNn58sSFSHtDOCxUKIVyXD4gxNvJ9dtols1xg/4FT+w==
-X-Received: by 2002:a17:902:f685:b0:2a0:d629:903f with SMTP id d9443c01a7336-2a3e2c8e298mr16967745ad.9.1767693067731;
-        Tue, 06 Jan 2026 01:51:07 -0800 (PST)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-819c59e755bsm1664799b3a.48.2026.01.06.01.51.06
+        d=1e100.net; s=20230601; t=1767697471; x=1768302271;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LY3dq+rPSxH2w2Pft71eabEVZpzDqJkYbf4EA1mCTNA=;
+        b=ntzgjrC0M8OSE9lG7P0wbVE0ErDfLNYH//39AUPuP45L8o3WZeZZbuw6DW7vPBJaXL
+         ZAn73+EGi6TUxM9twd9TD2mJEgPytVPxnpJTNCYYsxQjOWWpwW6tE84VvhXPN2haM+Sp
+         oTCIBTLgvQ6wj7RJtsrdi0Ol0xjUSS6bDTJ6wH7s+ZNK3yGZ2mRUm2jbXl4nK5CYIjSa
+         iyv1VjwA9eyFtxVGSqjF9DDGPbPpd0GmA4SRBbitI/Z6qMH7fjTGPLbz+uIjgq44GciG
+         GIBdUfWqvrH3lPJZ0neaS0z5autwb4o9lhEHquTaxngcz9AThmXmSH4U1t4mrjOXgIuw
+         yYgg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmRySuTDAD89Ax2ou3IHVfR9Rbx6AlFhzY4ueSXkl7MdxwaFAoNgvZ1iPMdeQUyxcvs0XrcQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YykDoMVIiqH+0IV3122Kw7nXNXHjXQIXJznfwVYdPTIHaMyV1Vp
+	F+u0S48va44KZ4Glfs6Vu/WnRK8qn1L7s3lAX1UsesmeKcEosbNaH8Zq
+X-Gm-Gg: AY/fxX5ey4zi/oWoll7XatExhrI3SwoM4l0Rj8nYSBeg3kJxs+kWJrOflJAbktWHRY4
+	rVQdcBWNiZ4sD60QBYon0d6/6/DSIo/SYoev7SaBDfE2Fw/oiB5tOkRLqO5Jj5WGR+N4tS9GZCu
+	ZizJcqeMGyjcu1vGkdsaPaJ8Icwox911RcT6MOXXdrOBjwKx8d8IO9F/Z23K/d+bEv82CBbhfZP
+	iS9NJ+1muhQKc8wy3lrOzU2TcCm37aIpWBbEwA77WQg3DrSYUZ0poZmVwPlZmfvdhPqNsL6qDqJ
+	LSU1IR2gjFfYdJokuVKUtE4Atpk1m3MzmXRa7yGMDZ2B8kNP2pGhy5JykHI9HmfNoD7iu92dvHb
+	MilnTYnM1arV9P48y7t7epifjW18p6zNxEGAvPgecBYb2NaPKqYGjtTfY8eNQK3dcwEjTT2WL9v
+	G8PVR0E9VO1Hnc7C0VMwQ2RiE=
+X-Google-Smtp-Source: AGHT+IEg8X0UYpcqPrkUiOL6WSm3KXNyehi1WFfU/VwFQO//MX2wF8odvwaaKiGMunKIna/STuKCcQ==
+X-Received: by 2002:a05:6808:13d6:b0:450:aef0:ffd2 with SMTP id 5614622812f47-45a5c93f955mr1488812b6e.5.1767697471125;
+        Tue, 06 Jan 2026 03:04:31 -0800 (PST)
+Received: from gmail.com ([2a03:2880:10ff:1::])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3ffa4de539bsm1100302fac.4.2026.01.06.03.04.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jan 2026 01:51:07 -0800 (PST)
-From: Coiby Xu <coxu@redhat.com>
-To: kexec@lists.infradead.org,
-	x86@kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT))
-Subject: [PATCH 2/2] Reapply "x86/mm: Remove unused __set_memory_prot()"
-Date: Tue,  6 Jan 2026 17:50:59 +0800
-Message-ID: <20260106095100.656292-2-coxu@redhat.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260106095100.656292-1-coxu@redhat.com>
-References: <20260106095100.656292-1-coxu@redhat.com>
+        Tue, 06 Jan 2026 03:04:30 -0800 (PST)
+Date: Tue, 6 Jan 2026 03:04:28 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-mm@kvack.org, usamaarif642@gmail.com, rmikey@meta.com, clm@fb.com, 
+	riel@surriel.com, kernel-team@meta.com
+Subject: Re: [PATCH v2 2/2] kexec: history: track kexec boot counter
+Message-ID: <w542cckfixvgo6pvepdg6itaera6qlq75pemqvpah7us6c7yxa@6vm7ebxd6ala>
+References: <20260102-kho-v2-0-1747b1a3a1d6@debian.org>
+ <20260102-kho-v2-2-1747b1a3a1d6@debian.org>
+ <86o6nb7oi1.fsf@kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: WhRHsqocgt0l0X0-ACsWv4RVVE9v7rISQySQ3oN1tbw_1767693069
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86o6nb7oi1.fsf@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260106_015113_444373_CD752946 
-X-CRM114-Status: GOOD (  13.53  )
+X-CRM114-CacheID: sfid-20260106_030433_000550_31E2CB4A 
+X-CRM114-Status: GOOD (  27.27  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,61 +91,53 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This reverts commit e1e6cd01d93359e22be84a23c8bb24ee4e04e142 as
-__set_memory_prot is unsued (again) after set_memory_p is used instead
-for x86_64 kdump LUKS support (CONFIG_CRASH_DM_CRYPT).
+On Fri, Jan 02, 2026 at 09:23:18PM +0100, Pratyush Yadav wrote:
+> On Fri, Jan 02 2026, Breno Leitao wrote:
+> 
+> > Track and display the number of kexec boots since the last cold reboot
+> 
+> Nit: this does not track kexec boots, it tracks KHO boots. None of this
+> can work on normal kexec boots. Can you please update the wording to
+> make that clear?
+> 
+> > when CONFIG_KEXEC_HISTORY is enabled.
+> >
+> > This extends the previous kernel release tracking feature by adding
+> > a counter that increments with each kexec boot. The counter provides
+> > visibility into the kexec chain depth, which is useful for understanding
+> > boot history in production environments.
+> >
+> > Add a new property, "kexec-count" in KHO FDT alongside the existing
+> > "previous-release" property. The counter is:
+> >
+> >  - Initialized to 0 when kho_in is instantiated.
+> >  - Incremented by 1 on each subsequent kexec.
+> >  - Printed alongside the previous kernel release version.
+> >
+> > The counter is stored as a 32-bit unsigned integer in FDT format and is
+> > only active when CONFIG_KEXEC_HISTORY is enabled.
+> 
+> We have such a counter for LUO as well from the properly
+> "liveupdate-number". If you're using LUO, why can't you use that counter
+> directly?
+> 
+> If you're not using LUO, I'm curious, what's your use case? Right now
+> KHO only supports reserve-mem outside of LUO. Is that what you plan to
+> use?
+> 
+> Also, do we want to keep both counters independently? Or do we have one
+> and drop the other? Pasha, what do you think?
 
-Signed-off-by: Coiby Xu <coxu@redhat.com>
----
- arch/x86/include/asm/set_memory.h |  2 --
- arch/x86/mm/pat/set_memory.c      | 13 -------------
- 2 files changed, 15 deletions(-)
+In fact, I do not have plan to use LUO right now. My goal is to pass the
+kexec release from kernel to another, and for that I am using KHO to
+pass this information.
 
-diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
-index 61f56cdaccb5..8d9f1c9aaa4c 100644
---- a/arch/x86/include/asm/set_memory.h
-+++ b/arch/x86/include/asm/set_memory.h
-@@ -4,7 +4,6 @@
- 
- #include <asm/page.h>
- #include <asm-generic/set_memory.h>
--#include <asm/pgtable.h>
- 
- #define set_memory_rox set_memory_rox
- int set_memory_rox(unsigned long addr, int numpages);
-@@ -38,7 +37,6 @@ int set_memory_rox(unsigned long addr, int numpages);
-  * The caller is required to take care of these.
-  */
- 
--int __set_memory_prot(unsigned long addr, int numpages, pgprot_t prot);
- int _set_memory_uc(unsigned long addr, int numpages);
- int _set_memory_wc(unsigned long addr, int numpages);
- int _set_memory_wt(unsigned long addr, int numpages);
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 6c6eb486f7a6..40581a720fe8 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -2145,19 +2145,6 @@ static inline int cpa_clear_pages_array(struct page **pages, int numpages,
- 		CPA_PAGES_ARRAY, pages);
- }
- 
--/*
-- * __set_memory_prot is an internal helper for callers that have been passed
-- * a pgprot_t value from upper layers and a reservation has already been taken.
-- * If you want to set the pgprot to a specific page protocol, use the
-- * set_memory_xx() functions.
-- */
--int __set_memory_prot(unsigned long addr, int numpages, pgprot_t prot)
--{
--	return change_page_attr_set_clr(&addr, numpages, prot,
--					__pgprot(~pgprot_val(prot)), 0, 0,
--					NULL);
--}
--
- int _set_memory_uc(unsigned long addr, int numpages)
- {
- 	/*
--- 
-2.52.0
+That said, I am planning to use KHO as the infrastructure to pass the
+kernel version from one kernel to another.
 
+Given that I don't think this "feature" should depend on LUO, maybe the
+counters should be independent (?!)
+
+Thanks
+--breno
 
