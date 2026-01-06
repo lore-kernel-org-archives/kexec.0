@@ -4,79 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8782DC47BE2
-	for <kexec@archiver.kernel.org>; Tue,  6 Jan 2026 11:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 87726CE9D63
+	for <kexec@archiver.kernel.org>; Tue,  6 Jan 2026 15:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=LY3dq+rPSxH2w2Pft71eabEVZpzDqJkYbf4EA1mCTNA=; b=YFYS9OUGRbRgI+ec/pZbSyJx7t
-	b0QSUkK7DUA6+MBzYfo3EZUSKKQXpWc62Ljmkwvw5vtQALWvTJ769lINJsIGayp9SbantRP5NElzf
-	eD6tGJ4h6vJWbGpyvSzXKXV6kWCtUULba9QqN6W6zn+mn+E9dxuOU7nBxHT+AYytWaIST+lQi7u5q
-	q2XXd7/3hI0quQ7RyPOoaqgjNoZm269aqq1yAxGWKqjultjTMLkW8svAOmxqDjJDD6Id2EzUdQu2m
-	cPs8ccQdhmiu7+/sYpfV0h1vaNoQNrVN9pL7f5JMldZi7e6+LJk4l6HdxcTZyuZtp2urJoXIi7uqE
-	KAjxQqVQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=d3BPDyxdSzmRlY82TYRVSEMIt1MGjPO4hr8vKGfT55g=; b=LYowVZnDREQObAZAkUMJouItxd
+	SuaTFd4KpNW3+HKRDy25Qp0SsYcr4bzBYrhFugE0g9Z8qMBEHjylxpDnieKV+tI8b8DO/9nRoiBhd
+	lSAji5D48pEYfjcZLSTB81JNynfmy5hNLRzmIw7Qr+pqVWDrvPvlN9PV8EczpeJ9xC58quvsGN9ov
+	QXX2eUkEbSvZ3vlhLHOr0RU7QFCNepCogfvjwBxlRK5Nw5yrSdlV5DEojZ9WfoKBnYW/Injo3aBnH
+	AEq9ZPk8LRH2wowki04gPXSfXKZb5JWxt558FbjYbEPi5NG6AqXxhltOar4Q1NgNhj2ooN5VSG98M
+	GF/DPz4w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vd4rb-0000000CqMc-1hr2;
-	Tue, 06 Jan 2026 11:04:35 +0000
-Received: from mail-oi1-f179.google.com ([209.85.167.179])
+	id 1vd9Er-0000000DQZH-2TIh;
+	Tue, 06 Jan 2026 15:44:53 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vd4rY-0000000CqMG-3vLK
+	id 1vd9Ep-0000000DQXu-2dxy
 	for kexec@lists.infradead.org;
-	Tue, 06 Jan 2026 11:04:34 +0000
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-459a6261428so516204b6e.1
-        for <kexec@lists.infradead.org>; Tue, 06 Jan 2026 03:04:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767697471; x=1768302271;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LY3dq+rPSxH2w2Pft71eabEVZpzDqJkYbf4EA1mCTNA=;
-        b=ntzgjrC0M8OSE9lG7P0wbVE0ErDfLNYH//39AUPuP45L8o3WZeZZbuw6DW7vPBJaXL
-         ZAn73+EGi6TUxM9twd9TD2mJEgPytVPxnpJTNCYYsxQjOWWpwW6tE84VvhXPN2haM+Sp
-         oTCIBTLgvQ6wj7RJtsrdi0Ol0xjUSS6bDTJ6wH7s+ZNK3yGZ2mRUm2jbXl4nK5CYIjSa
-         iyv1VjwA9eyFtxVGSqjF9DDGPbPpd0GmA4SRBbitI/Z6qMH7fjTGPLbz+uIjgq44GciG
-         GIBdUfWqvrH3lPJZ0neaS0z5autwb4o9lhEHquTaxngcz9AThmXmSH4U1t4mrjOXgIuw
-         yYgg==
-X-Forwarded-Encrypted: i=1; AJvYcCVmRySuTDAD89Ax2ou3IHVfR9Rbx6AlFhzY4ueSXkl7MdxwaFAoNgvZ1iPMdeQUyxcvs0XrcQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YykDoMVIiqH+0IV3122Kw7nXNXHjXQIXJznfwVYdPTIHaMyV1Vp
-	F+u0S48va44KZ4Glfs6Vu/WnRK8qn1L7s3lAX1UsesmeKcEosbNaH8Zq
-X-Gm-Gg: AY/fxX5ey4zi/oWoll7XatExhrI3SwoM4l0Rj8nYSBeg3kJxs+kWJrOflJAbktWHRY4
-	rVQdcBWNiZ4sD60QBYon0d6/6/DSIo/SYoev7SaBDfE2Fw/oiB5tOkRLqO5Jj5WGR+N4tS9GZCu
-	ZizJcqeMGyjcu1vGkdsaPaJ8Icwox911RcT6MOXXdrOBjwKx8d8IO9F/Z23K/d+bEv82CBbhfZP
-	iS9NJ+1muhQKc8wy3lrOzU2TcCm37aIpWBbEwA77WQg3DrSYUZ0poZmVwPlZmfvdhPqNsL6qDqJ
-	LSU1IR2gjFfYdJokuVKUtE4Atpk1m3MzmXRa7yGMDZ2B8kNP2pGhy5JykHI9HmfNoD7iu92dvHb
-	MilnTYnM1arV9P48y7t7epifjW18p6zNxEGAvPgecBYb2NaPKqYGjtTfY8eNQK3dcwEjTT2WL9v
-	G8PVR0E9VO1Hnc7C0VMwQ2RiE=
-X-Google-Smtp-Source: AGHT+IEg8X0UYpcqPrkUiOL6WSm3KXNyehi1WFfU/VwFQO//MX2wF8odvwaaKiGMunKIna/STuKCcQ==
-X-Received: by 2002:a05:6808:13d6:b0:450:aef0:ffd2 with SMTP id 5614622812f47-45a5c93f955mr1488812b6e.5.1767697471125;
-        Tue, 06 Jan 2026 03:04:31 -0800 (PST)
-Received: from gmail.com ([2a03:2880:10ff:1::])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3ffa4de539bsm1100302fac.4.2026.01.06.03.04.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jan 2026 03:04:30 -0800 (PST)
-Date: Tue, 6 Jan 2026 03:04:28 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-mm@kvack.org, usamaarif642@gmail.com, rmikey@meta.com, clm@fb.com, 
-	riel@surriel.com, kernel-team@meta.com
-Subject: Re: [PATCH v2 2/2] kexec: history: track kexec boot counter
-Message-ID: <w542cckfixvgo6pvepdg6itaera6qlq75pemqvpah7us6c7yxa@6vm7ebxd6ala>
-References: <20260102-kho-v2-0-1747b1a3a1d6@debian.org>
- <20260102-kho-v2-2-1747b1a3a1d6@debian.org>
- <86o6nb7oi1.fsf@kernel.org>
+	Tue, 06 Jan 2026 15:44:52 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 0EA3E4436F
+	for <kexec@lists.infradead.org>; Tue,  6 Jan 2026 15:44:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E315AC16AAE
+	for <kexec@lists.infradead.org>; Tue,  6 Jan 2026 15:44:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767714290;
+	bh=46IA74TgsYCX1Wdt8aKcLKb4RYOUhDJz4Bq8eqM3rvM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=M8aqSayh9x7eugOCav2bUStC3irU102ypWSH1a6+VxK2JM94lSG/3mPDBBxdNg9dB
+	 9caq4toXi+Ry3NHUpkGyP1fQsyXrE/u/eg6vxmWii3ry1BRwJeD/GYRdrDlQYq3p8b
+	 blArfXe2ZBxKN9qSAGwjrnmeGrKQoLrpyXvsBlgJ0C1U1koKUQuVL2I0Da2AHS9/2Q
+	 nHmJYt5vnHBuYlKzJja8nOpzuFBgsi3KUjttuiq5obuTJOTtU9Er9Jap/arRWt7EYL
+	 B95bFMEQ5Gj9f72+BsMunNYp1hqO/Cs/89rPiVCyWV5ZtDeuHGPqu9dw1Tqrr7VgMi
+	 Pbm03B+uBiMsA==
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b8440cb2dbeso27468866b.3
+        for <kexec@lists.infradead.org>; Tue, 06 Jan 2026 07:44:50 -0800 (PST)
+X-Gm-Message-State: AOJu0Yz4cV3TJzHmfod5qAY2lL8n8jeL+DEcM0JHhNKZl4GA7I8zUtq0
+	IQbZeXo2/1lE4q3WIzHlsCBc4QJQgxrsi13Z808ysgyXn4cQVfXxUa6uYf6xKXWoHQQZGLbG/lK
+	LW3F++HoEQkOpCwHz2EOJ7PmuNqR11Q==
+X-Google-Smtp-Source: AGHT+IHFeow7GaX738Pcre7r5od5Yqad8UB8G/TYGPsM6GH9pPZ2ShOPoXiLIEj59XKYnsYmNR7ZxCR17dGzQ8eR6p8=
+X-Received: by 2002:a17:907:d7c9:b0:b84:1fef:32a0 with SMTP id
+ a640c23a62f3a-b8426a422femr330026266b.6.1767714289311; Tue, 06 Jan 2026
+ 07:44:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86o6nb7oi1.fsf@kernel.org>
+References: <20251226141116.1379601-1-coxu@redhat.com>
+In-Reply-To: <20251226141116.1379601-1-coxu@redhat.com>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 6 Jan 2026 09:44:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLEsUV34tMZWSMc6w-xDV=M0JpOmS95TxrtbbBMRoD3Jw@mail.gmail.com>
+X-Gm-Features: AQt7F2oZXv_EGI4J1ibbdla2HKndc4TqmJiiAssIWbaMzvfSFkjDSKLgEAqcVKc
+Message-ID: <CAL_JsqLEsUV34tMZWSMc6w-xDV=M0JpOmS95TxrtbbBMRoD3Jw@mail.gmail.com>
+Subject: Re: [PATCH] arm64/kdump: pass dm-crypt keys to kdump kernel
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>, Baoquan he <bhe@redhat.com>, 
+	Dave Young <dyoung@redhat.com>, Kairui Song <ryncsn@gmail.com>, Pingfan Liu <kernelfans@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260106_030433_000550_31E2CB4A 
-X-CRM114-Status: GOOD (  27.27  )
+X-CRM114-CacheID: sfid-20260106_074451_683631_D46DEC14 
+X-CRM114-Status: GOOD (  16.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,53 +87,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jan 02, 2026 at 09:23:18PM +0100, Pratyush Yadav wrote:
-> On Fri, Jan 02 2026, Breno Leitao wrote:
-> 
-> > Track and display the number of kexec boots since the last cold reboot
-> 
-> Nit: this does not track kexec boots, it tracks KHO boots. None of this
-> can work on normal kexec boots. Can you please update the wording to
-> make that clear?
-> 
-> > when CONFIG_KEXEC_HISTORY is enabled.
-> >
-> > This extends the previous kernel release tracking feature by adding
-> > a counter that increments with each kexec boot. The counter provides
-> > visibility into the kexec chain depth, which is useful for understanding
-> > boot history in production environments.
-> >
-> > Add a new property, "kexec-count" in KHO FDT alongside the existing
-> > "previous-release" property. The counter is:
-> >
-> >  - Initialized to 0 when kho_in is instantiated.
-> >  - Incremented by 1 on each subsequent kexec.
-> >  - Printed alongside the previous kernel release version.
-> >
-> > The counter is stored as a 32-bit unsigned integer in FDT format and is
-> > only active when CONFIG_KEXEC_HISTORY is enabled.
-> 
-> We have such a counter for LUO as well from the properly
-> "liveupdate-number". If you're using LUO, why can't you use that counter
-> directly?
-> 
-> If you're not using LUO, I'm curious, what's your use case? Right now
-> KHO only supports reserve-mem outside of LUO. Is that what you plan to
-> use?
-> 
-> Also, do we want to keep both counters independently? Or do we have one
-> and drop the other? Pasha, what do you think?
+On Fri, Dec 26, 2025 at 8:11=E2=80=AFAM Coiby Xu <coxu@redhat.com> wrote:
+>
+> Based on the CONFIG_CRASH_DM_CRYPT feature, this patch adds
+> LUKS-encrypted device dump target support to ARM64 by addressing two
+> challenges [1],
+>  - Kdump kernel may not be able to decrypt the LUKS partition. For some
+>    machines, a system administrator may not have a chance to enter the
+>    password to decrypt the device in kdump initramfs after the 1st kernel
+>    crashes
+>
+>  - LUKS2 by default use the memory-hard Argon2 key derivation function
+>    which is quite memory-consuming compared to the limited memory reserve=
+d
+>    for kdump.
+>
+> 1st kernel will add device tree property dmcryptkeys as similar to
+> elfcorehdr to pass the memory address of the stored info of dm-crypt
+> keys to the kdump kernel.
 
-In fact, I do not have plan to use LUO right now. My goal is to pass the
-kexec release from kernel to another, and for that I am using KHO to
-pass this information.
+Is there not any security issue with putting the key into the DT? The
+DT is provided to userspace. There's provisions already to not expose
+"security-*" properties to userspace (see __of_add_property_sysfs).
+Though I think that has a hole in that the FDT is also provided as-is.
+However, I don't even know who or what uses these properties.
 
-That said, I am planning to use KHO as the infrastructure to pass the
-kernel version from one kernel to another.
-
-Given that I don't think this "feature" should depend on LUO, maybe the
-counters should be independent (?!)
-
-Thanks
---breno
+Rob
 
