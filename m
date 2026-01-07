@@ -4,138 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F3F36CFD63E
-	for <kexec@archiver.kernel.org>; Wed,  7 Jan 2026 14:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BB4BCD0D140
+	for <kexec@archiver.kernel.org>; Wed,  7 Jan 2026 16:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:Message-ID:Date:Subject:To:From:
-	Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=uVKwDZOpryH22HzJJyqyhfbyyDi9XV2/4mJpabqtabI=; b=rUGIdhvwLKwsPV
-	apD4RlGH68MSSnCOb6zyIXsVQ1x1R2Wz3VR3MFAag82OwhkXkynq29I53lXkyaT4+J+FFI9SFXFkA
-	aMYYca6MAV4mndZRyt2qIcsXRW7UOVQ72k6OGAd+aOqI8JjHsDWpSkFRkDEs7FzwJ37G/uMylwQuP
-	BtuX639z3+6AbBeh0h/oK3L08utWHd45w2FPftgQ6zquBAWwBDzAxDs9+KKhmaMA0yVOVDh90etZR
-	OlDBLMSSAYR3DjhSVK7i2HwA1mwBGkrsbKHQ5GCnzyG0n8Y4DGix3GX9ewB4zD9FDf+/zbv14n0Q7
-	ZyCZ4ULLBTrIfHzGbaeg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:Subject:From:To:Date:Reply-To:Cc:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=gSRhznMVNQ3g5FfOt0zXcZ9Os1ttCGfKgXLf9TOR39U=; b=wAOnj5dPeU1mtkFZS4829ov01s
+	AcI7jd6YjUOUxaMkAJAoq3xNeAhcKJqxbffbBKOK9PH+iiCSO9JTd9o4jjQrssji19MD0WNv7Q+m1
+	8UmePpc6dGNoliWbFGcHRcNRm2LqWBVfZ00pzKw/srUfc504di8EVXFpzn9hRukhRJXvkN0ElCXAQ
+	gYQq12U6EIYdCpOT9RFYTScYIla2AJBdBFx/yfnOFc0vnEW5OhecrYfIw99meQOY5UAPa2HpGGb0C
+	aaSKYePaP+V26pEetpSrKL+8ny+P1/yA81jN5bZcmWtVEPzY8RAdHf2b8ZrqXgTHXmE15PTaNqbm4
+	TGXrnojA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdUa6-0000000F62c-2INz;
-	Wed, 07 Jan 2026 14:32:14 +0000
-Received: from mail-northeuropeazolkn19012043.outbound.protection.outlook.com ([52.103.32.43] helo=DUZPR83CU001.outbound.protection.outlook.com)
+	id 1vdWd7-0000000FJtV-33DL;
+	Wed, 07 Jan 2026 16:43:29 +0000
+Received: from mail-43166.protonmail.ch ([185.70.43.166])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdUa4-0000000F61p-0rjZ
+	id 1vdWd4-0000000FJtD-2VZn
 	for kexec@lists.infradead.org;
-	Wed, 07 Jan 2026 14:32:13 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UUsb0mZcRR6Sv3Du3KSwCvmXh7WpGOLLUYLkF2Kw1P8vy75RQdoZ4dwtBHVuy8Fxw4erM5JXUdEuFlrHoRFEKsoJjkSE+zfGhQVMIF4WhgXWiUfcxuUa3h8CPivtrBm6xt7xi265w5egiSPTgtJo52unLQQbX3Ie7OU2yCOQvQILPSyVFyOuIwTyfOtQ4uAICPe10RFPREMSUv+X+DjNhEOajdcKnSAb9K74fCtIKHIPSVQGKFWEdm7bzXzvItLDFrauOfgVKLAVgveiZjUmckkFo/Dgn6/k37pBa76vcSsuCeHR3IjtbMWBkIewFTZSlkFy7M0POIUTt351Hl9w3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uVKwDZOpryH22HzJJyqyhfbyyDi9XV2/4mJpabqtabI=;
- b=XV29ypFsjt3ZEu0jhBPk563fnnKBYYGxa4jU4bW8j4tjzLbrG74IAOeW48tQzkvuCAcx8h29CMNc1Tfjk4nAiZnOEEegWCY2Y35z9m6JiTpiLe3IqZLYQkMnlebuV5CfC38N/J/4Udq6cgddi1loXkkxnORd4krynYEwEUpYaztJE1g2IF8UmTOCpHDMYbsX8STopyRqhatillyggsZAxGW3yXnO3XC56AqKqtJiWqSDuiOEoljFfoj9J0TzF22GemQDbuN80xgy8O/uWv3pmnVXBbwrnPeMXALwtSLKeZDVJOLS6odBjKW/aLPRXeXqoeT1KYCPbYNyJroXptiwLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uVKwDZOpryH22HzJJyqyhfbyyDi9XV2/4mJpabqtabI=;
- b=jh3Vx0sPtKyYTFH480j+OK4E5FjzHYbnvVKBIPWI9LanskcyBr8rx5QJjbUBDMtvDcPmpSaOpplM7DMGnioz1ieBacotgPcL/QV7J7ei+tKTZ2M4hA4tW17oKX+ZcTPDh4+cdtLOF39nqIdhk4KE0DTl9UphlEV5QbrjHwrWTfCw7wujThak75iToJyn8QSb038Dca+YEA8+EeFBZLDYZSS5WAQgpw9Eumuyncn1J9ilM5e8a1R+4Jb7THlHW4r2jHI4oNB0tvMo5/Lgyv6IYU5x6ePYOp60AIcf7gSgs8OcJgVe6b8KFTWs+M7kccqcLkM8lehLjpPYyYG2RAFQBQ==
-Received: from VI1PR02MB3952.eurprd02.prod.outlook.com (2603:10a6:803:85::14)
- by GV1PR02MB8732.eurprd02.prod.outlook.com (2603:10a6:150:9f::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.2; Wed, 7 Jan
- 2026 14:32:05 +0000
-Received: from VI1PR02MB3952.eurprd02.prod.outlook.com
- ([fe80::7280:4925:465e:c1d2]) by VI1PR02MB3952.eurprd02.prod.outlook.com
- ([fe80::7280:4925:465e:c1d2%6]) with mapi id 15.20.9499.002; Wed, 7 Jan 2026
- 14:32:05 +0000
-From: David Binderman <dcb314@hotmail.com>
-To: "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "bhe@redhat.com"
-	<bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: linux-6.19-rc4/kernel/kexec_core.c:425: Possible loss of data ?
-Thread-Topic: linux-6.19-rc4/kernel/kexec_core.c:425: Possible loss of data ?
-Thread-Index: AQHcf+Hu3iI3BxnL40CdMzlVKNqGNw==
-Date: Wed, 7 Jan 2026 14:32:05 +0000
-Message-ID: <VI1PR02MB395224C3D5F37DEDA794AED09C84A@VI1PR02MB3952.eurprd02.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: VI1PR02MB3952:EE_|GV1PR02MB8732:EE_
-x-ms-office365-filtering-correlation-id: f7d2e426-d1da-40ee-ef85-08de4df987f0
-x-ms-exchange-slblob-mailprops: Vs63Iqe4sQmnDmlsl/vneQbmorDq9Hf2d6Y8ROdAGSY/QNp/V67lG1xEfOJ6nqegqGQ2ekd6nYR/GwIVrqMGVzkFOkGUQ+GaZT76ZhdG6ViujTkk2sLiOWiGExwazI7BzlM5l6p8tVSf9xSo4jSwcxcmIxGDc3qtIGczko6sMfO0eDCiYP7g+5DD77Gdqrgua3pUIYiWpj9xrLAIhTSjTp6pFs0un8+KHjLzqvP5wqmCjvky0S8ZzhdK5WEAPsNXs5twsnUPY4pUCI8f19dISU323R4hHMg38o0m7kXVFpXf0CrC8XqmaVXHvMc5o9YcAL7i7/q4nWUEolWljiWqFJ5BK4B4awWXicuGEU9mRfYenJTKGCPBYaMUWtR3gmmUqCDqIcD6RKPXZnERTh6LQX5jviZ/RRB9g/iI007O8UI1s/nWbNZ7Fa4pObjXkUGdMm7/x8l6V0OI3HEMJCB3zP2X6k1VcWuFyXiLLqzPjSYzyFM62g3Z0FpnW9Pstk1b5Icu6/rMcIal0KNgPr2hpiQzH8fLMIOfssbWDUKrdmaN510QwXD1gxqDu4htvYNtuXKukrEuFvaUGD4moy1cdERJVKOzQX0mW0uyEJ97gZLleLaWc0SozTiRIv3jXamSoQ75caHVzHPMaDXzYLFc4I3NAp1u8Rkcx3xBWmVoAMW2Td7k7oMw8gNUSdDIST+LeBAm8+zA1WJd7RZJf4r6GmYonAgx5YaOYSV78EV+zmY=
-x-microsoft-antispam: BCL:0;ARA:14566002|8060799015|39105399006|8062599012|15030799006|15080799012|12121999013|19110799012|31061999003|461199028|40105399003|3412199025|440099028|102099032;
-x-microsoft-antispam-message-info: =?iso-8859-1?Q?pTVWU16eDlbgNlxO/3tljAmdQ4221f8sJ240EcDsDzmpzRMGgbQTqK2G9C?=
- =?iso-8859-1?Q?FMCABNk6dk/vd63PX16tQv7BvywgTQQ6MLf31nbNXvBFUWXEhYvqedHte+?=
- =?iso-8859-1?Q?N+4fbL9ZXDlZWKSjzqFor3SgS/vXe8DIeGm1qKzr0BYQhGe6llx4U2qQZY?=
- =?iso-8859-1?Q?9wz5hdWgMCOPzfi6J7w40zYk//ZxCZ0HdnQIvG6m1TqqMPso04B8evNYCG?=
- =?iso-8859-1?Q?2pPss10o5BsNY834m0rAgB77fligpwlzgLs/xbLVN3S17B9e4hKHuufHA6?=
- =?iso-8859-1?Q?ahuYwjoue/vuR63e4zMO/Qn+9KJV5hUbqUqF2EGl/GavZ1AzBycDrZUGfn?=
- =?iso-8859-1?Q?WTK/i1cEjrquqIDm1PIj1VQXCPoK5GZRHl+beh1oVIFOchts2YtkhUD1EA?=
- =?iso-8859-1?Q?+hf6/Ypxsfqv9D4yl2lOsCzOyZt53KI/bQenLYbJye2GlIKIkZ04T3uml2?=
- =?iso-8859-1?Q?QZ2xOE5Glhm3oaGJK/SUbNSrA3Vvu0wt+ARQJbvmhZYGDpq4fFXTU0biOw?=
- =?iso-8859-1?Q?esveHV+eHy8OILJDLpT4iRMeYBXl/Xx9JJhpHNEYGWGbi1yGVrHyUD5bnh?=
- =?iso-8859-1?Q?EOMwJdJhRZWz/hLnc/Bgvz5u9GzLUUXS7fxAMAkyStKPD8ZQMdNSyLbegt?=
- =?iso-8859-1?Q?HWhT18xjU76DITzl6QegrQbI8Pd53NjXNyckiconZZ95E7KVUtDkMjN7Lf?=
- =?iso-8859-1?Q?Fhs+Qwd7c0FOW5ebkpHYiOLqCxXiuQ6yxU28kYXdOgkOaOkTifZ6xEGly7?=
- =?iso-8859-1?Q?nYDvol0OmFghYDoFRdxOEiE4qmo4QuvkWy+CiqDXd0p9QnSyY8iN18hvIh?=
- =?iso-8859-1?Q?78yqS4n89yHLaC4O1fwr6fANQC+48f17yYBCejKXbfKTq6gK8zjsInqe+9?=
- =?iso-8859-1?Q?87iI2GqeazlM1OHneMzL7TJ1mT5b5/rzCC/PfumdWxO7Sbx9KGCfzxvyhj?=
- =?iso-8859-1?Q?T6haGRwE7caGF+qUX3tih4yCKWZfSiNtWHOcTVRxt9PBunwZikYHGwl1yS?=
- =?iso-8859-1?Q?UH6XGpYHIwh/iu1XlUMc2yRFGIWTXjnMcc4fpcnr8urKsmVh4/Q5DZZO3S?=
- =?iso-8859-1?Q?on/YguMYppdCNpP307/II1MczGPOU21b+I9w/QZ+8lBU/rVACvnwQiZq6x?=
- =?iso-8859-1?Q?zIfX7xaJhrhLze6w+RR2hXKLRBcXVtN68WWi8mBXJdVXMxMwJG6rCqxkUj?=
- =?iso-8859-1?Q?rImeRQIsMOs/FY9GJyTWnP9apmfMDqQl4LztHZIYxc2clhClld3a4tWJRv?=
- =?iso-8859-1?Q?NzKiGKnQkx5K/4xfWHnKLPDurFaDxHpzFqNw8lR2E=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?omCUX2mb4xH+6BYdAxTz9MBRYWY6Xt6/Id/hz8ehMRDxnvEm8YrukeWxCi?=
- =?iso-8859-1?Q?gWNoE3dM7YqxYttP4LfLyUjsMXMihGpfFxLqcPSbrXhGNglNeLzKDGuPyt?=
- =?iso-8859-1?Q?PlNbhULpBoYtENcNf/iyJXpIsO2s/V6Hgr5bXp7Ja0IyIqLILdFgmqYO+2?=
- =?iso-8859-1?Q?XKJ/I3O8kWJVyXIMgpxXVuoErXFXXFFn6W6Y0w85iDeZ3h1Zm3968Uwp+1?=
- =?iso-8859-1?Q?EubZV1eey0NZOatrD52cjN58wiy7A7kM8+qWtAnNt5f8N0wXPFFdbXCoyT?=
- =?iso-8859-1?Q?LwlqkJhJi7WcguKpVbL4BZonMrhj2SjQmbwSrbZ8HjAaU1nKPC1rauI5C/?=
- =?iso-8859-1?Q?RQI7XoFbKJZ/aJE++GxgNJ27up2Z4e0gqCRT/Y70AaUoBns3fs5JT9wUcd?=
- =?iso-8859-1?Q?YrzD1Kwgx+zs6nuVJlfREHTv1gcA+CTXUIa2lZGAeuK9Xta+kqv9NZTn6Q?=
- =?iso-8859-1?Q?LlRbvM2R4T1qLm/zTsy0KJzWKpsts+n3IiUVfLkJ4jS9JvEinhVUVFFdIT?=
- =?iso-8859-1?Q?7YjiDdQwf5w0DnbA1MMfKGvwnJQZ/5KavZ2VSjn/326DC1YS9TLkJ8Ullo?=
- =?iso-8859-1?Q?03l+kEsNn6XAkuV5J1JfaZL/4eX1V1WHMCnKRlzP1iGLKwzAWdF/ODi8dR?=
- =?iso-8859-1?Q?nLxjPQ46A2onXakkop7btgLa+cE4c6j5YpolO/8qzDQ7Y0TiwAFOWOC8UM?=
- =?iso-8859-1?Q?5R5ulXKmVq9UYYuPhgMx/+eEg/Vxexk19+/L5zR34I55sAbu++IkWlHp2H?=
- =?iso-8859-1?Q?hCnxMLwggZj2yMSK9Yik6Xm9xBAKZRRxPC4p4nmM2atwBclE+OgJiXdF2S?=
- =?iso-8859-1?Q?Wn1GdXtSNDNJdp2aloQoPJCg9Df6dga4BjwaPAgX33+Xg/H/r9kZmqqBrD?=
- =?iso-8859-1?Q?PWJbCqU6CRLflvKyJ0nsy06f+CuitbYDgGuxaxVp1U+vk7M4/99eSVMiZs?=
- =?iso-8859-1?Q?BpkPF5/Vizi90HVJrpgRlLmnlLofloqnsSBVltld+gmj11q/ERDl2MC+d1?=
- =?iso-8859-1?Q?09FyaLtsAXxN7aJuCHLINzpNttcvOnsuS3Gcbzu8fIrL8aRtop3l2pCetX?=
- =?iso-8859-1?Q?dqMDVGO3c6i6st6ZX2vVplCUEGrOPwkBQucAR93bq734a9xwm6qtrXavvH?=
- =?iso-8859-1?Q?CZ4yH5fSJV1hpMyA1X2LLYuaaJVhe3RfDjQ7KRa3q1KoJDbZyW62Cc65xQ?=
- =?iso-8859-1?Q?lfrOClIFexhEmqW5pOs9ixzK/bFBcMeJkzOKO7br+vQSmtn9npkK/dkSVv?=
- =?iso-8859-1?Q?n84vJ6jWUd5l07C9TlC4Z3K5h5jhYZ38kGy0VqoAVUtusg0pHDIoFWaL8i?=
- =?iso-8859-1?Q?Hz6PUsxU/zPTIRls1Mqu0XlNMejkIodeI9dK42tOFBAcLfxYomzFqNVx/L?=
- =?iso-8859-1?Q?HMoU1PjGXKxPJcGwDw8y1HvZhL1LfBBzl6r2NcmtXi2HZnaCFxsS6dwtyF?=
- =?iso-8859-1?Q?ZxMfKb6IraumL82LfSSRBIGt4BSVCRx0VHpkQ4dezPLxG1d8s4YvOCJKdQ?=
- =?iso-8859-1?Q?I=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	Wed, 07 Jan 2026 16:43:28 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1767804199; x=1768063399;
+	bh=gSRhznMVNQ3g5FfOt0zXcZ9Os1ttCGfKgXLf9TOR39U=;
+	h=Date:To:From:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=DFH8t2vfnIl8XtQAQBDUJBBhToU9Apc8rdDTifenuO015T3PNMY0slptGnHLcFiXV
+	 AGDOKagp59BfjXkP0o+dcJxa6LVN/sO78u3SpnBRpvQVuAlVPfekY7IroDaTw9NNw7
+	 zX32ESyXi3sPEIfdbBKmLC3YRfj+ASqBv7wd/YSrH5ChRy7ZsAcZEH8rprIjn46O3b
+	 cDSIzK8bxAry9nh2Fx2BH8emJLs0SRlT75eYi2TJ/eQ5fCg72R6X79v5eG/sKwj+lb
+	 oMw5Cn7mv3uhQz8PDhN+pVqgTMP1jEkSyaOX8hswfb6ToZwQN07QIFXXjvUAD3FzKO
+	 YoOraipRPiqPA==
+Date: Wed, 07 Jan 2026 16:43:14 +0000
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+From: Tj <tj.iam.tj@proton.me>
+Subject: crash hp: kexec_trylock() failed, kdump image may be inaccurate
+Message-ID: <M9wEb069tvcmJqpngM2EyYjyodw_HEmYt3KaW-XxRkVleH2qYeFvz16DLriKiOSRpLbPCVflvlCqhEFMZniF_Wb6YWL_gwhWAaPsHUYG2Bg=@proton.me>
+Feedback-ID: 113488376:user:proton
+X-Pm-Message-ID: 1c27d120faf7a435cc74428251e1fc0571ff931d
 MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-c3f6e.templateTenant
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR02MB3952.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7d2e426-d1da-40ee-ef85-08de4df987f0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jan 2026 14:32:05.5183
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR02MB8732
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260107_063212_448108_C26187C5 
-X-CRM114-Status: UNSURE (   6.40  )
+X-CRM114-CacheID: sfid-20260107_084327_258285_ADC002C0 
+X-CRM114-Status: UNSURE (   4.55  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -151,29 +66,122 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello there,=0A=
-=0A=
-Static analyser cppcheck says:=0A=
-=0A=
-linux-6.19-rc4/kernel/kexec_core.c:425:7: style: int result is assigned to =
-long variable. If the variable is long to avoid loss of information, then y=
-ou have loss of information. [truncLongCastAssignment]=0A=
-=0A=
-Source code is=0A=
-=0A=
-    size =3D (1 << order) << PAGE_SHIFT;=0A=
-=0A=
-I have no idea how large order gets, but if it gets over about=0A=
-30 or so, then IMHO there will be a loss of bits.=0A=
-=0A=
-Perhaps some sanity check on the value of order would=0A=
-be a good idea ? Either that or=0A=
-=0A=
-    size =3D (1UL << order) << PAGE_SHIFT;=0A=
-=0A=
-might be better code.=0A=
-=0A=
-Regards=0A=
-=0A=
-David Binderman=0A=
+Currently debugging a KEXEC_JUMP preserve_context panic with amd iommu on k=
+exec restart.
+
+However, during shutdown, all but the bootstrap core (BSC) generate this me=
+ssage. Is it something that {c,sh}ould be silenced if the BSC CPU holds the=
+ lock (as I presume), or is it indicating a real problem because the elfhea=
+der cannot be updated? My limited understanding would suggest this should b=
+e ignored silently. From scanning the code it seems to suggest this is inte=
+nded for sysfs directed CPU hotplug events.
+
+[  141.722644] shutdown[1]: Rebooting with kexec.
+[  141.781931] Freezing user space processes
+[  141.787032] Freezing user space processes completed (elapsed 0.001 secon=
+ds)
+[  141.794028] OOM killer disabled.
+[  141.802428] pn533_usb 5-4.4:1.0: NFC: NXP PN533 NFC device disconnected
+[  142.726967] amdgpu 0000:0a:00.0: amdgpu: VCE busy: VCE_STATUS=3D0x100, S=
+RBM_STATUS2=3D0x0
+[  142.966113] amdgpu 0000:0a:00.0: amdgpu: PCI CONFIG reset
+[  142.975667] Disabling non-boot CPUs ...
+[  143.004683] smpboot: CPU 15 is now offline
+[  143.008793] crash hp: kexec_trylock() failed, kdump image may be inaccur=
+ate
+[  143.052741] smpboot: CPU 14 is now offline
+[  143.056894] crash hp: kexec_trylock() failed, kdump image may be inaccur=
+ate
+[  143.088716] smpboot: CPU 13 is now offline
+[  143.092840] crash hp: kexec_trylock() failed, kdump image may be inaccur=
+ate
+[  143.132714] smpboot: CPU 12 is now offline
+[  143.136857] crash hp: kexec_trylock() failed, kdump image may be inaccur=
+ate
+[  143.160668] smpboot: CPU 11 is now offline
+[  143.164827] crash hp: kexec_trylock() failed, kdump image may be inaccur=
+ate
+[  143.184791] smpboot: CPU 10 is now offline
+[  143.188924] crash hp: kexec_trylock() failed, kdump image may be inaccur=
+ate
+[  143.208671] smpboot: CPU 9 is now offline
+[  143.212736] crash hp: kexec_trylock() failed, kdump image may be inaccur=
+ate
+[  143.236943] smpboot: CPU 8 is now offline
+[  143.241005] crash hp: kexec_trylock() failed, kdump image may be inaccur=
+ate
+[  143.248682] Spectre V2 : Update user space SMT mitigation: STIBP off
+[  143.280790] smpboot: CPU 7 is now offline
+[  143.284839] crash hp: kexec_trylock() failed, kdump image may be inaccur=
+ate
+[  143.316796] smpboot: CPU 6 is now offline
+[  143.320844] crash hp: kexec_trylock() failed, kdump image may be inaccur=
+ate
+[  143.352805] smpboot: CPU 5 is now offline
+[  143.356853] crash hp: kexec_trylock() failed, kdump image may be inaccur=
+ate
+[  143.432608] smpboot: CPU 4 is now offline
+[  143.436642] crash hp: kexec_trylock() failed, kdump image may be inaccur=
+ate
+[  143.468682] smpboot: CPU 3 is now offline
+[  143.472720] crash hp: kexec_trylock() failed, kdump image may be inaccur=
+ate
+[  143.512698] smpboot: CPU 2 is now offline
+[  143.516743] crash hp: kexec_trylock() failed, kdump image may be inaccur=
+ate
+[  143.536710] smpboot: CPU 1 is now offline
+[  143.540794] crash hp: kexec_trylock() failed, kdump image may be inaccur=
+ate
+[  143.548516] Calling amd_iommu_syscore_data_set+0x0/0x40
+[  143.553761] Checking wakeup interrupts
+[  143.557519] Calling kvm_suspend+0x0/0x30 [kvm]
+[  143.562023] Calling mce_syscore_suspend+0x0/0x30
+[  143.566655] Calling ledtrig_cpu_syscore_suspend+0x0/0x20
+[  143.571981] Calling timekeeping_syscore_suspend+0x0/0x10
+[  143.577331] Calling irq_gc_suspend+0x0/0x80
+[  143.581526] Calling ioapic_suspend+0x0/0x10
+[  143.585853] Calling i8259A_suspend+0x0/0x30
+[  143.590049] Calling perf_ibs_suspend+0x0/0x40
+[  143.594423] Calling amd_iommu_suspend+0x0/0x20
+[  143.598895] Calling fw_suspend+0x0/0x20
+[  143.602743] Calling acpi_save_bm_rld+0x0/0x30
+[  143.607118] Calling lapic_suspend+0x0/0x160
+[    0.000000] Linux version 6.19.0-rc3+debian+tj (linux@iam.tj) (gcc (Debi=
+an 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40) #364 SMP PREEM=
+PT_DYNAMIC Wed Jan  7 12:46:49 UTC 2026
+[    0.000000] Command line: root=3D/dev/mapper/SUNNY-rootfs ro debug syste=
+md.log_level=3Dinfo drm.edid_firmware=3DDP-2:edid/UE50NU7400.edid fbcon=3Dr=
+otate:3 modprobe.blacklist=3Dradeon amdgpu.si_support=3D1 console=3DttyS0,1=
+15200 console=3Dtty0 no_console_suspend nosplash vt.handoff=3D7 pm_debug_me=
+ssages=3D1 "dyndbg=3Dfile syscore.c +p" elfcorehdr=3D1032176K kexec_jump_ba=
+ck_entry=3D0x00000001ff34012b
+
+$ grep KEXEC /boot/config-$(uname -r)
+CONFIG_KEXEC_CORE=3Dy
+CONFIG_HAVE_IMA_KEXEC=3Dy
+CONFIG_KEXEC=3Dy
+CONFIG_KEXEC_FILE=3Dy
+CONFIG_KEXEC_SIG=3Dy
+# CONFIG_KEXEC_SIG_FORCE is not set
+CONFIG_KEXEC_BZIMAGE_VERIFY_SIG=3Dy
+CONFIG_KEXEC_JUMP=3Dy
+CONFIG_KEXEC_HANDOVER=3Dy
+# CONFIG_KEXEC_HANDOVER_DEBUG is not set
+CONFIG_KEXEC_HANDOVER_DEBUGFS=3Dy
+# CONFIG_KEXEC_HANDOVER_ENABLE_DEFAULT is not set
+CONFIG_ARCH_SUPPORTS_KEXEC=3Dy
+CONFIG_ARCH_SUPPORTS_KEXEC_FILE=3Dy
+CONFIG_ARCH_SELECTS_KEXEC_FILE=3Dy
+CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY=3Dy
+CONFIG_ARCH_SUPPORTS_KEXEC_SIG=3Dy
+CONFIG_ARCH_SUPPORTS_KEXEC_SIG_FORCE=3Dy
+CONFIG_ARCH_SUPPORTS_KEXEC_BZIMAGE_VERIFY_SIG=3Dy
+CONFIG_ARCH_SUPPORTS_KEXEC_JUMP=3Dy
+CONFIG_ARCH_SUPPORTS_KEXEC_HANDOVER=3Dy
+# CONFIG_IMA_KEXEC is not set
+# CONFIG_TEST_KEXEC_HANDOVER is not set
+
+Thanks for looking at this.
+
+Tj.
 
