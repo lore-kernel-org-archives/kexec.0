@@ -4,76 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3A8FAD1D478
-	for <kexec@archiver.kernel.org>; Thu,  8 Jan 2026 18:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 70FD8D1D486
+	for <kexec@archiver.kernel.org>; Thu,  8 Jan 2026 18:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=9fTSUEElSptFXw5hcWOsyzyjnkoVvF+cCjmuU+D4lPc=; b=dsQgOt+7g3kcvHdpmsnM40DZ1R
-	cu5WYt0+nJ56pdRTZpdmA/AurGv2KDKTE2cp4OQc2+nri+4Ef7zKXefE4s8QCPQNNBJfk+Y+OpXnW
-	V/ebxg4Ourqq+L7M5mP0lFbTVX7iStbjcC0g/mwxHur8gmuBaZkH07P9t5Wja2BcT076Tc9cLV4QW
-	rpnJAWyLy0ImyUd+ll0Nb+sFR159M5H9FXZLo+37HenK6k1ao9hpuDqb0VjPrGfBBzHu7ARkvOW8n
-	AtB7QHGch+Eh1i3Vfbbef94jusWCGsUVamk9w8r8KuxkV3yWyxKdQ0NIP2LlXkKvrh885wKpAKbGC
-	KjD977KQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Message-Id:Date:Subject:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=GxGOI4fTfH8u55B1DL8U4nm4ObzNusp9OL+d9L8pE9k=; b=yti2fR2cUtAX4E
+	8sn7W6fpPxpHzap7YPT9yFWLvj38RqGsdT67wZBOuoZtba/kZFtEJgD0mW3IoF25hHQNJfBN0nond
+	afaq7SX1WIOfEZoJ0LslaiXnHjWIWqZCe8jNDMvJpcpSkJAhy3UPPJ52WzOjV59tKJAFTyEulPBww
+	vyfWXFDlCKLpjnPTVs/Z+V4MQ2viO9XuHCjDzVvNVCAzpmt/+sECfMa+Q5KNwClWed+198MP1U8Yz
+	E98pt9yOfSI5a3WUrTrroRVaM+lsc6xz9EI4TdJOE2mhDTQsAAwQivQfT8SPvK9tyJCO27tgne40g
+	NjQ6skngrUONoZGG5Rrw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vduLw-00000000XyH-3fM3;
-	Thu, 08 Jan 2026 18:03:20 +0000
-Received: from mail-oa1-f47.google.com ([209.85.160.47])
+	id 1vdul1-00000000cHt-1nT3;
+	Thu, 08 Jan 2026 18:29:15 +0000
+Received: from mail-oa1-f46.google.com ([209.85.160.46])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vduLt-00000000Xwa-3CHy
+	id 1vduky-00000000cH7-002I
 	for kexec@lists.infradead.org;
-	Thu, 08 Jan 2026 18:03:20 +0000
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-3ece54945d9so1314902fac.0
-        for <kexec@lists.infradead.org>; Thu, 08 Jan 2026 10:03:17 -0800 (PST)
+	Thu, 08 Jan 2026 18:29:13 +0000
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-3fe3cc80bc3so1838324fac.0
+        for <kexec@lists.infradead.org>; Thu, 08 Jan 2026 10:29:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767895396; x=1768500196;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9fTSUEElSptFXw5hcWOsyzyjnkoVvF+cCjmuU+D4lPc=;
-        b=V/ozO6u8engkjwTepfrgEzifbnT+1Hpz8mpWQZ0Z5hEhUO/BoeFOJKSEjfCNJDQEhj
-         EkyRohHyYBsRB2w2Dw32pIUVaN1yv52aFL8OOjLt2X4ZMlsN92062TZknzhfJbsLVx14
-         8ghidYFg/soHeHXQXvSeQ1Qx/v8Mc7NMHnYGJmoxk7hd7KmNUC7ptpc1AaEpFQp3xVtn
-         eUv9JJMXiAt2K6fndM++er6Bctjns30s+kSQlis2ZzPWCjMYxWarKTOigbod6SHLIHCD
-         r32IAydDSe1u5byo/wis/parBGyelzOiZ+g13NuIPntoqouIbmVIqtiype3/Kn74Hqy7
-         SPLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHJI1YwVG379iErJjwtucuX3bzsqSv+CDphvaYKNFEJXq1j8G9Aw9s+T9J21pr3sUcpF/IUA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yyp2bu2Wr3Hf7pOniFOsIdXWgZu/ZBskrkX/HAbFDtyPuFTYlvq
-	Cf+3aD7ScvLtfpY+JaMrtGe3c7aAdi9bTZm3dB8ezKfSyaeXcTKPIy0w
-X-Gm-Gg: AY/fxX7H/kS/PLTHHCMDqiKk3p372HDuerGQGRGYVfNAPYgYisWrUIm5jQ3diZENxcB
-	cR8TmqQVrMPG6Fp6A4mWqbv/OqXMdXQaIeDaes59QgU2Bp6zF+QsjKXh9UtQYIXtdDpQ++3XPL8
-	5pm6XPkcT2/vkKleC78RC+lZ6fWfZ6nsJZbVTfvImwLhzffMDqbBGX9L/vs3qHD2u7rZ9BzYz40
-	Ccl/APAgglzc3iNUGl4odiNAoZ1vV2Wur8bDfnKECEddomFkhg37hmoDKKlvuwPrpK0TuEyjX4g
-	HyYRtrc3ngx+lx/EyxCvdnRuwsQJcCdOPiIu04wExt3chwwq9iPtt5N6iaaHzUfnR9s9losXl/j
-	XCgfwoUosYfHTuv21CBc8fEhRcqIHE4DxcSlz7uEsxU0WwtZ+i7DLDE8FIzGthMVhTF1nGEXzFc
-	W7
-X-Google-Smtp-Source: AGHT+IGB4UrTflumz8SI6ZENz32BgmOH5OCs08clFgtHXisIQW4hW+a27ip0KXG3pCc9DsjGk0gsGw==
-X-Received: by 2002:a05:6870:7085:b0:3f5:4172:16 with SMTP id 586e51a60fabf-3ffc0c77c57mr3522771fac.59.1767895396170;
-        Thu, 08 Jan 2026 10:03:16 -0800 (PST)
-Received: from gmail.com ([2a03:2880:10ff:3::])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3ffa4e38b60sm5224549fac.6.2026.01.08.10.03.15
+        d=1e100.net; s=20230601; t=1767896951; x=1768501751;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GxGOI4fTfH8u55B1DL8U4nm4ObzNusp9OL+d9L8pE9k=;
+        b=eZlfVtXhJCw5ztdD2sn5otbhwSu8fuUCBBBQwOIiUV8k3B5VlBFM7bnYnPb5qigNcb
+         On1ODkFhDs6PVgc4hFau2+9Fn7gnYHUH/8ah7Aia4yY1tqH/vQzqBKUOpWNu9yW20kQo
+         2O0yXvDiKbOtVi+mMFwCb1whzEIiO2Vxa6ym0bJmuy9RLro4K+piU7YVHwdbD7ZEQ9zE
+         E156yx6SxkDlKsqzC/KlI08KKTEmVdo39xoUI77my905ujLnmNRlWJV/yshbeht4BziS
+         Cj2IW3ZwtPiof8fCV3kasQaYfGqBK+xq942XRq7r6MK2M296JAW1JxNW8NLO2RutAV9Q
+         Xnxg==
+X-Forwarded-Encrypted: i=1; AJvYcCWMAbhyvfTP/oDwuQ2IuH3GqlHn8A1keW9cW84ac4QckMpXSqnX+mqt4SeITXxhsyAU7GZcxQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyOZD9sPd8CbYFF6kW39JVtqxQXAW2l4PzBxcpHeMVncGLBH9My
+	QG7I4TD0zXtDNnG8c5bVsrSUk/YNQHiwq9S7MgpPqzyRuCTd8sZ21Yw1
+X-Gm-Gg: AY/fxX6bV1o6VrBLU5Lawu1plzYsCyxzZJDn7IR9f+ahaWdJvD6ArIn8Tgz1emrRAf5
+	FEqkkTqoXlIzDX8weKWB6tpIKxeGe4fecZEUjSM4tuufej7DPWf2uPlCmumr0TWepJhyluaBWE6
+	oXeVjnd3wTWwEDZFdENdV99OV3aU7VviAWjprHZpTN8KrUbswLYMtqaQ9f5XVQGzJmj5RscAEUl
+	ZCZO6HXdaxtqAx0lpIDK7++Kz3lTYz/Y9I/hS7GQCO8MH6p+znRmnvr0lx/JqepYCxnLX1IpH4q
+	0ln5TKWg1/yQMeh+ICQm2OMn0PC8kbYunxzey/ZC1kPpV6nxPHiZPQKeUureN+W5zh4vMUVoZBt
+	+SySVCSJk0sN8iAzgqPaOob2GmsSu2Du2cedPWmlbLlV+89FR614ZUI2/owD9gEGTxXN7lw5pif
+	eHWw==
+X-Google-Smtp-Source: AGHT+IGjo79YzWbsVuqisuDsj8X6jFxioSTkbz2DzVGWWCeD2vs2aw6tQvT8I6ProgsJB1hbR2WPuw==
+X-Received: by 2002:a05:6830:4426:b0:7c7:6626:b595 with SMTP id 46e09a7af769-7ce50a54edcmr4043973a34.3.1767890480527;
+        Thu, 08 Jan 2026 08:41:20 -0800 (PST)
+Received: from localhost ([2a03:2880:10ff:4c::])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7ce4781c447sm5684987a34.9.2026.01.08.08.41.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jan 2026 10:03:15 -0800 (PST)
-Date: Thu, 8 Jan 2026 10:03:14 -0800
+        Thu, 08 Jan 2026 08:41:20 -0800 (PST)
 From: Breno Leitao <leitao@debian.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: akpm@linux-foundation.org, rppt@kernel.org, graf@amazon.com, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org, 
-	pratyush@kernel.org, ricardo.neri-calderon@linux.intel.com, kernel-team@meta.com
-Subject: Re: [PATCH v4] kho: validate preserved memory map during population
-Message-ID: <jixxiqeajngwox3nh2u3pwf2rivhmqxxmpyttqxu32pixshyde@4jdn5jvg5hvk>
-References: <20251223140140.2090337-1-pasha.tatashin@soleen.com>
+Subject: [PATCH v3 0/2] kho: history: track previous kernel version and
+ kexec boot count
+Date: Thu, 08 Jan 2026 08:40:57 -0800
+Message-Id: <20260108-kho-v3-0-b1d6b7a89342@debian.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251223140140.2090337-1-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABreX2kC/1WNyw6CMBBFf6WZNTWd4VFl5X8YF4UOUE3AtNhoC
+ P9uCnHB8ibnnLtAYO84QC0W8BxdcNMItcgzAe1gxp6ls1ALIEUlUq7kc5ik1krz2RB3yJAJeHn
+ u3Ger3O77Du/mwe2c1EQMLsyT/243ERN3LEaUKAurL6WhwpoLXy03zoynyfeQkpH+UqVQ0S6RV
+ BJ1oRs0uUFbHaR1XX9d6ZyF3gAAAA==
+X-Change-ID: 20251230-kho-7707e8a2ef1e
+To: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+ linux-mm@kvack.org, usamaarif642@gmail.com, rmikey@meta.com, clm@fb.com, 
+ riel@surriel.com, Breno Leitao <leitao@debian.org>, kernel-team@meta.com
+X-Mailer: b4 0.15-dev-47773
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2859; i=leitao@debian.org;
+ h=from:subject:message-id; bh=s1RRLh1s24N8vch0efEW4crrg2HPdZCHGJl+fLq95DU=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBpX94vATIWGxdN1+hN2/iDpZ64iATDNHKnAMXR/
+ MS4BU5sz6yJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaV/eLwAKCRA1o5Of/Hh3
+ bet1D/95jPd+3qRKS1ZBojBwI12XNWkxdzy/CpGuJX8MMI48vM1yS3kFweMp50BdaDU55SeilrV
+ awhMthz6pAeCD99uMtDpQqIAtwtvxHK3gwMlI+SKxusGJaBnAo8XQ3n6KToJJuVPmYN/qXYkUwy
+ K6WT4utD8kSPPCEXnsKKJyqPVMNvpLCWQlakaeZ5cVdgEf0f8w3tom9dG9WoNj3e3Gf2RQrWF7O
+ HcRBAYjakjQjAPOxAV29/bxedtC5oiMF2WKrdPcmSRXUzDTJD/MPtoFH0mxOmqtbV37yNEUCL7z
+ 48bI4jeGkHv3h6dZGEUECk2P1zXrEiQH9kBRnLD6O5LiiiCXmx6P5ZishQyRFsy/EF0e5T2Y5OJ
+ mvvLfYWb6WLvVVgV6IIJbFplD9T8EmRi40rSXPgTx+nrpAQWfabxlET6zuJ2wnIwS62emdYOhIQ
+ 7K+6vk9GWH2oSAYmrTkautpuE4rn/yQFv7PCO8J6mK7Wa6Kg/w/YqLw/rnVOKsg0UEzJH0tX2Oi
+ jJFFtR8KTew9WLjXGfCkTA6agW21iWGwWmchIvSZeqgVdZX51cXF5udYkqk5/PsFDAgfd5YxFYT
+ FO4W2yLAQmoN6CgjTzAbtXvBNDsBNy99A2q0SYl1KhR4y11iFfpsNYaLzm+HJkCfhUkOAEYXZVS
+ ZcN/EBby9Yo3wMA==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260108_100317_809562_6F2AACCE 
-X-CRM114-Status: GOOD (  21.52  )
+X-CRM114-CacheID: sfid-20260108_102912_076605_BAF31616 
+X-CRM114-Status: GOOD (  16.28  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,141 +111,78 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello Pasha,
+Use Kexec Handover (KHO) to pass the previous kernel's version string
+and the number of kexec reboots since the last cold boot to the next
+kernel, and print it at boot time.
 
-On Tue, Dec 23, 2025 at 09:01:40AM -0500, Pasha Tatashin wrote:
-> If the previous kernel enabled KHO but did not call kho_finalize()
-> (e.g., CONFIG_LIVEUPDATE=n or userspace skipped the finalization step),
-> the 'preserved-memory-map' property in the FDT remains empty/zero.
-> 
-> Previously, kho_populate() would succeed regardless of the memory map's
-> state, reserving the incoming scratch regions in memblock. However,
-> kho_memory_init() would later fail to deserialize the empty map. By that
-> time, the scratch regions were already registered, leading to partial
-> initialization and subsequent list corruption (freeing scratch area
-> twice) during kho_init().
+Example
+=======
+	[    0.000000] Linux version 6.19.0-rc3-upstream-00047-ge5d992347849
+	...
+        [    0.000000] KHO: exec from: 6.19.0-rc4-next-20260107upstream-00004-g3071b0dc4498 (count 1)
 
-While trying my new patchset [0] on top of this patch, I got the
-following issue:
+Motivation
+==========
 
-	[    0.000000] KHO: disabling KHO revival: -2
+Bugs that only reproduce when kexecing from specific kernel versions
+are difficult to diagnose. These issues occur when a buggy kernel
+kexecs into a new kernel, with the bug manifesting only in the second
+kernel.
 
-Trying to solve it, I come up with a change in kho_get_mem_map_phys() to
-distinguish no memory and error, see the patch attached later.
+Recent examples include:
 
-This is what I used to test [0] on top of linux-next. Is this useful?
+ * eb2266312507 ("x86/boot: Fix page table access in 5-level to 4-level paging transition")
+ * 77d48d39e991 ("efistub/tpm: Use ACPI reclaim memory for event log to avoid corruption")
+ * 64b45dd46e15 ("x86/efi: skip memattr table on kexec boot")
 
-Link: https://lore.kernel.org/all/20260108-kho-v3-1-b1d6b7a89342@debian.org/ [0]
+As kexec-based reboots become more common, these version-dependent bugs
+are appearing more frequently. At scale, correlating crashes to the
+previous kernel version is challenging, especially when issues only
+occur in specific transition scenarios.
 
-thanks
---breno
+Some bugs manifest only after multiple consecutive kexec reboots.
+Tracking the kexec count helps identify these cases (this metric is
+already used by live update sub-system).
 
-commit 5d7855fede8110d74942e1b67056ba589a1cb54a
-Author: Breno Leitao <leitao@debian.org>
-Date:   Thu Jan 8 07:44:08 2026 -0800
+KHO provides a reliable mechanism to pass information between kernels.
+By carrying the previous kernel's release string and kexec count
+forward, we can print this context at boot time to aid debugging.
 
-    kho: allow KHO to work when no memory is preserved
-    
-    Fix KHO initialization failing when no memory pages were preserved by
-    the previous kernel.
-    
-    Commit eda79a683a0a ("kho: validate preserved memory map during
-    population") introduced kho_get_mem_map_phys() which returns the physical
-    address of the preserved memory map directly as its return value. The
-    caller then validates it with:
-    
-        mem_map_phys = kho_get_mem_map_phys(fdt);
-        if (!mem_map_phys) {
-            err = -ENOENT;
-            goto out;
-        }
-    
-    This creates an ambiguity: physical address 0 is used both as an error
-    indicator (property missing/malformed) and as a valid value (property
-    exists with value 0, meaning no memory was preserved).
-    
-    "No memory preserved" is a legitimate state. KHO provides features beyond
-    memory page preservation, such as previous kernel version tracking and
-    kexec count tracking. When the previous kernel enables KHO but doesn't
-    preserve any memory pages, it sets 'preserved-memory-map' to 0. This is
-    semantically different from "KHO not initialized" - it means "KHO is
-    active, there's just nothing in the memory map."
-    
-    Before eda79a683a0a, the code handled this gracefully in
-    kho_mem_deserialize():
-    
-        chunk = mem ? phys_to_virt(mem) : NULL;
-        if (!chunk)
-            return false;  // No pages, but KHO could still work
-    
-    After eda79a683a0a, the early validation conflated "no property" with
-    "property value is 0", causing KHO to be completely disabled in both
-    cases.
-    
-    Fix this by changing kho_get_mem_map_phys() to return an error code and
-    pass the physical address via pointer. This allows distinguishing between:
-     - Property missing/malformed: return -ENOENT (KHO fails)
-     - Property exists with value 0: return 0 (KHO succeeds, no memory to
-       restore)
-    
-    Fixes: eda79a683a0a ("kho: validate preserved memory map during population")
-    Signed-off-by: Breno Leitao <leitao@debian.org>
+The goal of this feature is to have this information being printed in
+early boot, so, users can trace back kernel releases in kexec. Systemd
+is not helpful because we cannot assume that the previous kernel has
+systemd or even write access to the disk (common when using Linux as
+bootloaders)
 
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 271d90198a08..3cf2dc6840c9 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -471,8 +471,8 @@ static void __init deserialize_bitmap(unsigned int order,
- 	}
- }
- 
--/* Returns physical address of the preserved memory map from FDT */
--static phys_addr_t __init kho_get_mem_map_phys(const void *fdt)
-+/* Returns 0 on success and stores physical address in *phys_out */
-+static int __init kho_get_mem_map_phys(const void *fdt, phys_addr_t *phys_out)
- {
- 	const void *mem_ptr;
- 	int len;
-@@ -480,10 +480,11 @@ static phys_addr_t __init kho_get_mem_map_phys(const void *fdt)
- 	mem_ptr = fdt_getprop(fdt, 0, KHO_FDT_MEMORY_MAP_PROP_NAME, &len);
- 	if (!mem_ptr || len != sizeof(u64)) {
- 		pr_err("failed to get preserved memory bitmaps\n");
--		return 0;
-+		return -ENOENT;
- 	}
- 
--	return get_unaligned((const u64 *)mem_ptr);
-+	*phys_out = get_unaligned((const u64 *)mem_ptr);
-+	return 0;
- }
- 
- static void __init kho_mem_deserialize(struct khoser_mem_chunk *chunk)
-@@ -1439,7 +1440,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
- 			 phys_addr_t scratch_phys, u64 scratch_len)
- {
- 	struct kho_scratch *scratch = NULL;
--	phys_addr_t mem_map_phys;
-+	phys_addr_t mem_map_phys = 0;
- 	void *fdt = NULL;
- 	int err = 0;
- 	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
-@@ -1466,11 +1467,9 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
- 		goto out;
- 	}
- 
--	mem_map_phys = kho_get_mem_map_phys(fdt);
--	if (!mem_map_phys) {
--		err = -ENOENT;
-+	err = kho_get_mem_map_phys(fdt, &mem_map_phys);
-+	if (err)
- 		goto out;
--	}
- 
- 	scratch = early_memremap(scratch_phys, scratch_len);
- 	if (!scratch) {
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+Changes from v1 to RFC
+- Track the number of kexecs since cold boot (Pasha)
+- Change the printk() order compared to KHO
+- Rewording of the commit summary
+- Link to RFC: https://patch.msgid.link/20251230-kho-v1-1-4d795a24da9e@debian.org
 
+---
+Changes in v3:
+- Remove the extra CONFIG for this feature.
+- Reworded some identifiers, properties and printks.
+- Better documented the questions raised during v2.
+- Link to v2: https://patch.msgid.link/20260102-kho-v2-0-1747b1a3a1d6@debian.org
 
+---
+Breno Leitao (2):
+      kho: history: track previous kernel version
+      kho: history: track kexec boot counter
 
+ include/linux/kho/abi/kexec_handover.h |  6 ++++++
+ kernel/liveupdate/kexec_handover.c     | 39 +++++++++++++++++++++++++++++++++-
+ 2 files changed, 44 insertions(+), 1 deletion(-)
+---
+base-commit: 5eec2b2e1f37acff8b926d2494eadaeef59be279
+change-id: 20251230-kho-7707e8a2ef1e
 
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
 
 
