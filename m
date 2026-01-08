@@ -4,142 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9F620CF6A85
-	for <kexec@archiver.kernel.org>; Thu,  8 Jan 2026 08:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C72BFD185C2
+	for <kexec@archiver.kernel.org>; Thu,  8 Jan 2026 10:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:In-Reply-To:References:Message-ID:Date
-	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=1X5IDxRdNgjpJyB9Vg0yZtZQyJyHCYGiCF9cA8uNj84=; b=GPrxJKh1uTXPGs/WMjsXNY+Efb
-	rWrog/cpMy7wFEbcw+rHfDhInnbJ8xGH7wqJYtX7QGx1KSiBlVV6OBvwFS3NQv+enPYNuMDkhpud2
-	PJLu28sqxlsg1b2OeT2x4DCT/3SPQ7UUeF6cAzg2aFpJm5xb/3dCJMCVzF40HXJHOhx7NsJyRnyaZ
-	Ire2vUUqiNCGKHsYbnJzh/pcNY2o6d5dqfsZj7gto8DkJyJ8Y8DvPLrB8bDEkFyKVetDgJDSgaGnc
-	8OMdyidhC1YfOWoIW8DpryqpZpJ13DJ9xcXKFfJvIWkV6t5b3BVWMKm788n3amvUPuj9/xJHY4eqK
-	jxhJi4RQ==;
+	bh=Q4CgrKoI+gqPjZdUskKAdxCjFm05f46fwS6i3N+5Edg=; b=ij1Lkan8AGrN8Q6qvWs7jCb4BP
+	v3bSFcj/941nzx2v7GxZWLLGRzlfLflFRQPlKsJwdvTm1D+iVccLb9ADzHIMo8dc2HL8gZ79Gual7
+	msEO4W8xkG1mQNGRxeFgIoabIEGcpTJHB0Qej7m7LJFQlRKCy0GYAXT6wPWwRXKpJMuT/w//jNf6g
+	QW+Wi2gL4Hstx8rrAWDLy1upnVQ/LY5dTGKapfcRvu8vKqKW6dBTsXRHg2NaDbXgSdk8+ocBjWwB2
+	dFOJ4/C/5uc78z5Oel2crLAx8BjXym+hm8u6gvPpNgqjtN3Xp5PElD8QCi9wH6mYDbIi7Xa6mEOsi
+	++pwDhAg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdlbW-0000000GKNu-1MZs;
-	Thu, 08 Jan 2026 08:42:50 +0000
-Received: from mail-francesouthazolkn190110001.outbound.protection.outlook.com ([2a01:111:f403:d207::1] helo=MRWPR03CU001.outbound.protection.outlook.com)
+	id 1vdnMb-0000000Gdxi-12nZ;
+	Thu, 08 Jan 2026 10:35:33 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdlbT-0000000GKN7-40LP
+	id 1vdnMU-0000000Gdx1-1rjC
 	for kexec@lists.infradead.org;
-	Thu, 08 Jan 2026 08:42:49 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BoQO9+8KB+mRIFPXZS054zvDlncoAbkERdhJHRdObZjmbvcROE87CqUARYLM6N1yMPPSM5U2stqAp+5qmWk4sURLk/pz7vYo1dY+mvadXyrkewSmYw8H4x3V5tlMLsMj16j6QM0CuA/xDZWWXHjHvxnoKhWkZflRmXi7OfWy/ikt77XZ2+vQTUFCUP/wo7VHo/e6PxnB4W5TpeR271Gp84W2Gg6MJVM2YA0HcDqv40iqcSWuFG8OkUEsObvFGkHVv6OODwh3FbrH5pCuK6pw50zXA40PULscB08och9122HPPulzhC12X8qmzrEOu185sUzFuwc5ZM3u9sUIQ5siNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1X5IDxRdNgjpJyB9Vg0yZtZQyJyHCYGiCF9cA8uNj84=;
- b=I1oQLqwNdCZTJ53e/WGz2bj5uOfQerwiDfzgH2BgJSzIESBFBrgPxfxfHcKFSqiRnmwwceGS9SNvLkkP9All4yk9cM/+hDFagYkoBOdaEzhTDHeDjNizyHQgbQ3YIob4qvz5/Zwc6+qcj5ZCYbTHaP7XAj+DmU7fCRjv1MC7iVqfIptBzMjnH8WNqL/YsYFd0hL8cRaBwtzww5xT1ILX54CwApSxsrkf9y9AZcT2QOiDMa12nZ6obzdT4P5T/6a9t9EK50SRO0pWX08k6kqTJAkNbuPeZ3A5707hxPO4vQmsviV8J9BMofqOJYwLmE8YuqHg1kW0/YdzGyOjDT1Luw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1X5IDxRdNgjpJyB9Vg0yZtZQyJyHCYGiCF9cA8uNj84=;
- b=uhoBBxUrwJqCXLu41gso1aNSJiQJ4VcUr9qQ/46TJWsc6Vfq6mH8FJFYWSf83PmqJowvbJae1VC63rCJgHFtCsxlJWjTpVmtjpYsEyTE2NCdhRlOR8zxTtLqoEZi6UTbOlV49/ZgfulcbxgPsg/IwolEwpCzAH+iki+SvKom+ixuElJVRIEr6rodeOzYSwpM8OZoRK5u61T2UxhKI1Kmnkl7v1WCWmV8kIG9vIqywmrZzZCy8sQC+NuMoCiqVHm1wEY3EIVrDUE82dl+sOsoM3jTfKi7nZLPqNQ7dpwGDR3rk7G3feletj6PzYvl5juxs29FsM3TFA/1WvsJjfP1uQ==
-Received: from VI1PR02MB3952.eurprd02.prod.outlook.com (2603:10a6:803:85::14)
- by PA1PR02MB11128.eurprd02.prod.outlook.com (2603:10a6:102:493::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Thu, 8 Jan
- 2026 08:42:44 +0000
-Received: from VI1PR02MB3952.eurprd02.prod.outlook.com
- ([fe80::7280:4925:465e:c1d2]) by VI1PR02MB3952.eurprd02.prod.outlook.com
- ([fe80::7280:4925:465e:c1d2%6]) with mapi id 15.20.9499.002; Thu, 8 Jan 2026
- 08:42:43 +0000
-From: David Binderman <dcb314@hotmail.com>
-To: "bhe@redhat.com" <bhe@redhat.com>
-CC: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"kexec@lists.infradead.org" <kexec@lists.infradead.org>, LKML
-	<linux-kernel@vger.kernel.org>
-Subject: Re: linux-6.19-rc4/kernel/kexec_core.c:425: Possible loss of data ?
-Thread-Topic: linux-6.19-rc4/kernel/kexec_core.c:425: Possible loss of data ?
-Thread-Index: AQHcf+Hu3iI3BxnL40CdMzlVKNqGN7VHmY4AgABbXwk=
-Date: Thu, 8 Jan 2026 08:42:43 +0000
-Message-ID: <VI1PR02MB39527C39DB659394AD837E679C85A@VI1PR02MB3952.eurprd02.prod.outlook.com>
-References: <VI1PR02MB395224C3D5F37DEDA794AED09C84A@VI1PR02MB3952.eurprd02.prod.outlook.com>
- <aV8grrXoMlkJZ0fY@MiWiFi-R3L-srv>
-In-Reply-To: <aV8grrXoMlkJZ0fY@MiWiFi-R3L-srv>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: VI1PR02MB3952:EE_|PA1PR02MB11128:EE_
-x-ms-office365-filtering-correlation-id: 6833eba7-0b33-4421-93b6-08de4e91e3c4
-x-microsoft-antispam: BCL:0;ARA:14566002|461199028|8060799015|8062599012|19110799012|51005399006|15030799006|15080799012|31061999003|56899033|3412199025|440099028|40105399003|102099032;
-x-microsoft-antispam-message-info: =?iso-8859-1?Q?jcDUCxYicwb8GrPC5JpfvPbwVVMggYOZaJ7Zo5toM3vlc1zaC80zS/ec/Z?=
- =?iso-8859-1?Q?nMc9sPvLHb2b+itTgH1xCwvaJNmPlr3Id52zpHOnUXRZo4uL9ouDM7k6EY?=
- =?iso-8859-1?Q?PsswoOjhjeZxg8RvvcL5P0Bxr+hftpd1T6cWY8CRlMLjxPvBpNBNQ/qbkz?=
- =?iso-8859-1?Q?zYKa32Jzv20bqXJnomIMITV1EXwhDsT1Yr+utyLJSU/4UxJz+UHN4IKMz1?=
- =?iso-8859-1?Q?65rlf1kRZGYWYK8QJHM4uWRzCrWtxBONfzWvqKbn04o0pjZwqUiO3HaB+O?=
- =?iso-8859-1?Q?uxOmruUS5N33gaKxD39R8pyGT5n8fttF5B9gFYalNKjoPQSCDa0sBQvRMi?=
- =?iso-8859-1?Q?koSJVDCbfZieK1kD+Qn89KipjPjRXUjeoQ5G8qS34l1XKJ1TPJC8oQklv0?=
- =?iso-8859-1?Q?rYx/6G5JKw+O02Vct3jDlDbihwieuK6Q8GdeHp0tkkET1E8Ilz9cImnJAV?=
- =?iso-8859-1?Q?e6fwAnq22EshvoANksFDou2/HwnCggFJe+OPAxvQJrzhm5BMqAXGwKgzw6?=
- =?iso-8859-1?Q?yUfyDdlwyOZaDIo1IDQCtVrGbbpUIJ85Gy/KqfGU1DMD+8ku0iYJu4hpFI?=
- =?iso-8859-1?Q?Y6xcli/ZRqyNAinJMJi28rF49CrFtdoelRBNMbRn3SiXnKBsxes3lInL2l?=
- =?iso-8859-1?Q?hjeQPClkl3ogbdWLA7nNSc5Jx2vMktuKAsz0ivxU1mrZhDkYdRrwTqvgTt?=
- =?iso-8859-1?Q?VrrEDu+YJ/m/grPRIWT+20jtqroqJGRgL5bPRzHdLndDc2N1HDEWg7Hst2?=
- =?iso-8859-1?Q?36UH01ul3lQzA7+CLzwD+FTY0TAUO/hfZwR9SejQmeZfbVg6Nuq98Gcotk?=
- =?iso-8859-1?Q?8Y3NgmLXS73IHpCdkBFg+8W5/Xr5D2rTDrNGVjwdRQmOUkRvWWLpt+GuZ0?=
- =?iso-8859-1?Q?gvm4aQrjOlgZwaC1my/xKmpBYAPzscBgRBl1owoDzmfvgcui+77v2mlLb+?=
- =?iso-8859-1?Q?M8ajj/6pa7vOaaNeTvGwMYJbz7ignsgLSWnKNtiOVmiOC/y5FA1x0KNrgb?=
- =?iso-8859-1?Q?K4K28t+qV+XC1ljVqGyeIw/qkpSrh/FJ26ImvTackA6aga7giAx/Ce7y3v?=
- =?iso-8859-1?Q?1jNmXxI4heTf2PY+csVTJVUpdDJKURiBwh2110vvLQaMoj2DJ926oKUGSh?=
- =?iso-8859-1?Q?Z6fVmPsPxV201kBvl0rgaYMmt/vX5Ye/pkL5jO2FY7HQBqFuTMiuuZwk8l?=
- =?iso-8859-1?Q?u3jXGBLNNxZVhnPU6pCbtkLKUVzK9igY7Pxr0BJry3dbs9bgkZgIGa/i/L?=
- =?iso-8859-1?Q?Wft5NAWAuBt3a9l+tJ7g=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?fHjZRSD3XQNQ5oFbJD8YKdwbk+fHU9Yq9nG7wS4MYzw1uRQ87GP19YmLfW?=
- =?iso-8859-1?Q?7t6XVv4jEo8IPHCSWqmq6BpWnuJIQ241MYhwSCMh10Tqke/l6M+8SNPbKi?=
- =?iso-8859-1?Q?E1iHrdCjisemRtLxaQvQbhAVZKNQI7/Yx7DJeWk14v+EeqSB4YYIffrwO1?=
- =?iso-8859-1?Q?3EGF07+B96KGW0+OiOn9MVw7++BU3Mb31E1/cranftDEoAR00FRo2OACDa?=
- =?iso-8859-1?Q?+vxog5dtXMO32astBL4O5lLq7pdOufiaopiqJMv884TtxKdP9Y5YgvMiqD?=
- =?iso-8859-1?Q?v8RwiTOAMYueIBrWBe04pbgAzZ5Bl3My4lKtNfEMgKs70RMzSkSzNLiu7p?=
- =?iso-8859-1?Q?yrAQeZ296oZRrlCDRCAMK09sgQYk200Ckefsp8IH13L002XObBbYMbeeLu?=
- =?iso-8859-1?Q?pHk3LMjch2/sdODFev0mGwIYRwc3LeJRUG1oKkFQKpPBTpc+aZncts2M/c?=
- =?iso-8859-1?Q?8pxDl//aOKidhrmgUh6BJbUjEaqd124JIChNLKuBDv03TOpVg5WsYBLSKV?=
- =?iso-8859-1?Q?XktiIWY09vgdNJbvhmUYE61gkf0fFl3GkxPfZykJk7UPfUiMWJ5IuwVWGT?=
- =?iso-8859-1?Q?NF6hJ5djw4gemAbGdC445oBBS9Wr+G3H+mXm3HZPcf+tLOGN5ioujgU8h4?=
- =?iso-8859-1?Q?Wy9vGmZuaqDt5PrNIES8/5PfiVWSWRVgnWwBAbzT4/9QbMjbC97mnh9JXB?=
- =?iso-8859-1?Q?qFyDEwSaH1hvwAjFEdBzUTAH7G6LOCsyQGmBjsDDBKHd3yeFsZfovHa/QL?=
- =?iso-8859-1?Q?8S7Ct6grPXupJSFqHCdKxCr2TtUGnwcPwZiPp4QgH5t5UMeRy98T+ilX7R?=
- =?iso-8859-1?Q?uIea6anxtQI6jNrkEe3kRlaAiJogaVR/J3j/fFgjThBQqfgsCtaRBddD4x?=
- =?iso-8859-1?Q?J7PPNMMNL8WAJkgANKp8JWBplC+mNLujv8U7VU4eGHctT9RYzBKYZLn8hO?=
- =?iso-8859-1?Q?Iyrf/FJ9OEF/PSoEqHRzZjXJhuixt9/0hecfY0QNWF31+cdEcsnnNRk7/3?=
- =?iso-8859-1?Q?ILyLt1de2mWhCJUAKyRTTigupN54Oamxs5goCVjxHW8HsqxBxMnoQDrczx?=
- =?iso-8859-1?Q?4FNWqHf1XbR0h1lfdKo6gVu6BDNeaCt48aj5S6Nxkcd3gxe1M5CwpVAk6+?=
- =?iso-8859-1?Q?lHWk6Nx73UyA3tq1cwn1aiiVsA67XcCcvMO0DRJIsMa3G9NVolPXSFD0fc?=
- =?iso-8859-1?Q?pdknRZzRu0taBnHfx91EfB/lZxv1DbXCiwtLa3xBJe77eNQj5u2/t3FlL3?=
- =?iso-8859-1?Q?iYoVWk8Q3MsT50BHUIoAXHrX0dRR/DJKjCaHj6kuWwGb1OAf3dGUrep1zz?=
- =?iso-8859-1?Q?MbtofeT4bpcGL2ONUtqQowUcZskgg/vXMf0Ptym1ARQ2J9L9YfHs0/QhpE?=
- =?iso-8859-1?Q?bXVFdKKGms4a+S9Vd/opCducJRVFImatkYc/b5Fgm6Ms1ZvpfugbjqwrTI?=
- =?iso-8859-1?Q?yG3pXtDs34smel5u/UuhOp2WXxAjOd8snirQ40I4iIetjb0dVZP6thvSMb?=
- =?iso-8859-1?Q?8=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	Thu, 08 Jan 2026 10:35:28 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1767868524;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q4CgrKoI+gqPjZdUskKAdxCjFm05f46fwS6i3N+5Edg=;
+	b=a6iNZwtwj68FrR08CGGPfZQ7h7LczQZi0bEvFPAPHNsQ5XLUOA85kAXGfzM1mMJV/9y+h5
+	8Z5fZ8Q1fLiPupAkIRy0eR5k8/1Uq8NcCt/5UyJRMQw91/AMJp+0ukf8EIy+A55W5sxZ43
+	UQpzbIqWWM7Xg0xzxzk97gZF5CvyrOw=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-396-srt3iIdINOWweU8jjVZQ-w-1; Thu, 08 Jan 2026 05:35:23 -0500
+X-MC-Unique: srt3iIdINOWweU8jjVZQ-w-1
+X-Mimecast-MFC-AGG-ID: srt3iIdINOWweU8jjVZQ-w_1767868522
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-29f1f79d6afso45636655ad.0
+        for <kexec@lists.infradead.org>; Thu, 08 Jan 2026 02:35:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767868522; x=1768473322;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q4CgrKoI+gqPjZdUskKAdxCjFm05f46fwS6i3N+5Edg=;
+        b=L3aib+pL65PY5iJgkmCbwRfhB47lyjMS+C+lBg4Cg+dSjadgHaOYJIEQuOcW1HoN3T
+         O6FOBCECZ5yuGHJZqFu4GcsQfxHJIIe5hrdaePoamrD/NLbxYfwhIMlPyiDTZ8Jk+vl/
+         Xn3CQ6KYUwHItkg4HJAjumpImpjwsB/JjGuKULnRUOdxMcK5/KhjomF6/DCvOBWz1GyU
+         RKwmcah1fZZFljKwJy6mvNmLdOhizOlnZ7QadVKsjoL2ITwjDyLI+wtp2IDWWF4axH/Y
+         suAaCXg8bfYqapY6ztYpabqW99CILWuKQ8XvPGIqrN5ORtLLW294PyWn9p6upCAk8v9k
+         Qv8g==
+X-Gm-Message-State: AOJu0Yxu15lYDhaxbBbuQkGq7K3rjGR9Kg0ibYEPHOOW/aCXMmtOfTtv
+	R/7unHwTTqPMJxGc++ATqND8SyXl38MFdziLOt0zdW3qsTmaSsvybP6z4hCJ/otjCfnPELHm1aZ
+	FYlMmSb2bdeQ/96RDYKT/HdxowpbY5ISQI1FJEtgPveedVMI8v33ourVAejlR/Q==
+X-Gm-Gg: AY/fxX4raud1ezUrZDfZpCZrnrdGtgnhdXCBWoJ6uNpUZKFQqc2Ls2N66DcSCx6RRZ5
+	GWivm9mjG1P1YM++oAQ2hVXAShxmULdRWZc11ZC2ddgi30jQnwMYTGDVQCgs7uZ0uybsxMzGJzu
+	HML5xbxZSSNYorHXtWbhbkC1lJOLajQi5Ds2WiY1akBeBuUlxX9EB7KipJwpDboM8yF7cWGMmFG
+	vhUZtFNgDTv7TL4RdBCKHAhx8wwgCRYq2RvDM40YMtzpJ0e55/UPsINKwlC9IVhBJyk4lDmRcLG
+	Bdq5UpNow7JK6wrUeNHT8mCTiyRk/UgcIpvZYNzSe9znbuEBIoNNGSXywhbcIwDzBBkO26T7mUR
+	L
+X-Received: by 2002:a17:903:46c5:b0:2a3:e89c:593e with SMTP id d9443c01a7336-2a3ee41f181mr62398225ad.4.1767868522227;
+        Thu, 08 Jan 2026 02:35:22 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFWb7Nq1EAzfMOaDGj/G/lGftVbslZgXtHq29CNW23TT+aB3wwbYZDR2hEBzPzfJM832bE6sw==
+X-Received: by 2002:a17:903:46c5:b0:2a3:e89c:593e with SMTP id d9443c01a7336-2a3ee41f181mr62397775ad.4.1767868521555;
+        Thu, 08 Jan 2026 02:35:21 -0800 (PST)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3c48c2bsm74465035ad.26.2026.01.08.02.35.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Jan 2026 02:35:21 -0800 (PST)
+Date: Thu, 8 Jan 2026 18:32:55 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	Thomas Staudt <tstaudt@de.ibm.com>, Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>, 
+	Baoquan he <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
+	Pingfan Liu <kernelfans@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
+	Vivek Goyal <vgoyal@redhat.com>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] powerpc/kdump: pass dm-crypt keys to kdump kernel
+Message-ID: <aV5F-T1nNumTTdgK@Rk>
+References: <20251226140636.1378505-1-coxu@redhat.com>
+ <20260106074039.564707-1-coxu@redhat.com>
+ <9aa592c9-c766-4aac-a60c-25dd5c2f143d@linux.ibm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-c3f6e.templateTenant
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR02MB3952.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6833eba7-0b33-4421-93b6-08de4e91e3c4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2026 08:42:43.1695
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR02MB11128
+In-Reply-To: <9aa592c9-c766-4aac-a60c-25dd5c2f143d@linux.ibm.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: hE_f-3MbKEy5ifMTDILDArLQUn139xtjzwPH7SaLV4s_1767868522
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260108_004247_998174_EEBDCF96 
-X-CRM114-Status: UNSURE (   7.18  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260108_023526_560115_B48DE970 
+X-CRM114-Status: GOOD (  21.03  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -154,21 +113,98 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello there,=0A=
-=0A=
->We may not need to worry about it. In all places where=0A=
->kimage_alloc_control_pages is called, the order is 0 or=0A=
->get_order(KEXEC_CONTROL_PAGE_SIZE) on mips which is 2.=0A=
-=0A=
-Thanks for the update.=0A=
-=0A=
->That is fine if people is worried, a patch is welcome.=0A=
-=0A=
-Since my kernel patch success rate is 0.0 % (approx) I will avoid doing thi=
-s.=0A=
-Might be worth an assert that the value is in range [0..30].=0A=
-=0A=
-Regards=0A=
-=0A=
-David Binderman=0A=
+On Wed, Jan 07, 2026 at 02:32:41PM +0530, Sourabh Jain wrote:
+>
+>
+>On 06/01/26 13:10, Coiby Xu wrote:
+>>CONFIG_CRASH_DM_CRYPT has been introduced to support LUKS-encrypted
+>>device dump target by addressing two challenges [1],
+>>  - Kdump kernel may not be able to decrypt the LUKS partition. For some
+>>    machines, a system administrator may not have a chance to enter the
+>>    password to decrypt the device in kdump initramfs after the 1st kernel
+>>    crashes
+>>
+>>  - LUKS2 by default use the memory-hard Argon2 key derivation function
+>>    which is quite memory-consuming compared to the limited memory reserved
+>>    for kdump.
+>>
+>>To also enable this feature for PowerPC, we only need to let 1st kernel
+>>build up the kernel command parameter dmcryptkeys as similar to
+>>elfcorehdr to pass the memory address of the stored info of dm-crypt
+>>keys to the kdump kernel.
+>>
+>>Note to avoid a building failure [2] caused by undeclared function
+>>crash_load_dm_crypt_keys when CONFIG_CRASH_DUMP is not enabled,
+>>realign the function declaration with CONFIG_CRASH_DM_CRYPT.
+>>
+>>[1] https://lore.kernel.org/all/20250502011246.99238-1-coxu@redhat.com/
+>>[2] https://lore.kernel.org/oe-kbuild-all/202512272218.ghBaSjzO-lkp@intel.com/
+>>
+>>Cc: Thomas Staudt <tstaudt@de.ibm.com>
+>>Cc: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>
+>>Cc: Baoquan he <bhe@redhat.com>
+>>Cc: Dave Young <dyoung@redhat.com>
+>>Cc: Kairui Song <ryncsn@gmail.com>
+>>Cc: Pingfan Liu <kernelfans@gmail.com>
+>>Cc: Andrew Morton <akpm@linux-foundation.org>
+>>Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+>>Signed-off-by: Coiby Xu <coxu@redhat.com>
+>>---
+>>v2:
+>>- fix double kfree issue [Sourabh]
+>>- corretly kfree old modified_cmdline
+>>- use imperative mood for commit message
+>>- fix a compiling error caught by kernel test robot
+>>
+>>  arch/powerpc/include/asm/kexec.h |  3 ++-
+>>  arch/powerpc/kexec/elf_64.c      | 27 ++++++++++++++++++++++++++-
+>>  arch/powerpc/kexec/file_load.c   | 18 ++++++++++--------
+>>  include/linux/crash_core.h       | 14 +++++++-------
+>>  4 files changed, 45 insertions(+), 17 deletions(-)
+>>
+>>diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+>>index bd4a6c42a5f3..f3d098d543b4 100644
+>>--- a/arch/powerpc/include/asm/kexec.h
+>>+++ b/arch/powerpc/include/asm/kexec.h
+>>@@ -80,7 +80,8 @@ struct kimage_arch {
+>>  };
+>>  char *setup_kdump_cmdline(struct kimage *image, char *cmdline,
+>>-			  unsigned long cmdline_len);
+>>+			  unsigned long cmdline_len,
+>>+			  char *name, unsigned long addr);
+>>  int setup_purgatory(struct kimage *image, const void *slave_code,
+>>  		    const void *fdt, unsigned long kernel_load_addr,
+>>  		    unsigned long fdt_load_addr);
+>>diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
+>>index 5d6d616404cf..995d7e8e98e1 100644
+>>--- a/arch/powerpc/kexec/elf_64.c
+>>+++ b/arch/powerpc/kexec/elf_64.c
+>>@@ -81,13 +81,38 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+>>  		/* Setup cmdline for kdump kernel case */
+>>  		modified_cmdline = setup_kdump_cmdline(image, cmdline,
+>>-						       cmdline_len);
+>>+						       cmdline_len,
+>>+						       "elfcorehdr",
+>>+						       image->elf_load_addr);
+>>  		if (!modified_cmdline) {
+>>  			pr_err("Setting up cmdline for kdump kernel failed\n");
+>>  			ret = -EINVAL;
+>>  			goto out;
+>>  		}
+>>  		cmdline = modified_cmdline;
+>>+		cmdline_len = strlen(cmdline) + 1;
+>
+>I have a limited understanding of the new dm-crypt keys, but the way they
+>are loaded and the additional command-line options added for the kdump
+>kernel look good to me.
+>
+>Feel free to add:
+>Acked-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+
+Thanks for reviewing and acknowledging the patch!
+
+-- 
+Best regards,
+Coiby
+
 
