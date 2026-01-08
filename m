@@ -4,110 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B9457D1D482
-	for <kexec@archiver.kernel.org>; Thu,  8 Jan 2026 16:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 88222D1D483
+	for <kexec@archiver.kernel.org>; Thu,  8 Jan 2026 16:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=3fgOKlMQMvrdvMk8koNYIZJMH5yGHQCdYZiiHNFjJEw=; b=VgSFD/c9ZTVHWtZL3QgOP0LF4j
-	voL8dEuT2GDQLRMcNtiKUMmnQugkmKziuN01FbRsK8fPD7jm+IIGJgANVzSrDfbFgSBdkxg88ggs7
-	E2srX+pfvuFmUBEi0pdg5X5+AgaQo+lOdTLp6GZ1MI5fLFmh7YS7r38kmhO5VXSdo76LA94xGQiLM
-	JvfUwfxQKcf5prbh+IvKmO5x1U1h+eX55gQSrjPmgZCI2SOfnfOi4MWqPd2N1G+KWUZD1DTBeQjpm
-	IpirT0WizCRfp5Zkj60YpZAdNtqcPP/LV/pKMWGQRoQ0nHj0EweaXm+YwBuBsxH7pV4cqyPDlLHeF
-	aLIiPR0Q==;
+	bh=eEKbCl6eHGkX3T8z34Ba8e5S/FDTyu14lC4qmzFFHFA=; b=hlfWHcC6hBTAwaROjAi4KwJsKY
+	UaZRDOxQik/eaXaOGUYMIBS1IJDTuXw5M7WVG9Mz7QasmvcrTt1XEo0kfMiZtghfhcCm21JseIG7H
+	to6KsftOmVbcxnYDkOIJbT5aiP+/PQLx2yk423HgdxA3PvL3q7i350P/8iv+Echy6MI0abhsdKl4d
+	zHHr47SEBzbMV3mKdZbG14Ny1tNHpn9atA4HFwz5hwgUHqiLjDhajg4coHujCZkPDsXbi2gWyJHM1
+	mWj2hOPWl8/SeSs6eCfds9JyPNvUe9rN7tCBYrMlrr0AdC7mml1nRmlFQrTvyu2yinax5v1WmQbML
+	gWf+ltDw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdszx-00000000AFl-2Kdh;
-	Thu, 08 Jan 2026 16:36:33 +0000
-Received: from sender4-of-o50.zoho.com ([136.143.188.50])
+	id 1vdt4f-00000000BBD-2c8Y;
+	Thu, 08 Jan 2026 16:41:25 +0000
+Received: from mail-oi1-f175.google.com ([209.85.167.175])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdszv-00000000AFA-00Pr
+	id 1vdt4d-00000000B94-071m
 	for kexec@lists.infradead.org;
-	Thu, 08 Jan 2026 16:36:32 +0000
-ARC-Seal: i=1; a=rsa-sha256; t=1767890167; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Li/kXjANjd65RQe/mTVw6fzSsm+4XzsFNDAoVJc2DH33e5Z3708UttYEjOBRBWiP35libMtJUu1XJQRs3oEXvwqXuZelksks5bbxo2n5mUzkNqEBKZiXTzRHsBJ0ChltIcN4pBng1lra7RrDvS+ORllHGM0jUll0xnhGMJus95o=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1767890167; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=3fgOKlMQMvrdvMk8koNYIZJMH5yGHQCdYZiiHNFjJEw=; 
-	b=LtXrOUVj+ta+dAHw4nMSae0NbI6tIHT8s3vEqH5NLCGCa0QkU40fNXOTzJed0/BX7Rj/hY2tClKd6BDbrZwBpO0qLVniQmIS2WT82lUyob2ZblmmhTV9zCLHGjy5+PSRhCMXmAzWcTeEGSvucrNy82AWRMTYbFzYsSxA8LpMkCQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=apertussolutions.com;
-	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
-	dmarc=pass header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1767890167;
-	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=3fgOKlMQMvrdvMk8koNYIZJMH5yGHQCdYZiiHNFjJEw=;
-	b=p2vL/Cl3px20lR9/1mhM5GDoWubTVBr7vdIAD9h4UIH/mGNndn3QuLbgOZwiyP7J
-	h6d8nX+r4RvFu8SOvFWPGE4MO9NZLS+/6NebbLzbxNPPKf+IWCfLA0GcCshBOohIRRP
-	MuDRw8u6m4E9AiY1IJLZruEOP7t9ACdbzYWUhXx0=
-Received: by mx.zohomail.com with SMTPS id 1767890164219491.1739791671507;
-	Thu, 8 Jan 2026 08:36:04 -0800 (PST)
-Message-ID: <91fd7e8e-6c64-458c-9d78-d97482d95705@apertussolutions.com>
-Date: Thu, 8 Jan 2026 11:36:01 -0500
+	Thu, 08 Jan 2026 16:41:24 +0000
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-455ddb90934so1121990b6e.0
+        for <kexec@lists.infradead.org>; Thu, 08 Jan 2026 08:41:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767890482; x=1768495282;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=eEKbCl6eHGkX3T8z34Ba8e5S/FDTyu14lC4qmzFFHFA=;
+        b=F0YcdXmkQiWr9RoAisynShLounjmThkXcS60x7lXUFtc4fOw6XuFEw3I7qQdCiO2+/
+         evUSGKrtRltnbknvV5Va/xRH7aRUi2t9tV1oPBJV2MNmKBQM0fMeNKoheokOeiBDiBX/
+         SByuG8Y+EK1SZYWSNGqsE2P+Zotx2WKGetpkNe00JW9opkS7EsaGODnwmZiTJYL8m1+9
+         NQl2dd29wDk16OE8kjS3sufza3ekh1ndWdKL7nwiZyvBW5gKmd7eIcDniAsBcKL6SRRa
+         kDkoPS5AUoU8+FapseZS6mv9iakpwtfCf4DIuBd/7MSzzQckoVF6trBLPVdqBol3OnLp
+         6EOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWT4onNVxAXPdAexdjeMweTfkAwDRpb2I21fvBoSPpiQzm5bQDhefHbq9jc7lXu03+DzYFthw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzpCqub4Kehqt+vNa3RtyQ4JAolS8Ecao74CICzx7CqZ7vCUMDX
+	0/az+zLSFoCzVFsenwECmGLiDtF46TxHf0E2X7jrs8HC2qKW/cDtw0Bt
+X-Gm-Gg: AY/fxX71solK8HUMFaqx6AxBr11OiPb9yz65jnJUHb4n/RRmtagRdLG5ZYyQq7EQ1IN
+	M7D4VnQ13O9nJIPr7/PBGe2zhsPhb/QSy953vxpQP/BNhco9FO3F1YxW6tN9YQJpuKMeYR52Uz9
+	RwHYk58xMUw//z+weShq3SntHDN5qjmSSZwAK2ZJdtdAlNKHyX9h2H3vtRDvXpWWNKoVMhrSYb9
+	51f+EXVL4D4wDVo/ISU8Q1F0o3pqim5y6Hq5bambyVKo+oAQ5svbu4PiFJ0MTdCDqrIACeHxL8W
+	1olvsmL+RadiGVaiHZMr1jaeQgCQxNN+3As+JrQRxkvNGLkClzwjVrEI2Jxwcg1h4nRfUtU5KbF
+	W1SAjr8sxihQ9DxjTTu2ajLUDXj/KJFhDBz3PNGltQMrC46uVdq4GaClFYoNuyJXoI2+tElld/t
+	jTJA==
+X-Google-Smtp-Source: AGHT+IHwg85rGQHbkPrcqt1aBeanOarcVUdF/YJuRLIGyTivBFmbrsvMl5+YqDe216QHSew4Eycetw==
+X-Received: by 2002:a05:6808:1188:b0:455:7da6:44d5 with SMTP id 5614622812f47-45a6bdaf691mr2406341b6e.27.1767890481759;
+        Thu, 08 Jan 2026 08:41:21 -0800 (PST)
+Received: from localhost ([2a03:2880:10ff:71::])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3ffa5161468sm5298579fac.22.2026.01.08.08.41.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Jan 2026 08:41:21 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+Date: Thu, 08 Jan 2026 08:40:58 -0800
+Subject: [PATCH v3 1/2] kho: history: track previous kernel version
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 00/28] x86: Secure Launch support for Intel TXT
-Content-Language: en-US
-To: Dave Hansen <dave.hansen@intel.com>,
- Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
- dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
- James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, jarkko@kernel.org,
- jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu,
- herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
- ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com,
- kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
- trenchboot-devel@googlegroups.com
-References: <20251215233316.1076248-1-ross.philipson@oracle.com>
- <0cff620d-9be4-487d-8eb1-19375ca58a70@intel.com>
-From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
-Autocrypt: addr=dpsmith@apertussolutions.com; keydata=
- xsJuBFYrueARCACPWL3r2bCSI6TrkIE/aRzj4ksFYPzLkJbWLZGBRlv7HQLvs6i/K4y/b4fs
- JDq5eL4e9BdfdnZm/b+K+Gweyc0Px2poDWwKVTFFRgxKWq9R7McwNnvuZ4nyXJBVn7PTEn/Z
- G7D08iZg94ZsnUdeXfgYdJrqmdiWA6iX9u84ARHUtb0K4r5WpLUMcQ8PVmnv1vVrs/3Wy/Rb
- foxebZNWxgUiSx+d02e3Ad0aEIur1SYXXv71mqKwyi/40CBSHq2jk9eF6zmEhaoFi5+MMMgX
- X0i+fcBkvmT0N88W4yCtHhHQds+RDbTPLGm8NBVJb7R5zbJmuQX7ADBVuNYIU8hx3dF3AQCm
- 601w0oZJ0jGOV1vXQgHqZYJGHg5wuImhzhZJCRESIwf+PJxik7TJOgBicko1hUVOxJBZxoe0
- x+/SO6tn+s8wKlR1Yxy8gYN9ZRqV2I83JsWZbBXMG1kLzV0SAfk/wq0PAppA1VzrQ3JqXg7T
- MZ3tFgxvxkYqUP11tO2vrgys+InkZAfjBVMjqXWHokyQPpihUaW0a8mr40w9Qui6DoJj7+Gg
- DtDWDZ7Zcn2hoyrypuht88rUuh1JuGYD434Q6qwQjUDlY+4lgrUxKdMD8R7JJWt38MNlTWvy
- rMVscvZUNc7gxcmnFUn41NPSKqzp4DDRbmf37Iz/fL7i01y7IGFTXaYaF3nEACyIUTr/xxi+
- MD1FVtEtJncZNkRn7WBcVFGKMAf+NEeaeQdGYQ6mGgk++i/vJZxkrC/a9ZXme7BhWRP485U5
- sXpFoGjdpMn4VlC7TFk2qsnJi3yF0pXCKVRy1ukEls8o+4PF2JiKrtkCrWCimB6jxGPIG3lk
- 3SuKVS/din3RHz+7Sr1lXWFcGYDENmPd/jTwr1A1FiHrSj+u21hnJEHi8eTa9029F1KRfocp
- ig+k0zUEKmFPDabpanI323O5Tahsy7hwf2WOQwTDLvQ+eqQu40wbb6NocmCNFjtRhNZWGKJS
- b5GrGDGu/No5U6w73adighEuNcCSNBsLyUe48CE0uTO7eAL6Vd+2k28ezi6XY4Y0mgASJslb
- NwW54LzSSM0uRGFuaWVsIFAuIFNtaXRoIDxkcHNtaXRoQGFwZXJ0dXNzb2x1dGlvbnMuY29t
- PsJ6BBMRCAAiBQJWK7ngAhsjBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRBTc6WbYpR8
- KrQ9AP94+xjtFfJ8gj5c7PVx06Zv9rcmFUqQspZ5wSEkvxOuQQEAg6qEsPYegI7iByLVzNEg
- 7B7fUG7pqWIfMqFwFghYhQzOwU0EViu54BAIAL6MXXNlrJ5tRUf+KMBtVz1LJQZRt/uxWrCb
- T06nZjnbp2UcceuYNbISOVHGXTzu38r55YzpkEA8eURQf+5hjtvlrOiHxvpD+Z6WcpV6rrMB
- kcAKWiZTQihW2HoGgVB3gwG9dCh+n0X5OzliAMiGK2a5iqnIZi3o0SeW6aME94bSkTkuj6/7
- OmH9KAzK8UnlhfkoMg3tXW8L6/5CGn2VyrjbB/rcrbIR4mCQ+yCUlocuOjFCJhBd10AG1IcX
- OXUa/ux+/OAV9S5mkr5Fh3kQxYCTcTRt8RY7+of9RGBk10txi94dXiU2SjPbassvagvu/hEi
- twNHms8rpkSJIeeq0/cAAwUH/jV3tXpaYubwcL2tkk5ggL9Do+/Yo2WPzXmbp8vDiJPCvSJW
- rz2NrYkd/RoX+42DGqjfu8Y04F9XehN1zZAFmCDUqBMa4tEJ7kOT1FKJTqzNVcgeKNBGcT7q
- 27+wsqbAerM4A0X/F/ctjYcKwNtXck1Bmd/T8kiw2IgyeOC+cjyTOSwKJr2gCwZXGi5g+2V8
- NhJ8n72ISPnOh5KCMoAJXmCF+SYaJ6hIIFARmnuessCIGw4ylCRIU/TiXK94soilx5aCqb1z
- ke943EIUts9CmFAHt8cNPYOPRd20pPu4VFNBuT4fv9Ys0iv0XGCEP+sos7/pgJ3gV3pCOric
- p15jV4PCYQQYEQgACQUCViu54AIbDAAKCRBTc6WbYpR8Khu7AP9NJrBUn94C/3PeNbtQlEGZ
- NV46Mx5HF0P27lH3sFpNrwD/dVdZ5PCnHQYBZ287ZxVfVr4Zuxjo5yJbRjT93Hl0vMY=
-In-Reply-To: <0cff620d-9be4-487d-8eb1-19375ca58a70@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Message-Id: <20260108-kho-v3-1-b1d6b7a89342@debian.org>
+References: <20260108-kho-v3-0-b1d6b7a89342@debian.org>
+In-Reply-To: <20260108-kho-v3-0-b1d6b7a89342@debian.org>
+To: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+ linux-mm@kvack.org, usamaarif642@gmail.com, rmikey@meta.com, clm@fb.com, 
+ riel@surriel.com, Breno Leitao <leitao@debian.org>, kernel-team@meta.com
+X-Mailer: b4 0.15-dev-47773
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3243; i=leitao@debian.org;
+ h=from:subject:message-id; bh=lVq1FcOCQMqfHOK5DcXTIKEzb9rwsZ/ITwXUKRT+mew=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBpX94v0uvNnwH22s6hbp7/tiFmZZwZTGwvXKop4
+ GrcufIuHBmJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaV/eLwAKCRA1o5Of/Hh3
+ bYjfD/4q44IGNvMydiP1wiCUgQyjvqTCiWLge5E7NW/ndXZiqkKPAyOKxtqhbRpe3c4oYG93YXX
+ hY1pBWYWitOmAEIXiasAf7f/hD7fCvP3WLdm+BV+gHCkPrEBOny3qIUyZg2srW6xhWOMsnGMXuY
+ qG5+RTcUmpRnD6HISAobniQawTfwhu85aUGn8ip5IUZ0YNvAGX/bVHCIqnhPSmItE7H/F7uuenO
+ xoXJhbw4VkkHdtk1ybE9RSKp3K0lOV3aqNgwUD3K/yLWx+jibQ2XyLRYDyCYMEaQjToqlSe+NMN
+ aBaWk66cmepQT1SWPJqAxVe2DgTJ0bJvcFPCRvnJabEIIrCZCZ3uH0AFNaSJnNsDDjocfjxNwX4
+ Tq2CC+Dffe67p72GupDlMCgZBT/Dy4oK3gj2FEZkfgaF0ydlnL5m+E6b9akv0RLs1gaQlXWZ4j1
+ xeW6PoYuOwmnzxkN64Wa7WKVg+Uh0LRfqU+a/NJgpJwybc4apdsa3iCTRKx3vXqANCwwctaGjbi
+ nK8CZoIV+z5kL8EpHAIKd7NnO7XLIvJOCCfaDyAlIS3gmHIMegwdKiWFlGCZUA5lel0kIgshnLS
+ 34ZfVxSXBK7smuJX22xF2pphNI9HjIPTgiyH52WyWLw3Ov9QQuyvAj2xn8u4jB8MV8oEOAY2S3C
+ wIxZp7CPi87gccw==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260108_083631_072987_40753AE5 
-X-CRM114-Status: UNSURE (   5.99  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260108_084123_072486_CE3FAD5C 
+X-CRM114-Status: GOOD (  17.40  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -122,19 +107,103 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/16/25 17:14, Dave Hansen wrote:
-> On 12/15/25 15:32, Ross Philipson wrote:
->> Patch set based on commit:
->> torvalds/master/fd57572253bc356330dbe5b233c2e1d8426c66fd
-> 
-> That's an interesting place to pick. What was the reasoning behind it?
+Store and display the kernel version from the previous kexec boot.
 
-It was simply that it was the tip of torvalds/master at the time the 
-patch series was prepared. As far as we could find, there is not a lot 
-of guidance on commit selection in the patch guide. If there is a 
-generally accepted convention we should follow, we would be glad to 
-follow it.
+The current kernel's release string is saved to the "previous-release"
+property in the KHO FDT before kexec. On the next boot, if this property
+exists, the previous kernel version is retrieved and printed during
+early boot.
 
-v/r,
-dps
+This helps diagnose bugs that only manifest when kexecing from specific
+kernel versions, making it easier to correlate crashes with the kernel
+that initiated the kexec.
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ include/linux/kho/abi/kexec_handover.h |  3 +++
+ kernel/liveupdate/kexec_handover.c     | 25 ++++++++++++++++++++++++-
+ 2 files changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/kho/abi/kexec_handover.h b/include/linux/kho/abi/kexec_handover.h
+index 285eda8a36e4..f4f31e8f575b 100644
+--- a/include/linux/kho/abi/kexec_handover.h
++++ b/include/linux/kho/abi/kexec_handover.h
+@@ -84,6 +84,9 @@
+ /* The FDT property for sub-FDTs. */
+ #define KHO_FDT_SUB_TREE_PROP_NAME "fdt"
+ 
++/* The FDT property to track previous kernel (kexec caller) */
++#define KHO_PROP_PREVIOUS_RELEASE "previous-release"
++
+ /**
+  * DOC: Kexec Handover ABI for vmalloc Preservation
+  *
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 3cf2dc6840c9..b2d57868d22f 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -22,6 +22,7 @@
+ #include <linux/page-isolation.h>
+ #include <linux/unaligned.h>
+ #include <linux/vmalloc.h>
++#include <linux/utsname.h>
+ 
+ #include <asm/early_ioremap.h>
+ 
+@@ -1246,6 +1247,7 @@ struct kho_in {
+ 	phys_addr_t fdt_phys;
+ 	phys_addr_t scratch_phys;
+ 	phys_addr_t mem_map_phys;
++	char previous_release[__NEW_UTS_LEN + 1];
+ 	struct kho_debugfs dbg;
+ };
+ 
+@@ -1325,6 +1327,8 @@ static __init int kho_out_fdt_setup(void)
+ 	err |= fdt_property_string(root, "compatible", KHO_FDT_COMPATIBLE);
+ 	err |= fdt_property(root, KHO_FDT_MEMORY_MAP_PROP_NAME, &empty_mem_map,
+ 			    sizeof(empty_mem_map));
++	err |= fdt_property_string(root, KHO_PROP_PREVIOUS_RELEASE,
++				   init_uts_ns.name.release);
+ 	err |= fdt_end_node(root);
+ 	err |= fdt_finish(root);
+ 
+@@ -1436,6 +1440,22 @@ void __init kho_memory_init(void)
+ 	}
+ }
+ 
++static int __init kho_print_previous_kernel(const void *fdt)
++{
++	const char *prev_release;
++	int len;
++
++	prev_release = fdt_getprop(fdt, 0, KHO_PROP_PREVIOUS_RELEASE, &len);
++	if (!prev_release || len <= 0)
++		return -ENOENT;
++
++	strscpy(kho_in.previous_release, prev_release,
++		sizeof(kho_in.previous_release));
++	pr_info("exec from: %s\n", kho_in.previous_release);
++
++	return 0;
++}
++
+ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 			 phys_addr_t scratch_phys, u64 scratch_len)
+ {
+@@ -1513,7 +1533,10 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 	kho_in.scratch_phys = scratch_phys;
+ 	kho_in.mem_map_phys = mem_map_phys;
+ 	kho_scratch_cnt = scratch_cnt;
+-	pr_info("found kexec handover data.\n");
++
++	if (kho_print_previous_kernel(fdt))
++		/* Fallback message when previous kernel info unavailable */
++		pr_info("found kexec handover data.\n");
+ 
+ out:
+ 	if (fdt)
+
+-- 
+2.47.3
+
 
