@@ -4,101 +4,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C72BFD185C2
-	for <kexec@archiver.kernel.org>; Thu,  8 Jan 2026 10:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A5880D1D478
+	for <kexec@archiver.kernel.org>; Thu,  8 Jan 2026 16:22:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Q4CgrKoI+gqPjZdUskKAdxCjFm05f46fwS6i3N+5Edg=; b=ij1Lkan8AGrN8Q6qvWs7jCb4BP
-	v3bSFcj/941nzx2v7GxZWLLGRzlfLflFRQPlKsJwdvTm1D+iVccLb9ADzHIMo8dc2HL8gZ79Gual7
-	msEO4W8xkG1mQNGRxeFgIoabIEGcpTJHB0Qej7m7LJFQlRKCy0GYAXT6wPWwRXKpJMuT/w//jNf6g
-	QW+Wi2gL4Hstx8rrAWDLy1upnVQ/LY5dTGKapfcRvu8vKqKW6dBTsXRHg2NaDbXgSdk8+ocBjWwB2
-	dFOJ4/C/5uc78z5Oel2crLAx8BjXym+hm8u6gvPpNgqjtN3Xp5PElD8QCi9wH6mYDbIi7Xa6mEOsi
-	++pwDhAg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=oqv29i/Jkyku4YGsPHEwXi5y4vCYAIfyZbGbk20cx3Q=; b=Smh0gnEfEo2l2e+JXkUYp81wYD
+	jkCg0w2HOIlmjTVC7NG4C0pRrW9dU8W7MI/1BnuGWDyvyrMyXw0t0APCnxRNxOqUYkx09yWd5HRl7
+	1UXtCmOxqrd5h13ge+gEhZ7iUo7edS491hcVXvdXOz26zROJR8zlT9OIa6CAHQDfNYRavHa8h9mvF
+	RIAUj8rpMVbfL6LvLb1+8P3yL8EirEf4ZJMkYkwCa3U+rTGBbNV3CFBJPvRz44HyLJg1tL6pUXQYm
+	0nR7CYe1EfqN1cP7+0GDdPT1VK5sknb7iISgKZxc/5HDY+sdAiYYtYVMNAxf5a2J1obplfQ3nZei2
+	cPYPGgSw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdnMb-0000000Gdxi-12nZ;
-	Thu, 08 Jan 2026 10:35:33 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1vdsm4-000000006ef-0zxW;
+	Thu, 08 Jan 2026 16:22:12 +0000
+Received: from sender4-of-o50.zoho.com ([136.143.188.50])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vdnMU-0000000Gdx1-1rjC
+	id 1vdslz-000000006dO-3Xg4
 	for kexec@lists.infradead.org;
-	Thu, 08 Jan 2026 10:35:28 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1767868524;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q4CgrKoI+gqPjZdUskKAdxCjFm05f46fwS6i3N+5Edg=;
-	b=a6iNZwtwj68FrR08CGGPfZQ7h7LczQZi0bEvFPAPHNsQ5XLUOA85kAXGfzM1mMJV/9y+h5
-	8Z5fZ8Q1fLiPupAkIRy0eR5k8/1Uq8NcCt/5UyJRMQw91/AMJp+0ukf8EIy+A55W5sxZ43
-	UQpzbIqWWM7Xg0xzxzk97gZF5CvyrOw=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-396-srt3iIdINOWweU8jjVZQ-w-1; Thu, 08 Jan 2026 05:35:23 -0500
-X-MC-Unique: srt3iIdINOWweU8jjVZQ-w-1
-X-Mimecast-MFC-AGG-ID: srt3iIdINOWweU8jjVZQ-w_1767868522
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-29f1f79d6afso45636655ad.0
-        for <kexec@lists.infradead.org>; Thu, 08 Jan 2026 02:35:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767868522; x=1768473322;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q4CgrKoI+gqPjZdUskKAdxCjFm05f46fwS6i3N+5Edg=;
-        b=L3aib+pL65PY5iJgkmCbwRfhB47lyjMS+C+lBg4Cg+dSjadgHaOYJIEQuOcW1HoN3T
-         O6FOBCECZ5yuGHJZqFu4GcsQfxHJIIe5hrdaePoamrD/NLbxYfwhIMlPyiDTZ8Jk+vl/
-         Xn3CQ6KYUwHItkg4HJAjumpImpjwsB/JjGuKULnRUOdxMcK5/KhjomF6/DCvOBWz1GyU
-         RKwmcah1fZZFljKwJy6mvNmLdOhizOlnZ7QadVKsjoL2ITwjDyLI+wtp2IDWWF4axH/Y
-         suAaCXg8bfYqapY6ztYpabqW99CILWuKQ8XvPGIqrN5ORtLLW294PyWn9p6upCAk8v9k
-         Qv8g==
-X-Gm-Message-State: AOJu0Yxu15lYDhaxbBbuQkGq7K3rjGR9Kg0ibYEPHOOW/aCXMmtOfTtv
-	R/7unHwTTqPMJxGc++ATqND8SyXl38MFdziLOt0zdW3qsTmaSsvybP6z4hCJ/otjCfnPELHm1aZ
-	FYlMmSb2bdeQ/96RDYKT/HdxowpbY5ISQI1FJEtgPveedVMI8v33ourVAejlR/Q==
-X-Gm-Gg: AY/fxX4raud1ezUrZDfZpCZrnrdGtgnhdXCBWoJ6uNpUZKFQqc2Ls2N66DcSCx6RRZ5
-	GWivm9mjG1P1YM++oAQ2hVXAShxmULdRWZc11ZC2ddgi30jQnwMYTGDVQCgs7uZ0uybsxMzGJzu
-	HML5xbxZSSNYorHXtWbhbkC1lJOLajQi5Ds2WiY1akBeBuUlxX9EB7KipJwpDboM8yF7cWGMmFG
-	vhUZtFNgDTv7TL4RdBCKHAhx8wwgCRYq2RvDM40YMtzpJ0e55/UPsINKwlC9IVhBJyk4lDmRcLG
-	Bdq5UpNow7JK6wrUeNHT8mCTiyRk/UgcIpvZYNzSe9znbuEBIoNNGSXywhbcIwDzBBkO26T7mUR
-	L
-X-Received: by 2002:a17:903:46c5:b0:2a3:e89c:593e with SMTP id d9443c01a7336-2a3ee41f181mr62398225ad.4.1767868522227;
-        Thu, 08 Jan 2026 02:35:22 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFWb7Nq1EAzfMOaDGj/G/lGftVbslZgXtHq29CNW23TT+aB3wwbYZDR2hEBzPzfJM832bE6sw==
-X-Received: by 2002:a17:903:46c5:b0:2a3:e89c:593e with SMTP id d9443c01a7336-2a3ee41f181mr62397775ad.4.1767868521555;
-        Thu, 08 Jan 2026 02:35:21 -0800 (PST)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3c48c2bsm74465035ad.26.2026.01.08.02.35.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jan 2026 02:35:21 -0800 (PST)
-Date: Thu, 8 Jan 2026 18:32:55 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	Thomas Staudt <tstaudt@de.ibm.com>, Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>, 
-	Baoquan he <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
-	Pingfan Liu <kernelfans@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
-	Vivek Goyal <vgoyal@redhat.com>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] powerpc/kdump: pass dm-crypt keys to kdump kernel
-Message-ID: <aV5F-T1nNumTTdgK@Rk>
-References: <20251226140636.1378505-1-coxu@redhat.com>
- <20260106074039.564707-1-coxu@redhat.com>
- <9aa592c9-c766-4aac-a60c-25dd5c2f143d@linux.ibm.com>
+	Thu, 08 Jan 2026 16:22:11 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1767889297; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=IXM3IwQSRjpf/AjEz0IjjgNpQjKhbp5nQ8u43T/PE0S2VoEpHrCn41jycdM712iwf9SCmkXoHzMIahruw+OiMdoiMDU65J49RY54wL/zZJJwPKVDBCcDoveqL4CBjR4yE9wL/S0hCXYHl4a3+rJ6q4JdT07ezzAMed44GQyD5w0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1767889297; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=oqv29i/Jkyku4YGsPHEwXi5y4vCYAIfyZbGbk20cx3Q=; 
+	b=V4u9qhFfLwuC/8Ag3Sr7TEjepvSGOCV/0ZLCktSz/x6xG7OdamVnnr7uXXtZ8K05UG6IkM2ElQmmVgs2MgnTSYFX8utd266JxvnAhmeeOd5+bfetzHyFAJxsbX51kZa008dUmX9puWqIpF2mcE2Ew2pQNnqeiiGZ8FHA5+0eop4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=apertussolutions.com;
+	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
+	dmarc=pass header.from=<dpsmith@apertussolutions.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1767889297;
+	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=oqv29i/Jkyku4YGsPHEwXi5y4vCYAIfyZbGbk20cx3Q=;
+	b=dlxv/K6ZtChdyvl/fMxeMprD8qzLhwyyhoGEar4fSoaloeGwKaCIeVO/F2y/Q5Ka
+	T744G8PcyfblQWZlsHFeICcqT+L/mnCRbA9zEbnGSZ4EGhtqWDeoxqlA7dmfI0TpyXU
+	7GSm0GZP1/k+gmQmJ7byGqtM0ntYyCd6Cup03B7E=
+Received: by mx.zohomail.com with SMTPS id 1767889293888361.3114789025136;
+	Thu, 8 Jan 2026 08:21:33 -0800 (PST)
+Message-ID: <adb92eca-440b-4322-b65b-c21279710a0a@apertussolutions.com>
+Date: Thu, 8 Jan 2026 11:21:31 -0500
 MIME-Version: 1.0
-In-Reply-To: <9aa592c9-c766-4aac-a60c-25dd5c2f143d@linux.ibm.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: hE_f-3MbKEy5ifMTDILDArLQUn139xtjzwPH7SaLV4s_1767868522
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v15 19/28] x86/tpm: Early TPM PCR extending driver
+Content-Language: en-US
+To: Dave Hansen <dave.hansen@intel.com>,
+ Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+ linux-efi@vger.kernel.org, iommu@lists.linux.dev
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+ dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
+ James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, jarkko@kernel.org,
+ jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu,
+ herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
+ ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com,
+ kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
+ trenchboot-devel@googlegroups.com
+References: <20251215233316.1076248-1-ross.philipson@oracle.com>
+ <20251215233316.1076248-20-ross.philipson@oracle.com>
+ <56929e8b-a7cf-4390-b4ec-0b4c2c32b311@intel.com>
+ <62227ed3-3804-4795-93c9-ce2bbad3f2a7@apertussolutions.com>
+ <a507a85c-e1dd-4c63-94b2-9756ea9ece63@intel.com>
+From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+Autocrypt: addr=dpsmith@apertussolutions.com; keydata=
+ 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
+In-Reply-To: <a507a85c-e1dd-4c63-94b2-9756ea9ece63@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260108_023526_560115_B48DE970 
-X-CRM114-Status: GOOD (  21.03  )
+X-CRM114-CacheID: sfid-20260108_082207_959772_884EB609 
+X-CRM114-Status: GOOD (  13.27  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,98 +124,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jan 07, 2026 at 02:32:41PM +0530, Sourabh Jain wrote:
->
->
->On 06/01/26 13:10, Coiby Xu wrote:
->>CONFIG_CRASH_DM_CRYPT has been introduced to support LUKS-encrypted
->>device dump target by addressing two challenges [1],
->>  - Kdump kernel may not be able to decrypt the LUKS partition. For some
->>    machines, a system administrator may not have a chance to enter the
->>    password to decrypt the device in kdump initramfs after the 1st kernel
->>    crashes
+On 1/3/26 15:44, Dave Hansen wrote:
+> On 12/19/25 13:26, Daniel P. Smith wrote:
+> ...
+>>> I also seem to remember that there are special rules around the US
+>>> federal government's inability to hold copyrights. This seems worth at
+>>> least a mention ... somewhere.
 >>
->>  - LUKS2 by default use the memory-hard Argon2 key derivation function
->>    which is quite memory-consuming compared to the limited memory reserved
->>    for kdump.
->>
->>To also enable this feature for PowerPC, we only need to let 1st kernel
->>build up the kernel command parameter dmcryptkeys as similar to
->>elfcorehdr to pass the memory address of the stored info of dm-crypt
->>keys to the kdump kernel.
->>
->>Note to avoid a building failure [2] caused by undeclared function
->>crash_load_dm_crypt_keys when CONFIG_CRASH_DUMP is not enabled,
->>realign the function declaration with CONFIG_CRASH_DM_CRYPT.
->>
->>[1] https://lore.kernel.org/all/20250502011246.99238-1-coxu@redhat.com/
->>[2] https://lore.kernel.org/oe-kbuild-all/202512272218.ghBaSjzO-lkp@intel.com/
->>
->>Cc: Thomas Staudt <tstaudt@de.ibm.com>
->>Cc: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>
->>Cc: Baoquan he <bhe@redhat.com>
->>Cc: Dave Young <dyoung@redhat.com>
->>Cc: Kairui Song <ryncsn@gmail.com>
->>Cc: Pingfan Liu <kernelfans@gmail.com>
->>Cc: Andrew Morton <akpm@linux-foundation.org>
->>Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
->>Signed-off-by: Coiby Xu <coxu@redhat.com>
->>---
->>v2:
->>- fix double kfree issue [Sourabh]
->>- corretly kfree old modified_cmdline
->>- use imperative mood for commit message
->>- fix a compiling error caught by kernel test robot
->>
->>  arch/powerpc/include/asm/kexec.h |  3 ++-
->>  arch/powerpc/kexec/elf_64.c      | 27 ++++++++++++++++++++++++++-
->>  arch/powerpc/kexec/file_load.c   | 18 ++++++++++--------
->>  include/linux/crash_core.h       | 14 +++++++-------
->>  4 files changed, 45 insertions(+), 17 deletions(-)
->>
->>diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
->>index bd4a6c42a5f3..f3d098d543b4 100644
->>--- a/arch/powerpc/include/asm/kexec.h
->>+++ b/arch/powerpc/include/asm/kexec.h
->>@@ -80,7 +80,8 @@ struct kimage_arch {
->>  };
->>  char *setup_kdump_cmdline(struct kimage *image, char *cmdline,
->>-			  unsigned long cmdline_len);
->>+			  unsigned long cmdline_len,
->>+			  char *name, unsigned long addr);
->>  int setup_purgatory(struct kimage *image, const void *slave_code,
->>  		    const void *fdt, unsigned long kernel_load_addr,
->>  		    unsigned long fdt_load_addr);
->>diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
->>index 5d6d616404cf..995d7e8e98e1 100644
->>--- a/arch/powerpc/kexec/elf_64.c
->>+++ b/arch/powerpc/kexec/elf_64.c
->>@@ -81,13 +81,38 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
->>  		/* Setup cmdline for kdump kernel case */
->>  		modified_cmdline = setup_kdump_cmdline(image, cmdline,
->>-						       cmdline_len);
->>+						       cmdline_len,
->>+						       "elfcorehdr",
->>+						       image->elf_load_addr);
->>  		if (!modified_cmdline) {
->>  			pr_err("Setting up cmdline for kdump kernel failed\n");
->>  			ret = -EINVAL;
->>  			goto out;
->>  		}
->>  		cmdline = modified_cmdline;
->>+		cmdline_len = strlen(cmdline) + 1;
->
->I have a limited understanding of the new dm-crypt keys, but the way they
->are loaded and the additional command-line options added for the kdump
->kernel look good to me.
->
->Feel free to add:
->Acked-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>> IANAL either, but in general the safest/correct approach is to retain
+>> any CRs placed on the code being reused, and the above is the CR on the
+>> source from the Xen tree.
+> 
+> Yeah, in general, that's a good thing to do.
+> 
+> But I'm puzzled by your response. Are you making an attempt to justify
+> the past choice to copy the copyrights verbatim? Or are you declining to
+> follow my request to involve your companies' legal experts given that
+> you used the "safest/correct approach"?
 
-Thanks for reviewing and acknowledging the patch!
+My apologies that it came across like I was rebuffing your request. I 
+was just trying to inform as to why it was there. Yes, we are working to 
+determine the answer to your concern and what should be the correct 
+course of action.
 
--- 
-Best regards,
-Coiby
+> FWIW, I don't think what you did was bad here. You _did_ use a quite
+> reasonable approach in the case that a copyright was copied verbatim
+> from an existing legitimate* project.
+> 
+>   * I'll give Xen the benefit of the doubt just this one time and put it
+>     in the "legitimate" bucket. :P
 
+As a Xen contributor/maintainer, thanks ... I think. (^_^)
+
+V/r,
+dps
 
