@@ -4,56 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 64CA7D2502D
-	for <kexec@archiver.kernel.org>; Sun, 11 Jan 2026 00:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2D7CED2502F
+	for <kexec@archiver.kernel.org>; Sun, 11 Jan 2026 09:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zqK3HOg0vNq9f3TZyYs6Ctlm/q7dF5v31DWjp/N6no0=; b=rzbfoXRe0WNjA4U8MUhWZM4hgp
-	8rmhcpKogk5297x3V5g0QId/HyjuMlxZwSn/WtQx9sEOOh95yvJNCHZ3xft4C/s5NUVdS4PhMcbbi
-	HgVqTyhEMfnozIuuGBkz5UI53u+TzOQKwlLBSZ2XB46tJT/cPV+/tH0ziw1eV45m6EfhNCScnqXth
-	rkM2KnRfDsfkKsZeizack2QQZYN3erh9MOvmtubzH8mYNyoQxz/tXPzwChd8kgEsxW6o9wlhE2yIm
-	bqHWR8xubCApxu7KQovBhsDpzP1U1309AVDbEmjbizNdtmgT6oILJp10j1aXJ0XlrRpgUn8WEB6De
-	CyI5pO3w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=vL7gjUqvfCxhSt1TP11CCNuny296CJlfvFtlxrXBLKg=; b=G8EkZwXI7YpHEs13FiCZ9t4HmB
+	7UCSYgn49PRZg3uqWq3irmtIw4jiCLg+yzlfSW435BS8GUuaGL83IHkzOZfkvUxT6BtfRXYak1V9q
+	uyvzOQLdGfCiuyRjlTrAwbn2pv8RgZfOdZToYi7lRa007koooFAMSNnCYR7EIYDQHuPYcoXvSDhK4
+	DTZAwzVo1p1pik8QNUj4c3VrJztUXP+T05HUTUPgNxpH47YvI7AqWrhEoNmmWA+B/5sPDTMxiArIN
+	4KBBpqVi/OX335U5zlGlybHwb1oEZTnJdDJJKVH8KyN7gdniJ7ZEirj50D38NTYerMzFmi3/3/cWY
+	HjUOQy/w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vejK7-00000003nDS-0gVj;
-	Sun, 11 Jan 2026 00:28:51 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1verRr-000000043FX-20z3;
+	Sun, 11 Jan 2026 09:09:23 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vejK3-00000003nDM-0kCR
+	id 1verRo-000000043FB-2hZq
 	for kexec@lists.infradead.org;
-	Sun, 11 Jan 2026 00:28:47 +0000
+	Sun, 11 Jan 2026 09:09:21 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id E402560010;
-	Sun, 11 Jan 2026 00:28:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E054DC4CEF1;
-	Sun, 11 Jan 2026 00:28:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1768091324;
-	bh=MOScAOAfndrqdtTOZduWfCA2cVTB83JchOtZuxyo5fM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CpjTXcE3G/BfnjwGI+AlE5LJjHCT5gEInJ20H9uD2UP8SpQN+3xUghnmNVsLAyGJ0
-	 GwbhCaddbPfDXRJIyQepD15l4iKgpc7/e1+jJJdbDQqhC8n/n4a7YEym3hVFQfm4lJ
-	 vDrZYulVe+w1R/BuAaxiGCeCLDJgGOESbBkytWns=
-Date: Sat, 10 Jan 2026 16:28:43 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
+	by sea.source.kernel.org (Postfix) with ESMTP id F3A5640DC8;
+	Sun, 11 Jan 2026 09:09:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C796C4CEF7;
+	Sun, 11 Jan 2026 09:09:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768122559;
+	bh=GKu46ZcISn2tp5RrNUF5UFQMSBQBVWLCndgFjMo1l2k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vDDXkkr98Nhx5GtCAFY7rD9krnI3oR+m+tM1lenZeIb7ueLcAlFcRX0LJeytZHDfR
+	 H8Z84hnHqinsNLD1d9Zi/HdKhLZcSSAzaWl/ZcdmQA3iNp9oSVQi6E/2gVrSXYNW9b
+	 xoK8QJkSfYjcuHXwOGIDLGgkzkd9NgjgdhykyYdlWaZrKRScl7ejptOjy6YJI1hhxy
+	 OqZGUW+CBYo6y5CHHfWdlH1uI+lYW+Any5/uuHuaDcHeVSNwCzlwbxqJfFjPK1NiJD
+	 G80e8pS0xF19hkJFwbgMG8QXobXZJEMLU0sVchmc+EEMGXU7KpFRFPO/B+iT6Phj8A
+	 j0cnmXBTNKaBg==
+Date: Sun, 11 Jan 2026 11:09:12 +0200
+From: Mike Rapoport <rppt@kernel.org>
 To: ranxiaokai627@163.com
-Cc: graf@amazon.com, rppt@kernel.org, pasha.tatashin@soleen.com,
- pratyush@kernel.org, surenb@google.com, kexec@lists.infradead.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, ran.xiaokai@zte.com.cn
+Cc: graf@amazon.com, pasha.tatashin@soleen.com, pratyush@kernel.org,
+	akpm@linux-foundation.org, surenb@google.com,
+	kexec@lists.infradead.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, ran.xiaokai@zte.com.cn
 Subject: Re: [PATCH] kho: init alloc tags when restoring pages from reserved
  memory
-Message-Id: <20260110162843.ecd8e731bdc281f4cd8e4764@linux-foundation.org>
-In-Reply-To: <20260109104251.157767-1-ranxiaokai627@163.com>
+Message-ID: <aWNouDKhjUzHGXks@kernel.org>
 References: <20260109104251.157767-1-ranxiaokai627@163.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260109104251.157767-1-ranxiaokai627@163.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260111_010920_741713_853FA2A2 
+X-CRM114-Status: GOOD (  15.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -68,8 +74,7 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri,  9 Jan 2026 10:42:51 +0000 ranxiaokai627@163.com wrote:
-
+On Fri, Jan 09, 2026 at 10:42:51AM +0000, ranxiaokai627@163.com wrote:
 > From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
 > 
 > Memblock pages (including reserved memory) should have their allocation
@@ -81,12 +86,17 @@ On Fri,  9 Jan 2026 10:42:51 +0000 ranxiaokai627@163.com wrote:
 > 
 > Add missing clear_page_tag_ref() annotation in kho_restore_page() to
 > fix this.
+> 
+> Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
 
-Great, thanks.
+Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-It would be helpful to quote that warning message in the patch
-changelog, please.
-
+> ---
+>  kernel/liveupdate/kexec_handover.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> index cd6b3fb9dcae..2d47f2c50bd8 100644
 > --- a/kernel/liveupdate/kexec_handover.c
 > +++ b/kernel/liveupdate/kexec_handover.c
 > @@ -268,6 +268,7 @@ static struct page *kho_restore_page(phys_addr_t phys, bool is_folio)
@@ -97,17 +107,12 @@ changelog, please.
 >  	adjust_managed_page_count(page, nr_pages);
 >  	return page;
 >  }
+> -- 
+> 2.25.1
+> 
+> 
 
-Warning splats are pretty bad and it's desirable to fix this in
-previous kernel versions.
-
-To do that it's best for us to identify which kernel version(s) should
-be patched, via a Fixes: tag in the changelog.
-
-From a quick look, it appears that Pratyush's 12b9a2c05d1b ("kho:
-initialize tail pages for higher order folios properly") is a suitable
-anchor, what do people think?
-
-Meanwhile I'll queue this up for some testing while awaiting maintainer
-feedback.
+-- 
+Sincerely yours,
+Mike.
 
