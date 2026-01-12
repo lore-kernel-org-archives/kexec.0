@@ -4,64 +4,156 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 538E0C9EC64
-	for <kexec@archiver.kernel.org>; Mon, 12 Jan 2026 10:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 15CCAC9EC8D
+	for <kexec@archiver.kernel.org>; Mon, 12 Jan 2026 14:39:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=oQ+uhczkBU6ZeuZtsKRxUa8pjHCFPyNvAqTeWv5HkrM=; b=s0m3MQ8l93pvklnsboAgbYi6V6
-	I5DxHwyA+D/yZo5cEk6p7TwcQ1XzV/dylgcHZDTnWbHfHPorISv5SMQkcQsMyKhgt9nU/rqRgnCdA
-	/lx85dD8mEYSRvzjk9n3l3GztrGLVY753pKr3f+ioZ4byquUI6KYkbyN1STytcMsznbjPa7Sv6BOP
-	c7bEWUoPXADNu5EiATy/MNjq/zWOPVVxYlD6uyUr8c/NhmrT3heos/ajCHIrqvZBAm6kKJ52hK80H
-	d3bLiknDhzhHG50Nf3AXZHmun3dabJUJeWFoDuvh0NDj4Df+RPf3cfmDlAu6yE+pEgTqwyJJvedlg
-	33N5T83Q==;
+	bh=Q9JvcOOAnUmG+RXEkJncWN2C3v+3WUl14qzSyrQbRGg=; b=vll5Yavv/n+5U+NZy5ykURQUbc
+	E67KrGITUEPg0ru8/otmmmg3y7KpFCnnNPjvSVQgCtfaagg5rKmH1MKpXFYck3sLKRQXDkk5JPluR
+	+As8szGMBfAqaP5UDaQtl79S785yxm03ICW/2cgaKFnrpBD7P8z195vOqPJaZk4HzWd4e2cj9gvUn
+	+MpsinbCbK0W9L2h3snGsAVFdroB1ly+2UyxwcTve4ttpiNECHYyb33a+ttHI3Nq6JEcIBbS021QO
+	tpXHICRQf3KaBAF/JzSg/JJWweNqAWi5Ed/U4FsmYd6OrJNakRRyCrSQsnuMS38+V83IUgzy/2nmw
+	1gFXyq9A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vfF7I-00000005AOH-42rQ;
-	Mon, 12 Jan 2026 10:25:44 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1vfJ4c-00000005Y9i-1mlH;
+	Mon, 12 Jan 2026 14:39:14 +0000
+Received: from mail-westus2azlp170100005.outbound.protection.outlook.com ([2a01:111:f403:c005::5] helo=CO1PR03CU002.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vfF7H-00000005AOB-0x6z
+	id 1vfJ4a-00000005Y93-2ja1
 	for kexec@lists.infradead.org;
-	Mon, 12 Jan 2026 10:25:43 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 345466013B;
-	Mon, 12 Jan 2026 10:25:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8994C19422;
-	Mon, 12 Jan 2026 10:25:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768213541;
-	bh=iZB8w08zTJZOeuhUYutrmZtQ2wK2v16pDgwJWhcGpSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TB3TSWJyHUhoynAjWb06w7GIhKYoQDVMDrLeaOT0MyjqtCXWmRvgze14tZD7P/Aij
-	 oT7udaN4OUG/CI8sVA29DGFSF/v5h1VFOat9mN011g6JpkGPfSW50Kn/IqmKuckQGg
-	 L4w6njj6XBbg9UFgkKL1gks7m4swycKWV21aYcdp2FPiTRJFv6a5g7hOrV9zU6Fytr
-	 f6IqfCwKyzJ9fTSddo3Qk3g5INIYOh8v1UxrdwcElcfPv0PObPyj/klddRE3z7yxxH
-	 nH1xlOn92G7FHq3eDu2acNAfKG49EI7MwWD0/ritUdvPLFui90LZUCPn9VPt1441t9
-	 3/2xOo4VMXz1w==
-Date: Mon, 12 Jan 2026 12:25:34 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Jason Miu <jasonmiu@google.com>
-Cc: Alexander Graf <graf@amazon.com>,
+	Mon, 12 Jan 2026 14:39:13 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cPWGptrKWToDIbv/ShnnMKk3tbYnJzrvVMeJJ5iAj1IauPAVG/KjF9M7L6N7mDcjxjRWp5p2HJR0OBBe6V+c9RGoR5q3Lw5XwLSOb9IE6G3MwwQIUfia/TQYTUVw0/xbHn3DgEy10WBbWbWAI9TMT0ETbsKxqUdnEe5Vb2vNOS3HKrtFlZpqQLG53MiP4X12l+JbTlDbR/A16n6Z3yg5TPaBTev+AMOWOLDNnwDTJ6q/GHj19qBF+7MXLrP1AKfpdigfqfkPpvOs8ADNgQni/uMdvPATxxv5wzGwhxA4nbT49xyBVSBOLIhPIJV0gHSwJb/rftOgCZgg+wI+Nfpm9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Q9JvcOOAnUmG+RXEkJncWN2C3v+3WUl14qzSyrQbRGg=;
+ b=fAMcvy39ExjRAljugJ8x8DHqm6xcLsFKFZ8CGJrsuUR7CpTnUK9v846vTZEKhEkRhYa1unXTlFYeaghKpF8fWJcHyc0K/WyfUC0WFMtcMD97tLVcjRrGnwsHhfQT6qsFrsDt39okjhufG7SLVfzu0PFTEgy7F9Xeh82jGce1MR4YBaE5cAVnsqd8deoO0/LFITlXuA9yfZURE4/eJH43TgekcyURIFZgoOsIbPnfqnn5GIWx0V9GI0PzV+Ti3BlHU9aU3PZCPa5CAuikLJhZxRHipjr9PRpDM5pliQZDc76RcETTOIIPfz8emdYSwn1XGGxodo9vXmyQtj8ZloqZ5A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q9JvcOOAnUmG+RXEkJncWN2C3v+3WUl14qzSyrQbRGg=;
+ b=O9eW3vkQQyDdggSPnuY/v+qDSRk5LiO5hMyk6k8F+AfQGJ5bU+YDzI2iWDdDaNShmW47JKdEQNl0y3VIhjcAQZxbgUWet2Gudue+I6zRBio5o30kt9Vchualcie2iiGfybAaK6cflEjNqW4JWBuH1eJ+LAH8jWe0U8WfmpsiLdADL9BkO9jp5OM+yYi9pqEh3qViovqNN+hNVPiK9KgqSxZzOn0wtNV5ofrb9WV0OjHI/oOKlhTrU+P5ZOfLqp/DyaUmefsZ8tO0KT3l2ZRvOaryAKx+hEjoucCn8QoSGc83AVnP259vbqLeAEHpOlRhgkBKcj+0R8dVnTrm2Gq4DQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by DS0PR12MB8526.namprd12.prod.outlook.com (2603:10b6:8:163::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Mon, 12 Jan
+ 2026 14:39:05 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c%3]) with mapi id 15.20.9499.005; Mon, 12 Jan 2026
+ 14:39:04 +0000
+Date: Mon, 12 Jan 2026 10:39:04 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Jason Miu <jasonmiu@google.com>, Alexander Graf <graf@amazon.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>,
 	David Matlack <dmatlack@google.com>,
 	David Rientjes <rientjes@google.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
 	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v4 2/2] kho: Remove finalize state and clients
-Message-ID: <aWTMHgHXy9Z-cKeb@kernel.org>
+Subject: Re: [PATCH v4 1/2] kho: Adopt radix tree for preserved memory
+ tracking
+Message-ID: <20260112143904.GA812923@nvidia.com>
 References: <20260109001127.2596222-1-jasonmiu@google.com>
- <20260109001127.2596222-3-jasonmiu@google.com>
-MIME-Version: 1.0
+ <20260109001127.2596222-2-jasonmiu@google.com>
+ <aWTJ2v9J-Aa6ykBf@kernel.org>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260109001127.2596222-3-jasonmiu@google.com>
+In-Reply-To: <aWTJ2v9J-Aa6ykBf@kernel.org>
+X-ClientProxiedBy: BL6PEPF00016412.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:22e:400:0:1004:0:a) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|DS0PR12MB8526:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8671f75d-c463-4392-754b-08de51e855c7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?/80LbP/m7/27YLVEHo4akCG7I/H692VmjDjyrwmtYyC/QVARfzQfNd1Bo6Z4?=
+ =?us-ascii?Q?yUVE92tGAmvMfySd5RdDxgsM9ho/6uU6+qHdmBFsJqoVskgYFe4SZqYtktoT?=
+ =?us-ascii?Q?Z9yK4cifSVhzNf6iYEHlbCE0u0G4rQWNOoNBwao+N0PZU0c2ikn08aGWTEK/?=
+ =?us-ascii?Q?zm61HtTEXD6AtgAXpmYKeB7ngO7uOLF3dkGaFppl0HYBiND12JxM1LnGwF3P?=
+ =?us-ascii?Q?gr4tuTNve6mdEp1yeySdo0oMyqicV8zUyVPiYVvI8NDjwyqlLDr+34vW+7Ji?=
+ =?us-ascii?Q?O3RYWzcGzw2xyvhpLl5iOB6uoRoU3ef1TV0ThAZYApuymCBS4+5kWw/DBRR5?=
+ =?us-ascii?Q?yWrQkZ5cRTdFOPHpBbN7TSTaKAMJoBKxjoXh02z8ODI2eKhnqVHlVedI2/x3?=
+ =?us-ascii?Q?x92viyyHl5iO1vu5C0Yv2hTn8OHMzI8O7UBD8yd43u5gQIlDmpffhAPYRmhf?=
+ =?us-ascii?Q?MQiRNg8wqPB76InaHMc7izkArZVF+xwQlJlDT2fm9uc5gaMjlCFpTXOENjMr?=
+ =?us-ascii?Q?mlmus0sg6SjZpg9/Y9JlxnbBV2BPr/ep0Mw8hAGVQPMs1COn/Qf8vj1MxCUE?=
+ =?us-ascii?Q?V/SePuzOcUMURbkpX0Kg/ux8vr4X6rrKBzMkr0xkR0QtsoXYY0z5xcpkOJ9E?=
+ =?us-ascii?Q?1VTI91DUdHH8aGtajOndSsOTJrLl7Tt99D8vm+W/fEW74RmloqYIHS1xgDUz?=
+ =?us-ascii?Q?X9ZMmr2O7bVX6Fi1CqLG/XsRvDZf15oajm2mbdXkQD4rj1nCHH0n1ErPWwJi?=
+ =?us-ascii?Q?GpiP/FikeIamTx25G3tPb6solLU+MCaRTo0NwEkmBPOsSnxnF/7UKIioWAtA?=
+ =?us-ascii?Q?A3NN8OnLwhOlT58qyUtYpZrp59sr+s/fbC5Jzllr++tfoTaANu4SbW1O0yki?=
+ =?us-ascii?Q?dNXgUSJfO2WFG+dP6sx8oyafCn0DfQOBDPf/uT+V9vSOUfVIv3HxbbnDsoAL?=
+ =?us-ascii?Q?qN57CBxricb88mTGgrp1KgBKOSuMpOchzLsN1G/PGIa64Qw485NHGCpRJYRk?=
+ =?us-ascii?Q?kJqtfgiYx8/vxC5kDuYoGBioxThORfxWGmvHueVpN0FfXaFwqiebpW3ki+UL?=
+ =?us-ascii?Q?v1COP+DT1bR2DGKl80Btj9/CBuMHKLe/nU5+i8sXP6wBhYbBiDTo8NJAwnP3?=
+ =?us-ascii?Q?GWbaOgq7bovTWpJ+V41POS0Ko2OHtonj2GY92Kb8EuMGt+CMEkkUe17vqlaC?=
+ =?us-ascii?Q?e5qjoSzg5Y97tqjKdx2CjM204KoR/5zgG3trQJs6QL4QlixW03tmb2QB8tDJ?=
+ =?us-ascii?Q?KnSIh5Kbbg3tk4UqgMPgoVg7FH4NEPc5rArkpvE0DcUMsFCytHyOE3uPCA2g?=
+ =?us-ascii?Q?+YK7bpUMqqq7RqSisUulzHEuPwm+iGtmrWj11zRfZ/83UM0d5a+3SCDSd3VP?=
+ =?us-ascii?Q?kgyVdCmDAXJAWSGFnqEVDzA9T+YvKSR4jJM06YzBie1AnAMX+zyx4izwdEsF?=
+ =?us-ascii?Q?uS1iYSMVpjkHELT1Pu4XpLCLPcUSZf2A?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2cz40LeiKh0D+y4269hZG+YWr9Q87A0Vv3/MCJtMXFx+LXWmSWgElPro04XM?=
+ =?us-ascii?Q?FkA3w2tsDc6Oy1lTtpgUbqG7tS9n0ccxJbvVpK+QFprqMWfAz+FTVlEJE+Ar?=
+ =?us-ascii?Q?sEym8KtsRl7nQNhGKXTI+8eTvj9T0+Vb3IgpET+cNDdh3w49wo/r6DuwSH67?=
+ =?us-ascii?Q?iRmHs/z9eeze7WyzJRgZbw97aMWmeUHas+ZtsqCq2spLzVcivwJZTnJ83hWo?=
+ =?us-ascii?Q?GpCH7+ly5g8VkjXMRidrrrUWtiznLsrgFH0Xlz8zRnztu9eHtfFVNJf6KFZO?=
+ =?us-ascii?Q?J3RTqnIP1a4nb9I8FUjkpW1jIKg6mc4O0NlI3DBIU2UikGXayg4XZYtxKfQ9?=
+ =?us-ascii?Q?got+a75xExFdip6JqFMScHQlge1vjzJ18daFqyG3r/2w92rDSOwwgx+7ewIA?=
+ =?us-ascii?Q?IM/PrhKnhgs5tfINsgPYuQNrU0lIMqAnH3D8oXd0AYMgYEifqkbSCcxXCTRl?=
+ =?us-ascii?Q?oEQ87JS+WSSVw8ssfJt2Qp4ljpbe5xbClIssYsTrWqL6jXO/OGwXU48aOzKr?=
+ =?us-ascii?Q?owDMC+ntVehLtFLsRVQbDq873T2enCYMPyonROm3L5ALWGkwXpQA2MHwTHLX?=
+ =?us-ascii?Q?bAvKXhTgt4NBeFIYRBLs/8Qbd1yl2WuadMPS4nCVAARunqfKslrPG0HxYDc7?=
+ =?us-ascii?Q?691UW0c9l3CXcegNnhqHootsSP0sX+05sJ2GKEHUb++4qJUWZp+sRpt3kdc6?=
+ =?us-ascii?Q?xTfA7DIUWl91nQcy8njXuclhZNfacBXagRbAtjFYdW3nFIqm4ZUoSGuHsG6w?=
+ =?us-ascii?Q?5ek86uMiyvDwBBUmlKr1hHddRdTRgHBkoaLmMTqClhhQ5KsewhaDxrAeJzSq?=
+ =?us-ascii?Q?DCE1V0FGbF4piggnfC05UeuoM9EiQTOcULALe/UBUDWdKVHWt+7BoOA/NauT?=
+ =?us-ascii?Q?UXEFIvmduXif5lnF4PLxEPD9O2xtqz2t0TCRR6i01/N1IZASUQjxq5SUx927?=
+ =?us-ascii?Q?wCJuM3EfrabBHXTiFfv9LCN4AzQZ2TTFUI3R7ZdHFqd7UgqSlrvIR1tUvvsO?=
+ =?us-ascii?Q?T5AG1ZegxRshUUBt3XtKCCOUJlFcsuKRK3DbtPIsubm1pofAPaKhlTMMyLWg?=
+ =?us-ascii?Q?l9GGLM0KDbjdmV80F+fXUg6aSjxOGlYAcIqAXs0QsTl179teb6ufRVqFmAOT?=
+ =?us-ascii?Q?cy3vwULlr1WtDvUbOv3xkSUQB9XBbTWq7kGcIsBbBrDXJN6/fZG4hgxayNlN?=
+ =?us-ascii?Q?0l+dDFO3LVB7XcCQcCZZGhORGqAoLjE7IGSKUGSqMmDHyt8kfRu+myFEE/te?=
+ =?us-ascii?Q?S4MfHPGA9nS6MAXL+xYbrpgCBzIzDdIHq1e7Pxaz4pjBdYPbxsqOH55/ubu0?=
+ =?us-ascii?Q?eTAtUDdMfhe9owb0uwawmI47hpW5VXx+qPjM9Nl/b2kcPHiLINSLqlXCzOaH?=
+ =?us-ascii?Q?O7DKQQ0tXkqTB0GuQ/Ewa1wQ5kY5oUY8vJ9jxDiWsg01k5CazfJ3jGZxuUZ+?=
+ =?us-ascii?Q?IO9BApLyFFCql0pDcAu9CahyWBH99kp8YlUf0H+PP5s4+AmpqnBbaWkhWbcv?=
+ =?us-ascii?Q?XbHUrjXykvRHAM/So49ZiV2xFMUXb2T0qmMW5hqOcTOt3CMixDruqwmQQocc?=
+ =?us-ascii?Q?FtfOFRNf5OvhB4PEfC0ao4Jtl2Jw50ECo6xZ/U9fHxQ4YBId0ZvTQoBkBovv?=
+ =?us-ascii?Q?q8oXMBmm6mCGeI8RbdmbrkqIfCmz3b8aVdD+Jgy+t1abouRGEcyYh46rhLhn?=
+ =?us-ascii?Q?pMg2XhGif5iNaPWHc3I4y/jR8oOl9v9ts40bsDcdi7KQLxHEP0qnTwBaXEd8?=
+ =?us-ascii?Q?R/29hSwFag=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8671f75d-c463-4392-754b-08de51e855c7
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2026 14:39:04.9403
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vrXkRaedKzi0STJNgLpI6qwCWc15OoXPIvrVEUXwAvKOkf5uFkFek0Gk77hKtw4A
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8526
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260112_063912_692400_AC01DCD2 
+X-CRM114-Status: GOOD (  23.23  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,127 +168,62 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jan 08, 2026 at 04:11:27PM -0800, Jason Miu wrote:
-> Eliminate the `kho_finalize()` function and its associated state from
-> the KHO subsystem. The transition to a radix tree for memory tracking
-> makes the explicit "finalize" state and its serialization step
-> obsolete.
+On Mon, Jan 12, 2026 at 12:15:54PM +0200, Mike Rapoport wrote:
+> > + * The tree is traversed using a key that encodes the page's physical address
+> > + * (pa) and its order into a single unsigned long value. The encoded key value
+> > + * is composed of two parts: the 'order bit' in the upper part and the 'page
+> > + * offset' in the lower part.::
+> > + *
+> > + *   +------------+-----------------------------+--------------------------+
+> > + *   | Page Order | Order Bit                   | Page Offset              |
+> > + *   +------------+-----------------------------+--------------------------+
+> > + *   | 0          | ...000100 ... (at bit 52)   | pa >> (PAGE_SHIFT + 0)   |
+> > + *   | 1          | ...000010 ... (at bit 51)   | pa >> (PAGE_SHIFT + 1)   |
+> > + *   | 2          | ...000001 ... (at bit 50)   | pa >> (PAGE_SHIFT + 2)   |
+> > + *   | ...        | ...                         | ...                      |
+> > + *   +------------+-----------------------------+--------------------------+
+> > + *
+> > + * Page Offset:
 > 
-> Remove the `kho_finalize()` and `kho_finalized()` APIs and their stub
-> implementations. Update KHO client code and the debugfs interface to
-> no longer call or depend on the `kho_finalize()` mechanism.
+> To me "page offset" reads as offset from somewhere and here it's rather pfn
+> on steroids :) 
+> Also in many places in the kernel "page offset" refers to the offset inside a
+> page.
 > 
-> Complete the move towards a stateless KHO, simplifying the overall
-> design by removing unnecessary state management.
+> Can't say I can think of a better name, but it feels that it should express
+> that this is an address more explicitly.
+
+It is "Shifted Physical Address"
+
+> > +			node = phys_to_virt((phys_addr_t)node->table[idx]);
+> > +	}
+> > +
+> > +	/* Handle the leaf level bitmap (level 0) */
+> > +	leaf = (struct kho_radix_leaf *)node;
+> > +	idx = kho_radix_get_index(key, 0);
+> > +	__clear_bit(idx, leaf->bitmap);
 > 
-> Signed-off-by: Jason Miu <jasonmiu@google.com>
-> ---
->  Documentation/admin-guide/mm/kho.rst        | 52 ++++-----------------
->  Documentation/core-api/kho/index.rst        | 17 ++-----
->  kernel/liveupdate/kexec_handover.c          | 21 +--------
->  kernel/liveupdate/kexec_handover_debugfs.c  | 23 ---------
->  kernel/liveupdate/kexec_handover_internal.h |  3 --
->  kernel/liveupdate/luo_core.c                | 12 +----
->  kernel/liveupdate/luo_flb.c                 |  2 +-
->  tools/testing/selftests/kho/init.c          | 20 --------
->  8 files changed, 16 insertions(+), 134 deletions(-)
+> I think I already mentioned it in earlier reviews, but I don't remember any
+> response.
 > 
-> diff --git a/Documentation/admin-guide/mm/kho.rst b/Documentation/admin-guide/mm/kho.rst
-> index 6dc18ed4b886..57d5690dce77 100644
-> --- a/Documentation/admin-guide/mm/kho.rst
-> +++ b/Documentation/admin-guide/mm/kho.rst
-> @@ -28,20 +28,10 @@ per NUMA node scratch regions on boot.
->  Perform a KHO kexec
->  ===================
->  
-> -First, before you perform a KHO kexec, you need to move the system into
-> -the :ref:`KHO finalization phase <kho-finalization-phase>` ::
-> -
-> -  $ echo 1 > /sys/kernel/debug/kho/out/finalize
-> -
-> -After this command, the KHO FDT is available in
-> -``/sys/kernel/debug/kho/out/fdt``. Other subsystems may also register
-> -their own preserved sub FDTs under
-> -``/sys/kernel/debug/kho/out/sub_fdts/``.
-> -
-> -Next, load the target payload and kexec into it. It is important that you
-> -use the ``-s`` parameter to use the in-kernel kexec file loader, as user
-> -space kexec tooling currently has no support for KHO with the user space
-> -based file loader ::
-> +To perform a KHO kexec, load the target payload and kexec into it. It
-> +is important that you use the ``-s`` parameter to use the in-kernel
-> +kexec file loader, as user space kexec tooling currently has no
-> +support for KHO with the user space based file loader ::
->  
->    # kexec -l /path/to/bzImage --initrd /path/to/initrd -s
->    # kexec -e
-> @@ -52,40 +42,19 @@ For example, if you used ``reserve_mem`` command line parameter to create
->  an early memory reservation, the new kernel will have that memory at the
->  same physical address as the old kernel.
->  
-> -Abort a KHO exec
-> -================
-> -
-> -You can move the system out of KHO finalization phase again by calling ::
-> -
-> -  $ echo 0 > /sys/kernel/debug/kho/out/active
-> -
-> -After this command, the KHO FDT is no longer available in
-> -``/sys/kernel/debug/kho/out/fdt``.
-> -
->  debugfs Interfaces
->  ==================
->  
-> +These debugfs interfaces are available when the kernel is compiled with
-> +``CONFIG_KEXEC_HANDOVER_DEBUGFS`` set to y.
+> How do we approach freeing empty bitmaps and intermediate nodes?
+> If we do a few preserve/uppreserve cycles for memory that can be allocated
+> and freed in between we might get many unused bitmaps.
 
-s/set to y/enabled/
+Surely this is an error case??
 
->  ``/sys/kernel/debug/kho/out/sub_fdts/``
-> -    In the KHO finalization phase, KHO producers register their own
-> -    FDT blob under this directory.
-> +    KHO producers can register their own FDT blob under this directory.
+We shouldn't be unpreserving at all in a normal flow?
 
-"own FDT or another binary blob ..."
+> My view is that we should free the empty bitmaps, maybe asynchronously.
+> The intermediate nodes probably don't take that much memory to bother with
+> them.
 
-> diff --git a/Documentation/core-api/kho/index.rst b/Documentation/core-api/kho/index.rst
-> index 7ddc4d3ecac5..286a6d0b9956 100644
-> --- a/Documentation/core-api/kho/index.rst
-> +++ b/Documentation/core-api/kho/index.rst
-> @@ -9,8 +9,9 @@ Kexec Handover Subsystem
->  Overview
->  ========
->  
-> -Kexec HandOver (KHO) is a mechanism that allows Linux to preserve memory
-> -regions, which could contain serialized system states, across kexec.
-> +Kexec HandOver (KHO) is a mechanism that allows Linux to preserve
-> +memory regions, containing kernel data structures in their live,
-> +in-memory format, across kexec.
+Telling they are empty would be quite expensive. I think we should not
+attempt to clean the tree unless there is a really good reason why we
+should have good flows with alot of unpreserving activity.
 
-I'm not sure about "live, in-memory format". memfd does preserve some
-serialized state rather than "live memfd".
-The existing phrasing is general enough and I'd leave it as is.
-  
-> diff --git a/kernel/liveupdate/luo_flb.c b/kernel/liveupdate/luo_flb.c
-> index 4c437de5c0b0..ddc9110a2b45 100644
-> --- a/kernel/liveupdate/luo_flb.c
-> +++ b/kernel/liveupdate/luo_flb.c
-> @@ -630,7 +630,7 @@ int __init luo_flb_setup_incoming(void *fdt_in)
->   * data handle, and the final reference count. This allows the new kernel to
->   * find the appropriate handler and reconstruct the FLB's state.
->   *
-> - * Context: Called from liveupdate_reboot() just before kho_finalize().
-> + * Context: Called from liveupdate_reboot() just before return.
+I think we would be better served to treat the root cause and fixup
+what ever is doing preserving/unpreserving loops.
 
-Just
-
-	Called from liveupdate_reboot()
-
-is enough IMO.
-
->   */
-
--- 
-Sincerely yours,
-Mike.
+Jason
 
