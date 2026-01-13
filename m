@@ -4,156 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 15CCAC9EC8D
-	for <kexec@archiver.kernel.org>; Mon, 12 Jan 2026 14:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3D2ECD29DC8
+	for <kexec@archiver.kernel.org>; Tue, 13 Jan 2026 03:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Q9JvcOOAnUmG+RXEkJncWN2C3v+3WUl14qzSyrQbRGg=; b=vll5Yavv/n+5U+NZy5ykURQUbc
-	E67KrGITUEPg0ru8/otmmmg3y7KpFCnnNPjvSVQgCtfaagg5rKmH1MKpXFYck3sLKRQXDkk5JPluR
-	+As8szGMBfAqaP5UDaQtl79S785yxm03ICW/2cgaKFnrpBD7P8z195vOqPJaZk4HzWd4e2cj9gvUn
-	+MpsinbCbK0W9L2h3snGsAVFdroB1ly+2UyxwcTve4ttpiNECHYyb33a+ttHI3Nq6JEcIBbS021QO
-	tpXHICRQf3KaBAF/JzSg/JJWweNqAWi5Ed/U4FsmYd6OrJNakRRyCrSQsnuMS38+V83IUgzy/2nmw
-	1gFXyq9A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=kG53ciijNmoTnssyHfq8vIOccM9yp/KKrUz9IyCeyAI=; b=M4XfcEDgMZpGN3yVmcqXlflSeY
+	/m/Fa2jYS7YfN1RqOcMg8TmBsqRNMCoL+YEJDmR7yW2HvDgVj/d4yLlRvAKi6JUoKdUw83aBj99p5
+	dYtz5WnIUpndxJZtaaVb8FsQBxdBLdSkhCJ+xkc9+Gtk0YAWagT5w8AlghUYhFcE4jDh+iuwCVeDM
+	1yYk96XbthuUoFE/fi/7QWJjl10+/URHbF0EsNuidgiwKB4VAGDOk0SS5LcDUtB2fLpRj1UhcHDHH
+	QiVbAWvGazXj8PScl1rchsX2lznqPkjuXrCUugSMM3XgAgDeC/aP/2iEbO9VgoXjp7GUSRo9X+0eG
+	aSBl3h4g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vfJ4c-00000005Y9i-1mlH;
-	Mon, 12 Jan 2026 14:39:14 +0000
-Received: from mail-westus2azlp170100005.outbound.protection.outlook.com ([2a01:111:f403:c005::5] helo=CO1PR03CU002.outbound.protection.outlook.com)
+	id 1vfVBe-00000006URh-1Rml;
+	Tue, 13 Jan 2026 03:35:18 +0000
+Received: from m16.mail.163.com ([220.197.31.2])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vfJ4a-00000005Y93-2ja1
+	id 1vfVBZ-00000006UQl-0Tzd
 	for kexec@lists.infradead.org;
-	Mon, 12 Jan 2026 14:39:13 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cPWGptrKWToDIbv/ShnnMKk3tbYnJzrvVMeJJ5iAj1IauPAVG/KjF9M7L6N7mDcjxjRWp5p2HJR0OBBe6V+c9RGoR5q3Lw5XwLSOb9IE6G3MwwQIUfia/TQYTUVw0/xbHn3DgEy10WBbWbWAI9TMT0ETbsKxqUdnEe5Vb2vNOS3HKrtFlZpqQLG53MiP4X12l+JbTlDbR/A16n6Z3yg5TPaBTev+AMOWOLDNnwDTJ6q/GHj19qBF+7MXLrP1AKfpdigfqfkPpvOs8ADNgQni/uMdvPATxxv5wzGwhxA4nbT49xyBVSBOLIhPIJV0gHSwJb/rftOgCZgg+wI+Nfpm9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Q9JvcOOAnUmG+RXEkJncWN2C3v+3WUl14qzSyrQbRGg=;
- b=fAMcvy39ExjRAljugJ8x8DHqm6xcLsFKFZ8CGJrsuUR7CpTnUK9v846vTZEKhEkRhYa1unXTlFYeaghKpF8fWJcHyc0K/WyfUC0WFMtcMD97tLVcjRrGnwsHhfQT6qsFrsDt39okjhufG7SLVfzu0PFTEgy7F9Xeh82jGce1MR4YBaE5cAVnsqd8deoO0/LFITlXuA9yfZURE4/eJH43TgekcyURIFZgoOsIbPnfqnn5GIWx0V9GI0PzV+Ti3BlHU9aU3PZCPa5CAuikLJhZxRHipjr9PRpDM5pliQZDc76RcETTOIIPfz8emdYSwn1XGGxodo9vXmyQtj8ZloqZ5A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q9JvcOOAnUmG+RXEkJncWN2C3v+3WUl14qzSyrQbRGg=;
- b=O9eW3vkQQyDdggSPnuY/v+qDSRk5LiO5hMyk6k8F+AfQGJ5bU+YDzI2iWDdDaNShmW47JKdEQNl0y3VIhjcAQZxbgUWet2Gudue+I6zRBio5o30kt9Vchualcie2iiGfybAaK6cflEjNqW4JWBuH1eJ+LAH8jWe0U8WfmpsiLdADL9BkO9jp5OM+yYi9pqEh3qViovqNN+hNVPiK9KgqSxZzOn0wtNV5ofrb9WV0OjHI/oOKlhTrU+P5ZOfLqp/DyaUmefsZ8tO0KT3l2ZRvOaryAKx+hEjoucCn8QoSGc83AVnP259vbqLeAEHpOlRhgkBKcj+0R8dVnTrm2Gq4DQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
- by DS0PR12MB8526.namprd12.prod.outlook.com (2603:10b6:8:163::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.7; Mon, 12 Jan
- 2026 14:39:05 +0000
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::1b59:c8a2:4c00:8a2c]) by LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::1b59:c8a2:4c00:8a2c%3]) with mapi id 15.20.9499.005; Mon, 12 Jan 2026
- 14:39:04 +0000
-Date: Mon, 12 Jan 2026 10:39:04 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Jason Miu <jasonmiu@google.com>, Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>,
-	David Matlack <dmatlack@google.com>,
-	David Rientjes <rientjes@google.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v4 1/2] kho: Adopt radix tree for preserved memory
- tracking
-Message-ID: <20260112143904.GA812923@nvidia.com>
-References: <20260109001127.2596222-1-jasonmiu@google.com>
- <20260109001127.2596222-2-jasonmiu@google.com>
- <aWTJ2v9J-Aa6ykBf@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aWTJ2v9J-Aa6ykBf@kernel.org>
-X-ClientProxiedBy: BL6PEPF00016412.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:22e:400:0:1004:0:a) To LV8PR12MB9620.namprd12.prod.outlook.com
- (2603:10b6:408:2a1::19)
+	Tue, 13 Jan 2026 03:35:17 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=kG
+	53ciijNmoTnssyHfq8vIOccM9yp/KKrUz9IyCeyAI=; b=VIzHpzDfyJdSbzSux5
+	I1/9+g9NxthwkYv7DqlCSW6qOd6sJCanUCdh2As/A6GDW5ij84JEAT8VgzQCedFh
+	RRdbDg8LY+knitxcpFzlojQPjb/dVEnLt5LaszOodbmsifYafDD1mIQhYYr71Ag5
+	J9VbKNuBa8Xq9y3xLFn0SknkE=
+Received: from ubuntu24-z.. (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDXrf0wvWVpTNjGFQ--.289S2;
+	Tue, 13 Jan 2026 11:34:10 +0800 (CST)
+From: ranxiaokai627@163.com
+To: graf@amazon.com,
+	rppt@kernel.org,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	akpm@linux-foundation.org,
+	surenb@google.com
+Cc: kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	ran.xiaokai@zte.com.cn,
+	ranxiaokai627@163.com
+Subject: [PATCH v2] kho: init alloc tags when restoring pages from reserved memory
+Date: Tue, 13 Jan 2026 03:34:03 +0000
+Message-ID: <20260113033403.161869-1-ranxiaokai627@163.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|DS0PR12MB8526:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8671f75d-c463-4392-754b-08de51e855c7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?/80LbP/m7/27YLVEHo4akCG7I/H692VmjDjyrwmtYyC/QVARfzQfNd1Bo6Z4?=
- =?us-ascii?Q?yUVE92tGAmvMfySd5RdDxgsM9ho/6uU6+qHdmBFsJqoVskgYFe4SZqYtktoT?=
- =?us-ascii?Q?Z9yK4cifSVhzNf6iYEHlbCE0u0G4rQWNOoNBwao+N0PZU0c2ikn08aGWTEK/?=
- =?us-ascii?Q?zm61HtTEXD6AtgAXpmYKeB7ngO7uOLF3dkGaFppl0HYBiND12JxM1LnGwF3P?=
- =?us-ascii?Q?gr4tuTNve6mdEp1yeySdo0oMyqicV8zUyVPiYVvI8NDjwyqlLDr+34vW+7Ji?=
- =?us-ascii?Q?O3RYWzcGzw2xyvhpLl5iOB6uoRoU3ef1TV0ThAZYApuymCBS4+5kWw/DBRR5?=
- =?us-ascii?Q?yWrQkZ5cRTdFOPHpBbN7TSTaKAMJoBKxjoXh02z8ODI2eKhnqVHlVedI2/x3?=
- =?us-ascii?Q?x92viyyHl5iO1vu5C0Yv2hTn8OHMzI8O7UBD8yd43u5gQIlDmpffhAPYRmhf?=
- =?us-ascii?Q?MQiRNg8wqPB76InaHMc7izkArZVF+xwQlJlDT2fm9uc5gaMjlCFpTXOENjMr?=
- =?us-ascii?Q?mlmus0sg6SjZpg9/Y9JlxnbBV2BPr/ep0Mw8hAGVQPMs1COn/Qf8vj1MxCUE?=
- =?us-ascii?Q?V/SePuzOcUMURbkpX0Kg/ux8vr4X6rrKBzMkr0xkR0QtsoXYY0z5xcpkOJ9E?=
- =?us-ascii?Q?1VTI91DUdHH8aGtajOndSsOTJrLl7Tt99D8vm+W/fEW74RmloqYIHS1xgDUz?=
- =?us-ascii?Q?X9ZMmr2O7bVX6Fi1CqLG/XsRvDZf15oajm2mbdXkQD4rj1nCHH0n1ErPWwJi?=
- =?us-ascii?Q?GpiP/FikeIamTx25G3tPb6solLU+MCaRTo0NwEkmBPOsSnxnF/7UKIioWAtA?=
- =?us-ascii?Q?A3NN8OnLwhOlT58qyUtYpZrp59sr+s/fbC5Jzllr++tfoTaANu4SbW1O0yki?=
- =?us-ascii?Q?dNXgUSJfO2WFG+dP6sx8oyafCn0DfQOBDPf/uT+V9vSOUfVIv3HxbbnDsoAL?=
- =?us-ascii?Q?qN57CBxricb88mTGgrp1KgBKOSuMpOchzLsN1G/PGIa64Qw485NHGCpRJYRk?=
- =?us-ascii?Q?kJqtfgiYx8/vxC5kDuYoGBioxThORfxWGmvHueVpN0FfXaFwqiebpW3ki+UL?=
- =?us-ascii?Q?v1COP+DT1bR2DGKl80Btj9/CBuMHKLe/nU5+i8sXP6wBhYbBiDTo8NJAwnP3?=
- =?us-ascii?Q?GWbaOgq7bovTWpJ+V41POS0Ko2OHtonj2GY92Kb8EuMGt+CMEkkUe17vqlaC?=
- =?us-ascii?Q?e5qjoSzg5Y97tqjKdx2CjM204KoR/5zgG3trQJs6QL4QlixW03tmb2QB8tDJ?=
- =?us-ascii?Q?KnSIh5Kbbg3tk4UqgMPgoVg7FH4NEPc5rArkpvE0DcUMsFCytHyOE3uPCA2g?=
- =?us-ascii?Q?+YK7bpUMqqq7RqSisUulzHEuPwm+iGtmrWj11zRfZ/83UM0d5a+3SCDSd3VP?=
- =?us-ascii?Q?kgyVdCmDAXJAWSGFnqEVDzA9T+YvKSR4jJM06YzBie1AnAMX+zyx4izwdEsF?=
- =?us-ascii?Q?uS1iYSMVpjkHELT1Pu4XpLCLPcUSZf2A?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2cz40LeiKh0D+y4269hZG+YWr9Q87A0Vv3/MCJtMXFx+LXWmSWgElPro04XM?=
- =?us-ascii?Q?FkA3w2tsDc6Oy1lTtpgUbqG7tS9n0ccxJbvVpK+QFprqMWfAz+FTVlEJE+Ar?=
- =?us-ascii?Q?sEym8KtsRl7nQNhGKXTI+8eTvj9T0+Vb3IgpET+cNDdh3w49wo/r6DuwSH67?=
- =?us-ascii?Q?iRmHs/z9eeze7WyzJRgZbw97aMWmeUHas+ZtsqCq2spLzVcivwJZTnJ83hWo?=
- =?us-ascii?Q?GpCH7+ly5g8VkjXMRidrrrUWtiznLsrgFH0Xlz8zRnztu9eHtfFVNJf6KFZO?=
- =?us-ascii?Q?J3RTqnIP1a4nb9I8FUjkpW1jIKg6mc4O0NlI3DBIU2UikGXayg4XZYtxKfQ9?=
- =?us-ascii?Q?got+a75xExFdip6JqFMScHQlge1vjzJ18daFqyG3r/2w92rDSOwwgx+7ewIA?=
- =?us-ascii?Q?IM/PrhKnhgs5tfINsgPYuQNrU0lIMqAnH3D8oXd0AYMgYEifqkbSCcxXCTRl?=
- =?us-ascii?Q?oEQ87JS+WSSVw8ssfJt2Qp4ljpbe5xbClIssYsTrWqL6jXO/OGwXU48aOzKr?=
- =?us-ascii?Q?owDMC+ntVehLtFLsRVQbDq873T2enCYMPyonROm3L5ALWGkwXpQA2MHwTHLX?=
- =?us-ascii?Q?bAvKXhTgt4NBeFIYRBLs/8Qbd1yl2WuadMPS4nCVAARunqfKslrPG0HxYDc7?=
- =?us-ascii?Q?691UW0c9l3CXcegNnhqHootsSP0sX+05sJ2GKEHUb++4qJUWZp+sRpt3kdc6?=
- =?us-ascii?Q?xTfA7DIUWl91nQcy8njXuclhZNfacBXagRbAtjFYdW3nFIqm4ZUoSGuHsG6w?=
- =?us-ascii?Q?5ek86uMiyvDwBBUmlKr1hHddRdTRgHBkoaLmMTqClhhQ5KsewhaDxrAeJzSq?=
- =?us-ascii?Q?DCE1V0FGbF4piggnfC05UeuoM9EiQTOcULALe/UBUDWdKVHWt+7BoOA/NauT?=
- =?us-ascii?Q?UXEFIvmduXif5lnF4PLxEPD9O2xtqz2t0TCRR6i01/N1IZASUQjxq5SUx927?=
- =?us-ascii?Q?wCJuM3EfrabBHXTiFfv9LCN4AzQZ2TTFUI3R7ZdHFqd7UgqSlrvIR1tUvvsO?=
- =?us-ascii?Q?T5AG1ZegxRshUUBt3XtKCCOUJlFcsuKRK3DbtPIsubm1pofAPaKhlTMMyLWg?=
- =?us-ascii?Q?l9GGLM0KDbjdmV80F+fXUg6aSjxOGlYAcIqAXs0QsTl179teb6ufRVqFmAOT?=
- =?us-ascii?Q?cy3vwULlr1WtDvUbOv3xkSUQB9XBbTWq7kGcIsBbBrDXJN6/fZG4hgxayNlN?=
- =?us-ascii?Q?0l+dDFO3LVB7XcCQcCZZGhORGqAoLjE7IGSKUGSqMmDHyt8kfRu+myFEE/te?=
- =?us-ascii?Q?S4MfHPGA9nS6MAXL+xYbrpgCBzIzDdIHq1e7Pxaz4pjBdYPbxsqOH55/ubu0?=
- =?us-ascii?Q?eTAtUDdMfhe9owb0uwawmI47hpW5VXx+qPjM9Nl/b2kcPHiLINSLqlXCzOaH?=
- =?us-ascii?Q?O7DKQQ0tXkqTB0GuQ/Ewa1wQ5kY5oUY8vJ9jxDiWsg01k5CazfJ3jGZxuUZ+?=
- =?us-ascii?Q?IO9BApLyFFCql0pDcAu9CahyWBH99kp8YlUf0H+PP5s4+AmpqnBbaWkhWbcv?=
- =?us-ascii?Q?XbHUrjXykvRHAM/So49ZiV2xFMUXb2T0qmMW5hqOcTOt3CMixDruqwmQQocc?=
- =?us-ascii?Q?FtfOFRNf5OvhB4PEfC0ao4Jtl2Jw50ECo6xZ/U9fHxQ4YBId0ZvTQoBkBovv?=
- =?us-ascii?Q?q8oXMBmm6mCGeI8RbdmbrkqIfCmz3b8aVdD+Jgy+t1abouRGEcyYh46rhLhn?=
- =?us-ascii?Q?pMg2XhGif5iNaPWHc3I4y/jR8oOl9v9ts40bsDcdi7KQLxHEP0qnTwBaXEd8?=
- =?us-ascii?Q?R/29hSwFag=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8671f75d-c463-4392-754b-08de51e855c7
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2026 14:39:04.9403
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vrXkRaedKzi0STJNgLpI6qwCWc15OoXPIvrVEUXwAvKOkf5uFkFek0Gk77hKtw4A
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8526
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _____wDXrf0wvWVpTNjGFQ--.289S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ArWkWr1xuFWrXFyruw4xXrb_yoW8WFy5pr
+	y8Xr18J3y8J3ZrZayvq3Wq934fXan5W3y3Ja4Du34fZrnxCwn7ta97Za40qFy5Zr4vvF43
+	KF4UXrWYq3WY9w7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piOtx3UUUUU=
+X-Originating-IP: [117.176.243.29]
+X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/xtbCxhIve2llvTIqUAAA35
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260112_063912_692400_AC01DCD2 
-X-CRM114-Status: GOOD (  23.23  )
+X-CRM114-CacheID: sfid-20260112_193513_464265_55E51CE7 
+X-CRM114-Status: UNSURE (   7.40  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -168,62 +79,48 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jan 12, 2026 at 12:15:54PM +0200, Mike Rapoport wrote:
-> > + * The tree is traversed using a key that encodes the page's physical address
-> > + * (pa) and its order into a single unsigned long value. The encoded key value
-> > + * is composed of two parts: the 'order bit' in the upper part and the 'page
-> > + * offset' in the lower part.::
-> > + *
-> > + *   +------------+-----------------------------+--------------------------+
-> > + *   | Page Order | Order Bit                   | Page Offset              |
-> > + *   +------------+-----------------------------+--------------------------+
-> > + *   | 0          | ...000100 ... (at bit 52)   | pa >> (PAGE_SHIFT + 0)   |
-> > + *   | 1          | ...000010 ... (at bit 51)   | pa >> (PAGE_SHIFT + 1)   |
-> > + *   | 2          | ...000001 ... (at bit 50)   | pa >> (PAGE_SHIFT + 2)   |
-> > + *   | ...        | ...                         | ...                      |
-> > + *   +------------+-----------------------------+--------------------------+
-> > + *
-> > + * Page Offset:
-> 
-> To me "page offset" reads as offset from somewhere and here it's rather pfn
-> on steroids :) 
-> Also in many places in the kernel "page offset" refers to the offset inside a
-> page.
-> 
-> Can't say I can think of a better name, but it feels that it should express
-> that this is an address more explicitly.
+From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
 
-It is "Shifted Physical Address"
+Memblock pages (including reserved memory) should have their allocation
+tags initialized to CODETAG_EMPTY via clear_page_tag_ref() before being
+released to the page allocator. When kho restores pages through
+kho_restore_page(), missing this call causes mismatched
+allocation/deallocation tracking and below warning message:
+alloc_tag was not set
+WARNING: include/linux/alloc_tag.h:164 at ___free_pages+0xb8/0x260, CPU#1: swapper/0/1
+RIP: 0010:___free_pages+0xb8/0x260
+ kho_restore_vmalloc+0x187/0x2e0
+ kho_test_init+0x3c4/0xa30
+ do_one_initcall+0x62/0x2b0
+ kernel_init_freeable+0x25b/0x480
+ kernel_init+0x1a/0x1c0
+ ret_from_fork+0x2d1/0x360
 
-> > +			node = phys_to_virt((phys_addr_t)node->table[idx]);
-> > +	}
-> > +
-> > +	/* Handle the leaf level bitmap (level 0) */
-> > +	leaf = (struct kho_radix_leaf *)node;
-> > +	idx = kho_radix_get_index(key, 0);
-> > +	__clear_bit(idx, leaf->bitmap);
-> 
-> I think I already mentioned it in earlier reviews, but I don't remember any
-> response.
-> 
-> How do we approach freeing empty bitmaps and intermediate nodes?
-> If we do a few preserve/uppreserve cycles for memory that can be allocated
-> and freed in between we might get many unused bitmaps.
+Add missing clear_page_tag_ref() annotation in kho_restore_page() to
+fix this.
 
-Surely this is an error case??
+Fixes: fc33e4b44b27 ("kexec: enable KHO support for memory preservation")
+Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+---
+ kernel/liveupdate/kexec_handover.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-We shouldn't be unpreserving at all in a normal flow?
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index cd6b3fb9dcae..2d47f2c50bd8 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -268,6 +268,7 @@ static struct page *kho_restore_page(phys_addr_t phys, bool is_folio)
+ 	else
+ 		kho_init_pages(page, nr_pages);
+ 
++	clear_page_tag_ref(page);
+ 	adjust_managed_page_count(page, nr_pages);
+ 	return page;
+ }
+-- 
+2.25.1
 
-> My view is that we should free the empty bitmaps, maybe asynchronously.
-> The intermediate nodes probably don't take that much memory to bother with
-> them.
 
-Telling they are empty would be quite expensive. I think we should not
-attempt to clean the tree unless there is a really good reason why we
-should have good flows with alot of unpreserving activity.
-
-I think we would be better served to treat the root cause and fixup
-what ever is doing preserving/unpreserving loops.
-
-Jason
 
