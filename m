@@ -4,81 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 85A75D2D111
-	for <kexec@archiver.kernel.org>; Tue, 13 Jan 2026 14:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B9214D2D11B
+	for <kexec@archiver.kernel.org>; Tue, 13 Jan 2026 14:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=pSiuhQph/ApvBsNWFxpJdgFvWzz5gyNJmVSo8oa2Ohs=; b=gAIfM/ViM/F3NR9b5n+MUn6yjk
-	rr62bCeId/6wE3kSeAVTv0v8IiFqi8saq7IV9U0vpEbx0RsGDpPtjcde8e2wgOAJECcBTQADSO8fW
-	y88GLTN1aJfRWVAlqxWpblzlU7Z+TrPYx/e/GcpBUjUAY+7+hA7w2AIQCoBVWwGZ3wCrIs9RF89tk
-	FBH45Zlve001A8fEIcwRbuZCC9GzTFE9Q37gLFBfauN3IgZkNxGIBbjQiOZlLK5ktxwSXhdHBqGbB
-	YbNUrronBFS3V34WXVcO7YiBuuMqkdYcKAJTKm8e7tnUIREc/StL0SNW6HiVNGZ9st75OvVwY4oyX
-	BKi6e/dg==;
+	bh=jSy7jBvC9nebYOjTwgO9FutvaOd0nj9PGpV6sjReCbI=; b=ge/RTJsX/MoTrdFAEg9g07G64w
+	BwiJaBAxGzq5XTkJth8r5v348OoDOQ0gYdPYUUaWKsHHab8BRUvCefi4Tgh1ycvQv6VTtmw7gu3Su
+	HAJCn3LKbh04OFxr1gPbgJctL6lsyPh4ihR/s6knnVNTuTA5g+ugf4m+w78Wf+6/PnIkI8TVJOSne
+	DcgrCnC1UajNjnzFUXgNndrP4cJReRCu20lRhuGKn2cr7TlJ2lIIJa04tbofaOvrPsZG/xwqPZWUW
+	H6LMlBfqOHn09vzW+ZGxbp7XNfidYjqBePDi49Za2qBvimNDSaZeo6oezUFsP+5sCHdQxDdF6w5ZX
+	cvWmaR+g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vffNI-00000007Fvl-2O98;
-	Tue, 13 Jan 2026 14:28:00 +0000
-Received: from mail.alien8.de ([2a01:4f9:3051:3f93::2])
+	id 1vffev-00000007HTr-3lly;
+	Tue, 13 Jan 2026 14:46:13 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vffNG-00000007FuG-03g0
+	id 1vffer-00000007HTS-3SAy
 	for kexec@lists.infradead.org;
-	Tue, 13 Jan 2026 14:27:59 +0000
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B395040E01A9;
-	Tue, 13 Jan 2026 14:27:52 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id jyg3Aw5gpyWn; Tue, 13 Jan 2026 14:27:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1768314469; bh=pSiuhQph/ApvBsNWFxpJdgFvWzz5gyNJmVSo8oa2Ohs=;
+	Tue, 13 Jan 2026 14:46:12 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 211EE6001D;
+	Tue, 13 Jan 2026 14:46:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A77F2C116C6;
+	Tue, 13 Jan 2026 14:46:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768315568;
+	bh=4uCAucSurgWYYIfTPVGMA7hAEuKLq8ADMBBO1vAY/Ts=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=exuhMc0gxTQAKQSsuJUSatMmyysckIRa0c9yrwY5b0HKgAAD3t8CtP04EpoVeZ9Mq
-	 P2isYOJkeYQFqHMzNTjiMnAUjKzfT+jaMG1r8DL/aLsywTWLKBqgDx5pu2TC9wPATu
-	 Bdzaha5+SBLp3skLTM0LtnkI/iePKBM6WUlC0zYNPlMrmkCF1nivFfJG5kzn77Z2f8
-	 oRvIVIDq4JE41Fiw5/REhzLauudrqElKHgrBR+eyLdDLVD0ODZ0EfiMroXPuRLhtJn
-	 YEj1AQ5TmOybYKLsgpRiTdjP68BNaduHe/TCtQ+NJDIJRLam2tRvWS5r4qKjoDL9i5
-	 rHvJ8GLBG5WWt3nkOM3TWjN+/WPUMQJeOtUIZc9JoFZKaLj+hvyn+R7hbOrbFEy7QE
-	 XHytybwweCSHJcdkAziHxkR+ZtgTs1TPf0KRQFV8cgvCRVWriJeabP9+IPIO0kWLvc
-	 u6E/OxKbcDe8kC1pOFZE3m7AJFFfz13XLt/BgZLW0l0Kavfja6rVrHOegupdqIfhki
-	 7PX8FvFk9TDJBukdtDs0wEsGnYXY/o2zcQa/KMGaYsIatH//A8KjQlzeINxtiEUciP
-	 BnQk+Jm6/6RsjHLTdKI1CZ390M5i9oPKUpIPLGOYx+BDpZQG3gF7jHOGzkXUsmTNZP
-	 A5qvDK2IndFbuApg/iwQCmwQ=
-Received: from zn.tnic (pd953023b.dip0.t-ipconnect.de [217.83.2.59])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 268EF40E00DA;
-	Tue, 13 Jan 2026 14:27:40 +0000 (UTC)
-Date: Tue, 13 Jan 2026 15:27:33 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, x86@kernel.org,
+	b=DWF2snKTTWME68p5bqRoDMZp5nz+HXJ3bikIf6obk6LehQbfcBB89unOKo0echBdQ
+	 FuaLneguObpC5wzEdpQ4rXKS7R+Ve5bjzkv3OLAU9ULW88251bOBr6hU6ADJ4kju8g
+	 Ow6/uz65FMFNWthx0KS95LsdmFZZ89cakQFpXsZjmBoc6LAFAoBEQ9+wOqAOQ4UcHj
+	 5J6wu98pb1caihXnGjUDkQ6+uXeDHWR1nEAKf56OwSj6TZZTGkxmse0ttEsihnjDqj
+	 6MjG+RmsooY9V3L2ZPU8Fj55ZhiqPZ64NpuhkDFoZhEoO57LJvo6aI93ajbvqAI/OW
+	 5jmKNED0nhbOw==
+Date: Tue, 13 Jan 2026 16:46:01 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Jason Miu <jasonmiu@google.com>, Alexander Graf <graf@amazon.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] x86/crash: Use set_memory_p instead of
- __set_memory_prot
-Message-ID: <20260113142733.GKaWZWVR_0Q_awGa80@fat_crate.local>
-References: <20260106095100.656292-1-coxu@redhat.com>
- <20260109201142.GFaWFg_kR8eW48CpUp@fat_crate.local>
- <aWYWm4gLwFmvM730@Rk>
+	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>,
+	David Matlack <dmatlack@google.com>,
+	David Rientjes <rientjes@google.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v4 1/2] kho: Adopt radix tree for preserved memory
+ tracking
+Message-ID: <aWZaqcStRAK6VWLy@kernel.org>
+References: <20260109001127.2596222-1-jasonmiu@google.com>
+ <20260109001127.2596222-2-jasonmiu@google.com>
+ <aWTJ2v9J-Aa6ykBf@kernel.org>
+ <20260112143904.GA812923@nvidia.com>
+ <aWYt0gBHxDCKqj9Q@kernel.org>
+ <20260113130526.GE812923@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aWYWm4gLwFmvM730@Rk>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260113_062758_204371_B942A2B0 
-X-CRM114-Status: GOOD (  12.02  )
+In-Reply-To: <20260113130526.GE812923@nvidia.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,24 +80,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jan 13, 2026 at 06:14:38PM +0800, Coiby Xu wrote:
-> I thought smaller patches are easier to review. But seems it's unnecessary
-> for this case.
+On Tue, Jan 13, 2026 at 09:05:26AM -0400, Jason Gunthorpe wrote:
+> On Tue, Jan 13, 2026 at 01:34:42PM +0200, Mike Rapoport wrote:
+> 
+> > For example mshv intends to use kho_radix_tree to track the hypervisor
+> > memory and there unpreserving will be a part of the normal flow.
+> 
+> I do not think this is a good idea.
 
-Right, especially if the two patches do one logical thing - removing
-__set_memory_prot(). Then one patch is better.
+Sorry I wasn't clear, mshv is not going to use KHO memory tracker but
+another instance of kho_radix_tree data structure. 
+I don't see a problem with that.
+ 
+> Nothing should be touching KHO until a kexec sequence is started. KHO
+> calls should WARN_ON prior to this point. If a kexec sequence aborts
+> then the entire radix tree should be discarded and it should go back
+> to WARN_ON'ing KHO calls.
 
-> Thanks for squashing the two commits and also updating the commit
-> message! I notice you also added a Link tag. Does it mean there is no
-> need for me to re-send your new patch as v2?
+The whole point of making KHO stateless was to decouple it from kexec
+sequence and let userspace control when preservation happens and to allow
+preserving as much as possible ahead of time to save cycles at
+kexec-reboot.
 
-Yap, I can queue it, no need.
-
-Thx.
+> Jason
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Sincerely yours,
+Mike.
 
