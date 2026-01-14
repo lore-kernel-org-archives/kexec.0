@@ -4,86 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7804AD2F339
-	for <kexec@archiver.kernel.org>; Tue, 13 Jan 2026 16:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B5F92D31A06
+	for <kexec@archiver.kernel.org>; Wed, 14 Jan 2026 02:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=CL9mqA+L5ChBc4KUhSETt4hYPO2nC8ZfXtH0nl6Jj08=; b=WEBbffF39yFRjMOOwuJERS2Uuv
-	Wwpy8iT+OaI52Qnd/AMddR4UIdmfxQ4bn3w4thA8UE0QrTyC+D26VtsOYkMkaOXH+mCpUwGhHmyC4
-	IOSmJPipI6anlH4KH87LQY1Hk0nRBWRGnoKhwMfFWZKHehRGGs1BnC/X8hba9iFcXNXOXIRqW66N+
-	83Be6mE0G95VNRRUGLIoHK3l1/AnJInDGwyOdnzPl41v7wiSzBq5XgWka41bBxHiUaZETaTVJk3kZ
-	1AG1w4lfQojhLPSbCdZHUIwvMHILIkD1674nR2rlzGMeNvvhQaZG7hyORvv1eBmibhRohhwlEMDZQ
-	9o3MXTsA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=r6VtkOf5dPkBnW5vdgjj+TjeM5tElsvDFyqS2is6PaA=; b=NsrgOjZ9YeQOLuy7cxiVIXip5q
+	uJD6PznNBOoyMuxWbxHTvnzX2izQ+9osiZrnoSl4aX/ou42ycNt19PDGrmxgTetEy+OsWHzlTuFZy
+	ovcYn2WbNsGAJOA7Vqfu5WO1PDfTlZYynAMQvt/XYtI5En+2XwCgy7xW7GGrXazcZKW2/bQAeBAl/
+	8ZaanVHW7Mt353tr0FSLSDgBBCAFEs514TJGpcHzlN3+jSNLes+6qAmF+gXLZ50p1oAHUvBDnT/KQ
+	+4emOG/x3PzdfiJUfw5qzKZm4ednIfcAakA0KOMuMCewQLtfkluaPg8IBhLVHppuRNlyEnxx0LuOd
+	SODcc9rA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vfh9k-00000007Sjl-28Zl;
-	Tue, 13 Jan 2026 16:22:08 +0000
-Received: from mail-ed1-x52f.google.com ([2a00:1450:4864:20::52f])
+	id 1vfqoh-0000000800i-2EHG;
+	Wed, 14 Jan 2026 02:41:03 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vfh9i-00000007Siq-0WeT
+	id 1vfqoe-0000000800O-27uL
 	for kexec@lists.infradead.org;
-	Tue, 13 Jan 2026 16:22:07 +0000
-Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-64b608ffca7so12141112a12.3
-        for <kexec@lists.infradead.org>; Tue, 13 Jan 2026 08:22:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1768321324; x=1768926124; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CL9mqA+L5ChBc4KUhSETt4hYPO2nC8ZfXtH0nl6Jj08=;
-        b=fJkZsLqP6UW4mOsrdqT9bv9Knzt0eG4vqpvKlzNwFzr3OoBarT229JsqBzAnJ4i59B
-         YhUwrSOdzzGdXX0KkFaEBgUnmWruwXi2vB0Wup3qufKWYmOoS2q/ZF889F/mRZligiad
-         724iGEKV9n0axGB6f+Rn1VJbboX9oYeI3ZjpldYZbHw3BMfIDyD74GcP5rQRTLYCYpmH
-         xYl/zirqkd7QZAorSG0xW0J7HGsdRr3LY9v7j8ZLTMpo4Nc9aRKcl+U1yk3S7cvURCXr
-         PXjUU7eDv0jMh2GB9w2ihBWAgWB/WWKP5/E+oS5iGeB+SBP8nR/+x5tXrgMLTcijF6r2
-         4Yyg==
+	Wed, 14 Jan 2026 02:41:02 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1768358459;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r6VtkOf5dPkBnW5vdgjj+TjeM5tElsvDFyqS2is6PaA=;
+	b=KfLgIj26bUT25VNyTKdIYti8LPl40NO0MRWob99Zuu+4S3Z6DXs/T3gxMTluli3dXquZQT
+	VMQBQ5BwlZc2Oua2Ez7b6SYCMArwPjZtsT89hTH9tkRshhaRfgU7S3//9cP5lW9YO4MY0o
+	k18KF5/9I0ycWx6tE64xwqRJ47Q1GQ0=
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
+ [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-186-1kzhIM1JPJWDAVFuKIjHHQ-1; Tue, 13 Jan 2026 21:40:55 -0500
+X-MC-Unique: 1kzhIM1JPJWDAVFuKIjHHQ-1
+X-Mimecast-MFC-AGG-ID: 1kzhIM1JPJWDAVFuKIjHHQ_1768358455
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-81c68fef4d4so11266294b3a.2
+        for <kexec@lists.infradead.org>; Tue, 13 Jan 2026 18:40:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768321324; x=1768926124;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=CL9mqA+L5ChBc4KUhSETt4hYPO2nC8ZfXtH0nl6Jj08=;
-        b=q4IzbWOJvGRVh52CP9u9iZ4RRvuw6h/NC0jC407OzMfn8UHBB7j0tkx7TEdyeGq9mD
-         JT49zuRTtXZ8jIZqSz0TncvrzKdwLK1AGqbPl1xHdbSvsJXKy+pmWrAYh8dsTI6Yd/2n
-         qWAWBudAAf9G/1iEkmSkVLQOUws2VLg77vWSgi6ntQt5YNcyumxspxnvO1/1eMLJqycd
-         ysLXphJE/KU6HwT3oiQXkpJyJVmZUnTbKRIc2cifofuka/JqvU+TltudX7k/O57OTdV/
-         I/KpjEwHCWN3ewzLzAUQfMTJPuhp+k0nhnv9q2NL96QQGPVYJe1WJpzLXQgSybPqH8k5
-         jLJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWeq0byFijRDiiJh0aroxIaKfzw6auT57oyEjBV5XLkzOP/LAm4jkxLROEDXNFQSn9xhL/trw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YymAofHyZJNrGb2H1CxUW/bAaWS4G83hcG4meyWpQi65wb4ug2k
-	0f3va8PPoazVk+qS+XZ1A3R/Tcl881O5uwVupPcbMtfxlM/GuCAWZicNWH00Ezx64ZTlVFp821Z
-	Y84vTkR6cGEHmu1GFBFtkqNn2AL8r0oycwQH+dajH4A==
-X-Gm-Gg: AY/fxX7CEWtf2xQmzZ9GUK9mX4DEy7AflwLnVbmmyuuz18QF5pPFykf/B51hsL5wz79
-	JDwOsFHRwvF2Clk7WVMu4zl+/7zVF8VSU31AmQbDdSqeCzSuNLa8GixLJYFve8HaIKliK170D/F
-	dXGhtutkIRQaUUjUonzycRhSspJwO/RpzKms5tjGJyoU2wP53b7pZANvopLSkQMBERyJmNQ3Bwh
-	EHZ0meJ4DWCTTGsOLvkI+w29f2gIYMcFUfw04m/kj4Fbkl4co1SpqjB/rrlR6E8iYIR1y0ew0ET
-	BtEhG340+XqLKOHltBrztaCslQ==
-X-Google-Smtp-Source: AGHT+IE09dEuw/V3YD01k0td3WIxhGV8UT0oz/yQ+pLP1I2+bSDu0laME8BHispRCz0saUuovB6LZomX8UuT6DU+VTM=
-X-Received: by 2002:a05:6402:50c7:b0:649:815e:3f9b with SMTP id
- 4fb4d7f45d1cf-65097dcba5amr20365112a12.3.1768321324008; Tue, 13 Jan 2026
- 08:22:04 -0800 (PST)
+        d=1e100.net; s=20230601; t=1768358454; x=1768963254;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r6VtkOf5dPkBnW5vdgjj+TjeM5tElsvDFyqS2is6PaA=;
+        b=WC0kQXq/s626Vyww9fojmVXZJswLooaj+fXci7vv1GbypjC9G0O495UeNL38/O0+Wv
+         bKukIoOLIK4l/G4XS/Uq186I+fHDiCmKH73bPl9ZCsv587YA6njUtK/r3bwm+NPenLW9
+         wR7mPAFldFYpVNTXri66P+sHeKf9gUsBmJswbtT/DHb25v5N45As57MBY0nNKui5E594
+         ZgxG4vNF2KJ3chMuR+9cMy1sgILI1s7O1ds0dSK3dWom/+iaFMfD7DMXBXEjDNKjvDbn
+         8pP0qQ2otY4bh4s8iDFdRlU3HzdR9ytYim+L/S+z8BmDCk0jj6RH3vCUwQCQ6aEzdA30
+         h9LA==
+X-Gm-Message-State: AOJu0YwUJnqLsKSZVxZXVU0CVU/n8uccZQZi08gt+BIvM+/hO2xbeoNf
+	Ifm9Bhg6+19n88zAMtVOPBVnN8g93sHkN9S3FJtbNK170mymDfG8rttmA8MKki4FX55yEaiIpVh
+	BI4mVh3lmQF2le1BFe8AIzw79QpL2iwqtx95JJr6GC/GzI136jc/Da9ovRiPka6tdSlcQWF/O
+X-Gm-Gg: AY/fxX7sEaQZE2MB2AWXLTzdSk6fTr27VNWGjhZ+yLbuId1TjdHKF1vZdiF3ggWlvDS
+	yNYeX27EADaZa3oq/jOgMZA4Q/Mb5aKGCuncamUdGdaVjVAhn5g5vzm24h9bofxk4DU+nkL/iyH
+	x7bXJO0pcW2bmbc9jWu/lG4duMmhfovGzTXJIqyrw5pzGG6hevCh5hdRGa33PpQdm6dCVhangW/
+	Z4oDY3HxkA/UMwugGJrue46cpkxYQio/ixXiPT0WWAzuReRxZuC3RfxF2nyNJeCvaw8ixKM/ivg
+	diGlLOKbs0+aquFzdwyEkVY6yHUACUEPMxg9ZN4xXsZd3/aEnbFIZEc/4tcbgQ632QiFfCHagRO
+	m
+X-Received: by 2002:a05:6a00:4386:b0:81f:3e3e:c1fd with SMTP id d2e1a72fcca58-81f81cdee95mr966142b3a.5.1768358454354;
+        Tue, 13 Jan 2026 18:40:54 -0800 (PST)
+X-Received: by 2002:a05:6a00:4386:b0:81f:3e3e:c1fd with SMTP id d2e1a72fcca58-81f81cdee95mr966119b3a.5.1768358453860;
+        Tue, 13 Jan 2026 18:40:53 -0800 (PST)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-81ce881512asm6066366b3a.19.2026.01.13.18.40.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Jan 2026 18:40:53 -0800 (PST)
+Date: Wed, 14 Jan 2026 10:36:52 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: kexec@lists.infradead.org, x86@kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, 
+	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] x86/crash: Use set_memory_p instead of
+ __set_memory_prot
+Message-ID: <aWcAZbbRQtMn2H2U@Rk>
+References: <20260106095100.656292-1-coxu@redhat.com>
+ <20260109201142.GFaWFg_kR8eW48CpUp@fat_crate.local>
+ <aWYWm4gLwFmvM730@Rk>
+ <20260113142733.GKaWZWVR_0Q_awGa80@fat_crate.local>
 MIME-Version: 1.0
-References: <20260113033403.161869-1-ranxiaokai627@163.com>
-In-Reply-To: <20260113033403.161869-1-ranxiaokai627@163.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Tue, 13 Jan 2026 11:21:26 -0500
-X-Gm-Features: AZwV_Qhd1NUaX74PyQKfMs_orfB5NGTMsZf295fX_SYz96GVd1njvy0k-ruLXJE
-Message-ID: <CA+CK2bDmfuqnR4SuMSgLS43e=wqM9ovu_VBCYDCzdcBaFJW8+g@mail.gmail.com>
-Subject: Re: [PATCH v2] kho: init alloc tags when restoring pages from
- reserved memory
-To: ranxiaokai627@163.com
-Cc: graf@amazon.com, rppt@kernel.org, pratyush@kernel.org, 
-	akpm@linux-foundation.org, surenb@google.com, kexec@lists.infradead.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, ran.xiaokai@zte.com.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20260113142733.GKaWZWVR_0Q_awGa80@fat_crate.local>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: DdGBK-32u_44SLYTROZ0Jt1KWCKz61bJp_AqRM78YFM_1768358455
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260113_082206_188385_415DE7E1 
-X-CRM114-Status: GOOD (  14.59  )
+X-CRM114-CacheID: sfid-20260113_184100_641110_07D57D3D 
+X-CRM114-Status: GOOD (  15.40  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,54 +112,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jan 12, 2026 at 10:34=E2=80=AFPM <ranxiaokai627@163.com> wrote:
+On Tue, Jan 13, 2026 at 03:27:33PM +0100, Borislav Petkov wrote:
+>On Tue, Jan 13, 2026 at 06:14:38PM +0800, Coiby Xu wrote:
+>> I thought smaller patches are easier to review. But seems it's unnecessary
+>> for this case.
 >
-> From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
->
-> Memblock pages (including reserved memory) should have their allocation
-> tags initialized to CODETAG_EMPTY via clear_page_tag_ref() before being
-> released to the page allocator. When kho restores pages through
-> kho_restore_page(), missing this call causes mismatched
-> allocation/deallocation tracking and below warning message:
-> alloc_tag was not set
-> WARNING: include/linux/alloc_tag.h:164 at ___free_pages+0xb8/0x260, CPU#1=
-: swapper/0/1
-> RIP: 0010:___free_pages+0xb8/0x260
->  kho_restore_vmalloc+0x187/0x2e0
->  kho_test_init+0x3c4/0xa30
->  do_one_initcall+0x62/0x2b0
->  kernel_init_freeable+0x25b/0x480
->  kernel_init+0x1a/0x1c0
->  ret_from_fork+0x2d1/0x360
->
-> Add missing clear_page_tag_ref() annotation in kho_restore_page() to
-> fix this.
->
-> Fixes: fc33e4b44b27 ("kexec: enable KHO support for memory preservation")
-> Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
-> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+>Right, especially if the two patches do one logical thing - removing
+>__set_memory_prot(). Then one patch is better.
 
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+I see, thanks for the explanation!
 
-> ---
->  kernel/liveupdate/kexec_handover.c | 1 +
->  1 file changed, 1 insertion(+)
 >
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec=
-_handover.c
-> index cd6b3fb9dcae..2d47f2c50bd8 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -268,6 +268,7 @@ static struct page *kho_restore_page(phys_addr_t phys=
-, bool is_folio)
->         else
->                 kho_init_pages(page, nr_pages);
+>> Thanks for squashing the two commits and also updating the commit
+>> message! I notice you also added a Link tag. Does it mean there is no
+>> need for me to re-send your new patch as v2?
 >
-> +       clear_page_tag_ref(page);
->         adjust_managed_page_count(page, nr_pages);
->         return page;
->  }
-> --
-> 2.25.1
+>Yap, I can queue it, no need.
+
+Great, thanks for taking care of the patch!
+
+>
+>Thx.
+>
+>-- 
+>Regards/Gruss,
+>    Boris.
+>
+>https://people.kernel.org/tglx/notes-about-netiquette
+>
+
+-- 
+Best regards,
+Coiby
+
 
