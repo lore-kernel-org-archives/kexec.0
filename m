@@ -4,67 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2C418D39008
-	for <kexec@archiver.kernel.org>; Wed, 14 Jan 2026 18:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90F64D3900B
+	for <kexec@archiver.kernel.org>; Wed, 14 Jan 2026 19:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=LBnCNREOMaRTs8GPX9o6jn1T+H9j4SOjRgO9CydcfTQ=; b=KC4Ta5kztO/qtnOd37TFavsbUg
-	3s8XrlYCBg0ZUbCtB59t7JDQbnAy0vJxfnjuV20wgpKpafnS7yZ+a4Jjtl1IIpc4J5WkopCHaxXdz
-	t9E576NNBPOBLKBdr6v4apoPp2WwMhF0XeJRWi4PCeBQbMSTmBX+aRBKEzJuoKMCXrAu8A+YaV3m+
-	Rp/oZGyCZ3S48vLiUL6bSy30djpiVnMtkuTd4gnBQh+I8LovZEX0E72cdJIHCeCTCHstW6+K0h1YS
-	QMtmPrEiYKBOVeesfNXpwMFVdiHQMIvOoog3cLueUFP2n6jwKR/HbHaRCOKbvEv4ixRpy9GyqLoCd
-	3B8jyihQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=+EXMu8fVYrjqzrdjaSOI10qKA87dcHyKFOPIbUS4EPg=; b=KXnMZupIHwwiLueppax8ot0vve
+	gmypr1SdfLbt76S4DZ6KcwicAUA9UQRPvFn16SEL4omVcNRakaT8pyc5AFb7QQdNZU5XzcY+/dF9S
+	iyd5RJUowgLQc4B9L5igj+3++5NaBGiucjvnWwSagjwaKKPNy9ODMrIITHVASxmlbX9LCEnvIOQFs
+	ZX2w4zroR95onPcvR8ocd4CAJjGY/6Mswlf7x2K0ay1pDIDVdDFx5UYR4FU0u5hmTxpAKBV5/oAZc
+	3OXBHnOB6X1/CAsihGeu8EvOGi1qQfxjM9od8SV1eqFySNa4gnLhIQUfp4pHUARg7cpyXZ1BDeyiA
+	HEJOaeaQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vg5pE-0000000AMMm-101i;
-	Wed, 14 Jan 2026 18:42:36 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1vg6B9-0000000AQB1-37OU;
+	Wed, 14 Jan 2026 19:05:15 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vg5p9-0000000AMMQ-0UAP
+	id 1vg6B6-0000000AQA9-3vnz
 	for kexec@lists.infradead.org;
-	Wed, 14 Jan 2026 18:42:34 +0000
+	Wed, 14 Jan 2026 19:05:14 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 6769D442D7;
-	Wed, 14 Jan 2026 18:42:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B409C4CEF7;
-	Wed, 14 Jan 2026 18:42:28 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 512A24407C;
+	Wed, 14 Jan 2026 19:05:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10075C4CEF7;
+	Wed, 14 Jan 2026 19:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768416150;
-	bh=ycsyR+UpdbT5i32Mze2qlwVxIhWj61Ue122fNAYGHY0=;
+	s=k20201202; t=1768417512;
+	bh=2QKYOyEjrfuxHKVNPGX4pgerNIQSPvRZMBbE7X+COHs=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=ixSrRuMj11g7YibcuR9ajWVVm3hwT2dwBpFnZ4aM4ryqzWSCkw9oXmRW6zfsIgTCP
-	 jahC1f4rIshZtEZluXbRp/sCICEQOAPBcF9OadgwyNs/jEupj5lVVWX5O1epJEj0TM
-	 D681YQbymK9TlZhbbH5aGzvWA7pWz9Ak9RG70/bM6V3TuJ12TnE+4/XwAL3Q21xneu
-	 NFij89IbSZ5Lq6779M9VT/TZCQUM7ppogVxMlx4xqQ6BRugL8KReK5fGXg+WsN+FLC
-	 AdH9yQFF2eMHSm5lewA1h/3LAqm5B17N0KoqzBS1UfcUBCPpKzh6I8bgvYe3uMUZTJ
-	 48N8FVxcJKwAQ==
+	b=TBE16hKH5B1htBPywslXb3uE1G9s3+1zukbdGdlVTRKU9+GHpwxCGNVyD1rJDG1sM
+	 ypztzWs0yTDPqUuo7+Okx21fYvpOZtelOEspY4N6lXkNszYpELSMVN38Q1hHI8MSlq
+	 FWHgj/wokP9nwQNMeJQ63AH6rS9qTMdQjX6jVx0AybrqYwcB7BIuXADDiJ7tPTDnuW
+	 LD2sI+eUuTnrqfONFyvw7KdIaO48b21ooICSQyR5GtdjgqDLPDB7z9CMO4L4pV9iVS
+	 ob5xMRHaDy6gwcsXgZYz/BGOHmAhKuXjDI6lXx7WxrfA2J8nUuvjDRp69QFrjmNZ4g
+	 Otpd4WLe8rG2A==
 From: Pratyush Yadav <pratyush@kernel.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  ranxiaokai627@163.com,
-  graf@amazon.com,  rppt@kernel.org,  pasha.tatashin@soleen.com,
-  akpm@linux-foundation.org,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  linux-kernel@vger.kernel.org,
-  ran.xiaokai@zte.com.cn
-Subject: Re: [PATCH v2] kho: init alloc tags when restoring pages from
- reserved memory
-In-Reply-To: <CAJuCfpEwa=_fubhf5wBnFKrKpOgjyXRy94f2BDx38x_NALE_OQ@mail.gmail.com>
-	(Suren Baghdasaryan's message of "Wed, 14 Jan 2026 09:59:10 -0800")
-References: <20260113033403.161869-1-ranxiaokai627@163.com>
-	<2vxztswoi16k.fsf@kernel.org>
-	<CAJuCfpEwa=_fubhf5wBnFKrKpOgjyXRy94f2BDx38x_NALE_OQ@mail.gmail.com>
-Date: Wed, 14 Jan 2026 18:42:26 +0000
-Message-ID: <2vxzpl7chw8d.fsf@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Alexander Graf <graf@amazon.com>,
+  Mike Rapoport <rppt@kernel.org>,  Pasha Tatashin
+ <pasha.tatashin@soleen.com>,  linux-kernel@vger.kernel.org,
+  kexec@lists.infradead.org,  linux-mm@kvack.org,  usamaarif642@gmail.com,
+  rmikey@meta.com,  clm@fb.com,  riel@surriel.com,  kernel-team@meta.com
+Subject: Re: [PATCH v2 2/2] kexec: history: track kexec boot counter
+In-Reply-To: <w542cckfixvgo6pvepdg6itaera6qlq75pemqvpah7us6c7yxa@6vm7ebxd6ala>
+	(Breno Leitao's message of "Tue, 6 Jan 2026 03:04:28 -0800")
+References: <20260102-kho-v2-0-1747b1a3a1d6@debian.org>
+	<20260102-kho-v2-2-1747b1a3a1d6@debian.org> <86o6nb7oi1.fsf@kernel.org>
+	<w542cckfixvgo6pvepdg6itaera6qlq75pemqvpah7us6c7yxa@6vm7ebxd6ala>
+Date: Wed, 14 Jan 2026 19:05:08 +0000
+Message-ID: <2vxza4yghv6j.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260114_104231_197300_A75DD9A8 
-X-CRM114-Status: GOOD (  33.01  )
+X-CRM114-CacheID: sfid-20260114_110513_035998_6D6FF663 
+X-CRM114-Status: GOOD (  24.57  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,99 +77,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jan 14 2026, Suren Baghdasaryan wrote:
+On Tue, Jan 06 2026, Breno Leitao wrote:
 
-> On Wed, Jan 14, 2026 at 8:55=E2=80=AFAM Pratyush Yadav <pratyush@kernel.o=
-rg> wrote:
->>
->> Hi Ran,
->>
->> On Tue, Jan 13 2026, ranxiaokai627@163.com wrote:
->>
->> > From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+> On Fri, Jan 02, 2026 at 09:23:18PM +0100, Pratyush Yadav wrote:
+>> On Fri, Jan 02 2026, Breno Leitao wrote:
+>> 
+>> > Track and display the number of kexec boots since the last cold reboot
+>> 
+>> Nit: this does not track kexec boots, it tracks KHO boots. None of this
+>> can work on normal kexec boots. Can you please update the wording to
+>> make that clear?
+>> 
+>> > when CONFIG_KEXEC_HISTORY is enabled.
 >> >
->> > Memblock pages (including reserved memory) should have their allocation
->> > tags initialized to CODETAG_EMPTY via clear_page_tag_ref() before being
->> > released to the page allocator. When kho restores pages through
->> > kho_restore_page(), missing this call causes mismatched
->> > allocation/deallocation tracking and below warning message:
->> > alloc_tag was not set
->> > WARNING: include/linux/alloc_tag.h:164 at ___free_pages+0xb8/0x260, CP=
-U#1: swapper/0/1
->> > RIP: 0010:___free_pages+0xb8/0x260
->> >  kho_restore_vmalloc+0x187/0x2e0
->> >  kho_test_init+0x3c4/0xa30
->> >  do_one_initcall+0x62/0x2b0
->> >  kernel_init_freeable+0x25b/0x480
->> >  kernel_init+0x1a/0x1c0
->> >  ret_from_fork+0x2d1/0x360
+>> > This extends the previous kernel release tracking feature by adding
+>> > a counter that increments with each kexec boot. The counter provides
+>> > visibility into the kexec chain depth, which is useful for understanding
+>> > boot history in production environments.
 >> >
->> > Add missing clear_page_tag_ref() annotation in kho_restore_page() to
->> > fix this.
+>> > Add a new property, "kexec-count" in KHO FDT alongside the existing
+>> > "previous-release" property. The counter is:
 >> >
->> > Fixes: fc33e4b44b27 ("kexec: enable KHO support for memory preservatio=
-n")
->> > Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
->> > Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
->> > Reviewed-by: Suren Baghdasaryan <surenb@google.com>
->> > ---
->> >  kernel/liveupdate/kexec_handover.c | 1 +
->> >  1 file changed, 1 insertion(+)
+>> >  - Initialized to 0 when kho_in is instantiated.
+>> >  - Incremented by 1 on each subsequent kexec.
+>> >  - Printed alongside the previous kernel release version.
 >> >
->> > diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/ke=
-xec_handover.c
->> > index cd6b3fb9dcae..2d47f2c50bd8 100644
->> > --- a/kernel/liveupdate/kexec_handover.c
->> > +++ b/kernel/liveupdate/kexec_handover.c
->> > @@ -268,6 +268,7 @@ static struct page *kho_restore_page(phys_addr_t p=
-hys, bool is_folio)
->> >       else
->> >               kho_init_pages(page, nr_pages);
->> >
->> > +     clear_page_tag_ref(page);
->>
->> You are only clearing the tag for the head page. The tail pages are
->> still un-initialized. Is that intentional?
+>> > The counter is stored as a 32-bit unsigned integer in FDT format and is
+>> > only active when CONFIG_KEXEC_HISTORY is enabled.
+>> 
+>> We have such a counter for LUO as well from the properly
+>> "liveupdate-number". If you're using LUO, why can't you use that counter
+>> directly?
+>> 
+>> If you're not using LUO, I'm curious, what's your use case? Right now
+>> KHO only supports reserve-mem outside of LUO. Is that what you plan to
+>> use?
+>> 
+>> Also, do we want to keep both counters independently? Or do we have one
+>> and drop the other? Pasha, what do you think?
 >
-> In the case of a compound page we set the tag only on the head page,
-> so this is correct.
+> In fact, I do not have plan to use LUO right now. My goal is to pass the
+> kexec release from kernel to another, and for that I am using KHO to
+> pass this information.
+
+Oh, cool. Nice to see other use cases for KHO.
+
 >
->>
->> What about non-compound pages (the ones you get from
->> kho_restore_pages(), aka when is_folio is false)? Do we need to clear
->> the tag on all pages in that case?
+> That said, I am planning to use KHO as the infrastructure to pass the
+> kernel version from one kernel to another.
 >
-> In the case of kho_restore_pages() we call split_page() which calls
+> Given that I don't think this "feature" should depend on LUO, maybe the
+> counters should be independent (?!)
 
-Not since 7b71205ae112 ("kho: fix restoring of contiguous ranges of
-order-0 pages"). That commit removed the split_pages() call and
-open-coded the page initialization logic tailored for KHO.
+If you aren't using LUO then you certainly can't use its counter. But
+LUo users are all KHO users. So perhaps we can get away with removing
+the LUO one and moving it to KHO?
 
-So I think you do need to initialize the tags for kho_restore_pages().
-
-I sent a patch [0] simplifying the page init logic a bit. I need to do a
-v2 but it is a very simple change so I can get that done tomorrow. I
-think it would be good to base your series on that since that would make
-it easier for you to modify only the kho_restore_pages() path and the
-end result would be cleaner.
-
-[0] https://lore.kernel.org/linux-mm/20251223104448.195589-1-pratyush@kerne=
-l.org/
-
-> pgalloc_tag_split() and that propagates the tag from the head page to
-> all the tail pages being split from it. However now that I'm looking
-> at it, I'm not sure pgalloc_tag_split() works correctly if the tag
-> reference of the head page is CODETAG_EMPTY. In summary, this patch is
-> fine but there might be a bug inside pgalloc_tag_split() if the tag
-> reference is CODETAG_EMPTY.
->
-> I'll analyze and reproduce that case. If it indeed has the issue I
-> think it's easy to fix it by creating a specialized alloc_tag object
-> with alloc_tag->ct=3DCODETAG_EMPTY and  make __pgalloc_tag_get() return
-> it if the page's tag reference is CODETAG_EMPTY.
->
->>
->> >       adjust_managed_page_count(page, nr_pages);
->> >       return page;
->> >  }
+-- 
+Regards,
+Pratyush Yadav
 
