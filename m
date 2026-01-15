@@ -4,109 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A7372D3CC83
-	for <kexec@archiver.kernel.org>; Wed, 14 Jan 2026 22:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 08D30D4662F
+	for <kexec@archiver.kernel.org>; Thu, 15 Jan 2026 23:01:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=l3fL2jCAfWZLF1Vci6ZRE/CAoSZmZ+NVGFQtLj2FMso=; b=wiKZE5C2ZQ4bMirq7xG8AHj8UB
-	Oubic1freSGE88Y/R/aHZx6nOyWV9pWhLbR0xOPP9fcwzz8NxOTWVTmD1pnoMOi5EITTEIRtZzHup
-	LwqI3MZtmrr8+sUisr2wl1EH35tqF1UgzZFfAZJQ9XEvOnJJfrvtjntBXUTg0Ue5Z4Z4iwgEf+3e/
-	3unhDMGWJHo5QeZm1YscDuP6guACP/v049sasOwTqfxVK8tdRLd9rEs5aaxRp5R1cEyyxQIocOHrt
-	d63qTMPrefFG7F0oFomCJaUYp3jD147WWw/VSzEipFWA/IwS8oy2jpwzEdwXEBaIa6M/9ryH6UYPA
-	u5uzJ0VA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:To:From:Subject
+	:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:Cc:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=IMdtswLamt3UOykeQTkJyuYvDnFmHdnfUUvbhOgS5Nk=; b=Oc2dGbUGMoyTXEyz6nmsMXRj2A
+	7+IHnnms6Aw5O2hoxUnc4YnkNZkWtzAPXf4LmdCtOOECoZu4/L21MQscQ5Ei+Bwft6MRrKO6t60j6
+	om3R60txc2wq4RwFGccClOPdZM+KDU44UQWvc/j2ksN4cgU6tFVmzh+Nfj5weiawiU8CNqVQF5vX4
+	jm80bNttdzELGaURmNLp42JB8FRvEN1MyJOjuD93zVBfgTE1rysxQY9DmPu2/bOa5c/a5KpHqlrIV
+	A1uav5jxagJjqt7MiINnfOO9x9Pl8DJlkgGOYUUB5BpjiwCwGVApGT5vy2KcF1V52Zz9vFR2WcoBj
+	uOpZxH4Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vg8xv-0000000ArTt-0PvG;
-	Wed, 14 Jan 2026 22:03:47 +0000
-Received: from mail-qt1-x82c.google.com ([2607:f8b0:4864:20::82c])
+	id 1vgWKr-0000000DIFI-3xrz;
+	Thu, 15 Jan 2026 23:01:01 +0000
+Received: from mail-dy1-x1349.google.com ([2607:f8b0:4864:20::1349])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vg8xr-0000000ArSI-1euS
+	id 1vgWKn-0000000DIDc-36p2
 	for kexec@lists.infradead.org;
-	Wed, 14 Jan 2026 22:03:45 +0000
-Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-4ee243b98caso52431cf.1
-        for <kexec@lists.infradead.org>; Wed, 14 Jan 2026 14:03:42 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1768428222; cv=none;
-        d=google.com; s=arc-20240605;
-        b=CJY6jDY6QlKCSN9ebCaGd20Iy76JQwmP0YnqjDmuWZWmdKpYsjcIjZ5vF3LMVDRzZL
-         JKMDQYlv+vIOgxQjHDMUMZK5PM+001WST3mgLgcv/d7ir53B8n/yKREmqduZnGutwwF3
-         I8XV98OkbRgYbmLriEjmHM7PkperyAFPjtCSXoCUuBGgA6kRO09k+V8kcHqpn+lNRGW9
-         yC0ymYZVoOzE2S5svDvtg9gOMODZ7XwMhmtaDYgVSCD/+ScDI6whENxEGq5i7ET+CMnA
-         MlMtEsomvD/5OWEx4xhWMKssW1O6j6Oo4G6JT77wWZeFkRtdqcLRgeHcZkAByWTtlqxK
-         vHAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=l3fL2jCAfWZLF1Vci6ZRE/CAoSZmZ+NVGFQtLj2FMso=;
-        fh=8cwcH/bhJF261wWheR9mZAenWUsG1vSRNmLl666yuWY=;
-        b=gW9u7yaIfpodINSrpHUH/5yGt78Uc3wYldSOxcYAFso0x8bfPsyl0R5eHIuANQeKaf
-         5ejd4FZfLNnTYpj5eqenO2Sf6yfWe4mzvpvf2ecGXGZurwP9T4mFbPu90htOzYMOzHrr
-         x5P7vLp8XlCaeVAqKoIIk3HuoFTbOT5IVz0wrZxr2n7bvpCRhyXEKa/OEPk8cwzBgP69
-         ndDXuZL6pQVfUA2tXmu/EVP7oHFuCQBCj5D+suUqyEFSbAQmg+EsW+0OdNjJzXCC7FXq
-         wHV7T8+6METmfPnQUuJ+VkRjjM002doiPdTBUL0cUc10t5NjFZTdScUH54sRwhzJMHMn
-         G4QA==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	Thu, 15 Jan 2026 23:01:00 +0000
+Received: by mail-dy1-x1349.google.com with SMTP id 5a478bee46e88-2b6b56e2b07so1359490eec.1
+        for <kexec@lists.infradead.org>; Thu, 15 Jan 2026 15:00:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768428222; x=1769033022; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l3fL2jCAfWZLF1Vci6ZRE/CAoSZmZ+NVGFQtLj2FMso=;
-        b=2VOr8QN6M2hsdRk+PyANffJ9zGzC4q6axzpBvYJ9pJZqgEYOZBTtj2KsG/Ho5yj148
-         KxPJK76fl6HJFDzAj70MkKW6KMflnBrdFpFnrfOQke2hDgTVddC14h788lHP+W9JS6i9
-         MbAEgsuSPxKOw069w2hhgwbYLZHaOBkyTSMDRibIcx09Iwt7WQ2hLoVUJ1JcPMP1MCgl
-         8JBqk81qWzHyX74f0mMkqHq05n7rMg8qQrM+d4JyNkCVoKBL9RwXTP33gg79h/k+dvK6
-         8kYirhC/jdjBNOI6u5zFEdqakjblG9QUWT6ipsYgb0clImuwxD5wtcNpm/DAqykMEi5S
-         Kx8w==
+        d=google.com; s=20230601; t=1768518054; x=1769122854; darn=lists.infradead.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IMdtswLamt3UOykeQTkJyuYvDnFmHdnfUUvbhOgS5Nk=;
+        b=TXPDbxExsvJpsZEzeqFalJSZwi2002UCKegIjSccuV8ndCU5JGH3rzyR0Ti9gLnuJR
+         e1AlVb5iwMtkdcR6Ke5p0wUP0qqwW3qdgFNjOOJW6wX2tHYKbo5yTybyntK/aNxnkgTq
+         1ucJqfCd2480yn8tj8kzYxhypBPxkP4FeCUTpacjCHazXFRNY8YRvqs7IP26ik/97vxf
+         0AXJYr6asSl8zUtbJD4wo45W8xKpwwgcrBAiAh3aoy53t9H2GEq1OlGwOPphTFv8zuRA
+         6yQBe7890DG5Lv3cAz0Ebnu3UUreqhy7BhLJLafSM2dKblid8mJX4kBkdbQBfrl0NTqW
+         7l3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768428222; x=1769033022;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=l3fL2jCAfWZLF1Vci6ZRE/CAoSZmZ+NVGFQtLj2FMso=;
-        b=dR3J95daguPzL1N7hHLdGAI1ZIQvNDc8HxmQqEqfsBGDEVhq92Db8DqxIJNyJVfcX6
-         a7OLtT/6lU2Wbbqhgx2w3qsRQoYFYzTCflkngVq/bye2/Y2y1UzXWgGK8bkb+U2Uu/mf
-         WSjgBH1/WUD/ybsN16wb4V5uu5Hg6UYkgouutzqsY5cmtdxsAXE4Pe35nBNQCUll7Z4S
-         vjj2wdSiR1njTPjARgT9pSWVBb5a1cQnlCodBAwNT32RwOuvDWc/uuD7fNz11n6eiL7D
-         PwS4hW+KUnBXPEwqeUogP16DcjN4qwiOJqFgV4UOIVmDChn4sIppBiQY0COHFzNXmTlB
-         t/OA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXBNAu2p4V2FDTM4Kj3BdvogAwb++kBZ/Q+QAchG/wpSxKbtqiX7hyxOafYdEz2xZmUuoPbg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzLVa4S3/aLc0X6d++1W9XdwMY1WqXhbNtAVP6gwIEMIFlwI3GC
-	31cj89pOJbXpYZtWyfBybZ9kNL4LNtFJu1soQFHnpF9+OLAGT+G9YFSv8PdnRyjisWLhtE02Q8R
-	zfgm47SfYqziA8Nd5ZJjjeGm/Q5ilhyGzGGjRc2Ha
-X-Gm-Gg: AY/fxX5Qx+nvQ3k+cC6FYKXh+FYiYIFlyzgo2FUTm3nQK8e0662kEWnIK/eOrdkNE4Q
-	u9oWISNIbPnfRJmk7OuYYly1a4iBeP6oZIct5Kn0Jgjj6TSsLxaGc8zzleSG6DtOFOxbVwsksix
-	6aoyzYfooEMphRbfEgJ4VZP+wnRiJw6j1pCmszaRXi2J5t47u1+bavGmzGXqDeRIN+ylXcZDblP
-	hqAfAV4xjS81Tz0JJ7znruXorK1cDpBsDbslJP4UDe+GZlH8zTsjM/FL4cGPtaWvywJKpM31SxD
-	6Ycc49uU+uXPtFXl68Vm8b/cTA==
-X-Received: by 2002:a05:622a:1886:b0:4f4:bb86:504f with SMTP id
- d75a77b69052e-501eaba6816mr2892901cf.16.1768428221476; Wed, 14 Jan 2026
- 14:03:41 -0800 (PST)
-MIME-Version: 1.0
-References: <20260113033403.161869-1-ranxiaokai627@163.com>
- <2vxztswoi16k.fsf@kernel.org> <CAJuCfpEwa=_fubhf5wBnFKrKpOgjyXRy94f2BDx38x_NALE_OQ@mail.gmail.com>
- <2vxzpl7chw8d.fsf@kernel.org>
-In-Reply-To: <2vxzpl7chw8d.fsf@kernel.org>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 14 Jan 2026 14:03:30 -0800
-X-Gm-Features: AZwV_Qg5vTKHUbo3UIWgMBqfS48OHF8JA7wML31Ex5lRim3U9cb7GEUBvsiGrdk
-Message-ID: <CAJuCfpE3ffje9qXdwB3QZsyE+rD-unChSNXPfrijSkk5Nrt5CQ@mail.gmail.com>
-Subject: Re: [PATCH v2] kho: init alloc tags when restoring pages from
- reserved memory
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: ranxiaokai627@163.com, graf@amazon.com, rppt@kernel.org, 
-	pasha.tatashin@soleen.com, akpm@linux-foundation.org, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	ran.xiaokai@zte.com.cn
+        d=1e100.net; s=20230601; t=1768518054; x=1769122854;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IMdtswLamt3UOykeQTkJyuYvDnFmHdnfUUvbhOgS5Nk=;
+        b=aH/BvwBwNQ37it8mS0lgcwjJXK52+paPzJuUC53SULZxvOWZ8FBbOMzfqeCk92dBkh
+         mE5atQccSth0nAgiMEQeDMCu5EI8zrgVzC2aZJHZ3ScMCdDvLvA6s1p42F5qc1HmBhcb
+         s8JYD7taG+sBwKi5ZP3Rr1pHNGSH7JEgScexDWtUNb9qJhsLOn8DmkxLfPhUhake9oNt
+         44jyretrUYe0x8GxC0iiL7eN5xKwoM1a6x91et30xmWTEExbZVl41Mj7ed1ImmElMgKg
+         7Vt8VsG2Ws4rYBxoMcL37V7lGtkWr6B/gvu9QJRITWcZUzotRS8RGAz3RPGN8ffebwbB
+         3KQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWYPl5dMywcqy4Qhles4UbIGX9ktgxUyu6bTjsZP2l9lAz+CVD7Ky/ziPGBTjkw8oXTxHG3Wg==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yzx7/qUUvHq7P1rP5lR5D409p13IW8z0ITJg+SmYhQ9c8iAOZuy
+	aEURyxFPGgQzDPWloMfnzjZes01ed1jNxbGbRZEcgM3UJQdsQ5Mzu/ANoaE69DyA84fgqUB3PDr
+	tAymHBw2w9d1b+Q==
+X-Received: from dlbui3.prod.google.com ([2002:a05:7022:3d03:b0:11d:cfca:1df5])
+ (user=jasonmiu job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:7022:2206:b0:123:3bc6:1ffe with SMTP id a92af1059eb24-1244a70d2e6mr1427106c88.15.1768518054137;
+ Thu, 15 Jan 2026 15:00:54 -0800 (PST)
+Date: Thu, 15 Jan 2026 15:00:47 -0800
+In-Reply-To: <20260115230047.1220580-1-jasonmiu@google.com>
+Mime-Version: 1.0
+References: <20260115230047.1220580-1-jasonmiu@google.com>
+X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
+Message-ID: <20260115230047.1220580-3-jasonmiu@google.com>
+Subject: [PATCH v6 2/2] kho: Remove finalize state and clients
+From: Jason Miu <jasonmiu@google.com>
+To: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>, 
+	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Jason Miu <jasonmiu@google.com>, Mike Rapoport <rppt@kernel.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260114_140343_452520_22F49833 
-X-CRM114-Status: GOOD (  40.58  )
+X-CRM114-CacheID: sfid-20260115_150057_817090_EFC269A5 
+X-CRM114-Status: GOOD (  32.83  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,111 +91,322 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jan 14, 2026 at 10:42=E2=80=AFAM Pratyush Yadav <pratyush@kernel.or=
-g> wrote:
->
-> On Wed, Jan 14 2026, Suren Baghdasaryan wrote:
->
-> > On Wed, Jan 14, 2026 at 8:55=E2=80=AFAM Pratyush Yadav <pratyush@kernel=
-.org> wrote:
-> >>
-> >> Hi Ran,
-> >>
-> >> On Tue, Jan 13 2026, ranxiaokai627@163.com wrote:
-> >>
-> >> > From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
-> >> >
-> >> > Memblock pages (including reserved memory) should have their allocat=
-ion
-> >> > tags initialized to CODETAG_EMPTY via clear_page_tag_ref() before be=
-ing
-> >> > released to the page allocator. When kho restores pages through
-> >> > kho_restore_page(), missing this call causes mismatched
-> >> > allocation/deallocation tracking and below warning message:
-> >> > alloc_tag was not set
-> >> > WARNING: include/linux/alloc_tag.h:164 at ___free_pages+0xb8/0x260, =
-CPU#1: swapper/0/1
-> >> > RIP: 0010:___free_pages+0xb8/0x260
-> >> >  kho_restore_vmalloc+0x187/0x2e0
-> >> >  kho_test_init+0x3c4/0xa30
-> >> >  do_one_initcall+0x62/0x2b0
-> >> >  kernel_init_freeable+0x25b/0x480
-> >> >  kernel_init+0x1a/0x1c0
-> >> >  ret_from_fork+0x2d1/0x360
-> >> >
-> >> > Add missing clear_page_tag_ref() annotation in kho_restore_page() to
-> >> > fix this.
-> >> >
-> >> > Fixes: fc33e4b44b27 ("kexec: enable KHO support for memory preservat=
-ion")
-> >> > Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
-> >> > Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> >> > Reviewed-by: Suren Baghdasaryan <surenb@google.com>
-> >> > ---
-> >> >  kernel/liveupdate/kexec_handover.c | 1 +
-> >> >  1 file changed, 1 insertion(+)
-> >> >
-> >> > diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/=
-kexec_handover.c
-> >> > index cd6b3fb9dcae..2d47f2c50bd8 100644
-> >> > --- a/kernel/liveupdate/kexec_handover.c
-> >> > +++ b/kernel/liveupdate/kexec_handover.c
-> >> > @@ -268,6 +268,7 @@ static struct page *kho_restore_page(phys_addr_t=
- phys, bool is_folio)
-> >> >       else
-> >> >               kho_init_pages(page, nr_pages);
-> >> >
-> >> > +     clear_page_tag_ref(page);
-> >>
-> >> You are only clearing the tag for the head page. The tail pages are
-> >> still un-initialized. Is that intentional?
-> >
-> > In the case of a compound page we set the tag only on the head page,
-> > so this is correct.
-> >
-> >>
-> >> What about non-compound pages (the ones you get from
-> >> kho_restore_pages(), aka when is_folio is false)? Do we need to clear
-> >> the tag on all pages in that case?
-> >
-> > In the case of kho_restore_pages() we call split_page() which calls
->
-> Not since 7b71205ae112 ("kho: fix restoring of contiguous ranges of
-> order-0 pages"). That commit removed the split_pages() call and
-> open-coded the page initialization logic tailored for KHO.
+Eliminate the `kho_finalize()` function and its associated state from
+the KHO subsystem. The transition to a radix tree for memory tracking
+makes the explicit "finalize" state and its serialization step
+obsolete.
 
-Ah, I see. I missed that change.
+Remove the `kho_finalize()` and `kho_finalized()` APIs and their stub
+implementations. Update KHO client code and the debugfs interface to
+no longer call or depend on the `kho_finalize()` mechanism.
 
->
-> So I think you do need to initialize the tags for kho_restore_pages().
->
-> I sent a patch [0] simplifying the page init logic a bit. I need to do a
-> v2 but it is a very simple change so I can get that done tomorrow. I
-> think it would be good to base your series on that since that would make
-> it easier for you to modify only the kho_restore_pages() path and the
-> end result would be cleaner.
->
-> [0] https://lore.kernel.org/linux-mm/20251223104448.195589-1-pratyush@ker=
-nel.org/
+Complete the move towards a stateless KHO, simplifying the overall
+design by removing unnecessary state management.
 
-Ok, let's wait for your patch to see the final result. Please CC us
-when you send it.
+Signed-off-by: Jason Miu <jasonmiu@google.com>
+---
+ Documentation/admin-guide/mm/kho.rst        | 53 +++++----------------
+ Documentation/core-api/kho/index.rst        | 12 -----
+ kernel/liveupdate/kexec_handover.c          | 21 +-------
+ kernel/liveupdate/kexec_handover_debugfs.c  | 23 ---------
+ kernel/liveupdate/kexec_handover_internal.h |  3 --
+ kernel/liveupdate/luo_core.c                | 12 +----
+ kernel/liveupdate/luo_flb.c                 |  2 +-
+ tools/testing/selftests/kho/init.c          | 20 --------
+ 8 files changed, 14 insertions(+), 132 deletions(-)
 
->
-> > pgalloc_tag_split() and that propagates the tag from the head page to
-> > all the tail pages being split from it. However now that I'm looking
-> > at it, I'm not sure pgalloc_tag_split() works correctly if the tag
-> > reference of the head page is CODETAG_EMPTY. In summary, this patch is
-> > fine but there might be a bug inside pgalloc_tag_split() if the tag
-> > reference is CODETAG_EMPTY.
-> >
-> > I'll analyze and reproduce that case. If it indeed has the issue I
-> > think it's easy to fix it by creating a specialized alloc_tag object
-> > with alloc_tag->ct=3DCODETAG_EMPTY and  make __pgalloc_tag_get() return
-> > it if the page's tag reference is CODETAG_EMPTY.
-> >
-> >>
-> >> >       adjust_managed_page_count(page, nr_pages);
-> >> >       return page;
-> >> >  }
+diff --git a/Documentation/admin-guide/mm/kho.rst b/Documentation/admin-guide/mm/kho.rst
+index 6dc18ed4b886..454b378cf239 100644
+--- a/Documentation/admin-guide/mm/kho.rst
++++ b/Documentation/admin-guide/mm/kho.rst
+@@ -28,20 +28,10 @@ per NUMA node scratch regions on boot.
+ Perform a KHO kexec
+ ===================
+ 
+-First, before you perform a KHO kexec, you need to move the system into
+-the :ref:`KHO finalization phase <kho-finalization-phase>` ::
+-
+-  $ echo 1 > /sys/kernel/debug/kho/out/finalize
+-
+-After this command, the KHO FDT is available in
+-``/sys/kernel/debug/kho/out/fdt``. Other subsystems may also register
+-their own preserved sub FDTs under
+-``/sys/kernel/debug/kho/out/sub_fdts/``.
+-
+-Next, load the target payload and kexec into it. It is important that you
+-use the ``-s`` parameter to use the in-kernel kexec file loader, as user
+-space kexec tooling currently has no support for KHO with the user space
+-based file loader ::
++To perform a KHO kexec, load the target payload and kexec into it. It
++is important that you use the ``-s`` parameter to use the in-kernel
++kexec file loader, as user space kexec tooling currently has no
++support for KHO with the user space based file loader ::
+ 
+   # kexec -l /path/to/bzImage --initrd /path/to/initrd -s
+   # kexec -e
+@@ -52,40 +42,19 @@ For example, if you used ``reserve_mem`` command line parameter to create
+ an early memory reservation, the new kernel will have that memory at the
+ same physical address as the old kernel.
+ 
+-Abort a KHO exec
+-================
+-
+-You can move the system out of KHO finalization phase again by calling ::
+-
+-  $ echo 0 > /sys/kernel/debug/kho/out/active
+-
+-After this command, the KHO FDT is no longer available in
+-``/sys/kernel/debug/kho/out/fdt``.
+-
+ debugfs Interfaces
+ ==================
+ 
++These debugfs interfaces are available when the kernel is compiled with
++``CONFIG_KEXEC_HANDOVER_DEBUGFS`` enabled.
++
+ Currently KHO creates the following debugfs interfaces. Notice that these
+ interfaces may change in the future. They will be moved to sysfs once KHO is
+ stabilized.
+ 
+-``/sys/kernel/debug/kho/out/finalize``
+-    Kexec HandOver (KHO) allows Linux to transition the state of
+-    compatible drivers into the next kexec'ed kernel. To do so,
+-    device drivers will instruct KHO to preserve memory regions,
+-    which could contain serialized kernel state.
+-    While the state is serialized, they are unable to perform
+-    any modifications to state that was serialized, such as
+-    handed over memory allocations.
+-
+-    When this file contains "1", the system is in the transition
+-    state. When contains "0", it is not. To switch between the
+-    two states, echo the respective number into this file.
+-
+ ``/sys/kernel/debug/kho/out/fdt``
+-    When KHO state tree is finalized, the kernel exposes the
+-    flattened device tree blob that carries its current KHO
+-    state in this file. Kexec user space tooling can use this
++    The kernel exposes the flattened device tree blob that carries its
++    current KHO state in this file. Kexec user space tooling can use this
+     as input file for the KHO payload image.
+ 
+ ``/sys/kernel/debug/kho/out/scratch_len``
+@@ -100,8 +69,8 @@ stabilized.
+     it should place its payload images.
+ 
+ ``/sys/kernel/debug/kho/out/sub_fdts/``
+-    In the KHO finalization phase, KHO producers register their own
+-    FDT blob under this directory.
++    KHO producers can register their own FDT blob another binary blob under
++    this directory.
+ 
+ ``/sys/kernel/debug/kho/in/fdt``
+     When the kernel was booted with Kexec HandOver (KHO),
+diff --git a/Documentation/core-api/kho/index.rst b/Documentation/core-api/kho/index.rst
+index 002bdf0beb2e..0a2dee4f8e7d 100644
+--- a/Documentation/core-api/kho/index.rst
++++ b/Documentation/core-api/kho/index.rst
+@@ -71,18 +71,6 @@ for boot memory allocations and as target memory for kexec blobs, some parts
+ of that memory region may be reserved. These reservations are irrelevant for
+ the next KHO, because kexec can overwrite even the original kernel.
+ 
+-.. _kho-finalization-phase:
+-
+-KHO finalization phase
+-======================
+-
+-To enable user space based kexec file loader, the kernel needs to be able to
+-provide the FDT that describes the current kernel's state before
+-performing the actual kexec. The process of generating that FDT is
+-called serialization. When the FDT is generated, some properties
+-of the system may become immutable because they are already written down
+-in the FDT. That state is called the KHO finalization phase.
+-
+ Kexec Handover Radix Tree
+ =========================
+ 
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 33ba1c7db661..411bf7aa80c2 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -68,8 +68,7 @@ early_param("kho", kho_parse_enable);
+ 
+ struct kho_out {
+ 	void *fdt;
+-	bool finalized;
+-	struct mutex lock; /* protects KHO FDT finalization */
++	struct mutex lock; /* protects KHO FDT */
+ 
+ 	struct kho_radix_tree radix_tree;
+ 	struct kho_debugfs dbg;
+@@ -80,7 +79,6 @@ static struct kho_out kho_out = {
+ 	.radix_tree = {
+ 		.lock = __MUTEX_INITIALIZER(kho_out.radix_tree.lock),
+ 	},
+-	.finalized = false,
+ };
+ 
+ /**
+@@ -1196,23 +1194,6 @@ void kho_restore_free(void *mem)
+ }
+ EXPORT_SYMBOL_GPL(kho_restore_free);
+ 
+-int kho_finalize(void)
+-{
+-	if (!kho_enable)
+-		return -EOPNOTSUPP;
+-
+-	guard(mutex)(&kho_out.lock);
+-	kho_out.finalized = true;
+-
+-	return 0;
+-}
+-
+-bool kho_finalized(void)
+-{
+-	guard(mutex)(&kho_out.lock);
+-	return kho_out.finalized;
+-}
+-
+ struct kho_in {
+ 	phys_addr_t fdt_phys;
+ 	phys_addr_t scratch_phys;
+diff --git a/kernel/liveupdate/kexec_handover_debugfs.c b/kernel/liveupdate/kexec_handover_debugfs.c
+index 2abbf62ba942..430c9521d59c 100644
+--- a/kernel/liveupdate/kexec_handover_debugfs.c
++++ b/kernel/liveupdate/kexec_handover_debugfs.c
+@@ -75,24 +75,6 @@ void kho_debugfs_fdt_remove(struct kho_debugfs *dbg, void *fdt)
+ 	}
+ }
+ 
+-static int kho_out_finalize_get(void *data, u64 *val)
+-{
+-	*val = kho_finalized();
+-
+-	return 0;
+-}
+-
+-static int kho_out_finalize_set(void *data, u64 val)
+-{
+-	if (val)
+-		return kho_finalize();
+-	else
+-		return -EINVAL;
+-}
+-
+-DEFINE_DEBUGFS_ATTRIBUTE(kho_out_finalize_fops, kho_out_finalize_get,
+-			 kho_out_finalize_set, "%llu\n");
+-
+ static int scratch_phys_show(struct seq_file *m, void *v)
+ {
+ 	for (int i = 0; i < kho_scratch_cnt; i++)
+@@ -198,11 +180,6 @@ __init int kho_out_debugfs_init(struct kho_debugfs *dbg)
+ 	if (IS_ERR(f))
+ 		goto err_rmdir;
+ 
+-	f = debugfs_create_file("finalize", 0600, dir, NULL,
+-				&kho_out_finalize_fops);
+-	if (IS_ERR(f))
+-		goto err_rmdir;
+-
+ 	dbg->dir = dir;
+ 	dbg->sub_fdt_dir = sub_fdt_dir;
+ 	return 0;
+diff --git a/kernel/liveupdate/kexec_handover_internal.h b/kernel/liveupdate/kexec_handover_internal.h
+index 0202c85ad14f..9a832a35254c 100644
+--- a/kernel/liveupdate/kexec_handover_internal.h
++++ b/kernel/liveupdate/kexec_handover_internal.h
+@@ -22,9 +22,6 @@ struct kho_debugfs {};
+ extern struct kho_scratch *kho_scratch;
+ extern unsigned int kho_scratch_cnt;
+ 
+-bool kho_finalized(void);
+-int kho_finalize(void);
+-
+ #ifdef CONFIG_KEXEC_HANDOVER_DEBUGFS
+ int kho_debugfs_init(void);
+ void kho_in_debugfs_init(struct kho_debugfs *dbg, const void *fdt);
+diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
+index dda7bb57d421..84ac728d63ba 100644
+--- a/kernel/liveupdate/luo_core.c
++++ b/kernel/liveupdate/luo_core.c
+@@ -230,17 +230,7 @@ int liveupdate_reboot(void)
+ 
+ 	luo_flb_serialize();
+ 
+-	err = kho_finalize();
+-	if (err) {
+-		pr_err("kho_finalize failed %d\n", err);
+-		/*
+-		 * kho_finalize() may return libfdt errors, to aboid passing to
+-		 * userspace unknown errors, change this to EAGAIN.
+-		 */
+-		err = -EAGAIN;
+-	}
+-
+-	return err;
++	return 0;
+ }
+ 
+ /**
+diff --git a/kernel/liveupdate/luo_flb.c b/kernel/liveupdate/luo_flb.c
+index 4c437de5c0b0..22f6409875c9 100644
+--- a/kernel/liveupdate/luo_flb.c
++++ b/kernel/liveupdate/luo_flb.c
+@@ -630,7 +630,7 @@ int __init luo_flb_setup_incoming(void *fdt_in)
+  * data handle, and the final reference count. This allows the new kernel to
+  * find the appropriate handler and reconstruct the FLB's state.
+  *
+- * Context: Called from liveupdate_reboot() just before kho_finalize().
++ * Context: Called from liveupdate_reboot().
+  */
+ void luo_flb_serialize(void)
+ {
+diff --git a/tools/testing/selftests/kho/init.c b/tools/testing/selftests/kho/init.c
+index 6d9e91d55d68..88a41b6eba95 100644
+--- a/tools/testing/selftests/kho/init.c
++++ b/tools/testing/selftests/kho/init.c
+@@ -11,7 +11,6 @@
+ /* from arch/x86/include/asm/setup.h */
+ #define COMMAND_LINE_SIZE	2048
+ 
+-#define KHO_FINALIZE "/debugfs/kho/out/finalize"
+ #define KERNEL_IMAGE "/kernel"
+ 
+ static int mount_filesystems(void)
+@@ -22,22 +21,6 @@ static int mount_filesystems(void)
+ 	return mount("proc", "/proc", "proc", 0, NULL);
+ }
+ 
+-static int kho_enable(void)
+-{
+-	const char enable[] = "1";
+-	int fd;
+-
+-	fd = open(KHO_FINALIZE, O_RDWR);
+-	if (fd < 0)
+-		return -1;
+-
+-	if (write(fd, enable, sizeof(enable)) != sizeof(enable))
+-		return 1;
+-
+-	close(fd);
+-	return 0;
+-}
+-
+ static long kexec_file_load(int kernel_fd, int initrd_fd,
+ 			    unsigned long cmdline_len, const char *cmdline,
+ 			    unsigned long flags)
+@@ -78,9 +61,6 @@ int main(int argc, char *argv[])
+ 	if (mount_filesystems())
+ 		goto err_reboot;
+ 
+-	if (kho_enable())
+-		goto err_reboot;
+-
+ 	if (kexec_load())
+ 		goto err_reboot;
+ 
+-- 
+2.52.0.457.g6b5491de43-goog
+
 
