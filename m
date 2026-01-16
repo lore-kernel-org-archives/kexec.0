@@ -4,62 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 101D7C982DB
-	for <kexec@archiver.kernel.org>; Fri, 16 Jan 2026 16:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7DF05C982D1
+	for <kexec@archiver.kernel.org>; Fri, 16 Jan 2026 17:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=ORzddBrbw+D4uXnd0lt19gTnZVM9KpKMSRBPxVW3aSw=; b=PYxj/9vNYSuEo2jqP0+LOwhGZU
-	4ZVVBzWJkoR2DZKV02E0h/ViWtu8tdd88d7l2WH9MwTYdVogtlfbwJgEGR2zBeZoSGg/AKapz99RT
-	3AGozQk/6zTyEFnx5AAnjLxNrxIuldFzmpfllY/nkp1atZUEDAt9kJWaRMy/JyyCZhV616nJCcTYl
-	sFovVDFzo2XuDru0Xfg2jZ1Jvmu9XopOv89YTclCAKHNlGh+KDv1+QWrAwSlDXOQR7s0rgtq3qwoB
-	XRv0JZAJKV6zSszqHJdRMilbfQnjPnjzo0GutpaFkzxTY0mPZJuANiAGJ3MVzFzv0Wik6r2rdMpxf
-	TYLSgQHw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=arJvcCvN4ztGJLd7hUCd1IXFDv2P3lxC+j2W3w2tICE=; b=JPxeUZ3lNR70kxIYP2IQ4AHy0k
+	rVtITxn5BTt+/AhuA3whZojMVsdOjAs9kKj2onSqa+7fYb1jGDs1rhiU4UvsEIDgP+dW6l7XBNHwK
+	w8mvCK4J/PNt7f+u9V5evWFr2hQfcC76JB7BvHL2zldshrOdOWmsLuB95i3EsuEqxdQrqYqoTjtlZ
+	BLWa3ltpvfhTPQOs4a9AJ2p5VWSQHLwO4QXPCWXPiy92OqxtODXjzLo94qaL9jugHvyooJukVSvId
+	ZT2WefGA7YUjgDtbGxsvp2UF+w6qVleAKubnE0rg7yEcVTgU2kgWWTkCOIgbSZ/2uPLESLohIy8lp
+	U4Nrxukw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vgn5i-0000000EUnV-2gTY;
-	Fri, 16 Jan 2026 16:54:30 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1vgnPH-0000000EYeC-1mGC;
+	Fri, 16 Jan 2026 17:14:43 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vgn5i-0000000EUnJ-0NMD
+	id 1vgnPG-0000000EYe4-0TyR
 	for kexec@lists.infradead.org;
-	Fri, 16 Jan 2026 16:54:30 +0000
+	Fri, 16 Jan 2026 17:14:42 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 1F10F60160;
-	Fri, 16 Jan 2026 16:54:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2095C116C6;
-	Fri, 16 Jan 2026 16:54:26 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id EF2AD60150;
+	Fri, 16 Jan 2026 17:14:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25132C116C6;
+	Fri, 16 Jan 2026 17:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768582468;
-	bh=AgWf6hPAtL4GliApjS2EmEaZMLApvSCfTMtAOCyeuvI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=BKf01sPkBRzCsFEmg4ZVDfpmZ90mayC3ZU/FN+ZHAo23vyeGtT+oXnjZyugbGuq74
-	 FYKbltjY4O1OLBf2usHtyXNgg7hw6959Ax0Ue9Vz0pIKxmeSxV7l6eObGfrjVtXk9x
-	 66r8Z0xoQo+DyIPpSDyqLgRQDiPuP2Ony+VxR5L2XjBO7tuuqUTT5njMafIOjTEn/u
-	 8GCsJkk9Nm4+ey5dbbS3DGbC9Mr+2iyqzi+44UfU4bL1bhG/hK2M5i9Ai7qMherKUq
-	 s1TiafCUSp5IqGC77jGfCGzpOdbeB+QxJ7qQRplDkh92leWgohrPGmUln2kY1vIOQ4
-	 c154X1C7YSDrw==
+	s=k20201202; t=1768583680;
+	bh=d4CxCBV64cuXzGjuk2uWj4LPcoHD1d0/Q4IvI0bWIQ0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=rZkslwi1YB3MS82MWfrwr91m8ny+VcHQ9zx1fV+m11nPiXOIlxOrDB/3qRKxF+3Ya
+	 lJ6NR5Lo7R/QYTpVw5hVM5WxiUe5ytTY42GKkTOGzeriYbHLL/1l3ZKIMgpop0l97d
+	 K/vWGnYE4k5FWbLO5qdZ/QlzcDTFhV7O75SxKkUMDG8XpAHNiLCOGUAgJGQQlKd/1A
+	 aSrhQRWgaThcB5aA7mc86eaSvrqtNi+tIqCMWxJIZhLO/7CaaL8lhNiZ/TiTFW9R5f
+	 +g1uB6VjXsuotecCbO8L5DN4UvuvaHcc0YfFdx6Q+aSjK2BY8Vv3PYle+XeSRaQM4j
+	 q0X13GuhF/OjQ==
 From: Pratyush Yadav <pratyush@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Graf <graf@amazon.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>
-Cc: kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Samiullah Khawaja <skhawaja@google.com>,
-	David Matlack <dmatlack@google.com>,
-	Jason Miu <jasonmiu@google.com>
-Subject: [PATCH] kho: print which scratch buffer failed to be reserved
-Date: Fri, 16 Jan 2026 16:54:11 +0000
-Message-ID: <20260116165416.1262531-1-pratyush@kernel.org>
-X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
+To: l00580197 <longwei27@huawei.com>
+Cc: Alexander Graf <graf@amazon.com>,  Mike Rapoport <rppt@kernel.org>,
+  Pasha Tatashin <pasha.tatashin@soleen.com>,  Pratyush Yadav
+ <pratyush@kernel.org>,  <kexec@lists.infradead.org>,
+  <linux-mm@kvack.org>,  <linux-kernel@vger.kernel.org>,
+  <hewenliang4@huawei.com>
+Subject: Re: [PATCH] kho: test: clean up residual memory upon test_kho
+ module unload
+In-Reply-To: <20260107022427.4114424-1-longwei27@huawei.com>
+	(longwei27@huawei.com's message of "Wed, 7 Jan 2026 10:24:27 +0800")
+References: <20260107022427.4114424-1-longwei27@huawei.com>
+Date: Fri, 16 Jan 2026 17:14:37 +0000
+Message-ID: <2vxzjyxh7a4i.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,76 +73,23 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+On Wed, Jan 07 2026, l00580197 wrote:
 
-When scratch area fails to reserve, KHO prints a message indicating
-that. But it doesn't say which scratch failed to allocate. This can be
-useful information for debugging. Even more so when the failure is hard
-to reproduce.
+> From: Long Wei <longwei27@huawei.com>
+>
+> During the initialization phase, the test_kho module invokes the
+> kho_preserve_folio function, which internally configures bitmaps
+> within kho_mem_track and establishes chunk linked lists in KHO.
+> Upon unloading the test_kho module, it is necessary to clean up
+> these states.
+>
+> Signed-off-by: Long Wei <longwei27@huawei.com>
 
-Along with the current message, also print which exact scratch area
-failed to be reserved.
+Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
 
-Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
----
- kernel/liveupdate/kexec_handover.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+[...]
 
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 49bf2cecab12..636bd96780ae 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -651,8 +651,10 @@ static void __init kho_reserve_scratch(void)
- 	kho_scratch_cnt = num_online_nodes() + 2;
- 	size = kho_scratch_cnt * sizeof(*kho_scratch);
- 	kho_scratch = memblock_alloc(size, PAGE_SIZE);
--	if (!kho_scratch)
-+	if (!kho_scratch) {
-+		pr_err("Failed to reserve scratch array\n");
- 		goto err_disable_kho;
-+	}
- 
- 	/*
- 	 * reserve scratch area in low memory for lowmem allocations in the
-@@ -661,8 +663,10 @@ static void __init kho_reserve_scratch(void)
- 	size = scratch_size_lowmem;
- 	addr = memblock_phys_alloc_range(size, CMA_MIN_ALIGNMENT_BYTES, 0,
- 					 ARCH_LOW_ADDRESS_LIMIT);
--	if (!addr)
-+	if (!addr) {
-+		pr_err("Failed to reserve lowmem scratch buffer\n");
- 		goto err_free_scratch_desc;
-+	}
- 
- 	kho_scratch[i].addr = addr;
- 	kho_scratch[i].size = size;
-@@ -671,8 +675,10 @@ static void __init kho_reserve_scratch(void)
- 	/* reserve large contiguous area for allocations without nid */
- 	size = scratch_size_global;
- 	addr = memblock_phys_alloc(size, CMA_MIN_ALIGNMENT_BYTES);
--	if (!addr)
-+	if (!addr) {
-+		pr_err("Failed to reserve global scratch buffer\n");
- 		goto err_free_scratch_areas;
-+	}
- 
- 	kho_scratch[i].addr = addr;
- 	kho_scratch[i].size = size;
-@@ -683,8 +689,10 @@ static void __init kho_reserve_scratch(void)
- 		addr = memblock_alloc_range_nid(size, CMA_MIN_ALIGNMENT_BYTES,
- 						0, MEMBLOCK_ALLOC_ACCESSIBLE,
- 						nid, true);
--		if (!addr)
-+		if (!addr) {
-+			pr_err("Failed to reserve nid %d scratch buffer\n", nid);
- 			goto err_free_scratch_areas;
-+		}
- 
- 		kho_scratch[i].addr = addr;
- 		kho_scratch[i].size = size;
-
-base-commit: c37fac0551448c68e36f14782acaf662c7a1775e
 -- 
-2.52.0.457.g6b5491de43-goog
-
+Regards,
+Pratyush Yadav
 
