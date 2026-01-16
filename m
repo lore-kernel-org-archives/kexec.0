@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AAEE3D4663B
-	for <kexec@archiver.kernel.org>; Thu, 15 Jan 2026 23:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 53C2AD4A5F9
+	for <kexec@archiver.kernel.org>; Fri, 16 Jan 2026 03:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:To:From:Subject
 	:Message-ID:Mime-Version:Date:Reply-To:Cc:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=dgz1DtuTuOXgXInLnCBHEUta7LHhfgJVWxb17yQm2vY=; b=JRGSFjPml8AcvlOlqw4Tq1Argu
-	AvleoICQ1JLNRflz4GA/0UeCSyyPLsZCZaaBXgbIALB8P2YrGXWAxv0FOUlVYsH9vKuwks6ieI3Xr
-	Fwe7jBetUvyAMz1I6z1mjmovrmaHncid1G75A69KNMO/5KHe5QiUcH5TljzSjL4nbor9yt+FS08mL
-	vl2EhnvLrwv0V3/k8v7TX4d/VBC+y3SjtXWHNDw/HAKHs7K3T51GTw08DpEM1PEAYG1TOAdikJD4U
-	pF4grPwo4HKuCH8KX5Sae/d5IVK/DYDLgGRmMjXWuSBFXrFLUzRfKGHIzD7mDh72EX3OedY9gdvIR
-	tke2psMQ==;
+	bh=XajjLO2IfEQWNmg3arj/S1hgJxiIRRitST6jLheATpY=; b=iig/swTm3QM3cbbq6tsxgAIAlG
+	Vc0nYRdZaK+yVMvPhMMkCB+4kT2QMuKCNgyZ5dRI5IzV1dA1LDi84MFRHHNxybSo1Vcyoscm31KdR
+	EbKs77Nbw9BeiZ4/wLOlZF/h0ziZUBSbY25y5ULDX2MJ60qJXkGYx1pYR4pXtGRO+ugpWMFJUW0Zw
+	EwqOtcVqr+qWvsFQlF2V+Yn/vm8WgNGIjUBDgL4Df9Xp3ensG8h14rkStc+7s+n3zPrvaLfA1dsQU
+	h0jJNk0BQkZF9iUCTjdgYUrJ7TkzSlx+mzWo7Q7azxJliprRM3ckh6NwSSjaCKKZDUMVlQ/nyeFJW
+	xOKX3UHg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vgWKp-0000000DIDd-0S5h;
-	Thu, 15 Jan 2026 23:01:00 +0000
-Received: from mail-dl1-x124a.google.com ([2607:f8b0:4864:20::124a])
+	id 1vgalN-0000000DXcq-0Pr1;
+	Fri, 16 Jan 2026 03:44:41 +0000
+Received: from mail-dl1-x1249.google.com ([2607:f8b0:4864:20::1249])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vgWKi-0000000DID3-2knt
+	id 1vgalJ-0000000DXby-2TiO
 	for kexec@lists.infradead.org;
-	Thu, 15 Jan 2026 23:00:53 +0000
-Received: by mail-dl1-x124a.google.com with SMTP id a92af1059eb24-12339eea50bso7627043c88.1
-        for <kexec@lists.infradead.org>; Thu, 15 Jan 2026 15:00:51 -0800 (PST)
+	Fri, 16 Jan 2026 03:44:38 +0000
+Received: by mail-dl1-x1249.google.com with SMTP id a92af1059eb24-11b9786fb51so10332602c88.1
+        for <kexec@lists.infradead.org>; Thu, 15 Jan 2026 19:44:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768518050; x=1769122850; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1768535076; x=1769139876; darn=lists.infradead.org;
         h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=dgz1DtuTuOXgXInLnCBHEUta7LHhfgJVWxb17yQm2vY=;
-        b=Q4jo7dvwMZw1cnjXIpj4pAKBJi6NbtOZeACXgCaFj95OUF+imE3xxhJ6mngBl9ELRy
-         AfRVcJUnByf8zQFyKj/5bThY5DHJf4N7WMeg1J4lCWEPYX+o0hjRuPgm8iz7TcYvm4sH
-         j+ZCkm3ovFMb91sOOZMo2uRj0a1ZD+VKzMDYChEIU3iQufZLB9RJ+zi75PvH2tIKM56C
-         +AcNXXOwTK2SmyOZge0Be0PUkafuEFpV5bjLv0yqaY6UZSQwn6H9aS1GG7M73F79c2Zj
-         /tXd5EFBOHvsBs0/+WkSmJ70pG27TLLffu3DR5Y6F73Ca7rl1ipmTgB9yMRgVGn7FiqZ
-         B+/w==
+        bh=XajjLO2IfEQWNmg3arj/S1hgJxiIRRitST6jLheATpY=;
+        b=31WXM2+raZjCv8nqzcAE2eAkWR3V5U5qj5Di+C/gWfOWiSQntXPZ96SLi/lTuHdiBR
+         LvLAKyC5tkxPGg5smpqEIkqJdRdTCbsKYRwtHYHyr+ET/OJg7Z6t0yhdkgofCoIMXUZv
+         0qJaffqHEZ4tokq73XiMIV5nzoP2PS8c+qcy2V8AYPauIvWGR9zLJjYltY8+ev5pyf6J
+         poFb5PpefEFkzotRhlWrVPVvVMnpXAPxu8ecX22OgAL/EeZ2KswwHC6zIlhnlW9HFSx9
+         3Pa6YeOjInBAs1IA4aEz807+7kKqiuPIp6D4Df0rXb3SHxm2FTS//li6dfkyxfSb6i+H
+         b8fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768518050; x=1769122850;
+        d=1e100.net; s=20230601; t=1768535076; x=1769139876;
         h=to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=dgz1DtuTuOXgXInLnCBHEUta7LHhfgJVWxb17yQm2vY=;
-        b=QsI16KCxZtsfQaZwW5PZahz7mnfnLFXrzMmye5mB12M2VyALmDpbmZA4yycO+cI4PW
-         gbZWf/YeEqcScYfvZZ+E3WDPcbfT7AJYxC4Nc8PAey0c+xIPAOB7cAp7xU+PPveftDn4
-         CKg/EeDZ+JDwvkdWeTpkF03QQnQfOrkHeRAgu/SIdkBVnO/+Q8g+UATTTUsBf23aTZU3
-         ErDu7O2V9ysyIFrt1lkl3Sylj/XJs1upkGaYGHoFxYKYwQW1B8Y6WRwMU3EV0wr/E8EN
-         tLeH9MDoKsftYCzXihK79+LJdDuE/nurdTm2Nji3EAYZDEdCKvY3kSnaNnmYLwHihjz0
-         YOTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVXXr+r4+FHFez89VeiSu/m9JNbrw6s/QRSwBcnhOx1I7fWdTxgnDFH7Ebm6D0vQaIQQlSZQA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YysIHQ1iY9G6OB+I/Z5B3jmSfSuUh5+s91j6Ownp8qVZJICch1u
-	jYPk49e1SbizVg1kOMyeaZzssqIOK9PJCPkiJUY4KB9fOuG4iARsZ/ugM7oeJxRDjct6CEWpHgc
-	M+SfMnMW8mJc9pg==
-X-Received: from dlbdt13.prod.google.com ([2002:a05:7022:258d:b0:121:7b2a:193d])
+        bh=XajjLO2IfEQWNmg3arj/S1hgJxiIRRitST6jLheATpY=;
+        b=clWKNTMbVCMoJomDMhVaXqwo7IsuZfCV6Sg+uL2FANX+zPZ2FTV1di+ZCFZt65kHff
+         dtcM4kSQ2Xl/9vyeGUu0YqGGL3l74b9ymG/z6OUpAcGa2DF7I2DHvO0ZPkG4Ds1/Ucow
+         uZxNaG5aRGipmwExl4ln+921fxJjzsMcjD1dMGB7dzX41J+VeXJ750UpwM6AdRTuRYcK
+         bdHeLtJtYNhMEQIresnBSaV7fldfvlSYwhtesHPp769+p09UEqUylj4MGn6lFPSy9igQ
+         fVEa4j/Q526Hgt78g3Mzb8e3zJNjBYVoBI5wUwsgOZvRQeTHp+SMgFlxZZL5BztMUgNs
+         DyCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX7ZUIVE20Hkx1FPxiAA3tElS2sYdB9Hc7p+EgWTZcZIUoq4XSpEAZ5CLy7sOBcsR4mD20hoQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yw3qoGIuJ1dZ1OMf7S4EV4teIrrr41r8PwN/gkp40Nf2rv2YZZD
+	8Nmhbet6OFblRl6CWM3AJfrffP/kIUjVi75Zf2FASvpUbl4TfWtv8itcVGiwvsOhvs78qlJty8M
+	QcRoHQZoOMJ7BuQ==
+X-Received: from dlkk2.prod.google.com ([2002:a05:7022:6082:b0:11b:b064:f5dc])
  (user=jasonmiu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:7022:2397:b0:11b:9386:a3c5 with SMTP id a92af1059eb24-1244b395f25mr900028c88.48.1768518050280;
- Thu, 15 Jan 2026 15:00:50 -0800 (PST)
-Date: Thu, 15 Jan 2026 15:00:45 -0800
+ 2002:a05:7022:a8a:b0:11b:9386:825c with SMTP id a92af1059eb24-1244a791c71mr1740076c88.41.1768535076050;
+ Thu, 15 Jan 2026 19:44:36 -0800 (PST)
+Date: Thu, 15 Jan 2026 19:44:30 -0800
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
-Message-ID: <20260115230047.1220580-1-jasonmiu@google.com>
-Subject: [PATCH v6 0/2] Make KHO Stateless
+Message-ID: <20260116034432.1520731-1-jasonmiu@google.com>
+Subject: [PATCH v7 0/2] Make KHO Stateless
 From: Jason Miu <jasonmiu@google.com>
 To: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
 	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>, 
@@ -73,8 +73,8 @@ To: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>,
 	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260115_150052_696367_46267BFA 
-X-CRM114-Status: GOOD (  11.74  )
+X-CRM114-CacheID: sfid-20260115_194437_630071_1CEDC3A2 
+X-CRM114-Status: GOOD (  11.03  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,11 +117,12 @@ This series is broken down into the following patches:
 
 ---
 
-Changelog since v5 [1]:
-- Cleaned up header inclusions
-- Rebased to the latest linux-next
+Changelog since v6 [1]:
+- Fixed a potential dangling pointer in kho_radix_add_page() on allocation failure
+- Fixed a premature return in __kho_radix_walk_tree()
+- Corrected the size type in kho_preserved_memory_reserve() to match memblock_reserve()
 
-[1] https://lore.kernel.org/lkml/20260113053524.84186-1-jasonmiu@google.com/
+[1] https://lore.kernel.org/lkml/20260115230047.1220580-1-jasonmiu@google.com/
 
 ---
 
@@ -132,15 +133,15 @@ Jason Miu (2):
  Documentation/admin-guide/mm/kho.rst        |  53 +-
  Documentation/core-api/kho/abi.rst          |   6 +
  Documentation/core-api/kho/index.rst        |  18 +-
- include/linux/kho/abi/kexec_handover.h      | 144 ++++-
+ include/linux/kho/abi/kexec_handover.h      | 144 +++-
  include/linux/kho_radix_tree.h              |  70 ++
- kernel/liveupdate/kexec_handover.c          | 682 ++++++++++----------
+ kernel/liveupdate/kexec_handover.c          | 695 ++++++++++----------
  kernel/liveupdate/kexec_handover_debugfs.c  |  23 -
  kernel/liveupdate/kexec_handover_internal.h |   3 -
  kernel/liveupdate/luo_core.c                |  12 +-
  kernel/liveupdate/luo_flb.c                 |   2 +-
  tools/testing/selftests/kho/init.c          |  20 -
- 11 files changed, 560 insertions(+), 473 deletions(-)
+ 11 files changed, 573 insertions(+), 473 deletions(-)
  create mode 100644 include/linux/kho_radix_tree.h
 
 
