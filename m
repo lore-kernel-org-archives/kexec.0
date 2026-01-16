@@ -4,78 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A1263C982D7
-	for <kexec@archiver.kernel.org>; Fri, 16 Jan 2026 15:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0F882C982D4
+	for <kexec@archiver.kernel.org>; Fri, 16 Jan 2026 16:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=RWaLEplWq59uIHotHJ6qgSbmWWLE1NGtyoDG+TZxz50=; b=Xwm1ysZEKa/ctVXj1yUBSeC3H7
-	CcGnR5ZnMzcTfmmA2vPWXTaJmqJIU+ISz+8F2VFEEjADhtZiEN2/wVWsGyRWnv8bKsGFbghgBviDn
-	0o20Qfmdk/SGXgAkpzdN4kpgukkI91s0rEj8b/SZZcMcwU2TE9G4hWGYQpo4lvHgTKz81OedM6iSC
-	eiZzwD2OHR5JHPa+9pEk7pOEE6tLhmSgvKDt8wifDeUzsXJdIkUPv+ScOT4WnRp56v8OZNTlFXWk1
-	b+GyJqScHNRqi1W3QkaMcpjf77bkj9qT9VAuFrMYv5rMfHyOKHo4ZyDDWg3ZmRU0vBP1oMoK9VxJH
-	pBzst4xw==;
+	bh=wU02D3AuSYoipfiyxtuKzwahfFEJ5U5cyLoFJwWUhds=; b=cypl6ZkehaIc/o7GMlMuhiw7ve
+	l9mfx4zFJA3/8K45XcPn3GASPFlvsVV2SyotuDHgQz55YCIFFx3cLscKz05rWJWdZZAfGw4umrCOx
+	uOX/EI+u8oiB0juc8X7Zrw85z91KgDAcEhCheLlCm0xK9fbzW8y1EHjLA+6nlF/HhJ5cAw3+NpA4B
+	hoIYrZQ2u4mEpTjnRc2A+v69LOUqAKmn41zv2LjG07YfH6cu8a19iezKMrS+UkB8EIhDrGpB7xQBH
+	YR8oYSurDxNkvOy7G4MPxblsAMt64K9MRScZ8FY3qiWWtnD6hi7PO/wunz6+j4s00GzLPFIIw/jjK
+	1ue53sAQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vgm5s-0000000EOfK-2by5;
-	Fri, 16 Jan 2026 15:50:36 +0000
-Received: from mail-oo1-f47.google.com ([209.85.161.47])
+	id 1vgmZq-0000000ESb1-1isw;
+	Fri, 16 Jan 2026 16:21:34 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vgm5q-0000000EOeT-2Cg8
+	id 1vgmZo-0000000ESas-37Ds
 	for kexec@lists.infradead.org;
-	Fri, 16 Jan 2026 15:50:35 +0000
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-66109b09b53so773268eaf.1
-        for <kexec@lists.infradead.org>; Fri, 16 Jan 2026 07:50:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768578632; x=1769183432;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RWaLEplWq59uIHotHJ6qgSbmWWLE1NGtyoDG+TZxz50=;
-        b=ehKR0hwi00yMyUiTHqDRT8IL+BiTxbnNdc7AZAUtDzszSXFEhFcmqPklXoiaQ4IJYT
-         5zDGKTX3Mbqhz9jh6LA4CCnZ8b+TWtBCd9Et44JOH2/I2S9LrVQNGlxGdsylnRgBqith
-         noUpFwuZPGdtibBjrok+eoQ/yKy9SSBjLSBKklfc6ytNUs2zbJ8mu+gZsgbjOFGGNOMf
-         Yos0EK8GMdVAdTFDQL84e8TKVydAH1Hul3h9WSV9MeknOhG6iyXXMxBV22jRmAUd1VBQ
-         0XcyL/CGGCKCydW6+yVjSpx28dkFQv5Q2l8pKymc2GV3Jaf1RsS03Qe4EFdwCIisZS9w
-         rtww==
-X-Forwarded-Encrypted: i=1; AJvYcCXKyXAosojsCwJqgm6FWFe2AYObPFn7Fqq0EgDI1CGad/wFEZVuHFVIUPCXSmA6D++zDl63BA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Ywy59U9GjZnF6+VSttsteVeABVlpHzyiRSfBy1ZLm+rG1l9U/wJ
-	b9iD3rc73BPRUVoVy2l1bOF1qGCPyZNk/vwRqaqm9wCj0ZK5ARlqZrEy
-X-Gm-Gg: AY/fxX6PtfRpWM5PP+oPu2P/vMyBXoQTOdDUkDt1vr1od+DiizhaUm316l6lbZEHtWo
-	EoB1YsRPwalckjzYy1cvtmeSuPwzTsJ4gn2ONFGZP2FSHCkeepbideHMfUMx4eGC4aKAZP+Xhhw
-	E2zkBiJgSKPna4fg6HUc6yRgDD4rl9RAtj6QAQKDzNyfWXDX4HdPyPQ6lrntsDCTO4d2SK/4oNI
-	hu3NWugAteYztmb0UndfmDlDfn3SGHS6TBbM25c8xks9gwvvjMD5X/iyq8GU/3+XX+TS7d3jzzi
-	/17Jt20Mcg5rBEPSKVcKOmj859Axn1+mbJpCf+3kdUk5S8emUFm98basdDbZHYkbmIkYeg3ZAqG
-	MtH8n6e7ovEkE3VrSroOW4dhzVOFRWnJU5hZmOJ9XrbyD/hpWg3eWTB2K3+Lvo+lZvm87uk9Bj7
-	F5ykZdCs3xHG2j
-X-Received: by 2002:a4a:ec41:0:b0:65f:64eb:8ff5 with SMTP id 006d021491bc7-66117a392c9mr1173720eaf.81.1768578632024;
-        Fri, 16 Jan 2026 07:50:32 -0800 (PST)
-Received: from gmail.com ([2a03:2880:10ff:42::])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6611a78b02fsm902856eaf.9.2026.01.16.07.50.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jan 2026 07:50:31 -0800 (PST)
-Date: Fri, 16 Jan 2026 07:50:29 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-mm@kvack.org, usamaarif642@gmail.com, rmikey@meta.com, clm@fb.com, 
-	riel@surriel.com, kernel-team@meta.com
-Subject: Re: [PATCH v3 1/2] kho: history: track previous kernel version
-Message-ID: <v7g7nmd3jif6vftvnmucvpluevufcdxmefcgqq3yfpnzyb7mql@ojpotuu4hgxm>
-References: <20260108-kho-v3-0-b1d6b7a89342@debian.org>
- <20260108-kho-v3-1-b1d6b7a89342@debian.org>
- <2vxzy0m0gfyo.fsf@kernel.org>
+	Fri, 16 Jan 2026 16:21:32 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id D1D90601B9;
+	Fri, 16 Jan 2026 16:21:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA4FFC16AAE;
+	Fri, 16 Jan 2026 16:21:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768580491;
+	bh=NOCir8rPfAIQt6v7dI5do8gQE0TlAVf0w/j9ivkNyoA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=WEy73lKFMrRCN73iQS4oWwJwJsqakNAtuXhvrkpcc8ARMH1h5I+ATLsEyQEzdCTan
+	 tTEVqI+x3UE8bHCwufI71/rkNYwqFHV0ZZlVlioySeReu0++Q7Ti1TZkm6hTTHqPVp
+	 B4N1RUuhoANDlLiyAep700/vHLW5I+bJoJIjpH8KxNNgOBhrDJ18LFBqTm+Kb0c7SN
+	 JXt8Pf3b4ngvIzVue+gl2659ZXMNCx1R1JDOHfJnsv9reyDWQoUPrKx2a5rZlUCJau
+	 dpLJMQ4fsbmiK9FiMUyxraobrEQsJFWGE+z9AebnL4PEBkcyn/vTuplbxi52IWAu19
+	 mAnBNn93aukvw==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  akpm@linux-foundation.org,
+  rppt@kernel.org,  graf@amazon.com,  linux-kernel@vger.kernel.org,
+  kexec@lists.infradead.org,  linux-mm@kvack.org,  pratyush@kernel.org,
+  ricardo.neri-calderon@linux.intel.com,  kernel-team@meta.com
+Subject: Re: [PATCH v4] kho: validate preserved memory map during population
+In-Reply-To: <jixxiqeajngwox3nh2u3pwf2rivhmqxxmpyttqxu32pixshyde@4jdn5jvg5hvk>
+	(Breno Leitao's message of "Thu, 8 Jan 2026 10:03:14 -0800")
+References: <20251223140140.2090337-1-pasha.tatashin@soleen.com>
+	<jixxiqeajngwox3nh2u3pwf2rivhmqxxmpyttqxu32pixshyde@4jdn5jvg5hvk>
+Date: Fri, 16 Jan 2026 16:21:28 +0000
+Message-ID: <2vxzo6mt7cl3.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2vxzy0m0gfyo.fsf@kernel.org>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260116_075034_578534_245DBCC3 
-X-CRM114-Status: GOOD (  46.16  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,286 +72,175 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello Pratyush,
+Hi Breno,
 
-On Wed, Jan 14, 2026 at 07:19:11PM +0000, Pratyush Yadav wrote:
-> On Thu, Jan 08 2026, Breno Leitao wrote:
-> 
-> > Store and display the kernel version from the previous kexec boot.
-> >
-> > The current kernel's release string is saved to the "previous-release"
-> > property in the KHO FDT before kexec. On the next boot, if this property
-> > exists, the previous kernel version is retrieved and printed during
-> > early boot.
-> >
-> > This helps diagnose bugs that only manifest when kexecing from specific
-> > kernel versions, making it easier to correlate crashes with the kernel
-> > that initiated the kexec.
-> 
-> The KHO FDT is ABI. So you should be bumping the version number when you
-> make changes to it.
-> 
-> But honestly, adding this "optional" stuff to the core KHO ABI makes me
-> uneasy. I say optional since it is not needed for the main functionality
-> of KHO. Making this a part of the ABI increases the surface area we
-> have. The more things we stuff in the ABI, the more inflexible it gets
-> over time.
-> 
-> Any changes to the KHO ABI means all consumers also need a version bump.
-> This includes LUO and all its users for example. So I would really like
-> to avoid adding optional things in core KHO FDT.
-> 
-> The easy fix is to add a separate subtree for the optional metadata. You
-> would still need to create an ABI for the data format, but being
-> independent of core KHO, it will make it more flexible and easier to
-> change in the future. You can keep the code in kexec_handover.c.
+On Thu, Jan 08 2026, Breno Leitao wrote:
 
-Thanks for the feedback and guidance!
+> Hello Pasha,
+>
+> On Tue, Dec 23, 2025 at 09:01:40AM -0500, Pasha Tatashin wrote:
+>> If the previous kernel enabled KHO but did not call kho_finalize()
+>> (e.g., CONFIG_LIVEUPDATE=n or userspace skipped the finalization step),
+>> the 'preserved-memory-map' property in the FDT remains empty/zero.
+>> 
+>> Previously, kho_populate() would succeed regardless of the memory map's
+>> state, reserving the incoming scratch regions in memblock. However,
+>> kho_memory_init() would later fail to deserialize the empty map. By that
+>> time, the scratch regions were already registered, leading to partial
+>> initialization and subsequent list corruption (freeing scratch area
+>> twice) during kho_init().
+>
+> While trying my new patchset [0] on top of this patch, I got the
+> following issue:
+>
+> 	[    0.000000] KHO: disabling KHO revival: -2
+>
+> Trying to solve it, I come up with a change in kho_get_mem_map_phys() to
+> distinguish no memory and error, see the patch attached later.
+>
+> This is what I used to test [0] on top of linux-next. Is this useful?
+>
+> Link: https://lore.kernel.org/all/20260108-kho-v3-1-b1d6b7a89342@debian.org/ [0]
+>
+> thanks
+> --breno
+>
+> commit 5d7855fede8110d74942e1b67056ba589a1cb54a
+> Author: Breno Leitao <leitao@debian.org>
+> Date:   Thu Jan 8 07:44:08 2026 -0800
+>
+>     kho: allow KHO to work when no memory is preserved
+>     
+>     Fix KHO initialization failing when no memory pages were preserved by
+>     the previous kernel.
+>     
+>     Commit eda79a683a0a ("kho: validate preserved memory map during
+>     population") introduced kho_get_mem_map_phys() which returns the physical
+>     address of the preserved memory map directly as its return value. The
+>     caller then validates it with:
+>     
+>         mem_map_phys = kho_get_mem_map_phys(fdt);
+>         if (!mem_map_phys) {
+>             err = -ENOENT;
+>             goto out;
+>         }
+>     
+>     This creates an ambiguity: physical address 0 is used both as an error
+>     indicator (property missing/malformed) and as a valid value (property
+>     exists with value 0, meaning no memory was preserved).
+>     
+>     "No memory preserved" is a legitimate state. KHO provides features beyond
+>     memory page preservation, such as previous kernel version tracking and
+>     kexec count tracking. When the previous kernel enables KHO but doesn't
+>     preserve any memory pages, it sets 'preserved-memory-map' to 0. This is
+>     semantically different from "KHO not initialized" - it means "KHO is
+>     active, there's just nothing in the memory map."
 
-I was able to hack this a bit and I came up with something like the
-follow. Is this what you have in mind?
+This isn't true. If you hand over _any_ state, you will at least need
+the KHO FDT. And the KHO FDT is preserved memory (see the
+kho_alloc_preserve() call in kho_init()). So I don't see how you can
+ever have valid KHO with no memory.
 
-Author: Breno Leitao <leitao@debian.org>
-Date:   Fri Jan 16 06:42:56 2026 -0800
+mem_map_phys _can_ be 0, but only when KHO was enabled but not used. And
+that is of course also a valid use case.
 
-    kho: history: track previous kernel version and kexec count
-    
-    Use Kexec Handover (KHO) to pass the previous kernel's version string
-    and the number of kexec reboots since the last cold boot to the next
-    kernel, and print it at boot time.
-    
-    Example output:
-        [    0.000000] KHO: exec from: 6.19.0-rc4-next-20260107 (count 1)
-    
-    Motivation
-    ==========
-    
-    Bugs that only reproduce when kexecing from specific kernel versions
-    are difficult to diagnose. These issues occur when a buggy kernel
-    kexecs into a new kernel, with the bug manifesting only in the second
-    kernel.
-    
-    Recent examples include:
-    
-     * eb2266312507 ("x86/boot: Fix page table access in 5-level to 4-level paging transition")
-     * 77d48d39e991 ("efistub/tpm: Use ACPI reclaim memory for event log to avoid corruption")
-     * 64b45dd46e15 ("x86/efi: skip memattr table on kexec boot")
-    
-    As kexec-based reboots become more common, these version-dependent bugs
-    are appearing more frequently. At scale, correlating crashes to the
-    previous kernel version is challenging, especially when issues only
-    occur in specific transition scenarios.
-    
-    Implementation
-    ==============
-    
-    The history metadata is stored in a separate FDT subtree registered via
-    kho_add_subtree(), rather than being embedded directly in the root KHO
-    FDT. This design choice:
-    
-     - Keeps the core KHO ABI minimal and stable
-     - Allows the history format to evolve independently
-     - Avoids requiring version bumps for all KHO consumers (LUO, etc.)
-       when the history format changes
-    
-    The history subtree uses its own compatible string "kho-history-v1" and
-    contains two properties:
-     - previous-release: The kernel version that initiated the kexec
-     - kexec-count: Number of kexec boots since last cold boot
-    
-    On cold boot, kexec-count starts at 0 and increments with each kexec.
-    The count helps identify issues that only manifest after multiple
-    consecutive kexec reboots.
-    
-    Signed-off-by: Breno Leitao <leitao@debian.org>
+We want to treat mem_map_phys == 0 the same as the error path, just
+without the error print. This lets us discard all previous scratch areas
+since they don't have anything useful anyway, and have a fresh start.
 
-diff --git a/include/linux/kho/abi/kexec_handover.h b/include/linux/kho/abi/kexec_handover.h
-index 285eda8a36e4..da19d6029815 100644
---- a/include/linux/kho/abi/kexec_handover.h
-+++ b/include/linux/kho/abi/kexec_handover.h
-@@ -84,6 +84,29 @@
- /* The FDT property for sub-FDTs. */
- #define KHO_FDT_SUB_TREE_PROP_NAME "fdt"
- 
-+/*
-+ * The "history" subtree stores optional metadata about the kexec chain.
-+ * It is registered as a separate FDT via kho_add_subtree(), keeping it
-+ * independent from the core KHO ABI. This allows the history format to
-+ * evolve without affecting other KHO consumers.
-+ *
-+ * The history FDT structure:
-+ *
-+ *   / {
-+ *       compatible = "kho-history-v1";
-+ *       previous-release = "6.x.y-...";
-+ *       kexec-count = <N>;
-+ *   };
-+ */
-+#define KHO_HISTORY_NODE_NAME "history"
-+#define KHO_HISTORY_COMPATIBLE "kho-history-v1"
-+
-+/* The FDT property to track previous kernel (kexec caller) */
-+#define KHO_PROP_PREVIOUS_RELEASE "previous-release"
-+
-+/* The FDT property to track number of kexec counts so far */
-+#define KHO_PROP_KEXEC_COUNT "kexec-count"
-+
- /**
-  * DOC: Kexec Handover ABI for vmalloc Preservation
-  *
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 3cf2dc6840c9..fd22b0947587 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -15,6 +15,7 @@
- #include <linux/count_zeros.h>
- #include <linux/kexec.h>
- #include <linux/kexec_handover.h>
-+#include <linux/utsname.h>
- #include <linux/kho/abi/kexec_handover.h>
- #include <linux/libfdt.h>
- #include <linux/list.h>
-@@ -1246,6 +1247,8 @@ struct kho_in {
- 	phys_addr_t fdt_phys;
- 	phys_addr_t scratch_phys;
- 	phys_addr_t mem_map_phys;
-+	char previous_release[__NEW_UTS_LEN + 1];
-+	u32 kexec_count;
- 	struct kho_debugfs dbg;
- };
- 
-@@ -1331,6 +1334,48 @@ static __init int kho_out_fdt_setup(void)
- 	return err;
- }
- 
-+/*
-+ * Create a separate FDT subtree for optional history metadata.
-+ * This keeps the core KHO ABI minimal and allows the history format
-+ * to evolve independently.
-+ */
-+static __init int kho_history_init(void)
-+{
-+	u32 kexec_count;
-+	void *fdt;
-+	int err;
-+
-+	fdt = kho_alloc_preserve(PAGE_SIZE);
-+	if (IS_ERR(fdt))
-+		return PTR_ERR(fdt);
-+
-+	err = fdt_create(fdt, PAGE_SIZE);
-+	err |= fdt_finish_reservemap(fdt);
-+	err |= fdt_begin_node(fdt, "");
-+	err |= fdt_property_string(fdt, "compatible", KHO_HISTORY_COMPATIBLE);
-+	err |= fdt_property_string(fdt, KHO_PROP_PREVIOUS_RELEASE,
-+				   init_uts_ns.name.release);
-+	/* kho_in.kexec_count is set to 0 on cold boot */
-+	kexec_count = kho_in.kexec_count + 1;
-+	err |= fdt_property(fdt, KHO_PROP_KEXEC_COUNT, &kexec_count,
-+			    sizeof(kexec_count));
-+	err |= fdt_end_node(fdt);
-+	err |= fdt_finish(fdt);
-+
-+	if (err) {
-+		kho_unpreserve_free(fdt);
-+		return err;
-+	}
-+
-+	err = kho_add_subtree(KHO_HISTORY_NODE_NAME, fdt);
-+	if (err) {
-+		kho_unpreserve_free(fdt);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
- static __init int kho_init(void)
- {
- 	const void *fdt = kho_get_fdt();
-@@ -1357,6 +1402,10 @@ static __init int kho_init(void)
- 	if (err)
- 		goto err_free_fdt;
- 
-+	err = kho_history_init();
-+	if (err)
-+		pr_warn("failed to initialize history subtree: %d\n", err);
-+
- 	if (fdt) {
- 		kho_in_debugfs_init(&kho_in.dbg, fdt);
- 		return 0;
-@@ -1425,6 +1474,61 @@ static void __init kho_release_scratch(void)
- 	}
- }
- 
-+static int __init kho_print_previous_kernel(const void *fdt)
-+{
-+	const char *prev_release;
-+	const u64 *history_phys;
-+	const u32 *count_ptr;
-+	void *history_fdt;
-+	int history_node;
-+	int len;
-+	int ret;
-+
-+	/* Find the history subtree reference in root FDT */
-+	history_node = fdt_subnode_offset(fdt, 0, KHO_HISTORY_NODE_NAME);
-+	if (history_node < 0)
-+		/* This is fine, previous kernel didn't export history */
-+		return -ENOENT;
-+
-+	/* Get the physical address of the history FDT */
-+	history_phys = fdt_getprop(fdt, history_node, KHO_FDT_SUB_TREE_PROP_NAME, &len);
-+	if (!history_phys || len != sizeof(*history_phys))
-+		return -ENOENT;
-+
-+	/* Map the history FDT */
-+	history_fdt = early_memremap(*history_phys, PAGE_SIZE);
-+	if (!history_fdt)
-+		return -ENOMEM;
-+
-+	prev_release = fdt_getprop(history_fdt, 0, KHO_PROP_PREVIOUS_RELEASE, &len);
-+	if (!prev_release || len <= 0) {
-+		ret = -ENOENT;
-+		goto exit;
-+	}
-+
-+	/* Read the kexec count from the previous kernel */
-+	count_ptr = fdt_getprop(history_fdt, 0, KHO_PROP_KEXEC_COUNT, &len);
-+	if (WARN_ON(!count_ptr || len != sizeof(u32))) {
-+		ret = -ENOENT;
-+		goto exit;
-+	}
-+	/*
-+	 * This populate the kernel structure that will be persisted during
-+	 * kernel life time, and the fdt will be unmapped
-+	 */
-+	kho_in.kexec_count = *count_ptr;
-+
-+	strscpy(kho_in.previous_release, prev_release,
-+		sizeof(kho_in.previous_release));
-+	pr_info("exec from: %s (count %u)\n", kho_in.previous_release,
-+					      kho_in.kexec_count);
-+
-+	ret = 0;
-+exit:
-+	early_memunmap(history_fdt, PAGE_SIZE);
-+	return ret;
-+}
-+
- void __init kho_memory_init(void)
- {
- 	if (kho_in.mem_map_phys) {
-@@ -1513,7 +1617,10 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
- 	kho_in.scratch_phys = scratch_phys;
- 	kho_in.mem_map_phys = mem_map_phys;
- 	kho_scratch_cnt = scratch_cnt;
--	pr_info("found kexec handover data.\n");
-+
-+	if (kho_print_previous_kernel(fdt))
-+		/* Fallback message when previous kernel info unavailable */
-+		pr_info("found kexec handover data.\n");
- 
- out:
- 	if (fdt)
+So while you are seeing this error message, I don't think it should
+break anything and KHO should still be working fine. You can
+double-check this by inspecting /sys/kernel/debug/kho/out.
+
+So I think the patch is certainly a useful fix, it just needs some
+re-wording and fixups.
+
+Some comments on the code below.
+
+>     
+>     Before eda79a683a0a, the code handled this gracefully in
+>     kho_mem_deserialize():
+>     
+>         chunk = mem ? phys_to_virt(mem) : NULL;
+>         if (!chunk)
+>             return false;  // No pages, but KHO could still work
+>     
+>     After eda79a683a0a, the early validation conflated "no property" with
+>     "property value is 0", causing KHO to be completely disabled in both
+>     cases.
+>     
+>     Fix this by changing kho_get_mem_map_phys() to return an error code and
+>     pass the physical address via pointer. This allows distinguishing between:
+>      - Property missing/malformed: return -ENOENT (KHO fails)
+>      - Property exists with value 0: return 0 (KHO succeeds, no memory to
+>        restore)
+>     
+>     Fixes: eda79a683a0a ("kho: validate preserved memory map during population")
+>     Signed-off-by: Breno Leitao <leitao@debian.org>
+>
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> index 271d90198a08..3cf2dc6840c9 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
+> @@ -471,8 +471,8 @@ static void __init deserialize_bitmap(unsigned int order,
+>  	}
+>  }
+>  
+> -/* Returns physical address of the preserved memory map from FDT */
+> -static phys_addr_t __init kho_get_mem_map_phys(const void *fdt)
+> +/* Returns 0 on success and stores physical address in *phys_out */
+> +static int __init kho_get_mem_map_phys(const void *fdt, phys_addr_t *phys_out)
+>  {
+>  	const void *mem_ptr;
+>  	int len;
+> @@ -480,10 +480,11 @@ static phys_addr_t __init kho_get_mem_map_phys(const void *fdt)
+>  	mem_ptr = fdt_getprop(fdt, 0, KHO_FDT_MEMORY_MAP_PROP_NAME, &len);
+>  	if (!mem_ptr || len != sizeof(u64)) {
+>  		pr_err("failed to get preserved memory bitmaps\n");
+> -		return 0;
+> +		return -ENOENT;
+>  	}
+>  
+> -	return get_unaligned((const u64 *)mem_ptr);
+> +	*phys_out = get_unaligned((const u64 *)mem_ptr);
+> +	return 0;
+>  }
+>  
+>  static void __init kho_mem_deserialize(struct khoser_mem_chunk *chunk)
+> @@ -1439,7 +1440,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+>  			 phys_addr_t scratch_phys, u64 scratch_len)
+>  {
+>  	struct kho_scratch *scratch = NULL;
+> -	phys_addr_t mem_map_phys;
+> +	phys_addr_t mem_map_phys = 0;
+>  	void *fdt = NULL;
+>  	int err = 0;
+>  	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
+> @@ -1466,11 +1467,9 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+>  		goto out;
+>  	}
+>  
+> -	mem_map_phys = kho_get_mem_map_phys(fdt);
+> -	if (!mem_map_phys) {
+> -		err = -ENOENT;
+> +	err = kho_get_mem_map_phys(fdt, &mem_map_phys);
+> +	if (err)
+
+This will break when mem_map_phys == 0. As I explained earlier, when
+that happens we want to discard all previous scratch info and start with
+a clean slate.
+
+Making this if (err || !mem_map_phys) should do the trick. The if (err)
+check before the print should make sure the error message is not printed
+when we have a valid property but its value is 0.
+
+>  		goto out;
+> -	}
+>  
+>  	scratch = early_memremap(scratch_phys, scratch_len);
+>  	if (!scratch) {
+
+-- 
+Regards,
+Pratyush Yadav
 
