@@ -4,62 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4945DD4A5F4
-	for <kexec@archiver.kernel.org>; Sun, 18 Jan 2026 06:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 74502D4A5F4
+	for <kexec@archiver.kernel.org>; Sun, 18 Jan 2026 12:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=sWl5QjqvWJPA+2RtM9E5Vgtjj6RUa3Da5X+vwMAaGdY=; b=u5bee/5kf5koUJTp6pRRKbIewx
-	vtuEdO7FGRYLjX7UjL3/wX/auI6odp9b+TngHntTsmmMaUO/R09Mzi6GtKH+NZwce3p4imUH1gV7Q
-	JQny1xegIL8W3ZNqL+OmHdEi/mG3NAvaKSr0qBfH8y4jAzYSjaWlNmo/t32zcTg0Z189CL2EvV0bw
-	hpfOC2UV8fkxtwKPmVS3lNjalrnEcZ/g8Emmi1RRZlgakCGLnsJEG8SCGBk/3QeRS0vAslpMMAmNP
-	fqllcs1sNCNFMS28vJcBRxLsBx32aM1eKb5sHqpIXTPB4WvUF/+Gy9WLmqX3LAn+99HlKVYYftGIB
-	BUUhNdhg==;
+	bh=EFBnWOh1Hw/rPWlfuxf1cyW+AyiguOS5AieRNy1N54E=; b=wosyljI8Wb2kn67F9TuQqEpOaa
+	Gj6ghqTCPN6KsGktKDEhe7MX+ChaXEgVIHznzKZX9dBphGZ6vnYdR41q/4IoIr64HFAJV4WhZ6MRN
+	3kNh6cB8NSj1nJdC7ll+Mrizxh5gTQSZpVs9EqiL3A1aNq6av3mnhopLaor9xn8OX+kT183sXjuVo
+	4S00F6W6bvF7hOxifetGL+tIvVhw0REmm8Y3KUUS2JrgEAAOPCffcQyAYDvmQTshO9dWINgSmFCNw
+	HnOC/Qbn8D8ONm5xow8oAQ2smY5Vw9yqAI3XwhXaVd9Z3LNcUwVgI2G4ACr8mrAMq9W6E1rRFmR8q
+	qA0GVR9g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vhM1A-0000000GsWk-19ng;
-	Sun, 18 Jan 2026 06:12:08 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1vhRi3-0000000HYAy-1X7R;
+	Sun, 18 Jan 2026 12:16:47 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vhM14-0000000GsWY-2fbh
+	id 1vhRhy-0000000HYAX-1vY6
 	for kexec@lists.infradead.org;
-	Sun, 18 Jan 2026 06:12:02 +0000
+	Sun, 18 Jan 2026 12:16:42 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 872356000A;
-	Sun, 18 Jan 2026 06:12:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5C92C116D0;
-	Sun, 18 Jan 2026 06:11:56 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 80BE560126;
+	Sun, 18 Jan 2026 12:16:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC2C9C116D0;
+	Sun, 18 Jan 2026 12:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768716720;
-	bh=XQZz9Nu+u7TdwrpS5yQTxTW/ej0dkCDpS+WPtv5Iudo=;
+	s=k20201202; t=1768738601;
+	bh=GNLKijSufyMywtxmWVA+8J1TEZuTFKnq101th6Vg7vI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XX41RY4RMG0ZGtak6oOJ8ro7GjFQKoOTEGax7hbBjl5C/AdiAvlmAyQWb2RhVkmXL
-	 whCApzlt6RghCmL2BW7E4KC8L2C+ANNlMiddN6jW+afgjxv2oQa6WQTZq9WpfJbiu/
-	 SE1IVwdtIMLB4i9RnrD5nCTuUODRXiXw9C/2+s1+ty4rWJJExgOzZjkM3c1aFBRbkP
-	 oXGmkvAqB/1+Eor9pzWjrBDHh1DbT1DVnxKgkRPyFqRyWrg8WxK2AIi1HN+CgU+LAt
-	 vZWZ3NM7ey7xCLr6yTX7dOtSGIO/xW1VENnaUVRoDjmXacnBYfZjk5QLFeLFLtaaMJ
-	 NvFQLWabs2iUw==
-Date: Sun, 18 Jan 2026 08:11:52 +0200
+	b=kPKKUPNLIgdW1FVtu6t0pHQsFANoX0X/bfdI+nnOOtyQoWwUbEywGQkG0rtvqmvGJ
+	 I3fAz5b927vx35wgy9mmIcb/LEBGigkxdXVsXS79z3NI6I+Di69mAqfOaHBu+2L+yB
+	 ELOdNY+us7iSLo3Lny9KrYowyJ5s2dyobs+AHGfsLddWBdxC8LbYHSyhkbvTJ9gAtj
+	 BMpNCeNJZaLY8IGUm3MUR/Ke2Dt1HhIc6DFtQuShEuOKMN9UpecLCWh0BM36d1Z+Fc
+	 Ld6sNLxtkUbxn+jDOi0025JJGv9MvgPnsRrK6n4r380JHjlwt3SOGRbH+6FfkNESVb
+	 8pCvlPCJUbhkw==
+Date: Sun, 18 Jan 2026 14:16:33 +0200
 From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	akpm@linux-foundation.org, graf@amazon.com,
+To: Evangelos Petrongonas <epetron@amazon.de>,
+	Pratyush Yadav <pratyush@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Alexander Graf <graf@amazon.com>, Jason Miu <jasonmiu@google.com>,
 	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-mm@kvack.org, ricardo.neri-calderon@linux.intel.com,
-	kernel-team@meta.com
-Subject: Re: [PATCH v4] kho: validate preserved memory map during population
-Message-ID: <aWx5qHHYEXJXNuXm@kernel.org>
-References: <20251223140140.2090337-1-pasha.tatashin@soleen.com>
- <jixxiqeajngwox3nh2u3pwf2rivhmqxxmpyttqxu32pixshyde@4jdn5jvg5hvk>
- <2vxzo6mt7cl3.fsf@kernel.org>
+	linux-mm@kvack.org, nh-open-source@amazon.com
+Subject: Re: [PATCH] kho: skip memoryless NUMA nodes when reserving scratch
+ areas
+Message-ID: <aWzPIfZ0WeH0vca8@kernel.org>
+References: <20260116112640.64900-1-epetron@amazon.de>
+ <2vxzsec57oth.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2vxzo6mt7cl3.fsf@kernel.org>
+In-Reply-To: <2vxzsec57oth.fsf@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,259 +73,85 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jan 16, 2026 at 04:21:28PM +0000, Pratyush Yadav wrote:
-> Hi Breno,
+On Fri, Jan 16, 2026 at 11:57:14AM +0000, Pratyush Yadav wrote:
+> Hi Evangelos,
 > 
-> On Thu, Jan 08 2026, Breno Leitao wrote:
+> On Fri, Jan 16 2026, Evangelos Petrongonas wrote:
 > 
-> > Hello Pasha,
+> > kho_reserve_scratch() iterates over all online NUMA nodes to allocate
+> > per-node scratch memory. On systems with memoryless NUMA nodes (nodes
+> > that have CPUs but no memory), memblock_alloc_range_nid() fails because
+> > there is no memory available on that node. This causes KHO initialization
+> > to fail and kho_enable to be set to false.
 > >
-> > On Tue, Dec 23, 2025 at 09:01:40AM -0500, Pasha Tatashin wrote:
-> >> If the previous kernel enabled KHO but did not call kho_finalize()
-> >> (e.g., CONFIG_LIVEUPDATE=n or userspace skipped the finalization step),
-> >> the 'preserved-memory-map' property in the FDT remains empty/zero.
-> >> 
-> >> Previously, kho_populate() would succeed regardless of the memory map's
-> >> state, reserving the incoming scratch regions in memblock. However,
-> >> kho_memory_init() would later fail to deserialize the empty map. By that
-> >> time, the scratch regions were already registered, leading to partial
-> >> initialization and subsequent list corruption (freeing scratch area
-> >> twice) during kho_init().
+> > Some ARM64 systems have NUMA topologies where certain nodes contain only
+> > CPUs without any associated memory. These configurations are valid and
+> > should not prevent KHO from functioning.
 > >
-> > While trying my new patchset [0] on top of this patch, I got the
-> > following issue:
+> > Fix this by introducing kho_mem_nodes_count() which counts only nodes
+> > that have memory (N_MEMORY state), and skip memoryless nodes in the
+> > per-node scratch allocation loop.
 > >
-> > 	[    0.000000] KHO: disabling KHO revival: -2
-> >
-> > Trying to solve it, I come up with a change in kho_get_mem_map_phys() to
-> > distinguish no memory and error, see the patch attached later.
-> >
-> > This is what I used to test [0] on top of linux-next. Is this useful?
-> >
-> > Link: https://lore.kernel.org/all/20260108-kho-v3-1-b1d6b7a89342@debian.org/ [0]
-> >
-> > thanks
-> > --breno
-> >
-> > commit 5d7855fede8110d74942e1b67056ba589a1cb54a
-> > Author: Breno Leitao <leitao@debian.org>
-> > Date:   Thu Jan 8 07:44:08 2026 -0800
-> >
-> >     kho: allow KHO to work when no memory is preserved
-> >     
-> >     Fix KHO initialization failing when no memory pages were preserved by
-> >     the previous kernel.
-> >     
-> >     Commit eda79a683a0a ("kho: validate preserved memory map during
-> >     population") introduced kho_get_mem_map_phys() which returns the physical
-> >     address of the preserved memory map directly as its return value. The
-> >     caller then validates it with:
-> >     
-> >         mem_map_phys = kho_get_mem_map_phys(fdt);
-> >         if (!mem_map_phys) {
-> >             err = -ENOENT;
-> >             goto out;
-> >         }
-> >     
-> >     This creates an ambiguity: physical address 0 is used both as an error
-> >     indicator (property missing/malformed) and as a valid value (property
-> >     exists with value 0, meaning no memory was preserved).
-> >     
-> >     "No memory preserved" is a legitimate state. KHO provides features beyond
-> >     memory page preservation, such as previous kernel version tracking and
-> >     kexec count tracking. When the previous kernel enables KHO but doesn't
-> >     preserve any memory pages, it sets 'preserved-memory-map' to 0. This is
-> >     semantically different from "KHO not initialized" - it means "KHO is
-> >     active, there's just nothing in the memory map."
-> 
-> This isn't true. If you hand over _any_ state, you will at least need
-> the KHO FDT. And the KHO FDT is preserved memory (see the
-> kho_alloc_preserve() call in kho_init()). So I don't see how you can
-> ever have valid KHO with no memory.
-> 
-> mem_map_phys _can_ be 0, but only when KHO was enabled but not used. And
-> that is of course also a valid use case.
-> 
-> We want to treat mem_map_phys == 0 the same as the error path, just
-> without the error print. This lets us discard all previous scratch areas
-> since they don't have anything useful anyway, and have a fresh start.
-> 
-> So while you are seeing this error message, I don't think it should
-> break anything and KHO should still be working fine. You can
-> double-check this by inspecting /sys/kernel/debug/kho/out.
-> 
-> So I think the patch is certainly a useful fix, it just needs some
-> re-wording and fixups.
-> 
-> Some comments on the code below.
-> 
-> >     
-> >     Before eda79a683a0a, the code handled this gracefully in
-> >     kho_mem_deserialize():
-> >     
-> >         chunk = mem ? phys_to_virt(mem) : NULL;
-> >         if (!chunk)
-> >             return false;  // No pages, but KHO could still work
-> >     
-> >     After eda79a683a0a, the early validation conflated "no property" with
-> >     "property value is 0", causing KHO to be completely disabled in both
-> >     cases.
-> >     
-> >     Fix this by changing kho_get_mem_map_phys() to return an error code and
-> >     pass the physical address via pointer. This allows distinguishing between:
-> >      - Property missing/malformed: return -ENOENT (KHO fails)
-> >      - Property exists with value 0: return 0 (KHO succeeds, no memory to
-> >        restore)
-> >     
-> >     Fixes: eda79a683a0a ("kho: validate preserved memory map during population")
-> >     Signed-off-by: Breno Leitao <leitao@debian.org>
+> > Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
+> > ---
+> >  kernel/liveupdate/kexec_handover.c | 23 ++++++++++++++++++++++-
+> >  1 file changed, 22 insertions(+), 1 deletion(-)
 > >
 > > diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> > index 271d90198a08..3cf2dc6840c9 100644
+> > index 9dc51fab604f..c970ed08b477 100644
 > > --- a/kernel/liveupdate/kexec_handover.c
 > > +++ b/kernel/liveupdate/kexec_handover.c
-> > @@ -471,8 +471,8 @@ static void __init deserialize_bitmap(unsigned int order,
-> >  	}
+> > @@ -623,6 +623,23 @@ static phys_addr_t __init scratch_size_node(int nid)
+> >  	return round_up(size, CMA_MIN_ALIGNMENT_BYTES);
 > >  }
 > >  
-> > -/* Returns physical address of the preserved memory map from FDT */
-> > -static phys_addr_t __init kho_get_mem_map_phys(const void *fdt)
-> > +/* Returns 0 on success and stores physical address in *phys_out */
-> > +static int __init kho_get_mem_map_phys(const void *fdt, phys_addr_t *phys_out)
-> >  {
-> >  	const void *mem_ptr;
-> >  	int len;
-> > @@ -480,10 +480,11 @@ static phys_addr_t __init kho_get_mem_map_phys(const void *fdt)
-> >  	mem_ptr = fdt_getprop(fdt, 0, KHO_FDT_MEMORY_MAP_PROP_NAME, &len);
-> >  	if (!mem_ptr || len != sizeof(u64)) {
-> >  		pr_err("failed to get preserved memory bitmaps\n");
-> > -		return 0;
-> > +		return -ENOENT;
-> >  	}
-> >  
-> > -	return get_unaligned((const u64 *)mem_ptr);
-> > +	*phys_out = get_unaligned((const u64 *)mem_ptr);
-> > +	return 0;
-> >  }
-> >  
-> >  static void __init kho_mem_deserialize(struct khoser_mem_chunk *chunk)
-> > @@ -1439,7 +1440,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
-> >  			 phys_addr_t scratch_phys, u64 scratch_len)
-> >  {
-> >  	struct kho_scratch *scratch = NULL;
-> > -	phys_addr_t mem_map_phys;
-> > +	phys_addr_t mem_map_phys = 0;
-> >  	void *fdt = NULL;
-> >  	int err = 0;
-> >  	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
-> > @@ -1466,11 +1467,9 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
-> >  		goto out;
-> >  	}
-> >  
-> > -	mem_map_phys = kho_get_mem_map_phys(fdt);
-> > -	if (!mem_map_phys) {
-> > -		err = -ENOENT;
-> > +	err = kho_get_mem_map_phys(fdt, &mem_map_phys);
-> > +	if (err)
+> > +/*
+> > + * Count online NUMA nodes that have memory. Memoryless nodes cannot have
+> > + * scratch memory and should be excluded.
+> > + */
+> > +static unsigned int __init kho_mem_nodes_count(void)
+> > +{
+> > +	unsigned int cnt = 0;
+> > +	int nid;
+> > +
+> > +	for_each_online_node(nid) {
+> > +		if (node_state(nid, N_MEMORY))
+> > +			cnt++;
+> > +	}
+> > +
+> > +	return cnt;
+> > +}
+> > +
 > 
-> This will break when mem_map_phys == 0. As I explained earlier, when
-> that happens we want to discard all previous scratch info and start with
-> a clean slate.
+> You don't need this. You can use nodes_weight(nodes_state[N_MEMORY])
+> directly. Other than this, LGTM.
 > 
-> Making this if (err || !mem_map_phys) should do the trick. The if (err)
-> check before the print should make sure the error message is not printed
-> when we have a valid property but its value is 0.
-
-While we are on it, I'd suggest to change kho_populate() error handling to
-use goto, (i.e like below)
-Then a simple if (err) will do and that's much clearer.
-
-Another thing I noticed it that assigning err to -EFAULT or -EINVAL after
-printks is completely redundant, since we anyway report what went wrong, so
-printing the error value in the end just not needed.
-
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index feffeafa51b7..2bba111149c4 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -1453,27 +1453,27 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
- 	if (!fdt) {
- 		pr_warn("setup: failed to memremap FDT (0x%llx)\n", fdt_phys);
- 		err = -EFAULT;
--		goto out;
-+		goto err_report;
- 	}
- 	err = fdt_check_header(fdt);
- 	if (err) {
- 		pr_warn("setup: handover FDT (0x%llx) is invalid: %d\n",
- 			fdt_phys, err);
- 		err = -EINVAL;
--		goto out;
-+		goto err_unmap_fdt;
- 	}
- 	err = fdt_node_check_compatible(fdt, 0, KHO_FDT_COMPATIBLE);
- 	if (err) {
- 		pr_warn("setup: handover FDT (0x%llx) is incompatible with '%s': %d\n",
- 			fdt_phys, KHO_FDT_COMPATIBLE, err);
- 		err = -EINVAL;
--		goto out;
-+		goto err_unmap_fdt;
- 	}
- 
- 	mem_map_phys = kho_get_mem_map_phys(fdt);
- 	if (!mem_map_phys) {
- 		err = -ENOENT;
--		goto out;
-+		goto err_unmap_fdt;
- 	}
- 
- 	scratch = early_memremap(scratch_phys, scratch_len);
-@@ -1481,7 +1481,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
- 		pr_warn("setup: failed to memremap scratch (phys=0x%llx, len=%lld)\n",
- 			scratch_phys, scratch_len);
- 		err = -EFAULT;
--		goto out;
-+		goto err_unmap_scratch;
- 	}
- 
- 	/*
-@@ -1498,7 +1498,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
- 		if (WARN_ON(err)) {
- 			pr_warn("failed to mark the scratch region 0x%pa+0x%pa: %pe",
- 				&area->addr, &size, ERR_PTR(err));
--			goto out;
-+			goto err_unmap_scratch;
- 		}
- 		pr_debug("Marked 0x%pa+0x%pa as scratch", &area->addr, &size);
- 	}
-@@ -1520,13 +1520,14 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
- 	kho_scratch_cnt = scratch_cnt;
- 	pr_info("found kexec handover data.\n");
- 
--out:
--	if (fdt)
--		early_memunmap(fdt, fdt_len);
--	if (scratch)
--		early_memunmap(scratch, scratch_len);
--	if (err)
--		pr_warn("disabling KHO revival: %d\n", err);
-+	return;
-+
-+err_unmap_scratch:
-+	early_memunmap(scratch, scratch_len);
-+err_unmap_fdt:
-+	early_memunmap(fdt, fdt_len);
-+err_report:
-+	pr_warn("disabling KHO revival: %d\n", err);
- }
- 
- /* Helper functions for kexec_file_load */
- 
-> >  		goto out;
-> > -	}
+> >  /**
+> >   * kho_reserve_scratch - Reserve a contiguous chunk of memory for kexec
+> >   *
+> > @@ -643,7 +660,7 @@ static void __init kho_reserve_scratch(void)
+> >  	scratch_size_update();
 > >  
-> >  	scratch = early_memremap(scratch_phys, scratch_len);
-> >  	if (!scratch) {
+> >  	/* FIXME: deal with node hot-plug/remove */
+> > -	kho_scratch_cnt = num_online_nodes() + 2;
+> > +	kho_scratch_cnt = kho_mem_nodes_count() + 2;
+> >  	size = kho_scratch_cnt * sizeof(*kho_scratch);
+> >  	kho_scratch = memblock_alloc(size, PAGE_SIZE);
+> >  	if (!kho_scratch)
+> > @@ -674,6 +691,10 @@ static void __init kho_reserve_scratch(void)
+> >  	i++;
+> >  
+> >  	for_each_online_node(nid) {
+> > +		/* Skip memoryless nodes - we cannot allocate scratch memory there */
+> > +		if (!node_state(nid, N_MEMORY))
+> > +			continue;
+> > +
+
+And here you can use for_each_node_state(nid, N_MEMORY)
+
+> >  		size = scratch_size_node(nid);
+> >  		addr = memblock_alloc_range_nid(size, CMA_MIN_ALIGNMENT_BYTES,
+> >  						0, MEMBLOCK_ALLOC_ACCESSIBLE,
 > 
 > -- 
 > Regards,
