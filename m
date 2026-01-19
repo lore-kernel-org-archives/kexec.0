@@ -4,69 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 63433D2ECF6
-	for <kexec@archiver.kernel.org>; Mon, 19 Jan 2026 23:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2A1FED2ECF5
+	for <kexec@archiver.kernel.org>; Mon, 19 Jan 2026 23:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZNf9RZSpHbZsKeZBIGrXDrGUG26MErDq0MvU2RoL6yA=; b=Br+S7Cxcx7G03McG3hvKmjpGku
-	OMI5SELONwOYmK/Lq9sK2qgb2ODIwAGfmSHAS7nuPnupmuQlSuEIpsk90nfS1czrdh1jytkO2fSXp
-	I7rpLoetMbvVb0cFefnYSMZ1ox/FChz93OysPYRmvbs7pIUkhsvg6HoMOlPyKz2MG4wLElASj2ZML
-	7k01zdR4C/zuGu19KC+Tz3tztEPfmjyxIvabadAWxUrhSZa+xIi1DchLoxUM9wEJpNlVOIvI/nWJD
-	TpETMOqquff2bJud5YPuJ3uDnVMChG++A3fIByUKV/SNGpA+GKBK+LlYhxopCEjLcnK7kuYPfD0w3
-	Ew2wQQzw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=LSD4Ik8scI9yOd58Ngg5xIB2/+fX9P9jdMd8DczNzEE=; b=PYloDXw63MzSjpxvGtooh7sedr
+	1161Vzkp3Iax8uOp4YVgikvVtioc/UoewEYIX4xEeUpfjdnN0xUQ732R8CZko2USAsp58LiVc1/q3
+	363250P+CmOxgbGb9NVlwXDKWqOdCvbVo1rbJaIiKJGXCO0qOL6TjjIMuNYnCWjU/amT+M0bfCxc1
+	Gq1iCYW1UCKe9iQ4tMm4bwVTHbHiSxN2JCiHURhSUEuPz6XQ9ICxpg40+y9T+Xzge+Zueq8GMHBA6
+	G0cnlgeslG72wDfyuShYCxNLnKGbpUXLSDmWuB0UnSbCFd46gWUO6MWWG3Py4vYNNAeYKCX4fbCla
+	OHkRR8cQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vhyrb-00000002yK3-0pWm;
-	Mon, 19 Jan 2026 23:40:51 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1vhz0J-00000002yWf-0l1x;
+	Mon, 19 Jan 2026 23:49:51 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vhyrZ-00000002yJx-47PH
-	for kexec@lists.infradead.org;
-	Mon, 19 Jan 2026 23:40:50 +0000
+	id 1vhz0H-00000002yWV-1R0T;
+	Mon, 19 Jan 2026 23:49:49 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id F18F4600CB;
-	Mon, 19 Jan 2026 23:40:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE5DDC116C6;
-	Mon, 19 Jan 2026 23:40:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768866048;
-	bh=6NrPxPz4E43NAmZEFY9zOtn6zSC2DZZMKATrJDNpKPE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=us2gH29HvhoYcy8KLPl2/6iA9PWWRNEui+lLOpEboa9n5QgaiUTjPwADcxIJMlUvn
-	 dAoy1PT3pDDksm/95GxauR6NgekSwirir/BqRTJ5qkukU8rfvUHbImJhmuEU1YVTuk
-	 FLt46jEaDEKf3ZfXpo2V9xLkcBoBYaVbiSciLENDky3HoBrWDSwYL1OZuhRtyVe5Ra
-	 64RvfTo2P33LRMD6ccVWtz466TJMk1WTOCSw6R74++X7c0uQ4OCieDNF/U6+fN+iR7
-	 Llthdf1KpfnGisvODUZCj7neulEz2awu5O3ReQTikVIzG0aqbxYe3WJjDQzYy9joCA
-	 EVZp1dDagPmnQ==
-Date: Tue, 20 Jan 2026 01:40:43 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Ross Philipson <ross.philipson@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
-	linux-efi@vger.kernel.org, iommu@lists.linux.dev,
-	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-	ardb@kernel.org, mjg59@srcf.ucam.org,
-	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-	jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu,
-	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
-	ebiederm@xmission.com, dwmw2@infradead.org,
-	baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
-	andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v15 01/28] tpm: Initial step to reorganize TPM public
- headers
-Message-ID: <aW7A-4xJSzln1HtH@kernel.org>
-References: <20251215233316.1076248-1-ross.philipson@oracle.com>
- <20251215233316.1076248-2-ross.philipson@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251215233316.1076248-2-ross.philipson@oracle.com>
+	by tor.source.kernel.org (Postfix) with ESMTP id 44DCF600CB;
+	Mon, 19 Jan 2026 23:49:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5FF6C116C6;
+	Mon, 19 Jan 2026 23:49:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1768866588;
+	bh=dl4NfLFLRXwMEPRJZE/eVHiegg6qB2fc1iGd20FqEkA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=F1sdcYr41mj7u5GNBeON6roRdsjj9MA61KysbE5ZD0+DK7Gx8H4LEGBOPzjEDXih9
+	 6zBnK2Zno4pcDfzPJ8jqL/kbTeXssZm3huJStpAl+ROSzJl3JMl0ZNBTBXmuAm9s6H
+	 6JqxjQp+CLsr9IHQWqdk118THRMnnCRGDZfQLvvc=
+Date: Mon, 19 Jan 2026 15:49:47 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Qiang Ma <maqianga@uniontech.com>
+Cc: bhe@redhat.com, catalin.marinas@arm.com, will@kernel.org,
+ kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] kexec: add kexec flag to control debug printing
+Message-Id: <20260119154947.e351bfb8e97d91305932e2eb@linux-foundation.org>
+In-Reply-To: <20251219093134.2268620-1-maqianga@uniontech.com>
+References: <20251219093134.2268620-1-maqianga@uniontech.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,309 +66,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Dec 15, 2025 at 03:32:49PM -0800, Ross Philipson wrote:
-> Replace the existing public header tpm_command.h with the first two
-> new public headers tpm1.h and tpm_common.h. In addition, related
-> definitions in tpm1_cmd.c were moved to the new tpm1.h.
+On Fri, 19 Dec 2025 17:31:30 +0800 Qiang Ma <maqianga@uniontech.com> wrote:
+
+> The commit cbc2fe9d9cb2 ("kexec_file: add kexec_file flag to control
+> debug printing") added the kexec_file flag to control debug printing.
+> However, for arm64, after commit 6f8c1da071a4 ("kexec_file, arm64: print
+> out debugging message if required"), when using the kexec_load interface,
+> the kexec_image_info function is called to print debug message, but
+> it uses kexec_dprintk, which is only available under kexec_file,
+> then when specifying 'kexec -d', kexec_load interface will print nothing.
 > 
-> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
-> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
-> ---
->  drivers/char/tpm/tpm-buf.c                |  3 +-
->  drivers/char/tpm/tpm1-cmd.c               | 13 +-----
->  include/keys/trusted_tpm.h                |  1 -
->  include/linux/tpm.h                       |  3 ++
->  include/linux/tpm1.h                      | 55 +++++++++++++++++++++++
->  include/linux/tpm_command.h               | 30 -------------
-
-Removing tpm_command.h causes unnecessary noise.
-
-It would be better to retain tpm_command.h, and simply supplement
-it with TPM2 constants.
-
-Also, what is the reason to not have both TPM1 and TPM2 in tpm.h?
-
-To put the question in other words: is there something in tpm.h that
-would be incompatible with early boot code?
-
-I'd rather tweak that than have more files...
-
->  include/linux/tpm_common.h                | 22 +++++++++
->  security/keys/trusted-keys/trusted_tpm1.c |  1 -
->  security/keys/trusted-keys/trusted_tpm2.c |  1 -
->  9 files changed, 82 insertions(+), 47 deletions(-)
->  create mode 100644 include/linux/tpm1.h
->  delete mode 100644 include/linux/tpm_command.h
->  create mode 100644 include/linux/tpm_common.h
+> For riscv, commit eb7622d908a09 ("kexec_file, riscv: print out debugging
+> message if required") remove kexec_image_info(), because the content has
+> been printed out in generic code in kexec_file_load, but not in kexec_load.
 > 
-> diff --git a/drivers/char/tpm/tpm-buf.c b/drivers/char/tpm/tpm-buf.c
-> index 1cb649938c01..dae23e6de269 100644
-> --- a/drivers/char/tpm/tpm-buf.c
-> +++ b/drivers/char/tpm/tpm-buf.c
-> @@ -3,7 +3,6 @@
->   * Handling of TPM command and other buffers.
->   */
->  
-> -#include <linux/tpm_command.h>
->  #include <linux/module.h>
->  #include <linux/tpm.h>
->  
-> @@ -296,7 +295,7 @@ void tpm1_buf_append_extend(struct tpm_buf *buf, u32 pcr_idx, const u8 *hash)
->  	if (buf->flags & TPM_BUF_INVALID)
->  		return;
->  
-> -	if (!tpm1_buf_is_command(buf, TPM_ORD_EXTEND)) {
-> +	if (!tpm1_buf_is_command(buf, TPM_ORD_PCR_EXTEND)) {
->  		WARN(1, "tpm_buf: invalid TPM_Extend command\n");
->  		buf->flags |= TPM_BUF_INVALID;
->  		return;
-> diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
-> index bc156d7d59f2..f29827b454d2 100644
-> --- a/drivers/char/tpm/tpm1-cmd.c
-> +++ b/drivers/char/tpm/tpm1-cmd.c
-> @@ -18,12 +18,9 @@
->  #include <linux/mutex.h>
->  #include <linux/spinlock.h>
->  #include <linux/freezer.h>
-> -#include <linux/tpm_command.h>
->  #include <linux/tpm_eventlog.h>
->  #include "tpm.h"
->  
-> -#define TPM_MAX_ORDINAL 243
-> -
->  /*
->   * Array with one entry per ordinal defining the maximum amount
->   * of time the chip could take to return the result.  The ordinal
-> @@ -308,9 +305,6 @@ unsigned long tpm1_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal)
->  		return duration;
->  }
->  
-> -#define TPM_ORD_STARTUP 153
-> -#define TPM_ST_CLEAR 1
-> -
->  /**
->   * tpm1_startup() - turn on the TPM
->   * @chip: TPM chip to use
-> @@ -478,7 +472,6 @@ int tpm1_pcr_extend(struct tpm_chip *chip, u32 pcr_idx, const u8 *hash,
->  	return rc;
->  }
->  
-> -#define TPM_ORD_GET_CAP 101
->  ssize_t tpm1_getcap(struct tpm_chip *chip, u32 subcap_id, cap_t *cap,
->  		    const char *desc, size_t min_cap_length)
->  {
-> @@ -574,7 +567,6 @@ int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
->  	return rc;
->  }
->  
-> -#define TPM_ORD_PCRREAD 21
->  int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf)
->  {
->  	int rc;
-> @@ -584,7 +576,7 @@ int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf)
->  		return -ENOMEM;
->  
->  	tpm_buf_init(buf, TPM_BUFSIZE);
-> -	tpm_buf_reset(buf, TPM_TAG_RQU_COMMAND, TPM_ORD_PCRREAD);
-> +	tpm_buf_reset(buf, TPM_TAG_RQU_COMMAND, TPM_ORD_PCR_READ);
->  	tpm_buf_append_u32(buf, pcr_idx);
->  
->  	rc = tpm_transmit_cmd(chip, buf, TPM_DIGEST_SIZE,
-> @@ -599,7 +591,6 @@ int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf)
->  	return rc;
->  }
->  
-> -#define TPM_ORD_CONTINUE_SELFTEST 83
->  /**
->   * tpm1_continue_selftest() - run TPM's selftest
->   * @chip: TPM chip to use
-> @@ -716,8 +707,6 @@ int tpm1_auto_startup(struct tpm_chip *chip)
->  	return rc;
->  }
->  
-> -#define TPM_ORD_SAVESTATE 152
-> -
->  /**
->   * tpm1_pm_suspend() - pm suspend handler
->   * @chip: TPM chip to use.
-> diff --git a/include/keys/trusted_tpm.h b/include/keys/trusted_tpm.h
-> index 0fadc6a4f166..3a0fa3bc8454 100644
-> --- a/include/keys/trusted_tpm.h
-> +++ b/include/keys/trusted_tpm.h
-> @@ -3,7 +3,6 @@
->  #define __TRUSTED_TPM_H
->  
->  #include <keys/trusted-type.h>
-> -#include <linux/tpm_command.h>
->  
->  extern struct trusted_key_ops trusted_key_tpm_ops;
->  
-> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> index 8da49e8769d5..ef81e0b59657 100644
-> --- a/include/linux/tpm.h
-> +++ b/include/linux/tpm.h
-> @@ -25,6 +25,9 @@
->  #include <crypto/hash_info.h>
->  #include <crypto/aes.h>
->  
-> +#include "tpm_common.h"
-> +#include "tpm1.h"
-> +
->  #define TPM_DIGEST_SIZE		20	/* Max TPM v1.2 PCR size */
->  #define TPM_HEADER_SIZE		10
->  #define TPM_BUFSIZE		4096
-> diff --git a/include/linux/tpm1.h b/include/linux/tpm1.h
-> new file mode 100644
-> index 000000000000..54c6c211eb9e
-> --- /dev/null
-> +++ b/include/linux/tpm1.h
-> @@ -0,0 +1,55 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2004,2007,2008 IBM Corporation
-> + *
-> + * Authors:
-> + * Leendert van Doorn <leendert@watson.ibm.com>
-> + * Dave Safford <safford@watson.ibm.com>
-> + * Reiner Sailer <sailer@watson.ibm.com>
-> + * Kylene Hall <kjhall@us.ibm.com>
-> + * Debora Velarde <dvelarde@us.ibm.com>
-> + *
-> + * Maintained by: <tpmdd_devel@lists.sourceforge.net>
-> + *
-> + * Device driver for TCG/TCPA TPM (trusted platform module).
-> + * Specifications at www.trustedcomputinggroup.org
-> + */
-> +#ifndef __LINUX_TPM1_H__
-> +#define __LINUX_TPM1_H__
-> +
-> +/*
-> + * TPM 1.2 Main Specification
-> + * https://trustedcomputinggroup.org/resource/tpm-main-specification/
-> + */
-> +
-> +/* Command TAGS */
-> +enum tpm_command_tags {
-> +	TPM_TAG_RQU_COMMAND		= 193,
-> +	TPM_TAG_RQU_AUTH1_COMMAND	= 194,
-> +	TPM_TAG_RQU_AUTH2_COMMAND	= 195,
-> +	TPM_TAG_RSP_COMMAND		= 196,
-> +	TPM_TAG_RSP_AUTH1_COMMAND	= 197,
-> +	TPM_TAG_RSP_AUTH2_COMMAND	= 198,
-> +};
-> +
-> +/* Command Ordinals */
-> +enum tpm_command_ordinals {
-> +	TPM_ORD_CONTINUE_SELFTEST	= 83,
-> +	TPM_ORD_GET_CAP			= 101,
-> +	TPM_ORD_GET_RANDOM		= 70,
-> +	TPM_ORD_PCR_EXTEND		= 20,
-> +	TPM_ORD_PCR_READ		= 21,
-> +	TPM_ORD_OSAP			= 11,
-> +	TPM_ORD_OIAP			= 10,
-> +	TPM_ORD_SAVESTATE		= 152,
-> +	TPM_ORD_SEAL			= 23,
-> +	TPM_ORD_STARTUP			= 153,
-> +	TPM_ORD_UNSEAL			= 24,
-> +};
-> +
-> +/* Other constants */
-> +#define SRKHANDLE                       0x40000000
-> +#define TPM_NONCE_SIZE                  20
-> +#define TPM_ST_CLEAR			1
-> +
-> +#endif
-> diff --git a/include/linux/tpm_command.h b/include/linux/tpm_command.h
-> deleted file mode 100644
-> index 02038972a05f..000000000000
-> --- a/include/linux/tpm_command.h
-> +++ /dev/null
-> @@ -1,30 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> -#ifndef __LINUX_TPM_COMMAND_H__
-> -#define __LINUX_TPM_COMMAND_H__
-> -
-> -/*
-> - * TPM Command constants from specifications at
-> - * http://www.trustedcomputinggroup.org
-> - */
-> -
-> -/* Command TAGS */
-> -#define TPM_TAG_RQU_COMMAND             193
-> -#define TPM_TAG_RQU_AUTH1_COMMAND       194
-> -#define TPM_TAG_RQU_AUTH2_COMMAND       195
-> -#define TPM_TAG_RSP_COMMAND             196
-> -#define TPM_TAG_RSP_AUTH1_COMMAND       197
-> -#define TPM_TAG_RSP_AUTH2_COMMAND       198
-> -
-> -/* Command Ordinals */
-> -#define TPM_ORD_OIAP                    10
-> -#define TPM_ORD_OSAP                    11
-> -#define TPM_ORD_EXTEND			20
-> -#define TPM_ORD_SEAL                    23
-> -#define TPM_ORD_UNSEAL                  24
-> -#define TPM_ORD_GET_RANDOM              70
-> -
-> -/* Other constants */
-> -#define SRKHANDLE                       0x40000000
-> -#define TPM_NONCE_SIZE                  20
-> -
-> -#endif
-> diff --git a/include/linux/tpm_common.h b/include/linux/tpm_common.h
-> new file mode 100644
-> index 000000000000..b8be669913dd
-> --- /dev/null
-> +++ b/include/linux/tpm_common.h
-> @@ -0,0 +1,22 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2004,2007,2008 IBM Corporation
-> + *
-> + * Authors:
-> + * Leendert van Doorn <leendert@watson.ibm.com>
-> + * Dave Safford <safford@watson.ibm.com>
-> + * Reiner Sailer <sailer@watson.ibm.com>
-> + * Kylene Hall <kjhall@us.ibm.com>
-> + * Debora Velarde <dvelarde@us.ibm.com>
-> + *
-> + * Maintained by: <tpmdd_devel@lists.sourceforge.net>
-> + *
-> + * Device driver for TCG/TCPA TPM (trusted platform module).
-> + * Specifications at www.trustedcomputinggroup.org
-> + */
-> +#ifndef __LINUX_TPM_COMMON_H__
-> +#define __LINUX_TPM_COMMON_H__
-> +
-> +#define TPM_MAX_ORDINAL 243
-> +
-> +#endif
-> diff --git a/security/keys/trusted-keys/trusted_tpm1.c b/security/keys/trusted-keys/trusted_tpm1.c
-> index 6e6a9fb48e63..3717a06a5212 100644
-> --- a/security/keys/trusted-keys/trusted_tpm1.c
-> +++ b/security/keys/trusted-keys/trusted_tpm1.c
-> @@ -17,7 +17,6 @@
->  #include <keys/trusted-type.h>
->  #include <linux/key-type.h>
->  #include <linux/tpm.h>
-> -#include <linux/tpm_command.h>
->  
->  #include <keys/trusted_tpm.h>
->  
-> diff --git a/security/keys/trusted-keys/trusted_tpm2.c b/security/keys/trusted-keys/trusted_tpm2.c
-> index 0a99bd051a25..e6000c71eeb6 100644
-> --- a/security/keys/trusted-keys/trusted_tpm2.c
-> +++ b/security/keys/trusted-keys/trusted_tpm2.c
-> @@ -9,7 +9,6 @@
->  #include <linux/string.h>
->  #include <linux/err.h>
->  #include <linux/tpm.h>
-> -#include <linux/tpm_command.h>
->  
->  #include <keys/trusted-type.h>
->  #include <keys/trusted_tpm.h>
-> -- 
-> 2.43.7
+> Therefore, in order to solve the two problems mentioned above, for this
+> patchset, several things need to be done:
 > 
+> 1. Enabling kexec_dprintk is available for kexec_load.
+> 2. Add some debugging message of the deleted kexec_image_info
+>    to generic code.
+> 3. Remove duplicate debugging prints for arm64.
 
-BR, Jarkko
+Some additional review input on this series would be good, if someone
+has the time.
+
 
