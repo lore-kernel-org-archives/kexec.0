@@ -4,57 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90123CA5FF1
-	for <kexec@archiver.kernel.org>; Mon, 19 Jan 2026 07:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E8E01CA5FFF
+	for <kexec@archiver.kernel.org>; Mon, 19 Jan 2026 08:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
-	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bb3xkMpeNpnybd9Na8Isc5XENxO7ZKbU0IXQYY84igE=; b=TupaPZ0z2ri7D4qxPGVGHKSWh7
-	3/0bbOJiFowp11qpiZto1HwybfQDWPy64nyfeLY+GOmWySVY2Rj8tNFCXf69S3GGvQPEK1vE+cdmW
-	fSe/Hd4S7VepAR1LXadfDmcnq54Ysb/IOSeoljzJ6M1Qi5tqylKoYydNPvDX9Qk4pSFsn/fFl+YOp
-	h9X8JbjUtalbwROkWwlco82pJ9955TrKy90OuLpsnJ6/DPSu5zMfsh0PJlLImxtemLhnwcd/mcRyt
-	3+rOg1F3fGRg9CbfP8bmHCeOX5tf5E1gDq62WsN/rUi2jei2wkOVaXlNsW6JpDiJECzHq7Z92QPFY
-	LLh1J1og==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=bKJijYo++8zcbEKhMHwvqGK3GQboq6DGUl0Qp8eOuZ4=; b=Cn4dc8EVEIKJfTdwdZbMkxwroe
+	uAstx1x2GcuaG8FPn3vuRsglxVeAPnoYTBkiPVuAs4gQx+Upn8pAweBfEhnXszTO1RUDLOPge9O77
+	U+AyKR2oE0nqZQSDKDxBC4BgVyc6M/B9vLBR7nUQWJoeBHB+qaH/y2HGhOn3WxQt6UssGPZc3eGb0
+	MiW1XSuaU4HF/tA0gcWcNYZcbZjfpWZmnZJaGl4kwJUF1ICdaFz1mqBuQKxUp9a4B4096C7bamYzV
+	BhoLJrFkjfesGlLxAjQtPm17Jl1TrBCdZmIi+Vz3iCRUekQH7K8WVWtAaKSffoIaJ+r3TIL3yVWGi
+	OQzZlhXg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vhjKN-00000001Ri7-3EIk;
-	Mon, 19 Jan 2026 07:05:31 +0000
-Received: from out-173.mta1.migadu.com ([95.215.58.173])
+	id 1vhkYt-00000001YRR-490W;
+	Mon, 19 Jan 2026 08:24:35 +0000
+Received: from mgamail.intel.com ([192.198.163.18])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vhjKH-00000001Rhc-0T5t
-	for kexec@lists.infradead.org;
-	Mon, 19 Jan 2026 07:05:27 +0000
-Message-ID: <4f7e180d-f7bb-4a21-ae2b-f42cc969401d@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1768806319;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bb3xkMpeNpnybd9Na8Isc5XENxO7ZKbU0IXQYY84igE=;
-	b=EvclKCuZlg7ifGbmHKL+RgT9befhs9UroGPdqC0TP0IrHcmdjq9+EpZElp1YHgXCPiJOqW
-	7jzdt7ISwzQe3wrIIT70lxeL53lrGIAO9uNztt6xjt+fBF5mtZcojqTM+XY+8uVo3JYubs
-	fUY1C5COy2sskFonjvKYshEUIVRZ1NA=
-Date: Sun, 18 Jan 2026 23:04:58 -0800
+	id 1vhkYl-00000001YPL-27cf;
+	Mon, 19 Jan 2026 08:24:30 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768811068; x=1800347068;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3UoClJcJDW2uoWng1yw1//FZOmo69ZVnggpsjcysDfk=;
+  b=UvhcB2TI6UTD1Jhf0M6lvgRbZDb/cVyiE87WvM13Ehwkk7bqb8jMOfcL
+   bjP2vjLVHPqcE4koG4dh0tBHY05JlEOYqarlC2cNDiwh3l8JfGTP7YpKO
+   lKpRURiv1wShUOP82D39tiqrri2WYpz5BuXF9LetRtUC5bRsCbTB7HLaa
+   a8+wmGQcNMWuTX+gcKwx6VgN19kbuZHr7YuTZ/fWr8SilCvttnfjZzMiL
+   1GqXmF3YMvCDHWriowPc0PZ8M8UhmmtnDx7E+ipxOcjoDftAU6S2nUZNS
+   105qLFsuxYwHgzcO1Jfm5HGo7XKtHkLiegpgowvCTqjpjj+0QgAUba4ZY
+   w==;
+X-CSE-ConnectionGUID: F4N5sY8+RzC4tIwrfGONiw==
+X-CSE-MsgGUID: kKIFfQt9QfSjGhEtoa11kQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11675"; a="69217488"
+X-IronPort-AV: E=Sophos;i="6.21,237,1763452800"; 
+   d="scan'208";a="69217488"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 00:24:25 -0800
+X-CSE-ConnectionGUID: 6JrKYD8FQiOuYUMvH+ySjQ==
+X-CSE-MsgGUID: qEu6BI5JSmWE3xRAdt9Yxw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,237,1763452800"; 
+   d="scan'208";a="228742759"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 19 Jan 2026 00:24:18 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vhkYa-00000000Naz-080r;
+	Mon, 19 Jan 2026 08:24:16 +0000
+Date: Mon, 19 Jan 2026 16:23:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Pingfan Liu <piliu@redhat.com>, linux-arm-kernel@lists.infradead.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Pingfan Liu <piliu@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Simon Horman <horms@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Philipp Rudo <prudo@redhat.com>, Viktor Malik <vmalik@redhat.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	kexec@lists.infradead.org, bpf@vger.kernel.org,
+	systemd-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv6 11/13] arm64/kexec: Select KEXEC_BPF to support
+ UEFI-style kernel image
+Message-ID: <202601191626.CUD61tIS-lkp@intel.com>
+References: <20260119032424.10781-12-piliu@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4] kho: validate preserved memory map during population
-To: Pasha Tatashin <pasha.tatashin@soleen.com>, akpm@linux-foundation.org,
- rppt@kernel.org, graf@amazon.com, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, linux-mm@kvack.org, pratyush@kernel.org,
- ricardo.neri-calderon@linux.intel.com
-References: <20251223140140.2090337-1-pasha.tatashin@soleen.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <20251223140140.2090337-1-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260119032424.10781-12-piliu@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260118_230525_627861_8878B86E 
-X-CRM114-Status: GOOD (  23.31  )
+X-CRM114-CacheID: sfid-20260119_002427_554614_A077F751 
+X-CRM114-Status: GOOD (  12.61  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,160 +105,70 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-在 2025/12/23 6:01, Pasha Tatashin 写道:
-> If the previous kernel enabled KHO but did not call kho_finalize()
-> (e.g., CONFIG_LIVEUPDATE=n or userspace skipped the finalization step),
-> the 'preserved-memory-map' property in the FDT remains empty/zero.
-> 
-> Previously, kho_populate() would succeed regardless of the memory map's
-> state, reserving the incoming scratch regions in memblock. However,
-> kho_memory_init() would later fail to deserialize the empty map. By that
-> time, the scratch regions were already registered, leading to partial
-> initialization and subsequent list corruption (freeing scratch area
-> twice) during kho_init().
-> 
-> Move the validation of the preserved memory map earlier into
-> kho_populate(). If the memory map is empty/NULL:
-> 1. Abort kho_populate() immediately with -ENOENT.
-> 2. Do not register or reserve the incoming scratch memory, allowing the new
->     kernel to reclaim those pages as standard free memory.
-> 3. Leave the global 'kho_in' state uninitialized.
-> 
-> Consequently, kho_memory_init() sees no active KHO context
-> (kho_in.mem_chunks_phys is 0) and falls back to kho_reserve_scratch(),
-> allocating fresh scratch memory as if it were a standard cold boot.
-> 
-> Fixes: de51999e687c ("kho: allow memory preservation state updates after finalization")
-> Reported-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> Closes: https://lore.kernel.org/all/20251218215613.GA17304@ranerica-svr.sc.intel.com
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Tested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> ---
-> Changes v4:
-> - Addressed Tested-by
-> - Addressed review comments from Pratyush.
-> 
->   kernel/liveupdate/kexec_handover.c | 37 +++++++++++++++---------------
->   1 file changed, 19 insertions(+), 18 deletions(-)
-> 
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> index 9dc51fab604f..d4482b6e3cae 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -460,27 +460,23 @@ static void __init deserialize_bitmap(unsigned int order,
->   	}
->   }
->   
-> -/* Return true if memory was deserizlied */
-> -static bool __init kho_mem_deserialize(const void *fdt)
-> +/* Returns physical address of the preserved memory map from FDT */
-> +static phys_addr_t __init kho_get_mem_map_phys(const void *fdt)
->   {
-> -	struct khoser_mem_chunk *chunk;
->   	const void *mem_ptr;
-> -	u64 mem;
->   	int len;
->   
->   	mem_ptr = fdt_getprop(fdt, 0, PROP_PRESERVED_MEMORY_MAP, &len);
->   	if (!mem_ptr || len != sizeof(u64)) {
->   		pr_err("failed to get preserved memory bitmaps\n");
-> -		return false;
-> +		return 0;
->   	}
->   
-> -	mem = get_unaligned((const u64 *)mem_ptr);
-> -	chunk = mem ? phys_to_virt(mem) : NULL;
-> -
-> -	/* No preserved physical pages were passed, no deserialization */
-> -	if (!chunk)
-> -		return false;
-> +	return get_unaligned((const u64 *)mem_ptr);
-> +}
->   
-> +static void __init kho_mem_deserialize(struct khoser_mem_chunk *chunk)
-> +{
->   	while (chunk) {
->   		unsigned int i;
->   
-> @@ -489,8 +485,6 @@ static bool __init kho_mem_deserialize(const void *fdt)
->   					   &chunk->bitmaps[i]);
->   		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
->   	}
-> -
-> -	return true;
->   }
->   
->   /*
-> @@ -1253,6 +1247,7 @@ bool kho_finalized(void)
->   struct kho_in {
->   	phys_addr_t fdt_phys;
->   	phys_addr_t scratch_phys;
-> +	phys_addr_t mem_map_phys;
->   	struct kho_debugfs dbg;
->   };
->   
-> @@ -1434,12 +1429,10 @@ static void __init kho_release_scratch(void)
->   
->   void __init kho_memory_init(void)
->   {
-> -	if (kho_in.scratch_phys) {
-> +	if (kho_in.mem_map_phys) {
->   		kho_scratch = phys_to_virt(kho_in.scratch_phys);
->   		kho_release_scratch();
-> -
-> -		if (!kho_mem_deserialize(kho_get_fdt()))
-> -			kho_in.fdt_phys = 0;
-> +		kho_mem_deserialize(phys_to_virt(kho_in.mem_map_phys));
->   	} else {
->   		kho_reserve_scratch();
->   	}
-> @@ -1448,8 +1441,9 @@ void __init kho_memory_init(void)
->   void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
->   			 phys_addr_t scratch_phys, u64 scratch_len)
->   {
-> -	void *fdt = NULL;
->   	struct kho_scratch *scratch = NULL;
-> +	phys_addr_t mem_map_phys;
-> +	void *fdt = NULL;
->   	int err = 0;
->   	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
->   
-> @@ -1475,6 +1469,12 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
->   		goto out;
->   	}
->   
-> +	mem_map_phys = kho_get_mem_map_phys(fdt);
-> +	if (!mem_map_phys) {
-> +		err = -ENOENT;
-> +		goto out;
-> +	}
-> +
->   	scratch = early_memremap(scratch_phys, scratch_len);
->   	if (!scratch) {
->   		pr_warn("setup: failed to memremap scratch (phys=0x%llx, len=%lld)\n",
-> @@ -1515,6 +1515,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
->   
->   	kho_in.fdt_phys = fdt_phys;
->   	kho_in.scratch_phys = scratch_phys;
-> +	kho_in.mem_map_phys = mem_map_phys;
->   	kho_scratch_cnt = scratch_cnt;
->   	pr_info("found kexec handover data.\n");
->   
-> 
-> base-commit: cc3aa43b44bdb43dfbac0fcb51c56594a11338a8
-The base-commit is
+Hi Pingfan,
 
-commit cc3aa43b44bdb43dfbac0fcb51c56594a11338a8 (HEAD -> 
-upstream/master, tag: next-20251219)
-Author: Stephen Rothwell <sfr@canb.auug.org.au>
-Date:   Fri Dec 19 14:12:19 2025 +1100
+kernel test robot noticed the following build warnings:
 
-     Add linux-next specific files for 20251219
+[auto build test WARNING on bpf-next/net]
+[also build test WARNING on bpf-next/master bpf/master akpm-mm/mm-nonmm-unstable linus/master v6.19-rc6 next-20260116]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-     Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+url:    https://github.com/intel-lab-lkp/linux/commits/Pingfan-Liu/bpf-Introduce-kfuncs-to-parser-buffer-content/20260119-112939
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git net
+patch link:    https://lore.kernel.org/r/20260119032424.10781-12-piliu%40redhat.com
+patch subject: [PATCHv6 11/13] arm64/kexec: Select KEXEC_BPF to support UEFI-style kernel image
+config: arm64-randconfig-004-20260119 (https://download.01.org/0day-ci/archive/20260119/202601191626.CUD61tIS-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260119/202601191626.CUD61tIS-lkp@intel.com/reproduce)
 
-Now this commit can not be applied to the 6.19-rc5.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601191626.CUD61tIS-lkp@intel.com/
 
-Zhu Yanjun
+All warnings (new ones prefixed by >>):
+
+>> kernel/kexec_bpf_loader.c:103:22: warning: unknown attribute 'optimize' ignored [-Wunknown-attributes]
+     103 | __attribute__((used, optimize("O0"))) void kexec_image_parser_anchor(
+         |                      ^~~~~~~~~~~~~~
+   1 warning generated.
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for KEXEC_BPF
+   Depends on [n]: KEXEC_FILE [=y] && DEBUG_INFO_BTF [=y] && BPF_SYSCALL [=y] && KEEP_DECOMPRESSOR [=n]
+   Selected by [y]:
+   - ARCH_SELECTS_KEXEC_FILE [=y] && KEXEC_FILE [=y] && DEBUG_INFO_BTF [=y] && BPF_SYSCALL [=y]
+
+
+vim +/optimize +103 kernel/kexec_bpf_loader.c
+
+e683ae405ea0458 Pingfan Liu 2026-01-19   93  
+e683ae405ea0458 Pingfan Liu 2026-01-19   94  void kexec_image_parser_anchor(struct kexec_context *context,
+e683ae405ea0458 Pingfan Liu 2026-01-19   95  		unsigned long parser_id);
+e683ae405ea0458 Pingfan Liu 2026-01-19   96  
+e683ae405ea0458 Pingfan Liu 2026-01-19   97  /*
+e683ae405ea0458 Pingfan Liu 2026-01-19   98   * optimize("O0") prevents inline, compiler constant propagation
+e683ae405ea0458 Pingfan Liu 2026-01-19   99   *
+e683ae405ea0458 Pingfan Liu 2026-01-19  100   * Let bpf be the program context pointer so that it will not be spilled into
+e683ae405ea0458 Pingfan Liu 2026-01-19  101   * stack.
+e683ae405ea0458 Pingfan Liu 2026-01-19  102   */
+e683ae405ea0458 Pingfan Liu 2026-01-19 @103  __attribute__((used, optimize("O0"))) void kexec_image_parser_anchor(
+e683ae405ea0458 Pingfan Liu 2026-01-19  104  		struct kexec_context *context,
+e683ae405ea0458 Pingfan Liu 2026-01-19  105  		unsigned long parser_id)
+e683ae405ea0458 Pingfan Liu 2026-01-19  106  {
+e683ae405ea0458 Pingfan Liu 2026-01-19  107  	/*
+e683ae405ea0458 Pingfan Liu 2026-01-19  108  	 * To prevent linker from Identical Code Folding (ICF) with kexec_image_parser_anchor,
+e683ae405ea0458 Pingfan Liu 2026-01-19  109  	 * making them have different code.
+e683ae405ea0458 Pingfan Liu 2026-01-19  110  	 */
+e683ae405ea0458 Pingfan Liu 2026-01-19  111  	volatile int dummy = 0;
+e683ae405ea0458 Pingfan Liu 2026-01-19  112  
+e683ae405ea0458 Pingfan Liu 2026-01-19  113  	dummy += 1;
+e683ae405ea0458 Pingfan Liu 2026-01-19  114  }
+e683ae405ea0458 Pingfan Liu 2026-01-19  115  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
