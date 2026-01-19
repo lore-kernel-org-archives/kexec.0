@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CD2B6EEE26E
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C8CC3D489BF
 	for <kexec@archiver.kernel.org>; Mon, 19 Jan 2026 18:45:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,46 +12,46 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	References:In-Reply-To:Message-Id:MIME-Version:Content-Type:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=nQ1bnlblhz5Hj/ONZdHkmaHrHUuHe1i6PuMmieccQOA=; b=O5nuku5kmWCDKAvFXkw/r5KgzM
-	rPVHS6PA53k2hQK4V5Fb6wpHxOxpbXO63MhDoLs3mViAbp0AWrFPB3bKXPNqHgF+6xCmt7uo3O3rO
-	/sbeQg/GcKC02PK0T9pYlE0CRNuD8G98uj4zEUOOOxFHUDZEGmJ0WYwI/E6LzD0gIFQM+pa5WAK80
-	MaNbrmV6psdqyUcfC92JAslJSezuF+Yi/MsMpYdQBa+vARVDpsp9kZF2lcgFIf59rvl3WIEuQzMvo
-	3hwjC3PGiP6bTaIfPi9rxieruZRpPI2dTgYtJTI14iYwT1fv1BCXYd3B9Uu+y9mnhm0AacvYYLs13
-	720tVLnQ==;
+	bh=zOnhmnZMuP3iYw6uKhrLV+jhB+C3iBzAgMKn6nhSPUY=; b=4RikeUyPT3M9ADYY3MhbvUWdj+
+	zhxuTu0hFS4SYooGpIKtV7iRe3XwCNGuo7Am8t9jFSyM8/uHCJWLy3Ntvq1zEw5U+V09naA9P9XQg
+	WywivxcQPH1CM13PV7l9WbNa39k/vARj1G6tRn8o35I5om+kmnhHL9C8Od/vkU7vVOV4yNqmAiIUF
+	1NcAkf8pwTQGVU09nmz6/Iw69U2vBLmkMk1fWk0FEkSXBu87RPPlSg4oEWr2J2NmExBMqqDXZ4kue
+	K5Vqp0J8TUQE09jR9LkkkxmxIzOVoi5yR9lIzLdRVtMtDzm1dadGADM+VCoaH3T7Ct51zLBu3fd7k
+	NA7w9Qwg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vhuG8-00000002jdq-0u6F;
+	id 1vhuG8-00000002jeb-27tP;
 	Mon, 19 Jan 2026 18:45:52 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vhuG1-00000002jYj-08nu
+	id 1vhuG5-00000002jZq-1RMD
 	for kexec@lists.infradead.org;
 	Mon, 19 Jan 2026 18:45:49 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 7672060140;
-	Mon, 19 Jan 2026 18:45:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9347C19424;
-	Mon, 19 Jan 2026 18:45:43 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id B6D0D60153;
+	Mon, 19 Jan 2026 18:45:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 007C2C116C6;
+	Mon, 19 Jan 2026 18:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768848344;
-	bh=M79Vmns/Avz7hIWo4vceBKReeeeMlgF1ADBYBVpfZ5U=;
+	s=k20201202; t=1768848348;
+	bh=h9M3VYBtxAEa2EwrH2dHTAkKbQKY8m0mIdf4uUg6zyQ=;
 	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-	b=tOEf7mctB/OB4YSV1G1w6GWJEIOYeaDQLk7gmK7o+1BTw68evq2hIzDx/9qUTys8J
-	 6XWXzT7TwTfAhWIpt0yDcSudYX9G3TsvPSPXe3CVDIBtfcumXhssQJ7aSUTLTCQmbp
-	 vl9RLb1MWiX/Ot6ogICswk1dYqN/IAMFMDDIamFYxm6SqqSDLFIY0hI7rvvFXDlcg7
-	 Ac3YCRU/flPUXuNld6iKAzE4/WQywc5gOiGtVslXKlqhgAdUpvxV0TAohTSeXpL6a6
-	 bP8H5XGjuo8Jdluz+xyLSN9KSajYIA3z8gbXUOq6dGJHjzdqgXjSXJlBLuOP4woVU3
-	 FVxqzy5Es4Lcg==
-Content-Type: multipart/mixed; boundary="===============5395468137030447417=="
+	b=kble2M3tdeCBi+Rhj7syEirvqAi5NWfPqufd0haTd1xVG3FTj4DD8XevNRGHMS+C/
+	 sV4cytjEi7fhbZ2yclLbDeF4UvE6j6UNpmApoFEGX9RjTIN9srnHvggjY3KawObHrc
+	 +H+HiWBBsvnc2On8phPYg5rNxG96TgReeBORM/jPgWp12icFgbtIBVXfbLGFLmyVcb
+	 IC26AS2eYzFV5Jccleq0ejFHQ51tOsmIxkdpUP5jgr5AG+nsMQ4wIbCpKw6Aa3AEoX
+	 mlZkYbQ+1sy5UVyBOCrUnk8vSXMkDgbU+QOKddlsLA6jHmQfDCwXc+tiAtQoiLHLBr
+	 odXeAD/Lbtsjw==
+Content-Type: multipart/mixed; boundary="===============0962507557268174505=="
 MIME-Version: 1.0
-Message-Id: <ac79262dc46cbfcc238dfb3bfbb5feaa804a2b3b3e8ce2ab1e4b096b6985bdec@mail.kernel.org>
-In-Reply-To: <20260119032424.10781-2-piliu@redhat.com>
-References: <20260119032424.10781-2-piliu@redhat.com>
-Subject: Re: [PATCHv6 01/13] bpf: Introduce kfuncs to parser buffer content
+Message-Id: <e0424b46ffd815f666093af468a0961c6f9a4966a5d67d5cbc3b232422426328@mail.kernel.org>
+In-Reply-To: <20260119032424.10781-7-piliu@redhat.com>
+References: <20260119032424.10781-7-piliu@redhat.com>
+Subject: Re: [PATCHv6 06/13] kexec_file: Implement decompress method for parser
 From: bot+bpf-ci@kernel.org
-To: piliu@redhat.com,bpf@vger.kernel.org
-Cc: piliu@redhat.com,davem@davemloft.net,ast@kernel.org,daniel@iogearbox.net,john.fastabend@gmail.com,andrii@kernel.org,martin.lau@linux.dev,eddyz87@gmail.com,song@kernel.org,yonghong.song@linux.dev,jeremy.linton@arm.com,catalin.marinas@arm.com,will@kernel.org,ardb@kernel.org,horms@kernel.org,kraxel@redhat.com,vkuznets@redhat.com,prudo@redhat.com,vmalik@redhat.com,kernel@jfarr.cc,bhe@redhat.com,dyoung@redhat.com,akpm@linux-foundation.org,kexec@lists.infradead.org,systemd-devel@lists.freedesktop.org,linux-kernel@vger.kernel.org,kpsingh@kernel.org,sdf@fomichev.me,haoluo@google.com,jolsa@kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Mon, 19 Jan 2026 18:45:43 +0000 (UTC)
+To: piliu@redhat.com,kexec@lists.infradead.org
+Cc: piliu@redhat.com,davem@davemloft.net,ast@kernel.org,daniel@iogearbox.net,john.fastabend@gmail.com,andrii@kernel.org,martin.lau@linux.dev,eddyz87@gmail.com,song@kernel.org,yonghong.song@linux.dev,jeremy.linton@arm.com,catalin.marinas@arm.com,will@kernel.org,ardb@kernel.org,horms@kernel.org,kraxel@redhat.com,vkuznets@redhat.com,prudo@redhat.com,vmalik@redhat.com,kernel@jfarr.cc,bhe@redhat.com,dyoung@redhat.com,akpm@linux-foundation.org,bpf@vger.kernel.org,systemd-devel@lists.freedesktop.org,linux-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Mon, 19 Jan 2026 18:45:47 +0000 (UTC)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -66,88 +66,99 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
---===============5395468137030447417==
+--===============0962507557268174505==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 
-> diff --git a/kernel/bpf/bpf_buffer_parser.c b/kernel/bpf/bpf_buffer_parser.c
-> new file mode 100644
-> index 000000000000..6acb4b5da71b
-> --- /dev/null
-> +++ b/kernel/bpf/bpf_buffer_parser.c
+> diff --git a/kernel/kexec_bpf_loader.c b/kernel/kexec_bpf_loader.c
+> index dc59e1389da9..bd6a47fc53ed 100644
+> --- a/kernel/kexec_bpf_loader.c
+> +++ b/kernel/kexec_bpf_loader.c
 
 [ ... ]
 
-> +static void release_bpf_parser_context(struct kref *kref)
+> +static void decompress_mem_allocator_fini(struct decompress_mem_allocator *a)
 > +{
-> +	struct bpf_parser_context *ctx = container_of(kref, struct bpf_parser_context, ref);
-> +
-> +	if (!!ctx->buf) {
-> +		vfree(ctx->buf->buf);
-> +		kfree(ctx->buf);
-> +	}
+> +	vfree(a->chunk_base_addr);
+> +}
+
+Should decompress_mem_allocator_fini() also free the individual chunks stored
+in chunk_base_addr[0..next_idx-1]? On the success path, merge_decompressed_data()
+frees them, but on error paths (decompressor failure or merge failure), the
+chunks appear to be leaked since only the array pointer is freed here.
 
 [ ... ]
 
-> +struct bpf_parser_context *alloc_bpf_parser_context(bpf_parser_handler_t func,
-> +		void *data)
+> +static int parser_cmd_decompress(char *compressed_data, int image_gz_sz,
+> +		char **out_buf, int *out_sz, struct kexec_context *ctx)
 > +{
-> +	struct bpf_parser_context *ctx;
-> +	unsigned int key;
-> +
-> +	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-
-ctx->buf is NULL here from kzalloc.
-
-[ ... ]
-
-> +__bpf_kfunc int bpf_buffer_parser(char *buf, int buf_sz,
-> +		struct bpf_parser_context *context)
-> +{
-> +	struct bpf_parser_buf *parser_buf;
+> +	struct decompress_mem_allocator *a = &dcmpr_allocator;
+> +	decompress_fn decompressor;
+> +	const char *name;
 > +	int ret;
-> +	char *b;
 > +
-> +	if (unlikely(context->func == NULL))
-> +		return -EINVAL;
-> +
-> +	b = __vmalloc(buf_sz, GFP_KERNEL_ACCOUNT | __GFP_ZERO);
-> +	if (!b)
-> +		return -ENOMEM;
-> +	ret = copy_from_kernel_nofault(b, buf, buf_sz);
-> +	if (!!ret) {
-> +		vfree(b);
-> +		return ret;
+> +	decompress_mem_allocator_init(a, CHUNK_SIZE);
+
+Is the return value from decompress_mem_allocator_init() intentionally
+ignored? If vmalloc fails inside that function, chunk_base_addr and the
+other fields remain uninitialized, and subsequent code will use garbage
+values when accessing the allocator.
+
+> +	decompressor = decompress_method(compressed_data, image_gz_sz, &name);
+> +	if (!decompressor) {
+> +		pr_err("Can not find decompress method\n");
+> +		return -1;
 > +	}
+
+When decompress_method() returns NULL, should decompress_mem_allocator_fini()
+be called before returning? The allocator was initialized above and allocated
+both chunk_base_addr and the first chunk, which appear to leak on this path.
+
+> +	pr_debug("Find decompressing method: %s, compressed sz:0x%x\n",
+> +			name, image_gz_sz);
+> +	ret = decompressor(compressed_data, image_gz_sz, NULL, flush,
+> +				NULL, NULL, NULL);
+> +	if (!!ret)
+> +		goto err;
+> +	ret = merge_decompressed_data(a, out_buf, out_sz);
 > +
-> +	parser_buf = kmalloc(sizeof(struct bpf_parser_buf), GFP_KERNEL);
-> +	if (!parser_buf) {
-> +		vfree(b);
-> +		return -ENOMEM;
-> +	}
-> +	parser_buf->buf = b;
-> +	parser_buf->size = buf_sz;
-> +	context->buf = parser_buf;
-
-If bpf_buffer_parser() is called multiple times on the same context, does
-this leak the previous parser_buf and its backing vmalloc buffer? The
-assignment to context->buf overwrites any existing pointer without first
-freeing it.
-
-release_bpf_parser_context() will only free the final context->buf value
-when the context is destroyed, so any intermediate buffers from prior
-calls would be lost.
-
-Should there be a check here to either return an error if context->buf is
-already set, or free the old buffer before assigning the new one?
-
-> +	ret = context->func(context);
+> +err:
+> +	decompress_mem_allocator_fini(a);
 > +
 > +	return ret;
 > +}
 
 [ ... ]
+
+> +	switch (cmd->cmd) {
+> +	case KEXEC_BPF_CMD_DECOMPRESS:
+> +		ret = parser_cmd_decompress(buf, cmd->payload_len, &decompressed_buf,
+> +					&decompressed_sz, ctx);
+> +		if (!ret) {
+> +			switch (cmd->subcmd) {
+> +			case KEXEC_BPF_SUBCMD_KERNEL:
+> +				vfree(ctx->kernel);
+> +				ctx->kernel = decompressed_buf;
+> +				ctx->kernel_sz = decompressed_sz;
+> +				break;
+> +			default:
+> +				break;
+
+When decompression succeeds but subcmd is not KEXEC_BPF_SUBCMD_KERNEL (for
+example INITRD or CMDLINE), decompressed_buf is allocated by
+merge_decompressed_data() but not stored or freed. Is this intentional, or
+should decompressed_buf be freed in the default case?
+
+> +			}
+> +		}
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
 
 
 ---
@@ -156,5 +167,5 @@ See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
 CI run summary: https://github.com/kernel-patches/bpf/actions/runs/21147860407
 
---===============5395468137030447417==--
+--===============0962507557268174505==--
 
