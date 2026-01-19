@@ -4,78 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 96980D2ECEB
-	for <kexec@archiver.kernel.org>; Mon, 19 Jan 2026 20:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 63433D2ECF6
+	for <kexec@archiver.kernel.org>; Mon, 19 Jan 2026 23:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=OqAdMoCLDfxesWeXSjFPeXninStgY+7qdqGzoS26PCI=; b=pRgvPkITv4ixapg/265m/s8Ri8
-	MMoS+/HSRLOFmZliQwJezFThp3jzkPO059UnqlSm+v1pD0Q49MKM3A1T3hJasGCzIuDfBTD98f/od
-	CYlBx8YY7PjHCrEuqVc/3KssZyvLVAwl0dkg9Y+GNXI/DPJyxJfDotjKP08P7riLJQGNgQP9ze3YD
-	b+ghR83KkHRn3T/jPDD6JkD8LzebDEKcSMPFiNh05MzgY20lsJi5cgH0xtRnp6TAjfj3bpacdaeN0
-	3boQYmugsD0rCma52F15mvAa/bymSB8eVCCgSz5wBV20fCOrQ0FovFeweaCDZvjWqTVeWTB4p+hzM
-	20ka9ZWQ==;
+	bh=ZNf9RZSpHbZsKeZBIGrXDrGUG26MErDq0MvU2RoL6yA=; b=Br+S7Cxcx7G03McG3hvKmjpGku
+	OMI5SELONwOYmK/Lq9sK2qgb2ODIwAGfmSHAS7nuPnupmuQlSuEIpsk90nfS1czrdh1jytkO2fSXp
+	I7rpLoetMbvVb0cFefnYSMZ1ox/FChz93OysPYRmvbs7pIUkhsvg6HoMOlPyKz2MG4wLElASj2ZML
+	7k01zdR4C/zuGu19KC+Tz3tztEPfmjyxIvabadAWxUrhSZa+xIi1DchLoxUM9wEJpNlVOIvI/nWJD
+	TpETMOqquff2bJud5YPuJ3uDnVMChG++A3fIByUKV/SNGpA+GKBK+LlYhxopCEjLcnK7kuYPfD0w3
+	Ew2wQQzw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vhwLO-00000002rl4-2WpT;
-	Mon, 19 Jan 2026 20:59:26 +0000
-Received: from mail-qt1-f172.google.com ([209.85.160.172])
+	id 1vhyrb-00000002yK3-0pWm;
+	Mon, 19 Jan 2026 23:40:51 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vhwLL-00000002rjk-0nQr
+	id 1vhyrZ-00000002yJx-47PH
 	for kexec@lists.infradead.org;
-	Mon, 19 Jan 2026 20:59:25 +0000
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-502a789834fso26227241cf.2
-        for <kexec@lists.infradead.org>; Mon, 19 Jan 2026 12:59:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768856362; x=1769461162;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OqAdMoCLDfxesWeXSjFPeXninStgY+7qdqGzoS26PCI=;
-        b=ARzVIc899hrkvowQ99BLKdcdspHaHMLMe1m/da6fHWMt1Uk45rhpBSEOUtAXT0ErXs
-         TAM+9ALj2Cy6IL2RrWsSWIyuhJt/I3bZyJTd3jeQrjEpmCoE6wvCKjTcKrp7cle7PwP2
-         LvqHmXkBwKAExcEOOV5UuXLvJySeGYbxh121fKFcuzXHINm6QLB66ZTbwQtaESMhhULi
-         rZza/CrCkVKQA2gmbhG5iFU8SErqKWTto90KDYBzeWek8NVW3BN670vui6NSovFOOJ0x
-         jiTmNJuPuHdQfxchdINoms7eHIQozrp3Wy+glBXwNVZBkC0LdjHbaAtPm98aXIbRhmSM
-         sm/w==
-X-Forwarded-Encrypted: i=1; AJvYcCW/I93+BSe0RfY6McAjGp6NH2RtSpuAsbpR0f5ChlaVWg/+6rx6qbxdWDC7fkGR1fuKovQNIw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyUug3ccBG5xPwjqW2ejAiKQ8CpBEcFfrm7Ecgl7e6Ll2e2Blfa
-	CGVKU1ta9FAM2b8AQ7yuKL6D4HKo0uidwk6JWF/KkIalbjVMCI/GzqeI8qwP6A==
-X-Gm-Gg: AY/fxX77fMIPfEcMt5glCPrIZd03cNWwRlvAlCEWKRRyOI5LhHwOWl5zspksPRh3fCe
-	koD4nI/t+XFs7WHNWGNTkCBImmNskUtww6bvT12JUxIPHbIC8f8HhiHokVgGCdawkc+AYgTTkfw
-	I52ChllpPsQmxqbtYayqummNUMl5v66am7aP9+0FWkjzlXQmxCjyM/sYyeNGk4Fz5X0saiq4QtA
-	jbSHF2i6dprLrVMo0Bgu7AdUyWOrzBWWAcRbGdBN+ymBA5yox0erej/iYKptWSZf2a9+Nyp2hGV
-	1XyzQlbrjhU1R8mU+nQ3lx52Gn2MY8oXtw78CIU3w0Q8SqJ6X3nSXRl+spzQVOcjJEVw+2C4Gfz
-	xCoeQcnIO7vrEerTeusrnL9N3QRpm5bMYrCl0AJVNb9IrgAsqiw4FsXSYE85zvTanXKd1HzntQE
-	saWQ==
-X-Received: by 2002:a05:6830:6d0d:b0:7c7:568d:cba with SMTP id 46e09a7af769-7cfdebc991cmr6635773a34.0.1768848852118;
-        Mon, 19 Jan 2026 10:54:12 -0800 (PST)
-Received: from gmail.com ([2a03:2880:10ff:40::])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7cfdf000b80sm7154662a34.0.2026.01.19.10.54.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jan 2026 10:54:11 -0800 (PST)
-Date: Mon, 19 Jan 2026 10:54:09 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, akpm@linux-foundation.org, 
-	rppt@kernel.org, graf@amazon.com, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, ricardo.neri-calderon@linux.intel.com, 
-	kernel-team@meta.com
-Subject: Re: [PATCH v4] kho: validate preserved memory map during population
-Message-ID: <z2lraqiivexvfvokff4gmqyvbpswmfwhbkhv4u7lo3nnnyz346@mibnt7dkrvey>
-References: <20251223140140.2090337-1-pasha.tatashin@soleen.com>
- <jixxiqeajngwox3nh2u3pwf2rivhmqxxmpyttqxu32pixshyde@4jdn5jvg5hvk>
- <2vxzo6mt7cl3.fsf@kernel.org>
+	Mon, 19 Jan 2026 23:40:50 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id F18F4600CB;
+	Mon, 19 Jan 2026 23:40:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE5DDC116C6;
+	Mon, 19 Jan 2026 23:40:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768866048;
+	bh=6NrPxPz4E43NAmZEFY9zOtn6zSC2DZZMKATrJDNpKPE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=us2gH29HvhoYcy8KLPl2/6iA9PWWRNEui+lLOpEboa9n5QgaiUTjPwADcxIJMlUvn
+	 dAoy1PT3pDDksm/95GxauR6NgekSwirir/BqRTJ5qkukU8rfvUHbImJhmuEU1YVTuk
+	 FLt46jEaDEKf3ZfXpo2V9xLkcBoBYaVbiSciLENDky3HoBrWDSwYL1OZuhRtyVe5Ra
+	 64RvfTo2P33LRMD6ccVWtz466TJMk1WTOCSw6R74++X7c0uQ4OCieDNF/U6+fN+iR7
+	 Llthdf1KpfnGisvODUZCj7neulEz2awu5O3ReQTikVIzG0aqbxYe3WJjDQzYy9joCA
+	 EVZp1dDagPmnQ==
+Date: Tue, 20 Jan 2026 01:40:43 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Ross Philipson <ross.philipson@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+	linux-efi@vger.kernel.org, iommu@lists.linux.dev,
+	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+	ardb@kernel.org, mjg59@srcf.ucam.org,
+	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
+	jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu,
+	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
+	ebiederm@xmission.com, dwmw2@infradead.org,
+	baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
+	andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
+Subject: Re: [PATCH v15 01/28] tpm: Initial step to reorganize TPM public
+ headers
+Message-ID: <aW7A-4xJSzln1HtH@kernel.org>
+References: <20251215233316.1076248-1-ross.philipson@oracle.com>
+ <20251215233316.1076248-2-ross.philipson@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2vxzo6mt7cl3.fsf@kernel.org>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260119_125923_256922_66D0E97C 
-X-CRM114-Status: GOOD (  29.65  )
+In-Reply-To: <20251215233316.1076248-2-ross.philipson@oracle.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,79 +81,309 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jan 16, 2026 at 04:21:28PM +0000, Pratyush Yadav wrote:
-> > On Tue, Dec 23, 2025 at 09:01:40AM -0500, Pasha Tatashin wrote:
-> >> If the previous kernel enabled KHO but did not call kho_finalize()
-> >> (e.g., CONFIG_LIVEUPDATE=n or userspace skipped the finalization step),
-> >> the 'preserved-memory-map' property in the FDT remains empty/zero.
-> >> 
-> >> Previously, kho_populate() would succeed regardless of the memory map's
-> >> state, reserving the incoming scratch regions in memblock. However,
-> >> kho_memory_init() would later fail to deserialize the empty map. By that
-> >> time, the scratch regions were already registered, leading to partial
-> >> initialization and subsequent list corruption (freeing scratch area
-> >> twice) during kho_init().
-> >
-> > While trying my new patchset [0] on top of this patch, I got the
-> > following issue:
-> >
-> > 	[    0.000000] KHO: disabling KHO revival: -2
-> >
-> > Trying to solve it, I come up with a change in kho_get_mem_map_phys() to
-> > distinguish no memory and error, see the patch attached later.
-> >
-> > This is what I used to test [0] on top of linux-next. Is this useful?
-> >
-> > Link: https://lore.kernel.org/all/20260108-kho-v3-1-b1d6b7a89342@debian.org/ [0]
-> >
-> > thanks
-> > --breno
-> >
-> > commit 5d7855fede8110d74942e1b67056ba589a1cb54a
-> > Author: Breno Leitao <leitao@debian.org>
-> > Date:   Thu Jan 8 07:44:08 2026 -0800
-> >
-> >     kho: allow KHO to work when no memory is preserved
-> >     
-> >     Fix KHO initialization failing when no memory pages were preserved by
-> >     the previous kernel.
-> >     
-> >     Commit eda79a683a0a ("kho: validate preserved memory map during
-> >     population") introduced kho_get_mem_map_phys() which returns the physical
-> >     address of the preserved memory map directly as its return value. The
-> >     caller then validates it with:
-> >     
-> >         mem_map_phys = kho_get_mem_map_phys(fdt);
-> >         if (!mem_map_phys) {
-> >             err = -ENOENT;
-> >             goto out;
-> >         }
-> >     
-> >     This creates an ambiguity: physical address 0 is used both as an error
-> >     indicator (property missing/malformed) and as a valid value (property
-> >     exists with value 0, meaning no memory was preserved).
-> >     
-> >     "No memory preserved" is a legitimate state. KHO provides features beyond
-> >     memory page preservation, such as previous kernel version tracking and
-> >     kexec count tracking. When the previous kernel enables KHO but doesn't
-> >     preserve any memory pages, it sets 'preserved-memory-map' to 0. This is
-> >     semantically different from "KHO not initialized" - it means "KHO is
-> >     active, there's just nothing in the memory map."
+On Mon, Dec 15, 2025 at 03:32:49PM -0800, Ross Philipson wrote:
+> Replace the existing public header tpm_command.h with the first two
+> new public headers tpm1.h and tpm_common.h. In addition, related
+> definitions in tpm1_cmd.c were moved to the new tpm1.h.
 > 
-> This isn't true. If you hand over _any_ state, you will at least need
-> the KHO FDT. And the KHO FDT is preserved memory (see the
-> kho_alloc_preserve() call in kho_init()). So I don't see how you can
-> ever have valid KHO with no memory.
+> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+> ---
+>  drivers/char/tpm/tpm-buf.c                |  3 +-
+>  drivers/char/tpm/tpm1-cmd.c               | 13 +-----
+>  include/keys/trusted_tpm.h                |  1 -
+>  include/linux/tpm.h                       |  3 ++
+>  include/linux/tpm1.h                      | 55 +++++++++++++++++++++++
+>  include/linux/tpm_command.h               | 30 -------------
+
+Removing tpm_command.h causes unnecessary noise.
+
+It would be better to retain tpm_command.h, and simply supplement
+it with TPM2 constants.
+
+Also, what is the reason to not have both TPM1 and TPM2 in tpm.h?
+
+To put the question in other words: is there something in tpm.h that
+would be incompatible with early boot code?
+
+I'd rather tweak that than have more files...
+
+>  include/linux/tpm_common.h                | 22 +++++++++
+>  security/keys/trusted-keys/trusted_tpm1.c |  1 -
+>  security/keys/trusted-keys/trusted_tpm2.c |  1 -
+>  9 files changed, 82 insertions(+), 47 deletions(-)
+>  create mode 100644 include/linux/tpm1.h
+>  delete mode 100644 include/linux/tpm_command.h
+>  create mode 100644 include/linux/tpm_common.h
 > 
-> mem_map_phys _can_ be 0, but only when KHO was enabled but not used. And
-> that is of course also a valid use case.
+> diff --git a/drivers/char/tpm/tpm-buf.c b/drivers/char/tpm/tpm-buf.c
+> index 1cb649938c01..dae23e6de269 100644
+> --- a/drivers/char/tpm/tpm-buf.c
+> +++ b/drivers/char/tpm/tpm-buf.c
+> @@ -3,7 +3,6 @@
+>   * Handling of TPM command and other buffers.
+>   */
+>  
+> -#include <linux/tpm_command.h>
+>  #include <linux/module.h>
+>  #include <linux/tpm.h>
+>  
+> @@ -296,7 +295,7 @@ void tpm1_buf_append_extend(struct tpm_buf *buf, u32 pcr_idx, const u8 *hash)
+>  	if (buf->flags & TPM_BUF_INVALID)
+>  		return;
+>  
+> -	if (!tpm1_buf_is_command(buf, TPM_ORD_EXTEND)) {
+> +	if (!tpm1_buf_is_command(buf, TPM_ORD_PCR_EXTEND)) {
+>  		WARN(1, "tpm_buf: invalid TPM_Extend command\n");
+>  		buf->flags |= TPM_BUF_INVALID;
+>  		return;
+> diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
+> index bc156d7d59f2..f29827b454d2 100644
+> --- a/drivers/char/tpm/tpm1-cmd.c
+> +++ b/drivers/char/tpm/tpm1-cmd.c
+> @@ -18,12 +18,9 @@
+>  #include <linux/mutex.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/freezer.h>
+> -#include <linux/tpm_command.h>
+>  #include <linux/tpm_eventlog.h>
+>  #include "tpm.h"
+>  
+> -#define TPM_MAX_ORDINAL 243
+> -
+>  /*
+>   * Array with one entry per ordinal defining the maximum amount
+>   * of time the chip could take to return the result.  The ordinal
+> @@ -308,9 +305,6 @@ unsigned long tpm1_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal)
+>  		return duration;
+>  }
+>  
+> -#define TPM_ORD_STARTUP 153
+> -#define TPM_ST_CLEAR 1
+> -
+>  /**
+>   * tpm1_startup() - turn on the TPM
+>   * @chip: TPM chip to use
+> @@ -478,7 +472,6 @@ int tpm1_pcr_extend(struct tpm_chip *chip, u32 pcr_idx, const u8 *hash,
+>  	return rc;
+>  }
+>  
+> -#define TPM_ORD_GET_CAP 101
+>  ssize_t tpm1_getcap(struct tpm_chip *chip, u32 subcap_id, cap_t *cap,
+>  		    const char *desc, size_t min_cap_length)
+>  {
+> @@ -574,7 +567,6 @@ int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+>  	return rc;
+>  }
+>  
+> -#define TPM_ORD_PCRREAD 21
+>  int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf)
+>  {
+>  	int rc;
+> @@ -584,7 +576,7 @@ int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf)
+>  		return -ENOMEM;
+>  
+>  	tpm_buf_init(buf, TPM_BUFSIZE);
+> -	tpm_buf_reset(buf, TPM_TAG_RQU_COMMAND, TPM_ORD_PCRREAD);
+> +	tpm_buf_reset(buf, TPM_TAG_RQU_COMMAND, TPM_ORD_PCR_READ);
+>  	tpm_buf_append_u32(buf, pcr_idx);
+>  
+>  	rc = tpm_transmit_cmd(chip, buf, TPM_DIGEST_SIZE,
+> @@ -599,7 +591,6 @@ int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf)
+>  	return rc;
+>  }
+>  
+> -#define TPM_ORD_CONTINUE_SELFTEST 83
+>  /**
+>   * tpm1_continue_selftest() - run TPM's selftest
+>   * @chip: TPM chip to use
+> @@ -716,8 +707,6 @@ int tpm1_auto_startup(struct tpm_chip *chip)
+>  	return rc;
+>  }
+>  
+> -#define TPM_ORD_SAVESTATE 152
+> -
+>  /**
+>   * tpm1_pm_suspend() - pm suspend handler
+>   * @chip: TPM chip to use.
+> diff --git a/include/keys/trusted_tpm.h b/include/keys/trusted_tpm.h
+> index 0fadc6a4f166..3a0fa3bc8454 100644
+> --- a/include/keys/trusted_tpm.h
+> +++ b/include/keys/trusted_tpm.h
+> @@ -3,7 +3,6 @@
+>  #define __TRUSTED_TPM_H
+>  
+>  #include <keys/trusted-type.h>
+> -#include <linux/tpm_command.h>
+>  
+>  extern struct trusted_key_ops trusted_key_tpm_ops;
+>  
+> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+> index 8da49e8769d5..ef81e0b59657 100644
+> --- a/include/linux/tpm.h
+> +++ b/include/linux/tpm.h
+> @@ -25,6 +25,9 @@
+>  #include <crypto/hash_info.h>
+>  #include <crypto/aes.h>
+>  
+> +#include "tpm_common.h"
+> +#include "tpm1.h"
+> +
+>  #define TPM_DIGEST_SIZE		20	/* Max TPM v1.2 PCR size */
+>  #define TPM_HEADER_SIZE		10
+>  #define TPM_BUFSIZE		4096
+> diff --git a/include/linux/tpm1.h b/include/linux/tpm1.h
+> new file mode 100644
+> index 000000000000..54c6c211eb9e
+> --- /dev/null
+> +++ b/include/linux/tpm1.h
+> @@ -0,0 +1,55 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (C) 2004,2007,2008 IBM Corporation
+> + *
+> + * Authors:
+> + * Leendert van Doorn <leendert@watson.ibm.com>
+> + * Dave Safford <safford@watson.ibm.com>
+> + * Reiner Sailer <sailer@watson.ibm.com>
+> + * Kylene Hall <kjhall@us.ibm.com>
+> + * Debora Velarde <dvelarde@us.ibm.com>
+> + *
+> + * Maintained by: <tpmdd_devel@lists.sourceforge.net>
+> + *
+> + * Device driver for TCG/TCPA TPM (trusted platform module).
+> + * Specifications at www.trustedcomputinggroup.org
+> + */
+> +#ifndef __LINUX_TPM1_H__
+> +#define __LINUX_TPM1_H__
+> +
+> +/*
+> + * TPM 1.2 Main Specification
+> + * https://trustedcomputinggroup.org/resource/tpm-main-specification/
+> + */
+> +
+> +/* Command TAGS */
+> +enum tpm_command_tags {
+> +	TPM_TAG_RQU_COMMAND		= 193,
+> +	TPM_TAG_RQU_AUTH1_COMMAND	= 194,
+> +	TPM_TAG_RQU_AUTH2_COMMAND	= 195,
+> +	TPM_TAG_RSP_COMMAND		= 196,
+> +	TPM_TAG_RSP_AUTH1_COMMAND	= 197,
+> +	TPM_TAG_RSP_AUTH2_COMMAND	= 198,
+> +};
+> +
+> +/* Command Ordinals */
+> +enum tpm_command_ordinals {
+> +	TPM_ORD_CONTINUE_SELFTEST	= 83,
+> +	TPM_ORD_GET_CAP			= 101,
+> +	TPM_ORD_GET_RANDOM		= 70,
+> +	TPM_ORD_PCR_EXTEND		= 20,
+> +	TPM_ORD_PCR_READ		= 21,
+> +	TPM_ORD_OSAP			= 11,
+> +	TPM_ORD_OIAP			= 10,
+> +	TPM_ORD_SAVESTATE		= 152,
+> +	TPM_ORD_SEAL			= 23,
+> +	TPM_ORD_STARTUP			= 153,
+> +	TPM_ORD_UNSEAL			= 24,
+> +};
+> +
+> +/* Other constants */
+> +#define SRKHANDLE                       0x40000000
+> +#define TPM_NONCE_SIZE                  20
+> +#define TPM_ST_CLEAR			1
+> +
+> +#endif
+> diff --git a/include/linux/tpm_command.h b/include/linux/tpm_command.h
+> deleted file mode 100644
+> index 02038972a05f..000000000000
+> --- a/include/linux/tpm_command.h
+> +++ /dev/null
+> @@ -1,30 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -#ifndef __LINUX_TPM_COMMAND_H__
+> -#define __LINUX_TPM_COMMAND_H__
+> -
+> -/*
+> - * TPM Command constants from specifications at
+> - * http://www.trustedcomputinggroup.org
+> - */
+> -
+> -/* Command TAGS */
+> -#define TPM_TAG_RQU_COMMAND             193
+> -#define TPM_TAG_RQU_AUTH1_COMMAND       194
+> -#define TPM_TAG_RQU_AUTH2_COMMAND       195
+> -#define TPM_TAG_RSP_COMMAND             196
+> -#define TPM_TAG_RSP_AUTH1_COMMAND       197
+> -#define TPM_TAG_RSP_AUTH2_COMMAND       198
+> -
+> -/* Command Ordinals */
+> -#define TPM_ORD_OIAP                    10
+> -#define TPM_ORD_OSAP                    11
+> -#define TPM_ORD_EXTEND			20
+> -#define TPM_ORD_SEAL                    23
+> -#define TPM_ORD_UNSEAL                  24
+> -#define TPM_ORD_GET_RANDOM              70
+> -
+> -/* Other constants */
+> -#define SRKHANDLE                       0x40000000
+> -#define TPM_NONCE_SIZE                  20
+> -
+> -#endif
+> diff --git a/include/linux/tpm_common.h b/include/linux/tpm_common.h
+> new file mode 100644
+> index 000000000000..b8be669913dd
+> --- /dev/null
+> +++ b/include/linux/tpm_common.h
+> @@ -0,0 +1,22 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (C) 2004,2007,2008 IBM Corporation
+> + *
+> + * Authors:
+> + * Leendert van Doorn <leendert@watson.ibm.com>
+> + * Dave Safford <safford@watson.ibm.com>
+> + * Reiner Sailer <sailer@watson.ibm.com>
+> + * Kylene Hall <kjhall@us.ibm.com>
+> + * Debora Velarde <dvelarde@us.ibm.com>
+> + *
+> + * Maintained by: <tpmdd_devel@lists.sourceforge.net>
+> + *
+> + * Device driver for TCG/TCPA TPM (trusted platform module).
+> + * Specifications at www.trustedcomputinggroup.org
+> + */
+> +#ifndef __LINUX_TPM_COMMON_H__
+> +#define __LINUX_TPM_COMMON_H__
+> +
+> +#define TPM_MAX_ORDINAL 243
+> +
+> +#endif
+> diff --git a/security/keys/trusted-keys/trusted_tpm1.c b/security/keys/trusted-keys/trusted_tpm1.c
+> index 6e6a9fb48e63..3717a06a5212 100644
+> --- a/security/keys/trusted-keys/trusted_tpm1.c
+> +++ b/security/keys/trusted-keys/trusted_tpm1.c
+> @@ -17,7 +17,6 @@
+>  #include <keys/trusted-type.h>
+>  #include <linux/key-type.h>
+>  #include <linux/tpm.h>
+> -#include <linux/tpm_command.h>
+>  
+>  #include <keys/trusted_tpm.h>
+>  
+> diff --git a/security/keys/trusted-keys/trusted_tpm2.c b/security/keys/trusted-keys/trusted_tpm2.c
+> index 0a99bd051a25..e6000c71eeb6 100644
+> --- a/security/keys/trusted-keys/trusted_tpm2.c
+> +++ b/security/keys/trusted-keys/trusted_tpm2.c
+> @@ -9,7 +9,6 @@
+>  #include <linux/string.h>
+>  #include <linux/err.h>
+>  #include <linux/tpm.h>
+> -#include <linux/tpm_command.h>
+>  
+>  #include <keys/trusted-type.h>
+>  #include <keys/trusted_tpm.h>
+> -- 
+> 2.43.7
+> 
 
-Oh, I was not finalizing KHO, and in commit e1c3bfd091f363c1
-("kho: validate preserved memory map during population") started to fail this
-on purpose.
-
-So, I understand we want to fail if mem_map_phys = 0, but thn FDT was properly
-passed (how is it possible)? I know I can read
-KHO_PROP_PREVIOUS_RELEASE/KHO_PROP_PREVIOUS_RELEASE from the fdt, even when
-mem_map_phys is 0.
+BR, Jarkko
 
