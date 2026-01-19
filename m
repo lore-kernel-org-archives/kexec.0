@@ -4,94 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5EE0ED4A5EB
-	for <kexec@archiver.kernel.org>; Mon, 19 Jan 2026 03:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90123CA5FF1
+	for <kexec@archiver.kernel.org>; Mon, 19 Jan 2026 07:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=e54Q/Wn1M/aW4uiAmyk1v5WG6DDrOBedFc1qY/t+0Og=; b=IKRrq5NxDEz7W+oGg7liXXuo7v
-	ncmD98C2dHLN9997titfhFUasAFniuqdaH18pWMvPJhzT8kQJY1AUiuyQbEjNqfdPqgL90LIGDRIu
-	XcgU+o9uApyxSkqFtaFaMPZUShiXcB7ZPYcLpDswJOepFDTEIAyE09K2VSJ3YEHGolpHP4kFltIpu
-	yrYfVAaEOZfkahiwwoytGDhuxrvOVuz5lqXmQlYgHUBC1nozG/Mz8XHCstg3zAvd7RhbJaXLB6z3t
-	xIrMhYk13mOYTqhWOk3pAOE2CzvBPI2aCtHHdaooBRlETSKMtmQ0xQpA1BP1Dwcsj9tSvRO1DUVb7
-	d4b4hagQ==;
+	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=bb3xkMpeNpnybd9Na8Isc5XENxO7ZKbU0IXQYY84igE=; b=TupaPZ0z2ri7D4qxPGVGHKSWh7
+	3/0bbOJiFowp11qpiZto1HwybfQDWPy64nyfeLY+GOmWySVY2Rj8tNFCXf69S3GGvQPEK1vE+cdmW
+	fSe/Hd4S7VepAR1LXadfDmcnq54Ysb/IOSeoljzJ6M1Qi5tqylKoYydNPvDX9Qk4pSFsn/fFl+YOp
+	h9X8JbjUtalbwROkWwlco82pJ9955TrKy90OuLpsnJ6/DPSu5zMfsh0PJlLImxtemLhnwcd/mcRyt
+	3+rOg1F3fGRg9CbfP8bmHCeOX5tf5E1gDq62WsN/rUi2jei2wkOVaXlNsW6JpDiJECzHq7Z92QPFY
+	LLh1J1og==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vhfvr-00000001Jwg-20MA;
-	Mon, 19 Jan 2026 03:27:59 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1vhjKN-00000001Ri7-3EIk;
+	Mon, 19 Jan 2026 07:05:31 +0000
+Received: from out-173.mta1.migadu.com ([95.215.58.173])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vhfvm-00000001JvZ-2qm5
+	id 1vhjKH-00000001Rhc-0T5t
 	for kexec@lists.infradead.org;
-	Mon, 19 Jan 2026 03:27:56 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768793273;
+	Mon, 19 Jan 2026 07:05:27 +0000
+Message-ID: <4f7e180d-f7bb-4a21-ae2b-f42cc969401d@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1768806319;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=e54Q/Wn1M/aW4uiAmyk1v5WG6DDrOBedFc1qY/t+0Og=;
-	b=GIzyGpl2O8iCtNF0r2VV/JEQeQ1Sheymb64z9xoNxsYlClZlJiWbVDfnmIr+T3cHI+Xoh8
-	YzpEGGbFS/7sIpr9Z/r2P2vfShrX5taFdEkUEGgK3Rmjvahv6iZM8Gpp0KoRs6Yq7KlvW5
-	LRgmPmb97pmdWMhqzRtOeiKIIr4OeUE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-198-MZQWu_1TPlKFgy6xGA2pFw-1; Sun,
- 18 Jan 2026 22:27:50 -0500
-X-MC-Unique: MZQWu_1TPlKFgy6xGA2pFw-1
-X-Mimecast-MFC-AGG-ID: MZQWu_1TPlKFgy6xGA2pFw_1768793267
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9CC69180044D;
-	Mon, 19 Jan 2026 03:27:47 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.72.112.74])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 25AFF1955F22;
-	Mon, 19 Jan 2026 03:27:36 +0000 (UTC)
-From: Pingfan Liu <piliu@redhat.com>
-To: kexec@lists.infradead.org
-Cc: Pingfan Liu <piliu@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Philipp Rudo <prudo@redhat.com>,
-	Viktor Malik <vmalik@redhat.com>,
-	Jan Hendrik Farr <kernel@jfarr.cc>,
-	Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	bpf@vger.kernel.org,
-	systemd-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCHv6 13/13] tools/kexec: Add a zboot image building tool
-Date: Mon, 19 Jan 2026 11:24:24 +0800
-Message-ID: <20260119032424.10781-14-piliu@redhat.com>
-In-Reply-To: <20260119032424.10781-1-piliu@redhat.com>
-References: <20260119032424.10781-1-piliu@redhat.com>
+	bh=bb3xkMpeNpnybd9Na8Isc5XENxO7ZKbU0IXQYY84igE=;
+	b=EvclKCuZlg7ifGbmHKL+RgT9befhs9UroGPdqC0TP0IrHcmdjq9+EpZElp1YHgXCPiJOqW
+	7jzdt7ISwzQe3wrIIT70lxeL53lrGIAO9uNztt6xjt+fBF5mtZcojqTM+XY+8uVo3JYubs
+	fUY1C5COy2sskFonjvKYshEUIVRZ1NA=
+Date: Sun, 18 Jan 2026 23:04:58 -0800
 MIME-Version: 1.0
+Subject: Re: [PATCH v4] kho: validate preserved memory map during population
+To: Pasha Tatashin <pasha.tatashin@soleen.com>, akpm@linux-foundation.org,
+ rppt@kernel.org, graf@amazon.com, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, linux-mm@kvack.org, pratyush@kernel.org,
+ ricardo.neri-calderon@linux.intel.com
+References: <20251223140140.2090337-1-pasha.tatashin@soleen.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20251223140140.2090337-1-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260118_192754_886821_D726D0D5 
-X-CRM114-Status: GOOD (  28.94  )
+X-CRM114-CacheID: sfid-20260118_230525_627861_8878B86E 
+X-CRM114-Status: GOOD (  23.31  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,532 +69,160 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The objcopy binary can append a section to a PE file, but it disregards
-the DOS header. However, the zboot format carries important information
-in the DOS header: payload offset and size.
+在 2025/12/23 6:01, Pasha Tatashin 写道:
+> If the previous kernel enabled KHO but did not call kho_finalize()
+> (e.g., CONFIG_LIVEUPDATE=n or userspace skipped the finalization step),
+> the 'preserved-memory-map' property in the FDT remains empty/zero.
+> 
+> Previously, kho_populate() would succeed regardless of the memory map's
+> state, reserving the incoming scratch regions in memblock. However,
+> kho_memory_init() would later fail to deserialize the empty map. By that
+> time, the scratch regions were already registered, leading to partial
+> initialization and subsequent list corruption (freeing scratch area
+> twice) during kho_init().
+> 
+> Move the validation of the preserved memory map earlier into
+> kho_populate(). If the memory map is empty/NULL:
+> 1. Abort kho_populate() immediately with -ENOENT.
+> 2. Do not register or reserve the incoming scratch memory, allowing the new
+>     kernel to reclaim those pages as standard free memory.
+> 3. Leave the global 'kho_in' state uninitialized.
+> 
+> Consequently, kho_memory_init() sees no active KHO context
+> (kho_in.mem_chunks_phys is 0) and falls back to kho_reserve_scratch(),
+> allocating fresh scratch memory as if it were a standard cold boot.
+> 
+> Fixes: de51999e687c ("kho: allow memory preservation state updates after finalization")
+> Reported-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> Closes: https://lore.kernel.org/all/20251218215613.GA17304@ranerica-svr.sc.intel.com
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Tested-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> ---
+> Changes v4:
+> - Addressed Tested-by
+> - Addressed review comments from Pratyush.
+> 
+>   kernel/liveupdate/kexec_handover.c | 37 +++++++++++++++---------------
+>   1 file changed, 19 insertions(+), 18 deletions(-)
+> 
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> index 9dc51fab604f..d4482b6e3cae 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
+> @@ -460,27 +460,23 @@ static void __init deserialize_bitmap(unsigned int order,
+>   	}
+>   }
+>   
+> -/* Return true if memory was deserizlied */
+> -static bool __init kho_mem_deserialize(const void *fdt)
+> +/* Returns physical address of the preserved memory map from FDT */
+> +static phys_addr_t __init kho_get_mem_map_phys(const void *fdt)
+>   {
+> -	struct khoser_mem_chunk *chunk;
+>   	const void *mem_ptr;
+> -	u64 mem;
+>   	int len;
+>   
+>   	mem_ptr = fdt_getprop(fdt, 0, PROP_PRESERVED_MEMORY_MAP, &len);
+>   	if (!mem_ptr || len != sizeof(u64)) {
+>   		pr_err("failed to get preserved memory bitmaps\n");
+> -		return false;
+> +		return 0;
+>   	}
+>   
+> -	mem = get_unaligned((const u64 *)mem_ptr);
+> -	chunk = mem ? phys_to_virt(mem) : NULL;
+> -
+> -	/* No preserved physical pages were passed, no deserialization */
+> -	if (!chunk)
+> -		return false;
+> +	return get_unaligned((const u64 *)mem_ptr);
+> +}
+>   
+> +static void __init kho_mem_deserialize(struct khoser_mem_chunk *chunk)
+> +{
+>   	while (chunk) {
+>   		unsigned int i;
+>   
+> @@ -489,8 +485,6 @@ static bool __init kho_mem_deserialize(const void *fdt)
+>   					   &chunk->bitmaps[i]);
+>   		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
+>   	}
+> -
+> -	return true;
+>   }
+>   
+>   /*
+> @@ -1253,6 +1247,7 @@ bool kho_finalized(void)
+>   struct kho_in {
+>   	phys_addr_t fdt_phys;
+>   	phys_addr_t scratch_phys;
+> +	phys_addr_t mem_map_phys;
+>   	struct kho_debugfs dbg;
+>   };
+>   
+> @@ -1434,12 +1429,10 @@ static void __init kho_release_scratch(void)
+>   
+>   void __init kho_memory_init(void)
+>   {
+> -	if (kho_in.scratch_phys) {
+> +	if (kho_in.mem_map_phys) {
+>   		kho_scratch = phys_to_virt(kho_in.scratch_phys);
+>   		kho_release_scratch();
+> -
+> -		if (!kho_mem_deserialize(kho_get_fdt()))
+> -			kho_in.fdt_phys = 0;
+> +		kho_mem_deserialize(phys_to_virt(kho_in.mem_map_phys));
+>   	} else {
+>   		kho_reserve_scratch();
+>   	}
+> @@ -1448,8 +1441,9 @@ void __init kho_memory_init(void)
+>   void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+>   			 phys_addr_t scratch_phys, u64 scratch_len)
+>   {
+> -	void *fdt = NULL;
+>   	struct kho_scratch *scratch = NULL;
+> +	phys_addr_t mem_map_phys;
+> +	void *fdt = NULL;
+>   	int err = 0;
+>   	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
+>   
+> @@ -1475,6 +1469,12 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+>   		goto out;
+>   	}
+>   
+> +	mem_map_phys = kho_get_mem_map_phys(fdt);
+> +	if (!mem_map_phys) {
+> +		err = -ENOENT;
+> +		goto out;
+> +	}
+> +
+>   	scratch = early_memremap(scratch_phys, scratch_len);
+>   	if (!scratch) {
+>   		pr_warn("setup: failed to memremap scratch (phys=0x%llx, len=%lld)\n",
+> @@ -1515,6 +1515,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+>   
+>   	kho_in.fdt_phys = fdt_phys;
+>   	kho_in.scratch_phys = scratch_phys;
+> +	kho_in.mem_map_phys = mem_map_phys;
+>   	kho_scratch_cnt = scratch_cnt;
+>   	pr_info("found kexec handover data.\n");
+>   
+> 
+> base-commit: cc3aa43b44bdb43dfbac0fcb51c56594a11338a8
+The base-commit is
 
-To track this information and append a new PE section, here a dedicated
-binary tool is introduced to build zboot images. The payload's relative
-offset within the .data section remains unchanged.  Therefore, the .data
-section offset in the new PE file, plus the payload offset within that
-section, yields the payload offset within the new PE file.
+commit cc3aa43b44bdb43dfbac0fcb51c56594a11338a8 (HEAD -> 
+upstream/master, tag: next-20251219)
+Author: Stephen Rothwell <sfr@canb.auug.org.au>
+Date:   Fri Dec 19 14:12:19 2025 +1100
 
-Finally, the new PE file 'zboot.efi', with a .bpf section, can be got by
-the command:
-  make -C tools/kexec zboot
+     Add linux-next specific files for 20251219
 
-Signed-off-by: Pingfan Liu <piliu@redhat.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Philipp Rudo <prudo@redhat.com>
-Cc: bpf@vger.kernel.org
-To: kexec@lists.infradead.org
----
- tools/kexec/Makefile              |  10 +-
- tools/kexec/pe.h                  | 177 +++++++++++++++++++
- tools/kexec/zboot_image_builder.c | 278 ++++++++++++++++++++++++++++++
- 3 files changed, 464 insertions(+), 1 deletion(-)
- create mode 100644 tools/kexec/pe.h
- create mode 100644 tools/kexec/zboot_image_builder.c
+     Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 
-diff --git a/tools/kexec/Makefile b/tools/kexec/Makefile
-index 88db6d11bde61..acb045367adfa 100644
---- a/tools/kexec/Makefile
-+++ b/tools/kexec/Makefile
-@@ -27,7 +27,7 @@ BPFTOOL = bpftool
- 
- # List of generated target files
- HEADERS = vmlinux.h bpf_helper_defs.h image_size.h
--ZBOOT_TARGETS = zboot_parser_bpf.o zboot_parser_bpf.lskel.h bytecode.c bytecode.o
-+ZBOOT_TARGETS = zboot_parser_bpf.o zboot_parser_bpf.lskel.h bytecode.c bytecode.o zboot_image_builder zboot.efi
- 
- 
- # Targets
-@@ -76,6 +76,14 @@ bytecode.c: zboot_parser_bpf.lskel.h
- bytecode.o: bytecode.c
- 	@$(CC) -c $< -o $@
- 
-+# Rule to build zboot_image_builder executable
-+zboot_image_builder: zboot_image_builder.c
-+	@$(CC) $(CFLAGS) $< -o $@
-+
-+zboot.efi: zboot_image_builder bytecode.o
-+	@chmod +x zboot_image_builder
-+	@./zboot_image_builder $(EFI_IMAGE) bytecode.o $@
-+
- # Clean up generated files
- clean:
- 	@rm -f $(HEADERS) $(ZBOOT_TARGETS)
-diff --git a/tools/kexec/pe.h b/tools/kexec/pe.h
-new file mode 100644
-index 0000000000000..c2273d3fc3bb3
---- /dev/null
-+++ b/tools/kexec/pe.h
-@@ -0,0 +1,177 @@
-+/*
-+ * Extract from linux kernel include/linux/pe.h
-+ */
-+
-+#ifndef __PE_H__
-+#define __PE_H__
-+
-+#define IMAGE_DOS_SIGNATURE	0x5a4d	/* "MZ" */
-+#define IMAGE_NT_SIGNATURE	0x00004550	/* "PE\0\0" */
-+
-+struct mz_hdr {
-+	uint16_t magic;		/* MZ_MAGIC */
-+	uint16_t lbsize;	/* size of last used block */
-+	uint16_t blocks;	/* pages in file, 0x3 */
-+	uint16_t relocs;	/* relocations */
-+	uint16_t hdrsize;	/* header size in "paragraphs" */
-+	uint16_t min_extra_pps;	/* .bss */
-+	uint16_t max_extra_pps;	/* runtime limit for the arena size */
-+	uint16_t ss;		/* relative stack segment */
-+	uint16_t sp;		/* initial %sp register */
-+	uint16_t checksum;	/* word checksum */
-+	uint16_t ip;		/* initial %ip register */
-+	uint16_t cs;		/* initial %cs relative to load segment */
-+	uint16_t reloc_table_offset;	/* offset of the first relocation */
-+	uint16_t overlay_num;	/* overlay number.  set to 0. */
-+	uint16_t reserved0[4];	/* reserved */
-+	uint16_t oem_id;	/* oem identifier */
-+	uint16_t oem_info;	/* oem specific */
-+	uint16_t reserved1[10];	/* reserved */
-+	uint32_t peaddr;	/* address of pe header */
-+	char     message[];	/* message to print */
-+};
-+
-+struct pe_hdr {
-+	uint32_t magic;		/* PE magic */
-+	uint16_t machine;	/* machine type */
-+	uint16_t sections;	/* number of sections */
-+	uint32_t timestamp;	/* time_t */
-+	uint32_t symbol_table;	/* symbol table offset */
-+	uint32_t symbols;	/* number of symbols */
-+	uint16_t opt_hdr_size;	/* size of optional header */
-+	uint16_t flags;		/* flags */
-+};
-+
-+/* the fact that pe32 isn't padded where pe32+ is 64-bit means union won't
-+ * work right.  vomit. */
-+struct pe32_opt_hdr {
-+	/* "standard" header */
-+	uint16_t magic;		/* file type */
-+	uint8_t  ld_major;	/* linker major version */
-+	uint8_t  ld_minor;	/* linker minor version */
-+	uint32_t text_size;	/* size of text section(s) */
-+	uint32_t data_size;	/* size of data section(s) */
-+	uint32_t bss_size;	/* size of bss section(s) */
-+	uint32_t entry_point;	/* file offset of entry point */
-+	uint32_t code_base;	/* relative code addr in ram */
-+	uint32_t data_base;	/* relative data addr in ram */
-+	/* "windows" header */
-+	uint32_t image_base;	/* preferred load address */
-+	uint32_t section_align;	/* alignment in bytes */
-+	uint32_t file_align;	/* file alignment in bytes */
-+	uint16_t os_major;	/* major OS version */
-+	uint16_t os_minor;	/* minor OS version */
-+	uint16_t image_major;	/* major image version */
-+	uint16_t image_minor;	/* minor image version */
-+	uint16_t subsys_major;	/* major subsystem version */
-+	uint16_t subsys_minor;	/* minor subsystem version */
-+	uint32_t win32_version;	/* reserved, must be 0 */
-+	uint32_t image_size;	/* image size */
-+	uint32_t header_size;	/* header size rounded up to
-+				   file_align */
-+	uint32_t csum;		/* checksum */
-+	uint16_t subsys;	/* subsystem */
-+	uint16_t dll_flags;	/* more flags! */
-+	uint32_t stack_size_req;/* amt of stack requested */
-+	uint32_t stack_size;	/* amt of stack required */
-+	uint32_t heap_size_req;	/* amt of heap requested */
-+	uint32_t heap_size;	/* amt of heap required */
-+	uint32_t loader_flags;	/* reserved, must be 0 */
-+	uint32_t data_dirs;	/* number of data dir entries */
-+};
-+
-+struct pe32plus_opt_hdr {
-+	uint16_t magic;		/* file type */
-+	uint8_t  ld_major;	/* linker major version */
-+	uint8_t  ld_minor;	/* linker minor version */
-+	uint32_t text_size;	/* size of text section(s) */
-+	uint32_t data_size;	/* size of data section(s) */
-+	uint32_t bss_size;	/* size of bss section(s) */
-+	uint32_t entry_point;	/* file offset of entry point */
-+	uint32_t code_base;	/* relative code addr in ram */
-+	/* "windows" header */
-+	uint64_t image_base;	/* preferred load address */
-+	uint32_t section_align;	/* alignment in bytes */
-+	uint32_t file_align;	/* file alignment in bytes */
-+	uint16_t os_major;	/* major OS version */
-+	uint16_t os_minor;	/* minor OS version */
-+	uint16_t image_major;	/* major image version */
-+	uint16_t image_minor;	/* minor image version */
-+	uint16_t subsys_major;	/* major subsystem version */
-+	uint16_t subsys_minor;	/* minor subsystem version */
-+	uint32_t win32_version;	/* reserved, must be 0 */
-+	uint32_t image_size;	/* image size */
-+	uint32_t header_size;	/* header size rounded up to
-+				   file_align */
-+	uint32_t csum;		/* checksum */
-+	uint16_t subsys;	/* subsystem */
-+	uint16_t dll_flags;	/* more flags! */
-+	uint64_t stack_size_req;/* amt of stack requested */
-+	uint64_t stack_size;	/* amt of stack required */
-+	uint64_t heap_size_req;	/* amt of heap requested */
-+	uint64_t heap_size;	/* amt of heap required */
-+	uint32_t loader_flags;	/* reserved, must be 0 */
-+	uint32_t data_dirs;	/* number of data dir entries */
-+};
-+
-+struct data_dirent {
-+	uint32_t virtual_address;	/* relative to load address */
-+	uint32_t size;
-+};
-+
-+struct data_directory {
-+	struct data_dirent exports;		/* .edata */
-+	struct data_dirent imports;		/* .idata */
-+	struct data_dirent resources;		/* .rsrc */
-+	struct data_dirent exceptions;		/* .pdata */
-+	struct data_dirent certs;		/* certs */
-+	struct data_dirent base_relocations;	/* .reloc */
-+	struct data_dirent debug;		/* .debug */
-+	struct data_dirent arch;		/* reservered */
-+	struct data_dirent global_ptr;		/* global pointer reg. Size=0 */
-+	struct data_dirent tls;			/* .tls */
-+	struct data_dirent load_config;		/* load configuration structure */
-+	struct data_dirent bound_imports;	/* no idea */
-+	struct data_dirent import_addrs;	/* import address table */
-+	struct data_dirent delay_imports;	/* delay-load import table */
-+	struct data_dirent clr_runtime_hdr;	/* .cor (object only) */
-+	struct data_dirent reserved;
-+};
-+
-+struct section_header {
-+	char name[8];			/* name or "/12\0" string tbl offset */
-+	uint32_t virtual_size;		/* size of loaded section in ram */
-+	uint32_t virtual_address;	/* relative virtual address */
-+	uint32_t raw_data_size;		/* size of the section */
-+	uint32_t data_addr;		/* file pointer to first page of sec */
-+	uint32_t relocs;		/* file pointer to relocation entries */
-+	uint32_t line_numbers;		/* line numbers! */
-+	uint16_t num_relocs;		/* number of relocations */
-+	uint16_t num_lin_numbers;	/* srsly. */
-+	uint32_t flags;
-+};
-+
-+struct win_certificate {
-+	uint32_t length;
-+	uint16_t revision;
-+	uint16_t cert_type;
-+};
-+
-+/*
-+ * Return -1 if not PE, else offset of the PE header
-+ */
-+static int get_pehdr_offset(const char *buf)
-+{
-+	int pe_hdr_offset;
-+
-+	pe_hdr_offset = *((int *)(buf + 0x3c));
-+	buf += pe_hdr_offset;
-+	if (!!memcmp(buf, "PE\0\0", 4)) {
-+		printf("Not a PE file\n");
-+		return -1;
-+	}
-+
-+	return pe_hdr_offset;
-+}
-+
-+#endif
-diff --git a/tools/kexec/zboot_image_builder.c b/tools/kexec/zboot_image_builder.c
-new file mode 100644
-index 0000000000000..c0a785074970e
---- /dev/null
-+++ b/tools/kexec/zboot_image_builder.c
-@@ -0,0 +1,278 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2025 Red Hat, Inc.
-+ * The zboot format carries the compressed kernel image offset and size
-+ * information in the DOS header. The program appends a bpf section to PE file,
-+ * meanwhile maintains the offset and size information, which is lost when using
-+ * objcopy to handle zboot image.
-+ */
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <stdint.h>
-+#include <unistd.h>
-+#include <sys/mman.h>
-+#include <sys/stat.h>
-+#include <fcntl.h>
-+#include "pe.h"
-+
-+#ifdef DEBUG_DETAIL
-+	#define dprintf(...) printf(__VA_ARGS__)
-+#else
-+	#define dprintf(...) ((void)0)
-+#endif
-+
-+typedef struct {
-+	union {
-+		struct {
-+			unsigned int mz_magic;
-+			char image_type[4];
-+			/* offset to the whole file start */
-+			unsigned int payload_offset;
-+			unsigned int payload_size;
-+			unsigned int reserved[2];
-+			char comp_type[4];
-+		};
-+		char raw_bytes[56];
-+	};
-+	unsigned int linux_pe_magic;
-+	/* offset at: 0x3c or 60 */
-+	unsigned int pe_header_offset;
-+} __attribute__((packed)) pe_zboot_header;
-+
-+typedef unsigned long	uintptr_t;
-+#define ALIGN_UP(p, size) (__typeof__(p))(((uintptr_t)(p) + ((size) - 1)) & ~((size) - 1))
-+
-+int main(int argc, char **argv)
-+{
-+	uint32_t payload_new_offset, payload_sect_off;
-+	uint32_t payload_size;
-+	uint32_t payload_sect_idx;
-+	pe_zboot_header *zheader;
-+	struct pe_hdr *pe_hdr;
-+	struct pe32plus_opt_hdr *opt_hdr;
-+	int base_fd, out_fd;
-+	char *base_start_addr, *base_cur;
-+	char *out_start_addr, *out_cur;
-+	uint32_t out_sz, max_va_end = 0;
-+	struct stat sb;
-+	int i = 0, ret = 0;
-+
-+	if (argc != 4) {
-+	    fprintf(stderr, "Usage: %s <original_pe> <binary_file> <new_pe>\n", argv[0]);
-+	    return -1;
-+	}
-+
-+	const char *original_pe = argv[1];
-+	const char *binary_file = argv[2];
-+	const char *new_pe = argv[3];
-+	FILE *bin_fp = fopen(binary_file, "rb");
-+	if (!bin_fp) {
-+	    perror("Failed to open binary file");
-+	    return -1;
-+	}
-+	fseek(bin_fp, 0, SEEK_END);
-+	size_t bin_size = ftell(bin_fp);
-+	fseek(bin_fp, 0, SEEK_SET);
-+	base_fd = open(original_pe, O_RDWR);
-+	out_fd = open(new_pe, O_RDWR | O_CREAT, 0644);
-+	if (base_fd == -1 || out_fd == -1) {
-+	    perror("Error opening file");
-+	    exit(1);
-+	}
-+
-+	if (fstat(base_fd, &sb) == -1) {
-+	    perror("Error getting file size");
-+	    exit(1);
-+	}
-+	base_start_addr = mmap(NULL, sb.st_size, PROT_READ, MAP_SHARED, base_fd, 0);
-+	if (base_start_addr == MAP_FAILED) {
-+	    perror("Error mmapping the file");
-+	    exit(1);
-+	}
-+	/* 64KB for section table extending */
-+	out_sz = sb.st_size + bin_size + (1 << 16);
-+	out_start_addr = mmap(NULL, out_sz, PROT_WRITE, MAP_SHARED, out_fd, 0);
-+	if (ftruncate(out_fd, out_sz) == -1) {
-+		perror("Failed to resize output file");
-+		ret = -1;
-+		goto err;
-+	}
-+	if (out_start_addr == MAP_FAILED) {
-+	    perror("Error mmapping the file");
-+	    exit(1);
-+	}
-+
-+	zheader = (pe_zboot_header *)base_start_addr;
-+	if (zheader->mz_magic != 0x5A4D) {  // 'MZ'
-+	    fprintf(stderr, "Invalid DOS signature\n");
-+	    return -1;
-+	}
-+	uint32_t pe_hdr_offset = get_pehdr_offset((const char *)base_start_addr);
-+	base_cur = base_start_addr + pe_hdr_offset;
-+	pe_hdr = (struct pe_hdr *)base_cur;
-+	if (pe_hdr->magic!= 0x00004550) {  // 'PE\0\0'
-+	    fprintf(stderr, "Invalid PE signature\n");
-+	    return -1;
-+	}
-+	base_cur += sizeof(struct pe_hdr);
-+	opt_hdr = (struct pe32plus_opt_hdr *)base_cur;
-+	uint32_t file_align = opt_hdr->file_align;
-+	uint32_t section_alignment = opt_hdr->section_align;
-+
-+	uint16_t num_sections = pe_hdr->sections;
-+	struct section_header *base_sections, *sect;
-+	uint32_t section_table_offset = pe_hdr_offset + sizeof(struct pe_hdr) + pe_hdr->opt_hdr_size;
-+	base_sections = (struct section_header *)(base_start_addr + section_table_offset);
-+
-+	/* Decide the section idx and the payload offset within the section */
-+	for (i = 0; i < num_sections; i++) {
-+	    sect = &base_sections[i];
-+	    if (zheader->payload_offset >= sect->data_addr &&
-+		zheader->payload_offset < (sect->data_addr + sect->raw_data_size)) {
-+		    payload_sect_idx = i;
-+		    payload_sect_off = zheader->payload_offset - sect->data_addr;
-+	    }
-+	}
-+
-+	/* Calculate the end of the last section in virtual memory */
-+	for (i = 0; i < num_sections; i++) {
-+	    uint32_t section_end = base_sections[i].virtual_address + base_sections[i].virtual_size;
-+	    if (section_end > max_va_end) {
-+	        max_va_end = section_end;
-+	    }
-+	}
-+
-+	/* Calculate virtual address for the new .bpf section */
-+	uint32_t bpf_virtual_address = ALIGN_UP(max_va_end, section_alignment);
-+
-+	pe_zboot_header *new_zhdr = malloc(sizeof(pe_zboot_header));
-+	memcpy(new_zhdr, zheader, sizeof(pe_zboot_header));
-+	struct pe_hdr *new_hdr = malloc(sizeof(struct pe_hdr));
-+	memcpy(new_hdr, pe_hdr, sizeof(struct pe_hdr));
-+	new_hdr->sections += 1;
-+	struct pe32plus_opt_hdr *new_opt_hdr = malloc(pe_hdr->opt_hdr_size);
-+	memcpy(new_opt_hdr, opt_hdr, pe_hdr->opt_hdr_size);
-+	/* Create new section headers array (original + new section) */
-+	struct section_header *new_sections = calloc(1, new_hdr->sections * sizeof(struct section_header));
-+	if (!new_sections) {
-+	    perror("Failed to allocate memory for new section headers");
-+	    return -1;
-+	}
-+	memcpy(new_sections, base_sections, pe_hdr->sections * sizeof(struct section_header));
-+
-+	/* Configure the new .bpf section */
-+	struct section_header *bpf_section = &new_sections[new_hdr->sections - 1];
-+	memset(bpf_section, 0, sizeof(struct section_header));
-+	strncpy((char *)bpf_section->name, ".bpf", 8);
-+	bpf_section->virtual_size = bin_size;
-+	bpf_section->virtual_address = bpf_virtual_address;
-+	bpf_section->raw_data_size = bin_size;
-+	bpf_section->flags = 0x40000000; //Readable
-+
-+	/* Update headers */
-+	uint32_t new_size_of_image = bpf_section->virtual_address + bpf_section->virtual_size;
-+	new_size_of_image = ALIGN_UP(new_size_of_image, section_alignment);
-+	new_opt_hdr->image_size = new_size_of_image;
-+
-+	size_t section_table_size = new_hdr->sections * (sizeof(struct section_header));
-+	size_t headers_size = section_table_offset + section_table_size;
-+	size_t aligned_headers_size = ALIGN_UP(headers_size, file_align);
-+	new_opt_hdr->header_size = aligned_headers_size;
-+
-+
-+	uint32_t current_offset = aligned_headers_size;
-+	/*
-+	 * If the original PE data_addr is covered by enlarged header_size
-+	 * re-assign new data_addr for all sections
-+	 */
-+	if (base_sections[0].data_addr < aligned_headers_size) {
-+		for (i = 0; i < new_hdr->sections; i++) {
-+		    new_sections[i].data_addr = current_offset;
-+		    current_offset += ALIGN_UP(new_sections[i].raw_data_size, file_align);
-+		}
-+	/* Keep unchanged, just allocating file pointer for bpf section */
-+	} else {
-+		uint32_t t;
-+		i = new_hdr->sections - 2;
-+		t = new_sections[i].data_addr + new_sections[i].raw_data_size;
-+		i++;
-+		new_sections[i].data_addr = ALIGN_UP(t, file_align);
-+	}
-+
-+	payload_new_offset = new_sections[payload_sect_idx].data_addr + payload_sect_off;
-+	/* Update */
-+	new_zhdr->payload_offset = payload_new_offset;
-+	new_zhdr->payload_size = zheader->payload_size;
-+	dprintf("zboot payload_offset updated from 0x%x to 0x%x, size:0x%x\n",
-+		zheader->payload_offset, payload_new_offset, new_zhdr->payload_size);
-+
-+
-+	/* compose the new PE file */
-+
-+	/* Write Dos header */
-+	memcpy(out_start_addr, new_zhdr, sizeof(pe_zboot_header));
-+	out_cur = out_start_addr + pe_hdr_offset;
-+
-+	/* Write PE header */
-+	memcpy(out_cur, new_hdr, sizeof(struct pe_hdr));
-+	out_cur += sizeof(struct pe_hdr);
-+
-+	/* Write PE optional header */
-+	memcpy(out_cur, new_opt_hdr, new_hdr->opt_hdr_size);
-+	out_cur += new_hdr->opt_hdr_size;
-+
-+	/* Write all section headers */
-+	memcpy(out_cur, new_sections, new_hdr->sections * sizeof(struct section_header));
-+
-+	/* Skip padding and copy the section data */
-+	for (i = 0; i < pe_hdr->sections; i++) {
-+		base_cur = base_start_addr + base_sections[i].data_addr;
-+		out_cur = out_start_addr + new_sections[i].data_addr;
-+		memcpy(out_cur, base_cur, base_sections[i].raw_data_size);
-+	}
-+	msync(out_start_addr, new_sections[i].data_addr + new_sections[i].raw_data_size, MS_ASYNC);
-+	/* For the bpf section */
-+	out_cur = out_start_addr + new_sections[i].data_addr;
-+
-+	/* Write .bpf section data */
-+	char *bin_data = calloc(1, bin_size);
-+	if (!bin_data) {
-+		perror("Failed to allocate memory for binary data");
-+		free(new_sections);
-+		ret = -1;
-+		goto err;
-+	}
-+	if (fread(bin_data, bin_size, 1, bin_fp) != 1) {
-+		perror("Failed to read binary data");
-+		free(bin_data);
-+		free(new_sections);
-+		ret = -1;
-+		goto err;
-+	}
-+
-+	if (out_cur + bin_size > out_start_addr + out_sz) {
-+	    perror("out of out_fd mmap\n");
-+	    ret = -1;
-+	    goto err;
-+	}
-+	memcpy(out_cur, bin_data, bin_size);
-+	/* calculate the real size */
-+	out_sz = out_cur + bin_size - out_start_addr;
-+	msync(out_start_addr, out_sz, MS_ASYNC);
-+	/* truncate to the real size */
-+	if (ftruncate(out_fd, out_sz) == -1) {
-+		perror("Failed to resize output file");
-+		ret = -1;
-+		goto err;
-+	}
-+	printf("Create a new PE file with bpf section: %s\n", new_pe);
-+err:
-+	munmap(out_start_addr, out_sz);
-+	munmap(base_start_addr, sb.st_size);
-+	close(base_fd);
-+	close(out_fd);
-+	fclose(bin_fp);
-+
-+	return ret;
-+}
--- 
-2.49.0
+Now this commit can not be applied to the 6.19-rc5.
 
+Zhu Yanjun
 
