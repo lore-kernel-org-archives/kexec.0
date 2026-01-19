@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E003D29C5F
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 401B1CCF2F7
 	for <kexec@archiver.kernel.org>; Mon, 19 Jan 2026 18:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,46 +12,46 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	References:In-Reply-To:Message-Id:MIME-Version:Content-Type:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZCKEgplfWyZunSYkW4Ar+6dMYmq98YIAcP4aOXLrOP0=; b=yjY+kIhiGvv/W86fIj52YH0d6W
-	+mP3E5ZK8ojKV2Hrrxbg90adIUZDkn2BDkCkcZAeqsBWN551Axhb4kjfo2OEBUItdsj268T1f5570
-	EsFU9qHSrCf6q6dHpKN9IIlcK+eS32bGeSx8uQ/jBTEWsNDDyp8mAn+Ppsdd1CSdUxXptCg54uDjN
-	7a3RZdbd2IG8ATywIu9r4BzVKC6s21akcv9KNy2lJY7L9Pl+iryOeIrjhmlL8Ki56zjWIzFXN5DNk
-	SeadWKNgLP7bguB5pP77aenBBrkn2LUSQ3zDBSDJbg6K82FRYRE+0GOPtQqGRrXV7nU+q10CzpVt9
-	FOFS6pOg==;
+	bh=daRjYPvktAUimNvs8q3hMxnSVH4fnHMajUr2DzuSVtw=; b=uY/pSqOKVMq1QYG/P73L+sQkU/
+	ayBsZsbfltOmIIphQSw14KNPWrmxlVLd4swc0501LuEAhNZEOeMaIamVsfZL2QbIR26mf2ZGUIGh3
+	trqpD4kYERTxSY+5klz3QJuHH8UT3fsn5fLSbrodVb1rCNqnQV/OjTt7crjYfQv0OO7D5IGmfUsLT
+	jwJuithSWj1UZxoAXRj9hE3DpdfhHViP3bRFQV9pl+vItu/4FdpZ2fgJSvrrsqEI89pzrhy4pa3M7
+	Cm+lTRpcQL8m7ZC/eTbCXMPKH/S8+AxZHiqQYNFRNbRDdQRlxqyaYLaJzmziIbd4tpgpRUhBG7g1A
+	F8NT2nuQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vhuG6-00000002jcd-3seu;
+	id 1vhuG6-00000002jc9-2guU;
 	Mon, 19 Jan 2026 18:45:50 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vhuG2-00000002jZO-3Qym
+	id 1vhuFy-00000002jX3-3wuZ
 	for kexec@lists.infradead.org;
-	Mon, 19 Jan 2026 18:45:49 +0000
+	Mon, 19 Jan 2026 18:45:43 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 4341460156;
-	Mon, 19 Jan 2026 18:45:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BFECC2BC9E;
-	Mon, 19 Jan 2026 18:45:45 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 6143F6014E;
+	Mon, 19 Jan 2026 18:45:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACDA0C19422;
+	Mon, 19 Jan 2026 18:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768848346;
-	bh=yTzhnxNPfBjOv4A7Jf5ZH8irOVDGh2doSfoTA1eXI+Y=;
+	s=k20201202; t=1768848342;
+	bh=ZTIje7WATkqMH4x3QflgRA4cjG+o9UVX2c4ymxmpl3U=;
 	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-	b=jpF8sx9yoPBK+75kbwEK/XDb70QQw06hL19NghwrNXIbWlVRW+qpdggcZmPJqCnIZ
-	 xf7Xoa3xS4tsjCL+FN1anhTSqb3VlI3SLcIIDyrFqetIi65PHdgI+YtkFT8tUA6kXc
-	 GyX/wUtM1+grvip66TDHhOMCmDVRxniustnSTJ+mPAmelDj/1NiLniFysOT30vucZQ
-	 IRf5NlOtGqotpRWMhGqKP72SohWKAP3pfyV/bbUpKs+j7dLRE3kKAkQOloY0OyciPi
-	 9f1gU/xqpmuMP82pIK3eKiVnig2KyYPM5+IXEtpQnDpRgEO7Ge+5r4BQIWtaX1TV3o
-	 No1BBljt/DynQ==
-Content-Type: multipart/mixed; boundary="===============3750611079457372937=="
+	b=Ih+ATkmj3i3VhCFeNiT4Y2CJPVXo70WyKD6Vin9NZlO8KqGVvlHTWAycM7p8YysDR
+	 656miIoTVZ3EMb2QYzDhcvWF5381V6SYBjoSLG3dRzfv0Hq+0zOIbbGdyEBlKUwhSO
+	 lngsH3Yg7FAnghAWusJXGuEKuX0+mkMy/AE7ifP+SyYkjIbjb6chaXUdAWMHVjRhSp
+	 j3LXgX6EYJ6KnKfD5LiRNwgQHK04xFbkXsvNtJ4uugZtDXHwDSPBa7Hg0BlfmhaO3W
+	 3VWhLfWqqjNKW0naKnOB0XUuR8Lr1rptN/XADkcaqJNEN2nMbXXYovJ/54M1OkpWbJ
+	 j/YOvAav+3vVg==
+Content-Type: multipart/mixed; boundary="===============2133534859589085953=="
 MIME-Version: 1.0
-Message-Id: <b66d576d542b902d53ae283373b076be72b6c39b2a2a9d0ed5fd401664c6ba11@mail.kernel.org>
-In-Reply-To: <20260119032424.10781-3-piliu@redhat.com>
-References: <20260119032424.10781-3-piliu@redhat.com>
-Subject: Re: [PATCHv6 02/13] kexec_file: Move signature validation ahead
+Message-Id: <7509e4d1cd0a1a8a0f2b1a33c8a1f503e7275c826f9fc138e8cb2f12c4add8ec@mail.kernel.org>
+In-Reply-To: <20260119032424.10781-5-piliu@redhat.com>
+References: <20260119032424.10781-5-piliu@redhat.com>
+Subject: Re: [PATCHv6 04/13] kexec_file: Use bpf-prog to decompose image
 From: bot+bpf-ci@kernel.org
 To: piliu@redhat.com,kexec@lists.infradead.org
 Cc: piliu@redhat.com,davem@davemloft.net,ast@kernel.org,daniel@iogearbox.net,john.fastabend@gmail.com,andrii@kernel.org,martin.lau@linux.dev,eddyz87@gmail.com,song@kernel.org,yonghong.song@linux.dev,jeremy.linton@arm.com,catalin.marinas@arm.com,will@kernel.org,ardb@kernel.org,horms@kernel.org,kraxel@redhat.com,vkuznets@redhat.com,prudo@redhat.com,vmalik@redhat.com,kernel@jfarr.cc,bhe@redhat.com,dyoung@redhat.com,akpm@linux-foundation.org,bpf@vger.kernel.org,systemd-devel@lists.freedesktop.org,linux-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Mon, 19 Jan 2026 18:45:45 +0000 (UTC)
+Date: Mon, 19 Jan 2026 18:45:41 +0000 (UTC)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -66,66 +66,131 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
---===============3750611079457372937==
+--===============2133534859589085953==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index eb62a9794242..0222d17072d4 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -231,18 +231,19 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
->  	kexec_dprintk("kernel: %p kernel_size: %#lx\n",
->  		      image->kernel_buf, image->kernel_buf_len);
->
-> -	/* Call arch image probe handlers */
-> -	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
-> -					    image->kernel_buf_len);
-> -	if (ret)
-> -		goto out;
-> -
->  #ifdef CONFIG_KEXEC_SIG
->  	ret = kimage_validate_signature(image);
->
->  	if (ret)
->  		goto out;
->  #endif
-
-Does this reordering break signature verification? The kimage_validate_signature()
-function calls kexec_image_verify_sig(), which accesses image->fops->verify_sig:
-
-  static int kexec_image_verify_sig(struct kimage *image, void *buf,
-                                    unsigned long buf_len)
-  {
-      if (!image->fops || !image->fops->verify_sig) {
-          pr_debug("kernel loader does not support signature verification.\n");
-          return -EKEYREJECTED;
-      }
-      return image->fops->verify_sig(buf, buf_len);
-  }
-
-However, image->fops is set by arch_kexec_kernel_image_probe() via
-kexec_image_probe_default(), which now runs after kimage_validate_signature().
-Since the kimage struct is zero-initialized by do_kimage_alloc_init(),
-image->fops will be NULL when kexec_image_verify_sig() is called.
-
-With this ordering, kexec_image_verify_sig() will always return -EKEYREJECTED.
-When CONFIG_KEXEC_SIG_FORCE is enabled (sig_enforce = true), this causes
-kimage_validate_signature() to return the error and kexec_file_load() fails.
-
-Is this intentional, or should arch_kexec_kernel_image_probe() remain before
-the signature validation call?
-
-> +
-> +	/* Call arch image probe handlers */
-> +	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
-> +					    image->kernel_buf_len);
-> +	if (ret)
-> +		goto out;
-> +
+> diff --git a/kernel/kexec_bpf_loader.c b/kernel/kexec_bpf_loader.c
+> new file mode 100644
+> index 000000000000..dc59e1389da9
+> --- /dev/null
+> +++ b/kernel/kexec_bpf_loader.c
 
 [ ... ]
+
+> +struct kexec_context {
+> +	bool kdump;
+> +	char *kernel;
+> +	int kernel_sz;
+> +	char *initrd;
+> +	int initrd_sz;
+> +	char *cmdline;
+> +	int cmdline_sz;
+> +};
+
+The *_sz fields here are int, but image->kernel_buf_len and related fields
+are unsigned long. Could this cause truncation issues for buffers larger
+than INT_MAX?
+
+[ ... ]
+
+> +int decompose_kexec_image(struct kimage *image, int extended_fd)
+> +{
+> +	struct kexec_context context = { 0 };
+> +	struct bpf_parser_context *bpf;
+> +	unsigned long kernel_sz, bpf_sz;
+> +	char *kernel_start, *bpf_start;
+> +	int ret = 0;
+> +
+> +	if (image->type != KEXEC_TYPE_CRASH)
+> +	        context.kdump = false;
+> +	else
+> +	        context.kdump = true;
+> +
+> +	kernel_start = image->kernel_buf;
+> +	kernel_sz = image->kernel_buf_len;
+> +
+> +	while (file_has_bpf_section(kernel_start, kernel_sz)) {
+
+With the placeholder arm_bpf_prog/disarm_bpf_prog functions that do nothing,
+if an image has a .bpf section, won't this loop iterate forever? The BPF
+program is supposed to modify context.kernel to point to the inner content,
+but without a real implementation, context.kernel stays unchanged after
+kexec_image_parser_anchor() returns.
+
+Note: commit 59dbdff4e55b ("kexec_file: Integrate bpf light skeleton to load
+image with bpf-prog") later in the series fills in these placeholders.
+
+> +		bpf = alloc_bpf_parser_context(kexec_buff_parser, &context);
+> +		if (!bpf)
+> +			return -ENOMEM;
+
+[ ... ]
+
+> +		kernel_start = context.kernel;
+> +		kernel_sz = context.kernel_sz;
+> +
+> +		/*
+> +		 * detach the current bpf-prog from their attachment points.
+> +		 */
+> +		disarm_bpf_prog();
+> +		put_bpf_parser_context(bpf);
+> +	}
+> +
+> +	/*
+> +	 * image's kernel_buf, initrd_buf, cmdline_buf are set. Now they should
+> +	 * be updated to the new content.
+> +	 */
+> +	image->kernel_buf = context.kernel;
+> +	image->kernel_buf_len = context.kernel_sz;
+> +	image->initrd_buf = context.initrd;
+> +	image->initrd_buf_len = context.initrd_sz;
+> +	image->cmdline_buf = context.cmdline;
+> +	image->cmdline_buf_len = context.cmdline_sz;
+
+When the kernel image has no .bpf section, the while loop never executes.
+In that case, context.kernel remains NULL (from the zero initializer), and
+these lines set image->kernel_buf = NULL, image->kernel_buf_len = 0.
+
+This appears to leak the original image->kernel_buf that was allocated by
+kernel_read_file_from_fd() in kimage_file_prepare_segments(). The subsequent
+arch_kexec_kernel_image_probe() call then receives NULL instead of the valid
+kernel buffer.
+
+Should there be a check to preserve the original buffers when no
+decomposition occurred?
+
+> +
+> +	return 0;
+
+[ ... ]
+
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 0222d17072d4..f9674bb5bd8d 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -238,7 +238,14 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>  		goto out;
+>  #endif
+>
+> +	if (IS_ENABLED(CONFIG_KEXEC_BPF))
+> +		decompose_kexec_image(image, initrd_fd);
+
+The return value of decompose_kexec_image() is ignored here. If it returns
+an error (e.g., -ENOMEM from alloc_bpf_parser_context()), the function
+continues with potentially corrupted state instead of propagating the error.
+
+Should this check the return value and goto out on failure?
+
+> +
+> +	/*
+> +	 * From this point, the kexec subsystem handle the kernel boot protocol.
+> +	 *
+> +	 * Call arch image probe handlers
+> +	 */
+>  	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
+>  					    image->kernel_buf_len);
 
 
 ---
@@ -134,5 +199,5 @@ See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
 CI run summary: https://github.com/kernel-patches/bpf/actions/runs/21147860407
 
---===============3750611079457372937==--
+--===============2133534859589085953==--
 
