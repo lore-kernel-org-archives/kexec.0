@@ -4,63 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9B2B1D29C50
-	for <kexec@archiver.kernel.org>; Mon, 19 Jan 2026 18:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 76BEBD29C5F
+	for <kexec@archiver.kernel.org>; Mon, 19 Jan 2026 18:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:Cc:To:From:Subject:
+	References:In-Reply-To:Message-Id:MIME-Version:Content-Type:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=1f2oPOqAYByozw+PIAV4Leo7Wp4BePrrwg2Br+G5G0g=; b=zF1Ae1nUS7Hd4aLSevTpGKpX/L
-	LbjuA9vg/lYMISYFzVnzHHxpauN42KIbCdDNCV360WGzjsR1PuxqmpwmwFyfy3tHVf3XhBpstal18
-	M0q8WYSsoeuAfS/xOXDD0Fo2oxUKKwDv408099sf2VZm4pgTTxwwu6b45/6EZrl92+o2dWPiGaWqK
-	BIadV+8Jx1B9MGANpzy/Raov+LydMnsrh1VfE0fcFHambKYhcYT7aKv7hs04hGgIDLNG3UYN6tMtt
-	mwXruur7SMa8GNZPYlhiNl1uFCPq21Zmf3CDPYMRa4ngTZ6wZ6XkaU8VvGSeP/PtzP74zHudlBAB+
-	6M81FVhA==;
+	bh=ghQ4/MlS6QR/2l4DU4CYypjGattynpVfd3dWeOTY38k=; b=RmKAZiCZqbTbz1+qzJq8+SGmHC
+	bMPs+2DRgXbXGtu841ko8Svqh0IPJo4Si+bwZZW4KJRSEuMCiS8lu3hf/i8V/AnXM37MrP/vF8cjD
+	im1gWQmkSfsANEhurQ/KQhDh3M890mQjG4oy3MOrVrBX19Rdu9g7I58Q9jpGUdx4M7JuIBXa+39sY
+	zzjbe4BZuwfdfT4wUkKDFO5Wmfoi2K6cHVWEnL9/MsCO5A0fnv9Zc2X4uJxjc9I7oNreSZTviZmXW
+	X/jTKYrC/CgGPjmDkLMMnQ2teM0XcXOdJHe7Co9JRDfvbw2aNKVWH56T6oDhjKKL4XubXuZA8DmP/
+	QMJJORfA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vhuDh-00000002jJI-07eC;
-	Mon, 19 Jan 2026 18:43:21 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1vhuFv-00000002jVj-3coC;
+	Mon, 19 Jan 2026 18:45:39 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vhuDf-00000002jJC-3JlA
+	id 1vhuFq-00000002jUV-3viz
 	for kexec@lists.infradead.org;
-	Mon, 19 Jan 2026 18:43:19 +0000
+	Mon, 19 Jan 2026 18:45:38 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 3975B60054;
-	Mon, 19 Jan 2026 18:43:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF682C116C6;
-	Mon, 19 Jan 2026 18:43:14 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 4053D41AEA;
+	Mon, 19 Jan 2026 18:45:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CCFFC116C6;
+	Mon, 19 Jan 2026 18:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768848198;
-	bh=0jusXPuIwXIPjxzuxFwH6bINDFwmNsrGqBF1AyAan4c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YM0QqjqdUWbm50XeI0p+NG1eLf0kzunlAOfcRNZ0NB853n0+RKvlIUwYvlshIg0+W
-	 Zk3SQfmJqf89mLGzySXSdjkp+9F0et7hr7pZgBbHWzx4FMbWHAImWbAfe27haI2Fce
-	 NredufFmP9X9HwEpeZbpxUfaZi7kF1xM56WGMid0jC6/4zEVdDLBXriJ6k+jZmw1IY
-	 1j7yON5Qk3ZJa4NtiBder0W/z//vg4Ss6OM4tywuYtvl7lZW8T4eVoKzXwYKHxiORs
-	 HyGK2e5M6HQfm11Y4SqNf21eieyjng6xKG/NVn/0xs/YcJj2ucoOlLy/LIWX2aG2nf
-	 BEcLSVND6WvFQ==
-Date: Mon, 19 Jan 2026 20:43:10 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Jason Miu <jasonmiu@google.com>
-Cc: Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>,
-	David Matlack <dmatlack@google.com>,
-	David Rientjes <rientjes@google.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v7 0/2] Make KHO Stateless
-Message-ID: <aW57Pn4gj8lHoOO3@kernel.org>
-References: <20260116034432.1520731-1-jasonmiu@google.com>
+	s=k20201202; t=1768848333;
+	bh=eup11xvEgVwMgD+DiLklnJEQk5sM9viYzoAkrrjZKN0=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+	b=b22nm1dlaQzLWyS8+pjhpoMfuJqNqiLM0EOUQA0mZ9gWRnr6ofyA7piQjQXp6Aj9+
+	 8NrbvpXVzgGo6yNm292b0yZSpOW/lrsFyk9oHWGPQ/OKUPIERG4S8TtUO6oYbsiQL9
+	 Wr9uOxWG1rY/iTRx+SUuErmJSNrnH309bS8VoEh+cDxxv5cSqLI7R83oJ7wEyjD4cF
+	 W3rAv/6/7ELmMKLG4Rj6DfeSNPJddbvUeAlEK7fi4tEVYK3aSZQ+ubWVdOO6b+2glb
+	 3yXZsze+qFM9wgixXg5AxH3LwmE6fCY1+KjqT2H3Mi/PsGL2ed4imPccvx3msIWMnZ
+	 DcRaN3IF4nt3Q==
+Content-Type: multipart/mixed; boundary="===============0317604263355170277=="
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260116034432.1520731-1-jasonmiu@google.com>
+Message-Id: <028f71c299f5611605a71e8765c660e34ddd74900081d61e79c33f8f2599b8c1@mail.kernel.org>
+In-Reply-To: <20260119032424.10781-4-piliu@redhat.com>
+References: <20260119032424.10781-4-piliu@redhat.com>
+Subject: Re: [PATCHv6 03/13] kexec_file: Introduce routines to parse PE file
+From: bot+bpf-ci@kernel.org
+To: piliu@redhat.com,kexec@lists.infradead.org
+Cc: piliu@redhat.com,davem@davemloft.net,ast@kernel.org,daniel@iogearbox.net,john.fastabend@gmail.com,andrii@kernel.org,martin.lau@linux.dev,eddyz87@gmail.com,song@kernel.org,yonghong.song@linux.dev,jeremy.linton@arm.com,catalin.marinas@arm.com,will@kernel.org,ardb@kernel.org,horms@kernel.org,kraxel@redhat.com,vkuznets@redhat.com,prudo@redhat.com,vmalik@redhat.com,kernel@jfarr.cc,bhe@redhat.com,dyoung@redhat.com,akpm@linux-foundation.org,bpf@vger.kernel.org,systemd-devel@lists.freedesktop.org,linux-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Mon, 19 Jan 2026 18:45:32 +0000 (UTC)
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260119_104535_023593_AC035AC7 
+X-CRM114-Status: GOOD (  18.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,75 +69,91 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Jason,
+--===============0317604263355170277==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 15, 2026 at 07:44:30PM -0800, Jason Miu wrote:
-> This series transitions KHO from an xarray-based metadata tracking system
-> with serialization to a radix tree data structure that can be passed
-> directly to the next kernel.
-> 
-> The key motivations for this change are to:
-> - Eliminate the need for data serialization before kexec.
-> - Remove the KHO finalize state.
-> - Pass preservation metadata more directly to the next kernel via the FDT.
-> 
-> The new approach uses a radix tree to mark preserved pages. A page's
-> physical address and its order are encoded into a single value. The tree
-> is composed of multiple levels of page-sized tables, with leaf nodes
-> being bitmaps where each set bit represents a preserved page. The
-> physical address of the radix tree's root is passed in the FDT, allowing
-> the next kernel to reconstruct the preserved memory map.
-> 
-> This series is broken down into the following patches:
-> 
-> 1.  kho: Adopt radix tree for preserved memory tracking:    
->     Replaces the xarray-based tracker with the new radix tree
->     implementation and increments the ABI version.
-> 
-> 2.  kho: Remove finalize state and clients:
->     Removes the now-obsolete kho_finalize() function and its usage
->     from client code and debugfs.
-> 
-> ---
-> 
-> Changelog since v6 [1]:
-> - Fixed a potential dangling pointer in kho_radix_add_page() on allocation failure
-> - Fixed a premature return in __kho_radix_walk_tree()
-> - Corrected the size type in kho_preserved_memory_reserve() to match memblock_reserve()
+> diff --git a/kernel/kexec_uefi_app.c b/kernel/kexec_uefi_app.c
+> new file mode 100644
+> index 000000000000..dbe6d76d47ff
+> --- /dev/null
+> +++ b/kernel/kexec_uefi_app.c
 
-git range-diff claims that v5, v6 and v7 are identical.
+[ ... ]
 
-Can you please verify that it's the latest version you intended to send?
- 
-> [1] https://lore.kernel.org/lkml/20260115230047.1220580-1-jasonmiu@google.com/
-> 
-> ---
-> 
-> Jason Miu (2):
->   kho: Adopt radix tree for preserved memory tracking
->   kho: Remove finalize state and clients
-> 
->  Documentation/admin-guide/mm/kho.rst        |  53 +-
->  Documentation/core-api/kho/abi.rst          |   6 +
->  Documentation/core-api/kho/index.rst        |  18 +-
->  include/linux/kho/abi/kexec_handover.h      | 144 +++-
->  include/linux/kho_radix_tree.h              |  70 ++
->  kernel/liveupdate/kexec_handover.c          | 695 ++++++++++----------
->  kernel/liveupdate/kexec_handover_debugfs.c  |  23 -
->  kernel/liveupdate/kexec_handover_internal.h |   3 -
->  kernel/liveupdate/luo_core.c                |  12 +-
->  kernel/liveupdate/luo_flb.c                 |   2 +-
->  tools/testing/selftests/kho/init.c          |  20 -
->  11 files changed, 573 insertions(+), 473 deletions(-)
->  create mode 100644 include/linux/kho_radix_tree.h
-> 
-> 
-> base-commit: 9b7977f9e39b7768c70c2aa497f04e7569fd3e00
-> -- 
-> 2.52.0.457.g6b5491de43-goog
-> 
+> +static bool is_valid_pe(const char *kernel_buf, unsigned long kernel_len)
+> +{
+> +	struct mz_hdr *mz;
+> +	struct pe_hdr *pe;
+> +
+> +	if (!kernel_buf)
+> +		return false;
+> +	mz = (struct mz_hdr *)kernel_buf;
+> +	if (mz->magic != IMAGE_DOS_SIGNATURE)
+> +		return false;
+> +	pe = (struct pe_hdr *)(kernel_buf + mz->peaddr);
 
--- 
-Sincerely yours,
-Mike.
+The kernel_len parameter is declared but never used in this function.
+Should this validate that mz->peaddr is within bounds of kernel_len before
+accessing pe->magic? If mz->peaddr is larger than the buffer size, this
+would read out of bounds.
+
+> +	if (pe->magic != IMAGE_NT_SIGNATURE)
+> +		return false;
+> +	if (pe->opt_hdr_size == 0) {
+> +		pr_err("optional header is missing\n");
+> +		return false;
+> +	}
+> +	return true;
+> +}
+
+[ ... ]
+
+> +int pe_get_section(const char *file_buf, const char *sect_name,
+> +		char **sect_start, unsigned long *sect_sz)
+> +{
+> +	struct pe_hdr *pe_hdr;
+> +	struct pe32plus_opt_hdr *opt_hdr;
+> +	struct section_header *sect_hdr;
+> +	int section_nr, i;
+> +	struct mz_hdr *mz = (struct mz_hdr *)file_buf;
+> +
+> +	*sect_start = NULL;
+> +	*sect_sz = 0;
+> +	pe_hdr = (struct pe_hdr *)(file_buf + mz->peaddr);
+> +	section_nr = pe_hdr->sections;
+> +	opt_hdr = (struct pe32plus_opt_hdr *)(file_buf + mz->peaddr +
+> +				sizeof(struct pe_hdr));
+> +	sect_hdr = (struct section_header *)((char *)opt_hdr +
+> +				pe_hdr->opt_hdr_size);
+> +
+> +	for (i = 0; i < section_nr; i++) {
+
+pe_get_section() has no buffer size parameter. The values of mz->peaddr,
+pe_hdr->sections, and pe_hdr->opt_hdr_size are all read from the PE file
+content. If the file is malformed or crafted, section_nr could be set to an
+arbitrarily large value, causing sect_hdr to iterate past the end of
+file_buf. Is there a way to validate these offsets against the actual
+buffer size?
+
+> +		if (strcmp(sect_hdr->name, sect_name) == 0) {
+> +			*sect_start = (char *)file_buf + sect_hdr->data_addr;
+> +			*sect_sz = sect_hdr->raw_data_size;
+> +			return 0;
+> +		}
+> +		sect_hdr++;
+> +	}
+> +
+> +	return -1;
+> +}
+
+
+---
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/21147860407
+
+--===============0317604263355170277==--
 
