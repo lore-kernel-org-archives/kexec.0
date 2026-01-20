@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 02FECCA5FB7
-	for <kexec@archiver.kernel.org>; Tue, 20 Jan 2026 17:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 85B38CA5FCC
+	for <kexec@archiver.kernel.org>; Tue, 20 Jan 2026 17:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=M/SyHKIfT52m21jYTqMJn0kce5uLNXDcSuIH1lAA/Hw=; b=uL07Ad3hgu0VQFHPTITXIeyjl0
-	cJY6JstH1Ym0oeoEZkqdvgzigVXePJ894EojDd1sb7JPZaBKpUvn2YvaPec1tspM/ByIFaWJHW5O9
-	2vPJ9GC+EYf+znaBQk2GEXvd/5jwZOqbGnG+ibbOfojhdJjw72dWtl3q3upN2c14kGAd2S0Z7EgjR
-	pFjoB087HX4brRf5H9K9pRhnUJns103d4orW4mdee/4ebxBs2u6fpyzRBG1O/jf9Q2qQ4UrYxWgS1
-	djbXYr0n7PFYOs8XkE8ELPoIUr4CUN/82aTDbihycNZYyrli++Tla+VE/8oDYSppkvVei46ojWNeX
-	vBxcuHyw==;
+	bh=MfhT75hO3NZBcebmZbN8NiQlhZEwXQzjYMHe6XNmZFw=; b=1qRWt8i7gpD1VkhdBY5xW6uMvM
+	1iu5Fo7OX473LFkVb0vivRlNycR0olha/ntjKSWGIrHpV0P9AaSboWKWDvL2hLjia8SuxrsXRoF3t
+	iLfAtDS8g2vK4IMcdta2so9bEnmUt6R8BJltlflG92q5Zmuf+7ZzKFNiEtjxwWEwl4XFxeRsGeVfd
+	UU8tj5WuBRvndM3+h1IqAZVzYY8dssLrB3bnvdvYzdu67yevU2tOCnrvhrefwQ3S37mO81TZpwzPH
+	T1Hij8CeeTuUKFiIo27phOyZ2ZF8e9hlYSf+QpAKrG8mbUiUHBMEXzTsmSIWH1ssQo3WeWlPtNYvP
+	hkdvTwMg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1viFTh-00000004EqL-0Eev;
-	Tue, 20 Jan 2026 17:25:17 +0000
+	id 1viFzB-00000004GrW-26vC;
+	Tue, 20 Jan 2026 17:57:49 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1viFTc-00000004EpZ-3klz
+	id 1viFz7-00000004Gr6-3pGp
 	for kexec@lists.infradead.org;
-	Tue, 20 Jan 2026 17:25:15 +0000
+	Tue, 20 Jan 2026 17:57:48 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 36EB0419A1;
-	Tue, 20 Jan 2026 17:25:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA1CBC16AAE;
-	Tue, 20 Jan 2026 17:25:05 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 25B5A40485;
+	Tue, 20 Jan 2026 17:57:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2854AC16AAE;
+	Tue, 20 Jan 2026 17:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768929910;
-	bh=uwcLAOQjUO7lgxgkzAkEQvTOODBzpF5UAYJY///qzRA=;
+	s=k20201202; t=1768931865;
+	bh=YpDjEfkNyumQSj2vKApRnaV2QIrJCawbl/fbFRLhjvs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YuhQzc8Vo5QgOoQr9WpCPpsmsss0Ld5GnV1/9/q1mqcvMKHE+oa93rfwoKENXXr/a
-	 ewFcnaoV4m1ruoMthZ8RU1USM8Yrby4s3UMWbtBVZHhO53uATdVtLk9WJ0zZ+NXPb9
-	 5wJ3QTmYYbuSpGNXGL4z6pg3KFAg9U5s7aW4dc5utdJHzcX2bqWafG7oh4+JBs8nOX
-	 0PZvInefyHxobeICJIRrwnX7ql0dYyws+eIerB/K3pJva2Wsm/KYak7HDCAVcGQYeb
-	 2+0rMWBXq8l4uerPAhKBVjhko1zlrLKcA7N9sITfLuGwrGDuZI5YCLoEF6BKDwMBpt
-	 ZfZxqeLfxecNw==
-Date: Tue, 20 Jan 2026 19:25:01 +0200
+	b=DTUy1n4wndhSupFBOffwXqXmKNwnFwm/n+eeE46Wo+yZ8Kbn2dJr3RrCfkJuRWYi/
+	 pEHCFCX6KfjgiR7YTg55Y0w26XvYnbzdmQ94nheoUD3Kp+DA5I427bvu4Dk3tGOsUn
+	 ymc/ptSYMFWjtFx5aIi7DLYfY3fuz83zrASsBzH9QHnR1znbtpSM8rSIeFQoa+U8c0
+	 Xt1gRRlJnxqNG7BwFNHUSTbSa5xRLwgIiIkmucPHpBhQj5ruBcA8VnCSzRk9Pyhdyz
+	 rNEAOf8tvwk9N5fkvY0MFf2b/hK2DSkRxLX0vEazp4um7ulfj2fG40UWaMrSnbdPhy
+	 P0jdxOzuBkSSg==
+Date: Tue, 20 Jan 2026 19:57:37 +0200
 From: Mike Rapoport <rppt@kernel.org>
 To: Jason Miu <jasonmiu@google.com>
 Cc: Alexander Graf <graf@amazon.com>,
@@ -54,17 +54,18 @@ Cc: Alexander Graf <graf@amazon.com>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
 	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v7 2/2] kho: Remove finalize state and clients
-Message-ID: <aW-6bdsOScsBodwe@kernel.org>
+Subject: Re: [PATCH v7 1/2] kho: Adopt radix tree for preserved memory
+ tracking
+Message-ID: <aW_CEV-Qqrj2dvEb@kernel.org>
 References: <20260116034432.1520731-1-jasonmiu@google.com>
- <20260116034432.1520731-3-jasonmiu@google.com>
+ <20260116034432.1520731-2-jasonmiu@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260116034432.1520731-3-jasonmiu@google.com>
+In-Reply-To: <20260116034432.1520731-2-jasonmiu@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260120_092512_979387_6D354231 
-X-CRM114-Status: GOOD (  49.33  )
+X-CRM114-CacheID: sfid-20260120_095746_020290_3C6FCC26 
+X-CRM114-Status: GOOD (  33.14  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,327 +80,173 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jan 15, 2026 at 07:44:32PM -0800, Jason Miu wrote:
-> Eliminate the `kho_finalize()` function and its associated state from
-> the KHO subsystem. The transition to a radix tree for memory tracking
-> makes the explicit "finalize" state and its serialization step
-> obsolete.
+Hi Jason,
+
+On Thu, Jan 15, 2026 at 07:44:31PM -0800, Jason Miu wrote:
+> Introduce a radix tree implementation for tracking preserved memory
+> pages and switch the KHO memory tracking mechanism to use it. This
+> lays the groundwork for a stateless KHO implementation that eliminates
+> the need for serialization and the associated "finalize" state.
 > 
-> Remove the `kho_finalize()` and `kho_finalized()` APIs and their stub
-> implementations. Update KHO client code and the debugfs interface to
-> no longer call or depend on the `kho_finalize()` mechanism.
+> This patch introduces the core radix tree data structures and
+> constants to the KHO ABI. It adds the radix tree node and leaf
+> structures, along with documentation for the radix tree key encoding
+> scheme that combines a page's physical address and order.
 > 
-> Complete the move towards a stateless KHO, simplifying the overall
-> design by removing unnecessary state management.
+> To support broader use by other kernel subsystems, such as hugetlb
+> preservation, the core radix tree manipulation functions are exported
+> as a public API.
+> 
+> The xarray-based memory tracking is replaced with this new radix tree
+> implementation. The core KHO preservation and unpreservation functions
+> are wired up to use the radix tree helpers. On boot, the second kernel
+> restores the preserved memory map by walking the radix tree whose root
+> physical address is passed via the FDT.
+> 
+> The ABI `compatible` version is bumped to "kho-v2" to reflect the
+> structural changes in the preserved memory map and sub-FDT property
+> names. This includes renaming "fdt" to "preserved-data" to better
+> reflect that preserved state may use formats other than FDT.
 > 
 > Signed-off-by: Jason Miu <jasonmiu@google.com>
 
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+...
 
-> ---
->  Documentation/admin-guide/mm/kho.rst        | 53 +++++----------------
->  Documentation/core-api/kho/index.rst        | 12 -----
->  kernel/liveupdate/kexec_handover.c          | 21 +-------
->  kernel/liveupdate/kexec_handover_debugfs.c  | 23 ---------
->  kernel/liveupdate/kexec_handover_internal.h |  3 --
->  kernel/liveupdate/luo_core.c                | 12 +----
->  kernel/liveupdate/luo_flb.c                 |  2 +-
->  tools/testing/selftests/kho/init.c          | 20 --------
->  8 files changed, 14 insertions(+), 132 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/mm/kho.rst b/Documentation/admin-guide/mm/kho.rst
-> index 6dc18ed4b886..454b378cf239 100644
-> --- a/Documentation/admin-guide/mm/kho.rst
-> +++ b/Documentation/admin-guide/mm/kho.rst
-> @@ -28,20 +28,10 @@ per NUMA node scratch regions on boot.
->  Perform a KHO kexec
->  ===================
->  
-> -First, before you perform a KHO kexec, you need to move the system into
-> -the :ref:`KHO finalization phase <kho-finalization-phase>` ::
-> -
-> -  $ echo 1 > /sys/kernel/debug/kho/out/finalize
-> -
-> -After this command, the KHO FDT is available in
-> -``/sys/kernel/debug/kho/out/fdt``. Other subsystems may also register
-> -their own preserved sub FDTs under
-> -``/sys/kernel/debug/kho/out/sub_fdts/``.
-> -
-> -Next, load the target payload and kexec into it. It is important that you
-> -use the ``-s`` parameter to use the in-kernel kexec file loader, as user
-> -space kexec tooling currently has no support for KHO with the user space
-> -based file loader ::
-> +To perform a KHO kexec, load the target payload and kexec into it. It
-> +is important that you use the ``-s`` parameter to use the in-kernel
-> +kexec file loader, as user space kexec tooling currently has no
-> +support for KHO with the user space based file loader ::
->  
->    # kexec -l /path/to/bzImage --initrd /path/to/initrd -s
->    # kexec -e
-> @@ -52,40 +42,19 @@ For example, if you used ``reserve_mem`` command line parameter to create
->  an early memory reservation, the new kernel will have that memory at the
->  same physical address as the old kernel.
->  
-> -Abort a KHO exec
-> -================
-> -
-> -You can move the system out of KHO finalization phase again by calling ::
-> -
-> -  $ echo 0 > /sys/kernel/debug/kho/out/active
-> -
-> -After this command, the KHO FDT is no longer available in
-> -``/sys/kernel/debug/kho/out/fdt``.
-> -
->  debugfs Interfaces
->  ==================
->  
-> +These debugfs interfaces are available when the kernel is compiled with
-> +``CONFIG_KEXEC_HANDOVER_DEBUGFS`` enabled.
-> +
->  Currently KHO creates the following debugfs interfaces. Notice that these
->  interfaces may change in the future. They will be moved to sysfs once KHO is
->  stabilized.
->  
-> -``/sys/kernel/debug/kho/out/finalize``
-> -    Kexec HandOver (KHO) allows Linux to transition the state of
-> -    compatible drivers into the next kexec'ed kernel. To do so,
-> -    device drivers will instruct KHO to preserve memory regions,
-> -    which could contain serialized kernel state.
-> -    While the state is serialized, they are unable to perform
-> -    any modifications to state that was serialized, such as
-> -    handed over memory allocations.
-> -
-> -    When this file contains "1", the system is in the transition
-> -    state. When contains "0", it is not. To switch between the
-> -    two states, echo the respective number into this file.
-> -
->  ``/sys/kernel/debug/kho/out/fdt``
-> -    When KHO state tree is finalized, the kernel exposes the
-> -    flattened device tree blob that carries its current KHO
-> -    state in this file. Kexec user space tooling can use this
-> +    The kernel exposes the flattened device tree blob that carries its
-> +    current KHO state in this file. Kexec user space tooling can use this
->      as input file for the KHO payload image.
->  
->  ``/sys/kernel/debug/kho/out/scratch_len``
-> @@ -100,8 +69,8 @@ stabilized.
->      it should place its payload images.
->  
->  ``/sys/kernel/debug/kho/out/sub_fdts/``
-> -    In the KHO finalization phase, KHO producers register their own
-> -    FDT blob under this directory.
-> +    KHO producers can register their own FDT blob another binary blob under
-
-Nit:                                      ^ FDT or another binary blob
-
-> +    this directory.
->  
->  ``/sys/kernel/debug/kho/in/fdt``
->      When the kernel was booted with Kexec HandOver (KHO),
-> diff --git a/Documentation/core-api/kho/index.rst b/Documentation/core-api/kho/index.rst
-> index 002bdf0beb2e..0a2dee4f8e7d 100644
-> --- a/Documentation/core-api/kho/index.rst
-> +++ b/Documentation/core-api/kho/index.rst
-> @@ -71,18 +71,6 @@ for boot memory allocations and as target memory for kexec blobs, some parts
->  of that memory region may be reserved. These reservations are irrelevant for
->  the next KHO, because kexec can overwrite even the original kernel.
->  
-> -.. _kho-finalization-phase:
-> -
-> -KHO finalization phase
-> -======================
-> -
-> -To enable user space based kexec file loader, the kernel needs to be able to
-> -provide the FDT that describes the current kernel's state before
-> -performing the actual kexec. The process of generating that FDT is
-> -called serialization. When the FDT is generated, some properties
-> -of the system may become immutable because they are already written down
-> -in the FDT. That state is called the KHO finalization phase.
-> -
->  Kexec Handover Radix Tree
->  =========================
->  
 > diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> index 06adaf56cd69..14d2c66491a6 100644
+> index 49bf2cecab12..06adaf56cd69 100644
 > --- a/kernel/liveupdate/kexec_handover.c
 > +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -68,8 +68,7 @@ early_param("kho", kho_parse_enable);
->  
->  struct kho_out {
->  	void *fdt;
-> -	bool finalized;
-> -	struct mutex lock; /* protects KHO FDT finalization */
-> +	struct mutex lock; /* protects KHO FDT */
->  
->  	struct kho_radix_tree radix_tree;
->  	struct kho_debugfs dbg;
-> @@ -80,7 +79,6 @@ static struct kho_out kho_out = {
->  	.radix_tree = {
->  		.lock = __MUTEX_INITIALIZER(kho_out.radix_tree.lock),
->  	},
-> -	.finalized = false,
->  };
->  
->  /**
-> @@ -1209,23 +1207,6 @@ void kho_restore_free(void *mem)
->  }
->  EXPORT_SYMBOL_GPL(kho_restore_free);
->  
-> -int kho_finalize(void)
-> -{
-> -	if (!kho_enable)
-> -		return -EOPNOTSUPP;
-> -
-> -	guard(mutex)(&kho_out.lock);
-> -	kho_out.finalized = true;
-> -
-> -	return 0;
-> -}
-> -
-> -bool kho_finalized(void)
-> -{
-> -	guard(mutex)(&kho_out.lock);
-> -	return kho_out.finalized;
-> -}
-> -
->  struct kho_in {
->  	phys_addr_t fdt_phys;
->  	phys_addr_t scratch_phys;
-> diff --git a/kernel/liveupdate/kexec_handover_debugfs.c b/kernel/liveupdate/kexec_handover_debugfs.c
-> index 2abbf62ba942..430c9521d59c 100644
-> --- a/kernel/liveupdate/kexec_handover_debugfs.c
-> +++ b/kernel/liveupdate/kexec_handover_debugfs.c
-> @@ -75,24 +75,6 @@ void kho_debugfs_fdt_remove(struct kho_debugfs *dbg, void *fdt)
->  	}
->  }
->  
-> -static int kho_out_finalize_get(void *data, u64 *val)
-> -{
-> -	*val = kho_finalized();
-> -
-> -	return 0;
-> -}
-> -
-> -static int kho_out_finalize_set(void *data, u64 val)
-> -{
-> -	if (val)
-> -		return kho_finalize();
-> -	else
-> -		return -EINVAL;
-> -}
-> -
-> -DEFINE_DEBUGFS_ATTRIBUTE(kho_out_finalize_fops, kho_out_finalize_get,
-> -			 kho_out_finalize_set, "%llu\n");
-> -
->  static int scratch_phys_show(struct seq_file *m, void *v)
->  {
->  	for (int i = 0; i < kho_scratch_cnt; i++)
-> @@ -198,11 +180,6 @@ __init int kho_out_debugfs_init(struct kho_debugfs *dbg)
->  	if (IS_ERR(f))
->  		goto err_rmdir;
->  
-> -	f = debugfs_create_file("finalize", 0600, dir, NULL,
-> -				&kho_out_finalize_fops);
-> -	if (IS_ERR(f))
-> -		goto err_rmdir;
-> -
->  	dbg->dir = dir;
->  	dbg->sub_fdt_dir = sub_fdt_dir;
->  	return 0;
-> diff --git a/kernel/liveupdate/kexec_handover_internal.h b/kernel/liveupdate/kexec_handover_internal.h
-> index 0202c85ad14f..9a832a35254c 100644
-> --- a/kernel/liveupdate/kexec_handover_internal.h
-> +++ b/kernel/liveupdate/kexec_handover_internal.h
-> @@ -22,9 +22,6 @@ struct kho_debugfs {};
->  extern struct kho_scratch *kho_scratch;
->  extern unsigned int kho_scratch_cnt;
->  
-> -bool kho_finalized(void);
-> -int kho_finalize(void);
-> -
->  #ifdef CONFIG_KEXEC_HANDOVER_DEBUGFS
->  int kho_debugfs_init(void);
->  void kho_in_debugfs_init(struct kho_debugfs *dbg, const void *fdt);
-> diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
-> index dda7bb57d421..84ac728d63ba 100644
-> --- a/kernel/liveupdate/luo_core.c
-> +++ b/kernel/liveupdate/luo_core.c
-> @@ -230,17 +230,7 @@ int liveupdate_reboot(void)
->  
->  	luo_flb_serialize();
->  
-> -	err = kho_finalize();
-> -	if (err) {
-> -		pr_err("kho_finalize failed %d\n", err);
-> -		/*
-> -		 * kho_finalize() may return libfdt errors, to aboid passing to
-> -		 * userspace unknown errors, change this to EAGAIN.
-> -		 */
-> -		err = -EAGAIN;
-> -	}
-> -
-> -	return err;
-> +	return 0;
->  }
->  
->  /**
-> diff --git a/kernel/liveupdate/luo_flb.c b/kernel/liveupdate/luo_flb.c
-> index 4c437de5c0b0..22f6409875c9 100644
-> --- a/kernel/liveupdate/luo_flb.c
-> +++ b/kernel/liveupdate/luo_flb.c
-> @@ -630,7 +630,7 @@ int __init luo_flb_setup_incoming(void *fdt_in)
->   * data handle, and the final reference count. This allows the new kernel to
->   * find the appropriate handler and reconstruct the FLB's state.
->   *
-> - * Context: Called from liveupdate_reboot() just before kho_finalize().
-> + * Context: Called from liveupdate_reboot().
+> @@ -5,6 +5,7 @@
+>   * Copyright (C) 2025 Microsoft Corporation, Mike Rapoport <rppt@kernel.org>
+>   * Copyright (C) 2025 Google LLC, Changyuan Lyu <changyuanl@google.com>
+>   * Copyright (C) 2025 Pasha Tatashin <pasha.tatashin@soleen.com>
+> + * Copyright (C) 2025 Google LLC, Jason Miu <jasonmiu@google.com>
+
+It's already 2026 ;-)
+
 >   */
->  void luo_flb_serialize(void)
->  {
-> diff --git a/tools/testing/selftests/kho/init.c b/tools/testing/selftests/kho/init.c
-> index 6d9e91d55d68..88a41b6eba95 100644
-> --- a/tools/testing/selftests/kho/init.c
-> +++ b/tools/testing/selftests/kho/init.c
-> @@ -11,7 +11,6 @@
->  /* from arch/x86/include/asm/setup.h */
->  #define COMMAND_LINE_SIZE	2048
 >  
-> -#define KHO_FINALIZE "/debugfs/kho/out/finalize"
->  #define KERNEL_IMAGE "/kernel"
+>  #define pr_fmt(fmt) "KHO: " fmt
+
+...
+
+> +int kho_radix_add_page(struct kho_radix_tree *tree,
+> +		       unsigned long pfn, unsigned int order)
+> +{
+> +	/* Newly allocated nodes for error cleanup */
+> +	struct kho_radix_node *intermediate_nodes[KHO_TREE_MAX_DEPTH] = { 0 };
+> +	unsigned long key = kho_radix_encode_key(PFN_PHYS(pfn), order);
+> +	struct kho_radix_node *new_node, *anchor_node;
+> +	struct kho_radix_node *node = tree->root;
+> +	unsigned int i, idx, anchor_idx;
+> +	struct kho_radix_leaf *leaf;
+> +	int err = 0;
+> +
+> +	if (WARN_ON_ONCE(!tree->root))
+> +		return -EINVAL;
+> +
+> +	might_sleep();
+> +
+> +	guard(mutex)(&tree->lock);
+> +
+> +	/* Go from high levels to low levels */
+> +	for (i = KHO_TREE_MAX_DEPTH - 1; i > 0; i--) {
+> +		idx = kho_radix_get_table_index(key, i);
+> +
+> +		if (node->table[idx]) {
+> +			node = phys_to_virt(node->table[idx]);
+> +			continue;
+> +		}
+> +
+> +		/* Next node is empty, create a new node for it */
+> +		new_node = (struct kho_radix_node *)get_zeroed_page(GFP_KERNEL);
+> +		if (!new_node) {
+> +			err = -ENOMEM;
+> +			goto err_free_nodes;
+> +		}
+> +
+> +		node->table[idx] = virt_to_phys(new_node);
+> +
+> +		/*
+> +		 * Capture the node where the new branch starts for cleanup
+> +		 * if allocation fails.
+> +		 */
+> +		if (!anchor_node) {
+
+I think anchor_node should be initialized to NULL for this to work.
+
+> +			anchor_node = node;
+> +			anchor_idx = idx;
+> +		}
+> +		intermediate_nodes[i] = new_node;
+> +
+> +		node = new_node;
+> +	}
+> +
+> +	/* Handle the leaf level bitmap (level 0) */
+> +	idx = kho_radix_get_bitmap_index(key);
+> +	leaf = (struct kho_radix_leaf *)node;
+> +	__set_bit(idx, leaf->bitmap);
+> +
+> +	return 0;
+> +
+> +err_free_nodes:
+> +	for (i = KHO_TREE_MAX_DEPTH - 1; i > 0; i--) {
+> +		if (intermediate_nodes[i])
+> +			free_page((unsigned long)intermediate_nodes[i]);
+> +	}
+> +	if (anchor_node)
+> +		anchor_node->table[anchor_idx] = 0;
+> +
+> +	return err;
+> +}
+> +EXPORT_SYMBOL_GPL(kho_radix_add_page);
+
+...
+
+> +		if (WARN_ON(!node->table[idx]))
+> +			return;
+> +
+> +		node = phys_to_virt((phys_addr_t)node->table[idx]);
+
+No need for casting.
+
+> +		shift = ((level - 1) * KHO_TABLE_SIZE_LOG2) +
+> +			KHO_BITMAP_SIZE_LOG2;
+> +		key = start | (i << shift);
+> +
+> +		node = phys_to_virt((phys_addr_t)root->table[i]);
+
+Ditto.
+
+> @@ -1466,12 +1489,6 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+>  		goto out;
+>  	}
 >  
->  static int mount_filesystems(void)
-> @@ -22,22 +21,6 @@ static int mount_filesystems(void)
->  	return mount("proc", "/proc", "proc", 0, NULL);
->  }
+> -	mem_map_phys = kho_get_mem_map_phys(fdt);
+> -	if (!mem_map_phys) {
+> -		err = -ENOENT;
+> -		goto out;
+> -	}
+
+I think we should keep the logic that skips scratch initialization if there
+were no memory preservations, like Pasha implemented here:
+https://lkml.kernel.org/r/20251223140140.2090337-1-pasha.tatashin@soleen.com
+(commit e1c3bfd091f3 ("kho: validate preserved memory map during
+population") in today's mm tree)
+
+We just should update the validation to work with the radix tree.
+
+>  	scratch = early_memremap(scratch_phys, scratch_len);
+>  	if (!scratch) {
+>  		pr_warn("setup: failed to memremap scratch (phys=0x%llx, len=%lld)\n",
+> @@ -1512,7 +1529,6 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
 >  
-> -static int kho_enable(void)
-> -{
-> -	const char enable[] = "1";
-> -	int fd;
-> -
-> -	fd = open(KHO_FINALIZE, O_RDWR);
-> -	if (fd < 0)
-> -		return -1;
-> -
-> -	if (write(fd, enable, sizeof(enable)) != sizeof(enable))
-> -		return 1;
-> -
-> -	close(fd);
-> -	return 0;
-> -}
-> -
->  static long kexec_file_load(int kernel_fd, int initrd_fd,
->  			    unsigned long cmdline_len, const char *cmdline,
->  			    unsigned long flags)
-> @@ -78,9 +61,6 @@ int main(int argc, char *argv[])
->  	if (mount_filesystems())
->  		goto err_reboot;
->  
-> -	if (kho_enable())
-> -		goto err_reboot;
-> -
->  	if (kexec_load())
->  		goto err_reboot;
+>  	kho_in.fdt_phys = fdt_phys;
+>  	kho_in.scratch_phys = scratch_phys;
+> -	kho_in.mem_map_phys = mem_map_phys;
+>  	kho_scratch_cnt = scratch_cnt;
+>  	pr_info("found kexec handover data.\n");
 >  
 > -- 
 > 2.52.0.457.g6b5491de43-goog
