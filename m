@@ -4,77 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AB82FD2ED12
-	for <kexec@archiver.kernel.org>; Tue, 20 Jan 2026 03:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E83F5D2ED13
+	for <kexec@archiver.kernel.org>; Tue, 20 Jan 2026 03:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
 	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
 	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mKQ0YsLba/ectpeg2805HF732odIUIDnxwsg+f5sOy4=; b=gtTRtGeeSE9Tnpq2E/Bt9UkRJ3
-	zsoxhHXJ2uWT25hgQ6pL+KgwUuclwfOnJTcoPnFpRr91sITbxxLex00pdZfCdnDt2iiUu7EQ1xzsg
-	dG/aqhi6/yoSq/t+yD2n9e/w+72oL/f4HYkJQvTOdBJf9RRblD1c+DLbRYaOol5jGqlczmEJqYiZw
-	gn29Z7njFTHVQnCWuKLCjVQg9DB90sDwCY0qASn3FPTzAY20mIQU5e5oIylqoAc3HWxWbKx6n1HZo
-	QY6SHEg8PtZLiAPI/hzexnLqbvWJt81ZotsN7+hnGkbxFMf7+xMOPS5qde6sKw8pKG0OsqWkg+Bei
-	I7MOKbMQ==;
+	bh=Z0PEO7XnFjUoge5CuSA9Qah4eFYfNkmemnZ5qE746gg=; b=Ibc9cDk6nyHwwb4lHZs10K6F5f
+	rQ7TZIRXh5CvyL8LzKhxALAMoSCIQE5xyZp5G4bRIqYrOBin8rr+GmdJG4jwvlot+NG9yMZBBTyH0
+	KligSVFrhbJxKgheY4fJrxRUlOqwD1tXK/r/5YPS8/GgLrihBEIri3rLQ4ycYRfptCQgulFYImWDF
+	zih6PjECcRVzj27lobEfYtYGCUx1A/hmLX4UFm9frktB990wP6QnuZMj1IeFxgu0IQQvS9tXIonIX
+	wWsqpkN6T6tfv3v3TZ3W4GbmdRV3bHw13EGbre6TmpnURJQ2OWT3w64pSmsiN3ubC8kbhMSXp+Ajc
+	FzPvQYhA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vi2aU-0000000381U-0CB3;
-	Tue, 20 Jan 2026 03:39:26 +0000
+	id 1vi2aW-0000000383L-2Odc;
+	Tue, 20 Jan 2026 03:39:28 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vi2aR-0000000380r-03sC
+	id 1vi2aU-0000000381P-1Kj2
 	for kexec@lists.infradead.org;
-	Tue, 20 Jan 2026 03:39:24 +0000
+	Tue, 20 Jan 2026 03:39:27 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768880361;
+	s=mimecast20190719; t=1768880365;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mKQ0YsLba/ectpeg2805HF732odIUIDnxwsg+f5sOy4=;
-	b=IwroBMZdJLs/1Z2LNQmohqQSp4uNQIS++2UXMDTT+2sarlaelYaDdH14MTcMlwZ8fkmx0O
-	1qLxcp/MCdSGYaH4K3QZ8alZj8c4BhiEg4BpYnn6LlXRw5EpjdWvg6B8u+8ywvTWdlQvqg
-	M15xGoqdQ/MHEzCouAVsXxiZvkwUgv8=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Z0PEO7XnFjUoge5CuSA9Qah4eFYfNkmemnZ5qE746gg=;
+	b=XZh1kHeVn58phQMKJ51yfcJKUz4cpUvwvJrTJ0rF7wtWB2HmZGr7J0WNflJvozi0A1UYve
+	dMcjuEXIpmKgN+ZHzPkRsKfO0K0tpGY0vsWs9IO1IJSa+7rvS3/fmro/3xzMQD5HNz7NsL
+	C2oDKRBjHAEiWE1PU9bXKb/1ngE1wAs=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-477-YbCtKsvxMse4BQbt2t3RxQ-1; Mon, 19 Jan 2026 22:39:18 -0500
-X-MC-Unique: YbCtKsvxMse4BQbt2t3RxQ-1
-X-Mimecast-MFC-AGG-ID: YbCtKsvxMse4BQbt2t3RxQ_1768880357
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-352c79abf36so170814a91.2
-        for <kexec@lists.infradead.org>; Mon, 19 Jan 2026 19:39:18 -0800 (PST)
+ us-mta-211-8KIBa8zhOpOsJa4-cjsvSw-1; Mon, 19 Jan 2026 22:39:21 -0500
+X-MC-Unique: 8KIBa8zhOpOsJa4-cjsvSw-1
+X-Mimecast-MFC-AGG-ID: 8KIBa8zhOpOsJa4-cjsvSw_1768880360
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-34eff656256so4485032a91.2
+        for <kexec@lists.infradead.org>; Mon, 19 Jan 2026 19:39:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768880357; x=1769485157;
+        d=1e100.net; s=20230601; t=1768880360; x=1769485160;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=mKQ0YsLba/ectpeg2805HF732odIUIDnxwsg+f5sOy4=;
-        b=RtFuI/9CYh5H2r+mwXeaLE0kqR2Oa5BOVCahDBbT7VIVRmbnF9KN1ftf7d7HRhL6/m
-         AmlvLo2N/cp5v3OWcUDnD6aRpQCy6RyHOHA5o7eNKJ6hWTwA2jgPcK6Y1WbYnJ8/XJ/W
-         04vyrXZKSMMszQjAObDkBV6KO0p5dDqFC/th38coScuvbNBqOhNvoeqMoFYe6ZekHs+X
-         QtKigr0qvyj83X7wsovqc+7XCSqydDC2LFybOSOKcsqbtkFZXW7gXrX62MiqzRvE3XHP
-         9Gq89S7qofF3NRmywS7gMeoA7i8TSa9DJjDWVjj1W7YbvZWPuO6JRlxHWwb3K+zJbT3c
-         5QIw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMvgqbKTE0YgCf+o0P8MWdEEPXJWErVNH4DrtWMakLOo5QqTbyfh7xYy/gG1ND74cIOg7KUw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwHB5V73PjPQfZIjUfsftClKckM/uGOK1abLukYCVMNVI/6H4l2
-	hBExPfDao0s9XvBhRuqUvQLS3kRjdWrcwUM9v13GEHe9B9o11iXs+z2VOyApvfJVZpDyhubVPXI
-	dZqRTaJKxKHTcMyK5YUQzS9ieJdM8XUlhxGqsjqgSfMniPAm9Yx+wf+qvYn70rftx7lXQnA==
-X-Gm-Gg: AZuq6aLADhj6uF4GCAd2+NwITYcYuFDruhej+Sz3hCD8nJy4E1vrD2yTXM3e1JEyn74
-	Oik5PqVHiceXeQlrJpaIcrc0NgCVHIN1g7TWmO+mek+PbPGQibaCE4Ytp6cFxx+U/a0E5EnMkQL
-	u6COG2wTho7N+RqOkYdAHk0VcdssX4simi+4CRGwqhoP8hzWOY75JvS4v8oviWLlzPNZ7CVkix+
-	oUql/0btqwTmR/inuniHlGLcqYWeMdYniLNnyErAAnkiMlhL8d+2NRR1ilYT0NJLoANPMaoc8mH
-	xJ5fZyPoXVwIEYcLnRuRX0qd47DTjIH2JhFr2Z66V4+FLe4frASoSbn3Nx+92o480jucQjkkx5l
-	lTgHTrQ5d0Lp/IDuFTA==
-X-Received: by 2002:a17:90b:48d1:b0:352:c995:808e with SMTP id 98e67ed59e1d1-352c9958c67mr168959a91.2.1768880356775;
-        Mon, 19 Jan 2026 19:39:16 -0800 (PST)
-X-Received: by 2002:a17:90b:48d1:b0:352:c995:808e with SMTP id 98e67ed59e1d1-352c9958c67mr168949a91.2.1768880356370;
-        Mon, 19 Jan 2026 19:39:16 -0800 (PST)
+        bh=Z0PEO7XnFjUoge5CuSA9Qah4eFYfNkmemnZ5qE746gg=;
+        b=L5Ne9Nct/O3Svq0S8EURrQBmJiDVx4cViYhAe4hWEA0N9neBJnGE933whbD3ih+MLT
+         AoaoPNO2GN/Kxfz/QYC/eRzjjI24E5f3mCOGrvZDwmE9YyCFgp6SSXWtUR0ot8eo9rOD
+         vy0Li4aMz1NCXL+QYGPcW2FjECg4tzEoujBvYPOnHRlY6/VWaec27czlbQlY+l6PbxZP
+         FNqdNCvY9mnTIvHRH6shixjZVJT4uryznqW8XI7HqBQKMMI5NkFXxbil3g8TmteNQPM0
+         sieBra6g68YsoNi+Kto77YYn3GJ5rj8WejaO7vlrWNEIEEJShYlWE62qFOH2Z8oz0nEN
+         0uqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxngXHBhuLqjIbij0jJpujywzgXscI1Fqo9U+QfpqNmKkaxr+f5g8Xh6a6GORisSehaQQpdQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxdoOCDb5JoxyG7MqmAHSrr6sr+s07g0X8WtUTP4Bl+YQIqNqXV
+	nf4iVBJWysJ6+xtJN3bh9QVZVfJMsb2hVkl8euKCCl6NxQhRWB+y20qKIUkRabOvETlSrF1C+UI
+	bOCE/YNfdvCLsSBQmR+r/LNIucBVCzsEcdAs6evxKKAywZELQYATevWHse7WKgQ==
+X-Gm-Gg: AZuq6aIMICf3GQZuOtLNMv2Y4sLOyQWyr5VeBZa9c2f7LURXKs63GqE2n7UybGklxFu
+	h3LI5NsX+uj6f5r2tBiYVUpEw8wkGew5TOoRb8j3R6+1GNOaDRclpd/+SYIELIdtiCApu09FFBj
+	Y82qMTCOmqhk46YO8M5R1J8mQlhGsZIgzly5N573k6lPl8FrGV3A5yGbDTCpv5yRXL5//IWGgCq
+	8jTq7UVCRBSvtsDe5YtaiLWYTKkchnPXrEpH/HHLpVjTY/c92tHdTvnxXUPOtrH52ZbhZPj9cPq
+	cd8Brlmtb4u3bKjN86NyjDZuLhuAy/dGHCLbDPwqc4PJPXE6FLrc12FOy3MuHXNLp8u5ymFCsDA
+	+QRCF//di3G1ImLdnug==
+X-Received: by 2002:a17:90b:4a0b:b0:340:54a1:d6fe with SMTP id 98e67ed59e1d1-35273166396mr11860684a91.15.1768880360318;
+        Mon, 19 Jan 2026 19:39:20 -0800 (PST)
+X-Received: by 2002:a17:90b:4a0b:b0:340:54a1:d6fe with SMTP id 98e67ed59e1d1-35273166396mr11860667a91.15.1768880359890;
+        Mon, 19 Jan 2026 19:39:19 -0800 (PST)
 Received: from localhost.localdomain ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-352678c6a3dsm13375935a91.13.2026.01.19.19.39.13
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-352678c6a3dsm13375935a91.13.2026.01.19.19.39.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jan 2026 19:39:15 -0800 (PST)
+        Mon, 19 Jan 2026 19:39:19 -0800 (PST)
 From: Tao Liu <ltao@redhat.com>
 To: yamazaki-msmt@nec.com,
 	k-hagio-ab@nec.com,
@@ -82,21 +82,21 @@ To: yamazaki-msmt@nec.com,
 Cc: aravinda@linux.vnet.ibm.com,
 	stephen.s.brennan@oracle.com,
 	Tao Liu <ltao@redhat.com>
-Subject: [PATCH v3 1/8] Implement kernel kallsyms resolving
-Date: Tue, 20 Jan 2026 15:54:53 +1300
-Message-ID: <20260120025500.25095-2-ltao@redhat.com>
+Subject: [PATCH v3 2/8] Implement kernel btf resolving
+Date: Tue, 20 Jan 2026 15:54:54 +1300
+Message-ID: <20260120025500.25095-3-ltao@redhat.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20260120025500.25095-1-ltao@redhat.com>
 References: <20260120025500.25095-1-ltao@redhat.com>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: kPtNXM23THfyC2zKDr1pEjh3CgWlBX6VSss16yQQJ0M_1768880357
+X-Mimecast-MFC-PROC-ID: ym5kOOW6ON1spmGaTTl73SI-8l3xxO7P6B9iS5A_mYU_1768880360
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260119_193923_201313_2A485951 
-X-CRM114-Status: GOOD (  26.77  )
+X-CRM114-CacheID: sfid-20260119_193926_438214_1B6AA209 
+X-CRM114-Status: GOOD (  25.04  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,378 +111,302 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This patch will parse kernel's kallsyms data, and store them into a hash
-table so they can be referenced later in a fast speed.
+This patch will parse kernel's btf data using libbpf. The kernel's btf data is
+located between __start_BTF and __stop_BTF symbols which are resolved by kallsyms
+of the previous patch. The primary function implemented in this patch, is
+recursively diving into anonymous struct/union when encountered any, to find a
+member by given its name.
 
 Signed-off-by: Tao Liu <ltao@redhat.com>
 ---
- Makefile       |   2 +-
- kallsyms.c     | 265 +++++++++++++++++++++++++++++++++++++++++++++++++
- kallsyms.h     |  17 ++++
- makedumpfile.c |   3 +
- makedumpfile.h |  11 ++
- 5 files changed, 297 insertions(+), 1 deletion(-)
- create mode 100644 kallsyms.c
- create mode 100644 kallsyms.h
+ Makefile   |   4 +-
+ btf_info.c | 186 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ btf_info.h |  64 ++++++++++++++++++
+ 3 files changed, 252 insertions(+), 2 deletions(-)
+ create mode 100644 btf_info.c
+ create mode 100644 btf_info.h
 
 diff --git a/Makefile b/Makefile
-index 05ab5f2..6c450ac 100644
+index 6c450ac..f3f4da8 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -45,7 +45,7 @@ CFLAGS_ARCH += -m32
+@@ -45,12 +45,12 @@ CFLAGS_ARCH += -m32
  endif
  
  SRC_BASE = makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h sadump_info.h
--SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c tools.c printk.c detect_cycle.c
-+SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c tools.c printk.c detect_cycle.c kallsyms.c
+-SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c tools.c printk.c detect_cycle.c kallsyms.c
++SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c tools.c printk.c detect_cycle.c kallsyms.c btf_info.c
  OBJ_PART=$(patsubst %.c,%.o,$(SRC_PART))
  SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c arch/sparc64.c arch/mips64.c arch/loongarch64.c arch/riscv64.c
  OBJ_ARCH=$(patsubst %.c,%.o,$(SRC_ARCH))
-diff --git a/kallsyms.c b/kallsyms.c
+ 
+-LIBS = -ldw -lbz2 -ldl -lelf -lz
++LIBS = -ldw -lbz2 -ldl -lelf -lz -lbpf
+ ifneq ($(LINKTYPE), dynamic)
+ LIBS := -static $(LIBS) -llzma
+ endif
+diff --git a/btf_info.c b/btf_info.c
 new file mode 100644
-index 0000000..ecf64e0
+index 0000000..e7f8d9a
 --- /dev/null
-+++ b/kallsyms.c
-@@ -0,0 +1,265 @@
-+#include <stdint.h>
-+#include <stdbool.h>
++++ b/btf_info.c
+@@ -0,0 +1,186 @@
++#include <stdio.h>
++#include <stdlib.h>
 +#include <string.h>
++#include <bpf/btf.h>
++#include <bpf/libbpf_legacy.h>
 +#include "makedumpfile.h"
 +#include "kallsyms.h"
++#include "btf_info.h"
 +
-+static uint32_t *kallsyms_offsets = NULL;
-+static uint16_t *kallsyms_token_index = NULL;
-+static uint8_t  *kallsyms_token_table = NULL;
-+static uint8_t  *kallsyms_names = NULL;
-+static unsigned long kallsyms_relative_base = 0;
-+static unsigned int kallsyms_num_syms = 0;
++struct btf_arr_elem {
++	struct btf *btf;
++	char *module;
++};
 +
-+#define NAME_HASH 512
-+static struct syment *name_hash_table[NAME_HASH] = {0};
++static struct btf_arr_elem* btf_arr = NULL;
++static int btf_arr_len = 0;
++static int btf_arr_cap = 0;
 +
-+static uint64_t absolute_percpu(uint64_t base, int32_t val)
++static bool find_member_recursive(struct btf *btf,
++				int struct_typeid,
++				int base_offset,
++				char *member_name,
++				uint32_t *out_bit_offset,
++				uint32_t *out_bit_sz,
++				uint32_t *out_member_size)
 +{
-+	if (val >= 0)
-+		return (uint64_t)val;
-+	else
-+		return base - 1 - val;
-+}
++	const struct btf_type *st;
++	struct btf_member *bm;
++	int i, vlen;
 +
-+static unsigned int hash_index(const char *name, unsigned int hash_size)
-+{
-+	unsigned int len, value;
++	struct_typeid = btf__resolve_type(btf, struct_typeid);
++	st = btf__type_by_id(btf, struct_typeid);
 +
-+	len = strlen(name);
-+	value = name[len - 1] * name[len / 2];
++	if (!st)
++		return false;
 +
-+	return (name[0] ^ value) % hash_size;
-+}
++	if (BTF_INFO_KIND(st->info) != BTF_KIND_STRUCT &&
++	    BTF_INFO_KIND(st->info) != BTF_KIND_UNION)
++		return false;
 +
-+static void name_hash_install(struct syment *en)
-+{
-+	unsigned int index = hash_index(en->name, NAME_HASH);
-+	struct syment *sp = name_hash_table[index];
++	vlen = BTF_INFO_VLEN(st->info);
++	bm = btf_members(st);
 +
-+	if (sp == NULL) {
-+		name_hash_table[index] = en;
-+	} else {
-+		while (sp) {
-+			if (sp->name_hash_next) {
-+				sp = sp->name_hash_next;
-+			} else {
-+				sp->name_hash_next = en;
-+				break;
++	for (i = 0; i < vlen; i++, bm++) {
++		const char *name = btf__name_by_offset(btf, bm->name_off);
++		int member_bit_offset = btf_member_bit_offset(st, i) + base_offset;
++		int member_typeid = btf__resolve_type(btf, bm->type);
++		const struct btf_type *mt = btf__type_by_id(btf, member_typeid);
++
++		if (name && strcmp(name, member_name) == 0) {
++			*out_bit_offset = member_bit_offset;
++			*out_bit_sz = btf_member_bitfield_size(st, i);
++			*out_member_size = btf__resolve_size(btf, member_typeid);
++			return true;
++		}
++
++		if (!name || !name[0]) {
++			if (BTF_INFO_KIND(mt->info) == BTF_KIND_STRUCT ||
++			    BTF_INFO_KIND(mt->info) == BTF_KIND_UNION) {
++				if (find_member_recursive(btf, member_typeid,
++								member_bit_offset,
++								member_name,
++								out_bit_offset,
++								out_bit_sz,
++								out_member_size))
++					return true;
 +			}
 +		}
-+	}
-+}
-+
-+static struct syment *search_kallsyms_by_name(char *name)
-+{
-+	unsigned int index;
-+	struct syment *sp;
-+
-+	index = hash_index(name, NAME_HASH);
-+	for (sp = name_hash_table[index]; sp; sp = sp->name_hash_next) {
-+		if (!strcmp(name, sp->name)) {
-+			return sp;
-+		}
-+	}
-+	return sp;
-+}
-+
-+static bool is_unwanted_symbol(char *name)
-+{
-+	const char *unwanted_prefix[] = {
-+		"__pfx_",	// CFI symbols
-+		"_R",		// Rust symbols
-+	};
-+	for (int i = 0; i < sizeof(unwanted_prefix) / sizeof(char *); i++) {
-+		if (!strncmp(name, unwanted_prefix[i], strlen(unwanted_prefix[i])))
-+			return true;
 +	}
 +	return false;
 +}
 +
-+uint64_t get_kallsyms_value_by_name(char *name)
++bool get_struct_member_by_name(struct struct_member_info *smi)
 +{
-+	struct syment *sp;
++	int i, j, start_id;
++	char *fmt;
 +
-+	sp = search_kallsyms_by_name(name);
-+	if (!sp)
-+		return 0;
-+	return sp->value;
++	for (i = 0; i < btf_arr_len; i++) {
++		if (smi->modname != NULL) {
++			if (strcmp(smi->modname, btf_arr[i].module) != 0)
++				continue;
++		}
++		/*
++		 * vmlinux(btf_arr[0])'s typeid is 1~vmlinux_type_cnt,
++		 * modules(btf_arr[1...])'s typeid is vmlinux_type_cnt~btf__type_cnt
++		 */
++		start_id = (i == 0 ? 1 : btf__type_cnt(btf_arr[0].btf));
++
++		for (j = start_id; j < btf__type_cnt(btf_arr[i].btf); j++) {
++			const struct btf_type *bt = btf__type_by_id(btf_arr[i].btf, j);
++			const char *name = btf__name_by_offset(btf_arr[i].btf, bt->name_off);
++
++			if (name && strcmp(smi->struct_name, name) == 0) {
++				if (smi->member_name != NULL) {
++					/* Retrieve member info */
++					if (!find_member_recursive(btf_arr[i].btf, j,
++								0,
++								smi->member_name,
++								&(smi->member_bit_offset),
++								&(smi->member_bit_sz),
++								&(smi->member_size))) {
++						fprintf(stderr, "%s: Not find member %s in %s\n",
++							__func__, smi->struct_name,
++							smi->member_name);						
++						return false;
++					}
++				}
++				smi->struct_size = btf__resolve_size(btf_arr[i].btf, j);
++				return true;
++			}
++		}
++	}
++	fmt = smi->modname ?
++		"%s: Not find struct/union %s in %s\n" :
++		"%s: Not find struct/union %s%s\n";
++
++	fprintf(stderr, fmt, __func__, smi->struct_name,
++			smi->modname ? smi->modname : "");
++	return false;
 +}
 +
-+#define BUFLEN 1024
-+static bool parse_kernel_kallsyms(void)
++static bool add_to_btf_arr(struct btf *btf, char *module_name)
 +{
-+	char buf[BUFLEN];
-+	int index = 0, i;
-+	uint8_t *compressd_data;
-+	uint8_t *uncompressd_data;
-+	uint64_t stext;
-+	uint8_t len, len_old;
-+	struct syment *kern_syment;
-+	bool skip;
++	struct btf_arr_elem* tmp;
++	int new_cap = 0;
 +
-+	for (i = 0; i < kallsyms_num_syms; i++) {
-+		skip = false;
-+		memset(buf, 0, BUFLEN);
-+		len = kallsyms_names[index];
-+		if (len & 0x80) {
-+			index++;
-+			len_old = len;
-+			len = kallsyms_names[index];
-+			if (len & 0x80) {
-+				fprintf(stderr, "%s: BUG! Unexpected 3-byte length,"
-+					" should be detected in init_kernel_kallsyms()\n",
-+					__func__);
-+				goto out;
-+			}
-+			len = (len_old & 0x7F) | (len << 7);
-+		}
-+		index++;
-+
-+		compressd_data = &kallsyms_names[index];
-+		index += len;
-+		while (len--) {
-+			uncompressd_data = &kallsyms_token_table[kallsyms_token_index[*compressd_data]];
-+			if (strlen(buf) + strlen((char *)uncompressd_data) >= BUFLEN) {
-+				skip = true;
-+				break;
-+			}
-+			strcat(buf, (char *)uncompressd_data);
-+			compressd_data++;
-+		}
-+		if (skip || is_unwanted_symbol(&buf[1]))
-+			continue;
-+		kern_syment = (struct syment *)calloc(1, sizeof(struct syment));
-+		if (!kern_syment)
-+			goto no_mem;
-+		kern_syment->value = kallsyms_offsets[i];
-+		kern_syment->name = strdup(&buf[1]);
-+		if (!kern_syment->name) {
-+			free(kern_syment);
-+			goto no_mem;
-+		}
-+		name_hash_install(kern_syment);
++	if (btf_arr == NULL) {
++		new_cap = 4;
++	} else if (btf_arr_len >= btf_arr_cap) {
++		new_cap = btf_arr_cap + (btf_arr_cap >> 1);
 +	}
 +
-+	/* Now refresh the absolute each kallsyms address */
-+	stext = get_kallsyms_value_by_name("_stext");
-+	if (SYMBOL(_stext) == absolute_percpu(kallsyms_relative_base, stext)) {
-+		for (i = 0; i < NAME_HASH; i++) {
-+			for (kern_syment = name_hash_table[i];
-+			     kern_syment;
-+			     kern_syment = kern_syment->name_hash_next)
-+				kern_syment->value = absolute_percpu(kallsyms_relative_base,
-+							kern_syment->value);
-+		}
-+	} else if (SYMBOL(_stext) == kallsyms_relative_base + stext) {
-+		for (i = 0; i < NAME_HASH; i++) {
-+			for (kern_syment = name_hash_table[i];
-+			     kern_syment;
-+			     kern_syment = kern_syment->name_hash_next)
-+				kern_syment->value += kallsyms_relative_base;
-+		}
-+	} else {
-+		fprintf(stderr, "%s: Wrong calculate kallsyms symbol value!\n", __func__);
++	if (!module_name)
++		goto no_mem;
++
++	if (new_cap) {
++		tmp = reallocarray(btf_arr, new_cap, sizeof(struct btf_arr_elem));
++		if (!tmp)
++			goto no_mem;
++		btf_arr = tmp;
++		btf_arr_cap = new_cap;
++	}
++
++	btf_arr[btf_arr_len].btf = btf;
++	btf_arr[btf_arr_len++].module = module_name;
++	return true;
++
++no_mem:
++	fprintf(stderr, "%s: Not enough memory!\n", __func__);
++	return false;
++}
++
++bool init_kernel_btf(void)
++{
++	uint64_t size;
++	struct btf *btf;
++	char *buf = NULL;
++	bool ret = false;
++
++	uint64_t start_btf = get_kallsyms_value_by_name("__start_BTF");
++	uint64_t stop_btf = get_kallsyms_value_by_name("__stop_BTF");
++	if (!start_btf || !stop_btf) {
++		fprintf(stderr, "%s: symbol __start/stop_BTF not found!\n", __func__);
 +		goto out;
 +	}
 +
-+	return true;
-+no_mem:
-+	fprintf(stderr, "%s: Not enough memory!\n", __func__);
-+out:
-+	return false;
-+}
-+
-+static bool vmcore_info_ready = false;
-+
-+bool read_vmcoreinfo_kallsyms(void)
-+{
-+	READ_SYMBOL("kallsyms_names", kallsyms_names);
-+	READ_SYMBOL("kallsyms_num_syms", kallsyms_num_syms);
-+	READ_SYMBOL("kallsyms_token_table", kallsyms_token_table);
-+	READ_SYMBOL("kallsyms_token_index", kallsyms_token_index);
-+	READ_SYMBOL("kallsyms_offsets", kallsyms_offsets);
-+	READ_SYMBOL("kallsyms_relative_base", kallsyms_relative_base);
-+	vmcore_info_ready = true;
-+	return true;
-+}
-+
-+bool init_kernel_kallsyms(void)
-+{
-+	const int token_index_size = (UINT8_MAX + 1) * sizeof(uint16_t);
-+	uint64_t last_token, len;
-+	unsigned char data, data_old;
-+	int i;
-+	bool ret = false;
-+
-+	if (vmcore_info_ready == false) {
-+		fprintf(stderr, "%s: vmcoreinfo not ready for kallsyms!\n",
-+			__func__);
-+		return ret;
++	size = stop_btf - start_btf;
++	buf = (char *)malloc(size);
++	if (!buf) {
++		fprintf(stderr, "%s: Not enough memory!\n", __func__);
++		goto out;
 +	}
++	readmem(VADDR, start_btf, buf, size);
++	btf = btf__new(buf, size);
 +
-+	readmem(VADDR, SYMBOL(kallsyms_num_syms), &kallsyms_num_syms,
-+		sizeof(kallsyms_num_syms));
-+	readmem(VADDR, SYMBOL(kallsyms_relative_base), &kallsyms_relative_base,
-+		sizeof(kallsyms_relative_base));
-+
-+	kallsyms_offsets = malloc(sizeof(uint32_t) * kallsyms_num_syms);
-+	if (!kallsyms_offsets)
-+		goto no_mem;
-+	readmem(VADDR, SYMBOL(kallsyms_offsets), kallsyms_offsets,
-+		kallsyms_num_syms * sizeof(uint32_t));
-+
-+	kallsyms_token_index = malloc(token_index_size);
-+	if (!kallsyms_token_index)
-+		goto no_mem;
-+	readmem(VADDR, SYMBOL(kallsyms_token_index), kallsyms_token_index,
-+		token_index_size);
-+
-+	last_token = SYMBOL(kallsyms_token_table) + kallsyms_token_index[UINT8_MAX];
-+	do {
-+		readmem(VADDR, last_token++, &data, 1);
-+	} while(data);
-+	len = last_token - SYMBOL(kallsyms_token_table);
-+	kallsyms_token_table = malloc(len);
-+	if (!kallsyms_token_table)
-+		goto no_mem;
-+	readmem(VADDR, SYMBOL(kallsyms_token_table), kallsyms_token_table, len);
-+
-+	for (len = 0, i = 0; i < kallsyms_num_syms; i++) {
-+		readmem(VADDR, SYMBOL(kallsyms_names) + len, &data, 1);
-+		if (data & 0x80) {
-+			len += 1;
-+			data_old = data;
-+			readmem(VADDR, SYMBOL(kallsyms_names) + len, &data, 1);
-+			if (data & 0x80) {
-+				fprintf(stderr, "%s: BUG! Unexpected 3-byte length"
-+					" encoding in kallsyms names\n", __func__);
-+				goto out;
-+			}
-+			data = (data_old & 0x7F) | (data << 7);
-+		}
-+		len += data + 1;
++	if (libbpf_get_error(btf) != 0 ||
++	    add_to_btf_arr(btf, strdup("vmlinux")) == false) {	
++		fprintf(stderr, "%s: init vmlinux btf fail\n", __func__);
++		goto out;
 +	}
-+	kallsyms_names = malloc(len);
-+	if (!kallsyms_names)
-+		goto no_mem;
-+	readmem(VADDR, SYMBOL(kallsyms_names), kallsyms_names, len);
-+
-+	ret = parse_kernel_kallsyms();
-+	goto out;
-+
-+no_mem:
-+	fprintf(stderr, "%s: Not enough memory!\n", __func__);
++	ret = true;
 +out:
-+	if (kallsyms_offsets)
-+		free(kallsyms_offsets);
-+	if (kallsyms_token_index)
-+		free(kallsyms_token_index);
-+	if (kallsyms_token_table)
-+		free(kallsyms_token_table);
-+	if (kallsyms_names)
-+		free(kallsyms_names);
++	if (buf)
++		free(buf);
 +	return ret;
 +}
-diff --git a/kallsyms.h b/kallsyms.h
+diff --git a/btf_info.h b/btf_info.h
 new file mode 100644
-index 0000000..a4fbe10
+index 0000000..1fc6829
 --- /dev/null
-+++ b/kallsyms.h
-@@ -0,0 +1,17 @@
-+#ifndef _KALLSYMS_H
-+#define _KALLSYMS_H
-+
++++ b/btf_info.h
+@@ -0,0 +1,64 @@
++#ifndef _BTF_INFO_H
++#define _BTF_INFO_H
 +#include <stdint.h>
-+#include <stdbool.h>
 +
-+struct __attribute__((packed)) syment {
-+	uint64_t value;
-+	char *name;
-+	struct syment *name_hash_next;
++struct struct_member_info {
++	/********in******/
++	char *modname;		// Set to search within the module, in case
++				// name conflict of different modules
++	char *struct_name;	// Search by struct name
++	char *member_name;	// Search by member name
++	/********out*****/
++	uint32_t member_bit_offset;	// member offset in bits
++	uint32_t member_bit_sz;	// member width in bits
++	uint32_t member_size;	// member size in bytes
++	uint32_t struct_size;	// struct size in bytes
 +};
 +
-+bool read_vmcoreinfo_kallsyms(void);
-+bool init_kernel_kallsyms(void);
-+uint64_t get_kallsyms_value_by_name(char *);
++bool init_kernel_btf(void);
++bool get_struct_member_by_name(struct struct_member_info *smi);
 +
-+#endif /* _KALLSYMS_H */
-\ No newline at end of file
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 12fb0d8..dba3628 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -27,6 +27,7 @@
- #include <limits.h>
- #include <assert.h>
- #include <zlib.h>
-+#include "kallsyms.h"
- 
- struct symbol_table	symbol_table;
- struct size_table	size_table;
-@@ -3105,6 +3106,8 @@ read_vmcoreinfo_from_vmcore(off_t offset, unsigned long size, int flag_xen_hv)
- 		if (!read_vmcoreinfo())
- 			goto out;
- 	}
-+	read_vmcoreinfo_kallsyms();
++struct member_off_size {
++	int m_off;
++	int m_size;
++	int s_size;
++};
++#define QUATE(x) #x
++#define INIT_MOD_STRUCT_MEMBER(MOD, S, M) \
++	struct member_off_size _##MOD##_##S##_##M; \
++	memset(&smi, 0, sizeof(struct struct_member_info)); \
++	smi.modname = QUATE(MOD); \
++	smi.struct_name = QUATE(S); \
++	smi.member_name = QUATE(M); \
++	get_struct_member_by_name(&smi); \
++	_##MOD##_##S##_##M.s_size = smi.struct_size; \
++	_##MOD##_##S##_##M.m_size = smi.member_size; \
++	_##MOD##_##S##_##M.m_off = smi.member_bit_offset;
++#define GET_MOD_STRUCT_MEMBER_MOFF(MOD, S, M) (_##MOD##_##S##_##M.m_off)
++#define GET_MOD_STRUCT_MEMBER_MSIZE(MOD, S, M) (_##MOD##_##S##_##M.m_size)
++#define GET_MOD_STRUCT_MEMBER_SSIZE(MOD, S, M) (_##MOD##_##S##_##M.s_size)
 +
- 	close_vmcoreinfo();
- 
- 	ret = TRUE;
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 134eb7a..0dec50e 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -259,6 +259,7 @@ static inline int string_exists(char *s) { return (s ? TRUE : FALSE); }
- #define UINT(ADDR)	*((unsigned int *)(ADDR))
- #define ULONG(ADDR)	*((unsigned long *)(ADDR))
- #define ULONGLONG(ADDR)	*((unsigned long long *)(ADDR))
-+#define VOID_PTR(ADDR)  *((void **)(ADDR))
- 
- 
- /*
-@@ -1919,6 +1920,16 @@ struct symbol_table {
- 	 * symbols on sparc64 arch
- 	 */
- 	unsigned long long		vmemmap_table;
++#define INIT_STRUCT_MEMBER(S, M) \
++	struct member_off_size _##S##_##M; \
++	memset(&smi, 0, sizeof(struct struct_member_info)); \
++	smi.modname = NULL; \
++	smi.struct_name = QUATE(S); \
++	smi.member_name = QUATE(M); \
++	get_struct_member_by_name(&smi); \
++	_##S##_##M.s_size = smi.struct_size; \
++	_##S##_##M.m_size = smi.member_size; \
++	_##S##_##M.m_off = smi.member_bit_offset;
++#define GET_STRUCT_MEMBER_MOFF(S, M) (_##S##_##M.m_off)
++#define GET_STRUCT_MEMBER_MSIZE(S, M) (_##S##_##M.m_size)
++#define GET_STRUCT_MEMBER_SSIZE(S, M) (_##S##_##M.s_size)
 +
-+	/*
-+	 * kallsyms related
-+	 */
-+	unsigned long long		kallsyms_names;
-+	unsigned long long		kallsyms_num_syms;
-+	unsigned long long		kallsyms_token_table;
-+	unsigned long long		kallsyms_token_index;
-+	unsigned long long		kallsyms_offsets;
-+	unsigned long long		kallsyms_relative_base;
- };
- 
- struct size_table {
++#define INIT_STRUCT(S) \
++	struct member_off_size _##S; \
++	memset(&smi, 0, sizeof(struct struct_member_info)); \
++	smi.modname = NULL; \
++	smi.member_name = NULL; \
++	smi.struct_name = QUATE(S); \
++	get_struct_member_by_name(&smi); \
++	_##S.s_size = smi.struct_size;
++#define GET_STRUCT_SSIZE(S) (_##S.s_size)
++#endif /* _BTF_INFO_H */
 -- 
 2.47.0
 
