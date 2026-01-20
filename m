@@ -4,63 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C8285D26284
-	for <kexec@archiver.kernel.org>; Tue, 20 Jan 2026 18:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B7867D2628A
+	for <kexec@archiver.kernel.org>; Tue, 20 Jan 2026 19:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ytTCX43YaWLKtzXMqmoIG0r0Wwfc5JFXaC5vs4GyATw=; b=glQckaeXwzV8UPiU988RK1PcJb
-	jAq7CTFRgPC/GEIIKn5HAA2HVLCOqeq3B6fK6IeMC2c+HjJiQepTfdBhRcVshkDTko27UrudbrziR
-	P6nHQeQgEivCZJqTfrbNd96h6BZX9+F0h77fDP16gXg6kEdKtOTt9nooKbNjjTFCIGNL2V3RCErGy
-	VmJzemXOsz7o+0OO7kRkXIfiPVgs+jaaBEiM2SdV4dRtz76RHxWqETG62n2oX9kr+qqwUHFPoa8gn
-	l/REGZyqcMuvekOridJrLWOibyauA7u3MAHXGtDmzkflWjqqCfJD61OQh6p+yokDoYQPNEdthBL3q
-	mXooQNUg==;
+	bh=lq3aLbEqRyA37VDbVG+GjNtcxF/ESTkZeYhJniRXhow=; b=N+Rmc4t1okdBr1wcAoRyCEbM7S
+	qXzOKwvV9YGyu0rsYgxj/WjilF2VS6673F8Ex09SuSLIGGFe3eGbdWo5f9ZuTJwxLMio/Dc47at/6
+	zHHn5n1io2UX0Hjpb2LLO3CTizuUF+3ZQzc7DV3SBkX0rRDTLjDKSLW55wo1xk42Qx/sRkzaRf5id
+	EZskaduxBIQxErb+ypp11SLJgcLHKiaKfg5PaZJOyyL8bDZZqauOch1iBQPmINrx4ut/Pa/bqr2hA
+	UHp/h5NfC0TrtqioRObRdws7ayQAB08xghZiPlmwIiLP5vOxYcmVW7LRcAoLE5IWazjGQAuVRzpml
+	r/MYqI0A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1viGvc-00000004Ka6-0pDM;
-	Tue, 20 Jan 2026 18:58:12 +0000
+	id 1viGxc-00000004Kfw-3RFW;
+	Tue, 20 Jan 2026 19:00:16 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1viGvb-00000004Ka0-0w6L
+	id 1viGxb-00000004KfZ-088S
 	for kexec@lists.infradead.org;
-	Tue, 20 Jan 2026 18:58:11 +0000
+	Tue, 20 Jan 2026 19:00:15 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 46E7A6001A;
-	Tue, 20 Jan 2026 18:58:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EEA8C16AAE;
-	Tue, 20 Jan 2026 18:58:05 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 78868600BB;
+	Tue, 20 Jan 2026 19:00:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A071C16AAE;
+	Tue, 20 Jan 2026 19:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768935490;
-	bh=I5q0oGB+BoA/gz8qsotA61iskY7SDlYKob9LdnVdGNY=;
+	s=k20201202; t=1768935614;
+	bh=yvQMSUis/1NCpptkFQ9k3gZYHiivZOEOD7LfuZ7H1ks=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GhB7IVkwG/XveGj1F09VZwJYfZ6BTg7yXMg4IEJIePaigtf7knr23e4MQvTMxS+XR
-	 3XGbUKDlpl5+VcPlQFcjc3V9gDkHfwLhvQtn1622KVxhrL30oJc5/p1DDSVoy5b+oK
-	 gBhlEsuMf2+/UQWGOlx0kq6hZGbVeB28j90YZPDymuuRHHHrT0mJOWLA4U3nnby16v
-	 xCMZ/fk+eOp/cSZbaK58BPKykl50BWitcslIvDcc3KdijKzNQ8tUR6m4ERC7oTDGHh
-	 8D5Dnc+dFsby36GI2D0phtpjip1EDcbHqJ8Lu/KtkMuKJMuTGQxieNcRvQdi2kptia
-	 B2purnqkBT7Ig==
-Date: Tue, 20 Jan 2026 20:58:02 +0200
+	b=Bxw8pyjHejSup2eL6mvA96uU19t1osAViIerhPz9jEnZivgiUot4+fBfGEx0iha+T
+	 tXrlbmjA2vd6EeDIeLRb2kKyZz70+J3Lr77AfxsAALlJdTn0+9HmXJY2vVEfquWKl+
+	 /kUgz8xUTkbXsDISlW7QbcnuTK+LqCWkiBo4cft+B3f0bWY8VaUZvdrh5qXW97zWu+
+	 Xwojtdzz62UqOT6v+AEq2StJ47k/j+r5XCK4QMrieSUO8Dxi0VYsRqff8ZaCPywzDC
+	 kk+ZxOYZl+u0wBH1Yd6NDCEzY7/NzyT+lk7J1sMjayMtIa2SKc2vNKYRBOWT+MAnMQ
+	 3/uXHubLDOvIA==
+Date: Tue, 20 Jan 2026 21:00:07 +0200
 From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>, Alexander Graf <graf@amazon.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
+To: Evangelos Petrongonas <epetron@amazon.de>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Alexander Graf <graf@amazon.com>, Jason Miu <jasonmiu@google.com>,
 	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-mm@kvack.org, usamaarif642@gmail.com, rmikey@meta.com,
-	clm@fb.com, riel@surriel.com, kernel-team@meta.com
-Subject: Re: [PATCH v3 1/2] kho: history: track previous kernel version
-Message-ID: <aW_QOpA1ocySNLAF@kernel.org>
-References: <20260108-kho-v3-0-b1d6b7a89342@debian.org>
- <20260108-kho-v3-1-b1d6b7a89342@debian.org>
- <2vxzy0m0gfyo.fsf@kernel.org>
- <v7g7nmd3jif6vftvnmucvpluevufcdxmefcgqq3yfpnzyb7mql@ojpotuu4hgxm>
- <2vxzms28e1ib.fsf@kernel.org>
+	linux-mm@kvack.org, nh-open-source@amazon.com
+Subject: Re: [PATCH v2] kho: skip memoryless NUMA nodes when reserving
+ scratch areas
+Message-ID: <aW_Qtz6X-XErS74D@kernel.org>
+References: <20260120175913.34368-1-epetron@amazon.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2vxzms28e1ib.fsf@kernel.org>
+In-Reply-To: <20260120175913.34368-1-epetron@amazon.de>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,55 +72,74 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
-
-On Tue, Jan 20, 2026 at 03:40:12PM +0000, Pratyush Yadav wrote:
-> On Fri, Jan 16 2026, Breno Leitao wrote:
-> >     
-> >     On cold boot, kexec-count starts at 0 and increments with each kexec.
-> >     The count helps identify issues that only manifest after multiple
-> >     consecutive kexec reboots.
+On Tue, Jan 20, 2026 at 05:59:11PM +0000, Evangelos Petrongonas wrote:
+> kho_reserve_scratch() iterates over all online NUMA nodes to allocate
+> per-node scratch memory. On systems with memoryless NUMA nodes (nodes
+> that have CPUs but no memory), memblock_alloc_range_nid() fails because
+> there is no memory available on that node. This causes KHO initialization
+> to fail and kho_enable to be set to false.
 > 
-> Very well written changelog!
-
-@Breno, the submission would be perfect if you'd start a new thread rather
-than reply to v1 ;-)
- 
-> > +/*
-> > + * The "history" subtree stores optional metadata about the kexec chain.
-> > + * It is registered as a separate FDT via kho_add_subtree(), keeping it
-> > + * independent from the core KHO ABI. This allows the history format to
-> > + * evolve without affecting other KHO consumers.
-> > + *
-> > + * The history FDT structure:
+> Some ARM64 systems have NUMA topologies where certain nodes contain only
+> CPUs without any associated memory. These configurations are valid and
+> should not prevent KHO from functioning.
 > 
-> I don't have a strong preference here, but you don't _have_ to use FDT.
-> For example, with memfd, we moved from FDT to plain C structs during the
-> evolution of the patchset. Main reason is that FDT programming is a bit
-> annoying. C structs make many things much easier. For example, you can
-> always assume a certain property always exists and is of a given size,
-> and you don't have to validate every single property you read.
+> Fix this by only counting nodes that have memory (N_MEMORY state) and
+> skip memoryless nodes in the per-node scratch allocation loop.
 > 
-> Anyway, I don't mind either way.
+> Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
 
-Yeah, I agree that a plain C structure with an array of chars and u64 will
-make things simpler.
+Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-> > + *
-> > + *   / {
-> > + *       compatible = "kho-history-v1";
-> > + *       previous-release = "6.x.y-...";
-> > + *       kexec-count = <N>;
-> > + *   };
-> > + */
-> > +#define KHO_HISTORY_NODE_NAME "history"
+> ---
+> v2:
+> - Removed kho_mem_nodes_count in favour of nodes_weight(nodes_state[N_MEMORY])
+> - Use for_each_node_state(nid, N_MEMORY) to loop over nodes that are both
+> online and have memory.
+> TIL: Nodes in N_MEMORY are a subset of those that are online. Thanks Mike :)
 > 
-> Do we want to call it history? Perhaps "kexec-metadata" instead? So we
-> could use it for other misc information if needed later.
+>  kernel/liveupdate/kexec_handover.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> Mike/Pasha, any thoughts?
-
-I like kexec-metadata.
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> index 9dc51fab604f..979ebaf015bf 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
+> @@ -643,7 +643,7 @@ static void __init kho_reserve_scratch(void)
+>  	scratch_size_update();
+>  
+>  	/* FIXME: deal with node hot-plug/remove */
+> -	kho_scratch_cnt = num_online_nodes() + 2;
+> +	kho_scratch_cnt = nodes_weight(node_states[N_MEMORY]) + 2;
+>  	size = kho_scratch_cnt * sizeof(*kho_scratch);
+>  	kho_scratch = memblock_alloc(size, PAGE_SIZE);
+>  	if (!kho_scratch)
+> @@ -673,7 +673,11 @@ static void __init kho_reserve_scratch(void)
+>  	kho_scratch[i].size = size;
+>  	i++;
+>  
+> -	for_each_online_node(nid) {
+> +	/*
+> +	 * Loop over nodes that have both memory and are online. Skip
+> +	 * memoryless nodes, as we can not allocate scratch areas there.
+> +	 */
+> +	for_each_node_state(nid, N_MEMORY) {
+>  		size = scratch_size_node(nid);
+>  		addr = memblock_alloc_range_nid(size, CMA_MIN_ALIGNMENT_BYTES,
+>  						0, MEMBLOCK_ALLOC_ACCESSIBLE,
+> -- 
+> 2.43.0
+> 
+> 
+> 
+> 
+> Amazon Web Services Development Center Germany GmbH
+> Tamara-Danz-Str. 13
+> 10243 Berlin
+> Geschaeftsfuehrung: Christof Hellmis, Andreas Stieger
+> Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+> Sitz: Berlin
+> Ust-ID: DE 365 538 597
+> 
 
 -- 
 Sincerely yours,
