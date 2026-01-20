@@ -4,60 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2E81BD26280
-	for <kexec@archiver.kernel.org>; Tue, 20 Jan 2026 18:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D18CFD26280
+	for <kexec@archiver.kernel.org>; Tue, 20 Jan 2026 18:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
 	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=GDMPLKA0NvtUquTBXi8bx6F+PKsFGu9VN4ljw7/OJJ8=; b=yprazcMCA1KH+v+VHLthYYwnCo
-	RFyXULFMo94KQeUoTFpQAShbbwU0dWb3gCkpZAVjwbrOcrIPHVxd/1XmvzDQxqOnmALBJN5M10lNH
-	g0yMf+9++o/V/xR18gtAVMQDbTrcSa95YVscm556XlFVePbe2BYIVMZIhPl6ffTQoIY7z1wwthUEB
-	lfVxHVN496cl51iiT0eJaaXwwrHs1oHst7CnaUHrV1vS1CfQalfffBS6Pc1cJm0HPoSZY8LZa5Nwy
-	b3PsFh0GdaqVO+LjDcz0CT4ucwmhhQKnBDyXzzX8QfcwQqAGhfkd87cjYjQ6hRyJCVygVQvoUgUWR
-	Xk+QQ/SQ==;
+	bh=ITCH5eSHHFlFzrcAyVSLkFWfLkiw7PkA+qDqwaON19g=; b=VQLpR/tQvrXwH5jwu5LnjetcaM
+	VDg8TXsDezN80hfCUxOpVyhO4PFWaT5v8HT0b5QFuBzRhBzxUsi9mL0T2FYy6rS6rRTdiL6S4DAvv
+	99H/HXIq8ivlIvUUL/pyODf8cizZzq/sP33yS7I/yjfGv4VGFOqMvzxmvrX4rYHzuiDz0jlAjaZRG
+	dWy1khOo0Ci7BxYYHgYSu/CeCDpCsAKazKGrxdq3TuYTDOnbXld6qdaAE2al5zossaWySbXFUcjGu
+	OfbiZD8Ck2LQ65Vv2fP+5zMqYKjUhOg6/Qf+OREk9EbwnVS62SSni9gAx5b1XCYIlUpQufUy3R/iZ
+	aYZjhpyQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1viGan-00000004JGi-2rpx;
-	Tue, 20 Jan 2026 18:36:41 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1viGbS-00000004JJy-04lR;
+	Tue, 20 Jan 2026 18:37:22 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1viGaj-00000004JGU-3jeC
+	id 1viGbP-00000004JJe-0fD8
 	for kexec@lists.infradead.org;
-	Tue, 20 Jan 2026 18:36:38 +0000
+	Tue, 20 Jan 2026 18:37:20 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id DE02160007;
-	Tue, 20 Jan 2026 18:36:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA94CC19422;
-	Tue, 20 Jan 2026 18:36:34 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 0925760010;
+	Tue, 20 Jan 2026 18:37:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C598C16AAE;
+	Tue, 20 Jan 2026 18:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768934196;
-	bh=QYKth/XopUUmN2w5/xA9zHlbSfdy2ir24LbewWEwvOU=;
+	s=k20201202; t=1768934237;
+	bh=qMsPsLKr8lsKfYWwVgXUWfhbGnBcx6jUKbbl7LEcQak=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=nWDbIb8C4Pdc9S6Dmuhx0sP4s0TJLIBQyQ/AcWbVHuZ0hRe0PoKYtU9Hxw7X8LLHA
-	 aGURL8szqEnjBpSMEtjFVGh8C/URSKLfq0rrzoK8uC9cmJppJqsnolI/JyuUHEPJr8
-	 9reBvNxeN1DY9U2ZV2noPOjkpnUU3Bqg1QxrwnPWOSnMq58zo1iMYa7l2HieqrX0oA
-	 8ApTo/v7yNwJwAlbNpibuU1nZvgD952gLoAG/3qwjwIPsbPb7UPar6tliXWZ4G/KW6
-	 LfGny8wlbK+Hk9h47zxldaGYXNLdGVZCr+l+U1QnflucJkAB4DfAjL3btK3jNCFHlr
-	 C+4tPohqzOZ5A==
+	b=nRcoUS6sAu6+BgNMiYePK91g1ZaWzvwxv7IPVSWT7+mEBsipRiebKmFM/UAH0eXpC
+	 9SE9Xl+mi1vH/JrUI9JiIU3rkScWHMsXFjG0cuOUR+4bC8x63o8LELmLFV5BYdk+Zp
+	 a/0CyanVVAAizhMAP2hYSqqIVzn+aocGIxop3dQXKWYOIF/C+dBcJb1q5beBRmGS9w
+	 vKcapO/vc8FBqDBtOLn+DaBBpyRgXxbT1Q0YrCGhJc+H5II6chN5mbowEOldzZh94S
+	 bk7yQKAL06Vj4wAjmCWmEynUSR6woff0aLxofTsDD6UsGKzT4L4CymQ63F2/5/QmwO
+	 eTYDKs9FcfvUw==
 From: Pratyush Yadav <pratyush@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Andrew Morton
- <akpm@linux-foundation.org>,  Alexander Graf <graf@amazon.com>,  Jason Miu
- <jasonmiu@google.com>,  Jonathan Corbet <corbet@lwn.net>,  Pasha Tatashin
- <pasha.tatashin@soleen.com>,  kexec@lists.infradead.org,
-  linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  linux-mm@kvack.org
-Subject: Re: [PATCH 3/6] kho: docs: combine concepts and FDT documentation
-In-Reply-To: <aW_K7QZj8HYzA00t@kernel.org> (Mike Rapoport's message of "Tue,
-	20 Jan 2026 20:35:25 +0200")
-References: <20260105165839.285270-1-rppt@kernel.org>
-	<20260105165839.285270-4-rppt@kernel.org> <2vxz7btce06f.fsf@kernel.org>
-	<aW_K7QZj8HYzA00t@kernel.org>
-Date: Tue, 20 Jan 2026 18:36:33 +0000
-Message-ID: <2vxzikcwcery.fsf@kernel.org>
+To: Evangelos Petrongonas <epetron@amazon.de>
+Cc: Mike Rapoport <rppt@kernel.org>,  Pasha Tatashin
+ <pasha.tatashin@soleen.com>,  Pratyush Yadav <pratyush@kernel.org>,
+  "Alexander Graf" <graf@amazon.com>,  Jason Miu <jasonmiu@google.com>,
+  <linux-kernel@vger.kernel.org>,  <kexec@lists.infradead.org>,
+  <linux-mm@kvack.org>,  <nh-open-source@amazon.com>
+Subject: Re: [PATCH v2] kho: skip memoryless NUMA nodes when reserving
+ scratch areas
+In-Reply-To: <20260120175913.34368-1-epetron@amazon.de> (Evangelos
+	Petrongonas's message of "Tue, 20 Jan 2026 17:59:11 +0000")
+References: <20260120175913.34368-1-epetron@amazon.de>
+Date: Tue, 20 Jan 2026 18:37:14 +0000
+Message-ID: <2vxzecnkceqt.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -75,54 +73,25 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jan 20 2026, Mike Rapoport wrote:
+On Tue, Jan 20 2026, Evangelos Petrongonas wrote:
 
-> On Tue, Jan 20, 2026 at 04:08:56PM +0000, Pratyush Yadav wrote:
->> On Mon, Jan 05 2026, Mike Rapoport wrote:
->> 
->> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->> >
->> > Currently index.rst in KHO documentation looks empty and sad as it only
->> > contains links to "Kexec Handover Concepts" and "KHO FDT" chapters.
->> >
->> > Inline contents of these chapters into index.rst to provide a single
->> > coherent chapter describing KHO.
->> >
->> > While on it, drop parts of the KHO FDT description that will be superseded
->> > by addition of KHO ABI documentation.
->> >
->> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
->> [...]
->> > diff --git a/Documentation/core-api/kho/index.rst b/Documentation/core-api/kho/index.rst
->> > index 0c63b0c5c143..03cd9afbdb2e 100644
->> > --- a/Documentation/core-api/kho/index.rst
->> > +++ b/Documentation/core-api/kho/index.rst
->> > @@ -4,10 +4,73 @@
->> >  Kexec Handover Subsystem
->> >  ========================
->> >  
->> > -.. toctree::
->> > -   :maxdepth: 1
->> > +Overview
->> > +========
->> 
->> I ran a test build and Sphinx complains about:
->> 
->>     Documentation/admin-guide/mm/kho.rst:10: WARNING: undefined label: 'kho-concepts' [ref.ref]
->>     Documentation/admin-guide/mm/kho.rst:31: WARNING: undefined label: 'kho-finalization-phase' [ref.ref]
->> 
->> I suppose you should add these labels here.
+> kho_reserve_scratch() iterates over all online NUMA nodes to allocate
+> per-node scratch memory. On systems with memoryless NUMA nodes (nodes
+> that have CPUs but no memory), memblock_alloc_range_nid() fails because
+> there is no memory available on that node. This causes KHO initialization
+> to fail and kho_enable to be set to false.
 >
-> It's already in Andrew's tree:
-> https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/commit/?h=mm-nonmm-unstable&id=bc1a060da2a76161ba65f1badc551de15056e398
-
-Okay, nice. Then with that,
+> Some ARM64 systems have NUMA topologies where certain nodes contain only
+> CPUs without any associated memory. These configurations are valid and
+> should not prevent KHO from functioning.
+>
+> Fix this by only counting nodes that have memory (N_MEMORY state) and
+> skip memoryless nodes in the per-node scratch allocation loop.
+>
+> Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
 
 Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
 
->  
->> Otherwise LGTM.
->> 
 [...]
 
 -- 
