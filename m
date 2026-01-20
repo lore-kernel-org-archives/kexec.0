@@ -4,73 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BB052D2ECF7
-	for <kexec@archiver.kernel.org>; Tue, 20 Jan 2026 12:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 25F29D2ECE9
+	for <kexec@archiver.kernel.org>; Tue, 20 Jan 2026 13:04:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=RsbdtOmIV/sS2UcajTt/rwz3vGSUI4SRa4q2OoUAI2Y=; b=PmCkYbZnEtz16PuEI2+0iHE4u9
-	m7N4kmT88wRrhLucwxC9avuvX/6K2oedqitlJGpjOm6v+fh2dT7H7RaPXbaDUxRQj4XNy6eODUX4G
-	czvcQ4HErSlYsy88+J+/r4mOKjeEBGHtmoRf8Id3J4czecb/5SGbQeeCyWn1+yTjMqPMowx1sh/tS
-	gu606OpyFSfB4qExzk6Ki462uIpizx8/zyncvIAKPG1P7ESuUoO4QW9vrUpzjXmK/zTNS+HE+Jk0a
-	SBXdRd2mZov0CvWJx09KpGEMPympNQSFWxxz0KuOl1/r6qxBNO5PCM1VFhj57NCKWi2/C7x9Vg+vj
-	/nJEm0Ng==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=6HK2XDqvr0szkHQ7whJ4JBYHd5Ew9QIOfMDRmAhXuEc=; b=0Jl97qZM9dZIqz3C2AH/QLtkjL
+	yPPCbgYaAxsG1GyfTyLu0ciDY9cab1gFpCzhLHKXMM5pDKN7Azl6wztg8gcNXLPUIycj0142qCslw
+	DfESQ9zLiNm7HoYmBfzshfwPy3GBssa9cp8be1yWZvWkWNMyAIHZ1MNNcaxmsGAuyVro2TIGE7Eal
+	3gWS4rqErKZovkvGXF1KZfB9C5un8o485h8EXOPr/1Z0WnpICKWmhCk3YTIwsS5y8HiphgvYviuKj
+	PjKlrvgt74NNQQ6zLKw1D49b2MgfWb4g4b5DhgQNeMB4godl+Lk0h8I2WYWHkxwztnOpk7jSimBzB
+	+6bbsy4Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1viB2B-00000003rC6-317A;
-	Tue, 20 Jan 2026 12:40:35 +0000
-Received: from sender4-pp-f112.zoho.com ([136.143.188.112])
+	id 1viBOm-00000003t0Z-3OhD;
+	Tue, 20 Jan 2026 13:03:56 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1viB29-00000003rBK-3KQo
+	id 1viBOl-00000003t0N-30zX
 	for kexec@lists.infradead.org;
-	Tue, 20 Jan 2026 12:40:35 +0000
-ARC-Seal: i=1; a=rsa-sha256; t=1768912826; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ZnjLHik5x00fADycem+PT+TfqtIcsDimnHqkXxTM6EK1gZoGN9lFg9mgARM9u5I405RmeiJ/ZOaSJMLixkkweLh2GYtVcpyJQtzOpQ7Vl68cwOwieCZw1gEyasPe5z9fXzeHFZrHOKQcAU5LUZYudveDmpBneyTvmYmjFW4QbDU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1768912826; h=Content-Transfer-Encoding:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=RsbdtOmIV/sS2UcajTt/rwz3vGSUI4SRa4q2OoUAI2Y=; 
-	b=AoIfl2nS3aPx0d7fK8abAUDy54RYgBdnveYcg6ddil924EfC0qgVmdaGv/9Z2RFuFv/+MTRt5el4h+4jEGNi1aZWK5cuLrbR/WQottVNQ1xoxnzAaJ7wuBrEJHIBPJYcPfZ1ApFn1RyF3XBsCsmjxZK6r0eAY7rcL5hiaIVYKQ4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=linux.beauty;
-	spf=pass  smtp.mailfrom=me@linux.beauty;
-	dmarc=pass header.from=<me@linux.beauty>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1768912826;
-	s=zmail; d=linux.beauty; i=me@linux.beauty;
-	h=From:From:To:To:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-	bh=RsbdtOmIV/sS2UcajTt/rwz3vGSUI4SRa4q2OoUAI2Y=;
-	b=Sx6gfn3J3dVI5pJsTBe+0e4tUY2befYeCcqqQNp6BFLIJi7NpmRwnvKOW7xACyyQ
-	Z8+EeDwPfCnBj/jDAPEv5TMsyz3Jw/jy8eYgPVGjZAVwDWV4ab/pPxImzunLd5AG3zX
-	KKGgwxQGl0IwgqeVoVvfW6OXGsa3PXIVCYTdQ7XQ=
-Received: by mx.zohomail.com with SMTPS id 1768912824593109.50412840274407;
-	Tue, 20 Jan 2026 04:40:24 -0800 (PST)
-From: Li Chen <me@linux.beauty>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Steven Chen <chenste@linux.microsoft.com>,
+	Tue, 20 Jan 2026 13:03:55 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id D49AE60018;
+	Tue, 20 Jan 2026 13:03:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8C6FC16AAE;
+	Tue, 20 Jan 2026 13:03:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768914234;
+	bh=VjNsk+rGW49szc0ZaDC/PxUEhkP0A5D50M/kBU1Njlc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IjSYQTxZO9zOdD8dgFokigXt6el1iimLLAw18aUnWCJHji5YWJKX+76HBlEkC0+nm
+	 shaw36qPYg7q8aymOeUc3lZgVkWU+ZuL3raurQsht2qGETyMlHKnqwl1f/1l2xOSE7
+	 iiEEMdG7DRfOK6PIa5SEklmz+dMki95fKZ3WxKkzgQ9ShoxwBZ4bDZveME7VZL4SoY
+	 OgiNyNxxlSRXkBaBmCB5/xXtUVHl/OrU5jFCwY1TWAblP/9hShU2Xm5skNyRpr0Aa9
+	 6aK5NAYPw03LVj7OBXyWXzxMYZ1YG7auxZS7kGxuTX3RoBC9pZ7UpoE/YXaPqlD1pQ
+	 aEr2k0DRRsGLg==
+Date: Tue, 20 Jan 2026 15:03:48 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Alexander Graf <graf@amazon.com>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>,
-	Li Chen <me@linux.beauty>,
-	Philipp Rudo <prudo@redhat.com>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	Ricardo Ribalda <ribalda@chromium.org>,
-	Ross Zwisler <zwisler@google.com>,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] kexec: derive purgatory entry from symbol
-Date: Tue, 20 Jan 2026 20:40:04 +0800
-Message-ID: <20260120124005.148381-1-me@linux.beauty>
-X-Mailer: git-send-email 2.52.0
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	kexec@lists.infradead.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v2 1/2] kho: use unsigned long for nr_pages
+Message-ID: <aW99NEjHAZ8n-uwW@kernel.org>
+References: <20260116112217.915803-1-pratyush@kernel.org>
+ <20260116112217.915803-2-pratyush@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260120_044033_932983_C065AE7C 
-X-CRM114-Status: GOOD (  14.77  )
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260116112217.915803-2-pratyush@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,98 +73,103 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-kexec_load_purgatory() derives image->start by locating e_entry inside an
-SHF_EXECINSTR section. If the purgatory object contains multiple executable
-sections with overlapping sh_addr, the entrypoint check can match more than
-once and trigger a WARN.
+On Fri, Jan 16, 2026 at 11:22:14AM +0000, Pratyush Yadav wrote:
+> With 4k pages, a 32-bit nr_pages can span up to 16 TiB. While it is a
+> lot, there exist systems with terabytes of RAM. gup is also moving to
+> using long for nr_pages. Use unsigned long and make KHO future-proof.
+> 
+> Suggested-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
 
-Derive the entry section from the purgatory_start symbol when present and
-compute image->start from its final placement. Keep the existing e_entry
-fallback for purgatories that do not expose the symbol.
+Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-WARNING: kernel/kexec_file.c:1009 at kexec_load_purgatory+0x395/0x3c0, CPU#10: kexec/1784
-Call Trace:
- <TASK>
- bzImage64_load+0x133/0xa00
- __do_sys_kexec_file_load+0x2b3/0x5c0
- do_syscall_64+0x81/0x610
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> ---
+> 
+> Changes in v2:
+> - New in v2.
+> 
+>  include/linux/kexec_handover.h     |  6 +++---
+>  kernel/liveupdate/kexec_handover.c | 11 ++++++-----
+>  2 files changed, 9 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
+> index 5f7b9de97e8d..81814aa92370 100644
+> --- a/include/linux/kexec_handover.h
+> +++ b/include/linux/kexec_handover.h
+> @@ -45,15 +45,15 @@ bool is_kho_boot(void);
+>  
+>  int kho_preserve_folio(struct folio *folio);
+>  void kho_unpreserve_folio(struct folio *folio);
+> -int kho_preserve_pages(struct page *page, unsigned int nr_pages);
+> -void kho_unpreserve_pages(struct page *page, unsigned int nr_pages);
+> +int kho_preserve_pages(struct page *page, unsigned long nr_pages);
+> +void kho_unpreserve_pages(struct page *page, unsigned long nr_pages);
+>  int kho_preserve_vmalloc(void *ptr, struct kho_vmalloc *preservation);
+>  void kho_unpreserve_vmalloc(struct kho_vmalloc *preservation);
+>  void *kho_alloc_preserve(size_t size);
+>  void kho_unpreserve_free(void *mem);
+>  void kho_restore_free(void *mem);
+>  struct folio *kho_restore_folio(phys_addr_t phys);
+> -struct page *kho_restore_pages(phys_addr_t phys, unsigned int nr_pages);
+> +struct page *kho_restore_pages(phys_addr_t phys, unsigned long nr_pages);
+>  void *kho_restore_vmalloc(const struct kho_vmalloc *preservation);
+>  int kho_add_subtree(const char *name, void *fdt);
+>  void kho_remove_subtree(void *fdt);
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> index 9dc51fab604f..709484fbf9fd 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
+> @@ -222,7 +222,8 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
+>  static struct page *kho_restore_page(phys_addr_t phys, bool is_folio)
+>  {
+>  	struct page *page = pfn_to_online_page(PHYS_PFN(phys));
+> -	unsigned int nr_pages, ref_cnt;
+> +	unsigned long nr_pages;
+> +	unsigned int ref_cnt;
+>  	union kho_page_info info;
+>  
+>  	if (!page)
+> @@ -249,7 +250,7 @@ static struct page *kho_restore_page(phys_addr_t phys, bool is_folio)
+>  	 * count of 1
+>  	 */
+>  	ref_cnt = is_folio ? 0 : 1;
+> -	for (unsigned int i = 1; i < nr_pages; i++)
+> +	for (unsigned long i = 1; i < nr_pages; i++)
+>  		set_page_count(page + i, ref_cnt);
+>  
+>  	if (is_folio && info.order)
+> @@ -283,7 +284,7 @@ EXPORT_SYMBOL_GPL(kho_restore_folio);
+>   *
+>   * Return: 0 on success, error code on failure
+>   */
+> -struct page *kho_restore_pages(phys_addr_t phys, unsigned int nr_pages)
+> +struct page *kho_restore_pages(phys_addr_t phys, unsigned long nr_pages)
+>  {
+>  	const unsigned long start_pfn = PHYS_PFN(phys);
+>  	const unsigned long end_pfn = start_pfn + nr_pages;
+> @@ -829,7 +830,7 @@ EXPORT_SYMBOL_GPL(kho_unpreserve_folio);
+>   *
+>   * Return: 0 on success, error code on failure
+>   */
+> -int kho_preserve_pages(struct page *page, unsigned int nr_pages)
+> +int kho_preserve_pages(struct page *page, unsigned long nr_pages)
+>  {
+>  	struct kho_mem_track *track = &kho_out.track;
+>  	const unsigned long start_pfn = page_to_pfn(page);
+> @@ -873,7 +874,7 @@ EXPORT_SYMBOL_GPL(kho_preserve_pages);
+>   * kho_preserve_pages() call. Unpreserving arbitrary sub-ranges of larger
+>   * preserved blocks is not supported.
+>   */
+> -void kho_unpreserve_pages(struct page *page, unsigned int nr_pages)
+> +void kho_unpreserve_pages(struct page *page, unsigned long nr_pages)
+>  {
+>  	struct kho_mem_track *track = &kho_out.track;
+>  	const unsigned long start_pfn = page_to_pfn(page);
+> -- 
+> 2.52.0.457.g6b5491de43-goog
+> 
 
-Fixes: 8652d44f466a ("kexec: support purgatories with .text.hot sections")
-Signed-off-by: Li Chen <me@linux.beauty>
----
- kernel/kexec_file.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 3f1d6c4e8ff2..d3c68c6b4bbc 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -880,6 +880,8 @@ static int kexec_calculate_store_digests(struct kimage *image)
- }
- 
- #ifdef CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY
-+static const Elf_Sym * kexec_purgatory_find_symbol(struct purgatory_info *pi,
-+			      const char *name);
- /*
-  * kexec_purgatory_setup_kbuf - prepare buffer to load purgatory.
-  * @pi:		Purgatory to be loaded.
-@@ -958,6 +960,10 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
- 	unsigned long offset;
- 	size_t sechdrs_size;
- 	Elf_Shdr *sechdrs;
-+	const Elf_Sym *entry_sym;
-+	u16 entry_shndx = 0;
-+	unsigned long entry_off = 0;
-+	bool start_fixed = false;
- 	int i;
- 
- 	/*
-@@ -975,6 +981,12 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
- 	bss_addr = kbuf->mem + kbuf->bufsz;
- 	kbuf->image->start = pi->ehdr->e_entry;
- 
-+	entry_sym = kexec_purgatory_find_symbol(pi, "purgatory_start");
-+	if (entry_sym) {
-+		entry_shndx = entry_sym->st_shndx;
-+		entry_off = entry_sym->st_value;
-+	}
-+
- 	for (i = 0; i < pi->ehdr->e_shnum; i++) {
- 		unsigned long align;
- 		void *src, *dst;
-@@ -992,6 +1004,13 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
- 
- 		offset = ALIGN(offset, align);
- 
-+		if (!start_fixed && entry_sym && i == entry_shndx &&
-+		    (sechdrs[i].sh_flags & SHF_EXECINSTR) &&
-+		    entry_off < sechdrs[i].sh_size) {
-+			kbuf->image->start = kbuf->mem + offset + entry_off;
-+			start_fixed = true;
-+		}
-+
- 		/*
- 		 * Check if the segment contains the entry point, if so,
- 		 * calculate the value of image->start based on it.
-@@ -1002,13 +1021,14 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
- 		 * is not set to the initial value, and warn the user so they
- 		 * have a chance to fix their purgatory's linker script.
- 		 */
--		if (sechdrs[i].sh_flags & SHF_EXECINSTR &&
-+		if (!start_fixed && sechdrs[i].sh_flags & SHF_EXECINSTR &&
- 		    pi->ehdr->e_entry >= sechdrs[i].sh_addr &&
- 		    pi->ehdr->e_entry < (sechdrs[i].sh_addr
- 					 + sechdrs[i].sh_size) &&
--		    !WARN_ON(kbuf->image->start != pi->ehdr->e_entry)) {
-+		    kbuf->image->start == pi->ehdr->e_entry) {
- 			kbuf->image->start -= sechdrs[i].sh_addr;
- 			kbuf->image->start += kbuf->mem + offset;
-+			start_fixed = true;
- 		}
- 
- 		src = (void *)pi->ehdr + sechdrs[i].sh_offset;
 -- 
-2.52.0
-
+Sincerely yours,
+Mike.
 
