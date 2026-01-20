@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0DB9ECA5FA0
-	for <kexec@archiver.kernel.org>; Tue, 20 Jan 2026 16:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DA771CA5FA9
+	for <kexec@archiver.kernel.org>; Tue, 20 Jan 2026 16:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
 	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=AP3b1QG+xPI6jPhdm+mXUYSwKq6bcsjkSqEhuIl9PpA=; b=er5BwuYLupR85FJvrXX7y1LI4N
-	u8Fkj6iRTkYbYCqCkPnEI3PMMV7YVPtQHdUi43EGJl0Xy7M11x4JFaSthqq0p7hHrot7rP6fsYvDt
-	Bjl/7T0Xd39WnRIYbAtMACDhSQuo6PgM566DIydXR3Bwc8wnVVRB3kVGGFKgMZes3iacN6zBecKFA
-	fzrLBQq/5QoDrmaVnpv+1Z912b5hdUCpYiq4dv3uV2BSbkDK+13bX+3l7oJRp6djZPI3B/CqaY6dz
-	0Cu5WO5Xjddf54U39LoaDq7UG0j3uusHl4qrh046rUBo6I6LFicq32Uj0ZejnBjggJ84IorFtgo8V
-	8Ot2ijVQ==;
+	bh=z/J1YAop1V/r8c2DlUWbLz43fckCY4iAx9abYxpe3Yo=; b=jPQ0Psr0E3RJLBQKXUkv/5yrLw
+	Yrp2Hd9O+gga9kiKb2abBJoSRyZ3EGcz+xOEhb6jPxAWyfawoAA83Ia8cojTDqHvQCZSDpjxi9+qe
+	wrQbLn9WRK6vxY8sSQWXbJ8R/ht89ZjsbCCWgz//GFWeIo/TzAA23c8pgXf9mhLkmsflJRzTBLxHT
+	iiwev2ETkAYS+tmZmmevEPpHum8UEfTGYy4bw0oxwu9SoS0AtKTLbc0T5cy3ltrVSFHG11RQdGOio
+	HOI+f06DeSDC+lEabeadYrSmgJr3cn5SEMCHmihGnxacw+vllceLGH7tVquQhO7m2u/WlzplTsi67
+	fbRQPPrA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1viEMp-000000048m8-3zEN;
-	Tue, 20 Jan 2026 16:14:07 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1viEZG-00000004AAP-0hhg;
+	Tue, 20 Jan 2026 16:26:58 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1viEMn-000000048lI-1l7y
+	id 1viEZE-00000004AAA-1Csx
 	for kexec@lists.infradead.org;
-	Tue, 20 Jan 2026 16:14:06 +0000
+	Tue, 20 Jan 2026 16:26:56 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id C041740BC0;
-	Tue, 20 Jan 2026 16:14:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF835C16AAE;
-	Tue, 20 Jan 2026 16:14:02 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 7388060010;
+	Tue, 20 Jan 2026 16:26:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5254CC16AAE;
+	Tue, 20 Jan 2026 16:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768925644;
-	bh=C1IvwOEB2IeBsljjj1U5exHtGWqVJB2lEhayoPqkk5Y=;
+	s=k20201202; t=1768926415;
+	bh=4ywi/Ge6byP7fAvuQcqc1ZOy3qOB/jgJwjF/tX2C4Vs=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=dV47J2SIEbcMdZkZ9Lifr8FksIvm38/wEBwH1gTlZgjkovIsgQnrHeducibOmFi2u
-	 0MXW3RUHb176VYbMK+JyeNcRLKwK0htuCP642Do6W9esCNrZRZeWgKmjratMzZhxJr
-	 /Y/U7vCLf/7KDZtCnyqsm9dTVBjlTW7u7n4Y36QbguNVCx+fcoocx9lfyB/wYY22GI
-	 YQxLDv4C46PPgDTux/jLnKScOureFjXjQ3T6yun1zCpFJ4Tb4SkyPicZP67prLnJsO
-	 81We6TisKb/KfU/+uDFPsfyFCg9wnY9yaM5CIJw6/dHdUdK9aIvJTFBmcf7RmuOPU6
-	 LE8IcaGoozNaQ==
+	b=u/Jbtm1Uy7tW11ltZw+UNuQwuvnWlKzzSwmmZlJVZv6+RiqUfcPPqXDDuQNuAsvQa
+	 CBF3rwzUzEOnYqQI99rTEJF/0p4B+UHohQ4OG8Fcv67bLjRByLmqjTIcj+5nasml8/
+	 Fq8mdc02ZJ69FoXRZuLUgllceE+DLZts0A+7+7FslqKnXo8GDBQvrX6vlh/yRn3avF
+	 qzc1f/vB033q95iTw/v9m0JzrKBJnKB+bSvcm4CPZSuLfHlp8bMj8mcfaYy+2sWtRz
+	 z9jKx5XCC9uJmPnfArcbKqFqbODWK0TNEPHBUindT+YeOOcjB/KQicQU08LHn+tVOz
+	 n51upe5GYDzQA==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>,  Alexander Graf
@@ -50,19 +50,17 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,  Alexander Graf
  Yadav <pratyush@kernel.org>,  kexec@lists.infradead.org,
   linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,
   linux-mm@kvack.org
-Subject: Re: [PATCH 4/6] kho: Introduce KHO FDT ABI header
-In-Reply-To: <20260105165839.285270-5-rppt@kernel.org> (Mike Rapoport's
-	message of "Mon, 5 Jan 2026 18:58:37 +0200")
+Subject: Re: [PATCH 5/6] kho: Relocate vmalloc preservation structure to KHO
+ ABI header
+In-Reply-To: <20260105165839.285270-6-rppt@kernel.org> (Mike Rapoport's
+	message of "Mon, 5 Jan 2026 18:58:38 +0200")
 References: <20260105165839.285270-1-rppt@kernel.org>
-	<20260105165839.285270-5-rppt@kernel.org>
-Date: Tue, 20 Jan 2026 16:14:01 +0000
-Message-ID: <2vxz3440dzxy.fsf@kernel.org>
+	<20260105165839.285270-6-rppt@kernel.org>
+Date: Tue, 20 Jan 2026 16:26:51 +0000
+Message-ID: <2vxzy0lscks4.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260120_081405_478748_B6A6706F 
-X-CRM114-Status: GOOD (  10.82  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,25 +79,72 @@ On Mon, Jan 05 2026, Mike Rapoport wrote:
 
 > From: Jason Miu <jasonmiu@google.com>
 >
-> Introduce the `include/linux/kho/abi/kexec_handover.h` header file,
-> which defines the stable ABI for the KHO mechanism. This header specifies
-> how preserved data is passed between kernels using an FDT.
+> The `struct kho_vmalloc` defines the in-memory layout for preserving
+> vmalloc regions across kexec. This layout is a contract between kernels
+> and part of the KHO ABI.
 >
-> The ABI contract includes the FDT structure, node properties, and the
-> "kho-v1" compatible string. By centralizing these definitions, this
-> header serves as the foundational agreement for inter-kernel
-> communication of preserved states, ensuring forward compatibility and
-> preventing misinterpretation of data across kexec transitions.
+> To reflect this relationship, the related structs and helper macros are
+> relocated to the ABI header, `include/linux/kho/abi/kexec_handover.h`.
+> This move places the structure's definition under the protection of the
+> KHO_FDT_COMPATIBLE version string.
 >
-> Since the ABI definitions are now centralized in the header files, the
-> YAML files that previously described the FDT interfaces are
-> redundant. These redundant files have therefore been removed.
+> The structure and its components are now also documented within the
+> ABI header to describe the contract and prevent ABI breaks.
 >
 > Signed-off-by: Jason Miu <jasonmiu@google.com>
 > Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+[...]
+> +/* Helper macro to define a union for a serializable pointer. */
+> +#define DECLARE_KHOSER_PTR(name, type)	\
+> +	union {                        \
+> +		u64 phys;              \
+> +		type ptr;              \
+> +	} name
+> +
+> +/* Stores the physical address of a serializable pointer. */
+> +#define KHOSER_STORE_PTR(dest, val)               \
+> +	({                                        \
+> +		typeof(val) v = val;              \
+> +		typecheck(typeof((dest).ptr), v); \
+> +		(dest).phys = virt_to_phys(v);    \
+> +	})
+> +
+> +/* Loads the stored physical address back to a pointer. */
+> +#define KHOSER_LOAD_PTR(src)						\
+> +	({                                                                   \
+> +		typeof(src) s = src;                                         \
+> +		(typeof((s).ptr))((s).phys ? phys_to_virt((s).phys) : NULL); \
+> +	})
 
-Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+Nit: not a fan of exposing code internals to the ABI header. But without
+this the definition of kho_vmalloc_hdr won't make any sense to someone
+reading the doc without looking at the code. Dunno if we can do anything
+better though...
+
+> +
+> +/*
+> + * This header is embedded at the beginning of each `kho_vmalloc_chunk`
+> + * and contains a pointer to the next chunk in the linked list,
+> + * stored as a physical address for handover.
+> + */
+> +struct kho_vmalloc_hdr {
+> +	DECLARE_KHOSER_PTR(next, struct kho_vmalloc_chunk *);
+> +};
+> +
+> +#define KHO_VMALLOC_SIZE				\
+> +	((PAGE_SIZE - sizeof(struct kho_vmalloc_hdr)) / \
+> +	 sizeof(u64))
+> +
+> +/*
+> + * Each chunk is a single page and is part of a linked list that describes
+> + * a preserved vmalloc area. It contains the header with the link to the next
+> + * chunk and an array of physical addresses of the pages that make up the
+> + * preserved vmalloc area.
+
+Perhaps also mention that the array is 0-terminated?
+
+Looks good otherwise.
 
 [...]
 
