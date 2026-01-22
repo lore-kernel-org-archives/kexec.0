@@ -4,96 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B57CDD6CFA2
-	for <kexec@archiver.kernel.org>; Thu, 22 Jan 2026 18:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0C78AD6CFA3
+	for <kexec@archiver.kernel.org>; Thu, 22 Jan 2026 18:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mouF04Fjg8ir5c/+5/uLoczeIu6+gVBtr+E4eejz/fc=; b=r6eTnvnWzDqHUjHUyz1AYaEEgV
-	mEZry/eeZwI/RSYXu88zWS8nXbN8gMDdNh0CglMv7mcxw9THoMc25ecY7NbbK87ozinS0pWqL8bUs
-	gd03mxIK2Ww7kah/h87dizwAYr9UkavL9gVT32uc5P16TauKYpLHEP9ZBMLSadcAU+xpwppEIjzPt
-	URgcRSHrS5OZuaQuOPaxZ3a7ADZ3SPLXp3gKqZ/hFbHXaCa349EmEW+vJSzUEHHm84lIEB4BmrEhx
-	fCzBiYI+pkj3l7rWRX1k2vHUmGyEwe4jiQA3+O4s51fsdt2NnATaAwdiawRm4ZGUzuAgJuQPmHary
-	9DPr6VAA==;
+	bh=cmMh+ovoeRUCCwfFygbXGZ6j9n5SptMlw+qIxplX4y4=; b=FTUMOl601uPS7UswdJ/hWWPJ8r
+	/Z6Xdx+29mAUph9wql2l0FeLrrZNATGGCu1ldy0VABtPxf1qH8wQ9zmiPVYNHzlEoQQxJ4s66HdCc
+	Wj082E9jJo3AlUCz92JveOZYDbwmnuLmzgYQZDtII6mZDhtv/MCp3iGiOLj7XDwboVUeKkrVJPY31
+	DRiWehegHECq93EkZUzW/wNeZ03CLHGVefD2aTxbNUy80P1P9V4AZSBGpjwptRVhj9yOTXHtAEHjH
+	UbDk+d6b4KSRkDEzeWlA/wY8dAPiUO3btqD1gJS9o6RHoQZGWlNyfz/kourD1naIeP40HWWvZ/5pQ
+	GAbkPNeA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vizPT-00000007dKA-23Se;
-	Thu, 22 Jan 2026 18:27:59 +0000
-Received: from mail-ed1-x534.google.com ([2a00:1450:4864:20::534])
+	id 1vizQ7-00000007dO7-3Kz5;
+	Thu, 22 Jan 2026 18:28:39 +0000
+Received: from mail-ed1-x533.google.com ([2a00:1450:4864:20::533])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vizPR-00000007dJo-22on
+	id 1vizQ5-00000007dNg-06qM
 	for kexec@lists.infradead.org;
-	Thu, 22 Jan 2026 18:27:58 +0000
-Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-655af782859so2547451a12.2
-        for <kexec@lists.infradead.org>; Thu, 22 Jan 2026 10:27:56 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769106475; cv=none;
+	Thu, 22 Jan 2026 18:28:38 +0000
+Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-6581234d208so2569574a12.3
+        for <kexec@lists.infradead.org>; Thu, 22 Jan 2026 10:28:36 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769106515; cv=none;
         d=google.com; s=arc-20240605;
-        b=Bp5zQp74vn5orEKzRmIlHa6Kp6/nP9cTflHj4PHhDB3F2WHfIn/jgqhLWw28+uz0gl
-         N/rgujStVjGP5pf2HXmMZmioRX69mSXfwmFM/7JT/mUXflIlNmo3Lq1LdboAZvv45AEt
-         Cei7laWNpRQUxKIpF1pFxCgZPfOThYdseOC5EN1S1QbkbBlwZWJkvHAJINbmzJ0V0sBh
-         2GlAiLQc1itwPvf7uWxeu59YxhtVPiRYoI/Ct2vvx+pAVofid1pxBWl5zM1t4m8jNJKf
-         aC6NUpYWzRw5NH5koHPl0nm8f2xteEfa299gH2wr+q4SOjD2mbw9/KwWkrYrpOzCHvTl
-         2qJQ==
+        b=AFvhhKqU73CosBH/oMITOnRlAEXjb2EvpmAZWC5Dl0kQgMITLEegLWnDAEVfH+3rgv
+         ZtuBRZR/dQx3bDWWi068kjHgXJjDXBq1ZWYOustD0Uv/zCT/Eg0eBvh6WbtvPeO7SRqR
+         tNqLu2iePqCnJfatG5IYGRF+s1xDTTn/uhPm3u41HMWJHTaVJSz71S/Fp+46KJeoB/OS
+         bTmAuzB23lqT7N1ZSD2Ae6g3pTjssWkctibbL9+4xTgtM9JEYbKWDeQ+TP/Dlt//lV7C
+         UEN8/8SFrA7bMYqLQO8yrLEO66oLubr35HYL1HavnM36BnuIeNseXYUAbTIeBU351Jae
+         VbxA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=mouF04Fjg8ir5c/+5/uLoczeIu6+gVBtr+E4eejz/fc=;
-        fh=UPVAay0FewVq/A4HCGaReJKXYU62xPGAcxjwN5IGV/E=;
-        b=fgwD2U5GAJFyAyf87+g8JUQDxeeeDZJH4AGGcaY3qXaN/Gsq+w47jlRxUWgtuFsjJc
-         UIYM8jStRgo2ZWol+F88vNLfWQtH195rRLx1pQ6OTctcv6UjXY5OnaLPMUZ2lEAmdKvc
-         0jVk52VkDuUWau7qVM6TlziKBwtyf47UGiX051PD/P23Cq1ue6Sok9egltE15XKUpp/u
-         gHWj+XYoKsXYvEWRasSW/nRM6lVT15yA+/HBWFgK3l4iJ6I3t56+qIvd+iYW4hw0eE7j
-         J9pzjIR0Flz2kDiLI2guNu7qrBPLKfLofTcYUL5K7OGL3vFSWkCU2ZKTl06+9D1IulOz
-         zeCQ==;
+        bh=cmMh+ovoeRUCCwfFygbXGZ6j9n5SptMlw+qIxplX4y4=;
+        fh=2SIKaf9MGrScJg0DlE1mQLTfSdMqA00v2v3VgaKIMYo=;
+        b=jAAK/mBYii0EBvWT5Qcid37afY0rUd6XPnIQSGyGZQ6KnifpfNjbbRyFzwVx45d6kV
+         MSYzPARnGEFb2VesOXMxWz/6NPegngYcZPp+tC8+IPPmJs8x8mXvnykB8ptm+jZpc/kq
+         R2Kjqjk/BeKhcQLJOO6MTRgxvfNFf/QOLUn4miyeUCAE7ji1G01kNEQy9tlPB7w8ww4y
+         fWFd+bAvoAoQxSc/kQC83uO/aGsbHmBzY31JgqCdCVwauKt0eftwTqoZ36G//MupMuEN
+         cRjWTtr/vGzy9gFPcU+wlyR5zqn5AeXVHZiq4k09zvgTFspV2/v2od4eMdoZJc19hoCw
+         IbNA==;
         darn=lists.infradead.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1769106475; x=1769711275; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1769106515; x=1769711315; darn=lists.infradead.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mouF04Fjg8ir5c/+5/uLoczeIu6+gVBtr+E4eejz/fc=;
-        b=LtV4I49QU+KDQB7s2KnYMTiEIEQQeZ2dOSDRvkd1KecgKsWVtifceMmvmyeXrLBgyn
-         vtmKv8hKwrqtCsva5+CflmF8RwCkXCf1RBjQxaEo7DSMJt7gnPfqfz6RYiKDRMd97Q6S
-         rNJ++ePoei1hJjokCllKjju9b3XPxLg6CTME6+2S51ea+x5NZ9SPw4kv3hyxYIVG3llr
-         oB1YW9yczLYkMlxScOmChq0bD3DC5/9fg0x8ZSKhJbrkN8jo+X4EszXNGv3JDVkjW6lZ
-         sh4rKiMnL3vPdKDp8OivRKgPCxc5ZVMUbXpCnlm6CbgvkfFRbMzYyQuGhdUVCmhhuCam
-         nMtQ==
+        bh=cmMh+ovoeRUCCwfFygbXGZ6j9n5SptMlw+qIxplX4y4=;
+        b=QP3D2xZ128EEpJtZbZB16Y+WuRffxsuU/LwoVpiH4BIQ+mN8qRl2mMU8gmAgfDui/T
+         u0UQRErfUQBIUssJgTeQnQt4jHajJp7z0cyccd2oQ1rhneIAoHFyPXJHPfCZ6FpX+yFj
+         2X7bF+YzkGRn1OBcaf+1OYoTF7qdKRthhPNqmtLKClghUxTgTy2VlqGB1bVhwU0HseGO
+         yKzkCcbYUdq72Rs1JZ6iM7AP2baNuX7HsWlD9V6v+/uXD8WBQJzT+mFA6v7Z1cYx5f7f
+         qrQV6y0W5PSQ1qheIYQBmNgxEB3V0cDuCPdhRUybVVDJSpN5CSwr5aAXksKR0f6SnfBF
+         FDtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769106475; x=1769711275;
+        d=1e100.net; s=20230601; t=1769106515; x=1769711315;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=mouF04Fjg8ir5c/+5/uLoczeIu6+gVBtr+E4eejz/fc=;
-        b=vKyggcsDQkpoHHD3yBK33+/vDZ6svGYE18KLmShHCJNGL0Ns3P/37KUficlwkgIxRP
-         gTF5990332EArzuhIsV2QINahEOHjZ9T2s0BydnX1c3tKvPUCitdL8wWzH4FoVzXXhqp
-         gkgjjxF9H+jjot/Xj1BSwCObP43WQQ+CwJcExkG4hVtIewHLnSk9TkjbEAJK9yIEmynO
-         SIOigIGtJlS8iWg2jncBlkhPAUY9j38UUS/yjH24hkdn8ZddoNrrYAsRn8HK/7JKPs0+
-         AAXgdMFnAaQ6Qa+yJmTugn39LhqBOxNkGQTVG6o07bQn7KYCDY5KVdxqCK/oNTv6ZScB
-         LYhw==
-X-Forwarded-Encrypted: i=1; AJvYcCUFmB2VVpHk2RBdCMXHI5nDqnUzXy2GXHPdpKbs+okwZg2ell1MooyPL6x17UbEz80IYev73w==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwZ8fnPNaV6qUetL0Mja+Cy3gEDTw1mLTLlLPHF5rKxVaJWP0Bv
-	Y00o8wmIDqpTybAgG7sBNwTacHiO07Vuo75oXpRrUTCfJa0MUyPPfEExugnbgUOUATOWkhPWryG
-	o8autPWsJmM0UuQhEJOEqXeF54xDQuUZqL3gCrz9+zOPRzwOPWAG8
-X-Gm-Gg: AZuq6aL85rkydioiM3v+7HeptUCAQHMAi6lRd5TNz0F5lCovf1lwfy51z9KBHMkPSmT
-	aLIEhPfkusk6xRetcaLeaV8kSFVErTUDSo2DIcHSL1mzpvzU5LNLMyJfms/wSXHS2Kfxo8XOmwo
-	tDtr7+96X7VH5keLwn1xnThnY69fOqfs9kYqxm1t+9Zk4CwpS9RztPsb5bgo30y5U35UP0mSw0a
-	oKoEEBGv07nMuhthPWPPx75a/jKX+qPOWBNrywI55QKUIS8rf4XUGV0Cmg9BbquscgGNRBO1dDX
-	sxpwd6SWjFMpBKp8tGHE5m88gw==
-X-Received: by 2002:a17:907:787:b0:b87:bb45:bd5c with SMTP id
- a640c23a62f3a-b885aeea0demr12601766b.58.1769106475582; Thu, 22 Jan 2026
- 10:27:55 -0800 (PST)
+        bh=cmMh+ovoeRUCCwfFygbXGZ6j9n5SptMlw+qIxplX4y4=;
+        b=NqhTJ4KOagmAMW+EdS3S8/hf/ZLwteB/mLXxiJwBWVZuenWkPiFkeTKbFlhqKZBPqQ
+         vCX2ttKWs+OL3OY1qQUNqASqEEk/+qTjcwQpq/4UydN5vDOEZ86hlB3JMXOCJIA+mKuw
+         MlnjFl1QqGl1frOarpK9CZYg80yVDNCE9cvqe2JwRbZX7l5BpuMBuoRk+DEXyCAD7Z8c
+         cdrI5zIb1Ua6zcCLnTEfhVd+iiCc9osv8XRkARj/DcpnavHRG/xUJlUpw43WRmK+1heH
+         pv9BGBQqqifW3B120yeF+RPiBYPFF6mFfZJ4U1gDQ3XRUWsDhIkE6xlHzapYJ2TvjcWE
+         PAvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKqbySoMH/g2ADSV7hya+n1YAysfhVGO3yDm7PD9yTV4/t4xHsI4gEdr5qQaVjkFhgT43Iew==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzRVjP8EjZlG4KX4d/62L911n0wAW60doR7f855EzDfmF6sPhsC
+	M6WzMjVPKo/vbIi4Ynb3IAJwCEq8GPCVTf0xuJv3T3OhhsPybU7cq+OiXaV30oBIYEx1yoR5CFf
+	AYeMgnq4QQBufNdcQHOvxbd70E1bjayeIl6iMLQ0e/A==
+X-Gm-Gg: AZuq6aIOnp2056jcig0IK2u/mYd6sHZkHOW7dnkkmu3p3ZYgXwS34IONBM3j7fv7102
+	DyReaxocMCdUB+m+4vvX0P4h40o4/kEo9xiS5Z0xUGZg88cbJu6kg5+65T02tqXHFEdrS7YdkLD
+	huSV8vwA/pgOwGEDxRjlPe2lVvVeaEJBKP5xXOk8+F3UjUqMiXbmbqg9ehau/2f969/eYhay78M
+	F0Cx73qXP14eUUK4wEbVgptA1ZnCvjm5n6x0xRm4BwnUlmL3Npw5IwdOfnCFBdR5mDzt+UxDWSz
+	9tqOhMdGprCyz71fQl4g4bTRLw==
+X-Received: by 2002:a17:907:25c2:b0:b87:1b23:cad3 with SMTP id
+ a640c23a62f3a-b885ac40b17mr13522966b.9.1769106514941; Thu, 22 Jan 2026
+ 10:28:34 -0800 (PST)
 MIME-Version: 1.0
-References: <20260105165839.285270-1-rppt@kernel.org> <20260105165839.285270-4-rppt@kernel.org>
-In-Reply-To: <20260105165839.285270-4-rppt@kernel.org>
+References: <20260105165839.285270-1-rppt@kernel.org> <20260105165839.285270-2-rppt@kernel.org>
+In-Reply-To: <20260105165839.285270-2-rppt@kernel.org>
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 22 Jan 2026 13:27:19 -0500
-X-Gm-Features: AZwV_Qh5OQxnhkP1BE91ywGY4oJqPabhz38UybbAGCSh0mnJSMFxpX6QR-TTRaM
-Message-ID: <CA+CK2bBzv4mLEmFSQszHdcO9x+YJ+UA001KNvS2of8o_Wa6itA@mail.gmail.com>
-Subject: Re: [PATCH 3/6] kho: docs: combine concepts and FDT documentation
+Date: Thu, 22 Jan 2026 13:27:58 -0500
+X-Gm-Features: AZwV_Qh8LphdBgzf-rB2D4uKAJkXice2g_NEcJK-xBvMhkC97uW462CJuKpoRTs
+Message-ID: <CA+CK2bDkVtwrCB9Jb=gSNC4CLgROJNHChjBPP3yYcad5y6AeUA@mail.gmail.com>
+Subject: Re: [PATCH 1/6] kho/abi: luo: make generated documentation more coherent
 To: Mike Rapoport <rppt@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, Alexander Graf <graf@amazon.com>, 
 	Jason Miu <jasonmiu@google.com>, Jonathan Corbet <corbet@lwn.net>, 
@@ -102,9 +102,8 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, Alexander Graf <graf@amazon.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260122_102757_544212_BC59C83B 
-X-CRM114-Status: UNSURE (   7.56  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260122_102837_081901_211120BC 
+X-CRM114-Status: GOOD (  18.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -124,17 +123,41 @@ te:
 >
 > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 >
-> Currently index.rst in KHO documentation looks empty and sad as it only
-> contains links to "Kexec Handover Concepts" and "KHO FDT" chapters.
+> LUO ABI description starts with "This header defines" which is fine in
+> the header but reads weird in the generated html documentation.
 >
-> Inline contents of these chapters into index.rst to provide a single
-> coherent chapter describing KHO.
->
-> While on it, drop parts of the KHO FDT description that will be supersede=
-d
-> by addition of KHO ABI documentation.
+> Update it to make the generated documentation coherent.
 >
 > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-
+> ---
+>  include/linux/kho/abi/luo.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/linux/kho/abi/luo.h b/include/linux/kho/abi/luo.h
+> index bb099c92e469..beb86847b544 100644
+> --- a/include/linux/kho/abi/luo.h
+> +++ b/include/linux/kho/abi/luo.h
+> @@ -8,10 +8,10 @@
+>  /**
+>   * DOC: Live Update Orchestrator ABI
+>   *
+> - * This header defines the stable Application Binary Interface used by t=
+he
+> - * Live Update Orchestrator to pass state from a pre-update kernel to a
+> - * post-update kernel. The ABI is built upon the Kexec HandOver framewor=
+k
+> - * and uses a Flattened Device Tree to describe the preserved data.
+> + * Live Update Orchestrator uses the stable Application Binary Interface
+> + * defined below to pass state from a pre-update kernel to a post-update
+> + * kernel. The ABI is built upon the Kexec HandOver framework and uses a
+> + * Flattened Device Tree to describe the preserved data.
+>   *
+>   * This interface is a contract. Any modification to the FDT structure, =
+node
+>   * properties, compatible strings, or the layout of the `__packed` seria=
+lization
+> --
+> 2.51.0
+>
 Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 
