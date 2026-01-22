@@ -4,103 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B8A56D6CFA1
-	for <kexec@archiver.kernel.org>; Thu, 22 Jan 2026 19:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F3D22D6CFA3
+	for <kexec@archiver.kernel.org>; Thu, 22 Jan 2026 19:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=7uFuZoZJrwPWm069b7Zxl5WdE9K+cZvS9QdYX8aCTtE=; b=KV3tmygslwPCuBsDe9/x++3Tji
-	tS84Nd7AUPf3J8HBY1xWlJk2V4Ugb4ryE5M786o1aEMU1Q8M6hwuMExmd30bfZ/D+TvlePDHC4NFe
-	XWYWg1H4WqEQ6HZdEMczBX+cfKjneaNJZbE70eNIwEEDo/f1j+gb7OHnqAqWCsc+WOdMCTXvSpbMw
-	0+7CfGz0rzgrYgm5eVcuCOPo4ZUT7odq2XFzZQnrLSY+ddx8qk+30NYQQH6udszdnvTPKK3arKueO
-	M/agWKabadkd6pmTX9yYhHXHX1cHx73jbcILDc1AjMNPMuj7kxqVI7kCGTjoMOrM8gfxmsVUoN7Si
-	c4vfEyUg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=s7keTxLfsvNLS0EPh8K9+DpG6jqqIVhJos6SbOQ9CV0=; b=VTKaB5PgxHxL/pJl1h9cEvb+7X
+	O+yGh7k5zAKk2agvjR9vAUM70nmGvATCs1qDX5c6/jryvt8ZrtRzi53w3qsEKAGvpckFqOo+RiUNK
+	GoMq0UlGj/UnWnRI0MiZBugK10/3KHQ54nQqBf7zHCJ4H6MFmNO57+Zm6fzcJYO9QvupnfSq559Yw
+	J06O3MUCWr0U17xBzfO4QIryHxRD3IthMWhp+rbIN9e0DDu8AoeQf6j/JmLOi6AaZIj5w5w4bYnfI
+	Uqtp2uj7UC7xQeySiWR0Fs66fFYCeG+6fuZqu46ePFqb8ya/kTzT4AIF+xtHSr/Dm6ybNXPyAMbWg
+	LDOBaF6g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vj03g-00000007gPl-0aVi;
-	Thu, 22 Jan 2026 19:09:32 +0000
-Received: from mail-ed1-x531.google.com ([2a00:1450:4864:20::531])
+	id 1vj06D-00000007gV5-2dlT;
+	Thu, 22 Jan 2026 19:12:09 +0000
+Received: from mail-ed1-x52c.google.com ([2a00:1450:4864:20::52c])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vj03d-00000007gPQ-3kOl
+	id 1vj06B-00000007gUY-3G35
 	for kexec@lists.infradead.org;
-	Thu, 22 Jan 2026 19:09:31 +0000
-Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-6581234d208so2642310a12.3
-        for <kexec@lists.infradead.org>; Thu, 22 Jan 2026 11:09:29 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1769108968; cv=none;
+	Thu, 22 Jan 2026 19:12:08 +0000
+Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-6582e8831aeso2039897a12.1
+        for <kexec@lists.infradead.org>; Thu, 22 Jan 2026 11:12:07 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769109126; cv=none;
         d=google.com; s=arc-20240605;
-        b=YLdxQusaoLJZPvMUEYMdLO/BvInuCl5ThazJq6fmnCVWyxCSK2TowHqkim4cWxxRGz
-         RjXnC9Hx06TnU20csRE5tKRB0ake4S124aJFL70gioeAR3Q3ZE2KhKmm+kdsxNjaIKse
-         GhgyaktvlHO/L0Ay+oyrpqbWiaGmIHeKX++37Wz4a3vmJG4zDoxA/AgSXgkBkP65p6Eu
-         W1f7Mr50q68AXnJpOYwoIK5HwlESmuRBBs8X1rZbuDgR/DCFwKpeWNZzMvUyyPcAO+Zx
-         FolYx5OUhnnfKM3GwzUVrP8d9gCbnQYX/04+JsL+dPqvrNnGkU4axoWxKEOaXarKH9rt
-         ccbw==
+        b=UsA5FVUKl9OZNGb3FZ6iwC+F6BvtvGC1jf5Pa0Je2VM1lfSKxwsUmUodA89jB0Gc2M
+         YpMsaJ3YM9jwPpzppARQjofeU+8xWUtDQpruUUYT3boF7olOz8B1mXjcCSsiHis4x3Zk
+         fRdCdW6KL8JqkhbT1tyqzAA0QkQoD2Z1Nrf6b9B5sOBx70tNz64U/2wGb9e5DLnuI691
+         w4rbcEwQUUyK2YehAV3NIsQ7jPx5jNBKPe35QSPjXWC6BKeoOhvLhpbSu6jjbAKI1low
+         1jTkKGZ3Ocp+qbtOljcTBE1IN13AMIhJ4AG500Zd3sdcg3V6QtfUQemBb7hlEacpK1xC
+         cLdQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=7uFuZoZJrwPWm069b7Zxl5WdE9K+cZvS9QdYX8aCTtE=;
-        fh=0rBziEew2U7waN3XuclDEib+H4qf93svkeaxEJNN8s4=;
-        b=KrwcWECIksB+sfsPJmUk3iPBM/WAC/SK7DmlRm/WxWG+p6MtL3oR5GNUSgGVdvviuq
-         fSDyViJK5Z2XmOKj8IBpMVJLG0bcnmP9+xu5unZsH4NvYtd5zgL9f8ckzuTLYER7SPwm
-         Bx5CTtUgY0GPZyyD02+UQ0lJWzoFeALDkl5Hfw+LTs/hRze0XaAe5ectPJL6K6TWh8Yw
-         BFWpPMjaCmv4o/g29YCvqym7k6YGkmryzkw//JJCcwomea/EkrhNd+SbKk3trT4N0FXO
-         1tTwO3gGBlYrDJDIVZUq2prnFHU3aAeaETOyP3Rovqe1F34PKLRoRO0YGEAFzx84EqhY
-         rl+Q==;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=s7keTxLfsvNLS0EPh8K9+DpG6jqqIVhJos6SbOQ9CV0=;
+        fh=+EaPFZDKkXmSSBa6fC6h21JTiZ3o3XgrK7GlFNP9rQ8=;
+        b=Ni0ghza7koOYutfF9WwECLKb+GbhNp/rzyhD5FhKHlOJiuKx32avzBwJ/k52S2jjd5
+         enRTUd7GGy7WmQvtschOUp7uQ4o6nauIkVw4xauFp3TXSaBp9AhHmwhU+ddleCVZYvp/
+         xCGlV7/rAQk6TK/xLIUa7urmT9CXui1XuagNE73VKQ3g54X++5EfWBU7q+xgq66vC8DH
+         4eZp6Bj/rCV2JwU0vu0NdO+tFXDhvgGPd8UP6lEOpKqXp0bXF8SzHrNKRn3MLgtVzp7w
+         yROWdSZHCpPZYxiY2BA0jCJwOzW/4Y7sJmSvBjb9bmfkqZjrnHU8P/q0HIo2zMO6E0f3
+         gafw==;
         darn=lists.infradead.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1769108968; x=1769713768; darn=lists.infradead.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7uFuZoZJrwPWm069b7Zxl5WdE9K+cZvS9QdYX8aCTtE=;
-        b=WM1DvCGb9h0+kieuBpDvdnySGCDDL1RCSqiuLhmrO6W4qzcHYZt/q4cLK1rajfcJvF
-         HqxzPYMF5VyJ8O9O88C0e57/g+vfqndyqA2G/3gZt0SAB1N7+wAr2GjFaX7CUSvfTNIP
-         IT35BQFDst5/SUjrMnJyXuJEdjyhRex60yIuozJ1fMjvp8kOgSZdFUdBz1wCw4G06qCX
-         DER2Vjz9zvgjSeQxxqPXJn+zk6Frac2dwacMQCfaimhH/Uyci3lDDa35pD7vtTdkIYFR
-         iY16ioywszh0dtO4wlAabXrYFXZUKqyyn9QZlHklQ/PWYVcoBJYWLXfgkeUEJ7Uo9Rfi
-         r1RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769108968; x=1769713768;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=soleen.com; s=google; t=1769109126; x=1769713926; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7uFuZoZJrwPWm069b7Zxl5WdE9K+cZvS9QdYX8aCTtE=;
-        b=vWQ+CZYTo/ltpByRuSJjuDotriUF0yGqvzDLZ/BdZacaGenZND/z3ujKWZiheb7HFh
-         RJZXOGCodwis9qBzxz+2Ol0fnH4U4HcPXFTQDoC7vO4IiaXT8pBnUDm5gHkb0Tby0BHa
-         crDdtr67NJ5/b2lsFNCgSdx4RnTfte/Cdx9zmQCO/QeLoI4nhmDDvFH7oJ8bbqXwJQjF
-         FLBpOLIMfDvb3MYEk2MEHCdGJfr1HfFXVwXOk77PTIkBDZj+NsiDRvN0uxJZxLXwBY2T
-         WFdyOep7DMe/PuGyywqXhsjdVdt/0Nplwm8RhjmFd4keM1axJw9atjCzS1NpTlWezsBS
-         f5TA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqZ953MofxUbZu2S+z6FqRaNY+rsr8bZuTfNEnnI0tkmDCDtw6PYiC1MD2eC4u+TuEzvs8pw==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yw+fhMkGP341PwZFpKL3eRYP9Y89YPigefzoRUDoIuYYdQIghqD
-	7QYGZwriBj4Dio/cZmTRLi9FV2fInARHAO8Ay8GMj9ti1sPeuFhsZ/rMwRjCZW7B8WPUbFE04xU
-	IpCm0vsT/D0ZGbGGFrUskt20+cyH9R64CkgScGb/wTg==
-X-Gm-Gg: AZuq6aKXj8ic7VsJBci33bcYrIs2SJEur7P1vD+LYos7OK2AX0trvMe5tg5GTZD4KrY
-	nX5mCxZF8Cgvx0yjw2JuYzEDDJz0bxllNmkLps8OVsT0WJ8e+se0DmTT6tbGLTn04ra/ml0PPPz
-	zfPfapuWYMcwThSuwD+kMKZ9GAvsXKR8IjqcqgP5CfjmTBX+QcOPAnd0gkTScaSAYl4TAGQV3dT
-	ccO05bRGhbrKzziZ8mzaLfVyzb5dN4P/rUPx2WaLoaxMuaBEBm0Q2m12AjtBAW75SxM60bT1B8K
-	D+YQ1Ukr3DU9Js/pUyiv4AlMVA==
-X-Received: by 2002:a05:6402:1e91:b0:64b:bb79:96a8 with SMTP id
- 4fb4d7f45d1cf-6584874e5cdmr458412a12.3.1769108967947; Thu, 22 Jan 2026
- 11:09:27 -0800 (PST)
+        bh=s7keTxLfsvNLS0EPh8K9+DpG6jqqIVhJos6SbOQ9CV0=;
+        b=RH8MQOKVLIlwZNG1c6B9LY1gl97AoTh27JmACVrNCHzs+EIsOoJ+IGGnlQFi+6Nes0
+         CAdjjfJhc54nif/KMSfhwEOouUWON0KXgTL+cLDjqLpII/1iDhQHdytfFMAWEjOwnuUr
+         sNyMd36gKfK7F1MXIrufmISuwOY9Io/lZUoZYAt+Ms2FR3L40GbE9OXlbxqvUGjz6Xrx
+         jJzq6fV67J0SHgiUFtuodYU16F/b7DgMe4z0/85I4IvaDvMKooUWoOXSvP3xlpgfTF3G
+         Rg1g+kLH8Uo9CfFZyHE7y1ksDydd5MyIi1jqUoFlg8aEY7iUSxrF3WsJvlj5pMY7dBBe
+         9Dsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769109126; x=1769713926;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=s7keTxLfsvNLS0EPh8K9+DpG6jqqIVhJos6SbOQ9CV0=;
+        b=TwDSTJXwSqm/SjcgUYf6opl3daZd0xHvyXVDN71UX0j+HhjzMXFUie3tta93Gm65dd
+         ZjaY7Cq+WXdmYnru1qX/S0RhDtPbN2aRAAMi5BAQkAMgMKq+Q77Nm1Wn+nheg0eHFsI+
+         yFOK9dwnDczN6A70Tm2emy9Ymd5L0YLiETwHo9wmgEx9N3Sm9n8naDZYZLey+6SwAs8E
+         rVYwVMSVhZQOgOhcmOGMd04qUL04FTCZf0BoI3Jt1QlSyP+Ne87mmTHE/5lYoIRYcZmW
+         WUyK/yXkBybhIYgphPHuUL1K4JMSPJYn0917q4gIjAbSlhu0ZNQxVvx4+dw3KF9tqBrg
+         h7Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCUe7DZeNjSY8x0YnbLNLIWlt2sO72yDsl+RDrB2biwbljZaqpA0rEjswLFQMVvRqXjk4HRgbw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwWq4ATZEaBdYRiGTh94ocDBT7tPh2Fuvw44PuhWp6AnHAkmr0c
+	XiFP3PvCGSJbFPZgsgsZksYuBcaZ6TfT5xnQefcm2bQ0M8xQ09hWYbQSOEblyjCbeuB6ipMnHRI
+	kDO2WX0hirdBjDHIICeweH6dJqI6AwimazUpjv0Euaw==
+X-Gm-Gg: AZuq6aLz+vCM4E+S2T0npbWk6JNxqYhdd8W9q34qWtwERWP/YToOww55zQrOUMkHhbL
+	bk1LP0fBVcbnZXnUAhpbGssHdAcBp860M7upDHq/lUY9UbiXXNsCzlxOhaBteyMky/FSH2LD0gS
+	I++mSaf2qcWeLhAFvKw9xNL1nBVpDGnTGF7Y5f105FgZfRczWBBqVgOvdl0i20APWb+8J6Z5pyT
+	mfy2dDLpoXkoyKRkEkzFgWaLiIWIGLrS2+ay+K1N3dkyrAgoD6PNKK9cEJXc6M+6mnKOA2PRU6+
+	7GjwFkomcX1qzcOdKCgOTJ8WiA==
+X-Received: by 2002:a05:6402:3647:b0:658:2ee0:66a8 with SMTP id
+ 4fb4d7f45d1cf-658487a11ffmr332902a12.18.1769109125806; Thu, 22 Jan 2026
+ 11:12:05 -0800 (PST)
 MIME-Version: 1.0
-References: <20260116112217.915803-1-pratyush@kernel.org> <20260116112217.915803-2-pratyush@kernel.org>
-In-Reply-To: <20260116112217.915803-2-pratyush@kernel.org>
+References: <20260116112217.915803-1-pratyush@kernel.org> <20260116112217.915803-3-pratyush@kernel.org>
+In-Reply-To: <20260116112217.915803-3-pratyush@kernel.org>
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 22 Jan 2026 14:08:51 -0500
-X-Gm-Features: AZwV_Qh1xgpWqyDuNv5Xd0XNYx9RNx5Okc3zvyw-nwyeS0nxuHtmcgoGkJDkvlo
-Message-ID: <CA+CK2bAsGHDQGm7t43MPTS7jCSHVdfvyTZ3Oj2Qnx6G=8N-P-g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] kho: use unsigned long for nr_pages
+Date: Thu, 22 Jan 2026 14:11:27 -0500
+X-Gm-Features: AZwV_QgAlu9tv78e6zZyKDfrOb0ic14yXrXnuRshKsxxfWgKKxJ9Gk9Gedsce3w
+Message-ID: <CA+CK2bCTT5Chn+i0ZxDBsn2WwZTx0qC0q-2PbkW+4xSbQa=GOg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] kho: simplify page initialization in kho_restore_page()
 To: Pratyush Yadav <pratyush@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>, Alexander Graf <graf@amazon.com>, 
 	Mike Rapoport <rppt@kernel.org>, kexec@lists.infradead.org, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org, Suren Baghdasaryan <surenb@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260122_110929_952991_63B402DB 
-X-CRM114-Status: GOOD (  11.57  )
+X-CRM114-CacheID: sfid-20260122_111207_835380_E8758C38 
+X-CRM114-Status: GOOD (  12.59  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -115,49 +117,26 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> @@ -222,7 +222,8 @@ static int __kho_preserve_order(struct kho_mem_track *track, unsigned long pfn,
->  static struct page *kho_restore_page(phys_addr_t phys, bool is_folio)
->  {
->         struct page *page = pfn_to_online_page(PHYS_PFN(phys));
-> -       unsigned int nr_pages, ref_cnt;
-> +       unsigned long nr_pages;
-> +       unsigned int ref_cnt;
->         union kho_page_info info;
+On Fri, Jan 16, 2026 at 6:22=E2=80=AFAM Pratyush Yadav <pratyush@kernel.org=
+> wrote:
 >
->         if (!page)
-> @@ -249,7 +250,7 @@ static struct page *kho_restore_page(phys_addr_t phys, bool is_folio)
->          * count of 1
->          */
->         ref_cnt = is_folio ? 0 : 1;
-> -       for (unsigned int i = 1; i < nr_pages; i++)
-> +       for (unsigned long i = 1; i < nr_pages; i++)
->                 set_page_count(page + i, ref_cnt);
+> When restoring a page (from kho_restore_pages()) or folio (from
+> kho_restore_folio()), KHO must initialize the struct page. The
+> initialization differs slightly depending on if a folio is requested or
+> a set of 0-order pages is requested.
 >
->         if (is_folio && info.order)
-> @@ -283,7 +284,7 @@ EXPORT_SYMBOL_GPL(kho_restore_folio);
->   *
->   * Return: 0 on success, error code on failure
->   */
-> -struct page *kho_restore_pages(phys_addr_t phys, unsigned int nr_pages)
-> +struct page *kho_restore_pages(phys_addr_t phys, unsigned long nr_pages)
->  {
->         const unsigned long start_pfn = PHYS_PFN(phys);
->         const unsigned long end_pfn = start_pfn + nr_pages;
-> @@ -829,7 +830,7 @@ EXPORT_SYMBOL_GPL(kho_unpreserve_folio);
->   *
->   * Return: 0 on success, error code on failure
->   */
-> -int kho_preserve_pages(struct page *page, unsigned int nr_pages)
-> +int kho_preserve_pages(struct page *page, unsigned long nr_pages)
->  {
->         struct kho_mem_track *track = &kho_out.track;
->         const unsigned long start_pfn = page_to_pfn(page);
-> @@ -873,7 +874,7 @@ EXPORT_SYMBOL_GPL(kho_preserve_pages);
->   * kho_preserve_pages() call. Unpreserving arbitrary sub-ranges of larger
->   * preserved blocks is not supported.
->   */
-> -void kho_unpreserve_pages(struct page *page, unsigned int nr_pages)
-> +void kho_unpreserve_pages(struct page *page, unsigned long nr_pages)
+> Conceptually, it is quite simple to understand. When restoring 0-order
+> pages, each page gets a refcount of 1 and that's it. When restoring a
+> folio, head page gets a refcount of 1 and tail pages get 0.
+>
+> kho_restore_page() tries to combine the two separate initialization flow
+> into one piece of code. While it works fine, it is more complicated to
+> read than it needs to be. Make the code simpler by splitting the two
+> initalization paths into two separate functions. This improves
+> readability by clearly showing how each type must be initialized.
+>
+> Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
+
 
 Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 
