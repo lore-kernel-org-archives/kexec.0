@@ -4,64 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A757AC44500
-	for <kexec@archiver.kernel.org>; Thu, 22 Jan 2026 12:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9D4C5C44500
+	for <kexec@archiver.kernel.org>; Thu, 22 Jan 2026 12:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=SXWW54h4kaUiEYhDhi0tKdenERduKH4QQYXp8ttP4zc=; b=G00A8J/KsiXA3OAydonKoB0cBi
-	aXpyhGjYMbhn17TQqtYC71yXBnSO2Mc4CKV/qMxXXAOBpOE2GtA2WZ+k/yw9yBJ+7XG0xLogsUE3Z
-	NFuvis9hyvFwgrEe1e1gYn7NvB0Yqg71CitUxoTJ+Qn7Mzv0of7Qkh8/46W0pmj3aD5UO7x5ddIE+
-	FFdSAV2yTIUdU8twv75dZmieF5hWkDL7yPVaxGEwTCvZNh7WlxLHHHGLmP9RYd+wwsEb4rgd7Gz4g
-	Q7/aqjLFFpo+Ob6xozW31z3sCFrargXX8J0+kAKROAR5YKOeBsSY6/G7V7mVF95qsPNv9VNOn3bOW
-	aLfvmo2w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=l/jbOXRz2UxbzZ3+gwMR/HUDE0ALp1ml2pDzU1///BE=; b=f2sULrwzUBnqAZMk3bFzXy4oGz
+	ceQwmVbBa4hJvJdz1d1w6CtwlN8SDRsFMwWqftoOzfS6DaGSLPeKzuH1LzDrF4nSNku2PbSDPgcFT
+	gABNMLJcV5P0pNNYgoGq04phYjoRod7U4+1Z/UsItutV2YGxQKGE5RSkb1GXKID7yqkup2pQ1d9Iu
+	ryqxzVyN57AB2A+sQVHXKOhlpaWn9zuVCUVON4xyJY7L0qjTKjDU3gytKtXfw4tDvEsk54tslIqb3
+	fuv+R01t+qw2SE6STC1NvWwfPK4999zdWcM7pSb2nSDRB7E3CivGfMYPjYsWyIM5jk/J7TovAjfwv
+	snx6xlpQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vitRH-000000071nN-2WDL;
-	Thu, 22 Jan 2026 12:05:27 +0000
-Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
+	id 1vitda-000000072az-0WVE;
+	Thu, 22 Jan 2026 12:18:10 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vitRF-000000071mV-12x6
+	id 1vitdY-000000072an-1N8Y
+	for kexec@bombadil.infradead.org;
+	Thu, 22 Jan 2026 12:18:08 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
+	:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=l/jbOXRz2UxbzZ3+gwMR/HUDE0ALp1ml2pDzU1///BE=; b=ONEGAb0UcqbgtZwBQG95tO1uwV
+	Jn/y4IYXlH/arOGNzSks6Lv1ajfJbxVzfgEqnQ0iahn0YznmARzu3Hj2tFn0ru5cj8xKI6kB1ml6H
+	hPkghMK67DQHf3NoFVr+/aDfu16opkGM4v0wZwfaTUiZSS0E4qXug8YRmWfqhxsTyQmHvlKUz7LIp
+	FB2BdJIq8+Sb9Je+lbk7CaY11Q5McHcqcgmpL26dtzz9XpVE3QCBQZJxVKZMl28LDhlhgF0PTFb6k
+	0JJmeHJBhujstv5B0ckCPvSNQTsIRMGXZjIBNkivZz/1Vzn3YZzyXTz3A6gRE5NJFHq0QxbxRHn5D
+	Ucia0W0w==;
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vitdU-00000000K02-3nJ1
 	for kexec@lists.infradead.org;
-	Thu, 22 Jan 2026 12:05:26 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=SXWW54h4kaUiEYhDhi0tKdenERduKH4QQYXp8ttP4zc=; b=QTR5bMdKKQIdvaXl1F+VY653N5
-	deoCWEBrVYM5kYB1ioI4txfqaRfnP3/o5wmJR2oU2T/VoDoj7W90huPy6y6/sdm2NEY9ITRF43+6H
-	BeeHRXsBFRICDbM7413O2Nk4PFNOlU+PltnqN1zn7BdK8bsjLCiIwBZDP5UgtdcLdZ9gyGFXPsdNM
-	LFlO8lwU6Bu22ZUYi65aKqLaxdQ0jLgryx5uGf6Gz7fQD/yINQjoqNHFB1SwVURunmeLGEAu0DPWT
-	2JpJ9B9zf/hnKHZwWQ+jxU6KqB48S7sq2G8Edw4/CNsvZD+pF/go4hXkmlLs+/PP92bSZG0F5tsW+
-	sHvLYNBQ==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <leitao@debian.org>)
-	id 1vitQq-00D0EE-OM; Thu, 22 Jan 2026 12:05:01 +0000
-Date: Thu, 22 Jan 2026 04:04:55 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Alexander Graf <graf@amazon.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org, 
-	usamaarif642@gmail.com, rmikey@meta.com, clm@fb.com, riel@surriel.com, 
-	kernel-team@meta.com, SeongJae Park <sj@kernel.org>
-Subject: Re: [PATCH v4] kho: kexec-metadata: track previous kernel chain
-Message-ID: <aXILzST3NxyYXW1m@gmail.com>
-References: <20260121-kho-v4-1-5c8fe77b6804@debian.org>
- <aXICriRKbYB5f3li@kernel.org>
+	Thu, 22 Jan 2026 12:18:06 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 3E0B3437E5;
+	Thu, 22 Jan 2026 12:18:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C7F2C116C6;
+	Thu, 22 Jan 2026 12:18:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769084283;
+	bh=+pKK6YqjCMJk2Ik3AjBYzI1PBFwRJgM5oBdefe1/cHs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=r8OKixc2G/2NXhTyA+0uVZl/ZDMOjEaHITQyYQCFBafsKOn+b2PIkFccWozlddAlO
+	 18YXHZZ+97eI/p7OC3F3DFcXbmIq+sgDcaBuyEr4pQ2+GoJPXFRMZ6EvWWC3FWH7Rw
+	 hjc+jZt6nUszsq4VmpQo/p2ZD+okWpNpMOKCmMILuTjRUZ4/JtCvD4m4ekFCO+ENNb
+	 UXDj+c8/WvFNyXlkBPNoHIfhJlVtjbyhyfXYcRBAguuMLVvs8LDXIHalDDpV+cBZkJ
+	 PmuO/M7TiCItvBHXcog3MVE4QoAAYSi05Ii2Dzxkz8Eb3dzpDe98c3AXLfw4aPy+l8
+	 /yPeLZe254KUw==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Graf <graf@amazon.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <ptyadav@amazon.de>,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH] kho: cleanup error handling in kho_populate()
+Date: Thu, 22 Jan 2026 14:17:57 +0200
+Message-ID: <20260122121757.575987-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.51.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aXICriRKbYB5f3li@kernel.org>
-X-Debian-User: leitao
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260122_040525_294316_7D7BFE1F 
-X-CRM114-Status: GOOD (  26.72  )
+X-CRM114-CacheID: sfid-20260122_121805_436263_A30F97FA 
+X-CRM114-Status: GOOD (  14.14  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,149 +89,112 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello Mike,
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-On Thu, Jan 22, 2026 at 12:57:50PM +0200, Mike Rapoport wrote:
-> > +/**
-> > + * DOC: Kexec Metadata ABI
-> > + *
-> 
-> It would be nice to link it from Documentation/ as well ;-)
+* use dedicated labels for error handling instead of checking if a pointer
+  is not null to decide if it should be unmapped
+* drop assignment of values to err that are only used to print a numeric
+  error code, there are pr_warn()s for each failure already so printing a
+  numeric error code in the next line does not add anything useful
 
-Ack! I am planning something as:
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+---
+ kernel/liveupdate/kexec_handover.c | 39 +++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 22 deletions(-)
 
-	commit 90e098ca0d611b44594f08e50ba1cff3c932dd2b
-	Author: Breno Leitao <leitao@debian.org>
-	Date:   Thu Jan 22 03:47:23 2026 -0800
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index d4482b6e3cae..e248ce2e04b7 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -1441,46 +1441,40 @@ void __init kho_memory_init(void)
+ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 			 phys_addr_t scratch_phys, u64 scratch_len)
+ {
++	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
+ 	struct kho_scratch *scratch = NULL;
+ 	phys_addr_t mem_map_phys;
+ 	void *fdt = NULL;
+-	int err = 0;
+-	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
++	int err;
+ 
+ 	/* Validate the input FDT */
+ 	fdt = early_memremap(fdt_phys, fdt_len);
+ 	if (!fdt) {
+ 		pr_warn("setup: failed to memremap FDT (0x%llx)\n", fdt_phys);
+-		err = -EFAULT;
+-		goto out;
++		goto err_report;
+ 	}
+ 	err = fdt_check_header(fdt);
+ 	if (err) {
+ 		pr_warn("setup: handover FDT (0x%llx) is invalid: %d\n",
+ 			fdt_phys, err);
+-		err = -EINVAL;
+-		goto out;
++		goto err_unmap_fdt;
+ 	}
+ 	err = fdt_node_check_compatible(fdt, 0, KHO_FDT_COMPATIBLE);
+ 	if (err) {
+ 		pr_warn("setup: handover FDT (0x%llx) is incompatible with '%s': %d\n",
+ 			fdt_phys, KHO_FDT_COMPATIBLE, err);
+-		err = -EINVAL;
+-		goto out;
++		goto err_unmap_fdt;
+ 	}
+ 
+ 	mem_map_phys = kho_get_mem_map_phys(fdt);
+-	if (!mem_map_phys) {
+-		err = -ENOENT;
+-		goto out;
+-	}
++	if (!mem_map_phys)
++		goto err_unmap_fdt;
+ 
+ 	scratch = early_memremap(scratch_phys, scratch_len);
+ 	if (!scratch) {
+ 		pr_warn("setup: failed to memremap scratch (phys=0x%llx, len=%lld)\n",
+ 			scratch_phys, scratch_len);
+-		err = -EFAULT;
+-		goto out;
++		goto err_unmap_fdt;
+ 	}
+ 
+ 	/*
+@@ -1497,7 +1491,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 		if (WARN_ON(err)) {
+ 			pr_warn("failed to mark the scratch region 0x%pa+0x%pa: %pe",
+ 				&area->addr, &size, ERR_PTR(err));
+-			goto out;
++			goto err_unmap_scratch;
+ 		}
+ 		pr_debug("Marked 0x%pa+0x%pa as scratch", &area->addr, &size);
+ 	}
+@@ -1519,13 +1513,14 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 	kho_scratch_cnt = scratch_cnt;
+ 	pr_info("found kexec handover data.\n");
+ 
+-out:
+-	if (fdt)
+-		early_memunmap(fdt, fdt_len);
+-	if (scratch)
+-		early_memunmap(scratch, scratch_len);
+-	if (err)
+-		pr_warn("disabling KHO revival: %d\n", err);
++	return;
++
++err_unmap_scratch:
++	early_memunmap(scratch, scratch_len);
++err_unmap_fdt:
++	early_memunmap(fdt, fdt_len);
++err_report:
++	pr_warn("disabling KHO revival\n");
+ }
+ 
+ /* Helper functions for kexec_file_load */
 
-	kho: document kexec-metadata tracking feature
-	
-	Add documentation for the kexec-metadata feature that tracks the
-	previous kernel version and kexec boot count across kexec reboots.
-	This helps diagnose bugs that only reproduce when kexecing from
-	specific kernel versions.
-	
-	Suggested-by: Mike Rapoport <rppt@kernel.org>
-	Signed-off-by: Breno Leitao <leitao@debian.org>
+base-commit: 24d479d26b25bce5faea3ddd9fa8f3a6c3129ea7
+-- 
+2.51.0
 
-	diff --git a/Documentation/admin-guide/mm/kho.rst b/Documentation/admin-guide/mm/kho.rst
-	index 6dc18ed4b8861..1faf2c3ba4620 100644
-	--- a/Documentation/admin-guide/mm/kho.rst
-	+++ b/Documentation/admin-guide/mm/kho.rst
-	@@ -113,3 +113,42 @@ stabilized.
-	``/sys/kernel/debug/kho/in/sub_fdts/``
-	Similar to ``kho/out/sub_fdts/``, but contains sub FDT blobs
-	of KHO producers passed from the old kernel.
-	+
-	+Kexec Metadata
-	+==============
-	+
-	+KHO automatically tracks metadata about the kexec chain, passing information
-	+about the previous kernel to the next kernel. This feature helps diagnose
-	+bugs that only reproduce when kexecing from specific kernel versions.
-	+
-	+On each KHO kexec, the kernel logs the previous kernel's version and the
-	+number of kexec reboots since the last cold boot::
-	+
-	+    [    0.000000] KHO: exec from: 6.19.0-rc4-next-20260107 (count 1)
-	+
-	+The metadata includes:
-	+
-	+``previous_release``
-	+    The kernel version string (from ``uname -r``) of the kernel that
-	+    initiated the kexec.
-	+
-	+``kexec_count``
-	+    The number of kexec boots since the last cold boot. On cold boot,
-	+    this counter starts at 0 and increments with each kexec. This helps
-	+    identify issues that only manifest after multiple consecutive kexec
-	+    reboots.
-	+
-	+Use Cases
-	+---------
-	+
-	+This metadata is particularly useful for debugging kexec transition bugs,
-	+where a buggy kernel kexecs into a new kernel and the bug manifests only
-	+in the second kernel. Examples of such bugs include:
-	+
-	+- Memory corruption from the previous kernel affecting the new kernel
-	+- Incorrect hardware state left by the previous kernel
-	+- Firmware/ACPI state issues that only appear in kexec scenarios
-	+
-	+At scale, correlating crashes to the previous kernel version enables
-	+faster root cause analysis when issues only occur in specific kernel
-	+transition scenarios.
-
-
-> > diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> 
-> ...
-> 
-> >  static __init int kho_init(void)
-> >  {
-> >  	const void *fdt = kho_get_fdt();
-> > @@ -1357,6 +1413,15 @@ static __init int kho_init(void)
-> >  	if (err)
-> >  		goto err_free_fdt;
-> >  
-> > +	if (fdt)
-> > +		kho_process_kexec_metadata();
-> 
-> Can't we move it into the existing if (fdt) below?
-
-Unfortunately, that won't work due to a data dependency between the two
-functions.
-
-kho_process_kexec_metadata() reads from the FDT subtree and populates kho_in:
-
-Basically:
-
-	kho_in.kexec_count = metadata->kexec_count;
-
-While kho_populate_kexec_metadata() increments metadata->kexec_count:
-
-          /* kho_in.kexec_count is set to 0 on cold boot */
-          metadata->kexec_count = kho_in.kexec_count + 1;
-
-If kho_process_kexec_metadata() is moved after kho_populate_kexec_metadata(),
-the count would always increment from 0 to 1, ignoring whatever was passed in
-the FDT.
-
-Restructuring to call kho_in_debugfs_init() earlier also doesn't work:
-
-
-	if (fdt) {
-		kho_in_debugfs_init(&kho_in.dbg, fdt);
-		kho_process_kexec_metadata();
-		return 0;
-	}
-
-	/* Populate kexec metadata for the possible next kexec */
-	err = kho_populate_kexec_metadata();
-	if (err)
-                  pr_warn("failed to initialize kexec-metadata subtree: %d\n",
-                          err);
-
-This would return early without populating the kexec metadata for the next
-kexec, breaking the chain on KHO boots.
-
-Please let me know if I am missing any other option.
-
-> > +
-> > +	/* Populate kexec metadata for the possible next kexec */
-> > +	err = kho_populate_kexec_metadata();
-> > +	if (err)
-> > +		pr_warn("failed to initialize kexec-metadata subtree: %d\n",
-> > +			err);
-> 
-> Please follow if (err) goto err_ pattern.
-> 
-> kho_populate_kexec_metadata() failure essentially means that we failed to
-> allocate memory. This shouldn't happen that early in boot, but if it did,
-> then something is utterly wrong.
-
-Ack!
-
-Thanks for the review,
---breno
 
