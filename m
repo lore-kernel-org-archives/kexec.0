@@ -4,60 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DE8ECD72355
-	for <kexec@archiver.kernel.org>; Fri, 23 Jan 2026 08:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2FC83D7236A
+	for <kexec@archiver.kernel.org>; Fri, 23 Jan 2026 09:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=HPHstnKyauJbBsO6lryFaPd+v/fRclj9G8DTiqOAAcM=; b=DhUvjOqits/kDN/FwR2Bt2IWXr
-	3sozVlP6SDHkm60xJSQ0TYS9uS40i4jAtokn4N0etR9YtMzrxMu0rPuRJdDMhoRSvkOIhzeT9jepV
-	xlUalp8ui8uQV7HTEMT2RMqgpjKGPuoUZt37J2+NZyEWEapW+nxScjbk4qqOwSCL2KR+gD6huJfpC
-	LhhS3yqWh7068N4+9o7AuD0JF/+16rPaVOxNz3N8AEhjAYzHmEMMlatMkqRvHikOphBmCiN77rOQG
-	iFOtE1Zf3cjEPLmR7shD05MiPyylSDZu7oZVg9fIAH5drTv5wR5mHX6hzPCLlkpg3fd+1h7VkOANJ
-	57flJcOA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=w1MBNjkWGTQKD+0yvtdp75Gw+2OA0Wj33WLt2TbOs7I=; b=f4VIX1jnviS8uM+wjxW20k85UQ
+	g1BmBs1TXiI/6+saRrrWPEDVAgJ+cg/RdlYlY1tnu58jCJqcYFv/CqQ30art+1ApLqqbyqBLkrMmE
+	7hyMRue3lf4BCxYTCjjoPiykJFlLQMq/8ZDpeAiCPpkHZD1z8NIq23y0OEOu5aE2hsdJCGL/mhkNA
+	vfRmO2amdxVEHwmxLY3SgH0h2Fr26ZpLWbTaOH9WaVEqhRgyRUataC2JBA3puFkfD0FHGYfGIpVtw
+	U4ebWNcNZkvtFu4aliWVT4KM7vC8r2LAQstGFpq9Rr4jBEixJQo8HYMjZUZ47apunaYsQES60LR8j
+	JNp0znvA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vjCxi-00000008VeY-39cR;
-	Fri, 23 Jan 2026 08:56:14 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1vjDwd-00000008f28-1AvJ;
+	Fri, 23 Jan 2026 09:59:11 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vjCxh-00000008VeS-2oyu
+	id 1vjDwZ-00000008f0e-45Gc
 	for kexec@lists.infradead.org;
-	Fri, 23 Jan 2026 08:56:13 +0000
+	Fri, 23 Jan 2026 09:59:08 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 7542A600C3;
-	Fri, 23 Jan 2026 08:55:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51951C4CEF1;
-	Fri, 23 Jan 2026 08:55:38 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 0CF3060010;
+	Fri, 23 Jan 2026 09:59:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5B91C116D0;
+	Fri, 23 Jan 2026 09:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769158542;
-	bh=qipa/leqAcHIoHoVIyTRuSK7iSLnI0bYyPtkyQuKOwI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WoJ0nypqalaeViN45nqZS61DwLJvLaxS6Va7RYXhmCPffYKzA4qdEjCMvwy+oegw3
-	 aKfV7IBM1CmTPICv1FsvAfImMRMKEOCG5X7MpI/dePfmYI/JByz/LZYC0ZjrjP55Ao
-	 1SLnMSBL0Ke+sW43iPtgeIe6b9D4ydUSHzhKWjeaNBWdI0tlqCKYh3EUSBhdXc6j4g
-	 Syov6+OE4ubSQiSv1TfW/S9MSNsX9kLpZ7rHBdyf0+q1aYZRzbIOAAPe6UFwRdniIj
-	 QulhEZGmEzx4jlQmft7zPoZK+lQp6gZSh8Julc8gkPGTBfQXKSy2OVFVJHkJx/uMUy
-	 Jy70fsy4UJnYQ==
-Date: Fri, 23 Jan 2026 10:55:34 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: ranxiaokai627@163.com
-Cc: pratyush@kernel.org, surenb@google.com, akpm@linux-foundation.org,
-	pasha.tatashin@soleen.com, kent.overstreet@linux.dev,
-	graf@amazon.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, ran.xiaokai@zte.com.cn,
-	stable@vger.kernel.org
-Subject: Re: [PATCH RESEND v3] kho: init alloc tags when restoring pages from
- reserved memory
-Message-ID: <aXM3hgqsCaleOh8p@kernel.org>
-References: <20260122132740.176468-1-ranxiaokai627@163.com>
+	s=k20201202; t=1769162346;
+	bh=lJjM8x7dS3YIgG0GBsn8XGVAYDTLZLKZZO6yMQTePbI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SJ7og4hoGhYtUQuzu2z/K8eaIIthucOHysug8uhYPPd+WLGayt1UyIKBjy24YV13P
+	 idAlxjMzQXTC4m1HbSEm9j6H0MECzsdPtWn/v26vXmncrJ1Hsf/fSuAeOx+BP3rgk4
+	 ljpK5ICNBbyh3QCUlo4s4le4L+rZSzZ2VV42UhQcJdrPerdzXwmJuZGgqI2Sv9STgi
+	 RGVk15w1XwZnqhbDvNwFQ/ybch7b+vLHcmQKG/pSA5PlRN8P9Ic+/32IkL+43CyLnk
+	 ExwEiRTn3JFyNdBKgX0pAjlRAsXNZX25kKXUjiSOLA0KXF+mtfllcQ4kHdR9hDZ0Rr
+	 v10Ii6a+dHEJg==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Alexander Graf <graf@amazon.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Jason Gunthorpe <jgg@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] mm: memfd_luo: preserve file seals
+Date: Fri, 23 Jan 2026 10:58:49 +0100
+Message-ID: <20260123095854.535058-1-pratyush@kernel.org>
+X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260122132740.176468-1-ranxiaokai627@163.com>
+Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,67 +75,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jan 22, 2026 at 01:27:40PM +0000, ranxiaokai627@163.com wrote:
-> From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
-> 
-> Memblock pages (including reserved memory) should have their allocation
-> tags initialized to CODETAG_EMPTY via clear_page_tag_ref() before being
-> released to the page allocator. When kho restores pages through
-> kho_restore_page(), missing this call causes mismatched
-> allocation/deallocation tracking and below warning message:
-> 
-> alloc_tag was not set
-> WARNING: include/linux/alloc_tag.h:164 at ___free_pages+0xb8/0x260, CPU#1: swapper/0/1
-> RIP: 0010:___free_pages+0xb8/0x260
->  kho_restore_vmalloc+0x187/0x2e0
->  kho_test_init+0x3c4/0xa30
->  do_one_initcall+0x62/0x2b0
->  kernel_init_freeable+0x25b/0x480
->  kernel_init+0x1a/0x1c0
->  ret_from_fork+0x2d1/0x360
-> 
-> Add missing clear_page_tag_ref() annotation in kho_restore_page() to
-> fix this.
-> 
-> Fixes: fc33e4b44b27 ("kexec: enable KHO support for memory preservation")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Hi,
 
-> ---
-> 
-> v2 -> v3: 
->  - also call clear_page_tag_ref() for non-compound order-0 tail pages
-> 
->  kernel/liveupdate/kexec_handover.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> index d4482b6e3cae..96767b106cac 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -255,6 +255,14 @@ static struct page *kho_restore_page(phys_addr_t phys, bool is_folio)
->  	if (is_folio && info.order)
->  		prep_compound_page(page, info.order);
->  
-> +	/* Always mark headpage's codetag as empty to avoid accounting mismatch */
-> +	clear_page_tag_ref(page);
-> +	if (!is_folio) {
-> +		/* Also do that for the non-compound tail pages */
-> +		for (unsigned int i = 1; i < nr_pages; i++)
-> +			clear_page_tag_ref(page + i);
-> +	}
-> +
->  	adjust_managed_page_count(page, nr_pages);
->  	return page;
->  }
-> -- 
-> 2.25.1
-> 
-> 
+This series adds support for preserving file seals when preserving a
+memfd using LUO. Patch 1 exports some memfd seal manipulation functions
+and patch 2 adds support for preserving them. Since it makes changes to
+the serialized data structure for memfd, it also bumps the version
+number.
+
+I also plan to add some tests for this. I quickly hacked together
+something to test this series, but I am working on some patches
+that would add multiple selftests for memfd preservation. It might take
+me a couple weeks to get to it, so sending the main support now in the
+hopes of making it into the upcoming merge window.
+
+Regards,
+Pratyush Yadav
+
+Pratyush Yadav (Google) (2):
+  memfd: export memfd_{add,get}_seals()
+  mm: memfd_luo: preserve file seals
+
+ include/linux/kho/abi/memfd.h |  9 ++++++++-
+ include/linux/memfd.h         | 12 ++++++++++++
+ mm/memfd.c                    |  4 ++--
+ mm/memfd_luo.c                | 23 +++++++++++++++++++++--
+ 4 files changed, 43 insertions(+), 5 deletions(-)
 
 -- 
-Sincerely yours,
-Mike.
+2.52.0.457.g6b5491de43-goog
+
 
