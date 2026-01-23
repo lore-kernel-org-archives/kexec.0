@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2FC83D7236A
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 86970D72366
 	for <kexec@archiver.kernel.org>; Fri, 23 Jan 2026 09:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=w1MBNjkWGTQKD+0yvtdp75Gw+2OA0Wj33WLt2TbOs7I=; b=f4VIX1jnviS8uM+wjxW20k85UQ
-	g1BmBs1TXiI/6+saRrrWPEDVAgJ+cg/RdlYlY1tnu58jCJqcYFv/CqQ30art+1ApLqqbyqBLkrMmE
-	7hyMRue3lf4BCxYTCjjoPiykJFlLQMq/8ZDpeAiCPpkHZD1z8NIq23y0OEOu5aE2hsdJCGL/mhkNA
-	vfRmO2amdxVEHwmxLY3SgH0h2Fr26ZpLWbTaOH9WaVEqhRgyRUataC2JBA3puFkfD0FHGYfGIpVtw
-	U4ebWNcNZkvtFu4aliWVT4KM7vC8r2LAQstGFpq9Rr4jBEixJQo8HYMjZUZ47apunaYsQES60LR8j
-	JNp0znvA==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=OraLy8XeIZjSbX8NkjbCmR86yFe9whSrom3FX0RuLfQ=; b=YVtCEkLb1FZGC46Ig7HB6InKy6
+	9PFqK9eLVNChds02w/q5andBBm5a28ByEgEDnzPvEtO+IU/i6dwyaaRcdVnNkhzOq1bBe0iMEgQUl
+	SmP37C9ijHlJrQcLkRyY9+EtjoTtf87yFPJrEoVeh5OZffxDrEiGyoxr+OGqBVOF14jgIAHobd81s
+	g2gQN3MiD1VXH4IO/eBshuVJbUMxjnN0204OKh/JdQAYNZIjKRHqaC5xQuRY6tCep0NV6shJrOalh
+	MSomKNw0l0fF1FPlsS4rbyxl0bwnt1W5XtD8B9nV9raT9l3eaCtLVUvA6vUKaQ+8JKFyn4HkR490k
+	xehwXL5g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vjDwd-00000008f28-1AvJ;
+	id 1vjDwd-00000008f2L-2SQT;
 	Fri, 23 Jan 2026 09:59:11 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vjDwZ-00000008f0e-45Gc
+	id 1vjDwc-00000008f1E-07sH
 	for kexec@lists.infradead.org;
-	Fri, 23 Jan 2026 09:59:08 +0000
+	Fri, 23 Jan 2026 09:59:11 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 0CF3060010;
-	Fri, 23 Jan 2026 09:59:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5B91C116D0;
-	Fri, 23 Jan 2026 09:59:04 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 24E0543CEB;
+	Fri, 23 Jan 2026 09:59:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18175C19425;
+	Fri, 23 Jan 2026 09:59:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769162346;
-	bh=lJjM8x7dS3YIgG0GBsn8XGVAYDTLZLKZZO6yMQTePbI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=SJ7og4hoGhYtUQuzu2z/K8eaIIthucOHysug8uhYPPd+WLGayt1UyIKBjy24YV13P
-	 idAlxjMzQXTC4m1HbSEm9j6H0MECzsdPtWn/v26vXmncrJ1Hsf/fSuAeOx+BP3rgk4
-	 ljpK5ICNBbyh3QCUlo4s4le4L+rZSzZ2VV42UhQcJdrPerdzXwmJuZGgqI2Sv9STgi
-	 RGVk15w1XwZnqhbDvNwFQ/ybch7b+vLHcmQKG/pSA5PlRN8P9Ic+/32IkL+43CyLnk
-	 ExwEiRTn3JFyNdBKgX0pAjlRAsXNZX25kKXUjiSOLA0KXF+mtfllcQ4kHdR9hDZ0Rr
-	 v10Ii6a+dHEJg==
+	s=k20201202; t=1769162349;
+	bh=JvST1LRGXZAf6Fyp43JKlkKdk/TN8dTyoER4Anwc9lI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ty+NY1Hrg5UajXyM+Q53oJKE4lYESs2Ndf+rrFZyw5pJWcm5xsIKI1M81U/M88o4t
+	 6IJzU0w8L9WRwVIjLWvHI6yTSrh2shg2g1jDjpzIzu9SLF22HeiOs8HZUSkeMOO554
+	 eNrgEcRxRSUE8dV4e6skUucVCyYLm/CgKNAlktZzmlkPPqEaas8BY6rSMTLzYKEo8/
+	 0bS7kgysYI3H0JHAYcpov9Epz6ufCGqgafeXowxD4ICwP0M2xtAyQYsDZUw1BqM3fp
+	 DynHLuIgjz6nJpa/6iPihIquJZcegVo5xCJaTBInm4jlAIDGmKek8t1d/Q5A8b3n/C
+	 ntzq4giz/m+Xg==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Alexander Graf <graf@amazon.com>,
 	Mike Rapoport <rppt@kernel.org>,
@@ -55,12 +55,17 @@ Cc: Jason Gunthorpe <jgg@nvidia.com>,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] mm: memfd_luo: preserve file seals
-Date: Fri, 23 Jan 2026 10:58:49 +0100
-Message-ID: <20260123095854.535058-1-pratyush@kernel.org>
+Subject: [PATCH 1/2] memfd: export memfd_{add,get}_seals()
+Date: Fri, 23 Jan 2026 10:58:50 +0100
+Message-ID: <20260123095854.535058-2-pratyush@kernel.org>
 X-Mailer: git-send-email 2.52.0.457.g6b5491de43-goog
+In-Reply-To: <20260123095854.535058-1-pratyush@kernel.org>
+References: <20260123095854.535058-1-pratyush@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260123_015910_096529_11227E82 
+X-CRM114-Status: GOOD (  11.88  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,33 +82,69 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-Hi,
+Support for preserving file seals will be added to memfd preservation
+using the Live Update Orchestrator (LUO). Export
+memfd_{add,get}_seals)() so memfd_luo can use them to manipulate the
+seals.
 
-This series adds support for preserving file seals when preserving a
-memfd using LUO. Patch 1 exports some memfd seal manipulation functions
-and patch 2 adds support for preserving them. Since it makes changes to
-the serialized data structure for memfd, it also bumps the version
-number.
+Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+---
+ include/linux/memfd.h | 12 ++++++++++++
+ mm/memfd.c            |  4 ++--
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-I also plan to add some tests for this. I quickly hacked together
-something to test this series, but I am working on some patches
-that would add multiple selftests for memfd preservation. It might take
-me a couple weeks to get to it, so sending the main support now in the
-hopes of making it into the upcoming merge window.
-
-Regards,
-Pratyush Yadav
-
-Pratyush Yadav (Google) (2):
-  memfd: export memfd_{add,get}_seals()
-  mm: memfd_luo: preserve file seals
-
- include/linux/kho/abi/memfd.h |  9 ++++++++-
- include/linux/memfd.h         | 12 ++++++++++++
- mm/memfd.c                    |  4 ++--
- mm/memfd_luo.c                | 23 +++++++++++++++++++++--
- 4 files changed, 43 insertions(+), 5 deletions(-)
-
+diff --git a/include/linux/memfd.h b/include/linux/memfd.h
+index c328a7b356d0..b4fda09dab9f 100644
+--- a/include/linux/memfd.h
++++ b/include/linux/memfd.h
+@@ -18,6 +18,8 @@ struct folio *memfd_alloc_folio(struct file *memfd, pgoff_t idx);
+  */
+ int memfd_check_seals_mmap(struct file *file, vm_flags_t *vm_flags_ptr);
+ struct file *memfd_alloc_file(const char *name, unsigned int flags);
++int memfd_get_seals(struct file *file);
++int memfd_add_seals(struct file *file, unsigned int seals);
+ #else
+ static inline long memfd_fcntl(struct file *f, unsigned int c, unsigned int a)
+ {
+@@ -37,6 +39,16 @@ static inline struct file *memfd_alloc_file(const char *name, unsigned int flags
+ {
+ 	return ERR_PTR(-EINVAL);
+ }
++
++static inline int memfd_get_seals(struct file *file)
++{
++	return -EINVAL;
++}
++
++static inline int memfd_add_seals(struct file *file, unsigned int seals)
++{
++	return -EINVAL;
++}
+ #endif
+ 
+ #endif /* __LINUX_MEMFD_H */
+diff --git a/mm/memfd.c b/mm/memfd.c
+index f032c6052926..46c5508beea4 100644
+--- a/mm/memfd.c
++++ b/mm/memfd.c
+@@ -228,7 +228,7 @@ static unsigned int *memfd_file_seals_ptr(struct file *file)
+ 		     F_SEAL_WRITE | \
+ 		     F_SEAL_FUTURE_WRITE)
+ 
+-static int memfd_add_seals(struct file *file, unsigned int seals)
++int memfd_add_seals(struct file *file, unsigned int seals)
+ {
+ 	struct inode *inode = file_inode(file);
+ 	unsigned int *file_seals;
+@@ -310,7 +310,7 @@ static int memfd_add_seals(struct file *file, unsigned int seals)
+ 	return error;
+ }
+ 
+-static int memfd_get_seals(struct file *file)
++int memfd_get_seals(struct file *file)
+ {
+ 	unsigned int *seals = memfd_file_seals_ptr(file);
+ 
 -- 
 2.52.0.457.g6b5491de43-goog
 
