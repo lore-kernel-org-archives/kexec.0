@@ -4,61 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90E9DE63C9C
-	for <kexec@archiver.kernel.org>; Sun, 25 Jan 2026 11:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E3C5CE63C9C
+	for <kexec@archiver.kernel.org>; Sun, 25 Jan 2026 11:52:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=lsJsCT1Ku+2oSFFgQjz13x5XOWTJSyM0K4XxyQtDjQ0=; b=rBB8DQW0ThcNcgfIdmyzwBNpXs
-	MyMqHbqN4OWENySmFAiyUqpzbKlq4KoQ8htYM8KLvl2YA3b6cuJnHaT0U/uFdufZYbKwWl7BsjBWe
-	ZSZoxgsCIjAYWRppFH3loiI1zfyIsQTEJD0/IeE8f263staagRZ0X+xmocuFXSAot49CFyMBJV9tU
-	A3TovbQOhQ/yVpK6kJH/0tgbPI3USA6slcdY5/NQJlPsBzIkbbcQqvvS197jtJif+DZK/MgvgQ98R
-	PwIn7S5yoz+d+DooEP1cU0BA4FWY7DmgiM9Ieph3hyAfAVIKnATgSlpGK1Uat8KDsU+FnA8BlIaF5
-	2hDqyrbQ==;
+	bh=hDou/1syS+JRCJ5qMonQA+5CbCcw+Ru367ifn0R2jUA=; b=fkd2+so5gCpAlnRj/Ll9gP0BhC
+	w2BLyI7ndUv1Z30QIAbh1dnbYUMCVFPmRDBogopOarlhdUb4WrI77Hblc0IKQ04LrQxwjDivJrYs+
+	1iIjPqoMguNcjOIHnqErSK/B9FTf4E2BBAc/ar5GSn0AYaN0JILFXwlDtVc4B640ZxlS0uqeUoayn
+	GKPu6u1+6J/I1TfOpO6aZi1ZSzMsLi7Z9MzOo2YCfcY104DUUiYyLmaJpEpdUZf7miMGbK5wjIJTB
+	us7IzbD7P2Gc/O78cL9youtlUVVBg2hBBpohsyd+VTr7nt68l5DqU5HJF/GdKSWjpZ5dzHzZnQUCU
+	5UUo+9YQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vjye4-0000000B8mU-01X4;
-	Sun, 25 Jan 2026 11:51:08 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1vjyf5-0000000B8pu-1whp;
+	Sun, 25 Jan 2026 11:52:11 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vjye1-0000000B8lk-2ZZv
+	id 1vjyf3-0000000B8pl-2hiW
 	for kexec@lists.infradead.org;
-	Sun, 25 Jan 2026 11:51:06 +0000
+	Sun, 25 Jan 2026 11:52:09 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id ABCF742BB2;
-	Sun, 25 Jan 2026 11:51:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16513C4CEF1;
-	Sun, 25 Jan 2026 11:51:01 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id A561C60018;
+	Sun, 25 Jan 2026 11:52:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6121C4CEF1;
+	Sun, 25 Jan 2026 11:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769341864;
-	bh=6TAiQebVh1oHpaGV4OnDP/LH0lIQ9CGxw6VodtIwayY=;
+	s=k20201202; t=1769341928;
+	bh=iF5UwdbLx3lobfdhIsiNN5Ktf/ekLJHA9XetyqKlp6w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q0ZMoQnoT6qLr0kWpr2fmisUihk0K+he89tFOWATBNMW0H+/p5iE0vjMW5LUKLuBY
-	 a06+SfVmC8JYdAbJKa60U5rbi8DgEHGil9QfJD88bWZRIEzYyL4ysQxALbEc1Bkp3X
-	 m8IvjGt6dOE8edZHeIJI849An14dyi/Hpe9AgYOS/oNKWODUAgtolCSeOMv6mWEaKV
-	 Jy49n7cfaHoj7ifPB+YQAbxSfF++0gxnizvxkyQql5453LypHgWfY9n8FAhzuzuNzI
-	 Hv+u8Yvicv/m+AxetAHAPRSiUCPP/sSR21D/lkRag1expC6f4l5FXi081y6E/o2e+b
-	 EdJx0kPJ25/kQ==
-Date: Sun, 25 Jan 2026 13:50:58 +0200
+	b=RlinmGtCV5do+fZPL7nAszMQ8paDm3KutZYyue7aB8Ty5G9Kq3P0jh/Bo931S0z6M
+	 pAzQQWRdVzR1dpH1Fx377PGCxDPleGB6dYACGOs7o2M2z5TjZrKHyaFR/pRSptAs2x
+	 0BCrsz25RPCRvQoZZDnwfBkXN4jvuyuZN7dJEwddNn8a46eQX6TurhH47R9yLqDCR/
+	 4qQ/ipykXjpLdk2+SvVorfeYfo0gxv/1YwFKgpnXx435jBPuSH4gxrzXj2MgJNkHUH
+	 xtXJs9LQDzsV7iSlqNsqs3gbVIwdSqh/Sqv9Qc1/2bTAgg9FXhrI1NLqAENq1OAgR/
+	 p6+5MS3tT1E/A==
+Date: Sun, 25 Jan 2026 13:52:01 +0200
 From: Mike Rapoport <rppt@kernel.org>
-To: Tycho Andersen <tycho@kernel.org>
+To: Pratyush Yadav <pratyush@kernel.org>
 Cc: Alexander Graf <graf@amazon.com>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
+	Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org,
 	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kho: fix doc for kho_restore_pages()
-Message-ID: <aXYDov8RruYZszaQ@kernel.org>
-References: <20260123190506.1058669-1-tycho@kernel.org>
+Subject: Re: [PATCH 1/2] memfd: export memfd_{add,get}_seals()
+Message-ID: <aXYD4b46LcwSodjX@kernel.org>
+References: <20260123095854.535058-1-pratyush@kernel.org>
+ <20260123095854.535058-2-pratyush@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260123190506.1058669-1-tycho@kernel.org>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260125_035105_723669_1714F237 
-X-CRM114-Status: GOOD (  16.77  )
+In-Reply-To: <20260123095854.535058-2-pratyush@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,37 +75,77 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jan 23, 2026 at 12:05:06PM -0700, Tycho Andersen wrote:
-> From: "Tycho Andersen (AMD)" <tycho@kernel.org>
+On Fri, Jan 23, 2026 at 10:58:50AM +0100, Pratyush Yadav wrote:
+> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 > 
-> This function returns NULL if kho_restore_page() returns NULL, which
-> happens in a couple of corner cases. It never returns an error code.
+> Support for preserving file seals will be added to memfd preservation
+> using the Live Update Orchestrator (LUO). Export
+> memfd_{add,get}_seals)() so memfd_luo can use them to manipulate the
+> seals.
 > 
-> Signed-off-by: Tycho Andersen (AMD) <tycho@kernel.org>
+> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
 > ---
->  kernel/liveupdate/kexec_handover.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  include/linux/memfd.h | 12 ++++++++++++
+>  mm/memfd.c            |  4 ++--
+>  2 files changed, 14 insertions(+), 2 deletions(-)
 > 
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> index d4482b6e3cae..4c38ea7987c8 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -281,7 +281,7 @@ EXPORT_SYMBOL_GPL(kho_restore_folio);
->   * Restore a contiguous list of order 0 pages that was preserved with
->   * kho_preserve_pages().
->   *
-> - * Return: 0 on success, error code on failure
-> + * Return: the first page on success, NULL on failure.
+> diff --git a/include/linux/memfd.h b/include/linux/memfd.h
+> index c328a7b356d0..b4fda09dab9f 100644
+> --- a/include/linux/memfd.h
+> +++ b/include/linux/memfd.h
+> @@ -18,6 +18,8 @@ struct folio *memfd_alloc_folio(struct file *memfd, pgoff_t idx);
 >   */
->  struct page *kho_restore_pages(phys_addr_t phys, unsigned int nr_pages)
+>  int memfd_check_seals_mmap(struct file *file, vm_flags_t *vm_flags_ptr);
+>  struct file *memfd_alloc_file(const char *name, unsigned int flags);
+> +int memfd_get_seals(struct file *file);
+> +int memfd_add_seals(struct file *file, unsigned int seals);
+>  #else
+>  static inline long memfd_fcntl(struct file *f, unsigned int c, unsigned int a)
 >  {
-> 
-> base-commit: c072629f05d7bca1148ab17690d7922a31423984
+> @@ -37,6 +39,16 @@ static inline struct file *memfd_alloc_file(const char *name, unsigned int flags
+>  {
+>  	return ERR_PTR(-EINVAL);
+>  }
+> +
+> +static inline int memfd_get_seals(struct file *file)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static inline int memfd_add_seals(struct file *file, unsigned int seals)
+> +{
+> +	return -EINVAL;
+> +}
+>  #endif
+>  
+>  #endif /* __LINUX_MEMFD_H */
+> diff --git a/mm/memfd.c b/mm/memfd.c
+> index f032c6052926..46c5508beea4 100644
+> --- a/mm/memfd.c
+> +++ b/mm/memfd.c
+> @@ -228,7 +228,7 @@ static unsigned int *memfd_file_seals_ptr(struct file *file)
+>  		     F_SEAL_WRITE | \
+>  		     F_SEAL_FUTURE_WRITE)
+>  
+> -static int memfd_add_seals(struct file *file, unsigned int seals)
+> +int memfd_add_seals(struct file *file, unsigned int seals)
+>  {
+>  	struct inode *inode = file_inode(file);
+>  	unsigned int *file_seals;
+> @@ -310,7 +310,7 @@ static int memfd_add_seals(struct file *file, unsigned int seals)
+>  	return error;
+>  }
+>  
+> -static int memfd_get_seals(struct file *file)
+> +int memfd_get_seals(struct file *file)
+>  {
+>  	unsigned int *seals = memfd_file_seals_ptr(file);
+>  
 > -- 
-> 2.52.0
+> 2.52.0.457.g6b5491de43-goog
 > 
 
 -- 
