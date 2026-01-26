@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A98A3E63C8E
-	for <kexec@archiver.kernel.org>; Sun, 25 Jan 2026 12:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F3EB4CF65DB
+	for <kexec@archiver.kernel.org>; Mon, 26 Jan 2026 10:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=iqNzYgcK682OGBzEU/mbNTmwKAsTKy2bpCfAaVM9lTw=; b=wn88bXfD5Nr7laMPIUVh35R6BT
-	9w3/CqwKNVnO3chM+C+o2NdwZteB0LhTbSbojv8pTLRllfe7Gnd7NB0WQe+XfqQWGnwl0v4StGE2h
-	U9VLv3lOFWHvBbYiYE6ThmO7NF3Jv4O6ubmohb6BOsIMS6n7XTUyc385E3P8jvVIfn6fo4mXTTurK
-	IZ/Rpa8ozQD9+El1n5rInCuA9Jh0zOM1a1IYY3pZibaGdSRZA5xRi4tKlS+pf7xY11GjtbKbEcONT
-	BfEqKr0fyLI69Lu/aA/Y0HOfuRC+ARefnNDZLd66Lzemy+Sex4NYxrpT1GFJUCPyR6iy5ZvOg718G
-	duqtXyVA==;
+	bh=JOwl1LOtoKU5/PoRXFyQSq1478e5eRvje0/beAymu74=; b=h5wdxUkxXBxrXggM/4z3Aa9iYw
+	UUzki/yFuR4iQ6b9qLK7eyzR/ABGBQSK4EMO2KhX5AtDmyp3ZjXB+jz3Xg0vNSqtcd4srQK0b8Jb3
+	UsaExyF4M2hro/wYg2VAac3GOeImugQK18KYSR6nXn0vL2WVVo8quROWLkQymt4c2lB4RnzqexT9s
+	7KXT/xFZh5C46YCRJj+Z6r6T84lilk0bX1unSrHD3eMEFebFUpMQqHYYLED1FDXtDlp2OLnrz4j+D
+	NRc5BofJrVMcUPOLr2tiRfUwYzKgFGug7tHb4Ajyvtksk1w7hdvcccYnDkNzIX0JKs3/WhKkH/miH
+	xwQUhX9A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vjyqC-0000000B9Mn-3CDc;
-	Sun, 25 Jan 2026 12:03:40 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1vkKCm-0000000CMXI-3zyv;
+	Mon, 26 Jan 2026 10:52:24 +0000
+Received: from [2001:41b8:202:deb::311:108] (helo=stravinsky.debian.org)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vjyqA-0000000B9MM-0rSJ
+	id 1vkKCh-0000000CMWs-0HdD
 	for kexec@lists.infradead.org;
-	Sun, 25 Jan 2026 12:03:39 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 49EF242BB2;
-	Sun, 25 Jan 2026 12:03:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4209AC4CEF1;
-	Sun, 25 Jan 2026 12:03:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769342617;
-	bh=VgoxmZlbv0mSVt43gxyu4AMX9q5s+p+eQWF9sR0Ddes=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X4kzUMsFpCh/ex88C06+BH3I+aBZEdkYLS8o7XjZ7xGsN0h4N0RX6P76iOt2kl2vI
-	 d0qIEYPI+bPyahOl9Y5rMTOzV4tk4scT80WhLCzBvK0IAytDzkk3piase1AAB3Q7YY
-	 NSqGHdrlU6VItCS5c+sQwlkX2UCaAm6WDS4t8do5WQHuK1VDCr+cOVwP2ZgesTR+jf
-	 QXWvdXxiKx+I6tlaqA2y8o9hmK5xn4BuHND6zQC/5JDluqBaffrJ4CPDctaSYm8e9t
-	 tvl8SnaPQwhURaMNc6uD1DKZ+Ww3uY8qP8mpYksXUfxX/55ZiB9d8VR6hNxIQdLdMA
-	 9Jy3wZK1W56oQ==
-Date: Sun, 25 Jan 2026 14:03:29 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Alexander Graf <graf@amazon.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] mm: memfd_luo: preserve file seals
-Message-ID: <aXYGkb-QtYNaWYw4@kernel.org>
-References: <20260123095854.535058-1-pratyush@kernel.org>
- <20260123095854.535058-3-pratyush@kernel.org>
+	Mon, 26 Jan 2026 10:52:20 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=JOwl1LOtoKU5/PoRXFyQSq1478e5eRvje0/beAymu74=; b=FoeaBPY0sUru0rq2ib8j3XoHP0
+	jLisWlOIFORxUfmSwSfaBPksTO0/3iVT4cjfhskdL07owgh01DLsc9Vxkf8bEnYpffwyo7XjcMyfV
+	LoXFCdyb2d/U03jgFLE6O/Pdnffd91i9BOd3NM0vnV7E1EoHsFeMFyqUDX5kAx5xC6ncJWcd6Cq7b
+	wY38oXTrfyD0C1tJujuVRBPeOgbCDNdeONtJ8frbYHDDRQLthI38YiqGTcN4K457qBhgb1Cv8qy4K
+	D9R84n7FKPlZZH813+eIw70MV1hqEOcLPZ92rcv4OZF2x/FE5lWDAQpQ3Dp/vi+7Y4hew5+/pCG5r
+	M2foYQNQ==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <leitao@debian.org>)
+	id 1vkKCR-00G7ie-Sd; Mon, 26 Jan 2026 10:52:04 +0000
+Date: Mon, 26 Jan 2026 02:51:58 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Alexander Graf <graf@amazon.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org, 
+	usamaarif642@gmail.com, rmikey@meta.com, clm@fb.com, riel@surriel.com, 
+	kernel-team@meta.com, SeongJae Park <sj@kernel.org>
+Subject: Re: [PATCH v4] kho: kexec-metadata: track previous kernel chain
+Message-ID: <aXdGyXNUO0mPwJsp@gmail.com>
+References: <20260121-kho-v4-1-5c8fe77b6804@debian.org>
+ <aXICriRKbYB5f3li@kernel.org>
+ <aXILzST3NxyYXW1m@gmail.com>
+ <aXX_SxpI8Tuh6Q3V@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260123095854.535058-3-pratyush@kernel.org>
+In-Reply-To: <aXX_SxpI8Tuh6Q3V@kernel.org>
+X-Debian-User: leitao
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260125_040338_287383_14835C22 
-X-CRM114-Status: GOOD (  35.02  )
+X-CRM114-CacheID: sfid-20260126_025219_186081_E0139D03 
+X-CRM114-Status: GOOD (  20.91  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,154 +78,83 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jan 23, 2026 at 10:58:51AM +0100, Pratyush Yadav wrote:
-> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
-> 
-> File seals are used on memfd for making shared memory communication with
-> untrusted peers safer and simpler. Seals provide a guarantee that
-> certain operations won't be allowed on the file such as writes or
-> truncations. Maintaining these guarantees across a live update will help
-> keeping such use cases secure.
-> 
-> These guarantees will also be needed for IOMMUFD preservation with LUO.
-> Normally when IOMMUFD maps a memfd, it pins all its pages to make sure
-> any truncation operations on the memfd don't lead to IOMMUFD using freed
-> memory. This doesn't work with LUO since the preserved memfd might have
-> completely different pages after a live update, and mapping them back to
-> the IOMMUFD will cause all sorts of problems. Using and preserving the
-> seals allows IOMMUFD preservation logic to trust the memfd.
-> 
-> Preserve the seals by introducing a new 8-bit-wide bitfield. There are
-> currently only 6 possible seals but 2 extra bits are used to provide
-> room for future expansion. Since the seals are UAPI, it is safe to use
-> them directly in the ABI.
-> 
-> Back the 8-bit field with a u64, leaving 56 unused bits. This is done to
-> keep the struct nice and aligned. The unused bits can be used to add new
-> flags later, potentially without even needing to bump the version
-> number.
-> 
-> Since the serialization structure is changed, bump the version number to
-> "memfd-v2".
-> 
-> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-> ---
->  include/linux/kho/abi/memfd.h |  9 ++++++++-
->  mm/memfd_luo.c                | 23 +++++++++++++++++++++--
->  2 files changed, 29 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/kho/abi/memfd.h b/include/linux/kho/abi/memfd.h
-> index 68cb6303b846..bd549c81f1d2 100644
-> --- a/include/linux/kho/abi/memfd.h
-> +++ b/include/linux/kho/abi/memfd.h
-> @@ -60,6 +60,11 @@ struct memfd_luo_folio_ser {
->   * struct memfd_luo_ser - Main serialization structure for a memfd.
->   * @pos:       The file's current position (f_pos).
->   * @size:      The total size of the file in bytes (i_size).
-> + * @seals:     The seals present on the memfd. The seals are UAPI so it is safe
-> + *             to directly use them in the ABI. Note: currently there are 6
-> + *             seals possible but this field is 8 bits to leave room for future
-> + *             expansion.
-> + * @__reserved: Reserved bits. May be used later to add more flags.
->   * @nr_folios: Number of folios in the folios array.
->   * @folios:    KHO vmalloc descriptor pointing to the array of
->   *             struct memfd_luo_folio_ser.
-> @@ -67,11 +72,13 @@ struct memfd_luo_folio_ser {
->  struct memfd_luo_ser {
->  	u64 pos;
->  	u64 size;
-> +	u64 seals:8;
+On Sun, Jan 25, 2026 at 01:32:27PM +0200, Mike Rapoport wrote:
+> On Thu, Jan 22, 2026 at 04:04:55AM -0800, Breno Leitao wrote:
+> > Ack! I am planning something as:
+> > 
+> > 	commit 90e098ca0d611b44594f08e50ba1cff3c932dd2b
+> > 	Author: Breno Leitao <leitao@debian.org>
+> > 	Date:   Thu Jan 22 03:47:23 2026 -0800
+> > 
+> > 	kho: document kexec-metadata tracking feature
 
-Kernel uABI defines seals as unsigned int, I think we can spare u32 for
-them and reserve a u32 flags for other memfd flags (MFD_CLOEXEC,
-MFD_HUGETLB etc).
+...
 
-> +	u64 __reserved:56;
->  	u64 nr_folios;
->  	struct kho_vmalloc folios;
->  } __packed;
->  
->  /* The compatibility string for memfd file handler */
-> -#define MEMFD_LUO_FH_COMPATIBLE	"memfd-v1"
-> +#define MEMFD_LUO_FH_COMPATIBLE	"memfd-v2"
->  
->  #endif /* _LINUX_KHO_ABI_MEMFD_H */
-> diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-> index a34fccc23b6a..eb68e0b5457f 100644
-> --- a/mm/memfd_luo.c
-> +++ b/mm/memfd_luo.c
-> @@ -79,6 +79,8 @@
->  #include <linux/shmem_fs.h>
->  #include <linux/vmalloc.h>
->  #include <linux/memfd.h>
-> +#include <uapi/linux/memfd.h>
-> +
->  #include "internal.h"
->  
->  static int memfd_luo_preserve_folios(struct file *file,
-> @@ -222,7 +224,7 @@ static int memfd_luo_preserve(struct liveupdate_file_op_args *args)
->  	struct memfd_luo_folio_ser *folios_ser;
->  	struct memfd_luo_ser *ser;
->  	u64 nr_folios;
-> -	int err = 0;
-> +	int err = 0, seals;
->  
->  	inode_lock(inode);
->  	shmem_freeze(inode, true);
-> @@ -234,8 +236,15 @@ static int memfd_luo_preserve(struct liveupdate_file_op_args *args)
->  		goto err_unlock;
->  	}
->  
-> +	seals = memfd_get_seals(args->file);
-> +	if (seals < 0) {
-> +		err = seals;
-> +		goto err_free_ser;
-> +	}
-> +
->  	ser->pos = args->file->f_pos;
->  	ser->size = i_size_read(inode);
-> +	ser->seals = seals;
->  
->  	err = memfd_luo_preserve_folios(args->file, &ser->folios,
->  					&folios_ser, &nr_folios);
-> @@ -444,13 +453,23 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
->  	if (!ser)
->  		return -EINVAL;
->  
-> -	file = memfd_alloc_file("", 0);
-> +	/*
-> +	 * The seals are preserved. Allow sealing here so they can be added
-> +	 * later.
-> +	 */
-> +	file = memfd_alloc_file("", MFD_ALLOW_SEALING);
+> I'd move this section before "debugfs Interfaces", other than that LGTM.
 
-I think we should select flags passed to memfd_alloc_file() based on
-ser->seals (and later based on ser->seals and ser->flags).
+Ack!
 
->  	if (IS_ERR(file)) {
->  		pr_err("failed to setup file: %pe\n", file);
->  		err = PTR_ERR(file);
->  		goto free_ser;
->  	}
->  
-> +	err = memfd_add_seals(file, ser->seals);
-
-I'm not sure using MFD_ALLOW_SEALING is enough if there was F_SEAL_EXEC in
-seals.
-
-> +	if (err) {
-> +		pr_err("failed to add seals: %pe\n", ERR_PTR(err));
-> +		goto put_file;
-> +	}
-> +
->  	vfs_setpos(file, ser->pos, MAX_LFS_FILESIZE);
->  	file->f_inode->i_size = ser->size;
->  
-> -- 
-> 2.52.0.457.g6b5491de43-goog
+> > > Can't we move it into the existing if (fdt) below?
+> > 
+> > Unfortunately, that won't work due to a data dependency between the two
+> > functions.
+> > 
+> > kho_process_kexec_metadata() reads from the FDT subtree and populates kho_in:
+> > 
+> > Basically:
+> > 
+> > 	kho_in.kexec_count = metadata->kexec_count;
+> > 
+> > While kho_populate_kexec_metadata() increments metadata->kexec_count:
+> > 
+> >           /* kho_in.kexec_count is set to 0 on cold boot */
+> >           metadata->kexec_count = kho_in.kexec_count + 1;
+> > 
+> > If kho_process_kexec_metadata() is moved after kho_populate_kexec_metadata(),
+> > the count would always increment from 0 to 1, ignoring whatever was passed in
+> > the FDT.
+> > 
+> > Restructuring to call kho_in_debugfs_init() earlier also doesn't work:
+> > 
+> > 
+> > 	if (fdt) {
+> > 		kho_in_debugfs_init(&kho_in.dbg, fdt);
+> > 		kho_process_kexec_metadata();
+> > 		return 0;
+> > 	}
+> > 
+> > 	/* Populate kexec metadata for the possible next kexec */
+> > 	err = kho_populate_kexec_metadata();
+> > 	if (err)
+> >                   pr_warn("failed to initialize kexec-metadata subtree: %d\n",
+> >                           err);
+> > 
+> > This would return early without populating the kexec metadata for the next
+> > kexec, breaking the chain on KHO boots.
 > 
+> How about we rename kho_process_kexec_metadata() to
+> kho_retreive_kexec_metadata() and add kho_process_kexec_metadata() that
+> will first call _retrieve and then _populate? Something like
+> 
+> static int __init kho_process_kexec_metadata(const void *fdt)
+> {
+> 	int err;
+> 
+> 	if (fdt)
+> 		kho_retrieve_kexec_metadata();
+> 
+> 	/* Populate kexec metadata for the possible next kexec */
+> 	err = kho_populate_kexec_metadata();
+> 	if (err)
+> 		pr_warn("failed to initialize kexec-metadata subtree: %d\n",
+> 			err);
+> 
+> 	return err;
+> }
 
--- 
-Sincerely yours,
-Mike.
+That would work, I will probably rename it to kho_kexec_metadata_init()
+or kho_kexec_metadata_setup() to follow the same pattern already there.
+
+Thanks for the review, I will send an updated version soon,
+--breno
 
