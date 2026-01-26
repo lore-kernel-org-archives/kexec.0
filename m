@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5838CD13C0D
-	for <kexec@archiver.kernel.org>; Mon, 26 Jan 2026 13:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0E2BCD13C1E
+	for <kexec@archiver.kernel.org>; Mon, 26 Jan 2026 14:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=aa1DMzjW5ihMgg92YYEEvi+hVWZtO1QQ1kl6+AaoZvQ=; b=EWNDMEDVKKzUB/n/MGPHWBXEU0
-	xtGZnVPJZDv7+FhM0ZWAu9vrhkcl5gI1mssAtgTAuFJFMrHw60mO8ay41PbxfG5sG2MXwylJX5Iia
-	s89ei3MTlrK1K02ffa05RC0u5xStX5MnwOJ1HvTJjoYNhtnCcgcVbejXyF1gOUBN5YYi+531jjolA
-	azPhB40cZGlswrEdo+QHs/B6HXJK8lzS4SisDJ+Q3XRzh43X4wzBt7XcnyQcvhmwDs/TQ3Mv/bkF7
-	4qfbLOhRArgRG8FynD0Yy3wzuYLZcNbhtTHMSgwIkc1ieZcmG+QCfh+3iVo4OK9oBbBnPEnrijpM7
-	VcmhYC1Q==;
+	bh=x8zOxLLvY+Aal8JT5wI6fL2YE4FO4kialvpEhIAqwc0=; b=oPO8025spVYFrXQfhjxPH2oh9k
+	+oZhyFoiBfKUJaOMtyx8laG+S9fpgEGAFODzpXsKI1dLhfqr/wHmTtynqNmpP3GAgXUjQpaM11ysf
+	bS0KvpCGDYcLNIC9xaLEuVateEc3+vtVv/GnCnA4EiJk6LD+1kgX2I3nRw14v0sMGW0ZMyp0EsqkP
+	BgmPsU8ND9A/Unx5BlkwfavoUcGqFmWXx3vptV2C1DaJULdtu9FsKrbuHDutBApDespXarDwjn0vG
+	k3lJUo4EXYNsoA/Rp1J+SReanTFQbVDQefBbafVQVirkFkJYpLTPKuOB11fDy+bVrA2+hQ84bqWBh
+	JJTpAWIQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vkMwA-0000000Cdqv-25ut;
-	Mon, 26 Jan 2026 13:47:26 +0000
-Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
+	id 1vkNhR-0000000Chko-23zi;
+	Mon, 26 Jan 2026 14:36:17 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vkMw7-0000000CdqX-42np
-	for kexec@lists.infradead.org;
-	Mon, 26 Jan 2026 13:47:25 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=aa1DMzjW5ihMgg92YYEEvi+hVWZtO1QQ1kl6+AaoZvQ=; b=PTW8TqhgFvvUWcRC3HJM028fcP
-	M7Vxisjv/gGMNmxFO/SLOgwXfepfwBg8TfKn2bhZf1AVDlJkcvSDMbJLwOpj10bTWKE3kluom+K+N
-	/L0DHiSRwa7TItLibUQbsjIgw5OQ5QBdu/vN9mLeWAu9Bt2yyDrmdLewyCBzHo1Q9fkJfSQdJfOka
-	MCN20eKZFSUeIVHI1U2iyeA/KMrVnyztbocEcxEPWBtKFAZcXb76eg90AIrS+9ZSs2PscROltDqCp
-	YsKRS5aiepm+1WZlSQvL1/1oDp0bVAyFumjQytrDAxjxZyw7mUrB54GxuaxhmlLkyF1ke7ddLpjHE
-	Ynk/aOxg==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <leitao@debian.org>)
-	id 1vkMvr-00GDT2-Op; Mon, 26 Jan 2026 13:47:08 +0000
-Date: Mon, 26 Jan 2026 05:47:02 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-mm@kvack.org, usamaarif642@gmail.com, rmikey@meta.com, clm@fb.com, 
-	riel@surriel.com, kernel-team@meta.com, SeongJae Park <sj@kernel.org>
-Subject: Re: [PATCH v4] kho: kexec-metadata: track previous kernel chain
-Message-ID: <aXdwObCI5z6qbuwE@gmail.com>
-References: <20260121-kho-v4-1-5c8fe77b6804@debian.org>
- <aXdTEzsm88JKu9zY@gmail.com>
- <2vxzikcoa4g1.fsf@kernel.org>
+	id 1vkNhP-0000000ChkP-3m2S;
+	Mon, 26 Jan 2026 14:36:16 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 0751E60130;
+	Mon, 26 Jan 2026 14:36:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D73C0C116C6;
+	Mon, 26 Jan 2026 14:36:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769438174;
+	bh=dMO1MIhjP4aVHBALuscN5a9iA1kviHKn9sIWzBNa0Wc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d19x1kCDYOnGx2Xo+GWKZ43qg670AhXoY+z9KwUBlxi+c469kki/9gZpuNlXlZiNa
+	 rZv3iCrRfTEHJA5rC1gwkwhr5H0JOyrF+WuH4kMmHUTcr68c+SvH2IbV/Dy39kGQwq
+	 svRwyM23nXqJ/x+vnjF0iIUwhrH5WCHqHP3G/PRUJoRhd/73wKtuLhnxaFr9h6XFsb
+	 8d0PCPT3Fkp/jB2F5IQQtssYcq9rnL7dZB0zjOZvBWb1I7rzD2iYimD2+Sp0lm0acc
+	 kyW1vLZ3VVuiM+CCdHmjO1YG+mExxT6Yebnlb6Z/t8Wzh+4ynDm6n1DlvTtmLEoIH+
+	 1yFi7JsqmfQcQ==
+Date: Mon, 26 Jan 2026 14:36:08 +0000
+From: Will Deacon <will@kernel.org>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>,
+	Baoquan he <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>, Pingfan Liu <kernelfans@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Saravana Kannan <saravanak@kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v3] arm64/kdump: pass dm-crypt keys to kdump kernel
+Message-ID: <aXd72PcvvFsIFXO2@willie-the-truck>
+References: <20260123081326.1362666-1-coxu@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2vxzikcoa4g1.fsf@kernel.org>
-X-Debian-User: leitao
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260126_054724_037414_9F87CF95 
-X-CRM114-Status: GOOD (  29.92  )
+In-Reply-To: <20260123081326.1362666-1-coxu@redhat.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,76 +76,80 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jan 26, 2026 at 02:28:30PM +0100, Pratyush Yadav wrote:
-> > On Wed, Jan 21, 2026 at 06:50:38AM -0800, Breno Leitao wrote:
-> >> +static __init int kho_populate_kexec_metadata(void)
-> >> +{
-> >> +	struct kho_kexec_metadata *metadata;
-> >> +	int err;
-> >> +
-> >> +	metadata = kho_alloc_preserve(sizeof(*metadata));
-> >> +	if (IS_ERR(metadata))
-> >> +		return PTR_ERR(metadata);
-> >> +
-> >> +	strscpy(metadata->previous_release, init_uts_ns.name.release,
-> >> +		sizeof(metadata->previous_release));
-> >> +	/* kho_in.kexec_count is set to 0 on cold boot */
-> >> +	metadata->kexec_count = kho_in.kexec_count + 1;
-> >> +
-> >> +	err = kho_add_subtree(KHO_METADATA_NODE_NAME, metadata);
-> >
-> > There is a hidden bug in here when CONFIG_KEXEC_HANDOVER_DEBUGFS is set.
+On Fri, Jan 23, 2026 at 04:13:25PM +0800, Coiby Xu wrote:
+> CONFIG_CRASH_DM_CRYPT has been introduced to support LUKS-encrypted
+> device dump target by addressing two challenges [1],
+>  - Kdump kernel may not be able to decrypt the LUKS partition. For some
+>    machines, a system administrator may not have a chance to enter the
+>    password to decrypt the device in kdump initramfs after the 1st kernel
+>    crashes
 > 
-> Good catch!
+>  - LUKS2 by default use the memory-hard Argon2 key derivation function
+>    which is quite memory-consuming compared to the limited memory reserved
+>    for kdump.
 > 
-> >
-> > kho_add_subtree() expects a fdt as the second argument, and we are
-> > passing a pure C struct. That works fine, except for debugfs, which
-> > does:
-> >
-> >  1. kho_add_subtree() calls kho_debugfs_fdt_add()
-> >  2. kho_debugfs_fdt_add() calls __kho_debugfs_fdt_add()
-> >  3. __kho_debugfs_fdt_add() executes fdt_totalsize(fdt)
-> >
-> > The fdt_totalsize() macro reads bytes 4-7 of the input as a big-endian u32, and
-> > this will hit struct kho_kexec_metadata, given I am passing a C struct instead
-> > of a FDT.
-> >
-> >   struct kho_kexec_metadata {
-> >       char previous_release[__NEW_UTS_LEN + 1];  // 65 bytes
-> >       u32 kexec_count;
-> >   } __packed;
-> >
-> > Bytes 4-7 would be characters from previous_release (e.g., "0-rc" from
-> > "6.19.0-rc4..."). Interpreted as big-endian u32, this gives a garbage size
-> > value.
-> >
-> > The alternatives I see here are:
-> >
-> >  1) Come back to FDT instead of plain C struct, similarly to the previous
-> >     version [1]
-> >  2) Created some helpers to treat C struct fields specially just for this
-> >     feature, and we can do it later if we have more users.
-> >  3) Move this kexec_metadata to work on top of LUO (similarly to memfd), but
-> >     that would be an unnecessary dependency just to have this kexec_metadata.
-> >
-> > That said, for the next version, I am coming back to to FDT.
+> To also enable this feature for ARM64, we only need to add device tree
+> property dmcryptkeys [2] as similar to elfcorehdr to pass the memory
+> address of the stored info of dm-crypt keys to the kdump kernel. Since
+> this property is only needed by the kdump kenrel, it won't be exposed to
+> user space.
 > 
-> Please, no. Don't go back to it just for the sake of this bug.
+> [1] https://lore.kernel.org/all/20250502011246.99238-1-coxu@redhat.com/
+> [2] https://github.com/devicetree-org/dt-schema/pull/181
 > 
-> I think KHO's assumption that the subtree will always point to an FDT is
-> broken, and we should fix that. I think KHO should expose the blob of
-> serialized data and let userspace figure out what the format is and how
-> to decode it.
+> Cc: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>
+> Cc: Baoquan he <bhe@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Kairui Song <ryncsn@gmail.com>
+> Cc: Pingfan Liu <kernelfans@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
+> ---
+> v3
+> - Delete the property after reading it [Rob Herring]
 > 
-> To do that, we would need to update kho_add_subtree() to take a size
-> parameter from callers, and pass that down to debugfs code. I count 3
-> callers of kho_add_subtree() - memblock, LUO, and test_kho. I think all
-> 3 should be fairly easy to update, but I am happy to help out if you
-> need.
+> v2
+> - Krzysztof
+>   - Use imperative mood for commit message
+>   - Add dt-schema ABI Documentation 
+>     https://github.com/devicetree-org/dt-schema/pull/181
+> - Don't print dm-crypt keys address via pr_debug
+> 
+> 
+>  arch/arm64/kernel/machine_kexec_file.c |  9 +++++++++
+>  drivers/of/fdt.c                       | 21 +++++++++++++++++++++
+>  drivers/of/kexec.c                     | 19 +++++++++++++++++++
+>  3 files changed, 49 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+> index 410060ebd86d..5f3bad8ca96d 100644
+> --- a/arch/arm64/kernel/machine_kexec_file.c
+> +++ b/arch/arm64/kernel/machine_kexec_file.c
+> @@ -134,6 +134,15 @@ int load_other_segments(struct kimage *image,
+>  
+>  		kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+>  			      image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
+> +
+> +		ret = crash_load_dm_crypt_keys(image);
+> +
+> +		if (ret == -ENOENT) {
+> +			kexec_dprintk("No dm crypt key to load\n");
+> +		} else if (ret) {
+> +			pr_err("Failed to load dm crypt keys\n");
+> +			goto out_err;
+> +		}
 
-Sure, let me hack and see what I can get here.
+This looks like an unusual mixture of kexec_dprintk() and pr_err().
 
-Thanks for the direction,
---breno
+Stepping back a second, why do we need to print anything from the arch
+code at all? It looks like crash_load_dm_crypt_keys() already prints for
+the -ENOENT case so I'd be inclined just to do:
+
+	ret = crash_load_dm_crypt_keys(image);
+	if (ret)
+		goto out_err;
+
+Will
 
