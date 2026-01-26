@@ -4,62 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E0C2BCF65E5
-	for <kexec@archiver.kernel.org>; Mon, 26 Jan 2026 12:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 56EDAC88E52
+	for <kexec@archiver.kernel.org>; Mon, 26 Jan 2026 12:47:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=4MD0JKg2XNo8f5Vd/iDuV+WzwyogEWvnQdT2mMRPJPc=; b=SX8GcOAfwdSVy/EnI3FnOGbpBJ
-	MZMC0p1qvkixv9HWRMLzgDyaYwJVQpYQwNBpsBW5pEWvrrThjuCC3gHwoe5j4XHdPe860Vvqsb2A4
-	r8XUCb9xjbQo6KCCmBn7a1WIyUYNuqvuzgue334LGeWxZ6dRQZ3I49CclsVkFLsZ0R98A5yOC+xsF
-	oWgznMx47PWfOobtSSG8uBSWRSn5qlnr5mRUgoNLtDl7u8V5VEEhKGsWfTwOxge/9leIOh+ziPSeN
-	vSGjAag7XTSCnjSdPd9yVklXCtqni+dxYGIVVCW/PXBJiBHmdkwCyqmbiHSy09G6mGsiUlgBQuiRN
-	B6QA6cZA==;
+	bh=0yWEB3MC/IwOdZRTqjXn596FY/5KcgKt/UNJOXmLQQk=; b=vAxjZnao5hHpkuBz3NI6rT9MiK
+	t6JEXGoU5dfWGgEXlSfEEfyzz6yFTILk/mGruPC+CgHJgSapEJd1plGn8vjs7aIM3NOSYD83nkODg
+	+08+JM5WAsFSFXQeu1rx5Our5j58/xCxI4EvYaQx3SlqcJJT8Ism7EKJx1nJJJc0D/dIQ+Zy5CP84
+	Djf1KHNuGOSy1HaNkf3q1AqXjMy4OGULrbbZeKh/l7+msGZqb/L5LCPPV3bWXDsGL7K3sw65klqIF
+	6zr644JNmiK8rfxdLe2f6Kb7wIWziDSRnSZBq4jw6s3SHoYsFnSo8RX6Ex9JR7Ubv8853AdSW1jpO
+	ZNUSZrCA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vkLHi-0000000CTvi-1imk;
-	Mon, 26 Jan 2026 12:01:34 +0000
-Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
+	id 1vkM08-0000000CZZS-1K8B;
+	Mon, 26 Jan 2026 12:47:28 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vkLHa-0000000CTtb-3qsc
+	id 1vkM06-0000000CZZD-1wbR
 	for kexec@lists.infradead.org;
-	Mon, 26 Jan 2026 12:01:30 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4MD0JKg2XNo8f5Vd/iDuV+WzwyogEWvnQdT2mMRPJPc=; b=ojjfT47ZBr4oqDYV7h38ok75+M
-	p3XiCn2p0xutQKqmEFkIi9mdXHk694M+JEC5A2HSXodenka5ejPAqrEIpS+GR7+MIZKg/GiDrU0h/
-	cjbkbMVmKAxTCpcV0Crw8twAfmqwO+gHuEy6lwr7KLmPogIciBMC9NUJWI+Ebdv3TldDgNPWnpiAT
-	HHy6CIQ1SvX9w0pxi8AjQb0Z8TmM828eRnvex7+0FFxWR1GdpIbzhJOa7kWgZ8AwzFBqluspmowRM
-	X+gfS40M0dgf5MQOTY1t4JYXTAL3pUvNcF/lTDoq8BGr5sd0PghDaUSZ9FcYbtVbkCkDj5cVeRJOz
-	DXoP1LfA==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <leitao@debian.org>)
-	id 1vkLHR-00G9y1-Js; Mon, 26 Jan 2026 12:01:18 +0000
-Date: Mon, 26 Jan 2026 04:01:11 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-mm@kvack.org, usamaarif642@gmail.com, rmikey@meta.com, clm@fb.com, 
-	riel@surriel.com, kernel-team@meta.com, SeongJae Park <sj@kernel.org>
-Subject: Re: [PATCH v4] kho: kexec-metadata: track previous kernel chain
-Message-ID: <aXdTEzsm88JKu9zY@gmail.com>
-References: <20260121-kho-v4-1-5c8fe77b6804@debian.org>
+	Mon, 26 Jan 2026 12:47:26 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 8761160051;
+	Mon, 26 Jan 2026 12:47:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32E1AC116C6;
+	Mon, 26 Jan 2026 12:47:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769431645;
+	bh=6wAT8ti4QCa4aLuMEWb3Z0RxEKoJVGK3uZ0wJAMvvnQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=KfvbgkvCznk1tlJ4lZzsg2eEdrMAvgO7UG8TYLAUCLREEOBLo49BuFec7Tqa2OdsC
+	 AUY10n5LHMRvMmsZ4eZnNHSzvfjn79Wt2sm/OPIGlvBUsZj41efLMT1PJFH8bVRKnq
+	 cZGM0WpMCyMM+9RYv2LoPzNGLAjatqnehL8W4mX3pbDKRv/JKwP3GxFZnJ5Fz+LDs4
+	 lKGF1QioOvg/9OfZjRUvozT4QixNbDT3ic07rT9uDqg2LyaxehJnhoUleUepQLw1N+
+	 ph9v8qTWtLAd6IDK8XQZdfD12svL9ITDrwsSknk9Z4p5YI0bNOJGKbdXmB0ps9n3kp
+	 iUusOazWScZ1Q==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Alexander Graf <graf@amazon.com>,
+  Pasha Tatashin <pasha.tatashin@soleen.com>,  Hugh Dickins
+ <hughd@google.com>,  Baolin Wang <baolin.wang@linux.alibaba.com>,  Andrew
+ Morton <akpm@linux-foundation.org>,  Jason Gunthorpe <jgg@nvidia.com>,
+  Samiullah Khawaja <skhawaja@google.com>,  kexec@lists.infradead.org,
+  linux-mm@kvack.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm: memfd_luo: preserve file seals
+In-Reply-To: <aXYGkb-QtYNaWYw4@kernel.org> (Mike Rapoport's message of "Sun,
+	25 Jan 2026 14:03:29 +0200")
+References: <20260123095854.535058-1-pratyush@kernel.org>
+	<20260123095854.535058-3-pratyush@kernel.org>
+	<aXYGkb-QtYNaWYw4@kernel.org>
+Date: Mon, 26 Jan 2026 13:47:21 +0100
+Message-ID: <2vxzqzrca6cm.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260121-kho-v4-1-5c8fe77b6804@debian.org>
-X-Debian-User: leitao
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260126_040126_962107_504BC3A6 
-X-CRM114-Status: GOOD (  12.46  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,58 +75,179 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jan 21, 2026 at 06:50:38AM -0800, Breno Leitao wrote:
-> +static __init int kho_populate_kexec_metadata(void)
-> +{
-> +	struct kho_kexec_metadata *metadata;
-> +	int err;
-> +
-> +	metadata = kho_alloc_preserve(sizeof(*metadata));
-> +	if (IS_ERR(metadata))
-> +		return PTR_ERR(metadata);
-> +
-> +	strscpy(metadata->previous_release, init_uts_ns.name.release,
-> +		sizeof(metadata->previous_release));
-> +	/* kho_in.kexec_count is set to 0 on cold boot */
-> +	metadata->kexec_count = kho_in.kexec_count + 1;
-> +
-> +	err = kho_add_subtree(KHO_METADATA_NODE_NAME, metadata);
+Hi Mike,
 
-There is a hidden bug in here when CONFIG_KEXEC_HANDOVER_DEBUGFS is set.
+On Sun, Jan 25 2026, Mike Rapoport wrote:
 
-kho_add_subtree() expects a fdt as the second argument, and we are
-passing a pure C struct. That works fine, except for debugfs, which
-does:
+> On Fri, Jan 23, 2026 at 10:58:51AM +0100, Pratyush Yadav wrote:
+>> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+>> 
+>> File seals are used on memfd for making shared memory communication with
+>> untrusted peers safer and simpler. Seals provide a guarantee that
+>> certain operations won't be allowed on the file such as writes or
+>> truncations. Maintaining these guarantees across a live update will help
+>> keeping such use cases secure.
+>> 
+>> These guarantees will also be needed for IOMMUFD preservation with LUO.
+>> Normally when IOMMUFD maps a memfd, it pins all its pages to make sure
+>> any truncation operations on the memfd don't lead to IOMMUFD using freed
+>> memory. This doesn't work with LUO since the preserved memfd might have
+>> completely different pages after a live update, and mapping them back to
+>> the IOMMUFD will cause all sorts of problems. Using and preserving the
+>> seals allows IOMMUFD preservation logic to trust the memfd.
+>> 
+>> Preserve the seals by introducing a new 8-bit-wide bitfield. There are
+>> currently only 6 possible seals but 2 extra bits are used to provide
+>> room for future expansion. Since the seals are UAPI, it is safe to use
+>> them directly in the ABI.
+>> 
+>> Back the 8-bit field with a u64, leaving 56 unused bits. This is done to
+>> keep the struct nice and aligned. The unused bits can be used to add new
+>> flags later, potentially without even needing to bump the version
+>> number.
+>> 
+>> Since the serialization structure is changed, bump the version number to
+>> "memfd-v2".
+>> 
+>> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+>> ---
+>>  include/linux/kho/abi/memfd.h |  9 ++++++++-
+>>  mm/memfd_luo.c                | 23 +++++++++++++++++++++--
+>>  2 files changed, 29 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/include/linux/kho/abi/memfd.h b/include/linux/kho/abi/memfd.h
+>> index 68cb6303b846..bd549c81f1d2 100644
+>> --- a/include/linux/kho/abi/memfd.h
+>> +++ b/include/linux/kho/abi/memfd.h
+>> @@ -60,6 +60,11 @@ struct memfd_luo_folio_ser {
+>>   * struct memfd_luo_ser - Main serialization structure for a memfd.
+>>   * @pos:       The file's current position (f_pos).
+>>   * @size:      The total size of the file in bytes (i_size).
+>> + * @seals:     The seals present on the memfd. The seals are UAPI so it is safe
+>> + *             to directly use them in the ABI. Note: currently there are 6
+>> + *             seals possible but this field is 8 bits to leave room for future
+>> + *             expansion.
+>> + * @__reserved: Reserved bits. May be used later to add more flags.
+>>   * @nr_folios: Number of folios in the folios array.
+>>   * @folios:    KHO vmalloc descriptor pointing to the array of
+>>   *             struct memfd_luo_folio_ser.
+>> @@ -67,11 +72,13 @@ struct memfd_luo_folio_ser {
+>>  struct memfd_luo_ser {
+>>  	u64 pos;
+>>  	u64 size;
+>> +	u64 seals:8;
+>
+> Kernel uABI defines seals as unsigned int, I think we can spare u32 for
+> them and reserve a u32 flags for other memfd flags (MFD_CLOEXEC,
+> MFD_HUGETLB etc).
 
- 1. kho_add_subtree() calls kho_debugfs_fdt_add()
- 2. kho_debugfs_fdt_add() calls __kho_debugfs_fdt_add()
- 3. __kho_debugfs_fdt_add() executes fdt_totalsize(fdt)
+Sure, will do.
 
-The fdt_totalsize() macro reads bytes 4-7 of the input as a big-endian u32, and
-this will hit struct kho_kexec_metadata, given I am passing a C struct instead
-of a FDT.
+>
+>> +	u64 __reserved:56;
+>>  	u64 nr_folios;
+>>  	struct kho_vmalloc folios;
+>>  } __packed;
+>>  
+>>  /* The compatibility string for memfd file handler */
+>> -#define MEMFD_LUO_FH_COMPATIBLE	"memfd-v1"
+>> +#define MEMFD_LUO_FH_COMPATIBLE	"memfd-v2"
+>>  
+>>  #endif /* _LINUX_KHO_ABI_MEMFD_H */
+>> diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
+>> index a34fccc23b6a..eb68e0b5457f 100644
+>> --- a/mm/memfd_luo.c
+>> +++ b/mm/memfd_luo.c
+>> @@ -79,6 +79,8 @@
+>>  #include <linux/shmem_fs.h>
+>>  #include <linux/vmalloc.h>
+>>  #include <linux/memfd.h>
+>> +#include <uapi/linux/memfd.h>
+>> +
+>>  #include "internal.h"
+>>  
+>>  static int memfd_luo_preserve_folios(struct file *file,
+>> @@ -222,7 +224,7 @@ static int memfd_luo_preserve(struct liveupdate_file_op_args *args)
+>>  	struct memfd_luo_folio_ser *folios_ser;
+>>  	struct memfd_luo_ser *ser;
+>>  	u64 nr_folios;
+>> -	int err = 0;
+>> +	int err = 0, seals;
+>>  
+>>  	inode_lock(inode);
+>>  	shmem_freeze(inode, true);
+>> @@ -234,8 +236,15 @@ static int memfd_luo_preserve(struct liveupdate_file_op_args *args)
+>>  		goto err_unlock;
+>>  	}
+>>  
+>> +	seals = memfd_get_seals(args->file);
+>> +	if (seals < 0) {
+>> +		err = seals;
+>> +		goto err_free_ser;
+>> +	}
+>> +
+>>  	ser->pos = args->file->f_pos;
+>>  	ser->size = i_size_read(inode);
+>> +	ser->seals = seals;
+>>  
+>>  	err = memfd_luo_preserve_folios(args->file, &ser->folios,
+>>  					&folios_ser, &nr_folios);
+>> @@ -444,13 +453,23 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
+>>  	if (!ser)
+>>  		return -EINVAL;
+>>  
+>> -	file = memfd_alloc_file("", 0);
+>> +	/*
+>> +	 * The seals are preserved. Allow sealing here so they can be added
+>> +	 * later.
+>> +	 */
+>> +	file = memfd_alloc_file("", MFD_ALLOW_SEALING);
+>
+> I think we should select flags passed to memfd_alloc_file() based on
+> ser->seals (and later based on ser->seals and ser->flags).
 
-  struct kho_kexec_metadata {
-      char previous_release[__NEW_UTS_LEN + 1];  // 65 bytes
-      u32 kexec_count;
-  } __packed;
+Not sure what you mean.
 
-Bytes 4-7 would be characters from previous_release (e.g., "0-rc" from
-"6.19.0-rc4..."). Interpreted as big-endian u32, this gives a garbage size
-value.
+I think the only seal we can set via memfd_alloc_file() flags is
+MFD_NOEXEC_SEAL, which is really a F_SEAL_EXEC and plus a change of the
+inode's mode. And now that I think of it, that is a valid use case that
+we might as well support. But I think that should be done by preserving
+the mode of the inode directly, and then copying the seals back. The
+main reason for that is that the mode can be changed after the memfd is
+created too.
 
-The alternatives I see here are:
+Other than that, all other seals are set by fcntl (via
+memfd_add_seals()), so I don't see what else we can pass to
+memfd_alloc_file().
 
- 1) Come back to FDT instead of plain C struct, similarly to the previous
-    version [1]
- 2) Created some helpers to treat C struct fields specially just for this
-    feature, and we can do it later if we have more users.
- 3) Move this kexec_metadata to work on top of LUO (similarly to memfd), but
-    that would be an unnecessary dependency just to have this kexec_metadata.
+>
+>>  	if (IS_ERR(file)) {
+>>  		pr_err("failed to setup file: %pe\n", file);
+>>  		err = PTR_ERR(file);
+>>  		goto free_ser;
+>>  	}
+>>  
+>> +	err = memfd_add_seals(file, ser->seals);
+>
+> I'm not sure using MFD_ALLOW_SEALING is enough if there was F_SEAL_EXEC in
+> seals.
 
-That said, for the next version, I am coming back to to FDT.
+Why not? memfd_add_seals() can handle F_SEAL_EXEC as far as I can tell.
 
-Link: https://lore.kernel.org/all/20260108-kho-v3-0-b1d6b7a89342@debian.org/ [1]
+>
+>> +	if (err) {
+>> +		pr_err("failed to add seals: %pe\n", ERR_PTR(err));
+>> +		goto put_file;
+>> +	}
+>> +
+>>  	vfs_setpos(file, ser->pos, MAX_LFS_FILESIZE);
+>>  	file->f_inode->i_size = ser->size;
+>>  
+>> -- 
+>> 2.52.0.457.g6b5491de43-goog
+>> 
 
---breno
+-- 
+Regards,
+Pratyush Yadav
 
