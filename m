@@ -4,78 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 93BF7D2593F
-	for <kexec@archiver.kernel.org>; Tue, 27 Jan 2026 05:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BE8ACD25958
+	for <kexec@archiver.kernel.org>; Tue, 27 Jan 2026 07:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=FQViPQ8jqp6BXqY59Q4PpPvPb9kmHYBuT9rtqSSpXIY=; b=4YbpdMFM3ZQ5rBK/vDWuc9CovG
-	zUUiDuN9ul5tMWsncSy34cuMuTrHx54mtFCNXMnBDb/1kEOh/z798TDjDzLR71t3sWmaJPR8DYspY
-	J64BmBCBaoooZ6CBMGlBWoyTPsmOV7fukdzya91QGl9frql2ZXhnlDs9o2eZsExFBEP3a7APcYUHK
-	uGMcfTVCdOJgLzJ0IL1P+HXGIPv/KWx03E96dl57IZAJ/p/KA7muQtME1AFLBdeqtAASUO2Gd3pKe
-	SDMpOGU5TqnQyMkEGm80YiCq0O3fMVtqNrUWlXEiMxqBEwL4sIXC8VsLYpblzuRhNmK/K6gVyMyQ9
-	LXQJbTSw==;
+	bh=LS8aWoAwuUZfXKGJJtyYD5Ry6YFS4Hs0JmhcUrHlK/s=; b=m1nL6G0m8TJIsTHw15ZWWWN9nX
+	lk12F/f58bIIhog+NM1+1CGyvdgO85S4Yp/MbY2kDg4g1Uh9AOHuqkFr9oYcxt6Hg1zToqJcp/WmT
+	HegzQJrb0/cmpZH8jUFH3YnQD81Rzh7Z0aNW/tovWK/d0cHqEX7RZhoAE7zLhob+9dvQqYwXKToFV
+	ajPr3yno6mgoScBwQdJN6/vgHPo9k89PG6P0R3opy2DD9npNlLvUb5FTV3DN9nWdiZ5bUzJKf4XcL
+	owRZqyxdpRH7IJbhxuH6DDEfd+x5IGtcT6+JVEzFbcu1gFsEX/2f/OFi4/Oc1dqnskyrTElddsFAF
+	clEtUEhQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vkbxL-0000000DhGq-12Aq;
-	Tue, 27 Jan 2026 05:49:39 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1vkdQM-0000000Dm97-1Ez9;
+	Tue, 27 Jan 2026 07:23:42 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vkbxH-0000000DhG5-3dHy
+	id 1vkdQK-0000000Dm8a-08ky
 	for kexec@lists.infradead.org;
-	Tue, 27 Jan 2026 05:49:38 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1769492973;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FQViPQ8jqp6BXqY59Q4PpPvPb9kmHYBuT9rtqSSpXIY=;
-	b=cYAOaqcVxLPWqu850lmtrG93esSc5p4CNUE5vGSFGp6c4HmJAyDduPMw/BgBMtigXc42Sl
-	+fxJPV7FHaJpVwTM2KfdIsCtF2uhIjs8yyO1qWyr1fBzwQ+1B7FtJEEc1RjLpHND9icF40
-	Wbn/NZmwsNPAQCj8RUYXvOcgq1yEpUk=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-333-1nXIXkb9MrapWWMYmwp28Q-1; Tue,
- 27 Jan 2026 00:49:29 -0500
-X-MC-Unique: 1nXIXkb9MrapWWMYmwp28Q-1
-X-Mimecast-MFC-AGG-ID: 1nXIXkb9MrapWWMYmwp28Q_1769492967
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6357019775A7;
-	Tue, 27 Jan 2026 05:49:27 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.123])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9614018004D8;
-	Tue, 27 Jan 2026 05:49:25 +0000 (UTC)
-Date: Tue, 27 Jan 2026 13:49:20 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Li Chen <me@linux.beauty>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Steven Chen <chenste@linux.microsoft.com>,
-	Alexander Graf <graf@amazon.com>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>,
-	Philipp Rudo <prudo@redhat.com>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	Ricardo Ribalda <ribalda@chromium.org>,
-	Ross Zwisler <zwisler@google.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kexec: derive purgatory entry from symbol
-Message-ID: <aXhRqvzeX2tUGvia@MiWiFi-R3L-srv>
-References: <20260120124005.148381-1-me@linux.beauty>
+	Tue, 27 Jan 2026 07:23:41 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 942BF43F89;
+	Tue, 27 Jan 2026 07:23:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F0FDC116C6;
+	Tue, 27 Jan 2026 07:23:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769498618;
+	bh=wKc6TL0A4RPyPSsNR6BFVNJfOo7cACM6wopJvwkAz0g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G4bBJQeU/o9hOCFqmG0i2rEDHAXUQpCc0MJKYS6Y5c/RUILsdmi8lxJVvxAa+Cjl6
+	 L0Fkyp58vRmqs9H7LMt7ccQ+bhA0PGlobSQELyJcEpBhrnS9bcNhXDAOOySeHifhwh
+	 oDWSNMFxC1W1odL6Lv2avlJWJDfi1sEh9IgV+zqZAH3hKAD3zzoNijv8EfZST1APKh
+	 c2cbZvdVdf5wtPe+E+4Sg4BWBhIc1AJn5O9Dhz9u3+/MsiLxHi5Mjd/fPCSoZe7Vip
+	 X5DbMcjA5hw0brxwPZ8L7gLZpTpER20rkSCVGNiFynFI/cjdd9wpJkSWViWwE4dk4b
+	 6AzxEMzqK1u9w==
+Date: Tue, 27 Jan 2026 09:23:30 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Alexander Graf <graf@amazon.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, linux-mm@kvack.org,
+	usamaarif642@gmail.com, rmikey@meta.com, clm@fb.com,
+	riel@surriel.com, SeongJae Park <sj@kernel.org>,
+	kernel-team@meta.com
+Subject: Re: [PATCH v5 1/4] kho: add size parameter to kho_add_subtree()
+Message-ID: <aXhn8ieKtj3T3FCc@kernel.org>
+References: <20260126-kho-v5-0-7cd0f69ab204@debian.org>
+ <20260126-kho-v5-1-7cd0f69ab204@debian.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260120124005.148381-1-me@linux.beauty>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+In-Reply-To: <20260126-kho-v5-1-7cd0f69ab204@debian.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260126_214935_983361_F086EDDF 
-X-CRM114-Status: GOOD (  28.92  )
+X-CRM114-CacheID: sfid-20260126_232340_113650_AA731B70 
+X-CRM114-Status: GOOD (  19.69  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,118 +77,62 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Li Chen,
+On Mon, Jan 26, 2026 at 08:07:23AM -0800, Breno Leitao wrote:
+> kho_add_subtree() assumes the fdt argument is always an FDT and calls
+> fdt_totalsize() on it in the debugfs code path. This assumption will
+> break if a caller passes arbitrary data instead of an FDT.
+> 
+> When CONFIG_KEXEC_HANDOVER_DEBUGFS is enabled, kho_debugfs_fdt_add()
+> calls __kho_debugfs_fdt_add(), which executes:
+> 
+>     f->wrapper.size = fdt_totalsize(fdt);
+> 
+> Fix this by adding an explicit size parameter to kho_add_subtree() so
+> callers specify the blob size. This allows subtrees to contain
+> arbitrary data formats, not just FDTs. Update all callers:
+> 
+>   - memblock.c: use fdt_totalsize(fdt)
+>   - luo_core.c: use fdt_totalsize(fdt_out)
+>   - test_kho.c: use fdt_totalsize()
+>   - kexec_handover.c (root fdt): use fdt_totalsize(kho_out.fdt)
+> 
+> Also update kho_in_debugfs_init() to compute sizes using fdt_totalsize()
+> for the root and sub-FDTs it processes, since these are known to be
+> actual FDT blobs.
+> 
+> Suggested-by: Pratyush Yadav <pratyush@kernel.org>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-On 01/20/26 at 08:40pm, Li Chen wrote:
-> kexec_load_purgatory() derives image->start by locating e_entry inside an
-> SHF_EXECINSTR section. If the purgatory object contains multiple executable
-> sections with overlapping sh_addr, the entrypoint check can match more than
-> once and trigger a WARN.
-> 
-> Derive the entry section from the purgatory_start symbol when present and
-> compute image->start from its final placement. Keep the existing e_entry
-> fallback for purgatories that do not expose the symbol.
-> 
-> WARNING: kernel/kexec_file.c:1009 at kexec_load_purgatory+0x395/0x3c0, CPU#10: kexec/1784
-> Call Trace:
->  <TASK>
->  bzImage64_load+0x133/0xa00
->  __do_sys_kexec_file_load+0x2b3/0x5c0
->  do_syscall_64+0x81/0x610
->  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> 
-> Fixes: 8652d44f466a ("kexec: support purgatories with .text.hot sections")
-> Signed-off-by: Li Chen <me@linux.beauty>
-
-Thanks for fixing the issue. Could you tell how we can trigger this
-issue so that I can reproduce it?
+Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
 > ---
->  kernel/kexec_file.c | 24 ++++++++++++++++++++++--
->  1 file changed, 22 insertions(+), 2 deletions(-)
+>  include/linux/kexec_handover.h              |  4 ++--
+>  kernel/liveupdate/kexec_handover.c          |  8 +++++---
+>  kernel/liveupdate/kexec_handover_debugfs.c  | 15 +++++++++------
+>  kernel/liveupdate/kexec_handover_internal.h |  5 +++--
+>  kernel/liveupdate/luo_core.c                |  3 ++-
+>  lib/test_kho.c                              |  3 ++-
+>  mm/memblock.c                               |  2 +-
+>  7 files changed, 24 insertions(+), 16 deletions(-)
 > 
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 3f1d6c4e8ff2..d3c68c6b4bbc 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -880,6 +880,8 @@ static int kexec_calculate_store_digests(struct kimage *image)
->  }
->  
->  #ifdef CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY
-> +static const Elf_Sym * kexec_purgatory_find_symbol(struct purgatory_info *pi,
-> +			      const char *name);
+> diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
+> index ac4129d1d7416..abb1d324f42d0 100644
+> --- a/include/linux/kexec_handover.h
+> +++ b/include/linux/kexec_handover.h
+> @@ -32,7 +32,7 @@ void kho_restore_free(void *mem);
+>  struct folio *kho_restore_folio(phys_addr_t phys);
+>  struct page *kho_restore_pages(phys_addr_t phys, unsigned long nr_pages);
+>  void *kho_restore_vmalloc(const struct kho_vmalloc *preservation);
+> -int kho_add_subtree(const char *name, void *fdt);
+> +int kho_add_subtree(const char *name, void *fdt, size_t size);
 
-Here, is it better to move the whole function body of
-kexec_purgatory_find_symbol() here so that kexec_purgatory_setup_sechdrs()
-can see it too?
+I'd rename 'void *fdt' to 'void *blob' to make it clearer that subtree isn't
+necessary an FDT.
+And s/fdt/blob/ in debugfs function names.
+All this could be a separate cleanup.
 
-Other than the concerns about how to reproducing and above one, this
-patch looks good to me.
 
-Thanks
-Baoquan
-
->  /*
->   * kexec_purgatory_setup_kbuf - prepare buffer to load purgatory.
->   * @pi:		Purgatory to be loaded.
-> @@ -958,6 +960,10 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
->  	unsigned long offset;
->  	size_t sechdrs_size;
->  	Elf_Shdr *sechdrs;
-> +	const Elf_Sym *entry_sym;
-> +	u16 entry_shndx = 0;
-> +	unsigned long entry_off = 0;
-> +	bool start_fixed = false;
->  	int i;
->  
->  	/*
-> @@ -975,6 +981,12 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
->  	bss_addr = kbuf->mem + kbuf->bufsz;
->  	kbuf->image->start = pi->ehdr->e_entry;
->  
-> +	entry_sym = kexec_purgatory_find_symbol(pi, "purgatory_start");
-> +	if (entry_sym) {
-> +		entry_shndx = entry_sym->st_shndx;
-> +		entry_off = entry_sym->st_value;
-> +	}
-> +
->  	for (i = 0; i < pi->ehdr->e_shnum; i++) {
->  		unsigned long align;
->  		void *src, *dst;
-> @@ -992,6 +1004,13 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
->  
->  		offset = ALIGN(offset, align);
->  
-> +		if (!start_fixed && entry_sym && i == entry_shndx &&
-> +		    (sechdrs[i].sh_flags & SHF_EXECINSTR) &&
-> +		    entry_off < sechdrs[i].sh_size) {
-> +			kbuf->image->start = kbuf->mem + offset + entry_off;
-> +			start_fixed = true;
-> +		}
-> +
->  		/*
->  		 * Check if the segment contains the entry point, if so,
->  		 * calculate the value of image->start based on it.
-> @@ -1002,13 +1021,14 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
->  		 * is not set to the initial value, and warn the user so they
->  		 * have a chance to fix their purgatory's linker script.
->  		 */
-> -		if (sechdrs[i].sh_flags & SHF_EXECINSTR &&
-> +		if (!start_fixed && sechdrs[i].sh_flags & SHF_EXECINSTR &&
->  		    pi->ehdr->e_entry >= sechdrs[i].sh_addr &&
->  		    pi->ehdr->e_entry < (sechdrs[i].sh_addr
->  					 + sechdrs[i].sh_size) &&
-> -		    !WARN_ON(kbuf->image->start != pi->ehdr->e_entry)) {
-> +		    kbuf->image->start == pi->ehdr->e_entry) {
->  			kbuf->image->start -= sechdrs[i].sh_addr;
->  			kbuf->image->start += kbuf->mem + offset;
-> +			start_fixed = true;
->  		}
->  
->  		src = (void *)pi->ehdr + sechdrs[i].sh_offset;
-> -- 
-> 2.52.0
-> 
-> 
-
+-- 
+Sincerely yours,
+Mike.
 
