@@ -4,66 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BA2F2D2595A
-	for <kexec@archiver.kernel.org>; Tue, 27 Jan 2026 07:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DEC49CA6CBC
+	for <kexec@archiver.kernel.org>; Tue, 27 Jan 2026 09:29:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=l1IAoLAKw2Vg0PzPanaLKZXBk7NDv+OxvP+pKfiIL5A=; b=0ftFjUfNEm8/o+JIzq1GgdXW56
-	P1XPKTiSbsEZiVKqr2Oospc2kf9xrIzQZbz+UxMKb6eXlt+Mr6+jt5lNcuNhpJCH41uNiq4Jqoj+0
-	cbtyQ+9JV9PbBdi5b+fVmlffMkGiy+zwbFflwUSLCQGjopcESFvESFGsJPL4qlkBrSaVjK3cUAAIx
-	RhfFeXB26AVEfCdxJuoUQtrBRx5E8rnhggytRPsN6TqVrVJ6GnXns+vyJ4JD4ilaW3EKm9iaFpsnn
-	iyGbECYcRBcbQaQGi3oY7e8y69w8jIcjBGA7KN1AIYPp84mBnNHdmlgRloqlAq1gc2MHfK7M4rXvh
-	SM5lDJJg==;
+	bh=LTCrav6xCkfc0BbQ/U7B9PNL46cvtBsbXaZCd/pJxww=; b=3JKfTHUwL7tE9RdyjG8klrKEe/
+	U+l4iKcInl+vf09a9y4B/gYBLISNIuBB7fg4HapByT1rOvOqAKI1xB+v36Kbto3kDYSBj0jvXRuzr
+	Qt6KPzpdImmGI8XhVN5S1JmAlbxePuBrrU3TF3NOD/0hmBweX3OFEhzNmC1kEAb4LABF8BrW4MOR/
+	4fTau4Vug02oWSb8cXsJrY8n90ZShZUq6nxxsRgHcolrKvdchmfdfn1eoJuTXmeK1FTpeGYgRvrDC
+	yJE0KGIrp5ygbFxbBNCNcy0h9WCI3iS/UstE87YTA630DPT16tkDSeAsEJC83OqND8ZOKGGVPMWvP
+	YDar5GoQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vkdZL-0000000Dmdf-36gv;
-	Tue, 27 Jan 2026 07:32:59 +0000
+	id 1vkfOS-0000000DwHj-0v28;
+	Tue, 27 Jan 2026 09:29:52 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vkdZJ-0000000DmdJ-1sdi
+	id 1vkfOP-0000000DwHO-0zGl
 	for kexec@lists.infradead.org;
-	Tue, 27 Jan 2026 07:32:58 +0000
+	Tue, 27 Jan 2026 09:29:50 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id B029241976;
-	Tue, 27 Jan 2026 07:32:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 938F7C116C6;
-	Tue, 27 Jan 2026 07:32:52 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 8F3BB43631;
+	Tue, 27 Jan 2026 09:29:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DD2CC16AAE;
+	Tue, 27 Jan 2026 09:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769499176;
-	bh=mcYw49oBRDHwBRsps1hLbRA9pNvVL7ckmnD/EZWaycg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hWkAIVI6JJWgtjMbliTTZz7rAATFbBOFtk2u9m62j90Alz0nkLkJ/kF5uCEnurD1B
-	 71YoP9EcyxM0LL0aKZykj6W+rkSAU2mwAg9ZAdb6TWZpTwL/tX3L9iUcrmUsK2rSoq
-	 jATETtGfv+CbT368L+hBw9M7bByOThCQtxZLXV+O1qYzVNrsdVKRcgTsSKyLmPaYTy
-	 Kc/VG8gWLWdUH+/WzkNnkYSUdE3QcGpFoizlS2cJ+gCC1RXOsnKwmuhw8aPXJWdmpD
-	 5M7xTWGttZ/l3rb0Kcg557rRf/UWWMacrdpmTv3mZa4SZvn5Dg/bufstnzNx1NITjh
-	 KhAKErT+Ag2tg==
-Date: Tue, 27 Jan 2026 09:32:48 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Alexander Graf <graf@amazon.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, linux-mm@kvack.org,
-	usamaarif642@gmail.com, rmikey@meta.com, clm@fb.com,
-	riel@surriel.com, SeongJae Park <sj@kernel.org>,
-	kernel-team@meta.com
-Subject: Re: [PATCH v5 4/4] kho: document kexec-metadata tracking feature
-Message-ID: <aXhqIDAPKdoXYme4@kernel.org>
-References: <20260126-kho-v5-0-7cd0f69ab204@debian.org>
- <20260126-kho-v5-4-7cd0f69ab204@debian.org>
+	s=k20201202; t=1769506188;
+	bh=KbuD8VI9qE2RW+UjdlUAMiWNgxpjBHRyOL2IKLMpQ/g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=aqoE/WeGYI8SXZM/WQsI0BrG/uffO9ILMR28rlcvE1XrVbNfp6fD2ql4csfZg3mH2
+	 NiCKlSyMu2/lppn+f3Tj0iOQcTx/y9XGKV+AxvSL9tmr4C/LF2CUXDC5yXKdBso7c2
+	 dx5uatyuaYMnzYgvhzkbiSegWlZBpUkygCtt1L3drPX/mUreCsccyWb6HPx4Rt/fXp
+	 FcCqvZ2hWNSjZ3S5Fat9r6kLPF9REQG8/Jxa2pcXD1e8MIXyjkXC5gBafDQBTWGKMv
+	 Lb9I0baBSkFpSVv9qKYAo5v/RN9pVWgx2zKu5Ngmr/Wg6BW0fGzhYKyhVbHUFI8mN+
+	 LsM4gvb5CV5pA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,  Alexander Graf
+ <graf@amazon.com>,  Pasha Tatashin <pasha.tatashin@soleen.com>,  Pratyush
+ Yadav <ptyadav@amazon.de>,  kexec@lists.infradead.org,
+  linux-kernel@vger.kernel.org,  linux-mm@kvack.org
+Subject: Re: [PATCH] kho: cleanup error handling in kho_populate()
+In-Reply-To: <20260122121757.575987-1-rppt@kernel.org> (Mike Rapoport's
+	message of "Thu, 22 Jan 2026 14:17:57 +0200")
+References: <20260122121757.575987-1-rppt@kernel.org>
+Date: Tue, 27 Jan 2026 10:29:45 +0100
+Message-ID: <2vxz5x8n9zee.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260126-kho-v5-4-7cd0f69ab204@debian.org>
+Content-Type: text/plain
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260126_233257_509144_F3260D15 
-X-CRM114-Status: UNSURE (   7.85  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260127_012949_296100_27191938 
+X-CRM114-Status: GOOD (  10.26  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,18 +74,23 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jan 26, 2026 at 08:07:26AM -0800, Breno Leitao wrote:
-> Add documentation for the kexec-metadata feature that tracks the
-> previous kernel version and kexec boot count across kexec reboots.
-> This helps diagnose bugs that only reproduce when kexecing from
-> specific kernel versions.
-> 
-> Suggested-by: Mike Rapoport <rppt@kernel.org>
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+On Thu, Jan 22 2026, Mike Rapoport wrote:
 
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>
+> * use dedicated labels for error handling instead of checking if a pointer
+>   is not null to decide if it should be unmapped
+> * drop assignment of values to err that are only used to print a numeric
+>   error code, there are pr_warn()s for each failure already so printing a
+>   numeric error code in the next line does not add anything useful
+>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+
+Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+
+[...]
 
 -- 
-Sincerely yours,
-Mike.
+Regards,
+Pratyush Yadav
 
