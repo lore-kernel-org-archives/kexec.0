@@ -4,68 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 17C25D73E8D
-	for <kexec@archiver.kernel.org>; Thu, 29 Jan 2026 21:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3568CD73E8E
+	for <kexec@archiver.kernel.org>; Thu, 29 Jan 2026 21:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=dy0UJfAzqC2Uv0TXXgbyaGP8I7SQ7WbjV2I2sUTFK/o=; b=4gq5cKN7BUkWBzkWkjPrc1ob79
-	35AoU9H/PMY+y9dnVL1Eza3IUGpM/YK/HoYODhGsu2IUidYpc3KmbyHCYxDnQhfxDyNzFCoK4gAdx
-	RkbRIa4jTM1pt6647rau7x07JIBPNRRMfOLWyuDvThcAL7cXiL8MdFnTF7gHnHPLPceoORVCAsNfE
-	evoEwcMj07CBZzuvzrYDDDRRYHq9CGlQZFCR8rna+4Ez9pGTHMkXYuufvHjmS050Q14LfitKwu5KJ
-	3XbBfK534ICbmcnRsp0suevwUGKA2elEcSQL4oAkyebKsQKbpvzW5UGzoW4YvI/TUHvhYeEJvadQc
-	RzeayK8w==;
+	bh=BqEhbyqURPyKNgE6Ne2XGuBboHLh1jY5l9yG8cIgxTg=; b=X2qymsynr5a8+nc7ezrmowdAy9
+	5v/zI2X5AAk1fz7CBomFGj0de9bsSimhcKs8jRPQHGYrtJodOPCoAeFHstJ+XnWhq+sGX3WummTiH
+	rJJQqlfWVw/ZXke17SfITpXYeIsjxrfUIQ0asSox+w52dbfWF6akMwTLOnd4WiadOQuew0dPGvFI2
+	Gc8O7C29xmB1eK5oenE9G5z4/XiPiVPq0DgD6RMokUeOXMa9UcG2TAYsbwpnfECAtaEJ17l7JOP9L
+	hoRvgq80cD7uPmEUwHbjmgBmyxloUJj9QRvMvWObtLss5+fftyaMidLZ0djrG7veFBc5cF5o/OE1V
+	CTp8o7lA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vlZWp-00000000fZM-4ArK;
-	Thu, 29 Jan 2026 21:26:16 +0000
-Received: from mail-pl1-x64a.google.com ([2607:f8b0:4864:20::64a])
+	id 1vlZWs-00000000feW-2IZf;
+	Thu, 29 Jan 2026 21:26:18 +0000
+Received: from mail-pl1-x649.google.com ([2607:f8b0:4864:20::649])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vlZWc-00000000fO5-0QYt
+	id 1vlZWd-00000000fQs-3d15
 	for kexec@lists.infradead.org;
-	Thu, 29 Jan 2026 21:26:04 +0000
-Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-2a79164b686so15015965ad.0
-        for <kexec@lists.infradead.org>; Thu, 29 Jan 2026 13:26:01 -0800 (PST)
+	Thu, 29 Jan 2026 21:26:12 +0000
+Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-29f2381ea85so33117015ad.0
+        for <kexec@lists.infradead.org>; Thu, 29 Jan 2026 13:26:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769721961; x=1770326761; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1769721963; x=1770326763; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dy0UJfAzqC2Uv0TXXgbyaGP8I7SQ7WbjV2I2sUTFK/o=;
-        b=aBkxdsInToWsW7uXGH3cCryXDRJsXigur0X6W4m9EIE8fUY739Zhf7NBap/UFu6oST
-         5jpg+3iciUr/o/8SunHfuRyOeb/jFvhWYDv3AnK1vHAUMXyCNJKMtqVR06PZ6ggJt9fI
-         o9EzeIldHxx+8UMLujhLpWkv2mooLvVVMhhMnDkQem353G6TJDol/kMK2yAN9JmfMXKg
-         3xJd9cTTo9UYgGwx6mq3qv1oBWkV8nN2iBaxTuUfyV9WEbVYtO6MBQ3bBwNd15l24kkR
-         9nptSKvsv7xD2Sk/8O+qZLginQhz9S6+R/d/gd8V9lk644aZ+cWZ0dYwk6U99MkIBk+s
-         cwvg==
+        bh=BqEhbyqURPyKNgE6Ne2XGuBboHLh1jY5l9yG8cIgxTg=;
+        b=JDbCPFxzjmLnTK3vCqMRe4bZjtN0qwQRtzE6+wrtV7r2Y2ERvHI+z1STpj3l7AKXw4
+         X8TY6jDvVjuGcUqqO3Ryitaq/7o0hTXVHUv9GU+OqPcpEJr4LhbxNP9zzVJdum6tRPYi
+         j41KWXlLqb99/tl4yl2aPg0AXO/wNu9YFuQXFtw7Y6aenQ3Z8gvIvirw6AX1WReWapRd
+         vObjzsuUn2TTsx9XZvho438oCoDXRis8pqfkVIPfr3xiH4IArzEs+OOLIaobPlSTBgl9
+         xcgE6GLt/x2vztSKFWK3LNtv7XG+oLlqtVUukmpdO1LG+iRn9lKtPMMflIEgQdIyEUQp
+         ItkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769721961; x=1770326761;
+        d=1e100.net; s=20230601; t=1769721963; x=1770326763;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dy0UJfAzqC2Uv0TXXgbyaGP8I7SQ7WbjV2I2sUTFK/o=;
-        b=J6R20mU3TZEtE4hza9HXHedpKDMYD5zkjgVN5nlnQYmYhqNK71EAMQCgCrRU2EZnul
-         auI9NttpfMX5iNaxmKwrUQLOvJiJrK8wtlHZ06yiUylqUY+Q/063rmNX4L7fMeOP6PSA
-         VgEFP3vW08hNeGbB/zyzMMiIeSFzndYzf9k3os5GCluBDzaG9TmOXyZefaG3Hu5ihMiq
-         S1elUx4+ieIw/LNUBxkYFtm83vLIvovgFSeuoMDgMwOznnGYowYe01ZVYn9cLenVIJRl
-         IVw14Qd489vfvzfvhVUYDwC/smV16xsQ8xcQ8TteAR1fg23yx7bhL+4mXc5o0bLD3907
-         LcpA==
-X-Forwarded-Encrypted: i=1; AJvYcCWvex5R/dPngWDEfqrJupANfWIOk91ANY0EauA5Ju7xpeRq7/9kFPlv5EQDM8rSpUmVAdOl1g==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yxy4BmYP47J2nteQn5r14Yj1cQmzXuTJ+uJUT4bDcTEpV+qO0JU
-	XIEtxQnGuaufdjcGiTEsUynF8i2sgV4GiFHqd9BL7vCGQZOmc+63phGpA26p/0W2wFtgsE+DTnx
-	hhcF1MgqEDQy8xA==
-X-Received: from plrp10.prod.google.com ([2002:a17:902:b08a:b0:2a0:8ca0:1e55])
+        bh=BqEhbyqURPyKNgE6Ne2XGuBboHLh1jY5l9yG8cIgxTg=;
+        b=L6xEzkWahwdSFYfadppzjWURNbnd+UzuEROurPwCDC+ViT6boBI18/C7aQimezpquZ
+         Qo5BLPIoGh/d/SttL7vmTmhdbpiIvuT0SLwjeXhQ5RO+k/z4Vw3Nhn8GhK8oLwLDntoH
+         EhZNDzmELIN0ew96sCYowFlvbdfL5Ph/s118aAM6I8qm2aNCeVU+3e9jD+P/iapR0d9u
+         5+RyRBqMnj8OiYnvgUtNxwSv/AzgLzKRElGys7TaCbirlD+aoesJxYgxFQL8AZuqMXYS
+         hpcHlVIkis6Lk+5SH5ngyqywg/6xb4mHg/5m0E/uTDhpExxqwu3d4Q/ttpVvdFbLb5+L
+         43XA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZbRni/BII65PgM0IrhUl3xSsoapYMKK5JBpRadUx8yR1AwegTeKpXyZyQdTq/6he9MUNUWg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwNHvzKnDJABMzoBsEiGgWrNK/WoNjYSbxt5BtYGi4lpTkI2bpB
+	jPEUqLGTio8uARyFD0FX7YCsgiIw+os5lrslTp1YpqzxcEQKIPHszDC5YAjYV51NwiChh8scm9x
+	h3wdH7jFbM01bKQ==
+X-Received: from plot3.prod.google.com ([2002:a17:902:8c83:b0:2a7:78b9:f962])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:290d:b0:2a0:dabc:1388 with SMTP id d9443c01a7336-2a8d990adfcmr3786725ad.28.1769721960616;
- Thu, 29 Jan 2026 13:26:00 -0800 (PST)
-Date: Thu, 29 Jan 2026 21:25:01 +0000
+ 2002:a17:902:bd03:b0:2a7:a9b8:ebb0 with SMTP id d9443c01a7336-2a8d96a7ff3mr3875585ad.19.1769721962280;
+ Thu, 29 Jan 2026 13:26:02 -0800 (PST)
+Date: Thu, 29 Jan 2026 21:25:02 +0000
 In-Reply-To: <20260129212510.967611-1-dmatlack@google.com>
 Mime-Version: 1.0
 References: <20260129212510.967611-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.53.0.rc1.225.gd81095ad13-goog
-Message-ID: <20260129212510.967611-15-dmatlack@google.com>
-Subject: [PATCH v2 14/22] vfio: selftests: Build liveupdate library in VFIO selftests
+Message-ID: <20260129212510.967611-16-dmatlack@google.com>
+Subject: [PATCH v2 15/22] vfio: selftests: Add Makefile support for TEST_GEN_PROGS_EXTENDED
 From: David Matlack <dmatlack@google.com>
 To: Alex Williamson <alex@shazbot.org>
 Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
@@ -90,8 +90,8 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.
 	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>, Zhu Yanjun <yanjun.zhu@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260129_132602_189557_41A2195B 
-X-CRM114-Status: UNSURE (   9.15  )
+X-CRM114-CacheID: sfid-20260129_132603_962974_761E1963 
+X-CRM114-Status: UNSURE (   9.87  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -107,49 +107,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Vipin Sharma <vipinsh@google.com>
+Add Makefile support for TEST_GEN_PROGS_EXTENDED targets. These tests
+are not run by default.
 
-Import and build liveupdate selftest library in VFIO selftests.
+TEST_GEN_PROGS_EXTENDED will be used for Live Update selftests in
+subsequent commits. These selftests must be run manually because they
+require the user/runner to perform additional actions, such as kexec,
+during the test.
 
-It allows to use liveupdate ioctls in VFIO selftests
-
-Signed-off-by: Vipin Sharma <vipinsh@google.com>
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- tools/testing/selftests/vfio/Makefile | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ tools/testing/selftests/vfio/Makefile | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/tools/testing/selftests/vfio/Makefile b/tools/testing/selftests/vfio/Makefile
-index 3c796ca99a50..1e50998529fd 100644
+index 1e50998529fd..f9c040094d4a 100644
 --- a/tools/testing/selftests/vfio/Makefile
 +++ b/tools/testing/selftests/vfio/Makefile
-@@ -12,6 +12,7 @@ TEST_FILES += scripts/setup.sh
+@@ -23,12 +23,15 @@ LDFLAGS += -pthread
+ LIBS_O := $(LIBVFIO_O)
+ LIBS_O += $(LIBLIVEUPDATE_O)
  
- include ../lib.mk
- include lib/libvfio.mk
-+include ../liveupdate/lib/libliveupdate.mk
+-$(TEST_GEN_PROGS): %: %.o $(LIBS_O)
++$(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED): %: %.o $(LIBS_O)
+ 	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH) $< $(LIBS_O) $(LDLIBS) -o $@
  
- CFLAGS += -I$(top_srcdir)/tools/include
- CFLAGS += -MD
-@@ -19,11 +20,15 @@ CFLAGS += $(EXTRA_CFLAGS)
- 
- LDFLAGS += -pthread
- 
--$(TEST_GEN_PROGS): %: %.o $(LIBVFIO_O)
--	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $< $(LIBVFIO_O) $(LDLIBS) -o $@
-+LIBS_O := $(LIBVFIO_O)
-+LIBS_O += $(LIBLIVEUPDATE_O)
+-TEST_GEN_PROGS_O = $(patsubst %, %.o, $(TEST_GEN_PROGS))
+-TEST_DEP_FILES := $(patsubst %.o, %.d, $(TEST_GEN_PROGS_O))
++TESTS_O := $(patsubst %, %.o, $(TEST_GEN_PROGS))
++TESTS_O += $(patsubst %, %.o, $(TEST_GEN_PROGS_EXTENDED))
 +
-+$(TEST_GEN_PROGS): %: %.o $(LIBS_O)
-+	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH) $< $(LIBS_O) $(LDLIBS) -o $@
- 
- TEST_GEN_PROGS_O = $(patsubst %, %.o, $(TEST_GEN_PROGS))
--TEST_DEP_FILES = $(patsubst %.o, %.d, $(TEST_GEN_PROGS_O) $(LIBVFIO_O))
-+TEST_DEP_FILES := $(patsubst %.o, %.d, $(TEST_GEN_PROGS_O))
-+TEST_DEP_FILES += $(patsubst %.o, %.d, $(LIBS_O))
++TEST_DEP_FILES := $(patsubst %.o, %.d, $(TESTS_O))
+ TEST_DEP_FILES += $(patsubst %.o, %.d, $(LIBS_O))
  -include $(TEST_DEP_FILES)
  
- EXTRA_CLEAN += $(TEST_GEN_PROGS_O) $(TEST_DEP_FILES)
+-EXTRA_CLEAN += $(TEST_GEN_PROGS_O) $(TEST_DEP_FILES)
++EXTRA_CLEAN += $(TESTS_O)
++EXTRA_CLEAN += $(TEST_DEP_FILES)
 -- 
 2.53.0.rc1.225.gd81095ad13-goog
 
