@@ -4,68 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6B5B4D73E8D
-	for <kexec@archiver.kernel.org>; Thu, 29 Jan 2026 21:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 17C25D73E8D
+	for <kexec@archiver.kernel.org>; Thu, 29 Jan 2026 21:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ibCvH5eZEobsLpnry66xHV5xBXd91tAWSqhhlaOXScs=; b=GeaXWSL4G442aJTzxENLP+J8Ss
-	9T/ApBoKdQLYhQ0+CUNICafTou5ug444x0MY2OjwDnUkKoNAQa1KdvlC24tf17paxBFBQuOqmLJdD
-	sHFzj1IkmGSsKDTwAxg0piu0Mqx+KlYMGoxkH/Ka3/f29Y4gFpTqSjJumKitxIjJ5WkTMM6CDTUKL
-	Oz7YYDP4AhSW1ai86yl8uXe4L9M8n6P1E7Q/nAqA5v7GKAVPl0r88xoTg2JpdGCq3t0Svu/pyaVan
-	68wvTm4tkSE6NSCYz3IK0uRx4AM5v6LP2IXpx+d8POf8MxkesJIrde1NU1uyV5PdO1xQh6fU+cdKQ
-	a/Orkv5Q==;
+	bh=dy0UJfAzqC2Uv0TXXgbyaGP8I7SQ7WbjV2I2sUTFK/o=; b=4gq5cKN7BUkWBzkWkjPrc1ob79
+	35AoU9H/PMY+y9dnVL1Eza3IUGpM/YK/HoYODhGsu2IUidYpc3KmbyHCYxDnQhfxDyNzFCoK4gAdx
+	RkbRIa4jTM1pt6647rau7x07JIBPNRRMfOLWyuDvThcAL7cXiL8MdFnTF7gHnHPLPceoORVCAsNfE
+	evoEwcMj07CBZzuvzrYDDDRRYHq9CGlQZFCR8rna+4Ez9pGTHMkXYuufvHjmS050Q14LfitKwu5KJ
+	3XbBfK534ICbmcnRsp0suevwUGKA2elEcSQL4oAkyebKsQKbpvzW5UGzoW4YvI/TUHvhYeEJvadQc
+	RzeayK8w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vlZWf-00000000fUG-2eOj;
-	Thu, 29 Jan 2026 21:26:05 +0000
-Received: from mail-pj1-x1049.google.com ([2607:f8b0:4864:20::1049])
+	id 1vlZWp-00000000fZM-4ArK;
+	Thu, 29 Jan 2026 21:26:16 +0000
+Received: from mail-pl1-x64a.google.com ([2607:f8b0:4864:20::64a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vlZWY-00000000fJM-2pC2
+	id 1vlZWc-00000000fO5-0QYt
 	for kexec@lists.infradead.org;
-	Thu, 29 Jan 2026 21:26:03 +0000
-Received: by mail-pj1-x1049.google.com with SMTP id 98e67ed59e1d1-34ab459c051so2563730a91.0
-        for <kexec@lists.infradead.org>; Thu, 29 Jan 2026 13:25:56 -0800 (PST)
+	Thu, 29 Jan 2026 21:26:04 +0000
+Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-2a79164b686so15015965ad.0
+        for <kexec@lists.infradead.org>; Thu, 29 Jan 2026 13:26:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769721956; x=1770326756; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1769721961; x=1770326761; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ibCvH5eZEobsLpnry66xHV5xBXd91tAWSqhhlaOXScs=;
-        b=S72zNWsm7pQX2mwxHLnZmYg28jYp8dTLwd3REmACWy3nDc1ERDxtR7XqWKQLVF364p
-         BIu2Oe5pyAiYaVxEPivFEMjFXdX7dR6ZN8ZG+MzbYTluWBwsLp9555T0WcuYZQwoCcn9
-         3QpFB3GumI+Kg9MXyarRgp7doGUGqLLKrm71//2yFuORAr5sb2iDZE4hIlHZu+wujf/f
-         iEECrgtSklOBjDw4gALi7JPacKyWxifYGsBWHt4XaufXytRv/s7aaIHMNKQycGRuwLBm
-         UG7ZuXDoTOI3Id49haiD6xTDQn+MJEvRpSdDQUeh3sNSV3dkdcbnaotxwImkXYBSbizY
-         gHNA==
+        bh=dy0UJfAzqC2Uv0TXXgbyaGP8I7SQ7WbjV2I2sUTFK/o=;
+        b=aBkxdsInToWsW7uXGH3cCryXDRJsXigur0X6W4m9EIE8fUY739Zhf7NBap/UFu6oST
+         5jpg+3iciUr/o/8SunHfuRyOeb/jFvhWYDv3AnK1vHAUMXyCNJKMtqVR06PZ6ggJt9fI
+         o9EzeIldHxx+8UMLujhLpWkv2mooLvVVMhhMnDkQem353G6TJDol/kMK2yAN9JmfMXKg
+         3xJd9cTTo9UYgGwx6mq3qv1oBWkV8nN2iBaxTuUfyV9WEbVYtO6MBQ3bBwNd15l24kkR
+         9nptSKvsv7xD2Sk/8O+qZLginQhz9S6+R/d/gd8V9lk644aZ+cWZ0dYwk6U99MkIBk+s
+         cwvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769721956; x=1770326756;
+        d=1e100.net; s=20230601; t=1769721961; x=1770326761;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ibCvH5eZEobsLpnry66xHV5xBXd91tAWSqhhlaOXScs=;
-        b=Mh/JZ+VzcLIPc5TfyxJwqprAa+YW/FYzym41s6Iwex9RdqcxYc1ohl6I5x/Wtvs77D
-         L6ElT40VJfWKDUB4XzJA7eQtDiL+WI2N8jv3K/ibmRnvZxdzZj2BDYT9TJZbU459OFHF
-         uS0E/Sf96GP36PNZulfc8b+N9RDwB8kIzy5/MuAzc+4aqLkIScqgTBpcak0ViZqc51N2
-         tUcOCrsN6b1MZUvACY83D+gt5S87YZfwJIAr/eV1+c4xWr/NFeF1BIoRv4HSrz9JERya
-         B6DDxeW1GPt0YLf3fQxln3rG6FjOP23ORFKaJ26iyb+8Iow8yRufeeUnl87rOz2C9F0l
-         6qsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGE2HodtMKh3gINOt7NSfQMZCacSMmZZbcqWefy0cCHSzpJkIk5cwSQtdmDX4+ZcMaP58nmw==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yxggl/fDH6rqFP9utjSe1xFWIbl9MvSW8u0sRePSskYVg5QF3eZ
-	S70n5beYi5lTzq/FqPNTnwsb8IQB32ICjIO9o0lyo+yxozQNn27lK5TQGQ8rTqUtYgVNH/03JbT
-	tzxHHszqMImyIJA==
-X-Received: from pjbpv18.prod.google.com ([2002:a17:90b:3c92:b0:33b:ba24:b207])
+        bh=dy0UJfAzqC2Uv0TXXgbyaGP8I7SQ7WbjV2I2sUTFK/o=;
+        b=J6R20mU3TZEtE4hza9HXHedpKDMYD5zkjgVN5nlnQYmYhqNK71EAMQCgCrRU2EZnul
+         auI9NttpfMX5iNaxmKwrUQLOvJiJrK8wtlHZ06yiUylqUY+Q/063rmNX4L7fMeOP6PSA
+         VgEFP3vW08hNeGbB/zyzMMiIeSFzndYzf9k3os5GCluBDzaG9TmOXyZefaG3Hu5ihMiq
+         S1elUx4+ieIw/LNUBxkYFtm83vLIvovgFSeuoMDgMwOznnGYowYe01ZVYn9cLenVIJRl
+         IVw14Qd489vfvzfvhVUYDwC/smV16xsQ8xcQ8TteAR1fg23yx7bhL+4mXc5o0bLD3907
+         LcpA==
+X-Forwarded-Encrypted: i=1; AJvYcCWvex5R/dPngWDEfqrJupANfWIOk91ANY0EauA5Ju7xpeRq7/9kFPlv5EQDM8rSpUmVAdOl1g==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yxy4BmYP47J2nteQn5r14Yj1cQmzXuTJ+uJUT4bDcTEpV+qO0JU
+	XIEtxQnGuaufdjcGiTEsUynF8i2sgV4GiFHqd9BL7vCGQZOmc+63phGpA26p/0W2wFtgsE+DTnx
+	hhcF1MgqEDQy8xA==
+X-Received: from plrp10.prod.google.com ([2002:a17:902:b08a:b0:2a0:8ca0:1e55])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:3ccd:b0:352:bd7c:ddbd with SMTP id 98e67ed59e1d1-3543b38af32mr802532a91.23.1769721955711;
- Thu, 29 Jan 2026 13:25:55 -0800 (PST)
-Date: Thu, 29 Jan 2026 21:24:58 +0000
+ 2002:a17:903:290d:b0:2a0:dabc:1388 with SMTP id d9443c01a7336-2a8d990adfcmr3786725ad.28.1769721960616;
+ Thu, 29 Jan 2026 13:26:00 -0800 (PST)
+Date: Thu, 29 Jan 2026 21:25:01 +0000
 In-Reply-To: <20260129212510.967611-1-dmatlack@google.com>
 Mime-Version: 1.0
 References: <20260129212510.967611-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.53.0.rc1.225.gd81095ad13-goog
-Message-ID: <20260129212510.967611-12-dmatlack@google.com>
-Subject: [PATCH v2 11/22] docs: liveupdate: Document VFIO device file preservation
+Message-ID: <20260129212510.967611-15-dmatlack@google.com>
+Subject: [PATCH v2 14/22] vfio: selftests: Build liveupdate library in VFIO selftests
 From: David Matlack <dmatlack@google.com>
 To: Alex Williamson <alex@shazbot.org>
 Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
@@ -90,8 +90,9 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.
 	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>, Zhu Yanjun <yanjun.zhu@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260129_132558_734987_4FEAE9C7 
-X-CRM114-Status: GOOD (  18.36  )
+X-CRM114-CacheID: sfid-20260129_132602_189557_41A2195B 
+X-CRM114-Status: UNSURE (   9.15  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,171 +107,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add documentation for preserving VFIO device files across a Live Update,
-as well as some generic file preservation documentation. This
-documentation will be extended in the future as new types of files are
-supported and new dependency/ordering requirements are added.
+From: Vipin Sharma <vipinsh@google.com>
 
+Import and build liveupdate selftest library in VFIO selftests.
+
+It allows to use liveupdate ioctls in VFIO selftests
+
+Signed-off-by: Vipin Sharma <vipinsh@google.com>
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- Documentation/userspace-api/liveupdate.rst | 144 +++++++++++++++++++++
- 1 file changed, 144 insertions(+)
+ tools/testing/selftests/vfio/Makefile | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/userspace-api/liveupdate.rst b/Documentation/userspace-api/liveupdate.rst
-index 41c0473e4f16..dbf1e4aeddd7 100644
---- a/Documentation/userspace-api/liveupdate.rst
-+++ b/Documentation/userspace-api/liveupdate.rst
-@@ -14,6 +14,150 @@ ioctl uAPI
- ===========
- .. kernel-doc:: include/uapi/linux/liveupdate.h
+diff --git a/tools/testing/selftests/vfio/Makefile b/tools/testing/selftests/vfio/Makefile
+index 3c796ca99a50..1e50998529fd 100644
+--- a/tools/testing/selftests/vfio/Makefile
++++ b/tools/testing/selftests/vfio/Makefile
+@@ -12,6 +12,7 @@ TEST_FILES += scripts/setup.sh
  
-+File Preservation
-+=================
-+
-+Files can be preserved across Live Update in sessions. Since only one process
-+can open /dev/liveupdate, sessions must be created by a centralized process
-+(e.g. "luod") and then passed via UDS to lower privilege processes (e.g. VMMs)
-+for them to preserve their own files.
-+
-+luod::
-+
-+  luo_fd = open("/dev/liveupdate", ...);
-+
-+  ...
-+
-+  // Create a new session with the given name.
-+  struct liveupdate_ioctl_create_session arg = {
-+          .size = sizeof(arg),
-+	  .name = SESSION_NAME,
-+  };
-+  ioctl(luo_fd, LIVEUPDATE_IOCTL_CREATE_SESSION, &arg);
-+
-+  // Send session_fd to the VMM over UDS.
-+  send_session_fd(..., arg.fd);
-+
-+VMM::
-+
-+  // Receive the newly created session from luod over UDS
-+  session_fd = create_session(SESSION_NAME);
-+
-+  ...
-+
-+  // Preserve a file with a unique token value in the session.
-+  struct liveupdate_session_preserve_fd arg = {
-+          .size = sizeof(arg),
-+          .fd = fd,
-+          .token = TOKEN,
-+  }
-+  ioctl(session_fd, LIVEUPDATE_SESSION_PRESERVE_FD, &arg);
-+
-+Files can be unpreserved with the LIVEUPDATE_SESSION_UNPRESERVE_FD ioctl. They
-+are also unpreserved once the last reference to the session is dropped.  To
-+carry preserved files across a Live Update, references must be kept on the
-+session files through the reboot(LINUX_REBOOT_CMD_KEXEC) syscall.
-+
-+While a file is preserved in a session, the kernel holds an extra reference
-+to it to prevent it from being destroyed.
-+
-+Only the following types of files support LIVEUPDATE_SESSION_PRESERVE_FD. More
-+types of files are expected to be added in the future.
-+
-+ - memfd
-+ - VFIO character device files (vfio-pci only)
-+
-+File Retrieval
-+==============
-+
-+Files that are preserved in a session retrieved after
-+reboot(LINUX_REBOOT_CMD_KEXEC).
-+
-+luod::
-+
-+  luo_fd = open("/dev/liveupdate", ...);
-+
-+  ...
-+
-+  struct liveupdate_ioctl_retrieve_session arg = {
-+          .size = sizeof(arg),
-+	  .name = SESSION_NAME,
-+  };
-+  ioctl(luo_fd, LIVEUPDATE_IOCTL_RETRIEVE_SESSION, &arg);
-+
-+  // Send session_fd to VMM over UDS.
-+  send_session_fd(..., arg.fd);
-+
-+VMM::
-+
-+  // Receive the retrieved session from luod over UDS
-+  session_fd = retrieve_session(SESSION_NAME);
-+
-+  ...
-+
-+  // Retrieve the file associated with the token from the session.
-+  struct liveupdate_session_retrieve_fd arg = {
-+          .size = sizeof(arg),
-+          .token = TOKEN,
-+  };
-+  ioctl(session_fd, LIVEUPDATE_SESSION_RETRIEVE_FD, &arg);
-+
-+  ...
-+
-+  ioctl(session_fd, LIVEUPDATE_SESSION_FINISH, ...);
-+
-+A session can only be finished once all of the files within it have been
-+retrieved, and are fully restored from the kernel's perspective. The exact
-+requirements will vary by file type.
-+
-+VFIO Character Device (cdev) Files
-+==================================
-+
-+The kernel supports preserving VFIO character device files across Live Update
-+within a session::
-+
-+  device_fd = open("/dev/vfio/devices/X");
-+
-+  ...
-+
-+  ioctl(session_fd, LIVEUPDATE_SESSION_PRESERVE_FD, { ..., device_fd, ...});
-+
-+Attempting to preserve files acquired via VFIO_GROUP_GET_DEVICE_FD will fail.
-+
-+Since the kernel holds an extra reference to files preserved in sessions, there
-+is no way for the underlying PCI device to be unbound from vfio-pci while it
-+is being preserved.
-+
-+When a VFIO device file is preserved in a session, interrupts must be disabled
-+on the device prior to reboot(LINUX_REBOOT_CMD_KEXEC), or the kexec will fail.
-+
-+Preserved VFIO device files can be retrieved after a Live Update just like any
-+other preserved file::
-+
-+  ioctl(session_fd, LIVEUPDATE_SESSION_RETRIEVE_FD, &arg);
-+  device_fd = arg.fd;
-+
-+  ...
-+
-+  ioctl(session_fd, LIVEUPDATE_SESSION_FINISH, ...);
-+
-+Prior to LIVEUPDATE_SESSION_FINISH, preserved devices must be retrieved from
-+the session and bound to an iommufd. Attempting to open the device through
-+its character device (/dev/vfio/devices/X) or VFIO_GROUP_GET_DEVICE_FD will
-+fail with -EBUSY.
-+
-+The eventual goal of these support is to preserve devices running uninterrupted
-+across a Live Update. However there are many steps still needed to achieve this
-+(see Future Work below). So for now, VFIO will reset and restore the device
-+back into an idle state during reboot(LINUX_REBOOT_CMD_KEXEC).
-+
-+Future work:
-+
-+ - Preservation of iommufd files
-+ - Preservation of IOMMU driver state
-+ - Preservation of PCI state (BAR resources, device state, bridge state, ...)
-+ - Preservation of vfio-pci driver state
-+
- See Also
- ========
+ include ../lib.mk
+ include lib/libvfio.mk
++include ../liveupdate/lib/libliveupdate.mk
  
+ CFLAGS += -I$(top_srcdir)/tools/include
+ CFLAGS += -MD
+@@ -19,11 +20,15 @@ CFLAGS += $(EXTRA_CFLAGS)
+ 
+ LDFLAGS += -pthread
+ 
+-$(TEST_GEN_PROGS): %: %.o $(LIBVFIO_O)
+-	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $< $(LIBVFIO_O) $(LDLIBS) -o $@
++LIBS_O := $(LIBVFIO_O)
++LIBS_O += $(LIBLIVEUPDATE_O)
++
++$(TEST_GEN_PROGS): %: %.o $(LIBS_O)
++	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH) $< $(LIBS_O) $(LDLIBS) -o $@
+ 
+ TEST_GEN_PROGS_O = $(patsubst %, %.o, $(TEST_GEN_PROGS))
+-TEST_DEP_FILES = $(patsubst %.o, %.d, $(TEST_GEN_PROGS_O) $(LIBVFIO_O))
++TEST_DEP_FILES := $(patsubst %.o, %.d, $(TEST_GEN_PROGS_O))
++TEST_DEP_FILES += $(patsubst %.o, %.d, $(LIBS_O))
+ -include $(TEST_DEP_FILES)
+ 
+ EXTRA_CLEAN += $(TEST_GEN_PROGS_O) $(TEST_DEP_FILES)
 -- 
 2.53.0.rc1.225.gd81095ad13-goog
 
