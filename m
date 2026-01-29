@@ -4,81 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4736FD73E9C
-	for <kexec@archiver.kernel.org>; Thu, 29 Jan 2026 22:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CED7FD73E9B
+	for <kexec@archiver.kernel.org>; Thu, 29 Jan 2026 22:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+	Content-Type:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:
 	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=l69U1dIrB2ccHzImzegm889MzCj0l8Bz/N1WHXvfoHo=; b=KXCBRwXmxa661D4z6AX4PBfL8f
-	6eZkdW8WlrveEqNnXl5vSkpt8IlYvigwU8balWrEQSrfEXptS7gk6rHQ77ebRvtxzdskAIKdXtMSd
-	7zQSM+ugqB67eqHgmvRPaDr0TTNCKzRVmADyIXrJep1hz7n6VGLWwuQwZHwZpxxJjVPT8C3hXI3Kd
-	XQpNwFms1BUJ1tup2OMXy5LJv9PDe0fM68FElzSY7yAWxBqiXYCnLK1kNlwzAKe+b6mK0Bxnkadso
-	lyLZerXojevae6l4Y0Hda/Wh9wUufIfw5VSDgB1DavUfh0FsmkwbFqQodCO+H23tjJR9qKrKAgpGl
-	Gkkag1RA==;
+	bh=efQV8c2vxL73e/NbPg4bjRZ8RRf3t/urwpzmeMAf+MU=; b=PWIDGYISspr7eUsosky2S8SDT5
+	T3YFuMf+791bzpJ+WtJQt5j0ns7WkQPPEJq0AtFznmEKZBrvORF8Lvs3HNRK3nstSxDek0Awfbc5r
+	83rIDW5BK8/DDANqx+03KdE+04qoQ7uAuAlRR0vreXyzZwNzrS1jwvMUXc+bNYnf9H3jrazg8oixD
+	XnEpRmXsjtAyK3ON2aRZtIiOAInFO77qyHdmCQgPoQ5Ekrpw2qIvuxJipJ6PuK1oOhxfGbbYXgnnl
+	gO3yx+zvJ8Trr+zXGgMR8ldLW/g77AD6FGQk1lJie61hr988mmLJg90NrxxA0dwC2HnLmiWJ1Qarc
+	/hK6aplA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vlaOr-00000000jMJ-3c0Q;
-	Thu, 29 Jan 2026 22:22:05 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vlaOo-00000000jLt-2trz
+	id 1vlaUg-00000000jet-1xGJ;
+	Thu, 29 Jan 2026 22:28:06 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vlaUf-00000000jej-0ua4
 	for kexec@lists.infradead.org;
-	Thu, 29 Jan 2026 22:22:03 +0000
-Received: from localhost (unknown [40.65.108.177])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5D12120B7168;
-	Thu, 29 Jan 2026 14:22:00 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5D12120B7168
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1769725321;
-	bh=l69U1dIrB2ccHzImzegm889MzCj0l8Bz/N1WHXvfoHo=;
+	Thu, 29 Jan 2026 22:28:05 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id C92B96001A;
+	Thu, 29 Jan 2026 22:28:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E8A6C4CEF7;
+	Thu, 29 Jan 2026 22:28:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1769725682;
+	bh=N44h9IGQl6Tlfza/FlS2ht0OSxdsGypVx/k58diTUgw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JFbmvvQbSZuWgKtGygvkszx2JeEWdtJpgkKy9JrbMd/Wd5/9p+qh8F8DQZUL3TZRu
-	 2F9IotVi63Q1+5xtXPAj5Z5VpgM5SnxXvlYLMhpARcjtNuquJ02rdkhqPezl4x+bzG
-	 YQ4Gy7p2dGglcG8jvPE5kn+665aOMwS0WLDY/OxQ=
-Date: Thu, 29 Jan 2026 14:21:58 -0800
-From: Jacob Pan <jacob.pan@linux.microsoft.com>
-To: David Matlack <dmatlack@google.com>
-Cc: Alex Williamson <alex@shazbot.org>, Adithya Jayachandran
- <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, Alex Mastro
- <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>, Andrew Morton
- <akpm@linux-foundation.org>, Ankit Agrawal <ankita@nvidia.com>, Bjorn
- Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, David Rientjes
- <rientjes@google.com>, Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe
- <jgg@ziepe.ca>, Jonathan Corbet <corbet@lwn.net>, Josh Hilke
- <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>,
- kexec@lists.infradead.org, kvm@vger.kernel.org, Leon Romanovsky
- <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, "=?UTF-8?Q?Mic?=
- =?UTF-8?Q?ha=C5=82?= Winiarski" <michal.winiarski@intel.com>, Mike Rapoport
- <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, Pasha Tatashin
- <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>,
- Pratyush Yadav <pratyush@kernel.org>, Raghavendra Rao Ananta
- <rananta@google.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Saeed Mahameed
- <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>, Shuah Khan
- <skhan@linuxfoundation.org>, "Thomas =?UTF-8?Q?Hellstr=C3=B6m?="
- <thomas.hellstrom@linux.intel.com>, Tomita Moeko <tomitamoeko@gmail.com>,
- Vipin Sharma <vipinsh@google.com>, Vivek Kasireddy
- <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>, Yi Liu
- <yi.l.liu@intel.com>, Zhu Yanjun <yanjun.zhu@linux.dev>
-Subject: Re: [PATCH v2 10/22] vfio/pci: Skip reset of preserved device after
- Live Update
-Message-ID: <20260129142158.00004cdc@linux.microsoft.com>
-In-Reply-To: <20260129212510.967611-11-dmatlack@google.com>
-References: <20260129212510.967611-1-dmatlack@google.com>
-	<20260129212510.967611-11-dmatlack@google.com>
-Organization: LSG
-X-Mailer: Claws Mail 3.21.0 (GTK+ 2.24.33; x86_64-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260129_142202_778263_7C86464E 
-X-CRM114-Status: GOOD (  24.36  )
+	b=eUpotNSlwiEN0apH8/vUnPCrZAUNUEeLlAtcARF3P2459HK+4tEj9lF2PMC3QhPMY
+	 YW79aOx/OK0a0pgBBrG7Y3hzhhECleRAm4QHttVhEbodm2rCll5bOINglXlHCgTB/9
+	 4uW4VmxR2Rg6ffEuGg2H1R/Gf+FK2sxum9uxBVX0=
+Date: Thu, 29 Jan 2026 14:28:01 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: bhe@redhat.com, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+ kexec@lists.infradead.org, dyoung@redhat.com, tony.luck@intel.com,
+ xueshuai@linux.alibaba.com, vgoyal@redhat.com, zhiquan1.li@intel.com,
+ olja@meta.com
+Subject: Re: [PATCH] vmcore_info: expose hardware error recovery statistics
+ via sysfs
+Message-Id: <20260129142801.50781220e3164742a6e21858@linux-foundation.org>
+In-Reply-To: <20260129-vmcoreinfo_sysfs-v1-1-164c1fe1fe07@debian.org>
+References: <20260129-vmcoreinfo_sysfs-v1-1-164c1fe1fe07@debian.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,114 +69,76 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi David,
+On Thu, 29 Jan 2026 05:34:10 -0800 Breno Leitao <leitao@debian.org> wrote:
 
-On Thu, 29 Jan 2026 21:24:57 +0000
-David Matlack <dmatlack@google.com> wrote:
+> Add a sysfs file at /sys/kernel/vmcore_stats and expose hardware error
+> recovery statistics that are already tracked by the kernel. This allows
+> userspace monitoring tools to track recovered hardware errors without
+> requiring kernel crashes.
+> 
+> This is useful to track recoverable hardware errors in a time series,
+> even if the host doesn't crash.
+> 
+> Create a generic vmcore_stats sysfs, and add a section for
+> hwerr_recovery that shows the counts per subsystem and timestamps:
+> 
+>   - cpu: CPU-related errors (MCE, ARM processor errors)
+>   - memory: Memory-related errors
+>   - pci: PCI/PCIe AER non-fatal errors
+>   - cxl: CXL errors
+>   - other: Other hardware errors
+> 
+> Example output:
+>   hwerr_recovery:
+>     cpu: 0 (0)
+>     memory: 2 (1738148257)
+>     pci: 1 (1738147000)
+>     cxl: 0 (0)
+>     other: 0 (0)
 
-> From: Vipin Sharma <vipinsh@google.com>
->=20
-> Do not reset the device when a Live Update preserved vfio-pci device
-> is retrieved and first enabled. vfio_pci_liveupdate_freeze()
-> guarantees the device is reset prior to Live Update, so there's no
-> reason to reset it again after Live Update.
->=20
-> Since VFIO normally uses the initial reset to detect if the device
-> supports function resets, pass that from the previous kernel via
-> struct vfio_pci_core_dev_ser.
->=20
-> Signed-off-by: Vipin Sharma <vipinsh@google.com>
-> Signed-off-by: David Matlack <dmatlack@google.com>
-> ---
->  drivers/vfio/pci/vfio_pci_core.c       | 22 +++++++++++++++++-----
->  drivers/vfio/pci/vfio_pci_liveupdate.c |  1 +
->  include/linux/kho/abi/vfio_pci.h       |  2 ++
->  include/linux/vfio_pci_core.h          |  1 +
->  4 files changed, 21 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/vfio/pci/vfio_pci_core.c
-> b/drivers/vfio/pci/vfio_pci_core.c index b01b94d81e28..c9f73f597797
-> 100644 --- a/drivers/vfio/pci/vfio_pci_core.c
-> +++ b/drivers/vfio/pci/vfio_pci_core.c
-> @@ -515,12 +515,24 @@ int vfio_pci_core_enable(struct
-> vfio_pci_core_device *vdev) if (ret)
->  		goto out_power;
-> =20
-> -	/* If reset fails because of the device lock, fail this path
-> entirely */
-> -	ret =3D pci_try_reset_function(pdev);
-> -	if (ret =3D=3D -EAGAIN)
-> -		goto out_disable_device;
-> +	if (vdev->liveupdate_incoming_state) {
-> +		/*
-> +		 * This device was preserved by the previous kernel
-> across a
-> +		 * Live Update, so it does not need to be reset.
-> +		 */
-> +		vdev->reset_works =3D
-> vdev->liveupdate_incoming_state->reset_works;
-Just wondering what happened to skipping the bus master clearing. I
-understand this version does not preserve the device itself yet; I=E2=80=99m
-just curious whether there were specific difficulties that led to
-dropping the earlier patch which skipped clearing bus master.
+sysfs rules (which are widely ignored) say "one value per file".
 
-> +	} else {
-> +		/*
-> +		 * If reset fails because of the device lock, fail
-> this path
-> +		 * entirely.
-> +		 */
-> +		ret =3D pci_try_reset_function(pdev);
-> +		if (ret =3D=3D -EAGAIN)
-> +			goto out_disable_device;
+As a compromise the above could be squished into a single line.  Harder
+for humans to read, but it sounds like that isn't the expected use case.
+
+Or screw sysfs rules ;)
+
+> The value in parentheses is the timestamp (seconds since epoch) of the
+> last error of that type, or 0 if no errors have occurred.
+> 
+> These statistics provide visibility into the health of the system's
+> hardware and can be used by system administrators to proactively detect
+> failing components before they cause system crashes.
+> 
+> ...
+>
+> +/* sysfs interface for hardware error recovery statistics */
+> +static ssize_t vmcore_stats_show(struct kobject *kobj,
+> +				 struct kobj_attribute *attr, char *buf)
+> +{
+> +	return sysfs_emit(buf,
+> +			  "Recovered hardware errors:\n"
+> +			  "  cpu: %d (%lld)\n"
+> +			  "  memory: %d (%lld)\n"
+> +			  "  pci: %d (%lld)\n"
+> +			  "  cxl: %d (%lld)\n"
+> +			  "  other: %d (%lld)\n",
+> +			  atomic_read(&hwerr_data[HWERR_RECOV_CPU].count),
+> +			  (long long)READ_ONCE(hwerr_data[HWERR_RECOV_CPU].timestamp),
+> +			  atomic_read(&hwerr_data[HWERR_RECOV_MEMORY].count),
+> +			  (long long)READ_ONCE(hwerr_data[HWERR_RECOV_MEMORY].timestamp),
+
+vsprintf has `%ptT' for time64_t.  Is it usable here?
+
+> +			  atomic_read(&hwerr_data[HWERR_RECOV_PCI].count),
+> +			  (long long)READ_ONCE(hwerr_data[HWERR_RECOV_PCI].timestamp),
+> +			  atomic_read(&hwerr_data[HWERR_RECOV_CXL].count),
+> +			  (long long)READ_ONCE(hwerr_data[HWERR_RECOV_CXL].timestamp),
+> +			  atomic_read(&hwerr_data[HWERR_RECOV_OTHERS].count),
+> +			  (long long)READ_ONCE(hwerr_data[HWERR_RECOV_OTHERS].timestamp));
+> +}
 > +
-> +		vdev->reset_works =3D !ret;
-> +	}
-> =20
-> -	vdev->reset_works =3D !ret;
->  	pci_save_state(pdev);
->  	vdev->pci_saved_state =3D pci_store_saved_state(pdev);
->  	if (!vdev->pci_saved_state)
-> diff --git a/drivers/vfio/pci/vfio_pci_liveupdate.c
-> b/drivers/vfio/pci/vfio_pci_liveupdate.c index
-> 1ad7379c70c4..c52d6bdb455f 100644 ---
-> a/drivers/vfio/pci/vfio_pci_liveupdate.c +++
-> b/drivers/vfio/pci/vfio_pci_liveupdate.c @@ -57,6 +57,7 @@ static int
-> vfio_pci_liveupdate_preserve(struct liveupdate_file_op_args *args)=20
->  	ser->bdf =3D pci_dev_id(pdev);
->  	ser->domain =3D pci_domain_nr(pdev->bus);
-> +	ser->reset_works =3D vdev->reset_works;
-> =20
->  	args->serialized_data =3D virt_to_phys(ser);
->  	return 0;
-> diff --git a/include/linux/kho/abi/vfio_pci.h
-> b/include/linux/kho/abi/vfio_pci.h index 9bf58a2f3820..6c3d3c6dfc09
-> 100644 --- a/include/linux/kho/abi/vfio_pci.h
-> +++ b/include/linux/kho/abi/vfio_pci.h
-> @@ -34,10 +34,12 @@
->   *
->   * @bdf: The device's PCI bus, device, and function number.
->   * @domain: The device's PCI domain number (segment).
-> + * @reset_works: Non-zero if the device supports function resets.
->   */
->  struct vfio_pci_core_device_ser {
->  	u16 bdf;
->  	u16 domain;
-> +	u8 reset_works;
->  } __packed;
-> =20
->  #endif /* _LINUX_LIVEUPDATE_ABI_VFIO_PCI_H */
-> diff --git a/include/linux/vfio_pci_core.h
-> b/include/linux/vfio_pci_core.h index 350c30f84a13..95835298e29e
-> 100644 --- a/include/linux/vfio_pci_core.h
-> +++ b/include/linux/vfio_pci_core.h
-> @@ -16,6 +16,7 @@
->  #include <linux/types.h>
->  #include <linux/uuid.h>
->  #include <linux/notifier.h>
-> +#include <linux/kho/abi/vfio_pci.h>
-> =20
->  #ifndef VFIO_PCI_CORE_H
->  #define VFIO_PCI_CORE_H
-
+>
+> ...
+>
 
