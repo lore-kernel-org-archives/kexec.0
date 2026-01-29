@@ -4,68 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0D8BBD73E87
-	for <kexec@archiver.kernel.org>; Thu, 29 Jan 2026 21:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E749FD73E87
+	for <kexec@archiver.kernel.org>; Thu, 29 Jan 2026 21:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2DumsOMxgbS0OIrY6jatWasSBK4J7y0u52rkK5iohgQ=; b=MBbpyOAT4yn3VxpvMQSw2ZVW4e
-	mJB0t29DfVFDZ0NYo29MlbHP+Lef6OF6KqzG3Y8ZpNQzXRZIVIwydtT/My9M1chrR1sepjHOD8zER
-	9M3jB2UVr2JYGDROYGU7ZGHWA/Xh+/TBE2n/kBRnDDgCC0NZNUnUYYRlJqjSZfZzuvb5OHujjGK9/
-	XbB32wwWdDhFxMCTXKzabkSlBNXsl1ve2RfF2b5UWLOPU2pOIXFQ4yz3/2zQijk3yLVwur6ODYCK2
-	gMBLR99vJ88v2UvzlsBeT4/hzmneAoHTlvn3KwzPeC77DpZUCHCMZxT12VgnMJWFNQ/kFnCf8eiPY
-	uEXnoHJQ==;
+	bh=3umikqL/So8idv3VwvFYaIe6+4TeFw4VgnmENinGbaA=; b=PKCRLkWZlLxQVyNSnnJXagkayY
+	DcWVFMLumUWMg0kcDqDjA4aLBxo+qC3DLAGPU6p7wJZV8BJe1vh+TcUbdZ1/36V5nx/I87+e/rbou
+	NE6AHUt7Pp4dsZNfUQxfZ180+OVeh909qJfJ52sXDx8pHJ76ZqDSnjJpGQlxTcDPaPwGwdCbPaOsH
+	4O28vPGl/xr8DRAzCgx0dCeGyDBPTACIr20INt/4pLtP4U7UaIvnCDq3eqifvY02SfdsgmegIS/UI
+	kfyBTL6T2feOHws56PF+yiJV311y+CqlekQfsboAAPpq0ZSW9K6XN0vwvqi1rdgn6jlDpVmoxyPhR
+	KFl6xgRw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vlZWR-00000000fGy-1zUO;
-	Thu, 29 Jan 2026 21:25:51 +0000
+	id 1vlZWc-00000000fQD-2oAw;
+	Thu, 29 Jan 2026 21:26:02 +0000
 Received: from mail-pl1-x64a.google.com ([2607:f8b0:4864:20::64a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vlZWN-00000000fC5-1yau
+	id 1vlZWR-00000000fGz-45oC
 	for kexec@lists.infradead.org;
-	Thu, 29 Jan 2026 21:25:48 +0000
-Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-2a77040ede0so15034485ad.2
-        for <kexec@lists.infradead.org>; Thu, 29 Jan 2026 13:25:44 -0800 (PST)
+	Thu, 29 Jan 2026 21:25:58 +0000
+Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-2a76f2d7744so12727895ad.3
+        for <kexec@lists.infradead.org>; Thu, 29 Jan 2026 13:25:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769721944; x=1770326744; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1769721951; x=1770326751; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2DumsOMxgbS0OIrY6jatWasSBK4J7y0u52rkK5iohgQ=;
-        b=E4tqONUZdGu3VxvpYxuVWGUs9SeVRaBv2YtAW60/xUqQArKRjCDr6N5rOPHmSzKwRf
-         nX6OxPi8ohfsP5wZCQGsNdrL5bIHPznPIV2E+UtvNk+7vusRPjnjYiJORcGeIO19AAk+
-         gayGFl34pH9B7LHTZSoPgY7iLJ4ijs3FOwDpW2dLlk3ZdieVMO9QnCx79uwEbLKeP4wy
-         mpGNUaCfU5deumSmpyHD9QedojwTpJNhZJU+h4JvsuIxI15zQt0ELx+on63EjJ9/fe9E
-         Wi+pSFQ9pfiUeznhC8j/+q9eHgio7rSisvLAJB+W/OXVwpHPOS9FMd38M0uk5NGBy5Rn
-         85bA==
+        bh=3umikqL/So8idv3VwvFYaIe6+4TeFw4VgnmENinGbaA=;
+        b=QjHLkppm6Ze06mQ3IpysheYaCMd78xTGjMxPPb96k/Kl1SIJJTq3NorYUvsOa+xpYB
+         DuKKNdJ/F4UpxYZAohPvENZSxBQ7MZ7gm7ynQG+zuIi9pmsBBKCh3jcqkTnkih8c+NTS
+         k6nrhZ4CjixzRoAxBrDHisbtPQg26KILQE8EgLOpziP3uCJbZh60uXXNp/7WQW0WGj5g
+         orJd0lC3b+b37lc6Q8qWYquwJ0WRUqHxyXUnoUk8l7/zJb308y7RY38APymOIlcDRoTH
+         COnM7ODyNERjQxHchP0tpeP9IF/ez4BoNhVgxzNJTBZ3HLcTpdGsNHe6uItU8i7UF3uj
+         SPTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769721944; x=1770326744;
+        d=1e100.net; s=20230601; t=1769721951; x=1770326751;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2DumsOMxgbS0OIrY6jatWasSBK4J7y0u52rkK5iohgQ=;
-        b=bBs8guvIh0ABlM68e/7rdD2q6isznjN66A3EiTde9J79uOC6BlANlIVGOI0equiM7V
-         6RfxyxgcDreIZoD6ErUtMP1gr0OUROYilEZypHVeZsBzAXCAgbCFAfOuR2z/iwHelS8E
-         hhAYQN2DISZEkuuLK+JxIFkIbr7/qpI6sfCLcdz+xdow5O0A47ZRsQWiGDhYLR3jp2WG
-         ZThNccPpbGL2PzRLJQ+TS1D6te4ovrFnNMFnG2+Qcu4s/neQk2CqgTYRUzNPr6gmVTOD
-         Z+l0UK/S1HfZFo1ny4FeMjb1R9Q/3/wk5YurgUDv1oEEXlQJo4VU+EYeXLrhoCZwHY5C
-         VgRw==
-X-Forwarded-Encrypted: i=1; AJvYcCWKYRZPAHhcnTzs5fJ+QPlINEunYGjNGZgGKa4BDXgMvJhc9A4jgBTfp3WbFpHD/XhG3LLkPg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxQR3oWltrc/FDtn+x5SWcIB3Us6OrSjk+dc3sfwgQcWMq62DXc
-	Gnf/0/A0Y9KJas9/03v0/6UG9+Bp33KHOSnBf981hadtfaiAuIgJ7kW9ERRtA1geFpuvaHvQMnc
-	nnTLrlzLxo2BGRA==
-X-Received: from plxd5.prod.google.com ([2002:a17:902:ef05:b0:2a7:5199:9c34])
+        bh=3umikqL/So8idv3VwvFYaIe6+4TeFw4VgnmENinGbaA=;
+        b=RQzjUFvLzSfAN7A8SwNq1TBttXCxMXoreUoSCoFJl8SqpLXbAck4ttQ8l/oXmEg+dT
+         t6KbJRQ84zhv3lrcZfffo3Zx6ZeY/Qy6KNhT8fWrk3+QS98IU4TAHsiEt5B135p9XI2w
+         Z8KSnvtD6v9e3tfDqbbC8odt8S3/typ0bfiX60+FMsIOct3xOY0u55b9kyg2DBfSCyOP
+         cCcNJnwN+BBvSImVM11ALqXsFXGXFvytkUIl/aQnAzl8puDPo1J3nyBW+XfVryEM17W8
+         PlKDDOMANgRYL2HWd9A6ITI7EchTx+UxEY9M+NAK7k75nWJyOxOT9pSK3u/YJXDSV1ff
+         Z6ww==
+X-Forwarded-Encrypted: i=1; AJvYcCX4yn5KJPl5qxU2KCMg8I7u3B5fjix6dVoCagDBWkMNtnrnalwEeMWTDUpPya3siVV0CdktJQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxV/7p+zE4XPyw1F+aqsACFx075x1X1+9aOk1kSDB+t6ubzbrl9
+	Cf0HG15Lu+1IBvu5M6jZqW3z3YMwEAKJnOA4h8hl9g9xJHJhTjV4a36uQ+K7gM6a4kOmLdpOtOs
+	QWULIO3xVDuw/3Q==
+X-Received: from plrf5.prod.google.com ([2002:a17:902:ab85:b0:2a7:6c0c:5916])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:41c1:b0:2a0:d074:e9f4 with SMTP id d9443c01a7336-2a8d9a55422mr4900435ad.59.1769721944173;
- Thu, 29 Jan 2026 13:25:44 -0800 (PST)
-Date: Thu, 29 Jan 2026 21:24:51 +0000
+ 2002:a17:902:c952:b0:295:3584:1bbd with SMTP id d9443c01a7336-2a8d8176d76mr6976645ad.41.1769721950767;
+ Thu, 29 Jan 2026 13:25:50 -0800 (PST)
+Date: Thu, 29 Jan 2026 21:24:55 +0000
 In-Reply-To: <20260129212510.967611-1-dmatlack@google.com>
 Mime-Version: 1.0
 References: <20260129212510.967611-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.53.0.rc1.225.gd81095ad13-goog
-Message-ID: <20260129212510.967611-5-dmatlack@google.com>
-Subject: [PATCH v2 04/22] vfio/pci: Register a file handler with Live Update Orchestrator
+Message-ID: <20260129212510.967611-9-dmatlack@google.com>
+Subject: [PATCH v2 08/22] vfio: Enforce preserved devices are retrieved via LIVEUPDATE_SESSION_RETRIEVE_FD
 From: David Matlack <dmatlack@google.com>
 To: Alex Williamson <alex@shazbot.org>
 Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
@@ -90,8 +90,8 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.
 	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>, Zhu Yanjun <yanjun.zhu@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260129_132547_616979_302AB776 
-X-CRM114-Status: GOOD (  24.29  )
+X-CRM114-CacheID: sfid-20260129_132552_017030_621FB1A8 
+X-CRM114-Status: GOOD (  15.40  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,221 +106,91 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Vipin Sharma <vipinsh@google.com>
+Enforce that files for incoming (preserved by previous kernel) VFIO
+devices are retrieved via LIVEUPDATE_SESSION_RETRIEVE_FD rather than by
+opening the corresponding VFIO character device or via
+VFIO_GROUP_GET_DEVICE_FD.
 
-Register a live update file handler for vfio-pci device files. Add stub
-implementations of all required callbacks so that registration does not
-fail (i.e. to avoid breaking git-bisect).
+Both of these methods would result in VFIO initializing the device
+without access to the preserved state of the device passed by the
+previous kernel.
 
-This file handler will be extended in subsequent commits to enable a
-device bound to vfio-pci to run without interruption while the host is
-going through a kexec Live Update.
-
-Signed-off-by: Vipin Sharma <vipinsh@google.com>
-Co-developed-by: David Matlack <dmatlack@google.com>
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- MAINTAINERS                            |  1 +
- drivers/vfio/pci/Makefile              |  1 +
- drivers/vfio/pci/vfio_pci.c            |  9 +++-
- drivers/vfio/pci/vfio_pci_liveupdate.c | 69 ++++++++++++++++++++++++++
- drivers/vfio/pci/vfio_pci_priv.h       | 14 ++++++
- include/linux/kho/abi/vfio_pci.h       | 28 +++++++++++
- 6 files changed, 121 insertions(+), 1 deletion(-)
- create mode 100644 drivers/vfio/pci/vfio_pci_liveupdate.c
- create mode 100644 include/linux/kho/abi/vfio_pci.h
+ drivers/vfio/device_cdev.c |  4 ++++
+ drivers/vfio/group.c       |  9 +++++++++
+ include/linux/vfio.h       | 18 ++++++++++++++++++
+ 3 files changed, 31 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a671e3d4e8be..7d6cdecedb05 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -27520,6 +27520,7 @@ F:	Documentation/ABI/testing/debugfs-vfio
- F:	Documentation/ABI/testing/sysfs-devices-vfio-dev
- F:	Documentation/driver-api/vfio.rst
- F:	drivers/vfio/
-+F:	include/linux/kho/abi/vfio_pci.h
- F:	include/linux/vfio.h
- F:	include/linux/vfio_pci_core.h
- F:	include/uapi/linux/vfio.h
-diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
-index e0a0757dd1d2..23305ebc418b 100644
---- a/drivers/vfio/pci/Makefile
-+++ b/drivers/vfio/pci/Makefile
-@@ -7,6 +7,7 @@ obj-$(CONFIG_VFIO_PCI_CORE) += vfio-pci-core.o
+diff --git a/drivers/vfio/device_cdev.c b/drivers/vfio/device_cdev.c
+index 935f84a35875..355447e2add3 100644
+--- a/drivers/vfio/device_cdev.c
++++ b/drivers/vfio/device_cdev.c
+@@ -57,6 +57,10 @@ int vfio_device_fops_cdev_open(struct inode *inode, struct file *filep)
+ 	struct vfio_device *device = container_of(inode->i_cdev,
+ 						  struct vfio_device, cdev);
  
- vfio-pci-y := vfio_pci.o
- vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
-+vfio-pci-$(CONFIG_LIVEUPDATE) += vfio_pci_liveupdate.o
- obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
- 
- obj-$(CONFIG_MLX5_VFIO_PCI)           += mlx5/
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 0c771064c0b8..19e88322af2c 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -258,6 +258,10 @@ static int __init vfio_pci_init(void)
- 	int ret;
- 	bool is_disable_vga = true;
- 
-+	ret = vfio_pci_liveupdate_init();
-+	if (ret)
-+		return ret;
++	/* Device file must be retrieved via LIVEUPDATE_SESSION_RETRIEVE_FD */
++	if (vfio_liveupdate_incoming_is_preserved(device))
++		return -EBUSY;
 +
- #ifdef CONFIG_VFIO_PCI_VGA
- 	is_disable_vga = disable_vga;
- #endif
-@@ -266,8 +270,10 @@ static int __init vfio_pci_init(void)
- 
- 	/* Register and scan for devices */
- 	ret = pci_register_driver(&vfio_pci_driver);
--	if (ret)
-+	if (ret) {
-+		vfio_pci_liveupdate_cleanup();
- 		return ret;
-+	}
- 
- 	vfio_pci_fill_ids();
- 
-@@ -281,6 +287,7 @@ module_init(vfio_pci_init);
- static void __exit vfio_pci_cleanup(void)
- {
- 	pci_unregister_driver(&vfio_pci_driver);
-+	vfio_pci_liveupdate_cleanup();
+ 	return __vfio_device_fops_cdev_open(device, filep);
  }
- module_exit(vfio_pci_cleanup);
  
-diff --git a/drivers/vfio/pci/vfio_pci_liveupdate.c b/drivers/vfio/pci/vfio_pci_liveupdate.c
-new file mode 100644
-index 000000000000..b84e63c0357b
---- /dev/null
-+++ b/drivers/vfio/pci/vfio_pci_liveupdate.c
-@@ -0,0 +1,69 @@
-+// SPDX-License-Identifier: GPL-2.0
+diff --git a/drivers/vfio/group.c b/drivers/vfio/group.c
+index d47ffada6912..63fc4d656215 100644
+--- a/drivers/vfio/group.c
++++ b/drivers/vfio/group.c
+@@ -311,6 +311,15 @@ static int vfio_group_ioctl_get_device_fd(struct vfio_group *group,
+ 	if (IS_ERR(device))
+ 		return PTR_ERR(device);
+ 
++	/*
++	 * This device was preserved across a Live Update. Accessing it via
++	 * VFIO_GROUP_GET_DEVICE_FD is not allowed.
++	 */
++	if (vfio_liveupdate_incoming_is_preserved(device)) {
++		vfio_device_put_registration(device);
++		return -EBUSY;
++	}
 +
-+/*
-+ * Copyright (c) 2025, Google LLC.
-+ * Vipin Sharma <vipinsh@google.com>
-+ * David Matlack <dmatlack@google.com>
-+ */
+ 	fd = FD_ADD(O_CLOEXEC, vfio_device_open_file(device));
+ 	if (fd < 0)
+ 		vfio_device_put_registration(device);
+diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+index dc592dc00f89..0921847b18b5 100644
+--- a/include/linux/vfio.h
++++ b/include/linux/vfio.h
+@@ -16,6 +16,7 @@
+ #include <linux/cdev.h>
+ #include <uapi/linux/vfio.h>
+ #include <linux/iova_bitmap.h>
++#include <linux/pci.h>
+ 
+ struct kvm;
+ struct iommufd_ctx;
+@@ -431,4 +432,21 @@ static inline int __vfio_device_fops_cdev_open(struct vfio_device *device,
+ 
+ struct vfio_device *vfio_find_device(const void *data, device_match_t match);
+ 
++#ifdef CONFIG_LIVEUPDATE
++static inline bool vfio_liveupdate_incoming_is_preserved(struct vfio_device *device)
++{
++	struct device *d = device->dev;
 +
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++	if (dev_is_pci(d))
++		return to_pci_dev(d)->liveupdate_incoming;
 +
-+#include <linux/kho/abi/vfio_pci.h>
-+#include <linux/liveupdate.h>
-+#include <linux/errno.h>
-+
-+#include "vfio_pci_priv.h"
-+
-+static bool vfio_pci_liveupdate_can_preserve(struct liveupdate_file_handler *handler,
-+					     struct file *file)
++	return false;
++}
++#else
++static inline bool vfio_liveupdate_incoming_is_preserved(struct vfio_device *device)
 +{
 +	return false;
 +}
++#endif
 +
-+static int vfio_pci_liveupdate_preserve(struct liveupdate_file_op_args *args)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static void vfio_pci_liveupdate_unpreserve(struct liveupdate_file_op_args *args)
-+{
-+}
-+
-+static int vfio_pci_liveupdate_retrieve(struct liveupdate_file_op_args *args)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static void vfio_pci_liveupdate_finish(struct liveupdate_file_op_args *args)
-+{
-+}
-+
-+static const struct liveupdate_file_ops vfio_pci_liveupdate_file_ops = {
-+	.can_preserve = vfio_pci_liveupdate_can_preserve,
-+	.preserve = vfio_pci_liveupdate_preserve,
-+	.unpreserve = vfio_pci_liveupdate_unpreserve,
-+	.retrieve = vfio_pci_liveupdate_retrieve,
-+	.finish = vfio_pci_liveupdate_finish,
-+	.owner = THIS_MODULE,
-+};
-+
-+static struct liveupdate_file_handler vfio_pci_liveupdate_fh = {
-+	.ops = &vfio_pci_liveupdate_file_ops,
-+	.compatible = VFIO_PCI_LUO_FH_COMPATIBLE,
-+};
-+
-+int __init vfio_pci_liveupdate_init(void)
-+{
-+	if (!liveupdate_enabled())
-+		return 0;
-+
-+	return liveupdate_register_file_handler(&vfio_pci_liveupdate_fh);
-+}
-+
-+void vfio_pci_liveupdate_cleanup(void)
-+{
-+	if (!liveupdate_enabled())
-+		return;
-+
-+	liveupdate_unregister_file_handler(&vfio_pci_liveupdate_fh);
-+}
-diff --git a/drivers/vfio/pci/vfio_pci_priv.h b/drivers/vfio/pci/vfio_pci_priv.h
-index 27ac280f00b9..68966ec64e51 100644
---- a/drivers/vfio/pci/vfio_pci_priv.h
-+++ b/drivers/vfio/pci/vfio_pci_priv.h
-@@ -133,4 +133,18 @@ static inline void vfio_pci_dma_buf_move(struct vfio_pci_core_device *vdev,
- }
- #endif
- 
-+#ifdef CONFIG_LIVEUPDATE
-+int __init vfio_pci_liveupdate_init(void);
-+void vfio_pci_liveupdate_cleanup(void);
-+#else
-+static inline int vfio_pci_liveupdate_init(void)
-+{
-+	return 0;
-+}
-+
-+static inline void vfio_pci_liveupdate_cleanup(void)
-+{
-+}
-+#endif /* CONFIG_LIVEUPDATE */
-+
- #endif
-diff --git a/include/linux/kho/abi/vfio_pci.h b/include/linux/kho/abi/vfio_pci.h
-new file mode 100644
-index 000000000000..37a845eed972
---- /dev/null
-+++ b/include/linux/kho/abi/vfio_pci.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Copyright (c) 2025, Google LLC.
-+ * Vipin Sharma <vipinsh@google.com>
-+ * David Matlack <dmatlack@google.com>
-+ */
-+
-+#ifndef _LINUX_LIVEUPDATE_ABI_VFIO_PCI_H
-+#define _LINUX_LIVEUPDATE_ABI_VFIO_PCI_H
-+
-+/**
-+ * DOC: VFIO PCI Live Update ABI
-+ *
-+ * This header defines the ABI for preserving the state of a VFIO PCI device
-+ * files across a kexec reboot using LUO.
-+ *
-+ * Device metadata is serialized into memory which is then handed to the next
-+ * kernel via KHO.
-+ *
-+ * This interface is a contract. Any modification to any of the serialization
-+ * structs defined here constitutes a breaking change. Such changes require
-+ * incrementing the version number in the VFIO_PCI_LUO_FH_COMPATIBLE string.
-+ */
-+
-+#define VFIO_PCI_LUO_FH_COMPATIBLE "vfio-pci-v1"
-+
-+#endif /* _LINUX_LIVEUPDATE_ABI_VFIO_PCI_H */
+ #endif /* VFIO_H */
 -- 
 2.53.0.rc1.225.gd81095ad13-goog
 
