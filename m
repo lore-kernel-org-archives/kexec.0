@@ -4,68 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 61174D73E91
-	for <kexec@archiver.kernel.org>; Thu, 29 Jan 2026 21:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AFFC7D73E8D
+	for <kexec@archiver.kernel.org>; Thu, 29 Jan 2026 21:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xZYm6U95PKyVs4z00Hg/ZV7BBbgjTCKK+U9M7txSstE=; b=cxcpY/3DunIy2bKF/paHXI68EQ
-	LoouMWlrTOuJUqkw7go2U0ZtrukHoftjBaoqKr/BydZMy1IZt7uo6KsCJpI7C0XYrC3Z6NF6Pm1Vu
-	nvvlQLjR9zy/ugFNRFo0lLYNShfERS0+93TK5uUJkhkslgpr5ITwJhS7DjRybk1BXhMQE9QsZM3vZ
-	pLWXPYKshEUKq8UgVjew83n5iFYHzr43/u1Oo118QIy/U7sjSS81AWlNworariBTyKnvWoRBwure2
-	7b5U6/2eAtH3JFpXQe0wVHdtXR5Yz4mhVsrCLXdV69ucvTxlnNRTQTni6yCk0ac0H0/4iizDAo02F
-	D9bfzXuA==;
+	bh=JG18MDRMH4VUqggxYa+ZNtdyrKhzyTrjCDPr+CW7RY4=; b=kRAtUgVLjg//Uayc3hdN0LsFfZ
+	i1BzozLD7KZzrQgL6gOHnz94XumA/QZ0E2UGVMX1Ll3H829DuYa//jEbUmczFEImK1MdTRFDx8fAP
+	RHULpCIMauC4xlvFQnkOgBTFzv+GkLnhVgcAF79alOUobbstHBR5J+ZM6mKJjzBow8JGDm7vq4PsZ
+	BKZ9UgZ56CcXtWVZ3dLcsRrSN2SKWvayP8EORvGSPKARZbs9H5a4stZkWqrKRLs91FfsXSW3DXvkw
+	YI3/zlwXnv9mhT2hjKk7jmhm+6IuxVfom2kmpHZN1iNrJOzcAinYIiyJxAxofkvvkAMNh+zZ+u3xE
+	3WeynzNg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vlZWv-00000000fiV-39WB;
+	id 1vlZWv-00000000fhW-1QgY;
 	Thu, 29 Jan 2026 21:26:21 +0000
-Received: from mail-pj1-x104a.google.com ([2607:f8b0:4864:20::104a])
+Received: from mail-pl1-x64a.google.com ([2607:f8b0:4864:20::64a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vlZWm-00000000fVH-1Gpj
+	id 1vlZWl-00000000fV4-2cvq
 	for kexec@lists.infradead.org;
-	Thu, 29 Jan 2026 21:26:17 +0000
-Received: by mail-pj1-x104a.google.com with SMTP id 98e67ed59e1d1-34ab459c051so2564063a91.0
-        for <kexec@lists.infradead.org>; Thu, 29 Jan 2026 13:26:09 -0800 (PST)
+	Thu, 29 Jan 2026 21:26:16 +0000
+Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-2a863be8508so17025935ad.2
+        for <kexec@lists.infradead.org>; Thu, 29 Jan 2026 13:26:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769721969; x=1770326769; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1769721967; x=1770326767; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xZYm6U95PKyVs4z00Hg/ZV7BBbgjTCKK+U9M7txSstE=;
-        b=ZfzsTMfhlqtvNpFVbnjT2WepacoKz/MF9scckujZCzkgiPWm/uHvX9USYnFkkUhAiW
-         sHpP+6qod/psX/xKZqVNu1LWx2hORHPlSU4rZHLlfxWsXx2QxXQq9hJs24DAIHOCwO4P
-         JJYWLR5PbIZsG8U4AwYZ8Y+Vj0k4yelhUrULULwB2tjqHRtgG+YBbcOg+IYJZSfSl/h6
-         VN0uFaW1xznJkGfQbEbq566sZ7QxKXj0RCVdbVLTdbrwgYcBsXlEvOuYb52qPgKs7GgA
-         L7JMdRB4yd4wOaBTkg9koAebswylXDwTSDhDnQO22F0dfDpaLyw+ZKT5w5fBCiw1vtDv
-         j8dA==
+        bh=JG18MDRMH4VUqggxYa+ZNtdyrKhzyTrjCDPr+CW7RY4=;
+        b=gCkCilGSDKZydsbcGd86zsNE8bIgmksNgV5aNJjqWZyUioEjZ7r6Xp7lVi3crwuSie
+         U4hMoLY8gtwaxrsIrzhGPIGFQOumAvcJy/dDQOL67Ph/osNBg+XcljKhhc2+LPO5e3wI
+         crzwN0RzD6YmMwsvcMDYvC22xacAwVhQLUWFd/Qt4irVIqYj6Cd0cjDJsR+55fIxb4DK
+         kzCO9U9N4mXV3pDloH6VJGrNoR6tUQdQD7Ow9be72+PeTdrzjVtDKfcIuevNQIGk8uU1
+         eolgxqDGtnvLzpKnnOs1F+PgalVutd8AkmmlZSHL4j9XWkOD1B5wH62Zr0eyZzRFQHHY
+         HeAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769721969; x=1770326769;
+        d=1e100.net; s=20230601; t=1769721967; x=1770326767;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xZYm6U95PKyVs4z00Hg/ZV7BBbgjTCKK+U9M7txSstE=;
-        b=JxpIlHpsRq/01rdkF81uq3QUoxRfv971yVUYNYRuFPMI+MjuOe63msLRr+i5h5EKGG
-         2VQzrmEWwtq0QuZvCWWtiYF2MsKJAxE4lZc9v1Jek228L+TYHRxSLwyQGZlSjYeBy+Dv
-         Qw/yDe+3OYOYzs7gvUoeCqh9a3Gh+IoOtFJvZyvx9AYesg69Hw7YVTmys9ieaCbUROpm
-         LlxUAFbC48CmfERM+SA/GSO0wMcKW/gs+jQHh5XKruJEJCXf8nUCQgwrwicISnik/qAP
-         tXQwLCUx+phgsAVISMi7saHmat2zs4ugIKkb6p7PD0UcktZHhAKZRiAvOKw6eoAIvL3j
-         /iWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVWpNciaJ4GawxsAMtKwIFp7gEXeyxTQP6rZL7/qi3edNh0nYE+dUS9eIsilvBZ/WjwJcIjjg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzNsZnKdGW9S516tLlfp0V5RmtZQaK9ieiLPKTfc5Znl6T10025
-	PiFtgaHPJYhOgEQ/JtoEMBG60CFd1S/OrHDRFxWp4lpaBru0qlQkvww/Uk2bwvvsUOjjAELYIJe
-	Mr6K0/J3ZEX8zDA==
-X-Received: from pjpy19.prod.google.com ([2002:a17:90a:a413:b0:34c:9f0b:fd7])
+        bh=JG18MDRMH4VUqggxYa+ZNtdyrKhzyTrjCDPr+CW7RY4=;
+        b=rkW0spcNeHAcpniMcsVw3xiofGfaQMJKbxhkr6Ef/jBs0/zGjIXSIG2jxrveaRgilL
+         5Sf8HhTbMtLtUeanQrNbuLBgUq/qwuLPx17I+PAYsy9iNSeuHp2qxouXVfV9CCzaIKHh
+         jeGDdubxM4PyyolkoY1UOncd2VwqY1n25fSxJ34tB9GiaNF+JDJRnyc38bkktRSpK1mb
+         hBUEM8hsxnSKySnVEW06+OmATjU/rS91Uv0vkepJNkmKLVFk7GnpZko83x6hW79Qu3Cq
+         bkpIk45/ulBjrvsJZ97fT0+smGmA7d+HvSBBvUUE0NPzyT/M12+D8vDDcg1CkPQ+Wg84
+         9vtA==
+X-Forwarded-Encrypted: i=1; AJvYcCUMp4B1E8J8nU0hcf1hOCoHcpIngEHX1GCrF8Q59eALvJAOKG1Dni0l8ulmqsREe0PA0eXtAA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwNHlAoDE9j73vD4kWCwjy7ueajuL0W8bekMEQeG1dRdRvrzco1
+	n/rintEvjMj3W5X3WHizwJkRN+cZ9fkHoJCytRrOe/A3baIp9PiHdTGcvYvqBKrznPjmU+Lgm+c
+	Har/j1x9nUq6VhA==
+X-Received: from pldv20.prod.google.com ([2002:a17:902:ca94:b0:29f:2b44:973b])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:3ccd:b0:352:bd7c:ddbd with SMTP id 98e67ed59e1d1-3543b38af32mr803010a91.23.1769721969001;
- Thu, 29 Jan 2026 13:26:09 -0800 (PST)
-Date: Thu, 29 Jan 2026 21:25:06 +0000
+ 2002:a17:903:1c1:b0:2a7:90a5:2c95 with SMTP id d9443c01a7336-2a8d819ac05mr6111855ad.51.1769721967422;
+ Thu, 29 Jan 2026 13:26:07 -0800 (PST)
+Date: Thu, 29 Jan 2026 21:25:05 +0000
 In-Reply-To: <20260129212510.967611-1-dmatlack@google.com>
 Mime-Version: 1.0
 References: <20260129212510.967611-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.53.0.rc1.225.gd81095ad13-goog
-Message-ID: <20260129212510.967611-20-dmatlack@google.com>
-Subject: [PATCH v2 19/22] vfio: selftests: Expose iommu_modes to tests
+Message-ID: <20260129212510.967611-19-dmatlack@google.com>
+Subject: [PATCH v2 18/22] vfio: selftests: Add vfio_pci_liveupdate_kexec_test
 From: David Matlack <dmatlack@google.com>
 To: Alex Williamson <alex@shazbot.org>
 Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
@@ -90,8 +90,8 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.
 	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>, Zhu Yanjun <yanjun.zhu@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260129_132612_451184_57BB5CD0 
-X-CRM114-Status: GOOD (  13.77  )
+X-CRM114-CacheID: sfid-20260129_132612_008436_D8E67136 
+X-CRM114-Status: GOOD (  19.54  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,50 +106,152 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Expose the list of iommu_modes to enable tests that want to iterate
-through all possible iommu modes.
+From: Vipin Sharma <vipinsh@google.com>
 
+Add a selftest to exercise preserving a vfio-pci device across a Live
+Update. For now the test is extremely simple and just verifies that the
+device file can be preserved and retrieved. In the future this test will
+be extended to verify more parts about device preservation as they are
+implemented.
+
+This test is added to TEST_GEN_PROGS_EXTENDED since it must be run
+manually along with a kexec.
+
+To run this test manually:
+
+ $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
+ $ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test --stage 1 0000:00:04.0
+
+ $ kexec ...   # NOTE: Exact method will be distro-dependent
+
+ $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
+ $ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test --stage 2 0000:00:04.0
+
+The second call to setup.sh is necessary because preserved devices are
+not bound to a driver after Live Update. Such devices must be manually
+bound by userspace after Live Update via driver_override.
+
+This test is considered passing if all commands exit with 0.
+
+Signed-off-by: Vipin Sharma <vipinsh@google.com>
+Co-developed-by: David Matlack <dmatlack@google.com>
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- tools/testing/selftests/vfio/lib/include/libvfio/iommu.h | 2 ++
- tools/testing/selftests/vfio/lib/iommu.c                 | 4 +++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ tools/testing/selftests/vfio/Makefile         |  4 +
+ .../vfio/vfio_pci_liveupdate_kexec_test.c     | 89 +++++++++++++++++++
+ 2 files changed, 93 insertions(+)
+ create mode 100644 tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
 
-diff --git a/tools/testing/selftests/vfio/lib/include/libvfio/iommu.h b/tools/testing/selftests/vfio/lib/include/libvfio/iommu.h
-index 5c9b9dc6d993..a03ff2281f11 100644
---- a/tools/testing/selftests/vfio/lib/include/libvfio/iommu.h
-+++ b/tools/testing/selftests/vfio/lib/include/libvfio/iommu.h
-@@ -15,6 +15,8 @@ struct iommu_mode {
- 	unsigned long iommu_type;
- };
+diff --git a/tools/testing/selftests/vfio/Makefile b/tools/testing/selftests/vfio/Makefile
+index 666310872217..55d685f6e540 100644
+--- a/tools/testing/selftests/vfio/Makefile
++++ b/tools/testing/selftests/vfio/Makefile
+@@ -6,6 +6,10 @@ TEST_GEN_PROGS += vfio_pci_device_init_perf_test
+ TEST_GEN_PROGS += vfio_pci_driver_test
+ TEST_GEN_PROGS += vfio_pci_liveupdate_uapi_test
  
-+extern const struct iommu_mode iommu_modes[];
-+extern const int nr_iommu_modes;
- extern const char *default_iommu_mode;
- 
- struct dma_region {
-diff --git a/tools/testing/selftests/vfio/lib/iommu.c b/tools/testing/selftests/vfio/lib/iommu.c
-index 58b7fb7430d4..add35dbc83f8 100644
---- a/tools/testing/selftests/vfio/lib/iommu.c
-+++ b/tools/testing/selftests/vfio/lib/iommu.c
-@@ -23,7 +23,7 @@
- const char *default_iommu_mode = "iommufd";
- 
- /* Reminder: Keep in sync with FIXTURE_VARIANT_ADD_ALL_IOMMU_MODES(). */
--static const struct iommu_mode iommu_modes[] = {
-+const struct iommu_mode iommu_modes[] = {
- 	{
- 		.name = "vfio_type1_iommu",
- 		.container_path = "/dev/vfio/vfio",
-@@ -49,6 +49,8 @@ static const struct iommu_mode iommu_modes[] = {
- 	},
- };
- 
-+const int nr_iommu_modes = ARRAY_SIZE(iommu_modes);
++# This test must be run manually since it requires the user/automation to
++# perform a kexec during the test.
++TEST_GEN_PROGS_EXTENDED += vfio_pci_liveupdate_kexec_test
 +
- static const struct iommu_mode *lookup_iommu_mode(const char *iommu_mode)
- {
- 	int i;
+ TEST_FILES += scripts/cleanup.sh
+ TEST_FILES += scripts/lib.sh
+ TEST_FILES += scripts/run.sh
+diff --git a/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c b/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+new file mode 100644
+index 000000000000..15b3e3af91d1
+--- /dev/null
++++ b/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+@@ -0,0 +1,89 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <libliveupdate.h>
++#include <libvfio.h>
++
++static const char *device_bdf;
++
++static char state_session[LIVEUPDATE_SESSION_NAME_LENGTH];
++static char device_session[LIVEUPDATE_SESSION_NAME_LENGTH];
++
++enum {
++	STATE_TOKEN,
++	DEVICE_TOKEN,
++};
++
++static void before_kexec(int luo_fd)
++{
++	struct vfio_pci_device *device;
++	struct iommu *iommu;
++	int session_fd;
++	int ret;
++
++	iommu = iommu_init("iommufd");
++	device = vfio_pci_device_init(device_bdf, iommu);
++
++	create_state_file(luo_fd, state_session, STATE_TOKEN, /*next_stage=*/2);
++
++	session_fd = luo_create_session(luo_fd, device_session);
++	VFIO_ASSERT_GE(session_fd, 0);
++
++	printf("Preserving device in session\n");
++	ret = luo_session_preserve_fd(session_fd, device->fd, DEVICE_TOKEN);
++	VFIO_ASSERT_EQ(ret, 0);
++
++	close(luo_fd);
++	daemonize_and_wait();
++}
++
++static void after_kexec(int luo_fd, int state_session_fd)
++{
++	struct vfio_pci_device *device;
++	struct iommu *iommu;
++	int session_fd;
++	int device_fd;
++	int stage;
++
++	restore_and_read_stage(state_session_fd, STATE_TOKEN, &stage);
++	VFIO_ASSERT_EQ(stage, 2);
++
++	session_fd = luo_retrieve_session(luo_fd, device_session);
++	VFIO_ASSERT_GE(session_fd, 0);
++
++	printf("Finishing the session before retrieving the device (should fail)\n");
++	VFIO_ASSERT_NE(luo_session_finish(session_fd), 0);
++
++	printf("Retrieving the device FD from LUO\n");
++	device_fd = luo_session_retrieve_fd(session_fd, DEVICE_TOKEN);
++	VFIO_ASSERT_GE(device_fd, 0);
++
++	printf("Finishing the session before binding to iommufd (should fail)\n");
++	VFIO_ASSERT_NE(luo_session_finish(session_fd), 0);
++
++	printf("Binding the device to an iommufd and setting it up\n");
++	iommu = iommu_init("iommufd");
++
++	/*
++	 * This will invoke various ioctls on device_fd such as
++	 * VFIO_DEVICE_GET_INFO. So this is a decent sanity test
++	 * that LUO actually handed us back a valid VFIO device
++	 * file and not something else.
++	 */
++	device = __vfio_pci_device_init(device_bdf, iommu, device_fd);
++
++	printf("Finishing the session\n");
++	VFIO_ASSERT_EQ(luo_session_finish(session_fd), 0);
++
++	vfio_pci_device_cleanup(device);
++	iommu_cleanup(iommu);
++}
++
++int main(int argc, char *argv[])
++{
++	device_bdf = vfio_selftests_get_bdf(&argc, argv);
++
++	sprintf(device_session, "device-%s", device_bdf);
++	sprintf(state_session, "state-%s", device_bdf);
++
++	return luo_test(argc, argv, state_session, before_kexec, after_kexec);
++}
 -- 
 2.53.0.rc1.225.gd81095ad13-goog
 
