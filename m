@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B2E3DD73E90
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8CDB6D73E91
 	for <kexec@archiver.kernel.org>; Thu, 29 Jan 2026 21:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,61 +12,61 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=idHpW3SDccKJdv6+7GcWw8jBEpKmDKEMPgP0EwwfxqU=; b=44utzQrzN0BfqbNU07iqS3fYbP
-	mUiwvb0bcRX8rQN34eBIGTs/KE8G6IBsNr3TrFzLly+HCW3EdykAUuQCWN3m0zHEhTRrOxxspyZSA
-	Obu8eMcMam2cMzygOvBWdnjEnCPq4mxXJvzTUtt8VMSPUFAJKrT39AUsT+i2gTiQ1wK5PhPHAl48w
-	6vcpmEnmSpyLUmCya28jmUKsbWXClzEqS8madNYBS5I6Pg+Pb3w99wOnBsKv/0zQMSiW2NAfEp0g4
-	e11vChFtmuya2H+bCri73V9VOHgbrpayR47mJ4kQJbftQC1uGkT6lc6nct5jeY9MHsT5vViXySX46
-	GP7h6+AQ==;
+	bh=Hp3td6uMAaTZjQV6oFbLUGjv1pGfeS9Cq/BNEG9/dt4=; b=Wox7FS8vYZXxXzew2EkFxlTL6a
+	bGKfnrv2GRkCZyqLalLWJnoFEB4KTdKkAlgy+yZMCWM+Te1niBNx9LTBcNbyBT1rdrRZL6I9RUBws
+	v3mRmPXtWhYU2ewPuffWj3n7cHJqnznmEDvH37xK0bUJhDusmjWTJXvjt/YRTnvYpTC5xC76+QPX4
+	Mxdgd3dLxAsDPEcsRvnZ3VRVgEIvvUyrfflZEO4ddirzT+IgRAwamsR+Mzzc2tik7mt7YsCJUiRrC
+	QDId42poQRmEMJLC5TnXXUA1r9mIfq10Yp8FSIF8IbItWPlFM2tZuWaav5s4hxgrwcG3CgSqWbiaP
+	Igh5wprA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vlZWf-00000000fTT-0aVF;
-	Thu, 29 Jan 2026 21:26:05 +0000
-Received: from mail-pf1-x449.google.com ([2607:f8b0:4864:20::449])
+	id 1vlZWe-00000000fSg-1pOc;
+	Thu, 29 Jan 2026 21:26:04 +0000
+Received: from mail-pl1-x64a.google.com ([2607:f8b0:4864:20::64a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vlZWa-00000000fNY-3R4N
+	id 1vlZWY-00000000fKM-2qih
 	for kexec@lists.infradead.org;
-	Thu, 29 Jan 2026 21:26:03 +0000
-Received: by mail-pf1-x449.google.com with SMTP id d2e1a72fcca58-81f48cec0ccso1322074b3a.0
-        for <kexec@lists.infradead.org>; Thu, 29 Jan 2026 13:25:59 -0800 (PST)
+	Thu, 29 Jan 2026 21:26:02 +0000
+Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-2a784b2234dso36618265ad.1
+        for <kexec@lists.infradead.org>; Thu, 29 Jan 2026 13:25:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769721959; x=1770326759; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1769721957; x=1770326757; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=idHpW3SDccKJdv6+7GcWw8jBEpKmDKEMPgP0EwwfxqU=;
-        b=WsO3Mv+Qm1wzaAA482GVpj5ySSNSElqiJzPQg2CUQu1QvhkeBaxD1SafmEG9I+0Bs9
-         q4DlfzdDRT+WIRLcCPTSORsD3DFn3b+Me6ODUZahdK7UT8Tvj9cysVLQ51C4c+1EVZU5
-         SGlOoWWv2MJSy2W5fDaYpumkiw57rKfE9Z+eGbW+Rh+TNQEZYoZXT2jWzuxuYrvBa685
-         5SRMdr4VtflA3Tm7NFTMvb0NmAesnr1KdJl9pvtcfU0sS6qBxKBteiNEiW/CWJ5c68bH
-         qg1M7xetTGrk+LkE3j309wLFhqyKw60X+T9IiWqVFOZZbVuXsp9bgN9wKKxW0mqrl2EB
-         8Jqw==
+        bh=Hp3td6uMAaTZjQV6oFbLUGjv1pGfeS9Cq/BNEG9/dt4=;
+        b=TN7ZNccCnR3ERiGDrdUIviFlAaOBsnRIfWjxsAg4K0QkoPtMeTD3Kk6aV8E+54REE8
+         k/nZogFiOUoc8Sy+JXTTkYLd5NXQaO2VydXS1tU+H9DQy8aZtS0wBiMRlMl+XNLIpCYC
+         Bkyzhx3eC4TVgcK1kJba3hozK+0zhA4EGG5L63iP/GnPvc9RGshBjWHTIuZ2m7du1GHP
+         wBBwGoBsYzdAIDN/dfxGYIYGjRINl4JakqzCLo5domsl6C8oIqeqPZH1sAjq9vn9x48R
+         BQ8f5sqXoOFACoVX4I0Vfy7Hut8nppBc+GjKWtqspVpVeZUxECXhJ8g+8/KFjWHrAnc5
+         qWFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769721959; x=1770326759;
+        d=1e100.net; s=20230601; t=1769721957; x=1770326757;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=idHpW3SDccKJdv6+7GcWw8jBEpKmDKEMPgP0EwwfxqU=;
-        b=t0mnxlHsUVAEJMOW0IpbbNu5xqv407NeiFI3rTPhwD/El9cbUNvzOiizKV91citCsf
-         WRAiUl090YNQUT/hJPfctyH8eb4C4HIA+uX+2MazNc5NEFV0FBODqDVT1fibUfd+Ysw2
-         izDK/PmUV5i/31grULeD8AJh/KhDc4lDMY58Qn09AWQxXY6grTAXkTjhgQFNOMnIm6zR
-         ehVhsbUGdaEXaNTprYDl7xhCRECz6M92mWfpPblcAKN6/QwaSNtFWhnnBB18ShqGKLf3
-         5LovwDFg9JfBs/xsIKdwI21H1Wh7XNzrPMyrhmi9LraU4Xx+JNTC5Yi+1Ijafdv6mW1w
-         MQUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVlbNrt3ABhG3NsdYNZ3nLCT0tgwyjNdE0iw594mGPiMxqx79t0s+WWxJKXTGoaacD9yLxubQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxjIwypRixcXedILigaCgz0NZ3uowwoi7Chx995ThbruNS385Mc
-	17YPGHRNUVBMKsdPRH7hHt2RlIOTkcrtcw/oAA85LzBr3QHyiWRSVxpVktDvLNd7x1EPjeqEmAL
-	dgSigvBVza/m/Ww==
-X-Received: from pgdj29.prod.google.com ([2002:a05:6a02:521d:b0:c5e:d16c:917e])
+        bh=Hp3td6uMAaTZjQV6oFbLUGjv1pGfeS9Cq/BNEG9/dt4=;
+        b=mU4fiRR+An3Gn2xmAzjQgTzL8v7Rbrk1/wnHkOhQ8XzSiczTtpJlIFYVYg6YBJ+usw
+         f4TJaU1INKdycYYebGNETE+ZtUgxjfobTytTnPWsM1wkwy0FF2GDfqtxBRFkGiBpmoYB
+         BxU0g+G1TH6KTjKvKhQIhbDqCZadbKdw1hTsUb8KSWcGju2eS7m3CFGQil3OHjI3heI1
+         0StBiU6v5+cba+tIBy1kQSEbZYUH8+b57ZI23Uy5QfRmuvNsFC85y7F7hDU2Xw2W+XMb
+         LZlKDKmcQMUy+qM/Dfe/aNd6WcizRbsKyb58rAR9lnfsieEoiYqiW88trB4Ycv1TU7KE
+         ibhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKbN1zhNe1A7OySnS5EPjbpfAqp9DJkpUwJufnaoJa2XcbhKUG0wju7X0TLYz43M1Vst1pLw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxplfcN022HeHEDxiZ78JdnBxIeGDXON/Us/p60lEVOKejZ2yn8
+	acDPdskaj4FACIKiiJdiflRItb66YSapOYW+ozVrEuZEEMWK9YyPAX7AEDGvGBQiexWvCazEd6t
+	3wTtVTfc4pe783g==
+X-Received: from plgb8.prod.google.com ([2002:a17:902:d508:b0:295:50ce:4dd])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:3392:b0:366:581e:1a11 with SMTP id adf61e73a8af0-392e0148145mr472290637.57.1769721958852;
- Thu, 29 Jan 2026 13:25:58 -0800 (PST)
-Date: Thu, 29 Jan 2026 21:25:00 +0000
+ 2002:a17:903:388e:b0:295:596f:8507 with SMTP id d9443c01a7336-2a8d89464b3mr6954275ad.0.1769721957393;
+ Thu, 29 Jan 2026 13:25:57 -0800 (PST)
+Date: Thu, 29 Jan 2026 21:24:59 +0000
 In-Reply-To: <20260129212510.967611-1-dmatlack@google.com>
 Mime-Version: 1.0
 References: <20260129212510.967611-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.53.0.rc1.225.gd81095ad13-goog
-Message-ID: <20260129212510.967611-14-dmatlack@google.com>
-Subject: [PATCH v2 13/22] selftests/liveupdate: Add helpers to
- preserve/retrieve FDs
+Message-ID: <20260129212510.967611-13-dmatlack@google.com>
+Subject: [PATCH v2 12/22] selftests/liveupdate: Move luo_test_utils.* into a
+ reusable library
 From: David Matlack <dmatlack@google.com>
 To: Alex Williamson <alex@shazbot.org>
 Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
@@ -91,8 +91,8 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.
 	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>, Zhu Yanjun <yanjun.zhu@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260129_132601_845351_6DD05D99 
-X-CRM114-Status: GOOD (  14.45  )
+X-CRM114-CacheID: sfid-20260129_132558_751658_68B1726F 
+X-CRM114-Status: GOOD (  16.39  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,9 +109,10 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Vipin Sharma <vipinsh@google.com>
 
-Add helper functions to preserve and retrieve file descriptors from an
-LUO session. These will be used be used in subsequent commits to
-preserve FDs other than memfd.
+Move luo_test_utils.[ch] into a lib/ directory and pull the rules to
+build them out into a separate make script. This will enable these
+utilities to be also built by and used within other selftests (such as
+VFIO) in subsequent commits.
 
 No functional change intended.
 
@@ -119,96 +120,170 @@ Signed-off-by: Vipin Sharma <vipinsh@google.com>
 Co-developed-by: David Matlack <dmatlack@google.com>
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- .../liveupdate/lib/include/libliveupdate.h    |  3 ++
- .../selftests/liveupdate/lib/liveupdate.c     | 41 +++++++++++++++----
- 2 files changed, 35 insertions(+), 9 deletions(-)
+ tools/testing/selftests/liveupdate/.gitignore |  1 +
+ tools/testing/selftests/liveupdate/Makefile   | 14 ++++---------
+ .../include/libliveupdate.h}                  |  8 ++++----
+ .../selftests/liveupdate/lib/libliveupdate.mk | 20 +++++++++++++++++++
+ .../{luo_test_utils.c => lib/liveupdate.c}    |  2 +-
+ .../selftests/liveupdate/luo_kexec_simple.c   |  2 +-
+ .../selftests/liveupdate/luo_multi_session.c  |  2 +-
+ 7 files changed, 32 insertions(+), 17 deletions(-)
+ rename tools/testing/selftests/liveupdate/{luo_test_utils.h => lib/include/libliveupdate.h} (87%)
+ create mode 100644 tools/testing/selftests/liveupdate/lib/libliveupdate.mk
+ rename tools/testing/selftests/liveupdate/{luo_test_utils.c => lib/liveupdate.c} (99%)
 
-diff --git a/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
-index 4390a2737930..4c93d043d2b3 100644
---- a/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
+diff --git a/tools/testing/selftests/liveupdate/.gitignore b/tools/testing/selftests/liveupdate/.gitignore
+index 661827083ab6..18a0c7036cf3 100644
+--- a/tools/testing/selftests/liveupdate/.gitignore
++++ b/tools/testing/selftests/liveupdate/.gitignore
+@@ -3,6 +3,7 @@
+ !/**/
+ !*.c
+ !*.h
++!*.mk
+ !*.sh
+ !.gitignore
+ !config
+diff --git a/tools/testing/selftests/liveupdate/Makefile b/tools/testing/selftests/liveupdate/Makefile
+index 080754787ede..a060cc21f27f 100644
+--- a/tools/testing/selftests/liveupdate/Makefile
++++ b/tools/testing/selftests/liveupdate/Makefile
+@@ -1,7 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+-LIB_C += luo_test_utils.c
+-
+ TEST_GEN_PROGS += liveupdate
+ 
+ TEST_GEN_PROGS_EXTENDED += luo_kexec_simple
+@@ -10,25 +8,21 @@ TEST_GEN_PROGS_EXTENDED += luo_multi_session
+ TEST_FILES += do_kexec.sh
+ 
+ include ../lib.mk
++include lib/libliveupdate.mk
+ 
+ CFLAGS += $(KHDR_INCLUDES)
+ CFLAGS += -Wall -O2 -Wno-unused-function
+ CFLAGS += -MD
+ 
+-LIB_O := $(patsubst %.c, $(OUTPUT)/%.o, $(LIB_C))
+ TEST_O := $(patsubst %, %.o, $(TEST_GEN_PROGS))
+ TEST_O += $(patsubst %, %.o, $(TEST_GEN_PROGS_EXTENDED))
+ 
+-TEST_DEP_FILES := $(patsubst %.o, %.d, $(LIB_O))
++TEST_DEP_FILES := $(patsubst %.o, %.d, $(LIBLIVEUPDATE_O))
+ TEST_DEP_FILES += $(patsubst %.o, %.d, $(TEST_O))
+ -include $(TEST_DEP_FILES)
+ 
+-$(LIB_O): $(OUTPUT)/%.o: %.c
+-	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c $< -o $@
+-
+-$(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED): $(OUTPUT)/%: %.o $(LIB_O)
+-	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH) $< $(LIB_O) $(LDLIBS) -o $@
++$(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED): $(OUTPUT)/%: %.o $(LIBLIVEUPDATE_O)
++	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH) $< $(LIBLIVEUPDATE_O) $(LDLIBS) -o $@
+ 
+-EXTRA_CLEAN += $(LIB_O)
+ EXTRA_CLEAN += $(TEST_O)
+ EXTRA_CLEAN += $(TEST_DEP_FILES)
+diff --git a/tools/testing/selftests/liveupdate/luo_test_utils.h b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
+similarity index 87%
+rename from tools/testing/selftests/liveupdate/luo_test_utils.h
+rename to tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
+index 90099bf49577..4390a2737930 100644
+--- a/tools/testing/selftests/liveupdate/luo_test_utils.h
 +++ b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
-@@ -26,6 +26,9 @@ int luo_create_session(int luo_fd, const char *name);
- int luo_retrieve_session(int luo_fd, const char *name);
- int luo_session_finish(int session_fd);
+@@ -7,13 +7,13 @@
+  * Utility functions for LUO kselftests.
+  */
  
-+int luo_session_preserve_fd(int session_fd, int fd, int token);
-+int luo_session_retrieve_fd(int session_fd, int token);
+-#ifndef LUO_TEST_UTILS_H
+-#define LUO_TEST_UTILS_H
++#ifndef SELFTESTS_LIVEUPDATE_LIB_LIVEUPDATE_H
++#define SELFTESTS_LIVEUPDATE_LIB_LIVEUPDATE_H
+ 
+ #include <errno.h>
+ #include <string.h>
+ #include <linux/liveupdate.h>
+-#include "../kselftest.h"
++#include "../../../kselftest.h"
+ 
+ #define LUO_DEVICE "/dev/liveupdate"
+ 
+@@ -41,4 +41,4 @@ typedef void (*luo_test_stage2_fn)(int luo_fd, int state_session_fd);
+ int luo_test(int argc, char *argv[], const char *state_session_name,
+ 	     luo_test_stage1_fn stage1, luo_test_stage2_fn stage2);
+ 
+-#endif /* LUO_TEST_UTILS_H */
++#endif /* SELFTESTS_LIVEUPDATE_LIB_LIVEUPDATE_H */
+diff --git a/tools/testing/selftests/liveupdate/lib/libliveupdate.mk b/tools/testing/selftests/liveupdate/lib/libliveupdate.mk
+new file mode 100644
+index 000000000000..fffd95b085b6
+--- /dev/null
++++ b/tools/testing/selftests/liveupdate/lib/libliveupdate.mk
+@@ -0,0 +1,20 @@
++include $(top_srcdir)/scripts/subarch.include
++ARCH ?= $(SUBARCH)
 +
- int create_and_preserve_memfd(int session_fd, int token, const char *data);
- int restore_and_verify_memfd(int session_fd, int token, const char *expected_data);
- 
-diff --git a/tools/testing/selftests/liveupdate/lib/liveupdate.c b/tools/testing/selftests/liveupdate/lib/liveupdate.c
-index 60121873f685..9bf4f16ca0a4 100644
---- a/tools/testing/selftests/liveupdate/lib/liveupdate.c
++LIBLIVEUPDATE_SRCDIR := $(selfdir)/liveupdate/lib
++
++LIBLIVEUPDATE_C := liveupdate.c
++
++LIBLIVEUPDATE_OUTPUT := $(OUTPUT)/libliveupdate
++
++LIBLIVEUPDATE_O := $(patsubst %.c, $(LIBLIVEUPDATE_OUTPUT)/%.o, $(LIBLIVEUPDATE_C))
++
++LIBLIVEUPDATE_O_DIRS := $(shell dirname $(LIBLIVEUPDATE_O) | uniq)
++$(shell mkdir -p $(LIBLIVEUPDATE_O_DIRS))
++
++CFLAGS += -I$(LIBLIVEUPDATE_SRCDIR)/include
++
++$(LIBLIVEUPDATE_O): $(LIBLIVEUPDATE_OUTPUT)/%.o : $(LIBLIVEUPDATE_SRCDIR)/%.c
++	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c $< -o $@
++
++EXTRA_CLEAN += $(LIBLIVEUPDATE_OUTPUT)
+diff --git a/tools/testing/selftests/liveupdate/luo_test_utils.c b/tools/testing/selftests/liveupdate/lib/liveupdate.c
+similarity index 99%
+rename from tools/testing/selftests/liveupdate/luo_test_utils.c
+rename to tools/testing/selftests/liveupdate/lib/liveupdate.c
+index 3c8721c505df..60121873f685 100644
+--- a/tools/testing/selftests/liveupdate/luo_test_utils.c
 +++ b/tools/testing/selftests/liveupdate/lib/liveupdate.c
-@@ -54,9 +54,35 @@ int luo_retrieve_session(int luo_fd, const char *name)
- 	return arg.fd;
- }
+@@ -21,7 +21,7 @@
+ #include <errno.h>
+ #include <stdarg.h>
  
-+int luo_session_preserve_fd(int session_fd, int fd, int token)
-+{
-+	struct liveupdate_session_preserve_fd arg = {
-+		.size = sizeof(arg),
-+		.fd = fd,
-+		.token = token,
-+	};
-+
-+	if (ioctl(session_fd, LIVEUPDATE_SESSION_PRESERVE_FD, &arg))
-+		return -errno;
-+
-+	return 0;
-+}
-+
-+int luo_session_retrieve_fd(int session_fd, int token)
-+{
-+	struct liveupdate_session_retrieve_fd arg = {
-+		.size = sizeof(arg),
-+		.token = token,
-+	};
-+
-+	if (ioctl(session_fd, LIVEUPDATE_SESSION_RETRIEVE_FD, &arg))
-+		return -errno;
-+
-+	return arg.fd;
-+}
-+
- int create_and_preserve_memfd(int session_fd, int token, const char *data)
+-#include "luo_test_utils.h"
++#include <libliveupdate.h>
+ 
+ int luo_open_device(void)
  {
--	struct liveupdate_session_preserve_fd arg = { .size = sizeof(arg) };
- 	long page_size = sysconf(_SC_PAGE_SIZE);
- 	void *map = MAP_FAILED;
- 	int mfd = -1, ret = -1;
-@@ -75,9 +101,8 @@ int create_and_preserve_memfd(int session_fd, int token, const char *data)
- 	snprintf(map, page_size, "%s", data);
- 	munmap(map, page_size);
+diff --git a/tools/testing/selftests/liveupdate/luo_kexec_simple.c b/tools/testing/selftests/liveupdate/luo_kexec_simple.c
+index d7ac1f3dc4cb..786ac93b9ae3 100644
+--- a/tools/testing/selftests/liveupdate/luo_kexec_simple.c
++++ b/tools/testing/selftests/liveupdate/luo_kexec_simple.c
+@@ -8,7 +8,7 @@
+  * across a single kexec reboot.
+  */
  
--	arg.fd = mfd;
--	arg.token = token;
--	if (ioctl(session_fd, LIVEUPDATE_SESSION_PRESERVE_FD, &arg) < 0)
-+	ret = luo_session_preserve_fd(session_fd, mfd, token);
-+	if (ret)
- 		goto out;
+-#include "luo_test_utils.h"
++#include <libliveupdate.h>
  
- 	ret = 0;
-@@ -92,15 +117,13 @@ int create_and_preserve_memfd(int session_fd, int token, const char *data)
- int restore_and_verify_memfd(int session_fd, int token,
- 			     const char *expected_data)
- {
--	struct liveupdate_session_retrieve_fd arg = { .size = sizeof(arg) };
- 	long page_size = sysconf(_SC_PAGE_SIZE);
- 	void *map = MAP_FAILED;
- 	int mfd = -1, ret = -1;
+ #define TEST_SESSION_NAME "test-session"
+ #define TEST_MEMFD_TOKEN 0x1A
+diff --git a/tools/testing/selftests/liveupdate/luo_multi_session.c b/tools/testing/selftests/liveupdate/luo_multi_session.c
+index 0ee2d795beef..aac24a5f5ce3 100644
+--- a/tools/testing/selftests/liveupdate/luo_multi_session.c
++++ b/tools/testing/selftests/liveupdate/luo_multi_session.c
+@@ -9,7 +9,7 @@
+  * files.
+  */
  
--	arg.token = token;
--	if (ioctl(session_fd, LIVEUPDATE_SESSION_RETRIEVE_FD, &arg) < 0)
--		return -errno;
--	mfd = arg.fd;
-+	mfd = luo_session_retrieve_fd(session_fd, token);
-+	if (mfd < 0)
-+		return mfd;
+-#include "luo_test_utils.h"
++#include <libliveupdate.h>
  
- 	map = mmap(NULL, page_size, PROT_READ, MAP_SHARED, mfd, 0);
- 	if (map == MAP_FAILED)
+ #define SESSION_EMPTY_1 "multi-test-empty-1"
+ #define SESSION_EMPTY_2 "multi-test-empty-2"
 -- 
 2.53.0.rc1.225.gd81095ad13-goog
 
