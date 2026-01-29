@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5BFBFD73E87
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B2E3DD73E90
 	for <kexec@archiver.kernel.org>; Thu, 29 Jan 2026 21:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,60 +12,61 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Ha2krivTi79qOGY9TNrpoF2Kn7NOugjkcaAbsESD6eI=; b=ETdS/axFEHewO4+kkTj9Pvtr5m
-	38I4b6mBJaxk1db8r1YVMjrR+ywhwTTOUPaJxLxAM3fwxEflOwTHYnhszhBrPGusnZ/HDT4Gq4GCk
-	s+4AEOg09SIssBEC/52Uj3+036QOZf9bznWEawfaHdvqm9ar37x+dQXADnY+grkc8XrQO8X8P/0UH
-	ZkBF+VOrzM5CWvUAf91xOTji8g73tsGMwrL0ktsbqA+ThfjHO+Ngusw4sJnZ6yejVPeCZl+OFlHfg
-	iWlsfDi7lxQk079EgusZWmJ07EXCp5fvnxYDfXBz1/uQu5YS+dYG4CSUkRLf9QQ5vsgofBnfWO+2c
-	TajEOLUw==;
+	bh=idHpW3SDccKJdv6+7GcWw8jBEpKmDKEMPgP0EwwfxqU=; b=44utzQrzN0BfqbNU07iqS3fYbP
+	mUiwvb0bcRX8rQN34eBIGTs/KE8G6IBsNr3TrFzLly+HCW3EdykAUuQCWN3m0zHEhTRrOxxspyZSA
+	Obu8eMcMam2cMzygOvBWdnjEnCPq4mxXJvzTUtt8VMSPUFAJKrT39AUsT+i2gTiQ1wK5PhPHAl48w
+	6vcpmEnmSpyLUmCya28jmUKsbWXClzEqS8madNYBS5I6Pg+Pb3w99wOnBsKv/0zQMSiW2NAfEp0g4
+	e11vChFtmuya2H+bCri73V9VOHgbrpayR47mJ4kQJbftQC1uGkT6lc6nct5jeY9MHsT5vViXySX46
+	GP7h6+AQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vlZWd-00000000fRt-3riU;
-	Thu, 29 Jan 2026 21:26:03 +0000
-Received: from mail-pl1-x64a.google.com ([2607:f8b0:4864:20::64a])
+	id 1vlZWf-00000000fTT-0aVF;
+	Thu, 29 Jan 2026 21:26:05 +0000
+Received: from mail-pf1-x449.google.com ([2607:f8b0:4864:20::449])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vlZWX-00000000fJI-3zXb
+	id 1vlZWa-00000000fNY-3R4N
 	for kexec@lists.infradead.org;
-	Thu, 29 Jan 2026 21:26:01 +0000
-Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-2a773db3803so16090725ad.1
-        for <kexec@lists.infradead.org>; Thu, 29 Jan 2026 13:25:54 -0800 (PST)
+	Thu, 29 Jan 2026 21:26:03 +0000
+Received: by mail-pf1-x449.google.com with SMTP id d2e1a72fcca58-81f48cec0ccso1322074b3a.0
+        for <kexec@lists.infradead.org>; Thu, 29 Jan 2026 13:25:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769721954; x=1770326754; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1769721959; x=1770326759; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ha2krivTi79qOGY9TNrpoF2Kn7NOugjkcaAbsESD6eI=;
-        b=iFRPt8rDdg7SL8wvE3PDfEowkn2V9XBhd3ASDHBf+EsnNI+85zzeRyN7sYPCFt3TZG
-         tV7AxBbPd94aBieKsoOE/gUADmN1l9LS7xfYQK0j69O+v3x/Z3DYtNf0JOgwJ9pDqXyT
-         2YhIGj4drFbg3O7IPjcgrRsQObIFK6WHxvOVzWe7n4TLlQCNwrXSNXZMZTQI4/hngDBl
-         Fh8XBFCvakS2Tvi3zbrmTKF2rt5R44kmat5ShyGdsoO+Z9IBFU8IP37MBbF15su5qdk1
-         p524wUGZwv7u8fcjUoUtIdNteDvjLR276nkarQYBUlEj5Br5pIbU7g4kFAexXnzo6par
-         Rr7w==
+        bh=idHpW3SDccKJdv6+7GcWw8jBEpKmDKEMPgP0EwwfxqU=;
+        b=WsO3Mv+Qm1wzaAA482GVpj5ySSNSElqiJzPQg2CUQu1QvhkeBaxD1SafmEG9I+0Bs9
+         q4DlfzdDRT+WIRLcCPTSORsD3DFn3b+Me6ODUZahdK7UT8Tvj9cysVLQ51C4c+1EVZU5
+         SGlOoWWv2MJSy2W5fDaYpumkiw57rKfE9Z+eGbW+Rh+TNQEZYoZXT2jWzuxuYrvBa685
+         5SRMdr4VtflA3Tm7NFTMvb0NmAesnr1KdJl9pvtcfU0sS6qBxKBteiNEiW/CWJ5c68bH
+         qg1M7xetTGrk+LkE3j309wLFhqyKw60X+T9IiWqVFOZZbVuXsp9bgN9wKKxW0mqrl2EB
+         8Jqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769721954; x=1770326754;
+        d=1e100.net; s=20230601; t=1769721959; x=1770326759;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ha2krivTi79qOGY9TNrpoF2Kn7NOugjkcaAbsESD6eI=;
-        b=TsBmjzFOSeiU1VBgkiCH1QQ1Y/UuQjdM6dwZJnEv58+tEJrKoltWGQ3qcV6wfGQKVi
-         pjbVqnATl3KXSvkWkAa6PqD8q1U/BZytqb/KHt59GRAxgVRE48vFbEvf9ccHlzQRNbT2
-         2m6CT1S0/hrjM4jYkEwPXODX4OdDoTCFuc9MMGKUN5t8GVIGmBg9W1T1rZW83KTeZqv1
-         bboNlOePvnln7DAI4s7qVLc2UY9/CLHvogLwHhOYOzOc96AW34iQsLNXRIQ4XgJttZxR
-         gANuG1ZTgRT4L3MVVgul0aPz1Hn087ZEm0e9B6aq4o8snr7wqKFIWv5c1pFekyl7llAr
-         li9g==
-X-Forwarded-Encrypted: i=1; AJvYcCWgpQsqhIS9eYPyp7Fpb8dYO7s8eYdLQI4fn4l7oNXK8qdVN2G4QH/wRD+2BK8CNwt0OtmiHg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyAdH1hYHaHCPNj5kl79KIyy1hKLMj3jWTgBtf8Xys14bFYi6nH
-	jpBKZq7bzZk0VXyDPPqEqXWB06UNleKyyhsbCqF+6fD1imMJsAsUCR/BG0AwJrejn2tvV79U38R
-	5I2/t3b4v4ZP3aQ==
-X-Received: from plba14.prod.google.com ([2002:a17:903:100e:b0:29f:1fb1:be7e])
+        bh=idHpW3SDccKJdv6+7GcWw8jBEpKmDKEMPgP0EwwfxqU=;
+        b=t0mnxlHsUVAEJMOW0IpbbNu5xqv407NeiFI3rTPhwD/El9cbUNvzOiizKV91citCsf
+         WRAiUl090YNQUT/hJPfctyH8eb4C4HIA+uX+2MazNc5NEFV0FBODqDVT1fibUfd+Ysw2
+         izDK/PmUV5i/31grULeD8AJh/KhDc4lDMY58Qn09AWQxXY6grTAXkTjhgQFNOMnIm6zR
+         ehVhsbUGdaEXaNTprYDl7xhCRECz6M92mWfpPblcAKN6/QwaSNtFWhnnBB18ShqGKLf3
+         5LovwDFg9JfBs/xsIKdwI21H1Wh7XNzrPMyrhmi9LraU4Xx+JNTC5Yi+1Ijafdv6mW1w
+         MQUw==
+X-Forwarded-Encrypted: i=1; AJvYcCVlbNrt3ABhG3NsdYNZ3nLCT0tgwyjNdE0iw594mGPiMxqx79t0s+WWxJKXTGoaacD9yLxubQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxjIwypRixcXedILigaCgz0NZ3uowwoi7Chx995ThbruNS385Mc
+	17YPGHRNUVBMKsdPRH7hHt2RlIOTkcrtcw/oAA85LzBr3QHyiWRSVxpVktDvLNd7x1EPjeqEmAL
+	dgSigvBVza/m/Ww==
+X-Received: from pgdj29.prod.google.com ([2002:a05:6a02:521d:b0:c5e:d16c:917e])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:d4c9:b0:2a7:99c9:1086 with SMTP id d9443c01a7336-2a8d9a56c95mr4558805ad.47.1769721953965;
- Thu, 29 Jan 2026 13:25:53 -0800 (PST)
-Date: Thu, 29 Jan 2026 21:24:57 +0000
+ 2002:a05:6a21:3392:b0:366:581e:1a11 with SMTP id adf61e73a8af0-392e0148145mr472290637.57.1769721958852;
+ Thu, 29 Jan 2026 13:25:58 -0800 (PST)
+Date: Thu, 29 Jan 2026 21:25:00 +0000
 In-Reply-To: <20260129212510.967611-1-dmatlack@google.com>
 Mime-Version: 1.0
 References: <20260129212510.967611-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.53.0.rc1.225.gd81095ad13-goog
-Message-ID: <20260129212510.967611-11-dmatlack@google.com>
-Subject: [PATCH v2 10/22] vfio/pci: Skip reset of preserved device after Live Update
+Message-ID: <20260129212510.967611-14-dmatlack@google.com>
+Subject: [PATCH v2 13/22] selftests/liveupdate: Add helpers to
+ preserve/retrieve FDs
 From: David Matlack <dmatlack@google.com>
 To: Alex Williamson <alex@shazbot.org>
 Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
@@ -90,8 +91,8 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.
 	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>, Zhu Yanjun <yanjun.zhu@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260129_132558_045591_B23ACB17 
-X-CRM114-Status: GOOD (  18.55  )
+X-CRM114-CacheID: sfid-20260129_132601_845351_6DD05D99 
+X-CRM114-Status: GOOD (  14.45  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,99 +109,106 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Vipin Sharma <vipinsh@google.com>
 
-Do not reset the device when a Live Update preserved vfio-pci device is
-retrieved and first enabled. vfio_pci_liveupdate_freeze() guarantees the
-device is reset prior to Live Update, so there's no reason to reset it
-again after Live Update.
+Add helper functions to preserve and retrieve file descriptors from an
+LUO session. These will be used be used in subsequent commits to
+preserve FDs other than memfd.
 
-Since VFIO normally uses the initial reset to detect if the device
-supports function resets, pass that from the previous kernel via
-struct vfio_pci_core_dev_ser.
+No functional change intended.
 
 Signed-off-by: Vipin Sharma <vipinsh@google.com>
+Co-developed-by: David Matlack <dmatlack@google.com>
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- drivers/vfio/pci/vfio_pci_core.c       | 22 +++++++++++++++++-----
- drivers/vfio/pci/vfio_pci_liveupdate.c |  1 +
- include/linux/kho/abi/vfio_pci.h       |  2 ++
- include/linux/vfio_pci_core.h          |  1 +
- 4 files changed, 21 insertions(+), 5 deletions(-)
+ .../liveupdate/lib/include/libliveupdate.h    |  3 ++
+ .../selftests/liveupdate/lib/liveupdate.c     | 41 +++++++++++++++----
+ 2 files changed, 35 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index b01b94d81e28..c9f73f597797 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -515,12 +515,24 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
- 	if (ret)
- 		goto out_power;
+diff --git a/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
+index 4390a2737930..4c93d043d2b3 100644
+--- a/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
++++ b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
+@@ -26,6 +26,9 @@ int luo_create_session(int luo_fd, const char *name);
+ int luo_retrieve_session(int luo_fd, const char *name);
+ int luo_session_finish(int session_fd);
  
--	/* If reset fails because of the device lock, fail this path entirely */
--	ret = pci_try_reset_function(pdev);
--	if (ret == -EAGAIN)
--		goto out_disable_device;
-+	if (vdev->liveupdate_incoming_state) {
-+		/*
-+		 * This device was preserved by the previous kernel across a
-+		 * Live Update, so it does not need to be reset.
-+		 */
-+		vdev->reset_works = vdev->liveupdate_incoming_state->reset_works;
-+	} else {
-+		/*
-+		 * If reset fails because of the device lock, fail this path
-+		 * entirely.
-+		 */
-+		ret = pci_try_reset_function(pdev);
-+		if (ret == -EAGAIN)
-+			goto out_disable_device;
++int luo_session_preserve_fd(int session_fd, int fd, int token);
++int luo_session_retrieve_fd(int session_fd, int token);
 +
-+		vdev->reset_works = !ret;
-+	}
+ int create_and_preserve_memfd(int session_fd, int token, const char *data);
+ int restore_and_verify_memfd(int session_fd, int token, const char *expected_data);
  
--	vdev->reset_works = !ret;
- 	pci_save_state(pdev);
- 	vdev->pci_saved_state = pci_store_saved_state(pdev);
- 	if (!vdev->pci_saved_state)
-diff --git a/drivers/vfio/pci/vfio_pci_liveupdate.c b/drivers/vfio/pci/vfio_pci_liveupdate.c
-index 1ad7379c70c4..c52d6bdb455f 100644
---- a/drivers/vfio/pci/vfio_pci_liveupdate.c
-+++ b/drivers/vfio/pci/vfio_pci_liveupdate.c
-@@ -57,6 +57,7 @@ static int vfio_pci_liveupdate_preserve(struct liveupdate_file_op_args *args)
+diff --git a/tools/testing/selftests/liveupdate/lib/liveupdate.c b/tools/testing/selftests/liveupdate/lib/liveupdate.c
+index 60121873f685..9bf4f16ca0a4 100644
+--- a/tools/testing/selftests/liveupdate/lib/liveupdate.c
++++ b/tools/testing/selftests/liveupdate/lib/liveupdate.c
+@@ -54,9 +54,35 @@ int luo_retrieve_session(int luo_fd, const char *name)
+ 	return arg.fd;
+ }
  
- 	ser->bdf = pci_dev_id(pdev);
- 	ser->domain = pci_domain_nr(pdev->bus);
-+	ser->reset_works = vdev->reset_works;
++int luo_session_preserve_fd(int session_fd, int fd, int token)
++{
++	struct liveupdate_session_preserve_fd arg = {
++		.size = sizeof(arg),
++		.fd = fd,
++		.token = token,
++	};
++
++	if (ioctl(session_fd, LIVEUPDATE_SESSION_PRESERVE_FD, &arg))
++		return -errno;
++
++	return 0;
++}
++
++int luo_session_retrieve_fd(int session_fd, int token)
++{
++	struct liveupdate_session_retrieve_fd arg = {
++		.size = sizeof(arg),
++		.token = token,
++	};
++
++	if (ioctl(session_fd, LIVEUPDATE_SESSION_RETRIEVE_FD, &arg))
++		return -errno;
++
++	return arg.fd;
++}
++
+ int create_and_preserve_memfd(int session_fd, int token, const char *data)
+ {
+-	struct liveupdate_session_preserve_fd arg = { .size = sizeof(arg) };
+ 	long page_size = sysconf(_SC_PAGE_SIZE);
+ 	void *map = MAP_FAILED;
+ 	int mfd = -1, ret = -1;
+@@ -75,9 +101,8 @@ int create_and_preserve_memfd(int session_fd, int token, const char *data)
+ 	snprintf(map, page_size, "%s", data);
+ 	munmap(map, page_size);
  
- 	args->serialized_data = virt_to_phys(ser);
- 	return 0;
-diff --git a/include/linux/kho/abi/vfio_pci.h b/include/linux/kho/abi/vfio_pci.h
-index 9bf58a2f3820..6c3d3c6dfc09 100644
---- a/include/linux/kho/abi/vfio_pci.h
-+++ b/include/linux/kho/abi/vfio_pci.h
-@@ -34,10 +34,12 @@
-  *
-  * @bdf: The device's PCI bus, device, and function number.
-  * @domain: The device's PCI domain number (segment).
-+ * @reset_works: Non-zero if the device supports function resets.
-  */
- struct vfio_pci_core_device_ser {
- 	u16 bdf;
- 	u16 domain;
-+	u8 reset_works;
- } __packed;
+-	arg.fd = mfd;
+-	arg.token = token;
+-	if (ioctl(session_fd, LIVEUPDATE_SESSION_PRESERVE_FD, &arg) < 0)
++	ret = luo_session_preserve_fd(session_fd, mfd, token);
++	if (ret)
+ 		goto out;
  
- #endif /* _LINUX_LIVEUPDATE_ABI_VFIO_PCI_H */
-diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
-index 350c30f84a13..95835298e29e 100644
---- a/include/linux/vfio_pci_core.h
-+++ b/include/linux/vfio_pci_core.h
-@@ -16,6 +16,7 @@
- #include <linux/types.h>
- #include <linux/uuid.h>
- #include <linux/notifier.h>
-+#include <linux/kho/abi/vfio_pci.h>
+ 	ret = 0;
+@@ -92,15 +117,13 @@ int create_and_preserve_memfd(int session_fd, int token, const char *data)
+ int restore_and_verify_memfd(int session_fd, int token,
+ 			     const char *expected_data)
+ {
+-	struct liveupdate_session_retrieve_fd arg = { .size = sizeof(arg) };
+ 	long page_size = sysconf(_SC_PAGE_SIZE);
+ 	void *map = MAP_FAILED;
+ 	int mfd = -1, ret = -1;
  
- #ifndef VFIO_PCI_CORE_H
- #define VFIO_PCI_CORE_H
+-	arg.token = token;
+-	if (ioctl(session_fd, LIVEUPDATE_SESSION_RETRIEVE_FD, &arg) < 0)
+-		return -errno;
+-	mfd = arg.fd;
++	mfd = luo_session_retrieve_fd(session_fd, token);
++	if (mfd < 0)
++		return mfd;
+ 
+ 	map = mmap(NULL, page_size, PROT_READ, MAP_SHARED, mfd, 0);
+ 	if (map == MAP_FAILED)
 -- 
 2.53.0.rc1.225.gd81095ad13-goog
 
