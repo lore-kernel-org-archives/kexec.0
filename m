@@ -4,85 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 49302D49C92
-	for <kexec@archiver.kernel.org>; Fri, 30 Jan 2026 10:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B6885D61037
+	for <kexec@archiver.kernel.org>; Fri, 30 Jan 2026 11:08:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=pKF8X3pE882cWr/4cWrmRouYmpeno5NPBDdmWMasVKE=; b=dKChimcnEssm+fsDj/eblz4VUH
-	mbRbD/rBapvTU6Y+v22DhC6FYJ13NLSprklcBrFoIe8F02F3OZ4dBdsPBiboSCIjKpHFhqNdTXCS0
-	fZGv52XoQidmOVBcJH+TLjrQcp6z4bzxuJFJtnLlGBNsDnlwH+J6QJyU5iPvrZmEWMgDuRAqluFmO
-	TFGktgUFKvEHLqOy2cm4iYP7dv5Pro/Z0lcEDyFeB2FM20Zq4dz5JKQcKJtnSuA9Gu0mVp37s5Ojg
-	oJFWC70++9ne2bgtZ6JE/rVeALnj9lx3e5ADQEJf+Jdt02hyDm1gR57+JLzgUt1exO3BsfUifO1E6
-	27VY/pTg==;
+	bh=RWrHjYgZgg+KSNMmeqGnhJJifZmxh3jh3m1lxZ6fpOk=; b=Jff2YpmYAmklcQ7cGwq7layBVS
+	19b4l5QVQTBHMTVoWViZBj8t8iJ3okqcfPY4qNu2hjT6pBmCCXLmbEII+im/JsEHICskwa8Rc/TKI
+	9vI9qJSQl1SoswWWdJA++qPCCneyCI5JcGU9UleMCOE4uN+XMwdzfqhQo6d3f7NJVfAkjGgP6oA03
+	oWWeEMWfnvxNNwszcxVNlG4PQo6RTtgN4PW9jbJxGIq0XFpSB1pk6oDgZ6KmFAtZUXxXJlUp0eGYz
+	Ia82Fuf8HyEBnyoy5u9I2ybpNUH9efP7lGyr2vw1+2DHRVr88p1CdiN8UbkaQGKrWz1La/A+ZeCo3
+	h+XpHgvw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vllkW-00000001KIB-1H4L;
-	Fri, 30 Jan 2026 10:29:12 +0000
-Received: from mgamail.intel.com ([198.175.65.17])
+	id 1vlmML-00000001Oz3-1zOA;
+	Fri, 30 Jan 2026 11:08:17 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vllkT-00000001KHY-387o
+	id 1vlmMJ-00000001OyR-1WB3
 	for kexec@lists.infradead.org;
-	Fri, 30 Jan 2026 10:29:11 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769768950; x=1801304950;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FHGMwOuDMyqUbdmwF7i7VTLEoZIkyO/zzJwWJ2VhDBI=;
-  b=TFzeGrKGmuFJy7j42Sjn8/5eboD9NVWohRy83ZLs+44GF9+5mJpX9Q8b
-   nX0vEajvkAKhcPwWuX05xy8NqC+1iwIvVEZ3jg5cLgQ1+oJwn3hYYif/j
-   cUAdEgxlkNOQAJDOHHNPRkCvK1Kr/4CSQ0Md7CFzUmyHWBAsFG6WyV0vm
-   N5SJPNauZjMxlS4iLHRjV+N5kJ5QxxXSJ4O82SF6q63pvydHQsQ3fPm4b
-   kxIAq1eMNbzmm7GXwbY3L3EokB2ZVQC5hKynSODa/wr5UtFAiT99R+Mnw
-   1Dt2pTy6tBSRq3hicJMtHlgpsVHWBkBrIrHiTuXmqEcXsXCsa9VY8thDP
-   w==;
-X-CSE-ConnectionGUID: orUlenrlQ0i4GjVqRhVjig==
-X-CSE-MsgGUID: tiW5OGjNTdS1yelnU2CoPg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11686"; a="70996999"
-X-IronPort-AV: E=Sophos;i="6.21,262,1763452800"; 
-   d="scan'208";a="70996999"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2026 02:29:09 -0800
-X-CSE-ConnectionGUID: map7TzjeSMuclFBRztNn6Q==
-X-CSE-MsgGUID: vo+SFuKvQPyHGzrU5yiCCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,262,1763452800"; 
-   d="scan'208";a="208418862"
-Received: from igk-lkp-server01.igk.intel.com (HELO afc5bfd7f602) ([10.211.93.152])
-  by fmviesa007.fm.intel.com with ESMTP; 30 Jan 2026 02:29:05 -0800
-Received: from kbuild by afc5bfd7f602 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vllkN-000000002Tv-1g7X;
-	Fri, 30 Jan 2026 10:29:03 +0000
-Date: Fri, 30 Jan 2026 11:28:47 +0100
-From: kernel test robot <lkp@intel.com>
-To: Jason Miu <jasonmiu@google.com>, Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>,
-	David Matlack <dmatlack@google.com>,
-	David Rientjes <rientjes@google.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>
-Subject: Re: [PATCH v8 1/2] kho: Adopt radix tree for preserved memory
- tracking
-Message-ID: <202601301107.1CQsWeRT-lkp@intel.com>
-References: <20260130005739.3163049-2-jasonmiu@google.com>
+	Fri, 30 Jan 2026 11:08:16 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=RWrHjYgZgg+KSNMmeqGnhJJifZmxh3jh3m1lxZ6fpOk=; b=Dn10uzU8MbHOCG9+efqNiLQwpI
+	KxN6uS/lHev3RV0mXNRHRWpBzdwR851sKMQ+M8w1R+/Rkac/c9kseeDYEQh0mQD0QXQhuX2E18kyO
+	C3/OhTYf+36LyCtIjevNIK4qahd4AT//uTyezbgGynPz8bqsNh1oHuJRQSnmOQML/kd0V7VE3RuEA
+	pjzZf4Ho2ebtGP2Xt6h7EK0asm+sUJ8t9M9X7hA5DMrEdMt+bUePmtwKl8sFEz3dqmj604tm+EoCJ
+	avWXVknQOILA0isw8XZO8SwyfqZHw4UJbHCO5EWz8cDWDpMoWBD4IqSV0+apMcjcChYr4rmB4xOQR
+	AZhFtwpA==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <leitao@debian.org>)
+	id 1vlmM1-001fbJ-Tc; Fri, 30 Jan 2026 11:07:58 +0000
+Date: Fri, 30 Jan 2026 03:07:52 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	kernel-team@meta.com, kexec@lists.infradead.org, dyoung@redhat.com, 
+	tony.luck@intel.com, xueshuai@linux.alibaba.com, vgoyal@redhat.com, 
+	zhiquan1.li@intel.com, olja@meta.com
+Subject: Re: [PATCH] vmcore_info: expose hardware error recovery statistics
+ via sysfs
+Message-ID: <aXyOsFomVyQNlMof@gmail.com>
+References: <20260129-vmcoreinfo_sysfs-v1-1-164c1fe1fe07@debian.org>
+ <aXwQngYZx9Nk7hbv@fedora>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260130005739.3163049-2-jasonmiu@google.com>
+In-Reply-To: <aXwQngYZx9Nk7hbv@fedora>
+X-Debian-User: leitao
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260130_022909_862614_87D5A885 
-X-CRM114-Status: UNSURE (   8.54  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260130_030815_403230_8B995C53 
+X-CRM114-Status: GOOD (  12.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,38 +76,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Jason,
+On Fri, Jan 30, 2026 at 09:59:58AM +0800, Baoquan He wrote:
+> On 01/29/26 at 05:34am, Breno Leitao wrote:
+> > Add a sysfs file at /sys/kernel/vmcore_stats and expose hardware error
+> > recovery statistics that are already tracked by the kernel. This allows
+> > userspace monitoring tools to track recovered hardware errors without
+> > requiring kernel crashes.
+>
+> I don't understand. If w/o requring kernel crashes, why do you call it
+> vmcore_stats? It's a normal showing of hardware error recovery
+> statistics tracked by kernel, can we name it /sys/kernel/hwerr_stats?
 
-kernel test robot noticed the following build errors:
+Agreed, /sys/kernel/hwerr_stats is a much better name. Thank you for the
+suggestion!
 
-[auto build test ERROR on 33a647c659ffa5bdb94abc345c8c86768ff96215]
+> It's obviously having nothiing to do with vmcore, isn't it?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jason-Miu/kho-Adopt-radix-tree-for-preserved-memory-tracking/20260130-090027
-base:   33a647c659ffa5bdb94abc345c8c86768ff96215
-patch link:    https://lore.kernel.org/r/20260130005739.3163049-2-jasonmiu%40google.com
-patch subject: [PATCH v8 1/2] kho: Adopt radix tree for preserved memory tracking
-reproduce: (https://download.01.org/0day-ci/archive/20260130/202601301107.1CQsWeRT-lkp@intel.com/reproduce)
+You're correct. The only connection is that this functionality currently
+resides in kernel/vmcore_info.c. I initially thought it would make sense
+to create a generic sysfs entry for vmcore, but I can see now that this
+caused more confusion than clarification.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601301107.1CQsWeRT-lkp@intel.com/
+I'll update the patch accordingly.
 
-All errors (new ones prefixed by >>):
-
-   WARNING: No kernel-doc for file ./include/linux/kho/abi/kexec_handover.h
-   ERROR: Cannot find file ./include/linux/kho/abi/memblock.h
-   WARNING: No kernel-doc for file ./include/linux/kho/abi/memblock.h
-   ERROR: Cannot find file ./include/linux/kho/abi/kexec_handover.h
-   WARNING: No kernel-doc for file ./include/linux/kho/abi/kexec_handover.h
->> ERROR: Cannot find file ./include/linux/kho_radix_tree.h
-   WARNING: No kernel-doc for file ./include/linux/kho_radix_tree.h
-   ERROR: Cannot find file ./include/linux/kref.h
-   WARNING: No kernel-doc for file ./include/linux/kref.h
-   ERROR: Cannot find file ./include/linux/rslib.h
-   ERROR: Cannot find file ./include/linux/rslib.h
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+--breno
 
