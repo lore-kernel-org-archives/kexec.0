@@ -4,73 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 68F8ED73E86
-	for <kexec@archiver.kernel.org>; Fri, 30 Jan 2026 02:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 49302D49C92
+	for <kexec@archiver.kernel.org>; Fri, 30 Jan 2026 10:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=9Upt8qGT6DRoB1WlixiUcm116BMhY/lFaYw+vAb5KVA=; b=UTfr6KLOYz2+oYiV9lo/Ubch1j
-	h2LITQjREQ6ASOl7XOT8x5uKN02oq+3x1sOxXuKSGXsPC5sebjyycar4YCoRXLd+JjouwiurkgjqQ
-	wb2apjTAAzYQtF0+rn1kzJuZYBOgj1YZ3PoZ3o6IaDcdGUNO0usVncd3VtDzpxh0KvKEXxZkwi2Ym
-	tTrvD70sCcazXjFBPmDK+V/AvYke6rwJBdpSuTNgwK14ZDpWsOv/FtsWLsjrilD1roWlFiRMViz7w
-	hW4YZlwFPoboEKvoW1/2A0VmzaN38qbOtJlcpgs7WgHGQ2Uh8x8K3i5wkYvlmsebqAeF3mQfkiRVs
-	7PbpybDg==;
+	bh=pKF8X3pE882cWr/4cWrmRouYmpeno5NPBDdmWMasVKE=; b=dKChimcnEssm+fsDj/eblz4VUH
+	mbRbD/rBapvTU6Y+v22DhC6FYJ13NLSprklcBrFoIe8F02F3OZ4dBdsPBiboSCIjKpHFhqNdTXCS0
+	fZGv52XoQidmOVBcJH+TLjrQcp6z4bzxuJFJtnLlGBNsDnlwH+J6QJyU5iPvrZmEWMgDuRAqluFmO
+	TFGktgUFKvEHLqOy2cm4iYP7dv5Pro/Z0lcEDyFeB2FM20Zq4dz5JKQcKJtnSuA9Gu0mVp37s5Ojg
+	oJFWC70++9ne2bgtZ6JE/rVeALnj9lx3e5ADQEJf+Jdt02hyDm1gR57+JLzgUt1exO3BsfUifO1E6
+	27VY/pTg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vldoA-00000000sWY-1V9c;
-	Fri, 30 Jan 2026 02:00:26 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1vllkW-00000001KIB-1H4L;
+	Fri, 30 Jan 2026 10:29:12 +0000
+Received: from mgamail.intel.com ([198.175.65.17])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vldo6-00000000sVl-3zeA
+	id 1vllkT-00000001KHY-387o
 	for kexec@lists.infradead.org;
-	Fri, 30 Jan 2026 02:00:25 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1769738420;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9Upt8qGT6DRoB1WlixiUcm116BMhY/lFaYw+vAb5KVA=;
-	b=Ig5gtvhjfu+lJ7zEnnXEazDQSXO67ahhFYmfXsHtbYImBh+XbmiIBQLVxdE74mBzV5B9ex
-	WOnZ3ebyS9Ve9oCQcb5piF4MJurlc8WmPB2D5zywX8ViTq6GwRIQ/TJvbxzmzVgTbE45O0
-	lY6WEs2g/E2EpwAEU3xLmVHF7l0ebOw=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-421-E3KnMXnaNlmyYXYZVeQpYA-1; Thu,
- 29 Jan 2026 21:00:14 -0500
-X-MC-Unique: E3KnMXnaNlmyYXYZVeQpYA-1
-X-Mimecast-MFC-AGG-ID: E3KnMXnaNlmyYXYZVeQpYA_1769738412
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B34241956046;
-	Fri, 30 Jan 2026 02:00:11 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.123])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 27BEA1956056;
-	Fri, 30 Jan 2026 02:00:08 +0000 (UTC)
-Date: Fri, 30 Jan 2026 09:59:58 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Breno Leitao <leitao@debian.org>
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, kexec@lists.infradead.org, dyoung@redhat.com,
-	tony.luck@intel.com, xueshuai@linux.alibaba.com, vgoyal@redhat.com,
-	zhiquan1.li@intel.com, olja@meta.com
-Subject: Re: [PATCH] vmcore_info: expose hardware error recovery statistics
- via sysfs
-Message-ID: <aXwQngYZx9Nk7hbv@fedora>
-References: <20260129-vmcoreinfo_sysfs-v1-1-164c1fe1fe07@debian.org>
+	Fri, 30 Jan 2026 10:29:11 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769768950; x=1801304950;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FHGMwOuDMyqUbdmwF7i7VTLEoZIkyO/zzJwWJ2VhDBI=;
+  b=TFzeGrKGmuFJy7j42Sjn8/5eboD9NVWohRy83ZLs+44GF9+5mJpX9Q8b
+   nX0vEajvkAKhcPwWuX05xy8NqC+1iwIvVEZ3jg5cLgQ1+oJwn3hYYif/j
+   cUAdEgxlkNOQAJDOHHNPRkCvK1Kr/4CSQ0Md7CFzUmyHWBAsFG6WyV0vm
+   N5SJPNauZjMxlS4iLHRjV+N5kJ5QxxXSJ4O82SF6q63pvydHQsQ3fPm4b
+   kxIAq1eMNbzmm7GXwbY3L3EokB2ZVQC5hKynSODa/wr5UtFAiT99R+Mnw
+   1Dt2pTy6tBSRq3hicJMtHlgpsVHWBkBrIrHiTuXmqEcXsXCsa9VY8thDP
+   w==;
+X-CSE-ConnectionGUID: orUlenrlQ0i4GjVqRhVjig==
+X-CSE-MsgGUID: tiW5OGjNTdS1yelnU2CoPg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11686"; a="70996999"
+X-IronPort-AV: E=Sophos;i="6.21,262,1763452800"; 
+   d="scan'208";a="70996999"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2026 02:29:09 -0800
+X-CSE-ConnectionGUID: map7TzjeSMuclFBRztNn6Q==
+X-CSE-MsgGUID: vo+SFuKvQPyHGzrU5yiCCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,262,1763452800"; 
+   d="scan'208";a="208418862"
+Received: from igk-lkp-server01.igk.intel.com (HELO afc5bfd7f602) ([10.211.93.152])
+  by fmviesa007.fm.intel.com with ESMTP; 30 Jan 2026 02:29:05 -0800
+Received: from kbuild by afc5bfd7f602 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vllkN-000000002Tv-1g7X;
+	Fri, 30 Jan 2026 10:29:03 +0000
+Date: Fri, 30 Jan 2026 11:28:47 +0100
+From: kernel test robot <lkp@intel.com>
+To: Jason Miu <jasonmiu@google.com>, Alexander Graf <graf@amazon.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>,
+	David Matlack <dmatlack@google.com>,
+	David Rientjes <rientjes@google.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>
+Subject: Re: [PATCH v8 1/2] kho: Adopt radix tree for preserved memory
+ tracking
+Message-ID: <202601301107.1CQsWeRT-lkp@intel.com>
+References: <20260130005739.3163049-2-jasonmiu@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260129-vmcoreinfo_sysfs-v1-1-164c1fe1fe07@debian.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <20260130005739.3163049-2-jasonmiu@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260129_180023_086339_575476DC 
-X-CRM114-Status: GOOD (  29.84  )
+X-CRM114-CacheID: sfid-20260130_022909_862614_87D5A885 
+X-CRM114-Status: UNSURE (   8.54  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,155 +97,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 01/29/26 at 05:34am, Breno Leitao wrote:
-> Add a sysfs file at /sys/kernel/vmcore_stats and expose hardware error
-> recovery statistics that are already tracked by the kernel. This allows
-> userspace monitoring tools to track recovered hardware errors without
-> requiring kernel crashes.
+Hi Jason,
 
-I don't understand. If w/o requring kernel crashes, why do you call it
-vmcore_stats? It's a normal showing of hardware error recovery
-statistics tracked by kernel, can we name it /sys/kernel/hwerr_stats?
-It's obviously having nothiing to do with vmcore, isn't it?
+kernel test robot noticed the following build errors:
 
-> 
-> This is useful to track recoverable hardware errors in a time series,
-> even if the host doesn't crash.
-> 
-> Create a generic vmcore_stats sysfs, and add a section for
-> hwerr_recovery that shows the counts per subsystem and timestamps:
-> 
->   - cpu: CPU-related errors (MCE, ARM processor errors)
->   - memory: Memory-related errors
->   - pci: PCI/PCIe AER non-fatal errors
->   - cxl: CXL errors
->   - other: Other hardware errors
-> 
-> Example output:
->   hwerr_recovery:
->     cpu: 0 (0)
->     memory: 2 (1738148257)
->     pci: 1 (1738147000)
->     cxl: 0 (0)
->     other: 0 (0)
-> 
-> The value in parentheses is the timestamp (seconds since epoch) of the
-> last error of that type, or 0 if no errors have occurred.
-> 
-> These statistics provide visibility into the health of the system's
-> hardware and can be used by system administrators to proactively detect
-> failing components before they cause system crashes.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
-> To: akpm@linux-foundation.org
-> Cc: kexec@lists.infradead.org
-> To: bhe@redhat.com
-> Cc: linux-kernel@vger.kernel.org
-> Cc: dyoung@redhat.com
-> Cc: tony.luck@intel.com
-> Cc: xueshuai@linux.alibaba.com
-> Cc: vgoyal@redhat.com
-> Cc: zhiquan1.li@intel.com
-> Cc: olja@meta.com
-> ---
->  .../ABI/testing/sysfs-kernel-vmcore_stats          | 23 ++++++++++++++++
->  kernel/vmcore_info.c                               | 31 ++++++++++++++++++++++
->  2 files changed, 54 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-kernel-vmcore_stats b/Documentation/ABI/testing/sysfs-kernel-vmcore_stats
-> new file mode 100644
-> index 0000000000000..b42f18d24c00b
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-kernel-vmcore_stats
-> @@ -0,0 +1,23 @@
-> +What:		/sys/kernel/vmcore_stats
-> +Date:		January 2026
-> +KernelVersion:	6.20
-> +Contact:	Breno Leitao <leitao@debian.org>
-> +Description:
-> +		Shows statistics related to vmcore functionality. Currently
-> +		includes hardware error recovery statistics.
-> +
-> +		Format:
-> +		  Recovered hardware errors:
-> +		    metric: count (timestamp)
-> +
-> +		Statistics about recoverable hardware errors that the kernel
-> +		has handled since boot. Each metric shows the count and
-> +		timestamp (seconds since epoch) of the last error in
-> +		parentheses (0 if no errors have occurred).
-> +
-> +		Metrics:
-> +		    - cpu: CPU-related errors (MCE, ARM processor errors)
-> +		    - memory: Memory-related errors
-> +		    - pci: PCI/PCIe AER non-fatal errors
-> +		    - cxl: CXL (Compute Express Link) errors
-> +		    - other: Other hardware errors
-> diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
-> index fe9bf8db1922e..5974b4be08cbc 100644
-> --- a/kernel/vmcore_info.c
-> +++ b/kernel/vmcore_info.c
-> @@ -6,6 +6,8 @@
->  
->  #include <linux/buildid.h>
->  #include <linux/init.h>
-> +#include <linux/kobject.h>
-> +#include <linux/sysfs.h>
->  #include <linux/utsname.h>
->  #include <linux/vmalloc.h>
->  #include <linux/sizes.h>
-> @@ -135,6 +137,31 @@ void hwerr_log_error_type(enum hwerr_error_type src)
->  }
->  EXPORT_SYMBOL_GPL(hwerr_log_error_type);
->  
-> +/* sysfs interface for hardware error recovery statistics */
-> +static ssize_t vmcore_stats_show(struct kobject *kobj,
-> +				 struct kobj_attribute *attr, char *buf)
-> +{
-> +	return sysfs_emit(buf,
-> +			  "Recovered hardware errors:\n"
-> +			  "  cpu: %d (%lld)\n"
-> +			  "  memory: %d (%lld)\n"
-> +			  "  pci: %d (%lld)\n"
-> +			  "  cxl: %d (%lld)\n"
-> +			  "  other: %d (%lld)\n",
-> +			  atomic_read(&hwerr_data[HWERR_RECOV_CPU].count),
-> +			  (long long)READ_ONCE(hwerr_data[HWERR_RECOV_CPU].timestamp),
-> +			  atomic_read(&hwerr_data[HWERR_RECOV_MEMORY].count),
-> +			  (long long)READ_ONCE(hwerr_data[HWERR_RECOV_MEMORY].timestamp),
-> +			  atomic_read(&hwerr_data[HWERR_RECOV_PCI].count),
-> +			  (long long)READ_ONCE(hwerr_data[HWERR_RECOV_PCI].timestamp),
-> +			  atomic_read(&hwerr_data[HWERR_RECOV_CXL].count),
-> +			  (long long)READ_ONCE(hwerr_data[HWERR_RECOV_CXL].timestamp),
-> +			  atomic_read(&hwerr_data[HWERR_RECOV_OTHERS].count),
-> +			  (long long)READ_ONCE(hwerr_data[HWERR_RECOV_OTHERS].timestamp));
-> +}
-> +
-> +static struct kobj_attribute vmcore_stats_attr = __ATTR_RO(vmcore_stats);
-> +
->  static int __init crash_save_vmcoreinfo_init(void)
->  {
->  	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
-> @@ -244,6 +271,10 @@ static int __init crash_save_vmcoreinfo_init(void)
->  	arch_crash_save_vmcoreinfo();
->  	update_vmcoreinfo_note();
->  
-> +	/* Create /sys/kernel/vmcore_stats */
-> +	if (sysfs_create_file(kernel_kobj, &vmcore_stats_attr.attr))
-> +		pr_warn("Failed to create vmcore_stats sysfs file\n");
-> +
->  	return 0;
->  }
->  
-> 
-> ---
-> base-commit: 8dfce8991b95d8625d0a1d2896e42f93b9d7f68d
-> change-id: 20260129-vmcoreinfo_sysfs-ff4687979cd5
-> 
-> Best regards,
-> --  
-> Breno Leitao <leitao@debian.org>
-> 
+[auto build test ERROR on 33a647c659ffa5bdb94abc345c8c86768ff96215]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Jason-Miu/kho-Adopt-radix-tree-for-preserved-memory-tracking/20260130-090027
+base:   33a647c659ffa5bdb94abc345c8c86768ff96215
+patch link:    https://lore.kernel.org/r/20260130005739.3163049-2-jasonmiu%40google.com
+patch subject: [PATCH v8 1/2] kho: Adopt radix tree for preserved memory tracking
+reproduce: (https://download.01.org/0day-ci/archive/20260130/202601301107.1CQsWeRT-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601301107.1CQsWeRT-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   WARNING: No kernel-doc for file ./include/linux/kho/abi/kexec_handover.h
+   ERROR: Cannot find file ./include/linux/kho/abi/memblock.h
+   WARNING: No kernel-doc for file ./include/linux/kho/abi/memblock.h
+   ERROR: Cannot find file ./include/linux/kho/abi/kexec_handover.h
+   WARNING: No kernel-doc for file ./include/linux/kho/abi/kexec_handover.h
+>> ERROR: Cannot find file ./include/linux/kho_radix_tree.h
+   WARNING: No kernel-doc for file ./include/linux/kho_radix_tree.h
+   ERROR: Cannot find file ./include/linux/kref.h
+   WARNING: No kernel-doc for file ./include/linux/kref.h
+   ERROR: Cannot find file ./include/linux/rslib.h
+   ERROR: Cannot find file ./include/linux/rslib.h
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
