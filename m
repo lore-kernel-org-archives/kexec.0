@@ -4,82 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5A8DDE7C711
-	for <kexec@archiver.kernel.org>; Sun,  1 Feb 2026 06:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6D06EE65296
+	for <kexec@archiver.kernel.org>; Sun,  1 Feb 2026 16:21:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZwyK35BqHJ9vMxdC101Hpkz7OEl6VsmM8t+q1gtlYtQ=; b=sk1diE66dd+YLJrjSbnhGbotlm
-	9XcJ4A1EirCMvI/zqYdAYrTku4fxD9isFrEo3isH4r97ymG7iMRJSMjvDVWy1IqWxHgypFP/gPxzj
-	tZp+lJyBtv4IXf3hatPhxZu4628nobJi4tDVG5cXq+257IMJisGhPqO+qcljBAD9kWPs5IbYvcarR
-	IS0JGaMnR6ysj8n0k+nhQRwGphG2xsdtXl8OQkxjDM7+JG9CeXO7+jCKa6lmx8bNGLPcORvsXwt0d
-	Te/cegnsLWs2pJzFEKm7k5p54HyvlxaEA2uKl1omIJBFmeqNlmN1iC5k4WdJryTJjZlmOGICBs/wl
-	ry/eL+zw==;
+	bh=YIYCK59jh50spm8tJeld6eak6XiX3KK4FkOhjNCm+ws=; b=2dZ0MFFXEQ6/zltLCFIXGjm++O
+	XWRbqb6MbXW05gK7GCIjrajcajl98vRZuzUNFp4UMF30r5vsk2Pdfm0zN+LkfPYrPGkWU/oICzVCX
+	8krnChu5d8iox2rVFb/PrYSZ+4TOQJJKtzwSKM328lD3cGhIfsz7+pV+Nfq4g1RpX+p0styMN88U3
+	aiS4/N59HQzURox1klZoOLiK9tFMZ9LtBRU53ejBBdoSeWbio5/HjXKoP9SwFTCindaU7NQFCinS+
+	729aOU6BO4Ze9jzokByQr3ijkn6Q8/J4Bo07QXfaUS21Jz/xoExQxCDSmaTUG3B1ti0F1fS8yhK4x
+	d+zyP0UQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vmR6a-00000003J8d-2omk;
-	Sun, 01 Feb 2026 06:38:44 +0000
-Received: from out-170.mta1.migadu.com ([2001:41d0:203:375::aa])
+	id 1vmaCD-00000003zWy-2CT8;
+	Sun, 01 Feb 2026 16:21:09 +0000
+Received: from sender4-of-o50.zoho.com ([136.143.188.50])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vmR6W-00000003J8C-35AP
+	id 1vmaCA-00000003zWb-3QS1
 	for kexec@lists.infradead.org;
-	Sun, 01 Feb 2026 06:38:42 +0000
-Message-ID: <44484594-5b5d-4237-993c-ac1e173ad62e@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1769927913;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZwyK35BqHJ9vMxdC101Hpkz7OEl6VsmM8t+q1gtlYtQ=;
-	b=smbFLQG3fxi0EmdEQh5EfbtGQ62LpS961djirjg538qndfMoJIldCdV/L2GKzWYzuysN/1
-	/GumBEceCbaFABLQT0FDfy4W6hBDyhGvjE/RBwgY8Fercg7NI2raGGc+bgtYZDTz4/ErLu
-	bI04FQJ+kIrizpByKTlcv8fJSr/4ST4=
-Date: Sat, 31 Jan 2026 22:38:18 -0800
+	Sun, 01 Feb 2026 16:21:08 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1769962827; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=eLrQVuj3RsXJTTpG5owHrnqFfaHxy6E8IRRb5+CwFA3Bzfi+mJmyXXqc5phB2v4xpkbjb7zHkYRBbS/RVZH2ks0toqesjWOmYyWNH9LBecfI8Wn3v3N4uzI67ntOYXPRdcR8r+Ga5IckWnHefS6oBQXkeMZW3d0YzBLK77sD9lE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1769962827; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=YIYCK59jh50spm8tJeld6eak6XiX3KK4FkOhjNCm+ws=; 
+	b=bgIKAzESOhr623ZcPoiwK6IVCJRgVcxDo/joqJFPIWM0tFh8XkZV0pz2F8lGL6Tn3X/cX3M8AdWWJRTXfqNHMzSjYLIuPlK3CsEKeFjsndEgdsuJKPUIPKjBIdgO5b0GYCGfAwh3LgRwVt0oOtMVBpTs/RaxS6WLlDKDgBuB7iU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=apertussolutions.com;
+	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
+	dmarc=pass header.from=<dpsmith@apertussolutions.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1769962827;
+	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=YIYCK59jh50spm8tJeld6eak6XiX3KK4FkOhjNCm+ws=;
+	b=oTiSt5ZJZIrN5X1fyRVpbvtQMlOSvHav0NhcbHW+q/3VDkax3N3xHblVzK2zAHPK
+	BOpedbVBfCP7+j/MYLuMGdeF81TvsQg5EWue6+dA1HaKT1/KGm1dVSMIOnN3/GaX3Mq
+	I6j6uM5TqURWbXbpA/Yc+M2FHXM9J5c5BsxDvZxs=
+Received: by mx.zohomail.com with SMTPS id 1769962824390979.9307132328469;
+	Sun, 1 Feb 2026 08:20:24 -0800 (PST)
+Message-ID: <b94815dc-fc4d-4073-bfd6-31ab99a6b85b@apertussolutions.com>
+Date: Sun, 1 Feb 2026 11:20:20 -0500
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 02/22] PCI: Add API to track PCI devices preserved
- across Live Update
-To: David Matlack <dmatlack@google.com>, Alex Williamson <alex@shazbot.org>
-Cc: Adithya Jayachandran <ajayachandra@nvidia.com>,
- Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>,
- Alistair Popple <apopple@nvidia.com>,
- Andrew Morton <akpm@linux-foundation.org>, Ankit Agrawal
- <ankita@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Chris Li <chrisl@kernel.org>, David Rientjes <rientjes@google.com>,
- Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Corbet <corbet@lwn.net>,
- Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>,
- kexec@lists.infradead.org, kvm@vger.kernel.org,
- Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
- =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
- Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pranjal Shrivastava <praan@google.com>, Pratyush Yadav
- <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Saeed Mahameed <saeedm@nvidia.com>,
- Samiullah Khawaja <skhawaja@google.com>,
- Shuah Khan <skhan@linuxfoundation.org>,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>,
- Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>,
- Yi Liu <yi.l.liu@intel.com>
-References: <20260129212510.967611-1-dmatlack@google.com>
- <20260129212510.967611-3-dmatlack@google.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <20260129212510.967611-3-dmatlack@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v15 01/28] tpm: Initial step to reorganize TPM public
+ headers
+To: Jarkko Sakkinen <jarkko@kernel.org>,
+ Ross Philipson <ross.philipson@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+ linux-efi@vger.kernel.org, iommu@lists.linux.dev, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+ ardb@kernel.org, mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
+ peterhuewe@gmx.de, jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu,
+ herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
+ ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com,
+ kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
+ trenchboot-devel@googlegroups.com
+References: <20251215233316.1076248-1-ross.philipson@oracle.com>
+ <20251215233316.1076248-2-ross.philipson@oracle.com>
+ <aW7A-4xJSzln1HtH@kernel.org>
+Content-Language: en-US
+From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+Autocrypt: addr=dpsmith@apertussolutions.com; keydata=
+ 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
+In-Reply-To: <aW7A-4xJSzln1HtH@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260131_223841_322147_E90941D4 
-X-CRM114-Status: GOOD (  42.61  )
+X-CRM114-CacheID: sfid-20260201_082106_995595_C508471E 
+X-CRM114-Status: GOOD (  23.62  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,448 +123,324 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On 1/19/26 18:40, Jarkko Sakkinen wrote:
+> On Mon, Dec 15, 2025 at 03:32:49PM -0800, Ross Philipson wrote:
+>> Replace the existing public header tpm_command.h with the first two
+>> new public headers tpm1.h and tpm_common.h. In addition, related
+>> definitions in tpm1_cmd.c were moved to the new tpm1.h.
+>>
+>> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+>> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+>> ---
+>>   drivers/char/tpm/tpm-buf.c                |  3 +-
+>>   drivers/char/tpm/tpm1-cmd.c               | 13 +-----
+>>   include/keys/trusted_tpm.h                |  1 -
+>>   include/linux/tpm.h                       |  3 ++
+>>   include/linux/tpm1.h                      | 55 +++++++++++++++++++++++
+>>   include/linux/tpm_command.h               | 30 -------------
+> 
+> Removing tpm_command.h causes unnecessary noise.
+> 
+> It would be better to retain tpm_command.h, and simply supplement
+> it with TPM2 constants.
+> 
+> Also, what is the reason to not have both TPM1 and TPM2 in tpm.h?
+> 
+> To put the question in other words: is there something in tpm.h that
+> would be incompatible with early boot code?
+> 
+> I'd rather tweak that than have more files...
 
-在 2026/1/29 13:24, David Matlack 写道:
-> Add an API to enable the PCI subsystem to track all devices that are
-> preserved across a Live Update, including both incoming devices (passed
-> from the previous kernel) and outgoing devices (passed to the next
-> kernel).
->
-> Use PCI segment number and BDF to keep track of devices across Live
-> Update. This means the kernel must keep both identifiers constant across
-> a Live Update for any preserved device. VFs are not supported for now,
-> since that requires preserving SR-IOV state on the device to ensure the
-> same number of VFs appear after kexec and with the same BDFs.
->
-> Drivers that preserve devices across Live Update can now register their
-> struct liveupdate_file_handler with the PCI subsystem so that the PCI
-> subsystem can allocate and manage File-Lifecycle-Bound (FLB) global data
-> to track the list of incoming and outgoing preserved devices.
->
->    pci_liveupdate_register_fh(driver_fh)
->    pci_liveupdate_unregister_fh(driver_fh)
+Every #include in tpm.h will break in the early boot code. I don't see 
+any way to avoid having one header that is the device driver header that 
+integrates with mainline features and at least one header that holds the 
+general TPM definitions.
 
-Can the above 2 functions support the virtual devices? For example, 
-bonding, veth, iSWAP and RXE.
+We will move everything that was broken out into tpm_command.h, making 
+it the header with the general definitions. I would raise the question 
+of whether tpm_command.h would be the best name of the file after 
+definition reloactions
 
-These virtual devices do not have BDF. As such, I am not sure if your 
-patches take these virtual devices in to account.
+>>   include/linux/tpm_common.h                | 22 +++++++++
+>>   security/keys/trusted-keys/trusted_tpm1.c |  1 -
+>>   security/keys/trusted-keys/trusted_tpm2.c |  1 -
+>>   9 files changed, 82 insertions(+), 47 deletions(-)
+>>   create mode 100644 include/linux/tpm1.h
+>>   delete mode 100644 include/linux/tpm_command.h
+>>   create mode 100644 include/linux/tpm_common.h
+>>
+>> diff --git a/drivers/char/tpm/tpm-buf.c b/drivers/char/tpm/tpm-buf.c
+>> index 1cb649938c01..dae23e6de269 100644
+>> --- a/drivers/char/tpm/tpm-buf.c
+>> +++ b/drivers/char/tpm/tpm-buf.c
+>> @@ -3,7 +3,6 @@
+>>    * Handling of TPM command and other buffers.
+>>    */
+>>   
+>> -#include <linux/tpm_command.h>
+>>   #include <linux/module.h>
+>>   #include <linux/tpm.h>
+>>   
+>> @@ -296,7 +295,7 @@ void tpm1_buf_append_extend(struct tpm_buf *buf, u32 pcr_idx, const u8 *hash)
+>>   	if (buf->flags & TPM_BUF_INVALID)
+>>   		return;
+>>   
+>> -	if (!tpm1_buf_is_command(buf, TPM_ORD_EXTEND)) {
+>> +	if (!tpm1_buf_is_command(buf, TPM_ORD_PCR_EXTEND)) {
+>>   		WARN(1, "tpm_buf: invalid TPM_Extend command\n");
+>>   		buf->flags |= TPM_BUF_INVALID;
+>>   		return;
+>> diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
+>> index bc156d7d59f2..f29827b454d2 100644
+>> --- a/drivers/char/tpm/tpm1-cmd.c
+>> +++ b/drivers/char/tpm/tpm1-cmd.c
+>> @@ -18,12 +18,9 @@
+>>   #include <linux/mutex.h>
+>>   #include <linux/spinlock.h>
+>>   #include <linux/freezer.h>
+>> -#include <linux/tpm_command.h>
+>>   #include <linux/tpm_eventlog.h>
+>>   #include "tpm.h"
+>>   
+>> -#define TPM_MAX_ORDINAL 243
+>> -
+>>   /*
+>>    * Array with one entry per ordinal defining the maximum amount
+>>    * of time the chip could take to return the result.  The ordinal
+>> @@ -308,9 +305,6 @@ unsigned long tpm1_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal)
+>>   		return duration;
+>>   }
+>>   
+>> -#define TPM_ORD_STARTUP 153
+>> -#define TPM_ST_CLEAR 1
+>> -
+>>   /**
+>>    * tpm1_startup() - turn on the TPM
+>>    * @chip: TPM chip to use
+>> @@ -478,7 +472,6 @@ int tpm1_pcr_extend(struct tpm_chip *chip, u32 pcr_idx, const u8 *hash,
+>>   	return rc;
+>>   }
+>>   
+>> -#define TPM_ORD_GET_CAP 101
+>>   ssize_t tpm1_getcap(struct tpm_chip *chip, u32 subcap_id, cap_t *cap,
+>>   		    const char *desc, size_t min_cap_length)
+>>   {
+>> @@ -574,7 +567,6 @@ int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
+>>   	return rc;
+>>   }
+>>   
+>> -#define TPM_ORD_PCRREAD 21
+>>   int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf)
+>>   {
+>>   	int rc;
+>> @@ -584,7 +576,7 @@ int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf)
+>>   		return -ENOMEM;
+>>   
+>>   	tpm_buf_init(buf, TPM_BUFSIZE);
+>> -	tpm_buf_reset(buf, TPM_TAG_RQU_COMMAND, TPM_ORD_PCRREAD);
+>> +	tpm_buf_reset(buf, TPM_TAG_RQU_COMMAND, TPM_ORD_PCR_READ);
+>>   	tpm_buf_append_u32(buf, pcr_idx);
+>>   
+>>   	rc = tpm_transmit_cmd(chip, buf, TPM_DIGEST_SIZE,
+>> @@ -599,7 +591,6 @@ int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf)
+>>   	return rc;
+>>   }
+>>   
+>> -#define TPM_ORD_CONTINUE_SELFTEST 83
+>>   /**
+>>    * tpm1_continue_selftest() - run TPM's selftest
+>>    * @chip: TPM chip to use
+>> @@ -716,8 +707,6 @@ int tpm1_auto_startup(struct tpm_chip *chip)
+>>   	return rc;
+>>   }
+>>   
+>> -#define TPM_ORD_SAVESTATE 152
+>> -
+>>   /**
+>>    * tpm1_pm_suspend() - pm suspend handler
+>>    * @chip: TPM chip to use.
+>> diff --git a/include/keys/trusted_tpm.h b/include/keys/trusted_tpm.h
+>> index 0fadc6a4f166..3a0fa3bc8454 100644
+>> --- a/include/keys/trusted_tpm.h
+>> +++ b/include/keys/trusted_tpm.h
+>> @@ -3,7 +3,6 @@
+>>   #define __TRUSTED_TPM_H
+>>   
+>>   #include <keys/trusted-type.h>
+>> -#include <linux/tpm_command.h>
+>>   
+>>   extern struct trusted_key_ops trusted_key_tpm_ops;
+>>   
+>> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+>> index 8da49e8769d5..ef81e0b59657 100644
+>> --- a/include/linux/tpm.h
+>> +++ b/include/linux/tpm.h
+>> @@ -25,6 +25,9 @@
+>>   #include <crypto/hash_info.h>
+>>   #include <crypto/aes.h>
+>>   
+>> +#include "tpm_common.h"
+>> +#include "tpm1.h"
+>> +
+>>   #define TPM_DIGEST_SIZE		20	/* Max TPM v1.2 PCR size */
+>>   #define TPM_HEADER_SIZE		10
+>>   #define TPM_BUFSIZE		4096
+>> diff --git a/include/linux/tpm1.h b/include/linux/tpm1.h
+>> new file mode 100644
+>> index 000000000000..54c6c211eb9e
+>> --- /dev/null
+>> +++ b/include/linux/tpm1.h
+>> @@ -0,0 +1,55 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * Copyright (C) 2004,2007,2008 IBM Corporation
+>> + *
+>> + * Authors:
+>> + * Leendert van Doorn <leendert@watson.ibm.com>
+>> + * Dave Safford <safford@watson.ibm.com>
+>> + * Reiner Sailer <sailer@watson.ibm.com>
+>> + * Kylene Hall <kjhall@us.ibm.com>
+>> + * Debora Velarde <dvelarde@us.ibm.com>
+>> + *
+>> + * Maintained by: <tpmdd_devel@lists.sourceforge.net>
+>> + *
+>> + * Device driver for TCG/TCPA TPM (trusted platform module).
+>> + * Specifications at www.trustedcomputinggroup.org
+>> + */
+>> +#ifndef __LINUX_TPM1_H__
+>> +#define __LINUX_TPM1_H__
+>> +
+>> +/*
+>> + * TPM 1.2 Main Specification
+>> + * https://trustedcomputinggroup.org/resource/tpm-main-specification/
+>> + */
+>> +
+>> +/* Command TAGS */
+>> +enum tpm_command_tags {
+>> +	TPM_TAG_RQU_COMMAND		= 193,
+>> +	TPM_TAG_RQU_AUTH1_COMMAND	= 194,
+>> +	TPM_TAG_RQU_AUTH2_COMMAND	= 195,
+>> +	TPM_TAG_RSP_COMMAND		= 196,
+>> +	TPM_TAG_RSP_AUTH1_COMMAND	= 197,
+>> +	TPM_TAG_RSP_AUTH2_COMMAND	= 198,
+>> +};
+>> +
+>> +/* Command Ordinals */
+>> +enum tpm_command_ordinals {
+>> +	TPM_ORD_CONTINUE_SELFTEST	= 83,
+>> +	TPM_ORD_GET_CAP			= 101,
+>> +	TPM_ORD_GET_RANDOM		= 70,
+>> +	TPM_ORD_PCR_EXTEND		= 20,
+>> +	TPM_ORD_PCR_READ		= 21,
+>> +	TPM_ORD_OSAP			= 11,
+>> +	TPM_ORD_OIAP			= 10,
+>> +	TPM_ORD_SAVESTATE		= 152,
+>> +	TPM_ORD_SEAL			= 23,
+>> +	TPM_ORD_STARTUP			= 153,
+>> +	TPM_ORD_UNSEAL			= 24,
+>> +};
+>> +
+>> +/* Other constants */to address your concern over diff churn
+>> +#define SRKHANDLE                       0x40000000
+>> +#define TPM_NONCE_SIZE                  20
+>> +#define TPM_ST_CLEAR			1
+>> +
+>> +#endif
+>> diff --git a/include/linux/tpm_command.h b/include/linux/tpm_command.h
+>> deleted file mode 100644
+>> index 02038972a05f..000000000000
+>> --- a/include/linux/tpm_command.h
+>> +++ /dev/null
+>> @@ -1,30 +0,0 @@
+>> -/* SPDX-License-Identifier: GPL-2.0 */
+>> -#ifndef __LINUX_TPM_COMMAND_H__
+>> -#define __LINUX_TPM_COMMAND_H__
+>> -
+>> -/*
+>> - * TPM Command constants from specifications at
+>> - * http://www.trustedcomputinggroup.org
+>> - */
+>> -
+>> -/* Command TAGS */
+>> -#define TPM_TAG_RQU_COMMAND             193
+>> -#define TPM_TAG_RQU_AUTH1_COMMAND       194
+>> -#define TPM_TAG_RQU_AUTH2_COMMAND       195
+>> -#define TPM_TAG_RSP_COMMAND             196
+>> -#define TPM_TAG_RSP_AUTH1_COMMAND       197
+>> -#define TPM_TAG_RSP_AUTH2_COMMAND       198
+>> -
+>> -/* Command Ordinals */
+>> -#define TPM_ORD_OIAP                    10
+>> -#define TPM_ORD_OSAP                    11
+>> -#define TPM_ORD_EXTEND			20
+>> -#define TPM_ORD_SEAL                    23
+>> -#define TPM_ORD_UNSEAL                  24
+>> -#define TPM_ORD_GET_RANDOM              70
+>> -
+>> -/* Other constants */
+>> -#define SRKHANDLE                       0x40000000
+>> -#define TPM_NONCE_SIZE                  20
+>> -
+>> -#endif
+>> diff --git a/include/linux/tpm_common.h b/include/linux/tpm_common.h
+>> new file mode 100644
+>> index 000000000000..b8be669913dd
+>> --- /dev/null
+>> +++ b/include/linux/tpm_common.h
+>> @@ -0,0 +1,22 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * Copyright (C) 2004,2007,2008 IBM Corporation
+>> + *
+>> + * Authors:
+>> + * Leendert van Doorn <leendert@watson.ibm.com>
+>> + * Dave Safford <safford@watson.ibm.com>
+>> + * Reiner Sailer <sailer@watson.ibm.com>
+>> + * Kylene Hall <kjhall@us.ibm.com>
+>> + * Debora Velarde <dvelarde@us.ibm.com>
+>> + *
+>> + * Maintained by: <tpmdd_devel@lists.sourceforge.net>
+>> + *
+>> + * Device driver for TCG/TCPA TPM (trusted platform module).
+>> + * Specifications at www.trustedcomputinggroup.org
+>> + */
+>> +#ifndef __LINUX_TPM_COMMON_H__
+>> +#define __LINUX_TPM_COMMON_H__
+>> +
+>> +#define TPM_MAX_ORDINAL 243
+>> +
+>> +#endif
+>> diff --git a/security/keys/trusted-keys/trusted_tpm1.c b/security/keys/trusted-keys/trusted_tpm1.c
+>> index 6e6a9fb48e63..3717a06a5212 100644
+>> --- a/security/keys/trusted-keys/trusted_tpm1.c
+>> +++ b/security/keys/trusted-keys/trusted_tpm1.c
+>> @@ -17,7 +17,6 @@
+>>   #include <keys/trusted-type.h>
+>>   #include <linux/key-type.h>
+>>   #include <linux/tpm.h>
+>> -#include <linux/tpm_command.h>
+>>   
+>>   #include <keys/trusted_tpm.h>
+>>   
+>> diff --git a/security/keys/trusted-keys/trusted_tpm2.c b/security/keys/trusted-keys/trusted_tpm2.c
+>> index 0a99bd051a25..e6000c71eeb6 100644
+>> --- a/security/keys/trusted-keys/trusted_tpm2.c
+>> +++ b/security/keys/trusted-keys/trusted_tpm2.c
+>> @@ -9,7 +9,6 @@
+>>   #include <linux/string.h>
+>>   #include <linux/err.h>
+>>   #include <linux/tpm.h>
+>> -#include <linux/tpm_command.h>
+>>   
+>>   #include <keys/trusted-type.h>
+>>   #include <keys/trusted_tpm.h>
+>> -- 
+>> 2.43.7
+>>
+> 
+> BR, Jarkko
 
-Thanks a lot.
-
-Zhu Yanjun
-
->
-> Drivers can notify the PCI subsystem whenever a device is preserved and
-> unpreserved with the following APIs:
->
->    pci_liveupdate_outgoing_preserve(pci_dev)
->    pci_liveupdate_outgoing_unpreserve(pci_dev)
->
-> After a Live Update, the PCI subsystem fetches its FLB global data
-> from the previous kernel from the Live Update Orchestrator (LUO) during
-> device initialization to determine which devices were preserved.
->
-> Drivers can check if a device was preserved before userspace retrieves
-> the file for it via pci_dev->liveupdate_incoming.
->
-> Once a driver has finished restoring an incoming preserved device, it
-> can notify the PCI subsystem with the following call, which clears
-> pci_dev->liveupdate_incoming.
->
->    pci_liveupdate_incoming_finish(pci_dev)
->
-> This API will be used in subsequent commits by the vfio-pci driver to
-> preserve VFIO devices across Live Update and by the PCI subsystem.
->
-> Signed-off-by: David Matlack <dmatlack@google.com>
-> ---
->   drivers/pci/Makefile        |   1 +
->   drivers/pci/liveupdate.c    | 212 ++++++++++++++++++++++++++++++++++++
->   drivers/pci/probe.c         |   2 +
->   include/linux/kho/abi/pci.h |  55 ++++++++++
->   include/linux/pci.h         |  47 ++++++++
->   5 files changed, 317 insertions(+)
->   create mode 100644 drivers/pci/liveupdate.c
->   create mode 100644 include/linux/kho/abi/pci.h
->
-> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-> index 8c259a9a8796..a32f7658b9e5 100644
-> --- a/drivers/pci/Makefile
-> +++ b/drivers/pci/Makefile
-> @@ -16,6 +16,7 @@ obj-$(CONFIG_PROC_FS)		+= proc.o
->   obj-$(CONFIG_SYSFS)		+= pci-sysfs.o slot.o
->   obj-$(CONFIG_ACPI)		+= pci-acpi.o
->   obj-$(CONFIG_GENERIC_PCI_IOMAP) += iomap.o
-> +obj-$(CONFIG_LIVEUPDATE)	+= liveupdate.o
->   endif
->   
->   obj-$(CONFIG_OF)		+= of.o
-> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-> new file mode 100644
-> index 000000000000..182cfc793b80
-> --- /dev/null
-> +++ b/drivers/pci/liveupdate.c
-> @@ -0,0 +1,212 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * Copyright (c) 2025, Google LLC.
-> + * David Matlack <dmatlack@google.com>
-> + */
-> +
-> +#include <linux/bsearch.h>
-> +#include <linux/io.h>
-> +#include <linux/kexec_handover.h>
-> +#include <linux/kho/abi/pci.h>
-> +#include <linux/liveupdate.h>
-> +#include <linux/mutex.h>
-> +#include <linux/mm.h>
-> +#include <linux/pci.h>
-> +#include <linux/sort.h>
-> +
-> +static DEFINE_MUTEX(pci_flb_outgoing_lock);
-> +
-> +static int pci_flb_preserve(struct liveupdate_flb_op_args *args)
-> +{
-> +	struct pci_dev *dev = NULL;
-> +	int max_nr_devices = 0;
-> +	struct pci_ser *ser;
-> +	unsigned long size;
-> +
-> +	for_each_pci_dev(dev)
-> +		max_nr_devices++;
-> +
-> +	size = struct_size_t(struct pci_ser, devices, max_nr_devices);
-> +
-> +	ser = kho_alloc_preserve(size);
-> +	if (IS_ERR(ser))
-> +		return PTR_ERR(ser);
-> +
-> +	ser->max_nr_devices = max_nr_devices;
-> +
-> +	args->obj = ser;
-> +	args->data = virt_to_phys(ser);
-> +	return 0;
-> +}
-> +
-> +static void pci_flb_unpreserve(struct liveupdate_flb_op_args *args)
-> +{
-> +	struct pci_ser *ser = args->obj;
-> +
-> +	WARN_ON_ONCE(ser->nr_devices);
-> +	kho_unpreserve_free(ser);
-> +}
-> +
-> +static int pci_flb_retrieve(struct liveupdate_flb_op_args *args)
-> +{
-> +	args->obj = phys_to_virt(args->data);
-> +	return 0;
-> +}
-> +
-> +static void pci_flb_finish(struct liveupdate_flb_op_args *args)
-> +{
-> +	kho_restore_free(args->obj);
-> +}
-> +
-> +static struct liveupdate_flb_ops pci_liveupdate_flb_ops = {
-> +	.preserve = pci_flb_preserve,
-> +	.unpreserve = pci_flb_unpreserve,
-> +	.retrieve = pci_flb_retrieve,
-> +	.finish = pci_flb_finish,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static struct liveupdate_flb pci_liveupdate_flb = {
-> +	.ops = &pci_liveupdate_flb_ops,
-> +	.compatible = PCI_LUO_FLB_COMPATIBLE,
-> +};
-> +
-> +#define INIT_PCI_DEV_SER(_dev) {		\
-> +	.domain = pci_domain_nr((_dev)->bus),	\
-> +	.bdf = pci_dev_id(_dev),		\
-> +}
-> +
-> +static int pci_dev_ser_cmp(const void *__a, const void *__b)
-> +{
-> +	const struct pci_dev_ser *a = __a, *b = __b;
-> +
-> +	return cmp_int(a->domain << 16 | a->bdf, b->domain << 16 | b->bdf);
-> +}
-> +
-> +static struct pci_dev_ser *pci_ser_find(struct pci_ser *ser,
-> +					struct pci_dev *dev)
-> +{
-> +	const struct pci_dev_ser key = INIT_PCI_DEV_SER(dev);
-> +
-> +	return bsearch(&key, ser->devices, ser->nr_devices,
-> +		       sizeof(key), pci_dev_ser_cmp);
-> +}
-> +
-> +static int pci_ser_delete(struct pci_ser *ser, struct pci_dev *dev)
-> +{
-> +	struct pci_dev_ser *dev_ser;
-> +	int i;
-> +
-> +	dev_ser = pci_ser_find(ser, dev);
-> +	if (!dev_ser)
-> +		return -ENOENT;
-> +
-> +	for (i = dev_ser - ser->devices; i < ser->nr_devices - 1; i++)
-> +		ser->devices[i] = ser->devices[i + 1];
-> +
-> +	ser->nr_devices--;
-> +	return 0;
-> +}
-> +
-> +int pci_liveupdate_outgoing_preserve(struct pci_dev *dev)
-> +{
-> +	struct pci_dev_ser new = INIT_PCI_DEV_SER(dev);
-> +	struct pci_ser *ser;
-> +	int i, ret;
-> +
-> +	/* Preserving VFs is not supported yet. */
-> +	if (dev->is_virtfn)
-> +		return -EINVAL;
-> +
-> +	guard(mutex)(&pci_flb_outgoing_lock);
-> +
-> +	if (dev->liveupdate_outgoing)
-> +		return -EBUSY;
-> +
-> +	ret = liveupdate_flb_get_outgoing(&pci_liveupdate_flb, (void **)&ser);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (ser->nr_devices == ser->max_nr_devices)
-> +		return -E2BIG;
-> +
-> +	for (i = ser->nr_devices; i > 0; i--) {
-> +		struct pci_dev_ser *prev = &ser->devices[i - 1];
-> +		int cmp = pci_dev_ser_cmp(&new, prev);
-> +
-> +		if (WARN_ON_ONCE(!cmp))
-> +			return -EBUSY;
-> +
-> +		if (cmp > 0)
-> +			break;
-> +
-> +		ser->devices[i] = *prev;
-> +	}
-> +
-> +	ser->devices[i] = new;
-> +	ser->nr_devices++;
-> +	dev->liveupdate_outgoing = true;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_liveupdate_outgoing_preserve);
-> +
-> +void pci_liveupdate_outgoing_unpreserve(struct pci_dev *dev)
-> +{
-> +	struct pci_ser *ser;
-> +	int ret;
-> +
-> +	guard(mutex)(&pci_flb_outgoing_lock);
-> +
-> +	ret = liveupdate_flb_get_outgoing(&pci_liveupdate_flb, (void **)&ser);
-> +	if (WARN_ON_ONCE(ret))
-> +		return;
-> +
-> +	WARN_ON_ONCE(pci_ser_delete(ser, dev));
-> +	dev->liveupdate_outgoing = false;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_liveupdate_outgoing_unpreserve);
-> +
-> +u32 pci_liveupdate_incoming_nr_devices(void)
-> +{
-> +	struct pci_ser *ser;
-> +	int ret;
-> +
-> +	ret = liveupdate_flb_get_incoming(&pci_liveupdate_flb, (void **)&ser);
-> +	if (ret)
-> +		return 0;
-> +
-> +	return ser->nr_devices;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_liveupdate_incoming_nr_devices);
-> +
-> +void pci_liveupdate_setup_device(struct pci_dev *dev)
-> +{
-> +	struct pci_ser *ser;
-> +	int ret;
-> +
-> +	ret = liveupdate_flb_get_incoming(&pci_liveupdate_flb, (void **)&ser);
-> +	if (ret)
-> +		return;
-> +
-> +	dev->liveupdate_incoming = !!pci_ser_find(ser, dev);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_liveupdate_setup_device);
-> +
-> +void pci_liveupdate_incoming_finish(struct pci_dev *dev)
-> +{
-> +	dev->liveupdate_incoming = false;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_liveupdate_incoming_finish);
-> +
-> +int pci_liveupdate_register_fh(struct liveupdate_file_handler *fh)
-> +{
-> +	return liveupdate_register_flb(fh, &pci_liveupdate_flb);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_liveupdate_register_fh);
-> +
-> +int pci_liveupdate_unregister_fh(struct liveupdate_file_handler *fh)
-> +{
-> +	return liveupdate_unregister_flb(fh, &pci_liveupdate_flb);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_liveupdate_unregister_fh);
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 37329095e5fe..af6356c5a156 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2060,6 +2060,8 @@ int pci_setup_device(struct pci_dev *dev)
->   	if (pci_early_dump)
->   		early_dump_pci_device(dev);
->   
-> +	pci_liveupdate_setup_device(dev);
-> +
->   	/* Need to have dev->class ready */
->   	dev->cfg_size = pci_cfg_space_size(dev);
->   
-> diff --git a/include/linux/kho/abi/pci.h b/include/linux/kho/abi/pci.h
-> new file mode 100644
-> index 000000000000..6577767f8da6
-> --- /dev/null
-> +++ b/include/linux/kho/abi/pci.h
-> @@ -0,0 +1,55 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +/*
-> + * Copyright (c) 2025, Google LLC.
-> + * David Matlack <dmatlack@google.com>
-> + */
-> +
-> +#ifndef _LINUX_KHO_ABI_PCI_H
-> +#define _LINUX_KHO_ABI_PCI_H
-> +
-> +#include <linux/compiler.h>
-> +#include <linux/types.h>
-> +
-> +/**
-> + * DOC: PCI File-Lifecycle Bound (FLB) Live Update ABI
-> + *
-> + * This header defines the ABI for preserving core PCI state across kexec using
-> + * Live Update File-Lifecycle Bound (FLB) data.
-> + *
-> + * This interface is a contract. Any modification to any of the serialization
-> + * structs defined here constitutes a breaking change. Such changes require
-> + * incrementing the version number in the PCI_LUO_FLB_COMPATIBLE string.
-> + */
-> +
-> +#define PCI_LUO_FLB_COMPATIBLE "pci-v1"
-> +
-> +/**
-> + * struct pci_dev_ser - Serialized state about a single PCI device.
-> + *
-> + * @domain: The device's PCI domain number (segment).
-> + * @bdf: The device's PCI bus, device, and function number.
-> + */
-> +struct pci_dev_ser {
-> +	u16 domain;
-> +	u16 bdf;
-> +} __packed;
-> +
-> +/**
-> + * struct pci_ser - PCI Subsystem Live Update State
-> + *
-> + * This struct tracks state about all devices that are being preserved across
-> + * a Live Update for the next kernel.
-> + *
-> + * @max_nr_devices: The length of the devices[] flexible array.
-> + * @nr_devices: The number of devices that were preserved.
-> + * @devices: Flexible array of pci_dev_ser structs for each device. Guaranteed
-> + *           to be sorted ascending by domain and bdf.
-> + */
-> +struct pci_ser {
-> +	u64 max_nr_devices;
-> +	u64 nr_devices;
-> +	struct pci_dev_ser devices[];
-> +} __packed;
-> +
-> +#endif /* _LINUX_KHO_ABI_PCI_H */
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 7e36936bb37a..9ead6d84aef6 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -40,6 +40,7 @@
->   #include <linux/resource_ext.h>
->   #include <linux/msi_api.h>
->   #include <uapi/linux/pci.h>
-> +#include <linux/liveupdate.h>
->   
->   #include <linux/pci_ids.h>
->   
-> @@ -582,6 +583,10 @@ struct pci_dev {
->   	u8		tph_mode;	/* TPH mode */
->   	u8		tph_req_type;	/* TPH requester type */
->   #endif
-> +#ifdef CONFIG_LIVEUPDATE
-> +	unsigned int	liveupdate_incoming:1;	/* Preserved by previous kernel */
-> +	unsigned int	liveupdate_outgoing:1;	/* Preserved for next kernel */
-> +#endif
->   };
->   
->   static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
-> @@ -2854,4 +2859,46 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
->   	WARN_ONCE(condition, "%s %s: " fmt, \
->   		  dev_driver_string(&(pdev)->dev), pci_name(pdev), ##arg)
->   
-> +#ifdef CONFIG_LIVEUPDATE
-> +int pci_liveupdate_outgoing_preserve(struct pci_dev *dev);
-> +void pci_liveupdate_outgoing_unpreserve(struct pci_dev *dev);
-> +void pci_liveupdate_setup_device(struct pci_dev *dev);
-> +u32 pci_liveupdate_incoming_nr_devices(void);
-> +void pci_liveupdate_incoming_finish(struct pci_dev *dev);
-> +int pci_liveupdate_register_fh(struct liveupdate_file_handler *fh);
-> +int pci_liveupdate_unregister_fh(struct liveupdate_file_handler *fh);
-> +#else /* !CONFIG_LIVEUPDATE */
-> +static inline int pci_liveupdate_outgoing_preserve(struct pci_dev *dev)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static inline void pci_liveupdate_outgoing_unpreserve(struct pci_dev *dev)
-> +{
-> +}
-> +
-> +static inline void pci_liveupdate_setup_device(struct pci_dev *dev)
-> +{
-> +}
-> +
-> +static inline u32 pci_liveupdate_incoming_nr_devices(void)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline void pci_liveupdate_incoming_finish(struct pci_dev *dev)
-> +{
-> +}
-> +
-> +static inline int pci_liveupdate_register_fh(struct liveupdate_file_handler *fh)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static inline int pci_liveupdate_unregister_fh(struct liveupdate_file_handler *fh)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +#endif /* !CONFIG_LIVEUPDATE */
-> +
->   #endif /* LINUX_PCI_H */
->
--- 
-Best Regards,
-Yanjun.Zhu
+V/r,
+DPS
 
 
