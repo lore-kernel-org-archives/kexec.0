@@ -4,90 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C7B1CE7C6E3
-	for <kexec@archiver.kernel.org>; Sun,  1 Feb 2026 02:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5A8DDE7C711
+	for <kexec@archiver.kernel.org>; Sun,  1 Feb 2026 06:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Subject:cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=f+oWmSGi3OnfcgGTsDgVrrdujfgV5/abaDUEB3zopaE=; b=bHzUfZq93CkQcBGGLIN7/805a/
-	Dv/FaBK2UA0mBI54YmzbhRQcnyd93Wazs3baOv1Qt8VXbXJiJ7yPKuf6TMRgL+Th+OF2Cwx6ORxtb
-	7Kku+feL209cPbw5Gt8AIWA/8tQYK3QDH/7hh7i+V0XT4LRwddtmh2h9YNAx6mOdYnygkG1gutjKn
-	0MxN9XLd8jM3XaXm4T0a2ep+iEFje/LZRX+juJh+NKl+n5YzNjsRC2eU0p9a/hsB2huj/ink9qaSj
-	x4JMD1Bh5t1I7ESxS7dBGy7sh8IwNsS3Ie/Fqmj+cj/e9K+KB+azMHVbn74+N2l+byABTCvWkdg0z
-	CJpGmy8A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ZwyK35BqHJ9vMxdC101Hpkz7OEl6VsmM8t+q1gtlYtQ=; b=sk1diE66dd+YLJrjSbnhGbotlm
+	9XcJ4A1EirCMvI/zqYdAYrTku4fxD9isFrEo3isH4r97ymG7iMRJSMjvDVWy1IqWxHgypFP/gPxzj
+	tZp+lJyBtv4IXf3hatPhxZu4628nobJi4tDVG5cXq+257IMJisGhPqO+qcljBAD9kWPs5IbYvcarR
+	IS0JGaMnR6ysj8n0k+nhQRwGphG2xsdtXl8OQkxjDM7+JG9CeXO7+jCKa6lmx8bNGLPcORvsXwt0d
+	Te/cegnsLWs2pJzFEKm7k5p54HyvlxaEA2uKl1omIJBFmeqNlmN1iC5k4WdJryTJjZlmOGICBs/wl
+	ry/eL+zw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vmNNI-00000003C6i-3rt4;
-	Sun, 01 Feb 2026 02:39:44 +0000
-Received: from mail-pl1-x635.google.com ([2607:f8b0:4864:20::635])
+	id 1vmR6a-00000003J8d-2omk;
+	Sun, 01 Feb 2026 06:38:44 +0000
+Received: from out-170.mta1.migadu.com ([2001:41d0:203:375::aa])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vmNNA-00000003C6O-3VdT
+	id 1vmR6W-00000003J8C-35AP
 	for kexec@lists.infradead.org;
-	Sun, 01 Feb 2026 02:39:38 +0000
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-2a1462573caso65725ad.0
-        for <kexec@lists.infradead.org>; Sat, 31 Jan 2026 18:39:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1769913575; x=1770518375; darn=lists.infradead.org;
-        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=f+oWmSGi3OnfcgGTsDgVrrdujfgV5/abaDUEB3zopaE=;
-        b=eO8PYALcbfCcCMQw64x4/X4EwzeTrXN64FsepUyJJeics7hzQI9e3PwIG7fLbBclF5
-         KCpjWlexc45f9HeXRgxN9J+UOn+KisnQfjNficuEK1xYCyXRV0LC9ZbnQzkw7dvBVBZY
-         AHVdyFb7rg8Iu3HRxZd3O0g+852BfPUmEYCIOSnO39KglNRgUZF31wnZjXODjXqe4XKZ
-         2dhyGPtq6qfFtGw7TTejDc98RuyY5WUjcELHjrV6pUQhSPXBi3LSeAFT0Cm+SqzGg+Rb
-         GsL7xXhzj3eFgTAH1TbspFFCerMR3QUJVoKX8X5YBEarFU2u+WZ0antWpFq7YuLHISfG
-         8uBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769913575; x=1770518375;
-        h=mime-version:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f+oWmSGi3OnfcgGTsDgVrrdujfgV5/abaDUEB3zopaE=;
-        b=qkVfaNUdUoAZYsSf/Hlc09fIiGIrCM/Urroaznwx+ZTZ4F+VcxmAK+Ev5vPm9rxTSS
-         p8OWXF55Aw1mjHd54D01noCI3uTsnvIRV38xYlZKNBFKVmBZlZYLvlmjt8RHT5Rp6t31
-         diTYhuv3urff3/6Sr6CTkLsU9tvElcn3Fci9OY0GI9bmaYs/rvYZbi+US8Ocds7YJd0T
-         W2k3d+rG46+cQWY+QtkKfwx+VPWXpjDU1VKO+nminCSjlEueRpTGQ+hxyOH1JE1FyCvS
-         iyyE7XiSmWqLrxuIj5hCmRuyl6neRf9ynRu+MWvffA/mqaBnV27Q/m6vSUMT0jS3bdsM
-         Gfew==
-X-Forwarded-Encrypted: i=1; AJvYcCWnsToASYamAcPXTm/sgzJ7bugNGXRy7pETDMhUEE5NZRjGshFYdtldy7dgSOcVxhhRMbrBjw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxQcs4fQrYbN2m4w/ZtlRG4XwaDnEG5LB3lLMFwD4rCz7ssDlTX
-	mFpvm3le8OflyGzvejLG+EKcEqqAWfLE9azikDwVd+R7TaskdjQOKsO+Va+3zV4IXA==
-X-Gm-Gg: AZuq6aJL49UuDRHzo8Io98SFYRedmbnTJYw1Qb7S7dJhnpfiJqKukpeQiWX1YbA2VuP
-	cuEbwfuh80y8NJKPXj6stdkFHbd3A4n6xE3gaL3f9emW5ggO5pNxsJ+oPBOWoO6Jq42cfP4Egf5
-	V2aMLKBhEevOPmo5JZQs0Emaf7vKxgfnVA9qfvWZ5s6k1/TGhf2ADhyzl7fVtPR8oohP7/nxMeb
-	5evwfoxSwJ0IitXIc0LfQF3aekIVTpnz1vw/5Cer4MsT8WsngFfcegNUvhslWsu7kRZ7ew+sJXe
-	dnaI5JuNyRHJHzovj/WwOUunKiKnNdzw39YekDDJLIs2H1JrBEPOAV0aSS5jtvbyEU4riFvYcvg
-	0yjdMF39kvW3X9+SKDDFllh6bIyJFYGaF3Aa9ebuYfBdD48GhrDrllvcWAlaLOpagDXHCadEqc7
-	V7M2uK7UH8c+jxN2Rmm7M5bRlWy17zfK4pyOzcXN2Y5kvIsETflZyERFXI+R1HOvhxpG/upjyxW
-	gMA0COF939VUtF/CaZthAOU8immKOVNAK6TFOurdg==
-X-Received: by 2002:a17:903:41c2:b0:291:6858:ee60 with SMTP id d9443c01a7336-2a8f303cd1dmr2763475ad.4.1769913574385;
-        Sat, 31 Jan 2026 18:39:34 -0800 (PST)
-Received: from [2a00:79e0:2eb0:8:863b:f9a9:4fb1:e225] ([2a00:79e0:2eb0:8:863b:f9a9:4fb1:e225])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3543d52c396sm3585655a91.4.2026.01.31.18.39.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Jan 2026 18:39:33 -0800 (PST)
-Date: Sat, 31 Jan 2026 18:39:31 -0800 (PST)
-From: David Rientjes <rientjes@google.com>
-To: Alexander Graf <graf@amazon.com>, 
-    Anthony Yznaga <anthony.yznaga@oracle.com>, 
-    David Hildenbrand <david@kernel.org>, David Matlack <dmatlack@google.com>, 
-    James Gowans <jgowans@amazon.com>, Jason Gunthorpe <jgg@nvidia.com>, 
-    Mike Rapoport <rppt@kernel.org>, 
-    Pankaj Gupta <pankaj.gupta.linux@gmail.com>, 
-    Pasha Tatashin <tatashin@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
-    Praveen Kumar <kpraveen.lkml@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
-    Vishal Annapurve <vannapurve@google.com>, 
-    "Woodhouse, David" <dwmw@amazon.co.uk>
-cc: linux-mm@kvack.org, kexec@lists.infradead.org
-Subject: [Hypervisor Live Update] Notes from January 26, 2026
-Message-ID: <5f9a56f2-ee8a-0a7f-206e-fef46595c4d0@google.com>
+	Sun, 01 Feb 2026 06:38:42 +0000
+Message-ID: <44484594-5b5d-4237-993c-ac1e173ad62e@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1769927913;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZwyK35BqHJ9vMxdC101Hpkz7OEl6VsmM8t+q1gtlYtQ=;
+	b=smbFLQG3fxi0EmdEQh5EfbtGQ62LpS961djirjg538qndfMoJIldCdV/L2GKzWYzuysN/1
+	/GumBEceCbaFABLQT0FDfy4W6hBDyhGvjE/RBwgY8Fercg7NI2raGGc+bgtYZDTz4/ErLu
+	bI04FQJ+kIrizpByKTlcv8fJSr/4ST4=
+Date: Sat, 31 Jan 2026 22:38:18 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Subject: Re: [PATCH v2 02/22] PCI: Add API to track PCI devices preserved
+ across Live Update
+To: David Matlack <dmatlack@google.com>, Alex Williamson <alex@shazbot.org>
+Cc: Adithya Jayachandran <ajayachandra@nvidia.com>,
+ Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>,
+ Alistair Popple <apopple@nvidia.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Ankit Agrawal
+ <ankita@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Chris Li <chrisl@kernel.org>, David Rientjes <rientjes@google.com>,
+ Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Corbet <corbet@lwn.net>,
+ Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>,
+ kexec@lists.infradead.org, kvm@vger.kernel.org,
+ Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+ =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
+ Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pranjal Shrivastava <praan@google.com>, Pratyush Yadav
+ <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Saeed Mahameed <saeedm@nvidia.com>,
+ Samiullah Khawaja <skhawaja@google.com>,
+ Shuah Khan <skhan@linuxfoundation.org>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>,
+ Yi Liu <yi.l.liu@intel.com>
+References: <20260129212510.967611-1-dmatlack@google.com>
+ <20260129212510.967611-3-dmatlack@google.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20260129212510.967611-3-dmatlack@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260131_183936_917964_843B2449 
-X-CRM114-Status: GOOD (  31.88  )
+X-CRM114-CacheID: sfid-20260131_223841_322147_E90941D4 
+X-CRM114-Status: GOOD (  42.61  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,140 +94,448 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi everybody,
 
-Here are the notes from the last Hypervisor Live Update call that happened 
-on Monday, January 26.  Thanks to everybody who was involved!
+在 2026/1/29 13:24, David Matlack 写道:
+> Add an API to enable the PCI subsystem to track all devices that are
+> preserved across a Live Update, including both incoming devices (passed
+> from the previous kernel) and outgoing devices (passed to the next
+> kernel).
+>
+> Use PCI segment number and BDF to keep track of devices across Live
+> Update. This means the kernel must keep both identifiers constant across
+> a Live Update for any preserved device. VFs are not supported for now,
+> since that requires preserving SR-IOV state on the device to ensure the
+> same number of VFs appear after kexec and with the same BDFs.
+>
+> Drivers that preserve devices across Live Update can now register their
+> struct liveupdate_file_handler with the PCI subsystem so that the PCI
+> subsystem can allocate and manage File-Lifecycle-Bound (FLB) global data
+> to track the list of incoming and outgoing preserved devices.
+>
+>    pci_liveupdate_register_fh(driver_fh)
+>    pci_liveupdate_unregister_fh(driver_fh)
 
-These notes are intended to bring people up to speed who could not attend 
-the call as well as keep the conversation going in between meetings.
+Can the above 2 functions support the virtual devices? For example, 
+bonding, veth, iSWAP and RXE.
 
------>o-----
-This was a lengthy meeting with lots of discussion on various topics.  
-There were a few quick updates to kick us off.
+These virtual devices do not have BDF. As such, I am not sure if your 
+patches take these virtual devices in to account.
 
-Pasha updated on the status of stateless KHO: Mike approved of the latest 
-changes from Jason Miu and a refresh was on the way as long as there were 
-no more comments.  It should then be on track for inclusion in mm-new.  
-More review will be possible even after that.
+Thanks a lot.
 
-David Matlack updated on ordering issues when disabling interrupts during 
-live update, he is working with NV GPU team.  They have a subject matter 
-expert who is looking into the issue and will update David next week.  
-This should not delay future VFIO and IOMMU patch series, the changes for 
-interrupts would be incremental on top of those series. 
+Zhu Yanjun
 
-Pasha updated on the status of luod: there were no major changes since the 
-last meeting but Pasha was still looking for feedback on the design[1].
+>
+> Drivers can notify the PCI subsystem whenever a device is preserved and
+> unpreserved with the following APIs:
+>
+>    pci_liveupdate_outgoing_preserve(pci_dev)
+>    pci_liveupdate_outgoing_unpreserve(pci_dev)
+>
+> After a Live Update, the PCI subsystem fetches its FLB global data
+> from the previous kernel from the Live Update Orchestrator (LUO) during
+> device initialization to determine which devices were preserved.
+>
+> Drivers can check if a device was preserved before userspace retrieves
+> the file for it via pci_dev->liveupdate_incoming.
+>
+> Once a driver has finished restoring an incoming preserved device, it
+> can notify the PCI subsystem with the following call, which clears
+> pci_dev->liveupdate_incoming.
+>
+>    pci_liveupdate_incoming_finish(pci_dev)
+>
+> This API will be used in subsequent commits by the vfio-pci driver to
+> preserve VFIO devices across Live Update and by the PCI subsystem.
+>
+> Signed-off-by: David Matlack <dmatlack@google.com>
+> ---
+>   drivers/pci/Makefile        |   1 +
+>   drivers/pci/liveupdate.c    | 212 ++++++++++++++++++++++++++++++++++++
+>   drivers/pci/probe.c         |   2 +
+>   include/linux/kho/abi/pci.h |  55 ++++++++++
+>   include/linux/pci.h         |  47 ++++++++
+>   5 files changed, 317 insertions(+)
+>   create mode 100644 drivers/pci/liveupdate.c
+>   create mode 100644 include/linux/kho/abi/pci.h
+>
+> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> index 8c259a9a8796..a32f7658b9e5 100644
+> --- a/drivers/pci/Makefile
+> +++ b/drivers/pci/Makefile
+> @@ -16,6 +16,7 @@ obj-$(CONFIG_PROC_FS)		+= proc.o
+>   obj-$(CONFIG_SYSFS)		+= pci-sysfs.o slot.o
+>   obj-$(CONFIG_ACPI)		+= pci-acpi.o
+>   obj-$(CONFIG_GENERIC_PCI_IOMAP) += iomap.o
+> +obj-$(CONFIG_LIVEUPDATE)	+= liveupdate.o
+>   endif
+>   
+>   obj-$(CONFIG_OF)		+= of.o
+> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+> new file mode 100644
+> index 000000000000..182cfc793b80
+> --- /dev/null
+> +++ b/drivers/pci/liveupdate.c
+> @@ -0,0 +1,212 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * Copyright (c) 2025, Google LLC.
+> + * David Matlack <dmatlack@google.com>
+> + */
+> +
+> +#include <linux/bsearch.h>
+> +#include <linux/io.h>
+> +#include <linux/kexec_handover.h>
+> +#include <linux/kho/abi/pci.h>
+> +#include <linux/liveupdate.h>
+> +#include <linux/mutex.h>
+> +#include <linux/mm.h>
+> +#include <linux/pci.h>
+> +#include <linux/sort.h>
+> +
+> +static DEFINE_MUTEX(pci_flb_outgoing_lock);
+> +
+> +static int pci_flb_preserve(struct liveupdate_flb_op_args *args)
+> +{
+> +	struct pci_dev *dev = NULL;
+> +	int max_nr_devices = 0;
+> +	struct pci_ser *ser;
+> +	unsigned long size;
+> +
+> +	for_each_pci_dev(dev)
+> +		max_nr_devices++;
+> +
+> +	size = struct_size_t(struct pci_ser, devices, max_nr_devices);
+> +
+> +	ser = kho_alloc_preserve(size);
+> +	if (IS_ERR(ser))
+> +		return PTR_ERR(ser);
+> +
+> +	ser->max_nr_devices = max_nr_devices;
+> +
+> +	args->obj = ser;
+> +	args->data = virt_to_phys(ser);
+> +	return 0;
+> +}
+> +
+> +static void pci_flb_unpreserve(struct liveupdate_flb_op_args *args)
+> +{
+> +	struct pci_ser *ser = args->obj;
+> +
+> +	WARN_ON_ONCE(ser->nr_devices);
+> +	kho_unpreserve_free(ser);
+> +}
+> +
+> +static int pci_flb_retrieve(struct liveupdate_flb_op_args *args)
+> +{
+> +	args->obj = phys_to_virt(args->data);
+> +	return 0;
+> +}
+> +
+> +static void pci_flb_finish(struct liveupdate_flb_op_args *args)
+> +{
+> +	kho_restore_free(args->obj);
+> +}
+> +
+> +static struct liveupdate_flb_ops pci_liveupdate_flb_ops = {
+> +	.preserve = pci_flb_preserve,
+> +	.unpreserve = pci_flb_unpreserve,
+> +	.retrieve = pci_flb_retrieve,
+> +	.finish = pci_flb_finish,
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +static struct liveupdate_flb pci_liveupdate_flb = {
+> +	.ops = &pci_liveupdate_flb_ops,
+> +	.compatible = PCI_LUO_FLB_COMPATIBLE,
+> +};
+> +
+> +#define INIT_PCI_DEV_SER(_dev) {		\
+> +	.domain = pci_domain_nr((_dev)->bus),	\
+> +	.bdf = pci_dev_id(_dev),		\
+> +}
+> +
+> +static int pci_dev_ser_cmp(const void *__a, const void *__b)
+> +{
+> +	const struct pci_dev_ser *a = __a, *b = __b;
+> +
+> +	return cmp_int(a->domain << 16 | a->bdf, b->domain << 16 | b->bdf);
+> +}
+> +
+> +static struct pci_dev_ser *pci_ser_find(struct pci_ser *ser,
+> +					struct pci_dev *dev)
+> +{
+> +	const struct pci_dev_ser key = INIT_PCI_DEV_SER(dev);
+> +
+> +	return bsearch(&key, ser->devices, ser->nr_devices,
+> +		       sizeof(key), pci_dev_ser_cmp);
+> +}
+> +
+> +static int pci_ser_delete(struct pci_ser *ser, struct pci_dev *dev)
+> +{
+> +	struct pci_dev_ser *dev_ser;
+> +	int i;
+> +
+> +	dev_ser = pci_ser_find(ser, dev);
+> +	if (!dev_ser)
+> +		return -ENOENT;
+> +
+> +	for (i = dev_ser - ser->devices; i < ser->nr_devices - 1; i++)
+> +		ser->devices[i] = ser->devices[i + 1];
+> +
+> +	ser->nr_devices--;
+> +	return 0;
+> +}
+> +
+> +int pci_liveupdate_outgoing_preserve(struct pci_dev *dev)
+> +{
+> +	struct pci_dev_ser new = INIT_PCI_DEV_SER(dev);
+> +	struct pci_ser *ser;
+> +	int i, ret;
+> +
+> +	/* Preserving VFs is not supported yet. */
+> +	if (dev->is_virtfn)
+> +		return -EINVAL;
+> +
+> +	guard(mutex)(&pci_flb_outgoing_lock);
+> +
+> +	if (dev->liveupdate_outgoing)
+> +		return -EBUSY;
+> +
+> +	ret = liveupdate_flb_get_outgoing(&pci_liveupdate_flb, (void **)&ser);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (ser->nr_devices == ser->max_nr_devices)
+> +		return -E2BIG;
+> +
+> +	for (i = ser->nr_devices; i > 0; i--) {
+> +		struct pci_dev_ser *prev = &ser->devices[i - 1];
+> +		int cmp = pci_dev_ser_cmp(&new, prev);
+> +
+> +		if (WARN_ON_ONCE(!cmp))
+> +			return -EBUSY;
+> +
+> +		if (cmp > 0)
+> +			break;
+> +
+> +		ser->devices[i] = *prev;
+> +	}
+> +
+> +	ser->devices[i] = new;
+> +	ser->nr_devices++;
+> +	dev->liveupdate_outgoing = true;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_liveupdate_outgoing_preserve);
+> +
+> +void pci_liveupdate_outgoing_unpreserve(struct pci_dev *dev)
+> +{
+> +	struct pci_ser *ser;
+> +	int ret;
+> +
+> +	guard(mutex)(&pci_flb_outgoing_lock);
+> +
+> +	ret = liveupdate_flb_get_outgoing(&pci_liveupdate_flb, (void **)&ser);
+> +	if (WARN_ON_ONCE(ret))
+> +		return;
+> +
+> +	WARN_ON_ONCE(pci_ser_delete(ser, dev));
+> +	dev->liveupdate_outgoing = false;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_liveupdate_outgoing_unpreserve);
+> +
+> +u32 pci_liveupdate_incoming_nr_devices(void)
+> +{
+> +	struct pci_ser *ser;
+> +	int ret;
+> +
+> +	ret = liveupdate_flb_get_incoming(&pci_liveupdate_flb, (void **)&ser);
+> +	if (ret)
+> +		return 0;
+> +
+> +	return ser->nr_devices;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_liveupdate_incoming_nr_devices);
+> +
+> +void pci_liveupdate_setup_device(struct pci_dev *dev)
+> +{
+> +	struct pci_ser *ser;
+> +	int ret;
+> +
+> +	ret = liveupdate_flb_get_incoming(&pci_liveupdate_flb, (void **)&ser);
+> +	if (ret)
+> +		return;
+> +
+> +	dev->liveupdate_incoming = !!pci_ser_find(ser, dev);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_liveupdate_setup_device);
+> +
+> +void pci_liveupdate_incoming_finish(struct pci_dev *dev)
+> +{
+> +	dev->liveupdate_incoming = false;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_liveupdate_incoming_finish);
+> +
+> +int pci_liveupdate_register_fh(struct liveupdate_file_handler *fh)
+> +{
+> +	return liveupdate_register_flb(fh, &pci_liveupdate_flb);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_liveupdate_register_fh);
+> +
+> +int pci_liveupdate_unregister_fh(struct liveupdate_file_handler *fh)
+> +{
+> +	return liveupdate_unregister_flb(fh, &pci_liveupdate_flb);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_liveupdate_unregister_fh);
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 37329095e5fe..af6356c5a156 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2060,6 +2060,8 @@ int pci_setup_device(struct pci_dev *dev)
+>   	if (pci_early_dump)
+>   		early_dump_pci_device(dev);
+>   
+> +	pci_liveupdate_setup_device(dev);
+> +
+>   	/* Need to have dev->class ready */
+>   	dev->cfg_size = pci_cfg_space_size(dev);
+>   
+> diff --git a/include/linux/kho/abi/pci.h b/include/linux/kho/abi/pci.h
+> new file mode 100644
+> index 000000000000..6577767f8da6
+> --- /dev/null
+> +++ b/include/linux/kho/abi/pci.h
+> @@ -0,0 +1,55 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +/*
+> + * Copyright (c) 2025, Google LLC.
+> + * David Matlack <dmatlack@google.com>
+> + */
+> +
+> +#ifndef _LINUX_KHO_ABI_PCI_H
+> +#define _LINUX_KHO_ABI_PCI_H
+> +
+> +#include <linux/compiler.h>
+> +#include <linux/types.h>
+> +
+> +/**
+> + * DOC: PCI File-Lifecycle Bound (FLB) Live Update ABI
+> + *
+> + * This header defines the ABI for preserving core PCI state across kexec using
+> + * Live Update File-Lifecycle Bound (FLB) data.
+> + *
+> + * This interface is a contract. Any modification to any of the serialization
+> + * structs defined here constitutes a breaking change. Such changes require
+> + * incrementing the version number in the PCI_LUO_FLB_COMPATIBLE string.
+> + */
+> +
+> +#define PCI_LUO_FLB_COMPATIBLE "pci-v1"
+> +
+> +/**
+> + * struct pci_dev_ser - Serialized state about a single PCI device.
+> + *
+> + * @domain: The device's PCI domain number (segment).
+> + * @bdf: The device's PCI bus, device, and function number.
+> + */
+> +struct pci_dev_ser {
+> +	u16 domain;
+> +	u16 bdf;
+> +} __packed;
+> +
+> +/**
+> + * struct pci_ser - PCI Subsystem Live Update State
+> + *
+> + * This struct tracks state about all devices that are being preserved across
+> + * a Live Update for the next kernel.
+> + *
+> + * @max_nr_devices: The length of the devices[] flexible array.
+> + * @nr_devices: The number of devices that were preserved.
+> + * @devices: Flexible array of pci_dev_ser structs for each device. Guaranteed
+> + *           to be sorted ascending by domain and bdf.
+> + */
+> +struct pci_ser {
+> +	u64 max_nr_devices;
+> +	u64 nr_devices;
+> +	struct pci_dev_ser devices[];
+> +} __packed;
+> +
+> +#endif /* _LINUX_KHO_ABI_PCI_H */
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 7e36936bb37a..9ead6d84aef6 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -40,6 +40,7 @@
+>   #include <linux/resource_ext.h>
+>   #include <linux/msi_api.h>
+>   #include <uapi/linux/pci.h>
+> +#include <linux/liveupdate.h>
+>   
+>   #include <linux/pci_ids.h>
+>   
+> @@ -582,6 +583,10 @@ struct pci_dev {
+>   	u8		tph_mode;	/* TPH mode */
+>   	u8		tph_req_type;	/* TPH requester type */
+>   #endif
+> +#ifdef CONFIG_LIVEUPDATE
+> +	unsigned int	liveupdate_incoming:1;	/* Preserved by previous kernel */
+> +	unsigned int	liveupdate_outgoing:1;	/* Preserved for next kernel */
+> +#endif
+>   };
+>   
+>   static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
+> @@ -2854,4 +2859,46 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
+>   	WARN_ONCE(condition, "%s %s: " fmt, \
+>   		  dev_driver_string(&(pdev)->dev), pci_name(pdev), ##arg)
+>   
+> +#ifdef CONFIG_LIVEUPDATE
+> +int pci_liveupdate_outgoing_preserve(struct pci_dev *dev);
+> +void pci_liveupdate_outgoing_unpreserve(struct pci_dev *dev);
+> +void pci_liveupdate_setup_device(struct pci_dev *dev);
+> +u32 pci_liveupdate_incoming_nr_devices(void);
+> +void pci_liveupdate_incoming_finish(struct pci_dev *dev);
+> +int pci_liveupdate_register_fh(struct liveupdate_file_handler *fh);
+> +int pci_liveupdate_unregister_fh(struct liveupdate_file_handler *fh);
+> +#else /* !CONFIG_LIVEUPDATE */
+> +static inline int pci_liveupdate_outgoing_preserve(struct pci_dev *dev)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static inline void pci_liveupdate_outgoing_unpreserve(struct pci_dev *dev)
+> +{
+> +}
+> +
+> +static inline void pci_liveupdate_setup_device(struct pci_dev *dev)
+> +{
+> +}
+> +
+> +static inline u32 pci_liveupdate_incoming_nr_devices(void)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline void pci_liveupdate_incoming_finish(struct pci_dev *dev)
+> +{
+> +}
+> +
+> +static inline int pci_liveupdate_register_fh(struct liveupdate_file_handler *fh)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static inline int pci_liveupdate_unregister_fh(struct liveupdate_file_handler *fh)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +#endif /* !CONFIG_LIVEUPDATE */
+> +
+>   #endif /* LINUX_PCI_H */
+>
+-- 
+Best Regards,
+Yanjun.Zhu
 
-David then updated on VFIO v2 based on previous comments and was looking 
-to post an update this week.  This includes documentation for device 
-preservation and then extended for iommu in the future.  He's also getting 
-rid of the patch that does auto-probing.  He's also reworking the PCI FLB 
-to not be accessed after devices are initialized.
-
------>o-----
-Samiullah continues to work on iommu persistence, he was looking at 
-Pratyush's series on memfd seal preservation so that will be integrated.  
-The next series should be sent out in the next week.  He also discussed 
-hitless replacement for iommu domains; he had connected with Baolu 
-upstream and received feedback from Jason.  Baolu will be reworking his 
-series and then posting a new series upstream based on that.
-
-Jason noted some differences that will need to be done for hitless 
-long-term to support ARM.  Sami noted that he'll have to look into that 
-and discuss with Will.  Jason suggested using a temporary VM ID.
-
------>o-----
-Pratyush updated on HugeTLB preservation RFC and then presented this at 
-LPC.  Feedback has surfaced no specific concerns.  He'll continue to work 
-on this over the next couple weeks including tests.  I asked if this was 
-being reviewed by anybody outside of this group; Mike Rapoport noted there 
-wasn't any feedback from core hugetlb reviewers yet.  This should be in 
-good shape within the next month or so.
-
-He also updated on versioning.  During LPC, it was clear that the full 
-support is not yet ready to go.  The luo agent would read the vmlinux of 
-both kernels before performing the load and then can look at a special 
-section where all the versions of the different file handlers are listed.  
-Unless you support multiple versions, you can never roll out a new version 
-in the fleet, the next step will be to figure out how to do this.  
-Pratyush was leaning toward his suggestion for version negotiation.
-
-Jason suggested writing out all the versions.  Pratyush said there may be 
-a conflict but also was curious about how that would scale.  Jason 
-suggested there should actually only be two; this should be considered as 
-an escape hatch and shouldn't be overcomplicated or with new UAPIs.  
-Writing all versions sounds like a useful starting point.  Pasha said that 
-adding a new UAPI could also be done later.
-
------>o-----
-Pasha brought up topics for LSF/MM/BPF that is coming up in May.  Beyond 
-HugeTLB preservation, he was wondering if there were additional topics to 
-discuss there.  Another possibility is guest_memfd support for HugeTLB.  
-Pasha suggested KHO may also be in scope.  Struct page initialization may 
-be another topic to consider.
-
------>o-----
-Stanislav Kinsburskii noted that he sent an RFC out for blocking kexec in 
-the kernel.  He said Microsoft needs this ability when the kernel deposits 
-pages into the hypervisor and we want to make sure that if guests are 
-running or pages are deposited before we have proper support for these 
-features, we want to block the kexec.  Otherwise, the new kernel would 
-become inconsistent and can't access pages that were deposited.  He asked 
-for any feedback on the list.
-
-Pasha suggested to use fd preservation for this instead.  Stanislav noted 
-that the kexec syscall does not shut down userspace so even if an fd is 
-exposed to a userspace process, the kernel consistency depends on a 
-userspace process to do an ioctl to keep an fd and if kexec does not shut 
-down userspace processes then there is still a way to get kernel 
-inconsistency.  He suggested that this may not be a reliable way forward.
-
-Stanislav said with proper integration, we have a file descriptor and if 
-userspace closes this fd before the kexec, things are consistent.  We can 
-have a guest running and pages deposited into the hypervisor and then 
-somebody can do a kexec.  The expectation is that the new kernel boots and 
-that it is reliable; this is not the case with their hypervisor as the 
-memory can be leaked.  This is different where the VMs are KVM VMs and 
-userspace processes.  The suggestion was to have a hook to block kexec to 
-support other approaches.
-
-Pasha noted that if you have preserved the memory and the state then this 
-is no longer a normal kexec, it's a live update.  Stanislav asked if this 
-is the one procedure that can ensure consistency across the live update, 
-if one does not do this exact procedure then they shouldn't rely on 
-consistency after kexec.  Pasha said that with LUO if userspace preserves 
-fds then those fds are going to be preserved across the live update; if 
-the session is not closed before the live update, then those fds are going 
-to be preserved.
-
------>o-----
-Next meeting will be on Monday, February 9 at 8am PST (UTC-8), everybody
-is welcome: https://meet.google.com/rjn-dmzu-hgq
-
-Topics for the next meeting:
-
- - latest stateless KHO patches and inclusion in mm-new
- - ordering issues when disabling interrupts based on feedback from NV
- - luod design feedback and implementation next steps
- - VFIO patch series that would be incremental on top of the previous
-   version
- - IOMMU persistence patch series
- - hitless replacement for iommu domains and series from Baolu
- - HugeTLB preservation support
- - versioning for luod to negotiate
- - live update related topics to propose for LSF/MM/BPF 2026 (hugetlb,
-   KHO, deferred struct page initialization)
- - later: update on PCI preservation series and next steps
- - later: guest_memfd support for 1GB HugeTLB pages
- - later: testing methodology to allow downstream consumers to qualify
-   that live update works from one version to another
- - later: reducing blackout window during live update, including deferred
-   struct page initialization
-
-Please let me know if you'd like to propose additional topics for
-discussion, thank you!
-
-[1] https://tinyurl.com/luoddesign
 
