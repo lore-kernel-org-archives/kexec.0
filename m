@@ -4,80 +4,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F2F10E7DEF1
-	for <kexec@archiver.kernel.org>; Mon,  2 Feb 2026 14:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D7078E7DF19
+	for <kexec@archiver.kernel.org>; Mon,  2 Feb 2026 18:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
-	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
-	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=BsYw1jdHI6UNaHJ0xGEA+g0R+OyYdE59KzSX/GWoWYg=; b=4fvMEvaiLq/ulXej0bYp+X7z5f
-	DqWoE4pqVm03H8Inmk3cMb3qEhgAMS4WzoYLJ8OAqeHHM9+KuWS3vQY24SKNnFTYX5aVrkY5VacqZ
-	FpFeXl6mWF/g3C69Og6pmvIrs8Z7N+lzrNjwxfi01dKhpHf3n1Ggrwdk9UbRbbE9cWmSCHNJtayVX
-	KfKA7TRG/3wHIsPVBY0Vp5Uw4yGsoRYgvwHPEuUXjL8FozK8CymEV8VdSG8Vq+2mz0byjimVX3k/1
-	Ak0Ye2jVPkX8N0gUk34GXj84rie110/Z+buT3jrvAofa1zXKHO9QF1ZltZUrm0BTfTnu9aujJIuZv
-	JHAQ3TwQ==;
+	bh=LIHmbN0vtM4SeA7+jGmffdOqzfQaVyhc47MhdLc1+1s=; b=Eiumg0c8Nj74y/Piyqloqt1FTi
+	5idNOgcyoVXo19MYM5i3Y4cH67d7OsLzpwrnCNGcCO7RUJUy/r7MyDMp7A4ZA8jMt85n00ocGh8So
+	n1zeiqHTS3aFADzITCV7yAQVoVTIKOqjwWVBZTegjQePjYqvh4RsyuFeJceJFF+3HyKF6z0QGTnUI
+	byH7lAAkoE7+26ts7hdHqYCLf9cIVsj2Ielzaqppug2zyTW/mBDucNcqn5Z4GZfmyRf8gAhfqPaNJ
+	xBztJtxmgNparSnJ56IfjIPSSSqrBT6jeW4o46/6nGpU8Sol3neCxtOrF5qQBitt4O6TSGNB08Mb8
+	Jk9jD3JQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vmuuk-0000000567F-2FfG;
-	Mon, 02 Feb 2026 14:28:30 +0000
-Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
+	id 1vmySQ-00000005PeI-2I1a;
+	Mon, 02 Feb 2026 18:15:30 +0000
+Received: from mail-lj1-x22c.google.com ([2a00:1450:4864:20::22c])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vmuud-0000000564R-2xUc;
-	Mon, 02 Feb 2026 14:28:24 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:In-Reply-To:References:
-	Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
-	From:Reply-To:Content-ID:Content-Description;
-	bh=BsYw1jdHI6UNaHJ0xGEA+g0R+OyYdE59KzSX/GWoWYg=; b=aTgBNQQhltAuw96wTOS8uy9t3o
-	u5GM4R+satqAZlav3VkjHQMCbIG+RU7NskjwGA0dSj4hMrzgo3GbAQY6aonNxs5O34lCC8JVWXB3v
-	20VQ2YCokPSqSK2xreRzSFq2dcdhkY71p3FBlRSJ2FhYaloOS6gMTGmL/sJzYm7H8d2IyQ3Gk3Kwy
-	x8pNfhc+PtmsR1Yq3cwsj/0kUr/8gf54yPRr6qfmF39F41WG2wO3E8fcR4C0B+soL7U3O+sRwqt1w
-	ZVwyNntOpXeIXXsnuzW2YYLxdpZPW2fi2O9huq1p51c0Ip/wltzgBdMk6rNaGHud87OYBeFFeLHmu
-	1y8f8MTQ==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <leitao@debian.org>)
-	id 1vmuuT-0046Xj-1B; Mon, 02 Feb 2026 14:28:13 +0000
-From: Breno Leitao <leitao@debian.org>
-Date: Mon, 02 Feb 2026 06:27:40 -0800
-Subject: [PATCH v2 2/2] docs: add ABI documentation for
- /sys/kernel/hwerr_recovery_stats/
+	id 1vmySO-00000005Pdx-04O6
+	for kexec@lists.infradead.org;
+	Mon, 02 Feb 2026 18:15:29 +0000
+Received: by mail-lj1-x22c.google.com with SMTP id 38308e7fff4ca-385d9fb297dso48070981fa.2
+        for <kexec@lists.infradead.org>; Mon, 02 Feb 2026 10:15:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770056125; cv=none;
+        d=google.com; s=arc-20240605;
+        b=WY4kGgGnVdqoFtccmb99eMP1pYI83Ydic5QnZGWAskXjmL8Fwg9FoerbCuNWJCgJqP
+         QwozLxaNFuUZWLhxf0n1pm37J9TRS7GjRCiZWt9SuNfWVG9RdRQAFSgqs1/34WCwBPZ6
+         BAW+eVsOqUbBFIZQhLjnqi7PMwmvm8r1T11Bb6XztfNSf7YyaOUd1xa/QRgy7xWkDBQ9
+         DfbA9oEWqJPbbOPfTZr9pDtgWHpAuGXtgH0LOnBIr6qMVN8gihRenhrQ1mIUL6/hCO5u
+         bLXYqdi9Tn0kTKTxYPU00dIHPGE74FlVfw+N68zcaW5vwQMcmC+yhQUxpwbBW8MyFCOR
+         cwTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=LIHmbN0vtM4SeA7+jGmffdOqzfQaVyhc47MhdLc1+1s=;
+        fh=rN9+LU7ZBYRzGBBUKy3bdPTWV2LcOZUwykV7jGUbX98=;
+        b=KluKg/+o32Enw0cEK0uTy9Hk8+uM2Uj4Flkj12at+03NTSUisxhwRK1S5HJmMvcANr
+         rs0QZzDKwg6Ku8HqKQqusqx3JTgMmib0DaqFMUmz6WbOKKWp5O2obm3ZQ+mzA8aEbUyf
+         1uxEtC0cUxN47MqxxlIkVYrwCV9IuejDR5o0dYmFF7fB6/QXzBad+92mnYMsqais9Jlw
+         ee8pSEwBqN7p/Lunu3x9N8IFsh3Ie4rYZ2Fh/Ic/YpwYRb3s+ivvSj//16WE1IFwjVAS
+         ttr26qTii985JBZrxD1NFNdrpvFto86usRcLINf3r8kiH3ukIRUwUSqty+gyx6H/v/5c
+         s5fg==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1770056125; x=1770660925; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LIHmbN0vtM4SeA7+jGmffdOqzfQaVyhc47MhdLc1+1s=;
+        b=qpdAIdVLUyqdoz8CXYUFequ6ppOCmgO3xSbbHwKI4d5crFYA962rbv1AYp06Bs3hYf
+         o5rZxXJdkUMe2syjS9U3xtGj2MOwmk2L+CY4wEOrqK16hQ/HaMsOxWA77mb5pW64NrFW
+         ms5lPnLec5jlGqbm8sZTObEO9bvLWebNZzbd6pbJ1rnh/20ofa6lI54WyaBUQvT8DjZx
+         u3Cg/3baepxU21NaTR5j/CWP7wri5Mpt+24iE+XASAircMJ1md4/iyfsHnQJyc4b2wLy
+         YyI4m6jxndv3vuCncYK1xxPCD9RnfVN1kKJJbP0MnQIQwz+CQ16y0R7MhHq3vh9PZbxA
+         XWYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770056125; x=1770660925;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=LIHmbN0vtM4SeA7+jGmffdOqzfQaVyhc47MhdLc1+1s=;
+        b=CZBOGgMpqVWZCcymiTnG2MN+GtD6ltdqO65HGd/CTWuDVBm09lJLZQBItG3IM4+c1P
+         6Rhaxbo0tnvxk/tkJAEeYzIhDGsgJWLSG9AEd40REemOi5Qn3R27VzbOJeZ0GT9EuUlG
+         LqDxnYRhF8xzVwH09zNI5qv4oyI4GIiWIqp26hubF/86OVATPbn2nhfGnFeEZPYZzGbW
+         BeZDkRmTiaUE87wIe7QDQDlSAB7lgMTXqHcmbKu5skn5fyhzsCllplKyv+fQE00IQv24
+         GKb9yX+Saqaid5qf/2HjfXv65yhdraydrapqSYIO2Us5WAjUPMj79smgwMgzY099b4GI
+         hvcA==
+X-Forwarded-Encrypted: i=1; AJvYcCWOQsu1beb7/W3JKqeOBiVFZcpAwC5QZLNi4drQbiU7DDEF05jH8mtNh4qw+t8QGNko5ikXGA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwgygSwIOtBnA61XbXA5+3dOoZ/kIovG7/IQTe4rqs2ndf5xKaX
+	Flv7HKekPwZ8CmKnSQD6rYLSVduH7+QETbzoeINRns3/SA5X6X/3loPixDMhTIh6EYfDeeEYiB3
+	z9ENMWlbamvaYm4Uac+rF9CQ9wV3/HlGNnbJY+85w
+X-Gm-Gg: AZuq6aLwiB7YllyUqr9cvIzsNjioT5ZEXtMQcjISpvO618HXG6fuqHCjXR2Ih/l549T
+	abtrED0tyxSbSJxfawHg6WTohPjKJz0lk92ukEWCcRARbzlrzHsUB7V3EmCWjyQTmIkMjqk00BL
+	Mix52DIZFPoEcTTSBx3aICEcRIkvLfIDrnCXDTLraA/QyIc4vcc6LvUS6fI29Sj2bttldpqogQM
+	n0NoPjJTGPK/9Zk2iBlimz5phzxM/NH8ndb9uL79Om+AuMwe1ogufRPxURu3ugRgmQuRA==
+X-Received: by 2002:a2e:a54b:0:b0:383:1c18:ade6 with SMTP id
+ 38308e7fff4ca-3864662d728mr40696471fa.20.1770056124374; Mon, 02 Feb 2026
+ 10:15:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260202-vmcoreinfo_sysfs-v2-2-8f3b5308b894@debian.org>
-References: <20260202-vmcoreinfo_sysfs-v2-0-8f3b5308b894@debian.org>
-In-Reply-To: <20260202-vmcoreinfo_sysfs-v2-0-8f3b5308b894@debian.org>
-To: akpm@linux-foundation.org, bhe@redhat.com
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, 
- dyoung@redhat.com, tony.luck@intel.com, xueshuai@linux.alibaba.com, 
- vgoyal@redhat.com, zhiquan1.li@intel.com, olja@meta.com, 
- Breno Leitao <leitao@debian.org>, kernel-team@meta.com
-X-Mailer: b4 0.15-dev-f4305
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3053; i=leitao@debian.org;
- h=from:subject:message-id; bh=18gfPfnS76lTnOnvubbkQRKtlWGXJGHF5diwW/VEeLw=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBpgLRtcjZ4+WBywa2wxT1191HPWP7OKn4XR6Tn9
- uqH93TzJzmJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaYC0bQAKCRA1o5Of/Hh3
- bXbeEACoupF1Pf8XMs+rEdztojnWgDL4it51PtcayAHw+CQ6Wdp1MY6lxhkmj0g1+YNf+SwxbRl
- QynpeiRWj8Q15AddCGhpfuh7Uj4EuytJ6LXF18iIygYbwxlqC6GHxcYALJDCe/0RCpvnmrB5t0C
- KFSumDtE69FQYF2XESSku2W12rRODBRbnqvMWXdUkdVUobQyWmVhzGrntc7YDDX8MAg9si7Q6RQ
- WRrOTx28/G/RnNnzV/y4JBPjPJWV6Ibb7xGBrpVoiOJSJzEkGPBbKl6ZE+Fm3a+CmQp50aOLeWp
- yEscW50qSksuh0MyMdyDr1YhG+1vibIu/YUePZscz/cU7lK2dO+lORrafpeeEHHVbS5mnxmeM+R
- XDzkv+QiSPJIz1SAblR4iVeIwJYVuhI8irPOuv5KvdGWG1LE9aCEb/IZQKF3zQ3fOl5ywUK97JR
- SgoWnzj4yei259VzhSdUsgb9UR3RhGX8IX5TN8YJ7Yip9jK2Q4h3GL9loYly8g0c3ptWRDSaV4f
- eL50p/ADmpWoj899YL94PfCLUhZ8LSx+/QrwOdWmq3n6l46BPoEdrrF9LcXVnNDXIjw1tfAlhA8
- SAOGRYTZHatuaHp8sqoHRksVztne8OSrCPc70LI+pubdyQxWbmjuYKvYSVq59R3S/0PBxZm0oAF
- 6TW1S81PupfKqIw==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
-X-Debian-User: leitao
+References: <20260129212510.967611-1-dmatlack@google.com> <20260129212510.967611-3-dmatlack@google.com>
+ <44484594-5b5d-4237-993c-ac1e173ad62e@linux.dev>
+In-Reply-To: <44484594-5b5d-4237-993c-ac1e173ad62e@linux.dev>
+From: David Matlack <dmatlack@google.com>
+Date: Mon, 2 Feb 2026 10:14:56 -0800
+X-Gm-Features: AZwV_QhgTJZ7rnxODmCU1qhjsI1pWSHh1k-rPTozueyr5OUveeJ2FC59ISanCNo
+Message-ID: <CALzav=d1ZrHrWd-HhZJ8aY6aqxkBcLoet_5+-LL1mOakVTj6Ww@mail.gmail.com>
+Subject: Re: [PATCH v2 02/22] PCI: Add API to track PCI devices preserved
+ across Live Update
+To: Zhu Yanjun <yanjun.zhu@linux.dev>
+Cc: Alex Williamson <alex@shazbot.org>, Adithya Jayachandran <ajayachandra@nvidia.com>, 
+	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Ankit Agrawal <ankita@nvidia.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Corbet <corbet@lwn.net>, 
+	Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, kexec@lists.infradead.org, 
+	kvm@vger.kernel.org, Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, 
+	=?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>, 
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
+	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
+	Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
+	Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260202_062823_787206_F673FD06 
-X-CRM114-Status: GOOD (  12.49  )
+X-CRM114-CacheID: sfid-20260202_101528_323708_E1DE6EF8 
+X-CRM114-Status: GOOD (  22.46  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,87 +135,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Document the new hwerr_recovery_stats sysfs directory that exposes
-hardware error recovery statistics.
+On Sat, Jan 31, 2026 at 10:38=E2=80=AFPM Zhu Yanjun <yanjun.zhu@linux.dev> =
+wrote:
+>
+> =E5=9C=A8 2026/1/29 13:24, David Matlack =E5=86=99=E9=81=93:
+> > Add an API to enable the PCI subsystem to track all devices that are
+> > preserved across a Live Update, including both incoming devices (passed
+> > from the previous kernel) and outgoing devices (passed to the next
+> > kernel).
+> >
+> > Use PCI segment number and BDF to keep track of devices across Live
+> > Update. This means the kernel must keep both identifiers constant acros=
+s
+> > a Live Update for any preserved device. VFs are not supported for now,
+> > since that requires preserving SR-IOV state on the device to ensure the
+> > same number of VFs appear after kexec and with the same BDFs.
+> >
+> > Drivers that preserve devices across Live Update can now register their
+> > struct liveupdate_file_handler with the PCI subsystem so that the PCI
+> > subsystem can allocate and manage File-Lifecycle-Bound (FLB) global dat=
+a
+> > to track the list of incoming and outgoing preserved devices.
+> >
+> >    pci_liveupdate_register_fh(driver_fh)
+> >    pci_liveupdate_unregister_fh(driver_fh)
+>
+> Can the above 2 functions support the virtual devices? For example,
+> bonding, veth, iSWAP and RXE.
+>
+> These virtual devices do not have BDF. As such, I am not sure if your
+> patches take these virtual devices in to account.
 
-Update hw-recoverable-errors.rst to reference the new sysfs interface
-for runtime monitoring.
+No this patch series only supports PCI devices, since those are the
+only devices so far we've needed to support.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- .../ABI/testing/sysfs-kernel-hwerr_recovery_stats  | 47 ++++++++++++++++++++++
- Documentation/driver-api/hw-recoverable-errors.rst |  3 +-
- 2 files changed, 49 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-kernel-hwerr_recovery_stats b/Documentation/ABI/testing/sysfs-kernel-hwerr_recovery_stats
-new file mode 100644
-index 0000000000000..4cb9f5a89fba9
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-kernel-hwerr_recovery_stats
-@@ -0,0 +1,47 @@
-+What:		/sys/kernel/hwerr_recovery_stats/
-+Date:		February 2026
-+KernelVersion:	6.20
-+Contact:	Breno Leitao <leitao@debian.org>
-+Description:
-+		Directory containing hardware error recovery statistics.
-+		These statistics track recoverable hardware errors that the
-+		kernel has handled since boot.
-+
-+		Each file contains a single integer representing the count
-+		of recovered errors for that subsystem.
-+
-+What:		/sys/kernel/hwerr_recovery_stats/cpu
-+Date:		February 2026
-+KernelVersion:	6.20
-+Contact:	Breno Leitao <leitao@debian.org>
-+Description:
-+		Count of CPU-related recovered errors (MCE, ARM processor
-+		errors).
-+
-+What:		/sys/kernel/hwerr_recovery_stats/memory
-+Date:		February 2026
-+KernelVersion:	6.20
-+Contact:	Breno Leitao <leitao@debian.org>
-+Description:
-+		Count of memory-related recovered errors.
-+
-+What:		/sys/kernel/hwerr_recovery_stats/pci
-+Date:		February 2026
-+KernelVersion:	6.20
-+Contact:	Breno Leitao <leitao@debian.org>
-+Description:
-+		Count of PCI/PCIe AER non-fatal recovered errors.
-+
-+What:		/sys/kernel/hwerr_recovery_stats/cxl
-+Date:		February 2026
-+KernelVersion:	6.20
-+Contact:	Breno Leitao <leitao@debian.org>
-+Description:
-+		Count of CXL (Compute Express Link) recovered errors.
-+
-+What:		/sys/kernel/hwerr_recovery_stats/others
-+Date:		February 2026
-+KernelVersion:	6.20
-+Contact:	Breno Leitao <leitao@debian.org>
-+Description:
-+		Count of other hardware recovered errors.
-diff --git a/Documentation/driver-api/hw-recoverable-errors.rst b/Documentation/driver-api/hw-recoverable-errors.rst
-index fc526c3454bd7..4aefcd103be22 100644
---- a/Documentation/driver-api/hw-recoverable-errors.rst
-+++ b/Documentation/driver-api/hw-recoverable-errors.rst
-@@ -36,7 +36,8 @@ Data Exposure and Consumption
-   types like CPU, memory, PCI, CXL, and others.
- - It is exposed via vmcoreinfo crash dump notes and can be read using tools
-   like `crash`, `drgn`, or other kernel crash analysis utilities.
--- There is no other way to read these data other than from crash dumps.
-+- It is also exposed via sysfs at ``/sys/kernel/hwerr_recovery_stats/`` for runtime
-+  monitoring without requiring a crash dump.
- - These errors are divided by area, which includes CPU, Memory, PCI, CXL and
-   others.
- 
-
--- 
-2.47.3
-
+I am not familiar with any of the devices that you mentioned. If they
+are virtual then does that mean it's all just software? In that case I
+would be curious to know what problem is solved by preserving them in
+the kernel, vs. tearing them down and rebuilding them across a Live
+Udpate.
 
