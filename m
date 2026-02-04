@@ -4,62 +4,234 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B53AEE83EF9
-	for <kexec@archiver.kernel.org>; Wed,  4 Feb 2026 13:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 162AFE9D41E
+	for <kexec@archiver.kernel.org>; Wed,  4 Feb 2026 17:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6ISqGUnQFSfIzubIcjbsXKszPgBVvuBlocAkcpVEeiY=; b=KK2MywAQ7sSg5p5AHihI4dvib2
-	AfhcCmkhV3keHIRi+SKW0S1O4WPdItvl3/LrJo7t8XEWpq9Py67m7jOpZpSLhUCif/BST27PbG3eR
-	zvvk1X910iHoMoiJweaTiE9CeJAIHsCO1gYusKT82b0F/2Efsk/UpiJ1Yiqs6SHbscCKYQ52YKlcS
-	/hHzK1DcGjjfvzQSBETg1nIE61NLBju2aSO7zaLx37IuYzqXOzjIshi2NXf63UHrtD03SBE+n2zEX
-	/IbZ4l3y4lK2NMDdIxGzjOq4X0IhdMv6X3ko0BUnhsxw2wkJ/aAdDwCRkO5ywYNYSH+i8ZGp641gs
-	DyBehLxA==;
+	bh=mToUCRbwFhC5I9O8hcT3wFa66d0BnnJXnag524t6Lek=; b=ibO0TlBBqgSNuc6/R8RwxvS/0Z
+	i4FJaH5D02FDznZhpaSeLvXo5tqGrSfcgtT1Szl+UaaPF4yDIlfz0uE8XDXON7PwwQC+K6Y3MO/5B
+	HmFHclZPMG2SvIhpbKssOrsJr4/oDv1ObC45iDzKXxjrFW8egeGbAZnfGax24fiGrLp9RXRV6OxMw
+	bfiOB0aWShl8SWvbvQfRIU8BkziXkq1pwVLgiTmiZofKRH3VxvJDIRE6EWN3K7gm3Nbs85ItSS2Rc
+	yjbpX6Q2e2wMylhQYVfsKA2RAlDR/hqSW+etXW/O8TRldlBNhC/greSHIYWziyEbMMsehKHYSqt67
+	bCUUsr5w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vndL8-00000008YMR-1c3G;
-	Wed, 04 Feb 2026 13:54:42 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1vngwf-00000008sRY-0fkJ;
+	Wed, 04 Feb 2026 17:45:41 +0000
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vndL6-00000008YMJ-3iCf
+	id 1vngwY-00000008sQi-2yhi
 	for kexec@lists.infradead.org;
-	Wed, 04 Feb 2026 13:54:41 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id D36166012A;
-	Wed,  4 Feb 2026 13:54:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44AD6C4CEF7;
-	Wed,  4 Feb 2026 13:54:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770213279;
-	bh=Nx3mqv3VEYct46j5DWoW2n7667uX/NJxIPI+yS3dkOk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=gNU9RLmFxfnm6eHDaKsUmyEzRm88xgRGG3z8Trre1GxyWc7Fx/DsdvJRZnc+GaKLh
-	 kIV422HC993Ly9Zi4BYu9qPfXZ/5mc4XUhxPIglAtKhmp5Ehy+iG6ThT/lvo8AlkpB
-	 NP2xWCzTK2KQ8Gy7NqpD5A36R0edc/XwGtHEpDF9B9Z/5zHbZSnd1O606ndNcSfkwr
-	 K1wSITGJbN4y/tR1LB3US+oeYoz5vBwwMc1HAVEFTt2uVHjZoUl5CR2Ydc/pcMft6C
-	 jTvemJt8nPqu6eiOa6Y0vvQA5a2zaWnyKzA76KK41VbdGzzUxCxwfrTUu1+Bux9/h3
-	 vC2/P+qzC4H7w==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Alexander Graf <graf@amazon.com>,  Mike Rapoport <rppt@kernel.org>,
-  Pasha Tatashin <pasha.tatashin@soleen.com>,  Pratyush Yadav
- <pratyush@kernel.org>,  linux-kernel@vger.kernel.org,
-  kexec@lists.infradead.org,  linux-mm@kvack.org,  usamaarif642@gmail.com,
-  rmikey@meta.com,  clm@fb.com,  riel@surriel.com,  SeongJae Park
- <sj@kernel.org>,  kernel-team@meta.com
-Subject: Re: [PATCH v6 1/4] kho: add size parameter to kho_add_subtree()
-In-Reply-To: <20260127-kho-v6-1-56f9396681c2@debian.org> (Breno Leitao's
-	message of "Tue, 27 Jan 2026 06:37:36 -0800")
-References: <20260127-kho-v6-0-56f9396681c2@debian.org>
-	<20260127-kho-v6-1-56f9396681c2@debian.org>
-Date: Wed, 04 Feb 2026 14:54:35 +0100
-Message-ID: <2vxzjywszk9w.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Wed, 04 Feb 2026 17:45:37 +0000
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 614DOE0M3258017;
+	Wed, 4 Feb 2026 17:44:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=mToUCRbwFhC5I9O8hcT3wFa66d0BnnJXnag524t6Lek=; b=
+	fIirhGdx4X0/DxEyyFhQzup+8Qzd7dE/pXfWxuwQ4KZ+gVQOdaMqfIrw5tZV7lLu
+	4JVx07bW64MmcCdpVUjKNESUnKDprQpMxeSl4hmdmqj1EvVVgswJjwNMwE/ag5F5
+	h1pLG8JU6iGIR3n13vFZvaUzVia/EsS3kV9dAucsqDcSaWhZaaHYMQrD8VMC2xnD
+	P4LfuKq7Z08Sh5XARJ43jl8sNazISWK2xoY8Hu4l9zjxq6Zh179hS3JyQL0w/jvl
+	OMPcspdK4D044/tgT5Zy4fHc4LBmX3EeL4Gp+Q31sqYEpd1gYZCmOiwsEcMl5z2a
+	KwVrbeYTBWB/BPVqpAIS8Q==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4c3jsqjakw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 04 Feb 2026 17:44:46 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 614GHa1V025788;
+	Wed, 4 Feb 2026 17:44:46 GMT
+Received: from cy3pr05cu001.outbound.protection.outlook.com (mail-westcentralusazon11013018.outbound.protection.outlook.com [40.93.201.18])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4c257ac60e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 04 Feb 2026 17:44:45 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=m+r+2qyvR2e650BpV7+1aQtvNGfyUQy8bP9c7WIKnLBdr76TYH2ChK5tKhVrWNkn9gl3Q+uEbISGgdaKbpRX81gKA1ZQfj13W/uckL/2hjxJqLuLynmFBziOwcHU+EsWOMDDDCcwOeshLKzk5bIrU15Tj2lbB+lVz6YpHtwFPZ3H5vvhOncv0oxDVtwHiK1bUBqwcWSPB4LviEzVGXCEHzpJHPcGRccGDostsGt7Kj9U+d6ZDfpnqSA1FQfhb69GPf8HNGzyhDyFfG9SVqggCbWyAyk0PZ8LhACFKClxl9kIH71UnUsW1xfnmDCbqiCLgMEX6smNPkvRFIMcTvLvrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mToUCRbwFhC5I9O8hcT3wFa66d0BnnJXnag524t6Lek=;
+ b=Oh9w9K5LorKkgH9PIZx3xC/Fr9UNOPuC4ahDcF9zlCmzMwi7F7BCsYshO4eEYOxyGcv784+VgpaF33AjGUkg59wvNR6ea2LkUG5lsGhwD/KnMDM1HkbEmjrpAZeg8PnOnzaDOt51E0xotWLWByXgMeTTqo1UE05ckm4OehMdS3qPxIloNDzRew39Qc2g693/1q9cptzbkMLBPaT6uBwV4zJWoH2kCVG8w9VVwFLS9K4wdgY9MN5NTvGtc/ZLANIzFm1oHRodHwmf9wjESWRuHwIywgr3mmSEsvZxoryakqbEnnmI6VrmeJjrgGpkIhHo02Cs63hKuN0jKGFxTvsjjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mToUCRbwFhC5I9O8hcT3wFa66d0BnnJXnag524t6Lek=;
+ b=jur0KupwooYDry5M6l49hUTGrtAQQSVZ8rdOlOp1Poo6YWySllZs/0gZifx9CUhm+sbzpfIHsIKzhuL8OWYDUKZaS/ea9jP2rQpj2fQZ6/vxJeH6FbS7eTIwtbJVHVKT8hsUP8kdSQiVOjsUe69YstN+QL3AvvrSm58pxzkzP40=
+Received: from DS0PR10MB7224.namprd10.prod.outlook.com (2603:10b6:8:f5::14) by
+ PH3PPFCA9331432.namprd10.prod.outlook.com (2603:10b6:518:1::7c6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.13; Wed, 4 Feb
+ 2026 17:44:39 +0000
+Received: from DS0PR10MB7224.namprd10.prod.outlook.com
+ ([fe80::30d0:8be0:725b:3e0e]) by DS0PR10MB7224.namprd10.prod.outlook.com
+ ([fe80::30d0:8be0:725b:3e0e%5]) with mapi id 15.20.9587.013; Wed, 4 Feb 2026
+ 17:44:38 +0000
+Message-ID: <6e1e771c-ecd4-4ab6-ba9f-900f34c5d89d@oracle.com>
+Date: Wed, 4 Feb 2026 09:44:34 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v15 02/28] tpm: Move TPM1 specific definitions and
+ functions to new headers
+To: "Daniel P. Smith" <dpsmith@apertussolutions.com>,
+        Jarkko Sakkinen <jarkko@kernel.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+        linux-efi@vger.kernel.org, iommu@lists.linux.dev, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
+        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        luto@amacapital.net, nivedita@alum.mit.edu,
+        herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
+        ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com,
+        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
+        trenchboot-devel@googlegroups.com
+References: <20251215233316.1076248-1-ross.philipson@oracle.com>
+ <20251215233316.1076248-3-ross.philipson@oracle.com>
+ <aW7E2dVlmjZIUivW@kernel.org>
+ <7aad3461-f0a5-42ff-ba9b-b52edd7d36db@apertussolutions.com>
+Content-Language: en-US
+From: ross.philipson@oracle.com
+In-Reply-To: <7aad3461-f0a5-42ff-ba9b-b52edd7d36db@apertussolutions.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PH8P223CA0006.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:510:2db::12) To DS0PR10MB7224.namprd10.prod.outlook.com
+ (2603:10b6:8:f5::14)
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR10MB7224:EE_|PH3PPFCA9331432:EE_
+X-MS-Office365-Filtering-Correlation-Id: 32c5671b-a13e-426f-0af4-08de641511a2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?b0ZDeWdYOTVGK0VyT2FWb1IxYkpZOXhZYU96MUlRUVI4Qm4zK1Qwa3lvNENS?=
+ =?utf-8?B?U2RwZ2dVQmVmcmh1TTZUSjd4Q3VqMThZNEJIWGN3L0F2Y21BL0VvMis1YTRm?=
+ =?utf-8?B?U1pGdmU3SHZGbVZOVFlNSGN2YXp2YUo0aHl3VkVlUll4bDJyd3ZQK1NYcXYz?=
+ =?utf-8?B?UkJudExKYk8yaDFvZFNlbENIeWxwNUFJMWdwQjRpV3N5TmZVK3drMlAxQVoy?=
+ =?utf-8?B?VDd4SUY1QWdUaVdKQWhVT1htaVdCT1pwZ2ZPOXhsZ3l3Yml3RExtaTl5dkZn?=
+ =?utf-8?B?UjRNWVA3LzZpUlFCVTJ5Nzk0V2tubi84aVoxdXZDRUJMaUJaY2lrYUc5dm83?=
+ =?utf-8?B?TjV3clUrUnVySjRkcW5TYWZ0Z3k3WFhTV3ZtVnJBNlByTFErcVBsR0d1ZDRV?=
+ =?utf-8?B?RmFjRlgyb095bUQrUUFvK2dMb1hlUXFNbGZ6dmVBWUIycjhMRVpBQm9WcjhT?=
+ =?utf-8?B?RHNPNEErbTJ3bnJZaVNhMEwxRStsWEpVSTNoa3BQOEJkdFU1K1lTcXVHMDQz?=
+ =?utf-8?B?b0s2NFZYSG5EQ2lDY1EzeDF2NWpTUHZrcnFTd2kxZm9pdEVCdzd5bzB4UmR1?=
+ =?utf-8?B?ZDBZaUlkejBZOUhjNzZIQWVlSFlOaEFlbGlnb1hnRkZYWjJOOTRsbHdvOW01?=
+ =?utf-8?B?aEQrenFHQjJYdHc0SHRrbUpkZ2YraWQ3Qi9hc3l6Ky9KeHdmdktaTDFkVzFz?=
+ =?utf-8?B?dTgvYWdVbkZ0OG9ONkkrQlF3VGxiTGpEeFRWSDNTM2YxR3Y2RHI1WWUyWTlR?=
+ =?utf-8?B?dS9MWGpMMDlXcDZHSE16M2hUbUZVQWo0S1R1QlgxK09VeUxzSnRwb2YzWHI2?=
+ =?utf-8?B?YUpraC9Makl2MFRMclQzRnJUcjVrck1xNUgrTGl6ejF6bFQwL1krbUdMa3VH?=
+ =?utf-8?B?a013ak1jOW9uT01kSXUxa3ZJRk5XSDIzTVNkZEcyeVY5QUUzRlA5UXNldmVX?=
+ =?utf-8?B?TlRGY1hPNGxjR3kreTNob2xTOWlmdXBOMlpQRm0xd28yN1JLQnJOYnRnYVRx?=
+ =?utf-8?B?K1p0azd3YTNKcnE3Rm91SmJFd1luNHBNRTdweUZNbkpub295bjJ3ZmtJak5U?=
+ =?utf-8?B?MzhWVlJCREVkSDhML1NQd3FhdWVrajIxczNHb3NtazhqZmpFS25xVk5ic3pW?=
+ =?utf-8?B?YUh3NEtJQnZVVzRvdExxdDRSUzVwMzFVWk5IdG1pN3NGSE9ycjg3L09oQTVJ?=
+ =?utf-8?B?eENRVXduOUl3UXByb2MzaXl3ZUJTcnFVc0thYzJrbkUzZDdTVVM5b2RONDlF?=
+ =?utf-8?B?TWYxODZyQlZJYmJIRjVvbDIvN3JyeXo2Zm5JSWR2TWUzNzFVdmVuMVd2K3h3?=
+ =?utf-8?B?WnN6WEw1eGVad3hldHNEbE1hcnBTTVF5cjkyNTh0S1VmcUVmdXNYcEN0d3N2?=
+ =?utf-8?B?YmlSM3B6bDNCNXVyNmNmTnc5U0hNenhJS2t3UXZ1S3Q2NTNYWU4ybDNKMDhO?=
+ =?utf-8?B?MzE3d2hwbXQrM3hNb3NhdFdtSjZMb3hTZ1VhbjcyWnQzY1U4ckpSZkZaZnlD?=
+ =?utf-8?B?Q0VkN0pyTXBSVDdhM1JjYXVJcy9TaVhpb1V3aVpHdWQ1MHpReXpsUlhsdWtw?=
+ =?utf-8?B?QllqaCs1eEtoMTE4NzhFeklQQk9PZDRXL0FNcVNVMkViakVxMnFybWphSlo2?=
+ =?utf-8?B?QXVzV2FKQzNjMUFLb3lzdjcxY1d6VHZWUlpZWFZkbzZ0bk5MdFJLZDB6c2Ex?=
+ =?utf-8?B?b1lQZ0RSb3pGNTZQSmNiVTB2emlsU21uN05RbE5xTDlleVRmZ2daWEFCelIw?=
+ =?utf-8?B?aEU1WWF2cExaVllVYjBFTFhBRjExSDBUNTUwMWhPZnFnMDNoZVh5dkwxYzc3?=
+ =?utf-8?B?MEZlNVRlbkhhQ1hQRThZY1FvMXpwdkZMRFpURWsxUjAybU1hU2ZYdnlnSlcy?=
+ =?utf-8?B?OUxTTkVQMFVzbFFpWFlkaDYzVHpBbnJsdXhXeWJJaFNTUWs0RXk4ZG8xL042?=
+ =?utf-8?B?UGIrLytVR2xDUGlRYkNjRllvQWplNlRRc1RQNEVna2t6Q1dPdXlpdDY0R3NJ?=
+ =?utf-8?B?THNyR1g1T05QcWNWZGpHcmFDdGVqM1k1Syt5dDczb0ZxaC90NTgyZnNRL2dB?=
+ =?utf-8?Q?u+b/9X?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7224.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?KzN0WVptVHVtNUswMzhidDlqTjNrb0YzWUw3VzU0TDVXRlFwVjRXNzZGRUF6?=
+ =?utf-8?B?UzFQWEtSeXRMYUpJN0ZFRVNVTjBhY0xyU0hobWhzS2tuak1FYm42ayt1TTZI?=
+ =?utf-8?B?d0pPa2VydXB1QlIxeWFVOTVGTXhHWjFhV09HTU4xc2cvN09taGw3RjZNMTNa?=
+ =?utf-8?B?RVBVcllPYnpoaDJiZEFObk5Xd21kSWQxdjBSS0RXRXBJa3dpTEcxQ1h0a1Mx?=
+ =?utf-8?B?WTZKeUtaVjE1M0ZuWjlKY1lZcjFZZ3prQXdzcDZEelZTZXh0R3UzcGl5MWJC?=
+ =?utf-8?B?dzlzSU1iZi9TVW5Xd254c2VaRTQyUnJ6TXc3L1NvUm5nM0RuWWE1Y29Xd1JB?=
+ =?utf-8?B?N0Z2TVBXM0lxNTR0RG4rbXo3VFM0KzMvZTNLdmUvemhDVVB3N1Iwc3RINEha?=
+ =?utf-8?B?eTA0aUE4WCtLVVBZbitPME40bFc3aklvRkRYcnhPY2plSU5qbmRrZllzN0lY?=
+ =?utf-8?B?NE9keUZFMlNXV1pUNk1SQUNYcEtBYkVDRFVHbmdMUjBYaUJiV3IrVHd0Q3ZP?=
+ =?utf-8?B?NG9nbkpQc0p1QSt3N2l2TytadFowR24rdVdzSTlHbE9sM1ZNYWxseHp3NzZ6?=
+ =?utf-8?B?eTYxYkxjd1ZLcTBOcEZSdkFIcVN3TGZSRGNLSUZLVzQ4OUhRS1E1VnFOTWlN?=
+ =?utf-8?B?cktVQ3U4UTRhNHZST29BS3Q5cWRMTHU5QnVKUnNmVnorb2dkUW1zNDRBc0ZM?=
+ =?utf-8?B?aFpjaGJIZG4wTFNSNWQ1VEpHQlA3b21CQXVublZEdHowQ2JxL1k2RnRmaEtJ?=
+ =?utf-8?B?MmNZVzdPTW00Qlc1UFhmM3RpUnJpTi9naVYyY2Q1aWt6YWFKK1Vab1lBb0gz?=
+ =?utf-8?B?aDJIRk5aUW9XOTdYZHc2ZGJpeElBQTFQQ09kbnB2d211a3dkeTdoWmxwZEZO?=
+ =?utf-8?B?cU4ydkxHYTVVVzhINm9kSU9oem1LckNqWjhJbXVrZTBhWkN0dTZoR1hsTDlI?=
+ =?utf-8?B?aDhhQ3lKK09wVFJleXZmSjY1ZmRYc2o0UXVmQ1hRSVNJalpxczEyT2U4MEYw?=
+ =?utf-8?B?dXp2bHVRakxjcWFkK09Qd2xOS014SksxK00wVU1GVm9KQUZXTjJLOCtMbS9y?=
+ =?utf-8?B?My9JL08rRjhPeEZUQWUzRnpTNVZYOVR6TVpkUTkwb0RXanpQVmw5SzlSZnp6?=
+ =?utf-8?B?N1k5N3BmTko4SkVMSVpVZ3JzWFdoT3ZrUjlLbjFSSFMyQVU4ZGhvczFqNGZ4?=
+ =?utf-8?B?d1hmL0lheWRzSU5FV3NXQlF5L1JJYTdiRGNGdzM2dUoyRmsvTit0bHJlYlgz?=
+ =?utf-8?B?S0oxblRmTlRzQUFtU1hzUGRyT0VETzdsN09pazlHdHhMTHMwYm1kMGhvWERB?=
+ =?utf-8?B?UkpiMEtzL2dacnI1KzYwZFBzUEdvRDVwbG0rUHc3WVRlb2dTa1RMSGdrdk5U?=
+ =?utf-8?B?bXNmWFA4Nm5wQ2w1cHZ1bDVDSy9Ia2JFQkpUYUhlNGYweW04akZIcWJFVU11?=
+ =?utf-8?B?NCtBU09ncTNORzRxaUFhZkVYOFkwMm0xaTJXQmQyZllZaDdOZVZ6WStjTElp?=
+ =?utf-8?B?bmdBN0RQZ21TU0JPbG9RTjQ2TXVHU1JzS1QvaytVb0VRVmlSM0R0TmVMOWVO?=
+ =?utf-8?B?SWNTcjE2aU04Z3JjTFdCVEIxRzJpdnZINDdNOTFBcUlTcFh2QnJYOXExL1hL?=
+ =?utf-8?B?WWVRU1g1aWJIODBkejhWcUE3aCtYZ3NIVVhQbzNpRkFtMXR5d1c1c1hmd1JP?=
+ =?utf-8?B?L0tnbWxHQUx4Q3pGUFgwRVJmYW9BcnNOb2FkNVMyK1U0VmxVMEhsVnVTTms4?=
+ =?utf-8?B?UkVJRkV2YmVXSm41U1pVcU9DZllNaTBQYmZHVUxRSnZuMzIwcXpZTGJWSlNU?=
+ =?utf-8?B?bXdwZE5jM0FRNjIrNWt0RDh2MXJERVpjNEdiMHVNRStkYTNDbER2RXI0alJ0?=
+ =?utf-8?B?VHh5MW52Y1V4U0UwbVg5dSs5VnVhUHgxZWZFYms0MUFFK0svblVkTW03OFhG?=
+ =?utf-8?B?Yk9ibmNpUWJSQWFRSXNLQWRtUHpwNWdqWWhrejhvL0VyMkNjcllPeHllaFdQ?=
+ =?utf-8?B?dmNhUStOelp1ZytvWlY4VitCY0xaUTN0Ri8rTVNKdC9BTnNJWTZTVkF6UjVk?=
+ =?utf-8?B?OENPOGQ4am1McW9FdTZka2p4UUkvTWlIbGpwTDdVWHgvQWNkOVhSZUlCck1h?=
+ =?utf-8?B?QjI2MDYwdXUrZWZuNHdOY0VlSEVMZkY2K0VCUmdxU0c4eERZT0hZY2kxanJs?=
+ =?utf-8?B?d3FGMmFXUXlRalpZcEZLTlEzMlBURnNMYUlUQUlXclpiL2JQRlIrbGtxM0lt?=
+ =?utf-8?B?a3ZXekt5NjEwSVB3c3Y5T3MrL1RXV0MyWkk2ZkJhZ3ptNENqWWxCaXVTV1hv?=
+ =?utf-8?B?cWcyOUVNd2FCSnBUVkliNjQ1NnlOUitnMTloNlNML3EwMWQ0M0ZDSWp5cENt?=
+ =?utf-8?Q?lDNtEMi4utHvwC1A=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: Za2jj2ydW+ERdmtT/Eh4OEgpKwwtdl8c9ex4qP7+jXRAHUHbwrlZgRYTv9GraA2xv4mP15GKJZPWrKreFgxFahV2oO3Tt2pY8PFmPvyN2LtoCt2IQXFDKeejjwWZ+EdrhRdYQeGC+rooTpa3Wyq7zMqMQ6oIgUD7KcZKUuzI33aZ2cHLO6KBORicIp4w20sEAaH1lMnnPWS51ZWVBmuf1x+VCmciAbj08/fUNhzG7q9T1QzFuDiWUfLXcog8o9yjss4f7a1quzGKCjIaCMjTnnWPUOp69pz5sAmIaHQMwRMVFNgYCZbhKVWMZ3Y0pag6nlzRRMAOsutxk/KHPLcYRr+j0CfVIXeMZj6KIMOr+K+AiXmgjXZjT8INUHKtMRbKhCUUIQhZpAeJCEszS5udHi8e2Bf+GhH0n/68KbjWg+6TofBacndZqtrpzYdQaYDfu4QK5wKK5Dz7CtVraAZcRhEVkXrVIGDo4vLaTBeVe2Ev6JU5F0KAKWA5mX0/WRAYfyFzG4GZX0ER8Ye9qKc2RHDRB/tTbbc64fceXn5fMucPWoQaHSFYRNBesdwhN8/HUc7LjJpnB7dAUQ3QPtAIDhoT+2unKfqtG1H31DAlbek=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32c5671b-a13e-426f-0af4-08de641511a2
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7224.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2026 17:44:38.8528
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: J9TdV4OvN59iCKIU1yTGYJ59EbyzI1J8Za+jS052XLnv4Wt+w1UcPVk9vddaO1lc+F8Ba0Fo4fXRE+Z/Kkh1/N4ZbY3dH9/nh53ZHEYq/0s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPFCA9331432
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-02-04_06,2026-02-04_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
+ spamscore=0 bulkscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2601150000
+ definitions=main-2602040135
+X-Authority-Analysis: v=2.4 cv=Db0aa/tW c=1 sm=1 tr=0 ts=6983858e b=1 cx=c_pps
+ a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=HzLeVaNsDn8A:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=xt6ew7UTAAAA:8 a=UN5060LkAAAA:8 a=yPCof4ZbAAAA:8 a=VnNF1IyMAAAA:8
+ a=FP58Ms26AAAA:8 a=IFuHbMLi-Pw2QU87uAwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=tn93DeGZTgJ6DdWMtdD4:22 a=E6eXv-vVeS7VqOnxGRGn:22 cc=ntf awl=host:13644
+X-Proofpoint-ORIG-GUID: Lv7Gcblx3MkUZSQQF7P_ZP0gDxy838eq
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjA0MDEzNSBTYWx0ZWRfXwgXxTG6zdceI
+ BrtVHmBHpBUmdZU73XKXy3y+wcT/U6HwzCE0WUOugpc8Y12FoysjwEncNMvfZSRPqIu+sCVihrP
+ wIF0OMsrpY/pAiFLYnTb0dth/jGz01Y+zZqGcxcsGU4VQ8qrBzslHieP+XDriEwLaqYMs+ENvvN
+ kgD30Rcj43HH+jYWXzLme3DKumW8LAg7m36sya5nw0BITRJG9CY1kwsjgokN3k2c0bn7L5DZ2eD
+ ARME1kB9plmKMLMOszOlstyYDdap+DRieQtMHd556SM4TJL+xhsdmI3MtMFasw0dkMNURnMLkY6
+ cnHIVW7qeUFm6EVfDlmyY3VQkl0ZArwShT+czWFTsMu06M5NaMJIiHDneZlEeUKKiyG3ZpE5HE2
+ La8qcPpNlL7k40P7KRaANPaAAqe6V/6TfzRWJsBad/9RH2P9Rj8C4rlSaA4y9qhTQKH/TPaSG+E
+ FODZ+tmTTomfWzLBGzdsbEIo12wGPsEkhQuQwjNg=
+X-Proofpoint-GUID: Lv7Gcblx3MkUZSQQF7P_ZP0gDxy838eq
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260204_094534_878906_81A51892 
+X-CRM114-Status: UNSURE (   8.97  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,73 +246,348 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Breno,
+On 2/1/26 8:23 AM, Daniel P. Smith wrote:
+> On 1/19/26 18:57, Jarkko Sakkinen wrote:
+>> On Mon, Dec 15, 2025 at 03:32:50PM -0800, Ross Philipson wrote:
+>>> This gathers all the TPM1 definitions and structures into two separate
+>>> header files (public tpm1.h and private tpm1_structs.h). The definitions
+>>> moved to these files correspond to the TCG specification for TPM 1 family:
+>>>
+>>> TPM 1.2 Main Specification
+>>>   -  https://urldefense.com/v3/__https://trustedcomputinggroup.org/resource/tpm-main-specification/__;!!ACWV5N9M2RV99hQ!OivTxO-R0nvBJYXIV-T0n0fq0wY64MTgdaecPzAauxrFkRxTcQ6CuBEcXmZZYY1KfZlqmfLTZBbPaEr7Y8k7hJk9_mQ$
+>>> Note that the structures were pulled into tpm1_structs.h to allow their
+>>> external reuse.
+>>>
+>>> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+>>> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+>>> ---
+>>>   drivers/char/tpm/tpm.h          | 98 +--------------------------------
+>>>   drivers/char/tpm/tpm1-cmd.c     |  5 --
+>>>   drivers/char/tpm/tpm1_structs.h | 97 ++++++++++++++++++++++++++++++++
+>>
+>> I think you are overcomplicating the patch set and doing more
+>> than you really need to do.
+>>
+>> I.e. structs could go also just as well to tpm_command.h. We
+>> will deal with if/when that file ever grows too large. It's
+>> absolutely not a priority for this patch set.
+> 
+> Ack.
+> 
+>>>   include/linux/tpm1.h            | 34 +++++++++++-
+>>>   4 files changed, 132 insertions(+), 102 deletions(-)
+>>>   create mode 100644 drivers/char/tpm/tpm1_structs.h
+>>>
+>>> diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+>>> index ca391b2a211c..1f9f8540eede 100644
+>>> --- a/drivers/char/tpm/tpm.h
+>>> +++ b/drivers/char/tpm/tpm.h
+>>> @@ -50,105 +50,9 @@ enum tpm_addr {
+>>>       TPM_ADDR = 0x4E,
+>>>   };
+>>> -#define TPM_WARN_RETRY          0x800
+>>> -#define TPM_WARN_DOING_SELFTEST 0x802
+>>> -#define TPM_ERR_DEACTIVATED     0x6
+>>> -#define TPM_ERR_DISABLED        0x7
+>>> -#define TPM_ERR_FAILEDSELFTEST  0x1C
+>>> -#define TPM_ERR_INVALID_POSTINIT 38
+>>> -
+>>> -#define TPM_TAG_RQU_COMMAND 193
+>>> -
+>>>   /* TPM2 specific constants. */
+>>>   #define TPM2_SPACE_BUFFER_SIZE        16384 /* 16 kB */
+>>> -struct    stclear_flags_t {
+>>> -    __be16    tag;
+>>> -    u8    deactivated;
+>>> -    u8    disableForceClear;
+>>> -    u8    physicalPresence;
+>>> -    u8    physicalPresenceLock;
+>>> -    u8    bGlobalLock;
+>>> -} __packed;
+>>> -
+>>> -struct tpm1_version {
+>>> -    u8 major;
+>>> -    u8 minor;
+>>> -    u8 rev_major;
+>>> -    u8 rev_minor;
+>>> -} __packed;
+>>> -
+>>> -struct tpm1_version2 {
+>>> -    __be16 tag;
+>>> -    struct tpm1_version version;
+>>> -} __packed;
+>>> -
+>>> -struct    timeout_t {
+>>> -    __be32    a;
+>>> -    __be32    b;
+>>> -    __be32    c;
+>>> -    __be32    d;
+>>> -} __packed;
+>>> -
+>>> -struct duration_t {
+>>> -    __be32    tpm_short;
+>>> -    __be32    tpm_medium;
+>>> -    __be32    tpm_long;
+>>> -} __packed;
+>>> -
+>>> -struct permanent_flags_t {
+>>> -    __be16    tag;
+>>> -    u8    disable;
+>>> -    u8    ownership;
+>>> -    u8    deactivated;
+>>> -    u8    readPubek;
+>>> -    u8    disableOwnerClear;
+>>> -    u8    allowMaintenance;
+>>> -    u8    physicalPresenceLifetimeLock;
+>>> -    u8    physicalPresenceHWEnable;
+>>> -    u8    physicalPresenceCMDEnable;
+>>> -    u8    CEKPUsed;
+>>> -    u8    TPMpost;
+>>> -    u8    TPMpostLock;
+>>> -    u8    FIPS;
+>>> -    u8    operator;
+>>> -    u8    enableRevokeEK;
+>>> -    u8    nvLocked;
+>>> -    u8    readSRKPub;
+>>> -    u8    tpmEstablished;
+>>> -    u8    maintenanceDone;
+>>> -    u8    disableFullDALogicInfo;
+>>> -} __packed;
+>>> -
+>>> -typedef union {
+>>> -    struct    permanent_flags_t perm_flags;
+>>> -    struct    stclear_flags_t    stclear_flags;
+>>> -    __u8    owned;
+>>> -    __be32    num_pcrs;
+>>> -    struct tpm1_version version1;
+>>> -    struct tpm1_version2 version2;
+>>> -    __be32    manufacturer_id;
+>>> -    struct timeout_t  timeout;
+>>> -    struct duration_t duration;
+>>> -} cap_t;
+>>> -
+>>> -enum tpm_capabilities {
+>>> -    TPM_CAP_FLAG = 4,
+>>> -    TPM_CAP_PROP = 5,
+>>> -    TPM_CAP_VERSION_1_1 = 0x06,
+>>> -    TPM_CAP_VERSION_1_2 = 0x1A,
+>>> -};
+>>> -
+>>> -enum tpm_sub_capabilities {
+>>> -    TPM_CAP_PROP_PCR = 0x101,
+>>> -    TPM_CAP_PROP_MANUFACTURER = 0x103,
+>>> -    TPM_CAP_FLAG_PERM = 0x108,
+>>> -    TPM_CAP_FLAG_VOL = 0x109,
+>>> -    TPM_CAP_PROP_OWNER = 0x111,
+>>> -    TPM_CAP_PROP_TIS_TIMEOUT = 0x115,
+>>> -    TPM_CAP_PROP_TIS_DURATION = 0x120,
+>>> -};
+>>> -
+>>>   enum tpm2_pt_props {
+>>>       TPM2_PT_NONE = 0x00000000,
+>>>       TPM2_PT_GROUP = 0x00000100,
+>>> @@ -229,6 +133,8 @@ enum tpm2_pt_props {
+>>>    * compiler warnings about stack frame size. */
+>>>   #define TPM_MAX_RNG_DATA    128
+>>> +#include "tpm1_structs.h"
+>>> +
+>>>   extern const struct class tpm_class;
+>>>   extern const struct class tpmrm_class;
+>>>   extern dev_t tpm_devt;
+>>> diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
+>>> index f29827b454d2..02f20a0aa37d 100644
+>>> --- a/drivers/char/tpm/tpm1-cmd.c
+>>> +++ b/drivers/char/tpm/tpm1-cmd.c
+>>> @@ -505,11 +505,6 @@ ssize_t tpm1_getcap(struct tpm_chip *chip, u32 subcap_id, cap_t *cap,
+>>>   }
+>>>   EXPORT_SYMBOL_GPL(tpm1_getcap);
+>>> -struct tpm1_get_random_out {
+>>> -    __be32 rng_data_len;
+>>> -    u8 rng_data[TPM_MAX_RNG_DATA];
+>>> -} __packed;
+>>> -
+>>>   /**
+>>>    * tpm1_get_random() - get random bytes from the TPM's RNG
+>>>    * @chip:    a &struct tpm_chip instance
+>>> diff --git a/drivers/char/tpm/tpm1_structs.h b/drivers/char/tpm/tpm1_structs.h
+>>> new file mode 100644
+>>> index 000000000000..ad21376af5ab
+>>> --- /dev/null
+>>> +++ b/drivers/char/tpm/tpm1_structs.h
+>>> @@ -0,0 +1,97 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>>> +/*
+>>> + * Copyright (C) 2004 IBM Corporation
+>>> + * Copyright (C) 2015 Intel Corporation
+>>> + *
+>>> + * Authors:
+>>> + * Leendert van Doorn <leendert@watson.ibm.com>
+>>> + * Dave Safford <safford@watson.ibm.com>
+>>> + * Reiner Sailer <sailer@watson.ibm.com>
+>>> + * Kylene Hall <kjhall@us.ibm.com>
+>>> + *
+>>> + * Maintained by: <tpmdd-devel@lists.sourceforge.net>
+>>> + *
+>>> + * Device driver for TCG/TCPA TPM (trusted platform module).
+>>> + * Specifications at https://urldefense.com/v3/__http://www.trustedcomputinggroup.org__;!!ACWV5N9M2RV99hQ!OivTxO-R0nvBJYXIV-T0n0fq0wY64MTgdaecPzAauxrFkRxTcQ6CuBEcXmZZYY1KfZlqmfLTZBbPaEr7Y8k7HW5iz_w$ + */
+>>> +
+>>> +#ifndef __TPM1_STRUCTS_H__
+>>> +#define __TPM1_STRUCTS_H__
+>>> +
+>>> +struct    stclear_flags_t {
+>>> +    __be16    tag;
+>>> +    u8    deactivated;
+>>> +    u8    disableForceClear;
+>>> +    u8    physicalPresence;
+>>> +    u8    physicalPresenceLock;
+>>> +    u8    bGlobalLock;
+>>> +} __packed;
+>>
+>>
+>> Don't retain alignment.
+>>
+> 
+> Okay.
 
-On Tue, Jan 27 2026, Breno Leitao wrote:
+I wanted to clarify what you are asking here. Do you mean to just not pack the structs? It seems some of these structs define the responses from the TPM chip and I would assume they are packed this way.
 
-> kho_add_subtree() assumes the fdt argument is always an FDT and calls
-> fdt_totalsize() on it in the debugfs code path. This assumption will
-> break if a caller passes arbitrary data instead of an FDT.
->
-> When CONFIG_KEXEC_HANDOVER_DEBUGFS is enabled, kho_debugfs_fdt_add()
-> calls __kho_debugfs_fdt_add(), which executes:
->
->     f->wrapper.size = fdt_totalsize(fdt);
->
-> Fix this by adding an explicit size parameter to kho_add_subtree() so
-> callers specify the blob size. This allows subtrees to contain
-> arbitrary data formats, not just FDTs. Update all callers:
->
->   - memblock.c: use fdt_totalsize(fdt)
->   - luo_core.c: use fdt_totalsize(fdt_out)
->   - test_kho.c: use fdt_totalsize()
->   - kexec_handover.c (root fdt): use fdt_totalsize(kho_out.fdt)
->
-> Also update kho_in_debugfs_init() to compute sizes using fdt_totalsize()
-> for the root and sub-FDTs it processes, since these are known to be
-> actual FDT blobs.
+> 
+>>> +
+>>> +struct tpm1_version {
+>>> +    u8 major;
+>>> +    u8 minor;
+>>> +    u8 rev_major;
+>>> +    u8 rev_minor;
+>>> +} __packed;
+>>> +
+>>> +struct tpm1_version2 {
+>>> +    __be16 tag;
+>>> +    struct tpm1_version version;
+>>> +} __packed;
+>>> +
+>>> +struct    timeout_t {
+>>> +    __be32    a;
+>>> +    __be32    b;
+>>> +    __be32    c;
+>>> +    __be32    d;
+>>> +} __packed;
+>>> +
+>>> +struct duration_t {
+>>> +    __be32    tpm_short;
+>>> +    __be32    tpm_medium;
+>>> +    __be32    tpm_long;
+>>> +} __packed;
+>>> +
+>>> +struct permanent_flags_t {
+>>> +    __be16    tag;
+>>> +    u8    disable;
+>>> +    u8    ownership;
+>>> +    u8    deactivated;
+>>> +    u8    readPubek;
+>>> +    u8    disableOwnerClear;
+>>> +    u8    allowMaintenance;
+>>> +    u8    physicalPresenceLifetimeLock;
+>>> +    u8    physicalPresenceHWEnable;
+>>> +    u8    physicalPresenceCMDEnable;
+>>> +    u8    CEKPUsed;
+>>> +    u8    TPMpost;
+>>> +    u8    TPMpostLock;
+>>> +    u8    FIPS;
+>>> +    u8    operator;
+>>> +    u8    enableRevokeEK;
+>>> +    u8    nvLocked;
+>>> +    u8    readSRKPub;
+>>> +    u8    tpmEstablished;
+>>> +    u8    maintenanceDone;
+>>> +    u8    disableFullDALogicInfo;
+>>> +} __packed;
+>>> +
+>>> +/* Gather all capabilities related information info one type */
+>>> +typedef union {
+>>> +    struct    permanent_flags_t perm_flags;
+>>> +    struct    stclear_flags_t    stclear_flags;
+>>> +    __u8    owned;
+>>> +    __be32    num_pcrs;
+>>> +    struct tpm1_version version1;
+>>> +    struct tpm1_version2 version2;
+>>> +    __be32    manufacturer_id;
+>>> +    struct timeout_t  timeout;
+>>> +    struct duration_t duration;
+>>> +} cap_t;
+>>
+>> Don't retain alignment here.
 
-No, this doesn't seem right. The "fdt" field that kho_in_debugfs_init()
-uses is the same "fdt" field where we put our non-FDT blobs. So I don't
-see how these can be known to be actual FDTs. All this happened to work
-because so far all users were FDT, but I bet it will break if you use
-your blob here. Perhaps give it a try and see if I am understanding this
-correctly?
+Again to clarify, do you mean none of these structs should be packed (and thus the union won't be either)?
 
-To be honest, I didn't think of this when I suggested you use the size
-parameter. We have lost the size information, and it is hard for
-kho_in_debugfs_init() to find out since it has no idea what the
-underlying format is.
+Thanks
+Ross
 
-One option is to have it in the KHO FDT, but I am not sure that is a
-good idea. Adding to ABI for debug feature sounds odd (not that I am
-completely against it, it just feels off).
+>>
+> 
+> Okay.
+> 
+>>> +
+>>> +struct tpm1_get_random_out {
+>>> +    __be32 rng_data_len;
+>>> +    u8 rng_data[TPM_MAX_RNG_DATA];
+>>> +} __packed;
+>>> +
+>>> +#endif
+>>> diff --git a/include/linux/tpm1.h b/include/linux/tpm1.h
+>>> index 54c6c211eb9e..5fad94ac8d15 100644
+>>> --- a/include/linux/tpm1.h
+>>> +++ b/include/linux/tpm1.h
+>>> @@ -47,7 +47,39 @@ enum tpm_command_ordinals {
+>>>       TPM_ORD_UNSEAL            = 24,
+>>>   };
+>>> -/* Other constants */
+>>> +enum tpm_capabilities {
+>>> +    TPM_CAP_FLAG        = 4,
+>>> +    TPM_CAP_PROP        = 5,
+>>> +    TPM_CAP_VERSION_1_1    = 0x06,
+>>> +    TPM_CAP_VERSION_1_2    = 0x1A,
+>>> +};
+>>> +
+>>> +enum tpm_sub_capabilities {
+>>> +    TPM_CAP_PROP_PCR        = 0x101,
+>>> +    TPM_CAP_PROP_MANUFACTURER    = 0x103,
+>>> +    TPM_CAP_FLAG_PERM        = 0x108,
+>>> +    TPM_CAP_FLAG_VOL        = 0x109,
+>>> +    TPM_CAP_PROP_OWNER        = 0x111,
+>>> +    TPM_CAP_PROP_TIS_TIMEOUT    = 0x115,
+>>> +    TPM_CAP_PROP_TIS_DURATION    = 0x120,
+>>> +};
+>>> +
+>>> +/* Return Codes */
+>>> +enum tpm_return_codes {
+>>> +    TPM_BASE_MASK            = 0,
+>>> +    TPM_NON_FATAL_MASK        = 0x00000800,
+>>> +    TPM_SUCCESS            = TPM_BASE_MASK + 0,
+>>> +    TPM_ERR_DEACTIVATED        = TPM_BASE_MASK + 6,
+>>> +    TPM_ERR_DISABLED        = TPM_BASE_MASK + 7,
+>>> +    TPM_ERR_FAIL            = TPM_BASE_MASK + 9,
+>>> +    TPM_ERR_FAILEDSELFTEST        = TPM_BASE_MASK + 28,
+>>> +    TPM_ERR_INVALID_POSTINIT    = TPM_BASE_MASK + 38,
+>>> +    TPM_ERR_INVALID_FAMILY        = TPM_BASE_MASK + 55,
+>>> +    TPM_WARN_RETRY            = TPM_BASE_MASK + TPM_NON_FATAL_MASK + 0,
+>>> +    TPM_WARN_DOING_SELFTEST        = TPM_BASE_MASK + TPM_NON_FATAL_MASK + 2,
+>>> +};
+>>> +
+>>> +/* Misc. constants */
+>>
+>> These constants should be relocated in a separate patch.
+>>
+> 
+> Okay.
+> 
+>>>   #define SRKHANDLE                       0x40000000
+>>>   #define TPM_NONCE_SIZE                  20
+>>>   #define TPM_ST_CLEAR            1
+>>> -- 
+>>> 2.43.7
+>>>
+>>
+>> BR, Jarkko
+> 
 
-Another would be to give users a hook to populate the blobs when they
-call kho_retrieve_subtree(), so they can figure out how large the blob
-needs to be. This has another benefit: once we move away from FDT, it
-makes little sense to dump the blob since userspace won't have a way to
-parse it. Even with FDT, userspace still can't parse everything. For
-example, say the FDT has a reference to a struct kho_vmalloc. You'd get
-a pointer to the head of the list, but you would have no way of knowing
-what is inside the vmalloc buffer. This has the downside of not being
-able to show anything if the subsystem never calls
-kho_retrieve_subtree().
-
-Unfortunately I don't have much time this week to dive deeper into this.
-These are only things off the top of my head and I haven't thought too
-deeply, so please don't take them as strong suggestions. It would be
-great if you can think a bit more about the problem and come up with a
-recommendation?
-
-I will try to get back to this series in the next 1-2 weeks and
-hopefully find some way to make progress.
-
-I skimmed the rest of the patches and they all LGTM at a high level.
-
-[...]
-
--- 
-Regards,
-Pratyush Yadav
 
