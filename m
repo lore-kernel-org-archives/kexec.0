@@ -4,64 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 20A68E87842
-	for <kexec@archiver.kernel.org>; Tue,  3 Feb 2026 16:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A027CE8B37E
+	for <kexec@archiver.kernel.org>; Wed,  4 Feb 2026 00:10:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6T3Az5ve4UBbIJhUKrG9rATlOgWfWRksnYXGgxKSvYE=; b=1241qvQXX+6P59muhx8JUUFnKH
-	+kOnEzvGFo/Lbn1e49ScH4SlnPndWemobHP6J3sFNyp7rD/zVlVCGTOMMj5VJSiyqKgo+1ErTKxGs
-	W6Xq5Mt6S878udTVbqxf5ngUpzUIe1DtMTUlRkv8IaNCIgxSjztqeHKXlpYndp/CfUTU7v68Mj8rk
-	S3Tt+K962MoFKmH51rJDEbgm7wfh1/m75nUnp80VzPF/tRPqH7wb/PlwddWP5B4y6eBOirAq/T6q9
-	gJaOWd01AjstVRyOlSb2u8jBrFdQHVVFzMg2A2ohhURB/6r+97spl1y84VA+BzEOwaIvRUoO913AC
-	7e4KHSkw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=zPnG+2FnaGlQfzxXfIjWuGajlOFPpBxdoaiBCLVKvoU=; b=VLj9mYtA4EV5UCd0gOpp6cpheP
+	4nhMqV3HmQMuXIk/x0cQzbc/cNv71RDQoqWi9ZN0lOFLL71KMHfEu9QWaMwbeGhmF/0tciaUJA6b/
+	kw7N6j3n2tDX7U59UROssLcvEbQiX3grSm/V1Ey2i9tXq0qwTSFeZ0iS0tntRbcgGT2rWpDoyMRfT
+	LvjXvcY29K0XM0rPNKc+kjRlk7Cdt7aSnE6rhTgmaAIsMV0bmyDajpNbyg9wOL4RhNM3wrLDoXyHN
+	5880xGfiFPviTci1CjxxTTfcqCvZP6fT3pnIHtfctDuDxZVhmot0G3XMr+wdIT5QUKor9SrjDaqe9
+	nYczDzvQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vnJ6v-00000006uTn-2tHi;
-	Tue, 03 Feb 2026 16:18:41 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1vnQTT-00000007c6o-2WlO;
+	Wed, 04 Feb 2026 00:10:27 +0000
+Received: from out-181.mta0.migadu.com ([2001:41d0:1004:224b::b5])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vnJ6t-00000006uTK-30fs
+	id 1vnQTO-00000007c5g-48mg
 	for kexec@lists.infradead.org;
-	Tue, 03 Feb 2026 16:18:39 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id CBCCB601E4;
-	Tue,  3 Feb 2026 16:18:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A752C4AF09;
-	Tue,  3 Feb 2026 16:18:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770135518;
-	bh=t+xsjeWFVLSKurDj7D5PeSnLdx1mHlEer5mWWhx0m+4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EPw9Yz2ewWsZC74qCWy79KV4zsVshB9Iq/hOHPwXPkby4iTb1vviUNVI95rFWf+uW
-	 d3hT1L6a1m6W6qTyXU2sKIn7mU8YNOXSr6UJBWZ7KLLSeda6byFvzEaWEmiQnFtR5I
-	 FcwctMmaiENipUcr0hLmua/ZZmMFm1FoGCiTdB5aZDdGvML7fHQsnp6HZMZ2EliVjp
-	 //DSe/t+woW8eO9F0uWmzJEixjW5kYCuzIAO6mLNPnFVKrsUNsMQEb3y5deWlcCSNU
-	 Pw374nkEBvZmDZYfQgxTpcCkTT8upXMyHcnw75bd8l9gRG5Yo1itUkBqUWxeH7kMaF
-	 oeQ9nePc6dLqw==
-Date: Tue, 3 Feb 2026 18:18:30 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Jason Miu <jasonmiu@google.com>
-Cc: Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>,
-	David Matlack <dmatlack@google.com>,
-	David Rientjes <rientjes@google.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v8 2/2] kho: Remove finalize state and clients
-Message-ID: <aYIf1hOQzG6xuTAA@kernel.org>
-References: <20260130005739.3163049-1-jasonmiu@google.com>
- <20260130005739.3163049-3-jasonmiu@google.com>
+	Wed, 04 Feb 2026 00:10:25 +0000
+Message-ID: <7e49472c-4bbc-49fe-92c6-621e4675d882@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1770163814;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zPnG+2FnaGlQfzxXfIjWuGajlOFPpBxdoaiBCLVKvoU=;
+	b=ApRMKyWeexGTzglygbcOHhU7Wfd4rnLeiMI+Jogeatu2nhRqIkK0lA//+bUOV3vFAbHCoJ
+	mS0BsrYP93R9bxyxRU1fhniBcUvx2p4NhTCXzAkUT0zL/EyR+YUdOmdiWZC6zP6HhDzLGT
+	UyQfu6GTd6zJWiBQ6KJq5hvzWsaEowg=
+Date: Tue, 3 Feb 2026 16:10:04 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260130005739.3163049-3-jasonmiu@google.com>
+Subject: Re: [PATCH v2 02/22] PCI: Add API to track PCI devices preserved
+ across Live Update
+To: David Matlack <dmatlack@google.com>
+Cc: Alex Williamson <alex@shazbot.org>,
+ Adithya Jayachandran <ajayachandra@nvidia.com>,
+ Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>,
+ Alistair Popple <apopple@nvidia.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Ankit Agrawal
+ <ankita@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Chris Li <chrisl@kernel.org>, David Rientjes <rientjes@google.com>,
+ Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Corbet <corbet@lwn.net>,
+ Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>,
+ kexec@lists.infradead.org, kvm@vger.kernel.org,
+ Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+ =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
+ Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pranjal Shrivastava <praan@google.com>, Pratyush Yadav
+ <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Saeed Mahameed <saeedm@nvidia.com>,
+ Samiullah Khawaja <skhawaja@google.com>,
+ Shuah Khan <skhan@linuxfoundation.org>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>,
+ Yi Liu <yi.l.liu@intel.com>
+References: <20260129212510.967611-1-dmatlack@google.com>
+ <20260129212510.967611-3-dmatlack@google.com>
+ <44484594-5b5d-4237-993c-ac1e173ad62e@linux.dev>
+ <CALzav=d1ZrHrWd-HhZJ8aY6aqxkBcLoet_5+-LL1mOakVTj6Ww@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Yanjun.Zhu" <yanjun.zhu@linux.dev>
+In-Reply-To: <CALzav=d1ZrHrWd-HhZJ8aY6aqxkBcLoet_5+-LL1mOakVTj6Ww@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260203_161023_315710_6DC5F247 
+X-CRM114-Status: GOOD (  18.51  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,26 +98,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jan 29, 2026 at 04:57:39PM -0800, Jason Miu wrote:
-> Eliminate the `kho_finalize()` function and its associated state from
-> the KHO subsystem. The transition to a radix tree for memory tracking
-> makes the explicit "finalize" state and its serialization step
-> obsolete.
-> 
-> Remove the `kho_finalize()` and `kho_finalized()` APIs and their stub
-> implementations. Update KHO client code and the debugfs interface to
-> no longer call or depend on the `kho_finalize()` mechanism.
-> 
-> Complete the move towards a stateless KHO, simplifying the overall
-> design by removing unnecessary state management.
-> 
-> Signed-off-by: Jason Miu <jasonmiu@google.com>
 
-I think I already added RB tag :/
+On 2/2/26 10:14 AM, David Matlack wrote:
+> On Sat, Jan 31, 2026 at 10:38 PM Zhu Yanjun <yanjun.zhu@linux.dev> wrote:
+>> 在 2026/1/29 13:24, David Matlack 写道:
+>>> Add an API to enable the PCI subsystem to track all devices that are
+>>> preserved across a Live Update, including both incoming devices (passed
+>>> from the previous kernel) and outgoing devices (passed to the next
+>>> kernel).
+>>>
+>>> Use PCI segment number and BDF to keep track of devices across Live
+>>> Update. This means the kernel must keep both identifiers constant across
+>>> a Live Update for any preserved device. VFs are not supported for now,
+>>> since that requires preserving SR-IOV state on the device to ensure the
+>>> same number of VFs appear after kexec and with the same BDFs.
+>>>
+>>> Drivers that preserve devices across Live Update can now register their
+>>> struct liveupdate_file_handler with the PCI subsystem so that the PCI
+>>> subsystem can allocate and manage File-Lifecycle-Bound (FLB) global data
+>>> to track the list of incoming and outgoing preserved devices.
+>>>
+>>>     pci_liveupdate_register_fh(driver_fh)
+>>>     pci_liveupdate_unregister_fh(driver_fh)
+>> Can the above 2 functions support the virtual devices? For example,
+>> bonding, veth, iSWAP and RXE.
+>>
+>> These virtual devices do not have BDF. As such, I am not sure if your
+>> patches take these virtual devices in to account.
+> No this patch series only supports PCI devices, since those are the
+> only devices so far we've needed to support.
+>
+> I am not familiar with any of the devices that you mentioned. If they
+> are virtual then does that mean it's all just software? In that case I
+> would be curious to know what problem is solved by preserving them in
+> the kernel, vs. tearing them down and rebuilding them across a Live
+> Udpate.
 
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Bonding, veth, rxe, and siw can be used in KVM environments.
 
--- 
-Sincerely yours,
-Mike.
+Although these are software-only virtual devices with no associated 
+hardware,
+
+they may maintain state that is observable by userspace.
+
+As a result, Live Update should preserve their state across the update.
+
+Zhu Yanjun
+
 
