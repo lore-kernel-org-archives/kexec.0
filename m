@@ -4,61 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6DCB9EA7942
-	for <kexec@archiver.kernel.org>; Wed,  4 Feb 2026 18:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A5D34EA7945
+	for <kexec@archiver.kernel.org>; Thu,  5 Feb 2026 03:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xE30DIF7aMl5fJFbfMHsATsjIo296bw/JVseiyW00cs=; b=SAk7ffLQSxR171GqfOTXMzCx4O
-	J8JIKd256OmEzi1BZA6SmESilGKMnb91Hk5mK7PZ/dK50xnL/pbvH+7Ww3QrdYkRMc0nsz24EX6nE
-	oY6dSRU9qjU/pnsQZfsDGkHJ971qikssRiz/+f2Q4SFIMDXgkC3J04tWrir9KyF7UYeRPoa4d5Bdp
-	/iPuYHX6bbjQXrGMT6RDTrndtDrOJje9LcTtwbHzcTMiWj6vZsJX4m/6sSP35mGqCSyn2Y9T58TFa
-	9iisqZpQTfayCklv5nKbfufek55pG3Y/jlQM1kJRAIl3zBbmxbWii2jw7qGFi0X03G88M0L/vONXn
-	QC5Yj9Mg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=m0YhAEtCzGzoYGvZg42KcYgs+OHxXA5AmpEhewJRkE0=; b=oOvSBIK9EKnpSM0tH/fxLaDMjf
+	Hrxnldd9u5PDfGuQCS4cib2E+T+jx+FQasxDqJMx9UDEPHe6k7rJVieN46/4SRVasfo/ru8exGA9s
+	eJmy559hYM9yAYdDd8G4Dll5T2OfZIAZP4HL+ndDROdioWbUefBdTbYJUZKkh4gBsypc1RQzF/RJu
+	+VRV2RgC+vk0yhbPkJRAY3e4+mE6p6mJImfDNC5/H7Qit6ZSZrEW7Pe4CszbfdfGacQNzk+In++xN
+	4uh9tCEYujN1AUfmzBvu2vj+YuaMXYc0r02/DRHoUg0sjgPCJmM2tr4hEhvmlx4JI+bfeo3K5ZCJL
+	tDB6N+gg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vnhs1-00000008wb8-2BR4;
-	Wed, 04 Feb 2026 18:44:57 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1vnpqU-00000009M2r-0T0v;
+	Thu, 05 Feb 2026 03:15:54 +0000
+Received: from canpmsgout04.his.huawei.com ([113.46.200.219])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vnhs0-00000008wb2-15n9
-	for kexec@lists.infradead.org;
-	Wed, 04 Feb 2026 18:44:56 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 83F3360010;
-	Wed,  4 Feb 2026 18:44:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9977C4CEF7;
-	Wed,  4 Feb 2026 18:44:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770230695;
-	bh=sxzUvwz2+H6f2P/hcewo6WsZzK2JbK2OdANari5N7ys=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hbo8oTeRLq/G0/qNbB7YGWd3dqSCmtSDilBsD797FE8yTqU3sx0WcQ0oS9XbIIpUE
-	 A1GWb4UWvEa2lM04K4NCr3r7qRI9cmv98vwCQgZVTms9IFLwe+y25M2E08EtQ5kXvU
-	 TK/vUY9zjpNsqyq7VdV5gTZWHbI/+OiaQc22SSNijzPlesacMt+VEYZrtf5A9XAjj8
-	 64ZUmYp1Uo1yret9r+Dq7qgLLV/WTAto0tXRshAdik+sxBzHCbBTvB711h3J8tuCnf
-	 qjZNADObhwdt7CptI8g+ytiqygIxaDnlT0aWUKMEA2VDySzXf4rLHFIODj+3H4tvZv
-	 xAjV+tyoF8VQg==
-Date: Wed, 4 Feb 2026 20:44:48 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Evangelos Petrongonas <epetron@amazon.de>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jason Miu <jasonmiu@google.com>, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, linux-mm@kvack.org,
-	nh-open-source@amazon.com
-Subject: Re: [PATCH] kho: add support for deferred struct page init
-Message-ID: <aYOToJvAUU0dmW94@kernel.org>
-References: <20251216084913.86342-1-epetron@amazon.de>
+	id 1vnpqQ-00000009M2O-0b7l;
+	Thu, 05 Feb 2026 03:15:52 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=m0YhAEtCzGzoYGvZg42KcYgs+OHxXA5AmpEhewJRkE0=;
+	b=mrg81Ley9PfGVLZQRfso+yz1ManXQbV+PfgxLEEqszlmqVu7nf5ibUS3D3jz2hxv4nVKl3Pxy
+	u1f26cRtxz6qdg+Sa5H47rkNKtSL2+fw1FqsGBvUi1egGqaUWoOeHZW1xEPRfIPMfxyDybkK+me
+	y6AzQqnzHgyAcWGTJDZFXnA=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4f62L33nmhz1prQr;
+	Thu,  5 Feb 2026 11:11:07 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id A0B3540561;
+	Thu,  5 Feb 2026 11:15:44 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 5 Feb 2026 11:15:41 +0800
+Message-ID: <113f1d02-69df-b28e-edb9-514d284c6b29@huawei.com>
+Date: Thu, 5 Feb 2026 11:15:40 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251216084913.86342-1-epetron@amazon.de>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v3 1/3] crash: Exclude crash kernel memory in crash core
+Content-Language: en-US
+To: Sourabh Jain <sourabhjain@linux.ibm.com>, <corbet@lwn.net>,
+	<catalin.marinas@arm.com>, <will@kernel.org>, <chenhuacai@kernel.org>,
+	<kernel@xen0n.name>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
+	<npiggin@gmail.com>, <chleroy@kernel.org>, <pjw@kernel.org>,
+	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
+	<tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
+	<bhe@redhat.com>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
+	<pawan.kumar.gupta@linux.intel.com>, <feng.tang@linux.alibaba.com>,
+	<kees@kernel.org>, <elver@google.com>, <arnd@arndb.de>,
+	<lirongqing@baidu.com>, <fvdl@google.com>, <leitao@debian.org>,
+	<rppt@kernel.org>, <cfsworks@gmail.com>, <osandov@fb.com>, <ardb@kernel.org>,
+	<ryan.roberts@arm.com>, <tangyouling@kylinos.cn>, <ritesh.list@gmail.com>,
+	<bjorn@rivosinc.com>, <songshuaishuai@tinylab.org>,
+	<samuel.holland@sifive.com>, <kevin.brodsky@arm.com>,
+	<junhui.liu@pigmoral.tech>, <vishal.moola@gmail.com>, <coxu@redhat.com>,
+	<jbohac@suse.cz>, <liaoyuanhong@vivo.com>, <brgerst@gmail.com>,
+	<fuqiang.wang@easystack.cn>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <kexec@lists.infradead.org>
+References: <20260204093728.1447527-1-ruanjinjie@huawei.com>
+ <20260204093728.1447527-2-ruanjinjie@huawei.com>
+ <4dc944c7-20ad-4e92-b05e-28a9e0c5a2b8@linux.ibm.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <4dc944c7-20ad-4e92-b05e-28a9e0c5a2b8@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.109.254]
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260204_191551_056511_2B3DD426 
+X-CRM114-Status: GOOD (  24.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,131 +98,151 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Evangelos,
 
-Are you planning to send a v2?
 
-On Tue, Dec 16, 2025 at 08:49:12AM +0000, Evangelos Petrongonas wrote:
-> When `CONFIG_DEFERRED_STRUCT_PAGE_INIT` is enabled, struct page
-> initialization is deferred to parallel kthreads that run later
-> in the boot process.
-> 
-> During KHO restoration, `deserialize_bitmap()` writes metadata for
-> each preserved memory region. However, if the struct page has not been
-> initialized, this write targets uninitialized memory, potentially
-> leading to errors like:
-> ```
-> BUG: unable to handle page fault for address: ...
-> ```
-> 
-> Fix this by introducing `kho_get_preserved_page()`,  which ensures
-> all struct pages in a preserved region are initialized by calling
-> `init_deferred_page()` which is a no-op when deferred init is disabled
-> or when the struct page is already initialized.
-> 
-> Fixes: 8b66ed2c3f42 ("kho: mm: don't allow deferred struct page with KHO")
-> Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
-> ---
-> ### Notes
-> @Jason, this patch should act as a temporary fix to make KHO play nice
-> with deferred struct page init until you post your ideas about splitting
-> "Physical Reservation" from "Metadata Restoration".
-> 
-> ### Testing
-> In order to test the fix, I modified the KHO selftest, to allocate more
-> memory and do so from higher memory to trigger the incompatibility. The
-> branch with those changes can be found in:
-> https://git.infradead.org/?p=users/vpetrog/linux.git;a=shortlog;h=refs/heads/kho-deferred-struct-page-init
-> 
-> In future patches, we might want to enhance the selftest to cover
-> this case as well. However, properly adopting the test for this
-> is much more work than the actual fix, therefore it can be deferred to a
-> follow-up series.
-> 
-> In addition attempting to run the selftest for arm (without my changes)
-> fails with:
-> ```
-> ERROR:target/arm/internals.h:767:regime_is_user: code should not be reached
-> Bail out! ERROR:target/arm/internals.h:767:regime_is_user: code should not be reached
-> ./tools/testing/selftests/kho/vmtest.sh: line 113: 61609 Aborted
-> ```
-> I have not looked it up further, but can also do so as part of a
-> selftest follow-up.
-> 
->  kernel/liveupdate/Kconfig          |  2 --
->  kernel/liveupdate/kexec_handover.c | 19 ++++++++++++++++++-
->  2 files changed, 18 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/liveupdate/Kconfig b/kernel/liveupdate/Kconfig
-> index d2aeaf13c3ac..9394a608f939 100644
-> --- a/kernel/liveupdate/Kconfig
-> +++ b/kernel/liveupdate/Kconfig
-> @@ -1,12 +1,10 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  
->  menu "Live Update and Kexec HandOver"
-> -	depends on !DEFERRED_STRUCT_PAGE_INIT
->  
->  config KEXEC_HANDOVER
->  	bool "kexec handover"
->  	depends on ARCH_SUPPORTS_KEXEC_HANDOVER && ARCH_SUPPORTS_KEXEC_FILE
-> -	depends on !DEFERRED_STRUCT_PAGE_INIT
->  	select MEMBLOCK_KHO_SCRATCH
->  	select KEXEC_FILE
->  	select LIBFDT
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> index 9dc51fab604f..78cfe71e6107 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -439,6 +439,23 @@ static int kho_mem_serialize(struct kho_out *kho_out)
->  	return err;
->  }
->  
-> +/*
-> + * With CONFIG_DEFERRED_STRUCT_PAGE_INIT, struct pages in higher memory
-> + * regions may not be initialized yet at the time KHO deserializes preserved
-> + * memory. This function ensures all struct pages in the region are initialized.
-> + */
-> +static struct page *__init kho_get_preserved_page(phys_addr_t phys,
-> +						  unsigned int order)
-> +{
-> +	unsigned long pfn = PHYS_PFN(phys);
-> +	int nid = early_pfn_to_nid(pfn);
-> +
-> +	for (int i = 0; i < (1 << order); i++)
-> +		init_deferred_page(pfn + i, nid);
-> +
-> +	return pfn_to_page(pfn);
-> +}
-> +
->  static void __init deserialize_bitmap(unsigned int order,
->  				      struct khoser_mem_bitmap_ptr *elm)
->  {
-> @@ -449,7 +466,7 @@ static void __init deserialize_bitmap(unsigned int order,
->  		int sz = 1 << (order + PAGE_SHIFT);
->  		phys_addr_t phys =
->  			elm->phys_start + (bit << (order + PAGE_SHIFT));
-> -		struct page *page = phys_to_page(phys);
-> +		struct page *page = kho_get_preserved_page(phys, order);
->  		union kho_page_info info;
->  
->  		memblock_reserve(phys, sz);
-> -- 
-> 2.43.0
+On 2026/2/4 20:32, Sourabh Jain wrote:
 > 
 > 
-> 
-> 
-> Amazon Web Services Development Center Germany GmbH
-> Tamara-Danz-Str. 13
-> 10243 Berlin
-> Geschaeftsfuehrung: Christof Hellmis, Andreas Stieger
-> Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
-> Sitz: Berlin
-> Ust-ID: DE 365 538 597
-> 
+> On 04/02/26 15:07, Jinjie Ruan wrote:
+>> The exclude of crashk_res, crashk_low_res and crashk_cma memory
+>> are almost identical across different architectures, so handling them
+>> in the crash core would eliminate a lot of duplication, so do
+>> them in the common code.
+>>
+>> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+>> ---
+>>   arch/arm64/kernel/machine_kexec_file.c     | 12 -------
+>>   arch/loongarch/kernel/machine_kexec_file.c | 12 -------
+>>   arch/powerpc/kexec/ranges.c                | 16 ++-------
+>>   arch/riscv/kernel/machine_kexec_file.c     |  5 +--
+>>   arch/x86/kernel/crash.c                    | 39 ++--------------------
+>>   kernel/crash_core.c                        | 28 ++++++++++++++++
+>>   6 files changed, 34 insertions(+), 78 deletions(-)
+>>
 
--- 
-Sincerely yours,
-Mike.
+[...]
+
+>> -static int crash_exclude_mem_range_guarded(struct crash_mem
+>> **mem_ranges,
+>> -                       unsigned long long mstart,
+>> -                       unsigned long long mend)
+>> +static int crash_realloc_mem_range_guarded(struct crash_mem
+>> **mem_ranges)
+>>   {
+>>       struct crash_mem *tmem = *mem_ranges;
+>>   @@ -566,7 +564,7 @@ static int
+>> crash_exclude_mem_range_guarded(struct crash_mem **mem_ranges,
+>>               return -ENOMEM;
+>>       }
+>>   -    return crash_exclude_mem_range(tmem, mstart, mend);
+>> +    return 0;
+>>   }
+>>     /**
+>> @@ -604,18 +602,10 @@ int get_crash_memory_ranges(struct crash_mem
+>> **mem_ranges)
+>>               sort_memory_ranges(*mem_ranges, true);
+>>       }
+>>   -    /* Exclude crashkernel region */
+>> -    ret = crash_exclude_mem_range_guarded(mem_ranges,
+>> crashk_res.start, crashk_res.end);
+>> +    ret = crash_realloc_mem_range_guarded(mem_ranges);
+> 
+> What if max_nr_ranges - nr_ranges = 1, then no realloc will happen here.
+> And in
+> elf_header_exclude_ranges we may not enough space to store additional
+> memory ranges needed while excluding one or more CMA ranges.
+
+You're absolutely right — if max_nr_ranges - nr_ranges == 1 we skip the
+realloc, yet elf_header_exclude_ranges() can easily need more than one
+extra slot.
+
+Thanks for catching this.
+Jinjie
+
+> 
+>>       if (ret)
+>>           goto out;
+>>   -    for (i = 0; i < crashk_cma_cnt; ++i) {
+>> -        ret = crash_exclude_mem_range_guarded(mem_ranges,
+>> crashk_cma_ranges[i].start,
+>> -                          crashk_cma_ranges[i].end);
+>> -        if (ret)
+>> -            goto out;
+>> -    }
+>> -
+>>       /*
+>>        * FIXME: For now, stay in parity with kexec-tools but if RTAS/OPAL
+>>        *        regions are exported to save their context at the time of
+
+[...]
+
+>>   +static int crash_exclude_mem_ranges(struct crash_mem *cmem)
+>> +{
+>> +    int ret, i;
+>> +
+>> +    /* Exclude crashkernel region */
+>> +    ret = crash_exclude_mem_range(cmem, crashk_res.start,
+>> crashk_res.end);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    if (crashk_low_res.end) {
+>> +        ret = crash_exclude_mem_range(cmem, crashk_low_res.start,
+>> crashk_low_res.end);
+>> +        if (ret)
+>> +            return ret;
+>> +    }
+>>   +    for (i = 0; i < crashk_cma_cnt; ++i) {
+>> +        ret = crash_exclude_mem_range(cmem, crashk_cma_ranges[i].start,
+>> +                          crashk_cma_ranges[i].end);
+>> +        if (ret)
+>> +            return ret;
+>> +    }
+>>   +    return ret;
+>> +}
+>>     int crash_prepare_elf64_headers(struct crash_mem *mem, int
+>> need_kernel_map,
+>>                 void **addr, unsigned long *sz)
+>> @@ -174,6 +197,11 @@ int crash_prepare_elf64_headers(struct crash_mem
+>> *mem, int need_kernel_map,
+>>       unsigned int cpu, i;
+>>       unsigned long long notes_addr;
+>>       unsigned long mstart, mend;
+>> +    int ret;
+>> +
+>> +    ret = crash_exclude_mem_ranges(mem);
+> 
+> I think the assumption here is that mem should have enough space
+> to hold the extra ranges created while excluding crash memory ranges.
+> Right now, this is not happening on powerpc for the case I mentioned
+> in the above comment.
+
+Yes, as you mentioned above.
+
+> 
+> Also, if crashk_cma_cnt changes in the future, or if a new type of
+> crash memory is added, then every architecture would need to adjust
+> the mem allocation accordingly. Instead, could we handle this in
+> generic code rather than in architecture-specific code, so that we
+> always ensure mem has enough space?
+
+I agree — hard-coding the worst-case count in every arch is a
+maintenance trap.
+Let's move the size calculation (and the realloc if needed) into the
+generic crash core so that:
+
+- New CMA regions or future crash-memory types are automatically
+accounted for;
+
+- Each architecture no longer has to play whack-a-mole with its private
+array size.
+
+Thanks for the suggestion.
+
+> 
+>> +    if (ret)
+>> +        return ret;
+>>         /* extra phdr for vmcoreinfo ELF note */
+>>       nr_phdr = nr_cpus + 1;
+> 
 
