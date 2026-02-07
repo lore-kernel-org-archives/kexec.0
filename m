@@ -4,120 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 16B8AEE6B6A
-	for <kexec@archiver.kernel.org>; Fri,  6 Feb 2026 23:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7AF3EEE0AE7
+	for <kexec@archiver.kernel.org>; Sat,  7 Feb 2026 17:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xORO1Htmm6YxNYM1C9oAOOlxqgAaEPMiLYXG8QXy21k=; b=lDHCi2nOZHbE9zQ+gWumcHEyxI
-	wN481dLmzhWjQ4HaLybkI1OlVSx3we99q0TRUAp0nIG6BRwCzhearlbpTQL27Xj8kX/akfWJ75RC7
-	NSA4q/i1qH2oDB3dCjQJHINgD67AeqtoeaDZNFm2VcHb8ZEeaUuKTPOVOUJHEitHTO3/ixd52XJlj
-	uiEJuF1fi7vzonkeGW3MTEboh2F7yaNc0rFl30SLsXzCRFfpBtgaDUG+W+ln4yFoCbtp3KMCWt7IT
-	czq8rq7MCG/rpurHGsHbfp0kyq1KLlIvTnqJ+YpXL1LSU7d8h6uGo9Q1c61X+tjeIU0udHhUbTmm8
-	7ZVM3s/A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=emM03ICtpXPA/lI1nLRfslW4iFBkY1GL7RvYe7XqKRo=; b=RxXWKEgjXJnOx16qCuQ4S5Bzue
+	a0pKzx3KCGaKIFfcQXQOxJ3x5aJd1Rt3BZ08BiwnFLx3oUE3onRhg0JPT1jtem8KJrjb0QqTcf3a5
+	guTb/tgboP2xZUb/jTzbjrDjOpXsdTBlf5FiWfYqGK+X8zGLd+1w9yeBQ6vqJSaPj4TF817PsiM15
+	U02jdsUQrNHkQN8V1EaWCRGAWHBAfUYiklBMD2WaBtbL6qIQGW3CAZaQESgBGDkT+PBQCcAWe3VTR
+	q58ZahWMFq2sFnRgYFbSAroq4qrvA/5QMxvQN5xGBK+RWgdCwMuy1cZdNCdf4V068P0Jm56KsHamK
+	jhvfQcrg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1voV2P-0000000BuPJ-1ga9;
-	Fri, 06 Feb 2026 23:14:57 +0000
-Received: from mail-pg1-x52b.google.com ([2607:f8b0:4864:20::52b])
+	id 1volzc-0000000CeKJ-3IiR;
+	Sat, 07 Feb 2026 17:21:12 +0000
+Received: from mail-ej1-x633.google.com ([2a00:1450:4864:20::633])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1voV2M-0000000BuOx-2Wea
+	id 1volzT-0000000CeJU-1MGm
 	for kexec@lists.infradead.org;
-	Fri, 06 Feb 2026 23:14:55 +0000
-Received: by mail-pg1-x52b.google.com with SMTP id 41be03b00d2f7-c0ec27cad8cso933366a12.1
-        for <kexec@lists.infradead.org>; Fri, 06 Feb 2026 15:14:53 -0800 (PST)
+	Sat, 07 Feb 2026 17:21:06 +0000
+Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-b8845cb580bso269450166b.3
+        for <kexec@lists.infradead.org>; Sat, 07 Feb 2026 09:21:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770484861; cv=none;
+        d=google.com; s=arc-20240605;
+        b=M710Fp7yyktn/pNFJag/PbqdX4ZEyNqD5V7JMi8vDGrbYU1Q+vR4iXVdZquDJnErS5
+         MxGbyKo0ZHqUhZUh8MT1+lEQV5AaHLpP5rdmpCkQuybvYvAoZMPG++uQ7fZ2pJL9JYfc
+         G2TxAHrJBpYmKX44X8kX4+5f6C81Kueu4b/gco85zcY0UFJZzTKVn0M2gXFM8vSiZXH/
+         wtNI7AjpfBD329tRAsclQ8zBhPEYcbaYbiWnygdVBXP8MlmtrM+EKTLjZbs6o1l8cac+
+         ZEPjZz+9IdcZjVKQHHm2MS17mjRQeak2oyusWA+Jym84xJYxC1VcobbTJTjDdhOvtLO1
+         vP8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=emM03ICtpXPA/lI1nLRfslW4iFBkY1GL7RvYe7XqKRo=;
+        fh=d4e+xIYouKPcQit6+jcm/JL7k8QOYH/WFN3AOHnTz/E=;
+        b=MssCEzKu5Xczkg7T3OUdj0M53g3+Vq4cXFL6dDnMH0c+tCr6sXb+FFNqysEZ7r65BA
+         ifs0lCezKJ4BiTPOQK5kgWkBRU8nu/PmJd8jJh9hhZzT4JYzFaDRBd8FZcWZNDEKFPov
+         bIG5pVaZKW+06zIp6z6lds8Mw3kzgtPjt7VukMLSxyBxLUWz59mlWTtbrmu2irhuvpHo
+         J2rJaSgtGaknHrxGKtHIejMj/8XIlQE+UmUbYNgmRgwf8MDWLVgdU62aKOjVX641ufkN
+         GtikJG/cZqr/z9jzoAi3IfaxW3xFm703+GUZiV8r6EGEt255cPJTAB1kkli7G5dt4Slr
+         /CPg==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770419692; x=1771024492; darn=lists.infradead.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xORO1Htmm6YxNYM1C9oAOOlxqgAaEPMiLYXG8QXy21k=;
-        b=XI5NK6Z9bkrV8iG9tqeHYsxQlj8PI3OmV9BRNazCwEV5UsvQnKRoTpTLcONsdcFwrm
-         AeIZrCZcImWbbqVnMTQ3xplgghvULVdZg9snVIsdZGDcxr215NmuV+pjyW29SpqGkHiz
-         0FKraU4LptYKgjLlgBTQXshcOpznTDVX/Ov6vGLca98jo5d/UjH0pTE+yeTOg2HHkuJ7
-         3OL7z24agHaq5eXp8H/mbFo9BihRgm2t2R86uicET/Q4al8CUKGcFsCAvMzezdm8gY54
-         3ZzZpHODAuAzZJ99fJyQOkUGLlDsQBvZ2NDxeyAqdwO9z5hBsrsjjyQhQuq6iY5NhqKS
-         oJvA==
+        d=soleen.com; s=google; t=1770484861; x=1771089661; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=emM03ICtpXPA/lI1nLRfslW4iFBkY1GL7RvYe7XqKRo=;
+        b=cT+zmlPzhs+Bbtju3b4jJfaHkEox9kcH+ixSr+awvs1fljG+BnLUPvFzLYFj56XQcp
+         qh/hdZ9n5x5etc7FPZwS3HZlytI00E3Ee9tAC6p1GDdUQAu6RORiUjRRN/OZftGbgXbQ
+         1MxLszUr7Yy1xdb6fuw1jeFVPzUkmYOVcJlHh/bhcpA1DeHw5l6554QytD+UBOQU1/pc
+         AEgWAOsI7cJUjOdKRj8oMHvxUzF6mnkqLClvxEp9PDek2OS1SRKakslUwNFCLdjGZ2qi
+         gqeLhVTeuVjy4z+nL8R8mWjTeOXnt7dvJoRw+RiOTiw7D4AlOMS37Y2OLHQmTuTodYTW
+         oyhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770419692; x=1771024492;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xORO1Htmm6YxNYM1C9oAOOlxqgAaEPMiLYXG8QXy21k=;
-        b=pDzoSa15R99GhDeZolvItg7afJMGZZP7wYVpkrkRdeUjRpx4EWlyBsCnn+Odjm1LEL
-         WsyY7CPSvjd224dGdTudiLvAsTv14VW22hCjWia6oRpyXmgkk8U5nCSqClwOlv/r9oN1
-         eEVL8aEUc+d4h/gq42pWAT7mloGJQI4WLEEL7W2l5sdQtzg/wOAGGEbHVkN8Rn/+g5nN
-         diBeG4FvF5Gcpxon4cMvx87IBbzA7FDV+e31dPcxB7FE7QgOBG7GFzPcetH2EvSVNlG/
-         HU+4TfKV8nWubH9hJGPi6gv5hy9uMDDAq8jhEIae2W4zfFT/x0tVoVrL0AlQhAwDmR/7
-         mf9g==
-X-Forwarded-Encrypted: i=1; AJvYcCWlS4RJ4Lu574Q2z5sb94SURcqisBBlrt5Hc5n0RDmmaxCtgRYnKy1TIQKbZzIi39Ib83TBfQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yym9NHZM4JBa0fyGVO895eGHq6OFcEc8n9OxzWefUk6upsT0Y8S
-	y4EvQw20ZZ8K+iZyaxmSA/Y0s1r/6Aqxd6wtDE5f/hZH+T1HGK3wQ6h9ic4ETzBp0A==
-X-Gm-Gg: AZuq6aJHZZXkme2em+IPvEZHeZpc2L/7r26Q9L0+u4oHF08Ztb+vWe3GQag977qgcG0
-	ScOBCKfZoUk2ruKT3OSWlb9JediUCCjquzOPV17+AtqAoG4WT6D4AECfer2/pdKS08/gl55l7Ct
-	Vs9j/foxUhtlu/ujfXBSqDhekee3muk2y/nW/8aGztKsnzHmGNaBdrhXvDerluKvaNaDUDr0xdx
-	XfBWHZMVFNHafr+QiLb40rCI8z6lBMrTR/mc7UzAJjF39fWTvIx7umL8orUnMEaiwxox/VyIbGg
-	oCMBTCT0HgxuzHPoCEppX9DpXxaqkku6OKXz/wPSZV7SJFiDyg1ffBzmf8VsEx5JF1McrsrpzMH
-	7r3GRbhUJZ6xmt3iE7Xi+aXHTjZ325K+jKQO/gE5Lx1WaL3btQ/xrR1qlUwQuHOc3zaKd31n35I
-	kSp/rgFsRkaia+Fd8vGkKlkIftaB4sqjGH/KZZDW6XsaZbZbv5eg==
-X-Received: by 2002:a17:903:3bcb:b0:2a0:c1ed:c8c2 with SMTP id d9443c01a7336-2a95191f76emr38694515ad.55.1770419692202;
-        Fri, 06 Feb 2026 15:14:52 -0800 (PST)
-Received: from google.com (79.217.168.34.bc.googleusercontent.com. [34.168.217.79])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a9521eb87fsm33865195ad.71.2026.02.06.15.14.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Feb 2026 15:14:51 -0800 (PST)
-Date: Fri, 6 Feb 2026 23:14:46 +0000
-From: David Matlack <dmatlack@google.com>
-To: "Yanjun.Zhu" <yanjun.zhu@linux.dev>
-Cc: Alex Williamson <alex@shazbot.org>,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
-	Kevin Tian <kevin.tian@intel.com>, kexec@lists.infradead.org,
-	kvm@vger.kernel.org, Leon Romanovsky <leon@kernel.org>,
-	Leon Romanovsky <leonro@nvidia.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, linux-pci@vger.kernel.org,
-	Lukas Wunner <lukas@wunner.de>,
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pranjal Shrivastava <praan@google.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Raghavendra Rao Ananta <rananta@google.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Tomita Moeko <tomitamoeko@gmail.com>,
-	Vipin Sharma <vipinsh@google.com>,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v2 04/22] vfio/pci: Register a file handler with Live
- Update Orchestrator
-Message-ID: <aYZ15u120FEa8Qw2@google.com>
-References: <20260129212510.967611-1-dmatlack@google.com>
- <20260129212510.967611-5-dmatlack@google.com>
- <6dc423bd-36e6-4f97-b2b2-c7030575a3a1@linux.dev>
+        d=1e100.net; s=20230601; t=1770484861; x=1771089661;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=emM03ICtpXPA/lI1nLRfslW4iFBkY1GL7RvYe7XqKRo=;
+        b=rsiewmBJIQNNFfDm0yZeWIzjfltwrOM7HKemF+r52SThpWkeqjbKBQW3jgyGtXcDLa
+         HliXWZZNOn+1SmW2yGO4Yfa2zt4pg2DA1wJBMrHUEDUF7QCiUg947M6Zbmbc5poDj4+I
+         /p41/JnD6EdGu/yHy59sLRl+LUOLWdAaXOs88Tyg/Cd7iCW7hnR88OOcJHQDZmfDKzBm
+         KaEh7arntiZgb6K9RhHYrueMDdUEGqjAbfD3Vj9BQQ/JS+sCgpQ7bQGT4o4rUuE8Crme
+         YR/7n/ZStv/8zL5L1FV97II5jfP8W7gY+2Beb/FneNytAgOq268KX2QRFhDr8IRhIpEe
+         wOHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUWhSb+Srb5e6pI+Vlcn4MEGOF7+v4xRYwA5TOeSqzzd65+ZUeehZubVzj1XealXgs7GPh++Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwTMaGzVbPEk0EOGaiwX3tZMIoC6J/pc0atOhLIn7N5tOusWV2c
+	3BB4ODTXOGVHDtLr3k2AyuASLVQrznxNI1GUaIaOQU1i/qB4/1MFq+SN2edq1AI8A0QI77MfGai
+	k8ctOTgQzqL3Ed7Hdvky7OtlzhZqvVn7tHcimsi7nnA==
+X-Gm-Gg: AZuq6aIre+vj8OFZ2MCr0kOYcMlvMUSywwNSkWT/KhiPfBDKjIHZOYCdl/FEmrfVEbn
+	4rmUMRtuGjXX0ma+eEQNnVpfLIwsmfiCp+gZRkUdZK709x8aiMG30tAfNH8Mdzbf7wMr7fHtUmD
+	p4hBTNmjPxWGq6txntDYGnO6teUzSarWA9zToUJNQczqLKglz2ecEFzpCjGZTdy4OIxEWoSQbVs
+	lmnC66ecYKUg6hGh3ScBFgm+bfknvfSARDGAUiXU73iPRHx1SmcxfH47lzYPmwnIimRJchyTljZ
+	cLsP02Gztn11+j3MAoGREDw6mZiCpL9njrb1qQ==
+X-Received: by 2002:a17:907:d716:b0:b86:ea42:f829 with SMTP id
+ a640c23a62f3a-b8edf401a61mr395966866b.56.1770484860762; Sat, 07 Feb 2026
+ 09:21:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6dc423bd-36e6-4f97-b2b2-c7030575a3a1@linux.dev>
+References: <20260206021428.3386442-1-jasonmiu@google.com> <20260206021428.3386442-3-jasonmiu@google.com>
+In-Reply-To: <20260206021428.3386442-3-jasonmiu@google.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Sat, 7 Feb 2026 12:20:24 -0500
+X-Gm-Features: AZwV_QgzTl4mNxujoLDaf5mTXNHE3H1Ui7pyjHnr-IJSNXlSQjG622HK-ncLm8o
+Message-ID: <CA+CK2bBbM9__n-8JbHwi+jUaVYwue0Ro0_z1DPOCXkw5b5=vEA@mail.gmail.com>
+Subject: Re: [PATCH v9 2/2] kho: Remove finalize state and clients
+To: Jason Miu <jasonmiu@google.com>
+Cc: Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Baoquan He <bhe@redhat.com>, Changyuan Lyu <changyuanl@google.com>, 
+	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, 
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260206_151454_647424_F63CB933 
-X-CRM114-Status: GOOD (  12.14  )
+X-CRM114-CacheID: sfid-20260207_092103_382070_BA5F16E5 
+X-CRM114-Status: GOOD (  10.85  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -132,25 +119,42 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-02-06 02:37 PM, Yanjun.Zhu wrote:
-> On 1/29/26 1:24 PM, David Matlack wrote:
+On Thu, Feb 5, 2026 at 9:14=E2=80=AFPM Jason Miu <jasonmiu@google.com> wrot=
+e:
+>
+> Eliminate the `kho_finalize()` function and its associated state from
+> the KHO subsystem. The transition to a radix tree for memory tracking
+> makes the explicit "finalize" state and its serialization step
+> obsolete.
+>
+> Remove the `kho_finalize()` and `kho_finalized()` APIs and their stub
+> implementations. Update KHO client code and the debugfs interface to
+> no longer call or depend on the `kho_finalize()` mechanism.
+>
+> Complete the move towards a stateless KHO, simplifying the overall
+> design by removing unnecessary state management.
+>
+> Signed-off-by: Jason Miu <jasonmiu@google.com>
+> ---
+>  Documentation/admin-guide/mm/kho.rst        | 53 +++++----------------
+>  Documentation/core-api/kho/index.rst        | 12 -----
+>  kernel/liveupdate/kexec_handover.c          | 21 +-------
+>  kernel/liveupdate/kexec_handover_debugfs.c  | 23 ---------
+>  kernel/liveupdate/kexec_handover_internal.h |  3 --
+>  kernel/liveupdate/luo_core.c                | 12 +----
+>  tools/testing/selftests/kho/init.c          | 20 --------
+>  7 files changed, 13 insertions(+), 131 deletions(-)
 
-> > +int __init vfio_pci_liveupdate_init(void)
-> > +{
-> > +	if (!liveupdate_enabled())
-> > +		return 0;
-> 813 int liveupdate_register_file_handler(struct liveupdate_file_handler *fh)
-> 814 {
-> 815         struct liveupdate_file_handler *fh_iter;
-> 816         int err;
-> 817
-> 818         if (!liveupdate_enabled())
-> 
-> 819                 return -EOPNOTSUPP;
-> 
-> In the function liveupdate_register_file_handler, liveupdate_enabled is also checked.
-> as such, it is not necessary to check here?
+Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 
-Yeah that is a bit odd. I see that memfd_luo_init() just checks for
--EOPNOTSUPP. We can do the same thing here.
+A comment in FLB patch would also need to be updated:
+633  * Context: Called from liveupdate_reboot() just before
+kho_finalize().
+634  */
+635 void luo_flb_serialize(void)
+
+But, given that patch has not yet landed, it should be updated
+separately, as it is likely this work lands first.
+
+Pasha
 
