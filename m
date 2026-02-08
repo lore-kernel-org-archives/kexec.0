@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 38C38EF06E3
-	for <kexec@archiver.kernel.org>; Sun,  8 Feb 2026 18:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3FC93EF06E3
+	for <kexec@archiver.kernel.org>; Sun,  8 Feb 2026 18:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yMcDMMO5pUL3iromxDqvHXOfyfcuNP17tBgk7jNq3a8=; b=46MacSR4SxUV2+wEO4/DPh86Me
-	GAgfsflRp3Ok0sfGjfqMjTP0eDLyXszLe5NNFAd18+lAIfTFQg+oHCbpFCq9323AYiajyNdub+dZP
-	ZkNkvESnqx4ClygOUZ7gDLS+jnOZSGEDUr4T/r7TsHimvqYjj0TKuXOAWBUx0DZQJLxPUB1xnbu12
-	+eiBuvjlIORVpf39gum7Ca7UtDURtX+l5gkqqI3xiNMhV5ZSBDPfse5JxQHLrIvq18j3/W/bTcWfe
-	WE8egJYApDqnDFpro5zZ0ouHES9r8vRkKg1G2EeR/qeHyWWa+4u+QHOGGVir90egIsba9fZ+Mal4B
-	r+cdCRiQ==;
+	bh=sDzR9lpKjFEUV6LzjMz/jFbiERE11kuQT8Dk9zXCm+c=; b=vpnjqPdQkd0oqh4pkUHe0bfq9O
+	gZI8/PolTtreDQ0GLGt1IVHQNG7ukRXtzrej/fZ64rgzj61A/vbG40XWsA8Vy23KeN5EUASbyx07e
+	NITAqcst9TGLF/xX3QhonTnvg7vxXGc3b5/zb74ikjiecvvKkVOn4ZoZ9V5Iw1CxkgGKlQ4EQGC1D
+	psuA/BkwVeZRRcckijdlyZQ8+504q2RBBVK0sepKnULDBaHrnuqMfTfyN7YMH1VSaWz2w8cVzINYt
+	des3aOm4fDq6w7w3unGgSm0Ca7uLjqwkfYBTMFdPiTr4xKaVF+i0T7MnbWcBGdi+KR1V9e/Zt5lXM
+	TQcdkR5Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vp9C6-0000000DXPz-36qU;
-	Sun, 08 Feb 2026 18:07:38 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1vp9CQ-0000000DXSM-0KkX;
+	Sun, 08 Feb 2026 18:07:58 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vp9C2-0000000DXPq-1NLc
+	id 1vp9CP-0000000DXSG-2AHK
 	for kexec@lists.infradead.org;
-	Sun, 08 Feb 2026 18:07:34 +0000
+	Sun, 08 Feb 2026 18:07:57 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 49CD4600BB;
-	Sun,  8 Feb 2026 18:07:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 158FAC4CEF7;
-	Sun,  8 Feb 2026 18:07:28 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 9A8E0600BB;
+	Sun,  8 Feb 2026 18:07:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E5FBC4CEF7;
+	Sun,  8 Feb 2026 18:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770574053;
-	bh=PxcXwLUBRw69pj0y/iw2r5Y8so1kEeFr6i4iz7h+PcY=;
+	s=k20201202; t=1770574076;
+	bh=kQt8t7OYMDtNIa31uvKvR7rjvGtIHYQ481BGVMxx3o0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eIjSMF/3JMss8Yv+gzQCRJWnr30dkiCVPZJUb/Twq/rYj3Ce0b2P3ZsnTT+JbZyka
-	 vlOgGbPj+Hs+7evu4WQ5ZZjNMTbLg8eophnbVM8l5Yw9ZGiNNRYPAhr1wZw7Mnbbjp
-	 s2KPl5J79HQ1SNpCBVRfzZ5+IMwcNfGdFOgsV3UiLeNGfPu/PNNdp4cUxruGUrFEv4
-	 wvtSKOjCooDTcqBbHi/diKNhFZrcnm2EgIxJKYeJivAggYo04X0Rr5a4R6B9kAT3/m
-	 7midGG2ywBRApW/wuU82yzTseJINdxFPeWtLzn+sGRIQ3Xm9/dKr0cw8XkzCYvxSLP
-	 yE1Cl6ejYcP8g==
-Date: Sun, 8 Feb 2026 20:07:25 +0200
+	b=PCkh6TOJJvFbwBRVm1u4XSnuqOddU90qqDYh7bHdCfTliBoksC2mZUXnJ6aM/9csd
+	 q5EN9teFq6YQCsfb28mfFOUt9tXnGZHFrKDbLeOsuGPhXeE8lkfUQzaTh7FDP0bAnO
+	 RrROpFFspU3v6NrUtV6rz/FVijUm8MwCTBTHLTtdjGrZCtkOOfxEdo7HSGsWOLbZRM
+	 1oNVh+YGmDLy13BHv5N9HTfyhrt6BVSGLK2yauQV8TQuaKKcIL2JuUSr+BDBtc6BGQ
+	 18hko4wU0uu6JDzKvMrlFSsqmgadgl/VnYXl37i4IsnSjopbD+MWorp2oRQNaISbDu
+	 lt5o7xLDLouTg==
+Date: Sun, 8 Feb 2026 20:07:48 +0200
 From: Mike Rapoport <rppt@kernel.org>
 To: Jason Miu <jasonmiu@google.com>
 Cc: Alexander Graf <graf@amazon.com>,
@@ -54,15 +54,14 @@ Cc: Alexander Graf <graf@amazon.com>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
 	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v9 1/2] kho: Adopt radix tree for preserved memory
- tracking
-Message-ID: <aYjQ3WlwJkcvJOZz@kernel.org>
+Subject: Re: [PATCH v9 2/2] kho: Remove finalize state and clients
+Message-ID: <aYjQ9FYujrFJVDel@kernel.org>
 References: <20260206021428.3386442-1-jasonmiu@google.com>
- <20260206021428.3386442-2-jasonmiu@google.com>
+ <20260206021428.3386442-3-jasonmiu@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260206021428.3386442-2-jasonmiu@google.com>
+In-Reply-To: <20260206021428.3386442-3-jasonmiu@google.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,31 +76,18 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Feb 05, 2026 at 06:14:27PM -0800, Jason Miu wrote:
-> Introduce a radix tree implementation for tracking preserved memory
-> pages and switch the KHO memory tracking mechanism to use it. This
-> lays the groundwork for a stateless KHO implementation that eliminates
-> the need for serialization and the associated "finalize" state.
+On Thu, Feb 05, 2026 at 06:14:28PM -0800, Jason Miu wrote:
+> Eliminate the `kho_finalize()` function and its associated state from
+> the KHO subsystem. The transition to a radix tree for memory tracking
+> makes the explicit "finalize" state and its serialization step
+> obsolete.
 > 
-> This patch introduces the core radix tree data structures and
-> constants to the KHO ABI. It adds the radix tree node and leaf
-> structures, along with documentation for the radix tree key encoding
-> scheme that combines a page's physical address and order.
+> Remove the `kho_finalize()` and `kho_finalized()` APIs and their stub
+> implementations. Update KHO client code and the debugfs interface to
+> no longer call or depend on the `kho_finalize()` mechanism.
 > 
-> To support broader use by other kernel subsystems, such as hugetlb
-> preservation, the core radix tree manipulation functions are exported
-> as a public API.
-> 
-> The xarray-based memory tracking is replaced with this new radix tree
-> implementation. The core KHO preservation and unpreservation functions
-> are wired up to use the radix tree helpers. On boot, the second kernel
-> restores the preserved memory map by walking the radix tree whose root
-> physical address is passed via the FDT.
-> 
-> The ABI `compatible` version is bumped to "kho-v2" to reflect the
-> structural changes in the preserved memory map and sub-FDT property
-> names. This includes renaming "fdt" to "preserved-data" to better
-> reflect that preserved state may use formats other than FDT.
+> Complete the move towards a stateless KHO, simplifying the overall
+> design by removing unnecessary state management.
 > 
 > Signed-off-by: Jason Miu <jasonmiu@google.com>
 
