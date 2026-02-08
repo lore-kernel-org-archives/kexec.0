@@ -4,105 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7B5FBEE0AEF
-	for <kexec@archiver.kernel.org>; Sat,  7 Feb 2026 17:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C783EEF06E2
+	for <kexec@archiver.kernel.org>; Sun,  8 Feb 2026 13:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=jB/fqSueCYt2RA3ppkdZrQ1ODDWf2CGc5HEiG/Wtd9g=; b=XK19KJ5nWrGwLSJ5HIkp4gHrS0
-	mjXvNoPCkh+Sbr6gW7Tdb42wlrPkgT5mAyiOOhYJ7Sa0cCYk1oVeGxPKZvVnymoVqavQghlkU70gd
-	pFHtu0Ba7rIrr5pHSy6gbOZiyNMeMBIGEGgOlTcUXxqpVE989pWMpxbOruOrR+kFXWdmyFsmPyTdC
-	QSA04Bv9z8+BPTQhVdBsm2JmBorWie1D3qFlgU1aHfEvGGZ67LrHIgDCsvaOz1nvl3wAXJHND/+wv
-	nvLI8mxGpZS4DSSBfJEtzaA4W4mecHgt6uNwz7fw2kdqSaEIgvbTWjDtHGw3hxCZ5sGTqiiRTkzql
-	jY50K8Xg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=91Zr4q/44T0lY9BNUASm+viWC2+F0GlQ97HUhxTekQg=; b=D71D20vMwSWi6FBfVfjfml7mQr
+	4wriE+H0xteye2CBJyir6rH/m5JPE1KrUEx6hOMwvJdklpe3Pdtc2OSpHHhRvRpitsvIBM1asurZy
+	RU0zpSEOVrLidKPPw+S/W959q61hLH9nCdaUzmhje/NkWhimphhWurQn32kT5zBT9bi8Un0cFlPwp
+	EgozuSXUoft9DH2hP0+7//0I47GTvVGqbkiHW91Gz50zKkX+y31tnwqaX2A/d2f+RM/Z8IeU3ciqk
+	ZiDt6hp2iAdLKrL1v2yHMf9B/DWg3JPlhkPICm9ia4trOA65Nq+9ll9TnuXocuvQ7j760iYYNXp6s
+	cyckx6Kg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vomCp-0000000Cen4-3nWD;
-	Sat, 07 Feb 2026 17:34:51 +0000
-Received: from mail-ed1-x530.google.com ([2a00:1450:4864:20::530])
+	id 1vp50d-0000000DM95-2rnk;
+	Sun, 08 Feb 2026 13:39:31 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vomCk-0000000CemI-0dd7
+	id 1vp50b-0000000DM8w-3si1
 	for kexec@lists.infradead.org;
-	Sat, 07 Feb 2026 17:34:50 +0000
-Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-658ad86082dso2295440a12.0
-        for <kexec@lists.infradead.org>; Sat, 07 Feb 2026 09:34:45 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770485684; cv=none;
-        d=google.com; s=arc-20240605;
-        b=XzRpYVQb2dE216DbCpJng+/AnlkC2/lVqYY2ryzOLNfU9Bf46wmPXhpb9nlDCcEMbG
-         2X1HWAar4tMMIrx05daYWx7nNf0EvvyF+r1xicB+R+gOkfQg22/I1uYx5FCTw7tOtnqB
-         qrx+Vt0kK8u3Rhhc/KTFKDeKzGSY30lDf5rmUK9xVXOY1WqyLpdPEZAEKINCLJBcQ3Af
-         Z7fCj967acQlMhqagasv7l7iY7VuzLX8J3USMJqtvcNI5yIFOZ7twO5JDaKFB3iPb3GD
-         ckXBEcxchhuly3c+q3G1bQlSSHL2uUVTpFHI2kCyAwJn9TCWyOmp1JeDMxa4hqs53Iip
-         wgYQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=jB/fqSueCYt2RA3ppkdZrQ1ODDWf2CGc5HEiG/Wtd9g=;
-        fh=llKWxV3jgy/ojvEBaSEZH0ubUl5Bk6ptWUuGk7AlGsI=;
-        b=X/4GPFZULtQOTLeTYfORYt/pW/OpRL+Q8Y7Restb2G7J9E6YSxpvXC6eOo/4X5NYdJ
-         48uK9+Of16v2ePeTx530jCXI/YqcevXI5squiN4wW9OfNM+K5EUXB2WCJly3/LfndY0p
-         v/iyAlkXDoMzMrOR/IbMc+DpxKdLl63ztfb8/zUDNejTngkeHzswpBcEykji+KNq6P9O
-         dg/wyrISWBtBYSmSqDniCUe4nP7nRjj584DEsclf2wO8edX/MyfWb1btqPWFqm7lh3ll
-         NvVodqCtuUEw1TwTmgTzZ+Kay8N0rFLwNYskdYBxpLNAPr2R5kmGazT5LSSKAs04nUBw
-         /AOQ==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1770485684; x=1771090484; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jB/fqSueCYt2RA3ppkdZrQ1ODDWf2CGc5HEiG/Wtd9g=;
-        b=Ip6bhtk945CtdATNy2gRS/v/0jF0lDGdva43O9EJTzQ1gPlom0qTLZ0Yw7y9fX7C8f
-         rdGCsn1BWvfpnPXbAw8k/3WsnE37WoOzSB9FJWvVyG7GQcWwKOaQWvQFnoHBv3IpFU4P
-         +iZeHQ0CMNSsl2Bxypx73BvKbI/sB4cUSLqyycnw4i68aLd0bmGXB+KY5bZASykiCboX
-         yWyneucFScetXLtA/eQ1xJsa7/mtTm2E3g/oQ7g3eKAgk3sZJka6sRDQ4VPITtAtGU+C
-         bfFS2/QuKiqSAbB+3QyZS68qE1/BZ4rT122y+Dos8TOWRLqVRpUS2d5FLZjxydLBWGTF
-         tKEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770485684; x=1771090484;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jB/fqSueCYt2RA3ppkdZrQ1ODDWf2CGc5HEiG/Wtd9g=;
-        b=r5U5cXcAmudgAc4E1Gsqjx+MwGVYQNeCRl5PwIUa1JWW995OgMEIa7j6XkrleRaoUX
-         ojIQbrhMIHQIrXrKSfcPTWCQHNu7RxhwnTRmeUpPZHPoyRwOdQtsaMn6s4+gbUGpVTtX
-         5onP/DpDX3VwHwUrwbqTVH21s9mR54f8ZAmCG2q1DsBwzPdK2Z2jM/l1/eLsduAtWGvm
-         I7/Vz/Psg+6NA0RsotEjbOH/GHrU9iqkVBq5B63qAUvohKd/PZJJ00E5PEUPlk5zqqhO
-         ApMSaqfBHNh01fD7PCKrdBP9t2vVdqsGBxnrjfnt4HU6dD77IiIPIpD7c5Mpz7HhGVZe
-         PCGg==
-X-Forwarded-Encrypted: i=1; AJvYcCUeCnhaRgdKMvjh+pHE3ftetLGqbiqR3Z46UXenMaDBXlG7CikdrLwnnGhSdiGQsylECOC8gA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzdkWnEO+5jjj5KtfaGHOBB6N0oOGptpc35g6/lLeZ8h5ZQh6gn
-	KXBTXL25g/O/LE/DLWlBHwoGXvJtd4BZd/l/yreg71asDtjL6tU2jTdhqVnoRC+ry3h0NycA7Kk
-	mVB3aWGQ8WqFDOhGWp+PVM8KS+1nPBUG0cSPcoS0IgQ==
-X-Gm-Gg: AZuq6aI+LfOs9vTgDTralpsy925S44MWAGIfj15o1FmVdPwRpG+jJMEDUXXtHNRs/sL
-	Iyud+4kIdAUNmu+2JS0k+dqRmH7CoWDOSDExIeXQvdywxSZYEeEwJ9Qg8Lnb4aio1PNzPHmcKVz
-	NqJeXXK61DshvlEwYSXEneEJmpetopKPfZz23gqWU9LxZoGA45m8AI2fdLU6dVofctI+nMJeDox
-	DvXZxLowJmrDT6cw4P6w7d6KpaXg4XttD6W1G4vQkSCjD343aNx5FHZkPCSPmYsHxgjwzDawSwA
-	fOET1xtp4F9va7swhLCLwSj3Amw=
-X-Received: by 2002:a05:6402:4306:b0:659:454b:7167 with SMTP id
- 4fb4d7f45d1cf-6598419575cmr3540228a12.23.1770485683992; Sat, 07 Feb 2026
- 09:34:43 -0800 (PST)
+	Sun, 08 Feb 2026 13:39:30 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 112B7600BB;
+	Sun,  8 Feb 2026 13:39:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA29EC4CEF7;
+	Sun,  8 Feb 2026 13:39:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770557967;
+	bh=p5apwxke5Voq6wgYtF+4zURk4Mg2tVFJZzENXvZG7pA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kUJEeUBm5LsPQs1HT2BaNw9nnF8jBrN1BrdLchoRKC/cBOek3b5rZi3hO43YkXMc1
+	 ESyDpK9KraApfctaW2tM5QN6QDKziK2OF5cGKvZkN/vlspHUTe0GUUdT3rL88DxEMQ
+	 Wlcu3dQ1Uo8nB1ANrCx5ecm+yTFGopj2MQ3umx48vY/zX1WDVkY46Kq5wIkwrENP/Z
+	 mVJJKXEJZ93NuAs1T2gyHX4ZsfRN83pcGjk7rzXCb3ekiNg/669h234k3iLHVHm1F7
+	 D80llIqhnKD99pYgMRM4JYqEYjgDEeEyWwJKoFu0CIUFKbV8S2KLsMy02D4D3fFmQZ
+	 pDx1SXvFKxfNA==
+Date: Sun, 8 Feb 2026 15:39:23 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: ross.philipson@oracle.com
+Cc: "Daniel P. Smith" <dpsmith@apertussolutions.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+	linux-efi@vger.kernel.org, iommu@lists.linux.dev,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+	dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
+	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
+	jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu,
+	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
+	ebiederm@xmission.com, dwmw2@infradead.org,
+	baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
+	andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
+Subject: Re: [PATCH v15 02/28] tpm: Move TPM1 specific definitions and
+ functions to new headers
+Message-ID: <aYiSC5HFWYvSB50d@kernel.org>
+References: <20251215233316.1076248-1-ross.philipson@oracle.com>
+ <20251215233316.1076248-3-ross.philipson@oracle.com>
+ <aW7E2dVlmjZIUivW@kernel.org>
+ <7aad3461-f0a5-42ff-ba9b-b52edd7d36db@apertussolutions.com>
+ <6e1e771c-ecd4-4ab6-ba9f-900f34c5d89d@oracle.com>
 MIME-Version: 1.0
-References: <20260206043121.197564-1-ranxiaokai627@163.com> <20260206043121.197564-3-ranxiaokai627@163.com>
-In-Reply-To: <20260206043121.197564-3-ranxiaokai627@163.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Sat, 7 Feb 2026 12:34:08 -0500
-X-Gm-Features: AZwV_Qh6oCM3WhmWEP1Nry3xlXhW5Yie6guDA3kOhQ8BM2V2J9MhOnj_y4jt7p8
-Message-ID: <CA+CK2bCW9fNShn=BUuje3tAnSydCQoKw-7TXYK9HahO5DvZqUA@mail.gmail.com>
-Subject: Re: [PATCH -next 2/2] kho: remove unnecessary WARN_ON(err) in kho_populate()
-To: ranxiaokai627@163.com
-Cc: graf@amazon.com, rppt@kernel.org, pratyush@kernel.org, 
-	akpm@linux-foundation.org, kexec@lists.infradead.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, ran.xiaokai@zte.com.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260207_093446_230330_C1D80911 
-X-CRM114-Status: GOOD (  12.45  )
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6e1e771c-ecd4-4ab6-ba9f-900f34c5d89d@oracle.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,39 +85,359 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Feb 5, 2026 at 11:31=E2=80=AFPM <ranxiaokai627@163.com> wrote:
->
-> From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
->
-> The following pr_warn() provides detailed error and location
-> information, WARN_ON(err) adds no additional debugging value,
-> so remove the redundant WARN_ON() call.
->
-> Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
-> ---
->  kernel/liveupdate/kexec_handover.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec=
-_handover.c
-> index 76b714db175d..b851b09a8e99 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -1507,7 +1507,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 =
-fdt_len,
->
->                 memblock_add(area->addr, size);
->                 err =3D memblock_mark_kho_scratch(area->addr, size);
-> -               if (WARN_ON(err)) {
-> +               if (err) {
->                         pr_warn("failed to mark the scratch region 0x%pa+=
-0x%pa: %pe",
->                                 &area->addr, &size, ERR_PTR(err));
->                         goto err_unmap_scratch;
-> --
-> 2.25.1
->
->
->
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+On Wed, Feb 04, 2026 at 09:44:34AM -0800, ross.philipson@oracle.com wrote:
+> On 2/1/26 8:23 AM, Daniel P. Smith wrote:
+> > On 1/19/26 18:57, Jarkko Sakkinen wrote:
+> > > On Mon, Dec 15, 2025 at 03:32:50PM -0800, Ross Philipson wrote:
+> > > > This gathers all the TPM1 definitions and structures into two separate
+> > > > header files (public tpm1.h and private tpm1_structs.h). The definitions
+> > > > moved to these files correspond to the TCG specification for TPM 1 family:
+> > > > 
+> > > > TPM 1.2 Main Specification
+> > > >   -  https://urldefense.com/v3/__https://trustedcomputinggroup.org/resource/tpm-main-specification/__;!!ACWV5N9M2RV99hQ!OivTxO-R0nvBJYXIV-T0n0fq0wY64MTgdaecPzAauxrFkRxTcQ6CuBEcXmZZYY1KfZlqmfLTZBbPaEr7Y8k7hJk9_mQ$
+> > > > Note that the structures were pulled into tpm1_structs.h to allow their
+> > > > external reuse.
+> > > > 
+> > > > Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+> > > > Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+> > > > ---
+> > > >   drivers/char/tpm/tpm.h          | 98 +--------------------------------
+> > > >   drivers/char/tpm/tpm1-cmd.c     |  5 --
+> > > >   drivers/char/tpm/tpm1_structs.h | 97 ++++++++++++++++++++++++++++++++
+> > > 
+> > > I think you are overcomplicating the patch set and doing more
+> > > than you really need to do.
+> > > 
+> > > I.e. structs could go also just as well to tpm_command.h. We
+> > > will deal with if/when that file ever grows too large. It's
+> > > absolutely not a priority for this patch set.
+> > 
+> > Ack.
+> > 
+> > > >   include/linux/tpm1.h            | 34 +++++++++++-
+> > > >   4 files changed, 132 insertions(+), 102 deletions(-)
+> > > >   create mode 100644 drivers/char/tpm/tpm1_structs.h
+> > > > 
+> > > > diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+> > > > index ca391b2a211c..1f9f8540eede 100644
+> > > > --- a/drivers/char/tpm/tpm.h
+> > > > +++ b/drivers/char/tpm/tpm.h
+> > > > @@ -50,105 +50,9 @@ enum tpm_addr {
+> > > >       TPM_ADDR = 0x4E,
+> > > >   };
+> > > > -#define TPM_WARN_RETRY          0x800
+> > > > -#define TPM_WARN_DOING_SELFTEST 0x802
+> > > > -#define TPM_ERR_DEACTIVATED     0x6
+> > > > -#define TPM_ERR_DISABLED        0x7
+> > > > -#define TPM_ERR_FAILEDSELFTEST  0x1C
+> > > > -#define TPM_ERR_INVALID_POSTINIT 38
+> > > > -
+> > > > -#define TPM_TAG_RQU_COMMAND 193
+> > > > -
+> > > >   /* TPM2 specific constants. */
+> > > >   #define TPM2_SPACE_BUFFER_SIZE        16384 /* 16 kB */
+> > > > -struct    stclear_flags_t {
+> > > > -    __be16    tag;
+> > > > -    u8    deactivated;
+> > > > -    u8    disableForceClear;
+> > > > -    u8    physicalPresence;
+> > > > -    u8    physicalPresenceLock;
+> > > > -    u8    bGlobalLock;
+> > > > -} __packed;
+> > > > -
+> > > > -struct tpm1_version {
+> > > > -    u8 major;
+> > > > -    u8 minor;
+> > > > -    u8 rev_major;
+> > > > -    u8 rev_minor;
+> > > > -} __packed;
+> > > > -
+> > > > -struct tpm1_version2 {
+> > > > -    __be16 tag;
+> > > > -    struct tpm1_version version;
+> > > > -} __packed;
+> > > > -
+> > > > -struct    timeout_t {
+> > > > -    __be32    a;
+> > > > -    __be32    b;
+> > > > -    __be32    c;
+> > > > -    __be32    d;
+> > > > -} __packed;
+> > > > -
+> > > > -struct duration_t {
+> > > > -    __be32    tpm_short;
+> > > > -    __be32    tpm_medium;
+> > > > -    __be32    tpm_long;
+> > > > -} __packed;
+> > > > -
+> > > > -struct permanent_flags_t {
+> > > > -    __be16    tag;
+> > > > -    u8    disable;
+> > > > -    u8    ownership;
+> > > > -    u8    deactivated;
+> > > > -    u8    readPubek;
+> > > > -    u8    disableOwnerClear;
+> > > > -    u8    allowMaintenance;
+> > > > -    u8    physicalPresenceLifetimeLock;
+> > > > -    u8    physicalPresenceHWEnable;
+> > > > -    u8    physicalPresenceCMDEnable;
+> > > > -    u8    CEKPUsed;
+> > > > -    u8    TPMpost;
+> > > > -    u8    TPMpostLock;
+> > > > -    u8    FIPS;
+> > > > -    u8    operator;
+> > > > -    u8    enableRevokeEK;
+> > > > -    u8    nvLocked;
+> > > > -    u8    readSRKPub;
+> > > > -    u8    tpmEstablished;
+> > > > -    u8    maintenanceDone;
+> > > > -    u8    disableFullDALogicInfo;
+> > > > -} __packed;
+> > > > -
+> > > > -typedef union {
+> > > > -    struct    permanent_flags_t perm_flags;
+> > > > -    struct    stclear_flags_t    stclear_flags;
+> > > > -    __u8    owned;
+> > > > -    __be32    num_pcrs;
+> > > > -    struct tpm1_version version1;
+> > > > -    struct tpm1_version2 version2;
+> > > > -    __be32    manufacturer_id;
+> > > > -    struct timeout_t  timeout;
+> > > > -    struct duration_t duration;
+> > > > -} cap_t;
+> > > > -
+> > > > -enum tpm_capabilities {
+> > > > -    TPM_CAP_FLAG = 4,
+> > > > -    TPM_CAP_PROP = 5,
+> > > > -    TPM_CAP_VERSION_1_1 = 0x06,
+> > > > -    TPM_CAP_VERSION_1_2 = 0x1A,
+> > > > -};
+> > > > -
+> > > > -enum tpm_sub_capabilities {
+> > > > -    TPM_CAP_PROP_PCR = 0x101,
+> > > > -    TPM_CAP_PROP_MANUFACTURER = 0x103,
+> > > > -    TPM_CAP_FLAG_PERM = 0x108,
+> > > > -    TPM_CAP_FLAG_VOL = 0x109,
+> > > > -    TPM_CAP_PROP_OWNER = 0x111,
+> > > > -    TPM_CAP_PROP_TIS_TIMEOUT = 0x115,
+> > > > -    TPM_CAP_PROP_TIS_DURATION = 0x120,
+> > > > -};
+> > > > -
+> > > >   enum tpm2_pt_props {
+> > > >       TPM2_PT_NONE = 0x00000000,
+> > > >       TPM2_PT_GROUP = 0x00000100,
+> > > > @@ -229,6 +133,8 @@ enum tpm2_pt_props {
+> > > >    * compiler warnings about stack frame size. */
+> > > >   #define TPM_MAX_RNG_DATA    128
+> > > > +#include "tpm1_structs.h"
+> > > > +
+> > > >   extern const struct class tpm_class;
+> > > >   extern const struct class tpmrm_class;
+> > > >   extern dev_t tpm_devt;
+> > > > diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
+> > > > index f29827b454d2..02f20a0aa37d 100644
+> > > > --- a/drivers/char/tpm/tpm1-cmd.c
+> > > > +++ b/drivers/char/tpm/tpm1-cmd.c
+> > > > @@ -505,11 +505,6 @@ ssize_t tpm1_getcap(struct tpm_chip *chip, u32 subcap_id, cap_t *cap,
+> > > >   }
+> > > >   EXPORT_SYMBOL_GPL(tpm1_getcap);
+> > > > -struct tpm1_get_random_out {
+> > > > -    __be32 rng_data_len;
+> > > > -    u8 rng_data[TPM_MAX_RNG_DATA];
+> > > > -} __packed;
+> > > > -
+> > > >   /**
+> > > >    * tpm1_get_random() - get random bytes from the TPM's RNG
+> > > >    * @chip:    a &struct tpm_chip instance
+> > > > diff --git a/drivers/char/tpm/tpm1_structs.h b/drivers/char/tpm/tpm1_structs.h
+> > > > new file mode 100644
+> > > > index 000000000000..ad21376af5ab
+> > > > --- /dev/null
+> > > > +++ b/drivers/char/tpm/tpm1_structs.h
+> > > > @@ -0,0 +1,97 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > > > +/*
+> > > > + * Copyright (C) 2004 IBM Corporation
+> > > > + * Copyright (C) 2015 Intel Corporation
+> > > > + *
+> > > > + * Authors:
+> > > > + * Leendert van Doorn <leendert@watson.ibm.com>
+> > > > + * Dave Safford <safford@watson.ibm.com>
+> > > > + * Reiner Sailer <sailer@watson.ibm.com>
+> > > > + * Kylene Hall <kjhall@us.ibm.com>
+> > > > + *
+> > > > + * Maintained by: <tpmdd-devel@lists.sourceforge.net>
+> > > > + *
+> > > > + * Device driver for TCG/TCPA TPM (trusted platform module).
+> > > > + * Specifications at https://urldefense.com/v3/__http://www.trustedcomputinggroup.org__;!!ACWV5N9M2RV99hQ!OivTxO-R0nvBJYXIV-T0n0fq0wY64MTgdaecPzAauxrFkRxTcQ6CuBEcXmZZYY1KfZlqmfLTZBbPaEr7Y8k7HW5iz_w$ + */
+> > > > +
+> > > > +#ifndef __TPM1_STRUCTS_H__
+> > > > +#define __TPM1_STRUCTS_H__
+> > > > +
+> > > > +struct    stclear_flags_t {
+> > > > +    __be16    tag;
+> > > > +    u8    deactivated;
+> > > > +    u8    disableForceClear;
+> > > > +    u8    physicalPresence;
+> > > > +    u8    physicalPresenceLock;
+> > > > +    u8    bGlobalLock;
+> > > > +} __packed;
+> > > 
+> > > 
+> > > Don't retain alignment.
+> > > 
+> > 
+> > Okay.
+> 
+> I wanted to clarify what you are asking here. Do you mean to just not pack the structs? It seems some of these structs define the responses from the TPM chip and I would assume they are packed this way.
+> 
+> > 
+> > > > +
+> > > > +struct tpm1_version {
+> > > > +    u8 major;
+> > > > +    u8 minor;
+> > > > +    u8 rev_major;
+> > > > +    u8 rev_minor;
+> > > > +} __packed;
+> > > > +
+> > > > +struct tpm1_version2 {
+> > > > +    __be16 tag;
+> > > > +    struct tpm1_version version;
+> > > > +} __packed;
+> > > > +
+> > > > +struct    timeout_t {
+> > > > +    __be32    a;
+> > > > +    __be32    b;
+> > > > +    __be32    c;
+> > > > +    __be32    d;
+> > > > +} __packed;
+> > > > +
+> > > > +struct duration_t {
+> > > > +    __be32    tpm_short;
+> > > > +    __be32    tpm_medium;
+> > > > +    __be32    tpm_long;
+> > > > +} __packed;
+> > > > +
+> > > > +struct permanent_flags_t {
+> > > > +    __be16    tag;
+> > > > +    u8    disable;
+> > > > +    u8    ownership;
+> > > > +    u8    deactivated;
+> > > > +    u8    readPubek;
+> > > > +    u8    disableOwnerClear;
+> > > > +    u8    allowMaintenance;
+> > > > +    u8    physicalPresenceLifetimeLock;
+> > > > +    u8    physicalPresenceHWEnable;
+> > > > +    u8    physicalPresenceCMDEnable;
+> > > > +    u8    CEKPUsed;
+> > > > +    u8    TPMpost;
+> > > > +    u8    TPMpostLock;
+> > > > +    u8    FIPS;
+> > > > +    u8    operator;
+> > > > +    u8    enableRevokeEK;
+> > > > +    u8    nvLocked;
+> > > > +    u8    readSRKPub;
+> > > > +    u8    tpmEstablished;
+> > > > +    u8    maintenanceDone;
+> > > > +    u8    disableFullDALogicInfo;
+> > > > +} __packed;
+> > > > +
+> > > > +/* Gather all capabilities related information info one type */
+> > > > +typedef union {
+> > > > +    struct    permanent_flags_t perm_flags;
+> > > > +    struct    stclear_flags_t    stclear_flags;
+> > > > +    __u8    owned;
+> > > > +    __be32    num_pcrs;
+> > > > +    struct tpm1_version version1;
+> > > > +    struct tpm1_version2 version2;
+> > > > +    __be32    manufacturer_id;
+> > > > +    struct timeout_t  timeout;
+> > > > +    struct duration_t duration;
+> > > > +} cap_t;
+> > > 
+> > > Don't retain alignment here.
+> 
+> Again to clarify, do you mean none of these structs should be packed (and thus the union won't be either)?
+
+I only meant the syntactical (is that even a word) alignment :-)
+
+I don't know what purpose does it serve here, as struct members already
+convolute, and alignment then sort of add up to the convolution.
+
+E.g., "__be32 manufacturer_id" with just one spacebar is what I mean.
+
+> 
+> Thanks
+> Ross
+> 
+> > > 
+> > 
+> > Okay.
+> > 
+> > > > +
+> > > > +struct tpm1_get_random_out {
+> > > > +    __be32 rng_data_len;
+> > > > +    u8 rng_data[TPM_MAX_RNG_DATA];
+> > > > +} __packed;
+> > > > +
+> > > > +#endif
+> > > > diff --git a/include/linux/tpm1.h b/include/linux/tpm1.h
+> > > > index 54c6c211eb9e..5fad94ac8d15 100644
+> > > > --- a/include/linux/tpm1.h
+> > > > +++ b/include/linux/tpm1.h
+> > > > @@ -47,7 +47,39 @@ enum tpm_command_ordinals {
+> > > >       TPM_ORD_UNSEAL            = 24,
+> > > >   };
+> > > > -/* Other constants */
+> > > > +enum tpm_capabilities {
+> > > > +    TPM_CAP_FLAG        = 4,
+> > > > +    TPM_CAP_PROP        = 5,
+> > > > +    TPM_CAP_VERSION_1_1    = 0x06,
+> > > > +    TPM_CAP_VERSION_1_2    = 0x1A,
+> > > > +};
+> > > > +
+> > > > +enum tpm_sub_capabilities {
+> > > > +    TPM_CAP_PROP_PCR        = 0x101,
+> > > > +    TPM_CAP_PROP_MANUFACTURER    = 0x103,
+> > > > +    TPM_CAP_FLAG_PERM        = 0x108,
+> > > > +    TPM_CAP_FLAG_VOL        = 0x109,
+> > > > +    TPM_CAP_PROP_OWNER        = 0x111,
+> > > > +    TPM_CAP_PROP_TIS_TIMEOUT    = 0x115,
+> > > > +    TPM_CAP_PROP_TIS_DURATION    = 0x120,
+> > > > +};
+> > > > +
+> > > > +/* Return Codes */
+> > > > +enum tpm_return_codes {
+> > > > +    TPM_BASE_MASK            = 0,
+> > > > +    TPM_NON_FATAL_MASK        = 0x00000800,
+> > > > +    TPM_SUCCESS            = TPM_BASE_MASK + 0,
+> > > > +    TPM_ERR_DEACTIVATED        = TPM_BASE_MASK + 6,
+> > > > +    TPM_ERR_DISABLED        = TPM_BASE_MASK + 7,
+> > > > +    TPM_ERR_FAIL            = TPM_BASE_MASK + 9,
+> > > > +    TPM_ERR_FAILEDSELFTEST        = TPM_BASE_MASK + 28,
+> > > > +    TPM_ERR_INVALID_POSTINIT    = TPM_BASE_MASK + 38,
+> > > > +    TPM_ERR_INVALID_FAMILY        = TPM_BASE_MASK + 55,
+> > > > +    TPM_WARN_RETRY            = TPM_BASE_MASK + TPM_NON_FATAL_MASK + 0,
+> > > > +    TPM_WARN_DOING_SELFTEST        = TPM_BASE_MASK + TPM_NON_FATAL_MASK + 2,
+> > > > +};
+> > > > +
+> > > > +/* Misc. constants */
+> > > 
+> > > These constants should be relocated in a separate patch.
+> > > 
+> > 
+> > Okay.
+> > 
+> > > >   #define SRKHANDLE                       0x40000000
+> > > >   #define TPM_NONCE_SIZE                  20
+> > > >   #define TPM_ST_CLEAR            1
+> > > > -- 
+> > > > 2.43.7
+> > > > 
+> > > 
+> > > BR, Jarkko
+> > 
+> 
+
+BR, Jarkko
 
