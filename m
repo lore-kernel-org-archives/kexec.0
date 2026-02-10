@@ -4,76 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E6324EA810D
-	for <kexec@archiver.kernel.org>; Tue, 10 Feb 2026 13:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1F4DEEA810F
+	for <kexec@archiver.kernel.org>; Tue, 10 Feb 2026 13:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=eH6JL7gkCCkK21U6qSqUgOiFfCqEIuZ4GNLMeFzGLJ0=; b=cYOsAffCYrlhRY+rw4pOP707aL
-	elXHn50OSnltU85LPNDFvp/cBEjrOFLKaMCbrzcGXit+V1A3TAr5oUPXD0KbcpUQr7769Mn9agB9V
-	ute0wv+0K2nPnmAMorKOkwFA0lL4G1WjR/ffAcLkw7NDBmCx5SbxEw7slAhmPPCIPtbwyooczidxE
-	SRQQYv4asH/pTCQGCi4HBl8x+MKfjeZgdZWTWX2BogZhDOTUG/ylTp8RGRBw0IO5ANwh8AMkDpt+1
-	61HpIsxaibIeaEXph4QoeJ4IC5v3/cVjPzvjrvDaic/IrX+aTfu/8lI+6gLssDlToB+KhMxzE2CIW
-	tHc4wVhw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=n0h9spvQPsXRmFyX7NfVe0MGvBvIuwiJh1xd+Oy7s8A=; b=d72nGhmxu6hTbjNtUiuLY8kuEK
+	eiKHqGDEAVKy6uk9d9k1cgJI/eFRK28CWNxWAw7DXeTilDs+0iYXZYdB09GGcLbLNvvvNM0u4b8zf
+	QQPxTMNx7aQ3eFtnGcVGuKUCumWX8DULjSAw05kciaebc5viY4/LOkqyZ01uw8ah63744vPOBwIOK
+	LoI6v6WBIzIjJMbN4NE2MUF9r5ctp1IdQkzRMLqgq2vpvPUQWtsR5yPEDGgqwxBSyO9Oe8gitNq3S
+	GJib6Wobku7NLjJXohlDli2Yw2a3V1eq1gyX0mvkg0cX+qEq2CWMCEtgvrLICAruqGNVMVG+cgz8d
+	gBAlJj1A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vpnQ0-0000000GyR3-2TBW;
-	Tue, 10 Feb 2026 13:04:40 +0000
-Received: from mail-ej1-x64a.google.com ([2a00:1450:4864:20::64a])
+	id 1vpnW1-0000000GyeX-3Pxr;
+	Tue, 10 Feb 2026 13:10:53 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vpnPy-0000000GyQZ-01i1
+	id 1vpnVz-0000000GyeO-4C1b
 	for kexec@lists.infradead.org;
-	Tue, 10 Feb 2026 13:04:39 +0000
-Received: by mail-ej1-x64a.google.com with SMTP id a640c23a62f3a-b8704795d25so366633066b.2
-        for <kexec@lists.infradead.org>; Tue, 10 Feb 2026 05:04:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770728675; x=1771333475; darn=lists.infradead.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=eH6JL7gkCCkK21U6qSqUgOiFfCqEIuZ4GNLMeFzGLJ0=;
-        b=TpGZul0a4OFxgbstxiV+raALt/MHBnMKHlpIjb1u3g6rdFMx6TGHiO0slLM3Xt79b9
-         R63Mv2IR7FQf9zYqFOk4kzg51FixbPeHqf7FjrIZ0yKmpeLK886BNXR9QUUEVBGMtPWD
-         5WTYPiswM3xpG2tVKSTN2aZFzEFwlomI0mRqPmTWOLghsvjV8SYMgjh+UmAkBC3tOfYU
-         H/Ei1EDrKW8R+cwhn/Lzy9Ieg9dpinSWCOFqZ02QIPpXAs8D3QqidISZKmfd2QeQwmWM
-         cqwIjOFsp4h7juJkTc2Uf8PgV9b4Bymf7pL8aiJHb43Cuhk7WsEYRhzmVqA8V+lsM1O/
-         Nzlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770728675; x=1771333475;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eH6JL7gkCCkK21U6qSqUgOiFfCqEIuZ4GNLMeFzGLJ0=;
-        b=YnNi1lzOXLv1yejgKNcOvZpINV/yvvAQvPx+h4Zf/SK6yhCPbbzUOrSy6apsjZ461L
-         c0YCH+2/v7JhR9FKlkFZngg28WabusDwrvpMln7mDNSdAXGBEQF//3+09oETV/MlGJ7M
-         2+a6u+RF02y3X6rCmczkLvjWZssheoHNhXoyPf5tUNpWeSHmDloG8bOYhCmM9CZV8QAI
-         BdQ8wLIWSwxwATaJHHlTwgwe2u/IEAOx2jXVr8l8jGtpmgRRd3Ps8XfSY5597VnlTy0t
-         EeymnFjuq2e2MyDeD5mmuheXIvlqgD20l5OXu+j0M16vMiR1gJwImDLfEcRZyB9Qw6ZY
-         xRQw==
-X-Forwarded-Encrypted: i=1; AJvYcCU59nhGGDkKSlL5L8GKicA2j4z3nVQm3puBwmjahZPTNyX4u1IJWxZN0EiiOfgRxsx+cSpxJg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YziAvGktuR2r+NS39eZhxgfR6T5k45eNaBb8lQuZstWpgSRL9j3
-	+NlFAgVOVaXbqboY/nxvEDdPnVQAvbXIeCMvMUPIXBzUR+PTFzfi3nIK87igFkB97Io7d1cF7xD
-	KohH9hdjGX1S/CUMZIYsIfA==
-X-Received: from ejeo7.prod.google.com ([2002:a17:906:8c7:b0:b8d:7cde:ce4d])
- (user=mclapinski job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:907:9810:b0:b73:2b08:ac70 with SMTP id a640c23a62f3a-b8edf33e476mr828942066b.49.1770728675354;
- Tue, 10 Feb 2026 05:04:35 -0800 (PST)
-Date: Tue, 10 Feb 2026 14:04:18 +0100
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.53.0.rc2.204.g2597b5adb4-goog
-Message-ID: <20260210130418.297153-1-mclapinski@google.com>
-Subject: [PATCH v2] kho: add support for deferred struct page init
-From: Michal Clapinski <mclapinski@google.com>
-To: Evangelos Petrongonas <epetron@amazon.de>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
-	kexec@lists.infradead.org, linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Michal Clapinski <mclapinski@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260210_050438_065595_5DE7020F 
-X-CRM114-Status: GOOD (  21.60  )
+	Tue, 10 Feb 2026 13:10:52 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 7D5BD60127;
+	Tue, 10 Feb 2026 13:10:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34F91C19423;
+	Tue, 10 Feb 2026 13:10:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770729049;
+	bh=y/HJEMaa/rbv0tW6eu8usmweDN19KKP/8uDNCBZhhIk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=YAK2dF3e6lqB6pnmA+92RZmQ0JxS3hdmtrlWH7Jz+RnEUeWsrg3LJAlPHl0GcrSPf
+	 my0Bd3/hU8KVKgVRr8mk3XkU42cjfs7f/8ciBFxBoxeDYXWLAx+2bZTTkPsx1P55d9
+	 YYVWLtMai04SQzbJBBrCHbgEJdcL0PR7Ck7B5H8f6ihl46obqnBWV9l5W14fWQObk1
+	 0NSh4d6EpTsapeDSGqPVuBK+9SyLfyNrJaKSFL1sQYnkH/LsvWUeEayowKhUorndES
+	 JEdDncgOcjnhgUgHsZ+cA+TMccqh1vJqyUBBoV78whC6k2Gu9R5OqwcJzOheqBow8c
+	 CWN/XFgXUw8yQ==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Mike Rapoport <rppt@kernel.org>,  Pratyush Yadav <pratyush@kernel.org>,
+  Alexander Graf <graf@amazon.com>,  Pasha Tatashin
+ <pasha.tatashin@soleen.com>,  Hugh Dickins <hughd@google.com>,  Baolin
+ Wang <baolin.wang@linux.alibaba.com>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Samiullah Khawaja <skhawaja@google.com>,
+  kexec@lists.infradead.org,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm: memfd_luo: preserve file seals
+In-Reply-To: <20260126183115.GU1134360@nvidia.com> (Jason Gunthorpe's message
+	of "Mon, 26 Jan 2026 14:31:15 -0400")
+References: <20260123095854.535058-1-pratyush@kernel.org>
+	<20260123095854.535058-3-pratyush@kernel.org>
+	<aXYGkb-QtYNaWYw4@kernel.org> <20260126183115.GU1134360@nvidia.com>
+Date: Tue, 10 Feb 2026 14:10:45 +0100
+Message-ID: <2vxzseb8u4kq.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,119 +76,69 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When `CONFIG_DEFERRED_STRUCT_PAGE_INIT` is enabled, struct page
-initialization is deferred to parallel kthreads that run later
-in the boot process.
+Hi Jason,
 
-During KHO restoration, `deserialize_bitmap()` writes metadata for
-each preserved memory region. However, if the struct page has not been
-initialized, this write targets uninitialized memory, potentially
-leading to errors like:
-```
-BUG: unable to handle page fault for address: ...
-```
+On Mon, Jan 26 2026, Jason Gunthorpe wrote:
 
-Fix this by introducing `kho_get_preserved_page()`,  which ensures
-all struct pages in a preserved region are initialized by calling
-`init_deferred_page()` which is a no-op when deferred init is disabled
-or when the struct page is already initialized.
+> On Sun, Jan 25, 2026 at 02:03:29PM +0200, Mike Rapoport wrote:
+>> > @@ -67,11 +72,13 @@ struct memfd_luo_folio_ser {
+>> >  struct memfd_luo_ser {
+>> >  	u64 pos;
+>> >  	u64 size;
+>> > +	u64 seals:8;
+>> 
+>> Kernel uABI defines seals as unsigned int, I think we can spare u32 for
+>> them and reserve a u32 flags for other memfd flags (MFD_CLOEXEC,
+>> MFD_HUGETLB etc).
+>
+> It is a bit worse than that, the "v2" version is only going to support
+> some set of seals (probably the set defined in v6.19) and if there are
+> new seals down the road then this needs a version bump.
 
-Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
-Signed-off-by: Michal Clapinski <mclapinski@google.com>
----
-v2: updated a comment
+If we are running say kernel X, then X + 1 will always support a
+superset of the seals, since the seals are UAPI. So it should be able to
+handle all the seals that are given to it by X. This only becomes a
+problem on rollbacks. Is this what you are worried about or am I missing
+something?
 
-I think we can't initialize those struct pages in kho_restore_page.
-I encountered this stack:
-  page_zone(start_page)
-  __pageblock_pfn_to_page
-  set_zone_contiguous
-  page_alloc_init_late
+>
+> So I'd check that only supported seals are set here:
+>
+>> > +     seals = memfd_get_seals(args->file);
+>> > +     if (seals < 0) {
+>> > +             err = seals;
+>> > +             goto err_free_ser;
+>> > +     }
+>> > +
+>> >       ser->pos = args->file->f_pos;
+>> >       ser->size = i_size_read(inode);
+>> > +     ser->seals = seals;
+>
+> ..
+>
+>> > @@ -444,13 +453,23 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
+>> >  	if (!ser)
+>> >  		return -EINVAL;
+>> >  
+>> > -	file = memfd_alloc_file("", 0);
+>> > +	/*
+>> > +	 * The seals are preserved. Allow sealing here so they can be added
+>> > +	 * later.
+>> > +	 */
+>> > +	file = memfd_alloc_file("", MFD_ALLOW_SEALING);
+>> >  	if (IS_ERR(file)) {
+>> >  		pr_err("failed to setup file: %pe\n", file);
+>> >  		err = PTR_ERR(file);
+>> >  		goto free_ser;
+>> >  	}
+>> >  
+>> > +	err = memfd_add_seals(file, ser->seals);
+>
+> Because we really don't want this to fail :\
+>
+> Jason
 
-So, at the end of page_alloc_init_late struct pages are expected to be
-already initialized. set_zone_contiguous() looks at the first and last
-struct page of each pageblock in each populated zone to figure out if
-the zone is contiguous. If a kho page lands on a pageblock boundary,
-this will lead to access of an uninitialized struct page.
-There is also page_ext_init that invokes pfn_to_nid, which calls
-page_to_nid for each section-aligned page.
-There might be other places that do something similar. Therefore, it's
-a good idea to initialize all struct pages by the end of deferred
-struct page init. That's why I'm resending Evangelos's patch.
-
-I also tried to implement Pratyush's idea, i.e. iterate over zones,
-then get node from zone. I didn't notice any performance difference
-even with 8GB of kho.
-
-I repeated Evangelos's testing:
-In order to test the fix, I modified the KHO selftest, to allocate more
-memory and do so from higher memory to trigger the incompatibility. The
-branch with those changes can be found in:
-https://git.infradead.org/?p=users/vpetrog/linux.git;a=shortlog;h=refs/heads/kho-deferred-struct-page-init
----
- kernel/liveupdate/Kconfig          |  2 --
- kernel/liveupdate/kexec_handover.c | 23 ++++++++++++++++++++++-
- 2 files changed, 22 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/liveupdate/Kconfig b/kernel/liveupdate/Kconfig
-index 1a8513f16ef7..c13af38ba23a 100644
---- a/kernel/liveupdate/Kconfig
-+++ b/kernel/liveupdate/Kconfig
-@@ -1,12 +1,10 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
- menu "Live Update and Kexec HandOver"
--	depends on !DEFERRED_STRUCT_PAGE_INIT
- 
- config KEXEC_HANDOVER
- 	bool "kexec handover"
- 	depends on ARCH_SUPPORTS_KEXEC_HANDOVER && ARCH_SUPPORTS_KEXEC_FILE
--	depends on !DEFERRED_STRUCT_PAGE_INIT
- 	select MEMBLOCK_KHO_SCRATCH
- 	select KEXEC_FILE
- 	select LIBFDT
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index b851b09a8e99..26bb45b25809 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -457,6 +457,27 @@ static int kho_mem_serialize(struct kho_out *kho_out)
- 	return err;
- }
- 
-+/*
-+ * With CONFIG_DEFERRED_STRUCT_PAGE_INIT, struct pages in higher memory regions
-+ * may not be initialized yet at the time KHO deserializes preserved memory.
-+ * KHO uses the struct page to store metadata and a later initialization would
-+ * overwrite it.
-+ * Ensure all the struct pages in the preservation are
-+ * initialized. deserialize_bitmap() marks the reservation as noinit to make
-+ * sure they don't get re-initialized later.
-+ */
-+static struct page *__init kho_get_preserved_page(phys_addr_t phys,
-+						  unsigned int order)
-+{
-+	unsigned long pfn = PHYS_PFN(phys);
-+	int nid = early_pfn_to_nid(pfn);
-+
-+	for (int i = 0; i < (1 << order); i++)
-+		init_deferred_page(pfn + i, nid);
-+
-+	return pfn_to_page(pfn);
-+}
-+
- static void __init deserialize_bitmap(unsigned int order,
- 				      struct khoser_mem_bitmap_ptr *elm)
- {
-@@ -467,7 +488,7 @@ static void __init deserialize_bitmap(unsigned int order,
- 		int sz = 1 << (order + PAGE_SHIFT);
- 		phys_addr_t phys =
- 			elm->phys_start + (bit << (order + PAGE_SHIFT));
--		struct page *page = phys_to_page(phys);
-+		struct page *page = kho_get_preserved_page(phys, order);
- 		union kho_page_info info;
- 
- 		memblock_reserve(phys, sz);
 -- 
-2.53.0.rc2.204.g2597b5adb4-goog
-
+Regards,
+Pratyush Yadav
 
