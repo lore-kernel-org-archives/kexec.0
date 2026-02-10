@@ -4,65 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E6A23EA8114
-	for <kexec@archiver.kernel.org>; Tue, 10 Feb 2026 13:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E4951EA811B
+	for <kexec@archiver.kernel.org>; Tue, 10 Feb 2026 13:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
 	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Unc9qKAicQ/3X4+uqvXt+dYinmIoJsSf6GoPz9zE95w=; b=DstSKYPKCzLahAaTCu6CYdxRw4
-	P/5/iBkuSXPJksgtwD9eKr60aHRxGCCdwcoAf8r7GmVP9MBCIE+j4T7fSL1FhgCmUh7HBLBamAqc2
-	kbjnTYl9/Mr6wHi+WFmmmVu93v/qWdIdhaMk9gfKiUYVbMdaqMmR2L9l5qYYSwPUR3iD4K4rYFzYI
-	rhUopWwrM5vtj8gixq/tkWfEBUQ3zN630/K6dkNkmRenzaZvIS54la2H/6N+t17v90A3kBbRqvCoH
-	bYU7iMb3syVYaygsB8c5KpYCvG7Uro0NJj2++QPRDPeW5Na/DKregNS8+Ecp0XyuK/1f0U24IWNMT
-	ZMuSCUnw==;
+	bh=YSwYNeCOyJFr9mH7yM3wvUmcRA7MNm7DC826kAO04RA=; b=D++8Z5gCsw62GtFPXbhSS/mKdx
+	FwxJNODlSuVfdIEtZT0cpX0UyBfn+zGuzzP1VeNSA4vYA3RoTNWc5C8T/QDx803RmkwHRFxpbANje
+	ScID3Plw7cELOYZIk3CAVdsv/3Cg2fiazW/CHpyBZ/v+X5yav9KjJw4VTjeHWeBk11ogebxBkPQi0
+	vS49pn/dF84F89GY+DTHZeLm6k7VooVJ3UmotQmxwLBEm17Cu5NFO0UcwzdgNl3UnTvDMqyJeUv+7
+	xmkdZTRk6SxiHcO+C3wAX3664n32pM0iAX5IE1CiFUJVbhtEnQFpHNypFTF2o2kPr5v5S+VVEzWMP
+	OSMJMflw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vpnzL-0000000H08h-2joh;
-	Tue, 10 Feb 2026 13:41:11 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1vpo39-0000000H0TU-3t7e;
+	Tue, 10 Feb 2026 13:45:07 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vpnzJ-0000000H08M-3OTJ
+	id 1vpo38-0000000H0TF-3C9o
 	for kexec@lists.infradead.org;
-	Tue, 10 Feb 2026 13:41:10 +0000
+	Tue, 10 Feb 2026 13:45:06 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 4E73541A8D;
-	Tue, 10 Feb 2026 13:41:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9288C116C6;
-	Tue, 10 Feb 2026 13:41:06 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 232E260136;
+	Tue, 10 Feb 2026 13:45:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09900C16AAE;
+	Tue, 10 Feb 2026 13:45:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770730868;
-	bh=MT+rctIKmuvnA5eIBAxzoWBQTwTyMz/PD/htQtTMRHA=;
+	s=k20201202; t=1770731105;
+	bh=26+FDCEQwNmok8Zy9VH7xG1rfoNpFpyh5Os30EkIFhg=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=nIllKt5tMFMZhddu4EvDabsmw0eHTKy8WZOr+dKIUK3L85tK4gxTBXSx759Vo8FSP
-	 UEUEtJQRapO+RGb5Lej1n6r3xYUdyvdxWW6Xey2r3uABmMd57mYgPNF/1Vlizl4A/y
-	 2Lan/KlFtdWKApPbiTGiOpjdxcEhW5ODyj7+1LjCroZc7eJcd4z7PKmoVr9lV2hUUR
-	 hLDipo1c38yuDNcZaraPl5Four8CUKGTqKpey2Dkjbh8XtIagfqAnKbKvqvYZnrhIb
-	 XX/7t3NPvotDvDyaeHdjj7EwR++IqchPlbh/kdhhIuc3QtygKOiXDz2mIWRIrKu/SA
-	 o00paYupoA1MA==
+	b=L07Th7f5XZMNL4DPZNp7iGhK/MkggMhPQd+6GnpSRO9uacbIChCGIArP3Bk65MT7e
+	 VeVhJoldE25cfN6Mnr0ssXWFinpEq7DyU+kTPVT3Dc+/RfRDh73hcocq+JHplE/xcp
+	 3VkH4D/F4PW7wkpFZ2SZavF9ycU+9UyN6+yOMQDxqR25sjr5HE780HZXaBRIWigGsC
+	 yMD6SG8159daR0BsYEMUsVHf5un/W1geMNRnsc2zn6jvopbYhfOlo0UVT/hFzpgTss
+	 NOMM9bNJb1/HL4Z0+KU6IUMExl2XBc7G3ZylQHhhvXzwED9dPJIWZFC3JUNd5/IyZq
+	 nmCXB/3rkO+eA==
 From: Pratyush Yadav <pratyush@kernel.org>
-To: David Binderman <dcb314@hotmail.com>
-Cc: "graf@amazon.com" <graf@amazon.com>,  "rppt@kernel.org"
- <rppt@kernel.org>,  "pasha.tatashin@soleen.com"
- <pasha.tatashin@soleen.com>,  "pratyush@kernel.org" <pratyush@kernel.org>,
-  "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-  "linux-mm@kvack.org" <linux-mm@kvack.org>,  LKML
- <linux-kernel@vger.kernel.org>
-Subject: Re: linux-6.19-rc8/kernel/liveupdate/kexec_handover.c:1089:
- Possible 32/64 bit mixup ?
-In-Reply-To: <VI1PR02MB3952964EF347629B2686A36E9C99A@VI1PR02MB3952.eurprd02.prod.outlook.com>
-	(David Binderman's message of "Thu, 5 Feb 2026 09:21:17 +0000")
-References: <VI1PR02MB3952964EF347629B2686A36E9C99A@VI1PR02MB3952.eurprd02.prod.outlook.com>
-Date: Tue, 10 Feb 2026 14:41:05 +0100
-Message-ID: <2vxzzf5gsolq.fsf@kernel.org>
+To: ranxiaokai627@163.com
+Cc: graf@amazon.com,  rppt@kernel.org,  pasha.tatashin@soleen.com,
+  pratyush@kernel.org,  akpm@linux-foundation.org,
+  kexec@lists.infradead.org,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org,  ran.xiaokai@zte.com.cn,
+  stable@vger.kernel.org
+Subject: Re: [PATCH -next 1/2] kho: fix missing early_memunmap() call in
+ kho_populate()
+In-Reply-To: <20260206043121.197564-2-ranxiaokai627@163.com> (ranxiaokai's
+	message of "Fri, 6 Feb 2026 04:31:20 +0000")
+References: <20260206043121.197564-1-ranxiaokai627@163.com>
+	<20260206043121.197564-2-ranxiaokai627@163.com>
+Date: Tue, 10 Feb 2026 14:45:02 +0100
+Message-ID: <2vxzv7g4sof5.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260210_054109_872015_BDDB0495 
-X-CRM114-Status: GOOD (  15.32  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,39 +74,72 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi David,
+Hi Ran,
 
-On Thu, Feb 05 2026, David Binderman wrote:
+Thanks for the fix.
 
-> Hello there,
->
-> Source code analyser cppcheck says:
->
-> linux-6.19-rc8/kernel/liveupdate/kexec_handover.c:1089:15: style: int result is
-> assigned to long variable. If the variable is long to avoid loss of information,
-> then you have loss of information. [truncLongCastAssignment]
->
-> Source code is
->
->     contig_pages = (1 << order);
->
-> I admit the error message is hard to understand, but AFAIK
-> if local variable order remains under 30 or so, then there is no problem.
->
-> However, if it goes above 32, then there will be loss of data. 
-> Expression 1 << order is type int.
->
-> Suggest add some code or comment to document the expected range
-> of local variable order. If it ever goes above 32, suggest new code
->
->     contig_pages = 1UL << order;
+On Fri, Feb 06 2026, ranxiaokai627@163.com wrote:
 
-If order is 32, with 4k pages, that means 16 TiB. It is unlikely that we
-will see vmalloc area backed by pages this large any time soon. So I am
-not worried about any practical problems.
+> From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+>
+> kho_populate() returns without calling early_memunmap() on success
+> path, this will cause early ioremap virtual address space leak.
+>
+> Fixes: b50634c5e84a ("kho: cleanup error handling in kho_populate()")
+> Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+> ---
+>
+> b50634c5e84a ("kho: cleanup error handling in kho_populate()")
+> has not landed in upstream, so
+> Cc: <stable@vger.kernel.org> is unnecessary?
+>
+>  kernel/liveupdate/kexec_handover.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> index fb3a7b67676e..76b714db175d 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
+> @@ -1463,6 +1463,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+>  	struct kho_scratch *scratch = NULL;
+>  	phys_addr_t mem_map_phys;
+>  	void *fdt = NULL;
+> +	int populated = 0;
 
-But I think this is still a good idea to do for code hygiene. So a patch
-would be much appreciated.
+Nit: Please use a bool and true/false. I think it reads much nicer.
+
+>  	int err;
+>  
+>  	/* Validate the input FDT */
+> @@ -1529,16 +1530,17 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+>  	kho_in.scratch_phys = scratch_phys;
+>  	kho_in.mem_map_phys = mem_map_phys;
+>  	kho_scratch_cnt = scratch_cnt;
+> -	pr_info("found kexec handover data.\n");
+>  
+> -	return;
+> +	populated = 1;
+> +	pr_info("found kexec handover data.\n");
+>  
+>  err_unmap_scratch:
+>  	early_memunmap(scratch, scratch_len);
+>  err_unmap_fdt:
+>  	early_memunmap(fdt, fdt_len);
+>  err_report:
+
+Nit: now that this code can be reached by non-error paths, we should
+re-name the labels. I think dropping the "err_" prefix should be enough.
+
+With these fixed,
+
+Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+
+> -	pr_warn("disabling KHO revival\n");
+> +	if (!populated)
+> +		pr_warn("disabling KHO revival\n");
+>  }
+>  
+>  /* Helper functions for kexec_file_load */
 
 -- 
 Regards,
