@@ -4,105 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1EACAEA811B
-	for <kexec@archiver.kernel.org>; Tue, 10 Feb 2026 14:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C958CEA8126
+	for <kexec@archiver.kernel.org>; Tue, 10 Feb 2026 15:09:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=9BCbZ5VaM8E6O8CtxrV81YvFzyuG0PkGV3B/y9JLcfM=; b=2r4sWovfOH+LR+okkvNWCeu+qv
-	ix5kU8pv37QqmOFCEnUY0itJivImr7QnWh4ClhnIkDilCu9DYI6m3oPqM6t+zQLmJozPeX4OgC9Qj
-	afLfzm4G6QhFukwAhBlYvpfzOAW7aj7jD+F8JHUjBAHnrWJJKFyoKvCF5StvFdi17fY8qYLEd3NAV
-	55oXKYyi3IqeYV6ol2ktLDOgmYjkBG99GADGIzhyNUOZAAa89FfImAn1VbKFNPBVXO4T0s/veza9/
-	P4Z2zeV9Mys4Np1Nb7jXJItxTI5QFn12PHWxAyupFVQx4xG7HXe2lgcEbqBlVzXAXlxPbmN7mqvUL
-	6ph9ZdRQ==;
+	bh=tZqWOn6nM7zDPbQvvqMXHKEeR4Bn050FwLe6HRcqGmU=; b=xETv1k1RMDi+3cL151AS/BlZ8P
+	fgBmOK2tw2EtBbxRDMKk0geF/qZimh69AFgcq4zHr8W6VqslCmNScyRNBQ8qdYVYQfPLTm6cyk2wv
+	L+HfGOl3OAHfhmA6W2C7Rho0f7KU4u/H3wTwy4t3y4d9X6r0z+W2dhApNUv3Ts9YK5EAcsVBn6CHO
+	MixDk/KqYb9zlEloqtYRE6ld0RSsArh8N5DH3utUvb2AYSRqTNVAJmErVB5fZapnu0tapkm9Bk825
+	w2pBF10giukksxw4wwFBozrPONp8ec55hgjbBEM6ld6dH1TRbaxV+bvtHPaciwWHlTWAmQ9QOfyGS
+	TwtfBz4w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vpoJ3-0000000H1V7-0Gzg;
-	Tue, 10 Feb 2026 14:01:33 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1vppMw-0000000H6Ku-32ct;
+	Tue, 10 Feb 2026 15:09:38 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vpoJ0-0000000H1UC-07XQ
+	id 1vppMu-0000000H6JT-0qpr
 	for kexec@lists.infradead.org;
-	Tue, 10 Feb 2026 14:01:31 +0000
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61A8QxCr188751;
-	Tue, 10 Feb 2026 14:01:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=9BCbZ5VaM8E6O8CtxrV81YvFzyuG0P
-	kGV3B/y9JLcfM=; b=fVHKE59RK4IWyUsWKidtw9j4Lc7RH9TfrXFYBHVrsZDWX6
-	lytpYYebudkP4YlPTINZrJHkE8rpOwXNiKf11L5WZERdd1Exlv2oAxswmeo6X3YW
-	bMJ/jhS1Qi9xJuI0wq7ipEWwPdwUwQF+49u2cAcPN30jQr52vSNpgbNxBIGtiYJ8
-	rurVZaFelRoo4t+ZrDsFVLfPVVGOtlWmK0kOrX9JtcgU1KsEVod6mwWoh/yC1Ws8
-	pkWnAqx29IwAcJs67SwngUe1M2TrSgM94kpaWNiWCUa7Tpt04IvBRXOAWJCWNAlS
-	IJYTC7n9RJKDD4uCaFwAUUzd2IxbeLhHhnsHfeCg==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4c696wtdsj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Feb 2026 14:01:26 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61AARCU7012623;
-	Tue, 10 Feb 2026 14:01:25 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4c6h7k9efv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Feb 2026 14:01:25 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61AE1Nv625232080
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 10 Feb 2026 14:01:23 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7BD732004E;
-	Tue, 10 Feb 2026 14:01:23 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 673C22004F;
-	Tue, 10 Feb 2026 14:01:23 +0000 (GMT)
-Received: from localhost (unknown [9.52.203.71])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 10 Feb 2026 14:01:23 +0000 (GMT)
-From: Alexander Egorenkov <egorenar@linux.ibm.com>
-To: Heiko Carstens <hca@linux.ibm.com>, Baoquan He <bhe@redhat.com>
-Cc: linux-s390@vger.kernel.org, akpm@linux-foundation.org,
-        kexec@lists.infradead.org
-Subject: Re: [RESEND PATCH v1 1/1] s390/kexec: Make KEXEC_SIG available when
- CONFIG_MODULES=n
-In-Reply-To: <20260210133652.15669A6b-hca@linux.ibm.com>
-References: <20260209133308.118364-1-egorenar@linux.ibm.com>
- <aYqWhWQO265YRnPP@fedora> <20260210133652.15669A6b-hca@linux.ibm.com>
-Date: Tue, 10 Feb 2026 15:01:23 +0100
-Message-ID: <875x84k898.fsf@li-0ccc18cc-2c67-11b2-a85c-a193851e4c5d.ibm.com>
+	Tue, 10 Feb 2026 15:09:37 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 12A3A443A9;
+	Tue, 10 Feb 2026 15:09:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACA02C19421;
+	Tue, 10 Feb 2026 15:09:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770736174;
+	bh=s/009tO/uoAW8gW8CH7txHUInh05s9+ISLI8TUUR38M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VdoawcPU3pX+D8rF50VjcDAndYGaq86GorjJ9aukdRXku0zA3Fw6p2dOwqQtRNiSv
+	 tgVK7NwQMvx3J20AB/r8Q3AGl02aw+fUizk+J/c0haKUfWpBnffZ9goqRWMnI9fkGY
+	 P/JgUk3ev+ul4M6bvVbqWwu1W5D0T7/58XChisOa3QEcxa2sWJnYIbX4db2ilQ75xB
+	 EZBehxpuhgZ181BYTfo2FdPCtz43kPHHhxvF8fDRPlFenll9X6bMOr3+vbMslvLi7V
+	 Cq7F+fQ93cyTcBC+yxjG8aoLExRhaq6Z/aK5/q/x/Nw5F5UCptpkZHqBFiijoKDMkG
+	 2idMLHv2Ujf7Q==
+Date: Tue, 10 Feb 2026 17:09:28 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Michal Clapinski <mclapinski@google.com>
+Cc: Evangelos Petrongonas <epetron@amazon.de>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Alexander Graf <graf@amazon.com>, kexec@lists.infradead.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2] kho: add support for deferred struct page init
+Message-ID: <aYtKKB-yKu-fwp3j@kernel.org>
+References: <20260210130418.297153-1-mclapinski@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=WZYBqkhX c=1 sm=1 tr=0 ts=698b3a36 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22
- a=GgsMoib0sEa3-_RKJdDe:22 a=lxvgQm3_RAlpGahvngQA:9
-X-Proofpoint-GUID: B-IO1yp4kKiujqetpEyRNVpNNEI3HKyg
-X-Proofpoint-ORIG-GUID: B-IO1yp4kKiujqetpEyRNVpNNEI3HKyg
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjEwMDExNiBTYWx0ZWRfX6G94n/wwTSKB
- XMYC1RD7JLcSKg2TQEp+fRS+3tD2HYnpR2dkRMkREUqXAUQUlDrFMBSfcLcwNmGq8goh1nVEj8E
- B7BxB+RfaVGF8EfNYs+RC07Fkyj+OWAR3EBkfqBmf4dP9REV0G9rVDi3uYKoCq8TgMpTAHePmM1
- wRd0E4v+cPXd8ziKRJwz76kaOMNnRG/ETp3g3Sz+UNgBceSLkemW1sOxJaYOub5E+/JsNBLWZxm
- dHuToUChItwx6kgR8L7sMI3bcID6zzDSF5vt+AEG7AHWrIGr6/iZ9MEHW+RoSm97NI/qcsikFdL
- 49D+QxqgDlNUC+OoxXQ8/JOoM/Vd3dOKZyzS/6ygxvIQo9iC2mrV5UuBV0wntN8+3+xuoKwH0Zb
- O5Cs/x8LNWSru1GrjPEVhnsKLUajCwCvBXTtzYYvv33Fy74EUUglMcdb2uGV1l5gXueLjFzlRXG
- NhwS9CvTYIzIPpkbKSQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-10_01,2026-02-10_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 clxscore=1011 phishscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 lowpriorityscore=0 suspectscore=0 impostorscore=0
- malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
- definitions=main-2602100116
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260210130418.297153-1-mclapinski@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260210_060130_182998_E40977F2 
-X-CRM114-Status: GOOD (  13.95  )
+X-CRM114-CacheID: sfid-20260210_070936_302364_47C21248 
+X-CRM114-Status: GOOD (  38.17  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,39 +75,134 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
->> > diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
->> > index c2c7bf974397..385c1052cf45 100644
->> > --- a/arch/s390/Kconfig
->> > +++ b/arch/s390/Kconfig
->> > @@ -313,7 +313,7 @@ config ARCH_SUPPORTS_KEXEC_FILE
->> >  	def_bool y
->> >  
->> >  config ARCH_SUPPORTS_KEXEC_SIG
->> > -	def_bool MODULE_SIG_FORMAT
->> > +	def_bool y
->> >  
->> >  config ARCH_SUPPORTS_KEXEC_PURGATORY
->> >  	def_bool y
->> > diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
->> > index 15632358bcf7..df97227cfca9 100644
->> > --- a/kernel/Kconfig.kexec
->> > +++ b/kernel/Kconfig.kexec
->> > @@ -50,6 +50,7 @@ config KEXEC_SIG
->> >  	bool "Verify kernel signature during kexec_file_load() syscall"
->> >  	depends on ARCH_SUPPORTS_KEXEC_SIG
->> >  	depends on KEXEC_FILE
->> > +	select SYSTEM_DATA_VERIFICATION if S390
->
-> Alexander, would it make sense to move this to arch/s390/Kconfig and
-> add something like
->
-> 	select SYSTEM_DATA_VERIFICATION if KEXEC_SIG
->
-> instead? This would have the slight advantage to keep arch specifics
-> out of common code Kconfig.
+Hi Michal,
 
-That's even better, what i was actually looking for.
-And works as expected too.
+On Tue, Feb 10, 2026 at 02:04:18PM +0100, Michal Clapinski wrote:
+> When `CONFIG_DEFERRED_STRUCT_PAGE_INIT` is enabled, struct page
+> initialization is deferred to parallel kthreads that run later
+> in the boot process.
+> 
+> During KHO restoration, `deserialize_bitmap()` writes metadata for
+> each preserved memory region. However, if the struct page has not been
+> initialized, this write targets uninitialized memory, potentially
+> leading to errors like:
+> ```
+> BUG: unable to handle page fault for address: ...
+> ```
+> 
+> Fix this by introducing `kho_get_preserved_page()`,  which ensures
+> all struct pages in a preserved region are initialized by calling
+> `init_deferred_page()` which is a no-op when deferred init is disabled
+> or when the struct page is already initialized.
 
-Thanks, Heiko.
+Please drop md-style markup, plain text is fine :)
+ 
+> Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
+> Signed-off-by: Michal Clapinski <mclapinski@google.com>
+> ---
+> v2: updated a comment
+> 
+> I think we can't initialize those struct pages in kho_restore_page.
+> I encountered this stack:
+>   page_zone(start_page)
+>   __pageblock_pfn_to_page
+>   set_zone_contiguous
+>   page_alloc_init_late
+> 
+> So, at the end of page_alloc_init_late struct pages are expected to be
+> already initialized. set_zone_contiguous() looks at the first and last
+> struct page of each pageblock in each populated zone to figure out if
+> the zone is contiguous. If a kho page lands on a pageblock boundary,
+> this will lead to access of an uninitialized struct page.
+> There is also page_ext_init that invokes pfn_to_nid, which calls
+> page_to_nid for each section-aligned page.
+> There might be other places that do something similar. Therefore, it's
+> a good idea to initialize all struct pages by the end of deferred
+> struct page init. That's why I'm resending Evangelos's patch.
+> 
+> I also tried to implement Pratyush's idea, i.e. iterate over zones,
+> then get node from zone. I didn't notice any performance difference
+> even with 8GB of kho.
+> 
+> I repeated Evangelos's testing:
+> In order to test the fix, I modified the KHO selftest, to allocate more
+> memory and do so from higher memory to trigger the incompatibility. The
+> branch with those changes can be found in:
+> https://git.infradead.org/?p=users/vpetrog/linux.git;a=shortlog;h=refs/heads/kho-deferred-struct-page-init
+> ---
+>  kernel/liveupdate/Kconfig          |  2 --
+>  kernel/liveupdate/kexec_handover.c | 23 ++++++++++++++++++++++-
+>  2 files changed, 22 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/liveupdate/Kconfig b/kernel/liveupdate/Kconfig
+> index 1a8513f16ef7..c13af38ba23a 100644
+> --- a/kernel/liveupdate/Kconfig
+> +++ b/kernel/liveupdate/Kconfig
+> @@ -1,12 +1,10 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  
+>  menu "Live Update and Kexec HandOver"
+> -	depends on !DEFERRED_STRUCT_PAGE_INIT
+>  
+>  config KEXEC_HANDOVER
+>  	bool "kexec handover"
+>  	depends on ARCH_SUPPORTS_KEXEC_HANDOVER && ARCH_SUPPORTS_KEXEC_FILE
+> -	depends on !DEFERRED_STRUCT_PAGE_INIT
+>  	select MEMBLOCK_KHO_SCRATCH
+>  	select KEXEC_FILE
+>  	select LIBFDT
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> index b851b09a8e99..26bb45b25809 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
+> @@ -457,6 +457,27 @@ static int kho_mem_serialize(struct kho_out *kho_out)
+>  	return err;
+>  }
+>  
+> +/*
+> + * With CONFIG_DEFERRED_STRUCT_PAGE_INIT, struct pages in higher memory regions
+> + * may not be initialized yet at the time KHO deserializes preserved memory.
+> + * KHO uses the struct page to store metadata and a later initialization would
+> + * overwrite it.
+> + * Ensure all the struct pages in the preservation are
+> + * initialized. deserialize_bitmap() marks the reservation as noinit to make
+> + * sure they don't get re-initialized later.
+> + */
+> +static struct page *__init kho_get_preserved_page(phys_addr_t phys,
+> +						  unsigned int order)
+> +{
+> +	unsigned long pfn = PHYS_PFN(phys);
+> +	int nid = early_pfn_to_nid(pfn);
+
+Getting nid when CONFIG_DEFERRED_STRUCT_PAGE_INIT=n is a pure overhead
+because struct pages are initialized before KHO kho_mem_deserialize().
+
+Other than that LGTM.
+
+> +
+> +	for (int i = 0; i < (1 << order); i++)
+> +		init_deferred_page(pfn + i, nid);
+> +
+> +	return pfn_to_page(pfn);
+> +}
+> +
+>  static void __init deserialize_bitmap(unsigned int order,
+>  				      struct khoser_mem_bitmap_ptr *elm)
+>  {
+> @@ -467,7 +488,7 @@ static void __init deserialize_bitmap(unsigned int order,
+>  		int sz = 1 << (order + PAGE_SHIFT);
+>  		phys_addr_t phys =
+>  			elm->phys_start + (bit << (order + PAGE_SHIFT));
+> -		struct page *page = phys_to_page(phys);
+> +		struct page *page = kho_get_preserved_page(phys, order);
+>  		union kho_page_info info;
+>  
+>  		memblock_reserve(phys, sz);
+> -- 
+> 2.53.0.rc2.204.g2597b5adb4-goog
+> 
+
+-- 
+Sincerely yours,
+Mike.
 
