@@ -4,107 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B4C76E81BCC
-	for <kexec@archiver.kernel.org>; Mon,  9 Feb 2026 14:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B8833E94627
+	for <kexec@archiver.kernel.org>; Tue, 10 Feb 2026 02:23:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Subject:References:In-Reply-To:Message-Id:Cc:To:From:Date:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=dVX5OLSrXCWOxYyga+bv70OL4XyHLOY8LjrmlRgCM90=; b=ORP1ezXjcAAvpsx6P4BgoSVjla
-	eaYYCzph+ljYwXjdAPZQ1zKcj8LDoH+xFM6H7bvRAjI4oMeeRRmZkMZwZ3SaYgVmyW7R7YvJBYQfQ
-	Kla2kHO/C2ti+AZtHxEjmOHZz4wlkD2T3yn4zh6pWQnI1m1oXofxJz5GRHkFaZb+mLjHajyOaxjp3
-	K/H5+eE325UAVcvKpmpLNO982N1LoAtOyPBMmli/Rq8m0g9FNv0HvGYqKgqa3mT6Jo6z5zdPUSfG+
-	QIDlFajDzphy2Xlg2zkRyIpNmhsCSt2c3ewW3BNgujpZJH+PCn5XkBzoByCcHwCVzQnI7aqzKe8oE
-	aLgnta/A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Nrld4QUPFG908ozuxCRcRQrQXDKpD/pbHu8Ax6np3ME=; b=1MvU5AePlb1zwgda7ql2+S5fhy
+	bQmzDOyfbhmsh1JJf59XJJ5hzrs9QAFAOtZLrDODhMFqhyGD2aX3SLb+SxGU4vUS/UnTVvIH1e9DH
+	fRQQ8QPN3ASErJjffTuQZ6rTDD82R4AuG3PU27j2A1Yd/OKlTdcBXD7fJYH4NjJEeOGwej2jYux/Y
+	sYU+EgQVv6rFzf5YuASWwdjFQdSXcMOK+U5v2Y13koubBUn/g0rbbpPyr3x4QEPAUxuKrolpcOmAH
+	5VKRSe4fS+gQlqzoyc1c5ehR4AycNhyyeQMppWwBO/sMqcel/7Rp7zK39uA6mwVqdPj0WKnQlSm4s
+	YBBMs8Ow==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vpRuL-0000000FTls-1wYU;
-	Mon, 09 Feb 2026 14:06:33 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1vpdPa-0000000GKJF-2DS1;
+	Tue, 10 Feb 2026 02:23:34 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vpRuG-0000000FTlX-3jqa
+	id 1vpdPS-0000000GKIY-1ROC
 	for kexec@lists.infradead.org;
-	Mon, 09 Feb 2026 14:06:30 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 35EB04420E;
-	Mon,  9 Feb 2026 14:06:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38055C116C6;
-	Mon,  9 Feb 2026 14:06:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770645987;
-	bh=WYECX5SXJ228M5jBGqJxP6dlxH7z8FBmfDhplBvQyNA=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=qJYeldRkukWFxC+GUEs5v29/m/MI/Jd5J/fqRB8DASUDo2L/UUNgiXj+QyfryUXA1
-	 +zl8/9H/OX7KvgRJW4yoIjFobWVHUq2CPrKYlCd4i4vkes7P6Lvpz5WTh9ghhEa5zu
-	 s4mzMLAQQusCMADYhTP0dSyKPueeDQQjMP5ROiulGyeBCsejhDqRt4pE3CsPwxGhIO
-	 p2gYGfO8x+1uGuwqPwB5FAcyff+JTev4Md54lQscZRNrsOiiJw7Ko7nrBWsLVHB+HR
-	 R/p+m3qqUzdclMNjVO/Z6rTtu0ONRzclHhKw8Nr199hWHKx/itatYVzK1FzJVSE3h0
-	 LAMBf6idSe9Cg==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 1BD8AF40068;
-	Mon,  9 Feb 2026 09:06:25 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-01.internal (MEProxy); Mon, 09 Feb 2026 09:06:25 -0500
-X-ME-Sender: <xms:4emJaTad_Wco9m3j7o3lgpax2A6VgGCE8LZeGlO9i5g2yHyEDNUiHw>
-    <xme:4emJadNHkb9EKjKmR5ad65jXJKhI9WcoOxoazz_YJlip6wBxlVxBeuygzzZ21Nwrv
-    KHso3jK22jchQasdrWQMQ3oh9QNVDuPbfnhAnDLDBRUXmvb2K1YWAo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduleejtddtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrugcu
-    uehivghshhgvuhhvvghlfdcuoegrrhgusgeskhgvrhhnvghlrdhorhhgqeenucggtffrrg
-    htthgvrhhnpedtgefgheeutdeivdegiefgueeghfekhfffhfetheeggefhheeuvdegieev
-    tdefudenucffohhmrghinhepthhrvghntghhsghoohhtrdhorhhgpdhkvghrnhgvlhdroh
-    hrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegr
-    rhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieejtdehtddtjeelqd
-    effedvudeigeduhedqrghruggspeepkhgvrhhnvghlrdhorhhgseifohhrkhhofhgrrhgu
-    rdgtohhmpdhnsggprhgtphhtthhopeefuddpmhhouggvpehsmhhtphhouhhtpdhrtghpth
-    htohepsghpsegrlhhivghnkedruggvpdhrtghpthhtohepnhhivhgvughithgrsegrlhhu
-    mhdrmhhithdrvgguuhdprhgtphhtthhopehluhhtohesrghmrggtrghpihhtrghlrdhnvg
-    htpdhrtghpthhtohepughpshhmihhthhesrghpvghrthhushhsohhluhhtihhonhhsrdgt
-    ohhmpdhrtghpthhtoheprghnughrvgifrdgtohhophgvrhefsegtihhtrhhigidrtghomh
-    dprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohep
-    phgvthgvrhhhuhgvfigvsehgmhigrdguvgdprhgtphhtthhopehhvghrsggvrhhtsehgoh
-    hnughorhdrrghprghnrgdrohhrghdrrghupdhrtghpthhtohepthhrvghntghhsghoohht
-    qdguvghvvghlsehgohhoghhlvghgrhhouhhpshdrtghomh
-X-ME-Proxy: <xmx:4emJaQzUmyPR98OS0DVfVCBs7nP2yOprhVntmSFyFqqjCmSR2Op5vA>
-    <xmx:4emJaYjdE9_HEUdD0T7A9LUZNY5kj5IvupGKg9KTA8aXMCOAi4HI0Q>
-    <xmx:4emJafQ6xQcu41rnAo5XeQjx4pSSvTX8JVKYhyLWPcyn_t6QftTgKQ>
-    <xmx:4emJadPScFbmSVydk2_hRmtKQrY0ItBJpYwS2Vv8kIokJLoMdP3xtA>
-    <xmx:4emJacGg1Yqc0Zi7oImUY8WRMQf-r0h2LVcpe4s-75BQFRJhA66uOmpp>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id DEDB1700065; Mon,  9 Feb 2026 09:06:24 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	Tue, 10 Feb 2026 02:23:27 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1770690203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Nrld4QUPFG908ozuxCRcRQrQXDKpD/pbHu8Ax6np3ME=;
+	b=e0Y1XUIsaNrpsoSj3iLrhbR2zKsG3Q86okyLB0G/LisWdjct2hqjeGRqSerRigKhYegcup
+	mowD4O6xTriEsQrajgb7rHQKkJskkkVPW3Pk47vLsTjR8i+WUlVna4VnyIOZf8ifqjeZDP
+	ZrLDX/MsMSSid5P0YnVVipsLSvQ8sE0=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-397-NzdXD7atM0y6A-MYsrfvaA-1; Mon,
+ 09 Feb 2026 21:23:17 -0500
+X-MC-Unique: NzdXD7atM0y6A-MYsrfvaA-1
+X-Mimecast-MFC-AGG-ID: NzdXD7atM0y6A-MYsrfvaA_1770690196
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 353121955DD3;
+	Tue, 10 Feb 2026 02:23:16 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.171])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2AC7C1800464;
+	Tue, 10 Feb 2026 02:23:13 +0000 (UTC)
+Date: Tue, 10 Feb 2026 10:23:01 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Alexander Egorenkov <egorenar@linux.ibm.com>,
+	linux-s390@vger.kernel.org
+Cc: akpm@linux-foundation.org, kexec@lists.infradead.org
+Subject: Re: [RESEND PATCH v1 1/1] s390/kexec: Make KEXEC_SIG available when
+ CONFIG_MODULES=n
+Message-ID: <aYqWhWQO265YRnPP@fedora>
+References: <20260209133308.118364-1-egorenar@linux.ibm.com>
 MIME-Version: 1.0
-X-ThreadId: AAnEvm6syrbF
-Date: Mon, 09 Feb 2026 15:04:36 +0100
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Ross Philipson" <ross.philipson@oracle.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev
-Cc: dpsmith@apertussolutions.com, "Thomas Gleixner" <tglx@linutronix.de>,
- mingo@redhat.com, bp@alien8.de, "H . Peter Anvin" <hpa@zytor.com>,
- dave.hansen@linux.intel.com, mjg59@srcf.ucam.org,
- James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, jarkko@kernel.org,
- jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu,
- herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
- ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com,
- kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
- trenchboot-devel@googlegroups.com
-Message-Id: <b5f2b5a5-b984-4ed3-a023-c06d634f9146@app.fastmail.com>
-In-Reply-To: <20251215233316.1076248-1-ross.philipson@oracle.com>
-References: <20251215233316.1076248-1-ross.philipson@oracle.com>
-Subject: Re: [PATCH v15 00/28] x86: Secure Launch support for Intel TXT
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20260209133308.118364-1-egorenar@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: 6ftwAUzzqSefSiCnV4UtcGR-G-wgYhDtislh_y5WOFA_1770690196
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260209_060628_985366_62633AD0 
-X-CRM114-Status: GOOD (  38.26  )
+X-CRM114-CacheID: sfid-20260209_182326_460905_43702277 
+X-CRM114-Status: GOOD (  23.78  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -119,80 +85,72 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, 16 Dec 2025, at 00:32, Ross Philipson wrote:
-> Secure Launch is a vendor-neutral approach to implementing TGC Dynamic
-> Root of Trust (DRTM) support in the kernel. This is complementary to
-> better known Static Root of Trust (SRTM) schemes such as UEFI SecureBoot.
->
-> This series provides the common infrastructure along with Intel TXT
-> support, without needing the tboot exokernel. Support for AMD SKINIT is
-> pending the common infrastructure getting nailed down, and ARM are
-> looking to build on it too.
->
-> Originally, tboot were approached to see if they'd take support for
-> other vendors, but they elected not to. Hence this approach instead.
->
-> Work is being coordinated by the Trenchboot project, 
-> https://trenchboot.org/,
-> organising Secure Launch support for upstream open source projects 
-> including
-> Grub, iPXE and Xen. The goal of the Trenchboot project is to make DTRM 
-> easy
-> to use.  e.g. for Grub, it's simply adding "slaunch" as a command in 
-> the boot
-> stanza.  See 
-> https://trenchboot.org/user-docs/QUICKSTART/#linux-quick-start-guide
-> for more details
->
-> Patch set based on commit:
-> torvalds/master/fd57572253bc356330dbe5b233c2e1d8426c66fd
->
-> Depends on v3 of the following TPM patch set (note this patch
-> set is being actively worked on separately):
-> [PATCH v3 00/10]  tpm: Decouple Trenchboot dependencies
-> Message ID: 20250929194832.2913286-1-jarkko@kernel.org
->
-> Finally we would like to thank everyone for their input and
-> assistance. It has all been very helpful in improving the quality of
-> our solution and in reviewing/strengthening our security posture.
->
+On 02/09/26 at 02:33pm, Alexander Egorenkov wrote:
+> The commit c8424e776b09 ("MODSIGN: Export module signature definitions")
+> replaced the dependency of KEXEC_SIG on SYSTEM_DATA_VERIFICATION with
+> the dependency on MODULE_SIG_FORMAT. This change disables KEXEC_SIG
+> in s390 kernels built with MODULES=n if nothing else selects
+> MODULE_SIG_FORMAT.
+> 
+> Furthermore, the signature verification in s390 kexec does not require
+> MODULE_SIG_FORMAT because it requires only the struct module_signature and,
+> therefore, does not depend on code in kernel/module_signature.c.
+> 
+> But making ARCH_SUPPORTS_KEXEC_SIG depend on SYSTEM_DATA_VERIFICATION
+> is also incorrect because it makes KEXEC_SIG available on s390 only
+> if some other arbitrary option (for instance a file system or device driver)
+> selects it directly or indirectly.
+> 
+> To properly make KEXEC_SIG available for s390 kernels built with MODULES=y
+> as well as MODULES=n _and_ also not depend on arbitrary options selecting
+> SYSTEM_DATA_VERIFICATION, we set ARCH_SUPPORTS_KEXEC_SIG=y for s390 and
+> select SYSTEM_DATA_VERIFICATION when KEXEC_SIG=y.
 
-Hi Daniel and Ross,
+Thanks for fixing the issue.
 
-I have finally gotten around to getting the right hardware and building GRUB and Linux with your patches, and I have managed to get them running on an old Skylake HP laptop successfully.
+Seems the background and change is a little twisting, and selecting
+SYSTEM_DATA_VERIFICATION will cause a bunch of verification feature
+selected. While the change is only s390 related, request s390 expert to
+have look at this change. If no concern from s390 developer, I am also
+fine to it.
 
-Surprisingly, even when doing a secure launch, the EFI runtime services still work happily, which means (AIUI) that code that was excluded from the D-RTM TCB is still being executed at ring 0? Doesn't this defeat D-RTM entirely in the case some exploit is hidden in the EFI runtime code? Should we measure the contents of EfiRuntimeServicesCode regions too?
+Thanks
+Baoquan
+> 
+> Fixes: c8424e776b09 ("MODSIGN: Export module signature definitions")
+> Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+> ---
+>  arch/s390/Kconfig    | 2 +-
+>  kernel/Kconfig.kexec | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> index c2c7bf974397..385c1052cf45 100644
+> --- a/arch/s390/Kconfig
+> +++ b/arch/s390/Kconfig
+> @@ -313,7 +313,7 @@ config ARCH_SUPPORTS_KEXEC_FILE
+>  	def_bool y
+>  
+>  config ARCH_SUPPORTS_KEXEC_SIG
+> -	def_bool MODULE_SIG_FORMAT
+> +	def_bool y
+>  
+>  config ARCH_SUPPORTS_KEXEC_PURGATORY
+>  	def_bool y
+> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+> index 15632358bcf7..df97227cfca9 100644
+> --- a/kernel/Kconfig.kexec
+> +++ b/kernel/Kconfig.kexec
+> @@ -50,6 +50,7 @@ config KEXEC_SIG
+>  	bool "Verify kernel signature during kexec_file_load() syscall"
+>  	depends on ARCH_SUPPORTS_KEXEC_SIG
+>  	depends on KEXEC_FILE
+> +	select SYSTEM_DATA_VERIFICATION if S390
+>  	help
+>  	  This option makes the kexec_file_load() syscall check for a valid
+>  	  signature of the kernel image. The image can still be loaded without
+> -- 
+> 2.51.0
+> 
 
-In any case, I am aware that upstreaming this work has been a painful experience so far. Unfortunately, I don't think we're quite there yet.
-
-The way the work is divided between GRUB and Linux seems to be predicated entirely (at least originally) on the idea that the GRUB->Linux handover and the secure launch should be one and the same. I.e., GRUB sets the stage, pokes the ACM, which returns to the loaded linux image and boots it. This requires a lot of coordination, e.g., putting a MLE header in the kernel image and exposing it to GRUB in a certain manner, resource tables and other things that have to remain in sync between both sides.
-
-There also appears to be an assumption that the fact that the ACM returns to the loaded image in 32-bit mode requires a round trip through the decompressor, which may relocate itself in memory and do other things that the slaunch code then has to work around again.
-
-Due to the changes to the EFI boot path, this design has been watered down a bit already, in the sense that GRUB invokes the EFI entry point as usual, and only later, the pivot via the ACM is made.
-
-Other than the SHA-1 debate [*], the main issue I have with this approach is that it adds things to the boot ABI that are closely tied to TXT on the one hand, and bzImage oddities on the other (kernel_info, setup block etc). IOW, the complete lack of abstractions is going to make this a maintenance burden going forward.
-
-I've had a stab at implementing all of this in a manner that is more idiomatic for EFI boot:
-
-- GRUB does minimal TXT related preparation upfront, and exposes the remaining functionality via a protocol that is attached to the loaded image by GRUB
-- The SL stub is moved to the core kernel, with some startup code added to pivot to long mode
-- the EFI stub executes and decompresses the kernel as usual
-- if the protocol is present, the EFI stub calls it to pass the bootparams pointer, the base and size of the MLE and the header offset back to the GRUB code
-- after calling ExitBootServices(), it calls another protocol method to trigger the secure launch.
-
-The only pre-launch ABI that is being added here is a GRUB-specific protocol that is not necessarily tied to TXT. (For legacy boot, it should be feasible to call back into GRUB too, although it would be more of a ad-hoc construction, via the SLR table perhaps.) But no kernel_info and MLE headers etc being added to the ABI surface. Also, there is no longer a need for the GRUB code to understand how the decompressor is constructed, with a setup block etc, or take special care to perform PMR checks when its moves itself around in memory.
-
-Code can be found here:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/ardb/grub.git/log/?h=sl-v2
-https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=x86-slaunch
-
-I am aware that this is not the feedback you are waiting for at this point, given that we're at v15 already. But there are some warts in the current design that really need to be addressed before we can proceed with this IMHO.
-
--- 
-Ard.
-
-
-[*] which I still don't get: why is it fine to cap other banks with a single 0x1 byte [as the ACM does too, apparently], but do we require an SHA-1 implementation for capping the SHA-1 banks? Also, the TXT spec dropped all support for TPM1.2 so I wonder if that should be dropped from this series as well.
 
