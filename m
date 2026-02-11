@@ -4,106 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D6046ECD6D6
-	for <kexec@archiver.kernel.org>; Wed, 11 Feb 2026 19:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 873D2ECD6F8
+	for <kexec@archiver.kernel.org>; Wed, 11 Feb 2026 22:37:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mtFHLX3t7mFwB3FyF/7aRQrPd6PJdO/LGE1y0kBPp6M=; b=b+U3eRtWc62FXxP0MLLPxpiEy9
-	eR4il0DJKtQAl6etZrkNZNx4uV080pqMzCgiWYfDrv4BhYNlEVfGCRicc0KzjgvyeRbj3aFKyhSdA
-	QVuI6lhyCG+6hpU+qYGLSJtGWHcjX/hDMDK6OVpn7XCwAsyIeFTWWAJscau253rsfUWNID8EzRH1e
-	suBFDVmZZncKDTBnfqOwziWKKHcl1F+0PR1Az0UJuSW03g1QNeEPjEyOLEuys0Nrv3yWYZwyzlw1i
-	mBCnoq562Nylj7XQt7uSrq+2Xa4jqazdfOgmP5gpUDCKCGwrYR4qtE2KSu2v+Y3SGTPAloGaHoFtC
-	6EqmLCnQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=7Eu5WXcIuBe88Xd8eCDaS+uTqxUL8W+UWJopLy1W8/I=; b=2BaA87gStNmt19pYcpOu287TPe
+	Ez38oxhU4IESYhLjygYW28dslIIAJRMlfjiD6uE3eUJ/JEaYjVOBhmcZtBrBXTflctqRr6sNdzUaz
+	8klOodHU6nMxJeE3LvuC3hLtfdsYi80Lx56+zoKoroQSKpQMdAOat96QmRCkf2w6v1UlG8J/oYwFD
+	C0JfMOggYEFqI4CkbNRZtsoI+4LtSpW32vHEqwgnghNAiZM3peCgLJNDIqKWxEDf28fiMzbd2Db4C
+	tYckuHCvPCf3d3z6OOQKCUCXUGc6JkFYxlzxrmpk+1TYs5kg70V3deNlILhjln5cnoyjW7FdfQJVn
+	yiBvoqfw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vqG4p-00000000zge-2Com;
-	Wed, 11 Feb 2026 19:40:43 +0000
-Received: from mail-ej1-x635.google.com ([2a00:1450:4864:20::635])
+	id 1vqIpT-000000018Yi-2m6A;
+	Wed, 11 Feb 2026 22:37:03 +0000
+Received: from mgamail.intel.com ([198.175.65.19])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vqG4n-00000000zgJ-1Tae
-	for kexec@lists.infradead.org;
-	Wed, 11 Feb 2026 19:40:42 +0000
-Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-b79f8f7ea43so415428766b.2
-        for <kexec@lists.infradead.org>; Wed, 11 Feb 2026 11:40:39 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770838838; cv=none;
-        d=google.com; s=arc-20240605;
-        b=MHImP57Jpv+uaLi03yP7BMqabaxulbTWfLI2gNZYyTz7HIOkLYYz2Dd4UiLef0zozX
-         /uICLv3npyLvl0X0NZtXBv9viJoMtrnHZetK1h98Fl+nJjhDnwPzuZS3Tx2NKtqrE47l
-         rz1HUMM+K5ZZl47ZXn8OHpR0k//RDoE3te1tfpE2JkNSxcPebhWUCqOuJMmnnzfhVBg/
-         ynlu/7KuP2vXKFHvL0odj1miPJHJ0uKV7UnjEl5Y9swn5MGEDzMwpp3TXiCp59MWryoO
-         D0TsVkWwdFQcnT5RpVDseDItoUOCULwpaHDQhgZkXrHRfK271hhBrDFCBdt5rN+RaYAP
-         zYYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=mtFHLX3t7mFwB3FyF/7aRQrPd6PJdO/LGE1y0kBPp6M=;
-        fh=JJOJMruocd207LZUQsQbgEZIr3sRG7rZAa1wc3RpINU=;
-        b=WWxucP51uzQLE/7La5N8giIHnNOCX/NHB5lr1Ac/Z6wLMd5jma2K2h3so40l3SXm6w
-         HqE1J6cbijCV+ipZHe+hdMcV4URcokr0xP65E2j6mHv8Com5VgfHYD3SK8/bEx08w4u+
-         7KP83diFG2l/VmIF+WsNdBwraudcRDVkvkdOcFn/GjfftT57y/BB1THwvDkYn8fRKjDf
-         nmL1U9NcDz2CMB+y+cEkVrXBvpwEVDSBbmmrnFqNHv1kYnC9LVwn8i4hdbKYsJlvNbuj
-         AgZ+vDqs4VKH3TnPSzcd6HVRwsqH64QfBqXoqE+7L/vM9k3NarhBW7abqRqBqg+LXpzN
-         6K6g==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1770838838; x=1771443638; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mtFHLX3t7mFwB3FyF/7aRQrPd6PJdO/LGE1y0kBPp6M=;
-        b=e1Coib+MSW7Wx+qGX1gar8d4a3VfvA5pC0NPXxxpPxsgE3GP6jn+kLfaNjP26uV/WN
-         KDZPsO+d3wF78c0eo7CRFvvbc+p+rrfgP9yBwzUb+Ma7Qb+EdbXCEt3gC3mTNylZe+mt
-         NPoatlrBP6nlYZ8zSqx51RZK/aSzGqJ8jOV8Jj2SFEqEh3nWrN+WChtBGiMbC3iV76E8
-         FR5ocI+0O7+WYLNb9KXvUu4MOjsGM2nL43ugjfGJ3zopOudxFYE/6TwLc5uHZJiWUcSW
-         JvpGomt7EBtu+pNzZtSUqKEfZIGZkloTVm0JotZTS/t21YcrwulWLXab9Zp09V5PLfXF
-         ZDLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770838838; x=1771443638;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=mtFHLX3t7mFwB3FyF/7aRQrPd6PJdO/LGE1y0kBPp6M=;
-        b=AxAI4fkp4YN7RJ1vQxfdNh9em1JrRvgJq8i8ifeGtztEedBTUhXIuoJxl1pE4jipJG
-         za6N7gjFFCMH1EUyewFFc7GA3Z+3hdHbTqe4Y7WvJqjIpgXRy+Li2udZboev/zUKQe4n
-         ZTA94mwGzwkiUVc/VtFZ+ZJp7WB2FAiJWzi9225LcG1ftAj3kWOsmOKK+bD/hhKaL7wp
-         ZOY2bHJNzy+FlR3X4irrt9AovYKb6cCqjCofAWc+cFFiqAl6Hf0ebLpOGL3S+XzYIIPf
-         JcY1pXNe3F1/J6mwA/uIDx2vNDZQTpsCqEq96l8qJ9ztYgEl9wX76UxXLTud8K1Gt7P/
-         SE/w==
-X-Forwarded-Encrypted: i=1; AJvYcCWxGl7hTmxgSMhmFFKtm6vRKFY0XaGRohu88oSNnPkdcvLmtov7xOVZnPxn0mrFp1LCDUeAgA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzehcwbwUKG1jHteO/BjjtBrRM/CJZLwhl3QfXdkzZ3ens1yyIT
-	JAQw/ozdtti2+1fwzMsSW4wqwKPhlMY+41eT8DJ/HtxAl9AhwrPTRQDcyuVz0oVKEKY1yTZfYys
-	9gU1t/453fN53NEuik3u0GNtrP/yejWMy2Hsa20KUKQ==
-X-Gm-Gg: AZuq6aIQZUQRUvVpt2L019MSKrPr8Gh+Gi/7i6SGQJhYNoI7EGQCNev9HDSB+jHtzTx
-	k1ZztLvstmQRiOY+7FfVJObccT11Y08EBYJWFEkHXDBZ1ZAYMEo1XPBGzPh0potceiwLNXyS9nJ
-	ZjcFvSUIcwhfI9n64fCHOz8zqtUhHt5+GG553RlEcD2GN19Qf4eRVlf6qMUxeSmwJD7jL7ikXyT
-	qNp/43c06WDfG2LRQ6mtvDmoDiRuroISILT+xHU1MO6DlKVa6vZ9yL2naX5k+p9PX91ahcaUo4r
-	lWUofDDlgvKFyhnUT/0/4LYgN/Egcpw1Mprykw==
-X-Received: by 2002:a17:907:3f9b:b0:b87:7485:b4a8 with SMTP id
- a640c23a62f3a-b8f8ea91a6bmr15769166b.0.1770838837841; Wed, 11 Feb 2026
- 11:40:37 -0800 (PST)
+	id 1vqIpQ-000000018YA-3Rvo;
+	Wed, 11 Feb 2026 22:37:02 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770849421; x=1802385421;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5lBrMrSUEvT4lx29b/VzGz7vn6FI2f6WHH0Xp1tO82E=;
+  b=H9IFnpqib5B5sQaUWQazzfPAnodGsQHfyaN4C7EBwhanVSDCozvTM+ce
+   CAF3v27b0p0XkUqhwcv29wd+MoxtKQx6h3zXuH8GzjUlqzZLPdfaz0ndd
+   i8hcElhZrMDmnYMyl1gccgq9uw4AVyy/EEoGmj9Qk2Ersi+LqT3MIHnG4
+   DCAt/8OTck5zzG/RjI8mvpef2t8oSqv2Jv4uLspBkY+JRPODjJFd9zs6+
+   gPjyPutn4LVTpYw3DGUzAO5h+v27DPEAUgzjlsTONUdJbdA5nAUAi1whb
+   rbZSBUP0D1RMSUr8OgAReMmbn6/5pYzf/Cx63XyGVXpPsTeO7t9xPRXH6
+   Q==;
+X-CSE-ConnectionGUID: shQmGESnRPaJRrLZ8OCtoA==
+X-CSE-MsgGUID: rrsHFh4ETnmS1oW67Ermuw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11698"; a="71911091"
+X-IronPort-AV: E=Sophos;i="6.21,285,1763452800"; 
+   d="scan'208";a="71911091"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2026 14:36:59 -0800
+X-CSE-ConnectionGUID: ZabLUBVpQsqUdFupslNNvQ==
+X-CSE-MsgGUID: MSBEmk28TJaeA0OfdScegg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,285,1763452800"; 
+   d="scan'208";a="212403937"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 11 Feb 2026 14:36:53 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vqIpH-00000000qRi-0j3G;
+	Wed, 11 Feb 2026 22:36:51 +0000
+Date: Thu, 12 Feb 2026 06:35:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	devicetree@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>,
+	Baoquan he <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>, Pingfan Liu <kernelfans@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Rob Herring <robh@kernel.org>, Thomas Staudt <tstaudt@de.ibm.com>,
+	Sourabh Jain <sourabhjain@linux.ibm.com>,
+	Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] arm64,ppc64le/kdump: pass dm-crypt keys to kdump
+ kernel
+Message-ID: <202602120648.RgQALnnI-lkp@intel.com>
+References: <20260211082401.2407853-3-coxu@redhat.com>
 MIME-Version: 1.0
-References: <20260211173954.2091119-1-mclapinski@google.com>
-In-Reply-To: <20260211173954.2091119-1-mclapinski@google.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Wed, 11 Feb 2026 14:40:01 -0500
-X-Gm-Features: AZwV_Qhj_LXM_nkisF1dHW372t93JNjWhBHaT4GRxWYkxOjMAeZJR4yIQonUYk4
-Message-ID: <CA+CK2bBfJDD5SPJqwCaGbaGZe9FncONMsck0QkOb8WwmDSh_Yg@mail.gmail.com>
-Subject: Re: [PATCH v3] kho: add support for deferred struct page init
-To: Michal Clapinski <mclapinski@google.com>
-Cc: Evangelos Petrongonas <epetron@amazon.de>, Mike Rapoport <rppt@kernel.org>, 
-	Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, kexec@lists.infradead.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260211082401.2407853-3-coxu@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260211_114041_412926_82260656 
-X-CRM114-Status: GOOD (  13.81  )
+X-CRM114-CacheID: sfid-20260211_143700_933993_FD5AFC58 
+X-CRM114-Status: GOOD (  15.12  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -118,39 +104,176 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Feb 11, 2026 at 12:40=E2=80=AFPM Michal Clapinski <mclapinski@googl=
-e.com> wrote:
->
-> From: Evangelos Petrongonas <epetron@amazon.de>
->
-> When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, struct page
-> initialization is deferred to parallel kthreads that run later
-> in the boot process.
->
-> During KHO restoration, deserialize_bitmap() writes metadata for
-> each preserved memory region. However, if the struct page has not been
-> initialized, this write targets uninitialized memory, potentially
-> leading to errors like:
-> BUG: unable to handle page fault for address: ...
->
-> Fix this by introducing kho_get_preserved_page(),  which ensures
-> all struct pages in a preserved region are initialized by calling
-> init_deferred_page() which is a no-op when deferred init is disabled
-> or when the struct page is already initialized.
->
+Hi Coiby,
 
-Co-developed-by: Michal Clapinski <mclapinski@google.com>
+kernel test robot noticed the following build errors:
 
-> Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
-> Signed-off-by: Michal Clapinski <mclapinski@google.com>
-> Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-> ---
-> v3:
-> - changed commit msg
-> - don't invoke early_pfn_to_nid if CONFIG_DEFERRED_STRUCT_PAGE_INIT=3Dn
+[auto build test ERROR on 2619c62b7ef2f463bcbbb34af122689c09855c23]
 
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+url:    https://github.com/intel-lab-lkp/linux/commits/Coiby-Xu/crash_dump-dm-crypt-Don-t-print-in-arch-specific-code/20260211-162729
+base:   2619c62b7ef2f463bcbbb34af122689c09855c23
+patch link:    https://lore.kernel.org/r/20260211082401.2407853-3-coxu%40redhat.com
+patch subject: [PATCH v4 2/2] arm64,ppc64le/kdump: pass dm-crypt keys to kdump kernel
+config: powerpc64-randconfig-r111-20260212 (https://download.01.org/0day-ci/archive/20260212/202602120648.RgQALnnI-lkp@intel.com/config)
+compiler: powerpc64-linux-gcc (GCC) 11.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260212/202602120648.RgQALnnI-lkp@intel.com/reproduce)
 
-Thanks,
-Pasha
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202602120648.RgQALnnI-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   arch/powerpc/kexec/elf_64.c: In function 'elf64_load':
+>> arch/powerpc/kexec/elf_64.c:82:23: error: implicit declaration of function 'crash_load_dm_crypt_keys' [-Werror=implicit-function-declaration]
+      82 |                 ret = crash_load_dm_crypt_keys(image);
+         |                       ^~~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/crash_load_dm_crypt_keys +82 arch/powerpc/kexec/elf_64.c
+
+    27	
+    28	static void *elf64_load(struct kimage *image, char *kernel_buf,
+    29				unsigned long kernel_len, char *initrd,
+    30				unsigned long initrd_len, char *cmdline,
+    31				unsigned long cmdline_len)
+    32	{
+    33		int ret;
+    34		unsigned long kernel_load_addr;
+    35		unsigned long initrd_load_addr = 0, fdt_load_addr;
+    36		void *fdt;
+    37		const void *slave_code;
+    38		struct elfhdr ehdr;
+    39		char *modified_cmdline = NULL;
+    40		struct crash_mem *rmem = NULL;
+    41		struct kexec_elf_info elf_info;
+    42		struct kexec_buf kbuf = { .image = image, .buf_min = 0,
+    43					  .buf_max = ppc64_rma_size };
+    44		struct kexec_buf pbuf = { .image = image, .buf_min = 0,
+    45					  .buf_max = ppc64_rma_size, .top_down = true,
+    46					  .mem = KEXEC_BUF_MEM_UNKNOWN };
+    47	
+    48		ret = kexec_build_elf_info(kernel_buf, kernel_len, &ehdr, &elf_info);
+    49		if (ret)
+    50			return ERR_PTR(ret);
+    51	
+    52		if (IS_ENABLED(CONFIG_CRASH_DUMP) && image->type == KEXEC_TYPE_CRASH) {
+    53			/* min & max buffer values for kdump case */
+    54			kbuf.buf_min = pbuf.buf_min = crashk_res.start;
+    55			kbuf.buf_max = pbuf.buf_max =
+    56					((crashk_res.end < ppc64_rma_size) ?
+    57					 crashk_res.end : (ppc64_rma_size - 1));
+    58		}
+    59	
+    60		ret = kexec_elf_load(image, &ehdr, &elf_info, &kbuf, &kernel_load_addr);
+    61		if (ret)
+    62			goto out;
+    63	
+    64		kexec_dprintk("Loaded the kernel at 0x%lx\n", kernel_load_addr);
+    65	
+    66		ret = kexec_load_purgatory(image, &pbuf);
+    67		if (ret) {
+    68			pr_err("Loading purgatory failed.\n");
+    69			goto out;
+    70		}
+    71	
+    72		kexec_dprintk("Loaded purgatory at 0x%lx\n", pbuf.mem);
+    73	
+    74		/* Load additional segments needed for panic kernel */
+    75		if (IS_ENABLED(CONFIG_CRASH_DUMP) && image->type == KEXEC_TYPE_CRASH) {
+    76			ret = load_crashdump_segments_ppc64(image, &kbuf);
+    77			if (ret) {
+    78				pr_err("Failed to load kdump kernel segments\n");
+    79				goto out;
+    80			}
+    81	
+  > 82			ret = crash_load_dm_crypt_keys(image);
+    83			if (ret)
+    84				goto out;
+    85	
+    86			/* Setup cmdline for kdump kernel case */
+    87			modified_cmdline = setup_kdump_cmdline(image, cmdline,
+    88							       cmdline_len);
+    89			if (!modified_cmdline) {
+    90				pr_err("Setting up cmdline for kdump kernel failed\n");
+    91				ret = -EINVAL;
+    92				goto out;
+    93			}
+    94			cmdline = modified_cmdline;
+    95		}
+    96	
+    97		if (initrd != NULL) {
+    98			kbuf.buffer = initrd;
+    99			kbuf.bufsz = kbuf.memsz = initrd_len;
+   100			kbuf.buf_align = PAGE_SIZE;
+   101			kbuf.top_down = false;
+   102			kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+   103			ret = kexec_add_buffer(&kbuf);
+   104			if (ret)
+   105				goto out;
+   106			initrd_load_addr = kbuf.mem;
+   107	
+   108			kexec_dprintk("Loaded initrd at 0x%lx\n", initrd_load_addr);
+   109		}
+   110	
+   111		ret = get_reserved_memory_ranges(&rmem);
+   112		if (ret)
+   113			goto out;
+   114	
+   115		fdt = of_kexec_alloc_and_setup_fdt(image, initrd_load_addr,
+   116						   initrd_len, cmdline,
+   117						   kexec_extra_fdt_size_ppc64(image, rmem));
+   118		if (!fdt) {
+   119			pr_err("Error setting up the new device tree.\n");
+   120			ret = -EINVAL;
+   121			goto out;
+   122		}
+   123	
+   124		ret = setup_new_fdt_ppc64(image, fdt, rmem);
+   125		if (ret)
+   126			goto out_free_fdt;
+   127	
+   128		if (!IS_ENABLED(CONFIG_CRASH_HOTPLUG) || image->type != KEXEC_TYPE_CRASH)
+   129			fdt_pack(fdt);
+   130	
+   131		kbuf.buffer = fdt;
+   132		kbuf.bufsz = kbuf.memsz = fdt_totalsize(fdt);
+   133		kbuf.buf_align = PAGE_SIZE;
+   134		kbuf.top_down = true;
+   135		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+   136		ret = kexec_add_buffer(&kbuf);
+   137		if (ret)
+   138			goto out_free_fdt;
+   139	
+   140		/* FDT will be freed in arch_kimage_file_post_load_cleanup */
+   141		image->arch.fdt = fdt;
+   142	
+   143		fdt_load_addr = kbuf.mem;
+   144	
+   145		kexec_dprintk("Loaded device tree at 0x%lx\n", fdt_load_addr);
+   146	
+   147		slave_code = elf_info.buffer + elf_info.proghdrs[0].p_offset;
+   148		ret = setup_purgatory_ppc64(image, slave_code, fdt, kernel_load_addr,
+   149					    fdt_load_addr);
+   150		if (ret)
+   151			pr_err("Error setting up the purgatory.\n");
+   152	
+   153		goto out;
+   154	
+   155	out_free_fdt:
+   156		kvfree(fdt);
+   157	out:
+   158		kfree(rmem);
+   159		kfree(modified_cmdline);
+   160		kexec_free_elf_info(&elf_info);
+   161	
+   162		return ret ? ERR_PTR(ret) : NULL;
+   163	}
+   164	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
