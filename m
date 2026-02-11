@@ -4,71 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D9680EA8125
-	for <kexec@archiver.kernel.org>; Wed, 11 Feb 2026 09:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 55A48ECD6C1
+	for <kexec@archiver.kernel.org>; Wed, 11 Feb 2026 17:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=EA00nQCuRht5p3xpLEM73K63L/ah0hrG4IBrwVxJKZA=; b=EpOqBBuDp0/D5IFsT+keutMKqw
-	5g2fjF9ZrXjOTj4G5peo7vbgXU7AJelSSD+IS+ugCwojs9An5OYSGFXhNXLN4PwZzVYZuqfbRWOJ/
-	SNIDzAtnHseGa5p7BTfE/cQZRBS/f+av64xcKl7bQ4jMYL+lQnNwP1L/9XVR8Ztu412tDVHb4CmwP
-	KWeUE9SKFu6+HiHiRLZ52l+hObgl8U2UcvIA9yM9yakTyzPDqSYI+WDdosYQa/6fM7YhhSXAdBU4B
-	cTndEJkf4+IpbhMcRj6Ih2irg65Ld01E6VgejNCXOaxHzEjHj5aHGADFFV3uAak0hEDVgLe6mDCsO
-	ff2K8BuA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=dlNHJZ4DB/YIFPcTP8iAwpEYyWUng6cE6zKvxjI6tZ8=; b=4KhNpYFWJW7LBt7xC2Z4yYITZa
+	CGp08sLHb2NJgJoQwhoYDFpO6Tuc5zhm850iwy5U6LJ55Kof+satTwTwpKS2hV/aMheqzW+MHgYKE
+	Rrlno5O55FELPUF+RzzejuxHiCQus4PJ1LJkLemNg4qUSIgVP7ox+k7/ihXJnhcBIQHOIlJ69ZC/H
+	0Duccuywgioaeeuc7YGpnd9aQolV4qswmfDORpDfq88VxZwNrkfQwpBybXksyqQVQv64vMaUMBdI3
+	q9y6bX1x/d4UusMmdJK9gYVrTJjyb27nUsR209SOzmO86EAS8y35Enf+JFqQvflguOS7I3bGtcLh5
+	d7m0XrPA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vq6wT-00000000Sm2-1YJT;
-	Wed, 11 Feb 2026 09:55:29 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1vqEC5-00000000uey-1d2p;
+	Wed, 11 Feb 2026 17:40:05 +0000
+Received: from mail-ej1-x64a.google.com ([2a00:1450:4864:20::64a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vq6wQ-00000000SlU-42IT;
-	Wed, 11 Feb 2026 09:55:28 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id D211860053;
-	Wed, 11 Feb 2026 09:55:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35C04C4CEF7;
-	Wed, 11 Feb 2026 09:55:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770803725;
-	bh=ficnapCkCf+khatK2N0Ft9F3rB7FAZW78An8VQMxafM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AqX8gw98dFxJpmNqPCzOMtORCM+znj0QtTax6ydhaKXUKRLQ6hvD2Mca14wt6jhme
-	 OgLLSYM08TJPbKIUYsZ+9RwVM46VCxfCsTc2/fTJcq7RkbIpPx+8NXJ58U3jKdtvyz
-	 DpNTszqlwLSQodgfBpNaNhs2qonpmtJS8y+M6ODrFMz0cUSI5GyY6PL2p9oOSzidLd
-	 JRYwur4nfHICeJmev2M2QAhAePQ41d3/G0i9BdVg56pftCswAk7lxuf0Oqz1+eMnom
-	 9QJfYHHaIbOUbaooUMcYSaEMld0XmcJUgaziC4oxrtxjR+n8uaNDUT/TcbWplghTou
-	 rL4QYRQvAusFw==
-Message-ID: <423a3431-1271-4c35-94fe-8ca880679ed9@kernel.org>
-Date: Wed, 11 Feb 2026 10:55:17 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] arm64,ppc64le/kdump: pass dm-crypt keys to kdump
- kernel
-To: Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- devicetree@vger.kernel.org
-Cc: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>,
- Baoquan he <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
- Kairui Song <ryncsn@gmail.com>, Pingfan Liu <kernelfans@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
- Thomas Staudt <tstaudt@de.ibm.com>, Sourabh Jain
- <sourabhjain@linux.ibm.com>, Will Deacon <will@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Saravana Kannan <saravanak@kernel.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20260211082401.2407853-1-coxu@redhat.com>
- <20260211082401.2407853-3-coxu@redhat.com>
-Content-Language: fr-FR
-From: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
-In-Reply-To: <20260211082401.2407853-3-coxu@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+	id 1vqEC2-00000000ueI-2gd9
+	for kexec@lists.infradead.org;
+	Wed, 11 Feb 2026 17:40:04 +0000
+Received: by mail-ej1-x64a.google.com with SMTP id a640c23a62f3a-b8722f32507so740756466b.2
+        for <kexec@lists.infradead.org>; Wed, 11 Feb 2026 09:40:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1770831600; x=1771436400; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dlNHJZ4DB/YIFPcTP8iAwpEYyWUng6cE6zKvxjI6tZ8=;
+        b=z/yN4gXtQ0zCHai+Ab89Em6AapZXbJQ358WPBWa3IfhNWkE30RYFoboOoxio2LjRZi
+         T9yWEDiQhhbVxFpl/4FFBbg2HUBlXLOkSogfQ8aItcuZMAWPlFaSzFOmQbHEX/O0oIOu
+         RFmj2HYSQKTsCJlNJJdv8PkPcztYwqFeLFudehlxNKAdwFWCl8O0QGwwUSQsmfIXdM1x
+         cHy52Q4qcCXf6jpLnRYkH+py8Uvzs941H9MaTRTvSFHMBppxrCqUFtPJ9yOkw80SMWXz
+         TsYqXc0wRpnnzbzlNpAlXOWUz7uZQ924ov/fS6NLuADZCNXTEHDi21XI40SroQH4E7C0
+         RQBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770831600; x=1771436400;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dlNHJZ4DB/YIFPcTP8iAwpEYyWUng6cE6zKvxjI6tZ8=;
+        b=JgQULVXxP5Xsgn6mdzbhEEVWpE1+xDiWte7FxSYuSk2REciWcWi4ks5V7yR+mwY2OF
+         XlBznD3s7xidRL/Au1H5+ZFoWWSWyNNc77JEPHCPhNr/x8LmxGfcGgZYcuoHBo2puLP1
+         t9K6eHLwuCqrCeHk/eEv+JJNOy1w1I2HwC/w7ccEcIkH7XpJyVL4FH7a6k+IlAxOByXk
+         gb2lV8K76RT02PZeuMFccn6SCIqVCTX04vOatby8xVDLFruMl1gchs4az7N8PZLgdvlW
+         +qnDwJTucJ7DepR091PO+rSqrsej7BSvaF77MUynxkbH26IBdy2VIA72nL7GJT/DXO2e
+         i4TQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUa+b87XfGm0yZ8koGBAA4FvIMmU6AQj8PGflBMJq1CXHXFPKXNCsVU3OXxkGitVzLZ38yz5Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxSXFtXecEPmsJ+5VxL2BDlgbPmadBzmZj1epOeX+WS0md7tC+T
+	Q5DuBmTlslb5c76Qu8Q60fQLqM/a/42JdvFbIKVFIOTr3PA+A89Zjm0WaOw8yZy/Ay4LxZUcAjk
+	O72V0wDD6UAY2nJj18F45wg==
+X-Received: from edvj14.prod.google.com ([2002:aa7:de8e:0:b0:64b:aad7:d741])
+ (user=mclapinski job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:907:930a:b0:b88:463e:b55f with SMTP id a640c23a62f3a-b8f6a8e08c2mr193618466b.6.1770831599663;
+ Wed, 11 Feb 2026 09:39:59 -0800 (PST)
+Date: Wed, 11 Feb 2026 18:39:54 +0100
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.53.0.239.g8d8fc8a987-goog
+Message-ID: <20260211173954.2091119-1-mclapinski@google.com>
+Subject: [PATCH v3] kho: add support for deferred struct page init
+From: Michal Clapinski <mclapinski@google.com>
+To: Evangelos Petrongonas <epetron@amazon.de>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	kexec@lists.infradead.org, linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Michal Clapinski <mclapinski@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260211_094002_765656_FD70F379 
+X-CRM114-Status: GOOD (  22.81  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,92 +88,128 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+From: Evangelos Petrongonas <epetron@amazon.de>
 
+When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, struct page
+initialization is deferred to parallel kthreads that run later
+in the boot process.
 
-Le 11/02/2026 à 09:24, Coiby Xu a écrit :
-> CONFIG_CRASH_DM_CRYPT has been introduced to support LUKS-encrypted
-> device dump target by addressing two challenges [1],
->   - Kdump kernel may not be able to decrypt the LUKS partition. For some
->     machines, a system administrator may not have a chance to enter the
->     password to decrypt the device in kdump initramfs after the 1st kernel
->     crashes
-> 
->   - LUKS2 by default use the memory-hard Argon2 key derivation function
->     which is quite memory-consuming compared to the limited memory reserved
->     for kdump.
-> 
-> To also enable this feature for ARM64 and PowerPC, we only need to add
+During KHO restoration, deserialize_bitmap() writes metadata for
+each preserved memory region. However, if the struct page has not been
+initialized, this write targets uninitialized memory, potentially
+leading to errors like:
+BUG: unable to handle page fault for address: ...
 
-What do you want to say exactly with 'only' ?
+Fix this by introducing kho_get_preserved_page(),  which ensures
+all struct pages in a preserved region are initialized by calling
+init_deferred_page() which is a no-op when deferred init is disabled
+or when the struct page is already initialized.
 
-> a device tree property dmcryptkeys [2] as similar to elfcorehdr to pass
-> the memory address of the stored info of dm-crypt keys to the kdump
-> kernel. Since this property is only needed by the kdump kernel, it won't
-> be exposed to user space.
-> 
-> [1] https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Fall%2F20250502011246.99238-1-coxu%40redhat.com%2F&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C0aa5f3b34d694b23b0cc08de6946f66c%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C639063950684962054%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=8uCc%2Bg6YNojymf8UpZhmJY19vpWXJCC9KIf3qMyQ3dI%3D&reserved=0
-> [2] https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2Fdevicetree-org%2Fdt-schema%2Fpull%2F181&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C0aa5f3b34d694b23b0cc08de6946f66c%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C639063950684987003%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=1s5NPHgF1LsXdrDXBhawduFXOqnHPlkbohQHHvolLw4%3D&reserved=0
-> 
-> Cc: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>
-> Cc: Baoquan he <bhe@redhat.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: Kairui Song <ryncsn@gmail.com>
-> Cc: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Thomas Staudt <tstaudt@de.ibm.com>
-> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Signed-off-by: Coiby Xu <coxu@redhat.com>
-> ---
->   arch/arm64/kernel/machine_kexec_file.c |  4 ++++
->   arch/powerpc/kexec/elf_64.c            |  4 ++++
->   drivers/of/fdt.c                       | 21 +++++++++++++++++++++
->   drivers/of/kexec.c                     | 19 +++++++++++++++++++
->   4 files changed, 48 insertions(+)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 331646d667b9..2967e4aff807 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -866,6 +866,26 @@ static void __init early_init_dt_check_for_elfcorehdr(unsigned long node)
->   		 elfcorehdr_addr, elfcorehdr_size);
->   }
->   
-> +static void __init early_init_dt_check_for_dmcryptkeys(unsigned long node)
-> +{
-> +	const char *prop_name = "linux,dmcryptkeys";
-> +	const __be32 *prop;
-> +
-> +	if (!IS_ENABLED(CONFIG_CRASH_DM_CRYPT))
-> +		return;
-> +
-> +	pr_debug("Looking for dmcryptkeys property... ");
-> +
-> +	prop = of_get_flat_dt_prop(node, prop_name, NULL);
-> +	if (!prop)
-> +		return;
-> +
-> +	dm_crypt_keys_addr = dt_mem_next_cell(dt_root_addr_cells, &prop);
-> +
-> +	/* Property only accessible to crash dump kernel */
-> +	fdt_delprop(initial_boot_params, node, prop_name);
+Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
+Signed-off-by: Michal Clapinski <mclapinski@google.com>
+Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+---
+v3:
+- changed commit msg
+- don't invoke early_pfn_to_nid if CONFIG_DEFERRED_STRUCT_PAGE_INIT=n
+v2:
+- updated a comment
 
-Shouldn't this property be deleted regardless of whether kernel is built 
-with CONFIG_CRASH_DM_CRYPT or without ?
+I think we can't initialize those struct pages in kho_restore_page.
+I encountered this stack:
+  page_zone(start_page)
+  __pageblock_pfn_to_page
+  set_zone_contiguous
+  page_alloc_init_late
 
-> +}
-> +
->   static unsigned long chosen_node_offset = -FDT_ERR_NOTFOUND;
->   
->   /*
-> @@ -1097,6 +1117,7 @@ int __init early_init_dt_scan_chosen(char *cmdline)
->   
->   	early_init_dt_check_for_initrd(node);
->   	early_init_dt_check_for_elfcorehdr(node);
-> +	early_init_dt_check_for_dmcryptkeys(node);
->   
->   	rng_seed = of_get_flat_dt_prop(node, "rng-seed", &l);
->   	if (rng_seed && l > 0) {
+So, at the end of page_alloc_init_late struct pages are expected to be
+already initialized. set_zone_contiguous() looks at the first and last
+struct page of each pageblock in each populated zone to figure out if
+the zone is contiguous. If a kho page lands on a pageblock boundary,
+this will lead to access of an uninitialized struct page.
+There is also page_ext_init that invokes pfn_to_nid, which calls
+page_to_nid for each section-aligned page.
+There might be other places that do something similar. Therefore, it's
+a good idea to initialize all struct pages by the end of deferred
+struct page init. That's why I'm resending Evangelos's patch.
+
+I also tried to implement Pratyush's idea, i.e. iterate over zones,
+then get node from zone. I didn't notice any performance difference
+even with 8GB of kho.
+
+I repeated Evangelos's testing:
+In order to test the fix, I modified the KHO selftest, to allocate more
+memory and do so from higher memory to trigger the incompatibility. The
+branch with those changes can be found in:
+https://git.infradead.org/?p=users/vpetrog/linux.git;a=shortlog;h=refs/heads/kho-deferred-struct-page-init
+---
+ kernel/liveupdate/Kconfig          |  2 --
+ kernel/liveupdate/kexec_handover.c | 27 ++++++++++++++++++++++++++-
+ 2 files changed, 26 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/liveupdate/Kconfig b/kernel/liveupdate/Kconfig
+index 1a8513f16ef7..c13af38ba23a 100644
+--- a/kernel/liveupdate/Kconfig
++++ b/kernel/liveupdate/Kconfig
+@@ -1,12 +1,10 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+ menu "Live Update and Kexec HandOver"
+-	depends on !DEFERRED_STRUCT_PAGE_INIT
+ 
+ config KEXEC_HANDOVER
+ 	bool "kexec handover"
+ 	depends on ARCH_SUPPORTS_KEXEC_HANDOVER && ARCH_SUPPORTS_KEXEC_FILE
+-	depends on !DEFERRED_STRUCT_PAGE_INIT
+ 	select MEMBLOCK_KHO_SCRATCH
+ 	select KEXEC_FILE
+ 	select LIBFDT
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index b851b09a8e99..3bc14f3d7690 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -457,6 +457,31 @@ static int kho_mem_serialize(struct kho_out *kho_out)
+ 	return err;
+ }
+ 
++/*
++ * With CONFIG_DEFERRED_STRUCT_PAGE_INIT, struct pages in higher memory regions
++ * may not be initialized yet at the time KHO deserializes preserved memory.
++ * KHO uses the struct page to store metadata and a later initialization would
++ * overwrite it.
++ * Ensure all the struct pages in the preservation are
++ * initialized. deserialize_bitmap() marks the reservation as noinit to make
++ * sure they don't get re-initialized later.
++ */
++static struct page *__init kho_get_preserved_page(phys_addr_t phys,
++						  unsigned int order)
++{
++	unsigned long pfn = PHYS_PFN(phys);
++	int nid;
++
++	if (!IS_ENABLED(CONFIG_DEFERRED_STRUCT_PAGE_INIT))
++		return pfn_to_page(pfn);
++
++	nid = early_pfn_to_nid(pfn);
++	for (int i = 0; i < (1 << order); i++)
++		init_deferred_page(pfn + i, nid);
++
++	return pfn_to_page(pfn);
++}
++
+ static void __init deserialize_bitmap(unsigned int order,
+ 				      struct khoser_mem_bitmap_ptr *elm)
+ {
+@@ -467,7 +492,7 @@ static void __init deserialize_bitmap(unsigned int order,
+ 		int sz = 1 << (order + PAGE_SHIFT);
+ 		phys_addr_t phys =
+ 			elm->phys_start + (bit << (order + PAGE_SHIFT));
+-		struct page *page = phys_to_page(phys);
++		struct page *page = kho_get_preserved_page(phys, order);
+ 		union kho_page_info info;
+ 
+ 		memblock_reserve(phys, sz);
+-- 
+2.53.0.239.g8d8fc8a987-goog
+
 
