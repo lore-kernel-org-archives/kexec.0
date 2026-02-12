@@ -4,109 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0B1CAEEA84F
-	for <kexec@archiver.kernel.org>; Thu, 12 Feb 2026 20:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 78433EEA866
+	for <kexec@archiver.kernel.org>; Thu, 12 Feb 2026 22:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Subject:References:In-Reply-To:Message-Id:Cc:To:From:Date:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=EWiQy57J/wmVFlOHZYdbKDPQHVI0Kcl8Ig1BU+icU28=; b=hUuZIJtcvmPZmOrnCO276gr6wj
-	gQkNWHFea1xFmcW48AMzsgM2dyGhmPGP9LpF2sPd0mnqtjsiPUniXnKF35sEQH9+rVhxAcrcRvmC5
-	AjDi4vvW2YVrQT9oWgp7SdFikcQMDtZgGufqMgb/Absv/EWkfQ7eRVJr63esoUEWUK5+nveeHWRtL
-	b86MYbm0Hd19YH9FFZnS6fm6eI8DXuOjZPxmja0Vs+cre8jh01jjO27Efmm3y2o5EdR7TFiugsNiq
-	wHEjUSjXm3WeryMAC0F9UIxlthr9NeUQUK0AdBT2wwPZwIdp5a/a5eTfJMnjhTsxgy0VPzLeXQAjF
-	QXL+nXGA==;
+	bh=6eofuDKmKOLfCuq2pM2DyljxyLUgC9fSyFIoGCkDY4s=; b=IANm7UR6y3tjvviKSIpHRarr/3
+	wVofPsb3CoruJGqYenGEQByZKr4mI005Ap2XQF7Jp0wpeRo3iWr4txoyKqchoqOR4c3IyCUQRBfV5
+	Kb7w5bug+LPDHhB+RALPHqTrmNAQr0xedBPaFUAyeNY+npaR3RK2uCqoE8b+QAEeL1zADPtqWqHyG
+	tOI5JHf0WSDSGBfk+mlNJsLP9CbDthQtws4DKCZY3sVv8qtsEtoeFsOZgmyXDI551UyCFdYnhbnDr
+	YI+mhH4JmtdZIVaaeoTHttyqLq7Gc5fmpHwD6yqeQkBKIci/r6wZ0RgsszcQ44iMFFwoi/mhLhjXT
+	67Veqsvw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vqdU6-00000002cfD-2YsH;
-	Thu, 12 Feb 2026 20:40:22 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
-	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vqdU4-00000002cer-21FF
+	id 1vqeu6-00000002gkn-1lRa;
+	Thu, 12 Feb 2026 22:11:18 +0000
+Received: from linux.microsoft.com ([13.77.154.182])
+	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vqeu4-00000002gkP-2H3c
 	for kexec@lists.infradead.org;
-	Thu, 12 Feb 2026 20:40:22 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id D750243AD7;
-	Thu, 12 Feb 2026 20:40:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00C70C4AF0B;
-	Thu, 12 Feb 2026 20:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770928816;
-	bh=9Gc0/ilN7j5yF1KCkiGbXMqDqnOtVI+V0w9htJ9T/qI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=KXzgwHy4ws7X1BseHR09zXzvHUamgT75fcqq05Sw/siWUxQifEmpBeqR9qldRbbCl
-	 kBV3/0LlJQnSDu6h4Jii2YbfG9mu5nFg9S+A6e3HmcFofVMw3lFdgna2wEPcssfHTj
-	 +kNmlcORJkQTBe3XEbhzFpAVhSkDgM1mIK2vKSHKHDZE8wpBLUuXaXBLcg/Y0LI7Jx
-	 NcpmoTg6GPUDn6Q/rrN48+M7JDCHtAh15cnNfDimi9U3foFQXJsJ4br4ZCW9PNj3fj
-	 GtK9xyT2rz/8X/sSNn20jxKMihQFgTHT8VTe5ntFJ77AsGBwxJgGpHGfdBkP2EFWDo
-	 wrPTYuAgZ6NvA==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id AE1FCF4006C;
-	Thu, 12 Feb 2026 15:40:14 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-01.internal (MEProxy); Thu, 12 Feb 2026 15:40:14 -0500
-X-ME-Sender: <xms:rjqOaX0QLjTIfy27c3wPaNPIRvNddaaHAuyOUVu65QyF9gEOyAs6zg>
-    <xme:rjqOaQ4nOA_FKbInLAEV68q_4hRhnK5woPvU4rhlsRJsEeBhoAP1d3gKSotK4yszU
-    diS42BC7lux8IKxLTptldNVApg6wW4ayjZ8Tsqczw3Wf-rNLaD_vxBU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvtdeifeehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnegouf
-    hushhpvggtthffohhmrghinhculdegledmnecujfgurhepofggfffhvfevkfgjfhfutgfg
-    sehtjeertdertddtnecuhfhrohhmpedftehrugcuuehivghshhgvuhhvvghlfdcuoegrrh
-    gusgeskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpeefieefjeetgefhieff
-    vdekkeduvdejvddtgfduteehgeefjeekudeltefhkeeugeenucffohhmrghinhepghhith
-    hhuhgsrdhiohenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpegrrhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieejtdehtd
-    dtjeelqdeffedvudeigeduhedqrghruggspeepkhgvrhhnvghlrdhorhhgseifohhrkhho
-    fhgrrhgurdgtohhmpdhnsggprhgtphhtthhopeefuddpmhhouggvpehsmhhtphhouhhtpd
-    hrtghpthhtohepsghpsegrlhhivghnkedruggvpdhrtghpthhtohepnhhivhgvughithgr
-    segrlhhumhdrmhhithdrvgguuhdprhgtphhtthhopehluhhtohesrghmrggtrghpihhtrg
-    hlrdhnvghtpdhrtghpthhtohepughpshhmihhthhesrghpvghrthhushhsohhluhhtihho
-    nhhsrdgtohhmpdhrtghpthhtoheprghnughrvgifrdgtohhophgvrhefsegtihhtrhhigi
-    drtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghp
-    thhtohepphgvthgvrhhhuhgvfigvsehgmhigrdguvgdprhgtphhtthhopehhvghrsggvrh
-    htsehgohhnughorhdrrghprghnrgdrohhrghdrrghupdhrtghpthhtohepthhrvghntghh
-    sghoohhtqdguvghvvghlsehgohhoghhlvghgrhhouhhpshdrtghomh
-X-ME-Proxy: <xmx:rjqOadtbwIiIHCnUd_j9VP7bPDaeG7coXIhqRD0RRlF78n6PWXxVDA>
-    <xmx:rjqOaauqeXbCkuhSUhTE9F-LaZrj4ZUdQ7dIm_TxvXkV89BcojG4Kw>
-    <xmx:rjqOadsEr2p-s1zIBvnLMZp83TwcrlzaN8RCINinXrErvtqAAuGemQ>
-    <xmx:rjqOaS5UVfIV_ibP30J--5sFuG6QylqzdCiG0GQBcc3n12cZjFu8gw>
-    <xmx:rjqOaYB2PGF9YI179RUmYGnz5ol4bRje39RPhYrrBFzGH_3ioDmVMikp>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 7FC76700065; Thu, 12 Feb 2026 15:40:14 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	Thu, 12 Feb 2026 22:11:17 +0000
+Received: from [192.168.0.88] (192-184-212-33.fiber.dynamic.sonic.net [192.184.212.33])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 1756120B7165;
+	Thu, 12 Feb 2026 14:11:14 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1756120B7165
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1770934274;
+	bh=6eofuDKmKOLfCuq2pM2DyljxyLUgC9fSyFIoGCkDY4s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=d4QIqslBtpFWC040wupD6krQmTY8sHskhhAPvaKI9GV20GwJXRM5kMyuIhO1E6GIA
+	 YLhkjzbBniOJ98SDKPyB0H9C8pvPFPPkCvWC6ipxvwQVoeq07fNHbr9HYzlVKZMSfN
+	 k8yzi9xnba4S7yLurcLNLQ7bWk23zxxqp873raEg=
+Message-ID: <32c4bc2a-5dd1-c54d-a089-45bfad6eec94@linux.microsoft.com>
+Date: Thu, 12 Feb 2026 14:11:13 -0800
 MIME-Version: 1.0
-X-ThreadId: AAnEvm6syrbF
-Date: Thu, 12 Feb 2026 21:39:53 +0100
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Daniel P. Smith" <dpsmith@apertussolutions.com>,
- "Ross Philipson" <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev, dave.hansen@linux.intel.com
-Cc: "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
- mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, "Jarkko Sakkinen" <jarkko@kernel.org>, jgg@ziepe.ca,
- luto@amacapital.net, nivedita@alum.mit.edu,
- "Herbert Xu" <herbert@gondor.apana.org.au>, davem@davemloft.net,
- corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
- baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
- andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
-Message-Id: <49d169bf-0ad2-49be-b7d7-fceb9e7f831a@app.fastmail.com>
-In-Reply-To: <1ffd3cb5-2c76-4371-a067-3e4849907d80@apertussolutions.com>
-References: <20251215233316.1076248-1-ross.philipson@oracle.com>
- <b5f2b5a5-b984-4ed3-a023-c06d634f9146@app.fastmail.com>
- <1ffd3cb5-2c76-4371-a067-3e4849907d80@apertussolutions.com>
-Subject: Re: [PATCH v15 00/28] x86: Secure Launch support for Intel TXT
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH 2/2] mshv: Add kexec blocking support
+Content-Language: en-US
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+ rppt@kernel.org, akpm@linux-foundation.org, bhe@redhat.com,
+ kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, longli@microsoft.com
+Cc: kexec@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <176962149772.85424.9395505307198316093.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <176962212724.85424.5690118672585914211.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+From: Mukesh R <mrathor@linux.microsoft.com>
+In-Reply-To: <176962212724.85424.5690118672585914211.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260212_124020_836281_CF4A8842 
-X-CRM114-Status: GOOD (  30.02  )
+X-CRM114-CacheID: sfid-20260212_141116_625287_D38B36DB 
+X-CRM114-Status: GOOD (  31.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,66 +74,230 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, 12 Feb 2026, at 20:49, Daniel P. Smith wrote:
-> On 2/9/26 09:04, Ard Biesheuvel wrote:
-...
->> Surprisingly, even when doing a secure launch, the EFI runtime services still work happily, which means (AIUI) that code that was excluded from the D-RTM TCB is still being executed at ring 0? Doesn't this defeat D-RTM entirely in the case some exploit is hidden in the EFI runtime code? Should we measure the contents of EfiRuntimeServicesCode regions too?
->
-> Yes, in fact in the early days I specifically stated that we should 
-> provide for the ability to measure the RS blocks. Particularly if you 
-> are not in an environment where you can isolate the calls to RS from the 
-> TCB. While the RS can pose runtime corruption risks, the larger concern 
-> is integrating the D-RTM validation of the Intel System Resources 
-> Defense (ISRD), aka SMI isolation/SMM Supervisor, provided by the Intel 
-> System Security Report (ISSR). Within the ISSR is a list of memory 
-> regions which the SMM Policy Shim (SPS) restricts a SMI handler's access 
-> when running. This allows a kernel to restrict what access a SMI handler 
-> are able to reach, thus allowing them to be removed from the TCB when 
-> the appropriate guards are put in place.
->
-> If you are interested in understanding these further, Satoshi Tanda has 
-> probably the best technical explanation without Intel market speak.
->
-> ISRD: https://tandasat.github.io/blog/2024/02/29/ISRD.html
-> ISSR: https://tandasat.github.io/blog/2024/03/18/ISSR.html
->
+On 1/28/26 09:42, Stanislav Kinsburskii wrote:
+> Add kexec notifier to prevent kexec when VMs are active or memory
+> is deposited. The notifier blocks kexec operations if:
+> - Active VMs exist in the partition table
+> - Pages are still deposited to the hypervisor
+> 
+> The kernel cannot access hypervisor deposited pages: any access
+> triggers a GPF. Until the deposited page state can be handed over
+> to the next kernel, kexec must be blocked if there is any shared
+> state between kernel and hypervisor.
+> 
+> For L1 host virtualization, attempt to withdraw all deposited memory before
+> allowing kexec to proceed. If withdrawal fails or pages remain deposited
+> block the kexec operation.
+> 
+> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> ---
+>   drivers/hv/Makefile            |    1 +
+>   drivers/hv/hv_proc.c           |    4 ++
+>   drivers/hv/mshv_kexec.c        |   66 ++++++++++++++++++++++++++++++++++++++++
+>   drivers/hv/mshv_root.h         |   14 ++++++++
+>   drivers/hv/mshv_root_hv_call.c |    2 +
+>   drivers/hv/mshv_root_main.c    |    7 ++++
+>   6 files changed, 94 insertions(+)
+>   create mode 100644 drivers/hv/mshv_kexec.c
+> 
+> diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
+> index a49f93c2d245..bb72be5cc525 100644
+> --- a/drivers/hv/Makefile
+> +++ b/drivers/hv/Makefile
+> @@ -15,6 +15,7 @@ hv_vmbus-$(CONFIG_HYPERV_TESTING)	+= hv_debugfs.o
+>   hv_utils-y := hv_util.o hv_kvp.o hv_snapshot.o hv_utils_transport.o
+>   mshv_root-y := mshv_root_main.o mshv_synic.o mshv_eventfd.o mshv_irq.o \
+>   	       mshv_root_hv_call.o mshv_portid_table.o mshv_regions.o
+> +mshv_root-$(CONFIG_KEXEC) += mshv_kexec.o
+>   mshv_vtl-y := mshv_vtl_main.o
+>   
+>   # Code that must be built-in
+> diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
+> index 89870c1b0087..39bbbedb0340 100644
+> --- a/drivers/hv/hv_proc.c
+> +++ b/drivers/hv/hv_proc.c
+> @@ -15,6 +15,8 @@
+>    */
+>   #define HV_DEPOSIT_MAX (HV_HYP_PAGE_SIZE / sizeof(u64) - 1)
+>   
+> +atomic_t hv_pages_deposited;
+> +
+>   /* Deposits exact number of pages. Must be called with interrupts enabled.  */
+>   int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+>   {
+> @@ -93,6 +95,8 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+>   		goto err_free_allocations;
+>   	}
+>   
+> +	atomic_add(page_count, &hv_pages_deposited);
+> +
+>   	ret = 0;
+>   	goto free_buf;
+>   
+> diff --git a/drivers/hv/mshv_kexec.c b/drivers/hv/mshv_kexec.c
+> new file mode 100644
+> index 000000000000..5222b2e4ff97
+> --- /dev/null
+> +++ b/drivers/hv/mshv_kexec.c
+> @@ -0,0 +1,66 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2026, Microsoft Corporation.
+> + *
+> + * Live update orchestration management for mshv_root module.
+> + *
+> + * Author: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+> + */
+> +
+> +#include <linux/kexec.h>
+> +#include <linux/notifier.h>
+> +#include <asm/mshyperv.h>
+> +#include "mshv_root.h"
+> +
+> +static BLOCKING_NOTIFIER_HEAD(overlay_notify_chain);
+> +
+> +static int mshv_block_kexec_notify(struct notifier_block *nb,
+> +				   unsigned long action, void *arg)
+> +{
+> +	if (!hash_empty(mshv_root.pt_htable)) {
+> +		pr_warn("mshv: Cannot perform kexec while VMs are active\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	if (hv_l1vh_partition()) {
+> +		int err;
+> +
+> +		/* Attempt to withdraw all the deposited pages */
+> +		err = hv_call_withdraw_memory(U64_MAX, NUMA_NO_NODE,
+> +					      hv_current_partition_id);
+> +		if (err) {
+> +			pr_err("mshv: Failed to withdraw memory from L1 virtualization: %d\n",
+> +			       err);
+> +			return err;
+> +		}
+> +	}
+> +
+> +	if (atomic_read(&hv_pages_deposited)) {
+> +		pr_warn("mshv: Cannot perform kexec while pages are deposited\n");
+> +		return -EBUSY;
+> +	}
+> +	return 0;
+> +}
+> +
 
-Thanks, I'll take a look at those.
+What guarantees another deposit won't happen after this. Are all cpus
+"locked" in kexec path and not doing anything at this point?
 
-But would it be better to disable the runtime services by default when doing a secure launch? PREEMPT_RT already does the same.
+Thanks,
+-Mukesh
 
-> While you all care about Linux specifically, the 
-> goal for TrenchBoot is to build a common approach that we can implement
-> across any other open source OS.
->
 
-I'd argue that relying on things like setup_header, boot_params and kernel_info is not a great way to achieve that. The reason I care about this is that you are relying on those things even when doing EFI boot, which makes your approach highly Linux/x86 specific.
 
-Given that arm64 has no decompressor at all, it is highly likely (and acceptable) that only EFI boot can do a secure launch. It also implies that the core kernel is the only place where we can put the pieces that execute afterwards. So adopting a model now for x86 that we know does not generalize well across other architectures is something I am not keen on.
-
-...
->> I've had a stab at implementing all of this in a manner that is more idiomatic for EFI boot:
->> 
->> - GRUB does minimal TXT related preparation upfront, and exposes the remaining functionality via a protocol that is attached to the loaded image by GRUB
->> - The SL stub is moved to the core kernel, with some startup code added to pivot to long mode
->> - the EFI stub executes and decompresses the kernel as usual
->> - if the protocol is present, the EFI stub calls it to pass the bootparams pointer, the base and size of the MLE and the header offset back to the GRUB code
->> - after calling ExitBootServices(), it calls another protocol method to trigger the secure launch.
->> 
-...
->
-> I think this is a great approach for UEFI, though we need to reconcile 
-> this with non-UEFI situations such as booting under coreboot.
-
-There are two approaches that I think are feasible for coreboot in this model:
-
-- just unpack the ELF and boot that - there is already prior art for that with Xen. We can stick the MLE header offset in an ELF note where any loader can find it.
-
-- stick with the current approach as much as possible, i.e., disable physical KASLR so that the decompressed kernel will end up right where the decompressor was loaded, which allows much of the secure launch preparation to be done as before. Only the final bits (including the call into the ACM itself) need to be deferred, and we can propose a generic mechanism for that via boot_params.
-
-I'm working on a prototype of the latter, but GRUB is an odd beast and my x86 fu is weak.
-
-I'd be happy to have a call to compare notes and see if we can come up with something we can all agree on (modulo the SHA-1 :-))
-
+> +static struct notifier_block mshv_kexec_notifier = {
+> +	.notifier_call = mshv_block_kexec_notify,
+> +};
+> +
+> +int __init mshv_kexec_init(void)
+> +{
+> +	int err;
+> +
+> +	err = kexec_block_notifier_register(&mshv_kexec_notifier);
+> +	if (err) {
+> +		pr_err("mshv: Could not register kexec notifier: %pe\n",
+> +		       ERR_PTR(err));
+> +		return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +void __exit mshv_kexec_exit(void)
+> +{
+> +	(void)kexec_block_notifier_unregister(&mshv_kexec_notifier);
+> +}
+> diff --git a/drivers/hv/mshv_root.h b/drivers/hv/mshv_root.h
+> index 3c1d88b36741..311f76262d10 100644
+> --- a/drivers/hv/mshv_root.h
+> +++ b/drivers/hv/mshv_root.h
+> @@ -17,6 +17,7 @@
+>   #include <linux/build_bug.h>
+>   #include <linux/mmu_notifier.h>
+>   #include <uapi/linux/mshv.h>
+> +#include <hyperv/hvhdk.h>
+>   
+>   /*
+>    * Hypervisor must be between these version numbers (inclusive)
+> @@ -319,6 +320,7 @@ int hv_call_get_partition_property_ex(u64 partition_id, u64 property_code, u64 a
+>   extern struct mshv_root mshv_root;
+>   extern enum hv_scheduler_type hv_scheduler_type;
+>   extern u8 * __percpu *hv_synic_eventring_tail;
+> +extern atomic_t hv_pages_deposited;
+>   
+>   struct mshv_mem_region *mshv_region_create(u64 guest_pfn, u64 nr_pages,
+>   					   u64 uaddr, u32 flags);
+> @@ -333,4 +335,16 @@ bool mshv_region_handle_gfn_fault(struct mshv_mem_region *region, u64 gfn);
+>   void mshv_region_movable_fini(struct mshv_mem_region *region);
+>   bool mshv_region_movable_init(struct mshv_mem_region *region);
+>   
+> +#if IS_ENABLED(CONFIG_KEXEC)
+> +int mshv_kexec_init(void);
+> +void mshv_kexec_exit(void);
+> +#else
+> +static inline int mshv_kexec_init(void)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline void mshv_kexec_exit(void) { }
+> +#endif
+> +
+>   #endif /* _MSHV_ROOT_H_ */
+> diff --git a/drivers/hv/mshv_root_hv_call.c b/drivers/hv/mshv_root_hv_call.c
+> index 06f2bac8039d..4203af5190ee 100644
+> --- a/drivers/hv/mshv_root_hv_call.c
+> +++ b/drivers/hv/mshv_root_hv_call.c
+> @@ -73,6 +73,8 @@ int hv_call_withdraw_memory(u64 count, int node, u64 partition_id)
+>   		for (i = 0; i < completed; i++)
+>   			__free_page(pfn_to_page(output_page->gpa_page_list[i]));
+>   
+> +		atomic_sub(completed, &hv_pages_deposited);
+> +
+>   		if (!hv_result_success(status)) {
+>   			if (hv_result(status) == HV_STATUS_NO_RESOURCES)
+>   				status = HV_STATUS_SUCCESS;
+> diff --git a/drivers/hv/mshv_root_main.c b/drivers/hv/mshv_root_main.c
+> index 5fc572e31cd7..d55aa69d130c 100644
+> --- a/drivers/hv/mshv_root_main.c
+> +++ b/drivers/hv/mshv_root_main.c
+> @@ -2330,6 +2330,10 @@ static int __init mshv_parent_partition_init(void)
+>   	if (ret)
+>   		goto deinit_root_scheduler;
+>   
+> +	ret = mshv_kexec_init();
+> +	if (ret)
+> +		goto deinit_irqfd_wq;
+> +
+>   	spin_lock_init(&mshv_root.pt_ht_lock);
+>   	hash_init(mshv_root.pt_htable);
+>   
+> @@ -2337,6 +2341,8 @@ static int __init mshv_parent_partition_init(void)
+>   
+>   	return 0;
+>   
+> +deinit_irqfd_wq:
+> +	mshv_irqfd_wq_cleanup();
+>   deinit_root_scheduler:
+>   	root_scheduler_deinit();
+>   exit_partition:
+> @@ -2356,6 +2362,7 @@ static void __exit mshv_parent_partition_exit(void)
+>   	hv_setup_mshv_handler(NULL);
+>   	mshv_port_table_fini();
+>   	misc_deregister(&mshv_dev);
+> +	mshv_kexec_exit();
+>   	mshv_irqfd_wq_cleanup();
+>   	root_scheduler_deinit();
+>   	if (hv_root_partition())
+> 
+> 
 
 
