@@ -4,106 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 56B0AEE3683
-	for <kexec@archiver.kernel.org>; Thu, 12 Feb 2026 13:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0F934EEA845
+	for <kexec@archiver.kernel.org>; Thu, 12 Feb 2026 19:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:References:Cc:To:Subject:From:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mH6HMzCnnYstaeTidXe1DsSu+97OrNLd0YJh3QZ6yOI=; b=tN1wHcCoSIb/PbVjrOCZnWd13V
-	KP60xm6IQFpYTuZRifKErK7RjDhKSGcZQbBd+ISqcaBpD2pyJpE0PK4fhUrvjDPz+BuGW5PGxGsCP
-	dI0fhHBOEpMZMY+fHrg1uySfEsi/rPKVsJi4ZGr60tpSkNqeUURkzqFqr+0GnuROrqLYs8WQFOmgh
-	cCWLW6lDOaouEfoxobLecCodhHtYb2XHxRovTgFwr9n+0N2P6UKH+FQMrnDAjyijwVhZpZvU45UhY
-	UJ4l0RSApiCCJb38Rwj/5Zvyy1bUayFRq20gx5ityc5VII39BbhW+1fwAx/2pNhwmIgz0Eb1rRpiw
-	MTvTdDuw==;
+	bh=Q5f0KQ4HpmngY/cB/yWwkzlIghghBJhp3nW+USmOVik=; b=AhuBZBAcR+JVlznmFya/yytN4c
+	RbvTm2h8azv+cQiDgM27DOiTDBgK4AWiA5bL/RpLGvgvf1mayXYs7obJ6hkeeEoLsSxoQFAkF/A03
+	8XE1BEwF5YM5ZjiExhnhgUagv+kcVvIQq9TLRX25Esd7yen1UZrCXeaN+1bgzlOIPyxecx+qJIV2X
+	t0HvSalvPfGe2VWSk/zj6QzGb11g7bR6KKwMGNM2oOO3/czWK8TQMp37gBgfmktAfGDzDtMJrayKW
+	gPb2dH30XIilxvtuBike0GRa+pbKiWrC0KZmrZShumMEDI5rJKBmIModgaMX+004gjDFyrPcYPAHw
+	PLPFJ45A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vqWie-000000028Xs-0Ru7;
-	Thu, 12 Feb 2026 13:26:56 +0000
-Received: from mail-dl1-x122b.google.com ([2607:f8b0:4864:20::122b])
+	id 1vqchZ-00000002ajw-2rc3;
+	Thu, 12 Feb 2026 19:50:13 +0000
+Received: from sender4-of-o50.zoho.com ([136.143.188.50])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vqWib-000000028XU-42bN
+	id 1vqchV-00000002aj5-3kvT
 	for kexec@lists.infradead.org;
-	Thu, 12 Feb 2026 13:26:55 +0000
-Received: by mail-dl1-x122b.google.com with SMTP id a92af1059eb24-124a60cc9a1so7421c88.0
-        for <kexec@lists.infradead.org>; Thu, 12 Feb 2026 05:26:52 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1770902812; cv=none;
-        d=google.com; s=arc-20240605;
-        b=H55ofGwmv2FjJ2qu/lPALjsl0dKT8EtHleELhRQP6xR7yAJXjx77pA7JqjAkXy1DJE
-         vBBE4R/Uap7eUiOsSKZGhKqUfSmi/0jaszO7qIc36wzgOsC93eqgmadJwMdKYL84L6c6
-         aj9IV6oxLSI4fiJGhQietyfLLverQL3hF9YumYZXBpGMahjviHuwX5Y57wtW+6PJTUAO
-         88AQ3vRA/UgRQY5mOflzWg2EV6R9JCTtcgBr8W9y9pp69DdXgBAqTM7hHe3EZ8T5JTaD
-         Hzx6Z4Fn7PLhqS//dIkzKvJN77e9P7FmBeS7btRRZrLGUqsoMwngf9RcXddQLqtdgULq
-         XEBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=mH6HMzCnnYstaeTidXe1DsSu+97OrNLd0YJh3QZ6yOI=;
-        fh=2euZsMhmoTbvyKCvYiAsk3IDMHkfbPyKpcYEPJF6CP4=;
-        b=L1qwXiXxsJVpRG5tfrVUYj4RJ7i6/OG8Dw82IbAclq7oVADSQxTZdX07DUAwOB6XLN
-         u1SIMqj1I03ihg9Dly+k2jGIMZKplGeL85DZQIYjQQZllDwp1sfu3/LILHXc15t9OuXm
-         GHatVkmJ+euSm5RG8/0oJ4IRy9UfUCUNm/MQlegyi1l6DbMNjX/s9C7ls6qWI0zqDQ/3
-         zV0qPKpF854BnWUsfMvWNz1vLULad85KQbtnm6KHqVqN8XKWtBileUeSJpxT96KztfFF
-         hksCvfEZoT/Y0JSBgvH62WUDy+UWSPMa5moVHkB1Gl0eTWBSE2bCkxImJwS99zXRcIIt
-         oGUA==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1770902812; x=1771507612; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mH6HMzCnnYstaeTidXe1DsSu+97OrNLd0YJh3QZ6yOI=;
-        b=QMWysCdWL/ppeGgfeP1rgjduogEQrJ8e+jKmGnkP2opwYT48tFwXq7szZxXvl8LTV2
-         WucPH5tsLnCYWbPx57mOOz2SCEGKCKT/RdHmlqQ+S6mLDtuV6rb7h3fNHVBg3uRFBG2L
-         VNJoxRZsYyinVdDUiz1jhmqvOlcpSDvU4SgxHEK13UAhuAZWkChcSfgAx/1tgAee8PO5
-         8XvRYbXoGJZFGSySd/Rx3ZNOYJYGIO54Gzekoa5pqFvxd7YnXUqPfGuOY2VDgGRmYhpZ
-         V14MI2tzYvbm4Ps5TSBnIxMFWuwFroG7tiYjIbzomzXz9NsIX9L1mafrGWO9oc/XdXya
-         ZC/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770902812; x=1771507612;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=mH6HMzCnnYstaeTidXe1DsSu+97OrNLd0YJh3QZ6yOI=;
-        b=MOQa89ngvjndTyMbBdRyXU2V23MND5Cu+X7XLYJxuTDBcS2qHtJfEBd3RWx5iM3oo/
-         wgn9kzmhYJ6J7HLbkJNKXbJCjUJaL9d+0lv1dZ/auueMr6zfcD4Tn3jGjxrhLKYb393K
-         UKS7/1l+8/l3rGbzoW75Odgla/xQR9cWXojoZzHaeOqRwKfobrZ12Kbb+5msACKxPyn3
-         QMy+btL5RaVBh8Y+2XmbdoOkKHTGuLEZR7OTjClbKAz6IjqE1UiyZIxnls6zGoMwVXZs
-         WbMMCygqier65zHUAcJxPSd4tlJy7FdQGMYnaAUDhgPvATdfFdv4uOhtRPWFTIPnjJkC
-         4VeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUdPSQsT9jRjLqIVtuUHwHK/V8ySSAQZ46Y/T2sdo0VaJOKfBCJpPQPY2RznmiFvD5r5ew/Ow==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxwGJO01TYuGdJA+4YPjKuOrc8b6IHi1ofUInlqUOwNBKrg7nme
-	InzzAYkMI1ZtUz4y3OvzWmJhpwD7WpzA/CUV32xBWFA9VWkqGp/8KSmqxbaw1J4OHAX7JmLodvb
-	z4IjDNCP4M+Ulca8NFeqGNDFkzpTLPqgQdw65wurB
-X-Gm-Gg: AZuq6aL/sNJnrPzIQQ/iBvmKsMfapGInPXF4zsRc487n54RMjzOITxrKmvFPWER2mpE
-	nSF0YOkihvHqRITdSYPaf7JWyQwoHneqPEDGjzCaNAHp2gbwiU1pK5nT/Gy9dujEaIlx2rmvzNY
-	AC6OzCJyLHzSiOd9dmEVXwZMzRTvCGFbmsaQrcAWJFGTmht6mIaI7Zr5GePQu5tSCXE1uIL09M9
-	IKktTV+ulpa4LRsorgr+ziSmvH3EUtdYLbvXmLGEvxfpaQ4o1S6t8BPHM41FnOxSJQqrmtpfT68
-	5wjc3g==
-X-Received: by 2002:a05:7022:f010:b0:11a:2c18:9e70 with SMTP id
- a92af1059eb24-12730399227mr72922c88.11.1770902811657; Thu, 12 Feb 2026
- 05:26:51 -0800 (PST)
+	Thu, 12 Feb 2026 19:50:12 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1770925777; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ekcngpQ7NDkJ36AcYIWdWlZ1fnNZ2sBsMVqKfQdPEAq58d7uMUtli6X+0bwOeui8WnB1pIqRwn71DQN7aam7YVAhb3unullQN1FZ6dpqtrJiMEcoV5P74qWTGdr10ySbJK53R619BDyXoz26vuQ4fhObiFvFGltRtylIVBXPB3Q=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1770925777; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Q5f0KQ4HpmngY/cB/yWwkzlIghghBJhp3nW+USmOVik=; 
+	b=OIRmMZhuRv8EZPoPzI7yEywLPwm+gEF6hQf8YhVXec3TUKj8kphv8Bok1BkrKY6kg8Zds4WaDKCRwojR09EbV9nzUmCmlI7JwpCXrxbFUB9tqh4FSyAMnsF7QU130EX88bKnzzIFVJNQ0tqew2FndgXupSdn4mE9HtTlfHpV1vI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=apertussolutions.com;
+	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
+	dmarc=pass header.from=<dpsmith@apertussolutions.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770925777;
+	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
+	h=Message-ID:Date:Date:MIME-Version:From:From:Subject:Subject:To:To:Cc:Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=Q5f0KQ4HpmngY/cB/yWwkzlIghghBJhp3nW+USmOVik=;
+	b=h5+avsIC4D+GQntqrkrmOIS0ovmvmsYj1+nhBO/DqWIV6Bykd4KyYsWXp8F/SUiR
+	ZU2xI9FpC0N5mPDGNqVAd8YQbXOK9S591m6BI5Y1JzLXv23Ed2xfUL3cUmcVA0Cmv4h
+	L2Mmf0cjD7KzvGdsop+j+QLY5Uf5ACm56YBFzmKU=
+Received: by mx.zohomail.com with SMTPS id 1770925773787976.3595214538861;
+	Thu, 12 Feb 2026 11:49:33 -0800 (PST)
+Message-ID: <1ffd3cb5-2c76-4371-a067-3e4849907d80@apertussolutions.com>
+Date: Thu, 12 Feb 2026 14:49:31 -0500
 MIME-Version: 1.0
-References: <20260211173954.2091119-1-mclapinski@google.com> <CA+CK2bBfJDD5SPJqwCaGbaGZe9FncONMsck0QkOb8WwmDSh_Yg@mail.gmail.com>
-In-Reply-To: <CA+CK2bBfJDD5SPJqwCaGbaGZe9FncONMsck0QkOb8WwmDSh_Yg@mail.gmail.com>
-From: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
-Date: Thu, 12 Feb 2026 14:26:39 +0100
-X-Gm-Features: AZwV_QhOqhvLMMA8tGW0jRKe07LrkYVDlJ3nPhGSH3DMS5ObxgL-4w4AxgPOk7k
-Message-ID: <CAAi7L5d19R8ftDsvwJpoxjkx9YSVkBuANOAixk75P98KJU=r4g@mail.gmail.com>
-Subject: Re: [PATCH v3] kho: add support for deferred struct page init
-To: Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, 
-	linux-mm@kvack.org
-Cc: Evangelos Petrongonas <epetron@amazon.de>, Mike Rapoport <rppt@kernel.org>, 
-	Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, linux-kernel@vger.kernel.org, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+Subject: Re: [PATCH v15 00/28] x86: Secure Launch support for Intel TXT
+To: Ard Biesheuvel <ardb@kernel.org>,
+ Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+ linux-efi@vger.kernel.org, iommu@lists.linux.dev, dave.hansen@linux.intel.com
+Cc: Thomas Gleixner <tglx@linutronix.de>, mingo@redhat.com, bp@alien8.de,
+ "H . Peter Anvin" <hpa@zytor.com>, mjg59@srcf.ucam.org,
+ James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, jarkko@kernel.org,
+ jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu,
+ herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
+ ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com,
+ kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
+ trenchboot-devel@googlegroups.com
+References: <20251215233316.1076248-1-ross.philipson@oracle.com>
+ <b5f2b5a5-b984-4ed3-a023-c06d634f9146@app.fastmail.com>
+Content-Language: en-US
+Autocrypt: addr=dpsmith@apertussolutions.com; keydata=
+ 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
+In-Reply-To: <b5f2b5a5-b984-4ed3-a023-c06d634f9146@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260212_052654_031836_31C3BB97 
-X-CRM114-Status: GOOD (  17.37  )
+X-CRM114-CacheID: sfid-20260212_115010_164219_2256DABA 
+X-CRM114-Status: GOOD (  47.00  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -118,45 +121,124 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Feb 11, 2026 at 8:40=E2=80=AFPM Pasha Tatashin
-<pasha.tatashin@soleen.com> wrote:
->
-> On Wed, Feb 11, 2026 at 12:40=E2=80=AFPM Michal Clapinski <mclapinski@goo=
-gle.com> wrote:
-> >
-> > From: Evangelos Petrongonas <epetron@amazon.de>
-> >
-> > When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, struct page
-> > initialization is deferred to parallel kthreads that run later
-> > in the boot process.
-> >
-> > During KHO restoration, deserialize_bitmap() writes metadata for
-> > each preserved memory region. However, if the struct page has not been
-> > initialized, this write targets uninitialized memory, potentially
-> > leading to errors like:
-> > BUG: unable to handle page fault for address: ...
-> >
-> > Fix this by introducing kho_get_preserved_page(),  which ensures
-> > all struct pages in a preserved region are initialized by calling
-> > init_deferred_page() which is a no-op when deferred init is disabled
-> > or when the struct page is already initialized.
-> >
->
-> Co-developed-by: Michal Clapinski <mclapinski@google.com>
->
-> > Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
-> > Signed-off-by: Michal Clapinski <mclapinski@google.com>
-> > Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-> > ---
-> > v3:
-> > - changed commit msg
-> > - don't invoke early_pfn_to_nid if CONFIG_DEFERRED_STRUCT_PAGE_INIT=3Dn
->
-> Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+On 2/9/26 09:04, Ard Biesheuvel wrote:
+> On Tue, 16 Dec 2025, at 00:32, Ross Philipson wrote:
+>> Secure Launch is a vendor-neutral approach to implementing TGC Dynamic
+>> Root of Trust (DRTM) support in the kernel. This is complementary to
+>> better known Static Root of Trust (SRTM) schemes such as UEFI SecureBoot.
+>>
+>> This series provides the common infrastructure along with Intel TXT
+>> support, without needing the tboot exokernel. Support for AMD SKINIT is
+>> pending the common infrastructure getting nailed down, and ARM are
+>> looking to build on it too.
+>>
+>> Originally, tboot were approached to see if they'd take support for
+>> other vendors, but they elected not to. Hence this approach instead.
+>>
+>> Work is being coordinated by the Trenchboot project,
+>> https://trenchboot.org/,
+>> organising Secure Launch support for upstream open source projects
+>> including
+>> Grub, iPXE and Xen. The goal of the Trenchboot project is to make DTRM
+>> easy
+>> to use.  e.g. for Grub, it's simply adding "slaunch" as a command in
+>> the boot
+>> stanza.  See
+>> https://trenchboot.org/user-docs/QUICKSTART/#linux-quick-start-guide
+>> for more details
+>>
+>> Patch set based on commit:
+>> torvalds/master/fd57572253bc356330dbe5b233c2e1d8426c66fd
+>>
+>> Depends on v3 of the following TPM patch set (note this patch
+>> set is being actively worked on separately):
+>> [PATCH v3 00/10]  tpm: Decouple Trenchboot dependencies
+>> Message ID: 20250929194832.2913286-1-jarkko@kernel.org
+>>
+>> Finally we would like to thank everyone for their input and
+>> assistance. It has all been very helpful in improving the quality of
+>> our solution and in reviewing/strengthening our security posture.
+>>
+> 
+> Hi Daniel and Ross,
+> 
+> I have finally gotten around to getting the right hardware and building GRUB and Linux with your patches, and I have managed to get them running on an old Skylake HP laptop successfully.
 
-Hello Andrew,
-could you please apply this with the added Co-developed-by tag?
+That is great to hear!
 
-Thanks,
-Michal
+> Surprisingly, even when doing a secure launch, the EFI runtime services still work happily, which means (AIUI) that code that was excluded from the D-RTM TCB is still being executed at ring 0? Doesn't this defeat D-RTM entirely in the case some exploit is hidden in the EFI runtime code? Should we measure the contents of EfiRuntimeServicesCode regions too?
+
+Yes, in fact in the early days I specifically stated that we should 
+provide for the ability to measure the RS blocks. Particularly if you 
+are not in an environment where you can isolate the calls to RS from the 
+TCB. While the RS can pose runtime corruption risks, the larger concern 
+is integrating the D-RTM validation of the Intel System Resources 
+Defense (ISRD), aka SMI isolation/SMM Supervisor, provided by the Intel 
+System Security Report (ISSR). Within the ISSR is a list of memory 
+regions which the SMM Policy Shim (SPS) restricts a SMI handler's access 
+when running. This allows a kernel to restrict what access a SMI handler 
+are able to reach, thus allowing them to be removed from the TCB when 
+the appropriate guards are put in place.
+
+If you are interested in understanding these further, Satoshi Tanda has 
+probably the best technical explanation without Intel market speak.
+
+ISRD: https://tandasat.github.io/blog/2024/02/29/ISRD.html
+ISSR: https://tandasat.github.io/blog/2024/03/18/ISSR.html
+
+> In any case, I am aware that upstreaming this work has been a painful experience so far. Unfortunately, I don't think we're quite there yet.
+>
+> The way the work is divided between GRUB and Linux seems to be predicated entirely (at least originally) on the idea that the GRUB->Linux handover and the secure launch should be one and the same. I.e., GRUB sets the stage, pokes the ACM, which returns to the loaded linux image and boots it. This requires a lot of coordination, e.g., putting a MLE header in the kernel image and exposing it to GRUB in a certain manner, resource tables and other things that have to remain in sync between both sides.
+
+I would add one clarification, where you say GRUB, we would say any 
+bootloader and where you say Linux, we would say any kernel that could 
+be started with D-RTM. While you all care about Linux specifically, the 
+goal for TrenchBoot is to build a common approach that we can implement
+across any other open source OS.
+
+> There also appears to be an assumption that the fact that the ACM returns to the loaded image in 32-bit mode requires a round trip through the decompressor, which may relocate itself in memory and do other things that the slaunch code then has to work around again.
+> 
+> Due to the changes to the EFI boot path, this design has been watered down a bit already, in the sense that GRUB invokes the EFI entry point as usual, and only later, the pivot via the ACM is made.
+> 
+> Other than the SHA-1 debate [*], the main issue I have with this approach is that it adds things to the boot ABI that are closely tied to TXT on the one hand, and bzImage oddities on the other (kernel_info, setup block etc). IOW, the complete lack of abstractions is going to make this a maintenance burden going forward.
+> 
+> I've had a stab at implementing all of this in a manner that is more idiomatic for EFI boot:
+> 
+> - GRUB does minimal TXT related preparation upfront, and exposes the remaining functionality via a protocol that is attached to the loaded image by GRUB
+> - The SL stub is moved to the core kernel, with some startup code added to pivot to long mode
+> - the EFI stub executes and decompresses the kernel as usual
+> - if the protocol is present, the EFI stub calls it to pass the bootparams pointer, the base and size of the MLE and the header offset back to the GRUB code
+> - after calling ExitBootServices(), it calls another protocol method to trigger the secure launch.
+> 
+> The only pre-launch ABI that is being added here is a GRUB-specific protocol that is not necessarily tied to TXT. (For legacy boot, it should be feasible to call back into GRUB too, although it would be more of a ad-hoc construction, via the SLR table perhaps.) But no kernel_info and MLE headers etc being added to the ABI surface. Also, there is no longer a need for the GRUB code to understand how the decompressor is constructed, with a setup block etc, or take special care to perform PMR checks when its moves itself around in memory.
+
+> [*] which I still don't get: why is it fine to cap other banks with a single 0x1 byte [as the ACM does too, apparently], but do we require an SHA-1 implementation for capping the SHA-1 banks? Also, the TXT spec dropped all support for TPM1.2 so I wonder if that should be dropped from this series as well.
+
+I think this is a great approach for UEFI, though we need to reconcile 
+this with non-UEFI situations such as booting under coreboot. The one 
+concern we have before committing to yet another rework is to get 
+confirmation from the x86 maintainers. Would they be okay with a new 
+entry point into the mainline kernel, or any other major sticking points 
+they might see from this approach?
+
+Dave Hansen, since you have been helping us as an x86 maintainer, would 
+be willing to provide feedback on our concerns moving forward with the 
+above proposal?
+
+> Code can be found here:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/ardb/grub.git/log/?h=sl-v2
+> https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=x86-slaunch
+> 
+> I am aware that this is not the feedback you are waiting for at this point, given that we're at v15 already. But there are some warts in the current design that really need to be addressed before we can proceed with this IMHO.
+>
+
+V/r,
+DPS
+
+
+
+
+
+
 
