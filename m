@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C66FDEB4904
-	for <kexec@archiver.kernel.org>; Thu, 12 Feb 2026 11:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7FE59EB4904
+	for <kexec@archiver.kernel.org>; Thu, 12 Feb 2026 11:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=TZclJqzGvqfgYgzuUOZlJDMXe+pR9LdrFyA+dktDiAc=; b=o/uFhff0djLalaa2DlY02Nqk3Z
-	sfbXAvSXEagzC1dVksb8Uv1ZKb6lHNzLx+XiEbdx2ovceeUnE89ELd+TaziiLIIWw3OA7GipzU9iS
-	O2c4vv6AOtThBYq6uvxsSD7HkaRKQwXcKoUNbCcIiLbTM/VqVGZ+aOUbKCna2MJd0dVmdWscWtvRF
-	ecVa3Stehw8GzU66fxWdoROd1dFJCuOnkhDcGvL+PAZKxbVw7BMcjXntvCehiwASPlG5LJKEpVMfK
-	35ncaHExOLpk4owLSMcwu3NCZIyRDve67NbksyvSe9MY6lur4FWOOIN9nnR0ryXAOoXWwMtlg3pOy
-	BKw/+zrA==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=n+rpPjxDD+Z5fIPDrZeUxPDcng3MFwzbjG+nEfu3iEU=; b=emA5/vdRKhhSOtbaU3yNh/4KdE
+	AAUqHmLU/NH9aUvFw2n9Wuui07r61+F3QFo38lr4N632TS+qQabdniexa7unj52V+wCT7DwIUvZ7S
+	BJjCzHHzl/SGxODQaMWaUISTsQTOkXkkoA4EYJHayNameAwcazQmpw3asw54dX+euSZeAWMfxyWv5
+	fnYbLDmH6KubCaIoqiGyRr0+Oiofl3O9ulscNQLvO4MPZbH3khPA8yqkFmCghtPLaUbg2iUOYVoIa
+	32qKiH6Gv3TYXQybs1VDk+XKCWvBrrTi1OtYNW1sorSKoSdrTkir0kMuw27ZtD+2PsOhylnKSh19E
+	4SEUNzdA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vqUcs-00000001yaZ-3VHL;
-	Thu, 12 Feb 2026 11:12:50 +0000
-Received: from m16.mail.163.com ([220.197.31.4])
+	id 1vqUcw-00000001ycD-1ODW;
+	Thu, 12 Feb 2026 11:12:54 +0000
+Received: from m16.mail.163.com ([220.197.31.3])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vqUcq-00000001yZm-0Iy0
+	id 1vqUcu-00000001yag-1vSf
 	for kexec@lists.infradead.org;
-	Thu, 12 Feb 2026 11:12:49 +0000
+	Thu, 12 Feb 2026 11:12:53 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=TZ
-	clJqzGvqfgYgzuUOZlJDMXe+pR9LdrFyA+dktDiAc=; b=mqpPnjefSRBRJvFvQO
-	sNaSMHpziZbsP/fk1cSv7Jwxyoui8d9CYPKBwA7e+2b93epwJ6PZ5HW1s81bEzj6
-	MSLf+WxsToyix5Zd7HeUws++hsvIvdZFBIaS2vxq4RuMtbcNNxQrqsXPdvZgvnxR
-	2QdAcVcEC9I7SalWJy8MJwSA0=
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=n+
+	rpPjxDD+Z5fIPDrZeUxPDcng3MFwzbjG+nEfu3iEU=; b=FVCG87nMyScfOr2n5l
+	gVJn1xmndnPEpSJOd1HeBD+VoNDjwqFhPuIiZs02qMOAur+ctfVt2Di422iUdDMf
+	acEY50DaM1RBFpPWIZj4G1ixY6QE4YGIgJnl42SgEhGOziay12m+KwPV4JWbCSJZ
+	XyIDiF6ryBnXOyP1cbIXHzMFk=
 Received: from ubuntu24-z.. (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wCHZLl0tY1ptkijLg--.48890S2;
-	Thu, 12 Feb 2026 19:11:50 +0800 (CST)
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wCHZLl0tY1ptkijLg--.48890S4;
+	Thu, 12 Feb 2026 19:11:53 +0800 (CST)
 From: ranxiaokai627@163.com
 To: graf@amazon.com,
 	rppt@kernel.org,
@@ -47,20 +47,24 @@ Cc: kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	ran.xiaokai@zte.com.cn,
 	ranxiaokai627@163.com
-Subject: [PATCH v3 0/2] two fixes in kho_populate()
-Date: Thu, 12 Feb 2026 11:11:44 +0000
-Message-ID: <20260212111146.210086-1-ranxiaokai627@163.com>
+Subject: [PATCH v3 2/2] kho: remove unnecessary WARN_ON(err) in kho_populate()
+Date: Thu, 12 Feb 2026 11:11:46 +0000
+Message-ID: <20260212111146.210086-3-ranxiaokai627@163.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260212111146.210086-1-ranxiaokai627@163.com>
+References: <20260212111146.210086-1-ranxiaokai627@163.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _____wCHZLl0tY1ptkijLg--.48890S2
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvj4R3KsbUUUUU
+X-CM-TRANSID: _____wCHZLl0tY1ptkijLg--.48890S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWrtw1xXw17Cw4DGFW8XF4Dtwb_yoWDKrc_WF
+	4xtw1vkr4qvrn0vr1Yk39avFWrKw40qFyqv3W3JFyxt3W5tayj9a9xZr4DAFnxW34vkryD
+	Arn0grZ8tr4fWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRAJ5rDUUUUU==
 X-Originating-IP: [218.203.227.87]
-X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/xtbCxRZIlGmNtXaS0gAA3o
+X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/xtbC7RlJlWmNtXkzNQAA3G
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260212_031248_749974_ADA08EA1 
-X-CRM114-Status: UNSURE (   5.07  )
+X-CRM114-CacheID: sfid-20260212_031252_807134_21A00B26 
+X-CRM114-Status: UNSURE (   8.94  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -78,23 +82,30 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
 
-Patch1 fixes unpaired call of early_memmap()/early_memunmap()
-Patch2 cleans up unnecessary call of WARN_ON()
+The following pr_warn() provides detailed error and location
+information, WARN_ON(err) adds no additional debugging value,
+so remove the redundant WARN_ON() call.
 
-v3
- - rename all the labels suggested by Pratyush
+Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+---
+ kernel/liveupdate/kexec_handover.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v2
- - Improve code readability suggested by Pratyush
- - collect reviewed-by
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index af82d8862dd7..95601623b4d6 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -1507,7 +1507,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
  
-Ran Xiaokai (2):
-  kho: fix missing early_memunmap() call in kho_populate()
-  kho: remove unnecessary WARN_ON(err) in kho_populate()
-
- kernel/liveupdate/kexec_handover.c | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
-
+ 		memblock_add(area->addr, size);
+ 		err = memblock_mark_kho_scratch(area->addr, size);
+-		if (WARN_ON(err)) {
++		if (err) {
+ 			pr_warn("failed to mark the scratch region 0x%pa+0x%pa: %pe",
+ 				&area->addr, &size, ERR_PTR(err));
+ 			goto unmap_scratch;
 -- 
 2.25.1
 
