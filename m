@@ -4,93 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 942B7E6816A
-	for <kexec@archiver.kernel.org>; Tue, 17 Feb 2026 10:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E3A93E909D2
+	for <kexec@archiver.kernel.org>; Tue, 17 Feb 2026 16:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Ncftt7M/7L3tvlHxJyD2ceg016L/Z6MXyuNCrzU3inY=; b=1g3+prb/0IgxQ11OzG+p7GM4x2
-	mxTAyljYeXorg5zu5UlrQJB6bLLTeQur5wEXn0i00aYZ0I0WL0x1XcyEflXP0oGjHT1zE9Ta/aYHf
-	yNAdlmy4q8+lt54xscXbypzVLob4z/0hRvs04wmaUw0KcNLVJvuXLLJHKFtDwk9JgTTW+ux/m2vQB
-	O5n1x807mydjRX5dfHzxt7xc1dWk9R+4BnNVUo9kzd+szNpXL1xUbFVRKSjmkLri4nuuFf7GdsNal
-	CXIZaFkPpM8euVjYc16U1R52DujMYRqxO9g0TH4rh6fn4evw4EYm6XMYcekMi4iPOgdJLb6hNe2GY
-	s/MfY5vA==;
+	bh=7MA76AG6tK9tcyNeJzB4mQq5hd3vdoHJD3YHcgB1gp8=; b=QtsxcZTOnmvMN7ESKfc8Cudikm
+	Pb59Vtxywo8X1yWIdiN0FDcCFepAhHXKAjgXwc6zIhAJGr84OstuzXRJAzk84/aWheuxZOwCJ89CR
+	VyF8CBh5OqEzgVu73YuF7A/MnowsSK72nFe/df+K4/dNc7DeseBD5HG7TUiasM+8ein9kJv1JeoMM
+	BZ4Uo6RDt3g96WJeXD6c0uiolTVZooiIxPyN0UhsgY7Erm93qVAzuuBpPmT2CU75Gn48PoP+pEtfO
+	q0W0FgATD29/RmrltB6l0b9bfGH2gNPuLVV1voc/HkjPwRQ2ntQcEBE+UqDs14VB+YS80M8HEMM9r
+	dhzvussA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vsIKB-000000081r8-1ntb;
-	Tue, 17 Feb 2026 10:28:59 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1vsNft-00000008Y6E-2QyW;
+	Tue, 17 Feb 2026 16:11:45 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vsIK8-000000081qj-0QQ3
+	id 1vsNfq-00000008Y5k-0uvV
 	for kexec@lists.infradead.org;
-	Tue, 17 Feb 2026 10:28:57 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1771324134;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ncftt7M/7L3tvlHxJyD2ceg016L/Z6MXyuNCrzU3inY=;
-	b=LaCAyBQKRYxuFHgKTkKKTURzCcqFpHyz1BX9ufSDkgcgvscqwYx5t2KaTDYQbvZeyWpqmd
-	K8YmbRrUU5dOQ3xmm9uk1j0/gP+je3Q/30ZR7SARruJpukTFXEzxYLG4VR/GDPKaoqeBJr
-	HVv4Ie0rRAQ7hdkB4MROxjyzpVFqJ9w=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-45-X7cJr8DdOXqkkfWHKjVhDg-1; Tue, 17 Feb 2026 05:28:53 -0500
-X-MC-Unique: X7cJr8DdOXqkkfWHKjVhDg-1
-X-Mimecast-MFC-AGG-ID: X7cJr8DdOXqkkfWHKjVhDg_1771324132
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-386fdf13f45so20367771fa.3
-        for <kexec@lists.infradead.org>; Tue, 17 Feb 2026 02:28:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771324131; x=1771928931;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ncftt7M/7L3tvlHxJyD2ceg016L/Z6MXyuNCrzU3inY=;
-        b=Pkiw/mHAxigbaeN7FzL1UZEaI8mpOSJJ/IIoeMEgSfXRqTgQmWPoWn9uRLhIgx4LHB
-         UnICla39UYye8tfm6RXZUEF+UdtDnfkpZjYF2T5pxdw886/GxdFDIUrsBfP97UJTtLgr
-         XOL3dKq8dT3hWuyDT9c+AfUOe3fmk/Val5oZ/myR73XdMtsMhQ0peKDO1jxsIb0rqw+O
-         Whz2/u+wFTV0D6NjNye4wsC8Mlr2iNVn9HYvc2qM2CfCUKmNYHpElb+EdMETdYitln9A
-         P8P5+WmcGD27OaPPZ5c8m3WVvodvmymXeNTSW4C3u+uJKlIZTLuc278ytylmG5EKWXPU
-         nTCA==
-X-Forwarded-Encrypted: i=1; AJvYcCXS5cyDoE9LpHoON5SnZ6A0uVXwTk0xCc5RsTR9mVNHAEy8S+HULHgqsrNMo4V2IDG7sTXWNA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yz4vxvt3zsHc/FLeqzu85Gcm4wtBAmhG8xSXrQPAaH8pX2FH+8z
-	PWdTBrb9IG+HV0j+uptW3jAqr9cooTIcLVSniLjCcLTkrEPs5JjXL13kd/nS0T9vb365Y2AQkh1
-	aw1z7rKYAqetLTmUDdu1KE6rnD2N2g7u4W93mHUpZ7kq47F8FxrCjU9L9Eodos1GQlo/XIfiBgN
-	qvxJysUQIkeMtXVutzUZKlSyY6+YPilqR8+Hq/eqVGMx4B
-X-Gm-Gg: AZuq6aIrxAJ9QV8gXFQZhItLxIY7dyIbVScWQy492Ww4eUp28A0VZeEYvvyD7IZwRv1
-	cu9kPLGhiVS3yY7gzP2iguBDOnT/7i0EDlx87iVWMQLwlsl7Y00so/blz6sWIqLDeiYpLKHBOHh
-	MSSVGUJOdSDT6JPZS9QsX0LKtImJ3MhSC4af5xT3rXcR71WJG0lwOWrqe0jeSiZPka9vqWo1dO8
-	2jNb7J/8AY8lllxriaUz+OMApAwKU56nuuV2m3Ii8Txjn65QGrZ+LIoV1F5J2O0C6GM
-X-Received: by 2002:a05:651c:1545:b0:387:90a:e4a0 with SMTP id 38308e7fff4ca-3881b9509eemr28158561fa.29.1771324131491;
-        Tue, 17 Feb 2026 02:28:51 -0800 (PST)
-X-Received: by 2002:a05:651c:1545:b0:387:90a:e4a0 with SMTP id
- 38308e7fff4ca-3881b9509eemr28158421fa.29.1771324131045; Tue, 17 Feb 2026
- 02:28:51 -0800 (PST)
+	Tue, 17 Feb 2026 16:11:43 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 148F243B6F;
+	Tue, 17 Feb 2026 16:11:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18A07C4CEF7;
+	Tue, 17 Feb 2026 16:11:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771344700;
+	bh=W/0x24MhceikicVUT999x/ThkajGOQJS4pAuIVVsQHs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TGbDsFmSnm1FQ7OM4HQ4gnWyontM4641uJH46Fj8U/IaBBXBtdm66cXG7X4W7pc8e
+	 ogMewVwoOaeimKcCBcvDb3o+RhuSPR0ZpKWZlEpkgpz7d8WApTXd7Q6gASdAvX1tTD
+	 zrwu9MsryPj/SbfLN1BY3kQxSvE1f8GCrcNPfjPPWGz3XuXtFrWolpk2Rjv1A2iae+
+	 Vm5gudERjy0IEVHtLruKliGSj+nibNwXIrONXKqavknnNY6tVjQ3qbZl2hEfPU1Rfr
+	 hxwk1UndVBkAiESwIgjYDqQkDzrXSR8NUak1qQORjTCtRK0A+9OqPEbiK9SLYoHSQU
+	 nz5vBXKQUaUow==
+Date: Tue, 17 Feb 2026 16:11:37 +0000
+From: Simon Horman <horms@kernel.org>
+To: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: kexec@lists.infradead.org, Shivang Upadhyay <shivangu@linux.ibm.com>
+Subject: Re: [PATCH] ppc64: Reserve FDT memory for full elfcorehdr memory size
+Message-ID: <aZSTOR0MuaCTjEb2@horms.kernel.org>
+References: <20260210050536.285923-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
-References: <aZQg_tRQmdKNadCg@darkstar.users.ipa.redhat.com>
- <824bf9d5-93d3-4791-a064-3852014a1264@app.fastmail.com> <CALu+AoRdo5E-irxymu7WAV+L=sKLbjnOXtLLe7RHWX-NZtjvNw@mail.gmail.com>
- <61f0c9ad-a435-4856-8ebe-d5a81f72330e@app.fastmail.com> <CALu+AoTkGWXAokzXwo6C+6K1-mk3r9YA=WauXAggP628F_=ABQ@mail.gmail.com>
- <665dc599-8488-4761-b3c3-07b994cb82b8@app.fastmail.com>
-In-Reply-To: <665dc599-8488-4761-b3c3-07b994cb82b8@app.fastmail.com>
-From: Dave Young <dyoung@redhat.com>
-Date: Tue, 17 Feb 2026 18:29:22 +0800
-X-Gm-Features: AaiRm50T0aCHGoGZvHbV6ezL2DNwFGmrLSWM7LRCADXyTzZpVgFtpw54zvEwKqY
-Message-ID: <CALu+AoQMdng7QfKJjY1wugLu79AWbg0=x9SkvvT6TdwXjviM3A@mail.gmail.com>
-Subject: Re: [PATCH] efi/x86-stub: store acpi_rsdp_addr in bootparams
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, x86@kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: TQSc_SqGJ-LZAnlkQxGzt-3jJ8_PWrjkCuFIEhuVqSs_1771324132
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260210050536.285923-1-sourabhjain@linux.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260217_022856_236238_B86A9098 
-X-CRM114-Status: GOOD (  31.40  )
+X-CRM114-CacheID: sfid-20260217_081142_297627_DD5AE3BC 
+X-CRM114-Status: GOOD (  10.23  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,65 +70,23 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, 17 Feb 2026 at 18:27, Ard Biesheuvel <ardb@kernel.org> wrote:
->
->
->
-> On Tue, 17 Feb 2026, at 11:01, Dave Young wrote:
-> > On Tue, 17 Feb 2026 at 17:20, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >>
-> >>
-> >> On Tue, 17 Feb 2026, at 09:19, Dave Young wrote:
-> >> > Hi Ard,
-> >> >
-> >> > On Tue, 17 Feb 2026 at 16:10, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >> >>
-> >> >> Hi Dave,
-> >> >>
-> >> >> On Tue, 17 Feb 2026, at 09:04, Dave Young wrote:
-> >> >> > Kernel panic occurs during a kexec reboot when EFI runtime services
-> >> >> > are not enabled in the first kernel. The issue is that the second
-> >> >> > kernel cannot find the ACPI RSDP address during boot.
-> >> >> >
-> >> >> > In legacy boot, the acpi_rsdp_addr is set in early x86 boot code.
-> >> >> > However, kernel decompression has moved to the EFI stub for EFI boot.
-> >> >> > Therefore, the x86 EFI stub must also be updated to store the
-> >> >> > acpi_rsdp_addr in the boot parameters to ensure the kexec kernel
-> >> >> > can find it.
-> >> >> >
-> >> >> > (Note: If the pre-kexec kernel was itself a kexec boot, the later kexec
-> >> >> > reboot will still utilize the legacy decompressor path, so the original
-> >> >> > code remains functional though some cleanups can be done later.)
-> >> >> >
-> >> >> > Signed-off-by: Dave Young <dyoung@redhat.com>
-> >> >> > ---
-> >> >> >  drivers/firmware/efi/libstub/x86-stub.c |   18 ++++++++++++++++++
-> >> >> >  1 file changed, 18 insertions(+)
-> >> >> >
-> >> >>
-> >> >> If this issue is kexec-specific, can we move this to where the kexec code prepares the boot_params struct for the next kernel?
-> >> >>
-> >> >
-> >> > The kexec use case is it depends on the pre-kexec kernel saving it
-> >> > during boot for noefi case.  I do not have a better idea to do it in
-> >> > kexec code for the time being.
-> >>
-> >> How about something like this?
-> >
-> > Thanks!  It works for me, however the legacy kexec_load syscall still
-> > failed with a panic I did not dig into the root cause yet, I supposed
-> > it will find the rsdp from /sys/firmware/efi/systab file, maybe some
-> > userspace code bug.
-> >
-> > Anyway I'm fine with this fix,  would you like to send a formal patch
-> > since you proposed it?  Otherwise I will resend with the changes.
-> >
->
-> Excellent. I'll queue it with a link to this thread.
->
+On Tue, Feb 10, 2026 at 10:35:36AM +0530, Sourabh Jain wrote:
+> With --hotplug support, extra memory is added to elfcorehdr kexec
+> segment to accommodate additional resources during memory hotplug
+> events. However, the FDT is not updated with the same size, which
+> can lead to elfcorehdr corruption in the kdump kernel.
+> 
+> Fix this by updating the elfcorehdr size in the FDT memory
+> reservation entry to use its actual memsz instead of the current
+> buffer size.
+> 
+> Fixes: b8408c95e7c0 ("powerpc/kexec_load: add hotplug support")
+> Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
+> Cc: Simon Horman <horms@kernel.org>
+> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 
-Thanks a lot!
+Thanks, applied.
 
-Dave
-
+- ppc64: Reserve FDT memory for full elfcorehdr memory size
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=600c2f9512b5
 
