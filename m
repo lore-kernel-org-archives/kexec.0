@@ -4,94 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0E6ADE9A04C
-	for <kexec@archiver.kernel.org>; Thu, 19 Feb 2026 06:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 56C8CE9A03B
+	for <kexec@archiver.kernel.org>; Thu, 19 Feb 2026 07:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
 	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=f5Y/ObMYOjMNaMYn2BS529u3eaizGhMbHv9x7KJjXe8=; b=nUJtyPEGlfKe5uj+OEB0I+9HBI
-	wJlv81km6Sfyh+YJ6Ytwdw1LXucO4bTBMr34MQ9dX1WckjTbD8ox++LPnqrZKK8m9ys2y8juTxg10
-	4vK7uKQwVRr90m/I4GRkACmBSDDJzX9piZB3fYjrymDZcbWddgJwPN4YL0TITVaiC5wEGerdOHH2+
-	jB/j6xxWVZfxNzrpo3f8zCzlLv2RifRy6NBGNyxLsObQqkvtgi6Yhi+d744imnubAbnebQjVMMSD3
-	9zZ4hNsHbuwMXfK2SDiI1Xg+MIkq8u8ETLzmmb9oKAZr19n60/bsHY/LIuw8sP6VIYNZHgTsOIuqt
-	8xOlCbjw==;
+	bh=WrfKS8PiqfmgmByO6Y2CU8HPqfpLEZxb1TiV7UA1AMY=; b=bqRX3bHzFNLUSzLNm5BLdBg9af
+	mnFvNUFnOOtecSkYEJdpVlqSocbZnqas+PGiHCpRkQctQqSOGukWDnb8RBugsKhlnrjYFSwOUBVpG
+	L9lmfij1kxxQxWDgEIfyDfa4g8LJU9PK0mnUu5irz2sYw56g1AUDPCqvj+doAEW0dKDzEREpNmt42
+	Wio3Ivy5g02o3M+eAGKD3vspHzFn0+oWs9jskFdhXbGs5ilWCRr6wmCH0IpMRREVB9Bh3HdqmFADh
+	3gHXTLEC+V5+0cLyO1vbSElkUrRuvdGgLV5aojz8G+Rtoc5AIuyS5o/ZrzIZaK0UbXmZ8OMSqQM/6
+	CFl8/DEA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vsxy0-0000000AzsT-0ZAd;
-	Thu, 19 Feb 2026 06:56:52 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1vsy3d-0000000B0A7-0guQ;
+	Thu, 19 Feb 2026 07:02:41 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vsxxx-0000000Azs5-04VJ
+	id 1vsy3b-0000000B09f-07Px
 	for kexec@lists.infradead.org;
-	Thu, 19 Feb 2026 06:56:50 +0000
+	Thu, 19 Feb 2026 07:02:40 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1771484206;
+	s=mimecast20190719; t=1771484557;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=f5Y/ObMYOjMNaMYn2BS529u3eaizGhMbHv9x7KJjXe8=;
-	b=FzZdm5mYJTSCdh9SBAR+kORCAb9tbSPNR7EtP8p6CbREQYU4UZllTyzSIwIB3NMtiQagLa
-	C6ckbh+IvbbUAnJYGVEzPkoaeNJpsuPGY0S1lRJZQH4YqMb9/TVBd1LUMrZZh8XXkhMqT9
-	OV86FrtG5asJOJTA5rxGzhRdgi5fYDw=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=WrfKS8PiqfmgmByO6Y2CU8HPqfpLEZxb1TiV7UA1AMY=;
+	b=M1lL603R3nZeB/0QK2W37T7+VnysVFRlN48fHG+oqJXoW+1SQkvca4W10QCq3QFoxRLfsG
+	6Je1MpmJdkAK+y7nZCIHmwmJlL5bD9JMbYzRioIHhxQ478rPPRU2BJC9Sa+7zEDmJop4bx
+	o6wcBZTUQBiZGe+uJz+73oLjhHOISf8=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-607-Zrk3IxxtNgqqRcGjHPL2PQ-1; Thu, 19 Feb 2026 01:56:44 -0500
-X-MC-Unique: Zrk3IxxtNgqqRcGjHPL2PQ-1
-X-Mimecast-MFC-AGG-ID: Zrk3IxxtNgqqRcGjHPL2PQ_1771484203
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-3870b9ec9a0so3328171fa.1
-        for <kexec@lists.infradead.org>; Wed, 18 Feb 2026 22:56:44 -0800 (PST)
+ us-mta-20-IolZ0zlQOC-E9F-YZJLpeQ-1; Thu, 19 Feb 2026 02:02:35 -0500
+X-MC-Unique: IolZ0zlQOC-E9F-YZJLpeQ-1
+X-Mimecast-MFC-AGG-ID: IolZ0zlQOC-E9F-YZJLpeQ_1771484554
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-385bd85a0f4so4219361fa.3
+        for <kexec@lists.infradead.org>; Wed, 18 Feb 2026 23:02:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771484203; x=1772089003;
+        d=1e100.net; s=20230601; t=1771484553; x=1772089353;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f5Y/ObMYOjMNaMYn2BS529u3eaizGhMbHv9x7KJjXe8=;
-        b=KeTx70OcICMP4phAxLhUxSPkErGj2jKCUBaXeRShkYz1BcqL2SVCGEvxn0YvBPkK9Y
-         TyULZsYdt6y0Xjp0zbdfU+pIC3+iEglJkuMK/Z5fmVbOmUxlbeVYYpyl9c1bHeyzfvo+
-         BcaOQTjCThBIkMStFL4nx1eGh9ZrpBVKC3v+k3cCHspOlpAl/ALuYI615qZh376Ww/YQ
-         J4VzL09IpLQwUEUbe8gakI3Pc7wxD6rbcYGmzesjSZAeQOqhRiitDDGcZZTITy38WrrT
-         G6+0r8/T8W/APrcRni8advNkOvhDtkMmnbp2s7/3y0fqlFb2Zep/HNyck+xmHlYkKVXh
-         aUUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+uqTORT3ZpzHQEg7D3xKpt/s7uZM5oYWcbEt7I9Q4PfrUcfHghFgC4NoCpNIiGtHaQE0yrQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxaaG1wsw+1Ml97KWBVQ5dCSGZ7NOiJYtUEziqMRj6A4yQAG1D0
-	EEmUe8laTIb5nQ8MHo+RtY7+pfsUI3x/EliSaqFmFvSqkdJvQmWZXvtE3UasaizNwpUJ52QQd2l
-	eI6oAG1IDZ7T6yUFuDWCedUMeBi9dBGYBQ+5pKP763vr9Vepg1Jw+P2fW3yUU+IU4sWwjutZkkj
-	0w91uk6+z24pUGz0CagusUgAAGhvct9vnb/+e5
-X-Gm-Gg: AZuq6aJISRQhY2QWiNThHHVjAQGa2chyVQ08xsMUX5xhV4uJ+e8IkBo95EHCGg/QrvM
-	xkm9P+i8CLDZ7+DEbvBgVL1pzlmMiEmQdu+wTziNiPIclJtfopoO6Nla3qXyZJNiW8E7MqJqje6
-	4koObCHOG8yN4K+2fushpEZrCKWddNX4ida5iEn3ZVYsw2iFVCzAI2ISaP/GPnFhPX8eC83vqIH
-	3lsq1mN7wiAHscWZ5U8/8B2C8lPuOHP+wCFVsd0er73DHUBdIYZxQdNJg8uoPk2rx/W
-X-Received: by 2002:a05:651c:2225:b0:385:c13b:5584 with SMTP id 38308e7fff4ca-3881b97e9a0mr51039961fa.36.1771484202703;
-        Wed, 18 Feb 2026 22:56:42 -0800 (PST)
-X-Received: by 2002:a05:651c:2225:b0:385:c13b:5584 with SMTP id
- 38308e7fff4ca-3881b97e9a0mr51039911fa.36.1771484202292; Wed, 18 Feb 2026
- 22:56:42 -0800 (PST)
+        bh=WrfKS8PiqfmgmByO6Y2CU8HPqfpLEZxb1TiV7UA1AMY=;
+        b=HKi4SkSLn3zM05c7pjSu3QXJd63bwcunRDhA6P3Wrp7GgYBkSq/gNNUTN8pDnnEfLb
+         in8LY3Sgd7F+8+sczRN1sEccXOmUBF5Nly/XT1A1P7RfO1AsrpcRlvWdL1bT7PJtJzI3
+         Y3x/jO+9wG4hY7VaCI7Qngx4CoxcatfiyGkBt/8mjc9xedeeJzm7vrwi4WrNTZCvWdUj
+         WPCM1q12H3hRHKy92hju0mz/ScePwiJHxvNM6KTtPdnOS9yfmJKathUuWxfP5Lwpvl2h
+         WV1qtSUT5EvrH9dn+xG8JaWAIx6+6k93y+vCEVoz0aQMKH8XcczORe3VcsWYDesJqeHI
+         DR2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX/l8L6OQzDH6XRNpI6O+623d2j4EE4IB/KVEzPZADWBD/DisWf2+KJW4jDIHUy4Rt5l5BhPg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxZrd36KjK7naKY0Qr3/dwbX9jJ7m7sykM7oFD4pZTKMT/usqL0
+	Pt4Rc5xX3Fy0OYZ8jBqwpGMfTDdF5hcFKkxAud+ualeLKObiull9WTZ4Y7E9DfB1MYyV+cEfCqi
+	mM7S4Ajm8jUww93Ow/sipEBLvZq+07eZiJz/9ncIhFjnqGoIVhMqp/YwQ9x09lqglgC/FEMnOOy
+	dtMVzmV7d5dhCM22BYCi5ygRFMB3FjCdFLPS1y
+X-Gm-Gg: AZuq6aKCZzVSBzsjgJsVntebR3ERDIYw6k1FCRKZqyRWpke0dPlcjUbn25YiNoz9jCm
+	VdKwPSqx91Tcee+8cvN9Tw0HS9mcXEHgX+yUXyxF250H7A0o0TERMKoA/bBrH75Phnv1MZVNfnd
+	YKzxmV0p7Y3y+gcE4+tja+gY7c89KjhWFj7kjUf1WjE60BhVcFM1O3wCEFaJVwUuFGu3OUpJ2RA
+	rj4xgjkWPOUy8paofLajcvafg94uuWrhkXAAvpFP9+BjK3vxOKr2HQ3BTsWipgKHdDV
+X-Received: by 2002:a2e:a58b:0:b0:37b:b849:31c3 with SMTP id 38308e7fff4ca-38846e6e936mr13767581fa.44.1771484553386;
+        Wed, 18 Feb 2026 23:02:33 -0800 (PST)
+X-Received: by 2002:a2e:a58b:0:b0:37b:b849:31c3 with SMTP id
+ 38308e7fff4ca-38846e6e936mr13767481fa.44.1771484552924; Wed, 18 Feb 2026
+ 23:02:32 -0800 (PST)
 MIME-Version: 1.0
 References: <aZQg_tRQmdKNadCg@darkstar.users.ipa.redhat.com>
  <824bf9d5-93d3-4791-a064-3852014a1264@app.fastmail.com> <CALu+AoRdo5E-irxymu7WAV+L=sKLbjnOXtLLe7RHWX-NZtjvNw@mail.gmail.com>
  <61f0c9ad-a435-4856-8ebe-d5a81f72330e@app.fastmail.com> <CALu+AoTkGWXAokzXwo6C+6K1-mk3r9YA=WauXAggP628F_=ABQ@mail.gmail.com>
- <665dc599-8488-4761-b3c3-07b994cb82b8@app.fastmail.com> <CALu+AoQMdng7QfKJjY1wugLu79AWbg0=x9SkvvT6TdwXjviM3A@mail.gmail.com>
- <eba774b8-1127-4c77-99fc-943b6de8af54@app.fastmail.com>
-In-Reply-To: <eba774b8-1127-4c77-99fc-943b6de8af54@app.fastmail.com>
+In-Reply-To: <CALu+AoTkGWXAokzXwo6C+6K1-mk3r9YA=WauXAggP628F_=ABQ@mail.gmail.com>
 From: Dave Young <dyoung@redhat.com>
-Date: Thu, 19 Feb 2026 14:57:15 +0800
-X-Gm-Features: AaiRm52MPDjJIrnr6aiuB7naGrInBNXWrag7kRXeZTmUUl0RZ8Q467qwTU_SJBY
-Message-ID: <CALu+AoRdx_=FFkFUcfwc8Z_7qmMbyC6Yf5AJA6PpTyDcjBS2Hw@mail.gmail.com>
+Date: Thu, 19 Feb 2026 15:03:05 +0800
+X-Gm-Features: AaiRm52CO28LXPWE60CaPB6MX5LkIrQ6MX8PJpryZg4FynCBCqSHZH7nUJrQslg
+Message-ID: <CALu+AoRK8OXYb17=0WKkJfS=Q_9ssuwj+Ub+ZFRuS9_kdzo=Eg@mail.gmail.com>
 Subject: Re: [PATCH] efi/x86-stub: store acpi_rsdp_addr in bootparams
 To: Ard Biesheuvel <ardb@kernel.org>
 Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	kexec@lists.infradead.org, x86@kernel.org
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: j77b8RtDEj-tyG2fdqfM-R6ZeaxW_CioGQHFDEezLcU_1771484203
+X-Mimecast-MFC-PROC-ID: mpkVTo1jrlKzcfbZQMzKktpNyz9OV45A2e3unMXaeX0_1771484554
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260218_225649_132106_34BC7054 
-X-CRM114-Status: GOOD (  14.03  )
+X-CRM114-CacheID: sfid-20260218_230239_159847_DF4EF649 
+X-CRM114-Status: GOOD (  13.27  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,36 +104,19 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Ard,
+> > > The kexec use case is it depends on the pre-kexec kernel saving it
+> > > during boot for noefi case.  I do not have a better idea to do it in
+> > > kexec code for the time being.
+> >
+> > How about something like this?
+>
+> Thanks!  It works for me, however the legacy kexec_load syscall still
+> failed with a panic I did not dig into the root cause yet, I supposed
+> it will find the rsdp from /sys/firmware/efi/systab file, maybe some
+> userspace code bug.
 
-> Actually, looking at that code more closely, I kind of wonder why the kexec code tests for EFI_RUNTIME_SERVICES to begin with. Perhaps it might be sufficient to do this:
->
-> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-> index c3244ac680d1..bec91ee7e668 100644
-> --- a/arch/x86/kernel/kexec-bzimage64.c
-> +++ b/arch/x86/kernel/kexec-bzimage64.c
-> @@ -192,7 +192,7 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
->         struct efi_info *current_ei = &boot_params.efi_info;
->         struct efi_info *ei = &params->efi_info;
->
-> -       if (!efi_enabled(EFI_RUNTIME_SERVICES))
-> +       if (!efi_enabled(EFI_MEMMAP))
->                 return 0;
->
->         if (!current_ei->efi_memmap_size)
->
-> That way, if the first kernel was booted via EFI but without runtime services enabled, the kexec'ed kernel will simply inherit the ACPI and EFI tables.
-
-Actually it does not work,  EFI_MEMMAP is unset in function
-efi_memmap_unmap() when runtime is disabled,  so nodifference for
-checking EFI_MEMMAP or EFI_RUNTIME_SERVICES bits.
-
-The x86 kexec efi code is simply written to assume EFI runtime is
-enabled as it copies the cooked runtime service mem ranges in memmap.
- If we want to improve it I suspect the efi initialization code could
-need changes, and then even if first kernel disabled runtime, the
-kexec 2nd kernel still have chance to enter virtual mode to enable
-runtime.    But this does requires more work to be done.
+FYI, the changes work with the latest upstream kexec-tools,
+In case someone is curious, it fixed the wrong "%lux" with ""0x%" PRIx64"
 
 Thanks
 Dave
