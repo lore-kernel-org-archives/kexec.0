@@ -4,79 +4,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3EC18C5AD05
-	for <kexec@archiver.kernel.org>; Fri, 20 Feb 2026 16:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1DB44C5AD58
+	for <kexec@archiver.kernel.org>; Fri, 20 Feb 2026 19:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=PT6A/oALwI3aAl9sXp0IZoMRZ6ospSVkKGQtoOfj3Zc=; b=Vp1bFin5j2jHeeUbTvUODVkGzu
-	W50eylgtzopQenDN4mBBxbSSZx72gbEKq7uieDdpkewhALMQEMOwIFCbA1rlRwNgQK01sat4errm7
-	Ax9NHWQpN+/sKUmvS+rYwMfhSashW0qjhR3OLEc/BZ73XcBKeC8c+24ICBy+s72zWcOZtxoF5a5ud
-	bbPyivkgtMUKUidZ7g1hcQ6GROD1Ofohq18hQVSNvysdk56FKC+OljK6wEjlEMYkqsMxJiZBHzPuI
-	eO1ZFulTNPJUk7M8po29tcKHkoo+GMRa8g/X1IiIflQzeoj0zqy1w342ffhtujJMFWdciMenpKnK9
-	8SgPXwsw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Nos4S2W/MH7DucXly1ylwYhWrSc0JMSiOmM7eQ5L0v0=; b=vzet2ypRqmvmoDt7AXbKWyTcop
+	+OJ+AhMk7dSnGoY9W7n5A8ji/eoHaP9Kd3kT3phLFbnK5un6ApT547Hh1JG3b0KhcO2yrJLDnwdhD
+	Q3J1L9r7ivDKv9k6pCgjjoq8B+akgNRWmUHecDujH1gS3lZ5GjJifGiFV0s1yeC16U11TvL6ZlpVo
+	8/ROLnQrk4GgzY4NBlnuRvnzGVF9IqKN64mysAvccORQ1A2XOaGhr2YIB7XlGEzPnvHvnIlPe2e9D
+	sBpPh2ajOg68IGfSl/XFuKMrbTNSmiINydOjGbGPwJTYfG7yxnuZuIw6qrxxTtj1wFK6sGrlSsV9G
+	4jyRW6OQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vtTjn-0000000FKgu-2SUS;
-	Fri, 20 Feb 2026 16:52:19 +0000
-Received: from mail-wm1-x349.google.com ([2a00:1450:4864:20::349])
+	id 1vtVn9-0000000FU2A-2O3j;
+	Fri, 20 Feb 2026 19:03:55 +0000
+Received: from mail-lj1-x22b.google.com ([2a00:1450:4864:20::22b])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vtTjl-0000000FKf7-2iKR
+	id 1vtVn4-0000000FU1k-27f2
 	for kexec@lists.infradead.org;
-	Fri, 20 Feb 2026 16:52:18 +0000
-Received: by mail-wm1-x349.google.com with SMTP id 5b1f17b1804b1-483a24db6ecso20610025e9.1
-        for <kexec@lists.infradead.org>; Fri, 20 Feb 2026 08:52:16 -0800 (PST)
+	Fri, 20 Feb 2026 19:03:51 +0000
+Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-38709888abbso19378831fa.1
+        for <kexec@lists.infradead.org>; Fri, 20 Feb 2026 11:03:49 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771614227; cv=none;
+        d=google.com; s=arc-20240605;
+        b=IwWzg4Nr34xvXKx9lbJMtx4fQqUdNHCnTNUt9gjwb4N4YHn4li7JZjg3A0ArtV18v1
+         Cru+P84j2qDYV1TSkNAg51jWJ/9Mdm4bmD0T1q6PA8TPXdGBYCmEn7q3lni0rhW/Kijt
+         epQz9oOdrpf87Sf6icn8VOU5jfTlWLBtNnkw721EoqXAMQNLVe83DMGCaGu4EYjZRIzx
+         8r2oqmYlNAZYkdt+vTYi5AedxPp5rZtSLQsvkM2zZK8XEUBa7BIKpQyB5Z/wuy8xGIDH
+         xEY3IA+z3wjX8Ri9bU/PBAqzGU2KDfFfu9UXkkTU3K/Xs2sHwMpJ4VtXt8m/FlMRxThg
+         /fEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Nos4S2W/MH7DucXly1ylwYhWrSc0JMSiOmM7eQ5L0v0=;
+        fh=DleMrb2+UiIH2iqug0RJI877dwpN5535JBdXJd/PMeg=;
+        b=K4ARDzUVrVPMYP6+duzryLySdaXH5ZYKmfuHgTwWYEig/wR0NpfibhPB1xQDUh896l
+         j1DJNAetGE8TZZbYhoxQdCEyXQJDADFVQe86+Oi6+7M9o+3T/aDLoSPlumx0A9wKg0iB
+         ZKEtNfgDPwntmgW3l4b1vcWnT/9LgT0iXfhjtAU9NAv2LFbe/Bth1kyL5H9H5/Y3V5lE
+         YJTwMGq+cTasOFTZr2dNpFg1u0wn+Xfd5brL8cf9tQEya5h2gxcZG/yq0OxLcMqBWBXh
+         CJk6VYiruco4Ok0dDUHkB3VS5DsRldC2KhW7EFsYhnih4pMzU89GZ5TsolOoU0LbY2+5
+         a1tg==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1771606335; x=1772211135; darn=lists.infradead.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PT6A/oALwI3aAl9sXp0IZoMRZ6ospSVkKGQtoOfj3Zc=;
-        b=rnL97ZpcHEK9q5/66nFIpQP2YyKOfJ66nMJZL+2ctYPuNWT9PwQWLVC6e4dr3TWBfR
-         qoUM4d4P8wnztTm5fe7pjhHgdkhrhhiCjPTr4ISQEb/tm46ze1We3zo10q/miH+FBtr/
-         /0g61mWyK9F1NQji/SpFazhh2h/UTIPgEw+PD8r21WlFxkYqYU8L/6kKABy5oRkrqLJR
-         ZvtjCGbKJE49s2oSZ0j3oR+AZGlPGn6ppSU6Hgv389QwiIDjWBbFTmSQvwtbjSGDqHR9
-         c93vwtx4I9jbmQb3Z8pb/mKADfvxEVpkJx7EwyIrcfhD7Sb7+FolFVMwJJp+UQW/TExC
-         NVzQ==
+        d=google.com; s=20230601; t=1771614227; x=1772219027; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nos4S2W/MH7DucXly1ylwYhWrSc0JMSiOmM7eQ5L0v0=;
+        b=b41jz0UrFjTso4RoVVyUs857DVXmw9GajAbbgtCa7NuPrDKRELDzfJuwMtxQwADfMs
+         Jat/bhyV998LiJs9qIT8zORHA5KpDoNaA6L4JCLkrln8YdW8uyBqWsVySsQgxkKyukHt
+         rsGNDYeNhtHWyniLLHbElX1VFRr48S/pjbpdKVJO8Y4CGgrnqrjAeQ0gffpxJs/QIGTh
+         XyC0nz7pJywFMX0OSfE+/HJvZj9r+xEesjW0A2JJdLSUB4NqzGbwWmOtZgJsiW8VG65t
+         Z80VMT7eqZad+9YypQg8L/ZS40EuCHh13PuPDPvEeJvdW1KKWxbeF+zefxgHywWN4xUH
+         NFcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771606335; x=1772211135;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PT6A/oALwI3aAl9sXp0IZoMRZ6ospSVkKGQtoOfj3Zc=;
-        b=eBEAEVIoK4mBpo/hXlPdfyBeqOXA2S0qghSypCreel6mtbuc/17vYMZ6IVTN7H5CpO
-         UOEDd0VZH+fwRgCPeSDYanIbyb46zPT3umqb5px0wecJSYxLCJdHSpzL4i7Y7PzXjoEG
-         ALAPte/BtoUOaLiHCBAuo2GCESZgDfUMiu95b+Wf8dRlDqPuw0AyKS+7KGpcx2S3JlTU
-         hL65ZPz5hS0sujsPtU3neHV2xL0xuchC6R2Ypa1UOMm/z1gGyL5kQjOTlowgKMZ6n24V
-         j/IiWbMtTn2pOgl/gwmMa7lfbzRWwtJKXievBrQVlVitp/vOpyxvIwHIC0ihGQAJ485G
-         h/mA==
-X-Forwarded-Encrypted: i=1; AJvYcCUqDtpdCpu8KVjbgQDRTxsEwLDvW5wxscMyWttY8jNOtNjI4EBhI+7OLfMpsBxQ2h/3x2N8Dw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxcHcOO97vwlvpqBKoZ5gNQxKaw3TeZtHus7ZYqCur446udnNUW
-	S53sjvGFLFBDACTHqPAv2bPJxGMhOQM1j+paO4/3vEXJewwKIsE9Y1cwDcLdKcBf3XD90XNEafJ
-	mMhKhkeoz3aLoiNAB4BOdEQ==
-X-Received: from wmpu13.prod.google.com ([2002:a05:600c:4d0d:b0:483:a1ee:5eb8])
- (user=mclapinski job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:8b03:b0:477:54cd:200e with SMTP id 5b1f17b1804b1-483a95eb622mr2764805e9.1.1771606335280;
- Fri, 20 Feb 2026 08:52:15 -0800 (PST)
-Date: Fri, 20 Feb 2026 17:52:03 +0100
-In-Reply-To: <20260220165203.3213375-1-mclapinski@google.com>
-Mime-Version: 1.0
-References: <20260220165203.3213375-1-mclapinski@google.com>
-X-Mailer: git-send-email 2.53.0.345.g96ddfc5eaa-goog
-Message-ID: <20260220165203.3213375-3-mclapinski@google.com>
-Subject: [PATCH v4 2/2] kho: make preserved pages compatible with deferred
- struct page init
-From: Michal Clapinski <mclapinski@google.com>
-To: Evangelos Petrongonas <epetron@amazon.de>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
-	kexec@lists.infradead.org, linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Michal Clapinski <mclapinski@google.com>
+        d=1e100.net; s=20230601; t=1771614227; x=1772219027;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Nos4S2W/MH7DucXly1ylwYhWrSc0JMSiOmM7eQ5L0v0=;
+        b=mTZGHzJDrfCB76p4r7Gc67X+aLrWuNQApiKOkBnIfE1c3U9wT+2HPPh7Zr3gHhel5M
+         L3BcoXYewcEYuADjMdDvpRDIZCw0CUiNSYpJ/S9EhsrvCW4VSSTCdoQ9pP4nsAixBAzE
+         6Yq6HQ5BQW4hoVkddi3PPgHX0vTmY53TuOqhuMpEhbpu8CIVuAnyg2mz9lAcNl3SKncH
+         f4zA9wSyIlKGwhOl9Y7f66ICVYRbpXY//wCG5U8QDwkrXyXOGSanNV99yM2nN/O0eC+j
+         dev5NUnGMdjooDMO6ePGZ93jHiB6qsKIMdodk/+kGAGqvEfjB9t76TB/gi76COQXqwbE
+         hR0w==
+X-Forwarded-Encrypted: i=1; AJvYcCX10unYOIlBwDIaqCSebfeRu7wCJrW7nSW4sTYq5s69lKkAO4XcI/18MoHGT6ZcfCpwddolVw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxBq2uzCXxDekksgGOjAuwsa3m5DZ0tcX8PjmkXUmUg1QWMzEPO
+	rF9wO659ZlWeLPPf5QuuREX9VYQQeUCrWEISr9EEmcVGh05IZe6nMN1mjXPHRFruEVFAehTQ9Hk
+	bARgFA6IxZzmJjbN+fG2mKXD+JVZf6KyB1qS/4LC4
+X-Gm-Gg: AZuq6aJSmI2K9gz8TqPb9bsiyh/1u3aYQYqkobKKlvMcnZAiY0bb+8bvFLlD7ry0Nu7
+	el/yoHj79vUpYTqCLUkXedsuREtEAsS/aQnP5EXVRr0ZQU/g7tEkp7mGXS2ccD4OKmNKVk8ZckM
+	zDzvJHDq6pWXz6AWLmO1CFxWohD/oQmUodAHrGjdq4Dp7gN1wFIK00OIvtzXhnjp+OwrKNRSjMY
+	xkEuvxD/coRsB6T9nKKOnFQrIkFQae5/9sOj9gcUpcgEYzEzFjAIsasuFeZQbTA81N+RyKl0Lv2
+	NUWv56z77i0AA+ABlg==
+X-Received: by 2002:ac2:4c56:0:b0:59f:8546:203c with SMTP id
+ 2adb3069b0e04-5a0ed894dd1mr165159e87.12.1771614226924; Fri, 20 Feb 2026
+ 11:03:46 -0800 (PST)
+MIME-Version: 1.0
+References: <20260129212510.967611-1-dmatlack@google.com> <20260129212510.967611-3-dmatlack@google.com>
+ <44484594-5b5d-4237-993c-ac1e173ad62e@linux.dev> <CALzav=d1ZrHrWd-HhZJ8aY6aqxkBcLoet_5+-LL1mOakVTj6Ww@mail.gmail.com>
+ <7e49472c-4bbc-49fe-92c6-621e4675d882@linux.dev>
+In-Reply-To: <7e49472c-4bbc-49fe-92c6-621e4675d882@linux.dev>
+From: David Matlack <dmatlack@google.com>
+Date: Fri, 20 Feb 2026 11:03:18 -0800
+X-Gm-Features: AaiRm528gVDC51Vc6VmuyDJufgtIlxh6fV-eX6614wdRe-TzmLDadtAg2AEPmi8
+Message-ID: <CALzav=dEykMZGsqz35TgvPqqZZFzG0kqojmry1Ya+Xf+zEgyAg@mail.gmail.com>
+Subject: Re: [PATCH v2 02/22] PCI: Add API to track PCI devices preserved
+ across Live Update
+To: "Yanjun.Zhu" <yanjun.zhu@linux.dev>
+Cc: Alex Williamson <alex@shazbot.org>, Adithya Jayachandran <ajayachandra@nvidia.com>, 
+	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Ankit Agrawal <ankita@nvidia.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Corbet <corbet@lwn.net>, 
+	Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, kexec@lists.infradead.org, 
+	kvm@vger.kernel.org, Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, 
+	=?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>, 
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
+	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
+	Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
+	Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260220_085217_718347_C5FF238E 
-X-CRM114-Status: GOOD (  20.84  )
+X-CRM114-CacheID: sfid-20260220_110350_615698_FEC21B2F 
+X-CRM114-Status: GOOD (  30.12  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,119 +137,74 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Evangelos Petrongonas <epetron@amazon.de>
+On Tue, Feb 3, 2026 at 4:10=E2=80=AFPM Yanjun.Zhu <yanjun.zhu@linux.dev> wr=
+ote:
+>
+> On 2/2/26 10:14 AM, David Matlack wrote:
+> > On Sat, Jan 31, 2026 at 10:38=E2=80=AFPM Zhu Yanjun <yanjun.zhu@linux.d=
+ev> wrote:
+> >> =E5=9C=A8 2026/1/29 13:24, David Matlack =E5=86=99=E9=81=93:
+> >>> Add an API to enable the PCI subsystem to track all devices that are
+> >>> preserved across a Live Update, including both incoming devices (pass=
+ed
+> >>> from the previous kernel) and outgoing devices (passed to the next
+> >>> kernel).
+> >>>
+> >>> Use PCI segment number and BDF to keep track of devices across Live
+> >>> Update. This means the kernel must keep both identifiers constant acr=
+oss
+> >>> a Live Update for any preserved device. VFs are not supported for now=
+,
+> >>> since that requires preserving SR-IOV state on the device to ensure t=
+he
+> >>> same number of VFs appear after kexec and with the same BDFs.
+> >>>
+> >>> Drivers that preserve devices across Live Update can now register the=
+ir
+> >>> struct liveupdate_file_handler with the PCI subsystem so that the PCI
+> >>> subsystem can allocate and manage File-Lifecycle-Bound (FLB) global d=
+ata
+> >>> to track the list of incoming and outgoing preserved devices.
+> >>>
+> >>>     pci_liveupdate_register_fh(driver_fh)
+> >>>     pci_liveupdate_unregister_fh(driver_fh)
+> >> Can the above 2 functions support the virtual devices? For example,
+> >> bonding, veth, iSWAP and RXE.
+> >>
+> >> These virtual devices do not have BDF. As such, I am not sure if your
+> >> patches take these virtual devices in to account.
+> > No this patch series only supports PCI devices, since those are the
+> > only devices so far we've needed to support.
+> >
+> > I am not familiar with any of the devices that you mentioned. If they
+> > are virtual then does that mean it's all just software? In that case I
+> > would be curious to know what problem is solved by preserving them in
+> > the kernel, vs. tearing them down and rebuilding them across a Live
+> > Udpate.
+>
+> Bonding, veth, rxe, and siw can be used in KVM environments.
+>
+> Although these are software-only virtual devices with no associated
+> hardware,
+>
+> they may maintain state that is observable by userspace.
+>
+> As a result, Live Update should preserve their state across the update.
 
-When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, struct page
-initialization is deferred to parallel kthreads that run later
-in the boot process.
+Sorry for taking so long to get back to you.
 
-During KHO restoration, deserialize_bitmap() writes metadata for
-each preserved memory region. However, if the struct page has not been
-initialized, this write targets uninitialized memory, potentially
-leading to errors like:
-BUG: unable to handle page fault for address: ...
+Userspace should serialize the state of those devices out of the
+kernel, persist it in memory or on disk across Live Update, and then
+recreate it after Live Update.
 
-Fix this by introducing kho_get_preserved_page(),  which ensures
-all struct pages in a preserved region are initialized by calling
-init_deferred_page() which is a no-op when deferred init is disabled
-or when the struct page is already initialized.
-
-Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
-Co-developed-by: Michal Clapinski <mclapinski@google.com>
-Signed-off-by: Michal Clapinski <mclapinski@google.com>
-Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
-I think we can't initialize those struct pages in kho_restore_page.
-I encountered this stack:
-  page_zone(start_page)
-  __pageblock_pfn_to_page
-  set_zone_contiguous
-  page_alloc_init_late
-
-So, at the end of page_alloc_init_late struct pages are expected to be
-already initialized. set_zone_contiguous() looks at the first and last
-struct page of each pageblock in each populated zone to figure out if
-the zone is contiguous. If a kho page lands on a pageblock boundary,
-this will lead to access of an uninitialized struct page.
-There is also page_ext_init that invokes pfn_to_nid, which calls
-page_to_nid for each section-aligned page.
-There might be other places that do something similar. Therefore, it's
-a good idea to initialize all struct pages by the end of deferred
-struct page init. That's why I'm resending Evangelos's patch.
-
-I also tried to implement Pratyush's idea, i.e. iterate over zones,
-then get node from zone. I didn't notice any performance difference
-even with 8GB of kho.
----
- kernel/liveupdate/Kconfig          |  2 --
- kernel/liveupdate/kexec_handover.c | 27 ++++++++++++++++++++++++++-
- 2 files changed, 26 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/liveupdate/Kconfig b/kernel/liveupdate/Kconfig
-index 1a8513f16ef7..c13af38ba23a 100644
---- a/kernel/liveupdate/Kconfig
-+++ b/kernel/liveupdate/Kconfig
-@@ -1,12 +1,10 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
- menu "Live Update and Kexec HandOver"
--	depends on !DEFERRED_STRUCT_PAGE_INIT
- 
- config KEXEC_HANDOVER
- 	bool "kexec handover"
- 	depends on ARCH_SUPPORTS_KEXEC_HANDOVER && ARCH_SUPPORTS_KEXEC_FILE
--	depends on !DEFERRED_STRUCT_PAGE_INIT
- 	select MEMBLOCK_KHO_SCRATCH
- 	select KEXEC_FILE
- 	select LIBFDT
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index de167bfa2c8d..fe9c88fd2541 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -457,6 +457,31 @@ static int kho_mem_serialize(struct kho_out *kho_out)
- 	return err;
- }
- 
-+/*
-+ * With CONFIG_DEFERRED_STRUCT_PAGE_INIT, struct pages in higher memory regions
-+ * may not be initialized yet at the time KHO deserializes preserved memory.
-+ * KHO uses the struct page to store metadata and a later initialization would
-+ * overwrite it.
-+ * Ensure all the struct pages in the preservation are
-+ * initialized. deserialize_bitmap() marks the reservation as noinit to make
-+ * sure they don't get re-initialized later.
-+ */
-+static struct page *__init kho_get_preserved_page(phys_addr_t phys,
-+						  unsigned int order)
-+{
-+	unsigned long pfn = PHYS_PFN(phys);
-+	int nid;
-+
-+	if (!IS_ENABLED(CONFIG_DEFERRED_STRUCT_PAGE_INIT))
-+		return pfn_to_page(pfn);
-+
-+	nid = early_pfn_to_nid(pfn);
-+	for (unsigned long i = 0; i < (1UL << order); i++)
-+		init_deferred_page(pfn + i, nid);
-+
-+	return pfn_to_page(pfn);
-+}
-+
- static void __init deserialize_bitmap(unsigned int order,
- 				      struct khoser_mem_bitmap_ptr *elm)
- {
-@@ -467,7 +492,7 @@ static void __init deserialize_bitmap(unsigned int order,
- 		int sz = 1 << (order + PAGE_SHIFT);
- 		phys_addr_t phys =
- 			elm->phys_start + (bit << (order + PAGE_SHIFT));
--		struct page *page = phys_to_page(phys);
-+		struct page *page = kho_get_preserved_page(phys, order);
- 		union kho_page_info info;
- 
- 		memblock_reserve(phys, sz);
--- 
-2.53.0.345.g96ddfc5eaa-goog
-
+This is why, for example, KVM does not need to direclty participate in
+Live Update. The VMM serializes all KVM state from the kernel, saves
+it, and then constructs a completely new KVM VM after the Live Update
+using that state. KVM will only need to participate in Live Update
+once there is hardware requirement. For example, I believe some of the
+Confidential Computing hardware virtualization extensions require
+certain memory structures used by hardware remain in place and cannot
+be reallocated after Live Update. KVM would have to participate to
+preserve those and reassociate them with the right VM after Live
+Update.
 
