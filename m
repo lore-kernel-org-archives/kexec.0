@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6909EC54FCC
-	for <kexec@archiver.kernel.org>; Fri, 20 Feb 2026 08:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2BBD5C56206
+	for <kexec@archiver.kernel.org>; Fri, 20 Feb 2026 15:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Subject:References:In-Reply-To:Message-Id:Cc:To:From:Date:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Tu9JyrWBkCvBE+rW4aDEjkY2HhNBoG/Y+2oP0qB7r3g=; b=pF763H0uARMflasB89nEKOfMCI
-	PmQtQoTiRz67YLsINuO3dtq/0DD9B+cJd0jL5KgWoEOpl5fFvxmpdbm3VPRkaUT+6fLf0KBzVQ0wp
-	iTbJyAydcj8jp8mzaCN5LguW7DnXwBaH0CTcfNYinHrjPIlqm7K9POBTyN8ZI2nKuQWSHE/beIE9h
-	HIr05+UTnDoMl+3R+6LRK3gfWT496H0gjdW/khBfekArtQBxyDtaRSjZxQdhShDeHCvY4qhzwal02
-	SpVrfGM+Bx9MQnI4MHT+XWv3AnunlpOCxQLWfNqE363YOkbYoOEQ+UCyqS96qqaRM6J2SZ6GvuJ0D
-	mmasai3g==;
+	bh=rk95DXVUJ/uTE7v54hGbwsw6fj/K+loJ3mwosggZSgY=; b=NviyfkYMSJLSwO7JtHHKv9yZJi
+	FgBqoWcTqXXOb1b0VkDdyZGENjdaACKirpQO2huFGweSwMARGDOZYRkjTAiTK8SdB7JDeeHmTj5ay
+	Om0wuT0h9vEioXIfiUSiOXx9xOmDgR8nFx/rQh8ipN27P4dbFNqu3JTS28IC/7xQ7kzj7s55qYUNS
+	jC8OHV3n/v/Xwm4U88RSGwhVItClZRMIdOYZP7IyyOMXze/2TBqpM6n7apIn0Hu/QZFNtGsvfdWbp
+	p/Zimnb+dsC2PDt8CTxsdwLjvdwyV/4MVKxkaqKqm+7CAKQXZv9vXcizJVaOQj7pRmvjJGU5C2lWa
+	f3Oingrg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vtLuR-0000000DQOW-3G19;
-	Fri, 20 Feb 2026 08:30:47 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1vtSYO-0000000F3Cy-0mAR;
+	Fri, 20 Feb 2026 15:36:28 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vtLuP-0000000DQOL-43Br
+	id 1vtSYL-0000000F3C8-4ATd
 	for kexec@lists.infradead.org;
-	Fri, 20 Feb 2026 08:30:46 +0000
+	Fri, 20 Feb 2026 15:36:26 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 9BEB660054;
-	Fri, 20 Feb 2026 08:30:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B90EC4AF0B;
-	Fri, 20 Feb 2026 08:30:43 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 19BFB60134;
+	Fri, 20 Feb 2026 15:36:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ADE5C116D0;
+	Fri, 20 Feb 2026 15:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771576244;
-	bh=OOkNKzJWZ2PKiWVeYu871t9knsMGA4JMCfqoaCA5Qc0=;
+	s=k20201202; t=1771601784;
+	bh=Ip+Ok3z4b8Mn4e2k/xxO7ygofUYVx5NJdGPJvg3Uvvo=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=aPwL1llwYZ0PhJbYJjiccMMsFKNTpSN3h6HKEogc0SQMz0qNQ95k7ksQcMyHLRjzK
-	 V60/YPqUhDW73lmKblFgu8a0slvOz89MYLjGDR+YttCGKKNianvSxnuMy9ax4BfD14
-	 lZU0a4EmplrZP3FXNHbo6CJoWZS4W9XjwvCLq4/ylA8nJQ0Lulhq0hN7rX3Gx52dEn
-	 36cwfpbnut6G1KNsmrkILyKkomEwq3EsuUQ6xL4TCJYqfZhZ8qmk0A48pXktKFzez/
-	 RDCSP8cYbJqnbb50y21F212txXq/CGSZ2GdpPOCoOov13wP8rjvPAnbGqej0BOJA5Y
-	 3J8X2mNNwPAMg==
+	b=d8j24fM/iIueOFUXQImLRiw/Nvq9i5abxog58HkgSvv3tfg3f8bPIw4TIaTL2cNsF
+	 gj5E9/mdWAZ8jDtMoQbP0PsHlnKjlIaYKj+W4RmlL35pZsFnxdbTRoGlT/HDBOL1oD
+	 hS9oP7F1wMw4vHb8tBOq8YsCezfJ2JQwZUjGQnK92/Q6OTmB+qs8Dhl4KVI+wJ9Ynn
+	 bL7miOtFFyZc+7gtzmfTPsDwSVtXhaWtx6TIZIex4mvbDtrG809w7MJGHQP/NDckLn
+	 BLhR46uTaItrkYXBa7Po6XxMGAHum954lWlXf6VMAlRckrSh48zxvKM9vVUQTwYL26
+	 EkdgubbdOGCcQ==
 Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id EF254F40069;
-	Fri, 20 Feb 2026 03:30:41 -0500 (EST)
+	by mailfauth.phl.internal (Postfix) with ESMTP id DD74FF4006D;
+	Fri, 20 Feb 2026 10:36:22 -0500 (EST)
 Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-01.internal (MEProxy); Fri, 20 Feb 2026 03:30:42 -0500
-X-ME-Sender: <xms:sRuYaZtdO-kEDZ6jyrUg29QVVJFQrny0pZ3ezNCYPVygXUo8kPT68Q>
-    <xme:sRuYadTw0jR6o4mFsXaOb3AWdfxTdgAv1HFsKo5j_w9sORkvJLEhzV-q3spNFynOh
-    2Ubtqz0ZMXu-WayYa5VUA01TJLh6XvD099OkNR3ywFqD-joIDr8dsw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvvdejleehucetufdoteggodetrf
+  by phl-compute-01.internal (MEProxy); Fri, 20 Feb 2026 10:36:22 -0500
+X-ME-Sender: <xms:dn-YaXpKzgBI7lLLXvVnqkp9s_8LSG6eYRHb_v7Dh4I_nA74WDDqdw>
+    <xme:dn-Yacclxv5BJtKZ-Qq1XI4iHx3RyLHcNXmhZ9xG5qOn3jV4EcwK33tH6kozNhz9o
+    AbjnGXi1_VPLoTivYQYVCdUF9t9jfiBkqZ4d5ah8cdAmjyXu-PjMSg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvvdekkedvucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedftehrugcu
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrugcu
     uehivghshhgvuhhvvghlfdcuoegrrhgusgeskhgvrhhnvghlrdhorhhgqeenucggtffrrg
-    htthgvrhhnpeeuteeiudeigeekjedvheduieehteetgfdtuefghfejgffhfedtleehvdeh
-    fffhvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    htthgvrhhnpedvueehiedtvedtleekuddutefgffdtleetfeetveejveejieehfefhjeei
+    jeefudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
     grrhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieejtdehtddtjeel
     qdeffedvudeigeduhedqrghruggspeepkhgvrhhnvghlrdhorhhgseifohhrkhhofhgrrh
     gurdgtohhmpdhnsggprhgtphhtthhopeefvddpmhhouggvpehsmhhtphhouhhtpdhrtghp
@@ -68,50 +68,51 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvvdejleehucetufdote
     epphgvthgvrhhhuhgvfigvsehgmhigrdguvgdprhgtphhtthhopehhvghrsggvrhhtsehg
     ohhnughorhdrrghprghnrgdrohhrghdrrghupdhrtghpthhtohepthhrvghntghhsghooh
     htqdguvghvvghlsehgohhoghhlvghgrhhouhhpshdrtghomh
-X-ME-Proxy: <xmx:sRuYaSE41zy-0gKhEDntCwr9EkMSTDAbWBC6gFogmaZORdtSCZazBg>
-    <xmx:sRuYaQuD_PamJME6yIMQvHwc-vTB6378FCneQDrqKdQkZr2d7YsGNg>
-    <xmx:sRuYaYKiRTSt0NGzQEf8b1tar7A2Ez8t7wct0zTn-wFVaEhdpoQwBw>
-    <xmx:sRuYafx_Sf8aIzNhbGWpWKYWTwuFMiqozbcCiCP20ySSLcMVutcyMg>
-    <xmx:sRuYaT4yNHzt4j55xgiWueu0sefZ18usY5pqg8AA7-I87bnf8eokGbBA>
+X-ME-Proxy: <xmx:dn-YaZBdaidTbvEBGfz-iUZ-mgy8GA-vuxokns0lACS79eaqin2sjQ>
+    <xmx:dn-YaU4tmc_oQXzOQdSawhF3iuF8TCBCCqScSkC_zNOtmM0y7z9SfA>
+    <xmx:dn-YaQlTtj_nEiNEidchtEBlqmzl0pkyLthbR5p7BnKlCdBg4gvexw>
+    <xmx:dn-YaXfzUes1HVb7VveqSbLUM6qO4SVJqCj2HwTjJqow0G19GkCsMw>
+    <xmx:dn-YaZ3f8bIvTNMtbs-XCNvgBOCGXlsfh9Hb0ZD3p2MiApd3SUqnKoDq>
 Feedback-ID: ice86485a:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id BE6FD700069; Fri, 20 Feb 2026 03:30:41 -0500 (EST)
+	id A57F1700065; Fri, 20 Feb 2026 10:36:22 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 MIME-Version: 1.0
-X-ThreadId: AAnEvm6syrbF
-Date: Fri, 20 Feb 2026 09:30:21 +0100
+X-ThreadId: A1ToacgRLhLF
+Date: Fri, 20 Feb 2026 16:35:44 +0100
 From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Andy Lutomirski" <luto@amacapital.net>
-Cc: "Simo Sorce" <simo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>,
- "Daniel P. Smith" <dpsmith@apertussolutions.com>,
- "Ross Philipson" <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+To: "Daniel P. Smith" <dpsmith@apertussolutions.com>,
+ "Thomas Gleixner" <tglx@linutronix.de>,
+ "Eric W. Biederman" <ebiederm@xmission.com>,
+ "Eric Biggers" <ebiggers@kernel.org>
+Cc: "Ross Philipson" <ross.philipson@oracle.com>,
+ linux-kernel@vger.kernel.org, x86@kernel.org,
+ linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev,
- dave.hansen@linux.intel.com, "Thomas Gleixner" <tglx@linutronix.de>,
+ linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org,
  "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
- mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, "Jarkko Sakkinen" <jarkko@kernel.org>, jgg@ziepe.ca,
- nivedita@alum.mit.edu, "Herbert Xu" <herbert@gondor.apana.org.au>,
- davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
- dwmw2@infradead.org, baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
- andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
-Message-Id: <9034c6a1-ebce-40b6-9ac8-0b8cc5a50dd4@app.fastmail.com>
-In-Reply-To: <CALCETrWynypSD7vEjJNLcym3JhBw4k0ovDiR_3YuOHh92TnM=A@mail.gmail.com>
-References: <20251215233316.1076248-1-ross.philipson@oracle.com>
- <b5f2b5a5-b984-4ed3-a023-c06d634f9146@app.fastmail.com>
- <1ffd3cb5-2c76-4371-a067-3e4849907d80@apertussolutions.com>
- <49d169bf-0ad2-49be-b7d7-fceb9e7f831a@app.fastmail.com>
- <CALCETrUE8c-dxRWhtHKz_PojwZuWMXJSzOsFQf2vt5LS3ATwpA@mail.gmail.com>
- <1BBD7449-8420-43FD-930B-A4E1BA38FFC6@zytor.com>
- <CALCETrWzG1Mjb-RcwLQ5-tGFZ15WKHjZbqtLvyif+UPuVKJ_5g@mail.gmail.com>
- <32e62cef7b89d9691bdd4120388ce752fd041230.camel@redhat.com>
- <CALCETrUMR0RvOFXGzL7=F4c-3veL+1Sm2xf-BprHTK4=UKw8yA@mail.gmail.com>
- <558d0f28-01fb-4447-891c-2ffbf869c077@app.fastmail.com>
- <CALCETrWynypSD7vEjJNLcym3JhBw4k0ovDiR_3YuOHh92TnM=A@mail.gmail.com>
-Subject: Re: [PATCH v15 00/28] x86: Secure Launch support for Intel TXT
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+ "H . Peter Anvin" <hpa@zytor.com>, dave.hansen@linux.intel.com,
+ "Matthew Garrett" <mjg59@srcf.ucam.org>,
+ "James Bottomley" <James.Bottomley@hansenpartnership.com>, peterhuewe@gmx.de,
+ "Jarkko Sakkinen" <jarkko@kernel.org>, jgg@ziepe.ca,
+ "Andy Lutomirski" <luto@amacapital.net>, nivedita@alum.mit.edu,
+ "Herbert Xu" <herbert@gondor.apana.org.au>, davem@davemloft.net,
+ corbet@lwn.net, dwmw2@infradead.org, baolu.lu@linux.intel.com,
+ kanth.ghatraju@oracle.com, "Andrew Cooper" <andrew.cooper3@citrix.com>,
+ trenchboot-devel@googlegroups.com
+Message-Id: <c9a0cd9f-17cb-49e5-a411-b78ef9c7e35e@app.fastmail.com>
+In-Reply-To: <281c3bb3-13f6-47a2-9a9a-134e397bf686@apertussolutions.com>
+References: <20240531010331.134441-1-ross.philipson@oracle.com>
+ <20240531010331.134441-7-ross.philipson@oracle.com>
+ <20240531021656.GA1502@sol.localdomain>
+ <874jaegk8i.fsf@email.froward.int.ebiederm.org>
+ <5b1ce8d3-516d-4dfd-a976-38e5cee1ef4e@apertussolutions.com>
+ <87ttflli09.ffs@tglx>
+ <281c3bb3-13f6-47a2-9a9a-134e397bf686@apertussolutions.com>
+Subject: Re: [PATCH v9 06/19] x86: Add early SHA-1 support for Secure Launch early
+ measurements
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -126,195 +127,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Coming back to this old thread after having spent some time playing with the code:
 
+On Thu, 22 Aug 2024, at 20:29, Daniel P. Smith wrote:
 
-On Thu, 19 Feb 2026, at 18:34, Andy Lutomirski wrote:
-> On Wed, Feb 18, 2026 at 11:55=E2=80=AFPM Ard Biesheuvel <ardb@kernel.o=
-rg> wrote:
->>
->> On Wed, 18 Feb 2026, at 22:54, Andy Lutomirski wrote:
->> > On Wed, Feb 18, 2026 at 1:04=E2=80=AFPM Simo Sorce <simo@redhat.com=
-> wrote:
->> >>
->> >> On Wed, 2026-02-18 at 12:34 -0800, Andy Lutomirski wrote:
->> >> > On Wed, Feb 18, 2026 at 12:29=E2=80=AFPM H. Peter Anvin <hpa@zyt=
-or.com> wrote:
->> >> > >
->> >> > > On February 18, 2026 12:03:27 PM PST, Andy Lutomirski <luto@am=
-acapital.net> wrote:
->> >> > > > On Thu, Feb 12, 2026 at 12:40=E2=80=AFPM Ard Biesheuvel <ard=
-b@kernel.org> wrote:
->> >> > > > >
->> >> > > > > On Thu, 12 Feb 2026, at 20:49, Daniel P. Smith wrote:
->> >> > > > > > On 2/9/26 09:04, Ard Biesheuvel wrote:
->> >> > > > > ...
->> >> > > > > But would it be better to disable the runtime services by =
-default when doing a secure launch? PREEMPT_RT already does the same.
->> >> > > >
->> >> > > > So I have a possible way to disable EFI runtime service with=
-out losing
->> >> > > > the ability to write EFI vars.  We come up with a simple fil=
-e format
->> >> > > > to store deferred EFI var updates and we come up with a plac=
-e to put
->> >> > > > it so that we find it early-ish in boot the next time around=
-.  (This
->> >> > > > could be done via integration with systemd-boot or shim some=
- other
->> >> > > > boot loader or it could actually be part of the kernel.)  An=
-d then,
->> >> > > > instead of writing variables directly, we write them to the =
-deferred
->> >> > > > list and then update them on reboot (before TXT launch, etc)=
-.  [0]
->> >> > > > This would be a distincly nontrivial project and would not w=
-ork for
->> >> > > > all configurations.
->> >> > > >
->> >> > > > As a maybe less painful option, we could disable EFI runtime=
- services
->> >> > > > but have a root-writable thing in sysfs that (a) turns them =
-back on
->> >> > > > but (b) first extends a PCR to say that they're turned back =
-on.
->> >> > > >
->> >> > > > (Or someone could try running runtime services at CPL3...)
->> >> > > >
->> >> > > > [0] I have thought for years that Intel and AMD should do th=
-is on
->> >> > > > their end, too.  Keep the sensitive part of SMI flash entire=
-ly locked
->> >> > > > after boot and, instead of using magic SMM stuff to validate=
- that
->> >> > > > write attempts have the appropriate permissions and signatur=
-es, queue
->> >> > > > them up as deferred upates and validate the signatures on th=
-e next
->> >> > > > boot before locking flash.
->> >> > > >
->> >> > >
->> >> > > *If* a physical EFI partition exists there is a lot to be said=
- for this approach.
->> >> > >
->> >> > > The only issue with this that I can see is for things like net=
-work or CD/DVD booting where there isn't necessarily any EFI boot partit=
-ion, it might not be writable, or it might not be persistent (e.g. http =
-booting typically uses a ramdisk, like the old Linux initrd.)
->> >> >
->> >> > Hmm, I guess my approach is a 100% complete nonstarter for insta=
-lling
->> >> > Linux from a CD, and it's really not awesome for installing Linu=
-x from
->> >> > a USB stick.
->> >>
->> >> Doing any of this on a removable device feels generally like a tra=
-p.
->> >> You get your USB disk in, try to boot, and it saves vars, but rebo=
-ot
->> >> fails for whatever reason, you plug it in another machine ... and =
-it
->> >> tries to "continue" from there? The amount of validation needed and
->> >> testing for failure modes across reboots sounds really painful.
->> >
->> > I kind of stand by my other previous suggestion, though:
->> >
->> > As a maybe less painful option, we could disable EFI runtime servic=
-es
->> > but have a root-writable thing in sysfs that (a) turns them back on
->> > but (b) first extends a PCR to say that they're turned back on.
->> >
->>
->> After setting the EFI boot path to GRUB (or systemd-boot or whatever)=
- at installation time, what other meaningful interactions do we expect w=
-ith the EFI runtime services?
->>
->> And given that the secure launch is orchestrated by the bootloader , =
-with which the kernel has a backchannel via its configuration file, it s=
-hould be rather straight-forward to implement the staging of variable up=
-dates there if we really need it.
->>
->> Doing any of this at the EFI/spec level might lead to a situation whe=
-re the OS now has to guess which of the provided APIs to manipulate vari=
-ables is the least broken.
->>
->> Of course, for readinf variables, dumping the RT variables into a mem=
-ory buffer at boot time and exposing it via a EFI config table would be =
-rather straight-forward, but it is also something I feel should be the j=
-ob of the boot component that takes part in the decision to shield the r=
-untime services from the OS.
->
-> So there's sort of a usability issue here.  On the one hand, this can
-> all be orchestrated to work.  We build a kernel, and the kernel
-> supports secure launch.  Someone makes an installer image, and that
-> image is configured to skip secure launch, then install to disk, then
-> program EFI vars, then reboot.  And the installed image is configured
-> to do the secure launch, and EFI variable writes are turned off.
->
-> On the other hand, this all sucks.  I'm getting sick of having the
-> kernel tell me that I am not permitted to do things.  I'm sick of
-> writing software that deals with unnecessary restrictions.  If I were
-> writing an OS with a USB stick-based installer, I might want to be
-> able to boot the thing and decide later whether I'm installing an OS
-> to disk.  (In fact, many USB installers work this way.)  But, in the
-> model where EFI variable writes are hard-disabled on a secure launch,
-> the decision to do the secure launch happens before the decision to
-> install an OS, and we all lose.
->
-> So I'm proposing that EFI variable writes be treated a bit like kexec
-> [0] -- root (which is already part of the TCB for any practical
-> purpose) is going to decide, like a grown up, to execute some code
-> that it doesn't fully trust -- in this case, the EFI variable writes.
-> And root will coordinate, correctly, with whomever it's busy using the
-> TPM to coordinate with, and tell it that it's going to do something
-> that will change its trustworthiness.  So it works like this:
->
-> 1. Secure launch the environment on the stick.  (At this stage,
-> neither the boot loader nor the kernel has the faintest clue whether
-> anyone needs that secure launch, but this doesn't matter.)
->
-> 2. The owner of the machine clicks "install".
->
-> 3. The installer makes some partitions and writes some files.
->
-> (Up until now, the security posture of the running environment has not=
- changed.)
->
-> 4. The installer decides that it's now time to do untrustworthy
-> things, namely writing EFI vars.  So it unmounts anything it mounted
-> using TPM-sealed keys (or not -- this is between the distro and
-> whoever trusts the distro), and it does:
->
-> # echo 1 >/sys/.../extend_pcr_and_unlock_efi
->
-> which *first* extends a PCR because we are about to change our
-> security posture and *second* sets whatever flag permits use of EFI
-> runtime services.
->
-> 5. The installer writes to EFI variables.  And the installer can no
-> longer generate attestations to its previous security posture, which
-> is the correct behavior.  And maybe the user can no longer unlock
-> their home directory or whatever until they reboot.  Which is not
-> really a big deal.
->
-> (This is *dynamic* root of trust.  In theory the system could do a
-> DRTM re-launch and recover its security posture, but I don't think
-> this is implemented.)
->
->
-> One thing I like about this is that it involves very little code.
->
+<selective snip>
 
-It does seem rather straight-forward, and it doesn't have to be specific=
- to TXT either. I.e., we should probably always measure the runtime enab=
-led/disabled state into the PCRs.
+> Another fact to consider is that the current Intel's TXT MLE 
+> specification dictates SHA1 as a valid configuration. Secure Launch's 
+> use of SHA1 is therefore to comply with Intel's specification for TXT. 
 
-But given the actual problem at hand (untrustworthy glue code running in=
- ring 3 that does little more than poke SMM, which itself fundamentally =
-remains part of the TCB), it would be nice if we could just sandbox that=
- code using virtualization.
+As I understand the Intel TXT spec and the code:
 
-This came up in a separate discussion regarding ACPI PRM (the new dumpin=
-g ground for evil vendor code now that SMM has gone out of fashion), alt=
-hough there it should be feasible to run it unprivileged, as the spec re=
-quires that capability for the PRM payloads.
+- TPM 1.2 is no longer supported by the TXT spec (since 2023)
+- TPM 1.2 is not supported by your GRUB implementation
+- in TPM 2.0 mode, SHA1 is only supported by the TXT spec if it is the /only/ algo supported by the TPM
+- the proposed kernel implementation ignores any SHA-384 and SM3-256 PCR banks if they are active, and caps them using a { 1, 0, ... } fake digest.
+
+So apologies for being slow, but I still struggle to understand why it is so important to have a SHA-1 implementation to cap those PCRs. Is it just to support systems with a TPM 2.0 that only has SHA-1 banks enabled?
+
+Assuming that this code will get merged this year, it will be in a LTS branch by 2027, by which time distros like Debian will pick it up. 
+
+I fully understand that this code has lived out-of-tree for more than a decade, and you likely prefer to get everything upstream that your current users may be relying on. But for Linux, this is a new feature, and merging code now that is basically obsolete on day 1 is not something we should entertain imo.
+
+(and apologies for re-opening yet another can of worms - I assure you I am trying to be constructive here)
+
+-- 
+Ard.
+
 
