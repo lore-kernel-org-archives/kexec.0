@@ -4,115 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2BBD5C56206
-	for <kexec@archiver.kernel.org>; Fri, 20 Feb 2026 15:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 19EA0C5AD05
+	for <kexec@archiver.kernel.org>; Fri, 20 Feb 2026 16:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Subject:References:In-Reply-To:Message-Id:Cc:To:From:Date:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=rk95DXVUJ/uTE7v54hGbwsw6fj/K+loJ3mwosggZSgY=; b=NviyfkYMSJLSwO7JtHHKv9yZJi
-	FgBqoWcTqXXOb1b0VkDdyZGENjdaACKirpQO2huFGweSwMARGDOZYRkjTAiTK8SdB7JDeeHmTj5ay
-	Om0wuT0h9vEioXIfiUSiOXx9xOmDgR8nFx/rQh8ipN27P4dbFNqu3JTS28IC/7xQ7kzj7s55qYUNS
-	jC8OHV3n/v/Xwm4U88RSGwhVItClZRMIdOYZP7IyyOMXze/2TBqpM6n7apIn0Hu/QZFNtGsvfdWbp
-	p/Zimnb+dsC2PDt8CTxsdwLjvdwyV/4MVKxkaqKqm+7CAKQXZv9vXcizJVaOQj7pRmvjJGU5C2lWa
-	f3Oingrg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=CZAtOD8ZRnarQucUHW7t2nY+Ut5JOEodfHGgZzqPkiE=; b=Zmxxo4TrtoRfaebz6Ue2SSfws7
+	Fjo2Aw8Sa+YQiNYClRsuXrg/t88UppiifAMAwWz6X/hrVpCIVeVbrDguCa52cYCwpT4NLARvTrLih
+	OncKFP+a/RnoRdvrXb9m2oZQ9WjQn8paFoivEENxRq6g97Khc0orziFTa7GtOfurkCVrA2iVyBj7Y
+	FJiXQcJp1QIYyoMBDkaCHsFoNpzPekaVh3EKiS7ubCHY3t3Qu+u2IguRW+C0PNzWaE1H3tqE6lZEZ
+	gZaN5sj/vYgZvpY9AFPiuxI0Uaz262/eFPcdi6Imhm6NvEExHSpAVliHeog7w/qUxtzEQD7QN9zIB
+	7JBGCkeA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vtSYO-0000000F3Cy-0mAR;
-	Fri, 20 Feb 2026 15:36:28 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1vtTjh-0000000FKe8-0CjD;
+	Fri, 20 Feb 2026 16:52:13 +0000
+Received: from mail-wm1-x349.google.com ([2a00:1450:4864:20::349])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vtSYL-0000000F3C8-4ATd
+	id 1vtTje-0000000FKdc-3yIh
 	for kexec@lists.infradead.org;
-	Fri, 20 Feb 2026 15:36:26 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 19BFB60134;
-	Fri, 20 Feb 2026 15:36:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ADE5C116D0;
-	Fri, 20 Feb 2026 15:36:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771601784;
-	bh=Ip+Ok3z4b8Mn4e2k/xxO7ygofUYVx5NJdGPJvg3Uvvo=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=d8j24fM/iIueOFUXQImLRiw/Nvq9i5abxog58HkgSvv3tfg3f8bPIw4TIaTL2cNsF
-	 gj5E9/mdWAZ8jDtMoQbP0PsHlnKjlIaYKj+W4RmlL35pZsFnxdbTRoGlT/HDBOL1oD
-	 hS9oP7F1wMw4vHb8tBOq8YsCezfJ2JQwZUjGQnK92/Q6OTmB+qs8Dhl4KVI+wJ9Ynn
-	 bL7miOtFFyZc+7gtzmfTPsDwSVtXhaWtx6TIZIex4mvbDtrG809w7MJGHQP/NDckLn
-	 BLhR46uTaItrkYXBa7Po6XxMGAHum954lWlXf6VMAlRckrSh48zxvKM9vVUQTwYL26
-	 EkdgubbdOGCcQ==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id DD74FF4006D;
-	Fri, 20 Feb 2026 10:36:22 -0500 (EST)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-01.internal (MEProxy); Fri, 20 Feb 2026 10:36:22 -0500
-X-ME-Sender: <xms:dn-YaXpKzgBI7lLLXvVnqkp9s_8LSG6eYRHb_v7Dh4I_nA74WDDqdw>
-    <xme:dn-Yacclxv5BJtKZ-Qq1XI4iHx3RyLHcNXmhZ9xG5qOn3jV4EcwK33tH6kozNhz9o
-    AbjnGXi1_VPLoTivYQYVCdUF9t9jfiBkqZ4d5ah8cdAmjyXu-PjMSg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvvdekkedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrugcu
-    uehivghshhgvuhhvvghlfdcuoegrrhgusgeskhgvrhhnvghlrdhorhhgqeenucggtffrrg
-    htthgvrhhnpedvueehiedtvedtleekuddutefgffdtleetfeetveejveejieehfefhjeei
-    jeefudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieejtdehtddtjeel
-    qdeffedvudeigeduhedqrghruggspeepkhgvrhhnvghlrdhorhhgseifohhrkhhofhgrrh
-    gurdgtohhmpdhnsggprhgtphhtthhopeefvddpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepsghpsegrlhhivghnkedruggvpdhrtghpthhtohepnhhivhgvughithgrsegrlh
-    humhdrmhhithdrvgguuhdprhgtphhtthhopehluhhtohesrghmrggtrghpihhtrghlrdhn
-    vghtpdhrtghpthhtohepughpshhmihhthhesrghpvghrthhushhsohhluhhtihhonhhsrd
-    gtohhmpdhrtghpthhtoheprghnughrvgifrdgtohhophgvrhefsegtihhtrhhigidrtgho
-    mhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoh
-    epphgvthgvrhhhuhgvfigvsehgmhigrdguvgdprhgtphhtthhopehhvghrsggvrhhtsehg
-    ohhnughorhdrrghprghnrgdrohhrghdrrghupdhrtghpthhtohepthhrvghntghhsghooh
-    htqdguvghvvghlsehgohhoghhlvghgrhhouhhpshdrtghomh
-X-ME-Proxy: <xmx:dn-YaZBdaidTbvEBGfz-iUZ-mgy8GA-vuxokns0lACS79eaqin2sjQ>
-    <xmx:dn-YaU4tmc_oQXzOQdSawhF3iuF8TCBCCqScSkC_zNOtmM0y7z9SfA>
-    <xmx:dn-YaQlTtj_nEiNEidchtEBlqmzl0pkyLthbR5p7BnKlCdBg4gvexw>
-    <xmx:dn-YaXfzUes1HVb7VveqSbLUM6qO4SVJqCj2HwTjJqow0G19GkCsMw>
-    <xmx:dn-YaZ3f8bIvTNMtbs-XCNvgBOCGXlsfh9Hb0ZD3p2MiApd3SUqnKoDq>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A57F1700065; Fri, 20 Feb 2026 10:36:22 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-MIME-Version: 1.0
-X-ThreadId: A1ToacgRLhLF
-Date: Fri, 20 Feb 2026 16:35:44 +0100
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Daniel P. Smith" <dpsmith@apertussolutions.com>,
- "Thomas Gleixner" <tglx@linutronix.de>,
- "Eric W. Biederman" <ebiederm@xmission.com>,
- "Eric Biggers" <ebiggers@kernel.org>
-Cc: "Ross Philipson" <ross.philipson@oracle.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org,
- "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
- "H . Peter Anvin" <hpa@zytor.com>, dave.hansen@linux.intel.com,
- "Matthew Garrett" <mjg59@srcf.ucam.org>,
- "James Bottomley" <James.Bottomley@hansenpartnership.com>, peterhuewe@gmx.de,
- "Jarkko Sakkinen" <jarkko@kernel.org>, jgg@ziepe.ca,
- "Andy Lutomirski" <luto@amacapital.net>, nivedita@alum.mit.edu,
- "Herbert Xu" <herbert@gondor.apana.org.au>, davem@davemloft.net,
- corbet@lwn.net, dwmw2@infradead.org, baolu.lu@linux.intel.com,
- kanth.ghatraju@oracle.com, "Andrew Cooper" <andrew.cooper3@citrix.com>,
- trenchboot-devel@googlegroups.com
-Message-Id: <c9a0cd9f-17cb-49e5-a411-b78ef9c7e35e@app.fastmail.com>
-In-Reply-To: <281c3bb3-13f6-47a2-9a9a-134e397bf686@apertussolutions.com>
-References: <20240531010331.134441-1-ross.philipson@oracle.com>
- <20240531010331.134441-7-ross.philipson@oracle.com>
- <20240531021656.GA1502@sol.localdomain>
- <874jaegk8i.fsf@email.froward.int.ebiederm.org>
- <5b1ce8d3-516d-4dfd-a976-38e5cee1ef4e@apertussolutions.com>
- <87ttflli09.ffs@tglx>
- <281c3bb3-13f6-47a2-9a9a-134e397bf686@apertussolutions.com>
-Subject: Re: [PATCH v9 06/19] x86: Add early SHA-1 support for Secure Launch early
- measurements
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+	Fri, 20 Feb 2026 16:52:12 +0000
+Received: by mail-wm1-x349.google.com with SMTP id 5b1f17b1804b1-4837cee2e9bso18295675e9.3
+        for <kexec@lists.infradead.org>; Fri, 20 Feb 2026 08:52:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1771606329; x=1772211129; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CZAtOD8ZRnarQucUHW7t2nY+Ut5JOEodfHGgZzqPkiE=;
+        b=Fz3yRBDqDvnpGkew9ePpYSq03UVNOOAJh7ClVjqaEbC1Rai71/TLTyn+USFu6OYggk
+         DYfewZFMOI14i2nEugGH0MJbzjE0+z8BXChGDl9wrmW0/jDGjZGhnw+Odr7Jq15i32hJ
+         91XmQee4kR+QUowzVsUJtMErb6ux3eL45sukbTpI6J/1hiAP8NplCm55KwX3m9oe5TLO
+         65pPESdOct5/UArg8l3nWCv1axF1oM0P9Sl8xCxUdLdg7NbCBauFaJIZxduuoE6gOzPk
+         jJJ16d8ymCT6nrs/fWAW8fm2J8e2N31Bh8fK7VWpkV0CvBXggiaPo03OyfsAlLpkFkbu
+         B6yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771606329; x=1772211129;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CZAtOD8ZRnarQucUHW7t2nY+Ut5JOEodfHGgZzqPkiE=;
+        b=tF5Tb6DeJec9zk7sgyYHtHqg3rBTh0KUABURge3oo7Q7tl4SOaQmuWaE5zG/6xU2EW
+         okaoMlcoKmfW0k78H/d5nzogfJXKtq7/gXEQxkPs9qRVhHxQIzduzZKkllycuTCJ+UJd
+         gn9Dl/hKwLgyWVgp8dUgMKu5hoMCh4FCJ9X8YkpGiTq6UDZjIU4qwY/ywDTuxjP48FWo
+         JGrmauFLn9WRfTaeHCn3a69Bc0JTsK5Ms54uLGsP/PZe9ntVB8aYuPxFP1LkyYxGoJyk
+         L1bzmSuixfqSXd+R9m19+/dilvQpGMW/LMMiecnIYDZ+wF6GQ63VEqPTig+kmUivjx7t
+         uZzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUDdeU/CxEa6ewunXJEl2kD8DBBOQ6uRJ31X80u9Z5MJRRo01M7EzC5EUF1hJtP4Bv5zaP6VQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyghMkfGf7gfCsGWbswKYdl//fDeJwLdYB31taFGhcvmRUHEQMp
+	Em6UWGMRLEV0e9Cz9oYFOFuGXTmSz2H7QfmrXTDFVOWKOe6mgFU3RlmPKQehfWPZOwIjhGgrj7x
+	0YsaPs7zJe3ichvvC55nl/A==
+X-Received: from wmog4.prod.google.com ([2002:a05:600c:3104:b0:483:6fcc:920])
+ (user=mclapinski job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:5287:b0:47e:e807:a05a with SMTP id 5b1f17b1804b1-483a963c238mr2105545e9.33.1771606328737;
+ Fri, 20 Feb 2026 08:52:08 -0800 (PST)
+Date: Fri, 20 Feb 2026 17:52:01 +0100
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.53.0.345.g96ddfc5eaa-goog
+Message-ID: <20260220165203.3213375-1-mclapinski@google.com>
+Subject: [PATCH v4 0/2] kho: add support for deferred struct page init
+From: Michal Clapinski <mclapinski@google.com>
+To: Evangelos Petrongonas <epetron@amazon.de>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	kexec@lists.infradead.org, linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Michal Clapinski <mclapinski@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260220_085211_011713_A2AD370C 
+X-CRM114-Status: UNSURE (   7.76  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -127,32 +89,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Coming back to this old thread after having spent some time playing with the code:
+When CONFIG_DEFERRED_STRUCT_PAGE_INIT (hereinafter DEFERRED) is
+enabled, struct page initialization is deferred to parallel kthreads
+that run later in the boot process.
 
-On Thu, 22 Aug 2024, at 20:29, Daniel P. Smith wrote:
+Currently, KHO is incompatible with DEFERRED.
+This series fixes that incompatibility.
+---
+v4:
+- added a new commit to fix deferred init of kho scratch
+- switched to ulong when refering to pfn
+v3:
+- changed commit msg
+- don't invoke early_pfn_to_nid if CONFIG_DEFERRED_STRUCT_PAGE_INIT=n
+v2:
+- updated a comment
 
-<selective snip>
+Evangelos Petrongonas (1):
+  kho: make preserved pages compatible with deferred struct page init
 
-> Another fact to consider is that the current Intel's TXT MLE 
-> specification dictates SHA1 as a valid configuration. Secure Launch's 
-> use of SHA1 is therefore to comply with Intel's specification for TXT. 
+Michal Clapinski (1):
+  kho: fix deferred init of kho scratch
 
-As I understand the Intel TXT spec and the code:
-
-- TPM 1.2 is no longer supported by the TXT spec (since 2023)
-- TPM 1.2 is not supported by your GRUB implementation
-- in TPM 2.0 mode, SHA1 is only supported by the TXT spec if it is the /only/ algo supported by the TPM
-- the proposed kernel implementation ignores any SHA-384 and SM3-256 PCR banks if they are active, and caps them using a { 1, 0, ... } fake digest.
-
-So apologies for being slow, but I still struggle to understand why it is so important to have a SHA-1 implementation to cap those PCRs. Is it just to support systems with a TPM 2.0 that only has SHA-1 banks enabled?
-
-Assuming that this code will get merged this year, it will be in a LTS branch by 2027, by which time distros like Debian will pick it up. 
-
-I fully understand that this code has lived out-of-tree for more than a decade, and you likely prefer to get everything upstream that your current users may be relying on. But for Linux, this is a new feature, and merging code now that is basically obsolete on day 1 is not something we should entertain imo.
-
-(and apologies for re-opening yet another can of worms - I assure you I am trying to be constructive here)
+ include/linux/memblock.h           |  2 -
+ kernel/liveupdate/Kconfig          |  2 -
+ kernel/liveupdate/kexec_handover.c | 70 ++++++++++++++++--------------
+ mm/memblock.c                      | 22 ----------
+ 4 files changed, 37 insertions(+), 59 deletions(-)
 
 -- 
-Ard.
+2.53.0.345.g96ddfc5eaa-goog
 
 
