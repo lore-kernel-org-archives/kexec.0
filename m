@@ -4,120 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BE348EEC285
-	for <kexec@archiver.kernel.org>; Mon, 23 Feb 2026 21:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0A670EEC28C
+	for <kexec@archiver.kernel.org>; Mon, 23 Feb 2026 22:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=h8NnLyDahIjYa2r/mE8SrBY5YeZya77iJfvSt7LZAuk=; b=Hvx1wNIWvzCM+BTXYVa6p5MlmV
-	uzDUbEK0h+NqLEiLsJerdxTWwgyUbTF0wW2uE0FN0c2ymcCQ5xPG1YuVfmGqqO0ZbS36MhaksUafo
-	ZUZbNQM2M+kv3IBnYW7scbYI5rHHZVEmngDqzHjcAKlxccGAqduS/O6AJjt9ZZhNHk0CIYVq9+tiS
-	cwlnRZGVCPRm9M8eeAP+WueuyJQoRLkN+Qh5B6C5eNiycLt2nUG4v73IZLPWAW+I5eyY5BDOC51Cz
-	SUUpYrOpRzYwI0MqqEoHZkNNj62x7ldFjHz0PZfZqX6nHDfEawKyhTdSCu+xOTAjYjJfZDlJd/LY7
-	L13m+4tw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=OHyrvIUwqGI/vsO/cw6CrNGSRQGELXRV70tcL/TCQBg=; b=whJ6aOSVS0waIl+nLbPjeKDPJn
+	DlYVABYb1erGeuw653b1M233mCQjFu5W+lWJnXIIh8M6T/WToTEN2TkHksjQ8BBFgHu5JzIQk4ZGA
+	h7EGuhtp7r2NvEzgJ7ppePNt9CkB7Ddr/w/o7452hW7HoYO+MGePLSA7yXqe9HfMkMEifLYa66fAh
+	jeKgU4YGUoto0+pl+pwMiR77/dXhc3HNcEsG+eXaNfXNc6tK9r2EOBHdKXjTooQ/lZgvKYqEjlYMu
+	nCiHndMCi6aum1V3PYHBKVz7ZyXnXMRkpzpsnpMpK/KOFvraj8qTzyUptbaIFnFK72QgS4i2oxMbh
+	FlKdzTgw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vuddb-000000014SB-3WH5;
-	Mon, 23 Feb 2026 21:38:43 +0000
-Received: from sender4-of-o51.zoho.com ([136.143.188.51])
+	id 1vue32-000000015eV-0Gom;
+	Mon, 23 Feb 2026 22:05:00 +0000
+Received: from mail-pl1-x62f.google.com ([2607:f8b0:4864:20::62f])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vuddZ-000000014Ro-0USz
+	id 1vue30-000000015dq-27YN
 	for kexec@lists.infradead.org;
-	Mon, 23 Feb 2026 21:38:42 +0000
-ARC-Seal: i=1; a=rsa-sha256; t=1771882677; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ffjYtNOjrVDY85s8H1n2+Y4wa878dKU05XaPBpiQhMjhrkbwRhTcsvhek9WA/vN8ptkYTLjn3ypd8dCSySrh0XT8P/i6R8nunHsBLimTczlL+Ek5eICIVFPgNRrsepAyk10HAydAF5MLLeI1gsErtl0StDUwjMG9hG/FXJrDCb8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1771882677; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=h8NnLyDahIjYa2r/mE8SrBY5YeZya77iJfvSt7LZAuk=; 
-	b=cWaxR9XlGzKr65BZnm8jUFH1zgUwhL/DodbGfpIZlIM6Ycs+8FSpsYy5EVqYJ8yvKXz4rWeqH9bMtM4ChWBG1gDLNIVVwqqy22uLA4krxCrJCHSW4H9R2d3sp8gUavrTZM7GdIKtQb+BT4CZpCf0bMFzxB+VnXTtLdxgXKmg9Dc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=apertussolutions.com;
-	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
-	dmarc=pass header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1771882677;
-	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=h8NnLyDahIjYa2r/mE8SrBY5YeZya77iJfvSt7LZAuk=;
-	b=P7PcAYWewsxI7zMHuuIOTExnellqQJfITJDN8fsRqp3WdhX/HuQGt6f8wbGjUdM1
-	JnV8NQ1V6ZrXfrsve9kHI39ivmu766uO0AFsZKamepbKgMiMfAH4HyTZfJ7ZQQ9OAZk
-	pfRpttFfJlE5rMuuoCcq3Qcr/SI4uvU8EZarOy3A=
-Received: by mx.zohomail.com with SMTPS id 1771882674971616.8376032703019;
-	Mon, 23 Feb 2026 13:37:54 -0800 (PST)
-Message-ID: <f5323525-493c-4419-8199-d65630fce084@apertussolutions.com>
-Date: Mon, 23 Feb 2026 16:37:51 -0500
+	Mon, 23 Feb 2026 22:04:59 +0000
+Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-2a76b39587aso28005ad.0
+        for <kexec@lists.infradead.org>; Mon, 23 Feb 2026 14:04:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1771884297; x=1772489097; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OHyrvIUwqGI/vsO/cw6CrNGSRQGELXRV70tcL/TCQBg=;
+        b=TAzOvpZjy9TSWuisW6VRGNFQvVrX+rZTVa+Xz2m5Z0y/xHZ8pSEFt6DdJ16eB/CR7H
+         igXKfBAC2e+jXpuxmDU+jvl6qUOm2XDSsUMIF576wEVcJR1fPc79gVzf/J4dz24YpmeB
+         5zGsDOjbcFdIhfU+aWyTJifHQjIydY9ir4sn4njSo1RcACOhv03BiEVa++ny6SG1TDl7
+         ITtQ+vtMOZVrehDe3/4Sl/0I300N8P8oMmP6o+P99weLSMUpI9ZobdCNiZR/XGelH0bt
+         30h7PpvuIlVKkD92QdDapiwLvxtZMi3H0xbkHXkqhQ+yD056UPjXLMOPmqMdkIkCif7r
+         aBzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771884297; x=1772489097;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OHyrvIUwqGI/vsO/cw6CrNGSRQGELXRV70tcL/TCQBg=;
+        b=PJhSncU5BPm4WTNlznKecdv5RqzMF5axnz7zBEdEqRywl3WeP+VpzkQCDYSIvZ8qYK
+         g5l/5/dSvjvIqvhCQDvbOdxLAnYIN2Lx0iEk0Z6II09+OQdSnqEpAKNti/Udy2Unz96h
+         HlHkwpTsZnp4fl+RmKkSXWcF2n0APypuDJ73OwF66x6dGyLeMnQ1ELM5klUIhytd47zS
+         tYJcIf8PLd2WOZbZZnry5man2H506xVfxtM8GpFvc8ycnYM4fUYN17jEa99d3lL1MgrH
+         4GXDLafCv8zNUcCQ8Wdy0rackLO1GJWwUn2DIss6KlKg+D/27CFsZq8aSOV4yjcgvQ8w
+         wKTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUThZRSY8tjIvcPHgwr5LGhGZqT5zAKVbZCoIFsCCioMWsTrw8w6H2tOLEUXW5cSIcuG014RA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxJ0dR3ZsTL3EKGAPCwCzp9zr5l+ZdelVIgBb1SNi8ujKX0H4Hf
+	k5F1c5QfAFKjQBISABnhehXNTZkLCU3VbQj4VCcdD/Toj6oO5lzVzdOO9WnZsQqh+g==
+X-Gm-Gg: ATEYQzwtZgb9qv4FTmXeiivstB9uJu+KccVRLr7X915SktGhu/ZpEg7ybHtAHjd/Wgr
+	NPbUNXIs6ss2tH9bb6ReLmLJSVB/o1OkC7uyvExaul0OEYBNMfjUDvblcsM3ID3krLcRFbXJMSH
+	by5enCug7Y7+piOhnsXHIuqZe6+gzKpyLXS+YU3VerB7qIoRMKflaE4cxDqMjKNlIgP7qgElGop
+	zw+XvA+Hx/k0QG3guThehAUBcGhV4dBgSkkfmB5lPVhgV8OJNBjRCSAWOkMxXl2AaY5a5JPs75c
+	JRb0peCbqIzR5yT8JkH9avHSpPPuL5Bk2eRgbJD0tOcee48lrFbwl3QchdUMkbmCHAawJbaMUwD
+	GKGDKfL1KRcVo79CZw5KvKda3V+hElprud1EIefLv6fVHFRcEmXH4K6kEJBCiLyRIs3+rdfdaXn
+	8R3gKjxWsvtYh4xlguRrvLnJHgXIzvvvzpurfDSkOEk+7r/14IHdkZnhGG2I67Ug==
+X-Received: by 2002:a17:903:38d0:b0:290:8ecf:e9f9 with SMTP id d9443c01a7336-2ada346b6a8mr76155ad.7.1771884296114;
+        Mon, 23 Feb 2026 14:04:56 -0800 (PST)
+Received: from google.com (168.136.83.34.bc.googleusercontent.com. [34.83.136.168])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ad7503fdc9sm87224705ad.80.2026.02.23.14.04.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Feb 2026 14:04:55 -0800 (PST)
+Date: Mon, 23 Feb 2026 22:04:51 +0000
+From: Samiullah Khawaja <skhawaja@google.com>
+To: David Matlack <dmatlack@google.com>
+Cc: Alex Williamson <alex@shazbot.org>, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>, 
+	Alistair Popple <apopple@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Ankit Agrawal <ankita@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Chris Li <chrisl@kernel.org>, David Rientjes <rientjes@google.com>, 
+	Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, 
+	Kevin Tian <kevin.tian@intel.com>, kexec@lists.infradead.org, kvm@vger.kernel.org, 
+	Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, 
+	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>, Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, 
+	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, Tomita Moeko <tomitamoeko@gmail.com>, 
+	Vipin Sharma <vipinsh@google.com>, Vivek Kasireddy <vivek.kasireddy@intel.com>, 
+	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>, Zhu Yanjun <yanjun.zhu@linux.dev>
+Subject: Re: [PATCH v2 02/22] PCI: Add API to track PCI devices preserved
+ across Live Update
+Message-ID: <4mbhcmimhin2ulz57mbzpe5p5dkhfziiyep5k3vgls4zmom3sb@g6jlouyvmpuz>
+References: <20260129212510.967611-1-dmatlack@google.com>
+ <20260129212510.967611-3-dmatlack@google.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 00/28] x86: Secure Launch support for Intel TXT
-Content-Language: en-US
-To: Ard Biesheuvel <ardb@kernel.org>, Andy Lutomirski <luto@amacapital.net>
-Cc: Simo Sorce <simo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>,
- Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev,
- dave.hansen@linux.intel.com, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, Jarkko Sakkinen <jarkko@kernel.org>, jgg@ziepe.ca,
- nivedita@alum.mit.edu, Herbert Xu <herbert@gondor.apana.org.au>,
- davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
- dwmw2@infradead.org, baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
- andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
-References: <20251215233316.1076248-1-ross.philipson@oracle.com>
- <b5f2b5a5-b984-4ed3-a023-c06d634f9146@app.fastmail.com>
- <1ffd3cb5-2c76-4371-a067-3e4849907d80@apertussolutions.com>
- <49d169bf-0ad2-49be-b7d7-fceb9e7f831a@app.fastmail.com>
- <CALCETrUE8c-dxRWhtHKz_PojwZuWMXJSzOsFQf2vt5LS3ATwpA@mail.gmail.com>
- <1BBD7449-8420-43FD-930B-A4E1BA38FFC6@zytor.com>
- <CALCETrWzG1Mjb-RcwLQ5-tGFZ15WKHjZbqtLvyif+UPuVKJ_5g@mail.gmail.com>
- <32e62cef7b89d9691bdd4120388ce752fd041230.camel@redhat.com>
- <CALCETrUMR0RvOFXGzL7=F4c-3veL+1Sm2xf-BprHTK4=UKw8yA@mail.gmail.com>
- <558d0f28-01fb-4447-891c-2ffbf869c077@app.fastmail.com>
- <CALCETrWynypSD7vEjJNLcym3JhBw4k0ovDiR_3YuOHh92TnM=A@mail.gmail.com>
- <9034c6a1-ebce-40b6-9ac8-0b8cc5a50dd4@app.fastmail.com>
-From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
-Autocrypt: addr=dpsmith@apertussolutions.com; keydata=
- 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
-In-Reply-To: <9034c6a1-ebce-40b6-9ac8-0b8cc5a50dd4@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20260129212510.967611-3-dmatlack@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260223_133841_291373_7520C055 
-X-CRM114-Status: GOOD (  38.80  )
+X-CRM114-CacheID: sfid-20260223_140458_588210_1D9514A4 
+X-CRM114-Status: GOOD (  27.32  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -132,155 +116,441 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2/20/26 03:30, Ard Biesheuvel wrote:
-> 
-> 
-> On Thu, 19 Feb 2026, at 18:34, Andy Lutomirski wrote:
->> On Wed, Feb 18, 2026 at 11:55 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->>>
->>> On Wed, 18 Feb 2026, at 22:54, Andy Lutomirski wrote:
->>>> On Wed, Feb 18, 2026 at 1:04 PM Simo Sorce <simo@redhat.com> wrote:
->>>>>
->>>>> On Wed, 2026-02-18 at 12:34 -0800, Andy Lutomirski wrote:
->>>>>> On Wed, Feb 18, 2026 at 12:29 PM H. Peter Anvin <hpa@zytor.com> wrote:
->>>>>>>
->>>>>>> On February 18, 2026 12:03:27 PM PST, Andy Lutomirski <luto@amacapital.net> wrote:
->>>>>>>> On Thu, Feb 12, 2026 at 12:40 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->>>>>>>>>
->>>>>>>>> On Thu, 12 Feb 2026, at 20:49, Daniel P. Smith wrote:
->>>>>>>>>> On 2/9/26 09:04, Ard Biesheuvel wrote:
->>>>>>>>> ...
->>>>>>>>> But would it be better to disable the runtime services by default when doing a secure launch? PREEMPT_RT already does the same.
->>>>>>>>
->>>>>>>> So I have a possible way to disable EFI runtime service without losing
->>>>>>>> the ability to write EFI vars.  We come up with a simple file format
->>>>>>>> to store deferred EFI var updates and we come up with a place to put
->>>>>>>> it so that we find it early-ish in boot the next time around.  (This
->>>>>>>> could be done via integration with systemd-boot or shim some other
->>>>>>>> boot loader or it could actually be part of the kernel.)  And then,
->>>>>>>> instead of writing variables directly, we write them to the deferred
->>>>>>>> list and then update them on reboot (before TXT launch, etc).  [0]
->>>>>>>> This would be a distincly nontrivial project and would not work for
->>>>>>>> all configurations.
->>>>>>>>
->>>>>>>> As a maybe less painful option, we could disable EFI runtime services
->>>>>>>> but have a root-writable thing in sysfs that (a) turns them back on
->>>>>>>> but (b) first extends a PCR to say that they're turned back on.
->>>>>>>>
->>>>>>>> (Or someone could try running runtime services at CPL3...)
->>>>>>>>
->>>>>>>> [0] I have thought for years that Intel and AMD should do this on
->>>>>>>> their end, too.  Keep the sensitive part of SMI flash entirely locked
->>>>>>>> after boot and, instead of using magic SMM stuff to validate that
->>>>>>>> write attempts have the appropriate permissions and signatures, queue
->>>>>>>> them up as deferred upates and validate the signatures on the next
->>>>>>>> boot before locking flash.
->>>>>>>>
->>>>>>>
->>>>>>> *If* a physical EFI partition exists there is a lot to be said for this approach.
->>>>>>>
->>>>>>> The only issue with this that I can see is for things like network or CD/DVD booting where there isn't necessarily any EFI boot partition, it might not be writable, or it might not be persistent (e.g. http booting typically uses a ramdisk, like the old Linux initrd.)
->>>>>>
->>>>>> Hmm, I guess my approach is a 100% complete nonstarter for installing
->>>>>> Linux from a CD, and it's really not awesome for installing Linux from
->>>>>> a USB stick.
->>>>>
->>>>> Doing any of this on a removable device feels generally like a trap.
->>>>> You get your USB disk in, try to boot, and it saves vars, but reboot
->>>>> fails for whatever reason, you plug it in another machine ... and it
->>>>> tries to "continue" from there? The amount of validation needed and
->>>>> testing for failure modes across reboots sounds really painful.
->>>>
->>>> I kind of stand by my other previous suggestion, though:
->>>>
->>>> As a maybe less painful option, we could disable EFI runtime services
->>>> but have a root-writable thing in sysfs that (a) turns them back on
->>>> but (b) first extends a PCR to say that they're turned back on.
->>>>
->>>
->>> After setting the EFI boot path to GRUB (or systemd-boot or whatever) at installation time, what other meaningful interactions do we expect with the EFI runtime services?
->>>
->>> And given that the secure launch is orchestrated by the bootloader , with which the kernel has a backchannel via its configuration file, it should be rather straight-forward to implement the staging of variable updates there if we really need it.
->>>
->>> Doing any of this at the EFI/spec level might lead to a situation where the OS now has to guess which of the provided APIs to manipulate variables is the least broken.
->>>
->>> Of course, for readinf variables, dumping the RT variables into a memory buffer at boot time and exposing it via a EFI config table would be rather straight-forward, but it is also something I feel should be the job of the boot component that takes part in the decision to shield the runtime services from the OS.
->>
->> So there's sort of a usability issue here.  On the one hand, this can
->> all be orchestrated to work.  We build a kernel, and the kernel
->> supports secure launch.  Someone makes an installer image, and that
->> image is configured to skip secure launch, then install to disk, then
->> program EFI vars, then reboot.  And the installed image is configured
->> to do the secure launch, and EFI variable writes are turned off.
->>
->> On the other hand, this all sucks.  I'm getting sick of having the
->> kernel tell me that I am not permitted to do things.  I'm sick of
->> writing software that deals with unnecessary restrictions.  If I were
->> writing an OS with a USB stick-based installer, I might want to be
->> able to boot the thing and decide later whether I'm installing an OS
->> to disk.  (In fact, many USB installers work this way.)  But, in the
->> model where EFI variable writes are hard-disabled on a secure launch,
->> the decision to do the secure launch happens before the decision to
->> install an OS, and we all lose.
->>
->> So I'm proposing that EFI variable writes be treated a bit like kexec
->> [0] -- root (which is already part of the TCB for any practical
->> purpose) is going to decide, like a grown up, to execute some code
->> that it doesn't fully trust -- in this case, the EFI variable writes.
->> And root will coordinate, correctly, with whomever it's busy using the
->> TPM to coordinate with, and tell it that it's going to do something
->> that will change its trustworthiness.  So it works like this:
->>
->> 1. Secure launch the environment on the stick.  (At this stage,
->> neither the boot loader nor the kernel has the faintest clue whether
->> anyone needs that secure launch, but this doesn't matter.)
->>
->> 2. The owner of the machine clicks "install".
->>
->> 3. The installer makes some partitions and writes some files.
->>
->> (Up until now, the security posture of the running environment has not changed.)
->>
->> 4. The installer decides that it's now time to do untrustworthy
->> things, namely writing EFI vars.  So it unmounts anything it mounted
->> using TPM-sealed keys (or not -- this is between the distro and
->> whoever trusts the distro), and it does:
->>
->> # echo 1 >/sys/.../extend_pcr_and_unlock_efi
->>
->> which *first* extends a PCR because we are about to change our
->> security posture and *second* sets whatever flag permits use of EFI
->> runtime services.
->>
->> 5. The installer writes to EFI variables.  And the installer can no
->> longer generate attestations to its previous security posture, which
->> is the correct behavior.  And maybe the user can no longer unlock
->> their home directory or whatever until they reboot.  Which is not
->> really a big deal.
->>
->> (This is *dynamic* root of trust.  In theory the system could do a
->> DRTM re-launch and recover its security posture, but I don't think
->> this is implemented.)
->>
->>
->> One thing I like about this is that it involves very little code.
->>
-> 
-> It does seem rather straight-forward, and it doesn't have to be specific to TXT either. I.e., we should probably always measure the runtime enabled/disabled state into the PCRs.
+On Thu, Jan 29, 2026 at 09:24:49PM +0000, David Matlack wrote:
+>Add an API to enable the PCI subsystem to track all devices that are
+>preserved across a Live Update, including both incoming devices (passed
+>from the previous kernel) and outgoing devices (passed to the next
+>kernel).
+>
+>Use PCI segment number and BDF to keep track of devices across Live
+>Update. This means the kernel must keep both identifiers constant across
+>a Live Update for any preserved device. VFs are not supported for now,
+>since that requires preserving SR-IOV state on the device to ensure the
+>same number of VFs appear after kexec and with the same BDFs.
+>
+>Drivers that preserve devices across Live Update can now register their
+>struct liveupdate_file_handler with the PCI subsystem so that the PCI
+>subsystem can allocate and manage File-Lifecycle-Bound (FLB) global data
+>to track the list of incoming and outgoing preserved devices.
+>
+>  pci_liveupdate_register_fh(driver_fh)
+>  pci_liveupdate_unregister_fh(driver_fh)
+>
+>Drivers can notify the PCI subsystem whenever a device is preserved and
+>unpreserved with the following APIs:
+>
+>  pci_liveupdate_outgoing_preserve(pci_dev)
+>  pci_liveupdate_outgoing_unpreserve(pci_dev)
 
+nit: Preserve and Unpreserve can only be done from outgoing kernel, maybe
+remove the "outgoing" from the function name.
+>
+>After a Live Update, the PCI subsystem fetches its FLB global data
+>from the previous kernel from the Live Update Orchestrator (LUO) during
+>device initialization to determine which devices were preserved.
+>
+>Drivers can check if a device was preserved before userspace retrieves
+>the file for it via pci_dev->liveupdate_incoming.
+>
+>Once a driver has finished restoring an incoming preserved device, it
+>can notify the PCI subsystem with the following call, which clears
+>pci_dev->liveupdate_incoming.
+>
+>  pci_liveupdate_incoming_finish(pci_dev)
+>
+>This API will be used in subsequent commits by the vfio-pci driver to
+>preserve VFIO devices across Live Update and by the PCI subsystem.
+>
+>Signed-off-by: David Matlack <dmatlack@google.com>
+>---
+> drivers/pci/Makefile        |   1 +
+> drivers/pci/liveupdate.c    | 212 ++++++++++++++++++++++++++++++++++++
+> drivers/pci/probe.c         |   2 +
+> include/linux/kho/abi/pci.h |  55 ++++++++++
+> include/linux/pci.h         |  47 ++++++++
+> 5 files changed, 317 insertions(+)
+> create mode 100644 drivers/pci/liveupdate.c
+> create mode 100644 include/linux/kho/abi/pci.h
+>
+>diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+>index 8c259a9a8796..a32f7658b9e5 100644
+>--- a/drivers/pci/Makefile
+>+++ b/drivers/pci/Makefile
+>@@ -16,6 +16,7 @@ obj-$(CONFIG_PROC_FS)		+= proc.o
+> obj-$(CONFIG_SYSFS)		+= pci-sysfs.o slot.o
+> obj-$(CONFIG_ACPI)		+= pci-acpi.o
+> obj-$(CONFIG_GENERIC_PCI_IOMAP) += iomap.o
+>+obj-$(CONFIG_LIVEUPDATE)	+= liveupdate.o
+> endif
+>
+> obj-$(CONFIG_OF)		+= of.o
+>diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+>new file mode 100644
+>index 000000000000..182cfc793b80
+>--- /dev/null
+>+++ b/drivers/pci/liveupdate.c
+>@@ -0,0 +1,212 @@
+>+// SPDX-License-Identifier: GPL-2.0
+>+
+>+/*
+>+ * Copyright (c) 2025, Google LLC.
+>+ * David Matlack <dmatlack@google.com>
+>+ */
+>+
+>+#include <linux/bsearch.h>
+>+#include <linux/io.h>
+>+#include <linux/kexec_handover.h>
+>+#include <linux/kho/abi/pci.h>
+>+#include <linux/liveupdate.h>
+>+#include <linux/mutex.h>
+>+#include <linux/mm.h>
+>+#include <linux/pci.h>
+>+#include <linux/sort.h>
+>+
+>+static DEFINE_MUTEX(pci_flb_outgoing_lock);
+>+
+>+static int pci_flb_preserve(struct liveupdate_flb_op_args *args)
+>+{
+>+	struct pci_dev *dev = NULL;
+>+	int max_nr_devices = 0;
+>+	struct pci_ser *ser;
+>+	unsigned long size;
+>+
+>+	for_each_pci_dev(dev)
+>+		max_nr_devices++;
 
-As you mentioned, this is not unique to the DRTM case, but allow me to 
-provide our perspective. We would enjoy a sysfs controlled lock that 
-results in a PCR Event. With that said, while it may be getting down 
-into the implementation details, I would like to suggest the PCR be 
-configurable. When under DRTM, it would be desirable to have the ability 
-for the measurement to be extended into a DRTM PCR.
-
-v/r,
-dps
-
-> But given the actual problem at hand (untrustworthy glue code running in ring 3 that does little more than poke SMM, which itself fundamentally remains part of the TCB), it would be nice if we could just sandbox that code using virtualization.
-> 
-> This came up in a separate discussion regarding ACPI PRM (the new dumping ground for evil vendor code now that SMM has gone out of fashion), although there it should be feasible to run it unprivileged, as the spec requires that capability for the PRM payloads.
-
+This will not work for SRIOV as new devices will be registered when
+sriov is enabled and the max will increase. As we are not handling VFs
+with this patch series, this can be fine?
+>+
+>+	size = struct_size_t(struct pci_ser, devices, max_nr_devices);
+>+
+>+	ser = kho_alloc_preserve(size);
+>+	if (IS_ERR(ser))
+>+		return PTR_ERR(ser);
+>+
+>+	ser->max_nr_devices = max_nr_devices;
+>+
+>+	args->obj = ser;
+>+	args->data = virt_to_phys(ser);
+>+	return 0;
+>+}
+>+
+>+static void pci_flb_unpreserve(struct liveupdate_flb_op_args *args)
+>+{
+>+	struct pci_ser *ser = args->obj;
+>+
+>+	WARN_ON_ONCE(ser->nr_devices);
+>+	kho_unpreserve_free(ser);
+>+}
+>+
+>+static int pci_flb_retrieve(struct liveupdate_flb_op_args *args)
+>+{
+>+	args->obj = phys_to_virt(args->data);
+>+	return 0;
+>+}
+>+
+>+static void pci_flb_finish(struct liveupdate_flb_op_args *args)
+>+{
+>+	kho_restore_free(args->obj);
+>+}
+>+
+>+static struct liveupdate_flb_ops pci_liveupdate_flb_ops = {
+>+	.preserve = pci_flb_preserve,
+>+	.unpreserve = pci_flb_unpreserve,
+>+	.retrieve = pci_flb_retrieve,
+>+	.finish = pci_flb_finish,
+>+	.owner = THIS_MODULE,
+>+};
+>+
+>+static struct liveupdate_flb pci_liveupdate_flb = {
+>+	.ops = &pci_liveupdate_flb_ops,
+>+	.compatible = PCI_LUO_FLB_COMPATIBLE,
+>+};
+>+
+>+#define INIT_PCI_DEV_SER(_dev) {		\
+>+	.domain = pci_domain_nr((_dev)->bus),	\
+>+	.bdf = pci_dev_id(_dev),		\
+>+}
+>+
+>+static int pci_dev_ser_cmp(const void *__a, const void *__b)
+>+{
+>+	const struct pci_dev_ser *a = __a, *b = __b;
+>+
+>+	return cmp_int(a->domain << 16 | a->bdf, b->domain << 16 | b->bdf);
+>+}
+>+
+>+static struct pci_dev_ser *pci_ser_find(struct pci_ser *ser,
+>+					struct pci_dev *dev)
+>+{
+>+	const struct pci_dev_ser key = INIT_PCI_DEV_SER(dev);
+>+
+>+	return bsearch(&key, ser->devices, ser->nr_devices,
+>+		       sizeof(key), pci_dev_ser_cmp);
+>+}
+>+
+>+static int pci_ser_delete(struct pci_ser *ser, struct pci_dev *dev)
+>+{
+>+	struct pci_dev_ser *dev_ser;
+>+	int i;
+>+
+>+	dev_ser = pci_ser_find(ser, dev);
+>+	if (!dev_ser)
+>+		return -ENOENT;
+>+
+>+	for (i = dev_ser - ser->devices; i < ser->nr_devices - 1; i++)
+>+		ser->devices[i] = ser->devices[i + 1];
+>+
+>+	ser->nr_devices--;
+>+	return 0;
+>+}
+>+
+>+int pci_liveupdate_outgoing_preserve(struct pci_dev *dev)
+>+{
+>+	struct pci_dev_ser new = INIT_PCI_DEV_SER(dev);
+>+	struct pci_ser *ser;
+>+	int i, ret;
+>+
+>+	/* Preserving VFs is not supported yet. */
+>+	if (dev->is_virtfn)
+>+		return -EINVAL;
+>+
+>+	guard(mutex)(&pci_flb_outgoing_lock);
+>+
+>+	if (dev->liveupdate_outgoing)
+>+		return -EBUSY;
+>+
+>+	ret = liveupdate_flb_get_outgoing(&pci_liveupdate_flb, (void **)&ser);
+>+	if (ret)
+>+		return ret;
+>+
+>+	if (ser->nr_devices == ser->max_nr_devices)
+>+		return -E2BIG;
+>+
+>+	for (i = ser->nr_devices; i > 0; i--) {
+>+		struct pci_dev_ser *prev = &ser->devices[i - 1];
+>+		int cmp = pci_dev_ser_cmp(&new, prev);
+>+
+>+		if (WARN_ON_ONCE(!cmp))
+>+			return -EBUSY;
+>+
+>+		if (cmp > 0)
+>+			break;
+>+
+>+		ser->devices[i] = *prev;
+>+	}
+>+
+>+	ser->devices[i] = new;
+>+	ser->nr_devices++;
+>+	dev->liveupdate_outgoing = true;
+>+	return 0;
+>+}
+>+EXPORT_SYMBOL_GPL(pci_liveupdate_outgoing_preserve);
+>+
+>+void pci_liveupdate_outgoing_unpreserve(struct pci_dev *dev)
+>+{
+>+	struct pci_ser *ser;
+>+	int ret;
+>+
+>+	guard(mutex)(&pci_flb_outgoing_lock);
+>+
+>+	ret = liveupdate_flb_get_outgoing(&pci_liveupdate_flb, (void **)&ser);
+>+	if (WARN_ON_ONCE(ret))
+>+		return;
+>+
+>+	WARN_ON_ONCE(pci_ser_delete(ser, dev));
+>+	dev->liveupdate_outgoing = false;
+>+}
+>+EXPORT_SYMBOL_GPL(pci_liveupdate_outgoing_unpreserve);
+>+
+>+u32 pci_liveupdate_incoming_nr_devices(void)
+>+{
+>+	struct pci_ser *ser;
+>+	int ret;
+>+
+>+	ret = liveupdate_flb_get_incoming(&pci_liveupdate_flb, (void **)&ser);
+>+	if (ret)
+>+		return 0;
+>+
+>+	return ser->nr_devices;
+>+}
+>+EXPORT_SYMBOL_GPL(pci_liveupdate_incoming_nr_devices);
+>+
+>+void pci_liveupdate_setup_device(struct pci_dev *dev)
+>+{
+>+	struct pci_ser *ser;
+>+	int ret;
+>+
+>+	ret = liveupdate_flb_get_incoming(&pci_liveupdate_flb, (void **)&ser);
+>+	if (ret)
+>+		return;
+>+
+>+	dev->liveupdate_incoming = !!pci_ser_find(ser, dev);
+>+}
+>+EXPORT_SYMBOL_GPL(pci_liveupdate_setup_device);
+>+
+>+void pci_liveupdate_incoming_finish(struct pci_dev *dev)
+>+{
+>+	dev->liveupdate_incoming = false;
+>+}
+>+EXPORT_SYMBOL_GPL(pci_liveupdate_incoming_finish);
+>+
+>+int pci_liveupdate_register_fh(struct liveupdate_file_handler *fh)
+>+{
+>+	return liveupdate_register_flb(fh, &pci_liveupdate_flb);
+>+}
+>+EXPORT_SYMBOL_GPL(pci_liveupdate_register_fh);
+>+
+>+int pci_liveupdate_unregister_fh(struct liveupdate_file_handler *fh)
+>+{
+>+	return liveupdate_unregister_flb(fh, &pci_liveupdate_flb);
+>+}
+>+EXPORT_SYMBOL_GPL(pci_liveupdate_unregister_fh);
+>diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>index 37329095e5fe..af6356c5a156 100644
+>--- a/drivers/pci/probe.c
+>+++ b/drivers/pci/probe.c
+>@@ -2060,6 +2060,8 @@ int pci_setup_device(struct pci_dev *dev)
+> 	if (pci_early_dump)
+> 		early_dump_pci_device(dev);
+>
+>+	pci_liveupdate_setup_device(dev);
+>+
+> 	/* Need to have dev->class ready */
+> 	dev->cfg_size = pci_cfg_space_size(dev);
+>
+>diff --git a/include/linux/kho/abi/pci.h b/include/linux/kho/abi/pci.h
+>new file mode 100644
+>index 000000000000..6577767f8da6
+>--- /dev/null
+>+++ b/include/linux/kho/abi/pci.h
+>@@ -0,0 +1,55 @@
+>+/* SPDX-License-Identifier: GPL-2.0 */
+>+
+>+/*
+>+ * Copyright (c) 2025, Google LLC.
+>+ * David Matlack <dmatlack@google.com>
+>+ */
+>+
+>+#ifndef _LINUX_KHO_ABI_PCI_H
+>+#define _LINUX_KHO_ABI_PCI_H
+>+
+>+#include <linux/compiler.h>
+>+#include <linux/types.h>
+>+
+>+/**
+>+ * DOC: PCI File-Lifecycle Bound (FLB) Live Update ABI
+>+ *
+>+ * This header defines the ABI for preserving core PCI state across kexec using
+>+ * Live Update File-Lifecycle Bound (FLB) data.
+>+ *
+>+ * This interface is a contract. Any modification to any of the serialization
+>+ * structs defined here constitutes a breaking change. Such changes require
+>+ * incrementing the version number in the PCI_LUO_FLB_COMPATIBLE string.
+>+ */
+>+
+>+#define PCI_LUO_FLB_COMPATIBLE "pci-v1"
+>+
+>+/**
+>+ * struct pci_dev_ser - Serialized state about a single PCI device.
+>+ *
+>+ * @domain: The device's PCI domain number (segment).
+>+ * @bdf: The device's PCI bus, device, and function number.
+>+ */
+>+struct pci_dev_ser {
+>+	u16 domain;
+>+	u16 bdf;
+>+} __packed;
+>+
+>+/**
+>+ * struct pci_ser - PCI Subsystem Live Update State
+>+ *
+>+ * This struct tracks state about all devices that are being preserved across
+>+ * a Live Update for the next kernel.
+>+ *
+>+ * @max_nr_devices: The length of the devices[] flexible array.
+>+ * @nr_devices: The number of devices that were preserved.
+>+ * @devices: Flexible array of pci_dev_ser structs for each device. Guaranteed
+>+ *           to be sorted ascending by domain and bdf.
+>+ */
+>+struct pci_ser {
+>+	u64 max_nr_devices;
+>+	u64 nr_devices;
+>+	struct pci_dev_ser devices[];
+>+} __packed;
+>+
+>+#endif /* _LINUX_KHO_ABI_PCI_H */
+>diff --git a/include/linux/pci.h b/include/linux/pci.h
+>index 7e36936bb37a..9ead6d84aef6 100644
+>--- a/include/linux/pci.h
+>+++ b/include/linux/pci.h
+>@@ -40,6 +40,7 @@
+> #include <linux/resource_ext.h>
+> #include <linux/msi_api.h>
+> #include <uapi/linux/pci.h>
+>+#include <linux/liveupdate.h>
+>
+> #include <linux/pci_ids.h>
+>
+>@@ -582,6 +583,10 @@ struct pci_dev {
+> 	u8		tph_mode;	/* TPH mode */
+> 	u8		tph_req_type;	/* TPH requester type */
+> #endif
+>+#ifdef CONFIG_LIVEUPDATE
+>+	unsigned int	liveupdate_incoming:1;	/* Preserved by previous kernel */
+>+	unsigned int	liveupdate_outgoing:1;	/* Preserved for next kernel */
+>+#endif
+> };
+>
+> static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
+>@@ -2854,4 +2859,46 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
+> 	WARN_ONCE(condition, "%s %s: " fmt, \
+> 		  dev_driver_string(&(pdev)->dev), pci_name(pdev), ##arg)
+>
+>+#ifdef CONFIG_LIVEUPDATE
+>+int pci_liveupdate_outgoing_preserve(struct pci_dev *dev);
+>+void pci_liveupdate_outgoing_unpreserve(struct pci_dev *dev);
+>+void pci_liveupdate_setup_device(struct pci_dev *dev);
+>+u32 pci_liveupdate_incoming_nr_devices(void);
+>+void pci_liveupdate_incoming_finish(struct pci_dev *dev);
+>+int pci_liveupdate_register_fh(struct liveupdate_file_handler *fh);
+>+int pci_liveupdate_unregister_fh(struct liveupdate_file_handler *fh);
+>+#else /* !CONFIG_LIVEUPDATE */
+>+static inline int pci_liveupdate_outgoing_preserve(struct pci_dev *dev)
+>+{
+>+	return -EOPNOTSUPP;
+>+}
+>+
+>+static inline void pci_liveupdate_outgoing_unpreserve(struct pci_dev *dev)
+>+{
+>+}
+>+
+>+static inline void pci_liveupdate_setup_device(struct pci_dev *dev)
+>+{
+>+}
+>+
+>+static inline u32 pci_liveupdate_incoming_nr_devices(void)
+>+{
+>+	return 0;
+>+}
+>+
+>+static inline void pci_liveupdate_incoming_finish(struct pci_dev *dev)
+>+{
+>+}
+>+
+>+static inline int pci_liveupdate_register_fh(struct liveupdate_file_handler *fh)
+>+{
+>+	return -EOPNOTSUPP;
+>+}
+>+
+>+static inline int pci_liveupdate_unregister_fh(struct liveupdate_file_handler *fh)
+>+{
+>+	return -EOPNOTSUPP;
+>+}
+>+#endif /* !CONFIG_LIVEUPDATE */
+>+
+> #endif /* LINUX_PCI_H */
+>-- 
+>2.53.0.rc1.225.gd81095ad13-goog
+>
 
