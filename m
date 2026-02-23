@@ -4,125 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1DB44C5AD58
-	for <kexec@archiver.kernel.org>; Fri, 20 Feb 2026 19:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6C006EA4FA9
+	for <kexec@archiver.kernel.org>; Mon, 23 Feb 2026 11:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Nos4S2W/MH7DucXly1ylwYhWrSc0JMSiOmM7eQ5L0v0=; b=vzet2ypRqmvmoDt7AXbKWyTcop
-	+OJ+AhMk7dSnGoY9W7n5A8ji/eoHaP9Kd3kT3phLFbnK5un6ApT547Hh1JG3b0KhcO2yrJLDnwdhD
-	Q3J1L9r7ivDKv9k6pCgjjoq8B+akgNRWmUHecDujH1gS3lZ5GjJifGiFV0s1yeC16U11TvL6ZlpVo
-	8/ROLnQrk4GgzY4NBlnuRvnzGVF9IqKN64mysAvccORQ1A2XOaGhr2YIB7XlGEzPnvHvnIlPe2e9D
-	sBpPh2ajOg68IGfSl/XFuKMrbTNSmiINydOjGbGPwJTYfG7yxnuZuIw6qrxxTtj1wFK6sGrlSsV9G
-	4jyRW6OQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=WPriieVDmKWqMBFR4G9YtxqzqfHaNSD1dKKcY0qJxAU=; b=Ypiti70/RXP/ZGAjrn7WcZBRtJ
+	KBJVWCQd+Qr4mr6fbOMY/rhqkOevTOKiQrWHfU4kzhiZdye8jF/C2Go/LufjxBqm9UEvouGv5KWjq
+	b9E1srXw3S1wXCkwTvOxEVZBuL1GlUhpZyqDy7I3J/e2LZPWFx8gOMJuT1K/Nn8M8lg7anJRdiRU2
+	eR0E9PyxsLYfEPL0yyBXh87lNUpzp+Nadf3hYAE6Yw3d95SINwfoZeSIv8eoOrRZTQrSjW3wwI/47
+	FNR39sftsFJisnvZni4/PkM1e1htEFImHU1Jjk1gYoPH4ntpErBsV+cxW/vQErihahaf0uvZJt2S2
+	mlLoVNhw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vtVn9-0000000FU2A-2O3j;
-	Fri, 20 Feb 2026 19:03:55 +0000
-Received: from mail-lj1-x22b.google.com ([2a00:1450:4864:20::22b])
+	id 1vuTnA-000000007wB-30fM;
+	Mon, 23 Feb 2026 11:07:56 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vtVn4-0000000FU1k-27f2
+	id 1vuTn5-000000007vU-1QKQ
 	for kexec@lists.infradead.org;
-	Fri, 20 Feb 2026 19:03:51 +0000
-Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-38709888abbso19378831fa.1
-        for <kexec@lists.infradead.org>; Fri, 20 Feb 2026 11:03:49 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771614227; cv=none;
-        d=google.com; s=arc-20240605;
-        b=IwWzg4Nr34xvXKx9lbJMtx4fQqUdNHCnTNUt9gjwb4N4YHn4li7JZjg3A0ArtV18v1
-         Cru+P84j2qDYV1TSkNAg51jWJ/9Mdm4bmD0T1q6PA8TPXdGBYCmEn7q3lni0rhW/Kijt
-         epQz9oOdrpf87Sf6icn8VOU5jfTlWLBtNnkw721EoqXAMQNLVe83DMGCaGu4EYjZRIzx
-         8r2oqmYlNAZYkdt+vTYi5AedxPp5rZtSLQsvkM2zZK8XEUBa7BIKpQyB5Z/wuy8xGIDH
-         xEY3IA+z3wjX8Ri9bU/PBAqzGU2KDfFfu9UXkkTU3K/Xs2sHwMpJ4VtXt8m/FlMRxThg
-         /fEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Nos4S2W/MH7DucXly1ylwYhWrSc0JMSiOmM7eQ5L0v0=;
-        fh=DleMrb2+UiIH2iqug0RJI877dwpN5535JBdXJd/PMeg=;
-        b=K4ARDzUVrVPMYP6+duzryLySdaXH5ZYKmfuHgTwWYEig/wR0NpfibhPB1xQDUh896l
-         j1DJNAetGE8TZZbYhoxQdCEyXQJDADFVQe86+Oi6+7M9o+3T/aDLoSPlumx0A9wKg0iB
-         ZKEtNfgDPwntmgW3l4b1vcWnT/9LgT0iXfhjtAU9NAv2LFbe/Bth1kyL5H9H5/Y3V5lE
-         YJTwMGq+cTasOFTZr2dNpFg1u0wn+Xfd5brL8cf9tQEya5h2gxcZG/yq0OxLcMqBWBXh
-         CJk6VYiruco4Ok0dDUHkB3VS5DsRldC2KhW7EFsYhnih4pMzU89GZ5TsolOoU0LbY2+5
-         a1tg==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1771614227; x=1772219027; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nos4S2W/MH7DucXly1ylwYhWrSc0JMSiOmM7eQ5L0v0=;
-        b=b41jz0UrFjTso4RoVVyUs857DVXmw9GajAbbgtCa7NuPrDKRELDzfJuwMtxQwADfMs
-         Jat/bhyV998LiJs9qIT8zORHA5KpDoNaA6L4JCLkrln8YdW8uyBqWsVySsQgxkKyukHt
-         rsGNDYeNhtHWyniLLHbElX1VFRr48S/pjbpdKVJO8Y4CGgrnqrjAeQ0gffpxJs/QIGTh
-         XyC0nz7pJywFMX0OSfE+/HJvZj9r+xEesjW0A2JJdLSUB4NqzGbwWmOtZgJsiW8VG65t
-         Z80VMT7eqZad+9YypQg8L/ZS40EuCHh13PuPDPvEeJvdW1KKWxbeF+zefxgHywWN4xUH
-         NFcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771614227; x=1772219027;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Nos4S2W/MH7DucXly1ylwYhWrSc0JMSiOmM7eQ5L0v0=;
-        b=mTZGHzJDrfCB76p4r7Gc67X+aLrWuNQApiKOkBnIfE1c3U9wT+2HPPh7Zr3gHhel5M
-         L3BcoXYewcEYuADjMdDvpRDIZCw0CUiNSYpJ/S9EhsrvCW4VSSTCdoQ9pP4nsAixBAzE
-         6Yq6HQ5BQW4hoVkddi3PPgHX0vTmY53TuOqhuMpEhbpu8CIVuAnyg2mz9lAcNl3SKncH
-         f4zA9wSyIlKGwhOl9Y7f66ICVYRbpXY//wCG5U8QDwkrXyXOGSanNV99yM2nN/O0eC+j
-         dev5NUnGMdjooDMO6ePGZ93jHiB6qsKIMdodk/+kGAGqvEfjB9t76TB/gi76COQXqwbE
-         hR0w==
-X-Forwarded-Encrypted: i=1; AJvYcCX10unYOIlBwDIaqCSebfeRu7wCJrW7nSW4sTYq5s69lKkAO4XcI/18MoHGT6ZcfCpwddolVw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxBq2uzCXxDekksgGOjAuwsa3m5DZ0tcX8PjmkXUmUg1QWMzEPO
-	rF9wO659ZlWeLPPf5QuuREX9VYQQeUCrWEISr9EEmcVGh05IZe6nMN1mjXPHRFruEVFAehTQ9Hk
-	bARgFA6IxZzmJjbN+fG2mKXD+JVZf6KyB1qS/4LC4
-X-Gm-Gg: AZuq6aJSmI2K9gz8TqPb9bsiyh/1u3aYQYqkobKKlvMcnZAiY0bb+8bvFLlD7ry0Nu7
-	el/yoHj79vUpYTqCLUkXedsuREtEAsS/aQnP5EXVRr0ZQU/g7tEkp7mGXS2ccD4OKmNKVk8ZckM
-	zDzvJHDq6pWXz6AWLmO1CFxWohD/oQmUodAHrGjdq4Dp7gN1wFIK00OIvtzXhnjp+OwrKNRSjMY
-	xkEuvxD/coRsB6T9nKKOnFQrIkFQae5/9sOj9gcUpcgEYzEzFjAIsasuFeZQbTA81N+RyKl0Lv2
-	NUWv56z77i0AA+ABlg==
-X-Received: by 2002:ac2:4c56:0:b0:59f:8546:203c with SMTP id
- 2adb3069b0e04-5a0ed894dd1mr165159e87.12.1771614226924; Fri, 20 Feb 2026
- 11:03:46 -0800 (PST)
+	Mon, 23 Feb 2026 11:07:52 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 43FEA43BAD;
+	Mon, 23 Feb 2026 11:07:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02FDEC116C6;
+	Mon, 23 Feb 2026 11:07:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771844868;
+	bh=0YsJWHREax0w0K2fWlItFC0pBFK8dqhoeUM0EkuZNKY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T1Qj9fQSaAfU7lAymctvQoNk2F6nxLXKeGFXUzGa3OO5BJumvXl9nHd5HYD3gxpb2
+	 EvtVD+tb2FDM2BgQnih18J9vjvEC3dwW21vHqthFbS7cyLJ29+hjaecdg9sOfOBDz8
+	 cBtfsOYn5qAH8XU5dtoSYb1p2sDlpLK9dg47n2FjY+QBqeXhRnpyTYFPNTyWHYh4Zw
+	 h9aWqpagWz/lZSDmnPj1zHzIGnCMNHqnqKUZVRp71M0bxqgJAaBv3E49eW5kKco+V7
+	 BtA0/aBjJh5OhW50YIDXyGGaMwX8RNJl7/CLh7pWuRwDHSWpP+PdBPRJNAnQptYgFN
+	 32FwwBT/ir72A==
+Date: Mon, 23 Feb 2026 13:07:41 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Michal Clapinski <mclapinski@google.com>
+Cc: Evangelos Petrongonas <epetron@amazon.de>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Alexander Graf <graf@amazon.com>, kexec@lists.infradead.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v4 1/2] kho: fix deferred init of kho scratch
+Message-ID: <aZw0_c8TdTYvm2SV@kernel.org>
+References: <20260220165203.3213375-1-mclapinski@google.com>
+ <20260220165203.3213375-2-mclapinski@google.com>
 MIME-Version: 1.0
-References: <20260129212510.967611-1-dmatlack@google.com> <20260129212510.967611-3-dmatlack@google.com>
- <44484594-5b5d-4237-993c-ac1e173ad62e@linux.dev> <CALzav=d1ZrHrWd-HhZJ8aY6aqxkBcLoet_5+-LL1mOakVTj6Ww@mail.gmail.com>
- <7e49472c-4bbc-49fe-92c6-621e4675d882@linux.dev>
-In-Reply-To: <7e49472c-4bbc-49fe-92c6-621e4675d882@linux.dev>
-From: David Matlack <dmatlack@google.com>
-Date: Fri, 20 Feb 2026 11:03:18 -0800
-X-Gm-Features: AaiRm528gVDC51Vc6VmuyDJufgtIlxh6fV-eX6614wdRe-TzmLDadtAg2AEPmi8
-Message-ID: <CALzav=dEykMZGsqz35TgvPqqZZFzG0kqojmry1Ya+Xf+zEgyAg@mail.gmail.com>
-Subject: Re: [PATCH v2 02/22] PCI: Add API to track PCI devices preserved
- across Live Update
-To: "Yanjun.Zhu" <yanjun.zhu@linux.dev>
-Cc: Alex Williamson <alex@shazbot.org>, Adithya Jayachandran <ajayachandra@nvidia.com>, 
-	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Ankit Agrawal <ankita@nvidia.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
-	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Corbet <corbet@lwn.net>, 
-	Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, kexec@lists.infradead.org, 
-	kvm@vger.kernel.org, Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, 
-	=?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>, 
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
-	Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
-	Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260220165203.3213375-2-mclapinski@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260220_110350_615698_FEC21B2F 
-X-CRM114-Status: GOOD (  30.12  )
+X-CRM114-CacheID: sfid-20260223_030751_552163_32D987A2 
+X-CRM114-Status: GOOD (  25.82  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -137,74 +76,157 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Feb 3, 2026 at 4:10=E2=80=AFPM Yanjun.Zhu <yanjun.zhu@linux.dev> wr=
-ote:
->
-> On 2/2/26 10:14 AM, David Matlack wrote:
-> > On Sat, Jan 31, 2026 at 10:38=E2=80=AFPM Zhu Yanjun <yanjun.zhu@linux.d=
-ev> wrote:
-> >> =E5=9C=A8 2026/1/29 13:24, David Matlack =E5=86=99=E9=81=93:
-> >>> Add an API to enable the PCI subsystem to track all devices that are
-> >>> preserved across a Live Update, including both incoming devices (pass=
-ed
-> >>> from the previous kernel) and outgoing devices (passed to the next
-> >>> kernel).
-> >>>
-> >>> Use PCI segment number and BDF to keep track of devices across Live
-> >>> Update. This means the kernel must keep both identifiers constant acr=
-oss
-> >>> a Live Update for any preserved device. VFs are not supported for now=
-,
-> >>> since that requires preserving SR-IOV state on the device to ensure t=
-he
-> >>> same number of VFs appear after kexec and with the same BDFs.
-> >>>
-> >>> Drivers that preserve devices across Live Update can now register the=
-ir
-> >>> struct liveupdate_file_handler with the PCI subsystem so that the PCI
-> >>> subsystem can allocate and manage File-Lifecycle-Bound (FLB) global d=
-ata
-> >>> to track the list of incoming and outgoing preserved devices.
-> >>>
-> >>>     pci_liveupdate_register_fh(driver_fh)
-> >>>     pci_liveupdate_unregister_fh(driver_fh)
-> >> Can the above 2 functions support the virtual devices? For example,
-> >> bonding, veth, iSWAP and RXE.
-> >>
-> >> These virtual devices do not have BDF. As such, I am not sure if your
-> >> patches take these virtual devices in to account.
-> > No this patch series only supports PCI devices, since those are the
-> > only devices so far we've needed to support.
-> >
-> > I am not familiar with any of the devices that you mentioned. If they
-> > are virtual then does that mean it's all just software? In that case I
-> > would be curious to know what problem is solved by preserving them in
-> > the kernel, vs. tearing them down and rebuilding them across a Live
-> > Udpate.
->
-> Bonding, veth, rxe, and siw can be used in KVM environments.
->
-> Although these are software-only virtual devices with no associated
-> hardware,
->
-> they may maintain state that is observable by userspace.
->
-> As a result, Live Update should preserve their state across the update.
+On Fri, Feb 20, 2026 at 05:52:02PM +0100, Michal Clapinski wrote:
+> Currently, mm_core_init calls kho_memory_init, which calls
+> kho_release_scratch.
+> 
+> If DEFERRED is enabled, kho_release_scratch will first initialize the
+> struct pages of kho scratch. This is not needed. We can just let
+> page_alloc_init_late init it.
+> 
+> Next, kho_release_scratch will mark scratch as MIGRATE_CMA. If DEFERRED
+> is enabled, this will be overwritten later in deferred_free_pages.
+> 
+> To fix this, I removed the whole kho_release_scratch.
+> Marking the pageblocks as MIGRATE_CMA now happens in kho_init, which
+> runs after deferred_free_pages.
+> 
+> Signed-off-by: Michal Clapinski <mclapinski@google.com>
 
-Sorry for taking so long to get back to you.
+Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-Userspace should serialize the state of those devices out of the
-kernel, persist it in memory or on disk across Live Update, and then
-recreate it after Live Update.
+> ---
+>  include/linux/memblock.h           |  2 --
+>  kernel/liveupdate/kexec_handover.c | 43 ++++++++----------------------
+>  mm/memblock.c                      | 22 ---------------
+>  3 files changed, 11 insertions(+), 56 deletions(-)
+> 
+> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> index 221118b5a16e..35d9cf6bbf7a 100644
+> --- a/include/linux/memblock.h
+> +++ b/include/linux/memblock.h
+> @@ -614,11 +614,9 @@ static inline void memtest_report_meminfo(struct seq_file *m) { }
+>  #ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
+>  void memblock_set_kho_scratch_only(void);
+>  void memblock_clear_kho_scratch_only(void);
+> -void memmap_init_kho_scratch_pages(void);
+>  #else
+>  static inline void memblock_set_kho_scratch_only(void) { }
+>  static inline void memblock_clear_kho_scratch_only(void) { }
+> -static inline void memmap_init_kho_scratch_pages(void) {}
+>  #endif
+>  
+>  #endif /* _LINUX_MEMBLOCK_H */
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> index b851b09a8e99..de167bfa2c8d 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
+> @@ -1377,11 +1377,6 @@ static __init int kho_init(void)
+>  	if (err)
+>  		goto err_free_fdt;
+>  
+> -	if (fdt) {
+> -		kho_in_debugfs_init(&kho_in.dbg, fdt);
+> -		return 0;
+> -	}
+> -
+>  	for (int i = 0; i < kho_scratch_cnt; i++) {
+>  		unsigned long base_pfn = PHYS_PFN(kho_scratch[i].addr);
+>  		unsigned long count = kho_scratch[i].size >> PAGE_SHIFT;
+> @@ -1397,8 +1392,17 @@ static __init int kho_init(void)
+>  		 */
+>  		kmemleak_ignore_phys(kho_scratch[i].addr);
+>  		for (pfn = base_pfn; pfn < base_pfn + count;
+> -		     pfn += pageblock_nr_pages)
+> -			init_cma_reserved_pageblock(pfn_to_page(pfn));
+> +		     pfn += pageblock_nr_pages) {
+> +			if (fdt)
+> +				init_cma_pageblock(pfn_to_page(pfn));
+> +			else
+> +				init_cma_reserved_pageblock(pfn_to_page(pfn));
+> +		}
+> +	}
+> +
+> +	if (fdt) {
+> +		kho_in_debugfs_init(&kho_in.dbg, fdt);
+> +		return 0;
+>  	}
+>  
+>  	WARN_ON_ONCE(kho_debugfs_fdt_add(&kho_out.dbg, "fdt",
+> @@ -1421,35 +1425,10 @@ static __init int kho_init(void)
+>  }
+>  fs_initcall(kho_init);
+>  
+> -static void __init kho_release_scratch(void)
+> -{
+> -	phys_addr_t start, end;
+> -	u64 i;
+> -
+> -	memmap_init_kho_scratch_pages();
+> -
+> -	/*
+> -	 * Mark scratch mem as CMA before we return it. That way we
+> -	 * ensure that no kernel allocations happen on it. That means
+> -	 * we can reuse it as scratch memory again later.
+> -	 */
+> -	__for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
+> -			     MEMBLOCK_KHO_SCRATCH, &start, &end, NULL) {
+> -		ulong start_pfn = pageblock_start_pfn(PFN_DOWN(start));
+> -		ulong end_pfn = pageblock_align(PFN_UP(end));
+> -		ulong pfn;
+> -
+> -		for (pfn = start_pfn; pfn < end_pfn; pfn += pageblock_nr_pages)
+> -			init_pageblock_migratetype(pfn_to_page(pfn),
+> -						   MIGRATE_CMA, false);
+> -	}
+> -}
+> -
+>  void __init kho_memory_init(void)
+>  {
+>  	if (kho_in.mem_map_phys) {
+>  		kho_scratch = phys_to_virt(kho_in.scratch_phys);
+> -		kho_release_scratch();
+>  		kho_mem_deserialize(phys_to_virt(kho_in.mem_map_phys));
+>  	} else {
+>  		kho_reserve_scratch();
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 6cff515d82f4..3eff19124fc0 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -959,28 +959,6 @@ __init void memblock_clear_kho_scratch_only(void)
+>  {
+>  	kho_scratch_only = false;
+>  }
+> -
+> -__init void memmap_init_kho_scratch_pages(void)
+> -{
+> -	phys_addr_t start, end;
+> -	unsigned long pfn;
+> -	int nid;
+> -	u64 i;
+> -
+> -	if (!IS_ENABLED(CONFIG_DEFERRED_STRUCT_PAGE_INIT))
+> -		return;
+> -
+> -	/*
+> -	 * Initialize struct pages for free scratch memory.
+> -	 * The struct pages for reserved scratch memory will be set up in
+> -	 * reserve_bootmem_region()
+> -	 */
+> -	__for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
+> -			     MEMBLOCK_KHO_SCRATCH, &start, &end, &nid) {
+> -		for (pfn = PFN_UP(start); pfn < PFN_DOWN(end); pfn++)
+> -			init_deferred_page(pfn, nid);
+> -	}
+> -}
+>  #endif
+>  
+>  /**
+> -- 
+> 2.53.0.345.g96ddfc5eaa-goog
+> 
 
-This is why, for example, KVM does not need to direclty participate in
-Live Update. The VMM serializes all KVM state from the kernel, saves
-it, and then constructs a completely new KVM VM after the Live Update
-using that state. KVM will only need to participate in Live Update
-once there is hardware requirement. For example, I believe some of the
-Confidential Computing hardware virtualization extensions require
-certain memory structures used by hardware remain in place and cannot
-be reallocated after Live Update. KVM would have to participate to
-preserve those and reassociate them with the right VM after Live
-Update.
+-- 
+Sincerely yours,
+Mike.
 
