@@ -4,194 +4,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5D94FEEC2AC
-	for <kexec@archiver.kernel.org>; Mon, 23 Feb 2026 23:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1FE3BEEC2AC
+	for <kexec@archiver.kernel.org>; Mon, 23 Feb 2026 23:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:To:Subject
-	:Cc:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=aLnhh1bX8ifl+cTx/fiBs7PM+4kPn1+YIeJaFHd//D8=; b=gC9/Y8CTIzfn1Q6BUMSwrKJR5r
-	gZMGdTyDxh02KVVd2dv/1pcYmiVMeuv/6twn+RirvtlOPgpSQIwBtXkDe+Y164X2DqoxSIxJ938Bs
-	O4KdrEJD6vn7Z7bxOOQUz9D0LD5Urxz+jSi0Euihwe0sUigq1wyVIhD8Ag2Mrri7io7j3MkM/XCl5
-	f7r59WIiPtxq/yuvgh31QBKC2WcSuwxO51rt46z0BczjoY5IwhMyAX89eyxApmkdcp9EOuqSj5kWX
-	Hl8OYdK2NVugxiP8Ilb4OEwpx6O8wi2rOYgd8ZkCj6LjSmLeNsy+1Df5ju+sKYYpYOjPLpyNy3aPB
-	kIy0/T/g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=c4ne1Ls/uKmuDNTWcMVVG01PBoi2SfFbs/naiop9R80=; b=gZe1IdI16LK0WLDMwpWh2zRmu+
+	cwZWvD8/wxdC66DKYnkDaIcv230TINtGTrqGzV8s9t9XNXuy37xZxcQWC2dq9i3bNYG+/uEsn2tF6
+	OX4Pm+b4a78UugTehSrIf2YmVNQ8Q3B9qBexLwnTX62jXScSCfr+3QiPq3+52nRwobBb1IGMy10Na
+	1ZDs4wZD9EwFPoz2MBI9HItH+AsU/FiT3W8Q5lU5wq4M/3/ewGkqyxnrVxqn53BgWhfwzfGYBnWE+
+	V/Vr0Lqe1ZoA3xepIKrnrv4VvpQEa/0ynqiXVmRw5vUiqkkNmG7rsXq3NCe24lLxl7f3FXQut3QCn
+	5UPQKk2Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vuf2U-000000019lE-2w8z;
-	Mon, 23 Feb 2026 23:08:30 +0000
-Received: from mail-northcentralusazon11012027.outbound.protection.outlook.com ([40.107.200.27] helo=CH5PR02CU005.outbound.protection.outlook.com)
+	id 1vuf2r-000000019pT-16sF;
+	Mon, 23 Feb 2026 23:08:53 +0000
+Received: from mail-lf1-x12b.google.com ([2a00:1450:4864:20::12b])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vuf2R-000000019kJ-3qZe
+	id 1vuf2o-000000019oZ-3H8A
 	for kexec@lists.infradead.org;
-	Mon, 23 Feb 2026 23:08:29 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EGjBVE8nXLhkSuw87Yzqy7NS5yQMbRPJ7MZR3sQqoeENhYl30m/j2cDNMHERNTs82UFRSRfcdzNVn/0NOSbWgpxxbvofzuZ2KzGLCJVbqZpUhMGFjs91gadcay8FJMrjNpkpnTU2seYL0nT9wk4pe0lZJ1W0NXePV7Tq2H0o7qE/aupqT2/h0/iKG6jBFvC2oGLyCxWJj7yq4BXpSo04KIw/zanDOu5yWF5H9eNb0knJfrDG+iDG/DyfRs3D0M0BRbsQabzA7Mi7t6cREVp394n5jiIlp5IJpsp1muJw0mVBV4vs7nv0BE1mUsT6RHuXchfBUoYlDPRI+BDlR8T/5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aLnhh1bX8ifl+cTx/fiBs7PM+4kPn1+YIeJaFHd//D8=;
- b=vWgt7rzkKqjOLAwWYg5qohhuGmyRMvBtXKsciMbOLYqhveiL8J7ZxVw818CnIpjQjaV21FpgAiJx8tLU/n2zbQHe9SuJsh0hYzAYuap5aPGXSXyiflM0LVrLBK4eFVC6bVWiDZwIdLReF6g6eU0mmdPMp2XOJ7mT4OpuI9e6336TGyYBwRjc1xPQ9BL0tn6ty840l2kHPpdrZsY8n3mQXKwF9KeJdsCVVljTbsSQPBaR5bGTU8rHNU2Db8cSzobUioH1FZmAWDD9fNT8UdOXVUsfb1ENnqHNdq0eBE6yqyJH82pAWAF4ZIX9o06/6UuEx+i2fKqM1UMoqSxM/uvNBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=citrix.com; dmarc=pass action=none header.from=citrix.com;
- dkim=pass header.d=citrix.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=citrix.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aLnhh1bX8ifl+cTx/fiBs7PM+4kPn1+YIeJaFHd//D8=;
- b=t5dYP7MeYHebXTVfTgbMZy8jh8pnz4ms6J2V2VKLiZWMyOUiKxF8k6ApPW1F03b4++cealyRFSAYRSpnbaYmGHdcrxe1FDtvQUB2R9dln4D94oHcKEHbtP9r10rgWtUZ8uuKW2PSxwINHfzJ/i61gMFD7f38ZJYsedg/5Fn1H0A=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=citrix.com;
-Received: from CH8PR03MB8275.namprd03.prod.outlook.com (2603:10b6:610:2b9::7)
- by CO1PR03MB7985.namprd03.prod.outlook.com (2603:10b6:303:273::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.21; Mon, 23 Feb
- 2026 23:08:21 +0000
-Received: from CH8PR03MB8275.namprd03.prod.outlook.com
- ([fe80::a70d:dc32:bba8:ce37]) by CH8PR03MB8275.namprd03.prod.outlook.com
- ([fe80::a70d:dc32:bba8:ce37%6]) with mapi id 15.20.9632.017; Mon, 23 Feb 2026
- 23:08:21 +0000
-Message-ID: <02e6a889-ff72-4c18-b9ee-35fcef3570f6@citrix.com>
-Date: Mon, 23 Feb 2026 23:08:15 +0000
-User-Agent: Mozilla Thunderbird
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
- Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- "H . Peter Anvin" <hpa@zytor.com>, dave.hansen@linux.intel.com,
- Matthew Garrett <mjg59@srcf.ucam.org>,
- James Bottomley <James.Bottomley@hansenpartnership.com>, peterhuewe@gmx.de,
- Jarkko Sakkinen <jarkko@kernel.org>, jgg@ziepe.ca,
- Andy Lutomirski <luto@amacapital.net>, nivedita@alum.mit.edu,
- Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
- corbet@lwn.net, dwmw2@infradead.org, baolu.lu@linux.intel.com,
- kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v9 06/19] x86: Add early SHA-1 support for Secure Launch
- early measurements
-To: Ard Biesheuvel <ardb@kernel.org>,
- "Daniel P. Smith" <dpsmith@apertussolutions.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- "Eric W. Biederman" <ebiederm@xmission.com>,
- Eric Biggers <ebiggers@kernel.org>
-References: <20240531010331.134441-1-ross.philipson@oracle.com>
- <20240531010331.134441-7-ross.philipson@oracle.com>
- <20240531021656.GA1502@sol.localdomain>
- <874jaegk8i.fsf@email.froward.int.ebiederm.org>
- <5b1ce8d3-516d-4dfd-a976-38e5cee1ef4e@apertussolutions.com>
- <87ttflli09.ffs@tglx>
- <281c3bb3-13f6-47a2-9a9a-134e397bf686@apertussolutions.com>
- <c9a0cd9f-17cb-49e5-a411-b78ef9c7e35e@app.fastmail.com>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-In-Reply-To: <c9a0cd9f-17cb-49e5-a411-b78ef9c7e35e@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P265CA0308.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:391::7) To CH8PR03MB8275.namprd03.prod.outlook.com
- (2603:10b6:610:2b9::7)
+	Mon, 23 Feb 2026 23:08:51 +0000
+Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-59e62834439so5521678e87.1
+        for <kexec@lists.infradead.org>; Mon, 23 Feb 2026 15:08:49 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771888128; cv=none;
+        d=google.com; s=arc-20240605;
+        b=bxnFCP48mAafirs7tG0OntdXP7JnYZ9QPLbFFGe9jrXaRoiyQEXHzLeSojjKRPbzqF
+         zlDoIBVD/p2jGYfeDXsbx0Kc/oLelAiaerXY5ZZ+rBE8vhRx8NUl1NCFK2trPDiXJhN9
+         l739RD3TbhTbm0UbyjBqRNxwQPqYozXoGOUlmiJVoZTfMc8+pWemHaoktRcg0ECY8d0Y
+         40iRuF4oguueknImLEwUAmss0BtTo6kEq7s3leGdnP9OwPMl+piI+IK2fDph7SglftgN
+         nh5weyVj1C66tX0M4TujIJmKuLitstHzcRiqi7vuRjpXa0X98DSsASnAtuPzNh/Ba3y6
+         mqmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=c4ne1Ls/uKmuDNTWcMVVG01PBoi2SfFbs/naiop9R80=;
+        fh=wVqe+tw9j5Arafi9fYMweYTuMq6SBLdgKhHmMnOW+5k=;
+        b=fX/DSXzDwe6hNlFH1Oadm+p69lLg6T/SjjlnkNqnPsYXF8Gz4T2y2HI79gHR9/wvBM
+         aXW3mKqjqHQLAV2AiovMHJOGZImTqLCeFbU17AFwenLwtEvQ9wXhC6FPDZKUyxFIppbA
+         1w5UzUaiRyQnYXb7a/rnbFz24UfzokYmFuZd13NPQZ9lzIXiyFIO7UmYZKU66ArBPj4j
+         NOyCP+tmpAhZZBiy+7RHHEUgo1bVFhbhNKduuyrn0AlKn3arKcLW22zdy1l+KKSU8YTc
+         gfqCJ3Al2zhf6Ksa5AOW76aqCGMz+EJW/f9QI9FVqpvpoW6wgX+4W6i9/4Q//uBGUf2g
+         /MYg==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1771888128; x=1772492928; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c4ne1Ls/uKmuDNTWcMVVG01PBoi2SfFbs/naiop9R80=;
+        b=QApVxvvMqQHIbD2mDWgWKqKNjBPUT383CScG7kSaOC86WgDmzgWBH7kRosdEwe89mm
+         mCba6FpxKwObmWIrGiiWZS8WGd34uWMkGBID3IpPlWQDMgCsq3ohBZR+oIESY2sUTPMM
+         ku830fuY2TQpujb7QOGXQeZUj5ROSK/C8tyGdTHeQIgjOWlQH79A3hR7npbtPjlYpzSs
+         Qy0Bs499q8lsPnnqFlHIExJ5BCMAFcmfu9GOhTNAef4un1xc3S43yNGjKBQSNr9EnUbO
+         rWEitQpziV6eMQHotJviY/4SHmNsoQlL71hh3FzQsrLeric0Yp+vqg+QPrB/Ef9aFLI1
+         hzuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771888128; x=1772492928;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=c4ne1Ls/uKmuDNTWcMVVG01PBoi2SfFbs/naiop9R80=;
+        b=dR+8KEBc1jXYUdTCpAe8TxJNYbd2cUiOAaf1p8vb5WRCLHz6maErqhgY8ZbgYb2aZ7
+         0Bl1opXmwZ8lfvgvaF+sgXH51cojvWfjkiFV9KgEVOM5W/RteVuSqlZHfd/DrVvY0uQq
+         0bTNJnPkGhfmTvNqcXTbjkh+zx5+ttxrlBVlzLhnxZLcvzZJ+muEI7bt22VvFKyd+dSd
+         ixOCjWO/n71+Ewyy0cB2flHwRd5yIpsfbPtMoyTSdY7NCIA+se+tNZb3Owv6pNSda1is
+         9d0YVJl6x3kT3129JemJ/KEUKFdWjr0NJkTGBI0KY+WbdMDF3917Y0IRzLdZe6Zby7sp
+         kPCg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6GpAGd4kaFbjeCAkMqdvAWLAys2lKqYYGJHJklMdca/3GqPck8ASLvw13bs0WvR+EAYoOBA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwU3wdPCPFcpiGjz1KbE1iWiX0tv/eqMpfyTVwARIuc9KZ46YIr
+	ef+La7BNGawJLsRqnYrPOOk9/j8T3zgRt/eEYxNzBgzH2VPP0ZQNfjKD9fQuZZOLFWRX9cEd20p
+	kkc5gl7yCDtkFL5ZMsmeLDQHjm+HFl6y6SlJirlIc
+X-Gm-Gg: ATEYQzzYyV6aITjD8fEXjYsy+xoMZ6KERJfB2kIgeMz3qAUlHxf5bd8Vo9e4TucPMFC
+	itGZaNtCyPIv+LletWz5BgSvTOnJTmsF/KQz4BsN5XL2vLsoZ1OmZw/+W8XkZMi8/PC2jhxP2cl
+	ypGUotrQSDVXsN4/syzOr5q5Ks1cdcaJZTg8Hd9qGqX7xOBa0ZUWA8GENG/8cyjx/zkJ4GSTRk2
+	+pulYHqPIXDfQG3JUIy02YxDs+tbvpWKD8gVWnVGPfORMgvCaYFtB5JYYbtMk8SG916QhN1QWQP
+	KgfnDHw=
+X-Received: by 2002:a05:6512:3b9c:b0:59f:8546:1899 with SMTP id
+ 2adb3069b0e04-5a0ed87de41mr2986457e87.11.1771888127316; Mon, 23 Feb 2026
+ 15:08:47 -0800 (PST)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH8PR03MB8275:EE_|CO1PR03MB7985:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6aa165ad-2093-4c5c-0d13-08de7330708a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?Nm5Ca1YvOHptbnNuZWRIUVVreElYTkdSR0FQMWl2R0xXcmxXRVpxVGpEOThJ?=
- =?utf-8?B?YnVLT1c0aTE1dHNZd00rc3I4czM2UlpGZVBjekR2M1ZtS2Yxa1hJL3Uwdk1C?=
- =?utf-8?B?MnI5azhHZkl3MUxPeHVjcU44TVRaTzZXcUdaK29OTzh4T0lZL24vdXhDaDdl?=
- =?utf-8?B?TUcwcTU4SSttTTN6VGVaKzJuQjdIcEwzSHVETk5iSjgzaFdNcUJMd3kvUGRC?=
- =?utf-8?B?L2d4NnhXSTBKd1MwUDg4cDFTYlRHcU5LMmlJNTIwQzdyNXhrYXA3ajFQRlB3?=
- =?utf-8?B?WlBiaXNJT1k0a0lFbEdkemFaL0doYmQ2RGZYRGF1eEdZWUxzQWpseWhtVkJm?=
- =?utf-8?B?NGhWT295TE1xd1NCMmgyaVROSUdGVjFialpkWUpzaVVsTitQRW8vUE1SVGNC?=
- =?utf-8?B?TzhEbEFNWXltclpKbkViZElTdlJSZHRwbFp0WnpQNGFnN080dzRWK25rcWdl?=
- =?utf-8?B?ZVhWOFJ1bGJrZGlzaVpuNWh3cVpLWit5Smp0cDlHLzMrV2EwOFAxOVFONjgv?=
- =?utf-8?B?bkdiZVZjaSt2Sm1KcTVVTnk5TTU4a0w3QVpoOVFNY0lybFRXVHNSS0NNSTM4?=
- =?utf-8?B?T0FNL2pOb0pmeUNPc0FuT2tSNTRkYWRCQ29kK3BMOU1PRlY2YmJrQzhKUzJF?=
- =?utf-8?B?N2JIN2xYdGd4UGlWYmJDVEsvaFJ0OTF6WjAyZGFvZ0ZhY2pWYmNwbkZkb3Jm?=
- =?utf-8?B?bTNpWERkeUtUYTFQQ1A4MGRqMXNhaFgrdGtvNGRXWXVOekhjN1k4bmdzMDlr?=
- =?utf-8?B?Z09WNXM2QVR2NGp6c2N6alhnMFpmWGhFWHBoVkl5Q0pELy9QRFg3b3ZKZzBU?=
- =?utf-8?B?bnVNcjJIYWZ6UjZPd21GK2FodlJ2cHlYZFpWcUJPSFErWm5nbTMxQmZ0MW90?=
- =?utf-8?B?Q0RvUHlnNjVyYW5WMU1TMkhnZlE0QWU0Rm5MZ0I2NW5YZWtBTVpXaEhDVWE5?=
- =?utf-8?B?Lzl1cWRrQlRPTVpJRkhGRzdGa0ZqMkJIbXlLYTNCVzRiK3RETWk2WEdUMjVn?=
- =?utf-8?B?V0h4cWx4RkU2TS9qUXg3UjRxZ2J1RkdnVU9OSTNWM21ncDZWNnFiWHl4USt5?=
- =?utf-8?B?SWNJUXF0NlU5V0dTNVYwd0E1YVNCMll1OVRaSW9PUlJGZHJJRFdtaG9PUXM0?=
- =?utf-8?B?NUFJQklGUnl1RkhOMmVONHdIVmtmSVBKQzNxdmhBRXNpOVVuTmpGRUV1OXMx?=
- =?utf-8?B?bzBUcHNWYnhUU28zdXozcEplYys1WWIwa3Y0enhkaFRaeE9KRC8ybGJCWjdT?=
- =?utf-8?B?WGxBT25tZmpXQ0pSRjFDWGx1YTl3c3ZSNVJ3Uy9MYWZuTVo0SjVsZk9tM0VF?=
- =?utf-8?B?TVFWS3pBRGpoeHNPSW9uZVIxWTJBMHpmWHNZb0FMaHM2bUR1QkVuUjlvTjdu?=
- =?utf-8?B?dmcxZk1ScnJSUmc3VlR6RldqYnBZTXBHMGhKSGVvb3l5Z3Q2c0lmdk9NNHNh?=
- =?utf-8?B?NTFBVTRTUzJPcHl1aWplOW9OSExTb0ErSlhIZGF4UDZ0VzB6dm51OTFTSFRF?=
- =?utf-8?B?bEJEc1pDTjlGNVlPSUZRM2dYMzBWMVhIRlpYRGVJTWw2MzdFeW9qOGY0M2t1?=
- =?utf-8?B?bVdzWWVJRHd3WXRpQW1zVUx4cloxMkxlUjBzbjVCblJnZ1dQT3VzeUx5dkZN?=
- =?utf-8?B?MDVkTUpSTDl4NFllWEJVTFBSbDZkN1JrbUx4TGRLSTZodG1RWklXeVc5eXNJ?=
- =?utf-8?B?RnkxOEFhUmlzSXhaMXJuVkhhZ1dnWHVsZFk4TExCeFNNTzF5R3lFUVRzNklw?=
- =?utf-8?B?dkZ0SldRblhlZXcreFhTNkpBOWJKNjhZOXp2dy9oYWRvczVCL0I1d3FFZGpq?=
- =?utf-8?B?ckJZNGhmYWJRL1dYZFZ1Vmx0TWhoS2VOTHZ2akEzYlhxM1pnVWtEWFVHNm96?=
- =?utf-8?B?Zk1NUklzcWUwZTU5RUdWOStVZ1pDcGZjK2ExRCswU3NGcFREWFpPYnJnMTF1?=
- =?utf-8?B?OExmTjhGUHNJVGpSUnF6eWhqV0UvbVVIa20vYmUydFR5TkovcFgzTC9qYzlN?=
- =?utf-8?B?Q295eWxOWGU5bGJ0cmRIbkNON0UxeG93SUwxNjBGZVk0NEo5VFUwZkxXckp6?=
- =?utf-8?B?ekhBUnhWNFlibmE5S2p1TzdXclljK3crWGhKSWhydUlQblgxQWZIbk9RNWJO?=
- =?utf-8?Q?3ZME=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH8PR03MB8275.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eVNXajRzTWYrK0VqNHFmQlZISEJ6c3BNYVRmREtHN3dkaG85ZDI1RDdLZEl0?=
- =?utf-8?B?eWtXdTFuaEpzR2lienA1Y3BPL0N2N0d2QXpZdWpyd2tidGlVUis4RW1yazBj?=
- =?utf-8?B?MUZjT2szTExOcjh0bWtvZG9oZmRUOVNSV3NFT3pmNjR5Sm16cm5hajA4eG4y?=
- =?utf-8?B?bEx2b0NxeFlheEhiM0RXbFZqSW1aRnljb1ZmQ0R2S1NJZEZVYTRyc3krVmto?=
- =?utf-8?B?RWZwdjlrbndHblNsMXc5SHdFVUlsZTBRT3VRL2FEOFA0c1BheUVmYmZxSW9C?=
- =?utf-8?B?WFVnNGVkWGsrcDdDbGovQzl6eDN2QVdCMnNWemNOUE9JL1JxVGpxNTRtZkZu?=
- =?utf-8?B?NFo2M2IweWVFV3Z0S05Vbis3VWFhMnpyeFBtbjRhcEhiRCtSWGk4MEE2d1lO?=
- =?utf-8?B?SjVqSmRTWDJrR0g4eVRnZXJmR29TWVFjZlhOUElZQXBqV2gxSWlDZHdOYWE0?=
- =?utf-8?B?ZllJTkRsNi9CV1ExSk9vU2g1aWN5eFNJNkRUUXMrbW9jZTdvQ2Flam4veXBN?=
- =?utf-8?B?MEJwdGQweGJDVDd2c0VEc3dvcytBQ0VuVitUVEhzZ2JLbkNTS0VYbzFrb3o0?=
- =?utf-8?B?V2RERTRnVzBYQURpRkJkQnJHK2I0OWxKK1psRHNNQmN0c0VZSmRzb2xSRkIz?=
- =?utf-8?B?TCtlM1VMQUxGV0hYT21pcHBKTHJMUk1PUS8yUzM5OSs3dmNvOGpCaDhsTWYx?=
- =?utf-8?B?M21tZUpSOEJWSlFzNVlFMHZad21za1ZpUW5ZM0FOdFlPMnJMWk9IeW5nMHNj?=
- =?utf-8?B?TVA3MGxLaWFId0h1Uy9iSE1JbGxEd01PYTZuVytkdU1GYm9Ecklab0d1U0FC?=
- =?utf-8?B?WXY0L2dFZ2RLb0V2emJJcHJNbjNLQ1IwZmFSQ00ycEptcGIxQnR0a0pGWnhR?=
- =?utf-8?B?WGdmZW1BYXhYNTRwUTRLdHBjS2k5UnNjbDE3c040aFRtdFVhR1h6NG8xT0l4?=
- =?utf-8?B?bVl4YnJOTlFzeDNtQ0RQYUMwVWZtR1dKN3hXVGNkeTNINzFSMnNzM2FpVkEy?=
- =?utf-8?B?ZVI0Ri9SOExVTTBjeWh4WVVoTlZIZ2oxVXNlWHBnaG5kTWYxVG1RaU52OVlX?=
- =?utf-8?B?dERZdW1wQ1FWUUdCTHFRYUFocWY4V0s1NVlERHpDUVlwVUd6SjNFTFFyRjZz?=
- =?utf-8?B?TXFabzdsV04yQXNaSWdocjdwajYxdGpuTnhlYXJDMElBczRKRXFOZ0FJUW1i?=
- =?utf-8?B?dWs2eVNsSjY5WnBZVC9DWEg0UlJhTFVCNnNZNkFlbUFrTllyaEdhUjlNOTE5?=
- =?utf-8?B?cVNnVWVtTDlrcUYzOEppL3N2Mk1VdFh4WEFNWVUvNnd2ZXRpeU00M3RtdW9R?=
- =?utf-8?B?dEpTdjBrdzZVR0U1MGNBNjhPcjkrUWY1R1c1SUhQckt6VFMrMHAzS0V1QitE?=
- =?utf-8?B?UnVSVmRadS9SOVF6KzBWbk5HUXZtMXpIYXNVREtGVXdFT1kvNndXdCtvWmFl?=
- =?utf-8?B?ODNSRUEzRUZOOFVpc3hVaVMvc1lHSmlvSmNSMnhnWjZYbWtnQ1ZlSUMzVnpF?=
- =?utf-8?B?aWJnNGc1QlBiZlV3Z1NQbFd4MythTDhHMGN6VGdqaFhiNWl2Tm1YSUZZMDN3?=
- =?utf-8?B?WmxNWHFIZDRYN2FpakpFaFlCOUpaZ1F1YW9DM1g3blBRanhGVjRLRzBXQ0lI?=
- =?utf-8?B?WFhDR1R6NWhtK1lFbzZLWlg5Q3JIYzNCZXdPN0xuUy9VLzQ4OHQraFpreHRO?=
- =?utf-8?B?Tm9UeVVZUHZFWklWSjgrZEhTSktCcFNPd2NTSXRQWUtDeEhRc1czeS91RUQx?=
- =?utf-8?B?aG5tYUpJeVJoRUZFWGFGOWowYTFJN0g0YXZHc3RIYzFLL0hZOXhabm5IUE01?=
- =?utf-8?B?am9jeFJXREVhdC9tNEpZRmRjbStUZFVoUVBDN1lRUzFnNFVjU2xVRlZMcDNW?=
- =?utf-8?B?d00vREpONFpKRm15YkpjYjVKVS80Yi9nWFFydGtEZ0xncXFlNkxmRm5YNjNp?=
- =?utf-8?B?Q2VmUGRGT0hpT25tRnptalYrbmZvMTRUdnJpNHdES0JWdzhnVUcxYkNHZEtG?=
- =?utf-8?B?Q1BveFhSOUlKNEN0Wmc4UHcwWGZKTVdBZlcxeUE2MTFLMTR1MTlJUE56anE4?=
- =?utf-8?B?NEV0SGRWWHdWaHpRdno1WVJqTzk3cDVRWTdWZ3ptYnJmWkY5MnR6YlVMTmtZ?=
- =?utf-8?B?Qm1UNFZkY0FqRVdvbmVGSG5NZkpRRUlmZkxmNUJwWXdUM3VXbDREUFptY0lV?=
- =?utf-8?B?d0JibzhlTU9rUEFQWWtHZ1hUTjk0WHZnVWwvbk5VRmRKK3lNeWtoMnRrL2s3?=
- =?utf-8?B?cTlRNmNxMHBoNGVKUTRqVkc4T01Gek42YVNBUDZVMUdXeDRWM0hyNlNRanQ4?=
- =?utf-8?B?RkNxa0drNTlLeFd6emEvUXgyTndhR3h3eE1OR0xpTTRDVkQrWlcveDVISVVH?=
- =?utf-8?Q?lXfvv19DB+c4LRa4=3D?=
-X-OriginatorOrg: citrix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6aa165ad-2093-4c5c-0d13-08de7330708a
-X-MS-Exchange-CrossTenant-AuthSource: CH8PR03MB8275.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2026 23:08:21.7637
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335836de-42ef-43a2-b145-348c2ee9ca5b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WqsQiCZojkXaADdSkp+XTrKfMygXpKjhJpsjT0KHy2pqNzyhrM1T5rCzqZq4CgF3LjWE7EeyMqNeyc7inLEvtw+MZShZVAEmdUsWge6XER4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR03MB7985
+References: <20260129212510.967611-1-dmatlack@google.com> <20260129212510.967611-3-dmatlack@google.com>
+ <4mbhcmimhin2ulz57mbzpe5p5dkhfziiyep5k3vgls4zmom3sb@g6jlouyvmpuz>
+In-Reply-To: <4mbhcmimhin2ulz57mbzpe5p5dkhfziiyep5k3vgls4zmom3sb@g6jlouyvmpuz>
+From: David Matlack <dmatlack@google.com>
+Date: Mon, 23 Feb 2026 15:08:19 -0800
+X-Gm-Features: AaiRm50_OD8BarR0N1ju3iFQZFALazFmYS4w16LFHF58C19D7VPNrgpsKvMORCE
+Message-ID: <CALzav=eXY=ZBshmpi9axt+_0SxaAm0Xbo7w==nCWJwKK3xcThw@mail.gmail.com>
+Subject: Re: [PATCH v2 02/22] PCI: Add API to track PCI devices preserved
+ across Live Update
+To: Samiullah Khawaja <skhawaja@google.com>
+Cc: Alex Williamson <alex@shazbot.org>, Adithya Jayachandran <ajayachandra@nvidia.com>, 
+	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Ankit Agrawal <ankita@nvidia.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Corbet <corbet@lwn.net>, 
+	Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, kexec@lists.infradead.org, 
+	kvm@vger.kernel.org, Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, 
+	=?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>, 
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, 
+	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
+	Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
+	Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>, 
+	Zhu Yanjun <yanjun.zhu@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260223_150827_970054_9E2D11FF 
-X-CRM114-Status: GOOD (  23.39  )
+X-CRM114-CacheID: sfid-20260223_150850_882650_7A6D7CE8 
+X-CRM114-Status: GOOD (  17.45  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -206,55 +137,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 20/02/2026 3:35 pm, Ard Biesheuvel wrote:
-> Coming back to this old thread after having spent some time playing with the code:
->
-> On Thu, 22 Aug 2024, at 20:29, Daniel P. Smith wrote:
->
-> <selective snip>
->
->> Another fact to consider is that the current Intel's TXT MLE 
->> specification dictates SHA1 as a valid configuration. Secure Launch's 
->> use of SHA1 is therefore to comply with Intel's specification for TXT. 
-> As I understand the Intel TXT spec and the code:
->
-> - TPM 1.2 is no longer supported by the TXT spec (since 2023)
-> - TPM 1.2 is not supported by your GRUB implementation
-> - in TPM 2.0 mode, SHA1 is only supported by the TXT spec if it is the /only/ algo supported by the TPM
-> - the proposed kernel implementation ignores any SHA-384 and SM3-256 PCR banks if they are active, and caps them using a { 1, 0, ... } fake digest.
->
-> So apologies for being slow, but I still struggle to understand why it is so important to have a SHA-1 implementation to cap those PCRs. Is it just to support systems with a TPM 2.0 that only has SHA-1 banks enabled?
->
-> Assuming that this code will get merged this year, it will be in a LTS branch by 2027, by which time distros like Debian will pick it up. 
->
-> I fully understand that this code has lived out-of-tree for more than a decade, and you likely prefer to get everything upstream that your current users may be relying on. But for Linux, this is a new feature, and merging code now that is basically obsolete on day 1 is not something we should entertain imo.
->
-> (and apologies for re-opening yet another can of worms - I assure you I am trying to be constructive here)
->
+On Mon, Feb 23, 2026 at 2:04=E2=80=AFPM Samiullah Khawaja <skhawaja@google.=
+com> wrote:
+> On Thu, Jan 29, 2026 at 09:24:49PM +0000, David Matlack wrote:
 
-I appreciate that you've got concerns, but I don't think these
-characterisations are fair.  Ultimately yes, we do want to support TPM
-1.2 systems because we have users wanting a way off the out-of-tree patches.
+> >Drivers can notify the PCI subsystem whenever a device is preserved and
+> >unpreserved with the following APIs:
+> >
+> >  pci_liveupdate_outgoing_preserve(pci_dev)
+> >  pci_liveupdate_outgoing_unpreserve(pci_dev)
+>
+> nit: Preserve and Unpreserve can only be done from outgoing kernel, maybe
+> remove the "outgoing" from the function name.
 
-3-year-old hardware is new enough to still be in full support from OEMs,
-and totally fair game for distro LTS's even at this juncture.
+That's reasonable, I can make that change in v3.
 
-The TXT spec does not speak for what OEMs choose to support, nor for the
-TPM spec (where SHA1 is a mandatory algorithm for TPM 2.0), nor does it
-speak for other silicon vendors we're trying to support (there are AMD
-patches waiting for the interface to stop changing).
+> >+static int pci_flb_preserve(struct liveupdate_flb_op_args *args)
+> >+{
+> >+      struct pci_dev *dev =3D NULL;
+> >+      int max_nr_devices =3D 0;
+> >+      struct pci_ser *ser;
+> >+      unsigned long size;
+> >+
+> >+      for_each_pci_dev(dev)
+> >+              max_nr_devices++;
+>
+> This will not work for SRIOV as new devices will be registered when
+> sriov is enabled and the max will increase. As we are not handling VFs
+> with this patch series, this can be fine?
 
+That's right. Since this series does not support VFs
+(pci_liveupdate_outgoing_preserve(VF) will return -EINVAL), I dropped
+the logic from v1 that included the maximum possible number of VFs in
+max_nr_devices.
 
-But lets ask the question the other way around.  What does refusing SHA1
-gain?
+Once we add support for preserving VFs, we can update this logic.
 
-AFAICT, there's no meaningful reduction in complexity in the early code;
-the TPM library speaks TPM 1.2 and 2.0.  There is a small reduction in
-binary size for not including SHA-1, but including it is no extra C
-because we reuse the library that already exists.
-
-The cost is a failure to operate in some TXT configurations that exist
-on in-support CPUs, as well as older systems.
-
-~Andrew
+Another way that pci_liveupdate_outgoing_preserve() could fail due to
+running out of room is if hot-plugged devices are preserved. But I
+don't think that's an important problem to solve right now.
 
