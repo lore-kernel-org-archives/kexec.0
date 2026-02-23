@@ -4,104 +4,194 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 75CA5EEC2A3
-	for <kexec@archiver.kernel.org>; Mon, 23 Feb 2026 22:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5D94FEEC2AC
+	for <kexec@archiver.kernel.org>; Mon, 23 Feb 2026 23:08:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:To:Subject
+	:Cc:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=C8f6dXcdZJeSJ2qE0ghvpNFkqtAaZ6dotEKElaryP78=; b=MWUiLvKKZJBHvVef6wwFMMw9r3
-	tSoDpMusG4iliG/tySe0kWmd4Ye6EuSwd8GUtXh/oVtwqi94CKdHDf2YKKcglRNPrpjhK7Jo3SJp8
-	IGdi8dnKxV9/pYTTHtixMS+Pj95oXouxFEX0u7qXoFQjpp1YV4x1ZedyIZ95jhrfZ3qgMCdfME0RF
-	MPNDHu2uRbdWCdNL/NWIcxFIqoSxQTXdrqHUpFn95hRJE2lb8DixEyL6U6jucSLWsWr3Xr1XUKRYD
-	mezBeHBuRiNY64fe6a43xdm5imMxZ2BlplLJ7r32kMbH9X7QajPY7jWlINdaCKaqYD/YvEgB7NnmR
-	QodxHBIA==;
+	bh=aLnhh1bX8ifl+cTx/fiBs7PM+4kPn1+YIeJaFHd//D8=; b=gC9/Y8CTIzfn1Q6BUMSwrKJR5r
+	gZMGdTyDxh02KVVd2dv/1pcYmiVMeuv/6twn+RirvtlOPgpSQIwBtXkDe+Y164X2DqoxSIxJ938Bs
+	O4KdrEJD6vn7Z7bxOOQUz9D0LD5Urxz+jSi0Euihwe0sUigq1wyVIhD8Ag2Mrri7io7j3MkM/XCl5
+	f7r59WIiPtxq/yuvgh31QBKC2WcSuwxO51rt46z0BczjoY5IwhMyAX89eyxApmkdcp9EOuqSj5kWX
+	Hl8OYdK2NVugxiP8Ilb4OEwpx6O8wi2rOYgd8ZkCj6LjSmLeNsy+1Df5ju+sKYYpYOjPLpyNy3aPB
+	kIy0/T/g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vueQR-000000017GR-1JPL;
-	Mon, 23 Feb 2026 22:29:11 +0000
-Received: from mail-pl1-x631.google.com ([2607:f8b0:4864:20::631])
+	id 1vuf2U-000000019lE-2w8z;
+	Mon, 23 Feb 2026 23:08:30 +0000
+Received: from mail-northcentralusazon11012027.outbound.protection.outlook.com ([40.107.200.27] helo=CH5PR02CU005.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vueQP-000000017Fs-19rs
+	id 1vuf2R-000000019kJ-3qZe
 	for kexec@lists.infradead.org;
-	Mon, 23 Feb 2026 22:29:10 +0000
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-2a76b39587aso30195ad.0
-        for <kexec@lists.infradead.org>; Mon, 23 Feb 2026 14:29:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1771885748; x=1772490548; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=C8f6dXcdZJeSJ2qE0ghvpNFkqtAaZ6dotEKElaryP78=;
-        b=DehOZ0el5vfGjpf6PRY299MeAnHFSRr9Xhzjevz/I0UiCExH33oYGbvpMkAOb3/sbU
-         m82zKPSHpS1ts7RcybBsTLBXxfmuwzLmkcem12JVVq9JGpTumYVrDFsatxKU1eSAVw5l
-         uF9qLXj8Cmg0dmkjYzg+sRJhR5vEU7W4s72CX3ayEXPAKM5CAKk74TExONGfixnhr/EH
-         U2GtqCDEcUuMQX1Pm7zOytVbSjwnPBPvebl8PeQQsgOQDWJbT1TP/sEb4ORNbsFv5uiZ
-         XnvesIFXi1meO6aZ5u50MlO5yUR6vXXXsAJBkEwdVfGUdBqEDyiU+fzb5EnmMR3BH0w2
-         iReg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771885748; x=1772490548;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C8f6dXcdZJeSJ2qE0ghvpNFkqtAaZ6dotEKElaryP78=;
-        b=ksRPKar2nlxWmwfaJl4sEQ57hBLW0iS6FpIW1wQCbUK049w9APbVEN7lVLKNgHM97/
-         ASEBOWmXKn7Z1a9tqdlyejvX/E7GS17x+QciM10104QkyZFz5SDpPqHLClTgYpd1ZI8O
-         GrNLgdcwhUJBRx1MS2U9w4FWIZe8nHhk4KLNE1k8yI5bJ3b2KhntpVFPQKjWmDwg+N21
-         e+mgTnOsXrfkHfmYEQoSOyNSC+SFBWIYwC+yRiM4psb0ZcNgIDeDVyZmlWSaOxWB7JbF
-         EdkGtkGKbkF+bHAHTuXiq5ls6VzhyPkWWTpjJnbs0Hl6CsqHceceB3R4SYx2K5rf8Vb/
-         Hs0A==
-X-Forwarded-Encrypted: i=1; AJvYcCVKiS0BjI06Gn4v5TgDaVu5OGgVBDbW5SPuDiWJqRRmOngxdIENRmDPQ50knr1VvefCBkU2Ug==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwP8/wgMii64G+wi9BkorcRtScCQzgdJuXgl5amKLyyqEzvIRTJ
-	pJ140EE3JOgPnrxkA0rkoHL64DvasRosXPbmPr6RHb2MwimA3lq5b/8srJhiOXIGpw==
-X-Gm-Gg: ATEYQzwc2lTYPWOT8fVBOVpm4Y2LFk42iV3FD4rXNE2WgECV3XaXPVCxbMBuwHHAfna
-	ZYgbwYUtidI4OkNrT6b5rkISfmmmkRolcwf9rjivwQ6UTZK7K058bfI4uoVZDv5pT63q6ccMyV7
-	blOq3lzI3LD72jIiNDobOcS/Ti2+D/ZMrquQoazj8Y5+taErDzqgUIG8m7LOIdg8C67JWOgZYIG
-	GHPmmyLhKBsAwIzp5H3JwQYWZYBVBXczdkva99ZklJD5ZtGZK+0PGElVh5yEE3xdPa2+nXR+a+5
-	xi6mquLik1AtHz+Tm9QS0fk1fSleMAwGpkGqwASaQRyeJZMUiOyNeTn7Il2+scnFF4f0tD7wfRW
-	t9kLVhZiw1CO2oGkup1uHqy2pCtr1p6IWcXCihebH4MbSVHwLi6KoQt9pmZ1FzskripU5MemIcM
-	n5MuF8amafyqQjn19UXYgSF8JGB3jpPVfgTAzyrb5ru+eGykKTFDSCGzvmHDs9pQ==
-X-Received: by 2002:a17:902:ec89:b0:2a9:5ef5:399b with SMTP id d9443c01a7336-2ada3497c30mr138295ad.19.1771885747713;
-        Mon, 23 Feb 2026 14:29:07 -0800 (PST)
-Received: from google.com (168.136.83.34.bc.googleusercontent.com. [34.83.136.168])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-826dd8ba11bsm8507152b3a.50.2026.02.23.14.29.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Feb 2026 14:29:07 -0800 (PST)
-Date: Mon, 23 Feb 2026 22:29:03 +0000
-From: Samiullah Khawaja <skhawaja@google.com>
-To: David Matlack <dmatlack@google.com>
-Cc: Alex Williamson <alex@shazbot.org>, 
-	Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>, 
-	Alistair Popple <apopple@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Ankit Agrawal <ankita@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Chris Li <chrisl@kernel.org>, David Rientjes <rientjes@google.com>, 
-	Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, 
-	Kevin Tian <kevin.tian@intel.com>, kexec@lists.infradead.org, kvm@vger.kernel.org, 
-	Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, 
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>, Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Shuah Khan <skhan@linuxfoundation.org>, 
-	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, Tomita Moeko <tomitamoeko@gmail.com>, 
-	Vipin Sharma <vipinsh@google.com>, Vivek Kasireddy <vivek.kasireddy@intel.com>, 
-	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>, Zhu Yanjun <yanjun.zhu@linux.dev>
-Subject: Re: [PATCH v2 05/22] vfio/pci: Preserve vfio-pci device files across
- Live Update
-Message-ID: <qshnqqtfg7clbcqoq45ei55wt6xt4z4xtwv5ehjyjxwq47cwng@n3vd3lxigcs6>
-References: <20260129212510.967611-1-dmatlack@google.com>
- <20260129212510.967611-6-dmatlack@google.com>
+	Mon, 23 Feb 2026 23:08:29 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EGjBVE8nXLhkSuw87Yzqy7NS5yQMbRPJ7MZR3sQqoeENhYl30m/j2cDNMHERNTs82UFRSRfcdzNVn/0NOSbWgpxxbvofzuZ2KzGLCJVbqZpUhMGFjs91gadcay8FJMrjNpkpnTU2seYL0nT9wk4pe0lZJ1W0NXePV7Tq2H0o7qE/aupqT2/h0/iKG6jBFvC2oGLyCxWJj7yq4BXpSo04KIw/zanDOu5yWF5H9eNb0knJfrDG+iDG/DyfRs3D0M0BRbsQabzA7Mi7t6cREVp394n5jiIlp5IJpsp1muJw0mVBV4vs7nv0BE1mUsT6RHuXchfBUoYlDPRI+BDlR8T/5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aLnhh1bX8ifl+cTx/fiBs7PM+4kPn1+YIeJaFHd//D8=;
+ b=vWgt7rzkKqjOLAwWYg5qohhuGmyRMvBtXKsciMbOLYqhveiL8J7ZxVw818CnIpjQjaV21FpgAiJx8tLU/n2zbQHe9SuJsh0hYzAYuap5aPGXSXyiflM0LVrLBK4eFVC6bVWiDZwIdLReF6g6eU0mmdPMp2XOJ7mT4OpuI9e6336TGyYBwRjc1xPQ9BL0tn6ty840l2kHPpdrZsY8n3mQXKwF9KeJdsCVVljTbsSQPBaR5bGTU8rHNU2Db8cSzobUioH1FZmAWDD9fNT8UdOXVUsfb1ENnqHNdq0eBE6yqyJH82pAWAF4ZIX9o06/6UuEx+i2fKqM1UMoqSxM/uvNBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=citrix.com; dmarc=pass action=none header.from=citrix.com;
+ dkim=pass header.d=citrix.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=citrix.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aLnhh1bX8ifl+cTx/fiBs7PM+4kPn1+YIeJaFHd//D8=;
+ b=t5dYP7MeYHebXTVfTgbMZy8jh8pnz4ms6J2V2VKLiZWMyOUiKxF8k6ApPW1F03b4++cealyRFSAYRSpnbaYmGHdcrxe1FDtvQUB2R9dln4D94oHcKEHbtP9r10rgWtUZ8uuKW2PSxwINHfzJ/i61gMFD7f38ZJYsedg/5Fn1H0A=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=citrix.com;
+Received: from CH8PR03MB8275.namprd03.prod.outlook.com (2603:10b6:610:2b9::7)
+ by CO1PR03MB7985.namprd03.prod.outlook.com (2603:10b6:303:273::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.21; Mon, 23 Feb
+ 2026 23:08:21 +0000
+Received: from CH8PR03MB8275.namprd03.prod.outlook.com
+ ([fe80::a70d:dc32:bba8:ce37]) by CH8PR03MB8275.namprd03.prod.outlook.com
+ ([fe80::a70d:dc32:bba8:ce37%6]) with mapi id 15.20.9632.017; Mon, 23 Feb 2026
+ 23:08:21 +0000
+Message-ID: <02e6a889-ff72-4c18-b9ee-35fcef3570f6@citrix.com>
+Date: Mon, 23 Feb 2026 23:08:15 +0000
+User-Agent: Mozilla Thunderbird
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
+ Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+ linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ "H . Peter Anvin" <hpa@zytor.com>, dave.hansen@linux.intel.com,
+ Matthew Garrett <mjg59@srcf.ucam.org>,
+ James Bottomley <James.Bottomley@hansenpartnership.com>, peterhuewe@gmx.de,
+ Jarkko Sakkinen <jarkko@kernel.org>, jgg@ziepe.ca,
+ Andy Lutomirski <luto@amacapital.net>, nivedita@alum.mit.edu,
+ Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
+ corbet@lwn.net, dwmw2@infradead.org, baolu.lu@linux.intel.com,
+ kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com
+Subject: Re: [PATCH v9 06/19] x86: Add early SHA-1 support for Secure Launch
+ early measurements
+To: Ard Biesheuvel <ardb@kernel.org>,
+ "Daniel P. Smith" <dpsmith@apertussolutions.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ "Eric W. Biederman" <ebiederm@xmission.com>,
+ Eric Biggers <ebiggers@kernel.org>
+References: <20240531010331.134441-1-ross.philipson@oracle.com>
+ <20240531010331.134441-7-ross.philipson@oracle.com>
+ <20240531021656.GA1502@sol.localdomain>
+ <874jaegk8i.fsf@email.froward.int.ebiederm.org>
+ <5b1ce8d3-516d-4dfd-a976-38e5cee1ef4e@apertussolutions.com>
+ <87ttflli09.ffs@tglx>
+ <281c3bb3-13f6-47a2-9a9a-134e397bf686@apertussolutions.com>
+ <c9a0cd9f-17cb-49e5-a411-b78ef9c7e35e@app.fastmail.com>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+In-Reply-To: <c9a0cd9f-17cb-49e5-a411-b78ef9c7e35e@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO4P265CA0308.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:391::7) To CH8PR03MB8275.namprd03.prod.outlook.com
+ (2603:10b6:610:2b9::7)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20260129212510.967611-6-dmatlack@google.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH8PR03MB8275:EE_|CO1PR03MB7985:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6aa165ad-2093-4c5c-0d13-08de7330708a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?Nm5Ca1YvOHptbnNuZWRIUVVreElYTkdSR0FQMWl2R0xXcmxXRVpxVGpEOThJ?=
+ =?utf-8?B?YnVLT1c0aTE1dHNZd00rc3I4czM2UlpGZVBjekR2M1ZtS2Yxa1hJL3Uwdk1C?=
+ =?utf-8?B?MnI5azhHZkl3MUxPeHVjcU44TVRaTzZXcUdaK29OTzh4T0lZL24vdXhDaDdl?=
+ =?utf-8?B?TUcwcTU4SSttTTN6VGVaKzJuQjdIcEwzSHVETk5iSjgzaFdNcUJMd3kvUGRC?=
+ =?utf-8?B?L2d4NnhXSTBKd1MwUDg4cDFTYlRHcU5LMmlJNTIwQzdyNXhrYXA3ajFQRlB3?=
+ =?utf-8?B?WlBiaXNJT1k0a0lFbEdkemFaL0doYmQ2RGZYRGF1eEdZWUxzQWpseWhtVkJm?=
+ =?utf-8?B?NGhWT295TE1xd1NCMmgyaVROSUdGVjFialpkWUpzaVVsTitQRW8vUE1SVGNC?=
+ =?utf-8?B?TzhEbEFNWXltclpKbkViZElTdlJSZHRwbFp0WnpQNGFnN080dzRWK25rcWdl?=
+ =?utf-8?B?ZVhWOFJ1bGJrZGlzaVpuNWh3cVpLWit5Smp0cDlHLzMrV2EwOFAxOVFONjgv?=
+ =?utf-8?B?bkdiZVZjaSt2Sm1KcTVVTnk5TTU4a0w3QVpoOVFNY0lybFRXVHNSS0NNSTM4?=
+ =?utf-8?B?T0FNL2pOb0pmeUNPc0FuT2tSNTRkYWRCQ29kK3BMOU1PRlY2YmJrQzhKUzJF?=
+ =?utf-8?B?N2JIN2xYdGd4UGlWYmJDVEsvaFJ0OTF6WjAyZGFvZ0ZhY2pWYmNwbkZkb3Jm?=
+ =?utf-8?B?bTNpWERkeUtUYTFQQ1A4MGRqMXNhaFgrdGtvNGRXWXVOekhjN1k4bmdzMDlr?=
+ =?utf-8?B?Z09WNXM2QVR2NGp6c2N6alhnMFpmWGhFWHBoVkl5Q0pELy9QRFg3b3ZKZzBU?=
+ =?utf-8?B?bnVNcjJIYWZ6UjZPd21GK2FodlJ2cHlYZFpWcUJPSFErWm5nbTMxQmZ0MW90?=
+ =?utf-8?B?Q0RvUHlnNjVyYW5WMU1TMkhnZlE0QWU0Rm5MZ0I2NW5YZWtBTVpXaEhDVWE5?=
+ =?utf-8?B?Lzl1cWRrQlRPTVpJRkhGRzdGa0ZqMkJIbXlLYTNCVzRiK3RETWk2WEdUMjVn?=
+ =?utf-8?B?V0h4cWx4RkU2TS9qUXg3UjRxZ2J1RkdnVU9OSTNWM21ncDZWNnFiWHl4USt5?=
+ =?utf-8?B?SWNJUXF0NlU5V0dTNVYwd0E1YVNCMll1OVRaSW9PUlJGZHJJRFdtaG9PUXM0?=
+ =?utf-8?B?NUFJQklGUnl1RkhOMmVONHdIVmtmSVBKQzNxdmhBRXNpOVVuTmpGRUV1OXMx?=
+ =?utf-8?B?bzBUcHNWYnhUU28zdXozcEplYys1WWIwa3Y0enhkaFRaeE9KRC8ybGJCWjdT?=
+ =?utf-8?B?WGxBT25tZmpXQ0pSRjFDWGx1YTl3c3ZSNVJ3Uy9MYWZuTVo0SjVsZk9tM0VF?=
+ =?utf-8?B?TVFWS3pBRGpoeHNPSW9uZVIxWTJBMHpmWHNZb0FMaHM2bUR1QkVuUjlvTjdu?=
+ =?utf-8?B?dmcxZk1ScnJSUmc3VlR6RldqYnBZTXBHMGhKSGVvb3l5Z3Q2c0lmdk9NNHNh?=
+ =?utf-8?B?NTFBVTRTUzJPcHl1aWplOW9OSExTb0ErSlhIZGF4UDZ0VzB6dm51OTFTSFRF?=
+ =?utf-8?B?bEJEc1pDTjlGNVlPSUZRM2dYMzBWMVhIRlpYRGVJTWw2MzdFeW9qOGY0M2t1?=
+ =?utf-8?B?bVdzWWVJRHd3WXRpQW1zVUx4cloxMkxlUjBzbjVCblJnZ1dQT3VzeUx5dkZN?=
+ =?utf-8?B?MDVkTUpSTDl4NFllWEJVTFBSbDZkN1JrbUx4TGRLSTZodG1RWklXeVc5eXNJ?=
+ =?utf-8?B?RnkxOEFhUmlzSXhaMXJuVkhhZ1dnWHVsZFk4TExCeFNNTzF5R3lFUVRzNklw?=
+ =?utf-8?B?dkZ0SldRblhlZXcreFhTNkpBOWJKNjhZOXp2dy9oYWRvczVCL0I1d3FFZGpq?=
+ =?utf-8?B?ckJZNGhmYWJRL1dYZFZ1Vmx0TWhoS2VOTHZ2akEzYlhxM1pnVWtEWFVHNm96?=
+ =?utf-8?B?Zk1NUklzcWUwZTU5RUdWOStVZ1pDcGZjK2ExRCswU3NGcFREWFpPYnJnMTF1?=
+ =?utf-8?B?OExmTjhGUHNJVGpSUnF6eWhqV0UvbVVIa20vYmUydFR5TkovcFgzTC9qYzlN?=
+ =?utf-8?B?Q295eWxOWGU5bGJ0cmRIbkNON0UxeG93SUwxNjBGZVk0NEo5VFUwZkxXckp6?=
+ =?utf-8?B?ekhBUnhWNFlibmE5S2p1TzdXclljK3crWGhKSWhydUlQblgxQWZIbk9RNWJO?=
+ =?utf-8?Q?3ZME=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH8PR03MB8275.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eVNXajRzTWYrK0VqNHFmQlZISEJ6c3BNYVRmREtHN3dkaG85ZDI1RDdLZEl0?=
+ =?utf-8?B?eWtXdTFuaEpzR2lienA1Y3BPL0N2N0d2QXpZdWpyd2tidGlVUis4RW1yazBj?=
+ =?utf-8?B?MUZjT2szTExOcjh0bWtvZG9oZmRUOVNSV3NFT3pmNjR5Sm16cm5hajA4eG4y?=
+ =?utf-8?B?bEx2b0NxeFlheEhiM0RXbFZqSW1aRnljb1ZmQ0R2S1NJZEZVYTRyc3krVmto?=
+ =?utf-8?B?RWZwdjlrbndHblNsMXc5SHdFVUlsZTBRT3VRL2FEOFA0c1BheUVmYmZxSW9C?=
+ =?utf-8?B?WFVnNGVkWGsrcDdDbGovQzl6eDN2QVdCMnNWemNOUE9JL1JxVGpxNTRtZkZu?=
+ =?utf-8?B?NFo2M2IweWVFV3Z0S05Vbis3VWFhMnpyeFBtbjRhcEhiRCtSWGk4MEE2d1lO?=
+ =?utf-8?B?SjVqSmRTWDJrR0g4eVRnZXJmR29TWVFjZlhOUElZQXBqV2gxSWlDZHdOYWE0?=
+ =?utf-8?B?ZllJTkRsNi9CV1ExSk9vU2g1aWN5eFNJNkRUUXMrbW9jZTdvQ2Flam4veXBN?=
+ =?utf-8?B?MEJwdGQweGJDVDd2c0VEc3dvcytBQ0VuVitUVEhzZ2JLbkNTS0VYbzFrb3o0?=
+ =?utf-8?B?V2RERTRnVzBYQURpRkJkQnJHK2I0OWxKK1psRHNNQmN0c0VZSmRzb2xSRkIz?=
+ =?utf-8?B?TCtlM1VMQUxGV0hYT21pcHBKTHJMUk1PUS8yUzM5OSs3dmNvOGpCaDhsTWYx?=
+ =?utf-8?B?M21tZUpSOEJWSlFzNVlFMHZad21za1ZpUW5ZM0FOdFlPMnJMWk9IeW5nMHNj?=
+ =?utf-8?B?TVA3MGxLaWFId0h1Uy9iSE1JbGxEd01PYTZuVytkdU1GYm9Ecklab0d1U0FC?=
+ =?utf-8?B?WXY0L2dFZ2RLb0V2emJJcHJNbjNLQ1IwZmFSQ00ycEptcGIxQnR0a0pGWnhR?=
+ =?utf-8?B?WGdmZW1BYXhYNTRwUTRLdHBjS2k5UnNjbDE3c040aFRtdFVhR1h6NG8xT0l4?=
+ =?utf-8?B?bVl4YnJOTlFzeDNtQ0RQYUMwVWZtR1dKN3hXVGNkeTNINzFSMnNzM2FpVkEy?=
+ =?utf-8?B?ZVI0Ri9SOExVTTBjeWh4WVVoTlZIZ2oxVXNlWHBnaG5kTWYxVG1RaU52OVlX?=
+ =?utf-8?B?dERZdW1wQ1FWUUdCTHFRYUFocWY4V0s1NVlERHpDUVlwVUd6SjNFTFFyRjZz?=
+ =?utf-8?B?TXFabzdsV04yQXNaSWdocjdwajYxdGpuTnhlYXJDMElBczRKRXFOZ0FJUW1i?=
+ =?utf-8?B?dWs2eVNsSjY5WnBZVC9DWEg0UlJhTFVCNnNZNkFlbUFrTllyaEdhUjlNOTE5?=
+ =?utf-8?B?cVNnVWVtTDlrcUYzOEppL3N2Mk1VdFh4WEFNWVUvNnd2ZXRpeU00M3RtdW9R?=
+ =?utf-8?B?dEpTdjBrdzZVR0U1MGNBNjhPcjkrUWY1R1c1SUhQckt6VFMrMHAzS0V1QitE?=
+ =?utf-8?B?UnVSVmRadS9SOVF6KzBWbk5HUXZtMXpIYXNVREtGVXdFT1kvNndXdCtvWmFl?=
+ =?utf-8?B?ODNSRUEzRUZOOFVpc3hVaVMvc1lHSmlvSmNSMnhnWjZYbWtnQ1ZlSUMzVnpF?=
+ =?utf-8?B?aWJnNGc1QlBiZlV3Z1NQbFd4MythTDhHMGN6VGdqaFhiNWl2Tm1YSUZZMDN3?=
+ =?utf-8?B?WmxNWHFIZDRYN2FpakpFaFlCOUpaZ1F1YW9DM1g3blBRanhGVjRLRzBXQ0lI?=
+ =?utf-8?B?WFhDR1R6NWhtK1lFbzZLWlg5Q3JIYzNCZXdPN0xuUy9VLzQ4OHQraFpreHRO?=
+ =?utf-8?B?Tm9UeVVZUHZFWklWSjgrZEhTSktCcFNPd2NTSXRQWUtDeEhRc1czeS91RUQx?=
+ =?utf-8?B?aG5tYUpJeVJoRUZFWGFGOWowYTFJN0g0YXZHc3RIYzFLL0hZOXhabm5IUE01?=
+ =?utf-8?B?am9jeFJXREVhdC9tNEpZRmRjbStUZFVoUVBDN1lRUzFnNFVjU2xVRlZMcDNW?=
+ =?utf-8?B?d00vREpONFpKRm15YkpjYjVKVS80Yi9nWFFydGtEZ0xncXFlNkxmRm5YNjNp?=
+ =?utf-8?B?Q2VmUGRGT0hpT25tRnptalYrbmZvMTRUdnJpNHdES0JWdzhnVUcxYkNHZEtG?=
+ =?utf-8?B?Q1BveFhSOUlKNEN0Wmc4UHcwWGZKTVdBZlcxeUE2MTFLMTR1MTlJUE56anE4?=
+ =?utf-8?B?NEV0SGRWWHdWaHpRdno1WVJqTzk3cDVRWTdWZ3ptYnJmWkY5MnR6YlVMTmtZ?=
+ =?utf-8?B?Qm1UNFZkY0FqRVdvbmVGSG5NZkpRRUlmZkxmNUJwWXdUM3VXbDREUFptY0lV?=
+ =?utf-8?B?d0JibzhlTU9rUEFQWWtHZ1hUTjk0WHZnVWwvbk5VRmRKK3lNeWtoMnRrL2s3?=
+ =?utf-8?B?cTlRNmNxMHBoNGVKUTRqVkc4T01Gek42YVNBUDZVMUdXeDRWM0hyNlNRanQ4?=
+ =?utf-8?B?RkNxa0drNTlLeFd6emEvUXgyTndhR3h3eE1OR0xpTTRDVkQrWlcveDVISVVH?=
+ =?utf-8?Q?lXfvv19DB+c4LRa4=3D?=
+X-OriginatorOrg: citrix.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6aa165ad-2093-4c5c-0d13-08de7330708a
+X-MS-Exchange-CrossTenant-AuthSource: CH8PR03MB8275.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2026 23:08:21.7637
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335836de-42ef-43a2-b145-348c2ee9ca5b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WqsQiCZojkXaADdSkp+XTrKfMygXpKjhJpsjT0KHy2pqNzyhrM1T5rCzqZq4CgF3LjWE7EeyMqNeyc7inLEvtw+MZShZVAEmdUsWge6XER4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR03MB7985
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260223_142909_358533_3C4F3F09 
-X-CRM114-Status: GOOD (  29.64  )
+X-CRM114-CacheID: sfid-20260223_150827_970054_9E2D11FF 
+X-CRM114-Status: GOOD (  23.39  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -116,324 +206,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jan 29, 2026 at 09:24:52PM +0000, David Matlack wrote:
->From: Vipin Sharma <vipinsh@google.com>
+On 20/02/2026 3:35 pm, Ard Biesheuvel wrote:
+> Coming back to this old thread after having spent some time playing with the code:
 >
->Implement the live update file handler callbacks to preserve a vfio-pci
->device across a Live Update. Subsequent commits will enable userspace to
->then retrieve this file after the Live Update.
+> On Thu, 22 Aug 2024, at 20:29, Daniel P. Smith wrote:
 >
->Live Update support is scoped only to cdev files (i.e. not
->VFIO_GROUP_GET_DEVICE_FD files).
+> <selective snip>
 >
->State about each device is serialized into a new ABI struct
->vfio_pci_core_device_ser. The contents of this struct are preserved
->across the Live Update to the next kernel using a combination of
->Kexec-Handover (KHO) to preserve the page(s) holding the struct and the
->Live Update Orchestrator (LUO) to preserve the physical address of the
->struct.
+>> Another fact to consider is that the current Intel's TXT MLE 
+>> specification dictates SHA1 as a valid configuration. Secure Launch's 
+>> use of SHA1 is therefore to comply with Intel's specification for TXT. 
+> As I understand the Intel TXT spec and the code:
 >
->For now the only contents of struct vfio_pci_core_device_ser the
->device's PCI segment number and BDF, so that the device can be uniquely
->identified after the Live Update.
+> - TPM 1.2 is no longer supported by the TXT spec (since 2023)
+> - TPM 1.2 is not supported by your GRUB implementation
+> - in TPM 2.0 mode, SHA1 is only supported by the TXT spec if it is the /only/ algo supported by the TPM
+> - the proposed kernel implementation ignores any SHA-384 and SM3-256 PCR banks if they are active, and caps them using a { 1, 0, ... } fake digest.
 >
->Require that userspace disables interrupts on the device prior to
->freeze() so that the device does not send any interrupts until new
->interrupt handlers have been set up by the next kernel.
+> So apologies for being slow, but I still struggle to understand why it is so important to have a SHA-1 implementation to cap those PCRs. Is it just to support systems with a TPM 2.0 that only has SHA-1 banks enabled?
 >
->Reset the device and restore its state in the freeze() callback. This
->ensures the device can be received by the next kernel in a consistent
->state. Eventually this will be dropped and the device can be preserved
->across in a running state, but that requires further work in VFIO and
->the core PCI layer.
+> Assuming that this code will get merged this year, it will be in a LTS branch by 2027, by which time distros like Debian will pick it up. 
 >
->Note that LUO holds a reference to this file when it is preserved. So
->VFIO is guaranteed that vfio_df_device_last_close() will not be called
->on this device no matter what userspace does.
+> I fully understand that this code has lived out-of-tree for more than a decade, and you likely prefer to get everything upstream that your current users may be relying on. But for Linux, this is a new feature, and merging code now that is basically obsolete on day 1 is not something we should entertain imo.
 >
->Signed-off-by: Vipin Sharma <vipinsh@google.com>
->Co-developed-by: David Matlack <dmatlack@google.com>
->Signed-off-by: David Matlack <dmatlack@google.com>
->---
-> drivers/vfio/pci/vfio_pci.c            |  2 +-
-> drivers/vfio/pci/vfio_pci_liveupdate.c | 84 +++++++++++++++++++++++++-
-> drivers/vfio/pci/vfio_pci_priv.h       |  2 +
-> drivers/vfio/vfio.h                    | 13 ----
-> drivers/vfio/vfio_main.c               | 10 +--
-> include/linux/kho/abi/vfio_pci.h       | 15 +++++
-> include/linux/vfio.h                   | 28 +++++++++
-> 7 files changed, 129 insertions(+), 25 deletions(-)
->
->diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
->index 19e88322af2c..0260afb9492d 100644
->--- a/drivers/vfio/pci/vfio_pci.c
->+++ b/drivers/vfio/pci/vfio_pci.c
->@@ -125,7 +125,7 @@ static int vfio_pci_open_device(struct vfio_device *core_vdev)
-> 	return 0;
-> }
->
->-static const struct vfio_device_ops vfio_pci_ops = {
->+const struct vfio_device_ops vfio_pci_ops = {
-> 	.name		= "vfio-pci",
-> 	.init		= vfio_pci_core_init_dev,
-> 	.release	= vfio_pci_core_release_dev,
->diff --git a/drivers/vfio/pci/vfio_pci_liveupdate.c b/drivers/vfio/pci/vfio_pci_liveupdate.c
->index b84e63c0357b..f01de98f1b75 100644
->--- a/drivers/vfio/pci/vfio_pci_liveupdate.c
->+++ b/drivers/vfio/pci/vfio_pci_liveupdate.c
->@@ -8,25 +8,104 @@
->
-> #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->
->+#include <linux/kexec_handover.h>
-> #include <linux/kho/abi/vfio_pci.h>
-> #include <linux/liveupdate.h>
-> #include <linux/errno.h>
->+#include <linux/vfio.h>
->
-> #include "vfio_pci_priv.h"
->
-> static bool vfio_pci_liveupdate_can_preserve(struct liveupdate_file_handler *handler,
-> 					     struct file *file)
-> {
->-	return false;
->+	struct vfio_device_file *df = to_vfio_device_file(file);
->+
->+	if (!df)
->+		return false;
->+
->+	/* Live Update support is limited to cdev files. */
->+	if (df->group)
->+		return false;
->+
->+	return df->device->ops == &vfio_pci_ops;
-> }
->
-> static int vfio_pci_liveupdate_preserve(struct liveupdate_file_op_args *args)
-> {
->-	return -EOPNOTSUPP;
->+	struct vfio_device *device = vfio_device_from_file(args->file);
->+	struct vfio_pci_core_device_ser *ser;
->+	struct vfio_pci_core_device *vdev;
->+	struct pci_dev *pdev;
->+
->+	vdev = container_of(device, struct vfio_pci_core_device, vdev);
->+	pdev = vdev->pdev;
->+
->+	if (IS_ENABLED(CONFIG_VFIO_PCI_ZDEV_KVM))
->+		return -EINVAL;
->+
->+	if (vfio_pci_is_intel_display(pdev))
->+		return -EINVAL;
->+
->+	ser = kho_alloc_preserve(sizeof(*ser));
->+	if (IS_ERR(ser))
->+		return PTR_ERR(ser);
->+
->+	ser->bdf = pci_dev_id(pdev);
->+	ser->domain = pci_domain_nr(pdev->bus);
->+
->+	args->serialized_data = virt_to_phys(ser);
->+	return 0;
-> }
->
-> static void vfio_pci_liveupdate_unpreserve(struct liveupdate_file_op_args *args)
-> {
->+	kho_unpreserve_free(phys_to_virt(args->serialized_data));
->+}
->+
->+static int vfio_pci_liveupdate_freeze(struct liveupdate_file_op_args *args)
->+{
->+	struct vfio_device *device = vfio_device_from_file(args->file);
->+	struct vfio_pci_core_device *vdev;
->+	struct pci_dev *pdev;
->+	int ret;
->+
->+	vdev = container_of(device, struct vfio_pci_core_device, vdev);
->+	pdev = vdev->pdev;
->+
->+	guard(mutex)(&device->dev_set->lock);
->+
->+	/*
->+	 * Userspace must disable interrupts on the device prior to freeze so
->+	 * that the device does not send any interrupts until new interrupt
->+	 * handlers have been established by the next kernel.
->+	 */
->+	if (vdev->irq_type != VFIO_PCI_NUM_IRQS) {
->+		pci_err(pdev, "Freeze failed! Interrupts are still enabled.\n");
->+		return -EINVAL;
->+	}
->+
->+	pci_dev_lock(pdev);
->+
->+	ret = pci_load_saved_state(pdev, vdev->pci_saved_state);
->+	if (ret)
->+		goto out;
->+
->+	/*
->+	 * Reset the device and restore it back to its original state before
->+	 * handing it to the next kernel.
->+	 *
->+	 * Eventually both of these should be dropped and the device should be
->+	 * kept running with its current state across the Live Update.
->+	 */
->+	if (vdev->reset_works)
->+		ret = __pci_reset_function_locked(pdev);
->+
->+	pci_restore_state(pdev);
->+
->+out:
->+	pci_dev_unlock(pdev);
->+	return ret;
-> }
->
-> static int vfio_pci_liveupdate_retrieve(struct liveupdate_file_op_args *args)
->@@ -42,6 +121,7 @@ static const struct liveupdate_file_ops vfio_pci_liveupdate_file_ops = {
-> 	.can_preserve = vfio_pci_liveupdate_can_preserve,
-> 	.preserve = vfio_pci_liveupdate_preserve,
-> 	.unpreserve = vfio_pci_liveupdate_unpreserve,
->+	.freeze = vfio_pci_liveupdate_freeze,
-> 	.retrieve = vfio_pci_liveupdate_retrieve,
-> 	.finish = vfio_pci_liveupdate_finish,
-> 	.owner = THIS_MODULE,
->diff --git a/drivers/vfio/pci/vfio_pci_priv.h b/drivers/vfio/pci/vfio_pci_priv.h
->index 68966ec64e51..d3da79b7b03c 100644
->--- a/drivers/vfio/pci/vfio_pci_priv.h
->+++ b/drivers/vfio/pci/vfio_pci_priv.h
->@@ -11,6 +11,8 @@
-> /* Cap maximum number of ioeventfds per device (arbitrary) */
-> #define VFIO_PCI_IOEVENTFD_MAX		1000
->
->+extern const struct vfio_device_ops vfio_pci_ops;
->+
-> struct vfio_pci_ioeventfd {
-> 	struct list_head	next;
-> 	struct vfio_pci_core_device	*vdev;
->diff --git a/drivers/vfio/vfio.h b/drivers/vfio/vfio.h
->index 50128da18bca..6b89edbbf174 100644
->--- a/drivers/vfio/vfio.h
->+++ b/drivers/vfio/vfio.h
->@@ -16,17 +16,6 @@ struct iommufd_ctx;
-> struct iommu_group;
-> struct vfio_container;
->
->-struct vfio_device_file {
->-	struct vfio_device *device;
->-	struct vfio_group *group;
->-
->-	u8 access_granted;
->-	u32 devid; /* only valid when iommufd is valid */
->-	spinlock_t kvm_ref_lock; /* protect kvm field */
->-	struct kvm *kvm;
->-	struct iommufd_ctx *iommufd; /* protected by struct vfio_device_set::lock */
->-};
->-
-> void vfio_device_put_registration(struct vfio_device *device);
-> bool vfio_device_try_get_registration(struct vfio_device *device);
-> int vfio_df_open(struct vfio_device_file *df);
->@@ -34,8 +23,6 @@ void vfio_df_close(struct vfio_device_file *df);
-> struct vfio_device_file *
-> vfio_allocate_device_file(struct vfio_device *device);
->
->-extern const struct file_operations vfio_device_fops;
->-
-> #ifdef CONFIG_VFIO_NOIOMMU
-> extern bool vfio_noiommu __read_mostly;
-> #else
->diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
->index f7df90c423b4..276f615f0c28 100644
->--- a/drivers/vfio/vfio_main.c
->+++ b/drivers/vfio/vfio_main.c
->@@ -1436,15 +1436,7 @@ const struct file_operations vfio_device_fops = {
-> 	.show_fdinfo	= vfio_device_show_fdinfo,
-> #endif
-> };
->-
->-static struct vfio_device *vfio_device_from_file(struct file *file)
->-{
->-	struct vfio_device_file *df = file->private_data;
->-
->-	if (file->f_op != &vfio_device_fops)
->-		return NULL;
->-	return df->device;
->-}
->+EXPORT_SYMBOL_GPL(vfio_device_fops);
->
-> /**
->  * vfio_file_is_valid - True if the file is valid vfio file
->diff --git a/include/linux/kho/abi/vfio_pci.h b/include/linux/kho/abi/vfio_pci.h
->index 37a845eed972..9bf58a2f3820 100644
->--- a/include/linux/kho/abi/vfio_pci.h
->+++ b/include/linux/kho/abi/vfio_pci.h
->@@ -9,6 +9,9 @@
-> #ifndef _LINUX_LIVEUPDATE_ABI_VFIO_PCI_H
-> #define _LINUX_LIVEUPDATE_ABI_VFIO_PCI_H
->
->+#include <linux/compiler.h>
->+#include <linux/types.h>
->+
-> /**
->  * DOC: VFIO PCI Live Update ABI
->  *
->@@ -25,4 +28,16 @@
->
-> #define VFIO_PCI_LUO_FH_COMPATIBLE "vfio-pci-v1"
->
->+/**
->+ * struct vfio_pci_core_device_ser - Serialized state of a single VFIO PCI
->+ * device.
->+ *
->+ * @bdf: The device's PCI bus, device, and function number.
->+ * @domain: The device's PCI domain number (segment).
->+ */
->+struct vfio_pci_core_device_ser {
->+	u16 bdf;
->+	u16 domain;
->+} __packed;
->+
-> #endif /* _LINUX_LIVEUPDATE_ABI_VFIO_PCI_H */
->diff --git a/include/linux/vfio.h b/include/linux/vfio.h
->index e90859956514..9aa1587fea19 100644
->--- a/include/linux/vfio.h
->+++ b/include/linux/vfio.h
->@@ -81,6 +81,34 @@ struct vfio_device {
-> #endif
-> };
->
->+struct vfio_device_file {
->+	struct vfio_device *device;
->+	struct vfio_group *group;
->+
->+	u8 access_granted;
->+	u32 devid; /* only valid when iommufd is valid */
->+	spinlock_t kvm_ref_lock; /* protect kvm field */
->+	struct kvm *kvm;
->+	struct iommufd_ctx *iommufd; /* protected by struct vfio_device_set::lock */
->+};
->+
->+extern const struct file_operations vfio_device_fops;
->+
->+static inline struct vfio_device_file *to_vfio_device_file(struct file *file)
->+{
->+	if (file->f_op != &vfio_device_fops)
->+		return NULL;
->+
->+	return file->private_data;
->+}
->+
->+static inline struct vfio_device *vfio_device_from_file(struct file *file)
->+{
->+	struct vfio_device_file *df = to_vfio_device_file(file);
->+
->+	return df ? df->device : NULL;
->+}
->+
-> /**
->  * struct vfio_device_ops - VFIO bus driver device callbacks
->  *
->-- 
->2.53.0.rc1.225.gd81095ad13-goog
+> (and apologies for re-opening yet another can of worms - I assure you I am trying to be constructive here)
 >
 
-Reviewed-by: Samiullah Khawaja <skhawaja@google.com>
+I appreciate that you've got concerns, but I don't think these
+characterisations are fair.  Ultimately yes, we do want to support TPM
+1.2 systems because we have users wanting a way off the out-of-tree patches.
+
+3-year-old hardware is new enough to still be in full support from OEMs,
+and totally fair game for distro LTS's even at this juncture.
+
+The TXT spec does not speak for what OEMs choose to support, nor for the
+TPM spec (where SHA1 is a mandatory algorithm for TPM 2.0), nor does it
+speak for other silicon vendors we're trying to support (there are AMD
+patches waiting for the interface to stop changing).
+
+
+But lets ask the question the other way around.  What does refusing SHA1
+gain?
+
+AFAICT, there's no meaningful reduction in complexity in the early code;
+the TPM library speaks TPM 1.2 and 2.0.  There is a small reduction in
+binary size for not including SHA-1, but including it is no extra C
+because we reuse the library that already exists.
+
+The cost is a failure to operate in some TXT configurations that exist
+on in-support CPUs, as well as older systems.
+
+~Andrew
 
