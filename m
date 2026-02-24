@@ -4,116 +4,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 74830EFB811
-	for <kexec@archiver.kernel.org>; Tue, 24 Feb 2026 08:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 98BEEEFB816
+	for <kexec@archiver.kernel.org>; Tue, 24 Feb 2026 08:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=iUKKSXBfGZuIEKcFLX2f8iJcwGvlTC3YM5y4lXwVnQE=; b=l3kkkJFiWerd9yCqXO1Qaa1eMR
-	2FeYMlSGjPm9wfJsJh+B3WVv5HNfGj9R8440596zHr67clKOXaqh4OOkBtBTb/F8oN/PuPG389cHh
-	9ZXUHhAPETHhYKsIW0d2kCjHZ2XYktJAbs8674+UwithtcpXOMXp3KwyQjX0fgRvgeHtQUOw90awP
-	ZoGtDMU9VP3hnS3Psi5ChK7mgbDpRNo1qumZIMcvS01M90uZNvUqO0XkTryaePsdlHZrovYwdmeJJ
-	QYzVoHkRDoOUZK+fuFz7UffGcZVq9f8TX6sNZZjupB1WmJ9953GlLbsx8xXN8g0M/7WSGKkLtD+2q
-	kctl3EgQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Subject:References:In-Reply-To:Message-Id:Cc:To:From:Date:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=uGL5V4ybrZtgDy4Ez2EE0bWwenNORHtw2SqAtXBgfrM=; b=wBbXdwrgDgm6y+dxJIf98K+7Va
+	MbXnIsCZpwhtwxlyfq4EkeS8jeKgTfUqBE9FVfNXNxtQZG4KBBUrK3HSrvRrUbxRUgj0pI0xm4nZw
+	T30nrUJfTCeMHEBARdsB0e9KpgYL2xHl0PlZHTV4RS0qXArn2p2HWVgTBFuD97boS1TJ5cVZzupCs
+	qde0uIGoUy+kT0TYduAZYM90bapsxa0X3hSWp2t9ZBHwohn+Du0WhIL+gIj3VQgXwO211CtafRJtZ
+	lk2JXSaD0yetzS3Vl/v4h1gM9n4uoMyHZIt8ov4b1oHUmIAhmum6E5nWhKrxzOal4i6w00jWYEjrC
+	V9+xwSog==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vunkO-00000001dty-1Bpg;
-	Tue, 24 Feb 2026 08:26:24 +0000
-Received: from mail-pl1-x62d.google.com ([2607:f8b0:4864:20::62d])
+	id 1vunl2-00000001e0P-18f2;
+	Tue, 24 Feb 2026 08:27:04 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vunkL-00000001dtH-3hUY
+	id 1vunkz-00000001dzn-2F5H
 	for kexec@lists.infradead.org;
-	Tue, 24 Feb 2026 08:26:23 +0000
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-2a964077671so69505ad.0
-        for <kexec@lists.infradead.org>; Tue, 24 Feb 2026 00:26:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1771921579; x=1772526379; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iUKKSXBfGZuIEKcFLX2f8iJcwGvlTC3YM5y4lXwVnQE=;
-        b=1eLtCk00rGabjf9yj1BpA7cygPuJRKvsGIYvTvulRR5NlbMwOz6IvfeKVnrYDmljmv
-         4/jJ0HVSAx0VLveQ/zWe17SwYkEkD669oBhlEcO4iPE8TFBFFDQH5KR1Il5TSFfAYGW9
-         a52TsiS73Be/wwh9Euq+BrOSYtxhKrSaP10LkXtkk1LU9SYyzwoY6zvSIbe0TMnX4uZS
-         LIwRuWbX7NjCw+1Zb8WfYCHpmdfTQqP9xi2lPnM/I80SNrafu+9iR0Y3fS+OUrmfzaS1
-         Jva2MbItq3xms2MvDQeVo9aJxkvE8VHJb4Tolj9DZvFuJYxGWuSNlj3zHN4e+n4bHSh7
-         5CzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771921579; x=1772526379;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iUKKSXBfGZuIEKcFLX2f8iJcwGvlTC3YM5y4lXwVnQE=;
-        b=q50Iq4tro+Y3k6WFU5NScxZXuWXYs8n/BgXISpOscJcMMo8J9iLFKLx/baWwSOmzfj
-         ZTwBQMzhec8yu6uBjfglpz5vtlm5B0NIT1XnkOeqx8FTtcJByNP2bdK2obP9twdUrOKK
-         XZwsdrTD0Mf/3rqRTTyJ/KNahq96YNi9JBHwZ7wCZGH8S0OXNlnT50eW0iERkttm3ECu
-         7lNEqig0i6sVuub0wM6/Xg2eDTCZttUXabiRt+z1zb5yT/cOdNWYPfSSmPlsN/23Inwq
-         GlRIzjmhs9QMoIAQp6knON6NgrNur0kTO2GDVyF+LE8UsOh6DWk1GUBaybbJSuvLZlN4
-         hvAw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBx+8dLO+qco66KgRIxtRsr/MrvKbQEKFUTdShqdw5gCo2vWheam5by+D54pr+Dxvp1Kyh1g==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwqVivXrpzppvwVNeB5RX5rOQ2jYLJsh3pXfphAzMcJ9LOMLlOh
-	R+ZchGn0BjBEnquBwk//GyCqSuToXmxz8KEQ6Es37ujTxctYe1n0rQTKsYdevb3EMA==
-X-Gm-Gg: ATEYQzyOxpNW5+OEnAwOodN/TnOcaEH1WcXwAJECnJvBy1/HzQscMSjNrVeAXkUsGZC
-	RcUs9g0XyHnisiuEerkuH2wkx+fkUkFDQQpvT95xOfFtdPinBamjhi9Igd0T09VEvrsttayNssZ
-	CE5wqDx+v1WlN4GiCOEAkSdoD8x/fEe9dveoeqTzmhcscVG5lth39mD94+GRexECip3NvQcxOHn
-	7Vgr00/YV9rR4NM/E1i8F2qfHFXntDoLGS4p70oGHwo0X2HWcV02OUKRLNSW+vKSdRmiFL574rE
-	6RwQgS638fd1CgPTkDMhfE/IFKYE9gtJT4IAPG2q6UJ968HO1cLYSXoQt6ANbdKr6/dOyGXzk42
-	VbH5M/R8P4JYCA+EdnoV6aWbNVU4djhR74HYg4Ffikxe0DVkJGwtI82VvKbCa3sUW0c332MyLea
-	nyao5oIai3DWYFo50/GLRbCNEzym/vR706JU2X0JXHCHXUsld/E5CcZHMSPdxARjwZHBg9+tM=
-X-Received: by 2002:a17:903:2f04:b0:2a0:7fac:c031 with SMTP id d9443c01a7336-2ad997f5113mr1474945ad.14.1771921579006;
-        Tue, 24 Feb 2026 00:26:19 -0800 (PST)
-Received: from google.com (222.245.187.35.bc.googleusercontent.com. [35.187.245.222])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ada77cc13bsm13228715ad.47.2026.02.24.00.26.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Feb 2026 00:26:18 -0800 (PST)
-Date: Tue, 24 Feb 2026 08:26:08 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: David Matlack <dmatlack@google.com>
-Cc: Alex Williamson <alex@shazbot.org>,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
-	Kevin Tian <kevin.tian@intel.com>, kexec@lists.infradead.org,
-	kvm@vger.kernel.org, Leon Romanovsky <leon@kernel.org>,
-	Leon Romanovsky <leonro@nvidia.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, linux-pci@vger.kernel.org,
-	Lukas Wunner <lukas@wunner.de>,
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Raghavendra Rao Ananta <rananta@google.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Tomita Moeko <tomitamoeko@gmail.com>,
-	Vipin Sharma <vipinsh@google.com>,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
-	Zhu Yanjun <yanjun.zhu@linux.dev>
-Subject: Re: [PATCH v2 01/22] liveupdate: Export symbols needed by modules
-Message-ID: <aZ1goNCgY8xz9n6K@google.com>
-References: <20260129212510.967611-1-dmatlack@google.com>
- <20260129212510.967611-2-dmatlack@google.com>
+	Tue, 24 Feb 2026 08:27:02 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id CAF23443EF;
+	Tue, 24 Feb 2026 08:27:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99FC4C4AF0B;
+	Tue, 24 Feb 2026 08:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771921620;
+	bh=uGL5V4ybrZtgDy4Ez2EE0bWwenNORHtw2SqAtXBgfrM=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=axVIXYxUgRkP5VNvV98V1g0wnA7ipOtwAd357KTFn/CRheTNFVp2/ypFLpseuiOSL
+	 s9Q7QuK+wValYwI9sm1NvSzwKKauls2jJemU2qF4e2xWQENKI5xKo6RkUE1FQx1B6Q
+	 vVyy4y3eIPEpyz/hZYwSrq7o9uLSizPq5zATgrc1OgaUp8r4HGU/V6B/QLFH3tXvZv
+	 jxyPe5nAOBfUIt5RSL/OxgJ4TK0+zElK7XNg+lj1xTPrTENRsg8gx6GocV9NXgfZPb
+	 49tGwDX7vI7I+gmhucE9HiReXDACKRnKGuO23ez5Ccp5cxjJxw9fzJi/X67fWXSBqk
+	 3RDTrQdPBZ1jQ==
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 8F85BF4006A;
+	Tue, 24 Feb 2026 03:26:58 -0500 (EST)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-01.internal (MEProxy); Tue, 24 Feb 2026 03:26:58 -0500
+X-ME-Sender: <xms:0mCdaeS4gs9_4cI0M3pb0ELas63mgebvYSvnSqB9RAqe_bOYHciYMQ>
+    <xme:0mCdaelkhNJa-C8gAgeqSnHrqMx1JykXK-Eg_2ErefnrT4Df3ZGe-uThtv4pUDPFO
+    ZQhtHrXX3ZH00eunOoHDteXfbtsHZRZiB_CKFosv4GOq7i0LD320dc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvfeelieekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedftehrugcu
+    uehivghshhgvuhhvvghlfdcuoegrrhgusgeskhgvrhhnvghlrdhorhhgqeenucggtffrrg
+    htthgvrhhnpeeuteeiudeigeekjedvheduieehteetgfdtuefghfejgffhfedtleehvdeh
+    fffhvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieejtdehtddtjeel
+    qdeffedvudeigeduhedqrghruggspeepkhgvrhhnvghlrdhorhhgseifohhrkhhofhgrrh
+    gurdgtohhmpdhnsggprhgtphhtthhopeefvddpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohepsghpsegrlhhivghnkedruggvpdhrtghpthhtohepnhhivhgvughithgrsegrlh
+    humhdrmhhithdrvgguuhdprhgtphhtthhopehluhhtohesrghmrggtrghpihhtrghlrdhn
+    vghtpdhrtghpthhtohepughpshhmihhthhesrghpvghrthhushhsohhluhhtihhonhhsrd
+    gtohhmpdhrtghpthhtoheprghnughrvgifrdgtohhophgvrhefsegtihhtrhhigidrtgho
+    mhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoh
+    epphgvthgvrhhhuhgvfigvsehgmhigrdguvgdprhgtphhtthhopehhvghrsggvrhhtsehg
+    ohhnughorhdrrghprghnrgdrohhrghdrrghupdhrtghpthhtohepthhrvghntghhsghooh
+    htqdguvghvvghlsehgohhoghhlvghgrhhouhhpshdrtghomh
+X-ME-Proxy: <xmx:0mCdaVC92Ri72Ftpm6M5ZohWHZYKotgc9AzwW5hBVioygJzJDEfkLw>
+    <xmx:0mCdaeNvbe_P3jm_Oi-bOhVymevi0WIoW07XL-dampoag-b4eTcdow>
+    <xmx:0mCdaUkYLeWTXG5vbaFJ-xDDYExrF_SQLlH8ZGP-nr6zp_k6ZkhkZA>
+    <xmx:0mCdaQc57QXzPMBBpX0iwdRcBoNXBcYM2z9j-KjrSVl2AiKAzVHE5Q>
+    <xmx:0mCdaZD30e_5mV6VzzV0zJSiWC_PzLK46AJe_IvUTDxy6JlFAdW7YCjw>
+Feedback-ID: ice86485a:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 5DE47700069; Tue, 24 Feb 2026 03:26:58 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260129212510.967611-2-dmatlack@google.com>
+X-ThreadId: A1ToacgRLhLF
+Date: Tue, 24 Feb 2026 09:25:33 +0100
+From: "Ard Biesheuvel" <ardb@kernel.org>
+To: "Andrew Cooper" <andrew.cooper3@citrix.com>,
+ "Daniel P. Smith" <dpsmith@apertussolutions.com>,
+ "Thomas Gleixner" <tglx@linutronix.de>,
+ "Eric W. Biederman" <ebiederm@xmission.com>,
+ "Eric Biggers" <ebiggers@kernel.org>
+Cc: "Ross Philipson" <ross.philipson@oracle.com>,
+ linux-kernel@vger.kernel.org, x86@kernel.org,
+ linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+ linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org,
+ "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+ "H . Peter Anvin" <hpa@zytor.com>, dave.hansen@linux.intel.com,
+ "Matthew Garrett" <mjg59@srcf.ucam.org>,
+ "James Bottomley" <James.Bottomley@hansenpartnership.com>, peterhuewe@gmx.de,
+ "Jarkko Sakkinen" <jarkko@kernel.org>, jgg@ziepe.ca,
+ "Andy Lutomirski" <luto@amacapital.net>, nivedita@alum.mit.edu,
+ "Herbert Xu" <herbert@gondor.apana.org.au>, davem@davemloft.net,
+ corbet@lwn.net, dwmw2@infradead.org, baolu.lu@linux.intel.com,
+ kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com
+Message-Id: <ce68fcc7-d90d-4ee3-bb25-3f960442e281@app.fastmail.com>
+In-Reply-To: <02e6a889-ff72-4c18-b9ee-35fcef3570f6@citrix.com>
+References: <20240531010331.134441-1-ross.philipson@oracle.com>
+ <20240531010331.134441-7-ross.philipson@oracle.com>
+ <20240531021656.GA1502@sol.localdomain>
+ <874jaegk8i.fsf@email.froward.int.ebiederm.org>
+ <5b1ce8d3-516d-4dfd-a976-38e5cee1ef4e@apertussolutions.com>
+ <87ttflli09.ffs@tglx>
+ <281c3bb3-13f6-47a2-9a9a-134e397bf686@apertussolutions.com>
+ <c9a0cd9f-17cb-49e5-a411-b78ef9c7e35e@app.fastmail.com>
+ <02e6a889-ff72-4c18-b9ee-35fcef3570f6@citrix.com>
+Subject: Re: [PATCH v9 06/19] x86: Add early SHA-1 support for Secure Launch early
+ measurements
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260224_002622_030300_47E040C6 
-X-CRM114-Status: GOOD (  16.54  )
+X-CRM114-CacheID: sfid-20260224_002701_633773_DE22AE8A 
+X-CRM114-Status: GOOD (  29.59  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -128,50 +132,114 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jan 29, 2026 at 09:24:48PM +0000, David Matlack wrote:
-> Export liveupdate_enabled(), liveupdate_register_file_handler(), and
-> liveupdate_unregister_file_handler(). All of these will be used by
-> vfio-pci in a subsequent commit, which can be built as a module.
-> 
-> Signed-off-by: David Matlack <dmatlack@google.com>
-> ---
->  kernel/liveupdate/luo_core.c | 1 +
->  kernel/liveupdate/luo_file.c | 2 ++
->  2 files changed, 3 insertions(+)
-> 
 
-Reviewed-by: Pranjal Shrivastava <praan@google.com>
 
-> diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
-> index dda7bb57d421..59d7793d9444 100644
-> --- a/kernel/liveupdate/luo_core.c
-> +++ b/kernel/liveupdate/luo_core.c
-> @@ -255,6 +255,7 @@ bool liveupdate_enabled(void)
->  {
->  	return luo_global.enabled;
->  }
-> +EXPORT_SYMBOL_GPL(liveupdate_enabled);
->  
->  /**
->   * DOC: LUO ioctl Interface
-> diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
-> index 35d2a8b1a0df..32759e846bc9 100644
-> --- a/kernel/liveupdate/luo_file.c
-> +++ b/kernel/liveupdate/luo_file.c
-> @@ -872,6 +872,7 @@ int liveupdate_register_file_handler(struct liveupdate_file_handler *fh)
->  	luo_session_resume();
->  	return err;
->  }
-> +EXPORT_SYMBOL_GPL(liveupdate_register_file_handler);
->  
->  /**
->   * liveupdate_unregister_file_handler - Unregister a liveupdate file handler
-> @@ -917,3 +918,4 @@ int liveupdate_unregister_file_handler(struct liveupdate_file_handler *fh)
->  	liveupdate_test_register(fh);
->  	return err;
->  }
-> +EXPORT_SYMBOL_GPL(liveupdate_unregister_file_handler);
-> -- 
-> 2.53.0.rc1.225.gd81095ad13-goog
-> 
+On Tue, 24 Feb 2026, at 00:08, Andrew Cooper wrote:
+> On 20/02/2026 3:35 pm, Ard Biesheuvel wrote:
+>> Coming back to this old thread after having spent some time playing w=
+ith the code:
+>>
+>> On Thu, 22 Aug 2024, at 20:29, Daniel P. Smith wrote:
+>>
+>> <selective snip>
+>>
+>>> Another fact to consider is that the current Intel's TXT MLE=20
+>>> specification dictates SHA1 as a valid configuration. Secure Launch'=
+s=20
+>>> use of SHA1 is therefore to comply with Intel's specification for TX=
+T.=20
+>> As I understand the Intel TXT spec and the code:
+>>
+>> - TPM 1.2 is no longer supported by the TXT spec (since 2023)
+>> - TPM 1.2 is not supported by your GRUB implementation
+>> - in TPM 2.0 mode, SHA1 is only supported by the TXT spec if it is th=
+e /only/ algo supported by the TPM
+>> - the proposed kernel implementation ignores any SHA-384 and SM3-256 =
+PCR banks if they are active, and caps them using a { 1, 0, ... } fake d=
+igest.
+>>
+>> So apologies for being slow, but I still struggle to understand why i=
+t is so important to have a SHA-1 implementation to cap those PCRs. Is i=
+t just to support systems with a TPM 2.0 that only has SHA-1 banks enabl=
+ed?
+>>
+>> Assuming that this code will get merged this year, it will be in a LT=
+S branch by 2027, by which time distros like Debian will pick it up.=20
+>>
+>> I fully understand that this code has lived out-of-tree for more than=
+ a decade, and you likely prefer to get everything upstream that your cu=
+rrent users may be relying on. But for Linux, this is a new feature, and=
+ merging code now that is basically obsolete on day 1 is not something w=
+e should entertain imo.
+>>
+>> (and apologies for re-opening yet another can of worms - I assure you=
+ I am trying to be constructive here)
+>>
+>
+> I appreciate that you've got concerns, but I don't think these
+> characterisations are fair.=C2=A0 Ultimately yes, we do want to suppor=
+t TPM
+> 1.2 systems because we have users wanting a way off the out-of-tree pa=
+tches.
+>
+
+That was my question, yes. So supporting TPM 1.2 as well as TPM 2.0 with=
+ only SHA-1 banks enabled is needed not to comply with the spec, but to =
+support existing out-of-tree users. That needs to be called out, because=
+ what I am quoting above is a claim that it is needed to comply with the=
+ TXT MLE spec.
+
+So the debate is really about whether or not such systems should be cons=
+idered obsolete at this point.
+
+And why is it ok to just cap active SHA-384 banks rather than perform th=
+e proper measurements?
+
+> 3-year-old hardware is new enough to still be in full support from OEM=
+s,
+> and totally fair game for distro LTS's even at this juncture.
+>
+
+3-year old hardware that shipped with a TPM 1.2?
+
+> The TXT spec does not speak for what OEMs choose to support, nor for t=
+he
+> TPM spec (where SHA1 is a mandatory algorithm for TPM 2.0), nor does it
+> speak for other silicon vendors we're trying to support (there are AMD
+> patches waiting for the interface to stop changing).
+>
+>
+> But lets ask the question the other way around.=C2=A0 What does refusi=
+ng SHA1
+> gain?
+>
+> AFAICT, there's no meaningful reduction in complexity in the early cod=
+e;
+> the TPM library speaks TPM 1.2 and 2.0.=C2=A0 There is a small reducti=
+on in
+> binary size for not including SHA-1, but including it is no extra C
+> because we reuse the library that already exists.
+>
+
+The complexity of the code is not the problem. The problem is that we'll=
+ be stuck supporting it long past the point where anyone is making meani=
+ngful use of it. I'm not keen on being on the receiving end of a bug rep=
+ort from your last remaining TPM 1.2 user, with no means whatsoever to t=
+est or reproduce.
+
+> The cost is a failure to operate in some TXT configurations that exist
+> on in-support CPUs, as well as older systems.
+>
+
+Sure, some systems will be left behind. I just wonder how many of those =
+would be upgrading to the v7.3 LTS kernel to begin with, 4 years after T=
+PM 1.2 support was dropped from the TXT spec.
+
+In any case, the code changes themselves look fine to me. I am more conc=
+erned about the long term maintenance: the x86 boot code is very complex=
+, given how many boot methods it supports, and it is rather difficult to=
+ regression test all of those.
+
+
+
 
