@@ -4,98 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CE7BAF4BB66
-	for <kexec@archiver.kernel.org>; Tue, 24 Feb 2026 17:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 549A7F4BB67
+	for <kexec@archiver.kernel.org>; Tue, 24 Feb 2026 17:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ifttwnYsIrEN6pRSBIiuqj7H8s+5kPdjKC4U9v3r5Ew=; b=ORpq1Yok7//mc8jcHMyN4hOtxv
-	WDqr49vVt9om7vzbb/zQQ2cOPD5pixh2Y8FMG4avbxBXLmmd/FlUQKr7bFYVHh0/MjiLYSPM+IkfC
-	iNp6f08Km8iRbY3Q54zCe6NWYouFpotgIg3NCZln4DDRaDaFapXo83NOYDc0IUESwQnENDgBx5JFO
-	aDVvMKlgr14DEW9EsYkXd39Gfemxny2uKGmnuHczIVvOb/xU4lP6sAOuS+UNBR6YvvIInzaKqsxSP
-	LGsn6lr4koPrKETX7FcE09d40VcXOnNEYt8D9TkUOWYiSO8DL+svE3eJJlhpC3KgcpdPDHqe/H7ff
-	SXlU6kJQ==;
+	bh=WVyG+GjslObEPoiorlcEtEb0lbImQuwl2+xBSlYjPvU=; b=GXbWyeF0aK9XWou2QiV6rGYOEX
+	PB0C4rqcYu7Q48cGa3AVEuxn39s+sI47tSP+BLtJKgvopd/m/HFcZ8fiwY9Sjb5YanD1dv4/em9Iy
+	vQJZhQ9Wp0V8Fc/Fa0baFpcZbVuMQNs9TM2Fs3mGPurkQnZcvVxIhjz9kz/1ovyiCVq3bi70PGxm+
+	v8vyx9peaSXXcAfTASO0SM3iGoQOcWDKXkIyDc6tAYY77L6EUVh2GiIQtX4oETDFso/Bnbb5A116i
+	yUOnlx/rVtMKfyv35FSNzM9oWI4WMk81JQVHb0Vb/MNYKSeljAMeB3S4dFxRCa63pK6WzQcpdhWFk
+	ffBIiwVQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vuwIM-00000002Uuh-3GuZ;
-	Tue, 24 Feb 2026 17:34:02 +0000
-Received: from mail-ua1-x92a.google.com ([2607:f8b0:4864:20::92a])
+	id 1vuwLi-00000002V4D-2P1b;
+	Tue, 24 Feb 2026 17:37:30 +0000
+Received: from mail-vk1-xa36.google.com ([2607:f8b0:4864:20::a36])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vuwIK-00000002UuM-0IPf
+	id 1vuwLg-00000002V3r-0wTU
 	for kexec@lists.infradead.org;
-	Tue, 24 Feb 2026 17:34:01 +0000
-Received: by mail-ua1-x92a.google.com with SMTP id a1e0cc1a2514c-94dd05a4b44so18461241.1
-        for <kexec@lists.infradead.org>; Tue, 24 Feb 2026 09:33:59 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771954438; cv=none;
+	Tue, 24 Feb 2026 17:37:29 +0000
+Received: by mail-vk1-xa36.google.com with SMTP id 71dfb90a1353d-567404384b7so4073664e0c.3
+        for <kexec@lists.infradead.org>; Tue, 24 Feb 2026 09:37:27 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771954647; cv=none;
         d=google.com; s=arc-20240605;
-        b=adDwmy+MxdLSYMijEmQ1hpbcIseQn0xZCUe3/yfp0HirWKMvTioRN4yop0BkUahu2A
-         5jk+DjEwZKnJ8N1CQ4YeHBlMINcBj+V7HD/r3Nxut1N+JW+3+dr83VtzoRZW5uSpSt3K
-         5taj6dPzGsLNc8eRlUvfKUgAfF2ZkhmTHbeEhqDxYZv0EVZAD7GkyD6aymmRdTyLWTsi
-         2L1xy1xhiD1nPvfSUtUKsrBJ4qrSgI456vsqlBq0lgaB7ZebtQH3jbO4LPvdMP9d5Yhy
-         5QaIIp6ZT+me0viygcW4EPoEoKFnjIguQZ3sfTgFXj8xVOyJacQarHEnJq6yPjQgzvbl
-         ENMA==
+        b=Xr+rzZidSvwPhrO9Sg3wUUJRBR093GvdwxDmsaH6r7pnKfBxZgbTmaPg/na9sHubYb
+         VHrwdGctxDJtthooZ21mQYkXxXNs7PmKwyeb0cIRL/gTGu/b0gkQ6Yl91PLmcKopn22U
+         tTimlq8+IWEXUTi+JTo8eFfs4R8UYzddd+NNYCIHFw4RRpD4h7hPMTfUuw/qg5VVjXCK
+         KZmjxPmTSLahXj4u2JMxbvQT+IEcHI8x9yHISHuggJuctRltz+OYJvK8fcM9ONLDbb3j
+         RobHd6RM0QiK+4Vu+wK4jCnEEoOfszsfH6mOdR6uvAaLc7wkfUjJPL1aza9HuiZSwC7j
+         gisA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=ifttwnYsIrEN6pRSBIiuqj7H8s+5kPdjKC4U9v3r5Ew=;
-        fh=1s8neGbA4Mk+VWLRez2TsofdVrrAr7Be/ROfi67CkIw=;
-        b=OPrA5GZAuK3Lo/zcwfux3sxs/r2q5I43oAniAlklDQxPhs7F2ieDUcavH5Kcogq/Uo
-         NAI8bDYvvHHtklA1sXfOO7ROEblczcCy+my08PO5D3FPscx94wSHmzJjGFhC8kkwS2EZ
-         koYM6M/m7Xuj2TVTbgspCTy91tJfSu2SXizwgQD7A+5JHEQXvXJ3q8QPa1VzrdpHAqfc
-         iQAmBvBSPsEhzIA5nKHvnVhMI30WTHYGkYVrGSjdeVPwY/cTMJTtaB8xY1dMXnWWVhTt
-         GTzSz0cKoX9FGJq1J+OnNvVH9h4k3b7XO1UWYroxe2/tFdvUwcvtVm3yRyMb/MQgcSHG
-         o2ig==;
+        bh=WVyG+GjslObEPoiorlcEtEb0lbImQuwl2+xBSlYjPvU=;
+        fh=7h7o2fPhmw5tHIS/k4BsbqBYekzrluv3nuNuFXKQGcg=;
+        b=Sp+g/SoFvb0RN6vxQAlTsmPFc1yYwty9Gzw67RBnJiX7sA5inRagzHXWKlwxs9AoKJ
+         8ObHAMr2yBIwy7k1iQABMK5xvORozoR4eKIvX0qNP9lvG4sjSd06LQMRlYDVvrqO3YtY
+         OywbuajNZj9+A4OkebFgC0lxLBtC8hmKjMGnTc31+BQe0FMhXLznWUugLEm9mrCGzQfm
+         uijwJjkzqNyCIUJvJeGNTPJ2pSnzja7mIoA0R991i/9Tie/TKFcO1HuuMuCbzrJmcHUR
+         zM4QUu9k6schZ2xjnp/JMASx/Wpl6N/ZKydNshaQVWsVIr8gIz7yH78sSSWuViZ9wq6N
+         iDSA==;
         darn=lists.infradead.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1771954438; x=1772559238; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1771954647; x=1772559447; darn=lists.infradead.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ifttwnYsIrEN6pRSBIiuqj7H8s+5kPdjKC4U9v3r5Ew=;
-        b=kcPXPywY10pEIGmHLph9LbXKzUKG8LF4Qbtlyy80LBzOujnycQpSd+USwBpLDMxZFb
-         Gj/L/VDRqTubaa5CeZSRK0jnvlgQb/4NeqZT9u56ANap6bMWsX0Re9R7/6WeTuYzIyUU
-         ys7LpKaD0HPg8GHvRHFiz5bRLZNj2sAqtN4ogy8Fd908cV85WUNkUSAuRhtkBIv3hX5K
-         UBI8RdE2i0uIYeOrAU3732QdSRdw0xLKKJRXQ3Wqzc51S+12ugWfkOOKwZRu60E35uzo
-         IxrEfowbfypyBh+Bq0RNNvylV2MABe4cjiU1/gAva4727mghz0hOCJznoqNOysW1EK3u
-         xwnw==
+        bh=WVyG+GjslObEPoiorlcEtEb0lbImQuwl2+xBSlYjPvU=;
+        b=1A536UhD+G2Fu5JKmMCguN8GnyCzR7cbwxVwUMqT57gK+xOEKjTvWs9l4V0ruo3VHq
+         +Shyo4zpWOLVAqNxlEX94m2aFTx/m737aZY9ABZXMX3EKTSaNjSQAVDgI/rmrKnl59ox
+         UiooB8rmuEDrnAMawmzPewkbcGfpGT6yt6LA3dKoLX/WXxkvFyc7nkJYX2UOKnmO0H48
+         75nFpUhP1sueYCFfOq14lCHC5Ku1Z60VVO6O4ZbM6YJOBa064fPKtfAloP+a9HENh3/K
+         5xluxr95wGY/R+YZ+nMQ+UOPF+K2T+blxaBvWLJiZMcwHgfqKGUKdi4kHO3r77UiTEuu
+         xA3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771954438; x=1772559238;
+        d=1e100.net; s=20230601; t=1771954647; x=1772559447;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=ifttwnYsIrEN6pRSBIiuqj7H8s+5kPdjKC4U9v3r5Ew=;
-        b=G8zFBASAo46wADV6T8uLlrOIuuJDDTvoDVHXYDsm/1qJ1vDoTFinm3TSJCdPZrArsS
-         45/v6OYiL+RaVZqWJRv1hLw/WkFSka2g4ypN53l7soXQV++/xUGfHuEQKWFqkRL7+3tw
-         32zg94k9Xq8B90NZn/zvQStbMLG3pjeM9DgoAi93Lgd5jteFOtAFEtYM6uZf16ujDrLY
-         izQkmRX/CPE6FDa1WFI07U5bHRWKrgY2X/LSVC8ZBjXjr1xSxo6N5zRJFT8Jii1UyhLK
-         5Twxim1+hwzcP+/uvr9zhnUuK3hIznPEnn7gtb4J/iw7MpbPPlxheOENQCUKa3dSYmSo
-         EBWw==
-X-Forwarded-Encrypted: i=1; AJvYcCW/YvsdMANCvjSZ5RSEkpQrQfkyok1ridxXdcvFbJDqr2Igo/6PYwgZwM0IrxsxUVb6knNsoA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Ywae77ITzLq3oJ9fuS4N5UbB7w0KVVFC3XDmF2/3YTe3FYM1xAW
-	w1vbq0zb6htwiyT1/XdCJ0eUO7TaH5I9Iv0uszCCm8IR7Apx2zbNTCrBACv6Un8AfFqMFKp+R9v
-	C2KM6T4+5Ght2Bc3uDj+HbVFiHk0qtLZQrCYsmEcQ
-X-Gm-Gg: ATEYQzxr/XHJq+vHq7xggFESuCBuhUQn3PLeJrdECR/8InUxOOKQrVgtX+lH1EoVwE+
-	ojR2jyMqYGINSwW2BXKLVHO26Jf1ksz4YjbhAvxg7Ns3VraFgPvqy6Zh5mWkYVDxKKtH7Jp45EQ
-	T3IiQR5G8LyGa9yl4H97mFoq0JzbYC4Zt81V7sDqo5YKCOTJbqYr5oU6muEghrWGU5CiH6KWyqB
-	xxBe4nmeze5TuRLLQUvkGHGyd5XalNqT794FGdTub+q0uQuQnuDTGeUnrxujT3bXQqBoEesjoQh
-	QuUrH7s=
-X-Received: by 2002:a05:6102:e0a:b0:5ef:b32c:dff8 with SMTP id
- ada2fe7eead31-5feffd8e046mr571923137.5.1771954437826; Tue, 24 Feb 2026
- 09:33:57 -0800 (PST)
+        bh=WVyG+GjslObEPoiorlcEtEb0lbImQuwl2+xBSlYjPvU=;
+        b=S54xLKvmeEtNViyeMDBKB6posirdI3dKNADNiV4tOj4XXquIYkdJCvvlAKbMtwpFWD
+         8fUAePE4yZRdPr0FIgA/a8oawW2ozv8QXb5Hwmh7BcWx6Hewm1X1hEl5T3saikuFseF+
+         hmRCc+X7CHaejrjxSKjva18LrPTLcoTcrNxzgGXkzhwKYC7ju3zWRZ4q2ax355AWF94K
+         IV8GSD3SlcoSiaiNNNbuxiRlH3yUIwScvpz7Qw4aG6rWwbDwU4NOPjmG3/fTcv9YIsx8
+         ymNtqsnt7v2PPHACACKS3f3t6CIULXziFEBhhpiFr3zNjUcyYxtQIvhMZb8Blr7hoFSV
+         dlMA==
+X-Forwarded-Encrypted: i=1; AJvYcCXk2qkJGqZ8MWjzaihYlPuZcIrbh1UoMCDVOyzN/D8nTvGXa7YUVBBpvaWnBUIV/oY5NiyOcw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzFO4WHMSndW8jPcXhkX0+2lo6SB5Py5kQHCSv2w/k4URw3Nb5T
+	HNE4OWnKkE72VlcJevYRhuxeX7HbvpFFoctorq2/oHIUGVOWS/MCkB3y2A2B8E7u/9CcxlbgqdO
+	CeGdMIVU3MhHxOXjbH2F4y0ClIt7M9Zd+3a4kV2pt
+X-Gm-Gg: ATEYQzwTe/4YeGNHnLe/iHj5gn17R0kdc68enJ6ZECuKw7JSApT26pBR8FbGXX+RO0g
+	5yrI75DNogzHDm81fHSy9e6teW/4mgVAZAtYC2H7W/3Iuk+q4GTfjFU+i5MDPghcToirMW3Y+SQ
+	InZutyOtVt7JhcukABYiVLUxU4nCZUwEsfcNijeFNMnE00TOG0R38TQnhpF8St3QZ7fudQRPoET
+	VfozTC45pptT6p8pmepwKHmSnedLTS7wn//H10H1iT+3YohsSQ4vPQIizDYixMVdAytZaUbLSKW
+	/PhypDY=
+X-Received: by 2002:a05:6102:e11:b0:5f5:3835:4796 with SMTP id
+ ada2fe7eead31-5feb2eebe4fmr7234443137.15.1771954646379; Tue, 24 Feb 2026
+ 09:37:26 -0800 (PST)
 MIME-Version: 1.0
-References: <20260129212510.967611-1-dmatlack@google.com> <20260129212510.967611-3-dmatlack@google.com>
- <aZ1svGur9IxQ7Td2@google.com>
-In-Reply-To: <aZ1svGur9IxQ7Td2@google.com>
+References: <20260129212510.967611-1-dmatlack@google.com> <20260129212510.967611-4-dmatlack@google.com>
+ <aZ1xAyN0vgLWIi5y@google.com>
+In-Reply-To: <aZ1xAyN0vgLWIi5y@google.com>
 From: David Matlack <dmatlack@google.com>
-Date: Tue, 24 Feb 2026 09:33:28 -0800
-X-Gm-Features: AaiRm50ftzuk34ivxDcB4SNiM7gs91UDwPlTbTMB1CMe8djixeonPg3t_5VqAYg
-Message-ID: <CALzav=fSpd6H5pQNtJoFHdNtWVO11vffhWQFsMFkM+osGuE0wQ@mail.gmail.com>
-Subject: Re: [PATCH v2 02/22] PCI: Add API to track PCI devices preserved
- across Live Update
+Date: Tue, 24 Feb 2026 09:36:50 -0800
+X-Gm-Features: AaiRm51zYRUGqNlquBQBjZ_Ao68Y3fgUdHKViouV8m9qg-AcIptaKIFOE6taQzc
+Message-ID: <CALzav=cMsDyUrOPgkr5ouROPmsEAN2icsL266M4FxY3P6BNd1w@mail.gmail.com>
+Subject: Re: [PATCH v2 03/22] PCI: Inherit bus numbers from previous kernel
+ during Live Update
 To: Pranjal Shrivastava <praan@google.com>
 Cc: Alex Williamson <alex@shazbot.org>, Adithya Jayachandran <ajayachandra@nvidia.com>, 
 	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>, 
@@ -121,8 +121,8 @@ Cc: Alex Williamson <alex@shazbot.org>, Adithya Jayachandran <ajayachandra@nvidi
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260224_093400_154263_EB1B44FA 
-X-CRM114-Status: GOOD (  37.60  )
+X-CRM114-CacheID: sfid-20260224_093728_275746_9D334E2E 
+X-CRM114-Status: GOOD (  15.49  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -137,143 +137,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Feb 24, 2026 at 1:18=E2=80=AFAM Pranjal Shrivastava <praan@google.c=
+On Tue, Feb 24, 2026 at 1:36=E2=80=AFAM Pranjal Shrivastava <praan@google.c=
 om> wrote:
-> On Thu, Jan 29, 2026 at 09:24:49PM +0000, David Matlack wrote:
-> > + * Copyright (c) 2025, Google LLC.
+> On Thu, Jan 29, 2026 at 09:24:50PM +0000, David Matlack wrote:
+
+> > +     if (pci_liveupdate_incoming_nr_devices())
+> > +             return false;
 >
-> Nit: Should these be 2026 now?
+> Following the comment on Patch 2 regarding propagating errors, the check
+> if (pci_liveupdate_incoming_nr_devices()) should be made explicit to
+> distinguish between "Preservation Active" and "Retrieval Failed".
 
-Yes! Thanks for catching that.
+As mentioned in the previous patch, the errors mean "no incoming
+devices" rather than "retrieval failed".
 
-> > +int pci_liveupdate_outgoing_preserve(struct pci_dev *dev)
-> > +{
-> > +     struct pci_dev_ser new =3D INIT_PCI_DEV_SER(dev);
-> > +     struct pci_ser *ser;
-> > +     int i, ret;
-> > +
-> > +     /* Preserving VFs is not supported yet. */
-> > +     if (dev->is_virtfn)
-> > +             return -EINVAL;
-> > +
-> > +     guard(mutex)(&pci_flb_outgoing_lock);
-> > +
-> > +     if (dev->liveupdate_outgoing)
-> > +             return -EBUSY;
-> > +
-> > +     ret =3D liveupdate_flb_get_outgoing(&pci_liveupdate_flb, (void **=
-)&ser);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     if (ser->nr_devices =3D=3D ser->max_nr_devices)
-> > +             return -E2BIG;
+> >                               while (parent->parent) {
+> > -                                     if ((!pcibios_assign_all_busses()=
+) &&
+> > +                                     if (!assign_all_busses &&
+> >                                           (parent->busn_res.end > max) =
+&&
+> >                                           (parent->busn_res.end <=3D ma=
+x+i)) {
+> >                                               j =3D 1;
 >
-> I'm wondering how (or if) this handles hot-plugged devices?
-> max_nr_devices is calculated based on for_each_pci_dev at the time of
-> the first preservation.. what happens if a device is hotplugged after
-> the first device is preserved but before the second one is, does
-> max_nr_devices become stale? Since ser->max_nr_devices will not reflect
-> the actual possible device count, potentially leading to an unnecessary
-> -E2BIG failure?
+> Looks like we over-ride the pci=3Dassign-busses boot param here.
+> We should document how this change affects the pci=3Dassign-busses kernel
+> command line. If both are present, the inheritance required by LUO would
+> likely take precedence to prevent DMA corruption, but a doc update & a
+> warning to the user would be nice.
 
-Yes, it's possible to run out space to preserve devices if devices are
-hot-plugged and then preserved. But I think it's better to defer
-handling such a use-case exists (unless you see an obvious simple
-solution). So far I am not seeing preserving hot-plugged devices
-across Live Update as a high priority use-case to support.
-
-> > +u32 pci_liveupdate_incoming_nr_devices(void)
-> > +{
-> > +     struct pci_ser *ser;
-> > +     int ret;
-> > +
-> > +     ret =3D liveupdate_flb_get_incoming(&pci_liveupdate_flb, (void **=
-)&ser);
-> > +     if (ret)
-> > +             return 0;
->
-> Masking this error looks troubled, in the following patch, I see that
-> the retval 0 is treated as a fresh boot, but the IOMMU mappings for that
-> BDF might still be preserved? Which could lead to DMA aliasing issues,
-> without a hint of what happened since we don't even log anything.
-
-All fo the non-0 errors indicate there are 0 incoming devices at the
-time of the call, so I think returning 0 is appropriate.
-
- - EOPNOTSUPP: Live Update is not enabled.
- - ENODATA: Live Update is finished (all incoming devices have been restore=
-d).
- - ENOTENT: No PCI data was preserved across the Live Update.
-
-None of these cover the case where an IOMMU mapping for BDF X is
-preserved, but device X is not preserved. This is a case we should
-handle in some way... but here is not that place.
-
->
-> Maybe we could have something like the following:
->
-> int pci_liveupdate_incoming_nr_devices(void)
-> {
->         struct pci_ser *ser;
->         int ret;
->
->         ret =3D liveupdate_flb_get_incoming(&pci_liveupdate_flb, (void **=
-)&ser);
->         if (ret) {
->                 if (ret !=3D -ENOENT)
->                         pr_warn("PCI: Failed to retrieve preservation lis=
-t: %d\n", ret);
-
-This would cause this warning to get printed if Live Update was
-disabled, or if no PCI devices were preserved. But both of those are
-not error scenarios.
-
-> > +void pci_liveupdate_setup_device(struct pci_dev *dev)
-> > +{
-> > +     struct pci_ser *ser;
-> > +     int ret;
-> > +
-> > +     ret =3D liveupdate_flb_get_incoming(&pci_liveupdate_flb, (void **=
-)&ser);
-> > +     if (ret)
-> > +             return;
->
-> We should log something here either at info / debug level since the
-> error isn't bubbled up and the luo_core doesn't scream about it either.
-
-Any error from liveupdate_flb_get_incoming() simply means there are no
-incoming devices. So I don't think there's any error to report in
-dmesg.
-
-> > +     dev->liveupdate_incoming =3D !!pci_ser_find(ser, dev);
->
-> This feels a little hacky, shall we go for something like:
->
-> dev->liveupdate_incoming =3D (pci_ser_find(ser, dev) !=3D NULL); ?
-
-In my experience in the kernel (mostly from KVM), explicity comparison
-to NULL is less preferred to treating a pointer as a boolean. But I'm
-ok with following whatever is the locally preferred style for this
-kind of check.
-
-> > @@ -582,6 +583,10 @@ struct pci_dev {
-> >       u8              tph_mode;       /* TPH mode */
-> >       u8              tph_req_type;   /* TPH requester type */
-> >  #endif
-> > +#ifdef CONFIG_LIVEUPDATE
-> > +     unsigned int    liveupdate_incoming:1;  /* Preserved by previous =
-kernel */
-> > +     unsigned int    liveupdate_outgoing:1;  /* Preserved for next ker=
-nel */
-> > +#endif
-> >  };
->
-> This would start another anon bitfield container, should we move this
-> above within the existing bitfield? If we've run pahole and found this
-> to be better, then this should be fine.
-
-Yeah I simply appended these new fields to the very end of the struct.
-If we care about optimizing the packing of struct pci_dev I can find a
-better place to put it.
+Good call, I'll add a log message and update kernel-parameters.txt in v3.
 
