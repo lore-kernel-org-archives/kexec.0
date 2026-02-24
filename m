@@ -4,74 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D090AE9B245
-	for <kexec@archiver.kernel.org>; Tue, 24 Feb 2026 09:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 19E3EE9B249
+	for <kexec@archiver.kernel.org>; Tue, 24 Feb 2026 09:59:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=24cju2hDHQ+kbJrPkzmdwVRuKgiC4K6oV6u1w7p/OMI=; b=r2l0f4Sfai8UuDvgZG9r6+d/C2
-	ROX/ZRPBEifV3SWu+cxgM6rjixTwsv0mm/Esqg3tJlacC1A5t098FCxZvQCPfIujhmy6rET9tMgmL
-	YUl7vFNuzXmLuhK1ca7PHuIYkTq22hivnFjG3K0rO4JDOUz9eDj/wvVs1Hr+DGePszaJTlGLVH/QW
-	5rOfl6lv4GHvt3+anJ4JpoG3leegE3XJ0lgAAjFtfvAwR7FlJKY/kVrQAsalrd9OmVNbuXpJ3TGk5
-	vfcooOR67CpyUmMJ43rF53/3mrGT5kkZJ6FRzfakyzR/Tg8zAu99LO5v8VdZU2tmiXafYH7R8Dbbj
-	RC8dsHGA==;
+	bh=eblwuyUmTR+DmwKKXt5BlH8l1BOeREzivs7XkohPLYU=; b=ocOD/O2ZRXhYo63F9EIDZEXzak
+	hyTHT1hxykQZB9v6KWww8TKJPlSdX+4ssE0B5S5hMTBkdTgNtfqmaHqbGtrdxvUXsA3aSJCelFO7i
+	aeUMvUtomPRr7oib0nEKot8jEho/7nn/SUcZ1SQ9l15jwewrzUP6L5NPYvzcLNWq3HT+9xBPAmJ/W
+	UP0WbKV/x7yYp20bZbWvJk+S1XokP92c4d2oMEUymqqjxphoZj6x8npO9x7QXtUIGGh/qmmHIQIlu
+	koU844lFtfAJvKUk+N1io6CQhx5bewzxJ1sz6w0T8qahRAvWirJT7pygQvVfV9k78CXJGqqTdBQZV
+	6yccItBg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vuoq1-00000001mDx-160H;
-	Tue, 24 Feb 2026 09:36:17 +0000
-Received: from mail-pl1-x634.google.com ([2607:f8b0:4864:20::634])
+	id 1vupC8-00000001oOG-0FRa;
+	Tue, 24 Feb 2026 09:59:08 +0000
+Received: from mail-pl1-x62b.google.com ([2607:f8b0:4864:20::62b])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vuopz-00000001mDS-1OWd
+	id 1vupC6-00000001oNr-2Fhj
 	for kexec@lists.infradead.org;
-	Tue, 24 Feb 2026 09:36:16 +0000
-Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-2adb1c1f9d4so15025ad.0
-        for <kexec@lists.infradead.org>; Tue, 24 Feb 2026 01:36:15 -0800 (PST)
+	Tue, 24 Feb 2026 09:59:07 +0000
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-2adb1c1f9d4so17125ad.0
+        for <kexec@lists.infradead.org>; Tue, 24 Feb 2026 01:59:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1771925774; x=1772530574; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=24cju2hDHQ+kbJrPkzmdwVRuKgiC4K6oV6u1w7p/OMI=;
-        b=Aw9jNuHeFvUO5SVclEPpf/d2FgEN+tt5Q8br9f6fw1bTLivmGaQdsYGg6B7lCaqkVz
-         bUocfNXYkt4cVHiczoqa0CD2YtOcMMGtirEfInI/0YlU4ozfCkS6IU2eE4E+Qee6En7C
-         oHIPqZYYWq4ejds7WzjBTXp5IelJKXu6D4jNWO7E6knlY0gH5Jgh22JK8rUcvdNJV0cH
-         15DP0+mh4kPgVKFfj/JLhJvVFTIDVDwNihmJiNkp+SR9gg2yqqGk0qvxZDkjCKu0yb4o
-         Z7faPdpq6F3xdf7mTlWJIzlMZzG6EN7/fGE5yy4VRTKwBwdKrL9zvr6GLm9Ehtp4vevx
-         H20Q==
+        d=google.com; s=20230601; t=1771927145; x=1772531945; darn=lists.infradead.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=eblwuyUmTR+DmwKKXt5BlH8l1BOeREzivs7XkohPLYU=;
+        b=1C+DBR4fB4K6hh6BLw6uAYuAM7egXRety2Sb3afUI8HxYXpUAkQe85nr7LBKZTn4e9
+         /19HEqg5DKFVlqZz4RK82oNRWDGZN/N7GuGeqYaR1EgaA06K5BzvNoG+Oic5uDTPLYMs
+         FaQKn4SncJuh6lTd8LoNj0ADKlc5K3FqHPcULzBHZkRWA3XQDtKxcJnyVFTe/Fs04YgG
+         6ciswEg4+0A/qG2r/sdLzeJZRjsDjoeIvxaxbi+vRTtDcHvcKrnBd8A0heogWQK88U5k
+         bmKK/ynxF5Hlkfp8aB+VzkXx+EUMCdGNVibL8IwcuwS+clFXdXt8X3WCn0EALKtTBS3K
+         pSdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771925774; x=1772530574;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=24cju2hDHQ+kbJrPkzmdwVRuKgiC4K6oV6u1w7p/OMI=;
-        b=RElUmMsmBX0yWxik+eE8BlZdyX8/PcGi20KoGW7md0TwAFRN0SUqBMQe9mIy3HEP01
-         jbNgm6ylMibXQFAuPiLBeKsBfwpz+1t+pmDAlvkbkuNGV9Cb8yCTtiJU8BuQmJakeo7H
-         s2l5nyU77vNsSuzNFKRUXaVf/MRIFv6LMWUJzPyBLbwC9hWceHz277MW6KRxjB29eAWV
-         xdW/h9xFF0O3t4bNpLpNzF/WnXEmIPq6QzAJZ/YeaxOG/WueXZHbM/ORiYDXLQUA82Qu
-         CoWqPU7NiOWwM7s5eDMY9ntJ3J6KQ6snxiXxI1mcxFKrvkP1RzTrc34aIgyOr6vXPYEK
-         rMhw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMYnMo9oT5BYE902VTajA1l2r8JxWgO4LkgljJcnibvD3DycAMFh0L8JK1mKmeaYknAGRVOw==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yw8gRlcumyy0Yd/+wHWpx4AI+IH3TFxb4Km06IF9+1+n43raCD2
-	BTzu2zksyDl5uO7Vc2kgAeFxadnuU6dFK4/8MjUKulJY/B51C4LNn/BPEx3/0sREfw==
-X-Gm-Gg: ATEYQzw9b4dpw0ipx7fZKDG4MwxSo+KYCiljhH7ZsnmQql6rBdtnKC90bR3LZSEMrKA
-	5NWO4kUXcPCZW55DSE5eiCYpSNLI4zClbC1znwarfD9RdCYcGH9fPB3azfBKQQeozcoj2r+W+uX
-	Nc0plcsWHZJ/WXZ66Dt4yOchzeMjcW6/o/VOtBebGr+17uNoTM+WHZrbEJ/GEy5TebxCv1lfL6H
-	0C5ejhVeGpiwN+oh8SxI6+Xs2IL6PqIE/X8Q7c1jIHdezopI5Fu5mJKZf39e/3Pbl7HAujyBy2E
-	+BMuUMDDRpQtz+6wPzJX6SzMiorKPnFC9TFVxHoVHwyCpqhQsTOPeId3bQuZV/G9zcKcfxVbM7s
-	76krPUekMkou2cUvMAwfEFaXOkJYA9CbnSLUjvMhfouC4ribwYIs2uXNOzmupTRnh8UUoE/c3dq
-	eaFdkOy7dj+LbEG+Kk7ksoZb3Sv43wCdBwObNkrUVL+LuY/OpmCPRp8cCma2F6
-X-Received: by 2002:a17:902:e78f:b0:2a7:7f07:340e with SMTP id d9443c01a7336-2ad993a510cmr1492795ad.4.1771925773665;
-        Tue, 24 Feb 2026 01:36:13 -0800 (PST)
+        d=1e100.net; s=20230601; t=1771927145; x=1772531945;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eblwuyUmTR+DmwKKXt5BlH8l1BOeREzivs7XkohPLYU=;
+        b=Hk1/A0F6FwJCHiZ7MdiuY8lxjm0gNGU/+dOqSJINV54Irm6x2IMqV6waQNIzerZ6vf
+         vnlKLefHngSaJRCYzHG/5xODd6qrY+I06kcaFzWppMq3oRqbO9sGIO+fXnlQwO9PVneI
+         U63Usl0+G2ov9Gn98lv7MrXE5BIttQKMz/UPDhOooz8pU+ddPkqvx8l1zU9S+oCb3F5G
+         o4tKCM1orCXpQxMsKqPjJ/XZCVhmX1FtP/ffnxlHEJK/MSgLgSUe/RvD/SooG4E7Ookg
+         IFzWfVU5P8hS6sSwc9ZovtXREDF7/+YQV7u8MshcyqiUjqadHm/i7CpZmJ2F4GEh+IaR
+         rX7A==
+X-Forwarded-Encrypted: i=1; AJvYcCUOEgSK2pZY8Y9hpNx3pj5Ecr6uSQCFzL0aNL2Bdf0bn2NtK9CxAyagTaJ8p7J9yphf3mmI3w==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzgCfL3dlZEQQBI+k6u1BqZO1Srv+O/uGTqnq2+iIR/j4QId7X3
+	3q4KNbAg8rtlud1npJ3VfJK/c/CQoVk6v4LhCdNzT1bTo7u/uRV3M6F2njPzNaS4Rw==
+X-Gm-Gg: ATEYQzztI3JO4vwcv4rC27ivPLh10B5CtC3npevFKHtgeFhbnjcJO+TgDRNc+AfCP/J
+	4VCk0nbAjzRLWSKoLQfHpjQQJScoI/q5iv7ERcfeSL2JNDcN5EQec8gJDHCtn9Tg2ti6cO+6rqk
+	OlPYOLmHWjoPA6y1KTZmevmda5+jvtv3O82pYNOwc6kkJ3L6KYLIF48z/NztIP5uG1/H3QdMxws
+	F0lfzO1SFWqRdwghhuoB3nbDpgNc1a1Tk4lXihKvajwTDIFHEeBfN6SRdcnPEgbCS9RcycqSvKw
+	VOo8GsvGvde+4e5Q9rkj62LO7CQFo5JXlJGsxhmpulC/Jmcrs6WHFezwINo0L6mNrgUe4NSdUcc
+	y3Qa4USs52X8UQ7jwIlJ2sMnEqh1c5JyXsJU3ZoM/dlkx1d22WkBdO13+a6vS+1DzOfPovtyT0N
+	28WPEHcx9Tn2T82AZrKPrQ2zsf5Rr1NdQM1Dg2vziC4/LHx781kg6rjqw4VpOBFoFGMaGYKQc=
+X-Received: by 2002:a17:902:ec89:b0:2a9:5ef5:399b with SMTP id d9443c01a7336-2ada3497c30mr1333915ad.19.1771927145136;
+        Tue, 24 Feb 2026 01:59:05 -0800 (PST)
 Received: from google.com (222.245.187.35.bc.googleusercontent.com. [35.187.245.222])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c70b71a7351sm10754939a12.8.2026.02.24.01.36.05
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-826dd47c737sm9949341b3a.0.2026.02.24.01.58.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Feb 2026 01:36:13 -0800 (PST)
-Date: Tue, 24 Feb 2026 09:36:03 +0000
+        Tue, 24 Feb 2026 01:59:04 -0800 (PST)
+Date: Tue, 24 Feb 2026 09:58:55 +0000
 From: Pranjal Shrivastava <praan@google.com>
 To: David Matlack <dmatlack@google.com>
-Cc: Alex Williamson <alex@shazbot.org>,
+Cc: "Yanjun.Zhu" <yanjun.zhu@linux.dev>, Alex Williamson <alex@shazbot.org>,
 	Adithya Jayachandran <ajayachandra@nvidia.com>,
 	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>,
 	Alistair Popple <apopple@nvidia.com>,
@@ -101,20 +102,22 @@ Cc: Alex Williamson <alex@shazbot.org>,
 	Tomita Moeko <tomitamoeko@gmail.com>,
 	Vipin Sharma <vipinsh@google.com>,
 	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
-	Zhu Yanjun <yanjun.zhu@linux.dev>
-Subject: Re: [PATCH v2 03/22] PCI: Inherit bus numbers from previous kernel
- during Live Update
-Message-ID: <aZ1xAyN0vgLWIi5y@google.com>
+	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v2 04/22] vfio/pci: Register a file handler with Live
+ Update Orchestrator
+Message-ID: <aZ12X3tGn3W7YP4I@google.com>
 References: <20260129212510.967611-1-dmatlack@google.com>
- <20260129212510.967611-4-dmatlack@google.com>
+ <20260129212510.967611-5-dmatlack@google.com>
+ <6dc423bd-36e6-4f97-b2b2-c7030575a3a1@linux.dev>
+ <aYZ15u120FEa8Qw2@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20260129212510.967611-4-dmatlack@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aYZ15u120FEa8Qw2@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260224_013615_380755_9A6E5DCB 
-X-CRM114-Status: GOOD (  27.29  )
+X-CRM114-CacheID: sfid-20260224_015906_579666_24E9B5E3 
+X-CRM114-Status: GOOD (  16.56  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -129,88 +132,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jan 29, 2026 at 09:24:50PM +0000, David Matlack wrote:
-> Inherit bus numbers from the previous kernel during a Live Update when
-> one or more PCI devices are being preserved. This is necessary so that
-> preserved devices can DMA through the IOMMU during a Live Update
-> (changing bus numbers would break IOMMU translation).
+On Fri, Feb 06, 2026 at 11:14:46PM +0000, David Matlack wrote:
+> On 2026-02-06 02:37 PM, Yanjun.Zhu wrote:
+> > On 1/29/26 1:24 PM, David Matlack wrote:
 > 
-> Signed-off-by: David Matlack <dmatlack@google.com>
-> ---
->  drivers/pci/probe.c | 21 ++++++++++++++++++---
->  1 file changed, 18 insertions(+), 3 deletions(-)
+> > > +int __init vfio_pci_liveupdate_init(void)
+> > > +{
+> > > +	if (!liveupdate_enabled())
+> > > +		return 0;
+> > 813 int liveupdate_register_file_handler(struct liveupdate_file_handler *fh)
+> > 814 {
+> > 815         struct liveupdate_file_handler *fh_iter;
+> > 816         int err;
+> > 817
+> > 818         if (!liveupdate_enabled())
+> > 
+> > 819                 return -EOPNOTSUPP;
+> > 
+> > In the function liveupdate_register_file_handler, liveupdate_enabled is also checked.
+> > as such, it is not necessary to check here?
 > 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index af6356c5a156..ca6e5f79debb 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1351,6 +1351,20 @@ static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
->  	return true;
->  }
->  
-> +static bool pci_assign_all_busses(void)
-> +{
-> +	/*
-> +	 * During a Live Update where devices are preserved by the previous
-> +	 * kernel, inherit all bus numbers assigned by the previous kernel. Bus
-> +	 * numbers must remain stable for preserved devices so that they can
-> +	 * perform DMA during the Live Update uninterrupted.
-> +	 */
-> +	if (pci_liveupdate_incoming_nr_devices())
-> +		return false;
+> Yeah that is a bit odd. I see that memfd_luo_init() just checks for
+> -EOPNOTSUPP. We can do the same thing here.
 
-Following the comment on Patch 2 regarding propagating errors, the check
-if (pci_liveupdate_incoming_nr_devices()) should be made explicit to 
-distinguish between "Preservation Active" and "Retrieval Failed".
+If we move to checking the return value for -EOPNOTSUPP, we should
+ensure the pattern is consistent for the upcoming PCI registration in
+Patch 7 as well. With this addressed:
 
-> +
-> +	return pcibios_assign_all_busses();
-> +}
-> +
->  /*
->   * pci_scan_bridge_extend() - Scan buses behind a bridge
->   * @bus: Parent bus the bridge is on
-> @@ -1378,6 +1392,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
->  				  int max, unsigned int available_buses,
->  				  int pass)
->  {
-> +	bool assign_all_busses = pci_assign_all_busses();
->  	struct pci_bus *child;
->  	int is_cardbus = (dev->hdr_type == PCI_HEADER_TYPE_CARDBUS);
->  	u32 buses, i, j = 0;
-> @@ -1424,7 +1439,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
->  	pci_write_config_word(dev, PCI_BRIDGE_CONTROL,
->  			      bctl & ~PCI_BRIDGE_CTL_MASTER_ABORT);
->  
-> -	if ((secondary || subordinate) && !pcibios_assign_all_busses() &&
-> +	if ((secondary || subordinate) && !assign_all_busses &&
->  	    !is_cardbus && !broken) {
->  		unsigned int cmax, buses;
->  
-> @@ -1467,7 +1482,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
->  		 * do in the second pass.
->  		 */
->  		if (!pass) {
-> -			if (pcibios_assign_all_busses() || broken || is_cardbus)
-> +			if (assign_all_busses || broken || is_cardbus)
->  
->  				/*
->  				 * Temporarily disable forwarding of the
-> @@ -1542,7 +1557,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
->  							max+i+1))
->  					break;
->  				while (parent->parent) {
-> -					if ((!pcibios_assign_all_busses()) &&
-> +					if (!assign_all_busses &&
->  					    (parent->busn_res.end > max) &&
->  					    (parent->busn_res.end <= max+i)) {
->  						j = 1;
-
-Looks like we over-ride the pci=assign-busses boot param here. 
-We should document how this change affects the pci=assign-busses kernel
-command line. If both are present, the inheritance required by LUO would
-likely take precedence to prevent DMA corruption, but a doc update & a 
-warning to the user would be nice.
+Reviewed-by: Pranjal Shrivastava <praan@google.com>
 
 Thanks,
 Praan
