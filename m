@@ -4,117 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 83ECEF4BB82
-	for <kexec@archiver.kernel.org>; Tue, 24 Feb 2026 19:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7AA0AF5544E
+	for <kexec@archiver.kernel.org>; Wed, 25 Feb 2026 03:24:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	References:Message-ID:Date:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=gr8G2sJEnb4CcsPQ1rrAHuOyQl/uEocyHUTrMBlTuWs=; b=4POawSz7pIsSmkkIdsVSlxFM5l
-	bnsiTuov53jxHm9/AS/8XauR1AxIzJr8xewzBIpf9n2crx64DD3EORbRkeue7/6Syv0OaVljPoDSV
-	eK+kWBNGGVAQ1k2qU2KYktsDvsgDCPzKvWLZ6b38eU815z919sdqpGTaKd8folkOfxqEAqF3V6yAU
-	wUTXEGIWP3AKrTtHQbqW9u6JHnN/dLuovry8pJ+68x9lanF64tZJezKpa8gvgVF0PjU3pxP5q38w/
-	04rN1Yb3/7vvoF1pjRv6WIUh+tTRGwFFv/romoEZ10KqlgXz2SnZxK5cvxM4JFT1iPGHx0noMTqag
-	+Od4rHKw==;
+	bh=2erXaSzxqouJYHAI7iQgk06x1aOTRy7Rez7nS+35Gsk=; b=V3ZfkM/6/DjsOTb5LFvu8TylBn
+	AE5To8eXG6PFeOeD6aZB0C9ZUJpogQsIyW/kErmnAjbjiMw5WHouLar2Kx36Tj1j3xDTnCQViZ1dX
+	MaoVv/3vEilfqGiNLvlvF73FykYkuRH7pYAJ3pbBzCAMktJddqDuun+g2EdS/A8mmJnODrU0G52TH
+	Sr90qgUlwUv9jyIBDB/vH4UuhYWHuH6yNOb80XWDzYGnwmcG0j5WwJ1TlVDpkRbeXmgRvvF5UqkfT
+	ZDWixXf6IegyL/iGRkDw6jxpKfFvrXSMcrkVrpSmQgvYoUoO7xUcCq93JD9I3mOHioEQYdUjLWpFa
+	QGZw/1Fw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vuxwe-00000002g7Q-2HQ7;
-	Tue, 24 Feb 2026 19:19:44 +0000
-Received: from mail-pl1-x62b.google.com ([2607:f8b0:4864:20::62b])
+	id 1vv5Vo-000000039Hn-1PDa;
+	Wed, 25 Feb 2026 03:24:32 +0000
+Received: from mail-pj1-x102f.google.com ([2607:f8b0:4864:20::102f])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vuxwc-00000002g73-0ftR
+	id 1vv5Vk-000000039GT-36vY
 	for kexec@lists.infradead.org;
-	Tue, 24 Feb 2026 19:19:43 +0000
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-2adb1c1f9d4so13755ad.0
-        for <kexec@lists.infradead.org>; Tue, 24 Feb 2026 11:19:41 -0800 (PST)
+	Wed, 25 Feb 2026 03:24:30 +0000
+Received: by mail-pj1-x102f.google.com with SMTP id 98e67ed59e1d1-3562212b427so2567367a91.1
+        for <kexec@lists.infradead.org>; Tue, 24 Feb 2026 19:24:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1771960781; x=1772565581; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gr8G2sJEnb4CcsPQ1rrAHuOyQl/uEocyHUTrMBlTuWs=;
-        b=gx8eEhXdzvA0u9nlKUemT0yscCNKRmJwC+R9vP9uOnlT5z5J+1aBhnvOA/fw2AfYqI
-         XZrDcLLY8GhAwiUfVf+5Ilk+sj438P1RDekWZcuFqIKCiRo3aBWKv791ReIKLVvax+vC
-         gLpD5zuV6Y23zosx0n47yb5NguiVrEsZtW68pYgOmJMe6QxcmVu/zA5QSRTSRGoWy9UM
-         DZPkL7izIjTQN6GbK2g/XUcduL/or1e7/sRrYAuMjWtILsMV6RAwlb1rtIJSftfbkA7G
-         EfpAbdLZwpyTIvHoTdmIgFmm1cdH3ZZkM/R8ZKrxVP4mUDG25cVvIuE94Q7slchcvSWd
-         NjZA==
+        d=gmail.com; s=20230601; t=1771989867; x=1772594667; darn=lists.infradead.org;
+        h=mime-version:references:message-id:date:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2erXaSzxqouJYHAI7iQgk06x1aOTRy7Rez7nS+35Gsk=;
+        b=kTnoXGCg08QYCtnNF7EmK8W4fO2ylVtXv6x28+YCJgKsanzlW7bQhib+ldKOa92skH
+         79Z+Pj3Bm/7HizEloJdNSJwTdIJ04GrxA+TH1kg2rjlgmeww7pxkhLvUuUPBvFqEh1nG
+         nGJKf0+5Qeo2afhcvrVv3neINiKcijUiskEDHFmBaoOyMPY1W72AhCOVoL02Y+mj6dMb
+         ESRK7HQOKE8OWR8Tz/FDzS7RzA2vlc9B2NnH8GaX/Sklp0shGheC9a+ROxJVcOQSPUOk
+         F397RXuWmBS5IdIuTIWcUSKvRfhacoHPIf8EsWTgIBiHH+6HmVnCXr/vcvzmnh9lM37g
+         561w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771960781; x=1772565581;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gr8G2sJEnb4CcsPQ1rrAHuOyQl/uEocyHUTrMBlTuWs=;
-        b=kmx2QQ56Vvp5y5MI8JyftGmu2uPzNaoFS3Xm+6KH5Quf75w7y86VpuhCrk3GQA+BHr
-         9cEze9LdwfkB94yH8F3P+u2NojQwZzWdyWVtYc9/rCC60r2JKgCf1OPPhoAFuVSenbD8
-         jYCKeUWLndAMFm0EUQuLSdQGLa+zix3P928fGDigM72pwIekJS7xoGwqiLClho5GFQgs
-         VNr2VsqR6cwH+RAl0eMxF/N+Lxy8YcrjqdyV9yw97gmNj0VJnwy5DTNpjLM0rDPjxO1g
-         iH1J5UEPlR1rBldS6oJdxBWZdGdkweneI56I58n8TQL1Ng9dI8xsKx9X4RD0ZyY87xBq
-         44Hw==
-X-Forwarded-Encrypted: i=1; AJvYcCXzo7iNhP8jXmmITIPf6FEuZClvBg6S0EmD88PzqVwC2RAlQrLfbza2ZhsPmbuJt2bgdfXEYg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyPMm7bYZJYnKUoyUxRfvyb8ptCW4AdpW5sb4S3R26otFTLlI0U
-	boKGjI9PioB2JoqnVTJpqvBtBIGUCYa9XghjeowPoacN7mLX5I8YagJXJar6cY4OKg==
-X-Gm-Gg: ATEYQzyC2VLM97lmf1qbBl2j7XNSMSkKLH5N1POaZYXIlCRTn1fShoN9XO81MI9L5D4
-	imhv4FgfCJzpJhE5fUY7PX5Zg6WmtWauDROZZM8kYYex1y0CbnGTSr1+MlVjy4Z4y22jcwEkIB5
-	+p0TjlguFiUn3RTwbpuWaSEl7IhQZYBRTeEFxDCrCTNSkFq4Fl/9FJkhH+n6NBUrp/A5O1j9f1K
-	zewLAEcdM+NzLhBoiB8A96GbGjNEp/DOccmskD30/3T7r/qsN2nzMU7zhwdHqAqrOHhDLcD+zRg
-	l8+BaUUa9KKbzxK2vVbYlGjiOc+ZYUZcFiETEqfTXYxe/R1sAlVmRx1KDsszEjwqT0WKNPrknZM
-	aJYkpfWvm9nlgirM7SK7DZ+mO7mNvzPQLL11vdklK+4CJP/BWr3J3r77D94SQQ0m054vfl12tXm
-	LXrzRVWv7UTNze+9dRbJhL2vcQoeKvCZTRUzaFHI6kEjz0NAG2Bkx9Ds9jpOY8
-X-Received: by 2002:a17:902:f64a:b0:2aa:d604:62f3 with SMTP id d9443c01a7336-2adca6c8c34mr298805ad.10.1771960780478;
-        Tue, 24 Feb 2026 11:19:40 -0800 (PST)
-Received: from google.com (222.245.187.35.bc.googleusercontent.com. [35.187.245.222])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-826dd64367bsm11607309b3a.4.2026.02.24.11.19.32
+        d=1e100.net; s=20230601; t=1771989867; x=1772594667;
+        h=mime-version:references:message-id:date:in-reply-to:subject:cc:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2erXaSzxqouJYHAI7iQgk06x1aOTRy7Rez7nS+35Gsk=;
+        b=GGORA9brKcyj2JYJmpGeFFvU30Zchq0+RveE7n3Y0/soC3oaM/ighL6P4q1B9KQBsL
+         AzwyRf07VOAiRssLtHhvCDLIrOzkC6/i1WVnPjix4l0kfrFNXIRXuddXgkM96BkAToNM
+         ugS2SmoM5nBp8SBpMn6JueMkXl916374ERCmXeIffDpgX9J0bzjGXlcJpbdU2vO/cWJn
+         e8rGnkNtrLAxjaW2i3Op7BS0eUYUqoGQaUUp3y2HLS0j/wU3P8o+MFWWUmEQTexrKkky
+         p1M5gKEf9gKLTX9mTpGECpGI7M/w10rDvOoj6RUHmtajTnkKW7aoQKT5JNOfKj6vqyGR
+         tkiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVgPe+IDmVHcNwzhb8nNm7nw0ThqkvJPz1YLAd9tUek04CHRj5ZVt1wS3nB8ROYP42ialmHTQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyT2Y6F+UBwU2qza0jyd5QwViadv1lCGZy0GEImjcyYFRJAXYyl
+	hJRvO1hrCmMD+EWzYIO/OASUew+ePWuOLtOGdI5ljLEoue82vDOE+I4K
+X-Gm-Gg: ATEYQzwGdSA/9BOxKe9Gef7YVg4lN9WY8xDBhPfuVzkE5HH88G7u2cZcTUXBfAF+fvX
+	36Bc7HEeXjm0Kd/VGWSGZP9SY1Zd3ctNA20pop3NGl9Wv97BZcwCff1BifLqQ4tufrnpwm05naW
+	zeiehhmrhwNswdgkJ3AzSem/d9VNESVPU07paL4uVtfa1Rmr8LlOeeqr4vP12qEETHymdWC9e1f
+	3q7uh5+MKT+bHYuUiSUWTJuVUB7DyP3CGSwWptTWsXlJYSbwfMwTMxbx5oaR7fOzRkmvSblugUU
+	RFDGSbRS9ZQWk4PAbbHF6p6EwFnkFj5OSWrzRXfx6l5VRz3vp9hXC2WYCYkEczXlCjfVKVavYlk
+	0f5eQIFWD2ZH/wO5nod6DNkfvn9+a2mTdH1Bg+3non59bPWDr1LRoevirZ9wgn7CW5WUIJBkKBD
+	dXaY+9BVFJKqqN39zZ7A==
+X-Received: by 2002:a17:90b:2cc5:b0:356:35a5:4a64 with SMTP id 98e67ed59e1d1-358ae7c5003mr12522694a91.4.1771989867018;
+        Tue, 24 Feb 2026 19:24:27 -0800 (PST)
+Received: from dw-tp ([203.81.240.195])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-359037afe31sm1092824a91.16.2026.02.24.19.24.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Feb 2026 11:19:39 -0800 (PST)
-Date: Tue, 24 Feb 2026 19:19:30 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: David Matlack <dmatlack@google.com>
-Cc: Alex Williamson <alex@shazbot.org>,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
-	Kevin Tian <kevin.tian@intel.com>, kexec@lists.infradead.org,
-	kvm@vger.kernel.org, Leon Romanovsky <leon@kernel.org>,
-	Leon Romanovsky <leonro@nvidia.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, linux-pci@vger.kernel.org,
-	Lukas Wunner <lukas@wunner.de>,
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Raghavendra Rao Ananta <rananta@google.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Tomita Moeko <tomitamoeko@gmail.com>,
-	Vipin Sharma <vipinsh@google.com>,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
-	Zhu Yanjun <yanjun.zhu@linux.dev>
-Subject: Re: [PATCH v2 06/22] vfio/pci: Retrieve preserved device files after
- Live Update
-Message-ID: <aZ35wv5CKUtVoYII@google.com>
-References: <20260129212510.967611-1-dmatlack@google.com>
- <20260129212510.967611-7-dmatlack@google.com>
+        Tue, 24 Feb 2026 19:24:26 -0800 (PST)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: Jinjie Ruan <ruanjinjie@huawei.com>, corbet@lwn.net, skhan@linuxfoundation.org, 
+	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org, 
+	kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
+	chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, akpm@linux-foundation.org, 
+	bhe@redhat.com, vgoyal@redhat.com, dyoung@redhat.com, rdunlap@infradead.org, 
+	pmladek@suse.com, dapeng1.mi@linux.intel.com, kees@kernel.org, 
+	paulmck@kernel.org, lirongqing@baidu.com, arnd@arndb.de, ardb@kernel.org, 
+	leitao@debian.org, rppt@kernel.org, cfsworks@gmail.com, ryan.roberts@arm.com, 
+	sourabhjain@linux.ibm.com, tangyouling@kylinos.cn, eajames@linux.ibm.com, 
+	hbathini@linux.ibm.com, songshuaishuai@tinylab.org, samuel.holland@sifive.com, 
+	kevin.brodsky@arm.com, vishal.moola@gmail.com, junhui.liu@pigmoral.tech, 
+	coxu@redhat.com, liaoyuanhong@vivo.com, fuqiang.wang@easystack.cn, 
+	jbohac@suse.cz, brgerst@gmail.com, x86@kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, kexec@lists.infradead.org
+Cc: ruanjinjie@huawei.com
+Subject: Re: [PATCH v6 1/5] powerpc/crash: sort crash memory ranges before preparing elfcorehdr
+In-Reply-To: <20260224085342.387996-2-ruanjinjie@huawei.com>
+Date: Wed, 25 Feb 2026 08:45:56 +0530
+Message-ID: <87wm01h5sj.ritesh.list@gmail.com>
+References: <20260224085342.387996-1-ruanjinjie@huawei.com> <20260224085342.387996-2-ruanjinjie@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260129212510.967611-7-dmatlack@google.com>
+Content-Type: text/plain
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260224_111942_231410_2B438DDF 
-X-CRM114-Status: GOOD (  33.86  )
+X-CRM114-CacheID: sfid-20260224_192428_825082_EAE1E586 
+X-CRM114-Status: GOOD (  14.39  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -129,225 +112,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jan 29, 2026 at 09:24:53PM +0000, David Matlack wrote:
-> From: Vipin Sharma <vipinsh@google.com>
-> 
-> Enable userspace to retrieve preserved VFIO device files from VFIO after
-> a Live Update by implementing the retrieve() and finish() file handler
-> callbacks.
-> 
-> Use an anonymous inode when creating the file, since the retrieved
-> device file is not opened through any particular cdev inode, and the
-> cdev inode does not matter in practice.
-> 
-> For now the retrieved file is functionally equivalent a opening the
-> corresponding VFIO cdev file. Subsequent commits will leverage the
-> preserved state associated with the retrieved file to preserve bits of
-> the device across Live Update.
-> 
-> Signed-off-by: Vipin Sharma <vipinsh@google.com>
-> Co-developed-by: David Matlack <dmatlack@google.com>
-> Signed-off-by: David Matlack <dmatlack@google.com>
-> ---
->  drivers/vfio/device_cdev.c             | 21 ++++++---
->  drivers/vfio/pci/vfio_pci_liveupdate.c | 60 +++++++++++++++++++++++++-
->  drivers/vfio/vfio_main.c               | 13 ++++++
->  include/linux/vfio.h                   | 12 ++++++
->  4 files changed, 98 insertions(+), 8 deletions(-)
-> 
+Jinjie Ruan <ruanjinjie@huawei.com> writes:
 
-The use of anon_inode_getfile_fmode() is clever! The abstraction is
-clean as well. 
+> From: Sourabh Jain <sourabhjain@linux.ibm.com>
+>
+> During a memory hot-remove event, the elfcorehdr is rebuilt to exclude
+> the removed memory. While updating the crash memory ranges for this
+> operation, the crash memory ranges array can become unsorted. This
+> happens because remove_mem_range() may split a memory range into two
+> parts and append the higher-address part as a separate range at the end
+> of the array.
+>
+> So far, no issues have been observed due to the unsorted crash memory
+> ranges. However, this could lead to problems once crash memory range
+> removal is handled by generic code, as introduced in the upcoming
+> patches in this series.
+>
+> Currently, powerpc uses a platform-specific function,
+> remove_mem_range(), to exclude hot-removed memory from the crash memory
+> ranges. This function performs the same task as the generic
+> crash_exclude_mem_range() in crash_core.c. The generic helper also
+> ensures that the crash memory ranges remain sorted. So remove the
+> redundant powerpc-specific implementation and instead call
+> crash_exclude_mem_range_guarded() (which internally calls
+> crash_exclude_mem_range()) to exclude the hot-removed memory ranges.
+>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Baoquan he <bhe@redhat.com>
+> Cc: Jinjie Ruan <ruanjinjie@huawei.com>
+> Cc: Hari Bathini <hbathini@linux.ibm.com>
+> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+> Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
+> Cc: linux-kernel@vger.kernel.org
+> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 
-Reviewed-by: Pranjal Shrivastava <praan@google.com>
 
-Thanks!
-Praan
+I had gone through the generic implementation v/s the powerpc specific
+remove_mem_range() implementation, when it was posted by Sourabh
+separately. And it make sense to use the generic implementation in this
+case, rather than keeping a duplicate powerpc specific version. So...
 
-> diff --git a/drivers/vfio/device_cdev.c b/drivers/vfio/device_cdev.c
-> index 8ceca24ac136..935f84a35875 100644
-> --- a/drivers/vfio/device_cdev.c
-> +++ b/drivers/vfio/device_cdev.c
-> @@ -16,14 +16,8 @@ void vfio_init_device_cdev(struct vfio_device *device)
->  	device->cdev.owner = THIS_MODULE;
->  }
->  
-> -/*
-> - * device access via the fd opened by this function is blocked until
-> - * .open_device() is called successfully during BIND_IOMMUFD.
-> - */
-> -int vfio_device_fops_cdev_open(struct inode *inode, struct file *filep)
-> +int __vfio_device_fops_cdev_open(struct vfio_device *device, struct file *filep)
->  {
-> -	struct vfio_device *device = container_of(inode->i_cdev,
-> -						  struct vfio_device, cdev);
->  	struct vfio_device_file *df;
->  	int ret;
->  
-> @@ -52,6 +46,19 @@ int vfio_device_fops_cdev_open(struct inode *inode, struct file *filep)
->  	vfio_device_put_registration(device);
->  	return ret;
->  }
-> +EXPORT_SYMBOL_GPL(__vfio_device_fops_cdev_open);
-> +
-> +/*
-> + * device access via the fd opened by this function is blocked until
-> + * .open_device() is called successfully during BIND_IOMMUFD.
-> + */
-> +int vfio_device_fops_cdev_open(struct inode *inode, struct file *filep)
-> +{
-> +	struct vfio_device *device = container_of(inode->i_cdev,
-> +						  struct vfio_device, cdev);
-> +
-> +	return __vfio_device_fops_cdev_open(device, filep);
-> +}
->  
->  static void vfio_df_get_kvm_safe(struct vfio_device_file *df)
->  {
-> diff --git a/drivers/vfio/pci/vfio_pci_liveupdate.c b/drivers/vfio/pci/vfio_pci_liveupdate.c
-> index f01de98f1b75..7f4117181fd0 100644
-> --- a/drivers/vfio/pci/vfio_pci_liveupdate.c
-> +++ b/drivers/vfio/pci/vfio_pci_liveupdate.c
-> @@ -8,6 +8,8 @@
->  
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
-> +#include <linux/anon_inodes.h>
-> +#include <linux/file.h>
->  #include <linux/kexec_handover.h>
->  #include <linux/kho/abi/vfio_pci.h>
->  #include <linux/liveupdate.h>
-> @@ -108,13 +110,68 @@ static int vfio_pci_liveupdate_freeze(struct liveupdate_file_op_args *args)
->  	return ret;
->  }
->  
-> +static int match_device(struct device *dev, const void *arg)
-> +{
-> +	struct vfio_device *device = container_of(dev, struct vfio_device, device);
-> +	const struct vfio_pci_core_device_ser *ser = arg;
-> +	struct pci_dev *pdev;
-> +
-> +	pdev = dev_is_pci(device->dev) ? to_pci_dev(device->dev) : NULL;
-> +	if (!pdev)
-> +		return false;
-> +
-> +	return ser->bdf == pci_dev_id(pdev) && ser->domain == pci_domain_nr(pdev->bus);
-> +}
-> +
->  static int vfio_pci_liveupdate_retrieve(struct liveupdate_file_op_args *args)
->  {
-> -	return -EOPNOTSUPP;
-> +	struct vfio_pci_core_device_ser *ser;
-> +	struct vfio_device *device;
-> +	struct file *file;
-> +	int ret;
-> +
-> +	ser = phys_to_virt(args->serialized_data);
-> +
-> +	device = vfio_find_device(ser, match_device);
-> +	if (!device)
-> +		return -ENODEV;
-> +
-> +	/*
-> +	 * Simulate opening the character device using an anonymous inode. The
-> +	 * returned file has the same properties as a cdev file (e.g. operations
-> +	 * are blocked until BIND_IOMMUFD is called).
-> +	 */
-> +	file = anon_inode_getfile_fmode("[vfio-device-liveupdate]",
-> +					&vfio_device_fops, NULL,
-> +					O_RDWR, FMODE_PREAD | FMODE_PWRITE);
-> +	if (IS_ERR(file)) {
-> +		ret = PTR_ERR(file);
-> +		goto out;
-> +	}
-> +
-> +	ret = __vfio_device_fops_cdev_open(device, file);
-> +	if (ret) {
-> +		fput(file);
-> +		goto out;
-> +	}
-> +
-> +	args->file = file;
-> +
-> +out:
-> +	/* Drop the reference from vfio_find_device() */
-> +	put_device(&device->device);
-> +
-> +	return ret;
-> +}
-> +
-> +static bool vfio_pci_liveupdate_can_finish(struct liveupdate_file_op_args *args)
-> +{
-> +	return args->retrieved;
->  }
->  
->  static void vfio_pci_liveupdate_finish(struct liveupdate_file_op_args *args)
->  {
-> +	kho_restore_free(phys_to_virt(args->serialized_data));
->  }
->  
->  static const struct liveupdate_file_ops vfio_pci_liveupdate_file_ops = {
-> @@ -123,6 +180,7 @@ static const struct liveupdate_file_ops vfio_pci_liveupdate_file_ops = {
->  	.unpreserve = vfio_pci_liveupdate_unpreserve,
->  	.freeze = vfio_pci_liveupdate_freeze,
->  	.retrieve = vfio_pci_liveupdate_retrieve,
-> +	.can_finish = vfio_pci_liveupdate_can_finish,
->  	.finish = vfio_pci_liveupdate_finish,
->  	.owner = THIS_MODULE,
->  };
-> diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
-> index 276f615f0c28..89c5feef75d5 100644
-> --- a/drivers/vfio/vfio_main.c
-> +++ b/drivers/vfio/vfio_main.c
-> @@ -13,6 +13,7 @@
->  #include <linux/cdev.h>
->  #include <linux/compat.h>
->  #include <linux/device.h>
-> +#include <linux/device/class.h>
->  #include <linux/fs.h>
->  #include <linux/idr.h>
->  #include <linux/iommu.h>
-> @@ -1758,6 +1759,18 @@ int vfio_dma_rw(struct vfio_device *device, dma_addr_t iova, void *data,
->  }
->  EXPORT_SYMBOL(vfio_dma_rw);
->  
-> +struct vfio_device *vfio_find_device(const void *data, device_match_t match)
-> +{
-> +	struct device *device;
-> +
-> +	device = class_find_device(vfio.device_class, NULL, data, match);
-> +	if (!device)
-> +		return NULL;
-> +
-> +	return container_of(device, struct vfio_device, device);
-> +}
-> +EXPORT_SYMBOL_GPL(vfio_find_device);
-> +
->  /*
->   * Module/class support
->   */
-> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> index 9aa1587fea19..dc592dc00f89 100644
-> --- a/include/linux/vfio.h
-> +++ b/include/linux/vfio.h
-> @@ -419,4 +419,16 @@ int vfio_virqfd_enable(void *opaque, int (*handler)(void *, void *),
->  void vfio_virqfd_disable(struct virqfd **pvirqfd);
->  void vfio_virqfd_flush_thread(struct virqfd **pvirqfd);
->  
-> +#if IS_ENABLED(CONFIG_VFIO_DEVICE_CDEV)
-> +int __vfio_device_fops_cdev_open(struct vfio_device *device, struct file *filep);
-> +#else
-> +static inline int __vfio_device_fops_cdev_open(struct vfio_device *device,
-> +					       struct file *filep)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +#endif /* IS_ENABLED(CONFIG_VFIO_DEVICE_CDEV) */
-> +
-> +struct vfio_device *vfio_find_device(const void *data, device_match_t match);
-> +
->  #endif /* VFIO_H */
-> -- 
-> 2.53.0.rc1.225.gd81095ad13-goog
-> 
+LGTM. Please feel free to add:
+Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+
 
