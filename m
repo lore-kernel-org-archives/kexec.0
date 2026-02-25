@@ -4,71 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00D30EFD206
-	for <kexec@archiver.kernel.org>; Wed, 25 Feb 2026 08:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2EADEEFD207
+	for <kexec@archiver.kernel.org>; Wed, 25 Feb 2026 08:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=sCJxVjDFn9Nx1ZVu0w3V3L8nPN74ZP9DglkzEBV+/BI=; b=ZGIF4OhDMuQAe6hi4iVI+rnSwc
-	sYYUkaWtryb3JEOSGvhOW116+b7oGNRMY7Pa/oVNhUFjbtVALe0cliktfALaa5ogZv6UYTmmpXnxT
-	xUS397jemu/hwRPNSRkEIe9+n20eMExSftKf3Q4G2rRVl5RoFReULXBIepZvA/MhJLVlnV0MRq7lS
-	QB7rGYx7fpve5Yrf0Em7ycicLmHmSUVM7d5mervGayYFh/jvQ90JYxS+uPrinMlYW0Mbig0pA8JAf
-	mwVvg2mYio+nDYZ6n+YfAJfpCAL5dmKE/sUfiYFjK+GMib/H1sTWq9NfbInNS0Nh3MTDpuRW5KDQz
-	kU6y3eLA==;
+	bh=euz76pxATmJYev+UEaMjSj8YYGXQ5aYbA3uegrgN/Es=; b=LzF2uN4myMO6y2MaiV4CsJZNmV
+	bsgsWUBu75qziJA6rpZEnxSKrNuJEvpLwneR9FsjabJTCwfYrH292VBC6kwaJq0b8YMpmML5d7sqM
+	uHdUI1dQZ8G3xzFq0KJycbn/ahfj3PVXsgDMf2ZLv5OSs+cE0rbDhuIqXDm8DnZimnlxurPU5PzXO
+	Sk6bqQ1dbf2FXZaPaUhldIomlJP26bifZev+DQSeeXESG8BMMXHGaxG9HEwxR6JbjrMF3Icra6ut8
+	fU5mK1m25/1g2i3tvPm61z37FDCcHQKnI9NsW/LCjwnH5aiEbEr3aQhgB5WeHSRIa2lTX/LsgPqli
+	ZrelPwdA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vv9rp-00000003StH-2IJU;
-	Wed, 25 Feb 2026 08:03:33 +0000
-Received: from mail-pl1-x636.google.com ([2607:f8b0:4864:20::636])
+	id 1vvAPU-00000003Zlw-3aSY;
+	Wed, 25 Feb 2026 08:38:20 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vv9rm-00000003Ssw-3OpN
+	id 1vvAPS-00000003ZlP-3u7g
+	for kexec@bombadil.infradead.org;
+	Wed, 25 Feb 2026 08:38:19 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=euz76pxATmJYev+UEaMjSj8YYGXQ5aYbA3uegrgN/Es=; b=EayGN6WHK9TADeileMaNjss8bu
+	OMpWak3nwpxLf2EqGBNy/J8aEsSVs7kpDB5DVAe+9wG5X+b/+SJ5odlNooHcIgqXdQgD/2Y1D9oRe
+	lzKjpUmlJAVotMM5ADpaNWhF3VoRKueARpLEKPBEieaBfJ0IpvBJTd7VaUbHki5IylWq7fqixBoar
+	uaYP5sSRLMKBwvHHqLHPE9mCjzD/1J67GrkYQx9E+STX7tnXaaalI4y/UKDbHY9JyxSNd2ligSu7h
+	P8Ch2AWZpbk506zZtP0PMIASh3VEQjumiWfqyZZozSzbYBFHur3D16lXB+7h1+4AbgdGktTtfmCu5
+	pLTKEvXQ==;
+Received: from mail-pl1-x630.google.com ([2607:f8b0:4864:20::630])
+	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vvAPP-00000008aF4-2vAb
 	for kexec@lists.infradead.org;
-	Wed, 25 Feb 2026 08:03:31 +0000
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-2ada9e4ea32so55925ad.1
-        for <kexec@lists.infradead.org>; Wed, 25 Feb 2026 00:03:30 -0800 (PST)
+	Wed, 25 Feb 2026 08:38:17 +0000
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-2aad8123335so61775ad.1
+        for <kexec@lists.infradead.org>; Wed, 25 Feb 2026 00:38:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772006610; x=1772611410; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1772008693; x=1772613493; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sCJxVjDFn9Nx1ZVu0w3V3L8nPN74ZP9DglkzEBV+/BI=;
-        b=e1ZYrwCB7nX8vd8WsCW3yUWlnPJklQgbEd82MtplHfsdKCOPBcKdP4QDKY4MU3DnVU
-         tyhqnJ4xdq18mnfF7Jo+/1QZlAKjZu6eb4KbBNT5GNrrGJRNppNPSAkaiWPhWww8SlbW
-         2l5SdUgdf2LMRt1op7J5stZeaSyrD9SqReU6DcSGX+/64JRubY296VTnFMHoMPENTcmw
-         A9fhJutjVs3JeWWHG+B+FUMbybxo7pRzlut7vDO9b1j/C8dl5Cc1cJ+IBFRRKxjFwoZ/
-         qNK8lmvYFexLbyvdDOSBjz6MgyqmYPJJSLYDb9bJV8yB872UBixxUQmPyN5DAVznI2vw
-         45PQ==
+        bh=euz76pxATmJYev+UEaMjSj8YYGXQ5aYbA3uegrgN/Es=;
+        b=U0ygp57nWxEN0gmh22TFEu2IMrwalCpx+H2k0J7LaaSt5PdFO7nUQ5T2Z4QUMYfb3i
+         eXRhISIoznO5ILFZ0U8VSAYjvFs+rPvHh6AjJOYxVx4L+SSLojN0zQgyFvZCr4sVze+H
+         JSWvJmgUuRFuFmeSVWOQab5axDKfNnIvdYPNTXQiL9mO/zc8WG0pssuncyHL5XSencu0
+         ssiYW77wk1p6UoHpXRnURoG8wEGWr2EQh+HMROHK6rZ/L7o871iPakPFMMS0cT6vrrxe
+         vAe3V4u09IDIu6TwEZmwzrNKMFoA9SxasPKKpm5ecaizhNMh8VwFq8JxBV9hk8E3aErz
+         D06A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772006610; x=1772611410;
+        d=1e100.net; s=20230601; t=1772008693; x=1772613493;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sCJxVjDFn9Nx1ZVu0w3V3L8nPN74ZP9DglkzEBV+/BI=;
-        b=jEUbxnFHycbNgapXJ/5LdtEE0hg1vXdLyNRiAv1MhZfWt+q8Jqojrk/WVbDIGNMMaK
-         LZ9QSXr/7nGQwQ5GxCIGIwAJc2gZPKT2Ie4oSYzT2zRJoyqyRIR88vKLUxpcJNHxRP2F
-         awVpVFDop8Cvc2/WvQx1BOhU3EbubITIPmR5gD1zmTVqYMxhkVFguxkQD69mQjE3ABVr
-         zWkXUeWmpiHEuzzniSddEzPGmXt1srsPRtqHdzW2AEbdTGqtsPU1c/8bPouBqgM/oLz4
-         nQAjrSIUpfmRByJkX6mDSsiMrHYCktmXvdlAVb8v4QX7DBLc7D8ev9boqleAjEcuC3XW
-         zvqA==
-X-Forwarded-Encrypted: i=1; AJvYcCXEUeM1lSSB5f+dhBtVDYAFvpQJ3gyNcUnb2czQzntKrp2fVDvmjM+c85TrSxdB4mZhHBI6WA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yy2XVY3jZ+L/pT6ESHzqH1bCzpYpOPBBAYqEizBaVVwcwnicyH3
-	2Knkud7QfvpdXYeHN2kzh7IuEIvJAQJ/n1JbP9+JZxGtA2X3XUdKbchi7v44yTDMxw==
-X-Gm-Gg: ATEYQzxyKS69jEY096mG54rtqRVRC/VniNfq/wwlY6syo/nYE1/97ZD2NjEXSf586Du
-	8nnrQ6qZ9YspU3P9fWqX7CunxOaJC09B6zIucd0AwqjJ4KMSUK1PvA2ZMMDKjfrhFK7icCqfsfs
-	7zXh87qGRlJxPVsQPYmqKTHDgI3NjhIbVur/SrxTLawtJ9MU3GObsI0EnhVKwUJr/YCod3RfdL0
-	rSu7kZsDmke5rjlIRJutKQFOWwoQ5irHE6EAbjlBmpVVVJ2UkOfn0YIILshhnnYyDwWfKBD6x1A
-	+1H99uflW48WcoC+8FdHHyeBfv/1e3TK+wIYJ/O0YCaADJpciJudan0P59fi+6UoY5+Y7A4P9Jr
-	uHQiOiuyJ4YTtfQRBlTflFo/HUc5TyIaOnB7QzyLVXr9yGFeWrefwPPbUTbNjYIilDZTB9CAV0f
-	6WH/OELLz6fIwrfHozadBZnKNLYrQQ+7KS3cK1LZmBnavFnvgUohYL0xlUjTzP
-X-Received: by 2002:a17:902:ecc2:b0:2a7:7f07:340e with SMTP id d9443c01a7336-2adca6c9d85mr1313215ad.4.1772006609152;
-        Wed, 25 Feb 2026 00:03:29 -0800 (PST)
+        bh=euz76pxATmJYev+UEaMjSj8YYGXQ5aYbA3uegrgN/Es=;
+        b=EstdE4uIGcGRq6P+Z1KKH48aazDxf9OSlEWLL9dqdPmtLDkVkqVFLJ//1+EYy5WqLo
+         UnZpwy+MWJ7QKku3yBkipk9DfdJ4ArtK+fr7StWhKh1MvYNh/KPVncbMwea20OG/Yrg9
+         4c6Sva9db6H4Oqjuyp9asMATcgZGXJx/c78wHY2Ui4lK6d+XHDwbaFwW/X3BtB5tiIRr
+         +wyvxW2FhltokJRa8aBfbRB3FOdYe24TcJQ1OaiAyn+Ms+ert1C2XyRJYizWacPmv5rS
+         Vy5+Xf8D0BLQLxk/2Ak/Yx9GmXz8sH2ap9X03zTKQ7ZVOMNnL8OsUaETy4WHkfB69NEc
+         8tfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVgyST9HImQk8YVt0paEzNJOJAtpkgU9C9hqpHI1CvB0qfWUXgz2XJAtTX+01GF3tQZIwdofw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yypnxw/sCspyHZ7Q0eBhdeWjqRMjEiJidR4soSenws9Trt6LtjI
+	ZSLQ29ZrCKGmJx72bw/XFYpjKRiPsnOd2EbdmsYCpo4AuNBKgyJC0/vUXNwsViZKUw==
+X-Gm-Gg: ATEYQzxQhBgmmRkP1HYWHRoS2xmNChz+M8yAv0k2AmCau6NsE3mSf9Vns4o5QFsikhH
+	lUqtOjzHzBPA6x9aKxHlfB7yUmnTUqJQzfmc7wQnDy4vrtTHyOkye9EMHiEGbha4neZ6pJ5zoyI
+	/7xpDbd9r12DGVo0snG0ngCLGk9TiDQt2nrgApwtcxrXKnDK6HMOKv1vSuWpTKYdlaMKqJf+Rau
+	njbaH/D9zlAKTAVp+9JDIK04ZTpRT5gx54DnQYd4q7MZcbNo/nuHU3FHtqNQfA3dNmTEXIYACK0
+	JHkMKgv/4zL9GsSUE4SUfpMl4YQLRFyhJLU9VS/Ix+cV7EanmqzDkrSq1dYl+LfLXNoyyQ45ddB
+	9U7+OMC3YZzlmvtQucYiQ9kuMVi9G3FyeeulHylWXhNoMMp+ZbQ+kPus+F1olKxgd2L2xzCJzlJ
+	IBtLGGEOb+Gt7MDJisTB9VRZVZj8op3hJ8ub+UpKoa9O9ZO/MKi51MW46jeb79
+X-Received: by 2002:a17:902:ea02:b0:291:6858:ee60 with SMTP id d9443c01a7336-2adca6c8a9fmr1402215ad.4.1772008693092;
+        Wed, 25 Feb 2026 00:38:13 -0800 (PST)
 Received: from google.com (222.245.187.35.bc.googleusercontent.com. [35.187.245.222])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3591342f19fsm421683a91.10.2026.02.25.00.03.21
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-826dd6c30dfsm13034861b3a.27.2026.02.25.00.38.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Feb 2026 00:03:28 -0800 (PST)
-Date: Wed, 25 Feb 2026 08:03:18 +0000
+        Wed, 25 Feb 2026 00:38:12 -0800 (PST)
+Date: Wed, 25 Feb 2026 08:38:02 +0000
 From: Pranjal Shrivastava <praan@google.com>
 To: David Matlack <dmatlack@google.com>
 Cc: Alex Williamson <alex@shazbot.org>,
@@ -103,18 +118,18 @@ Cc: Alex Williamson <alex@shazbot.org>,
 	Vivek Kasireddy <vivek.kasireddy@intel.com>,
 	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
 	Zhu Yanjun <yanjun.zhu@linux.dev>
-Subject: Re: [PATCH v2 08/22] vfio: Enforce preserved devices are retrieved
- via LIVEUPDATE_SESSION_RETRIEVE_FD
-Message-ID: <aZ6sxhNeHqy-hqhK@google.com>
+Subject: Re: [PATCH v2 09/22] vfio/pci: Store incoming Live Update state in
+ struct vfio_pci_core_device
+Message-ID: <aZ606sDJxtfNF6qW@google.com>
 References: <20260129212510.967611-1-dmatlack@google.com>
- <20260129212510.967611-9-dmatlack@google.com>
+ <20260129212510.967611-10-dmatlack@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260129212510.967611-9-dmatlack@google.com>
+In-Reply-To: <20260129212510.967611-10-dmatlack@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260225_000330_855001_8D4AB12D 
-X-CRM114-Status: GOOD (  14.41  )
+X-CRM114-CacheID: sfid-20260225_083815_941347_BBB0C518 
+X-CRM114-Status: GOOD (  26.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -129,25 +144,86 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jan 29, 2026 at 09:24:55PM +0000, David Matlack wrote:
-> Enforce that files for incoming (preserved by previous kernel) VFIO
-> devices are retrieved via LIVEUPDATE_SESSION_RETRIEVE_FD rather than by
-> opening the corresponding VFIO character device or via
-> VFIO_GROUP_GET_DEVICE_FD.
+On Thu, Jan 29, 2026 at 09:24:56PM +0000, David Matlack wrote:
+> Stash a pointer to a device's incoming Live Updated state in struct
+> vfio_pci_core_device. This will enable subsequent commits to use the
+> preserved state when initializing the device.
 > 
-> Both of these methods would result in VFIO initializing the device
-> without access to the preserved state of the device passed by the
-> previous kernel.
+> To enable VFIO to safely access this pointer during device enablement,
+> require that the device is fully enabled before returning true from
+> can_finish(). This is synchronized by vfio_pci_core.c setting
+> vdev->liveupdate_incoming_state to NULL under dev_set lock once it's
+> done using it.
 > 
 > Signed-off-by: David Matlack <dmatlack@google.com>
 > ---
->  drivers/vfio/device_cdev.c |  4 ++++
->  drivers/vfio/group.c       |  9 +++++++++
->  include/linux/vfio.h       | 18 ++++++++++++++++++
->  3 files changed, 31 insertions(+)
+>  drivers/vfio/pci/vfio_pci_core.c       |  2 +-
+>  drivers/vfio/pci/vfio_pci_liveupdate.c | 17 ++++++++++++++++-
+>  include/linux/vfio_pci_core.h          |  1 +
+>  3 files changed, 18 insertions(+), 2 deletions(-)
 > 
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index 3a11e6f450f7..b01b94d81e28 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -569,7 +569,7 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
+>  	if (!vfio_vga_disabled() && vfio_pci_is_vga(pdev))
+>  		vdev->has_vga = true;
+>  
+> -
+> +	vdev->liveupdate_incoming_state = NULL;
+>  	return 0;
+>  
+>  out_free_zdev:
+> diff --git a/drivers/vfio/pci/vfio_pci_liveupdate.c b/drivers/vfio/pci/vfio_pci_liveupdate.c
+> index ad915352303f..1ad7379c70c4 100644
+> --- a/drivers/vfio/pci/vfio_pci_liveupdate.c
+> +++ b/drivers/vfio/pci/vfio_pci_liveupdate.c
+> @@ -131,6 +131,7 @@ static int match_device(struct device *dev, const void *arg)
+>  static int vfio_pci_liveupdate_retrieve(struct liveupdate_file_op_args *args)
+>  {
+>  	struct vfio_pci_core_device_ser *ser;
+> +	struct vfio_pci_core_device *vdev;
+>  	struct vfio_device *device;
+>  	struct file *file;
+>  	int ret;
+> @@ -160,6 +161,9 @@ static int vfio_pci_liveupdate_retrieve(struct liveupdate_file_op_args *args)
+>  		goto out;
+>  	}
+>  
+> +	vdev = container_of(device, struct vfio_pci_core_device, vdev);
+> +	vdev->liveupdate_incoming_state = ser;
+> +
+>  	args->file = file;
+>  
+>  out:
+> @@ -171,7 +175,18 @@ static int vfio_pci_liveupdate_retrieve(struct liveupdate_file_op_args *args)
+>  
+>  static bool vfio_pci_liveupdate_can_finish(struct liveupdate_file_op_args *args)
+>  {
+> -	return args->retrieved;
+> +	struct vfio_pci_core_device *vdev;
+> +	struct vfio_device *device;
+> +
+> +	if (!args->retrieved)
+> +		return false;
+> +
+> +	device = vfio_device_from_file(args->file);
+> +	vdev = container_of(device, struct vfio_pci_core_device, vdev);
+> +
+> +	/* Check that vdev->liveupdate_incoming_state is no longer in use. */
+> +	guard(mutex)(&device->dev_set->lock);
+> +	return !vdev->liveupdate_incoming_state;
 
-Reviewed-by: Pranjal Shrivastava <praan@google.com>
+Since we set this to NULL in the success path of vfio_pci_core_enable()
+I'm wondering if a failure in vfio_pci_core_enable could cause a
+resource leak? Because vfio_pci_liveupdate_can_finish() returns false
+as long as that pointer is valid, a single device failure will 
+perpetually block the LIVEUPDATE_SESSION_FINISH IOCTL for the entire 
+session preventing the LUO from reclaiming KHO memory.
+
+Shall we also set vdev->liveupdate_incoming_state = NULL on the error
+paths of vfio_pci_core_enable() ?
 
 Thanks,
 Praan
