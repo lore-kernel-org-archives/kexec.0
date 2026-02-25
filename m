@@ -4,100 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7AA0AF5544E
-	for <kexec@archiver.kernel.org>; Wed, 25 Feb 2026 03:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E453AEF5862
+	for <kexec@archiver.kernel.org>; Wed, 25 Feb 2026 06:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	References:Message-ID:Date:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2erXaSzxqouJYHAI7iQgk06x1aOTRy7Rez7nS+35Gsk=; b=V3ZfkM/6/DjsOTb5LFvu8TylBn
-	AE5To8eXG6PFeOeD6aZB0C9ZUJpogQsIyW/kErmnAjbjiMw5WHouLar2Kx36Tj1j3xDTnCQViZ1dX
-	MaoVv/3vEilfqGiNLvlvF73FykYkuRH7pYAJ3pbBzCAMktJddqDuun+g2EdS/A8mmJnODrU0G52TH
-	Sr90qgUlwUv9jyIBDB/vH4UuhYWHuH6yNOb80XWDzYGnwmcG0j5WwJ1TlVDpkRbeXmgRvvF5UqkfT
-	ZDWixXf6IegyL/iGRkDw6jxpKfFvrXSMcrkVrpSmQgvYoUoO7xUcCq93JD9I3mOHioEQYdUjLWpFa
-	QGZw/1Fw==;
+	bh=gmrGSNfnGiWDwNvctHFqdcRxKu8ZGchqf9tdlqmXs2o=; b=HpQhJAwnmwW2hDETuuYWe1eZcY
+	nSjSMGw+WHlPZYpP1tYyd2R5KyCPhN2fyTFJ3HH1C7ZWFXG4181Vm6FbCv/10keQhWuWziySD74iT
+	44RTYf7b8sB26Y/Xm86jKIOkJ4o65FZ4zmnGfwaxEhg6H74IFjrs93Ff/qpNgCbYqVnV/cegxcjcj
+	/I0/bjJXoqNvvOi+BBrWmajMAv3Ih5XdFP/wMZA3PP9AZ8iJ+V60olZNsO8QIAmN9DkLf7OXqhm9y
+	+YVvRQ0fBWVX6wf1fut90qoHS9If9OQkZ/jJc1NE9VxgWXsMvryX3e9v0LO/maqYgYU2VUisb4xCb
+	9zrgaQDg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vv5Vo-000000039Hn-1PDa;
-	Wed, 25 Feb 2026 03:24:32 +0000
-Received: from mail-pj1-x102f.google.com ([2607:f8b0:4864:20::102f])
+	id 1vv80C-00000003H5O-2aON;
+	Wed, 25 Feb 2026 06:04:04 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vv5Vk-000000039GT-36vY
+	id 1vv80A-00000003H3o-3yJg
 	for kexec@lists.infradead.org;
-	Wed, 25 Feb 2026 03:24:30 +0000
-Received: by mail-pj1-x102f.google.com with SMTP id 98e67ed59e1d1-3562212b427so2567367a91.1
-        for <kexec@lists.infradead.org>; Tue, 24 Feb 2026 19:24:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771989867; x=1772594667; darn=lists.infradead.org;
-        h=mime-version:references:message-id:date:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2erXaSzxqouJYHAI7iQgk06x1aOTRy7Rez7nS+35Gsk=;
-        b=kTnoXGCg08QYCtnNF7EmK8W4fO2ylVtXv6x28+YCJgKsanzlW7bQhib+ldKOa92skH
-         79Z+Pj3Bm/7HizEloJdNSJwTdIJ04GrxA+TH1kg2rjlgmeww7pxkhLvUuUPBvFqEh1nG
-         nGJKf0+5Qeo2afhcvrVv3neINiKcijUiskEDHFmBaoOyMPY1W72AhCOVoL02Y+mj6dMb
-         ESRK7HQOKE8OWR8Tz/FDzS7RzA2vlc9B2NnH8GaX/Sklp0shGheC9a+ROxJVcOQSPUOk
-         F397RXuWmBS5IdIuTIWcUSKvRfhacoHPIf8EsWTgIBiHH+6HmVnCXr/vcvzmnh9lM37g
-         561w==
+	Wed, 25 Feb 2026 06:04:04 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1771999442;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gmrGSNfnGiWDwNvctHFqdcRxKu8ZGchqf9tdlqmXs2o=;
+	b=fpxHKFZE2RgTpFFveNzUpKkRxrMgMUD1LQa0nRlXQavh88M7uE0fKZWmJcIiPeog3eiqlJ
+	oeIpdxY207H/j2n1BtwKCsxUxYtQDh4lK4fOaKBiLXn+1d4fGau54NG5GocnLQNaKn1Pnz
+	daDd62ob5/gHeugywoOfJBrkd9lyL+0=
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
+ [209.85.215.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-81-EeEAyEC0PaOHQfKnTsFyow-1; Wed, 25 Feb 2026 01:03:59 -0500
+X-MC-Unique: EeEAyEC0PaOHQfKnTsFyow-1
+X-Mimecast-MFC-AGG-ID: EeEAyEC0PaOHQfKnTsFyow_1771999438
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-c5269fcecdeso3785479a12.0
+        for <kexec@lists.infradead.org>; Tue, 24 Feb 2026 22:03:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771989867; x=1772594667;
-        h=mime-version:references:message-id:date:in-reply-to:subject:cc:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2erXaSzxqouJYHAI7iQgk06x1aOTRy7Rez7nS+35Gsk=;
-        b=GGORA9brKcyj2JYJmpGeFFvU30Zchq0+RveE7n3Y0/soC3oaM/ighL6P4q1B9KQBsL
-         AzwyRf07VOAiRssLtHhvCDLIrOzkC6/i1WVnPjix4l0kfrFNXIRXuddXgkM96BkAToNM
-         ugS2SmoM5nBp8SBpMn6JueMkXl916374ERCmXeIffDpgX9J0bzjGXlcJpbdU2vO/cWJn
-         e8rGnkNtrLAxjaW2i3Op7BS0eUYUqoGQaUUp3y2HLS0j/wU3P8o+MFWWUmEQTexrKkky
-         p1M5gKEf9gKLTX9mTpGECpGI7M/w10rDvOoj6RUHmtajTnkKW7aoQKT5JNOfKj6vqyGR
-         tkiA==
-X-Forwarded-Encrypted: i=1; AJvYcCVgPe+IDmVHcNwzhb8nNm7nw0ThqkvJPz1YLAd9tUek04CHRj5ZVt1wS3nB8ROYP42ialmHTQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyT2Y6F+UBwU2qza0jyd5QwViadv1lCGZy0GEImjcyYFRJAXYyl
-	hJRvO1hrCmMD+EWzYIO/OASUew+ePWuOLtOGdI5ljLEoue82vDOE+I4K
-X-Gm-Gg: ATEYQzwGdSA/9BOxKe9Gef7YVg4lN9WY8xDBhPfuVzkE5HH88G7u2cZcTUXBfAF+fvX
-	36Bc7HEeXjm0Kd/VGWSGZP9SY1Zd3ctNA20pop3NGl9Wv97BZcwCff1BifLqQ4tufrnpwm05naW
-	zeiehhmrhwNswdgkJ3AzSem/d9VNESVPU07paL4uVtfa1Rmr8LlOeeqr4vP12qEETHymdWC9e1f
-	3q7uh5+MKT+bHYuUiSUWTJuVUB7DyP3CGSwWptTWsXlJYSbwfMwTMxbx5oaR7fOzRkmvSblugUU
-	RFDGSbRS9ZQWk4PAbbHF6p6EwFnkFj5OSWrzRXfx6l5VRz3vp9hXC2WYCYkEczXlCjfVKVavYlk
-	0f5eQIFWD2ZH/wO5nod6DNkfvn9+a2mTdH1Bg+3non59bPWDr1LRoevirZ9wgn7CW5WUIJBkKBD
-	dXaY+9BVFJKqqN39zZ7A==
-X-Received: by 2002:a17:90b:2cc5:b0:356:35a5:4a64 with SMTP id 98e67ed59e1d1-358ae7c5003mr12522694a91.4.1771989867018;
-        Tue, 24 Feb 2026 19:24:27 -0800 (PST)
-Received: from dw-tp ([203.81.240.195])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-359037afe31sm1092824a91.16.2026.02.24.19.24.07
+        d=1e100.net; s=20230601; t=1771999438; x=1772604238;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=gmrGSNfnGiWDwNvctHFqdcRxKu8ZGchqf9tdlqmXs2o=;
+        b=k+vstz/i+xwiJmUKGAYsE5S1QUCDkuD6QA7/uq9TLeVeKj02DbFN49dfXBfCpPVy5U
+         40lefItnLDqfjbm/9wA2CipwFXojILyx5L3yP4kRfCbXfA6skNTGrzQQwP+/YFSbiALc
+         o+9CnAxZYjTknCxqPpyq7bB7hRZDbqLcywm5VsuTYKP7fi3paE7SHHrdvF0tTfyGqrAK
+         Z5RrHZGR/VpSaYYDNMcGCZ/6/Kiystz7h9INifvlIPEO3XA95Ccjf59sxQ20JmFeGASM
+         d/k7b9u61D9f/G2iCD71TJxxJVNT+yYnu2V/7hNURoq5zpKbXULel9KX/sgVmAL0Ze/h
+         pLug==
+X-Gm-Message-State: AOJu0YwS68B932mjcSpeBrax3+dkmWR248+/yRrv1RW0tUuq2ZfN++qQ
+	aRSidNgO08/WbwIK4+oxb15AWvANdR2YXCI3DK7UPX7MCM7KYOyzQlow9pkbcsyrv8wnOD2v8uR
+	wvVPDWclluSK4tY3Zy0jDv6SKnzmSdelv0QY//F1aYZUbp4UaFPZaue6RT+/GuUVkdmlkYolFYe
+	AzGFetVxY4+IpZNI7pZXP64PFF4P7od+qIn7U41nST/IM=
+X-Gm-Gg: ATEYQzzNGTWUvwdk48C6puSRsuJAbW1YzR58x9FUHDLlGg05EGB2FEMj92e/7DBNMav
+	vGZAaE3xnsBk4IVJBKQUdVI1pMxBoJ75P8/96T8aO99t+ylTlIGgRmQwgszj1j1CvGOGFQJvKmI
+	/whkBnVDfaSHzhP+P1nmlEZfVvv5xkbxdTXH2MjUw6hBVPqmeeIo3P9vUPaceP3ohqGKdMHMm0d
+	4HwN50puViLQhoSfElvyyr5BDxaUQYW9kCmln9Dw0zGsBXmaplFnsgv9WVYthUVpAQTlMamWaXy
+	XqsaGohbdaY+3lUUMrjUDdJYAP/54il+oGgLm5T+kPPxJh+j7AIGQZdjz8h3huxld7IJVw2LgNu
+	NLPbB9U6ifM3C
+X-Received: by 2002:a05:6a00:4c82:b0:81f:4d16:5d8a with SMTP id d2e1a72fcca58-82724a3529bmr1223072b3a.29.1771999438003;
+        Tue, 24 Feb 2026 22:03:58 -0800 (PST)
+X-Received: by 2002:a05:6a00:4c82:b0:81f:4d16:5d8a with SMTP id d2e1a72fcca58-82724a3529bmr1223028b3a.29.1771999437424;
+        Tue, 24 Feb 2026 22:03:57 -0800 (PST)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-826dd8fdb81sm13000482b3a.64.2026.02.24.22.03.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Feb 2026 19:24:26 -0800 (PST)
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>, corbet@lwn.net, skhan@linuxfoundation.org, 
-	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org, 
-	kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
-	chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, akpm@linux-foundation.org, 
-	bhe@redhat.com, vgoyal@redhat.com, dyoung@redhat.com, rdunlap@infradead.org, 
-	pmladek@suse.com, dapeng1.mi@linux.intel.com, kees@kernel.org, 
-	paulmck@kernel.org, lirongqing@baidu.com, arnd@arndb.de, ardb@kernel.org, 
-	leitao@debian.org, rppt@kernel.org, cfsworks@gmail.com, ryan.roberts@arm.com, 
-	sourabhjain@linux.ibm.com, tangyouling@kylinos.cn, eajames@linux.ibm.com, 
-	hbathini@linux.ibm.com, songshuaishuai@tinylab.org, samuel.holland@sifive.com, 
-	kevin.brodsky@arm.com, vishal.moola@gmail.com, junhui.liu@pigmoral.tech, 
-	coxu@redhat.com, liaoyuanhong@vivo.com, fuqiang.wang@easystack.cn, 
-	jbohac@suse.cz, brgerst@gmail.com, x86@kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, kexec@lists.infradead.org
-Cc: ruanjinjie@huawei.com
-Subject: Re: [PATCH v6 1/5] powerpc/crash: sort crash memory ranges before preparing elfcorehdr
-In-Reply-To: <20260224085342.387996-2-ruanjinjie@huawei.com>
-Date: Wed, 25 Feb 2026 08:45:56 +0530
-Message-ID: <87wm01h5sj.ritesh.list@gmail.com>
-References: <20260224085342.387996-1-ruanjinjie@huawei.com> <20260224085342.387996-2-ruanjinjie@huawei.com>
+        Tue, 24 Feb 2026 22:03:57 -0800 (PST)
+From: Coiby Xu <coxu@redhat.com>
+To: kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
+	devicetree@vger.kernel.org
+Cc: Will Deacon <will@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+Subject: [PATCH v5 1/3] crash_dump/dm-crypt: Don't print in arch-specific code
+Date: Wed, 25 Feb 2026 14:03:44 +0800
+Message-ID: <20260225060347.718905-2-coxu@redhat.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260225060347.718905-1-coxu@redhat.com>
+References: <20260225060347.718905-1-coxu@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: N73dN0VRr_LpMgDCTcIrmrjLZ4ULXT7F6EHJRQvltX0_1771999438
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260224_192428_825082_EAE1E586 
-X-CRM114-Status: GOOD (  14.39  )
+X-CRM114-CacheID: sfid-20260224_220403_074181_5ABA06C1 
+X-CRM114-Status: GOOD (  15.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,51 +121,68 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Jinjie Ruan <ruanjinjie@huawei.com> writes:
+When the vmcore dumping target is not a LUKS-encrypted target, it's
+expected that there is no dm-crypt key thus no need to return -ENOENT.
+Also print more logs in crash_load_dm_crypt_keys. The benefit is
+arch-specific code can be more succinct.
 
-> From: Sourabh Jain <sourabhjain@linux.ibm.com>
->
-> During a memory hot-remove event, the elfcorehdr is rebuilt to exclude
-> the removed memory. While updating the crash memory ranges for this
-> operation, the crash memory ranges array can become unsorted. This
-> happens because remove_mem_range() may split a memory range into two
-> parts and append the higher-address part as a separate range at the end
-> of the array.
->
-> So far, no issues have been observed due to the unsorted crash memory
-> ranges. However, this could lead to problems once crash memory range
-> removal is handled by generic code, as introduced in the upcoming
-> patches in this series.
->
-> Currently, powerpc uses a platform-specific function,
-> remove_mem_range(), to exclude hot-removed memory from the crash memory
-> ranges. This function performs the same task as the generic
-> crash_exclude_mem_range() in crash_core.c. The generic helper also
-> ensures that the crash memory ranges remain sorted. So remove the
-> redundant powerpc-specific implementation and instead call
-> crash_exclude_mem_range_guarded() (which internally calls
-> crash_exclude_mem_range()) to exclude the hot-removed memory ranges.
->
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Baoquan he <bhe@redhat.com>
-> Cc: Jinjie Ruan <ruanjinjie@huawei.com>
-> Cc: Hari Bathini <hbathini@linux.ibm.com>
-> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-> Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
-> Cc: linux-kernel@vger.kernel.org
-> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+Suggested-by: Will Deacon <will@kernel.org>
+Signed-off-by: Coiby Xu <coxu@redhat.com>
+---
+ arch/x86/kernel/kexec-bzimage64.c | 6 +-----
+ kernel/crash_dump_dm_crypt.c      | 7 +++++--
+ 2 files changed, 6 insertions(+), 7 deletions(-)
 
-
-I had gone through the generic implementation v/s the powerpc specific
-remove_mem_range() implementation, when it was posted by Sourabh
-separately. And it make sense to use the generic implementation in this
-case, rather than keeping a duplicate powerpc specific version. So...
-
-LGTM. Please feel free to add:
-Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 5630c7dca1f3..7e980ea49d8d 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -525,12 +525,8 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 		if (ret)
+ 			return ERR_PTR(ret);
+ 		ret = crash_load_dm_crypt_keys(image);
+-		if (ret == -ENOENT) {
+-			kexec_dprintk("No dm crypt key to load\n");
+-		} else if (ret) {
+-			pr_err("Failed to load dm crypt keys\n");
++		if (ret)
+ 			return ERR_PTR(ret);
+-		}
+ 		if (image->dm_crypt_keys_addr &&
+ 		    cmdline_len + MAX_ELFCOREHDR_STR_LEN + MAX_DMCRYPTKEYS_STR_LEN >
+ 			    header->cmdline_size) {
+diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+index 1f4067fbdb94..2f7b42b09673 100644
+--- a/kernel/crash_dump_dm_crypt.c
++++ b/kernel/crash_dump_dm_crypt.c
+@@ -414,14 +414,16 @@ int crash_load_dm_crypt_keys(struct kimage *image)
+ 
+ 	if (key_count <= 0) {
+ 		kexec_dprintk("No dm-crypt keys\n");
+-		return -ENOENT;
++		return 0;
+ 	}
+ 
+ 	if (!is_dm_key_reused) {
+ 		image->dm_crypt_keys_addr = 0;
+ 		r = build_keys_header();
+-		if (r)
++		if (r) {
++			pr_err("Failed to build dm-crypt keys header, ret=%d\n", r);
+ 			return r;
++		}
+ 	}
+ 
+ 	kbuf.buffer = keys_header;
+@@ -432,6 +434,7 @@ int crash_load_dm_crypt_keys(struct kimage *image)
+ 	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+ 	r = kexec_add_buffer(&kbuf);
+ 	if (r) {
++		pr_err("Failed to call kexec_add_buffer, ret=%d\n", r);
+ 		kvfree((void *)kbuf.buffer);
+ 		return r;
+ 	}
+-- 
+2.53.0
 
 
