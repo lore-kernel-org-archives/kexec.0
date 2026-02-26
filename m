@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90193FD9E22
-	for <kexec@archiver.kernel.org>; Thu, 26 Feb 2026 23:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5780CFD9E1E
+	for <kexec@archiver.kernel.org>; Thu, 26 Feb 2026 23:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=uUrZ9rZ9RlW3x07tCEk7xJ4J4Vz88lZHdKC8XE8Cxsc=; b=m1aFnaYbUWuhiD+rOLXpAeLgx1
-	+z5k+uLwv+2ypIqXk9InzqDa/mDitlehtavkPFJQwiBJtp3jSE7U1gPUGy/xxrHOSwavfv48jjFD0
-	XJtB0uPlLDAcQvb8ye966VtLGs4TO7UnoNsK3E46DjtGzIkZ8c0NQqpt4MOH0Hps3CztoNaTkPosv
-	5W2qyEbZH39dE6aLR0pfLWry2UnadIf859wqZ73gGVRMpixRKt+OMvy9SzgFQ0Qkoa+YvJHESBMmj
-	k7Ltb2ChQS+4O1AUi3MbZrvTs9el0ZM/aOAmDv/XB4kUx9AlLRiGlZl2rVEaWBnHcitEurcXJQpfW
-	9FL2vbjw==;
+	bh=UQ19nP7LWyVtbwlYCJ4KZaeb2FLacueUWULaQoURJXE=; b=1bYFxK+m1EUFCx3VJkLlAG8jxw
+	gxkbrNaDToWKe1QVx7/v/AQFyqKaOTnALRAKYeiraB2gMMjB1daP4fNEVmjBeigSN9mdzJw3T+j9l
+	dLC7S6NBg9bsPsz4sKCMVjVGwwfjYrLlXAvgC0FymdiLiO9k6toRaK5iAC5HNykL0vVz0YMip3BzM
+	LejCfAJFE0Uwzwjf14KQ9bXluhUc/YcnS5zx+N6bvNgbxvkE6fNbDDymrSbX+l8h2PqGvGsIBOHBY
+	eR98nDSQ43DMRR9zx3xywBGpp/X4fUpTWO4acsU9BbrykVVZ/jGEEl0gaVXFG4gIVAe1OZL5+r/8q
+	IT9DAbEg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vvklx-00000007NiI-38AA;
-	Thu, 26 Feb 2026 23:27:57 +0000
-Received: from mail-pf1-x42e.google.com ([2607:f8b0:4864:20::42e])
+	id 1vvkpj-00000007Nqx-1P6b;
+	Thu, 26 Feb 2026 23:31:51 +0000
+Received: from mail-pl1-x635.google.com ([2607:f8b0:4864:20::635])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vvklv-00000007Nhv-1Fnz
+	id 1vvkph-00000007Nqc-0dBM
 	for kexec@lists.infradead.org;
-	Thu, 26 Feb 2026 23:27:56 +0000
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-82746ed8cb1so477492b3a.3
-        for <kexec@lists.infradead.org>; Thu, 26 Feb 2026 15:27:54 -0800 (PST)
+	Thu, 26 Feb 2026 23:31:50 +0000
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-2aaed195901so7132495ad.0
+        for <kexec@lists.infradead.org>; Thu, 26 Feb 2026 15:31:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772148473; x=1772753273; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1772148708; x=1772753508; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uUrZ9rZ9RlW3x07tCEk7xJ4J4Vz88lZHdKC8XE8Cxsc=;
-        b=yZK+fuGoG1EGchiq6PbyOx/Ms/2F1+MI0NVVIzFCUHCg8vRvooBOfjQfvTMTnXMXt8
-         TO0jWdiUvsMPSE0hOugPM62vs/7vOPZdoFB6N6PsGzUifG4d2wfcHJ7/WpVggrrfhN5G
-         lzFTVVAONpR7IdL7Lm18glHUOBkXb4VqO/I6M3rVW3TypNc3rREmY47EoT5eazRf0PxE
-         WvnOGS4SoUTVrjICCsqn1PbR4VYl2zJnkETk+kRfqvS4mTLSt0ghEu4Ve0f2A1AbvfJk
-         0i2kPM5iL28fQk8ZAJORlA/oDiQ40jEbQeLyMqNNfodCojxyPf2C1f+mkLSM6nRVj/qL
-         +g8Q==
+        bh=UQ19nP7LWyVtbwlYCJ4KZaeb2FLacueUWULaQoURJXE=;
+        b=J4CLUGm93u7vWQbnBnuEwNrnIqNcLWCmMlO1jOxq2exvVbiC6RcYHPQ3FYwe4MgQhJ
+         shGTEkdM6XawLRV11f6vFvf5oZ/1EsoHPmBSXA56dzvcf+YsYyXFybnIN7Gesqe5OXVk
+         jtIO3HwaMl5/VpmpB+1NLDTyg2ej04Qz98OSRVyEYGS57ii7nEr25Aw/9fzt8ZAOENsQ
+         MGR8zvP6Bp9KB32zGh6/gEEm1A0km6dXlh9qQPWMd5LvWafZLNml/uBy/JrXLSEpwNGn
+         xj1UIymhn1T1lYUh4ul+gdyuoY90wypqo0tStExzz+8Xvf5hNbbnMBbeZg4PMDFXm6qz
+         mSig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772148473; x=1772753273;
+        d=1e100.net; s=20230601; t=1772148708; x=1772753508;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uUrZ9rZ9RlW3x07tCEk7xJ4J4Vz88lZHdKC8XE8Cxsc=;
-        b=X4iXLNc8NatSuwVwAP334FPQirxBcShfIA8Fy7ADVt13XAG6Cg/wRycTR7zFqRiMKK
-         esWJQSskZt4pxq/MuPmMTj8/A8hs6SnHI6UN8zo86kHtXLtgsvRtRNtZV3cyWJz5MmgH
-         AnFmjL/YFhg2JAtz4+ROilA0Z5lfMGHsc6UOBX1Z37QSEs+KVhQeK/KjXlq9veOeLhC5
-         6cG5QH1u3npQP8Bfp3nheHsLXgs/K7zX7huWJ6hf/oOUhJn9CJ8mVpQJxdRUgu7zGnwA
-         OH/oUsdH0ZFOh9XADcCX1phfaHYdqBwjFZe3oL3pkiGE+EkBEALOntF29Y/A3Z1WMMFC
-         PvbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCp1iOTr0avYCxser+j4k9f3dYv+5d3x7mYG+hTafN0GJQIxqP8/IqiI8epXUGVDRECcwtvA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yzgm1yhmVwu1l89mZApcxtOmhXrdRrdVMpkJAybrJmDWQ6TkTzU
-	XPQeZIsGq+jGVtex8E9z3cxW0Yifp+hwbemSBhQCvHJzlf/6SzVPCoFGZ849oItLPA==
-X-Gm-Gg: ATEYQzygznqVyHi4hmtXGe8nj6mONaRsUqvBOiOgifampHfB2sngi9+Y9VirheD5na+
-	GeSTeNdKS4fPjyC0miqopig3nOEb07CLsdetobmtI7JsD9BxbrJ+ZNtbDiNsLhL8KMne4usIAOZ
-	TK3nv7Ms6ssoNsJL/rd50ZAJI/DqVOtP5WreD3Zy8HQdaDECV0RqaFXjH+b9ZiRa3qRnEvQIXFT
-	p6lHwXm0MsXAVd275VZFsgbHeyoWuJI+CIofRlGq8lyrk4kHjvV2JhRZq7pGHc8e7P3l9AeYuSw
-	aITCm+ED6UqukV3M5tLU1RvyywAPo/Thanfc0E3a3ULX6xXdpAS3VhF5l/GlFAY5SAs4tq5TFo4
-	8Dw1iUFflCV/OmIDSsKQ8L4ZYVfA8CJiejDalDXAx3yBkMFaJgE6DsWBMyI1GwJiAbrkAII3W3W
-	w9EbrCJSJ2uBQiahL2WzoBMugQjidYahADsqoLdT8oAW7gE+ZjWgouGlta7iYI3hniCAK+McwB
-X-Received: by 2002:a05:6a20:1585:b0:38b:e9eb:b12b with SMTP id adf61e73a8af0-395c3ae6d18mr701611637.41.1772148472659;
-        Thu, 26 Feb 2026 15:27:52 -0800 (PST)
+        bh=UQ19nP7LWyVtbwlYCJ4KZaeb2FLacueUWULaQoURJXE=;
+        b=r/qftMwnuF8A2a1Q4NO4HzcurfGhlBnWFfVkRI1O/Xd6qFlz0gbcia371y+w0WCe39
+         MwkNbc55jgZi5wgLbpI8j7JGm7UOMB9gZSjZ7v0+vahxrsYWArWsIvBPgjlDw4KISfyf
+         xnfv8KIpUW8Bc4EnS8VNu3qDjRP++9YWLivACjpoK1JYeYH58PaV9swpARw3hY2IGd11
+         /YaIt+ulV1WlukfJrCajU3ZQ5aQtYXdMMdnysH5L70dgA7DfR5A3KUElNEqq46tzsGjD
+         XAG8JQA4CU6NTnEBZOespL4WeQDunoY+BOCYhU20QE+PS0LcfAp6ugv+/kPcuzuKEhMy
+         DptA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/3XDOTek/ckMU+vzlM0uRaNq4dtpV0E1IB7H5SmKjm2CZ/9MKkzIxyO4wwKyttTeuhDhibQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxaZJD7Y2vyuBbPC7QLqDFjSTwZQCGrtLw2PRLfT1odld6fAtX5
+	6kY7iOmSIhue1gw3+uqIwnKRjNiIeo7ugzDKRVdrAsT7TgQKh4mgftlRwDZ39tHgHA==
+X-Gm-Gg: ATEYQzyur/TR7wT82PxRP8nT1DGkVWy2T94A516ydPiKYzSY7pSm9nigXk058PZVdLt
+	G3UO69pV+TM9b2XSHouNR0lTbQG5unqMyOVmLF7eey4TRpnsvhAjSN9gn/gF58QJoNJUMclms7+
+	CmuFXzCOsKSoO3yZKZ34Y5Gs1BlIoAK45lXGi5WJdGSHWXOgdoprvd3S0GItDlX34cZzl7NaxOU
+	6bdrWQqC5nPTGY3ZqqIlMTiH5CWVcl4oDUCJwUXSYXIUcctu4NWZf+wtvoE/LFXD4hv91vKfZyz
+	+rYZsrPRvNUmvleBmvQtWKE2RNIBzbROhJeweAxh/6VYQ0SgRDwI7zwwgC9Uf+t3aYbl5FygklD
+	Ec9HsckUcpRw0McMKCycBM+rMFT1mB2jRaxBWeXOGBFBcI2+Te5Ttz+JWRdDBAJI2sJEFEnZw0b
+	DzNbVJs7LeYSQqNBt6vjuLRHbePDB4y3+wgkZ7+Ne4Q1FFxJByU5CCYIJ5A6yiTA==
+X-Received: by 2002:a17:902:dacb:b0:2a7:919c:34c6 with SMTP id d9443c01a7336-2ae2e4cd74bmr5371545ad.38.1772148707814;
+        Thu, 26 Feb 2026 15:31:47 -0800 (PST)
 Received: from google.com (239.23.105.34.bc.googleusercontent.com. [34.105.23.239])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2adfb6a03fbsm48080705ad.43.2026.02.26.15.27.51
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2adfb6a0432sm53850525ad.52.2026.02.26.15.31.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Feb 2026 15:27:51 -0800 (PST)
-Date: Thu, 26 Feb 2026 23:27:47 +0000
+        Thu, 26 Feb 2026 15:31:46 -0800 (PST)
+Date: Thu, 26 Feb 2026 23:31:43 +0000
 From: David Matlack <dmatlack@google.com>
 To: Alex Williamson <alex@shazbot.org>
 Cc: Adithya Jayachandran <ajayachandra@nvidia.com>,
@@ -103,19 +103,19 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>,
 	Vivek Kasireddy <vivek.kasireddy@intel.com>,
 	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
 	Zhu Yanjun <yanjun.zhu@linux.dev>
-Subject: Re: [PATCH v2 08/22] vfio: Enforce preserved devices are retrieved
- via LIVEUPDATE_SESSION_RETRIEVE_FD
-Message-ID: <aaDW86eWuQLZ3cfP@google.com>
+Subject: Re: [PATCH v2 07/22] vfio/pci: Notify PCI subsystem about devices
+ preserved across Live Update
+Message-ID: <aaDX34yT_3dwUi4I@google.com>
 References: <20260129212510.967611-1-dmatlack@google.com>
- <20260129212510.967611-9-dmatlack@google.com>
- <20260226161512.532609ec@shazbot.org>
+ <20260129212510.967611-8-dmatlack@google.com>
+ <20260226160353.6f3371bc@shazbot.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260226161512.532609ec@shazbot.org>
+In-Reply-To: <20260226160353.6f3371bc@shazbot.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260226_152755_343667_89CC1165 
-X-CRM114-Status: GOOD (  17.47  )
+X-CRM114-CacheID: sfid-20260226_153149_188640_6351C597 
+X-CRM114-Status: GOOD (  14.88  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -130,47 +130,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-02-26 04:15 PM, Alex Williamson wrote:
-> On Thu, 29 Jan 2026 21:24:55 +0000 David Matlack <dmatlack@google.com> wrote:
+On 2026-02-26 04:03 PM, Alex Williamson wrote:
+> On Thu, 29 Jan 2026 21:24:54 +0000 David Matlack <dmatlack@google.com> wrote:
 
-> > +	/*
-> > +	 * This device was preserved across a Live Update. Accessing it via
-> > +	 * VFIO_GROUP_GET_DEVICE_FD is not allowed.
-> > +	 */
-> > +	if (vfio_liveupdate_incoming_is_preserved(device)) {
-> > +		vfio_device_put_registration(device);
-> > +		return -EBUSY;
+> > diff --git a/drivers/vfio/pci/vfio_pci_liveupdate.c b/drivers/vfio/pci/vfio_pci_liveupdate.c
+> > index 7f4117181fd0..ad915352303f 100644
+> > --- a/drivers/vfio/pci/vfio_pci_liveupdate.c
+> > +++ b/drivers/vfio/pci/vfio_pci_liveupdate.c
+> > @@ -53,6 +53,8 @@ static int vfio_pci_liveupdate_preserve(struct liveupdate_file_op_args *args)
+> >  	if (IS_ERR(ser))
+> >  		return PTR_ERR(ser);
+> >  
+> > +	pci_liveupdate_outgoing_preserve(pdev);
 > 
-> Is this an EPERM issue then?
+> Why do we get to ignore the return value here?
 
-I was thinking EBUSY in the sense that the device is only temporarily
-inaccesible through this interface due it being in a preserved state as
-part of a Live Update. Once the preserved device file is retreived and
-closed, the device can be accessed again through
-VFIO_GROUP_GET_DEVICE_FD.
+Ugh, we do not. This is a bug, thanks for catching.
 
-EPERM might lead to confusion that there is a filesystem permission
-issue?
-
-> > +#ifdef CONFIG_LIVEUPDATE
-> > +static inline bool vfio_liveupdate_incoming_is_preserved(struct vfio_device *device)
-> > +{
-> > +	struct device *d = device->dev;
-> > +
-> > +	if (dev_is_pci(d))
-> > +		return to_pci_dev(d)->liveupdate_incoming;
-> > +
-> > +	return false;
-> > +}
-> > +#else
-> > +static inline bool vfio_liveupdate_incoming_is_preserved(struct vfio_device *device)
-> > +{
-> > +	return false;
-> > +}
-> > +#endif
+> > @@ -203,5 +225,6 @@ void vfio_pci_liveupdate_cleanup(void)
+> >  	if (!liveupdate_enabled())
+> >  		return;
+> >  
+> > +	WARN_ON_ONCE(pci_liveupdate_unregister_fh(&vfio_pci_liveupdate_fh));
 > 
-> Why does this need to be in the public header versus
-> drivers/vfio/vfio.h?
+> This is propagation of a poor API choice in liveupdate, the unregister
+> should return void, it shouldn't be allowed to fail, IMO.  Thanks,
 
-No good reason. I'll make it private.
+Ack. I'll make pci_liveupdate_unregister_fh() unable to fail and follow
+up with the maintainers of LUO about liveupdate_unregister_flb().
 
