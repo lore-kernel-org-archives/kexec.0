@@ -4,118 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8B889FD9E26
-	for <kexec@archiver.kernel.org>; Fri, 27 Feb 2026 00:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 05A83FD9E30
+	for <kexec@archiver.kernel.org>; Fri, 27 Feb 2026 02:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=MbrSIpDE3Y8TNhyTW+6lYUs18ku3UAynLvTznEtk/Vk=; b=Quwly6aBWma6Q7Zhvtum5//JHI
-	U6GyB0ed4HrQxc/+gUZyRxe2uOF/UdN0WhZB3U7ZFPdDMuPHGhkjsD9VhcQLYbE1VIAGmXiPxWGO8
-	zvjHNWcbdm+hNlowOTyuR2Yq4k8Ie1eB1Vu6iGPCldOC5/U0YsO4RYRXEDAlVJ+d9Auo9wPf2ba9r
-	pIV3RwUlWa3bZtt58CkPUBnpfXHkpAT/BCC0fttUARV8M75fB3tMmng6AUGoKR7iJzOXS7DDFFUWy
-	3zIG3ebKAHlZhNfSdkj5MsxmeJw/OH/ss45HRmbvPtK1wXHzeTHINaGo1nzC1cpBExl0n6O71HXxP
-	vAmOwTwQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=HZhniSNkbfOkNF4qC2hYeVFLUMtmUrZtxX5b9EmLi/c=; b=sShfOdVuAjb4NdER/uSI9rycBN
+	O7qtKoz6896p+4IIsg2V0tHcleX+F4ADXluZ7cEaZSv1MmfckY+mlgaSE2B7CtXmDaRaZTUltykgS
+	RoQe5kqWn/PuK2E70IU2h3h4u5C96N9nUk4HzWFzCnpKTHmdhA7KK7nfs6ZEBapacWh0D6oSNIw7Q
+	4tZIM3BqQagyZNMDI7EGqZfs7nMWtb1LrJJAObOSq1XhdliTao9NR/BXwlC64Qa6m1k5abQYNHKKG
+	8WroYWM/3PGTcv3dGjgoRO/6PN0OX9D/Hc9okB17Wnm5SOoK8V1METeUg3WPeNM2FJdU9Hk0e+4tf
+	2yELCk3Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vvm4k-00000007RaH-3uMP;
-	Fri, 27 Feb 2026 00:51:26 +0000
-Received: from mail-pl1-x631.google.com ([2607:f8b0:4864:20::631])
+	id 1vvnhM-00000007Y9Y-04QO;
+	Fri, 27 Feb 2026 02:35:24 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vvm4i-00000007RZt-45CZ
+	id 1vvnhI-00000007Y98-2kMd
 	for kexec@lists.infradead.org;
-	Fri, 27 Feb 2026 00:51:26 +0000
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-2ab077e3f32so6414415ad.3
-        for <kexec@lists.infradead.org>; Thu, 26 Feb 2026 16:51:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772153484; x=1772758284; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MbrSIpDE3Y8TNhyTW+6lYUs18ku3UAynLvTznEtk/Vk=;
-        b=bxskMeuUIoPCRa9d0avSnYuZ8iJAyzp4T1oYkk4KwwKTSWSR5xD2aNjhH0SVaAG2BZ
-         yOuK32nrhXcpFWMPzu38FQmk0PtBf0b3GKvL46TW8bmn4KCPEZ4ruqjco7x7GGLQ1+9z
-         C66YuNph3DF6ZFCeecjofty9QYWQe1itXFFQT9WI2D5YBIZzdTJuqG0eEDOU5bp+zuBc
-         jsDlXHU2ApebfnmPBX3us0iQDXIREeRaPXZkEC0oAo6/2Kk+HhC1c/k7RWZRVhpTg8FE
-         rrmPyDpHV02xbodvFfHzXVRKkAes6dLEpkev1KtLQimCbeXubRK3l1EFet0OCdOf1wjb
-         Q62Q==
+	Fri, 27 Feb 2026 02:35:22 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772159718;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HZhniSNkbfOkNF4qC2hYeVFLUMtmUrZtxX5b9EmLi/c=;
+	b=ALmcIIwDRMaiRwj7+0zfDBa0zija79maLtKdsAfTEmtwIVtKp6ybYvanwdIFlEC/dFy/R0
+	cDuXM6FA+jXw6J7/SjF1hnDD/Q94i51r9k+b170OM36MI1leBSRJxG7j/878NDXvzDe0Vf
+	1VatZR3Edb4smIDOtYKDem1XUxGmj5Q=
+Received: from mail-dy1-f197.google.com (mail-dy1-f197.google.com
+ [74.125.82.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-434-xV5UN_w8OTi8QJySFCv_EA-1; Thu, 26 Feb 2026 21:33:37 -0500
+X-MC-Unique: xV5UN_w8OTi8QJySFCv_EA-1
+X-Mimecast-MFC-AGG-ID: xV5UN_w8OTi8QJySFCv_EA_1772159616
+Received: by mail-dy1-f197.google.com with SMTP id 5a478bee46e88-2bde02c11b6so371787eec.1
+        for <kexec@lists.infradead.org>; Thu, 26 Feb 2026 18:33:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772153484; x=1772758284;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MbrSIpDE3Y8TNhyTW+6lYUs18ku3UAynLvTznEtk/Vk=;
-        b=fToEiV6X2MxDAcrh6/ZVhtEfRhIh/P2ojjqU0BR2AbA/efG2UJBG5CqXcDuhOEwyV6
-         IyR3MVJF4MKIoySKA9pBRo4ZYTlCUQ31LVP4pKUl3sw31WVWP1H3GLZE+ce+LtAVCR7g
-         ZpUbOwlPsZybwiNAQ2iArd1+QsHfOgqqqPrcyqew+JjH+bdoy6g1NgMUQiPPWDDgzQXt
-         p4maBkcXsDxU9/WAj2PwP+No/NvwP2uVINDQYOyZQyI4aBkL6ZZKlAqGOOie0b6LFqcO
-         sWwN+ld9BILgxEdZu0h90CM83rkSJXkgvmqsTcTG/d+F3q43noL7JELKFrqpgVPF6RjO
-         K7Hg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIChIBEe1c8UjlEV/2nBoDaDrgxHfdFEkf/q/BOMAZK+YAT0+G7yPRSgKl6b0YopIZnBhAkg==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yx7kAzSEbCpyozgo5KxoFKYZoOjgL8aGe92XpVtnwT6SVc/YjR5
-	KO/X82diIxlBFWiLI1VxiXYtUXeuvtC/BY8ccBFLQdx0VDByr5LsjeM0RYRp+XKp4A==
-X-Gm-Gg: ATEYQzw90mcoj/rNDTuJHRWWu6xIZI8wgsTq3om54EJs3BWl1BpSCfR1dOWE77ieqL7
-	Lt7qUrlH+S2JpSgFmFCT0sEIk3hjhTJypa9CSvwdP/8Ks7y6O+A7BO2hZO0vlQKiDR5z2vJ1vsn
-	2KpU+T7NlJvuG1twjakpJ2ipG2OXs4zJncZOCk7So/YVjHmXlVt9HsQc19rffle4txJ15/DZf63
-	9vjZV91mp3ZHwlW7fFbP32/0KmzGa1obO990SCDFoZnWe0gpNY8Xi5AZ8BQfbr4/nLXb1BBx50z
-	XeC5RrXXT5QlcES894iQ3IIXYzZMKVUMpsT5/aXeHgT57VyH/IeSUOYLw9bHxlhzIHhKEXF+1uK
-	rnuwmOhjI12W9F2tyVUMauzYdCAELplU853PpuEzMX1p9TvLCgB1YRoLpqA7Q9pgS0sg0eE+4zp
-	vhdpsPOyR8U+WiBLutN2e1DWhVF7MdBGPejmw6fhv7pdo3QPYrt20YdHuJKGe2lw==
-X-Received: by 2002:a17:903:41cb:b0:2ad:ba04:40ca with SMTP id d9443c01a7336-2ae2e419430mr8325415ad.25.1772153483265;
-        Thu, 26 Feb 2026 16:51:23 -0800 (PST)
-Received: from google.com (239.23.105.34.bc.googleusercontent.com. [34.105.23.239])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2adfb6b974csm34254135ad.65.2026.02.26.16.51.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Feb 2026 16:51:22 -0800 (PST)
-Date: Fri, 27 Feb 2026 00:51:18 +0000
-From: David Matlack <dmatlack@google.com>
-To: Alex Williamson <alex@shazbot.org>
-Cc: Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
-	Kevin Tian <kevin.tian@intel.com>, kexec@lists.infradead.org,
-	kvm@vger.kernel.org, Leon Romanovsky <leon@kernel.org>,
-	Leon Romanovsky <leonro@nvidia.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, linux-pci@vger.kernel.org,
-	Lukas Wunner <lukas@wunner.de>,
-	 =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pranjal Shrivastava <praan@google.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Raghavendra Rao Ananta <rananta@google.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Tomita Moeko <tomitamoeko@gmail.com>,
-	Vipin Sharma <vipinsh@google.com>,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
-	Zhu Yanjun <yanjun.zhu@linux.dev>
-Subject: Re: [PATCH v2 10/22] vfio/pci: Skip reset of preserved device after
- Live Update
-Message-ID: <aaDqhjdLyf1qSTSh@google.com>
-References: <20260129212510.967611-1-dmatlack@google.com>
- <20260129212510.967611-11-dmatlack@google.com>
- <20260226170030.5a938c74@shazbot.org>
+        d=1e100.net; s=20230601; t=1772159616; x=1772764416;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=HZhniSNkbfOkNF4qC2hYeVFLUMtmUrZtxX5b9EmLi/c=;
+        b=c6L1zG49QH/PG9EWAvJWoYJpFb5Q+J18JX1WxuEqjavQkW8RCEr0afBSdBlcLe6rLn
+         7cwhR9SWyniRRliqBR1Sx8p65EtMho6s+sZD4fnbISJFr72DXqp67iUH3gPShUylxGCC
+         jwEzPqBLdHfU+GLlDOQkYBOS8zljd6VevNyRtZQ5sygYsBybqHLBI3AWZSlTDGpPwAP2
+         ZFfoVv4r9GsIvtqMIW0eV4j35hdWJd1UIolotJRQYq/WW+jm5hRpQKfMcE+muygYPMay
+         LoSk/7XHznErEEYc0NQUcdYiXYOyYy0irh0t+Pk1oVKBB6M/lA8suCb357tg+NrKBcx6
+         9SBA==
+X-Gm-Message-State: AOJu0YwADRj/fqCbuBGJsYBL1cW5GleGvsjRIwVerVIT1DESdfrZgLpe
+	RiOeY7R/Bi9bj4CgXTNzQIk7RBCkzdRnX+UW99Hsv1jv/HDmWHerQskU3DOZYXENAmpOppFIcKn
+	8OokrXEPdpJscU2zQdUhxTGWKzxXLBEy/QlYFBC5d1vdhETq0aklX4kP/wIX/B7t4aX/NoNPFB9
+	YWU4JCRMbLxXAF0fXae3ZZG78MiVwRwCZB60hD
+X-Gm-Gg: ATEYQzz0hjNbKoXlMfxa5kf5laRKnWSro+GCfx5ZSOI6hwV8anhKW2OHZFLt/fOscof
+	4W7WulOL/JPJbfXtlx2L1rTcUU3VbWqfSRg8jokY89lVLOBxTrzXtOz10W4M5nOPvmaVgIlb0df
+	ZgOmVu9WRw4CvUir9O24eVEPm9uwPl6up45ggzR03DqI9Juv61mWyVDucQmhRrfvY94m+6IDaUq
+	9e0KkQ=
+X-Received: by 2002:a05:7300:cd86:b0:2ba:7c92:82fb with SMTP id 5a478bee46e88-2bdd0eccf46mr1356288eec.5.1772159615887;
+        Thu, 26 Feb 2026 18:33:35 -0800 (PST)
+X-Received: by 2002:a05:7300:cd86:b0:2ba:7c92:82fb with SMTP id
+ 5a478bee46e88-2bdd0eccf46mr1356266eec.5.1772159615443; Thu, 26 Feb 2026
+ 18:33:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260226170030.5a938c74@shazbot.org>
+References: <20260119032424.10781-1-piliu@redhat.com> <20260119032424.10781-3-piliu@redhat.com>
+ <20260226143710.42ba1843@rotkaeppchen>
+In-Reply-To: <20260226143710.42ba1843@rotkaeppchen>
+From: Pingfan Liu <piliu@redhat.com>
+Date: Fri, 27 Feb 2026 10:33:24 +0800
+X-Gm-Features: AaiRm51sv1BDNshyMBDK5hf7V7z9_aThj1MpWelhNhiRBiqIEooTA6HtBrVxGwk
+Message-ID: <CAF+s44TxkHPfGpiuD+RSGUCZ-WASOSUneObeEenYNFyCgdogQg@mail.gmail.com>
+Subject: Re: [PATCHv6 02/13] kexec_file: Move signature validation ahead
+To: Philipp Rudo <prudo@redhat.com>
+Cc: kexec@lists.infradead.org, "David S. Miller" <davem@davemloft.net>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, Jeremy Linton <jeremy.linton@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Simon Horman <horms@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Viktor Malik <vmalik@redhat.com>, 
+	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, bpf@vger.kernel.org, 
+	systemd-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: kfGDA68jVBUoMlspvscocxxWjY5lz8h64Q3r_VeCzOY_1772159616
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260226_165125_052386_A1774483 
-X-CRM114-Status: GOOD (  24.91  )
+X-CRM114-CacheID: sfid-20260226_183520_765194_C67D3671 
+X-CRM114-Status: GOOD (  27.48  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -130,73 +113,81 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-02-26 05:00 PM, Alex Williamson wrote:
-> On Thu, 29 Jan 2026 21:24:57 +0000
-> David Matlack <dmatlack@google.com> wrote:
+On Thu, Feb 26, 2026 at 9:37=E2=80=AFPM Philipp Rudo <prudo@redhat.com> wro=
+te:
+>
+> Hi Pingfan,
+>
+> On Mon, 19 Jan 2026 11:24:13 +0800
+> Pingfan Liu <piliu@redhat.com> wrote:
+>
+> > Move the signature validation at the head of the function, so the image
+> > can be unfold and handled later.
+>
+> besides what the bpf-bot already mentioned.
+>
+> What do you want to achieve by moving signature verification in front
+> of probing the image? Do you want to avoid calling
+> arch_kexec_kernel_image_probe twice? It would be great if you could add
+> the reasoning why the change is needed to the commit message in the
+> future. Not only to make review easier but also to document it for the
+> future.
+>
+Here I made a mistake. I think the UKI case and the convention case
+should be handled separately. For the UKI case, signature verification
+should be applied to the UKI envelope but skipped for the unpacked
+kernel image since it has no signature.
 
-> > -	/* If reset fails because of the device lock, fail this path entirely */
-> > -	ret = pci_try_reset_function(pdev);
-> > -	if (ret == -EAGAIN)
-> > -		goto out_disable_device;
-> > +	if (vdev->liveupdate_incoming_state) {
-> > +		/*
-> > +		 * This device was preserved by the previous kernel across a
-> > +		 * Live Update, so it does not need to be reset.
-> > +		 */
-> > +		vdev->reset_works = vdev->liveupdate_incoming_state->reset_works;
-> > +	} else {
-> > +		/*
-> > +		 * If reset fails because of the device lock, fail this path
-> > +		 * entirely.
-> > +		 */
-> > +		ret = pci_try_reset_function(pdev);
-> > +		if (ret == -EAGAIN)
-> > +			goto out_disable_device;
+
+Thanks,
+
+Pingfan
+
+> Thanks
+> Philipp
+>
+> > Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> > Cc: Baoquan He <bhe@redhat.com>
+> > Cc: Dave Young <dyoung@redhat.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Philipp Rudo <prudo@redhat.com>
+> > To: kexec@lists.infradead.org
+> > ---
+> >  kernel/kexec_file.c | 13 +++++++------
+> >  1 file changed, 7 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> > index eb62a97942428..0222d17072d40 100644
+> > --- a/kernel/kexec_file.c
+> > +++ b/kernel/kexec_file.c
+> > @@ -231,18 +231,19 @@ kimage_file_prepare_segments(struct kimage *image=
+, int kernel_fd, int initrd_fd,
+> >       kexec_dprintk("kernel: %p kernel_size: %#lx\n",
+> >                     image->kernel_buf, image->kernel_buf_len);
+> >
+> > -     /* Call arch image probe handlers */
+> > -     ret =3D arch_kexec_kernel_image_probe(image, image->kernel_buf,
+> > -                                         image->kernel_buf_len);
+> > -     if (ret)
+> > -             goto out;
+> > -
+> >  #ifdef CONFIG_KEXEC_SIG
+> >       ret =3D kimage_validate_signature(image);
+> >
+> >       if (ret)
+> >               goto out;
+> >  #endif
 > > +
-> > +		vdev->reset_works = !ret;
-> > +	}
-> 
-> This could maybe be incrementally cleaner in a
-> int vfio_pci_core_probe_reset(struct vfio_pci_core_device *vdev)
-> helper.
+> > +     /* Call arch image probe handlers */
+> > +     ret =3D arch_kexec_kernel_image_probe(image, image->kernel_buf,
+> > +                                         image->kernel_buf_len);
+> > +     if (ret)
+> > +             goto out;
+> > +
+> >       /* It is possible that there no initramfs is being loaded */
+> >       if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
+> >               ret =3D kernel_read_file_from_fd(initrd_fd, 0, &image->in=
+itrd_buf,
+>
 
-Will do.
-
-> >  
-> > -	vdev->reset_works = !ret;
-> >  	pci_save_state(pdev);
-> >  	vdev->pci_saved_state = pci_store_saved_state(pdev);
-> 
-> Isn't this a problem too?  In the first kernel we store the initial,
-> post reset state of the device, now we're storing some arbitrary state.
-> This is the state we're restore when the device is closed.
-
-The previous kernel resets the device and restores it back to its
-post reset state in vfio_pci_liveupdate_freeze() before handing off
-control to the next kernel. So my intention here is that VFIO will
-receive the device in that state, allowing it to call
-pci_store_saved_state() here to capture the post reset state of the
-device again.
-
-Eventually we want to drop the reset in vfio_pci_liveupdate_freeze() and
-preserve vdev->pci_saved_state across the Live Update. But I was hoping
-to add that in a follow up series to avoid this one getting too long.
-
-> > diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
-> > index 350c30f84a13..95835298e29e 100644
-> > --- a/include/linux/vfio_pci_core.h
-> > +++ b/include/linux/vfio_pci_core.h
-> > @@ -16,6 +16,7 @@
-> >  #include <linux/types.h>
-> >  #include <linux/uuid.h>
-> >  #include <linux/notifier.h>
-> > +#include <linux/kho/abi/vfio_pci.h>
-> >  
-> >  #ifndef VFIO_PCI_CORE_H
-> >  #define VFIO_PCI_CORE_H
-> 
-> Wouldn't a forward declaration do, and the kho/abi include can be kept
-> out of the public header?  Also should be in the previous patch?
-
-Will do.
 
