@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F1C9EFD0060
-	for <kexec@archiver.kernel.org>; Sun,  1 Mar 2026 11:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B2509FD005C
+	for <kexec@archiver.kernel.org>; Sun,  1 Mar 2026 11:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
 	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=vv6I0ky+vPPs0At65EIiqJlz5ngSThX4t8eVUQua22s=; b=mCvbS7TLI9IUEgtSaEMkSZbLHy
-	4/ht2gA2xvLGNELcrMRUcXBS9KKJzOjX2YAkZd5wPuKxz3DD4tMXa63ZX2tj3Gy381cYv7rD9S1aO
-	LRdv6c1HYNO04lnqmOfeIY3AgbGE2EZ1s9woJzUg3xFW68A5ZJ7VqOGMf64toYXBNn/yg1zeSVWGB
-	ekYomIqTsBdwvQQtisjRjj1LMwSsnqJW8W5n9JvZhsVZd/HMCc3i+PzTLPnk47g9KADvK6l/zwl1a
-	NGXtp3c9to6F4tgkLO9sabqyK0AkjskysPY07nAKMDDDJ6vtR8FlbSUAUHpb3djaSgqRX8Ao4jOvY
-	TgTTvTVA==;
+	bh=jtWeGYtlIhoBNrUU/Rn3atorlcVCPhoOvUEbiO3QIXw=; b=rLKYlPgLZFDk+jiiyLpOMR2waR
+	kdGg/XBO7M2kR58bdQtyWD0jiZx9LChWRoP2ZVs9B9nqFQyBh9AsLZgsn23Pm9zO9BvYd+PfXGRoW
+	VBrCeO+lu+3Azy6P5vQyvRquKuxaq73BjNJdBBiQoR17A9syDOeBJDl0/UyYedZvp6YGF0no1ouaN
+	2RA88RWi6mwX6MGC9qOyBulCteq5hdA01LOY1pmqS9ZL06RiyHLNK/SJuG6LNDYU7837gzQvGjKyH
+	VR6A1ZYEyDO/WjK5+BB2X4JKe32vhshRxXMSHIZHdZO6eHSrBrmWcaW66cR516++AsIO+U/O2XNHx
+	HBpgg55g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vwfP4-0000000B53T-0A54;
-	Sun, 01 Mar 2026 11:56:06 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1vwfPL-0000000B55Z-2VOg;
+	Sun, 01 Mar 2026 11:56:23 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vvz5Y-00000008Vib-42f6;
-	Fri, 27 Feb 2026 14:45:10 +0000
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61RCCXLK2582842;
-	Fri, 27 Feb 2026 14:44:20 GMT
+	id 1vvzBn-00000008WHE-1uqV;
+	Fri, 27 Feb 2026 14:51:36 +0000
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61RDxhAZ1234657;
+	Fri, 27 Feb 2026 14:51:00 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
 	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=vv6I0k
-	y+vPPs0At65EIiqJlz5ngSThX4t8eVUQua22s=; b=pkitHSgwPEC4BLFFExJyoN
-	frl47XfH3xBEp9RlR6L9JmpQyI0aTZKXwXaYirvFpzvhJONWIjBryT8H3DL/KKUT
-	I9wpjg//ptjJ8eeL0zwKUAXTwZcTycm9mkNH5Nf3Dr+45kbYM5xrogfyzjRwuPYx
-	/jvOxj9+yxZUyVHcL7/336/x2EKtEIGgaciXWCpYqbdJ9xU4Z2/gNvcWo83SOUNL
-	fYXzL7vIMiAqlthTKV+NTKYv9vhmb2qWVkuIA28obOVMZTHAWki/4VPl0WCjQ14D
-	7cKVMuY8dLVfR33+XEbVkptJphb1HZolSmeMl+GlMoayC0f6Xrun8wGqtcWSohxw
+	:message-id:mime-version:references:subject:to; s=pp1; bh=jtWeGY
+	tlIhoBNrUU/Rn3atorlcVCPhoOvUEbiO3QIXw=; b=ByR2b/L5/X53xebYC874SN
+	HUg5T4h+cAVrJ6EU3KJMhkisdx64KFdBPRf4Ngk4eCfYjBXIU3lARM5+RnKDCkF/
+	xS88gjyrnPJuuAUezDY0ksb8yQtnJA0q4B6chYE3eE9Nymj0w3Y3CV2rpGVOQoJF
+	uA3euifftQjmzNNQd4QBHDwFegtEEeQW/UBG0UClfaK4ALFEgkECCz9OOXqrJR3v
+	1pb/SLKT+VEXkjtEh/Q4dR7zFSO+eS0ELvx7MzYTivFyg319JhcS2A/vvEe68LbF
+	VEiQX2tjyf5yvQEJl5liX/pP+LF1mnLNtudgLXLWCDkbYNEy/kt6r+ZZ6TtGOzMw
 	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cf24gvchh-1
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cf4crd6nn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Feb 2026 14:44:20 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61RB1Y5V030414;
-	Fri, 27 Feb 2026 14:44:19 GMT
+	Fri, 27 Feb 2026 14:50:59 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61REM4lC001653;
+	Fri, 27 Feb 2026 14:50:57 GMT
 Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4cfrhktjbb-1
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4cfr1njpn4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Feb 2026 14:44:18 +0000
+	Fri, 27 Feb 2026 14:50:57 +0000
 Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61REiErm40894766
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61REorr350004244
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 27 Feb 2026 14:44:15 GMT
+	Fri, 27 Feb 2026 14:50:53 GMT
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CE00B20043;
-	Fri, 27 Feb 2026 14:44:14 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 988E92004B;
+	Fri, 27 Feb 2026 14:50:53 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8F9C520040;
-	Fri, 27 Feb 2026 14:43:57 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 2724020043;
+	Fri, 27 Feb 2026 14:50:36 +0000 (GMT)
 Received: from [9.124.211.61] (unknown [9.124.211.61])
 	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 27 Feb 2026 14:43:57 +0000 (GMT)
-Message-ID: <19cf18b5-362d-4ff2-8b85-e2e72809250c@linux.ibm.com>
-Date: Fri, 27 Feb 2026 20:13:56 +0530
+	Fri, 27 Feb 2026 14:50:35 +0000 (GMT)
+Message-ID: <3576865b-65bd-4289-babc-975a543eb775@linux.ibm.com>
+Date: Fri, 27 Feb 2026 20:20:34 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v7 3/5] crash: Use crash_exclude_core_ranges() on powerpc
@@ -96,36 +96,37 @@ Content-Language: en-US
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
 In-Reply-To: <20260226130437.1867658-4-ruanjinjie@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=TNRIilla c=1 sm=1 tr=0 ts=69a1adc4 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+X-Proofpoint-ORIG-GUID: 8g6pYP6-zbkoGqYlCGxh4H1YVcGADYjR
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjI3MDEzMCBTYWx0ZWRfX30qX6zxbkgBu
+ HpVyQ0dsZ1e/hMjf+YXrY/Y7l96+F6Gq/L7EP3s7O+PsvAQrNEOfynr0kGzxpzEyR+LT4GZoDno
+ LodhkSjypbg71KtoOKEnOWF8jH31sHW6uu6bhcydiALmeqzWL81zeSzk1IGU/eJZ4a65VsTjivX
+ 8euHfVyd4ayhP2VXikByN9kDAe8bSJPSLecJ6zyxOpr7D2rY029FW+OGtOcFyLfk3L3Xs+jCFor
+ bsaadJIIP7URf3sbJRtO69rQDj8WHIm7iA6maQ8C1SQuRVSNGAiBlWoLDncv301jGSftzY18Dsy
+ nNUn7bBREX85qibTDI3thHoqZbz64JGb9R2FihBUK06S08oIQC+4veA0SrZ/YzcwaP8qNbBHl9D
+ I/ao1ILtxtGkG9oHacZ7POqXB2GPtYWb+lm4FZqKRCBnKXIeUunEcpOaN+Ip55VwRiEfDlXToUk
+ 96zssSDnSpwHJRDYYlg==
+X-Proofpoint-GUID: IvuRiAQp0mvX7PMUGo7_TumVon-lPwvd
+X-Authority-Analysis: v=2.4 cv=bbBmkePB c=1 sm=1 tr=0 ts=69a1af53 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
  a=IkcTkHD0fZMA:10 a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22
  a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8
- a=i0EeH86SAAAA:8 a=FCicKRf1_97IgsoL-ogA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: udSiOUEwTIGg3568z9G18Y-U7dmzZ22v
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjI3MDEzMCBTYWx0ZWRfX+rwqwLNyDm+7
- Kajbzb/4AHH4a0DSb/UEdBx/rv6XBUQzSiid96euM8aA0Q6jzFDbCjQS4cfoJG/lcTutc53Mwb8
- J1Yn/mbs+LpLsBVigvCFaUEB9UelGkME6/WqhQahftj0wGt8YxBmcWeNiTuwUzZ7m/dhUdzCdkP
- jJlr6L/ZKn+tNqQ8wy32A8WWTz0FKbZJhOgWkkfCwa0eZhHM7zbnX7NTxrAReQR1OEYFtMyX8fS
- 4mNzZB9aItG7Ksf1TukqcucNtKxQKiED5xIA5TMIce+USq1bXaJjT9y9zUtR5UCZbexVNoTt1fd
- yDQjKAFfSMEaNjD74DlnFHPvy5L5dSXcfaPBuMQdrpKq7JW1HnWvIrE0uDcQHj5xsLRezCSwIzm
- hiaRXveMvDdCSFq6eMKazmG6c8NOSzaWZFJtbzLan6djpFtrVRINIHqqiG7kScpI+m+rrUi38pC
- HpLRaUjj93ZBhUOqE0g==
-X-Proofpoint-ORIG-GUID: RLOZoEp-Mbkrhtnbi26juVMkAhb1FcWs
+ a=VnNF1IyMAAAA:8 a=i0EeH86SAAAA:8 a=WpLmoQzK6mnfzqVyAaEA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-02-27_02,2026-02-27_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 adultscore=0 priorityscore=1501 impostorscore=0
- spamscore=0 clxscore=1011 bulkscore=0 lowpriorityscore=0 phishscore=0
+ malwarescore=0 bulkscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 suspectscore=0 clxscore=1015 phishscore=0 spamscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602270130
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260227_064509_151499_853EB733 
-X-CRM114-Status: GOOD (  26.36  )
-X-Mailman-Approved-At: Sun, 01 Mar 2026 03:56:04 -0800
+X-CRM114-CacheID: sfid-20260227_065135_519606_A96CDE2B 
+X-CRM114-Status: GOOD (  26.12  )
+X-Mailman-Approved-At: Sun, 01 Mar 2026 03:56:22 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -140,7 +141,8 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
+Resend of: 
+https://lore.kernel.org/all/19cf18b5-362d-4ff2-8b85-e2e72809250c@linux.ibm.com/
 
 On 26/02/26 18:34, Jinjie Ruan wrote:
 > The crash memory exclude of crashk_res and crashk_cma memory on powerpc
@@ -174,27 +176,40 @@ On 26/02/26 18:34, Jinjie Ruan wrote:
 > +int arch_crash_exclude_mem_range(struct crash_mem **mem_ranges,
 > +				 unsigned long long mstart,
 > +				 unsigned long long mend)
->   {
->   	struct crash_mem *tmem = *mem_ranges;
+
 
 update_crash_elfcorehdr() in arch/powerpc/kexec/crash.c still calls
-crash_exclude_mem_range_guarded(), causing a build failure. ld: 
-arch/powerpc/kexec/crash.o: in function `update_crash_elfcorehdr': 
+crash_exclude_mem_range_guarded(), causing a build failure.
+
+ld: arch/powerpc/kexec/crash.o: in function `update_crash_elfcorehdr':
 /root/linux/arch/powerpc/kexec/crash.c:454: undefined reference to 
-`crash_exclude_mem_range_guarded' To fix this: diff --git 
-a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c index 
-898742a5205c..e59e909c369d 100644 --- a/arch/powerpc/kexec/crash.c +++ 
-b/arch/powerpc/kexec/crash.c @@ -451,7 +451,7 @@ static void 
-update_crash_elfcorehdr(struct kimage *image, struct memory_notify * 
-base_addr = PFN_PHYS(mn->start_pfn); size = mn->nr_pages * PAGE_SIZE; 
-end = base_addr + size - 1; - ret = 
-crash_exclude_mem_range_guarded(&cmem, base_addr, end); + ret = 
-arch_crash_exclude_mem_range(&cmem, base_addr, end); if (ret) { 
-pr_err("Failed to remove hot-unplugged memory from crash memory 
-ranges\n"); goto out; With the above change included, things are working 
-fine on powerpc.
+`crash_exclude_mem_range_guarded'
 
 
+To fix this:
+--------------
+diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
+index 898742a5205c..e59e909c369d 100644
+--- a/arch/powerpc/kexec/crash.c
++++ b/arch/powerpc/kexec/crash.c
+@@ -451,7 +451,7 @@ static void update_crash_elfcorehdr(struct kimage 
+*image, struct memory_notify *
+                 base_addr = PFN_PHYS(mn->start_pfn);
+                 size = mn->nr_pages * PAGE_SIZE;
+                 end = base_addr + size - 1;
+-               ret = crash_exclude_mem_range_guarded(&cmem, base_addr, 
+end);
++              ret = arch_crash_exclude_mem_range(&cmem, base_addr, end);
+                 if (ret) {
+                         pr_err("Failed to remove hot-unplugged memory 
+from crash memory ranges\n");
+                         goto out;
+
+With the above change included, things are working fine on powerpc.
+
+
+>   {
+>   	struct crash_mem *tmem = *mem_ranges;
 >   
 > @@ -604,18 +604,10 @@ int get_crash_memory_ranges(struct crash_mem **mem_ranges)
 >   			sort_memory_ranges(*mem_ranges, true);
