@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A29B7FD0049
-	for <kexec@archiver.kernel.org>; Sun,  1 Mar 2026 01:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 781B6FD0045
+	for <kexec@archiver.kernel.org>; Sun,  1 Mar 2026 01:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=sdzhqp1KOXZgsRSRKZmviihcvREKbQF/BcHgKp0F/9w=; b=26pZyJGlFTsFS5EidVaNxLiy9k
-	25yOtDhwqNc2ehowzxI1CxJg8U0RekgVcJZpkn0fpQ5P38fOsLSOkCM3PmujyBHdDOuz3cVkf2JHI
-	i1d40YNqi1V+q5tkXckZB7OuGb2jIf1RxuYOmkZ0+jJ9loYkGUrdHCb5RNjE3dTy/C/mqLQ4RIOqB
-	nv3vqedkgLogybLJCk34g/rFiT7KV3KbRGKRMxHBeHYYnc2Ovp7iPKQ3ZJ4I6v8h4i2EyhbpDbpKc
-	zk+s3d2DMQtGoSJTTSc/1np9nVYMI4aDVhDXLt/0yv+zXWETTYKxOnyM7yzz3a80M/V4tiNsOHp++
-	xDz+TjUg==;
+	bh=+9Jo5kTfuGVxvjYQ71tLbkMqryt/iK9OT/Ti1gNRWIQ=; b=3lg69tJ+OjTJJEoNe8Uy8E32X0
+	uccL3dF3TFS9CKGYHshjrJDB5sZEbmdZs0GcoBqQVsPrc9IwoYrKzRvTTUBIeAtnCnho4CXmL+Zps
+	DiardHNLHGUdRcYQK1O7crwBk5gs/7Gt/jloAo/9Nxskb1AZcObf3L9jiGApDkjaF1jviT8r22qDY
+	2qWgBDhyuG6alKprabt2ifJLWGE/t7QAz3TyoZhAAlsVpWAfoOLJvbEQW2/cIhAnrje5n/Q2hRdHz
+	rZY3DEp/83k1JmLydxYRixL+Qs45ptHsMu0xmeGNMPimfS/+jVMHkUQeM1hccoD0cmENYPESMx8se
+	69Mvi5aw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vwVYB-0000000AVs6-1eFv;
-	Sun, 01 Mar 2026 01:24:51 +0000
+	id 1vwVid-0000000Aa7e-3HmX;
+	Sun, 01 Mar 2026 01:35:39 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vwVY6-0000000AVrL-2Pw8
+	id 1vwVic-0000000Aa7U-1PqF
 	for kexec@lists.infradead.org;
-	Sun, 01 Mar 2026 01:24:47 +0000
+	Sun, 01 Mar 2026 01:35:38 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id F119D60008;
-	Sun,  1 Mar 2026 01:24:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EEC0C19421;
-	Sun,  1 Mar 2026 01:24:44 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 8C23D60131;
+	Sun,  1 Mar 2026 01:35:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BF43C19421;
+	Sun,  1 Mar 2026 01:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772328285;
-	bh=2Cy/SoFqsi21gB9mam4ykVga1eM1E8viVSzzo18iC80=;
+	s=k20201202; t=1772328937;
+	bh=S56YA5Uv2kQArQg+KTbDvXGAKWcdygfI6q9JF94M7RQ=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Vy+ldkptV2IdxtQ4gcV+JdmaZLw0CbF0c1ZFB1a/8Ti5eUzZE+XkvPUm9VOUYI8M8
-	 nJsffbqaXvgpd3qZD2owlRWH2ymyt1ZGhPUYG/1BJmMKiwLuQdeLVa5GBIGTajdLwG
-	 31J2PcNPTzShwVuc5ftfrXMiRkg19C7PajwcH8eKZ5f4MkUG+VzafURLLeb8uY5i7k
-	 HMTvaz3DbN6KOJoS5Z0fVefb97CUlyT6/yzfUwWPzzQ0DQ15rpu5BClRtAiCgXF7eI
-	 jPQCx/IOdVN4HzhBf0Y9BCUzYLWX0CYxZe1X+q2saSZLZpKpgO8kZPXOGdxoJzHRsk
-	 OmNop9GOT+yaQ==
+	b=hXhYSZormzioWSzWPhzcQCCLOi0v7GgJCgWqhrcXvHlTJP+CpmdndTeg22vz2uHKW
+	 /h9jEsh43traJ/SuvnYSDzrEDk/SC6urHFu4ZFjZo9X5NvJc5CE/XeGDnM5P34k0W9
+	 n3IewpCO3wTYGgbG6NZX3ZRxVigExOJJCmdX9oy3XI35m6f/9zgz4RQChxf3xVTM3U
+	 DZw3AIFqq7fUu2H1Al49dHHCSsCHClNwufLB1wugeqILjHQYRkVslaebC2JU9ZeYEG
+	 E+FVNUz1SFfJD90bRBEjg/xTkNIrQWTXj6Lo5T8xF/QlWtlcKDkziz74MQZ5M1u0fG
+	 2X8v4XPxLddww==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
 	me@linux.beauty
@@ -55,9 +55,9 @@ Cc: Baoquan He <bhe@redhat.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	kexec@lists.infradead.org
-Subject: FAILED: Patch "kexec: derive purgatory entry from symbol" failed to apply to 6.12-stable tree
-Date: Sat, 28 Feb 2026 20:24:43 -0500
-Message-ID: <20260301012443.1681655-1-sashal@kernel.org>
+Subject: FAILED: Patch "kexec: derive purgatory entry from symbol" failed to apply to 6.6-stable tree
+Date: Sat, 28 Feb 2026 20:35:34 -0500
+Message-ID: <20260301013535.1695311-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 MIME-Version: 1.0
 X-Patchwork-Hint: ignore
@@ -77,7 +77,7 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The patch below does not apply to the 6.12-stable tree.
+The patch below does not apply to the 6.6-stable tree.
 If someone wants it applied there, or to any other stable or longterm
 tree, then please email the backport, including the original git commit
 id to <stable@vger.kernel.org>.
