@@ -4,57 +4,157 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F4A9FD0057
-	for <kexec@archiver.kernel.org>; Sun,  1 Mar 2026 12:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7A97DFD0047
+	for <kexec@archiver.kernel.org>; Sun,  1 Mar 2026 19:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=+5hSVLyMrqUzESvlc5APBImj2Nw/31Gm0PRLtn5Zcco=; b=Qpv983SvH29BTukftT6h56/yT/
-	lfc1IYytbZEYINs5fgNcW+wL+BwclNzi2Ha9lO+RBJ3kZvB6yDr3E33Vx9beDDdeNKG8+EX4ZbntY
-	BJDK9YHo9XDDik6K9S8jn0xNouiT8YQ/SEZQrgkiAmXRK3bo9tPI7dUgwY8hUq/6KKcGz+mjNW9kz
-	0f/kLmbQgSCb40nrxqAPgYzEZtIUHMb9GcihKCe2dBSVfwFaQPRDkSMgdGPGOZIyie7fVlZcyt0Rc
-	clA8QS/xKycBpMbAKrKQuZqQCxyYE9ucTt0iAnr7uzzuvkpM3Bd/Px8X5FrPBFEDwBsCN+he5+6yQ
-	ELMBdDiA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=RPyjmujpofD3jpHT46935+mfJWcwox3E0goTpqhU++o=; b=kj36ODBHJNfGY4KraHFftquZa0
+	X7u62su9r/Vw3+UU9kP+3cQ3EfMiqXvC4f483TlFqwfSz70mN+SZOW4kab3ibxJfsv0TdD1Um9a+1
+	u4wnQzyBC4D1pOiIzcTEO2BpgRDgpjQyAhJJUBzJqjIv1UGGC4VrnkhVCFyhiQiIHFdtC07iTgqlX
+	ze5lAcTCUK9MXkvcBOa5kPzPTc8y/aiwFVEVbkARemwF5IzCiu6W+IlhPJejWT92aovzIBTeuQnr4
+	inflO40RpzuKqaLqNAIIe8R+3S7LRN+tiiMPTMd0gAcjGvyRZmG5XfcOHGKTuaM7Ler+Jes2XsMtC
+	pjV6zkTw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vwgI2-0000000B7pB-2jzv;
-	Sun, 01 Mar 2026 12:52:54 +0000
-Received: from out-187.mta1.migadu.com ([2001:41d0:203:375::bb])
+	id 1vwmFI-0000000Bo6G-2E6a;
+	Sun, 01 Mar 2026 19:14:28 +0000
+Received: from mail-westus2azlp170120002.outbound.protection.outlook.com ([2a01:111:f403:c007::2] helo=MW6PR02CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vwgHz-0000000B7os-2ljZ
+	id 1vwmFF-0000000Bo5N-32pk
 	for kexec@lists.infradead.org;
-	Sun, 01 Mar 2026 12:52:53 +0000
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1772369564;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=+5hSVLyMrqUzESvlc5APBImj2Nw/31Gm0PRLtn5Zcco=;
-	b=LEJV/Y8a24oM1vY67p1/P5rm7FaW21JuUfIVDs/lHV7GS7tLhuFBKF5ybi+38neELJkwkG
-	iZVMe/6ep2AsVuHMR78prPd8euR6hfHWjc6E8XnWfXy1rRVOQcnqXFnh7rvAreOo1N8/UT
-	K7cvbSHNccR7SACF3Kgx/FD+YJkvF5w=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] crash_dump: use sysfs_emit in sysfs show functions
-Date: Sun,  1 Mar 2026 13:51:07 +0100
-Message-ID: <20260301125106.911980-2-thorsten.blum@linux.dev>
+	Sun, 01 Mar 2026 19:14:27 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yMt0Af2QUM4o0e+hdpuAWvvrsNcBRoXQNzh1m168BDrjS2WxaJhSDadtoYAdUAofOXrT/0iVOlA8dXOjjKJqYcyUACZ1oot044B4MXARkJmy58v9834PSxvoZ/qeHOlJ0JL+EM9jTSjSdrUnUM+dRxOZnBnpAzhsi+WnBhTwoN1cM1HMzf6BJO+KBt7dD2aB2Y0Uk2WgpH88BO92YlnjQ5SZhlWmd/bTSc0Ut+nia3ZPrVRxx3rtjgKYefIY12Gx0KWm7Gi+JbrCE5KDXBcpkNtVfyFVqk715F9gByIg/tKTFCuFb8j7IGS765m/3D6PqUU6T/EfKapCHka+83PMVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RPyjmujpofD3jpHT46935+mfJWcwox3E0goTpqhU++o=;
+ b=HJ2Far3pAB1sJZo7x5WbHQLVvxYWV2hayhA5uO+aJfVKIqhp49Vo4fYB8O0EUvNwVLggT2uBRZTZ0IQXaUDGrxxReAg8CkmCKRRGpaRMZIUNQh3ORhSHPSAXulkbcnrEgF2mxZ616Z9TNJIWP+NMTz6zbuL7NAxfFpfgXTJ3fZJaVRTGLrY61w0Sb1fP+PvLq9Z+gNtBDUVsDWDe0a0RyIRhqs3G+eVUVGZ16kdbxwcfMYOS7s71nV9Zu2f2T6AKcufUl1rXVMeMD0zLcDUiKz+2+sOiqDeeOuLEiZpzPfydHRyhkbEZh8L4AfvZpNRrGEJvVP7UrJpPrI5UaGjwyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RPyjmujpofD3jpHT46935+mfJWcwox3E0goTpqhU++o=;
+ b=RkI3T2e+VSLSnhxcevE2cipJQNzg5Iz2RBE5hykMFm5yeNT00gdy+gkFTFWcU+aPDiOFCpGPTAc9Pb/+zB9VGEkbIwckxhTYlZqKNQxydSKfuPYFGZZm6ckRREyf5joI5goSU6/DZ5olAHePf1DrGOqHB4B7KEvO2BdNr0C3gqo9BG3Tsd2BdKNhyLH/TFSR3Jdp6qDCwDulHs4RwzJXP44j9g5XCMnAH5+a94pkl9EAbVCYK+uDrLOZO4l5rDVGEwJad2+KCOoSAieJJKn78YtR5tkiplbsH+WrWJLaSvaXjxm60ANfY6aEVE7SLMmF7IJCdDyhsBwCAp0TI6qOgg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by BL3PR12MB6524.namprd12.prod.outlook.com (2603:10b6:208:38c::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.18; Sun, 1 Mar
+ 2026 19:14:16 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528%5]) with mapi id 15.20.9654.014; Sun, 1 Mar 2026
+ 19:14:16 +0000
+Date: Sun, 1 Mar 2026 15:14:14 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Alex Williamson <alex@shazbot.org>
+Cc: David Matlack <dmatlack@google.com>, Bjorn Helgaas <helgaas@kernel.org>,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
+	Kevin Tian <kevin.tian@intel.com>, kexec@lists.infradead.org,
+	kvm@vger.kernel.org, Leon Romanovsky <leon@kernel.org>,
+	Leon Romanovsky <leonro@nvidia.com>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org, linux-pci@vger.kernel.org,
+	Lukas Wunner <lukas@wunner.de>,
+	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pranjal Shrivastava <praan@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Raghavendra Rao Ananta <rananta@google.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Tomita Moeko <tomitamoeko@gmail.com>,
+	Vipin Sharma <vipinsh@google.com>,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>,
+	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
+	Zhu Yanjun <yanjun.zhu@linux.dev>
+Subject: Re: [PATCH v2 02/22] PCI: Add API to track PCI devices preserved
+ across Live Update
+Message-ID: <20260301191414.GO5933@nvidia.com>
+References: <20260129212510.967611-3-dmatlack@google.com>
+ <20260225224651.GA3711085@bhelgaas>
+ <aZ-TrC8P0tLYhxXO@google.com>
+ <20260227093233.45891424@shazbot.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260227093233.45891424@shazbot.org>
+X-ClientProxiedBy: BL1PR13CA0220.namprd13.prod.outlook.com
+ (2603:10b6:208:2bf::15) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|BL3PR12MB6524:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4a50b0d9-c18f-4659-acf4-08de77c6bad3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: teIeqMr5ernaSH2fpQcgAeRIaC2NQL1PRAxoMrnOXEiWeQj8GfAu5xXVTUxWjVJEF6eFaPEHwfoXosVmpRSL7ItlwyJLWlRPOdnW2wKmpi3c9/aX4I74s9qxCr4UA/BZvDchTu2SYojG8X+8HLrD2PILGt/gSx88VyHbl6xTpzW6/X5RmMf+EUh5J7s1hB+HtgyOK6vdOB7QnXxvCpgDimaf1ITaDkGrTE4khEH1xcTgMTeWPHV+peY0md3Nmdld57pt4MXxXV/hwNQvaByjStWYiBAcsxB2ODygEJYxwxwxmJbxP8oOTysMCoPo3RSmiMAs+tjbXrOj4U0H2sPcCJ8ICpkj3N2vxPOOQ+akpm+brPunrmh5frffsFqm24H3P3CGDc6t8PTrXH7SSti9bTXDeAQJ8ByhIht2n6D18UVOWkzSdrEE1zuJ0Z+hzB7WUTIYYHdG7p0fXukVE8q1YZXjW7ycUx7Hqy6sx5joyWJZZLzsQBt1Kkt6v+dXGEKgEw6Cgg0mePOqJlLpROpIz9WzkCfmtRU4pVjFcMz37/EsQjZxv4hWTowyGM7IGFusexygn1DqHkEpFtyZBGU9Z/Hkr0BjfDRqN9H48DsAlSXwQJ5RsYCZTY8WmyFOiEHe60P0PuWIs+AL70PGh5EgKUDOFzueYQky7qhyfiv0SfkxkItA/QaxFkG82JtE5euNYyV65NPqWCj9BraEigWHmBhYFL1Xc1W6aYraQN/wYb4=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?QbKAD31y4kwpj5brPQL9dAVbpmGVtAEV76bVLe5Nmo6AVXSrZLV+bX2654yZ?=
+ =?us-ascii?Q?CQ7o2LLKamIQhba92NQV4UjJiJwphfsl1bRmkDEPPAxdb/FkbMIqanjA9GPs?=
+ =?us-ascii?Q?tcYnSZSG7grPQiBPM3D2ne0LfdyTxxDP78V93phvLtfDPVwnG9z/Kevyz/Q8?=
+ =?us-ascii?Q?/6Gv6XrRUGSLNDQBigCyAulvnzoc1xiP/o0tGuRgcHr2fP3cUB84jPBhQrCT?=
+ =?us-ascii?Q?F2cjxivfd7ZIzn8fsBMShEKDi0Ispemmle3ug93HWWUks03+g/FccH88f03R?=
+ =?us-ascii?Q?FzdwfX1UEOjUB0qmGlxP/6Hzx4m8l/rTj/6MILULLrLtRcDa+HhvWvJRqkGt?=
+ =?us-ascii?Q?uT8B+V4VjSpIVC4vVH+uBOJ2nEs80zKGLIDFQXy5/Q0IKD9beg9dYhws6vz+?=
+ =?us-ascii?Q?TSIX1A+LI5JKd0pLvUPsPLbAQonORUaYZfWMlOGirU0Ye1ClfVGOmBpFZVq6?=
+ =?us-ascii?Q?9NTq06Ty/z3LZhsBapFuZ/4NNMeVomzXzY0tJxV5xo2LMjz9FQKdgwnvvygQ?=
+ =?us-ascii?Q?THn5+619imvJqH0pKVGFBez4nk04qeb7SIFBeUfNA+jv01FmqidhRmJdIy0f?=
+ =?us-ascii?Q?CP5NWzYhcu0bKs+mD/Ljzg+ovToMlWmobhXFjX/k8lW/vwnvc+ep/FjQItkO?=
+ =?us-ascii?Q?zGr8nhnavGdKBMgBGYpccWQrksmuHshvSSCjUqn3Jy7IphGI0a+vwpG2e1I0?=
+ =?us-ascii?Q?qY2k3OocEjshSVGY6fog77JYAH9lWehi98J90zfZz2XfL2Y5t74zDWqur+bd?=
+ =?us-ascii?Q?sJXbla7BD4den6QGWFecjt+Uf8ywnz51ouh6bqWYG8F7h4g65c+2NKvis9uX?=
+ =?us-ascii?Q?U73RierkyFXx14Js5HkbiZu12Zlv3DgA0bilhMtM+EanxfIJ2jaw7kNiB5tb?=
+ =?us-ascii?Q?Qbp0SDXabBy7AQo0gfKmGZGb34gIqHPOBwL5vgCGFgHjwBDOfEk3QBJoH5wh?=
+ =?us-ascii?Q?nTOuCr4kDbLvuPX+jaLIc4vP2rUzTm60KvnsDv10tCrWZd0oeH1eb6G9lBQJ?=
+ =?us-ascii?Q?p1nWsJwCUai9WqrwENt7Mt+/19KgmqCHhlYDSdP27QZZu0IOEDvtLem/QoaY?=
+ =?us-ascii?Q?lLYE02tcbjQqZ4MZ+/aSVd4db/gy59T8lz5820omgNfD9isi0tMhY/tMQm8f?=
+ =?us-ascii?Q?aJWYrEVHUKVzSPq6yZcc2fbzGup0X7s7DroNjNF3e93r/67CMVvxyQsEzYYv?=
+ =?us-ascii?Q?d6p8wvB5fWVIYC25vssluW+rQgO3hFWK4SLayhhiucik46BPqsSbqfrJwNnc?=
+ =?us-ascii?Q?+d2WaDIpQ6hLhvh/Ersd68msr9XTPcHZ/Ln72C2qRbt+zpkdZDlAR8LKLe1e?=
+ =?us-ascii?Q?kZdLtp4uJop6CzVhcWKza/xrBz61jPfdWkaV/Ai5Vs3KdrzxTRAcNyFFEX+r?=
+ =?us-ascii?Q?BtAY+bvktx6mc8ZfHFiJJpvedSscVhasg6EBSp0A6c2pAM2Uvt4OvL9hY+Ko?=
+ =?us-ascii?Q?DGgIwIL27f74vDARJMDu3tZmaruK1zbW4gq3sKs31w+nvKuBwyPKjsIUuISd?=
+ =?us-ascii?Q?89rn+aEQZfaCygP/btdnlnKgrTY2ohRWKWXGeKwRP7GWcXTGSuI6UklcaIlT?=
+ =?us-ascii?Q?ebm9a9Y7jAP/dKew7dCzOX4r2L6RvBm30nfv4U5UMOORtG3h8N4jhjRxNz2/?=
+ =?us-ascii?Q?vf8z8SSB2uELi6VRh9l5fsKfrJRVebSm0oL5FG7HtZuF7XuSd+YBdP0Vh6JZ?=
+ =?us-ascii?Q?bvwbNev3UStQAWlp2LR/Neu0/nohE1dP92sLIHexoJVrHNfs6w+nSdsEHHCt?=
+ =?us-ascii?Q?fOLVrxylGg=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a50b0d9-c18f-4659-acf4-08de77c6bad3
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Mar 2026 19:14:15.7689
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: z5kM8zkpqi0F7rTNdLz2qXNc7yyQjgmnTqqRoL4UcuNovvqfdmAYDDOjiQOZvzR1
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6524
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260301_045251_988863_3F57BA6C 
-X-CRM114-Status: UNSURE (   7.47  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260301_111425_781709_53DBB62A 
+X-CRM114-Status: GOOD (  27.91  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,65 +169,75 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Replace sprintf() with sysfs_emit() in sysfs show functions.
-sysfs_emit() is preferred for formatting sysfs output because it
-provides safer bounds checking.  No functional changes.
+On Fri, Feb 27, 2026 at 09:32:33AM -0700, Alex Williamson wrote:
+> On Thu, 26 Feb 2026 00:28:28 +0000
+> David Matlack <dmatlack@google.com> wrote:
+> > > > +static int pci_flb_preserve(struct liveupdate_flb_op_args *args)
+> > > > +{
+> > > > +	struct pci_dev *dev = NULL;
+> > > > +	int max_nr_devices = 0;
+> > > > +	struct pci_ser *ser;
+> > > > +	unsigned long size;
+> > > > +
+> > > > +	for_each_pci_dev(dev)
+> > > > +		max_nr_devices++;  
+> > > 
+> > > How is this protected against hotplug?  
+> > 
+> > Pranjal raised this as well. Here was my reply:
+> > 
+> > .  Yes, it's possible to run out space to preserve devices if devices are
+> > .  hot-plugged and then preserved. But I think it's better to defer
+> > .  handling such a use-case exists (unless you see an obvious simple
+> > .  solution). So far I am not seeing preserving hot-plugged devices
+> > .  across Live Update as a high priority use-case to support.
+> > 
+> > I am going to add a comment here in the next revision to clarify that.
+> > I will also add a comment clarifying why this code doesn't bother to
+> > account for VFs created after this call (preserving VFs are explicitly
+> > disallowed to be preserved in this patch since they require additional
+> > support).
+> 
+> TBH, without SR-IOV support and some examples of in-kernel PF
+> preservation in support of vfio-pci VFs, it seems like this only
+> supports a very niche use case. 
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- kernel/crash_dump_dm_crypt.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Well, this is a super complex problem overall and it has to start
+someplace digestible. There are real use cases of PF only devices,
+like GPUs for example, where this is entirely sufficient even without
+SRIOV support.
 
-diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
-index 1f4067fbdb94..827572aa800b 100644
---- a/kernel/crash_dump_dm_crypt.c
-+++ b/kernel/crash_dump_dm_crypt.c
-@@ -6,6 +6,7 @@
- #include <linux/cc_platform.h>
- #include <linux/configfs.h>
- #include <linux/module.h>
-+#include <linux/sysfs.h>
- 
- #define KEY_NUM_MAX 128	/* maximum dm crypt keys */
- #define KEY_SIZE_MAX 256	/* maximum dm crypt key size */
-@@ -189,7 +190,7 @@ static inline struct config_key *to_config_key(struct config_item *item)
- 
- static ssize_t config_key_description_show(struct config_item *item, char *page)
- {
--	return sprintf(page, "%s\n", to_config_key(item)->description);
-+	return sysfs_emit(page, "%s\n", to_config_key(item)->description);
- }
- 
- static ssize_t config_key_description_store(struct config_item *item,
-@@ -265,7 +266,7 @@ static struct config_item *config_keys_make_item(struct config_group *group,
- 
- static ssize_t config_keys_count_show(struct config_item *item, char *page)
- {
--	return sprintf(page, "%d\n", key_count);
-+	return sysfs_emit(page, "%d\n", key_count);
- }
- 
- CONFIGFS_ATTR_RO(config_keys_, count);
-@@ -274,7 +275,7 @@ static bool is_dm_key_reused;
- 
- static ssize_t config_keys_reuse_show(struct config_item *item, char *page)
- {
--	return sprintf(page, "%d\n", is_dm_key_reused);
-+	return sysfs_emit(page, "%d\n", is_dm_key_reused);
- }
- 
- static ssize_t config_keys_reuse_store(struct config_item *item,
-@@ -321,7 +322,7 @@ static bool restore;
- 
- static ssize_t config_keys_restore_show(struct config_item *item, char *page)
- {
--	return sprintf(page, "%d\n", restore);
-+	return sysfs_emit(page, "%d\n", restore);
- }
- 
- static ssize_t config_keys_restore_store(struct config_item *item,
--- 
-Thorsten Blum <thorsten.blum@linux.dev>
-GPG: 1D60 735E 8AEF 3BE4 73B6  9D84 7336 78FD 8DFE EAD4
+I expect a long trickle of series building on an enhacing this
+mechanism one brick at a time.
 
+> I expect the majority of vfio-pci devices are VFs and I don't think
+> we want to present a solution where the requirement is to move the
+> PF driver to userspace.  
+
+Well, I do, and am strongly advocating for this. As all these series
+show supporting live update in a kernel driver is fiendishly complex
+and most kernel drivers do more than just some bare minimum to operate
+a PF for SRIOV.
+
+Given we already have PF drivers in userspace and that is working
+well, lets start there. If people really want to tackle the nasty
+problems of a kernel side PF driver then they can go do that as a
+followup.
+
+> It's not clear, for example, how we can have vfio-pci variant
+> drivers relying on in-kernel channels to PF drivers to support
+> migration in this model.  Thanks,
+
+Probably not without tremendous work to make the PF driver side
+kexecable.
+
+The initial use cases for this don't include VFIO migration, I think
+you could say people are interested in this significantly because VFIO
+migration isn't viable in the devices they want to use..
+
+Sure it would be nice, but again, lets focus on the basic simple
+cases, nothing precludes building more and more complexity into the
+kernel to preserve more and more state across the kexec down the road.
+
+Jason
 
