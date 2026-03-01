@@ -4,91 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 110A1FD0045
-	for <kexec@archiver.kernel.org>; Sun,  1 Mar 2026 01:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3D84FFD0045
+	for <kexec@archiver.kernel.org>; Sun,  1 Mar 2026 01:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Subject:cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=Ep1r+TxTVXsjleXDRELngb1lJHdD0DP3WlzMub74vCE=; b=Ug7vrxkYWZ4cchB+du8YJ3BygO
-	NhR3YHQa9MkizogKGp+i7X2EwKahKF8vfV3WSo8xAb2tMQSJCounou/SU4dQIOZHrGNUZuQT767WQ
-	l7uYg2DLqC+fMwlwXxIIE8JsmyM4lJ7yGU6uDkaN+ws/41/0Yx7fePPMFvHJ0U0GKqJ93cRBLIRNr
-	5DEAPqnkVX8neePH1WI8vD2CZCTbG1tmGri+WLH8cxDUL2y0CXwzjnnzkZZFlXsn2E0sU0dhNoU7H
-	u5Un+5C6Om2pkXEb5PTgjLhwEGn1J4QBxq8uVQEapXAu6VoviMwDS2vr8gNUCN2RSE8aoZNLjZB7r
-	etJbwE5Q==;
+	bh=eOBlplEeRlENtdw5n6w+UxVHH1ApEWvIuCyAW9uXYVY=; b=lIthPjPWKjlEEDgLBRXJ1Vm6qN
+	EJej5d7jNIf1foxdWQ93ogYgcK9z065VQZpreNmJLUCKA9fN4UenBu22b7rUGjPPgm783FsefrHbB
+	aU/dqDGp/2M+LJ2R91sW3AgpSXnumJjJGvKDOKClXCxOwbghrYQK5LcEdIssuHlXrsDsRDu/FFlfr
+	TMvEvzxZI08dTubQHqiT1ppOeu4d92+3BQZvM4JGurOdwNWI3fYMjNWBdbNRlWr0sDBsDnNH00y3A
+	c5N+lkEu7Uqmv+jIF2kFFTSaUBegIpUuO53UYn6+xMgpLDMNckig34cMb/p8Iw2zMHo62LoEYAuDk
+	O6z7k0ag==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vwVr7-0000000AdIX-2kcT;
-	Sun, 01 Mar 2026 01:44:25 +0000
-Received: from mail-pl1-x62d.google.com ([2607:f8b0:4864:20::62d])
+	id 1vwVrL-0000000AdLY-0rRy;
+	Sun, 01 Mar 2026 01:44:39 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vwVr5-0000000AdHz-0SYE
+	id 1vwVrK-0000000AdLP-30Rj
 	for kexec@lists.infradead.org;
-	Sun, 01 Mar 2026 01:44:24 +0000
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-2ae3f822163so37815ad.0
-        for <kexec@lists.infradead.org>; Sat, 28 Feb 2026 17:44:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772329461; x=1772934261; darn=lists.infradead.org;
-        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Ep1r+TxTVXsjleXDRELngb1lJHdD0DP3WlzMub74vCE=;
-        b=4ZBqvdAlvja2DIt9qWyrIuEB2bAKw4kThX+d13CYdcPjg2cPk+zqorURN80Ro5At4u
-         75zw6PnSk6N1EPatKLutTgrk6q6eiLECJUu36KBA1MVaympFATzaFf9yRC8WYDwB4Zkh
-         n+8gWz49hhS6cLUQIiUUbsmtLHmCO+mUX7wdhyATc8dWHIVK/S8ORMEoEyZFTce3KBUb
-         DRxHG8LLSGL9Lm7m1N/HhrjtYMpxre4/OZjkKAff1JSRJl2NE3RAmmuLqdQtv2tadOGD
-         by98ORWT2QEv0SKvnV4SpGmlnLf5+0sv5F/X56B7+bbveigDZxoCDV9+aIzLNFmiaEN9
-         SA7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772329461; x=1772934261;
-        h=mime-version:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ep1r+TxTVXsjleXDRELngb1lJHdD0DP3WlzMub74vCE=;
-        b=g4TV+jTDX5F/5ZzjzW3T5tfPb3vVs8BQzSBiZDd7jaqwMp17j2dad07oJf5Av546zp
-         T3Wb5P2GqVP03RdUnkPU8xex8BNlfSOStZpEcogi1D4UIhuePQDBlI90Z2Hu+PR6Y7W3
-         Z/PGr5+HZDkCn3jI65InANbJoP+Xv0/cG7iG6GJb5byHrRN4KLTJqA/zS8xtfmhvTtxj
-         nV5WjtT/WXdRpsx2zG/Q1dPUyQJyY96HS467ROQS5JpZvPj6vilvnWMADLgVhz99giiu
-         09NghIGYLQfXtB7LI+YuWfDICIL6aW+e9wuAffnVJkBWdB+KmWl2cX3xkF0TB4aU3uvT
-         zI6w==
-X-Forwarded-Encrypted: i=1; AJvYcCUAMbo8FtW06D8PgqcS3nw7Dw0bPsMpNiQRL3wA/F2FuVwv+qtrBJaRleLAStTIJaTHQ3EXJA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxpPSBLR0CTHZ7t+7qy8niwI5ovKqxFI6p1TjzC1YLAg7jgInVg
-	ggTIbhAo7a5872mnb8Yk7YzecNlOhqTGCyWX3Wmda8rBw4GVMLCheUUsI+OCXSnNzg==
-X-Gm-Gg: ATEYQzyXBqrCMiLMIqpiLnFGS7FLkHHWS9Wb0Mx7AH0/3rSEwFpw27Y4RmTFZsfupYn
-	4utLJb1IuiTBEPlmxcmln1YSay3HKd0gy4NSesZDGWeF98e3o8qmbgZyKpDJGLoEdtgQQs6thre
-	obcerknvPayrxdTFGONS7gB/A3eKgOpXbtSWtSGuZtYufD+urMSISJm37jd4n6JJPwvgSitad2j
-	XRMbHIJvmEI4uNY5qGfwGDilshNDmJfxepLOfHMgvbYkgxrOFlQe9ACex4CMzz7wWoiKSnxDcer
-	11XOdlPZ/sInUDroSv0WA3rX8MwFdMQPYLcbvJWHxY92BBDACfIBwxkFWWi64bxaxMyE9tJcu2d
-	je26S2iVMCVjEx+jTe66GKDn244Z8uS6jTqZByCtXPq0SYuCheOfchpDblwfy40uMUHQ6jLdlUb
-	8W43x1RveiiF+Kg4MWzRNdPf0NNW2Bo8LxvhR+r/xfopikg63AKVQolVmJRj/WhLGSJmS5GrNX8
-	MnnWiqpJfmTk6YGMaToFkZ/sO+JCziYtwJ+504wfW2Jho/6I9B0oA==
-X-Received: by 2002:a17:903:3903:b0:2aa:d604:62f3 with SMTP id d9443c01a7336-2ae397254c0mr1958145ad.10.1772329460775;
-        Sat, 28 Feb 2026 17:44:20 -0800 (PST)
-Received: from [2a00:79e0:2eb0:8:963e:838d:a96b:8016] ([2a00:79e0:2eb0:8:963e:838d:a96b:8016])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8273a01a9dasm9104749b3a.49.2026.02.28.17.44.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Feb 2026 17:44:19 -0800 (PST)
-Date: Sat, 28 Feb 2026 17:44:18 -0800 (PST)
-From: David Rientjes <rientjes@google.com>
-To: Alexander Graf <graf@amazon.com>, 
-    "Andersen, Tycho" <Tycho.Andersen@amd.com>, 
-    Anthony Yznaga <anthony.yznaga@oracle.com>, 
-    Baolu Lu <baolu.lu@linux.intel.com>, David Hildenbrand <david@kernel.org>, 
-    David Matlack <dmatlack@google.com>, James Gowans <jgowans@amazon.com>, 
-    Jason Gunthorpe <jgg@nvidia.com>, Mike Rapoport <rppt@kernel.org>, 
-    Pankaj Gupta <pankaj.gupta.linux@gmail.com>, 
-    Pasha Tatashin <tatashin@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
-    Praveen Kumar <kpraveen.lkml@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
-    Vishal Annapurve <vannapurve@google.com>, 
-    "Woodhouse, David" <dwmw@amazon.co.uk>
-cc: linux-mm@kvack.org, kexec@lists.infradead.org
-Subject: [Hypervisor Live Update] Notes from February 23, 2026
-Message-ID: <8dff046d-a819-ac8e-c1fa-8b5a35740cbb@google.com>
+	Sun, 01 Mar 2026 01:44:38 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 280426013A;
+	Sun,  1 Mar 2026 01:44:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A253AC2BC86;
+	Sun,  1 Mar 2026 01:44:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772329477;
+	bh=pU6kEI3MjC3mGmpGsqTr2Z7DlCBRGEw4W+QYa8uyaaA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MHYFISW847pnHhQH1gewElJbjOiZ7ORnwsfA6paLrukxFBii/NyEdtTnBfoQA1HW6
+	 7G5GayGMeQ9enWd8HdIWzQDohcIeq+BucxEb/K2MBG9YC8tRuBb/CXrSbv1CDc/qGY
+	 vLD4c43BM4ZuLdSlJ0VLhPK5mvwguxwSLoVtIwgsowrm/9lJflQyHtEC64umhLPq5B
+	 vH5xypQo+C5fNOoPu0w1yu5QTiBxUXF/BGV0KN4Jp7ehi0+Fb7Vk2+Yly69CPIArTp
+	 9dgFUx8+Xy/2jLpkB5GCmLVLR4bKvGhYL1eAJzs2uTISjD2Omrn8Ba2RRXxkqU/vMo
+	 dc1R6a2XcVMgQ==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	me@linux.beauty
+Cc: Baoquan He <bhe@redhat.com>,
+	Alexander Graf <graf@amazon.com>,
+	Eric Biggers <ebiggers@kernel.org>,
+	Philipp Rudo <prudo@redhat.com>,
+	Ricardo Ribalda Delgado <ribalda@chromium.org>,
+	Ross Zwisler <zwisler@google.com>,
+	Sourabh Jain <sourabhjain@linux.ibm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	kexec@lists.infradead.org
+Subject: FAILED: Patch "kexec: derive purgatory entry from symbol" failed to apply to 6.1-stable tree
+Date: Sat, 28 Feb 2026 20:44:35 -0500
+Message-ID: <20260301014435.1706933-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260228_174423_155916_3FF7C052 
-X-CRM114-Status: GOOD (  30.19  )
+X-Patchwork-Hint: ignore
+X-stable: review
+Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,125 +77,244 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi everybody,
+The patch below does not apply to the 6.1-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
-Here are the notes from the last Hypervisor Live Update call that happened 
-on Monday, February 23.  Thanks to everybody who was involved!
+Thanks,
+Sasha
 
-These notes are intended to bring people up to speed who could not attend 
-the call as well as keep the conversation going in between meetings.
+------------------ original commit in Linus's tree ------------------
 
------>o-----
-We briefly mentioned the luod design doc[1] and asked people for review, 
-Pratyush noted that he would be taking a look at it.
+From 480e1d5c64bb14441f79f2eb9421d5e26f91ea3d Mon Sep 17 00:00:00 2001
+From: Li Chen <me@linux.beauty>
+Date: Tue, 20 Jan 2026 20:40:04 +0800
+Subject: [PATCH] kexec: derive purgatory entry from symbol
 
------>o-----
-Jork Loeser noted that he was looking at HyperV partition survival.  They 
-donate pages to HyperV which is a concept that doesn't exist in KVM.  
-These pages are removed from Linux entirely and cannot be accessed.  He 
-was playing with stateless KHO and extended some features but is not ready 
-to send the patches out for review.  He was wondering if there was a 
-possibility of landing changes in 7.1.
+kexec_load_purgatory() derives image->start by locating e_entry inside an
+SHF_EXECINSTR section.  If the purgatory object contains multiple
+executable sections with overlapping sh_addr, the entrypoint check can
+match more than once and trigger a WARN.
 
-Pratyush noted that stateless KHO should go into the tree independently.  
-Any consumers of the radix tree can be independent and build on top of 
-those patches.  He noted that he would be happy to review the patches when 
-they come out.
+Derive the entry section from the purgatory_start symbol when present and
+compute image->start from its final placement.  Keep the existing e_entry
+fallback for purgatories that do not expose the symbol.
 
------>o-----
-Pratyush noted that there were no updates for versioning support.  There 
-is a clear plan forward for it but it hasn't been implemented yet.
+WARNING: kernel/kexec_file.c:1009 at kexec_load_purgatory+0x395/0x3c0, CPU#10: kexec/1784
+Call Trace:
+ <TASK>
+ bzImage64_load+0x133/0xa00
+ __do_sys_kexec_file_load+0x2b3/0x5c0
+ do_syscall_64+0x81/0x610
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-He said he updated the HugeTLB preservation support with the requested 
-changes from the mailing list but doesn't have selftests done yet.  In two 
-weeks, he was hoping that these would be posted to the list.
+[me@linux.beauty: move helper to avoid forward declaration, per Baoquan]
+  Link: https://lkml.kernel.org/r/20260128043511.316860-1-me@linux.beauty
+Link: https://lkml.kernel.org/r/20260120124005.148381-1-me@linux.beauty
+Fixes: 8652d44f466a ("kexec: support purgatories with .text.hot sections")
+Signed-off-by: Li Chen <me@linux.beauty>
+Acked-by: Baoquan He <bhe@redhat.com>
+Cc: Alexander Graf <graf@amazon.com>
+Cc: Eric Biggers <ebiggers@kernel.org>
+Cc: Li Chen <me@linux.beauty>
+Cc: Philipp Rudo <prudo@redhat.com>
+Cc: Ricardo Ribalda Delgado <ribalda@chromium.org>
+Cc: Ross Zwisler <zwisler@google.com>
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+ kernel/kexec_file.c | 131 +++++++++++++++++++++++++-------------------
+ 1 file changed, 74 insertions(+), 57 deletions(-)
 
------>o-----
-David Matlack noted for interrupt ordering that discussions are still 
-ongoing with NV on the topic.  Right now the simple approach is being used 
-for disabling interrupts on the device and then reenabling them after live 
-update.
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index eb62a97942428..2bfbb2d144e69 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -882,6 +882,60 @@ static int kexec_calculate_store_digests(struct kimage *image)
+ }
+ 
+ #ifdef CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY
++/*
++ * kexec_purgatory_find_symbol - find a symbol in the purgatory
++ * @pi:		Purgatory to search in.
++ * @name:	Name of the symbol.
++ *
++ * Return: pointer to symbol in read-only symtab on success, NULL on error.
++ */
++static const Elf_Sym *kexec_purgatory_find_symbol(struct purgatory_info *pi,
++						  const char *name)
++{
++	const Elf_Shdr *sechdrs;
++	const Elf_Ehdr *ehdr;
++	const Elf_Sym *syms;
++	const char *strtab;
++	int i, k;
++
++	if (!pi->ehdr)
++		return NULL;
++
++	ehdr = pi->ehdr;
++	sechdrs = (void *)ehdr + ehdr->e_shoff;
++
++	for (i = 0; i < ehdr->e_shnum; i++) {
++		if (sechdrs[i].sh_type != SHT_SYMTAB)
++			continue;
++
++		if (sechdrs[i].sh_link >= ehdr->e_shnum)
++			/* Invalid strtab section number */
++			continue;
++		strtab = (void *)ehdr + sechdrs[sechdrs[i].sh_link].sh_offset;
++		syms = (void *)ehdr + sechdrs[i].sh_offset;
++
++		/* Go through symbols for a match */
++		for (k = 0; k < sechdrs[i].sh_size/sizeof(Elf_Sym); k++) {
++			if (ELF_ST_BIND(syms[k].st_info) != STB_GLOBAL)
++				continue;
++
++			if (strcmp(strtab + syms[k].st_name, name) != 0)
++				continue;
++
++			if (syms[k].st_shndx == SHN_UNDEF ||
++			    syms[k].st_shndx >= ehdr->e_shnum) {
++				pr_debug("Symbol: %s has bad section index %d.\n",
++					name, syms[k].st_shndx);
++				return NULL;
++			}
++
++			/* Found the symbol we are looking for */
++			return &syms[k];
++		}
++	}
++
++	return NULL;
++}
+ /*
+  * kexec_purgatory_setup_kbuf - prepare buffer to load purgatory.
+  * @pi:		Purgatory to be loaded.
+@@ -960,6 +1014,10 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
+ 	unsigned long offset;
+ 	size_t sechdrs_size;
+ 	Elf_Shdr *sechdrs;
++	const Elf_Sym *entry_sym;
++	u16 entry_shndx = 0;
++	unsigned long entry_off = 0;
++	bool start_fixed = false;
+ 	int i;
+ 
+ 	/*
+@@ -977,6 +1035,12 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
+ 	bss_addr = kbuf->mem + kbuf->bufsz;
+ 	kbuf->image->start = pi->ehdr->e_entry;
+ 
++	entry_sym = kexec_purgatory_find_symbol(pi, "purgatory_start");
++	if (entry_sym) {
++		entry_shndx = entry_sym->st_shndx;
++		entry_off = entry_sym->st_value;
++	}
++
+ 	for (i = 0; i < pi->ehdr->e_shnum; i++) {
+ 		unsigned long align;
+ 		void *src, *dst;
+@@ -994,6 +1058,13 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
+ 
+ 		offset = ALIGN(offset, align);
+ 
++		if (!start_fixed && entry_sym && i == entry_shndx &&
++		    (sechdrs[i].sh_flags & SHF_EXECINSTR) &&
++		    entry_off < sechdrs[i].sh_size) {
++			kbuf->image->start = kbuf->mem + offset + entry_off;
++			start_fixed = true;
++		}
++
+ 		/*
+ 		 * Check if the segment contains the entry point, if so,
+ 		 * calculate the value of image->start based on it.
+@@ -1004,13 +1075,14 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
+ 		 * is not set to the initial value, and warn the user so they
+ 		 * have a chance to fix their purgatory's linker script.
+ 		 */
+-		if (sechdrs[i].sh_flags & SHF_EXECINSTR &&
++		if (!start_fixed && sechdrs[i].sh_flags & SHF_EXECINSTR &&
+ 		    pi->ehdr->e_entry >= sechdrs[i].sh_addr &&
+ 		    pi->ehdr->e_entry < (sechdrs[i].sh_addr
+ 					 + sechdrs[i].sh_size) &&
+-		    !WARN_ON(kbuf->image->start != pi->ehdr->e_entry)) {
++		    kbuf->image->start == pi->ehdr->e_entry) {
+ 			kbuf->image->start -= sechdrs[i].sh_addr;
+ 			kbuf->image->start += kbuf->mem + offset;
++			start_fixed = true;
+ 		}
+ 
+ 		src = (void *)pi->ehdr + sechdrs[i].sh_offset;
+@@ -1128,61 +1200,6 @@ int kexec_load_purgatory(struct kimage *image, struct kexec_buf *kbuf)
+ 	return ret;
+ }
+ 
+-/*
+- * kexec_purgatory_find_symbol - find a symbol in the purgatory
+- * @pi:		Purgatory to search in.
+- * @name:	Name of the symbol.
+- *
+- * Return: pointer to symbol in read-only symtab on success, NULL on error.
+- */
+-static const Elf_Sym *kexec_purgatory_find_symbol(struct purgatory_info *pi,
+-						  const char *name)
+-{
+-	const Elf_Shdr *sechdrs;
+-	const Elf_Ehdr *ehdr;
+-	const Elf_Sym *syms;
+-	const char *strtab;
+-	int i, k;
+-
+-	if (!pi->ehdr)
+-		return NULL;
+-
+-	ehdr = pi->ehdr;
+-	sechdrs = (void *)ehdr + ehdr->e_shoff;
+-
+-	for (i = 0; i < ehdr->e_shnum; i++) {
+-		if (sechdrs[i].sh_type != SHT_SYMTAB)
+-			continue;
+-
+-		if (sechdrs[i].sh_link >= ehdr->e_shnum)
+-			/* Invalid strtab section number */
+-			continue;
+-		strtab = (void *)ehdr + sechdrs[sechdrs[i].sh_link].sh_offset;
+-		syms = (void *)ehdr + sechdrs[i].sh_offset;
+-
+-		/* Go through symbols for a match */
+-		for (k = 0; k < sechdrs[i].sh_size/sizeof(Elf_Sym); k++) {
+-			if (ELF_ST_BIND(syms[k].st_info) != STB_GLOBAL)
+-				continue;
+-
+-			if (strcmp(strtab + syms[k].st_name, name) != 0)
+-				continue;
+-
+-			if (syms[k].st_shndx == SHN_UNDEF ||
+-			    syms[k].st_shndx >= ehdr->e_shnum) {
+-				pr_debug("Symbol: %s has bad section index %d.\n",
+-						name, syms[k].st_shndx);
+-				return NULL;
+-			}
+-
+-			/* Found the symbol we are looking for */
+-			return &syms[k];
+-		}
+-	}
+-
+-	return NULL;
+-}
+-
+ void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name)
+ {
+ 	struct purgatory_info *pi = &image->purgatory_info;
+-- 
+2.51.0
 
-For VFIO, there hasn't been a lot of feedback yet.  He was going to ask 
-Bjorn and Alex to take a look.
 
------>o-----
-Sami sent out phase 1 of the IOMMU preservation series and is looking 
-forward to the next phase.  He was asking people for review upstream.  
-Sami is using the VFIO patch series as a dependency.
 
------>o-----
-Ackerley Tng went through guest_memfd HugeTLB support; the link to the 
-slides are included in the cover letter for participants.  He briefly 
-touched on an introduction to guest_memfd as a guest-first memory provider 
-to KVM.  He then discussed how guest_memfd simply wraps existing sources 
-of memory like pages from the buddy allocator or HugeTLB pages.  The 
-folios are put into the filemap.
 
-Every page is individually tracked to be either shared or private.  
-Confidential guests can request a private page to be shared with the host 
-and vice versa.  For shared-to-private conversion, the userspace VMM makes 
-sure that devices stop using the memory requested by checking refcounts 
-and then sends the SET_MEMORY_ATTRIBUTES ioctl to guest_memfd; that unmaps 
-the range from the userspace page tables and records the page as private 
-before returning to the guest.
-
-Refcounting for a HugeTLB page is taken for the entire hugepage so we 
-cannot identify which page within the hugepage the refcount was taken for.  
-For all private-to-shared conversions this requires splitting hugepages 
-into pages.  Split folios have to be merged back together but may also 
-out-live the guest_memfd; for example if the fd is closed the memory may 
-finally be unpinned.  This requires tracking outside of KVM such as the 
-original size of the folio and which memcg was charged for it.  This is 
-also required for memory error handling.
-
-For KHO preservation, for guest_memfd pages (not HugeTLB pages) we need to 
-preserve the filemap and associated folios, mempolicy, and memory 
-attributes from the Maple Tree.  For HugeTLB pages we must preserve the 
-restructuring metadata.  It was noted that there is no memory failure 
-tracking today, it could be a future extension.
-
-Pratyush asked if we can disallow any conversions after prepare.  Ackerley 
-said if this period is very short than this should be fine.  Pratyush also 
-asked if we should associate the guest_memfd with the host VM which, 
-today, we rely on the VMM to do.
-
-For timelines, Ackerley suggested that we would be able to merge 
-conversion support with private/shared tracking in March and then HugeTLB 
-support without restructuring in June.  He was hoping to have 
-restructuring support later this year.
-
------>o-----
-NOTE!!  Daylight Savings Time starts on Sunday, March 8 so the time of the 
-meeting may have changed for some participants.
-
-Next meeting will be on Monday, March 9 at 8am PDT (UTC-7), everybody is
-welcome: https://meet.google.com/rjn-dmzu-hgq
-
-Topics for the next meeting:
-
- - stateless KHO patch status in Andrew's tree
- - determine if luod would become part of systemd and discussions with
-   Luca; implementation and next steps
- - versioning support for luod to negotiate
- - HugeTLB preservation support
- - ordering issues when disabling interrupts based on feedback from NV
- - VFIO patch series review from the list 
- - phase 1 of IOMMU persistence patch series, then phase 2 status and
-   updates
- - hitless replacement for iommu domains
- - guest_memfd HugeTLB enlightenment: conversion support, HugeTLB support
-   without restructuring, and HugeTLB support with restructuring
- - live update related topics to propose for LSF/MM/BPF 2026
- - KHO enlightenment for ASI
- - later: update on PCI preservation series and next steps
- - later: testing methodology to allow downstream consumers to qualify
-   that live update works from one version to another
- - later: reducing blackout window during live update, including deferred
-   struct page initialization
-
-Please let me know if you'd like to propose additional topics for
-discussion, thank you!
-
-[1] https://tinyurl.com/luoddesign
 
