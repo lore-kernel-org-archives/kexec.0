@@ -4,159 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 673F9FD0047
-	for <kexec@archiver.kernel.org>; Sun,  1 Mar 2026 19:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AB18AD58E4B
+	for <kexec@archiver.kernel.org>; Mon,  2 Mar 2026 03:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=MX+yQJleX5GJghpdj7Xk+YKIvPyvO5I3xZNRwZlTweA=; b=A0kyXBJ48PfRZQZ7ktOBzi9WzN
-	BQg4dCuShRZFB04eqqpFyrwpwir5fQJWGu7Z72jgR2R/uzs99tiaosdEaq7ogk3go7rFUUqbE1Wr0
-	Ai1gU2rUlM8aBss3UHz0YfeNFWSHzJEgHOSgVtoUmk9x25yvPL0wcAGmSZ7uJey2UM2rx3L5y6jZ9
-	ovJXVhHdA8Hu2Nte659/+q0Hspd0WfdzKB9kswndnc5snr4ZqXU12SWYuqzOUAyeCkX5gvOpb0z73
-	KKa3YYTVSkAshv/5Q1eM6ZwrVxS7HuMvbquVCb/fMfpjbaNeIYUN4+sqlMi3EsdwxzxS/0SWO871O
-	NprHC9Bw==;
+	bh=805Lu3EMapzlzEnavOwixZrJ0Hw2CqNoGnLSexCdNJg=; b=KfS8z5XLVOKLzm5+3K/gr9lGvl
+	hY2lxEtCRTlFMBVu86Hq1R5L0K2Q0pBg2oVD7pidWIk8oUpzLXWyX8vu8xx0+bE02V/rU8BoJ8j1h
+	h0o0l4/iz8M7W1dyl/DCU8Wn8Xt+/kDGP39pH34QFKUYEFGM1fnfGxs0eEFqLklqMqrU2uby9toiP
+	teTFCrCYyA+kVrhjO3Op7kdBMEPKx0QQUujLSpShi2o/7ngbptyOEAunl6swEDWDcN6GLKIqtROw1
+	JrPNygyjJRtzpoF6x/lQ2bkp0oyInQkOEAO/KhBf4MCTNgkrGaHgO9oFtNUF90H1tyHPhggQ8pNyU
+	CgaqspJg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vwmTx-0000000BoiJ-2gr3;
-	Sun, 01 Mar 2026 19:29:37 +0000
-Received: from mail-centralusazon11011068.outbound.protection.outlook.com ([52.101.62.68] helo=DM5PR21CU001.outbound.protection.outlook.com)
+	id 1vwtsG-0000000CArv-41Gk;
+	Mon, 02 Mar 2026 03:23:12 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vwmTv-0000000Bohw-0vjL
+	id 1vwtsC-0000000CArO-2cJY
 	for kexec@lists.infradead.org;
-	Sun, 01 Mar 2026 19:29:36 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=g8DeFgY9VFqnccMTyprbrZr0bYlxVsSY5T+1f+zX3/hewlsop/K6Zdxcanb6rDmG4f/3+u1g2es5sEAfBK0m6dCA0RcWYUHcPcPI2FwMCpJ7xogfS/7/chB8UZYTRtMR+DQU5FAzu75gMz8NpFz1OGZzw0Zvkdr+rKWF0uj2F+ZAQiCsvhtmGygDCARQ+Z2hVfpD/Xw5REjGEgUP7q3ST77NhFZnuAhHFewgYzfQvaCBNMtLLBc/sxIKVdG69nu0MP/fsWFjAcZVI4ZBJdU7lMu2AaABfZNaFT7rEbSP93H4If7Nwh2sL2TJbW82esnCwCGAeqHYRffh6STemVvzDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MX+yQJleX5GJghpdj7Xk+YKIvPyvO5I3xZNRwZlTweA=;
- b=ZDU5qDayi9ec6GH6+Y60Jv4RtbiUmI0L9WrZIAeiTAOEm2zWWF5JE2A8Wi3m9iiYrMsGXr8v+Pgma134aHRKlJaLYVL84DgsBOWq4rTGHpOm7DL26z7VRvRNt5oisV7JGMWo516HG+3/UY6/3Rmc5y/e9DW9c+RR4c6vUWS5c6Z2hQ8cTPerBmZ+LS1m/Cj+5kJbivF9tp8si09o+IpCooSbRqq9pa2tjbpY1DWdp3VDiAxreX92nfXdUy0zBHg6SJap+FYefI+34SAMpOUzqhyZ+nMXInVSKeP9tmFAFUR9rfAyaoxBpqo97wT+cgmttZpaDvVhFkgdqR5x7DkxFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MX+yQJleX5GJghpdj7Xk+YKIvPyvO5I3xZNRwZlTweA=;
- b=SJShKU4HXjh4jsRDGi3kXfBqZJPfneihYXwl8HIPyGh+Mro88TbRpwdChZWxBgxiThMr9HbrevVL4Bhi5qQCZ/gJlsl6N4cjmfQivQzFu3Tk/z5Ud4pVZuI1uVufubZvKdv1LgjADZaAlBFBldVD2L2ZFqjIjzK80FTpKagAQKT3dI0Xb8kX1A9HyAt6LAjlqhfF++GIdHaJD+jpshhdgw+Q+xK+aDJSYmGLTd6LebFpVSBm8zuTQdHIQBIwwIfovkMY4EDT3CsUyDXiou+7dAx8R6I1UZXjL3iR+wAGODGoZy7rUe3mXC7sKuFSsr0cfLrImzkexH1hx2hh9zAOwA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
- by DM4PR12MB6591.namprd12.prod.outlook.com (2603:10b6:8:8e::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.16; Sun, 1 Mar
- 2026 19:29:26 +0000
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::299d:f5e0:3550:1528%5]) with mapi id 15.20.9654.014; Sun, 1 Mar 2026
- 19:29:25 +0000
-Date: Sun, 1 Mar 2026 15:29:24 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Alex Williamson <alex@shazbot.org>
-Cc: David Matlack <dmatlack@google.com>, Bjorn Helgaas <helgaas@kernel.org>,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
-	Kevin Tian <kevin.tian@intel.com>, kexec@lists.infradead.org,
-	kvm@vger.kernel.org, Leon Romanovsky <leon@kernel.org>,
-	Leon Romanovsky <leonro@nvidia.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, linux-pci@vger.kernel.org,
-	Lukas Wunner <lukas@wunner.de>,
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pranjal Shrivastava <praan@google.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Raghavendra Rao Ananta <rananta@google.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Tomita Moeko <tomitamoeko@gmail.com>,
-	Vipin Sharma <vipinsh@google.com>,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
-	Zhu Yanjun <yanjun.zhu@linux.dev>
-Subject: Re: [PATCH v2 02/22] PCI: Add API to track PCI devices preserved
- across Live Update
-Message-ID: <20260301192924.GR5933@nvidia.com>
-References: <20260129212510.967611-3-dmatlack@google.com>
- <20260225224651.GA3711085@bhelgaas>
- <aZ-TrC8P0tLYhxXO@google.com>
- <20260227093233.45891424@shazbot.org>
- <CALzav=dxthSXYo13rOjY710uNbu=6UjzD-OJKm-Xt=wR7oc0mg@mail.gmail.com>
- <20260227112501.465e2a86@shazbot.org>
+	Mon, 02 Mar 2026 03:23:09 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772421786;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=805Lu3EMapzlzEnavOwixZrJ0Hw2CqNoGnLSexCdNJg=;
+	b=C638m43QKy0OJukXI5RchLQJDBSs801FCCBeyTv6btUxbhIIEsgV6qkz4lmflazax31FYB
+	KyYEeVIeLF2/nB1Kkum3sIhmIk9qTx5DTrTDWFMvayNa7JVSNOk1YPpSFXuO0+yG3L4oro
+	X/j5CH3oZ8jxHp36wfMdXTsc0NdC+cI=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-610-ZKMInV-7Ov60vBkvpA8OSQ-1; Sun,
+ 01 Mar 2026 22:23:05 -0500
+X-MC-Unique: ZKMInV-7Ov60vBkvpA8OSQ-1
+X-Mimecast-MFC-AGG-ID: ZKMInV-7Ov60vBkvpA8OSQ_1772421784
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E453D195608E;
+	Mon,  2 Mar 2026 03:23:03 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.98])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AA6A130001BB;
+	Mon,  2 Mar 2026 03:23:02 +0000 (UTC)
+Date: Mon, 2 Mar 2026 11:22:58 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crash_dump: use sysfs_emit in sysfs show functions
+Message-ID: <aaUCkp7ndYDYHJd0@MiWiFi-R3L-srv>
+References: <20260301125106.911980-2-thorsten.blum@linux.dev>
+MIME-Version: 1.0
+In-Reply-To: <20260301125106.911980-2-thorsten.blum@linux.dev>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: ySmk6txRyVMNlhxcwCg6wm09NPZZ0RsU2Iq4W_csbJs_1772421784
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260227112501.465e2a86@shazbot.org>
-X-ClientProxiedBy: BL1P223CA0034.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:208:5b6::16) To LV8PR12MB9620.namprd12.prod.outlook.com
- (2603:10b6:408:2a1::19)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|DM4PR12MB6591:EE_
-X-MS-Office365-Filtering-Correlation-Id: 18d723bb-316c-49d9-0b0c-08de77c8d93f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info: 5bFEiRkDkqiJ6IwnEZJuhEuWjuCHm12MZ19LH7aM7bKNEru+HTQArfq7q7KMj/MIio4oRQyI/y7Sq5e4AcGsG61pWdPVrnKx70SpThRazmyN7iWZSPRD79ed8PxbOS9UwhhNvEemPuTnFPOsrqp/lUFjqmD9Ow/uhQYcxZO6uI4TaNR2+j9Un3B4UTr+FcNzwn/jJYU84UWGvzbub+X9mhYLEWKi7f8+uwE5kRAl/QxCcK3LGhI6D30goSheut01l2qqG1ebTHyW1RPNQgWF6E+Smu+jKpQZUCsQ1BjWnRvma8RZNQhevRFYnz68gMXSVXzs9S4kiUmEuwiBpaDnp9r6yHXQ8MKIBONAW7dSt15RwlygJu93AJ22QFDBWENLNNXuA8oQ6KoizH5Q54nqSFqnxKAUMwtkcN2gHdwCqwpzEuza+AY7OQ1f0Hi3jWyI4NCvSYSXyAnCraX6RPUjAiHKsL8dLf80OH6ZbY9ckhdrMJ+u2ikgxciuR1DWd5wWlM1faDFaVgrNcYqzNe86JewtrRmfKsJsTYG59bn8NZ5oO9uxsk7CfQiqIK19c/kLGgZQSOSFq9/EnXvpQJVcN4EU/8uqCx+PIyUbjasqA6w181PFFFKwuwGqY+dZwlVpqNZlUZLQ4QkiMlfu2lG8i+d/Gcs4pg4DNZNAYT/htPMuO7olRL11iL0K3lGx/iAqCUtKfWj9zRnuRsJmUkYzZ0CbPlMoUDvE7wQ2hQATGU0=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?TNPJx7wggLy4ocH9Yj526ndA2xiuMcYpbDiyVtcJVloJN2MNyVX0dky8G6o3?=
- =?us-ascii?Q?Z8cv6MUa9OAlM0/aXv+CHgPmMXXhXjipvH9ZgdY56XMT+T4700912B8S2rPz?=
- =?us-ascii?Q?iHaKK7P3lzvi01k/vliBrh1Tbe1B5L93wiI3AXTnwFa5hilpYw2bSTXx7JQa?=
- =?us-ascii?Q?GZCvItojrZTUnCkJL4AAGtITOsGhqdA4Fl4VjRWA8Uws9Fqlx0YGuyujCiJM?=
- =?us-ascii?Q?vWzv2yNprubnoulbUPnWxW4t8kffxEevikL/eyytlcE4rO4bcjmOo886xddM?=
- =?us-ascii?Q?WyfiFBJBoWgEb/t9uplOIoWYcRpD/qs8fpnwWE7sPJuHyfcO/VbwyMWv963L?=
- =?us-ascii?Q?hCsT/ko+n2vuS6HlGlRFrQvERM6OFsgAC4DDBh7Tucf6jiSnIR8jCcSMz2Ma?=
- =?us-ascii?Q?mDAm0QLUv5m6hTYtpn6trZ+HZyULme8ePNSFPcyI9QQ88C812zFdWY1Q1syv?=
- =?us-ascii?Q?hc4uGgMucDGtMwOSWyjxWkdfuI4MaAkUa15Nvh0uOpUwadWDWQMxblVAYkyO?=
- =?us-ascii?Q?Kezzz+gmzhQjYCz4gqe1UW7nQ27AwWKxTAyJVnBr+edzEKjzQVWxP49Eubpj?=
- =?us-ascii?Q?NvPhO88soTJb6O5iUktO6X0oq7Hcb/6evS1fOdzY/GCJZPd19BybSgdfpWUw?=
- =?us-ascii?Q?mnkp9VERuyiUt1fNPFvsv4YOVBtSSBop10GZt+RYLrR6d9qcZpI8fjstVwao?=
- =?us-ascii?Q?de8tsFIyIRSOjTDxlIyG16p5xnPju5D9Trdq/AXfrlAx8rXzMcDH+MgrQsP9?=
- =?us-ascii?Q?OwTM4JQV5wExpGMa36BHFJkbaNqjrrOCnqw+10eAiVV+SFu0eXvt/mCGvUcs?=
- =?us-ascii?Q?9IlgLPyAmX3sjF37sYMIEY860zB1vZMHw2zw/K2Ty+AY06aohfpZobiAsYEK?=
- =?us-ascii?Q?G5eeXj7HIdDExou4HbzHIUz8yjyRjHbX2S3uNyZoDMVtg+Ub7w17VeoZrUwu?=
- =?us-ascii?Q?eUsCUDciOcg0Rh7E0a0jQcgZQAIDHWVHc+1Vslp7F7xbRX03F8FbjS836umr?=
- =?us-ascii?Q?kRmF0wSYO6HCJk/X9i/O4eh9wz7/28u+3Bhzd1vdzAxnuZpT3mUwD8aXk8sI?=
- =?us-ascii?Q?4ysHAQPjxjNVqBFJhIlXd9LGvJHTHuaCoa0rexi7xlfsEM20c/KdVs1q3hkO?=
- =?us-ascii?Q?tmyGYQ7ved2ERw3guEsRQHbsBij83RAkzOTFGcHwadAUg2m63yO1VaKIUBx4?=
- =?us-ascii?Q?NiOWZnSGUmethPQLBdv80tiQTUNcStG5FrY53fkCBDg1P9dEwEFK3e335V+P?=
- =?us-ascii?Q?l1RDrKDOpThpcIqrGRp++5EiDwmzAUs0rVe0tEGHxmHPF4gIgNNLb7QR9rB7?=
- =?us-ascii?Q?VAP1VmArGbqiuzDzOa+KFMqBjYFVeOth+79glViDG1SWuI3B292NaEJg7uTl?=
- =?us-ascii?Q?eFYbPrMN21Yv7c1ZCBFj4KslBIzMIKkRQ8uFpiOTiTWV14/IWO4ktrLuZyhW?=
- =?us-ascii?Q?opRZTyoJVj0X91dareYv74udyq749QFJOPQXB3iAs3agU009xCXO5YqpNlQl?=
- =?us-ascii?Q?k6QuF/hORqZIwM1UTi07c9V2l1BhVbOhfokwL8g5QYL99fZSMhuUS8dcKgNV?=
- =?us-ascii?Q?3hRMnKRMcbE/lIAzyAw9KWkDBVWXivJ7VjbFgkRFcgdP1tnZwIhPj1+7vhgx?=
- =?us-ascii?Q?T7P13E+PSbbEOmAVO9vmmaQV61HhwBWgYR6EjCtPPK6dWTXNRCLM7ev/IZgj?=
- =?us-ascii?Q?7Ldo1ARlIt/zqIzSQ+Z+lrOFEbWqGb46ZS7gIPna0V0hXANnpg49BDCr+D/S?=
- =?us-ascii?Q?cGg1zuDQ0Q=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18d723bb-316c-49d9-0b0c-08de77c8d93f
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Mar 2026 19:29:25.8232
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DpLA7FfUJaPCXb0GSlpgepU3bVCHItRLhSTrLmdhlr/muqZmEJogeXj8Bv0ZuMA4
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6591
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260301_112935_269102_43554145 
-X-CRM114-Status: GOOD (  11.36  )
+X-CRM114-CacheID: sfid-20260301_192308_752688_2A3CFF93 
+X-CRM114-Status: GOOD (  13.62  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -171,20 +85,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Feb 27, 2026 at 11:25:01AM -0700, Alex Williamson wrote:
+On 03/01/26 at 01:51pm, Thorsten Blum wrote:
+> Replace sprintf() with sysfs_emit() in sysfs show functions.
+> sysfs_emit() is preferred for formatting sysfs output because it
+> provides safer bounds checking.  No functional changes.
+> 
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  kernel/crash_dump_dm_crypt.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 
-> There's obviously a knee jerk reaction that moving PF drivers into
-> userspace is a means to circumvent the GPL that was evident at LPC,
-> even if the real reason is "in-kernel is hard".
+Acked-by: Baoquan He <bhe@redhat.com>
 
-Given we already have GPL licensed kernel drivers for the PFs it
-doesn't seem like a reasonable worry to me to fret about some cut down
-version of a kernel driver running in userspace.
+> 
+> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+> index 1f4067fbdb94..827572aa800b 100644
+> --- a/kernel/crash_dump_dm_crypt.c
+> +++ b/kernel/crash_dump_dm_crypt.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/cc_platform.h>
+>  #include <linux/configfs.h>
+>  #include <linux/module.h>
+> +#include <linux/sysfs.h>
+>  
+>  #define KEY_NUM_MAX 128	/* maximum dm crypt keys */
+>  #define KEY_SIZE_MAX 256	/* maximum dm crypt key size */
+> @@ -189,7 +190,7 @@ static inline struct config_key *to_config_key(struct config_item *item)
+>  
+>  static ssize_t config_key_description_show(struct config_item *item, char *page)
+>  {
+> -	return sprintf(page, "%s\n", to_config_key(item)->description);
+> +	return sysfs_emit(page, "%s\n", to_config_key(item)->description);
+>  }
+>  
+>  static ssize_t config_key_description_store(struct config_item *item,
+> @@ -265,7 +266,7 @@ static struct config_item *config_keys_make_item(struct config_group *group,
+>  
+>  static ssize_t config_keys_count_show(struct config_item *item, char *page)
+>  {
+> -	return sprintf(page, "%d\n", key_count);
+> +	return sysfs_emit(page, "%d\n", key_count);
+>  }
+>  
+>  CONFIGFS_ATTR_RO(config_keys_, count);
+> @@ -274,7 +275,7 @@ static bool is_dm_key_reused;
+>  
+>  static ssize_t config_keys_reuse_show(struct config_item *item, char *page)
+>  {
+> -	return sprintf(page, "%d\n", is_dm_key_reused);
+> +	return sysfs_emit(page, "%d\n", is_dm_key_reused);
+>  }
+>  
+>  static ssize_t config_keys_reuse_store(struct config_item *item,
+> @@ -321,7 +322,7 @@ static bool restore;
+>  
+>  static ssize_t config_keys_restore_show(struct config_item *item, char *page)
+>  {
+> -	return sprintf(page, "%d\n", restore);
+> +	return sysfs_emit(page, "%d\n", restore);
+>  }
+>  
+>  static ssize_t config_keys_restore_store(struct config_item *item,
+> -- 
+> Thorsten Blum <thorsten.blum@linux.dev>
+> GPG: 1D60 735E 8AEF 3BE4 73B6  9D84 7336 78FD 8DFE EAD4
+> 
+> 
 
-Further, let's be honest here, the people most interested in all of
-this are doing it to support their proprietary VMMs. I'm pushing that
-we must have at least a reference implementation in qemu before the
-kernel parts should be merged..
-
-Jason
 
