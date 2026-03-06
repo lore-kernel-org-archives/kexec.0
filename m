@@ -4,126 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 05117F47CC1
-	for <kexec@archiver.kernel.org>; Thu,  5 Mar 2026 19:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2640EF513E9
+	for <kexec@archiver.kernel.org>; Fri,  6 Mar 2026 02:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=BFL2J/Icfk5z6sblaLG86L1o2xcdsDyOfso7V9JzEr4=; b=UtACb1Ei3V2VN4Kz8xD4HWwuH7
-	TpfRweOYJMtxqzVeVNM1S4tBpdl09BPF8kpdC4PE8Ip63p3eJfN/SWT/0r5A0HtijBgl3kHdp2oI5
-	lNOJ69B9bIw+xfh/74+je/35VsVmvaIrfYRs6g6mPPWYHftyfVFSBvbo/e2kgja/nT+jJ8cEwqgRM
-	Hh8UHueF+vOuraxa+2PtRurboa1fQQAXfhJ4ksDufIWV+23CW1dDOcczxmARHJWUfUKNrKrsIh0rP
-	tE5EJvcPPeRqQ0bB1j1NevTrEvuI1LynQ8DqASsFraVXh5WXBXQDJE+sSwjD/4qw1mg/bC9NDfRtI
-	oKobKWGw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ku+fyGp/YTBjGS772gug0NvDgqgMuQqPxeBeDkG1f5g=; b=n9PUu/kVOMdWUgidLDOpuFBTAe
+	lb4JbTf/sd2FlUaSTOe5IC5KvSJadhrnfLdftH9O07b98SU5djr9iT0jBu8i8DH2dHFwN24jZEmT3
+	+QfUltnYbTgsoX35e7MQiAeQ5P6SzUKLUn/zOuuvF4tcbpekI8rL+tpoWN9pCc9UB5Mr5wGNaN3oY
+	DESSzpI6wyhpu7uuOvgQNiwi09f5tMb1V9w99xeBPHswNWphGlUztKYuJM6EDMgU9ykT9sUzHFiTF
+	9/YeFVIeiANDcDIBh437cQyJD58h1YjttahvquGmYr1Y38l+F987Fg36XNRv9F8zQ0xCq+9bLGUwW
+	RTrxyUag==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vyEay-00000002TGZ-1meE;
-	Thu, 05 Mar 2026 19:42:52 +0000
-Received: from mail-lf1-x130.google.com ([2a00:1450:4864:20::130])
+	id 1vyKZz-00000002rXP-3PGC;
+	Fri, 06 Mar 2026 02:06:15 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vyEat-00000002TG5-2M72
+	id 1vyKZp-00000002rWH-2Sb6
 	for kexec@lists.infradead.org;
-	Thu, 05 Mar 2026 19:42:48 +0000
-Received: by mail-lf1-x130.google.com with SMTP id 2adb3069b0e04-5a12fbbd9d2so1231093e87.3
-        for <kexec@lists.infradead.org>; Thu, 05 Mar 2026 11:42:46 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772739765; cv=none;
-        d=google.com; s=arc-20240605;
-        b=fEBoM9w0g9f2n8q3v40LKtbpcEscIz4oD1YSXPBSMgjsn+zP7StXxn5LojKtbsGh7b
-         WpCPeX1slZMZiWWnFbzd02p0m4u9PGir/H1tsciCZlQ4CotkNbum8Gh6Dz+gcN8lSoTN
-         lCkiw1RyrQkjELsfWN6WRxVBcIFik5jqxMUJwtz0nQpDU37cKYI2bf0zvlpYsJc+GIcs
-         LdKXfxqGrdnRrLvArl4Ram/hPfAcWEEF5z0Qkaasgj1oATV+StJ4AP1XR24Laee+xRjH
-         09kJtguwwPLUlmYpqMBzcjc3zD748rLc6uB8jySTeTuHBC5KiYG4s5k7Os3ys5NUbGN3
-         w7qg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=BFL2J/Icfk5z6sblaLG86L1o2xcdsDyOfso7V9JzEr4=;
-        fh=Tzs/nzTIiR1S4c9KJC8+VbqcALRtBdA2rzlzdUynyNk=;
-        b=dushu2mLATdDRV3yi1yD21SZiqXXz9gAz1RMjLN6O9E9Ms1zsfyuMOZtzSC+BBzRf8
-         1VHmrpVR4DfCFfz+mZp4+3R8sIT/+mxxTkfw+Ml6/KOyHJ0dZhMAL2Ko2Fja7aSPsJaB
-         q5e1MUnjhFoHEt3Iz8BL9BRzKbDZr5Rhzevo017HkjLtYSL8JOUNsGpjdlCuCMzT9Jcr
-         FTPpR0sewqmI467SIIz0n/hkm0n8LVFYe/3PX5nq17bgQA1OfyXd3Uk/Jpa+gasr+T+C
-         WoQuWsgGcqlhLr9EZ1HuGcTYlJBPmYNXLNXoPDUFqRHzKpM69P+4d+F8vyWiPhuI3bb3
-         fmVw==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772739765; x=1773344565; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BFL2J/Icfk5z6sblaLG86L1o2xcdsDyOfso7V9JzEr4=;
-        b=mbgGIIej30AVWWQVjvgcHFDOJF+fxaQ1+OHYZZmiYshLhQUJnZrAFSLzrKICaGJ6KA
-         xptxbYVpnsq4LuL+gGeS1+eMBgVUDq7Q9zBdbrr5EROoWllGuXNy986BPNI1GTf6EALC
-         15dEEZvMOvljhlPo8A/NbNw2Nq8JeUNssHThI1kr6xE3/Z8UEFuQ3KqlkVSuZLyRUI/3
-         7vqz5uCqa4EW9LX/4f7yQ6NwlJlcJeOOxByMeFBLezxsxcCiYu3R5woTH9HAFrDMw3zd
-         nfvKc99KBWLw9wNie+X+BS2azMLznpoO89jU5hYxuRS7Fn8D3/3/FQCWSPDN+dbdOHQ/
-         FlXg==
+	Fri, 06 Mar 2026 02:06:10 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1772762761;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ku+fyGp/YTBjGS772gug0NvDgqgMuQqPxeBeDkG1f5g=;
+	b=E508wJt0qGTzrujD0o55CRPTtYE90O1ujN5akgXx+A/FWZf+Un7ZqmIlffNkJKErelWWXx
+	GxWt9Y7GJznz78ZIDdm5Ob0PF0JUL5EXJNbmdGY+9IwqX5rXVznFiB5X9m7BjjcXXcCKzG
+	qkFjgkxZrELJUK0dOeIchURsoONh19k=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-375-BQJffWw3OCSbj_vnr1E2hw-1; Thu, 05 Mar 2026 21:05:57 -0500
+X-MC-Unique: BQJffWw3OCSbj_vnr1E2hw-1
+X-Mimecast-MFC-AGG-ID: BQJffWw3OCSbj_vnr1E2hw_1772762756
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2ae62c87973so160132185ad.1
+        for <kexec@lists.infradead.org>; Thu, 05 Mar 2026 18:05:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772739765; x=1773344565;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=BFL2J/Icfk5z6sblaLG86L1o2xcdsDyOfso7V9JzEr4=;
-        b=wlR/EGn9yCfVen51mJbP6iIsmUm7Mjc+lH8MrNaMv/vYAHNFNBSBm9brbR13+GbvWn
-         VXTm/LDkTZZPG4PIZ97dNBG/dmaYc52quAHSf9iM9e/bv7xToY+4P/nOmETaZpo+Fti5
-         fknXW0GF7Gh14btifn9/ef1tk5oyE7lvspqA0wKZvf5+eNcZPUQKcKvtzhtVbA76ydio
-         9L0nUfZMMMRsTDcOaQFXArdIqu+noguUmGC3xA9ewIepPG4+kh0juUPCgSgjw1lqKdF8
-         eZsz96FoiM89Mk/AiUwQshOaXJ10JgYomCgsbtQfn8lrEmvHJ1I2TuiFR/nnjGlZIERK
-         gWOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXdzwb3kE8OUGnCacym24EzylHiT/J9HI/3Om7qg2f6ZXXyFhjyg529zl966FdKKF4TIDhRiw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzXl9/Exv5erA5SfPmIxX3JywUOqFkmQ/GWswrEVSNtTAmYm/0o
-	XBghVm6tUMhn0TtSBroitBboOlPJGVE1s9QEawzxMaG416m0kEODCPHEJEFsdiL2gZCusigfQGC
-	XS56Gp0AdscNloZnin0n19DxIZkXqPnYsieNNMZQT
-X-Gm-Gg: ATEYQzxDQQ7B8VgR7RJZfn1KX7YDR4S+/SF5K4PmqdyzUa3YY1AgZVilfvKKYMxZe5z
-	/kquiVL2Fyqebtg4xH1MXdbDmXyAE7HIt5Pcb3MCyayY2z4iflNqrGdbpx7zIVyVG2Uxn7Bn5MH
-	9wAhId5/MkAPr10TouheZX/Hx1IPMPORrsmhh5L044wJJQRkydGMfihrDj/EFMGLeE7cj7dRw+4
-	MA2BGdkqXfSpjidU46+bx4X0q2Fbf2MzYH0tQj2TrMJ5Yo36MQTMa19aRgPE4ndG9WJQVPZgXHV
-	2W1nj5/5
-X-Received: by 2002:a05:651c:1587:b0:38a:6f5:4b54 with SMTP id
- 38308e7fff4ca-38a3c815300mr2046311fa.4.1772739764639; Thu, 05 Mar 2026
- 11:42:44 -0800 (PST)
+        d=1e100.net; s=20230601; t=1772762756; x=1773367556;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ku+fyGp/YTBjGS772gug0NvDgqgMuQqPxeBeDkG1f5g=;
+        b=aPa6xo5qFsYd6tvLRCIbDPQjOcZ+yLrHQjCw324BzVFnFHoAV0H4wD2U9yzZbhNO1+
+         d/qQsbae0NlRPneBRl5vdMqeE7nLflQDp6xITrLEuMTOi8VlVj+q14AsMfGimW6tM5H+
+         tTFEhB8DOQy25AIRX8lII6o6Ww4Cs3+kXcLA55z3kJ8w2Zyca8+S7+byK+4imiuIl+T6
+         AAGB7kduOu1r3mfIKuKEVIm56g8zRPnQlP/9Iabf1YwXeSCLcR0s5ivjNcs6mO65jT6i
+         lTuJKWw30sIUU28yzrW58DBiUYvdA4fA7oSM0Gyjl3BbuFqB92M/ouo96k/V2yiI6xYd
+         Tgmg==
+X-Forwarded-Encrypted: i=1; AJvYcCWPH+BNKjJTUNPnlrLwBOZ0T5tSNeJ1neZLfqTh2eRbluR345h8QznhMi+5YRLfVFhtEEf30A==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxLhDYFjtIt9+nPROGvJfYfFxynP5Rxn3ry9CKuHSRpFrhxTCaF
+	SAHJCRMwVQVBPO6YiQC6nTXi/j387ClWEyzPY/JpvFF9ZCj4LJhBq9WXYQb25a2yJ9+YNMZ2pm3
+	XWzzgdXsH4vnxbapKtz9qQpLaSWMsAFn2P+W4b4bFB7yKExHc+vN/F3cFGGdOdg==
+X-Gm-Gg: ATEYQzxy8561cXdVytkgtP+wTBXDbF4yTFi0I/p1C9wqLjDjKcx2QvN0K+J87L8fQdl
+	hPS4ZqhWCxLN0pCxZq9Te5v+prtDQeVjc/2t4eywF7GyDXpd0+Wb2neN2B6AlyTz1TUYR/fqhH+
+	sv+pMkPKnrrLEKCgXwXBuxdgLLeLg6D+dHBw+3cY93gJQNZ5QRcXYP1VTJCWFKzEZaFhFvQA+xx
+	/hy7upv0tiZr72+0SEpLk4ZT0TGQi4ZQx06xJ0T8P9g0tdJuhkgzze0AEbQvx6iZw9ibybaRnUR
+	x+kFw2sbr4A9XqXPq/hzOYLkhv6pYMo2V3+yLIWvKn6sMXKWQ4FXLmi7EjSEzomzQTyp7UJsu2P
+	EeGaIhFLQYEKh
+X-Received: by 2002:a17:903:19e5:b0:2ae:61bb:425c with SMTP id d9443c01a7336-2ae8242cfa9mr6322995ad.35.1772762756412;
+        Thu, 05 Mar 2026 18:05:56 -0800 (PST)
+X-Received: by 2002:a17:903:19e5:b0:2ae:61bb:425c with SMTP id d9443c01a7336-2ae8242cfa9mr6322775ad.35.1772762755920;
+        Thu, 05 Mar 2026 18:05:55 -0800 (PST)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae83f77350sm517165ad.51.2026.03.05.18.05.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2026 18:05:55 -0800 (PST)
+Date: Fri, 6 Mar 2026 10:00:12 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>, 
+	Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	stable@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crash_dump: Don't log dm-crypt key bytes in
+ read_key_from_user_keying
+Message-ID: <aaoyu2ZnZNHMVb8n@Rk>
+References: <20260227230008.858641-2-thorsten.blum@linux.dev>
+ <aaUIhtN0oUkP5ALi@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-References: <20260129212510.967611-3-dmatlack@google.com> <20260225224651.GA3711085@bhelgaas>
- <aZ-TrC8P0tLYhxXO@google.com> <20260227093233.45891424@shazbot.org>
- <CALzav=dxthSXYo13rOjY710uNbu=6UjzD-OJKm-Xt=wR7oc0mg@mail.gmail.com>
- <20260227112501.465e2a86@shazbot.org> <20260301192924.GR5933@nvidia.com>
-In-Reply-To: <20260301192924.GR5933@nvidia.com>
-From: David Matlack <dmatlack@google.com>
-Date: Thu, 5 Mar 2026 11:42:16 -0800
-X-Gm-Features: AaiRm52QizUmbxb_ZZJRNIFYAvXcIrsVMR2oGVyxQJsUboHWoi4G3a03BNBWEM8
-Message-ID: <CALzav=deyfyzGXzSGmEbjvLr8Nn9Rpeh9w9JVk0vmb9FcURYPw@mail.gmail.com>
-Subject: Re: [PATCH v2 02/22] PCI: Add API to track PCI devices preserved
- across Live Update
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <helgaas@kernel.org>, 
-	Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>, 
-	Alistair Popple <apopple@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Ankit Agrawal <ankita@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
-	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, 
-	kexec@lists.infradead.org, kvm@vger.kernel.org, 
-	Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, 
-	=?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>, 
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
-	Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
-	Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>, 
-	Zhu Yanjun <yanjun.zhu@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <aaUIhtN0oUkP5ALi@MiWiFi-R3L-srv>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 4Pfg1cqN7GS7_FMlgwANwz1sWWXNIumKskqjtTHxcQg_1772762756
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260305_114247_632588_394F0830 
-X-CRM114-Status: GOOD (  17.93  )
+X-CRM114-CacheID: sfid-20260305_180606_090132_B348D9A1 
+X-CRM114-Status: GOOD (  15.96  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -138,32 +109,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, Mar 1, 2026 at 11:29=E2=80=AFAM Jason Gunthorpe <jgg@nvidia.com> wr=
-ote:
+On Mon, Mar 02, 2026 at 11:48:22AM +0800, Baoquan He wrote:
+>On 02/28/26 at 12:00am, Thorsten Blum wrote:
+>> When debug logging is enabled, read_key_from_user_keying() logs the
+>> first 8 bytes of the key payload and partially exposes the dm-crypt key.
+>> Stop logging any key bytes.
+>>
+>> Fixes: 479e58549b0f ("crash_dump: store dm crypt keys in kdump reserved memory")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+>> ---
+>>  kernel/crash_dump_dm_crypt.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+>> index 27a144920562..5ce958d069dd 100644
+>> --- a/kernel/crash_dump_dm_crypt.c
+>> +++ b/kernel/crash_dump_dm_crypt.c
+>> @@ -168,8 +168,8 @@ static int read_key_from_user_keying(struct dm_crypt_key *dm_key)
+>>
+>>  	memcpy(dm_key->data, ukp->data, ukp->datalen);
+>>  	dm_key->key_size = ukp->datalen;
+>> -	kexec_dprintk("Get dm crypt key (size=%u) %s: %8ph\n", dm_key->key_size,
+>> -		      dm_key->key_desc, dm_key->data);
+>> +	kexec_dprintk("Get dm crypt key (size=%u) %s\n", dm_key->key_size,
 >
-> On Fri, Feb 27, 2026 at 11:25:01AM -0700, Alex Williamson wrote:
+>Make sense to me.
 >
-> > There's obviously a knee jerk reaction that moving PF drivers into
-> > userspace is a means to circumvent the GPL that was evident at LPC,
-> > even if the real reason is "in-kernel is hard".
+>The kexec_dprintk() is only for debug printing. We can remove above line
+>or change it to pr_debug() if security is worried.
 >
-> Given we already have GPL licensed kernel drivers for the PFs it
-> doesn't seem like a reasonable worry to me to fret about some cut down
-> version of a kernel driver running in userspace.
->
-> Further, let's be honest here, the people most interested in all of
-> this are doing it to support their proprietary VMMs. I'm pushing that
-> we must have at least a reference implementation in qemu before the
-> kernel parts should be merged..
+>Coiby, what do you think?
 
-Yes, this is why we built VFIO selftests with the driver framework
-[1]. We wanted to ensure Live Update support could be well tested
-upstream independent of VMM adoption and without requiring complex
-orchestration.
+I think we can assume a key can be reliably read thus no need to print
+the first 8 bytes to check it. So this patch looks good to me. And
+thanks to Thorsten for suggesting multiple improvements on
+kernel/crash_dump_dm_crypt.c!
 
-Google is also working on upstreaming Live Update support into Cloud
-Hypervisor and the kernel pieces land.
+>
+>Thanks
+>Baoquan
+>
 
-[1] https://lore.kernel.org/kvm/20250523233018.1702151-1-dmatlack@google.co=
-m/
+-- 
+Best regards,
+Coiby
+
 
