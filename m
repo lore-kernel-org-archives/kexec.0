@@ -4,116 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0D690EA8545
-	for <kexec@archiver.kernel.org>; Sun,  8 Mar 2026 21:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7415CEA8542
+	for <kexec@archiver.kernel.org>; Mon,  9 Mar 2026 03:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=EpEbjDc3LPXe8dqsZJCZ7JLX+/M0KZBYRf+V6DsMR40=; b=HOsEZH+YS+c2X3cYgZDViPHl5j
-	M7j5Y0M0HvKMK+v7ObRKU0/skGFGSrAvhHWbZ0d3pgQSjhcElrYrYCLhuwfzGKswlrk49VkgNVO78
-	hhH5IMYGj0rvNPVW9ExRcwp0hZvJoZsE5msXP0T9V3eajI/Kde6H9t/25qr0qjX4WiJS+xCPPu3Dm
-	DtSyXiygtmJDwkH72nsfA2AjAKhjwTrxxAoWImqqmCTfVchc7MGn9AH5DN4rj0EDVNPhK1hDlotBl
-	2tLghTNQ7cHrw/7HIZCsaF1FlbgkUbNhrGVM5P/cJmG2Jap2bYB3C1cfTu/ZQ2VRTmGOU9xZqJ15T
-	h7VkjUxw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=t3ndmHXGauxJDS4CGjqJ7QWuEKcJ5XQ5EkIe5CSnHwM=; b=p05AP123J9mngZr5EPe8rmRZOw
+	WB5OSTVhaqKli7iZevh5LhibeZszpUj3ExZtwgwkMoob7rHEaTDz/sQuZ7mujSHNO9GQY7f5ZM29s
+	u6tcNGT791lEEm1YaRZeOhZW0Ufn0LxQWJXicEIWjWirbacT6lG6VcxW3FHfhhS4aWvc3Jrtx0Jo0
+	0QQEhpgAQOQP7snbt4hh8iEK7AIDhGFpQ7KJMslmAOahX4RLmYmrdYxEAHSVedeDRNvb0qa3X9GGa
+	3btyZzIiA+UlkjsN37GRRRXbqjvvyq7e4D+bobKtuYTOELz0SUCxN94h5xZFXoie6QPvvDreqdHmg
+	vn40C5zQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzLgv-00000006NCr-0usO;
-	Sun, 08 Mar 2026 21:29:37 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1vzRQf-00000006bgH-2aDW;
+	Mon, 09 Mar 2026 03:37:13 +0000
+Received: from m16.mail.163.com ([117.135.210.2])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzLgp-00000006NCQ-0AY3
+	id 1vzRQb-00000006bfv-1R3K
 	for kexec@lists.infradead.org;
-	Sun, 08 Mar 2026 21:29:32 +0000
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 628FWs3Y808461;
-	Sun, 8 Mar 2026 21:29:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=EpEbjDc3LPXe8dqsZJCZ7JLX+/M0KZ
-	BYRf+V6DsMR40=; b=I9eqkDOFnbQPtTpEXW2D9xWLMxexiRK2xyasPtT4MKspvt
-	zVs9StzDKbvhjzWBHyPTo+iH1chhrtF1ryaY/gvPfuf6Rm+ZJeK6fM98jc7Q4KlK
-	2F/kueNByYrhOrQvKtrRsDRxnuvLbFjcmxcMcL6USQywoBYOzhqf8/du60eHyxKR
-	9gf/Cwwc2eZypaiD/KjejGNcj8n6fS3aqsEnp5OUV4nmbuLiHSM4hfVbHmcedktF
-	KUeRTaL6omup5rV3xiNW9qjHsClwE4/VVk5bb/V6WoAn/zFEQoK84kNN636+MGjC
-	JwymKwH9vn92WgESUT1Tg3yGcDEPIy2zpuxyhNWw==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4crcvr463y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 08 Mar 2026 21:29:17 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 628KxvVt009081;
-	Sun, 8 Mar 2026 21:29:17 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4crxqy2pme-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 08 Mar 2026 21:29:17 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 628LTDiB55640494
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 8 Mar 2026 21:29:13 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3A70F2004B;
-	Sun,  8 Mar 2026 21:29:13 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E4EB820043;
-	Sun,  8 Mar 2026 21:29:08 +0000 (GMT)
-Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.124.213.155])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Sun,  8 Mar 2026 21:29:08 +0000 (GMT)
-Date: Mon, 9 Mar 2026 02:59:05 +0530
-From: Aditya Gupta <adityag@linux.ibm.com>
-To: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: kernel test robot <lkp@intel.com>,
-        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        Sachin Sant <sachinp@linux.ibm.com>,
-        Shivang Upadhyay <shivangu@linux.ibm.com>,
-        Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-        kexec@lists.infradead.org
-Subject: Re: [PATCH] powerpc/kexec/core: use big-endian types for crash
- variables
-Message-ID: <aa3iczOcLm12Y3ln@li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com>
-References: <20251224151257.28672-1-sourabhjain@linux.ibm.com>
+	Mon, 09 Mar 2026 03:37:11 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=t3
+	ndmHXGauxJDS4CGjqJ7QWuEKcJ5XQ5EkIe5CSnHwM=; b=hoaJWPfPXNVXybqq+W
+	reo4bRfQfdtqU0ZM7nEflYp6UjOLydJN3U3ZMfc/YocFwi+m+jtenipADQxOMWFm
+	iR7af+As1v7xhqO+4+Ae/ehPzJd1DHmrgfqWlmIO/hZ0c9K3/ZPkJg5fyg/WQNEe
+	VcTbinJN1WE/U/J0EMk1IfeQI=
+Received: from ubuntu24-z.. (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wD3KbcFQK5pXpqWPQ--.7196S2;
+	Mon, 09 Mar 2026 11:35:33 +0800 (CST)
+From: ranxiaokai627@163.com
+To: graf@amazon.com,
+	akpm@linux-foundation.org,
+	rppt@kernel.org,
+	pratyush@kernel.org,
+	pasha.tatashin@soleen.com,
+	jasonmiu@google.com
+Cc: linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	ran.xiaokai@zte.com.cn,
+	ranxiaokai627@163.com
+Subject: [PATCH] kho: fix child node parsing for debugfs in/sub_fdts
+Date: Mon,  9 Mar 2026 03:35:30 +0000
+Message-ID: <20260309033530.244508-1-ranxiaokai627@163.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251224151257.28672-1-sourabhjain@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA4MDE5NSBTYWx0ZWRfX/k3e3XuZU+3K
- kAFQNCLYQXcmkpdC6sD2iT+Yw+p/d/yQLVI8jD4zB00sfnqi32yNK+/EkqYfSKWvUwNYsWTTS4U
- mScjpOBxreqdyzWuLZw9uVh1k3IF1Zsxe7lEucWrkrLUaWYjrC/FMQGVSSOClvDz7AwjeYEI/yQ
- 36cSyIFlYcEpJCFpfCo+NqPhmsIALvantqlaVujOiYB1rW2MbWZS9pogVWFfwm2vhswQCfDAnue
- TWDS+O+ZZI0dS+GKy4/2m3OsvXDWC0+ohp6Lu6CikHryFaNPqEsqOLpAbcfIylCC+KVkDA9Ar7w
- 3II3ju0sFqCacia24w4qRazkyXJiJC6HvOihqdFsPiqccEYjHOBVAATTXkSnZf+eNbhCtMgr5Jo
- BwJlqMrkpn0kUgzYquwHxMQLXbpIsWrn46nINVKVuTbl+UO1BkkAfC/uI7fWjXL/oHb6peh4CPq
- Xi5Cfsd1w0UhyCbJTyA==
-X-Proofpoint-GUID: yhiZYhQiGnOrO4p-UGCj5pWqDrHpQDTT
-X-Proofpoint-ORIG-GUID: Y-uzDVmMSGGAIbwm3_3UPe1NSofI-dWd
-X-Authority-Analysis: v=2.4 cv=QoFTHFyd c=1 sm=1 tr=0 ts=69adea2e cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=kj9zAlcOel0A:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8
- a=HzmoW7uitHk6_fZNSsMA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-08_06,2026-03-06_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 priorityscore=1501 phishscore=0
- lowpriorityscore=0 adultscore=0 clxscore=1011 malwarescore=0 suspectscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2602130000
- definitions=main-2603080195
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _____wD3KbcFQK5pXpqWPQ--.7196S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ZF4ftw43Gw1fKF4xCr4fAFb_yoW8WF18p3
+	WkCF1DJw4UAw1YvFyFk3WFy34fX3ykXw15ta4v9343Ar13trn3Xa95uFW3KryxZ395KF15
+	KF1Yqa4FvF1UWFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pinjjfUUUUU=
+X-Originating-IP: [117.176.242.62]
+X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/xtbCxgUXY2muQAUN3gAA3m
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260308_142931_622242_7F090644 
-X-CRM114-Status: GOOD (  16.23  )
+X-CRM114-CacheID: sfid-20260308_203710_762738_C443BCA6 
+X-CRM114-Status: UNSURE (   9.94  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -128,42 +78,45 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 25/12/24 08:42PM, Sourabh Jain wrote:
-> Use explicit word-sized big-endian types for kexec and crash related
-> variables. This makes the endianness unambiguous and avoids type
-> mismatches that trigger sparse warnings.
-> 
-> The change addresses sparse warnings like below (seen on both 32-bit
-> and 64-bit builds):
-> 
-> <...snip...>
-> ...
->
->  /* Values we need to export to the second kernel via the device tree. */
-> -static phys_addr_t crashk_base;
-> -static phys_addr_t crashk_size;
-> -static unsigned long long mem_limit;
-> +static __be_word crashk_base;
-> +static __be_word crashk_size;
-> +static __be_word mem_limit;
-> ...
->  
->  static struct property memory_limit_prop = {
->  	.name = "linux,memory-limit",
-> -	.length = sizeof(unsigned long long),
-> +	.length = sizeof(__be_word),
->  	.value = &mem_limit,
+From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
 
-'mem_limit' has slight change here. it used to be 64bit always,
-but now on ppc32 it will be 32bit
+Commit e0c1731f5d57 ("kho: adopt radix tree for preserved memory tracking")
+changed KHO_FDT_SUB_TREE_PROP_NAME from "fdt" to "preserved-data". However,
+kho debugfs code still hard-coded the "fdt" string when parsing the
+device tree, causing the debugfs node /debugfs/kho/in/sub_fdts/
+fail to parse child nodes correctly.
 
-I see only one usage of this in arch/powerpc/kernel/prom.c, and don't
-see any issue with usage due to the 32-bit/64-bit memory_limit
+Fix this by including the header file and using KHO_FDT_SUB_TREE_PROP_NAME
+instead of the hard-coded string.
 
-For the patch:
-Reviewed-by: Aditya Gupta <adityaglinux.ibm.com>
+Fixes: e0c1731f5d57 ("kho: adopt radix tree for preserved memory tracking")
+Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+---
+ kernel/liveupdate/kexec_handover_debugfs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks,
-- Aditya G
+diff --git a/kernel/liveupdate/kexec_handover_debugfs.c b/kernel/liveupdate/kexec_handover_debugfs.c
+index 3f395fbd978f..acf368222682 100644
+--- a/kernel/liveupdate/kexec_handover_debugfs.c
++++ b/kernel/liveupdate/kexec_handover_debugfs.c
+@@ -13,6 +13,7 @@
+ #include <linux/io.h>
+ #include <linux/libfdt.h>
+ #include <linux/mm.h>
++#include <linux/kho/abi/kexec_handover.h>
+ #include "kexec_handover_internal.h"
+ 
+ static struct dentry *debugfs_root;
+@@ -121,7 +122,7 @@ __init void kho_in_debugfs_init(struct kho_debugfs *dbg, const void *fdt)
+ 		const char *name = fdt_get_name(fdt, child, NULL);
+ 		const u64 *fdt_phys;
+ 
+-		fdt_phys = fdt_getprop(fdt, child, "fdt", &len);
++		fdt_phys = fdt_getprop(fdt, child, KHO_FDT_SUB_TREE_PROP_NAME, &len);
+ 		if (!fdt_phys)
+ 			continue;
+ 		if (len != sizeof(*fdt_phys)) {
+-- 
+2.25.1
 
 
