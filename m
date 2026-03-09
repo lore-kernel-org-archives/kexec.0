@@ -4,58 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8937BEF36FB
-	for <kexec@archiver.kernel.org>; Mon,  9 Mar 2026 08:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 244F7EF3716
+	for <kexec@archiver.kernel.org>; Mon,  9 Mar 2026 08:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Ztkm0hITzf6ZbNoQAJDZGB4V8cwJn/m51Rb+EUtCung=; b=jCXDKDfI8YBcEQepliy1ITpfI4
-	5QbtPXMJUPVc1Tw9wRfJH0dqzVPTfg2wVOwdT6KPuUOmKjuwC+iFmwdRGYsVBy6o5nm5MRXrzEu7E
-	pATNp2MxOIYIX7IHsLP00NCwi46Qyk/cK6aJ8Kwy9FItVf6FkJiJanuJct/Oh4UQTgOkTgsR9iHAo
-	dZfdoy+fpO8fngbeKQFxBahtWJLDLQ301JoM9ZHoTDxZ3FisBzvumUgySJRI9J4r6SowpqfsKaaQN
-	FmVkjpiIvgiEQ/2RORUTr4J3BhM4pHFixWn5G8i6GxP4PHn/AWDjIRmetSzBvbROyB2D3zpVDXfd6
-	a3597hHw==;
+	bh=P1lIZx7jxksyX/dRkyXna8WJ9zLTRrgGdsrdZAvKcRI=; b=hOzC/PHyTI2e8GwFnEUUYvC/Jk
+	oxqf5fy/Hc3WIeJ7V43+rCHq97SNgUGYfhqEstv2NvNsnmwqsX+N56tiem1iORgDc+RAn5r9yMgqK
+	O2EyrV3lHKyeQQ98SnTdjZXl2lcXEuj4rAPOjgTeyijjg7ADx/F8tJOycBN9sJ6/cBV9GpM/vn+Vf
+	u6xljKKFruwnZlEsZfJJC3OSLbp+mJFygU961NMTLDxw2BvP+mRagi72/ZQDeYJ2CsM8CtDm+83mN
+	umB+YGwqhzUXJAEa3RF4Y/DCBHLa01jlAJveFNg2hQayjSVWgrph4VkRl5aurdpVG24IFZkv+4dY6
+	yN3RVy1w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzVhA-00000006rpb-3zTD;
-	Mon, 09 Mar 2026 08:10:32 +0000
+	id 1vzVtE-00000006sqG-2s5J;
+	Mon, 09 Mar 2026 08:23:00 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzVhA-00000006rpO-0DmG
+	id 1vzVtD-00000006sqA-1120
 	for kexec@lists.infradead.org;
-	Mon, 09 Mar 2026 08:10:32 +0000
+	Mon, 09 Mar 2026 08:22:59 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 7C688600AD;
-	Mon,  9 Mar 2026 08:10:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22A51C4CEF7;
-	Mon,  9 Mar 2026 08:10:27 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 18637600CB;
+	Mon,  9 Mar 2026 08:22:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B623C4CEF7;
+	Mon,  9 Mar 2026 08:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773043831;
-	bh=fY/+n+RAdnR1c6vjZfs9L8FV0Khh963E8lpMoY0hV2Y=;
+	s=k20201202; t=1773044577;
+	bh=V/B5tPmLCgAxbN8UIEDAM4TeuWOKraxmkgH51tGu4uw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XnM2qHqasT/NaPrciH8kkYw8JAu8qcnplu9+opyxx2YjkC5c2b+JSNINNH+zI/gb3
-	 6xU3RsHZ1/Kif26dvpJLN5dkEUwQkn+IcwiYy/n6+fK7spU/LYjgaUm3MyTQhSLGEd
-	 86mUCx87RUEvBJDjZqBh+xo6mjmsl7qw89ZWMRfFQahe3XMPjMTEYnSrOWEJTOM4o2
-	 s7GIpPPjaBJBhKaSWwErmqMxFzXD7x3nahE7k2tLK9fY88ERj6G+iGzl6VOgF8gUY6
-	 Pj2La1JRQJhZGHbDNgfePpTQbByBb/K9XeoAVElxeRl9V6GiDiDblJBwJtr6/u9n9B
-	 JTZHv6u284yVQ==
-Date: Mon, 9 Mar 2026 10:10:24 +0200
+	b=O3b92q7bgFaOMmV3eGLdzebrY0/Sr+0bh6qjjVKefF860DvD1c1diA+xcCEQSmiek
+	 bmvIjE53jg20sq2gBg+7p/LuokK09L0Giolq0uT/UOHHgc9MJtjIB3cMCqwPMGxlQ1
+	 kX5mGd8TNaqCBYpqvuDW+pBSdtOiCO3aIlJ3gRxeTVW4PIsDnAMKzsytp0APqz3sWu
+	 EKAYn6dGohnRiYx5K+hJUOYxUnxrL/rrDEhMnaLcIh50LQNGcc5aAZAKeUifPAWf5F
+	 3ShdhuDfGkK99AG/vwbd1ulwOU2eX/UHbTTTevAfbcR3baUHGm7hpB+EXgW4vYHawr
+	 pRWS78C/KKv8w==
+Date: Mon, 9 Mar 2026 10:22:50 +0200
 From: Mike Rapoport <rppt@kernel.org>
-To: ranxiaokai627@163.com
-Cc: graf@amazon.com, akpm@linux-foundation.org, pratyush@kernel.org,
-	pasha.tatashin@soleen.com, jasonmiu@google.com,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	ran.xiaokai@zte.com.cn
-Subject: Re: [PATCH] kho: fix child node parsing for debugfs in/sub_fdts
-Message-ID: <aa6AcCJJZ-NN0ea_@kernel.org>
-References: <20260309033530.244508-1-ranxiaokai627@163.com>
+To: Breno Leitao <leitao@debian.org>
+Cc: Alexander Graf <graf@amazon.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, linux-mm@kvack.org,
+	usamaarif642@gmail.com, SeongJae Park <sj@kernel.org>,
+	kernel-team@meta.com
+Subject: Re: [PATCH v7 4/6] kho: fix kho_in_debugfs_init() to handle non-FDT
+ blobs
+Message-ID: <aa6DWto0xY5EPyxK@kernel.org>
+References: <20260306-kho-v7-0-404d14c188bb@debian.org>
+ <20260306-kho-v7-4-404d14c188bb@debian.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260309033530.244508-1-ranxiaokai627@163.com>
+In-Reply-To: <20260306-kho-v7-4-404d14c188bb@debian.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,29 +74,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Mar 09, 2026 at 03:35:30AM +0000, ranxiaokai627@163.com wrote:
-> From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+On Fri, Mar 06, 2026 at 04:39:23AM -0800, Breno Leitao wrote:
+> kho_in_debugfs_init() has two problems when displaying incoming
+> sub-blobs in debugfs:
 > 
-> Commit e0c1731f5d57 ("kho: adopt radix tree for preserved memory tracking")
-> changed KHO_FDT_SUB_TREE_PROP_NAME from "fdt" to "preserved-data". However,
-> kho debugfs code still hard-coded the "fdt" string when parsing the
-> device tree, causing the debugfs node /debugfs/kho/in/sub_fdts/
-> fail to parse child nodes correctly.
+> 1. It uses the hardcoded property name "fdt" instead of
+>    KHO_FDT_SUB_TREE_PROP_NAME ("preserved-data"), so it never finds
+>    subtrees stored by the current kho_add_subtree().
 > 
-> Fix this by including the header file and using KHO_FDT_SUB_TREE_PROP_NAME
-> instead of the hard-coded string.
+> 2. It calls fdt_totalsize() to determine blob sizes, which assumes
+>    all blobs are FDTs. This breaks for non-FDT blobs like struct
+>    kho_kexec_metadata.
 > 
-> Fixes: e0c1731f5d57 ("kho: adopt radix tree for preserved memory tracking")
-> Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
-
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-
+> Fix both issues by using KHO_FDT_SUB_TREE_PROP_NAME to find subtrees
+> and reading the "blob-size" property from the FDT (persisted by
+> kho_add_subtree()) instead of calling fdt_totalsize().
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 > ---
->  kernel/liveupdate/kexec_handover_debugfs.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  kernel/liveupdate/kexec_handover_debugfs.c | 38 ++++++++++++++++++++----------
+>  1 file changed, 26 insertions(+), 12 deletions(-)
 > 
 > diff --git a/kernel/liveupdate/kexec_handover_debugfs.c b/kernel/liveupdate/kexec_handover_debugfs.c
-> index 3f395fbd978f..acf368222682 100644
+> index 7a100f2bf3947..fc2baa8b104fd 100644
 > --- a/kernel/liveupdate/kexec_handover_debugfs.c
 > +++ b/kernel/liveupdate/kexec_handover_debugfs.c
 > @@ -13,6 +13,7 @@
@@ -103,17 +107,63 @@ Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 >  #include "kexec_handover_internal.h"
 >  
 >  static struct dentry *debugfs_root;
-> @@ -121,7 +122,7 @@ __init void kho_in_debugfs_init(struct kho_debugfs *dbg, const void *fdt)
+> @@ -121,23 +122,36 @@ __init void kho_in_debugfs_init(struct kho_debugfs *dbg, const void *fdt)
+>  	fdt_for_each_subnode(child, fdt, 0) {
+>  		int len = 0;
 >  		const char *name = fdt_get_name(fdt, child, NULL);
->  		const u64 *fdt_phys;
->  
+> -		const u64 *fdt_phys;
+> -		void *sub_fdt;
+> -
 > -		fdt_phys = fdt_getprop(fdt, child, "fdt", &len);
-> +		fdt_phys = fdt_getprop(fdt, child, KHO_FDT_SUB_TREE_PROP_NAME, &len);
->  		if (!fdt_phys)
+> -		if (!fdt_phys)
+> +		const u64 *blob_phys;
+> +		const u64 *blob_size;
+> +		void *blob;
+> +		size_t size;
+
+Do we really need two size variables? Can't we just have u64 *size and pass
+*size to __kho_debugfs_blob_add()?
+
+> +
+> +		blob_phys = fdt_getprop(fdt, child,
+> +					KHO_FDT_SUB_TREE_PROP_NAME, &len);
+> +		if (!blob_phys)
 >  			continue;
->  		if (len != sizeof(*fdt_phys)) {
+> -		if (len != sizeof(*fdt_phys)) {
+> -			pr_warn("node %s prop fdt has invalid length: %d\n",
+> -				name, len);
+> +		if (len != sizeof(*blob_phys)) {
+> +			pr_warn("node %s prop %s has invalid length: %d\n",
+> +				name, KHO_FDT_SUB_TREE_PROP_NAME, len);
+>  			continue;
+>  		}
+> -		sub_fdt = phys_to_virt(*fdt_phys);
+> +
+> +		blob_size = fdt_getprop(fdt, child,
+> +					KHO_FDT_SUB_TREE_SIZE_PROP_NAME, &len);
+> +		if (!blob_size || len != sizeof(*blob_size)) {
+> +			pr_warn("node %s missing or invalid %s property\n",
+> +				name, KHO_FDT_SUB_TREE_SIZE_PROP_NAME);
+> +			continue;
+> +		}
+> +		size = (size_t)*blob_size;
+> +
+> +		blob = phys_to_virt(*blob_phys);
+>  		err = __kho_debugfs_blob_add(&dbg->fdt_list, sub_fdt_dir, name,
+> -					     sub_fdt, fdt_totalsize(sub_fdt));
+> +					     blob, size);
+>  		if (err) {
+> -			pr_warn("failed to add fdt %s to debugfs: %pe\n", name,
+> -				ERR_PTR(err));
+> +			pr_warn("failed to add blob %s to debugfs: %pe\n",
+> +				name, ERR_PTR(err));
+>  			continue;
+>  		}
+>  	}
+> 
 > -- 
-> 2.25.1
+> 2.47.3
+> 
 > 
 
 -- 
