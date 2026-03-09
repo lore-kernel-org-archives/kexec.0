@@ -4,66 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7415CEA8542
-	for <kexec@archiver.kernel.org>; Mon,  9 Mar 2026 03:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9D1ADEF36F8
+	for <kexec@archiver.kernel.org>; Mon,  9 Mar 2026 07:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=t3ndmHXGauxJDS4CGjqJ7QWuEKcJ5XQ5EkIe5CSnHwM=; b=p05AP123J9mngZr5EPe8rmRZOw
-	WB5OSTVhaqKli7iZevh5LhibeZszpUj3ExZtwgwkMoob7rHEaTDz/sQuZ7mujSHNO9GQY7f5ZM29s
-	u6tcNGT791lEEm1YaRZeOhZW0Ufn0LxQWJXicEIWjWirbacT6lG6VcxW3FHfhhS4aWvc3Jrtx0Jo0
-	0QQEhpgAQOQP7snbt4hh8iEK7AIDhGFpQ7KJMslmAOahX4RLmYmrdYxEAHSVedeDRNvb0qa3X9GGa
-	3btyZzIiA+UlkjsN37GRRRXbqjvvyq7e4D+bobKtuYTOELz0SUCxN94h5xZFXoie6QPvvDreqdHmg
-	vn40C5zQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=lKOGQSccnOLIOvszIRzBg7Fo7IwCwzoMUoz3ymuPxCY=; b=CtlwTGQ6ferqcsA4QSlM1numoN
+	u2TL5v20thEsSmTfeWJ44DuISsUVJBG8bA8IIdIqVb2OQDP/yz2FODNAtxqwkslbnSvzgnbAKjoei
+	nRxqUgOj0d/lXyR6Te3bKyf+BArWxXOsd4sQ2Xljk6/K/+m1qlEHGb+ymD5mm2IBLgJa/IW1EvWkm
+	1oiIzybovqlXVTL129e+cewYC6U3p8QoTjQcXFNEMdVPZVWRSmSVnvfRqn7AvIYB0oAhLSsnVcYcR
+	/d33t4yxL+pnilo1IPb2jVIe4kOiMAfApwLB2bAbzH2oRVEdbHKFdQqCPGFi8dhfW+Ud6UM6OCrLi
+	qrCMeg+A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzRQf-00000006bgH-2aDW;
-	Mon, 09 Mar 2026 03:37:13 +0000
-Received: from m16.mail.163.com ([117.135.210.2])
+	id 1vzVVG-00000006qra-0wEJ;
+	Mon, 09 Mar 2026 07:58:14 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzRQb-00000006bfv-1R3K
+	id 1vzVVE-00000006qr8-0Vsn
 	for kexec@lists.infradead.org;
-	Mon, 09 Mar 2026 03:37:11 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=t3
-	ndmHXGauxJDS4CGjqJ7QWuEKcJ5XQ5EkIe5CSnHwM=; b=hoaJWPfPXNVXybqq+W
-	reo4bRfQfdtqU0ZM7nEflYp6UjOLydJN3U3ZMfc/YocFwi+m+jtenipADQxOMWFm
-	iR7af+As1v7xhqO+4+Ae/ehPzJd1DHmrgfqWlmIO/hZ0c9K3/ZPkJg5fyg/WQNEe
-	VcTbinJN1WE/U/J0EMk1IfeQI=
-Received: from ubuntu24-z.. (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wD3KbcFQK5pXpqWPQ--.7196S2;
-	Mon, 09 Mar 2026 11:35:33 +0800 (CST)
-From: ranxiaokai627@163.com
-To: graf@amazon.com,
-	akpm@linux-foundation.org,
-	rppt@kernel.org,
-	pratyush@kernel.org,
-	pasha.tatashin@soleen.com,
-	jasonmiu@google.com
-Cc: linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	ran.xiaokai@zte.com.cn,
-	ranxiaokai627@163.com
-Subject: [PATCH] kho: fix child node parsing for debugfs in/sub_fdts
-Date: Mon,  9 Mar 2026 03:35:30 +0000
-Message-ID: <20260309033530.244508-1-ranxiaokai627@163.com>
-X-Mailer: git-send-email 2.43.0
+	Mon, 09 Mar 2026 07:58:13 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id BC441429CD;
+	Mon,  9 Mar 2026 07:58:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC603C4CEF7;
+	Mon,  9 Mar 2026 07:58:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773043090;
+	bh=hUC6isBD58pUbu3zVQBoLKKC8yyRHkrLeQRdXS+SnP0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sClTN7LRV3iwwY9qz66NghmzMC8SpFSJbToxuVy4BVF5uIomByFWf3jOe0N052pJb
+	 uGYnS+e2Nl7h6qc/xPnGiuWuT6Lx2UqprA0i4ePdVTT0EqQKE/XFW4qBzKuwGFG/PR
+	 EMIjY7nVuZ+omD39r4Fcjg796/5SL6xhmpQxmrNDwi71hiDNxioYYIcNHhzvwRLIkP
+	 GQgPKYtajX8JfO3HNU2AdGOb1aV6pNNz0z/7ASY1/kllgQEU/XBIqqsedf7Tux28uE
+	 LwbmzHcnOak0ZNfG+o/1MA//Vl9PJZZzXyauDhQHAqkLr884ErpdVNyyU4yxM/XU9N
+	 XHRftrpNAG3nQ==
+Date: Mon, 9 Mar 2026 09:58:02 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Alexander Graf <graf@amazon.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, linux-mm@kvack.org,
+	usamaarif642@gmail.com, SeongJae Park <sj@kernel.org>,
+	kernel-team@meta.com
+Subject: Re: [PATCH v7 2/6] kho: rename fdt parameter to blob in
+ kho_add/remove_subtree()
+Message-ID: <aa59irg2P-sejKO5@kernel.org>
+References: <20260306-kho-v7-0-404d14c188bb@debian.org>
+ <20260306-kho-v7-2-404d14c188bb@debian.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _____wD3KbcFQK5pXpqWPQ--.7196S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ZF4ftw43Gw1fKF4xCr4fAFb_yoW8WF18p3
-	WkCF1DJw4UAw1YvFyFk3WFy34fX3ykXw15ta4v9343Ar13trn3Xa95uFW3KryxZ395KF15
-	KF1Yqa4FvF1UWFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pinjjfUUUUU=
-X-Originating-IP: [117.176.242.62]
-X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/xtbCxgUXY2muQAUN3gAA3m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260306-kho-v7-2-404d14c188bb@debian.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260308_203710_762738_C443BCA6 
-X-CRM114-Status: UNSURE (   9.94  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260309_005812_290905_DD89714C 
+X-CRM114-Status: GOOD (  28.76  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,45 +77,250 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+On Fri, Mar 06, 2026 at 04:39:21AM -0800, Breno Leitao wrote:
+> Since kho_add_subtree() now accepts arbitrary data blobs (not just
+> FDTs), rename the parameter from 'fdt' to 'blob' to better reflect
+> its purpose. Apply the same rename to kho_remove_subtree() for
+> consistency.
+> 
+> Also rename kho_debugfs_fdt_add() and kho_debugfs_fdt_remove() to
+> kho_debugfs_blob_add() and kho_debugfs_blob_remove() respectively,
+> with the same parameter rename from 'fdt' to 'blob'.
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-Commit e0c1731f5d57 ("kho: adopt radix tree for preserved memory tracking")
-changed KHO_FDT_SUB_TREE_PROP_NAME from "fdt" to "preserved-data". However,
-kho debugfs code still hard-coded the "fdt" string when parsing the
-device tree, causing the debugfs node /debugfs/kho/in/sub_fdts/
-fail to parse child nodes correctly.
+Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-Fix this by including the header file and using KHO_FDT_SUB_TREE_PROP_NAME
-instead of the hard-coded string.
+> ---
+>  include/linux/kexec_handover.h              |  8 ++++----
+>  kernel/liveupdate/kexec_handover.c          | 25 +++++++++++++------------
+>  kernel/liveupdate/kexec_handover_debugfs.c  | 25 +++++++++++++------------
+>  kernel/liveupdate/kexec_handover_internal.h | 16 ++++++++--------
+>  4 files changed, 38 insertions(+), 36 deletions(-)
+> 
+> diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
+> index abb1d324f42d0..0666cf298c7f4 100644
+> --- a/include/linux/kexec_handover.h
+> +++ b/include/linux/kexec_handover.h
+> @@ -32,8 +32,8 @@ void kho_restore_free(void *mem);
+>  struct folio *kho_restore_folio(phys_addr_t phys);
+>  struct page *kho_restore_pages(phys_addr_t phys, unsigned long nr_pages);
+>  void *kho_restore_vmalloc(const struct kho_vmalloc *preservation);
+> -int kho_add_subtree(const char *name, void *fdt, size_t size);
+> -void kho_remove_subtree(void *fdt);
+> +int kho_add_subtree(const char *name, void *blob, size_t size);
+> +void kho_remove_subtree(void *blob);
+>  int kho_retrieve_subtree(const char *name, phys_addr_t *phys);
+>  
+>  void kho_memory_init(void);
+> @@ -97,12 +97,12 @@ static inline void *kho_restore_vmalloc(const struct kho_vmalloc *preservation)
+>  	return NULL;
+>  }
+>  
+> -static inline int kho_add_subtree(const char *name, void *fdt, size_t size)
+> +static inline int kho_add_subtree(const char *name, void *blob, size_t size)
+>  {
+>  	return -EOPNOTSUPP;
+>  }
+>  
+> -static inline void kho_remove_subtree(void *fdt) { }
+> +static inline void kho_remove_subtree(void *blob) { }
+>  
+>  static inline int kho_retrieve_subtree(const char *name, phys_addr_t *phys)
+>  {
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> index 55bdc5d2d1929..ebaf3104c36ab 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
+> @@ -749,13 +749,13 @@ static void __init kho_reserve_scratch(void)
+>  }
+>  
+>  /**
+> - * kho_add_subtree - record the physical address of a sub FDT in KHO root tree.
+> + * kho_add_subtree - record the physical address of a sub blob in KHO root tree.
+>   * @name: name of the sub tree.
+> - * @fdt: the sub tree blob.
+> + * @blob: the sub tree blob.
+>   * @size: size of the blob in bytes.
+>   *
+>   * Creates a new child node named @name in KHO root FDT and records
+> - * the physical address of @fdt. The pages of @fdt must also be preserved
+> + * the physical address of @blob. The pages of @blob must also be preserved
+>   * by KHO for the new kernel to retrieve it after kexec.
+>   *
+>   * A debugfs blob entry is also created at
+> @@ -764,9 +764,9 @@ static void __init kho_reserve_scratch(void)
+>   *
+>   * Return: 0 on success, error code on failure
+>   */
+> -int kho_add_subtree(const char *name, void *fdt, size_t size)
+> +int kho_add_subtree(const char *name, void *blob, size_t size)
+>  {
+> -	phys_addr_t phys = virt_to_phys(fdt);
+> +	phys_addr_t phys = virt_to_phys(blob);
+>  	void *root_fdt = kho_out.fdt;
+>  	int err = -ENOMEM;
+>  	int off, fdt_err;
+> @@ -789,7 +789,8 @@ int kho_add_subtree(const char *name, void *fdt, size_t size)
+>  	if (err < 0)
+>  		goto out_pack;
+>  
+> -	WARN_ON_ONCE(kho_debugfs_fdt_add(&kho_out.dbg, name, fdt, size, false));
+> +	WARN_ON_ONCE(kho_debugfs_blob_add(&kho_out.dbg, name, blob,
+> +					  size, false));
+>  
+>  out_pack:
+>  	fdt_pack(root_fdt);
+> @@ -798,9 +799,9 @@ int kho_add_subtree(const char *name, void *fdt, size_t size)
+>  }
+>  EXPORT_SYMBOL_GPL(kho_add_subtree);
+>  
+> -void kho_remove_subtree(void *fdt)
+> +void kho_remove_subtree(void *blob)
+>  {
+> -	phys_addr_t target_phys = virt_to_phys(fdt);
+> +	phys_addr_t target_phys = virt_to_phys(blob);
+>  	void *root_fdt = kho_out.fdt;
+>  	int off;
+>  	int err;
+> @@ -822,7 +823,7 @@ void kho_remove_subtree(void *fdt)
+>  
+>  		if ((phys_addr_t)*val == target_phys) {
+>  			fdt_del_node(root_fdt, off);
+> -			kho_debugfs_fdt_remove(&kho_out.dbg, fdt);
+> +			kho_debugfs_blob_remove(&kho_out.dbg, blob);
+>  			break;
+>  		}
+>  	}
+> @@ -1452,9 +1453,9 @@ static __init int kho_init(void)
+>  		return 0;
+>  	}
+>  
+> -	WARN_ON_ONCE(kho_debugfs_fdt_add(&kho_out.dbg, "fdt",
+> -					 kho_out.fdt,
+> -					 fdt_totalsize(kho_out.fdt), true));
+> +	WARN_ON_ONCE(kho_debugfs_blob_add(&kho_out.dbg, "fdt",
+> +					  kho_out.fdt,
+> +					  fdt_totalsize(kho_out.fdt), true));
+>  
+>  	return 0;
+>  
+> diff --git a/kernel/liveupdate/kexec_handover_debugfs.c b/kernel/liveupdate/kexec_handover_debugfs.c
+> index b5a1e09ca8f14..7a100f2bf3947 100644
+> --- a/kernel/liveupdate/kexec_handover_debugfs.c
+> +++ b/kernel/liveupdate/kexec_handover_debugfs.c
+> @@ -23,8 +23,9 @@ struct fdt_debugfs {
+>  	struct dentry *file;
+>  };
+>  
+> -static int __kho_debugfs_fdt_add(struct list_head *list, struct dentry *dir,
+> -				 const char *name, const void *fdt, size_t size)
+> +static int __kho_debugfs_blob_add(struct list_head *list, struct dentry *dir,
+> +				  const char *name, const void *blob,
+> +				  size_t size)
+>  {
+>  	struct fdt_debugfs *f;
+>  	struct dentry *file;
+> @@ -33,7 +34,7 @@ static int __kho_debugfs_fdt_add(struct list_head *list, struct dentry *dir,
+>  	if (!f)
+>  		return -ENOMEM;
+>  
+> -	f->wrapper.data = (void *)fdt;
+> +	f->wrapper.data = (void *)blob;
+>  	f->wrapper.size = size;
+>  
+>  	file = debugfs_create_blob(name, 0400, dir, &f->wrapper);
+> @@ -48,8 +49,8 @@ static int __kho_debugfs_fdt_add(struct list_head *list, struct dentry *dir,
+>  	return 0;
+>  }
+>  
+> -int kho_debugfs_fdt_add(struct kho_debugfs *dbg, const char *name,
+> -			const void *fdt, size_t size, bool root)
+> +int kho_debugfs_blob_add(struct kho_debugfs *dbg, const char *name,
+> +			 const void *blob, size_t size, bool root)
+>  {
+>  	struct dentry *dir;
+>  
+> @@ -58,15 +59,15 @@ int kho_debugfs_fdt_add(struct kho_debugfs *dbg, const char *name,
+>  	else
+>  		dir = dbg->sub_fdt_dir;
+>  
+> -	return __kho_debugfs_fdt_add(&dbg->fdt_list, dir, name, fdt, size);
+> +	return __kho_debugfs_blob_add(&dbg->fdt_list, dir, name, blob, size);
+>  }
+>  
+> -void kho_debugfs_fdt_remove(struct kho_debugfs *dbg, void *fdt)
+> +void kho_debugfs_blob_remove(struct kho_debugfs *dbg, void *blob)
+>  {
+>  	struct fdt_debugfs *ff;
+>  
+>  	list_for_each_entry(ff, &dbg->fdt_list, list) {
+> -		if (ff->wrapper.data == fdt) {
+> +		if (ff->wrapper.data == blob) {
+>  			debugfs_remove(ff->file);
+>  			list_del(&ff->list);
+>  			kfree(ff);
+> @@ -112,8 +113,8 @@ __init void kho_in_debugfs_init(struct kho_debugfs *dbg, const void *fdt)
+>  		goto err_rmdir;
+>  	}
+>  
+> -	err = __kho_debugfs_fdt_add(&dbg->fdt_list, dir, "fdt", fdt,
+> -				    fdt_totalsize(fdt));
+> +	err = __kho_debugfs_blob_add(&dbg->fdt_list, dir, "fdt", fdt,
+> +				     fdt_totalsize(fdt));
+>  	if (err)
+>  		goto err_rmdir;
+>  
+> @@ -132,8 +133,8 @@ __init void kho_in_debugfs_init(struct kho_debugfs *dbg, const void *fdt)
+>  			continue;
+>  		}
+>  		sub_fdt = phys_to_virt(*fdt_phys);
+> -		err = __kho_debugfs_fdt_add(&dbg->fdt_list, sub_fdt_dir, name,
+> -					    sub_fdt, fdt_totalsize(sub_fdt));
+> +		err = __kho_debugfs_blob_add(&dbg->fdt_list, sub_fdt_dir, name,
+> +					     sub_fdt, fdt_totalsize(sub_fdt));
+>  		if (err) {
+>  			pr_warn("failed to add fdt %s to debugfs: %pe\n", name,
+>  				ERR_PTR(err));
+> diff --git a/kernel/liveupdate/kexec_handover_internal.h b/kernel/liveupdate/kexec_handover_internal.h
+> index 2a28cb8db9b0a..0399ff1077750 100644
+> --- a/kernel/liveupdate/kexec_handover_internal.h
+> +++ b/kernel/liveupdate/kexec_handover_internal.h
+> @@ -26,19 +26,19 @@ extern unsigned int kho_scratch_cnt;
+>  int kho_debugfs_init(void);
+>  void kho_in_debugfs_init(struct kho_debugfs *dbg, const void *fdt);
+>  int kho_out_debugfs_init(struct kho_debugfs *dbg);
+> -int kho_debugfs_fdt_add(struct kho_debugfs *dbg, const char *name,
+> -			const void *fdt, size_t size, bool root);
+> -void kho_debugfs_fdt_remove(struct kho_debugfs *dbg, void *fdt);
+> +int kho_debugfs_blob_add(struct kho_debugfs *dbg, const char *name,
+> +			 const void *blob, size_t size, bool root);
+> +void kho_debugfs_blob_remove(struct kho_debugfs *dbg, void *blob);
+>  #else
+>  static inline int kho_debugfs_init(void) { return 0; }
+>  static inline void kho_in_debugfs_init(struct kho_debugfs *dbg,
+>  				       const void *fdt) { }
+>  static inline int kho_out_debugfs_init(struct kho_debugfs *dbg) { return 0; }
+> -static inline int kho_debugfs_fdt_add(struct kho_debugfs *dbg, const char *name,
+> -				      const void *fdt, size_t size,
+> -				      bool root) { return 0; }
+> -static inline void kho_debugfs_fdt_remove(struct kho_debugfs *dbg,
+> -					  void *fdt) { }
+> +static inline int kho_debugfs_blob_add(struct kho_debugfs *dbg,
+> +				       const char *name, const void *blob,
+> +				       size_t size, bool root) { return 0; }
+> +static inline void kho_debugfs_blob_remove(struct kho_debugfs *dbg,
+> +					   void *blob) { }
+>  #endif /* CONFIG_KEXEC_HANDOVER_DEBUGFS */
+>  
+>  #ifdef CONFIG_KEXEC_HANDOVER_DEBUG
+> 
+> -- 
+> 2.47.3
+> 
+> 
 
-Fixes: e0c1731f5d57 ("kho: adopt radix tree for preserved memory tracking")
-Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
----
- kernel/liveupdate/kexec_handover_debugfs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/liveupdate/kexec_handover_debugfs.c b/kernel/liveupdate/kexec_handover_debugfs.c
-index 3f395fbd978f..acf368222682 100644
---- a/kernel/liveupdate/kexec_handover_debugfs.c
-+++ b/kernel/liveupdate/kexec_handover_debugfs.c
-@@ -13,6 +13,7 @@
- #include <linux/io.h>
- #include <linux/libfdt.h>
- #include <linux/mm.h>
-+#include <linux/kho/abi/kexec_handover.h>
- #include "kexec_handover_internal.h"
- 
- static struct dentry *debugfs_root;
-@@ -121,7 +122,7 @@ __init void kho_in_debugfs_init(struct kho_debugfs *dbg, const void *fdt)
- 		const char *name = fdt_get_name(fdt, child, NULL);
- 		const u64 *fdt_phys;
- 
--		fdt_phys = fdt_getprop(fdt, child, "fdt", &len);
-+		fdt_phys = fdt_getprop(fdt, child, KHO_FDT_SUB_TREE_PROP_NAME, &len);
- 		if (!fdt_phys)
- 			continue;
- 		if (len != sizeof(*fdt_phys)) {
 -- 
-2.25.1
-
+Sincerely yours,
+Mike.
 
