@@ -4,61 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 551E4F3C241
-	for <kexec@archiver.kernel.org>; Mon,  9 Mar 2026 12:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 43AAFF3C24A
+	for <kexec@archiver.kernel.org>; Mon,  9 Mar 2026 13:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=1+QvVfVDDjSHdOMuU9xEZB+TDS7YqSYDHOoyyOBkn68=; b=Uk2JqEuRC6xj3Sc1gcWG4x/uIc
-	t7ud9CdD043tgfToNX5yIxT7jlAgnLj9xkeuxozH9phm0D+dX1RDHD5TaKZQCiMpkfZuJa82hE9VQ
-	3QglXpRt+NnP2Mdjg4rda0wfalsMS1GZKd1z3CEME/FKa6JFv0pDpiatU8l7aoZ0wmOn++eybdQD6
-	fB0ZpOyBGVnpZII7beywWyg3znKJ3M3ADSS3kvazfQgBqx8tWywP9txmqEZNtw9pgbf7losnTlYX2
-	XFxhn6vfwPe334OPFce49Hr2IKjvy6vNTs8P16FBKrsNZ6OIs3eJHdHexKItQ5W6z3R1J8UhfTXn3
-	UcgIW4mg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=xVZJ8HA1Bq2a4PhlPxh0lErV720ISPGpbYGMuWQZ5Lk=; b=WBs7aIz4ovi/QqEUjkmRIciUPA
+	w90uE8Jpod6iWT6t7GUyb9Mdl6TyQTEiuR1c1wBrF0mGKLHjJQls9DxYvzrY9zhK2NLYYDQAoM6t+
+	ttdhghpb2dCeX3xPWt7XWPxbZBTZb99VJoijMXx2G8IkHkhaeAY4f7tWAygj791fXHgtctPBicksK
+	kdfZu0PLnv2+088/Cp5R87H8SpBGTf/fL3nF9BMA7xmi0F0ZGwfNLAcZ4XDX/lqm2aUJzGr741Y9w
+	X1o21aULtbCaagqSv0JizgzFkuRr0mUNYCiam23ULRyFy7fkkuHrBt6wIrGAZVj3JnkEYJX4PYtCR
+	6lPUFy2g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzZp6-00000007K1x-2xGQ;
-	Mon, 09 Mar 2026 12:35:00 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1vzaFF-00000007M66-2P7g;
+	Mon, 09 Mar 2026 13:02:01 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzZp3-00000007K1Q-48Du
+	id 1vzaFD-00000007M5T-0Q3g
 	for kexec@lists.infradead.org;
-	Mon, 09 Mar 2026 12:34:58 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 67BF36013A;
-	Mon,  9 Mar 2026 12:34:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62E5AC2BC86;
-	Mon,  9 Mar 2026 12:34:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773059697;
-	bh=+0wA474v7nGumxjsD4uBjOHoecHS+At9sWy47yvU5l0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VgRs7yMhnJmvtZQe6EkaO6+UoTSVjE9edgYr80SRJ2nUwqQ+tMX3FpQy0xEUzElMa
-	 GfKLr1bFcQ3BBJFwmFS36Jm3ULHgZZUQfkZ6TbtdS2lBvAWOj6MYOAeS5qZ1JhUge4
-	 U4OnGbdoMqOLhOAfFvzeVtcpwlfPzR/152dQvJAQMno18ikG+2u/7CpP9oirOn1KqR
-	 kgCqOnhQ5AzednCk+s2cw5aTdEYLFBNp1qE15umTtU2PPaTmAPlo8RGXErq8c/PWTE
-	 cYT0FseEtymrV41BwP5IDGMSJ1KEy2sszqbVIrS76ThxLAhwyq11rCJJ2HEl9+D03W
-	 JOQShaugTHwrw==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Alexander Graf <graf@amazon.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] kho: drop restriction on maximum page order
-Date: Mon,  9 Mar 2026 12:34:07 +0000
-Message-ID: <20260309123410.382308-2-pratyush@kernel.org>
-X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
-In-Reply-To: <20260309123410.382308-1-pratyush@kernel.org>
-References: <20260309123410.382308-1-pratyush@kernel.org>
+	Mon, 09 Mar 2026 13:02:00 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=xVZJ8HA1Bq2a4PhlPxh0lErV720ISPGpbYGMuWQZ5Lk=; b=NVFEsr7GEe+1IceOj9Tgde+bOM
+	BC5ggZUCHv4FUkC8SvcoAo0kSlw6vUqgNYU0nkgjPTDujyZiRruV3N7EnE6SYJWyPj9GW4WINEhWf
+	8T8PeoS2LmMwfA6T+eHQ8RUJnDGNjuK24LvozWiuHSCEskCAwJpMcXL5gDGBnspQUvfeY+9264KwL
+	a9FRenXm8GKp8RmaWOerp16NZe6KVgCBikixT/yAN8hbwjNjcrKabTTv5MN5+71FtdE9Kz0BtTDwF
+	QrhlPTYFNs1zdtPbv+3n4gCqLylkfoz/64UetKXX2maA2RUtc2fcu0mUbn4pLW0isgBHZh+4mgGuL
+	sksMAMIw==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <leitao@debian.org>)
+	id 1vzaF2-002EbW-0v; Mon, 09 Mar 2026 13:01:48 +0000
+Date: Mon, 9 Mar 2026 06:01:43 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Alexander Graf <graf@amazon.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org, 
+	usamaarif642@gmail.com, SeongJae Park <sj@kernel.org>, kernel-team@meta.com
+Subject: Re: [PATCH v7 4/6] kho: fix kho_in_debugfs_init() to handle non-FDT
+ blobs
+Message-ID: <aa7EoP1zQ9wAG1Ri@gmail.com>
+References: <20260306-kho-v7-0-404d14c188bb@debian.org>
+ <20260306-kho-v7-4-404d14c188bb@debian.org>
+ <aa6DWto0xY5EPyxK@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aa6DWto0xY5EPyxK@kernel.org>
+X-Debian-User: leitao
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260309_060159_142899_6BC94C72 
+X-CRM114-Status: GOOD (  20.58  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,51 +77,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-KHO currently restricts the maximum order of a restored page to the
-maximum order supported by the buddy allocator. While this works fine
-for much of the data passed across kexec, it is possible to have pages
-larger than MAX_PAGE_ORDER.
+On Mon, Mar 09, 2026 at 10:22:50AM +0200, Mike Rapoport wrote:
+> On Fri, Mar 06, 2026 at 04:39:23AM -0800, Breno Leitao wrote:
+> > kho_in_debugfs_init() has two problems when displaying incoming
+> > sub-blobs in debugfs:
+> > 
+> > 1. It uses the hardcoded property name "fdt" instead of
+> >    KHO_FDT_SUB_TREE_PROP_NAME ("preserved-data"), so it never finds
+> >    subtrees stored by the current kho_add_subtree().
+> > 
+> > 2. It calls fdt_totalsize() to determine blob sizes, which assumes
+> >    all blobs are FDTs. This breaks for non-FDT blobs like struct
+> >    kho_kexec_metadata.
+> > 
+> > Fix both issues by using KHO_FDT_SUB_TREE_PROP_NAME to find subtrees
+> > and reading the "blob-size" property from the FDT (persisted by
+> > kho_add_subtree()) instead of calling fdt_totalsize().
+> > 
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > ---
+> >  kernel/liveupdate/kexec_handover_debugfs.c | 38 ++++++++++++++++++++----------
+> >  1 file changed, 26 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/kernel/liveupdate/kexec_handover_debugfs.c b/kernel/liveupdate/kexec_handover_debugfs.c
+> > index 7a100f2bf3947..fc2baa8b104fd 100644
+> > --- a/kernel/liveupdate/kexec_handover_debugfs.c
+> > +++ b/kernel/liveupdate/kexec_handover_debugfs.c
+> > @@ -13,6 +13,7 @@
+> >  #include <linux/io.h>
+> >  #include <linux/libfdt.h>
+> >  #include <linux/mm.h>
+> > +#include <linux/kho/abi/kexec_handover.h>
+> >  #include "kexec_handover_internal.h"
+> >  
+> >  static struct dentry *debugfs_root;
+> > @@ -121,23 +122,36 @@ __init void kho_in_debugfs_init(struct kho_debugfs *dbg, const void *fdt)
+> >  	fdt_for_each_subnode(child, fdt, 0) {
+> >  		int len = 0;
+> >  		const char *name = fdt_get_name(fdt, child, NULL);
+> > -		const u64 *fdt_phys;
+> > -		void *sub_fdt;
+> > -
+> > -		fdt_phys = fdt_getprop(fdt, child, "fdt", &len);
+> > -		if (!fdt_phys)
+> > +		const u64 *blob_phys;
+> > +		const u64 *blob_size;
+> > +		void *blob;
+> > +		size_t size;
+> 
+> Do we really need two size variables? Can't we just have u64 *size and pass
+> *size to __kho_debugfs_blob_add()?
 
-For one, it is possible to get a larger order when using
-kho_preserve_pages() if the number of pages is large enough, since it
-tries to combine multiple aligned 0-order preservations into one higher
-order preservation.
+We definitely can. let me respin with the other changes as well.
 
-For another, upcoming support for hugepages can have gigantic hugepages
-being preserved over KHO.
-
-There is no real reason for this limit. The KHO preservation machinery
-can handle any page order. Remove this artificial restriction on max
-page order.
-
-Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
-Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
----
-
-Notes:
-    This patch was first sent with this RFC series [0]. I am sending it
-    separately since it is an independent patch that is useful even without
-    hugepage preservation. No changes since the RFC.
-    
-    [0] https://lore.kernel.org/linux-mm/20251206230222.853493-1-pratyush@kernel.org/T/#u
-
- kernel/liveupdate/kexec_handover.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index bc9bd18294ee..1038e41ff9f9 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -253,7 +253,7 @@ static struct page *kho_restore_page(phys_addr_t phys, bool is_folio)
- 	 * check also implicitly makes sure phys is order-aligned since for
- 	 * non-order-aligned phys addresses, magic will never be set.
- 	 */
--	if (WARN_ON_ONCE(info.magic != KHO_PAGE_MAGIC || info.order > MAX_PAGE_ORDER))
-+	if (WARN_ON_ONCE(info.magic != KHO_PAGE_MAGIC))
- 		return NULL;
- 	nr_pages = (1 << info.order);
- 
--- 
-2.53.0.473.g4a7958ca14-goog
-
+Thanks for the review,
+--breno
 
