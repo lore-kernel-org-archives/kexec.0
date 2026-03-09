@@ -4,87 +4,127 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90B14F41808
-	for <kexec@archiver.kernel.org>; Mon,  9 Mar 2026 16:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 62816EFCD9B
+	for <kexec@archiver.kernel.org>; Mon,  9 Mar 2026 17:33:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=TdgCe2J3lvudY3Ri4RUwnY+/LSuwRgctaurAZvpEmI4=; b=0HPPFQRFa+0WXMBAOPHD+L3SDr
-	ytfBNbKQ5/95YmmwHiu71WjF8evbHpd7QO6rd9JHVWiUjq3bQ1IaBpJUsyjE4cI6umVftfb0cyyHL
-	CnTSulPy+XkRlMG9Cw/j5b9PF5vOrK9tdEBCmnx8y5iGmnHqHg3ZkS46WMMn2OXq86Tu8/BBVQHm6
-	HkG9YFOriI+DuQmSOOb7ausdiCMAMaTqwI1OgfqOVWvaJSYCEelnA2UQIrfPgl+Cjzgcv5o3Xn8Fj
-	G5QhOdd5PLygfvRbNAEvIZTTjKR4AHeOTOmJxZBOtbLQehm/NFIu/3a8FaAKQNaKhhSDE8GtCJ3MB
-	3Uqc/tEg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=mL+d40KjyhuL+4bMpXUsYaQzeUUDZaEOQ6AdzLVzNPg=; b=HmRUclqykYS/VMlfPkvG/vYb+d
+	FQ1aHMLW12VQVqGuV4F8uMTYNpomG5FGjal6psh//9EFGMkqAQFfJmNT8XhL6pvq3qwYI+sXgNr3m
+	2Jc54rxw8mmEKvzt3SZ8LgseyrqTp5TSEQ1SzHNExRzXNb3Hk/g7UUbITUs1JcbkwutGo5N73SNmY
+	0guquBTiKBHDE19FGWmiwxQGTI35N3dS0tAu2piZqbb/cSEg57fBe0cziqk0bt1NaNj4OBLZTePKL
+	6DwVWwiSsWF6QcsMqfe/vH8JeUfRfQczibjuOHg6v5tZv+ZXBQY6p4D8g70kMrWToTiQRYuM2KV2h
+	FtcVn51Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzd1X-00000007em3-2GfV;
-	Mon, 09 Mar 2026 16:00:03 +0000
-Received: from mail-pl1-x631.google.com ([2607:f8b0:4864:20::631])
+	id 1vzeTT-00000007pb3-44fS;
+	Mon, 09 Mar 2026 17:32:59 +0000
+Received: from mail-lj1-x230.google.com ([2a00:1450:4864:20::230])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzd1U-00000007ekd-0DVf
+	id 1vzeTR-00000007pae-0S1K
 	for kexec@lists.infradead.org;
-	Mon, 09 Mar 2026 16:00:01 +0000
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-2ae49120e97so157135ad.0
-        for <kexec@lists.infradead.org>; Mon, 09 Mar 2026 08:59:58 -0700 (PDT)
+	Mon, 09 Mar 2026 17:32:58 +0000
+Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-38a2f196cbaso48210061fa.1
+        for <kexec@lists.infradead.org>; Mon, 09 Mar 2026 10:32:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773077574; cv=none;
+        d=google.com; s=arc-20240605;
+        b=eUDju/JJzfIczz5GlwPzS/EDkA+OwM+h6X9A5agWTxcaLp6vneaaC+sHBkkTN51Mos
+         eWEyeblDQTXMT5pN/l6R3gr0AEeFXzXE0zD1diR6rXcKd43gVTDJVZx9qbTrCK2qAUJL
+         /gzmOoqglUlXo9eh9LOr9BVL/rlaG1b3wg0eFPNjjZDBgJf8PgrnN2wOgYuhij3hQroS
+         rVQoVaWgrqGCH1Uvxdz4CpmaP1Kr/IhkwycGhj4FFOAffYHIM2Gxz3ER6hU49hluz0WV
+         0LZ/1inLgc5lVnG+eKdTcpQlxa7Ottu3mvcMhYUQMDoeYsKoC3mlTizxkGQY9/N1vUQi
+         MonA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=mL+d40KjyhuL+4bMpXUsYaQzeUUDZaEOQ6AdzLVzNPg=;
+        fh=covrqwqZzwWckkrb94+p3rSwJQyQ3+emY+431mrm6cg=;
+        b=OTwHOvhGFK+9b3ZEsEHcKSjSz5ZkYA4jG+EwaQXIc+caGjEriZXyQ+cveLQei4SQm0
+         +HPCRqzHDMYSs/vsSDDpuUWAtwO/TD9AILLluOp379aMvSQJEsdhpyxs+afiScO0uxKN
+         Yh7CUNV5tZIn19qaXMfBKwkitxfDx4vw0O/pojSII2DJqlhZFZD9Tcmt/GbKZDjdf95j
+         pAQBpzl0m2+QtI/0gDgxwHog2e35bYa2uZUMhkD9CfUa5S3CDBx2uM2+ypt3NDJkcn/5
+         YHddvRaMHFZhquIOg1Ec9E9dj13+hGxsv/Fl4AAjh6CXH1pyPDv/sCxBBhLIzdhLntsI
+         jgnQ==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773071998; x=1773676798; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TdgCe2J3lvudY3Ri4RUwnY+/LSuwRgctaurAZvpEmI4=;
-        b=1Sha9/oc4GGLKopYkMwwEKEBo4WBaXMfULcdb2BtjEbz6I79FS4l3s4//9y9epdQUD
-         uwtnMBjVgj1rvSID1iK4Q5lO54Tl0+ptxE4lDC004qXv/1nCwrm0ZQ7TkbRnTY2orCZy
-         b4VQ40mCQ8c77oZuLcw+I88ylQ1at+x8npcIdqG0PlUHBQwYKhtRwOgIYNRAyGOgutNx
-         3x0eJsIAI5gUsGxE/tYTuB7UpE26p+pc4Pm7tdTqJ/mm9IkJYVo47N4v580LPXtOygBj
-         pfCvvcDJraxb7ifgE1tmY1n5KmOGj7FCADYVhehKBw4Y1NiX6SxIV1Lx6vcDV59ua4Fy
-         OVlw==
+        d=google.com; s=20230601; t=1773077574; x=1773682374; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mL+d40KjyhuL+4bMpXUsYaQzeUUDZaEOQ6AdzLVzNPg=;
+        b=jJA5hMQnQTT+Aw9kY4yR15MWWpSv5ovXDWQN+k2gxMyxchnZRovzHJCSngrafTN5Sv
+         8fJ2ThWf6QGTIlWPgmv+1pghPQWbzmr+flP7WOj8eVDwj0hu8vbGFDO+spQ/fqmJd2n/
+         +Si0+T1O2cF7rzEEM5QuZxppTI9p506dEj8oW1D3UYplijaPJe1tBdQJ9wqcUrdMkd6i
+         1Uc8DeMgaSAZUWfGbC+kjgsRdZ9cmD6/jCZDvWaKAt8t02+XWYA5qrZQ2dTRY9Gxdkav
+         q/eS/zUGZkG37ua7LLnxj+pqvl3TU5DTcbWd63mnJ0ekUCFbpavLDShlmRYS/k62LWK5
+         2NlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773071998; x=1773676798;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TdgCe2J3lvudY3Ri4RUwnY+/LSuwRgctaurAZvpEmI4=;
-        b=hCwg9fzQzNAojBcnormQq52L1fAGbQjJLe4FhYJf+X7psLzUSujE8ZFY5Mnim4VkkQ
-         qawMXN3i68R9ZxMn7YFtEYUYZWCynBSyIXhHjfVvChKAs7/NQWzBA4UIGpKuxAdAEVff
-         KDXzpiFNfthGfw+et6Uz99tx/q7ZpViQuXetyiB7/O/DgroDIPp9dqU0NkXZJhvpuF1E
-         YBBSeiwuXfgZOyIRO8TBQnkRqr//wgreJX1FBXYsTjxUmMxVcS+1n59bfGG1eSTWoN7m
-         LX5ndoSX+91q1+bkmohgDzk9BL4spTgbGNvoCTPkZFVDCTp60CQL7fGjI54pWHv4pXoO
-         IrdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKzNC1pjUOrK02ke2w15FKB/rmhKA+KwQuiEe09DMWmHdpubKjHtaU00VCQ5qwq02dheDIQQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxFWDRSZQvrO+uxxlffmSfRtc/hL3P1NJb8w87E/OpFEe7Wknjw
-	e7AWGdIIjRV6G9AQ0K9K9P7RKj/kdGnYxiFZcj4x0QGkjfdodZNzqy8VYtL4X3SAKA==
-X-Gm-Gg: ATEYQzxYWs65oWpur0fiSmTABc9XA3BTpfALW9rMkUmHd6obtjbHNGtXGkkhwHfX9jF
-	bgGFq4u2X8Qm+AylBaO4aq9mVKomp2/2Gnrd8aCYbKKgeRUzVte8f1jxR+R6mNqoXfOgig0AcQ8
-	jexDjRcYPQHqgjrQUSxLn1ho0nqOYG9rgLyp7FsDbeVHq4/yO8HpDNSPKqjwXsOrtauMIanJv5u
-	HNCJI9lEthDPbEiSrvJZPRT86wcpHnVvZ3WhMA5y/A3Qhk9qUh6Q9ET7OAjaTbWXCXpcVrZh0M4
-	VKryoBf/Wu/+B1CpQm0pvNr38DqaKGhKlISadgY62JwUJbrGVF2ez/u4LArGTTCGd5HRD4RFZnp
-	UJZ3oFESbi/7LaYrNwYdT4CIYAP/cdP0hB1wcjS/s7aBDi6rjU3SXh+6SZxvBd9cebu2ximOyOp
-	+oVCJtdlPCZUIGL7QzJ6D/XaoySM32PsnJNPU9V5h2LVn0ceVehmH+seI2Bzjerg==
-X-Received: by 2002:a17:903:98c:b0:2ae:6432:8f77 with SMTP id d9443c01a7336-2ae8ba59672mr3148705ad.17.1773071997647;
-        Mon, 09 Mar 2026 08:59:57 -0700 (PDT)
-Received: from google.com (168.136.83.34.bc.googleusercontent.com. [34.83.136.168])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ae840ad894sm162231525ad.80.2026.03.09.08.59.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2026 08:59:56 -0700 (PDT)
-Date: Mon, 9 Mar 2026 15:59:52 +0000
-From: Samiullah Khawaja <skhawaja@google.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] kho: make sure preservations do not span multiple
- NUMA nodes
-Message-ID: <aa7uXzkRCHuY2jA6@google.com>
-References: <20260309123410.382308-1-pratyush@kernel.org>
+        d=1e100.net; s=20230601; t=1773077574; x=1773682374;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mL+d40KjyhuL+4bMpXUsYaQzeUUDZaEOQ6AdzLVzNPg=;
+        b=LfBnZXUhesUsOSNS8KItJ7YPW0Ut19zTesZGdXh6WJTiepD9axbtMtujTnntXOoLVf
+         uGvk7XyatVe3oa9KriSpbA3tQhSir73DvGb+MFqQY4VLU4D9DDtAMN/Ht78bWR4P6Fn/
+         862xS3Jd+ggeDaZW8OXnMPo1SCkjRJ2x1MfUm2O3YgerdxrqLDL0vVX8g9ogBUTD9O7v
+         TYPX5m3fFd+PvnuYFUrV5zlmW95jRvelDFRo6oh31Hdt7UMVknar2xAT6dxj+O9yONtW
+         09kqwFN9teHVF+AnnN5gp3LVyTyNRkFaQuxtZujN2F4JPYjwmnx00FnDS4AzOqsT3SWJ
+         vJZw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+3eIxniNWjF13+yUdsnS4ZvG9qxl4aDj1GHMWADw1rfgl0c4+QzyNhli3OFONV87HDeV+nA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwoOnRF+XFzafbKZfBWOhzqUP7B6j29DfSCfact3KkJmtpSc+Zk
+	H5LfQJsggz0lep8QDU8dW/TPkzA/ryLfuX4OZHPvigIKtJ1q+X0NBT2QZmh5YHRyN/Lyjd0Rs33
+	tCWFRyKAgbB7sB5Rg2cgw7CLM/DHNaGjqmu4qwo4J
+X-Gm-Gg: ATEYQzyb2ZaIXVh4yBL8Psc88xIP7jl/VDO5LQN/7uZhhrBaJVIu3J5xNdC1U7Gh8k4
+	hxqbAQbiJlswr8DhIoC1Z3iRyLwqNGbko/nfOg2Nc+6hIFK+n3aPmCrqWmCtKAFIqlffN9gqwk6
+	m9KnVJsXDVDJVQz3VfMm6QJ+xcEAAG1gDff2MX0KBa++CUBK3g7XRPJjraV27yrKhIeuI5MrWMY
+	n1bJxzIKRA2v2DzPQYkO8SejXwMD3DbFfR7fncYHR/CQ4GsUQ+J/wj+Hx4pCIZHK1mcTEBDDDNM
+	Bj6aAiKB
+X-Received: by 2002:a2e:9e89:0:b0:389:fc6b:943f with SMTP id
+ 38308e7fff4ca-38a40b72dbbmr31791631fa.11.1773077573745; Mon, 09 Mar 2026
+ 10:32:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20260309123410.382308-1-pratyush@kernel.org>
+References: <20260129212510.967611-1-dmatlack@google.com> <20260129212510.967611-11-dmatlack@google.com>
+ <20260226170030.5a938c74@shazbot.org> <aaDqhjdLyf1qSTSh@google.com>
+ <20260227084658.3767d801@shazbot.org> <CALzav=fHy23RAzhgkdaL+JA5T2tL9FT6aPgRfXUh7i9zvYCGPA@mail.gmail.com>
+ <20260227105720.522ca97f@shazbot.org>
+In-Reply-To: <20260227105720.522ca97f@shazbot.org>
+From: David Matlack <dmatlack@google.com>
+Date: Mon, 9 Mar 2026 10:32:25 -0700
+X-Gm-Features: AaiRm51UQkPGi_THgF8Q61sl9tHSSk61beTImuWL9a-lckj5dJAcnYvj7LG9bmc
+Message-ID: <CALzav=fjRPa_ZbXu7iFXyemcf_8Kq_dZTWT6c-A0bc6czF_Rdw@mail.gmail.com>
+Subject: Re: [PATCH v2 10/22] vfio/pci: Skip reset of preserved device after
+ Live Update
+To: Alex Williamson <alex@shazbot.org>
+Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
+	Alex Mastro <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Ankit Agrawal <ankita@nvidia.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Corbet <corbet@lwn.net>, 
+	Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, kexec@lists.infradead.org, 
+	kvm@vger.kernel.org, Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, 
+	=?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>, 
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
+	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
+	Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
+	Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>, 
+	Zhu Yanjun <yanjun.zhu@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260309_090000_118386_D528F57A 
-X-CRM114-Status: GOOD (  13.33  )
+X-CRM114-CacheID: sfid-20260309_103257_186134_10A242F8 
+X-CRM114-Status: GOOD (  30.75  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,58 +139,78 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Mar 09, 2026 at 12:34:06PM +0000, Pratyush Yadav wrote:
->From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+On Fri, Feb 27, 2026 at 9:57=E2=80=AFAM Alex Williamson <alex@shazbot.org> =
+wrote:
 >
->The KHO restoration machinery is not capable of dealing with
->preservations that span multiple NUMA nodes. kho_preserve_folio()
->guarantees the preservation will only span one NUMA node since folios
->can't span multiple nodes.
+> On Fri, 27 Feb 2026 09:07:48 -0800
+> David Matlack <dmatlack@google.com> wrote:
 >
->This leaves kho_preserve_pages(). While semantically
->kho_preserve_pages() only deals with 0-order pages, so all preservations
->should be single page only, in practice it combines preservations to
->higher orders for efficiency. This can result in a preservation spanning
->multiple nodes. Break up the preservations into a smaller order if that
->happens.
+> > On Fri, Feb 27, 2026 at 7:47=E2=80=AFAM Alex Williamson <alex@shazbot.o=
+rg> wrote:
+> > >
+> > > On Fri, 27 Feb 2026 00:51:18 +0000
+> > > David Matlack <dmatlack@google.com> wrote:
+> > >
+> > > > On 2026-02-26 05:00 PM, Alex Williamson wrote:
+> > > > > On Thu, 29 Jan 2026 21:24:57 +0000
+> > > > > David Matlack <dmatlack@google.com> wrote:
+> > > > > >
+> > > > > > - vdev->reset_works =3D !ret;
+> > > > > >   pci_save_state(pdev);
+> > > > > >   vdev->pci_saved_state =3D pci_store_saved_state(pdev);
+> > > > >
+> > > > > Isn't this a problem too?  In the first kernel we store the initi=
+al,
+> > > > > post reset state of the device, now we're storing some arbitrary =
+state.
+> > > > > This is the state we're restore when the device is closed.
+> > > >
+> > > > The previous kernel resets the device and restores it back to its
+> > > > post reset state in vfio_pci_liveupdate_freeze() before handing off
+> > > > control to the next kernel. So my intention here is that VFIO will
+> > > > receive the device in that state, allowing it to call
+> > > > pci_store_saved_state() here to capture the post reset state of the
+> > > > device again.
+> > > >
+> > > > Eventually we want to drop the reset in vfio_pci_liveupdate_freeze(=
+) and
+> > > > preserve vdev->pci_saved_state across the Live Update. But I was ho=
+ping
+> > > > to add that in a follow up series to avoid this one getting too lon=
+g.
+> > >
+> > > I appreciate reviewing this in smaller chunks, but how does userspace
+> > > know whether the kernel contains a stub implementation of liveupdate =
+or
+> > > behaves according to the end goal?
+> >
+> > Would a new VFIO_DEVICE_INFO_CAP be a good way to communicate this
+> > information to userspace?
 >
->Suggested-by: Pasha Tatashin <pasha.tatashin@soleen.com>
->Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
->---
->
->Notes:
->    Ref: https://lore.kernel.org/linux-mm/CA+CK2bDvaGmfkCPCMWM6gPcd4FfUyD6e5yWE+kNcma1vT3Jw3g@mail.gmail.com/
->
-> kernel/liveupdate/kexec_handover.c | 10 +++++++++-
-> 1 file changed, 9 insertions(+), 1 deletion(-)
->
->diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
->index cc68a3692905..bc9bd18294ee 100644
->--- a/kernel/liveupdate/kexec_handover.c
->+++ b/kernel/liveupdate/kexec_handover.c
->@@ -869,9 +869,17 @@ int kho_preserve_pages(struct page *page, unsigned long nr_pages)
-> 	}
->
-> 	while (pfn < end_pfn) {
->-		const unsigned int order =
->+		unsigned int order =
-> 			min(count_trailing_zeros(pfn), ilog2(end_pfn - pfn));
->
->+		/*
->+		 * Make sure all the pages in a single preservation are in the
->+		 * same NUMA node. The restore machinery can not cope with a
->+		 * preservation spanning multiple NUMA nodes.
->+		 */
->+		while (pfn_to_nid(pfn) != pfn_to_nid(pfn + (1UL << order) - 1))
->+			order--;
->+
-> 		err = __kho_preserve_order(track, pfn, order);
-> 		if (err) {
-> 			failed_pfn = pfn;
->-- 
->2.53.0.473.g4a7958ca14-goog
->
->
+> Sorry if I don't have the whole model in my head yet, but is exposing
+> the restriction to the vfio user of the device sufficient to manage the
+> liveupdate orchestration?  For example, a VFIO_DEVICE_INFO_CAP pushes
+> the knowledge to QEMU... what does QEMU do with that knowledge?  Who
+> imposes the policy decision to decide what support is sufficient?
 
-Reviewed-by: Samiullah Khawaja <skhawaja@google.com>
+Hm.. good questions. I don't think we want userspace inspecting bits
+exposed by the kernel and trying to infer exactly what's being
+preserved and whether it's "good enough" to use. And such a UAPI would
+become tech debt once we finish development, I suspect.
+
+A better approach would be to hide this support from userspace until
+we decide it is ready for production use-cases.
+
+To enable development and testing, we can add an opt-in mechanism,
+such as CONFIG_EXPERIMENTAL or a kernel parameter. For example, adding
+something like this to vfio_pci_liveupdate_preserve():
+
+if (!IS_ENABLED(CONFIG_EXPERIMENTAL)) {
+        pr_warn("vfio-pci file preservation requires
+CONFIG_EXPERIMENTAL to enable!\n");
+        return -EOPNOTSUPP;
+}
+
+Once we feel the support is ready, we can just submit a patch to
+delete those lines, and there will be no left-over UAPI.
 
