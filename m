@@ -4,62 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 244F7EF3716
-	for <kexec@archiver.kernel.org>; Mon,  9 Mar 2026 08:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5B5BAF3C248
+	for <kexec@archiver.kernel.org>; Mon,  9 Mar 2026 12:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=P1lIZx7jxksyX/dRkyXna8WJ9zLTRrgGdsrdZAvKcRI=; b=hOzC/PHyTI2e8GwFnEUUYvC/Jk
-	oxqf5fy/Hc3WIeJ7V43+rCHq97SNgUGYfhqEstv2NvNsnmwqsX+N56tiem1iORgDc+RAn5r9yMgqK
-	O2EyrV3lHKyeQQ98SnTdjZXl2lcXEuj4rAPOjgTeyijjg7ADx/F8tJOycBN9sJ6/cBV9GpM/vn+Vf
-	u6xljKKFruwnZlEsZfJJC3OSLbp+mJFygU961NMTLDxw2BvP+mRagi72/ZQDeYJ2CsM8CtDm+83mN
-	umB+YGwqhzUXJAEa3RF4Y/DCBHLa01jlAJveFNg2hQayjSVWgrph4VkRl5aurdpVG24IFZkv+4dY6
-	yN3RVy1w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=os8LJwgTVC15dJZoK2SNHppYxuMj/YeuyOkX7l1pAKs=; b=jHMi/eKrBnmlzWyvMETDCB0SNC
+	fFVKWCW0CxhacGjJ389TE4uNFd3ycq+Z65Ij39GHWcbhngI2+CW0Er5UcxF86EHYfNBd4g1nkjyDM
+	5SsKdnfOELXZoSCTtUtrIf5z8Slv/pGNbm4xq9P9N88f199gegB77Yz3BjhILOzeIpFyGGMBZkUKu
+	jFjLm2oKABaGQSxARTmebw7JS1JDAyxOelZxd1ZYxw+0F4lLg2iZ3z0FptkD2hTYtclSGN6pTyDH+
+	dKxjuOdquYpm0A48ZcHmrZdwqNHJL584wxjw/1IFHTTObRvxsVFY3YphunFLV32JoTzWewawFF2av
+	ItAkO+UQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzVtE-00000006sqG-2s5J;
-	Mon, 09 Mar 2026 08:23:00 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1vzZp4-00000007K1W-1bik;
+	Mon, 09 Mar 2026 12:34:58 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzVtD-00000006sqA-1120
+	id 1vzZp2-00000007K1A-3fKE
 	for kexec@lists.infradead.org;
-	Mon, 09 Mar 2026 08:22:59 +0000
+	Mon, 09 Mar 2026 12:34:56 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 18637600CB;
-	Mon,  9 Mar 2026 08:22:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B623C4CEF7;
-	Mon,  9 Mar 2026 08:22:53 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 42CB5600B0;
+	Mon,  9 Mar 2026 12:34:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AF2DC4CEF7;
+	Mon,  9 Mar 2026 12:34:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773044577;
-	bh=V/B5tPmLCgAxbN8UIEDAM4TeuWOKraxmkgH51tGu4uw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O3b92q7bgFaOMmV3eGLdzebrY0/Sr+0bh6qjjVKefF860DvD1c1diA+xcCEQSmiek
-	 bmvIjE53jg20sq2gBg+7p/LuokK09L0Giolq0uT/UOHHgc9MJtjIB3cMCqwPMGxlQ1
-	 kX5mGd8TNaqCBYpqvuDW+pBSdtOiCO3aIlJ3gRxeTVW4PIsDnAMKzsytp0APqz3sWu
-	 EKAYn6dGohnRiYx5K+hJUOYxUnxrL/rrDEhMnaLcIh50LQNGcc5aAZAKeUifPAWf5F
-	 3ShdhuDfGkK99AG/vwbd1ulwOU2eX/UHbTTTevAfbcR3baUHGm7hpB+EXgW4vYHawr
-	 pRWS78C/KKv8w==
-Date: Mon, 9 Mar 2026 10:22:50 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Alexander Graf <graf@amazon.com>,
+	s=k20201202; t=1773059695;
+	bh=gAZtsXuVCQZAaWSuJc+3R0a9ehVlq0Y70kTuOfLhCbE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=aokPU8BvqTGchyuCzIuNeiQ8qP/hrE7iYZZdXhyaNuqAaFkiXwphl6BhDnLOZ7TRN
+	 ZJkJlJngDQMyZRE85FpXe8HlO14vh0anff0e6Z++FkX/8o52bE9w8vbh5VCxvivppS
+	 R9iSiQDviOzYYPPgDOBH1enVCr5/8v2mSc5c0XGoGoU+DmCxk5vKewHAOwmK/h7J0O
+	 AGv7hwbxcMUk0FB1N9lZwaf0dj6kcOdLgv7O2l2fRx9CxwBfwWs9vjt8d/Zyf8NSsf
+	 gYCJVnjOYxB/2Ydo3dIBfKFV9cIx0IauaTY8nUOPbg8wvDQVGt5nCYGY5yQag2I6xc
+	 81jT83wv7xryQ==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Alexander Graf <graf@amazon.com>,
+	Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, linux-mm@kvack.org,
-	usamaarif642@gmail.com, SeongJae Park <sj@kernel.org>,
-	kernel-team@meta.com
-Subject: Re: [PATCH v7 4/6] kho: fix kho_in_debugfs_init() to handle non-FDT
- blobs
-Message-ID: <aa6DWto0xY5EPyxK@kernel.org>
-References: <20260306-kho-v7-0-404d14c188bb@debian.org>
- <20260306-kho-v7-4-404d14c188bb@debian.org>
+	Pratyush Yadav <pratyush@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] kho: make sure preservations do not span multiple NUMA nodes
+Date: Mon,  9 Mar 2026 12:34:06 +0000
+Message-ID: <20260309123410.382308-1-pratyush@kernel.org>
+X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260306-kho-v7-4-404d14c188bb@debian.org>
+Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,99 +71,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Mar 06, 2026 at 04:39:23AM -0800, Breno Leitao wrote:
-> kho_in_debugfs_init() has two problems when displaying incoming
-> sub-blobs in debugfs:
-> 
-> 1. It uses the hardcoded property name "fdt" instead of
->    KHO_FDT_SUB_TREE_PROP_NAME ("preserved-data"), so it never finds
->    subtrees stored by the current kho_add_subtree().
-> 
-> 2. It calls fdt_totalsize() to determine blob sizes, which assumes
->    all blobs are FDTs. This breaks for non-FDT blobs like struct
->    kho_kexec_metadata.
-> 
-> Fix both issues by using KHO_FDT_SUB_TREE_PROP_NAME to find subtrees
-> and reading the "blob-size" property from the FDT (persisted by
-> kho_add_subtree()) instead of calling fdt_totalsize().
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
->  kernel/liveupdate/kexec_handover_debugfs.c | 38 ++++++++++++++++++++----------
->  1 file changed, 26 insertions(+), 12 deletions(-)
-> 
-> diff --git a/kernel/liveupdate/kexec_handover_debugfs.c b/kernel/liveupdate/kexec_handover_debugfs.c
-> index 7a100f2bf3947..fc2baa8b104fd 100644
-> --- a/kernel/liveupdate/kexec_handover_debugfs.c
-> +++ b/kernel/liveupdate/kexec_handover_debugfs.c
-> @@ -13,6 +13,7 @@
->  #include <linux/io.h>
->  #include <linux/libfdt.h>
->  #include <linux/mm.h>
-> +#include <linux/kho/abi/kexec_handover.h>
->  #include "kexec_handover_internal.h"
->  
->  static struct dentry *debugfs_root;
-> @@ -121,23 +122,36 @@ __init void kho_in_debugfs_init(struct kho_debugfs *dbg, const void *fdt)
->  	fdt_for_each_subnode(child, fdt, 0) {
->  		int len = 0;
->  		const char *name = fdt_get_name(fdt, child, NULL);
-> -		const u64 *fdt_phys;
-> -		void *sub_fdt;
-> -
-> -		fdt_phys = fdt_getprop(fdt, child, "fdt", &len);
-> -		if (!fdt_phys)
-> +		const u64 *blob_phys;
-> +		const u64 *blob_size;
-> +		void *blob;
-> +		size_t size;
+From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-Do we really need two size variables? Can't we just have u64 *size and pass
-*size to __kho_debugfs_blob_add()?
+The KHO restoration machinery is not capable of dealing with
+preservations that span multiple NUMA nodes. kho_preserve_folio()
+guarantees the preservation will only span one NUMA node since folios
+can't span multiple nodes.
 
-> +
-> +		blob_phys = fdt_getprop(fdt, child,
-> +					KHO_FDT_SUB_TREE_PROP_NAME, &len);
-> +		if (!blob_phys)
->  			continue;
-> -		if (len != sizeof(*fdt_phys)) {
-> -			pr_warn("node %s prop fdt has invalid length: %d\n",
-> -				name, len);
-> +		if (len != sizeof(*blob_phys)) {
-> +			pr_warn("node %s prop %s has invalid length: %d\n",
-> +				name, KHO_FDT_SUB_TREE_PROP_NAME, len);
->  			continue;
->  		}
-> -		sub_fdt = phys_to_virt(*fdt_phys);
-> +
-> +		blob_size = fdt_getprop(fdt, child,
-> +					KHO_FDT_SUB_TREE_SIZE_PROP_NAME, &len);
-> +		if (!blob_size || len != sizeof(*blob_size)) {
-> +			pr_warn("node %s missing or invalid %s property\n",
-> +				name, KHO_FDT_SUB_TREE_SIZE_PROP_NAME);
-> +			continue;
-> +		}
-> +		size = (size_t)*blob_size;
-> +
-> +		blob = phys_to_virt(*blob_phys);
->  		err = __kho_debugfs_blob_add(&dbg->fdt_list, sub_fdt_dir, name,
-> -					     sub_fdt, fdt_totalsize(sub_fdt));
-> +					     blob, size);
->  		if (err) {
-> -			pr_warn("failed to add fdt %s to debugfs: %pe\n", name,
-> -				ERR_PTR(err));
-> +			pr_warn("failed to add blob %s to debugfs: %pe\n",
-> +				name, ERR_PTR(err));
->  			continue;
->  		}
->  	}
-> 
-> -- 
-> 2.47.3
-> 
-> 
+This leaves kho_preserve_pages(). While semantically
+kho_preserve_pages() only deals with 0-order pages, so all preservations
+should be single page only, in practice it combines preservations to
+higher orders for efficiency. This can result in a preservation spanning
+multiple nodes. Break up the preservations into a smaller order if that
+happens.
 
+Suggested-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+---
+
+Notes:
+    Ref: https://lore.kernel.org/linux-mm/CA+CK2bDvaGmfkCPCMWM6gPcd4FfUyD6e5yWE+kNcma1vT3Jw3g@mail.gmail.com/
+
+ kernel/liveupdate/kexec_handover.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index cc68a3692905..bc9bd18294ee 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -869,9 +869,17 @@ int kho_preserve_pages(struct page *page, unsigned long nr_pages)
+ 	}
+ 
+ 	while (pfn < end_pfn) {
+-		const unsigned int order =
++		unsigned int order =
+ 			min(count_trailing_zeros(pfn), ilog2(end_pfn - pfn));
+ 
++		/*
++		 * Make sure all the pages in a single preservation are in the
++		 * same NUMA node. The restore machinery can not cope with a
++		 * preservation spanning multiple NUMA nodes.
++		 */
++		while (pfn_to_nid(pfn) != pfn_to_nid(pfn + (1UL << order) - 1))
++			order--;
++
+ 		err = __kho_preserve_order(track, pfn, order);
+ 		if (err) {
+ 			failed_pfn = pfn;
 -- 
-Sincerely yours,
-Mike.
+2.53.0.473.g4a7958ca14-goog
+
 
