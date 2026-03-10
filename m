@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C87C7EB1048
-	for <kexec@archiver.kernel.org>; Tue, 10 Mar 2026 10:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C2C0DEB1048
+	for <kexec@archiver.kernel.org>; Tue, 10 Mar 2026 10:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=fgTzzrmoxXkxxAU7wnjcLS0dqIIdLnXdz4estcKKu7M=; b=o0g8FOj2B6MgTV4wLgbniUn8+d
-	QE2r57B0M4SXLZPrmXrTN8DoX37DO///UVIvD5GY+SPuHfwG2brSFQDmme5LrzflN37IKKqNkK3X8
-	uv/9aB+Vw7EROh0I0qXGXard7uYSvW8R06r9iABqj5FC34GjEwo64hzKcPrH5Xbs2LNUDg1vtWqI1
-	GLO4TpxHEV4U5pyVxmJOG6bzVBCNRpSKIUA3WGt33txVdXvWwqol4Acb0FqlHaZua0VZ/ubPoZWhG
-	bHSv9AkXF5lArs8mwfi/pDlKFHEQSQulvfZU1+o59RpFOe9cDNvI5eQFDKw08lAoGdXd4nRRlcolz
-	5sd3zLiA==;
+	bh=eAiiRheaH2AeHI/DwDRcz8L/YNZeEcKvchS3XukuuHM=; b=0C7IQFtAUrdFakFJpB7Gp6S9iS
+	XdO+xNMpVu4DZwNpdmk/xulbinry0JEmpaTu8FdOUW66YzA5yVcoCBvMsjp5ttHWoBv5RYn62rVem
+	o4dFjaP+D9mOMUYd2QRbatjpda1RRPgTRqSb6PYLbNfJMcTzk4ntwKbB1np4eAtgsQwtHc73JZRUQ
+	Fsks6TrzbQyGLLbBDaD0tXKGih5v2wKfQCny0XOOEA+p9xgTMoj+qyDBUQRBg5i/LEE5TyJCv4I8B
+	FNMw2eWcUttOc8Iho7OLLIwGfKpgP4JMMLcFdfTDKY43amC8pXRw1S8nAXe4/8BhFYciqyg0qhxll
+	i63b3j2A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzuNv-00000009Cqh-2ada;
-	Tue, 10 Mar 2026 10:32:19 +0000
+	id 1vzuPM-00000009Cy9-1js2;
+	Tue, 10 Mar 2026 10:33:48 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzuNt-00000009Cpd-2jsI
+	id 1vzuPJ-00000009CxI-1fQZ
 	for kexec@lists.infradead.org;
-	Tue, 10 Mar 2026 10:32:18 +0000
+	Tue, 10 Mar 2026 10:33:46 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 8B4F243A73;
-	Tue, 10 Mar 2026 10:32:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E01C4C19423;
-	Tue, 10 Mar 2026 10:32:12 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 0F041443FA;
+	Tue, 10 Mar 2026 10:33:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C35C19423;
+	Tue, 10 Mar 2026 10:33:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773138735;
-	bh=ZAajPCZBWnuyiHXT/HC/E7AWtxibfHeRxEoqFvx/SPk=;
+	s=k20201202; t=1773138824;
+	bh=ECE4xmh6kRZf/kIT7/6rB3iS7so/etotWxeKzoWbm+g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WLBubtiyvjjuzUzuIpOM/fjq+FTbtXBIm8ZoTRqrnLL49dgS29NGyxzfLRF9Rgt4H
-	 fc2qPAsrsr9xDCUf2rMUjN4NeZJnOzz5ifzx7SKfHviwG033YS/VwBY21GWr2zpoy0
-	 nNIrTb069ljo1jW6gaFoGlwakT0BR+PCuNAbh4YsvXIKV+ItLIdKNKL9dZ1awtRQle
-	 L/eqipk8Mq0yUMMee0XueXnXiM1Efio6OHyzySi875QgfTeq1mvntAI7hA7m1jTxbr
-	 EgjjC6OS6t0EpjGgn1DbWBJa4HW196mKxBPFsjPeMtN+Fa5mGlFqhQxtqfM/FqaF/F
-	 7sl4bVYdv1TYQ==
-Date: Tue, 10 Mar 2026 12:32:09 +0200
+	b=PoBiWwP/Rm5yU49N/sDms4v+xmjkjdzd1To0opImrEbV59JC3YYemr/v4RJrp3yjP
+	 LvvfPpnP8JK+d7w3Qr6jcO+BUL2mv4wTohbNyO07suKvUOJsdxTvjicOstulgBda+b
+	 pB4ugJ/JE5RkftJfWPF9X2YMh0W/4atpTARAW/LTXbXjgua/kIMcTc5P/zQcMZrJ3k
+	 wbCT2aTHtwB+kOGcsDhmLo+Q25U450SutGLnVZEKekCPRpP8hmtgr1QAPTMdzCm5gO
+	 2c3y+56HcVJNEWpv5peHiGeIRWJVj+7NLfQlO5mOH9dTJuy84IBrizkcRc0fZM/cKs
+	 uqnD7h5Spsaug==
+Date: Tue, 10 Mar 2026 12:33:38 +0200
 From: Mike Rapoport <rppt@kernel.org>
 To: Pratyush Yadav <pratyush@kernel.org>
 Cc: Alexander Graf <graf@amazon.com>,
@@ -50,17 +50,17 @@ Cc: Alexander Graf <graf@amazon.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	kexec@lists.infradead.org, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] kho: make sure preservations do not span multiple
- NUMA nodes
-Message-ID: <aa_zKQr_yGKVJ7cF@kernel.org>
+Subject: Re: [PATCH 2/2] kho: drop restriction on maximum page order
+Message-ID: <aa_zglmh3AU2_RA0@kernel.org>
 References: <20260309123410.382308-1-pratyush@kernel.org>
+ <20260309123410.382308-2-pratyush@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260309123410.382308-1-pratyush@kernel.org>
+In-Reply-To: <20260309123410.382308-2-pratyush@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260310_033217_733883_25786FAD 
-X-CRM114-Status: GOOD (  19.90  )
+X-CRM114-CacheID: sfid-20260310_033345_457227_2EA5F8EB 
+X-CRM114-Status: GOOD (  22.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,57 +75,56 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Mar 09, 2026 at 12:34:06PM +0000, Pratyush Yadav wrote:
-> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+On Mon, Mar 09, 2026 at 12:34:07PM +0000, Pratyush Yadav wrote:
+> KHO currently restricts the maximum order of a restored page to the
+> maximum order supported by the buddy allocator. While this works fine
+> for much of the data passed across kexec, it is possible to have pages
+> larger than MAX_PAGE_ORDER.
 > 
-> The KHO restoration machinery is not capable of dealing with
-> preservations that span multiple NUMA nodes. kho_preserve_folio()
-> guarantees the preservation will only span one NUMA node since folios
-> can't span multiple nodes.
+> For one, it is possible to get a larger order when using
+> kho_preserve_pages() if the number of pages is large enough, since it
+> tries to combine multiple aligned 0-order preservations into one higher
+> order preservation.
 > 
-> This leaves kho_preserve_pages(). While semantically
-> kho_preserve_pages() only deals with 0-order pages, so all preservations
-> should be single page only, in practice it combines preservations to
-> higher orders for efficiency. This can result in a preservation spanning
-> multiple nodes. Break up the preservations into a smaller order if that
-> happens.
+> For another, upcoming support for hugepages can have gigantic hugepages
+> being preserved over KHO.
 > 
-> Suggested-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> There is no real reason for this limit. The KHO preservation machinery
+> can handle any page order. Remove this artificial restriction on max
+> page order.
+> 
+> Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
 > Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+
+One SOB should be enough ;-)
 
 Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
 > ---
 > 
 > Notes:
->     Ref: https://lore.kernel.org/linux-mm/CA+CK2bDvaGmfkCPCMWM6gPcd4FfUyD6e5yWE+kNcma1vT3Jw3g@mail.gmail.com/
+>     This patch was first sent with this RFC series [0]. I am sending it
+>     separately since it is an independent patch that is useful even without
+>     hugepage preservation. No changes since the RFC.
+>     
+>     [0] https://lore.kernel.org/linux-mm/20251206230222.853493-1-pratyush@kernel.org/T/#u
 > 
->  kernel/liveupdate/kexec_handover.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
+>  kernel/liveupdate/kexec_handover.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> index cc68a3692905..bc9bd18294ee 100644
+> index bc9bd18294ee..1038e41ff9f9 100644
 > --- a/kernel/liveupdate/kexec_handover.c
 > +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -869,9 +869,17 @@ int kho_preserve_pages(struct page *page, unsigned long nr_pages)
->  	}
+> @@ -253,7 +253,7 @@ static struct page *kho_restore_page(phys_addr_t phys, bool is_folio)
+>  	 * check also implicitly makes sure phys is order-aligned since for
+>  	 * non-order-aligned phys addresses, magic will never be set.
+>  	 */
+> -	if (WARN_ON_ONCE(info.magic != KHO_PAGE_MAGIC || info.order > MAX_PAGE_ORDER))
+> +	if (WARN_ON_ONCE(info.magic != KHO_PAGE_MAGIC))
+>  		return NULL;
+>  	nr_pages = (1 << info.order);
 >  
->  	while (pfn < end_pfn) {
-> -		const unsigned int order =
-> +		unsigned int order =
->  			min(count_trailing_zeros(pfn), ilog2(end_pfn - pfn));
->  
-> +		/*
-> +		 * Make sure all the pages in a single preservation are in the
-> +		 * same NUMA node. The restore machinery can not cope with a
-> +		 * preservation spanning multiple NUMA nodes.
-> +		 */
-> +		while (pfn_to_nid(pfn) != pfn_to_nid(pfn + (1UL << order) - 1))
-> +			order--;
-> +
->  		err = __kho_preserve_order(track, pfn, order);
->  		if (err) {
->  			failed_pfn = pfn;
 > -- 
 > 2.53.0.473.g4a7958ca14-goog
 > 
