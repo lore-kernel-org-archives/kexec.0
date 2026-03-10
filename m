@@ -4,127 +4,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 62816EFCD9B
-	for <kexec@archiver.kernel.org>; Mon,  9 Mar 2026 17:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9F7ABFCC9B2
+	for <kexec@archiver.kernel.org>; Tue, 10 Mar 2026 03:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mL+d40KjyhuL+4bMpXUsYaQzeUUDZaEOQ6AdzLVzNPg=; b=HmRUclqykYS/VMlfPkvG/vYb+d
-	FQ1aHMLW12VQVqGuV4F8uMTYNpomG5FGjal6psh//9EFGMkqAQFfJmNT8XhL6pvq3qwYI+sXgNr3m
-	2Jc54rxw8mmEKvzt3SZ8LgseyrqTp5TSEQ1SzHNExRzXNb3Hk/g7UUbITUs1JcbkwutGo5N73SNmY
-	0guquBTiKBHDE19FGWmiwxQGTI35N3dS0tAu2piZqbb/cSEg57fBe0cziqk0bt1NaNj4OBLZTePKL
-	6DwVWwiSsWF6QcsMqfe/vH8JeUfRfQczibjuOHg6v5tZv+ZXBQY6p4D8g70kMrWToTiQRYuM2KV2h
-	FtcVn51Q==;
+	bh=Z8wzi9FNPp4/XKZYVRleDC4ka3neBIgTHsv9B+jgRvc=; b=KVSPeNyWPLfW/TIf/kI278L8qW
+	d3GuFbAMHrrgW2JKG68KUYOWduZY4SJqesel7EXzYwv/SqpOrAQ3cIvmoGkR+Wt2SXdF/UGb752OQ
+	PwkPOgKp47V1ZKa7PkUvf7mQ3FJEJhuXKzZ1bATAtbprTfkJ3EGM/XgvTTSOlancsQa4LYx7EE76c
+	yLVdy+3OR0KOb0Q7BAeQLnAiIQiIAdViWqNzsRs+ZXaVpV4HJaRtJcUJHk+6xpYRe45VQh3Dsa+Dd
+	NKML/pzQBsMp/MfASCZ6bAxNDYJKAcCzm9m3RlXTP4tBk2+nM+yMWeSbfkuSzS9lRm2pIBNNoZ7vi
+	/sw3/Y0w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzeTT-00000007pb3-44fS;
-	Mon, 09 Mar 2026 17:32:59 +0000
-Received: from mail-lj1-x230.google.com ([2a00:1450:4864:20::230])
+	id 1vznqb-00000008fQ2-2CBJ;
+	Tue, 10 Mar 2026 03:33:29 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vzeTR-00000007pae-0S1K
+	id 1vznqV-00000008fPg-2UYX
 	for kexec@lists.infradead.org;
-	Mon, 09 Mar 2026 17:32:58 +0000
-Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-38a2f196cbaso48210061fa.1
-        for <kexec@lists.infradead.org>; Mon, 09 Mar 2026 10:32:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773077574; cv=none;
-        d=google.com; s=arc-20240605;
-        b=eUDju/JJzfIczz5GlwPzS/EDkA+OwM+h6X9A5agWTxcaLp6vneaaC+sHBkkTN51Mos
-         eWEyeblDQTXMT5pN/l6R3gr0AEeFXzXE0zD1diR6rXcKd43gVTDJVZx9qbTrCK2qAUJL
-         /gzmOoqglUlXo9eh9LOr9BVL/rlaG1b3wg0eFPNjjZDBgJf8PgrnN2wOgYuhij3hQroS
-         rVQoVaWgrqGCH1Uvxdz4CpmaP1Kr/IhkwycGhj4FFOAffYHIM2Gxz3ER6hU49hluz0WV
-         0LZ/1inLgc5lVnG+eKdTcpQlxa7Ottu3mvcMhYUQMDoeYsKoC3mlTizxkGQY9/N1vUQi
-         MonA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=mL+d40KjyhuL+4bMpXUsYaQzeUUDZaEOQ6AdzLVzNPg=;
-        fh=covrqwqZzwWckkrb94+p3rSwJQyQ3+emY+431mrm6cg=;
-        b=OTwHOvhGFK+9b3ZEsEHcKSjSz5ZkYA4jG+EwaQXIc+caGjEriZXyQ+cveLQei4SQm0
-         +HPCRqzHDMYSs/vsSDDpuUWAtwO/TD9AILLluOp379aMvSQJEsdhpyxs+afiScO0uxKN
-         Yh7CUNV5tZIn19qaXMfBKwkitxfDx4vw0O/pojSII2DJqlhZFZD9Tcmt/GbKZDjdf95j
-         pAQBpzl0m2+QtI/0gDgxwHog2e35bYa2uZUMhkD9CfUa5S3CDBx2uM2+ypt3NDJkcn/5
-         YHddvRaMHFZhquIOg1Ec9E9dj13+hGxsv/Fl4AAjh6CXH1pyPDv/sCxBBhLIzdhLntsI
-         jgnQ==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1773077574; x=1773682374; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mL+d40KjyhuL+4bMpXUsYaQzeUUDZaEOQ6AdzLVzNPg=;
-        b=jJA5hMQnQTT+Aw9kY4yR15MWWpSv5ovXDWQN+k2gxMyxchnZRovzHJCSngrafTN5Sv
-         8fJ2ThWf6QGTIlWPgmv+1pghPQWbzmr+flP7WOj8eVDwj0hu8vbGFDO+spQ/fqmJd2n/
-         +Si0+T1O2cF7rzEEM5QuZxppTI9p506dEj8oW1D3UYplijaPJe1tBdQJ9wqcUrdMkd6i
-         1Uc8DeMgaSAZUWfGbC+kjgsRdZ9cmD6/jCZDvWaKAt8t02+XWYA5qrZQ2dTRY9Gxdkav
-         q/eS/zUGZkG37ua7LLnxj+pqvl3TU5DTcbWd63mnJ0ekUCFbpavLDShlmRYS/k62LWK5
-         2NlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773077574; x=1773682374;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=mL+d40KjyhuL+4bMpXUsYaQzeUUDZaEOQ6AdzLVzNPg=;
-        b=LfBnZXUhesUsOSNS8KItJ7YPW0Ut19zTesZGdXh6WJTiepD9axbtMtujTnntXOoLVf
-         uGvk7XyatVe3oa9KriSpbA3tQhSir73DvGb+MFqQY4VLU4D9DDtAMN/Ht78bWR4P6Fn/
-         862xS3Jd+ggeDaZW8OXnMPo1SCkjRJ2x1MfUm2O3YgerdxrqLDL0vVX8g9ogBUTD9O7v
-         TYPX5m3fFd+PvnuYFUrV5zlmW95jRvelDFRo6oh31Hdt7UMVknar2xAT6dxj+O9yONtW
-         09kqwFN9teHVF+AnnN5gp3LVyTyNRkFaQuxtZujN2F4JPYjwmnx00FnDS4AzOqsT3SWJ
-         vJZw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+3eIxniNWjF13+yUdsnS4ZvG9qxl4aDj1GHMWADw1rfgl0c4+QzyNhli3OFONV87HDeV+nA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwoOnRF+XFzafbKZfBWOhzqUP7B6j29DfSCfact3KkJmtpSc+Zk
-	H5LfQJsggz0lep8QDU8dW/TPkzA/ryLfuX4OZHPvigIKtJ1q+X0NBT2QZmh5YHRyN/Lyjd0Rs33
-	tCWFRyKAgbB7sB5Rg2cgw7CLM/DHNaGjqmu4qwo4J
-X-Gm-Gg: ATEYQzyb2ZaIXVh4yBL8Psc88xIP7jl/VDO5LQN/7uZhhrBaJVIu3J5xNdC1U7Gh8k4
-	hxqbAQbiJlswr8DhIoC1Z3iRyLwqNGbko/nfOg2Nc+6hIFK+n3aPmCrqWmCtKAFIqlffN9gqwk6
-	m9KnVJsXDVDJVQz3VfMm6QJ+xcEAAG1gDff2MX0KBa++CUBK3g7XRPJjraV27yrKhIeuI5MrWMY
-	n1bJxzIKRA2v2DzPQYkO8SejXwMD3DbFfR7fncYHR/CQ4GsUQ+J/wj+Hx4pCIZHK1mcTEBDDDNM
-	Bj6aAiKB
-X-Received: by 2002:a2e:9e89:0:b0:389:fc6b:943f with SMTP id
- 38308e7fff4ca-38a40b72dbbmr31791631fa.11.1773077573745; Mon, 09 Mar 2026
- 10:32:53 -0700 (PDT)
+	Tue, 10 Mar 2026 03:33:25 +0000
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 629DnYgS903350;
+	Tue, 10 Mar 2026 03:33:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Z8wzi9
+	FNPp4/XKZYVRleDC4ka3neBIgTHsv9B+jgRvc=; b=L+azaVHpieVl/BGd4lCe8h
+	9D8H4bOmuMtshAMiI0KVgICRXgFdMbZDppiP7k4+75azBFHm5q50EZCbzrmv4WQt
+	KZxqPxrDB/wkXfjUkFL24T8BK2c6xW31G/crHvUOAykiuLY2J35NsQ9CyfRYTpaS
+	21onvC4jWeuIjXdnuZbz/j17lS27ksRL+dOlBVCuYsDrRL1Huma7JcUJ2dy3Vgty
+	6EPvabuj2omPx9EbG9v1UqpiyQe7ujaoNAmhsH5uTR/ktSSF/75ZvPVzcBW2GSjF
+	3So6aCK54CdCMKI26vSbWB1s+RCoq0PfRQXdahrLlSzPen3ufSy9/yBV4inKPd4Q
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4crd1mgy51-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Mar 2026 03:33:11 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62A0JFGD022994;
+	Tue, 10 Mar 2026 03:33:11 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ct8ng0fba-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 10 Mar 2026 03:33:11 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62A3X7cD41419218
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 10 Mar 2026 03:33:07 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0A73820043;
+	Tue, 10 Mar 2026 03:33:07 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5B8A420040;
+	Tue, 10 Mar 2026 03:33:04 +0000 (GMT)
+Received: from [9.109.204.116] (unknown [9.109.204.116])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 10 Mar 2026 03:33:04 +0000 (GMT)
+Message-ID: <9c9c4500-d703-4ece-89b0-c88fcb04d847@linux.ibm.com>
+Date: Tue, 10 Mar 2026 09:03:03 +0530
 MIME-Version: 1.0
-References: <20260129212510.967611-1-dmatlack@google.com> <20260129212510.967611-11-dmatlack@google.com>
- <20260226170030.5a938c74@shazbot.org> <aaDqhjdLyf1qSTSh@google.com>
- <20260227084658.3767d801@shazbot.org> <CALzav=fHy23RAzhgkdaL+JA5T2tL9FT6aPgRfXUh7i9zvYCGPA@mail.gmail.com>
- <20260227105720.522ca97f@shazbot.org>
-In-Reply-To: <20260227105720.522ca97f@shazbot.org>
-From: David Matlack <dmatlack@google.com>
-Date: Mon, 9 Mar 2026 10:32:25 -0700
-X-Gm-Features: AaiRm51UQkPGi_THgF8Q61sl9tHSSk61beTImuWL9a-lckj5dJAcnYvj7LG9bmc
-Message-ID: <CALzav=fjRPa_ZbXu7iFXyemcf_8Kq_dZTWT6c-A0bc6czF_Rdw@mail.gmail.com>
-Subject: Re: [PATCH v2 10/22] vfio/pci: Skip reset of preserved device after
- Live Update
-To: Alex Williamson <alex@shazbot.org>
-Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
-	Alex Mastro <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Ankit Agrawal <ankita@nvidia.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
-	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Corbet <corbet@lwn.net>, 
-	Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, kexec@lists.infradead.org, 
-	kvm@vger.kernel.org, Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, 
-	=?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>, 
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
-	Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
-	Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>, 
-	Zhu Yanjun <yanjun.zhu@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] powerpc/kexec/core: use big-endian types for crash
+ variables
+To: Aditya Gupta <adityag@linux.ibm.com>
+Cc: kernel test robot <lkp@intel.com>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+        Sachin Sant <sachinp@linux.ibm.com>,
+        Shivang Upadhyay <shivangu@linux.ibm.com>,
+        Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+        kexec@lists.infradead.org
+References: <20251224151257.28672-1-sourabhjain@linux.ibm.com>
+ <aa3iczOcLm12Y3ln@li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <aa3iczOcLm12Y3ln@li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=ds3Wylg4 c=1 sm=1 tr=0 ts=69af90f8 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8
+ a=u8TtPYIeZricfBlmIPcA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzEwMDAyNSBTYWx0ZWRfX6LkqvsvTMNhh
+ F7CLSg2LAU4LxTUixApNvzt2LmBcztCor8E0o+dIM4PhE7ne9hArsnR/iSUO+fDAUyXG54IJ/Mr
+ VGoN8s/+h28xx2B4ACVq8t3aTPZwiwYKWUUPjfNT1D/ELrjJKhAUARKkuYE8mXR7cmO3ZGAokNS
+ eSTbSu9eOhYy0JYDkVJ8Zm+37byNMLk0QtmriEbdxsiL5TRquCY03eHCF3tZhbfjw3gSnwyIa58
+ wNvWrIFl3A5w0U+OIq1pwMWsgu7ZCtUFKbQtxMt44wg8z2fScksjj4axhFiHeEGwZHf5vh7/L8Q
+ h7RP6h+pG7/KHvTmSpIPxb7WPgUNd0rYEdYKefQNOnJ6MvgTTSF+eqzIrHOQcGgf9RNksv/mAdE
+ knaT+N6O2S8MirmSaYbmUac+Ch6+g8rqLwU0wKQ5AcsBUfJECD+qZ60OEGROjrcmcbZOBjpW0Hp
+ OIO5Pe2KFSMfNF7Rvqw==
+X-Proofpoint-GUID: joi6sjzKVTMNGUQ3z0Lfx_jkLrB_Dxn_
+X-Proofpoint-ORIG-GUID: 9VDmsq0HKnZqq_vCEsk2sidhTa1QfnHv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-10_01,2026-03-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 phishscore=0 clxscore=1015 impostorscore=0 suspectscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 adultscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603100025
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260309_103257_186134_10A242F8 
-X-CRM114-Status: GOOD (  30.75  )
+X-CRM114-CacheID: sfid-20260309_203324_115916_EC3B2ACC 
+X-CRM114-Status: GOOD (  16.95  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -139,78 +131,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Feb 27, 2026 at 9:57=E2=80=AFAM Alex Williamson <alex@shazbot.org> =
-wrote:
+
+
+On 09/03/26 02:59, Aditya Gupta wrote:
+> On 25/12/24 08:42PM, Sourabh Jain wrote:
+>> Use explicit word-sized big-endian types for kexec and crash related
+>> variables. This makes the endianness unambiguous and avoids type
+>> mismatches that trigger sparse warnings.
+>>
+>> The change addresses sparse warnings like below (seen on both 32-bit
+>> and 64-bit builds):
+>>
+>> <...snip...>
+>> ...
+>>
+>>   /* Values we need to export to the second kernel via the device tree. */
+>> -static phys_addr_t crashk_base;
+>> -static phys_addr_t crashk_size;
+>> -static unsigned long long mem_limit;
+>> +static __be_word crashk_base;
+>> +static __be_word crashk_size;
+>> +static __be_word mem_limit;
+>> ...
+>>   
+>>   static struct property memory_limit_prop = {
+>>   	.name = "linux,memory-limit",
+>> -	.length = sizeof(unsigned long long),
+>> +	.length = sizeof(__be_word),
+>>   	.value = &mem_limit,
+> 'mem_limit' has slight change here. it used to be 64bit always,
+> but now on ppc32 it will be 32bit
 >
-> On Fri, 27 Feb 2026 09:07:48 -0800
-> David Matlack <dmatlack@google.com> wrote:
+> I see only one usage of this in arch/powerpc/kernel/prom.c, and don't
+> see any issue with usage due to the 32-bit/64-bit memory_limit
 >
-> > On Fri, Feb 27, 2026 at 7:47=E2=80=AFAM Alex Williamson <alex@shazbot.o=
-rg> wrote:
-> > >
-> > > On Fri, 27 Feb 2026 00:51:18 +0000
-> > > David Matlack <dmatlack@google.com> wrote:
-> > >
-> > > > On 2026-02-26 05:00 PM, Alex Williamson wrote:
-> > > > > On Thu, 29 Jan 2026 21:24:57 +0000
-> > > > > David Matlack <dmatlack@google.com> wrote:
-> > > > > >
-> > > > > > - vdev->reset_works =3D !ret;
-> > > > > >   pci_save_state(pdev);
-> > > > > >   vdev->pci_saved_state =3D pci_store_saved_state(pdev);
-> > > > >
-> > > > > Isn't this a problem too?  In the first kernel we store the initi=
-al,
-> > > > > post reset state of the device, now we're storing some arbitrary =
-state.
-> > > > > This is the state we're restore when the device is closed.
-> > > >
-> > > > The previous kernel resets the device and restores it back to its
-> > > > post reset state in vfio_pci_liveupdate_freeze() before handing off
-> > > > control to the next kernel. So my intention here is that VFIO will
-> > > > receive the device in that state, allowing it to call
-> > > > pci_store_saved_state() here to capture the post reset state of the
-> > > > device again.
-> > > >
-> > > > Eventually we want to drop the reset in vfio_pci_liveupdate_freeze(=
-) and
-> > > > preserve vdev->pci_saved_state across the Live Update. But I was ho=
-ping
-> > > > to add that in a follow up series to avoid this one getting too lon=
-g.
-> > >
-> > > I appreciate reviewing this in smaller chunks, but how does userspace
-> > > know whether the kernel contains a stub implementation of liveupdate =
-or
-> > > behaves according to the end goal?
-> >
-> > Would a new VFIO_DEVICE_INFO_CAP be a good way to communicate this
-> > information to userspace?
->
-> Sorry if I don't have the whole model in my head yet, but is exposing
-> the restriction to the vfio user of the device sufficient to manage the
-> liveupdate orchestration?  For example, a VFIO_DEVICE_INFO_CAP pushes
-> the knowledge to QEMU... what does QEMU do with that knowledge?  Who
-> imposes the policy decision to decide what support is sufficient?
+> For the patch:
+> Reviewed-by: Aditya Gupta <adityaglinux.ibm.com>
+Thank you for the review.
 
-Hm.. good questions. I don't think we want userspace inspecting bits
-exposed by the kernel and trying to infer exactly what's being
-preserved and whether it's "good enough" to use. And such a UAPI would
-become tech debt once we finish development, I suspect.
-
-A better approach would be to hide this support from userspace until
-we decide it is ready for production use-cases.
-
-To enable development and testing, we can add an opt-in mechanism,
-such as CONFIG_EXPERIMENTAL or a kernel parameter. For example, adding
-something like this to vfio_pci_liveupdate_preserve():
-
-if (!IS_ENABLED(CONFIG_EXPERIMENTAL)) {
-        pr_warn("vfio-pci file preservation requires
-CONFIG_EXPERIMENTAL to enable!\n");
-        return -EOPNOTSUPP;
-}
-
-Once we feel the support is ready, we can just submit a patch to
-delete those lines, and there will be no left-over UAPI.
+- Sourabh Jain
 
