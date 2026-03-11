@@ -4,116 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B1437FD88D8
-	for <kexec@archiver.kernel.org>; Wed, 11 Mar 2026 02:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0BBC91062897
+	for <kexec@archiver.kernel.org>; Wed, 11 Mar 2026 12:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2MWSpH9FvXPMPfQOubS4scinmNzLxM1+H3KRkOEZ/Js=; b=iNwlL4OvVY+vPu7Pg2e09PSWbu
-	e/VAicDzrMVe2SpRD14lMb8DpAJSpabRX50n/fbuLkq3FpbSB0XdzuXwNLhAz7CpdYx2/KHr4Bz5G
-	hGDQS/MvsSlOiLJvlNG3di3aPIHIZpU552wuUnfOpBLhttkFQsmq5lfY8MsG7goeDpQNGH+uD5qoh
-	6nqiqp4K0wkQ+nkDOMB6flJqoLCtsYgNooKUspB8fT3D11Y6evuzQdn6fBSMeRcImEYB7b7jc95qm
-	FwGV0ZfhK9VpMu0RKaLxMlGAS6/mWAqIb5uMQx1IpdJoNgwJtCg1UwSXrCau/TEm/LKrWkH/sGz9T
-	DsXMSOIg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=2Y9gskyCpeZiaybJRnS79bVzWhSmmn3pZfV0wtEdZDk=; b=hcSgYcYY58JQt5bI4AeM1Cv0Ik
+	9HYDAsUbAWCybo2bw4IjHxUmgSRwy0ZFeps1wzpZRqEonb5FYkapkD9to7hha1RuXunp0Lv8dHPQe
+	WvIwYbpLYJVSkZ4rZziSPW4GnxX1DA25c0sVZ5egSVVlPeDuUPZIiOCe08gyIybvWjHK1pWN/s/8S
+	Wa2oG4M5YRuO8F/rWvCMpprt+sSPeQTALq290i3C6k5SFsCCggXC5JQovDqsmePIB/IWqew3Oz6RN
+	vKq4kQ/zeD7/FESuJIQhKddBVCPLVjz1aUGHr+UYktCI4ZYxLw9p8nzlpr8QCm2T6RbJf8m0rasjN
+	5ck7FbRw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w0969-0000000AXdU-1tKW;
-	Wed, 11 Mar 2026 02:14:57 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1w0J6U-0000000BbLv-32Mu;
+	Wed, 11 Mar 2026 12:55:58 +0000
+Received: from mail-ed1-x54a.google.com ([2a00:1450:4864:20::54a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w0966-0000000AXd5-1r1H
+	id 1w0J6N-0000000BbLN-2pUS
 	for kexec@lists.infradead.org;
-	Wed, 11 Mar 2026 02:14:56 +0000
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62AMEXx31594484;
-	Wed, 11 Mar 2026 02:14:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=2MWSpH
-	9FvXPMPfQOubS4scinmNzLxM1+H3KRkOEZ/Js=; b=F29gA9MASS8w1rf6yAzz9E
-	aeLmpZjZv0iJonXmY86CXR2HFIymbMDbhgcc+xC9+10D2ARF2P1A6sbv9X1jtTpQ
-	DkF2J1zb/QSmOGjCEGOLEl0gdnXSJ5MYWr+lrnbRU7Nhc7H6g/cKXoyKAst+gJtc
-	jhD8FtCEg/NHmcZH0mKsy+rR/jB3FekjVP2jvhca5YCeASwkUqHDi6kLBbM61nRv
-	Gl3tlnnA8YmScoEE8Cb3FWlQvQDyoV/ui08cHe/YUmkc67OLOnsFIeznUwTYvy9m
-	iXzWhSkUdKPgp/2nKJyJY67c97xeSnLAS1InVIOsmJj7YjM6yDhVEg6LWSg+PsMA
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4crcvrdcub-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Mar 2026 02:14:42 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 62ALKPFL025052;
-	Wed, 11 Mar 2026 02:14:41 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4cs0jk3fsp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 11 Mar 2026 02:14:41 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 62B2EbpL57540908
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 11 Mar 2026 02:14:37 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 868B120067;
-	Wed, 11 Mar 2026 02:14:37 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 281CF2004B;
-	Wed, 11 Mar 2026 02:14:34 +0000 (GMT)
-Received: from Linuxdev (unknown [9.43.124.195])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 11 Mar 2026 02:14:33 +0000 (GMT)
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-To: linuxppc-dev@lists.ozlabs.org, Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: kernel test robot <lkp@intel.com>,
-        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        Sachin Sant <sachinp@linux.ibm.com>,
-        Shivang Upadhyay <shivangu@linux.ibm.com>,
-        Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-        kexec@lists.infradead.org
-Subject: Re: [PATCH] powerpc/kexec/core: use big-endian types for crash variables
-Date: Wed, 11 Mar 2026 07:44:32 +0530
-Message-ID: <177319508340.269267.14742705106176639516.b4-ty@linux.ibm.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20251224151257.28672-1-sourabhjain@linux.ibm.com>
-References: <20251224151257.28672-1-sourabhjain@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzExMDAxNiBTYWx0ZWRfXxds8FJnQxUpv
- 9ruvVtKeu69jZFh8sBDanBw4pDkWTmE4R1RZI/Yyoj9WJnO8seFG4JZMfehWtEBkTWPRIeEV+A8
- pBt2ZQD92gXE+PXlEz206YMocDdQdnsYUIkNy0lD5rbgfmbscrLiNe9EEOdhWUuOQfAGT/C7ama
- BBaLrEUjv/zMglp6xwNxe5kV6PIQPI0IloVZ1PgF5Q1EOxna2htv5SvYKBIFmH/QMz4wH6sbB3N
- nz7QlXZh7LwM6/L5KHLWuZiVXqDNTFg5kjYO/s5ukHi0lskGigPIPuum5zIm2z6AjzGv6Zoy2hI
- Y/Z/fVEMmDP/8wjldWvAsayOyZXWGXMXV8K6ZLa1+K0zG6Kw0L9c3k6k+gcRmEG3Ts46POcVHbY
- c99/AJnmUvLWAwef+TMHWTwKHGJaEFr97nK6lXVZVAD9suKNOJaTyP3+u5feyRDcZZkGmDtSThn
- 38vM323nA+Cvrb1eZUQ==
-X-Proofpoint-GUID: 3aav-ZHLpvVPrmyA0QoL0pvoD0ZcDNI_
-X-Proofpoint-ORIG-GUID: iJ4tafNgLV2Ta3r6ntWSGPhq8xMpYz5E
-X-Authority-Analysis: v=2.4 cv=QoFTHFyd c=1 sm=1 tr=0 ts=69b0d012 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=VwQbUJbxAAAA:8
- a=-K50HR8UOdKsrgnMF3AA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-10_05,2026-03-09_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 priorityscore=1501 phishscore=0
- lowpriorityscore=0 adultscore=0 clxscore=1011 malwarescore=0 suspectscore=0
- bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2602130000
- definitions=main-2603110016
+	Wed, 11 Mar 2026 12:55:53 +0000
+Received: by mail-ed1-x54a.google.com with SMTP id 4fb4d7f45d1cf-662aa4b4000so2549348a12.0
+        for <kexec@lists.infradead.org>; Wed, 11 Mar 2026 05:55:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1773233749; x=1773838549; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2Y9gskyCpeZiaybJRnS79bVzWhSmmn3pZfV0wtEdZDk=;
+        b=wDLNQgj2CHueca1hHAyRpy3yCs3cY7ItoyaySdY2pt8kyO0AwA4oWWFWYOI91k4mSO
+         iCIDCBYl4yc0LnJQLv/H95/GIvSD64wPT603jjuahik6SDBLoRZu1a8dJXD1szSFPYzk
+         GBxRs/H4vvQ/s++b4Qxy7eNb1T+1lA5Dd4N8YAGg/kAxpBZn2JwjvkD0aQUFBIcu4FaP
+         6ajfaE9mgKTW6uviie0JaQiVCPRvfh+ay1FeCmhpbdn/BlzalyQ01RArJqk0+QDxa/yA
+         yz82OtLdiHOArNKYAxsNweaLsWfFwajuwKoqqCaKLUW8/QZ7KIB5xGzw8+uzf2Q0xeD4
+         LP3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773233749; x=1773838549;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2Y9gskyCpeZiaybJRnS79bVzWhSmmn3pZfV0wtEdZDk=;
+        b=iHtq1UUVqCLTzW32AtzI+9/9ZZyOG0FrCFwNPi0TfbnMYlwWRpaS93Ju8Kal45crXp
+         IGmhMSqWvJ06tRS7Eo2dYyUM5DhF/HzXsvjCc+WIoL3y2d4s+eDNl80EjIrxca1SuiT6
+         vZBlwltJsByn1h0m3Hr7tyK2ySuvVW54VNqBH2iNsbsL0bW34Xa8fjA8/MrDimaZBN2t
+         9O8DpIv5prfzIEWV3GmCvyavCMebAXGYVaA9sz9Gy6j1s/SZm55q+vYkcE5iuorrn9W3
+         Qb7d2jmp/699C1JxwiWpTDoE9bu8fAvV2L6EhNoeYsB/YUH2YzOMnXrLtqmw4+8d6/PM
+         EMKg==
+X-Forwarded-Encrypted: i=1; AJvYcCUB2a6zUicaRymarfNwPZI5gBrLjc2d6GcC8a+rmtnM4uBAobP1Nw0NydeVrhPbLdgQTg6JMg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzC0dQER6Pe4LL6VzMYYh038nN7/Th6leSD9cVXIjR0NOAc7Ww2
+	bejxGmEn+QX3Lp+nlzwU/zvD2HQO1BlbVxUsy8vraUkxZhwcCV31gg8vxnjscJTNYEJQ43B6GjY
+	cldMKfJlNbtCrAmCqF3m9QQ==
+X-Received: from ejpi2.prod.google.com ([2002:a17:906:4442:b0:b93:57db:4eba])
+ (user=mclapinski job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:907:f495:b0:b93:62dd:a4a4 with SMTP id a640c23a62f3a-b972e6a5b85mr118824966b.51.1773233748733;
+ Wed, 11 Mar 2026 05:55:48 -0700 (PDT)
+Date: Wed, 11 Mar 2026 13:55:37 +0100
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.53.0.473.g4a7958ca14-goog
+Message-ID: <20260311125539.4123672-1-mclapinski@google.com>
+Subject: [PATCH v6 0/2] kho: add support for deferred struct page init
+From: Michal Clapinski <mclapinski@google.com>
+To: Evangelos Petrongonas <epetron@amazon.de>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org, linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Michal Clapinski <mclapinski@google.com>
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260310_191454_625275_D630541C 
-X-CRM114-Status: GOOD (  10.19  )
+X-CRM114-CacheID: sfid-20260311_055551_719861_8F76C85F 
+X-CRM114-Status: UNSURE (   9.42  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -128,20 +89,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 24 Dec 2025 20:42:57 +0530, Sourabh Jain wrote:
-> Use explicit word-sized big-endian types for kexec and crash related
-> variables. This makes the endianness unambiguous and avoids type
-> mismatches that trigger sparse warnings.
-> 
-> The change addresses sparse warnings like below (seen on both 32-bit
-> and 64-bit builds):
-> 
-> [...]
+When CONFIG_DEFERRED_STRUCT_PAGE_INIT (hereinafter DEFERRED) is
+enabled, struct page initialization is deferred to parallel kthreads
+that run later in the boot process.
 
-Applied to powerpc/fixes.
+Currently, KHO is incompatible with DEFERRED.
+This series fixes that incompatibility.
+---
+v6:
+- reimplemented the initialization of kho scratch
+v5:
+- rebased
+v4:
+- added a new commit to fix deferred init of kho scratch
+- switched to ulong when refering to pfn
+v3:
+- changed commit msg
+- don't invoke early_pfn_to_nid if CONFIG_DEFERRED_STRUCT_PAGE_INIT=n
+v2:
+- updated a comment
 
-[1/1] powerpc/kexec/core: use big-endian types for crash variables
-      https://git.kernel.org/powerpc/c/20197b967a6a29dab81495f25a988515bda84cfe
+I took Evangelos's test code:
+https://git.infradead.org/?p=users/vpetrog/linux.git;a=shortlog;h=refs/heads/kho-deferred-struct-page-init
+and then modified it to this monster test that does 2 allocations:
+at core_initcall (early) and at module_init (late). Then kexec, then
+2 more allocations at these points, then restore the original 2, then
+kexec, then restore the other 2. Basically I test preservation of early
+and late allocation both on cold and on warm boot.
+Tested it both with and without DEFERRED.
 
-cheers
+Evangelos Petrongonas (1):
+  kho: make preserved pages compatible with deferred struct page init
+
+Michal Clapinski (1):
+  kho: fix deferred init of kho scratch
+
+ include/linux/kexec_handover.h     |  6 +++
+ include/linux/memblock.h           |  2 -
+ kernel/liveupdate/Kconfig          |  2 -
+ kernel/liveupdate/kexec_handover.c | 62 +++++++++++++++++++++++++++++-
+ mm/memblock.c                      | 22 -----------
+ mm/mm_init.c                       | 17 +++++---
+ 6 files changed, 78 insertions(+), 33 deletions(-)
+
+-- 
+2.53.0.473.g4a7958ca14-goog
+
 
