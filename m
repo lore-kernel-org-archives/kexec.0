@@ -4,141 +4,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0372E106ACF4
-	for <kexec@archiver.kernel.org>; Thu, 12 Mar 2026 23:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D9EED106ACFC
+	for <kexec@archiver.kernel.org>; Thu, 12 Mar 2026 23:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Message-ID:Date:Subject:Cc:To:From:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=z1vPG6JafKZbJXr8M3YgsCzayv4FHyW6an8+dF+wIJk=; b=WVwlRHeFpb4mADOgDScLXS8NpR
-	1FsQC+xuuGqi2eL3on+se9cE1XsQ7aV1hFtwq3Enj4g9IX5p0SkOF5s0l23AA5lhj1BlfcZDn1bOc
-	QWnFKzTsWDAB1NasvocKQlGKVtADysbk67Oid9FhUvJjFUecr3XtYCMAPoc4v9PAdYoyjpdNwYKZK
-	pv+QwNupu/JJvr6YGzsTiJSLZ7gjEuPOznu7QRmGXOq1hA6QxuDAlTZH6704p18BMamsxmyYaFxfS
-	Te5CxRVqJIKtXVLJEbkNtnbpj7dDjl66FahLq0hGcL086h3yHCInAfQrGzoyH5PCBdgiwqCEb66KM
-	Xrgq4aWA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=tuWxuj0biLq2l1xmhqHdX16m/kzH5EhGtvvF3ksAcvQ=; b=UTLNIOB2o9wagPNp+oQ3rIIGEI
+	Cc5ItGuTtueARjU/eIo//ijuhrNEQ4NGDXEikLm5SfmNDWHLhx/tY3SwvErIdcjS6xNGvi4JxbPir
+	tQmJ2b8sKtCp6zTEkcVcJalSCWsMGq8Xu1z1qpMeow6xmZtqvvxaW7PywWhs/Z991V9FZ3masqUX6
+	pvoredraTYb/JZq2rVm7HaRtGHfdvpXC/1AmZxoC/+yKYPOc2yy4uTdiden0p/QGvbMcmgTRRgo7B
+	dWvAaHDsntxX0S3qr5VWuh9U40gbnwiTBklgacTax7jbPKnrxk+0lsn3VC46xzOrIUKqjylXuzWff
+	14sF1D+g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w0pHV-0000000Fl2a-1Ddx;
-	Thu, 12 Mar 2026 23:17:29 +0000
-Received: from mail-eastus2azon11010002.outbound.protection.outlook.com ([52.101.56.2] helo=BN1PR04CU002.outbound.protection.outlook.com)
+	id 1w0pdF-0000000Fnz9-0GKp;
+	Thu, 12 Mar 2026 23:39:57 +0000
+Received: from mail-pj1-x1031.google.com ([2607:f8b0:4864:20::1031])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w0pHS-0000000Fl1r-3cbD
+	id 1w0pdB-0000000FnyJ-46MV
 	for kexec@lists.infradead.org;
-	Thu, 12 Mar 2026 23:17:28 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=J+N/PPVw9ovkVLrHTw05akAKhYs060WtV/dwfeW/844TnHB5mpiJK5TTkyz0NTBxoyDidkb6LwpvohcYgqqLA5IvZY49uUZ/myxYC32jA7t9QYuZ/JcoqaEuFWX/WPxduUiQ8FMHjsNFN4ZrsO6nPvzQ/B2XnaxSuDHBl70dQiWpPEZULIvf0T1/ej6zZwR0GWi63evV5OmUg5KRuVb6GHN5I757hivZYWKB3vAB1wR4YKFc7qF0RIpdWT60lG83wU1VLpB4ohJhqQLM+/YuYdBSr93lvMCq7n+CG9fMZ7yR0RlQ9gRxDQkqcaloDnT2eeZ3sbpE5bfVCyBmEY2Jqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=z1vPG6JafKZbJXr8M3YgsCzayv4FHyW6an8+dF+wIJk=;
- b=ZKDJfR5SvtZ7UhiUwiz6VJO1rtdgsv8MX4YbsZzfih2d4cTuZJCiRRIbzN6uiuGFV9rpWLbNE7lAvK7CVJJHqoZCzjBmQLsMo9IrfbthSjpJEVMhuuN/Ub8e0fPuGo3WnLVS2ZsyuGqE7bRO2TfHyy0o1tgqmrVFh9/Glq6QqQUk/Y6QW+349S2BEdhBPzAIMcUlX9JTn1TmUlMXqI0tyR17Ujh2ziJ982fCeJB1AVeu2utBX7lT0yQND25b1WKka4qPpYAp4mXPG4RbRah842pNpSYPlKQBJbfQM/xyX45gVnV1H3nLDVZYSBpxJKM7MckYWdiktby679iIUOtL+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z1vPG6JafKZbJXr8M3YgsCzayv4FHyW6an8+dF+wIJk=;
- b=ON5f1mCSzPQqdWRjNZDgLmuVD0AEwQL1FktpSumjZrY+56Be9EjdOkjcNuu/zB+eDZv1DAMpRfnNeJOEC7+yKGlL9rwXLrFw9Y6YITkFQmizIw57hPAA9eALixhY8xBLiow6nISUO+kBTmpiHQ3owhzMZ0nq+he/98IuBtb1fuYllj2HBIF6/DEThl70nPsN1nrIwdQWF9QfST4KNzSYnXGkPT73BE/YwwJbDyQlJnWscayk4vwmbBCgGjDuJ9VUXTLYnq0id+W85fwJGXbS7W7CLk/tXtd7B+mV59JfCa4MKRGJskyQFnU7PPO+tsbHEBBjGd5Gjrsx7g0+6JG00A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB8786.namprd12.prod.outlook.com (2603:10b6:8:149::17)
- by SA1PR12MB8143.namprd12.prod.outlook.com (2603:10b6:806:333::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.3; Thu, 12 Mar
- 2026 23:17:21 +0000
-Received: from DS0PR12MB8786.namprd12.prod.outlook.com
- ([fe80::cd1a:bacf:6ab9:6f91]) by DS0PR12MB8786.namprd12.prod.outlook.com
- ([fe80::cd1a:bacf:6ab9:6f91%2]) with mapi id 15.20.9723.004; Thu, 12 Mar 2026
- 23:17:20 +0000
-From: Yury Norov <ynorov@nvidia.com>
-To: Yury Norov <yury.norov@gmail.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Eric Biggers <ebiggers@kernel.org>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Ard Biesheuvel <ardb@kernel.org>
-Cc: Yury Norov <ynorov@nvidia.com>,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Steve French <sfrench@samba.org>,
-	Alexander Graf <graf@amazon.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH] lib: count_zeros: fix 32/64-bit inconsistency in count_trailing_zeros()
-Date: Thu, 12 Mar 2026 19:08:16 -0400
-Message-ID: <20260312230817.372878-1-ynorov@nvidia.com>
-X-Mailer: git-send-email 2.43.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BL1PR13CA0427.namprd13.prod.outlook.com
- (2603:10b6:208:2c3::12) To DS0PR12MB8786.namprd12.prod.outlook.com
- (2603:10b6:8:149::17)
+	Thu, 12 Mar 2026 23:39:55 +0000
+Received: by mail-pj1-x1031.google.com with SMTP id 98e67ed59e1d1-3585ec417f6so1054063a91.1
+        for <kexec@lists.infradead.org>; Thu, 12 Mar 2026 16:39:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1773358792; x=1773963592; darn=lists.infradead.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tuWxuj0biLq2l1xmhqHdX16m/kzH5EhGtvvF3ksAcvQ=;
+        b=AAL+kjukxOVYsaHAhYb/m2R9gpTvFxe3NSuJ7usQani/EqRtZL7mlvALfRisKgEoqP
+         ZSNLElrJJ1+/z9pnS3U/nzteMigVYCNGeOg6+x4ocMGGWTkrUbezd8oCGI1IgV3DApqk
+         n10YRM96vs/0ItNbTpm3qrUXs08ymd7HrM/vnyK8Xscs4Bzcp/WnpcfmXtpt9hhTJlve
+         FjzhD3M76/v83v/bUkGxdsXuoANZn5Ln3CfxRyMpgP7dHJTILIVL1JWEQP1n0bHBP6zP
+         XcCCHIqAsO38lyELhYe+bJi8aREXhyfOPyzKmPw+zo5uOPGQcQPXteofXoarIl3+alh6
+         IOFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773358792; x=1773963592;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tuWxuj0biLq2l1xmhqHdX16m/kzH5EhGtvvF3ksAcvQ=;
+        b=GFYuBNgyfAdPdIXEzRvfxgzjRaI4srvK0ODRSzTb8EYh4SkfW5KnCGLkakTweGsMlW
+         Bd7boC6BWe9hKkyKxCaRJd77fLUuCYsu/kslxulxtEYBvNGqcPQFe0rSc6EYYEUPx+t3
+         XCnOWWMLlGJlyFkgBZnU2mykIkTobwVnXFExGhyenXePQ7AIHvmePVsyn50pXu5onD6b
+         IUJR17b5hRagRIQeLnknG5hWAn5+RFRoi6o7KOfjovF1gq0g6gmTwyAzSfivZDFUcWze
+         542dFdiaDZGlnMPyKY4aQhMjq1RrwRMuWii2ie8tiH+GB88gWwKon1cLShX6zyu/f5Ue
+         ou/A==
+X-Forwarded-Encrypted: i=1; AJvYcCX8yLvu8R0PasGFWbXwAN8RvMdKP1LVBvSpHUNcpWKevnict5AWZEIt1dTyvG8XpCdblLdDYA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwceXN0zZ7g6ka0z3cXn9ZD/avNq4c446papPlxPUpDMHjlwxev
+	/zf5VOzTY5UhAsL2b69T3ETzNyzWEng8yTiAZ67uHCZ16mgKH4mBK0JSh44IaS4sXQ==
+X-Gm-Gg: ATEYQzxF39dMnf6w3q14gpe5D4CsY9zlKw1sSrP6afdr5GxgqH7Ok+T/+aZD3iY0xbj
+	P0tXm878frdOSfkFcg8FIxqH1Hmjm/hTo82P1LIl06vJ6KPm+rZYCFY4R4RgF02+22VAQAlXSXD
+	PrmfBCz5X9t7b76PtOqUa0hO1CvMK5in9J+KW8PpX9q0O/4HPRT7xALAP50sjsb/zV76Twnzo1F
+	qtxArnoDruVcwxu8IiEHVgotNNVl99D+AwFlwvCziu+/wO7/0EXH1ScanfFumy3qOp5e+VUxB8E
+	HbsbnvTY+3tR563dBSGuqkADNAPThteIuwTajBBjJguuGKLGcxEc6aR7T/27XSdgwaeVY565pLJ
+	ZTw7pXEBsjxYhu55Z2pR6859hAK3XMZzj/DKAx/r3dLDxH2Xu8oTzVvIBLZEezXexTc5SGbYjzP
+	r0tllqzEuLBGOshXVQ1Adh58FDRkKxJN56JwJ6+QT4SOF+MlYmPWyjQsDh36j0YA==
+X-Received: by 2002:a17:90b:3d4b:b0:35a:117:9521 with SMTP id 98e67ed59e1d1-35a21fdb67bmr847337a91.10.1773358791623;
+        Thu, 12 Mar 2026 16:39:51 -0700 (PDT)
+Received: from google.com (239.23.105.34.bc.googleusercontent.com. [34.105.23.239])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-35a03034401sm6609677a91.16.2026.03.12.16.39.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2026 16:39:49 -0700 (PDT)
+Date: Thu, 12 Mar 2026 23:39:45 +0000
+From: David Matlack <dmatlack@google.com>
+To: Alex Williamson <alex@shazbot.org>
+Cc: Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
+	Kevin Tian <kevin.tian@intel.com>, kexec@lists.infradead.org,
+	kvm@vger.kernel.org, Leon Romanovsky <leon@kernel.org>,
+	Leon Romanovsky <leonro@nvidia.com>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org, linux-pci@vger.kernel.org,
+	Lukas Wunner <lukas@wunner.de>,
+	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pranjal Shrivastava <praan@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Raghavendra Rao Ananta <rananta@google.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Tomita Moeko <tomitamoeko@gmail.com>,
+	Vipin Sharma <vipinsh@google.com>,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>,
+	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
+	Zhu Yanjun <yanjun.zhu@linux.dev>
+Subject: Re: [PATCH v2 10/22] vfio/pci: Skip reset of preserved device after
+ Live Update
+Message-ID: <abNOwcOTXqxCxNzt@google.com>
+References: <20260129212510.967611-1-dmatlack@google.com>
+ <20260129212510.967611-11-dmatlack@google.com>
+ <20260226170030.5a938c74@shazbot.org>
+ <aaDqhjdLyf1qSTSh@google.com>
+ <20260227084658.3767d801@shazbot.org>
+ <CALzav=fHy23RAzhgkdaL+JA5T2tL9FT6aPgRfXUh7i9zvYCGPA@mail.gmail.com>
+ <20260227105720.522ca97f@shazbot.org>
+ <CALzav=fjRPa_ZbXu7iFXyemcf_8Kq_dZTWT6c-A0bc6czF_Rdw@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB8786:EE_|SA1PR12MB8143:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9502d587-1921-4eec-d653-08de808d82c7
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|18002099003|56012099003;
-X-Microsoft-Antispam-Message-Info: bmIgEK6QpC6sNWu53l9LnjHkTE7bJgM6HrZrdw29cDWNrtJ7D6v/aqwaZn9xl1l31bfWbPPSn4IsC04NldASLyTG2U92F5RJURBzaZRK32hKWPOz4U6kWPnI6UCINgdSmdxV+5Fjx02JidmdN97OJxC7DtiEWblM8EkUt7A1j6dxWyK9Kc/1xR4iYJZBIQ9GJITrIYD0RxcRn3gBBKXL3AR8Pe6CMDbv3B12WMPuLxauvmnmbUVjs0HlW3RRC4QPd3/vmHtj1LdfZLNUbp5uDIjGkS6df1BdGwnkBYBXFxVMI+0H1nPXRB6F5MBThHOhGIdGBEwNrV7FUQk7zB7xK/RYRDLwFKPMuLiwjO555RLUDP13txwlM5bCKxuKWxUfm7ykwTmgwQHWQgrxEPZx+nBuT2vx6iAJqyfj32rUX7tZ0+PnJFCbgtnVqqPrluF4EHm5faKaxpCXHsJk+QlyyzSMfl2GJi50mgKWS0+I/A93/J7UG2jQblhrBE6Tc3NFfYhPlTeiI3Zm4bHbMn9hu12YJ0A4A+yrKSlez/OCbivpQzlsA/sw/zz0Pa8LcQ7x4NxXznpvwIlv3AaoMMe/8jFR5f6rgLxgb9U6Pg4e7SgHGl9/dyeGQVNXNEioUJUZcr8PzTqL4NrPNDTEh8bCbusz8uLdUwQFemNG3nO9u7R1jPjH2TK7fWT6HX/EdwpzQ+uQmuycZ7avSWNIKYvVXGf1RtA5hu9XDwP52R35Vik=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB8786.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(18002099003)(56012099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?SxpYQIEJWjBDznn/77ns1x9muGJirF3jpktD9WkybCbZT1+q+K5i2R031QYk?=
- =?us-ascii?Q?59YafLFA+/CCPT4mAd2XLuA0WHlIg9Vq8b35adbRYkiwiMAovRVzQNNuacR6?=
- =?us-ascii?Q?u7PORcbOQtB6/Jl2vfkxlGA84wurA3251aT/T95bpjFrqbfkFxZwJGLrw1RH?=
- =?us-ascii?Q?padBfyWbl+I1XiEqM4oXjDV7qbIXGJvZVxzO1oc4QgvAF/FgaRWcnrMNAi1i?=
- =?us-ascii?Q?fbVwZG0cZumz/vF8WgAm5dJaSj5TUc+/LrJe+82M8bNrK0rFfUSINUk2cUsP?=
- =?us-ascii?Q?D5xzdylK0qMtsIQs2BZKHjxljVvn7g4V2KLw+C6OFGFvXYKacx5Mzw94rtU1?=
- =?us-ascii?Q?j5vTBrnUh4g8QV+G/1Q8kpWOtP1AFR7yo2p27mAKw87xsRnR9P4wHiFtpaag?=
- =?us-ascii?Q?6wewhAVhEJ3ENh2B9FRuufWSjoGSPA3ieZYLS+XolgDeO+CZHEfQZqFKHAC3?=
- =?us-ascii?Q?yJFQBRIofi5CadDpIqN++8isMCfkTfIi/2B+4pE7U7u45Swt/od/EWniIXl2?=
- =?us-ascii?Q?E7avGU/gOtVqf/+BRNRjBOvIcKONZwilASF7Qq2fPM7XKKuZMwSsRY+Sjh11?=
- =?us-ascii?Q?1LdEKlRDIHBsgZ/ciZyNPUpLP1YacKDTSn5BL0cr07mb9iGvfFgFu7J8rGzD?=
- =?us-ascii?Q?ske9s6MvEAOwcB1kfg++2O13LvhkUDqUbx0dNmCh3I0ZmDYV2+Vl1DLy0h3z?=
- =?us-ascii?Q?frwVpbOq/6VyDwqgMyrj0c3eURDOaOMSpT5PFlSweCXokBWqZLnHpyn3zt6s?=
- =?us-ascii?Q?3FV7Xq0pvjfdi5JRoKKCeQzbEy3NvlZPqYyhI0AxQM+6wNW+p7b75YolZSfr?=
- =?us-ascii?Q?Zt2FKIHpefN46N7Cswg+DhElTS3FEL/zBoYCoFDB3bffBwVllFb1meSVIhrJ?=
- =?us-ascii?Q?E4cUp7JBl1h+I41GQSEIJe3U894YI7xrGCr29bNCDCQ5wX0ZXS5jRJrlU8uz?=
- =?us-ascii?Q?0pSSe3JibPMZPdpt8oBBpZteoZlik4vaDjF9xfSAH7r+uJgIPdpAQpknxY3L?=
- =?us-ascii?Q?5VgzJ16FxerWTIaaMdSUMJDxRRY6rFw+910NSyFBRrD+FNBZX0SOexFf6OhU?=
- =?us-ascii?Q?NXyUbwnSb46o//nllokKsAOkbfaT/6c3NG+1qevxBQihYtwsCgRU4u1PE885?=
- =?us-ascii?Q?xk9wdYPzNRMlr4FonRpefvRI1cvPXSKJ9fpy2JHsV4Uj7ZilU8VPj5LruJAo?=
- =?us-ascii?Q?90/97kteiEwA+hFx8Y6tXGg/AVnYkn4KtCbwbQnqIw/8/nM9VQajy2ZCefma?=
- =?us-ascii?Q?PY9nNOdj5gujncuJGea1uBw/TTnsw5pO3He+femo3WgST4gCWU0T4dBxxJV8?=
- =?us-ascii?Q?M/26P/m73w95TGHYxI20gPBMGQeCrTITDz9eB7vOnK7N/7LQg+N1tE8+vl5a?=
- =?us-ascii?Q?AXU7dPeMh5lEvNWfY+Z6xFKz7E4WMNWbkz3Ww/os4NSFmfXOsOUz0A6eR0SJ?=
- =?us-ascii?Q?ZiLVF8/5o2IGFlZtbemdvLX29WlxyKLrnf53IIbcTFlzGuL9L310kZWv8az8?=
- =?us-ascii?Q?zVSiOVCqJoHK3p2D8w0W3uophAM4EFi0lISLYkv+zKheCaPVq3VvMOu0adfW?=
- =?us-ascii?Q?9TQf4yq2dUh2Ew31BZTfWKYdv8s4SMpQvqTExZDqm4CTQkK/OylwBslYKV9X?=
- =?us-ascii?Q?YeFX/eupQitcqa7Gt8bi6yndVJjlMYd9yne/sLU2LuequTeT7fZVaK/hhOSu?=
- =?us-ascii?Q?qY+K3m8ok8q+UqPHofx853seXWuBmMMHuTY+71JqrtJGCA/hUBE+FOlTKMjt?=
- =?us-ascii?Q?VIABc6fuGg=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9502d587-1921-4eec-d653-08de808d82c7
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB8786.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2026 23:17:20.7802
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EaWLlEYUVNeJsrN79NtYBAANRP9m0Ae2qWsUXQz9qWVhdvyfH3T5M3HiZAsE5lqhCzPUfORYLfS/0WhK/9m9zQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8143
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALzav=fjRPa_ZbXu7iFXyemcf_8Kq_dZTWT6c-A0bc6czF_Rdw@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260312_161726_903123_D0EC95BC 
-X-CRM114-Status: GOOD (  13.83  )
+X-CRM114-CacheID: sfid-20260312_163954_023050_C6FE5FC6 
+X-CRM114-Status: GOOD (  21.62  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -153,74 +137,58 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Based on 'sizeof(x) == 4' condition, in 32-bit case the function is wired
-to ffs(), while in 64-bit case to __ffs(). The difference is substantial:
-ffs(x) == __ffs(x) + 1. Also, ffs(0) == 0, while __ffs(0) is undefined.
+On 2026-03-09 10:32 AM, David Matlack wrote:
+> On Fri, Feb 27, 2026 at 9:57 AM Alex Williamson <alex@shazbot.org> wrote:
 
-The 32-bit behaviour is inconsistent with the function description, so it
-needs to get fixed.
+> > Sorry if I don't have the whole model in my head yet, but is exposing
+> > the restriction to the vfio user of the device sufficient to manage the
+> > liveupdate orchestration?  For example, a VFIO_DEVICE_INFO_CAP pushes
+> > the knowledge to QEMU... what does QEMU do with that knowledge?  Who
+> > imposes the policy decision to decide what support is sufficient?
+> 
+> Hm.. good questions. I don't think we want userspace inspecting bits
+> exposed by the kernel and trying to infer exactly what's being
+> preserved and whether it's "good enough" to use. And such a UAPI would
+> become tech debt once we finish development, I suspect.
+> 
+> A better approach would be to hide this support from userspace until
+> we decide it is ready for production use-cases.
+> 
+> To enable development and testing, we can add an opt-in mechanism
 
-There are 9 individual users for the function in 6 different subsystems.
-Some arches and drivers are 64-bit only:
- - arch/loongarch/kvm/intc/eiointc.c;
- - drivers/hv/mshv_vtl_main.c;
- - kernel/liveupdate/kexec_handover.c;
+Here is what I am trending towards sending in v3 as the opt-in mechanism:
 
-The others are:
- - ib_umem_find_best_pgsz(): as per comment, __ffs() should be correct;
- - rzv2m_csi_reg_write_bit(): ARCH_RENESAS only, unclear;
- - lz77_match_len(): CIFS_COMPRESSION only, unclear, experimental;
+diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
+index 1e82b44bda1a..770231554221 100644
+--- a/drivers/vfio/pci/Kconfig
++++ b/drivers/vfio/pci/Kconfig
+@@ -58,6 +58,27 @@ config VFIO_PCI_ZDEV_KVM
+ config VFIO_PCI_DMABUF
+        def_bool y if VFIO_PCI_CORE && PCI_P2PDMA && DMA_SHARED_BUFFER
 
-None of them explicitly tweak their code for a word length, or x == 0.
-
-Requesting comments from the corresponding maintainers on how to proceed
-with this.
-
-The attached patch gets rid of 32-bit explicit support, so that both
-32- and 64-bit versions rely on __ffs().
-
-CC: "K. Y. Srinivasan" <kys@microsoft.com> (hyperv)
-CC: Haiyang Zhang <haiyangz@microsoft.com> (hyperv)
-CC: Jason Gunthorpe <jgg@ziepe.ca> (infiniband)
-CC: Leon Romanovsky <leon@kernel.org> (infiniband)
-CC: Mark Brown <broonie@kernel.org> (spi)
-CC: Steve French <sfrench@samba.org> (smb)
-CC: Alexander Graf <graf@amazon.com> (kexec)
-CC: Mike Rapoport <rppt@kernel.org> (kexec)
-CC: Pasha Tatashin <pasha.tatashin@soleen.com> (kexec)
-Signed-off-by: Yury Norov <ynorov@nvidia.com>
----
- include/linux/count_zeros.h | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/include/linux/count_zeros.h b/include/linux/count_zeros.h
-index 4e5680327ece..5034a30b5c7c 100644
---- a/include/linux/count_zeros.h
-+++ b/include/linux/count_zeros.h
-@@ -10,6 +10,8 @@
- 
- #include <asm/bitops.h>
- 
-+#define COUNT_TRAILING_ZEROS_0 (-1)
++config VFIO_PCI_LIVEUPDATE
++       bool "VFIO PCI support for Live Update (EXPERIMENTAL)"
++       depends on LIVEUPDATE && VFIO_PCI
++       help
++         Support for preserving devices bound to vfio-pci across a Live
++         Update. The eventual goal is that preserved devices can run
++         uninterrupted during a Live Update, including DMA to preserved
++         memory buffers and P2P. However there are many steps still needed to
++         achieve this, including:
 +
- /**
-  * count_leading_zeros - Count the number of zeros from the MSB back
-  * @x: The value
-@@ -40,12 +42,7 @@ static inline int count_leading_zeros(unsigned long x)
-  */
- static inline int count_trailing_zeros(unsigned long x)
- {
--#define COUNT_TRAILING_ZEROS_0 (-1)
--
--	if (sizeof(x) == 4)
--		return ffs(x);
--	else
--		return (x != 0) ? __ffs(x) : COUNT_TRAILING_ZEROS_0;
-+	return (x != 0) ? __ffs(x) : COUNT_TRAILING_ZEROS_0;
- }
- 
- #endif /* _LINUX_BITOPS_COUNT_ZEROS_H_ */
--- 
-2.43.0
++          - Preservation of iommufd files
++          - Preservation of IOMMU driver state
++          - Preservation of PCI state (BAR resources, device state, ...)
++          - Preservation of vfio-pci driver state
++
++         This option should only be enabled by developers working on
++         implementing this support. Once enough support has landed in the
++         kernel, this option will no longer be marked EXPERIMENTAL.
++
++         If you don't know what to do here, say N.
++
+ source "drivers/vfio/pci/mlx5/Kconfig"
+
+ source "drivers/vfio/pci/hisilicon/Kconfig"
 
 
