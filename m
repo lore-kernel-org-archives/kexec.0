@@ -4,135 +4,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EC084106ACFE
-	for <kexec@archiver.kernel.org>; Thu, 12 Mar 2026 23:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8AFB4106FD62
+	for <kexec@archiver.kernel.org>; Fri, 13 Mar 2026 00:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bwmhrK1mTh+MLga869G8X7ffK5a55BOcYDLNgMLau3w=; b=YROrzH2ZhkV4DVpqMSoJJZvioz
-	7bpUW34l3FCRZ33VfQ5ew8Dw+Ym1UR+lFvvE0vd8oqMBn+6/eCWPmZO0DdeMlvVaDLPozKwZKa6BP
-	G8eLr/yjv7ab6f6dG2nLtzo9FLUK9olP2uRqRzsoTB/ChGUMMvhLzasaU9EHy3OJQUvxjGt6AA7G1
-	WRor33Oz7/8oTH/wr6UKV7Z/Qs+j4umUNUazeODD9nvvL777ILfCowZzQZtFURN/JkPESFAO2J1fa
-	G+IxBoJ3TYnO6kRep/OMkCJpxa7++j6iQvpuI5I1TmAz8IpvzMH43meucEtg/fcOliTM01fVawlOd
-	YEgmtj9g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=pnJL3Iw0wwI9nfGsL4UNGadpWjx4M7Li4XWaHu9e8Ms=; b=g0p6CTaGlutOqEbQ9xGGpwc610
+	OqzPJjQFMUmcV6wXHhVPNZKc4vl5blTj/TDn/eSn/OgVHHGNGXs4lPhVtfRdq/BoDvEFYN+DuGNGq
+	xcptiOt28Em8/Mo6nWc9I0CLNvd3qhfVDsFI2vvWGSURAyB98p5uky0Qt7TRzheYWqBx5TehjnlLY
+	X2PcVaRIhsYPk4x7b2Ue4ej6lsUjoaIW9jj11iKCnhevl50Wdb/dM+HJQusQnvNXKXqpchEoffp/h
+	QC4tt0An7Pjw8doXD7RUSc4pp2exGBQPKwpkHPGFYWoNEDGHwr7j2tMLa8Ab378sVJ+AtfypVIory
+	iJD9M05A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w0prT-0000000Fpl0-1dOy;
-	Thu, 12 Mar 2026 23:54:39 +0000
-Received: from smtp-out1.suse.de ([195.135.223.130])
+	id 1w0qTh-0000000FwOq-2m58;
+	Fri, 13 Mar 2026 00:34:09 +0000
+Received: from mail-ed1-x536.google.com ([2a00:1450:4864:20::536])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w0prQ-0000000FpkP-3krS
+	id 1w0qTe-0000000FwO5-2Yyd
 	for kexec@lists.infradead.org;
-	Thu, 12 Mar 2026 23:54:38 +0000
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id DBF7F4DE48;
-	Thu, 12 Mar 2026 23:54:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1773359673; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bwmhrK1mTh+MLga869G8X7ffK5a55BOcYDLNgMLau3w=;
-	b=fk+HrQFzF538OaZee5zKteZcA0YzllQN4x1inGCAbXjNlo6QUNFUqNbGrCH5EeTJbbl1jk
-	FTvU17qIJfkQDV+ln6qt+1UPpVopM6PIvAMUtTOjZZJ3/a+RYpvPc0tmmUajk0tARslnmX
-	EHrtJDNB0KVkLkU4HiHWqk3laOWGWpA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1773359673;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bwmhrK1mTh+MLga869G8X7ffK5a55BOcYDLNgMLau3w=;
-	b=GjeLT5POJ2ppQv2V8UcAch81RQWi73SsE94ZqWuISHtXbtVGKO30Qb71oigY1fJWtdCROD
-	hJQD5w9T4bPhNBAQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=nK3FApym;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=6EDt9gxw
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1773359672; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bwmhrK1mTh+MLga869G8X7ffK5a55BOcYDLNgMLau3w=;
-	b=nK3FApym7tfNn1DYJAjxANwZrZkOi+7diHoNWII3ULI7GL59N/yI/X6ge92tRZaTNO+iDP
-	rbkiSLfVzTovlXnwx+sm2XdjW+milZHXwHV3OFqONrs/aDXtvH33MrKfrw0c8b1brwsruE
-	f+oOYH59XwjN26di3wGpoeV3fGBkJnk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1773359672;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bwmhrK1mTh+MLga869G8X7ffK5a55BOcYDLNgMLau3w=;
-	b=6EDt9gxwjTnn8WVNa/iDDOJbUxG4c6IPQDPESQ58T74caGcpdtTs0tWldMb3C2Klzv+2cX
-	aUwaMbUSyMcQ9xBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5A3794022C;
-	Thu, 12 Mar 2026 23:54:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id QCh3CDhSs2lNPAAAD6G6ig
-	(envelope-from <ematsumiya@suse.de>); Thu, 12 Mar 2026 23:54:32 +0000
-Date: Thu, 12 Mar 2026 20:54:29 -0300
-From: Enzo Matsumiya <ematsumiya@suse.de>
-To: Yury Norov <ynorov@nvidia.com>
-Cc: Yury Norov <yury.norov@gmail.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Eric Biggers <ebiggers@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-cifs@vger.kernel.org, linux-spi@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
-	Mark Brown <broonie@kernel.org>, Steve French <sfrench@samba.org>, 
-	Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>
-Subject: Re: [PATCH] lib: count_zeros: fix 32/64-bit inconsistency in
- count_trailing_zeros()
-Message-ID: <atnytehtvt6h6kp2ndxsa3x257usezp3bk5hp4ch7gf5w2zake@omihp5zbio3l>
-References: <20260312230817.372878-1-ynorov@nvidia.com>
+	Fri, 13 Mar 2026 00:34:08 +0000
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-661d929219bso1884190a12.0
+        for <kexec@lists.infradead.org>; Thu, 12 Mar 2026 17:34:05 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773362044; cv=none;
+        d=google.com; s=arc-20240605;
+        b=IajBwgmnRMr/n7zT2QaA773JHh2dZ5YwyALnmDupRQXYPYCMCP41tt3EkTcitGIfjx
+         +H8KknD37UI5XuGi0Rq5bL+XB3x+h9muIOeaCaH56mZzfUALq0n2dw2jVeIQLhkGRaWx
+         x8yeYlFYaz7ta0CmseR6IK2YgDZpwGjiIkAyihhFf+UlHxPIa/MNPyjzqP9MusQlpIHL
+         uX1uyq1jdmAuO3TTOQevoo3r1a9eo4bWKLDdiyF1nAYyQ42IHvv/LQqG2E0CLzyJnBEe
+         IF8npBKNIpAjXEtLH4ijF1ENmFc1oXKuRR31dcOKRrzpl+JBvjVhGpr6ZJgJkdNEZt0S
+         f9LA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=pnJL3Iw0wwI9nfGsL4UNGadpWjx4M7Li4XWaHu9e8Ms=;
+        fh=gITrxpr6scYMr/aMN9R/9siFXAOm6Uu1BJ2VPshYSJo=;
+        b=i1dJ5L9BhgaaC4OhfKsD9mZe+KTi5+nfqNIrqzD3jZAfPZXs+gbrEXGmYyosyqbcJG
+         EJb9rJtk++AB5cpbuaSdIwm70y0WshJuJ1K7Fjt6rlR6F4dJLh0ZFRRvUNU78wWbs3dY
+         3qzZWSnTPZGnk1cYYt6ViuPVkTP/lml/TZ8Eek5/0fIZkDGKmtzYa+caOza9DmpUSyg2
+         /ibgFoFI8TceXWOdKH6zO39nY7KdPJJbgBLm76gX/Yeh0Pw4p21ywTncOLLhvtKN6z/H
+         k2Y/8Hbd8ES6/2vucZjNma268iwWaP0kdq0Yz0FpI8ia9J9XoG6JZkuMMxB5cNaxkem7
+         lA7Q==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1773362044; x=1773966844; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pnJL3Iw0wwI9nfGsL4UNGadpWjx4M7Li4XWaHu9e8Ms=;
+        b=BUuNkR3KjVoYJ2XcxsJWfiQvvHD9MOp0e2NH6vApPHXNiMSdZyve7jUNZwFeJmyHtA
+         SpjfVpnXk36ftHIdPxaYeCpqx0F+5SKBc1dObnQlrIuUz6TrSIbRBMIZ7uiDf0O+kN8J
+         rsEtxoocNeFfvKl8r8tdaV8ZwCqAhLAvprgXU9QMkxK/9/qn443lrFCmW5kg9WaiKlJg
+         BzL27XYMVFiEaqYlhxoNDZmx6rcKmNxYsraRG/jScJOsYqoMoM8Hjbgn+YituaGzQMdN
+         vQCLINBwocSRFkB9k8mPFKKpt5qc9NbdkCDOYOgR4aGlgLAyMcN8MRgFNFru57Vb/Aa4
+         Dh8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773362044; x=1773966844;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=pnJL3Iw0wwI9nfGsL4UNGadpWjx4M7Li4XWaHu9e8Ms=;
+        b=pwxl8nltA/o/NBngfzY+koe44ZknN9g6TlovlbHO1TK2Sq7zV0IEVaNq486lg47dow
+         CXtlo5+jMC1tl0Ewv0xvE+O+nCpifG5qbsB8g7Oy6VqH2UvBO+I8L8Et4U8WbyyYBi6F
+         f+O2fon01N4TvFiXXiBcBw/Q0vjUyKEwynqq1VOdQPAJTO2JCNv3VA+DSOOAC5VE4/mx
+         G9zrVidxq4xkktrFuPSaxGqKTb25mwWISV+t81RNXVgdoJzSRX68j9SO/6nhf6KpD9yq
+         1W638aoNmIU/f0pZJ0Vkx9TNMNjoM/eTsJFDxoHkLcIwW7T9ihlGyo5970RXCKhkpbfi
+         9f5w==
+X-Forwarded-Encrypted: i=1; AJvYcCXo7T3aa6HtOE4EBf+AyOkQEetpUlKDk0Bv+2PTbLaLWOUJ122mU1NY3INMq1B/8aNPJBkQ1A==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwMPba0lH1hUognfJXRTHiPzkmrXt6xNgMOQFBmpeOUi7s9wDxU
+	YgERaEAM//Er7vStjeuxzFXn/3Pa3qSezsuzwHV4L6oaWbeD9mAPkssnJyHoWESzGZ3UeapGdBv
+	bGQmyrsrWRw9b1R/XoHVO2oAUqgKSoU+wxb9InZzQaw==
+X-Gm-Gg: ATEYQzymrGZ3EMgZnz/t0PkAYqiX1myHYyybARumobdcofXhIo6etWRBsgtzvRntKJw
+	auH+mfFGgTOBROlvnA80RUHbWk+VRyEm0D5xC5gQABbT5BjhttjelD66+0/CjNAUeimAxwFHOXJ
+	bBrYcpfUD45NIp3ohPfWPzjwg0zqu4GK9L9x86jWG0lH8N0CWQLGCJELg+08I40EZvUZAmrjtLM
+	EbQ5r/q5wqGJe4PwaR06GNNcU050N2rWmmGbJJET3sVSzC1YAAFeVrS/INdJqBRp6OEZ7SJx4aI
+	rty2J6XhTXHacTGihQ/2qF5Xlasn9/1mX0NAFQ==
+X-Received: by 2002:a05:6402:3486:b0:662:e094:8dcd with SMTP id
+ 4fb4d7f45d1cf-663bb3d3be3mr643429a12.27.1773362043907; Thu, 12 Mar 2026
+ 17:34:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20260312230817.372878-1-ynorov@nvidia.com>
-X-Spamd-Result: default: False [-2.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[gmail.com,linux.intel.com,rasmusvillemoes.dk,kernel.org,zx2c4.com,vger.kernel.org,lists.infradead.org,microsoft.com,ziepe.ca,samba.org,amazon.com,soleen.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: DBF7F4DE48
+References: <20260129212510.967611-1-dmatlack@google.com> <20260129212510.967611-8-dmatlack@google.com>
+ <20260226160353.6f3371bc@shazbot.org> <20260303210733.GG972761@nvidia.com>
+In-Reply-To: <20260303210733.GG972761@nvidia.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Thu, 12 Mar 2026 20:33:27 -0400
+X-Gm-Features: AaiRm50W9P4A7h3ayFJS5r_ZVIe8OM2EYEDEiGqBav5AUONhmByKJOVge3skGH0
+Message-ID: <CA+CK2bDADhFcMVGoJew9RoJ-DsVhYhiZJGJVwfzTBZdGX++8Ng@mail.gmail.com>
+Subject: Re: [PATCH v2 07/22] vfio/pci: Notify PCI subsystem about devices
+ preserved across Live Update
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Alex Williamson <alex@shazbot.org>, David Matlack <dmatlack@google.com>, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>, 
+	Alistair Popple <apopple@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Ankit Agrawal <ankita@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, 
+	kexec@lists.infradead.org, kvm@vger.kernel.org, 
+	Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, 
+	=?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>, 
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
+	Pranjal Shrivastava <praan@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Raghavendra Rao Ananta <rananta@google.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, 
+	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
+	Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
+	Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>, 
+	Zhu Yanjun <yanjun.zhu@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260312_165437_251877_978D48B2 
-X-CRM114-Status: GOOD (  17.99  )
+X-CRM114-CacheID: sfid-20260312_173406_684897_55AFB2EA 
+X-CRM114-Status: GOOD (  15.38  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -147,98 +136,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Yury,
+On Tue, Mar 3, 2026 at 4:07=E2=80=AFPM Jason Gunthorpe <jgg@nvidia.com> wro=
+te:
+>
+> On Thu, Feb 26, 2026 at 04:03:53PM -0700, Alex Williamson wrote:
+> > > @@ -203,5 +225,6 @@ void vfio_pci_liveupdate_cleanup(void)
+> > >     if (!liveupdate_enabled())
+> > >             return;
+> > >
+> > > +   WARN_ON_ONCE(pci_liveupdate_unregister_fh(&vfio_pci_liveupdate_fh=
+));
+> >
+> > This is propagation of a poor API choice in liveupdate, the unregister
+> > should return void, it shouldn't be allowed to fail, IMO.  Thanks,
+>
+> +1
+>
+> "destroy" functions that fail are evil. :)
 
-On 03/12, Yury Norov wrote:
->Based on 'sizeof(x) == 4' condition, in 32-bit case the function is wired
->to ffs(), while in 64-bit case to __ffs(). The difference is substantial:
->ffs(x) == __ffs(x) + 1. Also, ffs(0) == 0, while __ffs(0) is undefined.
->
->The 32-bit behaviour is inconsistent with the function description, so it
->needs to get fixed.
->
->There are 9 individual users for the function in 6 different subsystems.
->Some arches and drivers are 64-bit only:
-> - arch/loongarch/kvm/intc/eiointc.c;
-> - drivers/hv/mshv_vtl_main.c;
-> - kernel/liveupdate/kexec_handover.c;
->
->The others are:
-> - ib_umem_find_best_pgsz(): as per comment, __ffs() should be correct;
-> - rzv2m_csi_reg_write_bit(): ARCH_RENESAS only, unclear;
-> - lz77_match_len(): CIFS_COMPRESSION only, unclear, experimental;
->
->None of them explicitly tweak their code for a word length, or x == 0.
+Generally, I agree that unregister, free, or destroy functions
+shouldn't return errors. However, this situation is tricky because the
+state is controlled by user space. The only relavent scenario where
+this function fails is:
 
-Context for lz77_match_len() case:
+"-EBUSY if the live update session is active and cannot be quiesced."
 
-	const u64 diff = lz77_read64(cur) ^ lz77_read64(wnd);
+If there are active sessions (incoming or outgoing) with preserved
+data, how can we safely unregister while they are in-flight? It is a
+rare condition, but since the user can cause it, they need to be
+notified that unloading the module right now is not a good idea.
 
-	if (!diff) {
-	...
-	}
+Pasha
 
-	cur += count_trailing_zeros(diff) >> 3;
-
-So x == 0 is checked, however it does assume that
-sizeof(unsigned long) == sizeof(u64).  I'll have to fix it for when
-that's not the case (even with your patch in, as __ffs() casts x to
-unsigned long down the line).  Thanks for the heads up.
-
-
-Cheers,
-
-Enzo
-
->Requesting comments from the corresponding maintainers on how to proceed
->with this.
 >
->The attached patch gets rid of 32-bit explicit support, so that both
->32- and 64-bit versions rely on __ffs().
->
->CC: "K. Y. Srinivasan" <kys@microsoft.com> (hyperv)
->CC: Haiyang Zhang <haiyangz@microsoft.com> (hyperv)
->CC: Jason Gunthorpe <jgg@ziepe.ca> (infiniband)
->CC: Leon Romanovsky <leon@kernel.org> (infiniband)
->CC: Mark Brown <broonie@kernel.org> (spi)
->CC: Steve French <sfrench@samba.org> (smb)
->CC: Alexander Graf <graf@amazon.com> (kexec)
->CC: Mike Rapoport <rppt@kernel.org> (kexec)
->CC: Pasha Tatashin <pasha.tatashin@soleen.com> (kexec)
->Signed-off-by: Yury Norov <ynorov@nvidia.com>
->---
-> include/linux/count_zeros.h | 9 +++------
-> 1 file changed, 3 insertions(+), 6 deletions(-)
->
->diff --git a/include/linux/count_zeros.h b/include/linux/count_zeros.h
->index 4e5680327ece..5034a30b5c7c 100644
->--- a/include/linux/count_zeros.h
->+++ b/include/linux/count_zeros.h
->@@ -10,6 +10,8 @@
->
-> #include <asm/bitops.h>
->
->+#define COUNT_TRAILING_ZEROS_0 (-1)
->+
-> /**
->  * count_leading_zeros - Count the number of zeros from the MSB back
->  * @x: The value
->@@ -40,12 +42,7 @@ static inline int count_leading_zeros(unsigned long x)
->  */
-> static inline int count_trailing_zeros(unsigned long x)
-> {
->-#define COUNT_TRAILING_ZEROS_0 (-1)
->-
->-	if (sizeof(x) == 4)
->-		return ffs(x);
->-	else
->-		return (x != 0) ? __ffs(x) : COUNT_TRAILING_ZEROS_0;
->+	return (x != 0) ? __ffs(x) : COUNT_TRAILING_ZEROS_0;
-> }
->
-> #endif /* _LINUX_BITOPS_COUNT_ZEROS_H_ */
->-- 
->2.43.0
->
->
+> Jason
 
