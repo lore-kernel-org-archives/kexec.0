@@ -4,59 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2B36F107BCD5
-	for <kexec@archiver.kernel.org>; Fri, 13 Mar 2026 17:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CDC58107BCD0
+	for <kexec@archiver.kernel.org>; Fri, 13 Mar 2026 18:15:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
 	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=GYXnI2vdIHNvh+pw/Lw4YXsJpxdFkolP02bUfhxYFu8=; b=N71hXfvnn8LBB5Zx3NxhbBzRKk
-	IrGm4/EB3uPZiaEeAVAwki+mkiRaZxFT25ZulXTRi0h9n5mKMEpxw+FxYovQazKy/ixERF/KJye9I
-	NCxvfoSfNzTf4CDry8o/IRVKd5DqH7Hx7RTLbwqCRazcz5w0NcBa3H2oG5w8dLx5MhrstEDecxuny
-	hodQMrYTMcmOPeYNI+LaqTZktNyb14d3RTXe6Thn2N02Xn3tZ0X+d43G5YMRC6LjRouyTOw/Pu8BD
-	yLQU7Ut1gsPi7fFuCEYVlWWovXNOE4cTczQoosss2vIorLFvZmESm4MlHt/QOlEdBJgPJnnad3FCy
-	pVSJSxYg==;
+	bh=Jznxcn6Nn63Hpa1lbbaZPsankzE0DKOrBlmEW26u+yA=; b=LtKzeE75Y6wspyFeFIrv+Pnv5t
+	dlMWB1aJX9q28nyff0/8x+VNgyp7dxRFNoaY2EHRocOuDAgZmEmYhli4y6/uRi5AFp/ETfSoY7Jdy
+	2gJEj6BTyPjjFqyd73z8I0DRkDf9NIlkMTqfcGWjipoq8I3pzTb1Io+9SwnExc7RyRuz6bJp0RTIv
+	v8KzI6N6Yf85Alq0MsxfyFi//z3uJQO57eLp3QCcVAkeClNF1ZYiHhfXl0WHfOf82qA8Ypk9sq4Vx
+	+G4adr7H7G3mMV0pgYpTDO4AqLeu6nKk6jhTJ112xazagIy1j8Cq8jZLDcSs15n4R61q0b68xOJC2
+	ucqF/l3A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w16cn-00000000mml-2NnC;
-	Fri, 13 Mar 2026 17:48:37 +0000
-Received: from mail-southcentralusazon11012038.outbound.protection.outlook.com ([40.93.195.38] helo=SN4PR2101CU001.outbound.protection.outlook.com)
+	id 1w172N-00000000s8I-2sWA;
+	Fri, 13 Mar 2026 18:15:03 +0000
+Received: from mail-centralusazlp170110009.outbound.protection.outlook.com ([2a01:111:f403:c111::9] helo=DM5PR21CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w16ck-00000000mls-1uAr
+	id 1w172H-00000000s6M-2JFZ
 	for kexec@lists.infradead.org;
-	Fri, 13 Mar 2026 17:48:35 +0000
+	Fri, 13 Mar 2026 18:15:02 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YVzR94sFf8RzkXy04JZNp/SBjumFHifuTgFtAqhrnEK5W+JzAO+4McAImykfmq78bJ+K4TCaVywoSI3IDEW8CVTbK5agawJJEwMW2EP3n9CdRjf60ZHxh7wCEZcxuEA9vMy5KaB80mkAmqeOTxpWb3wt+aCJCMjHwxe95N6F1JpKdDqVJnjd3LWX1OGHK08riqGN//CGIyxOQoehtwbkj1XsaS75DPN1pqfeVIn6M0PuldPhX9PQcsUzua/+T4LOJshOmdSiuwFKKBPpShd7Uf16HauArC2MWq3rAGUD7vvowxWUUbVqrNr97FB258IHk71xIwXRspDy9QQF36iktw==
+ b=nEvkUGYWz7SvnCYugqMQVhr/95k0P+cHgSQK9Ig10LFt8yjROFeFKsFTkDaVci6w8Kxdja0Z04QNCgQjwv48PhEZgHAuSm3Nn+dToS7fg91kbxb9BohtRkMK4Vix0pWX2dYAvlPSxfo/Y0ppzERhjZIIMzrP7jzoia915AN8+BtcdCbETZniiDRk3MlCcWJhoIZ7zhj9tQZJw2zMyxBRQRZGlISdDvTJO4f3HSnEUlNi+9N/t64JI6lBtRQLVycigPrDYmgzhRA0rewBGDx5qHP5CQ0Km4o+tjBNuyfgMzRObizIwU1Q4XiooebaJR4uxp/j60cuOm0kRxOCzW7v7w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GYXnI2vdIHNvh+pw/Lw4YXsJpxdFkolP02bUfhxYFu8=;
- b=VvS/gA5AEtk3DuEGQEo9cORAYbnbeHmCZl0nx8QKXh3CRlEYHI7uh2JigOYgPt6ciPcwQ1WZDVdWE7d2MKu2kWYQe43u1DMbUh0IaOMebjCw3y9ueKiHBk/fTHkS+NOGfHfoqWfKRWi0jNxXVX2VzCohhbrr0ZhFKtSK6ll0m1nifvmcHSg2sUEvwsqF1/X7gRIqPdm0BpVbI+zXz2x3vFnyFlt4moWgsr3bFTgw0BemSX5m1VDE6cwtaL71rydVzevbWCSumMOA+ppYkFjirgeBWPWjvXke5WbKg9uEdCV5B6AfSisPjXWL1nbAXQxdMVLerIeIIz8hkJt6hhiJMw==
+ bh=Jznxcn6Nn63Hpa1lbbaZPsankzE0DKOrBlmEW26u+yA=;
+ b=Aq+xQfzgZReo1H9QeFF3PzLAOz9M3ao/K7Rz2Ds1G24qPaobpD3/Y7zyB6FWC/sd/ptUuScECKhBCpXyiRig//Kd9uirWzP8TnFE8p/6jQwEuEeC31wnG10sY6qapjis/EFqQ/WQ63ewW8nUCKlSliYEsjhdH3CbWfeu2deNax0m1gEAxD85J2IGLf8gVoauakIeRaW3OuKJ0ZTThd9arYy1nP+9zVD2GDeq99KxzX9oYDPy436WW9X46jmKGfzXLS/K09ju5bg+NCDzAZ30J+dJb078IOrEuyuTs8D1VRbdVSVcoYI5sCd+0KAxV1LIQOE+PMbt/aQ6aPh4jG36pg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GYXnI2vdIHNvh+pw/Lw4YXsJpxdFkolP02bUfhxYFu8=;
- b=I/jbwPUzsqUE9qixPc/NFJQpDdLGVt9Bq5+I+2CAZEUHuHuHDFzxSTu8M9Ynh7T5AcqkbaWrFzTMMbuOaIYmTBC4+2LQNoexkdVN3WwmX7Zy9nS4n+LDFwsspAIPRTAoUqNoUig950zxLR4+W3C/CPnowSMz1L6AEtAkmmPGok0SieJPfb8NTQ42DxkVAqLOSFJW/DAYh/K8nYSZ2DEi9xukUTNoLMKs/GW5wmP4biVqe742CbVuOEixaltonRezqY2+O4qXsnS2Nq/ZpZKw/+oRihw3sXUF/0W7t8a91cvbca6RfY55C+k9lRXD2TiRg2tnwiwmHpAe2AOXqeAGxQ==
+ bh=Jznxcn6Nn63Hpa1lbbaZPsankzE0DKOrBlmEW26u+yA=;
+ b=YP/tg1IFYZns1ZKab5CGqXHCJMcEM00+7D5aZ3lLL4ZlQdPdsMi1Ui1zCyRuzWKYE9xisAxlJaeY80SyaMXN0Jphm+l5TvAbXZAEswWkoz5ltLtge/WeDBqOq2S6kms0vAeNtWwAsFTWS14g6ppjTnP1u1W5Ryz2dHXxKf/FmsrZzO5j7VeNzvVD3j5S09r2eIFVMMEsxDL8KHs7SmTW5ZqJT9n8eYbeAY1X+AwyNG3TdxKncEGTzeNDYf6mFj5UhBA0+7X7Oh4dayy2zPqWLMMLjd5dWxSuJPrmez/T+zNWEZ2Z2Z6naTNGQDUKg6g3FL4UWylwmvy5PSL0CnadnA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from PH0PR12MB8800.namprd12.prod.outlook.com (2603:10b6:510:26f::12)
- by IA1PR12MB6281.namprd12.prod.outlook.com (2603:10b6:208:3e7::17) with
+ by CY5PR12MB6035.namprd12.prod.outlook.com (2603:10b6:930:2d::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.8; Fri, 13 Mar
- 2026 17:48:25 +0000
+ 2026 18:14:51 +0000
 Received: from PH0PR12MB8800.namprd12.prod.outlook.com
  ([fe80::f79d:ddc5:2ad7:762d]) by PH0PR12MB8800.namprd12.prod.outlook.com
  ([fe80::f79d:ddc5:2ad7:762d%4]) with mapi id 15.20.9723.006; Fri, 13 Mar 2026
- 17:48:25 +0000
-Date: Fri, 13 Mar 2026 13:48:23 -0400
+ 18:14:51 +0000
+Date: Fri, 13 Mar 2026 14:14:49 -0400
 From: Yury Norov <ynorov@nvidia.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
 Cc: Yury Norov <yury.norov@gmail.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	Eric Biggers <ebiggers@kernel.org>,
 	"Jason A. Donenfeld" <Jason@zx2c4.com>,
@@ -65,77 +66,76 @@ Cc: Yury Norov <yury.norov@gmail.com>,
 	linux-spi@vger.kernel.org, linux-hyperv@vger.kernel.org,
 	"K. Y. Srinivasan" <kys@microsoft.com>,
 	Haiyang Zhang <haiyangz@microsoft.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Mark Brown <broonie@kernel.org>, Steve French <sfrench@samba.org>,
-	Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>,
-	Konstantin Ryabitsev <mricon@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Steve French <sfrench@samba.org>, Alexander Graf <graf@amazon.com>,
+	Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>
 Subject: Re: [PATCH] lib: count_zeros: fix 32/64-bit inconsistency in
  count_trailing_zeros()
-Message-ID: <abRN59ST3uRDS5-e@yury>
+Message-ID: <abRUGVW6ZuGioa4Z@yury>
 References: <20260312230817.372878-1-ynorov@nvidia.com>
- <abPdItJ152oMzGd6@ashevche-desk.local>
+ <20260313171855.GA1744604@nvidia.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <abPdItJ152oMzGd6@ashevche-desk.local>
-X-ClientProxiedBy: BN0PR04CA0123.namprd04.prod.outlook.com
- (2603:10b6:408:ed::8) To PH0PR12MB8800.namprd12.prod.outlook.com
+In-Reply-To: <20260313171855.GA1744604@nvidia.com>
+X-ClientProxiedBy: BN0PR10CA0009.namprd10.prod.outlook.com
+ (2603:10b6:408:143::6) To PH0PR12MB8800.namprd12.prod.outlook.com
  (2603:10b6:510:26f::12)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR12MB8800:EE_|IA1PR12MB6281:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8f056589-2632-4a80-3324-08de8128ba0b
+X-MS-TrafficTypeDiagnostic: PH0PR12MB8800:EE_|CY5PR12MB6035:EE_
+X-MS-Office365-Filtering-Correlation-Id: c71f53bf-ea84-458c-04e2-08de812c6b6c
 X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|10070799003|366016|376014|1800799024|7416014|18002099003|22082099003|56012099003;
-X-Microsoft-Antispam-Message-Info: cqw79NQ6ayA9+ltS0AGjL8jzoYbmmkaNlFnCKwH3BL4VQ4/QCfCUbUxke3fZFQb4gXRsFBL0wyBXXTT7ZWvJw5W+zqaoae6c43DjFVF/uZulwa6STBU/yAGGbUa2oJ+E0gSBzrL+c1tbm1b7/oy6FGyUm3x7DOhUSYOJs882cLI2rKBt4SP6tpumIZ6HoEWR2JU3uSpP5XZ/1f1rv2jm+e01ILR13nVicLcLA61cGPFm8V3L1JkhYpHN+d67f+1iElNHDkLpxLlIjdMbDOrRnntg29jQn+99ZmuzkCNhYvAfyUMmW8x70WTFllUiQ9SR/3NJW2HxWRPbQM0F09MsU6Fopw59il55r6V0Vi5pVHI65FCjFxbCQZPHCQ6im2aYdxavpVTY4r7HCixDkvR0CxVRUrns722bsY7qgG94BfJkp8PddTmrnFunAyiOJJ1D5M6g7U1EPs5XIJYT3AuA6DKqi5qsbk7KmR3PLGYm6zJL8knpzSdcYFBw8ycXDat/yLEqGb4Qn4FwOnJkUbMfZ87Xtwogt+LrNJLCcImtAyI0F2RIG88PDQmw5fgplcZKymqQd9jQMbzza5ATDhmYQslhMisB+n+OVueE3deQMh/PWRHKs6Q9joTBAde9tyJMmCJdcizRTmdp/xRxX8KFkVqmfZNP6AvOCa4BmGDvMIDvc+iNaQNCPz3mPgA7ffy73ZSOznrg/PtSWkmYw1bY+Krm7DiPmoNiMtbQgX1vh6wK6WBMOSV3alkpF+u1+vzg
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR12MB8800.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(376014)(1800799024)(7416014)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|10070799003|366016|22082099003|56012099003|18002099003;
+X-Microsoft-Antispam-Message-Info: XZSrGIIfFrdUG8PRSTJLbyZibG9axDCqmnyNzmIcAch4/RP1wgHCKJfdhdYQabV6Z9k1DBvekOoGhVfwjx9FXDoBCokntWMSH2kPvqjtxtz3g/a93lqKYk5MKKdA7SW0fj54c7DKG0l8LHDw9UZNCYBWn0nCfK+4hTHSvrpYLnb0rnBgMre5SRFRcf7+quUXDL5Hbi9EbH0Oy5kqvB4mtiBcdCbF80RBZoUhV4To9Ar/HQXJaJYxzzzA8em2O103VwzVwkaG+I9P6WnB0aCsBoYnljvT4WLlULVFwM0DL2rsD4SicDCadeY42wUl2mNwmmJfcNExN4a9U3dlOCa7RFbCrhXB1FPM3/0l4AEy5bb4jexIitFCqwhYg7JpF1nu1nRMOto5tcQwmKfqfbI2zVhzl/yvGslENwRKD2wFkbbmjBZ95jL755cPcLWqDzviTV1dN4WRx/WjdEMQdE1VwohkTKez7X3XdZZyIKHJ3AjsWLGf4PO3+OMVv4Cs4e3L7356Ui3dyNIO7+smhyAS3rqDSn0mEnPrnLNbpeA4R8MwXFhq95hkU9op5XtuygOSItflqGZb5H6gtt6Ozt70o7QJgSWHn5LGuRxBPOfZ6WJv+YG8xhiAWwbd6ApYhAsqvA5j3MGPMQU4C/JhP/sqmGFHJnsNVRzrTfOJiq03uBruAvMsHlS+ffClD8ear6pVUONS6xevsdIm4tgmOIkGJEE+s7EE3QJqVuI24dTGwXg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR12MB8800.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(10070799003)(366016)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?IZgn0EJZPldzZY0oAqix8rs230AbM7WQt/p7ICM4v3alDTMZebS4+OmeKtjk?=
- =?us-ascii?Q?oO370YPYhxM+emCmi1UGiNSJqPMktA5hsiZ3vGd8ZIw1KLk7Jsz9nOemL1dl?=
- =?us-ascii?Q?xVt6B0M6nsrzRNbTC/sucEtHHgNB9kuYLIiw5onf9vNg0KZotetP1Yeeyhnq?=
- =?us-ascii?Q?tykUPffSXLinzkSgczg9AwODThaH558I9JkD2/j9+mk9JKagDo6ZM8wMgtfx?=
- =?us-ascii?Q?HLayKqtzPNU8rBvtAbqwx5YlKJFdv4X0g9noh/11PJVtmDf0KemGAsU0zSbV?=
- =?us-ascii?Q?p9pNngBKn4kTtpjrUeUhXvXdmBpHC9j5OSLGSHxwvNUMMpymJpCGAzPCqUxx?=
- =?us-ascii?Q?H1654KFENQNXwyLA3xszPNuWuGcIuHJE83f+4hu4cIVRGiyF86zWSm6+4I07?=
- =?us-ascii?Q?RjuB//hStoC6kE56GoBzfavs4w/jTbxyiMtw/UYJbcU9PEfQvgXVRoyYznRw?=
- =?us-ascii?Q?HTx1fU0zkKkqZCpH0zrDbqDStre79Vn+ayRJRkUX84V8wCQ8dLyG56gVWXi9?=
- =?us-ascii?Q?bErrZqck0nxBF+vFtIPCGjdDYpcTdNwKU9TZ1aEbg7qqtOTFoKlOtXJmA70R?=
- =?us-ascii?Q?XDwkiZvDW0Dw3py6WajJfWEksYzzzK4UgWLNoWzRN+jTNzJPZYsHaLuMaeIy?=
- =?us-ascii?Q?Xrbc5P/XajkxoSrUiCwttqsdAe0J7d3b5g0QaBX7C8cJBYU+iba8JjMKfX74?=
- =?us-ascii?Q?0bdMuOiN66avRm8H8V5+OJjUACMEXlVLOVXLd5j1wtaFKqoeUPpvFpBTkV0x?=
- =?us-ascii?Q?NjYztymVClUojU1VaAcWm2vTCIpZ3xs3Y1r9XIzgnQHBan+qwoqs8L6xA6oT?=
- =?us-ascii?Q?Lb+UQphlL2wghkoYMtL1RCoPimtOvh2glmpR3vf707pgZvsoMz2IEaQc0cWW?=
- =?us-ascii?Q?FBM6/Xreb+0FQjz3RP1GYjzgDrm9wmK64jK3SBVSKJTjTlTHXMeCk7Q6UKWG?=
- =?us-ascii?Q?0xo/Sb4A9JCq2yp0oRK0Bux9XBej6FgbGPLUBpwnlnA8/JaVXnWoxY0zwP+F?=
- =?us-ascii?Q?+8dB4mgHIpuyD8g5k8sfIPPdBLRqxzHAnrz+7UvvgQhsY2m4vr4C7aWaFZp9?=
- =?us-ascii?Q?CD1vQFcMIslnXn8rH7EuYOI22hR17oQCZlKnA1Hw+H13+AshlmcObYOGL9N2?=
- =?us-ascii?Q?HV0i+y8CDyrjrLjdq+vc3nFYOy9om0/pSQccDrWxKE0uVXYzu0o8+BehkvvV?=
- =?us-ascii?Q?7Hi0Nn1yy9yqpek63Ea0vbraTx293R00BCNYhBv82FpfX+Lyo2q/3aJg2kqI?=
- =?us-ascii?Q?EZZ/7QLHH19z0ej1HGbt8zwkMvFRKcoUrgfSBlLGdj7mTooJ41Ek3m69w//p?=
- =?us-ascii?Q?1cgr+YYjM/7XO54toB8TNU3meP8eGce1PHVm6NA1uJwgkKDyfcKbgdVzSDBF?=
- =?us-ascii?Q?yY8aM0c9MuipyLpwBi+j3++l5tpmQWe7TEX6/j7H0ClqnVtAWGboBhq1b8k2?=
- =?us-ascii?Q?5EEoZjEUgqfNroT4uUwlOkpPW/ckKsINWEBrMjaYprCr49ivfCz8L/EgA4vS?=
- =?us-ascii?Q?ImXEkODRFMfP2ZCSsZpT2d+UVNffFo3qbqtskwNtF/ic4v0uKdfLb0GAP+S5?=
- =?us-ascii?Q?H9NqQYt5+s4oEDcHYiGWJ7vdQu96rMYqP00Rm9SSiPJHyxEnzjBZ9SKq6voK?=
- =?us-ascii?Q?aCQX4SWmydYXMZpi8AiO/KNpJatn8D8ardDfWA0yrtGVe/FrF0bdEk60HOEK?=
- =?us-ascii?Q?1fymkGatO9wtF76Rv4Y79bMANEnhpXwTSCrZzMqJgekFD1X+//FpgKv9Q4A5?=
- =?us-ascii?Q?NNprO88qKs8L56owxjB0bw2w4Y7QLjGkSe2rJOWdQs/lp8HHLHeI?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?dok6uZWq1MPTd6Aalz96D42Wg6EyP7GnkTzV6XYHFzkR9/T4TX/CvSyZIVrm?=
+ =?us-ascii?Q?t27o0vXHrCwlD7hG7HeV6R8bFQxdwlTaYcQkL7hM/3bYACWDI24GyJB20+Fm?=
+ =?us-ascii?Q?15Svk3AA5HAO0/YHKP1tbASq3wI9uiPpWelppCcNQH42lJJ2yX3fLPKoEmWO?=
+ =?us-ascii?Q?r3jiYc0SDCDFifacUJWCG3n6ARFXEjXjspI6durrydePOqVW/HuWOkuKJLoE?=
+ =?us-ascii?Q?lWQB41EtIdRnnnIk7DzVHMK0dz6xcagXrtd9R0BZwDAraVPVNxkEz2ppiQuT?=
+ =?us-ascii?Q?TcgpD0WLhzkUwznEgsi6xgh3mpQZz7QDTCvJ5gShK3V0GwKs75g9Se1tnh2K?=
+ =?us-ascii?Q?fpmVdCjb+OA0mPncDHXVfPTqCZoSI5dsz0xHH/ocGWPVYTbSJhRETUiieB2q?=
+ =?us-ascii?Q?Q9ZJqd8rpQMwT+raSe8iOFFlmiIpYE/7+30DvjdYgW3avLZa4pyhJxf381Lg?=
+ =?us-ascii?Q?kchHBTNLcBgOm+ikIVyv9NvSZWQ29jgNW5AaaNYR+VId8Vyl35FdQ56CMA90?=
+ =?us-ascii?Q?8DS0F39aRVKXCA/+bRkqFCxwvWsVG0sNt5sbBj/tQG8kBZZZ5ZdkBladvZHA?=
+ =?us-ascii?Q?YIZdV/Mf6U5c6trqRrsL+V0R73gKF7vF+yycWgDYZXJD/ebKUvc93y5HIB5i?=
+ =?us-ascii?Q?hr8CAQmZVC5eM0dC1JGVkiuEhStPWB32bD+xvzd15t0drsyihFrES3OLpUUX?=
+ =?us-ascii?Q?sQ+QlJAqrHUvsSEokZFKm92kNg13/0O6xbkwFvrCR0uGOt9hK3COSLaGcgZh?=
+ =?us-ascii?Q?dxKu2XcH2ELVxWPNBGa6o8207vlcfN225JsSRXDEP5ayi4WJPMAHdX3NJ8Fr?=
+ =?us-ascii?Q?7T/PXMJv9bO/0gxs9E96StDWMXIOnnqgia3hhmgEbxoNJE0E7cEMEfPBUHKs?=
+ =?us-ascii?Q?+q+9WNtTHETFWcpnDViYZJpfKE6KAEV+yADGMkb3A0WVtcfd2bczKyTyXf5x?=
+ =?us-ascii?Q?9YpPxgJOCgyyVJTif2P3GSZiATa7dIZpkbtsxtllURxByAVJOjMiHmpOHlG5?=
+ =?us-ascii?Q?nDvz44Bmb9+1xFeK+BBog6x8cEZignpwgyw1sGmCrzH+rXpmCooYGX2rHu6N?=
+ =?us-ascii?Q?9gjAR+1BVfTeTqB9m3Zx6aacfmXHOuedFTsLRJZkID7IuXgNcfOi5KBenLhn?=
+ =?us-ascii?Q?LH6ahmW7ySdt7QcPuZdp4teE6QR7EszQNat198bh1E9DxIMFqr2X7a71GW29?=
+ =?us-ascii?Q?f1C9bZgnaKgPMlu1owRBT0mCfhoFXr/6dk000TsOV6Vy35bU4knU8HUXcWqU?=
+ =?us-ascii?Q?TxMCopClgx2KaKu+3UL+yqbgNVLNjJKUl6pBvJnU9oOcELhUEwY4VKj2f1jF?=
+ =?us-ascii?Q?N9pxbwB/WhW+T9uqKiqsU9ghy8HcduHj3jZ0UW8c3cWbPHJMVBlWzJ54kOJC?=
+ =?us-ascii?Q?utnrP2pwvZnCOzw7miIlkznndkVWfHMh1D8wwJsr698sEx0o2kNGkgfSyHA7?=
+ =?us-ascii?Q?oafXZJi14QmFQi8OUFF+PCGHmEsr1Yj0IgEQ0BeScLoNIrFmO02/es136M1H?=
+ =?us-ascii?Q?bZWtd9YCRDQjSpZgICD5UH/WUnP0c28Zbbn0j4ooD/4iHhUp5hdfkPLABfMU?=
+ =?us-ascii?Q?4QogI7qRd8+3Ie0+qIroffQAHMbuKAE/2nPI4JjSxx8Zd78xxzHRCiDdbAcV?=
+ =?us-ascii?Q?N7W1uDN4d6KopfMBKMKu3CTwhYAqWOBAKfeDrNK5IgvSSH8mGKQt+ghEy8/K?=
+ =?us-ascii?Q?0rY3D183kyF96kYmj9t5+F7+ZvVugwF5QqH1QkIIkxJ0lkbLljEA3pmz6ARq?=
+ =?us-ascii?Q?DkKt6mvOgROy2OGLqcg3mxjuI7AsOYlUOyYYkdwEcb4K9ERb2hIG?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f056589-2632-4a80-3324-08de8128ba0b
+X-MS-Exchange-CrossTenant-Network-Message-Id: c71f53bf-ea84-458c-04e2-08de812c6b6c
 X-MS-Exchange-CrossTenant-AuthSource: PH0PR12MB8800.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2026 17:48:25.4970
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2026 18:14:51.5228
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zEN286Byv1ea2oE5zDEF7ennw8tycDbCzbXwWJAaSqBPJJ5F1ok3JpcfrKJXgXoqYTAXgfE/clHAjllaCU3SdA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6281
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3JERrbAz2qJl1cdO4o6loxDK4en6g49PqLBUOlI1kqSrTIGXHHWKJbXojMhI+LkUOkM3KN4yTxSLt0DEvYZtyA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6035
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260313_104834_496102_C93FA686 
-X-CRM114-Status: GOOD (  27.82  )
+X-CRM114-CacheID: sfid-20260313_111457_589009_1D6F488E 
+X-CRM114-Status: GOOD (  14.75  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -150,7 +150,7 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Mar 13, 2026 at 11:47:14AM +0200, Andy Shevchenko wrote:
+On Fri, Mar 13, 2026 at 02:18:55PM -0300, Jason Gunthorpe wrote:
 > On Thu, Mar 12, 2026 at 07:08:16PM -0400, Yury Norov wrote:
 > > Based on 'sizeof(x) == 4' condition, in 32-bit case the function is wired
 > > to ffs(), while in 64-bit case to __ffs(). The difference is substantial:
@@ -167,91 +167,26 @@ On Fri, Mar 13, 2026 at 11:47:14AM +0200, Andy Shevchenko wrote:
 > > 
 > > The others are:
 > >  - ib_umem_find_best_pgsz(): as per comment, __ffs() should be correct;
-> >  - rzv2m_csi_reg_write_bit(): ARCH_RENESAS only, unclear;
-> >  - lz77_match_len(): CIFS_COMPRESSION only, unclear, experimental;
-> > 
-> > None of them explicitly tweak their code for a word length, or x == 0.
-> > 
-> > Requesting comments from the corresponding maintainers on how to proceed
-> > with this.
-> > 
-> > The attached patch gets rid of 32-bit explicit support, so that both
-> > 32- and 64-bit versions rely on __ffs().
 > 
-> > CC: "K. Y. Srinivasan" <kys@microsoft.com> (hyperv)
-> > CC: Haiyang Zhang <haiyangz@microsoft.com> (hyperv)
-> > CC: Jason Gunthorpe <jgg@ziepe.ca> (infiniband)
-> > CC: Leon Romanovsky <leon@kernel.org> (infiniband)
-> > CC: Mark Brown <broonie@kernel.org> (spi)
-> > CC: Steve French <sfrench@samba.org> (smb)
-> > CC: Alexander Graf <graf@amazon.com> (kexec)
-> > CC: Mike Rapoport <rppt@kernel.org> (kexec)
-> > CC: Pasha Tatashin <pasha.tatashin@soleen.com> (kexec)
-> 
-> Please, move the Cc: list to the...
-> 
-> > Signed-off-by: Yury Norov <ynorov@nvidia.com>
-> > ---
-> 
-> ...comments block. It will have the same effect on emails, but drastically
-> reduces unneeded noise in the commit message in the Git history.
+> So long as 32 bit works the same as 64 bit it is correct for ib
 
-In general case, I agree. In this particular case, I want CCs to be in the
-main block, and eventually got replaced with the ACKs from the proper
-maintainers.
- 
-> You may also read this subthread (patch 18) on how to handle it locally:
-> https://lore.kernel.org/linux-iio/20260123113708.416727-19-bigeasy@linutronix.de/
+This is what the patch does, except that it doesn't account for the
+word length. In you case, 'mask' is dma_addr_t, which is u32 or u64
+depending ARCH_DMA_ADDR_T_64BIT.
 
-+ Konstantin Ryabitsev <mricon@kernel.org>
+This config is:
 
-(Thanks for b4!)
+        config ARCH_DMA_ADDR_T_64BIT
+                def_bool 64BIT || PHYS_ADDR_T_64BIT
 
-Interesting thread.
+And PHYS_ADDR_T_64BIT is simply def_bool 64BIT. So, at least now
+dma_addr_t simply follows unsigned long, and thus, the patch is
+correct. But IDK what's the history behind this configurations.
 
-So, my workflow is:
-
- 1. git format-patch --cover-letter
- 2. # Edit cover letter, add To and CC section
- 3. git send-email 000* --to-cover --cc-cover
- 4. b4 am 
- 5. # Address nits/typos in the mbox
- 6. git am 
- 7. # Address substantial comments in git
- 8. git format-patch -v2 --cover-letter
- 9. # Edit cover letter again to restore body, To and CC sections
-10. git send-email v2-000* --to-cover --cc-cover
-
-So, yes I loose recipients on every iteration, together with the whole
-cover letter. But to me it's not a big deal because I can just pull
-them from my mailbox.
-
-In the better world, I'd like to have:
-git send-email -v2 000* --to-the-same-people-as-in-v1
-
-In the perfect world, I'd prefer to keep the cover letter under the
-git control, once it created, together with the recipients, once they
-are added, and be able to edit them just like regular commits.
-
-There's a 'git am -k', which is seemingly related to the matter, and
-it keeps the [PATCH] prefix. But it's not what can preserve recipients
-for me.
-
-I'll try b4 prep and trailers as suggested.
+Anyways, the patch aligns 32-bit count_trailing_zeros() with the
+64-bit one. If you OK with that, as you said, can you please send
+an explicit ack?
 
 Thanks,
 Yury
-
-> >  include/linux/count_zeros.h | 9 +++------
-> 
-> ...
-> 
-> > +#define COUNT_TRAILING_ZEROS_0 (-1)
-> 
-> Shouldn't we also saturate this to BITS_PER_LONG?
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
 
