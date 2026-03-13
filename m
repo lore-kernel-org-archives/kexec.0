@@ -4,88 +4,138 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 56B64105F7B5
-	for <kexec@archiver.kernel.org>; Fri, 13 Mar 2026 15:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0F549107BCCA
+	for <kexec@archiver.kernel.org>; Fri, 13 Mar 2026 16:32:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=VVQdnkFvzB/gHBAeEfjDOu3ipWHlOC3d2TtGMa0Nogc=; b=TgwVphFUz098kl7/avWmi9+fA0
-	MnkSkN8MbMRw+wJZuM8CuyNGqPLVCXK8Jgck8cM1Gt1W8/NVB0XAMVsFWhyX5ZOrHlY+0MNi3yVJs
-	yZ5tkI/gU+mVSrQ2mvnKd6PmErKQsmb1vxNL0fI+jtn1B7YzB2zsqc2D0UeAHjl7zFpR0/pMygJyo
-	hno9iHH6mXCbbxzpVYFsKCTm3Nux0UhN97h7BhxaTj9lVWX3YUGkUulolz+btjp9ggp0g+ctD4MYL
-	t5lUZIhud/iLkGK3vlY+ZjiZaWg9J/ZcjRLIiMALFVMF+MPkol/Lt+DRZP2o4lpj1rOaF6oiEMKcp
-	+7BaFp2Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=YgLF48WkHE3CRVHlzZfppQaXr/J1pLt7MRdCBrePrGY=; b=rdYCNRHv3dg52bUbmPTLwuHepU
+	7fJQyLuLKhGNN7/W+vOO+saeBhncgtAxQOtmVtxvagQclEZx25vEAH+D+isLKiuCiUtdgoF3MwT9o
+	206MZXldWvtW1Z9drGif5HgW7ct5qrICnlK8y279a01UDKnhBjvGTpgBF6mfWdgGVH8lppHcbZxNX
+	3P4VbupYI1cj60s47rFA/x6w3d9+HybYQcUm3SyUBQFP9ogf6LE03ISCKD5+Fmwl8UJA3l55sTw+4
+	h63xxZUASY18hTRCqUYK2UZmJbb5etndXpvfecexymHqGO6WEhdEMEpetzowPQWzwaDy7xWO3PkG5
+	Y89ntOIQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w14bm-00000000ZS4-1Kf7;
-	Fri, 13 Mar 2026 15:39:26 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w14bk-00000000ZRh-1LmG
+	id 1w15Qb-00000000eVh-1Vy9;
+	Fri, 13 Mar 2026 16:31:57 +0000
+Received: from mail-centralusazlp170100005.outbound.protection.outlook.com ([2a01:111:f403:c111::5] helo=DM1PR04CU001.outbound.protection.outlook.com)
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1w15QU-00000000eUm-0FPZ
 	for kexec@lists.infradead.org;
-	Fri, 13 Mar 2026 15:39:25 +0000
-Received: from localhost (unknown [40.65.108.177])
-	by linux.microsoft.com (Postfix) with ESMTPSA id D661420B710C;
-	Fri, 13 Mar 2026 08:39:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D661420B710C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1773416360;
-	bh=VVQdnkFvzB/gHBAeEfjDOu3ipWHlOC3d2TtGMa0Nogc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bxGjZFhVAxog3QqvD0UQFk4sXHeeQ5NE2qTFN5kayLXjvmuIDnMGr+7++bUo9CucU
-	 ozt1v8CCrq0QALAxMV7zkbSKkHJCrii46ijMqsaPNHRiGsN8elmzY4FJG5Ye5XbnF8
-	 qQbz/XGG8TzAcfJfbSL0GA/sFnxPqdXJNavH1QSw=
-Date: Fri, 13 Mar 2026 08:39:18 -0700
-From: Jacob Pan <jacob.pan@linux.microsoft.com>
-To: David Matlack <dmatlack@google.com>
-Cc: Alex Williamson <alex@shazbot.org>, Adithya Jayachandran
- <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, Alex Mastro
- <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>, Andrew Morton
- <akpm@linux-foundation.org>, Ankit Agrawal <ankita@nvidia.com>, Bjorn
- Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, David Rientjes
- <rientjes@google.com>, Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe
- <jgg@ziepe.ca>, Jonathan Corbet <corbet@lwn.net>, Josh Hilke
- <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>,
- kexec@lists.infradead.org, kvm@vger.kernel.org, Leon Romanovsky
- <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, =?utf-8?Q?Mich?=
- =?utf-8?Q?a=C5=82?= Winiarski <michal.winiarski@intel.com>, Mike Rapoport
- <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, Pasha Tatashin
- <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>,
- Pratyush Yadav <pratyush@kernel.org>, Raghavendra Rao Ananta
- <rananta@google.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Saeed Mahameed
- <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>, Shuah Khan
- <skhan@linuxfoundation.org>, Thomas =?utf-8?Q?Hellstr=C3=B6m?=
- <thomas.hellstrom@linux.intel.com>, Tomita Moeko <tomitamoeko@gmail.com>,
- Vipin Sharma <vipinsh@google.com>, Vivek Kasireddy
- <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>, Yi Liu
- <yi.l.liu@intel.com>, Zhu Yanjun <yanjun.zhu@linux.dev>
-Subject: Re: [PATCH v2 10/22] vfio/pci: Skip reset of preserved device after
- Live Update
-Message-ID: <20260313083918.00005731@linux.microsoft.com>
-In-Reply-To: <abNOwcOTXqxCxNzt@google.com>
-References: <20260129212510.967611-1-dmatlack@google.com>
-	<20260129212510.967611-11-dmatlack@google.com>
-	<20260226170030.5a938c74@shazbot.org>
-	<aaDqhjdLyf1qSTSh@google.com>
-	<20260227084658.3767d801@shazbot.org>
-	<CALzav=fHy23RAzhgkdaL+JA5T2tL9FT6aPgRfXUh7i9zvYCGPA@mail.gmail.com>
-	<20260227105720.522ca97f@shazbot.org>
-	<CALzav=fjRPa_ZbXu7iFXyemcf_8Kq_dZTWT6c-A0bc6czF_Rdw@mail.gmail.com>
-	<abNOwcOTXqxCxNzt@google.com>
-Organization: LSG
-X-Mailer: Claws Mail 3.21.0 (GTK+ 2.24.33; x86_64-w64-mingw32)
+	Fri, 13 Mar 2026 16:31:52 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Z0x9PXhhHip4G9/IE8UoYZ5G8qGaNsetJLHiHKZyfWQr/U6IlXEaEXoLr5R0SE8EL9tONJP6soqcEb/ahiXTBDQbmFI2JNHVbkxVMZhuAawI6kbShX/+JIHljqG+0f7u/G46FKqDpfbJFfvelWa8sypbJjyQ/KPBu7kKDM2CpN8q6EDz/5hhWaa9h86ecAx//cQlH8iUY5g0NJ4/sm9YEFHxt7Y4L0y+pyXaOAsFO6cLvJx64JBesIeX9xoKaixkiHQpxXE9vnlyN3G9+fmZGrIsfFXqrfwiVNxu+SUa2r2yNEjBuogUCaDvk7ac6IEd5O0xa5kmKq9xWmTZCRCvBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YgLF48WkHE3CRVHlzZfppQaXr/J1pLt7MRdCBrePrGY=;
+ b=vA56JWiYp/+nOjdMoaqkTOw+gurNCO6x4ThstOBjTXWlPHSusO3z1jM7ngSnzGaO7C0LW5wCwOjYtbJlq2oQa1kga4Xgx4e3FK0I6eZoiIualX4qsmVvZ7h5C08I32EblZxmZAL+a/UY8DGS5DrlM6/n2T5i91vJOYizgDa6uKfDDgnzwfkuYtgymGa2p9rrS08rjRK7tn0e3guZo8XK+Qhh91AFjJ2mOQUNJ4YyNObFCZZlqAgk6GxMHn+YNt75u6LCctA2vCSjHRlpoeuquqT40oQ0XoDF5EPKbaBb2wOD0V0IZQ+W2iG5ic7Dh7gZCbm0h9Nsw8x6gcJkJO6Lvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YgLF48WkHE3CRVHlzZfppQaXr/J1pLt7MRdCBrePrGY=;
+ b=KI5bduDrWBujNIKE+3klT+XH2+0MHVKT4SP0smsVtYXI8Js9yNn/zX1f6AAxHK28//2S/iT7gSDqE4ecc/jaxfFaZ3cL5YJq+n3OMeUCGAhYlI7Lpyb5QeGXb22rR1jmA4RC09oYHfBWwufUJD+Vwu9n86S9l+P1HqWtAJiMB2owaQK6ZNrKbAR5YAS9zQ0AE0wP9Cucb1/KWT9WHIPY7fEzOTZYeXk6/1yvUAJMNjM6sHkVENN9J7AOEKvqLilFPRvMPpoVMy/hJXaR/D6NOh7Q2F7aKBMZ8Gg4Hoh5AOmpPkv9Vx1VbZ59K/JpW5q20XrjR9JJZK8I+u4cMJ07UQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH0PR12MB8800.namprd12.prod.outlook.com (2603:10b6:510:26f::12)
+ by LV2PR12MB5896.namprd12.prod.outlook.com (2603:10b6:408:172::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.8; Fri, 13 Mar
+ 2026 16:31:44 +0000
+Received: from PH0PR12MB8800.namprd12.prod.outlook.com
+ ([fe80::f79d:ddc5:2ad7:762d]) by PH0PR12MB8800.namprd12.prod.outlook.com
+ ([fe80::f79d:ddc5:2ad7:762d%4]) with mapi id 15.20.9723.006; Fri, 13 Mar 2026
+ 16:31:44 +0000
+Date: Fri, 13 Mar 2026 12:31:41 -0400
+From: Yury Norov <ynorov@nvidia.com>
+To: Enzo Matsumiya <ematsumiya@suse.de>
+Cc: Yury Norov <yury.norov@gmail.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Eric Biggers <ebiggers@kernel.org>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, linux-cifs@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Mark Brown <broonie@kernel.org>, Steve French <sfrench@samba.org>,
+	Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>
+Subject: Re: [PATCH] lib: count_zeros: fix 32/64-bit inconsistency in
+ count_trailing_zeros()
+Message-ID: <abQ77W5WjR7np2BT@yury>
+References: <20260312230817.372878-1-ynorov@nvidia.com>
+ <atnytehtvt6h6kp2ndxsa3x257usezp3bk5hp4ch7gf5w2zake@omihp5zbio3l>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <atnytehtvt6h6kp2ndxsa3x257usezp3bk5hp4ch7gf5w2zake@omihp5zbio3l>
+X-ClientProxiedBy: BN0PR03CA0012.namprd03.prod.outlook.com
+ (2603:10b6:408:e6::17) To PH0PR12MB8800.namprd12.prod.outlook.com
+ (2603:10b6:510:26f::12)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR12MB8800:EE_|LV2PR12MB5896:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3974d806-0eed-49a2-02c0-08de811e0362
+X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|10070799003|366016|22082099003|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info: TGukriTe68miiacmtpoGHJTjz9LMofHNE8NUFKtu+hBdrnrcQqe7Cdbc6biJj/Tvte9u3JfHiCT5QYkNulHm1O+63ORq48mRIBzu17hFr3dfonHQWIAZYBkuYuBpDtxlneR3d3Dehfbi7F5ukLON0c5osYXEzjZfJzgRpVEhJAvZ1CxlSaTXlI/1np9YJCUBxFd8AOnnihc8S0Zf93KCvkFmshRt7ZVZhb1sk78Tm+FqhG7FYTgcycIYc8GSnvZsTyz4L79EYuucGj9dKzoW35jR43b4is1SRhG6ClTBMUMK2P+hfqJD+qZ93r1l5S2PdQ2UUZfcO2wpMaAKmAfOGdV6TT7P5P6OkUQP09RE/+piI7u1g2dLAFKdE7Mt1WGa5iOVPV8YbBLl9lu/lAzuB6I5em/EVLGk0yWo2u2U3vISkHqd0ysEHSs6m/l5ktyFLMLnTg4Gp3BvRyk64EGVdsPm7qdgor4oVFesW0lqzwpSOTmeYQgtzLOEVp0sm/vYp1PJzkhza8DsB1oJB0NzEwVvnkUMKeAkhlDcrJww7h3T6oN0+qsZCrWLGB2xd0+yOsjYTmvVeslPBt6fO07SXfpfh+E3+fyQ7nZPbJi4ZrIQqlABqqYIA6sNYMyvVX3A8Sgl1ceUh/3Q0Io7qnitEaHzC56nj9TPBQ6AjaWCmvIP2ltD9+2NTxAosJUVOVtBGC2mZuXP1XqXnHKX9BGcBjw9SS8g/sC45okOjshV7lk=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR12MB8800.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(10070799003)(366016)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?kWAi05sFhfO7QtpRupWqTBotrRBkd4vybIOHyJ+9rrpGikvMJoEavcodxnJz?=
+ =?us-ascii?Q?lZGCTg5/AUN6dV0x7BBWlQBQPnYtjGWVWR258tA4tIvRPNPvnvgDQHC0Hid3?=
+ =?us-ascii?Q?tDp9srj6iM93g5Ij21u+oJBtGVsWrUHKu1VnVUG6r0PqloA39jPb7LwVp4qh?=
+ =?us-ascii?Q?01zRDBy+HpI637VXSaq9ySVoEZB6UfTZXzuWb4nes1Nnah9L92wKSUvyRJGd?=
+ =?us-ascii?Q?ynxWP9Z4jO718dza427qIDG6sNNGXjN3bH9icHR4FgGp8tvGEu6U3yGcQ5/K?=
+ =?us-ascii?Q?nGdwDKyJNCnvZrkxVyNaDRljvMGolGudriibUQ6GPBPNBwADZpcXmf+l45Zn?=
+ =?us-ascii?Q?1GiFSBMvwD28ZeQHX6/qSgDnAFc8r1MQdfyU1wfFKlnfy1edMjjkox2vguyC?=
+ =?us-ascii?Q?HHo3hNau5fo7Af3O5BHYwcvhgVM0C/eC63gXmQ6qVtNapehanGI4tS6/YiEd?=
+ =?us-ascii?Q?VHXAwNKjnh13im6F4dy8XouxM3DAyRFlJofZdZJS7Y5GoL7y/1QgvtyaFbhD?=
+ =?us-ascii?Q?TDJAUdwSVeDzSnyIUHgAnySylpw8ZqVyj0QJQfD4pbwj+S1sDshN8UoE6UM9?=
+ =?us-ascii?Q?X1yCH24u7SCZODqoQbvpyaskxozDD0noZ8UIctdiJs3XoGsiJZTEsg9se8o4?=
+ =?us-ascii?Q?9HPNdc+oatvRH5FSj/+cAEN0dPWNdkjYThQf5/F7AFD3DqxBiSqoPDYjZuUQ?=
+ =?us-ascii?Q?jt2ah5kgDA+KoPW5nWpkt/E8SS9b1FwfH+MtyyBxsTRLoZRpNfwgmeGGy5jc?=
+ =?us-ascii?Q?xlIrwuKQWZv6nTcBmdoLtmHbT8uTc4kySfn0aqfZ1RROR/EiLsQB3MZYX6sH?=
+ =?us-ascii?Q?VCQFlk3FX220hUrOF2ER0mvReLeX4wb8YiCKV9kfoj1+IxrEXeNwmq5Qi4+S?=
+ =?us-ascii?Q?fCdmsDcoaQMgmJUht44FOZAht3Ha2AkfGcZEtywBz9C+YwPlEzlVq6qqdmCc?=
+ =?us-ascii?Q?2vFndUDdSDl9M6l+AzmMUkCdNpliVtTrPyMHtcVuYhVVAUlfeFA4tIlV+L0Y?=
+ =?us-ascii?Q?DWUsHMpWVSnXke3C03IgnNcMI60VGR0t3PU10wByV6CdlIzAtapAdz/YblCE?=
+ =?us-ascii?Q?lcjz3+y8wZG/H/wr0DtG9qIv0VVhXAzsXlIM6jn2ea92eWoUggHta46W0j36?=
+ =?us-ascii?Q?pahlGrfZdkZVtuneFHwebG3SXIb1ZXvrSBo4lAWubR8qp89SnqBugT0wJewj?=
+ =?us-ascii?Q?QvpYAVJNz8X/B8REURN4VhuzfXUzJSSkTkn7Uz41Orh1pOuROJaXAlCm+rbD?=
+ =?us-ascii?Q?UprzA8xgYn2IkmnqT2DrdNG41u2+dW4BnOifrx8IeIeVvNGPP6FQyoLGxUVi?=
+ =?us-ascii?Q?bkP7q1SmSmhsEssdnYDSj/dbHzvtUuzgHix9okeb7+maj3zUEyDgFE4ydwGP?=
+ =?us-ascii?Q?9zhSqWmzew+PES/HANiz4VoWc4K1f+fJGE8op1Q8sKZ71qPPRdgMyZkiRoxN?=
+ =?us-ascii?Q?FIW0zcW2mmjokCZnDdmfL0l6SIFLGJDjQw+ru8MUeuaCjpd8UdUejsQ5Fvgb?=
+ =?us-ascii?Q?2r9bqZsxqvfCB343M6KgFozOFRVQWkOuj+EWwOYVQr5Hd0lkr2ABJdc4Y6H+?=
+ =?us-ascii?Q?qnbdtuxGxm8XCHvd9e+piXRfD5WE67kmLcMj6rCNMPFT8G7Ay2Cpl5ql0lFg?=
+ =?us-ascii?Q?xVg9i/Uoj7Qn7LvB7o3dBlLZEAH0naW46PseZRfM18+yyeBZ9rUtfqgEMRhn?=
+ =?us-ascii?Q?wfcgILUY2YE8KNmHjdVi4u/xBUNvy2aDbbpKXakMtaCjNSbOBKAxZwTBPU6Q?=
+ =?us-ascii?Q?N9V87tMZWTlGuw433lcTYvXxRVW9Ohlm/jewZYmKyZ//I4dQRsld?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3974d806-0eed-49a2-02c0-08de811e0362
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR12MB8800.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2026 16:31:44.1027
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: id1r2na7q+sNlOu3kI/WYnuCxwm9+4hm3wVjAplEMN/kRsU+REAHsTCZcShB0wEyXreP0kq6m1w/NNyyTddPRQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5896
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260313_083924_411514_31C2EE87 
-X-CRM114-Status: GOOD (  29.57  )
+X-CRM114-CacheID: sfid-20260313_093150_103012_584B3FA9 
+X-CRM114-Status: GOOD (  19.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,77 +150,62 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi David,
+On Thu, Mar 12, 2026 at 08:54:29PM -0300, Enzo Matsumiya wrote:
+> Hi Yury,
+> 
+> On 03/12, Yury Norov wrote:
+> > Based on 'sizeof(x) == 4' condition, in 32-bit case the function is wired
+> > to ffs(), while in 64-bit case to __ffs(). The difference is substantial:
+> > ffs(x) == __ffs(x) + 1. Also, ffs(0) == 0, while __ffs(0) is undefined.
+> > 
+> > The 32-bit behaviour is inconsistent with the function description, so it
+> > needs to get fixed.
+> > 
+> > There are 9 individual users for the function in 6 different subsystems.
+> > Some arches and drivers are 64-bit only:
+> > - arch/loongarch/kvm/intc/eiointc.c;
+> > - drivers/hv/mshv_vtl_main.c;
+> > - kernel/liveupdate/kexec_handover.c;
+> > 
+> > The others are:
+> > - ib_umem_find_best_pgsz(): as per comment, __ffs() should be correct;
+> > - rzv2m_csi_reg_write_bit(): ARCH_RENESAS only, unclear;
+> > - lz77_match_len(): CIFS_COMPRESSION only, unclear, experimental;
+> > 
+> > None of them explicitly tweak their code for a word length, or x == 0.
+> 
+> Context for lz77_match_len() case:
+> 
+> 	const u64 diff = lz77_read64(cur) ^ lz77_read64(wnd);
+> 
+> 	if (!diff) {
+> 	...
+> 	}
+> 
+> 	cur += count_trailing_zeros(diff) >> 3;
+> 
+> So x == 0 is checked, however it does assume that
+> sizeof(unsigned long) == sizeof(u64).  I'll have to fix it for when
+> that's not the case (even with your patch in, as __ffs() casts x to
+> unsigned long down the line).  Thanks for the heads up.
+ 
+Yes, in your case you need __ffs64() (which doesn't exist). Or simply
+leverage bitmaps API:
 
-On Thu, 12 Mar 2026 23:39:45 +0000
-David Matlack <dmatlack@google.com> wrote:
+        DECLARE_BITMAP(bitmap, 64);
 
-> On 2026-03-09 10:32 AM, David Matlack wrote:
-> > On Fri, Feb 27, 2026 at 9:57=E2=80=AFAM Alex Williamson <alex@shazbot.o=
-rg>
-> > wrote: =20
->=20
-> > > Sorry if I don't have the whole model in my head yet, but is
-> > > exposing the restriction to the vfio user of the device
-> > > sufficient to manage the liveupdate orchestration?  For example,
-> > > a VFIO_DEVICE_INFO_CAP pushes the knowledge to QEMU... what does
-> > > QEMU do with that knowledge?  Who imposes the policy decision to
-> > > decide what support is sufficient? =20
-> >=20
-> > Hm.. good questions. I don't think we want userspace inspecting bits
-> > exposed by the kernel and trying to infer exactly what's being
-> > preserved and whether it's "good enough" to use. And such a UAPI
-> > would become tech debt once we finish development, I suspect.
-> >=20
-> > A better approach would be to hide this support from userspace until
-> > we decide it is ready for production use-cases.
-> >=20
-> > To enable development and testing, we can add an opt-in mechanism =20
->=20
-> Here is what I am trending towards sending in v3 as the opt-in
-> mechanism:
->=20
-> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
-> index 1e82b44bda1a..770231554221 100644
-> --- a/drivers/vfio/pci/Kconfig
-> +++ b/drivers/vfio/pci/Kconfig
-> @@ -58,6 +58,27 @@ config VFIO_PCI_ZDEV_KVM
->  config VFIO_PCI_DMABUF
->         def_bool y if VFIO_PCI_CORE && PCI_P2PDMA && DMA_SHARED_BUFFER
->=20
-> +config VFIO_PCI_LIVEUPDATE
-> +       bool "VFIO PCI support for Live Update (EXPERIMENTAL)"
-> +       depends on LIVEUPDATE && VFIO_PCI
-> +       help
-> +         Support for preserving devices bound to vfio-pci across a
-> Live
-> +         Update. The eventual goal is that preserved devices can run
-> +         uninterrupted during a Live Update, including DMA to
-> preserved
-> +         memory buffers and P2P. However there are many steps still
-> needed to
-> +         achieve this, including:
-> +
-> +          - Preservation of iommufd files
-> +          - Preservation of IOMMU driver state
-In the interim, what do you think about moving forward with noiommu
-mode without preserving IOMMU driver state? I=E2=80=99ve tested your
-vfio_pci_liveupdate_kexec_test with the noiommu cdev, and it works as
-expected.
+        ...
 
-> +          - Preservation of PCI state (BAR resources, device state,
-> ...)
-> +          - Preservation of vfio-pci driver state
-> +
-> +         This option should only be enabled by developers working on
-> +         implementing this support. Once enough support has landed
-> in the
-> +         kernel, this option will no longer be marked EXPERIMENTAL.
-> +
-> +         If you don't know what to do here, say N.
-> +
->  source "drivers/vfio/pci/mlx5/Kconfig"
->=20
->  source "drivers/vfio/pci/hisilicon/Kconfig"
+        bitmap_from_u64(bitmap, diff);
+        cur += find_first_bit(bitmap, 64) >> 3;
+> 
+> Cheers,
+> 
+> Enzo
 
+So, if you're not objecting to wire 32-bit count_trailing_zeros() to
+__ffs(), can you please send your ack?
+
+Thanks,
+Yury
 
