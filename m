@@ -4,67 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1E5B107BCD7
-	for <kexec@archiver.kernel.org>; Fri, 13 Mar 2026 18:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2BF0F10854A7
+	for <kexec@archiver.kernel.org>; Sat, 14 Mar 2026 20:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Ec3TnsxrQwvNWMYSCA+TVrh4TnAyLnsbcwvWaQQyqRA=; b=b7bKZXBsbkGeOE/CcLWtAJvhU2
-	mZag1dKd/dJjX+8TpVRJTTTS2yysNUbRcGuiK/0YBRg9/RLa1rrkacha2jL3eUBCFBZYHbn3SqNbw
-	eK1Vq/R0FiOHNnulzxpoITmbpNiq2HPw3NjkpO7+4bLWJgm2ewZiOZp/dkKJSP0zLLxTESycD8++f
-	aPG/hhNCcet0f9XR7UG3cys72qvdALr4T1lKku1hy/Fg+/jDNu567ijZMbDThTpZnXPJ9ea4BeZcq
-	urB1N5o7U+mrL+2YHdGTWyxaiYhUB0FwCKnpg+d0UwiuBOG985/cPqMilbkSULiPGxDcBOenjfGqV
-	C0wLi+lw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=4k6CpHj3cAuenf8CUhu4WfhqIJLP10A3qud/G1UciUw=; b=phZE3hYULQK2118TiKwy25q2LP
+	DIq7PqiChLTeA5A66FqfyjZjk/9ZZPJzAGvgsZlxjA5TVoLy+SV3qW1ieaYUf4wx3tVdpLcjCSHfx
+	nJjD5Sfyrq4zpii7oCQ0mQ6AH1Am9AZegctw/lHHpocbuSLDXD354EPliyvuCXwTCSHxh+ccuCltZ
+	FZXROnb7GBo3OJSapb6H5+PPH+R3Kuk/qpA5aE/Tgel76pRA6N5TZnMjC4cX3MbDY3WJB/JR/4o/v
+	n2ibOWgklQ52QTK0pcdSRQCsYQRQ4BtkE4bnMPh2LVQad8dNt+5OKbEpchXBQFVyu3ueoC6d1VdkP
+	0GnahEiw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w17Ru-00000000wUl-1bSi;
-	Fri, 13 Mar 2026 18:41:26 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1w1VoY-000000029Wt-0HV1;
+	Sat, 14 Mar 2026 20:42:26 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w17Rt-00000000wUb-3nmt
+	id 1w1VoS-000000029Wi-1w5O
 	for kexec@lists.infradead.org;
-	Fri, 13 Mar 2026 18:41:25 +0000
+	Sat, 14 Mar 2026 20:42:20 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id B6FE16183E;
-	Fri, 13 Mar 2026 18:41:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ECB7C2BC86;
-	Fri, 13 Mar 2026 18:41:24 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 89A2260121;
+	Sat, 14 Mar 2026 20:42:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB074C116C6;
+	Sat, 14 Mar 2026 20:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773427284;
-	bh=50cycpp4ATFd7gtddJcbklbgmFyHqoxs3fVcSu1G/XQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rTk6A1vUmlpvT1mOSDswCtWk+iRf2GWxhSIkKEiPuayrILlZX7Wcm7L6bYquGKq6r
-	 7BEyinSpm7S9ypvwf2B2tqzNB81XFz5AMmsngxrtEFdfWA3PY4y/c0H1lwR7R7SDIT
-	 9HiwNeU7lmMoy2AhFqImDZ5MR30JpjE7p8j1HTxv+xqvFBRerby2sx0RPlAOuIMk2m
-	 T4k/GElJMF0rFiAqjGNcEh8uHVy55fi5D9WI4D+zeJA+CEYLe2Ih6URw0VJyoRYIbm
-	 0x+wNLyu1mEN9IngdqACYLrNYuQfiwzgXXcjGND034eEfx3DbBWHLl3dRTPJhH8bzA
-	 xyaIQ3XiW2IBQ==
-Date: Fri, 13 Mar 2026 14:41:23 -0400
-From: Konstantin Ryabitsev <mricon@kernel.org>
-To: Yury Norov <ynorov@nvidia.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Eric Biggers <ebiggers@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-cifs@vger.kernel.org, linux-spi@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
-	Mark Brown <broonie@kernel.org>, Steve French <sfrench@samba.org>, 
-	Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>
-Subject: Re: [PATCH] lib: count_zeros: fix 32/64-bit inconsistency in
- count_trailing_zeros()
-Message-ID: <20260313-futuristic-steadfast-caribou-2b628a@lemur>
-References: <20260312230817.372878-1-ynorov@nvidia.com>
- <abPdItJ152oMzGd6@ashevche-desk.local>
- <abRN59ST3uRDS5-e@yury>
+	s=k20201202; t=1773520939;
+	bh=3MyRZyHFOwGHloTPezn9JMoFcYJ0FFqkU9SBJORQdYg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XlRKjYZ1KGGyHC4B+mLNLD6cwYqWY+togujJ/2nsEemHMDp0HXWa24tW8RhVnOYXB
+	 IFnP0OnOaitj1tdccTNaJ3GdhNjV5+A5GujNfrAk0rbzQs7qYRFpX8jXsgLsNIbD10
+	 /32hW8NELhjG9SxQNhyISoHHouAhvIS8dNXwktHtaHwdloJfZmkAO3L+7HjchJzD4U
+	 A/73BSIeBECg3PxkuLDUmIcyN4drNmbeMkFz0dtmvw0mZn/9fvFglhbcSNO5V5Sfco
+	 qL/cK3jMis4F8x15WyIUEEe+w8xqkMPmYGPXh8fywB9/MkoBEjRULm14yTKtkDRm4K
+	 5STeLDUYpxsNg==
+From: Eric Biggers <ebiggers@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Eric Biggers <ebiggers@kernel.org>
+Subject: [PATCH] kernel/kexec: Remove inclusion of crypto/hash.h
+Date: Sat, 14 Mar 2026 13:41:44 -0700
+Message-ID: <20260314204144.44884-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.53.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <abRN59ST3uRDS5-e@yury>
+Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,49 +68,33 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Mar 13, 2026 at 01:48:23PM -0400, Yury Norov wrote:
-> (Thanks for b4!)
+kexec_core.c does not do any cryptographic hashing, so the header
+crypto/hash.h is not needed at all.
 
-\o/
+Signed-off-by: Eric Biggers <ebiggers@kernel.org>
+---
+ kernel/kexec_core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> Interesting thread.
-> 
-> So, my workflow is:
-> 
->  1. git format-patch --cover-letter
->  2. # Edit cover letter, add To and CC section
->  3. git send-email 000* --to-cover --cc-cover
->  4. b4 am 
->  5. # Address nits/typos in the mbox
->  6. git am 
->  7. # Address substantial comments in git
->  8. git format-patch -v2 --cover-letter
->  9. # Edit cover letter again to restore body, To and CC sections
-> 10. git send-email v2-000* --to-cover --cc-cover
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 2fea396d29b97..a43d2da0fe3e7 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -45,11 +45,10 @@
+ #include <linux/sysfs.h>
+ 
+ #include <asm/page.h>
+ #include <asm/sections.h>
+ 
+-#include <crypto/hash.h>
+ #include "kexec_internal.h"
+ 
+ atomic_t __kexec_lock = ATOMIC_INIT(0);
+ 
+ /* Flag to indicate we are going to kexec a new kernel */
 
-This is doing it the classic way.
-
-> So, yes I loose recipients on every iteration, together with the whole
-> cover letter. But to me it's not a big deal because I can just pull
-> them from my mailbox.
-> 
-> In the better world, I'd like to have:
-> git send-email -v2 000* --to-the-same-people-as-in-v1
-> 
-> In the perfect world, I'd prefer to keep the cover letter under the
-> git control, once it created, together with the recipients, once they
-> are added, and be able to edit them just like regular commits.
-> 
-> There's a 'git am -k', which is seemingly related to the matter, and
-> it keeps the [PATCH] prefix. But it's not what can preserve recipients
-> for me.
-> 
-> I'll try b4 prep and trailers as suggested.
-
-Yes, it was created to simplify this process significantly. It's still mostly
-git and email, but at least you won't have to do quite so many manual steps.
-
-Regards,
+base-commit: 1c9982b4961334c1edb0745a04cabd34bc2de675
 -- 
-KR
+2.53.0
+
 
