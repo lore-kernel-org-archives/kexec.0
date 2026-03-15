@@ -4,86 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C812FF3026E
-	for <kexec@archiver.kernel.org>; Sun, 15 Mar 2026 15:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 96814F3026E
+	for <kexec@archiver.kernel.org>; Sun, 15 Mar 2026 17:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=tgkBw5OnojBrxNHN+m3w323m1e8OxqpyisbSdD+yjCM=; b=DykpGMBGP0QqP1UgVtHNloxoaL
-	aq7vyMxAudtWFVgIzo4s60EEhKbhpNvpE7SISxfG4ANrJz1YrzuUbRrdnksfOr5VNgwqZ2ZYpkt1w
-	NuzHAP49WDh5YEZffwna88tAMwiYQE5+eX8yTHXI58NeKMlAe2sQxqB3XMOvxqE36eylJ/IW8OCZX
-	fewkLJLfxqttlngRV5tZELVMFB3b7zPJxex76AeBvLMACcQ+GNC5gAjkXTqxnW7Iq4nvA4ceTJFHc
-	5O0To58fnSyaOyT5DE4c861D7UI0hrcS+EHxWb371BLaHYcd1327ShWHImPK4tw6bJTJtncxkCObw
-	vPSRjXaQ==;
+	bh=YRgTtVCfp33nFF3iOJpPBpviRk62A8CIxOCCKEiDg4M=; b=qaQOVeNGqtU8gbOUgoMCW2rKr+
+	bEMdeBVGjQKOjY5p2/5WFbWMaryVlrlPN10kenR4G8TiPi/phuw8IR91RvgBmhVonmeU0p4qajuwW
+	IFYmxjuHNikZgG262i4Hr4FU4DgJzwQVLttHIlvI5P1WBvS/UY0fNr4MhCV+DgHnTjH5MoUXIWFYQ
+	WwoWIOjDUjGB/UiOGb8hyRHzHffrx+M4LsZQwcnCTxz2gm0HqeK6wA9A1eBVymSdLu9HbcqbyltzF
+	VVyr8ZY5RFlQsHNgEjEpKJ9fETP/D5i9LXVfLmfbTKtoIwFVRvikLaKaFwntX+/g3vtxgeZfpsocD
+	CcTwlItg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w1nXt-00000002hH8-0bxn;
-	Sun, 15 Mar 2026 15:38:25 +0000
-Received: from mail-wm1-x329.google.com ([2a00:1450:4864:20::329])
+	id 1w1oyv-00000002kds-3vih;
+	Sun, 15 Mar 2026 17:10:25 +0000
+Received: from mail-wm1-x32b.google.com ([2a00:1450:4864:20::32b])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w1nXp-00000002hGl-226b
+	id 1w1oyu-00000002kdJ-0yZk
 	for kexec@lists.infradead.org;
-	Sun, 15 Mar 2026 15:38:23 +0000
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-4853f2826f7so40226845e9.1
-        for <kexec@lists.infradead.org>; Sun, 15 Mar 2026 08:38:20 -0700 (PDT)
+	Sun, 15 Mar 2026 17:10:25 +0000
+Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-483487335c2so36311475e9.2
+        for <kexec@lists.infradead.org>; Sun, 15 Mar 2026 10:10:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773589099; x=1774193899; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1773594622; x=1774199422; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tgkBw5OnojBrxNHN+m3w323m1e8OxqpyisbSdD+yjCM=;
-        b=Zh8v/KMLYr4AIireQ5vYvmELQqcvB5dsVxskeuEQM7p0j5Wwwymsoh2epsV6gv3LQa
-         oAYthn/svKtVVbalzRf67uNp4xeggHRT9Uwy2t3pyJL7efw+vf3OuFwT4U/6lr3UDtWd
-         ARa0hyUZaHIIIWVNdrkOJxB2teZtTNpApp2W57oiJBGiAqMHpwB5mvo76uQ429vHVeJd
-         V/Pwcn45amjNSV2bsRuF1BsrPj8/FE1b1OmFq0z36ScXUt8W2dQ71YSyxUCqLmQ0/65b
-         zfrffUslMMhkzGQUoW2PaFQtt6kGkaVOxh4k0y+pOos2ZQDvnjQu69bttWiDH7N5nNI3
-         Vdfg==
+        bh=YRgTtVCfp33nFF3iOJpPBpviRk62A8CIxOCCKEiDg4M=;
+        b=WvsRz5NOL2lYEx7Dk3oQZPw/UMPO5gg2ZiLfU00COa5FLjQryHg0nTjePKsFNetgzb
+         z/cVDuMz643C80bf0XjLhSWeD36uf5e4FnEvMeYawhOd6lLpZaBWgxEauOWJed9yLyuy
+         QklrdtPDG+cy228MoNFi7wO9VeFsaTb6ElXF81sR6IaRdyuBHnVLEojJj+/fWJXApA6c
+         5NhXksxqfeoYbs802ke0tTbxroDBdFN2h4dYUXrCKIneycFhlwdb6GR8ZzwftM59z2xK
+         WS1NxvXHrtkbamh5gNMErQc3mKQFC88fNSldOXdZAV/+g+bCL5b88Dz+VpWrtA6NTziO
+         jV+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773589099; x=1774193899;
+        d=1e100.net; s=20251104; t=1773594622; x=1774199422;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tgkBw5OnojBrxNHN+m3w323m1e8OxqpyisbSdD+yjCM=;
-        b=D6V8JGENFmDOEQDzLrhA6fancEcuA/Jo8hiLUJxOpuKkCQs4l9AvLcVNitY09sD6kX
-         h01x816nD23iTrj6YtRexSmZZ1+4n08vej9k+6IbFZV7/D0Y/yEkTD/ILvaa8IrcwrS+
-         tdwX9lBS89GIeMPdp6mk7P8Ne5H8wwmBA5tYcaycSiqCIZZs7IvmN+2H/EOmBGz0sxdf
-         Qp/eiJ4lyzy/zW9aqiZX0n5AKAdeuHYhzPE+FUsONZ1lRxLaRMXQelpPF9Utvx76AhsI
-         qqyr6xDuP6bQq0LaFv2FBsfHXbBfKiPkORRn9fRO+NGN65Uevo0z4LUnp7eZAOV4Eey4
-         cbFw==
-X-Gm-Message-State: AOJu0YzWMEj26zY03N4E2vhImVgGWmt/QwphyPzgIgq5JwG9AQQN/IeF
-	XHqeT+WW/Adf1TMy0APS3vzCoT2GSXafpjvDjFoIfT8vwZTqorskPkh7oRGiydiyLAE=
-X-Gm-Gg: ATEYQzzD0CDTsbxr9098j6iN8oJChnmUW4CHYsOdip4zYqLvpxt1BSb7tLlOq0oFkI5
-	FluA6xMDyVjUd3un3KObPbVIb5rzCdJKpxUyM9X8Igfv+Etyz3xHOypoj+dVcz6Ger3gD2CflBJ
-	U41+U7m4SBHS973T6zvbAy8U6AdpI3PK9TXZcGg+1Y1z/nEeFZHvlLEkvOeXKGC2YvW3LxTm+kE
-	zQZa+5UbaimybkLV2OCp294ZMgH8PJfSLC2iReH2Vj23ZxvMm0A4y0mK0GIgYgcZjvx3aX3yOvd
-	Ch2AeiZ5AehxssgZWTc5ubDyAyzEYfkIpLM/D9WXTpZrnvA9cgEEqIeOd/kuJpDK5tiRUbxq55V
-	X55XJS/ccj6BE5aut8kuo6a4tXmwQreFCofreTQs8J3fdBGlMJJt1UynPlgHcpxn+YjK3y0Nuh7
-	05u4kqZkuCcU41LzCIMYkahIFdFKVR7Wjt5e6lI9x3YFKxpySisfBRqvPHXPldZKBr7HNltlU3j
-	8adV79ZXnSDUst0tku30ky5jtKpKA==
-X-Received: by 2002:a05:600d:6445:10b0:485:35a4:939c with SMTP id 5b1f17b1804b1-4855670c0f4mr119960285e9.29.1773589098938;
-        Sun, 15 Mar 2026 08:38:18 -0700 (PDT)
+        bh=YRgTtVCfp33nFF3iOJpPBpviRk62A8CIxOCCKEiDg4M=;
+        b=P1Br7oNmi1mrlnE1rSBbv7AbK9XorlPpo77dVIHuhvfkBevPKIrGTrx+r/dLuPFojz
+         aBRg3qd48JoMcXgrzyD/d2iM39sXQ82kusKxDgTI3F8941pDN4M1RFIx3u70NrwHwhBx
+         y6ggSW6fXYKCPGxbIfkFqC0csSQ8MDaoLA6QY7NPnWaJmPaXh3U//vVflvZQWZger7es
+         ncRVwUJzyweyqP1Z52GhUvLLbDAepv3CYgbzaXX902hC9U2e94q3Md912Md/jMkGQIMP
+         ajcb7g2ijOsFz5MHsOW0oRwCBGBqXqD71yIcdaaD5D5XVi1Bn9xf3YBOzlar+CaG48hf
+         9XQw==
+X-Gm-Message-State: AOJu0YxLGNwBmNPaUc6fKIqoHxfJVJhIiMXC3VRBLq/1y62As8bTvCOg
+	JvwJ+iSXuVlMHwtTzxMugv4LCyJKPdmiBUvPHZdsAljhYYb5+mUH7wO6
+X-Gm-Gg: ATEYQzz8JnThGP0D5FAmCQEwP44lk0pwE0GAh++a2zJ/GnRaW2ubkurzWW8UCDZ6raA
+	j4y4qGAujAKhF4jOzNfEhUt2M9Jx5Gq3+PCgnvpkZp1LG6nqcmyVtSPrTuCChPkaSZDeFC7uFbE
+	94dlPUYIRUVM6EXBLxn4/15nE76OinbDzu6VwbcVwjCIQxuvIYYr20hd8HWgNDvJZ2OBmc9JI+8
+	mxGxXlVKNngXuxwp4rD3MgHbylWBkFciOaYnqoPpgDYE1bFfILmyBmcG63Lld3EtkTq/fyBz33f
+	Ly/U0aGZ6toFpHAnDHtGib9JMyBMZEbq1t2l0edi0hRjmG6QQrACwP9R60vNYIqsL9MAlh27HAp
+	gdYJ7DVu/zmigJoP3RIdbmsoPxabkCyy6oUNKCjWCZlG/ZHQbb1ngV6kQ3KNOe30+to6L3lxM1e
+	k5e7UwKcoJO/sDYPmX0KX1e4Am5GmwVlRmr5QnXdQVyjRyP+t7zS8HOenzMUtPP3iIjenWi6IFI
+	Vof4Ayha/ef5N5sbK+uhzJJproi1g==
+X-Received: by 2002:a05:600c:4f8b:b0:485:3e6c:aa84 with SMTP id 5b1f17b1804b1-4855670f7d3mr167790935e9.33.1773594622123;
+        Sun, 15 Mar 2026 10:10:22 -0700 (PDT)
 Received: from DESKTOP-TILNSD1.localdomain ([139.47.104.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48557c6e2b1sm68018115e9.28.2026.03.15.08.38.17
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4854b5e9179sm354997525e9.3.2026.03.15.10.10.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Mar 2026 08:38:18 -0700 (PDT)
+        Sun, 15 Mar 2026 10:10:21 -0700 (PDT)
 From: Kit Dallege <xaum.io@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Baoquan He <bhe@redhat.com>
 Cc: kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Kit Dallege <xaum.io@gmail.com>,
-	Claude <noreply@anthropic.com>
-Subject: [PATCH] kexec: add missing kernel-doc parameters for ELF loading functions
-Date: Sun, 15 Mar 2026 16:38:08 +0100
-Message-ID: <20260315153808.49218-1-xaum.io@gmail.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] kexec: add missing kernel-doc parameters for ELF loading functions
+Date: Sun, 15 Mar 2026 18:10:11 +0100
+Message-ID: <20260315171011.66068-1-xaum.io@gmail.com>
 X-Mailer: git-send-email 2.53.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260315_083821_562755_EC53A27C 
-X-CRM114-Status: GOOD (  13.98  )
+X-CRM114-CacheID: sfid-20260315_101024_284029_546F7F7A 
+X-CRM114-Status: GOOD (  14.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,7 +100,7 @@ Document all missing parameters across 6 functions in kexec_elf.c:
 elf_is_ehdr_sane(), elf_is_phdr_sane(), elf_read_phdrs(),
 kexec_free_elf_info(), kexec_build_elf_info(), and kexec_elf_load().
 
-Assisted-by: Claude <noreply@anthropic.com>
+Assisted-by: Claude:claude-opus-4-6
 Signed-off-by: Kit Dallege <xaum.io@gmail.com>
 ---
  kernel/kexec_elf.c | 16 +++++++++++++++-
