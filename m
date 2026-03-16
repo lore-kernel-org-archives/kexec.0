@@ -4,73 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D3ADDF30273
-	for <kexec@archiver.kernel.org>; Mon, 16 Mar 2026 05:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 59025F4644F
+	for <kexec@archiver.kernel.org>; Mon, 16 Mar 2026 11:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=54l7x8IhbQtdZRTGFsHRf7iPiatZmyfZH8oZcoYfHkw=; b=H0feuTITMyx4qJF1rUIQtJ9V8D
-	7H3pn3ofDKMDRlFFyemRst1+lZJI4EZX08vF3xmwUsfQCgu4sfaTwVLtBXpr9moobq5lIU2tbSyca
-	GmDlPckkZ7XAW1U0tu4Zq60tVRwExVmbiHMdMfIsz4Sn+vPHQfE/Pw6H6zbfDJXt7ytFihAIxqBV6
-	90uomipTXltHN/3GYV5VPSzuhyqPd55pOv3OfV1eTKuheJdeM7AlkVtVcFRPJShTF1pvM6RHt/Fmt
-	63n88uw9NaFiC/QdRXFNaEgUl9ai2NaeQwtojZ1sKtzQGONMllOD1b7I+ekf+3DV+V7mOXYQylQlS
-	qa+ZeMeQ==;
+	bh=JZL2bgode2vAt2OHP2/8t7Ara1fNH4s4w9EznBHpivw=; b=q9DmfVWTgZyTzwD63tkAUVXSrs
+	p0HacmmqaAXHf0jMzfFwXaOvmlg0sorzspFoBiyb1BT6Fodfak2MAVfi5+0yc7SoprePAq5/YXQcu
+	IsH5lqAxMpcMeqEh/pmS6p84S8dlPX9dDAhR94iQaaY4dDOu+e/CRP7S4/bStpinGlR4gEwpfrdOK
+	QOdhhKa9lTNXLEvx0j6wQZADaZuVLfnnriSPR5scZBE0PEP+q9GvTvnyhqmXjrGCnWwTzDLWfxemB
+	ynX74FxjvD2aAsOMBE9OqwQ7cnEE/d4zXrpV8X7vYF/IORbHQjfhumnC/tAOeeTVS0uas9sJUQPsN
+	ikVh4qIA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w20yC-00000003NW3-2Jvl;
-	Mon, 16 Mar 2026 05:58:28 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1w25ph-00000003nMN-110i;
+	Mon, 16 Mar 2026 11:10:01 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w20y5-00000003NV8-1aBZ
+	id 1w25pf-00000003nL7-0nPg
 	for kexec@lists.infradead.org;
-	Mon, 16 Mar 2026 05:58:24 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1773640698;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=54l7x8IhbQtdZRTGFsHRf7iPiatZmyfZH8oZcoYfHkw=;
-	b=D5+OrSEd8JUL6ekKV9HNtIMQaYQ/k6XTAr6IBJGN28mcHLRiTh08jYlAbXMwrDT+uHtEFE
-	bOPv56woDnKPa3W0RRStkSoaNHbUzzssSVJtzE9zpsdA37oQGeFu0/K63xjjyu2J3AcShZ
-	BHpmmfIvGjguRREcnUW8n98t+lTDMzw=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-347-0wxENqZIOi26Y68ERchjUw-1; Mon,
- 16 Mar 2026 01:58:14 -0400
-X-MC-Unique: 0wxENqZIOi26Y68ERchjUw-1
-X-Mimecast-MFC-AGG-ID: 0wxENqZIOi26Y68ERchjUw_1773640693
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 38C121953994;
-	Mon, 16 Mar 2026 05:58:13 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.142])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F3528300019F;
-	Mon, 16 Mar 2026 05:58:10 +0000 (UTC)
-Date: Mon, 16 Mar 2026 13:58:06 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Kit Dallege <xaum.io@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] kexec: add missing kernel-doc parameters for ELF
- loading functions
-Message-ID: <abeb7qDkOnmsFMOB@fedora>
-References: <20260315171011.66068-1-xaum.io@gmail.com>
+	Mon, 16 Mar 2026 11:10:00 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=JZL2bgode2vAt2OHP2/8t7Ara1fNH4s4w9EznBHpivw=; b=FyiTwwV+9NvW3WHPFOYHEDVBcW
+	3mj3heMZibE7ObGWZHDyqshfsIZq3czXuoBSKMR1bW4Gk3mLHzsNByOIVsw8+F+HfrdQYsny/NhfL
+	MUMVuXyrWmHZdZsOZE3lhpwYK9Gdqf12CLZ6yg83sNWCaME+d1gWOFWgTdmyYk+PUnOSIrBaqnU+K
+	wZl3IJseSbq+xllzRYWzZOc6IO1+xhkLWqd9cs8WVT70vGBOwpmmdP2rUW3QUlUnWMDzthejTvbmu
+	3LwO4LHeFCYx5Sohkn2sE5Yx+lauTchJpbKjZltDmylLJbTAqm1/5FRcD15EbP/WhPCnaZlsPg8Nf
+	woSHgZVw==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <leitao@debian.org>)
+	id 1w25pV-0024X3-H2; Mon, 16 Mar 2026 11:09:48 +0000
+Date: Mon, 16 Mar 2026 04:09:43 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-mm@kvack.org, usamaarif642@gmail.com, SeongJae Park <sj@kernel.org>, 
+	kernel-team@meta.com
+Subject: Re: [PATCH v8 3/6] kho: persist blob size in KHO FDT
+Message-ID: <abfkVOjq1ngZb-Nm@gmail.com>
+References: <20260309-kho-v8-0-c3abcf4ac750@debian.org>
+ <20260309-kho-v8-3-c3abcf4ac750@debian.org>
+ <2vxzbjgsgk41.fsf@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260315171011.66068-1-xaum.io@gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: 62EZ6RJrcq9-uCGhHm32mTaJwDGAbomGFnt-sZIEhWI_1773640693
-X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <2vxzbjgsgk41.fsf@kernel.org>
+X-Debian-User: leitao
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260315_225821_889193_90930B5F 
-X-CRM114-Status: GOOD (  21.92  )
+X-CRM114-CacheID: sfid-20260316_040959_449228_5C2B9741 
+X-CRM114-Status: GOOD (  40.68  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,88 +76,189 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 03/15/26 at 06:10pm, Kit Dallege wrote:
-> Document all missing parameters across 6 functions in kexec_elf.c:
-> elf_is_ehdr_sane(), elf_is_phdr_sane(), elf_read_phdrs(),
-> kexec_free_elf_info(), kexec_build_elf_info(), and kexec_elf_load().
+On Fri, Mar 13, 2026 at 09:21:50AM +0000, Pratyush Yadav wrote:
+> On Mon, Mar 09 2026, Breno Leitao wrote:
 > 
-> Assisted-by: Claude:claude-opus-4-6
-
-
-> Signed-off-by: Kit Dallege <xaum.io@gmail.com>
-
-Is this Claude-opus produced patch checked by people? There's no
-changelog in this v2, I don't know what's improved since v1. Is it
-created automatically?
-
-> ---
->  kernel/kexec_elf.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
+> > kho_add_subtree() accepts a size parameter but only forwards it to
+> > debugfs. The size is not persisted in the KHO FDT, so it is lost across
+> > kexec. This makes it impossible for the incoming kernel to determine the
+> > blob size without understanding the blob format.
+> >
+> > Store the blob size as a "blob-size" property in the KHO FDT alongside
+> > the "preserved-data" physical address. This allows the receiving kernel
+> > to recover the size for any blob regardless of format.
+> >
+> > Also extend kho_retrieve_subtree() with an optional size output
+> > parameter so callers can learn the blob size without needing to
+> > understand the blob format. Update all callers to pass NULL for the
+> > new parameter.
+> >
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > ---
+> [...]
+> > diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> > index 54fe59fe43acd..1f22705d5d246 100644
+> > --- a/kernel/liveupdate/kexec_handover.c
+> > +++ b/kernel/liveupdate/kexec_handover.c
+> > @@ -768,6 +768,7 @@ int kho_add_subtree(const char *name, void *blob, size_t size)
+> >  {
+> >  	phys_addr_t phys = virt_to_phys(blob);
+> >  	void *root_fdt = kho_out.fdt;
+> > +	u64 size_u64 = size;
+> >  	int err = -ENOMEM;
+> >  	int off, fdt_err;
+> >  
+> > @@ -784,11 +785,16 @@ int kho_add_subtree(const char *name, void *blob, size_t size)
+> >  		goto out_pack;
+> >  	}
+> >  
+> > -	err = fdt_setprop(root_fdt, off, KHO_FDT_SUB_TREE_PROP_NAME,
+> > +	err = fdt_setprop(root_fdt, off, KHO_SUB_TREE_PROP_NAME,
+> >  			  &phys, sizeof(phys));
+> >  	if (err < 0)
+> >  		goto out_pack;
+> >  
+> > +	err = fdt_setprop(root_fdt, off, KHO_SUB_TREE_SIZE_PROP_NAME,
+> > +			  &size_u64, sizeof(size_u64));
+> > +	if (err < 0)
+> > +		goto out_pack;
+> > +
 > 
-> diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
-> index 3a5c25b2adc9..48f7c0677e87 100644
-> --- a/kernel/kexec_elf.c
-> +++ b/kernel/kexec_elf.c
-> @@ -58,6 +58,7 @@ static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
->  
->  /**
->   * elf_is_ehdr_sane - check that it is safe to use the ELF header
-> + * @ehdr:	pointer to the ELF header to check.
->   * @buf_len:	size of the buffer in which the ELF file is loaded.
->   */
->  static bool elf_is_ehdr_sane(const struct elfhdr *ehdr, size_t buf_len)
-> @@ -180,6 +181,7 @@ static int elf_read_ehdr(const char *buf, size_t len, struct elfhdr *ehdr)
->  
->  /**
->   * elf_is_phdr_sane - check that it is safe to use the program header
-> + * @phdr:	pointer to the ELF program header to check.
->   * @buf_len:	size of the buffer in which the ELF file is loaded.
->   */
->  static bool elf_is_phdr_sane(const struct elf_phdr *phdr, size_t buf_len)
-> @@ -244,6 +246,9 @@ static int elf_read_phdr(const char *buf, size_t len,
->  
->  /**
->   * elf_read_phdrs - read the program headers from the buffer
-> + * @buf:	buffer to read ELF file from.
-> + * @len:	size of @buf.
-> + * @elf_info:	pointer to existing struct which will be populated.
->   *
->   * This function assumes that the program header table was checked for sanity.
->   * Use elf_is_ehdr_sane() if it wasn't.
-> @@ -315,6 +320,7 @@ static int elf_read_from_buffer(const char *buf, size_t len,
->  
->  /**
->   * kexec_free_elf_info - free memory allocated by elf_read_from_buffer
-> + * @elf_info:	ELF info struct to free.
->   */
->  void kexec_free_elf_info(struct kexec_elf_info *elf_info)
->  {
-> @@ -323,6 +329,10 @@ void kexec_free_elf_info(struct kexec_elf_info *elf_info)
->  }
->  /**
->   * kexec_build_elf_info - read ELF executable and check that we can use it
-> + * @buf:	buffer to read ELF file from.
-> + * @len:	size of @buf.
-> + * @ehdr:	pointer to existing struct which will be populated.
-> + * @elf_info:	pointer to existing struct which will be populated.
->   */
->  int kexec_build_elf_info(const char *buf, size_t len, struct elfhdr *ehdr,
->  			       struct kexec_elf_info *elf_info)
-> @@ -379,7 +389,11 @@ int kexec_elf_probe(const char *buf, unsigned long len)
->  
->  /**
->   * kexec_elf_load - load ELF executable image
-> - * @lowest_load_addr:	On return, will be the address where the first PT_LOAD
-> + * @image:		pointer to the kexec image being loaded.
-> + * @ehdr:		pointer to the ELF header of the executable.
-> + * @elf_info:		pointer to the ELF info struct with program headers.
-> + * @kbuf:		pointer to the kexec buffer used for segment loading.
-> + * @lowest_load_addr:	on return, will be the address where the first PT_LOAD
->   *			section will be loaded in memory.
->   *
->   * Return:
-> -- 
-> 2.53.0
+> I noticed that the error handling here is a bit broken. We open the
+> subnode for the subtree, but then if we fail to add the "preserved-data"
+> property, we don't remove the subnode. So the next kernel gets an
+> invalid FDT (per KHO ABI) and might as well refuse to parse it.
 > 
+> Similarly here, the FDT might also be missing the size and then the next
+> kernel might reject the FDT.
+> 
+> Also, we directly return the FDT error code to the caller, which
+> wouldn't make sense since it probably expects -errno.
+> 
+> Not something this patchset has to fix, but I am pointing this out in
+> case someone (possibly also future me) is interested in fixing this up.
 
+That is a good point, do you mean a fix like the following? 
+
+commit 633d0cb01ed959676b60de8b1851dad1757d8fe5
+Author: Breno Leitao <leitao@debian.org>
+Date:   Mon Mar 16 04:03:51 2026 -0700
+
+    kho: fix error handling in kho_add_subtree()
+    
+    Fix two error handling issues in kho_add_subtree():
+    
+    1. If fdt_setprop() fails after the subnode has been created, the
+       subnode is not removed. This leaves an incomplete node in the FDT
+       (missing "preserved-data" or "blob-size" properties), which violates
+       the KHO ABI and may cause the next kernel to reject the FDT.
+    
+    2. The fdt_setprop() return value (an FDT error code) is stored
+       directly in err and returned to the caller, which expects -errno.
+    
+    Fix both by storing fdt_setprop() results in fdt_err, jumping to a new
+    out_del_node label that removes the subnode on failure, and only setting
+    err = 0 on the success path.
+    
+    Signed-off-by: Breno Leitao <leitao@debian.org>
+    Suggested-by: Pratyush Yadav <pratyush@kernel.org>
+
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 62b1b8a9aa337..8d2d30119f6d4 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -787,19 +787,24 @@ int kho_add_subtree(const char *name, void *blob, size_t size)
+ 		goto out_pack;
+ 	}
+ 
+-	err = fdt_setprop(root_fdt, off, KHO_SUB_TREE_PROP_NAME,
+-			  &phys, sizeof(phys));
+-	if (err < 0)
+-		goto out_pack;
++	fdt_err = fdt_setprop(root_fdt, off, KHO_SUB_TREE_PROP_NAME,
++			      &phys, sizeof(phys));
++	if (fdt_err < 0)
++		goto out_del_node;
+ 
+-	err = fdt_setprop(root_fdt, off, KHO_SUB_TREE_SIZE_PROP_NAME,
+-			  &size_u64, sizeof(size_u64));
+-	if (err < 0)
+-		goto out_pack;
++	fdt_err = fdt_setprop(root_fdt, off, KHO_SUB_TREE_SIZE_PROP_NAME,
++			      &size_u64, sizeof(size_u64));
++	if (fdt_err < 0)
++		goto out_del_node;
+ 
+ 	WARN_ON_ONCE(kho_debugfs_blob_add(&kho_out.dbg, name, blob,
+ 					  size, false));
+ 
++	err = 0;
++	goto out_pack;
++
++out_del_node:
++	fdt_del_node(root_fdt, off);
+ out_pack:
+ 	fdt_pack(root_fdt);
+ 
+
+Given this is not strictly related to this patchset, I am planning to
+send this fix separately.
+
+> >  	WARN_ON_ONCE(kho_debugfs_blob_add(&kho_out.dbg, name, blob,
+> >  					  size, false));
+> >  
+> > @@ -817,7 +823,7 @@ void kho_remove_subtree(void *blob)
+> >  		const u64 *val;
+> >  		int len;
+> >  
+> > -		val = fdt_getprop(root_fdt, off, KHO_FDT_SUB_TREE_PROP_NAME, &len);
+> > +		val = fdt_getprop(root_fdt, off, KHO_SUB_TREE_PROP_NAME, &len);
+> >  		if (!val || len != sizeof(phys_addr_t))
+> >  			continue;
+> >  
+> > @@ -1314,13 +1320,14 @@ EXPORT_SYMBOL_GPL(is_kho_boot);
+> >   * kho_retrieve_subtree - retrieve a preserved sub blob by its name.
+> >   * @name: the name of the sub blob passed to kho_add_subtree().
+> >   * @phys: if found, the physical address of the sub blob is stored in @phys.
+> > + * @size: if not NULL and found, the size of the sub blob is stored in @size.
+> >   *
+> >   * Retrieve a preserved sub blob named @name and store its physical
+> > - * address in @phys.
+> > + * address in @phys and optionally its size in @size.
+> >   *
+> >   * Return: 0 on success, error code on failure
+> >   */
+> > -int kho_retrieve_subtree(const char *name, phys_addr_t *phys)
+> > +int kho_retrieve_subtree(const char *name, phys_addr_t *phys, size_t *size)
+> >  {
+> >  	const void *fdt = kho_get_fdt();
+> >  	const u64 *val;
+> > @@ -1336,12 +1343,21 @@ int kho_retrieve_subtree(const char *name, phys_addr_t *phys)
+> >  	if (offset < 0)
+> >  		return -ENOENT;
+> >  
+> > -	val = fdt_getprop(fdt, offset, KHO_FDT_SUB_TREE_PROP_NAME, &len);
+> > +	val = fdt_getprop(fdt, offset, KHO_SUB_TREE_PROP_NAME, &len);
+> >  	if (!val || len != sizeof(*val))
+> >  		return -EINVAL;
+> >  
+> >  	*phys = (phys_addr_t)*val;
+> >  
+> > +	if (size) {
+> > +		val = fdt_getprop(fdt, offset, KHO_SUB_TREE_SIZE_PROP_NAME,
+> > +				  &len);
+> > +		if (val && len == sizeof(*val))
+> > +			*size = (size_t)*val;
+> > +		else
+> > +			*size = 0;
+> 
+> If the size property is invalid, is it a good idea to ignore it? Should
+> we instead consider the subnode to be broken and reject it entirely with
+> an error message? Because if a caller expects a blob of 16 bytes but
+> gets one with 0 bytes, it will likely error out anyway.
+
+Ack, let me update this, then.
+
+Thanks for the review,
+--breno
 
