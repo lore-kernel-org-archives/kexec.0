@@ -4,84 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 96814F3026E
-	for <kexec@archiver.kernel.org>; Sun, 15 Mar 2026 17:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D3ADDF30273
+	for <kexec@archiver.kernel.org>; Mon, 16 Mar 2026 05:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=YRgTtVCfp33nFF3iOJpPBpviRk62A8CIxOCCKEiDg4M=; b=qaQOVeNGqtU8gbOUgoMCW2rKr+
-	bEMdeBVGjQKOjY5p2/5WFbWMaryVlrlPN10kenR4G8TiPi/phuw8IR91RvgBmhVonmeU0p4qajuwW
-	IFYmxjuHNikZgG262i4Hr4FU4DgJzwQVLttHIlvI5P1WBvS/UY0fNr4MhCV+DgHnTjH5MoUXIWFYQ
-	WwoWIOjDUjGB/UiOGb8hyRHzHffrx+M4LsZQwcnCTxz2gm0HqeK6wA9A1eBVymSdLu9HbcqbyltzF
-	VVyr8ZY5RFlQsHNgEjEpKJ9fETP/D5i9LXVfLmfbTKtoIwFVRvikLaKaFwntX+/g3vtxgeZfpsocD
-	CcTwlItg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=54l7x8IhbQtdZRTGFsHRf7iPiatZmyfZH8oZcoYfHkw=; b=H0feuTITMyx4qJF1rUIQtJ9V8D
+	7H3pn3ofDKMDRlFFyemRst1+lZJI4EZX08vF3xmwUsfQCgu4sfaTwVLtBXpr9moobq5lIU2tbSyca
+	GmDlPckkZ7XAW1U0tu4Zq60tVRwExVmbiHMdMfIsz4Sn+vPHQfE/Pw6H6zbfDJXt7ytFihAIxqBV6
+	90uomipTXltHN/3GYV5VPSzuhyqPd55pOv3OfV1eTKuheJdeM7AlkVtVcFRPJShTF1pvM6RHt/Fmt
+	63n88uw9NaFiC/QdRXFNaEgUl9ai2NaeQwtojZ1sKtzQGONMllOD1b7I+ekf+3DV+V7mOXYQylQlS
+	qa+ZeMeQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w1oyv-00000002kds-3vih;
-	Sun, 15 Mar 2026 17:10:25 +0000
-Received: from mail-wm1-x32b.google.com ([2a00:1450:4864:20::32b])
+	id 1w20yC-00000003NW3-2Jvl;
+	Mon, 16 Mar 2026 05:58:28 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w1oyu-00000002kdJ-0yZk
+	id 1w20y5-00000003NV8-1aBZ
 	for kexec@lists.infradead.org;
-	Sun, 15 Mar 2026 17:10:25 +0000
-Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-483487335c2so36311475e9.2
-        for <kexec@lists.infradead.org>; Sun, 15 Mar 2026 10:10:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773594622; x=1774199422; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YRgTtVCfp33nFF3iOJpPBpviRk62A8CIxOCCKEiDg4M=;
-        b=WvsRz5NOL2lYEx7Dk3oQZPw/UMPO5gg2ZiLfU00COa5FLjQryHg0nTjePKsFNetgzb
-         z/cVDuMz643C80bf0XjLhSWeD36uf5e4FnEvMeYawhOd6lLpZaBWgxEauOWJed9yLyuy
-         QklrdtPDG+cy228MoNFi7wO9VeFsaTb6ElXF81sR6IaRdyuBHnVLEojJj+/fWJXApA6c
-         5NhXksxqfeoYbs802ke0tTbxroDBdFN2h4dYUXrCKIneycFhlwdb6GR8ZzwftM59z2xK
-         WS1NxvXHrtkbamh5gNMErQc3mKQFC88fNSldOXdZAV/+g+bCL5b88Dz+VpWrtA6NTziO
-         jV+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773594622; x=1774199422;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YRgTtVCfp33nFF3iOJpPBpviRk62A8CIxOCCKEiDg4M=;
-        b=P1Br7oNmi1mrlnE1rSBbv7AbK9XorlPpo77dVIHuhvfkBevPKIrGTrx+r/dLuPFojz
-         aBRg3qd48JoMcXgrzyD/d2iM39sXQ82kusKxDgTI3F8941pDN4M1RFIx3u70NrwHwhBx
-         y6ggSW6fXYKCPGxbIfkFqC0csSQ8MDaoLA6QY7NPnWaJmPaXh3U//vVflvZQWZger7es
-         ncRVwUJzyweyqP1Z52GhUvLLbDAepv3CYgbzaXX902hC9U2e94q3Md912Md/jMkGQIMP
-         ajcb7g2ijOsFz5MHsOW0oRwCBGBqXqD71yIcdaaD5D5XVi1Bn9xf3YBOzlar+CaG48hf
-         9XQw==
-X-Gm-Message-State: AOJu0YxLGNwBmNPaUc6fKIqoHxfJVJhIiMXC3VRBLq/1y62As8bTvCOg
-	JvwJ+iSXuVlMHwtTzxMugv4LCyJKPdmiBUvPHZdsAljhYYb5+mUH7wO6
-X-Gm-Gg: ATEYQzz8JnThGP0D5FAmCQEwP44lk0pwE0GAh++a2zJ/GnRaW2ubkurzWW8UCDZ6raA
-	j4y4qGAujAKhF4jOzNfEhUt2M9Jx5Gq3+PCgnvpkZp1LG6nqcmyVtSPrTuCChPkaSZDeFC7uFbE
-	94dlPUYIRUVM6EXBLxn4/15nE76OinbDzu6VwbcVwjCIQxuvIYYr20hd8HWgNDvJZ2OBmc9JI+8
-	mxGxXlVKNngXuxwp4rD3MgHbylWBkFciOaYnqoPpgDYE1bFfILmyBmcG63Lld3EtkTq/fyBz33f
-	Ly/U0aGZ6toFpHAnDHtGib9JMyBMZEbq1t2l0edi0hRjmG6QQrACwP9R60vNYIqsL9MAlh27HAp
-	gdYJ7DVu/zmigJoP3RIdbmsoPxabkCyy6oUNKCjWCZlG/ZHQbb1ngV6kQ3KNOe30+to6L3lxM1e
-	k5e7UwKcoJO/sDYPmX0KX1e4Am5GmwVlRmr5QnXdQVyjRyP+t7zS8HOenzMUtPP3iIjenWi6IFI
-	Vof4Ayha/ef5N5sbK+uhzJJproi1g==
-X-Received: by 2002:a05:600c:4f8b:b0:485:3e6c:aa84 with SMTP id 5b1f17b1804b1-4855670f7d3mr167790935e9.33.1773594622123;
-        Sun, 15 Mar 2026 10:10:22 -0700 (PDT)
-Received: from DESKTOP-TILNSD1.localdomain ([139.47.104.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4854b5e9179sm354997525e9.3.2026.03.15.10.10.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Mar 2026 10:10:21 -0700 (PDT)
-From: Kit Dallege <xaum.io@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org,
+	Mon, 16 Mar 2026 05:58:24 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1773640698;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=54l7x8IhbQtdZRTGFsHRf7iPiatZmyfZH8oZcoYfHkw=;
+	b=D5+OrSEd8JUL6ekKV9HNtIMQaYQ/k6XTAr6IBJGN28mcHLRiTh08jYlAbXMwrDT+uHtEFE
+	bOPv56woDnKPa3W0RRStkSoaNHbUzzssSVJtzE9zpsdA37oQGeFu0/K63xjjyu2J3AcShZ
+	BHpmmfIvGjguRREcnUW8n98t+lTDMzw=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-347-0wxENqZIOi26Y68ERchjUw-1; Mon,
+ 16 Mar 2026 01:58:14 -0400
+X-MC-Unique: 0wxENqZIOi26Y68ERchjUw-1
+X-Mimecast-MFC-AGG-ID: 0wxENqZIOi26Y68ERchjUw_1773640693
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 38C121953994;
+	Mon, 16 Mar 2026 05:58:13 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.142])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F3528300019F;
+	Mon, 16 Mar 2026 05:58:10 +0000 (UTC)
+Date: Mon, 16 Mar 2026 13:58:06 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Kit Dallege <xaum.io@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] kexec: add missing kernel-doc parameters for ELF loading functions
-Date: Sun, 15 Mar 2026 18:10:11 +0100
-Message-ID: <20260315171011.66068-1-xaum.io@gmail.com>
-X-Mailer: git-send-email 2.53.0
+Subject: Re: [PATCH v2] kexec: add missing kernel-doc parameters for ELF
+ loading functions
+Message-ID: <abeb7qDkOnmsFMOB@fedora>
+References: <20260315171011.66068-1-xaum.io@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260315171011.66068-1-xaum.io@gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: 62EZ6RJrcq9-uCGhHm32mTaJwDGAbomGFnt-sZIEhWI_1773640693
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260315_101024_284029_546F7F7A 
-X-CRM114-Status: GOOD (  14.71  )
+X-CRM114-CacheID: sfid-20260315_225821_889193_90930B5F 
+X-CRM114-Status: GOOD (  21.92  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,79 +85,88 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Document all missing parameters across 6 functions in kexec_elf.c:
-elf_is_ehdr_sane(), elf_is_phdr_sane(), elf_read_phdrs(),
-kexec_free_elf_info(), kexec_build_elf_info(), and kexec_elf_load().
+On 03/15/26 at 06:10pm, Kit Dallege wrote:
+> Document all missing parameters across 6 functions in kexec_elf.c:
+> elf_is_ehdr_sane(), elf_is_phdr_sane(), elf_read_phdrs(),
+> kexec_free_elf_info(), kexec_build_elf_info(), and kexec_elf_load().
+> 
+> Assisted-by: Claude:claude-opus-4-6
 
-Assisted-by: Claude:claude-opus-4-6
-Signed-off-by: Kit Dallege <xaum.io@gmail.com>
----
- kernel/kexec_elf.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
-index 3a5c25b2adc9..48f7c0677e87 100644
---- a/kernel/kexec_elf.c
-+++ b/kernel/kexec_elf.c
-@@ -58,6 +58,7 @@ static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
- 
- /**
-  * elf_is_ehdr_sane - check that it is safe to use the ELF header
-+ * @ehdr:	pointer to the ELF header to check.
-  * @buf_len:	size of the buffer in which the ELF file is loaded.
-  */
- static bool elf_is_ehdr_sane(const struct elfhdr *ehdr, size_t buf_len)
-@@ -180,6 +181,7 @@ static int elf_read_ehdr(const char *buf, size_t len, struct elfhdr *ehdr)
- 
- /**
-  * elf_is_phdr_sane - check that it is safe to use the program header
-+ * @phdr:	pointer to the ELF program header to check.
-  * @buf_len:	size of the buffer in which the ELF file is loaded.
-  */
- static bool elf_is_phdr_sane(const struct elf_phdr *phdr, size_t buf_len)
-@@ -244,6 +246,9 @@ static int elf_read_phdr(const char *buf, size_t len,
- 
- /**
-  * elf_read_phdrs - read the program headers from the buffer
-+ * @buf:	buffer to read ELF file from.
-+ * @len:	size of @buf.
-+ * @elf_info:	pointer to existing struct which will be populated.
-  *
-  * This function assumes that the program header table was checked for sanity.
-  * Use elf_is_ehdr_sane() if it wasn't.
-@@ -315,6 +320,7 @@ static int elf_read_from_buffer(const char *buf, size_t len,
- 
- /**
-  * kexec_free_elf_info - free memory allocated by elf_read_from_buffer
-+ * @elf_info:	ELF info struct to free.
-  */
- void kexec_free_elf_info(struct kexec_elf_info *elf_info)
- {
-@@ -323,6 +329,10 @@ void kexec_free_elf_info(struct kexec_elf_info *elf_info)
- }
- /**
-  * kexec_build_elf_info - read ELF executable and check that we can use it
-+ * @buf:	buffer to read ELF file from.
-+ * @len:	size of @buf.
-+ * @ehdr:	pointer to existing struct which will be populated.
-+ * @elf_info:	pointer to existing struct which will be populated.
-  */
- int kexec_build_elf_info(const char *buf, size_t len, struct elfhdr *ehdr,
- 			       struct kexec_elf_info *elf_info)
-@@ -379,7 +389,11 @@ int kexec_elf_probe(const char *buf, unsigned long len)
- 
- /**
-  * kexec_elf_load - load ELF executable image
-- * @lowest_load_addr:	On return, will be the address where the first PT_LOAD
-+ * @image:		pointer to the kexec image being loaded.
-+ * @ehdr:		pointer to the ELF header of the executable.
-+ * @elf_info:		pointer to the ELF info struct with program headers.
-+ * @kbuf:		pointer to the kexec buffer used for segment loading.
-+ * @lowest_load_addr:	on return, will be the address where the first PT_LOAD
-  *			section will be loaded in memory.
-  *
-  * Return:
--- 
-2.53.0
+> Signed-off-by: Kit Dallege <xaum.io@gmail.com>
+
+Is this Claude-opus produced patch checked by people? There's no
+changelog in this v2, I don't know what's improved since v1. Is it
+created automatically?
+
+> ---
+>  kernel/kexec_elf.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
+> index 3a5c25b2adc9..48f7c0677e87 100644
+> --- a/kernel/kexec_elf.c
+> +++ b/kernel/kexec_elf.c
+> @@ -58,6 +58,7 @@ static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
+>  
+>  /**
+>   * elf_is_ehdr_sane - check that it is safe to use the ELF header
+> + * @ehdr:	pointer to the ELF header to check.
+>   * @buf_len:	size of the buffer in which the ELF file is loaded.
+>   */
+>  static bool elf_is_ehdr_sane(const struct elfhdr *ehdr, size_t buf_len)
+> @@ -180,6 +181,7 @@ static int elf_read_ehdr(const char *buf, size_t len, struct elfhdr *ehdr)
+>  
+>  /**
+>   * elf_is_phdr_sane - check that it is safe to use the program header
+> + * @phdr:	pointer to the ELF program header to check.
+>   * @buf_len:	size of the buffer in which the ELF file is loaded.
+>   */
+>  static bool elf_is_phdr_sane(const struct elf_phdr *phdr, size_t buf_len)
+> @@ -244,6 +246,9 @@ static int elf_read_phdr(const char *buf, size_t len,
+>  
+>  /**
+>   * elf_read_phdrs - read the program headers from the buffer
+> + * @buf:	buffer to read ELF file from.
+> + * @len:	size of @buf.
+> + * @elf_info:	pointer to existing struct which will be populated.
+>   *
+>   * This function assumes that the program header table was checked for sanity.
+>   * Use elf_is_ehdr_sane() if it wasn't.
+> @@ -315,6 +320,7 @@ static int elf_read_from_buffer(const char *buf, size_t len,
+>  
+>  /**
+>   * kexec_free_elf_info - free memory allocated by elf_read_from_buffer
+> + * @elf_info:	ELF info struct to free.
+>   */
+>  void kexec_free_elf_info(struct kexec_elf_info *elf_info)
+>  {
+> @@ -323,6 +329,10 @@ void kexec_free_elf_info(struct kexec_elf_info *elf_info)
+>  }
+>  /**
+>   * kexec_build_elf_info - read ELF executable and check that we can use it
+> + * @buf:	buffer to read ELF file from.
+> + * @len:	size of @buf.
+> + * @ehdr:	pointer to existing struct which will be populated.
+> + * @elf_info:	pointer to existing struct which will be populated.
+>   */
+>  int kexec_build_elf_info(const char *buf, size_t len, struct elfhdr *ehdr,
+>  			       struct kexec_elf_info *elf_info)
+> @@ -379,7 +389,11 @@ int kexec_elf_probe(const char *buf, unsigned long len)
+>  
+>  /**
+>   * kexec_elf_load - load ELF executable image
+> - * @lowest_load_addr:	On return, will be the address where the first PT_LOAD
+> + * @image:		pointer to the kexec image being loaded.
+> + * @ehdr:		pointer to the ELF header of the executable.
+> + * @elf_info:		pointer to the ELF info struct with program headers.
+> + * @kbuf:		pointer to the kexec buffer used for segment loading.
+> + * @lowest_load_addr:	on return, will be the address where the first PT_LOAD
+>   *			section will be loaded in memory.
+>   *
+>   * Return:
+> -- 
+> 2.53.0
+> 
 
 
