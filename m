@@ -4,98 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 98688F53D78
-	for <kexec@archiver.kernel.org>; Mon, 16 Mar 2026 17:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7B1DAF53D78
+	for <kexec@archiver.kernel.org>; Mon, 16 Mar 2026 17:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=9+JmK53GRb51WN1NqYAYXjEI124SxFiHPFttdlfjYpg=; b=pz7yGTLWscsUEoy48Jr04gT5IE
-	25UtUCjSReXyKRUSgJ/qZakKvNXrQKJVwy8miLu7CVhJJWMPTBHJWBN0P2iODFzlW71MMq2wnexd9
-	MGeoXRAJOHJZKFzcJCDabzrll+mve23u0vWd7ls/gBQyNzrQ7U/hIxvhVheVUloq12JQsguuczdae
-	mfCUQbp9QQ9JAb4wo98XfZQb/VZZCXNpA4mANX8s6Y9Z6koDKjhNGUSRIpzLwokvqVgqrtbIlOb+M
-	JThnmANMmGXSgfSMAZsFqKJENa0u07WvBu617ZfVuNM0PJnC3nWfUl2Uwfyp6shS2BEjaNRiODk83
-	di+uhtCw==;
+	bh=VjajILnhW/iAqqxkTb08T/Hii8IQWi4dcNUVIU2+S2M=; b=ryaTqHanyw3aAz1yqbJJa4thWk
+	VxBloVVNVRqifCZmj3wXqxIWRV9vde7ZSG9Au5GTcpmc6tOSs5P/suquTMhCynwy93eVgYNzWCHi2
+	66yVV2caTEPTN8ILRNYT4VA9KrPK3wt/5Wk3QDGEk8n6pgddk1ZFj5KVSkJED3wqVzWg2jOt2Oj1Y
+	Gtk1cocrIH/TiKFevCds2hL8Tkh2R+e4WApur5rm/a7likf92xhreMk8F3lCp0g+3Nl3BXE8AYRIV
+	kVCdQRQu/SrxSr+N+TI4KhZbhzjPg8+dbC/DSjs39im9IwjpuE8C7ccMwnCDwuXUjWcoE1WaNL+ca
+	DZhBPx6A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w2BRl-00000004Vdy-112L;
-	Mon, 16 Mar 2026 17:09:41 +0000
-Received: from mail-lf1-x130.google.com ([2a00:1450:4864:20::130])
+	id 1w2BSA-00000004Vhy-3OFU;
+	Mon, 16 Mar 2026 17:10:06 +0000
+Received: from mail-lf1-x131.google.com ([2a00:1450:4864:20::131])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w2BRi-00000004VdW-2laB
+	id 1w2BS8-00000004VhT-1290
 	for kexec@lists.infradead.org;
-	Mon, 16 Mar 2026 17:09:39 +0000
-Received: by mail-lf1-x130.google.com with SMTP id 2adb3069b0e04-5a13f6bcbf4so6849730e87.1
-        for <kexec@lists.infradead.org>; Mon, 16 Mar 2026 10:09:37 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773680976; cv=none;
+	Mon, 16 Mar 2026 17:10:05 +0000
+Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-5a140efd2d5so8761173e87.2
+        for <kexec@lists.infradead.org>; Mon, 16 Mar 2026 10:10:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773681002; cv=none;
         d=google.com; s=arc-20240605;
-        b=jB8oOMKZPVO2L0njPy9EEW6JJtPKIhoCy+cOryLZoHcX5YmxowNBwSufBZ9swrefmC
-         DQDEvsMbMca0EU/R8x8RFnodNnWbPBBIiSjMXJWFcX+8yQS0BU26wDKL/ktwD6prJI7F
-         b5PUIuZ/XQ2J1QrkCM1QemRFr+0V4RipfZo/JuMFkf+13RFJIpk2iLDKLojsZ+E4EQoo
-         mDTklZ/RLgot84TUSKFVoYo//EzlzZzYlARYcaqzNnoMfyc0OkeZhRmxQU8UJLjvk9VO
-         GSWtpq5wRdNxDD1cY1m8lULfZAS2678OKyiu3A1gJY2MJTfLPF2rzqSa1uPjR4sdzRmj
-         Wc/Q==
+        b=UISNuDuirdJnxo5tbDHKClnZ0b0rY7TR7rTitC6vQCOlgVI1+RXpFWUrcBQz7lpqhV
+         i+olp+XZA3Asyc3YRkPDEde4wwhImGeK4yqYcltCK5VfP05EfwzukZ+M6U5lfYldK3ZE
+         clMej9dhiNXlw8TNdu0ujxzupuQpn2ainTgPv2VpuUF5cQkEhRM5kYkjDb3eB1H1ghmI
+         6KlEep3+7/2pio+TF6wUOtFmlXdpxDQlG19R8WW2OjfsdEiDoMhzB3ObxAie/LePOCro
+         V5fvmsXP5j0nvqrhN/AP6yNaqNAGHU5bq70o0peGXHdZNQBpMXGqnsQs+pIof4E44PSr
+         Kvxg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=9+JmK53GRb51WN1NqYAYXjEI124SxFiHPFttdlfjYpg=;
-        fh=xOwGVvOYwOPU5/4Yf4omcqQjUSlieucQf8l/Z/bzOMI=;
-        b=ay0RbHsudiEV4j7F6Ahfxjn3IXwPxc2d9KJfvm5zV7mn3DrY/Ko29cNO1KvUO87jX6
-         RxCosn20yJSlhF2jsgwZ+DbkJuHsPUtvpyX74uShVUjmsoUBjRZ1vWpA5XI0YZIT5IKg
-         5uQI90g0721ib2SWf50PGtte0dw+MTsTHxaoO3vWq9NbTr7Z5cBcYdkTyxzKFJVdB0WX
-         jie37+nN7KV+u7xrhC6W1zHz96XzdUZJ8XqWVdvaQYVrop1vIdtO8KU7GCYHE7KTpHum
-         qcQC29So2KHx8yHlA4qKtvegMHxSryfZNUDvpUU/mQ4VFDMpZ4E8yox9c4qpnXBtQgG6
-         89Ew==;
+        bh=VjajILnhW/iAqqxkTb08T/Hii8IQWi4dcNUVIU2+S2M=;
+        fh=7j/F87rpkgQMM2JTGkcjQl62q1SAr6Tso4sZn9DYpuQ=;
+        b=Z5vj+uPWbsTRQVk/CU1LThZ0Thn0jPLrFRfLKL3DvCJ5nyYvkU30h3Y5/N0DUzEcIG
+         a9MBZjvEQ0wLCNl7JBVIpcQ5xJ58bp9ahI5dvhWOVZYdDo65D5EoB1B3nY48IpTXlabe
+         bma6osGYung1HAt8X73zAielHneWQ62j33o4iJ1oTe4mTpopQec5E8imdbHYBmtdFmQf
+         84Leyi4tLxH4qwclzKcOxxK1SJDv72c3076vNhY1PoazPaZ8Kyzs3W+dpWVAa3+BXxeD
+         bKXeTb4RX2slAo5IezHcs2sdaJpJdPJWxmNklFjTzEfgxvUGX0UhSRQuwWQS/m96BMuy
+         mCPA==;
         darn=lists.infradead.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773680976; x=1774285776; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1773681002; x=1774285802; darn=lists.infradead.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9+JmK53GRb51WN1NqYAYXjEI124SxFiHPFttdlfjYpg=;
-        b=XCAYw7oL0l6Oap/CwUowmAQZ8hb9cLjMz/HKafG/q192YYtN4eoQ0lzlitMwK1ebIR
-         j/6VwJ5Vy2Yxy01bUlIfWx67OSVBNu7aYBWANo0dhzj7jYBm4hDOXZ7H6mIYjJsMmlQw
-         /lPm1nWHoJpLl3td8dA0nCwOqTjevJt16IJvnC+cqTgvXqJLXHXOatRYxQHebX5mwAPA
-         03iHus9/pkC98Ig7urZitS7K4E6fiYX/Z+/Bx35WVvIvhGlJqmTPmFQi03szOTCJcCZw
-         dneQBEjaNC/z/NsBKSpILKA468cdHDqNQOTxv77Byvb17lJEqaQ4C6qJOfXw41EgDhLA
-         fI2w==
+        bh=VjajILnhW/iAqqxkTb08T/Hii8IQWi4dcNUVIU2+S2M=;
+        b=QqMVauwvSa9N72aQUF/sVmml5Y67ketsBa3R3e8PSJ6Qx32TziRgTDDgnOxx7+Btmw
+         +nPhZ5xX1nmJ34q9N89uHY0EuPmoi5bjG0LqIwbaeOokR878nSSZjtUpJC4seISVSY71
+         8s2ZenKyqoMsRC63X6RriXO+E5AgjTRzajg0ZDY5Tid6G1JFLafmyiDgI/h4kO6HdL3m
+         mBocMrcGNXYGTRNt6P3tyznhSp4mjLWDKVjSuRIxu+x0ig5dMbwIs/ClBB6alXVMK3M1
+         2XROFfl1GTYWOXHbA383t2wu0kw3ggjzohyXWZIjjQnt0vFm7fvA/yimzman6E7YwA6v
+         TTUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773680976; x=1774285776;
+        d=1e100.net; s=20251104; t=1773681002; x=1774285802;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=9+JmK53GRb51WN1NqYAYXjEI124SxFiHPFttdlfjYpg=;
-        b=P9jls28MmZzcCiVkOL4P+kLGfpFE0Q3BIjTVvwQd0mbviSGlGBg5j7mVD2Mzpk+JER
-         I6OllgMvmcFl/T4Vg8nv1q/1gpniEgH1wMmzH1WmPRriFMVxkIVRdyKQ/FZZTo44b2pi
-         3niVpwGUIcfWAY7xVUZGTL87EtOuvS0MxJM+3+IyM9lgt1cwLs85QWu1G/z7Jtnif6+p
-         gCL4QODgaYlTDaqipqmQGThr3+fXB1jTWnva8qiIuLxXdVr/YztDrq3v74s2wajvVsvJ
-         zO4i8AhmN/3hDtNfVsxWzaYRgOD45Ek9BftYg/EiPAzyZzt2QpIsgK0iiAH198Z3mo97
-         yloQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX6WzYyt24hXGEl9oNbHPXQKvj9FZLyOR3O722QPuA6YHE2+Yyt0eOMd5VIsQo6gyIjKBe33A==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxUAWvFhtojqHMUytGvzKQBR+ScG27nSS2z1HXNf+UaL/7wUSkV
-	vY9VeZA3MtBo4eYVWlQCLkrtz9P8Ab2iHJU/BvERGdCy+WKSszsbPdcuOxNh6Avv6Yl+5kJxGhv
-	ctgyaaRNYs7mAp1J6BupxA4Tr66xTDiMiX3JfVCiO
-X-Gm-Gg: ATEYQzyvo4ikaHZLK3eokUDJOZX9pG9nSG9Fpy2B6GL5ZUpRWyFbxkxnVa1ie5LUVWQ
-	M1DiHvwNkapVTYmspNozNP/7OYPt+qXiIMJY+RFvsITuwqfuOW/JDeBj4QYDsVO0C8RumI2tQhm
-	9M8XBLSA9E+zKtkL4IacfBXuWfPeIf6VFlvfGhELsGv6biFc7bmXV85W8OtA0ljPHc0Qwl+XB1X
-	L/rz/lL9WBVYShGE0DobM/SuAurc8o1on5rhKnczMU9Wmn3+u9KfcXWNX/rNjlf1RP4zueyvMcz
-	4/Q47MCg
-X-Received: by 2002:a05:6512:64e2:b0:59f:6a2e:49e4 with SMTP id
- 2adb3069b0e04-5a1626fb8abmr3594350e87.7.1773680975067; Mon, 16 Mar 2026
- 10:09:35 -0700 (PDT)
+        bh=VjajILnhW/iAqqxkTb08T/Hii8IQWi4dcNUVIU2+S2M=;
+        b=XB90G+8MoUomQ3f2esE5VlZ/6+5v+TrRpdYMRQGsuMSciSjP7k20VBeJQ1/1nXdDp1
+         Cm/llbWO+pWLxPfAAiFoCoW5P74g0qgEifDNRYQraHvO2J1cpoD4DzNePg78CtlhdOSV
+         jbXBUgElUX0jdNfG3ngF7ufkwn8up1muM8hN0gPM/6KvhV1FmtfbrYHrojfrWB63I3yk
+         Kf0IKK0hK0Ubu4C3jbheoLwRYkS1KvLz/SbqPwYRSh9e5++Y/CmX9B/ugCrh8gnp15cV
+         jxB8xXPB/OMUVquqd/3qgpaz+878FlNxMQSxjsQMrEHOEPEg1pkfL7ImhrEfbExawpce
+         tsTw==
+X-Forwarded-Encrypted: i=1; AJvYcCVIDC9z02HLii+s7JsFiRdpFGiIi+0mSkvvHy8immRWPtVTvv2a40CrODoNMLWLX1qaKwPAXw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yy7nI5atqLFlPe+5cQ/krBrPXKyPTf7WLd8NeAJq1bYbsqzMqdd
+	GN6e9I8G0+UGox8tbmmjetJJ3MlVjRRyOxolgcrWNkv0h2zkwoKkF/CBZAKuNjGTj+pKaRnnBAa
+	091ETL6EUrBrjgSarPdEqkJQCqHtXuER+kkwoaO9y
+X-Gm-Gg: ATEYQzzunY0lzJ9ST8o7QJp0bRVqjNek6c3Xo50MG8cndgRsLpw5g75FyKRzXfzslLK
+	H+36T6Q04OcHjpQIWlaSmcp7e+B1gzMuqESihGpIgaOpGC8rJrXiXzstkLWzaggTmMplYyS3Ghy
+	0eSvScqoWWraPSplb3IH7Xkw8NkgkDUkkjTEZICIDZVaRaFXAflw1ZZQS7DfO7E/9modoIP3d/L
+	t7rwVd2UM/eGm6w4ObSM0bLkaOv36Yd+HtsH8L6N77PvcG+EQ5kebMSLGke/yL7MZ1x73u3bXKs
+	9Vidzgecs/Pt+luvWF4=
+X-Received: by 2002:a05:6512:145c:20b0:5a1:3207:694c with SMTP id
+ 2adb3069b0e04-5a162b0c23emr3396226e87.29.1773681001667; Mon, 16 Mar 2026
+ 10:10:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20260129212510.967611-1-dmatlack@google.com> <20260129212510.967611-8-dmatlack@google.com>
- <20260314061747.GD4177610.vipinsh@google.com>
-In-Reply-To: <20260314061747.GD4177610.vipinsh@google.com>
+References: <20260129212510.967611-1-dmatlack@google.com> <20260129212510.967611-17-dmatlack@google.com>
+ <20260314073250.GE4177610.vipinsh@google.com>
+In-Reply-To: <20260314073250.GE4177610.vipinsh@google.com>
 From: David Matlack <dmatlack@google.com>
-Date: Mon, 16 Mar 2026 10:09:07 -0700
-X-Gm-Features: AaiRm52NY6sLPHJr9Fl_13O_4mOB8Cua734qhyhURDdG8FlJ-PNRJ5f7ttW8G5g
-Message-ID: <CALzav=cQQny8AXzewtSe2pM-Z20+K9UbTcNBiy6SC4PUzR3sng@mail.gmail.com>
-Subject: Re: [PATCH v2 07/22] vfio/pci: Notify PCI subsystem about devices
- preserved across Live Update
+Date: Mon, 16 Mar 2026 10:09:31 -0700
+X-Gm-Features: AaiRm539MAtTSlMtJ9cZiQMw7S77YkLj3Qx3YTaEKJUIvtilcVTIw0VDB1yQ5S8
+Message-ID: <CALzav=fWmv_+BACzTLq2Nj2aUux575EnbLRwJTevH4aYZTXycw@mail.gmail.com>
+Subject: Re: [PATCH v2 16/22] vfio: selftests: Add vfio_pci_liveupdate_uapi_test
 To: Vipin Sharma <vipinsh@google.com>
 Cc: Alex Williamson <alex@shazbot.org>, Adithya Jayachandran <ajayachandra@nvidia.com>, 
 	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>, 
@@ -120,8 +119,8 @@ Cc: Alex Williamson <alex@shazbot.org>, Adithya Jayachandran <ajayachandra@nvidi
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260316_100938_719528_EFEEA046 
-X-CRM114-Status: GOOD (  15.99  )
+X-CRM114-CacheID: sfid-20260316_101004_313064_C367F989 
+X-CRM114-Status: GOOD (  13.94  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -136,37 +135,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Mar 16, 2026 at 9:03=E2=80=AFAM Vipin Sharma <vipinsh@google.com> w=
+On Mon, Mar 16, 2026 at 9:05=E2=80=AFAM Vipin Sharma <vipinsh@google.com> w=
 rote:
 >
-> On Thu, Jan 29, 2026 at 09:24:54PM +0000, David Matlack wrote:
-> > diff --git a/drivers/vfio/pci/vfio_pci_liveupdate.c b/drivers/vfio/pci/=
-vfio_pci_liveupdate.c
-> > @@ -192,10 +200,24 @@ static struct liveupdate_file_handler vfio_pci_li=
-veupdate_fh =3D {
-> >
-> >  int __init vfio_pci_liveupdate_init(void)
-> >  {
+> On Thu, Jan 29, 2026 at 09:25:03PM +0000, David Matlack wrote:
+> > +
+> > +TEST_F(vfio_pci_liveupdate_uapi_test, preserve_device)
+> > +{
 > > +     int ret;
 > > +
-> >       if (!liveupdate_enabled())
-> >               return 0;
-> >
-> > -     return liveupdate_register_file_handler(&vfio_pci_liveupdate_fh);
-> > +     ret =3D liveupdate_register_file_handler(&vfio_pci_liveupdate_fh)=
-;
-> > +     if (ret)
-> > +             return ret;
+> > +     ret =3D luo_session_preserve_fd(self->session_fd, self->device->f=
+d, 0);
 > > +
-> > +     ret =3D pci_liveupdate_register_fh(&vfio_pci_liveupdate_fh);
+> > +     /* Preservation should only be supported for VFIO cdev files. */
+> > +     ASSERT_EQ(ret, self->iommu->iommufd ? 0 : -ENOENT);
+> > +}
+> > +
+> > +TEST_F(vfio_pci_liveupdate_uapi_test, preserve_group_fails)
+> > +{
+> > +     int ret;
+> > +
+> > +     if (self->iommu->iommufd)
+> > +             return;
 >
-> May be we should rename pci_liveupdate_register_fh() to something like
-> pci_register_to_liveupdate_flb(). In the current way, it is confusing to
-> why same handler is getting registered at two places.
->
-> Above name will also make it similar to IOMMU series as well
->   https://lore.kernel.org/kvm/20260203220948.2176157-2-skhawaja@google.co=
-m/
+> for iommufd variant, should we mark test as skipped instead of showing
+> it as passed?
 
 Will do.
+
+> > +int main(int argc, char *argv[])
+> > +{
+> > +     int fd;
+> > +
+> > +     fd =3D luo_open_device();
+> > +     if (fd < 0) {
+> > +             printf("open(%s) failed: %s, skipping\n", LUO_DEVICE, str=
+error(errno));
+> > +             return KSFT_SKIP;
+>
+> Both can be combined using ksft_exit_skip()
+
+Will do.
+
+Thanks!
 
