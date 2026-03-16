@@ -4,72 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90FF0F013FA
-	for <kexec@archiver.kernel.org>; Mon, 16 Mar 2026 21:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D4D85F53D6C
+	for <kexec@archiver.kernel.org>; Mon, 16 Mar 2026 21:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=/8z1/dIhYqxHzj3/umwHNkEcO1PtVcvAJP18LcAQq1Y=; b=uvMMysaprWDpdzQrUe1RxTxuEI
-	SxwbJc19c9OJZRhfB5IXHhIrO8DmhigLnWJXiXWSX+LFUV/o5bzO4fMqx/aDI35O/DGFxLglrOuAV
-	eP4GZbW9GWgSelJQ2z52ZZMDRYGkjNIt+TlMrV88cFdaJsmjyKFIfKw1BU5ApikhnpyKoDtk8Bien
-	6lGVKD/ynpgBADcrnWEK3AsawR0WoUU4mwFj5DJmrO8DS3DBXj8sj4femHUlADUgQSfk+RQ/Hsji9
-	wyADlHkkLdVA4eFxSNTnf9v/WkW8HbYQG5a1wHWW6rfJpWrBzFWws04VGS/li8DKdr/X0sUdpytGe
-	2Gi8Bawg==;
+	bh=OzZGe5xJiZCdI8yLv+9J6duKMFuSxCgV09Lwr9FRsuY=; b=W9EBfMBKS8C+YVqXAZ7i0qNt/r
+	uoZLyprw3/oE9VKJWzwGsC1Ag5pkw4tOMlRDs6V7NGV1nW5GHfdkLSzb2gsCuzqU1D6nBgYuJTzQE
+	2k7gFIZspEu2MdG34+/66bMD6GYSnDvbXkNiSgDr20MJDOGaFXhsBbTL6ZevOwen6BvcwvwAO2mSQ
+	P6rQbpSFt/NropbyiT3UjPpEGOZb+OdCQI2mHeK66pjOsjXltBwqCoBh5U8ParaWnk6It/HOijbly
+	nDLjOoWtM9IVYWzjXhpMHZkHhwy2+qbqJBxefoA8FVevbrLhfZEbyhZQjDqgvtll+HQ6pYY8mFlEN
+	uxNpzekw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w2Fok-00000004xpI-4AKp;
-	Mon, 16 Mar 2026 21:49:43 +0000
-Received: from mail-pl1-x634.google.com ([2607:f8b0:4864:20::634])
+	id 1w2FuR-00000004y3S-00o0;
+	Mon, 16 Mar 2026 21:55:35 +0000
+Received: from mail-pl1-x631.google.com ([2607:f8b0:4864:20::631])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w2Foi-00000004xoi-2ycj
+	id 1w2FuO-00000004y35-36Yr
 	for kexec@lists.infradead.org;
-	Mon, 16 Mar 2026 21:49:41 +0000
-Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-2b04c9e3eb7so28035ad.0
-        for <kexec@lists.infradead.org>; Mon, 16 Mar 2026 14:49:40 -0700 (PDT)
+	Mon, 16 Mar 2026 21:55:33 +0000
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-2b052ec7176so13715ad.1
+        for <kexec@lists.infradead.org>; Mon, 16 Mar 2026 14:55:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773697780; x=1774302580; darn=lists.infradead.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/8z1/dIhYqxHzj3/umwHNkEcO1PtVcvAJP18LcAQq1Y=;
-        b=aurgiCLCz0g+6MEsPyfgu4GPB8/uuVhKJWxMWgZB1gEqra/NvFdt453fnJJ0o+vKIu
-         qB9lA1JeRI0ImGP9ljv0QsigIOlOPH4wrbe2Gfxx7pVh3+zpuS8ZH5Vtv7A3Eiozn5p1
-         DRYxR+JQror0of9VN0O/TIcpZxo4hSU1nSPi9YAiV/3MsJfhj+8+fQ9Pe1RcNVPsQT+v
-         TAduGbJf4eEbbE+LB1q35F9h81q6M8exOsPiqKln4MN+M3gV0VoYW0tRvqfFSOFIFMzr
-         hYZNcF2v/N2znAQuof1sPuDurCLBd6/eX4dRn8mUBW7JEpPnNYAXS31jL0USfWBH0YMj
-         dPZA==
+        d=google.com; s=20251104; t=1773698132; x=1774302932; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OzZGe5xJiZCdI8yLv+9J6duKMFuSxCgV09Lwr9FRsuY=;
+        b=FYsFn4yH4pEWLXw+DFxyvQpAxwmqpOPXYW1lKDvNw6h0FfJm+CdX9K+OY2ACM8pwgu
+         Bs4VmXVPpaJC7YtrckdTemvqLd8m3YP7Qim9lN66RnF11pS2ADabI/b4f4IcYx5Tgmzk
+         BOuZ+MR+0j8uNUwnpN1yqWC1wf4vaDR8h4nnjUeh7qBIpAhhJQegb2jYHeBKbwfJ4Q+B
+         JKPBLY1he9go5lC2X2Xzu+tA9VWNL0RLrkHV0LsHraX/0+VO0n1aGQ1XGQ/6W5akEc+2
+         RX7zcG6vZslqFpHr+utCflQdGadUFRkhpsIqY49ioPo/3wfIC/6c+O7B3+feAqIUQ9DO
+         ZQJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773697780; x=1774302580;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/8z1/dIhYqxHzj3/umwHNkEcO1PtVcvAJP18LcAQq1Y=;
-        b=RjoAbuQG1qhBvVmeRMW7RjfHUMA6kXMSBwcJdXvEwwB8/x6FOKOt2ODD3ArfEzlWXH
-         AomF7iGwwjqbYncUANz12yvLDV+uh8gxHQwL1gUzgfEOunpV+KiG45TkynKli8M+rXLD
-         SOW+VpX4KsOLH7qqRSKIDlGXKoMtqEye1C59U6veFma+6hIlRb1q5RhDUpjYZFsV0ePB
-         K7FKEoXOr193/Y+/qHmG5Nvqju5VdOdT6F+jFZ0TsCVDNvVH3+GKn4bGyrY3AWmUtAEU
-         o0LGhby0ie0lSZ5/gESxJxUa+pz+Vf6MNER2c1oCRnwj+yPf+AgL5ng2YfTPIyDVrj/h
-         YuNw==
-X-Forwarded-Encrypted: i=1; AJvYcCWdUowQBq8YQlotWUgfh4O9TFi95AuMxgeMe03HjBxZtCIaowMN+oU/kCgC+5PoefryTj1bCA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwaIQXhmJMmY7Yx5DAJApzc7oaDz6vartKN+iAEqRNKXimPS2mU
-	sDKvDILuHDJrYSe4yHxbhUNEz+iORFSqYfXTPkQ+FGXDyOBoCs8u1gvnmmgzkGbNeA==
-X-Gm-Gg: ATEYQzzf0woyS4VNNXjwqFZjljsSvSLSI77r2Ff9FCOETR+6loxSEznSd+xxkCugU0S
-	RvWAKLOTSVA5GJaD1u4l7Xzk4jqtHH6gElsti2RUimX5Tf/rjPs4v6oOWIoIobZtklJwBY72Ndc
-	UbD9ss2mP64NW49d0tn+uNhm/Q86+w35XfDxKN6u3D3RePiOrqkqI+bAs2hmn79+2Rmv/jaJVTv
-	Qew4p3c3nfevjmb4MD5g3hA4rKDtExUEDTZzXETZ6RK9RIGnrVwTMqNq0hBNWgwsxNMFVKmQlO/
-	fbxfxZPFcWZ3lrxQVTe5koCoyL7grSOVqBpU0SIhQwcHn0XiwujPgymfV7/jUn1GAWcFs5E/BQo
-	qiSEE4qPX1wyLsRcHzMnLW/k57uRD11witKvwn5lw4c4gQf3xfAxXMh+8oMAjIWDyQUoqxdSx4V
-	QntRU7MnqIGvJ9OAvLjOcZ1GWMR0ATojp1t8H6qlDvwVSC/rdFWZVwLzZaB/5L
-X-Received: by 2002:a17:903:98b:b0:2a8:ffed:4663 with SMTP id d9443c01a7336-2b06402f49emr1238925ad.12.1773697779367;
-        Mon, 16 Mar 2026 14:49:39 -0700 (PDT)
-Received: from google.com (176.13.105.34.bc.googleusercontent.com. [34.105.13.176])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82a07365b22sm14359627b3a.45.2026.03.16.14.49.38
+        d=1e100.net; s=20251104; t=1773698132; x=1774302932;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OzZGe5xJiZCdI8yLv+9J6duKMFuSxCgV09Lwr9FRsuY=;
+        b=n1mMR2+xfbYscm+Aij5AoWmMariIAcTmLyaEa+FXqWG+YKyqYN79e4mbnG10hQV7se
+         KuDA/mdFPgz4WDokweTqefJZZ7UxNJ/wrudcIaOWbJs3ejZO8xduM6043U1Lh2iVkb6q
+         HSK+5g2blk2yUE7mmftYNMlqvhfl+LqJ3is5CHX0wyX5K7kFi07oqguxbvSdF0HIjrPO
+         rglEQ4f7VYhmgrxKGU18yy874Tedf9EgytqjE2mmRQCAWEKPlLSF4/zreQXGMT20lR4/
+         NDyqIlDT2jLSv1RkKP13t0YODlIVdxSGpGhPwVcOt9z3LZkJ5fJaQ1UvzSqzAtxD1mqS
+         wx1A==
+X-Forwarded-Encrypted: i=1; AJvYcCVmmQuAekB86jHx77xikhlkoe3zqzAn7Oeak9biKOEkt4Ocx2I40jaVrc7XwkCthEqOnIm25Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyOXS6MYvRl1I15iVuSolXCYR3t6aWyffwNv2ALBXA7J6uI004a
+	VJr6bNAgT0qD1u0P+Jy4J4smw6tpj8bNb+GYyY1PDWg3xHL42/ZVmRGci7hOtvS/kg==
+X-Gm-Gg: ATEYQzwWIfYESkl902iG4GNEWUGCLW5sDqP8k3cXS7didGMYdt/3PyIqI1HtAS1OkMT
+	G5uwgboYmyddgreVqZaQqF3BW3TRmQd8bAFYCMnA1tW1QJ7lKKicAmBAkVgYDcozgTbAyvM+aJw
+	USjMpsvw3U869BI66pMrfuOVQ+8iD5X4KkB90M6/EruVyhgb4s9DGXuJrIM77VosFd/V+84l2++
+	n7fywXLOb+vAwgFFdP/no4tncZcLyratdHP5B5f69TA1VAxrKPQu/dqNTc5IvVBvAbCGEMmvYxq
+	hwi9e7QcXj0cLquQ2O4LkceMr3kMtLO5IGV2CxPVBIlx2IZfdDawovOUKTUnMPaPpqhiAR/93f4
+	kjsQcVQuW6eGlqqY9YR/sXuJlhHD4TC5kmF8exbeoPUdZuAcpWM+qIZMfz/XDDgW/JI7YHDeu0O
+	Ugy5fV8pyGW9AaRGFRQ9V3N2JMGM+lZQcRtDIB+n9JpLHTRctNAw6BGkN6dw==
+X-Received: by 2002:a17:902:e885:b0:2ae:4e8e:954e with SMTP id d9443c01a7336-2b06599f6camr431285ad.5.1773698131381;
+        Mon, 16 Mar 2026 14:55:31 -0700 (PDT)
+Received: from google.com (60.89.247.35.bc.googleusercontent.com. [35.247.89.60])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2aece7edd14sm155239485ad.50.2026.03.16.14.55.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2026 14:49:38 -0700 (PDT)
-Date: Mon, 16 Mar 2026 14:49:34 -0700
+        Mon, 16 Mar 2026 14:55:30 -0700 (PDT)
+Date: Mon, 16 Mar 2026 14:55:26 -0700
 From: Vipin Sharma <vipinsh@google.com>
 To: David Matlack <dmatlack@google.com>
 Cc: Alex Williamson <alex@shazbot.org>, 
@@ -91,27 +90,18 @@ Cc: Alex Williamson <alex@shazbot.org>,
 	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, Tomita Moeko <tomitamoeko@gmail.com>, 
 	Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>, 
 	Zhu Yanjun <yanjun.zhu@linux.dev>
-Subject: Re: [PATCH v2 10/22] vfio/pci: Skip reset of preserved device after
- Live Update
-Message-ID: <20260316214055.GB1846904.vipinsh@google.com>
-References: <20260129212510.967611-11-dmatlack@google.com>
- <20260226170030.5a938c74@shazbot.org>
- <aaDqhjdLyf1qSTSh@google.com>
- <20260227084658.3767d801@shazbot.org>
- <CALzav=fHy23RAzhgkdaL+JA5T2tL9FT6aPgRfXUh7i9zvYCGPA@mail.gmail.com>
- <20260227105720.522ca97f@shazbot.org>
- <CALzav=fjRPa_ZbXu7iFXyemcf_8Kq_dZTWT6c-A0bc6czF_Rdw@mail.gmail.com>
- <abNOwcOTXqxCxNzt@google.com>
- <20260316160759.GA1767448.vipinsh@google.com>
- <CALzav=cskxLZtZ5-uRa0+aV+1Kb3fwQQJ5dS=Yes4GAHrS6GpQ@mail.gmail.com>
+Subject: Re: [PATCH v2 11/22] docs: liveupdate: Document VFIO device file
+ preservation
+Message-ID: <20260316215056.GC1846904.vipinsh@google.com>
+References: <20260129212510.967611-1-dmatlack@google.com>
+ <20260129212510.967611-12-dmatlack@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALzav=cskxLZtZ5-uRa0+aV+1Kb3fwQQJ5dS=Yes4GAHrS6GpQ@mail.gmail.com>
+In-Reply-To: <20260129212510.967611-12-dmatlack@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260316_144940_756741_1B91B05F 
-X-CRM114-Status: GOOD (  43.82  )
+X-CRM114-CacheID: sfid-20260316_145532_784712_7C48E4B0 
+X-CRM114-Status: GOOD (  16.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -126,103 +116,42 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Mar 16, 2026 at 10:18:22AM -0700, David Matlack wrote:
-> On Mon, Mar 16, 2026 at 9:22 AM Vipin Sharma <vipinsh@google.com> wrote:
-> >
-> > On Thu, Mar 12, 2026 at 11:39:45PM +0000, David Matlack wrote:
-> > > On 2026-03-09 10:32 AM, David Matlack wrote:
-> > > > On Fri, Feb 27, 2026 at 9:57 AM Alex Williamson <alex@shazbot.org> wrote:
-> > >
-> > > > > Sorry if I don't have the whole model in my head yet, but is exposing
-> > > > > the restriction to the vfio user of the device sufficient to manage the
-> > > > > liveupdate orchestration?  For example, a VFIO_DEVICE_INFO_CAP pushes
-> > > > > the knowledge to QEMU... what does QEMU do with that knowledge?  Who
-> > > > > imposes the policy decision to decide what support is sufficient?
-> > > >
-> > > > Hm.. good questions. I don't think we want userspace inspecting bits
-> > > > exposed by the kernel and trying to infer exactly what's being
-> > > > preserved and whether it's "good enough" to use. And such a UAPI would
-> > > > become tech debt once we finish development, I suspect.
-> > > >
-> > > > A better approach would be to hide this support from userspace until
-> > > > we decide it is ready for production use-cases.
-> > > >
-> > > > To enable development and testing, we can add an opt-in mechanism
-> > >
-> > > Here is what I am trending towards sending in v3 as the opt-in mechanism:
-> > >
-> > > diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
-> > > index 1e82b44bda1a..770231554221 100644
-> > > --- a/drivers/vfio/pci/Kconfig
-> > > +++ b/drivers/vfio/pci/Kconfig
-> > > @@ -58,6 +58,27 @@ config VFIO_PCI_ZDEV_KVM
-> > >  config VFIO_PCI_DMABUF
-> > >         def_bool y if VFIO_PCI_CORE && PCI_P2PDMA && DMA_SHARED_BUFFER
-> > >
-> > > +config VFIO_PCI_LIVEUPDATE
-> > > +       bool "VFIO PCI support for Live Update (EXPERIMENTAL)"
-> > > +       depends on LIVEUPDATE && VFIO_PCI
-> > > +       help
-> > > +         Support for preserving devices bound to vfio-pci across a Live
-> > > +         Update. The eventual goal is that preserved devices can run
-> > > +         uninterrupted during a Live Update, including DMA to preserved
-> > > +         memory buffers and P2P. However there are many steps still needed to
-> > > +         achieve this, including:
-> > > +
-> > > +          - Preservation of iommufd files
-> > > +          - Preservation of IOMMU driver state
-> > > +          - Preservation of PCI state (BAR resources, device state, ...)
-> > > +          - Preservation of vfio-pci driver state
-> > > +
-> > > +         This option should only be enabled by developers working on
-> > > +         implementing this support. Once enough support has landed in the
-> > > +         kernel, this option will no longer be marked EXPERIMENTAL.
-> > > +
-> > > +         If you don't know what to do here, say N.
-> > > +
-> >
-> > To use VFIO liveupdate, user has to do at least two things:
-> > 1. Enable CONFIG_LIVEUPDATE
-> > 2. Pass VFIO FD to a live update session.
-> >
-> > This means someone using it has to know what live update is and
-> > intentionally pass the VFIO FDs. Isn't act of doing this itself an
-> > opt-in mechanism?
+On Thu, Jan 29, 2026 at 09:24:58PM +0000, David Matlack wrote:
+> Add documentation for preserving VFIO device files across a Live Update,
+> as well as some generic file preservation documentation. This
+> documentation will be extended in the future as new types of files are
+> supported and new dependency/ordering requirements are added.
 > 
-> If it is, then I can leave this out. Alex?
+> Signed-off-by: David Matlack <dmatlack@google.com>
+> ---
+>  Documentation/userspace-api/liveupdate.rst | 144 +++++++++++++++++++++
+>  1 file changed, 144 insertions(+)
 > 
-> My thinking was: Distros are free to enable LIVEUPDATE and use it. The
-> support it enables today is all fully functional (albeit new).
-> vfio-cdev, OTOH, is not. A separate Kconfig can help express that
-> difference.
-> 
-> Consider that LIVEUPDATE could be enabled by default in a future
-> release, but vfio-cdev support might not be ready yet at that point.
+> diff --git a/Documentation/userspace-api/liveupdate.rst b/Documentation/userspace-api/liveupdate.rst
+> index 41c0473e4f16..dbf1e4aeddd7 100644
+> --- a/Documentation/userspace-api/liveupdate.rst
+> +++ b/Documentation/userspace-api/liveupdate.rst
+> @@ -14,6 +14,150 @@ ioctl uAPI
+>  ===========
+>  .. kernel-doc:: include/uapi/linux/liveupdate.h
+>  
+> +File Preservation
+> +=================
 
-But that also requires point 2 above i.e. userspace explicitly passing
-VFIO FD to liveupdate. Unless there is a capability mechanism like KVM
-then userspace cannot know what is exactly supported. Also, users who
-are using these APIs will already be advanced users and have to know
-many details about what liveupdate supports or not.
+Should we use the existing way where documentation is written in code
+files and referenced here? Maybe luo_file.c for this?
 
-> 
-> > I am not sure providing VFIO_PCI_LIVEUPDATE alleviate Alex's concern
-> > about how userspace will know that sufficient VFIO support exists.
-> 
-> I was thinking we can flip VFIO_PCI_LIVEUPDATE to be enabled by
-> default (if LIVEUPDATE and VFIO_PCI are enabled), and drop
-> "(EXPERIMENTAL)" from the option title. That would be how distros and
-> downstream users of the kernel know that sufficient support exists to
-> enable VFIO_PCI_LIVEUPDATE.
-> 
-> > May be write in liveupdate documentation (PATCH 11 of this series) that
-> > support is experimental?
-> 
-> The documentation in patch 11 includes largely the same text that I
-> put under VFIO_PCI_LIVEU"PDATE. But I can explicitly mention
-> "experimental" as well if that's what you're asking.
+> +
+> +File Retrieval
+> +==============
 
-Yeah, even though documentation do get stale but I think there is no
-better way in this scenario.
+Same as above.
 
+> +
+> +
+> +VFIO Character Device (cdev) Files
+> +==================================
+> +
+
+vfio_pci_liveupdate.c
 
