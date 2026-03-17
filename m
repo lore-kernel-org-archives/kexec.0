@@ -4,79 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B1750FD8777
-	for <kexec@archiver.kernel.org>; Tue, 17 Mar 2026 14:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 276CEFED9E4
+	for <kexec@archiver.kernel.org>; Tue, 17 Mar 2026 15:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=20jDT7vbb/pcwg3RWwDlyXHU14Ovqo1gDrXuULw2Qtw=; b=o1LScpQoggLCOvpoQGfA72Nf9A
-	umaxISe4P8TbPdtTvheNTTRbpzzPsGqwpo6UDiNKZ1g548VY89WdfAfhcDZtEA6NuHecuPGsNgbY4
-	fN7+XQ2KxLLiyIelGTVSfMDefUm+vrYB6D0+iMc1+PrU+bPn6eX8cQCG2dCMHIpoFjwHTF0lbXoSE
-	BFzFDBNWvPM1pp84UKu7LUdLVo/QMcgQQXPDfk2ffezpzWHbqvUR2XvMbZcy3nZoh1kUMMEABhWLC
-	CobrKJUE3OhpHWouelJZekH/z4cZHJVXRMJJU/SqkamQF5FnZgbEBEFaFNHo6xHu19u6Mq7mRMMqp
-	c4OyZA0A==;
+	bh=ZEUQCJqT1ZWbvxn49UTxpKl45Cm6yPdEfigJuT9xQdc=; b=sSMzx2VqFKyQfbZVa7Lp8UvSEe
+	n2bP9PtpjoKZdHwKsBidDCa+8IgxY1HMWJOJYTXDDcUQ5dcfP2tU4kl90LK8lBKQx9d4laUHqDtoh
+	YM51klJE1feheSe7ifejyzdkIIdW2QEexkbDePCLK3R+BFDwOXXn8Y0wiG7iF9A8fXV9c2fJvoAVA
+	XzZ+X9L6QjyPpsyZzonqf4etgNv82CwVrHGfsB7M8RQPhlUmMpqkvQRcXnwKDV/s3j8JqXOp4xOQZ
+	xyz01GeCfH6gFn9TCJPNAfvqyV/JwXDIZtK06PLG+/nwtFY/8Kj3fFpIBojPyLVtrBcIxR2wCbit1
+	mIHV+Vyw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w2VD9-00000006Y2Z-3292;
-	Tue, 17 Mar 2026 14:15:55 +0000
-Received: from mail-wr1-x449.google.com ([2a00:1450:4864:20::449])
+	id 1w2W2Z-00000006gsF-0hRT;
+	Tue, 17 Mar 2026 15:09:03 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w2VD6-00000006XzZ-3wqi
+	id 1w2W2W-00000006gqo-1GBT
 	for kexec@lists.infradead.org;
-	Tue, 17 Mar 2026 14:15:54 +0000
-Received: by mail-wr1-x449.google.com with SMTP id ffacd0b85a97d-43b3a41c62bso3066365f8f.1
-        for <kexec@lists.infradead.org>; Tue, 17 Mar 2026 07:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773756950; x=1774361750; darn=lists.infradead.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=20jDT7vbb/pcwg3RWwDlyXHU14Ovqo1gDrXuULw2Qtw=;
-        b=Vxp9onwC2ufohcCS/gtQFCNXEoNDXZjGKbY+oIJIs1J7bv5LQqKlWBg9m3WDLjcvuP
-         ULqF2vmfPkLumJJdQ8HygXXhveSju4nBtCS82VRJqZNPSYNNdxq0bDNZOTrVQhMAxJP7
-         onjaye+SlMwNrhUDfcd+LjWNXUpNGz+L4aGK4QzhesTBDAJHBJIJ8sX7SnPk9JfcskNM
-         UYlNILYd5pUI78T1Z+NMDX/ox6aiceB2jwoD7Y8gGGqit2gDXALlrUpxmxR78w3+m2fc
-         NNSl5j2fZvVo0oVCkhYsgLx8lBWwZ6dUEgeUaq4hK5PBIEEwaGiquiD6uYLmDrD9p5Sf
-         RQ1Q==
+	Tue, 17 Mar 2026 15:09:01 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1773760139;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZEUQCJqT1ZWbvxn49UTxpKl45Cm6yPdEfigJuT9xQdc=;
+	b=YN9HlhpcT5OrF+ZJIfuBBrhEIk+wF1U5ddWjCzXeqT7EiFAxxROgsCAIWc8uVujVoRjcXz
+	HVtxAklLofg3H49On/NAIfYPnu1owDXghhHqb1UjM8k6bqxyZJwGb9zppPbdqrNjqTNLuU
+	Vy4Et9Z7GpOOB7ZE9MaCl9+SCxbgm6s=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-437-uShUD_dkN2uuLDsgUydjnQ-1; Tue, 17 Mar 2026 11:08:57 -0400
+X-MC-Unique: uShUD_dkN2uuLDsgUydjnQ-1
+X-Mimecast-MFC-AGG-ID: uShUD_dkN2uuLDsgUydjnQ_1773760137
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-c7414179cceso367835a12.0
+        for <kexec@lists.infradead.org>; Tue, 17 Mar 2026 08:08:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773756950; x=1774361750;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=20jDT7vbb/pcwg3RWwDlyXHU14Ovqo1gDrXuULw2Qtw=;
-        b=RXRt3un/jo9+dyObxCF7O9qidWb3VksNYU3FhrsGBTrkhD3KCKWVgLzX0gLvYbAfwY
-         FN7VCLe0osQZimnXFrL+sam6yNDnQ/pzYdL+DRMifFDwQDu/JEdgCxnuUWFDGkFlCg0p
-         EMLjiWeMB11kcABUJOWTIzB/MKrVXwQZ8Fe3oeTD10mYcchF4erP3/D9HKfttgYwCRLd
-         EyQK1JC2eqsBREBtrvxvfiV3d1tKL6pKOuIatP8wO5JANlhSO+wzq2Y8oN9f57CMFPbl
-         bagg4hdQLoLu2RmsWh/6LoV2Yr98inwSBonWFG5ZUTTKRP0Dns0mp0/xLfbNvZzBJWIm
-         PLDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvZZSI055uLvvm5tTtStOdwh/CzEj6RopwSZJlZg9SOuTQhcdtJ372pSpak+Yd3Meogtn6dA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyBNuidK4LX+xtwr3iIeajC0etUKrulONouwJ3m6axbk07lW6K0
-	jlTId6f2EWrvBvnQqJMb0esBDYuB2BfuDobk31jhglaHz03i2dF4joXLrhokVth3duTZpCUDQ3k
-	T72h79kAxX0Y9wGt8I0oGuA==
-X-Received: from wmpj20.prod.google.com ([2002:a05:600c:4894:b0:485:3c21:d5f0])
- (user=mclapinski job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:8b45:b0:485:30d4:6b9e with SMTP id 5b1f17b1804b1-48556702853mr281166825e9.21.1773756950287;
- Tue, 17 Mar 2026 07:15:50 -0700 (PDT)
-Date: Tue, 17 Mar 2026 15:15:34 +0100
-In-Reply-To: <20260317141534.815634-1-mclapinski@google.com>
-Mime-Version: 1.0
-References: <20260317141534.815634-1-mclapinski@google.com>
-X-Mailer: git-send-email 2.53.0.851.ga537e3e6e9-goog
-Message-ID: <20260317141534.815634-4-mclapinski@google.com>
-Subject: [PATCH v7 3/3] kho: make preserved pages compatible with deferred
- struct page init
-From: Michal Clapinski <mclapinski@google.com>
-To: Evangelos Petrongonas <epetron@amazon.de>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
-	Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org, linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Michal Clapinski <mclapinski@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        d=1e100.net; s=20251104; t=1773760137; x=1774364937;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ZEUQCJqT1ZWbvxn49UTxpKl45Cm6yPdEfigJuT9xQdc=;
+        b=Ejb/QYdejDXtbqEefdHgqXrNhjnAQVu+ZqSwDEI65zG5/se2GpzexqmfxwLciwyO14
+         MUlLoOg6tQysUsZmRy1KvQnuwvGuWl+oom+I6Ht7nmN6950012JLjkPgNX1EZgNUOYIG
+         i0vr5aZsp6GJYga942JJwDqU2DXSCbjbJEvqQO1rVMrAR2zTAumilTHs/FZfykUp3gJ7
+         jsZ9aiHKhmgASzhlVnPj324b0z7h74yQe+k81/1kX9ZKjoZps3PpTBM4rM1JIbp366TA
+         g7ONlmm75LqORjML9w7YgCMLVqtDgf8AuRZVd/jQk/H0n5FkidDJfgjcI4Ix/1mtHBEB
+         kM6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUKTsQOxgeXjyWtAXgTfjaMB3C3pieZTF+9ZHXkWbLUjjimO6TeNJGdFrZeH0jW6MTrFJ7ErA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzazcjBXsP9UG/BfYmAltzIp90FFimVJNjGPzd/35qSdcV7hn4e
+	tsFBvoxT6h3UvvwJbexdzlJ6H4Ivk7FsDTPWoOxXNd5qU0kszWbg2da0f5jwZd1NYefHrOOlfMv
+	o8C9a3m9+ML08p2RUKazzBuD7eiOaKbPaW4Z9RD9wtofcYjxym8/EVuEfk9CcCw==
+X-Gm-Gg: ATEYQzxLDHd8x74B2cgaVHtwRmGdG/bhTJdtbkZCjHHNGcCZhRyxPeFnhZwiKocnsp7
+	IkoyeA2tvFD6+K8dXna8CIGyVpngyC9Z8i1xQCQdyKh83M4eGqwLAaMmwx6BtDRPvs1UChw9v+/
+	PgZ5nIJC1S57/tiBcCoAyoqXu50ldTMls8NfLYGPxEkhOl5UrTNJH8ZSf8E84f3fYjzdULEHVDk
+	04ZW/tKzCXNWHzMyfkDtRTKZ19qJBKpWwr3UY+BrbU3BMFqlTfgOc1t08622mAT0CzTGktzso0E
+	3jmliMGxrUld5+nsUS2Qe/rq7DRIGMvvSagH2SkeB1zJwu/bhmDeenUlLqIR6Ejq/wlsp6JuxhB
+	NGCO0NusxRXSrnubUDJKdScKIrEyj2SGJYQ==
+X-Received: by 2002:a05:6a00:4197:b0:829:8aa3:2ec6 with SMTP id d2e1a72fcca58-82a196b55c5mr15250306b3a.10.1773760136588;
+        Tue, 17 Mar 2026 08:08:56 -0700 (PDT)
+X-Received: by 2002:a05:6a00:4197:b0:829:8aa3:2ec6 with SMTP id d2e1a72fcca58-82a196b55c5mr15250283b3a.10.1773760136182;
+        Tue, 17 Mar 2026 08:08:56 -0700 (PDT)
+Received: from localhost.localdomain.com ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82a07340417sm16993404b3a.39.2026.03.17.08.08.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2026 08:08:55 -0700 (PDT)
+From: Tao Liu <ltao@redhat.com>
+To: yamazaki-msmt@nec.com,
+	k-hagio-ab@nec.com,
+	kexec@lists.infradead.org
+Cc: aravinda@linux.vnet.ibm.com,
+	stephen.s.brennan@oracle.com,
+	Tao Liu <ltao@redhat.com>
+Subject: [PATCH v4][makedumpfile 1/7] Reserve sections for makedumpfile and extenions
+Date: Wed, 18 Mar 2026 04:07:37 +1300
+Message-ID: <20260317150743.69590-2-ltao@redhat.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20260317150743.69590-1-ltao@redhat.com>
+References: <20260317150743.69590-1-ltao@redhat.com>
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 1ja4TZBd1uw7I78S2Jnl9u1UsnAV6LoMoyARYM2_LxM_1773760137
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260317_071553_069566_90724BB5 
-X-CRM114-Status: GOOD (  20.81  )
+X-CRM114-CacheID: sfid-20260317_080900_408134_2D4DAC24 
+X-CRM114-Status: GOOD (  13.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,119 +111,58 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Evangelos Petrongonas <epetron@amazon.de>
+This patch makes preparation for btf/kallsyms support of
+makedumpfile and extensions. Any needed kernel symbols/types
+will be reserved within a special section, .init_ksyms for
+kallsyms symbols and .init_ktypes for kernel types. During
+makedumpfile kallsyms/btf initialization, those missing info
+will be resolved. A makedumpfile.ld script is introduced for the
+purpose.
 
-When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, struct page
-initialization is deferred to parallel kthreads that run later
-in the boot process.
-
-During KHO restoration, kho_preserved_memory_reserve() writes metadata
-for each preserved memory region. However, if the struct page has not
-been initialized, this write targets uninitialized memory, potentially
-leading to errors like:
-BUG: unable to handle page fault for address: ...
-
-Fix this by introducing kho_get_preserved_page(),  which ensures
-all struct pages in a preserved region are initialized by calling
-init_deferred_page() which is a no-op when the struct page is already
-initialized.
-
-Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
-Co-developed-by: Michal Clapinski <mclapinski@google.com>
-Signed-off-by: Michal Clapinski <mclapinski@google.com>
-Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Suggested-by: Stephen Brennan <stephen.s.brennan@oracle.com>
+Signed-off-by: Tao Liu <ltao@redhat.com>
 ---
-I think we can't initialize those struct pages in kho_restore_page.
-I encountered this stack:
-  page_zone(start_page)
-  __pageblock_pfn_to_page
-  set_zone_contiguous
-  page_alloc_init_late
+ Makefile        |  2 +-
+ makedumpfile.ld | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
+ create mode 100644 makedumpfile.ld
 
-So, at the end of page_alloc_init_late struct pages are expected to be
-already initialized. set_zone_contiguous() looks at the first and last
-struct page of each pageblock in each populated zone to figure out if
-the zone is contiguous. If a kho page lands on a pageblock boundary,
-this will lead to access of an uninitialized struct page.
-There is also page_ext_init that invokes pfn_to_nid, which calls
-page_to_nid for each section-aligned page.
-There might be other places that do something similar. Therefore, it's
-a good idea to initialize all struct pages by the end of deferred
-struct page init. That's why I'm resending Evangelos's patch.
-
-I also tried to implement Pratyush's idea, i.e. iterate over zones,
-then get node from zone. I didn't notice any performance difference
-even with 8GB of kho.
----
- kernel/liveupdate/Kconfig          |  2 --
- kernel/liveupdate/kexec_handover.c | 27 ++++++++++++++++++++++++++-
- 2 files changed, 26 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/liveupdate/Kconfig b/kernel/liveupdate/Kconfig
-index 1a8513f16ef7..c13af38ba23a 100644
---- a/kernel/liveupdate/Kconfig
-+++ b/kernel/liveupdate/Kconfig
-@@ -1,12 +1,10 @@
- # SPDX-License-Identifier: GPL-2.0-only
+diff --git a/Makefile b/Makefile
+index 05ab5f2..15a4ba0 100644
+--- a/Makefile
++++ b/Makefile
+@@ -113,7 +113,7 @@ $(OBJ_ARCH): $(SRC_ARCH)
+ 	$(CC) $(CFLAGS_ARCH) -c -o ./$@ $(VPATH)$(@:.o=.c)
  
- menu "Live Update and Kexec HandOver"
--	depends on !DEFERRED_STRUCT_PAGE_INIT
- 
- config KEXEC_HANDOVER
- 	bool "kexec handover"
- 	depends on ARCH_SUPPORTS_KEXEC_HANDOVER && ARCH_SUPPORTS_KEXEC_FILE
--	depends on !DEFERRED_STRUCT_PAGE_INIT
- 	select MEMBLOCK_KHO_SCRATCH
- 	select KEXEC_FILE
- 	select LIBFDT
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index e511a50fab9c..b49ebcd0b946 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -471,6 +471,31 @@ struct page *kho_restore_pages(phys_addr_t phys, unsigned long nr_pages)
- }
- EXPORT_SYMBOL_GPL(kho_restore_pages);
- 
-+/*
-+ * With CONFIG_DEFERRED_STRUCT_PAGE_INIT, struct pages in higher memory regions
-+ * may not be initialized yet at the time KHO deserializes preserved memory.
-+ * KHO uses the struct page to store metadata and a later initialization would
-+ * overwrite it.
-+ * Ensure all the struct pages in the preservation are
-+ * initialized. kho_preserved_memory_reserve() marks the reservation as noinit
-+ * to make sure they don't get re-initialized later.
-+ */
-+static struct page *__init kho_get_preserved_page(phys_addr_t phys,
-+						  unsigned int order)
+ makedumpfile: $(SRC_BASE) $(OBJ_PART) $(OBJ_ARCH)
+-	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -o $@ $< $(LIBS)
++	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -Wl,-T,makedumpfile.ld -o $@ $< $(LIBS)
+ 	@sed -e "s/@DATE@/$(DATE)/" \
+ 	     -e "s/@VERSION@/$(VERSION)/" \
+ 	     $(VPATH)makedumpfile.8.in > $(VPATH)makedumpfile.8
+diff --git a/makedumpfile.ld b/makedumpfile.ld
+new file mode 100644
+index 0000000..231a162
+--- /dev/null
++++ b/makedumpfile.ld
+@@ -0,0 +1,15 @@
++SECTIONS
 +{
-+	unsigned long pfn = PHYS_PFN(phys);
-+	int nid;
++	.init_ksyms ALIGN(8) : {
++		__start_init_ksyms = .;
++		KEEP(*(.init_ksyms*))
++		__stop_init_ksyms = .;
++	}
 +
-+	if (!IS_ENABLED(CONFIG_DEFERRED_STRUCT_PAGE_INIT))
-+		return pfn_to_page(pfn);
-+
-+	nid = early_pfn_to_nid(pfn);
-+	for (unsigned long i = 0; i < (1UL << order); i++)
-+		init_deferred_page(pfn + i, nid);
-+
-+	return pfn_to_page(pfn);
++	.init_ktypes ALIGN(8) : {
++		__start_init_ktypes = .;
++		KEEP(*(.init_ktypes*))
++		__stop_init_ktypes = .;
++	}
 +}
-+
- static int __init kho_preserved_memory_reserve(phys_addr_t phys,
- 					       unsigned int order)
- {
-@@ -479,7 +504,7 @@ static int __init kho_preserved_memory_reserve(phys_addr_t phys,
- 	u64 sz;
- 
- 	sz = 1 << (order + PAGE_SHIFT);
--	page = phys_to_page(phys);
-+	page = kho_get_preserved_page(phys, order);
- 
- 	/* Reserve the memory preserved in KHO in memblock */
- 	memblock_reserve(phys, sz);
++INSERT AFTER .data;
+\ No newline at end of file
 -- 
-2.53.0.851.ga537e3e6e9-goog
+2.47.0
 
 
