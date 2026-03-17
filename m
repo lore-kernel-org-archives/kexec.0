@@ -4,62 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 41610F3381D
-	for <kexec@archiver.kernel.org>; Tue, 17 Mar 2026 09:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A4D7FF3381E
+	for <kexec@archiver.kernel.org>; Tue, 17 Mar 2026 09:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
 	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=3e0YC03hyon1Le6dOafGrBEV+8gcHzSoitXDLRAEfg0=; b=UzDE9cNcbk4VElRkFnz6dkZpdW
-	XoASAZB/XIIHd7cjcgciFfpvdj1+SU07jp6NlcecSDOfw+Oj7/gsDuTWg/488gGATTScg11Frr3eQ
-	N2KKRV5cNDPzhggsxK5DEJIoCh1KNItHl+iwg+ck1JJBpwKbs2evWLN8yXiSeUrufhgREv1lHe98P
-	n/cbShhwJnAr1v+GKgpiLKzgTMdXDcFY4M/g+uSiniYcsLfMylGTvN2ggrLbh6Urjree449TLyFxe
-	8cPDnHwaMaEChUlCEy/LvQtFSsr9j9Rc+FCCZQpu12SwWdQTQy1+NrVYG59mPjit1PBPeLucxqoqx
-	N9jm1/tQ==;
+	bh=CLI/bZM+cSBD8wVwTESyfSKw+Jwsxjddwt/oR6H0SR0=; b=pYZouO/FkKyk0ue5oOY9TqcLWR
+	Ki27MxcIftji8KKKrtLlHUBq535T4R/frNwzWrVet1CEiycQVO7BfW7G1IlhTFQZtHJZ+d0GDLwKj
+	N3iqD/GaNnZFdcgnfmi+UoiMtSRMP4NX6ghnhMQzFkCAyxWdeVrvUTgmWVCAlboHl3qVAaf+BaGgs
+	g0HVBcgb3I+Ml05T3DJy+hbhUAgv13tLx/ikoCxmPlPAwD5J8DO24ghUCwPyyw7dS9oDqApUJO4+I
+	5bT401P0kxFfxBmKkT/Qj5ivKIoPPwJxts1QHAeapM/ki0DvpUOwoPHt62hb6lg6tc9OUKH67z/E5
+	sk3fqhkw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w2QQu-00000005oRM-1Me7;
-	Tue, 17 Mar 2026 09:09:48 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1w2QTR-00000005omg-498U;
+	Tue, 17 Mar 2026 09:12:25 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w2QQn-00000005oQa-32Hj
+	id 1w2QTQ-00000005oll-0sDU
 	for kexec@lists.infradead.org;
-	Tue, 17 Mar 2026 09:09:41 +0000
+	Tue, 17 Mar 2026 09:12:25 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id EF67860127;
-	Tue, 17 Mar 2026 09:09:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70463C4CEF7;
-	Tue, 17 Mar 2026 09:09:38 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 78CFC434DC;
+	Tue, 17 Mar 2026 09:12:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3B50C4CEF7;
+	Tue, 17 Mar 2026 09:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773738580;
-	bh=Ak+fkoI4kuQLOTzVMHsdfWZxTKkFz4NFB8J6dcF3eS4=;
+	s=k20201202; t=1773738743;
+	bh=mg1XRSjP0lyWKLduKNpAhmOLtj6KEMMUpquKvbP4yzo=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=i7SW/bR05M3EjYJgdOTRtR0PzK6x+w20Ft0042LLJ6uprnCdWX0HmDexl5MVUNu7l
-	 h+REqv0LK2fhaBMyoK7B3MAdNKQVF6DY8TZeUZUB7P8KyRHzWaEzvjE+ZdUNyJJeD1
-	 RpGWZKX8DYZeoxLww7PNXtUy9YpT/CyjTZXXotLkjTqOOteuaAi8sKTk8jQyiTjCfl
-	 zx8ubORE5LoN6oLyWw6L0pPxyICvVFV+8ukD7WY+p0cwePLLHBmC8i/hW4k+CxYyed
-	 bs6/N+hEyhAYeTKpgjb8mk436rwyZpqIVa0T45Ne/jUVswC3aZdh3/SUoohUweuGLW
-	 +navEj6W7tgbQ==
+	b=mCZgaD6KOl4NSTvradsDqu9gM/HxUVIdrWrJzFCG3NpmQRzxXB6cpFVf7i0XSNUsU
+	 sBBhdtVC3l6lOJ6gKK9nyDiKxhm7+JhNmY3pMoBWtjsfFWPR3xt8E5iBfgXdibGoL6
+	 C2d2zx/FUoHViLg4+OOcVbYNrXtg+72aw7pDXGnEsQ4xx72BH5L5eweQQB6EcMhZzC
+	 jUjYJkPeMtkj26MK8yF35s38QTxuf9lHnHoAtlI+pgUyqBuI7YS8bc6UVDhWYF4tgn
+	 0VrUCQIQtzOGZY4IS5H2EruN/PN4SICGCPHyUshAIx5ayU6jIV4J539TcrC3l2IFIa
+	 Az3X55mxCQJ1g==
 From: Pratyush Yadav <pratyush@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  ranxiaokai627@163.com,
-  graf@amazon.com,  rppt@kernel.org,  pasha.tatashin@soleen.com,
-  jasonmiu@google.com,  linux-kernel@vger.kernel.org,
-  kexec@lists.infradead.org,  ran.xiaokai@zte.com.cn,  Breno Leitao
- <leitao@debian.org>
-Subject: Re: [PATCH] kho: fix child node parsing for debugfs in/sub_fdts
-In-Reply-To: <20260314154637.86a7d4f07800b59c00049814@linux-foundation.org>
-	(Andrew Morton's message of "Sat, 14 Mar 2026 15:46:37 -0700")
-References: <20260309033530.244508-1-ranxiaokai627@163.com>
-	<2vxzpl58f3oh.fsf@kernel.org>
-	<20260314154637.86a7d4f07800b59c00049814@linux-foundation.org>
-Date: Tue, 17 Mar 2026 09:09:36 +0000
-Message-ID: <2vxzse9yddpr.fsf@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Alexander Graf <graf@amazon.com>,
+  Pasha Tatashin <pasha.tatashin@soleen.com>,  Andrew Morton
+ <akpm@linux-foundation.org>,  kexec@lists.infradead.org,
+  linux-mm@kvack.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] kho: drop restriction on maximum page order
+In-Reply-To: <aa_zglmh3AU2_RA0@kernel.org> (Mike Rapoport's message of "Tue,
+	10 Mar 2026 12:33:38 +0200")
+References: <20260309123410.382308-1-pratyush@kernel.org>
+	<20260309123410.382308-2-pratyush@kernel.org>
+	<aa_zglmh3AU2_RA0@kernel.org>
+Date: Tue, 17 Mar 2026 09:12:19 +0000
+Message-ID: <2vxzo6kmddl8.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260317_021224_268719_87BE8A78 
+X-CRM114-Status: GOOD (  12.20  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,54 +76,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, Mar 14 2026, Andrew Morton wrote:
+On Tue, Mar 10 2026, Mike Rapoport wrote:
 
-> On Fri, 13 Mar 2026 10:02:06 +0000 Pratyush Yadav <pratyush@kernel.org> wrote:
->
->> On Mon, Mar 09 2026, ranxiaokai627@163.com wrote:
+> On Mon, Mar 09, 2026 at 12:34:07PM +0000, Pratyush Yadav wrote:
+>> KHO currently restricts the maximum order of a restored page to the
+>> maximum order supported by the buddy allocator. While this works fine
+>> for much of the data passed across kexec, it is possible to have pages
+>> larger than MAX_PAGE_ORDER.
 >> 
->> > From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
->> >
->> > Commit e0c1731f5d57 ("kho: adopt radix tree for preserved memory tracking")
->> > changed KHO_FDT_SUB_TREE_PROP_NAME from "fdt" to "preserved-data". However,
->> > kho debugfs code still hard-coded the "fdt" string when parsing the
->> > device tree, causing the debugfs node /debugfs/kho/in/sub_fdts/
->> > fail to parse child nodes correctly.
->> >
->> > Fix this by including the header file and using KHO_FDT_SUB_TREE_PROP_NAME
->> > instead of the hard-coded string.
->> >
->> > Fixes: e0c1731f5d57 ("kho: adopt radix tree for preserved memory tracking")
->> > Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+>> For one, it is possible to get a larger order when using
+>> kho_preserve_pages() if the number of pages is large enough, since it
+>> tries to combine multiple aligned 0-order preservations into one higher
+>> order preservation.
 >> 
->> Breno's patch [0] also fixes this, but I'd rather have this go through
->> hotfixes and get backported to stable, and Breno's series to build on
->> top of this.
+>> For another, upcoming support for hugepages can have gigantic hugepages
+>> being preserved over KHO.
 >> 
->> [0] https://lore.kernel.org/linux-mm/20260309-kho-v8-4-c3abcf4ac750@debian.org/
+>> There is no real reason for this limit. The KHO preservation machinery
+>> can handle any page order. Remove this artificial restriction on max
+>> page order.
+>> 
+>> Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
+>> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 >
-> Confused.  This patch (kho: fix child node parsing for debugfs
-> in/sub_fdts) fixes the mm-unstable patch "kho: adopt radix tree for
-> preserved memory tracking".
+> One SOB should be enough ;-)
+
+Hmm, I figured the unemployed me (who originally wrote the patch) and
+the employed-by-google me (who is doing this new version) would count as
+two separate entities and there should be a S-o-b for both.
+
+Anyway, I am fine with dropping either one of the two.
+
 >
-> So what are you suggesting be added to -stable?
->
-> (Please lay it all out very clearly, idenfifying patches by name!)
+> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-Sorry, my bad for causing the confusion. I thought the radix tree
-patches ("kho: adopt radix tree for preserved memory tracking") already
-landed in mainline, but I went and checked and it seems that they
-haven't. They are still in mm-unstable. So we should just meld this
-patch ("kho: fix child node parsing for debugfs in/sub_fdts") into
-("kho: adopt radix tree for preserved memory tracking").
+Thanks!
 
-There is nothing that needs to be added to -stable, and there is nothing
-that needs to go to hotfixes.
-
-Breno's patch ("kho: fix kho_in_debugfs_init() to handle non-FDT blobs")
-also fixes this bug, but then also adds some other changes with it. So
-Breno's patch will cause conflicts once applied on top of this patch,
-but they should be simple enough to resolve I think.
+[...]
 
 -- 
 Regards,
