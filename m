@@ -4,68 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DD2F3FD8777
-	for <kexec@archiver.kernel.org>; Tue, 17 Mar 2026 14:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 55CC4FD8770
+	for <kexec@archiver.kernel.org>; Tue, 17 Mar 2026 14:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6pQdqVuW3s3IY2V2/GcIHf4+cwJRcBc6iC91+pnO9/s=; b=CYS1r+5Oelw5wV4tHJXWmhj6SY
-	+DuNt1chMlKlflLRbdYNB0t2duckk2sxD1/ms8O/dN0RkpOei71EhRrwbnyT0AbdLJi3mjVgB5lgJ
-	+uPXqiuddkc4Qv2B0RwMAAChCxotNFNga5rXKNayccu6A0U2UNx3b7XFRo6y/Hi9KHb4LTu8tgT1j
-	2FEGk9KdoRgiE5Y3EkH6FSsBWTpT0no8EdiMxok+xhq0WlZCau8HhyQYe1ycDUk9u8PjFDxXlofwH
-	CNyy8z+MLXlS5OloxnRACc4qsEHB1P8x402yk8rVwGtZ+VG4k2fOb5wkxvq0o0F4eSC/k81HaMFkz
-	6DD5PQZg==;
+	bh=ENui0Js8tkhd80bmpMrXzJoFIzd5GZKUFokCk0GUoAI=; b=HYHJWxlaNqi/9LzmIS9eIYXPYC
+	LIECC645UpsMdZJS8KUyltGTWO8FQVlVSO7wAEN9/cZQb8lAtdDUaZuhXZ0QQ6zxVkmF1H6UVO4+A
+	kqYuXgY+5BvxGrN7AlYqewYiyI95P4lGcZmppFMgaKLU932UvZSDt+A5d9b3+URs0MLDvr2spNn/m
+	0whaHA1pY7IZX2tKrgF0Imi/kIsRhfEH53KoWHltNmzGEAght8UgEs262gNcOnuhrrnpJAXOgO3bs
+	B0mcVfm1WIyNimIF6qBttuhOSUC/7kixnr9+ZcJEUQmWVuvgRaSQ5GRcLGUiIgwWcCt/bPHx6evlC
+	rtwxPUxQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w2VD4-00000006Xyd-02rW;
-	Tue, 17 Mar 2026 14:15:50 +0000
-Received: from mail-wr1-x449.google.com ([2a00:1450:4864:20::449])
+	id 1w2VD6-00000006Y0R-1h4D;
+	Tue, 17 Mar 2026 14:15:52 +0000
+Received: from mail-ed1-x549.google.com ([2a00:1450:4864:20::549])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w2VD0-00000006Xvb-2iHg
+	id 1w2VD4-00000006Xx5-1IaV
 	for kexec@lists.infradead.org;
-	Tue, 17 Mar 2026 14:15:48 +0000
-Received: by mail-wr1-x449.google.com with SMTP id ffacd0b85a97d-439bab2d095so3545314f8f.3
-        for <kexec@lists.infradead.org>; Tue, 17 Mar 2026 07:15:45 -0700 (PDT)
+	Tue, 17 Mar 2026 14:15:51 +0000
+Received: by mail-ed1-x549.google.com with SMTP id 4fb4d7f45d1cf-6673de2e0a6so802475a12.2
+        for <kexec@lists.infradead.org>; Tue, 17 Mar 2026 07:15:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773756944; x=1774361744; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1773756947; x=1774361747; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6pQdqVuW3s3IY2V2/GcIHf4+cwJRcBc6iC91+pnO9/s=;
-        b=s3Mecmx5MgdTbGBy4RwV4ADRwYCJjmbtf/AHIBn4xTc9QItswIfG5cm9/I7UWRWzky
-         FZrdb1U3gG895uUsVSG1oz/mhuk2NKNLAvOHJPq9Mi5Bt9LedaJEsgtLem8brDdmuIts
-         LeHUANkJ+UQOdN++wuUOmuXWUojs+WnqE2IbcSndkp0ZSyWNwQ6LJWLEG9IPgt2lBhdM
-         v6dIf/JbfyewTBqRhmR8AFebI7LSSSa8uE+1XJntwrycliC8gYFNP8PJc9rgaMnh7wfq
-         G4lAVrWZguThDBWOwzY1sRbrFRroivUTJdrU0gV3PI+qO/5EOhdu1krrbtqgzAGLa3ix
-         /TUQ==
+        bh=ENui0Js8tkhd80bmpMrXzJoFIzd5GZKUFokCk0GUoAI=;
+        b=EcmzwCrmdU6gx91tCwF+HTF2eDoKX8KCLy7ph/kUDwlURe88dEsyEA0yBaK6ruBkFP
+         rYfyi7D5004byxST2TSyYa48yUngvXMO3M23w7TdqM0ACocTQGjOl8LddkcoTqxO8EGe
+         v8BWoGGKC1eP2w6043Z5I+7b7sQkja2hYWUpdT9lIc24ymNP0BfXcBzfnK1gmwqBubm/
+         onVOOVz0d9YwobmxZWpeQq3wbeY6qXiCa4Mz5WvuTFR7mVg+lFF31CeDvwATx5G/6QTt
+         wHyH5C6qhkeOwvvbNuOpDh67kYyD+5dLgvdu0+55SKY0e+vA+/BOq9nBmQ6RmD45e8dO
+         1oaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773756944; x=1774361744;
+        d=1e100.net; s=20251104; t=1773756947; x=1774361747;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6pQdqVuW3s3IY2V2/GcIHf4+cwJRcBc6iC91+pnO9/s=;
-        b=nu1FFSKnIVLuspFX5LK1S/X3/qQDuNZwfSWfsTScRHJT4p/a+xfK2sc84z79rNN0ky
-         quaoPzH/rKmNfLKX92rZpL/wnYf/e8T1lPKCRg+49eOYyO0pXjyqmLampmwLnlCeE/fD
-         vkBRV0RWdV/Oa0/C+8PVD1SFL9eS0Mr5kcxmdEzIfSN+cJIDd+bS1l/+26RXTBE/1mQV
-         c2UT3tPHHw4E1jUAURZ7ctEXgox8E2oSj6PZ/r9qHk/5Cp/u+K+2Py928Ao4IJ4zZONn
-         Yg/DxofgDNEidTVcSxfHtQ1hqahkPkzV8RcyVp7fohgYQsPwWh1QuFo70HMIeMirJCAX
-         a/JA==
-X-Forwarded-Encrypted: i=1; AJvYcCVIstBNHtnWe8xAcLk97jKziXZmgwaMn2wLB2Kl8XwNQflMywnvWqI03mHmHISWJpSmroQzLQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxWZcmANngIOVu902YClyE1IEscyUU7AibVftpz5BfTsvyEZcXH
-	hVhDoV/XQ8FZWrCr00aPoAb5cuCoPS+m3vyraclFQnof6JLC//0E2wchaoECnJpMB0txbBpJSwI
-	Fn4eCHackVHXcyPKdoxr3MQ==
-X-Received: from wmz7.prod.google.com ([2002:a05:600c:6b67:b0:485:3aa2:da59])
+        bh=ENui0Js8tkhd80bmpMrXzJoFIzd5GZKUFokCk0GUoAI=;
+        b=sBezUtU4S7zRGIF5deRcferg4hf73kaj7kl8b27e1lUDtG3+NdTeeTp0Q4OMFplfvy
+         tVggXUPksTVdfbsC9iqUWpKNkBif5yP8boqEmtgMtqeCYD5IHTy0cHUyY8HJGyXKeGwF
+         vsUoDuWBcxQ4GYXajGwb3Xj2fufauqU3VcChjR+faJgiVJuM9U7FD3VrX3GVS4jxbCwE
+         IO7Zi+T3hGrJToNxeY+63qFcidgYKek7izyEmMSfv0fM/bjl15HNtkhJmWyP9XxlscK7
+         xHqh1Yg6Ql/jEQLCkaJb2aDlGfZl7Qrh976xh4XdwlmNfrWzZ6dF5mcU9xPJCQ0JwAsK
+         83Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCWYBb9aW6U7JoGo90rFZBB3uh2X9mVle5G3NujwaB7Do/VdP9XipO4O6hdJnW1udGIk7pbg5g==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxuTh9qb7OV/f/KqURrZo0gY/uL/CjA2GppEBqzTmt2f6Z14ujY
+	Gf2M1MQC0WUy1VFtJvWtxP79VqAvLhlhvykjaljr2Bnm8hOiE+kaVm+Lc1+YqwfV8NH0Dd/hpKd
+	mOL8m7bqHp5WE/uBFA/kEfA==
+X-Received: from edew21-n1.prod.google.com ([2002:a05:6402:a215:10b0:662:4e97:3bc9])
  (user=mclapinski job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4583:b0:485:3f17:410 with SMTP id 5b1f17b1804b1-485566fd031mr299341025e9.16.1773756943916;
- Tue, 17 Mar 2026 07:15:43 -0700 (PDT)
-Date: Tue, 17 Mar 2026 15:15:32 +0100
+ 2002:a05:6402:26c5:b0:667:5318:2bc9 with SMTP id 4fb4d7f45d1cf-66753182f33mr1449370a12.15.1773756947028;
+ Tue, 17 Mar 2026 07:15:47 -0700 (PDT)
+Date: Tue, 17 Mar 2026 15:15:33 +0100
 In-Reply-To: <20260317141534.815634-1-mclapinski@google.com>
 Mime-Version: 1.0
 References: <20260317141534.815634-1-mclapinski@google.com>
 X-Mailer: git-send-email 2.53.0.851.ga537e3e6e9-goog
-Message-ID: <20260317141534.815634-2-mclapinski@google.com>
-Subject: [PATCH v7 1/3] kho: make kho_scratch_overlap usable outside debugging
+Message-ID: <20260317141534.815634-3-mclapinski@google.com>
+Subject: [PATCH v7 2/3] kho: fix deferred init of kho scratch
 From: Michal Clapinski <mclapinski@google.com>
 To: Evangelos Petrongonas <epetron@amazon.de>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
 	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
@@ -74,8 +74,8 @@ Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
 	Michal Clapinski <mclapinski@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260317_071546_773050_96677691 
-X-CRM114-Status: GOOD (  17.19  )
+X-CRM114-CacheID: sfid-20260317_071550_389170_D56D4758 
+X-CRM114-Status: GOOD (  16.47  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,158 +90,136 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Also return false if kho_scratch is NULL.
+Currently, if DEFERRED is enabled, kho_release_scratch will initialize
+the struct pages and set migratetype of kho scratch. Unless the whole
+scratch fit below first_deferred_pfn, some of that will be overwritten
+either by deferred_init_pages or memmap_init_reserved_pages.
+
+To fix it, I modified kho_release_scratch to only set the migratetype
+on already initialized pages. Then, modified init_pageblock_migratetype
+to set the migratetype to CMA if the page is located inside scratch.
 
 Signed-off-by: Michal Clapinski <mclapinski@google.com>
 ---
- include/linux/kexec_handover.h              |  6 +++++
- kernel/liveupdate/Makefile                  |  1 -
- kernel/liveupdate/kexec_handover.c          | 28 ++++++++++++++++++---
- kernel/liveupdate/kexec_handover_debug.c    | 25 ------------------
- kernel/liveupdate/kexec_handover_internal.h |  7 ++++--
- 5 files changed, 35 insertions(+), 32 deletions(-)
- delete mode 100644 kernel/liveupdate/kexec_handover_debug.c
+ include/linux/memblock.h           |  2 --
+ kernel/liveupdate/kexec_handover.c | 10 ++++++----
+ mm/memblock.c                      | 22 ----------------------
+ mm/page_alloc.c                    |  7 +++++++
+ 4 files changed, 13 insertions(+), 28 deletions(-)
 
-diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
-index ac4129d1d741..6a0e572c3adc 100644
---- a/include/linux/kexec_handover.h
-+++ b/include/linux/kexec_handover.h
-@@ -35,6 +35,7 @@ void *kho_restore_vmalloc(const struct kho_vmalloc *preservation);
- int kho_add_subtree(const char *name, void *fdt);
- void kho_remove_subtree(void *fdt);
- int kho_retrieve_subtree(const char *name, phys_addr_t *phys);
-+bool kho_scratch_overlap(phys_addr_t phys, size_t size);
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 6ec5e9ac0699..3e217414e12d 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -614,11 +614,9 @@ static inline void memtest_report_meminfo(struct seq_file *m) { }
+ #ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
+ void memblock_set_kho_scratch_only(void);
+ void memblock_clear_kho_scratch_only(void);
+-void memmap_init_kho_scratch_pages(void);
+ #else
+ static inline void memblock_set_kho_scratch_only(void) { }
+ static inline void memblock_clear_kho_scratch_only(void) { }
+-static inline void memmap_init_kho_scratch_pages(void) {}
+ #endif
  
- void kho_memory_init(void);
- 
-@@ -109,6 +110,11 @@ static inline int kho_retrieve_subtree(const char *name, phys_addr_t *phys)
- 	return -EOPNOTSUPP;
- }
- 
-+static inline bool kho_scratch_overlap(phys_addr_t phys, size_t size)
-+{
-+	return false;
-+}
-+
- static inline void kho_memory_init(void) { }
- 
- static inline void kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
-diff --git a/kernel/liveupdate/Makefile b/kernel/liveupdate/Makefile
-index d2f779cbe279..dc352839ccf0 100644
---- a/kernel/liveupdate/Makefile
-+++ b/kernel/liveupdate/Makefile
-@@ -7,7 +7,6 @@ luo-y :=								\
- 		luo_session.o
- 
- obj-$(CONFIG_KEXEC_HANDOVER)		+= kexec_handover.o
--obj-$(CONFIG_KEXEC_HANDOVER_DEBUG)	+= kexec_handover_debug.o
- obj-$(CONFIG_KEXEC_HANDOVER_DEBUGFS)	+= kexec_handover_debugfs.o
- 
- obj-$(CONFIG_LIVEUPDATE)		+= luo.o
+ #endif /* _LINUX_MEMBLOCK_H */
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 532f455c5d4f..c9b982372d6e 100644
+index c9b982372d6e..e511a50fab9c 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -820,7 +820,8 @@ int kho_preserve_folio(struct folio *folio)
- 	const unsigned long pfn = folio_pfn(folio);
- 	const unsigned int order = folio_order(folio);
- 
--	if (WARN_ON(kho_scratch_overlap(pfn << PAGE_SHIFT, PAGE_SIZE << order)))
-+	if (WARN_ON(kho_scratch_overlap_debug(pfn << PAGE_SHIFT,
-+					      PAGE_SIZE << order)))
- 		return -EINVAL;
- 
- 	return kho_radix_add_page(tree, pfn, order);
-@@ -864,10 +865,9 @@ int kho_preserve_pages(struct page *page, unsigned long nr_pages)
- 	unsigned long failed_pfn = 0;
- 	int err = 0;
- 
--	if (WARN_ON(kho_scratch_overlap(start_pfn << PAGE_SHIFT,
--					nr_pages << PAGE_SHIFT))) {
-+	if (WARN_ON(kho_scratch_overlap_debug(start_pfn << PAGE_SHIFT,
-+					      nr_pages << PAGE_SHIFT)))
- 		return -EINVAL;
--	}
- 
- 	while (pfn < end_pfn) {
- 		unsigned int order =
-@@ -1327,6 +1327,26 @@ int kho_retrieve_subtree(const char *name, phys_addr_t *phys)
- }
- EXPORT_SYMBOL_GPL(kho_retrieve_subtree);
- 
-+bool kho_scratch_overlap(phys_addr_t phys, size_t size)
-+{
-+	phys_addr_t scratch_start, scratch_end;
-+	unsigned int i;
-+
-+	if (!kho_scratch)
-+		return false;
-+
-+	for (i = 0; i < kho_scratch_cnt; i++) {
-+		scratch_start = kho_scratch[i].addr;
-+		scratch_end = kho_scratch[i].addr + kho_scratch[i].size;
-+
-+		if (phys < scratch_end && (phys + size) > scratch_start)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+EXPORT_SYMBOL_GPL(kho_scratch_overlap);
-+
- static int __init kho_mem_retrieve(const void *fdt)
+@@ -1477,8 +1477,7 @@ static void __init kho_release_scratch(void)
  {
- 	struct kho_radix_tree tree;
-diff --git a/kernel/liveupdate/kexec_handover_debug.c b/kernel/liveupdate/kexec_handover_debug.c
-deleted file mode 100644
-index 6efb696f5426..000000000000
---- a/kernel/liveupdate/kexec_handover_debug.c
-+++ /dev/null
-@@ -1,25 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * kexec_handover_debug.c - kexec handover optional debug functionality
-- * Copyright (C) 2025 Google LLC, Pasha Tatashin <pasha.tatashin@soleen.com>
-- */
+ 	phys_addr_t start, end;
+ 	u64 i;
 -
--#define pr_fmt(fmt) "KHO: " fmt
+-	memmap_init_kho_scratch_pages();
++	int nid;
+ 
+ 	/*
+ 	 * Mark scratch mem as CMA before we return it. That way we
+@@ -1486,10 +1485,13 @@ static void __init kho_release_scratch(void)
+ 	 * we can reuse it as scratch memory again later.
+ 	 */
+ 	__for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
+-			     MEMBLOCK_KHO_SCRATCH, &start, &end, NULL) {
++			     MEMBLOCK_KHO_SCRATCH, &start, &end, &nid) {
+ 		ulong start_pfn = pageblock_start_pfn(PFN_DOWN(start));
+ 		ulong end_pfn = pageblock_align(PFN_UP(end));
+ 		ulong pfn;
++#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
++		end_pfn = min(end_pfn, NODE_DATA(nid)->first_deferred_pfn);
++#endif
+ 
+ 		for (pfn = start_pfn; pfn < end_pfn; pfn += pageblock_nr_pages)
+ 			init_pageblock_migratetype(pfn_to_page(pfn),
+@@ -1500,8 +1502,8 @@ static void __init kho_release_scratch(void)
+ void __init kho_memory_init(void)
+ {
+ 	if (kho_in.scratch_phys) {
+-		kho_scratch = phys_to_virt(kho_in.scratch_phys);
+ 		kho_release_scratch();
++		kho_scratch = phys_to_virt(kho_in.scratch_phys);
+ 
+ 		if (kho_mem_retrieve(kho_get_fdt()))
+ 			kho_in.fdt_phys = 0;
+diff --git a/mm/memblock.c b/mm/memblock.c
+index b3ddfdec7a80..ae6a5af46bd7 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -959,28 +959,6 @@ __init void memblock_clear_kho_scratch_only(void)
+ {
+ 	kho_scratch_only = false;
+ }
 -
--#include "kexec_handover_internal.h"
--
--bool kho_scratch_overlap(phys_addr_t phys, size_t size)
+-__init void memmap_init_kho_scratch_pages(void)
 -{
--	phys_addr_t scratch_start, scratch_end;
--	unsigned int i;
+-	phys_addr_t start, end;
+-	unsigned long pfn;
+-	int nid;
+-	u64 i;
 -
--	for (i = 0; i < kho_scratch_cnt; i++) {
--		scratch_start = kho_scratch[i].addr;
--		scratch_end = kho_scratch[i].addr + kho_scratch[i].size;
+-	if (!IS_ENABLED(CONFIG_DEFERRED_STRUCT_PAGE_INIT))
+-		return;
 -
--		if (phys < scratch_end && (phys + size) > scratch_start)
--			return true;
+-	/*
+-	 * Initialize struct pages for free scratch memory.
+-	 * The struct pages for reserved scratch memory will be set up in
+-	 * reserve_bootmem_region()
+-	 */
+-	__for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
+-			     MEMBLOCK_KHO_SCRATCH, &start, &end, &nid) {
+-		for (pfn = PFN_UP(start); pfn < PFN_DOWN(end); pfn++)
+-			init_deferred_page(pfn, nid);
 -	}
--
--	return false;
 -}
-diff --git a/kernel/liveupdate/kexec_handover_internal.h b/kernel/liveupdate/kexec_handover_internal.h
-index 9a832a35254c..804d6a1209b8 100644
---- a/kernel/liveupdate/kexec_handover_internal.h
-+++ b/kernel/liveupdate/kexec_handover_internal.h
-@@ -41,9 +41,12 @@ static inline void kho_debugfs_fdt_remove(struct kho_debugfs *dbg,
- #endif /* CONFIG_KEXEC_HANDOVER_DEBUGFS */
+ #endif
  
- #ifdef CONFIG_KEXEC_HANDOVER_DEBUG
--bool kho_scratch_overlap(phys_addr_t phys, size_t size);
-+static inline bool kho_scratch_overlap_debug(phys_addr_t phys, size_t size)
-+{
-+	return kho_scratch_overlap(phys, size);
-+}
- #else
--static inline bool kho_scratch_overlap(phys_addr_t phys, size_t size)
-+static inline bool kho_scratch_overlap_debug(phys_addr_t phys, size_t size)
- {
- 	return false;
- }
+ /**
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index ee81f5c67c18..5ca078dde61d 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -55,6 +55,7 @@
+ #include <linux/cacheinfo.h>
+ #include <linux/pgalloc_tag.h>
+ #include <linux/mmzone_lock.h>
++#include <linux/kexec_handover.h>
+ #include <asm/div64.h>
+ #include "internal.h"
+ #include "shuffle.h"
+@@ -549,6 +550,12 @@ void __meminit init_pageblock_migratetype(struct page *page,
+ 		     migratetype < MIGRATE_PCPTYPES))
+ 		migratetype = MIGRATE_UNMOVABLE;
+ 
++	/*
++	 * Mark KHO scratch as CMA so no unmovable allocations are made there.
++	 */
++	if (unlikely(kho_scratch_overlap(page_to_phys(page), PAGE_SIZE)))
++		migratetype = MIGRATE_CMA;
++
+ 	flags = migratetype;
+ 
+ #ifdef CONFIG_MEMORY_ISOLATION
 -- 
 2.53.0.851.ga537e3e6e9-goog
 
