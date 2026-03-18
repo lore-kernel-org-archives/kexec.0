@@ -4,127 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E8168103E195
-	for <kexec@archiver.kernel.org>; Wed, 18 Mar 2026 15:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CCC56103E195
+	for <kexec@archiver.kernel.org>; Wed, 18 Mar 2026 15:18:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zCozF4TumMwOms9OqQxOoUEHlGbfrZtREKPghz2vWDc=; b=NC/H7WEf7mPsQcAjdLYXAGpJYU
-	ms/ySLq+egHZLRWdCJwIcp5kPk/V/ElElmDXI5kqHP8W9gRL853ajfnOl6KeU6V/07zE5YB+52cal
-	sQ8875w+geomp/+AVDz6ifcn58yg4nzUIoJyHi2cJC+gAXUxyDfPTNaTaLWNKO2eFath6go15rH5Y
-	OS8yUPZ6sAdNsKMWdcsRlKj1I8vqs3hqb+DVm2RCScy8mF/e3Z7qbUPlshRqHCTmVK/virKn7SuRe
-	U2vgNMmkY2xOtdnUCJ/1DNs/+EMpP2lnXEOmPQlaftrXh+mvjOWl1TU7/lrQwRHBKEnl6BXIhgO0a
-	gbOgY7KQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=zJSXdmrQV+K79VmgmeCa/oY/xkKliZyOXrkXdpiFNNY=; b=P3ybfWCz8PvmN2MYJm5v6/x/Vb
+	BxuEZQ86f8TFoJJ3NbLCgoaVBRjDyTjvba6ACgnVAcbbqFeCEWSm1Wrcu9OILfII5S7KofkS5Q1p0
+	oliuVOO9cwAb6/7jvhTSCwmpy5/LRYCd6jdy/o+8F/e5dhp60hXDvYoGH16yVgh7ZM2aFUtmvibj9
+	q0rdEJe9DdiLvKEKfMtNqsI1/WRVAfbA+2oSe6ZRUl0X/xE5V9rWImh7GpdmaTlgVF14AuPBnl7On
+	db5JrB4ctwfXczYjUez+07t/j0UZD7mYWQrEz5BZHGVa+buU3DBR6vQZOT1IFVXGpf0tBb1dx6Efo
+	w52vSL+Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w2sXx-00000008f6O-3EMl;
-	Wed, 18 Mar 2026 15:10:57 +0000
-Received: from mail-westus2azon11010021.outbound.protection.outlook.com ([52.101.46.21] helo=CO1PR03CU002.outbound.protection.outlook.com)
+	id 1w2sfc-00000008gf4-0UH6;
+	Wed, 18 Mar 2026 15:18:52 +0000
+Received: from mail-dl1-x1231.google.com ([2607:f8b0:4864:20::1231])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w2sXv-00000008f5z-1yId
+	id 1w2sfZ-00000008geS-3Fea
 	for kexec@lists.infradead.org;
-	Wed, 18 Mar 2026 15:10:57 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HnnzoC1CmUfy7lObUXm5gXrw+wu0qTkIwwrQxtqlI2ZYXU1dZPbWt7mbaDjUKz1G8KyNYQt6m2ptHGLYNKHh6yuqJbcL8if1g4+qHp5b5khS36kkj5D21TtgEbpYdhakNJiFXvcCWh4wNMjp+DTQUEImNBBdBY1YVGbE4Y94pbGq0A7FcF4bkBolSYnx7SsG69zbJ4rjayObXc9NoHmBIlhngTqR+woO6DLui6o96ehHrT4k5lsxUdqn91w2CJZ1QbswMG6hcpB6qEaynC1he817qtomMK7h37iKX50tYle9oDz3bBaCwEdEZd6Vwx+GVMrQQlAzt++UNLOg0MY4TA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zCozF4TumMwOms9OqQxOoUEHlGbfrZtREKPghz2vWDc=;
- b=poqTfbW/365BwJPFUa20Vk7UWJVweEl6BLthsH3VAw0kvrfsGYng4G98GOrI85Xh/HEGm399oRWqeobUSp0gsAx1l4qoECgVd+ZP5EgohgAQKtpi0bzWcCr64LZb4cS7hIeNvFKFTYSMVnaIVzxDcWB2DcM0x0YtdNH3EPmPMNO5r7ipYNBA7U99wPxS67QDiji/NQjUANouGc7XwZD4pewf36KtQywikeOU3wnku8itbbRwYN76TsCT0bAbJHtGzK+9eLY9IpynopQM4XfHOtT6B051kAaSU3hPrQu2NHb1BbCycreVGibiUewjqtKNq59v22dsgRmOZxGCS4pKCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zCozF4TumMwOms9OqQxOoUEHlGbfrZtREKPghz2vWDc=;
- b=X8b92VU0g9AUhRy2o2c9YhOWQJH+lfQwbscVo6lyVdtQp/JPULrYOnBrbQA3D4pFEx5mSkZr5DtTh4PX+t9SDXY4QHoTCZtZo93tnj8gLA4APusVj0RSp5XIUOXDcmRIjvUF/pOpdMaD+D69Uw6yptcyNsLjT5+h+nOP9+pp7ibSBgv67FPOcHqFilXVBOeuiwWMUep1m9dJ2j5nxsIY2WMrTxcy5n3UsUhDqvI1KGaoYFhzB0AKUHX/GfvZNFRqrblN2EopQHSmWYcjUHrYQpkFWd3ZEbf+YA3khzZmaIfLW6/bzHCp9K8W6yNKb/OKZzz6D3skwX5QVx0x0VwGGQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- MN6PR12MB8514.namprd12.prod.outlook.com (2603:10b6:208:474::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.19; Wed, 18 Mar
- 2026 15:10:47 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::f01d:73d2:2dda:c7b2]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::f01d:73d2:2dda:c7b2%4]) with mapi id 15.20.9723.016; Wed, 18 Mar 2026
- 15:10:39 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Michal Clapinski <mclapinski@google.com>
-Cc: Evangelos Petrongonas <epetron@amazon.de>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>,
- Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>,
- Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v7 2/3] kho: fix deferred init of kho scratch
-Date: Wed, 18 Mar 2026 11:10:34 -0400
-X-Mailer: MailMate (2.0r6290)
-Message-ID: <AD9E1B18-C813-480E-894C-FEEB51EE8A93@nvidia.com>
-In-Reply-To: <20260317141534.815634-3-mclapinski@google.com>
-References: <20260317141534.815634-1-mclapinski@google.com>
- <20260317141534.815634-3-mclapinski@google.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0283.namprd03.prod.outlook.com
- (2603:10b6:a03:39e::18) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	Wed, 18 Mar 2026 15:18:50 +0000
+Received: by mail-dl1-x1231.google.com with SMTP id a92af1059eb24-128ce536fe0so12235c88.0
+        for <kexec@lists.infradead.org>; Wed, 18 Mar 2026 08:18:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773847129; cv=none;
+        d=google.com; s=arc-20240605;
+        b=HPNA+cB+EkjxV7A4PqqSYTj301lAK/5/HITPmtAPCd1+Ecnh4uY9Dav8cwF4TjNElB
+         9mQe8M0SMYrjvfyeId+VlTs6VQX7dbsyb2P0BWfXNIxvRhYceGLazZYpjtEL8JRXAnMe
+         QkvnaiMQKJ5qDB+tMo4fk5nzYSgjKxCil7ny14h3QFOJQ3Sk+CHdC6mGW4cFMtJc596G
+         2zL4fx31dV7hZdr1yCg604SQsIqk2424sIeKZh2xun/OwsE7DYJOUojffxjp25nD0KSz
+         qixtzQ3zg6CDR+2H+64nS2QsigwhGq+OYR+L/ap5WUtKbFal39vfaFYVC1OPWyot94kz
+         M2Qw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=zJSXdmrQV+K79VmgmeCa/oY/xkKliZyOXrkXdpiFNNY=;
+        fh=Grrr0Kocl3kIY8nO18/lBM52sBKYWe9O0JbHQ2k8dXQ=;
+        b=POrb1I7kfKwjOq0wYp5laL53x19IVKVglCK7TX6sWP8xYCnSiB37iohzWddZjOsmUK
+         1gAkCLtTohPuFqJ1syKqlFDuJnlt2YjIGinDzzEd+Wy1VkH47tnffQokS9jvhqXpo1im
+         ruQthskVDpEWLEYoMJexUX6O2yd5QOtZOS9FBMCpbRndlmcOxaHHCK8b8nOInhw3qSbT
+         5F89c9dBWAv2/XM3BSPIgJ712CvWeeryhM3pyb/Os0CP6X25dDxcJWsXDJWhRn0YzpxU
+         sddr7pTQ/c6BkhPRvphPlzw6lD1AKLAvvDalXU5nhcojlZwHeHKQpX0RYgaNPEfniz7g
+         XN9Q==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1773847129; x=1774451929; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zJSXdmrQV+K79VmgmeCa/oY/xkKliZyOXrkXdpiFNNY=;
+        b=Lx3mivpXXpV6KewQaSjfUowrKEUbiOKqrLqs3aW7y5h429o/ZF3NV/MJCNVJkwUOpi
+         QJ+Y5LdF9nj6YU5pd2dhAWZirBMub78PBUSrVR2oHVjEFXs9VP1Wwh/xQ6WvZb17ecwm
+         ZoqbPPZ+O2Tp1kjRTkSXhxo1y2qGZewyP3H+P8gjJ41qpHWMMN8DD/QL4HyUMevPsY/U
+         Z8ZEq14qiVdJv3TUSXe4phUlcAnracRrGVaBCJVbmsunHD/4YctVVd2fAT/oXIR0op8T
+         LgScPTlzsKWk5hJ/z5uLBXcCAICz9/e2PX/QK9cRJLD0V7Xi4FHRjM2jRBZmgx0m23V4
+         eO8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773847129; x=1774451929;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=zJSXdmrQV+K79VmgmeCa/oY/xkKliZyOXrkXdpiFNNY=;
+        b=eNFqhl4A1s6l3klH6oLQoSkz05PgBHWqDzTb9FP8oieKCpQtUKepq3jlm0esK+EZnJ
+         5TpAY4jUATHpQ91AJ9L3xs0K74sLV+d7nsfQJ+0eUh45B4ytwewufuYKuBoBNJGaQzXE
+         nt/xAJWBMsMETDq0hVxXlY+6pfq+mpohI9q37M4E7E2OapkvejPcxNjK3u+eXWMCeoVl
+         3p1UZh5YEf4GPGTvrWx1pRDK+2ARlETnaVa4TEt5KY7vgPQZ5ANL3h0zOyLAF8D56Zsi
+         AbZkNvvlL8bwzPpMCe5meJ7+oXKoA6cp5AC7rSz+dKlhQ0si4y8mQT1qwVs9VrihzlNl
+         WVww==
+X-Forwarded-Encrypted: i=1; AJvYcCXN2HpH7Z96ku2pFUFwThuXQaEe59yFu8CsvgLmoE5lgmFjk8rlrn67CMP9xdUtgD6Oi/YQpQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yw5XTqm/qO0+HV+zSBIfW3Ls/wxudVnwFcTDYhUCC42PZIek3ZY
+	md1aV+6KwQ+ecQ5JALZTw3rQWBljd6c7TxPsvLW4zTAZ2kYk/oESq59vvHmIdQ6QVXWvpkyIXEe
+	Js/LosX7vudleF7Eag4QMoXasDsneAF3Zww98fIfO
+X-Gm-Gg: ATEYQzymBXWqFqWJLPUsE/ckniIX7j73A0tgUGf5F+UndlbjcfZKLRrBYMufMZfe0N9
+	eFOUQf5ZksUvVD2UE4mpuTFjLUlptj9IKfmtD/T1zgDE1mK3L7gm9WhqQf9NMHedL3GrCLdqXF5
+	vBVA2Zs2StaXExXkVNoukml1Z/Rfhp52ZJ7J4mkVlXXOyywM9aRF/Z/+CzFQnuC3CuUfvmW5BQj
+	Dx0EdGgFH37THbKM0vXpAuxy/Fhh+1tjLyEd8OK104rjvseOj656FQDCZoo5xtLeuUGINZeDi47
+	ZZ1nRg==
+X-Received: by 2002:a05:7022:e1d:b0:129:e9f:4c09 with SMTP id
+ a92af1059eb24-129c58964b6mr256844c88.6.1773847128064; Wed, 18 Mar 2026
+ 08:18:48 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|MN6PR12MB8514:EE_
-X-MS-Office365-Filtering-Correlation-Id: a6b08ea5-92e4-435a-ad74-08de85008418
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007|22082099003|56012099003|18002099003;
-X-Microsoft-Antispam-Message-Info: M6O0qj+iauFbiOYhFz7Dg9jBaywA+qzZMWjnRPpe6n4zGUlCnM0Ev2dJNHwDob1EaGGqMYb0PtXySR+/83tS1iOEePj3or4bFLuzbo9BoTKu7XZUVTtMpkzRBMZW0d6dyVO3lSq2C52zYRr5sY0MTlCWusag8WwSmDkcULouHJnybt/VoLxO69cgEvdXQMnUZid7lVFZqU5P5QB/HtZSB1KwFdtacC5VH0qgSLd/RTSxUTlupRkHzn17hagspw95IdMqFPx5oH+i6gGV0+l6SQZN0BjDLle8pLKZZWX4P4KqjbK96VEgrjXpp7ftI6v18/ne+QuMHmwB2AMQJ+z8a9ZJcQUpBtTwZ1Fl8+uwhOIFuUf3feI1jxbe8Dche0rmA5aqdteyHfTLIVtSSkLYmHmWO5Kq1AYsU/ApMCY5f6+7dU9x6aIVapav6QH/0/b7LkldVOeRnlgDOe66lI1suDIo1lm/EOjp8rlX01E6ALzjSnUFgcXE+UO1th0WweZvH0Fo7L6DoMjThjf8AOdypm35OFOkk6uGLpuT6/4d/I4glL8MdQd2b+zlbLzjWcn988JRleBhotbEUR6ivGGD6C1XWrCsrj49YVlq2RTZMr4QCJojFQC8CgKleuqlLeIPDtHkcox4dLawIEu47gpYFSZL+6HE5l8uguHD2p9GbmYYGjQc1qnbvUgDNLIJKNoqSmKfmVuCoS0/SmHWmuqauE0DyJtfEwxH9NAGl7vFdpE=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1M3TrqRS1gYHgAzfVEw8AVHKmQ2qkkHEO9SSmTE967jnmEuWf/8HSQQCWmWw?=
- =?us-ascii?Q?p0g1Ofsk5kes8tho8A/DKO2ZO9G+M5KGEEU1XEvlysicnkSWR9tmNIpPykKF?=
- =?us-ascii?Q?IbUGCucw5dWevQc+MwZ9FwECZIhgodjYa4y/U67CJCmLdYGbezCYldcr/cSS?=
- =?us-ascii?Q?GXnJygvGNFHRxHC5Tgk5jAGEKDDO2rgLPllgxveeBZu+FaoM+p6TjB51WmkW?=
- =?us-ascii?Q?mCSdjTlN6664EIhRlhqE2Ilb4XCSDpLlirIIKKsLCZrUEgLWyA8RnbRf6Aw3?=
- =?us-ascii?Q?Lwj4y9N79PU9L9Q59JpWJGSrDmpvtSm4mS7R8h1AwXOcAREcl2pTVmE34HZS?=
- =?us-ascii?Q?Ihqr08fNjl6Fz4R26svFBizs5jwgjyfZ9d1iFx86SqQSOZ0YjnQfo55H1JtG?=
- =?us-ascii?Q?bZ8QzGMwB7lgG3wtXzrw2Vm0KfTeozInhxszXmp2MJ4x9wfwAKAyGrLsHiNn?=
- =?us-ascii?Q?2Ym1Fga5RGSkCwZaWu9hbmAcxnP+jOHFG2QLriYde2wlhskzmqa1xNznYtOK?=
- =?us-ascii?Q?6NX+D2E/2NUWhhaw01UogrsobQUGs5uLbRZzX400NkdiPXo1MmHWpUWkt5rQ?=
- =?us-ascii?Q?x0FKT9PDP2hUvpX/hFzTG9LGYlUVZz7hznFdP29eU73qXxXTb1eKAr3a93z7?=
- =?us-ascii?Q?eZc5NZlJC702Co3dIyIESNnHrQuX6VM+xrfUbvq2//kRoUg9+r1XMikD6UuV?=
- =?us-ascii?Q?5lX7/0iI5Cl75E9bQt5KyQZwcoPFa24uJhEtMPXg6ZLKcCKNcIpkBjIjnSvm?=
- =?us-ascii?Q?b2YVW18Gf3OTwg3Y2JYMo9tJ30Y+xb0G6CC4/stLZ//9eogCz5Er+QqaFh9k?=
- =?us-ascii?Q?N23fFGZ94fYcze46rJEz/V3pAPTlEzK3ZHaTsn8ueTuaYzIpepsDtmkPKoPw?=
- =?us-ascii?Q?hnQroH978+X4ysY6dKsNeEH0JfnMJKx189lxqJOKW5S+xOsT25CUAVN6arzR?=
- =?us-ascii?Q?5EEUnzkyZ+fcV8b1af/NZ9eyi7xtUwc544iSp1tstoSmW3pZaL9hXZscAsfX?=
- =?us-ascii?Q?AzD/KfJq6tpdB1Lnu7odRN4CZc+2PojiweJYsxnu30NbHXzFsPJrY7BDsShN?=
- =?us-ascii?Q?MaHVREkt2yXuaQJw9MG3fNNOBQhtwEv+LRGsVkfdEeSFT8dBzgwdl8hmaTDy?=
- =?us-ascii?Q?I0SjlFxGARKs8Y7Y1r39BxQKjhC7MCQm4K8bFcQYzCA9feF6sMFnRP+7+XpI?=
- =?us-ascii?Q?084MlKiEqOm0lGqCUJ4SxnPfUAbAZhNoz4iSpry2NxAvdBuQfWD9d7/wBH0z?=
- =?us-ascii?Q?Rx2AcvYWYeemf3RPikaQoTOn0cpnp5dmkPP51fyE70ty492WalRMfZwyPxsZ?=
- =?us-ascii?Q?puQYvD0Y2Z6fKXwzw4KdnuM6rxelVtOZdowr4G8a9J7MZjwmq6KWl6orCPDC?=
- =?us-ascii?Q?Ke0IP9uarJQd8ShEE/o7RttCDo2pl6Qaj8GMm10DWjk8IAR2XIkDHhz0dHaG?=
- =?us-ascii?Q?rDC+U/c0CGw81Wy5JLovNUvw7SdKmQZdFWAQ+Yqu8edrjhpLPbKoKU6vFTOZ?=
- =?us-ascii?Q?+rsHBYLz0nf45Y0bOZWQrqFUqjmfeNgmQS8jkIUL/M1FcYHd1w6rgR0+1MEj?=
- =?us-ascii?Q?+GoGuR88NXOwRWqpW5HV8hpqbMQQjU9UxEJmrj+C2PzV2e5nUxJXMyDTdRsL?=
- =?us-ascii?Q?hZktjm98WzRF9tOHxo6EeB0iyGx0s1lh28pwiYpX1GbE/87wrG5pxGikTMRm?=
- =?us-ascii?Q?kVnpyjpWUwodk3KlO6frIjHoBIKUnxA7hflUn94k9lY1RZGo?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6b08ea5-92e4-435a-ad74-08de85008418
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2026 15:10:39.7326
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IHcEhYH2tV7gSsiZLDhZH0PlUEiv4td9Yt+fVeRJtH+GNmNcjmNPyFezhyy74/6h
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR12MB8514
+References: <20260317141534.815634-1-mclapinski@google.com>
+ <20260317141534.815634-3-mclapinski@google.com> <AD9E1B18-C813-480E-894C-FEEB51EE8A93@nvidia.com>
+In-Reply-To: <AD9E1B18-C813-480E-894C-FEEB51EE8A93@nvidia.com>
+From: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
+Date: Wed, 18 Mar 2026 16:18:36 +0100
+X-Gm-Features: AaiRm531JN35mo1Mbe2KYhEsq0xf4gyOI0iQIVc6Zhg91-Z5R0b7EOHbR97JHD8
+Message-ID: <CAAi7L5dSOxXETv-bYs4hJ1SfixMBQXS4fmfKs3SzVvQ=yY7oSg@mail.gmail.com>
+Subject: Re: [PATCH v7 2/3] kho: fix deferred init of kho scratch
+To: Zi Yan <ziy@nvidia.com>
+Cc: Evangelos Petrongonas <epetron@amazon.de>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260318_081055_716201_9DAE6B8B 
-X-CRM114-Status: GOOD (  16.28  )
+X-CRM114-CacheID: sfid-20260318_081849_814373_DDA7CF83 
+X-CRM114-Status: GOOD (  22.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -139,62 +119,73 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 17 Mar 2026, at 10:15, Michal Clapinski wrote:
-
-> Currently, if DEFERRED is enabled, kho_release_scratch will initialize
-> the struct pages and set migratetype of kho scratch. Unless the whole
-> scratch fit below first_deferred_pfn, some of that will be overwritten
-> either by deferred_init_pages or memmap_init_reserved_pages.
+On Wed, Mar 18, 2026 at 4:10=E2=80=AFPM Zi Yan <ziy@nvidia.com> wrote:
 >
-> To fix it, I modified kho_release_scratch to only set the migratetype
-> on already initialized pages. Then, modified init_pageblock_migratetype
-> to set the migratetype to CMA if the page is located inside scratch.
+> On 17 Mar 2026, at 10:15, Michal Clapinski wrote:
 >
-> Signed-off-by: Michal Clapinski <mclapinski@google.com>
-> ---
->  include/linux/memblock.h           |  2 --
->  kernel/liveupdate/kexec_handover.c | 10 ++++++----
->  mm/memblock.c                      | 22 ----------------------
->  mm/page_alloc.c                    |  7 +++++++
->  4 files changed, 13 insertions(+), 28 deletions(-)
+> > Currently, if DEFERRED is enabled, kho_release_scratch will initialize
+> > the struct pages and set migratetype of kho scratch. Unless the whole
+> > scratch fit below first_deferred_pfn, some of that will be overwritten
+> > either by deferred_init_pages or memmap_init_reserved_pages.
+> >
+> > To fix it, I modified kho_release_scratch to only set the migratetype
+> > on already initialized pages. Then, modified init_pageblock_migratetype
+> > to set the migratetype to CMA if the page is located inside scratch.
+> >
+> > Signed-off-by: Michal Clapinski <mclapinski@google.com>
+> > ---
+> >  include/linux/memblock.h           |  2 --
+> >  kernel/liveupdate/kexec_handover.c | 10 ++++++----
+> >  mm/memblock.c                      | 22 ----------------------
+> >  mm/page_alloc.c                    |  7 +++++++
+> >  4 files changed, 13 insertions(+), 28 deletions(-)
+> >
 >
-
-<snip>
-
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index ee81f5c67c18..5ca078dde61d 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -55,6 +55,7 @@
->  #include <linux/cacheinfo.h>
->  #include <linux/pgalloc_tag.h>
->  #include <linux/mmzone_lock.h>
-> +#include <linux/kexec_handover.h>
->  #include <asm/div64.h>
->  #include "internal.h"
->  #include "shuffle.h"
-> @@ -549,6 +550,12 @@ void __meminit init_pageblock_migratetype(struct page *page,
->  		     migratetype < MIGRATE_PCPTYPES))
->  		migratetype = MIGRATE_UNMOVABLE;
+> <snip>
 >
-> +	/*
-> +	 * Mark KHO scratch as CMA so no unmovable allocations are made there.
-> +	 */
-> +	if (unlikely(kho_scratch_overlap(page_to_phys(page), PAGE_SIZE)))
-> +		migratetype = MIGRATE_CMA;
-> +
-
-If this is only for deferred init code, why not put it in deferred_free_pages()?
-Otherwise, all init_pageblock_migratetype() callers need to pay the penalty
-of traversing kho_scratch array.
-
-
->  	flags = migratetype;
+> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > index ee81f5c67c18..5ca078dde61d 100644
+> > --- a/mm/page_alloc.c
+> > +++ b/mm/page_alloc.c
+> > @@ -55,6 +55,7 @@
+> >  #include <linux/cacheinfo.h>
+> >  #include <linux/pgalloc_tag.h>
+> >  #include <linux/mmzone_lock.h>
+> > +#include <linux/kexec_handover.h>
+> >  #include <asm/div64.h>
+> >  #include "internal.h"
+> >  #include "shuffle.h"
+> > @@ -549,6 +550,12 @@ void __meminit init_pageblock_migratetype(struct p=
+age *page,
+> >                    migratetype < MIGRATE_PCPTYPES))
+> >               migratetype =3D MIGRATE_UNMOVABLE;
+> >
+> > +     /*
+> > +      * Mark KHO scratch as CMA so no unmovable allocations are made t=
+here.
+> > +      */
+> > +     if (unlikely(kho_scratch_overlap(page_to_phys(page), PAGE_SIZE)))
+> > +             migratetype =3D MIGRATE_CMA;
+> > +
 >
->  #ifdef CONFIG_MEMORY_ISOLATION
+> If this is only for deferred init code, why not put it in deferred_free_p=
+ages()?
+> Otherwise, all init_pageblock_migratetype() callers need to pay the penal=
+ty
+> of traversing kho_scratch array.
 
+Because reserve_bootmem_region() doesn't call deferred_free_pages().
+So I would also have to modify it.
 
+And the early initialization won't pay the penalty of traversing the
+kho_scratch array, since then kho_scratch is NULL.
 
-Best Regards,
-Yan, Zi
+> >       flags =3D migratetype;
+> >
+> >  #ifdef CONFIG_MEMORY_ISOLATION
+>
+>
+>
+> Best Regards,
+> Yan, Zi
 
