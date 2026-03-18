@@ -4,110 +4,144 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A838C10775EA
-	for <kexec@archiver.kernel.org>; Wed, 18 Mar 2026 17:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E06F710775F9
+	for <kexec@archiver.kernel.org>; Wed, 18 Mar 2026 17:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=NLRA5wLn5WuPBfC09ox3pNnNkgYTeioPhs9JJbhrjUM=; b=b1LCNZ+rAdb6I+ORsD/4KbIhfx
-	w0n1/ECjkeQUHUquBZTkaSDtH5QlInxzZ/EiluM/Pouap8sDU9qnIXNyM1WnK/m2llPUsIZxpUmHa
-	26yDw4wnhtBcyJndh4kdFUYIbvogSAJ6glOeLwyg2dVBAQyE3IkEs6Fr4gLvy7xwikQUS/qy7XBXo
-	hFw0+FoPTZVRTtnT/2ac9QPRF+pO/xMijRJE1+sR7drU/0S59zf8f6NxVKg+g2JPpSEpkLUoCYpE7
-	on3x816DeK3ZDPRP5TRVfoiq+B69HoLTRgzc1wR5Jwtx3x9M/upTWSVtNC6Deql/0qSBBgfPQK5p8
-	U63q4OFw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Message-ID:Date
+	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=0mQQaMZU0DTE99t6jVs2NEo3NyBoCnGRw9BbPAjCGMs=; b=cldFG3cjuwyPudERTcvs+Zeod9
+	HVP4zIhAU1dhiT0oTwvfH9s5qb8Jpx2xAhdAtywXYAW9rNDif2/WT4HU4uv9ABxo4lord8tPj3B2L
+	WP8ukedWOzpdytKySDCDrZ8wX3WlyTtW6sqYMljr+OeyJjQjsrk3vSI1fQQiOOqzMorWDDWDI2AXP
+	YMEG2HCT0K86pdLNdNswNLRwqQvihwMxvexbzFQ7BjUtgxJdGhYRjooa5jYlnAnP6Oep6CGwre+kw
+	6fMtygNFOjHKOTEBrgJgcklbwbWDhM8NQy6FvUoC6kQbk/eQZxKug4qe/mW7sykMQV6ZLeaeFUzld
+	kLSoE3Rw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w2uYh-000000093G1-1Jfm;
-	Wed, 18 Mar 2026 17:19:51 +0000
-Received: from mail-dl1-x1229.google.com ([2607:f8b0:4864:20::1229])
+	id 1w2uoi-0000000965C-2pR5;
+	Wed, 18 Mar 2026 17:36:24 +0000
+Received: from mail-westus3azlp170100009.outbound.protection.outlook.com ([2a01:111:f403:c107::9] helo=PH7PR06CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w2uYf-000000093Fc-0c4n
+	id 1w2uof-00000009642-1INA
 	for kexec@lists.infradead.org;
-	Wed, 18 Mar 2026 17:19:50 +0000
-Received: by mail-dl1-x1229.google.com with SMTP id a92af1059eb24-1270f10a774so323c88.1
-        for <kexec@lists.infradead.org>; Wed, 18 Mar 2026 10:19:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773854388; cv=none;
-        d=google.com; s=arc-20240605;
-        b=M0SUhht8tfHrGNYSLJPatOGOxB2GfzY2NF3nxJC1BLRhoR4hRWKWX4H27xYGXqNCXl
-         NpddAV0kS/bvL39grz3fCaZAvx4Zi0jWhFi+yGTYbUaA33NFMOSSlHOayBerl6zxqp51
-         U8M8grdWKHFbsGDO2RY3wcePzjrpA6RNyH7n+jf77Sx/g7t3FHInRQ0Lp0c5UZ4p4ryh
-         DZZ3JAqM+UayUf+RBKbtiFumZBdQRQCKj5TqL++8+kP5vaIPekABkbJgIpoh7egV/zwk
-         xgqDnEucR9ioXrZchCaJQzdUQif1ySNviRwnP1K8XxFXf4UGW9IZIQXuWfcd71d78XD0
-         jYMQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=NLRA5wLn5WuPBfC09ox3pNnNkgYTeioPhs9JJbhrjUM=;
-        fh=0tNVjwZGQXhK5/ul3y8yTLKa8e467Eeo0CNihGsXaxc=;
-        b=axOlbS+11JNAlzZ0flj49TLWbGoiufLvep78VjBG7GYlgT5c8CpboY5UhZMpYK3Lus
-         sowWXQGwbtfllnoLVtnF4lHQm3GxbJXDD6BZKzHB6PgUnSaoQB3Uq4ef3lyAs4A5ONlm
-         KRvsWB3LkmFe6u7SUoeCyN4wpBKhXeLn+FwgdM8JqqbVAtvrJ9U/Lit9Zineh75RXg6f
-         6fhkiXH+fEIWpJGTWhD/eglJ0LLdA6jUSPfLqeoRoVE8ZNMYyM1eZkvvlL7lVJ10ZM7a
-         m6irdlVUhyPUfXrOXUXYBYKQujGSXXR9IrM8c2/QpPIyTkt8DBwx3BhOawLgJsIPkVS2
-         JpMA==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773854388; x=1774459188; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NLRA5wLn5WuPBfC09ox3pNnNkgYTeioPhs9JJbhrjUM=;
-        b=wBex9FjVT6Vw1qr6sRapSZC0TN19xZIkRTzEMl0pFQWY43k7mJgeOw9szoOZZUza/x
-         qydW5wQeMtp1H/TArHcoAY9Qts+AOa124mmMNJJ984QiLOyqOvaaAVPOPpYRObn05gzK
-         764CO/AQa1FlBh12y5kt5+B9nsV5MpBu5/zaNHiAsXC3YK+JwOiAqD+y7RPnRBb+fQyL
-         CNaLlfIgpVC9YbI3RwV1vKknF+2blaZ1/81N/fJt13ppHxnJ34u48bbcujZ3hZaja0gc
-         O/t+IleAzCA20e1I2X7JwRoMspSZmllk5RFTwLgM90o5WSNbcGxbwEpBuzsA7fVTHMBn
-         mavw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773854388; x=1774459188;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=NLRA5wLn5WuPBfC09ox3pNnNkgYTeioPhs9JJbhrjUM=;
-        b=dEOULZy5D9bTdrl/ymmw0G8JRtf76MFjWiQACgP25yTS+FeHu/XGS2dX79ggv+bDcb
-         NmCoaW0E0YkHakyaccgpZhWZ1KnO4piEVrPRvtMjyW1K0aqBQoy57Bpburg2tLW0FWli
-         vqkKHzGqoaykbxpoDbIWkNy4GFOuaZUFvInWLTnCYBn5FBVO+zM1zgjI1MZzWF+oc/kO
-         Z3Q73MoLgN+EnQ7r5mJmj8yScn4zekphrGWET7IqlhUBsxqsHvYdxKWqNOG3pnBhA2uU
-         HpUu5G9j5Y7kzQy8UcFNYC+SGrMYsp0aNR8dTpi5AOiiQjYqMVJf+vwpANmfujDlTzsy
-         TJxw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWJuKdzsXzD7Gcp4xNSyfKROMpVJNfbCUb2pBFPPkwK9p21YVieaGCbviCWASlBQZMoaTyYg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyBAqlgsAteldgKvVTl2AlF7kUsvodprEUQCYT3Mn23q8j1dJ3J
-	+7Rrp68RtVEuAUZqW8izSvux5R1VYJXZ8zjbLAi/NV133u/KXflw2kWlB/J7yiFekKY7WW+juUG
-	1ukn4R71GcMkCZEODB65BObgZvDDUb3sCxstMSkW1
-X-Gm-Gg: ATEYQzzLJLBC++GqN5JGx/5YGWIG0tuh4aUixeF9Imo0aoSCW/DnKKq3PFIOYLx4tqj
-	rgmtNVq2Tdw+9gRB3FRh3m5xTp/lQLHGx5Qaudl4n2H+4+2BWLH3mnccDc1zRs1v9MnEyhUsXKo
-	1ahUDcMPnKHFdK1jjqXjbRQWXs3kn+/sRj97nP8BezfZsvEc3r0Sn5SNYT/3saqqrTvMWcpMRVS
-	s3YD/ncB6NpAyNPFtRm5dkHr9cLP0pXbpRJXPrjJAVYgVT6cbQD251Vz5m5Qa5x4bSNAMVS+Cz5
-	E07b4Q==
-X-Received: by 2002:a05:7022:124:b0:119:e56b:c1e3 with SMTP id
- a92af1059eb24-12a68d26a20mr10433c88.14.1773854387389; Wed, 18 Mar 2026
- 10:19:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20260317141534.815634-1-mclapinski@google.com>
- <20260317141534.815634-3-mclapinski@google.com> <AD9E1B18-C813-480E-894C-FEEB51EE8A93@nvidia.com>
- <CAAi7L5dSOxXETv-bYs4hJ1SfixMBQXS4fmfKs3SzVvQ=yY7oSg@mail.gmail.com>
- <76559EF5-8740-4691-8776-0ADD1CCBF2A4@nvidia.com> <CAAi7L5ex+66qgFzRkLDbuOmC=cVrMyBctPZv6wd15n1rc2U9KQ@mail.gmail.com>
- <0D1F59C7-CA35-49C8-B341-32D8C7F4A345@nvidia.com>
-In-Reply-To: <0D1F59C7-CA35-49C8-B341-32D8C7F4A345@nvidia.com>
-From: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
-Date: Wed, 18 Mar 2026 18:19:35 +0100
-X-Gm-Features: AaiRm52CPFaymzRa8X5AjTmLN3_97Lik6HaBOVaHylO9YyWT8r-Y2mIkOIgQpF8
-Message-ID: <CAAi7L5fvUPUqd3A4m6wubeYh90NH+S2KBRE1R8WKerBYhkU8kg@mail.gmail.com>
+	Wed, 18 Mar 2026 17:36:23 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZkaU8FpoYZiQxNG042QhLkeDLv5LRJ4bCaJCQZSOUwQ+XlFk1TXK4z7bp7HDw5LqrV7SiDGmpS+IA45Cs3tbIfD+oXAwp088tbD3STTtxfiWRk8mvftExQjufFou8la0cC9uY9aJDJrIo9TMBHDkoE55BqFZ4AbZySYKvcW9iJFU1EQy6Z+TOte2W5CVNhiZB+AV9UeGanEEoOb03goCnGTTLTDuKhP1ztg4HFYYNGbbnRrEmDZCcgWlzJ0XpdcMUMOa33bM3VFBgiDGlMVUSdlX17xX6LG9+orMASqCoKL+bhflBVFU5FlCKp5EbU39xTDrtz012fBJvLgYvqL6jA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0mQQaMZU0DTE99t6jVs2NEo3NyBoCnGRw9BbPAjCGMs=;
+ b=PkTBCNuu8pWwBv6bx+UjZQfxsbij+P1Qqdd/HoPd40EagYj//iPCcujuf9ZMHUxFnlRBquFcKx5uRUWX7P4TwQC63wCJxCgT7nWwhxc0h5Rj8RuDQdaLVvmud4bD6D8onCA+k/Au8tbep2h5s5Gec3SPg5NA/gX6wqywgLm+psreCuOxWmxIIt2o5cqNkLpW6gzeSAdIRRIYnpzEhJ4yPz+msIi7iw/sBh0E1lxSAHiJchig9/XdLLdCCDw6befaf3TN6DDmFO17LgAmP8lO09vvnsbR78e/Zsr3SoyV+hEcGScOM5EZP9zwiMpdSsDcICQ7EFhtizzeyfP2nMdf9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0mQQaMZU0DTE99t6jVs2NEo3NyBoCnGRw9BbPAjCGMs=;
+ b=ISac8f/sA8Y9WdWm4l/NGMwYNdOZnMRw8T4sB65TZ0mt1SgoDtfyVXWVD0zLiHeQPieszWMKSFf9iSixSWtxGZQ0o6RqJezemuJScOvO0ZIlV2CI8l/g5iNvmmBRGe6J/iaXPmsOvDnyk7lzjI+00Cq+XjLcUUfdf8RbLyXF0eHkaHsutCmjYXoDegXU5rfps88A0i9LnynRzJgeFQ+X9ie1SWwESggjYt9WltNu/xpYtOWsfLIuarNPHsP6mlQoQ5hfk/ViSxL79dq+o7TT3e04xVbgL3Y24z7gyMCQpb3p0xacubevnW50tAiKYOTAM7OVbLHT4RUrgqD3+T9/Dg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ BN7PPF5D27497F1.namprd12.prod.outlook.com (2603:10b6:40f:fc02::6d1) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.19; Wed, 18 Mar
+ 2026 17:36:11 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::f01d:73d2:2dda:c7b2]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::f01d:73d2:2dda:c7b2%4]) with mapi id 15.20.9723.016; Wed, 18 Mar 2026
+ 17:36:11 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: =?utf-8?b?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
+Cc: Evangelos Petrongonas <epetron@amazon.de>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>,
+ Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>,
+ Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>
 Subject: Re: [PATCH v7 2/3] kho: fix deferred init of kho scratch
-To: Zi Yan <ziy@nvidia.com>
-Cc: Evangelos Petrongonas <epetron@amazon.de>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
-	Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Date: Wed, 18 Mar 2026 13:36:07 -0400
+X-Mailer: MailMate (2.0r6290)
+Message-ID: <58A8B1B4-A73B-48D2-8492-A58A03634644@nvidia.com>
+In-Reply-To: <CAAi7L5fvUPUqd3A4m6wubeYh90NH+S2KBRE1R8WKerBYhkU8kg@mail.gmail.com>
+References: <20260317141534.815634-1-mclapinski@google.com>
+ <20260317141534.815634-3-mclapinski@google.com>
+ <AD9E1B18-C813-480E-894C-FEEB51EE8A93@nvidia.com>
+ <CAAi7L5dSOxXETv-bYs4hJ1SfixMBQXS4fmfKs3SzVvQ=yY7oSg@mail.gmail.com>
+ <76559EF5-8740-4691-8776-0ADD1CCBF2A4@nvidia.com>
+ <CAAi7L5ex+66qgFzRkLDbuOmC=cVrMyBctPZv6wd15n1rc2U9KQ@mail.gmail.com>
+ <0D1F59C7-CA35-49C8-B341-32D8C7F4A345@nvidia.com>
+ <CAAi7L5fvUPUqd3A4m6wubeYh90NH+S2KBRE1R8WKerBYhkU8kg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: BYAPR06CA0071.namprd06.prod.outlook.com
+ (2603:10b6:a03:14b::48) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|BN7PPF5D27497F1:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8a7a3abb-5a4d-4766-3102-08de8514d858
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016|18002099003|56012099003|22082099003|7053199007;
+X-Microsoft-Antispam-Message-Info: j2xX4yvF+fKqcTej2dZSYkxf/mG1RdWokEKsk590lXTeXY20lknPJ74r4/WEwCfP/fuyAiDSJLxZR7uZnseJlrGGg+13NZqBJ5+FmJsKTqdseZuYzvHhsEd7IkTwC9EykxaCzzcfT7AlLfvJCPrA/R5RxL560amt9tQ4ocvV62QLAVhsRR5qmQe4M0FaJ1CCsrmN6v55qnhxBMibJtS1G9zJDWLvNE2bvGpHTBB1R7c0zVlWWHsgsgI3czNJXN7/9kWSqMclxHA8qKBvZjgqz4UhxzcfmQWyqJU2QxtX97yJHE5xBPW4XF73Qsmu2PSpWuvuZPtCGiZNK68sk3FNAvkm1jJ/VuLD7D6FLRh5+haKHyPxSV4VFc6mCl/oV4D1c/C53ws2BzD8D9sqCG0E6JTAWik0jgrcdEnWjRr0dQhnosq/iiqJeXmpIEGwdsFPCMBSGckB3va8Z2tdQX1CrobeHsWg0OVwEcyEYUBk+0cGkGbT1pxaGDwuEuuuIhHHBVjTf6ZGlhndWLsA02ufzVmyC5vbtj9zhIHPcKL3e2DK6HOeveac2bYJme7KdZ1g2dZgJ+ZtX0MIX/+PeZWxnI9MLCrFE8mLingpwp4rWbiUTdTEb+M7X7OO/FdEgD2wgbbWh6SYXykt/cKdIjB+hmuC0xT/YL1V+RpHAb/wbhxW703+P4edv4o2K2HRJ2YB4BKNXu1meB4MU1Zq2xvuqgIev4PSQrNcmzFiy+PTVSQ=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(18002099003)(56012099003)(22082099003)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WEZrWlZCd3djLzI4b1NSbjRqYkhac2U5dUgxTVhRc2s5Z2V6SXE3YzRIRmZh?=
+ =?utf-8?B?UU5nS0JGNnQ5Zng1OEJyc0dkY3kvYkhITHYranlzNlNuZ2ZZRFNYZlR4UjY0?=
+ =?utf-8?B?L2dQOVA3NkF1TjI3dkswYkxsWmVEM2xSa2hLL1F1bUxQUzJCaERrb3J1OEZV?=
+ =?utf-8?B?ZDZlVzlxcVdLRFhwTjYzRXlUS3FBTGh6dDBqM09VVDY0bFM0K1R2SCtmU2tr?=
+ =?utf-8?B?cnRxVG4wVVI2SkN1RDlUckh2UnNxTFFHMGtScHpOSlNPOHlpNTlIQ1krNk9r?=
+ =?utf-8?B?MmtYOXBSdnpTWUVHMHBzbGd2T0NmdkdGRUxoVWs0VXBVY2V4eGtTNzI3R1JF?=
+ =?utf-8?B?K3dNSENLNytTRUd3RUxQNkFiQTFCNGViK1RCeGN1enc4UGVORVVpaEttenln?=
+ =?utf-8?B?eUU0cERvdExtUERTOFFETWhSTFU5TEQxWG1RMmd1eG5xeEJ5QXN1K0RZUEtu?=
+ =?utf-8?B?eENDa2tLM205U0Fta3owbnFYZ2JaNGw1UUhSZDhId2tUSytwVUo4RzBBZmRG?=
+ =?utf-8?B?YWVUYVByOVVFbnBiREFtZkQwcjg1UWc2QU9GVVZiMEtXNERTaXpheURZTUd5?=
+ =?utf-8?B?YTFvaTV0aEJINEpySGhoMU1Vc0hrTW5icTI2WGZRSUhWeDlHc3JUeVcyOVNR?=
+ =?utf-8?B?Z2huWVMvQm0vZ3pGYkx6THVvRVZlTHB6Q0NLMzlxMkhTY3Nhcy9YcW1zanVD?=
+ =?utf-8?B?clJTeWl5UkIzaHVNWDNnWEFvZTdOUThIcGhtWmRKLzVDY01QWElsZEFXVG9J?=
+ =?utf-8?B?amFLSUN2eEx5THNDU285amhwbmliOVB3cUdlU0p6Yk5ZeTNrVGtKNXFQZ3Vn?=
+ =?utf-8?B?NjEySjZBOWJQWGxjZ1duTEZXNjdYRzNhN0RjRm4vZlVlTVFYb2JSdHp5OXRp?=
+ =?utf-8?B?b1NMM1huTlFCMlpnaXVQT0RVb2Zab3B0cTI4VlVrT0lMYS9KVFdrSVZaMEZ6?=
+ =?utf-8?B?V1p5aVoxVjlSOXlJYVVoeExNUUpyT21SNm5PRHRXeXc0SUxGSXhvbGN0YjVv?=
+ =?utf-8?B?eko1c0ZWRXU3Y0FBOHdSVWpvbEFlMzRrbUlYV0ZUVDdGVDJkOUNSU1psRlZS?=
+ =?utf-8?B?MFcycTVjTjlzdUwyUEV0cCtYL2tvSzVVcjVqQzJHSzVhUWUyazRndnc3ZUM5?=
+ =?utf-8?B?c3NEM2dGYlovMytPMkpVRUtITG05dlBXamFnSUtrbXBRY2VYZVRKNnJPV2s0?=
+ =?utf-8?B?QU1MZWVReS9sM2l3ODROck5GNDkzUFhUakRINEhNamE0NExLSjBJcEVvN1A5?=
+ =?utf-8?B?ZzZVMWRYYTVISlZZVkkyQWhUdmoyZUo2VHhnK3ZwZUZmdDRjTC9LcmpXQTht?=
+ =?utf-8?B?MnNsUTFPeHZ0QWE2aGhNVU4xSTRFSkJ5YklMRDBrNkRzVThqd3J4ZnBWU1I3?=
+ =?utf-8?B?SkhlN1JXZUlzYWVETXdZREJqWktlQk1TVzJuV0RyTjFOeCtva0ZaRzNDUWRk?=
+ =?utf-8?B?U0xkYWFmdVRVZmErOVBxb2h2eUh0MTFFYTlYNm1tU0dBMmdJYjBRUGZ6R3Y5?=
+ =?utf-8?B?ZE9DTXYzVFJRWjY0OGNGemM0TkUwWDl1UkJpVEpYUytXa0o0dEJtVlpoRG5r?=
+ =?utf-8?B?aXBqWFhNQjlGaCsxRDVGcUk1dnlac1VneEJmMEJFKzhJeGhwWWRSemxWeGN3?=
+ =?utf-8?B?ZjZ1T3RCRVN6S0MrZHNvSU52ekRXZWVJbnkrcks1Wk5FZ2RNZHpKc291eS9L?=
+ =?utf-8?B?RzVxTUp5aE1MQUNJR2VlMWxza3pRc2ZjcThqNkxDVVlhWmxZUzVSeG0yQTVN?=
+ =?utf-8?B?azNYd3A3TUlZaXRNVnBmNStVbEVnU3JGY0ZZeHRNZndYL0ZMWGc1WjlCdS9z?=
+ =?utf-8?B?YmJVYWo3cER4NGVBYkpud1A3Rlh1RUdZWURJL2EwQW1NUGcxc0RLYVYrSUo4?=
+ =?utf-8?B?T1R1UytDVG0wdEhKaTdNSUFoSHZPdG5sa0pNMGNjaHcvUDJtMm5NMTduaDhW?=
+ =?utf-8?B?ekU2bnA2Z0pjOW5aZzhHMTNxTnVFMUE0UDhQbWRmVUhvSUxTb3cyNW9FVjU4?=
+ =?utf-8?B?Z2IyNjAybWRVMnVMUHBjUWpGU2lXUkRndi9aOXdTbVdOMXREL1ZFRmFrbUNI?=
+ =?utf-8?B?S3JnMFRCeGcyMWJMeVcvSmVRMHdMZFNPL1pwWk1sVzBseUQ2SGNoWFRZZFNx?=
+ =?utf-8?B?cGtVWldKSStYTFJIaVFSRHNNOURseVhHUXNtKzEvV2M3dlQrb2dzQnpWMkRL?=
+ =?utf-8?B?b0wvc0NvWDhFMDN5aktERGZ6dUN5cVg5TnRaTEp6aHAzT1F2dk5pQm05OGw4?=
+ =?utf-8?B?VmlCYjRlTEpIVGtCelZXYXVlOSt6aytvZUE2elJ2cnl3T3QxYWtuOVlPVlRB?=
+ =?utf-8?B?RE5LaHR3cGFWL3RNQi92UGYvVGROVjU5bHAxTXNiWlppdjJ1Wlpqdz09?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a7a3abb-5a4d-4766-3102-08de8514d858
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2026 17:36:11.0209
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: M33A95z88CowiGQxKou1NY6LFwdccNpNouwCboX/mFI7LlND19uJTTiuQwYnbzKs
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPF5D27497F1
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260318_101949_199325_8D675CDE 
-X-CRM114-Status: GOOD (  49.26  )
+X-CRM114-CacheID: sfid-20260318_103622_250206_5C897924 
+X-CRM114-Status: GOOD (  25.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -122,274 +156,187 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Mar 18, 2026 at 6:08=E2=80=AFPM Zi Yan <ziy@nvidia.com> wrote:
->
-> On 18 Mar 2026, at 11:45, Micha=C5=82 C=C5=82api=C5=84ski wrote:
->
-> > On Wed, Mar 18, 2026 at 4:26=E2=80=AFPM Zi Yan <ziy@nvidia.com> wrote:
-> >>
-> >> On 18 Mar 2026, at 11:18, Micha=C5=82 C=C5=82api=C5=84ski wrote:
-> >>
-> >>> On Wed, Mar 18, 2026 at 4:10=E2=80=AFPM Zi Yan <ziy@nvidia.com> wrote=
+On 18 Mar 2026, at 13:19, Micha=C5=82 C=C5=82api=C5=84ski wrote:
+
+> On Wed, Mar 18, 2026 at 6:08=E2=80=AFPM Zi Yan <ziy@nvidia.com> wrote:
+>>
+>> On 18 Mar 2026, at 11:45, Micha=C5=82 C=C5=82api=C5=84ski wrote:
+>>
+>>> On Wed, Mar 18, 2026 at 4:26=E2=80=AFPM Zi Yan <ziy@nvidia.com> wrote:
+>>>>
+>>>> On 18 Mar 2026, at 11:18, Micha=C5=82 C=C5=82api=C5=84ski wrote:
+>>>>
+>>>>> On Wed, Mar 18, 2026 at 4:10=E2=80=AFPM Zi Yan <ziy@nvidia.com> wrote=
 :
-> >>>>
-> >>>> On 17 Mar 2026, at 10:15, Michal Clapinski wrote:
-> >>>>
-> >>>>> Currently, if DEFERRED is enabled, kho_release_scratch will initial=
+>>>>>>
+>>>>>> On 17 Mar 2026, at 10:15, Michal Clapinski wrote:
+>>>>>>
+>>>>>>> Currently, if DEFERRED is enabled, kho_release_scratch will initial=
 ize
-> >>>>> the struct pages and set migratetype of kho scratch. Unless the who=
+>>>>>>> the struct pages and set migratetype of kho scratch. Unless the who=
 le
-> >>>>> scratch fit below first_deferred_pfn, some of that will be overwrit=
+>>>>>>> scratch fit below first_deferred_pfn, some of that will be overwrit=
 ten
-> >>>>> either by deferred_init_pages or memmap_init_reserved_pages.
-> >>>>>
-> >>>>> To fix it, I modified kho_release_scratch to only set the migratety=
+>>>>>>> either by deferred_init_pages or memmap_init_reserved_pages.
+>>>>>>>
+>>>>>>> To fix it, I modified kho_release_scratch to only set the migratety=
 pe
-> >>>>> on already initialized pages. Then, modified init_pageblock_migrate=
+>>>>>>> on already initialized pages. Then, modified init_pageblock_migrate=
 type
-> >>>>> to set the migratetype to CMA if the page is located inside scratch=
+>>>>>>> to set the migratetype to CMA if the page is located inside scratch=
 .
-> >>>>>
-> >>>>> Signed-off-by: Michal Clapinski <mclapinski@google.com>
-> >>>>> ---
-> >>>>>  include/linux/memblock.h           |  2 --
-> >>>>>  kernel/liveupdate/kexec_handover.c | 10 ++++++----
-> >>>>>  mm/memblock.c                      | 22 ----------------------
-> >>>>>  mm/page_alloc.c                    |  7 +++++++
-> >>>>>  4 files changed, 13 insertions(+), 28 deletions(-)
-> >>>>>
-> >>>>
-> >>>> <snip>
-> >>>>
-> >>>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> >>>>> index ee81f5c67c18..5ca078dde61d 100644
-> >>>>> --- a/mm/page_alloc.c
-> >>>>> +++ b/mm/page_alloc.c
-> >>>>> @@ -55,6 +55,7 @@
-> >>>>>  #include <linux/cacheinfo.h>
-> >>>>>  #include <linux/pgalloc_tag.h>
-> >>>>>  #include <linux/mmzone_lock.h>
-> >>>>> +#include <linux/kexec_handover.h>
-> >>>>>  #include <asm/div64.h>
-> >>>>>  #include "internal.h"
-> >>>>>  #include "shuffle.h"
-> >>>>> @@ -549,6 +550,12 @@ void __meminit init_pageblock_migratetype(stru=
+>>>>>>>
+>>>>>>> Signed-off-by: Michal Clapinski <mclapinski@google.com>
+>>>>>>> ---
+>>>>>>>  include/linux/memblock.h           |  2 --
+>>>>>>>  kernel/liveupdate/kexec_handover.c | 10 ++++++----
+>>>>>>>  mm/memblock.c                      | 22 ----------------------
+>>>>>>>  mm/page_alloc.c                    |  7 +++++++
+>>>>>>>  4 files changed, 13 insertions(+), 28 deletions(-)
+>>>>>>>
+>>>>>>
+>>>>>> <snip>
+>>>>>>
+>>>>>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>>>>>>> index ee81f5c67c18..5ca078dde61d 100644
+>>>>>>> --- a/mm/page_alloc.c
+>>>>>>> +++ b/mm/page_alloc.c
+>>>>>>> @@ -55,6 +55,7 @@
+>>>>>>>  #include <linux/cacheinfo.h>
+>>>>>>>  #include <linux/pgalloc_tag.h>
+>>>>>>>  #include <linux/mmzone_lock.h>
+>>>>>>> +#include <linux/kexec_handover.h>
+>>>>>>>  #include <asm/div64.h>
+>>>>>>>  #include "internal.h"
+>>>>>>>  #include "shuffle.h"
+>>>>>>> @@ -549,6 +550,12 @@ void __meminit init_pageblock_migratetype(stru=
 ct page *page,
-> >>>>>                    migratetype < MIGRATE_PCPTYPES))
-> >>>>>               migratetype =3D MIGRATE_UNMOVABLE;
-> >>>>>
-> >>>>> +     /*
-> >>>>> +      * Mark KHO scratch as CMA so no unmovable allocations are ma=
+>>>>>>>                    migratetype < MIGRATE_PCPTYPES))
+>>>>>>>               migratetype =3D MIGRATE_UNMOVABLE;
+>>>>>>>
+>>>>>>> +     /*
+>>>>>>> +      * Mark KHO scratch as CMA so no unmovable allocations are ma=
 de there.
-> >>>>> +      */
-> >>>>> +     if (unlikely(kho_scratch_overlap(page_to_phys(page), PAGE_SIZ=
+>>>>>>> +      */
+>>>>>>> +     if (unlikely(kho_scratch_overlap(page_to_phys(page), PAGE_SIZ=
 E)))
-> >>>>> +             migratetype =3D MIGRATE_CMA;
-> >>>>> +
-> >>>>
-> >>>> If this is only for deferred init code, why not put it in deferred_f=
+>>>>>>> +             migratetype =3D MIGRATE_CMA;
+>>>>>>> +
+>>>>>>
+>>>>>> If this is only for deferred init code, why not put it in deferred_f=
 ree_pages()?
-> >>>> Otherwise, all init_pageblock_migratetype() callers need to pay the =
+>>>>>> Otherwise, all init_pageblock_migratetype() callers need to pay the =
 penalty
-> >>>> of traversing kho_scratch array.
-> >>>
-> >>> Because reserve_bootmem_region() doesn't call deferred_free_pages().
-> >>> So I would also have to modify it.
-> >>>
-> >>> And the early initialization won't pay the penalty of traversing the
-> >>> kho_scratch array, since then kho_scratch is NULL.
-> >>
-> >> How about hugetlb_bootmem_init_migratetype(), init_cma_pageblock(),
-> >> init_cma_reserved_pageblock(), __init_page_from_nid(), memmap_init_ran=
+>>>>>> of traversing kho_scratch array.
+>>>>>
+>>>>> Because reserve_bootmem_region() doesn't call deferred_free_pages().
+>>>>> So I would also have to modify it.
+>>>>>
+>>>>> And the early initialization won't pay the penalty of traversing the
+>>>>> kho_scratch array, since then kho_scratch is NULL.
+>>>>
+>>>> How about hugetlb_bootmem_init_migratetype(), init_cma_pageblock(),
+>>>> init_cma_reserved_pageblock(), __init_page_from_nid(), memmap_init_ran=
 ge(),
-> >> __init_zone_device_page()?
-> >>
-> >> 1. are they having any PFN range overlapping with kho?
-> >> 2. is kho_scratch NULL for them?
-> >>
-> >> 1 tells us whether putting code in init_pageblock_migratetype() could =
+>>>> __init_zone_device_page()?
+>>>>
+>>>> 1. are they having any PFN range overlapping with kho?
+>>>> 2. is kho_scratch NULL for them?
+>>>>
+>>>> 1 tells us whether putting code in init_pageblock_migratetype() could =
 save
-> >> the hassle of changing all above locations.
-> >> 2 tells us how many callers are affected by traversing kho_scratch.
-> >
-> > I could try answering those questions but
-> >
-> > 1. I'm new to this and I'm not sure how correct the answers will be.
-> >
-> > 2. If you're not using CONFIG_KEXEC_HANDOVER, the performance penalty
-> > will be zero.
-> > If you are using it, currently you have to disable
-> > CONFIG_DEFERRED_STRUCT_PAGE_INIT and the performance hit from this is
-> > far, far greater. This solution saves 0.5s on my setup (100GB of
-> > memory). We can always improve the performance further in the future.
-> >
+>>>> the hassle of changing all above locations.
+>>>> 2 tells us how many callers are affected by traversing kho_scratch.
+>>>
+>>> I could try answering those questions but
+>>>
+>>> 1. I'm new to this and I'm not sure how correct the answers will be.
+>>>
+>>> 2. If you're not using CONFIG_KEXEC_HANDOVER, the performance penalty
+>>> will be zero.
+>>> If you are using it, currently you have to disable
+>>> CONFIG_DEFERRED_STRUCT_PAGE_INIT and the performance hit from this is
+>>> far, far greater. This solution saves 0.5s on my setup (100GB of
+>>> memory). We can always improve the performance further in the future.
+>>>
+>>
+>> OK, I asked Claude for help and the answer is that not all callers of
+>> init_pageblock_migratetype() touch kho scratch memory regions. Basically=
+,
+>> you only need to perform the kho_scratch_overlap() check in
+>> __init_page_from_nid() to achieve the same end result.
+>>
+>>
+>> The below is the analysis from Claude.
+>> Based on my understanding,
+>> 1. memmap_init_range() is done before kho_memory_init(), so it does not =
+need
+>> the check.
+>>
+>> 2. __init_zone_device_page() is not relevant.
+>>
+>> 3. init_cma_reserved_pageblock() / init_cma_pageblock() are already set
+>> to MIGRATE_CMA.
+>>
+>> 4. hugetlb is not used by kho scratch, so also does not need the check.
+>>
+>> 5. kho_release_scratch() already takes care of it.
+>>
+>> The remaining memblock_free_pages() needs a check, but I am not 100%.
+>>
+>>
+>> # kho_scratch_overlap() in init_pageblock_migratetype() =E2=80=94 scope =
+analysis
+>>
+>> ## Context
+>>
+>> Commit a7700b3c6779 ("kho: fix deferred init of kho scratch") added a
+>> kho_scratch_overlap() call inside init_pageblock_migratetype() in
+>> mm/page_alloc.c:
+>>
+>> ```c
+>> if (unlikely(kho_scratch_overlap(page_to_phys(page), PAGE_SIZE)))
+>>     migratetype =3D MIGRATE_CMA;
+>> ```
+>>
+>> kho_scratch_overlap() does a NULL check followed by a loop over the
+>> kho_scratch array. For non-KHO boots (kho_scratch =3D=3D NULL) the cost =
+is
+>> a single NULL load and branch. For KHO boots the loop runs on every call
+>> to init_pageblock_migratetype().
+>>
+>> ## Question
+>>
+>> Does this add overhead for callers whose memory range cannot overlap
+>> with scratch? Can the check be moved to the caller side?
+>>
+>> ## Call site analysis
+>>
+>> init_pageblock_migratetype() has nine call sites. The init call ordering
+>> relevant to scratch is:
+>>
+>> ```
+>> setup_arch()
+>>   zone_sizes_init() -> free_area_init() -> memmap_init_range()   [1]
+>>
+>> mm_init_free_all() / start_kernel():
+>>   kho_memory_init() -> kho_release_scratch()                     [2]
+>>   memblock_free_all()
+>>     free_low_memory_core_early()
+>>       memmap_init_reserved_pages()
+>>         reserve_bootmem_region() -> __init_deferred_page()
+>>           -> __init_page_from_nid()                              [3]
+>>   deferred init kthreads -> __init_page_from_nid()               [4]
+>> ```
 >
-> OK, I asked Claude for help and the answer is that not all callers of
-> init_pageblock_migratetype() touch kho scratch memory regions. Basically,
-> you only need to perform the kho_scratch_overlap() check in
-> __init_page_from_nid() to achieve the same end result.
->
->
-> The below is the analysis from Claude.
-> Based on my understanding,
-> 1. memmap_init_range() is done before kho_memory_init(), so it does not n=
-eed
-> the check.
->
-> 2. __init_zone_device_page() is not relevant.
->
-> 3. init_cma_reserved_pageblock() / init_cma_pageblock() are already set
-> to MIGRATE_CMA.
->
-> 4. hugetlb is not used by kho scratch, so also does not need the check.
->
-> 5. kho_release_scratch() already takes care of it.
->
-> The remaining memblock_free_pages() needs a check, but I am not 100%.
->
->
-> # kho_scratch_overlap() in init_pageblock_migratetype() =E2=80=94 scope a=
-nalysis
->
-> ## Context
->
-> Commit a7700b3c6779 ("kho: fix deferred init of kho scratch") added a
-> kho_scratch_overlap() call inside init_pageblock_migratetype() in
-> mm/page_alloc.c:
->
-> ```c
-> if (unlikely(kho_scratch_overlap(page_to_phys(page), PAGE_SIZE)))
->     migratetype =3D MIGRATE_CMA;
-> ```
->
-> kho_scratch_overlap() does a NULL check followed by a loop over the
-> kho_scratch array. For non-KHO boots (kho_scratch =3D=3D NULL) the cost i=
-s
-> a single NULL load and branch. For KHO boots the loop runs on every call
-> to init_pageblock_migratetype().
->
-> ## Question
->
-> Does this add overhead for callers whose memory range cannot overlap
-> with scratch? Can the check be moved to the caller side?
->
-> ## Call site analysis
->
-> init_pageblock_migratetype() has nine call sites. The init call ordering
-> relevant to scratch is:
->
-> ```
-> setup_arch()
->   zone_sizes_init() -> free_area_init() -> memmap_init_range()   [1]
->
-> mm_init_free_all() / start_kernel():
->   kho_memory_init() -> kho_release_scratch()                     [2]
->   memblock_free_all()
->     free_low_memory_core_early()
->       memmap_init_reserved_pages()
->         reserve_bootmem_region() -> __init_deferred_page()
->           -> __init_page_from_nid()                              [3]
->   deferred init kthreads -> __init_page_from_nid()               [4]
-> ```
+> I don't understand this. deferred_free_pages() doesn't call
+> __init_page_from_nid(). So I would clearly need to modify both
+> deferred_free_pages and __init_page_from_nid.
 
-I don't understand this. deferred_free_pages() doesn't call
-__init_page_from_nid(). So I would clearly need to modify both
-deferred_free_pages and __init_page_from_nid.
+Sure. But other callers I mentioned above do not need to check kho_scratch,
+right?
 
->
-> ### Per call site
->
-> **mm/mm_init.c =E2=80=94 __init_page_from_nid() (deferred init)**
->
-> Called for every deferred pfn (>=3D first_deferred_pfn). Scratch pages
-> in the deferred range are not touched by kho_release_scratch() (new
-> code clips end_pfn to first_deferred_pfn) and not touched by
-> memmap_init_range() (stops at first_deferred_pfn). This path sets
-> MIGRATE_MOVABLE on deferred scratch pageblocks after
-> kho_release_scratch() has already run.
->
-> **Needs the fix: yes.**
->
-> Both sub-paths that reach this function for deferred scratch pages:
-> - deferred init kthreads [4]
-> - reserve_bootmem_region() -> __init_deferred_page() [3]
->   (early_page_initialised() returns early for non-deferred pfns, so
->   __init_page_from_nid() is only reached for deferred pfns here too)
->
-> **mm/mm_init.c =E2=80=94 memmap_init_range()**
->
-> Runs during setup_arch() [1], before kho_memory_init() [2]. Sets
-> MIGRATE_MOVABLE on scratch pageblocks, but kho_release_scratch() runs
-> afterward and correctly overrides to MIGRATE_CMA for non-deferred
-> scratch. For deferred scratch, memmap_init_range() stops at
-> first_deferred_pfn and never processes them.
->
-> **Needs the fix: no.**
->
-> **mm/mm_init.c =E2=80=94 __init_zone_device_page()**
->
-> ZONE_DEVICE path only. Scratch is normal RAM, not ZONE_DEVICE.
->
-> **Needs the fix: no.**
->
-> **mm/mm_init.c =E2=80=94 memblock_free_pages() (lines ~2012 and ~2023)**
->
-> Called by memblock_free_all() for free (non-reserved) memblock regions.
-> Scratch is memblock-reserved and released through the CMA path, not
-> through memblock_free_all().
->
-> **Needs the fix: no.**
->
-> **mm/mm_init.c =E2=80=94 init_cma_reserved_pageblock() / init_cma_pageblo=
-ck()**
->
-> Both already pass MIGRATE_CMA. The kho_scratch_overlap() check would
-> be redundant even if scratch reaches these paths.
->
-> **Needs the fix: no (redundant).**
->
-> **mm/hugetlb.c =E2=80=94 __prep_compound_gigantic_folio()**
->
-> Gigantic hugepage setup. Scratch regions are not used for gigantic
-> hugepages.
->
-> **Needs the fix: no.**
->
-> **kernel/liveupdate/kexec_handover.c =E2=80=94 kho_release_scratch()**
->
-> Already passes MIGRATE_CMA. Additionally, kho_scratch is NULL at the
-> point kho_release_scratch() runs (kho_memory_init() sets kho_scratch
-> only after kho_release_scratch() returns), so kho_scratch_overlap()
-> would return false regardless.
->
-> **Needs the fix: no.**
->
-> ## Conclusion
->
-> The only path that actually requires the MIGRATE_CMA override is
-> __init_page_from_nid(). All problematic sub-paths (deferred init
-> kthreads and reserve_bootmem_region()) converge there.
->
-> The check could be moved to __init_page_from_nid() to keep the
-> KHO-specific concern out of the generic init_pageblock_migratetype():
->
-> ```c
-> /* mm/mm_init.c: __init_page_from_nid() */
-> if (pageblock_aligned(pfn)) {
->     enum migratetype mt =3D MIGRATE_MOVABLE;
->     if (kho_scratch_overlap(PFN_PHYS(pfn), PAGE_SIZE))
->         mt =3D MIGRATE_CMA;
->     init_pageblock_migratetype(pfn_to_page(pfn), mt, false);
-> }
-> ```
->
-> __init_page_from_nid() is only compiled under CONFIG_DEFERRED_STRUCT_PAGE=
-_INIT,
-> which is the only configuration where the bug can occur, so the
-> kho_scratch_overlap() call would be naturally gated by that config.
->
->
->
-> Best Regards,
-> Yan, Zi
+
+Best Regards,
+Yan, Zi
 
