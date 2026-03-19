@@ -4,76 +4,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B2FFA1091924
-	for <kexec@archiver.kernel.org>; Thu, 19 Mar 2026 21:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4C148109192A
+	for <kexec@archiver.kernel.org>; Thu, 19 Mar 2026 22:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=smcAMeBF3eFvC+OZUcjPasWlZlCzzD66XLXM7VGnv/E=; b=HodeWtPh+U4UWD7Kgkz3SyrZ2G
-	1WSu+POaVLXolRZJwzAmESO1eQsrL0RT4AGr4HAZk8yeVtIK9+uyOgF6K9LClIWLk6KRP1Rgeyp86
-	0Jwp6/a+Wx2cE3dtnNQ3+IG3FYZXf7pizSWnRWUroMT1/TYlR69od/3ePZbfQ5GpjlT8yuk4sd6uT
-	b9/Q/GkW+PbgsjKKFWAmoPULH01qfOwColjaWCIk+PfoO0J2prW8GQgbwOivVyWGby3I8R4+0j271
-	hLuOD6H/lJXLrf+wueH9+k8k0MVOdPTroDllsgUaDrokfZ6MIf2DrAKDtIZnE9ZAh32/26DntUlAu
-	NnBmkEIA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=svD4wMks8gwyXRL5XOV+qF8B6FaNKoBJNHk7PXgg3Q0=; b=JSEnLFRyPZ91Ols3Mhrnx7Sa2N
+	1PfxW7GjJjWEb6DimQgtpBlOouDib9PbIqSRhxg20PzYfg8zl1oENkkW7ZZiZVlvyWo3nCZbz0eeL
+	4VlULg+a95PNUgNq/bpPBCDcJNrTB0UIs/LkGqsexJPYTtS3nlSsWXuh23UnCUi3Gv97zl8jpIy31
+	KrJbAQPiqhCZKNfLY3l+zEkqJxSqHpwPKoqOWdlFeZjIQ3MYH+bANxPiWXwB6NGiad8MQaybvOWlN
+	tMWHyhwD3rI5vb8huuyjwFmtf6t3yClPOO5P8TCb436k301+Vpxu2H0cfR8sDKbclS7RAIEbMsy+1
+	e91p/2nQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w3KZH-0000000BZZM-3ZRZ;
-	Thu, 19 Mar 2026 21:06:11 +0000
-Received: from mail-wm1-x34a.google.com ([2a00:1450:4864:20::34a])
+	id 1w3LYu-0000000BcUN-0eHF;
+	Thu, 19 Mar 2026 22:09:52 +0000
+Received: from mail-lf1-x132.google.com ([2a00:1450:4864:20::132])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w3KZF-0000000BZZ0-1ZCN
+	id 1w3LYr-0000000BcTv-46DV
 	for kexec@lists.infradead.org;
-	Thu, 19 Mar 2026 21:06:10 +0000
-Received: by mail-wm1-x34a.google.com with SMTP id 5b1f17b1804b1-4836abfc742so13183595e9.0
-        for <kexec@lists.infradead.org>; Thu, 19 Mar 2026 14:06:07 -0700 (PDT)
+	Thu, 19 Mar 2026 22:09:51 +0000
+Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-5a12c19affeso847112e87.1
+        for <kexec@lists.infradead.org>; Thu, 19 Mar 2026 15:09:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773958187; cv=none;
+        d=google.com; s=arc-20240605;
+        b=CdIE64QvrM6ZXSnH6kiB8zjYzRXZv6dOLMdwDBZZLiLGbV0QI7tzezfQDwN+GuxZEk
+         euRXV3JvB9ZKwHFaehUK5OkeLf+P/tWvDdo6Fqps/DyxyljBPHFkwxx1D+OxCMV0beTh
+         0uO1e0+Cattuul435jSZ/4pa931PIJWl+aSmCtlxv6c/U+Y3aP/ZbFBgrG8vReNBrKq8
+         zmxtWBT6W+h8nKPQWGCXdwcsMhl34sNvG2Ve9n0XmJ7pYphaiOOltXI8o9Aytjw1hV8x
+         Yh+PkzieYCcsckZ5fmwG/irokU0/gAoTXQoqWwb9JBw2pNzV4AelhvOfCLfA/rAZ1icd
+         PL2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=svD4wMks8gwyXRL5XOV+qF8B6FaNKoBJNHk7PXgg3Q0=;
+        fh=EzlXQBZ5d4J0DWtqdsgpIig/lFAX5BOfGPk/zM4qyFE=;
+        b=altLkxTWX3y3VElpFnEvmsbdhmeQh/uptEOzZ+OVKKQzq9MNB0miLUzV2izu0evbRZ
+         UkLjxgfcqtjQ1XfFizhwJrOUcFYNe1nBMdrC9PvHAETVA4745KesJZlG5Lpi8YYtvik2
+         SWugOgnF7981tTr8cmH08MQSydFZm/TArhO1SHwqI+hfvAY/In2bZrLqgZfH/3ToDmdm
+         sHa/gcag5k4hDhl+OLbIYxL9xtvwh+vOhelFaEU4eLAbG3HQHumfMDNQZ4eaJJOoJaB5
+         Ab+l0NzPBy0DJXQlsE6gyHuxwKtU7StgVH7CTyNXtVNRPLOKWjir//d10l3KSgQGN94i
+         2jHA==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773954366; x=1774559166; darn=lists.infradead.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=smcAMeBF3eFvC+OZUcjPasWlZlCzzD66XLXM7VGnv/E=;
-        b=BhlMCm4uWjAg7XhgrpeMlJGDEr82fY6FnyLC9Z7pODGCE2JRQywRH7hyORrJYFsJ5h
-         PfaMe8nIf+4gq+CdxbST3NWP5f0a7ZokeRwLHz2ryiWU/wK6nEJSd+2LN5mLGPPFNLh8
-         esAC8Wlarx79jywkM5EwOR6N0YtmtQgTHAiQBsoBrq/X68XyiTdcMp1odxlxWdkSCJ0F
-         gnw+K7OYT/nEkdu1G/ThKrCcxhtz86VVzVxpObUr+9j/2BSGljVufRHFieGKt57WC1yO
-         5xSrhpY0kuAwjLYSw/ln4s4I3CE84hN7OvECQT8pzKl/j4KY3V+Oa0XSI0bn8jc3m8mS
-         zaPQ==
+        d=google.com; s=20251104; t=1773958187; x=1774562987; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=svD4wMks8gwyXRL5XOV+qF8B6FaNKoBJNHk7PXgg3Q0=;
+        b=uzOw5m4t3VY+bWXnTywEUmKVk3wAd5Ap+NdI6x+IqHqrzFnrn/h93Fx+HzUMnlfilW
+         EDwFa80RFMMqvANxXUGmbIR9IQ5JpOHHaTGigwrRKn3P9IFnTHQVqO2msLbKc5BJ1NfL
+         ZCvhKiBEhSCdJHuzL1CFluk4rUrpRTsLZKAOp+UeHTaqv6DJXnHNgidaNIDRXBXbM2Za
+         oUOKMRPVY5tAzJq1LlB/ScT0rf9U54OMuyTkPrI4ugwYInrEuU8OieoOXxThTSnLr8yc
+         nVgIAPuD11Qrl1cPlRKspdC19uAD6/+pSagd8uMwXB/Sk62VHJyy+SQyRj6HATYtYh9J
+         A6nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773954366; x=1774559166;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=smcAMeBF3eFvC+OZUcjPasWlZlCzzD66XLXM7VGnv/E=;
-        b=S8Sqknad+Qgxc1CqH47pxGW+vQbWpsLmctDCdDPFQw4Qo2bQgaOGgTEcFH9nuCfHKm
-         lpEugETvCpC5YTH5jA8yBnE/MLhr6DTGYm7oIXJqEUs5UtcGef5lWsm8y/jooh+QZu0u
-         Z7AjgcWIxM9sHw/g3VI+e5nqdT5FAmk5UVaSYMUW4B46yItHMANVrXAn8ghLrzxneUyY
-         aX3F+3s4F13qqcJIc7jrkRYMwm0m0KpUpemD8mqnf3NfQW04DUsIDcM8rW+SXsFjAkAo
-         ZJLNcPKa9merFOszMc1EqJIi6KtZXWjRuhsg957KWnkdprEuOFGIVW+O46HLAnP/gey9
-         WUCw==
-X-Forwarded-Encrypted: i=1; AJvYcCWyh1acYVfNbm9KmutrewNQusAyh8nGtJmqTBH9zaptYUrRw48gQKJcSxbRNDcrCQazLWYTEA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yz67ZKnQL6m6hkxfNETZyDxkm3Y4wND+txcDqAOC+FiNzqN6Vhs
-	Ll0XptSXNWO413Oumst0ODUBXd7GjOftQ6BjjhNZYlVpIlgCw4cLDn+u3DCY4ySIwUwF82B6xes
-	1zw==
-X-Received: from wmjk5.prod.google.com ([2002:a7b:c305:0:b0:485:2e9a:31b4])
- (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:468b:b0:477:54f9:6ac2
- with SMTP id 5b1f17b1804b1-486feb5f9c1mr10150515e9.0.1773954366292; Thu, 19
- Mar 2026 14:06:06 -0700 (PDT)
-Date: Thu, 19 Mar 2026 22:03:53 +0100
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.53.0.1018.g2bb0e51243-goog
-Message-ID: <20260319210528.1694513-2-elver@google.com>
-Subject: [PATCH v2] kho: use checked arithmetic in deserialize_bitmap()
-From: Marco Elver <elver@google.com>
-To: elver@google.com
-Cc: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	kasan-dev@googlegroups.com
+        d=1e100.net; s=20251104; t=1773958187; x=1774562987;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=svD4wMks8gwyXRL5XOV+qF8B6FaNKoBJNHk7PXgg3Q0=;
+        b=bQ0yW3BeBjwHsoM8vDIZzFnEnar3CNDWL+gIPCjit783LgVU+RmyuuHWy92H/yzwWI
+         S1LRpfQkSNQdDvToRaKOy+qLXY9ErVoBBvjG3VY7aTXChoZNcLSzkVlisEkCJiKw1Xkz
+         BpLJJ1yEhWCVmyFNnLy9uVbaMuz9iZYwCiuoFIYesH7YUXMxQveyY83JCU4fU5Vj2sqV
+         nDm2os4fYnlX3jJJHs2tD+GJO8jXc2kcjbhY5TNUD5aGJojNj7Ms5BZqwFbZRPFEDFI1
+         VrtyDHbPlheBRXUtaGA93Awd1GpmCIcsZIuwMX0Wm5P0iQMkkPK/X04ENJuJia5dEHid
+         q/Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCX2ePn+jmBUsxsSJXsiDTMfxY7WxlN0vqdXajIZ3Lad+ttrY88PZiPjgfs8hl+/ESIXUwBgjw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxW6aOm0j7nKwGXsV/QtIj1bWABsLDtdBp4SJbF1TWq4wII1sGE
+	xncffAQWOgKhE+8xX8oMktTPTiTgxRCiSQxlGZwnAQyn44hu5uoYJa1U+/4fl9+7y/BsQgD4zQY
+	k3U3JCB3sRWZk+apHkPz3yNO6gp720m9Nq/IP2jzf
+X-Gm-Gg: ATEYQzwBBikjVrXF/or2wiuFurzfuGgqK9nY2puwMkPk/LTxQR1nrIDarvXRh6TNgC5
+	eJH9Tj9RLo3SOBpNc4tWIIBKgto6i8znp698pbenUibDR7TDRGbXDKoASxxucunkrbMnSn+qmSN
+	D99TqvkWmkJbSZ/bXXCxjNEdsG8GigOrFAw03bceFpO8QhohEGWRKW6OE/zMC5Aq6RrhVnr1pAo
+	5Blq59WnRfYxxyeh/VUs54jKJyPh11zF88FTVnOVdqq9kBnptQaCoehUL0Wx2IHg7EhIcqsDAUw
+	CAzel67V
+X-Received: by 2002:a05:6512:3b22:b0:5a1:742d:277f with SMTP id
+ 2adb3069b0e04-5a27de01545mr1986403e87.11.1773958186394; Thu, 19 Mar 2026
+ 15:09:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <20260129212510.967611-1-dmatlack@google.com> <20260129212510.967611-5-dmatlack@google.com>
+ <20260225143328.35be89f6@shazbot.org> <aZ-CnywNgMnr6f1k@google.com> <CAAywjhR4Azqx8hXRap0eLUrwetYRiX8TALEM=b+1BorPc3eJdQ@mail.gmail.com>
+In-Reply-To: <CAAywjhR4Azqx8hXRap0eLUrwetYRiX8TALEM=b+1BorPc3eJdQ@mail.gmail.com>
+From: David Matlack <dmatlack@google.com>
+Date: Thu, 19 Mar 2026 15:09:18 -0700
+X-Gm-Features: AaiRm51momKlFVcCV9Yk7taG4PZCOSiNfgaYNzeVE1MwV2qirg6S-TkURRRSfl8
+Message-ID: <CALzav=cMEkenGKYvA=rNmTmVjpf_DW_92MCFx-2gxqKbrdG0Kg@mail.gmail.com>
+Subject: Re: [PATCH v2 04/22] vfio/pci: Register a file handler with Live
+ Update Orchestrator
+To: Samiullah Khawaja <skhawaja@google.com>
+Cc: Alex Williamson <alex@shazbot.org>, Adithya Jayachandran <ajayachandra@nvidia.com>, 
+	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Ankit Agrawal <ankita@nvidia.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Corbet <corbet@lwn.net>, 
+	Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, kexec@lists.infradead.org, 
+	kvm@vger.kernel.org, Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, 
+	=?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>, 
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, 
+	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
+	Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
+	Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>, 
+	Zhu Yanjun <yanjun.zhu@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260319_140609_428942_BB9A385B 
-X-CRM114-Status: GOOD (  12.53  )
+X-CRM114-CacheID: sfid-20260319_150950_045098_7C64CD7B 
+X-CRM114-Status: GOOD (  24.50  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,85 +137,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The function deserialize_bitmap() calculates the reservation size using:
+On Wed, Feb 25, 2026 at 3:55=E2=80=AFPM Samiullah Khawaja <skhawaja@google.=
+com> wrote:
+>
+> On Wed, Feb 25, 2026 at 3:15=E2=80=AFPM David Matlack <dmatlack@google.co=
+m> wrote:
+> >
+> > On 2026-02-25 02:33 PM, Alex Williamson wrote:
+> > > On Thu, 29 Jan 2026 21:24:51 +0000
+> > > David Matlack <dmatlack@google.com> wrote:
+> >
+> > > > +int __init vfio_pci_liveupdate_init(void)
+> > > > +{
+> > > > +   if (!liveupdate_enabled())
+> > > > +           return 0;
+> > > > +
+> > > > +   return liveupdate_register_file_handler(&vfio_pci_liveupdate_fh=
+);
+> > > > +}
+> > >
+> > > liveupdate_register_file_handler() "pins" vfio-pci with a
+> > > try_module_get().  Since this is done in our module_init function and
+> > > unregister occurs in our module_exit function, rather than relative
+> > > to any actual device binding or usage, this means vfio-pci CANNOT be
+> > > unloaded.  That seems bad.  Thanks,
+> >
+> > Good point. So a better approach that would allow vfio-pci to be
+> > unloaded would be to register the file handler when the number of
+> > devices bound to vfio-pci goes from 0->1 and then unregister on 1->0.
+>
+> Yeah maybe a kref that gets inc/dec in probe/remove. I have a similar
+> problem with iommufd preservation, but I think I can handle it based
+> on the number of iommufd open.
+>
+> I am wondering whether this file handler registration kref stuff can
+> be moved into LUO by adding it to LUO file_handler and the modules
+> only call get/put?
 
-    int sz = 1 << (order + PAGE_SHIFT);
+Circling back here, the new plan is for LUO to not take a module
+reference in liveupdate_register_file_handler():
 
-If a corrupted KHO image provides an order >= 20 (on systems with 4KB
-pages), the shift amount becomes >= 32, which overflows the 32-bit
-integer. This results in a zero-size memory reservation.
+  https://lore.kernel.org/lkml/20260318141637.1870220-13-pasha.tatashin@sol=
+een.com/
 
-Furthermore, the physical address calculation:
-
-    phys_addr_t phys = elm->phys_start + (bit << (order + PAGE_SHIFT));
-
-can also overflow and wrap around if the order is large. This allows a
-corrupt KHO image to cause out-of-bounds updates to page->private of
-arbitrary physical pages during early boot.
-
-Fix this by changing 'sz' to 'unsigned long' and using checked add and
-shift to safely calculate the shift amount, size, and physical address,
-skipping malformed chunks. This allows preserving memory with an order
-larger than MAX_PAGE_ORDER.
-
-Fixes: fc33e4b44b27 ("kexec: enable KHO support for memory preservation")
-Signed-off-by: Marco Elver <elver@google.com>
----
-v2:
-* Switch to unsigned long and use checked shift and add (Mike).
-
-v1: https://lore.kernel.org/all/20260214010013.3027519-1-elver@google.com/
----
- kernel/liveupdate/kexec_handover.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index cc68a3692905..0d8417dcd3ff 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -19,6 +19,7 @@
- #include <linux/libfdt.h>
- #include <linux/list.h>
- #include <linux/memblock.h>
-+#include <linux/overflow.h>
- #include <linux/page-isolation.h>
- #include <linux/unaligned.h>
- #include <linux/vmalloc.h>
-@@ -461,15 +462,29 @@ static void __init deserialize_bitmap(unsigned int order,
- 				      struct khoser_mem_bitmap_ptr *elm)
- {
- 	struct kho_mem_phys_bits *bitmap = KHOSER_LOAD_PTR(elm->bitmap);
-+	unsigned int shift;
- 	unsigned long bit;
-+	unsigned long sz;
-+
-+	if (check_add_overflow(order, PAGE_SHIFT, &shift) ||
-+	    check_shl_overflow(1UL, shift, &sz)) {
-+		pr_warn("invalid order %u for preserved bitmap\n", order);
-+		return;
-+	}
- 
- 	for_each_set_bit(bit, bitmap->preserve, PRESERVE_BITS) {
--		int sz = 1 << (order + PAGE_SHIFT);
--		phys_addr_t phys =
--			elm->phys_start + (bit << (order + PAGE_SHIFT));
--		struct page *page = phys_to_page(phys);
-+		phys_addr_t offset, phys;
-+		struct page *page;
- 		union kho_page_info info;
- 
-+		if (check_shl_overflow((phys_addr_t)bit, shift, &offset) ||
-+		    check_add_overflow(elm->phys_start, offset, &phys)) {
-+			pr_warn("invalid phys layout for preserved bitmap\n");
-+			return;
-+		}
-+
-+		page = phys_to_page(phys);
-+
- 		memblock_reserve(phys, sz);
- 		memblock_reserved_mark_noinit(phys, sz);
- 		info.magic = KHO_PAGE_MAGIC;
--- 
-2.53.0.1018.g2bb0e51243-goog
-
+In the next version of this series I am going to rebase on top of
+Pasha's changes and keep the call to
+liveupdate_register_file_handler() where it is.
 
