@@ -4,143 +4,127 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3D8E610854D2
-	for <kexec@archiver.kernel.org>; Thu, 19 Mar 2026 17:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 435B71091909
+	for <kexec@archiver.kernel.org>; Thu, 19 Mar 2026 18:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bWL7Mvz3ZFb3DsvrD6klOpnMDDqkJa/pdjIb2Ow02uU=; b=Si3QGIe4lF9VO0hJWJfUpg0zzm
-	zDWZjWgI/mAv3dh+T3PnOdBJR+X9/60kgpaP96/RZ6QW1VoVqxBUifk+CULeliY5eHJxOWxXqt52W
-	TlDGTD9GLbyVx2f7airU0xhIz6NQj07jKp5KA5Y9gHd+1SegN3lEgcmqAnQi3n9p5j02AdB2xnD0e
-	r5tnjSTvz2IDflGK7fgHFSHmUGuxsbADPJGLg7av7JK2rkIqN1g78T2++KYhGGn6qSwz45u/UWWAR
-	/0B4GFYOtdm9H2w/gcFu6xIwNCleTR+CkzjWVYT/Nin0DbD7LXN0LD98u1iyfKmL4WSGcDuKJgkAT
-	EeXrboDg==;
+	bh=YQeSlb7OEZ3xloMA9xhKbLU6mKFG3hm3XyxfgVq5ezM=; b=Ik4ZrwrtlfntVrM3RsimzV/1zR
+	u8/CeNq1txhg3lCRdx/gYf4hJ83N+22CmdqmC8nzLqxeTcVu6TMDNZtC2IaZs+fPusmIQylaj06bi
+	B2pLKgsPhKE9ELDJQbVqf0XCrCtWeAzuQ+jo73WAr+FkLck2OE9wrhWyMjYbQDW6ST+CBW4WWxmb9
+	n/zLNn4ZVXvYG6cWghSsjKE7gPfv5p2xjLLWNahKZ5AWHHD48pi5blMZ4wLrZ+6lxYLxAxT7nBCDI
+	tTMAFHI4bpaVscU4OKA4nGYZsvFBUHUIIY9b+Y4i+vApALLt01QdGRs3DW1wW2n2qUfUehnb1T+L2
+	FIrKFkog==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w3H6m-0000000BC4q-2sDt;
-	Thu, 19 Mar 2026 17:24:32 +0000
+	id 1w3Hwf-0000000BIAX-1fZC;
+	Thu, 19 Mar 2026 18:18:09 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w3H6l-0000000BC4k-17Fo
+	id 1w3Hwd-0000000BIAN-2mOb
 	for kexec@bombadil.infradead.org;
-	Thu, 19 Mar 2026 17:24:31 +0000
+	Thu, 19 Mar 2026 18:18:07 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
 	:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:MIME-Version:
 	Sender:Reply-To:Content-ID:Content-Description;
-	bh=bWL7Mvz3ZFb3DsvrD6klOpnMDDqkJa/pdjIb2Ow02uU=; b=fNhJA3ZUHbbNodHHeDMTP0vccn
-	c2kkg2Kh/dN1G2l7xP23jOeNrTouLYq514GLggWVUpALDroPYUFz3m//PxAkOT3ntY1EEGybf8gzX
-	K7y2YvoxdbCGqqrYX5aUCmfMIzU2F+DCToD49N3DYu2q6S+RczzCUha8SaXga0KvD2VH+yCWLAXAV
-	stEwAuroOaisQWQ+aTB7KXgFFchBuK2pmOYjVrRnFqNUjcUbYWzIf7xDPlDL7N048cagHEt1q4G+p
-	hpOMVDHXQlvODKcgpLSqA2aYnOhx4EuigCjKdt7jXptGim5xdjh1HrZJlDd/jBl6PNIvZ7FQmW0pJ
-	Kjt3fcdQ==;
-Received: from mail-lf1-x12c.google.com ([2a00:1450:4864:20::12c])
+	bh=YQeSlb7OEZ3xloMA9xhKbLU6mKFG3hm3XyxfgVq5ezM=; b=FJUo9GoQ9F88TckiU/2rRMCUBM
+	JV2HvgxybPdXcUkeXUjoOVSsXHz4xPIlmqTtKD6au05i2+onV7W5EdUTLSn5uBAvRBSVmKp9SkUS3
+	/RamV/hcTHKvmXdDD0FLbIwhyf7XKMo2SpTEEfrkGHHPjYZE5qUOhxrniLr4WIP8J4Z8ESZJqdnkr
+	c9tNULjqux6e3YXLW1Ocd1aQ+gIkfY2YvzDg0Lbfwy1mxAR6EHlb7/5Njg9LLlibd3q6iquLO+N4Q
+	9eCSKzYo6mtZqpmKQ0EZF/h9hG10RprsyZQHQ84e8DFpN8TrcF8l7YJS+MLnGjLdzI1qHo8yMBfn0
+	jSNZGPJQ==;
+Received: from mail-dl1-x122b.google.com ([2607:f8b0:4864:20::122b])
 	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w3H6h-0000000E6Qt-4AC0
+	id 1w3Hwa-0000000EDH5-1m0a
 	for kexec@lists.infradead.org;
-	Thu, 19 Mar 2026 17:24:29 +0000
-Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-5a126c8aab9so1322573e87.0
-        for <kexec@lists.infradead.org>; Thu, 19 Mar 2026 10:24:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773941065; cv=none;
+	Thu, 19 Mar 2026 18:18:06 +0000
+Received: by mail-dl1-x122b.google.com with SMTP id a92af1059eb24-1270fc2bdf2so1330c88.0
+        for <kexec@lists.infradead.org>; Thu, 19 Mar 2026 11:18:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773944281; cv=none;
         d=google.com; s=arc-20240605;
-        b=jAsrwbm3sxn+DM7RV6RRl7f6JNsPfbNBBBfMm61cxNoOKRD8ZXsuJe2ynZdKULIgi6
-         Hm31LU3NLmyeszctSyXXZjLw3xaEtg0KrL2djeMFgFNFL0E2Cx/crjNsEIb8ErAq1kY1
-         +JaPX83zn+spaHE/T1cNElNv1mU95s5aT4wgpdoU6BsUJ3a0mmhK7IjxjE4QpxdUvRWZ
-         18IeLPJFnTpWT8j3hRCCB9QE3KmZyttRnVlyhAvSylrXp3/uowC4UVByprG5SlG8eLnz
-         JQnZww0srYh4YXKBF5JKr3Em18Xvq2WI0XtApqDzjh+XoUExTchN5quA0Xn60VPi3uzC
-         5EsA==
+        b=jPvCv/K3DXY557Fnfc4v414Q8ipOiVAoXEuAd1/CuFwpsda9vAme5yUhI+XzGmbfZ+
+         MfiQvPJ9pHm3zTmMD/Uy47wS9Hea9GvRm8KvfYX2vF1JV3mND58sUaZQ9Nivjv3Bw+1b
+         04SHp5025UgvSsQUQWEzo0zxFwdcSONxiQ5ripq7Mhpks48kLuyS6henk28ijp8ejlXN
+         bLA+2OvBICJoqX4EfgWP6z914zSFdQm95qZHibuUW/BqnPwBgUDCLRsiLPSaYByD/qJp
+         Jz9lBTyE0RZBOQdr5Y95md4nG9fuG9FEmZ+qBO6CXBw5Hhq4CG0BFAeDkAXvJhfU8TY4
+         psdQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=bWL7Mvz3ZFb3DsvrD6klOpnMDDqkJa/pdjIb2Ow02uU=;
-        fh=VrKD89KFLoN7bfI0oRGJSNdg0xcw0R7e0wEdlXxybfs=;
-        b=Eummh9KiUNdJ6yvOynC93BWVR6ogI2p3pQSXPoNwVksN4eITaDuLkYeBOKfX3LRoeo
-         nki7bmEMBhapgmIXOIng0aLg8geJ1B0NJhAaA/EBBvP5+2fi6bZbqHj5au6XntlJ5DjH
-         YBlQQLo7zab+cDM4RHIQxjgytkx60iSy2AIsj5tV1/qxxKkwOfqKJtrscWmVitajYn/h
-         XyPmV+tGbVGBMfmN8BltiZtahQUzgHvFrqKYDiHOKHFReJDBopkp2OnuEq3V/l9R3VY2
-         /Z42+sw+vfzmB/QUGNKxjLF7lzwxc/bArjQ6zFkIYVqwIq+/ZXrHEDbC4xl+URzLgyva
-         rqrg==;
+        bh=YQeSlb7OEZ3xloMA9xhKbLU6mKFG3hm3XyxfgVq5ezM=;
+        fh=4s/yN3P3UhqYAUfaPtspyJdn7R4aAgAqzqYug8o5Pdc=;
+        b=aSB3rIbJSX60hTKgHXP5gxJLWR6svHNRWwZQNLLRyZdkQ842q0XjCj68quCAd5F2xC
+         iuBv43AeyCruKU7ckUvb+VPH/vW449e1PaOLZEwnkQfQeImeaoFaH2wn3Usjtwzo5XmL
+         II1jrIG/YZXzHTM2Y9BQbJW9EC5/DAgrrtvsGPVfR8+v5RQIkPBh/88N1m3Nj4pwhs9T
+         SMRiJHUFuEvGKlRrduHEVD0VUZrlUOG3yUpA7SpHKtb0hM1nsmz665YHWJOe+zGBd0Kv
+         SHyaIVdEsjoF01NFJEhmYTQBGO4V969oe8/v90LhcN68/cNbIskATTGNUMS34IgVWiuT
+         +GEg==;
         darn=lists.infradead.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1773941065; x=1774545865; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1773944281; x=1774549081; darn=lists.infradead.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bWL7Mvz3ZFb3DsvrD6klOpnMDDqkJa/pdjIb2Ow02uU=;
-        b=ZQskIfG52GdcgMuU5QZkKd0KvQ9he6xRU5QkU8fZ3ydrl4+nMQPJDGBLTuY0sUINU9
-         5Aa5xLw00Qy/fqmMjFoHqYpt18G4n7ghpcUvOjZIrZkRLornBztIotL4PfmPV67IutWG
-         grUzDT/R9T3UwUmHzliKiWgZdJ0F3MjBEikIkBXiRliLD5c/seM+kYEUVVNskbp9+BzM
-         gRqyZ1PFjEdZEAPJrBRjeAqDHeIUrguC0/dWIHgNDqi5TMr4ZVSULY+4tazBFY/LhrYV
-         wHO1wyxEzVGlbZXdUYsA62diQla/V6JOQrwe5z7Zc24mVPhe0B46+rYIadKUC5HSXNkt
-         7lRA==
+        bh=YQeSlb7OEZ3xloMA9xhKbLU6mKFG3hm3XyxfgVq5ezM=;
+        b=YEOtg8JM2bDRrfqqzN2adZzbUcukS3r27FCX4F+MNgOb1ybh3YOUjccqch5oUAI0PM
+         FFXyOt2i/tBAPrlNGuxki528cyd36Add33H+gM/r8n6eUMDzBWF/oGaevd0wmx3GNW/5
+         iKibHCYLoISdHVI8w4PspkXPSIU/dj3o1OxlwH3IFu9EgVViPuZ19YzxxsqfyrxQSwl9
+         fhk1mqh0d2wArHNneMMVQVthdRIZ0UQTSFystU0TUlS9k/aGQ2eEsgNeUAxgO35KZdN0
+         1YxAerj+0pnAKqiSZAXArWQyvuX4syopaMOMP9GiIh8PeHV2J1kYcCQkLAKpT5tBJRkC
+         n3FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773941065; x=1774545865;
+        d=1e100.net; s=20251104; t=1773944281; x=1774549081;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=bWL7Mvz3ZFb3DsvrD6klOpnMDDqkJa/pdjIb2Ow02uU=;
-        b=ACPnKCWX+Ys1cp7oSLXubYw/H5TnI8AtIh8s8y3ijpORWygBE4805VUnT2X5MKKe62
-         aEa0NqYEMDcT5eI22Cx/+FrrplLZOUyH/nZAHm/rI6xofyOdkOoEiDOCuYJi2mvEB/aT
-         VYpd7qdvSBJRqzs/I1vnuBGwKA9Jwoqc3wOnd4Hudn2Ke2H3LG0DimrpFEgvWnzs2J0B
-         43qlAp5d3P3gCDYfWqZYiX1skyro4Q9cXmpuzu/36xy1oibVpqUQjliQLvlvu41kuxpi
-         2VTCidF86qND0B+UjI71pzq/7DzKmZ3B0m86oynNFsx0m4bqnbi9MU2zMy0zXuP5/mnY
-         15eA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0/D3Lj7CfrO3cMlTfgL/f4/9BmceDVLYEwi6ssWuWZAVGklnsK+V8pFZ8QmmGejQNlpumHQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwZCdQYKDs5qLXoW1SQs6e02/h6mHnGngx5nAfzuDcR6bhRUeQu
-	uYtyj/j+yxAPr3GDF8oJS8F6oG6GZXgajXAFnUMtCvR5+DqPmKr3zoKfNIgjr+sM2DpTGp/w7ZG
-	Lm4youzzlMtcxmWuYfTkuxJhqpfA1oWIAo3at2Gp1
-X-Gm-Gg: ATEYQzxrZE9Fl9i+3+y6jPJXZtHEPPJiWb888sGin5ka1hoG1oYi3/6yGoPil4qa8NI
-	HhtFiWUHLBrUd69XH2ciNz1Ed+y3Bm4Vkc1tT2oaBK2J28y47rZbaZugx9iAtx8zQcLQu3sVkrb
-	Nk0PH3pXbY2BX6g2evPcKgEAWiHn7jZ+Nz+6E/D0hgj/VN1yPtP0IXPHKOk9KJ7Lacb/9O7OIKd
-	zFnDyBx6TMdR3/DKxHBHLJYbjx1HBDvX30d6CW+vRr/88YmNODhbptYBq+1nq3Fh3YexBT/XUdo
-	AXxbiDVr
-X-Received: by 2002:a05:6512:4016:b0:5a2:7e5b:5a48 with SMTP id
- 2adb3069b0e04-5a27e5b5b70mr1566015e87.26.1773941064245; Thu, 19 Mar 2026
- 10:24:24 -0700 (PDT)
+        bh=YQeSlb7OEZ3xloMA9xhKbLU6mKFG3hm3XyxfgVq5ezM=;
+        b=miZc05Nku4a0O5Wjgca4+0Zkqsik62gv5wUc9huLVHzZgCEUyXJuxqQGfcJqUxiA9B
+         WwLPxlRagOcfwZbt7WNBskukmxIkF8PKvlwS087P+lpzb5j3Xm0znhwluTjXVJ0cp1Dt
+         lleqchb5+QM1fyk7gNXGfoCzoOLUprGygPIqacMKoR+bbzYSmCuRRWUpZ6ZC/JfR5di3
+         FDYLbFPAUPiJUnuFy3zNhEqa4p6TgV9JaLSMiGkpQiihMvYJgniHhrkEXj4rjJrYrbRT
+         ImJNpeEy6QXP2FWdVlwZ2qdwkY1NM+E6wYVmj4ACwsUzYbyfMp/G61+o371FcoauE/g9
+         k/dQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUi6u0O22Awto708McdsbFB0IWWkdPTLScaORe3WWrLB4CfJstfN5LUi8bXtm/ij2O87FiDew==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyN5CYpZntODD/NysKGJJIlRBPF9x8GiC3d5vAihXBCFVdZv6qs
+	bkdNu7D+qRgpEqAt/znES92jbB04lHbV4aEAiWSBBDqQMkxhfUupOZHR7B5NwTQy0NeEK4Scaa8
+	r3ILfAmwbgUODpjITYYpGEb7196mLSxqgnYsvO6cbRHG3WJ6o+XGZHPw1kI8bpA==
+X-Gm-Gg: ATEYQzxcQGDt8oQb6d2sLx76KxJn2WqUu3FskH29zC5T+qBk7EW4ru7zHyihBOBwaoQ
+	6WKiOJDvyWLDB7fAmT8KKkeg2g73jk2HKJ6RQLJ7JqIl5CAUu10VSQZ/ncNfSG8kJObUS/ii0B4
+	uItmTrVcSDrEhrqq5Y4XkqbtLmcgFV+RpvXyBP2ZWF2L6ixTg12Lofx06yHU70aQRfDX21TAcg3
+	dujXGcuIg0yJkw9RlhTZp7bxzbS5AfljIULx+dXEAick5exojAneg9ZnyNSk5miCHTboCQahcm+
+	8DcqM1XtmQo6T7iS
+X-Received: by 2002:a05:7022:699d:b0:128:ec96:67 with SMTP id
+ a92af1059eb24-12a724be71fmr6228c88.9.1773944280502; Thu, 19 Mar 2026 11:18:00
+ -0700 (PDT)
 MIME-Version: 1.0
-References: <20260129212510.967611-1-dmatlack@google.com> <20260129212510.967611-11-dmatlack@google.com>
- <20260226170030.5a938c74@shazbot.org> <aaDqhjdLyf1qSTSh@google.com>
- <20260227084658.3767d801@shazbot.org> <CALzav=fHy23RAzhgkdaL+JA5T2tL9FT6aPgRfXUh7i9zvYCGPA@mail.gmail.com>
- <20260227105720.522ca97f@shazbot.org> <CALzav=fjRPa_ZbXu7iFXyemcf_8Kq_dZTWT6c-A0bc6czF_Rdw@mail.gmail.com>
- <abNOwcOTXqxCxNzt@google.com> <20260313083918.00005731@linux.microsoft.com>
- <CALzav=eGLpo5nrsHq5L8bUTC=FWZ-SgrTE1FoScrWB4p+NDgnA@mail.gmail.com> <20260319093932.000078c2@linux.microsoft.com>
-In-Reply-To: <20260319093932.000078c2@linux.microsoft.com>
-From: David Matlack <dmatlack@google.com>
-Date: Thu, 19 Mar 2026 10:23:56 -0700
-X-Gm-Features: AaiRm53rqLDO8igOEPnPEHv7Le9OPlkg99gzLBiOllDBuZj0inzOHo1IukO9vNo
-Message-ID: <CALzav=fvG+s6MYNzxhuHFmQkmTRJJASXAGs=zQWWSnSv3Y=J9A@mail.gmail.com>
-Subject: Re: [PATCH v2 10/22] vfio/pci: Skip reset of preserved device after
- Live Update
-To: Jacob Pan <jacob.pan@linux.microsoft.com>
-Cc: Alex Williamson <alex@shazbot.org>, Adithya Jayachandran <ajayachandra@nvidia.com>, 
-	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>, Alistair Popple <apopple@nvidia.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Ankit Agrawal <ankita@nvidia.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
-	David Rientjes <rientjes@google.com>, Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, Kevin Tian <kevin.tian@intel.com>, 
-	kexec@lists.infradead.org, kvm@vger.kernel.org, 
-	Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, 
-	=?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>, 
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
-	Tomita Moeko <tomitamoeko@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
-	Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>, 
-	Zhu Yanjun <yanjun.zhu@linux.dev>
+References: <20260317141534.815634-1-mclapinski@google.com>
+ <20260317141534.815634-3-mclapinski@google.com> <AD9E1B18-C813-480E-894C-FEEB51EE8A93@nvidia.com>
+ <CAAi7L5dSOxXETv-bYs4hJ1SfixMBQXS4fmfKs3SzVvQ=yY7oSg@mail.gmail.com>
+ <76559EF5-8740-4691-8776-0ADD1CCBF2A4@nvidia.com> <CAAi7L5ex+66qgFzRkLDbuOmC=cVrMyBctPZv6wd15n1rc2U9KQ@mail.gmail.com>
+ <0D1F59C7-CA35-49C8-B341-32D8C7F4A345@nvidia.com> <CAAi7L5fvUPUqd3A4m6wubeYh90NH+S2KBRE1R8WKerBYhkU8kg@mail.gmail.com>
+ <58A8B1B4-A73B-48D2-8492-A58A03634644@nvidia.com> <aburnbP64n9axmu_@kernel.org>
+In-Reply-To: <aburnbP64n9axmu_@kernel.org>
+From: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
+Date: Thu, 19 Mar 2026 19:17:48 +0100
+X-Gm-Features: AaiRm505tq6vM1X9ULuY3A25VFS9p9k0Q14LqvIkt_uaKuJpyK0GLpRABpnGwjA
+Message-ID: <CAAi7L5evx8ta8BifNiGNfUoTiaBUsv4cgQRbm_15RoAfdKPcMw@mail.gmail.com>
+Subject: Re: [PATCH v7 2/3] kho: fix deferred init of kho scratch
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Zi Yan <ziy@nvidia.com>, Evangelos Petrongonas <epetron@amazon.de>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Alexander Graf <graf@amazon.com>, Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260319_172428_094333_DD41B3CA 
-X-CRM114-Status: GOOD (  30.69  )
+X-CRM114-CacheID: sfid-20260319_181804_556013_67B49D99 
+X-CRM114-Status: GOOD (  36.12  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -155,60 +139,191 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Mar 19, 2026 at 9:39=E2=80=AFAM Jacob Pan <jacob.pan@linux.microsof=
-t.com> wrote:
+On Thu, Mar 19, 2026 at 8:54=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
+te:
 >
-> Hi David,
+> Hi,
 >
-> On Mon, 16 Mar 2026 11:11:20 -0700
-> David Matlack <dmatlack@google.com> wrote:
+> On Wed, Mar 18, 2026 at 01:36:07PM -0400, Zi Yan wrote:
+> > On 18 Mar 2026, at 13:19, Micha=C5=82 C=C5=82api=C5=84ski wrote:
+> > > On Wed, Mar 18, 2026 at 6:08=E2=80=AFPM Zi Yan <ziy@nvidia.com> wrote=
+:
+> > >>
+> > >> ## Call site analysis
+> > >>
+> > >> init_pageblock_migratetype() has nine call sites. The init call orde=
+ring
+> > >> relevant to scratch is:
+> > >>
+> > >> ```
+> > >> setup_arch()
+> > >>   zone_sizes_init() -> free_area_init() -> memmap_init_range()   [1]
 >
-> > On Fri, Mar 13, 2026 at 8:39=E2=80=AFAM Jacob Pan
-> > <jacob.pan@linux.microsoft.com> wrote:
-> > > On Thu, 12 Mar 2026 23:39:45 +0000
-> > > David Matlack <dmatlack@google.com> wrote:
-> >
-> > > > +config VFIO_PCI_LIVEUPDATE
-> > > > +       bool "VFIO PCI support for Live Update (EXPERIMENTAL)"
-> > > > +       depends on LIVEUPDATE && VFIO_PCI
-> > > > +       help
-> > > > +         Support for preserving devices bound to vfio-pci across
-> > > > a Live
-> > > > +         Update. The eventual goal is that preserved devices can
-> > > > run
-> > > > +         uninterrupted during a Live Update, including DMA to
-> > > > preserved
-> > > > +         memory buffers and P2P. However there are many steps
-> > > > still needed to
-> > > > +         achieve this, including:
-> > > > +
-> > > > +          - Preservation of iommufd files
-> > > > +          - Preservation of IOMMU driver state
-> > > In the interim, what do you think about moving forward with noiommu
-> > > mode without preserving IOMMU driver state?
-> >
-> > I haven't gotten a chance to look at your noiommu patches yet, but I
-> > do think noiommu will probably be a good way to develop the VFIO and
-> > PCI support for Live Update without blocking on IOMMU driver support.
-> >
-> > > I=E2=80=99ve tested your
-> > > vfio_pci_liveupdate_kexec_test with the noiommu cdev, and it works
-> > > as expected.
-> >
-> > Would you be able to send patches to add noiommu support to VFIO
-> > selftests? That would be very helpful toward allowing us to develop
-> > and test Live Update support with noiommu.
+> Hmm, this is slightly outdated, but largely correct :)
 >
-> It is included in the noiommu patchset; the only difference is that the
-> VFIO cdev name is prefixed with noiommu, which is not strictly required
-> and is done out of caution.
+> > >>
+> > >> mm_init_free_all() / start_kernel():
+> > >>   kho_memory_init() -> kho_release_scratch()                     [2]
+> > >>   memblock_free_all()
+> > >>     free_low_memory_core_early()
+> > >>       memmap_init_reserved_pages()
+> > >>         reserve_bootmem_region() -> __init_deferred_page()
+> > >>           -> __init_page_from_nid()                              [3]
+> > >>   deferred init kthreads -> __init_page_from_nid()               [4]
 >
-> /dev/vfio/
-> |-- devices
-> |   `-- noiommu-vfio0
+> And this is wrong, deferred init does not call __init_page_from_nid, only
+> reserve_bootmem_region() does.
 >
-> https://lore.kernel.org/linux-iommu/20260312155637.376854-10-jacob.pan@li=
-nux.microsoft.com/
+> And there's a case claude missed:
+>
+> hugetlb_bootmem_free_invalid_page() -> __init_page_from_nid() that
+> shouldn't check for KHO. Well, at least until we have support for hugetlb
+> persistence and most probably even afterwards.
+>
+> I don't think we should modify reserve_bootmem_region(). If there are
+> reserved pages in a pageblock, it does not matter if it's initialized to
+> MIGRATE_CMA. It only becomes important if the reserved pages freed, so we
+> can update pageblock migrate type in free_reserved_area().
+> When we boot with KHO, all memblock allocations come from scratch, so
+> anything freed in free_reserved_area() should become CMA again.
 
-This one flew under my radar. I will take a look and respond there, thanks!
+What happens if the reserved area covers one page and that page is
+pageblock aligned? Then it won't be marked as CMA until it is freed
+and unmovable allocation might appear in that pageblock, right?
+
+>
+> > >> ```
+> > >
+> > > I don't understand this. deferred_free_pages() doesn't call
+> > > __init_page_from_nid(). So I would clearly need to modify both
+> > > deferred_free_pages and __init_page_from_nid.
+>
+> For deferred_free_pages() we don't need kho_scratch_overlap(), we already
+> have memblock_region (almost) at hand and it's enough to check if it's
+> MEMBLOCK_KHO_SCRATCH.
+>
+> Something along these lines (compile tested only) should do the trick:
+>
+> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> index 3e217414e12d..b9b1e0991ec8 100644
+> --- a/include/linux/memblock.h
+> +++ b/include/linux/memblock.h
+> @@ -275,6 +275,8 @@ static inline void __next_physmem_range(u64 *idx, str=
+uct memblock_type *type,
+>         __for_each_mem_range(i, &memblock.reserved, NULL, NUMA_NO_NODE, \
+>                              MEMBLOCK_NONE, p_start, p_end, NULL)
+>
+> +struct memblock_region *memblock_region_from_iter(u64 iterator);
+> +
+>  static inline bool memblock_is_hotpluggable(struct memblock_region *m)
+>  {
+>         return m->flags & MEMBLOCK_HOTPLUG;
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index ae6a5af46bd7..9cf99f32279f 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -1359,6 +1359,16 @@ void __init_memblock __next_mem_range_rev(u64 *idx=
+, int nid,
+>         *idx =3D ULLONG_MAX;
+>  }
+>
+> +__init_memblock struct memblock_region *memblock_region_from_iter(u64 it=
+erator)
+> +{
+> +       int index =3D iterator & 0xffffffff;
+
+I'm not sure about this. __next_mem_range() has this code:
+/*
+* The region which ends first is
+* advanced for the next iteration.
+*/
+if (m_end <=3D r_end)
+        idx_a++;
+else
+        idx_b++;
+
+Therefore, the index you get from this might be correct or it might
+already be incremented.
+
+> +
+> +       if (index < 0 || index >=3D memblock.memory.cnt)
+> +               return NULL;
+> +
+> +       return &memblock.memory.regions[index];
+> +}
+> +
+>  /*
+>   * Common iterator interface used to define for_each_mem_pfn_range().
+>   */
+> diff --git a/mm/mm_init.c b/mm/mm_init.c
+> index cec7bb758bdd..96b25895ffbe 100644
+> --- a/mm/mm_init.c
+> +++ b/mm/mm_init.c
+> @@ -1996,7 +1996,7 @@ unsigned long __init node_map_pfn_alignment(void)
+>
+>  #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+>  static void __init deferred_free_pages(unsigned long pfn,
+> -               unsigned long nr_pages)
+> +               unsigned long nr_pages, enum migratetype mt)
+>  {
+>         struct page *page;
+>         unsigned long i;
+> @@ -2009,8 +2009,7 @@ static void __init deferred_free_pages(unsigned lon=
+g pfn,
+>         /* Free a large naturally-aligned chunk if possible */
+>         if (nr_pages =3D=3D MAX_ORDER_NR_PAGES && IS_MAX_ORDER_ALIGNED(pf=
+n)) {
+>                 for (i =3D 0; i < nr_pages; i +=3D pageblock_nr_pages)
+> -                       init_pageblock_migratetype(page + i, MIGRATE_MOVA=
+BLE,
+> -                                       false);
+> +                       init_pageblock_migratetype(page + i, mt, false);
+>                 __free_pages_core(page, MAX_PAGE_ORDER, MEMINIT_EARLY);
+>                 return;
+>         }
+> @@ -2020,8 +2019,7 @@ static void __init deferred_free_pages(unsigned lon=
+g pfn,
+>
+>         for (i =3D 0; i < nr_pages; i++, page++, pfn++) {
+>                 if (pageblock_aligned(pfn))
+> -                       init_pageblock_migratetype(page, MIGRATE_MOVABLE,
+> -                                       false);
+> +                       init_pageblock_migratetype(page, mt, false);
+>                 __free_pages_core(page, 0, MEMINIT_EARLY);
+>         }
+>  }
+> @@ -2077,6 +2075,8 @@ deferred_init_memmap_chunk(unsigned long start_pfn,=
+ unsigned long end_pfn,
+>         u64 i =3D 0;
+>
+>         for_each_free_mem_range(i, nid, 0, &start, &end, NULL) {
+> +               struct memblock_region *region =3D memblock_region_from_i=
+ter(i);
+> +               enum migratetype mt =3D MIGRATE_MOVABLE;
+>                 unsigned long spfn =3D PFN_UP(start);
+>                 unsigned long epfn =3D PFN_DOWN(end);
+>
+> @@ -2086,12 +2086,15 @@ deferred_init_memmap_chunk(unsigned long start_pf=
+n, unsigned long end_pfn,
+>                 spfn =3D max(spfn, start_pfn);
+>                 epfn =3D min(epfn, end_pfn);
+>
+> +               if (memblock_is_kho_scratch(region))
+> +                       mt =3D MIGRATE_CMA;
+> +
+>                 while (spfn < epfn) {
+>                         unsigned long mo_pfn =3D ALIGN(spfn + 1, MAX_ORDE=
+R_NR_PAGES);
+>                         unsigned long chunk_end =3D min(mo_pfn, epfn);
+>
+>                         nr_pages +=3D deferred_init_pages(zone, spfn, chu=
+nk_end);
+> -                       deferred_free_pages(spfn, chunk_end - spfn);
+> +                       deferred_free_pages(spfn, chunk_end - spfn, mt);
+>
+>                         spfn =3D chunk_end;
+>
+> --
+> Sincerely yours,
+> Mike.
 
