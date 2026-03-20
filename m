@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8071B10987AB
-	for <kexec@archiver.kernel.org>; Fri, 20 Mar 2026 16:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90F311099B31
+	for <kexec@archiver.kernel.org>; Fri, 20 Mar 2026 18:01:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=OFWl7Ej0DLfHR3zQ1Wnf1cKYYmYa0BNVU+VFNYEBse8=; b=FGJd/skfveLlkAQQpSSESPEjXQ
-	SFyqcdtSwkWgKdb5AZvRhsvqR6/HkWL5S8SgNuDGWbiwZuckllCQH3ac1wJum0yJXfwKrCXp4niGN
-	rgpgrAZ8Dv7jL8Mi+nRzLP7sr/ORCapuZKSIDOvVMGKIk2IL8bC61Xanf6g0aoAZq+5BhBgLr9/V2
-	SdE6RU4TXGSuTixlRvFbiypqmvcgA1vWnezgT9zR/Qr6fkpLx/RvRqmW6xKLMJ+PEpqLws2/MdrDT
-	qtRgat6DdoYsmcKRZvMagSi9sOPO5sfBRGdY1UQBqEzonDvM1lo37UkeJMaxPvRuVPWFOUturZZvN
-	+sXijzzw==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=zFcjBe+mvrvbkiJzQPLvMjEPcNe5xRrIkckbRoMHOoU=; b=fuPVhqjotuZQ7OZotq9yMFLIxx
+	DMixYUSqkBbsaMO0amlFfKVEau2t/Q2467dLrDJHafCrkZvZ5vE4kypSh6SPFWaXhC+2GyWl7H0BP
+	IJ79A2NSDNlsuzrodcd+RrpXBxZ4kHxFK77O7Adv2eT8psh9AJHOafEfa5pGFVv96z8zj6MotJsEn
+	+cnH6pszOYbzngr9pZVri5+QIAZPTq4kDscITGinbOzPLUBCmzPq39Fttjv17prwvWoZYD81U6G3z
+	k/Slqqq/RfX8StNWW9sb8IFcb0l6DwnTfY7QnmnxDSIDWMPDhhsf/02YXf2oGlKc/1u4OF4cOEDaQ
+	AbEp9v+Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w3ct6-0000000DAK5-2P9j;
-	Fri, 20 Mar 2026 16:39:52 +0000
-Received: from hillsboro-edge.smtp.mymangomail.com ([5.78.130.219])
+	id 1w3e9S-0000000DLCG-141M;
+	Fri, 20 Mar 2026 18:00:50 +0000
+Received: from ip74-208-171-129.pbiaas.com ([74.208.171.129] helo=kansas-city-edge.smtp.mymangomail.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w3ct0-0000000DAIe-2CLc
+	id 1w3e9B-0000000DLB8-3LMK
 	for kexec@lists.infradead.org;
-	Fri, 20 Mar 2026 16:39:48 +0000
-Received: from smtp.mymangomail.com (localhost [127.0.0.1])
-	by smtp.mymangomail.com (Mango Mail) with ESMTP id C45144089D;
-	Fri, 20 Mar 2026 12:39:33 -0400 (EDT)
+	Fri, 20 Mar 2026 18:00:48 +0000
+Received: from [127.0.1.1] (localhost [127.0.0.1])
+	by hillsboro.smtp.mymangomail.com (Mango Mail) with ESMTP id CA6965D9CF;
+	Fri, 20 Mar 2026 12:40:49 -0400 (EDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gerlicz.space;
-	s=mango-1; t=1774024773;
-	bh=d0ek7AVQMvweJcV8KF6oPuPSOtLVpNAVzgGT5RI8EcU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DSL9oMa38kQD7wIQawTgMO0RV9QMPigjVMbhXOFBzgog5IuDWtY7Rv57NTZRuVbuI
-	 4HCJSWwK1CfT/nDEoJ/owhoqupk13oUBSh5z69FSSxfm0FnQl+Nl7BdviOJYPGZaQw
-	 OoTDqrIbtyEIF2Xsxz7zDvL7WluNYc2EWKrjIf04=
+	s=mango-1; t=1774024849;
+	bh=QWzd64L8DpR90a0dwQiBIkOjZTFKBpBjyJYEA80DZcA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=CVlr5fcb4wlv/TtO3vW3AC/Jm6ICTm/eyKjhDPV/8VMUuIjXTpJsD0mdi8g71aYpf
+	 0JIxHH9sE2RXzitN6IGUmCNVCy2ZwMms3/ZFHO0kL/QzBc2i/kETtbp69tnH8JJtOg
+	 7T4KVWl6vtg2ax/fKQpnQizf1s2t4Gah5V5DMuq4=
 X-Mango-Origin: 1
 X-Mango-Origin: 1
 X-Mango-Origin: 1
@@ -51,8 +51,8 @@ Received: from authenticated-user (smtp.mymangomail.com [205.185.121.143])
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits)
  server-digest SHA256)
 	(No client certificate requested)
-	by smtp.mymangomail.com (Mango Mail) with ESMTPSA id 7038A40440;
-	Fri, 20 Mar 2026 12:38:30 -0400 (EDT)
+	by hillsboro.smtp.mymangomail.com (Mango Mail) with ESMTPSA id 92A775D9B1;
+	Fri, 20 Mar 2026 12:39:37 -0400 (EDT)
 From: Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>,
 	Mike Rapoport <rppt@kernel.org>,
@@ -63,14 +63,16 @@ Cc: Pratyush Yadav <pratyush@kernel.org>,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
-Subject: [PATCH 1/5] liveupdate: block outgoing session updates during reboot
-Date: Fri, 20 Mar 2026 17:37:16 +0100
-Message-ID: <20260320163720.100456-1-oskar@gerlicz.space>
+Subject: [PATCH 2/5] kexec: abort liveupdate handover on kernel_kexec() unwind
+Date: Fri, 20 Mar 2026 17:37:17 +0100
+Message-ID: <20260320163720.100456-2-oskar@gerlicz.space>
+In-Reply-To: <20260320163720.100456-1-oskar@gerlicz.space>
+References: <20260320163720.100456-1-oskar@gerlicz.space>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260320_093946_895264_726A4295 
-X-CRM114-Status: GOOD (  15.76  )
+X-CRM114-CacheID: sfid-20260320_110042_325570_EF7CFB2E 
+X-CRM114-Status: GOOD (  14.19  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,159 +87,159 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When kernel_kexec() starts a live update handover, LUO serializes
-outgoing sessions before the reboot path freezes tasks or shuts
-devices down. That leaves a window where close() and
-LIVEUPDATE_SESSION_PRESERVE_FD can still mutate an existing outgoing
-session after luo_session_serialize() has already captured it.
+Once outgoing sessions are blocked during reboot, every failure path
+after liveupdate_reboot() must release that state again. Today
+kernel_kexec() sets liveupdate_prepared only after
+liveupdate_reboot() returns successfully, so a partial failure inside
+liveupdate_reboot() skips the abort path entirely. The
+kho_finalize() failure path also leaves the LUO session state frozen.
 
-The race is dangerous because the next kernel may inherit stale file
-metadata or references to memory that userspace has already
-unpreserved. That breaks handover consistency and can later trigger
-restore failures on already torn down state.
+This is dangerous because a failed kexec attempt can leave userspace
+with outgoing sessions stuck in reboot state, blocking release and
+preserve paths until the next reboot.
 
-Mark the outgoing session set as rebooting while serialization is in
-progress, reject new mutations with -EBUSY, and make release wait
-until rebooting finishes before unpreserving files. Reset the flag and
-wake waiters when serialization rolls back, and use READ_ONCE() and
-WRITE_ONCE() so the state is visible across CPUs.
+Export a liveupdate_reboot_abort() helper, call it from the
+kho_finalize() error path, and mark liveupdate as prepared before
+entering liveupdate_reboot(). That makes every failed handover attempt
+unwind the session state and wake blocked waiters.
 
 Signed-off-by: Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
 ---
- kernel/liveupdate/luo_session.c | 58 ++++++++++++++++++++++++++++++---
- 1 file changed, 53 insertions(+), 5 deletions(-)
+ include/linux/liveupdate.h       |  5 +++++
+ kernel/kexec_core.c              |  4 ++++
+ kernel/liveupdate/luo_core.c     | 11 ++++++++++-
+ kernel/liveupdate/luo_internal.h |  1 +
+ kernel/liveupdate/luo_session.c  | 23 +++++++++++++++++++++++
+ 5 files changed, 43 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
-index 783677295640..ee5ea2a8ed3f 100644
---- a/kernel/liveupdate/luo_session.c
-+++ b/kernel/liveupdate/luo_session.c
-@@ -66,6 +66,7 @@
- #include <linux/rwsem.h>
- #include <linux/slab.h>
- #include <linux/unaligned.h>
-+#include <linux/wait.h>
- #include <uapi/linux/liveupdate.h>
- #include "luo_internal.h"
+diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
+index dd11fdc76a5f..d93b043a0421 100644
+--- a/include/linux/liveupdate.h
++++ b/include/linux/liveupdate.h
+@@ -226,6 +226,7 @@ bool liveupdate_enabled(void);
  
-@@ -91,8 +92,10 @@ struct luo_session_header {
- 	long count;
- 	struct list_head list;
- 	struct rw_semaphore rwsem;
-+	wait_queue_head_t reboot_waitq;
- 	struct luo_session_header_ser *header_ser;
- 	struct luo_session_ser *ser;
-+	bool rebooting;
- 	bool active;
- };
+ /* Called during kexec to tell LUO that entered into reboot */
+ int liveupdate_reboot(void);
++void liveupdate_reboot_abort(void);
  
-@@ -110,13 +113,23 @@ static struct luo_session_global luo_session_global = {
- 	.incoming = {
- 		.list = LIST_HEAD_INIT(luo_session_global.incoming.list),
- 		.rwsem = __RWSEM_INITIALIZER(luo_session_global.incoming.rwsem),
-+		.reboot_waitq =
-+			__WAIT_QUEUE_HEAD_INITIALIZER(luo_session_global.incoming.reboot_waitq),
- 	},
- 	.outgoing = {
- 		.list = LIST_HEAD_INIT(luo_session_global.outgoing.list),
- 		.rwsem = __RWSEM_INITIALIZER(luo_session_global.outgoing.rwsem),
-+		.reboot_waitq =
-+			__WAIT_QUEUE_HEAD_INITIALIZER(luo_session_global.outgoing.reboot_waitq),
- 	},
- };
+ int liveupdate_register_file_handler(struct liveupdate_file_handler *fh);
+ int liveupdate_unregister_file_handler(struct liveupdate_file_handler *fh);
+@@ -250,6 +251,10 @@ static inline int liveupdate_reboot(void)
+ 	return 0;
+ }
  
-+static void luo_session_reboot_done(struct luo_session_header *sh)
++static inline void liveupdate_reboot_abort(void)
 +{
-+	WRITE_ONCE(sh->rebooting, false);
-+	wake_up_all(&sh->reboot_waitq);
 +}
 +
- static struct luo_session *luo_session_alloc(const char *name)
+ static inline int liveupdate_register_file_handler(struct liveupdate_file_handler *fh)
  {
- 	struct luo_session *session = kzalloc_obj(*session);
-@@ -152,6 +165,9 @@ static int luo_session_insert(struct luo_session_header *sh,
- 	 * for new session.
- 	 */
- 	if (sh == &luo_session_global.outgoing) {
-+		if (READ_ONCE(sh->rebooting))
-+			return -EBUSY;
-+
- 		if (sh->count == LUO_SESSION_MAX)
- 			return -ENOMEM;
- 	}
-@@ -216,9 +232,22 @@ static int luo_session_release(struct inode *inodep, struct file *filep)
- 		}
- 		sh = &luo_session_global.incoming;
- 	} else {
--		scoped_guard(mutex, &session->mutex)
--			luo_file_unpreserve_files(&session->file_set);
- 		sh = &luo_session_global.outgoing;
-+
-+		for (;;) {
-+			down_read(&sh->rwsem);
-+			if (READ_ONCE(sh->rebooting)) {
-+				up_read(&sh->rwsem);
-+				wait_event(sh->reboot_waitq,
-+					   !READ_ONCE(sh->rebooting));
-+				continue;
-+			}
-+
-+			scoped_guard(mutex, &session->mutex)
-+				luo_file_unpreserve_files(&session->file_set);
-+			up_read(&sh->rwsem);
-+			break;
-+		}
- 	}
- 
- 	luo_session_remove(sh, session);
-@@ -231,10 +260,22 @@ static int luo_session_preserve_fd(struct luo_session *session,
- 				   struct luo_ucmd *ucmd)
+ 	return -EOPNOTSUPP;
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 2fea396d29b9..492c17f7e96f 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1139,6 +1139,7 @@ bool kexec_load_permitted(int kexec_image_type)
+ int kernel_kexec(void)
  {
- 	struct liveupdate_session_preserve_fd *argp = ucmd->cmd;
-+	struct luo_session_header *sh = NULL;
- 	int err;
+ 	int error = 0;
++	bool liveupdate_prepared = false;
  
--	guard(mutex)(&session->mutex);
--	err = luo_preserve_file(&session->file_set, argp->token, argp->fd);
-+	if (!session->retrieved) {
-+		sh = &luo_session_global.outgoing;
-+		down_read(&sh->rwsem);
-+		if (READ_ONCE(sh->rebooting)) {
-+			up_read(&sh->rwsem);
-+			return -EBUSY;
-+		}
-+	}
-+
-+	scoped_guard(mutex, &session->mutex)
-+		err = luo_preserve_file(&session->file_set, argp->token, argp->fd);
-+	if (sh)
-+		up_read(&sh->rwsem);
- 	if (err)
- 		return err;
- 
-@@ -578,6 +619,10 @@ int luo_session_serialize(void)
- 	int err;
- 
- 	guard(rwsem_write)(&sh->rwsem);
-+	if (READ_ONCE(sh->rebooting))
-+		return -EBUSY;
-+
-+	WRITE_ONCE(sh->rebooting, true);
- 	list_for_each_entry(session, &sh->list, list) {
- 		err = luo_session_freeze_one(session, &sh->ser[i]);
- 		if (err)
-@@ -595,8 +640,11 @@ int luo_session_serialize(void)
- 	list_for_each_entry_continue_reverse(session, &sh->list, list) {
- 		i--;
- 		luo_session_unfreeze_one(session, &sh->ser[i]);
--		memset(sh->ser[i].name, 0, sizeof(sh->ser[i].name));
-+		memset(&sh->ser[i], 0, sizeof(sh->ser[i]));
+ 	if (!kexec_trylock())
+ 		return -EBUSY;
+@@ -1147,6 +1148,7 @@ int kernel_kexec(void)
+ 		goto Unlock;
  	}
-+	sh->header_ser->count = 0;
-+	/* Reset rebooting flag on serialization failure. */
-+	luo_session_reboot_done(sh);
  
++	liveupdate_prepared = true;
+ 	error = liveupdate_reboot();
+ 	if (error)
+ 		goto Unlock;
+@@ -1231,6 +1233,8 @@ int kernel_kexec(void)
+ #endif
+ 
+  Unlock:
++	if (error && liveupdate_prepared)
++		liveupdate_reboot_abort();
+ 	kexec_unlock();
+ 	return error;
+ }
+diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
+index dda7bb57d421..95a0b81ce60d 100644
+--- a/kernel/liveupdate/luo_core.c
++++ b/kernel/liveupdate/luo_core.c
+@@ -233,8 +233,9 @@ int liveupdate_reboot(void)
+ 	err = kho_finalize();
+ 	if (err) {
+ 		pr_err("kho_finalize failed %d\n", err);
++		liveupdate_reboot_abort();
+ 		/*
+-		 * kho_finalize() may return libfdt errors, to aboid passing to
++		 * kho_finalize() may return libfdt errors, to avoid passing to
+ 		 * userspace unknown errors, change this to EAGAIN.
+ 		 */
+ 		err = -EAGAIN;
+@@ -243,6 +244,14 @@ int liveupdate_reboot(void)
  	return err;
  }
+ 
++void liveupdate_reboot_abort(void)
++{
++	if (!liveupdate_enabled())
++		return;
++
++	luo_session_abort_reboot();
++}
++
+ /**
+  * liveupdate_enabled - Check if the live update feature is enabled.
+  *
+diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_internal.h
+index 8083d8739b09..ad09ea756156 100644
+--- a/kernel/liveupdate/luo_internal.h
++++ b/kernel/liveupdate/luo_internal.h
+@@ -82,6 +82,7 @@ int luo_session_retrieve(const char *name, struct file **filep);
+ int __init luo_session_setup_outgoing(void *fdt);
+ int __init luo_session_setup_incoming(void *fdt);
+ int luo_session_serialize(void);
++void luo_session_abort_reboot(void);
+ int luo_session_deserialize(void);
+ bool luo_session_quiesce(void);
+ void luo_session_resume(void);
+diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
+index ee5ea2a8ed3f..39215e5eda7a 100644
+--- a/kernel/liveupdate/luo_session.c
++++ b/kernel/liveupdate/luo_session.c
+@@ -649,6 +649,29 @@ int luo_session_serialize(void)
+ 	return err;
+ }
+ 
++void luo_session_abort_reboot(void)
++{
++	struct luo_session_header *sh = &luo_session_global.outgoing;
++	struct luo_session *session;
++	int i = 0;
++
++	guard(rwsem_write)(&sh->rwsem);
++	if (!READ_ONCE(sh->rebooting))
++		return;
++
++	list_for_each_entry(session, &sh->list, list) {
++		if (i >= sh->header_ser->count)
++			break;
++
++		luo_session_unfreeze_one(session, &sh->ser[i]);
++		memset(&sh->ser[i], 0, sizeof(sh->ser[i]));
++		i++;
++	}
++
++	sh->header_ser->count = 0;
++	luo_session_reboot_done(sh);
++}
++
+ /**
+  * luo_session_quiesce - Ensure no active sessions exist and lock session lists.
+  *
 -- 
 2.53.0
 
