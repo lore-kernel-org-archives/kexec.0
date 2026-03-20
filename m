@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90F311099B31
-	for <kexec@archiver.kernel.org>; Fri, 20 Mar 2026 18:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A9D3D1099B32
+	for <kexec@archiver.kernel.org>; Fri, 20 Mar 2026 18:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zFcjBe+mvrvbkiJzQPLvMjEPcNe5xRrIkckbRoMHOoU=; b=fuPVhqjotuZQ7OZotq9yMFLIxx
-	DMixYUSqkBbsaMO0amlFfKVEau2t/Q2467dLrDJHafCrkZvZ5vE4kypSh6SPFWaXhC+2GyWl7H0BP
-	IJ79A2NSDNlsuzrodcd+RrpXBxZ4kHxFK77O7Adv2eT8psh9AJHOafEfa5pGFVv96z8zj6MotJsEn
-	+cnH6pszOYbzngr9pZVri5+QIAZPTq4kDscITGinbOzPLUBCmzPq39Fttjv17prwvWoZYD81U6G3z
-	k/Slqqq/RfX8StNWW9sb8IFcb0l6DwnTfY7QnmnxDSIDWMPDhhsf/02YXf2oGlKc/1u4OF4cOEDaQ
-	AbEp9v+Q==;
+	bh=12eV5O9XU1QG2j4V22rptbcLrLlRG2N4Np2JBHQuFzY=; b=b0cKPLIhRO4QP32B0nuTfdkvSS
+	1TOTbzHU7GO7ooAK6JF7+OFDJlhSTlTjCtZtY7qiRsaVPK3vf2oHBQFrA29xk8qqsiHUYYvNSK4N7
+	FqAkiZPQHTm702AmvxpbQgtYo/jR50iNwXWaI6R7kpohg/4XYuCTE35ZKTtJP+ccKA0pBY7ocgK2p
+	ISNNuZVWFj4I5RRdqP7ROMghmeSTwWj8zpeZR+D446Z80zluQRUYhI2KZMzwZxn8SgaT5VQaBGGIo
+	FeKRzURC90tEO/+6nfAO/Jrjgw+eqT9bt0e8PnBToo/1yIrPZj+5m4O4WqkewRD9vJmcRpGUDL2oH
+	sDLCk+HA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w3e9S-0000000DLCG-141M;
-	Fri, 20 Mar 2026 18:00:50 +0000
-Received: from ip74-208-171-129.pbiaas.com ([74.208.171.129] helo=kansas-city-edge.smtp.mymangomail.com)
+	id 1w3eIx-0000000DM8S-2n4B;
+	Fri, 20 Mar 2026 18:10:39 +0000
+Received: from [209.141.44.239] (helo=smtp3.mymangomail.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w3e9B-0000000DLB8-3LMK
+	id 1w3eIu-0000000DM7C-1dSC
 	for kexec@lists.infradead.org;
-	Fri, 20 Mar 2026 18:00:48 +0000
+	Fri, 20 Mar 2026 18:10:38 +0000
 Received: from [127.0.1.1] (localhost [127.0.0.1])
-	by hillsboro.smtp.mymangomail.com (Mango Mail) with ESMTP id CA6965D9CF;
-	Fri, 20 Mar 2026 12:40:49 -0400 (EDT)
+	by hillsboro.smtp.mymangomail.com (Mango Mail) with ESMTP id C36FA5D9D7;
+	Fri, 20 Mar 2026 12:41:58 -0400 (EDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gerlicz.space;
-	s=mango-1; t=1774024849;
-	bh=QWzd64L8DpR90a0dwQiBIkOjZTFKBpBjyJYEA80DZcA=;
+	s=mango-1; t=1774024918;
+	bh=J/1BiQbwlvxBt7cWoacVDZkl2V/E1R2YIIE3+5yf7DA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CVlr5fcb4wlv/TtO3vW3AC/Jm6ICTm/eyKjhDPV/8VMUuIjXTpJsD0mdi8g71aYpf
-	 0JIxHH9sE2RXzitN6IGUmCNVCy2ZwMms3/ZFHO0kL/QzBc2i/kETtbp69tnH8JJtOg
-	 7T4KVWl6vtg2ax/fKQpnQizf1s2t4Gah5V5DMuq4=
+	b=dVAnV60LpMdbV2dsHvLTbSJOu0JGMLqhSycUN9zBO960h4lvQ7WRi15lZSHl6gbsW
+	 7D1IEeCJCiitk/0LoHCgi415L2LrwOvDMholQ8nJsRIj75Y7WPEZa6WScOmsYbCFU8
+	 Bv2ID5wYc9JHzMqvNOof7QjR8p6OFsZ7P+1SAtTY=
 X-Mango-Origin: 1
 X-Mango-Origin: 1
 X-Mango-Origin: 1
@@ -51,8 +51,8 @@ Received: from authenticated-user (smtp.mymangomail.com [205.185.121.143])
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits)
  server-digest SHA256)
 	(No client certificate requested)
-	by hillsboro.smtp.mymangomail.com (Mango Mail) with ESMTPSA id 92A775D9B1;
-	Fri, 20 Mar 2026 12:39:37 -0400 (EDT)
+	by hillsboro.smtp.mymangomail.com (Mango Mail) with ESMTPSA id 8CBD65D9B1;
+	Fri, 20 Mar 2026 12:40:52 -0400 (EDT)
 From: Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>,
 	Mike Rapoport <rppt@kernel.org>,
@@ -63,16 +63,17 @@ Cc: Pratyush Yadav <pratyush@kernel.org>,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
-Subject: [PATCH 2/5] kexec: abort liveupdate handover on kernel_kexec() unwind
-Date: Fri, 20 Mar 2026 17:37:17 +0100
-Message-ID: <20260320163720.100456-2-oskar@gerlicz.space>
+Subject: [PATCH 3/5] liveupdate: fail session restore on file deserialization
+ errors
+Date: Fri, 20 Mar 2026 17:37:18 +0100
+Message-ID: <20260320163720.100456-3-oskar@gerlicz.space>
 In-Reply-To: <20260320163720.100456-1-oskar@gerlicz.space>
 References: <20260320163720.100456-1-oskar@gerlicz.space>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260320_110042_325570_EF7CFB2E 
-X-CRM114-Status: GOOD (  14.19  )
+X-CRM114-CacheID: sfid-20260320_111037_519281_B7818437 
+X-CRM114-Status: GOOD (  16.79  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,159 +88,156 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Once outgoing sessions are blocked during reboot, every failure path
-after liveupdate_reboot() must release that state again. Today
-kernel_kexec() sets liveupdate_prepared only after
-liveupdate_reboot() returns successfully, so a partial failure inside
-liveupdate_reboot() skips the abort path entirely. The
-kho_finalize() failure path also leaves the LUO session state frozen.
+luo_session_deserialize() calls luo_file_deserialize() but ignores its
+return value. If file restore fails part-way through, the incoming
+session still gets inserted and the caller still sees success.
 
-This is dangerous because a failed kexec attempt can leave userspace
-with outgoing sessions stuck in reboot state, blocking release and
-preserve paths until the next reboot.
+Leaving a partially restored session on the incoming list is dangerous
+because later retrieve or finish operations can walk half-built file
+state and operate on uninitialized or stale entries.
 
-Export a liveupdate_reboot_abort() helper, call it from the
-kho_finalize() error path, and mark liveupdate as prepared before
-entering liveupdate_reboot(). That makes every failed handover attempt
-unwind the session state and wake blocked waiters.
+Propagate file deserialization failures back to session restore,
+remove the partially restored session, and free any struct luo_file
+objects that were already allocated before returning the error.
 
 Signed-off-by: Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
 ---
- include/linux/liveupdate.h       |  5 +++++
- kernel/kexec_core.c              |  4 ++++
- kernel/liveupdate/luo_core.c     | 11 ++++++++++-
- kernel/liveupdate/luo_internal.h |  1 +
- kernel/liveupdate/luo_session.c  | 23 +++++++++++++++++++++++
- 5 files changed, 43 insertions(+), 1 deletion(-)
+ kernel/liveupdate/luo_file.c    | 45 ++++++++++++++++++++-------------
+ kernel/liveupdate/luo_session.c | 27 +++++++-------------
+ 2 files changed, 36 insertions(+), 36 deletions(-)
 
-diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
-index dd11fdc76a5f..d93b043a0421 100644
---- a/include/linux/liveupdate.h
-+++ b/include/linux/liveupdate.h
-@@ -226,6 +226,7 @@ bool liveupdate_enabled(void);
- 
- /* Called during kexec to tell LUO that entered into reboot */
- int liveupdate_reboot(void);
-+void liveupdate_reboot_abort(void);
- 
- int liveupdate_register_file_handler(struct liveupdate_file_handler *fh);
- int liveupdate_unregister_file_handler(struct liveupdate_file_handler *fh);
-@@ -250,6 +251,10 @@ static inline int liveupdate_reboot(void)
+diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
+index 5acee4174bf0..cc0fd7e9c332 100644
+--- a/kernel/liveupdate/luo_file.c
++++ b/kernel/liveupdate/luo_file.c
+@@ -717,6 +717,22 @@ int luo_file_finish(struct luo_file_set *file_set)
  	return 0;
  }
  
-+static inline void liveupdate_reboot_abort(void)
++static void luo_file_discard_deserialized(struct luo_file_set *file_set)
 +{
-+}
++	struct luo_file *luo_file;
 +
- static inline int liveupdate_register_file_handler(struct liveupdate_file_handler *fh)
- {
- 	return -EOPNOTSUPP;
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 2fea396d29b9..492c17f7e96f 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -1139,6 +1139,7 @@ bool kexec_load_permitted(int kexec_image_type)
- int kernel_kexec(void)
- {
- 	int error = 0;
-+	bool liveupdate_prepared = false;
- 
- 	if (!kexec_trylock())
- 		return -EBUSY;
-@@ -1147,6 +1148,7 @@ int kernel_kexec(void)
- 		goto Unlock;
- 	}
- 
-+	liveupdate_prepared = true;
- 	error = liveupdate_reboot();
- 	if (error)
- 		goto Unlock;
-@@ -1231,6 +1233,8 @@ int kernel_kexec(void)
- #endif
- 
-  Unlock:
-+	if (error && liveupdate_prepared)
-+		liveupdate_reboot_abort();
- 	kexec_unlock();
- 	return error;
- }
-diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
-index dda7bb57d421..95a0b81ce60d 100644
---- a/kernel/liveupdate/luo_core.c
-+++ b/kernel/liveupdate/luo_core.c
-@@ -233,8 +233,9 @@ int liveupdate_reboot(void)
- 	err = kho_finalize();
- 	if (err) {
- 		pr_err("kho_finalize failed %d\n", err);
-+		liveupdate_reboot_abort();
- 		/*
--		 * kho_finalize() may return libfdt errors, to aboid passing to
-+		 * kho_finalize() may return libfdt errors, to avoid passing to
- 		 * userspace unknown errors, change this to EAGAIN.
- 		 */
- 		err = -EAGAIN;
-@@ -243,6 +244,14 @@ int liveupdate_reboot(void)
- 	return err;
- }
- 
-+void liveupdate_reboot_abort(void)
-+{
-+	if (!liveupdate_enabled())
-+		return;
-+
-+	luo_session_abort_reboot();
-+}
-+
- /**
-  * liveupdate_enabled - Check if the live update feature is enabled.
-  *
-diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_internal.h
-index 8083d8739b09..ad09ea756156 100644
---- a/kernel/liveupdate/luo_internal.h
-+++ b/kernel/liveupdate/luo_internal.h
-@@ -82,6 +82,7 @@ int luo_session_retrieve(const char *name, struct file **filep);
- int __init luo_session_setup_outgoing(void *fdt);
- int __init luo_session_setup_incoming(void *fdt);
- int luo_session_serialize(void);
-+void luo_session_abort_reboot(void);
- int luo_session_deserialize(void);
- bool luo_session_quiesce(void);
- void luo_session_resume(void);
-diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
-index ee5ea2a8ed3f..39215e5eda7a 100644
---- a/kernel/liveupdate/luo_session.c
-+++ b/kernel/liveupdate/luo_session.c
-@@ -649,6 +649,29 @@ int luo_session_serialize(void)
- 	return err;
- }
- 
-+void luo_session_abort_reboot(void)
-+{
-+	struct luo_session_header *sh = &luo_session_global.outgoing;
-+	struct luo_session *session;
-+	int i = 0;
-+
-+	guard(rwsem_write)(&sh->rwsem);
-+	if (!READ_ONCE(sh->rebooting))
-+		return;
-+
-+	list_for_each_entry(session, &sh->list, list) {
-+		if (i >= sh->header_ser->count)
-+			break;
-+
-+		luo_session_unfreeze_one(session, &sh->ser[i]);
-+		memset(&sh->ser[i], 0, sizeof(sh->ser[i]));
-+		i++;
++	while (!list_empty(&file_set->files_list)) {
++		luo_file = list_last_entry(&file_set->files_list,
++					   struct luo_file, list);
++		list_del(&luo_file->list);
++		mutex_destroy(&luo_file->mutex);
++		kfree(luo_file);
 +	}
 +
-+	sh->header_ser->count = 0;
-+	luo_session_reboot_done(sh);
++	file_set->count = 0;
++	file_set->files = NULL;
 +}
 +
  /**
-  * luo_session_quiesce - Ensure no active sessions exist and lock session lists.
-  *
+  * luo_file_deserialize - Reconstructs the list of preserved files in the new kernel.
+  * @file_set:     The incoming file_set to fill with deserialized data.
+@@ -747,6 +763,7 @@ int luo_file_deserialize(struct luo_file_set *file_set,
+ {
+ 	struct luo_file_ser *file_ser;
+ 	u64 i;
++	int err;
+ 
+ 	if (!file_set_ser->files) {
+ 		WARN_ON(file_set_ser->count);
+@@ -756,21 +773,6 @@ int luo_file_deserialize(struct luo_file_set *file_set,
+ 	file_set->count = file_set_ser->count;
+ 	file_set->files = phys_to_virt(file_set_ser->files);
+ 
+-	/*
+-	 * Note on error handling:
+-	 *
+-	 * If deserialization fails (e.g., allocation failure or corrupt data),
+-	 * we intentionally skip cleanup of files that were already restored.
+-	 *
+-	 * A partial failure leaves the preserved state inconsistent.
+-	 * Implementing a safe "undo" to unwind complex dependencies (sessions,
+-	 * files, hardware state) is error-prone and provides little value, as
+-	 * the system is effectively in a broken state.
+-	 *
+-	 * We treat these resources as leaked. The expected recovery path is for
+-	 * userspace to detect the failure and trigger a reboot, which will
+-	 * reliably reset devices and reclaim memory.
+-	 */
+ 	file_ser = file_set->files;
+ 	for (i = 0; i < file_set->count; i++) {
+ 		struct liveupdate_file_handler *fh;
+@@ -787,12 +789,15 @@ int luo_file_deserialize(struct luo_file_set *file_set,
+ 		if (!handler_found) {
+ 			pr_warn("No registered handler for compatible '%s'\n",
+ 				file_ser[i].compatible);
+-			return -ENOENT;
++			err = -ENOENT;
++			goto err_discard;
+ 		}
+ 
+ 		luo_file = kzalloc_obj(*luo_file);
+-		if (!luo_file)
+-			return -ENOMEM;
++		if (!luo_file) {
++			err = -ENOMEM;
++			goto err_discard;
++		}
+ 
+ 		luo_file->fh = fh;
+ 		luo_file->file = NULL;
+@@ -803,6 +808,10 @@ int luo_file_deserialize(struct luo_file_set *file_set,
+ 	}
+ 
+ 	return 0;
++
++err_discard:
++	luo_file_discard_deserialized(file_set);
++	return err;
+ }
+ 
+ void luo_file_set_init(struct luo_file_set *file_set)
+diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
+index 39215e5eda7a..77afa913d6c7 100644
+--- a/kernel/liveupdate/luo_session.c
++++ b/kernel/liveupdate/luo_session.c
+@@ -565,21 +565,6 @@ int luo_session_deserialize(void)
+ 	if (!sh->active)
+ 		return 0;
+ 
+-	/*
+-	 * Note on error handling:
+-	 *
+-	 * If deserialization fails (e.g., allocation failure or corrupt data),
+-	 * we intentionally skip cleanup of sessions that were already restored.
+-	 *
+-	 * A partial failure leaves the preserved state inconsistent.
+-	 * Implementing a safe "undo" to unwind complex dependencies (sessions,
+-	 * files, hardware state) is error-prone and provides little value, as
+-	 * the system is effectively in a broken state.
+-	 *
+-	 * We treat these resources as leaked. The expected recovery path is for
+-	 * userspace to detect the failure and trigger a reboot, which will
+-	 * reliably reset devices and reclaim memory.
+-	 */
+ 	for (int i = 0; i < sh->header_ser->count; i++) {
+ 		struct luo_session *session;
+ 
+@@ -598,9 +583,15 @@ int luo_session_deserialize(void)
+ 			return err;
+ 		}
+ 
+-		scoped_guard(mutex, &session->mutex) {
+-			luo_file_deserialize(&session->file_set,
+-					     &sh->ser[i].file_set_ser);
++		scoped_guard(mutex, &session->mutex)
++			err = luo_file_deserialize(&session->file_set,
++						   &sh->ser[i].file_set_ser);
++		if (err) {
++			pr_warn("Failed to deserialize session [%s] files %pe\n",
++				session->name, ERR_PTR(err));
++			luo_session_remove(sh, session);
++			luo_session_free(session);
++			return err;
+ 		}
+ 	}
+ 
 -- 
 2.53.0
 
