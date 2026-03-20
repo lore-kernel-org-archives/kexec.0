@@ -4,62 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 52FF8108B8ED
-	for <kexec@archiver.kernel.org>; Fri, 20 Mar 2026 10:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8071B10987AB
+	for <kexec@archiver.kernel.org>; Fri, 20 Mar 2026 16:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=oBBrP+dJlC8xCC1p9KU1pC4ESzqrQhTEbPEnQfQ8Eyw=; b=WGd8Pn2LfoMC/Jbm81/SxIFUtB
-	Og/UZ8CLhSEHVQCFlzoqKN5WWKBBUwkzLU9tmJqZGW3GLpKPp/GaPLYYIfpXkFpPLobJoPTOo9BcG
-	kxoeFh0j1iljN3nWhieiolUuqKIEHOJkICieNts+xNJpXP6Z0nkkjZ3KFZ2rXsGPFFkYEzOhVbZlg
-	OANNJ0H6vpkgXCvhTiewlmb6Xoy8tZaGFc2b2Ctxs/t5JzrHGAM9Y9SdMtKqvUIbXW36uEjKsOjl6
-	awOQ23LVS1VVJ657eskn3LxaVn05c1FNLFqE/w8ajfoA1TjQSuHIyd4yeOR6IJWxuqximPG9rXlI2
-	o2HIBLAQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=OFWl7Ej0DLfHR3zQ1Wnf1cKYYmYa0BNVU+VFNYEBse8=; b=FGJd/skfveLlkAQQpSSESPEjXQ
+	SFyqcdtSwkWgKdb5AZvRhsvqR6/HkWL5S8SgNuDGWbiwZuckllCQH3ac1wJum0yJXfwKrCXp4niGN
+	rgpgrAZ8Dv7jL8Mi+nRzLP7sr/ORCapuZKSIDOvVMGKIk2IL8bC61Xanf6g0aoAZq+5BhBgLr9/V2
+	SdE6RU4TXGSuTixlRvFbiypqmvcgA1vWnezgT9zR/Qr6fkpLx/RvRqmW6xKLMJ+PEpqLws2/MdrDT
+	qtRgat6DdoYsmcKRZvMagSi9sOPO5sfBRGdY1UQBqEzonDvM1lo37UkeJMaxPvRuVPWFOUturZZvN
+	+sXijzzw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w3X1a-0000000Ca9T-2BBp;
-	Fri, 20 Mar 2026 10:24:14 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1w3ct6-0000000DAK5-2P9j;
+	Fri, 20 Mar 2026 16:39:52 +0000
+Received: from hillsboro-edge.smtp.mymangomail.com ([5.78.130.219])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w3X1Z-0000000Ca9E-2WkH
+	id 1w3ct0-0000000DAIe-2CLc
 	for kexec@lists.infradead.org;
-	Fri, 20 Mar 2026 10:24:13 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id B837660126;
-	Fri, 20 Mar 2026 10:24:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADDF9C4CEF7;
-	Fri, 20 Mar 2026 10:24:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774002252;
-	bh=Wn5jstUr6dOBAVU09O9JpAI9Bd4XixCEsjnU1Cfj78w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=L9ltC+2PmAsjD6RD3FhjaLQ88mtFPqKCZ5e5wnXlbMD0IE9ci1RMSYc2iX7AMzX2x
-	 FjYVkT+gjdl/yDn4ixlebZZ+2qW2aDJguNj3A/VBCQP9agUS4lHl8yk0KWw9VvMIXO
-	 J7vr5Wg3QsfH7xzwVn0AgUtwCcaD/g2GsqkxKns3rKpMmSp2LxSdLI2Z4E9rk+133W
-	 JG7fXKrDdeY4Z1Ksm/FRtx1S1+r14I/wUqQVqO6Ge7JvNdImtPHqNsEPwMm2rZUfJv
-	 uOkHS/OYVXSHVS3P/53PHq+FigYnABJvBNjGBfIb924tCSOAW91pKd6lCAKkX/1ygE
-	 hJ3HQ35zk27RA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Alexander Graf <graf@amazon.com>,
-  Pasha Tatashin <pasha.tatashin@soleen.com>,  Andrew Morton
- <akpm@linux-foundation.org>,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] kho: drop restriction on maximum page order
-In-Reply-To: <abk1L_gpK7Ys4TK5@kernel.org> (Mike Rapoport's message of "Tue,
-	17 Mar 2026 13:04:15 +0200")
-References: <20260309123410.382308-1-pratyush@kernel.org>
-	<20260309123410.382308-2-pratyush@kernel.org>
-	<aa_zglmh3AU2_RA0@kernel.org> <2vxzo6kmddl8.fsf@kernel.org>
-	<abk1L_gpK7Ys4TK5@kernel.org>
-Date: Fri, 20 Mar 2026 10:24:08 +0000
-Message-ID: <2vxzy0jmajef.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Fri, 20 Mar 2026 16:39:48 +0000
+Received: from smtp.mymangomail.com (localhost [127.0.0.1])
+	by smtp.mymangomail.com (Mango Mail) with ESMTP id C45144089D;
+	Fri, 20 Mar 2026 12:39:33 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gerlicz.space;
+	s=mango-1; t=1774024773;
+	bh=d0ek7AVQMvweJcV8KF6oPuPSOtLVpNAVzgGT5RI8EcU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DSL9oMa38kQD7wIQawTgMO0RV9QMPigjVMbhXOFBzgog5IuDWtY7Rv57NTZRuVbuI
+	 4HCJSWwK1CfT/nDEoJ/owhoqupk13oUBSh5z69FSSxfm0FnQl+Nl7BdviOJYPGZaQw
+	 OoTDqrIbtyEIF2Xsxz7zDvL7WluNYc2EWKrjIf04=
+X-Mango-Origin: 1
+X-Mango-Origin: 1
+X-Mango-Origin: 1
+X-Mango-Origin: 1
+X-Mango-Origin: 1
+X-Mango-Origin: 1
+X-Mango-Origin: 1
+X-Mango-Origin: 1
+X-Mango-Origin: 1
+Received: from authenticated-user (smtp.mymangomail.com [205.185.121.143])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits)
+ server-digest SHA256)
+	(No client certificate requested)
+	by smtp.mymangomail.com (Mango Mail) with ESMTPSA id 7038A40440;
+	Fri, 20 Mar 2026 12:38:30 -0400 (EDT)
+From: Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Baoquan He <bhe@redhat.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
+Subject: [PATCH 1/5] liveupdate: block outgoing session updates during reboot
+Date: Fri, 20 Mar 2026 17:37:16 +0100
+Message-ID: <20260320163720.100456-1-oskar@gerlicz.space>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260320_093946_895264_726A4295 
+X-CRM114-Status: GOOD (  15.76  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,50 +85,160 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Mar 17 2026, Mike Rapoport wrote:
+When kernel_kexec() starts a live update handover, LUO serializes
+outgoing sessions before the reboot path freezes tasks or shuts
+devices down. That leaves a window where close() and
+LIVEUPDATE_SESSION_PRESERVE_FD can still mutate an existing outgoing
+session after luo_session_serialize() has already captured it.
 
-> On Tue, Mar 17, 2026 at 09:12:19AM +0000, Pratyush Yadav wrote:
->> On Tue, Mar 10 2026, Mike Rapoport wrote:
->> 
->> > On Mon, Mar 09, 2026 at 12:34:07PM +0000, Pratyush Yadav wrote:
->> >> KHO currently restricts the maximum order of a restored page to the
->> >> maximum order supported by the buddy allocator. While this works fine
->> >> for much of the data passed across kexec, it is possible to have pages
->> >> larger than MAX_PAGE_ORDER.
->> >> 
->> >> For one, it is possible to get a larger order when using
->> >> kho_preserve_pages() if the number of pages is large enough, since it
->> >> tries to combine multiple aligned 0-order preservations into one higher
->> >> order preservation.
->> >> 
->> >> For another, upcoming support for hugepages can have gigantic hugepages
->> >> being preserved over KHO.
->> >> 
->> >> There is no real reason for this limit. The KHO preservation machinery
->> >> can handle any page order. Remove this artificial restriction on max
->> >> page order.
->> >> 
->> >> Signed-off-by: Pratyush Yadav <pratyush@kernel.org>
->> >> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
->> >
->> > One SOB should be enough ;-)
->> 
->> Hmm, I figured the unemployed me (who originally wrote the patch) and
->> the employed-by-google me (who is doing this new version) would count as
->> two separate entities and there should be a S-o-b for both.
->
-> Maybe than something like:
->
-> Signed-off-by: Pratyush Yadav (Hobbyist) <pratyush@kernel.org>
-> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
->  
-> ;-)
->
-Yeah, that works too :-)
+The race is dangerous because the next kernel may inherit stale file
+metadata or references to memory that userspace has already
+unpreserved. That breaks handover consistency and can later trigger
+restore failures on already torn down state.
 
-I'll use that when I redo some of the HugeTLB patches too
+Mark the outgoing session set as rebooting while serialization is in
+progress, reject new mutations with -EBUSY, and make release wait
+until rebooting finishes before unpreserving files. Reset the flag and
+wake waiters when serialization rolls back, and use READ_ONCE() and
+WRITE_ONCE() so the state is visible across CPUs.
 
+Signed-off-by: Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
+---
+ kernel/liveupdate/luo_session.c | 58 ++++++++++++++++++++++++++++++---
+ 1 file changed, 53 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
+index 783677295640..ee5ea2a8ed3f 100644
+--- a/kernel/liveupdate/luo_session.c
++++ b/kernel/liveupdate/luo_session.c
+@@ -66,6 +66,7 @@
+ #include <linux/rwsem.h>
+ #include <linux/slab.h>
+ #include <linux/unaligned.h>
++#include <linux/wait.h>
+ #include <uapi/linux/liveupdate.h>
+ #include "luo_internal.h"
+ 
+@@ -91,8 +92,10 @@ struct luo_session_header {
+ 	long count;
+ 	struct list_head list;
+ 	struct rw_semaphore rwsem;
++	wait_queue_head_t reboot_waitq;
+ 	struct luo_session_header_ser *header_ser;
+ 	struct luo_session_ser *ser;
++	bool rebooting;
+ 	bool active;
+ };
+ 
+@@ -110,13 +113,23 @@ static struct luo_session_global luo_session_global = {
+ 	.incoming = {
+ 		.list = LIST_HEAD_INIT(luo_session_global.incoming.list),
+ 		.rwsem = __RWSEM_INITIALIZER(luo_session_global.incoming.rwsem),
++		.reboot_waitq =
++			__WAIT_QUEUE_HEAD_INITIALIZER(luo_session_global.incoming.reboot_waitq),
+ 	},
+ 	.outgoing = {
+ 		.list = LIST_HEAD_INIT(luo_session_global.outgoing.list),
+ 		.rwsem = __RWSEM_INITIALIZER(luo_session_global.outgoing.rwsem),
++		.reboot_waitq =
++			__WAIT_QUEUE_HEAD_INITIALIZER(luo_session_global.outgoing.reboot_waitq),
+ 	},
+ };
+ 
++static void luo_session_reboot_done(struct luo_session_header *sh)
++{
++	WRITE_ONCE(sh->rebooting, false);
++	wake_up_all(&sh->reboot_waitq);
++}
++
+ static struct luo_session *luo_session_alloc(const char *name)
+ {
+ 	struct luo_session *session = kzalloc_obj(*session);
+@@ -152,6 +165,9 @@ static int luo_session_insert(struct luo_session_header *sh,
+ 	 * for new session.
+ 	 */
+ 	if (sh == &luo_session_global.outgoing) {
++		if (READ_ONCE(sh->rebooting))
++			return -EBUSY;
++
+ 		if (sh->count == LUO_SESSION_MAX)
+ 			return -ENOMEM;
+ 	}
+@@ -216,9 +232,22 @@ static int luo_session_release(struct inode *inodep, struct file *filep)
+ 		}
+ 		sh = &luo_session_global.incoming;
+ 	} else {
+-		scoped_guard(mutex, &session->mutex)
+-			luo_file_unpreserve_files(&session->file_set);
+ 		sh = &luo_session_global.outgoing;
++
++		for (;;) {
++			down_read(&sh->rwsem);
++			if (READ_ONCE(sh->rebooting)) {
++				up_read(&sh->rwsem);
++				wait_event(sh->reboot_waitq,
++					   !READ_ONCE(sh->rebooting));
++				continue;
++			}
++
++			scoped_guard(mutex, &session->mutex)
++				luo_file_unpreserve_files(&session->file_set);
++			up_read(&sh->rwsem);
++			break;
++		}
+ 	}
+ 
+ 	luo_session_remove(sh, session);
+@@ -231,10 +260,22 @@ static int luo_session_preserve_fd(struct luo_session *session,
+ 				   struct luo_ucmd *ucmd)
+ {
+ 	struct liveupdate_session_preserve_fd *argp = ucmd->cmd;
++	struct luo_session_header *sh = NULL;
+ 	int err;
+ 
+-	guard(mutex)(&session->mutex);
+-	err = luo_preserve_file(&session->file_set, argp->token, argp->fd);
++	if (!session->retrieved) {
++		sh = &luo_session_global.outgoing;
++		down_read(&sh->rwsem);
++		if (READ_ONCE(sh->rebooting)) {
++			up_read(&sh->rwsem);
++			return -EBUSY;
++		}
++	}
++
++	scoped_guard(mutex, &session->mutex)
++		err = luo_preserve_file(&session->file_set, argp->token, argp->fd);
++	if (sh)
++		up_read(&sh->rwsem);
+ 	if (err)
+ 		return err;
+ 
+@@ -578,6 +619,10 @@ int luo_session_serialize(void)
+ 	int err;
+ 
+ 	guard(rwsem_write)(&sh->rwsem);
++	if (READ_ONCE(sh->rebooting))
++		return -EBUSY;
++
++	WRITE_ONCE(sh->rebooting, true);
+ 	list_for_each_entry(session, &sh->list, list) {
+ 		err = luo_session_freeze_one(session, &sh->ser[i]);
+ 		if (err)
+@@ -595,8 +640,11 @@ int luo_session_serialize(void)
+ 	list_for_each_entry_continue_reverse(session, &sh->list, list) {
+ 		i--;
+ 		luo_session_unfreeze_one(session, &sh->ser[i]);
+-		memset(sh->ser[i].name, 0, sizeof(sh->ser[i].name));
++		memset(&sh->ser[i], 0, sizeof(sh->ser[i]));
+ 	}
++	sh->header_ser->count = 0;
++	/* Reset rebooting flag on serialization failure. */
++	luo_session_reboot_done(sh);
+ 
+ 	return err;
+ }
 -- 
-Regards,
-Pratyush Yadav
+2.53.0
+
 
