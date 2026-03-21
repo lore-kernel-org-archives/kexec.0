@@ -4,39 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 18DFA1094469
-	for <kexec@archiver.kernel.org>; Sat, 21 Mar 2026 10:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5AD851094464
+	for <kexec@archiver.kernel.org>; Sat, 21 Mar 2026 14:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=TCqNFyyPUUdW9ZMPxDkboCXhDE0SUM9SHSiNMtFzQiE=; b=DRKmuIeikbHf5q5TFUcOwzVjrI
-	HRs9/Xp/+4su8EAVnrv0EZUTHwEfOTi/Niauwtpo5Ky+puLoE8Aa0G677pIZf5boLn2EhuTATjLcT
-	l33257uQhoPk6mWwC8ksPr5M1SyXGIiA5m19Hy8dRrXVXfU+no+eIPIgVg6IqnvgdVPJWSrDhSpvD
-	ThDH0gP/S9HSqx/N+YMLituJqD14s3sJqI15gK4feH3NBe/qyh5z/lEhLwfPjAcQN9726abNiauWg
-	IehqT4WFHgsgxkbKV4NEFhwzVFncpYMMp70yz0ublgfyWAj7pcu0CCfTJ2H7xjwhwt5ImNg5LdKC6
-	BlihpYtQ==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=HTcUM5/5vTlxqDZ0IDfSrSlcUXg6dnvK2vq84Nv3L18=; b=tnyEPcRqkHNXsS57mOXniGoa0r
+	gDBSlU579YdjJ+0nkVf5g4NxoeuVJum45P7AiBPg5sC84eWc56AQ0ORRWSzz9DQ3vf3UQk0L5dWbe
+	S06m+fJ36w+sH7on1MspASEcDaBjyMMhG8bV9PpoidRbRCjoF+t713BcfNZ11nwWEAx8cLW0kgr1g
+	rSLfEvv49iZLyQaJQFl7giYVh4M5d58LuGXOu+SDnTWiQ1qzOjBSfLDxMPdSkLzGlwNsncQt5bmaY
+	PC4XtQsGxcHn9oA1EBLoVleL6gmVeJpF69pdgjj8eqPhb0cHZU4MviLD+TUtQlEUAMd5Q6xHRWfmR
+	qy/1QvHg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w3tYe-0000000EM7H-3j4i;
-	Sat, 21 Mar 2026 10:27:52 +0000
+	id 1w3xTQ-0000000EXrV-0Mh0;
+	Sat, 21 Mar 2026 14:38:44 +0000
 Received: from hillsboro-edge.smtp.mymangomail.com ([5.78.130.219])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w3tYc-0000000EM6i-0nZk
+	id 1w3xTM-0000000EXr8-3BNf
 	for kexec@lists.infradead.org;
-	Sat, 21 Mar 2026 10:27:51 +0000
+	Sat, 21 Mar 2026 14:38:42 +0000
 Received: from smtp.mymangomail.com (localhost [127.0.0.1])
-	by smtp.mymangomail.com (Mango Mail) with ESMTP id 893AE41963;
-	Sat, 21 Mar 2026 06:27:11 -0400 (EDT)
+	by smtp.mymangomail.com (Mango Mail) with ESMTP id 7432B4162F;
+	Sat, 21 Mar 2026 10:38:13 -0400 (EDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gerlicz.space;
-	s=mango-1; t=1774088831;
-	bh=WGQD1ZsKdugY1KTxZSSSEplvqr53gUI6cKQKc+OHL1Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=p9UBjw60JFvX5QGlAhtaEm3GKgshG9pnkCkbfl5muB8nOVBJKhjPnNc7wDB+U4KK2
-	 ap5sfw24DYfiealUvfeYrtG8tzZKmb1adON1zrWqNKtKus5UAPFLBm6Xqn+wFBcsXS
-	 JAFzVyE/vVXqTxFaz+p7slnZI6R6TMAxcvF+Sl1I=
+	s=mango-1; t=1774103893;
+	bh=RXmr7HObhK4yLbUfOBHniLrvNTlKJGpTMMr7zufLkKQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tf6FHtXC7WcgkVaXgx3C1OPqRiGDqCEMicu9wTyplsDVT2jXSiMhdB9sq9+Lo5zc7
+	 Bfs0xA2gQXcbifHE+Pmcuwag8DFQvLAMUc3Jpi1dumZolGefCRks2lFWQ47MOieGA7
+	 YUvY2r54QT4kGumut/TZhguuE/R2SVlq/bbsOjEY=
+X-Mango-Origin: 1
 X-Mango-Origin: 1
 X-Mango-Origin: 1
 X-Mango-Origin: 1
@@ -47,31 +48,30 @@ X-Mango-Origin: 1
 X-Mango-Origin: 1
 Received: from authenticated-user (smtp.mymangomail.com [205.185.121.143])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest
- SHA256)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits)
+ server-digest SHA256)
 	(No client certificate requested)
-	by smtp.mymangomail.com (Mango Mail) with ESMTPSA id 29FB9418D0;
-	Sat, 21 Mar 2026 06:26:00 -0400 (EDT)
-MIME-Version: 1.0
-Date: Sat, 21 Mar 2026 11:25:59 +0100
-From: oskar@gerlicz.space
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport
- <rppt@kernel.org>, Baoquan He <bhe@redhat.com>, Pratyush Yadav
- <pratyush@kernel.org>, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, linux-mm@kvack.org
-Subject: Re: [PATCH 1/5] liveupdate: block outgoing session updates during
+	by smtp.mymangomail.com (Mango Mail) with ESMTPSA id F3460408C6;
+	Sat, 21 Mar 2026 10:36:48 -0400 (EDT)
+From: Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Baoquan He <bhe@redhat.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
+Subject: [PATCH v3 1/5] liveupdate: block outgoing session updates during
  reboot
-In-Reply-To: <20260320182352.ca6c88e409ff12d0368b03ae@linux-foundation.org>
-References: <20260320163720.100456-1-oskar@gerlicz.space>
- <20260320182352.ca6c88e409ff12d0368b03ae@linux-foundation.org>
-Message-ID: <af15eae6ea9007aa6fd7924512657168@gerlicz.space>
-X-Sender: oskar@gerlicz.space
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Date: Sat, 21 Mar 2026 15:36:38 +0100
+Message-ID: <20260321143642.166313-1-oskar@gerlicz.space>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260321_032750_279552_02F00203 
-X-CRM114-Status: GOOD (  20.05  )
+X-CRM114-CacheID: sfid-20260321_073841_202879_77855E43 
+X-CRM114-Status: GOOD (  23.33  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,118 +86,485 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-03-21 02:23, Andrew Morton wrote:
-> On Fri, 20 Mar 2026 17:37:16 +0100 Oskar Gerlicz Kowalczuk <oskar@gerlicz.space> wrote:
-> 
->> When kernel_kexec() starts a live update handover, LUO serializes
->> outgoing sessions before the reboot path freezes tasks or shuts
->> devices down. That leaves a window where close() and
->> LIVEUPDATE_SESSION_PRESERVE_FD can still mutate an existing outgoing
->> session after luo_session_serialize() has already captured it.
->> 
->> The race is dangerous because the next kernel may inherit stale file
->> metadata or references to memory that userspace has already
->> unpreserved. That breaks handover consistency and can later trigger
->> restore failures on already torn down state.
->> 
->> Mark the outgoing session set as rebooting while serialization is in
->> progress, reject new mutations with -EBUSY, and make release wait
->> until rebooting finishes before unpreserving files. Reset the flag and
->> wake waiters when serialization rolls back, and use READ_ONCE() and
->> WRITE_ONCE() so the state is visible across CPUs.
-> 
-> Sashiko AI review has quite a few questions:
-> 	https://sashiko.dev/#/patchset/20260320163720.100456-1-oskar@gerlicz.space
+kernel_kexec() serializes outgoing sessions before the reboot path
+freezes tasks, so close() and session ioctls can still mutate a
+session while handover state is being prepared. The original v2 code
+also let incoming lookups keep a bare session pointer after dropping
+the list lock.
 
+That leaves two correctness problems in the reboot path: outgoing state
+can change after serialization starts, and incoming sessions can be
+freed while another thread still holds a pointer to them.
 
-Thanks for the careful review.
+Add refcounted session lifetime management, track in-flight outgoing
+close() paths with an atomic closing counter, and make serialization
+wait for closing to drain before setting rebooting. Reject phase-invalid
+ioctls, keep incoming release on a common cleanup path, and make the
+release wait freezable without spinning.
 
-Patch 1
+Fixes: fc5acd5c89fe ("liveupdate: block outgoing session updates during reboot")
+Signed-off-by: Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
+---
+ kernel/liveupdate/luo_internal.h |  12 +-
+ kernel/liveupdate/luo_session.c  | 236 +++++++++++++++++++++++++++----
+ 2 files changed, 221 insertions(+), 27 deletions(-)
 
-You are right. The incoming .release path can return before
-luo_session_remove() / luo_session_free() and leave the session
-stranded. This is pre-existing rather than introduced by this patch,
-but it is a real bug. I will fix it in v2 by ensuring the release path
-always removes and frees the session, while keeping the warning if
-finish fails.
+diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_internal.h
+index 8083d8739b09..0cfc0269d746 100644
+--- a/kernel/liveupdate/luo_internal.h
++++ b/kernel/liveupdate/luo_internal.h
+@@ -9,6 +9,7 @@
+ #define _LINUX_LUO_INTERNAL_H
+ 
+ #include <linux/liveupdate.h>
++#include <linux/refcount.h>
+ #include <linux/uaccess.h>
+ 
+ struct luo_ucmd {
+@@ -63,8 +64,7 @@ struct luo_file_set {
+  * @list:       A list_head member used to link this session into a global list
+  *              of either outgoing (to be preserved) or incoming (restored from
+  *              previous kernel) sessions.
+- * @retrieved:  A boolean flag indicating whether this session has been
+- *              retrieved by a consumer in the new kernel.
++ * @state:      Current lifecycle phase of the session.
+  * @file_set:   A set of files that belong to this session.
+  * @mutex:      protects fields in the luo_session.
+  */
+@@ -72,8 +72,14 @@ struct luo_session {
+ 	char name[LIVEUPDATE_SESSION_NAME_LENGTH];
+ 	struct luo_session_ser *ser;
+ 	struct list_head list;
+-	bool retrieved;
++	enum {
++		LUO_SESSION_OUTGOING,
++		LUO_SESSION_INCOMING,
++		LUO_SESSION_RETRIEVED,
++		LUO_SESSION_CLOSED,
++	} state;
+ 	struct luo_file_set file_set;
++	refcount_t refs;
+ 	struct mutex mutex;
+ };
+ 
+diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
+index 783677295640..d97ec91e1118 100644
+--- a/kernel/liveupdate/luo_session.c
++++ b/kernel/liveupdate/luo_session.c
+@@ -51,6 +51,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/anon_inodes.h>
++#include <linux/atomic.h>
+ #include <linux/cleanup.h>
+ #include <linux/err.h>
+ #include <linux/errno.h>
+@@ -66,6 +67,7 @@
+ #include <linux/rwsem.h>
+ #include <linux/slab.h>
+ #include <linux/unaligned.h>
++#include <linux/wait.h>
+ #include <uapi/linux/liveupdate.h>
+ #include "luo_internal.h"
+ 
+@@ -89,10 +91,13 @@
+  */
+ struct luo_session_header {
+ 	long count;
++	atomic_t closing;
+ 	struct list_head list;
+ 	struct rw_semaphore rwsem;
++	wait_queue_head_t reboot_waitq;
+ 	struct luo_session_header_ser *header_ser;
+ 	struct luo_session_ser *ser;
++	bool rebooting;
+ 	bool active;
+ };
+ 
+@@ -110,13 +115,24 @@ static struct luo_session_global luo_session_global = {
+ 	.incoming = {
+ 		.list = LIST_HEAD_INIT(luo_session_global.incoming.list),
+ 		.rwsem = __RWSEM_INITIALIZER(luo_session_global.incoming.rwsem),
++		.reboot_waitq =
++			__WAIT_QUEUE_HEAD_INITIALIZER(luo_session_global.incoming.reboot_waitq),
+ 	},
+ 	.outgoing = {
++		.closing = ATOMIC_INIT(0),
+ 		.list = LIST_HEAD_INIT(luo_session_global.outgoing.list),
+ 		.rwsem = __RWSEM_INITIALIZER(luo_session_global.outgoing.rwsem),
++		.reboot_waitq =
++			__WAIT_QUEUE_HEAD_INITIALIZER(luo_session_global.outgoing.reboot_waitq),
+ 	},
+ };
+ 
++static void luo_session_reboot_done(struct luo_session_header *sh)
++{
++	WRITE_ONCE(sh->rebooting, false);
++	wake_up_all(&sh->reboot_waitq);
++}
++
+ static struct luo_session *luo_session_alloc(const char *name)
+ {
+ 	struct luo_session *session = kzalloc_obj(*session);
+@@ -128,6 +144,8 @@ static struct luo_session *luo_session_alloc(const char *name)
+ 	INIT_LIST_HEAD(&session->file_set.files_list);
+ 	luo_file_set_init(&session->file_set);
+ 	INIT_LIST_HEAD(&session->list);
++	session->state = LUO_SESSION_OUTGOING;
++	refcount_set(&session->refs, 1);
+ 	mutex_init(&session->mutex);
+ 
+ 	return session;
+@@ -140,6 +158,17 @@ static void luo_session_free(struct luo_session *session)
+ 	kfree(session);
+ }
+ 
++static void luo_session_get(struct luo_session *session)
++{
++	refcount_inc(&session->refs);
++}
++
++static void luo_session_put(struct luo_session *session)
++{
++	if (refcount_dec_and_test(&session->refs))
++		luo_session_free(session);
++}
++
+ static int luo_session_insert(struct luo_session_header *sh,
+ 			      struct luo_session *session)
+ {
+@@ -152,6 +181,9 @@ static int luo_session_insert(struct luo_session_header *sh,
+ 	 * for new session.
+ 	 */
+ 	if (sh == &luo_session_global.outgoing) {
++		if (READ_ONCE(sh->rebooting))
++			return -EBUSY;
++
+ 		if (sh->count == LUO_SESSION_MAX)
+ 			return -ENOMEM;
+ 	}
+@@ -172,17 +204,98 @@ static int luo_session_insert(struct luo_session_header *sh,
+ 	return 0;
+ }
+ 
++static void __luo_session_remove(struct luo_session_header *sh,
++				 struct luo_session *session)
++{
++	list_del(&session->list);
++	sh->count--;
++}
++
+ static void luo_session_remove(struct luo_session_header *sh,
+ 			       struct luo_session *session)
+ {
+ 	guard(rwsem_write)(&sh->rwsem);
+-	list_del(&session->list);
+-	sh->count--;
++	__luo_session_remove(sh, session);
++}
++
++static int luo_session_outgoing_begin(struct luo_session *session,
++				      struct luo_session_header **shp)
++{
++	struct luo_session_header *sh;
++
++	if (READ_ONCE(session->state) != LUO_SESSION_OUTGOING)
++		return -EINVAL;
++
++	sh = &luo_session_global.outgoing;
++	down_read(&sh->rwsem);
++	if (READ_ONCE(sh->rebooting)) {
++		up_read(&sh->rwsem);
++		return -EBUSY;
++	}
++
++	*shp = sh;
++	return 0;
++}
++
++static void luo_session_outgoing_end(struct luo_session_header *sh)
++{
++	if (sh)
++		up_read(&sh->rwsem);
++}
++
++static void luo_session_wait_reboot(struct luo_session_header *sh)
++{
++	DEFINE_WAIT(wait);
++
++	for (;;) {
++		prepare_to_wait(&sh->reboot_waitq, &wait,
++				TASK_UNINTERRUPTIBLE | TASK_FREEZABLE);
++		if (!READ_ONCE(sh->rebooting))
++			break;
++		schedule();
++	}
++
++	finish_wait(&sh->reboot_waitq, &wait);
++}
++
++static int luo_session_finish_retrieved(struct luo_session *session)
++{
++	int err;
++
++	guard(mutex)(&session->mutex);
++	if (session->state != LUO_SESSION_RETRIEVED)
++		return -EINVAL;
++
++	err = luo_file_finish(&session->file_set);
++	if (err)
++		session->state = LUO_SESSION_INCOMING;
++
++	return err;
++}
++
++static void luo_session_discard_deserialized(struct luo_session_header *sh)
++{
++	struct luo_session *session;
++
++	down_write(&sh->rwsem);
++	while (!list_empty(&sh->list)) {
++		session = list_last_entry(&sh->list, struct luo_session, list);
++		__luo_session_remove(sh, session);
++		session->state = LUO_SESSION_CLOSED;
++		luo_file_abort_deserialized(&session->file_set);
++		luo_session_put(session);
++	}
++	up_write(&sh->rwsem);
++
++	luo_flb_discard_incoming();
+ }
+ 
+ static int luo_session_finish_one(struct luo_session *session)
+ {
+ 	guard(mutex)(&session->mutex);
++	if (session->state != LUO_SESSION_RETRIEVED)
++		return -EINVAL;
++
+ 	return luo_file_finish(&session->file_set);
+ }
+ 
+@@ -204,26 +317,67 @@ static int luo_session_release(struct inode *inodep, struct file *filep)
+ {
+ 	struct luo_session *session = filep->private_data;
+ 	struct luo_session_header *sh;
++	int state = READ_ONCE(session->state);
++	int ret = 0;
++	bool discard_flb = false;
+ 
+-	/* If retrieved is set, it means this session is from incoming list */
+-	if (session->retrieved) {
+-		int err = luo_session_finish_one(session);
++	if (state == LUO_SESSION_RETRIEVED) {
++		ret = luo_session_finish_retrieved(session);
+ 
+-		if (err) {
++		if (ret) {
+ 			pr_warn("Unable to finish session [%s] on release\n",
+ 				session->name);
+-			return err;
++			luo_session_put(session);
++			return ret;
+ 		}
+-		sh = &luo_session_global.incoming;
+-	} else {
+ 		scoped_guard(mutex, &session->mutex)
+-			luo_file_unpreserve_files(&session->file_set);
+-		sh = &luo_session_global.outgoing;
++			session->state = LUO_SESSION_CLOSED;
++		sh = &luo_session_global.incoming;
++		down_write(&sh->rwsem);
++		__luo_session_remove(sh, session);
++		discard_flb = !sh->count;
++		up_write(&sh->rwsem);
++		luo_session_put(session);
++		luo_session_put(session);
++		if (discard_flb)
++			luo_flb_discard_incoming();
++		return 0;
+ 	}
+ 
+-	luo_session_remove(sh, session);
+-	luo_session_free(session);
++	if (state != LUO_SESSION_OUTGOING) {
++		WARN_ON_ONCE(1);
++		luo_session_put(session);
++		return 0;
++	}
+ 
++	sh = &luo_session_global.outgoing;
++
++	for (;;) {
++		down_write(&sh->rwsem);
++		if (READ_ONCE(sh->rebooting)) {
++			up_write(&sh->rwsem);
++			luo_session_wait_reboot(sh);
++			continue;
++		}
++
++		atomic_inc(&sh->closing);
++		__luo_session_remove(sh, session);
++		up_write(&sh->rwsem);
++		break;
++	}
++
++	scoped_guard(mutex, &session->mutex) {
++		session->state = LUO_SESSION_CLOSED;
++		luo_file_unpreserve_files(&session->file_set);
++	}
++
++	down_write(&sh->rwsem);
++	if (atomic_dec_and_test(&sh->closing))
++		wake_up_all(&sh->reboot_waitq);
++	up_write(&sh->rwsem);
++
++	luo_session_put(session);
++	luo_session_put(session);
+ 	return 0;
+ }
+ 
+@@ -231,10 +385,16 @@ static int luo_session_preserve_fd(struct luo_session *session,
+ 				   struct luo_ucmd *ucmd)
+ {
+ 	struct liveupdate_session_preserve_fd *argp = ucmd->cmd;
++	struct luo_session_header *sh = NULL;
+ 	int err;
+ 
+-	guard(mutex)(&session->mutex);
+-	err = luo_preserve_file(&session->file_set, argp->token, argp->fd);
++	err = luo_session_outgoing_begin(session, &sh);
++	if (err)
++		return err;
++
++	scoped_guard(mutex, &session->mutex)
++		err = luo_preserve_file(&session->file_set, argp->token, argp->fd);
++	luo_session_outgoing_end(sh);
+ 	if (err)
+ 		return err;
+ 
+@@ -252,6 +412,11 @@ static int luo_session_retrieve_fd(struct luo_session *session,
+ 	struct file *file;
+ 	int err;
+ 
++	scoped_guard(mutex, &session->mutex) {
++		if (session->state != LUO_SESSION_RETRIEVED)
++			return -EINVAL;
++	}
++
+ 	argp->fd = get_unused_fd_flags(O_CLOEXEC);
+ 	if (argp->fd < 0)
+ 		return argp->fd;
+@@ -281,8 +446,9 @@ static int luo_session_finish(struct luo_session *session,
+ 			      struct luo_ucmd *ucmd)
+ {
+ 	struct liveupdate_session_finish *argp = ucmd->cmd;
+-	int err = luo_session_finish_one(session);
++	int err;
+ 
++	err = luo_session_finish_one(session);
+ 	if (err)
+ 		return err;
+ 
+@@ -371,9 +537,12 @@ static int luo_session_getfile(struct luo_session *session, struct file **filep)
+ 
+ 	lockdep_assert_held(&session->mutex);
+ 	snprintf(name_buf, sizeof(name_buf), "[luo_session] %s", session->name);
++	luo_session_get(session);
+ 	file = anon_inode_getfile(name_buf, &luo_session_fops, session, O_RDWR);
+-	if (IS_ERR(file))
++	if (IS_ERR(file)) {
++		luo_session_put(session);
+ 		return PTR_ERR(file);
++	}
+ 
+ 	*filep = file;
+ 
+@@ -403,7 +572,7 @@ int luo_session_create(const char *name, struct file **filep)
+ err_remove:
+ 	luo_session_remove(&luo_session_global.outgoing, session);
+ err_free:
+-	luo_session_free(session);
++	luo_session_put(session);
+ 
+ 	return err;
+ }
+@@ -418,6 +587,7 @@ int luo_session_retrieve(const char *name, struct file **filep)
+ 	scoped_guard(rwsem_read, &sh->rwsem) {
+ 		list_for_each_entry(it, &sh->list, list) {
+ 			if (!strncmp(it->name, name, sizeof(it->name))) {
++				luo_session_get(it);
+ 				session = it;
+ 				break;
+ 			}
+@@ -428,12 +598,14 @@ int luo_session_retrieve(const char *name, struct file **filep)
+ 		return -ENOENT;
+ 
+ 	guard(mutex)(&session->mutex);
+-	if (session->retrieved)
+-		return -EINVAL;
++	if (session->state != LUO_SESSION_INCOMING)
++		err = -EINVAL;
++	else
++		err = luo_session_getfile(session, filep);
+ 
+-	err = luo_session_getfile(session, filep);
+ 	if (!err)
+-		session->retrieved = true;
++		session->state = LUO_SESSION_RETRIEVED;
++	luo_session_put(session);
+ 
+ 	return err;
+ }
+@@ -548,6 +720,7 @@ int luo_session_deserialize(void)
+ 				sh->ser[i].name, session);
+ 			return PTR_ERR(session);
+ 		}
++		session->state = LUO_SESSION_INCOMING;
+ 
+ 		err = luo_session_insert(sh, session);
+ 		if (err) {
+@@ -578,6 +751,17 @@ int luo_session_serialize(void)
+ 	int err;
+ 
+ 	guard(rwsem_write)(&sh->rwsem);
++	if (READ_ONCE(sh->rebooting))
++		return -EBUSY;
++
++	while (atomic_read(&sh->closing)) {
++		up_write(&sh->rwsem);
++		wait_event(sh->reboot_waitq, !atomic_read(&sh->closing));
++		down_write(&sh->rwsem);
++		if (READ_ONCE(sh->rebooting))
++			return -EBUSY;
++	}
++	WRITE_ONCE(sh->rebooting, true);
+ 	list_for_each_entry(session, &sh->list, list) {
+ 		err = luo_session_freeze_one(session, &sh->ser[i]);
+ 		if (err)
+@@ -595,8 +779,11 @@ int luo_session_serialize(void)
+ 	list_for_each_entry_continue_reverse(session, &sh->list, list) {
+ 		i--;
+ 		luo_session_unfreeze_one(session, &sh->ser[i]);
+-		memset(sh->ser[i].name, 0, sizeof(sh->ser[i].name));
++		memset(&sh->ser[i], 0, sizeof(sh->ser[i]));
+ 	}
++	sh->header_ser->count = 0;
++	/* Reset rebooting flag on serialization failure. */
++	luo_session_reboot_done(sh);
+ 
+ 	return err;
+ }
+@@ -624,7 +811,8 @@ bool luo_session_quiesce(void)
+ 	down_write(&luo_session_global.outgoing.rwsem);
+ 
+ 	if (luo_session_global.incoming.count ||
+-	    luo_session_global.outgoing.count) {
++	    luo_session_global.outgoing.count ||
++	    atomic_read(&luo_session_global.outgoing.closing)) {
+ 		up_write(&luo_session_global.outgoing.rwsem);
+ 		up_write(&luo_session_global.incoming.rwsem);
+ 		return false;
+-- 
+2.53.0
 
-You are right. This wait can be hit from userspace while the
-preserve_context path is entering the freezer. I will switch this to
-wait_event_freezable(), as this path can be reached from userspace
-during the freeze phase.
-
-You are right. Dropping the rwsem before luo_session_remove() leaves
-a serialize-vs-close window, so v1 still allows an outgoing session to
-be serialized after close has started. In v2 I will keep the outgoing
-session exclusion across the entire unpreserve/remove path (i.e. prevent
-serialization until the session is fully removed), and I will gate both
-PRESERVE_FD and FINISH under the same reboot check.
-
-These issues indicate the outgoing session lifecycle still has race
-windows, so I will rework this part more substantially in v2.
-
-Patch 2
-
-You are right. On the preserve_context flow, machine_kexec() can
-return to the original kernel with error == 0, so the current
-abort-on-error logic is insufficient. I will fix this by explicitly
-aborting liveupdate state on the preserve_context return path in
-kernel_kexec() after machine_kexec() returns.
-
-Agreed. The abort loop only stays synchronized as long as the outgoing
-list cannot change after serialization. The remaining release/remove
-race in patch 1 breaks that assumption. I will fix that in v2 by
-ensuring outgoing removal is excluded once serialization starts, so
-abort can unfreeze the same session set that was serialized.
-
-Patch 3
-
-You are right. luo_file_discard_deserialized() currently drops
-file_set->files without freeing the preserved KHO block. I will fix
-this by routing the discard path through a common cleanup path which
-calls kho_restore_free(file_set->files) before clearing the pointer.
-
-You are right. The direct returns in luo_session_deserialize()
-bypass cleanup of sh->header_ser, can leave previously restored
-sessions behind, and do not cache the final error value. I will fix
-this by routing all deserialize failures through a common cleanup path
-which removes any sessions restored so far, frees sh->header_ser,
-clears sh->ser, and stores the cached error before returning.
-
-I do not think this specific UAF is reachable, because deserialization
-happens before the device becomes visible to userspace and the device
-enforces single-open semantics. The cleanup and leak issues are real,
-though, and the common unwind path above will address them.
-
-Patch 4
-
-Agreed. The file-set validation failures currently share the same
-cleanup hole as patch 3. The common deserialize cleanup in v2 will
-free the preserved file_set block via kho_restore_free() before
-dropping the pointer.
-
-You are right about the direct returns in luo_session_deserialize().
-I will convert those to the same common error path so sh->header_ser
-is freed and the cached error is set consistently.
-
-You are right about memfd cleanup. I will route early validation
-failures through free_ser:, and I will fix the folio unwind so it also
-releases the current folio entry rather than only the tail entries
-after it.
-
-Agreed. I will also validate nr_folios against the vmalloc backing
-metadata (ser->folios.total_pages), not only against ser->size,
-before iterating.
-
-Patch 5
-
-I agree this is a bug. It is pre-existing and not introduced by this
-patch, so I will fix it in a follow-up by rechecking the incoming state
-under the mutex before returning success from
-liveupdate_flb_get_incoming().
-
-Overall, I will rework the outgoing session lifecycle, unify the
-serialization exclusion rules, and fix the cleanup paths in v2.
-
-Oskar Gerlicz Kowalczuk
 
