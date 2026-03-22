@@ -4,57 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 76268109448C
-	for <kexec@archiver.kernel.org>; Sun, 22 Mar 2026 02:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0DBA9109448C
+	for <kexec@archiver.kernel.org>; Sun, 22 Mar 2026 02:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:Cc:To:From:Subject:
 	References:In-Reply-To:Message-Id:MIME-Version:Content-Type:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xERLiFunLRNb8lbLEdTuH1ic+4aHz0LjEa5KLiwdylQ=; b=u0RYrZDWegkvD58jUveCEJ9XKU
-	Bsd1q3r53QDEuKwPfMnesfHJ1G9rxwAKLKcd9dws38fDzLpP2S2YujOCVBcSUpd1k7DysCi9+fz6R
-	Oh/cnEIUdxXLwKZhdi9yxypkxj+VJKaSy2rV5MpEbuv5M/aRIp+C+8MiJyxKiKfcncSP4UPbBkMhn
-	ho/6mGFxdF8Ot8iJKMFQm5vzXcPPnqQmNHV319DntIm1TMa/YN2jSUTw34JJV9CHswYEGCqiND3JL
-	geI8RebsjLzVm2P8wSit9nPUaCo/KeCF/LsihCBN1VbZ/iINg6mLj2JyS7Mhrl2sk2PBi7JqN2WbI
-	FL1uvyfw==;
+	bh=GUKH6tk7e0QXLFYS2hPEcOStsd5qhu6cQrD7NLLmGzY=; b=asZHykJ5IIm0ImWSc9XjPNIis0
+	mPdWZ7OjtzkUeK9qDHncayYgpUfmCXqEMRIv+iFfpHE/MQwsFoHsHR6i2RgRT1FYcaZkwCnsbIA6K
+	bdXcNwNx0tzFLKtKesP08QHsKzmWLfBLJg5n/PAR5deVWlXmF2itgd0lgzukNfiNJvdThLE1+SJjK
+	WjbGSeHoQO5GD6GWOr4MQh9vXxqCHPemcdTOjs5lB8cQvsTO9YnTHZPYqrjbPXRddJ89Jd87KKvDd
+	KI3zIiKMoRdsI575anW7SuUW9Zuq3Ld8x/3O6gcxYEJfafw9kq/r4fUda7IIypti5ySWvbS+e44qm
+	B67BwKew==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w48Kn-0000000EyZq-0Jim;
-	Sun, 22 Mar 2026 02:14:33 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1w48WS-0000000Ez9n-45US;
+	Sun, 22 Mar 2026 02:26:36 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w48Kj-0000000EyX3-4AuY
+	id 1w48WR-0000000Ez8p-3dy3
 	for kexec@lists.infradead.org;
-	Sun, 22 Mar 2026 02:14:31 +0000
+	Sun, 22 Mar 2026 02:26:35 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id ADDEA44545;
-	Sun, 22 Mar 2026 02:14:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06289C19421;
-	Sun, 22 Mar 2026 02:14:29 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 400186187F;
+	Sun, 22 Mar 2026 02:26:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68215C19421;
+	Sun, 22 Mar 2026 02:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774145669;
-	bh=KM27ZStv54d4ev0F7eUGi5mKasxRcuFt8w61iI2z5fg=;
+	s=k20201202; t=1774146394;
+	bh=e28PPferGzosCU+i58JNVBT0CDCpiwBcPUUhQVfPpa4=;
 	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-	b=oxUq1vhpeCZwtX+7Kq7V3QSY/lojQ+xfQP0pcoqot5QvXw7dV/4rDeQc4Fmrmz261
-	 bTZRS/mvj5oQHnT1L/FgCE9DX2A6ylnaoFZyYsiDjfmbgFI++GWJJSx0li5dtrXa5X
-	 f0jRGsbVhjksG7iR8ZJ5iQ/zXJFt54xyL9EPHQ8vBKj0YCKmycjTCIHilcxZgai7+2
-	 lPD9Ojg6dtgDhgW+9MiZnpR8YqmnhoYSyM12LtNBNchwxx9hOLrbge4ALx9VWZnKrZ
-	 pCfOGXtBQiPGyUYRLbuTQsK2Fs44b/oZRUcxkKk0JdHwZhVoK8nqoF68AHgYNQj68b
-	 rrPtttxnisexQ==
-Content-Type: multipart/mixed; boundary="===============8611594194516260872=="
+	b=lrfLxNMmIAVERtQCvrBbbT2rJgEZ3n+ml/bVFya/R7T8MXMVnpb0VEZnlh4xoUuJN
+	 uYVt6vk+SfjkrKgD48TaBD7o0kCfyoEHDiH3l1CAmOuMY/rXJGjqy2CqpmXtZ+Vzah
+	 JjCuFhkoHYsP4t0/ct05fLANvhSuqxjIsaiC2NPu6vOs1iUsrKFi1hSFklRO38UEH9
+	 a9uuj1FhstylH3gPXcOmA72EoOeaFdBjwj/7PJi3hDMc7H/CpY1B1eKyf2qxu+p690
+	 IYX/zs4PIjJCPVWRT+sSezoPRFv0LfKQa0RmmRglBMrlL91u/CMyvZykXs+BL7v7f6
+	 YxvKwiBqGCZug==
+Content-Type: multipart/mixed; boundary="===============7741034310972575734=="
 MIME-Version: 1.0
-Message-Id: <08c0a3bb712e08a8889996a1e4e8c4539eb02a393e237d67e3179364c054fddc@mail.kernel.org>
-In-Reply-To: <20260322014402.8815-3-piliu@redhat.com>
-References: <20260322014402.8815-3-piliu@redhat.com>
-Subject: Re: [PATCHv7 02/13] kexec_file: Use bpf-prog to decompose image
+Message-Id: <9fc6a101fc0aff669aab2270d9287b55e63b44993778536303843b6155af1283@mail.kernel.org>
+In-Reply-To: <20260322014402.8815-5-piliu@redhat.com>
+References: <20260322014402.8815-5-piliu@redhat.com>
+Subject: Re: [PATCHv7 04/13] kexec_file: Implement decompress method for parser
 From: bot+bpf-ci@kernel.org
 To: piliu@redhat.com,kexec@lists.infradead.org
 Cc: piliu@redhat.com,davem@davemloft.net,ast@kernel.org,daniel@iogearbox.net,john.fastabend@gmail.com,andrii@kernel.org,martin.lau@linux.dev,eddyz87@gmail.com,song@kernel.org,yonghong.song@linux.dev,jeremy.linton@arm.com,catalin.marinas@arm.com,will@kernel.org,ardb@kernel.org,horms@kernel.org,kraxel@redhat.com,vkuznets@redhat.com,prudo@redhat.com,vmalik@redhat.com,kernel@jfarr.cc,bhe@redhat.com,dyoung@redhat.com,akpm@linux-foundation.org,bpf@vger.kernel.org,systemd-devel@lists.freedesktop.org,linux-kernel@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Sun, 22 Mar 2026 02:14:29 +0000 (UTC)
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260321_191430_086390_D64D52F8 
-X-CRM114-Status: GOOD (  18.99  )
+Date: Sun, 22 Mar 2026 02:26:34 +0000 (UTC)
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,116 +66,73 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
---===============8611594194516260872==
+--===============7741034310972575734==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 
 > diff --git a/kernel/kexec_bpf_loader.c b/kernel/kexec_bpf_loader.c
-> new file mode 100644
-> index 000000000000..bd1800a76782
-> --- /dev/null
+> index bd1800a76782..c79fb777d51b 100644
+> --- a/kernel/kexec_bpf_loader.c
 > +++ b/kernel/kexec_bpf_loader.c
 
 [ ... ]
 
-> +#include <linux/bpf.h>
-> +#include <linux/filter.h>
-> +#include <asm/byteorder.h>
-> +#include <asm/image.h>
-> +#include <asm/memory.h>
-> +#include "kexec_internal.h"
-
-Are asm/image.h and asm/memory.h needed here?  I could not find any
-symbols from either header used in this file.  asm/image.h only exists
-for arm64, loongarch, and riscv, and asm/memory.h only for arm, arm64,
-and csky.
-
-Since CONFIG_KEXEC_BPF has no architecture dependency, enabling it on
-x86 would cause a build failure from these missing headers.
+> @@ -73,8 +74,243 @@ static int __init kexec_bpf_prog_run_init(void)
+>  }
+>  late_initcall(kexec_bpf_prog_run_init);
 
 [ ... ]
 
-> +static int process_bpf_parsers_container(const char *elf_buf, size_t elf_sz,
-> +				   struct kexec_context *context, int depth)
-> +{
+>  static int kexec_buff_parser(struct bpf_parser_context *parser)
+>  {
+> +	struct bpf_parser_buf *pbuf = parser->buf;
+> +	struct kexec_context *ctx = (struct kexec_context *)parser->data;
+> +	struct cmd_hdr *cmd = (struct cmd_hdr *)pbuf->buf;
+> +	char *decompressed_buf, *buf, *p;
+> +	unsigned long decompressed_sz;
+> +	int ret = 0;
 
 [ ... ]
 
-> +		/*
-> +		 * Give the BPF prog a clean slate so context->parsed reliably
-> +		 * reflects whether *this* invocation succeeded.
-> +		 */
-> +		context->parsed = false;
-> +		/* This is the hook point for bpf-prog */
-> +		kexec_image_parser_anchor(context, (unsigned long)bpf);
-> +		disarm_bpf_prog();
-> +
-> +		/* Free the old parsing context, and reload the new */
-> +		for (int i = 0; i < MAX_PARSING_BUF_NUM; i++) {
-> +			if (!!context->parsing_buf[i])
-> +				break;
-> +			vfree(context->parsing_buf[i]);
-> +			context->parsing_buf[i] = NULL;
-> +			context->parsing_buf_sz[i] = 0;
-> +		}
-
-The comment says "free the old parsing context" but the condition
-appears inverted.  !!context->parsing_buf[i] is true when the pointer
-is non-NULL, so the loop breaks at the first populated entry and only
-calls vfree() on NULL pointers (which is a no-op).
-
-Should this be if (!context->parsing_buf[i]) instead?
-
-[ ... ]
-
-> +int decompose_kexec_image(struct kimage *image, int extended_fd)
-> +{
-> +	struct kexec_context ctx = { 0 };
-> +	unsigned long parser_sz;
-> +	char *parser_start;
-> +	int ret = -EINVAL;
-
-[ ... ]
-
-> +	if (!validate_elf_bpf_sections(parser_start, parser_sz)) {
-> +
-> +		ret = kernel_read_file_from_fd(extended_fd,
-> +						0,
-> +						(void **)&ctx.parsing_buf[0],
-> +						KEXEC_FILE_SIZE_MAX,
-> +						NULL,
-> +						0);
-> +		if (ret < 0) {
-> +			pr_err("Fail to read image container\n");
-> +			return -EINVAL;
-> +		}
-> +		ctx.parsing_buf_sz[0] = ret;
-> +		ret = process_bpf_parsers_container(parser_start, parser_sz, &ctx, 0);
+> +	case KEXEC_BPF_CMD_DECOMPRESS:
+> +		ret = parser_cmd_decompress(buf, cmd->payload_len, &decompressed_buf,
+> +					&decompressed_sz, ctx);
 > +		if (!ret) {
-> +			char *p;
-> +
-> +			/* Envelop should hold valid kernel, initrd, cmdline sections */
-> +			if (!ctx.kernel || !ctx.initrd || !ctx.cmdline) {
-> +				vfree(ctx.kernel);
-> +				vfree(ctx.initrd);
-> +				vfree(ctx.cmdline);
-> +				return -EINVAL;
+> +			switch (cmd->subcmd) {
+> +			case KEXEC_BPF_SUBCMD_KERNEL:
+> +				vfree(ctx->kernel);
+> +				ctx->kernel = decompressed_buf;
+> +				ctx->kernel_sz = decompressed_sz;
+> +				break;
+> +			default:
+> +				vfree(decompressed_buf);
+> +				break;
 > +			}
-
-[ ... ]
-
 > +		}
-> +		return ret;
+> +		break;
+> +	default:
+> +		break;
 > +	}
 > +
-> +	return -EINVAL;
-> +}
+>  	return 0;
+>  }
 
-When process_bpf_parsers_container() fails, or when the
-!ctx.kernel || !ctx.initrd || !ctx.cmdline check triggers,
-ctx.parsing_buf[0] was allocated by kernel_read_file_from_fd() but
-is never freed before returning.  Does this leak the buffer?
+Should this return ret instead of 0?  When parser_cmd_decompress()
+fails, ret holds the error code, but the function discards it and
+returns success.
+
+bpf_buffer_parser() in bpf_buffer_parser.c propagates this return
+value back to the calling BPF program:
+
+    ret = context->func(context);
+    ...
+    return ret;
+
+Returning 0 here means the BPF program sees success even when
+decompression failed.  It would then proceed to send
+KEXEC_BPF_CMD_DONE, setting ctx->parsed = true, causing kexec
+to complete loading with a missing or undecompressed kernel image.
 
 
 ---
@@ -186,5 +140,5 @@ AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
 See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
 CI run summary: https://github.com/kernel-patches/bpf/actions/runs/23393379437
---===============8611594194516260872==--
+--===============7741034310972575734==--
 
