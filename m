@@ -4,70 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 10AD01094481
-	for <kexec@archiver.kernel.org>; Sun, 22 Mar 2026 03:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1F2E9FC72AF
+	for <kexec@archiver.kernel.org>; Sun, 22 Mar 2026 07:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=zRoYtoWMobhDxLBaF8G/BRL7/KalCQubI0jjWzgyfa4=; b=UBhSooSgs9KIy+tLHWt2Vii0Yq
-	FZ//ZZIKWeMyhw5jdzojOuQAIgpnnfHw82gloGY3wX64awlGrIz5g+kVUZj0ZZxBCSERmx8wk9LeC
-	D8xxeyEfZpP+Lcc0Hbx9xiKTvRsbdYD+5ze0bRn3RH2pUQEAssIPdBz31OkMsicQpJlSD7ce0azLK
-	w16G89sMzFPDjDjQ+OTrAxGcbF82VQgVwbgmoxL8SJlVwcqgQrboilhuD3yyNNGWr8rADfwzMsid9
-	kYa0NVT/N+2XdnuvQv5U+RwdfrQIX95FVFQ67ELdUO06TsNACDqhp1BiLERcJsf9ArbOi6UFXpJOj
-	xvyql+YQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=fl6Vo0CZ6glcVLyy4yu619dgSiIfKOAp/m+BURB5CJU=; b=sDWpj0l0bI1+5Ie2W271zBVdhH
+	UW6PANUPPfrXe9Zm+MoekiP9pRHQn1VxJK33sGUNCXSaV+WPLOJc/sv0hb++i82agEYjbDPOWeSqP
+	Y3nHjXhKjw6ftV/n7GVqjxd6S0+cgjRE37RfHOsJVAY2ILE9IaNLQZG6pgHLT1qM11pfWrmxj2axQ
+	yDqC2EvGHt9P3PjOwovg97f7FSXo3BqGOcM0MhrcTnDBhlOoPaFii6JrMeQwh/NayUtNlGG6OvARb
+	Mb7pQdjKbqjBIkvq+eijbwcx4DCr+0K0uCEhca5EomIappXFwW7m4OsmeJq6VUFjih8hgJtdyebS4
+	ZsL/oPDw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w49Ls-0000000F0ne-10it;
-	Sun, 22 Mar 2026 03:19:44 +0000
-Received: from smtp25.cstnet.cn ([159.226.251.25] helo=cstnet.cn)
+	id 1w4DQq-0000000FA7s-3Pt7;
+	Sun, 22 Mar 2026 07:41:08 +0000
+Received: from mgamail.intel.com ([192.198.163.19])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w49Lo-0000000F0nE-2MtZ
+	id 1w4DQm-0000000FA77-1nVj
 	for kexec@lists.infradead.org;
-	Sun, 22 Mar 2026 03:19:42 +0000
-Received: from localhost.localdomain (unknown [111.196.245.197])
-	by APP-05 (Coremail) with SMTP id zQCowAAntwq8X79p5E8eCw--.19969S2;
-	Sun, 22 Mar 2026 11:19:25 +0800 (CST)
-From: Pengpeng Hou <pengpeng@iscas.ac.cn>
-To: x86@kernel.org
-Cc: pengpeng@iscas.ac.cn,
-	kexec@lists.infradead.org,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/kexec: bound bzImage64 setup header copy
-Date: Sun, 22 Mar 2026 11:19:24 +0800
-Message-ID: <20260322031924.58050-1-pengpeng@iscas.ac.cn>
-X-Mailer: git-send-email 2.50.1
+	Sun, 22 Mar 2026 07:41:07 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774165264; x=1805701264;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Bb4QyRenZ7daQTIah7HNDKj8CLKXNag8jCu6QnIEdBg=;
+  b=O49xhhTxl069ZoyKC/pqyAK3iWIlFrdw4IHU5r65bTuCIrKGPEcFed3G
+   dT6Kwb0Rka9dOMKE8fC8tM6xOZyK1xfk2kQU8e1GYUIUaFS8QPu50U9bM
+   7xs9uBhDCRg1UngXXz/xFeQCxgVW7r7MTU+YomHC9YpjpyBwUHyM7O/gx
+   D6/dCFkX7udEZrLZC61WAb+mQ2KnSZTY7XzDo2TjfUP3i4wFemr1oNeZn
+   qkTkw46p4+THHKs20s622rcODn2lWfqs/R2K8T1vQXyhYhrbopuQfm+iM
+   b/BbkBpQSOYgHYYx1j05Rz4Jy314+kzdY20HvGsXJMjvAiyWlKkQMe3H8
+   A==;
+X-CSE-ConnectionGUID: bgQwl+SxROaZREr7fqk6Mg==
+X-CSE-MsgGUID: skRqiJQcT6e9a5FoFRZ8ZQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11736"; a="74218071"
+X-IronPort-AV: E=Sophos;i="6.23,134,1770624000"; 
+   d="scan'208";a="74218071"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2026 00:41:02 -0700
+X-CSE-ConnectionGUID: aubtGZfvTP64cXi8tj3R7Q==
+X-CSE-MsgGUID: iuwTwHhqRGKMtknP2CxQOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,134,1770624000"; 
+   d="scan'208";a="223749971"
+Received: from lkp-server02.sh.intel.com (HELO d7fefbca0d04) ([10.239.97.151])
+  by orviesa008.jf.intel.com with ESMTP; 22 Mar 2026 00:40:59 -0700
+Received: from kbuild by d7fefbca0d04 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1w4DQb-000000001pJ-1PUq;
+	Sun, 22 Mar 2026 07:40:55 +0000
+Date: Sun, 22 Mar 2026 15:40:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Mike Rapoport <rppt@kernel.org>, Baoquan He <bhe@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, Pratyush Yadav <pratyush@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
+Subject: Re: [PATCH 1/5] liveupdate: block outgoing session updates during
+ reboot
+Message-ID: <202603221537.TfoAS2LD-lkp@intel.com>
+References: <20260320163720.100456-1-oskar@gerlicz.space>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: zQCowAAntwq8X79p5E8eCw--.19969S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uF1kKr4kJFy3Xw15JF1UWrg_yoW8CFW8pw
-	srX340gw1DJr1Y93y8Zr48CFW3A397ta4agFWUG395tFs0g348KFWIgry29a1j9r4rKF1F
-	qw1YyF1S93WkJrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v2
-	6r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
-	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
-	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267
-	AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_
-	Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbtxhJ
-	UUUUU==
-X-Originating-IP: [111.196.245.197]
-X-CM-SenderInfo: pshqw1xhqjqxpvfd2hldfou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260320163720.100456-1-oskar@gerlicz.space>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260321_201940_985019_02FBBCD4 
-X-CRM114-Status: GOOD (  11.19  )
+X-CRM114-CacheID: sfid-20260322_004104_481639_4C911922 
+X-CRM114-Status: GOOD (  11.40  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,51 +93,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-`bzImage64_load()` computes the size of the setup header from the image
-header bytes and copies that amount into `params->hdr` without first
-verifying that the derived size fits the destination `setup_header`.
-Current in-tree images line up with the expected header length, but the
-loader still trusts the image-derived byte and will happily copy a
-larger header area from a malformed bzImage.
+Hi Oskar,
 
-Reject setup headers larger than `struct setup_header` before copying
-them into `boot_params`.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
----
- arch/x86/kernel/kexec-bzimage64.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+[auto build test WARNING on linus/master]
+[also build test WARNING on v7.0-rc4 next-20260320]
+[cannot apply to akpm-mm/mm-everything]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 5630c7dca1f3..ac31bf092292 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -587,16 +587,20 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 		kbuf.bufsz += sizeof(struct setup_data) +
- 			      sizeof(struct kho_data);
- 
-+	/* Copy setup header onto bootparams. Documentation/arch/x86/boot.rst */
-+	setup_header_size = 0x0202 + (unsigned char)kernel[0x0201] -
-+			    setup_hdr_offset;
-+	if (setup_header_size > sizeof(struct setup_header)) {
-+		pr_err("bzImage setup header too large\n");
-+		return ERR_PTR(-ENOEXEC);
-+	}
-+
- 	params = kvzalloc(kbuf.bufsz, GFP_KERNEL);
- 	if (!params)
- 		return ERR_PTR(-ENOMEM);
- 	efi_map_offset = params_cmdline_sz;
- 	efi_setup_data_offset = efi_map_offset + ALIGN(efi_map_sz, 16);
- 
--	/* Copy setup header onto bootparams. Documentation/arch/x86/boot.rst */
--	setup_header_size = 0x0202 + kernel[0x0201] - setup_hdr_offset;
--
--	/* Is there a limit on setup header size? */
- 	memcpy(&params->hdr, (kernel + setup_hdr_offset), setup_header_size);
- 
- 	kbuf.buffer = params;
+url:    https://github.com/intel-lab-lkp/linux/commits/Oskar-Gerlicz-Kowalczuk/kexec-abort-liveupdate-handover-on-kernel_kexec-unwind/20260322-071016
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20260320163720.100456-1-oskar%40gerlicz.space
+patch subject: [PATCH 1/5] liveupdate: block outgoing session updates during reboot
+config: x86_64-randconfig-161-20260322 (https://download.01.org/0day-ci/archive/20260322/202603221537.TfoAS2LD-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.4.0-5) 12.4.0
+smatch: v0.5.0-9004-gb810ac53
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260322/202603221537.TfoAS2LD-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202603221537.TfoAS2LD-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> Warning: kernel/liveupdate/luo_session.c:99 struct member 'reboot_waitq' not described in 'luo_session_header'
+>> Warning: kernel/liveupdate/luo_session.c:99 struct member 'rebooting' not described in 'luo_session_header'
+>> Warning: kernel/liveupdate/luo_session.c:99 struct member 'reboot_waitq' not described in 'luo_session_header'
+>> Warning: kernel/liveupdate/luo_session.c:99 struct member 'rebooting' not described in 'luo_session_header'
+
 -- 
-2.50.1 (Apple Git-155)
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
