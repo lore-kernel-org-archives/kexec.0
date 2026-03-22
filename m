@@ -4,105 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 913C4109449D
-	for <kexec@archiver.kernel.org>; Sat, 21 Mar 2026 23:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 781ED109449D
+	for <kexec@archiver.kernel.org>; Sun, 22 Mar 2026 01:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=NxFfukiYQfTiKo8hngBXYOGIkpypLUKnBpebRqVgDE8=; b=OFGsQPNAyi0vtccPz5EbIJlbwT
-	D1V2L+IVRwIggO4MIMEFw9Th3dsKjcZZ2K5imkcCVqLR61kTE+9dBpfafKFrvVhPQw/21ccH54E0q
-	3Av2MFvetZeEYAHPscrgJpeHToYlPfRarBrEmYJ6QzpgVn6F2Bdhgd3HAl2ADKLzzz9q+v7FJgGHk
-	1nmkfYdt1toutG1+yikbTfyrInvAgNNw0SaC9cLQAffm/zGHu8QEkrhqaYUL6Pomi8XGcm45BmTfZ
-	GVBMUUCWhnUmxrQsU10NYZitiPp+mzBwFW11HJwQNWu8kTbbY7i5FZBAsbr4IESzTgBB0aUvNlIQu
-	68/bXAyg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=AqEEL25LD51u+oJXMo+RBoLHenSW9n6bAMMAPGybk7E=; b=OIBf1oV6EqYBFJn8om2RIGndmr
+	74Q41YhyWjSAiNRAPmVkDaI6zV3EfACktItaZ/sYmfVl6SdW60Wea45aj+xVXReuBvh1jVsKZLXkZ
+	WQ37/Uh3HGImBEzMFRwrPp/2KhybxNwvT/fsX8iA+4z+t+L1MVT7mLTtZw959O47ad70oGvM0TerG
+	x/qXoZsQ8CFY6Gx288Jv+D84T02H6DmIFbCDnUfK4j1Ralal5ic9kU9FI8NxSwMOqjmj6ReSGPbQx
+	0BCTil1adnU8oEqGahArLvqrTRQMWJ/pTwmGxSKfVjD7YRERS8TDUYrYFTai+zQAvH7HrbJwnvQPa
+	SDSTfZfw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w45O7-0000000ErRi-3O8o;
-	Sat, 21 Mar 2026 23:05:47 +0000
-Received: from mail-ed1-x52f.google.com ([2a00:1450:4864:20::52f])
+	id 1w47rz-0000000Ewh9-0S2b;
+	Sun, 22 Mar 2026 01:44:47 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w45O5-0000000ErRN-3Ymp
+	id 1w47rv-0000000Ewgh-2GEh
 	for kexec@lists.infradead.org;
-	Sat, 21 Mar 2026 23:05:47 +0000
-Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-6689033d0c3so2556934a12.0
-        for <kexec@lists.infradead.org>; Sat, 21 Mar 2026 16:05:45 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774134344; cv=none;
-        d=google.com; s=arc-20240605;
-        b=HOxVKf7YLyNgsrflYaH4kRdAbYL+HA/0Njigy45dzffA9P/r9KegkXg++NKLiwaiJO
-         7JjVZ3j23acXr9+1906fFMtOzjZF6DuyxObYn0wmwx2EgZlKh55d7df7S34X43FbOYiW
-         XxJHwqi+fK/pKOh/TVNDX9dehcbpMPuG8PPXsge+DE/XOu6vVsJPenS/6cXBq5xWCJ16
-         VJ06dpGFtXA4YU9JE2i/ItS5G1/BnUYcpMx9wI8zaaU/TszvyyFL/A1HwSD/vXd/Z/JO
-         UivDt5HDIW6R5xsSK6WLMeAMxPywop0WI+SW/eBu8x00Bb0VLnDhUy9PR6RFjg6DMab/
-         BL2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=NxFfukiYQfTiKo8hngBXYOGIkpypLUKnBpebRqVgDE8=;
-        fh=YZMN9kPlyusikQtMBICQm78yKKDLe/SJzIRMMUzq/pU=;
-        b=YcWFTb9wndf4+4upDrC3X3MO2T3cozCUvVMWX3TymxV5ym//Ryo3QBOnHWF02EXvHU
-         1lOFYA8zAEEFoKrID8SJPdi9NvuMEmSL6BqdAbidfh9w3XOPmaS6k2H3XXAG6S8rb6TM
-         6W8nQllgKlCzCUCwrku361fGpWcXx6MdDsScsa3zXwBeEq4hIvxDQ1ks1+/IkUM1d2Uq
-         Jn8DR65mieYkM3ph6rk5O3iIU62LgWAs7OFjLWrbw07a98nQX6BT7/epqGDx62PMk1LZ
-         keACPAt4rmygZZOg5Tq08jwJmjZsXP7UYRd9VHjNgzM61ANv49BqO7IYdymcPnFyTYTz
-         sVOQ==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1774134344; x=1774739144; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NxFfukiYQfTiKo8hngBXYOGIkpypLUKnBpebRqVgDE8=;
-        b=ipLCZ80d55Ou1Ak167AktwySHqyT3eSrOo+HzAhSlucgiQ90IOBTHI6si80RIoaWNs
-         m5pEVE9Ilq/eH0l12MQ5V5i1qmKKeSKxuZAdQdE1PMGsc0l3cOIYsK62duAZJbX492tq
-         RrP7H/9Mknqj3CJAg482xgoYLDc1ARAPv8HYkHJWefYclTxEaBUuJnYL36oGA36btP9B
-         VegSQeaq71uRBnsU82TEOT6qg2eUvlxPvGLYMXSLgzBHZ1v1eS/SfefO7p/v52EnchE9
-         ff++0jKMxW8VaZSkzn/3UtTL66zR1SfTlM334RrBUCsl8AJOzviTKuC8ilr4VAB+inkk
-         FknA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774134344; x=1774739144;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=NxFfukiYQfTiKo8hngBXYOGIkpypLUKnBpebRqVgDE8=;
-        b=BlJU32WkZ4cAROrHXlFXerA9SnPGiWFH5HpkkrVEIGlJg+H6RtzaLLEe9QW/4WPdXG
-         seHk+/k6sqr2vC430jw19t/VvzOkgFAqASJm5S7jKDbZm0Jv9B1LpNuIvr2u15seBBL7
-         vuiEqeTao6b/HjtKpBjpoDOVXeHXoAOdH0Eb94jnWPWIZr7lPIKDz/Qp4YPbLNdfZ8i+
-         8CLKXl3MV3xenSGsKPgmXwRUFi+owjc0cyQp8nBSuSBR+YOhc0CEMkPviTQLm23JM1h8
-         ogUbxawQUFyTdazuyMsPhK/gt7j3szbEikP+L3dYt/IOuCqoCOuighZz/EnSBwdgw8ZE
-         xdvg==
-X-Forwarded-Encrypted: i=1; AJvYcCULmatwLTOv7fliBpUFoGdifcLy/vmKoRJp8APSG4R2VaCU2KOjBYSk4kbTAagdnvwdTqqfcg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YziqL722D3U/jVCmSoK+Y377wDvkaGHkH64SrEZEOtVe1zoi6Qv
-	2X99ZP+qTtdi0NHnCRGX4tiDcUwuiazOwqJoMK5f21fUeejknV6wKZqTYOoVKORW+8PJftPRPZb
-	tQjyZiC1mnbDhtZOTeT5umpe7KfsUQvtAt6/niqmWUg==
-X-Gm-Gg: ATEYQzzGo8x6duSsExqphYzoQKntloKGAOCCiWbbSbH24H3T/Sl7euFboFmKHKCZ/LS
-	BjypNZnDEuTUdHFbWb2jZEag3/4QYU3LyMx0bPlQ80i49tfz1/kpEAAHrPEgHOkz3QGLetAngmu
-	wKSN48r//pBmBsCmdkgyAPc9buaU2G93Vwi9e/3i6I8Uyy80ia2x/CpLIlNaShbNnZIgFWQkx2f
-	dTAZ7ujXHhmNKZCRFRJGAqtBxGzljdl5qcbUZ9CsOcEUNq3DdNUt+fmexffxEXGlHewNZNuvj7l
-	8IyNlYLLrolugLiw/BEYwYGoUmbgQ5tSZeE3aRnkr4VHKJxF
-X-Received: by 2002:a05:6402:5287:b0:667:7d90:71cc with SMTP id
- 4fb4d7f45d1cf-668c911507amr5739041a12.3.1774134343288; Sat, 21 Mar 2026
- 16:05:43 -0700 (PDT)
+	Sun, 22 Mar 2026 01:44:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1774143879;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AqEEL25LD51u+oJXMo+RBoLHenSW9n6bAMMAPGybk7E=;
+	b=ha1NA5jpQBWSJkSBJHJLB5/9Xj7F+c2R8KixSfjwTdEgM7M2kqylv+DDxggE3jNJvzE/5H
+	NSLHWlYle790XmgeNo+sy4C9U4sKWdLcFV+FP0L5YsxxQCUs7yZushoxCCpYojmRxOWpFl
+	S6YH9icpGTYgrqd/Zk2Zu6kppRxpEfA=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-403-BKqg7uL7MCytRdzsKJ4GAA-1; Sat,
+ 21 Mar 2026 21:44:35 -0400
+X-MC-Unique: BKqg7uL7MCytRdzsKJ4GAA-1
+X-Mimecast-MFC-AGG-ID: BKqg7uL7MCytRdzsKJ4GAA_1774143873
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 35CEC180044D;
+	Sun, 22 Mar 2026 01:44:32 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.72.112.22])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AE2BD300019F;
+	Sun, 22 Mar 2026 01:44:18 +0000 (UTC)
+From: Pingfan Liu <piliu@redhat.com>
+To: 
+Cc: Pingfan Liu <piliu@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Philipp Rudo <prudo@redhat.com>,
+	Viktor Malik <vmalik@redhat.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	kexec@lists.infradead.org,
+	bpf@vger.kernel.org,
+	systemd-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCHv7 00/13] kexec: Use BPF lskel to enable kexec to load PE format boot image
+Date: Sun, 22 Mar 2026 09:43:49 +0800
+Message-ID: <20260322014402.8815-1-piliu@redhat.com>
 MIME-Version: 1.0
-References: <20260321143642.166313-1-oskar@gerlicz.space> <20260321143642.166313-2-oskar@gerlicz.space>
-In-Reply-To: <20260321143642.166313-2-oskar@gerlicz.space>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Sat, 21 Mar 2026 19:05:07 -0400
-X-Gm-Features: AaiRm52N1A5JiyPRBAXH_ftxFPoPbwtABbjPiEkUX2L9NL3d-c2DKSK2P4FMnrU
-Message-ID: <CA+CK2bCVge7xybLshgLLphHAdRSHMLD3egT1nEyESBUFi7kHCw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] kexec: abort liveupdate handover on kernel_kexec() unwind
-To: Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
-Cc: Mike Rapoport <rppt@kernel.org>, Baoquan He <bhe@redhat.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: JEFsC-2NObb7SAIK8dyvPBRZltg6EE2PXS5mgpYkZ5g_1774143873
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260321_160545_953624_5481FA0D 
-X-CRM114-Status: GOOD (  28.12  )
+X-CRM114-CacheID: sfid-20260321_184443_659160_0510B54E 
+X-CRM114-Status: GOOD (  23.47  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,193 +107,185 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, Mar 21, 2026 at 10:39=E2=80=AFAM Oskar Gerlicz Kowalczuk
-<oskar@gerlicz.space> wrote:
->
-> liveupdate_reboot() can freeze outgoing session state before the kexec
-> transition completes. v2 only unwound that state when kernel_kexec()
-> returned a non-zero error, which misses the preserve_context path where
-> machine_kexec() can return to the old kernel with error =3D=3D 0.
->
-> If that return path skips the abort, outgoing sessions remain stuck in
-> the reboot state and later user space operations cannot make progress.
->
-> Treat every return to the original kernel after a prepared liveupdate
-> handover as an unwind point and call liveupdate_reboot_abort() there as
-> well.
->
-> Fixes: 8b32d3ced269 ("kexec: abort liveupdate handover on kernel_kexec() =
-unwind")
-> Signed-off-by: Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
+*** The history ***
 
-AFAIK, preserve-context reboot is no longer used; in fact, it is
-currently broken. I tried using it six years ago and hit an old
-spinlock bug in the x86 code that prevented it, which means this path
-touches dead code.
+Nowadays, UEFI PE bootable images are becoming increasingly popular
+among distributions. Currently, we have several kinds of image format
+parsers in user space (kexec-tools). However, this approach breaks the
+integrity protection of the images. To address this integrity protection
+concern, several approaches have been proposed to resolve this issue,
+but none of them have been accepted upstream yet.
 
-It was originally developed for machines lacking hardware support for
-hibernation, and I can't imagine anyone using it today. (I know Amazon
-is using it for a non intended reason and that is a very specific
-scenario in a costumized kernel that internally fixes the upstream
-bugs, and would not conlict with live update).
+The summary of those approaches:
+  -1. UEFI service emulator for UEFI stub
+  -2. PE format parser in kernel
+  -3. Signing the arm64/boot/Image
 
-During live update, we cannot return to userspace after a successful
-liveupdate_reboot(). We specifically place liveupdate_reboot() in the
-kexec path as the last possible point of failure. Perhap, to guarantee
-this behavior, we could  add !KEXEC_JUMP as a dependency to KHO and
-LUO or crash the kernel.
 
-Pasha
+For the first approach, I tried a purgatory-style emulator [1], but it
+encounters hardware scaling issues. For the second approach, both
+zboot-format [2] and UKI-format [3] parsers were rejected due to
+concerns that variant format parsers would bloat the kernel code.
+Additionally, for example in arm64, both UKI and zboot format parsers
+would need to be introduced and chained together to handle image
+loading. For the third approach, I attempted [4], but since zboot or UKI
+images already have signatures, upstream maintainers dislike the
+additional signature on the Image. Moreover, for secure boot UKI, this
+method cannot use signatures to protect the initramfs.
 
-> ---
->  include/linux/liveupdate.h       |  5 +++++
->  kernel/kexec_core.c              |  6 +++++-
->  kernel/liveupdate/luo_core.c     | 11 ++++++++++-
->  kernel/liveupdate/luo_internal.h |  1 +
->  kernel/liveupdate/luo_session.c  | 23 +++++++++++++++++++++++
->  5 files changed, 44 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
-> index dd11fdc76a5f..d93b043a0421 100644
-> --- a/include/linux/liveupdate.h
-> +++ b/include/linux/liveupdate.h
-> @@ -226,6 +226,7 @@ bool liveupdate_enabled(void);
->
->  /* Called during kexec to tell LUO that entered into reboot */
->  int liveupdate_reboot(void);
-> +void liveupdate_reboot_abort(void);
->
->  int liveupdate_register_file_handler(struct liveupdate_file_handler *fh)=
-;
->  int liveupdate_unregister_file_handler(struct liveupdate_file_handler *f=
-h);
-> @@ -250,6 +251,10 @@ static inline int liveupdate_reboot(void)
->         return 0;
->  }
->
-> +static inline void liveupdate_reboot_abort(void)
-> +{
-> +}
-> +
->  static inline int liveupdate_register_file_handler(struct liveupdate_fil=
-e_handler *fh)
->  {
->         return -EOPNOTSUPP;
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index 2fea396d29b9..95710a7d5e56 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -1139,6 +1139,7 @@ bool kexec_load_permitted(int kexec_image_type)
->  int kernel_kexec(void)
->  {
->         int error =3D 0;
-> +       bool liveupdate_prepared =3D false;
->
->         if (!kexec_trylock())
->                 return -EBUSY;
-> @@ -1147,6 +1148,7 @@ int kernel_kexec(void)
->                 goto Unlock;
->         }
->
-> +       liveupdate_prepared =3D true;
->         error =3D liveupdate_reboot();
->         if (error)
->                 goto Unlock;
-> @@ -1230,7 +1232,9 @@ int kernel_kexec(void)
->         }
->  #endif
->
-> - Unlock:
-> +Unlock:
-> +       if (liveupdate_prepared)
-> +               liveupdate_reboot_abort();
->         kexec_unlock();
->         return error;
->  }
-> diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
-> index dda7bb57d421..95a0b81ce60d 100644
-> --- a/kernel/liveupdate/luo_core.c
-> +++ b/kernel/liveupdate/luo_core.c
-> @@ -233,8 +233,9 @@ int liveupdate_reboot(void)
->         err =3D kho_finalize();
->         if (err) {
->                 pr_err("kho_finalize failed %d\n", err);
-> +               liveupdate_reboot_abort();
->                 /*
-> -                * kho_finalize() may return libfdt errors, to aboid pass=
-ing to
-> +                * kho_finalize() may return libfdt errors, to avoid pass=
-ing to
->                  * userspace unknown errors, change this to EAGAIN.
->                  */
->                 err =3D -EAGAIN;
-> @@ -243,6 +244,14 @@ int liveupdate_reboot(void)
->         return err;
->  }
->
-> +void liveupdate_reboot_abort(void)
-> +{
-> +       if (!liveupdate_enabled())
-> +               return;
-> +
-> +       luo_session_abort_reboot();
-> +}
-> +
->  /**
->   * liveupdate_enabled - Check if the live update feature is enabled.
->   *
-> diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_int=
-ernal.h
-> index 0cfc0269d746..8a6b1f6c9b4f 100644
-> --- a/kernel/liveupdate/luo_internal.h
-> +++ b/kernel/liveupdate/luo_internal.h
-> @@ -88,6 +88,7 @@ int luo_session_retrieve(const char *name, struct file =
-**filep);
->  int __init luo_session_setup_outgoing(void *fdt);
->  int __init luo_session_setup_incoming(void *fdt);
->  int luo_session_serialize(void);
-> +void luo_session_abort_reboot(void);
->  int luo_session_deserialize(void);
->  bool luo_session_quiesce(void);
->  void luo_session_resume(void);
-> diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_sess=
-ion.c
-> index d97ec91e1118..200dd3b8229c 100644
-> --- a/kernel/liveupdate/luo_session.c
-> +++ b/kernel/liveupdate/luo_session.c
-> @@ -788,6 +788,29 @@ int luo_session_serialize(void)
->         return err;
->  }
->
-> +void luo_session_abort_reboot(void)
-> +{
-> +       struct luo_session_header *sh =3D &luo_session_global.outgoing;
-> +       struct luo_session *session;
-> +       int i =3D 0;
-> +
-> +       guard(rwsem_write)(&sh->rwsem);
-> +       if (!READ_ONCE(sh->rebooting))
-> +               return;
-> +
-> +       list_for_each_entry(session, &sh->list, list) {
-> +               if (i >=3D sh->header_ser->count)
-> +                       break;
-> +
-> +               luo_session_unfreeze_one(session, &sh->ser[i]);
-> +               memset(&sh->ser[i], 0, sizeof(sh->ser[i]));
-> +               i++;
-> +       }
-> +
-> +       sh->header_ser->count =3D 0;
-> +       luo_session_reboot_done(sh);
-> +}
-> +
->  /**
->   * luo_session_quiesce - Ensure no active sessions exist and lock sessio=
-n lists.
->   *
-> --
-> 2.53.0
->
->
+
+*** The approach in this series ***
+
+This series introduces an approach that allows image formats to be
+parsed by BPF programs. Through BPF, two main functions, collecting
+kernel boot protocol data and decompression, are exposed to BPF programs
+via the commands KEXEC_BPF_CMD_DECOMPRESS and KEXEC_BPF_CMD_COPY.
+As a result, the kexec kernel code can remain relatively stable without
+requiring new parsers for different architectures.
+
+Beside above, this approach redesigns kexec_file_load(): kernel_fd is
+used to pass the BPF parser, while initrd_fd can be used to carry
+everything else, the kernel image, initrd, and cmdline data. So we can
+avoid changing the kexe_file_load() protocol. 
+
+
+The main purpose of this series is to provide format flexibility. This
+is demonstrated by the patch 'tools/kexec: Introduce a bpf-prog to
+handle zboot image', where the BPF program works in conjunction with a
+private format defined in 'tools/kexec: Introduce a tool to build zboot
+envelope'.
+
+
+*** Outlook for the security support (the next step) ***
+
+The remaining issue in this series is the security support.
+The isolated bpf-prog can be signed as what is done on kernel module,
+and verified as the trusted root later.
+Each signed PE can be asked to be verified by the trusted bpf-prog.
+
+For IMA, an out-most bpf-parser will be introduced to read each file by
+kernel_read_file_from_path(..., READING_KEXEC_IMAGE).
+
+
+*** Thanks ***
+I would like to thank Philipp Rudo, whose insights inspired this
+approach and who dedicated significant time to evaluating its
+practicality. I am also grateful to Viktor Malik for his guidance on
+using BPF light skeleton to prevent malicious attacks from user space.
+
+
+*** Test approach ***
+-1. compile kexec-tools from https://github.com/pfliu/kexec-tools/tree/bpf_loader
+-2. compile kernel
+-3. For UKI, get the UKI parser bpf-prog by 'make -C tools/kexec uki',
+    there will be uki.bpf.
+    Load it by:
+        kexec -s -l uki.bpf image.uki
+
+    For zboot, get the zboot parser by 'make -C tools/kexec zboot'
+    create the zboot envelop (packing vmlinuz.efi, initrd, cmdline) by:
+        tools/kexec/build_zboot_envelop vmlinuz.efi initrd "cmdline"
+    The default envelop image is named "zboot_image.elf"
+    Load it by:
+        kexec -s -l zboot.bpf zboot_image.elf
+
+
+[1]: https://lore.kernel.org/lkml/20240819145417.23367-1-piliu@redhat.com/T/
+[2]: https://lore.kernel.org/kexec/20230306030305.15595-1-kernelfans@gmail.com/
+[3]: https://lore.kernel.org/lkml/20230911052535.335770-1-kernel@jfarr.cc/
+[4]: https://lore.kernel.org/linux-efi/20230921133703.39042-1-kernelfans@gmail.com/
+
+
+*** Changes ***
+v6 -> v7:
+  - Redesign the kexec_file_load interface to prevent BPF section injection
+    into UKI or zboot images. The kernel_fd now carries the BPF parser,
+    while initrd_fd carries the UKI image.
+  - Introduce a UKI image parser.
+  - Enhance the zboot parser to support both UKI and direct zboot images.
+  - Fix the bug reported by bot+bpf-ci
+
+
+v5 -> v6
+  - Re-organize the layers in kexec_file_load into two layers: format-parsing and kernel boot protocol handling.
+  - Simplify the bpf kfunc interface.
+  - rebased onto Linux 6.19-rc2
+
+v4 -> v5
+  - rebased onto Linux 6.17-rc2
+  - [1/12], use a separate CONFIG_KEEP_COMPRESSOR to decide the section
+    of decompressor method
+  - [10/12], add Catalin's acked-by (Thanks Catalin!)
+
+v3 -> v4
+  - Use dynamic allocator in decompression ([4/12])
+  - Fix issue caused by Identical Code Folding ([5/12])
+  - Integrate the image generator tool in the kernel tree ([11,12/12])
+  - Address the issue according to Philipp's comments in v3 reviewing.
+    Thanks Philipp!
+
+RFCv2 -> v3
+  - move the introduced bpf kfuncs to kernel/bpf/* and mark them sleepable
+  - use listener and publisher model to implement bpf_copy_to_kernel()
+  - keep each introduced kfunc under the control of memcg
+
+RFCv1 -> RFCv2
+  - Use bpf kfunc instead of helper
+  - Use C source code to generate the light skeleton file
+
+
+Pingfan Liu (13):
+  bpf: Introduce kfuncs to parser buffer content
+  kexec_file: Use bpf-prog to decompose image
+  lib/decompress: Keep decompressor when CONFIG_KEEP_DECOMPRESSOR
+  kexec_file: Implement decompress method for parser
+  kexec_file: Implement copy method for parser
+  kexec_file: Chain the stages into a pipeline
+  kexec_file: Introduce a bpf-prog lskel to run a format parser
+  kexec_file: Factor out routine to find a symbol in ELF
+  kexec_file: Integrate bpf light skeleton to load image with bpf-prog
+  arm64/kexec: Select KEXEC_BPF to support UEFI-style kernel image
+  tools/kexec: Introduce a bpf-prog to handle zboot image
+  tools/kexec: Introduce a bpf-prog to handle UKI image
+  tools/kexec: Introduce a tool to build zboot envelop
+
+ arch/arm64/Kconfig                           |   1 +
+ include/linux/bpf.h                          |  20 +
+ include/linux/decompress/mm.h                |   8 +
+ kernel/Kconfig.kexec                         |   8 +
+ kernel/Makefile                              |   2 +
+ kernel/bpf/Makefile                          |   3 +
+ kernel/bpf/bpf_buffer_parser.c               | 186 ++++
+ kernel/kexec_bpf/Makefile                    |  70 ++
+ kernel/kexec_bpf/kexec_pe_parser_bpf.c       |  12 +
+ kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h | 130 +++
+ kernel/kexec_bpf/template.c                  |  72 ++
+ kernel/kexec_bpf_loader.c                    | 873 +++++++++++++++++++
+ kernel/kexec_file.c                          | 104 ++-
+ kernel/kexec_internal.h                      |   5 +
+ lib/Kconfig                                  |   6 +
+ lib/decompress.c                             |   6 +-
+ tools/kexec/Makefile                         | 203 +++++
+ tools/kexec/build_zboot_envelop.c            | 362 ++++++++
+ tools/kexec/template.c                       |  72 ++
+ tools/kexec/uki_parser_bpf.c                 | 235 +++++
+ tools/kexec/zboot_envelop.h                  |   7 +
+ tools/kexec/zboot_parser_bpf.c               | 348 ++++++++
+ 22 files changed, 2719 insertions(+), 14 deletions(-)
+ create mode 100644 kernel/bpf/bpf_buffer_parser.c
+ create mode 100644 kernel/kexec_bpf/Makefile
+ create mode 100644 kernel/kexec_bpf/kexec_pe_parser_bpf.c
+ create mode 100644 kernel/kexec_bpf/kexec_pe_parser_bpf.lskel.h
+ create mode 100644 kernel/kexec_bpf/template.c
+ create mode 100644 kernel/kexec_bpf_loader.c
+ create mode 100644 tools/kexec/Makefile
+ create mode 100644 tools/kexec/build_zboot_envelop.c
+ create mode 100644 tools/kexec/template.c
+ create mode 100644 tools/kexec/uki_parser_bpf.c
+ create mode 100644 tools/kexec/zboot_envelop.h
+ create mode 100644 tools/kexec/zboot_parser_bpf.c
+
+-- 
+2.49.0
+
 
