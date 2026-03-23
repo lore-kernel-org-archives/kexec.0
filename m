@@ -4,68 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AFB53F532C4
-	for <kexec@archiver.kernel.org>; Mon, 23 Mar 2026 23:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 95DABF532C1
+	for <kexec@archiver.kernel.org>; Mon, 23 Mar 2026 23:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=CreqaGlwQEQK+YRyK6iGxzdx6WSNNVSy3f0PqjRZciY=; b=SBUTo6/DyJQAmTfGXiVUKKS1R0
-	AkbskM9ZdebXlLzz2EJR8yzJiFH85N2qeb4ZgoM/T0heG7RXlLdcM5IatwmF5kyt3L/k/bYO6P34+
-	LWTCFjwyuhJcgTLNkTpwmbgcnOPXVdAS+50jk+lhCmY4Rz5QOm/wAYxjcqMZV1smbFMTtrDFVXOfs
-	MBTZ2HGO10HWLog1xIhrKvUVqZXSI/izDAOZvaDB4783VVcon45jlushVdM7XcrTMmOKrUnCty4R8
-	7/6Fqsce+bbfUfSAbX5GtfIevwQPUjdwl8lKTcMmPUFEuvYJmMNp3hnNZZXFALL1NJMiC5zNZAGIG
-	CK+v1/aQ==;
+	bh=a6ai3Q1Y7nW49bYKBphuq9xPRlXveX2MorY71NenjMU=; b=SxwKqLBftXieH/mHbHf1V+8+zJ
+	zujtlqhR3IF+SIQgqsv4NDnmqk2NarJAF5/52/lRavTJp0/uPmUsbYX5uQTgNkIBA0gzfiPhcFZ94
+	I7cZuMS0qeBwYS4uFi1f+XmycVyDEuD29luRMiq4ZLzVLje87/G38EZMwHRhORLE+AKyffernh9lE
+	amDQYlVKxp6Oxw6vu5zlTbPNA9DXWgCJrgauA8ukAKesyKow3smZW62xdqIzgPXJqIDUDfeWWcYsP
+	Hv9IuRkYr2cVO8kC+6m+bWyAjLyGKYO3hUARFOpChxBMIOzMUM45MGm42jLxE6VKzqYGKx4VsSGEV
+	EELCXWgA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4pB2-00000000BvN-2Bro;
-	Mon, 23 Mar 2026 23:59:20 +0000
-Received: from mail-pj1-x1049.google.com ([2607:f8b0:4864:20::1049])
+	id 1w4pB4-00000000ByC-2rCG;
+	Mon, 23 Mar 2026 23:59:22 +0000
+Received: from mail-pj1-x104a.google.com ([2607:f8b0:4864:20::104a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4pAz-00000000Bp0-0S6p
+	id 1w4pB0-00000000Br5-0Afk
 	for kexec@lists.infradead.org;
-	Mon, 23 Mar 2026 23:59:18 +0000
-Received: by mail-pj1-x1049.google.com with SMTP id 98e67ed59e1d1-35b8f351debso810092a91.1
-        for <kexec@lists.infradead.org>; Mon, 23 Mar 2026 16:59:15 -0700 (PDT)
+	Mon, 23 Mar 2026 23:59:20 +0000
+Received: by mail-pj1-x104a.google.com with SMTP id 98e67ed59e1d1-359fe456655so4522099a91.3
+        for <kexec@lists.infradead.org>; Mon, 23 Mar 2026 16:59:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774310355; x=1774915155; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1774310357; x=1774915157; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CreqaGlwQEQK+YRyK6iGxzdx6WSNNVSy3f0PqjRZciY=;
-        b=M/HW0vcqP68XR+zNUR0TPKaGnxOrPY+APRCglZtR9nxne9g/GBfaqgrzrd/FXmVVXS
-         Ge034UUi2gDsy19bYNfLJwbdDUUFojxyCaQhn6AEhW8qRB1hkYnvTUmYPmar+WnbBEIj
-         Vyh6V+WOUonvtacrfM0u+7igSyVeDg52vuUZo4pdjSiIqgJvhVhWLq2Lvd5IhxHxdeV1
-         WWxHGbM7vKONtzxu9VZ4oTZbTaRM7t6B9rBkXalWA+TqqU6PWjMwlp7zLxvqcW52gSF5
-         veMF6b3lWu8k3Ay7cecpOR/MvqKwjBrL+Evq4vu9ImmMxyxapl3yhcndnO7N+v88TAZq
-         MgbA==
+        bh=a6ai3Q1Y7nW49bYKBphuq9xPRlXveX2MorY71NenjMU=;
+        b=PQ7jG8L195wmaLVofZSZ8gfYfASi1tXOTwe79WYj/+84M4r2Tvl6fbgsoH/e+vzkD6
+         iw4P8NWufVE0Qrr2uUjTgsF/GvQ1LP74kbnLLJGzXmsME3Lg4pZbCYhfRoPgFQZe86Sv
+         +++bjNCMm7wh+kxqove9gmHrKQW1luIZrUrGRDzkir21zQszBQQCh3NGeLVSxQN0xk8m
+         TUdneP6lM+uAKGRVoEHcxqqe/6tUyyymko5YbT+xS3TIwX/Zjv4YjEpmPH7jp5Z/eyTT
+         IS9kLie3A9I2TsSse60uEFDKuX9zbJl/1VxmhZZKJTdhBsKzSB/J1tJENGj1zyDx1qtl
+         Bqdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774310355; x=1774915155;
+        d=1e100.net; s=20251104; t=1774310357; x=1774915157;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CreqaGlwQEQK+YRyK6iGxzdx6WSNNVSy3f0PqjRZciY=;
-        b=olHkdhstLpNQX2iKB8ReSlC4+Z5wQwG7RwNv4rtkpTOMpBEQWQGYl6VGcJaZS4yKKV
-         V5rDcfCcpl5vHkgn7tsJMAVeDpSWr2a+u1xeBg1VD11V1UU5AnzCH9+mYdoJjqATQe2D
-         u2Z8yU0+XZGsR//Dqjmus2k71VwbsS7qvpGjgE25/+fu2wApVDEsJohuXvdrw3p4/yRx
-         P3AVUY920+iv5uJT8RJLMQ3ouSeH9H5OXVjQOzKjtuYeLa9xOrOUL72yUT4rwnI2fKUN
-         H9orZ8UmiSAnNYbrABA23AP2tvHnosSZYgOEDQmJtbcVr0SdmpZZMFgjjg56lGg50kN9
-         OS5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWMljXc+9baOu5emiA3Ql56cpUzI7KaAvBV5EVTcgYfSp8WeWq10Myz4KQV0wyj8GCe7/ZPng==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxPzWgSqxdVeK4jX0WZzSWfnWezHSM7WOHBQsTb9p0X24j6eHs6
-	b1bMPj9lSliRYCD6zWDxTZZjxvmdiBeKfOB/MJIsy95hsnJyglFy4BcRabTe9JCHQBCn0mi0ygo
-	elNMHv2MbaSS8Lw==
-X-Received: from pjat16.prod.google.com ([2002:a17:90a:d10:b0:35b:a2ad:add2])
+        bh=a6ai3Q1Y7nW49bYKBphuq9xPRlXveX2MorY71NenjMU=;
+        b=iI3oyaQoeM+tn1Wo2qy044qdW9NlAuZnef5CMLCtQ05R/LbKuBEB+anPQvYNHYnZKP
+         CnpPP4lNd4THPBOg2pYuOwGEsCGyKagR5Ppq15YoShlWYDEmBV538wnea1Dm7xEoafNL
+         0MC8p9bxTfGemv4EGwTwWPkpoujjbcgyQ58zQn5f+amx0xht/0N6z2vADYs+aNVaZgLf
+         eZQ4AGi1B5H3qFvXGrW0WTXgAbsGtQ1h0wzG0xACapWYCX4e+frWOSpIaIVENTUgR7bq
+         xbxMuBONikmwu0D902XwsmgrUaVzXdMU2nGYas2yMNumctHcQybVQyndgyLGXXQKCku4
+         lLOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2EOAxRwsq9iaq2p+MUTLItl4LzCwDmToluAmjf+lbxszxGFCK9IDENDnj+re6sRtjI20OnA==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yy1BfVCVtwiJFDf26fRyoLm2XTh434Jb6G8rm+Z3ZUmwPEOkTNZ
+	qiPN9kuX79H1CAy4aSucvi8IULyw/j5pD8j2A24+a0xs1riKmMK9KqaYJEg9gVnwWJ5QKogShfP
+	XS/mpws75Ot7Mhg==
+X-Received: from pjxu14.prod.google.com ([2002:a17:90a:db4e:b0:35b:a2a4:de5a])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:3d85:b0:359:1063:6aed with SMTP id 98e67ed59e1d1-35bd2cb3e52mr11055132a91.22.1774310354638;
- Mon, 23 Mar 2026 16:59:14 -0700 (PDT)
-Date: Mon, 23 Mar 2026 23:58:13 +0000
+ 2002:a17:90b:3891:b0:35b:e85a:865e with SMTP id 98e67ed59e1d1-35be85a8693mr5878913a91.33.1774310356298;
+ Mon, 23 Mar 2026 16:59:16 -0700 (PDT)
+Date: Mon, 23 Mar 2026 23:58:14 +0000
 In-Reply-To: <20260323235817.1960573-1-dmatlack@google.com>
 Mime-Version: 1.0
 References: <20260323235817.1960573-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.53.0.983.g0bb29b3bc5-goog
-Message-ID: <20260323235817.1960573-22-dmatlack@google.com>
-Subject: [PATCH v3 21/24] vfio: selftests: Expose iommu_modes to tests
+Message-ID: <20260323235817.1960573-23-dmatlack@google.com>
+Subject: [PATCH v3 22/24] vfio: selftests: Expose low-level helper routines
+ for setting up struct vfio_pci_device
 From: David Matlack <dmatlack@google.com>
 To: Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>
 Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
@@ -93,8 +94,8 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.
 	Zhu Yanjun <yanjun.zhu@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260323_165917_226103_226F5D72 
-X-CRM114-Status: GOOD (  14.45  )
+X-CRM114-CacheID: sfid-20260323_165918_090153_E97637E2 
+X-CRM114-Status: GOOD (  15.31  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,50 +110,117 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Expose the list of iommu_modes to enable tests that want to iterate
-through all possible iommu modes.
+Expose a few low-level helper routings for setting up vfio_pci_device
+structs. These routines will be used in a subsequent commit to assert
+that VFIO_GROUP_GET_DEVICE_FD fails under certain conditions.
 
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- tools/testing/selftests/vfio/lib/include/libvfio/iommu.h | 2 ++
- tools/testing/selftests/vfio/lib/iommu.c                 | 4 +++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ .../lib/include/libvfio/vfio_pci_device.h     |  5 +++
+ .../selftests/vfio/lib/vfio_pci_device.c      | 33 +++++++++++++------
+ 2 files changed, 28 insertions(+), 10 deletions(-)
 
-diff --git a/tools/testing/selftests/vfio/lib/include/libvfio/iommu.h b/tools/testing/selftests/vfio/lib/include/libvfio/iommu.h
-index e9a3386a4719..4b9cbe262159 100644
---- a/tools/testing/selftests/vfio/lib/include/libvfio/iommu.h
-+++ b/tools/testing/selftests/vfio/lib/include/libvfio/iommu.h
-@@ -15,6 +15,8 @@ struct iommu_mode {
- 	unsigned long iommu_type;
- };
+diff --git a/tools/testing/selftests/vfio/lib/include/libvfio/vfio_pci_device.h b/tools/testing/selftests/vfio/lib/include/libvfio/vfio_pci_device.h
+index 896dfde88118..2389c7698335 100644
+--- a/tools/testing/selftests/vfio/lib/include/libvfio/vfio_pci_device.h
++++ b/tools/testing/selftests/vfio/lib/include/libvfio/vfio_pci_device.h
+@@ -125,4 +125,9 @@ static inline bool vfio_pci_device_match(struct vfio_pci_device *device,
  
-+extern const struct iommu_mode iommu_modes[];
-+extern const int nr_iommu_modes;
- extern const char *default_iommu_mode;
+ const char *vfio_pci_get_cdev_path(const char *bdf);
  
- struct dma_region {
-diff --git a/tools/testing/selftests/vfio/lib/iommu.c b/tools/testing/selftests/vfio/lib/iommu.c
-index 035dac069d60..95a494f829d2 100644
---- a/tools/testing/selftests/vfio/lib/iommu.c
-+++ b/tools/testing/selftests/vfio/lib/iommu.c
-@@ -23,7 +23,7 @@
- const char *default_iommu_mode = MODE_IOMMUFD;
- 
- /* Reminder: Keep in sync with FIXTURE_VARIANT_ADD_ALL_IOMMU_MODES(). */
--static const struct iommu_mode iommu_modes[] = {
-+const struct iommu_mode iommu_modes[] = {
- 	{
- 		.name = MODE_VFIO_TYPE1_IOMMU,
- 		.container_path = "/dev/vfio/vfio",
-@@ -49,6 +49,8 @@ static const struct iommu_mode iommu_modes[] = {
- 	},
- };
- 
-+const int nr_iommu_modes = ARRAY_SIZE(iommu_modes);
++/* Low-level routines for setting up a struct vfio_pci_device */
++struct vfio_pci_device *vfio_pci_device_alloc(const char *bdf, struct iommu *iommu);
++void vfio_pci_group_setup(struct vfio_pci_device *device);
++void vfio_pci_iommu_setup(struct vfio_pci_device *device);
 +
- static const struct iommu_mode *lookup_iommu_mode(const char *iommu_mode)
+ #endif /* SELFTESTS_VFIO_LIB_INCLUDE_LIBVFIO_VFIO_PCI_DEVICE_H */
+diff --git a/tools/testing/selftests/vfio/lib/vfio_pci_device.c b/tools/testing/selftests/vfio/lib/vfio_pci_device.c
+index e9215c712cda..66ee268110e2 100644
+--- a/tools/testing/selftests/vfio/lib/vfio_pci_device.c
++++ b/tools/testing/selftests/vfio/lib/vfio_pci_device.c
+@@ -220,7 +220,7 @@ static unsigned int vfio_pci_get_group_from_dev(const char *bdf)
+ 	return group;
+ }
+ 
+-static void vfio_pci_group_setup(struct vfio_pci_device *device, const char *bdf)
++void vfio_pci_group_setup(struct vfio_pci_device *device)
  {
- 	int i;
+ 	struct vfio_group_status group_status = {
+ 		.argsz = sizeof(group_status),
+@@ -228,7 +228,7 @@ static void vfio_pci_group_setup(struct vfio_pci_device *device, const char *bdf
+ 	char group_path[32];
+ 	int group;
+ 
+-	group = vfio_pci_get_group_from_dev(bdf);
++	group = vfio_pci_get_group_from_dev(device->bdf);
+ 	snprintf(group_path, sizeof(group_path), "/dev/vfio/%d", group);
+ 
+ 	device->group_fd = open(group_path, O_RDWR);
+@@ -240,14 +240,12 @@ static void vfio_pci_group_setup(struct vfio_pci_device *device, const char *bdf
+ 	ioctl_assert(device->group_fd, VFIO_GROUP_SET_CONTAINER, &device->iommu->container_fd);
+ }
+ 
+-static void vfio_pci_container_setup(struct vfio_pci_device *device, const char *bdf)
++void vfio_pci_iommu_setup(struct vfio_pci_device *device)
+ {
+ 	struct iommu *iommu = device->iommu;
+ 	unsigned long iommu_type = iommu->mode->iommu_type;
+ 	int ret;
+ 
+-	vfio_pci_group_setup(device, bdf);
+-
+ 	ret = ioctl(iommu->container_fd, VFIO_CHECK_EXTENSION, iommu_type);
+ 	VFIO_ASSERT_GT(ret, 0, "VFIO IOMMU type %lu not supported\n", iommu_type);
+ 
+@@ -257,8 +255,14 @@ static void vfio_pci_container_setup(struct vfio_pci_device *device, const char
+ 	 * because the IOMMU type is already set.
+ 	 */
+ 	(void)ioctl(iommu->container_fd, VFIO_SET_IOMMU, (void *)iommu_type);
++}
+ 
+-	device->fd = ioctl(device->group_fd, VFIO_GROUP_GET_DEVICE_FD, bdf);
++static void vfio_pci_container_setup(struct vfio_pci_device *device)
++{
++	vfio_pci_group_setup(device);
++	vfio_pci_iommu_setup(device);
++
++	device->fd = ioctl(device->group_fd, VFIO_GROUP_GET_DEVICE_FD, device->bdf);
+ 	VFIO_ASSERT_GE(device->fd, 0);
+ }
+ 
+@@ -358,9 +362,7 @@ static void vfio_pci_iommufd_setup(struct vfio_pci_device *device,
+ 	vfio_device_attach_iommufd_pt(device->fd, device->iommu->ioas_id);
+ }
+ 
+-struct vfio_pci_device *__vfio_pci_device_init(const char *bdf,
+-					       struct iommu *iommu,
+-					       int device_fd)
++struct vfio_pci_device *vfio_pci_device_alloc(const char *bdf, struct iommu *iommu)
+ {
+ 	struct vfio_pci_device *device;
+ 
+@@ -371,9 +373,20 @@ struct vfio_pci_device *__vfio_pci_device_init(const char *bdf,
+ 	device->iommu = iommu;
+ 	device->bdf = bdf;
+ 
++	return device;
++}
++
++struct vfio_pci_device *__vfio_pci_device_init(const char *bdf,
++					       struct iommu *iommu,
++					       int device_fd)
++{
++	struct vfio_pci_device *device;
++
++	device = vfio_pci_device_alloc(bdf, iommu);
++
+ 	if (iommu->mode->container_path) {
+ 		VFIO_ASSERT_EQ(device_fd, -1);
+-		vfio_pci_container_setup(device, bdf);
++		vfio_pci_container_setup(device);
+ 	} else {
+ 		vfio_pci_iommufd_setup(device, bdf, device_fd);
+ 	}
 -- 
 2.53.0.983.g0bb29b3bc5-goog
 
