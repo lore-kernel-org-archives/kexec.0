@@ -4,69 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 94BCAF532C0
-	for <kexec@archiver.kernel.org>; Mon, 23 Mar 2026 23:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 179A8F532C2
+	for <kexec@archiver.kernel.org>; Mon, 23 Mar 2026 23:59:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=uoPb6rPvbQAZiMMCvtGaLSKACFZ3kOlM4xYp0I2xeaE=; b=prXufXhlkqxPpHtKnHtNACLSvJ
-	MslML8IxfZfAxDqp/yeGzPgwllR6J4MSzmiXmOqdoZRfW1/FX+qDBNbG5Pw9n+5/t9Ir+72spcvAF
-	Nx53zBTIGSd0MNwzxDg3E32LFE8goq0FhjIjb6WedcXIR079w1+MehLZzkc/DMXbIDlouXKPylOiN
-	miKDWwCF2P6mW0k+KocWF3FACNFS/5UeMWR/MO4tZSrZV3P3yND/J5RWtovjjkPje0vWViUoFnwiv
-	3JIUgSIvm4w67Tw2UaMkftdYzZ5Sf3Zg6W7YImV0e/VJuAx5MkAKAWXgwRziNrltvPhNG6B5IOmy6
-	Wgafzclw==;
+	bh=IXP5xRG4iZUBSse1Xd5a8GnmNvg4u/BwNl26bCYdYz4=; b=g15Mzh2O2HRb2MYI8l89Z6VPtw
+	ayMJ59+RfZjJQuQacERpiE8kPEKIRA/g1N5/6AozwhSJgkGQrN2FS0Qxw1NLUJ5FVvdfV8sf5EaMY
+	MreNiYpSlyekOispSqc1Nx1I//U4h1wlLg3nOez+zoc6SWa+kDek/wayGvh5Rfz2xU5d2Z6OMBrwe
+	7rg5BuNxVrVcBMP2E68ynjPWjnZ0tnaoImIF7iIdm5EFmKOp3rX7rMT65tyjx48Zs8Xq2jLCLbwwW
+	eZP6J1WGUg0pUiAYAZ1DRiC0AOu/4e17L3qX3OJDz63ojAnn1pYur+/AN6DITdOr60utJwxfVI3Wi
+	2ylnz0zA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4pB0-00000000BsB-0wND;
-	Mon, 23 Mar 2026 23:59:18 +0000
-Received: from mail-pl1-x649.google.com ([2607:f8b0:4864:20::649])
+	id 1w4pB1-00000000BuX-3reR;
+	Mon, 23 Mar 2026 23:59:19 +0000
+Received: from mail-pj1-x104a.google.com ([2607:f8b0:4864:20::104a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4pAu-00000000BmX-2bCK
+	id 1w4pAy-00000000Bof-2bLL
 	for kexec@lists.infradead.org;
-	Mon, 23 Mar 2026 23:59:17 +0000
-Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-2aed1beaa73so62839215ad.2
-        for <kexec@lists.infradead.org>; Mon, 23 Mar 2026 16:59:12 -0700 (PDT)
+	Mon, 23 Mar 2026 23:59:18 +0000
+Received: by mail-pj1-x104a.google.com with SMTP id 98e67ed59e1d1-35b94e2caf9so17506161a91.0
+        for <kexec@lists.infradead.org>; Mon, 23 Mar 2026 16:59:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774310351; x=1774915151; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1774310353; x=1774915153; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uoPb6rPvbQAZiMMCvtGaLSKACFZ3kOlM4xYp0I2xeaE=;
-        b=wAryloiGUaA8vWKF2eE3katHvTNn0Fn0Iy+2jgSo6NVc+fPANt6vlB2CUHGpR2OSa2
-         1lui3zES6otLfV3KZR9VJRuZ88muJomX7ypEYJQhiu+dM1SXyO9K2w0/KtjKYgGSXCB6
-         YZ7BzTNujPliU9QxmJ7cvZql74bM0yRH3NYgzMXrRMoQBLywNYqdE+WRA8PAnrqIzaGQ
-         7abzjfhxnST0atmnoAQMwo12ebqjEnPOD0bgEulxFcrsKnoZc1ePQ2HpeTwmx7Hd0QM0
-         q0YO7KtLN6oLuG1RQlRvNmpKhU26l8rAOX+SGgKnC2Aj5HfkotC2GjIhw6Wb1NZQaG/d
-         Vw5g==
+        bh=IXP5xRG4iZUBSse1Xd5a8GnmNvg4u/BwNl26bCYdYz4=;
+        b=kAq7amFb9hPpHnki2f/R+bWAYABmM8eBdJ+LIPrsqrfvNOWZHPbnM26ed7Qt+094ti
+         C3XpyfUcOBFYtFqYElgzKSlw4SDdmhg3rb2gT0A0EnP10M5LhCRjK84+nFI4x3s2WvdX
+         HG6OVYvUi3P0NKdPFomaxz9/G7+ERfKmPZpTUrdCZp4piFPkqAuSEcx49cWKrVsx9lV2
+         UrTerWcdKjueKRFfp3Q2dfpkmJEVErkJF7o1l4IW30SiPrslJMkvFUYs/w+lG9ruy8Iq
+         2EV3Umpbh9bJYwBzEywiueiEXB+ch8tWwG2xAUEa9YLjiLNsO6K5R6DpKJub3tHtZA6X
+         ET3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774310351; x=1774915151;
+        d=1e100.net; s=20251104; t=1774310353; x=1774915153;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uoPb6rPvbQAZiMMCvtGaLSKACFZ3kOlM4xYp0I2xeaE=;
-        b=mESMsv61FQAQ45ak++dn8qPF+yVOmrsrqhg3iHRa4+uqr4Bp0zVkgK/J88VtJBXhkT
-         72iw1vDwE/0n3px4Vb9r44+GqiprWj7Sh/0ns+kTW7kGqex5FhjK/1KLDsQMw5fwXLhP
-         CkFKjUaa68UtnStKLUP5XC35V5AeetPkffPVMevWFbSr3HKJuSrqpODLJSxc3/QbpE84
-         zUQsrXmIDXq7/RroJyFp0hC6J+2py6RCxlgTGilcI5PGWm+vFPnoR0OLbwGpteI//Ola
-         naHr2ahz71dhdX+t3ldk92TvWMUWqMi9G6os6sJNkV4KtXam+YO+Rs1pV+ZDw28MNF2c
-         nfWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVEBerRxXAf9/0gm1U9DoX9nLtao1NcXSBJ5F/YMtxTw0sGaIM/t2/D/h33yFfPGa42xA0b2w==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxCxsE9H7oKyH+4O1fr86KWnd4IZFanaLqdjjok0XctplboOmiP
-	CPU/0hf5gqBNsPtX9vJCcy+7Cmz1vqBWe2sgII+VDjgOhM7vrjvm++OR1dlBScIw1T0163BdA57
-	bMBDpw701iRzfrQ==
-X-Received: from pga26.prod.google.com ([2002:a05:6a02:4f9a:b0:c6e:28c3:dd5c])
+        bh=IXP5xRG4iZUBSse1Xd5a8GnmNvg4u/BwNl26bCYdYz4=;
+        b=TMy7+Apj4r6GL+gdq3L4uLuTWj6H4nuaji4mwSUh3c470yvqgh/JzDGF3s5ggqSS7I
+         jdlzHDWnMbqOB2YmQM719t6Us2mbqMUlBybRTyOOdLcXYh8fXWauCLH1qqInqTznMhr0
+         LF7bQ66rAKzWk+jXfsIpSJPOD1oZZUJKvXDzQ2LusT4+5QDoDiZXZT1EC9JuNEe+uW46
+         c5BiBfIEdNoGh2dcmCTai7f721KB2M5vmxDC9i1XlV0SQU0NNd9LFduOKokPBApjPhQh
+         WjURa5jYkdGPuwmM3vR3BM21RywatOBB8Ylg7AaZnK+R5keR7MdsV7qxA+XmUjGuHukl
+         saww==
+X-Forwarded-Encrypted: i=1; AJvYcCWtjSSzqGI4ukPf7j4gJmjdROf60iRemIvvoiti6DCjqEFWBlMXFJCqx0k1vYZiRhyr2a1SUQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yyg4sxrpoKdwakNCv3TSKkurur/W2UjpjuergjGdFUjdxH8UPS/
+	TU/p8BwDJlGgbutpou29W9nju2sD3ye09VbOh/CTi3jOIWEPh15vrZXdrriAEhjEeibVVnhBOcA
+	Vk0zl0Vei7KYfpA==
+X-Received: from pjbil12.prod.google.com ([2002:a17:90b:164c:b0:35b:9d0e:7821])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6300:218a:b0:39b:81bf:15e3 with SMTP id adf61e73a8af0-39bcec29166mr12126845637.66.1774310351170;
- Mon, 23 Mar 2026 16:59:11 -0700 (PDT)
-Date: Mon, 23 Mar 2026 23:58:11 +0000
+ 2002:a17:90a:d406:b0:35b:9c13:30cc with SMTP id 98e67ed59e1d1-35bd2d3fbffmr11092911a91.23.1774310352922;
+ Mon, 23 Mar 2026 16:59:12 -0700 (PDT)
+Date: Mon, 23 Mar 2026 23:58:12 +0000
 In-Reply-To: <20260323235817.1960573-1-dmatlack@google.com>
 Mime-Version: 1.0
 References: <20260323235817.1960573-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.53.0.983.g0bb29b3bc5-goog
-Message-ID: <20260323235817.1960573-20-dmatlack@google.com>
-Subject: [PATCH v3 19/24] vfio: selftests: Initialize vfio_pci_device using a
- VFIO cdev FD
+Message-ID: <20260323235817.1960573-21-dmatlack@google.com>
+Subject: [PATCH v3 20/24] vfio: selftests: Add vfio_pci_liveupdate_kexec_test
 From: David Matlack <dmatlack@google.com>
 To: Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>
 Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
@@ -94,8 +93,8 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.
 	Zhu Yanjun <yanjun.zhu@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260323_165912_680573_39F9F026 
-X-CRM114-Status: GOOD (  15.41  )
+X-CRM114-CacheID: sfid-20260323_165916_753076_3C8DD882 
+X-CRM114-Status: GOOD (  20.14  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,102 +111,150 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Vipin Sharma <vipinsh@google.com>
 
-Use the given VFIO cdev FD to initialize vfio_pci_device in VFIO
-selftests. Add the assertion to make sure that passed cdev FD is not
-used with legacy VFIO APIs. If VFIO cdev FD is provided then do not open
-the device instead use the FD for any interaction with the device.
+Add a selftest to exercise preserving a vfio-pci device across a Live
+Update. For now the test is extremely simple and just verifies that the
+device file can be preserved and retrieved. In the future this test will
+be extended to verify more parts about device preservation as they are
+implemented.
 
-This API will allow to write selftests where VFIO device FD is preserved
-using liveupdate and retrieved later using liveupdate ioctl after kexec.
+This test is added to TEST_GEN_PROGS_EXTENDED since it must be run
+manually along with a kexec.
+
+To run this test manually:
+
+ $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
+ $ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test --stage 1 0000:00:04.0
+
+ $ kexec ...   # NOTE: Exact method will be distro-dependent
+
+ $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
+ $ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test --stage 2 0000:00:04.0
+
+The second call to setup.sh is necessary because preserved devices are
+not bound to a driver after Live Update. Such devices must be manually
+bound by userspace after Live Update via driver_override.
+
+This test is considered passing if all commands exit with 0.
 
 Signed-off-by: Vipin Sharma <vipinsh@google.com>
 Co-developed-by: David Matlack <dmatlack@google.com>
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- .../lib/include/libvfio/vfio_pci_device.h     |  3 ++
- .../selftests/vfio/lib/vfio_pci_device.c      | 33 ++++++++++++++-----
- 2 files changed, 27 insertions(+), 9 deletions(-)
+ tools/testing/selftests/vfio/Makefile         |  4 +
+ .../vfio/vfio_pci_liveupdate_kexec_test.c     | 89 +++++++++++++++++++
+ 2 files changed, 93 insertions(+)
+ create mode 100644 tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
 
-diff --git a/tools/testing/selftests/vfio/lib/include/libvfio/vfio_pci_device.h b/tools/testing/selftests/vfio/lib/include/libvfio/vfio_pci_device.h
-index 2858885a89bb..896dfde88118 100644
---- a/tools/testing/selftests/vfio/lib/include/libvfio/vfio_pci_device.h
-+++ b/tools/testing/selftests/vfio/lib/include/libvfio/vfio_pci_device.h
-@@ -38,6 +38,9 @@ struct vfio_pci_device {
- #define dev_info(_dev, _fmt, ...) printf("%s: " _fmt, (_dev)->bdf, ##__VA_ARGS__)
- #define dev_err(_dev, _fmt, ...) fprintf(stderr, "%s: " _fmt, (_dev)->bdf, ##__VA_ARGS__)
+diff --git a/tools/testing/selftests/vfio/Makefile b/tools/testing/selftests/vfio/Makefile
+index 5b6e79593555..792c4245d4f7 100644
+--- a/tools/testing/selftests/vfio/Makefile
++++ b/tools/testing/selftests/vfio/Makefile
+@@ -14,6 +14,10 @@ TEST_GEN_PROGS += vfio_pci_device_init_perf_test
+ TEST_GEN_PROGS += vfio_pci_driver_test
+ TEST_GEN_PROGS += vfio_pci_liveupdate_uapi_test
  
-+struct vfio_pci_device *__vfio_pci_device_init(const char *bdf,
-+					       struct iommu *iommu,
-+					       int device_fd);
- struct vfio_pci_device *vfio_pci_device_init(const char *bdf, struct iommu *iommu);
- void vfio_pci_device_cleanup(struct vfio_pci_device *device);
- 
-diff --git a/tools/testing/selftests/vfio/lib/vfio_pci_device.c b/tools/testing/selftests/vfio/lib/vfio_pci_device.c
-index 4e5871f1ebc3..e9215c712cda 100644
---- a/tools/testing/selftests/vfio/lib/vfio_pci_device.c
-+++ b/tools/testing/selftests/vfio/lib/vfio_pci_device.c
-@@ -340,19 +340,27 @@ static void vfio_device_attach_iommufd_pt(int device_fd, u32 pt_id)
- 	ioctl_assert(device_fd, VFIO_DEVICE_ATTACH_IOMMUFD_PT, &args);
- }
- 
--static void vfio_pci_iommufd_setup(struct vfio_pci_device *device, const char *bdf)
-+static void vfio_pci_iommufd_setup(struct vfio_pci_device *device,
-+				   const char *bdf, int device_fd)
- {
--	const char *cdev_path = vfio_pci_get_cdev_path(bdf);
-+	const char *cdev_path;
- 
--	device->fd = open(cdev_path, O_RDWR);
--	VFIO_ASSERT_GE(device->fd, 0);
--	free((void *)cdev_path);
-+	if (device_fd >= 0) {
-+		device->fd = device_fd;
-+	} else {
-+		cdev_path = vfio_pci_get_cdev_path(bdf);
-+		device->fd = open(cdev_path, O_RDWR);
-+		VFIO_ASSERT_GE(device->fd, 0);
-+		free((void *)cdev_path);
-+	}
- 
- 	vfio_device_bind_iommufd(device->fd, device->iommu->iommufd);
- 	vfio_device_attach_iommufd_pt(device->fd, device->iommu->ioas_id);
- }
- 
--struct vfio_pci_device *vfio_pci_device_init(const char *bdf, struct iommu *iommu)
-+struct vfio_pci_device *__vfio_pci_device_init(const char *bdf,
-+					       struct iommu *iommu,
-+					       int device_fd)
- {
- 	struct vfio_pci_device *device;
- 
-@@ -363,10 +371,12 @@ struct vfio_pci_device *vfio_pci_device_init(const char *bdf, struct iommu *iomm
- 	device->iommu = iommu;
- 	device->bdf = bdf;
- 
--	if (iommu->mode->container_path)
-+	if (iommu->mode->container_path) {
-+		VFIO_ASSERT_EQ(device_fd, -1);
- 		vfio_pci_container_setup(device, bdf);
--	else
--		vfio_pci_iommufd_setup(device, bdf);
-+	} else {
-+		vfio_pci_iommufd_setup(device, bdf, device_fd);
-+	}
- 
- 	vfio_pci_device_setup(device);
- 	vfio_pci_driver_probe(device);
-@@ -374,6 +384,11 @@ struct vfio_pci_device *vfio_pci_device_init(const char *bdf, struct iommu *iomm
- 	return device;
- }
- 
-+struct vfio_pci_device *vfio_pci_device_init(const char *bdf, struct iommu *iommu)
++# This test must be run manually since it requires the user/automation to
++# perform a kexec during the test.
++TEST_GEN_PROGS_EXTENDED += vfio_pci_liveupdate_kexec_test
++
+ TEST_FILES += scripts/cleanup.sh
+ TEST_FILES += scripts/lib.sh
+ TEST_FILES += scripts/run.sh
+diff --git a/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c b/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+new file mode 100644
+index 000000000000..15b3e3af91d1
+--- /dev/null
++++ b/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+@@ -0,0 +1,89 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <libliveupdate.h>
++#include <libvfio.h>
++
++static const char *device_bdf;
++
++static char state_session[LIVEUPDATE_SESSION_NAME_LENGTH];
++static char device_session[LIVEUPDATE_SESSION_NAME_LENGTH];
++
++enum {
++	STATE_TOKEN,
++	DEVICE_TOKEN,
++};
++
++static void before_kexec(int luo_fd)
 +{
-+	return __vfio_pci_device_init(bdf, iommu, /*device_fd=*/-1);
++	struct vfio_pci_device *device;
++	struct iommu *iommu;
++	int session_fd;
++	int ret;
++
++	iommu = iommu_init("iommufd");
++	device = vfio_pci_device_init(device_bdf, iommu);
++
++	create_state_file(luo_fd, state_session, STATE_TOKEN, /*next_stage=*/2);
++
++	session_fd = luo_create_session(luo_fd, device_session);
++	VFIO_ASSERT_GE(session_fd, 0);
++
++	printf("Preserving device in session\n");
++	ret = luo_session_preserve_fd(session_fd, device->fd, DEVICE_TOKEN);
++	VFIO_ASSERT_EQ(ret, 0);
++
++	close(luo_fd);
++	daemonize_and_wait();
 +}
 +
- void vfio_pci_device_cleanup(struct vfio_pci_device *device)
- {
- 	int i;
++static void after_kexec(int luo_fd, int state_session_fd)
++{
++	struct vfio_pci_device *device;
++	struct iommu *iommu;
++	int session_fd;
++	int device_fd;
++	int stage;
++
++	restore_and_read_stage(state_session_fd, STATE_TOKEN, &stage);
++	VFIO_ASSERT_EQ(stage, 2);
++
++	session_fd = luo_retrieve_session(luo_fd, device_session);
++	VFIO_ASSERT_GE(session_fd, 0);
++
++	printf("Finishing the session before retrieving the device (should fail)\n");
++	VFIO_ASSERT_NE(luo_session_finish(session_fd), 0);
++
++	printf("Retrieving the device FD from LUO\n");
++	device_fd = luo_session_retrieve_fd(session_fd, DEVICE_TOKEN);
++	VFIO_ASSERT_GE(device_fd, 0);
++
++	printf("Finishing the session before binding to iommufd (should fail)\n");
++	VFIO_ASSERT_NE(luo_session_finish(session_fd), 0);
++
++	printf("Binding the device to an iommufd and setting it up\n");
++	iommu = iommu_init("iommufd");
++
++	/*
++	 * This will invoke various ioctls on device_fd such as
++	 * VFIO_DEVICE_GET_INFO. So this is a decent sanity test
++	 * that LUO actually handed us back a valid VFIO device
++	 * file and not something else.
++	 */
++	device = __vfio_pci_device_init(device_bdf, iommu, device_fd);
++
++	printf("Finishing the session\n");
++	VFIO_ASSERT_EQ(luo_session_finish(session_fd), 0);
++
++	vfio_pci_device_cleanup(device);
++	iommu_cleanup(iommu);
++}
++
++int main(int argc, char *argv[])
++{
++	device_bdf = vfio_selftests_get_bdf(&argc, argv);
++
++	sprintf(device_session, "device-%s", device_bdf);
++	sprintf(state_session, "state-%s", device_bdf);
++
++	return luo_test(argc, argv, state_session, before_kexec, after_kexec);
++}
 -- 
 2.53.0.983.g0bb29b3bc5-goog
 
