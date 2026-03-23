@@ -4,71 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 91A91D58CBE
-	for <kexec@archiver.kernel.org>; Mon, 23 Mar 2026 02:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E45FAD58CDC
+	for <kexec@archiver.kernel.org>; Mon, 23 Mar 2026 06:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=CWeufLH8B60TEocnFeIkYMdZpkD6l9S6p2cYRKOxz7A=; b=P0ZasbjsPqQB/zbYBCGwBNbEX1
-	VeTOsyV9DlZICexo7L9MZmL0Zv5DNOwKway5ZsbLP+t3hmpJqvbVIWKaJLq14R1to2K2whBuCOLvi
-	Ue4YlHfulEg/+xfFCW6Hqe3A/wItFJQAUDOUaXHltYzp/SSbLYKuKaZsMHkqohLFjpKsBpT468kph
-	m7hSvrWvnx4XEUaXmzJTRXo0+a8Dk7oAq9PafNwHbQheHLxZI5z68gSnxiBZXbWmGL83QwyPomczX
-	yyCZMC0A+WjHI1rFmshOpnVJedVdHUczNpv3tG4YjBNYGuWpKnZ4uAWHdwPIFOysnVpjJfl7aFedb
-	k/+oYjXQ==;
+	bh=3FBFBEMTYlFRGPvcRDz5Q/yZJO0dAkwNN+DQ7KDBemM=; b=FyEzxgv05D5rV7h1lsmBLGsW2K
+	RrrkHa7+MMCR3JFXTf/+ZpmuJfm3gjaEvIXPqwDP095ne+bQBTP45lVp/sSpOHqZYyKI+7UOk3/F+
+	suggNfQLUj//Y6sG8HnNFivR8NG79tA4p1Yk8RH/xLRU6zK5dOI/Qfq+qBw5z8T+bk2CZMvO4jhQS
+	m4rjHd4Zn/CzbGke69qf5c81VEwQJ3K3Cl2pGMYimvCn7M0XO8Xu07SxHaDBCblDdjrlWOUUY4iq8
+	Xwevr6TSGWzzp/Mxy5Zfs7tN/LtiDZelSPA5LZfOF6WF6WiDXKDlUVG3lELtZDyySVUf3XSOIOBQB
+	sKC3XjkQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4Umg-0000000FtWe-30NJ;
-	Mon, 23 Mar 2026 02:12:50 +0000
-Received: from smtp81.cstnet.cn ([159.226.251.81] helo=cstnet.cn)
-	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4Umd-0000000FtWK-05sk
+	id 1w4YaW-0000000G7Q9-1BPH;
+	Mon, 23 Mar 2026 06:16:32 +0000
+Received: from mail.loongson.cn ([114.242.206.163])
+	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1w4YaS-0000000G7Pn-2odc
 	for kexec@lists.infradead.org;
-	Mon, 23 Mar 2026 02:12:48 +0000
-Received: from localhost.localdomain (unknown [111.196.245.197])
-	by APP-03 (Coremail) with SMTP id rQCowAB3ldySocBpdauBCw--.8884S2;
-	Mon, 23 Mar 2026 10:12:38 +0800 (CST)
-From: Pengpeng Hou <pengpeng@iscas.ac.cn>
-To: x86@kernel.org
-Cc: Pengpeng Hou <pengpeng@iscas.ac.cn>,
-	kexec@lists.infradead.org,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/kexec: bound bzImage64 setup header copy
-Date: Mon, 23 Mar 2026 10:12:34 +0800
-Message-ID: <20260323021234.51062-1-pengpeng@iscas.ac.cn>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20260322031924.58050-1-pengpeng@iscas.ac.cn>
-References: <20260322031924.58050-1-pengpeng@iscas.ac.cn>
+	Mon, 23 Mar 2026 06:16:31 +0000
+Received: from loongson.cn (unknown [10.180.13.167])
+	by gateway (Coremail) with SMTP id _____8DxccC02sBpKK8dAA--.26148S3;
+	Mon, 23 Mar 2026 14:16:20 +0800 (CST)
+Received: from [0.0.0.0] (unknown [10.180.13.167])
+	by front1 (Coremail) with SMTP id qMiowJBxiuCy2sBpmSNbAA--.39116S2;
+	Mon, 23 Mar 2026 14:16:19 +0800 (CST)
+Message-ID: <7d602b85-1436-40b7-88f3-7f3eadfb43f7@loongson.cn>
+Date: Mon, 23 Mar 2026 14:16:18 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] LoongArch: Increase MAX_MEMORY_RANGES to 1024
+From: Ming Wang <wangming01@loongson.cn>
+To: kexec@lists.infradead.org
+Cc: horms@kernel.org, loongarch@lists.linux.dev, chenhuacai@kernel.org
+References: <20260304011914.880120-1-wangming01@loongson.cn>
+Content-Language: en-US
+In-Reply-To: <20260304011914.880120-1-wangming01@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: rQCowAB3ldySocBpdauBCw--.8884S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYx7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
-	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z2
-	80aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-	w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
-	vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v
-	4I1l42xK82IYc2Ij64vIr41l4c8EcI0Ec7CjxVAaw2AFwI0_Jw0_GFyl4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIda
-	VFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
-X-Originating-IP: [111.196.245.197]
-X-CM-SenderInfo: pshqw1xhqjqxpvfd2hldfou0/
+X-CM-TRANSID: qMiowJBxiuCy2sBpmSNbAA--.39116S2
+X-CM-SenderInfo: 5zdqwzxlqjiio6or00hjvr0hdfq/1tbiAQEPEmm-hMQJnQABse
+X-Coremail-Antispam: 1Uk129KBj93XoWrtr1xuw1xXw4xAr17tF4kKrX_yoW8Jr1xpr
+	W7AF1DGrWrWrs7tw1kt39xXwn3G343KF1xWFya9ryxCr4DXr1Iv3WDWrZ8XFWUXw4rKryI
+	grn0g34FqFWDXwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjx
+	CEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAF
+	wI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0x
+	vEwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8bTm3UU
+	UUU==
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260322_191247_454234_62750CCE 
-X-CRM114-Status: UNSURE (   4.76  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260322_231629_684822_C7DE5719 
+X-CRM114-Status: GOOD (  13.01  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,11 +82,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
+Just a gentle ping.
 
-Thanks for the clarification. You're right that the loader already reserves enough space for the setup header, so I will narrow the report wording to focus on the header-derived length and its signedness/unsigned interpretation rather than on destination space reservation.
-
-Best regards,
-Pengpeng
+在 2026/3/4 09:19, Ming Wang 写道:
+> On some LoongArch systems, especially multi-socket machines like 3D6000,
+> the current limit of MAX_MEMORY_RANGES (64) is too small to accommodate
+> all memory range entries in /proc/iomem.
+> 
+> When the limit is reached, get_memory_ranges() stops parsing, which causes
+> kexec to fail with "locate_hole failed" because it cannot correctly identify
+> the crash kernel reserved memory or necessary RAM segments.
+> 
+> Increase MAX_MEMORY_RANGES to 1024 to support systems with complex
+> memory layouts.
+> 
+> Signed-off-by: Ming Wang <wangming01@loongson.cn>
+> ---
+>   kexec/arch/loongarch/kexec-loongarch.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kexec/arch/loongarch/kexec-loongarch.h b/kexec/arch/loongarch/kexec-loongarch.h
+> index 2e65eb0..895809c 100644
+> --- a/kexec/arch/loongarch/kexec-loongarch.h
+> +++ b/kexec/arch/loongarch/kexec-loongarch.h
+> @@ -8,7 +8,7 @@
+>   #define BOOT_BLOCK_VERSION 17
+>   #define BOOT_BLOCK_LAST_COMP_VERSION 16
+>   
+> -#define MAX_MEMORY_RANGES 64
+> +#define MAX_MEMORY_RANGES 1024
+>   #define MAX_LINE 160
+>   
+>   #define CORE_TYPE_ELF64 1
 
 
