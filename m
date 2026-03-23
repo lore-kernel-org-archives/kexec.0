@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AD7A4D3941F
-	for <kexec@archiver.kernel.org>; Thu,  2 Apr 2026 12:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E310CD3941D
+	for <kexec@archiver.kernel.org>; Thu,  2 Apr 2026 12:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:To:From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=LN3XXiXdQIjEqV28MGsUKiJ1rwzSL0+/rvdOwW8fCQg=; b=N862p5As1EyfzJssmc19Q/C6xf
-	0MLd4yv/8Pg526txHbGVEio7okc0Rkt+irhOR29PCkymch2EEhwdV9JHtNAqvDzDjUs5V5Rm6mkCG
-	EnhJs4EPPZUAhm8CBsc0DBpndMRpdGOH8jhJfjhRgvwtO7qHOWs6lwKCwh3pFsMK8RNsoA32n204i
-	XlhbHzAEa9xW1aFzvklSW1JQU0Zs5M3uxesgnZmOxATTZYJEPCWbzHQbyVsTlUypCUt7Kjfp22t1r
-	ZHBw8HEHgy4c+pszJRrPxJp6lhwnw62N7MB+0b/2vt/pXKI56y2AKvqPMhQ1XMxLKh1+klpvy0Z/N
-	7OBJkVdw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:
+	From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=q26crh1bRAQSwEBH+O8wN3grLapTaD7O8Bt4sMFkk/0=; b=ngXIeItITEkj50cgNvHcsaN5KI
+	v6rN84TY8rM2akIAWDNjaH2Qb5d7WwNEUTq6FTL0xVrKST0q1zz0oLk1XgrRy935NjjijO3xHtZeJ
+	1b3F39u77U4x3OkpNIupOuOYUZVNVZ2NKoDhAHxYpXY+4svpa0/Z7UTv6Lumgd6HM2MQc3d/nAsEL
+	MYrTDg2MsHbe2lmR0UeQF2pL+g8ygMbZnSy9xtUfX+cY3+WSH0tqu8rShQY6EaSHV09fFtg+qsMFx
+	twfhWucrtlJg7g5B0m4Zh32PfodwQpgsZpRl8xAIrrMxEH+YJkI7AvVYWbQFoWlVrKGyhXMEE+eG/
+	PmJkOycA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w8HFj-000000003pf-3zkk;
-	Thu, 02 Apr 2026 12:34:27 +0000
-Received: from canpmsgout04.his.huawei.com ([113.46.200.219])
+	id 1w8HFl-000000003sU-2COb;
+	Thu, 02 Apr 2026 12:34:29 +0000
+Received: from canpmsgout08.his.huawei.com ([113.46.200.223])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4ZgC-0000000GBjd-0iWS;
-	Mon, 23 Mar 2026 07:26:30 +0000
+	id 1w4ZgF-0000000GBjf-2YDd;
+	Mon, 23 Mar 2026 07:26:33 +0000
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=LN3XXiXdQIjEqV28MGsUKiJ1rwzSL0+/rvdOwW8fCQg=;
-	b=Id4q8VpFGKdX5KMd/vJbS0/sIoSWOx8d8tpUPNqWpM/DQC60eEaIs/+lQk5409afRNpHSLSE8
-	cnTdKe9m1uC56iz8bgyxPTizP4OpC2pE3LYi8HH2Yy05V1G2fi/3SChSvOCqK97IDlrnXZUq98v
-	TM5wu8BS6+82fj+fTuLSkhs=
-Received: from mail.maildlp.com (unknown [172.19.162.144])
-	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4ffPhD1l3Rz1prM1;
-	Mon, 23 Mar 2026 15:20:12 +0800 (CST)
+	bh=q26crh1bRAQSwEBH+O8wN3grLapTaD7O8Bt4sMFkk/0=;
+	b=ZsVUaj5Mifw+opMXK0aA44WFftzh+E/uVNOs8Z+OcHWhOQDPFuUKJm4ooX7ibK1s6mbzRanhy
+	0wUF1p50Tj1EvW/fbP2koNdLk9pPInUJNgWTT/in3ux4wLLZoPKn/2AiDsN4jPKkJjys9yUwWZB
+	xJuc5vvWrZ5pBLMM4uz6zRY=
+Received: from mail.maildlp.com (unknown [172.19.163.214])
+	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4ffPhP2f0mzmV73;
+	Mon, 23 Mar 2026 15:20:21 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 561C640567;
-	Mon, 23 Mar 2026 15:26:19 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 1666C4056C;
+	Mon, 23 Mar 2026 15:26:27 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
  (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 23 Mar
- 2026 15:26:16 +0800
+ 2026 15:26:24 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
@@ -68,21 +68,21 @@ To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
 	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
 	<kexec@lists.infradead.org>
-Subject: [PATCH v9 1/5] powerpc/crash: sort crash memory ranges before preparing elfcorehdr
-Date: Mon, 23 Mar 2026 15:27:41 +0800
-Message-ID: <20260323072745.2481719-2-ruanjinjie@huawei.com>
+Subject: [PATCH v9 4/5] arm64: kexec: Add support for crashkernel CMA reservation
+Date: Mon, 23 Mar 2026 15:27:44 +0800
+Message-ID: <20260323072745.2481719-5-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260323072745.2481719-1-ruanjinjie@huawei.com>
 References: <20260323072745.2481719-1-ruanjinjie@huawei.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-Originating-IP: [10.90.53.73]
 X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
  dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260323_002628_990283_0AF67DCA 
-X-CRM114-Status: GOOD (  25.53  )
+X-CRM114-CacheID: sfid-20260323_002632_276172_0D45423F 
+X-CRM114-Status: GOOD (  20.81  )
 X-Mailman-Approved-At: Thu, 02 Apr 2026 05:34:23 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -98,191 +98,151 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
+Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
+crashkernel= command line option") and commit ab475510e042 ("kdump:
+implement reserve_crashkernel_cma") added CMA support for kdump
+crashkernel reservation.
 
-During a memory hot-remove event, the elfcorehdr is rebuilt to exclude
-the removed memory. While updating the crash memory ranges for this
-operation, the crash memory ranges array can become unsorted. This
-happens because remove_mem_range() may split a memory range into two
-parts and append the higher-address part as a separate range at the end
-of the array.
+Crash kernel memory reservation wastes production resources if too
+large, risks kdump failure if too small, and faces allocation difficulties
+on fragmented systems due to contiguous block constraints. The new
+CMA-based crashkernel reservation scheme splits the "large fixed
+reservation" into a "small fixed region + large CMA dynamic region": the
+CMA memory is available to userspace during normal operation to avoid
+waste, and is reclaimed for kdump upon crash—saving memory while
+improving reliability.
 
-So far, no issues have been observed due to the unsorted crash memory
-ranges. However, this could lead to problems once crash memory range
-removal is handled by generic code, as introduced in the upcoming
-patches in this series.
+So extend crashkernel CMA reservation support to arm64. The following
+changes are made to enable CMA reservation:
 
-Currently, powerpc uses a platform-specific function,
-remove_mem_range(), to exclude hot-removed memory from the crash memory
-ranges. This function performs the same task as the generic
-crash_exclude_mem_range() in crash_core.c. The generic helper also
-ensures that the crash memory ranges remain sorted. So remove the
-redundant powerpc-specific implementation and instead call
-crash_exclude_mem_range_guarded() (which internally calls
-crash_exclude_mem_range()) to exclude the hot-removed memory ranges.
+- Parse and obtain the CMA reservation size along with other crashkernel
+  parameters.
+- Call reserve_crashkernel_cma() to allocate the CMA region for kdump.
+- Include the CMA-reserved ranges for kdump kernel to use.
+- Exclude the CMA-reserved ranges from the crash kernel memory to
+  prevent them from being exported through /proc/vmcore, which is already
+  done in the crash core.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan he <bhe@redhat.com>
-Cc: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org
+Update kernel-parameters.txt to document CMA support for crashkernel on
+arm64 architecture.
+
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 Acked-by: Baoquan He <bhe@redhat.com>
-Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
 Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- arch/powerpc/include/asm/kexec_ranges.h |  4 +-
- arch/powerpc/kexec/crash.c              |  5 +-
- arch/powerpc/kexec/ranges.c             | 87 +------------------------
- 3 files changed, 7 insertions(+), 89 deletions(-)
+v7:
+- Correct the inclusion of CMA-reserved ranges for kdump
+  kernel in of/kexec.
+v3:
+- Add Acked-by.
+v2:
+- Free cmem in prepare_elf_headers()
+- Add the mtivation.
+---
+ Documentation/admin-guide/kernel-parameters.txt | 2 +-
+ arch/arm64/kernel/machine_kexec_file.c          | 2 +-
+ arch/arm64/mm/init.c                            | 5 +++--
+ drivers/of/fdt.c                                | 9 +++++----
+ drivers/of/kexec.c                              | 9 +++++++++
+ 5 files changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/kexec_ranges.h b/arch/powerpc/include/asm/kexec_ranges.h
-index 14055896cbcb..ad95e3792d10 100644
---- a/arch/powerpc/include/asm/kexec_ranges.h
-+++ b/arch/powerpc/include/asm/kexec_ranges.h
-@@ -7,7 +7,9 @@
- void sort_memory_ranges(struct crash_mem *mrngs, bool merge);
- struct crash_mem *realloc_mem_ranges(struct crash_mem **mem_ranges);
- int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size);
--int remove_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size);
-+int crash_exclude_mem_range_guarded(struct crash_mem **mem_ranges,
-+				    unsigned long long mstart,
-+				    unsigned long long mend);
- int get_exclude_memory_ranges(struct crash_mem **mem_ranges);
- int get_reserved_memory_ranges(struct crash_mem **mem_ranges);
- int get_crash_memory_ranges(struct crash_mem **mem_ranges);
-diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
-index a325c1c02f96..898742a5205c 100644
---- a/arch/powerpc/kexec/crash.c
-+++ b/arch/powerpc/kexec/crash.c
-@@ -431,7 +431,7 @@ static void update_crash_elfcorehdr(struct kimage *image, struct memory_notify *
- 	struct crash_mem *cmem = NULL;
- 	struct kexec_segment *ksegment;
- 	void *ptr, *mem, *elfbuf = NULL;
--	unsigned long elfsz, memsz, base_addr, size;
-+	unsigned long elfsz, memsz, base_addr, size, end;
- 
- 	ksegment = &image->segment[image->elfcorehdr_index];
- 	mem = (void *) ksegment->mem;
-@@ -450,7 +450,8 @@ static void update_crash_elfcorehdr(struct kimage *image, struct memory_notify *
- 	if (image->hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY) {
- 		base_addr = PFN_PHYS(mn->start_pfn);
- 		size = mn->nr_pages * PAGE_SIZE;
--		ret = remove_mem_range(&cmem, base_addr, size);
-+		end = base_addr + size - 1;
-+		ret = crash_exclude_mem_range_guarded(&cmem, base_addr, end);
- 		if (ret) {
- 			pr_err("Failed to remove hot-unplugged memory from crash memory ranges\n");
- 			goto out;
-diff --git a/arch/powerpc/kexec/ranges.c b/arch/powerpc/kexec/ranges.c
-index 867135560e5c..6c58bcc3e130 100644
---- a/arch/powerpc/kexec/ranges.c
-+++ b/arch/powerpc/kexec/ranges.c
-@@ -553,7 +553,7 @@ int get_usable_memory_ranges(struct crash_mem **mem_ranges)
- #endif /* CONFIG_KEXEC_FILE */
- 
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index cb850e5290c2..afb3112510f7 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1121,7 +1121,7 @@ Kernel parameters
+ 			It will be ignored when crashkernel=X,high is not used
+ 			or memory reserved is below 4G.
+ 	crashkernel=size[KMG],cma
+-			[KNL, X86, ppc] Reserve additional crash kernel memory from
++			[KNL, X86, ARM64, PPC] Reserve additional crash kernel memory from
+ 			CMA. This reservation is usable by the first system's
+ 			userspace memory and kernel movable allocations (memory
+ 			balloon, zswap). Pages allocated from this memory range
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index c338506a580b..cc577d77df00 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -42,7 +42,7 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
  #ifdef CONFIG_CRASH_DUMP
--static int crash_exclude_mem_range_guarded(struct crash_mem **mem_ranges,
-+int crash_exclude_mem_range_guarded(struct crash_mem **mem_ranges,
- 					   unsigned long long mstart,
- 					   unsigned long long mend)
+ unsigned int arch_get_system_nr_ranges(void)
  {
-@@ -641,89 +641,4 @@ int get_crash_memory_ranges(struct crash_mem **mem_ranges)
- 		pr_err("Failed to setup crash memory ranges\n");
- 	return ret;
+-	unsigned int nr_ranges = 2; /* for exclusion of crashkernel region */
++	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* for exclusion of crashkernel region */
+ 	phys_addr_t start, end;
+ 	u64 i;
+ 
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 96711b8578fd..144e30fe9a75 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -96,8 +96,8 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit;
+ 
+ static void __init arch_reserve_crashkernel(void)
+ {
++	unsigned long long crash_base, crash_size, cma_size = 0;
+ 	unsigned long long low_size = 0;
+-	unsigned long long crash_base, crash_size;
+ 	bool high = false;
+ 	int ret;
+ 
+@@ -106,11 +106,12 @@ static void __init arch_reserve_crashkernel(void)
+ 
+ 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+ 				&crash_size, &crash_base,
+-				&low_size, NULL, &high);
++				&low_size, &cma_size, &high);
+ 	if (ret)
+ 		return;
+ 
+ 	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
++	reserve_crashkernel_cma(cma_size);
  }
--
--/**
-- * remove_mem_range - Removes the given memory range from the range list.
-- * @mem_ranges:    Range list to remove the memory range to.
-- * @base:          Base address of the range to remove.
-- * @size:          Size of the memory range to remove.
-- *
-- * (Re)allocates memory, if needed.
-- *
-- * Returns 0 on success, negative errno on error.
-- */
--int remove_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
--{
--	u64 end;
--	int ret = 0;
--	unsigned int i;
--	u64 mstart, mend;
--	struct crash_mem *mem_rngs = *mem_ranges;
--
--	if (!size)
--		return 0;
--
--	/*
--	 * Memory range are stored as start and end address, use
--	 * the same format to do remove operation.
--	 */
--	end = base + size - 1;
--
--	for (i = 0; i < mem_rngs->nr_ranges; i++) {
--		mstart = mem_rngs->ranges[i].start;
--		mend = mem_rngs->ranges[i].end;
--
--		/*
--		 * Memory range to remove is not part of this range entry
--		 * in the memory range list
--		 */
--		if (!(base >= mstart && end <= mend))
--			continue;
--
--		/*
--		 * Memory range to remove is equivalent to this entry in the
--		 * memory range list. Remove the range entry from the list.
--		 */
--		if (base == mstart && end == mend) {
--			for (; i < mem_rngs->nr_ranges - 1; i++) {
--				mem_rngs->ranges[i].start = mem_rngs->ranges[i+1].start;
--				mem_rngs->ranges[i].end = mem_rngs->ranges[i+1].end;
--			}
--			mem_rngs->nr_ranges--;
--			goto out;
--		}
--		/*
--		 * Start address of the memory range to remove and the
--		 * current memory range entry in the list is same. Just
--		 * move the start address of the current memory range
--		 * entry in the list to end + 1.
--		 */
--		else if (base == mstart) {
--			mem_rngs->ranges[i].start = end + 1;
--			goto out;
--		}
--		/*
--		 * End address of the memory range to remove and the
--		 * current memory range entry in the list is same.
--		 * Just move the end address of the current memory
--		 * range entry in the list to base - 1.
--		 */
--		else if (end == mend)  {
--			mem_rngs->ranges[i].end = base - 1;
--			goto out;
--		}
--		/*
--		 * Memory range to remove is not at the edge of current
--		 * memory range entry. Split the current memory entry into
--		 * two half.
--		 */
--		else {
--			size = mem_rngs->ranges[i].end - end + 1;
--			mem_rngs->ranges[i].end = base - 1;
--			ret = add_mem_range(mem_ranges, end + 1, size);
--		}
--	}
--out:
--	return ret;
--}
- #endif /* CONFIG_CRASH_DUMP */
+ 
+ static phys_addr_t __init max_zone_phys(phys_addr_t zone_limit)
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 331646d667b9..531be5fcdeb6 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -871,11 +871,12 @@ static unsigned long chosen_node_offset = -FDT_ERR_NOTFOUND;
+ /*
+  * The main usage of linux,usable-memory-range is for crash dump kernel.
+  * Originally, the number of usable-memory regions is one. Now there may
+- * be two regions, low region and high region.
+- * To make compatibility with existing user-space and older kdump, the low
+- * region is always the last range of linux,usable-memory-range if exist.
++ * be 2 + CRASHKERNEL_CMA_RANGES_MAX regions, low region, high region and
++ * cma regions. To make compatibility with existing user-space and older
++ * kdump, the low region is always the last range of linux,usable-memory-range
++ * if exist.
+  */
+-#define MAX_USABLE_RANGES		2
++#define MAX_USABLE_RANGES		(2 + CRASHKERNEL_CMA_RANGES_MAX)
+ 
+ /**
+  * early_init_dt_check_for_usable_mem_range - Decode usable memory range
+diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
+index c4cf3552c018..c8521d99552f 100644
+--- a/drivers/of/kexec.c
++++ b/drivers/of/kexec.c
+@@ -431,6 +431,15 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
+ 		if (ret)
+ 			goto out;
+ 
++		for (int i = 0; i < crashk_cma_cnt; i++) {
++			ret = fdt_appendprop_addrrange(fdt, 0, chosen_node,
++					"linux,usable-memory-range",
++					crashk_cma_ranges[i].start,
++					crashk_cma_ranges[i].end - crashk_cma_ranges[i].start + 1);
++			if (ret)
++				goto out;
++		}
++
+ 		if (crashk_low_res.end) {
+ 			ret = fdt_appendprop_addrrange(fdt, 0, chosen_node,
+ 					"linux,usable-memory-range",
 -- 
 2.34.1
 
