@@ -4,69 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5E87BF532C4
-	for <kexec@archiver.kernel.org>; Mon, 23 Mar 2026 23:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E8CCAF532C0
+	for <kexec@archiver.kernel.org>; Mon, 23 Mar 2026 23:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=d5dX1H4XkIVUdogReT0P+xEIybXWqypp015VM5/RpRc=; b=FX/1IdWZkge7h1Tt03uXh0Ez11
-	IqCymC05vNrHUJHMp1coFRV7lwVsuaQxTCd7bNWvBYhyrGY06jK4Ajish1rO2Q9qJPJt2b6atoh58
-	0rRmKOP8/sV055bE7oIsSaWlHAZvVFcsI/VwfTbXzAc3SAXG9yKV3ltH9e6Xr+0kVjIEdP4okIgNE
-	FtupywPuMx7mmfgUPoHTAb3Yg+1uQb5IGcRXTUg4+CqNzro+dfj6UA2tYLpc9xdO6V2L2KnlMRRzz
-	5RdtzjTWjQlzGKL1H2VSXLKLtM6S5WaCeO4zOd88bWQyNo+tQShTWGpo2o/mvjpX3CAJh4qO7ehDn
-	d/ANSMPA==;
+	bh=JUFryWFBPXxe6T+DTeCmqMtrNHQ62SSe5LgDU16cd+0=; b=RjD6BU95FIqjmlZn9Q0zq0LBqm
+	lBeN9AxK85oPHJuH6MEoRyChlVk7ZPskgY+6JyxIC6PrJHkPV9Svs4IVB2s98hRGu5zu7EMv8B2DV
+	6aKuasFvwsPTk+X159K89zuzgXEvHB0GYx/lTzRVcQ12mkvN4fGywYyKxLHvqcUUPO8AOgPGXvYed
+	zvhvoKAVaYbfT6KdNMDPsRCz1HMFQDSzol+VfTJ4rbAR6zympuvSxrZDEcbS2wQrobTZJqtaLka4n
+	NshIhCAJnQNhXc+4iN4AC54mjueV+Vq/GaxMJPrTWB3B7e+kVjRm8NBwBK+USzGMh5JkjY7YAt91O
+	gl7pkIrA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4pAr-00000000Bk0-2lBF;
-	Mon, 23 Mar 2026 23:59:09 +0000
-Received: from mail-pl1-x64a.google.com ([2607:f8b0:4864:20::64a])
+	id 1w4pAu-00000000Bny-3eKH;
+	Mon, 23 Mar 2026 23:59:12 +0000
+Received: from mail-pj1-x104a.google.com ([2607:f8b0:4864:20::104a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4pAn-00000000Bdk-1qzj
+	id 1w4pAs-00000000Bkc-3LWv
 	for kexec@lists.infradead.org;
-	Mon, 23 Mar 2026 23:59:07 +0000
-Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-2b0554888cfso9524955ad.3
-        for <kexec@lists.infradead.org>; Mon, 23 Mar 2026 16:59:04 -0700 (PDT)
+	Mon, 23 Mar 2026 23:59:12 +0000
+Received: by mail-pj1-x104a.google.com with SMTP id 98e67ed59e1d1-35a1e725a8fso24245724a91.3
+        for <kexec@lists.infradead.org>; Mon, 23 Mar 2026 16:59:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774310344; x=1774915144; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1774310349; x=1774915149; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d5dX1H4XkIVUdogReT0P+xEIybXWqypp015VM5/RpRc=;
-        b=HkH7/bpa+4dU8PXHNN0TTj/gmLmWq9cPh3qX2AvyBpdmIVFRNpbxntR5Tx5qo60ZFa
-         ej5wvsEv0J/IkfAYyvrRyxXDwUmEapFiM58mgR6Flg1qU9gg5xnWsjBrk3YnlnKOZ3Zb
-         i/vYzkwAcOe4cAzU/RnPhFvkCnXr61/ROuBZJ8zd3sKuTm7RMIrB7wgyr3NLWint+IO2
-         8pJbbEvGhcZ4EOlHkLDeNC7zTCen78n8NRQ4ZeMjUeQuAa8oThNz+FMUgEr4fySNeUEh
-         fJFjo8leqNMhXFdpnCDkpXsttQU2D6cQo2ozt7qtieY1wMIHcciNdti0PwOAGEO5TdS7
-         p10Q==
+        bh=JUFryWFBPXxe6T+DTeCmqMtrNHQ62SSe5LgDU16cd+0=;
+        b=pl6vVfjzbygHGXKpuFEw/Ns13k6zPXAxFq0XD8j9LqpxnKJzT5YxYaBOa4df2RzqiK
+         DLgRoKf2eORl5Pn5ZFmBwFpTridWoJ8dM+jZ3KECItIpXrRuFEBLjKRHvnM+1cIFdzJu
+         o5wT7ur0y4sARP1cCydx19RMcrhEzHqW3SA1VciELi9PdnFwOY6i31+BnXa89UVENSb7
+         /PM2saTzUUjbx+Y4gljhpERPbvwLdUYBZn9DHqdeChDWP5B0xpNsriQ05Tf1aP2gov83
+         f3rp66obSM4jCuCZRe8X9beivQisieHid5+NLoY/O1RKkXmgiG3KgcdcUydnZXpdN+nS
+         KFww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774310344; x=1774915144;
+        d=1e100.net; s=20251104; t=1774310349; x=1774915149;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d5dX1H4XkIVUdogReT0P+xEIybXWqypp015VM5/RpRc=;
-        b=PKeu0AqIhC4aYyLjLcZdXpvZEOfTHiSlwf3H92n2B52GOU9Dos/iQDiWCrSQJwAcUe
-         +4PuSkVaDLEz7T4jBe+r343QxputJUlSnsiK2odvo31C/THWEuwnTX5WqAAwyuLOFyYt
-         IkVabgudqviOEOAidQum4WaL905IuPJOJ54lW/aLD5hdsHpv3RkdV1PsnjVP9hQiMbDN
-         7NF4z1RsKKIejQ16R4ng33efSDRyh/mMCdmJcw7ClOsLVslSIv/Ma4RrFeB9hvWlt9FC
-         sjY7C7uJKsjwTc13GiPts8mrB/F1FvWSLD7ALFnDn02D+1KyILJohReN4k5j7VWPyHtF
-         BPtw==
-X-Forwarded-Encrypted: i=1; AJvYcCViSQ40DI/+UBP+sclsC9Oey+fRpwoR23tROaPxrogFRJqDq0ffqpq3MNOnaOBVmOsFgsLhaQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwhHIFPPXtCD9KLeHV+6zkbL+MUNP3PoZi/5qFy+VRiAqBpvQsu
-	p4H1ovClANExopYxG6ngxK8lZGkkTdfCwwrGJPfACn2Zb5WaIYcok2pC5Ag49Jz7VQpQnDqwo9e
-	UpEor5fR9iEYmhw==
-X-Received: from plpn15.prod.google.com ([2002:a17:902:968f:b0:2ae:c5aa:fcd7])
+        bh=JUFryWFBPXxe6T+DTeCmqMtrNHQ62SSe5LgDU16cd+0=;
+        b=RKdgzWnqs/piFvf4ebPluY4cnO9QenVuf9dyjQ4yAnnHyJev3OsSVBD94HmLfXi1/D
+         8n/p2KptVb53WSGc85Yu7MeRwI0E9QsiJpJspBycPRAL4kIcQqVlsnUxhcxuuDscAWM5
+         t8daO4QHSnwXsoAktY0YmI4+2rxvPT84ih0jjzRf8BdbBxyPpUxBdOY7NP7GL0AVNUap
+         hTor49A8namf6P9er4tvr323EhcDKMle4GheW5h/ypgATiimYRY74n0Qi66e3eTZFM9F
+         uaJmcTRxZRi8B11xvEsULqa0MlKyoF/+BNHRWzEM+dd+thYWqMtuurlXNs2tZYI/PTiq
+         XBsA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGLUW303xmJ2aCYBhcVDzRUEqnrnGAQQoQTjFpNZjLgDtJZuW5GJrHjIekImfUS2BtXXMRHw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxRR8UuC/l/QWp+n9eBkxDOIBrxP01QIluPtZFzfQtm3EUgyjan
+	GBCAUbPtA4b0zjCh2Ja/6W5VFsmHz13p5D8KFGdYpSQ5CfAcOqdy0UgDyppqkwPt4YeiMEINvBx
+	+lW9Em9+P8l68Qg==
+X-Received: from pjub5.prod.google.com ([2002:a17:90a:cc05:b0:359:f1f1:7bcb])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:124f:b0:2b0:54dc:62c with SMTP id d9443c01a7336-2b0827c9a7cmr151447295ad.48.1774310343811;
- Mon, 23 Mar 2026 16:59:03 -0700 (PDT)
-Date: Mon, 23 Mar 2026 23:58:07 +0000
+ 2002:a17:90a:1c08:b0:35b:e519:213b with SMTP id 98e67ed59e1d1-35be5192186mr4242377a91.30.1774310349283;
+ Mon, 23 Mar 2026 16:59:09 -0700 (PDT)
+Date: Mon, 23 Mar 2026 23:58:10 +0000
 In-Reply-To: <20260323235817.1960573-1-dmatlack@google.com>
 Mime-Version: 1.0
 References: <20260323235817.1960573-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.53.0.983.g0bb29b3bc5-goog
-Message-ID: <20260323235817.1960573-16-dmatlack@google.com>
-Subject: [PATCH v3 15/24] selftests/liveupdate: Add helpers to
- preserve/retrieve FDs
+Message-ID: <20260323235817.1960573-19-dmatlack@google.com>
+Subject: [PATCH v3 18/24] vfio: selftests: Add vfio_pci_liveupdate_uapi_test
 From: David Matlack <dmatlack@google.com>
 To: Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>
 Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
@@ -94,8 +93,8 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.
 	Zhu Yanjun <yanjun.zhu@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260323_165905_541027_1EFD6F22 
-X-CRM114-Status: GOOD (  15.11  )
+X-CRM114-CacheID: sfid-20260323_165910_875158_D1D5F09E 
+X-CRM114-Status: GOOD (  16.14  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,108 +109,129 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Vipin Sharma <vipinsh@google.com>
+Add a selftest to exercise preserving a various VFIO files through
+/dev/liveupdate. Ensure that VFIO cdev device files can be preserved and
+everything else (group-based device files, group files, and container
+files) all fail.
 
-Add helper functions to preserve and retrieve file descriptors from an
-LUO session. These will be used be used in subsequent commits to
-preserve FDs other than memfd.
-
-No functional change intended.
-
-Signed-off-by: Vipin Sharma <vipinsh@google.com>
-Co-developed-by: David Matlack <dmatlack@google.com>
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- .../liveupdate/lib/include/libliveupdate.h    |  3 ++
- .../selftests/liveupdate/lib/liveupdate.c     | 41 +++++++++++++++----
- 2 files changed, 35 insertions(+), 9 deletions(-)
+ tools/testing/selftests/vfio/Makefile         |  1 +
+ .../vfio/vfio_pci_liveupdate_uapi_test.c      | 93 +++++++++++++++++++
+ 2 files changed, 94 insertions(+)
+ create mode 100644 tools/testing/selftests/vfio/vfio_pci_liveupdate_uapi_test.c
 
-diff --git a/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
-index 4390a2737930..2b04b3256382 100644
---- a/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
-+++ b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
-@@ -26,6 +26,9 @@ int luo_create_session(int luo_fd, const char *name);
- int luo_retrieve_session(int luo_fd, const char *name);
- int luo_session_finish(int session_fd);
+diff --git a/tools/testing/selftests/vfio/Makefile b/tools/testing/selftests/vfio/Makefile
+index 9d5e390a61b7..5b6e79593555 100644
+--- a/tools/testing/selftests/vfio/Makefile
++++ b/tools/testing/selftests/vfio/Makefile
+@@ -12,6 +12,7 @@ TEST_GEN_PROGS += vfio_iommufd_setup_test
+ TEST_GEN_PROGS += vfio_pci_device_test
+ TEST_GEN_PROGS += vfio_pci_device_init_perf_test
+ TEST_GEN_PROGS += vfio_pci_driver_test
++TEST_GEN_PROGS += vfio_pci_liveupdate_uapi_test
  
-+int luo_session_preserve_fd(int session_fd, int fd, __u64 token);
-+int luo_session_retrieve_fd(int session_fd, __u64 token);
+ TEST_FILES += scripts/cleanup.sh
+ TEST_FILES += scripts/lib.sh
+diff --git a/tools/testing/selftests/vfio/vfio_pci_liveupdate_uapi_test.c b/tools/testing/selftests/vfio/vfio_pci_liveupdate_uapi_test.c
+new file mode 100644
+index 000000000000..1d89b08ab0a4
+--- /dev/null
++++ b/tools/testing/selftests/vfio/vfio_pci_liveupdate_uapi_test.c
+@@ -0,0 +1,93 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +
- int create_and_preserve_memfd(int session_fd, int token, const char *data);
- int restore_and_verify_memfd(int session_fd, int token, const char *expected_data);
- 
-diff --git a/tools/testing/selftests/liveupdate/lib/liveupdate.c b/tools/testing/selftests/liveupdate/lib/liveupdate.c
-index 60121873f685..3e070975a3ec 100644
---- a/tools/testing/selftests/liveupdate/lib/liveupdate.c
-+++ b/tools/testing/selftests/liveupdate/lib/liveupdate.c
-@@ -54,9 +54,35 @@ int luo_retrieve_session(int luo_fd, const char *name)
- 	return arg.fd;
- }
- 
-+int luo_session_preserve_fd(int session_fd, int fd, __u64 token)
-+{
-+	struct liveupdate_session_preserve_fd arg = {
-+		.size = sizeof(arg),
-+		.fd = fd,
-+		.token = token,
-+	};
++#include <libliveupdate.h>
++#include <libvfio.h>
++#include <kselftest_harness.h>
 +
-+	if (ioctl(session_fd, LIVEUPDATE_SESSION_PRESERVE_FD, &arg))
-+		return -errno;
++static const char *device_bdf;
 +
-+	return 0;
++FIXTURE(vfio_pci_liveupdate_uapi_test) {
++	int luo_fd;
++	int session_fd;
++	struct iommu *iommu;
++	struct vfio_pci_device *device;
++};
++
++FIXTURE_VARIANT(vfio_pci_liveupdate_uapi_test) {
++	const char *iommu_mode;
++};
++
++#define FIXTURE_VARIANT_ADD_IOMMU_MODE(_iommu_mode)			\
++FIXTURE_VARIANT_ADD(vfio_pci_liveupdate_uapi_test, _iommu_mode) {	\
++	.iommu_mode = #_iommu_mode,					\
 +}
 +
-+int luo_session_retrieve_fd(int session_fd, __u64 token)
++FIXTURE_VARIANT_ADD_ALL_IOMMU_MODES();
++#undef FIXTURE_VARIANT_ADD_IOMMU_MODE
++
++FIXTURE_SETUP(vfio_pci_liveupdate_uapi_test)
 +{
-+	struct liveupdate_session_retrieve_fd arg = {
-+		.size = sizeof(arg),
-+		.token = token,
-+	};
++	self->luo_fd = luo_open_device();
++	ASSERT_GE(self->luo_fd, 0);
 +
-+	if (ioctl(session_fd, LIVEUPDATE_SESSION_RETRIEVE_FD, &arg))
-+		return -errno;
++	self->session_fd = luo_create_session(self->luo_fd, "session");
++	ASSERT_GE(self->session_fd, 0);
 +
-+	return arg.fd;
++	self->iommu = iommu_init(variant->iommu_mode);
++	self->device = vfio_pci_device_init(device_bdf, self->iommu);
 +}
 +
- int create_and_preserve_memfd(int session_fd, int token, const char *data)
- {
--	struct liveupdate_session_preserve_fd arg = { .size = sizeof(arg) };
- 	long page_size = sysconf(_SC_PAGE_SIZE);
- 	void *map = MAP_FAILED;
- 	int mfd = -1, ret = -1;
-@@ -75,9 +101,8 @@ int create_and_preserve_memfd(int session_fd, int token, const char *data)
- 	snprintf(map, page_size, "%s", data);
- 	munmap(map, page_size);
- 
--	arg.fd = mfd;
--	arg.token = token;
--	if (ioctl(session_fd, LIVEUPDATE_SESSION_PRESERVE_FD, &arg) < 0)
-+	ret = luo_session_preserve_fd(session_fd, mfd, token);
-+	if (ret)
- 		goto out;
- 
- 	ret = 0;
-@@ -92,15 +117,13 @@ int create_and_preserve_memfd(int session_fd, int token, const char *data)
- int restore_and_verify_memfd(int session_fd, int token,
- 			     const char *expected_data)
- {
--	struct liveupdate_session_retrieve_fd arg = { .size = sizeof(arg) };
- 	long page_size = sysconf(_SC_PAGE_SIZE);
- 	void *map = MAP_FAILED;
- 	int mfd = -1, ret = -1;
- 
--	arg.token = token;
--	if (ioctl(session_fd, LIVEUPDATE_SESSION_RETRIEVE_FD, &arg) < 0)
--		return -errno;
--	mfd = arg.fd;
-+	mfd = luo_session_retrieve_fd(session_fd, token);
-+	if (mfd < 0)
-+		return mfd;
- 
- 	map = mmap(NULL, page_size, PROT_READ, MAP_SHARED, mfd, 0);
- 	if (map == MAP_FAILED)
++FIXTURE_TEARDOWN(vfio_pci_liveupdate_uapi_test)
++{
++	vfio_pci_device_cleanup(self->device);
++	iommu_cleanup(self->iommu);
++	close(self->session_fd);
++	close(self->luo_fd);
++}
++
++TEST_F(vfio_pci_liveupdate_uapi_test, preserve_device)
++{
++	int ret;
++
++	ret = luo_session_preserve_fd(self->session_fd, self->device->fd, 0);
++
++	/* Preservation should only be supported for VFIO cdev files. */
++	ASSERT_EQ(ret, self->iommu->iommufd ? 0 : -ENOENT);
++}
++
++TEST_F(vfio_pci_liveupdate_uapi_test, preserve_group_fails)
++{
++	int ret;
++
++	if (self->iommu->iommufd)
++		SKIP(return, "iommufd-mode does not have group files");
++
++	ret = luo_session_preserve_fd(self->session_fd, self->device->group_fd, 0);
++	ASSERT_EQ(ret, -ENOENT);
++}
++
++TEST_F(vfio_pci_liveupdate_uapi_test, preserve_container_fails)
++{
++	int ret;
++
++	if (self->iommu->iommufd)
++		SKIP(return, "iommufd-mode does not have container files");
++
++	ret = luo_session_preserve_fd(self->session_fd, self->iommu->container_fd, 0);
++	ASSERT_EQ(ret, -ENOENT);
++}
++
++int main(int argc, char *argv[])
++{
++	int fd;
++
++	fd = luo_open_device();
++	if (fd < 0)
++		ksft_exit_skip("open(%s) failed: %s, skipping\n",
++			       LUO_DEVICE, strerror(errno));
++
++	close(fd);
++
++	device_bdf = vfio_selftests_get_bdf(&argc, argv);
++	return test_harness_run(argc, argv);
++}
 -- 
 2.53.0.983.g0bb29b3bc5-goog
 
