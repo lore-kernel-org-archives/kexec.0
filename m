@@ -4,65 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 460C2FC72D4
-	for <kexec@archiver.kernel.org>; Sun, 22 Mar 2026 19:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 91A91D58CBE
+	for <kexec@archiver.kernel.org>; Mon, 23 Mar 2026 02:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Qezk6G018iXhbEGoOaR5h2fb7tphPgejzlyz8Y9AoPQ=; b=Y1RxavOrGynlz3aPWIhyC40vvB
-	Qcz6wn+9Wxsp2u723qvbwr41XR4v7uBOsyciTuFIKJAWLU9T2fuueRxCFXxJ92jA84H9HGZzG6x4L
-	pTmzrK8dWg/vwvKyq0XWUBfzVqCvILNZ5+l3EbgVPnMqZmNmEUKXrA0u8hTLKY9ReMazyLWF+77/m
-	xK/1ifbNFon4TZ1scHSshNfUx/kfckWcO4/Wr4UWOqrK+I3Wsoh9e6CH6z+f+YgGrK13ScBYTvI3b
-	IyTaX7H4Q/9+nwXTTPHk07wGhORzKgvrR6SeeeQvCFmojY4j/Xgh9tGEdpmGzO48P/YffCT1FUhwu
-	C2II3uYQ==;
+	bh=CWeufLH8B60TEocnFeIkYMdZpkD6l9S6p2cYRKOxz7A=; b=P0ZasbjsPqQB/zbYBCGwBNbEX1
+	VeTOsyV9DlZICexo7L9MZmL0Zv5DNOwKway5ZsbLP+t3hmpJqvbVIWKaJLq14R1to2K2whBuCOLvi
+	Ue4YlHfulEg/+xfFCW6Hqe3A/wItFJQAUDOUaXHltYzp/SSbLYKuKaZsMHkqohLFjpKsBpT468kph
+	m7hSvrWvnx4XEUaXmzJTRXo0+a8Dk7oAq9PafNwHbQheHLxZI5z68gSnxiBZXbWmGL83QwyPomczX
+	yyCZMC0A+WjHI1rFmshOpnVJedVdHUczNpv3tG4YjBNYGuWpKnZ4uAWHdwPIFOysnVpjJfl7aFedb
+	k/+oYjXQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4O5q-0000000FaNx-1l35;
-	Sun, 22 Mar 2026 19:04:10 +0000
-Received: from terminus.zytor.com ([2607:7c80:54:3::136] helo=mail.zytor.com)
+	id 1w4Umg-0000000FtWe-30NJ;
+	Mon, 23 Mar 2026 02:12:50 +0000
+Received: from smtp81.cstnet.cn ([159.226.251.81] helo=cstnet.cn)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4O5j-0000000FaNe-0Tg3
+	id 1w4Umd-0000000FtWK-05sk
 	for kexec@lists.infradead.org;
-	Sun, 22 Mar 2026 19:04:04 +0000
-Received: from ehlo.thunderbird.net (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 62MJ3WiX700427
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Sun, 22 Mar 2026 12:03:33 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 62MJ3WiX700427
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2026022301; t=1774206213;
-	bh=Qezk6G018iXhbEGoOaR5h2fb7tphPgejzlyz8Y9AoPQ=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=RtFEZOn+LYOeg9TVY8jJge4wqhDSIGa6HYizssFdrVE6d6lT3CZw+FSBLV2x0wQi5
-	 EB3OS+peFkHDjbY24TV9Y5FUgOoh4p3/f0651op8UC2O0n9ln7As4rl8MmgOWD1B/L
-	 zITTGPO9HyACWWj2Z+XIyUOzf97ESza/NzSZ2ynE19M6o9jpCJV0FNMy4W0grhr6+l
-	 VDDvBhX3P3neQv8MkoAhjC+0uEFHHbND2qox9PkB7cneFfErOeR1tNSvlUbVDG7oc5
-	 koWh9OAd6c7R8nU8lfloSR7vGuuDMXYovIxuA8dsbJ8ZS8pz4CF17t9WGlVa3IJgWt
-	 p0Ot34ACRo8Kg==
-Date: Sun, 22 Mar 2026 12:03:26 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Pengpeng Hou <pengpeng@iscas.ac.cn>, x86@kernel.org
-CC: pengpeng@iscas.ac.cn, kexec@lists.infradead.org,
-        Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org
+	Mon, 23 Mar 2026 02:12:48 +0000
+Received: from localhost.localdomain (unknown [111.196.245.197])
+	by APP-03 (Coremail) with SMTP id rQCowAB3ldySocBpdauBCw--.8884S2;
+	Mon, 23 Mar 2026 10:12:38 +0800 (CST)
+From: Pengpeng Hou <pengpeng@iscas.ac.cn>
+To: x86@kernel.org
+Cc: Pengpeng Hou <pengpeng@iscas.ac.cn>,
+	kexec@lists.infradead.org,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] x86/kexec: bound bzImage64 setup header copy
-User-Agent: K-9 Mail for Android
+Date: Mon, 23 Mar 2026 10:12:34 +0800
+Message-ID: <20260323021234.51062-1-pengpeng@iscas.ac.cn>
+X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260322031924.58050-1-pengpeng@iscas.ac.cn>
 References: <20260322031924.58050-1-pengpeng@iscas.ac.cn>
-Message-ID: <E205DB4A-5916-40AD-BADE-8DE331626E0D@zytor.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: rQCowAB3ldySocBpdauBCw--.8884S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYx7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z2
+	80aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+	w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
+	vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v
+	4I1l42xK82IYc2Ij64vIr41l4c8EcI0Ec7CjxVAaw2AFwI0_Jw0_GFyl4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-Originating-IP: [111.196.245.197]
+X-CM-SenderInfo: pshqw1xhqjqxpvfd2hldfou0/
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260322_120403_157149_9452927D 
-X-CRM114-Status: UNSURE (   6.40  )
+X-CRM114-CacheID: sfid-20260322_191247_454234_62750CCE 
+X-CRM114-Status: UNSURE (   4.76  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -78,7 +83,11 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-It is actually harmless, because we have to have that space to reserved any=
-way (up to the maximum possible size=2E) However, this is a *signed* byte, =
-so if interpreted as unsigned it could overflow=2E
+Hi,
+
+Thanks for the clarification. You're right that the loader already reserves enough space for the setup header, so I will narrow the report wording to focus on the header-derived length and its signedness/unsigned interpretation rather than on destination space reservation.
+
+Best regards,
+Pengpeng
+
 
