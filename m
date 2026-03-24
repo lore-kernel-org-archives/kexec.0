@@ -4,106 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EA635F532E5
-	for <kexec@archiver.kernel.org>; Tue, 24 Mar 2026 06:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 60A9EF532E8
+	for <kexec@archiver.kernel.org>; Tue, 24 Mar 2026 07:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Mifv6lV/1vhl2tnAgC+pUhj48DLTv7wevR0+F6OEtI0=; b=s3+S/MPu1D3u7Yoj8Iqos5w4Ii
-	Jn3GLL4YcyOyvvYcKQtTIWXRVFqtz0rRkgLBYi3YCTFUvnmze9oUYIbNFpUoWpT6dKMDftuHj0Ijd
-	pbG2S46qT04Z8Hso9GJ3ZsvXjHJk2vquAzoWIri6E4qDsvsQJIKDsThHyC2cZgw7EN9nye778XByM
-	QnzyLMt51ko4s+0f2MLZiRNaLACHDybg8dskuuemsy0SMtnLxTY76ZjykOINUCWH3dNoXYAvPJDbz
-	kNVTQlmD+ywQj4g0s6s8b6O6VAbfWoARZqHWvTi+2yFowqkhZavr3m5gUjbrObEFVHEFsTovKaFVj
-	ufIZS9kQ==;
+	bh=j0p7ruypCDdXXfhz5IqiaSpJ0nIoncl+MrV7FY/rAAI=; b=x9EndKmVNnyviLMvJ8kJnMga+Z
+	yYKA4q/GryzoAOZ9dJoxaJJbJ6otiXCKW7jOpjaKPq5Mg/NH3xSObxyP4eD2ofi1+R0W/43RXl85X
+	G5a+hWQyUzhqWP0z4w/mhtLyXoxUH8hKBcxCoxerwv+XcwQMABR8DWc3wfbrx+Oz9hUlBBsf/JiyY
+	7Wgj7Tw81RUqcsPzzTic/vpDVIl1uKFPG1rGPt09/M9XCpON7ZeJOmvO4As5Oi3LIlGXaTobCZf3q
+	XOMwuSQf+/bZQBKjSWJqg3qyDCDmjPvKjbU1MdPzEkUG9IzzYnmO0QQZxEYSj2c7ADVIgWKwCdYro
+	Kz0U5nDA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4vTf-00000000mzK-2VOA;
-	Tue, 24 Mar 2026 06:42:59 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1w4vtw-00000000rki-2Jhm;
+	Tue, 24 Mar 2026 07:10:08 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4vTe-00000000mxh-1DGP
-	for kexec@bombadil.infradead.org;
-	Tue, 24 Mar 2026 06:42:58 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description;
-	bh=Mifv6lV/1vhl2tnAgC+pUhj48DLTv7wevR0+F6OEtI0=; b=YowLD4SamcsKgekvVHz3TEY4iL
-	lPETt0H3HinIfj5wsAdYx6BS886F3HTTi0jmErYFyKjFe8b5NaOVcwam/l18O5t8KcarxLSxYZISF
-	hzyioxf7WQ25cAIzBO5gUmWCtHmdn29aTQ6oV3Z/+P13cP0hdKASdcD5XbPADOuHisZsHK7xYZ5RG
-	oh3sQ4VBFLT1XRU6UDLSxCxVnaTDshrMg3tBwrUujqgVQSigzxqZGb6XATZkSGHE0Z/HUzKcj8nYq
-	/kQHkXYOlNCKZ19UBBZ5RZsTQGp/cvLDJiYdAWP35eB5O1DF18FcskdwVDkWB75izzCojTxJ4Hnmw
-	s7F/zzpQ==;
-Received: from mail-wm1-x336.google.com ([2a00:1450:4864:20::336])
-	by casper.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4vTb-0000000DZIt-1UCN
+	id 1w4vtt-00000000riy-1bzP
 	for kexec@lists.infradead.org;
-	Tue, 24 Mar 2026 06:42:57 +0000
-Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-486fd5360d4so9768295e9.1
-        for <kexec@lists.infradead.org>; Mon, 23 Mar 2026 23:42:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774334572; x=1774939372; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mifv6lV/1vhl2tnAgC+pUhj48DLTv7wevR0+F6OEtI0=;
-        b=JwgOy+ma435u7fbi/MGfi9ZxlqH1omLnW78BwEg27UmwIeu55zTiQugHrD+yEIGosh
-         le7mMIiWjGEJHIdjvWzk7tevCe022mnNVI5uD995JiTJswln1xQLpuS5WRyWwHtwCQhf
-         E72r2PY68ptJu+GfBZi6/hwwlDsaMJ5MdrdhlSjjYVpvcC2LSx13NaYIMaWeor8vNC54
-         +RJyCyQXc+HJBvQOwgVkklR/lHet7D0wbyH1oevQ/8hQ1PZhOFXh8CYpo/jd19zxl7JX
-         QTVgd8DiZxQ4prtVn22o5W7cAsDy+BhJgN/tZQ2d14q/FSYbPKNpOpRUU5k+jHvYqXqS
-         NnKg==
+	Tue, 24 Mar 2026 07:10:07 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1774336202;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j0p7ruypCDdXXfhz5IqiaSpJ0nIoncl+MrV7FY/rAAI=;
+	b=PD/Ej470eOb+g84OhCkfHcxaEVAW2ZaWGBRxMZ/6RlQWtlPDUE73LTb2OcLeiY5mcx5x5T
+	mVRx4h59t4Cd+8/kGeq4nYb49CPsOOSik5h5yA5LZOaygJiXlduKycoP3wEJOtuXPP6PTw
+	XV44ms/XCid68DShZR9v9dgbyfvVFSY=
+Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com
+ [74.125.82.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-640-m0KpNOUwOjCB7YPz09WUsg-1; Tue, 24 Mar 2026 03:10:01 -0400
+X-MC-Unique: m0KpNOUwOjCB7YPz09WUsg-1
+X-Mimecast-MFC-AGG-ID: m0KpNOUwOjCB7YPz09WUsg_1774336200
+Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-2c109ba1296so8329021eec.1
+        for <kexec@lists.infradead.org>; Tue, 24 Mar 2026 00:10:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774334572; x=1774939372;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20251104; t=1774336199; x=1774940999;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Mifv6lV/1vhl2tnAgC+pUhj48DLTv7wevR0+F6OEtI0=;
-        b=dgjPsRc6477JxQ3eH2mnHSddjvOMIOs+iPen5XpCRUOjm5m8mfvOdii64iDx9UUb4L
-         NVWZyXn0q5fajQauuUK8SNkie+ZsSeYXjXlQNTM26Ma+jhFSfXJjiE8TGWu2LMM/ySFr
-         Xq82YYOKJ1t2Co3WMlPLBAUFaeve6wW0sf9TfKbWAJDhn3kaec0cdfGBVqw6xmOcTI7p
-         vbdQuFmfHs1LC6YuiF3RWaQF4a4Qzr7ssjX+e41FsJuIXTIT4Oi/Qk/RiF1O19Zajcfk
-         1GWouoqJeI6tG09+09Qm/OjUqc2tgflitOoOvskp11oKPuyd772zWT35U5RywBD6+ILM
-         7VjQ==
-X-Gm-Message-State: AOJu0YxoWd7VLm9K00lvigTF1FWrzKAxPvD5JZ7ubpfssWbJVQNZISbO
-	NGjgBp2UlKr9bZukxi90ZiavB0mrTopdVyGcs/BvlvIkTceKc7u2xwGS
-X-Gm-Gg: ATEYQzy9sBsbL0573yaAoHu43NLUL4uf9b8XzZ0T0xvhcq8HFRUjXJNpBBG4ufnbgej
-	2mY0azCmNuaudKTBIfa1PZHcwp+FnJfHksGyaKj7JHnWhzREXBR0ATDB6OKmqIZBtVg7xVypwRJ
-	03a2qtt9b9RZmAbMHzkUevPzOjqgkFIlfM2bhrkICMPJbaGH1GTzquXLcPS/i86zBl9FgZKlpBu
-	soiANfEHoAP1WfTrP6AwgN3bXD9zfzIyRH9IQtni4vq1tPeXcVjaVvTdZ8NUukfoVFO7hfH7hIH
-	TAHAYvAG3XjBvQC14ajrDk55BQ1Qz869xm2XNqNvu+0ifoB/x/Fzl/M3jSz3ask9sJcIeKCEumL
-	OhxmQrPp57mrmTZMQf4a3Uih6AL1HxTBJWoEYwwZrFZzLCy3Sbgz8tqSAAKRt6Fo/NzlDdTUAvr
-	sO5tAZyAj0q+Wv1h91tt8=
-X-Received: by 2002:a05:600c:8b31:b0:485:9a50:3369 with SMTP id 5b1f17b1804b1-486fee304c4mr210200845e9.29.1774334572299;
-        Mon, 23 Mar 2026 23:42:52 -0700 (PDT)
-Received: from localhost ([212.73.77.104])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-48711116cbfsm10881105e9.35.2026.03.23.23.42.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2026 23:42:50 -0700 (PDT)
-From: Askar Safin <safinaskar@gmail.com>
-To: dmatlack@google.com
-Cc: kexec@lists.infradead.org,
-	kvm@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 00/24] vfio/pci: Base Live Update support for VFIO device files
-Date: Tue, 24 Mar 2026 09:42:47 +0300
-Message-ID: <20260324064247.3271583-1-safinaskar@gmail.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260323235817.1960573-1-dmatlack@google.com>
-References: <20260323235817.1960573-1-dmatlack@google.com>
+        bh=j0p7ruypCDdXXfhz5IqiaSpJ0nIoncl+MrV7FY/rAAI=;
+        b=Zl81tKubiLb+kOHSc2g8Ys0TXN6I1h0AjmUHwalta2SVgc5IAli5GHuUBpiBpG+Y/B
+         gfYLRJdLhSXd1UwN2MgiO34smDc9Ix78mFgYn+GWekOe8f+MJ0vgMz9cXi45XY9sL8FR
+         gZmqgw1IvqLiYQS8YvMpSc3p5CZWoC/vnjDRF5MHfL5qyHsixrYKf3r/+QhwU66rLEMd
+         eGSnamNjDqLbbvQMl5NVsihuBEWgiLNn9gnZr49IOYIttmcThiY3wRZibe/0bLwyaum3
+         6woyn8ebXqJc6FHBUuKf7pqCg5IC/KketQIZIpTpkWm/NAPXBEMy00C4CNeRglZgSubk
+         8h6A==
+X-Forwarded-Encrypted: i=1; AJvYcCWJukJyEkZCA3OHdi39ROCFgMCfh6U7NHTPfdqn5HQdabiax5/fhH3ZC/ouyeZdv/D9tqSTXQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzdDUycYFWw7otTisLdHihrko9wj0Wlu6luwrPNKJ3TYGc5RYb9
+	9hBMnFdSQdOuF5K1oRTLoX2rpmwBdaMNo4sV9Tnf7s/MwESTvn3uBUuY25y3yKPEfFc7gQb7nIC
+	z6BlqPnhEMT/d7ZvpZ4qJAx9lZLvddbnVcKa0CFx/HvTK6wOuCmRgCATEcCa0pdwNr9vUHK68GC
+	cwAQ18fqxBqxOJTfhyDsnRBF8LejKFKwjlHRjzt7GAV6JncuY=
+X-Gm-Gg: ATEYQzxSkzOCfdm6FBsPkXJI/MTSnGN+vXaeQ4UhNYFxw12igCAkd69mwbqaQABmAFI
+	tjauGdqcI1XJVSnzh6H57aNgG0b3uKpO/zCB3p/pWb3zP81K3mq0cupNnCuZAS97TKO9G5sK0BO
+	1dZla6E/yjMfg9DeAtFKAF2+NvJd5UDivY+qV8284J1xiBNKDPeNhdpKN2iuW/XDWxtOBu7LOot
+	Qkn2r4=
+X-Received: by 2002:a05:7300:a145:b0:2be:617:2ddf with SMTP id 5a478bee46e88-2c10970ed0fmr7262393eec.16.1774336199480;
+        Tue, 24 Mar 2026 00:09:59 -0700 (PDT)
+X-Received: by 2002:a05:7300:a145:b0:2be:617:2ddf with SMTP id
+ 5a478bee46e88-2c10970ed0fmr7262363eec.16.1774336199034; Tue, 24 Mar 2026
+ 00:09:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260322014402.8815-1-piliu@redhat.com> <20260323120202.e662110de3ca696086f9e1f9@linux-foundation.org>
+In-Reply-To: <20260323120202.e662110de3ca696086f9e1f9@linux-foundation.org>
+From: Pingfan Liu <piliu@redhat.com>
+Date: Tue, 24 Mar 2026 15:09:48 +0800
+X-Gm-Features: AQROBzArO1s8UFiUXdDfYP1zd5xobyzeix-spM303OTU0oAnUprxLEsDtBalr70
+Message-ID: <CAF+s44RKERrXWEt+a7c8+bMt5fDbFUfVo109nS2d++sTH_S9fw@mail.gmail.com>
+Subject: Re: [PATCHv7 00/13] kexec: Use BPF lskel to enable kexec to load PE
+ format boot image
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, Jeremy Linton <jeremy.linton@arm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Simon Horman <horms@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Philipp Rudo <prudo@redhat.com>, Viktor Malik <vmalik@redhat.com>, 
+	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	kexec@lists.infradead.org, bpf@vger.kernel.org, 
+	systemd-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: WeHkdaQDjwCalLPh0eXSYRDk1OI1sgarex4fBg4HUsY_1774336200
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260324_064255_421482_923AE750 
-X-CRM114-Status: UNSURE (   4.50  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260324_001005_513660_A14B08B0 
+X-CRM114-Status: GOOD (  20.84  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -118,8 +114,56 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Please, remove me from CC list in future versions of this patchset
+On Tue, Mar 24, 2026 at 3:02=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
+>
+> On Sun, 22 Mar 2026 09:43:49 +0800 Pingfan Liu <piliu@redhat.com> wrote:
+>
+> > Nowadays, UEFI PE bootable images are becoming increasingly popular
+> > among distributions. Currently, we have several kinds of image format
+> > parsers in user space (kexec-tools). However, this approach breaks the
+> > integrity protection of the images. To address this integrity protectio=
+n
+> > concern, several approaches have been proposed to resolve this issue,
+> > but none of them have been accepted upstream yet.
+> >
+> > The summary of those approaches:
+> >   -1. UEFI service emulator for UEFI stub
+> >   -2. PE format parser in kernel
+> >   -3. Signing the arm64/boot/Image
+> >
+> >
+> > For the first approach, I tried a purgatory-style emulator [1], but it
+> > encounters hardware scaling issues. For the second approach, both
+> > zboot-format [2] and UKI-format [3] parsers were rejected due to
+> > concerns that variant format parsers would bloat the kernel code.
+> > Additionally, for example in arm64, both UKI and zboot format parsers
+> > would need to be introduced and chained together to handle image
+> > loading. For the third approach, I attempted [4], but since zboot or UK=
+I
+> > images already have signatures, upstream maintainers dislike the
+> > additional signature on the Image. Moreover, for secure boot UKI, this
+> > method cannot use signatures to protect the initramfs.
+> >
+> >
+> > *** The approach in this series ***
+> >
+> > This series introduces an approach that allows image formats to be
+> > parsed by BPF programs.
+>
+> AI review has a ton of questions:
+>         https://sashiko.dev/#/patchset/20260322014402.8815-1-piliu@redhat=
+.com
+>
+> Coverage is partial because some patches didn't apply.  Probably some
+> of these questions are legitimate, others will be false positives -
+> we're still figuring this out.
+>
 
--- 
-Askar Safin
+Thank you, I will check them too.
+
+Best Regards,
+
+Pingfan
+
 
