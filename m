@@ -4,102 +4,198 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 60A9EF532E8
-	for <kexec@archiver.kernel.org>; Tue, 24 Mar 2026 07:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 96019F54AA8
+	for <kexec@archiver.kernel.org>; Tue, 24 Mar 2026 13:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=j0p7ruypCDdXXfhz5IqiaSpJ0nIoncl+MrV7FY/rAAI=; b=x9EndKmVNnyviLMvJ8kJnMga+Z
-	yYKA4q/GryzoAOZ9dJoxaJJbJ6otiXCKW7jOpjaKPq5Mg/NH3xSObxyP4eD2ofi1+R0W/43RXl85X
-	G5a+hWQyUzhqWP0z4w/mhtLyXoxUH8hKBcxCoxerwv+XcwQMABR8DWc3wfbrx+Oz9hUlBBsf/JiyY
-	7Wgj7Tw81RUqcsPzzTic/vpDVIl1uKFPG1rGPt09/M9XCpON7ZeJOmvO4As5Oi3LIlGXaTobCZf3q
-	XOMwuSQf+/bZQBKjSWJqg3qyDCDmjPvKjbU1MdPzEkUG9IzzYnmO0QQZxEYSj2c7ADVIgWKwCdYro
-	Kz0U5nDA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:CC:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Ap9xkwBoPWiGKSB/7RGzc7FrJWXP/J/+7OTsijHf58M=; b=KZ/WJYAgl/Rm3/qnv72u9iZgfx
+	XLAHM450v0BGuMiRlPfwFRKUo1kNmi0Bk/FFcSWdAIPiulm99CqoMY5aTpJqqndQnp+1DFND17s+5
+	hL4ZY7z5D01whsxIHFUYX1uMkhbW9hhamvum4zd6CVB9iNiy1dmYZvzKNR9jCXGs5yb9WaopOk3Wu
+	3lpfSkeh9ymrheltvCJ0Bu6mYWPQBmj0Xq1DgkndjZ6VRc0cFCiJVxe4yIPtUiiMWrRwZi/HkYRJ7
+	AJoz0wwLcOVCUCPghRcDdg2Y7HmpNdlzoddubdmCkqOFHZRftgD2VG2AFxg4NcbaRJGLdK1toM6Q2
+	tauhAsoQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4vtw-00000000rki-2Jhm;
-	Tue, 24 Mar 2026 07:10:08 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1w51N3-00000001Tjt-10iu;
+	Tue, 24 Mar 2026 13:00:33 +0000
+Received: from mgamail.intel.com ([192.198.163.16])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4vtt-00000000riy-1bzP
+	id 1w51Mv-00000001Thc-2CW8
 	for kexec@lists.infradead.org;
-	Tue, 24 Mar 2026 07:10:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1774336202;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j0p7ruypCDdXXfhz5IqiaSpJ0nIoncl+MrV7FY/rAAI=;
-	b=PD/Ej470eOb+g84OhCkfHcxaEVAW2ZaWGBRxMZ/6RlQWtlPDUE73LTb2OcLeiY5mcx5x5T
-	mVRx4h59t4Cd+8/kGeq4nYb49CPsOOSik5h5yA5LZOaygJiXlduKycoP3wEJOtuXPP6PTw
-	XV44ms/XCid68DShZR9v9dgbyfvVFSY=
-Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com
- [74.125.82.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-640-m0KpNOUwOjCB7YPz09WUsg-1; Tue, 24 Mar 2026 03:10:01 -0400
-X-MC-Unique: m0KpNOUwOjCB7YPz09WUsg-1
-X-Mimecast-MFC-AGG-ID: m0KpNOUwOjCB7YPz09WUsg_1774336200
-Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-2c109ba1296so8329021eec.1
-        for <kexec@lists.infradead.org>; Tue, 24 Mar 2026 00:10:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774336199; x=1774940999;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=j0p7ruypCDdXXfhz5IqiaSpJ0nIoncl+MrV7FY/rAAI=;
-        b=Zl81tKubiLb+kOHSc2g8Ys0TXN6I1h0AjmUHwalta2SVgc5IAli5GHuUBpiBpG+Y/B
-         gfYLRJdLhSXd1UwN2MgiO34smDc9Ix78mFgYn+GWekOe8f+MJ0vgMz9cXi45XY9sL8FR
-         gZmqgw1IvqLiYQS8YvMpSc3p5CZWoC/vnjDRF5MHfL5qyHsixrYKf3r/+QhwU66rLEMd
-         eGSnamNjDqLbbvQMl5NVsihuBEWgiLNn9gnZr49IOYIttmcThiY3wRZibe/0bLwyaum3
-         6woyn8ebXqJc6FHBUuKf7pqCg5IC/KketQIZIpTpkWm/NAPXBEMy00C4CNeRglZgSubk
-         8h6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWJukJyEkZCA3OHdi39ROCFgMCfh6U7NHTPfdqn5HQdabiax5/fhH3ZC/ouyeZdv/D9tqSTXQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzdDUycYFWw7otTisLdHihrko9wj0Wlu6luwrPNKJ3TYGc5RYb9
-	9hBMnFdSQdOuF5K1oRTLoX2rpmwBdaMNo4sV9Tnf7s/MwESTvn3uBUuY25y3yKPEfFc7gQb7nIC
-	z6BlqPnhEMT/d7ZvpZ4qJAx9lZLvddbnVcKa0CFx/HvTK6wOuCmRgCATEcCa0pdwNr9vUHK68GC
-	cwAQ18fqxBqxOJTfhyDsnRBF8LejKFKwjlHRjzt7GAV6JncuY=
-X-Gm-Gg: ATEYQzxSkzOCfdm6FBsPkXJI/MTSnGN+vXaeQ4UhNYFxw12igCAkd69mwbqaQABmAFI
-	tjauGdqcI1XJVSnzh6H57aNgG0b3uKpO/zCB3p/pWb3zP81K3mq0cupNnCuZAS97TKO9G5sK0BO
-	1dZla6E/yjMfg9DeAtFKAF2+NvJd5UDivY+qV8284J1xiBNKDPeNhdpKN2iuW/XDWxtOBu7LOot
-	Qkn2r4=
-X-Received: by 2002:a05:7300:a145:b0:2be:617:2ddf with SMTP id 5a478bee46e88-2c10970ed0fmr7262393eec.16.1774336199480;
-        Tue, 24 Mar 2026 00:09:59 -0700 (PDT)
-X-Received: by 2002:a05:7300:a145:b0:2be:617:2ddf with SMTP id
- 5a478bee46e88-2c10970ed0fmr7262363eec.16.1774336199034; Tue, 24 Mar 2026
- 00:09:59 -0700 (PDT)
+	Tue, 24 Mar 2026 13:00:31 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774357226; x=1805893226;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=cr1zK/4oCAGFEHqWJIIBhO5IvxY+rtnQjG70Ul/vp2k=;
+  b=U7eGhVAmBwTcuyEtq1seL9i2d3s4GmfvQEejb16PLk9MA0Xa7RXE0QYK
+   7zvHK+i6C8QlNFL1I6ZIPAnrNeJM4dFgmgzanI0FwG+8tCLGZEpnGGVhq
+   pSs4fd9pWygt5/N7Xqo4vVXPUMhRpCg2XL0IPSgkN2gvsC0Hfj9EPjkdX
+   /NyykFbCIWiivPUrbwsy+sXed6MWUae2J0PksmsjxiOIxTn4e1SyJppFZ
+   0f1DmV7lisQu8CO0PmuU1waxM5CS0Z+fK6FSEkf9Z+P/T0jt4Uy8J7+wQ
+   ehwrR8qT9YN8iJkEnC+XGM3FwABHUEw6kIUAVwTrsJCpHPOvjvPTvb/8a
+   Q==;
+X-CSE-ConnectionGUID: EZ7/03J7TtKGlHAXd6FixA==
+X-CSE-MsgGUID: IWdNShhYQquDYOQEWMG0dw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="62921501"
+X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
+   d="scan'208";a="62921501"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 06:00:23 -0700
+X-CSE-ConnectionGUID: OB4TBlc1QIq62BlgsiCAmQ==
+X-CSE-MsgGUID: JW2imWdGTumCQRWRgaH3wA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
+   d="scan'208";a="219908261"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 06:00:21 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Tue, 24 Mar 2026 06:00:19 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Tue, 24 Mar 2026 06:00:19 -0700
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (40.93.194.60)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Tue, 24 Mar 2026 06:00:19 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OnxwPdQe3D1aTKUaa/SV2rTamV+mmCfY0NNOzadgw7rKA133jVO6QIemKt+KPE1h6Ym4BqCajhtNdjMG21I6vM33NXuucMi+XQB1jY0C244L8MVDVoHjjzy31CIFMGmC7IlpCynB4yznQYgM1qznbbMRID+b/DxGpkbQcIGB6SCcj1foZwyja3C3TSqNQRqlgpQ8JaSP6czrEm5Y16C2lh6TdIXgkmsSYJ3Nd16MvUbGdqlS3lRgMziPpUwlrbW1RGTfs5eIZ37fJjvJS/m/ff4vbYC6/HP0/e2YWZDux1zx8TWspv9oJ4EeWUP7YeNSRog5G1VmkNKcw3VU7UPfHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ap9xkwBoPWiGKSB/7RGzc7FrJWXP/J/+7OTsijHf58M=;
+ b=G8MzYimUZYs1SiUZTzMdREzRo+YNj3OZ3RP6oD75qCgZv24xZrS1jVUXe3kOnCMP1yObic56J0DIlvYnweKv4IrTFo1NfuIkmtty8zV366j4mGwilxblr5tuhsxt3s4jArQUi5fXSXSm2jkfqVs2OMhpI+fzgIeA2ETAdhhLQo7179manD5bvqhk8jWRBci/uJoLmTxhz1c9pCM4TZ1ZgZyuYjDmsWEEK+SCuU0ULWSubRehL3gzzFqtQ2Du4KMdn6cBAm2jFjPAsErX40pQrVmuycb2LhVlm6b/34hUsSx7Sezv/PUTuES5lkLqAZl09Z5+DeKg/oZy4lARtIDDBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV8PR11MB8509.namprd11.prod.outlook.com (2603:10b6:408:1e6::15)
+ by DS4PPF0084F97E3.namprd11.prod.outlook.com (2603:10b6:f:fc02::4) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.12; Tue, 24 Mar
+ 2026 13:00:15 +0000
+Received: from LV8PR11MB8509.namprd11.prod.outlook.com
+ ([fe80::f5bd:4dde:4f2f:20b7]) by LV8PR11MB8509.namprd11.prod.outlook.com
+ ([fe80::f5bd:4dde:4f2f:20b7%5]) with mapi id 15.20.9745.019; Tue, 24 Mar 2026
+ 13:00:15 +0000
+Message-ID: <376910fa-4232-4e58-bf87-0504202866a5@intel.com>
+Date: Tue, 24 Mar 2026 21:07:45 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 03/24] PCI: Require Live Update preserved devices are
+ in singleton iommu_groups
+To: David Matlack <dmatlack@google.com>, Alex Williamson <alex@shazbot.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+CC: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf
+	<graf@amazon.com>, Alex Mastro <amastro@fb.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Ankit Agrawal <ankita@nvidia.com>, Arnd Bergmann
+	<arnd@arndb.de>, Askar Safin <safinaskar@gmail.com>, "Borislav Petkov (AMD)"
+	<bp@alien8.de>, Chris Li <chrisl@kernel.org>, Dapeng Mi
+	<dapeng1.mi@linux.intel.com>, David Rientjes <rientjes@google.com>, Feng Tang
+	<feng.tang@linux.alibaba.com>, Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, "Jonathan
+ Corbet" <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, Kees Cook
+	<kees@kernel.org>, Kevin Tian <kevin.tian@intel.com>,
+	<kexec@lists.infradead.org>, <kvm@vger.kernel.org>, Leon Romanovsky
+	<leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-pci@vger.kernel.org>, Li RongQing <lirongqing@baidu.com>, Lukas Wunner
+	<lukas@wunner.de>, Marco Elver <elver@google.com>,
+	=?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>, Mike Rapoport
+	<rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, Pasha Tatashin
+	<pasha.tatashin@soleen.com>, "Paul E. McKenney" <paulmck@kernel.org>, "Pawan
+ Gupta" <pawan.kumar.gupta@linux.intel.com>, "Peter Zijlstra (Intel)"
+	<peterz@infradead.org>, Pranjal Shrivastava <praan@google.com>, "Pratyush
+ Yadav" <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>,
+	Randy Dunlap <rdunlap@infradead.org>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>,
+	Zhu Yanjun <yanjun.zhu@linux.dev>
+References: <20260323235817.1960573-1-dmatlack@google.com>
+ <20260323235817.1960573-4-dmatlack@google.com>
+Content-Language: en-US
+From: Yi Liu <yi.l.liu@intel.com>
+In-Reply-To: <20260323235817.1960573-4-dmatlack@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR02CA0120.apcprd02.prod.outlook.com
+ (2603:1096:4:92::36) To LV8PR11MB8509.namprd11.prod.outlook.com
+ (2603:10b6:408:1e6::15)
 MIME-Version: 1.0
-References: <20260322014402.8815-1-piliu@redhat.com> <20260323120202.e662110de3ca696086f9e1f9@linux-foundation.org>
-In-Reply-To: <20260323120202.e662110de3ca696086f9e1f9@linux-foundation.org>
-From: Pingfan Liu <piliu@redhat.com>
-Date: Tue, 24 Mar 2026 15:09:48 +0800
-X-Gm-Features: AQROBzArO1s8UFiUXdDfYP1zd5xobyzeix-spM303OTU0oAnUprxLEsDtBalr70
-Message-ID: <CAF+s44RKERrXWEt+a7c8+bMt5fDbFUfVo109nS2d++sTH_S9fw@mail.gmail.com>
-Subject: Re: [PATCHv7 00/13] kexec: Use BPF lskel to enable kexec to load PE
- format boot image
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: "David S. Miller" <davem@davemloft.net>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, Jeremy Linton <jeremy.linton@arm.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Simon Horman <horms@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Philipp Rudo <prudo@redhat.com>, Viktor Malik <vmalik@redhat.com>, 
-	Jan Hendrik Farr <kernel@jfarr.cc>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
-	kexec@lists.infradead.org, bpf@vger.kernel.org, 
-	systemd-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: WeHkdaQDjwCalLPh0eXSYRDk1OI1sgarex4fBg4HUsY_1774336200
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR11MB8509:EE_|DS4PPF0084F97E3:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7fc65314-26d0-4482-8787-08de89a54a9b
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|42112799006|366016|7053199007|22082099003|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info: A3txQW2o3gfWFJgjaW1Xkrklzaa6jN5iyOu3ehyp4+wePg7Vr/Pth/jk9wpk4rvqlGyeqgzx6VCmGvGNzkkOVhMqK16rY0aTbtexFSnpvc983YOcxUnvPQ1K/kA9//RQF71NcOz+7mbFjLLU2PcbK5giNTzkCIQtDjO8u3PeKWGnhLMiPe2hpflavos88pUOboUZq1GR5cCssRdmVKmBjIRyqWDY2qI1YgfY5RWxZQNWQ0EC6efJw2BlQI6aReQRGx3mGa2XFFX8EmLhEYOGo3E991FFM6wzHlwTvGpLgWjdVNfLInSDCcBipduOAOblg94vWyEU1CcsSmWv4Kqyyyy7s0rjlx+CrQDtg+tA2eFuxQAbPz4ZDq2D0uz6MpcQI7TS+gBPLGsesMOzSovvEIj6zgEuBLu/6jf1Vq/7ddOTL0cH6nas3AXxDzbHRq4hHyCPGpCYGSmrPIpHaDqiCqk6rdwzD5sWAZZgkSUTi8nYH6XU/igDJSYbYC/dzcgGTPkJbRpVxXQINhatbMgR7fa2BjIEeyKbf7+15s2EjNOQWzesuK1Q4Wgj9a0Pr0kWhwRvn6WL8ezUEuRJHjX/DcilQ3Vga+DsaDp7J025MBJzllCos08UOb/by/GErqHEgiTzYyhlrzh0D1g6dToU4+SxPf0SVTeewUDERdjdqk8sQOYTTeyMNu5zI6x4/8b4vuFCIsZHlymrr6bRnEIGA0CN+PT9CVbZxdBVOG/SDn0=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR11MB8509.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(42112799006)(366016)(7053199007)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?L0NWWTRHRE1vRHd6R2JHdW5JOU1mSmVmYWJrU25LNk4wSkVUZTNtOFJKMmRB?=
+ =?utf-8?B?aEZkNG5HSDZDQmh3eSs2NitleFVxSXR0Z05Kay9LVkFibWxZRHg5cy91MFl3?=
+ =?utf-8?B?YXR1Vy9YZ1BmeUtWbmEzWTRaYUxrNDlNL3hFeGlPRkF0NEZaZVRxb1lTMmQr?=
+ =?utf-8?B?Qjk4dUdWemtIYzdWSmRGWUlyaHVjR1ZnYndPbDI3U1Jya3BlTUVPUEg4Nm5C?=
+ =?utf-8?B?MXBCZDR3VnVhZlFuaWNrNkFmdlpac2ZOSmVOYkRzclk3dTRxSURUSjZzbThL?=
+ =?utf-8?B?cEZwOUNRUG9iYUFheXRYc2M0WGlkQmhVV2tNNzJpNzBVaVYySm5wYjlRdzFP?=
+ =?utf-8?B?ZGVqYnU5QWpNdFVrOWZINk9CdHlleHBqYjRrNGlhMlNTTlA4bkpJSFhDTW5r?=
+ =?utf-8?B?cEJPZWMxajk5RHdXc0dhUjUva3BFMnVrTGFUZEZ6MXBEcnpQc1JoaC95a0pu?=
+ =?utf-8?B?Rm04M1FCc1YrRDhyc3lDWTJIUWhvQXExZlZucU5wOURJYkFoYXJ5Rm9JcVA1?=
+ =?utf-8?B?OFJCVS92eWg2MmdHRlEyVDB4THd1aHVJYzJaMjZ6Zjh6RHFsT3ZQMktETFRu?=
+ =?utf-8?B?K2xmWFI2YllJOXB0NTJSRnBuRE11WWIxL1dNNThWZWdSUGdOY2R1d20zUVRw?=
+ =?utf-8?B?ckYvZllIZzFzdytVdURyZmRYRXR1NGFZNnJNQjUxcU5lKy9NM1RreDhGYlZY?=
+ =?utf-8?B?K3pGNFJnVGhJcVd2NWhFZzZLL3MvWmZsMEl5Y1JFV2ozRnovNk9vKzlCL1Uy?=
+ =?utf-8?B?czI1ZFJEYXBiQjh1amZsVUpocjR3NU9UUlQvNGo2ZHFEMmtEVCtyMEE2K05N?=
+ =?utf-8?B?czNvTXdXejl1dnVUd3p0SkhPWDZIYkpLTWNldVlyU3g5MEZIb3c4SVpmRjJY?=
+ =?utf-8?B?ZHdHcnNSRUlmV0pIMGVpL2NITEdUYjM5eHNaTkhSRUZrUjVyYk5rVXloRHNz?=
+ =?utf-8?B?YndKdlVwdFp0OEVxS21QeUg0dFg1SWJDMUIzeVZFSXlpUXFDNDBxQjREYWZZ?=
+ =?utf-8?B?cGg4WjFIWlFodU5Kby9lUFIyNWpVWXNjZ0pTT094d3c1VW5qdWI2Q2VQd2JG?=
+ =?utf-8?B?VVd6T0Fhd1E1eEhEWjBnbmZraktmTHJvOVhqWXBEaDdDa0trNDhLNGI3MWla?=
+ =?utf-8?B?RWlVWVpyaWJ6amtnMEd3NTBEVjJCZXpXQUEvblVXMEVQOGwzTU5SUkJrbGFk?=
+ =?utf-8?B?K2dzNVJ5VzcvUGxlWHZyVVI1VUpqWGdxc2NLRlRyaU43b2VvOXdxU2JRZVlz?=
+ =?utf-8?B?R3lDZlF5T2N4UHNyYzNvSTlBbmZpL1BUdmFDVEVKdk5NaEh3c2xodjBLZ3Jx?=
+ =?utf-8?B?Qm5nY2s5TXVQQ3RVTGpIenBEMmo3WUg4blluZHNTa0RTYWF0Q3NMVk1MQm5v?=
+ =?utf-8?B?aElmNkNYVC80c2ZIMURqRmY1TWlyTjQ5elUzTVVxMXRINWYxcE5xRUhWK1pt?=
+ =?utf-8?B?NlZnVWhrQWs0bHJQR2dtYVJOWUdhQlNwSU5wQ1JSWmhiZmJqNmxvMXNQNk1j?=
+ =?utf-8?B?NElYbjBHZm1jRmVsNHk1NzIrajZFOURyc0lZQy9XWlNPS24yYUlrY3dZa0Zz?=
+ =?utf-8?B?TnlURDZmcDNhYzg5N3kyUXNVYnVRaDdJVXFoTzlsQzRIbmxGWWZHdk9zZEJl?=
+ =?utf-8?B?c1RWNXNhMFVoa1hMcFBCNkhDdmVvYzFyRjNxYzE5UDZ4elpiZ0FRTGR0WFF3?=
+ =?utf-8?B?RFZKNUxFdGZVTW9RdEY4RFRuYzVVM3N0T0UxQldBMU9EM0h2eGxzM3ljQXYy?=
+ =?utf-8?B?K1lMQngrRCs3b0xWUkgxN3lzL3l2SUY0TURRRG8xaDlUbmZ0NjNpYzAwRmNK?=
+ =?utf-8?B?eE04NTRQV1BabDlpaUdpWndrWGtPRFB1cmVuZFdyQ1VkeDg0eDlqWlkvL0RF?=
+ =?utf-8?B?NXByN1dwMlFsV2YzUW5zL1VESk9zTlppU1hpUU5zVy9zTW5xV0dXNHAxaThx?=
+ =?utf-8?B?OVBha0g3QTN6amJNayttaTQ2dmlFakltdzBOeEx5OUZGMlJQeG5NR25Rcmcx?=
+ =?utf-8?B?VWhMUXZrTC9TYWxoNmlFaTUrZDJwdDdIeVJGalhWTFphb1RIYUYvMGpxQ2lh?=
+ =?utf-8?B?Y3QzNHNkWWg3QldtaERsWmNKQjBZQUJPd01MeUM4MUdPSWhPWGNHTDEySCtp?=
+ =?utf-8?B?NHlJVHowZWplaHBFVWNyOTdzdzg3MDhUVmR0cVc3THkxQzNSdkJ6ald4aEVr?=
+ =?utf-8?B?bkRubFlIc0FOU21UQmdaeHZTSXdBeitxWXljM0ZvRUJVZXZHa1QzMnd3NW93?=
+ =?utf-8?B?cWN3UWRUSDlnTEttOXVISmd2dllVWWtHM254WUp5dko0aFlwSEV6a1NNa1Bq?=
+ =?utf-8?B?dE5sODlMZXVCYmRqQm9IVTVFQVc5SW96cWFiQ3lpSFBDQTJQOGxYdz09?=
+X-Exchange-RoutingPolicyChecked: ARVS/eeTkmtJ41g6LQMYMeZaORyR/8gKPnOOHk40FsiY8LXHLoxUYA0wFWeJHcivsPP66fFpgsTJEPUbw58G+2m68YdLKHHjkaZVsKMHv68HhNPjGZoLZvIJJjiAiCQ6DOM0sSHezkCj8Ge01uzHeZ2AZiN/RUO6XmWWxrp+AFJSr5JLurCred+sC0O79VlDJ7mpjZWwVIJtNiSuHTPRJDwPLRRSbxhpW1jmfLE2yONaHXukOiuUPpij87Aqd00oxAcgToZEKGrczxmy7HqQhAMS75EWGypybLSYTeRx5Uxm5HFE/z5nk4/WU+wAiYEw3A5MkhBWu+7jJ4VGwMyFzw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7fc65314-26d0-4482-8787-08de89a54a9b
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR11MB8509.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2026 13:00:14.9425
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: k6aSwakLe/ulhO8ww1V58ZXG9dn71ElyD6qdpjIuYARkilkwPV4HSZ32GLSMKYtXd7w/l9NpLulh328f3fhCFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PPF0084F97E3
+X-OriginatorOrg: intel.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260324_001005_513660_A14B08B0 
-X-CRM114-Status: GOOD (  20.84  )
+X-CRM114-CacheID: sfid-20260324_060025_615074_FB7473EA 
+X-CRM114-Status: GOOD (  19.59  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -114,56 +210,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Mar 24, 2026 at 3:02=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
-n.org> wrote:
->
-> On Sun, 22 Mar 2026 09:43:49 +0800 Pingfan Liu <piliu@redhat.com> wrote:
->
-> > Nowadays, UEFI PE bootable images are becoming increasingly popular
-> > among distributions. Currently, we have several kinds of image format
-> > parsers in user space (kexec-tools). However, this approach breaks the
-> > integrity protection of the images. To address this integrity protectio=
-n
-> > concern, several approaches have been proposed to resolve this issue,
-> > but none of them have been accepted upstream yet.
-> >
-> > The summary of those approaches:
-> >   -1. UEFI service emulator for UEFI stub
-> >   -2. PE format parser in kernel
-> >   -3. Signing the arm64/boot/Image
-> >
-> >
-> > For the first approach, I tried a purgatory-style emulator [1], but it
-> > encounters hardware scaling issues. For the second approach, both
-> > zboot-format [2] and UKI-format [3] parsers were rejected due to
-> > concerns that variant format parsers would bloat the kernel code.
-> > Additionally, for example in arm64, both UKI and zboot format parsers
-> > would need to be introduced and chained together to handle image
-> > loading. For the third approach, I attempted [4], but since zboot or UK=
-I
-> > images already have signatures, upstream maintainers dislike the
-> > additional signature on the Image. Moreover, for secure boot UKI, this
-> > method cannot use signatures to protect the initramfs.
-> >
-> >
-> > *** The approach in this series ***
-> >
-> > This series introduces an approach that allows image formats to be
-> > parsed by BPF programs.
->
-> AI review has a ton of questions:
->         https://sashiko.dev/#/patchset/20260322014402.8815-1-piliu@redhat=
-.com
->
-> Coverage is partial because some patches didn't apply.  Probably some
-> of these questions are legitimate, others will be false positives -
-> we're still figuring this out.
->
+On 3/24/26 07:57, David Matlack wrote:
+> Require that Live Update preserved devices are in singleton iommu_groups
+> during preservation (outgoing kernel) and retrieval (incoming kernel).
+> 
+> PCI devices preserved across Live Update will be allowed to perform
+> memory transactions throughout the Live Update. Thus IOMMU groups for
+> preserved devices must remain fixed. Since all current use cases for
+> Live Update are for PCI devices in singleton iommu_groups, require that
+> as a starting point. This avoids the complexity of needing to enforce
+> arbitrary iommu_group topologies while still allowing all current use
+> cases.
+> 
+> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: David Matlack <dmatlack@google.com>
+> ---
+>   drivers/pci/liveupdate.c | 34 +++++++++++++++++++++++++++++++++-
+>   1 file changed, 33 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+> index bec7b3500057..a3dbe06650ff 100644
+> --- a/drivers/pci/liveupdate.c
+> +++ b/drivers/pci/liveupdate.c
+> @@ -75,6 +75,8 @@
+>    *
+>    *  * The device must not be a Physical Function (PF).
+>    *
+> + *  * The device must be the only device in its IOMMU group.
+> + *
+>    * Preservation Behavior
+>    * =====================
+>    *
+> @@ -105,6 +107,7 @@
+>   
+>   #include <linux/bsearch.h>
+>   #include <linux/io.h>
+> +#include <linux/iommu.h>
+>   #include <linux/kexec_handover.h>
+>   #include <linux/kho/abi/pci.h>
+>   #include <linux/liveupdate.h>
+> @@ -222,6 +225,31 @@ static void pci_ser_delete(struct pci_ser *ser, struct pci_dev *dev)
+>   	ser->nr_devices--;
+>   }
+>   
+> +static int count_devices(struct device *dev, void *__nr_devices)
+> +{
+> +	(*(int *)__nr_devices)++;
+> +	return 0;
+> +}
+> +
 
-Thank you, I will check them too.
+there was a related discussion on the singleton group check. have you
+considered the device_group_immutable_singleton() in below link?
 
-Best Regards,
+https://lore.kernel.org/linux-iommu/20220421052121.3464100-4-baolu.lu@linux.intel.com/
 
-Pingfan
-
+Regards,
+Yi Liu
 
