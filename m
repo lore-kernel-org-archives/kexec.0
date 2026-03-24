@@ -4,98 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 71C48F54AD7
-	for <kexec@archiver.kernel.org>; Tue, 24 Mar 2026 16:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9AE60F54AD9
+	for <kexec@archiver.kernel.org>; Tue, 24 Mar 2026 16:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=f++PU3wwkpbB0N6cii11zfED2xylkHlgqhKc/U2ncVo=; b=vjCUwlfpXLtb4Rm21Q+kK0XY01
-	0iqg+jVebG0ow/pTXnFB19fU3DHAwnrPUffgF74CV3pOLgXABOkryFEL9YK22akukNi5Rl+B+EOib
-	VUGh2mK9H7nrpVjbCuBnaKLSHMGNhwYEFaCBY1GER2PGqKLWjpM3mgjM9EJvT3quOY3zHLnSS7DTR
-	rKYdcgrTmX/Q7DMy9OQFBVrio75ZiWoClvjxOVLyPCEBqLvPOPxeR+FaDKGhGXehX4lbhqE3Y0scc
-	6rktSywyzPmAsTHotGe31ugy8MiGk4kCK3jVOtjqLIIYHGTZC5WDBQ6hODMhJOC3/+jtEVfplVvnw
-	/bNedLow==;
+	bh=UCikAyXiicm5k2VXyH9xrW1vWINN0uWZrBsYrIEp9jQ=; b=3AtT6O70gspFNh46jckoTpCNPT
+	8NSlq1h7hqt5Yz4lTkFt4UHuHZ1FGoADp4YcJaYeQC38afNOc/EbTudm4upeNGADlA9upiR5xrkzd
+	C7TweiD9DV8y6S1cqiJqfj8m38oz5WTz71FHGUFrfMdcvuTKlDlXqq2mDZsPvuuXc9o4xqSxEaRg7
+	pc1h2Tu+wEQxH2u0GqUiHhDn3RuCmziJbdMyf5beIkFoPdKOVYkGxnV2tou2hBj/ZkNglPZEmsplJ
+	eGYkFjaE+iYYTU+DPAebOyUwPcibg3yGkwNORCMi5EcbGFpg4tMmcr357Lpodj8recbIOODEX5w4b
+	gftKC5Hw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w54hO-00000001tT5-1m1O;
-	Tue, 24 Mar 2026 16:33:46 +0000
-Received: from mail-lf1-x129.google.com ([2a00:1450:4864:20::129])
+	id 1w54to-00000001vTG-2p3u;
+	Tue, 24 Mar 2026 16:46:36 +0000
+Received: from mail-lj1-x22f.google.com ([2a00:1450:4864:20::22f])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w54hM-00000001tSD-0awL
+	id 1w54tn-00000001vSb-0lam
 	for kexec@lists.infradead.org;
-	Tue, 24 Mar 2026 16:33:45 +0000
-Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-5a12c310e8aso4294783e87.3
-        for <kexec@lists.infradead.org>; Tue, 24 Mar 2026 09:33:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774370021; cv=none;
+	Tue, 24 Mar 2026 16:46:36 +0000
+Received: by mail-lj1-x22f.google.com with SMTP id 38308e7fff4ca-389f9895c81so14422191fa.2
+        for <kexec@lists.infradead.org>; Tue, 24 Mar 2026 09:46:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774370793; cv=none;
         d=google.com; s=arc-20240605;
-        b=WBe7VR8KkPK2gYoQAPkNb3MzmcxEIw7Xd74LV2xykrtw5fUwilWV5x+wHARhhMngH/
-         v5mCJO2rMasBeVImDLJ2cMp1Sq/u3t3/RdarDbah9V32PBhWyV5DBvDx2ckxS5wu1Npy
-         fWu2kIU7O8ziDPy1tQio+bdYukYi4gN5uCTJ17G/8AnsEMm5VT3GMXLtlUs+QcB2zqBd
-         CxkJO3o9Y9PKUvEN13KvweCXx6gPKrv8m8R9irEco52X1ySo8m+Ty0YZOzRG6x+9dpdM
-         w8VN1WXcgT/7tipfk9B3HCGGtlYgfUasIfAIA5SaCGSm9ue1kfcDPxKav0LcV6s1Hpnr
-         BXqQ==
+        b=PdJcFPPJQNwawnC7Lg/WRdcm4UFuMaKlLfNa31M90QA73gF8copmKauuLXqrMsA0hY
+         8TRr7SL6vZXOOSPtVdKH1/4aQtSBjOe0enG8aEUj2TQGqJ4L+MfnwMlsFyoacqi5v0ZR
+         XQHzMfA7paP4AdziJAv85I90U4WjWzZs95qNDk8zYcCo0vFS9jpy2H1vDNTu/QoCyVbV
+         ph0AJoxo/8g6KzrCW5MDzvkS/9Y4Twoehz5qZpRtNkgILulJw8Ojv7GTcEOXOUqy5bjF
+         3UqTEkCxAumc3elpZ9jk5PyMCLSc39+rDzn+Id2nDCieEUYfAWpogjfskDxd24gbYzqw
+         BF2A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=f++PU3wwkpbB0N6cii11zfED2xylkHlgqhKc/U2ncVo=;
-        fh=YZMsngfq/EtIqmOKQrTmbE1kAzHf/KyQw+ctolk3hTA=;
-        b=Dk/MGFKkHGrWhsZZkzvIFPuc082VqggqkxBY3Gn1h5yxjA3xe7FaqA94g5SNCKlvt2
-         Y22lYPlDV7uv7U4z2U0C7A4NetpMHz6lH2lAAqywwhJZFxELofUNaZU3RVI5TTQQK8/h
-         rdCatdltvNZqnIUse/isUJr+Ei38JByNXz+EFs4q8S6dQDOx1e4AKluQStpaIVFLDzOV
-         syA+7rVizgbrZ82HoB4v9xQc+3XsajM4DOy93IRXuIGexp9wFqdYP72oO0wFygsbWF9v
-         uI6GYqYBpr8ddQy0qal15PJEbj/TECDy8rTdXA3VAYlsyc18kEnwYZgeuNsQFpWDFR+b
-         018w==;
+        bh=UCikAyXiicm5k2VXyH9xrW1vWINN0uWZrBsYrIEp9jQ=;
+        fh=7w+znsiDXWY6EPGY0gamd42VpC+x40Ep0kAJR+uSkY4=;
+        b=jRsmJQpY1xsFGrpOUTgHQkSZn321gEChsCdOCF56p9gaX+/wJ75NhzalvJPjRCLOjN
+         O99GOuIM/i2pXzOq0xOzVK/hY/r1F0GEr7iQRMkrxAqiU1FquaqU/GjCbYwBQEvHfN0Q
+         N0xy+OVkonb1TPFTDAp+/6/kqik57eGW25hapO5CS6MgTL9PV8/l30xmC5MVwOsqFjJf
+         7LdZETYOIPRyr8nRAxm/oNNXRJnEXMEUoyxEaaGham0JhYt5k4LJxBKMMAWfeHdWdjot
+         R+PP9Iy9gTsXc22mOjdtYH+UeBgxnOp8YBPd22F4E2vO0QMrk4Vq5agIZPGYfZLzTRbA
+         QnkA==;
         darn=lists.infradead.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774370021; x=1774974821; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1774370793; x=1774975593; darn=lists.infradead.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f++PU3wwkpbB0N6cii11zfED2xylkHlgqhKc/U2ncVo=;
-        b=dXflXcOiIR+knOBWCoAUVeQ935a1YEoyOCueAxPaNue5GJYueA2LS9TY/SCrPnPU9x
-         9kEwCEi0rrN3GvY6ZRw8NtWtue3uU8LDP0Kbe6cs4vGvHzzLTGChtYYVxTd71YCdYSwY
-         IFwteZblppFYeYMxCr52WcIkKOZxrJgMF4AQftZUetVKv0I4VEcty6kkRkNJ6ZTqhFCC
-         67KNiSiu25wi3s9mwWEbKhasTQO6E19k4O+CLIGMmTu+QJHhpFwHs9rjQdp8rqqUctkn
-         NvpPmhlPrOKXl3pLRjgVVQtfMQYmYuv97ghPI5Dty6P+AAXJx+jh5VMIUQQE6X3gygIr
-         DCxQ==
+        bh=UCikAyXiicm5k2VXyH9xrW1vWINN0uWZrBsYrIEp9jQ=;
+        b=M8WGTSlOxVqmlxtowEoFyhnPf9HESwAsm0H9ZgtXYlGMLU8cNtRuiq0SRaJ5pmUdvs
+         lo6JpqnNAVcOqqFyck8rt/ZzAddmedpz0bhnxHg95/czfw4Ohp0NODtY58Qtt0G4t/lc
+         TNIWdpodwiT+2p0vH5VF/pCVrz7T3wwJvssvfV449UtyqEmajf1N0vlg82m2wRjQnzow
+         ZO7+I1/BGRe90i48+cTX23YH1SNKgl37L9vaUUL+orS9NkVaUm0Wd45WaV1a/w+dbBF0
+         usI8Ag8uw/TdkslsP8nTURY3YFK+iNnzkFlfokCX7dCXvxWNrClKWICEmGc9wp/d26HS
+         FqZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774370021; x=1774974821;
+        d=1e100.net; s=20251104; t=1774370793; x=1774975593;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=f++PU3wwkpbB0N6cii11zfED2xylkHlgqhKc/U2ncVo=;
-        b=eHbFQmU4JquEGr7+2MHoA9+xmDdiuRqdYETlqMWFZS4iGGWUujIAOIQ9PF93kgqmxu
-         XBT7Q6OZa/Cv7oPRWmnTF8tQjbqeCdiqYl8aWu2/nvqnsoEcw4wEX1FjcE18e7LUf/gB
-         OAq9pOo6A3xXIroeq3p5nPcH08dKZPCXZboQ291XW/6Lw5zLnV6pmqnsgmdZt3wJoGSK
-         MSZWqP/eAVkml1fRFujM2MgG4R7GZaxuCq49uHd6S/RiQeV8QaPKgOInU7b67xsg7oI+
-         hhtjrGopciTEnQLfzyYPgOJeM2VfhwYKImsug2WIu5Kt2f7bTV0PjNQPUJa2u/twrjWz
-         ixLA==
-X-Forwarded-Encrypted: i=1; AJvYcCUAiuUxhLGTc2R6cEtzreuwzkOwD4aed7oqQAS+hTgU2hTd09WPL2vERugy5XEJJJrEMUUPRA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzZVP6FgoT+awg61+DX2hjxvEQPtcOLlscEdGblcJlI1DHBSWck
-	cnv7h83/q9h+rU9uDZIqGT6q6Eb0stAgKsBh6uxOebUzlQ+Tzg+v6AJZbcxLeO25RN+ZiwWNHP0
-	DZs8be1EBFSUgU0WKiFgHq3aqW7VpeaREBz0uxbCN
-X-Gm-Gg: ATEYQzxEDgkPm/zNUd73gJGUUVDGqEVAEOuJbiZL2dwKkmhcDjFAACyKnaHFv2cnaP4
-	zJsABSyPZTkO+Vj1WGsuCogiM3HVnC3r+K/m27he2hrEkcVlV8/9BZakIf7QYYFDscHloZWCPrS
-	4SfBibuzeLhPozpsZa3FeEa+1biBeBYNaGPgFCZ+0FZyxf+0EdD/3aaKU9uLjH96cjY/zFxzefs
-	0rxEwwC849xYq9Jlh4/yKMOj+N63qbCEYsuHsQ1Sb2TkVYP1+CWEPZOfoqTkYTqlILx8JtoCMyr
-	gX6Gw/4e
-X-Received: by 2002:a05:6512:3044:b0:5a1:1899:a0cb with SMTP id
- 2adb3069b0e04-5a29b9a1efbmr55664e87.34.1774370018671; Tue, 24 Mar 2026
- 09:33:38 -0700 (PDT)
+        bh=UCikAyXiicm5k2VXyH9xrW1vWINN0uWZrBsYrIEp9jQ=;
+        b=b6+FgogXiqZVBIl5UI+OhTMSk7hv1hPmSpzL5rZR6Y/jtAp/Qyd6fRRbe5QpGhpLEq
+         uUPBPSjJ/FsFjdTGV7f0+tEZeXaJszE7+WcBL8MpZp5seZNSwIlJ/+e4McOQvhoeHbzL
+         ihScYSK978z8IOK3DsxgC+GvlUQI6qtvLSvhFI1xqH9MBtePhdyNSFz80LtYuHBo1TEK
+         Tj5r7gzThHMSK0oM7jPCondc33barzmSjWclw5mSQPWRyJPDys6Sg1pmGD35sSuBmwgQ
+         NluAGBZPqL82KQdEVW9SbNNHFx1MpYCcYSUbuPD+fqK2qdkrajW/kqN8/wAbmGEDoS4+
+         YUXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVyvgY7SFfdFlwBBAinjvJmJORBShtVX++IKHJzYQVnS0L63kQQg2Mbqq75ln61fefyX0z75w==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yy3zSwEjq2xdLc758lgfU7wyu+TI8RoR2pUxqS/wAZJ8oxxlwWk
+	s9AxS5H60bWpDmt83MZ3uMIk49VdEufgVJTcWSclmZ6LY5rV6gMeOezufBx5gnfpW7F8ny8m2jU
+	97NBGB72VA9bpaPlD9dFzqeia5Sl8QYLVjfqUJb67
+X-Gm-Gg: ATEYQzwT7kDUEMG24b89Gk4UJfKXW1bgSB6Vu57CByXwtHaz3aXhBROV8XsN6pjRxEj
+	lQlWynlsBcSHF2Sqouu9/jSuWaZdpDikYMh9EJDzovDMvjeyVrfW9ixFo/e2YO/t4E2RJE0Ig5l
+	cQ47RU6YZPAAg0GGHo8uKOQN2t86ziPBHBk56nIY/WT/MVnHwCQ11hho6SHxFnvY5EJ+9b446QK
+	vvOLeRB6GLZbrepRmhvW3ddVH1zjgA2TaYZFLrXUjjOTeafP5o1qSwS5y71S/gwhWOCb6Y1vm1Q
+	s6RVfmaG
+X-Received: by 2002:a05:651c:198d:b0:38a:45d6:c246 with SMTP id
+ 38308e7fff4ca-38c4309f785mr403821fa.8.1774370792285; Tue, 24 Mar 2026
+ 09:46:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20260323235817.1960573-1-dmatlack@google.com> <20260323235817.1960573-7-dmatlack@google.com>
- <0d2eedec-01c1-41c9-bc74-0133ae6ebb04@intel.com>
-In-Reply-To: <0d2eedec-01c1-41c9-bc74-0133ae6ebb04@intel.com>
+References: <20260323235817.1960573-1-dmatlack@google.com> <20260323235817.1960573-8-dmatlack@google.com>
+ <df5dac48-8a54-49e2-acb8-9370b7078033@intel.com>
+In-Reply-To: <df5dac48-8a54-49e2-acb8-9370b7078033@intel.com>
 From: David Matlack <dmatlack@google.com>
-Date: Tue, 24 Mar 2026 09:33:10 -0700
-X-Gm-Features: AaiRm530aoKtDDdSXYb9CaNnVHDZa0HeKfsko4zWVykFU0w66CUzojlEOk9szPI
-Message-ID: <CALzav=d65Z1Va14rmoRcx5WrK1GfRvuHmrqK16wJJeTiq28eCA@mail.gmail.com>
-Subject: Re: [PATCH v3 06/24] vfio/pci: Register a file handler with Live
- Update Orchestrator
+Date: Tue, 24 Mar 2026 09:46:03 -0700
+X-Gm-Features: AaiRm53x8nRAyhq72BKXQ8vBk2jNU8cpC5QwT_5hu3qjlEbsk36YMzg6v1f1PaQ
+Message-ID: <CALzav=cGzzZTL-tyaaG_AhC3gP7ULiU6hWS=X6joLTjyoo-6sg@mail.gmail.com>
+Subject: Re: [PATCH v3 07/24] vfio/pci: Preserve vfio-pci device files across
+ Live Update
 To: Yi Liu <yi.l.liu@intel.com>
 Cc: Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>, 
 	Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>, 
@@ -125,8 +125,8 @@ Cc: Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260324_093344_223341_980F537E 
-X-CRM114-Status: GOOD (  14.20  )
+X-CRM114-CacheID: sfid-20260324_094635_254884_18D4BE5A 
+X-CRM114-Status: GOOD (  16.87  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -141,31 +141,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Mar 24, 2026 at 6:00=E2=80=AFAM Yi Liu <yi.l.liu@intel.com> wrote:
+On Tue, Mar 24, 2026 at 6:01=E2=80=AFAM Yi Liu <yi.l.liu@intel.com> wrote:
 > On 3/24/26 07:57, David Matlack wrote:
 
-> > --- a/drivers/vfio/pci/vfio_pci.c
-> > +++ b/drivers/vfio/pci/vfio_pci.c
-> > @@ -170,6 +170,7 @@ static int vfio_pci_probe(struct pci_dev *pdev, con=
-st struct pci_device_id *id)
-> >       ret =3D vfio_pci_core_register_device(vdev);
-> >       if (ret)
-> >               goto out_put_vdev;
-> > +
+> > + * Usage Example
+> > + * =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > + *
+> > + * VFIO PCI devices can be preserved across a kexec by preserving the =
+file
+> > + * associated with the device in a LUO session::
+> > + *
+> > + *   device_fd =3D open("/dev/vfio/devices/X");
 >
-> a meaningless line here.
+> /dev/vfio/devices/vfioX
 
-Will fix in v4, thanks.
+Will fix in v4.
 
-> > --- /dev/null
-> > +++ b/include/linux/kho/abi/vfio_pci.h
-> > @@ -0,0 +1,28 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +/*
-> > + * Copyright (c) 2025, Google LLC.
+> > + *  * The device file must have been acquired from the VFIO character =
+device,
+> > + *    not ``VFIO_GROUP_GET_DEVICE_FD``.
 >
-> would be nice to update 2025 to 2026 now. :)
+> how about "The device file descriptor must be obtained by opening the
+> VFIO device
+> character device (``/dev/vfio/devices/vfioX``), not via
+> ``VFIO_GROUP_GET_DEVICE_FD``."?
+>
+> just be aligned with the below words in vfio.rst.
+>
+> "Traditionally user acquires a device fd via VFIO_GROUP_GET_DEVICE_FD
+> user can now acquire a device fd by directly opening a character device
+> /dev/vfio/devices/vfioX"
 
-Oops, missed this one, thanks. Will fix in v4.
+Thanks for the suggestion. Here is the wording I have for v4:
+
+  *  * The device file being preserved must have been obtained by
+opening the
+  *    VFIO character device (``/dev/vfio/devices/vfioX``), not via
+  *    ``VFIO_GROUP_GET_DEVICE_FD``.
+
+> > +#include <linux/kexec_handover.h>
+> >   #include <linux/kho/abi/vfio_pci.h>
+> >   #include <linux/liveupdate.h>
+> >   #include <linux/errno.h>
+> > +#include <linux/vfio.h>
+>
+> maybe follow alphabet order. errno.h would be moved to the top first.
+
+I will reorder errno.h to be at the top in the previous patch (where
+the alphabetical ordering issue is introduced).
 
