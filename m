@@ -4,54 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B1263D3941F
-	for <kexec@archiver.kernel.org>; Thu,  2 Apr 2026 12:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5076FD39425
+	for <kexec@archiver.kernel.org>; Thu,  2 Apr 2026 12:34:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bDy1WqzyWZ4QXi9V76+nhfaX5tyIvisESl1ex2cgViU=; b=RhrMzUyN+Bqz89zCZIG0H6neRV
-	e0NZk7wey1UP5KKIR+WG86KQcCkLYYIfBc09V59fcYIR2Bc/tIARqJ9j496CfjECFedmKy+LIgqVH
-	A3YwqxgAEDHAVI4SL2L22woFrLkXyBVXHrIo9tnK08U2sMHtX9QdJWBMNCtHGI1Fwr9uTVDNQVYrX
-	SzLG65ahThnf+qwE7H3CMowuFps+CvUGl8HO5mEORq7VxT7cS4fz7nbmo4WBZZLbYTMbhctRTJsQI
-	+oc7Pie42x2VcGoLkQL+tzHjjBa1M3uWzJnxRPDOIyfxwE96ACRLVK3fOU7GVCnJ/+TN36Wi71Izd
-	lwO8FOzQ==;
+	bh=qfaMojy4YCJI6x7hn3yLKKO+h1WPTwEnl4yVpQYK7UQ=; b=w4jQ1C9+TRjCI18ccRA4rCXoKh
+	sT6H0alzG+HOAS46WEkK5WhK78fsDNnD/uSZ6ra41Qi9cEE7PhSvLBNpTcPfs9176sur9L2QuSypj
+	5o8FbFbkiqhFQsCkwVX2Pyu6yJ10TqUuEBxMYkl3hwNcF9nBRXC3F7ERqJ33CfjBNWXfrR7YRUuWv
+	VZMfyTBwIqWCDzfNUQMMIAugviRu3NIxbkzGSK7Es4ehSjxTa4O5Ye2uBYYqh6iGi3Xmowle5z9eY
+	zwJCIJ4LRLtqSJze7EYaZ+/MhYj808oQrS8hBBO0/U0g7xj1j6NZYQ/AMhVmj5YIcLJUQNQQemyCx
+	uXePAKvg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w8HFo-000000003xN-0I7E;
+	id 1w8HFo-000000003zW-46OW;
 	Thu, 02 Apr 2026 12:34:32 +0000
-Received: from canpmsgout06.his.huawei.com ([113.46.200.221])
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w4syw-00000000WYQ-0b24;
-	Tue, 24 Mar 2026 04:03:08 +0000
+	id 1w4v2X-00000000fac-2tec;
+	Tue, 24 Mar 2026 06:14:58 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=qfaMojy4YCJI6x7hn3yLKKO+h1WPTwEnl4yVpQYK7UQ=; b=AlNPbq+92yYcp6cnb5kk/aLQxd
+	in7+YMXScLmg+R2no6KntNPs5fpeZtzKroo7yaaUS3eKPPbzaZ9gfAmCVEokPYMOFvhaHvND01Z2W
+	886dY+SsUyRHYYtkpuV5DjiAxk7hLX4vG57Q0Q6oBQjZNoylPraCnlgIN4VIbExWdV8GAQy2UJB9Q
+	F4iMkXSCUgYl4q1L2y/cJK5H/FwkUsnR1586QLVw1WJSw2oaZ+GZA+sj3eAATs62rl/NXOj+yb20x
+	Eq3jea/IUJB6xM71lU6tnhJa+DXLywgiTblfUBE66Khsx06NdznE2M+iySE5hNCWVjfRJxfsmm+gN
+	ZTZR2voA==;
+Received: from [113.46.200.219] (helo=canpmsgout04.his.huawei.com)
+	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1w4v2J-00000003GNW-34mF;
+	Tue, 24 Mar 2026 06:14:51 +0000
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=bDy1WqzyWZ4QXi9V76+nhfaX5tyIvisESl1ex2cgViU=;
-	b=ZdiH1pglApVl4a6IeiYB/RNIPfMQalqh1J1N6H54h+m4wVAkBIL12akP2v0PgO4JxJv57h8AL
-	Sz/Bww8R1NtzLrMTjBlHDOVrLDCImsP+6ecp+QIQd2fWrygKLGWJO1InyvsolTRvUDIfiWTeLx6
-	ALNTxdX6ngOuZZaJRk7Pqc4=
-Received: from mail.maildlp.com (unknown [172.19.163.104])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4ffx7B5xTXzRhRB;
-	Tue, 24 Mar 2026 11:56:54 +0800 (CST)
+	bh=qfaMojy4YCJI6x7hn3yLKKO+h1WPTwEnl4yVpQYK7UQ=;
+	b=jpV0OS8P669YME8Q51wZE1sJYxg0mWoQB30y8MPrPMbvQ22ehAAXuIqteUT/3sIxyL1MmSP7h
+	RbyG9KeFJGYgssJdZyGAsROKKri5Ypb8c7977na6j8YwpXxHoqMP1oXnnOWDxdKrCxthN2TlvfT
+	lJ1A1OOOgmTlVrMeRWDFqEE=
+Received: from mail.maildlp.com (unknown [172.19.162.140])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4fg02m0NPjz1prkX;
+	Tue, 24 Mar 2026 14:08:16 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id A0A44404AD;
-	Tue, 24 Mar 2026 12:02:59 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B7AF22012A;
+	Tue, 24 Mar 2026 14:14:23 +0800 (CST)
 Received: from [10.67.109.254] (10.67.109.254) by
  dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 24 Mar 2026 12:02:57 +0800
-Message-ID: <4cfde40c-673a-12b0-dfc5-703d582d6ea9@huawei.com>
-Date: Tue, 24 Mar 2026 12:02:51 +0800
+ 15.2.1544.11; Tue, 24 Mar 2026 14:14:20 +0800
+Message-ID: <e51d5a5d-40d4-950b-274f-229e1d72e60d@huawei.com>
+Date: Tue, 24 Mar 2026 14:14:18 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.0
 Subject: Re: [PATCH v9 0/5] arm64/riscv: Add support for crashkernel CMA
  reservation
 Content-Language: en-US
-To: Andrew Morton <akpm@linux-foundation.org>
+To: Sourabh Jain <sourabhjain@linux.ibm.com>, Andrew Morton
+	<akpm@linux-foundation.org>
 CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
 	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
@@ -66,28 +81,29 @@ CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<lirongqing@baidu.com>, <safinaskar@gmail.com>, <rppt@kernel.org>,
 	<ardb@kernel.org>, <leitao@debian.org>, <jbohac@suse.cz>,
 	<cfsworks@gmail.com>, <osandov@fb.com>, <tangyouling@kylinos.cn>,
-	<sourabhjain@linux.ibm.com>, <ritesh.list@gmail.com>,
-	<eajames@linux.ibm.com>, <songshuaishuai@tinylab.org>,
-	<kevin.brodsky@arm.com>, <samuel.holland@sifive.com>,
-	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <coxu@redhat.com>,
-	<liaoyuanhong@vivo.com>, <fuqiang.wang@easystack.cn>, <x86@kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>
+	<ritesh.list@gmail.com>, <eajames@linux.ibm.com>,
+	<songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
+	<samuel.holland@sifive.com>, <vishal.moola@gmail.com>,
+	<junhui.liu@pigmoral.tech>, <coxu@redhat.com>, <liaoyuanhong@vivo.com>,
+	<fuqiang.wang@easystack.cn>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<kexec@lists.infradead.org>
 References: <20260323072745.2481719-1-ruanjinjie@huawei.com>
  <20260323095548.fa4e13d6e8ae5005ae585e13@linux-foundation.org>
+ <4cfde40c-673a-12b0-dfc5-703d582d6ea9@huawei.com>
+ <595e793d-adc3-4acb-af18-f0a3cf2d5e73@linux.ibm.com>
 From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20260323095548.fa4e13d6e8ae5005ae585e13@linux-foundation.org>
+In-Reply-To: <595e793d-adc3-4acb-af18-f0a3cf2d5e73@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.67.109.254]
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
  dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260323_210306_854967_59797CDB 
-X-CRM114-Status: UNSURE (   9.70  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260324_061447_009014_81DEC6E9 
+X-CRM114-Status: GOOD (  21.25  )
 X-Mailman-Approved-At: Thu, 02 Apr 2026 05:34:23 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -105,83 +121,123 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
 
-On 2026/3/24 0:55, Andrew Morton wrote:
-> On Mon, 23 Mar 2026 15:27:40 +0800 Jinjie Ruan <ruanjinjie@huawei.com> wrote:
+On 2026/3/24 12:29, Sourabh Jain wrote:
 > 
->> The crash memory allocation, and the exclude of crashk_res, crashk_low_res
->> and crashk_cma memory are almost identical across different architectures,
->> This patch set handle them in crash core in a general way, which eliminate
->> a lot of duplication code.
+> 
+> On 24/03/26 09:32, Jinjie Ruan wrote:
 >>
->> And add support for crashkernel CMA reservation for arm64 and riscv.
+>> On 2026/3/24 0:55, Andrew Morton wrote:
+>>> On Mon, 23 Mar 2026 15:27:40 +0800 Jinjie Ruan
+>>> <ruanjinjie@huawei.com> wrote:
+>>>
+>>>> The crash memory allocation, and the exclude of crashk_res,
+>>>> crashk_low_res
+>>>> and crashk_cma memory are almost identical across different
+>>>> architectures,
+>>>> This patch set handle them in crash core in a general way, which
+>>>> eliminate
+>>>> a lot of duplication code.
+>>>>
+>>>> And add support for crashkernel CMA reservation for arm64 and riscv.
+>>> Thanks.  AI review has completed and it asks questions:
+>>>     https://sashiko.dev/#/patchset/20260323072745.2481719-1-ruanjinjie@huawei.com
+>> I believe it identified 4 valid issues:
+>>
+>> - The already discovered crashk_low_res not excluded bug in the existing
+>> RISC-V code.
+>>
+>> - An existing memory leak issue in the existing PowerPC code.
 > 
-> Thanks.  AI review has completed and it asks questions:
-> 	https://sashiko.dev/#/patchset/20260323072745.2481719-1-ruanjinjie@huawei.com
+> Yes and suggested approach to fix the issue looks good.
+> Which is basically replace return with goto out.
+> 
+> diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
+> index 898742a5205c..1426d2099bad 100644
+> --- a/arch/powerpc/kexec/crash.c
+> +++ b/arch/powerpc/kexec/crash.c
+> @@ -440,7 +440,7 @@ static void update_crash_elfcorehdr(struct kimage
+> *image, struct memory_notify *
+>         ret = get_crash_memory_ranges(&cmem);
+>         if (ret) {
+>                 pr_err("Failed to get crash mem range\n");
+> -               return;
+> +               goto out;
+>         }
+> 
+>         /*
+> 
+> Are you planning to handle this in this patch series? Or do you want me
+> to send a separate fix patch?
 
-I believe it identified 4 valid issues:
+Yes, will fix it in v10, thanks for the clarification.
 
-- The already discovered crashk_low_res not excluded bug in the existing
-RISC-V code.
+Best regards,
+Jinjie
 
-- An existing memory leak issue in the existing PowerPC code.
+> 
+> 
+>>
+>> - The ordering issue of adding CMA ranges to "linux,usable-memory-range".
+>>
+>> - An existing concurrency issue. A Concurrent memory hotplug may occur
+>> between reading memblock and attempting to fill cmem during kexec_load()
+>> for almost all existing architectures，I'm not sure if this is a
+>> practical issue in reality..
 
-- The ordering issue of adding CMA ranges to "linux,usable-memory-range".
+What are your thoughts on this concurrency issue?
 
-- An existing concurrency issue. A Concurrent memory hotplug may occur
-between reading memblock and attempting to fill cmem during kexec_load()
-for almost all existing architectures，I'm not sure if this is a
-practical issue in reality..
-
- Race Condition Scenario
-
-  Timeline:
-  ---------------------------------------------------------------------
-  T1: kexec_load() syscall starts
-  T2: kexec_trylock() acquires kexec_lock
-  T3: crash_prepare_headers() is called
-  T4: arch_get_system_nr_ranges() queries memblock → finds 100 memory ranges
-  T5: cmem = alloc_cmem(100) allocates buffer for 100 ranges
-  T6: [RACE WINDOW] Another process triggers memory hotplug
-  T7: add_memory() → lock_device_hotplug() → memblock_add_node()
-  T8: New memory region added to memblock
-  T9: arch_crash_populate_cmem() iterates: now finds 102 ranges
-  T10: cmem->ranges[100] → OUT OF BOUNDS WRITE!
-  T11: cmem->ranges[101] → OUT OF BOUNDS WRITE!
-  T12: Kernel crash or memory corruption
-
-  Why This Happens
-
-  1. Different locks used:
-    - kexec_load() uses kexec_trylock (atomic_t)
-    - Memory hotplug uses device_hotplug_lock (mutex)
-  2. No synchronization between these two operations
-  3. Time-of-check to time-of-use (TOCTOU) issue:
-    - Step T4-T5: We query the number of ranges and allocate buffer
-    - Step T6-T9: Memory hotplug adds new ranges between query and
-population
-
-
-
-Any comments or suggestions on the following approach?
-
-
-int crash_prepare_headers(...)
-  {
-      unsigned int max_nr_ranges;
-      struct crash_mem *cmem;
-      int ret;
-
-      lock_device_hotplug();
-
-      max_nr_ranges = arch_get_system_nr_ranges();
-      // ...
-      ret = arch_crash_populate_cmem(cmem);
-      // ...
-
-      unlock_device_hotplug();
-      return ret;
-  }
-
-
+>>
+>>   Race Condition Scenario
+>>
+>>    Timeline:
+>>    ---------------------------------------------------------------------
+>>    T1: kexec_load() syscall starts
+>>    T2: kexec_trylock() acquires kexec_lock
+>>    T3: crash_prepare_headers() is called
+>>    T4: arch_get_system_nr_ranges() queries memblock → finds 100 memory
+>> ranges
+>>    T5: cmem = alloc_cmem(100) allocates buffer for 100 ranges
+>>    T6: [RACE WINDOW] Another process triggers memory hotplug
+>>    T7: add_memory() → lock_device_hotplug() → memblock_add_node()
+>>    T8: New memory region added to memblock
+>>    T9: arch_crash_populate_cmem() iterates: now finds 102 ranges
+>>    T10: cmem->ranges[100] → OUT OF BOUNDS WRITE!
+>>    T11: cmem->ranges[101] → OUT OF BOUNDS WRITE!
+>>    T12: Kernel crash or memory corruption
+>>
+>>    Why This Happens
+>>
+>>    1. Different locks used:
+>>      - kexec_load() uses kexec_trylock (atomic_t)
+>>      - Memory hotplug uses device_hotplug_lock (mutex)
+>>    2. No synchronization between these two operations
+>>    3. Time-of-check to time-of-use (TOCTOU) issue:
+>>      - Step T4-T5: We query the number of ranges and allocate buffer
+>>      - Step T6-T9: Memory hotplug adds new ranges between query and
+>> population
+>>
+>>
+>>
+>> Any comments or suggestions on the following approach?
+>>
+>>
+>> int crash_prepare_headers(...)
+>>    {
+>>        unsigned int max_nr_ranges;
+>>        struct crash_mem *cmem;
+>>        int ret;
+>>
+>>        lock_device_hotplug();
+>>
+>>        max_nr_ranges = arch_get_system_nr_ranges();
+>>        // ...
+>>        ret = arch_crash_populate_cmem(cmem);
+>>        // ...
+>>
+>>        unlock_device_hotplug();
+>>        return ret;
+>>    }
+>>
+>>
 > 
 
