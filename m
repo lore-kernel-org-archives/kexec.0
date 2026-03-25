@@ -4,105 +4,193 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 47901106B53B
-	for <kexec@archiver.kernel.org>; Wed, 25 Mar 2026 13:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8D385109C029
+	for <kexec@archiver.kernel.org>; Wed, 25 Mar 2026 14:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=faA6mSGMnx6rDUpnfk0PZMG7cUv6wd8U0MzReApShCA=; b=TblaDg4RZit5259g3xLoAi/wdu
-	0YgMj7Hpz63RJ3YCmF6PbgpA0j6/dp0cQcief+TSW3ktYt8t+H/+O8bBLugRN2C8AuGQFA8njhESO
-	bj3tgLmynlWU1jm9liNB54ZZAO+mBP6gX8zjAeyTqvwDaLvMXqBYWC0lFptXXFTUdOCkwt/djNN0g
-	c4mLFqPkrmjifk4ONOLJBfsRROVVhcVMxTbiqcIR6inmADi2w0bevoCrd/+GRPtECie7qVV53QX0Z
-	yYPAb2airvYWbUcdOVmhyK8a1appM/i1XX0Nr26WISuaJ5LfPZh4It5QmzJ2Xz5FC7zq5xDf1Nawk
-	KX3I0Uwg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-ID:Content-Type:Message-ID:Date:Subject:CC:
+	To:From:Reply-To:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=6Vnj2pUknbesnjE//mYIh4xBElXiTpkwVva95swmlOQ=; b=YkEyH05oyLzCSCajks8jS9MhT+
+	G8LffJqmwqIEFwi8fgXrqvRk0RFAcP6BpNsDh7jLlrOY+VLFmdt6Qud2eZzd23eqJGuLZfQvzAk2S
+	joPfzZzAZRnXdbk1kRJCTHKVHcxiyJH5mwu+uTqHRUTQsftGRw72j8VQA7RmWOLPHQFk/g4lRDv0y
+	N7JkbB8TiWFEZShk2x9hoMZRPwUJCph2YCaUWcXbEF7UJrRpe90z+4ASaGyEmq/uP6IflglITwLFm
+	5h4epWyE6Qm6Pv1L+qUPiURwPmt5V0XBr2JcaBHO1i5DhWMdkbxZteywjqhIbxU/UZkAuCU5S96GJ
+	GWHjtNyg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w5OSL-00000003Tmj-0UNJ;
-	Wed, 25 Mar 2026 13:39:33 +0000
-Received: from mail-ed1-x534.google.com ([2a00:1450:4864:20::534])
+	id 1w5PaM-00000003gqf-1AC1;
+	Wed, 25 Mar 2026 14:51:54 +0000
+Received: from mgamail.intel.com ([198.175.65.20])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w5OSI-00000003Tm2-0bls
+	id 1w5PZg-00000003fbq-36pk
 	for kexec@lists.infradead.org;
-	Wed, 25 Mar 2026 13:39:31 +0000
-Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-660a58841d4so3520223a12.0
-        for <kexec@lists.infradead.org>; Wed, 25 Mar 2026 06:39:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774445968; cv=none;
-        d=google.com; s=arc-20240605;
-        b=cEFu/LiTyy/0pwFpW3pRUSgRjXmNGI3zYP3uluu00iQLfSseBybx4WVFIUuJi+1A2E
-         YcFPG4PcBnGUMBfp9I7HcoGIx/zfHUbLBQomKtbKv8pksEoxxkO5T1Km5y4nxjvB8FZv
-         9aiWSW0Bb4efqqN7Uz2mCVxTs5Pyh6p/5Kvf8mZ+H+387ZxG7ozc5gGAA3tdi9vm439W
-         d8wVv+6f6kNZBbDP5ue08EaDB3lEsW6vnWlb6A0rlSZD49V2Ls538teJUQ+VrM904wn+
-         Pp+YEKWvA1srXdO2KaKCSMzVzXhC8/sG+x2GcOClUzOqd7uXciZG2wgYnv/qrdJF+MbK
-         hlCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=faA6mSGMnx6rDUpnfk0PZMG7cUv6wd8U0MzReApShCA=;
-        fh=Xe31LK1TGj4DbWza/fkoG11Z3tLS3EqUbQZSJP6CSH0=;
-        b=aTk+u7jANhhuzwRiUdwXE7+m+yI5DJfazNJ96CTitBg4UKuBvrnVhueuuieoaaaDvn
-         laeCs92HLmShVx9gNygyFk4L2l4Yjeq9t1ecM2wGREboOykVfGm/DebW+5JiV7b14kxx
-         pyMiwLb58RdgaYo6Kma/8V6lQEVyrefyVGxMkH8skuw1Eyknk0TFWrgO5i9a9Ik5WXAx
-         FoLhVVZLVun0AsP3C5MLwx25wF6loPAJnC/d4DlHDCDDo6lpm2DjvUUANAueobesm2Qh
-         ngNTFZLVU16jiscf8q4eXihSteoXNCg9QX20zE1+bdlC2yJmU8ykNsSY77096uFaQh5o
-         4SGA==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1774445968; x=1775050768; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=faA6mSGMnx6rDUpnfk0PZMG7cUv6wd8U0MzReApShCA=;
-        b=JCTqtEt407fMoARri6yeUz34rmyq+UeXmllLMBbYJbAnbWEJRz3t3UJcjM23n518zx
-         xEji5IfwMbAdjkNxnGpxkB/tQeSLxPCxjhv3LtclYWH7QrZALB4goY+Rs7C71+PRAnO9
-         IVsc7kIl14YJLb78pVu5EN+Bi0Hcoi4hfswT1ed1Ug3noOosoOF/Rlv/JB9DPZyG7scF
-         s61HsRxhJv29GlQr/tamw/Vw0gaACI2F3jRzqvT+QnUOsfgELSqZ6ngraXHI9Maei1Il
-         ltGLnF0Z5/FgbccREmNsSvitz2wIw7huc+AhxJG4UNlYTff58/JLDLbJou15GBYGxYTJ
-         AM6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774445968; x=1775050768;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=faA6mSGMnx6rDUpnfk0PZMG7cUv6wd8U0MzReApShCA=;
-        b=AcnUwEt6iLBxc44HahLbahJN/WJoOTQLhN7jnKZBPEB4H8Ator2qSwWWwLhVIjUSpo
-         PwGXeNUcNzwMO3TExgqIWgwlvtl8kF21Odx2V5mP+3iF+7FqXOa6EskCnbnGfB7WBLag
-         n7sL/M0F9ucKz0Hw0XjhRDHv8VNv0DHPHm4P9UHcGiXgmJogUQN0/HgMgkt06r5Q7JFq
-         I8dhGpabswNjbvfKYpB7N97yXL2KXDkirOCggbDjoJMiA8CH5tCbcYDQDZshluJNCj9p
-         PqqkcEw64jyLaggjqyGUsjUF/MfKje6s+TE77ce4Gd0uZYgnXgALpqa/NaBgCE7S8qRm
-         dOTw==
-X-Forwarded-Encrypted: i=1; AJvYcCVm0EtXSepYyi2ahk8pSOnkB02ZDE0gbi625iCj6C0rVBPJ8YkdnF1u8aED9ZSTVw6KHRVzrg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyvEfuwo4ggx7YGpDmT6+6qQKFlkNe3wUvk+Q7GZypGzgeg2lfv
-	D0z9MdYCES70DHU+7N8eaTxrorQXOkSbWlC8IARObw9frmakEDNjR+RaymdaSnB5xiYmaZgdIim
-	K4eW4S3jIwOS8EUOhPZBUaa/P1J2q3JT0ak10u1M0bA==
-X-Gm-Gg: ATEYQzzsxK0UOps7G6f95FRtPpbfYBkqkS7WYzgzvAj5G2bfr6hrtJcsVl3T63lB8Pn
-	c0syhY9wEJNH7LmVcSy/DLuLapF7u/XCNqN7ouHsdrqX8lNUcBXR+MC2ty5k3sb8Gt5xFr38kzC
-	Yer8qZ8RJUarWZMMJjraBxE/U4YzWkAktoY6KFsKLqaDb85b08YSY77tIFaZPOVqfj5dnbPDgWo
-	YqUY+v2KAXErMM4saP8v1vg4nI11squsapa2oGrS2TKum8h6s8qjVjd1SLSi038AZjhRsiCC6Jo
-	KrSY9bXNOZiTYQ05WNme2wX7hVeEslhaDm0www==
-X-Received: by 2002:a05:6402:1912:b0:662:fad8:4a9f with SMTP id
- 4fb4d7f45d1cf-66a8262df57mr2229663a12.9.1774445967511; Wed, 25 Mar 2026
- 06:39:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20260324212730.65290-1-oskar@gerlicz.space>
-In-Reply-To: <20260324212730.65290-1-oskar@gerlicz.space>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Wed, 25 Mar 2026 09:38:50 -0400
-X-Gm-Features: AQROBzANxvahMrwgqF65m0uu8wFijNd2nMQVhGo85hpt9Z6ibVgi4ycmBx884KY
-Message-ID: <CA+CK2bCiqCg1Tt0WgP3KszrK96Qahcgfyfige4eUQOkMVyLUqg@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] liveupdate: tighten handover cleanup and session lifetime
-To: Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
-Cc: Mike Rapoport <rppt@kernel.org>, Baoquan He <bhe@redhat.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+	Wed, 25 Mar 2026 14:51:14 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774450272; x=1805986272;
+  h=from:to:cc:subject:date:message-id:content-id:
+   content-transfer-encoding:mime-version;
+  bh=DRB8d1zqD9Kbtp/4yvYAJ1tpSD0pUknTYdUe9vG42y8=;
+  b=H3O4owVpA+BS3YBzXxqaC3j29wiRgORcnjGh5ZLeetzx9mi5whtJZSPR
+   zDZ97c/2epBerAuoiCmrpZ+XnSXSEzhHmkSlKMa90jA7j9qNK5Z3sXdY9
+   DaMRXqkjeFISr1Ajer0+rxac3XUinzkRwf5xOgNa82miPRi6CL1/BuYQn
+   k0scjHsNr6ZAvCk2D1aoWmzWbu869XSO0k0Drj+cl2elB+4Y2zh/mLmlK
+   xQYhw7x3KEYMt8dMH+4iLHHL4aCiOvRpeUxeRFIqf8EV8dxI1JAyJ6mBj
+   3Hz8RNO6RvnF4BY7HBVSMp0/SXY4Idgk9SiywBjIgvnhyS0AjZ9VG5Yyq
+   A==;
+X-CSE-ConnectionGUID: KT1FA7RjT+C0RxM6pT2z4g==
+X-CSE-MsgGUID: p5axDvXiRsS/x6DNBnzidg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11740"; a="75204421"
+X-IronPort-AV: E=Sophos;i="6.23,140,1770624000"; 
+   d="scan'208";a="75204421"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2026 07:51:11 -0700
+X-CSE-ConnectionGUID: btMJq9JgS8Gj6dayz5f6Mw==
+X-CSE-MsgGUID: m3HtEYDOQXyW3M1FSb9IoA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,140,1770624000"; 
+   d="scan'208";a="221382287"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2026 07:51:10 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Wed, 25 Mar 2026 07:51:09 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Wed, 25 Mar 2026 07:51:09 -0700
+Received: from BL2PR02CU003.outbound.protection.outlook.com (52.101.52.53) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Wed, 25 Mar 2026 07:51:08 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Z3+wC5C+fkc7ZuOMQp7AEQv7O2fQ77TLVsU8VdIiSD5uFy6kOEI4yI87AtvB5bTsTaKrSeHOpeULKiW0cYcOxq2Ek4ynVZpZZcu7cf+8vugPfhVZKumqh3ATy0yzmNhki8l7xkMKh3kaHit1qUDvxp84ptuNtxySg7g1zYOWJweIh3De4ktceACCzQoUg8Tfz9EjC0aCi4iAcp731YH1lSgZMw4Zjv5dY39BWV572PsTBl7guKVFAZlao3A1jfnK2imQV8OyjszdV52pokNlEM1Rh74DsfBUV0qMelx6dAnyNwQ3xFXc/RegdiNDHpuTNT3SWoWAMyUh5sVWookzfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6Vnj2pUknbesnjE//mYIh4xBElXiTpkwVva95swmlOQ=;
+ b=NWEZ5XlXDL79J1b57Jr4NBIABBNnjnmHivAp9jNgvqLffF/3wmDXdlu1EtRCMRQQVWnLk1FKNE0eGt4giy87sC7LguYIysv+wpFapMchNNvY6xWC2X0RfJx641tZ41y4qv+H63EWMXmIUqT/x1vJCwBClqY2MFc57MX5eBXImd1PubJ+AczUScBfAnyG1vI6p0AZVuuA7sBRLpTssmFc7xXeYG0dja7I67IiEtDnQPFXsOzhY1oQeR/B7FxwD6NsfQDo6KGIBgiwtwPM57FkgTNyEB/STQrqNFO+TDLmGgqdyKQIGbd39PT1vmRc9rGrFGmFR3A2jtwCVriT2JOlMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from LV8PR11MB8509.namprd11.prod.outlook.com (2603:10b6:408:1e6::15)
+ by PH3PPFC067E5C7D.namprd11.prod.outlook.com (2603:10b6:518:1::d48) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.20; Wed, 25 Mar
+ 2026 14:51:00 +0000
+Received: from LV8PR11MB8509.namprd11.prod.outlook.com
+ ([fe80::f5bd:4dde:4f2f:20b7]) by LV8PR11MB8509.namprd11.prod.outlook.com
+ ([fe80::f5bd:4dde:4f2f:20b7%5]) with mapi id 15.20.9745.019; Wed, 25 Mar 2026
+ 14:51:00 +0000
+From: "Liu, Yi L" <yi.l.liu@intel.com>
+To: David Matlack <dmatlack@google.com>
+CC: Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Adithya Jayachandran <ajayachandra@nvidia.com>, "Graf, Alexander"
+	<graf@amazon.com>, Alex Mastro <amastro@fb.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Ankit Agrawal <ankita@nvidia.com>, Arnd Bergmann
+	<arnd@arndb.de>, Askar Safin <safinaskar@gmail.com>, Borislav Petkov
+	<bp@alien8.de>, Chris Li <chrisl@kernel.org>, Dapeng Mi
+	<dapeng1.mi@linux.intel.com>, David Rientjes <rientjes@google.com>, Feng Tang
+	<feng.tang@linux.alibaba.com>, Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, "Jonathan
+ Corbet" <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, Kees Cook
+	<kees@kernel.org>, "Tian, Kevin" <kevin.tian@intel.com>,
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, Leon Romanovsky
+	<leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, Li RongQing <lirongqing@baidu.com>, Lukas Wunner
+	<lukas@wunner.de>, Elver Marco <elver@google.com>, "Winiarski, Michal"
+	<michal.winiarski@intel.com>, Mike Rapoport <rppt@kernel.org>, Parav Pandit
+	<parav@nvidia.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, "Paul E.
+ McKenney" <paulmck@kernel.org>, Pawan Gupta
+	<pawan.kumar.gupta@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
+	Pranjal Shrivastava <praan@google.com>, Pratyush Yadav <pratyush@kernel.org>,
+	Raghavendra Rao Ananta <rananta@google.com>, Randy Dunlap
+	<rdunlap@infradead.org>, "Vivi, Rodrigo" <rodrigo.vivi@intel.com>, "Saeed
+ Mahameed" <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>, Shuah
+ Khan <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>,
+	"Kasireddy, Vivek" <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>,
+	Yanjun Zhu <yanjun.zhu@linux.dev>
+Subject: Re: [PATCH v3 03/24] PCI: Require Live Update preserved devices are
+ in singleton iommu_groups
+Thread-Topic: [PATCH v3 03/24] PCI: Require Live Update preserved devices are
+ in singleton iommu_groups
+Thread-Index: AQHcvGbLhACgv/fpyUGZl+i4j6P07Q==
+Date: Wed, 25 Mar 2026 14:51:00 +0000
+Message-ID: <4F9426C5-68B7-47DC-9DC3-2F420FC71F63@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: LV8PR11MB8509:EE_|PH3PPFC067E5C7D:EE_
+x-ms-office365-filtering-correlation-id: f150e614-2ec1-49ee-51fd-08de8a7dee0b
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700021|56012099003|18002099003;
+x-microsoft-antispam-message-info: XJNdGkHTxM0//hqXP9MAEdg7k8Zg3NKUwQvfnfZff1K4M+aCuW3sI64KiAvvsNBlLKLCVJXOd5Y8/4Vx5GiIYFEZr8hvqBLbAEG07XJW68+G3X+ATQEd1tVj+suraub9HR5tOLWdnhyXGj/K32kaDMX5ivLOeVNqF+DzBk/LrJxCYiFgT46GflG7HAaR4MEIcIKnXNBhYBMfzXU+Zw4Nspy2mFxMo3M7Zv2W9D2DGbl/olgnmTuIanFMnP3HfCzXtKQ/Kd2eEGKvEb48K4mAs+oQ8k1mjQ+ibo6EbqTIntx11CbyD93WHiagZuaupSoRw1IuFuPlbNnQ4Q/WB9UqL8Xve9l2deEWA9vOiedD2I6A/FQ8tTVAskXRmw2MbUfAQg6RpvPcJeqy9GbC9nmnxhnIhqsaZ9Nc4JOaaUD8yFyZXDRCO6pfGIajezVq0YGP+o/fAIGzuLwyMvM4zFln05cABGHeBecU5VdPUadxy2WmNEzTAlMLgW7F82wvRiHZMzIU8tEHLORb+J+bWofPQIKFKmC3y7JxFKIugFmMmfvB+Z+tg6XxMb6JPXsrbmOTs5K8qu13KEO8feRu9HInXU6Tk/cIqN5x0Pw5sCrkkADj8GrzBpQlrHXUcff1V4ALIiKq9Yej0/H0p6b6VeBJcGgbRo6sf76+KZFr/AsGA7laJTPvlxwOlyQdDQENpwq4oUeHM7BFEXaA0IeeYs2eqyuNhMluR3sqzAPaPSVPOL2djKM2JO3cCu9RiCUohnJ4dqgGHh1CWASnzf8QTY88ifTEr8/SL/kcD7pTNNGvvYc=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR11MB8509.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700021)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?b7h2wDIQpUl/kdhHA7Ejri7wTxEZRa5zMv9BYJXQv21oICASlEFxoMinoHUM?=
+ =?us-ascii?Q?ZjVk8wd51kIb5Wn4vuMqg58d/9zayLdCBYzeS5CwoY8wKGGYHXndOgU0yEsI?=
+ =?us-ascii?Q?NfUe3Z39kkpYpZyA1sIzzyRnFOMKuMdNOXeug6dIWVjye4FF9q1enRTpP04u?=
+ =?us-ascii?Q?80Hqkw3IvwJlcybp4A3S/KYWJkwBnuflnDfV0Hc3F6jpJSvZMaAi0kXC5XA5?=
+ =?us-ascii?Q?EOEhUcbF8w1PZcUug55jyYw0nJtBZL2bEPuzwwRiKGRVxcTyOT7ArrzgHPOb?=
+ =?us-ascii?Q?SMV0xYoFEleMsRjsjzIfgnveEIwIwP6p1buY8c27pHj9YG7xEaenhy2yME1d?=
+ =?us-ascii?Q?MIW4o29dPixbAjVNMMxdWoIJTGjcJAq28aLFEHG78jtjcOlA5cDEJiOI9uon?=
+ =?us-ascii?Q?5atyAub5YUK51jLlF/rDXzEJhKBHHNEHo3SXph9dYFmt3lCIJuPZ9N8yaMc2?=
+ =?us-ascii?Q?4Ao5POGsvmzeJqSAxSDnp0iJembpQ1lj0NcsnDSeeQ1UmCDcp5N/sdn2dCem?=
+ =?us-ascii?Q?scX0RbcXA7tl7kqRliqjNsxIcKJRSIsjD1NwyfGFQ3dCWo9yABagSM/1Stxa?=
+ =?us-ascii?Q?Hq2a2n7Os6rxOsX5HcOd03KZSVLW0NWIGrQd8XcoU/CUQyz5ahNEWbI4KEjf?=
+ =?us-ascii?Q?oXOLg9F7t4ph5a0lSirVokaeM0TmySqgyBolzm/cR8ySU0NFf1Dqmx0oMiJ9?=
+ =?us-ascii?Q?Mf191XNZehW98shyE/AtajfGopSJt9qUuQu6hhmbjL3rKtlbBghyf5Bqz72x?=
+ =?us-ascii?Q?eQdwJEglAqV9FQrWm+/ish10aEGlWVsp1LlOJPbRhAn4fmCPG8uKMITUzjYU?=
+ =?us-ascii?Q?TDfQH6kHBECxvuUF0Kuw064wKCkmNZzUuBFeeXRTe2x/aO8shbg0Iinyt8S0?=
+ =?us-ascii?Q?lBOfsq8YLsBJ2GW0MY5SlYfMhv7H4PekMgKeuJh5hbwiyvb2kYuw5/ytx/0/?=
+ =?us-ascii?Q?6f+0YWilGG7xosq8StgQ8TmsodyX7Qy25qsdaqoJK95Vxg1JslvFHOo6TZau?=
+ =?us-ascii?Q?JHr1Mg9LGZBSzLAt+qLrRc066OXhdF799xj/0zmF93iMDMale4+9m3WqsRVr?=
+ =?us-ascii?Q?4xHfTpIHYdqnzjzZ78eYRFlzNAD50oFr2+XETTlj5nxJGufoqifiJg3Omnlp?=
+ =?us-ascii?Q?hiOCplh+InGukyKTKSYev/k9hM+zbXZDyOuK6dC2EqrcbY4VNWQXf//EGzKb?=
+ =?us-ascii?Q?LuHKOFya81RC7ofUw3SdJaVjjhD+B8a7hHDDCJfWPKqKsteyIexrNW39x8xv?=
+ =?us-ascii?Q?Oa7Z1Ya8/YrTIwzEoO6fYPr93P4scjxa5juMPTYiUl3uQydHDTTnioAeytFC?=
+ =?us-ascii?Q?FjALSJgt8Bgtv5oMrPy0ajJXch7dY9cmyMhTwy0VYrdGdxMG4RRiz21BB78g?=
+ =?us-ascii?Q?ZGrExEZRLZ7hG39sYgtrCvaaKfRWxLU6ArbWa/pur8eikrvWk2wa4KGzcnIW?=
+ =?us-ascii?Q?bUs5FxLmA6P1Jt5dP+dJRecI0YNG6Qm6NxdMRNCRykH/ZKW9nrbHmUplM6Mf?=
+ =?us-ascii?Q?fhJ3AmxbaYjSTPEOYKIa4S2tRsJr5m//iTpZv4mP9+IcrEg6N8JmIlxqvG+l?=
+ =?us-ascii?Q?axsuiaDgFT96mumQXzA+mTn2oOsrIxrtD3FPrElp0m4yZxeXbsktix7DI9Qn?=
+ =?us-ascii?Q?f4KSBs2XsPj8YqxVUheJdfSqcc29AKvNiIZrgGnli2VrFafpl+qomBWamGsO?=
+ =?us-ascii?Q?WA36MOLlEntM6GXWnNID/KFX2wKF7Ds2k3b/BqHoPf5OG6Y5XzgRuFpfX1Wb?=
+ =?us-ascii?Q?2O0edsUamg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <FD75F3C252782E4ABDCD7E248240E47A@intel.onmicrosoft.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-Exchange-RoutingPolicyChecked: Mj2ewsnGq9q5TYqZWzXwypSXlAExiylQQqoLS+f8LAsMQ40/90BIyWU4bQGpgGK54uTvVCGJMUgvtDQ9bN8JpRO50prmwTEJ3ewWYuQCp7FuB7QwGHFVOw8yRrqNiwELn46uK86TU5lKloSxdjUI5Q1Tpd32apvZGEun2Dkz1JJU1lijKSIYbKiRHtDhTsijQ69SYq4zDWWb+YQ6PIMvddcEJRrGdR4Ct7/tma2WovEenYIDhMInSEjmeIF3xfUD7XuHthiNv5ScbGKhf4LjBI2RQGl7nU/D619xZgbczt8thtWqTgmPiDuePI/UtSY8/Cxoqobi8EDefhJ0ix8nQw==
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR11MB8509.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f150e614-2ec1-49ee-51fd-08de8a7dee0b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2026 14:51:00.2233
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: e92cDs9nADvIS5GLBVRpkWtxd9kyRJvSPecXdahYMDxTYvTHaBTLC+SefP6yJ0jKHQywJFzz+MrtTK/pZExzQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPFC067E5C7D
+X-OriginatorOrg: intel.com
+X-Bad-Reply: 'Re:' in Subject but no References or In-Reply-To headers
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260325_063930_250063_DDAB5403 
-X-CRM114-Status: GOOD (  28.37  )
+X-CRM114-CacheID: sfid-20260325_075112_854706_A476F6D8 
+X-CRM114-Status: GOOD (  31.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,138 +205,92 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Mar 24, 2026 at 5:29=E2=80=AFPM Oskar Gerlicz Kowalczuk
-<oskar@gerlicz.space> wrote:
->
-> Hi Pasha,
->
-> this v4 keeps the simpler direction from your mail: outgoing handover is
-> still driven by a boolean rebooting gate, refcount pinning of outgoing
-> sessions during serialization, and session->mutex as the serialization
-> point for in-flight mutations. There is no return to the earlier closing
-> counter or a larger session state machine.
->
-> The main changes in this respin are:
->
-> - reshape the series into five commits, each building and standing on its
->   own
-> - keep incoming session origin immutable and use retrieved only as the
->   checked-out bit
-> - make FINISH and implicit close consume incoming sessions without
->   reopening races through retrieve-by-name
-> - route deserialize failures through explicit rollback paths for
->   sessions, files, and serialized memfd state
-> - validate KHO-preserved extents before walking serialized metadata
-> - harden incoming FLB lifetime and remaining teardown paths
->
-> Patches 1-4 keep the core session, kexec, deserialize and validation work
-> separate. Patch 5 carries the remaining FLB and teardown fixes needed to
-> match the final tree.
->
-> Oskar Gerlicz Kowalczuk (5):
->   liveupdate: block outgoing session updates during reboot
->   kexec: abort liveupdate handover on kernel_kexec() unwind
->   liveupdate: fail session restore on file deserialization errors
->   liveupdate: validate handover metadata before using it
->   liveupdate: harden FLB lifetime and remaining teardown paths
->
->  include/linux/kexec_handover.h     |  13 +
->  include/linux/liveupdate.h         |  17 +-
->  kernel/kexec_core.c                |   4 +
->  kernel/liveupdate/kexec_handover.c |  22 ++
->  kernel/liveupdate/luo_core.c       |  16 +-
->  kernel/liveupdate/luo_file.c       | 237 ++++++++++++--
->  kernel/liveupdate/luo_flb.c        | 116 +++++--
->  kernel/liveupdate/luo_internal.h   |  14 +-
->  kernel/liveupdate/luo_session.c    | 500 ++++++++++++++++++++++++-----
->  lib/tests/liveupdate.c             |   2 +
->  mm/memfd_luo.c                     | 160 +++++++--
->  11 files changed, 934 insertions(+), 167 deletions(-)
 
-Hi Oskar,
 
-This is a NAK.
+On 3/25/26 02:00, David Matlack wrote:
+> On 2026-03-24 09:07 PM, Yi Liu wrote:
+>> On 3/24/26 07:57, David Matlack wrote:
+>>> Require that Live Update preserved devices are in singleton iommu_group=
+s
+>>> during preservation (outgoing kernel) and retrieval (incoming kernel).
+>>> PCI devices preserved across Live Update will be allowed to perform
+>>> memory transactions throughout the Live Update. Thus IOMMU groups for
+>>> preserved devices must remain fixed. Since all current use cases for
+>>> Live Update are for PCI devices in singleton iommu_groups, require that
+>>> as a starting point. This avoids the complexity of needing to enforce
+>>> arbitrary iommu_group topologies while still allowing all current use
+>>> cases.
+>>> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+>>> Signed-off-by: David Matlack <dmatlack@google.com>
+>>> ---
+>>>  drivers/pci/liveupdate.c | 34 +++++++++++++++++++++++++++++++++-
+>>>  1 file changed, 33 insertions(+), 1 deletion(-)
+>>> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+>>> index bec7b3500057..a3dbe06650ff 100644
+>>> --- a/drivers/pci/liveupdate.c
+>>> +++ b/drivers/pci/liveupdate.c
+>>> @@ -75,6 +75,8 @@
+>>>   *
+>>>   *  * The device must not be a Physical Function (PF).
+>>>   *
+>>> + *  * The device must be the only device in its IOMMU group.
+>>> + *
+>>>   * Preservation Behavior
+>>>   * =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>>   *
+>>> @@ -105,6 +107,7 @@
+>>>  #include <linux/bsearch.h>
+>>>  #include <linux/io.h>
+>>> +#include <linux/iommu.h>
+>>>  #include <linux/kexec_handover.h>
+>>>  #include <linux/kho/abi/pci.h>
+>>>  #include <linux/liveupdate.h>
+>>> @@ -222,6 +225,31 @@ static void pci_ser_delete(struct pci_ser *ser, st=
+ruct pci_dev *dev)
+>>>      ser->nr_devices--;
+>>>  }
+>>> +static int count_devices(struct device *dev, void *__nr_devices)
+>>> +{
+>>> +    (*(int *)__nr_devices)++;
+>>> +    return 0;
+>>> +}
+>>> +
+>> there was a related discussion on the singleton group check. have you
+>> considered the device_group_immutable_singleton() in below link?
+>> https://lore.kernel.org/linux-iommu/20220421052121.3464100-4-baolu.lu@li=
+nux.intel.com/
+> Thanks for the link.
+> Based on the discussion in the follow-up threads, I think the only check
+> in that function that is needed on top of what is in this patch to
+> ensure group immutability is this one:
+>   /*
+>    * The device could be considered to be fully isolated if
+>    * all devices on the path from the device to the host-PCI
+>    * bridge are protected from peer-to-peer DMA by ACS.
+>    */
+>   if (!pci_acs_path_enabled(pdev, NULL, REQ_ACS_FLAGS))
+>       return false;
+> However, this would restrict Live Update support to only device
+> topologies that have these flags enabled. I am not yet sure if this
+> would be overly restrictive for the scenarios we care about supporting.
 
-This patch series is still significantly over-engineering solutions to
-straightforward problems, and the patches read as if they were
-mechanically generated rather than thoughtfully designed. The sheer
-volume of changes (nearly 1,000 lines) is unnecessary for what we are
-trying to achieve.
+yes. It's a bit different from that thread in which not only require
+singleton group but also need to be immutable.
 
-As I pointed out previously, we need to keep this simple. For example,
-the problem of preventing a return to userspace after a successful
-liveupdate_reboot() does not require inventing a new
-liveupdate_reboot_abort() function. It just requires placing the call
-where it's the last function allowed to return, with a simple
-exception for context-preserved kexec jumps. That is a trivial change:
+> An alternative way to ensure immutability would be to block adding
+> devices at probe time. i.e. Fail pci_device_group() if the device being
+> added has liveupdate_incoming=3DTrue, or if the group already contains a
+> device with liveupdate_{incoming,outgoing}=3DTrue. We would still need th=
+e
+> check in pci_liveupdate_preserve() to pretect against setting
+> liveupdate_outgoing=3DTrue on a device in a multi-device group.
 
--       error =3D liveupdate_reboot();
--       if (error)
--               goto Unlock;
-+       if (!kexec_image->preserve_context) {
-+               error =3D liveupdate_reboot();
-+               if (error)
-+                       goto Unlock;
-+       }
+this looks good to me. But you'll disallow hotplug-in during liveupdate.
+not sure about if any decision w.r.t. hotplug. is it acceptable?
 
-The same principle applies to the other issues. You are doing rewrites
-when targeted fixes should be applied:
-- Sessions mutating after entering the reboot() syscall?: This is a
-14-line fix [1].
-- Destroyed serialization race during liveupdate_reboot()? This is a
-70-line fix [2].
+BTW. A question not specific to this patch. If failure happens after
+executing kexec, is there any chance to fallback to the prior kernel?
 
-I was hoping that v4 (BTW, why are we at v4 in just a week?) would
-include the patches I already provided, along with similarly scoped,
-minimal fixes for the deserialization path if needed. Instead, I am
-seeing another over-complicated rewrite.
-
-Looking at deserialization, I am seeing, you are deleting a comment
-that explicitly explains our error-handling design:
--       /*
--        * Note on error handling:
--        *
--        * If deserialization fails (e.g., allocation failure or corrupt da=
-ta),
--        * we intentionally skip cleanup of files that were already restore=
-d.
--        *
--        * A partial failure leaves the preserved state inconsistent.
--        * Implementing a safe "undo" to unwind complex dependencies (sessi=
-ons,
--        * files, hardware state) is error-prone and provides little value,=
- as
--        * the system is effectively in a broken state.
--        *
--        * We treat these resources as leaked. The expected recovery path i=
-s for
--        * userspace to detect the failure and trigger a reboot, which will
--        * reliably reset devices and reclaim memory.
--        */
-
-You are adding a bunch of new functions to solve something we
-intentionally chose not to solve. Attempting to cleanly unwind and
-release incorrectly deserialized resources back to userspace is
-dangerous. It risks security violations and, in the worst-case
-scenario, customer data leaks. A failed deserialization means the
-system is broken; we leak the resources (make them unavailable) and
-rely on a reboot to reliably sanitize the state.
-
-Please drop the over-engineered approaches. Use the patches provided,
-keep the fixes minimal, and do not alter established security
-boundaries like the deserialization error paths. Take your time to
-manually self-review your work, do not rely on AI to do everything for
-you.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/tatashin/linux.git/comm=
-it/?h=3Dluo-reboot-sync/rfc/1&id=3Dd47b76707c4f352c3f70384d3d6a818e2875439a
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/tatashin/linux.git/comm=
-it/?h=3Dluo-reboot-sync/rfc/1&id=3Df27a6a9364cd0a19067734eeb24ea4d290b72139
-
-Pasha
-
->
-> --
-> 2.53.0
->
+Regards,
+Yi Liu
 
