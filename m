@@ -4,75 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A4FD3109C04B
-	for <kexec@archiver.kernel.org>; Wed, 25 Mar 2026 17:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1F9C109C05B
+	for <kexec@archiver.kernel.org>; Wed, 25 Mar 2026 20:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Tqtdz49F1thS+8gpmqv2HF5sNOiFchZq7BXU6+8jf4U=; b=K0MH61X6LC34NeoYQWX1h1TlUu
-	CeNOLeC6vLK7xJgoZkqMsK62WM9X5qz5N9KWSVHFOZgRYO36X8TTOWEGNUpHxvbaC84expAlhfyLe
-	somalnWUsktMoUlzYe27hNeNSIZvcOYKHvZJPlfjeHoKdXDcKZPV2Wxach99R700o6eA81bMJ7tgY
-	+yaH1x6I51RirR6A+Yo3nCnwYGKGJl43ZkUixlW8tbzsFGcsf/oqZ2RcNp+ASezzAEpcXpzaf/EUi
-	THoAMRrtH6pHg6340Xw7ZcGhpLPVw+h8tPET4i7THuFm6+pki28cphwLJ5UiQBGrNEkL0Y4nLybL7
-	w1YZMcfQ==;
+	bh=+fZRp4AJi5cb/F6jA80ZrndPdXYxEQL1IK9u8/P+m9k=; b=PADM3ei5pA5/3bXIwzaJ2pvCRg
+	lvFVt40Qw4nvFQBMSOHLFkNY3dAaHdedcZVZsI7KhdOIfZnusIqa395evQ6LSWmaJbRUiD25ie8Kg
+	yuGKZ2P9hk1RoBXo92iwr81vdKiN6FNBbr2fsk2oaIDPGnmV/9f50yMkbNNN+LLB1vdgqH6YzWN0B
+	X2DMoVJ9lHgScNm0ZX3uWvaZdg6i0dGUcfXq33SUnKDuJt3K0UPBoFwuSFGDSYJL9UWhdBnyHJTzX
+	D5a50usP0X4zR9hXzSWjiLru4/9xJ6NuLfKi2IWUg3E9TFQgPxu3fNiD54EQDWVXgUsK5dKDBugMS
+	EA5Ypohg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w5S3L-00000003zcK-3AI4;
-	Wed, 25 Mar 2026 17:29:59 +0000
-Received: from mail-pf1-x431.google.com ([2607:f8b0:4864:20::431])
+	id 1w5UVD-00000004BxH-2V1O;
+	Wed, 25 Mar 2026 20:06:55 +0000
+Received: from mail-pg1-x532.google.com ([2607:f8b0:4864:20::532])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w5S3I-00000003zbf-43Ll
+	id 1w5UVB-00000004Bwp-3s07
 	for kexec@lists.infradead.org;
-	Wed, 25 Mar 2026 17:29:58 +0000
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-82c68339cf0so860915b3a.0
-        for <kexec@lists.infradead.org>; Wed, 25 Mar 2026 10:29:55 -0700 (PDT)
+	Wed, 25 Mar 2026 20:06:55 +0000
+Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-c648bc907ebso200797a12.3
+        for <kexec@lists.infradead.org>; Wed, 25 Mar 2026 13:06:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774459795; x=1775064595; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1774469213; x=1775074013; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tqtdz49F1thS+8gpmqv2HF5sNOiFchZq7BXU6+8jf4U=;
-        b=pEUmYybFOT9CTt3JRB0SkjOMKiyvPxzF1tRUCTjc4lekt/bgE2rJigNM8fEoc4PmeN
-         0Kz6PL2HKFszQqKqn5JSmfdu7OUMrR4zkSo5KMnw24ITCYXPHvm/4HXDMgIsAm3fOUAF
-         4kQNpN143BOBq6cge9k3NSccfPsvu/BTXl6NSUrOeywTTq2j7xzURvNDJNgd/y1QG1CZ
-         BtTGNL9wTFEBuMk/QCw9EFcRbE+cwHaCExokVNP8ISt671F+P5A/kumQCmx0bd9scSma
-         pTslKD4uYxDlf2Kven7hTieP011vywGWkNfmXJwP2AthWEf+U3PKrB8qSw+1uXcyKlj7
-         jC7Q==
+        bh=+fZRp4AJi5cb/F6jA80ZrndPdXYxEQL1IK9u8/P+m9k=;
+        b=JYdkNmXdYrUXbrmo+iT1hSsJOVELysQY3kraFYDDs7JjPjfrlzilVHc7BMu8ADMgCh
+         8stISoG5oFXnI8AXjtnQ8XQpqFypG2X65FAopauATZKCFUILqE+lGHWq5V/C+CnPXp1J
+         g+cuYGsqeounC9UEnmRahz1FD9YZacMCd0ljPpGkHF9TRqhw8N8fDwnoUaRNtkRSA17g
+         CSTkt5XIeS/sO7f8iJ/2aXKCloXuuXCEzN17uu5hmndqfX4xaFuMA2HTIbTCUi9kcV2V
+         1HPsXEI73kN5jAg4n/AtXYn3UtpksnBEQTXJeddUS+dml5KURhGlyl/NG80kOwMvYzhB
+         ZzLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774459795; x=1775064595;
+        d=1e100.net; s=20251104; t=1774469213; x=1775074013;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Tqtdz49F1thS+8gpmqv2HF5sNOiFchZq7BXU6+8jf4U=;
-        b=Q+L7nODh/IvTIEKFIepdUm13mEknNoBkXuxmOquby0wbqAgx6lE86V09a7Eex1Z9a7
-         wwel3jIUEOfmHHNdZb7CjY7/L5A36apC0DK4lhh0zZh42jqlt7nEozzGqmEnNaHTBZuU
-         hxfyrgmz9QjNXQaxF0FWhmhzGECqA0hxmLM1G4IZ/boxVawRaprfiXS2kjxSDzFMsHGS
-         dIKayPoxPVYBnvyAJ1NqY3eKskGpnDqI2dqB9VcRpF1E359IzV3Df3RmeGCyEggSOCJu
-         sZsuIqoHY2fWOsEXVIGdpvDiTX6R9b7i6B87EvDqzgiDVCvYCBomOYg57JC53W1ZouSM
-         /nsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVvY4lMZrFeD2JBGDgYKqPUd/YvN2oEXppokUK4aduOM9Gfmvgu4rTqD92oVVKFfU+nqXxyPQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yzu82pS0NFXBZhpyfC6XBSCHZeOk9U7bX7w6Phl6al4wYACtJsw
-	p7F6dCTBgBnuzk/wS8CVbue58VqfZpzzkBHMtEYQRZ+CJ1oP5eyTZFgWvCjQz5V2JA==
-X-Gm-Gg: ATEYQzy2SAg/aDPZ+nllkcvNfJ3MeyutR212yUuLVgQgFUZoGe8yTglbaxTRXgl2uC+
-	Eix2Qx1QUHCIq/jOAtFq4WLPzXUw2ITR21Jeut9LPLd+TDtC9lhfLspFOXSpp+iRP9RTAZ38DuY
-	9mzNcdlXe0WK46sxTjK0mmrls9Gv4jMAgTBr8kleqnI7QhpNEXqzCwVrQ7ZeNbem/P85eXGzpdi
-	TQevSI+afMwk4Iifef2twHlhK1h8Dmq6XTf292+dcpu/4zJCyPrsY13JDDa6j9KMWcztRwypw0v
-	4ZqYzJ5d4mY+aftOXBLN4WLNF3pECDmHDRzXgjoraq/Chx3EJmWaNxjvyHcwqwlQ4AQT9J2fI32
-	VduTYzVkW00mrMsXDkTW6sz+1g2NAh9bnK1SgFCRJoBn4YdgF/1/Sot/5rr/5JLdEP2Oh7eaEAS
-	8Rqw4P1unBkw/jJ3x47UdhLuwfPloJGTpw+DAGdsIGgKRfFjYrgtrhIzikvVwl/A==
-X-Received: by 2002:a05:6a00:1826:b0:827:2dff:7116 with SMTP id d2e1a72fcca58-82c6d99ac23mr4021492b3a.13.1774459794263;
-        Wed, 25 Mar 2026 10:29:54 -0700 (PDT)
+        bh=+fZRp4AJi5cb/F6jA80ZrndPdXYxEQL1IK9u8/P+m9k=;
+        b=T5ib9o8wkm71oa4+pw78HX0Hcl/0sgrwRXJbaJ9BFNYgEy1WN2CqJC6r9PJxa4LPV6
+         qrsUbvHiseOX+8QOpGxYhwI+UbOGMwafqBaP/9nOpf6Tio5QLntUx7Zhd2051nlzzv5y
+         fYKmiw+Kb3l1olu6aXGkkFoIpNTFEnEp8Vozyz8UUQAmXzz5qUjFr0j6UW834zstzQIQ
+         D4z46wK+Opx1XTVEhngO2C0EPviKMc4Pq2bwbjfWjgBTxneYHfmG/nMv+Tygl2Sc41Jq
+         Lj92rud5R0cXL8UB9JeOQsgASnGk/HtSozIZVp/J1Uuf1MAxIfn9+ehocg9OtlaZuuLt
+         +qEw==
+X-Forwarded-Encrypted: i=1; AJvYcCWvyU7IY+KpTtYbLIE13AqS0UlaiHS3wcuIifLFONAFJtT9h8vWH1nzvVGHu/QSH0WtAi/bHA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyLHwRo+VyYHZLFHDixJ+mT5VAA0GGyIVAgniYf9bTMhvwliAeC
+	UyzRJ9LPGbEMf5a/2XDRDCjC0AJhj26h6XYwWZPA9jvztITFaU9phMqxVji/cBv1vA==
+X-Gm-Gg: ATEYQzyy1O+LfXcnbdgWL6vg3ZiVPutBpltpCb7F4yaZGLLWEsLJN0wXO/ZAQPK2j8N
+	Pi54zi24RVkRm9uuslr53FC5Gxxvo8QAXwQ9gFJ1zFDVNnNplNWpzXaex6Qu0kvcvstQnZROCxq
+	7pC+iAvtmPCovtDeshnie2jum84Af4QOJYMkBHtkah+CYwM+RSfBCqhLjoQKyOYHZArvoGkn5oY
+	XO5OYYYYRElxb2DUzeR8cBBUPOrcnvniHHkuDlsBZAIUdy1XdR3vMG/1Xb1mI/Zd+P0mEM2+LU+
+	l4DUKlF4evnZpd9SOuvUqZ7Pt00Hrd9s24Y6JiiyYIRfWWINKO4FCQwW/LUescQBR8uNrSlPTdW
+	n2yo/DVVMGuVPser6DIawEu+3w6tXlX+4lkWa16aDVCcb44/zHihdYsJIhqAQZscbKBeTH4qMOH
+	mcE48y6e96qHJWLOGuc8MHy8lOC1TRhIAvFFkRlY6yqkzV/jPuUr9wBelaIck8Mg==
+X-Received: by 2002:a05:6a20:8ca6:b0:398:b3bd:de58 with SMTP id adf61e73a8af0-39c4aed5082mr3746836637.65.1774469212632;
+        Wed, 25 Mar 2026 13:06:52 -0700 (PDT)
 Received: from google.com (239.23.105.34.bc.googleusercontent.com. [34.105.23.239])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82c7d216a0esm312308b3a.17.2026.03.25.10.29.52
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c7673819da1sm305751a12.11.2026.03.25.13.06.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2026 10:29:52 -0700 (PDT)
-Date: Wed, 25 Mar 2026 17:29:48 +0000
+        Wed, 25 Mar 2026 13:06:51 -0700 (PDT)
+Date: Wed, 25 Mar 2026 20:06:47 +0000
 From: David Matlack <dmatlack@google.com>
-To: Yi Liu <yi.l.liu@intel.com>
-Cc: Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
+To: Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Adithya Jayachandran <ajayachandra@nvidia.com>,
 	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Ankit Agrawal <ankita@nvidia.com>, Arnd Bergmann <arnd@arndb.de>,
@@ -109,22 +108,20 @@ Cc: Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Vipin Sharma <vipinsh@google.com>,
 	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	William Tu <witu@nvidia.com>, Zhu Yanjun <yanjun.zhu@linux.dev>
-Subject: Re: [PATCH v3 03/24] PCI: Require Live Update preserved devices are
- in singleton iommu_groups
-Message-ID: <acQbjF53aIzv7Ieq@google.com>
+	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
+	Zhu Yanjun <yanjun.zhu@linux.dev>
+Subject: Re: [PATCH v3 02/24] PCI: Add API to track PCI devices preserved
+ across Live Update
+Message-ID: <acRAV7IK6RW8h_QM@google.com>
 References: <20260323235817.1960573-1-dmatlack@google.com>
- <20260323235817.1960573-4-dmatlack@google.com>
- <376910fa-4232-4e58-bf87-0504202866a5@intel.com>
- <acLRICLAP5Ccqt9I@google.com>
- <b16f93af-1ec6-43f5-b4d0-b1d390e3c23c@intel.com>
+ <20260323235817.1960573-3-dmatlack@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b16f93af-1ec6-43f5-b4d0-b1d390e3c23c@intel.com>
+In-Reply-To: <20260323235817.1960573-3-dmatlack@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260325_102957_014711_B023CD98 
-X-CRM114-Status: GOOD (  47.10  )
+X-CRM114-CacheID: sfid-20260325_130653_965658_2A9BB0F8 
+X-CRM114-Status: GOOD (  25.27  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -139,108 +136,94 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-03-25 07:12 PM, Yi Liu wrote:
-> 
-> 
-> On 3/25/26 02:00, David Matlack wrote:
-> > On 2026-03-24 09:07 PM, Yi Liu wrote:
-> > > On 3/24/26 07:57, David Matlack wrote:
-> > > > Require that Live Update preserved devices are in singleton iommu_groups
-> > > > during preservation (outgoing kernel) and retrieval (incoming kernel).
-> > > > 
-> > > > PCI devices preserved across Live Update will be allowed to perform
-> > > > memory transactions throughout the Live Update. Thus IOMMU groups for
-> > > > preserved devices must remain fixed. Since all current use cases for
-> > > > Live Update are for PCI devices in singleton iommu_groups, require that
-> > > > as a starting point. This avoids the complexity of needing to enforce
-> > > > arbitrary iommu_group topologies while still allowing all current use
-> > > > cases.
-> > > > 
-> > > > Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> > > > Signed-off-by: David Matlack <dmatlack@google.com>
-> > > > ---
-> > > >    drivers/pci/liveupdate.c | 34 +++++++++++++++++++++++++++++++++-
-> > > >    1 file changed, 33 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-> > > > index bec7b3500057..a3dbe06650ff 100644
-> > > > --- a/drivers/pci/liveupdate.c
-> > > > +++ b/drivers/pci/liveupdate.c
-> > > > @@ -75,6 +75,8 @@
-> > > >     *
-> > > >     *  * The device must not be a Physical Function (PF).
-> > > >     *
-> > > > + *  * The device must be the only device in its IOMMU group.
-> > > > + *
-> > > >     * Preservation Behavior
-> > > >     * =====================
-> > > >     *
-> > > > @@ -105,6 +107,7 @@
-> > > >    #include <linux/bsearch.h>
-> > > >    #include <linux/io.h>
-> > > > +#include <linux/iommu.h>
-> > > >    #include <linux/kexec_handover.h>
-> > > >    #include <linux/kho/abi/pci.h>
-> > > >    #include <linux/liveupdate.h>
-> > > > @@ -222,6 +225,31 @@ static void pci_ser_delete(struct pci_ser *ser, struct pci_dev *dev)
-> > > >    	ser->nr_devices--;
-> > > >    }
-> > > > +static int count_devices(struct device *dev, void *__nr_devices)
-> > > > +{
-> > > > +	(*(int *)__nr_devices)++;
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > 
-> > > there was a related discussion on the singleton group check. have you
-> > > considered the device_group_immutable_singleton() in below link?
-> > > 
-> > > https://lore.kernel.org/linux-iommu/20220421052121.3464100-4-baolu.lu@linux.intel.com/
-> > 
-> > Thanks for the link.
-> > 
-> > Based on the discussion in the follow-up threads, I think the only check
-> > in that function that is needed on top of what is in this patch to
-> > ensure group immutability is this one:
-> > 
-> > 	/*
-> > 	 * The device could be considered to be fully isolated if
-> > 	 * all devices on the path from the device to the host-PCI
-> > 	 * bridge are protected from peer-to-peer DMA by ACS.
-> > 	 */
-> > 	if (!pci_acs_path_enabled(pdev, NULL, REQ_ACS_FLAGS))
-> > 		return false;
-> > 
-> > However, this would restrict Live Update support to only device
-> > topologies that have these flags enabled. I am not yet sure if this
-> > would be overly restrictive for the scenarios we care about supporting.
-> 
-> yes. It's a bit different from that thread in which not only require
-> singleton group but also need to be immutable.
-> 
-> > An alternative way to ensure immutability would be to block adding
-> > devices at probe time. i.e. Fail pci_device_group() if the device being
-> > added has liveupdate_incoming=True, or if the group already contains a
-> > device with liveupdate_{incoming,outgoing}=True. We would still need the
-> > check in pci_liveupdate_preserve() to pretect against setting
-> > liveupdate_outgoing=True on a device in a multi-device group.
-> 
-> this looks good to me. But you'll disallow hotplug-in during liveupdate.
-> not sure about if any decision w.r.t. hotplug. is it acceptable?
+On 2026-03-23 11:57 PM, David Matlack wrote:
 
-Anyone doing hotplug during the middle of a Live Update is asking for
-trouble IMO. And it would only prevent a hot-plugged device from coming
-up if it were to be added to the iommu_group as an existing preserved
-device. I think that is reasonable.
+> +static void pci_flb_finish(struct liveupdate_flb_op_args *args)
+> +{
+> +	kho_restore_free(args->obj);
+> +}
+> +
+> +static struct liveupdate_flb_ops pci_liveupdate_flb_ops = {
+> +	.preserve = pci_flb_preserve,
+> +	.unpreserve = pci_flb_unpreserve,
+> +	.retrieve = pci_flb_retrieve,
+> +	.finish = pci_flb_finish,
+> +	.owner = THIS_MODULE,
+> +};
+...
+> +static int pci_liveupdate_flb_get_incoming(struct pci_ser **serp)
+> +{
+> +	int ret;
+> +
+> +	ret = liveupdate_flb_get_incoming(&pci_liveupdate_flb, (void **)serp);
+> +
+> +	/* Live Update is not enabled. */
+> +	if (ret == -EOPNOTSUPP)
+> +		return ret;
+> +
+> +	/* Live Update is enabled, but there is no incoming FLB data. */
+> +	if (ret == -ENODATA)
+> +		return ret;
+> +
+> +	/*
+> +	 * Live Update is enabled and there is incoming FLB data, but none of it
+> +	 * matches pci_liveupdate_flb.compatible.
+> +	 *
+> +	 * This could mean that no PCI FLB data was passed by the previous
+> +	 * kernel, but it could also mean the previous kernel used a different
+> +	 * compatibility string (i.e.a different ABI). The latter deserves at
+> +	 * least a WARN_ON_ONCE() but it cannot be distinguished from the
+> +	 * former.
+> +	 */
+> +	if (ret == -ENOENT) {
+> +		pr_info_once("PCI: No incoming FLB data detected during Live Update");
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * There is incoming FLB data that matches pci_liveupdate_flb.compatible
+> +	 * but it cannot be retrieved. Proceed with standard initialization as
+> +	 * if there was not incoming PCI FLB data.
+> +	 */
+> +	WARN_ONCE(ret, "PCI: Failed to retrieve incoming FLB data during Live Update");
+> +	return ret;
+> +}
+> +
+> +u32 pci_liveupdate_incoming_nr_devices(void)
+> +{
+> +	struct pci_ser *ser;
+> +
+> +	if (pci_liveupdate_flb_get_incoming(&ser))
+> +		return 0;
+> +
+> +	return ser->nr_devices;
+> +}
+> +
+> +void pci_liveupdate_setup_device(struct pci_dev *dev)
+> +{
+> +	struct pci_ser *ser;
+> +
+> +	if (pci_liveupdate_flb_get_incoming(&ser))
+> +		return;
+> +
+> +	if (!pci_ser_find(ser, dev))
+> +		return;
+> +
+> +	dev->liveupdate_incoming = true;
+> +}
 
-> BTW. A question not specific to this patch. If failure happens after
-> executing kexec, is there any chance to fallback to the prior kernel?
+There is an inerent race between callers of
+liveupdate_flb_get_incoming() and liveupdate_flb_ops.finish(). There is
+no way for callers to protect themselves against the finish() callback
+running and freeing the incoming FLB after liveupdate_flb_get_incoming()
+returns. Sashiko flagged this as well [1].
 
-There are many failure paths during the reboot() syscall that can return
-back to userspace, and then userspace can figure out how to bring the
-system (e.g. VMs) back online on the current kernel.
+After some off list discussion with Pasha and Sami, the proposal to fix
+this is to have liveupdate_flb_get_incoming() increment the reference
+count on the incoming FLB. We will add a liveupdate_flb_put_incoming()
+to drop the reference when the caller is done using the incoming FLB.
 
-But otherwise, kexec is currently a one way door. Once you kexec, into
-the new kernel, you would have to do another Live Update to get back
-into the previous kernel.
+I plan to include a patch for this in v4.
+
+[1] https://sashiko.dev/#/patchset/20260323235817.1960573-1-dmatlack%40google.com?patch=7974
 
