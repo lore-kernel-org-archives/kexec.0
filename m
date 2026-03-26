@@ -4,83 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DDB9AD3941E
-	for <kexec@archiver.kernel.org>; Thu,  2 Apr 2026 12:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C28DED3941F
+	for <kexec@archiver.kernel.org>; Thu,  2 Apr 2026 12:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=cafOVGJhVpKtrDApJntdDFDO00PImuG+jp56XDPXWNM=; b=3DVqj0QFyb9ZqiGgWyJoe72a4Z
-	7UIIy2blD4EdbprUwjwi5/ZqK1oiU8QHLBXdAUV6Iw6tQEUmRzIJcczZTbq0syF2qfZf/9+OiW0Gl
-	SxZmpEyYJ1yKRrwQHnx49MQ5d4e+v2YFXLv8sDlQplg5wcbBLriD7jUEaM/T/TI/YiN/mxP3uM45r
-	6bFq+y0tBVmtO3WucZSbO3EGq6D1QCRKtqgB4HkCLLTdTjGexyz2Fo0x70EN1borkSs0xXZb2K+VM
-	X6FOcKMYDTDTDUCLLljs5z6LiWOuNlXL7MnrcJMKBDfCFg7Blq/YtXeawHgvnkW/LkXWnL3U9ha+h
-	vTrQ6YLw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=jLyfKSEzGPeE1dJtR15Kc0eOwoYz6wTxdsqltUK1s+8=; b=FYT07ITriRLY1HYzXH0bocCXKv
+	Sr6lh8DuyDpVO8tE+yyXRS3FbYb0OZYW0sD9XOV0rZk6v72/K9Qizmlgeqi/7fBLdHNkRQQynVihd
+	3a9p+9g2SjXBlNxCy+OEGx1w8PFkNJ8tkm43Ug0LLd/aBALRInfvcTB2/xQw4SxN6qVzOxxwyxEq9
+	oi4zgs1iczkBDxFuxuFn7oVIP1/GoGvDAh5LkjrKTj+5OOcZ58jJq++FZvNltBSZ/Gm/Ope0lTRn2
+	0jRUTiCM12aFxJ2vXADm2Efl91DIXIOj+vSJDA7Omyyvm9U8GBajs3s2ev/ztnj4ryyYjXcvK7f6V
+	aDCf3czg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w8HFw-000000004F8-0YdL;
+	id 1w8HFw-000000004Gm-3i2n;
 	Thu, 02 Apr 2026 12:34:40 +0000
-Received: from foss.arm.com ([217.140.110.172])
-	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w5iLu-00000005Il6-2Ho6;
-	Thu, 26 Mar 2026 10:54:15 +0000
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7625D175A;
-	Thu, 26 Mar 2026 03:54:06 -0700 (PDT)
-Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E50D13FB90;
-	Thu, 26 Mar 2026 03:54:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1774522452; bh=8IXmdtIFEytfMHYy2/zN6eUVEhDW6CUJvZu3Mba6/Z0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YVuxS70wtA+CNyc+9Yfuu8kLdwGx0hAOW4qIgVCCdqd3eWV81ySjZ1drGGhP2OXoL
-	 +ZNCcv/2wvx0wEMhP2Dp3UCFRMfOF2SBHpPH29ZkEJibdsvI0zy0/8alDG7Ivbi7i4
-	 oE7duHHNhvv6uUVGYqsXoDVURWRztrpZN8osSmlg=
-Date: Thu, 26 Mar 2026 10:54:01 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: corbet@lwn.net, skhan@linuxfoundation.org, will@kernel.org,
-	chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
-	mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org,
-	pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, robh@kernel.org,
-	saravanak@kernel.org, akpm@linux-foundation.org, bhe@redhat.com,
-	vgoyal@redhat.com, dyoung@redhat.com, rdunlap@infradead.org,
-	peterz@infradead.org, pawan.kumar.gupta@linux.intel.com,
-	feng.tang@linux.alibaba.com, dapeng1.mi@linux.intel.com,
-	kees@kernel.org, elver@google.com, paulmck@kernel.org,
-	lirongqing@baidu.com, rppt@kernel.org, ardb@kernel.org,
-	leitao@debian.org, osandov@fb.com, cfsworks@gmail.com,
-	tangyouling@kylinos.cn, sourabhjain@linux.ibm.com,
-	ritesh.list@gmail.com, eajames@linux.ibm.com,
-	songshuaishuai@tinylab.org, kevin.brodsky@arm.com,
-	samuel.holland@sifive.com, vishal.moola@gmail.com,
-	junhui.liu@pigmoral.tech, coxu@redhat.com, liaoyuanhong@vivo.com,
-	jbohac@suse.cz, fuqiang.wang@easystack.cn, guoren@kernel.org,
-	chenjiahao16@huawei.com, hbathini@linux.ibm.com,
-	james.morse@arm.com, takahiro.akashi@linaro.org,
-	lizhengyu3@huawei.com, x86@kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	kexec@lists.infradead.org
-Subject: Re: [PATCH v10 6/8] arm64: kexec: Add support for crashkernel CMA
- reservation
-Message-ID: <acUQSSNgxCCK5LnI@arm.com>
-References: <20260325025904.2811960-1-ruanjinjie@huawei.com>
- <20260325025904.2811960-7-ruanjinjie@huawei.com>
+Received: from canpmsgout06.his.huawei.com ([113.46.200.221])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1w5kT0-00000005WIh-2DVo;
+	Thu, 26 Mar 2026 13:09:44 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=jLyfKSEzGPeE1dJtR15Kc0eOwoYz6wTxdsqltUK1s+8=;
+	b=r27NhnWJDoBRU0BLviPWrzC48eoWH2aXc39RU0NNg9RfVmkYMPQAakNbwupG9o1vLSlUZgi3I
+	9q6pjI1LWhogcfA3FIhnuqdaqvSt3N0ef5hNY4GTFUKrfjR9jw+KWWzREvNA4nYdsjVC61P8MMl
+	7eCWHr3D/yJXJKgUr+I5ku0=
+Received: from mail.maildlp.com (unknown [172.19.163.104])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4fhP8m1T9zzRhQP;
+	Thu, 26 Mar 2026 21:03:20 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 757E14056A;
+	Thu, 26 Mar 2026 21:09:26 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 26 Mar 2026 21:09:22 +0800
+Message-ID: <b82f26e6-adac-e921-6547-94d3284d2678@huawei.com>
+Date: Thu, 26 Mar 2026 21:09:16 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260325025904.2811960-7-ruanjinjie@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v10 0/8] arm64/riscv: Add support for crashkernel CMA
+ reservation
+Content-Language: en-US
+To: Andrew Morton <akpm@linux-foundation.org>
+CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
+	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>, <bhe@redhat.com>,
+	<vgoyal@redhat.com>, <dyoung@redhat.com>, <rdunlap@infradead.org>,
+	<peterz@infradead.org>, <pawan.kumar.gupta@linux.intel.com>,
+	<feng.tang@linux.alibaba.com>, <dapeng1.mi@linux.intel.com>,
+	<kees@kernel.org>, <elver@google.com>, <paulmck@kernel.org>,
+	<lirongqing@baidu.com>, <rppt@kernel.org>, <ardb@kernel.org>,
+	<leitao@debian.org>, <osandov@fb.com>, <cfsworks@gmail.com>,
+	<tangyouling@kylinos.cn>, <sourabhjain@linux.ibm.com>,
+	<ritesh.list@gmail.com>, <eajames@linux.ibm.com>,
+	<songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
+	<samuel.holland@sifive.com>, <vishal.moola@gmail.com>,
+	<junhui.liu@pigmoral.tech>, <coxu@redhat.com>, <liaoyuanhong@vivo.com>,
+	<jbohac@suse.cz>, <fuqiang.wang@easystack.cn>, <guoren@kernel.org>,
+	<chenjiahao16@huawei.com>, <hbathini@linux.ibm.com>, <james.morse@arm.com>,
+	<takahiro.akashi@linaro.org>, <lizhengyu3@huawei.com>, <x86@kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
+	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>
+References: <20260325025904.2811960-1-ruanjinjie@huawei.com>
+ <20260325210049.28cca592a001e745954b3241@linux-foundation.org>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <20260325210049.28cca592a001e745954b3241@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.109.254]
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260326_035414_696744_F48AF06B 
-X-CRM114-Status: GOOD (  11.26  )
-X-Mailman-Approved-At: Thu, 02 Apr 2026 05:34:23 -0700
+X-CRM114-CacheID: sfid-20260326_060942_951592_EAE59988 
+X-CRM114-Status: GOOD (  23.81  )
+X-Mailman-Approved-At: Thu, 02 Apr 2026 05:34:24 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,40 +104,127 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Mar 25, 2026 at 10:59:02AM +0800, Jinjie Ruan wrote:
-> Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
-> crashkernel= command line option") and commit ab475510e042 ("kdump:
-> implement reserve_crashkernel_cma") added CMA support for kdump
-> crashkernel reservation.
-> 
-> Crash kernel memory reservation wastes production resources if too
-> large, risks kdump failure if too small, and faces allocation difficulties
-> on fragmented systems due to contiguous block constraints. The new
-> CMA-based crashkernel reservation scheme splits the "large fixed
-> reservation" into a "small fixed region + large CMA dynamic region": the
-> CMA memory is available to userspace during normal operation to avoid
-> waste, and is reclaimed for kdump upon crash—saving memory while
-> improving reliability.
-> 
-> So extend crashkernel CMA reservation support to arm64. The following
-> changes are made to enable CMA reservation:
-> 
-> - Parse and obtain the CMA reservation size along with other crashkernel
->   parameters.
-> - Call reserve_crashkernel_cma() to allocate the CMA region for kdump.
-> - Include the CMA-reserved ranges for kdump kernel to use.
-> - Exclude the CMA-reserved ranges from the crash kernel memory to
->   prevent them from being exported through /proc/vmcore, which is already
->   done in the crash core.
-> 
-> Update kernel-parameters.txt to document CMA support for crashkernel on
-> arm64 architecture.
-> 
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> Acked-by: Baoquan He <bhe@redhat.com>
-> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Acked-by: Ard Biesheuvel <ardb@kernel.org>
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+
+On 2026/3/26 12:00, Andrew Morton wrote:
+> On Wed, 25 Mar 2026 10:58:56 +0800 Jinjie Ruan <ruanjinjie@huawei.com> wrote:
+> 
+>> The crash memory allocation, and the exclude of crashk_res, crashk_low_res
+>> and crashk_cma memory are almost identical across different architectures,
+>> This patch set handle them in crash core in a general way, which eliminate
+>> a lot of duplication code.
+>>
+>> And add support for crashkernel CMA reservation for arm64 and riscv.
+> 
+> So who is patchmonkey for this.
+> 
+>>  .../admin-guide/kernel-parameters.txt         |  16 +--
+>>  arch/arm64/kernel/machine_kexec_file.c        |  39 ++-----
+>>  arch/arm64/mm/init.c                          |   5 +-
+>>  arch/loongarch/kernel/machine_kexec_file.c    |  39 ++-----
+>>  arch/powerpc/include/asm/kexec_ranges.h       |   1 -
+>>  arch/powerpc/kexec/crash.c                    |   7 +-
+>>  arch/powerpc/kexec/ranges.c                   | 101 +----------------
+>>  arch/riscv/kernel/machine_kexec_file.c        |  38 ++-----
+>>  arch/riscv/mm/init.c                          |   5 +-
+>>  arch/x86/kernel/crash.c                       |  89 ++-------------
+>>  drivers/of/fdt.c                              |   9 +-
+>>  drivers/of/kexec.c                            |   9 ++
+>>  include/linux/crash_core.h                    |   9 ++
+>>  kernel/crash_core.c                           | 105 +++++++++++++++++-
+> 
+> Me, I guess, with as many arch acks as I can gather, please.
+> 
+> I'm seriously trying to slow things down now, but I guess I can make an
+> exception for non-MM material.
+> 
+> AI review asks a few questions:
+> 	https://sashiko.dev/#/patchset/20260325025904.2811960-1-ruanjinjie@huawei.com
+> 
+> Can you please check these?  And I'm interested in learning how many of
+> these are valid.  Thanks.
+
+Thanks for the feedback. At the very least, the issue highlighted below
+remains valid and needs to be addressed, which can be fixed with below
+fixed number usable ranges.
+
++#define MAX_USABLE_RANGES		(6)
+
+"
+> */
+> -#define MAX_USABLE_RANGES		2
+> +#define MAX_USABLE_RANGES		(2 + CRASHKERNEL_CMA_RANGES_MAX)
+Could this silently drop crash memory if the crash kernel is built without
+CONFIG_CMA?
+If the main kernel is compiled with CONFIG_CMA, it might append up to 6
+regions to the linux,usable-memory-range property (2 standard + 4 CMA).
+If the crash kernel is compiled without CONFIG_CMA,
+CRASHKERNEL_CMA_RANGES_MAX
+evaluates to 0. During boot, the crash kernel's FDT parsing logic limits the
+ranges to MAX_USABLE_RANGES (which would be 2). This truncates the ranges
+and drops all the CMA-backed crash memory.
+Since the crash kernel only registers these regions as normal RAM, it
+doesn't
+require CONFIG_CMA to use them. Should MAX_USABLE_RANGES unconditionally
+accommodate the maximum possible ranges any sender might provide?"
+
+
+
+Regarding the concurrency issue mentioned below, as noted in my v9
+response, could we confirm if this is indeed a bug? If so, I believe
+each affected architecture might need a separate fix, as this issue
+already exists in the current code and likely requires a more
+comprehensive solution. Does anyone have thoughts on whether this is a
+valid concern or suggestions on how to address it?
+
+
+Link:
+https://lore.kernel.org/all/4cfde40c-673a-12b0-dfc5-703d582d6ea9@huawei.com/
+
+
+"
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -326,15 +326,25 @@ int crash_prepare_headers(int need_kernel_map,
+void **addr, unsigned long *sz,
+>  	struct crash_mem *cmem;
+>  	int ret;
+>
+> +	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
+> +		lock_device_hotplug();
+Can this cause a self-deadlock during memory hotplug?
+When memory is onlined or offlined via sysfs (for example, in state_store()
+calling lock_device_hotplug_sysfs()), the device_hotplug_lock is already
+acquired before initiating the hotplug sequence.
+Since crash_prepare_headers() can be invoked by the crash_memhp_notifier
+during these memory hotplug operations, acquiring device_hotplug_lock again
+here would cause a recursive mutex acquisition.
+> +
+>  	max_nr_ranges = arch_get_system_nr_ranges();
+> -	if (!max_nr_ranges)
+> -		return -ENOMEM;
+> +	if (!max_nr_ranges) {
+> +		ret = -ENOMEM;
+> +		goto unlock;
+> +	}
+>
+>  	cmem = alloc_cmem(max_nr_ranges);
+> -	if (!cmem)
+> -		return -ENOMEM;
+> +	if (!cmem) {
+> +		ret = -ENOMEM;
+> +		goto unlock;
+> +	}
+>
+>  	ret = arch_crash_populate_cmem(cmem);
+While the locking attempts to address the race, is it possible that the
+architecture specific population callbacks could still write out of bounds?
+The callbacks appear to unconditionally write to
+cmem->ranges[cmem->nr_ranges]
+without verifying if cmem->nr_ranges >= cmem->max_nr_ranges.
+Would it be safer to also add explicit bounds checking inside the populate
+callbacks to return an error like -ENOMEM when the array capacity is
+exceeded?"
+
+> 
 
