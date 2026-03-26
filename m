@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C23EF109E55B
-	for <kexec@archiver.kernel.org>; Thu, 26 Mar 2026 06:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7A456109E55B
+	for <kexec@archiver.kernel.org>; Thu, 26 Mar 2026 06:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=n7isdfrqjLl4oRkGVkjigFFtWxBai5gXnoimO6gOWXE=; b=Mi3fQ1PrvjkyRWkHZ22I6CwO2e
-	U32HaQZ/6E/GwEcb6+9L36N4yfdaIxsFrniy8SeIj3Cejtz+8yc3FT7FMVGewbK64pZKC/XVTRzAE
-	okuL6bhRIMNhl+GhuuSRcGQcbTqKxc27Ho4Uo0OUrG+se5mn0s85CrlixKcyJBq7uSW4jWWP6RnCg
-	xAyxoOawiCjCMBKUny/FacP4N6IVuPXmuIgtgROHZ98pDfPH6vBpsuoeUxwbS+6Yu0zJeDpCKKsoz
-	JEmBuJcCQhNrFCwgcBDk3KF2C9Tp490+Ei8jLf3P9vrAropPUnhfO4BM3MnJGU1HmF9Yld0R66770
-	s5jzUczw==;
+	bh=vatpyTHCvApxrpdQIC/dp3cKCrlOiEv4QlZzcoloOko=; b=Qj0XCRJiOrC/nu1qUdE8pJBqS6
+	uXjtNAKwowdlB+8BxdlrZmcO9o17452YqvzSRHEnIRU+J2vT2eKa8PjFEXXv/oEEqPDXlsndK+t9K
+	mM4Pn4ZpL104ajLAstU2ZqH/2GctnvMURTvY2ddhGBVdxA6WjBf3PdHZXW98Exvz9M3Yz/NNouKrg
+	hxOpYl+jF37yatSy4OnQ+l0GMGpyLLk+OIuGmpSOha0AdhZYQG+QHR3p2pQd9WvhDcua6rJqOftqw
+	7ItjxoxM0IUrlY5pg8f5mET6joHnzSF7b0LeZ0anedX9GnFgLu6yd3q/HPhxuZr4uD8sj55pN7v/T
+	SnlQtQEw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w5eUt-00000004rsg-0fMh;
-	Thu, 26 Mar 2026 06:47:15 +0000
+	id 1w5eW0-00000004s3r-4BsD;
+	Thu, 26 Mar 2026 06:48:25 +0000
 Received: from [209.141.44.239] (helo=smtp3.mymangomail.com)
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w5eUp-00000004rsH-423s
+	id 1w5eVy-00000004s3J-1mcj
 	for kexec@lists.infradead.org;
-	Thu, 26 Mar 2026 06:47:13 +0000
+	Thu, 26 Mar 2026 06:48:23 +0000
 Received: from [127.0.1.1] (localhost [127.0.0.1])
-	by hillsboro.smtp.mymangomail.com (Mango Mail) with ESMTP id 6F9455D9C1;
-	Thu, 26 Mar 2026 02:47:00 -0400 (EDT)
+	by hillsboro.smtp.mymangomail.com (Mango Mail) with ESMTP id 84F925D9C4;
+	Thu, 26 Mar 2026 02:48:12 -0400 (EDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gerlicz.space;
-	s=mango-1; t=1774507620;
-	bh=bAXOMshbJhQGZ5ZyyPvepWgn87EqYBruY6YlzgtvPQ0=;
+	s=mango-1; t=1774507692;
+	bh=3EuSxHtkudq5kGLqdpvQzp2LofPCcj5NY0hFbWKHRwY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fapLmS1C/M/jQxsPcnjq+DOgpFyxPADZ+rZCkITfFoqsxWN0TdSWfM3XbcelVvhnn
-	 QdbWUcRmr/PMwEPr7Px41Pcs0COZQioKBioSXWTPNjJNltU+YAWpfwQS5RLPlKYMCa
-	 samGEIWtFzvAtCkXCBkmK0T9jhTsKSyHpBSnIAvo=
+	b=XxwiZltzYTzUbZgbJj7WdHS/IcmTagynFNvDFKTtrfQuZJwGK7TMBAd2aZttyswUD
+	 JL5uX5IcAlO4lplY7KVS13SzRnfYndqizuE2LkfdAHuHuw6A4llsFC1YcQKFvNG6ai
+	 r8SwfWUgtWQ/JQ/HUrMw7PncyoE+fbwoSCv+/v88=
 X-Mango-Origin: 1
 X-Mango-Origin: 1
 X-Mango-Origin: 1
@@ -50,10 +50,10 @@ Received: from authenticated-user (smtp.mymangomail.com [205.185.121.143])
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest
  SHA256)
 	(No client certificate requested)
-	by hillsboro.smtp.mymangomail.com (Mango Mail) with ESMTPSA id 6A03D5D9BD;
-	Thu, 26 Mar 2026 02:43:55 -0400 (EDT)
+	by hillsboro.smtp.mymangomail.com (Mango Mail) with ESMTPSA id 796195D9BD;
+	Thu, 26 Mar 2026 02:47:04 -0400 (EDT)
 MIME-Version: 1.0
-Date: Thu, 26 Mar 2026 07:43:54 +0100
+Date: Thu, 26 Mar 2026 07:47:03 +0100
 From: oskar@gerlicz.space
 To: Pasha Tatashin <pasha.tatashin@soleen.com>
 Cc: Mike Rapoport <rppt@kernel.org>, Baoquan He <bhe@redhat.com>, Pratyush
@@ -64,13 +64,13 @@ Subject: Re: [PATCH v4 0/5] liveupdate: tighten handover cleanup and session
 In-Reply-To: <CA+CK2bCiqCg1Tt0WgP3KszrK96Qahcgfyfige4eUQOkMVyLUqg@mail.gmail.com>
 References: <20260324212730.65290-1-oskar@gerlicz.space>
  <CA+CK2bCiqCg1Tt0WgP3KszrK96Qahcgfyfige4eUQOkMVyLUqg@mail.gmail.com>
-Message-ID: <414949e275fcecf58cddaf422fed0b1a@gerlicz.space>
+Message-ID: <7628da0465cd09bfc16bf9353f37045c@gerlicz.space>
 X-Sender: oskar@gerlicz.space
 Content-Type: text/plain; charset=UTF-8;
  format=flowed
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260325_234712_341032_54D84884 
+X-CRM114-CacheID: sfid-20260325_234822_506825_E84163B6 
 X-CRM114-Status: GOOD (  39.13  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -231,6 +231,8 @@ On 2026-03-25 14:38, Pasha Tatashin wrote:
 Hi Pasha, thank you for the detailed feedback and for sharing your 
 patches. I understand that my previous version was overcomplicated. I 
 will rework the series to follow your approach and keep the changes 
-minimal. I plan to send an updated version later today. Thanks, Oskar 
-Gerlicz-Kowalczuk
+minimal. I plan to send an updated version later today.
+
+Thanks,
+Oskar Gerlicz-Kowalczuk
 
