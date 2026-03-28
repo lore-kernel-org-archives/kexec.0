@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BADFED3941D
-	for <kexec@archiver.kernel.org>; Thu,  2 Apr 2026 12:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A3B4ED3941E
+	for <kexec@archiver.kernel.org>; Thu,  2 Apr 2026 12:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
 	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
 	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=jId8P+ONUCkepbB9G1MdtS+YuPsIL1WMFxljnCguKpc=; b=lF7URMDPJ4jUjCBtjKdYAIwAng
-	17nznKwBfHGP3CVNUKp9nWUcHwPHuwUliN+gHmfOVkQ3iJi0nrc/Esedtz24C8wYFnMIXJjCHFrC1
-	4xZOT/j+Th7uS8LeEt6Q3BSKf1VZnmILIvVJM11eA7HIBCY1Pa0E46dQTxakfV5DJBOyq2tLtYhpi
-	xpiyRw8Btibr1HRlw7xF6ShR6sKviMMx9kQnlSw4mCypNJRSwISDrbi4tqtLJm1WovMc92FIwu7zp
-	2cKyuDdSvfG6j2wm1jwt7hcCvFnOlZWuuJwTAYXIvpczSru4iOkrsP3/ebM4DPsa/0DmN70DfKnv/
-	D5zRpyww==;
+	bh=7Ej/nGP6D4OZlN2NP0wOiKbhFa+CLfU7f01IuTLoNYc=; b=1xX2S2KU4KVb3E/eC+OJMuu4lG
+	bediEfmotGzFZf2qZHqJDW4By7kc3kDzmcL0CHpgxpU/lZGPoJvAJ91umQsVYYujkZ9n5z6YDYMAs
+	+ihhoHE9j0VNf7W8N0gocefcmqVH+ooWz28vLBvBWYwjGxnq57VS9Y006G/K1v8bhAhhVHscNz1vJ
+	MeV+2HvHAcUfCQLG8/1aHf07yV/ekKljY5wnmjdkdy0BCxIvmdiOBhrxfXFL1smJmgGUR9I8FEbbx
+	8ILNoAW4+eRkkRWevfvT/CZ0+NixIi02rGD+bc+QCyOVBy+zWmerKGKqJ+6zl0L9U1ZIbRE1jSjL6
+	49QkWOig==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w8HFx-000000004It-32su;
-	Thu, 02 Apr 2026 12:34:41 +0000
-Received: from canpmsgout08.his.huawei.com ([113.46.200.223])
+	id 1w8HFy-000000004Kf-2Ev8;
+	Thu, 02 Apr 2026 12:34:42 +0000
+Received: from canpmsgout07.his.huawei.com ([113.46.200.222])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w6OIU-00000008gY3-2qP2;
+	id 1w6OIV-00000008gYF-44Sz;
 	Sat, 28 Mar 2026 07:41:33 +0000
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=jId8P+ONUCkepbB9G1MdtS+YuPsIL1WMFxljnCguKpc=;
-	b=tFzuTHsTkjp4T9eVg+QMjSR1BwdJKPVGlbxtsiR/GAHmEdxR/pSdAVK0KLuk7PcltF+4loIVu
-	CdZt6dmuUw92EX/5a4EchYTeJiN0hf+WMgxJIDJeJrMc3/wVkKB6Iq0m+GnTt7eqZbUqXZ3vuva
-	oUihRt+/+uUS97kTDqFf1qs=
-Received: from mail.maildlp.com (unknown [172.19.163.163])
-	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4fjTnF3fqpzmV79;
-	Sat, 28 Mar 2026 15:35:13 +0800 (CST)
+	bh=7Ej/nGP6D4OZlN2NP0wOiKbhFa+CLfU7f01IuTLoNYc=;
+	b=PCikQ7pIzeaKrzAs1XH/O8ZmZYPB9pV0fBIUYs2VLOstWE8QiBMRuVM3CIvEXipATIGW3TQ8X
+	gcrx6UYl2RFLLYRjDgwBg3lAQFmP1VJZr1v/vi26ia8fHvOPtkTiccABS/ORh8k+igGZUfzsNYX
+	1sRHQpEli+zR1tX+CITCvDo=
+Received: from mail.maildlp.com (unknown [172.19.163.214])
+	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4fjTnL4BJGzLlsZ;
+	Sat, 28 Mar 2026 15:35:18 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4031240565;
-	Sat, 28 Mar 2026 15:41:22 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 1B7C44056C;
+	Sat, 28 Mar 2026 15:41:25 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
  (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 28 Mar
- 2026 15:41:19 +0800
+ 2026 15:41:22 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
@@ -70,9 +70,9 @@ To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
 	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v11 02/11] powerpc/crash: Fix possible memory leak in update_crash_elfcorehdr()
-Date: Sat, 28 Mar 2026 15:40:04 +0800
-Message-ID: <20260328074013.3589544-3-ruanjinjie@huawei.com>
+Subject: [PATCH v11 03/11] x86/kexec: Fix potential buffer overflow in prepare_elf_headers()
+Date: Sat, 28 Mar 2026 15:40:05 +0800
+Message-ID: <20260328074013.3589544-4-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260328074013.3589544-1-ruanjinjie@huawei.com>
 References: <20260328074013.3589544-1-ruanjinjie@huawei.com>
@@ -83,8 +83,9 @@ X-Originating-IP: [10.90.53.73]
 X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
  dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260328_004131_417871_D7F42511 
-X-CRM114-Status: GOOD (  11.03  )
+X-CRM114-CacheID: sfid-20260328_004132_387500_B8FE18E9 
+X-CRM114-Status: UNSURE (   8.13  )
+X-CRM114-Notice: Please train this message.
 X-Mailman-Approved-At: Thu, 02 Apr 2026 05:34:24 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -100,35 +101,45 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-In get_crash_memory_ranges(), if crash_exclude_mem_range() failed
-after realloc_mem_ranges() has successfully allocated the cmem
-memory, it just returns an error but leaves cmem pointing to
-the allocated memory, nor is it freed in the caller
-update_crash_elfcorehdr(), which cause a memory leak, goto out
-to free the cmem.
+There is a race condition between the kexec_load() system call
+(crash kernel loading path) and memory hotplug operations that can lead
+to buffer overflow and potential kernel crash.
 
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Fixes: 849599b702ef ("powerpc/crash: add crash memory hotplug support")
+During prepare_elf_headers(), the following steps occur:
+1. get_nr_ram_ranges_callback() queries current System RAM memory ranges
+2. Allocates buffer based on queried count
+3. prepare_elf64_ram_headers_callback() populates ranges from memblock
+
+If memory hotplug occurs between step 1 and step 3, the number of ranges
+can increase, causing out-of-bounds write when populating cmem->ranges[].
+
+This happens because kexec_load() uses kexec_trylock (atomic_t) while
+memory hotplug uses device_hotplug_lock (mutex), so they don't serialize
+with each other.
+
+Just add bounds checking in prepare_elf64_ram_headers_callback() to
+prevent out-of-bounds (OOB) access,
+
+Fixes: 8d5f894a3108 ("x86: kexec_file: lift CRASH_MAX_RANGES limit on crash_mem buffer")
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- arch/powerpc/kexec/crash.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/crash.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
-index a325c1c02f96..1d12cef8e1e0 100644
---- a/arch/powerpc/kexec/crash.c
-+++ b/arch/powerpc/kexec/crash.c
-@@ -440,7 +440,7 @@ static void update_crash_elfcorehdr(struct kimage *image, struct memory_notify *
- 	ret = get_crash_memory_ranges(&cmem);
- 	if (ret) {
- 		pr_err("Failed to get crash mem range\n");
--		return;
-+		goto out;
- 	}
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 335fd2ee9766..7fa6d45ebe3f 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -225,6 +225,9 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+ {
+ 	struct crash_mem *cmem = arg;
  
- 	/*
++	if (cmem->nr_ranges >= cmem->max_nr_ranges)
++		return -ENOMEM;
++
+ 	cmem->ranges[cmem->nr_ranges].start = res->start;
+ 	cmem->ranges[cmem->nr_ranges].end = res->end;
+ 	cmem->nr_ranges++;
 -- 
 2.34.1
 
