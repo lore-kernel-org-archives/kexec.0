@@ -4,91 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 87C4610D148A
-	for <kexec@archiver.kernel.org>; Sun, 29 Mar 2026 01:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E25FFFF4923
+	for <kexec@archiver.kernel.org>; Sun, 29 Mar 2026 22:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Subject:cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=4NsleX9u5aPhbjAVr0Nezc/nBr+cao/tGbHhc5N7BqY=; b=0i/g9vdQaaG/ySedKDTHFkO9xL
-	mfrwGYADCoS3qzVzTuUf6pBrKUl+L+uCAeVjPlVZVVw8uJ7WA3LGG4GaYl4dgl5SVB/3OLKx0u0Q6
-	0WI2Cre3dwk0v/UPyvUBUzpSO810IfLMCLDCe4ph+Tux45snN7yCVydiy1+Y3fGB1qMH2RHt6fpdD
-	Sq04Hu4J0ijH1qilvE+PjK7bieQC4i/UTm35GbCxybl0Soj7MFmEW72R/MJ1LfMDQBbcpsD+EF+A+
-	v2aNIreJM27Rc913gMO7OBHuPuCt7WK7OGg0wW179LNmDQi/z+N4N4dnzwrG/XwnN9lpaAguG+RpH
-	eECM8DJQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:Date:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=EmjkZkbbVjjgaCUxuu5+nE0xjPd5gN1qT4GlMrecGi4=; b=eoF1haLNajEuBoBuM0xQEjivHY
+	XLJze8AkI+gpfrvkNyLyHEwmVwjgZIRsR00alrLdu/eaa1XeeJeBI3Rm7dF2IgBJS9VcHqQ16El6i
+	AbIQk/niUD7PA+g1PdZz7XxhFoHacRCv4OSzxlN58vgttQ8iJRKkv6mBq7g6Ji7XPcwO+YWYI4VMq
+	uxyXtfiUNqwssXu9hCGRLoxWmOe6QUJy7yQBHLFvUEqyRRrS/bx3Y+goH/PSs83pAY8oS3w72Dnoa
+	8dxG55TqCAbJsh+Nbbgf2pdej0++rso0yhMU/gqlNqp36XpFPyPkjiLEkyAHZQjLoZItIrRRqvvp4
+	RKoWuBOQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w6eZ4-00000009Rdw-3Arj;
-	Sun, 29 Mar 2026 01:03:42 +0000
-Received: from mail-pl1-x629.google.com ([2607:f8b0:4864:20::629])
+	id 1w6z4x-0000000AP0R-1fs2;
+	Sun, 29 Mar 2026 22:57:59 +0000
+Received: from mail-dl1-x1235.google.com ([2607:f8b0:4864:20::1235])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w6eYy-00000009RdZ-1rDJ
+	id 1w6z4v-0000000AP05-1lJb
 	for kexec@lists.infradead.org;
-	Sun, 29 Mar 2026 01:03:37 +0000
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-2b0b260d309so56585ad.1
-        for <kexec@lists.infradead.org>; Sat, 28 Mar 2026 18:03:35 -0700 (PDT)
+	Sun, 29 Mar 2026 22:57:58 +0000
+Received: by mail-dl1-x1235.google.com with SMTP id a92af1059eb24-128b9b7e3edso1936117c88.0
+        for <kexec@lists.infradead.org>; Sun, 29 Mar 2026 15:57:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1774746214; x=1775351014; darn=lists.infradead.org;
-        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=4NsleX9u5aPhbjAVr0Nezc/nBr+cao/tGbHhc5N7BqY=;
-        b=TnmxYRobvTrPGJIPbwCi53TUKHtYW03he9BarwSMEh9ByAMAEi31zmKPoNov2EEvo7
-         d3e98OPJN7m2YRjHGWtgGVNT7Cn6zifaLUUw3Br0RL/Fbi0sp3rEg3M1CS3GQRG3s3/4
-         WbJdz8PmSnEY2Q0UJn0vLrzHyxGPdNo1E9Fp1Qt90lbz8q30LvKQSBv7VLtHqJ5YIrcr
-         VGEn6vZw7PzNwXYGwU7U55csiTKZec+MQDjvDD9akJGlNw3o0ouqb947eh0hl3D3es8O
-         QemalPuspcHwr6kR9/a3ugYY8TuGD4sf1L03xclLk28iCTuoNdseHO/KLsXi7hnMQYtw
-         cO3w==
+        d=code406.com; s=google; t=1774825076; x=1775429876; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EmjkZkbbVjjgaCUxuu5+nE0xjPd5gN1qT4GlMrecGi4=;
+        b=HKPAa44nBkG5sgl+ttMM/v2P79D/VH7axoUH9+xUwERCv6KGdR9uSGQSZdjXtIPIYR
+         PAA4K9Rp62IsGf7uHzCvlgQcu093CPEEUiSIjcKpRpwfx7sP1DCJCCfdI9c3jYPaQqb3
+         c4MtcFCoZ/oWqVERpbYCNGQgF3t+0kj19xwwo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774746214; x=1775351014;
-        h=mime-version:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4NsleX9u5aPhbjAVr0Nezc/nBr+cao/tGbHhc5N7BqY=;
-        b=L2gydZavaySJdoRXjkmbV0mMyPv9lCB6bUfI1GkysJ2TAn0WnwLIpW+Wj8alqsQ2D9
-         CobEE2UupuA3nr3qjQU9k9SrHWGeg/fgBnMFnpXOvBTjEgipTQkFPQm4wwh9tn6YeogQ
-         LKhW8H+x4KBBoiCUtwOLA4NM65kE1L4HmBH4j8Sq2k7vqqZbINDm39bgwnUMfHOWB/Y8
-         gxD7mcUt6HSPACTlOqwgI4CzNwF2938N7BMnZ7ABI5c/SuAkjRelhT5gG3s0WI9tVe6k
-         qk4FrulA6JxYt397LiCP+aXlq2S+IWg9J99X7tIk4BOLdm0BM1VeOsRmQK/CJL/RDer+
-         O4WA==
-X-Forwarded-Encrypted: i=1; AJvYcCXfG4buydfOA+VeFXNLUi+gPsnCVvbp3qGUiWrYs7PteCwZQClUITD9PaKVrXH4im63c0wi2Q==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxDzhlIoQLPjTeLyzkgdzNbUpvGWl9mjhC7EhnqalOUEhkoptfy
-	NRC+aig20NMmSNQzKtxn3smzZhV53fvafuy4HJcX+NDki36s7SRhU3oXrVWOx/+oVA==
-X-Gm-Gg: ATEYQzxGflbgxCKIO0qgV8jfQBwpm+4yFAo8cnzj0qSLV3/PzU4qJtviVI5x2TJAGs2
-	fGhj5Rf8urbSgdYefWcYXJRp8fSMgXOnAAhnnFe9dsbDiPzEFCRQ4i51ellpnvrhGv3gmcdk436
-	MGPpiTR4acNk/Iegnm8o5zfp9UEocgtamvZ3BhXwCneHE5NSRTVr5eOTsRd1WdIofjD2WWU+bZn
-	499zbzfrHcvbIWekhKh7iFyy5+qWx5Xys7Bz9OZeOjiOClfiOZD6NH20NFLmFL8s8USGL6085dC
-	OmxHfP6V86xEIH/G7xbCUxkJpVqx26DfvFIrmgCFzioaOwuls4HbS7y07UETAXHNJY+N1ukMMcs
-	9aWZ4Dv2v7Vjf/vMhb3WZrA0PPUAtLyDvAP5YWJYpc8m77qNmgSdLPc5VfZP8D5AgcN2hSlm5fI
-	5NRP9x7Vq8JFXHOZ77Mfsm2G9/6nnMbIDKvjC5cyS0KD32DIkBs1PQ8Jj25HejiYyKoH8u1V5dy
-	0J7714DHfzhNmk0d5Bp2H3Gqk1NvzoWw3Na5mTCmA4dRzfe4I4mEQ==
-X-Received: by 2002:a17:903:15cf:b0:2b0:b925:da98 with SMTP id d9443c01a7336-2b242ceb47cmr1976585ad.19.1774746213717;
-        Sat, 28 Mar 2026 18:03:33 -0700 (PDT)
-Received: from [2a00:79e0:2eb0:8:a947:3e4f:679c:4c03] ([2a00:79e0:2eb0:8:a947:3e4f:679c:4c03])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82ca843d8e5sm3682786b3a.5.2026.03.28.18.03.32
+        d=1e100.net; s=20251104; t=1774825076; x=1775429876;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EmjkZkbbVjjgaCUxuu5+nE0xjPd5gN1qT4GlMrecGi4=;
+        b=EajEIN77GRzjUQi6UMjbSVpvGBNXEtrosZzG7Bqo2bhqQ/Tb0C3Ns/6S8FlbtfRQe4
+         7j6HRb2CfHY0czI91c0UtJX+KAed7iw+qn2UzYDmTK7zQF3NtoYGsPsDpD4ezmrYtxrY
+         laoZMIbYD7yi24pICAa8OEQ+e1Yu/FH1h14LinNSg1SSHVzArs95GrGedIY3kmSY2NM/
+         XWon4eWBg61gmvdZkx1U2ZXnYOhZrTcbJDPFAkmrJZXu8zaxKhrwStuIML85g8tL08AB
+         infDeA3ZZIScKzdOSeBSKzqQW+PgxZoGd5989mDtANz3e7wdDgmeRUeGZK6egYy0EC3I
+         TPLw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwWs8M8QhqgWxhtIgbQjVYSKYgmvl+orQSeTeOW4rc4pD8OWDYRn8s/3+MwClQMMd3xW3Vcw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyZArsx/iCwABNY4zPmZCwpOwm1Ur/OWkuyNG/F253X0bUBqdih
+	eA9WU12+Riiin+eIplCowl7fCIGaOJlxTCqjlkUACotO47PV72vy4nr/4xo7ryBRFQ==
+X-Gm-Gg: ATEYQzyLOrgv6NAj/bwpXSPZcsMWN3cVH5W8Y8CTwrV5p9h3tiAIV4xOW4OZwcYXfJd
+	QKHiKa3+zqJ8DKhA9s9v3ZAUhLzkO8HHRYXQnYn7LSuVGv7jPoOsI1bQ4qoKyRXErp2Wyjr192m
+	claos2UzOBi1dZL4sg1fEuLqUN5+gFIRc/y3l+aWRyQFTTnabnkbYxt1svJrWJjpYRBDj/hKvbq
+	AB8X7w3dnXQAUcly6m9C46w9cShoY/05XpAmnGfbGphltaGADCHik3A24RFTh6FAUQ67CkO/Qpo
+	fAl0BgAkADUiCaCcLuzcRQre4yy9ThFeV/7L2j4BMCV2ZJ7ycZZApm9tLfQDsBUc+o269yWuEFS
+	WSx3itEnwY12DR2porhn/3mBw9XJ6ioWU3+mNlKvlJDh5Oa1lVeGth+OOZNpl1ApK7jYM+Xy+r/
+	+4Hd1ieKad7LPqisuWPewiErpb4UM2ivVYjx5ROhcm2ka/x0/p0sNa8HKsvnE4bQm5pqMsSyEjZ
+	69Piif5JB5OiDMBDjZeMAWux2p+
+X-Received: by 2002:a05:7022:2209:b0:11d:f89d:85a0 with SMTP id a92af1059eb24-12ab2912740mr5861569c88.27.1774825075962;
+        Sun, 29 Mar 2026 15:57:55 -0700 (PDT)
+Received: from ubuntu ([2601:645:8a00:6e44:958e:90e9:e30b:7ecc])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12ab970da7fsm6096026c88.0.2026.03.29.15.57.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2026 18:03:32 -0700 (PDT)
-Date: Sat, 28 Mar 2026 18:03:31 -0700 (PDT)
-From: David Rientjes <rientjes@google.com>
-To: Alexander Graf <graf@amazon.com>, 
-    "Andersen, Tycho" <Tycho.Andersen@amd.com>, 
-    Anthony Yznaga <anthony.yznaga@oracle.com>, 
-    Baolu Lu <baolu.lu@linux.intel.com>, David Hildenbrand <david@kernel.org>, 
-    David Matlack <dmatlack@google.com>, James Gowans <jgowans@amazon.com>, 
-    Jason Gunthorpe <jgg@nvidia.com>, Mike Rapoport <rppt@kernel.org>, 
-    Pankaj Gupta <pankaj.gupta.linux@gmail.com>, 
-    Pasha Tatashin <tatashin@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
-    Praveen Kumar <kpraveen.lkml@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
-    Vishal Annapurve <vannapurve@google.com>, 
-    "Woodhouse, David" <dwmw@amazon.co.uk>
-cc: linux-mm@kvack.org, kexec@lists.infradead.org
-Subject: [Hypervisor Live Update] Notes from March 23, 2026
-Message-ID: <d07decf3-bd88-0ebc-1aeb-f91545318d3f@google.com>
+        Sun, 29 Mar 2026 15:57:55 -0700 (PDT)
+From: Josh Snyder <josh@code406.com>
+X-Google-Original-From: Josh Snyder <josh@cod406.com>
+Date: Sun, 29 Mar 2026 15:57:51 -0700
+To: Ross Philipson <ross.philipson@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-efi@vger.kernel.org, iommu@lists.linux.dev, 
+	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org, 
+	mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, 
+	jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu, 
+	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com, 
+	dwmw2@infradead.org, baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com, 
+	andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
+Subject: Re: [PATCH v15 08/28] tpm/tpm_tis: Close all localities
+Message-ID: <v2l4v5imh2lmsayevxz3palyjeglpxo3qu475gjpchitgfzil2@l24ax4vevjp7>
+References: <20251215233316.1076248-1-ross.philipson@oracle.com>
+ <20251215233316.1076248-9-ross.philipson@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251215233316.1076248-9-ross.philipson@oracle.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260328_180336_518432_8C2B25A6 
-X-CRM114-Status: GOOD (  26.87  )
+X-CRM114-CacheID: sfid-20260329_155757_468426_60245DFA 
+X-CRM114-Status: UNSURE (   7.56  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,108 +106,25 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi everybody,
+On Mon, Dec 15, 2025 at 03:32:56PM -0800, Ross Philipson wrote:
+> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+> +		if (check_locality(chip, i))
+> +			tpm_tis_relinquish_locality(chip, i);
 
-Here are the notes from the last Hypervisor Live Update call that happened 
-on Monday, March 23.  Thanks to everybody who was involved!
+When I applied this patch locally, tpm_chip's locality_count underflowed to -1
+and no IO was performed. That is because tpm_tis_relinquish_locality is
+implemented like so:
 
-These notes are intended to bring people up to speed who could not attend 
-the call as well as keep the conversation going in between meetings.
+  struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
 
------>o-----
-Pasha updated on the status of luod and a good conversation with Luca who 
-is interested in integration.  Luca had proposed to do it in phases with 
-the first phase being support for systemd logging during shutdown when 
-devices are unmounted.  Luod will require preserving the logs and passing 
-them to the next kernel and next systemd.  He was also interested in the 
-next LPC discussion on the topic.
+  mutex_lock(&priv->locality_count_mutex);
+  priv->locality_count--;
+  if (priv->locality_count == 0)
+	  __tpm_tis_relinquish_locality(priv, l);
 
-Pasha also updated that there are new tabs added to the design doc[1], 
-this will be expanded for systemd and its communication channel.  The plan 
-is to have 100% integration into systemd.
+I was able to work around the issue by calling __tpm_tis_relinquish_locality
+instead.
 
-Jork Loeser noted in his discussions that systemd was very adamant about 
-supporting fd store and asked to what extent we need multiple sessions per 
-service.  This would include the LUO client interface as well.  Pasha 
-noted there were discussions on how many files per session we can save, 
-for example, and added a limits tab to the design doc.  Right now, it's 
-about 128 files and a thousand sessions.  In the future, the file and 
-session count limits should be removed entirely.  Jork was asking about 
-whether systemd should expose an interface to the clients where the yget 
-explicitly tied and create multiple sessions, or whether the interface was 
-just fd store.  Pasha said the plan was that systemd would expose the 
-sessions interface so clients can create new sessions.
-
-Pasha said next steps include getting the design ready and then the first 
-implementation for systemd logging.  The latter would be implemented 
-before the next LPC.
-
------>o-----
-We chatted about deferred struct page initialization.  The patches are not 
-yet ready to be merged so we would follow up next time.
-
-Pasha noted that Pratyush and Jork had discussed scalability of memblock 
-reservations.  Jork said a couple approaches were discussed one of which 
-is to move the quadratic initialization or setup of the memblock list to 
-be linear.  This would allow us to interate over the struct pages as well 
-as the KHO tree to avoid restoring the memblock list.  There was also an 
-idea to side-step the memblock entirely and to use the buddy allocator.
-
-Pasha asked about the proposed changes to the radix tree: if we move the 
-order then the bit in the bitmap at the leaf levels would not represent 
-the order size but rather represent the page size.  So the memory overhead 
-could be much larger.
-
-Pasha suggested allowing the scratch areas to grow when needed by finding 
-the biggest hole in the radix tree, this could help to solve some 
-scalability problems.
-
------>o-----
-David Matlack updated on VFIO v3 which is pretty much done and is going 
-through final testing for posting this week.  v4 should include a roadmap 
-for what comes next.  Starting at v4, the series may get split into two: 
-PCI patches are growing so it may make sense to split PCI and VFIO 
-patches.  Most of the code is behind config options that should help with 
-merging as well as the new documentation that should also move this along.
-
------>o-----
-Samiullah updated on IOMMU persistence: his series is getting reviews 
-upstream.  He's preparing for the next verison of the series.  There was 
-no update on the hitless replacement, this would be worked on next.  There 
-was a comment that we should standardize on naming in the tree between LU 
-shorthand and using liveupdate as a single word.
-
------>o-----
-Ackerley updated on the UAPI for guest_memfd HugeTLB enligthenment, he is 
-still working on the conversion support.  That work is pushing out into 
-April.
-
------>o-----
-Next meeting will be on Monday, April 6 at 8am PDT (UTC-7), everybody is
-welcome: https://meet.google.com/rjn-dmzu-hgq
-
-Topics for the next meeting:
-
- - luod design feedback and intersection with systemd; implementation and
-   next steps
- - KHO optimizations for boot time performance including initialization of
-   memblock list and deferred struct page initialization
- - HugeTLB preservation support including selftests
-   + debrief discussion from Linux MM Alignment Session
- - VFIO v3 patch series posting to the list and roadmap for v4
- - phase 1 of IOMMU persistence patch series, then phase 2 status and
-   updates
- - hitless replacement for iommu domains and patches from Intel
- - guest_memfd HugeTLB enlightenment: conversion support, HugeTLB support
-   without restructuring, and HugeTLB support with restructuring
- - later: versioning support for luod to negotiate
- - later: ordering issues when disabling interrupts based on feedback from
-   Nvidia
- - later: update on PCI preservation series and next steps
- - later: KHO enlightenment for ASI
-
-Please let me know if you'd like to propose additional topics for
-discussion, thank you!
-
-[1] https://tinyurl.com/luoddesign
+Thanks,
+Josh
 
