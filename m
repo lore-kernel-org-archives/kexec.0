@@ -4,77 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C775210D14A6
-	for <kexec@archiver.kernel.org>; Mon, 30 Mar 2026 11:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 85D661061B24
+	for <kexec@archiver.kernel.org>; Mon, 30 Mar 2026 22:54:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=gvAh52M6pis730l5q8D5EHWXWp5qXG4bsCWjlx9wIeo=; b=rzZhLxncg3yT5R0FHLQNNoGoRC
-	tcGpIFL47wAXWbQ0O5ufurIs9vOvc7wMGP0GiZ7QejD9sEmALB5afhXMkiJz7/nfQsm1T/pVyHgEA
-	nuhrQ5eIoSe/9Yx8BWiNdcIjYRiGSLCjnB2bHRMDZBev/BqTSPX+Euifxcqc+1lUWfVdDiEj47VXa
-	uVCZa2kwN9+XJAzqKFhfb9jvPANhyQM8J8cVRWqkvgrTNd/vO9H5NI09D/rQDotTiLohDOPRFjcc5
-	IT+ZglSdccN67B9jYQH9nL3ww+0WXUnRE4I2q6jB+TVrbLT9R8MxgdHfp8VULTlIfF9ZMHdkLGAjT
-	iuhDB8Jw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+	List-Owner; bh=AsHMOe97xyJT3nr2JXGse7sRAJPfDYTkxClSq/c6RB4=; b=hwirn7qAVaaWiF
+	7xUHHsM3P7dVwXqw6DhT2uVIvRbXarppOsIFH5rz38hui2HOnlYJx91SEyevKAiq/Du1uZyPSOdfQ
+	Ryc37u7MzYxn+eYWSAxPtDgYPWkVILpd6sHuHhtwljETop0JK/soZAD0w/45l8HrGipCphv3Z22Tq
+	jj77JqegzNqavPrmzp4cABboF6i2DOiq8eYJjPEhtQ35dCXefzSip/5so6OsLwv7ncrj9Nbk49krq
+	ZTpf6fXvFiUmoH0kuBV7PhoaeS2VCsKZpztmJhxX7pVsz6glPvlNiVIsU7qokVaLHRNDUBLueGmsh
+	fA2EtLJ7u/YLKVii8X9w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w7B2q-0000000BBJW-3ZFD;
-	Mon, 30 Mar 2026 11:44:36 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1w7LVL-0000000C09A-2bco;
+	Mon, 30 Mar 2026 22:54:43 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w7B2k-0000000BBIm-2CpD
+	id 1w7LVI-0000000C08m-2okC
 	for kexec@lists.infradead.org;
-	Mon, 30 Mar 2026 11:44:31 +0000
+	Mon, 30 Mar 2026 22:54:41 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 309BF4169E
-	for <kexec@lists.infradead.org>; Mon, 30 Mar 2026 11:44:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 110F2C2BCB0
-	for <kexec@lists.infradead.org>; Mon, 30 Mar 2026 11:44:29 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 484A540591;
+	Mon, 30 Mar 2026 22:54:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F35DFC4CEF7;
+	Mon, 30 Mar 2026 22:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774871069;
-	bh=f4YOF8vt92eNl1mKdqZyMCWyNb3+OoCLLo4tIp4YmMQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uRgEIC0OHFTjGnjqpcUzudj5PK0ySwoo0ihbOdzRQr39HpLRTD/b2F2IvmnAy0QMB
-	 rMpU3c4qVSq+9B8Y3duAzRNQuULKIQZbB39tqIkx8h89z4P2sZ9eMWiMJ30V3z502w
-	 NIF2J7pbUI3fUK3BirFOwUYBzMAggmASC/7WvxLSBKqvpOvo7SunL3gq+bnDoEJUBY
-	 /UdVOODG1a06dfavlzYSUXk3tAmWgl7T6tulCQxgzbVEbmMNzTjDANd7cfZfR1sR8j
-	 74NgXYv75Qk/gs3G1Y+cluMsPz+Bgmuy8fyQZZ4dv58tGBG5rim27ZzZxmmF48FCKY
-	 N6cZh6RtZJ6jQ==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-66a33f61d80so7268622a12.0
-        for <kexec@lists.infradead.org>; Mon, 30 Mar 2026 04:44:28 -0700 (PDT)
-X-Gm-Message-State: AOJu0YxyyMVRcz1rVMCOpSK4XRIJviqn/Eeb4eUKwj5r6304WrVp8USP
-	ZinHhM2rjV0lSSldUDqFNd3TtzU25oyap0glxlgSQRJO6cZXGbDxficxVAZLvMdHd8OcdC4H/tT
-	7vvZVdHtZxq6wa1zBaPxGMogj+S7Llg==
-X-Received: by 2002:a05:6402:448d:b0:66b:82e6:5355 with SMTP id
- 4fb4d7f45d1cf-66b82e65456mr3962353a12.19.1774871067648; Mon, 30 Mar 2026
- 04:44:27 -0700 (PDT)
+	s=k20201202; t=1774911279;
+	bh=D72YCLwgexObNKWUs+QMeapQr6cp2LwytErV3nWFNrI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=B8syhKKsyFZJp5ViyX++4WrxJjf/s9SAF7iygNRC2lm40WrFlLGTAnr0hFbEHEWpg
+	 ia0nmVOXtkUh3vhlhox571th3beaW/qiZ0UhWghrTL0ijZ1lHdbckIr1aHU9zAe5G0
+	 CvsSlIKv0lEt3fPrjfgSEPOeIVkS1hIVMfwLKgsEWB5ljchs42iEpW0WypBa1aNJds
+	 nbeHvJqpoSsA0leiKgJIfEu3KmnUNxL6DcREVydRzDquesl/x/Xq6CUf44WrwNt74U
+	 7/bdEe0ptuFtBXnFOID+jZrpG5MRU/isthWqPdqX6EOggBOF7qrB3M+2MOfD0eEOQv
+	 QGKQ7dkrgXF1g==
+Date: Mon, 30 Mar 2026 17:54:37 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: David Matlack <dmatlack@google.com>
+Cc: Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ankit Agrawal <ankita@nvidia.com>, Arnd Bergmann <arnd@arndb.de>,
+	Askar Safin <safinaskar@gmail.com>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Chris Li <chrisl@kernel.org>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	David Rientjes <rientjes@google.com>,
+	Feng Tang <feng.tang@linux.alibaba.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
+	Kees Cook <kees@kernel.org>, Kevin Tian <kevin.tian@intel.com>,
+	kexec@lists.infradead.org, kvm@vger.kernel.org,
+	Leon Romanovsky <leon@kernel.org>,
+	Leon Romanovsky <leonro@nvidia.com>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org, linux-pci@vger.kernel.org,
+	Li RongQing <lirongqing@baidu.com>, Lukas Wunner <lukas@wunner.de>,
+	Marco Elver <elver@google.com>,
+	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Pranjal Shrivastava <praan@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Raghavendra Rao Ananta <rananta@google.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Vipin Sharma <vipinsh@google.com>,
+	Vivek Kasireddy <vivek.kasireddy@intel.com>,
+	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
+	Zhu Yanjun <yanjun.zhu@linux.dev>
+Subject: Re: [PATCH v3 02/24] PCI: Add API to track PCI devices preserved
+ across Live Update
+Message-ID: <20260330225437.GA111390@bhelgaas>
 MIME-Version: 1.0
-References: <20260225060347.718905-1-coxu@redhat.com> <20260225060347.718905-4-coxu@redhat.com>
-In-Reply-To: <20260225060347.718905-4-coxu@redhat.com>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 30 Mar 2026 06:44:15 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+0w2hGN=Loy=ucHbZcdnn+ty3x9qS4WVX0Vj+g19tfpg@mail.gmail.com>
-X-Gm-Features: AQROBzBPVOVlPWkIprh4svfiWPChabJG3_HPxZ8omC63yiiiHstiwFYKcyHWrdY
-Message-ID: <CAL_Jsq+0w2hGN=Loy=ucHbZcdnn+ty3x9qS4WVX0Vj+g19tfpg@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] arm64,ppc64le/kdump: pass dm-crypt keys to kdump kernel
-To: Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, 
-	Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>, Baoquan he <bhe@redhat.com>, 
-	Dave Young <dyoung@redhat.com>, Kairui Song <ryncsn@gmail.com>, Pingfan Liu <kernelfans@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Thomas Staudt <tstaudt@de.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, 
-	Will Deacon <will@kernel.org>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Saravana Kannan <saravanak@kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <acWne_ZCcF4YQN25@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260330_044430_674308_2326636E 
-X-CRM114-Status: GOOD (  20.71  )
+X-CRM114-CacheID: sfid-20260330_155440_759845_2F07867D 
+X-CRM114-Status: GOOD (  71.89  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,50 +109,201 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Feb 25, 2026 at 12:04=E2=80=AFAM Coiby Xu <coxu@redhat.com> wrote:
->
-> CONFIG_CRASH_DM_CRYPT has been introduced to support LUKS-encrypted
-> device dump target by addressing two challenges [1],
->  - Kdump kernel may not be able to decrypt the LUKS partition. For some
->    machines, a system administrator may not have a chance to enter the
->    password to decrypt the device in kdump initramfs after the 1st kernel
->    crashes
->
->  - LUKS2 by default use the memory-hard Argon2 key derivation function
->    which is quite memory-consuming compared to the limited memory reserve=
-d
->    for kdump.
->
-> To also enable this feature for ARM64 and PowerPC, the missing piece is
-> to let the kdump kernel know where to find the dm-crypt keys which are
-> randomly stored in memory reserved for kdump. Introduce a new device
-> tree property dmcryptkeys [2] as similar to elfcorehdr to pass the
-> memory address of the stored info of dm-crypt keys to the kdump kernel.
-> Since this property is only needed by the kdump kernel, it won't be
-> exposed to user space.
->
-> [1] https://lore.kernel.org/all/20250502011246.99238-1-coxu@redhat.com/
-> [2] https://github.com/devicetree-org/dt-schema/pull/181
->
-> Cc: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>
-> Cc: Baoquan he <bhe@redhat.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: Kairui Song <ryncsn@gmail.com>
-> Cc: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Thomas Staudt <tstaudt@de.ibm.com>
-> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
-> Signed-off-by: Coiby Xu <coxu@redhat.com>
-> ---
->  arch/arm64/kernel/machine_kexec_file.c |  4 ++++
->  arch/powerpc/kexec/elf_64.c            |  4 ++++
->  drivers/of/fdt.c                       | 21 +++++++++++++++++++++
->  drivers/of/kexec.c                     | 19 +++++++++++++++++++
->  4 files changed, 48 insertions(+)
+On Thu, Mar 26, 2026 at 09:39:07PM +0000, David Matlack wrote:
+> On 2026-03-25 06:12 PM, Bjorn Helgaas wrote:
+> > On Mon, Mar 23, 2026 at 11:57:54PM +0000, David Matlack wrote:
+> > > Add an API to enable the PCI subsystem to participate in a Live Update
+> > > and track all devices that are being preserved by drivers. Since this
+> > > support is still under development, hide it behind a new Kconfig
+> > > PCI_LIVEUPDATE that is marked experimental.
+> ...
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> > This sets "dev->liveupdate_incoming = false", and the only place we
+> > check that is in pci_liveupdate_retrieve().  In particular, there's
+> > nothing in the driver bind/unbind paths that seems related.  I guess
+> > pci_liveupdate_finish() just means the driver can't call
+> > pci_liveupdate_retrieve() any more?
+> 
+> liveupdate_incoming is used by VFIO in patch 10:
+> 
+>   https://lore.kernel.org/kvm/20260323235817.1960573-11-dmatlack@google.com/
+> 
+> Fundamentally, I think drivers will need to know that the device they
+> are dealing with was preserved across the Live Update so they can react
+> accordingly and this is how they know. This feels like an appropriate
+> responsibility to delegate to the PCI core since it can be common across
+> all PCI devices, rather than requiring drivers to store their own state
+> about which devices were preserved. I suspect PCI core will also use
+> liveupdate_incoming in the future (e.g. to avoid assigning new BARs) as
+> we implement more of the device preservation.
+
+Yes.  It's easier to review if this is added at the point where it is
+used.
+
+> And in case you are also wondering about liveupdate_outgoing, I forsee
+> that being used for things like skipping disabling bus mastering in
+> pci_device_shutdown().
+> 
+> I think it would be a good idea to try to split this patch up, so there
+> is more breathing room to explain this context in the commit messages.
+
+Sounds good.
+
+> > > +	 * Don't both accounting for VFs that could be created after this
+> > > +	 * since preserving VFs is not supported yet. Also don't account
+> > > +	 * for devices that could be hot-plugged after this since preserving
+> > > +	 * hot-plugged devices across Live Update is not yet an expected
+> > > +	 * use-case.
+> > 
+> > s/Don't both accounting/Don't bother accounting/ ? not sure of intent
+> 
+> "Don't bother" was the intent.
+> 
+> > I suspect the important thing here is that this allocates space for
+> > preserving X devices, and each subsequent pci_liveupdate_preserve()
+> > call from a driver uses up one of those slots.
+> > 
+> > My guess is this is just an allocation issue and from that point of
+> > view there's no actual problem with enabling VFs or hot-adding devices
+> > after this point; it's just that pci_liveupdate_preserve() will fail
+> > after X calls.
+> 
+> Yes that is correct.
+
+Mentioning VFs in the comment is a slight misdirection when the actual
+concern is just about the number of devices.
+
+> I see that a lot of your comments are about these WARN_ONs so do you
+> have any general guidance on how I should be handling them?
+
+If it's practical to arrange it so we dereference a NULL pointer or
+similar, that's my preference because it doesn't take extra code and
+it's impossible to ignore.  Sometimes people add "if (!ptr) return
+-EINVAL;" to internal functions where "ptr" should never be NULL.  IMO
+cases like that should just use assume "ptr" is valid and use it.
+Likely not a practical strategy in your case.
+
+> > > +	if (pci_WARN_ONCE(dev, !dev_ser, "Cannot find preserved device!"))
+> > 
+> > Seems like an every-time sort of message if this indicates a driver bug?
+> > 
+> > It's enough of a hassle to convince myself that pci_WARN_ONCE()
+> > returns the value that caused the warning that I would prefer:
+> > 
+> >   if (!dev_ser) {
+> >     pci_warn(...) or pci_WARN_ONCE(...)
+> >     return;
+> >   }
+> 
+> For "this should really never happen" warnings, which is the case here,
+> my preference is to use WARN_ON_ONCE() since you only need to see it
+> happen once to know there is a bug somewhere, and logging every time can
+> lead to overwhelmingly interleaved logs if it happens too many times.
+
+I'm objecting more to using the return value of pci_WARN_ONCE() than
+the warning itself.  It's not really obvious what WARN_ONCE() should
+return and kind of a hassle to figure it out, so I think it's clearer
+in this case to test dev_ser directly.
+
+> > > +	for (i = ser->nr_devices; i > 0; i--) {
+> > > +		struct pci_dev_ser *prev = &ser->devices[i - 1];
+> > > +		int cmp = pci_dev_ser_cmp(&new, prev);
+> > > +
+> > > +		/*
+> > > +		 * This should never happen unless there is a kernel bug or
+> > > +		 * corruption that causes the state in struct pci_ser to get out
+> > > +		 * of sync with struct pci_dev.
+> > 
+> > Huh.  Same comment as above.  I don't think this is telling me
+> > anything useful.  I guess what happened is we're trying to preserve X
+> > and X is already in "ser", but we should have returned -EBUSY above
+> > for that case.  If we're just saying memory corruption could cause
+> > bugs, I think that's pointless.
+> > 
+> > Actually I'm not even sure we should check for this.
+> > 
+> > > +		 */
+> > > +		if (WARN_ON_ONCE(!cmp))
+> > > +			return -EBUSY;
+> 
+> This is another "this should really never happen" check. I could just
+> return without warning but this is a sign that something is very wrong
+> somewhere in the kernel and it is trivial to just add WARN_ON_ONCE() so
+> that it gets flagged in dmesg. In my experience that can be very helpful
+> to track down logic bugs during developemt and rare race conditions at
+> scale in production environments.
+
+OK.  Maybe just remove the comment.  It's self-evident that
+WARN_ON_ONCE() is a "shouldn't happen" situation, and I don't think
+the comment contains useful information.
+
+> > > +u32 pci_liveupdate_incoming_nr_devices(void)
+> > > +{
+> > > +	struct pci_ser *ser;
+> > > +
+> > > +	if (pci_liveupdate_flb_get_incoming(&ser))
+> > > +		return 0;
+> > 
+> > Seems slightly overcomplicated to return various error codes from
+> > pci_liveupdate_flb_get_incoming(), only to throw them away here and
+> > special-case the "return 0".  I think you *could* set
+> > "ser->nr_devices" to zero at entry to
+> > pci_liveupdate_flb_get_incoming() and make this just:
+> > 
+> >   pci_liveupdate_flb_get_incoming(&ser);
+> >   return ser->nr_devices;
+> 
+> pci_liveupdate_flb_get_incoming() fetches the preserved pci_ser struct
+> from LUO (the struct that the previous kernel allocated and populated).
+> If pci_liveupdate_flb_get_incoming() returns an error, it means there
+> was no struct pci_ser preserved by the previous kernel (or at least not
+> that the current kernel is compatible with), so we return 0 here to
+> indicate that 0 devices were preserved.
+
+Right.  Here's what I was thinking:
+
+  pci_liveupdate_flb_get_incoming(...)
+  {
+    struct pci_ser *ser = *serp;
+
+    ser->nr_devices = 0;
+
+    ret = liveupdate_flb_get_incoming(...);
+    ...
+    if (ret == -ENOENT) {
+      pr_info_once("PCI: No incoming FLB data detected during Live Update");
+      return;
+    }
+
+    WARN_ONCE(ret, "PCI: Failed to retrieve incoming ...");
+  }
+
+  u32 pci_liveupdate_incoming_nr_devices(void)
+  {
+    pci_liveupdate_flb_get_incoming(&ser);
+    return ser->nr_devices;
+  }
+
+> > > +++ b/include/linux/kho/abi/pci.h
+> > 
+> > It seems like most of include/linux/ is ABI, so does kho/abi/ need to
+> > be separated out in its own directory?
+> 
+> include/linux/kho/abi/ contains all of the structs, enums, etc. that are
+> handed off between kernels during a Live Update. If almost anything
+> changes in this directory, it breaks our ability to upgrade/downgrade
+> via Live Update. That's why it's split off into its own directory.
+> 
+> include/linux/ is not part of the Live Update ABI. Changes to those
+> headers to not affect our ability to upgrade/downgrade via Live Update.
+> 
+> > It's kind of unusual for the hierarchy to be this deep, especially
+> > since abi/ is the only thing in include/linux/kho/.
+> 
+> Yes I agree, but that is outside the scope of this patchset I think.
+> This directory already exists.
+
+Agreed.
+
+Bjorn
 
