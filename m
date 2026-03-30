@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 198FCD39421
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 83794D3941E
 	for <kexec@archiver.kernel.org>; Thu,  2 Apr 2026 12:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,55 +12,55 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=nbn+1wU01z27PHPiB6pyjlcWzi6QRevgboBAEreZK0g=; b=zMhI92LbulkpdfCeKfcQq4r3lD
-	X6U33hFlp5U5hdSA8P3GLAGK6gqQBt0su4ibeLotjS1St4YaXY1ZtRFpfcDjf7gvUsL3a8gqmNMAk
-	IiHP7tXJ/gXYuwLu673Vq0qrmJt+Lxd81nTVCyqdNI5JV6uAjMwCjiw1QWzB0ddxrWCxdqFFImtu1
-	n4s1JR97kU7x+SRKnG7ZE5FgJ9B7xULzlPu3/uQqBqgp2SqbUNxL1hzENjN5wnMl2A6Na+fvwKAD0
-	i1k9KvxmQOAhIbAHCxH/GeFeoHFo8I+UG9eKksZpbGbucaapHthDAoDrTffGlA2bULsQ7NAzI9NmQ
-	8l00mllA==;
+	bh=W7U7BTXS8iu2ikkIeTXCYXN1EZ8TvQ225S/V4SWCkaY=; b=adNDGzbG+9B9t7PRlH8V/skfvg
+	ZaLT+/30iigiPyAARmWeFbhkJDv8k6rLMP8fpKjrubjzjGEy0v1kPAU4tQjMWc43naaYkaT/vwsCd
+	OIIbWApENUe5rN1wxDIe4BUvLB482V2rycU/UNl6eHay2rw52J2YNEsrzMnjtWp2dvldPD2f6F5ZD
+	RVRXBkbDtApB2C6I3lr1JPUvnNf/TlzQOluFy2m2wBrRtf79/9YAzbnF6tpH5EIp+B8JPLoiFgXaw
+	FIwqVVAs76UQ1gW5YpcbBBOJhkkK3nrNLtWq+RiXhqhx2vLEhR2kVQOKYuZHeAo8BoPBIBXLJ5EYB
+	jBUMWP2w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w8HG8-000000004e6-3YJr;
-	Thu, 02 Apr 2026 12:34:52 +0000
+	id 1w8HG9-000000004f3-2J2D;
+	Thu, 02 Apr 2026 12:34:53 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w73bO-0000000AZKz-1w0u
+	id 1w73dO-0000000AZTu-0uIn
 	for kexec@lists.infradead.org;
-	Mon, 30 Mar 2026 03:47:48 +0000
+	Mon, 30 Mar 2026 03:49:53 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 1C47E41A07
-	for <kexec@lists.infradead.org>; Mon, 30 Mar 2026 03:47:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F01EFC2BCB2
-	for <kexec@lists.infradead.org>; Mon, 30 Mar 2026 03:47:44 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id D31B744557
+	for <kexec@lists.infradead.org>; Mon, 30 Mar 2026 03:49:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B84F4C2BCB2
+	for <kexec@lists.infradead.org>; Mon, 30 Mar 2026 03:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774842465;
-	bh=nbn+1wU01z27PHPiB6pyjlcWzi6QRevgboBAEreZK0g=;
+	s=k20201202; t=1774842589;
+	bh=obCDFOyxCbjX0f8M408do6wNaHwmsZQneN83knIeC68=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Scb0MZjy9cW04DoU9XXgbCQXHVOKa8DZVHDYfIiIKz2Fqgl3FbLxeTL5wH1FsnBpY
-	 bDiVv31JMHV56ZOzGCkfJIHGhtdSgwDDoOdmQZHEVQJr0OiUIlyPhAzciiHFsWHUE5
-	 yOl5buCFMT8PBAhOjjBMBO9ikE5Iebn/0Ej0dSz4tPpx94aoiMHtf1yBtqO3rFwQOq
-	 7F3RSd6YK57Ou0xLcJTTjr8bkmKSvHsISlzMFKdyUGKweTQfm0r1NvzqhVLExwzHGA
-	 TF+qUuaMfIQSuIAcVONoEBik/na74YLUlofcP75mpWWxJS29GiNl6QhjqFIjVRgmQm
-	 EvkNHCPAr+0FQ==
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-486fe36cfabso24250945e9.1
-        for <kexec@lists.infradead.org>; Sun, 29 Mar 2026 20:47:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVGCGsEma9AD3ta0GfBaid4DaJBrwbSAdJ1nPRVDrK/Tw4vjq6XqnHYBnru7ngJkXbv6tGlcA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwbfOha1EjmfhZd9TCJhUliXBzpV6/PsTmjNUWiaiNe3TXgBXF2
-	f9OkSeyagNU7jDDgKl9ZoISCb3ZyrqfVq8qpM0gM8M3tRDkd7EhOwqqxUKTS9htzHwy6Cd64dRv
-	W9JtJwQKGzTQKx/H0t3jngwy3xcy5SZM=
-X-Received: by 2002:a05:6000:1a8e:b0:43b:45c6:7ad with SMTP id
- ffacd0b85a97d-43b97a90decmr23305904f8f.29.1774842462488; Sun, 29 Mar 2026
- 20:47:42 -0700 (PDT)
+	b=eoZ8B/stmhNenV55/GZwaY1J2F6+Mdl80yqD9NRcEWBOsoYl+9c7bLnMbhuDm8UCy
+	 /HdFRjzUQbmAk/UyPSD+aNwyk+7+AXRsactruboxv4TBhmx7ZVUw3PnXCFXHbt/2Tv
+	 8gPyg7oqfxDRPwPwOxonENTYb7rY2pfqtB3H6lN+8wTRbtHFo5byuP+ppf4WRnAd5Y
+	 XciAnSMYuc3D6bWIB/pXvfsgHa26rnCnF4gtv6axbQIdyVpVlSoEdBsZ3ZtXIwQJfW
+	 magEl9/ciAmyJ46LOqRQucXon3Rz5vlKU6TS+JdRCMl0FTU+kXQTbAQM34dEaStji4
+	 KbhEz4mM9Fraw==
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-43cfa33a983so464670f8f.1
+        for <kexec@lists.infradead.org>; Sun, 29 Mar 2026 20:49:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUjB8sufL3s8DGeEeh2w8gHcBET1aTH4iy9ATzncYFcjpWgdjtuNbbB1UZBWLkTJ49X27o+ag==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxI0YOO7l07xCFdLcrwBEG2kjc5G2jd2N8iiBG5UK3kQ+SoTl6Y
+	JIYdiv/uL4H2GBzOQDlAUyD7sNN+nRP1ValUQlxWwZEXEYKlr7Q0YrlJlPOxom9JpgWg9S+JjW1
+	DWpwl4PpYT+z4pqwYN65dgSbZzEuuIDw=
+X-Received: by 2002:a05:6000:250f:b0:43c:f4df:923c with SMTP id
+ ffacd0b85a97d-43cf4dfaca4mr10913170f8f.49.1774842587366; Sun, 29 Mar 2026
+ 20:49:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20260328074013.3589544-1-ruanjinjie@huawei.com> <20260328074013.3589544-6-ruanjinjie@huawei.com>
-In-Reply-To: <20260328074013.3589544-6-ruanjinjie@huawei.com>
+References: <20260328074013.3589544-1-ruanjinjie@huawei.com> <20260328074013.3589544-2-ruanjinjie@huawei.com>
+In-Reply-To: <20260328074013.3589544-2-ruanjinjie@huawei.com>
 From: Guo Ren <guoren@kernel.org>
-Date: Mon, 30 Mar 2026 11:47:30 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTQu0ekP6Emz=F3uEhPsyqNvH_PwwJU5yOADbR9poQ4noQ@mail.gmail.com>
-X-Gm-Features: AQROBzBPJeJ2Q-LIGCNdFWKdGbP9VQWOujey1zE68GwImpeUgj1lBD6fgh2uH4Y
-Message-ID: <CAJF2gTQu0ekP6Emz=F3uEhPsyqNvH_PwwJU5yOADbR9poQ4noQ@mail.gmail.com>
-Subject: Re: [PATCH v11 05/11] riscv: kexec_file: Fix potential buffer
- overflow in prepare_elf_headers()
+Date: Mon, 30 Mar 2026 11:49:33 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTRN=RpgzQsQ7QDbwjDmyQZP9anQZ+CaK2r-Mrz9dQbohQ@mail.gmail.com>
+X-Gm-Features: AQROBzDiH9EGqvtsmkvuTI8F_a_MxhnUfiDn46oBgBr7JyKcMW8nH_9Y5zS6MkE
+Message-ID: <CAJF2gTRN=RpgzQsQ7QDbwjDmyQZP9anQZ+CaK2r-Mrz9dQbohQ@mail.gmail.com>
+Subject: Re: [PATCH v11 01/11] riscv: kexec_file: Fix crashk_low_res not
+ exclude bug
 To: Jinjie Ruan <ruanjinjie@huawei.com>
 Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com, 
 	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, 
@@ -87,9 +87,8 @@ Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260329_204746_547058_90C11CBD 
-X-CRM114-Status: UNSURE (   7.77  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260329_204950_294789_D803A7B4 
+X-CRM114-Status: GOOD (  17.94  )
 X-Mailman-Approved-At: Thu, 02 Apr 2026 05:34:24 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -108,18 +107,69 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 On Sat, Mar 28, 2026 at 3:41=E2=80=AFPM Jinjie Ruan <ruanjinjie@huawei.com>=
  wrote:
 >
-> There is a race condition between the kexec_load() system call
-> (crash kernel loading path) and memory hotplug operations that can lead
-> to buffer overflow and potential kernel crash.
-riscv left no margin for hotplug in prepare_elf_headers(). Actually,
-this check has been in crash_exclude_mem_range(); this patch makes it
-happen earlier.
+> As done in commit 944a45abfabc ("arm64: kdump: Reimplement crashkernel=3D=
+X")
+> and commit 4831be702b95 ("arm64/kexec: Fix missing extra range for
+> crashkres_low.") for arm64, while implementing crashkernel=3DX,[high,low]=
+,
+> riscv should have excluded the "crashk_low_res" reserved ranges from
+> the crash kernel memory to prevent them from being exported through
+> /proc/vmcore, and the exclusion would need an extra crash_mem range.
+>
+> Cc: Guo Ren <guoren@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Fixes: 5882e5acf18d ("riscv: kdump: Implement crashkernel=3DX,[high,low]"=
+)
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>  arch/riscv/kernel/machine_kexec_file.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/m=
+achine_kexec_file.c
+> index 54e2d9552e93..3f7766057cac 100644
+> --- a/arch/riscv/kernel/machine_kexec_file.c
+> +++ b/arch/riscv/kernel/machine_kexec_file.c
+> @@ -61,7 +61,7 @@ static int prepare_elf_headers(void **addr, unsigned lo=
+ng *sz)
+>         unsigned int nr_ranges;
+>         int ret;
+>
+> -       nr_ranges =3D 1; /* For exclusion of crashkernel region */
+> +       nr_ranges =3D 2; /* For exclusion of crashkernel region */
+>         walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback=
+);
+>
+>         cmem =3D kmalloc_flex(*cmem, ranges, nr_ranges);
+> @@ -76,8 +76,16 @@ static int prepare_elf_headers(void **addr, unsigned l=
+ong *sz)
+>
+>         /* Exclude crashkernel region */
+>         ret =3D crash_exclude_mem_range(cmem, crashk_res.start, crashk_re=
+s.end);
+> -       if (!ret)
+> -               ret =3D crash_prepare_elf64_headers(cmem, true, addr, sz)=
+;
+> +       if (ret)
+> +               goto out;
+> +
+> +       if (crashk_low_res.end) {
+> +               ret =3D crash_exclude_mem_range(cmem, crashk_low_res.star=
+t, crashk_low_res.end);
+Exclude crashk_low_res is reasonable, but have you tested this?
 
-Although this patch has no real effect for riscv for the current. I
-still give an acked-by, because it's a proper check step in this
-callback.
+> +               if (ret)
+> +                       goto out;
+> +       }
+> +
+> +       ret =3D crash_prepare_elf64_headers(cmem, true, addr, sz);
+>
+>  out:
+>         kfree(cmem);
+> --
+> 2.34.1
+>
 
-Reviewed-by: Guo Ren <guoren@kernel.org>
 
 --=20
 Best Regards
