@@ -4,94 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E25FFFF4923
-	for <kexec@archiver.kernel.org>; Sun, 29 Mar 2026 22:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C775210D14A6
+	for <kexec@archiver.kernel.org>; Mon, 30 Mar 2026 11:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:Date:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=EmjkZkbbVjjgaCUxuu5+nE0xjPd5gN1qT4GlMrecGi4=; b=eoF1haLNajEuBoBuM0xQEjivHY
-	XLJze8AkI+gpfrvkNyLyHEwmVwjgZIRsR00alrLdu/eaa1XeeJeBI3Rm7dF2IgBJS9VcHqQ16El6i
-	AbIQk/niUD7PA+g1PdZz7XxhFoHacRCv4OSzxlN58vgttQ8iJRKkv6mBq7g6Ji7XPcwO+YWYI4VMq
-	uxyXtfiUNqwssXu9hCGRLoxWmOe6QUJy7yQBHLFvUEqyRRrS/bx3Y+goH/PSs83pAY8oS3w72Dnoa
-	8dxG55TqCAbJsh+Nbbgf2pdej0++rso0yhMU/gqlNqp36XpFPyPkjiLEkyAHZQjLoZItIrRRqvvp4
-	RKoWuBOQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=gvAh52M6pis730l5q8D5EHWXWp5qXG4bsCWjlx9wIeo=; b=rzZhLxncg3yT5R0FHLQNNoGoRC
+	tcGpIFL47wAXWbQ0O5ufurIs9vOvc7wMGP0GiZ7QejD9sEmALB5afhXMkiJz7/nfQsm1T/pVyHgEA
+	nuhrQ5eIoSe/9Yx8BWiNdcIjYRiGSLCjnB2bHRMDZBev/BqTSPX+Euifxcqc+1lUWfVdDiEj47VXa
+	uVCZa2kwN9+XJAzqKFhfb9jvPANhyQM8J8cVRWqkvgrTNd/vO9H5NI09D/rQDotTiLohDOPRFjcc5
+	IT+ZglSdccN67B9jYQH9nL3ww+0WXUnRE4I2q6jB+TVrbLT9R8MxgdHfp8VULTlIfF9ZMHdkLGAjT
+	iuhDB8Jw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w6z4x-0000000AP0R-1fs2;
-	Sun, 29 Mar 2026 22:57:59 +0000
-Received: from mail-dl1-x1235.google.com ([2607:f8b0:4864:20::1235])
+	id 1w7B2q-0000000BBJW-3ZFD;
+	Mon, 30 Mar 2026 11:44:36 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w6z4v-0000000AP05-1lJb
+	id 1w7B2k-0000000BBIm-2CpD
 	for kexec@lists.infradead.org;
-	Sun, 29 Mar 2026 22:57:58 +0000
-Received: by mail-dl1-x1235.google.com with SMTP id a92af1059eb24-128b9b7e3edso1936117c88.0
-        for <kexec@lists.infradead.org>; Sun, 29 Mar 2026 15:57:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=code406.com; s=google; t=1774825076; x=1775429876; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EmjkZkbbVjjgaCUxuu5+nE0xjPd5gN1qT4GlMrecGi4=;
-        b=HKPAa44nBkG5sgl+ttMM/v2P79D/VH7axoUH9+xUwERCv6KGdR9uSGQSZdjXtIPIYR
-         PAA4K9Rp62IsGf7uHzCvlgQcu093CPEEUiSIjcKpRpwfx7sP1DCJCCfdI9c3jYPaQqb3
-         c4MtcFCoZ/oWqVERpbYCNGQgF3t+0kj19xwwo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774825076; x=1775429876;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EmjkZkbbVjjgaCUxuu5+nE0xjPd5gN1qT4GlMrecGi4=;
-        b=EajEIN77GRzjUQi6UMjbSVpvGBNXEtrosZzG7Bqo2bhqQ/Tb0C3Ns/6S8FlbtfRQe4
-         7j6HRb2CfHY0czI91c0UtJX+KAed7iw+qn2UzYDmTK7zQF3NtoYGsPsDpD4ezmrYtxrY
-         laoZMIbYD7yi24pICAa8OEQ+e1Yu/FH1h14LinNSg1SSHVzArs95GrGedIY3kmSY2NM/
-         XWon4eWBg61gmvdZkx1U2ZXnYOhZrTcbJDPFAkmrJZXu8zaxKhrwStuIML85g8tL08AB
-         infDeA3ZZIScKzdOSeBSKzqQW+PgxZoGd5989mDtANz3e7wdDgmeRUeGZK6egYy0EC3I
-         TPLw==
-X-Forwarded-Encrypted: i=1; AJvYcCUwWs8M8QhqgWxhtIgbQjVYSKYgmvl+orQSeTeOW4rc4pD8OWDYRn8s/3+MwClQMMd3xW3Vcw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyZArsx/iCwABNY4zPmZCwpOwm1Ur/OWkuyNG/F253X0bUBqdih
-	eA9WU12+Riiin+eIplCowl7fCIGaOJlxTCqjlkUACotO47PV72vy4nr/4xo7ryBRFQ==
-X-Gm-Gg: ATEYQzyLOrgv6NAj/bwpXSPZcsMWN3cVH5W8Y8CTwrV5p9h3tiAIV4xOW4OZwcYXfJd
-	QKHiKa3+zqJ8DKhA9s9v3ZAUhLzkO8HHRYXQnYn7LSuVGv7jPoOsI1bQ4qoKyRXErp2Wyjr192m
-	claos2UzOBi1dZL4sg1fEuLqUN5+gFIRc/y3l+aWRyQFTTnabnkbYxt1svJrWJjpYRBDj/hKvbq
-	AB8X7w3dnXQAUcly6m9C46w9cShoY/05XpAmnGfbGphltaGADCHik3A24RFTh6FAUQ67CkO/Qpo
-	fAl0BgAkADUiCaCcLuzcRQre4yy9ThFeV/7L2j4BMCV2ZJ7ycZZApm9tLfQDsBUc+o269yWuEFS
-	WSx3itEnwY12DR2porhn/3mBw9XJ6ioWU3+mNlKvlJDh5Oa1lVeGth+OOZNpl1ApK7jYM+Xy+r/
-	+4Hd1ieKad7LPqisuWPewiErpb4UM2ivVYjx5ROhcm2ka/x0/p0sNa8HKsvnE4bQm5pqMsSyEjZ
-	69Piif5JB5OiDMBDjZeMAWux2p+
-X-Received: by 2002:a05:7022:2209:b0:11d:f89d:85a0 with SMTP id a92af1059eb24-12ab2912740mr5861569c88.27.1774825075962;
-        Sun, 29 Mar 2026 15:57:55 -0700 (PDT)
-Received: from ubuntu ([2601:645:8a00:6e44:958e:90e9:e30b:7ecc])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12ab970da7fsm6096026c88.0.2026.03.29.15.57.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2026 15:57:55 -0700 (PDT)
-From: Josh Snyder <josh@code406.com>
-X-Google-Original-From: Josh Snyder <josh@cod406.com>
-Date: Sun, 29 Mar 2026 15:57:51 -0700
-To: Ross Philipson <ross.philipson@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-efi@vger.kernel.org, iommu@lists.linux.dev, 
-	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org, 
-	mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, 
-	jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu, 
-	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com, 
-	dwmw2@infradead.org, baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com, 
-	andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v15 08/28] tpm/tpm_tis: Close all localities
-Message-ID: <v2l4v5imh2lmsayevxz3palyjeglpxo3qu475gjpchitgfzil2@l24ax4vevjp7>
-References: <20251215233316.1076248-1-ross.philipson@oracle.com>
- <20251215233316.1076248-9-ross.philipson@oracle.com>
+	Mon, 30 Mar 2026 11:44:31 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 309BF4169E
+	for <kexec@lists.infradead.org>; Mon, 30 Mar 2026 11:44:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 110F2C2BCB0
+	for <kexec@lists.infradead.org>; Mon, 30 Mar 2026 11:44:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1774871069;
+	bh=f4YOF8vt92eNl1mKdqZyMCWyNb3+OoCLLo4tIp4YmMQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uRgEIC0OHFTjGnjqpcUzudj5PK0ySwoo0ihbOdzRQr39HpLRTD/b2F2IvmnAy0QMB
+	 rMpU3c4qVSq+9B8Y3duAzRNQuULKIQZbB39tqIkx8h89z4P2sZ9eMWiMJ30V3z502w
+	 NIF2J7pbUI3fUK3BirFOwUYBzMAggmASC/7WvxLSBKqvpOvo7SunL3gq+bnDoEJUBY
+	 /UdVOODG1a06dfavlzYSUXk3tAmWgl7T6tulCQxgzbVEbmMNzTjDANd7cfZfR1sR8j
+	 74NgXYv75Qk/gs3G1Y+cluMsPz+Bgmuy8fyQZZ4dv58tGBG5rim27ZzZxmmF48FCKY
+	 N6cZh6RtZJ6jQ==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-66a33f61d80so7268622a12.0
+        for <kexec@lists.infradead.org>; Mon, 30 Mar 2026 04:44:28 -0700 (PDT)
+X-Gm-Message-State: AOJu0YxyyMVRcz1rVMCOpSK4XRIJviqn/Eeb4eUKwj5r6304WrVp8USP
+	ZinHhM2rjV0lSSldUDqFNd3TtzU25oyap0glxlgSQRJO6cZXGbDxficxVAZLvMdHd8OcdC4H/tT
+	7vvZVdHtZxq6wa1zBaPxGMogj+S7Llg==
+X-Received: by 2002:a05:6402:448d:b0:66b:82e6:5355 with SMTP id
+ 4fb4d7f45d1cf-66b82e65456mr3962353a12.19.1774871067648; Mon, 30 Mar 2026
+ 04:44:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20251215233316.1076248-9-ross.philipson@oracle.com>
+References: <20260225060347.718905-1-coxu@redhat.com> <20260225060347.718905-4-coxu@redhat.com>
+In-Reply-To: <20260225060347.718905-4-coxu@redhat.com>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 30 Mar 2026 06:44:15 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+0w2hGN=Loy=ucHbZcdnn+ty3x9qS4WVX0Vj+g19tfpg@mail.gmail.com>
+X-Gm-Features: AQROBzBPVOVlPWkIprh4svfiWPChabJG3_HPxZ8omC63yiiiHstiwFYKcyHWrdY
+Message-ID: <CAL_Jsq+0w2hGN=Loy=ucHbZcdnn+ty3x9qS4WVX0Vj+g19tfpg@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] arm64,ppc64le/kdump: pass dm-crypt keys to kdump kernel
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, 
+	Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>, Baoquan he <bhe@redhat.com>, 
+	Dave Young <dyoung@redhat.com>, Kairui Song <ryncsn@gmail.com>, Pingfan Liu <kernelfans@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Thomas Staudt <tstaudt@de.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, 
+	Will Deacon <will@kernel.org>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Saravana Kannan <saravanak@kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260329_155757_468426_60245DFA 
-X-CRM114-Status: UNSURE (   7.56  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260330_044430_674308_2326636E 
+X-CRM114-Status: GOOD (  20.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,25 +89,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Dec 15, 2025 at 03:32:56PM -0800, Ross Philipson wrote:
-> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
-> +		if (check_locality(chip, i))
-> +			tpm_tis_relinquish_locality(chip, i);
+On Wed, Feb 25, 2026 at 12:04=E2=80=AFAM Coiby Xu <coxu@redhat.com> wrote:
+>
+> CONFIG_CRASH_DM_CRYPT has been introduced to support LUKS-encrypted
+> device dump target by addressing two challenges [1],
+>  - Kdump kernel may not be able to decrypt the LUKS partition. For some
+>    machines, a system administrator may not have a chance to enter the
+>    password to decrypt the device in kdump initramfs after the 1st kernel
+>    crashes
+>
+>  - LUKS2 by default use the memory-hard Argon2 key derivation function
+>    which is quite memory-consuming compared to the limited memory reserve=
+d
+>    for kdump.
+>
+> To also enable this feature for ARM64 and PowerPC, the missing piece is
+> to let the kdump kernel know where to find the dm-crypt keys which are
+> randomly stored in memory reserved for kdump. Introduce a new device
+> tree property dmcryptkeys [2] as similar to elfcorehdr to pass the
+> memory address of the stored info of dm-crypt keys to the kdump kernel.
+> Since this property is only needed by the kdump kernel, it won't be
+> exposed to user space.
+>
+> [1] https://lore.kernel.org/all/20250502011246.99238-1-coxu@redhat.com/
+> [2] https://github.com/devicetree-org/dt-schema/pull/181
+>
+> Cc: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>
+> Cc: Baoquan he <bhe@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Kairui Song <ryncsn@gmail.com>
+> Cc: Pingfan Liu <kernelfans@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Thomas Staudt <tstaudt@de.ibm.com>
+> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
+> ---
+>  arch/arm64/kernel/machine_kexec_file.c |  4 ++++
+>  arch/powerpc/kexec/elf_64.c            |  4 ++++
+>  drivers/of/fdt.c                       | 21 +++++++++++++++++++++
+>  drivers/of/kexec.c                     | 19 +++++++++++++++++++
+>  4 files changed, 48 insertions(+)
 
-When I applied this patch locally, tpm_chip's locality_count underflowed to -1
-and no IO was performed. That is because tpm_tis_relinquish_locality is
-implemented like so:
-
-  struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
-
-  mutex_lock(&priv->locality_count_mutex);
-  priv->locality_count--;
-  if (priv->locality_count == 0)
-	  __tpm_tis_relinquish_locality(priv, l);
-
-I was able to work around the issue by calling __tpm_tis_relinquish_locality
-instead.
-
-Thanks,
-Josh
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
