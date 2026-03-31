@@ -4,105 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 28EF010F92F2
-	for <kexec@archiver.kernel.org>; Tue, 31 Mar 2026 19:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6CB0F10F92F8
+	for <kexec@archiver.kernel.org>; Tue, 31 Mar 2026 19:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=NrBqUb822UIvex6OIe+3K5fMDptrtW6BzFohhlrirV4=; b=xGRIX092pMMkfB2R/d4cBxDS9c
-	jzxLd+PBvgx3eYjCG1K643YrbUJpVDOOd9TI8TQSwQp9KqK0CJviUB4+pk7xAM29IWKzuJpVaQWQC
-	L7+NfF53P99IhthlVC+GbiKsn7/C6auBvRp8J5BrVM+KOlb+RcilMFsppboauE0VBbsTKvASW7jwN
-	OU3OEEQKXRDthXt1+ua0QMioKsx1zinEbleBGsXjRUzoG0tILlFZma1MvvO51L90De2Woua+/0nPH
-	hK3cAfwub76T6U8/6rfgG4Qe61EkMveuo44qQpx85tADinvaTcVqGgdnlL87LYOc51yC4b9gdoMZV
-	+dsJ2/bg==;
+	bh=P6pVCvPmJ8zZo4wz569DUvEXPXLd6B6BfKDtUFU2IIE=; b=3nWrewaV/6hinNXw1YwLwHt/VK
+	u218FWbDhGbTlSmshvcnXRsxFt0ZPeAo3MQs9gGZXS2VJC0iiVX9zGZpmP+KjZUpAGyLxRdry4pnZ
+	VzCoHxlkYruo593iswrP8SA8Ev2clAMaKp8DM8W6UZKL94WIxmADNuql9RKJ3REe5oeOxz98kQBVT
+	7oG+I7tM71rlLSsqSU9DYuVwqUrN8IPQY3iXpq3R4n60D5paH5aWkNMX2WxIbgAsvUupc/MXNFapm
+	V5Qu+qb4kc0kM/34gEwA8PcawjvNU6yKgWMsrJIWrp3ZY1BrUnJdFTX0zJNBHpvn4mkuBfIvml/Ft
+	dYyzx2OA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w7ewo-0000000DUDd-1SpW;
-	Tue, 31 Mar 2026 19:40:22 +0000
-Received: from mail-yx1-xb135.google.com ([2607:f8b0:4864:20::b135])
+	id 1w7f3O-0000000DUsy-3KdD;
+	Tue, 31 Mar 2026 19:47:10 +0000
+Received: from mail-yx1-xb12f.google.com ([2607:f8b0:4864:20::b12f])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w7ewl-0000000DUDI-0tie
+	id 1w7f3M-0000000DUsa-343k
 	for kexec@lists.infradead.org;
-	Tue, 31 Mar 2026 19:40:20 +0000
-Received: by mail-yx1-xb135.google.com with SMTP id 956f58d0204a3-6501c0399c4so5007711d50.2
-        for <kexec@lists.infradead.org>; Tue, 31 Mar 2026 12:40:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774986018; cv=none;
+	Tue, 31 Mar 2026 19:47:09 +0000
+Received: by mail-yx1-xb12f.google.com with SMTP id 956f58d0204a3-64d5a7926cfso9218336d50.2
+        for <kexec@lists.infradead.org>; Tue, 31 Mar 2026 12:47:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774986427; cv=none;
         d=google.com; s=arc-20240605;
-        b=ExDRPc65uQoMnKpBNx1HZOsEaG4h7OWJSWNsx3b7RY3Ota9osgs/v4jDjL0SCHdeB1
-         hv1w3rQKWu0RtoaaJ/94+DhkYVkvmK5vh6gA9KA5gxw9DzPAKic/+X7ki7mjEYYRtFCC
-         ELq9QKNUkwN4OSEpa+9ZTJxo1oLgdY8gUysL1LAin1rHQmMNSosb9vK8M6mOTqyCcZCg
-         u8kpotTbYdXHGmqe5s1ft/gdfw2Q3nwy2/5YGhq4P751DY3iDlZRqOYVqHOs9ngwC4Gi
-         WgU9pXEpx4joXezHKP70QunniGn+MqCx1zTXjmjizqEz+cqe5PbEwdlrlBrgLLP79dld
-         /ptg==
+        b=F0VBddpumW2P+fnsMntejkGTAVwaHgXfIUQmc0vDLx7AvmcEzufEymdI0OeVXt7z6C
+         Fbf15gCfW3eVLa9jEuW1nOqC3/IvKzRKY75xzVZ3rkWQHcDLDZfR3cC0SNAKGcXLua+9
+         /SKSZFt1fbEBD91fVpORYF5/UackIJmr3B4pcrhBETVFEjEi7LkcNOKCA2IWc8hx6Gha
+         u/QotdtNDzl/6T5bBWoVv75yAJ74x9xwHAqQuDv54jwCceVQs7M08Py06L9zwkTi+dnU
+         Fg5pacjr40WwLeTp4RWo26SVSYbOnsy1iL3WeSnevHWe+8MncEGWaZvhUoxfV3PvyEUp
+         +n8Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=NrBqUb822UIvex6OIe+3K5fMDptrtW6BzFohhlrirV4=;
-        fh=GANUD5BWosk9bK7F12KIXLdQusXpLCHe/533bgnHPZs=;
-        b=IstUtRj+mrmGWSe8HjfBscg2JOQe/WvZx3lE92i/6BlCroAkCSJhMOpElW04aoQIYb
-         rYbx2iqG1MALtTfdWvbOwRtO0WJCTEG9rUasj4jBagGaVlbmSHSv2YYczQBWlgRHUQeg
-         1bHcH9/OceioipHA1JfQDbM2SMLuB3b05B+O8sPDYZEIh42I9LSa5XMxDn7CsnEphORO
-         r9LgRyeITAORzQNGza0pqa7Ml1Na5hwTu+la8F0xeNid7jM//rFEB6WKiJzc3FUZkoHn
-         VlYFZ5Am7e22KT7y3bwgCxjBRc3+HSEJcjcIvSFAcW6hqmjN2Gm/mFug5uhRLMNUzO4v
-         0Gsw==;
+        bh=P6pVCvPmJ8zZo4wz569DUvEXPXLd6B6BfKDtUFU2IIE=;
+        fh=YVJ4hsELCKgDqXx2GU/NVlA92oEIniguYCDFSY+GV6A=;
+        b=W1WH126j5X+Fk952w1TrlEUq6cIX5MnVmZJtK+/Tusb2FmqSG0NwVmkHc6mcyPkgWl
+         kKuChq3Jh0Zm082qDjEBh7wJxB5e3YLCDcVUITDLYekX2GRmK57ikp7YhFxt73YvU/Ht
+         yvpzZOXL9fjNTN7fhTxdTu/nIRqu9U2kvTYsNF91jwIoWWsUace1mHDYsRCioaClOfPF
+         5xujBukiEwHae4HBoX7sh4qMmXOfWzt6cPNnC/ArvGv/c3JcBtp0iPPt1CKTs/LueFN8
+         nPO9sDRhPUWK7dUpRRCsqswi/eniuuHaOo/dWvf+EiM9a39BWTvG9wcPk5WYoPflEhJf
+         bmUA==;
         darn=lists.infradead.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774986018; x=1775590818; darn=lists.infradead.org;
+        d=gmail.com; s=20251104; t=1774986427; x=1775591227; darn=lists.infradead.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NrBqUb822UIvex6OIe+3K5fMDptrtW6BzFohhlrirV4=;
-        b=hlHhrcbUUhFjB5pz2QdTt0HP34JmvfYGnuaTENrzzYhVgh/A2faRVAlFn99uy9oVhr
-         o4/bAu3FA3M6eUhnsYWpnx5F3QFv4hGw6P1vMPRGIR3TuH/P3bD6ayaSCFj6PeMEuy7H
-         5Z2LLBVbhWWXp11QQ5mUtfGfalPprF0RWwDOOFScDxZcX1Uy6I961a0vkks3h1mkfIbK
-         W31e1qZCV6Cskjzf3l+gjLb2FcVZk73jWdQuhpXdpFd8UpjS9b2NFRsjy/y97nQnapfx
-         Oia3MWo+nte+TBwz+jWU536AmzqCFMlhooAENQ/zI6oM6KtNI1MYEh91iOQOI3MuE7xR
-         FaBA==
+        bh=P6pVCvPmJ8zZo4wz569DUvEXPXLd6B6BfKDtUFU2IIE=;
+        b=acaZpVAg4aR6oB99iT2Mee4VIxEX+PdJFeYqpETIR/+wqUuZnaYnUgCwea12B+HjhZ
+         syOALZiJ8gKVbQqIrixPxn0LkAdudVZ0HH022la8V8vPRaCj1yHUlMdSJR3IAgOYdm91
+         LQ1y/RfvVcTpoXQb6qk5lvGlJjasJHq6q0+tBaWXRdry2zk6B2rqB+Pdw2+XcZDA0Wpa
+         UqHWwl3sIH855m0vKM/pM55OmtvzNSg3IO/PR6a5sd8y+dwECp3L90UbHBOyLD6xKkVk
+         IrljdLlWjZ63j+F/Ht0I7VgIHW8v09d466eXm1v7qxWg6v98qy23V25GKq/7q4AyQjrn
+         +dUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774986018; x=1775590818;
+        d=1e100.net; s=20251104; t=1774986427; x=1775591227;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=NrBqUb822UIvex6OIe+3K5fMDptrtW6BzFohhlrirV4=;
-        b=tEl+JVdJVJITFpl4XPqAhbS+Y8bNLrc811bMyOBeywoR70S6MwpKh0el9yJgr9cknb
-         tO88xQzv7GtzcmJ2PhKXZs7yLZ0QHrnIDRQMC0PmVOW/xu1trGhrSIVMtV4XPJHEdU4E
-         OwSAUnbTuOug/TxkbnZeBfIQXJC5gIECUn2TXHgfNcv+p0PviYNT2AfgfESlcakmemnx
-         VxylvRPfO1/HpFN5to1NpGjKUmyzD38s2YaTY+0ynxDtkw5IXJRTYvbBKqLi/Q+33Ntk
-         3YliCdSRwW6BAWN91hw+bAGcO5fTMQnUB07A0v+dgfNeQrJxKo4p267udixdflPanDtf
-         esnA==
-X-Gm-Message-State: AOJu0Yy9LrAZsWp19cBUzVLKfRTQVwdL0pnamYmEIF6GQLoaWne4BBNO
-	vrGKjku3ggvcKSwRuFQOyv/eruj9QHsUw7/JtmTS/lffNACaYbyz0wa6c3kc6KOd4cNrdd1iUAs
-	yA4RP21W0s4unLD4uEnjhmxTsKYpBuv3DXg==
-X-Gm-Gg: ATEYQzwezXOvchJkGhZ+EA4I+T9+G2gLb8MLS2iX8oV8+VRXZaG0FrLIYl8sCKOTppm
-	TjECG13yb7cpnObifs84tS3d0Tjf6VTlNq3PnviaOUQFhAKkin5bx17i5Etlo9VSu5/176ePxSl
-	9PRV821iri78KuZhJN0dbUfc9Ve8UQem1IdPnpCk7zCm7sX3bvXRc/Na6ACdrui/pR9KLC+bzI7
-	OqteDPJAvIf6oBKzu94A31FJfJH7zCUAs1rWPhScio7DgjXJM0JmAwfKsdBflsFp9gchcvNVH6G
-	lWeu7Nlcx8rmg3KObavm4BuxFIp84qUfkSnQg53C6A==
-X-Received: by 2002:a53:be51:0:b0:650:19b1:751c with SMTP id
- 956f58d0204a3-6502fe65217mr459746d50.53.1774986017941; Tue, 31 Mar 2026
- 12:40:17 -0700 (PDT)
+        bh=P6pVCvPmJ8zZo4wz569DUvEXPXLd6B6BfKDtUFU2IIE=;
+        b=TwHdg+cUa/OF+9RagZ2Lk+WTHL3Gl4+tKGe3iwbO2ZtRx7JEaYd+ugkzLi8ey8KHyy
+         +/CHl88m7hCTR9+T9lQ5bziRccQyf8G793j5QHUGGkzmz5sERiJv30xtTO122n610Qdp
+         SrFqnEgN1MfCYC64thCVihQtE5XXe2ZejY7LsrcG90qjQiKZhy8NAy9UFY+R4K2TLeSR
+         TT68YpbjB4NHOfkx5i7QSLuUzwAXG6o0N7sULXO53HOfqz0zr+cgS117Sf1lRQKo9krb
+         tJp3G54+MvisxxuunFxDoyxKPNJqHWSaA7UOTTfW8npPexG+bby72sa6zYv3QNGJhljm
+         fIPw==
+X-Gm-Message-State: AOJu0YyHIUj6CxuCh6yTkhM1weuZrtcC9YOiDotkfX9Jla/0OclzV+Zv
+	9ZphtaxuB4g6+0ghEGul/bFzaA+LvuGr6fxkB6eeaOM6PE7td+7IimPo4buftueQW5ySPXI20cr
+	8/vL43b7W254/kVcoroF1HqxbuQsA6jM=
+X-Gm-Gg: ATEYQzyBgH8MPezvsp8FdUJutCkHy+uoMl14+gs90WaH5LXR0kUnWiLxZbD85MXYOcB
+	KHmb5nmeFLR0xElZW+jFizU1engmeVuDrmvy8LtUQdtu7cRuzzwVPPFpZnVSUgsrA5sBe40vcho
+	w9yWiPuJuuj+z6q5aCZ7ousJJg32NmmyZHaZ/mrHXl25ACMtqEZcRlzg9Zx1sPyhn6cE7DZGPPz
+	NIEJCFCFVZTGGY0drWWePNhEZf/+/xDRf6bAzjEdIDi/Nd5TGGf1ef1yVR8d7xH4jAFPynmV2+6
+	dK3b4h3B1Wc6TAwbcuUnF476oVErNTvI+h6RXcWaEQ==
+X-Received: by 2002:a53:adce:0:b0:64f:1278:e7b3 with SMTP id
+ 956f58d0204a3-6502fdc14aemr517173d50.22.1774986427400; Tue, 31 Mar 2026
+ 12:47:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20260331175456.4065874-1-luca.boccassi@gmail.com>
- <CA+CK2bB0bMxW721Q+SzFJENe4X0_GwcOh83R-mm1V5dig3oP3A@mail.gmail.com>
- <CAMw=ZnQZm_k_mMQPmKwuBtkFyXXgAn9MK1NzmVbZst4nGu6xhw@mail.gmail.com> <CA+CK2bDL9=uNmy9hq=3D-w=MHYsY82FNCkqvNeNpnTnX6meYRA@mail.gmail.com>
-In-Reply-To: <CA+CK2bDL9=uNmy9hq=3D-w=MHYsY82FNCkqvNeNpnTnX6meYRA@mail.gmail.com>
+References: <20260331175639.4066033-1-luca.boccassi@gmail.com>
+ <CA+CK2bCKJ8rkJ_onp9Za0KNuWujH4Gzue3a=HvwOJAK2tYhReA@mail.gmail.com>
+ <CAMw=ZnQcAggXOXY2s77qtgTS_d4td-5PXeMXEkMEVwnMFUrGPw@mail.gmail.com> <CA+CK2bDB1Z9tsv7dHGHGnfRcSyYZ7MTsCXtvJYVMAmgRZyZ=PQ@mail.gmail.com>
+In-Reply-To: <CA+CK2bDB1Z9tsv7dHGHGnfRcSyYZ7MTsCXtvJYVMAmgRZyZ=PQ@mail.gmail.com>
 From: Luca Boccassi <luca.boccassi@gmail.com>
-Date: Tue, 31 Mar 2026 20:40:07 +0100
-X-Gm-Features: AQROBzA80Z5vv8p1B8O-wR4-lNM3XMfZwPtBcQ1uf2wGh6dYtIhVFfM-a8O-V2Q
-Message-ID: <CAMw=ZnRKEaWC0GiXWHpbiAchpZeBawOCoDgtq18B1UJsZpNN-w@mail.gmail.com>
-Subject: Re: [PATCH] liveupdate: truncate getfile name to NAME_MAX
+Date: Tue, 31 Mar 2026 20:46:56 +0100
+X-Gm-Features: AQROBzCZMrg1QaVOm36h96ccl-T60eQ_EqWFDMABE8fw_zScwCx681KFLt1TMfk
+Message-ID: <CAMw=ZnQEuYrti57ZRXRUYXVryyBRwQgaU_7Moc5R4zaUHjYSGw@mail.gmail.com>
+Subject: Re: [PATCH] liveupdate: add LIVEUPDATE_SESSION_GET_NAME ioctl
 To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: kexec@lists.infradead.org, linux-mm@kvack.org, 
-	Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, pratyush@kernel.org
+Cc: kexec@lists.infradead.org, linux-mm@kvack.org, graf@amazon.com, 
+	rppt@kernel.org, pratyush@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260331_124019_292200_BFC4D377 
-X-CRM114-Status: GOOD (  37.46  )
+X-CRM114-CacheID: sfid-20260331_124708_787239_CB569AE7 
+X-CRM114-Status: GOOD (  38.64  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,123 +117,86 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, 31 Mar 2026 at 20:14, Pasha Tatashin <pasha.tatashin@soleen.com> wr=
+On Tue, 31 Mar 2026 at 20:28, Pasha Tatashin <pasha.tatashin@soleen.com> wr=
 ote:
 >
-> On Tue, Mar 31, 2026 at 2:30=E2=80=AFPM Luca Boccassi <luca.boccassi@gmai=
+> On Tue, Mar 31, 2026 at 3:07=E2=80=AFPM Luca Boccassi <luca.boccassi@gmai=
 l.com> wrote:
 > >
-> > On Tue, 31 Mar 2026, 19:21 Pasha Tatashin, <pasha.tatashin@soleen.com> =
-wrote:
-> >>
-> >> On Tue, Mar 31, 2026 at 1:55=E2=80=AFPM <luca.boccassi@gmail.com> wrot=
-e:
-> >> >
-> >> > From: Luca Boccassi <luca.boccassi@gmail.com>
-> >> >
-> >> > dynamic_dname() harcodes its limit to NAME_MAX bytes, which includes=
- a
-> >> > NUL terminator and a 'anon_inode:' prefix. If the name passed on goe=
-s
-> >> > above the limit it results in userspace getting a ENAMETOOLONG error=
-.
-> >> >
-> >> > Truncate the name to NAME_MAX - 12 - 1 characters to ensure this nev=
-er
-> >> > fails (accounting for prefix and NUL).
-> >> >
-> >> > Fixes: 0153094d03df ("liveupdate: luo_session: add sessions support"=
-)
->
-> Let's remove this, this patch is not fixing an existing issue, but a
-> preparation for future uapi changes?
-
-The linked patch that increases the buffer to 255 is tagged with
-'fixes' so I don't mind, as that's enough to fix the -ENAMETOOLONG
-error in currently released kernels. The original version of this set
-the truncation to the current max buffer size, hence why I had the
-fixes line.
-
-> >> >
-> >> > Signed-off-by: Luca Boccassi <luca.boccassi@gmail.com>
-> >> > ---
-> >> > Builds on top of this just sent by Aleksa:
-> >> >
-> >> > https://lore.kernel.org/linux-fsdevel/20260401-dynamic-dname-name_ma=
-x-v1-1-8ca20ab2642e@amutable.com/
-> >> >
-> >> >  kernel/liveupdate/luo_session.c | 7 +++++--
-> >> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> >> >
-> >> > diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo=
-_session.c
-> >> > index 7836772956406..4a40c7fdfb44f 100644
-> >> > --- a/kernel/liveupdate/luo_session.c
-> >> > +++ b/kernel/liveupdate/luo_session.c
-> >> > @@ -366,11 +366,14 @@ static const struct file_operations luo_sessio=
-n_fops =3D {
-> >> >  /* Create a "struct file" for session */
-> >> >  static int luo_session_getfile(struct luo_session *session, struct =
-file **filep)
-> >> >  {
-> >> > -       char name_buf[128];
-> >> > +       char name_buf[NAME_MAX];
-> >> >         struct file *file;
-> >> >
-> >> >         lockdep_assert_held(&session->mutex);
-> >> > -       snprintf(name_buf, sizeof(name_buf), "[luo_session] %s", ses=
-sion->name);
-> >> > +       /* dynamic_dname() rejects names above NAME_MAX bytes, inclu=
-ding NUL terminator
-> >> > +        * and a 'anon_inode:' prefix. Truncate to NAME_MAX - 12 - 1=
- to avoid
-> >> > +        * ENAMETOOLONG. */
-> >> > +       snprintf(name_buf, NAME_MAX - 12 - 1, "[luo_session] %s", se=
-ssion->name);
-> >>
-> >> I am confused by this change, the maximum session name length is: 64,
-> >> as defined in:
-> >> include/uapi/linux/liveupdate.h
-> >> /* The maximum length of session name including null termination */
-> >> #define LIVEUPDATE_SESSION_NAME_LENGTH 64
-> >>
-> >> So, 128 should be enough to include:
-> >> "[luo_session] %s", session->name
-> >>
-> >> Or am I missing something?
-> >>
-> >> Pasha
+> > On Tue, 31 Mar 2026 at 19:34, Pasha Tatashin <pasha.tatashin@soleen.com=
+> wrote:
+> > >
+> > > On Tue, Mar 31, 2026 at 1:56=E2=80=AFPM <luca.boccassi@gmail.com> wro=
+te:
+> > > >
+> > > > From: Luca Boccassi <luca.boccassi@gmail.com>
+> > > >
+> > > > Userspace when requesting a session specifies a name and gets a FD,
+> > > > but then there is no way to go back the other way and get the name
+> > > > given a LUO session FD. This is problematic especially when there
+> > > > is a userspace orchestrator that wants to check what FDs it is
+> > > > handling for clients.
+> > > >
+> > > > Resolving the /proc/self/fd/X is lossy as that has a hard limit
+> > > > of characters, so names might be truncated. Also requiring going
+> > > > through procfs and doing manual string mangling is not a nice
+> > > > pattern.
+> > >
+> > > Hi Luca,
+> > >
+> > > Thank you for working on this.
+> > >
+> > > This needs more explanation. The way I see it, the user orchestrator
+> > > can be the only one that has access to /dev/liveupdate (and this is
+> > > actually enforced by kernel). It opens it and creates session_fds for
+> > > any client out there. So, the orchestrator already has the FDs and
+> > > sends them to clients(e.g. via SCM_RIGHTS). It then monitors the PIDs
+> > > of the clients, and if they die, it closes the session_fds for them,
+> > > as their data does not need to be preserved.
+> > >
+> > > Could you please explain why the user orchestrator would need to quer=
+y
+> > > the session_fds, since it is the one that creates them in the first
+> > > place and has to keep them open in order to preserve them during a
+> > > live update?
 > >
-> >
-> > Yeah we need to to bump that size, it's too small - see the shared doc.=
- This is anyway needed for safety, as the user space call falls apart compl=
-etely if it goes over the hard coded limit,
+> > The orchestrator cannot and will not hold on to all this state, that
+> > is not possible. It will simply hand out session FDs on-demand via an
+> > IPC, enforcing a naming convention for the client, and immediately
+> > forget about them. Clients will hold them and use them as they see
+> > fit, and then store them in the FD store on shutdown if they want to
+> > commit them, and that's where the orchestrator will get them back, and
 >
-> If there is a safety issue, it should be fixed (even without a limit
-> bump), could you please explain it.
-
-Nothing specific, more from the abstract point of view - given that
-this will fail with a hard error if it goes above the hardcoded limit,
-it seems better to me to check it, rather than assuming it's going to
-match, as that's error prone.
-
-> I looked at the shared doc [https://tinyurl.com/luoddesign under limits t=
-ab]:
+> I see. The idea is to expand the LUO Session API to be compatible with
+> the systemd FD store API.
 >
-> I see:
-> TODO: this needs to be bumped, as for the varlink API we will impose a
-> cgroup path prefix, which means PATH_MAX + "/" + client-supplied
-> string.
+> > they need to be verified that they come from the right cgroup, what
+> > the client's portion of the name is to be able to hand them back after
+> > reboot, and so on.
 >
-> Why would we do that? Why can't we use a 63-byte unique identifier for
-> sessions and an in-memory database that maps the cgroup path prefix to
-> session_ids, where the database also gets passed from one kernel to
-> the other?
+> So, if I understand correctly, the enforcement of who gets a systemd
+> stored fd returned to them is based on the cgroup name, right?
+> Presumably, after a reboot, each VMM would have to start in a separate
+> cgroup (using the same name as in the previous kernel) and request its
+> session FDs back from systemd. That is what will be used to verify
+> ownership, am I correct?
 
-Because that requires tracking state across all runtime, and that's a
-no-go. The session itself needs to be identifiable by cgroup, so that
-its owner is uniquely identified in all cases, in all situations,
-regardless of any state or lack thereof.
-The structs have a size as input, so it should be doable to follow the
-usual process and keep it backward compatible.
+It could work either way, it depends on what the client wants to do
+w.r.t state separation. If the client is fine with having a single
+service being in charge of all sessions, that's of course ok, it can
+have as many as it wants to.
+But this also makes it possible to have strict state separation
+enforced when that is instead desired. I intend to make the interface
+to request a session privileged by default, but also gated by polkit,
+so that it is easy to make it unprivileged and scoped to specific
+uid/gid/services/etc if one wants to, with a simple polkit rule, and
+in that case we really want to be sure that nobody is playing games
+with other cgroups' sessions, as a precaution.
+
+I haven't finished getting this part going, but I'm close - the client
+asks for a session and provides a name, and the cgroup path of the
+caller is prefixed to it when creating the session. That way they are
+all tagged in a way that is immutable and unique, and that clients
+cannot mess with. If the client wants multiple sessions they'll all
+have the same prefix.
 
