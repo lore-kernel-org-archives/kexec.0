@@ -4,88 +4,172 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B1551D6AB16
-	for <kexec@archiver.kernel.org>; Thu,  2 Apr 2026 21:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 555D7D6AB18
+	for <kexec@archiver.kernel.org>; Thu,  2 Apr 2026 23:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=VGY/X63AM5CYUV5jHKCyejpvWLCEkd2f02dEjLoEJ0Q=; b=AQfbzoKRlDJKGRv4Wk6oxWHtgv
-	YpTwCI0neXVkRfhrgiLMpJUq4rdbiHxV5oRBU+iMA3U7vrKASsjH/3WzyS7ddsh5oidxL7KNjynkn
-	mo/Jq1f1KxYXvfiMABjVEuhrhODtEUKoFj7fW0iIKg/vvJDgkeTJ4mkexmNoMappS94HouDiEyZgW
-	U5Rh/ZU6YwueWrXXI0z9eghrKAvuoufLZOmD0+ZROamXeiD7kondcEVBnN9qWv1oDjcQb7/DMa06r
-	marzBME14HocsSn9+bDN5Bze6uPue+h1B9Nzy9cOP6cbDYJB1ZoJTc78sB5Y1I1I8pCQIWdHeQd4f
-	mSlZJbyw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=nAN5bptidML2Kt4p1H+2dCrPs2WWQMrrjGezrdlDOhI=; b=iBXT6okXtkQ4zydDP30Fu9AUik
+	Trv1AcOsaEOPqEiL0b0+YQpFwOUDAtigPEmDCUXu7HlE6BjgV2i6wkIBfNANq9+UdwCq5UqQuWZ2x
+	fKF8o6t4TzOF5Q3oqbHOgqp85KmI2PuusKr4fsg2RRPlAK5rHGLOhnE7ArB9AqXK985omXtRw70eO
+	GelZGnEBLNBhslptg38i/OtuqQ8lxnil21/10gAlrPy5xIFUnKoVCZCUBf71wwq7TQkl9nXygb7cm
+	971lJtTqhrFFgJ/bYRk75fr7CC1fu94t9fKNYHNLlonAgtkX4hVGOhP7xXb3brLiHOLFwqQDDxJzp
+	2ASEIRKw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w8PbT-00000000nGZ-3i4U;
-	Thu, 02 Apr 2026 21:29:27 +0000
-Received: from out-181.mta1.migadu.com ([95.215.58.181])
+	id 1w8RVn-00000000wR8-3QrY;
+	Thu, 02 Apr 2026 23:31:43 +0000
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w8PbQ-00000000nFs-48AW
+	id 1w8RVk-00000000wQb-3gD7
 	for kexec@lists.infradead.org;
-	Thu, 02 Apr 2026 21:29:27 +0000
-Message-ID: <e3fe7085-1297-47b8-bb17-a48196e8f37f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1775165349;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VGY/X63AM5CYUV5jHKCyejpvWLCEkd2f02dEjLoEJ0Q=;
-	b=cztqdX6ZDXLjlnqtaj+XpSJxK4tUGlU68740mYIA2/tAZ0QyPcAGYalbPO778XJaLi5FCW
-	6qDQsqTpoBrueJesKDXMKQLMFjUGINUaKboQIwzePc4BTBGVlUS+t6FFHDDv0fSXVa8on0
-	uWDv0N9DH/uNE2epNJ8s5a150/lSiOM=
-Date: Thu, 2 Apr 2026 14:28:53 -0700
+	Thu, 02 Apr 2026 23:31:42 +0000
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 632FBw5L1498964;
+	Thu, 2 Apr 2026 23:31:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=nAN5bptidML2Kt4p1H
+	+2dCrPs2WWQMrrjGezrdlDOhI=; b=UJCnZGhn7Ic3K/azsJ8+m1BtTPGKsylXGf
+	xK7r0SbUpmNjY0wiEcfFcGDcpcSCwdicFC35EzSg+Hu1GCMB4Q4COQMOE1iORWiG
+	EQ92ebLIxVxcjr4TeygbPXlXaOYzyYY+i7jkqwy1neJuyjcN1m7URqc/7pcFpa22
+	W1PVwZ7NyBE2y4swEXSX8zF/DD0hQE0i5dlJTJO+lZC+HnW3gGcO+MQ1rFTNAhjp
+	ryv6O/ToTEOIG4ZsVAWpwpuhfyDwU52UzK32WaiDPzuYT8Lv9f+Bf+TZqMH4oja3
+	cKxEo27wR31JAyA1txZn8tI8ws9ybLx7nrNqLQ87WGTvwslrsCow==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4d65jwhdam-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 02 Apr 2026 23:31:38 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 632L82uO039582;
+	Thu, 2 Apr 2026 23:31:37 GMT
+Received: from ch1pr05cu001.outbound.protection.outlook.com (mail-northcentralusazon11010024.outbound.protection.outlook.com [52.101.193.24])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4d65ekwdyr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 02 Apr 2026 23:31:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RYcu3o0EhDMR1PYtT0v/suKXjwMmj5ypP4Bvn0coMqECFM5YPmNH/ETEABEuSNaQa8rLBnAwguKdVx+QOqS1ZE75OuZr/Wf7L8DmcuxKRbWWMK5ImiEeakxIUn7F8N1lCMcSeWBYJNwwjeip51Yj8C8F8hrZZkLy2INcheo0h5pxwQgoV4YZP3FlOCjN1SNLYqILO1HO0U/lF74bKes7wriPwnRvee6ZobkZWOhERgYF8OHieV9iHUoH2tIFAk1IfWlMCE7FH4XL7AmeCEUqVAflM4MUqehz94DeZCp9yKLapXcCe2j6Hpv5+o1zVz5StOKVOLD6KIdXniFmlYAb5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nAN5bptidML2Kt4p1H+2dCrPs2WWQMrrjGezrdlDOhI=;
+ b=QX7dMeRt67zXNLltTcmd28NINwSBbO0C9fi08y+ahVHhicTRxv0MkvLiIyW2khOi/5pCFtgjW66DgiFDqYk2IwSmOhx9cwEm0ycJiVbpC4rji0aZ76Hp9xjJAh+xhBWbo7U5A9QUk6S/WFRelwwQZRNfdaoSem+hPGcad9ZVuThTpHA5kQReO4/iw7Qrr8SYP69dlrm9DDTCxLGlJUGJBcQ0xrumEhSUbX37V1M4MP+qch17O3hVu3vSI/ym3C11T2gJQ/9uwJRqmSTrNJvASQViwHJ2LqClDScF6/QI4u6YCiXINzljfN8VNEUAqdJmhgqOFihHHOqZ3UoRCxcSPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nAN5bptidML2Kt4p1H+2dCrPs2WWQMrrjGezrdlDOhI=;
+ b=G9AkFJ4uW1qF/wyIwVlbU4WHOPYy7gFZyPFzofSkfrFwzylWayGFyTUBahmr4/UY0aaFkmu32RkFTvYfANAIrSTMkn3IS1M3hhXH4FsFFzx+mhjw7DvflffsB2P/wuXdSdxGBiNlUiIJjy6SBUEeomCo5w3l5TNeMR5MIs6Yuc4=
+Received: from LV3PR10MB7868.namprd10.prod.outlook.com (2603:10b6:408:1b4::9)
+ by PH0PR10MB7098.namprd10.prod.outlook.com (2603:10b6:510:26e::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.17; Thu, 2 Apr
+ 2026 23:31:33 +0000
+Received: from LV3PR10MB7868.namprd10.prod.outlook.com
+ ([fe80::9105:4421:4267:8fce]) by LV3PR10MB7868.namprd10.prod.outlook.com
+ ([fe80::9105:4421:4267:8fce%5]) with mapi id 15.20.9769.018; Thu, 2 Apr 2026
+ 23:31:33 +0000
+From: Stephen Brennan <stephen.s.brennan@oracle.com>
+To: Tao Liu <ltao@redhat.com>, yamazaki-msmt@nec.com, k-hagio-ab@nec.com,
+        kexec@lists.infradead.org
+Cc: aravinda@linux.vnet.ibm.com, Tao Liu <ltao@redhat.com>
+Subject: Re: [PATCH v4][makedumpfile 1/7] Reserve sections for makedumpfile
+ and extenions
+In-Reply-To: <20260317150743.69590-2-ltao@redhat.com>
+References: <20260317150743.69590-1-ltao@redhat.com>
+ <20260317150743.69590-2-ltao@redhat.com>
+Date: Thu, 02 Apr 2026 16:31:31 -0700
+Message-ID: <875x69ey7g.fsf@oracle.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR13CA0135.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c6::20) To LV3PR10MB7868.namprd10.prod.outlook.com
+ (2603:10b6:408:1b4::9)
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 02/24] PCI: Add API to track PCI devices preserved
- across Live Update
-To: David Matlack <dmatlack@google.com>, Alex Williamson <alex@shazbot.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: Adithya Jayachandran <ajayachandra@nvidia.com>,
- Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>,
- Andrew Morton <akpm@linux-foundation.org>, Ankit Agrawal
- <ankita@nvidia.com>, Arnd Bergmann <arnd@arndb.de>,
- Askar Safin <safinaskar@gmail.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- Chris Li <chrisl@kernel.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>,
- David Rientjes <rientjes@google.com>, Feng Tang
- <feng.tang@linux.alibaba.com>, Jacob Pan <jacob.pan@linux.microsoft.com>,
- Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
- Kees Cook <kees@kernel.org>, Kevin Tian <kevin.tian@intel.com>,
- kexec@lists.infradead.org, kvm@vger.kernel.org,
- Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-pci@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
- Lukas Wunner <lukas@wunner.de>, Marco Elver <elver@google.com>,
- =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
- Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Pranjal Shrivastava <praan@google.com>, Pratyush Yadav
- <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>,
- Randy Dunlap <rdunlap@infradead.org>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>,
- Shuah Khan <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>,
- Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>,
- Yi Liu <yi.l.liu@intel.com>
-References: <20260323235817.1960573-1-dmatlack@google.com>
- <20260323235817.1960573-3-dmatlack@google.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Yanjun.Zhu" <yanjun.zhu@linux.dev>
-In-Reply-To: <20260323235817.1960573-3-dmatlack@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR10MB7868:EE_|PH0PR10MB7098:EE_
+X-MS-Office365-Filtering-Correlation-Id: 923f1b19-e64a-41ef-56cd-08de910ff9c1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|22082099003|56012099003|18002099003;
+X-Microsoft-Antispam-Message-Info: UxV++4PJe7DAsKP4bmH+JbcUGtwrw7qKhb+8AFbCEAwWa1alWSiazbhpaNUgzbjEz1Q7ovC7bx71qZaSz7fxDsauwO88X8XVlGmcV6xmrR0+ntXFoqtNBpp5PY+N4OpJGWNJhGaxyIofpizgLAn7F70ntSUwZkMlebiPh/MD1vL16h7NcVwjeiMemp8mnvKxVF5lAX69kXCdPczFueQ7S4+ztN29uWLiuAJ/RRzT8MbF9cQlo0XtoBtZPeCOEnuQxrn9RydGVoQD9sMpa9piMAlcxuOqEd5uHx6Vbx6o6NNOW7Rm9xaWWax93q+xJqsL1VS83H/n69JlxNKl6hOaJhpl9OlLANt3PjTE9g5HHpfGBn8zzx5HGkKxXrUTAu2I9lGUiUgOiDewCLvs8DKHYIltzItP022B4ioc4yaSgChm23YYxX7RPHyrNifgRubpZwYyB5XzHyTp8WQDF4ICxF/ZeYzkTpIlqvnS3TA45Vlz/ZEsqvWkQuP82H6xyuRs9jfw7qy2e6510SSRbqEQwDvpBe0Urva20reZUhHsGnxkC3uppLgBIMVkY/0RKABgv0Hp6yxPTZx2GEgomeGnxYmQ6/RiiHvXdNPpbOEskTAwbSUjD9Zj45fyd+LGV85zdEw70lnWxOBQwTwgi4cJbxIPQQ2D5GrDIQyKZasebYSUYVkfCmYqj7p72gYUHxcsCVhiydDXx36X2IuIkxyRUCqFTwHIybk9qy7EEWwKlg0=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR10MB7868.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?BTDEZt3zNW+N7zgLnKERrkm7jh7PADEgBxpPmrZLynSRdWtE26Ol7MP9QHk8?=
+ =?us-ascii?Q?VlAjOE/86wBV/gMIQSXGQBr9vGha+wPlrObZeBOt2++H4GFp8FEWMypxGsox?=
+ =?us-ascii?Q?pIPsBYIQckAHiBXCLBftyaue8mUByjvmuR+ldL0qH4ZMsZ+PKDWDoZ7LIxvC?=
+ =?us-ascii?Q?5Puxx+LYk/mSc6I8bBStrnpGTt3YpBPBhFXu98hKRfi92gEMjSj0m3fYHFaV?=
+ =?us-ascii?Q?HL3eL7tbBKRDe4c+pHmN20xEt5UNHoIRMsEb8c5afUVnN6L4XGHrQ9C+rGZH?=
+ =?us-ascii?Q?runc/EVOHeqfRkgfctpo60m9mOmzooixNGLAo0qF1UxIQWwy2l20MUiGABfz?=
+ =?us-ascii?Q?SMJH3HoZLh156ZBwMB+DJp8JJQSOBtKGXIF506077s54UGH2vQffjfJERpt+?=
+ =?us-ascii?Q?obxysKVpbMXJ2TJM8lFj2vB5yAnIK3mREv3ITaKk6JibpdGWpjf4Ki7iUr3f?=
+ =?us-ascii?Q?1BeA66X7gOhzZs5YkZNoaoU/dG+2tTWi6IRV6vxD/LF71V1iqEWfxGfu1r+l?=
+ =?us-ascii?Q?2prCIoXG4gwzuTpsvINZJQDXrhxJD1tICQmYVZIYIzVmwsVmP6MP7nr3Xna7?=
+ =?us-ascii?Q?eQ/Lmzbjz9t6OW1hgedWtaBiJejLunyGn6DwZR5iOjH6JDkhkSWKNpgPJRQu?=
+ =?us-ascii?Q?elAuYrW0zxWLNiJlbbND6Fe6L31U9b3usYNNPdyFQlL/NI/+spQe7sKkv/Do?=
+ =?us-ascii?Q?B6SCWO9g6oFQY7vM7rv9c2xOw2BPm5Uef1KFEKA24mS0O6iwD34G+kt7lr1s?=
+ =?us-ascii?Q?Rk7qIwz5cFC1dJsrTF0WztfedsejUFtf8dUcsIzf3TjVQhYhoNmQ/UAD+Q8b?=
+ =?us-ascii?Q?NQkIyISzrFy6/XTnK+BZW/MJO3NXn7gxoznNoSSfbi7cS0ZX48XpjLOYBOt1?=
+ =?us-ascii?Q?ZwpyU1ioIafmqClvou8oFhrTIlQMArhX8e21C75PACHpE/FK48xsM4iHtHI4?=
+ =?us-ascii?Q?jf52zVZ6rgNR5wjKU/HoDb2tQkZVdRdgnmruaRNbuo9GyNyB13jGGDmZavPw?=
+ =?us-ascii?Q?SZkH3WZ0Hd2+qEf1cZdekNCbfcsIaDHOXsn4H0gzUb9A0FgPS7oP2qcXUzur?=
+ =?us-ascii?Q?SchXPGsdq3RJ+sxBxX6gQ8tW5kRb8bOo2ycEXi+gbZ1rfq55sgz60S5HLpsl?=
+ =?us-ascii?Q?FOPMjX17HwU23g7O2PIPxdMzOgz8mKGCxD+A8YSv796Us+f6Z/2XkCm4aX9R?=
+ =?us-ascii?Q?+v0wbv5bV8w1rPv8SR+O1Y+6Np72omsWyGDXKqzhRebAhjtrCP/yq9Yyfw44?=
+ =?us-ascii?Q?VskjNR2iOjfLBp0GSooWumFhOGHtChxsHThCr3thTKGOtfgW8+n1GDyh7Z7t?=
+ =?us-ascii?Q?RmeqwCT8ks24tsPbXYzclGhPSq21Ch8wnTSagoZoz0ZD/HSUgzpVSARHtyvJ?=
+ =?us-ascii?Q?yynJingHngb/ICBlIBcD2xYNWTTHJKs8xRmWt1auzXrTQbwmE8nSQvlUpymH?=
+ =?us-ascii?Q?UYiRpfUGmxHWjgJTqH7k9vQoXzE3xZsvD5YIWS2K+Y/Nb4qcRUGerVvRkPEA?=
+ =?us-ascii?Q?u8mIi1v8UZPBJRuG9o2woEA5SARGSWcxiP8ljFMBL4sGRFjhyceOyQl3Egid?=
+ =?us-ascii?Q?QIseYmm9P+u2bl38uAUkls7zv+0T9Gw63wkI3PEfHOugNHbLTIzCmc6QY7II?=
+ =?us-ascii?Q?l+5aB707psU0q1WuZU24mUWv/EGKe9T4uDs8GqOmcMQsRcWb3TBDjkDwjHQ3?=
+ =?us-ascii?Q?xFJAW2A8sd3lLT48ky7YVQ5Z0D7ZRMyWBnkIU6241tO1GDZ5lgN91f7F7UMt?=
+ =?us-ascii?Q?R0F8V5kDUmTxOUP6IZGjifslMA37urw=3D?=
+X-Exchange-RoutingPolicyChecked: swNpmAHg8HdCDooXHrqcukwjf5mq68kb1I9vnqbIbCf3cFv9BnG2LEDf5N7qHl0Lt4Ho5TC/+lJZbjcnNzOKX8v1Ia5QweXvjTT9rkZdW0iiDXID8QHBEXrIzOXaH1tZ0TyDsSmQZ71Kwlau9nYgDOXthy1/S0FWp6nVrYWwrxskch5EDugANzMTMQOvGiiE+f0sm1BSNS7RS2hIsXRHX53fj26kYthH2NTJtwAvEww+UydkeguMO5BFk5WwZ/K/Obka8Vy96Lp/Nl+u/Eqrzhn9iakvtGs/UNejDl/UDvlzyFGmJcxtxFmRK+ahf3pKv2dwzs/E36K41NTd76JcGQ==
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 9EzrfbxiUSpO/n3sULqk13cyaPFWfG3qUzjTo5hjGIJt3AzVYea0v3BFFWC2k/dedZ2P63NrgdBvH1uNpZB/JEQKkRMbH7FWObv2qTfNJS1zl8ryPv7eP8hR1b/3W6GWPqXGR3defqtThaNowDPb2EHWCUchgMnyvUV5H9Go36oKV/qOnRy4aN8QmQz/KiSpFN3KjJGPuWMr3PDBCv5I4rKeerpGc7vyFqX5V0Ryo52kYmOfAKwoGHlIiIKjrD4NOuyMmV8G/ZWqZiQI7p2nehC/gT4xkbT1lSnP5qmwEQ5VoGv8H9QGHVlnIj9pVR6ocKfpQMfm3D8ge2ZfYG7j/dJEQDjcmZSPqeiJITVTqL1E2HCGAhZBxgFq84qcwudIHsbkptmoM8wfJ1GMiYXHAoqjpcw92DiZ5OWTgIOCI05xTbGBdMsl0IyVWbYW71+X4HD30N5lMdZ2FWoZtYVZxMXK27rEpg46F8P4OnKTtsX+z7CRZ1jYw2iHCGAkZrQfWjNbYypMTgkKJDLUknZ7oHHsrXLwdjZm18gWdQqnVF5NasSDkvYU5mKljeik40xxE5rFJexLTJ0SI/F1u8UvKoJWIXWXwfkj9k0D4BwSXsU=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 923f1b19-e64a-41ef-56cd-08de910ff9c1
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR10MB7868.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2026 23:31:33.6298
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NJTmNzw7z72wbvYoYuOAuUk3QGAo+oQ4ppeFVjvKXVlyjXSkqVrAkvHKTNuIu4UKgkBqvE6aQdUuVsQb4JnVcGNHxAuDEY4rEZBEhKsk2ls=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB7098
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-02_04,2026-04-02_05,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 adultscore=0
+ bulkscore=0 phishscore=0 suspectscore=0 malwarescore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2603050001
+ definitions=main-2604020210
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAyMDIxMCBTYWx0ZWRfX87sZS7GoBfoF
+ vxRBu2w/PtUsgie1Ykx5Zk/lXWXnSJyv50aP7gx7oSvEg20YwSb2EGpu9IINr3p++aDLicTF4N9
+ InESRNcKazDGIpS4q+qFy/U+d5CsFG9i7jGdDPhqd90WWYPUIhJJ3oMFRCzcTheK8L/uT02CZsA
+ IvmSVSRZdmJuMMiq7xku8xMUkiFyzkGcG40CC2TCobkxJDEfXd0ZtQkkMvrkPIIHXmX3QoOQyTS
+ I1jQ3o+CJ7UAptR4dZAe6b+nbX/CeYiulnCSOkMPib6qsHZYUZeBXsd1MgmucGI1Q1Ky8fc9Vlf
+ gMMGynhsZ6s6CJ/U9RDMaFp+VwmE8ubdJTVXPgqtZ33XWXIXs88AvAyKUldhlry5X347HaNDL6V
+ BXd5DkROSx6k4Qmj5Yj2yzdwVc8aHGHpMJitLSRIPNYbu0/Lu+S5TEbZM0KL6+HVHLKoU+CBMIW
+ vlAX9RHAOKetaE5+IdHxCFJKVnSvL1qfBa2tid6c=
+X-Authority-Analysis: v=2.4 cv=CJEnnBrD c=1 sm=1 tr=0 ts=69cefc5a b=1 cx=c_pps
+ a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=A5OVakUREuEA:10
+ a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22 a=jiCTI4zE5U7BLdzWsZGv:22
+ a=RD47p0oAkeU5bO7t-o6f:22 a=20KFwNOVAAAA:8 a=yPCof4ZbAAAA:8
+ a=dPx6R2Yw8r53PyULBc4A:9 cc=ntf awl=host:12292
+X-Proofpoint-ORIG-GUID: rhUQzKbhHJFRVHcg_vJn2XkVpucj4bRD
+X-Proofpoint-GUID: rhUQzKbhHJFRVHcg_vJn2XkVpucj4bRD
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260402_142925_742548_F0B0AC3D 
-X-CRM114-Status: GOOD (  55.52  )
+X-CRM114-CacheID: sfid-20260402_163140_945615_D9B0ED6E 
+X-CRM114-Status: GOOD (  20.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,631 +184,67 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Tao Liu <ltao@redhat.com> writes:
+> This patch makes preparation for btf/kallsyms support of
+> makedumpfile and extensions. Any needed kernel symbols/types
+> will be reserved within a special section, .init_ksyms for
+> kallsyms symbols and .init_ktypes for kernel types. During
+> makedumpfile kallsyms/btf initialization, those missing info
+> will be resolved. A makedumpfile.ld script is introduced for the
+> purpose.
+>
+> Suggested-by: Stephen Brennan <stephen.s.brennan@oracle.com>
+> Signed-off-by: Tao Liu <ltao@redhat.com>
 
-On 3/23/26 4:57 PM, David Matlack wrote:
-> Add an API to enable the PCI subsystem to participate in a Live Update
-> and track all devices that are being preserved by drivers. Since this
-> support is still under development, hide it behind a new Kconfig
-> PCI_LIVEUPDATE that is marked experimental.
->
-> This API will be used in subsequent commits by the vfio-pci driver to
-> preserve VFIO devices across Live Update.
->
-> Signed-off-by: David Matlack <dmatlack@google.com>
+As I mentioned before, I don't think this patch is strictly necessary.
+If we rename the sections to avoid the "." at the start of the names,
+then the compiler should automatically provide the start and stop
+symbols. But that said, there's nothing wrong with doing it this way,
+and it is a bit more explicit, so I see the value in keeping it.
+
+Reviewed-by: Stephen Brennan <stephen.s.brennan@oracle.com>
+
 > ---
->   drivers/pci/Kconfig         |  11 ++
->   drivers/pci/Makefile        |   1 +
->   drivers/pci/liveupdate.c    | 380 ++++++++++++++++++++++++++++++++++++
->   drivers/pci/pci.h           |  14 ++
->   drivers/pci/probe.c         |   2 +
->   include/linux/kho/abi/pci.h |  62 ++++++
->   include/linux/pci.h         |  41 ++++
->   7 files changed, 511 insertions(+)
->   create mode 100644 drivers/pci/liveupdate.c
->   create mode 100644 include/linux/kho/abi/pci.h
+>  Makefile        |  2 +-
+>  makedumpfile.ld | 15 +++++++++++++++
+>  2 files changed, 16 insertions(+), 1 deletion(-)
+>  create mode 100644 makedumpfile.ld
 >
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index e3f848ffb52a..05307d89c3f4 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -334,6 +334,17 @@ config VGA_ARB_MAX_GPUS
->   	  Reserves space in the kernel to maintain resource locking for
->   	  multiple GPUS.  The overhead for each GPU is very small.
->   
-> +config PCI_LIVEUPDATE
-> +	bool "PCI Live Update Support (EXPERIMENTAL)"
-> +	depends on PCI && LIVEUPDATE
-> +	help
-> +	  Support for preserving PCI devices across a Live Update. This option
-> +	  should only be enabled by developers working on implementing this
-> +	  support. Once enough support as landed in the kernel, this option
-> +	  will no longer be marked EXPERIMENTAL.
-> +
-> +	  If unsure, say N.
-
-Currently, it only supports 'n' or 'y'. Is it possible to add 'm' 
-(modular support)?
-
-This would allow the feature to be built as a kernel module. For 
-development
-
-purposes, modularization means we only need to recompile a single module
-
-for testing, rather than rebuilding the entire kernel. Compiling a 
-module should
-
-be significantly faster than a full kernel build.
-
-Zhu Yanjun
-
-> +
->   source "drivers/pci/hotplug/Kconfig"
->   source "drivers/pci/controller/Kconfig"
->   source "drivers/pci/endpoint/Kconfig"
-> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-> index 41ebc3b9a518..e8d003cb6757 100644
-> --- a/drivers/pci/Makefile
-> +++ b/drivers/pci/Makefile
-> @@ -16,6 +16,7 @@ obj-$(CONFIG_PROC_FS)		+= proc.o
->   obj-$(CONFIG_SYSFS)		+= pci-sysfs.o slot.o
->   obj-$(CONFIG_ACPI)		+= pci-acpi.o
->   obj-$(CONFIG_GENERIC_PCI_IOMAP) += iomap.o
-> +obj-$(CONFIG_PCI_LIVEUPDATE)	+= liveupdate.o
->   endif
->   
->   obj-$(CONFIG_OF)		+= of.o
-> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+> diff --git a/Makefile b/Makefile
+> index 05ab5f2..15a4ba0 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -113,7 +113,7 @@ $(OBJ_ARCH): $(SRC_ARCH)
+>  	$(CC) $(CFLAGS_ARCH) -c -o ./$@ $(VPATH)$(@:.o=.c)
+>  
+>  makedumpfile: $(SRC_BASE) $(OBJ_PART) $(OBJ_ARCH)
+> -	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -o $@ $< $(LIBS)
+> +	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -Wl,-T,makedumpfile.ld -o $@ $< $(LIBS)
+>  	@sed -e "s/@DATE@/$(DATE)/" \
+>  	     -e "s/@VERSION@/$(VERSION)/" \
+>  	     $(VPATH)makedumpfile.8.in > $(VPATH)makedumpfile.8
+> diff --git a/makedumpfile.ld b/makedumpfile.ld
 > new file mode 100644
-> index 000000000000..bec7b3500057
+> index 0000000..231a162
 > --- /dev/null
-> +++ b/drivers/pci/liveupdate.c
-> @@ -0,0 +1,380 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * Copyright (c) 2026, Google LLC.
-> + * David Matlack <dmatlack@google.com>
-> + */
-> +
-> +/**
-> + * DOC: PCI Live Update
-> + *
-> + * The PCI subsystem participates in the Live Update process to enable drivers
-> + * to preserve their PCI devices across kexec.
-> + *
-> + * Device preservation across Live Update is built on top of the Live Update
-> + * Orchestrator (LUO) support for file preservation across kexec. Userspace
-> + * indicates that a device should be preserved by preserving the file associated
-> + * with the device with ``ioctl(LIVEUPDATE_SESSION_PRESERVE_FD)``.
-> + *
-> + * .. note::
-> + *    The support for preserving PCI devices across Live Update is currently
-> + *    *partial* and should be considered *experimental*. It should only be
-> + *    used by developers working on the implementation for the time being.
-> + *
-> + *    To enable the support, enable ``CONFIG_PCI_LIVEUPDATE``.
-> + *
-> + * Driver API
-> + * ==========
-> + *
-> + * Drivers that support file-based device preservation must register their
-> + * ``liveupdate_file_handler`` with the PCI subsystem by calling
-> + * ``pci_liveupdate_register_flb()``. This ensures the PCI subsystem will be
-> + * notified whenever a device file is preserved so that ``struct pci_ser``
-> + * can be allocated to track all preserved devices. This struct is an ABI
-> + * and is eventually handed off to the next kernel via Kexec-Handover (KHO).
-> + *
-> + * In the "outgoing" kernel (before kexec), drivers should then notify the PCI
-> + * subsystem directly whenever the preservation status for a device changes:
-> + *
-> + *  * ``pci_liveupdate_preserve(pci_dev)``: The device is being preserved.
-> + *
-> + *  * ``pci_liveupdate_unpreserve(pci_dev)``: The device is no longer being
-> + *    preserved (preservation is cancelled).
-> + *
-> + * In the "incoming" kernel (after kexec), drivers should notify the PCI
-> + * subsystem with the following calls:
-> + *
-> + *  * ``pci_liveupdate_retrieve(pci_dev)``: The device file is being retrieved
-> + *    by userspace.
-> + *
-> + *  * ``pci_liveupdate_finish(pci_dev)``: The device is done participating in
-> + *    Live Update. After this point the device may no longer be even associated
-> + *    with the same driver.
-> + *
-> + * Incoming/Outgoing
-> + * =================
-> + *
-> + * The state of each device's participation in Live Update is stored in
-> + * ``struct pci_dev``:
-> + *
-> + *  * ``liveupdate_outgoing``: True if the device is being preserved in the
-> + *    outgoing kernel. Set in ``pci_liveupdate_preserve()`` and cleared in
-> + *    ``pci_liveupdate_unpreserve()``.
-> + *
-> + *  * ``liveupdate_incoming``: True if the device is preserved in the incoming
-> + *    kernel. Set during probing when the device is first created and cleared
-> + *    in ``pci_liveupdate_finish()``.
-> + *
-> + * Restrictions
-> + * ============
-> + *
-> + * Preserved devices currently have the following restrictions. Each of these
-> + * may be relaxed in the future.
-> + *
-> + *  * The device must not be a Virtual Function (VF).
-> + *
-> + *  * The device must not be a Physical Function (PF).
-> + *
-> + * Preservation Behavior
-> + * =====================
-> + *
-> + * The kernel preserves the following state for devices preserved across a Live
-> + * Update:
-> + *
-> + *  * The PCI Segment, Bus, Device, and Function numbers assigned to the device
-> + *    are guaranteed to remain the same across Live Update.
-> + *
-> + * This list will be extended in the future as new support is added.
-> + *
-> + * Driver Binding
-> + * ==============
-> + *
-> + * It is the driver's responsibility for ensuring that preserved devices are not
-> + * released or bound to a different driver for as long as they are preserved. In
-> + * practice, this is enforced by LUO taking an extra referenced to the preserved
-> + * device file for as long as it is preserved.
-> + *
-> + * However, there is a window of time in the incoming kernel when a device is
-> + * first probed and when userspace retrieves the device file with
-> + * ``LIVEUPDATE_SESSION_RETRIEVE_FD`` when the device could be bound to any
-> + * driver.
-> + *
-> + * It is currently userspace's responsibility to ensure that the device is bound
-> + * to the correct driver in this window.
-> + */
-> +
-> +#include <linux/bsearch.h>
-> +#include <linux/io.h>
-> +#include <linux/kexec_handover.h>
-> +#include <linux/kho/abi/pci.h>
-> +#include <linux/liveupdate.h>
-> +#include <linux/mutex.h>
-> +#include <linux/mm.h>
-> +#include <linux/pci.h>
-> +#include <linux/sort.h>
-> +
-> +#include "pci.h"
-> +
-> +static DEFINE_MUTEX(pci_flb_outgoing_lock);
-> +
-> +static int pci_flb_preserve(struct liveupdate_flb_op_args *args)
+> +++ b/makedumpfile.ld
+> @@ -0,0 +1,15 @@
+> +SECTIONS
 > +{
-> +	struct pci_dev *dev = NULL;
-> +	int max_nr_devices = 0;
-> +	struct pci_ser *ser;
-> +	unsigned long size;
-> +
-> +	/*
-> +	 * Don't both accounting for VFs that could be created after this
-> +	 * since preserving VFs is not supported yet. Also don't account
-> +	 * for devices that could be hot-plugged after this since preserving
-> +	 * hot-plugged devices across Live Update is not yet an expected
-> +	 * use-case.
-> +	 */
-> +	for_each_pci_dev(dev)
-> +		max_nr_devices++;
-> +
-> +	size = struct_size_t(struct pci_ser, devices, max_nr_devices);
-> +
-> +	ser = kho_alloc_preserve(size);
-> +	if (IS_ERR(ser))
-> +		return PTR_ERR(ser);
-> +
-> +	ser->max_nr_devices = max_nr_devices;
-> +
-> +	args->obj = ser;
-> +	args->data = virt_to_phys(ser);
-> +	return 0;
-> +}
-> +
-> +static void pci_flb_unpreserve(struct liveupdate_flb_op_args *args)
-> +{
-> +	struct pci_ser *ser = args->obj;
-> +
-> +	WARN_ON_ONCE(ser->nr_devices);
-> +	kho_unpreserve_free(ser);
-> +}
-> +
-> +static int pci_flb_retrieve(struct liveupdate_flb_op_args *args)
-> +{
-> +	args->obj = phys_to_virt(args->data);
-> +	return 0;
-> +}
-> +
-> +static void pci_flb_finish(struct liveupdate_flb_op_args *args)
-> +{
-> +	kho_restore_free(args->obj);
-> +}
-> +
-> +static struct liveupdate_flb_ops pci_liveupdate_flb_ops = {
-> +	.preserve = pci_flb_preserve,
-> +	.unpreserve = pci_flb_unpreserve,
-> +	.retrieve = pci_flb_retrieve,
-> +	.finish = pci_flb_finish,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static struct liveupdate_flb pci_liveupdate_flb = {
-> +	.ops = &pci_liveupdate_flb_ops,
-> +	.compatible = PCI_LUO_FLB_COMPATIBLE,
-> +};
-> +
-> +#define INIT_PCI_DEV_SER(_dev) {		\
-> +	.domain = pci_domain_nr((_dev)->bus),	\
-> +	.bdf = pci_dev_id(_dev),		\
-> +}
-> +
-> +static int pci_dev_ser_cmp(const void *__a, const void *__b)
-> +{
-> +	const struct pci_dev_ser *a = __a, *b = __b;
-> +
-> +	return cmp_int((u64)a->domain << 16 | a->bdf,
-> +		       (u64)b->domain << 16 | b->bdf);
-> +}
-> +
-> +static struct pci_dev_ser *pci_ser_find(struct pci_ser *ser,
-> +					struct pci_dev *dev)
-> +{
-> +	const struct pci_dev_ser key = INIT_PCI_DEV_SER(dev);
-> +
-> +	return bsearch(&key, ser->devices, ser->nr_devices,
-> +		       sizeof(key), pci_dev_ser_cmp);
-> +}
-> +
-> +static void pci_ser_delete(struct pci_ser *ser, struct pci_dev *dev)
-> +{
-> +	struct pci_dev_ser *dev_ser;
-> +	int i;
-> +
-> +	dev_ser = pci_ser_find(ser, dev);
-> +
-> +	/*
-> +	 * This should never happen unless there is a kernel bug or
-> +	 * corruption that causes the state in struct pci_ser to get
-> +	 * out of sync with struct pci_dev.
-> +	 */
-> +	if (pci_WARN_ONCE(dev, !dev_ser, "Cannot find preserved device!"))
-> +		return;
-> +
-> +	for (i = dev_ser - ser->devices; i < ser->nr_devices - 1; i++)
-> +		ser->devices[i] = ser->devices[i + 1];
-> +
-> +	ser->nr_devices--;
-> +}
-> +
-> +int pci_liveupdate_preserve(struct pci_dev *dev)
-> +{
-> +	struct pci_dev_ser new = INIT_PCI_DEV_SER(dev);
-> +	struct pci_ser *ser;
-> +	int i, ret;
-> +
-> +	/* SR-IOV is not supported yet. */
-> +	if (dev->is_virtfn || dev->is_physfn)
-> +		return -EINVAL;
-> +
-> +	guard(mutex)(&pci_flb_outgoing_lock);
-> +
-> +	if (dev->liveupdate_outgoing)
-> +		return -EBUSY;
-> +
-> +	ret = liveupdate_flb_get_outgoing(&pci_liveupdate_flb, (void **)&ser);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (ser->nr_devices == ser->max_nr_devices)
-> +		return -E2BIG;
-> +
-> +	for (i = ser->nr_devices; i > 0; i--) {
-> +		struct pci_dev_ser *prev = &ser->devices[i - 1];
-> +		int cmp = pci_dev_ser_cmp(&new, prev);
-> +
-> +		/*
-> +		 * This should never happen unless there is a kernel bug or
-> +		 * corruption that causes the state in struct pci_ser to get out
-> +		 * of sync with struct pci_dev.
-> +		 */
-> +		if (WARN_ON_ONCE(!cmp))
-> +			return -EBUSY;
-> +
-> +		if (cmp > 0)
-> +			break;
-> +
-> +		ser->devices[i] = *prev;
+> +	.init_ksyms ALIGN(8) : {
+> +		__start_init_ksyms = .;
+> +		KEEP(*(.init_ksyms*))
+> +		__stop_init_ksyms = .;
 > +	}
 > +
-> +	ser->devices[i] = new;
-> +	ser->nr_devices++;
-> +	dev->liveupdate_outgoing = true;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_liveupdate_preserve);
-> +
-> +void pci_liveupdate_unpreserve(struct pci_dev *dev)
-> +{
-> +	struct pci_ser *ser;
-> +	int ret;
-> +
-> +	/* This should never happen unless the caller (driver) is buggy */
-> +	if (WARN_ON_ONCE(!dev->liveupdate_outgoing))
-> +		return;
-> +
-> +	guard(mutex)(&pci_flb_outgoing_lock);
-> +
-> +	ret = liveupdate_flb_get_outgoing(&pci_liveupdate_flb, (void **)&ser);
-> +
-> +	/* This should never happen unless there is a bug in LUO */
-> +	if (WARN_ON_ONCE(ret))
-> +		return;
-> +
-> +	pci_ser_delete(ser, dev);
-> +	dev->liveupdate_outgoing = false;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_liveupdate_unpreserve);
-> +
-> +static int pci_liveupdate_flb_get_incoming(struct pci_ser **serp)
-> +{
-> +	int ret;
-> +
-> +	ret = liveupdate_flb_get_incoming(&pci_liveupdate_flb, (void **)serp);
-> +
-> +	/* Live Update is not enabled. */
-> +	if (ret == -EOPNOTSUPP)
-> +		return ret;
-> +
-> +	/* Live Update is enabled, but there is no incoming FLB data. */
-> +	if (ret == -ENODATA)
-> +		return ret;
-> +
-> +	/*
-> +	 * Live Update is enabled and there is incoming FLB data, but none of it
-> +	 * matches pci_liveupdate_flb.compatible.
-> +	 *
-> +	 * This could mean that no PCI FLB data was passed by the previous
-> +	 * kernel, but it could also mean the previous kernel used a different
-> +	 * compatibility string (i.e.a different ABI). The latter deserves at
-> +	 * least a WARN_ON_ONCE() but it cannot be distinguished from the
-> +	 * former.
-> +	 */
-> +	if (ret == -ENOENT) {
-> +		pr_info_once("PCI: No incoming FLB data detected during Live Update");
-> +		return ret;
+> +	.init_ktypes ALIGN(8) : {
+> +		__start_init_ktypes = .;
+> +		KEEP(*(.init_ktypes*))
+> +		__stop_init_ktypes = .;
 > +	}
-> +
-> +	/*
-> +	 * There is incoming FLB data that matches pci_liveupdate_flb.compatible
-> +	 * but it cannot be retrieved. Proceed with standard initialization as
-> +	 * if there was not incoming PCI FLB data.
-> +	 */
-> +	WARN_ONCE(ret, "PCI: Failed to retrieve incoming FLB data during Live Update");
-> +	return ret;
 > +}
-> +
-> +u32 pci_liveupdate_incoming_nr_devices(void)
-> +{
-> +	struct pci_ser *ser;
-> +
-> +	if (pci_liveupdate_flb_get_incoming(&ser))
-> +		return 0;
-> +
-> +	return ser->nr_devices;
-> +}
-> +
-> +void pci_liveupdate_setup_device(struct pci_dev *dev)
-> +{
-> +	struct pci_ser *ser;
-> +
-> +	if (pci_liveupdate_flb_get_incoming(&ser))
-> +		return;
-> +
-> +	if (!pci_ser_find(ser, dev))
-> +		return;
-> +
-> +	dev->liveupdate_incoming = true;
-> +}
-> +
-> +int pci_liveupdate_retrieve(struct pci_dev *dev)
-> +{
-> +	if (!dev->liveupdate_incoming)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_liveupdate_retrieve);
-> +
-> +void pci_liveupdate_finish(struct pci_dev *dev)
-> +{
-> +	dev->liveupdate_incoming = false;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_liveupdate_finish);
-> +
-> +int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh)
-> +{
-> +	return liveupdate_register_flb(fh, &pci_liveupdate_flb);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_liveupdate_register_flb);
-> +
-> +void pci_liveupdate_unregister_flb(struct liveupdate_file_handler *fh)
-> +{
-> +	liveupdate_unregister_flb(fh, &pci_liveupdate_flb);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_liveupdate_unregister_flb);
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 13d998fbacce..979cb9921340 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -1434,4 +1434,18 @@ static inline int pci_msix_write_tph_tag(struct pci_dev *pdev, unsigned int inde
->   	(PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
->   	 PCI_CONF1_EXT_REG(reg))
->   
-> +#ifdef CONFIG_PCI_LIVEUPDATE
-> +void pci_liveupdate_setup_device(struct pci_dev *dev);
-> +u32 pci_liveupdate_incoming_nr_devices(void);
-> +#else
-> +static inline void pci_liveupdate_setup_device(struct pci_dev *dev)
-> +{
-> +}
-> +
-> +static inline u32 pci_liveupdate_incoming_nr_devices(void)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
->   #endif /* DRIVERS_PCI_H */
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index bccc7a4bdd79..c60222d45659 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2064,6 +2064,8 @@ int pci_setup_device(struct pci_dev *dev)
->   	if (pci_early_dump)
->   		early_dump_pci_device(dev);
->   
-> +	pci_liveupdate_setup_device(dev);
-> +
->   	/* Need to have dev->class ready */
->   	dev->cfg_size = pci_cfg_space_size(dev);
->   
-> diff --git a/include/linux/kho/abi/pci.h b/include/linux/kho/abi/pci.h
-> new file mode 100644
-> index 000000000000..7764795f6818
-> --- /dev/null
-> +++ b/include/linux/kho/abi/pci.h
-> @@ -0,0 +1,62 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +/*
-> + * Copyright (c) 2025, Google LLC.
-> + * David Matlack <dmatlack@google.com>
-> + */
-> +
-> +#ifndef _LINUX_KHO_ABI_PCI_H
-> +#define _LINUX_KHO_ABI_PCI_H
-> +
-> +#include <linux/bug.h>
-> +#include <linux/compiler.h>
-> +#include <linux/types.h>
-> +
-> +/**
-> + * DOC: PCI File-Lifecycle Bound (FLB) Live Update ABI
-> + *
-> + * This header defines the ABI for preserving core PCI state across kexec using
-> + * Live Update File-Lifecycle Bound (FLB) data.
-> + *
-> + * This interface is a contract. Any modification to any of the serialization
-> + * structs defined here constitutes a breaking change. Such changes require
-> + * incrementing the version number in the PCI_LUO_FLB_COMPATIBLE string.
-> + */
-> +
-> +#define PCI_LUO_FLB_COMPATIBLE "pci-v1"
-> +
-> +/**
-> + * struct pci_dev_ser - Serialized state about a single PCI device.
-> + *
-> + * @domain: The device's PCI domain number (segment).
-> + * @bdf: The device's PCI bus, device, and function number.
-> + * @reserved: Reserved (to naturally align struct pci_dev_ser).
-> + */
-> +struct pci_dev_ser {
-> +	u32 domain;
-> +	u16 bdf;
-> +	u16 reserved;
-> +} __packed;
-> +
-> +/**
-> + * struct pci_ser - PCI Subsystem Live Update State
-> + *
-> + * This struct tracks state about all devices that are being preserved across
-> + * a Live Update for the next kernel.
-> + *
-> + * @max_nr_devices: The length of the devices[] flexible array.
-> + * @nr_devices: The number of devices that were preserved.
-> + * @devices: Flexible array of pci_dev_ser structs for each device. Guaranteed
-> + *           to be sorted ascending by domain and bdf.
-> + */
-> +struct pci_ser {
-> +	u64 max_nr_devices;
-> +	u64 nr_devices;
-> +	struct pci_dev_ser devices[];
-> +} __packed;
-> +
-> +/* Ensure all elements of devices[] are naturally aligned. */
-> +static_assert(offsetof(struct pci_ser, devices) % sizeof(unsigned long) == 0);
-> +static_assert(sizeof(struct pci_dev_ser) % sizeof(unsigned long) == 0);
-> +
-> +#endif /* _LINUX_KHO_ABI_PCI_H */
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 1c270f1d5123..27ee9846a2fd 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -40,6 +40,7 @@
->   #include <linux/resource_ext.h>
->   #include <linux/msi_api.h>
->   #include <uapi/linux/pci.h>
-> +#include <linux/liveupdate.h>
->   
->   #include <linux/pci_ids.h>
->   
-> @@ -591,6 +592,10 @@ struct pci_dev {
->   	u8		tph_mode;	/* TPH mode */
->   	u8		tph_req_type;	/* TPH requester type */
->   #endif
-> +#ifdef CONFIG_PCI_LIVEUPDATE
-> +	unsigned int	liveupdate_incoming:1;	/* Preserved by previous kernel */
-> +	unsigned int	liveupdate_outgoing:1;	/* Preserved for next kernel */
-> +#endif
->   };
->   
->   static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
-> @@ -2871,4 +2876,40 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
->   	WARN_ONCE(condition, "%s %s: " fmt, \
->   		  dev_driver_string(&(pdev)->dev), pci_name(pdev), ##arg)
->   
-> +#ifdef CONFIG_PCI_LIVEUPDATE
-> +int pci_liveupdate_preserve(struct pci_dev *dev);
-> +void pci_liveupdate_unpreserve(struct pci_dev *dev);
-> +int pci_liveupdate_retrieve(struct pci_dev *dev);
-> +void pci_liveupdate_finish(struct pci_dev *dev);
-> +int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh);
-> +void pci_liveupdate_unregister_flb(struct liveupdate_file_handler *fh);
-> +#else
-> +static inline int pci_liveupdate_preserve(struct pci_dev *dev)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static inline void pci_liveupdate_unpreserve(struct pci_dev *dev)
-> +{
-> +}
-> +
-> +static inline int pci_liveupdate_retrieve(struct pci_dev *dev)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static inline void pci_liveupdate_finish(struct pci_dev *dev)
-> +{
-> +}
-> +
-> +static inline int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static inline void pci_liveupdate_unregister_flb(struct liveupdate_file_handler *fh)
-> +{
-> +}
-> +#endif
-> +
->   #endif /* LINUX_PCI_H */
+> +INSERT AFTER .data;
+> \ No newline at end of file
+> -- 
+> 2.47.0
 
