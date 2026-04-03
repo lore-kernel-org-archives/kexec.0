@@ -4,92 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 15E25FF885A
-	for <kexec@archiver.kernel.org>; Sat, 25 Apr 2026 03:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B0A14FF8860
+	for <kexec@archiver.kernel.org>; Mon, 27 Apr 2026 15:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Subject:cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=yQTvhWSyeRzzkMlZ8tRqN85t2RdPb6JQ5sP+OFC2oos=; b=sf7kBnxgRQa6gGqkOazWYNwGgz
-	l4y0uUFZHK5TEROe6CIJEUohLI1ZQsKbqVy6ijb9fjRf6WxeA+g4cWlVuJzKn/SP7noW+0aHQBW+A
-	UCsX6I6uBdYvITQav3DACvkSosEuhXtux8ysw90cwO/B5Mj8rIRdxOlGw/LjaaxKrV0wqPLE1vygI
-	rXVBhC1Ky+3K8s9NI1dPhvgB9SpcHBV3dDomGmKFeBi08mYTP5lQ0jWIvhBEHM55dvAKhosQrNATF
-	lIJ8uWc/mUo8eld5CyEm0PHrecVXv4ezwN1ihIW9FE/LJfri2wBsAzEohEc4CrCy+XoUew6m+moLJ
-	CMaNfHXQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=1u/gaQ+oVmmKaoGhJfA0lv+PgPfetH5Z+BotMjq1x2M=; b=EsQo97KaR+agXVsyRF3/L8yTHV
+	Rfwpi9MC/thkzNo+18vXHsFSG65qAzSQXjB3QkALGIRyzDBIzEl4zFB+LpVpZBwLOtsWJy7vYWFbv
+	Jv1h0wS22f6dCXkxb9KMv5ODYbWBNK1QFQ6uoaWj60xqKoS7LD7pjUutgXfYAHo5BPfnEfp0l453v
+	nx1ikO600IyLidUQcM0beqe40pf/C7kTjmF2FadCH4ASAVsBIUbtXUWztbc1C70Ko5ySKOqvX1qUM
+	uuS9K2ZmA8gZhGYv9kB9F0Jw7FBYIIsHAYLSzkJ6FnKI1p0hY3LI7WdH7Dw+9KtvfuHauV60oQRCH
+	qsfiAPIw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wGTN8-0000000E1Tf-25WU;
-	Sat, 25 Apr 2026 03:07:58 +0000
-Received: from mail-pl1-x633.google.com ([2607:f8b0:4864:20::633])
+	id 1wHOIJ-0000000HFGS-3Gmi;
+	Mon, 27 Apr 2026 15:54:49 +0000
+Received: from canpmsgout04.his.huawei.com ([113.46.200.219])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wGTN6-0000000E1TE-1Xoj
-	for kexec@lists.infradead.org;
-	Sat, 25 Apr 2026 03:07:57 +0000
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-2b2591757fbso282645ad.0
-        for <kexec@lists.infradead.org>; Fri, 24 Apr 2026 20:07:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777086474; x=1777691274; darn=lists.infradead.org;
-        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yQTvhWSyeRzzkMlZ8tRqN85t2RdPb6JQ5sP+OFC2oos=;
-        b=OqB5qGWQuyKP/OpPuWKxBSl2dmCzgdad3ayHKtMEFTjmrWwlHPVMAxucpXiJFbohvc
-         U0f1w096OpkbyMRmUCNLY5QzXcGnzaakTw+JD9fv0Ukv9bZh7D/ykU5ok1Jt/9Kg7dk8
-         Tmb3weWxcgDzULBrEHsOPkiztlhmdrFhnPnUuUguRSK/eWjyPDlivuBSJgo9tQZdUPcd
-         JFIfN0Le9OJHdQr1itHrdo+2VVBMViLSZlJHrsJYxWjaYi039YvA/awHK4cHO3Es6NXi
-         WbSChOVQgR0sXn+VxnTlKHoiuqvxnOLacPlpAx9DnC8N5mqw+VxCKk+RKPuUuy6B8jR/
-         F3fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777086474; x=1777691274;
-        h=mime-version:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yQTvhWSyeRzzkMlZ8tRqN85t2RdPb6JQ5sP+OFC2oos=;
-        b=LvkOrIbLhZ7GLAytykYQtV//qbZRIjjWlSBlahoyUnn77lYLBKwIGzBBHxOhgTsmHX
-         BH2U/eOWpbvKEjNUDQBNDAgCaIu/VR333IegMghRVFq5y9HGj76HyVlV1Qw4L8u63p2A
-         eFeRiOwBTqRZniTvIvrB7T8TucsMlT62qMlxiZ6REMZ1RyZUWCSpLikBEQzvB5BzVakx
-         dGtgVJ1tNFsU05qlIwBxycW8Ok/AeaBy4mA1/vDWCvI4TMaV5phuVNgp/dRPeEkauRjM
-         Vh/lTlexRjKk4eb1ytC47e9Jf7YpTbEV4Y1tl4pZ6Yrx5TlVHn72btgbUMaw9XOMIuvp
-         9LEg==
-X-Forwarded-Encrypted: i=1; AFNElJ8OUiCdSaBRWhKr19x+OmEF9WwZylW9nIyNKjOfc3qWMYgKHFHdgBXVG5aoDmRPyClvnjxxSA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yx3Z7M+ZQuZLeSZDkz9s1xbYFFHegXwhnupe4LqUVg7Q9iAUdGf
-	ASvSJKoEVV1G5stSh6WoKEHzTbD27ksxydrOZvv9e1hWZ93huxGlrWTi6EOMj36SHA==
-X-Gm-Gg: AeBDiesfEMdL2dRYYPbQCktn5eh6HE2eiv6qHv5suhjF7kWkcyfJFe2keXuUmL2jPK9
-	Luwi6HdlPjKrvDbF7cU8Ddk6rARBBGTKs7sYZIEAZRDWSExszhQBcEMAiCgtdcJlQctnhUp38XP
-	TQ54sg7E8GQ67zkI4WQ89IHHNgQ9PKheRWF7rikpE3IIM5hjDZxw/FbFvi/EpvyMx00A+QbwjqC
-	PO9xqbuEOrrldZnaH+SiI+THo0QSlGogK9cVOFbKFA5QLooOSXgV44f4ZY+HD2DI+vTg1bTh8RC
-	lAQm9ivatoIvTuGfPPz0mti03w8rBcPkw+fX9IZU0lk8gJVKyBd5naZHmUgz9+7lE9amJ1QA0FY
-	rMKRZgU4dwvfZkDQovMfjAd9uvg5OPu2wTwWfGVhBH6hinpWdLeIO2GGIes27SKkKlMYXctPhT5
-	i6oVykmsJuJSwTdBd5bu5B2bZqYCNa793DIUzkl6TGiBCB/mlyxkwCs++b+oTOZsm4PQ/6WwL9o
-	g79Aorj+zf5r/XRVi9mRQ1iwIP+8VU55K1d4MPyQe0bk0UhYGD/lW52bY89AYRp9ZaCu9/SYvw=
-X-Received: by 2002:a17:902:e552:b0:2ae:45cc:aeb6 with SMTP id d9443c01a7336-2b602f42603mr12894195ad.6.1777086473646;
-        Fri, 24 Apr 2026 20:07:53 -0700 (PDT)
-Received: from [2a00:79e0:2eb0:8:a18f:54fc:a476:f72a] ([2a00:79e0:2eb0:8:a18f:54fc:a476:f72a])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3614186adddsm25961188a91.2.2026.04.24.20.07.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2026 20:07:52 -0700 (PDT)
-Date: Fri, 24 Apr 2026 20:07:51 -0700 (PDT)
-From: David Rientjes <rientjes@google.com>
-To: Alexander Graf <graf@amazon.com>, 
-    "Andersen, Tycho" <Tycho.Andersen@amd.com>, 
-    Anthony Yznaga <anthony.yznaga@oracle.com>, 
-    Baolu Lu <baolu.lu@linux.intel.com>, David Hildenbrand <david@kernel.org>, 
-    David Matlack <dmatlack@google.com>, 
-    "Heyne, Maximillian" <mheyne@amazon.de>, James Gowans <jgowans@amazon.com>, 
-    Jason Gunthorpe <jgg@nvidia.com>, Mike Rapoport <rppt@kernel.org>, 
-    Pankaj Gupta <pankaj.gupta.linux@gmail.com>, 
-    Pasha Tatashin <tatashin@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
-    Praveen Kumar <kpraveen.lkml@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
-    Vishal Annapurve <vannapurve@google.com>, 
-    "Woodhouse, David" <dwmw@amazon.co.uk>
-cc: linux-mm@kvack.org, kexec@lists.infradead.org
-Subject: [Hypervisor Live Update] Notes from April 20, 2026
-Message-ID: <014fae14-28e1-ff32-c126-28bdffdff636@google.com>
+	id 1w8acY-00000001ma8-25YZ;
+	Fri, 03 Apr 2026 09:15:20 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=1u/gaQ+oVmmKaoGhJfA0lv+PgPfetH5Z+BotMjq1x2M=;
+	b=Ng5I2f7+M26BlWo+f15W4F3KICwNL5iu3h39vY8J/Yh43OjddzRD1MsWnEf25APCV36pJ7jaV
+	E+dS9RuezRSZ5OUSyATrJYym/oMSq0Q/fgtStWYYumuP16zq8mKRFCRw0duIgZtaeNEb1yxvcFU
+	83ODrCmyuPyUV05deMYPVP0=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4fnCZW0jdKz1prlD;
+	Fri,  3 Apr 2026 17:08:51 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id E56E540571;
+	Fri,  3 Apr 2026 17:15:04 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 3 Apr 2026 17:15:01 +0800
+Message-ID: <c5ee66fe-ecc4-2eb4-4b58-44f7d292d221@huawei.com>
+Date: Fri, 3 Apr 2026 17:14:58 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v12 00/15] arm64/riscv: Add support for crashkernel CMA
+ reservation
+Content-Language: en-US
+To: Borislav Petkov <bp@alien8.de>
+CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
+	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <dave.hansen@linux.intel.com>, <hpa@zytor.com>,
+	<robh@kernel.org>, <saravanak@kernel.org>, <akpm@linux-foundation.org>,
+	<bhe@redhat.com>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
+	<rdunlap@infradead.org>, <peterz@infradead.org>,
+	<pawan.kumar.gupta@linux.intel.com>, <feng.tang@linux.alibaba.com>,
+	<dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
+	<paulmck@kernel.org>, <lirongqing@baidu.com>, <rppt@kernel.org>,
+	<leitao@debian.org>, <ardb@kernel.org>, <jbohac@suse.cz>,
+	<cfsworks@gmail.com>, <tangyouling@kylinos.cn>, <sourabhjain@linux.ibm.com>,
+	<ritesh.list@gmail.com>, <hbathini@linux.ibm.com>, <eajames@linux.ibm.com>,
+	<guoren@kernel.org>, <songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
+	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <coxu@redhat.com>,
+	<fuqiang.wang@easystack.cn>, <liaoyuanhong@vivo.com>,
+	<takahiro.akashi@linaro.org>, <james.morse@arm.com>, <lizhengyu3@huawei.com>,
+	<x86@kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<kexec@lists.infradead.org>
+References: <20260402072701.628293-1-ruanjinjie@huawei.com>
+ <20260402113137.GAac5Tmc5b7SL98KdY@fat_crate.local>
+ <c6eb858c-5275-6fdc-b6e9-bd6d4b169e05@huawei.com>
+ <20260402133644.GBac5w7OYl9MwvVxY_@fat_crate.local>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <20260402133644.GBac5w7OYl9MwvVxY_@fat_crate.local>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.109.254]
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260424_200756_497689_69A11120 
-X-CRM114-Status: GOOD (  22.71  )
+X-CRM114-CacheID: sfid-20260403_021519_032017_44E21560 
+X-CRM114-Status: UNSURE (   6.12  )
+X-CRM114-Notice: Please train this message.
+X-Mailman-Approved-At: Mon, 27 Apr 2026 08:54:43 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,100 +106,20 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi everybody,
 
-Here are the notes from the last Hypervisor Live Update call that happened 
-on Monday, April 20.  Thanks to everybody who was involved!
 
-These notes are intended to bring people up to speed who could not attend 
-the call as well as keep the conversation going in between meetings.
+On 2026/4/2 21:36, Borislav Petkov wrote:
+> On Thu, Apr 02, 2026 at 07:47:53PM +0800, Jinjie Ruan wrote:
+>> Thank you for the reminder and for your patience. I apologize for the
+>> frequent updates; I am becoming more familiar with the community's
+>> workflow.
+> 
+> Yap, and you can use that time while waiting to learn about it:
 
------>o-----
-Pasha updated on systemd integration for LUO.  He created a pull request 
-for initial LUO support and that patch series is under review.  In 
-addition, the session limit was removed.  Luca sent a patch series that 
-allows finding the name for a session and logic to determine if this is a 
-LUO session.  Those patches are also under review.
+Thanks for the pointer! I'm using the wait time to dive into the process
+docs. Definitely a lot to learn about the workflow, but I'm getting there.
 
-He also mentioned that Pratyush was working on boot time optimizations for 
-KHO but were not in attendance at the meeting.  Deferred struct page 
-initialization v8 was sent out last Friday and all major comments have 
-been addressed so we are hopeful these patches will be staged soon.  For 
-memblock improvements to automatically expand the scratch area, Pratyush 
-is working on this and he'll likely send this series out soon.  This will 
-add a new data structure to find holes of 1GB or better to create separate 
-radix tree for boot time allocations.
-
------>o-----
-David Matlack updated on VFIO and the roadmap going forward.  He said that 
-the series will be split into two with him taking the PCI core changes and 
-iterate on those separately while Vipin Sharma takes the VFIO patches and 
-selftests.  While iterating on them independently, they will be tested 
-together.  v4 of the PCI core changes are prepped and ready but he's still 
-cleaning them up for posting this week.
-
-Vipin updated on VFIO which will largely be based on the previous v3 
-patches and he is targeting sending these out before the next meeting.
-
------>o-----
-Samiullah updated on IOMMU persistence and said that it should be out by 
-the end of this week for feedback.  There was discussion upstream to 
-preserve the minimum that is required to free the domain.  He is planning 
-on sharing a roadmap externally on the shared drive for discussion to keep 
-the conversation going and to preview future thoughts.
-
------>o-----
-Maximilian Heyne joined us and noted that he is continuing Pratyush's 
-work.  Imagining a database or a process with a huge amount of cache or 
-memory, all that memory is gone after updating to a new kernel.  He wished 
-to discuss how to preserve that memory over reboot or kexec.  His idea is 
-to take a process and dump its state to disk and then restore on the other 
-side of the reboot.  The problem is this takes a very long time so perhaps 
-it would possible to leverage KHO to preserve the data in memfds.  He is 
-using splice to move pages from the process into the memfd and this seems 
-very inefficient.  He would like a solution where he can turn the process 
-address space into a memfd to do the preservation directly.
-
-Pasha noted the limitation with CRIU was the snapshotting and restore that 
-would make this difficult to do in place.  He also pointed out existing 
-APIs for preserving memory through DAX.  He didn't think this would need 
-to be an application level change but rather a CRIU snapshotting change.  
-Pasha said the VM use case is different than CRIU because the guest memory 
-is preserved but the data structures associated with it get recreated.
-
-Jason suggested the pathway would be equivalent to converting an anonymous 
-VMA into a memfd so that CRIU can just use the memfd right away and that 
-would likely be better as an upstream discussion including core MM 
-developers.  He thought that some amount of application enlightenment 
-should be used for this, however, either through memfd or hugetlb.  Pasha 
-said an alternative may be to preserve random files in tmpfs.
-
------>o-----
-NOTE!!!  The next meeting will be canceled due to LSF/MM/BPF 2026.
-
-Next meeting will be on Monday, May 18 at 8am PDT (UTC-7), everybody is
-welcome: https://meet.google.com/rjn-dmzu-hgq
-
-Topics for the next meeting:
-
- - systemd integration for LUO, patches from both Pasha and Luca
- - KHO optimizations for boot time performance including initialization
-   of memblock list and deferred struct page initialization
- - HugeTLB preservation support including selftests and fallback
-   allocation strategy
- - PCI core changes v4 and next round of VFIO patches including selftests
- - Vipin and David Matlack roadmap for PCI and VFIO changes to solicit
-   upstream feedback
- - IOMMU persistence patch series status
- - Samiullah's roadmap for IOMMU persistence to share with stakeholders
- - Maximilian demo for persisting process memory across kexec
- - guest_memfd HugeTLB enlightenment: conversion support, HugeTLB support
-   without restructuring, and HugeTLB support with restructuring
- - KHO support for Confidential VMs including page table preservation and
-   pinning
- - later: versioning support for luod to negotiate
- - later: KHO enlightenment for ASI
-
-Please let me know if you'd like to propose additional topics for
-discussion, thank you!
+> 
+> Documentation/process/
+> 
 
