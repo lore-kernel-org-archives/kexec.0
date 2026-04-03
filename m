@@ -4,112 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 61508E85372
-	for <kexec@archiver.kernel.org>; Fri,  3 Apr 2026 14:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8D74AE8537A
+	for <kexec@archiver.kernel.org>; Fri,  3 Apr 2026 17:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=u4o+5xQz4rBlXhhhaVbeSyCEljJvqzKGzcABXH9U2Ss=; b=eJFLkCtyLhtMg1x7JyYfpDiBiG
-	DEtWL/hczTjY7JJvwNOzFRevR0A8O4k7o+TAFHUsnWBpbGk3WynEjpvOWJiSrUQaMudppSSSMIFty
-	7bKJ8/2wTVdz9GFD3M6TIM5g9wg52EjUSpqkch/zu3qK42QLMIUr+vx0SluwHk7e9oIFcRwB9zTRt
-	10eQykXocsDVNL/xEZFY4N33omhWrOZVqb74CzvxT6CVIXXX+RhHP8j22mnZgzWFXewO4QX/dbmkx
-	tQ0Z5/RvW5EmB1KpwuPDxP7khrxBO/Pq/XCWSACK/8iQ+QGn8PQRn5Xl5BSDC73FuA3TnFQvabCn5
-	Fh63sFCw==;
+	bh=MxfxN2zWBmikOMpbTxf4ZqLUBV1Y22o7mjg0HGhygTw=; b=yenY6+V6lAQOgoeztFdMZaACTt
+	sOq+6ythkvQ4MRgv7+d9wsMYnX7JpfjQ0j9a/ok1i6Q5VeVq0/S55yNlDNuxrTYy/gOah6g6FmwSP
+	Z45nudJXZNhRI50Qt1S5dU8RJtBFd4+pVeAjO7WNqTvm9t761yGsjO0o7nl4g60B5iuoNM5m7vPj8
+	t53O8S08bLvcgqJrPzFKcdxzYSnnNX3HQGarOsK2lcWUGWlNIom2ej+Rs/nveI5do8dp2H14Q7ZNN
+	zIAlnzgoUBV0MPpb39/KhR7kcm473oH4rdllkgq5Yyi4YhrhlXjmrWz5vdcQXZ9omUxDNX28Rp0qO
+	810KKlGA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w8fMA-000000027ys-43vR;
-	Fri, 03 Apr 2026 14:18:42 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1w8iGJ-00000002ONr-2Sym;
+	Fri, 03 Apr 2026 17:24:51 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w8fM8-000000027yL-2vE7
+	id 1w8iGH-00000002ONU-0Hht
 	for kexec@lists.infradead.org;
-	Fri, 03 Apr 2026 14:18:42 +0000
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6334bMp9473627;
-	Fri, 3 Apr 2026 14:18:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=u4o+5x
-	Qz4rBlXhhhaVbeSyCEljJvqzKGzcABXH9U2Ss=; b=cPoTp5cXxotZ2EImhK0AmD
-	B1+mrQUjazLVY40Ju3LXE4bKGa5R+vWWn7A8lko+Q+JQT963ee3FXeTQd5WAzoNm
-	vaXu7bPLrH1FjVt0CDR0aXvObxX6Rm8ehlfl11B9njduTJ0q5atE3c37feDFyY8d
-	SeLz93iw2Jn25Fxi/6PhcFrWzNZuw6cqV0NZGQDt9DdlFrqjnxjnaLApLJGojVim
-	mLMSvHLTy643neTdLFp53tRoYiXvjzXBsc2XkzyecPSTgIOKUT+kGjhdZMBJ4WSN
-	i7w3LkOCbew7Fpu6TP4I3D8YQzcS/szhnX8rPF2YMsjGpIdbWSfB/Ymh9iLppteA
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4d64dh07em-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 03 Apr 2026 14:18:37 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 6339F0Cs030947;
-	Fri, 3 Apr 2026 14:18:37 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4d6uhk6708-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 03 Apr 2026 14:18:36 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 633EIZs931785258
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 3 Apr 2026 14:18:35 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 41A8920043;
-	Fri,  3 Apr 2026 14:18:35 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8F59F20040;
-	Fri,  3 Apr 2026 14:18:32 +0000 (GMT)
-Received: from [9.124.211.65] (unknown [9.124.211.65])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  3 Apr 2026 14:18:32 +0000 (GMT)
-Message-ID: <972b9a73-d066-4a38-8a4b-fe7d1ba2944b@linux.ibm.com>
-Date: Fri, 3 Apr 2026 19:48:29 +0530
+	Fri, 03 Apr 2026 17:24:50 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id B0736445AA
+	for <kexec@lists.infradead.org>; Fri,  3 Apr 2026 17:24:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CFE2C2BCF4
+	for <kexec@lists.infradead.org>; Fri,  3 Apr 2026 17:24:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775237087;
+	bh=E1bzUypaVS7w28CbARApxGc+uxb6NjOyzaisp3si/6g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ri162ENaaXiSRPqBTShI8ahm36fA0yxapnpusRTreYOdDDMZ+niMHjj7xqXvZwXxR
+	 W4688wQ9cGxnGe+4MGiHfTAaMtuD2Con4gYFbAMxcYjgjIt93lCPasclWTi7ojO9Zc
+	 cazVdgRwAtkk89yPiJTWnIHMEFFN8LHV8glDBn0X8QcC5UvdP0JZaLMOMJXUx/iVXU
+	 J6GWfBEZdlJkOBVUvtov+m1djxfdByrpUr0rmKXjb+/NqCjkj+Qy2GYzHPm2Fr+5nb
+	 8/vPh720vR6+uCmdKhX7HYao8p87jfXTXfxJbR1k47IxMwREqsFF2kj0iRdD6uwC5X
+	 E/5FWDXI51lcQ==
+Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-64ef161129bso1800170d50.1
+        for <kexec@lists.infradead.org>; Fri, 03 Apr 2026 10:24:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWYifpYwfxpqVvbW68Sqh5F7B5O7hGBWe99BKUeTo9l22Qj9MHQDqZcY5C4jz4Wwp9s9JJ4iw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwFH+ivzKjTGm21yPprhz91bLv9f1ee1LPSgJhbQQ1rOmK0fVu4
+	3ihBu6ifsxqfEk/2ktr9wc0q6pmiss4VsCH88XALKYScS+XGBsZkliPRRLT8BHPkz4czfZxDXFJ
+	fZ8uKdqYsAfi/zsj43dfF6gemIx0AljYIJORBW1KIyg==
+X-Received: by 2002:a05:690e:d41:b0:64e:a765:ef82 with SMTP id
+ 956f58d0204a3-6504870ea48mr3180067d50.24.1775237086162; Fri, 03 Apr 2026
+ 10:24:46 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] crash_dump: Fix potential double free and UAF of
- keys_header
-To: Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org
-Cc: stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-        Dave Young <dyoung@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20260403100126.1468200-1-coxu@redhat.com>
-Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <20260403100126.1468200-1-coxu@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDAzMDEyNyBTYWx0ZWRfX5e3hD65KjPE8
- 75KPQnF5RscaI0G98tuekDhtVJ7d8CjBopwmFeqTRoseeaSSo4QQat+GTdN6LxpSB+MtuS8etk0
- MLJVEfivV2tRSL3+E9awafsZfL/fIP8hb84ORKo9ANPBBBkQcMg6Nui/Pj/Uqol/4L4bycsRvjL
- p+Z2Eg0MXnAp8pArivvTu9NkO82ZS/0ibO1uuwYK6MqtYFKexLurk2QVbT8H1D/hZQuedrMnWG3
- J909VpewUoOIe7kJ9Y1o0RgflC2PUaIkXxjUKI99iWgiuunLJTxIZmcc6bGw4iD8rD0zqfro2qZ
- XrOOHAbeb0W9DqVGTJtOpkY6eF1R62inOCcCRJElss0WmYlHHUBeGYz8n0wMRREJWGH3xdoWzIX
- 8swzIQXYZEef7fddAApzNoIyKlKlMLvFsI8lyS+D35WtxVuAG9mAXeFEFKC0X0+WCHl7L/RRj+c
- uf+IPl3T2jl95VjL0BQ==
-X-Authority-Analysis: v=2.4 cv=QKZlhwLL c=1 sm=1 tr=0 ts=69cfcc3d cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=c92rfblmAAAA:8
- a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8 a=Z4Rwk6OoAAAA:8 a=VnNF1IyMAAAA:8
- a=LspaYCeSQ2Tinx22wy8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=GvGzcOZaWPEFPQC_NcjD:22 a=HkZW87K1Qel5hWWM3VKY:22
-X-Proofpoint-GUID: Asdp7Dmj9Ch6BF2KJMHwrnzxu_0HgNcH
-X-Proofpoint-ORIG-GUID: Asdp7Dmj9Ch6BF2KJMHwrnzxu_0HgNcH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-03_04,2026-04-03_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 phishscore=0 adultscore=0 impostorscore=0 clxscore=1011
- spamscore=0 bulkscore=0 priorityscore=1501 suspectscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2604030127
+References: <20260323235817.1960573-1-dmatlack@google.com> <20260323235817.1960573-3-dmatlack@google.com>
+ <e3fe7085-1297-47b8-bb17-a48196e8f37f@linux.dev>
+In-Reply-To: <e3fe7085-1297-47b8-bb17-a48196e8f37f@linux.dev>
+From: Chris Li <chrisl@kernel.org>
+Date: Fri, 3 Apr 2026 10:24:35 -0700
+X-Gmail-Original-Message-ID: <CACePvbWrHCSzYmiKz0EuXE48MNk26+4j0njSP+1Vy83RMvvVrQ@mail.gmail.com>
+X-Gm-Features: AQROBzDLi9Fnv8_mDDwmklVKEby5KKVysrnsYTweXxYMFegWZQjyvtyGp9AI6Cw
+Message-ID: <CACePvbWrHCSzYmiKz0EuXE48MNk26+4j0njSP+1Vy83RMvvVrQ@mail.gmail.com>
+Subject: Re: [PATCH v3 02/24] PCI: Add API to track PCI devices preserved
+ across Live Update
+To: "Yanjun.Zhu" <yanjun.zhu@linux.dev>
+Cc: David Matlack <dmatlack@google.com>, Alex Williamson <alex@shazbot.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Adithya Jayachandran <ajayachandra@nvidia.com>, 
+	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Ankit Agrawal <ankita@nvidia.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Askar Safin <safinaskar@gmail.com>, 
+	"Borislav Petkov (AMD)" <bp@alien8.de>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	David Rientjes <rientjes@google.com>, Feng Tang <feng.tang@linux.alibaba.com>, 
+	Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, 
+	Kees Cook <kees@kernel.org>, Kevin Tian <kevin.tian@intel.com>, kexec@lists.infradead.org, 
+	kvm@vger.kernel.org, Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
+	linux-pci@vger.kernel.org, Li RongQing <lirongqing@baidu.com>, 
+	Lukas Wunner <lukas@wunner.de>, Marco Elver <elver@google.com>, 
+	=?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>, 
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>, Pranjal Shrivastava <praan@google.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>, 
+	Randy Dunlap <rdunlap@infradead.org>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>, 
+	Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260403_071840_854847_8DA312A0 
-X-CRM114-Status: GOOD (  27.92  )
+X-CRM114-CacheID: sfid-20260403_102449_178427_B72776AF 
+X-CRM114-Status: GOOD (  17.82  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -124,113 +107,40 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello Coiby,
-
-On 03/04/26 15:31, Coiby Xu wrote:
-> If kexec_add_buffer fails, keys_header will be freed. And depending on
-> /sys/kernel/config/crash_dm_crypt_key/reuse, it will lead to the
-> following two problems if the kexec_file_load syscall is called again,
->    1. Double free of keys_header if reuse=false
->    2. UAF of keys_header if reuse=true
+On Thu, Apr 2, 2026 at 2:29=E2=80=AFPM Yanjun.Zhu <yanjun.zhu@linux.dev> wr=
+ote:
+> > +config PCI_LIVEUPDATE
+> > +     bool "PCI Live Update Support (EXPERIMENTAL)"
+> > +     depends on PCI && LIVEUPDATE
+> > +     help
+> > +       Support for preserving PCI devices across a Live Update. This o=
+ption
+> > +       should only be enabled by developers working on implementing th=
+is
+> > +       support. Once enough support as landed in the kernel, this opti=
+on
+> > +       will no longer be marked EXPERIMENTAL.
+> > +
+> > +       If unsure, say N.
 >
-> Address these problems by setting keys_header to NULL after freeing
-> kbuf.buffer and re-building keys_header when necessary respectively.
+> Currently, it only supports 'n' or 'y'. Is it possible to add 'm'
+> (modular support)?
 >
-> Fixes: 479e58549b0f ("crash_dump: store dm crypt keys in kdump reserved memory")
-> Fixes: 9ebfa8dcaea7 ("crash_dump: reuse saved dm crypt keys for CPU/memory hot-plugging")
-> Cc: stable@vger.kernel.org
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Reported-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-> Signed-off-by: Coiby Xu <coxu@redhat.com>
-> ---
->   kernel/crash_dump_dm_crypt.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+> This would allow the feature to be built as a kernel module. For
+> development
 >
-> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
-> index a20d4097744a..92eebef27156 100644
-> --- a/kernel/crash_dump_dm_crypt.c
-> +++ b/kernel/crash_dump_dm_crypt.c
-> @@ -417,7 +417,7 @@ int crash_load_dm_crypt_keys(struct kimage *image)
->   		return -ENOENT;
->   	}
->   
-> -	if (!is_dm_key_reused) {
-> +	if (!is_dm_key_reused || !keys_header) {
->   		image->dm_crypt_keys_addr = 0;
->   		r = build_keys_header();
->   		if (r)
-> @@ -433,6 +433,7 @@ int crash_load_dm_crypt_keys(struct kimage *image)
->   	r = kexec_add_buffer(&kbuf);
->   	if (r) {
->   		kvfree((void *)kbuf.buffer);
-> +		keys_header = NULL;
->   		return r;
->   	}
->   	image->dm_crypt_keys_addr = kbuf.mem;
+> purposes, modularization means we only need to recompile a single module
 >
-> base-commit: d8a9a4b11a137909e306e50346148fc5c3b63f9d
+> for testing, rather than rebuilding the entire kernel. Compiling a
+> module should
+>
+> be significantly faster than a full kernel build.
 
-Sashiko raised seven concerns on this patch. Most of them are
-not directly related to the changes introduced here, but I
-think they can be addressed along with this fix.
+Building as a module has extra complexity to handle, e.g. the callback
+can happen when the module hasn't been loaded. Then the user space can
+take an arbitrarily long time to load the module.
 
-https://sashiko.dev/#/patchset/20260403100126.1468200-1-coxu%40redhat.com
+It needs more infrastructure to support the liveupdate as a module.
 
-
-1. build_keys_header() does not release key_header memory on
-    error. This can cause incorrect keys to be loaded for the
-    kdump kernel in subsequent system calls.
-
-Can be addressed by releasing keys_header on error path.
-
-2–3. get_keys_header_size() uses key_count to find the size of
-key_header buffer, which can lead to out-of-bounds access
-at two places.
-   a. Around kexec_add_buffer()
-   b. In build_keys_header()
-
-I think there is one more place where this applies is:
-   c. In get_keys_from_kdump_reserved_memory() at memcpy
-
-I agree with solution provided by Sashiko of using keys_header->total_keys
-instead.
-
-4. get_keys_from_kdump_reserved_memory() may run into issues
-    if kexec_crash_image->dm_crypt_keys_addr is larger than a
-    page size during memcpy. Because kmap_local_page only maps
-    one page.
-
-How about moving this in a loop and do map and copy page by page?
-
-5. Related to releasing the keyring_ref reference count, but
-    I did not fully understand this concern.
-
-6. restore_dm_crypt_keys_to_thread_keyring() does not release
-    previously allocated keys_header, leading to a memory leak.
-
-As per kdump.rst, restore was introduced to handle CPU and
-memory hotplug cases. Is it needed when there is no in-kernel
-update to the kdump image on CPU or memory hotplug events?
-
-But in that case, we rely on a udev rule to reload the kdump image
-again.
-
-I am confused about when exactly we need to restore.
-
-
-7. Possible memory leak and data races due to concurrent kexec loads.
-
-I think we can ignore this because both kexec system calls are protected
-by the same lock.
-
-I also noticed that kdump.rst still says CONFIG_CRASH_DM_CRYPT is
-only supported on x86_64 for now. With the patch series below,
-this needs to change, right?
-https://lore.kernel.org/all/20260225060347.718905-1-coxu@redhat.com/
-
-- Sourabh Jain
-
-
-
-
+Chris
 
