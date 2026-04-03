@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4A24DE7E36C
-	for <kexec@archiver.kernel.org>; Fri,  3 Apr 2026 11:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A47ECE7E36C
+	for <kexec@archiver.kernel.org>; Fri,  3 Apr 2026 11:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
 	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=WdLkX+T+geuPxnAcCrsQTc83eke1BcvJBuYuVeCU424=; b=q5q9kiD9s13BaSPX7S+jnekF22
-	kJQtYxQzny1BNNxuQHngq0a8QfBXm6nr/Dxp1UKVcZRwhVpuUb7JI5/226s0o8t/niat8SSoZ78yj
-	LbKkxuoGy8jYVOpZvrq6xAOwscKmSzI3Akyp5qYHW601U7b6J/STD/+5fEd7oAZTVKZWJlDYwebIL
-	Qq25cFuVdMLkkQtyzzpFy1HVnD22U5HRyOkwZLpVcuCKOmiHC+xVYrV4nWrdCS3e3FcZkQcPslcn9
-	4UZqJlcC8hRidNqJihBEOkekvieCYie44yqmXrsTiQxEao5RImOAuOpuDiqjv23+ACuxOOrKMXL2L
-	6oHf8Rqw==;
+	bh=FKfl9TdVDizzlO2LSkdlwxuYXtAA09Pi4B9rN5R3bSs=; b=TlJ8J7whBF6NjI4IPsBE0/S/D6
+	m9W5MohtpVf7E1IMI7AwW3l0dEc0KjEU/hyXjXKRqCTgbX/Q5AGoLpR4c2jRjmGIon1ikjRxkCU59
+	f/HsynuEIDeIYPPPzb+Eqx73+yJITJ8sZHlZ4yvRV4YJYk4R7d9su3r8hf0QGgvb1Lg7UtKwt9Jsr
+	bwgfVse1WMJHdzY5yi1aANLIZObPVfKlU3NGKe0yOPGGDu0UDq5GMpLr5O8g9ABe5KNSC7J+zrMMU
+	SczkJb2lioEW7zWx+AKTCrzotnTu5lsTc9DHahMFeqjONUICvD9jnC7/zmNjEK/fitVqpLyuYQ/XF
+	v1xA2RaA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w8caZ-00000001wnS-27lr;
-	Fri, 03 Apr 2026 11:21:23 +0000
+	id 1w8cds-00000001xBy-43ou;
+	Fri, 03 Apr 2026 11:24:48 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w8caY-00000001wnJ-0rZf
+	id 1w8cds-00000001xBs-0Akf
 	for kexec@lists.infradead.org;
-	Fri, 03 Apr 2026 11:21:22 +0000
+	Fri, 03 Apr 2026 11:24:48 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id A4A1960121;
-	Fri,  3 Apr 2026 11:21:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27C78C4CEF7;
-	Fri,  3 Apr 2026 11:21:18 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 3CD1D60121;
+	Fri,  3 Apr 2026 11:24:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5912C4CEF7;
+	Fri,  3 Apr 2026 11:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775215281;
-	bh=C2PE0QSFewGyAGB7w24PL7F8mQ26TmpseXExWlTHEWY=;
+	s=k20201202; t=1775215486;
+	bh=n2kIfPcxv9fpCDmESjetmPVIXXSHk10QB/niw+4zBdk=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=KnOMtt0Y7qhdjpMeGPoOcoZzqzzIQ8bv9ED6tBakBnpMTCVr5t/aZUH/yShW+kwBO
-	 /E2OZ019G6iRF3IQ792ESCtxHs8GPQZBq562VKyr4/bxj2976VMZNZ07swz+bUe1Qa
-	 ZtzRE2+6UfFy+gOhX20mXNwcHni8iH0Rejl0Cs2vUZZx5gnYtDdLPdfLmtmJ69IyMs
-	 N2PwyydrgIkOPhcG/BkRqLSiTDjIATePGlYEMu1bajcReeOZmit3q3LXmhAo09TpHW
-	 d1MH+pIx1nfc5NNBB+Rm2S97U8CFTy3i+QuA1YH3xdXmB2cfpux78gF0vPlJMVL9yN
-	 a5wtgMCfecICQ==
+	b=MPnN5DluGKOUu49y7lrQ31VECTcn+7zuVK939IQ5sR/OYJUUpHW5cHhN86TpjW4ZO
+	 GWAnpWC9hE3EaJmqVEmgKjv3EI7JPlNNtKzt9viRA+HTBDfMkDoih68tiF8CTXXb/d
+	 y+M3nDSw/J1tEGuM6JqsqQgdoSNuw1ddWxE6tUE6FZyqtuonPwaE0L8RIUHlnjkB0a
+	 g3UBF2uo+2owZ0fVzaZAnY5b2wDOxiwaRcF+79st1pSStTkWc+3CIDSh17AFfji0+/
+	 IKrp5d0S0voXE2VTuh4ICx0KqwvSLDAqAshzULkTs16KdZEm15RW4ltzMWiPQBaEBl
+	 Q47Y4/9dxpbTw==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Breno Leitao <leitao@debian.org>
 Cc: Alexander Graf <graf@amazon.com>,  Mike Rapoport <rppt@kernel.org>,
@@ -49,13 +49,13 @@ Cc: Alexander Graf <graf@amazon.com>,  Mike Rapoport <rppt@kernel.org>,
  <pratyush@kernel.org>,  linux-kernel@vger.kernel.org,
   kexec@lists.infradead.org,  linux-mm@kvack.org,  usama.arif@linux.dev,
   SeongJae Park <sj@kernel.org>,  kernel-team@meta.com
-Subject: Re: [PATCH v9 1/6] kho: add size parameter to kho_add_subtree()
-In-Reply-To: <20260316-kho-v9-1-ed6dcd951988@debian.org> (Breno Leitao's
-	message of "Mon, 16 Mar 2026 04:54:31 -0700")
+Subject: Re: [PATCH v9 3/6] kho: persist blob size in KHO FDT
+In-Reply-To: <20260316-kho-v9-3-ed6dcd951988@debian.org> (Breno Leitao's
+	message of "Mon, 16 Mar 2026 04:54:33 -0700")
 References: <20260316-kho-v9-0-ed6dcd951988@debian.org>
-	<20260316-kho-v9-1-ed6dcd951988@debian.org>
-Date: Fri, 03 Apr 2026 11:21:17 +0000
-Message-ID: <2vxz1pgwe1ci.fsf@kernel.org>
+	<20260316-kho-v9-3-ed6dcd951988@debian.org>
+Date: Fri, 03 Apr 2026 11:24:42 +0000
+Message-ID: <2vxztstscmmd.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -75,32 +75,20 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On Mon, Mar 16 2026, Breno Leitao wrote:
 
-> kho_add_subtree() assumes the fdt argument is always an FDT and calls
-> fdt_totalsize() on it in the debugfs code path. This assumption will
-> break if a caller passes arbitrary data instead of an FDT.
+> kho_add_subtree() accepts a size parameter but only forwards it to
+> debugfs. The size is not persisted in the KHO FDT, so it is lost across
+> kexec. This makes it impossible for the incoming kernel to determine the
+> blob size without understanding the blob format.
 >
-> When CONFIG_KEXEC_HANDOVER_DEBUGFS is enabled, kho_debugfs_fdt_add()
-> calls __kho_debugfs_fdt_add(), which executes:
+> Store the blob size as a "blob-size" property in the KHO FDT alongside
+> the "preserved-data" physical address. This allows the receiving kernel
+> to recover the size for any blob regardless of format.
 >
->     f->wrapper.size = fdt_totalsize(fdt);
+> Also extend kho_retrieve_subtree() with an optional size output
+> parameter so callers can learn the blob size without needing to
+> understand the blob format. Update all callers to pass NULL for the
+> new parameter.
 >
-> Fix this by adding an explicit size parameter to kho_add_subtree() so
-> callers specify the blob size. This allows subtrees to contain
-> arbitrary data formats, not just FDTs. Update all callers:
->
->   - memblock.c: use fdt_totalsize(fdt)
->   - luo_core.c: use fdt_totalsize(fdt_out)
->   - test_kho.c: use fdt_totalsize()
->   - kexec_handover.c (root fdt): use fdt_totalsize(kho_out.fdt)
->
-> Also update __kho_debugfs_fdt_add() to receive the size explicitly
-> instead of computing it internally via fdt_totalsize(). In
-> kho_in_debugfs_init(), pass fdt_totalsize() for the root FDT and
-> sub-blobs since all current users are FDTs. A subsequent patch will
-> persist the size in the KHO FDT so the incoming side can handle
-> non-FDT blobs correctly.
->
-> Suggested-by: Pratyush Yadav <pratyush@kernel.org>
 > Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 > Signed-off-by: Breno Leitao <leitao@debian.org>
 
