@@ -4,108 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A0AD3E7E360
-	for <kexec@archiver.kernel.org>; Fri,  3 Apr 2026 09:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E161DE7E361
+	for <kexec@archiver.kernel.org>; Fri,  3 Apr 2026 10:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:MIME-Version:References:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZH9+LliZTB5HpO6CFpEOH4jpCgMrdVel5twiQSolHR0=; b=UeD1VshVv1qVLVK3vsITi69yC4
-	GHuC9qNuMS0oaK0gn/d27fQB7xQszoKQc86YCblRUjX7+MrRi/bS6IQw3Bnvv78C/Oj/1nM6NgQX8
-	oSLvTfrBPu6AIppbiAgMMXK4Y/HUWp95T7Ft4KDxQfjDwKbzn98ipn4tmCotT5YimM6Q7/moHhHoi
-	AuLRbXzNHkNjNdYNdHcQ7+nHfs3X7uDXi5oqHf5gWQSjnvWFjPH1UB7OLoeHJxPyRS4+7FkarPThx
-	tcdu7s0wn2Jbj/3eTkfD/971uRK04yOHyw5OTPbKJ2H4Pi4FLNKiEZAWV3yTCBJix/feGEC13xGCt
-	qKA3W9wQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=JpVYK1kYMsSmb0glYSul7QEcfCfzZZ/MPpQITA6+2SA=; b=FUrOOVvHDBDKscSS8XsoMHUVrt
+	rdCfUokTIGHFZBd06CiT4sRFki55HEEGSa/n0rkW5fn+j1GoENqU1ZpSrV/Ez/swchWUH1a8gijlj
+	tGKcKcJvP1uvcu4XsXWJuG6bBal+SYeTTPvlZrZYKSu/ocSZj31K3VfvyZiyhxmB9AuNC7jIosHnd
+	l/yFw6cJ2vVL/00zjig1T20LPcWs10QAvia8S1BbNMSWInBu6TpEex4UzUaWRAX5Tsm8RRYlUhQuI
+	dCU+rmAmomKraDPKLWhkRUTJl5WYndmH5AzE4WE5EKop6psyMcswDf/A6p+YZdlg5LTjqimPMoYdF
+	0g3cEIVA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w8b5h-00000001q5o-2LFB;
-	Fri, 03 Apr 2026 09:45:25 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1w8bLN-00000001rGw-0bAF;
+	Fri, 03 Apr 2026 10:01:37 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w8b5e-00000001q4h-28gt
+	id 1w8bLK-00000001rGY-18B4
 	for kexec@lists.infradead.org;
-	Fri, 03 Apr 2026 09:45:23 +0000
+	Fri, 03 Apr 2026 10:01:35 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1775209521;
+	s=mimecast20190719; t=1775210493;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZH9+LliZTB5HpO6CFpEOH4jpCgMrdVel5twiQSolHR0=;
-	b=RVUoI8r0l3qExUBPz74z9H/QdXvOKXAJ2X2cYq/r04E2e8H3t0wA76cqtjSu923NkVvxta
-	AHmIe/ON1HfH1tzf3gAUojF8nWpfsHuuPu5gE9BEIBf5hwXbFPrvoy3XZYrEQ133GkX46G
-	89bTJ3doBFyf074+fZWQdrmpTVb6lOY=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=JpVYK1kYMsSmb0glYSul7QEcfCfzZZ/MPpQITA6+2SA=;
+	b=XZ+AlJBtocAuIVptxjk53rk52LB4aNCJnQnQiZu062EiY0h+O576du/Gtftll3bMDsboqJ
+	dA+dbKqQGe8REWyrqCjQkZjRBwxwu5l5blQzOOUqcS81rTF75T+Neh13laVXEdTtrh3yG8
+	HWhZi1IpVyUubbZ5LIj3uYEJVoaC2wM=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-317-DdCKTLDJMym2THKKaVA4dA-1; Fri, 03 Apr 2026 05:45:17 -0400
-X-MC-Unique: DdCKTLDJMym2THKKaVA4dA-1
-X-Mimecast-MFC-AGG-ID: DdCKTLDJMym2THKKaVA4dA_1775209517
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-82c7ec40f92so2495718b3a.0
-        for <kexec@lists.infradead.org>; Fri, 03 Apr 2026 02:45:17 -0700 (PDT)
+ us-mta-554-JlPm4b6vOx-u6xlWgxJcQw-1; Fri, 03 Apr 2026 06:01:31 -0400
+X-MC-Unique: JlPm4b6vOx-u6xlWgxJcQw-1
+X-Mimecast-MFC-AGG-ID: JlPm4b6vOx-u6xlWgxJcQw_1775210491
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2b0cf396c45so19500995ad.1
+        for <kexec@lists.infradead.org>; Fri, 03 Apr 2026 03:01:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775209517; x=1775814317;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZH9+LliZTB5HpO6CFpEOH4jpCgMrdVel5twiQSolHR0=;
-        b=QDE5ZRY6wQ5z67dxydzYj2JZH/gjkz2tRsh0AktSSvxXMwe1ZgI5U64YyREAA9Q0ML
-         lkD2U2E3Ws4K3XxHndHs9+fi+Faw7a/Sg6dm52UVzePy11YDkA6WxqPGB7Jdv7qBjyoy
-         RuGFrI4ZXGGlNBJXN1vlWSo9pnLoYOl4DjVN0YTchnnXGxTu3ikOYXDhdgRauR41bY/u
-         qeNP6Xm0c9XD9oyFz34ylZrIzE/c9DbPAXbb7dlHF0Mk5meTSZYd/Cq5yrswwpUUQEXq
-         NkLXoAz1fw/D3ZRfkghgCAdLNUOUGM/UZBS6+dJ5D/W6JUFFsc9e1iNrBQXm85wg9iAr
-         R+bw==
-X-Forwarded-Encrypted: i=1; AJvYcCVUdujFVBu2Qh9yfLjmacHn3WBoqxubX2+JPx595k0j2CQUYf1JZBGI1sdb+W3Ze7pwcFH0Hg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzrpbJEmhLijFyRpZis6SMVUxKe/eoc3tbRxVJZLPpoNs0Lrz4c
-	jWCUE2o0j1FKOwYcyH1MhzvekiRw5K766ZWR9HZOXLggUXZmrk5MftBoSa2/W4bI/jMPlzvO6yT
-	gx+DFUyQ4otdjcu1RiB3Z9EfENne7FS/igKfIAuH7qgtemBoQT0o7NsWIgvzWLe7WenSI9FKm
-X-Gm-Gg: AeBDieshR42RcreB3KExtehpE8kAurGVGQtliW+A4XGKAFUpHj8o95qWA5IyZjYdXM3
-	ISiLjttaPfJkShdc/nxnhrXQqyGtSDmPf12vQiBL2dsn7ja890aqO3KtiEwE354d7G5+gSNTFXT
-	WlAZ7EkAj50GehnRzVdq5FU2PXZuT2Q34GWjCfYY5PVSwLkV9oGTWq4KA8ZnhKkUWsGY7ZzD7TT
-	Qk8rUGULQ77j/9RX7hqCdJpXXC1dDpEV0oYJTILdjfkfo9B+gxCPkkb/nAu+B/s8pk9yt4TNYPy
-	SttRgVeCikmQcFARaulZrQ3y0XBk4R017K02honldKMhvfcB8nsQ/jIPkP1fRn90q6VUri1f+OR
-	DKjmeatARcZCU
-X-Received: by 2002:a05:6a00:3027:b0:81f:52d4:a5ec with SMTP id d2e1a72fcca58-82d0dba9c6fmr2625449b3a.43.1775209516625;
-        Fri, 03 Apr 2026 02:45:16 -0700 (PDT)
-X-Received: by 2002:a05:6a00:3027:b0:81f:52d4:a5ec with SMTP id d2e1a72fcca58-82d0dba9c6fmr2625387b3a.43.1775209515832;
-        Fri, 03 Apr 2026 02:45:15 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1775210490; x=1775815290;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JpVYK1kYMsSmb0glYSul7QEcfCfzZZ/MPpQITA6+2SA=;
+        b=ajOyEPf8SOHtOGzMZaDC+ik17/TF6I0vEfasLWndipdqFGJAJiMr1zpj5Y2DqDE8KU
+         9S033OEfmKaYfwQNzUYW3lsSGPJR9OLwwQLGNCWv75qJiVdWjwWIJyyDiHXr0Cwd7Utx
+         Wjf3z6Mhw75MvHQ/+9e97zTf4WjrbSiHwykG5SRI0mCUIFh7F8tu2mKOScEZIBanx9wy
+         z+od8o2NNNCrUt9zc58Qw9e2JKlX9GaQTvQMbRrSLc7zv2O3u6XL/M2r4puFS/UnJskx
+         Tbz+ntUCNQW/RDTfYXus0OVtZr87qJQHAF5b7TP8wAxryp6flu4pirJLIKvG41Nej6TE
+         KSdw==
+X-Gm-Message-State: AOJu0YzdeR8U/dDMx6djfryJRU1CIMfXfaH0LjrofD2N9nXNsZOgPhNY
+	WaL+aF+Nkcmz0xfIz/Da+W8njT0e3bZID5kAoOpFtOEID8ZRmWXLlk3zrxCZs5uEU9/xX9IJc9N
+	o3zNxqhfG1xOLEFwI5i+tUkSCzA4Ve+qI/3KSpCCz726o8rthhefBGsmggV8iH4crBPQOWRD0of
+	ceDplEDAe9dvCkmw1qjSNtdYC5rHNVYnNy9hBeEcEgsOo=
+X-Gm-Gg: AeBDieu4hYuRI7Ec8UauMQBnK6Rs+3JRnw8g37Ws+2AwjsGgsSaIz4V3PIN308Qthyq
+	5Mga6jyC2PpyXJ4qb5GZPT8zQ7E64yxvAUx204ty6PvUHWZPjeJHx0llRDjRoczw5tklgHh68+l
+	HeMoT72+sWJA8MxXFDtqQlqetNnvdEvaBvt5Gb4LkLnMDrLidyecqklULtvl5k1IVVaIEBHgtfx
+	wSuEzkw1ssCE/XCmo01W8te8R+NKOGAPFPSrzTBdDlzV7kmmLYqIsewtKhJMkNh5JeQDGq2swiF
+	QULzG70zCwGA2yzaP+fFdurafsoTNlqde9OmDRVskkBRXjfvEO21jOg7Tt8GiwiVBdCLxk4f9lI
+	RizMJBBkF1Hqy
+X-Received: by 2002:a17:903:94e:b0:2b0:7026:24bf with SMTP id d9443c01a7336-2b28180530fmr27122925ad.14.1775210490274;
+        Fri, 03 Apr 2026 03:01:30 -0700 (PDT)
+X-Received: by 2002:a17:903:94e:b0:2b0:7026:24bf with SMTP id d9443c01a7336-2b28180530fmr27122265ad.14.1775210489564;
+        Fri, 03 Apr 2026 03:01:29 -0700 (PDT)
 Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82cf9c9cbf6sm5915263b3a.52.2026.04.03.02.45.14
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b2749a1e9csm58846095ad.55.2026.04.03.03.01.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2026 02:45:15 -0700 (PDT)
-Date: Fri, 3 Apr 2026 17:40:52 +0800
+        Fri, 03 Apr 2026 03:01:29 -0700 (PDT)
 From: Coiby Xu <coxu@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>, kexec@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, 
-	Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>, Baoquan he <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
-	Kairui Song <ryncsn@gmail.com>, Pingfan Liu <kernelfans@gmail.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Thomas Staudt <tstaudt@de.ibm.com>, Will Deacon <will@kernel.org>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Saravana Kannan <saravanak@kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 3/3] arm64,ppc64le/kdump: pass dm-crypt keys to kdump
- kernel
-Message-ID: <ac-KKklNrB5eQFvG@Rk>
-References: <20260225060347.718905-1-coxu@redhat.com>
- <20260225060347.718905-4-coxu@redhat.com>
- <51761fcf-955f-45e2-97a5-2b49d8e79d04@linux.ibm.com>
- <20260402233118.08ea88a6836bd10f01031cce@linux-foundation.org>
+To: kexec@lists.infradead.org
+Cc: stable@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Sourabh Jain <sourabhjain@linux.ibm.com>,
+	Baoquan He <bhe@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] crash_dump: Fix potential double free and UAF of keys_header
+Date: Fri,  3 Apr 2026 18:01:25 +0800
+Message-ID: <20260403100126.1468200-1-coxu@redhat.com>
+X-Mailer: git-send-email 2.53.0
 MIME-Version: 1.0
-In-Reply-To: <20260402233118.08ea88a6836bd10f01031cce@linux-foundation.org>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: aOt6fYlBkjIasfGTfkvuZpGlKaYdc4gImwzYyolj2KQ_1775209517
+X-Mimecast-MFC-PROC-ID: 9x_0s9pIL7EH2WsYZ_RGr-j05FaBAmIyrZMHPa--Svs_1775210491
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260403_024522_610563_813B8988 
-X-CRM114-Status: GOOD (  12.25  )
+X-CRM114-CacheID: sfid-20260403_030134_407046_4A3DA4FE 
+X-CRM114-Status: GOOD (  12.49  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -120,49 +110,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Apr 02, 2026 at 11:31:18PM -0700, Andrew Morton wrote:
->On Thu, 2 Apr 2026 16:24:14 +0530 Sourabh Jain <sourabhjain@linux.ibm.com> wrote:
->
->> But while reading crash_load_dm_crypt_keys() I noticed a possibility of a
->> double free at the address pointed by `keys_header`:
->>
->> In crash_load_dm_crypt_keys()/crash_dump_dm_crypt.c
->>      snip...
->>
->>      kbuf.buffer = keys_header;
->>
->>      snip....
->>
->>      r = kexec_add_buffer(&kbuf);
->>      if (r) {
->>          pr_err("Failed to call kexec_add_buffer, ret=%d\n", r);
->>          kvfree((void *)kbuf.buffer);                           <---
->> First Free
->>          return r;
->>      }
->>
->> Since `keys_header` is not reset, the next call to build_keys_header()
->> will cause a double free at `keys_header`.
->>
->> static int build_keys_header(void)
->> {
->>
->>      snip...
->>
->>      if (keys_header != NULL)
->>          kvfree(keys_header);
->>
->>      snip...
->> }
->>
->> What do you think?
->
->It looks that way to me.
+If kexec_add_buffer fails, keys_header will be freed. And depending on
+/sys/kernel/config/crash_dm_crypt_key/reuse, it will lead to the
+following two problems if the kexec_file_load syscall is called again,
+  1. Double free of keys_header if reuse=false
+  2. UAF of keys_header if reuse=true
 
-Thanks for confirming it! I'll send a patch after finishing the testing.
+Address these problems by setting keys_header to NULL after freeing
+kbuf.buffer and re-building keys_header when necessary respectively.
 
+Fixes: 479e58549b0f ("crash_dump: store dm crypt keys in kdump reserved memory")
+Fixes: 9ebfa8dcaea7 ("crash_dump: reuse saved dm crypt keys for CPU/memory hot-plugging")
+Cc: stable@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Reported-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+Signed-off-by: Coiby Xu <coxu@redhat.com>
+---
+ kernel/crash_dump_dm_crypt.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+index a20d4097744a..92eebef27156 100644
+--- a/kernel/crash_dump_dm_crypt.c
++++ b/kernel/crash_dump_dm_crypt.c
+@@ -417,7 +417,7 @@ int crash_load_dm_crypt_keys(struct kimage *image)
+ 		return -ENOENT;
+ 	}
+ 
+-	if (!is_dm_key_reused) {
++	if (!is_dm_key_reused || !keys_header) {
+ 		image->dm_crypt_keys_addr = 0;
+ 		r = build_keys_header();
+ 		if (r)
+@@ -433,6 +433,7 @@ int crash_load_dm_crypt_keys(struct kimage *image)
+ 	r = kexec_add_buffer(&kbuf);
+ 	if (r) {
+ 		kvfree((void *)kbuf.buffer);
++		keys_header = NULL;
+ 		return r;
+ 	}
+ 	image->dm_crypt_keys_addr = kbuf.mem;
+
+base-commit: d8a9a4b11a137909e306e50346148fc5c3b63f9d
 -- 
-Best regards,
-Coiby
+2.53.0
 
 
