@@ -4,74 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CF725E88D8B
-	for <kexec@archiver.kernel.org>; Sat,  4 Apr 2026 07:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 43295E9D812
+	for <kexec@archiver.kernel.org>; Sun,  5 Apr 2026 16:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=zVuyuZWPEacFSdtZ4/rdPo2ZTR7RDfdP3BpyB0CT/YE=; b=Le6nyjtjbREWFne2Lwq00HhwGf
-	wOl/A5SbECrQqbMSaC8Y9QSr95vIvmt9MFs40RCsjJODVdRISnqrGeLvwld6Mm3DfRw2lAtmCulD2
-	VbCfxO2owQVuAcxln9f6FTjBvjkHjnPFvKdB7AvufZJRppU4UOs3r1F5LXboKNXTcWwqhtCGij+2f
-	+2GA37jtpDfsPTgbBIoG2E0lA+Olo0kc+TZIrKbiABMTahCrKj3jWt36uvUyX93dUYVWvYpaGbcuE
-	H4steuBpAYnIh3C2h0SJ/XqJUK+GVoXQJBOZB4qSiGy6OJNmFgK8LyjtqiLsbswBbL9L9gcRfBedE
-	CSCIHEOw==;
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=IFvtQF/EQRNqZnPTUPg67LAGyHPrcqrBHQ7jLg4MTF8=; b=sPorr3X47lxOGbsXIfkZYJ05oV
+	oyKOPOr2HOWtdagWWYC6fmmDapQ/Aap/tUWjq1ZSKMfuQIgvUIHtpBktsxfOucPuthSanJx9gqgLv
+	GEGyG3qpD6LBvR2HY/dpymbPBjjRBjK3svEUDfXdRVm/a/0ttAjxszM3JiJPoChuvw1EvAyaPxup0
+	V436nZ6qIncZBVmOY8lFRXS42RHMP0F94SMnVwwozSwiA/B0s+utB0BIBznaDvEjSe2hyxvfpD3Kw
+	MqMum7/fqNjuj1Of0gXnbpzte4sgTDNvE3m8V/fub8iojhna6Vcai0urU5Ku10ec33WVLYtOV8Dxt
+	H8tGRoww==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w8veI-00000003Fwv-1Wrr;
-	Sat, 04 Apr 2026 07:42:30 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1w9QmP-00000004Lqo-14MD;
+	Sun, 05 Apr 2026 16:56:57 +0000
+Received: from out-188.mta1.migadu.com ([95.215.58.188])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w8veD-00000003Fwo-3HdP
-	for kexec@bombadil.infradead.org;
-	Sat, 04 Apr 2026 07:42:25 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
-	:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=zVuyuZWPEacFSdtZ4/rdPo2ZTR7RDfdP3BpyB0CT/YE=; b=Z8h3qpueo/1/21YYrxtYqtm7BB
-	F/9kBb41aiGKPwSqbRbKJZUY/oIwKWNlXIh5o+EdvNW6RlMRxbUHXjsc6hYNi6atVk7riPq28Qs/5
-	POaPiTqXWAlpc1POt0rUA15+vtTTuuHbnw57XSQhNcHPd8JcvQgTRhFotqUoxTXkqUEmvd4ekToNj
-	IQDkwWD5nfMCtppqSJ6vdaJXnJmz9hKaaeQVfRfezUkUUVp0Sv1OwmvdaHbFjuwh2KA9c9Fq7clm5
-	5tTEElb/6cAHcdzPvuDnFLLB0NFpT96WMK116ys/uD2fkWNGWv4MRk/QaecoWMXqC3zMgwr4mjCuV
-	YHYjbIcg==;
-Received: from out-182.mta1.migadu.com ([95.215.58.182])
-	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1w8veA-000000056Xs-3YJC
+	id 1w9QmJ-00000004LqS-0xnv
 	for kexec@lists.infradead.org;
-	Sat, 04 Apr 2026 07:42:24 +0000
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+	Sun, 05 Apr 2026 16:56:52 +0000
+Message-ID: <c4138f66-edf2-4689-b5fe-16dc4839e9c3@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1775288527;
+	t=1775408205;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=zVuyuZWPEacFSdtZ4/rdPo2ZTR7RDfdP3BpyB0CT/YE=;
-	b=dxbtbL1bskq8RWMNIzElKYR1ejUPl3iSCrsVzm9L2lgnTj85qp31lBNZsJ2NWa62PdDW2c
-	OSoKGbN0weVgseDjjowry2AM4FnIRMyUe5IqxHPaVVpx/NmszhVr971maYVLuT7UfaFqsL
-	JfIgQfBLHXQG2/U5orIsq8tDe+DkqjU=
-From: Youling Tang <youling.tang@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	youling.tang@linux.dev,
-	Youling Tang <tangyouling@kylinos.cn>
-Subject: [PATCH] crash: Support high memory reservation for range syntax
-Date: Sat,  4 Apr 2026 15:41:03 +0800
-Message-ID: <20260404074103.506793-1-youling.tang@linux.dev>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IFvtQF/EQRNqZnPTUPg67LAGyHPrcqrBHQ7jLg4MTF8=;
+	b=M7zv8SV4cjrjb+YyPeE71EssW0qE0pL4fOJ+Nfy2dOQw7qKT75gTxWwXd3t7VJ7pQv+MzR
+	doi0hOcDMnXCCO/t3Cbdhxa59++qaLFBiSpFWSPaIh/M5gWLB9BHkiJSGHEqWF/2+6Ab90
+	Am2CiF8y5Sv3KMSrbLHOexlLh/l+4JY=
+Date: Sun, 5 Apr 2026 09:56:37 -0700
 MIME-Version: 1.0
+Subject: Re: [PATCH v3 02/24] PCI: Add API to track PCI devices preserved
+ across Live Update
+To: David Matlack <dmatlack@google.com>,
+ "yanjun.zhu@linux.dev" <yanjun.zhu@linux.dev>
+Cc: Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Adithya Jayachandran <ajayachandra@nvidia.com>,
+ Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Ankit Agrawal
+ <ankita@nvidia.com>, Arnd Bergmann <arnd@arndb.de>,
+ Askar Safin <safinaskar@gmail.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Chris Li <chrisl@kernel.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ David Rientjes <rientjes@google.com>, Feng Tang
+ <feng.tang@linux.alibaba.com>, Jacob Pan <jacob.pan@linux.microsoft.com>,
+ Jason Gunthorpe <jgg@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
+ Kees Cook <kees@kernel.org>, Kevin Tian <kevin.tian@intel.com>,
+ kexec@lists.infradead.org, kvm@vger.kernel.org,
+ Leon Romanovsky <leon@kernel.org>, Leon Romanovsky <leonro@nvidia.com>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-pci@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
+ Lukas Wunner <lukas@wunner.de>, Marco Elver <elver@google.com>,
+ =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
+ Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Pranjal Shrivastava <praan@google.com>, Pratyush Yadav
+ <pratyush@kernel.org>, Raghavendra Rao Ananta <rananta@google.com>,
+ Randy Dunlap <rdunlap@infradead.org>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>,
+ Shuah Khan <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>, William Tu <witu@nvidia.com>,
+ Yi Liu <yi.l.liu@intel.com>
+References: <20260323235817.1960573-1-dmatlack@google.com>
+ <20260323235817.1960573-3-dmatlack@google.com>
+ <e3fe7085-1297-47b8-bb17-a48196e8f37f@linux.dev>
+ <CALzav=eyf4XRTi8MfE_GBNSm+tjmfX7=d0M8Aj5Hh0vJn7huew@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <CALzav=eyf4XRTi8MfE_GBNSm+tjmfX7=d0M8Aj5Hh0vJn7huew@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260404_084222_955471_BC9DBBDA 
-X-CRM114-Status: GOOD (  18.96  )
+X-CRM114-CacheID: sfid-20260405_095651_654960_A5EC4C32 
+X-CRM114-Status: GOOD (  23.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,211 +102,240 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Youling Tang <tangyouling@kylinos.cn>
 
-The crashkernel range syntax (range1:size1[,range2:size2,...]) allows
-automatic size selection based on system RAM, but it always reserves
-from low memory. When a large crashkernel is selected, this can
-consume most of the low memory, causing subsequent hardware
-hotplug or drivers requiring low memory to fail due to allocation
-failures.
+在 2026/4/3 14:58, David Matlack 写道:
+> On Thu, Apr 2, 2026 at 2:29 PM Yanjun.Zhu <yanjun.zhu@linux.dev> wrote:
+>> On 3/23/26 4:57 PM, David Matlack wrote:
+>>> +config PCI_LIVEUPDATE
+>>> +     bool "PCI Live Update Support (EXPERIMENTAL)"
+>>> +     depends on PCI && LIVEUPDATE
+>>> +     help
+>>> +       Support for preserving PCI devices across a Live Update. This option
+>>> +       should only be enabled by developers working on implementing this
+>>> +       support. Once enough support as landed in the kernel, this option
+>>> +       will no longer be marked EXPERIMENTAL.
+>>> +
+>>> +       If unsure, say N.
+>> Currently, it only supports 'n' or 'y'. Is it possible to add 'm'
+>> (modular support)?
+>>
+>> This would allow the feature to be built as a kernel module. For
+>> development
+>>
+>> purposes, modularization means we only need to recompile a single module
+>>
+>> for testing, rather than rebuilding the entire kernel. Compiling a
+>> module should
+>>
+>> be significantly faster than a full kernel build.
+> I don't think it is possible for CONFIG_PCI_LIVEUPDATE to support 'm'.
+> pci_setup_device() (which is under CONFIG_PCI) needs to call
+> pci_liveupdate_setup_device(), and CONFIG_PCI cannot be built as a
+> module. This call is necessary so the PCI core knows whether a device
+> being enumerated was preserved across a previous Live Update.
 
-Add a new optional conditional suffix ",>boundary" to the crashkernel
-range syntax. When the selected crashkernel size exceeds the specified
-boundary, the kernel will automatically apply the same reservation
-policy as "crashkernel=size,high" - preferring high memory first
-and reserving the default low memory area.
+After the following changes, the liveupdate.ko can be generated 
+successfully.
 
-Syntax:
-    crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset],>boundary
+"
 
-Example:
-    crashkernel=2G-16G:512M,16G-:1G,>512M
+# ls drivers/pci/liveupdate.ko
+drivers/pci/liveupdate.ko
+"
 
-This means:
-  - For 2G-16G RAM: reserve 512M normally
-  - For >16G RAM: reserve 1G with high memory preference (since 1G > 512M)
 
-For systems with >16G RAM, 1G is selected which exceeds 512M, so it
-will be reserved from high memory instead of consuming 1G of
-precious low memory.
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
 
-Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
----
- Documentation/admin-guide/kdump/kdump.rst     | 25 ++++++++-
- .../admin-guide/kernel-parameters.txt         |  2 +-
- kernel/crash_reserve.c                        | 56 ++++++++++++++++---
- 3 files changed, 73 insertions(+), 10 deletions(-)
+index 05307d89c3f4..e172c31b33fa 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -335,7 +335,7 @@ config VGA_ARB_MAX_GPUS
+           multiple GPUS.  The overhead for each GPU is very small.
 
-diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-index 7587caadbae1..b5ae4556e9ca 100644
---- a/Documentation/admin-guide/kdump/kdump.rst
-+++ b/Documentation/admin-guide/kdump/kdump.rst
-@@ -293,7 +293,28 @@ crashkernel syntax
-        2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
-        3) if the RAM size is larger than 2G, then reserve 128M
- 
--3) crashkernel=size,high and crashkernel=size,low
-+3) range1:size1[,range2:size2,...][@offset],>boundary
-+   Optionally, the range list can be followed by a conditional suffix
-+   `,>boundary`. When the selected crashkernel size matches the
-+   condition, the kernel will reserve memory using the same policy as
-+   `crashkernel=size,high` (i.e. prefer high memory first and reserve the
-+   default low memory area).
+  config PCI_LIVEUPDATE
+-       bool "PCI Live Update Support (EXPERIMENTAL)"
++       tristate "PCI Live Update Support (EXPERIMENTAL)"
+         depends on PCI && LIVEUPDATE
+         help
+           Support for preserving PCI devices across a Live Update. This 
+option
+diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+index c1251f4f8438..71bab8ecba85 100644
+--- a/drivers/pci/liveupdate.c
++++ b/drivers/pci/liveupdate.c
+@@ -413,3 +413,26 @@ void pci_liveupdate_unregister_flb(struct 
+liveupdate_file_handler *fh)
+         liveupdate_unregister_flb(fh, &pci_liveupdate_flb);
+  }
+  EXPORT_SYMBOL_GPL(pci_liveupdate_unregister_flb);
 +
-+   The syntax is::
-+
-+        crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset],>boundary
-+        range=start-[end]
-+
-+   For example::
-+
-+        crashkernel=2G-16G:512M,16G-:1G,>512M
-+
-+   This would mean:
-+       1) if the RAM size is between 2G and 16G (exclusive), then reserve 512M.
-+       2) if the RAM size is larger than 16G, allocation will behave like
-+          `crashkernel=1G,high`.
-+
-+4) crashkernel=size,high and crashkernel=size,low
- 
-    If memory above 4G is preferred, crashkernel=size,high can be used to
-    fulfill that. With it, physical memory is allowed to be allocated from top,
-@@ -311,7 +332,7 @@ crashkernel syntax
- 
-             crashkernel=0,low
- 
--4) crashkernel=size,cma
-+5) crashkernel=size,cma
- 
- 	Reserve additional crash kernel memory from CMA. This reservation is
- 	usable by the first system's userspace memory and kernel movable
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 03a550630644..b2e1892ab4d8 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1087,7 +1087,7 @@ Kernel parameters
- 			4G when '@offset' hasn't been specified.
- 			See Documentation/admin-guide/kdump/kdump.rst for further details.
- 
--	crashkernel=range1:size1[,range2:size2,...][@offset]
-+	crashkernel=range1:size1[,range2:size2,...][@offset][,>boundary]
- 			[KNL] Same as above, but depends on the memory
- 			in the running system. The syntax of range is
- 			start-[end] where start and end are both
-diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
-index 62e60e0223cf..917738412390 100644
---- a/kernel/crash_reserve.c
-+++ b/kernel/crash_reserve.c
-@@ -254,15 +254,47 @@ static __init char *get_last_crashkernel(char *cmdline,
- 	return ck_cmdline;
- }
- 
-+/*
-+ * This function parses command lines in the format
-+ *
-+ *   crashkernel=ramsize-range:size[,...][@offset],>boundary
-+ */
-+static void __init parse_crashkernel_boundary(char *ck_cmdline,
-+					unsigned long long *boundary)
++extern void (*pci_liveupdate_setup_device_hook)(struct pci_dev *dev);
++extern u32 (*pci_liveupdate_incoming_nr_devices_hook)(void);
++static int __init liveupdate_module_init(void)
 +{
-+	char *cur = ck_cmdline, *next;
-+	char *first_gt = false;
-+
-+	first_gt = strchr(cur, '>');
-+	if (!first_gt)
-+		return;
-+
-+	cur = first_gt + 1;
-+	if (*cur == '\0' || *cur == ' ' || *cur == ',') {
-+		pr_warn("crashkernel: '>' specified without boundary size, ignoring\n");
-+		return;
-+	}
-+
-+	*boundary = memparse(cur, &next);
-+	if (cur == next) {
-+		pr_warn("crashkernel: invalid boundary size after '>'\n");
-+		return;
-+	}
++       pci_liveupdate_setup_device_hook = pci_liveupdate_setup_device;
++       pci_liveupdate_incoming_nr_devices_hook = 
+pci_liveupdate_incoming_nr_devices;
++       pr_info("loaded\n");
++       return 0;
 +}
 +
- static int __init __parse_crashkernel(char *cmdline,
- 			     unsigned long long system_ram,
- 			     unsigned long long *crash_size,
- 			     unsigned long long *crash_base,
--			     const char *suffix)
-+			     const char *suffix,
-+			     bool *high,
-+			     unsigned long long *low_size)
- {
- 	char *first_colon, *first_space;
- 	char *ck_cmdline;
- 	char *name = "crashkernel=";
-+	unsigned long long boundary = 0;
-+	int ret;
- 
- 	BUG_ON(!crash_size || !crash_base);
- 	*crash_size = 0;
-@@ -283,10 +315,20 @@ static int __init __parse_crashkernel(char *cmdline,
- 	 */
- 	first_colon = strchr(ck_cmdline, ':');
- 	first_space = strchr(ck_cmdline, ' ');
--	if (first_colon && (!first_space || first_colon < first_space))
--		return parse_crashkernel_mem(ck_cmdline, system_ram,
-+	if (first_colon && (!first_space || first_colon < first_space)) {
-+		ret = parse_crashkernel_mem(ck_cmdline, system_ram,
- 				crash_size, crash_base);
- 
-+		/* Handle optional ',>boundary' condition for range ':' syntax only. */
-+		parse_crashkernel_boundary(ck_cmdline, &boundary);
-+		if (!ret && *crash_size > boundary) {
-+			*high = true;
-+			*low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-+		}
++static void __exit liveupdate_module_exit(void)
++{
++       pci_liveupdate_setup_device_hook = NULL;
++       pci_liveupdate_incoming_nr_devices_hook = NULL;
++       pr_info("unloaded\n");
++}
 +
-+		return ret;
-+	}
++module_init(liveupdate_module_init);
++module_exit(liveupdate_module_exit);
 +
- 	return parse_crashkernel_simple(ck_cmdline, crash_size, crash_base);
- }
- 
-@@ -310,7 +352,7 @@ int __init parse_crashkernel(char *cmdline,
- 
- 	/* crashkernel=X[@offset] */
- 	ret = __parse_crashkernel(cmdline, system_ram, crash_size,
--				crash_base, NULL);
-+				crash_base, NULL, high, low_size);
- #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
- 	/*
- 	 * If non-NULL 'high' passed in and no normal crashkernel
-@@ -318,7 +360,7 @@ int __init parse_crashkernel(char *cmdline,
- 	 */
- 	if (high && ret == -ENOENT) {
- 		ret = __parse_crashkernel(cmdline, 0, crash_size,
--				crash_base, suffix_tbl[SUFFIX_HIGH]);
-+				crash_base, suffix_tbl[SUFFIX_HIGH], high, low_size);
- 		if (ret || !*crash_size)
- 			return -EINVAL;
- 
-@@ -327,7 +369,7 @@ int __init parse_crashkernel(char *cmdline,
- 		 * is not allowed.
- 		 */
- 		ret = __parse_crashkernel(cmdline, 0, low_size,
--				crash_base, suffix_tbl[SUFFIX_LOW]);
-+				crash_base, suffix_tbl[SUFFIX_LOW], high, low_size);
- 		if (ret == -ENOENT) {
- 			*low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
- 			ret = 0;
-@@ -344,7 +386,7 @@ int __init parse_crashkernel(char *cmdline,
- 	 */
- 	if (cma_size)
- 		__parse_crashkernel(cmdline, 0, cma_size,
--			&cma_base, suffix_tbl[SUFFIX_CMA]);
-+			&cma_base, suffix_tbl[SUFFIX_CMA], high, low_size);
- #endif
- 	if (!*crash_size)
- 		ret = -EINVAL;
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("PCI Live Update Support");
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 979cb9921340..93f76500cb0d 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -1434,18 +1434,12 @@ static inline int pci_msix_write_tph_tag(struct 
+pci_dev *pdev, unsigned int inde
+         (PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
+          PCI_CONF1_EXT_REG(reg))
+
+-#ifdef CONFIG_PCI_LIVEUPDATE
++#if IS_ENABLED(CONFIG_PCI_LIVEUPDATE)
+  void pci_liveupdate_setup_device(struct pci_dev *dev);
+-u32 pci_liveupdate_incoming_nr_devices(void);
+  #else
+  static inline void pci_liveupdate_setup_device(struct pci_dev *dev)
+  {
+  }
+-
+-static inline u32 pci_liveupdate_incoming_nr_devices(void)
+-{
+-       return 0;
+-}
+  #endif
+
+  #endif /* DRIVERS_PCI_H */
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 165056d71e66..4880302bca43 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1369,6 +1369,9 @@ bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 
+*sec, u8 *sub)
+         return true;
+  }
+
++u32 (*pci_liveupdate_incoming_nr_devices_hook)(void) = NULL;
++EXPORT_SYMBOL_GPL(pci_liveupdate_incoming_nr_devices_hook);
++
+  static bool pci_assign_all_busses(void)
+  {
+         if (!pcibios_assign_all_busses())
+@@ -1389,7 +1392,7 @@ static bool pci_assign_all_busses(void)
+          * numbers during the initial cold boot, and then that topology 
+would
+          * then remain fixed across any subsequent Live Updates.
+          */
+-       if (pci_liveupdate_incoming_nr_devices()) {
++       if (pci_liveupdate_incoming_nr_devices_hook && 
+pci_liveupdate_incoming_nr_devices_hook()) {
+                 pr_info_once("Ignoring pci=assign-busses and inheriting 
+bus numbers during Live Update\n");
+                 return false;
+         }
+@@ -2030,6 +2033,9 @@ static const char *pci_type_str(struct pci_dev *dev)
+         }
+  }
+
++void (*pci_liveupdate_setup_device_hook)(struct pci_dev *dev) = NULL;
++EXPORT_SYMBOL_GPL(pci_liveupdate_setup_device_hook);
++
+  /**
+   * pci_setup_device - Fill in class and map information of a device
+   * @dev: the device structure to fill
+@@ -2091,7 +2097,8 @@ int pci_setup_device(struct pci_dev *dev)
+         if (pci_early_dump)
+                 early_dump_pci_device(dev);
+
+-       pci_liveupdate_setup_device(dev);
++       if (pci_liveupdate_setup_device_hook)
++               pci_liveupdate_setup_device_hook(dev);
+
+         /* Need to have dev->class ready */
+         dev->cfg_size = pci_cfg_space_size(dev);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 27ee9846a2fd..aaab6adb487e 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -592,7 +592,7 @@ struct pci_dev {
+         u8              tph_mode;       /* TPH mode */
+         u8              tph_req_type;   /* TPH requester type */
+  #endif
+-#ifdef CONFIG_PCI_LIVEUPDATE
++#if IS_ENABLED(CONFIG_PCI_LIVEUPDATE)
+         unsigned int    liveupdate_incoming:1;  /* Preserved by 
+previous kernel */
+         unsigned int    liveupdate_outgoing:1;  /* Preserved for next 
+kernel */
+  #endif
+@@ -2876,7 +2876,7 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  
+pci_ers_result err_type);
+         WARN_ONCE(condition, "%s %s: " fmt, \
+                   dev_driver_string(&(pdev)->dev), pci_name(pdev), ##arg)
+
+-#ifdef CONFIG_PCI_LIVEUPDATE
++#if IS_ENABLED(CONFIG_PCI_LIVEUPDATE)
+  int pci_liveupdate_preserve(struct pci_dev *dev);
+  void pci_liveupdate_unpreserve(struct pci_dev *dev);
+  int pci_liveupdate_retrieve(struct pci_dev *dev);
+diff --git a/kernel/liveupdate/luo_flb.c b/kernel/liveupdate/luo_flb.c
+index 874830f8e44d..33fbdc6c417c 100644
+--- a/kernel/liveupdate/luo_flb.c
++++ b/kernel/liveupdate/luo_flb.c
+@@ -461,7 +461,7 @@ int liveupdate_register_flb(struct 
+liveupdate_file_handler *fh,
+
+         return 0;
+  }
+-
++EXPORT_SYMBOL_GPL(liveupdate_register_flb);
+  /**
+   * liveupdate_unregister_flb - Remove an FLB dependency from a file 
+handler.
+   * @fh:   The file handler that is currently depending on the FLB.
+@@ -487,7 +487,7 @@ void liveupdate_unregister_flb(struct 
+liveupdate_file_handler *fh,
+
+         luo_flb_unregister_one(fh, flb);
+  }
+-
++EXPORT_SYMBOL_GPL(liveupdate_unregister_flb);
+  /**
+   * liveupdate_flb_get_incoming - Retrieve the incoming FLB object.
+   * @flb:  The FLB definition.
+@@ -525,7 +525,7 @@ int liveupdate_flb_get_incoming(struct 
+liveupdate_flb *flb, void **objp)
+
+         return 0;
+  }
+-
++EXPORT_SYMBOL_GPL(liveupdate_flb_get_incoming);
+  /**
+   * liveupdate_flb_get_outgoing - Retrieve the outgoing FLB object.
+   * @flb:  The FLB definition.
+@@ -552,6 +552,7 @@ int liveupdate_flb_get_outgoing(struct 
+liveupdate_flb *flb, void **objp)
+
+         return 0;
+  }
++EXPORT_SYMBOL_GPL(liveupdate_flb_get_outgoing);
+
+  int __init luo_flb_setup_outgoing(void *fdt_out)
+  {
+
 -- 
-2.43.0
+Best Regards,
+Yanjun.Zhu
 
 
