@@ -4,109 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0890EFF5126
-	for <kexec@archiver.kernel.org>; Tue,  7 Apr 2026 16:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 23A83FF512E
+	for <kexec@archiver.kernel.org>; Tue,  7 Apr 2026 17:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=D08YF3C7gaIOrt/KDm0mueNU5cX5u2VSKpuLteAqV1k=; b=GdYFslcWK46bq6mnmwbh5fEqZR
-	B5QZYGOWcKhr7NRGCtXx919nNECj5BAM69Teo+ZNv8wociNYIM0SRATzWAPRqfW8+wTeLbqIqJkPb
-	Qryox/MFTPeBqO55c9BT7Fq5y6cP2bvT+P3k0OiEjnAhyEXNMerV4BdJlY49b6AMBXm0ZgnfPjA50
-	Q7OE+Nyry1MhZvUx2B9b7nx3PvdTwwd1H7nmh0xJ8VQWLVGPsg5kynBSoH99QFuJNoCKf18MBZBw+
-	AVrOpGDUYh58eGVgxcrkyw0iFttqKNUctxTbhM1t004vNvA3WKiKBP0smE2wY38qzkyNqzdzRw/gC
-	kQMEiZEw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=RU9CUTBlQTV9unvZiW1Jd4pICbElcO0miIF1kiEWLp4=; b=TOlufX2zFya0r6Fpb07MESs3l5
+	fxjYWradsbEqYewu0cEDF1Mwc4p1aAWRxbccX8OZhkuWV7TVxLfdmMGe4tAXC3qq2NhMtskTMkTSP
+	55BjtLyqzT1eBs5Ukckg0Kfqx9UuXrThex7IenHfMQXXEl/J5JA3KU2jVk0hYXAy8GCGSYByvXNaU
+	9ayBNKgP+CamRUYswokyNJzN5+/ixcaXU7RJqNLUHGk7lRWBD7Ms41imEZv1Txs3PGKIinOtl4Y2n
+	60uMMye+7mVUfoeN7AdrnuGR6E1RMuSgGnZRaqXbYNdt+dP+5CUytaroBuZftoUh5wJHFiVpUdNJd
+	3hzmCdGQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wA9MJ-00000006nuS-0ePr;
-	Tue, 07 Apr 2026 16:32:59 +0000
-Received: from mail-ed1-x52d.google.com ([2a00:1450:4864:20::52d])
+	id 1wA9oZ-00000006pIO-0yhy;
+	Tue, 07 Apr 2026 17:02:11 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wA9MG-00000006ntq-1yF1
+	id 1wA9oX-00000006pHa-1A00
 	for kexec@lists.infradead.org;
-	Tue, 07 Apr 2026 16:32:57 +0000
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-66f916529d5so148718a12.3
-        for <kexec@lists.infradead.org>; Tue, 07 Apr 2026 09:32:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775579574; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Q2nTeDIpBhovmz3wGC+092GfsaMXB1gERAvLIjlPAUoHihLutb6eSA0aV/53NNDz64
-         xxGPs9zzbZS95Z5haymwiilnQwYpZzpin7lEz/kXef4HIlyqaxWHQnO3WHyA0cNrgOa/
-         +9/0mD4KhpR2UZAnNYLLY8huW4hjjgPRFoDh5dt8JkeQLi45VwbaXIw5v/4WE8szznxV
-         KrRTrQPxqEIyOESND22OY5xvked35/zvnfAK46lC0iWGFfO+TD/AbazwKavbGu0xacla
-         MOtPqGMS/xLAX5HxpDiuX9SXfd+zy7NqmXVaPC0an1TsYbpI+fJn0UILDuZOv1UKUSXZ
-         cpgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=D08YF3C7gaIOrt/KDm0mueNU5cX5u2VSKpuLteAqV1k=;
-        fh=sZ1b5pveaYAmvDsgXA1n1NqhWN1MEs/XMXA9SmqUTYw=;
-        b=PncxpA6RpJ56TbN+98GArFYLw85SoJqGnQCg91rQERFJcbTwbm/XSAw58V4E2o44iX
-         VHM6dwEdcL+m5kRsYuXzKR2KXJShnOdk0Q/O3kc8rBowOS9E/NYTRhm4Uth19cz1XX6C
-         eDNWVjYlHUdftveEBx/SShN4MWOmlAZZ4Mz4tjP3mMvjZeutbS/75ew6TCivOJ7hZRVM
-         qBz83VM15j96N+7J1LRXX9x+pihdDNKjhQN495xmSClm/2qrxrEQ4KZA5iwqGWQkrjyK
-         9MIudBAwtj7t5cZURO1CyFkfxeq6K0E3jUyMm/GlEb8JL7d+Pi+bG/lTRYiqQM+DjSFs
-         QATA==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1775579574; x=1776184374; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D08YF3C7gaIOrt/KDm0mueNU5cX5u2VSKpuLteAqV1k=;
-        b=STqdAXlhdYLxGEBeUVbZz3ScX/TuUKj/MQDsgnvG5CZaF9HQEUd6Oo7tiOi5cEL6DB
-         JQXcSDs2FA4SegongVU9PHTImmk0zgdUW9g78Okya/cbfctCwnTQAyERbaH0EHtGlmKC
-         SmTKg2dSUyG6wSLA+bY3h7XRQyUkIwBzzBOq4x4cQOcBxD71dzMqqj7VItJluL02d+3m
-         f4UTt9dY6Gjw3GZGcsoorZ+2+/cPyPKKaA9cTNGdhXplXvdoLWPikLTHtWsspT/eC+x6
-         Oc+s32R9zqZPlGLJtTOjzl73KE9XCvystylADG0l3KbyknVjlt5MsPYhKDJFesmL4bU3
-         J5YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775579574; x=1776184374;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=D08YF3C7gaIOrt/KDm0mueNU5cX5u2VSKpuLteAqV1k=;
-        b=lzodn8wFtBHFQrFbqYneIEik3hf4QMbfQMLef125F59OcW9AmkUW6lTRAdIZ3hLOh7
-         GyJ9dMxjoX3/X/hvpuidwugJNOjfePpbBOHAT6MW26u6XNHFjmK+V78869Tfzasxn3t3
-         8HuGL+UTEqYxkr1KHilXZ28FtI2Enehllie2YfooxsQNg88g3XOFyErGhahYCU6dyPab
-         FWqkG7LWLAzEiq+isZ3dxudXQdeR2TRI0vVc4zeuNLU8fuIycQVBUeSuJwpf+XyDA3aW
-         MtVafi2GnVqZSnHe/gxIB0vC8rZfq3GBJ/3V6wNJmApGuvJlVLfa6zfNFC+B+qyXlfr/
-         Nulw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXBG0vuKHrrLX+LrxgMjACujke25LSnp8y+gcEV+fpz2rWqQLdvuzbGdhuj7yR8eHc6jBquw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwJVDA91dInX5kiykVKoX3BjID232BxqezGgYMIZvLwhZmx8Pn4
-	xF2IsicnM/ROadRS3ckdUs8irsUoHdGM+xLna8iZADw+BkkjOJYnv8mU/jr03cv50Y7DQu2ce/O
-	rsWrrilaIK5Lbzxw8iYsxTFQrK2hQZyvpeQOa0jsDww==
-X-Gm-Gg: AeBDieuTDrumVr+ogP1lAHMF+l94ya6SKHXdum96kMQVV7mMXh///Vsu1jFMzVmZpPA
-	TrqpVDd1vHd16uZu9e/qssoyLvCtTuDtnKFAIMBeVntML9ZgXVZpFWAP5sbNxXRsFtfFm2jbtWZ
-	UOaopFH+kbFwEiGz7Vtew2SCzmunqc0dIRbSFtNSsjuovSAURYoT8DK3AQvnzCuJt6gWFQfYrRV
-	TnUZWvBZWAYv7IIDmTyD7NGGaGS30BgQJNmxbff8PLAB68KaXzEqfo4jYdPanAqDyULzPyl8z4V
-	MqsdIs786PH37EvhtUrF4bI8b5r+5hRl5inDurA1pwM9ChsT
-X-Received: by 2002:a05:6402:460e:10b0:66e:5664:1e2f with SMTP id
- 4fb4d7f45d1cf-66e56642201mr5605470a12.1.1775579573998; Tue, 07 Apr 2026
- 09:32:53 -0700 (PDT)
+	Tue, 07 Apr 2026 17:02:10 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
+	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
+	bh=RU9CUTBlQTV9unvZiW1Jd4pICbElcO0miIF1kiEWLp4=; b=TDW7x8/Cs5bog2cDLG7VRZw7mI
+	uXdr5mFUG0MHd/TjOmBDl3ivMIiF2q2rgA8LWXVvR0d3+AVnpWpRf4n4rjTlR/DSZEd02PSBfWqO9
+	A0jZAJj3dFxox5lZ1fvv5iVwGTd5XhZNRXAuHKNn/DFmzdqGv4nvM9TGt7vSg5aFsVnH3hsfdoXza
+	gif5GP1xJXNZOVc8ZjjZ9+lhp7iTfBQub4UeKgf8M+EQFEggWPgwcTMq7do11Bj0XsEEKL+7upZmc
+	NyIp54SgnZzTgTe1ee+PcccgWdWh/a/NszTSpOWqQfOwUdtAglQZP7tUZL0tO7NHrBXN+03HQc8V+
+	LTzBs2jw==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wA9oO-007mvG-1S;
+	Tue, 07 Apr 2026 17:01:59 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Tue, 07 Apr 2026 10:01:47 -0700
+Subject: [PATCH] kho: fix error handling in kho_add_subtree()
 MIME-Version: 1.0
-References: <20260317141534.815634-1-mclapinski@google.com>
- <20260317141534.815634-2-mclapinski@google.com> <abptg2AObfxkkxKf@kernel.org>
- <2vxz1pgravke.fsf@kernel.org> <CA+CK2bCSoKGxfV+0QL46p_GqC=rj0YhcvP__bLrM2rVTgTNr=A@mail.gmail.com>
- <2vxzse96ah20.fsf@kernel.org>
-In-Reply-To: <2vxzse96ah20.fsf@kernel.org>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Tue, 7 Apr 2026 12:32:17 -0400
-X-Gm-Features: AQROBzDr_wa6PG8u3aIP6J0dUOY2EAUmN-EmDNqiTUddHsGQiNSzAqI7mC7Gp0o
-Message-ID: <CA+CK2bDVKdyT8aFPhn01r3wL+2Z27iCH5ErJY1rk4qxFmajfyA@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] kho: make kho_scratch_overlap usable outside debugging
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>, Michal Clapinski <mclapinski@google.com>, 
-	Evangelos Petrongonas <epetron@amazon.de>, Alexander Graf <graf@amazon.com>, 
-	Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260407-kho_fix_send-v1-1-b21977feb960@debian.org>
+X-B4-Tracking: v=1; b=H4sIAHo41WkC/yXMTQqDMBAG0KsM39pAjH+Qq5QiaiY6LcSSaUUQ7
+ y5tl2/zDihnYYWnA5k3UVkTPJUFYVqGNLORAE9w1rW2tp15LmsfZe+VUzADV1Us29A11qEgvDJ
+ H2X/d7f63fsYHT+/vgfO8AOSrA1twAAAA
+X-Change-ID: 20260407-kho_fix_send-ae33f16d7502
+To: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>
+Cc: kexec@lists.infradead.org, linux-mm@kvack.org, 
+ linux-kernel@vger.kernel.org, kernel-team@meta.com, 
+ Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.16-dev-453a6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2270; i=leitao@debian.org;
+ h=from:subject:message-id; bh=mGwEireWqSGdcxepiszY5FgqrgUhgGJ91Fpy3eOBcDM=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBp1TiD8BaOCojAoyo4gqxHXTLFN+vR9pNm/DeW3
+ TfrpuAhq7yJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCadU4gwAKCRA1o5Of/Hh3
+ bQYFD/0VGdPVpIsIE+BuFlsCe113eYUK+EoINu70uXmeeQkBov6zRr52bpi+VEaWBJd47lWSy7H
+ XKY/7ME30RAOXDTT5aPAFNKnlaIbXh3voGs7YsJTmD+dWikCYu00M7rq/E7y92Di5/QnXmfiCNC
+ lPhxivU8c4pl7f2LK5wV4D4R2TWPupeLDZta+7EkNm6HRuu9QxpqOKumCKyJzjNfI/vKXqHksBi
+ HE3sLwzVVn+F1bwfMDMNbmkmE5gQceOTvCQU2BLr92qPRO3TJp+zE2zoSBHfMV7yyukt8aXy+C7
+ +0yJMkcKFxXveJ8L6k8B/9Sa9VhiM3O7P5zcJbEEvK4f2MKd5HE8GwyKC6y8jXViK+L4G0/NDmf
+ Y5NPV2JmP6dk1v734w+kDqOzxrCogiLSM8pYhMp6cgk1KSgyyr4Ts+Cl9W440s45dsH4aISs3EQ
+ G/pL919eTfRLrVd5HZZrdgeZRbxQzf/5mO0+e+4mvY0SXm/+EbHXLu6zCqFZu2QFbccBpECsHti
+ 1Ayk9dMMgIuUoU53ik9kQ4cy8IfFyJtbu0/eDmo6AP2N6TTftctPOPi88p7fG3VrpX/Zwt35/M5
+ RUaivx4dN/ow8yCQO/e7wOeV6cEqmM+C8vRndLhsC3l5Gb0f56tup1VgOF3N0uNI9FovLd4hjSS
+ xrKD/hwBiQgiPYA==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260407_093256_545148_F0CE923E 
-X-CRM114-Status: GOOD (  34.38  )
+X-CRM114-CacheID: sfid-20260407_100209_349888_0725F1AC 
+X-CRM114-Status: GOOD (  10.97  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,118 +95,72 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Apr 7, 2026 at 12:09=E2=80=AFPM Pratyush Yadav <pratyush@kernel.org=
-> wrote:
->
-> On Tue, Apr 07 2026, Pasha Tatashin wrote:
->
-> > On Tue, Apr 7, 2026 at 6:55=E2=80=AFAM Pratyush Yadav <pratyush@kernel.=
-org> wrote:
-> >>
-> >> On Wed, Mar 18 2026, Mike Rapoport wrote:
-> >>
-> >> > Hi Michal,
-> >> >
-> >> > On Tue, Mar 17, 2026 at 03:15:32PM +0100, Michal Clapinski wrote:
-> >> >> Also return false if kho_scratch is NULL.
-> >> >>
-> >> [...]
-> >> >> diff --git a/kernel/liveupdate/Makefile b/kernel/liveupdate/Makefil=
-e
-> >> >> index d2f779cbe279..dc352839ccf0 100644
-> >> >> --- a/kernel/liveupdate/Makefile
-> >> >> +++ b/kernel/liveupdate/Makefile
-> >> >> @@ -7,7 +7,6 @@ luo-y :=3D                                         =
-                    \
-> >> >>              luo_session.o
-> >> >>
-> >> >>  obj-$(CONFIG_KEXEC_HANDOVER)                +=3D kexec_handover.o
-> >> >> -obj-$(CONFIG_KEXEC_HANDOVER_DEBUG)  +=3D kexec_handover_debug.o
-> >> >>  obj-$(CONFIG_KEXEC_HANDOVER_DEBUGFS)        +=3D kexec_handover_de=
-bugfs.o
-> >> >>
-> >> >>  obj-$(CONFIG_LIVEUPDATE)            +=3D luo.o
-> >> >> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate=
-/kexec_handover.c
-> >> >> index 532f455c5d4f..c9b982372d6e 100644
-> >> >> --- a/kernel/liveupdate/kexec_handover.c
-> >> >> +++ b/kernel/liveupdate/kexec_handover.c
-> >> >> @@ -820,7 +820,8 @@ int kho_preserve_folio(struct folio *folio)
-> >> >>      const unsigned long pfn =3D folio_pfn(folio);
-> >> >>      const unsigned int order =3D folio_order(folio);
-> >> >>
-> >> >> -    if (WARN_ON(kho_scratch_overlap(pfn << PAGE_SHIFT, PAGE_SIZE <=
-< order)))
-> >> >> +    if (WARN_ON(kho_scratch_overlap_debug(pfn << PAGE_SHIFT,
-> >> >> +                                          PAGE_SIZE << order)))
-> >> >
-> >> > Can't say I'm fond of kho_scratch_overlap_debug(). How about we make=
- it
-> >> >
-> >> >       if (IS_ENABLED(CONFIG_KEXEC_HANDOVER_DEBUG) &&
-> >> >           WARN_ON(kho_scratch_overlap(...))
-> >>
-> >> +1. And we can get rid of kexec_handover_debug.c, for now at least. We
-> >> can add it back when we have something else to put in there.
-> >
-> > Are you proposing moving kho_scratch_overlap() into kexec_handover.c?
-> > That would make it uglier to have #ifdefs in the C file. If you mean
-> > removing this function entirely, I think that is too dangerous because
-> > we have already had a memory corruption issue [1] that was challenging
-> > to root cause, and having this simple check prevents this from
-> > occurring going forward. The problem is that changes to defences such
-> > as kfence, kasan, and asi are happening outside of the core KHO code,
-> > and it is very easy to miss when something unexpectedly causes a
-> > preservation from the scratch area, as we have seen this with kfence.
-> > Worst of all, some of those mitigations use randomized or sampling
-> > approaches and might not be reproducible on every try, so having a
-> > CONFIG that tests it every time in a debug build is the only solid
-> > defense against that.
->
-> I think you miss the context here. This patchset uses
-> kho_scratch_overlap() during MM init to set the migrate type of
-> pageblocks. So it will no longer be gated by
-> CONFIG_KEXEC_HANDOVER_DEBUG, but by CONFIG_KEXEC_HANDOVER instead. So
-> there is no need for any #ifdefs. All we need to change is to have the
-> debug checks gated with a IS_ENABLED(CONFIG_KEXEC_HANDOVER_DEBUG).
+Fix two error handling issues in kho_add_subtree(), where it doesn't
+handle the error path correctly.
 
-Ah, this makes sense, IS_ENABLED(CONFIG_KEXEC_HANDOVER_DEBUG) Mike
-proposed was just for optimization for debug checks while making the
-patch is  making the function generic.
+1. If fdt_setprop() fails after the subnode has been created, the
+   subnode is not removed. This leaves an incomplete node in the FDT
+   (missing "preserved-data" or "blob-size" properties).
 
-Thank you for the clarifications. Need to review this series.
+2. The fdt_setprop() return value (an FDT error code) is stored
+   directly in err and returned to the caller, which expects -errno.
 
-Pasha
+Fix both by storing fdt_setprop() results in fdt_err, jumping to a new
+out_del_node label that removes the subnode on failure, and only setting
+err = 0 on the success path, otherwise returning -ENOMEM (instead of
+FDT_ERR_ errors that would come from fdt_setprop).
 
-> So the function stays around, and so do the debug checks. Since core KHO
-> now uses this function, we just move it out to the main file. And since
-> kexec_handover_debug.c has nothing else, we can delete it for now.
->
-> Anyway, based on the discussion it looks like people want to ask
-> memblock directly and not use kho_scratch_overlap(), so the next version
-> might not have this patch at all.
+Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
+Suggested-by: Pratyush Yadav <pratyush@kernel.org>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ kernel/liveupdate/kexec_handover.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 94762de1fe5f0..18509d8082ea7 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -762,19 +762,24 @@ int kho_add_subtree(const char *name, void *blob, size_t size)
+ 		goto out_pack;
+ 	}
+ 
+-	err = fdt_setprop(root_fdt, off, KHO_SUB_TREE_PROP_NAME,
+-			  &phys, sizeof(phys));
+-	if (err < 0)
+-		goto out_pack;
++	fdt_err = fdt_setprop(root_fdt, off, KHO_SUB_TREE_PROP_NAME,
++			      &phys, sizeof(phys));
++	if (fdt_err < 0)
++		goto out_del_node;
+ 
+-	err = fdt_setprop(root_fdt, off, KHO_SUB_TREE_SIZE_PROP_NAME,
+-			  &size_u64, sizeof(size_u64));
+-	if (err < 0)
+-		goto out_pack;
++	fdt_err = fdt_setprop(root_fdt, off, KHO_SUB_TREE_SIZE_PROP_NAME,
++			      &size_u64, sizeof(size_u64));
++	if (fdt_err < 0)
++		goto out_del_node;
+ 
+ 	WARN_ON_ONCE(kho_debugfs_blob_add(&kho_out.dbg, name, blob,
+ 					  size, false));
+ 
++	err = 0;
++	goto out_pack;
++
++out_del_node:
++	fdt_del_node(root_fdt, off);
+ out_pack:
+ 	fdt_pack(root_fdt);
+ 
 
+---
+base-commit: 9763aa6c6df784d7159925c0b3bef4dfb791e84f
+change-id: 20260407-kho_fix_send-ae33f16d7502
 
->
-> >
-> > Pasha
-> >
-> > [1] https://lore.kernel.org/all/20251021000852.2924827-1-pasha.tatashin=
-@soleen.com
-> >
-> >>
-> >> >
-> >> >>              return -EINVAL;
-> >> >>
-> >> >>      return kho_radix_add_page(tree, pfn, order);
-> >> [...]
-> >>
-> >> --
-> >> Regards,
-> >> Pratyush Yadav
->
-> --
-> Regards,
-> Pratyush Yadav
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
+
 
