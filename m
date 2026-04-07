@@ -4,147 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 65DBFFEEF41
-	for <kexec@archiver.kernel.org>; Tue,  7 Apr 2026 13:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 07CA8FEEF44
+	for <kexec@archiver.kernel.org>; Tue,  7 Apr 2026 14:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Message-ID:Date
-	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=x2FX56NtXi/VblAlUOAHPjqz8guTWDBOuXi4XmFcv1Y=; b=YzKLH/UZ+l9ARu5Cqe1YHuTUj7
-	17+zEt5SN6PjKw0V5QBtIyfFBvyce2fFSJM3zN+ZPPl2CxqpJcfOgAW3+6ChudQYHsj97y8fqQ9fU
-	38Nu0KmqNJ2VxCgVkmsqos5igYOz+RE7odhbaivolbYQSu3svZYd18AQoqmelQ9ssoK2Z5PclHzOp
-	VfETTdHH6Xh82A1rjHudS0ajeKnHNFKd9HtL8Kg+0dLT4oq37BtHdgNUkLQ4Ids7GNAo52pvkMfzZ
-	Gl7osYo7pnjgoBsnynJqUBjY7pDnimwo2O8pCT2dgBH395PdQOAquCaubj8w2edZLrr35L1gLxyq1
-	E9ZphvMQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=PH7dFq7f1INYm9K7IYaHG84sZj/ZwJzM9/9IHu+cmAg=; b=CftinuTzwv+i6rSvNMkBQBafh9
+	37uL9pDEQYkZo5HqbQribpDRJC5BZJE7EHHVXj2gUKYN/FxTFNOQix8tgRmQns19vJklq+rIPsDg3
+	zXH4T9HBk5bBt+L5GxNMTEYB90+DtuQ7NHZf8IvNFSaHVewd8kg16Jjzws+EjrHW89WhVxwDgwW+G
+	sxjraQ1BveEW1LQMO4PdIUhuZG9uhCiT27HRE+syeSFgZyMfHI93zBDiAAsNkRo7NHPVnqzKPaIH2
+	jytyi0i5ZQnv1RCeBrlZnsriiPaM71/8rpwPNXQcAlbFxff3s2YCp2ByjP0YibO6ETNnGxQ6t+NIZ
+	a5lmpC4g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wA6N9-00000006W1L-0tgs;
-	Tue, 07 Apr 2026 13:21:39 +0000
-Received: from mail-westus2azon11010021.outbound.protection.outlook.com ([52.101.46.21] helo=CO1PR03CU002.outbound.protection.outlook.com)
+	id 1wA7Gm-00000006ag7-40Me;
+	Tue, 07 Apr 2026 14:19:08 +0000
+Received: from mail-ej1-x62e.google.com ([2a00:1450:4864:20::62e])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wA6N6-00000006W0N-03pE
+	id 1wA7Gj-00000006afj-3xvM
 	for kexec@lists.infradead.org;
-	Tue, 07 Apr 2026 13:21:37 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ibPp+oq1C6lv6eHHpHgealloP9N2BPm3Pfq6Gfcv6+TqWEHJiiZD1cyhbb6MMd3V72/AOa42HuNx4lZs4fhfs7uBdn+4KUg9XsD8TG89X4NjK+BSDDw4EThyb/M/eE6FqYIQ/MIvvR/gTxQLitnL4eFH1jx27UQsJHoFPe1IvSRokYB7Qg0nYYTsbnMcnalJQKshMmzvpjQPGTOQww+zfvsIR230369M+l87g8uuQxM7BVli83Fb2z/CFiXxyr3zGXAeTYTVg4jEhHdGMTJdcqRB7J8cxQzIMDicIQ/gryDL/hGjJ71mG+2JqWTYtxqALs4mgKExTxa8zoqJcpUjvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=x2FX56NtXi/VblAlUOAHPjqz8guTWDBOuXi4XmFcv1Y=;
- b=HlHHmDbW0giGVCRAGl2TsA9mRtq9jAqa89ewLdjMCusK30blW5d4bjPjGfvwIqzW765xdikD4cfAlr/vQvFZ0hbpGtfscx0b9GB0cKQPScbbbP6gK5bqlPtEM8evXMZ9pg+L3NhaM508ANi16KSIiMOR/pirx8dwRa38C7Vz36MOMWM03HDzXw4YA8YqYG5X0ZndHjpke8RQkVSXdr5C5kT6i+jfayGD0WS/51l9TZh3B3RUiqc4L5RSgUUHOBvC3MIxmHRFsrOKHYAbTDIQ4toqIeRq5Oxym9fg0JmWQ1jLGlDY6rV1i5LPzUKCGgRuoq4gGbprKiOYSoo2H8J2mg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x2FX56NtXi/VblAlUOAHPjqz8guTWDBOuXi4XmFcv1Y=;
- b=spTzZ6PPVMr0Qs4XB/bVxfktp3hWj25DWCzJKcJ/uwvcd8TBf/3ZaIGO33EYp5Ypp+LhbyfBG8omr4m0cgXQHJEWczxEtBuPFR1byjc6hKr0lT+0Y9kHsLYSOb1fPjZxsSOQJH46xqAp+wW/CImfbVNtERIBPNlj9dLVSt9esf+8JxKTjGawZ4unQP7ROJYO0mGRib/Lj9UnwU6JeLeh4hPpYy/Miyvd/6SO5P+T0tN5Daw6+zIciaSH1ZRSiw1XBfUQJzNbQ0TO0nAfj1OmArNk25OgtAF/YTCIUgQRQOG2ogPBwvZ39L657nU3CMTBrtCELf3U3D/C1X7uQRlzSQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- CY8PR12MB7435.namprd12.prod.outlook.com (2603:10b6:930:51::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9769.18; Tue, 7 Apr 2026 13:21:28 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::f01d:73d2:2dda:c7b2]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::f01d:73d2:2dda:c7b2%4]) with mapi id 15.20.9769.014; Tue, 7 Apr 2026
- 13:21:28 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>,
- =?utf-8?b?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
- Evangelos Petrongonas <epetron@amazon.de>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Alexander Graf <graf@amazon.com>,
- Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v7 2/3] kho: fix deferred init of kho scratch
-Date: Tue, 07 Apr 2026 09:21:25 -0400
-X-Mailer: MailMate (2.0r6290)
-Message-ID: <DFD0C0F5-F23B-44CA-B2C7-9D03F2397DCF@nvidia.com>
-In-Reply-To: <2vxzwlyj9d0b.fsf@kernel.org>
-References: <20260317141534.815634-3-mclapinski@google.com>
- <AD9E1B18-C813-480E-894C-FEEB51EE8A93@nvidia.com>
- <CAAi7L5dSOxXETv-bYs4hJ1SfixMBQXS4fmfKs3SzVvQ=yY7oSg@mail.gmail.com>
- <76559EF5-8740-4691-8776-0ADD1CCBF2A4@nvidia.com>
- <CAAi7L5ex+66qgFzRkLDbuOmC=cVrMyBctPZv6wd15n1rc2U9KQ@mail.gmail.com>
- <0D1F59C7-CA35-49C8-B341-32D8C7F4A345@nvidia.com>
- <CAAi7L5fvUPUqd3A4m6wubeYh90NH+S2KBRE1R8WKerBYhkU8kg@mail.gmail.com>
- <58A8B1B4-A73B-48D2-8492-A58A03634644@nvidia.com>
- <aburnbP64n9axmu_@kernel.org>
- <CAAi7L5evx8ta8BifNiGNfUoTiaBUsv4cgQRbm_15RoAfdKPcMw@mail.gmail.com>
- <acAAp4JaTGn_STBH@kernel.org> <2vxzwlyj9d0b.fsf@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: IA4P220CA0006.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:208:558::7) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	Tue, 07 Apr 2026 14:19:07 +0000
+Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-b9c603ec2dfso534040166b.1
+        for <kexec@lists.infradead.org>; Tue, 07 Apr 2026 07:19:04 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1775571543; cv=none;
+        d=google.com; s=arc-20240605;
+        b=WTVGNJVSGxEbCE7p1RGtuXa6epHMpkH6n5zQaIqIdTeACW5lDcCd/xfQgq1iuFfYFg
+         aMNrYBtQzOTfB+HUchg/zn9pJWl+irk0zHvKsGaXOfWYJy5wzuKEJkB3WhDZQquQPQsC
+         +kZETvzPtrCJwqFcr09w/IMXFcGXq3Zwxcp6ESlSF3IYFZ769En6sDgU3OvHlDuVD8tA
+         n0EmCgkUeQKP1oXeHXj7qDmDa1l1or3zIDVQPhIMQDC9UIZ0Erx1m26K4JrS6z60T/Ef
+         O2pB4ePdyWGpl3Sor+x/gRWsSP0Fjo8kjUctE+AkxUDPo35fj3qpEUdCtmnPTgdhUNY9
+         ipjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=PH7dFq7f1INYm9K7IYaHG84sZj/ZwJzM9/9IHu+cmAg=;
+        fh=AGLSkFPpX8pguion7pnCqQlkMkCdUn13X3unb8feXus=;
+        b=fOrDfmf36roihFb0b7l3qJjPluoXTkLA3/4OLqhFVc2YNGrC1nZKPo/9iaxDs4qPeL
+         cXEoW3aoIkcz2EfGz9Qep9xFAcMYNczNjX3ez/e7KKqDXW+cSN5xnGS9XPMXFTtiW8wO
+         VC9y2aZ7CN0xYONn/bfQcX1kw85qr2uFTAPbIbBEj2sPDDAS4V5hX9zZtr9vBwVJhGyE
+         Z0rjqxn0U2qG0LW1VjnwX0L/Sg2uMM34B/DKMRbfI8aZgqOaiQEePZ2zdvF6W3wklQzk
+         WgaXlioGThQ3y8d/wYuKwOPGQQtjQQfzkgNFy3PZ7CHRK8LY7Me51tD5mAf/LnSYo0qF
+         tAmA==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1775571543; x=1776176343; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PH7dFq7f1INYm9K7IYaHG84sZj/ZwJzM9/9IHu+cmAg=;
+        b=YJ/5Zp3as+yR35mPftTbxKe/WsLyJZH5oZwunGiwPDS3j2bhISLHTUc7ZAQ8z63Y/3
+         riB5s4Imlyr6AKZxJMeIemSkisDqdR68dq4uRpSqu6ZeF9vAwjPiIo99L2/Zc/Rzf3s7
+         1V+XFP0FfPkxb5DSj98BNI4/9BkecQ48POJ9lZOF8b9VrQhGIARVfDhZnEJ85DRTo1yR
+         4qWj96zrTYWNKT/DE1OT7aqwtKOY6FtErV50hr+p3vcgaGrxkD1XRCySBW05lauZ0VJN
+         OZqtmf9OJ+FXXmoNg25WdEdgZmvKClwgYXcLYpCmMLtENiaAQMv/vm96v7dPNrdZBsC3
+         J2BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775571543; x=1776176343;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=PH7dFq7f1INYm9K7IYaHG84sZj/ZwJzM9/9IHu+cmAg=;
+        b=i9zfVfUe1YVgOLpDV9likWTn52OvZFaJO/8viMUvVFyvx7+wjlman8z8uA1DT+hijI
+         AM72D6rCjtyTDtA0OpMxXiM66uVhn2j7r5TN+7ba/ZPIglrvcS/5eRxljQKMsyhmWXH9
+         Pj3KiKx9zFp53vZ71kURfqo3euaOqKdPxYIr5bPOt3ZMOv6FyNwlPl5XZPu3391G59X6
+         Tw1VhPu0AnK1TsbC+5aC8KRYXoG5IciZu8/Hrpz3f+7EKuzhjAcIKWbA/ooWKYay7TZP
+         hck6F6KjIVZ2QXfnOjif002AhFjrh8Uf3E5yBCYkWY3yRpFnBMkczQTsNOYiVmAxXEfk
+         ci9A==
+X-Forwarded-Encrypted: i=1; AJvYcCX6KXXXmV1G+q+WGCHKsVpfBpSWtyS5U0WDefQyRFBXgweg+Eka83Syg+ez6327RsGbXl7H/Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxvsTrVZvgea7v5ly6mAVt6TzEX1XdQrzIzwBAg3cj6q8y3HBgP
+	dHFTB0nuyBKhWVwUhXxu1iyHJQrti6In85Ug7G0x3pyq4EZMbhcSl4T6y6UvR07aN0x62zmGya9
+	6eL4bgWWq3p+79VxDZU97dgoJcN/AvEzv2YGjAickYQ==
+X-Gm-Gg: AeBDiesqIEg3PsbK5OXZV2IaQF1hBxim5F6hTPkC1xf9nGy+AO5TTAkpA9+YcB5tlt0
+	upG7LI+09OArC3MRjfHfFEMAvPm7D7BazkS+KthosKdnicnAqi9/oH3uabWC6FF7Dlp28xW42+L
+	XWkux8Ut6dinEWLV3kVy9X3H4hTZVlfs2o0OgsXJH0UdzMGkiy2rNwy0acJD1oJZ/UNdW/qbGkG
+	374Pi6eMWZBXKRSApdVEkwLzZUFe3qyi2CO6xcAo19bSekkJ0VJvD7MZKJT6PBvkbVNURyyOhW5
+	2qmdQ+GjhmXrwOl2UyaQiTH/BJKCzFbUpLRinU2k3AspSMaO
+X-Received: by 2002:a17:907:e113:b0:b9c:1a5:acb7 with SMTP id
+ a640c23a62f3a-b9c67b4d13bmr511967866b.29.1775571543087; Tue, 07 Apr 2026
+ 07:19:03 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|CY8PR12MB7435:EE_
-X-MS-Office365-Filtering-Correlation-Id: f44a00dc-8fc5-4bfd-4dc5-08de94a8938c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014|18002099003|22082099003|56012099003;
-X-Microsoft-Antispam-Message-Info: 6q/TbbS3iweP7MiO2TWyy1MVglCVs3yimYm5CrAoh+UBeDHvzibGnZDoyMyud2YxbBOxj+YgXbzcMoPAYCXfABqmcvWPPHJtb0cwBESnIRGnismSqfVxSBfr5VlaMwLlHNiGybiMA6lSzjSjsNG9EelE5821YZMSdz9vYXdW4/TV96bbWyNVCtiK3NUmbI7hZH85dmPF1ktpctvaTLfYrVGBsoWHjmFbzkt57pEIZWTiteuSOt4BAkSYp68DaFIsdtnGjubmjfJz2Yp3CAACUwdJ+QgP0nvdNo3ZWkq6cvaIl9S1t0kRo6pY6MAqjmi0V2bSbJ3KjJBprThG4O656K7wsAFuoqxGA6VAlJpou+O7hxFqPjQLfq6ksx97dTVbppWw9qF9eWee5GZhNkL5JoUwQjDPItQNB7fvCMQeKtyt9a7olZkKs38H2b6Slr14oFWaj3cZ03RJzJdZaR8yYLqnnYuLv2TbuTCLh47jOUVjsg+VMjNl/EzTot/79qCAOSxyZGc0o976cH/0ArvgJ2pfIV2mqRCJSYGkZJF8Wsh+kXpwTkhJGYZo+V8/6y8An6cUyNA4d8VGh/3tWB1zNe5QkcxXKwluXahIRz9Srjqkv3XQQfcOpLTbWpK2iguQu6nBCWDpV1m33IEMypnXV+WgaQCgLI6dO6CT55PgN3ayrdiJKErP0I11CYrDLZe6ScdquNdIOVS3Gtj5+mMUEKo8U4+/3Vqd5aHXF8whAy3d0Cq6CoDGZkUir3ftCvk2
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MGhPcTNoSDVncUhOUVJsL1pYTWpPQllZNWN4dUdHVHYza0NQazlOajk5dHJP?=
- =?utf-8?B?TUFCUFp2RDZCQzhqUEFic1c2TWV3L3hFRXQwc2FJR2ZuV3J2T3hEZkFHZWpa?=
- =?utf-8?B?SXphMTdjQkFmalY1VWY2U005N2M3NHp2OFFndlJZaUx1TGExRDBuS0lqakRX?=
- =?utf-8?B?Tmp6czhrR01kd0o0OENFMXM0WDhwd3dmQVdnS0tnNGs2WWtWOTExeFVKYlNr?=
- =?utf-8?B?QTY0ZzN6VmpXYXBFYzd0OExXcmptSnBheDVOUzZ4VTltMFNvcmt1a0pJcHdN?=
- =?utf-8?B?UU11bDVVYXpqNG1ubk14aEZZNGx0MHh4MzlnV2cwN1RJbWhHTDlXSjF3bytN?=
- =?utf-8?B?c3c0VVhtZ3QyRHU4RklnRGF4RXlrZ1QrSlpyWnF2U3JhUTI0Y3FmSEpkeERL?=
- =?utf-8?B?VjRCV2pzYmRwcFhtQmlreGFpeU1IYjRoSE95UlAxV3hmd2U5MlJnanFrNklR?=
- =?utf-8?B?QnRTUXBlMmJ5REkwVk9IRGlRSVpOQjV3TW01ZGF2YWJDeTd4cEZxa2RaZHp6?=
- =?utf-8?B?SVNNc0sxcVFSSW5GVmJHdlVkc0pwNE81dmxGaDFnaHJzcVRZNHN4cVJWT2Y2?=
- =?utf-8?B?T3lIT1MxNU03cUszTmlmVEM3V2VGcERwWlJOQkpEU0pTSmpQSXYydGpZc0Fr?=
- =?utf-8?B?S0N0dzdtRkxpZUY4aThCdTNlOHhjbklyQ2wyenVVdFlKUUgvczc3VFNuQmcz?=
- =?utf-8?B?ek1RbjlpejdVaUpVVlFMK3pEeUtSNVNoYnpLRHA0SVpDSHFtbWFFV2F5WGtS?=
- =?utf-8?B?NmxJd2pDbzlwNFQxWjB1Wmk4YjUrMEhKMUNkZWcwMDcyT0NWWTB5OG92SzZk?=
- =?utf-8?B?cWcvVXRGWkRJSzZINlcvL0JTNjVyYXdqMnhsZExmSHJoSWpySHBqODRDci9o?=
- =?utf-8?B?ZWFQbDRzMmNIMUVlemF2ZWZUYStnTmM4Sk1uZTV0ZENCSy9yR3UvT0s5K1JG?=
- =?utf-8?B?OFMwM3VYWE5ZcW5ROXZjZ2piUnFrSzNXbldzQkNOa21kTktZME5mbHFDMytq?=
- =?utf-8?B?OHlwRXVJS2hHV3ROanpBcnU4QnB4MnR1OXNzcjMrM25taHhJKzhBYyt6UDlz?=
- =?utf-8?B?cy9GT0lQNE92ZGJkWVZQdFp6a1l2TUoyVHlVVUhwN1VBZE5rb1NTVExybHdi?=
- =?utf-8?B?cXN4VUI0d200b2pmQ1FjOWpHbkc3R2FocWZ0YXVqWW93RmZOUFBsVldIckNB?=
- =?utf-8?B?OWg1L2FmYjRhZ3hRaWoyVXp3aFptd3RIWThRRGxtNVU2MjlpZSsyOXhtRkhD?=
- =?utf-8?B?OXZiU1B0OGt2LzRiYkNkcWFUNHFBYW5RU0NxS0Y1MzVadW9QTk9ZTEpMSzBI?=
- =?utf-8?B?MDRveWVYcC9HRm1PS3kva2pkL215cDB4a2pUbnZBQ0JYSnNRajl6VmxPc3FY?=
- =?utf-8?B?Mm93ang3V1N6c3hpVi9IeHZSVXB0K25YbmZMdGdUY0xTMisvckcxNThUTjB3?=
- =?utf-8?B?aDhwYmFoYnBGTUduZEl5Y0tlRW5HREJxQVpkTVA2Q3hvRWVwZDk0UklLMENw?=
- =?utf-8?B?ZWJNVzEvUXVPSUlIZjhydnpBeFFzVHFCcUVwMFpPSEt6UFMxTXg4SFJNR0Y4?=
- =?utf-8?B?a0JGdFRzOTZFMmxoY0FROGhaeHl4UVgzek5QME9LSjFxOFN6RWdtTnd6UDhi?=
- =?utf-8?B?SWRKb2xNSHp1R2ZFZi9mRFVNNGMvN1A0U0ljYUtNZlpWT2xPZXdiWFdsMWRP?=
- =?utf-8?B?ZWt2MHBMcWJUZGxZNHNoaWZkQWk1QUcyVzJlVkZZcUVGdEFXU0w2N0cyMUVM?=
- =?utf-8?B?WDdwUlFlTlFVS1dNT3I5dDJFNGh5Y1hLcytuOHhnWGR4OS91QnJXQ1cwTG1Y?=
- =?utf-8?B?N2tqMkpRMThTNVFVU1JPcW5oLy9pUzlTc2J4b2RJN0NEcENjU0l0RU16WXZx?=
- =?utf-8?B?QjBQZEd2bHpVcWRGc3M5TThFbWNLWmxuWmE4bWxsdEFOUXppT0hBRmtoaldi?=
- =?utf-8?B?Ym92cnc3QWIybmFaR1VaTEFRV0pvcmlBL3hJWlk4SVVqN2wzb1Q4MzhPeTZV?=
- =?utf-8?B?V2lHZ3NwVzVFeEJxTlVxWUdXc21YUk9EVnp1Tkx1cHgzQnNZelYweTNuM2ls?=
- =?utf-8?B?Rzl5Y3M2emlxRWV1L2JaSTVYMHJ2RTFRbXNiaFdkckt4SXBLcUhhZWlvc0Zr?=
- =?utf-8?B?OWU3aHJOUGJFZjYxVWlRMERMM2IveUc1bUJkc2RFRHdmM3NFTUdleUVXU2pU?=
- =?utf-8?B?Yld6anVXSXZ6Q0pzSXd6YUxTdUpZZjR5MDlRa3duTkNvOU5JYmpMUmlBMHh2?=
- =?utf-8?B?M2MveHdUNkRoK3ZNOU12VDFXd1BuTG1DTFJmNG15bGs2S2t2SkZNN3pQNVVC?=
- =?utf-8?Q?weep/YISrG8X8hApVS?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f44a00dc-8fc5-4bfd-4dc5-08de94a8938c
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2026 13:21:28.5446
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kgdjiyoYBGDjAajVBosYE6aP3NZLnd+f/7meg3EVeJ5Lhb1ogopJJDs134k8hfaG
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7435
+References: <20260317141534.815634-1-mclapinski@google.com>
+ <20260317141534.815634-2-mclapinski@google.com> <abptg2AObfxkkxKf@kernel.org> <2vxz1pgravke.fsf@kernel.org>
+In-Reply-To: <2vxz1pgravke.fsf@kernel.org>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Tue, 7 Apr 2026 10:18:24 -0400
+X-Gm-Features: AQROBzDxG3uqA6xycK2LUwqsWH3qLlD9BRFGhHVc5AlW0BiYM_p2w8BL8PV1yAE
+Message-ID: <CA+CK2bCSoKGxfV+0QL46p_GqC=rj0YhcvP__bLrM2rVTgTNr=A@mail.gmail.com>
+Subject: Re: [PATCH v7 1/3] kho: make kho_scratch_overlap usable outside debugging
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, Michal Clapinski <mclapinski@google.com>, 
+	Evangelos Petrongonas <epetron@amazon.de>, Alexander Graf <graf@amazon.com>, 
+	Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260407_062136_113488_152064CC 
-X-CRM114-Status: GOOD (  36.30  )
+X-CRM114-CacheID: sfid-20260407_071906_014578_AC1F3086 
+X-CRM114-Status: GOOD (  20.66  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -159,330 +119,80 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 7 Apr 2026, at 8:21, Pratyush Yadav wrote:
-
-> On Sun, Mar 22 2026, Mike Rapoport wrote:
->
->> On Thu, Mar 19, 2026 at 07:17:48PM +0100, Micha=C5=82 C=C5=82api=C5=84sk=
-i wrote:
->>> On Thu, Mar 19, 2026 at 8:54=E2=80=AFAM Mike Rapoport <rppt@kernel.org>=
+On Tue, Apr 7, 2026 at 6:55=E2=80=AFAM Pratyush Yadav <pratyush@kernel.org>=
  wrote:
+>
+> On Wed, Mar 18 2026, Mike Rapoport wrote:
+>
+> > Hi Michal,
+> >
+> > On Tue, Mar 17, 2026 at 03:15:32PM +0100, Michal Clapinski wrote:
+> >> Also return false if kho_scratch is NULL.
+> >>
 > [...]
->>>> +__init_memblock struct memblock_region *memblock_region_from_iter(u64=
- iterator)
->>>> +{
->>>> +       int index =3D iterator & 0xffffffff;
->>>
->>> I'm not sure about this. __next_mem_range() has this code:
->>> /*
->>> * The region which ends first is
->>> * advanced for the next iteration.
->>> */
->>> if (m_end <=3D r_end)
->>>         idx_a++;
->>> else
->>>         idx_b++;
->>>
->>> Therefore, the index you get from this might be correct or it might
->>> already be incremented.
->>
->> Hmm, right, missed that :/
->>
->> Still, we can check if an address is inside scratch in
->> reserve_bootmem_regions() and in deferred_init_pages() and set migrate t=
-ype
->> to CMA in that case.
->>
->> I think something like the patch below should work. It might not be the
->> most optimized, but it localizes the changes to mm_init and memblock and
->> does not complicated the code (well, almost).
->>
->> The patch is on top of
->> https://lore.kernel.org/linux-mm/20260322143144.3540679-1-rppt@kernel.or=
-g/T/#u
->>
->> and I pushed the entire set here:
->> https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=3D=
-kho-deferred-init
->>
->> It compiles and passes kho self test with both deferred pages enabled an=
-d
->> disabled, but I didn't do further testing yet.
->>
->> From 97aa1ea8e085a128dd5add73f81a5a1e4e0aad5e Mon Sep 17 00:00:00 2001
->> From: Michal Clapinski <mclapinski@google.com>
->> Date: Tue, 17 Mar 2026 15:15:33 +0100
->> Subject: [PATCH] kho: fix deferred initialization of scratch areas
->>
->> Currently, if CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled,
->> kho_release_scratch() will initialize the struct pages and set migratety=
-pe
->> of KHO scratch. Unless the whole scratch fits below first_deferred_pfn, =
-some
->> of that will be overwritten either by deferred_init_pages() or
->> memmap_init_reserved_range().
->>
->> To fix it, modify kho_release_scratch() to only set the migratetype on
->> already initialized pages and make deferred_init_pages() and
->> memmap_init_reserved_range() recognize KHO scratch regions and set
->> migratetype of pageblocks in that regions to MIGRATE_CMA.
+> >> diff --git a/kernel/liveupdate/Makefile b/kernel/liveupdate/Makefile
+> >> index d2f779cbe279..dc352839ccf0 100644
+> >> --- a/kernel/liveupdate/Makefile
+> >> +++ b/kernel/liveupdate/Makefile
+> >> @@ -7,7 +7,6 @@ luo-y :=3D                                            =
+                 \
+> >>              luo_session.o
+> >>
+> >>  obj-$(CONFIG_KEXEC_HANDOVER)                +=3D kexec_handover.o
+> >> -obj-$(CONFIG_KEXEC_HANDOVER_DEBUG)  +=3D kexec_handover_debug.o
+> >>  obj-$(CONFIG_KEXEC_HANDOVER_DEBUGFS)        +=3D kexec_handover_debug=
+fs.o
+> >>
+> >>  obj-$(CONFIG_LIVEUPDATE)            +=3D luo.o
+> >> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/ke=
+xec_handover.c
+> >> index 532f455c5d4f..c9b982372d6e 100644
+> >> --- a/kernel/liveupdate/kexec_handover.c
+> >> +++ b/kernel/liveupdate/kexec_handover.c
+> >> @@ -820,7 +820,8 @@ int kho_preserve_folio(struct folio *folio)
+> >>      const unsigned long pfn =3D folio_pfn(folio);
+> >>      const unsigned int order =3D folio_order(folio);
+> >>
+> >> -    if (WARN_ON(kho_scratch_overlap(pfn << PAGE_SHIFT, PAGE_SIZE << o=
+rder)))
+> >> +    if (WARN_ON(kho_scratch_overlap_debug(pfn << PAGE_SHIFT,
+> >> +                                          PAGE_SIZE << order)))
+> >
+> > Can't say I'm fond of kho_scratch_overlap_debug(). How about we make it
+> >
+> >       if (IS_ENABLED(CONFIG_KEXEC_HANDOVER_DEBUG) &&
+> >           WARN_ON(kho_scratch_overlap(...))
 >
-> Hmm, I don't like that how complex this is. It adds another layer of
-> complexity to the initialization of the migratetype, and you have to dig
-> through all the possible call sites to be sure that we catch all the
-> cases. Makes it harder to wrap your head around it. Plus, makes it more
-> likely for bugs to slip through if later refactors change some page init
-> flow.
->
-> Is the cost to look through the scratch array really that bad? I would
-> suspect we'd have at most 4-6 per-node scratches, and one global one
-> lowmem. So I'd expect around 10 items to look through, and it will
-> probably be in the cache anyway.
+> +1. And we can get rid of kexec_handover_debug.c, for now at least. We
+> can add it back when we have something else to put in there.
 
-It is not only about the cost of going through the scratch array, but also
-about adding kho code to the generic init_pageblock_migratetype().
-This means all callers of init_pageblock_migratetype(), no matter if
-they are involved with kho or not, need to do the check. It is a good
-practice to do the check when necessary, otherwise, this catch-all check
-might hide some bugs in the future.
+Are you proposing moving kho_scratch_overlap() into kexec_handover.c?
+That would make it uglier to have #ifdefs in the C file. If you mean
+removing this function entirely, I think that is too dangerous because
+we have already had a memory corruption issue [1] that was challenging
+to root cause, and having this simple check prevents this from
+occurring going forward. The problem is that changes to defences such
+as kfence, kasan, and asi are happening outside of the core KHO code,
+and it is very easy to miss when something unexpectedly causes a
+preservation from the scratch area, as we have seen this with kfence.
+Worst of all, some of those mitigations use randomized or sampling
+approaches and might not be reproducible on every try, so having a
+CONFIG that tests it every time in a debug build is the only solid
+defense against that.
+
+Pasha
+
+[1] https://lore.kernel.org/all/20251021000852.2924827-1-pasha.tatashin@sol=
+een.com
 
 >
-> Michal, did you ever run any numbers on how much extra time
-> init_pageblock_migratetype() takes as a result of your patch?
+> >
+> >>              return -EINVAL;
+> >>
+> >>      return kho_radix_add_page(tree, pfn, order);
+> [...]
 >
-> Anyway, Mike, if you do want to do it this way, it LGTM for the most
-> part, but some comments below.
->
->>
->> Signed-off-by: Michal Clapinski <mclapinski@google.com>
->> Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
->> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
->> ---
->>  include/linux/memblock.h           |  7 ++++--
->>  kernel/liveupdate/kexec_handover.c | 10 +++++---
->>  mm/memblock.c                      | 39 +++++++++++++-----------------
->>  mm/mm_init.c                       | 14 ++++++-----
->>  4 files changed, 36 insertions(+), 34 deletions(-)
->>
->> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
->> index 6ec5e9ac0699..410f2a399691 100644
->> --- a/include/linux/memblock.h
->> +++ b/include/linux/memblock.h
->> @@ -614,11 +614,14 @@ static inline void memtest_report_meminfo(struct s=
-eq_file *m) { }
->>  #ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
->>  void memblock_set_kho_scratch_only(void);
->>  void memblock_clear_kho_scratch_only(void);
->> -void memmap_init_kho_scratch_pages(void);
->> +bool memblock_is_kho_scratch_memory(phys_addr_t addr);
->>  #else
->>  static inline void memblock_set_kho_scratch_only(void) { }
->>  static inline void memblock_clear_kho_scratch_only(void) { }
->> -static inline void memmap_init_kho_scratch_pages(void) {}
->> +static inline bool memblock_is_kho_scratch_memory(phys_addr_t addr)
->> +{
->> +	return false;
->> +}
->>  #endif
->>
->>  #endif /* _LINUX_MEMBLOCK_H */
->> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexe=
-c_handover.c
->> index 532f455c5d4f..12292b83bf49 100644
->> --- a/kernel/liveupdate/kexec_handover.c
->> +++ b/kernel/liveupdate/kexec_handover.c
->> @@ -1457,8 +1457,7 @@ static void __init kho_release_scratch(void)
->>  {
->>  	phys_addr_t start, end;
->>  	u64 i;
->> -
->> -	memmap_init_kho_scratch_pages();
->> +	int nid;
->>
->>  	/*
->>  	 * Mark scratch mem as CMA before we return it. That way we
->> @@ -1466,10 +1465,13 @@ static void __init kho_release_scratch(void)
->>  	 * we can reuse it as scratch memory again later.
->>  	 */
->>  	__for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
->> -			     MEMBLOCK_KHO_SCRATCH, &start, &end, NULL) {
->> +			     MEMBLOCK_KHO_SCRATCH, &start, &end, &nid) {
->>  		ulong start_pfn =3D pageblock_start_pfn(PFN_DOWN(start));
->>  		ulong end_pfn =3D pageblock_align(PFN_UP(end));
->>  		ulong pfn;
->> +#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
->> +		end_pfn =3D min(end_pfn, NODE_DATA(nid)->first_deferred_pfn);
->> +#endif
->
-> Can we just get rid of this entirely? And just update
-> memmap_init_zone_range() to also look for scratch and set the
-> migratetype correctly from the get go? That's more consistent IMO. The
-> two main places that initialize the struct page,
-> memmap_init_zone_range() and deferred_init_memmap_chunk(), check for
-> scratch and set the migratetype correctly.
->>
->>  		for (pfn =3D start_pfn; pfn < end_pfn; pfn +=3D pageblock_nr_pages)
->>  			init_pageblock_migratetype(pfn_to_page(pfn),
->> @@ -1480,8 +1482,8 @@ static void __init kho_release_scratch(void)
->>  void __init kho_memory_init(void)
->>  {
->>  	if (kho_in.scratch_phys) {
->> -		kho_scratch =3D phys_to_virt(kho_in.scratch_phys);
->>  		kho_release_scratch();
->> +		kho_scratch =3D phys_to_virt(kho_in.scratch_phys);
->>
->>  		if (kho_mem_retrieve(kho_get_fdt()))
->>  			kho_in.fdt_phys =3D 0;
->> diff --git a/mm/memblock.c b/mm/memblock.c
->> index 17aa8661b84d..fe50d60db9c6 100644
->> --- a/mm/memblock.c
->> +++ b/mm/memblock.c
->> @@ -17,6 +17,7 @@
->>  #include <linux/seq_file.h>
->>  #include <linux/memblock.h>
->>  #include <linux/mutex.h>
->> +#include <linux/page-isolation.h>
->>
->>  #ifdef CONFIG_KEXEC_HANDOVER
->>  #include <linux/libfdt.h>
->> @@ -959,28 +960,6 @@ __init void memblock_clear_kho_scratch_only(void)
->>  {
->>  	kho_scratch_only =3D false;
->>  }
->> -
->> -__init void memmap_init_kho_scratch_pages(void)
->> -{
->> -	phys_addr_t start, end;
->> -	unsigned long pfn;
->> -	int nid;
->> -	u64 i;
->> -
->> -	if (!IS_ENABLED(CONFIG_DEFERRED_STRUCT_PAGE_INIT))
->> -		return;
->> -
->> -	/*
->> -	 * Initialize struct pages for free scratch memory.
->> -	 * The struct pages for reserved scratch memory will be set up in
->> -	 * reserve_bootmem_region()
->> -	 */
->> -	__for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
->> -			     MEMBLOCK_KHO_SCRATCH, &start, &end, &nid) {
->> -		for (pfn =3D PFN_UP(start); pfn < PFN_DOWN(end); pfn++)
->> -			init_deferred_page(pfn, nid);
->> -	}
->> -}
->>  #endif
->>
->>  /**
->> @@ -1971,6 +1950,18 @@ bool __init_memblock memblock_is_map_memory(phys_=
-addr_t addr)
->>  	return !memblock_is_nomap(&memblock.memory.regions[i]);
->>  }
->>
->> +#ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
->> +bool __init_memblock memblock_is_kho_scratch_memory(phys_addr_t addr)
->> +{
->> +	int i =3D memblock_search(&memblock.memory, addr);
->> +
->> +	if (i =3D=3D -1)
->> +		return false;
->> +
->> +	return memblock_is_kho_scratch(&memblock.memory.regions[i]);
->> +}
->> +#endif
->> +
->>  int __init_memblock memblock_search_pfn_nid(unsigned long pfn,
->>  			 unsigned long *start_pfn, unsigned long *end_pfn)
->>  {
->> @@ -2262,6 +2253,10 @@ static void __init memmap_init_reserved_range(phy=
-s_addr_t start,
->>  		 * access it yet.
->>  		 */
->>  		__SetPageReserved(page);
->> +
->> +		if (memblock_is_kho_scratch_memory(PFN_PHYS(pfn)) &&
->> +		    pageblock_aligned(pfn))
->> +			init_pageblock_migratetype(page, MIGRATE_CMA, false);
->>  	}
->>  }
->>
->> diff --git a/mm/mm_init.c b/mm/mm_init.c
->> index 96ae6024a75f..5ead2b0f07c6 100644
->> --- a/mm/mm_init.c
->> +++ b/mm/mm_init.c
->> @@ -1971,7 +1971,7 @@ unsigned long __init node_map_pfn_alignment(void)
->>
->>  #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
->>  static void __init deferred_free_pages(unsigned long pfn,
->> -		unsigned long nr_pages)
->> +		unsigned long nr_pages, enum migratetype mt)
->>  {
->>  	struct page *page;
->>  	unsigned long i;
->> @@ -1984,8 +1984,7 @@ static void __init deferred_free_pages(unsigned lo=
-ng pfn,
->>  	/* Free a large naturally-aligned chunk if possible */
->>  	if (nr_pages =3D=3D MAX_ORDER_NR_PAGES && IS_MAX_ORDER_ALIGNED(pfn)) {
->>  		for (i =3D 0; i < nr_pages; i +=3D pageblock_nr_pages)
->> -			init_pageblock_migratetype(page + i, MIGRATE_MOVABLE,
->> -					false);
->> +			init_pageblock_migratetype(page + i, mt, false);
->>  		__free_pages_core(page, MAX_PAGE_ORDER, MEMINIT_EARLY);
->>  		return;
->>  	}
->> @@ -1995,8 +1994,7 @@ static void __init deferred_free_pages(unsigned lo=
-ng pfn,
->>
->>  	for (i =3D 0; i < nr_pages; i++, page++, pfn++) {
->>  		if (pageblock_aligned(pfn))
->> -			init_pageblock_migratetype(page, MIGRATE_MOVABLE,
->> -					false);
->> +			init_pageblock_migratetype(page, mt, false);
->>  		__free_pages_core(page, 0, MEMINIT_EARLY);
->>  	}
->>  }
->> @@ -2052,6 +2050,7 @@ deferred_init_memmap_chunk(unsigned long start_pfn=
-, unsigned long end_pfn,
->>  	u64 i =3D 0;
->>
->>  	for_each_free_mem_range(i, nid, 0, &start, &end, NULL) {
->> +		enum migratetype mt =3D MIGRATE_MOVABLE;
->>  		unsigned long spfn =3D PFN_UP(start);
->>  		unsigned long epfn =3D PFN_DOWN(end);
->>
->> @@ -2061,12 +2060,15 @@ deferred_init_memmap_chunk(unsigned long start_p=
-fn, unsigned long end_pfn,
->>  		spfn =3D max(spfn, start_pfn);
->>  		epfn =3D min(epfn, end_pfn);
->>
->> +		if (memblock_is_kho_scratch_memory(PFN_PHYS(spfn)))
->> +			mt =3D MIGRATE_CMA;
->
-> Would it make sense for for_each_free_mem_range() to also return the
-> flags for the region? Then you won't have to do another search. It adds
-> yet another parameter to it so no strong opinion, but something to
-> consider.
->
->> +
->>  		while (spfn < epfn) {
->>  			unsigned long mo_pfn =3D ALIGN(spfn + 1, MAX_ORDER_NR_PAGES);
->>  			unsigned long chunk_end =3D min(mo_pfn, epfn);
->>
->>  			nr_pages +=3D deferred_init_pages(zone, spfn, chunk_end);
->> -			deferred_free_pages(spfn, chunk_end - spfn);
->> +			deferred_free_pages(spfn, chunk_end - spfn, mt);
->>
->>  			spfn =3D chunk_end;
->>
->> --=20
->>
->> 2.53.0
->
-> --=20
+> --
 > Regards,
 > Pratyush Yadav
-
-
-Best Regards,
-Yan, Zi
 
