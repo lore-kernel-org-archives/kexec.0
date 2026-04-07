@@ -4,82 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 21ACAFF5104
-	for <kexec@archiver.kernel.org>; Tue,  7 Apr 2026 15:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9BC7EFF510C
+	for <kexec@archiver.kernel.org>; Tue,  7 Apr 2026 16:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=fwF/+V8vSUXyDGHI+Ez5ilMcTLluahXcPGLTKcZ4SJQ=; b=DlCBWXeCrzOYoRIYzRWWGGqlrg
-	dz2DZVvd+jI4/oqfKy1RHSkDNjE1Y/+BDt17sLxRmfKq7qyQUfIolWegQpGxB4CTNx3cGqdgnv/4t
-	GGAMXPbKypuR91XCODo6E8QmzSO15iL6uE9lonjPsWbw/siFgO5EVPpMLLTwxf4yR4ZVbd8lH7HJc
-	2g7+n5whL/u6pkkamqp1s6Nh1pTsQ4Pvz8UNh1A2fgp8Esf/J6phXYqbwtAMqeW8sjjNG3N6PddzS
-	p1LFJMwKldCN5luPmhxsZ5TbRwxOB11VGuLFM29yTZu/dmIGGU9xlR1CxlVB3qKPqBGu3tfp96vvY
-	EPict5Mg==;
+	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=qlJveMDYEKfKVQwJqQFhg400ubL5f912Md3XDsqP01E=; b=WQH1jcexUkVT+D97LhNYWKXZH2
+	EGem4dlOrYzZKZadd1TAFKP/LpP66IyIMtPiNmawAWqYd5l6Lf3K90cUd0zlPwYGCsfKOCOf3wHhO
+	NnCnNIv27TDyO7YOlhEQeVFCCBWZam/LHAVZjrl2qDarcTDxBnASRZDqbmSdKCY1jQr7ooGd4NyXO
+	JT+U+KwZ1We4CFb3Ot5bEaorPSGzVFqF1np5edRQNMdTah4FHaofiTLpTL7RL3vs9JAn4VuWers3x
+	VkktkSvfCVmcDBUgfRYAvk3wXtD5s7aapjsawTEJkBJ7DKG2uBbzIYpRTHXbBNqxSP2nZ0S6bKoEX
+	bi7Bg9iA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wA81X-00000006fqP-1NvU;
-	Tue, 07 Apr 2026 15:07:27 +0000
-Received: from pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com ([52.35.192.45])
+	id 1wA8zN-00000006lrS-3gCE;
+	Tue, 07 Apr 2026 16:09:17 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wA81U-00000006fpY-1DvZ
+	id 1wA8zM-00000006lqr-0NdG
 	for kexec@lists.infradead.org;
-	Tue, 07 Apr 2026 15:07:26 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
-  t=1775574444; x=1807110444;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=fwF/+V8vSUXyDGHI+Ez5ilMcTLluahXcPGLTKcZ4SJQ=;
-  b=AxBaZFqgcZoymDHuNyloKxJf/uXVln0GPpcXR1us4Sa09AnQ42N6CW/4
-   SWGzD2sqYhK4RxUy72dOfhtxTpBuLF1e+7pPTxxK+VrCk3YPJ1kUP0x1+
-   i56FmvYdInDIUg634q+gQve09CQc7AW1YSyxS79T8/aDmEloFys+ziCUZ
-   bI1yZoGJyZWvgTUMrYGAx72OtLi77toC38sb8e+ctesAJJkeYkw9+tVq6
-   +6HjB3Yh9LQuss17aTTtwHFBfhhTMDKA7WKYN3eGD0bmKceoaDat0bo49
-   15VJSSFcdAuME4YRmb49noCi1P2up8k2A5jXvF438czfyg+NcgaxT3L5a
-   A==;
-X-CSE-ConnectionGUID: No09qL5zSY+r3KzHCgll3Q==
-X-CSE-MsgGUID: rDHiqfZOR+6EXwRVTo2XtQ==
-X-IronPort-AV: E=Sophos;i="6.23,165,1770595200"; 
-   d="scan'208";a="16535437"
-Received: from ip-10-5-9-48.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.9.48])
-  by internal-pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 15:07:18 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [205.251.233.178:19288]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.60.23:2525] with esmtp (Farcaster)
- id 4bfd4df0-b04f-448b-b697-624a06f2ef88; Tue, 7 Apr 2026 15:07:18 +0000 (UTC)
-X-Farcaster-Flow-ID: 4bfd4df0-b04f-448b-b697-624a06f2ef88
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
- Tue, 7 Apr 2026 15:07:18 +0000
-Received: from dev-dsk-epetron-1c-1d4d9719.eu-west-1.amazon.com
- (10.253.109.105) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37; Tue, 7 Apr 2026
- 15:07:15 +0000
-From: Evangelos Petrongonas <epetron@amazon.de>
-To: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>
-CC: Evangelos Petrongonas <epetron@amazon.de>, "Mike Rapoport (Microsoft)"
-	<rppt@kernel.org>, Changyuan Lyu <changyuanl@google.com>, Alexander Graf
-	<graf@amazon.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav
-	<pratyush@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
-	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <nh-open-source@amazon.com>
-Subject: [PATCH] of: fdt: skip KHO when booting as crash kernel
-Date: Tue, 7 Apr 2026 15:06:33 +0000
-Message-ID: <20260407150639.69923-1-epetron@amazon.de>
-X-Mailer: git-send-email 2.47.3
+	Tue, 07 Apr 2026 16:09:17 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id A7D4143429;
+	Tue,  7 Apr 2026 16:09:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54141C116C6;
+	Tue,  7 Apr 2026 16:09:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775578155;
+	bh=IZq3eFoH971hNaQ5fWFSLPAm17OKpP60ehLVeEyCFXs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Zg0VQW9GzIUTKfH117MbdYQt2PE9Sc4Wr1nEsCmi3Da/xmvEFGTxKHShSUU0LWHX8
+	 X2geS/H8OmV15mGL62gAEYxqx7j55Uw+TapBNrvWuX6xrpgmzbAhiTdKywdkj8tiaj
+	 E8d54gLfpkyftc6CjHlXn3HGKymPd3h+4tFOlbQu2KoLSABJlooA6bzhKTwFTCOS+C
+	 Tcq/vALCBfoRSHWjIakzvJMjPMt/SY2UfHf/23DhBbCo8lVzCiKXUmYheuxryZqLrT
+	 NIPyhEcg9hC4LIqiCuL3J1wXroInDAn7coPgaBhrDN3N+2Mfww22UGKsEbj/VYHGRH
+	 tGrftCCULKaCQ==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Mike Rapoport <rppt@kernel.org>,
+  Michal Clapinski <mclapinski@google.com>,  Evangelos Petrongonas
+ <epetron@amazon.de>,  Alexander Graf <graf@amazon.com>,  Samiullah Khawaja
+ <skhawaja@google.com>,  kexec@lists.infradead.org,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org,  Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v7 1/3] kho: make kho_scratch_overlap usable outside
+ debugging
+In-Reply-To: <CA+CK2bCSoKGxfV+0QL46p_GqC=rj0YhcvP__bLrM2rVTgTNr=A@mail.gmail.com>
+	(Pasha Tatashin's message of "Tue, 7 Apr 2026 10:18:24 -0400")
+References: <20260317141534.815634-1-mclapinski@google.com>
+	<20260317141534.815634-2-mclapinski@google.com>
+	<abptg2AObfxkkxKf@kernel.org> <2vxz1pgravke.fsf@kernel.org>
+	<CA+CK2bCSoKGxfV+0QL46p_GqC=rj0YhcvP__bLrM2rVTgTNr=A@mail.gmail.com>
+Date: Tue, 07 Apr 2026 16:09:11 +0000
+Message-ID: <2vxzse96ah20.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-X-Originating-IP: [10.253.109.105]
-X-ClientProxiedBy: EX19D039UWB004.ant.amazon.com (10.13.138.57) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260407_080724_421629_FB4124ED 
-X-CRM114-Status: GOOD (  17.31  )
+X-CRM114-CacheID: sfid-20260407_090916_184056_1228F4C6 
+X-CRM114-Status: GOOD (  24.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,93 +80,102 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-KHO preserves state across kexec by passing a KHO-specific FDT pointer
-and scratch memory region to the incoming kernel. These point to
-physical addresses in the outgoing kernel's memory that the incoming
-kernel is expected to access and restore from. This falls apart when
-the incoming kernel is a crash kernel as the crash kernel can run in a
-small reserved memory region. The scratch regions can sit outside this
-reservation, so the end result is quite unpleasant.
+On Tue, Apr 07 2026, Pasha Tatashin wrote:
 
-kho_add_chosen() unconditionally propagates KHO properties into
-the device tree for all kexec image types, including crash images. The
-crash kernel then discovers these properties during
-early_init_dt_check_kho(), records the stale physical addresses via
-kho_populate(), and later faults in kho_memory_init() when it tries
-phys_to_virt() on the KHO FDT address:
+> On Tue, Apr 7, 2026 at 6:55=E2=80=AFAM Pratyush Yadav <pratyush@kernel.or=
+g> wrote:
+>>
+>> On Wed, Mar 18 2026, Mike Rapoport wrote:
+>>
+>> > Hi Michal,
+>> >
+>> > On Tue, Mar 17, 2026 at 03:15:32PM +0100, Michal Clapinski wrote:
+>> >> Also return false if kho_scratch is NULL.
+>> >>
+>> [...]
+>> >> diff --git a/kernel/liveupdate/Makefile b/kernel/liveupdate/Makefile
+>> >> index d2f779cbe279..dc352839ccf0 100644
+>> >> --- a/kernel/liveupdate/Makefile
+>> >> +++ b/kernel/liveupdate/Makefile
+>> >> @@ -7,7 +7,6 @@ luo-y :=3D                                           =
+                  \
+>> >>              luo_session.o
+>> >>
+>> >>  obj-$(CONFIG_KEXEC_HANDOVER)                +=3D kexec_handover.o
+>> >> -obj-$(CONFIG_KEXEC_HANDOVER_DEBUG)  +=3D kexec_handover_debug.o
+>> >>  obj-$(CONFIG_KEXEC_HANDOVER_DEBUGFS)        +=3D kexec_handover_debu=
+gfs.o
+>> >>
+>> >>  obj-$(CONFIG_LIVEUPDATE)            +=3D luo.o
+>> >> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/k=
+exec_handover.c
+>> >> index 532f455c5d4f..c9b982372d6e 100644
+>> >> --- a/kernel/liveupdate/kexec_handover.c
+>> >> +++ b/kernel/liveupdate/kexec_handover.c
+>> >> @@ -820,7 +820,8 @@ int kho_preserve_folio(struct folio *folio)
+>> >>      const unsigned long pfn =3D folio_pfn(folio);
+>> >>      const unsigned int order =3D folio_order(folio);
+>> >>
+>> >> -    if (WARN_ON(kho_scratch_overlap(pfn << PAGE_SHIFT, PAGE_SIZE << =
+order)))
+>> >> +    if (WARN_ON(kho_scratch_overlap_debug(pfn << PAGE_SHIFT,
+>> >> +                                          PAGE_SIZE << order)))
+>> >
+>> > Can't say I'm fond of kho_scratch_overlap_debug(). How about we make it
+>> >
+>> >       if (IS_ENABLED(CONFIG_KEXEC_HANDOVER_DEBUG) &&
+>> >           WARN_ON(kho_scratch_overlap(...))
+>>
+>> +1. And we can get rid of kexec_handover_debug.c, for now at least. We
+>> can add it back when we have something else to put in there.
+>
+> Are you proposing moving kho_scratch_overlap() into kexec_handover.c?
+> That would make it uglier to have #ifdefs in the C file. If you mean
+> removing this function entirely, I think that is too dangerous because
+> we have already had a memory corruption issue [1] that was challenging
+> to root cause, and having this simple check prevents this from
+> occurring going forward. The problem is that changes to defences such
+> as kfence, kasan, and asi are happening outside of the core KHO code,
+> and it is very easy to miss when something unexpectedly causes a
+> preservation from the scratch area, as we have seen this with kfence.
+> Worst of all, some of those mitigations use randomized or sampling
+> approaches and might not be reproducible on every try, so having a
+> CONFIG that tests it every time in a debug build is the only solid
+> defense against that.
 
-Unable to handle kernel paging request at virtual address xxxxxxxx
-...
-  fdt_offset_ptr+...
-  fdt_check_node_offset_+...
-  fdt_first_property_offset+...
-  fdt_get_property_namelen_+...
-  fdt_getprop+...
-  kho_memory_init+...
-  mm_core_init+...
-  start_kernel+...
+I think you miss the context here. This patchset uses
+kho_scratch_overlap() during MM init to set the migrate type of
+pageblocks. So it will no longer be gated by
+CONFIG_KEXEC_HANDOVER_DEBUG, but by CONFIG_KEXEC_HANDOVER instead. So
+there is no need for any #ifdefs. All we need to change is to have the
+debug checks gated with a IS_ENABLED(CONFIG_KEXEC_HANDOVER_DEBUG).
 
-kho_locate_mem_hole() already skips KHO logic for KEXEC_TYPE_CRASH
-images, but the DT property propagation and the consumer side were both
-missing the same guard.
+So the function stays around, and so do the debug checks. Since core KHO
+now uses this function, we just move it out to the main file. And since
+kexec_handover_debug.c has nothing else, we can delete it for now.
 
-Fix this at both ends. Have kho_add_chosen() skip writing KHO properties
-for crash images so the stale pointers never reach the crash kernel's
-device tree. Also have early_init_dt_check_kho() bail out when
-is_kdump_kernel() is true. This way even if KHO properties end up in
-the DT through some other path, the crash kernel will not act on them.
+Anyway, based on the discussion it looks like people want to ask
+memblock directly and not use kho_scratch_overlap(), so the next version
+might not have this patch at all.
 
-Fixes: 274cdcb1c004 ("arm64: add KHO support")
-Signed-off-by: Evangelos Petrongonas <epetron@amazon.de>
----
+>
+> Pasha
+>
+> [1] https://lore.kernel.org/all/20251021000852.2924827-1-pasha.tatashin@s=
+oleen.com
+>
+>>
+>> >
+>> >>              return -EINVAL;
+>> >>
+>> >>      return kho_radix_add_page(tree, pfn, order);
+>> [...]
+>>
+>> --
+>> Regards,
+>> Pratyush Yadav
 
-I think we should backport the fix on KHO compatible versions (6.16+),
-hence the "Fixes:" tag. Tested on an arm64 system.
-
- drivers/of/fdt.c   | 3 +++
- drivers/of/kexec.c | 3 ++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 43a0944ca462..77018ec99fc8 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -926,6 +926,9 @@ static void __init early_init_dt_check_kho(void)
- 	if (!IS_ENABLED(CONFIG_KEXEC_HANDOVER) || (long)node < 0)
- 		return;
- 
-+	if (is_kdump_kernel())
-+		return;
-+
- 	if (!of_flat_dt_get_addr_size(node, "linux,kho-fdt",
- 				      &fdt_start, &fdt_size))
- 		return;
-diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
-index c4cf3552c018..b95f0b386684 100644
---- a/drivers/of/kexec.c
-+++ b/drivers/of/kexec.c
-@@ -271,7 +271,8 @@ static int kho_add_chosen(const struct kimage *image, void *fdt, int chosen_node
- 	if (ret && ret != -FDT_ERR_NOTFOUND)
- 		return ret;
- 
--	if (!image->kho.fdt || !image->kho.scratch)
-+	if (!image->kho.fdt || !image->kho.scratch ||
-+	    image->type == KEXEC_TYPE_CRASH)
- 		return 0;
- 
- 	fdt_mem = image->kho.fdt;
--- 
-2.43.0
-
-
-
-
-Amazon Web Services Development Center Germany GmbH
-Tamara-Danz-Str. 13
-10243 Berlin
-Geschaeftsfuehrung: Christof Hellmis, Andreas Stieger
-Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
-Sitz: Berlin
-Ust-ID: DE 365 538 597
-
+--=20
+Regards,
+Pratyush Yadav
 
