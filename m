@@ -4,110 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 177C01073C9F
-	for <kexec@archiver.kernel.org>; Wed,  8 Apr 2026 11:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2DB0D1073CA5
+	for <kexec@archiver.kernel.org>; Wed,  8 Apr 2026 12:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mQ6zZpxT2qSOtvzZoKaBAI5LQFfgnkXwcNMrFIicLhI=; b=FaqYfIUMjvpa1Z/lVKVfgjKvmh
-	Tmm7Ez3UNT+3plgyhBgSBX1eynDtUfPLN+NzuXRUqfWmWCgsG7gmlR0SyapoHXcfcZDf9T0GkvaBa
-	Daq9M/CBTR0hywIsi5RF1ZuJFhZTDeb5w6J0jWmL+fXsYTLTA2wbPxsGN/QyEC9+62k97NLd3xFX0
-	+d3reE+fUMPoZD/FmwRP9X6s/5IJzDuprh4EAcku9qvs7/uEVmnibzW91qnpy2FK2B/eM4A/AvJ9b
-	bLBtOKlosgk4sneRmb73guxp2uZe9ySXWcwW3pGPs94Yp4MBlwZMKhSfsIkVTGg5EIxu3cft5Mqnj
-	Q2lQ4rEQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:From:To:Subject:Message-Id:
+	Date:Content-Type:Content-Transfer-Encoding:Mime-Version:Reply-To:Cc:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=KfTNmYa3LP5ZjwRxlWCLHoSF5NUmyiGhtzguuu39KnU=; b=WfvHR4RckX8ifzZjR0qcSmvrCD
+	Et61iy6bbSNiljFG4Fu638YH3mH1vG1vlwMcJaY/uAsxEajVvbGhG31W4ZKB6lnrZBdHetPGeY/Ve
+	iAYzGvanAfHR3WzR0tW8Iu1M5F/RvL0HbSMLzS7dsz7Wq3rdU2Zs+Phy/a3Y+ZKNcN8QYR44ylAXg
+	kpceM5qxCOfnbYg5Q4OQVpIBCzaa+yfAIV2EnynC7wEGHLi7O0qUachzX5uDXwxdpZo3MN3UTn585
+	Q+KL7aoOKPDQ5W2+kfEVIVakkNNOw9ehSTWP4GE3ihR3hOjmT/SAfX+G6qjdwkssIYomZIPgylo34
+	/FTFQ8SA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wAR9G-00000008kee-2kup;
-	Wed, 08 Apr 2026 11:32:42 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1wARtG-00000008omP-2BvY;
+	Wed, 08 Apr 2026 12:20:14 +0000
+Received: from mx-02.verkligendata.se ([91.223.231.12])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wAR9E-00000008keJ-1ReK
+	id 1wARtC-00000008olQ-3VYo
 	for kexec@lists.infradead.org;
-	Wed, 08 Apr 2026 11:32:41 +0000
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6386678R2302243;
-	Wed, 8 Apr 2026 11:32:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=mQ6zZp
-	xT2qSOtvzZoKaBAI5LQFfgnkXwcNMrFIicLhI=; b=CdJS1/UAA+e7v16JnBcaBi
-	FevxVeMbtvPmzRYVrepXAWVnoo68Kfx5It06IaBOm7Bel1G+0JvqN1tl8JURtcOu
-	MohUDWThBJvGRTLPQbYU7QAMR3ac72uiEw1jZCj/tJO+rEkSDm35VpO0qQz+Qtav
-	rPYBey9cbdzIIRIXHHMdXp0OOukHYc/a++fBAxi39T9Sp6fpcGpE0brdCB9a/SNM
-	USoBIB3mqEOShduuPMGo3sNWi9NIA+HEE8n8kntDRZWzANfMTKTscHcty4BjFgrS
-	oXIUDCPU+5vgvjRkpcG8o6Mipa3ImB0Mp4FO8moNiXqBhpqGp5TKpgNewenZaehA
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dcn2ffpte-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 08 Apr 2026 11:32:21 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 638B3KOv019113;
-	Wed, 8 Apr 2026 11:32:20 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4dcme9f70r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 08 Apr 2026 11:32:20 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 638BWIw022217086
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 8 Apr 2026 11:32:18 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6E8CD20040;
-	Wed,  8 Apr 2026 11:32:18 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3EC0320043;
-	Wed,  8 Apr 2026 11:32:16 +0000 (GMT)
-Received: from [9.123.14.142] (unknown [9.123.14.142])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  8 Apr 2026 11:32:16 +0000 (GMT)
-Message-ID: <9905884d-9af1-476e-9355-c2df733d9c75@linux.ibm.com>
-Date: Wed, 8 Apr 2026 17:02:15 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] crash: Support high memory reservation for range syntax
-To: Youling Tang <youling.tang@linux.dev>,
-        Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
-References: <20260404074103.506793-1-youling.tang@linux.dev>
-Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <20260404074103.506793-1-youling.tang@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDA4MDEwNCBTYWx0ZWRfXw/s5twIwj5ku
- srLl0b8nEiGgrernx/eJbrS5U4u2nfJ+wV/vdVFcd9PO/d7PeKEI1qe9PvY93uCgdkhVCZtknBy
- v6aNhmdlcLb8OmZSanLSpo0UTdbaILS8pS9wWVimCS8sdyB2odToc2hcwRPn4XPavllR0NBbmLe
- aBmW40L8qCD+VADkBqhVqjAea4vaWSNpNPkv6/4h4DV/hGZm0+rqKtxdsehQ+iezJmytHwtksof
- +SXeWMQ1W9UrdZ/kUNeYlY53MJBURGWTJyLh4rgwyypoxbDLnPC21ljx1+bs7y2spU+706vT8lJ
- YczE1HFl2UnljpNkR82aiO8f/ZW5R8H1CkuyxRXEmrEPPIbCF1hYuYtje/UV3ox5pBkVNAEF0PR
- 7E1+WfJ+ewJaGRuqwm+m55vqz+6VTYPs4PI14UD7NT8hd3BHSJnGAKfEyWP/zUY4Y1MhFDjIWr/
- 5CoR5rsXgwn0JABGV7g==
-X-Authority-Analysis: v=2.4 cv=FsY1OWrq c=1 sm=1 tr=0 ts=69d63cc5 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=YjEWhN3Cx0CZYGql71AA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: UBVhWKsi9V-Xe3jkId-8tgitBtDBFFuG
-X-Proofpoint-GUID: UBVhWKsi9V-Xe3jkId-8tgitBtDBFFuG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-08_03,2026-04-08_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 priorityscore=1501 impostorscore=0 spamscore=0 phishscore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 malwarescore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2604010000 definitions=main-2604080104
+	Wed, 08 Apr 2026 12:20:12 +0000
+Authentication-Results: madvise.sigsum.org;
+	dkim=pass (2048-bit key; secure) header.d=glasklarteknik.se header.i=@glasklarteknik.se header.a=rsa-sha256 header.s=dkim header.b=aQf8gFag;
+	dkim-atps=neutral
+Received: from mail-01.sigsum.org (mail-01.sigsum.org [46.227.66.48])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits)
+	 client-signature RSA-PSS (2048 bits))
+	(Client CN "mail-01.sigsum.org", Issuer "R13" (not verified))
+	by madvise.sigsum.org (Postfix) with ESMTPS id 508B07FF46
+	for <kexec@lists.infradead.org>; Wed,  8 Apr 2026 14:20:00 +0200 (CEST)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 131D8BFAE9
+	for <kexec@lists.infradead.org>; Wed,  8 Apr 2026 14:19:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=glasklarteknik.se;
+	s=dkim; t=1775650799; h=from:subject:date:message-id:to:mime-version:content-type:
+	 content-transfer-encoding; bh=KfTNmYa3LP5ZjwRxlWCLHoSF5NUmyiGhtzguuu39KnU=;
+	b=aQf8gFagxesUVwqHNoqwQ1AnIgqupdMCokEblXRpIKZyj1rkKhCj8IW666RLMtaYN3wE8L
+	6cIuyeYIbO1M3drdt7IEftYtmAzA4ZIskevkBLqC0iKFKJDEeipDRaUsvjaKiKbHV84/MR
+	I97UzJgFjCuAFHbqHoKV+6cVPq16I1AT+YyDiUtTSGQRyNfIGWgMHzGUcX4ge9TOJ1xMoZ
+	PJPMnALwVl52p2oHsiMO8HWAWZafa/kK+9ez3kdB2QV+SxKpulai+UF9c8buTzI/xpUpMF
+	Bf5SzoeOln7AO8VvZOMZMrb35lVcU/ptalKnyX6F5dp7usIp/Cubgz/8MsHITQ==
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 08 Apr 2026 14:19:56 +0200
+Message-Id: <DHNROAISY87U.1KKR1293WLMN5@glasklarteknik.se>
+Subject: consistent kexec crash on specific HP server
+To: <kexec@lists.infradead.org>
+From: "Daniel Lublin" <daniel@glasklarteknik.se>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+X-Last-TLS-Session-Version: TLSv1.3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260408_043240_398328_AD87557C 
-X-CRM114-Status: GOOD (  36.89  )
+X-CRM114-CacheID: sfid-20260408_052011_460979_596E60A8 
+X-CRM114-Status: GOOD (  11.43  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -123,227 +75,194 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
+Hello,
 
-On 04/04/26 13:11, Youling Tang wrote:
-> From: Youling Tang <tangyouling@kylinos.cn>
->
-> The crashkernel range syntax (range1:size1[,range2:size2,...]) allows
-> automatic size selection based on system RAM, but it always reserves
-> from low memory. When a large crashkernel is selected, this can
-> consume most of the low memory, causing subsequent hardware
-> hotplug or drivers requiring low memory to fail due to allocation
-> failures.
->
-> Add a new optional conditional suffix ",>boundary" to the crashkernel
-> range syntax. When the selected crashkernel size exceeds the specified
-> boundary, the kernel will automatically apply the same reservation
-> policy as "crashkernel=size,high" - preferring high memory first
-> and reserving the default low memory area.
->
-> Syntax:
->      crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset],>boundary
->
-> Example:
->      crashkernel=2G-16G:512M,16G-:1G,>512M
->
-> This means:
->    - For 2G-16G RAM: reserve 512M normally
->    - For >16G RAM: reserve 1G with high memory preference (since 1G > 512M)
->
-> For systems with >16G RAM, 1G is selected which exceeds 512M, so it
-> will be reserved from high memory instead of consuming 1G of
-> precious low memory.
->
-> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> ---
->   Documentation/admin-guide/kdump/kdump.rst     | 25 ++++++++-
->   .../admin-guide/kernel-parameters.txt         |  2 +-
->   kernel/crash_reserve.c                        | 56 ++++++++++++++++---
->   3 files changed, 73 insertions(+), 10 deletions(-)
->
-> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-> index 7587caadbae1..b5ae4556e9ca 100644
-> --- a/Documentation/admin-guide/kdump/kdump.rst
-> +++ b/Documentation/admin-guide/kdump/kdump.rst
-> @@ -293,7 +293,28 @@ crashkernel syntax
->          2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
->          3) if the RAM size is larger than 2G, then reserve 128M
->   
-> -3) crashkernel=size,high and crashkernel=size,low
-> +3) range1:size1[,range2:size2,...][@offset],>boundary
-> +   Optionally, the range list can be followed by a conditional suffix
-> +   `,>boundary`. When the selected crashkernel size matches the
-> +   condition, the kernel will reserve memory using the same policy as
-> +   `crashkernel=size,high` (i.e. prefer high memory first and reserve the
-> +   default low memory area).
+We are seeing a reproducible kexec crash on specific hardware, and would
+appreciate any pointers on what is going wrong, how this could be
+debugged further etc.
 
-Since we are mentioning that this follows same policy as 
-crashkernel=size,high
-in certain cases I think it is good to mention crashkernel=size,low is 
-ignored here.
+Hardware: HP ProLiant BL460c Gen9, BIOS I36 05/17/2022
+With 2x Intel Xeon CPU E5-2667 v4 @ 3.20GHz ("Broadwell EP")
 
-> +
-> +   The syntax is::
-> +
-> +        crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset],>boundary
-> +        range=start-[end]
-> +
-> +   For example::
-> +
-> +        crashkernel=2G-16G:512M,16G-:1G,>512M
-> +
-> +   This would mean:
-> +       1) if the RAM size is between 2G and 16G (exclusive), then reserve 512M.
-> +       2) if the RAM size is larger than 16G, allocation will behave like
-> +          `crashkernel=1G,high`.
-> +
-> +4) crashkernel=size,high and crashkernel=size,low
->   
->      If memory above 4G is preferred, crashkernel=size,high can be used to
->      fulfill that. With it, physical memory is allowed to be allocated from top,
-> @@ -311,7 +332,7 @@ crashkernel syntax
->   
->               crashkernel=0,low
->   
-> -4) crashkernel=size,cma
-> +5) crashkernel=size,cma
->   
->   	Reserve additional crash kernel memory from CMA. This reservation is
->   	usable by the first system's userspace memory and kernel movable
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 03a550630644..b2e1892ab4d8 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -1087,7 +1087,7 @@ Kernel parameters
->   			4G when '@offset' hasn't been specified.
->   			See Documentation/admin-guide/kdump/kdump.rst for further details.
->   
-> -	crashkernel=range1:size1[,range2:size2,...][@offset]
-> +	crashkernel=range1:size1[,range2:size2,...][@offset][,>boundary]
->   			[KNL] Same as above, but depends on the memory
->   			in the running system. The syntax of range is
->   			start-[end] where start and end are both
-> diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
-> index 62e60e0223cf..917738412390 100644
-> --- a/kernel/crash_reserve.c
-> +++ b/kernel/crash_reserve.c
-> @@ -254,15 +254,47 @@ static __init char *get_last_crashkernel(char *cmdline,
->   	return ck_cmdline;
->   }
->   
-> +/*
-> + * This function parses command lines in the format
-> + *
-> + *   crashkernel=ramsize-range:size[,...][@offset],>boundary
-> + */
-> +static void __init parse_crashkernel_boundary(char *ck_cmdline,
-> +					unsigned long long *boundary)
-> +{
-> +	char *cur = ck_cmdline, *next;
-> +	char *first_gt = false;
+kexec consistently fails on this platform. The system hangs hard or
+reboots upon kexec. This happens both when doing kexec from our
+bootloader stboot in Go, and when using kexec-tools (2.0.29).
 
-false to char *? We don't even need to initialize.
+The crash has been observed on all 3 machines of this exact model that
+it has been tested on. kexec has not been successfully run on this exact
+model; but we run kexec on various other server models.
 
-> +
-> +	first_gt = strchr(cur, '>');
-> +	if (!first_gt)
-> +		return;
-> +
-> +	cur = first_gt + 1;
-> +	if (*cur == '\0' || *cur == ' ' || *cur == ',') {
-> +		pr_warn("crashkernel: '>' specified without boundary size, ignoring\n");
-> +		return;
-> +	}
-> +
-> +	*boundary = memparse(cur, &next);
-> +	if (cur == next) {
-> +		pr_warn("crashkernel: invalid boundary size after '>'\n");
-> +		return;
-> +	}
-> +}
-> +
->   static int __init __parse_crashkernel(char *cmdline,
->   			     unsigned long long system_ram,
->   			     unsigned long long *crash_size,
->   			     unsigned long long *crash_base,
-> -			     const char *suffix)
-> +			     const char *suffix,
-> +			     bool *high,
-> +			     unsigned long long *low_size)
->   {
->   	char *first_colon, *first_space;
->   	char *ck_cmdline;
->   	char *name = "crashkernel=";
-> +	unsigned long long boundary = 0;
-> +	int ret;
->   
->   	BUG_ON(!crash_size || !crash_base);
->   	*crash_size = 0;
-> @@ -283,10 +315,20 @@ static int __init __parse_crashkernel(char *cmdline,
->   	 */
->   	first_colon = strchr(ck_cmdline, ':');
->   	first_space = strchr(ck_cmdline, ' ');
-> -	if (first_colon && (!first_space || first_colon < first_space))
-> -		return parse_crashkernel_mem(ck_cmdline, system_ram,
-> +	if (first_colon && (!first_space || first_colon < first_space)) {
-> +		ret = parse_crashkernel_mem(ck_cmdline, system_ram,
->   				crash_size, crash_base);
->   
-> +		/* Handle optional ',>boundary' condition for range ':' syntax only. */
-> +		parse_crashkernel_boundary(ck_cmdline, &boundary);
-> +		if (!ret && *crash_size > boundary) {
-> +			*high = true;
-> +			*low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+Various kernel have been tried.
 
-Not all architectures support high crashkernel reservation. So high and 
-low_size
-can be NULL.
+- custom 6.12.x (relatively small, all built-in, no kmods), with our
+  stboot-go doing kexec
+- kernel 6.6.15 from Debian bookworm, and userspace, kexec-tools based
+  on it
+- kernel 6.12.61 from System Rescue iso, with its userspace etc
 
-I think we should just skip parse_crashkernel_boundary() call if high is 
-NULL. - Sourabh Jain
-> +		}
-> +
-> +		return ret;
-> +	}
-> +
->   	return parse_crashkernel_simple(ck_cmdline, crash_size, crash_base);
->   }
->   
-> @@ -310,7 +352,7 @@ int __init parse_crashkernel(char *cmdline,
->   
->   	/* crashkernel=X[@offset] */
->   	ret = __parse_crashkernel(cmdline, system_ram, crash_size,
-> -				crash_base, NULL);
-> +				crash_base, NULL, high, low_size);
->   #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
->   	/*
->   	 * If non-NULL 'high' passed in and no normal crashkernel
-> @@ -318,7 +360,7 @@ int __init parse_crashkernel(char *cmdline,
->   	 */
->   	if (high && ret == -ENOENT) {
->   		ret = __parse_crashkernel(cmdline, 0, crash_size,
-> -				crash_base, suffix_tbl[SUFFIX_HIGH]);
-> +				crash_base, suffix_tbl[SUFFIX_HIGH], high, low_size);
->   		if (ret || !*crash_size)
->   			return -EINVAL;
->   
-> @@ -327,7 +369,7 @@ int __init parse_crashkernel(char *cmdline,
->   		 * is not allowed.
->   		 */
->   		ret = __parse_crashkernel(cmdline, 0, low_size,
-> -				crash_base, suffix_tbl[SUFFIX_LOW]);
-> +				crash_base, suffix_tbl[SUFFIX_LOW], high, low_size);
->   		if (ret == -ENOENT) {
->   			*low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
->   			ret = 0;
-> @@ -344,7 +386,7 @@ int __init parse_crashkernel(char *cmdline,
->   	 */
->   	if (cma_size)
->   		__parse_crashkernel(cmdline, 0, cma_size,
-> -			&cma_base, suffix_tbl[SUFFIX_CMA]);
-> +			&cma_base, suffix_tbl[SUFFIX_CMA], high, low_size);
->   #endif
->   	if (!*crash_size)
->   		ret = -EINVAL;
+When using kexec-tools, the procedure has been:
 
+    kexec -d -l /kernel --initrd=3D/initrd
+    kexec -d -e
+
+With crash happening on `kexec -e`.
+
+Observed behaviour upon crashing has varied; sometimes immediate reboot,
+sometimes hang followed by reboot.
+
+When using the Debian kernel we had one more verbose crash. I managed to
+take some screenshots of the remote servers console, and the ocr:d text
+(so not 100%) follows below.
+
+Thank you for any advice!
+
+...
+E820 memmap:
+0000000000000400-0000000000092fff (1)
+0000000000093000-0000000000093fff (2)
+0000000000094000-000000000009ffff (1)
+0000000000100000-0000000062e60fff (1)
+0000000062e61000-000000006b460fff (2)
+000000006b461000-000000006b461fff (1)
+000000006b462000-000000006b4e2fff (2)
+000000006b4e3000-00000000784fefff (1)
+00000000784ff000-00000000791fefff (2)
+00000000791ff000-000000007b5fefff (4)
+000000007b5ff000-000000007b7fefff (3)
+000000007b7ff000-000000007b7fffff (1)
+0000000080000000-000000008fffffff (2)
+0000000100000000-000000187fffffff (1)
+/sys/firmware/edd does not exist.
+kexec_load: entry =3D 0x187fff7730 flags =3D 0x3e0000
+nr_segments =3D 7
+segment[0].buf   =3D 0x56152e71e680
+segment[0].bufsz =3D 0x70
+segment[0].mem   =3D 0x100000
+segment[0].memsz =3D 0x1000
+segment[1].buf   =3D 0x56152e7266c0
+segment[1].bufsz =3D 0xc8
+segment[1].mem   =3D 0x101000
+segment[1].memsz =3D 0x1000
+segment[2].buf   =3D 0x56152e71ec10
+segment[2].bufsz =3D 0x30
+segment[2].mem   =3D 0x102000
+segment[2].memsz =3D 0x1000
+segment[3].buf   =3D 0x7f0dab1c1010
+segment[3].bufsz =3D 0x6929f5
+segment[3].mem   =3D 0x187c36d000
+segment[3].memsz =3D 0x693000
+segment[4].buf   =3D 0x7f0dab858010
+segment[4].bufsz =3D 0x8e2800
+segment[4].mem   =3D 0x187ca00000
+segment[4].memsz =3D 0x359c000
+segment[5].buf   =3D 0x56152e718fe0
+segment[5].bufsz =3D 0x404d
+segment[5].mem   =3D 0x187fff2000
+segment[5].memsz =3D 0x5000
+segment[6].buf   =3D 0x56152e711d60
+segment[6].bufsz =3D 0x70e0
+segment[6].mem   =3D 0x187fff7000
+segment[6].memsz =3D 0x9000
+sleeping 3 before kexec
+sleeping 3 before kexec
+[   20.486015] pcieport 0000:00:1c.7: Enabling MPC IRBNCE
+[   20.490565] pcieport 0000:00:1c.7: Intel PCH root port ACS workaround en=
+abled
+[   20.508324] pcieport 0000:00:1c.6: Enabling MPC IRBNCE
+[   20.513781] pcieport 0000:00:1c.6: Intel PCH root port ACS workaround en=
+abled
+[   20.530010] pcieport 0000:00:1c.4: Enabling MPC IRBNCE
+[   20.535828] pcieport 0000:00:1c.4: Intel PCH root port ACS workaround en=
+abled
+[   20.554003] pcieport 0000:00:1c.0: Enabling MPC IRBNCE
+[   20.560203] pcieport 0000:00:1c.0: Intel PCH root port ACS workaround en=
+abled
+[   21.157711] {1}[Hardware Error]: Hardware error from APEI Generic Hardwa=
+re Error Source: 1
+[   21.157717] {1}[Hardware Error]: event severity: fatal
+[   21.157721] {1}[Hardware Error]:  Error 0, type: fatal
+[   21.157725] {1}[Hardware Error]:   section_type: PCIe error
+[   21.157727] {1}[Hardware Error]:   port_type: 4, root port
+[   21.157730] {1}[Hardware Error]:   version: 1.16
+[   21.157734] {1}[Hardware Error]:   command: 0x6010, status: 0x0143
+[   21.157737] {1}[Hardware Error]:   device_id: 0000:00:02.2
+[   21.157741] {1}[Hardware Error]:   slot: 0
+[   21.157743] {1}[Hardware Error]:   secondary_bus: 0x07
+[   21.157746] {1}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x6f06
+[   21.157749] {1}[Hardware Error]:   class_code: 000604
+[   21.157753] {1}[Hardware Error]:   bridge: secondary_status: 0x2000, con=
+trol: 0x0003
+[   21.157755] {1}[Hardware Error]:   aer_uncor_status: 0x00100000, aer_unc=
+or_mask: 0x00000000
+[   21.157757] {1}[Hardware Error]:   aer_uncor_severity: 0x00062030
+[   21.157759] {1}[Hardware Error]:   TLP Header: 00000001 0700000f 791de06=
+c 00000000
+[   21.157762] {1}[Hardware Error]:  Error 1, type: fatal
+[   21.157764] {1}[Hardware Error]:   section_type: PCIe error
+[   21.157766] {1}[Hardware Error]:   port_type: 4, root port
+[   21.157767] {1}[Hardware Error]:   version: 1.16
+[   21.157768] {1}[Hardware Error]:   command: 0x6010, status: 0x0143
+[   21.157770] {1}[Hardware Error]:   device_id: 0000:00:02.2
+[   21.157772] {1}[Hardware Error]:   slot: 0
+[   21.157773] {1}[Hardware Error]:   secondary_bus: 0x07
+[   21.157774] {1}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x6f06
+[   21.157776] {1}[Hardware Error]:   class_code: 000604
+[   21.157777] {1}[Hardware Error]:   bridge: secondary_status: 0x2000, con=
+trol: 0x0003
+[   21.157778] {1}[Hardware Error]:   aer_uncor_status: 0x00100000, aer_unc=
+or_mask: 0x00000000
+[   21.157780] {1}[Hardware Error]:   aer_uncor_severity: 0x00062030
+[   21.157782] {1}[Hardware Error]:   TLP Header: 00000001 0700000f 791de06=
+c 00000000
+[   21.157787] Kernel panic - not syncing: Fatal hardware error!
+[   21.157790] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.6.15-amd64 #1  D=
+ebian 6.6.15-2
+[   21.157795] Hardware name: HP ProLiant BL460c Gen9, BIOS I36 05/17/2022
+[   21.157798] Call Trace:
+[   21.157803]  <NMI>
+[   21.157807]  dump_stack_lvl+0x47/0x60
+[   21.157823]  panic+0x180/0x330
+[   21.157833]  __ghes_panic+0x67/0x70
+[   21.157843]  ghes_notify_nmi+0x1e1/0x390
+[   21.157850]  nmi_handle+0x61/0x150
+[   21.157862]  default_do_nmi+0x40/0x100
+[   21.157874]  exc_nmi+0x139/0x1c0
+[   21.157879]  end_repeat_nmi+0x16/0x67
+[   21.157887] RIP: 0010:intel_idle+0x62/0xb0
+[   21.157896] Code: 48 89 d1 65 48 8b 04 25 00 2c 03 00 0f 01 c8 48 8b 00 =
+a8 08 75 14 66 90 0f 00 2d e5 18 50 00 b9 01 00 00 00
+ 48 89 f8 0f 01 c9 <65> 48 8b 04 25 00 2c 03 00 f0 80 60 02 df f0 83 44 24 =
+fc 00 48 8b
+[   21.157900] RSP: 0000:ffffffffa4603e30 EFLAGS: 00000046
+[   21.157905] RAX: 0000000000000020 RBX: ffffe8f3fea30ad0 RCX: 00000000000=
+00001
+[   21.157908] RDX: 0000000000000000 RSI: 0000000000000004 RDI: 00000000000=
+00020
+[   21.157910] RBP: 0000000000000004 R08: 0000000000000002 R09: 00000000000=
+02459
+[   21.157913] R10: 0000000000000018 R11: ffff888c4fa31fe4 R12: ffffffffa47=
+9a500
+[   21.157915] R13: ffffffffa479a6b8 R14: 0000000000000004 R15: 00000000000=
+00000
+[   21.157920]  ? intel_idle+0x62/0xb0
+[   21.157925]  ? intel_idle+0x62/0xb0
+[   21.157929]  </NMI>
+[   21.157931]  <TASK>
+[   21.157932]  cpuidle_enter_state+0x84/0x440
+[   21.157938]  cpuidle_enter+0x2d/0x40
+[   21.157951]  do_idle+0x20d/0x270
+[   21.157961]  cpu_startup_entry+0x2a/0x30
+[   21.157967]  rest_init+0xd0/0xd0
+[   21.157973]  arch_call_rest_init+0xe/0x30
+[   21.157986]  start_kernel+0x4de/0x790
+[   21.157994]  x86_64_start_reservations+0x18/0x30
+[   21.158002]  x86_64_start_kernel+0x96/0xa0
+[   21.158007]  secondary_startup_64_no_verify+0x18f/0x19b
+[   21.158019]  </TASK>
+[   21.158072] Kernel Offset: disabled
+[   22.099458] ERST: [Firmware Warn]: Firmware does not respond in time.
+[   22.099462] pstore: backend (erst) writing error (-5)
+
+--=20
+Daniel
 
