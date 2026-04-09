@@ -4,71 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EC517F364A6
-	for <kexec@archiver.kernel.org>; Thu,  9 Apr 2026 18:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BAFD6F364B2
+	for <kexec@archiver.kernel.org>; Thu,  9 Apr 2026 18:51:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:CC:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=NfxUCt49N9N51sdtX7qGacaTiS5FvXvof6n28eKOkMY=; b=FJJNAcZWxK4NCQeAZhoLeMvUxV
-	3oTKK2tFaj7qYFfGg4GTr2+bvR+Q4AGXviD2IiLf/rvnvqBD1mizwOh5vmLs37c7Yky8rOFDk4tBZ
-	rJBYkPU7IQc52hcBuYjy0zAXo64GwFoswWm7X+8rLvN4oKuMukr5USCG5n2nc7F2HVc+MKaaT3QR5
-	Ie1d+fmepZ46a6ZXaBJfXV2f6gxdVkYrbM00zp8feIXTyrDbROfc4+v2ozu51gPPysWvHKKXPjDgA
-	kUdaAyASp2gh900jQMwAqCnDHwm9sXrvH94awxQXh72TVhfsu+f7XUeCxVCrEgXBfOy7BBqOQisJ+
-	coVOEubQ==;
+	bh=HrytP8IlU1zcnz3KNtUwmivDgViJtRjefBb3Lu7mQ2M=; b=qfz3PoeDFbnD0FKX37v2JPbNND
+	tngfRCtj5wSrdHMOdMKINgSNe7noHcnz7NNFHm4zUNLgjVasWPsYopemFSOrv+AY89HijIAkS0nib
+	pypGoVnrt7OxOIPUJmJYOb8GV6f1XTojTKoyCLpxNd/l9hoSOp+ngHfT+Q+UfZxK+r25F6uP618gQ
+	l3Jgz5cxuHPSHXOXq7Y2nZiVkfZ5dWRLw0WhdY8i9SWKCjlYbl1A0Z9/TqQS/sNKqLEHhxE3u+M1s
+	rWM6hadm8T5iEjo5BDixODikNQjSVp8MXCIQNmT4I5RCuIwI50XRlnzNYr+BMHFpncOcukeuv6aMy
+	f/BvyNRQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wAtlj-0000000B3SC-171G;
-	Thu, 09 Apr 2026 18:06:19 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wAuTJ-0000000B7DU-0TS7;
+	Thu, 09 Apr 2026 18:51:21 +0000
+Received: from pdx-out-002.esa.us-west-2.outbound.mail-perimeter.amazon.com ([44.246.1.125])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wAtlg-0000000B3Rv-3gOg
+	id 1wAuTF-0000000B7Cr-3wyt
 	for kexec@lists.infradead.org;
-	Thu, 09 Apr 2026 18:06:16 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id E1E2A60103;
-	Thu,  9 Apr 2026 18:06:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 250F9C4CEF7;
-	Thu,  9 Apr 2026 18:06:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775757975;
-	bh=LRJfzSmiQGNsDySIlvIC513MTSAp1qgL1sH0ceLK3sU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PbKILrKUtYeTHPHYiFH7Na561CeOcYXO40jy5rZUX8E5WIt7k9DY0agiTU5dlnX8u
-	 lD6nqEz1VJQZlooy5fG3WpjGdKdE4Wyc4C0l/Xz7bWo5+TSgH9jTDDZhbu6zTjbwJG
-	 /q6tBlAna9M9Xnc2PPq+kxcvdUt9adTIPuiYakb58ekbB9TnaQu4VwJ5OH8Xol1tD+
-	 37GPK64nUrdz1H9kR9pfJoRRhspoBIIGO5OSpdYEveVvP0KB9f1zcsD2fhqG4Wb5rZ
-	 BhJc2pBBfvfpV0TkFuopQ4Tyrh+FS2NvXZZDUqeVyb1pnGRIor3sac94pWmlwR9qfR
-	 4hIzj/tiZVIfQ==
-Date: Thu, 9 Apr 2026 21:06:08 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
-	Zi Yan <ziy@nvidia.com>, Evangelos Petrongonas <epetron@amazon.de>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Alexander Graf <graf@amazon.com>,
-	Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v7 2/3] kho: fix deferred init of kho scratch
-Message-ID: <adfqkOWVFgeAkItF@kernel.org>
-References: <CAAi7L5dSOxXETv-bYs4hJ1SfixMBQXS4fmfKs3SzVvQ=yY7oSg@mail.gmail.com>
- <76559EF5-8740-4691-8776-0ADD1CCBF2A4@nvidia.com>
- <CAAi7L5ex+66qgFzRkLDbuOmC=cVrMyBctPZv6wd15n1rc2U9KQ@mail.gmail.com>
- <0D1F59C7-CA35-49C8-B341-32D8C7F4A345@nvidia.com>
- <CAAi7L5fvUPUqd3A4m6wubeYh90NH+S2KBRE1R8WKerBYhkU8kg@mail.gmail.com>
- <58A8B1B4-A73B-48D2-8492-A58A03634644@nvidia.com>
- <aburnbP64n9axmu_@kernel.org>
- <CAAi7L5evx8ta8BifNiGNfUoTiaBUsv4cgQRbm_15RoAfdKPcMw@mail.gmail.com>
- <acAAp4JaTGn_STBH@kernel.org>
- <2vxzwlyj9d0b.fsf@kernel.org>
+	Thu, 09 Apr 2026 18:51:19 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1775760677; x=1807296677;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HrytP8IlU1zcnz3KNtUwmivDgViJtRjefBb3Lu7mQ2M=;
+  b=EhGU7CNGFKxoa6H/cIHaLgnycd7/NvV4zHEQVHyvYq2s/AGYSGuP4aM2
+   Ai2W34Og9A1pYl5qWO5f3NUDktIWzhW2ro4hoaNFr3/1OLja8GKBJ0C7J
+   F4h1QPIM1/tMvU93/tbZgr3/0vqMacQluhtf67wuoI94yUy2QzYtGgrz2
+   2gv8ysZSaJFWmq73klMfFA8wBZ8T8wh0yu7fDNg7eD9M8yB/lFvqW/UYq
+   6CaBhs4y/rzH/PL+aEb9CoCAjn8vBV0DJt2h2ZehiKYMUMbMLqm9Rmvxm
+   PC5Dtb7uoT4/EIaUMXl4qybxAdpi9rA9ABejyF8dXmRxHd9snsx4Nxgxb
+   A==;
+X-CSE-ConnectionGUID: /VYPa2h5RAKD6+SZdMGPJg==
+X-CSE-MsgGUID: rSvJMwIbSpSENj2cE02f5g==
+X-IronPort-AV: E=Sophos;i="6.23,170,1770595200"; 
+   d="scan'208";a="16952641"
+Received: from ip-10-5-12-219.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.12.219])
+  by internal-pdx-out-002.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2026 18:51:12 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [205.251.233.111:15277]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.9.233:2525] with esmtp (Farcaster)
+ id 79311853-5cd8-4807-beb1-7c2687e50223; Thu, 9 Apr 2026 18:51:11 +0000 (UTC)
+X-Farcaster-Flow-ID: 79311853-5cd8-4807-beb1-7c2687e50223
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
+ Thu, 9 Apr 2026 18:51:09 +0000
+Received: from dev-dsk-epetron-1c-1d4d9719.eu-west-1.amazon.com
+ (10.253.109.105) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37; Thu, 9 Apr 2026
+ 18:51:07 +0000
+Date: Thu, 9 Apr 2026 18:51:04 +0000
+From: Evangelos Petrongonas <epetron@amazon.de>
+To: Mike Rapoport <rppt@kernel.org>
+CC: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>,
+	Changyuan Lyu <changyuanl@google.com>, Alexander Graf <graf@amazon.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav
+	<pratyush@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <nh-open-source@amazon.com>
+Subject: Re: [PATCH] of: fdt: skip KHO when booting as crash kernel
+Message-ID: <20260409185104.GA74321@dev-dsk-epetron-1c-1d4d9719.eu-west-1.amazon.com>
+References: <20260407150639.69923-1-epetron@amazon.de>
+ <ade2ExpM8ROXV-vy@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2vxzwlyj9d0b.fsf@kernel.org>
+In-Reply-To: <ade2ExpM8ROXV-vy@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Originating-IP: [10.253.109.105]
+X-ClientProxiedBy: EX19D042UWA003.ant.amazon.com (10.13.139.44) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260409_115118_056744_0AFE2D03 
+X-CRM114-Status: GOOD (  20.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,137 +97,90 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Apr 07, 2026 at 12:21:56PM +0000, Pratyush Yadav wrote:
-> On Sun, Mar 22 2026, Mike Rapoport wrote:
+On Thu, Apr 09, 2026 at 05:22:11PM +0300 Mike Rapoport wrote:
+> Hi Evangelos,
 > 
-> > On Thu, Mar 19, 2026 at 07:17:48PM +0100, Michał Cłapiński wrote:
-> >> On Thu, Mar 19, 2026 at 8:54 AM Mike Rapoport <rppt@kernel.org> wrote:
-> [...]
-> >> > +__init_memblock struct memblock_region *memblock_region_from_iter(u64 iterator)
-> >> > +{
-> >> > +       int index = iterator & 0xffffffff;
-> >> 
-> >> I'm not sure about this. __next_mem_range() has this code:
-> >> /*
-> >> * The region which ends first is
-> >> * advanced for the next iteration.
-> >> */
-> >> if (m_end <= r_end)
-> >>         idx_a++;
-> >> else
-> >>         idx_b++;
-> >> 
-> >> Therefore, the index you get from this might be correct or it might
-> >> already be incremented.
-> >
-> > Hmm, right, missed that :/
-> >
-> > Still, we can check if an address is inside scratch in
-> > reserve_bootmem_regions() and in deferred_init_pages() and set migrate type
-> > to CMA in that case.
-> >
-> > I think something like the patch below should work. It might not be the
-> > most optimized, but it localizes the changes to mm_init and memblock and
-> > does not complicated the code (well, almost).
-> >
-> > The patch is on top of
-> > https://lore.kernel.org/linux-mm/20260322143144.3540679-1-rppt@kernel.org/T/#u
-> >
-> > and I pushed the entire set here:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=kho-deferred-init
-> >
-> > It compiles and passes kho self test with both deferred pages enabled and
-> > disabled, but I didn't do further testing yet.
-> >
-> > From 97aa1ea8e085a128dd5add73f81a5a1e4e0aad5e Mon Sep 17 00:00:00 2001
-> > From: Michal Clapinski <mclapinski@google.com>
-> > Date: Tue, 17 Mar 2026 15:15:33 +0100
-> > Subject: [PATCH] kho: fix deferred initialization of scratch areas
-> >
-> > Currently, if CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled,
-> > kho_release_scratch() will initialize the struct pages and set migratetype
-> > of KHO scratch. Unless the whole scratch fits below first_deferred_pfn, some
-> > of that will be overwritten either by deferred_init_pages() or
-> > memmap_init_reserved_range().
-> >
-> > To fix it, modify kho_release_scratch() to only set the migratetype on
-> > already initialized pages and make deferred_init_pages() and
-> > memmap_init_reserved_range() recognize KHO scratch regions and set
-> > migratetype of pageblocks in that regions to MIGRATE_CMA.
-> 
-> Hmm, I don't like that how complex this is. It adds another layer of
-> complexity to the initialization of the migratetype, and you have to dig
-> through all the possible call sites to be sure that we catch all the
-> cases. Makes it harder to wrap your head around it. Plus, makes it more
-> likely for bugs to slip through if later refactors change some page init
-> flow.
-> 
-> Is the cost to look through the scratch array really that bad? I would
-> suspect we'd have at most 4-6 per-node scratches, and one global one
-> lowmem. So I'd expect around 10 items to look through, and it will
-> probably be in the cache anyway.
+> On Tue, Apr 07, 2026 at 03:06:33PM +0000, Evangelos Petrongonas wrote:
+> What about x86? ;-)
+>
 
-The check is most probably cheap enough, but if we stick it into
-init_pageblock_migratetype(), we'd check each pageblock even though we have
-that information already for much larger chunks. And we should use that
-information rather than go back and forth for each pageblock.
- 
-> Michal, did you ever run any numbers on how much extra time
-> init_pageblock_migratetype() takes as a result of your patch?
-> 
-> Anyway, Mike, if you do want to do it this way, it LGTM for the most
-> part, but some comments below.
-> 
-> > @@ -1466,10 +1465,13 @@ static void __init kho_release_scratch(void)
-> >  	 * we can reuse it as scratch memory again later.
-> >  	 */
-> >  	__for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
-> > -			     MEMBLOCK_KHO_SCRATCH, &start, &end, NULL) {
-> > +			     MEMBLOCK_KHO_SCRATCH, &start, &end, &nid) {
-> >  		ulong start_pfn = pageblock_start_pfn(PFN_DOWN(start));
-> >  		ulong end_pfn = pageblock_align(PFN_UP(end));
-> >  		ulong pfn;
-> > +#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
-> > +		end_pfn = min(end_pfn, NODE_DATA(nid)->first_deferred_pfn);
-> > +#endif
-> 
-> Can we just get rid of this entirely? And just update
-> memmap_init_zone_range() to also look for scratch and set the
-> migratetype correctly from the get go? That's more consistent IMO. The
-> two main places that initialize the struct page,
-> memmap_init_zone_range() and deferred_init_memmap_chunk(), check for
-> scratch and set the migratetype correctly.
+Well... I was planning to reply with "we will sort it out in a followup".
+I have a suspicion though, that you knew that the kho_fill_kimage()
+approach would take care of it. Nice! Thanks for the tip.
+I will post soon the v2.
 
-We could. E.g. let memmap_init() check the memblock flags and pass the
-migratetype to memmap_init_zone_range().
-
-I wanted to avoid as much KHO code in mm/ as possible, but if it is must
-have in deferred_init_memmap_chunk() we could add some to memmap_init() as
-well.
- 
-> > @@ -2061,12 +2060,15 @@ deferred_init_memmap_chunk(unsigned long start_pfn, unsigned long end_pfn,
-> >  		spfn = max(spfn, start_pfn);
-> >  		epfn = min(epfn, end_pfn);
+> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> > index 43a0944ca462..77018ec99fc8 100644
+> > --- a/drivers/of/fdt.c
+> > +++ b/drivers/of/fdt.c
+> > @@ -926,6 +926,9 @@ static void __init early_init_dt_check_kho(void)
+> >  	if (!IS_ENABLED(CONFIG_KEXEC_HANDOVER) || (long)node < 0)
+> >  		return;
 > >  
-> > +		if (memblock_is_kho_scratch_memory(PFN_PHYS(spfn)))
-> > +			mt = MIGRATE_CMA;
+> > +	if (is_kdump_kernel())
+> > +		return;
+> > +
 > 
-> Would it make sense for for_each_free_mem_range() to also return the
-> flags for the region? Then you won't have to do another search. It adds
-> yet another parameter to it so no strong opinion, but something to
-> consider.
+> This seems redundant if don't add KHO nodes at the first place.
+> 
+Indeed it is, it was more of a defense in depth in case there were stale
+data somehow, but I will drop it in v2.
 
-I hesitated a lot about this.
-Have you seen memblock::__next_mem_range() signature? ;-)
+> >  	if (!of_flat_dt_get_addr_size(node, "linux,kho-fdt",
+> >  				      &fdt_start, &fdt_size))
+> >  		return;
+> > diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
+> > index c4cf3552c018..b95f0b386684 100644
+> > --- a/drivers/of/kexec.c
+> > +++ b/drivers/of/kexec.c
+> > @@ -271,7 +271,8 @@ static int kho_add_chosen(const struct kimage *image, void *fdt, int chosen_node
+> >  	if (ret && ret != -FDT_ERR_NOTFOUND)
+> >  		return ret;
+> >  
+> > -	if (!image->kho.fdt || !image->kho.scratch)
+> > +	if (!image->kho.fdt || !image->kho.scratch ||
+> > +	    image->type == KEXEC_TYPE_CRASH)
+> >  		return 0;
+> >  
+> >  	fdt_mem = image->kho.fdt;
+> 
+> kho_add_chosen() bails out if there's no KHO buffer in kimage, so if
+> kho_fill_kimage won't add KHO buffer to kexec_crash_image it should be
+> enough.
+> 
+Indeed, one guard to rule them all. Much more elegant than the
+"let's sprinkle checks everywhere (apart from x86))" approach.
 
-I decided to start with something correct, but slowish and leave the churn
-and speed for later.
- 
+> > -- 
+> > 2.43.0
+> > 
+> > 
+> > 
+> > 
+> > Amazon Web Services Development Center Germany GmbH
+> > Tamara-Danz-Str. 13
+> > 10243 Berlin
+> > Geschaeftsfuehrung: Christof Hellmis, Andreas Stieger
+> > Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+> > Sitz: Berlin
+> > Ust-ID: DE 365 538 597
+> > 
+> 
 > -- 
-> Regards,
-> Pratyush Yadav
+> Sincerely yours,
+> Mike.
 
--- 
-Sincerely yours,
-Mike.
+Kind Regards,
+Evangelos
+
+
+
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christof Hellmis, Andreas Stieger
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
+
 
