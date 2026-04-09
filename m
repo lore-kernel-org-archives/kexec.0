@@ -4,61 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 078AB10FC466
-	for <kexec@archiver.kernel.org>; Thu,  9 Apr 2026 01:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A056FEA3C22
+	for <kexec@archiver.kernel.org>; Thu,  9 Apr 2026 10:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=n31YwgANNxir0IqZ1AmWTsXElIZ9bdMo1T2ZdsadX0c=; b=G0n8VeBmaZ1zpVDVrdGpOG4x5S
-	vMfzFwrLEFJfYx8JMtboUgD91I1Ye63PEkZVdwDZTuOVhoRLq4hOeI83PSb0IpmsAxr6Ah+3FUwsj
-	aANjv1OlAlUSd1bGx2nJi/7TVZAhR6NUtcHNq+7aJY/ce6+7YdhPIRnY4Jqpp0FJr749qehBgIKdH
-	NoSU4eJuv9Y8UpJ5qGAq+HXiwo5Kq8weBG19Kehm5Ipsn9EN7KZ5i9+hEGiYjlk150eZTbf20atpI
-	6VrHx6xw5s6VRZmfkk36Vx3E0nAKr0D6Au7k2cG+qVjextNYCYE6V7Lb5X/Uxz60TPerLDHO5fEIV
-	SDPr9A4g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=FzWgWPTYOUXksm2yrkcRcT+jT0HPJKIhnfcAUSbpY+U=; b=ORrXdytfkc8rT9IQGejMqpRFO6
+	XKBkJuEcx7AxM8NEbscmxu5CUWvRHemO7tg/WAKtTOZcXc/vaSuuyc34IMC4TFSX8/cwrTynzK4fY
+	SC4Hfnz8zE5SQH9fksBvtONt3fN89FFJrNQiq75nGGogGNOvivcAP3rS+ozQTEBp7Us9LPwK//7Dd
+	sJGFOm8IJ6lnz8QKFUhTxEyOExCSPiAEf02UzlPy0KIF3o3WynLM6GwDxUMW9mWk97NlHA6hW22R2
+	Ltw2PWUsU5+tCi2NpkYWVjIP5qo7qjkYJhCcMLz86mxWyUIkxSpFtFi18UqhX8UtxrfgAvarCEehN
+	AQLdaPwA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wAed2-00000009awY-3Z3F;
-	Thu, 09 Apr 2026 01:56:20 +0000
-Received: from out-186.mta0.migadu.com ([2001:41d0:1004:224b::ba])
+	id 1wAmOh-0000000A8N8-3Nld;
+	Thu, 09 Apr 2026 10:14:03 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wAecz-00000009aw4-2Pic
+	id 1wAmOd-0000000A8Mn-12Vq
 	for kexec@lists.infradead.org;
-	Thu, 09 Apr 2026 01:56:19 +0000
-Message-ID: <ea389ca2-8980-4022-a7d0-d96c913f671c@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1775699772;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n31YwgANNxir0IqZ1AmWTsXElIZ9bdMo1T2ZdsadX0c=;
-	b=Z++eKhxRA2Fx5lMqcc9QiWiaKIcOsEsIaqTo65xxhhAB1eEcdUlus0AgWBHz7JWp7YdmuQ
-	lAx2vZTt4Q9xjLSYWqhFVk699bTbT7e4TgBO+TMySfVWZIAIfyMF+WznhPdBWXIbwHw8hQ
-	5CbFC2X/WzxINA8aTk1aTBiDeHCd4vs=
-Date: Thu, 9 Apr 2026 09:55:31 +0800
+	Thu, 09 Apr 2026 10:14:00 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=FzWgWPTYOUXksm2yrkcRcT+jT0HPJKIhnfcAUSbpY+U=; b=Os4bzlJi9bj/d529D/CNPg2+mG
+	57BpudCqnG69DUWP3fHaIAFLnOgZi0lzTjI/xDZf1ptRBTLOHX4krCZjLPuKjaKRQIC/Mrq4pLT68
+	KB1dXUJDOYIswsUI51ySf+3kG1IaQuUe4F+mGKI0YunJQt76F/+xqpuC6ewFl9hwGnbXVQ62ceTWE
+	vUkwxjaU5gX9mfD7gC8eVnjYubM5nz7NfokII2vTefdvU3ehednwVYgbwn3ATc0MH4DHuWZMEvVT0
+	8eF71tXDvzj7ZTfjtnZcYugLaKQ3aV8KiQabvi4Hwo/O7GeopnRZNn5AKZU2z6Z9+PuhAtbqFdx/U
+	5HHciUHg==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wAmOT-0097x9-2S;
+	Thu, 09 Apr 2026 10:13:50 +0000
+Date: Thu, 9 Apr 2026 03:13:43 -0700
+From: Breno Leitao <leitao@debian.org>
+To: akpm@linux-foundation.org, mclapinski@google.com
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-mm@kvack.org, usamaarif642@gmail.com, SeongJae Park <sj@kernel.org>, 
+	kernel-team@meta.com, Alexander Graf <graf@amazon.com>, 
+	Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, puranjay@kernel.org, asml.silence@gmail.com
+Subject: Re: [PATCH v8 5/6] kho: kexec-metadata: track previous kernel chain
+Message-ID: <add4SuufMiHo8Mpm@gmail.com>
+References: <20260309-kho-v8-0-c3abcf4ac750@debian.org>
+ <20260309-kho-v8-5-c3abcf4ac750@debian.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] crash: Support high memory reservation for range syntax
-To: Baoquan He <bhe@redhat.com>, Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Jonathan Corbet <corbet@lwn.net>, Vivek Goyal <vgoyal@redhat.com>,
- Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- Youling Tang <tangyouling@kylinos.cn>
-References: <20260404074103.506793-1-youling.tang@linux.dev>
- <d584d383-1862-417d-9251-153d9bcf5626@linux.ibm.com>
- <adZYpnwOxgvFMLaT@MiWiFi-R3L-srv>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Youling Tang <youling.tang@linux.dev>
-In-Reply-To: <adZYpnwOxgvFMLaT@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260309-kho-v8-5-c3abcf4ac750@debian.org>
+X-Debian-User: leitao
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260408_185617_832980_58F473FC 
-X-CRM114-Status: GOOD (  18.51  )
+X-CRM114-CacheID: sfid-20260409_031359_291549_A77CA6E3 
+X-CRM114-Status: GOOD (  14.76  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,73 +77,69 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi, Baoquan
+Hello Andrew,
 
-On 4/8/26 21:32, Baoquan He wrote:
-> On 04/08/26 at 10:01am, Sourabh Jain wrote:
->> Hello Youling,
->>
->> On 04/04/26 13:11, Youling Tang wrote:
->>> From: Youling Tang <tangyouling@kylinos.cn>
->>>
->>> The crashkernel range syntax (range1:size1[,range2:size2,...]) allows
->>> automatic size selection based on system RAM, but it always reserves
->>> from low memory. When a large crashkernel is selected, this can
->>> consume most of the low memory, causing subsequent hardware
->>> hotplug or drivers requiring low memory to fail due to allocation
->>> failures.
->>
->> Support for high crashkernel reservation has been added to
->> address the above problem.
->>
->> However, high crashkernel reservation is not supported with
->> range-based crashkernel kernel command-line arguments.
->> For example: crashkernel=0M-1G:100M,1G-4G:160M,4G-8G:192M
->>
->> Many users, including some distributions, use range-based
->> crashkernel configuration. So, adding support for high crashkernel
->> reservation with range-based configuration would be useful.
-> Sorry for late response. And I have to say sorry because I have some
-> negative tendency on this change.
->
-> We use crashkernel=xM|G and crashkernel=range1:size1[,range2:size2,...]
-> as default setting, so that people only need to set suggested amount
-> of memory. While crashkernel=,high|low is for advanced user to customize
-> their crashkernel value. In that case, user knows what's high memory and
-> low memory, and how much is needed separately to achieve their goal, e.g
-> saving low memory, taking away more high memory.
->
-> To be honest, above grammers sounds simple, right? I believe both of you
-> know very well how complicated the current crashkernel code is. I would
-> suggest not letting them becomre more and more complicated by extending
-> the grammer further and further. Unless you meet unavoidable issue with
-> the existing grammer.
->
-> Here comes my question, do you meet unavoidable issue with the existing
-> grammer when you use crashkernel=range1:size1[,range2:size2,...] and
-> think it's not satisfactory, and at the same time crashkernel=,high|low
-> can't meet your demand either?
+On Mon, Mar 09, 2026 at 06:41:48AM -0700, Breno Leitao wrote:
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> index 1f22705d5d246..7bac80e9a29a4 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
+> @@ -1441,6 +1512,10 @@ static __init int kho_init(void)
+>  	if (err)
+>  		goto err_free_fdt;
+>  
+> +	err = kho_kexec_metadata_init(fdt);
+> +	if (err)
+> +		goto err_free_fdt;
+> +
+>  	for (int i = 0; i < kho_scratch_cnt; i++) {
+>  		unsigned long base_pfn = PHYS_PFN(kho_scratch[i].addr);
+>  		unsigned long count = kho_scratch[i].size >> PAGE_SHIFT;
 
-Yes, regular users generally don't know about high memory and low memory,
-and probably don't know how much crashkernel memory should be reserved
-either. They mostly just use the default crashkernel parameters configured
-by the distribution.
+I discovered an issue while testing this code on the current linux-next:
+the kho_kexec_metadata_init() call is now unreachable due to recent
+changes.
 
-For advanced users, the current grammar is sufficient, because
-'crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset],>boundary'
-can definitely be replaced with 'crashkernel=size,high'.
+My original patch was based on commit 5c9e55fecf93658 ("Add linux-next
+specific files for 20260312"), which included commit d7176a010afce8
+("kho: fix deferred init of kho scratch"). However, that commit has since
+been rebased/reworked in linux-next, and the code flow has changed.
 
-The main purpose of this patch is to provide distributions with a more
-reasonable default parameter configuration (satisfying most requirements),
-without having to set different distribution default parameters for 
-different
-scenarios (physical machines, virtual machines) and different machine 
-models.
+I'll send a follow-up patch to correct the placement.
+
+For reference, the intended code structure should be:
+
+  static __init int kho_init(void) {
+	  ....
+          err = kho_out_fdt_setup();
+          if (err)
+                  goto err_free_fdt;
+
+          err = kho_kexec_metadata_init(fdt);
+          if (err)
+                  goto err_free_fdt;
+
+
+Currently in linux-next, it looks like:
+
+          err = kho_out_fdt_setup();
+          if (err)
+                  goto err_free_fdt;
+
+          if (fdt) {					    |
+                  kho_in_debugfs_init(&kho_in.dbg, fdt);    |  -> This code was moved by d7176a010afce8, but, not anymore
+                  return 0; 				    |
+          }						    |
+
+          err = kho_kexec_metadata_init(fdt);               |  -> This code is now unreachable
+          if (err)
+                  goto err_free_fdt;
+
+
+I will send the fix for it soon, and we can carry on the discussion
+there.
 
 Thanks,
-Youling.
->
-> Thanks
-> Baoquan
->
+--breno
+
 
