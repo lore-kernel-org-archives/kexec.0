@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48860F9D0EC
-	for <kexec@archiver.kernel.org>; Tue, 14 Apr 2026 17:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 75F6CF9D0EC
+	for <kexec@archiver.kernel.org>; Tue, 14 Apr 2026 17:54:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=o0oitkRaPlhxEvrLUvQee5Y375xtYhMjN9dXeQ5U3AQ=; b=UustImU2GrK1z5rDR5swu30Gvy
-	nMAfVIp+RCkmVqVZF3SxceeD2dZv+AVNG7DR+5WMvMiPUV2OBRPNn/anXC/4tJ1qmIdytev7Q8rfz
-	7dYj+mUdJD+v4heT20zJk4LaWxlZSAmTRQhRc5ZlIKpDqu24s61aSYjGI8ptx2xIMKj6hsCf6iSra
-	blBBt5GZGAbRWWE0tMQGy+8uAvZ9E/uGJEqkXcd7GxyQFmsvqs0aUVeJ3kdY8Qz7LpRZMJqdafbp9
-	q6xVishWgqzZMAgy12dpMzcnYyCosSunXjaGljXg5/MoOfwjluj8nyEdyY+mMEXtxOB5u2b6/BWsx
-	Mf9qSKgA==;
+	bh=UVTInWR2aHl59QuYgge7RukF8qLFnBFE4Shx6Ep0t0w=; b=jntkGBeKEx6R198ECRenr2YwiB
+	dSNA2ip3QlqTDSz8/qYzlQ7IxBfYgOCAOlRcmwK1N+pI4UBXAn/cXKPJHa3WHzyU0UyxpETLKEYKr
+	L6xl5/VizhGP4aKsYJ46XmN+scJXk6SqRqh5BcMzSM8e9TlKnmjq9qkqFsHsSr7GkKs84D6bebJ7c
+	+tjDJqBmf8Wo5WBC8A09/BIYZA5JmqsqYxRqaD76N2QP4e9tD/IxyDF1gMTeJjzY1U2TzGYyJV9fw
+	Ra2PXq83zxkOFVG6m16wCgeP10MH/kO7CEbMzQXN8q8lxOxxKOegvJj17UzIW2i0zYDdFw76hbVNv
+	ezxgekFQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wChy0-000000004q8-1MjY;
-	Tue, 14 Apr 2026 17:54:28 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wChyE-000000004tW-3VKL;
+	Tue, 14 Apr 2026 17:54:42 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wChxx-000000004pg-23Ks
+	id 1wChyC-000000004t6-1Bxm
 	for kexec@lists.infradead.org;
-	Tue, 14 Apr 2026 17:54:26 +0000
+	Tue, 14 Apr 2026 17:54:41 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id B2BDA41A29;
-	Tue, 14 Apr 2026 17:54:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05C40C19425;
-	Tue, 14 Apr 2026 17:54:21 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 9104343B85;
+	Tue, 14 Apr 2026 17:54:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0F30C19425;
+	Tue, 14 Apr 2026 17:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776189264;
-	bh=jDAi4hxOBuKCdZsMTGr0ClpmAouBxMWURvjoq8hDpcI=;
+	s=k20201202; t=1776189279;
+	bh=Jr2B3lt3xXa4bQQKpEY82S/EjHBlc1NaMLGr1CILpA8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=p9UsAxCC0f3S7z2S+/ETxVZHJlHzFEZrxRXdOohy1WfdoZuR8Vze96U0stZl28euq
-	 wrlQSxUSUpzdHMXt+XcdskPrSEtT0wF+yTPEs5+bSING+vJPbkhLmGBvzaN6IayrdZ
-	 J7hL8wkSC8aLR2nlAiY4FDYHiq091w+2YdYKDXgaSoN6x1lBBa9dpHStqlAin3qUb5
-	 YXpeQGbwKFMvVFE1u/smyCTLSQCCI4u/B3hcuoK9fGxAQGCNwJqwXDhYmsK3dv2RWd
-	 Wz/tUfJVOz8CezhJ4KUkdHEKXbUWi4lPBjtiKW6hO8Yto+pr5DltFf0ogfKsHDf3UM
-	 /zpfCAnJO5o1g==
-Message-ID: <5b906d22-50bc-474c-ab12-4253781cbadd@kernel.org>
-Date: Tue, 14 Apr 2026 19:54:18 +0200
+	b=VSw8oHqB/VwrtwyDmI2U2CbPZdE0lVA8lEknsFFI0fMzklbjVtpVkFFyM6C8Oodsy
+	 l/UfDajM3Y0Z5Kli7JlF2jJykBaRws2Ok3jZiHxV2VJGd9oSjUZq0x38m6y+K0xH5M
+	 RmzNqux2UVGy5fEX+TJOrgBJqiU8DgQDetPY3tpVyXdvYhwU1JCl7GU8gkdHxxK/Nm
+	 KzdYixz1Hg4jSOW5HMRta5xx8+OtnhEiH9TTDpezucl2Fp7RCARPDckmwul93ZBpx0
+	 Jd75qMQUbW3+FCwZd+SNlr+IOeMO1w4+Kgds6y1r9kzqQJ1t8eSLZaSvLeM2WJmLeP
+	 kEY2KSZcTpf7w==
+Message-ID: <ce988601-6b5e-4557-8f37-068f35469207@kernel.org>
+Date: Tue, 14 Apr 2026 19:54:32 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] MAINTAINERS: drop include/linux/liveupdate from LIVE
- UPDATE
+Subject: Re: [PATCH 1/3] MAINTAINERS: update KHO and LIVE UPDATE maintainers
 To: Pratyush Yadav <pratyush@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
  Pasha Tatashin <pasha.tatashin@soleen.com>, Alexander Graf
@@ -55,7 +54,7 @@ To: Pratyush Yadav <pratyush@kernel.org>,
 Cc: kexec@lists.infradead.org, linux-mm@kvack.org,
  linux-kernel@vger.kernel.org
 References: <20260414121752.1912847-1-pratyush@kernel.org>
- <20260414121752.1912847-4-pratyush@kernel.org>
+ <20260414121752.1912847-2-pratyush@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -102,12 +101,13 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260414121752.1912847-4-pratyush@kernel.org>
+In-Reply-To: <20260414121752.1912847-2-pratyush@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260414_105425_573750_7CEF6FE5 
-X-CRM114-Status: GOOD (  11.66  )
+X-CRM114-CacheID: sfid-20260414_105440_371313_0BA7E87F 
+X-CRM114-Status: UNSURE (   9.17  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -125,27 +125,17 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 On 4/14/26 14:17, Pratyush Yadav wrote:
 > From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 > 
-> The directory does not exist any more.
+> I have been helping out with reviewing and developing KHO. I would also
+> like to help maintain it. Change my entry from R to M for KHO and live
+> update. Alex has been inactive for a while, so to avoid over-crowding
+> the KHO entry and to keep the information up-to-date, move his entry
+> from M to R.
 > 
-> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-> ---
->  MAINTAINERS | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c1e2cefb4493..bb588928533f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14811,7 +14811,6 @@ F:	Documentation/mm/memfd_preservation.rst
->  F:	Documentation/userspace-api/liveupdate.rst
->  F:	include/linux/kho/abi/
->  F:	include/linux/liveupdate.h
-> -F:	include/linux/liveupdate/
->  F:	include/uapi/linux/liveupdate.h
->  F:	kernel/liveupdate/
->  F:	lib/tests/liveupdate.c
+> We also now have a tree for KHO and live update at liveupdate/linux.git
+> where we plan to start maintaining those subsystems and start queuing
+> the patches. List that in the entries as well.
 
-Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
+Good idea!
 
 -- 
 Cheers,
