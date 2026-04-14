@@ -4,94 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C1E08F531E8
-	for <kexec@archiver.kernel.org>; Tue, 14 Apr 2026 11:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 35C0BF9D0C1
+	for <kexec@archiver.kernel.org>; Tue, 14 Apr 2026 11:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=uIqBdHGleBayBd6RqaDo/em7kxO8SnlaVAkvgImACpY=; b=Qp988cNy/0LCHFb+yOW2EzrLoa
-	ZXfC/k+kFxZbSxAEJnYV+nN7QfbPX6HdqPmOnMosRRNwtXRrS8CuW4AXnAU+VTtV8Ke5itvYzDVms
-	yi76O3cGDIwr6NnhUswaMgtdgbghZjfMh70B47qurmABGN6UI8RCSyeXSZiQSJH7YofjlICKiam00
-	gfsrf7XCK3/kQIUYsMSENXpUidJ7a5FvHgl8hXenoJjGmuXcalD59u/ZCT0Dw7wxuqL2oMCuXykni
-	DLRuUhSxpjwmXOwDu0E/Iu9tGe2weWjBA5MdTAYkO935Zp90DtiuijUWYxTp+9wr4aIe1SKY/LGr8
-	M+WSxnHA==;
+	bh=kJpNfu1lxZlcuNt52Z58mzSycI95cFIJWF1/CsmyCgE=; b=dQIQy7hU4vTA8vh8LaTy7fQLD7
+	6aIOsgirTMcAVPv6oREaZzhhhvLHVAQlZnfX5WE14e3pxpmw9QDoo7wynBrqicAe3BDwKcK3xtozS
+	aHiTgYJGVwF6ciPq9X1f59igUA31fvbujoIQfKWR0j+eBsWw03IwoqV6KGd34JMm7GLWtElwetcod
+	VL2AGHwHC5NFkOyQgjUKRZKfzmgxrQOSUjzLePwLYxkkdeyN3J5yq1wqnnkCGDoSUVsvSdBdQc2b1
+	R677uiczP0KXI8NNjexdc+0JDIjdJmzjVb2CXczf/oQ09CJD3cWWXwR1ZA/RmInRU2ttkMuNiXAU5
+	f13b8QzA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wCbg8-0000000HDJ7-1eT0;
-	Tue, 14 Apr 2026 11:11:36 +0000
+	id 1wCbmX-0000000HDxJ-0xNt;
+	Tue, 14 Apr 2026 11:18:13 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wCbg5-0000000HDIk-1DIb
+	id 1wCbmU-0000000HDwd-1n0u
 	for kexec@lists.infradead.org;
-	Tue, 14 Apr 2026 11:11:35 +0000
+	Tue, 14 Apr 2026 11:18:12 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1776165092;
+	s=mimecast20190719; t=1776165489;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uIqBdHGleBayBd6RqaDo/em7kxO8SnlaVAkvgImACpY=;
-	b=RdbXOX2PfG5LY6++IQSQeqdkhWEGjqTbqlWZ5SBvxwy59CuqsG4oU8JqbSfKERlJzRB31E
-	esyq9jVGgthq5MoiSQovvR2/o2VWw97X/Kfq/IEBgu4l1M6cc6zcRrBRgMkiua74LQf0XI
-	8mvaejs4jMQPIv6G5OjP3El7RNVEG9M=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=kJpNfu1lxZlcuNt52Z58mzSycI95cFIJWF1/CsmyCgE=;
+	b=OEGPx8hL2rAIuShAk2/cdTxc4ZTh0Mti7oB2lqy62IsesiCoCK3ldyLWRBnfN5MrtWkZei
+	BXvwFFT5roumFvt4Q/m9j389R0zKJASXZIXdG5Uan0ce8/aljqnh3oL6SbfDUx8U7R60QZ
+	T1P5FDQcAizXwr2Iv0iDjmYJp7N6oW4=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-540-cJYfSXysO3aIVhTNDeUIfg-1; Tue, 14 Apr 2026 07:11:31 -0400
-X-MC-Unique: cJYfSXysO3aIVhTNDeUIfg-1
-X-Mimecast-MFC-AGG-ID: cJYfSXysO3aIVhTNDeUIfg_1776165090
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-50b4031b86dso147618451cf.0
-        for <kexec@lists.infradead.org>; Tue, 14 Apr 2026 04:11:30 -0700 (PDT)
+ us-mta-146-8I8WFbqgM--aRxvYij8cVQ-1; Tue, 14 Apr 2026 07:18:07 -0400
+X-MC-Unique: 8I8WFbqgM--aRxvYij8cVQ-1
+X-Mimecast-MFC-AGG-ID: 8I8WFbqgM--aRxvYij8cVQ_1776165487
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-50d812c898cso140657131cf.1
+        for <kexec@lists.infradead.org>; Tue, 14 Apr 2026 04:18:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776165090; x=1776769890;
+        d=1e100.net; s=20251104; t=1776165487; x=1776770287;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=uIqBdHGleBayBd6RqaDo/em7kxO8SnlaVAkvgImACpY=;
-        b=T8bkj6dBvRWR4XFSUlX23CTjoC6n2zrsZs+oyk/THeKTUGPL5a/edrsXL1DHXGMwWN
-         EnGj4y+uiwU6KnOb1oXlPx8lSs5KCeaXnBMTiEORuVlhcpJg+b6p53xLdoLP3PpqEBq4
-         U4zq7FRHgdPTypajZ8HszAa06JO37L5/IDnsGXWZwGp0yIrHeP0qlYytQmMJGR1X+SGs
-         ekfqVc7BwmHoIOXBQ8vZ5nsEPBS5DYt9mi92OwCU+Eb0ObcM4UeILl0UFuq9rBKFBruQ
-         rMUKk2NBWNb6M58HzBBpDY0eAZsx9a8vJY4Ume3DfuZiRrfBDDuWwcDe2ibCI6AGeZTt
-         EefQ==
-X-Forwarded-Encrypted: i=1; AFNElJ90Orr+JLXla0QAaOfoJSQCb/DZi78FOXwBuHuh8FjsZYRQYWqPeBw+PRzWLHlO+PsVxqen2A==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzxTmfirdXwSM4G6rXvAuWJTXzp9+4uNPsZq7mRcM7kWpRCD3fj
-	2yb9KJxW3ZxwvKs/ee4V/C+rW1GRFPzqzKLi8yt8Y5O7nUMRhkDi7cjh/rk5ZZmbRewjxWl3psA
-	M1K8xwKEL7IhjDSWYOl3OtBiYimIMcgMI9w7Tl3jaJ5qVLGXTEM+T8mE5jl+TRkj8M8u+WpaGbi
-	hxk0JYSJqEiyo0wuF2LuXueNsNOqPGVMPaSQqZN8Eo0BAnpWc=
-X-Gm-Gg: AeBDieuWvrDxwHUo0W0VR6V+6MzrXJeGAKf1LFPbgKqOgsUNv3vGL71UY5FU5H2nDx1
-	wO9+Y4TvoLI5Z4EvnokRMgjg9eWNdb9imsrm/BVCKuq0S0Rwh0PG1UYoh4XMCH2CHLb8arqo6Kw
-	YFuyqzRgoFFmagnnJS8PDhLKdyCheek1mekC+P5zUvOr83WKO1KxIXsZuy49FJL/i4id6c2V8NU
-	W+szgaescyFTQ==
-X-Received: by 2002:ac8:5f51:0:b0:50b:3831:417f with SMTP id d75a77b69052e-50dd5bbed2cmr236831951cf.45.1776165089952;
-        Tue, 14 Apr 2026 04:11:29 -0700 (PDT)
-X-Received: by 2002:ac8:5f51:0:b0:50b:3831:417f with SMTP id
- d75a77b69052e-50dd5bbed2cmr236831261cf.45.1776165089274; Tue, 14 Apr 2026
- 04:11:29 -0700 (PDT)
+        bh=kJpNfu1lxZlcuNt52Z58mzSycI95cFIJWF1/CsmyCgE=;
+        b=o+YVvdH15kv1SXz59l6KJ/XiR1VNBobqoSLewaxqv9IZNQCkjAFw2Jyiguic/F3Ys+
+         sDkF6LFNLmHcUCJrpE4vYra8Klfsbx4vlKzEL4a1CmDFh77O4ULhEmDwzZF8ylZk24D/
+         56Gzh8GjiTW1KWqW6CIHgkc6OFfJj90M85YglW992Uw2M1+FGel3tgnHp8X/xQYdmYQT
+         qmliFkzu9xXZPTqLW7jiSfcfqTAzJqGL4o2XhZq6CAcsKCnJEz1yTfRQoyZ4TmwMoQnx
+         EyHVrYg5U8twMA8K2WmFo3iGE4C/LirYAiBWl/uLOt75ABKgE8lofvfKQM0q9JX2FbWH
+         Uzrg==
+X-Forwarded-Encrypted: i=1; AFNElJ95K/gK2SlPAhDdMpstoIXCuXR1k2pdaqk7G2Bx3HMM2vVfJACwp/fWnyZ+5O63dfAKYGmXsw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yyr3qXgutr5VbUZJTLva0glxwL1+xgAmbH1NZWlE9c9iTxnG3e4
+	+CwtNhr5rVpGRMq5Lw9RNy6FMuY+3+mEOM2mE+GyJMJuYgaftxEHz9ixZMhFWKWmdZ/uhiXWzgh
+	9gn83UUSZPAm3lAe2sE8X4lHu7J5GXA591bW49PwZLV07pKAfIBavRmXxQDWEHorlxZKQzAjaGw
+	QxwjKo5auoV2R3xlrrbldsGrMPZJvndPbpTVNR
+X-Gm-Gg: AeBDievzKl+3acS1PPZJhTVrjK4M78LIH1+XqBwW/Dndr7N6bZshlcp1cNKvfW8dMqw
+	VEudv1oWejrK24sYPgJZrhOPtV0X4IDEVBE4TIsBdgWV/bQwH3b11HB3W2YJfKa9psWnQt2dQOL
+	5yWtCTGSpQ69byka0j0w6ublNVXrPQEXbNcGwpHENDChhE4Rd01S4gC93HZYKXNwL8Jspl/ZqbS
+	WjuktEu+fZeAA==
+X-Received: by 2002:ac8:5708:0:b0:509:37d5:7a41 with SMTP id d75a77b69052e-50dd5cd7b7bmr230608081cf.63.1776165486886;
+        Tue, 14 Apr 2026 04:18:06 -0700 (PDT)
+X-Received: by 2002:ac8:5708:0:b0:509:37d5:7a41 with SMTP id
+ d75a77b69052e-50dd5cd7b7bmr230607641cf.63.1776165486322; Tue, 14 Apr 2026
+ 04:18:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20260317150743.69590-1-ltao@redhat.com> <20260317150743.69590-3-ltao@redhat.com>
- <308b1818-9f00-4806-aa4f-4868f39f330e@nec.com>
-In-Reply-To: <308b1818-9f00-4806-aa4f-4868f39f330e@nec.com>
+References: <20260317150743.69590-1-ltao@redhat.com> <20260317150743.69590-4-ltao@redhat.com>
+ <2a4a6823-5dc7-46f9-8dee-89ca68285607@nec.com>
+In-Reply-To: <2a4a6823-5dc7-46f9-8dee-89ca68285607@nec.com>
 From: Tao Liu <ltao@redhat.com>
-Date: Tue, 14 Apr 2026 23:10:52 +1200
-X-Gm-Features: AQROBzB7NwO28GXZPIkfdZ_gkE49Hjct3Sqe7EfQQubak1iwy4ma-qET1XA5vuw
-Message-ID: <CAO7dBbUz8rTVWHb75ONeB5Xg9GdJ=Z7eXkaq_Y2+npp4LwebsA@mail.gmail.com>
-Subject: Re: [PATCH v4][makedumpfile 2/7] Implement kernel kallsyms resolving
+Date: Tue, 14 Apr 2026 23:17:30 +1200
+X-Gm-Features: AQROBzCvovrlrDS07HXEWjzuREJ0Scc-kbmQKM0uNkybx33CfYSQR-DMV8B7sQ0
+Message-ID: <CAO7dBbXwkuVywQDD3vxkU07npaWz-MGuD4kLGkB4uzP_zfMwvg@mail.gmail.com>
+Subject: Re: [PATCH v4][makedumpfile 3/7] Implement kernel btf resolving
 To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
 Cc: "stephen.s.brennan@oracle.com" <stephen.s.brennan@oracle.com>, 
 	=?UTF-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0jiDnnJ/lhYkp?= <yamazaki-msmt@nec.com>, 
 	"kexec@lists.infradead.org" <kexec@lists.infradead.org>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 7y0oPy9L6jukhtIDqK4BKcYF8xTGvzHSbNrKCmZoj4E_1776165090
+X-Mimecast-MFC-PROC-ID: 0EHdI_-dOc38vZSoc3ydYN831W86kq_VnoFFWl5LKNE_1776165487
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260414_041133_507905_F9D4AFBD 
-X-CRM114-Status: GOOD (  37.47  )
+X-CRM114-CacheID: sfid-20260414_041810_614472_B37353A2 
+X-CRM114-Status: GOOD (  35.97  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,138 +108,109 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 Hi Kazu,
 
-On Fri, Apr 3, 2026 at 9:12=E2=80=AFPM HAGIO KAZUHITO(=E8=90=A9=E5=B0=BE=E3=
+On Fri, Apr 3, 2026 at 9:13=E2=80=AFPM HAGIO KAZUHITO(=E8=90=A9=E5=B0=BE=E3=
 =80=80=E4=B8=80=E4=BB=81) <k-hagio-ab@nec.com> wrote:
 >
 > On 2026/03/18 0:07, Tao Liu wrote:
-> > This patch will parse kernel's kallsyms data. During the parsing
-> > process, the .init_ksyms sections of makedumpfile and the
-> > extensions will be iterated, so the kallsyms symbols which belongs
-> > to vmlinux can be resolved at this moment.
+> > This patch will parse kernel's btf data using libbpf. The kernel's
+> > btf data is located between __start_BTF and __stop_BTF symbols which
+> > are resolved by kallsyms of the previous patch. Same as the previous
+> > one, the .init_ktypes section of makedumpfile and the extensions will
+> > be iterated, and any types which belongs to vmlinux can be resolved
+> > at this time.
+> >
+> > Another primary function implemented in this patch, is recursively
+> > diving into anonymous struct/union when encountered any, to find a
+> > member by given its name.
 > >
 > > Suggested-by: Stephen Brennan <stephen.s.brennan@oracle.com>
 > > Signed-off-by: Tao Liu <ltao@redhat.com>
 > > ---
-> >   Makefile       |   2 +-
-> >   kallsyms.c     | 350 ++++++++++++++++++++++++++++++++++++++++++++++++=
+> >   Makefile   |   4 +-
+> >   btf_info.c | 233 ++++++++++++++++++++++++++++++++++++++++++++++++++++=
 +
-> >   kallsyms.h     |  91 +++++++++++++
-> >   makedumpfile.c |   3 +
-> >   makedumpfile.h |  11 ++
-> >   5 files changed, 456 insertions(+), 1 deletion(-)
-> >   create mode 100644 kallsyms.c
-> >   create mode 100644 kallsyms.h
+> >   btf_info.h |  90 +++++++++++++++++++++
+> >   3 files changed, 325 insertions(+), 2 deletions(-)
+> >   create mode 100644 btf_info.c
+> >   create mode 100644 btf_info.h
 > >
 > > diff --git a/Makefile b/Makefile
-> > index 15a4ba0..a57185e 100644
+> > index a57185e..320677d 100644
 > > --- a/Makefile
 > > +++ b/Makefile
-> > @@ -45,7 +45,7 @@ CFLAGS_ARCH +=3D -m32
+> > @@ -45,12 +45,12 @@ CFLAGS_ARCH +=3D -m32
 > >   endif
 > >
 > >   SRC_BASE =3D makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.=
 h sadump_info.h
 > > -SRC_PART =3D print_info.c dwarf_info.c elf_info.c erase_info.c sadump_=
-info.c cache.c tools.c printk.c detect_cycle.c
-> > +SRC_PART =3D print_info.c dwarf_info.c elf_info.c erase_info.c sadump_=
 info.c cache.c tools.c printk.c detect_cycle.c kallsyms.c
+> > +SRC_PART =3D print_info.c dwarf_info.c elf_info.c erase_info.c sadump_=
+info.c cache.c tools.c printk.c detect_cycle.c kallsyms.c btf_info.c
 > >   OBJ_PART=3D$(patsubst %.c,%.o,$(SRC_PART))
 > >   SRC_ARCH =3D arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia=
 64.c arch/ppc64.c arch/s390x.c arch/ppc.c arch/sparc64.c arch/mips64.c arch=
 /loongarch64.c arch/riscv64.c
 > >   OBJ_ARCH=3D$(patsubst %.c,%.o,$(SRC_ARCH))
-> > diff --git a/kallsyms.c b/kallsyms.c
+> >
+> > -LIBS =3D -ldw -lbz2 -ldl -lelf -lz
+> > +LIBS =3D -ldw -lbz2 -ldl -lelf -lz -lbpf
+>
+> Not all distributions may use the extension function or have libbpf.
+> Also I would like to build makedumpfile on RHEL8 too, but it cannot be
+> built due to the version of libbpf.  Could we introduce an option e.g.
+> "EXTENSION=3Don" to use the function?
+
+Great suggestion! The EXTENSION=3Don switch will be much more helpful to
+OSs that don't support the makedumpfile extension, such as rhel8. This
+was already improved in v5.
+
+>
+>
+> >   ifneq ($(LINKTYPE), dynamic)
+> >   LIBS :=3D -static $(LIBS) -llzma
+> >   endif
+> > diff --git a/btf_info.c b/btf_info.c
 > > new file mode 100644
-> > index 0000000..f7737cb
+> > index 0000000..1cb66e2
 > > --- /dev/null
-> > +++ b/kallsyms.c
-> > @@ -0,0 +1,350 @@
-> > +#include <stdint.h>
-> > +#include <stdbool.h>
+> > +++ b/btf_info.c
+> > @@ -0,0 +1,233 @@
+> > +#include <stdio.h>
+> > +#include <stdlib.h>
 > > +#include <string.h>
+> > +#include <bpf/btf.h>
+> > +#include <bpf/libbpf_legacy.h>
 > > +#include "makedumpfile.h"
 > > +#include "kallsyms.h"
+> > +#include "btf_info.h"
 > > +
-> > +static uint32_t *kallsyms_offsets =3D NULL;
-> > +static uint16_t *kallsyms_token_index =3D NULL;
-> > +static uint8_t  *kallsyms_token_table =3D NULL;
-> > +static uint8_t  *kallsyms_names =3D NULL;
-> > +static unsigned long kallsyms_relative_base =3D 0;
-> > +static unsigned int kallsyms_num_syms =3D 0;
+> > +struct btf_arr_elem {
+> > +     struct btf *btf;
+> > +     char *module;
+> > +};
 > > +
-> > +/* makedumpfile & extensions' .init_ksyms section range array */
+> > +static struct btf_arr_elem **btf_arr =3D NULL;
+> > +static int btf_arr_len =3D 0;
+> > +static int btf_arr_cap =3D 0;
+> > +
+> > +/* makedumpfile & extensions' .init_ktypes section range array */
 > > +static struct section_range **sr =3D NULL;
 > > +static int sr_len =3D 0;
 > > +static int sr_cap =3D 0;
 > > +
-> > +/* Which mod's kallsyms should be inited? */
+> > +/* Which mod's btf should be inited? */
 > > +static char **mods =3D NULL;
 > > +static int mods_len =3D 0;
 > > +static int mods_cap =3D 0;
 > > +
-> > +INIT_KERN_SYM(_stext);
-> > +
-> > +/*
-> > + * Utility: add elem to arr, which can auto extend its capacity.
-> > + * (*arr) is a pointer array, holding pointers of elem
-> > +*/
-> > +bool add_to_arr(void ***arr, int *arr_len, int *arr_cap, void *elem)
-> > +{
-> > +     void *tmp;
-> > +     int new_cap =3D 0;
-> > +
-> > +     if (*arr =3D=3D NULL) {
-> > +             *arr_len =3D 0;
-> > +             new_cap =3D 4;
-> > +     } else if (*arr_len >=3D *arr_cap) {
-> > +             new_cap =3D (*arr_cap) + ((*arr_cap) >> 1);
-> > +     }
-> > +
-> > +     if (new_cap) {
-> > +             tmp =3D reallocarray(*arr, new_cap, sizeof(void *));
-> > +             if (!tmp)
-> > +                     goto no_mem;
-> > +             *arr =3D tmp;
-> > +             *arr_cap =3D new_cap;
-> > +     }
-> > +
-> > +     (*arr)[(*arr_len)++] =3D elem;
-> > +     return true;
-> > +
-> > +no_mem:
-> > +     fprintf(stderr, "%s: Not enough memory!\n", __func__);
->
-> Could you use ERRMSG() or MSG() instead of fprintf/printf for message
-> control, through the patchset?
-
-Fixed in v5.
-
->
->
-> > +     return false;
-> > +}
-> > +
-> > +/*
-> > + * Utility: add uniq string to arr, which can auto extend its capacity=
-.
-> > +*/
-> > +bool push_uniq_str(void ***arr, int *arr_len, int *arr_cap, char *str)
-> > +{
-> > +     for (int i =3D 0; i < (*arr_len); i++) {
-> > +             if (!strcmp((*arr)[i], str))
-> > +                     /* String already exists, skip it */
-> > +                     return true;
-> > +     }
-> > +     return add_to_arr(arr, arr_len, arr_cap, str);
-> > +}
-> > +
-> > +static bool add_ksym_modname(char *modname)
+> > +static bool add_ktype_modname(char *modname)
 > > +{
 > > +     return push_uniq_str((void ***)&mods, &mods_len, &mods_cap, modna=
 me);
 > > +}
 > > +
-> > +bool check_ksyms_require_modname(char *modname, int *total)
+> > +bool check_ktypes_require_modname(char *modname, int *total)
 > > +{
 > > +     if (total)
 > > +             *total =3D mods_len;
@@ -250,7 +221,7 @@ me);
 > > +     return false;
 > > +}
 > > +
-> > +static void cleanup_ksyms_modname(void)
+> > +static void cleanup_ktypes_modname(void)
 > > +{
 > > +     if (mods) {
 > > +             free(mods);
@@ -261,13 +232,13 @@ me);
 > > +}
 > > +
 > > +/*
-> > + * Used by makedumpfile and extensions, to register their .init_ksyms =
-section.
-> > + * so kallsyms can know which module/sym should be inited.
+> > + * Used by makedumpfile and extensions, to register their .init_ktypes=
+ section,
+> > + * so btf_info can know which module/type should be inited.
 > > +*/
-> > +REGISTER_SECTION(ksym)
+> > +REGISTER_SECTION(ktype)
 > > +
-> > +static void cleanup_ksyms_section_range(void)
+> > +static void cleanup_ktypes_section_range(void)
 > > +{
 > > +     for (int i =3D 0; i < sr_len; i++) {
 > > +             free(sr[i]);
@@ -280,453 +251,305 @@ section.
 > > +     sr_cap =3D 0;
 > > +}
 > > +
-> > +static uint64_t absolute_percpu(uint64_t base, int32_t val)
+> > +static void find_member_recursive(struct btf *btf, int struct_typeid,
+> > +                               int base_offset, struct ktype_info *ki)
 > > +{
-> > +     if (val >=3D 0)
-> > +             return (uint64_t)val;
-> > +     else
-> > +             return base - 1 - val;
-> > +}
+> > +     const struct btf_type *st;
+> > +     struct btf_member *bm;
+> > +     int i, vlen;
 > > +
-> > +static uint64_t calc_addr_absolute_percpu(struct ksym_info *p)
-> > +{
-> > +     return absolute_percpu(kallsyms_relative_base, p->value);
-> > +}
+> > +     struct_typeid =3D btf__resolve_type(btf, struct_typeid);
+> > +     st =3D btf__type_by_id(btf, struct_typeid);
 > > +
-> > +static uint64_t calc_addr_relative_base(struct ksym_info *p)
-> > +{
-> > +     return p->value + kallsyms_relative_base;
-> > +}
+> > +     if (!st)
+> > +             return;
 > > +
-> > +static uint64_t calc_addr_place_relative(struct ksym_info *p)
-> > +{
-> > +     return SYMBOL(kallsyms_offsets) + p->index * sizeof(uint32_t) +
-> > +             (int32_t)kallsyms_offsets[p->index];
-> > +}
+> > +     if (BTF_INFO_KIND(st->info) !=3D BTF_KIND_STRUCT &&
+> > +         BTF_INFO_KIND(st->info) !=3D BTF_KIND_UNION)
+> > +             return;
 > > +
-> > +#define BUFLEN 1024
-> > +static bool parse_kernel_kallsyms(void)
-> > +{
-> > +     char buf[BUFLEN];
->
-> There already is BUFSIZE, which is the same value.
->
-I have removed it and used BUFSIZE instead.
-
->
-> > +     int index =3D 0, i, j;
-> > +     uint8_t *compressd_data;
-> > +     uint8_t *uncompressd_data;
-> > +     uint8_t len, len_old;
-> > +     struct ksym_info **p;
-> > +     uint64_t (*calc_addr)(struct ksym_info *);
-> > +     struct ksym_info *stext_p;
+> > +     vlen =3D BTF_INFO_VLEN(st->info);
+> > +     bm =3D btf_members(st);
 > > +
-> > +     for (i =3D 0; i < kallsyms_num_syms; i++) {
-> > +             memset(buf, 0, BUFLEN);
-> > +             len =3D kallsyms_names[index];
-> > +             if (len & 0x80) {
-> > +                     index++;
-> > +                     len_old =3D len;
-> > +                     len =3D kallsyms_names[index];
-> > +                     if (len & 0x80) {
-> > +                             fprintf(stderr, "%s: BUG! Unexpected 3-by=
-te length,"
-> > +                                     " should be detected in init_kern=
-el_kallsyms()\n",
-> > +                                     __func__);
-> > +                             goto out;
-> > +                     }
-> > +                     len =3D (len_old & 0x7F) | (len << 7);
-> > +             }
-> > +             index++;
+> > +     for (i =3D 0; i < vlen; i++, bm++) {
+> > +             const char *name =3D btf__name_by_offset(btf, bm->name_of=
+f);
+> > +             int member_bit_offset =3D btf_member_bit_offset(st, i) + =
+base_offset;
+> > +             int member_typeid =3D btf__resolve_type(btf, bm->type);
+> > +             const struct btf_type *mt =3D btf__type_by_id(btf, member=
+_typeid);
 > > +
-> > +             compressd_data =3D &kallsyms_names[index];
-> > +             index +=3D len;
-> > +             while (len--) {
-> > +                     uncompressd_data =3D &kallsyms_token_table[kallsy=
-ms_token_index[*compressd_data]];
-> > +                     if (strlen(buf) + strlen((char *)uncompressd_data=
-) >=3D BUFLEN) {
-> > +                             goto next_symbol;
-> > +                     }
-> > +                     strcat(buf, (char *)uncompressd_data);
-> > +                     compressd_data++;
+> > +             if (name && strcmp(name, ki->member_name) =3D=3D 0) {
+> > +                     ki->member_bit_offset =3D member_bit_offset;
+> > +                     ki->member_bit_sz =3D btf_member_bitfield_size(st=
+, i);
+> > +                     ki->member_size =3D btf__resolve_size(btf, member=
+_typeid);
+> > +                     ki->index =3D i;
+> > +                     return;
 > > +             }
 > > +
-> > +             /* Now check if the symbol is we wanted */
-> > +             for (j =3D 0; j < sr_len; j++) {
-> > +                     for (p =3D (struct ksym_info **)(sr[j]->start);
-> > +                          p < (struct ksym_info **)(sr[j]->stop);
-> > +                          p++) {
-> > +                             if (!strcmp((*p)->modname, "vmlinux") &&
-> > +                                 !strcmp((*p)->symname, &buf[1])) {
-> > +                                     (*p)->value =3D kallsyms_offsets[=
-i];
-> > +                                     (*p)->index =3D i;
-> > +                             }
-> > +                     }
-> > +             }
-> > +next_symbol:
->
-> gcc-8.5.0 rejects this style, how about adding ";" here to avoid this?
->
-> kallsyms.c: In function =E2=80=98parse_kernel_kallsyms=E2=80=99:
-> kallsyms.c:193:1: error: label at end of compound statement
->   next_symbol:
->   ^~~~~~~~~~~
-> make: *** [Makefile:109: kallsyms.o] Error 1
-
-I reproduced the error in rhel8 compiling. Sorry I didn't test the
-compiling against rhel8 before so missed this. Removed the next_symbol
-tag in v5.
-
->
->
-> > +     }
-> > +
-> > +     /* Check the approach for calc absolute kallsyms address
-> > +      *
-> > +      * A complete comment of each approaches please refer to:
-> > +      * https://github.com/osandov/drgn/commit/744f36ec3c3f64d7e1323a0=
-037898158698585c4
-> > +      */
-> > +     if (!KERN_SYM_EXIST(_stext)) {
-> > +             fprintf(stderr, "%s: symbol _stext not found!\n", __func_=
-_);
-> > +             goto out;
-> > +     }
-> > +
-> > +     stext_p =3D GET_KERN_SYM_PTR(_stext);
-> > +
-> > +     if (SYMBOL(_stext) =3D=3D calc_addr_absolute_percpu(stext_p)) {
-> > +             calc_addr =3D calc_addr_absolute_percpu;
-> > +     } else if (SYMBOL(_stext) =3D=3D calc_addr_relative_base(stext_p)=
+> > +             if (!name || !name[0]) {
+> > +                     if (BTF_INFO_KIND(mt->info) =3D=3D BTF_KIND_STRUC=
+T ||
+> > +                         BTF_INFO_KIND(mt->info) =3D=3D BTF_KIND_UNION=
 ) {
-> > +             calc_addr =3D calc_addr_relative_base;
-> > +     } else if (SYMBOL(_stext) =3D=3D calc_addr_place_relative(stext_p=
-)) {
-> > +             calc_addr =3D calc_addr_place_relative;
-> > +     } else {
-> > +             fprintf(stderr, "%s: Wrong calculate kallsyms symbol valu=
-e!\n", __func__);
-> > +             goto out;
-> > +     }
-> > +
-> > +     /* Now do the calc */
-> > +     for (j =3D 0; j < sr_len; j++) {
-> > +             for (p =3D (struct ksym_info **)(sr[j]->start);
-> > +                  p < (struct ksym_info **)(sr[j]->stop);
-> > +                  p++) {
-> > +                     if (!strcmp((*p)->modname, "vmlinux") &&
-> > +                         SYM_EXIST(*p)) {
-> > +                             (*p)->value =3D calc_addr(*p);
+> > +                             find_member_recursive(btf, member_typeid,
+> > +                                                   member_bit_offset, =
+ki);
 > > +                     }
 > > +             }
 > > +     }
-> > +
-> > +     return true;
-> > +out:
-> > +     return false;
 > > +}
 > > +
-> > +static bool vmcore_info_ready =3D false;
-> > +
-> > +bool read_vmcoreinfo_kallsyms(void)
+> > +static void get_ktype_info(struct ktype_info *ki, char *mod_to_resolve=
+)
 > > +{
-> > +     READ_SYMBOL("kallsyms_names", kallsyms_names);
-> > +     READ_SYMBOL("kallsyms_num_syms", kallsyms_num_syms);
-> > +     READ_SYMBOL("kallsyms_token_table", kallsyms_token_table);
-> > +     READ_SYMBOL("kallsyms_token_index", kallsyms_token_index);
-> > +     READ_SYMBOL("kallsyms_offsets", kallsyms_offsets);
-> > +     READ_SYMBOL("kallsyms_relative_base", kallsyms_relative_base);
-> > +     vmcore_info_ready =3D true;
-> > +     return true;
-> > +}
+> > +     int i, j, start_id;
 > > +
-> > +/*
-> > + * Makedumpfile's .init_ksyms section
-> > +*/
-> > +extern struct ksym_info *__start_init_ksyms[];
-> > +extern struct ksym_info *__stop_init_ksyms[];
-> > +
-> > +bool init_kernel_kallsyms(void)
-> > +{
-> > +     const int token_index_size =3D (UINT8_MAX + 1) * sizeof(uint16_t)=
-;
-> > +     uint64_t last_token, len;
-> > +     unsigned char data, data_old;
-> > +     int i;
-> > +     bool ret =3D false;
-> > +
-> > +     if (vmcore_info_ready =3D=3D false) {
-> > +             fprintf(stderr, "%s: vmcoreinfo not ready for kallsyms!\n=
-",
-> > +                     __func__);
-> > +             return ret;
+> > +     if (mod_to_resolve !=3D NULL) {
+> > +             if (strcmp(ki->modname, mod_to_resolve) !=3D 0)
+> > +                     /* Exit safely */
+> > +                     return;
 > > +     }
 > > +
-> > +     if (!register_ksym_section((char *)__start_init_ksyms,
-> > +                                (char *)__stop_init_ksyms))
-> > +             return ret;
-> > +
-> > +     readmem(VADDR, SYMBOL(kallsyms_num_syms), &kallsyms_num_syms,
-> > +             sizeof(kallsyms_num_syms));
-> > +     if (SYMBOL(kallsyms_relative_base) !=3D NOT_FOUND_SYMBOL)
-> > +             readmem(VADDR, SYMBOL(kallsyms_relative_base),
-> > +                     &kallsyms_relative_base, sizeof(kallsyms_relative=
-_base));
-> > +
-> > +     kallsyms_offsets =3D malloc(sizeof(uint32_t) * kallsyms_num_syms)=
-;
-> > +     if (!kallsyms_offsets)
-> > +             goto no_mem;
-> > +     readmem(VADDR, SYMBOL(kallsyms_offsets), kallsyms_offsets,
-> > +             kallsyms_num_syms * sizeof(uint32_t));
-> > +
-> > +     kallsyms_token_index =3D malloc(token_index_size);
-> > +     if (!kallsyms_token_index)
-> > +             goto no_mem;
-> > +     readmem(VADDR, SYMBOL(kallsyms_token_index), kallsyms_token_index=
-,
-> > +             token_index_size);
-> > +
-> > +     last_token =3D SYMBOL(kallsyms_token_table) + kallsyms_token_inde=
-x[UINT8_MAX];
-> > +     do {
-> > +             readmem(VADDR, last_token++, &data, 1);
-> > +     } while(data);
-> > +     len =3D last_token - SYMBOL(kallsyms_token_table);
-> > +     kallsyms_token_table =3D malloc(len);
-> > +     if (!kallsyms_token_table)
-> > +             goto no_mem;
-> > +     readmem(VADDR, SYMBOL(kallsyms_token_table), kallsyms_token_table=
-, len);
-> > +
-> > +     for (len =3D 0, i =3D 0; i < kallsyms_num_syms; i++) {
-> > +             readmem(VADDR, SYMBOL(kallsyms_names) + len, &data, 1);
+> > +     for (i =3D 0; i < btf_arr_len; i++) {
+> > +             if (strcmp(btf_arr[i]->module, ki->modname) !=3D 0)
+> > +                     continue;
 > > +             /*
-> > +              * The 2-byte representation was added in commit 73bbb944=
-66fd3
-> > +              * ("kallsyms: support "big" kernel symbols") in v6.1, th=
-us for
-> > +              * v6.1+, they indicate a long symbol, but for kernel ver=
-sions
-> > +              * prior to v6.1, they might be ambiguous.
+> > +              * vmlinux(btf_arr[0])'s typeid is 1~vmlinux_type_cnt,
+> > +              * modules(btf_arr[1...])'s typeid is vmlinux_type_cnt~bt=
+f__type_cnt
 > > +              */
-> > +             if (data & 0x80) {
-> > +                     len +=3D 1;
-> > +                     data_old =3D data;
-> > +                     readmem(VADDR, SYMBOL(kallsyms_names) + len, &dat=
-a, 1);
-> > +                     if (data & 0x80) {
-> > +                             fprintf(stderr, "%s: BUG! Unexpected 3-by=
-te length"
-> > +                                     " encoding in kallsyms names\n", =
-__func__);
-> > +                             goto out;
-> > +                     }
-> > +                     data =3D (data_old & 0x7F) | (data << 7);
-> > +             }
-> > +             len +=3D data + 1;
-> > +     }
-> > +     kallsyms_names =3D malloc(len);
-> > +     if (!kallsyms_names)
-> > +             goto no_mem;
-> > +     readmem(VADDR, SYMBOL(kallsyms_names), kallsyms_names, len);
+> > +             start_id =3D (i =3D=3D 0 ? 1 : btf__type_cnt(btf_arr[0]->=
+btf));
 > > +
-> > +     ret =3D parse_kernel_kallsyms();
-> > +     goto out;
+> > +             for (j =3D start_id; j < btf__type_cnt(btf_arr[i]->btf); =
+j++) {
+> > +                     const struct btf_type *bt =3D
+> > +                             btf__type_by_id(btf_arr[i]->btf, j);
+> > +                     const char *name =3D
+> > +                             btf__name_by_offset(btf_arr[i]->btf, bt->=
+name_off);
+> > +
+> > +                     if (name && strcmp(ki->struct_name, name) =3D=3D =
+0) {
+> > +                             if (ki->member_name !=3D NULL) {
+> > +                                     /* Retrieve member info */
+> > +                                     find_member_recursive(btf_arr[i]-=
+>btf, j, 0, ki);
+> > +                             } else {
+> > +                                     ki->index =3D j;
+> > +                             }
+> > +                             ki->struct_size =3D btf__resolve_size(btf=
+_arr[i]->btf, j);
+> > +                             return;
+> > +                     }
+> > +             }
+> > +     }
+> > +}
+> > +
+> > +static bool add_to_btf_arr(struct btf *btf, char *module_name)
+> > +{
+> > +     struct btf_arr_elem *new_p;
+> > +
+> > +     new_p =3D malloc(sizeof(struct btf_arr_elem));
+> > +     if (!new_p)
+> > +             goto no_mem;
+> > +
+> > +     new_p->btf =3D btf;
+> > +     new_p->module =3D module_name;
+> > +
+> > +     return add_to_arr((void ***)&btf_arr, &btf_arr_len, &btf_arr_cap,=
+ new_p);
 > > +
 > > +no_mem:
 > > +     fprintf(stderr, "%s: Not enough memory!\n", __func__);
+> > +     return false;
+> > +}
+> > +
+> > +INIT_KERN_SYM(__start_BTF);
+> > +INIT_KERN_SYM(__stop_BTF);
+> > +
+> > +/*
+> > + * Makedumpfile's .init_ktypes section
+> > +*/
+> > +extern struct ktype_info *__start_init_ktypes[];
+> > +extern struct ktype_info *__stop_init_ktypes[];
+> > +
+> > +bool init_kernel_btf(void)
+> > +{
+> > +     uint64_t size;
+> > +     struct btf *btf;
+> > +     int i;
+> > +     struct ktype_info **p;
+> > +     char *buf =3D NULL;
+> > +     bool ret =3D false;
+> > +
+> > +     uint64_t start_btf =3D GET_KERN_SYM(__start_BTF);
+> > +     uint64_t stop_btf =3D GET_KERN_SYM(__stop_BTF);
+> > +     if (!KERN_SYM_EXIST(__start_BTF) ||
+> > +         !KERN_SYM_EXIST(__stop_BTF)) {
+> > +             fprintf(stderr, "%s: symbol __start/stop_BTF not found!\n=
+", __func__);
+> > +             goto out;
+> > +     }
+> > +
+> > +     if (!register_ktype_section((char *)__start_init_ktypes,
+> > +                                 (char *)__stop_init_ktypes))
+> > +             return ret;
+> > +
+> > +     size =3D stop_btf - start_btf;
+> > +     buf =3D (char *)malloc(size);
+> > +     if (!buf) {
+> > +             fprintf(stderr, "%s: Not enough memory!\n", __func__);
+> > +             goto out;
+> > +     }
+> > +     readmem(VADDR, start_btf, buf, size);
+> > +     btf =3D btf__new(buf, size);
+> > +
+> > +     if (libbpf_get_error(btf) !=3D 0 ||
+> > +         add_to_btf_arr(btf, strdup("vmlinux")) =3D=3D false) {
+> > +             fprintf(stderr, "%s: init vmlinux btf fail\n", __func__);
+> > +             goto out;
+> > +     }
+> > +
+> > +     for (i =3D 0; i < sr_len; i++) {
+> > +             for (p =3D (struct ktype_info **)(sr[i]->start);
+> > +                  p < (struct ktype_info **)(sr[i]->stop);
+> > +                  p++) {
+> > +                     get_ktype_info(*p, "vmlinux");
+> > +             }
+> > +     }
+> > +
+> > +     ret =3D true;
 > > +out:
-> > +     if (kallsyms_offsets) {
-> > +             free(kallsyms_offsets);
-> > +             kallsyms_offsets =3D NULL;
-> > +     }
-> > +     if (kallsyms_token_index) {
-> > +             free(kallsyms_token_index);
-> > +             kallsyms_token_index =3D NULL;
-> > +     }
-> > +     if (kallsyms_token_table) {
-> > +             free(kallsyms_token_table);
-> > +             kallsyms_token_table =3D NULL;
-> > +     }
-> > +     if (kallsyms_names) {
-> > +             free(kallsyms_names);
-> > +             kallsyms_names =3D NULL;
-> > +     }
+> > +     if (buf)
+> > +             free(buf);
 > > +     return ret;
 > > +}
 > > \ No newline at end of file
-> > diff --git a/kallsyms.h b/kallsyms.h
+> > diff --git a/btf_info.h b/btf_info.h
 > > new file mode 100644
-> > index 0000000..3791284
+> > index 0000000..2cf6b07
 > > --- /dev/null
-> > +++ b/kallsyms.h
-> > @@ -0,0 +1,91 @@
-> > +#ifndef _KALLSYMS_H
-> > +#define _KALLSYMS_H
-> > +
+> > +++ b/btf_info.h
+> > @@ -0,0 +1,90 @@
+> > +#ifndef _BTF_INFO_H
+> > +#define _BTF_INFO_H
 > > +#include <stdint.h>
 > > +#include <stdbool.h>
 > > +
-> > +struct ksym_info {
+> > +struct ktype_info {
 > > +     /********in******/
-> > +     char *modname;
-> > +     char *symname;
-> > +     bool sym_required;
+> > +     char *modname;          // Set to search within the module, in ca=
+se
+> > +                             // name conflict of different modules
+> > +     char *struct_name;      // Search by struct name
+> > +     char *member_name;      // Search by member name
+> > +     bool struct_required : 1;
+> > +     bool member_required : 1;
 > > +     /********out*****/
-> > +     uint64_t value;
-> > +     int index;      // -1 if sym not found
+> > +     uint32_t member_bit_offset;     // member offset in bits
+> > +     uint32_t member_bit_sz; // member width in bits
+> > +     uint32_t member_size;   // member size in bytes
+> > +     uint32_t struct_size;   // struct size in bytes
+> > +     int index;              // -1 if type not found
 > > +};
 > > +
+> > +bool check_ktypes_require_modname(char *modname, int *total);
+> > +bool register_ktype_section(char *start, char *stop);
+> > +bool init_kernel_btf(void);
+> > +
 > > +#define QUATE(x) #x
+> > +#define INIT_MOD_STRUCT_MEMBER_RQD(MOD, S, M, R)                     \
+> > +     struct ktype_info _##MOD##_##S##_##M =3D {                       =
+ \
+> > +             QUATE(MOD), QUATE(S), QUATE(M), R, R, 0, 0, 0, 0, -1    \
+> > +     };                                                              \
+> > +     __attribute__((section(".init_ktypes"), used))                  \
+> > +     struct ktype_info * _ptr_##MOD##_##S##_##M =3D &_##MOD##_##S##_##=
+M
+> > +
+> > +/*
+> > + * Required types will be checked automatically before extension runni=
+ng.
+> > + * Optinal types should be checked manually at extension runtime.
+> > + */
+> > +#define INIT_MOD_STRUCT_MEMBER(MOD, S, M) \
+> > +     INIT_MOD_STRUCT_MEMBER_RQD(MOD, S, M, 1)
+> > +#define INIT_OPT_MOD_STRUCT_MEMBER(MOD, S, M) \
+> > +     INIT_MOD_STRUCT_MEMBER_RQD(MOD, S, M, 0)
+> > +
+> > +#define DECLARE_MOD_STRUCT_MEMBER(MOD, S, M) \
+> > +     extern struct ktype_info _##MOD##_##S##_##M
+> > +
+> > +#define GET_MOD_STRUCT_MEMBER_MOFF(MOD, S, M)  (_##MOD##_##S##_##M.mem=
+ber_bit_offset)
+> > +#define GET_MOD_STRUCT_MEMBER_MSIZE(MOD, S, M) (_##MOD##_##S##_##M.mem=
+ber_size)
+> > +#define GET_MOD_STRUCT_MEMBER_SSIZE(MOD, S, M) (_##MOD##_##S##_##M.str=
+uct_size)
+> > +#define MOD_STRUCT_MEMBER_EXIST(MOD, S, M) (_##MOD##_##S##_##M.index >=
+=3D 0)
+> > +#define TYPE_EXIST(p) ((p)->index >=3D 0)
+> > +
+> > +#define INIT_KERN_STRUCT_MEMBER(S, M) \
+> > +     INIT_MOD_STRUCT_MEMBER(vmlinux, S, M)
+> > +#define INIT_OPT_KERN_STRUCT_MEMBER(S, M) \
+> > +     INIT_OPT_MOD_STRUCT_MEMBER(vmlinux, S, M)
+> > +
+> > +#define DECLARE_KERN_STRUCT_MEMBER(S, M) \
+> > +     DECLARE_MOD_STRUCT_MEMBER(vmlinux, S, M)
+> > +
+> > +#define GET_KERN_STRUCT_MEMBER_MOFF(S, M)  GET_MOD_STRUCT_MEMBER_MOFF(=
+vmlinux, S, M)
+> > +#define GET_KERN_STRUCT_MEMBER_MSIZE(S, M) GET_MOD_STRUCT_MEMBER_MSIZE=
+(vmlinux, S, M)
+> > +#define GET_KERN_STRUCT_MEMBER_SSIZE(S, M) GET_MOD_STRUCT_MEMBER_SSIZE=
+(vmlinux, S, M)
+> > +#define KERN_STRUCT_MEMBER_EXIST(S, M) MOD_STRUCT_MEMBER_EXIST(vmlinux=
+, S, M)
+> > +
+> > +#define INIT_MOD_STRUCT_RQD(MOD, S, R)                               \
+> > +     struct ktype_info _##MOD##_##S =3D {                      \
+> > +             QUATE(MOD), QUATE(S), 0, R, 0, 0, 0, 0, 0, -1   \
+> > +     };                                                      \
+> > +     __attribute__((section(".init_ktypes"), used))          \
+> > +     struct ktype_info * _ptr_##MOD##_##S =3D &_##MOD##_##S
+> > +
+> > +#define INIT_MOD_STRUCT(MOD, S) INIT_MOD_STRUCT_RQD(MOD, S, 1)
+> > +#define INIT_OPT_MOD_STRUCT(MOD, S) INIT_MOD_STRUCT_RQD(MOD, S, 0)
+> > +
+> > +#define DECLARE_MOD_STRUCT(MOD, S) \
+> > +     extern struct ktype_info _##MOD##_##S;
+> > +
+> > +#define GET_MOD_STRUCT_SSIZE(MOD, S) (_##MOD##_##S.struct_size)
+> > +#define MOD_STRUCT_EXIST(MOD, S) (_##MOD##_##S.index >=3D 0)
+> > +
+> > +#define INIT_KERN_STRUCT(S) INIT_MOD_STRUCT(vmlinux, S)
+> > +#define INIT_OPT_KERN_STRUCT(S) INIT_OPT_MOD_STRUCT(vmlinux, S)
+> > +
+> > +#define DECLARE_KERN_STRUCT(S) \
+> > +     DECLARE_MOD_STRUCT(vmlinux, S)
+> > +
+> > +#define GET_KERN_STRUCT_SSIZE(S) GET_MOD_STRUCT_SSIZE(vmlinux, S)
+> > +#define KERN_STRUCT_EXIST(S) MOD_STRUCT_EXIST(vmlinux, S)
 >
-> Is this intended?  I think what this does is "quote"..
+> I feel these macros are a bit messy.. "KERN" macros multiply the number
+> of macros.  Does this need both KERN/MOD macros, i.e. how about uniting
+> them and describe that "vmlinux" is used for kernel on a manual?
 
-I removed QUATE(x) macro, but use #x directly in v5 macros.
+I removed the "KERN" macros from btf_info.h, which looks much cleaner.
 
 >
 > Thanks,
 > Kazu
 >
 >
-> > +#define INIT_MOD_SYM_RQD(MOD, SYM, R)                        \
-> > +     struct ksym_info _##MOD##_##SYM =3D {             \
-> > +             QUATE(MOD), QUATE(SYM), R, 0, -1        \
-> > +     };                                              \
-> > +     __attribute__((section(".init_ksyms"), used))   \
-> > +     struct ksym_info * _ptr_##MOD##_##SYM =3D &_##MOD##_##SYM
 > > +
-> > +#define GET_MOD_SYM(MOD, SYM) (_##MOD##_##SYM.value)
-> > +#define GET_MOD_SYM_PTR(MOD, SYM) (&_##MOD##_##SYM)
-> > +#define MOD_SYM_EXIST(MOD, SYM) (_##MOD##_##SYM.index >=3D 0)
-> > +#define SYM_EXIST(p) ((p)->index >=3D 0)
-> > +
-> > +#define GET_KERN_SYM(SYM) GET_MOD_SYM(vmlinux, SYM)
-> > +#define GET_KERN_SYM_PTR(SYM) GET_MOD_SYM_PTR(vmlinux, SYM)
-> > +#define KERN_SYM_EXIST(SYM) MOD_SYM_EXIST(vmlinux, SYM)
-> > +
-> > +/*
-> > + * Required syms will be checked automatically before extension runnin=
-g.
-> > + * Optinal syms should be checked manually at extension runtime.
-> > + */
-> > +#define INIT_MOD_SYM(MOD, SYM) INIT_MOD_SYM_RQD(MOD, SYM, 1)
-> > +#define INIT_OPT_MOD_SYM(MOD, SYM) INIT_MOD_SYM_RQD(MOD, SYM, 0)
-> > +
-> > +#define INIT_KERN_SYM(SYM) INIT_MOD_SYM(vmlinux, SYM)
-> > +#define INIT_OPT_KERN_SYM(SYM) INIT_OPT_MOD_SYM(vmlinux, SYM)
-> > +
-> > +struct section_range {
-> > +     char *start;
-> > +     char *stop;
-> > +};
-> > +
-> > +#define REGISTER_SECTION(T)                                          \
-> > +bool register_##T##_section(char *start, char *stop)                 \
-> > +{                                                                    \
-> > +     struct section_range *new_sr;                                   \
-> > +     struct T##_info **p;                                            \
-> > +     bool ret =3D false;                                              =
- \
-> > +                                                                     \
-> > +     if (!start || !stop) {                                          \
-> > +             fprintf(stderr, "%s: Invalid section start/stop\n",     \
-> > +                     __func__);                                      \
-> > +             goto out;                                               \
-> > +     }                                                               \
-> > +                                                                     \
-> > +     for (p =3D (struct T##_info **)start;                            =
- \
-> > +          p < (struct T##_info **)stop;                              \
-> > +          p++) {                                                     \
-> > +             if (!add_##T##_modname((*p)->modname))                  \
-> > +                     goto out;                                       \
-> > +     }                                                               \
-> > +                                                                     \
-> > +     new_sr =3D malloc(sizeof(struct section_range));                 =
- \
-> > +     if (!new_sr) {                                                  \
-> > +             fprintf(stderr, "%s: Not enough memory!\n", __func__);  \
-> > +             goto out;                                               \
-> > +     }                                                               \
-> > +     new_sr->start =3D start;                                         =
- \
-> > +     new_sr->stop =3D stop;                                           =
- \
-> > +     if (!add_to_arr((void ***)&sr, &sr_len, &sr_cap, new_sr)) {     \
-> > +             free(new_sr);                                           \
-> > +             goto out;                                               \
-> > +     }                                                               \
-> > +     ret =3D true;                                                    =
- \
-> > +out:                                                                 \
-> > +     return ret;                                                     \
-> > +}
-> > +
-> > +bool add_to_arr(void ***arr, int *arr_len, int *arr_cap, void *elem);
-> > +bool push_uniq_str(void ***arr, int *arr_len, int *arr_cap, char *str)=
-;
-> > +bool check_ksyms_require_modname(char *modname, int *total);
-> > +bool register_ksym_section(char *start, char *stop);
-> > +bool read_vmcoreinfo_kallsyms(void);
-> > +bool init_kernel_kallsyms(void);
-> > +#endif /* _KALLSYMS_H */
+> > +#endif /* _BTF_INFO_H */
 > > \ No newline at end of file
-> > diff --git a/makedumpfile.c b/makedumpfile.c
-> > index 12fb0d8..dba3628 100644
-> > --- a/makedumpfile.c
-> > +++ b/makedumpfile.c
-> > @@ -27,6 +27,7 @@
-> >   #include <limits.h>
-> >   #include <assert.h>
-> >   #include <zlib.h>
-> > +#include "kallsyms.h"
-> >
-> >   struct symbol_table symbol_table;
-> >   struct size_table   size_table;
-> > @@ -3105,6 +3106,8 @@ read_vmcoreinfo_from_vmcore(off_t offset, unsigne=
-d long size, int flag_xen_hv)
-> >               if (!read_vmcoreinfo())
-> >                       goto out;
-> >       }
-> > +     read_vmcoreinfo_kallsyms();
-> > +
-> >       close_vmcoreinfo();
-> >
-> >       ret =3D TRUE;
-> > diff --git a/makedumpfile.h b/makedumpfile.h
-> > index 134eb7a..0f13743 100644
-> > --- a/makedumpfile.h
-> > +++ b/makedumpfile.h
-> > @@ -259,6 +259,7 @@ static inline int string_exists(char *s) { return (=
-s ? TRUE : FALSE); }
-> >   #define UINT(ADDR)  *((unsigned int *)(ADDR))
-> >   #define ULONG(ADDR) *((unsigned long *)(ADDR))
-> >   #define ULONGLONG(ADDR)     *((unsigned long long *)(ADDR))
-> > +#define VOID_PTR(ADDR)       *((void **)(ADDR))
-> >
-> >
-> >   /*
-> > @@ -1919,6 +1920,16 @@ struct symbol_table {
-> >        * symbols on sparc64 arch
-> >        */
-> >       unsigned long long              vmemmap_table;
-> > +
-> > +     /*
-> > +      * kallsyms related
-> > +      */
-> > +     unsigned long long              kallsyms_names;
-> > +     unsigned long long              kallsyms_num_syms;
-> > +     unsigned long long              kallsyms_token_table;
-> > +     unsigned long long              kallsyms_token_index;
-> > +     unsigned long long              kallsyms_offsets;
-> > +     unsigned long long              kallsyms_relative_base;
-> >   };
-> >
-> >   struct size_table {
 
 
