@@ -4,94 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3A7B1F9D0C4
-	for <kexec@archiver.kernel.org>; Tue, 14 Apr 2026 11:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A953AF9D0C8
+	for <kexec@archiver.kernel.org>; Tue, 14 Apr 2026 12:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=XDdRK/7tCQSuBuCTutJQfamBPR3u24FrMn7huO5/67M=; b=zbQDODD00iqIBxsnSduzSTwM5Q
-	YDUhtfP2zwioPbFGbNxVnABW20/txfdbkTAqpkSJDOGn7I2nrVyyjD9qSVXMtMmMmAAY03QCz7DGS
-	f10JGGVtJS34PJ+40vYkg6bh0iiVL6bw7QWDleusNDX9IWPjT+YJD38oBEk10EA8o+Bi/8Bm5J7ey
-	JIqA+NBO4G+s8XX7m17iHzt+AFLjACCrHqY6kLgEFzUhx8eLPWuEKoK0ipBhA7gyOqm4r2sDdLmhO
-	rGcWYVTIV7hzna+wHW9+J4csZ47CVVXnsR85q9npsWR4qUp8dMppQSNUokMmleDb9HHI1/mfCC7+L
-	7lQstO7A==;
+	bh=62B9koVc77QS12CmKS4aLOtsKKM8d3i6317wAAwhRmg=; b=uYRIoboii1LB4CottlM0C7Ar0t
+	rFwanVC86aRlDY/WDI3JYkh0vitHOMPgbtbzSdUF6MivJV13eE0hzASCXhsbcNlDxrYfZcZz2mxAc
+	8thrsQ1brlJSlTRyLs/nQDstWkkRphGAv7qHPh6o4BN12TYhF/7EZwvNvqmsb4wduUFPwSCeco1LE
+	VHI0H4C8h16dnK6PAGLIQGTlgoJFbDBVn/KxNmI1YxCIfzmU/J8YonkZh2mUsr1pwEdM+GMAMTGBy
+	Y/zg5x2fsk77xW5nSgMI1LZjxz8lKVU363FlGshTJ2AuPQbud8DmSMgEas7Dukqn52imT3gUBLZxW
+	zhy7f5JQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wCcIc-0000000HGMM-1jbj;
-	Tue, 14 Apr 2026 11:51:22 +0000
+	id 1wCcYE-0000000HHDe-49T0;
+	Tue, 14 Apr 2026 12:07:30 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wCcIZ-0000000HGLo-23Vj
+	id 1wCcYC-0000000HHDG-0SIq
 	for kexec@lists.infradead.org;
-	Tue, 14 Apr 2026 11:51:21 +0000
+	Tue, 14 Apr 2026 12:07:29 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1776167478;
+	s=mimecast20190719; t=1776168446;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XDdRK/7tCQSuBuCTutJQfamBPR3u24FrMn7huO5/67M=;
-	b=hZm0EwBdNLViloxOXYLoSm+zGhH5NY9bXszYZKHYdJKTvLp22kdBwBooC2Y1uyt04E4A9w
-	Tv4wTH3tb2j3iAlZ4qjV2X25hjR/+qyjbugvhFbuxqOa2I34enzJvIw3sesyjgyxxCzGOM
-	f/uak3z//8L2WpeApZcMYUZgFOTBSV8=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=62B9koVc77QS12CmKS4aLOtsKKM8d3i6317wAAwhRmg=;
+	b=dw1WLuekc3QGtlcnreL76IwTJDwv1hpWlpRpU2KcK6OVZuTNa0ma5I3cT9Z/3QbEjRcDE4
+	/Y1AnqsyJ/DhagAOwOsta8Rr5jux6aZS9tGyCBVdRdYcCkrD1a3Uux/SDRBS2uxH4mg83T
+	WFh5OladfzgyiLHr6RTnFjQLixsTKI4=
+Received: from mail-ua1-f72.google.com (mail-ua1-f72.google.com
+ [209.85.222.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-571-r9AxgsP5NnS7NS0oC20gHg-1; Tue, 14 Apr 2026 07:51:15 -0400
-X-MC-Unique: r9AxgsP5NnS7NS0oC20gHg-1
-X-Mimecast-MFC-AGG-ID: r9AxgsP5NnS7NS0oC20gHg_1776167475
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-50b31cff27fso15597451cf.3
-        for <kexec@lists.infradead.org>; Tue, 14 Apr 2026 04:51:15 -0700 (PDT)
+ us-mta-591-LlPR1Tk8PmelIdigJ-ZSwA-1; Tue, 14 Apr 2026 08:07:21 -0400
+X-MC-Unique: LlPR1Tk8PmelIdigJ-ZSwA-1
+X-Mimecast-MFC-AGG-ID: LlPR1Tk8PmelIdigJ-ZSwA_1776168441
+Received: by mail-ua1-f72.google.com with SMTP id a1e0cc1a2514c-953d479ea6eso6862547241.3
+        for <kexec@lists.infradead.org>; Tue, 14 Apr 2026 05:07:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776167475; x=1776772275;
+        d=1e100.net; s=20251104; t=1776168441; x=1776773241;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=XDdRK/7tCQSuBuCTutJQfamBPR3u24FrMn7huO5/67M=;
-        b=YYw0bNrxFNpGvmAZKtIkQFTC1ZuxKsPsETIszT5GG9gbJe2IEfAnzI2lWQsaXdY5Er
-         le2nxrfXqvJWDAgNdEc7lqgzEHv4kBMFYrJ1h/QvqzvHnUwsV5torX43OTqWw3+BUUqK
-         b2oBNoW1xtvBoAGnNBUntZjaQAXaWLTlyY+A/vU5226+xKgYawOHSNF4zfKL+/9ghl9u
-         syAZEFwlf6LTQqBdNu8/LsDucYZc3v4WawF4dQNdi3AMDLdneTR7CYQm/tl850fOzrzG
-         Df0cjaHEx8PurvNj89PrBVwc7b+o2OtJymxIBZhF8Jwe0sxS85lUx6oNHszf32pgiwx4
-         zsjg==
-X-Forwarded-Encrypted: i=1; AFNElJ8kSXuJUVP8IalIh+AtAS8qFsfGq4I+zlnivu68c9DYsh+2HP38mMvmQA4Ud577sC81VtsKDA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yzvsc9FZshrR0m2NSa0ThOXXkHuHnB02QieET6JcOKpgfwrNQHq
-	De5jzhc0GBx9uQyqr3SK9PyboQZACZ0YQkyOgLSGumbmYBU0/0nCo7enH8hSQGQssloWLdGgBoU
-	uF5G1u92dA6BGOD0vVBOgT7PfjlqsV3J4Q3w5N3TA3fnrNqcEb5KQ/zRQpelrz+RjYz7ol+PxPO
-	AZN/YRhz5qtFpaFj2OkrAyPsSAKBCtXvFCe7kF
-X-Gm-Gg: AeBDievKWUWXdYj8QeYMUmuiheHpO+0mHFozhBklCzgpD2d8vVJGqw/Qbq9kF2nBV+9
-	bpBRed8lBcjc80MVcQ8B95C/KzwTyKLA+6tLBX/P2VGHC+crVQr6CbC0l8MTHGiFYZ24VoilJRb
-	dao0OcEV5yrp9mkgZaCjtmKh/kOvIPIWb7uh+cn7KLuo/pcAUgAHuXWRacF0qbpU6R2MJMcmmMJ
-	kMhg7XodRiodA==
-X-Received: by 2002:a05:622a:3c8:b0:50b:4755:94b9 with SMTP id d75a77b69052e-50dd5c15d59mr264530411cf.56.1776167474470;
-        Tue, 14 Apr 2026 04:51:14 -0700 (PDT)
-X-Received: by 2002:a05:622a:3c8:b0:50b:4755:94b9 with SMTP id
- d75a77b69052e-50dd5c15d59mr264529731cf.56.1776167473772; Tue, 14 Apr 2026
- 04:51:13 -0700 (PDT)
+        bh=62B9koVc77QS12CmKS4aLOtsKKM8d3i6317wAAwhRmg=;
+        b=E2kqhTkp1U+pi87gS1GuQMXSET0obVLR01rkyRH8P72iq+PhqhFz66XyaQe2yc3B7A
+         X5TvjHsYxAGDE6vxyWSXDN2R3MGvSwCTsf7bxLDtqwL/LPul495ngG7c1d5OXicIO4PJ
+         t6kkMPbPz19n7Q3jhUutWkAUrVSB8ElCizOltWA84QB1cJzxElS69kdFFI6F/vxa+UoA
+         KQlhSXCcmqvcxAgfze9yXhitkVix7eWtiXXRiUU2VBCHYUrV7S5nWj6/um9tQiY9b5wM
+         f4y/lBKBuKL9+Fn2jZ74RPaeb5VRcxYjKc+EVbn7DICHTGZnuO0/DX4zuQ4Ftw3et45V
+         oFTQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+LG4e6riWJxy+3ETWyRBUc4QZEmxfaOXvHyMLWgpS4IPK/WvejCQ+pzpgZXfCuOThiQB/sEg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyjRkBerxL1G1kLTlhF+U9/z6vvxeyDlyF8FKfphMpCjKrOlPXN
+	TK0SzCjNxGwZxwozl5uBtSrO/g0rfLkGaxEo4Th8/UTP5e7YWN51wAVugNRZcEhjNN/lTEwYi/5
+	reEeiGpLzJ1lWEJBElXY05sEwiNKfycpCg2YFzx2PXE9IlWW1wKSuUGdhmLrJutbZ1EuNJlzgGV
+	Q8A9fbkpIfv4Jost6kYQP+4I7MA7YZArBSR+jz
+X-Gm-Gg: AeBDievt4qrvdkU2OcEqs9QOX6DGS4dygT+Vc7v6EMwGt+sJZfFK/xKP0njVvuK0bbC
+	kNV5d+Hu5/5W/ZPs9vSBQa50sGO6CI351/Sa7wkXGaZdIDM9Ptiwp3QXtX6g3cjehAGQnq/vWMm
+	qsr1gF5FRA2j5ak4uXEN5zVBv9Q549LR88wi26tWbV0A/RMWzF7qgs6mwV/vWMZ7PGSCqUJEF1g
+	3BkyYtZ8OeFYA==
+X-Received: by 2002:a05:6102:5b:b0:60f:c9ba:b992 with SMTP id ada2fe7eead31-60fc9bad7bbmr2221067137.16.1776168440436;
+        Tue, 14 Apr 2026 05:07:20 -0700 (PDT)
+X-Received: by 2002:a05:6102:5b:b0:60f:c9ba:b992 with SMTP id
+ ada2fe7eead31-60fc9bad7bbmr2221030137.16.1776168439835; Tue, 14 Apr 2026
+ 05:07:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20260317150743.69590-1-ltao@redhat.com> <20260317150743.69590-7-ltao@redhat.com>
- <bda432f0-57a4-48a2-bc8e-bdd0a132824b@nec.com>
-In-Reply-To: <bda432f0-57a4-48a2-bc8e-bdd0a132824b@nec.com>
+References: <20260317150743.69590-1-ltao@redhat.com> <20260317150743.69590-8-ltao@redhat.com>
+ <87o6k0ew4k.fsf@oracle.com>
+In-Reply-To: <87o6k0ew4k.fsf@oracle.com>
 From: Tao Liu <ltao@redhat.com>
-Date: Tue, 14 Apr 2026 23:50:34 +1200
-X-Gm-Features: AQROBzBXF9cN9HaTO8Es0bIfmEy24VNSvUUIP4WUSBrWXcWb7e-bV0JbmAHr5n4
-Message-ID: <CAO7dBbUa_8H0fe+9bTNTQWjMVy9qCPiu0fo3g8XamiDS_Mr8eA@mail.gmail.com>
-Subject: Re: [PATCH v4][makedumpfile 6/7] Add makedumpfile extensions support
-To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
-Cc: "stephen.s.brennan@oracle.com" <stephen.s.brennan@oracle.com>, 
-	=?UTF-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0jiDnnJ/lhYkp?= <yamazaki-msmt@nec.com>, 
-	"kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Date: Wed, 15 Apr 2026 00:06:43 +1200
+X-Gm-Features: AQROBzCV2bbpNbz2AFJN5tMA0BpzrHShcnCGvh6hb_MO_dXAF601J9wunBTf2Q4
+Message-ID: <CAO7dBbXLvYGhwW7BuKVBiSLMd7M4Ek0WWJz8sZm1ev9wyH29WA@mail.gmail.com>
+Subject: Re: [PATCH v4][makedumpfile 7/7] Filter amdgpu mm pages
+To: Stephen Brennan <stephen.s.brennan@oracle.com>
+Cc: yamazaki-msmt@nec.com, k-hagio-ab@nec.com, kexec@lists.infradead.org, 
+	aravinda@linux.vnet.ibm.com
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 5gJbQzBOnj6_Jz-obtrbsNmlKhQlWFGwajEk8AAc-Mo_1776167475
+X-Mimecast-MFC-PROC-ID: xueTQovgZZoK4Kd8Z0ohKJ6QQnKmSV-Mivyhah9pE8c_1776168441
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260414_045119_701527_623F8822 
-X-CRM114-Status: GOOD (  41.74  )
+X-CRM114-CacheID: sfid-20260414_050728_292157_034067A0 
+X-CRM114-Status: GOOD (  32.30  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,713 +105,651 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Kazu,
+Hi Stephen,
 
-On Fri, Apr 3, 2026 at 9:14=E2=80=AFPM HAGIO KAZUHITO(=E8=90=A9=E5=B0=BE=E3=
-=80=80=E4=B8=80=E4=BB=81) <k-hagio-ab@nec.com> wrote:
+On Fri, Apr 3, 2026 at 1:16=E2=80=AFPM Stephen Brennan
+<stephen.s.brennan@oracle.com> wrote:
 >
-> On 2026/03/18 0:07, Tao Liu wrote:
-> > The extensions can be specified by makedumpfile cmdline parameter as
-> > "--extension", followed by extension's filename or absolute path. If
-> > filename is give, then "./extenisons" and "/usr/lib64/makedumpfile/exte=
-nsions/"
-> > will be searched.
+> Tao Liu <ltao@redhat.com> writes:
+>
+> > This patch will introduce maple_tree & amdgpu mm page filtering extensi=
+on,
+> > those mm pages allocated to amdgpu will be discarded from vmcore, in or=
+der
+> > to shrink vmcore size since mm pages allocated to amdgpu are useless to=
+ kernel
+> > crash and may contain sensitive data.
 > >
-> > The procedures of extensions are as follows:
-> >
-> > Step 0: Every extensions will declare which kernel symbol/types they ne=
-eded
-> > during programming. This info will be stored within .init_ksyms/ktypes =
-section.
-> > Also extension will have a callback function for makedumpfile to call.
-> >
-> > Step 1: Register .init_ksyms and .init_ktypes sections of makedumpfile
-> > itself and extension's .so files, then tell kallsyms/btf subcomponent t=
-hat which
-> > kernel symbols/types will be resolved. And callbacks are also registere=
-d.
-> >
-> > Step 2: Init kernel/module's btf/kallsyms on demand. Any un-needed kenr=
-el
-> > modules will be skipped.
-> >
-> > Step 3: During btf/kallsyms parsing, the needed info will be filled. Fo=
-r
-> > syms/types which are defined via INIT_OPT(...) macro, these are optinal
-> > syms/types, it won't fail at parsing step if any are missing, instead, =
-they
-> > need to be checked within extension_init() of each extensions; For
-> > syms/types which defined via INIT_(...) macro, these are must-have syms=
-/types,
-> > if any missing, the extension will fail at this step and as a result
-> > this extension will be skipped.
-> >
-> > After this step, required kernel symbol value and kernel types size/off=
-set
-> > are resolved, the extensions are ready to go.
-> >
-> > Step 4: When makedumpfile doing page filtering, in addition to its
-> > original filtering mechanism, it will call extensions callbacks for adv=
-ice
-> > whether the page should be included/excluded.
-> >
-> > Suggested-by: Stephen Brennan <stephen.s.brennan@oracle.com>
 > > Signed-off-by: Tao Liu <ltao@redhat.com>
 > > ---
-> >   Makefile            |   7 +-
-> >   extension.c         | 300 +++++++++++++++++++++++++++++++++++++++++++=
-+
-> >   extension.h         |  12 ++
-> >   extensions/Makefile |  10 ++
-> >   makedumpfile.c      |  38 +++++-
-> >   makedumpfile.h      |   2 +
-> >   6 files changed, 363 insertions(+), 6 deletions(-)
-> >   create mode 100644 extension.c
-> >   create mode 100644 extension.h
-> >   create mode 100644 extensions/Makefile
+> >  extensions/Makefile        |   4 +-
+> >  extensions/amdgpu_filter.c | 190 +++++++++++++++++++++++
+> >  extensions/maple_tree.c    | 307 +++++++++++++++++++++++++++++++++++++
+> >  extensions/maple_tree.h    |   6 +
+> >  4 files changed, 506 insertions(+), 1 deletion(-)
+> >  create mode 100644 extensions/amdgpu_filter.c
+> >  create mode 100644 extensions/maple_tree.c
+> >  create mode 100644 extensions/maple_tree.h
 > >
-> > diff --git a/Makefile b/Makefile
-> > index 320677d..1bb67d9 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -45,7 +45,7 @@ CFLAGS_ARCH +=3D -m32
-> >   endif
+> > diff --git a/extensions/Makefile b/extensions/Makefile
+> > index b8bbfbc..55b789b 100644
+> > --- a/extensions/Makefile
+> > +++ b/extensions/Makefile
+> > @@ -1,8 +1,10 @@
+> >  CC ?=3D gcc
+> > -CONTRIB_SO :=3D
+> > +CONTRIB_SO :=3D amdgpu_filter.so
 > >
-> >   SRC_BASE =3D makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.=
-h sadump_info.h
-> > -SRC_PART =3D print_info.c dwarf_info.c elf_info.c erase_info.c sadump_=
-info.c cache.c tools.c printk.c detect_cycle.c kallsyms.c btf_info.c
-> > +SRC_PART =3D print_info.c dwarf_info.c elf_info.c erase_info.c sadump_=
-info.c cache.c tools.c printk.c detect_cycle.c kallsyms.c btf_info.c extens=
-ion.c
-> >   OBJ_PART=3D$(patsubst %.c,%.o,$(SRC_PART))
-> >   SRC_ARCH =3D arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia=
-64.c arch/ppc64.c arch/s390x.c arch/ppc.c arch/sparc64.c arch/mips64.c arch=
-/loongarch64.c arch/riscv64.c
-> >   OBJ_ARCH=3D$(patsubst %.c,%.o,$(SRC_ARCH))
-> > @@ -126,6 +126,7 @@ eppic_makedumpfile.so: extension_eppic.c
+> >  all: $(CONTRIB_SO)
 > >
-> >   clean:
-> >       rm -f $(OBJ) $(OBJ_PART) $(OBJ_ARCH) makedumpfile makedumpfile.8 =
-makedumpfile.conf.5
-> > +     $(MAKE) -C extensions clean
-> >
-> >   install:
-> >       install -m 755 -d ${DESTDIR}/${SBINDIR} ${DESTDIR}/usr/share/man/=
-man5 ${DESTDIR}/usr/share/man/man8
-> > @@ -135,3 +136,7 @@ install:
-> >       mkdir -p ${DESTDIR}/usr/share/makedumpfile/eppic_scripts
-> >       install -m 644 -D $(VPATH)makedumpfile.conf ${DESTDIR}/usr/share/=
-makedumpfile/makedumpfile.conf.sample
-> >       install -m 644 -t ${DESTDIR}/usr/share/makedumpfile/eppic_scripts=
-/ $(VPATH)eppic_scripts/*
+> > +amdgpu_filter.so: maple_tree.c
 > > +
-> > +.PHONY: extensions
-> > +extensions:
-> > +     $(MAKE) -C extensions CC=3D$(CC)
-> > \ No newline at end of file
-> > diff --git a/extension.c b/extension.c
+> >  $(CONTRIB_SO): %.so: %.c
+> >       $(CC) -O2 -g -fPIC -shared -Wl,-T,../makedumpfile.ld -o $@ $^
+> >
+> > diff --git a/extensions/amdgpu_filter.c b/extensions/amdgpu_filter.c
 > > new file mode 100644
-> > index 0000000..35e2756
+> > index 0000000..3a1e9f2
 > > --- /dev/null
-> > +++ b/extension.c
-> > @@ -0,0 +1,300 @@
+> > +++ b/extensions/amdgpu_filter.c
+> > @@ -0,0 +1,190 @@
 > > +#include <stdio.h>
 > > +#include <stdlib.h>
-> > +#include <string.h>
-> > +#include <dirent.h>
-> > +#include <dlfcn.h>
-> > +#include <stdbool.h>
-> > +#include <unistd.h>
-> > +#include "kallsyms.h"
-> > +#include "btf_info.h"
-> > +#include "extension.h"
+> > +#include "maple_tree.h"
+> > +#include "../makedumpfile.h"
+> > +#include "../btf_info.h"
+> > +#include "../kallsyms.h"
+> > +#include "../extension.h"
 > > +
-> > +typedef int (*callback_fn)(unsigned long, const void *);
+> > +/*
+> > + * These syms/types are must-have for the extension.
+> > +*/
+> > +INIT_KERN_STRUCT_MEMBER(task_struct, tasks);
+> > +INIT_KERN_STRUCT_MEMBER(task_struct, mm);
+> > +INIT_KERN_STRUCT_MEMBER(mm_struct, mm_mt);
+> > +INIT_KERN_STRUCT_MEMBER(vm_area_struct, vm_ops);
+> > +INIT_KERN_STRUCT_MEMBER(vm_area_struct, vm_private_data);
+> > +INIT_MOD_STRUCT_MEMBER(amdgpu, ttm_buffer_object, ttm);
+> > +INIT_MOD_STRUCT_MEMBER(amdgpu, ttm_tt, pages);
+> > +INIT_MOD_STRUCT_MEMBER(amdgpu, ttm_tt, num_pages);
+> > +INIT_KERN_STRUCT(page);
 > > +
-> > +struct extension_handle_cb {
-> > +     void *handle;
-> > +     callback_fn cb;
+> > +INIT_KERN_SYM(init_task);
+> > +INIT_KERN_SYM(vmemmap_base);
+> > +INIT_MOD_SYM(amdgpu, amdgpu_gem_vm_ops);
+> > +
+> > +struct ft_page_info {
+> > +     unsigned long pfn;
+> > +     unsigned long num;
+> > +     struct ft_page_info *next;
 > > +};
 > > +
-> > +/* Extension .so extension_handle_cb array */
-> > +static struct extension_handle_cb **handle_cbs =3D NULL;
-> > +static int handle_cbs_len =3D 0;
-> > +static int handle_cbs_cap =3D 0;
+> > +static struct ft_page_info *ft_head_discard =3D NULL;
 > > +
-> > +/* Extension option array */
-> > +static char **extension_opts =3D NULL;
-> > +static int extension_opts_len =3D 0;
-> > +static int extension_opts_cap =3D 0;
-> > +
-> > +static const char *dirs[] =3D {
-> > +     "/usr/lib64/makedumpfile/extensions/",
-> > +     "./extensions/",
-> > +};
->
-> I think we should add "./" to the first and arrange them in this order:
->
->    "./",
->    "./extensions/",
->    "/usr/lib64/makedumpfile/extensions/"
->
-> Without this, we cannot use a relative path like this, it's not natural.
->
->    $ ls
->    amdgpu_filter.so  makedumpfile  vmcore
->    $ ./makedumpfile -ld31 --extension amdgpu_filter.so vmcore dump
->    load_extensions: Not found amdgpu_filter.so
->    Copying data                                      : [ 26.5 %]
-
-Sure, fixed in v5.
->
->
-> > +
-> > +void add_extension_opts(char *opt)
+> > +static void update_filter_pages_info(unsigned long pfn, unsigned long =
+num)
 > > +{
-> > +     if (!add_to_arr((void ***)&extension_opts, &extension_opts_len,
-> > +                     &extension_opts_cap, opt))
-> > +             /*
-> > +              * If fail, print error info and skip the extension.
-> > +             */
-> > +              fprintf(stderr, "%s: Fail to add extension %s\n", __func=
-__, opt);
-> > +}
+> > +     struct ft_page_info *p, **ft_head;
+> > +     struct ft_page_info *new_p =3D malloc(sizeof(struct ft_page_info)=
+);
 > > +
-> > +static bool init_kallsyms_btf(void)
-> > +{
-> > +     int count;
-> > +     bool ret =3D false;
-> > +     /* We will load module's btf/kallsyms on demand */
-> > +     bool init_ksyms_module =3D false;
-> > +     bool init_ktypes_module =3D false;
+> > +     ft_head =3D &ft_head_discard;
 > > +
-> > +     if (check_ksyms_require_modname("vmlinux", &count)) {
-> > +             if (!init_kernel_kallsyms())
-> > +                     goto out;
-> > +             if (count >=3D 2)
-> > +                     init_ksyms_module =3D true;
->
-> I may have misread, if an extension depends only a module's symbols, no
-> init functions are run?  or it can't be such a situation?
-
-The sequence of kallsyms/btf resolving is:
-
-step 1) Starting from vmcoreinfo, we know basic kallsyms info such as
-kallsyms_names/num_syms/token_table/.. etc. Then based on those info,
-we construct the whole kernel's kallsyms info, but only kernel's, not
-kernel modules'.
-
-step 2) From step1, we have resolved __start_BTF/__stop_BTF symbol
-value, which are critical for btf info parsing. So in step 2, we can
-construct the while kernel's btf info, but only kernel's, not kernel
-modules'.
-
-step 3) By kernel's kallsyms and btf info, we can understand kernel
-symbol address and data structures, so we can resolve module struct
-and iterate all kernel modules linked list. By which we can resolve
-each kernel modules' kallsyms & btf info.
-
-As you can see, the kallsyms/btf info resolving of kernel module is
-relying on the kallsyms/btf info resolving of kernel itself. So if an
-extension only relies on kernel modules symbol, the kernel, or
-vmlinux's kallsyms/btf info are still resolved first. So
-init_kernel_kallsyms() will always be called if kernel modules'
-kallsyms are needed.
-
->
->
+> > +     if (!new_p) {
+> > +             fprintf(stderr, "%s: Can't allocate memory for ft_page_in=
+fo\n",
+> > +                     __func__);
+> > +             return;
 > > +     }
-> > +     if (check_ktypes_require_modname("vmlinux", &count)) {
-> > +             if (!init_kernel_btf())
-> > +                     goto out;
-> > +             if (count >=3D 2)
-> > +                     init_ktypes_module =3D true;
+> > +     new_p->pfn =3D pfn;
+> > +     new_p->num =3D num;
+> > +     new_p->next =3D NULL;
+> > +
+> > +     if (!(*ft_head) || (*ft_head)->pfn > new_p->pfn) {
+> > +             new_p->next =3D (*ft_head);
+> > +             (*ft_head) =3D new_p;
+> > +             return;
 > > +     }
-> > +     if (init_ksyms_module && !init_module_kallsyms())
-> > +             goto out;
-> > +     if (init_ktypes_module && !init_module_btf())
-> > +             goto out;
-> > +     ret =3D true;
-> > +out:
-> > +     return ret;
+> > +
+> > +     p =3D (*ft_head);
+> > +     while (p->next !=3D NULL && p->next->pfn < new_p->pfn) {
+> > +             p =3D p->next;
+> > +     }
+> > +
+> > +     new_p->next =3D p->next;
+> > +     p->next =3D new_p;
 > > +}
 > > +
-> > +static void cleanup_kallsyms_btf(void)
+> > +static int filter_page(unsigned long pfn, struct ft_page_info **p)
 > > +{
-> > +     cleanup_kallsyms();
-> > +     cleanup_btf();
+> > +     struct ft_page_info *ft_head =3D ft_head_discard;
+> > +
+> > +     if (ft_head =3D=3D NULL)
+> > +             return PG_UNDECID;
+> > +
+> > +     if (*p =3D=3D NULL)
+> > +             *p =3D ft_head;
+> > +
+> > +     /* The gap before 1st block */
+> > +     if (pfn >=3D 0 && pfn < ft_head->pfn)
+> > +             return PG_UNDECID;
+> > +
+> > +     /* Handle 1~(n-1) blocks and following gaps */
+> > +     while ((*p)->next) {
+> > +             if (pfn >=3D (*p)->pfn && pfn < (*p)->pfn + (*p)->num)
+> > +                     return PG_EXCLUDE; // hit the block
+> > +             if (pfn >=3D (*p)->pfn + (*p)->num && pfn < (*p)->next->p=
+fn)
+> > +                     return PG_UNDECID; // the gap after the block
+> > +             *p =3D (*p)->next;
+> > +     }
+> > +
+> > +     /* The last block and gap */
+> > +     if (pfn >=3D (*p)->pfn + (*p)->num)
+> > +             return PG_UNDECID;
+> > +     else
+> > +             return PG_EXCLUDE;
 > > +}
 > > +
-> > +static void load_extensions(void)
+> > +static void do_cleanup(struct ft_page_info **ft_head)
 > > +{
-> > +     char path[512];
-> > +     int len, i, j;
-> > +     void *handle;
-> > +     struct extension_handle_cb *ehc;
+> > +     struct ft_page_info *p, *p_tmp;
 > > +
-> > +     for (i =3D 0; i < extension_opts_len; i++) {
-> > +             handle =3D NULL;
-> > +             if (!extension_opts[i])
-> > +                     continue;
-> > +             if ((len =3D strlen(extension_opts[i])) <=3D 3 ||
-> > +                 (strcmp(extension_opts[i] + len - 3, ".so") !=3D 0)) =
-{
-> > +                     fprintf(stderr, "%s: Skip invalid extension: %s\n=
-",
-> > +                             __func__, extension_opts[i]);
-> > +                     continue;
-> > +             }
+> > +     for (p =3D *ft_head; p;) {
+> > +             p_tmp =3D p;
+> > +             p =3D p->next;
+> > +             free(p_tmp);
+> > +     }
+> > +     *ft_head =3D NULL;
+> > +}
 > > +
-> > +             if (extension_opts[i][0] =3D=3D '/') {
-> > +                     /* Path & filename */
-> > +                     snprintf(path, sizeof(path), "%s", extension_opts=
-[i]);
-> > +                     handle =3D dlopen(path, RTLD_NOW);
-> > +                     if (!handle) {
-> > +                             fprintf(stderr, "%s: Failed to load %s\n"=
-,
-> > +                                     __func__, dlerror());
-> > +                             continue;
-> > +                     }
-> > +             } else {
-> > +                     /* Only filename */
-> > +                     for (j =3D 0; j < sizeof(dirs) / sizeof(char *); =
-j++) {
-> > +                             snprintf(path, sizeof(path), "%s", dirs[j=
-]);
-> > +                             len =3D strlen(path);
-> > +                             snprintf(path + len, sizeof(path) - len, =
-"%s",
-> > +                                     extension_opts[i]);
-> > +                             if (access(path, F_OK) =3D=3D 0) {
-> > +                                     handle =3D dlopen(path, RTLD_NOW)=
-;
-> > +                                     if (handle)
-> > +                                             break;
-> > +                                     else
-> > +                                             fprintf(stderr, "%s: Fail=
-ed to load %s\n",
-> > +                                                     __func__, dlerror=
-());
-> > +                             }
-> > +                     }
-> > +                     if (!handle && j >=3D sizeof(dirs) / sizeof(char =
-*)) {
-> > +                             fprintf(stderr, "%s: Not found %s\n",
-> > +                                     __func__, extension_opts[i]);
-> > +                             continue;
-> > +                     }
-> > +             }
+> > +#define KERN_MEMBER_OFF(S, M) \
+> > +     GET_KERN_STRUCT_MEMBER_MOFF(S, M) / 8
+> > +#define MOD_MEMBER_OFF(MOD, S, M) \
+> > +     GET_MOD_STRUCT_MEMBER_MOFF(MOD, S, M) / 8
 > > +
-> > +             if (dlsym(handle, "extension_init") =3D=3D NULL) {
-> > +                     fprintf(stderr, "%s: Skip extension %s: No extens=
-ion_init()\n",
-> > +                             __func__, path);
-> > +                     dlclose(handle);
+> > +static void gather_amdgpu_mm_range_info(void)
+> > +{
+> > +     uint64_t init_task, list, list_offset, amdgpu_gem_vm_ops;
+> > +     uint64_t mm, vm_ops, tbo, ttm, num_pages, pages, pfn, vmemmap_bas=
+e;
+> > +     int array_len;
+> > +     unsigned long *array_out;
+> > +     init_task =3D GET_KERN_SYM(init_task);
+> > +     amdgpu_gem_vm_ops =3D GET_MOD_SYM(amdgpu, amdgpu_gem_vm_ops);
+> > +
+> > +     list =3D init_task + KERN_MEMBER_OFF(task_struct, tasks);
+> > +
+> > +     do {
+> > +             readmem(VADDR, list - KERN_MEMBER_OFF(task_struct, tasks)=
+ +
+> > +                             KERN_MEMBER_OFF(task_struct, mm),
+> > +                     &mm, sizeof(uint64_t));
+> > +             if (!mm) {
+> > +                     list =3D next_list(list);
 > > +                     continue;
 > > +             }
 > > +
-> > +             if ((ehc =3D malloc(sizeof(struct extension_handle_cb))) =
-=3D=3D NULL) {
-> > +                     fprintf(stderr, "%s: Skip extension %s: No memory=
-\n",
-> > +                             __func__, path);
-> > +                     dlclose(handle);
-> > +                     continue;
+> > +             array_out =3D mt_dump(mm + KERN_MEMBER_OFF(mm_struct, mm_=
+mt), &array_len);
+> > +             if (!array_out)
+> > +                     return;
+> > +
+> > +             for (int i =3D 0; i < array_len; i++) {
+> > +                     num_pages =3D 0;
+> > +                     readmem(VADDR, array_out[i] + KERN_MEMBER_OFF(vm_=
+area_struct, vm_ops),
+> > +                             &vm_ops, GET_KERN_STRUCT_MEMBER_MSIZE(vm_=
+area_struct, vm_ops));
+> > +                     if (vm_ops =3D=3D amdgpu_gem_vm_ops) {
+> > +                             readmem(VADDR, array_out[i] +
+> > +                                     KERN_MEMBER_OFF(vm_area_struct, v=
+m_private_data),
+> > +                                     &tbo, GET_KERN_STRUCT_MEMBER_MSIZ=
+E(vm_area_struct, vm_private_data));
+> > +                             readmem(VADDR, tbo + MOD_MEMBER_OFF(amdgp=
+u, ttm_buffer_object, ttm),
+> > +                                     &ttm, GET_MOD_STRUCT_MEMBER_MSIZE=
+(amdgpu, ttm_buffer_object, ttm));
+> > +                             if (ttm) {
+> > +                                     readmem(VADDR, ttm + MOD_MEMBER_O=
+FF(amdgpu, ttm_tt, num_pages),
+> > +                                             &num_pages, GET_MOD_STRUC=
+T_MEMBER_MSIZE(amdgpu, ttm_tt, num_pages));
+> > +                                     readmem(VADDR, ttm + MOD_MEMBER_O=
+FF(amdgpu, ttm_tt, pages),
+> > +                                             &pages, GET_MOD_STRUCT_ME=
+MBER_MSIZE(amdgpu, ttm_tt, pages));
 >
-> Some lines have spaces at the end of line, please remove them.
+> Are these pages guaranteed to be contiguous?
+> If not, you're applying the page filter rule based on just the first
+> element of the pages array.
+> If they are guaranteed contiguous, maybe a comment would be helpful?
 
-Fixed the formatting issue in v5.
+Hmm, frankly I'm not sure if all the pages are contiguous. All I saw was:
+
+struct ttm_tt {
+/** @pages: Array of pages backing the data. */
+struct page **pages;
+/** @num_pages: Number of pages in the page array. */
+uint32_t num_pages;
+...
+};
+
+So if I know ttm_tt, I can resolve pages & num_pages, and I can
+convert pages into pfn. Since the makedumpfile callback will give pfn
+one by one, I can know if one specific pfn is located within
+pages(pfn) ~ pages(pfn + num_pages). Honestly I didn't take page
+contiguous into consideration. I'm not an expert to kernel mm, is page
+contiguity an essential issue here?
+
+Thanks,
+Tao Liu
 
 >
 > Thanks,
-> Kazu
+> Stephen
 >
-> > +             }
-> > +
-> > +             ehc->handle =3D handle;
-> > +             ehc->cb =3D dlsym(handle, "extension_callback");
-> > +
-> > +             if (!add_to_arr((void ***)&handle_cbs, &handle_cbs_len, &=
-handle_cbs_cap, ehc)) {
-> > +                     fprintf(stderr, "%s: Failed to load %s\n", __func=
-__,
-> > +                             extension_opts[i]);
-> > +                     free(ehc);
-> > +                     dlclose(handle);
-> > +                     continue;
-> > +             }
-> > +             printf("Loaded extension: %s\n", path);
-> > +     }
-> > +}
-> > +
-> > +static bool register_extension_sections(void)
-> > +{
-> > +     char *start, *stop;
-> > +     int i;
-> > +     bool ret =3D false;
-> > +
-> > +     for (i =3D 0; i < handle_cbs_len; i++) {
-> > +             start =3D dlsym(handle_cbs[i]->handle, "__start_init_ksym=
-s");
-> > +             stop =3D dlsym(handle_cbs[i]->handle, "__stop_init_ksyms"=
-);
-> > +             if (!register_ksym_section(start, stop))
-> > +                     goto out;
-> > +
-> > +             start =3D dlsym(handle_cbs[i]->handle, "__start_init_ktyp=
-es");
-> > +             stop =3D dlsym(handle_cbs[i]->handle, "__stop_init_ktypes=
-");
-> > +             if (!register_ktype_section(start, stop))
-> > +                     goto out;
-> > +     }
-> > +     ret =3D true;
-> > +out:
-> > +     return ret;
-> > +}
-> > +
-> > +void cleanup_extensions(void)
-> > +{
-> > +     for (int i =3D 0; i < handle_cbs_len; i++) {
-> > +             dlclose(handle_cbs[i]->handle);
-> > +             free(handle_cbs[i]);
-> > +     }
-> > +     if (handle_cbs) {
-> > +             free(handle_cbs);
-> > +             handle_cbs =3D NULL;
-> > +     }
-> > +     handle_cbs_len =3D 0;
-> > +     handle_cbs_cap =3D 0;
-> > +     if (extension_opts) {
-> > +             free(extension_opts);
-> > +             extension_opts =3D NULL;
-> > +     }
-> > +     extension_opts_len =3D 0;
-> > +     extension_opts_cap =3D 0;
-> > +
-> > +     cleanup_kallsyms_btf();
-> > +}
-> > +
-> > +static bool check_required_ksyms_all_resolved(void *handle)
-> > +{
-> > +     char *start, *stop;
-> > +     struct ksym_info **p;
-> > +     bool ret =3D true;
-> > +
-> > +     start =3D dlsym(handle, "__start_init_ksyms");
-> > +     stop =3D dlsym(handle, "__stop_init_ksyms");
-> > +
-> > +     for (p =3D (struct ksym_info **)start;
-> > +          p < (struct ksym_info **)stop;
-> > +          p++) {
-> > +             if ((*p)->sym_required && !SYM_EXIST(*p)) {
-> > +                     ret =3D false;
-> > +                     fprintf(stderr, "Symbol %s in %s not found\n",
-> > +                             (*p)->symname, (*p)->modname);
-> > +             }
-> > +     }
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static bool check_required_ktypes_all_resolved(void *handle)
-> > +{
-> > +     char *start, *stop;
-> > +     struct ktype_info **p;
-> > +     bool ret =3D true;
-> > +
-> > +     start =3D dlsym(handle, "__start_init_ktypes");
-> > +     stop =3D dlsym(handle, "__stop_init_ktypes");
-> > +
-> > +     for (p =3D (struct ktype_info **)start;
-> > +          p < (struct ktype_info **)stop;
-> > +          p++) {
-> > +             if (!TYPE_EXIST(*p)) {
-> > +                     if ((*p)->member_required) {
-> > +                             ret =3D false;
-> > +                             fprintf(stderr, "Member %s of struct %s i=
-n %s not found\n",
-> > +                                     (*p)->member_name, (*p)->struct_n=
-ame, (*p)->modname);
-> > +                     } else if ((*p)->struct_required) {
-> > +                             ret =3D false;
-> > +                             fprintf(stderr, "Struct %s in %s not foun=
-d\n",
-> > +                                     (*p)->struct_name, (*p)->modname)=
-;
+> > +                                     readmem(VADDR, pages, &pages, siz=
+eof(unsigned long));
+> > +                                     readmem(VADDR, GET_KERN_SYM(vmemm=
+ap_base),
+> > +                                             &vmemmap_base, sizeof(uns=
+igned long));
+> > +                                     pfn =3D (pages - vmemmap_base) / =
+GET_KERN_STRUCT_SSIZE(page);
+> > +                                     update_filter_pages_info(pfn, num=
+_pages);
+> > +                             }
 > > +                     }
 > > +             }
-> > +     }
 > > +
-> > +     return ret;
-> > +}
+> > +             free(array_out);
+> > +             list =3D next_list(list);
+> > +     } while (list !=3D init_task + KERN_MEMBER_OFF(task_struct, tasks=
+));
 > > +
-> > +static bool extension_runnable(void *handle)
-> > +{
-> > +     return check_required_ksyms_all_resolved(handle) &&
-> > +             check_required_ktypes_all_resolved(handle);
-> > +}
-> > +
-> > +void init_extensions(void)
-> > +{
-> > +     /* Entry of extension init */
-> > +     void (*init)(void);
-> > +
-> > +     load_extensions();
-> > +     if (!register_extension_sections())
-> > +             goto fail;
-> > +     if (!init_kallsyms_btf())
-> > +             goto fail;
-> > +     for (int i =3D 0; i < handle_cbs_len; i++) {
-> > +             if (extension_runnable(handle_cbs[i]->handle)) {
-> > +                     init =3D dlsym(handle_cbs[i]->handle, "extension_=
-init");
-> > +                     init();
-> > +             } else {
-> > +                     fprintf(stderr, "%s: Skip %dth extension\n",
-> > +                             __func__, i + 1);
-> > +             }
-> > +     }
 > > +     return;
-> > +fail:
-> > +     fprintf(stderr, "%s: fail & skip all extensions\n", __func__);
-> > +     cleanup_extensions();
 > > +}
 > > +
-> > +int run_extension_callback(unsigned long pfn, const void *pcache)
+> > +/* Extension callback when makedumpfile do page filtering */
+> > +int extension_callback(unsigned long pfn, const void *pcache)
 > > +{
-> > +     int result;
-> > +     int ret =3D PG_UNDECID;
+> > +     struct ft_page_info *cur =3D NULL;
 > > +
-> > +     for (int i =3D 0; i < handle_cbs_len; i++) {
-> > +             if (handle_cbs[i]->cb) {
-> > +                     result =3D handle_cbs[i]->cb(pfn, pcache);
-> > +                     if (result =3D=3D PG_INCLUDE) {
-> > +                             ret =3D result;
-> > +                             goto out;
-> > +                     } else if (result =3D=3D PG_EXCLUDE) {
-> > +                             ret =3D result;
-> > +                     }
-> > +             }
-> > +     }
-> > +out:
-> > +     return ret;
+> > +     return filter_page(pfn, &cur);
 > > +}
-> > \ No newline at end of file
-> > diff --git a/extension.h b/extension.h
+> > +
+> > +/* Entry of extension */
+> > +void extension_init(void)
+> > +{
+> > +     if (!maple_init()) {
+> > +             goto out;
+> > +     }
+> > +     gather_amdgpu_mm_range_info();
+> > +out:
+> > +     return;
+> > +}
+> > +
+> > +__attribute__((destructor))
+> > +void extension_cleanup(void)
+> > +{
+> > +     do_cleanup(&ft_head_discard);
+> > +}
+> > diff --git a/extensions/maple_tree.c b/extensions/maple_tree.c
 > > new file mode 100644
-> > index 0000000..dc5902e
+> > index 0000000..e367940
 > > --- /dev/null
-> > +++ b/extension.h
-> > @@ -0,0 +1,12 @@
-> > +#ifndef _EXTENSION_H
-> > +#define _EXTENSION_H
+> > +++ b/extensions/maple_tree.c
+> > @@ -0,0 +1,307 @@
+> > +#include <stdio.h>
+> > +#include <stdbool.h>
+> > +#include "../btf_info.h"
+> > +#include "../kallsyms.h"
+> > +#include "../makedumpfile.h"
+> > +
+> > +static unsigned char mt_slots[4] =3D {0};
+> > +static unsigned char mt_pivots[4] =3D {0};
+> > +static unsigned long mt_max[4] =3D {0};
+> > +
+> > +INIT_OPT_KERN_SYM(mt_slots);
+> > +INIT_OPT_KERN_SYM(mt_pivots);
+> > +
+> > +INIT_OPT_KERN_STRUCT(maple_tree);
+> > +INIT_OPT_KERN_STRUCT(maple_node);
+> > +INIT_OPT_KERN_STRUCT_MEMBER(maple_tree, ma_root);
+> > +INIT_OPT_KERN_STRUCT_MEMBER(maple_node, ma64);
+> > +INIT_OPT_KERN_STRUCT_MEMBER(maple_node, mr64);
+> > +INIT_OPT_KERN_STRUCT_MEMBER(maple_node, slot);
+> > +INIT_OPT_KERN_STRUCT_MEMBER(maple_arange_64, pivot);
+> > +INIT_OPT_KERN_STRUCT_MEMBER(maple_arange_64, slot);
+> > +INIT_OPT_KERN_STRUCT_MEMBER(maple_range_64, pivot);
+> > +INIT_OPT_KERN_STRUCT_MEMBER(maple_range_64, slot);
+> > +
+> > +#define MEMBER_OFF(S, M) \
+> > +     GET_KERN_STRUCT_MEMBER_MOFF(S, M) / 8
+> > +
+> > +#define MAPLE_BUFSIZE                        512
 > > +
 > > +enum {
-> > +     PG_INCLUDE,     // Exntesion will keep the page
-> > +     PG_EXCLUDE,     // Exntesion will discard the page
-> > +     PG_UNDECID,     // Exntesion makes no decision
+> > +     maple_dense_enum,
+> > +     maple_leaf_64_enum,
+> > +     maple_range_64_enum,
+> > +     maple_arange_64_enum,
 > > +};
-> > +int run_extension_callback(unsigned long pfn, const void *pcache);
-> > +void init_extensions(void);
-> > +void cleanup_extensions(void);
-> > +#endif /* _EXTENSION_H */
-> > \ No newline at end of file
-> > diff --git a/extensions/Makefile b/extensions/Makefile
-> > new file mode 100644
-> > index 0000000..b8bbfbc
-> > --- /dev/null
-> > +++ b/extensions/Makefile
-> > @@ -0,0 +1,10 @@
-> > +CC ?=3D gcc
-> > +CONTRIB_SO :=3D
 > > +
-> > +all: $(CONTRIB_SO)
+> > +#define MAPLE_NODE_MASK                      255UL
+> > +#define MAPLE_NODE_TYPE_MASK         0x0F
+> > +#define MAPLE_NODE_TYPE_SHIFT                0x03
+> > +#define XA_ZERO_ENTRY                        xa_mk_internal(257)
 > > +
-> > +$(CONTRIB_SO): %.so: %.c
-> > +     $(CC) -O2 -g -fPIC -shared -Wl,-T,../makedumpfile.ld -o $@ $^
+> > +static unsigned long xa_mk_internal(unsigned long v)
+> > +{
+> > +     return (v << 2) | 2;
+> > +}
 > > +
-> > +clean:
-> > +     rm -f $(CONTRIB_SO)
-> > \ No newline at end of file
-> > diff --git a/makedumpfile.c b/makedumpfile.c
-> > index dba3628..ef7468f 100644
-> > --- a/makedumpfile.c
-> > +++ b/makedumpfile.c
-> > @@ -28,6 +28,7 @@
-> >   #include <assert.h>
-> >   #include <zlib.h>
-> >   #include "kallsyms.h"
-> > +#include "extension.h"
-> >
-> >   struct symbol_table symbol_table;
-> >   struct size_table   size_table;
-> > @@ -102,6 +103,7 @@ mdf_pfn_t pfn_free;
-> >   mdf_pfn_t pfn_hwpoison;
-> >   mdf_pfn_t pfn_offline;
-> >   mdf_pfn_t pfn_elf_excluded;
-> > +mdf_pfn_t pfn_extension;
-> >
-> >   mdf_pfn_t num_dumped;
-> >
-> > @@ -6459,6 +6461,7 @@ __exclude_unnecessary_pages(unsigned long mem_map=
-,
-> >       unsigned int order_offset, dtor_offset;
-> >       unsigned long flags, mapping, private =3D 0;
-> >       unsigned long compound_dtor, compound_head =3D 0;
-> > +     int filter_pg;
-> >
-> >       /*
-> >        * If a multi-page exclusion is pending, do it first
-> > @@ -6531,6 +6534,14 @@ __exclude_unnecessary_pages(unsigned long mem_ma=
-p,
-> >                       pfn_read_end   =3D pfn + pfn_mm - 1;
-> >               }
-> >
-> > +             /*
-> > +              * Include pages that specified by user via
-> > +              * makedumpfile extensions
-> > +              */
-> > +             filter_pg =3D run_extension_callback(pfn, pcache);
-> > +             if (filter_pg =3D=3D PG_INCLUDE)
-> > +                     continue;
+> > +static bool xa_is_internal(unsigned long entry)
+> > +{
+> > +     return (entry & 3) =3D=3D 2;
+> > +}
 > > +
-> >               flags   =3D ULONG(pcache + OFFSET(page.flags));
-> >               _count  =3D UINT(pcache + OFFSET(page._refcount));
-> >               mapping =3D ULONG(pcache + OFFSET(page.mapping));
-> > @@ -6687,6 +6698,14 @@ check_order:
-> >               else if (isOffline(flags, _mapcount)) {
-> >                       pfn_counter =3D &pfn_offline;
-> >               }
-> > +             /*
-> > +              * Exclude pages that specified by user via
-> > +              * makedumpfile extensions
-> > +              */
-> > +             else if (filter_pg =3D=3D PG_EXCLUDE) {
-> > +                     nr_pages =3D 1;
-> > +                     pfn_counter =3D &pfn_extension;
-> > +             }
-> >               /*
-> >                * Unexcludable page
-> >                */
-> > @@ -8234,7 +8253,7 @@ write_elf_pages_cyclic(struct cache_data *cd_head=
-er, struct cache_data *cd_page)
-> >        */
-> >       if (info->flag_cyclic) {
-> >               pfn_zero =3D pfn_cache =3D pfn_cache_private =3D 0;
-> > -             pfn_user =3D pfn_free =3D pfn_hwpoison =3D pfn_offline =
-=3D 0;
-> > +             pfn_user =3D pfn_free =3D pfn_hwpoison =3D pfn_offline =
-=3D pfn_extension =3D 0;
-> >               pfn_memhole =3D info->max_mapnr;
-> >       }
-> >
-> > @@ -9579,7 +9598,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_=
-data *cd_header, struct cache_d
-> >                * Reset counter for debug message.
-> >                */
-> >               pfn_zero =3D pfn_cache =3D pfn_cache_private =3D 0;
-> > -             pfn_user =3D pfn_free =3D pfn_hwpoison =3D pfn_offline =
-=3D 0;
-> > +             pfn_user =3D pfn_free =3D pfn_hwpoison =3D pfn_offline =
-=3D pfn_extension =3D 0;
-> >               pfn_memhole =3D info->max_mapnr;
-> >
-> >               /*
-> > @@ -10528,7 +10547,7 @@ print_report(void)
-> >       pfn_original =3D info->max_mapnr - pfn_memhole;
-> >
-> >       pfn_excluded =3D pfn_zero + pfn_cache + pfn_cache_private
-> > -         + pfn_user + pfn_free + pfn_hwpoison + pfn_offline;
-> > +         + pfn_user + pfn_free + pfn_hwpoison + pfn_offline + pfn_exte=
-nsion;
-> >
-> >       REPORT_MSG("\n");
-> >       REPORT_MSG("Original pages  : 0x%016llx\n", pfn_original);
-> > @@ -10544,6 +10563,7 @@ print_report(void)
-> >       REPORT_MSG("    Free pages              : 0x%016llx\n", pfn_free)=
-;
-> >       REPORT_MSG("    Hwpoison pages          : 0x%016llx\n", pfn_hwpoi=
-son);
-> >       REPORT_MSG("    Offline pages           : 0x%016llx\n", pfn_offli=
-ne);
-> > +     REPORT_MSG("    Extension filter pages  : 0x%016llx\n", pfn_exten=
-sion);
-> >       REPORT_MSG("  Remaining pages  : 0x%016llx\n",
-> >           pfn_original - pfn_excluded);
-> >
-> > @@ -10584,7 +10604,7 @@ print_mem_usage(void)
-> >       pfn_original =3D info->max_mapnr - pfn_memhole;
-> >
-> >       pfn_excluded =3D pfn_zero + pfn_cache + pfn_cache_private
-> > -         + pfn_user + pfn_free + pfn_hwpoison + pfn_offline;
-> > +         + pfn_user + pfn_free + pfn_hwpoison + pfn_offline + pfn_exte=
-nsion;
-> >       shrinking =3D (pfn_original - pfn_excluded) * 100;
-> >       shrinking =3D shrinking / pfn_original;
-> >       total_size =3D info->page_size * pfn_original;
-> > @@ -10878,6 +10898,7 @@ create_dumpfile(void)
-> >       }
-> >
-> >       print_vtop();
-> > +     init_extensions();
-> >
-> >       num_retry =3D 0;
-> >   retry:
-> > @@ -10888,8 +10909,11 @@ retry:
-> >                       && !gather_filter_info())
-> >               return FALSE;
-> >
-> > -     if (!create_dump_bitmap())
-> > +     if (!create_dump_bitmap()) {
-> > +             cleanup_extensions();
-> >               return FALSE;
-> > +     }
-> > +     cleanup_extensions();
-> >
-> >       if (info->flag_split) {
-> >               if ((status =3D writeout_multiple_dumpfiles()) =3D=3D FAL=
-SE)
-> > @@ -12130,6 +12154,7 @@ static struct option longopts[] =3D {
-> >       {"check-params", no_argument, NULL, OPT_CHECK_PARAMS},
-> >       {"dry-run", no_argument, NULL, OPT_DRY_RUN},
-> >       {"show-stats", no_argument, NULL, OPT_SHOW_STATS},
-> > +     {"extension", required_argument, NULL, OPT_EXTENSION},
-> >       {0, 0, 0, 0}
-> >   };
-> >
-> > @@ -12317,6 +12342,9 @@ main(int argc, char *argv[])
-> >               case OPT_SHOW_STATS:
-> >                       flag_show_stats =3D TRUE;
-> >                       break;
-> > +             case OPT_EXTENSION:
-> > +                     add_extension_opts(optarg);
+> > +static bool xa_is_node(unsigned long entry)
+> > +{
+> > +     return xa_is_internal(entry) && entry > 4096;
+> > +}
+> > +
+> > +static bool xa_is_value(unsigned long entry)
+> > +{
+> > +     return entry & 1;
+> > +}
+> > +
+> > +static bool xa_is_zero(unsigned long entry)
+> > +{
+> > +     return entry =3D=3D XA_ZERO_ENTRY;
+> > +}
+> > +
+> > +static unsigned long xa_to_internal(unsigned long entry)
+> > +{
+> > +     return entry >> 2;
+> > +}
+> > +
+> > +static unsigned long xa_to_value(unsigned long entry)
+> > +{
+> > +     return entry >> 1;
+> > +}
+> > +
+> > +static unsigned long mte_to_node(unsigned long entry)
+> > +{
+> > +        return entry & ~MAPLE_NODE_MASK;
+> > +}
+> > +
+> > +static unsigned long mte_node_type(unsigned long maple_enode_entry)
+> > +{
+> > +     return (maple_enode_entry >> MAPLE_NODE_TYPE_SHIFT) &
+> > +             MAPLE_NODE_TYPE_MASK;
+> > +}
+> > +
+> > +static unsigned long mt_slot(void **slots, unsigned char offset)
+> > +{
+> > +       return (unsigned long)slots[offset];
+> > +}
+> > +
+> > +static bool ma_is_leaf(unsigned long type)
+> > +{
+> > +     return type < maple_range_64_enum;
+> > +}
+> > +
+> > +static bool mte_is_leaf(unsigned long maple_enode_entry)
+> > +{
+> > +       return ma_is_leaf(mte_node_type(maple_enode_entry));
+> > +}
+> > +
+> > +static void mt_dump_entry(unsigned long entry, unsigned long min,
+> > +                     unsigned long max, unsigned int depth,
+> > +                     unsigned long **array_out, int *array_len,
+> > +                     int *array_cap)
+> > +{
+> > +     if (entry =3D=3D 0)
+> > +             return;
+> > +
+> > +     add_to_arr((void ***)array_out, array_len, array_cap, (void *)ent=
+ry);
+> > +}
+> > +
+> > +static void mt_dump_node(unsigned long entry, unsigned long min,
+> > +                     unsigned long max, unsigned int depth,
+> > +                     unsigned long **array_out, int *array_len,
+> > +                     int *array_cap);
+> > +
+> > +static void mt_dump_range64(unsigned long entry, unsigned long min,
+> > +                     unsigned long max, unsigned int depth,
+> > +                     unsigned long **array_out, int *array_len,
+> > +                     int *array_cap)
+> > +{
+> > +     unsigned long maple_node_m_node =3D mte_to_node(entry);
+> > +     char node_buf[MAPLE_BUFSIZE];
+> > +     bool leaf =3D mte_is_leaf(entry);
+> > +     unsigned long first =3D min, last;
+> > +     int i;
+> > +     char *mr64_buf;
+> > +
+> > +     readmem(VADDR, maple_node_m_node, node_buf, GET_KERN_STRUCT_SSIZE=
+(maple_node));
+> > +     mr64_buf =3D node_buf + MEMBER_OFF(maple_node, mr64);
+> > +
+> > +     for (i =3D 0; i < mt_slots[maple_range_64_enum]; i++) {
+> > +             last =3D max;
+> > +
+> > +             if (i < (mt_slots[maple_range_64_enum] - 1))
+> > +                     last =3D ULONG(mr64_buf + MEMBER_OFF(maple_range_=
+64, pivot) +
+> > +                                  sizeof(ulong) * i);
+> > +
+> > +             else if (!VOID_PTR(mr64_buf + MEMBER_OFF(maple_range_64, =
+slot) +
+> > +                       sizeof(void *) * i) &&
+> > +                      max !=3D mt_max[mte_node_type(entry)])
 > > +                     break;
-> >               case '?':
-> >                       MSG("Commandline parameter is invalid.\n");
-> >                       MSG("Try `makedumpfile --help' for more informati=
-on.\n");
-> > diff --git a/makedumpfile.h b/makedumpfile.h
-> > index 0f13743..d880ae7 100644
-> > --- a/makedumpfile.h
-> > +++ b/makedumpfile.h
-> > @@ -2747,6 +2747,7 @@ struct elf_prstatus {
-> >   #define OPT_CHECK_PARAMS        OPT_START+18
-> >   #define OPT_DRY_RUN             OPT_START+19
-> >   #define OPT_SHOW_STATS          OPT_START+20
-> > +#define OPT_EXTENSION           OPT_START+21
-> >
-> >   /*
-> >    * Function Prototype.
-> > @@ -2777,5 +2778,6 @@ int write_and_check_space(int fd, void *buf, size=
-_t buf_size,
-> >   int open_dump_file(void);
-> >   int dump_lockless_dmesg(void);
-> >   unsigned long long memparse(char *ptr, char **retptr);
-> > +void add_extension_opts(char *opt);
-> >
-> >   #endif /* MAKEDUMPFILE_H */
+> > +             if (last =3D=3D 0 && i > 0)
+> > +                     break;
+> > +             if (leaf)
+> > +                     mt_dump_entry(mt_slot((void **)(mr64_buf +
+> > +                                                   MEMBER_OFF(maple_ra=
+nge_64, slot)), i),
+> > +                             first, last, depth + 1, array_out, array_=
+len, array_cap);
+> > +             else if (VOID_PTR(mr64_buf + MEMBER_OFF(maple_range_64, s=
+lot) +
+> > +                               sizeof(void *) * i)) {
+> > +                     mt_dump_node(mt_slot((void **)(mr64_buf +
+> > +                                                  MEMBER_OFF(maple_ran=
+ge_64, slot)), i),
+> > +                             first, last, depth + 1, array_out, array_=
+len, array_cap);
+> > +             }
+> > +
+> > +             if (last =3D=3D max)
+> > +                     break;
+> > +             if (last > max) {
+> > +                     printf("node %p last (%lu) > max (%lu) at pivot %=
+d!\n",
+> > +                             mr64_buf, last, max, i);
+> > +                     break;
+> > +             }
+> > +             first =3D last + 1;
+> > +     }
+> > +}
+> > +
+> > +static void mt_dump_arange64(unsigned long entry, unsigned long min,
+> > +                     unsigned long max, unsigned int depth,
+> > +                     unsigned long **array_out, int *array_len,
+> > +                     int *array_cap)
+> > +{
+> > +     unsigned long maple_node_m_node =3D mte_to_node(entry);
+> > +     char node_buf[MAPLE_BUFSIZE];
+> > +     unsigned long first =3D min, last;
+> > +     int i;
+> > +     char *ma64_buf;
+> > +
+> > +     readmem(VADDR, maple_node_m_node, node_buf, GET_KERN_STRUCT_SSIZE=
+(maple_node));
+> > +     ma64_buf =3D node_buf + MEMBER_OFF(maple_node, ma64);
+> > +
+> > +     for (i =3D 0; i < mt_slots[maple_arange_64_enum]; i++) {
+> > +             last =3D max;
+> > +
+> > +             if (i < (mt_slots[maple_arange_64_enum] - 1))
+> > +                     last =3D ULONG(ma64_buf + MEMBER_OFF(maple_arange=
+_64, pivot) +
+> > +                                  sizeof(void *) * i);
+> > +             else if (!VOID_PTR(ma64_buf + MEMBER_OFF(maple_arange_64,=
+ slot) +
+> > +                                sizeof(void *) * i))
+> > +                     break;
+> > +             if (last =3D=3D 0 && i > 0)
+> > +                     break;
+> > +
+> > +             if (ULONG(ma64_buf + MEMBER_OFF(maple_arange_64, slot) + =
+sizeof(void *) * i))
+> > +                     mt_dump_node(mt_slot((void **)(ma64_buf +
+> > +                                                   MEMBER_OFF(maple_ar=
+ange_64, slot)), i),
+> > +                             first, last, depth + 1, array_out, array_=
+len, array_cap);
+> > +
+> > +             if (last =3D=3D max)
+> > +                     break;
+> > +             if (last > max) {
+> > +                     printf("node %p last (%lu) > max (%lu) at pivot %=
+d!\n",
+> > +                             ma64_buf, last, max, i);
+> > +                     break;
+> > +             }
+> > +             first =3D last + 1;
+> > +     }
+> > +}
+> > +
+> > +static void mt_dump_node(unsigned long entry, unsigned long min,
+> > +                     unsigned long max, unsigned int depth,
+> > +                     unsigned long **array_out, int *array_len,
+> > +                     int *array_cap)
+> > +{
+> > +     unsigned long maple_node =3D mte_to_node(entry);
+> > +     unsigned long type =3D mte_node_type(entry);
+> > +     int i;
+> > +     char node_buf[MAPLE_BUFSIZE];
+> > +
+> > +     readmem(VADDR, maple_node, node_buf, GET_KERN_STRUCT_SSIZE(maple_=
+node));
+> > +
+> > +     switch (type) {
+> > +     case maple_dense_enum:
+> > +             for (i =3D 0; i < mt_slots[maple_dense_enum]; i++) {
+> > +                     if (min + i > max)
+> > +                             printf("OUT OF RANGE: ");
+> > +                     mt_dump_entry(mt_slot((void **)(node_buf + MEMBER=
+_OFF(maple_node, slot)), i),
+> > +                             min + i, min + i, depth, array_out, array=
+_len, array_cap);
+> > +             }
+> > +             break;
+> > +     case maple_leaf_64_enum:
+> > +     case maple_range_64_enum:
+> > +             mt_dump_range64(entry, min, max, depth, array_out, array_=
+len, array_cap);
+> > +             break;
+> > +     case maple_arange_64_enum:
+> > +             mt_dump_arange64(entry, min, max, depth, array_out, array=
+_len, array_cap);
+> > +             break;
+> > +     default:
+> > +             printf(" UNKNOWN TYPE\n");
+> > +     }
+> > +}
+> > +
+> > +unsigned long *mt_dump(unsigned long mt, int *array_len)
+> > +{
+> > +     char tree_buf[MAPLE_BUFSIZE];
+> > +     unsigned long entry;
+> > +     unsigned long *array_out =3D NULL;
+> > +     int array_cap =3D 0;
+> > +     *array_len =3D 0;
+> > +
+> > +     readmem(VADDR, mt, tree_buf, GET_KERN_STRUCT_SSIZE(maple_tree));
+> > +     entry =3D ULONG(tree_buf + MEMBER_OFF(maple_tree, ma_root));
+> > +
+> > +     if (xa_is_node(entry))
+> > +             mt_dump_node(entry, 0, mt_max[mte_node_type(entry)], 0,
+> > +                             &array_out, array_len, &array_cap);
+> > +     else if (entry)
+> > +             mt_dump_entry(entry, 0, 0, 0, &array_out, array_len, &arr=
+ay_cap);
+> > +     else
+> > +             printf("(empty)\n");
+> > +
+> > +     return array_out;
+> > +}
+> > +
+> > +bool maple_init(void)
+> > +{
+> > +     unsigned long mt_slots_ptr;
+> > +     unsigned long mt_pivots_ptr;
+> > +
+> > +     if (!KERN_SYM_EXIST(mt_slots) ||
+> > +         !KERN_SYM_EXIST(mt_pivots) ||
+> > +         !KERN_STRUCT_EXIST(maple_tree) ||
+> > +         !KERN_STRUCT_EXIST(maple_node) ||
+> > +         !KERN_STRUCT_MEMBER_EXIST(maple_tree, ma_root) ||
+> > +         !KERN_STRUCT_MEMBER_EXIST(maple_node, ma64) ||
+> > +         !KERN_STRUCT_MEMBER_EXIST(maple_node, mr64) ||
+> > +         !KERN_STRUCT_MEMBER_EXIST(maple_node, slot) ||
+> > +         !KERN_STRUCT_MEMBER_EXIST(maple_arange_64, pivot) ||
+> > +         !KERN_STRUCT_MEMBER_EXIST(maple_arange_64, slot) ||
+> > +         !KERN_STRUCT_MEMBER_EXIST(maple_range_64, pivot) ||
+> > +         !KERN_STRUCT_MEMBER_EXIST(maple_range_64, slot)) {
+> > +             printf("%s: Missing required maple tree syms/types\n",
+> > +                     __func__);
+> > +             return false;
+> > +     }
+> > +
+> > +     mt_slots_ptr =3D GET_KERN_SYM(mt_slots);
+> > +     mt_pivots_ptr =3D GET_KERN_SYM(mt_pivots);
+> > +
+> > +     if (GET_KERN_STRUCT_SSIZE(maple_tree) > MAPLE_BUFSIZE ||
+> > +         GET_KERN_STRUCT_SSIZE(maple_node) > MAPLE_BUFSIZE) {
+> > +             printf("%s: MAPLE_BUFSIZE should be larger than maple_nod=
+e/tree struct\n",
+> > +                     __func__);
+> > +             return false;
+> > +     }
+> > +
+> > +     readmem(VADDR, mt_slots_ptr, mt_slots, sizeof(mt_slots));
+> > +     readmem(VADDR, mt_pivots_ptr, mt_pivots, sizeof(mt_pivots));
+> > +
+> > +     mt_max[maple_dense_enum]           =3D mt_slots[maple_dense_enum]=
+;
+> > +     mt_max[maple_leaf_64_enum]         =3D ULONG_MAX;
+> > +     mt_max[maple_range_64_enum]        =3D ULONG_MAX;
+> > +     mt_max[maple_arange_64_enum]       =3D ULONG_MAX;
+> > +
+> > +     return true;
+> > +}
+> > \ No newline at end of file
+> > diff --git a/extensions/maple_tree.h b/extensions/maple_tree.h
+> > new file mode 100644
+> > index 0000000..c96624c
+> > --- /dev/null
+> > +++ b/extensions/maple_tree.h
+> > @@ -0,0 +1,6 @@
+> > +#ifndef _MAPLE_TREE_H
+> > +#define _MAPLE_TREE_H
+> > +#include <stdbool.h>
+> > +unsigned long *mt_dump(unsigned long mt, int *array_len);
+> > +bool maple_init(void);
+> > +#endif /* _MAPLE_TREE_H */
+> > \ No newline at end of file
+> > --
+> > 2.47.0
+>
 
 
