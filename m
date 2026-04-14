@@ -4,93 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 74797F9D0C2
-	for <kexec@archiver.kernel.org>; Tue, 14 Apr 2026 11:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3A7B1F9D0C4
+	for <kexec@archiver.kernel.org>; Tue, 14 Apr 2026 11:51:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=XItc3IU3HIGOmqRsLdEgoJudtKZ/Pv6lMBZMI5XVQx0=; b=5BLfZf2xjyXg9kxeK+F6lf5u9T
-	78er5PwnnfP1/c+yrFm6MqQTNpoX6pPEfKeBLgK7DfWpXqN5j9Tlu9N/UfN5XpruJAUi7AfqKOuXa
-	xQPHtzAKPl4aSUWLBENiiFqnYq9C6fIaB7aF8g0duMrGPzvSZWL7Wp6Ik+7QyNUejbCsTXtF5gNsR
-	faT5QxT2ya21wSCENq4I+oHZbahf3zVj3h2s8ABpnTgfZ/GGr/TswvCIgloFmVNaucIzbEj86KA3l
-	x5r4OpyvrrW0ANUMGwcTK+HcAz2JlTUJB3K80yUaAVXUmMxCep8bWREkEsHxPQazbTucmhsWbvyPR
-	DhXOBciA==;
+	bh=XDdRK/7tCQSuBuCTutJQfamBPR3u24FrMn7huO5/67M=; b=zbQDODD00iqIBxsnSduzSTwM5Q
+	YDUhtfP2zwioPbFGbNxVnABW20/txfdbkTAqpkSJDOGn7I2nrVyyjD9qSVXMtMmMmAAY03QCz7DGS
+	f10JGGVtJS34PJ+40vYkg6bh0iiVL6bw7QWDleusNDX9IWPjT+YJD38oBEk10EA8o+Bi/8Bm5J7ey
+	JIqA+NBO4G+s8XX7m17iHzt+AFLjACCrHqY6kLgEFzUhx8eLPWuEKoK0ipBhA7gyOqm4r2sDdLmhO
+	rGcWYVTIV7hzna+wHW9+J4csZ47CVVXnsR85q9npsWR4qUp8dMppQSNUokMmleDb9HHI1/mfCC7+L
+	7lQstO7A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wCbwX-0000000HEUl-1gCb;
-	Tue, 14 Apr 2026 11:28:33 +0000
+	id 1wCcIc-0000000HGMM-1jbj;
+	Tue, 14 Apr 2026 11:51:22 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wCbwU-0000000HEUO-0sAA
+	id 1wCcIZ-0000000HGLo-23Vj
 	for kexec@lists.infradead.org;
-	Tue, 14 Apr 2026 11:28:31 +0000
+	Tue, 14 Apr 2026 11:51:21 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1776166108;
+	s=mimecast20190719; t=1776167478;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XItc3IU3HIGOmqRsLdEgoJudtKZ/Pv6lMBZMI5XVQx0=;
-	b=ikGm2XtuZ4Eiv7dPd7TDfGIp102ylm2kqb1R2Q2sHnCCDPNv/Na5/V6AAJITFakc0op/ka
-	zjUh3Q0qDpDW3xXY7x3ROqXO5AW4BxlTv0FK3I7AzMBBsEhlrv14UTTbZ5zCnSgRvJsj/j
-	z+HDLE+ymoXRvMkWtwZ8b/ZYTECdIy8=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=XDdRK/7tCQSuBuCTutJQfamBPR3u24FrMn7huO5/67M=;
+	b=hZm0EwBdNLViloxOXYLoSm+zGhH5NY9bXszYZKHYdJKTvLp22kdBwBooC2Y1uyt04E4A9w
+	Tv4wTH3tb2j3iAlZ4qjV2X25hjR/+qyjbugvhFbuxqOa2I34enzJvIw3sesyjgyxxCzGOM
+	f/uak3z//8L2WpeApZcMYUZgFOTBSV8=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-283-ttPmvds3NDu5tFM5wmdMLA-1; Tue, 14 Apr 2026 07:28:27 -0400
-X-MC-Unique: ttPmvds3NDu5tFM5wmdMLA-1
-X-Mimecast-MFC-AGG-ID: ttPmvds3NDu5tFM5wmdMLA_1776166107
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-50d8e4c29caso135121741cf.0
-        for <kexec@lists.infradead.org>; Tue, 14 Apr 2026 04:28:27 -0700 (PDT)
+ us-mta-571-r9AxgsP5NnS7NS0oC20gHg-1; Tue, 14 Apr 2026 07:51:15 -0400
+X-MC-Unique: r9AxgsP5NnS7NS0oC20gHg-1
+X-Mimecast-MFC-AGG-ID: r9AxgsP5NnS7NS0oC20gHg_1776167475
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-50b31cff27fso15597451cf.3
+        for <kexec@lists.infradead.org>; Tue, 14 Apr 2026 04:51:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776166107; x=1776770907;
+        d=1e100.net; s=20251104; t=1776167475; x=1776772275;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=XItc3IU3HIGOmqRsLdEgoJudtKZ/Pv6lMBZMI5XVQx0=;
-        b=kFhn58Iss1hEg0cmE82eKzZJf3dwJ9RK6Z8qxRX6sNDzpnc6IWm+gkcT77/Reu6CSU
-         GGbMLBZ9VBbe6D4Jh3JR3TQPTeU+o5OiuLdsofbUiDvUCuhwtdrWlEZr48oyR5fB2Em+
-         rn72oANQN5v4iuJxisjjClOrGg3HGkinaZZZnohykh2LkR5ehFgUvEGwUtowWInkOHez
-         Hl1ZCfVrzgEk8IVseDet0q9U7mNraxidGxb0pFvgwKbE5go5JvNzqBzXftirdijor3sc
-         J2TVBSlye45v3Lq+aa7VP4/e6swMt4g8kiC6ClgdS7Fol4ziIIcA7Ztx3AWbh+6s8v1t
-         apZg==
-X-Forwarded-Encrypted: i=1; AFNElJ8qLmP0fh6gxzFIk/YVr/rtPqO3iqQ2Vg/c+zI4QoNIvzZCc1yAE08RW66QZXlB01TY1ba4Dw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzwrJOeSRpW3fa3ej9jB9uZTXrNEbOD3ND4JvgYKjBUFGOasv1/
-	577SNRdHgPQ46RDLErlhAzqGe6DXyPa7T/H1lNnfzUFpSBANsgKoC20rw5IChwVluvWkUoNOEwQ
-	06m9VZIr1GRG1gHmYwVoX7lsnDdzUR6ANYti1h1qMjoTinYlT9I+KjeFG0cV8Ga6c33i8qZ/um3
-	CimFuKJYBvpNKc2aPO4iEGi5jLK3XetIbjM64P
-X-Gm-Gg: AeBDietxdiwe18/mZdyGz4chHsnn5EjYB1GZp91/bAm7/80PmKO1VnVb2QlzjpUGvOi
-	K64r2pRLNN5hH1JMMQpFZITFsqyrc6jZ244QtSP6yharqijH/7PwT+B0H4foJCvbQVXsRTH/3Rj
-	Zo2dPrPtt97jq7PbGLK+XMXCOI7pZ/+r+gq1QZVcgvi7Vz3fCpJ7G9FHK3NqpqykxmRWtYfJGFe
-	yABTQZ9Jw55lA==
-X-Received: by 2002:a05:622a:588b:b0:50b:4f75:c925 with SMTP id d75a77b69052e-50dd5b7e1b8mr231688431cf.24.1776166106471;
-        Tue, 14 Apr 2026 04:28:26 -0700 (PDT)
-X-Received: by 2002:a05:622a:588b:b0:50b:4f75:c925 with SMTP id
- d75a77b69052e-50dd5b7e1b8mr231687981cf.24.1776166105813; Tue, 14 Apr 2026
- 04:28:25 -0700 (PDT)
+        bh=XDdRK/7tCQSuBuCTutJQfamBPR3u24FrMn7huO5/67M=;
+        b=YYw0bNrxFNpGvmAZKtIkQFTC1ZuxKsPsETIszT5GG9gbJe2IEfAnzI2lWQsaXdY5Er
+         le2nxrfXqvJWDAgNdEc7lqgzEHv4kBMFYrJ1h/QvqzvHnUwsV5torX43OTqWw3+BUUqK
+         b2oBNoW1xtvBoAGnNBUntZjaQAXaWLTlyY+A/vU5226+xKgYawOHSNF4zfKL+/9ghl9u
+         syAZEFwlf6LTQqBdNu8/LsDucYZc3v4WawF4dQNdi3AMDLdneTR7CYQm/tl850fOzrzG
+         Df0cjaHEx8PurvNj89PrBVwc7b+o2OtJymxIBZhF8Jwe0sxS85lUx6oNHszf32pgiwx4
+         zsjg==
+X-Forwarded-Encrypted: i=1; AFNElJ8kSXuJUVP8IalIh+AtAS8qFsfGq4I+zlnivu68c9DYsh+2HP38mMvmQA4Ud577sC81VtsKDA==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yzvsc9FZshrR0m2NSa0ThOXXkHuHnB02QieET6JcOKpgfwrNQHq
+	De5jzhc0GBx9uQyqr3SK9PyboQZACZ0YQkyOgLSGumbmYBU0/0nCo7enH8hSQGQssloWLdGgBoU
+	uF5G1u92dA6BGOD0vVBOgT7PfjlqsV3J4Q3w5N3TA3fnrNqcEb5KQ/zRQpelrz+RjYz7ol+PxPO
+	AZN/YRhz5qtFpaFj2OkrAyPsSAKBCtXvFCe7kF
+X-Gm-Gg: AeBDievKWUWXdYj8QeYMUmuiheHpO+0mHFozhBklCzgpD2d8vVJGqw/Qbq9kF2nBV+9
+	bpBRed8lBcjc80MVcQ8B95C/KzwTyKLA+6tLBX/P2VGHC+crVQr6CbC0l8MTHGiFYZ24VoilJRb
+	dao0OcEV5yrp9mkgZaCjtmKh/kOvIPIWb7uh+cn7KLuo/pcAUgAHuXWRacF0qbpU6R2MJMcmmMJ
+	kMhg7XodRiodA==
+X-Received: by 2002:a05:622a:3c8:b0:50b:4755:94b9 with SMTP id d75a77b69052e-50dd5c15d59mr264530411cf.56.1776167474470;
+        Tue, 14 Apr 2026 04:51:14 -0700 (PDT)
+X-Received: by 2002:a05:622a:3c8:b0:50b:4755:94b9 with SMTP id
+ d75a77b69052e-50dd5c15d59mr264529731cf.56.1776167473772; Tue, 14 Apr 2026
+ 04:51:13 -0700 (PDT)
 MIME-Version: 1.0
 References: <20260317150743.69590-1-ltao@redhat.com> <20260317150743.69590-7-ltao@redhat.com>
- <87qzowewcg.fsf@oracle.com>
-In-Reply-To: <87qzowewcg.fsf@oracle.com>
+ <bda432f0-57a4-48a2-bc8e-bdd0a132824b@nec.com>
+In-Reply-To: <bda432f0-57a4-48a2-bc8e-bdd0a132824b@nec.com>
 From: Tao Liu <ltao@redhat.com>
-Date: Tue, 14 Apr 2026 23:27:49 +1200
-X-Gm-Features: AQROBzCdhlbeTDWFyTx4nZV4M1QOpxJvyFReEBDFG0obnx6-JiSLx1AVte70mAQ
-Message-ID: <CAO7dBbWHZgBBRR+Tjehz0yHU-NkXd+XRcM0MuJGr1w_Oqxi01g@mail.gmail.com>
+Date: Tue, 14 Apr 2026 23:50:34 +1200
+X-Gm-Features: AQROBzBXF9cN9HaTO8Es0bIfmEy24VNSvUUIP4WUSBrWXcWb7e-bV0JbmAHr5n4
+Message-ID: <CAO7dBbUa_8H0fe+9bTNTQWjMVy9qCPiu0fo3g8XamiDS_Mr8eA@mail.gmail.com>
 Subject: Re: [PATCH v4][makedumpfile 6/7] Add makedumpfile extensions support
-To: Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc: yamazaki-msmt@nec.com, k-hagio-ab@nec.com, kexec@lists.infradead.org, 
-	aravinda@linux.vnet.ibm.com
+To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
+Cc: "stephen.s.brennan@oracle.com" <stephen.s.brennan@oracle.com>, 
+	=?UTF-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0jiDnnJ/lhYkp?= <yamazaki-msmt@nec.com>, 
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 87egAXJj-UC5b4dy36eXrbO7ktv4sPA2sXZBCweqM84_1776166107
+X-Mimecast-MFC-PROC-ID: 5gJbQzBOnj6_Jz-obtrbsNmlKhQlWFGwajEk8AAc-Mo_1776167475
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260414_042830_481297_1340D6F1 
-X-CRM114-Status: GOOD (  37.84  )
+X-CRM114-CacheID: sfid-20260414_045119_701527_623F8822 
+X-CRM114-Status: GOOD (  41.74  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,12 +106,12 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Stephen,
+Hi Kazu,
 
-On Fri, Apr 3, 2026 at 1:12=E2=80=AFPM Stephen Brennan
-<stephen.s.brennan@oracle.com> wrote:
+On Fri, Apr 3, 2026 at 9:14=E2=80=AFPM HAGIO KAZUHITO(=E8=90=A9=E5=B0=BE=E3=
+=80=80=E4=B8=80=E4=BB=81) <k-hagio-ab@nec.com> wrote:
 >
-> Tao Liu <ltao@redhat.com> writes:
+> On 2026/03/18 0:07, Tao Liu wrote:
 > > The extensions can be specified by makedumpfile cmdline parameter as
 > > "--extension", followed by extension's filename or absolute path. If
 > > filename is give, then "./extenisons" and "/usr/lib64/makedumpfile/exte=
@@ -158,51 +159,45 @@ ice
 > > Suggested-by: Stephen Brennan <stephen.s.brennan@oracle.com>
 > > Signed-off-by: Tao Liu <ltao@redhat.com>
 > > ---
-> >  Makefile            |   7 +-
-> >  extension.c         | 300 ++++++++++++++++++++++++++++++++++++++++++++
-> >  extension.h         |  12 ++
-> >  extensions/Makefile |  10 ++
-> >  makedumpfile.c      |  38 +++++-
-> >  makedumpfile.h      |   2 +
->
-> I think the manual page will need updating with this change.
-> Documentation updates could probably be done in a separate patch, though.
-
-Thanks for the suggestion, I have updated the doc in v5.
-
->
-> >  6 files changed, 363 insertions(+), 6 deletions(-)
-> >  create mode 100644 extension.c
-> >  create mode 100644 extension.h
-> >  create mode 100644 extensions/Makefile
+> >   Makefile            |   7 +-
+> >   extension.c         | 300 +++++++++++++++++++++++++++++++++++++++++++=
++
+> >   extension.h         |  12 ++
+> >   extensions/Makefile |  10 ++
+> >   makedumpfile.c      |  38 +++++-
+> >   makedumpfile.h      |   2 +
+> >   6 files changed, 363 insertions(+), 6 deletions(-)
+> >   create mode 100644 extension.c
+> >   create mode 100644 extension.h
+> >   create mode 100644 extensions/Makefile
 > >
 > > diff --git a/Makefile b/Makefile
 > > index 320677d..1bb67d9 100644
 > > --- a/Makefile
 > > +++ b/Makefile
 > > @@ -45,7 +45,7 @@ CFLAGS_ARCH +=3D -m32
-> >  endif
+> >   endif
 > >
-> >  SRC_BASE =3D makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h=
- sadump_info.h
+> >   SRC_BASE =3D makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.=
+h sadump_info.h
 > > -SRC_PART =3D print_info.c dwarf_info.c elf_info.c erase_info.c sadump_=
 info.c cache.c tools.c printk.c detect_cycle.c kallsyms.c btf_info.c
 > > +SRC_PART =3D print_info.c dwarf_info.c elf_info.c erase_info.c sadump_=
 info.c cache.c tools.c printk.c detect_cycle.c kallsyms.c btf_info.c extens=
 ion.c
-> >  OBJ_PART=3D$(patsubst %.c,%.o,$(SRC_PART))
-> >  SRC_ARCH =3D arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia6=
-4.c arch/ppc64.c arch/s390x.c arch/ppc.c arch/sparc64.c arch/mips64.c arch/=
-loongarch64.c arch/riscv64.c
-> >  OBJ_ARCH=3D$(patsubst %.c,%.o,$(SRC_ARCH))
+> >   OBJ_PART=3D$(patsubst %.c,%.o,$(SRC_PART))
+> >   SRC_ARCH =3D arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia=
+64.c arch/ppc64.c arch/s390x.c arch/ppc.c arch/sparc64.c arch/mips64.c arch=
+/loongarch64.c arch/riscv64.c
+> >   OBJ_ARCH=3D$(patsubst %.c,%.o,$(SRC_ARCH))
 > > @@ -126,6 +126,7 @@ eppic_makedumpfile.so: extension_eppic.c
 > >
-> >  clean:
+> >   clean:
 > >       rm -f $(OBJ) $(OBJ_PART) $(OBJ_ARCH) makedumpfile makedumpfile.8 =
 makedumpfile.conf.5
 > > +     $(MAKE) -C extensions clean
 > >
-> >  install:
+> >   install:
 > >       install -m 755 -d ${DESTDIR}/${SBINDIR} ${DESTDIR}/usr/share/man/=
 man5 ${DESTDIR}/usr/share/man/man8
 > > @@ -135,3 +136,7 @@ install:
@@ -254,6 +249,24 @@ makedumpfile/makedumpfile.conf.sample
 > > +     "/usr/lib64/makedumpfile/extensions/",
 > > +     "./extensions/",
 > > +};
+>
+> I think we should add "./" to the first and arrange them in this order:
+>
+>    "./",
+>    "./extensions/",
+>    "/usr/lib64/makedumpfile/extensions/"
+>
+> Without this, we cannot use a relative path like this, it's not natural.
+>
+>    $ ls
+>    amdgpu_filter.so  makedumpfile  vmcore
+>    $ ./makedumpfile -ld31 --extension amdgpu_filter.so vmcore dump
+>    load_extensions: Not found amdgpu_filter.so
+>    Copying data                                      : [ 26.5 %]
+
+Sure, fixed in v5.
+>
+>
 > > +
 > > +void add_extension_opts(char *opt)
 > > +{
@@ -279,6 +292,36 @@ __, opt);
 > > +                     goto out;
 > > +             if (count >=3D 2)
 > > +                     init_ksyms_module =3D true;
+>
+> I may have misread, if an extension depends only a module's symbols, no
+> init functions are run?  or it can't be such a situation?
+
+The sequence of kallsyms/btf resolving is:
+
+step 1) Starting from vmcoreinfo, we know basic kallsyms info such as
+kallsyms_names/num_syms/token_table/.. etc. Then based on those info,
+we construct the whole kernel's kallsyms info, but only kernel's, not
+kernel modules'.
+
+step 2) From step1, we have resolved __start_BTF/__stop_BTF symbol
+value, which are critical for btf info parsing. So in step 2, we can
+construct the while kernel's btf info, but only kernel's, not kernel
+modules'.
+
+step 3) By kernel's kallsyms and btf info, we can understand kernel
+symbol address and data structures, so we can resolve module struct
+and iterate all kernel modules linked list. By which we can resolve
+each kernel modules' kallsyms & btf info.
+
+As you can see, the kallsyms/btf info resolving of kernel module is
+relying on the kallsyms/btf info resolving of kernel itself. So if an
+extension only relies on kernel modules symbol, the kernel, or
+vmlinux's kallsyms/btf info are still resolved first. So
+init_kernel_kallsyms() will always be called if kernel modules'
+kallsyms are needed.
+
+>
+>
 > > +     }
 > > +     if (check_ktypes_require_modname("vmlinux", &count)) {
 > > +             if (!init_kernel_btf())
@@ -377,6 +420,15 @@ ion_init()\n",
 > > +                             __func__, path);
 > > +                     dlclose(handle);
 > > +                     continue;
+>
+> Some lines have spaces at the end of line, please remove them.
+
+Fixed the formatting issue in v5.
+
+>
+> Thanks,
+> Kazu
+>
 > > +             }
 > > +
 > > +             ehc->handle =3D handle;
@@ -590,20 +642,20 @@ init");
 > > --- a/makedumpfile.c
 > > +++ b/makedumpfile.c
 > > @@ -28,6 +28,7 @@
-> >  #include <assert.h>
-> >  #include <zlib.h>
-> >  #include "kallsyms.h"
+> >   #include <assert.h>
+> >   #include <zlib.h>
+> >   #include "kallsyms.h"
 > > +#include "extension.h"
 > >
-> >  struct symbol_table  symbol_table;
-> >  struct size_table    size_table;
+> >   struct symbol_table symbol_table;
+> >   struct size_table   size_table;
 > > @@ -102,6 +103,7 @@ mdf_pfn_t pfn_free;
-> >  mdf_pfn_t pfn_hwpoison;
-> >  mdf_pfn_t pfn_offline;
-> >  mdf_pfn_t pfn_elf_excluded;
+> >   mdf_pfn_t pfn_hwpoison;
+> >   mdf_pfn_t pfn_offline;
+> >   mdf_pfn_t pfn_elf_excluded;
 > > +mdf_pfn_t pfn_extension;
 > >
-> >  mdf_pfn_t num_dumped;
+> >   mdf_pfn_t num_dumped;
 > >
 > > @@ -6459,6 +6461,7 @@ __exclude_unnecessary_pages(unsigned long mem_map=
 ,
@@ -708,7 +760,7 @@ nsion;
 > > +     init_extensions();
 > >
 > >       num_retry =3D 0;
-> >  retry:
+> >   retry:
 > > @@ -10888,8 +10909,11 @@ retry:
 > >                       && !gather_filter_info())
 > >               return FALSE;
@@ -719,32 +771,7 @@ nsion;
 > >               return FALSE;
 > > +     }
 > > +     cleanup_extensions();
->
-> If a retry happens, then all of the data related to extensions will be
-> cleared: including the list of extensions, the callbacks, etc.
-> Functionally, extensions will be disabled on the retry. Is that
-> intentional?
->
-> If not, then I think we'll need to move this cleanup so that it happens
-> when we exit the retry loop (either by an early return, or on success).
->
-> If this is intentional, then it probably ought to be documented.
-
-Honestly I have missed the retry case, you're right the
-cleanup_extension will break the retry. My initial thought was,
-extensions will only be useful to create_dump_bitmap(), when it
-finishes job, all extensions are better to be freed to save memory.
-For writeout_dumpfile() will do page compression, which might take up
-memory. But after my testing, free early or later don't really impact
-memory consumption. So I simply take your implementation in v5.
-
-Thanks,
-Tao Liu
-
->
-> Thanks,
-> Stephen
->
+> >
 > >       if (info->flag_split) {
 > >               if ((status =3D writeout_multiple_dumpfiles()) =3D=3D FAL=
 SE)
@@ -754,7 +781,7 @@ SE)
 > >       {"show-stats", no_argument, NULL, OPT_SHOW_STATS},
 > > +     {"extension", required_argument, NULL, OPT_EXTENSION},
 > >       {0, 0, 0, 0}
-> >  };
+> >   };
 > >
 > > @@ -12317,6 +12342,9 @@ main(int argc, char *argv[])
 > >               case OPT_SHOW_STATS:
@@ -772,23 +799,20 @@ on.\n");
 > > --- a/makedumpfile.h
 > > +++ b/makedumpfile.h
 > > @@ -2747,6 +2747,7 @@ struct elf_prstatus {
-> >  #define OPT_CHECK_PARAMS        OPT_START+18
-> >  #define OPT_DRY_RUN             OPT_START+19
-> >  #define OPT_SHOW_STATS          OPT_START+20
+> >   #define OPT_CHECK_PARAMS        OPT_START+18
+> >   #define OPT_DRY_RUN             OPT_START+19
+> >   #define OPT_SHOW_STATS          OPT_START+20
 > > +#define OPT_EXTENSION           OPT_START+21
 > >
-> >  /*
-> >   * Function Prototype.
+> >   /*
+> >    * Function Prototype.
 > > @@ -2777,5 +2778,6 @@ int write_and_check_space(int fd, void *buf, size=
 _t buf_size,
-> >  int open_dump_file(void);
-> >  int dump_lockless_dmesg(void);
-> >  unsigned long long memparse(char *ptr, char **retptr);
+> >   int open_dump_file(void);
+> >   int dump_lockless_dmesg(void);
+> >   unsigned long long memparse(char *ptr, char **retptr);
 > > +void add_extension_opts(char *opt);
 > >
-> >  #endif /* MAKEDUMPFILE_H */
-> > --
-> > 2.47.0
->
+> >   #endif /* MAKEDUMPFILE_H */
 
 
