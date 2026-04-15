@@ -4,81 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 84504F9D0CE
-	for <kexec@archiver.kernel.org>; Wed, 15 Apr 2026 01:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 20C46F9D0CE
+	for <kexec@archiver.kernel.org>; Wed, 15 Apr 2026 03:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=8Bl7WGpmLYIApMfuS1TwMShkQjfWUQ5qudg2RkqIKY0=; b=mdZLMot/BMV+fklqfOy5DtBIbH
-	dVKLiO/E4UKryBOs411+LEP6nt45Gir1zUNYUojYq7vrb1d2culec9TgeOhP52mFDCdhAcHBdcq7j
-	8tzaDeRWWWyrUY8a0WWKqHIZvaFBioEwTUIW5eCO/tvRhZiyLFtQaGJUXK6PK0gOtwUsM4+WBEdcQ
-	PK1yiUjEthomLZVlTTZxHodPZd3yq1QE/aHaU4b6AoxgTi5VUWi8PadHklYJC8gtjKoQm98tetpQd
-	4E8D8/bj/Fsl7/k8aL6UvbgKtP6kfATyx7zIxLIr5NKsth6PVAw1sQ4qCTzUxYVNMp8zs6cbMGjid
-	sUHhGsow==;
+	bh=4tZtfPotxl8kfqhlcellANwp2kwmi1pimXdRirEPd8U=; b=0/vT/+CaKU4e1CaW+bHfg+43m6
+	QhBFXo5N0D9IpPBVdfziNAO531BJpC0qIA9oszi5/gHn4JqgB9ENOflFJ2DDABsKwPNLqH2iLlTSC
+	QutYNR0eIJ4Eoa5/v+KU6W2Zp8vJ6+xhErTY7XCdskgfr+LSHXj1S3Jku/XdfUhi/FbStBnxXouEO
+	yK39dC97Oj1rwwLLtTrj4WxtWv/5wLemArXn3FvFvU3YAbKLyzCc/y9cXUsTNcZgri96CvUJL/JQD
+	EDIEVHJRvpg0UV/sSKp+fsiWAWluyoI3LekkSwSwIs/doAeYQTdwbAgPqUS1+Q6TxlVPbQggEljwj
+	yuXqYfbw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wCpHz-00000000RDm-3e2u;
-	Wed, 15 Apr 2026 01:43:35 +0000
-Received: from mgamail.intel.com ([198.175.65.19])
+	id 1wCqlu-00000000Vrl-3Ols;
+	Wed, 15 Apr 2026 03:18:34 +0000
+Received: from mgamail.intel.com ([192.198.163.19])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wCpHx-00000000RDL-1KGs
+	id 1wCqls-00000000VrN-0Wsn
 	for kexec@lists.infradead.org;
-	Wed, 15 Apr 2026 01:43:34 +0000
+	Wed, 15 Apr 2026 03:18:33 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776217413; x=1807753413;
+  t=1776223112; x=1807759112;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=KJ1dmm7JBQS8tm37XInqKorcvhoHPQHM2ZL56cx+0tc=;
-  b=Ct++P5XsUBJCz7JhMzvZ3nfAX/zU+GXjhBdXvJPFBZKI0igDRwv6xV8l
-   FJcmfmd31z0n2FoiNnUJovxN5b2uhY+KmPi0a41pmjBkAhXa+3MgKKFzt
-   jkhMkJvRQoOrsAIjqLu3/ueLQcZMNlr5jq54SqV3pRS9p88r2X30UtZOY
-   TWXYH5MbuQ3EboqQmqNzhBbh5f6GystlI+x8jBJzh3oFJluwYrlrPq0HH
-   oFDCaZIHjHKekDN4d/kCXRXGh3z9wC3NeJn3fhgZTwiJxi8CqwAwCeyHl
-   TDxsD9Ool4xpVQuAvhrd3ajeZX9PoEgA0/KzYnsurpKlEyYtaaYjEzbNo
-   g==;
-X-CSE-ConnectionGUID: LYijg4WKRA+lT7o0dOAaGQ==
-X-CSE-MsgGUID: D8vl3lBnQ96j1nF23TFpvw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11759"; a="77092850"
+  bh=pN4vBEp6nfcqXNrQLkmLldYUzKj2XXj7ZHPiuukhJLg=;
+  b=ND2CLi4ZQGV75/+CsNsfvReESg0aINLLHoP065fEZKqSou0NU1HrZaJk
+   tKn6qTOp6hOMOOk1iq31jP+JtMt1fs0PQQZvWWEiSiI/ou5YajOtJZxxt
+   sIfT1xbQgDexMbGWVoJjOMMSGvAZ2++Jru+PIcQIPkbEaZF4vPTyWNEPt
+   H10gFo888+jPtsZ/hTi8rJXGiXLctrbesgll8WnICueTS6asNvI2NiJBR
+   t3UN00UevptuNuTfuXq8A3Fsh/0jHZQ83seGm8IH8xb/Qxs0nGobxw6XE
+   vwTfn8Jb4w7J5JwCjG/h1lyKm+pC/rkShvefAj/qqqhm7Zkc+CAsuwhPp
+   Q==;
+X-CSE-ConnectionGUID: 5BALn9L9RVWdv8FFhrbsHQ==
+X-CSE-MsgGUID: sXIgcYbkRq6MsVRGqF6EPg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11759"; a="76224292"
 X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
-   d="scan'208";a="77092850"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2026 18:43:31 -0700
-X-CSE-ConnectionGUID: xDnDgNgmQHylQE5TEFOqqQ==
-X-CSE-MsgGUID: 0K3ensgWS3ubo6LrqDE3yw==
+   d="scan'208";a="76224292"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2026 20:18:29 -0700
+X-CSE-ConnectionGUID: hRHIx42nTce3zJplxlFpbg==
+X-CSE-MsgGUID: 36SwFOnOTKqLOuqoFusQfQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
-   d="scan'208";a="229401197"
-Received: from lkp-server01.sh.intel.com (HELO 7b0b59b3a0d4) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 14 Apr 2026 18:43:28 -0700
-Received: from kbuild by 7b0b59b3a0d4 with local (Exim 4.98.2)
+   d="scan'208";a="223780958"
+Received: from lkp-server01.sh.intel.com (HELO 7f3b36e5d6a5) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 14 Apr 2026 20:18:26 -0700
+Received: from kbuild by 7f3b36e5d6a5 with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1wCpHp-0000000023N-1IVW;
-	Wed, 15 Apr 2026 01:43:25 +0000
-Date: Wed, 15 Apr 2026 09:43:06 +0800
+	id 1wCqlj-0000000005h-0rLu;
+	Wed, 15 Apr 2026 03:18:23 +0000
+Date: Wed, 15 Apr 2026 11:17:53 +0800
 From: kernel test robot <lkp@intel.com>
 To: Youling Tang <youling.tang@linux.dev>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+Cc: oe-kbuild-all@lists.linux.dev,
 	Linux Memory Management List <linux-mm@kvack.org>,
 	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
 	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org, youling.tang@linux.dev,
 	Youling Tang <tangyouling@kylinos.cn>
 Subject: Re: [PATCH] crash: Support high memory reservation for range syntax
-Message-ID: <202604150941.oDguaP7A-lkp@intel.com>
+Message-ID: <202604151100.7wbci6vo-lkp@intel.com>
 References: <20260404074103.506793-1-youling.tang@linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20260404074103.506793-1-youling.tang@linux.dev>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260414_184333_436697_CAC29C03 
-X-CRM114-Status: GOOD (  11.60  )
+X-CRM114-CacheID: sfid-20260414_201832_231873_D810C6C5 
+X-CRM114-Status: GOOD (  14.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,24 +107,22 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Youling-Tang/crash-Suppor
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
 patch link:    https://lore.kernel.org/r/20260404074103.506793-1-youling.tang%40linux.dev
 patch subject: [PATCH] crash: Support high memory reservation for range syntax
-config: s390-defconfig (https://download.01.org/0day-ci/archive/20260415/202604150941.oDguaP7A-lkp@intel.com/config)
-compiler: clang version 23.0.0git (https://github.com/llvm/llvm-project 5bac06718f502014fade905512f1d26d578a18f3)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260415/202604150941.oDguaP7A-lkp@intel.com/reproduce)
+config: mips-randconfig-r061-20260415 (https://download.01.org/0day-ci/archive/20260415/202604151100.7wbci6vo-lkp@intel.com/config)
+compiler: mips64-linux-gcc (GCC) 12.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260415/202604151100.7wbci6vo-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202604150941.oDguaP7A-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202604151100.7wbci6vo-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   kernel/crash_reserve.c:264:19: warning: expression which evaluates to zero treated as a null pointer constant of type 'char *' [-Wnon-literal-null-conversion]
-     264 |         char *first_gt = false;
-         |                          ^~~~~
->> kernel/crash_reserve.c:324:16: error: use of undeclared identifier 'DEFAULT_CRASH_KERNEL_LOW_SIZE'
+   kernel/crash_reserve.c: In function '__parse_crashkernel':
+>> kernel/crash_reserve.c:324:37: error: 'DEFAULT_CRASH_KERNEL_LOW_SIZE' undeclared (first use in this function)
      324 |                         *low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
          |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   1 warning and 1 error generated.
+   kernel/crash_reserve.c:324:37: note: each undeclared identifier is reported only once for each function it appears in
 
 
 vim +/DEFAULT_CRASH_KERNEL_LOW_SIZE +324 kernel/crash_reserve.c
