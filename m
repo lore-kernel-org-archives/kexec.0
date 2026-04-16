@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9051CF8D753
-	for <kexec@archiver.kernel.org>; Thu, 16 Apr 2026 15:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AB19AF8D760
+	for <kexec@archiver.kernel.org>; Thu, 16 Apr 2026 16:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
 	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zd3e2VDKFmhHyj8dlw1B5vVyPvKeqv4J9fz3f7RtiCM=; b=g74oWPW4zJF7L6AvI7PWA0tyuG
-	o3n2jrSghJWPQc5clhqR6zFWf4zYEzAFklDyTnqk4PHmuU7XJmGCKK4Y/GFU4AFA1Q2MVwU+p8Lp+
-	cJ29Gn8kiNXazYtoZIYMoUb0jt1uc7FK2prDLoUU7v7FNcqY/fZgrqQE2aKqucQGLDXh2O8bM3ylK
-	UDTDdvi5AFRReD8ZnPYZzBDYIRsCyIsIVQ6vygZlQ8jH22X1RwExxSe0J0ysHuMLJ/CqkgvTGzaMw
-	dr1GMtb04/olYXVuRkfq6zYf4OGy1CuzfjHFP/dpi/y3cCnFaU9qIZzhA9Q6lyWj3LD35Vni37rrh
-	XLHGPR+Q==;
+	bh=O/bqmT/sHPhtEYlBdl+Pe9z2g5g8mvJyEt3k/kSDG8s=; b=TgZYtxNU3m04GndUEVVMQPuTqy
+	QbeZJ/XKak5qI67f1lyiUupwnZ+P/7EKLFi8TtH+Q0dS7/y6dwBqAKzudmsbj922hixwnjWokdnoJ
+	L0ApNLl5WuQqAtM9D4TDPy5nhP0h0TT6PzxzY7R/r/HYtHUXMyYCFY8EKkYqCPXkKK9mY61iI4JXJ
+	PD03VxY72p8f5fK4gNI5LCVsT4/viUq+nNQf+26rfSIPePNN/lHB5QKDhZ52BjEXZsuIuttNEAEZc
+	xoZ949aqxbCWU9QGaXHJfFEyoYLTtsDAv9Zdc1iaAxi4FPyfq8pFaELet9NdiTfZjPlwgk1kxNF8n
+	1wNxIOCg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wDOsK-00000002dMn-0akM;
-	Thu, 16 Apr 2026 15:43:28 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wDPLF-00000002ed8-2YZ8;
+	Thu, 16 Apr 2026 16:13:21 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wDOsJ-00000002dMh-2SiU
+	id 1wDPLB-00000002ecm-2ZFU
 	for kexec@lists.infradead.org;
-	Thu, 16 Apr 2026 15:43:27 +0000
+	Thu, 16 Apr 2026 16:13:18 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 5914C60127;
-	Thu, 16 Apr 2026 15:43:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91706C2BCAF;
-	Thu, 16 Apr 2026 15:43:20 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 392FC4045A;
+	Thu, 16 Apr 2026 16:13:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDC17C2BCAF;
+	Thu, 16 Apr 2026 16:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776354205;
-	bh=aCG8gGEPXzuo1QRGojUmghGuuLoszJoxEs8ppN1nF9k=;
+	s=k20201202; t=1776355994;
+	bh=qIXWb9zk7cCWCWuHZHzx5UEDyqwqm3ROl3GtCRHkRO0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UnQoNmDqmM4OQ9xZI2iIfRMM2LZ+f8ZvP6JyKMv2rzL4SRId993hJU4/RZb9HMW8K
-	 KLdoOhFv/hOkgKx0VIX5Z+hxsV0R9pzX5xT+epyBp5ar0AMl8GjKGiOQeE4oHZH5TQ
-	 unnuTtu9QTpoIyd6fNAt4/rdStMlWIz2+Liv8RNO/mWqCIL3YqdFhkBaWoZdMoDCmS
-	 fIKoMAcdpF5Yzdqf3syStgdqw8ze+El9pQEj0qrsg9FwZhVg1mOdtiPhdrC1V6///W
-	 js28o+vPMnyIm2T1xIMsYIxgUdcHLXJebfj8DatOwmqTpSLp5ojbr6zaLIRMHieRac
-	 Lx9TSKJTSSHqg==
-Date: Thu, 16 Apr 2026 18:43:17 +0300
+	b=RFMlIkBMMOgwrHCtflz3RSb2FmJbQI3+0F0SMsRAc0uohnsekVsLJz5Z9EXVf4Xb0
+	 CtGuojup3h+lZc0vq+tLGlF7XtmI2de9YP7mqpprDY74xiQG/jxLLMYMwLo7k3q/82
+	 aUbDdG6fQnVsbHAwkZs8wYWu7BH+Er8zqlf1x2vL6/jy1xTnaNgbPiyQMW0pDl8Arh
+	 AIGMIJenzzQrP6mpskMgHgfAzxrYBi1dTrPg+DlXpi46lkwFLxCm675Rg8N7G4gKe/
+	 jbdlQfMq5MkkffV4oTRE4OJwJ27mpwluJ1cW944HIiiJsDAnOQ8/IlVOBESGAkdf2Y
+	 /KE0/l9U0ErFQ==
+Date: Thu, 16 Apr 2026 19:13:06 +0300
 From: Mike Rapoport <rppt@kernel.org>
 To: =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
 Cc: Evangelos Petrongonas <epetron@amazon.de>,
@@ -57,16 +57,20 @@ Cc: Evangelos Petrongonas <epetron@amazon.de>,
 	Michal Hocko <mhocko@suse.com>,
 	Brendan Jackman <jackmanb@google.com>,
 	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>
-Subject: Re: [PATCH v8 0/2] kho: add support for deferred struct page init
-Message-ID: <aeEDlY6ZpzeqmAtJ@kernel.org>
+Subject: Re: [PATCH v8 1/2] kho: fix deferred initialization of scratch areas
+Message-ID: <aeEKksfLxQ0A7Jun@kernel.org>
 References: <20260416110654.247398-1-mclapinski@google.com>
- <aeD5kboEdzwuR4P_@kernel.org>
- <CAAi7L5dFaxwoU5dho8sJJ41+SSwgrmXW_NjQZnn7UPzj0zoowg@mail.gmail.com>
+ <20260416110654.247398-2-mclapinski@google.com>
+ <aeD2Fzr6yr4pu9-X@kernel.org>
+ <CAAi7L5d-ujEa7R21Lmd37X9451KBmK8ZhagSKbJde15aQLi2MQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAi7L5dFaxwoU5dho8sJJ41+SSwgrmXW_NjQZnn7UPzj0zoowg@mail.gmail.com>
+In-Reply-To: <CAAi7L5d-ujEa7R21Lmd37X9451KBmK8ZhagSKbJde15aQLi2MQ@mail.gmail.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260416_091317_674320_A41EBB6F 
+X-CRM114-Status: GOOD (  13.32  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,95 +85,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Apr 16, 2026 at 05:23:32PM +0200, Michał Cłapiński wrote:
-> On Thu, Apr 16, 2026 at 5:00 PM Mike Rapoport <rppt@kernel.org> wrote:
+On Thu, Apr 16, 2026 at 05:06:10PM +0200, Michał Cłapiński wrote:
+> On Thu, Apr 16, 2026 at 4:45 PM Mike Rapoport <rppt@kernel.org> wrote:
 > >
-> > On Thu, Apr 16, 2026 at 01:06:52PM +0200, Michal Clapinski wrote:
-> > > When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, struct page
-> > > initialization is deferred to parallel kthreads that run later in
-> > > the boot process.
-> > >
-> > > Currently, KHO is incompatible with DEFERRED.
-> > > This series fixes that incompatibility.
-> > > ---
-> > > v8:
-> > > - moved overriding the migratetype from init_pageblock_migratetype
-> > >   to callsites
-> > > v7:
-> > > - reimplemented the initialization of kho scratch again
-> > > v6:
-> > > - reimplemented the initialization of kho scratch
-> > > v5:
-> > > - rebased
-> > > v4:
-> > > - added a new commit to fix deferred init of kho scratch
-> > > - switched to ulong when refering to pfn
-> > > v3:
-> > > - changed commit msg
-> > > - don't invoke early_pfn_to_nid if CONFIG_DEFERRED_STRUCT_PAGE_INIT=n
-> > > v2:
-> > > - updated a comment
-> > >
-> > > I took Evangelos's test code:
-> > > https://git.infradead.org/?p=users/vpetrog/linux.git;a=shortlog;h=refs/heads/kho-deferred-struct-page-init
-> > > and then modified it to this monster test that does 2 allocations:
-> > > at core_initcall (early) and at module_init (late). Then kexec, then
-> > > 2 more allocations at these points, then restore the original 2, then
-> > > kexec, then restore the other 2. Basically I test preservation of early
-> > > and late allocation both on cold and on warm boot.
-> > > Tested it both with and without DEFERRED.
+> > Hi Michal,
 > >
-> > Any chance you can clean that monster and send it as patch 3?
+> > On Thu, Apr 16, 2026 at 01:06:53PM +0200, Michal Clapinski wrote:
+> > > @@ -2262,6 +2253,12 @@ static void __init memmap_init_reserved_range(phys_addr_t start,
+> > >                * access it yet.
+> > >                */
+> > >               __SetPageReserved(page);
+> > > +
+> > > +#ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
+> >
+> > No need for #ifdef here, there's a stub returning false for
+> > CONFIG_MEMBLOCK_KHO_SCRATCH=n case.
 > 
-> I fear that would delay this series somewhere into v15, which I would
-> like to avoid. Can I clean it up and send it separately?
+> In all 3 places the #ifdef is there because MIGRATE_CMA might be
+> undefined. I already broke mm-new branch in the past because of that.
 
-I don't mind. For this series can we add a build with deferred pages to
-selftests/kho/vmtest.sh? Shouldn't be as controversial :)
- 
-> > There's no real difference between core_initcall() and module_init() with
-> > respect to that deferred page initialization, they both run after the
-> > memory map is fully initialized.
-> 
-> One of them runs before kho_init() and the other after. So it allowed
-> me to expose the bug that I introduced in v4.
- 
-Ah, nice.
+Hmm, that hurts :/
 
-> > > This patch probably doesn't apply onto anything currently.
-> > > It's based on mm-new with
-> > > "memblock: move reserve_bootmem_range() to memblock.c and make it static"
-> > > cherrypicked from rppt/memblock.
-> >
-> > You can base on for-next in the memblock tree:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock
-> 
-> I tried that but that branch is missing other commits from mm-new. So
-> I would have to modify my code, which would then conflict with mm-new.
+The best I can think of is to add a static inline in memblock.h and ifdefs
+around it.
 
-Let's continue with mm-new and a cherrypicked memblock patch, it all should
-be sorted out after -rc1 I hope.
- 
-> > > Evangelos Petrongonas (1):
-> > >   kho: make preserved pages compatible with deferred struct page init
-> > >
-> > > Michal Clapinski (1):
-> > >   kho: fix deferred initialization of scratch areas
-> > >
-> > >  include/linux/memblock.h           |  7 ++--
-> > >  kernel/liveupdate/Kconfig          |  2 --
-> > >  kernel/liveupdate/kexec_handover.c | 52 +++++++++++++++---------------
-> > >  mm/memblock.c                      | 41 +++++++++++------------
-> > >  mm/mm_init.c                       | 27 +++++++++++-----
-> > >  5 files changed, 69 insertions(+), 60 deletions(-)
-> > >
-> > > --
-> > > 2.54.0.rc1.555.g9c883467ad-goog
-> > >
-> >
-> > --
-> > Sincerely yours,
-> > Mike.
+> > > +             if (memblock_is_kho_scratch_memory(PFN_PHYS(pfn)) &&
+> > > +                 pageblock_aligned(pfn))
+> > > +                     init_pageblock_migratetype(page, MIGRATE_CMA, false);
+> > > +#endif
+> > >       }
+> > >  }
 
 -- 
 Sincerely yours,
