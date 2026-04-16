@@ -4,73 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 68D7FF8A146
-	for <kexec@archiver.kernel.org>; Thu, 16 Apr 2026 09:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 71FE8F8A15E
+	for <kexec@archiver.kernel.org>; Thu, 16 Apr 2026 11:07:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=JrmV0E2FR5QIiwCjjUz4crYhfG5jwFca3BcKbwvfTbU=; b=De1eIASyXhwlgG4IH7o+fxBGeq
-	pv39D97kxUF8qBUCQA/4jWgM3vGovaFJTmlAkDFtGbHAo0CINECtZQT00OYrSFQAgAt2BK/QzwlRJ
-	bnsVOPTM9kQBkdqMhVPZTGecO48/kMsfCP33ZWSG9Za33EGVGAZgtlH0bcYpPApc0XM+QD5rnGSWW
-	me+iSz0A5owk9iIs2bSyKY1ysJyKxQS/hz+kXLdilm5wkFn7dcrYFfZzcrP7l/zx42IM3QKoLi9Ov
-	2sYjJpPpPfTVSg4Gej2ANtTIjdhgrdDEjZqPBajZFUAL9O0wIYrmf9D9shjnEeHCyH/AzM6P4SP/w
-	kpK4PpzA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=lKHwSeRo/ultSF+DvjG6BVyCb2GmqVTT5wmkO/QWglI=; b=nnfXJ1nNBc3dvLhqBj7YdRDvto
+	/MSZ03HsqTehBVQ0LEtQiVTGUikgB7601629eRk8WgvPs3aiyQIwI7Pa4wlRztXKIQLtdZZ77KrWh
+	LoDRzzaqXcNv899MRO25JbMdkA0XwbGQK/h7gBB0TRATR7+iYnExF7ybWkq/HK6tqI9308QJyEeeQ
+	pvygtyOhibHJOkpSaOI/ATHlgAXw2Io0Go3CVeCtX8n4CeFiJR97mKhn2Cut485yCIEV4RPJ++zE3
+	GhNyRLWEz5gTRs9lf+z4b13O0bwc1p/Zip4NRmabiP0I4MWLYnRw1c8glFrqWrJGCbRvvTx252h8R
+	BTiMna9A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wDJGf-00000002GBD-0u2D;
-	Thu, 16 Apr 2026 09:44:13 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wDKYr-00000002LUQ-1YST;
+	Thu, 16 Apr 2026 11:07:05 +0000
+Received: from mail-ed1-x54a.google.com ([2a00:1450:4864:20::54a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wDJGd-00000002GB1-3S08
+	id 1wDKYp-00000002LU0-01kX
 	for kexec@lists.infradead.org;
-	Thu, 16 Apr 2026 09:44:11 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id E10EB60123;
-	Thu, 16 Apr 2026 09:44:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A991C2BCAF;
-	Thu, 16 Apr 2026 09:44:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776332650;
-	bh=CPSWvjITVlDgLqJaNBJ4mUklmtrmxg+VXMXbQXCouI0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=naarDjEyGSJoW4LnTL4F2XkqZixsO54podpGe54idT5LI8xKd9lFol6POyM9EjwyS
-	 HjZsccyA4hqkKhLkrYCnoqCfkUa0DlTmc/CeJnpiLKHlNmBtzxHFpZepRWmzlbGiSL
-	 6Ne/oUuxTDNJgwK/UpkYdnUuJScKVNdxzdQSH8xVfbgM9t5Mu0SXmZQGKv+wfHLWUv
-	 W8/alr94CH26BOTOvpFAhpeXQ77+8RXwF8KoNd5n8hPwv9JC7u88P/yzdtWlbJQ6zb
-	 nV05JT4Q4zSuYVxFN9IExOz/LY9yI5Oi9bhQDEoX6kf1oZ3Owy6AgzcfwFij3w3tfJ
-	 17PuGeGbNQdpg==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Zi Yan <ziy@nvidia.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Mike Rapoport <rppt@kernel.org>,
-  =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
-  Evangelos Petrongonas
- <epetron@amazon.de>,  Pasha Tatashin <pasha.tatashin@soleen.com>,
-  Alexander Graf <graf@amazon.com>,  Samiullah Khawaja
- <skhawaja@google.com>,  kexec@lists.infradead.org,  linux-mm@kvack.org,
-  linux-kernel@vger.kernel.org,  Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v7 2/3] kho: fix deferred init of kho scratch
-In-Reply-To: <DFD0C0F5-F23B-44CA-B2C7-9D03F2397DCF@nvidia.com> (Zi Yan's
-	message of "Tue, 07 Apr 2026 09:21:25 -0400")
-References: <20260317141534.815634-3-mclapinski@google.com>
-	<AD9E1B18-C813-480E-894C-FEEB51EE8A93@nvidia.com>
-	<CAAi7L5dSOxXETv-bYs4hJ1SfixMBQXS4fmfKs3SzVvQ=yY7oSg@mail.gmail.com>
-	<76559EF5-8740-4691-8776-0ADD1CCBF2A4@nvidia.com>
-	<CAAi7L5ex+66qgFzRkLDbuOmC=cVrMyBctPZv6wd15n1rc2U9KQ@mail.gmail.com>
-	<0D1F59C7-CA35-49C8-B341-32D8C7F4A345@nvidia.com>
-	<CAAi7L5fvUPUqd3A4m6wubeYh90NH+S2KBRE1R8WKerBYhkU8kg@mail.gmail.com>
-	<58A8B1B4-A73B-48D2-8492-A58A03634644@nvidia.com>
-	<aburnbP64n9axmu_@kernel.org>
-	<CAAi7L5evx8ta8BifNiGNfUoTiaBUsv4cgQRbm_15RoAfdKPcMw@mail.gmail.com>
-	<acAAp4JaTGn_STBH@kernel.org> <2vxzwlyj9d0b.fsf@kernel.org>
-	<DFD0C0F5-F23B-44CA-B2C7-9D03F2397DCF@nvidia.com>
-Date: Thu, 16 Apr 2026 09:44:06 +0000
-Message-ID: <2vxzjyu76xzt.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
-MIME-Version: 1.0
-Content-Type: text/plain
+	Thu, 16 Apr 2026 11:07:04 +0000
+Received: by mail-ed1-x54a.google.com with SMTP id 4fb4d7f45d1cf-66f103b3141so5134185a12.0
+        for <kexec@lists.infradead.org>; Thu, 16 Apr 2026 04:07:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1776337620; x=1776942420; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lKHwSeRo/ultSF+DvjG6BVyCb2GmqVTT5wmkO/QWglI=;
+        b=Ji86zWOw77yxsCv8q1FXUXJbxBagwX7fuGUQdXHr3IcQnLxa6Pb6a7307YGg/Mumaj
+         Vo0QOZi6s6g70+L6B5hE8bsDUXUmBfXjlLNHNz8QD/Z4bjf2vSlFLSoemWBK+KlT61eT
+         6LFMx6Tz0M0b1+cMSolpU75jA8NN4++WZ+KVy6p1uQt2NXxU6dziC1WzZ3ec0m26cmhi
+         NgU4m96xvvTcFm2H8nWXM8wmg71P/QI9/lnYeGZs4oBsD2Nx4h0BegB2mAQbxq2GY6Yz
+         uZ0lV3UAeg8DbbyxbKzxGUx+RBGTxzt1NlyiG3cvzIIQbo3KrNLr42lNkovDLaKmA2Bd
+         fm7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776337620; x=1776942420;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lKHwSeRo/ultSF+DvjG6BVyCb2GmqVTT5wmkO/QWglI=;
+        b=QBYyuNfwUvu+9+MmQZqV33dvXggWgsgwTJOZbdp7Q8saE2reYrADgyTwi0dOik+DMw
+         TU908NBv3Gp7ZQrcqaO2N8aTcv4VozIJrTdybnUwK67przfymqx32/2A6fKIIWQUq8nr
+         DCb9UYWanKajA5PASuim05HWio+CTf1ANL9ivpq8ojgCi0JY1zAHaB8Vya3Z7cvyODHQ
+         g6nD8gJkHvZb/e63wZh8/1IU7ogXlHI6SIpDWOqAKWIIYQvXrMLNzlppFbFSHNyFCD3D
+         8GW0MQ7WCH+AguqPQiH5Y8jI2XOo10bGCW17hFmHYsWqogrzdxxIRD33BuyHcxF9zlBq
+         HuHw==
+X-Forwarded-Encrypted: i=1; AFNElJ/T4H2EsHZiDZCnqbPZuNPFdkp8T177d7ZdgdMygylVKp2vG3+zhlYPiEmtbFPW5y+MirrqRA==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yy8mpg2mKA6ksuntzNeqVcVCY4a58zXXb2fmTWEpbtDprFEPH5M
+	Al5/P30NrGWBZLqMMYfWlBJooTSSE9EL668RvQr+aulfjQGlZ2OfGn5fqCT+QAryJgWX1dw80LU
+	ytCWSwmU2T0u59AZZ1IgPFQ==
+X-Received: from educ13.prod.google.com ([2002:a05:6402:100d:b0:66e:cdad:9d95])
+ (user=mclapinski job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6402:2b99:b0:671:bc46:1b93 with SMTP id 4fb4d7f45d1cf-671bc461f4dmr6398522a12.18.1776337620197;
+ Thu, 16 Apr 2026 04:07:00 -0700 (PDT)
+Date: Thu, 16 Apr 2026 13:06:52 +0200
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.54.0.rc1.555.g9c883467ad-goog
+Message-ID: <20260416110654.247398-1-mclapinski@google.com>
+Subject: [PATCH v8 0/2] kho: add support for deferred struct page init
+From: Michal Clapinski <mclapinski@google.com>
+To: Evangelos Petrongonas <epetron@amazon.de>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org, linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
+	Michal Clapinski <mclapinski@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260416_040703_061543_5B7D9114 
+X-CRM114-Status: GOOD (  10.82  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,39 +90,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Apr 07 2026, Zi Yan wrote:
+When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, struct page
+initialization is deferred to parallel kthreads that run later in
+the boot process.
 
-> On 7 Apr 2026, at 8:21, Pratyush Yadav wrote:
-[...]
->> Hmm, I don't like that how complex this is. It adds another layer of
->> complexity to the initialization of the migratetype, and you have to dig
->> through all the possible call sites to be sure that we catch all the
->> cases. Makes it harder to wrap your head around it. Plus, makes it more
->> likely for bugs to slip through if later refactors change some page init
->> flow.
->>
->> Is the cost to look through the scratch array really that bad? I would
->> suspect we'd have at most 4-6 per-node scratches, and one global one
->> lowmem. So I'd expect around 10 items to look through, and it will
->> probably be in the cache anyway.
->
-> It is not only about the cost of going through the scratch array, but also
-> about adding kho code to the generic init_pageblock_migratetype().
-> This means all callers of init_pageblock_migratetype(), no matter if
-> they are involved with kho or not, need to do the check. It is a good
-> practice to do the check when necessary, otherwise, this catch-all check
-> might hide some bugs in the future.
+Currently, KHO is incompatible with DEFERRED.
+This series fixes that incompatibility.
+---
+v8:
+- moved overriding the migratetype from init_pageblock_migratetype
+  to callsites
+v7:
+- reimplemented the initialization of kho scratch again
+v6:
+- reimplemented the initialization of kho scratch
+v5:
+- rebased
+v4:
+- added a new commit to fix deferred init of kho scratch
+- switched to ulong when refering to pfn
+v3:
+- changed commit msg
+- don't invoke early_pfn_to_nid if CONFIG_DEFERRED_STRUCT_PAGE_INIT=n
+v2:
+- updated a comment
 
-We can move the check to memmap init, so it will still be done for most
-pageblocks I reckon. The only other callers I see are zone device and
-CMA.
+I took Evangelos's test code:
+https://git.infradead.org/?p=users/vpetrog/linux.git;a=shortlog;h=refs/heads/kho-deferred-struct-page-init
+and then modified it to this monster test that does 2 allocations:
+at core_initcall (early) and at module_init (late). Then kexec, then
+2 more allocations at these points, then restore the original 2, then
+kexec, then restore the other 2. Basically I test preservation of early
+and late allocation both on cold and on warm boot.
+Tested it both with and without DEFERRED.
 
-Anyway, I get your point and am fine with moving it out to memmap init
-functions.
+This patch probably doesn't apply onto anything currently.
+It's based on mm-new with
+"memblock: move reserve_bootmem_range() to memblock.c and make it static"
+cherrypicked from rppt/memblock.
 
-[...]
+Evangelos Petrongonas (1):
+  kho: make preserved pages compatible with deferred struct page init
+
+Michal Clapinski (1):
+  kho: fix deferred initialization of scratch areas
+
+ include/linux/memblock.h           |  7 ++--
+ kernel/liveupdate/Kconfig          |  2 --
+ kernel/liveupdate/kexec_handover.c | 52 +++++++++++++++---------------
+ mm/memblock.c                      | 41 +++++++++++------------
+ mm/mm_init.c                       | 27 +++++++++++-----
+ 5 files changed, 69 insertions(+), 60 deletions(-)
 
 -- 
-Regards,
-Pratyush Yadav
+2.54.0.rc1.555.g9c883467ad-goog
+
 
