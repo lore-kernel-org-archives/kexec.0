@@ -4,87 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 54713F4213B
-	for <kexec@archiver.kernel.org>; Wed, 15 Apr 2026 18:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 002A3F8A146
+	for <kexec@archiver.kernel.org>; Thu, 16 Apr 2026 09:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=BphYppqYDh7wB5j90/jJR2V0IBmnVZp6cAEOzQX6UH8=; b=00Slyw9vWm4pGg+nU4RFXrAHVB
-	KK6sPEFfyaL3yxh6a1gFec8oELiBeElEtzlJ90le7bd+tL9wnoDPFNn7EmJwr6AYYDnD9JPAVzegY
-	4dp1Kr1x8g3GOWDfLgXQXcZBd3ApVHd/4NXAxjAx+ZqeoEjC5sX9w0pTr5e1rmAGgAeusAftqcpgE
-	RIgW7SxA/Ghl9KSWFzYTHJ0/RrTBCDZD+vhGpwEGnv/9c9eE0YoTIPEzGTDernWF/bHwiO3xc4U/j
-	sIb3NpmpjoMSEGLt2jLXUNix/dPgkmJ6YnviPbptHVwMsvWsyRQNmg/1jrJDm4m3/+GK57yKcdidE
-	1ZsNOh4w==;
+	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=lNY0efeN81fPPEk7hSc0vbaPFWkcvmDpUyEhycoFZW4=; b=SDKkpDr+JSVHp+i+11pweK2zva
+	ztLZtiWAAdGfmfz0GGhH9rzV51U6H6uAV4E/oFQf3gcITHi95HpXmWGUstIFceinfI0StOkP9NZsU
+	uJUKK3LNH6GL1slnCEDcjErZ5lYs3oWFCt6tJZRSy6ejlApkXUa/pw12rTuFwzC5SSwyGLfMSIP9b
+	JpXcBVTP7JOvyTxDZlaEmG64ah9aHSsgW+C2jClNYBUO9BUo9sAx9oV1tRPH5lH00R+A5RQXx3DHC
+	v/RYVUIrkN6cB8oAy60rowvzoy0K7dQ0XaDTFDe+ZOYe25LO/2u2RsJSVZuj1E3nUJF+DlTvnUsk/
+	mB7FHFKw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wD5GK-00000001W7K-1xNb;
-	Wed, 15 Apr 2026 18:46:56 +0000
-Received: from mail-wr1-x435.google.com ([2a00:1450:4864:20::435])
+	id 1wDJDu-00000002Ftf-29Lk;
+	Thu, 16 Apr 2026 09:41:22 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wD5GI-00000001W6m-124l
+	id 1wDJDs-00000002FtN-1jEl
 	for kexec@lists.infradead.org;
-	Wed, 15 Apr 2026 18:46:55 +0000
-Received: by mail-wr1-x435.google.com with SMTP id ffacd0b85a97d-43d64313c39so4173892f8f.3
-        for <kexec@lists.infradead.org>; Wed, 15 Apr 2026 11:46:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776278812; x=1776883612; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BphYppqYDh7wB5j90/jJR2V0IBmnVZp6cAEOzQX6UH8=;
-        b=IEVk37jRoL7aM4Wxyw+3YIPg0x6G88wqgoPXAjLrWHPr6EF0WVBiqacvInETSqDReP
-         VSQ/dJIbdmv9KWURqzPHWmDgjlCnJLIV90TZWssHimsgSdAkjEWaXS/d6vJZ/BFtCWeM
-         izXm125mn9IUuvCV+MgZFKp6u6Ns7wGAzAPZIU7hBEgxGB+zxvrsUJBGIrG/QKB4Bp4G
-         mH7sO0NKXTNBfbOu5STibcqYB902AeDaWdFiPHZzHfDOiC1i+QW3K2pbPgIk3ksK9OHE
-         QfNaZEG7DoSrw9odsiKemqAflrOOvbb641uhUateZxwdFyE8RAjyay2k+WDBNquzMPyc
-         SYoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776278812; x=1776883612;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BphYppqYDh7wB5j90/jJR2V0IBmnVZp6cAEOzQX6UH8=;
-        b=RIh2GZMQ/Uy8K6wJzSLVdg3DaMw84O0wEDNUZzqpUnY0s7WO5Hi7l69hWZDEwta1qk
-         +pxNMQWvDO2ERNoZuQ+fQuo5LeI+YC/sdKNNM4z38sqWWh2xcRX22cpexKkcSSn3AcEo
-         mItsRtEuqtMOjy2SRf6PnYDM4sJRDnPfJWKlKXG6IbrM+ldMsMOXcU93dacByjetudig
-         infqtg8gyUst6/qU0BtDRkl3ciO+7r+9MzYr6Y22Q7YBIIIkqL/m/S1VW8erxRI4oNud
-         47na1oWelnXHIGFKKohkLRt1BxpF01QuiJgJ6uAQx9ldXLBXzF6lUXhpq2g3qW2YhQVw
-         4Tvg==
-X-Gm-Message-State: AOJu0YztzFGygfRG2zMhiOgB2xvWZOTciX8puLjhHsXfBjj3pPO2Btf3
-	mQGpO0flcF/Q6i9KaeWin4VUaS05gCGcpHhgAHrFWWdtePgnG9f+wN8kiblvPs8j
-X-Gm-Gg: AeBDiet0mWVNSzVZdZjRAtOf8RD8EWrNyruZ7YupMqmRpEuUz3qScTK4RmFjpktmUvK
-	DhVQtisKwm7+e776mbao/GUxneR1QCHekAFRf462UF79GIBEXGd0ZjMXUmVGniAoVlXqF7e52H6
-	ABZPR8j31Ay2g6h7TX0RUnGAxOWUlowb19471Ne2wzeB2QvEJDK0MatbkYxmJchkJoiOdeGLUPS
-	0XO/NWSRSpdEZNc6QoQ/kDrvuWvTEPwSmGKR7nQOSEK4HKTrmsAgIBi7vjwGOFXggaVHnkQ2Tfo
-	0ByowUw6IL0r5mBC+P3GIzVvjFyMjt9ebvYGb4q7MVTALx4L+BoUqglFyI9v6hyCIEtX5+L8Lz0
-	Fsfi+EXqY0HD2nrcBvSyKNgaVHTwbz0DiXJtlTx3PQVUFYEIAURXugi2MbyUbtnpnE5Qn3rgqJg
-	/+Bje3SuDwatzZl3lkJUigxB46TtU3
-X-Received: by 2002:a05:6000:1a8b:b0:43d:7e6f:37fa with SMTP id ffacd0b85a97d-43d7e6f38cemr14920036f8f.19.1776278811888;
-        Wed, 15 Apr 2026 11:46:51 -0700 (PDT)
-Received: from localhost ([2a01:4b00:d036:ae00:1648:8c4d:e867:9ebb])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-43ead356616sm7204165f8f.13.2026.04.15.11.46.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2026 11:46:51 -0700 (PDT)
-From: luca.boccassi@gmail.com
-To: kexec@lists.infradead.org
-Cc: linux-mm@kvack.org,
-	graf@amazon.com,
-	rppt@kernel.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	brauner@kernel.org,
-	Luca Boccassi <luca.boccassi@gmail.com>
-Subject: [PATCH v2] liveupdate: add LIVEUPDATE_SESSION_GET_NAME ioctl
-Date: Wed, 15 Apr 2026 19:46:14 +0100
-Message-ID: <20260415184644.1155360-1-luca.boccassi@gmail.com>
-X-Mailer: git-send-email 2.47.3
+	Thu, 16 Apr 2026 09:41:20 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id B6A2D60131;
+	Thu, 16 Apr 2026 09:41:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F5D1C2BCAF;
+	Thu, 16 Apr 2026 09:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776332479;
+	bh=2alzcICEC3k3e6IxHUG9ZYQslVBWBu0n2/gQ20xdRCU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=OdMSTtrEFg4+AGBw878XaR6uOAeNGvy/8yLqfJgPzBcEDzZ5fp6NaaNoMwboYXmJ1
+	 7txHfU9adWdlrfIaaFQAscBcBAs5h3myYVDtGYstooiXzpqVeIB4kVus2LLAjrcieY
+	 rmTVnpOms3yewsFmqwnNSGQlTlvPiRRPgon8/uNrdU6ecf8bErhYWfmzo/VDNL91y1
+	 mmE3niwtXR2kS0wlP5YmV1LiquITUyAkMuCGQprFBcxlXASwnBIQzy78QiyVSkC3xn
+	 E1uTWzoeDUF81anyAgjfMsoOTLa8Of82Jte969TF2IuQty8jNkGyAgF8HL3IYFMtKX
+	 Cp5v8B/Fb59Rg==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  =?utf-8?B?TWljaGHFgiBDxYJhcGk=?=
+ =?utf-8?B?xYRza2k=?=
+ <mclapinski@google.com>,  Zi Yan <ziy@nvidia.com>,  Evangelos Petrongonas
+ <epetron@amazon.de>,  Pasha Tatashin <pasha.tatashin@soleen.com>,
+  Alexander Graf <graf@amazon.com>,  Samiullah Khawaja
+ <skhawaja@google.com>,  kexec@lists.infradead.org,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org,  Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v7 2/3] kho: fix deferred init of kho scratch
+In-Reply-To: <adfqkOWVFgeAkItF@kernel.org> (Mike Rapoport's message of "Thu, 9
+	Apr 2026 21:06:08 +0300")
+References: <CAAi7L5dSOxXETv-bYs4hJ1SfixMBQXS4fmfKs3SzVvQ=yY7oSg@mail.gmail.com>
+	<76559EF5-8740-4691-8776-0ADD1CCBF2A4@nvidia.com>
+	<CAAi7L5ex+66qgFzRkLDbuOmC=cVrMyBctPZv6wd15n1rc2U9KQ@mail.gmail.com>
+	<0D1F59C7-CA35-49C8-B341-32D8C7F4A345@nvidia.com>
+	<CAAi7L5fvUPUqd3A4m6wubeYh90NH+S2KBRE1R8WKerBYhkU8kg@mail.gmail.com>
+	<58A8B1B4-A73B-48D2-8492-A58A03634644@nvidia.com>
+	<aburnbP64n9axmu_@kernel.org>
+	<CAAi7L5evx8ta8BifNiGNfUoTiaBUsv4cgQRbm_15RoAfdKPcMw@mail.gmail.com>
+	<acAAp4JaTGn_STBH@kernel.org> <2vxzwlyj9d0b.fsf@kernel.org>
+	<adfqkOWVFgeAkItF@kernel.org>
+Date: Thu, 16 Apr 2026 09:41:14 +0000
+Message-ID: <2vxzo6jj6y4l.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260415_114654_315539_9E0633CC 
-X-CRM114-Status: GOOD (  19.95  )
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,184 +84,58 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Luca Boccassi <luca.boccassi@gmail.com>
+On Thu, Apr 09 2026, Mike Rapoport wrote:
 
-Userspace when requesting a session via the ioctl specifies a name and
-gets a FD, but then there is no ioctl to go back the other way and get
-the name given a LUO session FD. This is problematic especially when
-there is a userspace orchestrator that wants to check what FDs it is
-handling for clients without having to do manual string scraping of
-procfs, or without procfs at all.
+> On Tue, Apr 07, 2026 at 12:21:56PM +0000, Pratyush Yadav wrote:
+>> On Sun, Mar 22 2026, Mike Rapoport wrote:
+>>=20
+>> > On Thu, Mar 19, 2026 at 07:17:48PM +0100, Micha=C5=82 C=C5=82api=C5=84=
+ski wrote:
+[...]
+>> Can we just get rid of this entirely? And just update
+>> memmap_init_zone_range() to also look for scratch and set the
+>> migratetype correctly from the get go? That's more consistent IMO. The
+>> two main places that initialize the struct page,
+>> memmap_init_zone_range() and deferred_init_memmap_chunk(), check for
+>> scratch and set the migratetype correctly.
+>
+> We could. E.g. let memmap_init() check the memblock flags and pass the
+> migratetype to memmap_init_zone_range().
+>
+> I wanted to avoid as much KHO code in mm/ as possible, but if it is must
+> have in deferred_init_memmap_chunk() we could add some to memmap_init() as
+> well.
 
-Add a ioctl to simply get the name from an FD.
+KHO fundamentally alters mm init, so I think it would be hard to keep it
+to a neat corner unfortunately... We have been somewhat successful so
+far, but that has come at the cost of performance. Once we start trying
+to improve performance, I reckon more and more of it will spill into mm
+init.
 
-Signed-off-by: Luca Boccassi <luca.boccassi@gmail.com>
----
-v2: adjusted the commit message a bit and rebased on liveupdate/next
+>=20=20
+>> > @@ -2061,12 +2060,15 @@ deferred_init_memmap_chunk(unsigned long start=
+_pfn, unsigned long end_pfn,
+>> >  		spfn =3D max(spfn, start_pfn);
+>> >  		epfn =3D min(epfn, end_pfn);
+>> >=20=20
+>> > +		if (memblock_is_kho_scratch_memory(PFN_PHYS(spfn)))
+>> > +			mt =3D MIGRATE_CMA;
+>>=20
+>> Would it make sense for for_each_free_mem_range() to also return the
+>> flags for the region? Then you won't have to do another search. It adds
+>> yet another parameter to it so no strong opinion, but something to
+>> consider.
+>
+> I hesitated a lot about this.
+> Have you seen memblock::__next_mem_range() signature? ;-)
 
- include/uapi/linux/liveupdate.h               | 19 +++++
- kernel/liveupdate/luo_session.c               | 13 ++++
- .../testing/selftests/liveupdate/liveupdate.c | 71 +++++++++++++++++++
- 3 files changed, 103 insertions(+)
+Fair enough :-O
 
-diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveupdate.h
-index 30bc66ee9436a..41dc44d239dde 100644
---- a/include/uapi/linux/liveupdate.h
-+++ b/include/uapi/linux/liveupdate.h
-@@ -59,6 +59,7 @@ enum {
- 	LIVEUPDATE_CMD_SESSION_PRESERVE_FD = LIVEUPDATE_CMD_SESSION_BASE,
- 	LIVEUPDATE_CMD_SESSION_RETRIEVE_FD = 0x41,
- 	LIVEUPDATE_CMD_SESSION_FINISH = 0x42,
-+	LIVEUPDATE_CMD_SESSION_GET_NAME = 0x43,
- };
- 
- /**
-@@ -213,4 +214,22 @@ struct liveupdate_session_finish {
- #define LIVEUPDATE_SESSION_FINISH					\
- 	_IO(LIVEUPDATE_IOCTL_TYPE, LIVEUPDATE_CMD_SESSION_FINISH)
- 
-+/**
-+ * struct liveupdate_session_get_name - ioctl(LIVEUPDATE_SESSION_GET_NAME)
-+ * @size:  Input; sizeof(struct liveupdate_session_get_name)
-+ * @name:  Output; A null-terminated string with the full session name.
-+ *
-+ * Retrieves the full name of the session associated with this file descriptor.
-+ * This is useful because the kernel may truncate the name shown in /proc.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+struct liveupdate_session_get_name {
-+	__u32		size;
-+	__u8		name[LIVEUPDATE_SESSION_NAME_LENGTH];
-+};
-+
-+#define LIVEUPDATE_SESSION_GET_NAME					\
-+	_IO(LIVEUPDATE_IOCTL_TYPE, LIVEUPDATE_CMD_SESSION_GET_NAME)
-+
- #endif /* _UAPI_LIVEUPDATE_H */
-diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
-index 25ae704d77873..af9e498206d24 100644
---- a/kernel/liveupdate/luo_session.c
-+++ b/kernel/liveupdate/luo_session.c
-@@ -289,10 +289,21 @@ static int luo_session_finish(struct luo_session *session,
- 	return luo_ucmd_respond(ucmd, sizeof(*argp));
- }
- 
-+static int luo_session_get_name(struct luo_session *session,
-+				struct luo_ucmd *ucmd)
-+{
-+	struct liveupdate_session_get_name *argp = ucmd->cmd;
-+
-+	strscpy((char *)argp->name, session->name, sizeof(argp->name));
-+
-+	return luo_ucmd_respond(ucmd, sizeof(*argp));
-+}
-+
- union ucmd_buffer {
- 	struct liveupdate_session_finish finish;
- 	struct liveupdate_session_preserve_fd preserve;
- 	struct liveupdate_session_retrieve_fd retrieve;
-+	struct liveupdate_session_get_name get_name;
- };
- 
- struct luo_ioctl_op {
-@@ -319,6 +330,8 @@ static const struct luo_ioctl_op luo_session_ioctl_ops[] = {
- 		 struct liveupdate_session_preserve_fd, token),
- 	IOCTL_OP(LIVEUPDATE_SESSION_RETRIEVE_FD, luo_session_retrieve_fd,
- 		 struct liveupdate_session_retrieve_fd, token),
-+	IOCTL_OP(LIVEUPDATE_SESSION_GET_NAME, luo_session_get_name,
-+		 struct liveupdate_session_get_name, name),
- };
- 
- static long luo_session_ioctl(struct file *filep, unsigned int cmd,
-diff --git a/tools/testing/selftests/liveupdate/liveupdate.c b/tools/testing/selftests/liveupdate/liveupdate.c
-index c2878e3d5ef90..bdc1cedc4f944 100644
---- a/tools/testing/selftests/liveupdate/liveupdate.c
-+++ b/tools/testing/selftests/liveupdate/liveupdate.c
-@@ -102,6 +102,22 @@ static int create_session(int lu_fd, const char *name)
- 	return args.fd;
- }
- 
-+/* Helper function to get a session name via ioctl. */
-+static int get_session_name(int session_fd, char *name, size_t name_len)
-+{
-+	struct liveupdate_session_get_name args = {};
-+
-+	args.size = sizeof(args);
-+
-+	if (ioctl(session_fd, LIVEUPDATE_SESSION_GET_NAME, &args))
-+		return -errno;
-+
-+	strncpy(name, (char *)args.name, name_len - 1);
-+	name[name_len - 1] = '\0';
-+
-+	return 0;
-+}
-+
- /*
-  * Test Case: Create Duplicate Session
-  *
-@@ -345,4 +361,59 @@ TEST_F(liveupdate_device, preserve_unsupported_fd)
- 	ASSERT_EQ(close(session_fd), 0);
- }
- 
-+/*
-+ * Test Case: Get Session Name
-+ *
-+ * Verifies that the full session name can be retrieved from a session file
-+ * descriptor via ioctl.
-+ */
-+TEST_F(liveupdate_device, get_session_name)
-+{
-+	char name_buf[LIVEUPDATE_SESSION_NAME_LENGTH] = {};
-+	const char *session_name = "get-name-test-session";
-+	int session_fd;
-+
-+	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
-+	if (self->fd1 < 0 && errno == ENOENT)
-+		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
-+	ASSERT_GE(self->fd1, 0);
-+
-+	session_fd = create_session(self->fd1, session_name);
-+	ASSERT_GE(session_fd, 0);
-+
-+	ASSERT_EQ(get_session_name(session_fd, name_buf, sizeof(name_buf)), 0);
-+	ASSERT_STREQ(name_buf, session_name);
-+
-+	ASSERT_EQ(close(session_fd), 0);
-+}
-+
-+/*
-+ * Test Case: Get Session Name at Maximum Length
-+ *
-+ * Verifies that a session name using the full LIVEUPDATE_SESSION_NAME_LENGTH
-+ * (minus the null terminator) can be correctly retrieved.
-+ */
-+TEST_F(liveupdate_device, get_session_name_max_length)
-+{
-+	char name_buf[LIVEUPDATE_SESSION_NAME_LENGTH] = {};
-+	char long_name[LIVEUPDATE_SESSION_NAME_LENGTH];
-+	int session_fd;
-+
-+	memset(long_name, 'A', sizeof(long_name) - 1);
-+	long_name[sizeof(long_name) - 1] = '\0';
-+
-+	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
-+	if (self->fd1 < 0 && errno == ENOENT)
-+		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
-+	ASSERT_GE(self->fd1, 0);
-+
-+	session_fd = create_session(self->fd1, long_name);
-+	ASSERT_GE(session_fd, 0);
-+
-+	ASSERT_EQ(get_session_name(session_fd, name_buf, sizeof(name_buf)), 0);
-+	ASSERT_STREQ(name_buf, long_name);
-+
-+	ASSERT_EQ(close(session_fd), 0);
-+}
-+
- TEST_HARNESS_MAIN
--- 
-2.47.3
+>
+> I decided to start with something correct, but slowish and leave the churn
+> and speed for later.
 
+--=20
+Regards,
+Pratyush Yadav
 
