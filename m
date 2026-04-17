@@ -4,87 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 594D3F99C65
-	for <kexec@archiver.kernel.org>; Fri, 17 Apr 2026 21:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4B246F99C63
+	for <kexec@archiver.kernel.org>; Fri, 17 Apr 2026 21:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=3Me/r6y+WzPcCjVhGDh2HGIPNUwQfElYLMiSVWgNDfI=; b=uJWerffiCy0qplo/1LM9Cb72Oj
-	2oVbCj8YvJtVU4l/kZhLNTDzck9kb8Bn+rhPSMLLMyCAGsI7jpO9a7uRA5wOLplpLx4nSjwLtuw+P
-	1Np0GwbanCpCN8HIQ2BF++xCWzbGXerCLBGBMRUA+KGypKngh2hIaKWmCBNQqImgCo4AWf83FmPbt
-	eK/Crudot8bfkKewECCEJxbCpeT+A542F5MORKPMvCvVJrv1fhOUv7SeVdFqHYSR8MJSyaab6aUM2
-	zvvsx7sEG/TQjdWE2LytxPvo4z1CIGqIFw5J44jfRg4tZbz3rh/MXU5mXooORsiaWhD0z6i0vBZdf
-	6vUS77hQ==;
+	bh=nHdL1Ocg1KAYUcmdB/M7wkvLdiK2qMWc0+wVJsX3Xkk=; b=De8SrAWHq4sW6Nb20Cf1R7aAas
+	Pfl+AZ+hinWEouYjQaMk2B+f6a8u7M8ldVfnazdQKuwq6Xpj5BtMGpu/wvFNNnrHaaovuLIEOAnCW
+	nQGw5VQQC8QQumowvq3Kvk5rlRTVlOCObZTK4JqiL6WJ7rgtAXgIAhfgTpDokGChmjLA8QTayp9ZB
+	aDqzwnAZS2Cia8fqjQ0cpsPYmr6dn8pYDPOooAs/NoMTXqq+2/gzuEzrijcYF9w58/4fBXQBzvGuZ
+	M123e2ld9akEOh0ON4sKDzCD68CYgCOFG+MeMiSJ6G9UWxrTLc0yOQBI0LTMm58U5ODniHELTbKHA
+	uBwOVzsg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wDqON-00000004TQQ-1e2r;
-	Fri, 17 Apr 2026 21:06:23 +0000
-Received: from mail-qk1-x72a.google.com ([2607:f8b0:4864:20::72a])
+	id 1wDr34-00000004VE5-0KDF;
+	Fri, 17 Apr 2026 21:48:26 +0000
+Received: from mail-qv1-xf29.google.com ([2607:f8b0:4864:20::f29])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wDqOK-00000004TQ3-3x1d
+	id 1wDr31-00000004VDj-1640
 	for kexec@lists.infradead.org;
-	Fri, 17 Apr 2026 21:06:22 +0000
-Received: by mail-qk1-x72a.google.com with SMTP id af79cd13be357-8d68f702851so146300785a.0
-        for <kexec@lists.infradead.org>; Fri, 17 Apr 2026 14:06:20 -0700 (PDT)
+	Fri, 17 Apr 2026 21:48:24 +0000
+Received: by mail-qv1-xf29.google.com with SMTP id 6a1803df08f44-8a5800772f3so8144256d6.2
+        for <kexec@lists.infradead.org>; Fri, 17 Apr 2026 14:48:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1776459980; x=1777064780; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1776462502; x=1777067302; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3Me/r6y+WzPcCjVhGDh2HGIPNUwQfElYLMiSVWgNDfI=;
-        b=KOYKNXVubqd52Q/bB2Koab5gjTTnNGee9D3Py6NDovr0xijiKGeuaPXJRHFXu5527c
-         XRpHK5tpdutdXNvUW/0WW6P6mN3zx+zOJr167vEDxNMGYm93IPHdQFr5RbsQoGMn5a7B
-         j8ls56auE4mfDLIIy/wX6r62NZ5zDULUqlgeIurK7s1BMIJJRCNbPwThfr1fVUVDqOxL
-         /XNYWC8IZsg1P+/eZesOXz+N8PJRLvzy/Rmdfb7jZx/8iCZQjExzJW26u/5ZQLnBJpsn
-         JbRZ12Gbq1xk/7Jcr4MHhBvKf9HbMR0bBe7bKmOyuwBq68JokbBJPRow4cv3qRD44OKk
-         WrAw==
+        bh=nHdL1Ocg1KAYUcmdB/M7wkvLdiK2qMWc0+wVJsX3Xkk=;
+        b=gXPXeOKidk3B/4Fa/Rq/UnNvJjaR0igFYlBK3+7esEE64vjy4Vhm6TyD+6kubu04gT
+         DkvJjswb9yIWKK6BYBpyCqsLSoNFG67PgbFuUvwu3zg+xKvh0AtUHW4ohPLumfvKeUdK
+         pvETpb3jGzegxs4VSCq40GPL0y+RUwSXbb0/B2XcbCi+lwhBIM3f9PBP3pb4ctcn69zK
+         vUVFaSNUht1YTz+wB8ayphiULkXzb8lDyLbVWRkz1Dc8IfyURWDO3vFml/854Y1t6UDP
+         Crs29WRnq9GN6oO8HeY3U46t4gC8ZKXw1C0k5UCeFITYmN0gIxlAsk8TFegnnDn1tRIU
+         0I+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776459980; x=1777064780;
+        d=1e100.net; s=20251104; t=1776462502; x=1777067302;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3Me/r6y+WzPcCjVhGDh2HGIPNUwQfElYLMiSVWgNDfI=;
-        b=YpiV+2HcFw3wNz5zolrczdJbnm4z7+F/PhzUXR0f7MmanTDfi62BJsOfBYZXehCN2g
-         kY2uAD704USY5OlcZc8QOlLqEa/N3qhFTpLzaiNo+hJko/un4tnu4kHM11nFVDcbbGCs
-         m5Hv53bIOutB6gqy5QOWYxrQ1VI3uIuCs8lMg36eRxOcjqxA90LVqYz4VvcDZFWBAPXJ
-         L9rAP+4gIQPDTOsfsdCu/5PUAjZs4LkzcSVHKOtIzj1g3qAgA1laBUV6IRe2cnhd86C4
-         4ioyvf6J9aJdgs4qqJwUZrWaPceSLIbmTEKYB15yldyFajbCISG1p4a95S/jUz2vYmFL
-         E2qw==
-X-Gm-Message-State: AOJu0Yyn5niC7luTNA5dmjoqfB2g1tOVFv3uXOj1IMiZuWqApV1mCR81
-	maTgZGTbo3aOYDJsjgIr1zzG03iUruCS6rKHTL9UHU5WjV4GkasLs0lKUYlB8QJg52Q=
-X-Gm-Gg: AeBDiev1ayv6+kw9L/+F70UTZ83Utm4TT+iJUejMo7zYSNJ8xuJHe8vjVZYmszdzazd
-	OGQGoNqGhHHoaCTnOg8X6bwxpnWWMPkc/4eoxcPC54uGdHQOQNzedVuqropOzySkvfRyjIPjPPg
-	gnOFkrHiafXYYxLV0/h9BXDPPbk9yi2poJT5JJSaNzYxbtp88JEjT3DlKLrW/XcJKYthtPsTAAi
-	fp9p9U5rEvdtBA56knEUGeOfhVGa9/d+aTf2BvVO0qHEn+Tu/R3tuQcS//3k6Y5uDQ7FLJ/J3aG
-	WBKFySTG1Zp+zy3WlskzF0fxrh6EKpDrOn5OnlI78XNYAsOu8nXz258cCJHis36gtfDtdAOIuBP
-	TudKkunKK9fOCjTcybjrTse1Bs9cyNeEnCgbFdFa5AdhSSOOlUiJPfMJgSoD2qIEfG2SVmdswu3
-	rV0LnUpZH0F3mNEOZYqPHC2jiEqeGhLIKAFbot5qXQS4CbAXaHy1c0G9GS193U5G0T+M35Xgg=
-X-Received: by 2002:a05:620a:4612:b0:8d4:aa50:686b with SMTP id af79cd13be357-8e7911ce9cdmr646446785a.31.1776459979750;
-        Fri, 17 Apr 2026 14:06:19 -0700 (PDT)
+        bh=nHdL1Ocg1KAYUcmdB/M7wkvLdiK2qMWc0+wVJsX3Xkk=;
+        b=YFzJY2REadKZQYXlc+bPc0P4OdVQQ3LOk7XiLVK0SnOO9OpwIc2aU/qr3w1/TbDAF9
+         x38a07fiEFO47hr6lSUXhvYvi/GR6Qbk/rWvIudco+XLJxheAb06y+iZ7yiveXWI2JbK
+         cbkbpuIEyUPjtXVBESAdpjPWaguocaTkFNqTcCK8bu4n893l/QoZmYU+Qu3N0utGPiqG
+         Jw0i6BUw20alIAHhyTLa3sAbXYrDBhkrEaSQ8ns+biS3b1FWB+Yr8A9jJskyzqMsJYVo
+         g0u8lUclghHN8Octy14RWG2uRabnfndDqvP7cSUwZc76HHQY4cruWXyeJ2tSlhagKX4F
+         b+ig==
+X-Gm-Message-State: AOJu0YyybRCivWzV25aTIKg7e59F70MrhaPsZzwBqS6PQOx8CIV6Ky9z
+	FhnPKFnc4XBr+XYLDBrWq9vPIq5cgD1dDY4k31g1I58/Q7UEUMuUR8TcxspB1UWzTZs=
+X-Gm-Gg: AeBDiesNEBKN1WmsnPIwm8UkQpXl1aRbspCyy/EYcYNAwjjQYQpzk9iHT0tbR3UvAVy
+	H1hs66Mfp4KLo5dZrLYZJUZ3IV/Qr5ivU0olCoh68i2t8opoFE2P6K2aTaVfph5tcy9ropNDckx
+	SF40LpBpf/OmkM6/6NSz75XaSWlTBrEKmiTf2b6VGbn3CjnFLU4LQI1mhkRWuF24dVcxmEW1tWU
+	uTIiryK04X6zGKRrIla4jgkNZZb3MfXnjUIN1hSGz/o8jrekGslEHWfSMsZM0EwzFJP+KuBjMHy
+	vc2xbvZhoy+/g4IX8/vCUnwp3NiSSUekvfxgPajVNh0qOPEkBedxhfkbMQn8g+Pc+dGBdGnxlpk
+	BA1YDF82+unLrXjTD8mXjwegxCUWlZphLJhboRuhEhY8Ygz0cTRV3Y5TjwXWG08vj/bZ3HbFIYD
+	bZJI/oK0LKrcCkEtZd/yTp3s3jaJqWMvA22BWU6ntwUPF55FOjL2tjs6NGaNbuNR4qgqmbIE8=
+X-Received: by 2002:a05:6214:4f18:b0:89c:4812:cc2 with SMTP id 6a1803df08f44-8b028065b51mr63135706d6.15.1776462501707;
+        Fri, 17 Apr 2026 14:48:21 -0700 (PDT)
 Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8b02ac68e76sm19709696d6.11.2026.04.17.14.06.18
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8b02aebc0f8sm19830736d6.47.2026.04.17.14.48.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2026 14:06:19 -0700 (PDT)
-Date: Fri, 17 Apr 2026 21:06:17 +0000
+        Fri, 17 Apr 2026 14:48:21 -0700 (PDT)
+Date: Fri, 17 Apr 2026 21:48:19 +0000
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: luca.boccassi@gmail.com
 Cc: kexec@lists.infradead.org, linux-mm@kvack.org, graf@amazon.com, 
 	rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, 
-	brauner@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] selftests/liveupdate: add test case for
- LUO_SESSION_MAGIC
-Message-ID: <amspd2iat2hzjf77en5d55wbmau6xyaa4mmxbzjxl5nw5tlqma@lellpiqvrgb5>
-References: <20260417205810.1831923-1-luca.boccassi@gmail.com>
- <20260417205810.1831923-2-luca.boccassi@gmail.com>
+	brauner@kernel.org
+Subject: Re: [PATCH v2] liveupdate: add LIVEUPDATE_SESSION_GET_NAME ioctl
+Message-ID: <huu6stumzw7ziu7i5qsbpo54hmvd4j4g6fge3acrulhwekw7ez@mjjf6psjty2g>
+References: <20260417003856.1525287-1-luca.boccassi@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260417205810.1831923-2-luca.boccassi@gmail.com>
+In-Reply-To: <20260417003856.1525287-1-luca.boccassi@gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260417_140620_991633_9687402C 
-X-CRM114-Status: GOOD (  17.31  )
+X-CRM114-CacheID: sfid-20260417_144823_410424_5F87B7F4 
+X-CRM114-Status: GOOD (  32.07  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,78 +97,195 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 04-17 21:57, luca.boccassi@gmail.com wrote:
+On 04-17 01:36, luca.boccassi@gmail.com wrote:
 > From: Luca Boccassi <luca.boccassi@gmail.com>
 > 
-> Verify that fstat works as expected after the switch from anon_inode
-> to the new magic number.
+> Userspace when requesting a session via the ioctl specifies a name and
+> gets a FD, but then there is no ioctl to go back the other way and get
+> the name given a LUO session FD. This is problematic especially when
+> there is a userspace orchestrator that wants to check what FDs it is
+> handling for clients without having to do manual string scraping of
+> procfs, or without procfs at all.
+> 
+> Add a ioctl to simply get the name from an FD.
 > 
 > Signed-off-by: Luca Boccassi <luca.boccassi@gmail.com>
-
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-
 > ---
-> v4: split test case in separate patch, reorder variable declarations
+> This was requested by Lennart and Christian when discussing integration
+> with systemd for LUO management.
 > 
->  .../testing/selftests/liveupdate/liveupdate.c | 40 +++++++++++++++++++
->  1 file changed, 40 insertions(+)
+> v2: apply one fix from bot review about cleanup on error path:
+>     https://sashiko.dev/#/patchset/20260415184536.1155220-1-luca.boccassi%40gmail.com
+>     the other comments are invalid: luo is not a kmod, and the write hooks are not set up
+
+Please split into two patches, and also CC to kernel-linux.
 > 
+>  include/uapi/linux/liveupdate.h               | 19 +++++
+>  kernel/liveupdate/luo_session.c               | 13 ++++
+>  .../testing/selftests/liveupdate/liveupdate.c | 71 +++++++++++++++++++
+>  3 files changed, 103 insertions(+)
+> 
+> diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveupdate.h
+> index 30bc66ee9436a..41dc44d239dde 100644
+> --- a/include/uapi/linux/liveupdate.h
+> +++ b/include/uapi/linux/liveupdate.h
+> @@ -59,6 +59,7 @@ enum {
+>  	LIVEUPDATE_CMD_SESSION_PRESERVE_FD = LIVEUPDATE_CMD_SESSION_BASE,
+>  	LIVEUPDATE_CMD_SESSION_RETRIEVE_FD = 0x41,
+>  	LIVEUPDATE_CMD_SESSION_FINISH = 0x42,
+> +	LIVEUPDATE_CMD_SESSION_GET_NAME = 0x43,
+>  };
+>  
+>  /**
+> @@ -213,4 +214,22 @@ struct liveupdate_session_finish {
+>  #define LIVEUPDATE_SESSION_FINISH					\
+>  	_IO(LIVEUPDATE_IOCTL_TYPE, LIVEUPDATE_CMD_SESSION_FINISH)
+>  
+> +/**
+> + * struct liveupdate_session_get_name - ioctl(LIVEUPDATE_SESSION_GET_NAME)
+> + * @size:  Input; sizeof(struct liveupdate_session_get_name)
+> + * @name:  Output; A null-terminated string with the full session name.
+> + *
+> + * Retrieves the full name of the session associated with this file descriptor.
+> + * This is useful because the kernel may truncate the name shown in /proc.
+> + *
+> + * Return: 0 on success, negative error code on failure.
+> + */
+> +struct liveupdate_session_get_name {
+> +	__u32		size;
+> +	__u8		name[LIVEUPDATE_SESSION_NAME_LENGTH];
+
+Add __u32  reserved;
+
+Thanks,
+Pasha
+
+
+> +};
+> +
+> +#define LIVEUPDATE_SESSION_GET_NAME					\
+> +	_IO(LIVEUPDATE_IOCTL_TYPE, LIVEUPDATE_CMD_SESSION_GET_NAME)
+> +
+>  #endif /* _UAPI_LIVEUPDATE_H */
+> diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
+> index 25ae704d77873..af9e498206d24 100644
+> --- a/kernel/liveupdate/luo_session.c
+> +++ b/kernel/liveupdate/luo_session.c
+> @@ -289,10 +289,21 @@ static int luo_session_finish(struct luo_session *session,
+>  	return luo_ucmd_respond(ucmd, sizeof(*argp));
+>  }
+>  
+> +static int luo_session_get_name(struct luo_session *session,
+> +				struct luo_ucmd *ucmd)
+> +{
+> +	struct liveupdate_session_get_name *argp = ucmd->cmd;
+> +
+> +	strscpy((char *)argp->name, session->name, sizeof(argp->name));
+> +
+> +	return luo_ucmd_respond(ucmd, sizeof(*argp));
+> +}
+> +
+>  union ucmd_buffer {
+>  	struct liveupdate_session_finish finish;
+>  	struct liveupdate_session_preserve_fd preserve;
+>  	struct liveupdate_session_retrieve_fd retrieve;
+> +	struct liveupdate_session_get_name get_name;
+>  };
+>  
+>  struct luo_ioctl_op {
+> @@ -319,6 +330,8 @@ static const struct luo_ioctl_op luo_session_ioctl_ops[] = {
+>  		 struct liveupdate_session_preserve_fd, token),
+>  	IOCTL_OP(LIVEUPDATE_SESSION_RETRIEVE_FD, luo_session_retrieve_fd,
+>  		 struct liveupdate_session_retrieve_fd, token),
+> +	IOCTL_OP(LIVEUPDATE_SESSION_GET_NAME, luo_session_get_name,
+> +		 struct liveupdate_session_get_name, name),
+>  };
+>  
+>  static long luo_session_ioctl(struct file *filep, unsigned int cmd,
 > diff --git a/tools/testing/selftests/liveupdate/liveupdate.c b/tools/testing/selftests/liveupdate/liveupdate.c
-> index bdc1cedc4f944..3c21352f023a7 100644
+> index c2878e3d5ef90..bdc1cedc4f944 100644
 > --- a/tools/testing/selftests/liveupdate/liveupdate.c
 > +++ b/tools/testing/selftests/liveupdate/liveupdate.c
-> @@ -22,9 +22,12 @@
->  #include <fcntl.h>
->  #include <string.h>
->  #include <sys/ioctl.h>
-> +#include <sys/stat.h>
-> +#include <sys/vfs.h>
->  #include <unistd.h>
+> @@ -102,6 +102,22 @@ static int create_session(int lu_fd, const char *name)
+>  	return args.fd;
+>  }
 >  
->  #include <linux/liveupdate.h>
-> +#include <linux/magic.h>
->  
->  #include "../kselftest.h"
->  #include "../kselftest_harness.h"
-> @@ -416,4 +419,41 @@ TEST_F(liveupdate_device, get_session_name_max_length)
+> +/* Helper function to get a session name via ioctl. */
+> +static int get_session_name(int session_fd, char *name, size_t name_len)
+> +{
+> +	struct liveupdate_session_get_name args = {};
+> +
+> +	args.size = sizeof(args);
+> +
+> +	if (ioctl(session_fd, LIVEUPDATE_SESSION_GET_NAME, &args))
+> +		return -errno;
+> +
+> +	strncpy(name, (char *)args.name, name_len - 1);
+> +	name[name_len - 1] = '\0';
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * Test Case: Create Duplicate Session
+>   *
+> @@ -345,4 +361,59 @@ TEST_F(liveupdate_device, preserve_unsupported_fd)
 >  	ASSERT_EQ(close(session_fd), 0);
 >  }
 >  
 > +/*
-> + * Test Case: Session fstat
+> + * Test Case: Get Session Name
 > + *
-> + * Verifies that fstatfs() on a session file descriptor reports the
-> + * LUO_SESSION_MAGIC filesystem type, and that fstat() returns consistent
-> + * inode numbers across different sessions (shared singleton inode).
+> + * Verifies that the full session name can be retrieved from a session file
+> + * descriptor via ioctl.
 > + */
-> +TEST_F(liveupdate_device, session_fstat)
+> +TEST_F(liveupdate_device, get_session_name)
 > +{
-> +	int session_fd1, session_fd2;
-> +	struct stat st1, st2;
-> +	struct statfs sfs;
+> +	char name_buf[LIVEUPDATE_SESSION_NAME_LENGTH] = {};
+> +	const char *session_name = "get-name-test-session";
+> +	int session_fd;
 > +
 > +	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
 > +	if (self->fd1 < 0 && errno == ENOENT)
 > +		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
 > +	ASSERT_GE(self->fd1, 0);
 > +
-> +	session_fd1 = create_session(self->fd1, "fstat-session-1");
-> +	ASSERT_GE(session_fd1, 0);
+> +	session_fd = create_session(self->fd1, session_name);
+> +	ASSERT_GE(session_fd, 0);
 > +
-> +	session_fd2 = create_session(self->fd1, "fstat-session-2");
-> +	ASSERT_GE(session_fd2, 0);
+> +	ASSERT_EQ(get_session_name(session_fd, name_buf, sizeof(name_buf)), 0);
+> +	ASSERT_STREQ(name_buf, session_name);
 > +
-> +	/* Verify the filesystem type is LUO_SESSION_MAGIC */
-> +	ASSERT_EQ(fstatfs(session_fd1, &sfs), 0);
-> +	EXPECT_EQ(sfs.f_type, LUO_SESSION_MAGIC);
+> +	ASSERT_EQ(close(session_fd), 0);
+> +}
 > +
-> +	/* Verify both sessions share the same inode number */
-> +	ASSERT_EQ(fstat(session_fd1, &st1), 0);
-> +	ASSERT_EQ(fstat(session_fd2, &st2), 0);
-> +	EXPECT_EQ(st1.st_ino, st2.st_ino);
+> +/*
+> + * Test Case: Get Session Name at Maximum Length
+> + *
+> + * Verifies that a session name using the full LIVEUPDATE_SESSION_NAME_LENGTH
+> + * (minus the null terminator) can be correctly retrieved.
+> + */
+> +TEST_F(liveupdate_device, get_session_name_max_length)
+> +{
+> +	char name_buf[LIVEUPDATE_SESSION_NAME_LENGTH] = {};
+> +	char long_name[LIVEUPDATE_SESSION_NAME_LENGTH];
+> +	int session_fd;
 > +
-> +	ASSERT_EQ(close(session_fd1), 0);
-> +	ASSERT_EQ(close(session_fd2), 0);
+> +	memset(long_name, 'A', sizeof(long_name) - 1);
+> +	long_name[sizeof(long_name) - 1] = '\0';
+> +
+> +	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
+> +	if (self->fd1 < 0 && errno == ENOENT)
+> +		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
+> +	ASSERT_GE(self->fd1, 0);
+> +
+> +	session_fd = create_session(self->fd1, long_name);
+> +	ASSERT_GE(session_fd, 0);
+> +
+> +	ASSERT_EQ(get_session_name(session_fd, name_buf, sizeof(name_buf)), 0);
+> +	ASSERT_STREQ(name_buf, long_name);
+> +
+> +	ASSERT_EQ(close(session_fd), 0);
 > +}
 > +
 >  TEST_HARNESS_MAIN
