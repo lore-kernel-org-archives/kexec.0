@@ -4,102 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C6668F99C63
-	for <kexec@archiver.kernel.org>; Fri, 17 Apr 2026 20:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 69126F99C63
+	for <kexec@archiver.kernel.org>; Fri, 17 Apr 2026 21:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZufiGMBiodERE5FIiMZDUSkBmcYz2+uUaKg2n/08duc=; b=NVMpMpgpQ/hlecLq9E2T9uSXCs
-	kn8TgDoCwuTvjbtv8S2V8KYu5E9N+dIP6pVOStTl98niuQAsHkgBE9VqGc9x5No+GJJDAqEfUXB83
-	66SsqQfKgCHq6mBaIJE2fy1O7S0cJMl0Lk1DJDzlU/yQ/mhSRNY+QPPJdCYOGk4SJYJzKD+ch7FBB
-	zVCK5mHCSfZwsTwrLthim7oMAQv+LEUNNMIUk9ECic4gd29xYN76lgBPSEWeHDKsg5pIZbvjlzFXJ
-	JdSDpQTONrT5+d/2gobtr/90ot0P25rysXI9pZRMalXZL9PUddqEU7cw5DJmqoU/G6TAWOa1vZAB8
-	On8Vf83g==;
+	bh=QIFmiMDTeP/Oqc+nqvJkfeXsIdepM88Xx6p9HfnIkCU=; b=0qvQ5hI7b2qTJU+n7UFVgHYdr1
+	TAnAETtf1FMJDdHNNFbwJCSEfHX10el9xBMsFt/x5klBfPS6Wwr7Ys5XngY1aP0xzIlyJXnqYtzmc
+	4hIwnMFjHNQzr7Cm89eXeW9nh4McggbGNn8T8Lq+Ym8JOEMT4UmpkeFSPVRTaPQYuB4udGd5jKFci
+	z0qj+9YNzjnBEjLMPVjGKJTRsTHglZN7327rz4iFG2cIBtBePJ97kv8fqZjQDgrS0P7sjL8EIm8En
+	XpiiCGP4rLuEb5wmRyZT2DgjuzB2HoAZjJDkdk7OgE/hJNvWT9ckZI/ctRY80XXDGoXrU06VZ/qNY
+	ZVzcIOpA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wDqHs-00000004T8h-3jQl;
-	Fri, 17 Apr 2026 20:59:40 +0000
-Received: from mail-yx1-xb133.google.com ([2607:f8b0:4864:20::b133])
+	id 1wDqMn-00000004TKo-2cO9;
+	Fri, 17 Apr 2026 21:04:45 +0000
+Received: from mail-qk1-x736.google.com ([2607:f8b0:4864:20::736])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wDqHq-00000004T8K-2WpU
+	id 1wDqMk-00000004TKR-1z6S
 	for kexec@lists.infradead.org;
-	Fri, 17 Apr 2026 20:59:40 +0000
-Received: by mail-yx1-xb133.google.com with SMTP id 956f58d0204a3-6530dd51ccaso1147347d50.3
-        for <kexec@lists.infradead.org>; Fri, 17 Apr 2026 13:59:38 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776459577; cv=none;
-        d=google.com; s=arc-20240605;
-        b=g1nQ9IX/rdOOiEF4OA7PZh13sn5QpkdfxQCC/hwaMnrp+r2q0bvcBQT3SFn7+JZqk5
-         DTXqjNm3k0fseuREAQSNSCot0dyYQcr965tQiSuxrQwdYQOnIare5WuHDIkgiKP7VdfP
-         aadX6ukJLtgYV6UE1rDAQEPsbVqUzzD486exubhuIhc6A3w1iIRfTb13ESf86kQoVnUw
-         6omWi8Wcph5dPi2pI67BB0UpkZZJ4lv448McTuha5jLugPWxgdD7bVArDesaGqM5KW5G
-         OvFuk49QFZi6bQqIKYk1OiiBsK6EGHQFPiF+eW/THOmORGTt/dc7k3dDhQev1H16ndZg
-         eIww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=ZufiGMBiodERE5FIiMZDUSkBmcYz2+uUaKg2n/08duc=;
-        fh=lfpDnHrRrA3hnfLuAB3WY/TkEmve1iZbn8duMFYu5m4=;
-        b=cZyZ2G0VpsovfmXYOy3ai9ZJ83rfMnUOFdVUvSZnzlZBD2cjC72K8kp0RD9tidOUIX
-         IfRagGogVeYK/0zHgUqYASnMZaeOxxTfN3GhnJ9kRPvqYxVd51gTPKAY56K8ydyzTyWE
-         xSpE/2/pe5P8Tc9duE1Ua2BHBEH86dOzY87/S38RjrHdbld6sZH4BYnJVAGgUQHrdXiV
-         b4FSnzDNlTftVWMKbElOyCKOd0tPhgiP5Ao0QqK5+iOiQ0LAxOkZbgJ4fpc5J58byTEo
-         u2H/8Hv+TRHMMcfYoeNpuC6oA5ZxifbvClBtpy6+kCZuKL36Nrrq8tiYA9StJewfa5+G
-         99IQ==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	Fri, 17 Apr 2026 21:04:43 +0000
+Received: by mail-qk1-x736.google.com with SMTP id af79cd13be357-8d933da14f0so115914285a.2
+        for <kexec@lists.infradead.org>; Fri, 17 Apr 2026 14:04:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776459577; x=1777064377; darn=lists.infradead.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZufiGMBiodERE5FIiMZDUSkBmcYz2+uUaKg2n/08duc=;
-        b=n9bK4uI6jSEko3H/NmORxBzR00w/ppjCnXaNO6qoPZEFDtlHjyLWVtTePzwuWgosfU
-         YiV1v4i1kfFdqwWwigMTIMk30YFZjz2i0HSNmXUlrSvuMByxE8GaP9VTNiHHsUVdexaA
-         LCSnZ1vLVtQtluguJEJVogI5fcribJhx5bL5Si6iBi5kcyFnV1fkvqjXHCugcP74Poy/
-         7n3y1STRhnnnBh7to8x5qqAdJqYMOXlaQulzW71TX61KGjUme3UZvUgyx32RGSdySD5Z
-         jjzdXe92r/qUD7G0a0a7BhmtyUtOUWXll4fj9Gk/elYj/RNuEkL3ZxxnwbC05EPLVnHo
-         ZUOA==
+        d=soleen.com; s=google; t=1776459881; x=1777064681; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QIFmiMDTeP/Oqc+nqvJkfeXsIdepM88Xx6p9HfnIkCU=;
+        b=Ts0tu4oxkjeCgspiGm+dlaf+xI4XCDafAUvvNA2eS+wCYK7FH/Sy3i4AeOx+2p4QqI
+         pSjxoHhnluNvH7AZFG37o4/Dd8sk/UpUt9LKijPDdUJ0nh8BuCYDqcAo95bk/81WrHm4
+         dW82cVZt1RQS9Q6iVDdJAqe+/MTFDCL2KDWnvu59nRx9lXmZGrqyu00IQZ6FzHsWvDvj
+         2ZWd4XGoKLRsefwNJXAUYPrKh+IAx4b9l4ZB3BUMMa3loQL1nVjYH0NEYXBGQfngySBa
+         VdtWuon8Gm93quQd4rELoR3O6E1U32ia8rGkWECCpN/St8ADgGLmCW0+9cDXskgN5diL
+         D9MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776459577; x=1777064377;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZufiGMBiodERE5FIiMZDUSkBmcYz2+uUaKg2n/08duc=;
-        b=iWMaOE7gw3p5PIX76WOvymsZdWVD23LmU2L2oSqyNuIbOyfzfIFHIcOjJc0yM/jAXZ
-         9cViRGTywoPAcF7GP/G8KA/xAgKibpmOYa7XhgaDnniw18+pQSlQBOTyRLqrd0Nfv/LU
-         jbJyPst6MNu+EMGvBctCxzxN5p/XhX94MfZTCaM9ZMXSz+DGJPbK5Mn/q5oI0IGbbNbM
-         DDP9j6mlk+OXAZm8O2fqCBn+zuGsIN5/cOV2OZb1sHnl/vFf1YiKibVJ299NQS9oFjNB
-         VAwHVMgWG+3X4/+lmCRNeSGcQFmUKQML+x0tSdA5T3HSHzCp44QbJ2XDpGNPdaMTwB6T
-         fvwQ==
-X-Gm-Message-State: AOJu0YziftQCnvc4XCGYq1XMgE+L2uhGBmTRlKeJTtpkINrCvagkM8Nv
-	T4mx3CFVQNAclh4GK0Ko16sMnp+OK7Uh4ii49KxvAW6ea20DHjBjGd8S/r3eeCCoNMuAIBAPc+p
-	EojtmayfwGIzNuUZYAtpNZGOXeo+30/M=
-X-Gm-Gg: AeBDietPptVnIg9w2NUABGE+pPU+FwU569RsR9x2NvCAePRC2TdT+ZT5ymv5no2voZf
-	X8lwgyy34eaGJIpWV2LmpMrxmU80vfZwmPP8O5li8YDplQ9whPahM1FMxvImsj6Be7kFsIKHp4a
-	GSkLZsUcKK8MzqQA2psAt6YjlYOCMVRPwWINB9Ui8/co93g7/qlvs+7ZDi0PA9AS0fmErG8c6qS
-	57HiUUcm6CZRIegRP53E1v7BPkIvTblFR7hUaDfMVvuGh5D5yHcRGATGN4EoWTtEsncUQyQH/CI
-	aia/p7yXqZNMe1mAm3pGMysRSou+ktF/OMq1G60lUOfufh3pNuVSI1ZZq71YeRs=
-X-Received: by 2002:a05:690e:128c:b0:653:61a:2cd with SMTP id
- 956f58d0204a3-6531080839amr4343211d50.16.1776459577133; Fri, 17 Apr 2026
- 13:59:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20260417204039.1827319-1-luca.boccassi@gmail.com> <547dc4f7xmafywo7jfeuordj5uwaq5lq4zfdupvswxy5yn5osj@v67ia535jnfw>
-In-Reply-To: <547dc4f7xmafywo7jfeuordj5uwaq5lq4zfdupvswxy5yn5osj@v67ia535jnfw>
-From: Luca Boccassi <luca.boccassi@gmail.com>
-Date: Fri, 17 Apr 2026 21:59:23 +0100
-X-Gm-Features: AQROBzDPb8w6RKJJ7naC7qwRolTzXugdDA1zS20bjZ619PpPhYtV0_RCHxk_70M
-Message-ID: <CAMw=ZnRX2eLzdWG+DDsPA-MebkARg7rOWx2ZP0W5T2AgPd-7VA@mail.gmail.com>
-Subject: Re: [PATCH v3] liveupdate: add LUO_SESSION_MAGIC magic inode type
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
+        d=1e100.net; s=20251104; t=1776459881; x=1777064681;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QIFmiMDTeP/Oqc+nqvJkfeXsIdepM88Xx6p9HfnIkCU=;
+        b=WB4/VkmE+cOJhSvrGzlcC9zryRG3YHI0ZH/MO12UUTeQvXDbs/TVQKuAThN18h3hK1
+         UawPbbSeWVsZwcqrDlvDq7g3o/6HkMVz6o66xscKZtlOrRYKooqANX2L4J9I+Ixfr7X1
+         gPAu4jI2XUWCypPP5ZCkqM0xWlktkbhxX0nf7bjYI5IOfNVkNH3XEpBJtWRA36G5Z3vH
+         W8H2ZhCvgH7dGr5Jvem5oOckP43C+R3iH6LdvW9RQ31HHopLn/N5rrGjOQArb2Jh449Y
+         jSPHxh8TbR2uC/rWvuMItKZVT30ETEdzj83hHQuDG8FCrL6mPMtw26xhHbVDgMMgR3w0
+         zR5w==
+X-Gm-Message-State: AOJu0YwSanHMmTp4DcDExYGWcRBZ+KqFfDl2LLk6m1REZpZIsvJ0y9fa
+	M+dCvTwSef71lPOqNPVVgEEyh6n9NzyEv093snwvJvbFHSmavy8arqxQ5YEfO145U20=
+X-Gm-Gg: AeBDieuZTSr/Z7aojI1CsonJhdp2FHUyLM4r2YfmdWsutm6xWniKO+DbopxaPRSL2hf
+	UWJ5AF6x8HcDgUASd8haZWkXA4/PIxJoQj1oKQYSOwf9b4fNegebTNLKisc9QoKzQ19pR9rBTGn
+	PI6fZePk28QHDTqcjAzMuo8STbWTUi6TUwstqfxR+fytC/wJoyRi9QpsDhq+ILFPGq/XBJnwNjz
+	EjSK0IarR+4PsVJnoJQYkAbXsieVMMFVgliZ4bHiJ+8rrxs77LWhSZ2RwL626x23/wZ09zbfKqJ
+	1djsnKqwhT9u0cZ8J61O1x+p5ZQBEawu/p1Oc2NpZ9bSuC3sWisGsnf/vhxwS/R+YbBdrVvfTwl
+	5aE0v7E/VbSyQqUGIhkEO1GuVnTcCh2mbqPFn9dVUYBrtKvIIRaRAmcmhh0pU8M4Rls6r0uL5l/
+	ATSWuFGDWVfWV0SRIJBlUFw/y8zXn0ZT2ygEgxFDS82SPrBmaOcBsqpICIVyZu
+X-Received: by 2002:a05:620a:4513:b0:8cd:9665:9eff with SMTP id af79cd13be357-8e78f730674mr667672085a.21.1776459880758;
+        Fri, 17 Apr 2026 14:04:40 -0700 (PDT)
+Received: from plex ([71.181.43.54])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8e7d69ad48asm189183185a.19.2026.04.17.14.04.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2026 14:04:40 -0700 (PDT)
+Date: Fri, 17 Apr 2026 21:04:38 +0000
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: luca.boccassi@gmail.com
 Cc: kexec@lists.infradead.org, linux-mm@kvack.org, graf@amazon.com, 
-	rppt@kernel.org, pratyush@kernel.org, brauner@kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+	rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, 
+	brauner@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] liveupdate: add LUO_SESSION_MAGIC magic inode type
+Message-ID: <qwxxff3i65vsnzyaklovxp6ldc26ni6wnrfd2mne7oktdybqan@35hjg7obfrf5>
+References: <20260417205810.1831923-1-luca.boccassi@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260417205810.1831923-1-luca.boccassi@gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260417_135938_731456_EB36586A 
-X-CRM114-Status: GOOD (  17.97  )
+X-CRM114-CacheID: sfid-20260417_140442_533297_20BA0807 
+X-CRM114-Status: GOOD (  10.61  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -114,37 +97,20 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, 17 Apr 2026 at 21:53, Pasha Tatashin <pasha.tatashin@soleen.com> wrote:
->
-> On 04-17 21:40, luca.boccassi@gmail.com wrote:
-> > From: Luca Boccassi <luca.boccassi@gmail.com>
-> >
-> > In userspace when managing LUO sessions we want to be able to identify
-> > a FD as a LUO session, in order to be able to do the special handling
-> > that they require in order to function as intended on kexec.
-> >
-> > Currently this requires scraping procfs and doing string matching on
-> > the prefix of the dname, which is not an ideal interface.
-> >
-> > Add a singleton inode type with a magic value, so that we can
-> > programmatically identify a fd as a LUO session via fstat().
-> >
-> > Signed-off-by: Luca Boccassi <luca.boccassi@gmail.com>
-> > ---
-> > This was requested by Lennart and Christian when discussing integration
-> > with systemd for LUO management.
-> >
-> > v2: apply one fix from bot review about cleanup on error path:
-> >     https://sashiko.dev/#/patchset/20260415184536.1155220-1-luca.boccassi%40gmail.com
-> >     the other comments are invalid: luo is not a kmod, and the write hooks are not set up
-> > v3: add test case to liveupdate selftest
->
-> This should be split into two patches, also please CC:
-> linux-kernel@vger.kernel.org
+On 04-17 21:57, luca.boccassi@gmail.com wrote:
+> From: Luca Boccassi <luca.boccassi@gmail.com>
+> 
+> In userspace when managing LUO sessions we want to be able to identify
+> a FD as a LUO session, in order to be able to do the special handling
+> that they require in order to function as intended on kexec.
+> 
+> Currently this requires scraping procfs and doing string matching on
+> the prefix of the dname, which is not an ideal interface.
+> 
+> Add a singleton inode type with a magic value, so that we can
+> programmatically identify a fd as a LUO session via fstat().
+> 
+> Signed-off-by: Luca Boccassi <luca.boccassi@gmail.com>
 
-...
-
-> Reverse-christmast-tree order please.
-
-Done with v4, thanks
+Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 
