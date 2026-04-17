@@ -4,87 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1B2E5F8E498
-	for <kexec@archiver.kernel.org>; Fri, 17 Apr 2026 00:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6971CF43683
+	for <kexec@archiver.kernel.org>; Fri, 17 Apr 2026 09:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=wonoc5490QuGHhln27veolm76wdYSRsus2wubp5nw+8=; b=YxSbk6zUlUIfBb9jKS2zOcwFpw
-	ts6Skr3MWScTxgwH0I0NENFwqmkTfqGJoJQHeSo1QSUj1ELlxhKREcz7JAkQ/056jCwFJ2ftND9Bf
-	SmbXGLHeHhmaQwD+O2E0xWvojUskWemaXDobKprru7B1Vd3N4LDv9Clfw+2NKhucRl1+NIhFhUEo+
-	zTWMqQLzHxbViOiKFluGmfmTsrwfStx3IpSCG7bwTDHh974v28Bi0kkSZlAg27mmRrLIU3pqSYXzl
-	7rm9RQ/BHrWROvOPqXNFaaXfD/MDZVDpCKS6idrGworX7TAx/65zQCmAg3sFfcriuNptgqweZiqrD
-	fRdNJk8Q==;
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=bxhLWlsH38nctCN2Sqtp0FNUJjg3XOl8ORoFvMkTgNY=; b=NhJ5t+ISwEnNoRktC4k2oQ0Q2v
+	LjB6F8gVcUwWa4wi873d+7gdujQDxg0R7kwqgap086m6cLdbMrzj6a/IaZ4PeuuUMckigPRBHccig
+	CQPM8JDY356+/V2oFeKypek3VC6KIX3C27nol4aVBdR+Px/zeDSeBYdCBwQP0D/p+YwWUwG2ky2ac
+	Q+4edN0cZ3gP/UyH8Uq1EyfPoSBGQHN3Lb4CZpVC8rf8OE4yJOkf/ugb/dVsN766ag3S37ZOqo6m5
+	E1W9fAmL+xZoidUsKFv0B28dMvGJ/L9VEuwnu8VLVC7JDeXIza0cbW3ZPerjHzYQur/qOP0LqpsIG
+	8pTvkR5Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wDXEh-00000003EtF-3vFS;
-	Fri, 17 Apr 2026 00:39:07 +0000
-Received: from mail-wm1-x32c.google.com ([2a00:1450:4864:20::32c])
+	id 1wDfQp-00000003kWO-3IcO;
+	Fri, 17 Apr 2026 09:24:11 +0000
+Received: from out-182.mta0.migadu.com ([2001:41d0:1004:224b::b6])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wDXEc-00000003EsU-1Y8C
+	id 1wDfQn-00000003kVE-0ZDs
 	for kexec@lists.infradead.org;
-	Fri, 17 Apr 2026 00:39:03 +0000
-Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-482f454be5bso12065075e9.0
-        for <kexec@lists.infradead.org>; Thu, 16 Apr 2026 17:39:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776386340; x=1776991140; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wonoc5490QuGHhln27veolm76wdYSRsus2wubp5nw+8=;
-        b=L0JF6GHtNk2DLwaDAwFOJJ5HQi5kynP8jpLpoOczutMsu7x5vBPCftj4fNR98VDq+P
-         O28y5qNk9Ugy/Z0rxChDZgAEMCYyRVmZAaJHlGLRhNjD8/U6g64JX3RY9VBprxqBdyPp
-         GH516lTi2REPvcuxkPz2CmIj3x2xVAHumgqSUBbrYEyaz6JASaje1quP61RQdFKIgnyJ
-         1904OxPKsk5Ej7pKdQk2/DOM/07P0mlpOq20JZy9kgv/4qwTy8w7uTCoANAp2ri0OETs
-         vaeAi2hJgBe7Q9poGBqCPu1ZDc6dC/Q0WhMtgRxxTPFXlYGffRtJ9iekXCFJXmsbCrgd
-         Nd9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776386340; x=1776991140;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wonoc5490QuGHhln27veolm76wdYSRsus2wubp5nw+8=;
-        b=godIW1zU7Xn94gmwLapQqsPFDHfMvZ6Bcui6B/JztO/YFvHEHCcrsZhp1t7SYTaXDU
-         ofETJ5a62465WdDF/j0AFlAw6pai0vhSAe7MNnSpxahJ7qfpqKoZypfdEKDLgzXMVCwk
-         cgChnndbLAJylp/tturnCYBOC6gsM7u9RMtDnA7eVmcYAZM1SlQz8dmnksWu3edhRyMg
-         eFgiYXFOme8f5KVdfDH//rJFtAL1YI/dgY1C2suMr6r+pmo3U9nfM0PfG0zXpn+uaYwp
-         JOGKP8lypt8SNVpQYIbc5l8WZzDdNrG5FCvKInlhoAXcnFIDImI2h1IX8T2sVxRPQTuW
-         +HoA==
-X-Gm-Message-State: AOJu0YyAe/ZReoLfwYApGq+8C8VuuHdGy6Yu/SGZd6UW95p/ANTw52l7
-	l500trPHxRtp21xDfhIEt0Pa5fsOQwEAkhcH/MNa4U6pw1tqZd+emnHJXSazEpM1
-X-Gm-Gg: AeBDiev2675xeRgRb9W3am7NrGF8rs+GBo3UBAFbdzdVnVhJCbkV0y8rmY6+exMFPzk
-	kkuM6GlhP7SUB/yRbqz1/923KgQcZKcnT8U3HnoD5QFRw1wQauVJixKssAQKNXedeSrkPNGrBrU
-	UC5MeF13mJp95KavB7jqRvlS1ok5ldqkwl5UO1UK9PDkV86vr3oB/e+XQYrwybl8GonbaEHUFtw
-	DJsEFyUKwHTswWgrcEpiDLAot2HCTfkeZlLOuAjyD9u8RGW1vLYPDMq/aG2d+rcKfcygiDUxOjI
-	LUe0HubDD+0VsZEdhT8nMlr8/5IXAeq/FvlI1+2tLyNctf4yQGRwGJ0wmQVJ1nSAKoNL6R3AC0k
-	v4m8IizFyYgk0Ltu3gOvEdXoZaOVo9u1FlBXoswQUok0d8XMT+wf5oRx86b61nGhd1GK+LQiZXb
-	LkdQsjES2Gu+jZbcWG8YtrPf+33SAZu7qApXK4/9E=
-X-Received: by 2002:a05:600c:8884:b0:477:9890:9ab8 with SMTP id 5b1f17b1804b1-488fb88380amr4504715e9.3.1776386339675;
-        Thu, 16 Apr 2026 17:38:59 -0700 (PDT)
-Received: from localhost ([2a01:4b00:d036:ae00:f478:3ca4:c1b8:70d5])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-488fc189f2esm2442535e9.7.2026.04.16.17.38.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2026 17:38:59 -0700 (PDT)
-From: luca.boccassi@gmail.com
-To: kexec@lists.infradead.org
-Cc: linux-mm@kvack.org,
-	graf@amazon.com,
-	rppt@kernel.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	brauner@kernel.org,
-	Luca Boccassi <luca.boccassi@gmail.com>
-Subject: [PATCH v2] liveupdate: add LIVEUPDATE_SESSION_GET_NAME ioctl
-Date: Fri, 17 Apr 2026 01:36:58 +0100
-Message-ID: <20260417003856.1525287-1-luca.boccassi@gmail.com>
-X-Mailer: git-send-email 2.47.3
+	Fri, 17 Apr 2026 09:24:10 +0000
+Message-ID: <a2232eec-34b9-49d0-b671-9a184ef1e4b4@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1776417833;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bxhLWlsH38nctCN2Sqtp0FNUJjg3XOl8ORoFvMkTgNY=;
+	b=GeHGYql+K62K8092FrXUYkINVPGvfXquj4jyvdTo+JSuGTjL5B8ClIhv1zP7YKhBMDtf0/
+	NGGgAAwA2FD9QX03Un9qjIK61VERnBWP7G8rwQ7IkhurYQCIzE3WLR2PRxiZ1w2gZLXQta
+	MJuHFpGc5a2dC95vxgwH+m5V1dETojQ=
+Date: Fri, 17 Apr 2026 17:23:12 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] crash: Support high memory reservation for range syntax
+To: Baoquan He <baoquan.he@linux.dev>
+Cc: Baoquan He <bhe@redhat.com>, Sourabh Jain <sourabhjain@linux.ibm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
+ Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+ kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, Youling Tang <tangyouling@kylinos.cn>
+References: <20260404074103.506793-1-youling.tang@linux.dev>
+ <d584d383-1862-417d-9251-153d9bcf5626@linux.ibm.com>
+ <adZYpnwOxgvFMLaT@MiWiFi-R3L-srv>
+ <ea389ca2-8980-4022-a7d0-d96c913f671c@linux.dev>
+ <ad92ix7d7I8jsykV@MiWiFi-R3L-srv>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Youling Tang <youling.tang@linux.dev>
+In-Reply-To: <ad92ix7d7I8jsykV@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260416_173902_497794_14F9E7FA 
-X-CRM114-Status: GOOD (  20.04  )
+X-CRM114-CacheID: sfid-20260417_022409_320781_FE18BD18 
+X-CRM114-Status: GOOD (  13.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,189 +75,78 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Luca Boccassi <luca.boccassi@gmail.com>
+On 4/15/26 19:29, Baoquan He wrote:
 
-Userspace when requesting a session via the ioctl specifies a name and
-gets a FD, but then there is no ioctl to go back the other way and get
-the name given a LUO session FD. This is problematic especially when
-there is a userspace orchestrator that wants to check what FDs it is
-handling for clients without having to do manual string scraping of
-procfs, or without procfs at all.
+> On 04/09/26 at 09:55am, Youling Tang wrote:
+>> Hi, Baoquan
+>>
+>> On 4/8/26 21:32, Baoquan He wrote:
+>>> On 04/08/26 at 10:01am, Sourabh Jain wrote:
+>>>> Hello Youling,
+>>>>
+>>>> On 04/04/26 13:11, Youling Tang wrote:
+>>>>> From: Youling Tang <tangyouling@kylinos.cn>
+>>>>>
+>>>>> The crashkernel range syntax (range1:size1[,range2:size2,...]) allows
+>>>>> automatic size selection based on system RAM, but it always reserves
+>>>>> from low memory. When a large crashkernel is selected, this can
+>>>>> consume most of the low memory, causing subsequent hardware
+>>>>> hotplug or drivers requiring low memory to fail due to allocation
+>>>>> failures.
+>>>> Support for high crashkernel reservation has been added to
+>>>> address the above problem.
+>>>>
+>>>> However, high crashkernel reservation is not supported with
+>>>> range-based crashkernel kernel command-line arguments.
+>>>> For example: crashkernel=0M-1G:100M,1G-4G:160M,4G-8G:192M
+>>>>
+>>>> Many users, including some distributions, use range-based
+>>>> crashkernel configuration. So, adding support for high crashkernel
+>>>> reservation with range-based configuration would be useful.
+>>> Sorry for late response. And I have to say sorry because I have some
+>>> negative tendency on this change.
+>>>
+>>> We use crashkernel=xM|G and crashkernel=range1:size1[,range2:size2,...]
+>>> as default setting, so that people only need to set suggested amount
+>>> of memory. While crashkernel=,high|low is for advanced user to customize
+>>> their crashkernel value. In that case, user knows what's high memory and
+>>> low memory, and how much is needed separately to achieve their goal, e.g
+>>> saving low memory, taking away more high memory.
+>>>
+>>> To be honest, above grammers sounds simple, right? I believe both of you
+>>> know very well how complicated the current crashkernel code is. I would
+>>> suggest not letting them becomre more and more complicated by extending
+>>> the grammer further and further. Unless you meet unavoidable issue with
+>>> the existing grammer.
+>>>
+>>> Here comes my question, do you meet unavoidable issue with the existing
+>>> grammer when you use crashkernel=range1:size1[,range2:size2,...] and
+>>> think it's not satisfactory, and at the same time crashkernel=,high|low
+>>> can't meet your demand either?
+>> Yes, regular users generally don't know about high memory and low memory,
+>> and probably don't know how much crashkernel memory should be reserved
+>> either. They mostly just use the default crashkernel parameters configured
+>> by the distribution.
+>>
+>> For advanced users, the current grammar is sufficient, because
+>> 'crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset],>boundary'
+>> can definitely be replaced with 'crashkernel=size,high'.
+>>
+>> The main purpose of this patch is to provide distributions with a more
+>> reasonable default parameter configuration (satisfying most requirements),
+>> without having to set different distribution default parameters for
+>> different
+>> scenarios (physical machines, virtual machines) and different machine
+>> models.
+> OK, do you have a concrete case? e.g in your distros, what will you set
+> with this patchset applied? Let's see if it can cover all cases with one
+> simple and satisfying parameter.
 
-Add a ioctl to simply get the name from an FD.
+For our production deployment across various hardware configurations
+(physical servers, VMs with different memory sizes), I'm planning to
+use the following crashkernel configuration:
+crashkernel=1G-4G:256M,4G-12G:384M,12G-48G:512M,48G-128G:768M,128G-:1024M,>384M
 
-Signed-off-by: Luca Boccassi <luca.boccassi@gmail.com>
----
-This was requested by Lennart and Christian when discussing integration
-with systemd for LUO management.
-
-v2: apply one fix from bot review about cleanup on error path:
-    https://sashiko.dev/#/patchset/20260415184536.1155220-1-luca.boccassi%40gmail.com
-    the other comments are invalid: luo is not a kmod, and the write hooks are not set up
-
- include/uapi/linux/liveupdate.h               | 19 +++++
- kernel/liveupdate/luo_session.c               | 13 ++++
- .../testing/selftests/liveupdate/liveupdate.c | 71 +++++++++++++++++++
- 3 files changed, 103 insertions(+)
-
-diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveupdate.h
-index 30bc66ee9436a..41dc44d239dde 100644
---- a/include/uapi/linux/liveupdate.h
-+++ b/include/uapi/linux/liveupdate.h
-@@ -59,6 +59,7 @@ enum {
- 	LIVEUPDATE_CMD_SESSION_PRESERVE_FD = LIVEUPDATE_CMD_SESSION_BASE,
- 	LIVEUPDATE_CMD_SESSION_RETRIEVE_FD = 0x41,
- 	LIVEUPDATE_CMD_SESSION_FINISH = 0x42,
-+	LIVEUPDATE_CMD_SESSION_GET_NAME = 0x43,
- };
- 
- /**
-@@ -213,4 +214,22 @@ struct liveupdate_session_finish {
- #define LIVEUPDATE_SESSION_FINISH					\
- 	_IO(LIVEUPDATE_IOCTL_TYPE, LIVEUPDATE_CMD_SESSION_FINISH)
- 
-+/**
-+ * struct liveupdate_session_get_name - ioctl(LIVEUPDATE_SESSION_GET_NAME)
-+ * @size:  Input; sizeof(struct liveupdate_session_get_name)
-+ * @name:  Output; A null-terminated string with the full session name.
-+ *
-+ * Retrieves the full name of the session associated with this file descriptor.
-+ * This is useful because the kernel may truncate the name shown in /proc.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+struct liveupdate_session_get_name {
-+	__u32		size;
-+	__u8		name[LIVEUPDATE_SESSION_NAME_LENGTH];
-+};
-+
-+#define LIVEUPDATE_SESSION_GET_NAME					\
-+	_IO(LIVEUPDATE_IOCTL_TYPE, LIVEUPDATE_CMD_SESSION_GET_NAME)
-+
- #endif /* _UAPI_LIVEUPDATE_H */
-diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
-index 25ae704d77873..af9e498206d24 100644
---- a/kernel/liveupdate/luo_session.c
-+++ b/kernel/liveupdate/luo_session.c
-@@ -289,10 +289,21 @@ static int luo_session_finish(struct luo_session *session,
- 	return luo_ucmd_respond(ucmd, sizeof(*argp));
- }
- 
-+static int luo_session_get_name(struct luo_session *session,
-+				struct luo_ucmd *ucmd)
-+{
-+	struct liveupdate_session_get_name *argp = ucmd->cmd;
-+
-+	strscpy((char *)argp->name, session->name, sizeof(argp->name));
-+
-+	return luo_ucmd_respond(ucmd, sizeof(*argp));
-+}
-+
- union ucmd_buffer {
- 	struct liveupdate_session_finish finish;
- 	struct liveupdate_session_preserve_fd preserve;
- 	struct liveupdate_session_retrieve_fd retrieve;
-+	struct liveupdate_session_get_name get_name;
- };
- 
- struct luo_ioctl_op {
-@@ -319,6 +330,8 @@ static const struct luo_ioctl_op luo_session_ioctl_ops[] = {
- 		 struct liveupdate_session_preserve_fd, token),
- 	IOCTL_OP(LIVEUPDATE_SESSION_RETRIEVE_FD, luo_session_retrieve_fd,
- 		 struct liveupdate_session_retrieve_fd, token),
-+	IOCTL_OP(LIVEUPDATE_SESSION_GET_NAME, luo_session_get_name,
-+		 struct liveupdate_session_get_name, name),
- };
- 
- static long luo_session_ioctl(struct file *filep, unsigned int cmd,
-diff --git a/tools/testing/selftests/liveupdate/liveupdate.c b/tools/testing/selftests/liveupdate/liveupdate.c
-index c2878e3d5ef90..bdc1cedc4f944 100644
---- a/tools/testing/selftests/liveupdate/liveupdate.c
-+++ b/tools/testing/selftests/liveupdate/liveupdate.c
-@@ -102,6 +102,22 @@ static int create_session(int lu_fd, const char *name)
- 	return args.fd;
- }
- 
-+/* Helper function to get a session name via ioctl. */
-+static int get_session_name(int session_fd, char *name, size_t name_len)
-+{
-+	struct liveupdate_session_get_name args = {};
-+
-+	args.size = sizeof(args);
-+
-+	if (ioctl(session_fd, LIVEUPDATE_SESSION_GET_NAME, &args))
-+		return -errno;
-+
-+	strncpy(name, (char *)args.name, name_len - 1);
-+	name[name_len - 1] = '\0';
-+
-+	return 0;
-+}
-+
- /*
-  * Test Case: Create Duplicate Session
-  *
-@@ -345,4 +361,59 @@ TEST_F(liveupdate_device, preserve_unsupported_fd)
- 	ASSERT_EQ(close(session_fd), 0);
- }
- 
-+/*
-+ * Test Case: Get Session Name
-+ *
-+ * Verifies that the full session name can be retrieved from a session file
-+ * descriptor via ioctl.
-+ */
-+TEST_F(liveupdate_device, get_session_name)
-+{
-+	char name_buf[LIVEUPDATE_SESSION_NAME_LENGTH] = {};
-+	const char *session_name = "get-name-test-session";
-+	int session_fd;
-+
-+	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
-+	if (self->fd1 < 0 && errno == ENOENT)
-+		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
-+	ASSERT_GE(self->fd1, 0);
-+
-+	session_fd = create_session(self->fd1, session_name);
-+	ASSERT_GE(session_fd, 0);
-+
-+	ASSERT_EQ(get_session_name(session_fd, name_buf, sizeof(name_buf)), 0);
-+	ASSERT_STREQ(name_buf, session_name);
-+
-+	ASSERT_EQ(close(session_fd), 0);
-+}
-+
-+/*
-+ * Test Case: Get Session Name at Maximum Length
-+ *
-+ * Verifies that a session name using the full LIVEUPDATE_SESSION_NAME_LENGTH
-+ * (minus the null terminator) can be correctly retrieved.
-+ */
-+TEST_F(liveupdate_device, get_session_name_max_length)
-+{
-+	char name_buf[LIVEUPDATE_SESSION_NAME_LENGTH] = {};
-+	char long_name[LIVEUPDATE_SESSION_NAME_LENGTH];
-+	int session_fd;
-+
-+	memset(long_name, 'A', sizeof(long_name) - 1);
-+	long_name[sizeof(long_name) - 1] = '\0';
-+
-+	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
-+	if (self->fd1 < 0 && errno == ENOENT)
-+		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
-+	ASSERT_GE(self->fd1, 0);
-+
-+	session_fd = create_session(self->fd1, long_name);
-+	ASSERT_GE(session_fd, 0);
-+
-+	ASSERT_EQ(get_session_name(session_fd, name_buf, sizeof(name_buf)), 0);
-+	ASSERT_STREQ(name_buf, long_name);
-+
-+	ASSERT_EQ(close(session_fd), 0);
-+}
-+
- TEST_HARNESS_MAIN
--- 
-2.47.3
-
+Thanks,
+Youling.
 
