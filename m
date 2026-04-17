@@ -4,85 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4B246F99C63
-	for <kexec@archiver.kernel.org>; Fri, 17 Apr 2026 21:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EB491F99C63
+	for <kexec@archiver.kernel.org>; Fri, 17 Apr 2026 21:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=nHdL1Ocg1KAYUcmdB/M7wkvLdiK2qMWc0+wVJsX3Xkk=; b=De8SrAWHq4sW6Nb20Cf1R7aAas
-	Pfl+AZ+hinWEouYjQaMk2B+f6a8u7M8ldVfnazdQKuwq6Xpj5BtMGpu/wvFNNnrHaaovuLIEOAnCW
-	nQGw5VQQC8QQumowvq3Kvk5rlRTVlOCObZTK4JqiL6WJ7rgtAXgIAhfgTpDokGChmjLA8QTayp9ZB
-	aDqzwnAZS2Cia8fqjQ0cpsPYmr6dn8pYDPOooAs/NoMTXqq+2/gzuEzrijcYF9w58/4fBXQBzvGuZ
-	M123e2ld9akEOh0ON4sKDzCD68CYgCOFG+MeMiSJ6G9UWxrTLc0yOQBI0LTMm58U5ODniHELTbKHA
-	uBwOVzsg==;
+	bh=5QXJgugqAlraVFQ9lgbeMD3VGh3AxgbVqc+X5mlsbqc=; b=aJ2jPcLZE1rbp9wUhn9/dINc10
+	DfsQgg5UI4AHUJud+i/qHJN5v21c6tQb4WGd9yugxfNnlPGPq7a8Qx2/RcXkIxYF2On03D5sP9D3b
+	BvckQ4bL8ZL89FWyXZMjgMxTiUcIfYsEIPx9hjqiZ46YJdOaFcLdH+UkQwk/bNDZ5c1LJ92XmlfLY
+	ZpgluYBWQ+Yq1IMFOZkVh8kVnF0jwdr60r4vwhuGwqbMbpDAtCp6Q5rslkZJsjKCfmCv9/QJve06N
+	be/WqRRzM+X259MRTrQEzh0dD4EBE3SinSy/WI31qTcHBJLLxuH0U71qCnhH/idqepCdV/iNP8Yr5
+	ewBJXVTw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wDr34-00000004VE5-0KDF;
-	Fri, 17 Apr 2026 21:48:26 +0000
-Received: from mail-qv1-xf29.google.com ([2607:f8b0:4864:20::f29])
+	id 1wDrCJ-00000004VTz-0RMT;
+	Fri, 17 Apr 2026 21:57:59 +0000
+Received: from mail-ed1-x536.google.com ([2a00:1450:4864:20::536])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wDr31-00000004VDj-1640
+	id 1wDrCG-00000004VTd-1khZ
 	for kexec@lists.infradead.org;
-	Fri, 17 Apr 2026 21:48:24 +0000
-Received: by mail-qv1-xf29.google.com with SMTP id 6a1803df08f44-8a5800772f3so8144256d6.2
-        for <kexec@lists.infradead.org>; Fri, 17 Apr 2026 14:48:22 -0700 (PDT)
+	Fri, 17 Apr 2026 21:57:57 +0000
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-6714fa8b955so2142891a12.0
+        for <kexec@lists.infradead.org>; Fri, 17 Apr 2026 14:57:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776463074; cv=none;
+        d=google.com; s=arc-20240605;
+        b=DzMazJFn4HFRpTQOHhOXxby57qWOL9nueg4wLFnPLZ8wGnFHmjrrJtPTEdv1Jzt2tu
+         Gi+wPOHrpkh0tQYNSIrq9hFGsjPe2HU9C28XFwrToBV5qn2QaGkJi6PLKckvyJmfuQ/O
+         4veR9n4ilD4216mw9dR03HvBuhACE09P9EBjpAthfpbSCeAX3MfiGyFWOfsx6KQFVVZD
+         xbxufI5xUOs17uNeQ0MkrwRo71m6Tx208b/uZAONunSrtzDW3mh2ikKRblHDcATKcp3W
+         r6rejBccm7jO9y7Bkuh7zcEC20u5H6Z+sRl4HI7yUf9aZ+4qtrKpfnX4xhjb/iftixk8
+         GPTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=5QXJgugqAlraVFQ9lgbeMD3VGh3AxgbVqc+X5mlsbqc=;
+        fh=LMYcHJDOLb2KA7nfnrewUCqIzspHg7Qxmce6hTuh/Mc=;
+        b=gYGZfHsRWweiArrNISF4inMAH30mdMFO8E4H4hsAghdI4A4pBMgsMCG8rM0184TUX+
+         2mkQwfi8JyY5yYyKn40JS9CqxJE/rZf/+OsG0/sP2kG8mnY3X9O/LoyNqdwGA9pb9t1c
+         yPPytZrVSZnNudzEPiEx8sbU3SMlwVLXFCq4Bc7K0Vtzm5d9yeHpk8BNNkW5boh7Um5b
+         2GRDEhFF4IdJlZPMOU+DSMRzXS8jNzFilIMTzq8JrTMp4bZELwwDVEmfAkZKSa910cP5
+         4KDi8wRc0thX5TuzxLdsJ08zwm0jGPd6rXc+eSO6R3Rn7MkVJCTl8s/CqaIHSvoIL0y+
+         vjcA==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1776462502; x=1777067302; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nHdL1Ocg1KAYUcmdB/M7wkvLdiK2qMWc0+wVJsX3Xkk=;
-        b=gXPXeOKidk3B/4Fa/Rq/UnNvJjaR0igFYlBK3+7esEE64vjy4Vhm6TyD+6kubu04gT
-         DkvJjswb9yIWKK6BYBpyCqsLSoNFG67PgbFuUvwu3zg+xKvh0AtUHW4ohPLumfvKeUdK
-         pvETpb3jGzegxs4VSCq40GPL0y+RUwSXbb0/B2XcbCi+lwhBIM3f9PBP3pb4ctcn69zK
-         vUVFaSNUht1YTz+wB8ayphiULkXzb8lDyLbVWRkz1Dc8IfyURWDO3vFml/854Y1t6UDP
-         Crs29WRnq9GN6oO8HeY3U46t4gC8ZKXw1C0k5UCeFITYmN0gIxlAsk8TFegnnDn1tRIU
-         0I+A==
+        d=soleen.com; s=google; t=1776463074; x=1777067874; darn=lists.infradead.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5QXJgugqAlraVFQ9lgbeMD3VGh3AxgbVqc+X5mlsbqc=;
+        b=Gz395IG3H/0GOGvyRotNV2oqujVaR7/44VU2POzLXev+vERshKxia8tEFsEwkkN4FH
+         /v5YC/uBxHa+z/s6O1L8lboy3HHRov+4lDkxiKM35dxVWwGQtHu5eWo5WwH3MTazMVX+
+         +5s48cbYvcYonmONB5/o5dRF3KXhMowasJkMD2NtaxbaUAigSfQJIIrAmsNOxsfYYQIT
+         NM3t7jwHQhYUPcNn+gLPP+fojQlqNlUctCXpGbtWJ0KVQO1UECb6q74EYCduadBGKDlw
+         OhRnjrxRv9q9k83cSFPMv6xctiJAnqo9yiRrTW557Jgt+Sxa+QAiNcNYiqJlV6jYNaVe
+         f7Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776462502; x=1777067302;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nHdL1Ocg1KAYUcmdB/M7wkvLdiK2qMWc0+wVJsX3Xkk=;
-        b=YFzJY2REadKZQYXlc+bPc0P4OdVQQ3LOk7XiLVK0SnOO9OpwIc2aU/qr3w1/TbDAF9
-         x38a07fiEFO47hr6lSUXhvYvi/GR6Qbk/rWvIudco+XLJxheAb06y+iZ7yiveXWI2JbK
-         cbkbpuIEyUPjtXVBESAdpjPWaguocaTkFNqTcCK8bu4n893l/QoZmYU+Qu3N0utGPiqG
-         Jw0i6BUw20alIAHhyTLa3sAbXYrDBhkrEaSQ8ns+biS3b1FWB+Yr8A9jJskyzqMsJYVo
-         g0u8lUclghHN8Octy14RWG2uRabnfndDqvP7cSUwZc76HHQY4cruWXyeJ2tSlhagKX4F
-         b+ig==
-X-Gm-Message-State: AOJu0YyybRCivWzV25aTIKg7e59F70MrhaPsZzwBqS6PQOx8CIV6Ky9z
-	FhnPKFnc4XBr+XYLDBrWq9vPIq5cgD1dDY4k31g1I58/Q7UEUMuUR8TcxspB1UWzTZs=
-X-Gm-Gg: AeBDiesNEBKN1WmsnPIwm8UkQpXl1aRbspCyy/EYcYNAwjjQYQpzk9iHT0tbR3UvAVy
-	H1hs66Mfp4KLo5dZrLYZJUZ3IV/Qr5ivU0olCoh68i2t8opoFE2P6K2aTaVfph5tcy9ropNDckx
-	SF40LpBpf/OmkM6/6NSz75XaSWlTBrEKmiTf2b6VGbn3CjnFLU4LQI1mhkRWuF24dVcxmEW1tWU
-	uTIiryK04X6zGKRrIla4jgkNZZb3MfXnjUIN1hSGz/o8jrekGslEHWfSMsZM0EwzFJP+KuBjMHy
-	vc2xbvZhoy+/g4IX8/vCUnwp3NiSSUekvfxgPajVNh0qOPEkBedxhfkbMQn8g+Pc+dGBdGnxlpk
-	BA1YDF82+unLrXjTD8mXjwegxCUWlZphLJhboRuhEhY8Ygz0cTRV3Y5TjwXWG08vj/bZ3HbFIYD
-	bZJI/oK0LKrcCkEtZd/yTp3s3jaJqWMvA22BWU6ntwUPF55FOjL2tjs6NGaNbuNR4qgqmbIE8=
-X-Received: by 2002:a05:6214:4f18:b0:89c:4812:cc2 with SMTP id 6a1803df08f44-8b028065b51mr63135706d6.15.1776462501707;
-        Fri, 17 Apr 2026 14:48:21 -0700 (PDT)
-Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8b02aebc0f8sm19830736d6.47.2026.04.17.14.48.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2026 14:48:21 -0700 (PDT)
-Date: Fri, 17 Apr 2026 21:48:19 +0000
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: luca.boccassi@gmail.com
-Cc: kexec@lists.infradead.org, linux-mm@kvack.org, graf@amazon.com, 
-	rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, 
-	brauner@kernel.org
-Subject: Re: [PATCH v2] liveupdate: add LIVEUPDATE_SESSION_GET_NAME ioctl
-Message-ID: <huu6stumzw7ziu7i5qsbpo54hmvd4j4g6fge3acrulhwekw7ez@mjjf6psjty2g>
-References: <20260417003856.1525287-1-luca.boccassi@gmail.com>
+        d=1e100.net; s=20251104; t=1776463074; x=1777067874;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5QXJgugqAlraVFQ9lgbeMD3VGh3AxgbVqc+X5mlsbqc=;
+        b=ciP6VRC6y5/189U5E9qybMvO8L4zX/feQ/Tw0U3mwUGDzodubkNyhAKMDAWaegtM9W
+         5ltXUz5KyzhaFaWPD8WqR2d+ngdAGp34TJaoUuMeOiAObhudrNbzFAKEeuN6/H0EtF0Y
+         Wf3ngxqqN1psU326t0G6cOHmFSzHHcBBTkS/96hoDNZ4iOVaHSqnRyrzAeAGbcfXNXdN
+         5rTW88UUNdCWElfolzGnDa6+wnQmhpLgcmUlkTe2JkPB3cJTLhQdUzrVsK83AUc6+Hpi
+         K2JGydVH7SH+vS73rvt7i+MwPsxIJQ2PIQfDHwwqRJPb2FYuWXZAw/42s4LWPrcLr4jX
+         AiXw==
+X-Forwarded-Encrypted: i=1; AFNElJ8WDo4DxPObzFLdEQ72JN+8q7VWZ0M2Ca9IA6kbtgdV0XfgLobYT+RH1lFOYGX8pUWwbOOwQg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzdlMrBUt0mjjL90M1JUOzPnImH5JhBhBSta8eF87YAzzyfiX47
+	Yj4w6q1KaQX1nvXITWtY8TilpPEZo0OvLA78PxaQthKwUFqeVC7/uw5JeJ7hp3ms9SGGbVnDjRe
+	zHzaK3AjBhcoC3gw4hmpYRpOvb2WHBejq9ZhkHDk0rQ==
+X-Gm-Gg: AeBDiet9rsvkrQSnfKppJ2SNUDF4Gqej3j27PtugSdr8VnBHDB3y98/AC+n2SDcr6m5
+	V+KI3pH5FwdgID0tnAYWele+sWYACosjht+Srpmv4I/18d8JIq+ZH1RW/kNj2kUY7wI845YKWJu
+	wg7JbFpiwOLrb/cK+oLCx/s4d/iieMbnxagfvU8ruJCYOqhhFb75wNz/b+YvquPHr/YmDr9LC50
+	Ykf56iLu3CdcIcMt6dJa26WgQqcIrY+iHf1qj81luOx9do0t82sC/eixQM3puVrEVl6emjEIfpU
+	eOzuKkUYcDZ3kXjvcX2UKZw+m6pwNgRg69eil9wE8f4biuuKcZ1NrHX1Tpg=
+X-Received: by 2002:a05:6402:21d5:b0:66e:df52:7ce0 with SMTP id
+ 4fb4d7f45d1cf-672bfdc9493mr1849875a12.17.1776463073992; Fri, 17 Apr 2026
+ 14:57:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260417003856.1525287-1-luca.boccassi@gmail.com>
+References: <20260413121146.49215-1-pasha.tatashin@soleen.com>
+In-Reply-To: <20260413121146.49215-1-pasha.tatashin@soleen.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Fri, 17 Apr 2026 17:57:16 -0400
+X-Gm-Features: AQROBzAVaYe7tqDhNO0fa6JobuaMGy95p7t73Y8TVE4-Cw4wNmeQFkTjEfdCtos
+Message-ID: <CA+CK2bDwcGLasN56NXJdwq_AvFWrz+WMv9L9uxK8MkChXw29rg@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: update kexec/kdump maintainers entries
+To: rppt@kernel.org, tglx@kernel.org, kuba@kernel.org, enelsonmoore@gmail.com, 
+	martink@posteo.de, magnus.karlsson@intel.com, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, 
+	krzysztof.kozlowski@oss.qualcomm.com, diego.viola@gmail.com, 
+	broonie@kernel.org, cl@gentwo.org, masahiroy@kernel.org, 
+	kexec mailing list <kexec@lists.infradead.org>, Baoquan He <baoquan.he@linux.dev>, 
+	Baoquan He <bhe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260417_144823_410424_5F87B7F4 
-X-CRM114-Status: GOOD (  32.07  )
+X-CRM114-CacheID: sfid-20260417_145756_494837_08F17E28 
+X-CRM114-Status: GOOD (  15.11  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,199 +120,64 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 04-17 01:36, luca.boccassi@gmail.com wrote:
-> From: Luca Boccassi <luca.boccassi@gmail.com>
-> 
-> Userspace when requesting a session via the ioctl specifies a name and
-> gets a FD, but then there is no ioctl to go back the other way and get
-> the name given a LUO session FD. This is problematic especially when
-> there is a userspace orchestrator that wants to check what FDs it is
-> handling for clients without having to do manual string scraping of
-> procfs, or without procfs at all.
-> 
-> Add a ioctl to simply get the name from an FD.
-> 
-> Signed-off-by: Luca Boccassi <luca.boccassi@gmail.com>
+CC: kexec mailing list.
+
+On Mon, Apr 13, 2026 at 8:11=E2=80=AFAM Pasha Tatashin
+<pasha.tatashin@soleen.com> wrote:
+>
+> Update KEXEC and KDUMP maintainer entries by adding the live
+> update group maintainers. Remove Vivek Goyal due to inactivity
+> to keep the MAINTAINERS file up-to-date, and add Vivek to the
+> CREDITS file to recognize their contributions.
+>
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 > ---
-> This was requested by Lennart and Christian when discussing integration
-> with systemd for LUO management.
-> 
-> v2: apply one fix from bot review about cleanup on error path:
->     https://sashiko.dev/#/patchset/20260415184536.1155220-1-luca.boccassi%40gmail.com
->     the other comments are invalid: luo is not a kmod, and the write hooks are not set up
-
-Please split into two patches, and also CC to kernel-linux.
-> 
->  include/uapi/linux/liveupdate.h               | 19 +++++
->  kernel/liveupdate/luo_session.c               | 13 ++++
->  .../testing/selftests/liveupdate/liveupdate.c | 71 +++++++++++++++++++
->  3 files changed, 103 insertions(+)
-> 
-> diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveupdate.h
-> index 30bc66ee9436a..41dc44d239dde 100644
-> --- a/include/uapi/linux/liveupdate.h
-> +++ b/include/uapi/linux/liveupdate.h
-> @@ -59,6 +59,7 @@ enum {
->  	LIVEUPDATE_CMD_SESSION_PRESERVE_FD = LIVEUPDATE_CMD_SESSION_BASE,
->  	LIVEUPDATE_CMD_SESSION_RETRIEVE_FD = 0x41,
->  	LIVEUPDATE_CMD_SESSION_FINISH = 0x42,
-> +	LIVEUPDATE_CMD_SESSION_GET_NAME = 0x43,
->  };
->  
->  /**
-> @@ -213,4 +214,22 @@ struct liveupdate_session_finish {
->  #define LIVEUPDATE_SESSION_FINISH					\
->  	_IO(LIVEUPDATE_IOCTL_TYPE, LIVEUPDATE_CMD_SESSION_FINISH)
->  
-> +/**
-> + * struct liveupdate_session_get_name - ioctl(LIVEUPDATE_SESSION_GET_NAME)
-> + * @size:  Input; sizeof(struct liveupdate_session_get_name)
-> + * @name:  Output; A null-terminated string with the full session name.
-> + *
-> + * Retrieves the full name of the session associated with this file descriptor.
-> + * This is useful because the kernel may truncate the name shown in /proc.
-> + *
-> + * Return: 0 on success, negative error code on failure.
-> + */
-> +struct liveupdate_session_get_name {
-> +	__u32		size;
-> +	__u8		name[LIVEUPDATE_SESSION_NAME_LENGTH];
-
-Add __u32  reserved;
-
-Thanks,
-Pasha
-
-
-> +};
+>  CREDITS     | 4 ++++
+>  MAINTAINERS | 7 ++++++-
+>  2 files changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/CREDITS b/CREDITS
+> index 9091bac3d2da..035f70bae0cc 100644
+> --- a/CREDITS
+> +++ b/CREDITS
+> @@ -1456,6 +1456,10 @@ N: Andy Gospodarek
+>  E: andy@greyhouse.net
+>  D: Maintenance and contributions to the network interface bonding driver=
+.
+>
+> +N: Vivek Goyal
+> +E: vgoyal@redhat.com
+> +D: KDUMP, KEXEC, and VIRTIO FILE SYSTEM
 > +
-> +#define LIVEUPDATE_SESSION_GET_NAME					\
-> +	_IO(LIVEUPDATE_IOCTL_TYPE, LIVEUPDATE_CMD_SESSION_GET_NAME)
-> +
->  #endif /* _UAPI_LIVEUPDATE_H */
-> diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
-> index 25ae704d77873..af9e498206d24 100644
-> --- a/kernel/liveupdate/luo_session.c
-> +++ b/kernel/liveupdate/luo_session.c
-> @@ -289,10 +289,21 @@ static int luo_session_finish(struct luo_session *session,
->  	return luo_ucmd_respond(ucmd, sizeof(*argp));
->  }
->  
-> +static int luo_session_get_name(struct luo_session *session,
-> +				struct luo_ucmd *ucmd)
-> +{
-> +	struct liveupdate_session_get_name *argp = ucmd->cmd;
-> +
-> +	strscpy((char *)argp->name, session->name, sizeof(argp->name));
-> +
-> +	return luo_ucmd_respond(ucmd, sizeof(*argp));
-> +}
-> +
->  union ucmd_buffer {
->  	struct liveupdate_session_finish finish;
->  	struct liveupdate_session_preserve_fd preserve;
->  	struct liveupdate_session_retrieve_fd retrieve;
-> +	struct liveupdate_session_get_name get_name;
->  };
->  
->  struct luo_ioctl_op {
-> @@ -319,6 +330,8 @@ static const struct luo_ioctl_op luo_session_ioctl_ops[] = {
->  		 struct liveupdate_session_preserve_fd, token),
->  	IOCTL_OP(LIVEUPDATE_SESSION_RETRIEVE_FD, luo_session_retrieve_fd,
->  		 struct liveupdate_session_retrieve_fd, token),
-> +	IOCTL_OP(LIVEUPDATE_SESSION_GET_NAME, luo_session_get_name,
-> +		 struct liveupdate_session_get_name, name),
->  };
->  
->  static long luo_session_ioctl(struct file *filep, unsigned int cmd,
-> diff --git a/tools/testing/selftests/liveupdate/liveupdate.c b/tools/testing/selftests/liveupdate/liveupdate.c
-> index c2878e3d5ef90..bdc1cedc4f944 100644
-> --- a/tools/testing/selftests/liveupdate/liveupdate.c
-> +++ b/tools/testing/selftests/liveupdate/liveupdate.c
-> @@ -102,6 +102,22 @@ static int create_session(int lu_fd, const char *name)
->  	return args.fd;
->  }
->  
-> +/* Helper function to get a session name via ioctl. */
-> +static int get_session_name(int session_fd, char *name, size_t name_len)
-> +{
-> +	struct liveupdate_session_get_name args = {};
-> +
-> +	args.size = sizeof(args);
-> +
-> +	if (ioctl(session_fd, LIVEUPDATE_SESSION_GET_NAME, &args))
-> +		return -errno;
-> +
-> +	strncpy(name, (char *)args.name, name_len - 1);
-> +	name[name_len - 1] = '\0';
-> +
-> +	return 0;
-> +}
-> +
->  /*
->   * Test Case: Create Duplicate Session
->   *
-> @@ -345,4 +361,59 @@ TEST_F(liveupdate_device, preserve_unsupported_fd)
->  	ASSERT_EQ(close(session_fd), 0);
->  }
->  
-> +/*
-> + * Test Case: Get Session Name
-> + *
-> + * Verifies that the full session name can be retrieved from a session file
-> + * descriptor via ioctl.
-> + */
-> +TEST_F(liveupdate_device, get_session_name)
-> +{
-> +	char name_buf[LIVEUPDATE_SESSION_NAME_LENGTH] = {};
-> +	const char *session_name = "get-name-test-session";
-> +	int session_fd;
-> +
-> +	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
-> +	if (self->fd1 < 0 && errno == ENOENT)
-> +		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
-> +	ASSERT_GE(self->fd1, 0);
-> +
-> +	session_fd = create_session(self->fd1, session_name);
-> +	ASSERT_GE(session_fd, 0);
-> +
-> +	ASSERT_EQ(get_session_name(session_fd, name_buf, sizeof(name_buf)), 0);
-> +	ASSERT_STREQ(name_buf, session_name);
-> +
-> +	ASSERT_EQ(close(session_fd), 0);
-> +}
-> +
-> +/*
-> + * Test Case: Get Session Name at Maximum Length
-> + *
-> + * Verifies that a session name using the full LIVEUPDATE_SESSION_NAME_LENGTH
-> + * (minus the null terminator) can be correctly retrieved.
-> + */
-> +TEST_F(liveupdate_device, get_session_name_max_length)
-> +{
-> +	char name_buf[LIVEUPDATE_SESSION_NAME_LENGTH] = {};
-> +	char long_name[LIVEUPDATE_SESSION_NAME_LENGTH];
-> +	int session_fd;
-> +
-> +	memset(long_name, 'A', sizeof(long_name) - 1);
-> +	long_name[sizeof(long_name) - 1] = '\0';
-> +
-> +	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
-> +	if (self->fd1 < 0 && errno == ENOENT)
-> +		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
-> +	ASSERT_GE(self->fd1, 0);
-> +
-> +	session_fd = create_session(self->fd1, long_name);
-> +	ASSERT_GE(session_fd, 0);
-> +
-> +	ASSERT_EQ(get_session_name(session_fd, name_buf, sizeof(name_buf)), 0);
-> +	ASSERT_STREQ(name_buf, long_name);
-> +
-> +	ASSERT_EQ(close(session_fd), 0);
-> +}
-> +
->  TEST_HARNESS_MAIN
-> -- 
-> 2.47.3
-> 
+>  N: Wolfgang Grandegger
+>  E: wg@grandegger.com
+>  D: Controller Area Network (device drivers)
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d238590a31f2..e5b4db2d8f88 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13796,7 +13796,9 @@ F:      scripts/Makefile.kcsan
+>  KDUMP
+>  M:     Andrew Morton <akpm@linux-foundation.org>
+>  M:     Baoquan He <bhe@redhat.com>
+> -R:     Vivek Goyal <vgoyal@redhat.com>
+> +M:     Mike Rapoport <rppt@kernel.org>
+> +M:     Pasha Tatashin <pasha.tatashin@soleen.com>
+> +M:     Pratyush Yadav <pratyush@kernel.org>
+>  R:     Dave Young <dyoung@redhat.com>
+>  L:     kexec@lists.infradead.org
+>  S:     Maintained
+> @@ -14112,6 +14114,9 @@ F:      include/linux/kernfs.h
+>  KEXEC
+>  M:     Andrew Morton <akpm@linux-foundation.org>
+>  M:     Baoquan He <bhe@redhat.com>
+> +M:     Mike Rapoport <rppt@kernel.org>
+> +M:     Pasha Tatashin <pasha.tatashin@soleen.com>
+> +M:     Pratyush Yadav <pratyush@kernel.org>
+>  L:     kexec@lists.infradead.org
+>  W:     http://kernel.org/pub/linux/utils/kernel/kexec/
+>  F:     include/linux/kexec.h
+> --
+> 2.43.0
+>
 
