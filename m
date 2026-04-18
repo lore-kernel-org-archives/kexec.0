@@ -4,87 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F04CCF99C79
-	for <kexec@archiver.kernel.org>; Sat, 18 Apr 2026 04:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 32B4CF99C78
+	for <kexec@archiver.kernel.org>; Sat, 18 Apr 2026 08:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=cP27zeRun5nCnbgqutW/rz1GusWQaq6Mzm9A44tQDsk=; b=sQCY96JiaZkjg0tglTfr9RyZ3c
-	NhFzHqlbhfSucDpPfbCtYfC+t+yO7oNwekBneNUsScpFrurpK6C78tdMa/uJ711E7rZMPh1/ZOI8o
-	aSXtE8CTk7kzFFebD1iEQKnhhwJMT0iXu9F6Q702/BWzxWlIwN4kIvs+xAa3bjvuztAMz1dQs9FdN
-	e5Hb9MLYUNk1e/MWIxa+lW2ccY8PRcmZb/O0jpYpHFFO8zHhSXHWQGtjKck4cLeCyryMRQ+8HQ/mT
-	H/nbLVaJFGG6fB/YwONdrZ79Khhbh4v+1BVHpCnO4SRYcmrUOEkKCG9FjJLoBDnn/nMvGwrlthQ83
-	eLN0EkRw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=uS6XkAUImtXIADuxL3SYKYJhW2yqQ6A1rbk7T8OpT98=; b=pUt9WPTfPbxEj0/ZmSYbVyw4lf
+	/26h/oRDCSHLxHY+jRaqW1KxUnHkci3u9bicwYLDIeyQ76Xb9M27EY4eqQqCiaSiw+gGgELpyporL
+	OMEvlMRiQon93VVflwQk3yPY4GQbBv04HAVKXL89nCFBtNtNEGIqQ7Ef+wkK9FZk6CKiLcxv/gnJF
+	imer5W9Kb316a2EBZzsMBt0sIESb/XLt4gE8EotJPvL5oLaZlAB0WWRorLF4aYE5lfCPOrJPDCs1j
+	nRjLdvLk87QPypE+JvWRx50kiWqsz5WdjncdjfHVYNAVTvqWagbY7l6VwYgJ7VLNVM6PK83nrs5Ru
+	oVVDbJ8g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wDx7l-00000004j3w-1tJH;
-	Sat, 18 Apr 2026 04:17:41 +0000
-Received: from mail-qv1-xf35.google.com ([2607:f8b0:4864:20::f35])
+	id 1wE0de-00000004pWb-2XI0;
+	Sat, 18 Apr 2026 08:02:50 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wDx7i-00000004j3R-2hCZ
+	id 1wE0db-00000004pWF-3LSo
 	for kexec@lists.infradead.org;
-	Sat, 18 Apr 2026 04:17:39 +0000
-Received: by mail-qv1-xf35.google.com with SMTP id 6a1803df08f44-8acb3daf2aaso21623146d6.0
-        for <kexec@lists.infradead.org>; Fri, 17 Apr 2026 21:17:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1776485857; x=1777090657; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cP27zeRun5nCnbgqutW/rz1GusWQaq6Mzm9A44tQDsk=;
-        b=I62NVKMBl6C39AEmer+oFaHX8CEA0kY7StEg4yG1khaBNusjxKFEfdgiigvfDzvewT
-         pWR8we3yzJqSaU0XLiofWyIFm4UofrOs+9D2pNGg/YVJHCZNEH9CBkCyEB4GDF54d+YX
-         kGx40p/HCBhx1QXjikl7wlCcjBxGrXIWpwrULNwIukcci1QVKTZJeGVGe9cZWMqwwIbD
-         2S81+RCVRxZPNgkqaMy8jP9SjIMQOQNe0E7Ud9t5AI7kVaIJ2m+kDrh4/1VeVFupEfOe
-         wjMyOlgdOBRarjiefbs/PxDpG/bwuRNpnrWZsRmjVcir9uHbbmLkIB6PY61JXR5f0Cxn
-         +dgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776485857; x=1777090657;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cP27zeRun5nCnbgqutW/rz1GusWQaq6Mzm9A44tQDsk=;
-        b=P29Uw8tg5uHRIc3MyN5plThHVOTU89DCJSkIubo8WLzB3sg8XxKMy94n8NddnihgB2
-         B3gp8WxzL0LLPwfHs1RGJ6FUmXOth9+FOlYLtVNM9UeFRpqJxYnhXVFX0UJa/vhlKeQ7
-         FVLwwGktQarDnaLY4EbEhlmHPcwAMC1EIHt1R8sdLzBr8NMCTctmYiYWaKap3PT9a5z8
-         DY94Q/NO7J2LJRsobtIvSLXIvLocYlP0kqO+JXi/Jw/m9Ec2uAEXssWC2au2e8RcW8If
-         pXzGFbTpf1UDfJmbkTXvxwTzBcZBWWQeNoLFWnEwMELej4kcumNCIygwL3Cb4Q1dsP3s
-         FVYA==
-X-Gm-Message-State: AOJu0YwJNubiPI0qck6uvpCRjhXu/nJ7jVeHNyzPBxIfjZQeeJVqvDyV
-	n3ZiwDhh7EFB0XOnWmauZMPavz9QyvLJLYdgnxIH4kTXOiiyTqZFaKbGCkJdH9MBsxA=
-X-Gm-Gg: AeBDieuGlRzAo7n3Iy9OjuFWERvQkCqcxj/SbW9yyfZLHG2CeC267GR5B8TlhsH43pv
-	lr+9ijIaTOm2RbEOQoEIbCWhDv7iK3vgHH15B3bViHGHyrgBRee6OASKI088dHQvlbXRU+Nkjuq
-	LggpgF3e7IuDKaVdg6a13bTBVEKBY79qEPc4JeNrPY1Ov+oq9HX0LobaB4EAF8uKgns+W8K2oV0
-	BT+q+kFVuB2HFwe1CV8NQUz55KRYtba4gGdvfRI4I82ludZarSpym4AsYOZHoSHae+BoT6m6EBU
-	1CbDIL/QZm6kI3kGe/28gN3TsoNsjkT3Eau9sn8oLTmsIyvhahLyZu/tCG6L4Eqqogd4pdnFBXU
-	N5UlvagO56QdcP0iNhYmVdVSEZSWICc1H9UnLYDVrKKbTGWkmOdh+tqVDkbjdn4yTzHT8koHLZI
-	i643bQ2uw0+kD4wzcHGC7NoYE5rgZ5yS+83Ex68TLVscsB3Djm5YNoFoYQQSax
-X-Received: by 2002:a05:6214:4f02:b0:8ac:74d7:dd14 with SMTP id 6a1803df08f44-8b028167980mr85768556d6.34.1776485856935;
-        Fri, 17 Apr 2026 21:17:36 -0700 (PDT)
-Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8b02aea5ebcsm26638176d6.44.2026.04.17.21.17.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2026 21:17:36 -0700 (PDT)
-Date: Sat, 18 Apr 2026 04:17:34 +0000
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: luca.boccassi@gmail.com
-Cc: kexec@lists.infradead.org, linux-mm@kvack.org, graf@amazon.com, 
-	rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, 
-	brauner@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] selftests/liveupdate: add test cases for
- LIVEUPDATE_SESSION_GET_NAME
-Message-ID: <qwztxisl7vf3ukjqrv62msq6iaavnru2kyays6ye7rspg2uej2@62cwrsshdxfu>
-References: <20260417220831.1934945-1-luca.boccassi@gmail.com>
- <20260417220831.1934945-4-luca.boccassi@gmail.com>
+	Sat, 18 Apr 2026 08:02:49 +0000
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63I7RArQ3715939;
+	Sat, 18 Apr 2026 08:02:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=uS6XkAUImtXIADuxL3SYKYJhW2yqQ6A1rbk7T8OpT
+	98=; b=rX0r0yCvXPtUhvzMyTOi0v+ElADVbxKMlf9fD5w1UZmYYGDI+rQYL8Cjb
+	/aPI8TY2vkGYOPae6X2/Eko79++jN6Jlk76MeIm1NMJMw14WUnfDdTqv2RuPmCM3
+	YwLTt5CVDdtIhXSQfkugQh0Z8WqKoZYGYCmGpDimYFImliLEdtKtKwZETorLCYrp
+	a6DcqrywFzR97qn00kx0gTDWpJynIa6dAu3E7rTsTcuUFIfK1+1zYwb0Ci+iUobB
+	QfdOWSitQmqeRdrbXEncuUak6orzqk06KYK6BG++MT9ii6upt1lzL/Oz6h0MSX8T
+	mR9LywcT2iY8EaPzkrDgUyCoCGwSQ==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dm2k0genr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 18 Apr 2026 08:02:44 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 63I7oRaH003209;
+	Sat, 18 Apr 2026 08:02:44 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dm239gjmm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 18 Apr 2026 08:02:43 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 63I82gGI17105214
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 18 Apr 2026 08:02:42 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E3F7320043;
+	Sat, 18 Apr 2026 08:02:41 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2E33620040;
+	Sat, 18 Apr 2026 08:02:40 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.124.217.81])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sat, 18 Apr 2026 08:02:39 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: akpm@linux-foundation.org
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>, Baoquan He <bhe@redhat.com>,
+        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: remove stale kdump project URL
+Date: Sat, 18 Apr 2026 13:32:26 +0530
+Message-ID: <20260418080226.40415-1-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.52.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260417220831.1934945-4-luca.boccassi@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: wDuCuc_VERqIOu9-260B9A3FgwJxEIXg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDE4MDA3MSBTYWx0ZWRfX9ie9wsIKjhWV
+ AA1y7WDE54t8+I5F5Wrcd5vVYH45z4H4gzYRd/N7mIrdqNOqPrBH8lCfIS9BsQZD74BWkZxk6Ec
+ VA1xH1e3Ye1fXM1QKPVha3VCM7xhCU9kGM6LjRrxSDtMdaNNH8W3QeNXWwmG9YtyImS/kZPNdiy
+ 9UIIJvmpsCFTyewLhfbXXA9v5zRh1bRb7efPtXAdv3ARZm7X/Upfb78Elzi8iL9zIDxU61BGyYw
+ 48uGCSXtgClQ+Y7rkR0w5SvfdmEFjBxxiPTW2fZKTsryAEwuR7pfrOJNOBqrccRrJF59g5qrcVO
+ dNgFMBWoO8HGqTssyyfugxDtvGxd86a1+9ITWlGzKL8IMTdoJvzHQSRI1paY4estycSiPSPO7sP
+ sBTMGkGWbCF96erqIvgC3IE4sqsMLBittMRRa2yOjBYRmXObHTVP4/yqYkVyT18tqEcCFeFMdWF
+ KDGLQyCVL01+mgcRRFg==
+X-Authority-Analysis: v=2.4 cv=PtujqQM3 c=1 sm=1 tr=0 ts=69e33aa4 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=V8glGbnc2Ofi9Qvn3v5h:22 a=FP58Ms26AAAA:8 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
+ a=20KFwNOVAAAA:8 a=JfrnYn6hAAAA:8 a=ljaXgjZVgEGuH4GNExYA:9 a=zZCYzV9kfG8A:10
+ a=1CNFftbPRP8L7MoqJWF3:22
+X-Proofpoint-GUID: wDuCuc_VERqIOu9-260B9A3FgwJxEIXg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-18_02,2026-04-17_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 suspectscore=0 clxscore=1015 spamscore=0 impostorscore=0
+ priorityscore=1501 bulkscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604070000 definitions=main-2604180071
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260417_211738_725181_D93A91D6 
-X-CRM114-Status: GOOD (  20.34  )
+X-CRM114-CacheID: sfid-20260418_010248_049187_B0707B64 
+X-CRM114-Status: GOOD (  11.30  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,115 +116,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 04-17 23:05, luca.boccassi@gmail.com wrote:
-> From: Luca Boccassi <luca.boccassi@gmail.com>
+The kdump project URL in MAINTAINERS points to
+http://lse.sourceforge.net/kdump/, but it is no longer maintained.
 
-The commit log is too empty. Please explain what this patch does.
+Remove this outdated link to avoid confusion and keep the file
+up to date.
 
-> Signed-off-by: Luca Boccassi <luca.boccassi@gmail.com>
-> ---
-> v5: merge with LUO_SESSION_MAGIC series as they both change the same
->     unit test file, to avoid merge conflicts
->     split into separate patch
-> 
->  .../testing/selftests/liveupdate/liveupdate.c | 71 +++++++++++++++++++
->  1 file changed, 71 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/liveupdate/liveupdate.c b/tools/testing/selftests/liveupdate/liveupdate.c
-> index d132b4685f767..f81201b363cc1 100644
-> --- a/tools/testing/selftests/liveupdate/liveupdate.c
-> +++ b/tools/testing/selftests/liveupdate/liveupdate.c
-> @@ -105,6 +105,22 @@ static int create_session(int lu_fd, const char *name)
->  	return args.fd;
->  }
->  
-> +/* Helper function to get a session name via ioctl. */
-> +static int get_session_name(int session_fd, char *name, size_t name_len)
-> +{
-> +	struct liveupdate_session_get_name args = {};
-> +
-> +	args.size = sizeof(args);
-> +
-> +	if (ioctl(session_fd, LIVEUPDATE_SESSION_GET_NAME, &args))
-> +		return -errno;
-> +
-> +	strncpy(name, (char *)args.name, name_len - 1);
-> +	name[name_len - 1] = '\0';
-> +
-> +	return 0;
-> +}
-> +
->  /*
->   * Test Case: Create Duplicate Session
->   *
-> @@ -385,4 +401,59 @@ TEST_F(liveupdate_device, session_fstat)
->  	ASSERT_EQ(close(session_fd2), 0);
->  }
->  
-> +/*
-> + * Test Case: Get Session Name
-> + *
-> + * Verifies that the full session name can be retrieved from a session file
-> + * descriptor via ioctl.
-> + */
-> +TEST_F(liveupdate_device, get_session_name)
-> +{
-> +	char name_buf[LIVEUPDATE_SESSION_NAME_LENGTH] = {};
-> +	const char *session_name = "get-name-test-session";
-> +	int session_fd;
-> +
-> +	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
-> +	if (self->fd1 < 0 && errno == ENOENT)
-> +		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
-> +	ASSERT_GE(self->fd1, 0);
-> +
-> +	session_fd = create_session(self->fd1, session_name);
-> +	ASSERT_GE(session_fd, 0);
-> +
-> +	ASSERT_EQ(get_session_name(session_fd, name_buf, sizeof(name_buf)), 0);
-> +	ASSERT_STREQ(name_buf, session_name);
-> +
-> +	ASSERT_EQ(close(session_fd), 0);
-> +}
-> +
-> +/*
-> + * Test Case: Get Session Name at Maximum Length
-> + *
-> + * Verifies that a session name using the full LIVEUPDATE_SESSION_NAME_LENGTH
-> + * (minus the null terminator) can be correctly retrieved.
-> + */
-> +TEST_F(liveupdate_device, get_session_name_max_length)
-> +{
-> +	char name_buf[LIVEUPDATE_SESSION_NAME_LENGTH] = {};
-> +	char long_name[LIVEUPDATE_SESSION_NAME_LENGTH];
-> +	int session_fd;
-> +
-> +	memset(long_name, 'A', sizeof(long_name) - 1);
-> +	long_name[sizeof(long_name) - 1] = '\0';
-> +
-> +	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
-> +	if (self->fd1 < 0 && errno == ENOENT)
-> +		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
-> +	ASSERT_GE(self->fd1, 0);
-> +
-> +	session_fd = create_session(self->fd1, long_name);
-> +	ASSERT_GE(session_fd, 0);
-> +
-> +	ASSERT_EQ(get_session_name(session_fd, name_buf, sizeof(name_buf)), 0);
-> +	ASSERT_STREQ(name_buf, long_name);
-> +
-> +	ASSERT_EQ(close(session_fd), 0);
+Discussion to remove this link:
+https://lore.kernel.org/all/e1e9e200-17d7-4ae9-b0eb-71300f4eb1ac@linux.ibm.com/
 
-May be add a few more edge cases: i.e. no '\0' termination name, or empty 
-string session name?
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
 
-Thank you,
-Pasha
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 288866c32ade..46aa9a48ec15 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13870,7 +13870,6 @@ R:	Vivek Goyal <vgoyal@redhat.com>
+ R:	Dave Young <dyoung@redhat.com>
+ L:	kexec@lists.infradead.org
+ S:	Maintained
+-W:	http://lse.sourceforge.net/kdump/
+ F:	Documentation/admin-guide/kdump/
+ F:	fs/proc/vmcore.c
+ F:	include/linux/crash_core.h
+-- 
+2.52.0
 
-> +}
-> +
->  TEST_HARNESS_MAIN
-> -- 
-> 2.47.3
-> 
 
