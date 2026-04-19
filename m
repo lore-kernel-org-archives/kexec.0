@@ -4,44 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 34634EA7193
-	for <kexec@archiver.kernel.org>; Sun, 19 Apr 2026 09:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 77662EA7194
+	for <kexec@archiver.kernel.org>; Sun, 19 Apr 2026 09:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
 	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6J8ehCkrmP/V19GUsfdL2G29gjzTaGv6leFxhWhWang=; b=1jspi2K1zfDRqDlj7i1zWM/+6C
-	LOeA21v0XqcxSeHemzbnoonHgSQJgCq4xPZJihqAyQqFAw7/D3GQ5NIqdqasPJumHgRz0f5k6NONQ
-	+owhhVxd7rhPsnj7c2OzwYH1VNwEoaaIEw9gedrkWQRnJKophfEAXgRYCzxiIXSKIin0jQjDVAH5n
-	avLX19JxDoyPTrlSQ/onuxLRwgMcTJ+Fnhm9FSglEcIkCcDHO1JLMwCIwrSKQesDAlUy5rnuAssYR
-	01EUHZvEbiPCRZuJHlBabBuxFWGk4fBykPo4qK9qBnsI8kBF70/1o+o5v9ApDAAyK4veXjUv4enwS
-	5J/gt4Fw==;
+	bh=2SPw7oDGT01M+iv1kpdNVMewY3nQAxo5Ti8SNjIVQEo=; b=1J6lzle56bGxk70gEB5D0i+JsZ
+	FNTpXDlvthZQ4NM1Nl3v2zEfg1JPWy/qbDnk+avpgdvUaIIK3+XE1FXOacKrEkxpOGrCVRqic1XRs
+	cmKpri5sA8uZjk+zrshUIBKS9KodNYQ265kKFk6IpNfU63NpNijdC/QhDAFgA6f//DrInhNt4Vz4/
+	5YTxAM1TJ9kstvxSqmpviEI1Ue5ORb2IQ7xux1xrkiXC7pVhCpoSB/330qEiUiHC5YPoeK3yUiDz5
+	BG3VfVE7UiwfKvcni7+Sh+0lffZiWuAc9QdXrPvLJHMn0AXqeVsTkMb/07EZ8fPXKnlAnLSZoDz5r
+	y9b0DZeg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wEOAs-00000005fWt-0Q5F;
-	Sun, 19 Apr 2026 09:10:42 +0000
-Received: from out-174.mta0.migadu.com ([91.218.175.174])
+	id 1wEOC7-00000005fbA-24uN;
+	Sun, 19 Apr 2026 09:11:59 +0000
+Received: from out-189.mta1.migadu.com ([95.215.58.189])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wEOAl-00000005fWV-3Bva
+	id 1wEOC4-00000005fal-3hc7
 	for kexec@lists.infradead.org;
-	Sun, 19 Apr 2026 09:10:37 +0000
-Date: Sun, 19 Apr 2026 17:10:23 +0800
+	Sun, 19 Apr 2026 09:11:58 +0000
+Date: Sun, 19 Apr 2026 17:11:41 +0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1776589830;
+	t=1776589913;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6J8ehCkrmP/V19GUsfdL2G29gjzTaGv6leFxhWhWang=;
-	b=Q5h5B38i847Ynd7aWT65awEod7gzuzVpJSxSBNOBeT13hXKgHXEUOQKaFmdB6GhKdmm2n1
-	JSRRgAnag8Csn+8dVfqTmktEA59lk8hjKnuHQjxXs3gIHudhGUB1NsjoDqBuQNyp+G7iez
-	L7iUyiinuG/o/LQB0yMsyIeuVZCcl6k=
+	bh=2SPw7oDGT01M+iv1kpdNVMewY3nQAxo5Ti8SNjIVQEo=;
+	b=dGdVDGLDBne94Ay6djZKquTevZGyw5xQWl/R1ZFs8gSFqnE0UtmOSePATlxKLHosJTCmSD
+	hvIuuZSMRWMX4clZx8VTEuEQWtXvjjqTsG2c4elYyHJHucUkQvinwkhHcoFr6B/gNGGB6V
+	9aOE+OhTxK39mC3YeO9FGI2IJehS928=
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Baoquan He <baoquan.he@linux.dev>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>, vgoyal@redhat.com,
-	ruirui.yang@linux.dev, dyoung@redhat.com
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
 Cc: rppt@kernel.org, tglx@kernel.org, kuba@kernel.org,
 	enelsonmoore@gmail.com, martink@posteo.de,
 	magnus.karlsson@intel.com, akpm@linux-foundation.org,
@@ -51,7 +50,7 @@ Cc: rppt@kernel.org, tglx@kernel.org, kuba@kernel.org,
 	kexec mailing list <kexec@lists.infradead.org>,
 	Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH] MAINTAINERS: update kexec/kdump maintainers entries
-Message-ID: <aeSb_xv9gzPS0Vv5@MiWiFi-R3L-srv>
+Message-ID: <aeScTZjN3UNT6QrS@MiWiFi-R3L-srv>
 References: <20260413121146.49215-1-pasha.tatashin@soleen.com>
  <CA+CK2bDwcGLasN56NXJdwq_AvFWrz+WMv9L9uxK8MkChXw29rg@mail.gmail.com>
 MIME-Version: 1.0
@@ -61,8 +60,8 @@ Content-Transfer-Encoding: 8bit
 In-Reply-To: <CA+CK2bDwcGLasN56NXJdwq_AvFWrz+WMv9L9uxK8MkChXw29rg@mail.gmail.com>
 X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260419_021036_023549_4697B6E7 
-X-CRM114-Status: GOOD (  16.40  )
+X-CRM114-CacheID: sfid-20260419_021157_119949_46C4D143 
+X-CRM114-Status: GOOD (  16.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,9 +78,6 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 04/17/26 at 05:57pm, Pasha Tatashin wrote:
 > CC: kexec mailing list.
-
-CC more people in reivewers' list.
-
 > 
 > On Mon, Apr 13, 2026 at 8:11 AM Pasha Tatashin
 > <pasha.tatashin@soleen.com> wrote:
@@ -96,6 +92,12 @@ CC more people in reivewers' list.
 > >  CREDITS     | 4 ++++
 > >  MAINTAINERS | 7 ++++++-
 > >  2 files changed, 10 insertions(+), 1 deletion(-)
+
+This is fine to me since KHO people will create a git tree to hold all
+kexec related codes.
+
+Acked-by: Baoquan He <bhe@redhat.com>
+
 > >
 > > diff --git a/CREDITS b/CREDITS
 > > index 9091bac3d2da..035f70bae0cc 100644
