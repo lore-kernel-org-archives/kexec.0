@@ -4,70 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5D635F588DF
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7CACEF588E0
 	for <kexec@archiver.kernel.org>; Mon, 20 Apr 2026 14:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=qewxjB4gqze9ueAsfaggwvN0d9awd7MKHEueXVS3eI8=; b=tCoRYCuDrTfOHvQM3xqABmUIxZ
-	tGgzp8mlbCNflZRZRQJv7lZDSSUypOJTgYGdT4PBSspr9Dl/2850igFOkk2iGPSEPP2CmRktytNNB
-	6BzIyiRZVHgGGx1fD894I7usPVy8nrNpTZNj/WGKfs/P6K8ritoFkEQ1De/8Q0ka42n8in3iZPKNj
-	uA19rJr7vPVN574iFiP0PLnWkWK/ffzck1X3hE9JfEHKqkJc92EQTFysegOZZLUSwOm1GI0i3eQ4l
-	ausZy+3ZxKVCmihFB/GL1fjn2n4wOwCqefnP2Es961fMTcVyrFXYpfGZUBRXVIc3E1aThdZNjceQh
-	/S8O620w==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=5HAgeJOZaSUjQDMERltKw7poLkmLCttGsEyTv6VLp9I=; b=hB6BYCFSA49WvXfuRo2wL0hOKs
+	AxU88kRrrHV5Wl6wmR6E79rAnCbHXcplLSoPmtlGhAjWaBvY2/pC9hQcfzvq+y66JYgTMZKMvmBzb
+	mXFi9tA24t1BEcSbcmxp6FdLvcxV3Cm1AGL+tbeAwJscGqj1Ifv8OWfJEFVAMYRmKaec9JoWEJvq7
+	7gKXGldarsVeOI4J/bxnJlKgj8/vSaPlfhnvnn8W11Ck96Bb305W2dk9llaG7IU999G7Hgsk1bi6S
+	HRq6j/bJk7dU7vH38wbV4asZZAuezmgdaoAt8cu1VRxBa/Ta6EBtP6qQCBg9qxsdwIgoukxvbmBDO
+	pQpjqgpg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wEpRf-000000079rQ-1Qpl;
+	id 1wEpRf-000000079r5-0Gtf;
 	Mon, 20 Apr 2026 14:17:51 +0000
-Received: from mail-wr1-x436.google.com ([2a00:1450:4864:20::436])
+Received: from mail-wm1-x333.google.com ([2a00:1450:4864:20::333])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wEpRc-000000079q4-3GOH
+	id 1wEpRb-000000079q2-3Czn
 	for kexec@lists.infradead.org;
 	Mon, 20 Apr 2026 14:17:49 +0000
-Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-43d572f7437so2084935f8f.1
-        for <kexec@lists.infradead.org>; Mon, 20 Apr 2026 07:17:48 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-48984d29fe3so9838095e9.0
+        for <kexec@lists.infradead.org>; Mon, 20 Apr 2026 07:17:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776694666; x=1777299466; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qewxjB4gqze9ueAsfaggwvN0d9awd7MKHEueXVS3eI8=;
-        b=km8J5FEppKStTXzpygqAk3rbcPJTW60hPtpxtdE65hY22RVJS0WQm6nT/MzRNJtFZE
-         /yYTSVN3d4g+2f2YWX0XG8//j6EhVAVbOa1dH22RGwJjk7hrsRZBLp6kk5lHI+1MonMy
-         3gUKiO0+BjsHjF5qX9ABgEkLeCdpL1jvWRaKtCLE8vcTkef8NEB7AJB4sHUkfJsVdjUP
-         Mnwk7hiHyZKxAt7UyEEV17sSJ2UMQdApphKHpph3hiDDTELHh1N4ZC2rd1a76gV8ksJM
-         hobgylK87doBFx29K3y+M4Z4nPPYdi9iwSbWLfyp44AeRHW8Ya9uJmCys/0XCU7XN5Pj
-         CsRQ==
+        d=gmail.com; s=20251104; t=1776694665; x=1777299465; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5HAgeJOZaSUjQDMERltKw7poLkmLCttGsEyTv6VLp9I=;
+        b=DfzvPI064O2MPg0RXWHWouV2a1XFijNG0RA18sltJxgX30e0mEoPjedYj5bEw77D3d
+         d/Ra5w4uakVqG6xUWVxrqvrFxLcT0vKQjs5B7Hvb8m6PEEzCVPczeBSXqzeLJ50+/QKh
+         1dcHQAbnt0diAUvItZYXyx/rXgiNjMYX/FzQTWcD/Voo5+Q/oFZANmqlFbm9Y0wefoHE
+         25d0GgCNPTD8INHVXJocP0F3buhwXLn+YtaCwSdIZ9DaU5KnxWZs8HPFmncn9JYRX7pQ
+         YpfkXQdgCU2gS6QoQutfVcSCdsSxrVUWORkkirFjCIlGPTSv0bQXGeKj8zOPzx6Xd4xc
+         sNRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776694666; x=1777299466;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=qewxjB4gqze9ueAsfaggwvN0d9awd7MKHEueXVS3eI8=;
-        b=WXwALhY+6lpKvnhKFSdfn6JRp1EejZQobNPk/cQFuMlXDLJEvg7q3AT60ECy6KgfjH
-         ocP0QxSONj/0UqNNp4Rd1+rkGARMbsZtPPyvSzU/UkLqAspLYGf7U1md2rs47dVH2MvA
-         4lpODZN4NvUYzCnt2PA3UUBKiEO9Dhs9RovcS953FQslnrp0uUhtoASi5Z8xBq9ey0BS
-         Xhk263LPDyPQmbKzrUtXhvmhP0qutbDmP9esAzIaY6HEbDDOSyb+esAmiG9uFFLWouWK
-         /wX/ECdCOlFfKCMK862qHVs6nAyysN4zA0OJ+Gp5bFmGagz8HeE3BdYkczIWjMIBzvRG
-         EJ+g==
-X-Gm-Message-State: AOJu0Yzdb5+EPWuagU2iyx3/Un/VYVCKKKPfL6xTXyuo/gWZ8vFa12Fm
-	SZ8amCkrouUXVpcrYT68I8qJl70Ie0euYoNibzv0Yp+ZcDXHGX9PfLjMmxwu/w==
-X-Gm-Gg: AeBDietap836LD8uRwK3vbBwZmzlzXcQ6rQWnLZ0sBOC+GfQoOtvaKQ777Hg7Sy+oi8
-	+av8jw3jFug8VJu2tUShof/i+y6VN6194sxCFeykISe35MTyz5wgdtiefaeQDBm5l0loWn1Z94W
-	3Quxh6bo9rC/BULAY4q0l9jdC/d79SPaRAbXkqc44rpGlmaY2LzVZ8Rl2v55WnzowSNMzaVHeHj
-	MLNsKTrP4veVbZsJNX5WO6ncDTEtLIGSUHWvobteSkhBE+eUB6ghZ2EsTCiTOY2BuFha2V+b2t9
-	EXes69HzNdGlS+PtMM2t1+Xk08OB83WZybE6PEj0tRB2XmpYrru7Gl6xfanBhf2SvED9eo7csz+
-	UYWXctfTCl5oO98MsiK/++JVXLvaOH6Dk6NUz0lCCbf1HCPUCrYpbdeEmZBdiJbH8XKgHLSzrim
-	9v2PKyKffWQMMOdq5+dt+Cx5vPGzKwuG5fNx0iL1An+0oP2tG2Xg==
-X-Received: by 2002:a05:600c:6296:b0:488:c40b:c8a4 with SMTP id 5b1f17b1804b1-488fb73d764mr194293145e9.1.1776694666131;
-        Mon, 20 Apr 2026 07:17:46 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1776694665; x=1777299465;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5HAgeJOZaSUjQDMERltKw7poLkmLCttGsEyTv6VLp9I=;
+        b=iotL+mOXeF4bOzmQNNQGUFObKWduUalKmjQLshMRLbAt702TIPUP1KwInEI43yfecB
+         nJICvpiVaIwILw5sD+tyGRaslmV6Zs7/W2jpOoRq5cxJLl7D5Ujx3z6biMPX2JOAdH/r
+         dmMD6QkMcPItByOxsPYSNMooNuiW1CSA1cCTS+6E+oNwopHi6fzfZ9KEp8E+NIxRT7Pe
+         K0ynDnjZo0IBjzxFPobT2yyj6a0Q2VPD3GccS9L8zACYfiArp9KGyMNpZwMNbGKQaPU9
+         oP4RhjMNspnG1QeB7+f7O+GepcNuiJQKBJKqPA4/Zdkcw0oWMQxDxajfHarF+UYw0TW6
+         KlPw==
+X-Gm-Message-State: AOJu0YwuOXwZxljAS8GsY7V2MqoibQpXiHpR8Cgsu6M6XFcU3jLczyVf
+	lRK0jCTWKCSY9+EkvqlMdDNBvOcJtmxBzTZVTT/eph9DkpKChUEOmqb8rGcKbA==
+X-Gm-Gg: AeBDievU3vDEc3ZqD2eJEP1srYXFmuU+CyQ88Nwk0BnORQh03Ble0AndST32GvMu+kD
+	gCf/D8nrMxo1gNPdlInUt4fwAPAUFUE7gTvdeo9Sd+hdbDITKx3ZKFLXpN8c73X2oQQjzL8nkBu
+	M0mgzIdpLHdLqpXaUsPiF7S8RhiaU7saygSwjKF78PdMnaB7Y1FE+i6oH4oIlq6qyN7o4F9cwsN
+	0GEpYUWp4dT5a6AApMDNvoDQiQOXm7GR1prYRY42WiOkuRaa/zF2WagkPCicSayuj64JvoR+5pU
+	kQlxSZOR0BoOAbJfNY7RVII+/W4hY43o8h/YCGu/Skm1LncOdrIwh0fs1EJO1abq6Ii5QGa7/Wq
+	AJmhz/CW2m7HOwmGJoT17xzVhoCiPnYDPtpmxAy0ygaSLcg/890nnTZkyFrP54p21Oa/fS6JXmk
+	mzjW3johYPnVGBsxP04YyQk8EMRhr4rd0jhuJFZvY=
+X-Received: by 2002:a05:600c:859a:b0:48a:53ea:13eb with SMTP id 5b1f17b1804b1-48a53ea15bdmr3192745e9.5.1776694664793;
+        Mon, 20 Apr 2026 07:17:44 -0700 (PDT)
 Received: from localhost ([2a01:4b00:d036:ae00:355d:3be4:308b:c943])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-488fc1c0354sm269742375e9.11.2026.04.20.07.17.45
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-488fb77b001sm131753195e9.3.2026.04.20.07.17.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2026 07:17:45 -0700 (PDT)
+        Mon, 20 Apr 2026 07:17:44 -0700 (PDT)
 From: luca.boccassi@gmail.com
 To: kexec@lists.infradead.org
 Cc: linux-mm@kvack.org,
@@ -78,17 +77,15 @@ Cc: linux-mm@kvack.org,
 	brauner@kernel.org,
 	linux-kernel@vger.kernel.org,
 	Luca Boccassi <luca.boccassi@gmail.com>
-Subject: [PATCH v9 1/6] liveupdate: reject LIVEUPDATE_IOCTL_CREATE_SESSION with invalid name length
-Date: Mon, 20 Apr 2026 15:15:09 +0100
-Message-ID: <20260420141741.2688371-2-luca.boccassi@gmail.com>
+Subject: [PATCH v9 0/6] liveupdate: new ioctl, change session inode type, bug fixes
+Date: Mon, 20 Apr 2026 15:15:08 +0100
+Message-ID: <20260420141741.2688371-1-luca.boccassi@gmail.com>
 X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260420141741.2688371-1-luca.boccassi@gmail.com>
-References: <20260420141741.2688371-1-luca.boccassi@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260420_071748_862508_AC1EB299 
-X-CRM114-Status: GOOD (  10.21  )
+X-CRM114-CacheID: sfid-20260420_071747_821521_E407DB81 
+X-CRM114-Status: GOOD (  12.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,35 +102,53 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Luca Boccassi <luca.boccassi@gmail.com>
 
-A session name must not be an empty string, and must not exceed the
-maximum size define in the uapi header, including null termination.
+A series of patches matured while implementing LUO support in userspace
+in systemd.
 
-Fixes: 0153094d03df ("liveupdate: luo_session: add sessions support")
+- reject session names that are either empty strings or too long
+- change inode type of session FDs to a new singleton magic number,
+  so that userspace can immediately identify them without string
+  parsing in procfs
+- add new ioctl to retrieve session name from FD, so that userspace
+  can query it without string parsing in procfs
 
-Signed-off-by: Luca Boccassi <luca.boccassi@gmail.com>
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
----
- kernel/liveupdate/luo_session.c | 4 ++++
- 1 file changed, 4 insertions(+)
+All changes come with a follow-up patch add test coverage via the
+existing selftest.
 
-diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
-index 25ae704d7787..5e316a4c5d71 100644
---- a/kernel/liveupdate/luo_session.c
-+++ b/kernel/liveupdate/luo_session.c
-@@ -382,9 +382,13 @@ static int luo_session_getfile(struct luo_session *session, struct file **filep)
- 
- int luo_session_create(const char *name, struct file **filep)
- {
-+	size_t len = strnlen(name, LIVEUPDATE_SESSION_NAME_LENGTH);
- 	struct luo_session *session;
- 	int err;
- 
-+	if (len == 0 || len > LIVEUPDATE_SESSION_NAME_LENGTH - 1)
-+		return -EINVAL;
-+
- 	session = luo_session_alloc(name);
- 	if (IS_ERR(session))
- 		return PTR_ERR(session);
+v2: apply one fix from bot review about cleanup on error path:
+    https://sashiko.dev/#/patchset/20260415184536.1155220-1-luca.boccassi%40gmail.com
+    the other comments are invalid: luo is not a kmod, and the write hooks are not set up
+v3: add test case to liveupdate selftest
+v4: split test case in separate follow-up patch
+v5: add r-b tag, merge series with LIVEUPDATE_SESSION_GET_NAME ioctl
+    as they both change the same unit test source file, to avoid merge conflicts
+    add '__u32 reserved' to the UAPI struct
+v6: add more test cases as suggested
+    more verbose commit message
+    fix docstring
+v7: apply suggestion from review bot to stub out setattr ops,
+    like it was done in 22bdf3d6581a
+v8: add new patches to reject session names that are empty or too long
+v9: fixes following review comments on LUO_SESSION_MAGIC
+
+Luca Boccassi (6):
+  liveupdate: reject LIVEUPDATE_IOCTL_CREATE_SESSION with invalid name
+    length
+  selftests/liveupdate: add test cases for
+    LIVEUPDATE_IOCTL_CREATE_SESSION calls with invalid length
+  liveupdate: add LUO_SESSION_MAGIC magic inode type
+  selftests/liveupdate: add test case for LUO_SESSION_MAGIC
+  liveupdate: add LIVEUPDATE_SESSION_GET_NAME ioctl
+  selftests/liveupdate: add test cases for LIVEUPDATE_SESSION_GET_NAME
+
+ include/uapi/linux/liveupdate.h               |  21 +++
+ include/uapi/linux/magic.h                    |   1 +
+ kernel/liveupdate/luo_core.c                  |  10 +-
+ kernel/liveupdate/luo_internal.h              |   2 +
+ kernel/liveupdate/luo_session.c               | 108 ++++++++++++-
+ .../testing/selftests/liveupdate/liveupdate.c | 153 ++++++++++++++++++
+ 6 files changed, 289 insertions(+), 6 deletions(-)
+
 -- 
 2.47.3
 
