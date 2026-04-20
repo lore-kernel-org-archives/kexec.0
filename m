@@ -4,133 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 411C8EA71B5
-	for <kexec@archiver.kernel.org>; Mon, 20 Apr 2026 02:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0B81FF3ED70
+	for <kexec@archiver.kernel.org>; Mon, 20 Apr 2026 04:32:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-ID:Content-Type:Message-ID:Date:Subject:To:
-	From:Reply-To:Cc:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=Bh20uoKoEuJHCOppBCW9EV3A/doOyMXa3pzPtyAl95s=; b=UurVCZij/eiENDLCWerDm6k7IP
-	lFwU8OPyff6lgZBpxzW50RXUVGx0S+AxpduvHd1MXWeSePa+7HiM+3ihpXZyH5JLJOWVvJPuusiVm
-	Kep2BOWVje7hCgDFjxr5jiGubhHXB2+F1BBJXmWGG9tKdkunzFRjaWzMA0zF7W660QCTgbR7aNkaY
-	BEnBw+8Nz5M/ZBq8vBBMRvfkNhoTbVzWQqP+3A9Z/YmuLzGUqhHzwE3TA6O/8F3n/SBQfTqU/tRIG
-	6McT//4luMV++LExxdLAWIdxp8GTwLd86Ly2SxcyVLMjp1jTRu8H8ST93kdZO0Az/92N5oKAJK06R
-	Si1PQq+Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=5MnYggTyySz4EUQ19/7Dx63B3B6BmxCSuohEE45TtEc=; b=UIspslzt7bXLiPYxGQIiMKuFXZ
+	xh2CyIarNQTOKhPZ1x3ZUgu29n4LTMJBnV2bYT1c1jY9ys/SyEeuUw3Szk8KhKJEbMQX9/3Z3xsSD
+	OfTvRNphs1M/EgaDsHuwj6dPzu8Hd5FgK0UjTa8JY2AYbrdQENhkHmiq5mS2MsNNw6cYaW8lFv24j
+	/d9MxCAx5+v6pM/9AGF7G4D8fOzOeJIJ813zIHDY4l1IpoQrG8+hxuMi0891f8UurLj253xyl/t/n
+	AyPmsDaP5rtcTDQOfSTN/INEylw9V4SHRA6Kh76Fx1rHWB/3bgkz76BePc0NLBK4SQDjVswHRln7O
+	3J5m41Vg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wEdwg-00000006IxU-461p;
-	Mon, 20 Apr 2026 02:01:06 +0000
-Received: from mail-japanwestazon11010066.outbound.protection.outlook.com ([52.101.228.66] helo=OS0P286CU011.outbound.protection.outlook.com)
+	id 1wEgJD-00000006P1m-1Ory;
+	Mon, 20 Apr 2026 04:32:31 +0000
+Received: from out-174.mta1.migadu.com ([95.215.58.174])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wEdwc-00000006Iwi-457l
+	id 1wEgJ9-00000006OzZ-2VID
 	for kexec@lists.infradead.org;
-	Mon, 20 Apr 2026 02:01:04 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QH2WG79AnQsJFKP6Phl69ghNmzusV+yEpj9CSI1JOg6VKhGRQe0a4bY83OyF+yQzGXSy08mC1vetqXTqlongjqByXafGvdlD09yOxvkodwngoKcWDNW60ug/+gqse4tZR+rYY558afiaiQyHr8+/4eorvUUCSZznL0onVAjeYAB4wmo+5uI978VEdF4VeY3fd+iQjqR4J5pa2nHuuAR9RivIeJRyPnEGQkQZ3aystjU2Kxx+H+ypEroV9flxqfJjSO5qiTP9WcsMHliyIbyvIUmoKowbsCqUu4E4AGAxcDzLhFN7yhlmn6/Ga/9N4q3OdLalJJuL7oSUvFJMbPZw+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Bh20uoKoEuJHCOppBCW9EV3A/doOyMXa3pzPtyAl95s=;
- b=kB6xa+YUMrbgZpOQWeR+pVO67VBhwaeCwVT+ZSu6cY33MMB3s/g/UmZNILtGJKEOo9CxTqa665NXo77TnIsg9rB1/IgC4bFJ0y90dlmNT0CmnoBBjzkwdPB3+ctJ90NwjxYQH+sOiweF+iZeMbGvi2AqiGXsY/7moEfgwh7ZZR5ajyA3javnHFzUW4iF0Nq7a6Jo4S0t5iunJeiix1FRZp9czcMNMBbuvmI5lWVg+jPgtvQnfpA1xyow/TPu0DpxrM0eApfsfn+U+yFVHbNeG8nQkxzdlhKZ2QZyI5UJ62gh3WYe2DIbgshqhlYipZHsTu3jTjOJm1va9thk25a6Jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
- header.d=nec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bh20uoKoEuJHCOppBCW9EV3A/doOyMXa3pzPtyAl95s=;
- b=slABRKor5SxOfAU7gIYvwEreSc6fvlaftpCKxLW4mEMeOhdYucBRO5ENjKGNM1iRYMQzTn+AXYb/fvupXdkAwsOUQn8GzwHe3GJyEjqhJIxduKHPE4tALNrX8NzsqB4C7yRdxDk+Yy0zVwibLUB+XGHnO569yLGef7ctbVX26bFheeuOHS/RSK+28Uaq6wpYJFsZ5zCDInam2t7WV6JuR/62dqMnjPSX/3M7XpAdWVG6Lufhi8Ymh1iCyRYOLY6d5FkBz5rjucf/iOUU9t/izN6eUs355FTl7XFLNzh/3YsB87lT5ZAG9+tb8YzSMMD/k9jqJZMlJUPVc7AJrdk/IQ==
-Received: from TY4PR01MB13462.jpnprd01.prod.outlook.com
- (2603:1096:405:1d7::13) by TYRPR01MB15809.jpnprd01.prod.outlook.com
- (2603:1096:405:2c5::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.31; Mon, 20 Apr
- 2026 02:00:47 +0000
-Received: from TY4PR01MB13462.jpnprd01.prod.outlook.com
- ([fe80::8dd0:19c7:2047:1820]) by TY4PR01MB13462.jpnprd01.prod.outlook.com
- ([fe80::8dd0:19c7:2047:1820%4]) with mapi id 15.20.9818.032; Mon, 20 Apr 2026
- 02:00:47 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
-	<k-hagio-ab@nec.com>
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Subject: [ANNOUNCE] makedumpfile 1.7.9
-Thread-Topic: [ANNOUNCE] makedumpfile 1.7.9
-Thread-Index: AQHc0GmB/4j84pHQUE6De+YWXQPuug==
-Date: Mon, 20 Apr 2026 02:00:47 +0000
-Message-ID: <ffe967c2-627e-4164-afc2-4fc4e3299460@nec.com>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nec.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY4PR01MB13462:EE_|TYRPR01MB15809:EE_
-x-ms-office365-filtering-correlation-id: 705047de-e941-4032-a76d-08de9e80a3b5
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700021|56012099003|18002099003;
-x-microsoft-antispam-message-info: npIftEf1nKvR/MKufPqDtqKuvaWMql1fS16aQ1vQkGjeUwzmxxJ6/bLuu+59nUnu48+7YogqPQmWSeCDk/3byc+ynfIZA20kCh1jlPh0h9bdYUN2FFS/gfjhDKw40YCUZF0hQm0Yhg0cIX/zWvP4mcLAKYd6bHiOkxwAbjt1cDOFH01UR1yndRXvhUCiJZ2Ick336jo4Vf30wV+1ZUjHo64aUi5NZ4JN8rB82jdppEnwTIAM1a0frrswr5UdivAqImxjqe5cGTZmJrVpPpWsYqx2ZiHwuQpRZoXx1r+Wa+HFpyyBSUjg9gc1MYWbB3INSNUC6uTn4FsjPg+g3Zpx68bvaSYAWMceyXxgiCvNRlopcFMFZm+K2Vfi7NWOrjBQvoTvCI6gJX99brugUU4w5HpYLmd7p+f8v1Xq2A5CuCmgvpS6Ra0rGDgBOQrztQVv6fttJzXZnWbb3NJet3YmcfnRFWPj2SKqddKy7nqpRJ+ULJ358oErHZs0vEtAukERU0MUlIabCM74xZPzSEkQlLzP7mizv+s/QtNLX5gRWF2sy5lHrtlN/Ant6gk9nSj6AlYpj/EUSrl7hD33WUSIEp6hXhmCvSfyIPjBaM/ccZ0ZZTf5ISjVMRN/gL5K12XsFhVHvwyb9akqGBVJU9D5h3cBmkezcV2RW4VJOkhHF2MHMS+yugKb6vZCbv+3dfFZAFDrNwI6m/XlQkFDlkzxSVfzyVnM+pWi2ZdHaQ6OQCjgzOoXe56A6Rnl3nh/xPrQfj0HkLYEV39Y+MXyCzGIgCk0Zw8PPmbQxmg8GtXetc0Mx7sLlShHdWAuznUqFu2t
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY4PR01MB13462.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700021)(56012099003)(18002099003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?dGVCK0NNK2k3UmE1WjdIWitEZng1bUpsbnh4UTNSU3NaV29NNjZIelNlSVd0?=
- =?utf-8?B?M2J6V3BtaEhxUUVRSC92Q3g3MWlKZStrb2IxWnpvdFFrRUxtZGNuQ01DelFr?=
- =?utf-8?B?SFo3RHlhczA3bkRnRWEzdzVyWUVqRFRESUNXRGdmVnJRLzBDd2h2TElORFR6?=
- =?utf-8?B?YjRiQ3FuODBZZks3bTRkakFZM3VCNFB2ZVFXR1JYN1hBUTRESmNQTGJsbDho?=
- =?utf-8?B?TXRudkUvY2JHdHIrVXB3a3BaT1JRbjJnYmtvQWFGTVpxa1Nsa2JmeGpUd3gv?=
- =?utf-8?B?aWdkWVRaQWZCWjdwNDh5VThlNWt5eFl0VGNIV0RVTFNUbytybG5jL1I5OXNP?=
- =?utf-8?B?K0tSbE5CMjdXUm5tWEE3b1ZoazVYSjZzMVN5QkxKVWhvRkR2TWRTZGlhRkcw?=
- =?utf-8?B?QWVvVWVxMS9RVGN2TURUSS9rT1RuZUdpN24yU1lMamdWTC9lWDhucUJ1T21K?=
- =?utf-8?B?cFVFK0ZZRUV1eTNGeW1NOEVaZm41QWVDMDkydnBQR0JQenhYNHd6Tnl4WTJs?=
- =?utf-8?B?blA0NXh3a0ticEdvY0F1NjZhYXhzYXBiMHkwVUVDdFBUU2l0SGFlaXY4WXRQ?=
- =?utf-8?B?NVRnb2hRSU9mQWVoWnBpL0JuZDVFZG1zcWxxaEo3cW13ZG5SaFFMeEVxUHRO?=
- =?utf-8?B?MEYyWk83dW1CY2FwL2JIVVdnMGZ2cFB2cGlCbC96Mkpnd09McXczK3FoNlp3?=
- =?utf-8?B?NGxMQk9YRFZBdzZjejdDeW1ITFZvVTZQR2VQQkRManN6L00xTTB1QTN0dTNx?=
- =?utf-8?B?NW5PSlVhTXRqSnA2WkNMTTZIZ0MxbzF4K1hFVWZ2TDV6MVJBS1JiNnF5R2w0?=
- =?utf-8?B?OUdpVFR2V0hBQnBJWDBhMVVXanhPM2IzYlhYZVhnaTVza2xycGNvODFINHE0?=
- =?utf-8?B?S1o4TFJFejlPSCtLanIzTTJzWGhPMmdoNWd3R1FyRndHWHVoU0lwOGExcVRS?=
- =?utf-8?B?eHlIekVjOHpZb1U1dG5JWEFCaGQ5NlNtUmI1dXJnQ2I2UW83Z1pZcG9sNXI5?=
- =?utf-8?B?YXVXTTZSdkUyVFdkS1E3MzdzN3Z3cHAzQVl3dFhCQVZHWDRqanFra2J1VmFS?=
- =?utf-8?B?bVE3ejRBYmR4a3FTTERxVlAvY3BwWGp3TXY1NlJvQUdHM0taeE84elJOYWh3?=
- =?utf-8?B?NVBhZnE1dGtVcmFpajJFWngxVjh2YitVUkQxUkE0TGVJUUJ3RjI4N2pGZENj?=
- =?utf-8?B?QzhxYkNEZ29zdUpZclNJNnFNdkJGeTdTYWxSR0Q5N3UyY3dIVFRBQzU3b3Fq?=
- =?utf-8?B?U1pmajlTS21qRjhlWE1TRXNyRm1wTVhQN1hpZ2hlTWlRM28yeldEWWszRFg0?=
- =?utf-8?B?bG5YRjNsZDlIdVY3MThCUStuSFEzUld6cVNaNzU3a3lKVWdZaXN2a2R3RmV6?=
- =?utf-8?B?d0R6emdRamphWnI3b2EyZDhRQnVxT1BkdW9DdFFGT2w4c2V2cHpKK0dzV055?=
- =?utf-8?B?a1hiMTducU9KUHFyRWM0QWxtUnp6OUt0VnRIeHNSV2lHRm5uT1VhbDcwb3k4?=
- =?utf-8?B?RHBOZjJrdVozeU9zNVl5UWdkTXZxUkxOUHc2cThmZXFnY1ZlNTVPK2xpWUR4?=
- =?utf-8?B?aDNzK1ZDeTc2THZNaFFENzUyQ0xMRW8yU0NBUkNIUVN1UFR3ZURYd3FuQzYw?=
- =?utf-8?B?UmszVDJ5VDdFS1RuYlJtSjV3SmkrSklqK3kzeTlCbnJXNXBqZXd5UnRyYTNO?=
- =?utf-8?B?R3JOK0N3a1NmYnU4SDVnakwzRjBoUUR3T2Q4TU5kVVpzWHdCeWVyZmhoMEJU?=
- =?utf-8?B?eTRXWnphVzVoTmFNeW90N2ttelFsa3lrM0YrM2N2TjdVSjNXS1BqMkRxRXVk?=
- =?utf-8?B?RUFvWnVZaEdhTW5abWh2bnpIRFdKZHBadHlRbnBzNkhGT0NoelZRN09OeXMy?=
- =?utf-8?B?eEpyYTNKeWZiYXVRVElCMDNoZk54aDdwU0E0OEgrSUt0Ymh1a1AvTVFLNnZh?=
- =?utf-8?B?UUxUMWV2ZkN3WHNYZ0M1YzhvWWpPcS9XOHVnRG5qUmVQMWhucjhlYnV2WnVv?=
- =?utf-8?B?NnpBQldKbk5UK3NEZjVmVnBqSTc0THBNVmw4TVgyU2lFMFE5TEE4YThqejc4?=
- =?utf-8?B?bk56aysyaXFoRWluV3JFNG1UekwwaW5JUUlYUkpIMEZXTk1RbFRhUWQzYVFo?=
- =?utf-8?B?RTVpOFVrd1o5SWE2cys5L1B0ZFZDK1FRVXJ5UVNxbmErNnJSTjBkV2pVQlFO?=
- =?utf-8?B?RlE3dDIxcmdheXhPMHNRUWpqeFkzRkEvQnNaRUFaWUpjS1N5TmJxK21NM0xT?=
- =?utf-8?B?eUVza3NubkxleU9vTnltRGlQUTl1MG5nbTRYd0hPZHAySW4rUWE5QVFYS2xX?=
- =?utf-8?B?cmxncVN5dFVEUktpUDU2M01pRTVjM2dtOStSQmpjRHpkZTNNTGdkdz09?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <353537295F6CAB459BCFA6568ACDFBF4@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	Mon, 20 Apr 2026 04:32:29 +0000
+Message-ID: <cea19b89-22d4-4df3-a770-d75eff22e556@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1776659530;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5MnYggTyySz4EUQ19/7Dx63B3B6BmxCSuohEE45TtEc=;
+	b=G09nrrQeVAZKf4wksdB8CU5gruoW1QcK0eujZuWYMJmHbys+6aCRTmy3u6R4PYilHIl0DL
+	WutfMtemwFp0vJBJ5tMG6k1QcrxoSNkgbboqQhhRQ7jO9RK9BZwf5o3lakqwRa3equsqgf
+	Kxk+FoZmdL2UPRV3N6s9zt5onjTE1t0=
+Date: Sun, 19 Apr 2026 21:32:00 -0700
 MIME-Version: 1.0
-X-OriginatorOrg: nec.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY4PR01MB13462.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 705047de-e941-4032-a76d-08de9e80a3b5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2026 02:00:47.2609
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IIAE2Rgw9EWJY5nBLs2W5skn2lERc97oZYIMpRfxmoDKkn8Ma//oHr04QREtPa8Rmyd2lxNgW/LshYsGwmhQhw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYRPR01MB15809
+Subject: Re: [PATCH 1/5] liveupdate: Remove limit on the number of sessions
+To: Pasha Tatashin <pasha.tatashin@soleen.com>,
+ "yanjun.zhu@linux.dev" <yanjun.zhu@linux.dev>
+Cc: linux-kselftest@vger.kernel.org, rppt@kernel.org, shuah@kernel.org,
+ akpm@linux-foundation.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ dmatlack@google.com, kexec@lists.infradead.org, pratyush@kernel.org,
+ skhawaja@google.com, graf@amazon.com
+References: <20260414200237.444170-1-pasha.tatashin@soleen.com>
+ <20260414200237.444170-2-pasha.tatashin@soleen.com>
+ <4bd21077-8711-4ae7-a695-8bc88ce652d1@linux.dev>
+ <CA+CK2bDvFQUYCsD+jKBWw1KfRNJ4DOopAu29iq7SWYrPWV+dzQ@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <CA+CK2bDvFQUYCsD+jKBWw1KfRNJ4DOopAu29iq7SWYrPWV+dzQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260419_190103_379916_11034721 
-X-CRM114-Status: UNSURE (   5.94  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260419_213228_181454_80BBD6F4 
+X-CRM114-Status: GOOD (  33.48  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -145,17 +74,538 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-SGksDQoNCldlJ3JlIHBsZWFzZWQgdG8gYW5ub3VuY2UgdGhlIHJlbGVhc2Ugb2YgbWFrZWR1bXBm
-aWxlIDEuNy45Lg0KVGhhbmsgeW91IGV2ZXJ5b25lIGZvciB5b3VyIGhlbHAgdG8gbWFpbnRhaW4g
-dGhlIHRvb2wuDQoNCkRvd25sb2FkOg0KVGhlIGxhdGVzdCBtYWtlZHVtcGZpbGUgY2FuIGJlIGRv
-d25sb2FkZWQgZnJvbSB0aGUgZm9sbG93aW5nIFVSTC4NCiAgIGh0dHBzOi8vZ2l0aHViLmNvbS9t
-YWtlZHVtcGZpbGUvbWFrZWR1bXBmaWxlL3JlbGVhc2VzDQoNCk5ldyBmZWF0dXJlczoNCi0gU3Vw
-cG9ydCBmb3Iga2VybmVscyB1cCB0byB2Ny4wICh4ODZfNjQpDQoNCkNvbW1pdHMgc2luY2UgMS43
-Ljg6DQplYjQyZDYzIFt2MS43LjldIFVwZGF0ZSB2ZXJzaW9uIChLYXp1aGl0byBIYWdpbykNCg0K
-RGVzY3JpcHRpb24gb2YgbWFrZWR1bXBmaWxlOg0KVGhlIG1ha2VkdW1wZmlsZSBpcyBhIHRvb2wg
-Zm9yIGNyZWF0aW5nIGEgZHVtcGZpbGUgZnJvbSAvcHJvYy92bWNvcmUNCndpdGggZmlsdGVyaW5n
-IG91dCB1bm5lY2Vzc2FyeSBwYWdlcyBmb3IgYW5hbHlzaXMgYW5kIGNvbXByZXNzaW5nIHRoZQ0K
-cmVtYWluaW5nIHBhZ2VzLCB0byBzaG9ydGVuIHRoZSBzaXplIG9mIHRoZSBkdW1wZmlsZSBhbmQg
-dGhlIHRpbWUgb2YNCmNyZWF0aW5nIGl0Lg0KaHR0cHM6Ly9naXRodWIuY29tL21ha2VkdW1wZmls
-ZS9tYWtlZHVtcGZpbGUNCg0KVGhhbmtzLA0KS2F6dQ==
+
+在 2026/4/14 17:14, Pasha Tatashin 写道:
+> On Tue, Apr 14, 2026 at 8:06 PM yanjun.zhu <yanjun.zhu@linux.dev> wrote:
+>> On 4/14/26 1:02 PM, Pasha Tatashin wrote:
+>>> Currently, the number of LUO sessions is limited by a fixed number of
+>>> pre-allocated pages for serialization (16 pages, allowing for ~819
+>>> sessions).
+>>>
+>>> This limitation is problematic if LUO is used to support things such as
+>>> systemd file descriptor store, and would be used not just as VM memory
+>>> but to save other states on the machine.
+>>>
+>>> Remove this limit by transitioning to a linked-block approach for
+>>> session metadata serialization. Instead of a single contiguous block,
+>>> session metadata is now stored in a chain of 16-page blocks. Each block
+>>> starts with a header containing the physical address of the next block
+>>> and the number of session entries in the current block.
+>>>
+>>> - Bump session ABI version to v3.
+>>> - Update struct luo_session_header_ser to include a 'next' pointer.
+>>> - Implement dynamic block allocation in luo_session_insert().
+>>> - Update setup, serialization, and deserialization logic to traverse
+>>>     the block chain.
+>>> - Remove LUO_SESSION_MAX limit.
+>>>
+>>> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+>>> ---
+>>>    include/linux/kho/abi/luo.h      |  19 +--
+>>>    kernel/liveupdate/luo_internal.h |  12 +-
+>>>    kernel/liveupdate/luo_session.c  | 237 +++++++++++++++++++++++--------
+>>>    3 files changed, 197 insertions(+), 71 deletions(-)
+>>>
+>>> diff --git a/include/linux/kho/abi/luo.h b/include/linux/kho/abi/luo.h
+>>> index 46750a0ddf88..f5732958545e 100644
+>>> --- a/include/linux/kho/abi/luo.h
+>>> +++ b/include/linux/kho/abi/luo.h
+>>> @@ -57,9 +57,10 @@
+>>>     *   - compatible: "luo-session-v1"
+>>>     *     Identifies the session ABI version.
+>>>     *   - luo-session-header: u64
+>>> - *     The physical address of a `struct luo_session_header_ser`. This structure
+>>> - *     is the header for a contiguous block of memory containing an array of
+>>> - *     `struct luo_session_ser`, one for each preserved session.
+>>> + *     The physical address of the first `struct luo_session_header_ser`.
+>>> + *     This structure is the header for a block of memory containing an array
+>>> + *     of `struct luo_session_ser` entries. Multiple blocks are linked via
+>>> + *     the `next` field in the header.
+>>>     *
+>>>     * File-Lifecycle-Bound Node (luo-flb):
+>>>     *   This node describes all preserved global objects whose lifecycle is bound
+>>> @@ -77,9 +78,9 @@
+>>>     *   `__packed` structures. These structures contain the actual preserved state.
+>>>     *
+>>>     *   - struct luo_session_header_ser:
+>>> - *     Header for the session array. Contains the total page count of the
+>>> - *     preserved memory block and the number of `struct luo_session_ser`
+>>> - *     entries that follow.
+>>> + *     Header for the session data block. Contains the physical address of the
+>>> + *     next session data block and the number of `struct luo_session_ser`
+>>> + *     entries that follow this header in the current block.
+>>>     *
+>>>     *   - struct luo_session_ser:
+>>>     *     Metadata for a single session, including its name and a physical pointer
+>>> @@ -153,21 +154,23 @@ struct luo_file_set_ser {
+>>>     *                          luo_session_header_ser
+>>>     */
+>>>    #define LUO_FDT_SESSION_NODE_NAME   "luo-session"
+>>> -#define LUO_FDT_SESSION_COMPATIBLE   "luo-session-v2"
+>>> +#define LUO_FDT_SESSION_COMPATIBLE   "luo-session-v3"
+>>>    #define LUO_FDT_SESSION_HEADER              "luo-session-header"
+>>>
+>>>    /**
+>>>     * struct luo_session_header_ser - Header for the serialized session data block.
+>>> + * @next:  Physical address of the next struct luo_session_header_ser.
+>>>     * @count: The number of `struct luo_session_ser` entries that immediately
+>>>     *         follow this header in the memory block.
+>>>     *
+>>> - * This structure is located at the beginning of a contiguous block of
+>>> + * This structure is located at the beginning of a block of
+>>>     * physical memory preserved across the kexec. It provides the necessary
+>>>     * metadata to interpret the array of session entries that follow.
+>>>     *
+>>>     * If this structure is modified, `LUO_FDT_SESSION_COMPATIBLE` must be updated.
+>>>     */
+>>>    struct luo_session_header_ser {
+>>> +     u64 next;
+>>>        u64 count;
+>>>    } __packed;
+>>>
+>>> diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_internal.h
+>>> index 875844d7a41d..a73f42069301 100644
+>>> --- a/kernel/liveupdate/luo_internal.h
+>>> +++ b/kernel/liveupdate/luo_internal.h
+>>> @@ -11,6 +11,16 @@
+>>>    #include <linux/liveupdate.h>
+>>>    #include <linux/uaccess.h>
+>>>
+>>> +/*
+>>> + * Safeguard limit for the number of serialization blocks. This is used to
+>>> + * prevent infinite loops and excessive memory allocation in case of memory
+>>> + * corruption in the preserved state.
+>>> + *
+>>> + * This limit allows for ~8.1 million sessions and ~1.2 million files per
+>>> + * session, which is more than enough for all realistic use cases.
+>>> + */
+>>> +#define LUO_MAX_BLOCKS 10000
+>>> +
+>>>    struct luo_ucmd {
+>>>        void __user *ubuffer;
+>>>        u32 user_size;
+>>> @@ -59,7 +69,6 @@ struct luo_file_set {
+>>>     * struct luo_session - Represents an active or incoming Live Update session.
+>>>     * @name:       A unique name for this session, used for identification and
+>>>     *              retrieval.
+>>> - * @ser:        Pointer to the serialized data for this session.
+>>>     * @list:       A list_head member used to link this session into a global list
+>>>     *              of either outgoing (to be preserved) or incoming (restored from
+>>>     *              previous kernel) sessions.
+>>> @@ -70,7 +79,6 @@ struct luo_file_set {
+>>>     */
+>>>    struct luo_session {
+>>>        char name[LIVEUPDATE_SESSION_NAME_LENGTH];
+>>> -     struct luo_session_ser *ser;
+>>>        struct list_head list;
+>>>        bool retrieved;
+>>>        struct luo_file_set file_set;
+>>> diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
+>>> index 92b1af791889..007ca34eba79 100644
+>>> --- a/kernel/liveupdate/luo_session.c
+>>> +++ b/kernel/liveupdate/luo_session.c
+>>> @@ -69,30 +69,39 @@
+>>>    #include <uapi/linux/liveupdate.h>
+>>>    #include "luo_internal.h"
+>>>
+>>> -/* 16 4K pages, give space for 744 sessions */
+>>> +/* 16 4K pages, give space for 819 sessions per block */
+>>>    #define LUO_SESSION_PGCNT   16ul
+>>> -#define LUO_SESSION_MAX              (((LUO_SESSION_PGCNT << PAGE_SHIFT) -   \
+>>> +#define LUO_SESSION_BLOCK_MAX                (((LUO_SESSION_PGCNT << PAGE_SHIFT) -   \
+>>>                sizeof(struct luo_session_header_ser)) /                \
+>>>                sizeof(struct luo_session_ser))
+>>>
+>>> +/**
+>>> + * struct luo_session_block - Internal representation of a session serialization block.
+>>> + * @list: List head for linking blocks in memory.
+>>> + * @ser:  Pointer to the serialized header in preserved memory.
+>>> + */
+>>> +struct luo_session_block {
+>>> +     struct list_head list;
+>>> +     struct luo_session_header_ser *ser;
+>>> +};
+>>> +
+>>>    /**
+>>>     * struct luo_session_header - Header struct for managing LUO sessions.
+>>>     * @count:      The number of sessions currently tracked in the @list.
+>>> + * @nblocks:    The number of allocated serialization blocks.
+>>>     * @list:       The head of the linked list of `struct luo_session` instances.
+>>>     * @rwsem:      A read-write semaphore providing synchronized access to the
+>>>     *              session list and other fields in this structure.
+>>> - * @header_ser: The header data of serialization array.
+>>> - * @ser:        The serialized session data (an array of
+>>> - *              `struct luo_session_ser`).
+>>> + * @blocks:     The list of serialization blocks (struct luo_session_block).
+>>>     * @active:     Set to true when first initialized. If previous kernel did not
+>>>     *              send session data, active stays false for incoming.
+>>>     */
+>>>    struct luo_session_header {
+>>>        long count;
+>>> +     long nblocks;
+>>>        struct list_head list;
+>>>        struct rw_semaphore rwsem;
+>>> -     struct luo_session_header_ser *header_ser;
+>>> -     struct luo_session_ser *ser;
+>>> +     struct list_head blocks;
+>>>        bool active;
+>>>    };
+>>>
+>>> @@ -110,10 +119,12 @@ static struct luo_session_global luo_session_global = {
+>>>        .incoming = {
+>>>                .list = LIST_HEAD_INIT(luo_session_global.incoming.list),
+>>>                .rwsem = __RWSEM_INITIALIZER(luo_session_global.incoming.rwsem),
+>>> +             .blocks = LIST_HEAD_INIT(luo_session_global.incoming.blocks),
+>>>        },
+>>>        .outgoing = {
+>>>                .list = LIST_HEAD_INIT(luo_session_global.outgoing.list),
+>>>                .rwsem = __RWSEM_INITIALIZER(luo_session_global.outgoing.rwsem),
+>>> +             .blocks = LIST_HEAD_INIT(luo_session_global.outgoing.blocks),
+>>>        },
+>>>    };
+>>>
+>>> @@ -140,6 +151,70 @@ static void luo_session_free(struct luo_session *session)
+>>>        kfree(session);
+>>>    }
+>>>
+>>> +static int luo_session_add_block(struct luo_session_header *sh,
+>>> +                              struct luo_session_header_ser *ser)
+>>> +{
+>>> +     struct luo_session_block *block;
+>>> +
+>>> +     if (sh->nblocks >= LUO_MAX_BLOCKS)
+>>> +             return -ENOSPC;
+>>> +
+>>> +     block = kzalloc_obj(*block);
+>>> +     if (!block)
+>>> +             return -ENOMEM;
+>>> +
+>>> +     block->ser = ser;
+>>> +     list_add_tail(&block->list, &sh->blocks);
+>>> +     sh->nblocks++;
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +static int luo_session_create_ser_block(struct luo_session_header *sh)
+>>> +{
+>>> +     struct luo_session_block *last = NULL;
+>>> +     struct luo_session_header_ser *ser;
+>>> +     int err;
+>>> +
+>>> +     ser = kho_alloc_preserve(LUO_SESSION_PGCNT << PAGE_SHIFT);
+>>> +     if (IS_ERR(ser))
+>>> +             return PTR_ERR(ser);
+>>> +
+>>> +     if (!list_empty(&sh->blocks))
+>>> +             last = list_last_entry(&sh->blocks, struct luo_session_block, list);
+>>> +
+>>> +     err = luo_session_add_block(sh, ser);
+>>> +     if (err)
+>>> +             goto err_unpreserve;
+>>> +
+>>> +     if (last)
+>>> +             last->ser->next = virt_to_phys(ser);
+>>> +
+>>> +     return 0;
+>>> +
+>>> +err_unpreserve:
+>>> +     kho_unpreserve_free(ser);
+>>> +     return err;
+>>> +}
+>>> +
+>>> +static void luo_session_destroy_ser_blocks(struct luo_session_header *sh,
+>>> +                                        bool unpreserve)
+>>> +{
+>>> +     struct luo_session_block *block, *tmp;
+>>> +
+>>> +     list_for_each_entry_safe(block, tmp, &sh->blocks, list) {
+>>> +             if (block->ser) {
+>>> +                     if (unpreserve)
+>>> +                             kho_unpreserve_free(block->ser);
+>>> +                     else
+>>> +                             kho_restore_free(block->ser);
+>>> +             }
+>>> +             list_del(&block->list);
+>>> +             kfree(block);
+>>> +             sh->nblocks--;
+>>> +     }
+>>> +}
+>>> +
+>>>    static int luo_session_insert(struct luo_session_header *sh,
+>>>                              struct luo_session *session)
+>>>    {
+>>> @@ -147,15 +222,6 @@ static int luo_session_insert(struct luo_session_header *sh,
+>>>
+>>>        guard(rwsem_write)(&sh->rwsem);
+>>>
+>>> -     /*
+>>> -      * For outgoing we should make sure there is room in serialization array
+>>> -      * for new session.
+>>> -      */
+>>> -     if (sh == &luo_session_global.outgoing) {
+>>> -             if (sh->count == LUO_SESSION_MAX)
+>>> -                     return -ENOMEM;
+>>> -     }
+>>> -
+>>>        /*
+>>>         * For small number of sessions this loop won't hurt performance
+>>>         * but if we ever start using a lot of sessions, this might
+>>> @@ -166,6 +232,20 @@ static int luo_session_insert(struct luo_session_header *sh,
+>>>                if (!strncmp(it->name, session->name, sizeof(it->name)))
+>>>                        return -EEXIST;
+>>>        }
+>>> +
+>>> +     /*
+>>> +      * For outgoing we should make sure there is room in serialization array
+>>> +      * for new session. If not, allocate a new block.
+>>> +      */
+>>> +     if (sh == &luo_session_global.outgoing) {
+>>> +             if (sh->count == sh->nblocks * LUO_SESSION_BLOCK_MAX) {
+>> I am not sure if "LUO_SESSION_BLOCK_MAX 10000" has special meaning or not.
+> LUO_SESSION_BLOCK_MAX is calculated based on the number of times
+> "struct luo_session_ser)" fits into a page-aligned block minus the
+> luo_session_header_ser. It is not power-of-two, so there is no pretty
+> way to change this to avoid multiplcation.
+
+Maybe we can use
+
+if (!(sh->count % LUO_SESSION_BLOCK_MASK) && sh->count > 0)
+
+This can avoid multiplcation.
+
+Just 2 cent suggestion.
+
+Zhu Yanjun
+
+>
+>> If not, we can use the following:
+>>
+>> #define LUO_SESSION_BLOCK_SHIFT 13
+>> #define LUO_SESSION_BLOCK_MAX   (1UL << LUO_SESSION_BLOCK_SHIFT) // 8192
+>> #define LUO_SESSION_BLOCK_MASK  (LUO_SESSION_BLOCK_MAX - 1)      // 0x1FFF
+>>
+>> if (!(sh->count & LUO_SESSION_BLOCK_MASK) && sh->count > 0) {
+>> ...
+>> }
+>>
+>> Zhu Yanjun
+>>
+>>> +                     int err = luo_session_create_ser_block(sh);
+>>> +
+>>> +                     if (err)
+>>> +                             return err;
+>>> +             }
+>>> +     }
+>>> +
+>>>        list_add_tail(&session->list, &sh->list);
+>>>        sh->count++;
+>>>
+>>> @@ -444,9 +524,12 @@ int __init luo_session_setup_outgoing(void *fdt_out)
+>>>        u64 header_ser_pa;
+>>>        int err;
+>>>
+>>> -     header_ser = kho_alloc_preserve(LUO_SESSION_PGCNT << PAGE_SHIFT);
+>>> -     if (IS_ERR(header_ser))
+>>> -             return PTR_ERR(header_ser);
+>>> +     err = luo_session_create_ser_block(&luo_session_global.outgoing);
+>>> +     if (err)
+>>> +             return err;
+>>> +
+>>> +     header_ser = list_first_entry(&luo_session_global.outgoing.blocks,
+>>> +                                   struct luo_session_block, list)->ser;
+>>>        header_ser_pa = virt_to_phys(header_ser);
+>>>
+>>>        err = fdt_begin_node(fdt_out, LUO_FDT_SESSION_NODE_NAME);
+>>> @@ -459,19 +542,18 @@ int __init luo_session_setup_outgoing(void *fdt_out)
+>>>        if (err)
+>>>                goto err_unpreserve;
+>>>
+>>> -     luo_session_global.outgoing.header_ser = header_ser;
+>>> -     luo_session_global.outgoing.ser = (void *)(header_ser + 1);
+>>>        luo_session_global.outgoing.active = true;
+>>>
+>>>        return 0;
+>>>
+>>>    err_unpreserve:
+>>> -     kho_unpreserve_free(header_ser);
+>>> +     luo_session_destroy_ser_blocks(&luo_session_global.outgoing, true);
+>>>        return err;
+>>>    }
+>>>
+>>>    int __init luo_session_setup_incoming(void *fdt_in)
+>>>    {
+>>> +     struct luo_session_header *sh = &luo_session_global.incoming;
+>>>        struct luo_session_header_ser *header_ser;
+>>>        int err, header_size, offset;
+>>>        u64 header_ser_pa;
+>>> @@ -501,11 +583,14 @@ int __init luo_session_setup_incoming(void *fdt_in)
+>>>        }
+>>>
+>>>        header_ser_pa = get_unaligned((u64 *)ptr);
+>>> -     header_ser = phys_to_virt(header_ser_pa);
+>>> -
+>>> -     luo_session_global.incoming.header_ser = header_ser;
+>>> -     luo_session_global.incoming.ser = (void *)(header_ser + 1);
+>>> -     luo_session_global.incoming.active = true;
+>>> +     while (header_ser_pa) {
+>>> +             header_ser = phys_to_virt(header_ser_pa);
+>>> +             err = luo_session_add_block(sh, header_ser);
+>>> +             if (err)
+>>> +                     return err;
+>>> +             header_ser_pa = header_ser->next;
+>>> +     }
+>>> +     sh->active = true;
+>>>
+>>>        return 0;
+>>>    }
+>>> @@ -513,6 +598,7 @@ int __init luo_session_setup_incoming(void *fdt_in)
+>>>    int luo_session_deserialize(void)
+>>>    {
+>>>        struct luo_session_header *sh = &luo_session_global.incoming;
+>>> +     struct luo_session_block *block;
+>>>        static bool is_deserialized;
+>>>        static int err;
+>>>
+>>> @@ -539,40 +625,49 @@ int luo_session_deserialize(void)
+>>>         * userspace to detect the failure and trigger a reboot, which will
+>>>         * reliably reset devices and reclaim memory.
+>>>         */
+>>> -     for (int i = 0; i < sh->header_ser->count; i++) {
+>>> -             struct luo_session *session;
+>>> -
+>>> -             session = luo_session_alloc(sh->ser[i].name);
+>>> -             if (IS_ERR(session)) {
+>>> -                     pr_warn("Failed to allocate session [%.*s] during deserialization %pe\n",
+>>> -                             (int)sizeof(sh->ser[i].name),
+>>> -                             sh->ser[i].name, session);
+>>> -                     err = PTR_ERR(session);
+>>> -                     return err;
+>>> -             }
+>>> +     list_for_each_entry(block, &sh->blocks, list) {
+>>> +             struct luo_session_ser *ser = (void *)(block->ser + 1);
+>>>
+>>> -             err = luo_session_insert(sh, session);
+>>> -             if (err) {
+>>> -                     pr_warn("Failed to insert session [%s] %pe\n",
+>>> -                             session->name, ERR_PTR(err));
+>>> -                     luo_session_free(session);
+>>> +             if (block->ser->count > LUO_SESSION_BLOCK_MAX) {
+>>> +                     pr_warn("Session block contains too many entries: %llu\n",
+>>> +                             block->ser->count);
+>>> +                     err = -EINVAL;
+>>>                        return err;
+>>>                }
+>>>
+>>> -             scoped_guard(mutex, &session->mutex) {
+>>> -                     err = luo_file_deserialize(&session->file_set,
+>>> -                                                &sh->ser[i].file_set_ser);
+>>> -             }
+>>> -             if (err) {
+>>> -                     pr_warn("Failed to deserialize files for session [%s] %pe\n",
+>>> -                             session->name, ERR_PTR(err));
+>>> -                     return err;
+>>> +             for (int i = 0; i < block->ser->count; i++) {
+>>> +                     struct luo_session *session;
+>>> +
+>>> +                     session = luo_session_alloc(ser[i].name);
+>>> +                     if (IS_ERR(session)) {
+>>> +                             pr_warn("Failed to allocate session [%.*s] during deserialization %pe\n",
+>>> +                                     (int)sizeof(ser[i].name),
+>>> +                                     ser[i].name, session);
+>>> +                             err = PTR_ERR(session);
+>>> +                             return err;
+>>> +                     }
+>>> +
+>>> +                     err = luo_session_insert(sh, session);
+>>> +                     if (err) {
+>>> +                             pr_warn("Failed to insert session [%s] %pe\n",
+>>> +                                     session->name, ERR_PTR(err));
+>>> +                             luo_session_free(session);
+>>> +                             return err;
+>>> +                     }
+>>> +
+>>> +                     scoped_guard(mutex, &session->mutex) {
+>>> +                             err = luo_file_deserialize(&session->file_set,
+>>> +                                                        &ser[i].file_set_ser);
+>>> +                     }
+>>> +                     if (err) {
+>>> +                             pr_warn("Failed to deserialize files for session [%s] %pe\n",
+>>> +                                     session->name, ERR_PTR(err));
+>>> +                             return err;
+>>> +                     }
+>>>                }
+>>>        }
+>>>
+>>> -     kho_restore_free(sh->header_ser);
+>>> -     sh->header_ser = NULL;
+>>> -     sh->ser = NULL;
+>>> +     luo_session_destroy_ser_blocks(sh, false);
+>>>
+>>>        return 0;
+>>>    }
+>>> @@ -580,31 +675,51 @@ int luo_session_deserialize(void)
+>>>    int luo_session_serialize(void)
+>>>    {
+>>>        struct luo_session_header *sh = &luo_session_global.outgoing;
+>>> +     struct luo_session_block *block;
+>>>        struct luo_session *session;
+>>> +     struct luo_session_ser *ser;
+>>>        int i = 0;
+>>>        int err;
+>>>
+>>>        guard(rwsem_write)(&sh->rwsem);
+>>> +
+>>> +     if (list_empty(&sh->blocks))
+>>> +             return 0;
+>>> +
+>>> +     block = list_first_entry(&sh->blocks, struct luo_session_block, list);
+>>> +     ser = (void *)(block->ser + 1);
+>>> +
+>>>        list_for_each_entry(session, &sh->list, list) {
+>>> -             err = luo_session_freeze_one(session, &sh->ser[i]);
+>>> +             if (i == LUO_SESSION_BLOCK_MAX) {
+>>> +                     block->ser->count = i;
+>>> +                     block = list_next_entry(block, list);
+>>> +                     ser = (void *)(block->ser + 1);
+>>> +                     i = 0;
+>>> +             }
+>>> +
+>>> +             err = luo_session_freeze_one(session, &ser[i]);
+>>>                if (err)
+>>>                        goto err_undo;
+>>>
+>>> -             strscpy(sh->ser[i].name, session->name,
+>>> -                     sizeof(sh->ser[i].name));
+>>> +             strscpy(ser[i].name, session->name,
+>>> +                     sizeof(ser[i].name));
+>>>                i++;
+>>>        }
+>>> -     sh->header_ser->count = sh->count;
+>>> +     block->ser->count = i;
+>>>
+>>>        return 0;
+>>>
+>>>    err_undo:
+>>>        list_for_each_entry_continue_reverse(session, &sh->list, list) {
+>>>                i--;
+>>> -             luo_session_unfreeze_one(session, &sh->ser[i]);
+>>> -             memset(sh->ser[i].name, 0, sizeof(sh->ser[i].name));
+>>> +             if (i < 0) {
+>>> +                     block = list_prev_entry(block, list);
+>>> +                     ser = (void *)(block->ser + 1);
+>>> +                     i = LUO_SESSION_BLOCK_MAX - 1;
+>>> +             }
+>>> +             luo_session_unfreeze_one(session, &ser[i]);
+>>> +             memset(ser[i].name, 0, sizeof(ser[i].name));
+>>>        }
+>>>
+>>>        return err;
+>>>    }
+>>> -
+>>
+-- 
+Best Regards,
+Yanjun.Zhu
+
 
