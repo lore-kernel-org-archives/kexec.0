@@ -4,165 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AFBDFF94CA7
-	for <kexec@archiver.kernel.org>; Tue, 21 Apr 2026 19:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B2CCDF94CDE
+	for <kexec@archiver.kernel.org>; Wed, 22 Apr 2026 08:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=iT8/t4hqx6YsKjv6GiyYdJPDbRUrv/SDi6uN3iMzbxM=; b=N+oKNRDqECBEJNnz6FCKp5V5l+
-	d0riayWxITz4bwNbORGVjG4EO2MrA8dYfr8k7rAGUIAXCNj3GzEsN5JY5w8XLW+PN+qV9+bFyB+KS
-	++2MR0Tr6gZhAhARmztQpS4y9q4JJNfJ2R3ckAI3S6roqyE8SAPQCz1gV9t2bz8EYU2DweijxY6ho
-	b13Qgin//I1InoEoAElCgeJmISlYpAgdYOyHNmmvYtcLKEGS6l43eheRqKHISzxc16SMryI/b/RoI
-	lhJxdkY9iwkw3dkMaghiwoqiynf+pb84gQ5fkFWHXF+MoZ0GE/Y3VeOkbjZ/vmUtdfH//7lK6fw1Z
-	7BsQBz/w==;
+	bh=sYLiGcnW+OQmYUURhujiHWOSX8EBFzucg+U6o17BlWI=; b=J79cVe9Oup0t1bb3tf/hEGhUx+
+	Xk0E4e3esOXemm6B4o7E8THfR/7+RbVbcB7HmMO2SfXa0K7PFcftlJ73/eaivgJfeRkJ6HPJNeF9l
+	MNKBHn3k90IruwgiHhroIIuQQQtMGWTw0SA0gIIezitfnGsYN7N7wit+c2+KeOS35/YPyhdfpNOCa
+	gId/3JK+VxWVOu20Ln8qQIABMzWKMUFGXXP4ZGsnoq0RuwPfgZJrGHCzAfgX3xsy4jcns4f8JtgQ8
+	Xijy4XxOfAEW8ZK5h05iECaUa20/nd96VdYH79sCBWn6/e+QyIgDRobqrL3/Jss2leR7eFsBF3HM6
+	90OoNTlg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wFGez-000000094ls-0SSn;
-	Tue, 21 Apr 2026 19:21:25 +0000
-Received: from mail-eastusazon11011047.outbound.protection.outlook.com ([52.101.52.47] helo=BL2PR02CU003.outbound.protection.outlook.com)
+	id 1wFSt8-00000009m3o-3jJF;
+	Wed, 22 Apr 2026 08:24:50 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wFGeP-000000094kU-3hwM
+	id 1wFSt6-00000009m3R-3n3h
 	for kexec@lists.infradead.org;
-	Tue, 21 Apr 2026 19:21:23 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AB3OwNmNiLq02cV/8f2V4xseVBLLBThFVXBBiLSa/G/kTDy+i/yImomm51X8cJjq28zsxlpNhDCPf/bK8et3hhNQzAD/7JCWj0TaOz9fodvDY6wJy1aDf/dFL4cXhdmhAGAopc2p7LzZkUv13uUtaVbDmATECkGYPOn/k4o9yI9z7cCwLSOkIknkuM8Mq/BS5sJYArypysdEtScdpbm9L2BBUOHZ4JAYCmBRpGa/MOwHvVio/N9vSlry3WApxVyC31tKxm3w0BsuAKbJmaLVIjwD+l2VCkEH0OeQ3H6I3TAvzRtM5ZgtDKcV4EhDj6rpxIVmbUg/g8R80exCitxfhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iT8/t4hqx6YsKjv6GiyYdJPDbRUrv/SDi6uN3iMzbxM=;
- b=VTVEcQ6yT5LFgtdje7hP7EG6GRbc2jfFn0pE9iZmwbdU5tNw9XuNbqazfsG6c9OaW9s11p8deOVbyppZP8pJqF+OCT09faw/O1aY6uhlz8JyclsZ0aY6gCq5qR4WBmKdkjbaRIsXOfas2nGui1XQU6EPiPzSWXcSexJ6cSo/ahqtA+3sxQttq14tbKH1d62qAwAD+O5UouuRsggcb3NfHoJIGhrVctz5IPCrz11SO5+4mHElkbi3mSecLLBOL4BmmW2soV4ESqCBSUfUlzHYy1GZS5pwurGQrLmja2QAgklg8D0h4kMQDCxfKPmNbLoSWWsRaIWzh50/9fpAUeHb6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iT8/t4hqx6YsKjv6GiyYdJPDbRUrv/SDi6uN3iMzbxM=;
- b=bkgn6yz4Xveuy6enkf1zsJpS4+8123bGHpuQWNRQ8e6v/xS1YqqSA+tEtOfxHMFjdlViVkyGd5ICiiSGRpigG3lIVLZanrkwGBmvMTUdhcFrj992VYxeh+U5a/bu3ng7B01XQ8PxuA9D8azDx2p60CQuysHpUUW462QLLiszccUDQwIfWc26VsFP5EOVymrRYumK0wLU1S8VbB+cgE9Ylr73zmhJA/UgSA2rNSCzYUnVoZonOziVQOsxfwyB03+jJJUxeY1O6ejoUdot/E1KE+0sCxHpvVa71FCtG4kZJzCCn6ZtQDKG7OGQHA6wY/braERzq7CJ1+n9IxS0x3v7jA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
- by PH7PR12MB7233.namprd12.prod.outlook.com (2603:10b6:510:204::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.16; Tue, 21 Apr
- 2026 19:20:43 +0000
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::299d:f5e0:3550:1528%5]) with mapi id 15.20.9846.016; Tue, 21 Apr 2026
- 19:20:43 +0000
-Date: Tue, 21 Apr 2026 16:20:42 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: David Matlack <dmatlack@google.com>
-Cc: Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>, Alex Mastro <amastro@fb.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ankit Agrawal <ankita@nvidia.com>, Arnd Bergmann <arnd@arndb.de>,
-	Askar Safin <safinaskar@gmail.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Chris Li <chrisl@kernel.org>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	David Rientjes <rientjes@google.com>,
-	Feng Tang <feng.tang@linux.alibaba.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
-	Kees Cook <kees@kernel.org>, Kevin Tian <kevin.tian@intel.com>,
-	kexec@lists.infradead.org, kvm@vger.kernel.org,
-	Leon Romanovsky <leon@kernel.org>,
-	Leon Romanovsky <leonro@nvidia.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, linux-pci@vger.kernel.org,
-	Li RongQing <lirongqing@baidu.com>, Lukas Wunner <lukas@wunner.de>,
-	Marco Elver <elver@google.com>,
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Wed, 22 Apr 2026 08:24:50 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 059BE4069B;
+	Wed, 22 Apr 2026 08:24:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1779C19425;
+	Wed, 22 Apr 2026 08:24:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776846287;
+	bh=O4CGkWR3yo72+GsjHY8NtS8RkGbc3ZGUxRZULeofgFg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cv0wwWgrynQ5CA3sXK6hAWgNSFWM9M0Zf2+AiJn8U6B9PhZ8P+C4ZcFM2PTWH3/gS
+	 xunfJhdsw6QoZtFJ7iQZ1jD/zF3jHLpWq1U0LzJ1UqK6dYj9WCy5q36v2PwNmOUy92
+	 +ddok9+Sq2osrJYGf7HRLV38oc6lizDVYyDKEbkCaWLBoeXywA/hrW+EJmemlReyHx
+	 A4tFlE44uBAEjEHQbhIY2BImZLll0veiNGSOAJpViaay+cnCilRb/Lf1uj4stLtM/3
+	 yk99yteLjLs3RCIdvQqb8sXfx3R6zXyYAEYIw67qBRxVeD29gSj3H9EYJqOxWNRAEw
+	 bTUUsOhSinHig==
+Date: Wed, 22 Apr 2026 11:24:39 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
+Cc: Evangelos Petrongonas <epetron@amazon.de>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Pranjal Shrivastava <praan@google.com>,
 	Pratyush Yadav <pratyush@kernel.org>,
-	Raghavendra Rao Ananta <rananta@google.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Vipin Sharma <vipinsh@google.com>,
-	Vivek Kasireddy <vivek.kasireddy@intel.com>,
-	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
-	Zhu Yanjun <yanjun.zhu@linux.dev>
-Subject: Re: [PATCH v3 07/24] vfio/pci: Preserve vfio-pci device files across
- Live Update
-Message-ID: <20260421192042.GH3199414@nvidia.com>
-References: <20260323235817.1960573-1-dmatlack@google.com>
- <20260323235817.1960573-8-dmatlack@google.com>
- <CALzav=ehpWA=XchL+XLZuaYfYmBTPNWDYt1W3LFY5-6+US4E7w@mail.gmail.com>
- <20260421184433.GG3199414@nvidia.com>
- <CALzav=cFarR4q7NugCxXwCW6wnyU9dJRaaTnxs7MY5ia5SDJWQ@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALzav=cFarR4q7NugCxXwCW6wnyU9dJRaaTnxs7MY5ia5SDJWQ@mail.gmail.com>
-X-ClientProxiedBy: BL1P221CA0012.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:208:2c5::6) To LV8PR12MB9620.namprd12.prod.outlook.com
- (2603:10b6:408:2a1::19)
+	Alexander Graf <graf@amazon.com>,
+	Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>
+Subject: Re: [PATCH v8 1/2] kho: fix deferred initialization of scratch areas
+Message-ID: <aeiFx8tilasoGzwa@kernel.org>
+References: <20260416110654.247398-1-mclapinski@google.com>
+ <20260416110654.247398-2-mclapinski@google.com>
+ <aeD2Fzr6yr4pu9-X@kernel.org>
+ <CAAi7L5d-ujEa7R21Lmd37X9451KBmK8ZhagSKbJde15aQLi2MQ@mail.gmail.com>
+ <aeEKksfLxQ0A7Jun@kernel.org>
+ <CAAi7L5cp3B0DFEQex5EqFdLDkqVWwRw228-pgp0PnhfgLP=e6Q@mail.gmail.com>
+ <aecUW-Xgm5MPMyVr@kernel.org>
+ <CAAi7L5d8x1MB1f6A_h2acj1CYU1wf7DijS1TENC+Lurx5wLhKw@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|PH7PR12MB7233:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7aca0a3f-9c7c-4b0d-b39d-08de9fdb14e3
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024|56012099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info: Kd8xGL6SFpML6qGGK7qRoCDdftITqEfgQfyjP+QBctPOAzLg+qIbTJuUwW6fsmjnP+yaYV1ooRguGD3Iw4v+YjtkjiGzAAEHux1hEoktfyto+3QV5dDR5veOFobyNtedtfwdyJRrmlGzxq5djEFNKUVgUr7H6Ud13ifzycrddFMrrzpijXGC1RdN6T7qzM5Hr3ygTuhXF3TNkbYcL0eM8ajLSAK16UkoX4fG9eB+KAhCGIQ09ax7ko0/6oE6ypw6Ymnx2ttTLnG+HliqjTDWrOCmeft96LDdB1li8pbPNqTJHt2xpLbQIgX0NFjRfcZiID49HKTOukygjV+59oJRdgINW2d1m+MDGdOGmOHwidxmQgv/NNEPX66cSLCstMpX6EbVF17mTlsmyrDi8XpRAPJjIzh4D0iUQStu2jfaKBCUtPiW/ztLNyD1LP1KHYYRh1/ulnpRM8OFKyBSTPGQgierQsa8pFaeOfy+2DE0NNdOyDGzBehOB8DjgFtepavMkErK7+5UxiznNPbZhTw0xw2tv9ku1P2tWkcrrzELyJMRarbwjP2V6d2yKP0TFkanGjqO7hqJFW1SH2nMBqUmZsBdG4u0QKHYDRc5dL4ZNnZv2t1OJKqux+LLaUfP03/yhVKAUJuemDc/nUCm9/YBb4koe0ikORJ/Id18rg3w+I2k/Va8pF76iOiVrVvtn0PY63JhuV7B3wncQaDTtLVZyh80o0YDWC//tz5E9mSmsoo=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?pEfjo0RKO370kJoVQowS1gGNNv2xt7J98af77o/R9gw0pSnF5VlNjQxjTbmu?=
- =?us-ascii?Q?DRbkRUmWKdU4EFlQ0/1HNY/++GMmdml4cvIXns0OIArRVJqgyRpgXn8vMISh?=
- =?us-ascii?Q?Z6QKsn23BRvEws6KOnCThapMRsi2nPGpn0yKN2uNVb4/QiP2X3L+jC0c+bLJ?=
- =?us-ascii?Q?rEcXfi/N+DpgU43MXR7EiAlgiF+VM3F881etdeYnfRQrQIc9+sCjTssCu2Jd?=
- =?us-ascii?Q?IjRfTfUH+yK66ylslRs+PZiGZVcChOJhoKLmFn1PN/5ps9PXHS9F0FT/9fxo?=
- =?us-ascii?Q?loLExhsKgCQTJix+OCCJAh1ybMnJ0lw/GpdjrkaTmlRznE8siy+80MglOyts?=
- =?us-ascii?Q?GhUWl2M+Pwfx4xVgBOtQbDvHfFSUSqjFxEjXdK5bDQWLqoc1quVyPct2kkqU?=
- =?us-ascii?Q?FErz4LCQwMSXgeS8hTa6ZUWLUSPQvH+DqewYBCXMTZiWdd94DJAikKBCwnqd?=
- =?us-ascii?Q?j/fCiegmgbz3jErhK/fx6KukvTTOgZlWMi0Dv9/pcKEo2DHRF8b/pCzJIoyH?=
- =?us-ascii?Q?2NOukZimtLtwjRRMKNdAaAr2EAkhCqMMPVvdPYzezFe9Lc8Ao5PqUsNkjHvw?=
- =?us-ascii?Q?eeiyfdx+9EUxGs3S9UOovKaSiCi1Q2v2Oo4X72U1UFtXhT/M9EIJNji0R6EI?=
- =?us-ascii?Q?IP3zwoN5pwY4tg0ByVCLqfMA+1SYbooewvtgsd0GQUyseBDlJPo+xpHEYqZ7?=
- =?us-ascii?Q?eHeYP0lphMgo+gmcKXiAz7/eeldO9XGpfr2Q1Yjj/aBDUFe45r++UajsAhhI?=
- =?us-ascii?Q?WFlFpC0jxy6b11+uK0nfa7v2Wf8rQeTaXmbjhrn/bqJsftczYAnks1v7TjlT?=
- =?us-ascii?Q?xWxD5G1htcym3/hEIoEs4yUk4ins9DJ7bHMnSj/yHicwrGMz+zCLMOucCUg0?=
- =?us-ascii?Q?GZj/wmtGuHQi58alHv6DwcqAK3G4t9Ecj9QGh6CWyZLgVoNSFeLLa/91Iki2?=
- =?us-ascii?Q?cutT70sl7g+io4HEE1VCJt/+J5xORsWQnohXy+uUYMlYdfHhdjeeCGqodA0V?=
- =?us-ascii?Q?sV2qotCXmaoi2eje+zslbxgPRrziQmdLig2Im3ael5eByhBJ7Yhp6ma+55Wu?=
- =?us-ascii?Q?P+uXPEKL5VkTQJ58D7e9fo7pYt3D1NmEbUbnt+CDI3Ts6FRUZ3Q+ps6xE01O?=
- =?us-ascii?Q?Q6MwEH8uFiusycwswyc5ciOU0KnetTumR+WDqYJI5u2KC2IsbvvLVbVSu66H?=
- =?us-ascii?Q?6/2JfsUTS06pkQss0jeSZnvzbh/COx2DxR+EoLg5Rl8L7I+wZ/YsmvIca6Vq?=
- =?us-ascii?Q?k6xvz9SVhJHoWfjgkgD34MmqxQlcGrSthynIbhR98aHi2L/HUVZq4lS8EWzI?=
- =?us-ascii?Q?Q2cbCLLgoqNGk9QUpaRjm9tKEKcx+4aq2lWaG4wQM3VnzkY7yVLFhjVeh/K1?=
- =?us-ascii?Q?ftVEccQu0sIlUz+PF5FdoOPyMKmomc0wd/FapUR5R9WqeulRsRktFnzoL6lv?=
- =?us-ascii?Q?XnKLlTuobsaTwlFRN22yC+QAbEXd+YlHYEwAHLqoZkKfgMjWUAAU1EJiQDlv?=
- =?us-ascii?Q?S/qUOWDzLzhjxIPvjc5KGfDZ6SgLPiESC0brfbA0Ic5FQQaj6aFLbogKbi55?=
- =?us-ascii?Q?SxfIDQYA1o0hwq23XjJS07lK27HpidbiS/AvS1ld8w0EcquTRkelsHSdv3K5?=
- =?us-ascii?Q?Ls2QhDG+Qrr836r5Uvpk+RZanx9ncJdUjDuARqnPU/5amoZ+gRbTEYNO7JP7?=
- =?us-ascii?Q?OzcrIPe+2vKyC3/h7QCU5i9/ItAxPRYcnrUYSXwgalZ5XjOd?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7aca0a3f-9c7c-4b0d-b39d-08de9fdb14e3
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2026 19:20:43.1883
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FCUmHDPBTwPMLW8mmjZLB615OOiAdOwfBMHsvlWVNVTExtSxmzuJehv4Xx9UPN+H
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7233
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAi7L5d8x1MB1f6A_h2acj1CYU1wf7DijS1TENC+Lurx5wLhKw@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260421_122049_928499_089C5E23 
-X-CRM114-Status: GOOD (  14.73  )
+X-CRM114-CacheID: sfid-20260422_012448_986230_8DAE5EAB 
+X-CRM114-Status: GOOD (  25.48  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -177,28 +89,102 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Apr 21, 2026 at 12:02:51PM -0700, David Matlack wrote:
-> > > I think a call to pci_clear_master() is needed here to so the device
-> > > stops issuing memory transactions while VFIO is trying to resetting
-> > > it.
+On Tue, Apr 21, 2026 at 12:20:27PM +0200, Michał Cłapiński wrote:
+> On Tue, Apr 21, 2026 at 8:08 AM Mike Rapoport <rppt@kernel.org> wrote:
 > >
-> > That doesn't sound right, reset should always work..
+> > On Mon, Apr 20, 2026 at 03:11:03PM +0200, Michał Cłapiński wrote:
+> > > On Thu, Apr 16, 2026 at 6:13 PM Mike Rapoport <rppt@kernel.org> wrote:
+> > > >
+> > > > On Thu, Apr 16, 2026 at 05:06:10PM +0200, Michał Cłapiński wrote:
+> > > > > On Thu, Apr 16, 2026 at 4:45 PM Mike Rapoport <rppt@kernel.org> wrote:
+> > > > > >
+> > > > > > Hi Michal,
+> > > > > >
+> > > > > > On Thu, Apr 16, 2026 at 01:06:53PM +0200, Michal Clapinski wrote:
+> > > > > > > @@ -2262,6 +2253,12 @@ static void __init memmap_init_reserved_range(phys_addr_t start,
+> > > > > > >                * access it yet.
+> > > > > > >                */
+> > > > > > >               __SetPageReserved(page);
+> > > > > > > +
+> > > > > > > +#ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
+> > > > > >
+> > > > > > No need for #ifdef here, there's a stub returning false for
+> > > > > > CONFIG_MEMBLOCK_KHO_SCRATCH=n case.
+> > > > >
+> > > > > In all 3 places the #ifdef is there because MIGRATE_CMA might be
+> > > > > undefined. I already broke mm-new branch in the past because of that.
+> > > >
+> > > > Hmm, that hurts :/
+> > > >
+> > > > The best I can think of is to add a static inline in memblock.h and ifdefs
+> > > > around it.
+> > >
+> > > Sorry, I don't understand what you mean. What would that static inline contain?
+> >
+> > Something like this:
+> >
+> > #ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
+> > static inline enum migratetype kho_scratch_migratetype(unsigned long pfn,
+> >                                                        enum migratetype mt)
+> > {
+> >         if (memblock_is_kho_scratch_memory(PFN_PHYS(pfn)))
+> >                 return MIGRATE_CMA
+> >         return mt;
+> > }
+> > #else
+> > static inline enum migratetype kho_scratch_migratetype(unsigned long pfn,
+> >                                                        enum migratetype mt)
+> > {
+> >         return mt;
+> > }
+> > #endif
 > 
-> pcie_flr() calls pci_wait_for_pending_transaction() which times out
-> and prints an error message. The reset seems to be working fine though
-> after that.
+> How would I use it for this code?
+> 
+> +#ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
+> +             if (memblock_is_kho_scratch_memory(PFN_PHYS(pfn)) &&
+> +                 pageblock_aligned(pfn))
+> +                     init_pageblock_migratetype(page, MIGRATE_CMA, false);
+> +#endif
 
-Wow, that doesn't sound right in more ways :)
+Something like this
 
-pci_reset_function() just calls straight down to that and it is
-directly tied into the sysfs reset file.
+		enum migratetype mt = kho_scratch_migratetype(pfn, MIGRATE_MOVABLE);
 
-Meaning the sysfs doesn't work if the device is actively doing DMA?
-Feels wrong!
+	        ...
 
-However it has been like that since 2008 so I probably wouldn't touch
-it and agree that disabling busmastering appears to be an undocumented
-requirement.
+		if (memblock_is_kho_scratch_memory(PFN_PHYS(pfn)) &&
+		    pageblock_aligned(pfn)) 
+			init_pageblock_migratetype(page, mt, false);
 
-Jason
+seems better to me than ifdef, even though MIGRATE_MOVABLE is bogus here.
+
+And since we anyway changing init_pageblock_migratetype() callers in
+mm_init.c the entire block in memmap_init_reserved_range() can be dropped
+and the change can be done in __init_page_from_nid().
+
+> 
+> It doesn't invoke init_pageblock_migratetype unless pfn is kho scratch.
+> 
+> > Can't say I'm happy about the name, but could not think of something
+> > better.
+> >
+> > > > > > > +             if (memblock_is_kho_scratch_memory(PFN_PHYS(pfn)) &&
+> > > > > > > +                 pageblock_aligned(pfn))
+> > > > > > > +                     init_pageblock_migratetype(page, MIGRATE_CMA, false);
+> > > > > > > +#endif
+> > > > > > >       }
+> > > > > > >  }
+> > > >
+> > > > --
+> > > > Sincerely yours,
+> > > > Mike.
+> >
+> > --
+> > Sincerely yours,
+> > Mike.
+
+-- 
+Sincerely yours,
+Mike.
 
