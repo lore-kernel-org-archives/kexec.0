@@ -4,74 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3ED45FDEE4E
-	for <kexec@archiver.kernel.org>; Thu, 23 Apr 2026 21:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3F4B6FDEE4E
+	for <kexec@archiver.kernel.org>; Thu, 23 Apr 2026 21:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:To:From:Subject
-	:Message-ID:Mime-Version:Date:Reply-To:Cc:Content-Transfer-Encoding:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=kl+pv05082o4iUYPTAspfzDZexWtIImSBuw1JtCkgoE=; b=ERw6STfl+Py0edYJB1DDoz9RaJ
-	zO/2tJ1cJ6CmF4GxEs5iYm0dE3sMrIvUlfLV65oRklR3olqz7gJqBa7/m7yJ9eO/rOujKd1pEuHDe
-	flOOJ05ZeQExjfwhRR/y916f99jKgjSwS/dEzIx4/jqry3ZXuGhpRm65X/BV6IIpVXuNFmZ4GLA+v
-	o7dzRDrWOb1QraRE1Pua2bAubBBBbYB37qo8NN5kfS2QrYeSJpy8u5BhfZYoy+QRwTmX5FqA0GdBY
-	odRWMu8GtY1FX7LTmJZ9CXD5p3vWpdy6bgH65RUkYG6b12iHFJ7eFCAi+KGXCy3fJioAuv9c7lG4L
-	lSKLXOiA==;
+	bh=kl+pv05082o4iUYPTAspfzDZexWtIImSBuw1JtCkgoE=; b=3AnAYflFo9t1Socg8D4SMKnQ4U
+	zjnsidov5hCbj/jKaCepdaTTqogc4CxAJPDi6jB1Lg+hBBkrjWwD8jkQHr0vulgkyXApsBXhVk2fL
+	lQlm8BqvLzZUSavjfZ9lZhMEqeuVIwGXMvcJ+LR27kVNZe/WW1rsVghi4ELT0jRbTfUTXMK64KymW
+	TMeKMxKwtJ/9kWcEYIvzo/8QrO2rRCZQ0hdwOyD8GgttgfsQSwkdPqg1TZMUmBvhqgafQ9dYwy6JR
+	4HWh+4Dv07Q75yNRPGezo2QUJOXZDh7SbK5It5Mo8ukGj0doko0fZl65kWdfdB1qTAHiiAZrwIGNv
+	OKImxK4w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wG1VY-0000000CKym-47nN;
-	Thu, 23 Apr 2026 21:22:48 +0000
-Received: from mail-pl1-x649.google.com ([2607:f8b0:4864:20::649])
+	id 1wG1W7-0000000CL1f-1CMW;
+	Thu, 23 Apr 2026 21:23:23 +0000
+Received: from mail-pf1-x449.google.com ([2607:f8b0:4864:20::449])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wG1VV-0000000CKyN-3UY1
+	id 1wG1W5-0000000CL0u-1Rl1
 	for kexec@lists.infradead.org;
-	Thu, 23 Apr 2026 21:22:47 +0000
-Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-2b24af7ca99so96466245ad.1
-        for <kexec@lists.infradead.org>; Thu, 23 Apr 2026 14:22:44 -0700 (PDT)
+	Thu, 23 Apr 2026 21:23:22 +0000
+Received: by mail-pf1-x449.google.com with SMTP id d2e1a72fcca58-82f70ae35c0so3661443b3a.2
+        for <kexec@lists.infradead.org>; Thu, 23 Apr 2026 14:23:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776979364; x=1777584164; darn=lists.infradead.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+        d=google.com; s=20251104; t=1776979400; x=1777584200; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
         bh=kl+pv05082o4iUYPTAspfzDZexWtIImSBuw1JtCkgoE=;
-        b=ZX8Mwtc5FYqzcbTRFTOqMN3ThkL4apBJtzljeT4NNKQk+cm6Xv9FyMoGFgEjtfoDcR
-         N3LDuvt5r2YEzgVDLtF+Ae4F81i3XIPhiVvVasbILeR4ppuBzeZH3ZxZWpJbYooyhl7X
-         2pjI/L1V33INaOueWIres1ONIjvgQY7nZOzXvbFeHjBkRhQyQeCcg7claaFX4Pi4h67q
-         cQFE00q5f9q5Y9rrhfxKXQYXRtG3BvyYgAu4lIdghNFn32UpFw2vRt+IS37j9yyaRhjd
-         l2HnkHI+DtdYlBsLyZ3QU/1WXP8comyDnFmlAQOG7XuGGQlXq27VkcIPKvN6v4A5vFSj
-         v72A==
+        b=erS9T/412Vb9FFsocWsf4NrBwHGD6rTRlkkSWc/DQsGbS+typzFeGvZ/QcqevRj3pz
+         TNKYnDHhoAJvapmHCs8CraLUwM4/MKquorfe9PivEzB8wuZAsFOUaoz90QoqhUH73ehF
+         96JOVFGVdkGxXrGNay9zVpz+VENUFzrsmxwaShsQ6rmNoXmj+Bq6W3EMkNksNRNlw8Wt
+         ohrMKs5+7QrVc6uHcdF+2j4UobUd9MT7EiclxE3L/KBxv8VythZiL0yKwWQiUFTKcoN2
+         eXx1UF55hka/r2+OL6dbUzCUPsExCHAVylK574+rKAHD7vbBLVvpvQhNVlKPPJVEKjKv
+         UCPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776979364; x=1777584164;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=1e100.net; s=20251104; t=1776979400; x=1777584200;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
         bh=kl+pv05082o4iUYPTAspfzDZexWtIImSBuw1JtCkgoE=;
-        b=EzyLvypoeOa7f6XRsZbTfq+fvuXZtjroLvSGFO3B62jOEmilWejLbrncD0Vf8WRr7j
-         F/fZzohhBQtnbCECbvUBSZ5aAFR62BPLc5uJr+TB0KngPWdFjffAGCpV4TdS5YPqwM9m
-         TpV8ORoBGuhIGmDKvnz/dFDwXkZ96QpHUZZv5nGPEEXId5BFD+sXjXChONsonKzvPoJl
-         ZSn55kDijT1m9hX4zjw0J/EfpEG92H8prPIftmyXlroXx5c582Zn3lsbKirsTQstnHi3
-         oxeFybFEDyxh06yYTUaVKp0hKCA+Mem2A3kP7JtgvE4Tu2YwIWiUjbU+/98lOZAy3tEE
-         yf1A==
-X-Forwarded-Encrypted: i=1; AFNElJ+YLUxWAEEEatJYVC/cOgzsA940uPeiljuka5kzV1WMg7cgX+w1Y1ev0wOX5pA6uIDcyBJU3Q==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yw5srZWDSnPTSUwp5/5qIm4XFb66yZiH3vRm0MvLjnMK1Lxc8G5
-	S26FzpexdatJV0UEEk+qNMMg6468iD1fPmEiigCpPrPnAsUqDwHKq+7U8x8s0L9A9hn5Wquy2f9
-	9gkQW3k0STJJqUQ==
-X-Received: from plnx22.prod.google.com ([2002:a17:902:8216:b0:2ae:ce70:7c80])
+        b=X2Zh7EGy6lnrMnhsgT4VGi0Ch1Ak24BaPL2w0JwRBfcKoYYptdY89bWkdMnwfI4Va0
+         Vj4dmJc+KhXl4tfX2lTM6IiITmB9kPcN6DmdLIPxloa/APuU1siZrQeGb7zJbHmRXtg8
+         B+GIKSbfrCK9du3q966oWESC/61Szrl3ylyzcjOu3BBrSn5tedqLnXR/Ci8b2mJM782P
+         qfPcHGdKTP3D6NRwgc3veGN2WEQeuyJaDXx1rLqOO5BFPiUf9ggBNBSfKHeX+8zTTCMr
+         ChCEt8su+cotKaWjZnNjF+QZQtCegvhR26WqYrlH2pskdXTLOdNzIjXOArkY6pPQ69aE
+         MXIQ==
+X-Forwarded-Encrypted: i=1; AFNElJ96pF8YopZO8FIS9oTFDCSVhxBRwrAfEgQz8Rr23pn4BAK+t0teBmWXc7PeyfoEotyUoC+c2w==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yyd3EIiaP7aRbn4Lpv9l5vOM71BuKUoNUxGRunp0Tv/GcmKuXJh
+	zXO2g9chnP0X0Co/QIAuPBQN1BYZEHl+bdaRzltK3SJIq+mzfKTWvtkV0JZUm9FVC7zJWVI1E1S
+	fJe2xX3jZj3MDNg==
+X-Received: from pfhx15.prod.google.com ([2002:a05:6a00:188f:b0:82f:3c29:a283])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:7d8c:b0:2b4:604c:ec6f with SMTP id d9443c01a7336-2b5f9f86840mr213628685ad.32.1776979363647;
- Thu, 23 Apr 2026 14:22:43 -0700 (PDT)
-Date: Thu, 23 Apr 2026 21:22:31 +0000
+ 2002:a05:6a00:bd0a:b0:82f:74b2:7fba with SMTP id d2e1a72fcca58-82f8c7dd0d9mr31341067b3a.4.1776979399901;
+ Thu, 23 Apr 2026 14:23:19 -0700 (PDT)
+Date: Thu, 23 Apr 2026 21:23:04 +0000
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.54.0.rc2.544.gc7ae2d5bb8-goog
-Message-ID: <20260423212242.3431136-1-dmatlack@google.com>
+Message-ID: <20260423212316.3431746-1-dmatlack@google.com>
 Subject: [PATCH v4 00/11] PCI: liveupdate: PCI core support for Live Update
 From: David Matlack <dmatlack@google.com>
-To: dmatlack@google.com, iommu@lists.linux.dev, kexec@lists.infradead.org, 
+To: iommu@lists.linux.dev, kexec@lists.infradead.org, 
 	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
 	linux-pci@vger.kernel.org
+Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
+	Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
+	Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Joerg Roedel <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, 
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, 
+	Parav Pandit <parav@nvidia.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pranjal Shrivastava <praan@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Will Deacon <will@kernel.org>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260423_142245_885507_241ADE13 
-X-CRM114-Status: GOOD (  24.17  )
+X-CRM114-CacheID: sfid-20260423_142321_392095_5AEF5B73 
+X-CRM114-Status: GOOD (  25.09  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
