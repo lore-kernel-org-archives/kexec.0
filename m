@@ -4,69 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A49A1FDEE51
-	for <kexec@archiver.kernel.org>; Thu, 23 Apr 2026 21:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D33FCFDEE4D
+	for <kexec@archiver.kernel.org>; Thu, 23 Apr 2026 21:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=E/PZfm0ILlaeTWExhdrHJ+nS/9VkLe0d8hpRsDexX1A=; b=ssCPT9ByUE1YiXxkYJWB06VKx7
-	YVUEhr+bSnXumlzULrqcYWtYIwNT+1GUQyt+RnO/34o4Gce3tZeomeEvGw5HpTMHZ3w2Gwu2B2cDL
-	PRswqPbO6eCitKLJtnL53gqe+AUXnz95dd97ErspK7juIOCkHDEq6ZYCE9VKzYjqNIFBD08EG4Xzo
-	wLfu9846nofRfLFAc2N+nV0syQWNhGpaHVXmHj8g2hQ572eCe56sPYHcpmiZxd4jGlptKEbOT6KsC
-	voQu8nAEbFLeMVAzYIL9nTFPM12kTRQbYE4jtFNXwjLxcMWiLn7/7BBET0cS/vALwReZNxbO++jF2
-	U8AvoZEg==;
+	bh=NDSmr3KzvFf45fqXLLacm4Nig+LS/n/kl38OHtIvfGo=; b=eX22NbCsfwxjcS051MRx0ekzgV
+	Ie87N5wR+TZQMEw0FYGN/l6cbTCKvZNufWnT0ofpQ0Sc2zcP1aTy+xNJYc18IJtb7uZR2RELUrHy2
+	TjJafcx4ss3PBgJwMxirsBSJxhproCARvCKHnZUyFFrceJM/UU96CpYlf5J4GQtCaMgdZ8AVRNe9C
+	SiSRjHmgVebRXAOsi4JczgbXiZ6XvlCrkRGVNzYqFpXOTiaGM49r+2fKSL2i5hy7UCX5uzCSuYXt9
+	9us0PD32QhYUEXwqeSPJytMs9bHTbVft1EP9Lc8g09hkbRoeVzhj38vP1b3wGm45Yb6l3eRhk+4vr
+	gl853Xjg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wG1WN-0000000CLFP-2lbs;
-	Thu, 23 Apr 2026 21:23:39 +0000
-Received: from mail-pl1-x64a.google.com ([2607:f8b0:4864:20::64a])
+	id 1wG1WP-0000000CLHi-461b;
+	Thu, 23 Apr 2026 21:23:41 +0000
+Received: from mail-pl1-x649.google.com ([2607:f8b0:4864:20::649])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wG1WK-0000000CLBb-3CUq
+	id 1wG1WN-0000000CLE5-00lI
 	for kexec@lists.infradead.org;
-	Thu, 23 Apr 2026 21:23:38 +0000
-Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-2b24af7ca99so96472695ad.1
-        for <kexec@lists.infradead.org>; Thu, 23 Apr 2026 14:23:36 -0700 (PDT)
+	Thu, 23 Apr 2026 21:23:40 +0000
+Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-2b242b9359aso70728565ad.0
+        for <kexec@lists.infradead.org>; Thu, 23 Apr 2026 14:23:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776979416; x=1777584216; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1776979418; x=1777584218; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=E/PZfm0ILlaeTWExhdrHJ+nS/9VkLe0d8hpRsDexX1A=;
-        b=R3dneC21/LI6hpx4Gp3IX1J0BgqQF1FS3HVJ70HMMiTEtI28THFEEogzRPMFyZ/R2V
-         UB4IM7vhIeTJzQzDfr72l5m1aAx4Nybr50n95Qh2WU8gTaPUS1sZrqKgGtxge0y33t8C
-         u/59SVUoNEwYtrfwakzuABukZBLlNObEgRRekxZ8hPt/c/kfU5YFTcCLrzy5t26axpGZ
-         aLp60bw1Vf51asv9d0MW65bKXQ3yw9Ljv12Zk+RrEEzlMpoklWxTXEbYtRv/RAkioo94
-         iOFY/oNN3WPqPlxyJzh7YRLx9RZvntXpJ9+wP2PCO1RlWDFvfKemeK8LENVrKHkqMFyx
-         9zsA==
+        bh=NDSmr3KzvFf45fqXLLacm4Nig+LS/n/kl38OHtIvfGo=;
+        b=iZb4DLzw5mTV6xIghe3mvW06LI1cCwUWj8KN9btDi0ujBqtFaZ237NV4Bxqt2+Hzgv
+         5bbsXQC9q2tAY3pHpeaw1J1RkY5tl7Cj0grWNJ0O0vdz8t+yvbrpjzngHtWVOsr0/jAJ
+         o9rSuP75hsQomGveOQYtc8i+iB2z5uqGCttOaS6g3+hwNehM3RLVZM31oGy22mZKOefj
+         h13xzjqH7ZKyis42lSd0pYpzdPUdtni3MJfyozR6xlHfoNP6s5RZe/9A8sspf38Z6J7I
+         nxk9zs6eIb7IS1Wv3tS0WSSCZ/7Ut39tUKdATwA6spC3YJgtB984BVw5HHwvezCPMmiB
+         74Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776979416; x=1777584216;
+        d=1e100.net; s=20251104; t=1776979418; x=1777584218;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E/PZfm0ILlaeTWExhdrHJ+nS/9VkLe0d8hpRsDexX1A=;
-        b=ZVwMc9RnjR7dswAOhv2br9aUU7AN674Nanyh68BI1oJWt9O99qXY0vrrhVZvqZ9IZW
-         mGrhoXMY/5xxu5O4KeY0XZIP4YCD45qpcQ6wqRuNShCw62d2/AE/k/p4h2LZoley6F8K
-         M/Z2rJgQQvxuYxpy3P6R6jVqN8esjmmJtfybD0NzENWb5tO3/tADxDrISYvvP0ltaE9Y
-         7dVFR6+D5o0VVdAl7me2NHWQxxt79lsxgT0QbzJ5cYk8x51lf1hWKZQGO9uiJ+mPTaZv
-         hnsYijVnfwgeC+MpXgdS9Rr2la9SKiUFunqL8uL+cuPq4hHuoViZdC7x7ebykMtNydAG
-         6KJw==
-X-Forwarded-Encrypted: i=1; AFNElJ/L/nBtiaKk1GkC/GQtMEiNYWUpfSCbH5lXNXEg8tJKry1r1BkTQ/aIVVPAUw/1A8wijBn/CA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yy5WFOrXHLZc9wUPofXiOaICOXfPEF1CB/BpYSUAtGf/E+YA4m5
-	RymxXrEXuE3Ay3eBrX38R5Rappq++ubeV1XIiBBqCbKZqcK5Jbaz/Ktku1vqRyIUwgZVbB3BwKB
-	ak4bnP5iUK3nOLQ==
-X-Received: from plav22.prod.google.com ([2002:a17:902:f0d6:b0:2b0:5380:49f1])
+        bh=NDSmr3KzvFf45fqXLLacm4Nig+LS/n/kl38OHtIvfGo=;
+        b=ZMZVbC9L1B7aYVWcNImuUV9g3SkUTVdo6od0oyE0sb1X+rD7gWeLjDT7kyYYP/nEIR
+         3G3HIHMgzalDGi1WuZiRsIz3o/GZ579Y41ncoDz8GPa//K0rLjR4ZNzaGHcTS1R6P3gQ
+         6rOA3q0GPDxAvLqi78CrMwBxRrem/8xl5VBZM2dU+8fUw6Q6g1p1juCqF9jDy6NiWyQD
+         Dm7m7L9+Z+nDSU+i3ZIafrwwH5OthF3iJsQW8GjuaLn831BvATkskg+jHODb4QzBhxvi
+         eJ+MYpkgQaKPrxoPk7S+CD2dLJR7OT5aPMLltFNGR7GG3Tk80MUpm9Ib/LBtJ0x3Sh6y
+         7qNw==
+X-Forwarded-Encrypted: i=1; AFNElJ/cmCGvd+XJQ1fZznfeBaYw7rfkgpNicfk4SATL/W+MVMzHzyh0KqKKtNhk+K2dNiF8J512TQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yxu/HoHHqKEOrYfh8ua94Yy7wn+G6PSfmJX3F/X1BGvad28oa5Y
+	CdqesXztNYvUg7cI6SDAeLM4Ibll59BWNpLAMiq/k7Te2V0nz8N//BQ4KuUTgSU8owWqhTDhj4M
+	hGh1T6cyyl5dexQ==
+X-Received: from plov1.prod.google.com ([2002:a17:902:8d81:b0:2ae:c54f:d5ad])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:1a88:b0:2b2:5ec6:dcf6 with SMTP id d9443c01a7336-2b5f9e85f20mr294713095ad.8.1776979415642;
- Thu, 23 Apr 2026 14:23:35 -0700 (PDT)
-Date: Thu, 23 Apr 2026 21:23:13 +0000
+ 2002:a17:902:ba94:b0:2b4:5c0d:314b with SMTP id d9443c01a7336-2b5f9f83342mr210260195ad.38.1776979417788;
+ Thu, 23 Apr 2026 14:23:37 -0700 (PDT)
+Date: Thu, 23 Apr 2026 21:23:14 +0000
 In-Reply-To: <20260423212316.3431746-1-dmatlack@google.com>
 Mime-Version: 1.0
 References: <20260423212316.3431746-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.54.0.rc2.544.gc7ae2d5bb8-goog
-Message-ID: <20260423212316.3431746-10-dmatlack@google.com>
-Subject: [PATCH v4 09/11] PCI: liveupdate: Inherit ARI Forwarding Enable on
- preserved bridges
+Message-ID: <20260423212316.3431746-11-dmatlack@google.com>
+Subject: [PATCH v4 10/11] PCI: liveupdate: Do not disable bus mastering on
+ preserved devices during kexec
 From: David Matlack <dmatlack@google.com>
 To: iommu@lists.linux.dev, kexec@lists.infradead.org, 
 	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
@@ -84,8 +84,8 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.
 	Will Deacon <will@kernel.org>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260423_142336_822168_75C7BAE0 
-X-CRM114-Status: GOOD (  13.06  )
+X-CRM114-CacheID: sfid-20260423_142339_054020_585BD188 
+X-CRM114-Status: GOOD (  17.98  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,63 +100,91 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Inherit the ARI Forwarding Enable on preserved bridges and update
-pci_dev->ari_enabled accordingly during a Live Update. This ensures that
-the preserved devices on the bridge's secondary bus can be identified
-with the same expanded 8-bit function number after a Live Update.
+Do not disable bus mastering on outgoing preserved devices during
+pci_device_shutdown() for kexec.
+
+Preserved devices must be allowed to perform memory transactions during
+a Live Update to minimize downtime and ensure continuous operation.
+Clearing the bus mastering bit would prevent these devices from issuing
+any memory requests while the new kernel boots.
+
+Because bridges upstream of preserved endpoint devices are also
+automatically preserved, this change also avoids clearing bus mastering
+on them. This is critical because clearing bus mastering on an upstream
+bridge prevents the bridge from forwarding memory requests upstream (i.e.
+it would prevent the endpoint device from accessing system RAM and doing
+peer-to-peer transactions with devices not downstream of the bridge).
 
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
  drivers/pci/liveupdate.c |  4 ++++
- drivers/pci/pci.c        | 12 +++++++++++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ drivers/pci/pci-driver.c | 31 ++++++++++++++++++++++---------
+ 2 files changed, 26 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-index 54a90ff02bdd..25c86cd4c173 100644
+index 25c86cd4c173..2a4a139623a6 100644
 --- a/drivers/pci/liveupdate.c
 +++ b/drivers/pci/liveupdate.c
-@@ -128,6 +128,10 @@
-  *  * The PCI core inherits all ACS flags enabled on incoming preserved devices
-  *    rather than assigning new ones. This ensures that TLPs are routed the same
-  *    way after Live Update and ensures that IOMMU groups do not change.
+@@ -132,6 +132,10 @@
+  *  * The PCI core inherits ARI Forwarding Enable on all bridges with downstream
+  *    preserved devices to ensure that all preserved devices on the bridge's
+  *    secondary bus are addressable after the Live Update.
 + *
-+ *  * The PCI core inherits ARI Forwarding Enable on all bridges with downstream
-+ *    preserved devices to ensure that all preserved devices on the bridge's
-+ *    secondary bus are addressable after the Live Update.
++ *  * The PCI core does not disable bus mastering on outoing preserved devices
++ *    during kexec. This allows preserved devices to issue memory transactions
++ *    throughout the Live Update.
   */
  
  #define pr_fmt(fmt) "PCI: liveupdate: " fmt
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e615b7c3e430..b45539c55c7d 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3498,8 +3498,9 @@ void pci_configure_ari(struct pci_dev *dev)
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index d10ece0889f0..05584bc76332 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -531,6 +531,27 @@ static void pci_device_remove(struct device *dev)
+ 	pci_dev_put(pci_dev);
+ }
+ 
++/*
++ * Disable bus mastering on the device so that it does not perform memory
++ * transactions during kexec.
++ *
++ * Don't touch devices that are being preserved across kexec for Live
++ * Update or that are in D3cold or unknown states.
++ */
++static void pci_clear_master_for_shutdown(struct pci_dev *pci_dev)
++{
++	if (!kexec_in_progress)
++		return;
++
++	if (pci_liveupdate_outgoing(pci_dev))
++		return;
++
++	if (pci_dev->current_state > PCI_D3hot)
++		return;
++
++	pci_clear_master(pci_dev);
++}
++
+ static void pci_device_shutdown(struct device *dev)
  {
- 	u32 cap;
- 	struct pci_dev *bridge;
-+	u16 val = 0;
+ 	struct pci_dev *pci_dev = to_pci_dev(dev);
+@@ -541,15 +562,7 @@ static void pci_device_shutdown(struct device *dev)
+ 	if (drv && drv->shutdown)
+ 		drv->shutdown(pci_dev);
  
--	if (pcie_ari_disabled || !pci_is_pcie(dev) || dev->devfn)
-+	if (!pci_is_pcie(dev) || dev->devfn)
- 		return;
+-	/*
+-	 * If this is a kexec reboot, turn off Bus Master bit on the
+-	 * device to tell it to not continue to do DMA. Don't touch
+-	 * devices in D3cold or unknown states.
+-	 * If it is not a kexec reboot, firmware will hit the PCI
+-	 * devices with big hammer and stop their DMA any way.
+-	 */
+-	if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
+-		pci_clear_master(pci_dev);
++	pci_clear_master_for_shutdown(pci_dev);
+ }
  
- 	bridge = dev->bus->self;
-@@ -3510,6 +3511,15 @@ void pci_configure_ari(struct pci_dev *dev)
- 	if (!(cap & PCI_EXP_DEVCAP2_ARI))
- 		return;
- 
-+	if (pci_liveupdate_incoming(bridge)) {
-+		pcie_capability_read_word(bridge, PCI_EXP_DEVCTL2, &val);
-+		bridge->ari_enabled = !!(val & PCI_EXP_DEVCTL2_ARI);
-+		return;
-+	}
-+
-+	if (pcie_ari_disabled)
-+		return;
-+
- 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ARI)) {
- 		pcie_capability_set_word(bridge, PCI_EXP_DEVCTL2,
- 					 PCI_EXP_DEVCTL2_ARI);
+ #ifdef CONFIG_PM_SLEEP
 -- 
 2.54.0.rc2.544.gc7ae2d5bb8-goog
 
