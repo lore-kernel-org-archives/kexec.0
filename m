@@ -4,74 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8086BF99351
-	for <kexec@archiver.kernel.org>; Thu, 23 Apr 2026 08:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6124FF589AF
+	for <kexec@archiver.kernel.org>; Thu, 23 Apr 2026 12:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=AnqwNiNmBE870TAbn0m3IWi2wJAeU1ScdF9aKm0HDwQ=; b=RyNDmo0dA9R7fuqrW1852NgpKL
-	/iTm3MmH5p0bA+Xsqv4e4ZDC7IgE5XFi+a95YLnOXLXhD/FerYJpaF2PquKFklJRlpoXflzqrogAl
-	9qq9lCIcuCgIvTrbZ31pV5+j6/1yAcur2PPRV0Hlt0iCnrkSyWQgIpw/QuVawduHJYY1z2t+zRs+a
-	oIpVNae9y7VfKvNznNefpj9saKgVKxgLrGk8LlHJwjFSTMhZbJEgFODFBf0EF9zHGT6Juzz8HH56O
-	sIUNbGGuleiG6Vkaj+3aK/0wkcA4HGOzPRAmCjqoyqdod5r53ThqJHBGg5Q+qUaCsnCooqQcIUnnk
-	hyqE52Mg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=Fi9xSgYpoZ/qpCfid0/vii4Xij6h2WhXpELMzsBfSVU=; b=Dis/XjL7BuNo7OUOzAx9U3cKq6
+	5CIThYRg9uLhodiAFG9xhAKbhRuoQja5WlCVOvbbu1lC+xWSlRLu91FyjV+4AIICY3jz00n3lMdMM
+	zcf26fNCKln+tg4uyLpR8KStn6nxLRXRM5Ztpt7LIM/ZY/jJV4eM+khv2vPFKvzbkcA1H9gJdN5t/
+	hRU86SDRQmpXGqMarGBOs0EO5lrP9ZhDqKhWW9my+bEBRUJ1y5U6VENF9Ec/A2ra1/h5IionajdvN
+	AVUtFaXBNa2tQ/kYBAkSLvx+Z0cAEzyppPy04rcykz0jIIlvZJVrZNcYZX9nlTObkgvlXlC6RHXNC
+	dZ5+ZG9A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wFpci-0000000BGPR-2eRd;
-	Thu, 23 Apr 2026 08:41:24 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wFt7u-0000000BbyI-0dMF;
+	Thu, 23 Apr 2026 12:25:50 +0000
+Received: from mail-ed1-x54a.google.com ([2a00:1450:4864:20::54a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wFpcb-0000000BGPK-2BcY
+	id 1wFt7p-0000000Bbx4-1h4J
 	for kexec@lists.infradead.org;
-	Thu, 23 Apr 2026 08:41:17 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 40BA56001A;
-	Thu, 23 Apr 2026 08:41:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47E55C2BCAF;
-	Thu, 23 Apr 2026 08:41:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776933676;
-	bh=/o3cyhlI3NGUpyx7vDlXkXGS/7l1clLahFR6qWl4Ock=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=FLcJUqE+7zBvDxLageLu5YyUTMj8lC6wE1/M26SxjfptjMSqgpGlxLccHjh9YvSfp
-	 xROm9gPXfErHIJqvFx7WN5jD0HzoO6HV2MAvppfFxyImKdMvwg7pD53cfEeVFMfCOQ
-	 KoUcxtirs9rs8z16YYzzGjoGKHUieLX/lYMD9d/bC02bXJvc3rPvuuQPMLeBMYyMxS
-	 ggdyxIp2HIOkR5Sp4Z07wdEHzERvLKpLEi4hkeBxkD5as4nDON3vElkI5QmDQBDtaQ
-	 wzooCPgouNEtEDgXKs0uKi7/QxUY7Dnq4PdufvO9fyPjDRIeXY/LBxiDJblPV+xob5
-	 MJLJICKdkYybw==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
-  Evangelos Petrongonas
- <epetron@amazon.de>,  Pasha Tatashin <pasha.tatashin@soleen.com>,
-  Pratyush Yadav <pratyush@kernel.org>,  Alexander Graf <graf@amazon.com>,
-  Samiullah Khawaja <skhawaja@google.com>,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  linux-kernel@vger.kernel.org,  Andrew Morton
- <akpm@linux-foundation.org>,  Vlastimil Babka <vbabka@kernel.org>,  Suren
- Baghdasaryan <surenb@google.com>,  Michal Hocko <mhocko@suse.com>,
-  Brendan Jackman <jackmanb@google.com>,  Johannes Weiner
- <hannes@cmpxchg.org>,  Zi Yan <ziy@nvidia.com>
-Subject: Re: [PATCH v8 1/2] kho: fix deferred initialization of scratch areas
-In-Reply-To: <aeiFx8tilasoGzwa@kernel.org> (Mike Rapoport's message of "Wed,
-	22 Apr 2026 11:24:39 +0300")
-References: <20260416110654.247398-1-mclapinski@google.com>
-	<20260416110654.247398-2-mclapinski@google.com>
-	<aeD2Fzr6yr4pu9-X@kernel.org>
-	<CAAi7L5d-ujEa7R21Lmd37X9451KBmK8ZhagSKbJde15aQLi2MQ@mail.gmail.com>
-	<aeEKksfLxQ0A7Jun@kernel.org>
-	<CAAi7L5cp3B0DFEQex5EqFdLDkqVWwRw228-pgp0PnhfgLP=e6Q@mail.gmail.com>
-	<aecUW-Xgm5MPMyVr@kernel.org>
-	<CAAi7L5d8x1MB1f6A_h2acj1CYU1wf7DijS1TENC+Lurx5wLhKw@mail.gmail.com>
-	<aeiFx8tilasoGzwa@kernel.org>
-Date: Thu, 23 Apr 2026 10:41:11 +0200
-Message-ID: <2vxzqzo65as8.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+	Thu, 23 Apr 2026 12:25:49 +0000
+Received: by mail-ed1-x54a.google.com with SMTP id 4fb4d7f45d1cf-6771df2b5easo1036147a12.0
+        for <kexec@lists.infradead.org>; Thu, 23 Apr 2026 05:25:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1776947143; x=1777551943; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Fi9xSgYpoZ/qpCfid0/vii4Xij6h2WhXpELMzsBfSVU=;
+        b=HqZbrM7e1WXbkN48WzrOP5lFslVsdkmuRNyzGHkWOXGiaml7gJ0PxQ6Ggt+/LWF14P
+         jsFppZxQCzvXlJAs/UgK01bLAQaIeGOG5u4NB4iiQDmC4pjVK2VhffqJfuJaUkFJufnz
+         ElcnCBOP38P7+xx5w52gs0adqcTbAEVIsSvUZEnwZDgWqFz6YgHL9b4yZwH4DY+1PIcu
+         PHkUrhRchk2XUgG7HLJu9s2GFZNjI/L7SVf9htxB+MEiIfFvhtlEp+3AHy9h8pywyUpo
+         FdoL20eNU0jydnvtOmVP6jlEcOyR/dKbAozJ9XHp1JhF4XnNpm9Y/XShVWi9cgpvUXnC
+         0d6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776947143; x=1777551943;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Fi9xSgYpoZ/qpCfid0/vii4Xij6h2WhXpELMzsBfSVU=;
+        b=oPwBEIjkuMeGR4WuGNVzJ78jpz5sr+idC0ANeIoKfJJO42aGbRWsnAWWCMqx/NTiml
+         fBjQpvE7I1j00k6IAbW40VUUWCv5y4GSFlN8zjFHtuDgmmXPTjEhjJr/UtE+uBSXN7U0
+         fTgNBl9xUmCSo1VxRNvU1U5NQFGDCEe419fGe1uTRJGgONoPYMeD5TxPxOD5JCSjbxKm
+         IawIetQB0EigBIrflOtOTIe5iqev8wngORimaVwLmBrOtYpR+gqXY2mbzFSzF+laY2Ra
+         GVspQnfEBg5HG1+fILlH9M7fllu6+R+AiE3R74M2iSazzRUPmGOH2Ixxfatu/NRwEy2q
+         y2AQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/ReaWoFDWvuoD/gmJASq5HiTawVjL0Av2aCcO002bY9lDB5e5/9DbHOevHWp9flYqb6vERRQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yy+Q1/N7jfoQm2rjxWcy5uQidDhf6ikaXQa+CXhYgSBIckXNZ8K
+	vd5gTC66cKduKlpAVcnitXDU1I6Cz594CXctpRTPeouFJ9u3QzOwLj874RBYxhJLphou3pPgUnn
+	NND5PYhPGU+oKq5NSsAYSEA==
+X-Received: from edev7-n1.prod.google.com ([2002:a05:6402:a2c7:10b0:676:9c94:9878])
+ (user=mclapinski job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6402:1f01:b0:674:37b7:227c with SMTP id 4fb4d7f45d1cf-67437b722e4mr9379117a12.2.1776947142685;
+ Thu, 23 Apr 2026 05:25:42 -0700 (PDT)
+Date: Thu, 23 Apr 2026 14:25:35 +0200
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.54.0.rc2.533.g4f5dca5207-goog
+Message-ID: <20260423122538.140993-1-mclapinski@google.com>
+Subject: [PATCH v9 0/3] kho: add support for deferred struct page init
+From: Michal Clapinski <mclapinski@google.com>
+To: Evangelos Petrongonas <epetron@amazon.de>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org, linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
+	Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
+	Michal Clapinski <mclapinski@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260423_052545_456954_E06D7517 
+X-CRM114-Status: GOOD (  10.84  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,136 +90,67 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Apr 22 2026, Mike Rapoport wrote:
+When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, struct page
+initialization is deferred to parallel kthreads that run later in
+the boot process.
 
-> On Tue, Apr 21, 2026 at 12:20:27PM +0200, Micha=C5=82 C=C5=82api=C5=84ski=
- wrote:
->> On Tue, Apr 21, 2026 at 8:08=E2=80=AFAM Mike Rapoport <rppt@kernel.org> =
-wrote:
->> >
->> > On Mon, Apr 20, 2026 at 03:11:03PM +0200, Micha=C5=82 C=C5=82api=C5=84=
-ski wrote:
->> > > On Thu, Apr 16, 2026 at 6:13=E2=80=AFPM Mike Rapoport <rppt@kernel.o=
-rg> wrote:
->> > > >
->> > > > On Thu, Apr 16, 2026 at 05:06:10PM +0200, Micha=C5=82 C=C5=82api=
-=C5=84ski wrote:
->> > > > > On Thu, Apr 16, 2026 at 4:45=E2=80=AFPM Mike Rapoport <rppt@kern=
-el.org> wrote:
->> > > > > >
->> > > > > > Hi Michal,
->> > > > > >
->> > > > > > On Thu, Apr 16, 2026 at 01:06:53PM +0200, Michal Clapinski wro=
-te:
->> > > > > > > @@ -2262,6 +2253,12 @@ static void __init memmap_init_reserv=
-ed_range(phys_addr_t start,
->> > > > > > >                * access it yet.
->> > > > > > >                */
->> > > > > > >               __SetPageReserved(page);
->> > > > > > > +
->> > > > > > > +#ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
->> > > > > >
->> > > > > > No need for #ifdef here, there's a stub returning false for
->> > > > > > CONFIG_MEMBLOCK_KHO_SCRATCH=3Dn case.
->> > > > >
->> > > > > In all 3 places the #ifdef is there because MIGRATE_CMA might be
->> > > > > undefined. I already broke mm-new branch in the past because of =
-that.
->> > > >
->> > > > Hmm, that hurts :/
->> > > >
->> > > > The best I can think of is to add a static inline in memblock.h an=
-d ifdefs
->> > > > around it.
->> > >
->> > > Sorry, I don't understand what you mean. What would that static inli=
-ne contain?
->> >
->> > Something like this:
->> >
->> > #ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
->> > static inline enum migratetype kho_scratch_migratetype(unsigned long p=
-fn,
->> >                                                        enum migratetyp=
-e mt)
->> > {
->> >         if (memblock_is_kho_scratch_memory(PFN_PHYS(pfn)))
->> >                 return MIGRATE_CMA
->> >         return mt;
->> > }
->> > #else
->> > static inline enum migratetype kho_scratch_migratetype(unsigned long p=
-fn,
->> >                                                        enum migratetyp=
-e mt)
->> > {
->> >         return mt;
->> > }
->> > #endif
->>=20
->> How would I use it for this code?
->>=20
->> +#ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
->> +             if (memblock_is_kho_scratch_memory(PFN_PHYS(pfn)) &&
->> +                 pageblock_aligned(pfn))
->> +                     init_pageblock_migratetype(page, MIGRATE_CMA, fals=
-e);
->> +#endif
->
-> Something like this
->
-> 		enum migratetype mt =3D kho_scratch_migratetype(pfn, MIGRATE_MOVABLE);
->
-> 	        ...
->
-> 		if (memblock_is_kho_scratch_memory(PFN_PHYS(pfn)) &&
-> 		    pageblock_aligned(pfn))=20
-> 			init_pageblock_migratetype(page, mt, false);
+Currently, KHO is incompatible with DEFERRED.
+This series fixes that incompatibility.
+---
+v9:
+- moved init_pageblock_migratetype from memmap_init_reserved_range
+  to __init_page_from_nid
+- reduced number of ifdefs
+- new commit to test this feature
+v8:
+- moved overriding the migratetype from init_pageblock_migratetype
+  to callsites
+v7:
+- reimplemented the initialization of kho scratch again
+v6:
+- reimplemented the initialization of kho scratch
+v5:
+- rebased
+v4:
+- added a new commit to fix deferred init of kho scratch
+- switched to ulong when refering to pfn
+v3:
+- changed commit msg
+- don't invoke early_pfn_to_nid if CONFIG_DEFERRED_STRUCT_PAGE_INIT=n
+v2:
+- updated a comment
 
-You can optimize this a tiny bit by doing something like this:
+I took Evangelos's test code:
+https://git.infradead.org/?p=users/vpetrog/linux.git;a=shortlog;h=refs/heads/kho-deferred-struct-page-init
+and then modified it to this monster test that does 2 allocations:
+at core_initcall (early) and at module_init (late). Then kexec, then
+2 more allocations at these points, then restore the original 2, then
+kexec, then restore the other 2. Basically I test preservation of early
+and late allocation both on cold and on warm boot.
+Tested it both with and without DEFERRED.
+https://github.com/mclapinski/linux/commits/deferred_test/
 
-	if (pageblock_aligned(pfn)) {
-		enum migratetype mt =3D kho_scratch_migratetype(pfn, MIGRATE_MOVABLE);
+This patch probably doesn't apply onto anything currently.
+It's based on mm-new with
+"memblock: move reserve_bootmem_range() to memblock.c and make it static"
+cherrypicked from rppt/memblock.
 
-		init_pageblock_migratetype(page, mt, false);
-	}
+Evangelos Petrongonas (1):
+  kho: make preserved pages compatible with deferred struct page init
 
-The kho_scratch_migratetype() you suggested already calls
-memblock_is_kho_scratch_memory() so no need to duplicate the search.
-Plus, this way this only executes for each pageblock instead for each
-page.
+Michal Clapinski (2):
+  kho: fix deferred initialization of scratch areas
+  selftests: kho: test with deferred struct page init
 
->
-> seems better to me than ifdef, even though MIGRATE_MOVABLE is bogus here.
->
-> And since we anyway changing init_pageblock_migratetype() callers in
-> mm_init.c the entire block in memmap_init_reserved_range() can be dropped
-> and the change can be done in __init_page_from_nid().
->
->>=20
->> It doesn't invoke init_pageblock_migratetype unless pfn is kho scratch.
->>=20
->> > Can't say I'm happy about the name, but could not think of something
->> > better.
->> >
->> > > > > > > +             if (memblock_is_kho_scratch_memory(PFN_PHYS(pf=
-n)) &&
->> > > > > > > +                 pageblock_aligned(pfn))
->> > > > > > > +                     init_pageblock_migratetype(page, MIGRA=
-TE_CMA, false);
->> > > > > > > +#endif
->> > > > > > >       }
->> > > > > > >  }
->> > > >
->> > > > --
->> > > > Sincerely yours,
->> > > > Mike.
->> >
->> > --
->> > Sincerely yours,
->> > Mike.
+ include/linux/memblock.h              | 21 +++++++++-
+ kernel/liveupdate/Kconfig             |  2 -
+ kernel/liveupdate/kexec_handover.c    | 52 ++++++++++++-------------
+ mm/memblock.c                         | 56 +++++++++++----------------
+ mm/mm_init.c                          | 30 +++++++-------
+ tools/testing/selftests/kho/vmtest.sh |  4 ++
+ 6 files changed, 88 insertions(+), 77 deletions(-)
 
---=20
-Regards,
-Pratyush Yadav
+-- 
+2.54.0.rc2.533.g4f5dca5207-goog
+
 
