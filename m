@@ -4,106 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B417FFDEE45
-	for <kexec@archiver.kernel.org>; Thu, 23 Apr 2026 18:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3ED45FDEE4E
+	for <kexec@archiver.kernel.org>; Thu, 23 Apr 2026 21:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xz1kG4GLCvqQFzeXh7n8DWRNtWprzVemNcNEfPAsXwo=; b=fshrRtQx3ZRgqL2cwEouKJhX99
-	waSqOcBVkbCjU+eSSdTSDf+zMxLVccezB3osm8euqim+qnjHJdvwlX94/DpMvp1+y+g4O2qoAUlg+
-	XHIlU59FgCvHdWlEHgJ8k4CvuLzNx4RQl4AuNE1E/i6PzW0UxeRkHuPMH4oSq39+u6z4ryJcHciEF
-	We0Y8VwKZKmvBIww2sKlVS4zEwBIxEPAAsBd0NjGpojfrknnb/fAArZzlZQOV21pLQedGZfyXT2EC
-	qzl3hPJiSHGNjOx+FZh5pzq8jhbwFyEC/2lqWqLsxwyUSKNXBXlqA/pGDSKXOdwWuZJvfoeNHpt1J
-	tpLm+ONg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:To:From:Subject
+	:Message-ID:Mime-Version:Date:Reply-To:Cc:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=kl+pv05082o4iUYPTAspfzDZexWtIImSBuw1JtCkgoE=; b=ERw6STfl+Py0edYJB1DDoz9RaJ
+	zO/2tJ1cJ6CmF4GxEs5iYm0dE3sMrIvUlfLV65oRklR3olqz7gJqBa7/m7yJ9eO/rOujKd1pEuHDe
+	flOOJ05ZeQExjfwhRR/y916f99jKgjSwS/dEzIx4/jqry3ZXuGhpRm65X/BV6IIpVXuNFmZ4GLA+v
+	o7dzRDrWOb1QraRE1Pua2bAubBBBbYB37qo8NN5kfS2QrYeSJpy8u5BhfZYoy+QRwTmX5FqA0GdBY
+	odRWMu8GtY1FX7LTmJZ9CXD5p3vWpdy6bgH65RUkYG6b12iHFJ7eFCAi+KGXCy3fJioAuv9c7lG4L
+	lSKLXOiA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wFyzP-0000000C8M6-3VyJ;
-	Thu, 23 Apr 2026 18:41:27 +0000
-Received: from mail-lj1-x22b.google.com ([2a00:1450:4864:20::22b])
+	id 1wG1VY-0000000CKym-47nN;
+	Thu, 23 Apr 2026 21:22:48 +0000
+Received: from mail-pl1-x649.google.com ([2607:f8b0:4864:20::649])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wFyzM-0000000C8Lm-3x0z
+	id 1wG1VV-0000000CKyN-3UY1
 	for kexec@lists.infradead.org;
-	Thu, 23 Apr 2026 18:41:26 +0000
-Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-38e7b8e3f38so58723871fa.3
-        for <kexec@lists.infradead.org>; Thu, 23 Apr 2026 11:41:23 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776969682; cv=none;
-        d=google.com; s=arc-20240605;
-        b=VPcYbjM9T37oeLX1tE71Tvo3D9P87fvUs7kr88vQl4upQc43Bv9413RkxgO8wD3GUM
-         4FYDY8Vu96mBlZW0tB2j8O0rcPmTFInVEGkMjgKUNQaUAkPOPArLVKzbD3FMYsU2lmoy
-         efxr7/vBq9SDtbmWNjxJiLTepqARDIqx/BsHdluHrsp+jPbU892MyFO0aV8/TSXpnUTY
-         3UQYLMdO/Et8rVR+ftmatxWdzXxiNvZ8Ij6UC6nTAmciMgI0SYHPSLLlqspB1YJUQdz9
-         dhZbyg1OeiWCJ0cyy8OVJMHV4R2uTL4hz+E38Tbk3gMArInCS4hrQ5cRRfLcI2CBzG3o
-         j2NQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=xz1kG4GLCvqQFzeXh7n8DWRNtWprzVemNcNEfPAsXwo=;
-        fh=DV1/oP9HWtj75pYOp1oVBaosaDkFBh1vyZrhfLSjZcw=;
-        b=Zb7x4cYhTkPUsszgWyluGasZVEa5qzPSFcr9Zmtt1el/jgCUGbw48f2nJBtmVgRnzT
-         7Ttr0PVx+CJxjvabjrhkj7Ug6VDJOV+7LgkxzBY8Pha5ZnQcC68CMoa45M3UzO1JXJ1a
-         LSCUzxQi2sDAriBtuteo0K1vRUruxnMxM5/wxjLJpTWv4uMVYED51VbwpkWPQCtUsX89
-         ub8wdGSoBWflNqLBVcdNNOjn3uMNNGeYV0lwYmPNX49JLQSJn9fChpgg5/monXKGWFyG
-         fmhVkreT4/2iHg8V5+rgwMZu8jv1yCFCQiyKgep9vEM5ZvJuEH7zCjstfnF9KGWX3Xdl
-         7xGg==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	Thu, 23 Apr 2026 21:22:47 +0000
+Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-2b24af7ca99so96466245ad.1
+        for <kexec@lists.infradead.org>; Thu, 23 Apr 2026 14:22:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776969682; x=1777574482; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xz1kG4GLCvqQFzeXh7n8DWRNtWprzVemNcNEfPAsXwo=;
-        b=ev3NJXVjdD1Q+Q4vuTtz2Vy3fc9amO9L/1Mi2jgudXK7xy96tHsH748p2IYREX6GP+
-         OrBc0LczfSM036JCC8/Mza9aS19DUgwkwfxbAM75P6TNOUgcN4OBdo0O4aAYmc4pXzXf
-         7sI3IRqbrFgaGNsvKBPnlbH+IrGV6n45azkA3mLvJnthmyb9vY69UTEb4hMHcg6Vwpdm
-         sqjxN2s8VhAaqPhq7qFr/Rdppxex4CzmyTk7f8ga7HcvSZbQjHOFuhtQrPTWJlTmjuov
-         TMAAFVcXhsTcKds8PSuo90FkArLAIrbYDTdmm5sJxMpqZ/jcQ9p725JWj0sYLvUcyQC3
-         MDVA==
+        d=google.com; s=20251104; t=1776979364; x=1777584164; darn=lists.infradead.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kl+pv05082o4iUYPTAspfzDZexWtIImSBuw1JtCkgoE=;
+        b=ZX8Mwtc5FYqzcbTRFTOqMN3ThkL4apBJtzljeT4NNKQk+cm6Xv9FyMoGFgEjtfoDcR
+         N3LDuvt5r2YEzgVDLtF+Ae4F81i3XIPhiVvVasbILeR4ppuBzeZH3ZxZWpJbYooyhl7X
+         2pjI/L1V33INaOueWIres1ONIjvgQY7nZOzXvbFeHjBkRhQyQeCcg7claaFX4Pi4h67q
+         cQFE00q5f9q5Y9rrhfxKXQYXRtG3BvyYgAu4lIdghNFn32UpFw2vRt+IS37j9yyaRhjd
+         l2HnkHI+DtdYlBsLyZ3QU/1WXP8comyDnFmlAQOG7XuGGQlXq27VkcIPKvN6v4A5vFSj
+         v72A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776969682; x=1777574482;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=xz1kG4GLCvqQFzeXh7n8DWRNtWprzVemNcNEfPAsXwo=;
-        b=SnWPAn6foGQzisarNUZf9L6+FmI+6hzdsUeSzcS0TVZgj9E7FLDxjJOw8U3sApr/eB
-         gvWtLxHAoSGHzpx8ZCWamb3Y5VH6/BRNz992schW35Nfqk5xtLQEJpgwZI3g41JYgah5
-         1GSH/hlyy5bQZllsdlMnoeeUJkbGaI4WhMsh3jXX1JnHRxhegVLR/InpoddTJenvCtAD
-         B0muCYbaQXNaGBeDIoeBMFa9FDYk2LepNa6p6Oj+02Xoq8payI9GP93Zqoa5JCDt55BO
-         l+zlvaYsDiOCHoPmCdLRHczcPrApPVdmzIoN+wln7k2YiwU6WGX7BUbuX6Mcn6MLgE+P
-         XH5g==
-X-Forwarded-Encrypted: i=1; AFNElJ9MDMX46QDDg+NoM/PPGKaefJ5iF5951s8vb8g7T2411zh2d0aRh1YY/a8jSGJPsMaSmSuw8g==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyDJeu/kkhF9M31I7msEcJ3TGbuCfH1BmBtxDgTALvNhh2KSgMv
-	eEm8dHpr2KtWveuGEKBNSyu7xbs8jGCd6ENVKGcQt5gEr98QdkB50gpEuWmN/GM/oJH+2BqxzF8
-	/1CahY+u1v0nWdhjpW6jeKAPChwTk3cskULj6Yvno
-X-Gm-Gg: AeBDietLEVFiBmRf1Rd/Bhdzqx7imS7sIgjRfpQduiw6n7u/B00n/ZTkAbWGlTTTdSW
-	2/2ksv+xi5xNEL9HRAG6RKZiX2JLTjs6H5AhroTaQURqeJexHo8LTzcj4ZZTowhTuCXtONn9k+P
-	rTnsk+kC49XzaBBWoQZE39bvxlHJu4W9sR+FCGjA6MTWbLvHM7s6WrIIrkx0N4Uj9NrbCRDHbfF
-	YjRI897zajt4fvTfuz7x/+8h2VcyUEzS0+sSJuajU1pIvnDF4ig89nHAS/5gBs6iFhK3bbgeTns
-	5WXV1K6ugUBgEojymJ2Rw8AQsZ6BRef0/MXGbbyJ
-X-Received: by 2002:a05:651c:e18:b0:38e:e6fd:65b2 with SMTP id
- 38308e7fff4ca-38ee6fd6850mr73331981fa.21.1776969681282; Thu, 23 Apr 2026
- 11:41:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20260423174032.3140399-1-dmatlack@google.com> <aepgyxZDc4evs5ew@plex>
-In-Reply-To: <aepgyxZDc4evs5ew@plex>
+        d=1e100.net; s=20251104; t=1776979364; x=1777584164;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kl+pv05082o4iUYPTAspfzDZexWtIImSBuw1JtCkgoE=;
+        b=EzyLvypoeOa7f6XRsZbTfq+fvuXZtjroLvSGFO3B62jOEmilWejLbrncD0Vf8WRr7j
+         F/fZzohhBQtnbCECbvUBSZ5aAFR62BPLc5uJr+TB0KngPWdFjffAGCpV4TdS5YPqwM9m
+         TpV8ORoBGuhIGmDKvnz/dFDwXkZ96QpHUZZv5nGPEEXId5BFD+sXjXChONsonKzvPoJl
+         ZSn55kDijT1m9hX4zjw0J/EfpEG92H8prPIftmyXlroXx5c582Zn3lsbKirsTQstnHi3
+         oxeFybFEDyxh06yYTUaVKp0hKCA+Mem2A3kP7JtgvE4Tu2YwIWiUjbU+/98lOZAy3tEE
+         yf1A==
+X-Forwarded-Encrypted: i=1; AFNElJ+YLUxWAEEEatJYVC/cOgzsA940uPeiljuka5kzV1WMg7cgX+w1Y1ev0wOX5pA6uIDcyBJU3Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yw5srZWDSnPTSUwp5/5qIm4XFb66yZiH3vRm0MvLjnMK1Lxc8G5
+	S26FzpexdatJV0UEEk+qNMMg6468iD1fPmEiigCpPrPnAsUqDwHKq+7U8x8s0L9A9hn5Wquy2f9
+	9gkQW3k0STJJqUQ==
+X-Received: from plnx22.prod.google.com ([2002:a17:902:8216:b0:2ae:ce70:7c80])
+ (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:7d8c:b0:2b4:604c:ec6f with SMTP id d9443c01a7336-2b5f9f86840mr213628685ad.32.1776979363647;
+ Thu, 23 Apr 2026 14:22:43 -0700 (PDT)
+Date: Thu, 23 Apr 2026 21:22:31 +0000
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.54.0.rc2.544.gc7ae2d5bb8-goog
+Message-ID: <20260423212242.3431136-1-dmatlack@google.com>
+Subject: [PATCH v4 00/11] PCI: liveupdate: PCI core support for Live Update
 From: David Matlack <dmatlack@google.com>
-Date: Thu, 23 Apr 2026 11:40:54 -0700
-X-Gm-Features: AQROBzCqNMDGmFOr6lSRc3MqO7e6y4Kr9nG_nXzgrUF8aY4QyhS_mfqX85iMyuo
-Message-ID: <CALzav=e0vCH-q+=W6p6yH54zOmxDJE-UXKhLpT3gdS_ao9Yh6g@mail.gmail.com>
-Subject: Re: [PATCH 0/2] liveupdate: FLB refcounting improvements
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, 
-	Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org
+To: dmatlack@google.com, iommu@lists.linux.dev, kexec@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260423_114125_041370_E5425CDC 
-X-CRM114-Status: UNSURE (   7.66  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260423_142245_885507_241ADE13 
+X-CRM114-Status: GOOD (  24.17  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -118,13 +86,197 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Apr 23, 2026 at 11:13=E2=80=AFAM Pasha Tatashin
-<pasha.tatashin@soleen.com> wrote:
->
-> Please include kexec@lists.infradead.org so the patches are tested by
-> Sashiko, and added to patchwork that we are using to maintaine live
-> update work.
+This series can be found on GitHub:
 
-Sure. Should we add kexec@lists.infradead.org to "LIVE UPDATE" in
-MAINTAINERS then? That way scripts/get_maintainers.pl works.
+  https://github.com/dmatlack/linux/tree/liveupdate/pci/base/v4
+
+This patch series introduces support in the PCI core for Live Update,
+enabling drivers to preserve PCI devices across a kexec-based kernel
+update without interrupting the device. This functionality is critical
+for minimizing downtime in environments where PCI devices (e.g., those
+assigned to VMs via VFIO) must continue operating or maintain state
+across a host kernel upgrade.
+
+This series was split off from the the VFIO driver series [1] to enable
+more rapid iteration on the PCI core changes, add breathing room to
+split changes into smaller patches, and add some more functionality.
+
+Series Overview
+---------------
+
+This series implements the following to support PCI device preservation
+across Live Update:
+
+  1. Set up a File-Lifecycle-Bound (FLB) handler to track and preserve
+     PCI-specific state (struct pci_ser) across Live Update using Kexec
+     Handover (KHO).
+
+  2. Add APIs for drivers to register "outgoing" devices for
+     preservation and for the PCI core to identify "incoming" preserved
+     devices during enumeration.
+
+  3. Automatically preserve all upstream bridges for any preserved
+     endpoint. Use reference counting to ensure bridges remain preserved
+     as long as any downstream device is preserved.
+
+  4. Inherit secondary/subordinate bus numbers, ARI Forwarding Enable,
+     and Access Control Services (ACS) flags from the previous kernel to
+     ensure a stable routing fabric and consistent IOMMU group
+     assignments during Live Update.
+
+  5. Restrict preservation to devices in immutable singleton IOMMU
+     groups. Require that all upstream bridges have the necessary ACS
+     features enabled to prevent IOMMU group changes across the update.
+
+  6. Modify the PCI shutdown path to avoid disabling bus mastering on
+     preserved devices and their upstream bridges, allowing memory
+     transactions to continue uninterrupted.
+
+  7. Provide comprehensive documentation for the FLB API, device
+     tracking mechanisms, and the division of responsibilities between
+     the PCI core, drivers, and userspace.
+
+This series could be simplified down to fewer patches by limiting
+preservation support to only devices on a root bus. Supporting devices
+downstream of bridges could be split off into a follow-up series.
+However since I got bridge preservation working and the series was less
+than 15 patches I opted to include it for now.
+
+Dependencies
+------------
+
+This series depends on 2 LUO patches to enable refcounting of the
+incoming FLB so that it is safe for the PCI core to use
+liveupdate_flb_get_incoming() during enumeration.
+
+  https://lore.kernel.org/lkml/20260423174032.3140399-1-dmatlack@google.com/
+
+VFIO support for PCI device preservation is built on top of this series.
+The following branch on GitHub contains all the patches together to
+enable testing (the LUO FLB changes, this series, and the VFIO patches):
+
+  https://github.com/dmatlack/linux/tree/liveupdate/pci/base/v4-with-vfio
+
+Testing
+-------
+
+This series was tested in combination with the VFIO patches mentioned in
+the previous section using the the new VFIO selftests:
+
+  - vfio_pci_liveupdate_uapi_test
+  - vfio_pci_liveupdate_kexec_test
+
+Both tests were ran in ran in a QEMU-based VM environment, using a
+single virtio-net PCIe device behind a PCI-to-PCI bridge as the test
+device, and in a baremetal environment on an Intel EMR server, using 8x
+Intel DSA PCIe devices (each on a host bridge).
+
+Future Work
+-----------
+
+After this series we expect to make further improvements to the PCI core
+support for Live Update. Once these are done we plan to drop the
+"experimental" verbiage from PCI_LIVEUPDATE Kconfig help message and
+documentation.
+
+  - Ensure bridges with downstream preserved devices stay in D0 across
+    Live Update in case preserved endpoints are doing memory
+    transactions.
+  - Preserve BARs of all preserved devices to avoid disrupting P2P
+
+Beyond that we also plan to add support for preserving Virtual Functions
+since that is a major use-case for Cloud environments. This will require
+keeping SR-IOV enabled on the partent PF across a Live Update.
+
+Changelog
+---------
+
+v4:
+
+ Enhancements on top of previous series:
+
+ - Split "PCI: Add API to track PCI devices preserved across Live
+   Update" from v3 into 4 separate commits to make reviewing easier (FLB
+   setup, outgoing device tracking, incoming device tracking, and
+   documentation for driver binding)
+ - Use new incoming FLB refcounting to avoid use-after-free bugs during
+   enumeration
+ - Use an xarray to speed up looking up of incoming preserved devices
+   during enumeration
+ - Use a per-device bit to indicate when secondary and subordinate bus
+   numbers should be inherited on bridges instead of global data to
+   avoid races between the 2 passes
+ - Inherit ARI enablement across Live Update
+ - Automatically preserve bridges upstream of preserved endpoints so
+   so that ACS flags, ARI enablement, and bus mastering can be kept
+   constant on bridges across Live Update
+ - Avoid clearing bus mastering during shutdown on outgoing preserved
+   device to avoid disrupting memory transcations being performed by
+   preserved devices
+ - Add a MAINTAINERS entry for the new files to support Live Update in
+   the PCI core
+ - Add info and debug level logging for various events throughout device
+   preservation
+
+ Changes based on review feedback on v3:
+
+ - Fix up typos, wording, documentation gaps, and code style (Bjorn)
+ - Use pci_WARN_ONCE() where possible (Bjorn)
+ - Require ACS flags to preserve devices behind bridges so that
+   singleton IOMMU group topology is guaranteed to remain across Live
+   Update (Yi)
+ - Preserve ACS flags (Jason, Alex)
+
+v3: https://lore.kernel.org/kvm/20260323235817.1960573-1-dmatlack@google.com/
+
+v2: https://lore.kernel.org/kvm/20260129212510.967611-1-dmatlack@google.com/
+
+v1: https://lore.kernel.org/kvm/20251126193608.2678510-1-dmatlack@google.com/
+
+rfc: https://lore.kernel.org/kvm/20251018000713.677779-1-vipinsh@google.com/
+
+
+[1] https://lore.kernel.org/kvm/20260323235817.1960573-1-dmatlack@google.com/
+
+David Matlack (11):
+  PCI: liveupdate: Set up FLB handler for the PCI core
+  PCI: liveupdate: Track outgoing preserved PCI devices
+  PCI: liveupdate: Track incoming preserved PCI devices
+  PCI: liveupdate: Document driver binding responsibilities
+  PCI: liveupdate: Inherit bus numbers during Live Update
+  PCI: liveupdate: Auto-preserve upstream bridges across Live Update
+  PCI: liveupdate: Inherit ACS flags in incoming preserved devices
+  PCI: liveupdate: Require preserved devices are in immutable singleton
+    IOMMU groups
+  PCI: liveupdate: Inherit ARI Forwarding Enable on preserved bridges
+  PCI: liveupdate: Do not disable bus mastering on preserved devices
+    during kexec
+  Documentation: PCI: Add documentation for Live Update
+
+ Documentation/PCI/index.rst                   |   1 +
+ Documentation/PCI/liveupdate.rst              |  23 +
+ .../admin-guide/kernel-parameters.txt         |   6 +-
+ Documentation/core-api/liveupdate.rst         |   1 +
+ MAINTAINERS                                   |  13 +
+ drivers/iommu/iommu.c                         |  35 ++
+ drivers/pci/Kconfig                           |  14 +
+ drivers/pci/Makefile                          |   1 +
+ drivers/pci/liveupdate.c                      | 562 ++++++++++++++++++
+ drivers/pci/pci-driver.c                      |  31 +-
+ drivers/pci/pci.c                             |  22 +-
+ drivers/pci/pci.h                             |  13 +
+ drivers/pci/probe.c                           |  25 +-
+ include/linux/iommu.h                         |   7 +
+ include/linux/kho/abi/pci.h                   |  62 ++
+ include/linux/pci.h                           |  58 ++
+ 16 files changed, 858 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/PCI/liveupdate.rst
+ create mode 100644 drivers/pci/liveupdate.c
+ create mode 100644 include/linux/kho/abi/pci.h
+
+
+base-commit: a13f7eb5b2d5bef886659768680093bec1c0470d
+-- 
+2.54.0.rc2.544.gc7ae2d5bb8-goog
+
 
