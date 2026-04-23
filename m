@@ -4,104 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 166B9FDEE53
-	for <kexec@archiver.kernel.org>; Thu, 23 Apr 2026 23:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0F95FFDEE4D
+	for <kexec@archiver.kernel.org>; Thu, 23 Apr 2026 23:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=lt0LRXP7f5oacTu2NcOl/7iPlzf9+apNICsUQAZ1DMY=; b=JEgLbv4JhukdtziQNqj26dR5Pc
-	UiHU0bMHW9o42PhbswXB01/uefK6h6ORfLVkeqDspQquOUSjIgAdB5ZLSQH591dFjke59aM1Wncvd
-	44K007zbqbwk+ah5bClFmqbfUHm0q+xO0LGmd77nAXZOBlaLkMDmoaRybVMf5lmCTjjMiNpZ1WtsG
-	LcXOknIo9nE33G40IgPYK+GpWJ6kNJMn+KqxOflxFGXQfCpYyuY9VDRZGK5VjQrJjTIMz00zltcCy
-	n011+nlWsRL0oUFPHjhhsEHW/yaPV6HbCoKxbUstlg/Oo6XVJmaP+jJMgSQxbLiE6e3OSiTid7Iu2
-	nv/r7WyQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=Lki0JX5m/qaGqm5DoBE8zLiop+9ooQpoPeZ7HcosWXk=; b=pGtWoR3QNTY47/un3A63qzqKSi
+	LkibgQaALntx80U14VUtgJpzI7XjoZLjUee8sxaTpDxAW9RPVJH0hMFiyfOQ1i/YTBusVAaFJjKNE
+	Wp59U3gxuS9v/INcNoCZaeaqEx2VDGI/PD9aff0AEheJkwu+asphdzqbZbZ7JJdg6l+vA8bElL6b6
+	azcEUYl5NlZmGieIRZ4EIw3RBz/WKjt9PiCm1iNsNdt2ZyUCctABv4YhmJNQX1t6tgFMr4IlhdVJF
+	MvrcmuTmydUuNHnNus/1U0DOFS3a+S1bIgWMdCKfSVTrPIMrwOp22Z/QIHWAKQUJ33aySx3X49Zf0
+	g0qhMEdA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wG3Sc-0000000CPes-0Inr;
-	Thu, 23 Apr 2026 23:27:54 +0000
-Received: from mail-pl1-x62e.google.com ([2607:f8b0:4864:20::62e])
+	id 1wG3n3-0000000CQ8k-39h9;
+	Thu, 23 Apr 2026 23:49:01 +0000
+Received: from mail-wm1-x32c.google.com ([2a00:1450:4864:20::32c])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wG3SY-0000000CPe8-3TRj
+	id 1wG3mz-0000000CQ7x-2ve8
 	for kexec@lists.infradead.org;
-	Thu, 23 Apr 2026 23:27:52 +0000
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-2b243198058so187505ad.1
-        for <kexec@lists.infradead.org>; Thu, 23 Apr 2026 16:27:50 -0700 (PDT)
+	Thu, 23 Apr 2026 23:48:59 +0000
+Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-4896c22fcbaso44144135e9.0
+        for <kexec@lists.infradead.org>; Thu, 23 Apr 2026 16:48:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776986870; x=1777591670; darn=lists.infradead.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lt0LRXP7f5oacTu2NcOl/7iPlzf9+apNICsUQAZ1DMY=;
-        b=jDTWAEIWoL9c7QITjb4aehudzCBTpR/4JgJNQDFiS0mnLaLjk38gsLHSQo9iG6QHJq
-         gx0+yGnHqcxmj9Z+Jg46o92YfBHrMs+J0R2Ws3t9GurJsLdAfFP13dtp8ispmqONsu2K
-         wwIZUnzJ1vb8gplESkcMswhKumuJl6jmbhkIGi2RXtMkrTTuOgRL5qoHBI9JP5mn8B1D
-         Ezq47lWEv6mkP3+eDDyMgWqGnqKBRNiM5FH1K8ETlSL04FxtlKDmDOX5WhJjioD3SwTE
-         cB1FvafflcjDNGEPYBGY6knZEONozzE/fiNPoeB1TkgL60BYgH52KyFBU8WeJSz78zis
-         zsJQ==
+        d=gmail.com; s=20251104; t=1776988135; x=1777592935; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lki0JX5m/qaGqm5DoBE8zLiop+9ooQpoPeZ7HcosWXk=;
+        b=oJchJ8IPcwFzFiDdkorSdYfYtMv7XX6WN5sJM/SEoaVqVArkLS/SWarvU3xL0q0eaU
+         zAwSwPxxowvavj/NGZOlBTo+3tbfiSexuVJc0ueMhzuDpkl8QIc/5OPMIC9z4xs+/LLW
+         T13e7xStreUHhIkKdVJHfyaUI5r+5U2F5hwjkviWF7hr7jfpqYnMkXLmCbsZvGzgMxoY
+         Mugj+rZ7Vw/9V042cqwDok8kdfOcra5KoJCxqrUr3r8lZhftDNqyK5SrTciZmwdAmsq8
+         z4zUS1f1nxbDc1Kw/BfjOpJogqb0TdC9cOIrCVd6YWHXtu/GXSPEcy9j9cfYgBd0qRkm
+         egVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776986870; x=1777591670;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lt0LRXP7f5oacTu2NcOl/7iPlzf9+apNICsUQAZ1DMY=;
-        b=oYctc/aeDgoGElgPEVz999MaY8fDup77ZtQAhvBS6DGe2CzLK0SfuV8d13JF/kSVkU
-         oxs+APAvL0Y6qtjuLbUEXsDCU+T8Yb6dctQVbKY3PeYOYd5dUqI33wJKI05dH8YOvaeS
-         mo7DCt2s4RkcDCgSEtyU7cmatcdNDnmig3gL1ZdzRaMWsUS0LCgKSTtzS02MNCXRPjfQ
-         5zFD3LFU8JkKsYgF96XbUcJdyieHZKxDxPZb8gSRL8DvlZBHQPJWgb0vRMOX2EXCk3pH
-         uKC4xch6RWxy2M9clbA0KWOxkuoS82ap5ZDz5Vt/qb0qGz8hZq8GTQnifbsyQoX1oGqC
-         7vgw==
-X-Forwarded-Encrypted: i=1; AFNElJ9oN35Uy4mjfPcaeqJ2Cs5ogpjnhN3IGsWww4NFBySMZdRTtEOUmkxn18lFyGylalJ6AghsLw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwWlXsY1Ii3p7fzayMMyPT5UpeGCmmLnARVJafJZWu3RgVHMrp3
-	KwgPQoshcyYz9slr1kaIFeBe5SwkdHVu+P2gWm6wV8q8yiZ0U0cCLNDfa1wzTYU4Wg==
-X-Gm-Gg: AeBDietQ0ZQtKdrc3eSZlZA7dHjw8YMILZKunvYM2PBElBydfYxn2GMTsVfiba6ALSA
-	UF5QF1FetmNsAaa4jextzeflxXOu0gO34GBYgoTxpkRUwYx060otn4BAK8CrRKOvnP2/WF6wWqR
-	Qxm5uOqCXVkSoT+iXJQqgkziSqR2JmW3vTyV1XegOqYbsRorx7Dkidfd+nECr/RjhRCamMatqGi
-	F7m/VxUneax1QZ7GVG0pfZNFhIQWMNZk/JEsd+U2YaW9hGuTHcKyR+EodBEj3j1uH+ZqK6RBndq
-	+nysp2p63hlJBWZUeOVLQII9rXMSsq39DyoBFanSvPbvIRk1ESJAPZalYFmZon7edMe8Qa1EavP
-	RpzpN0F9xrYMUqo8H7esR1yoPgx0EtV16px9wWb6VVZDS+VmWlmbJ5260sf2+0JTQdZ+z0t7g/N
-	CBpSXBo8eDUxwNorWRWiuiu12CK72jx4weVzDvMSyRUbwYw6CXU+0OrljkmxoPthMAwYKnRB/vI
-	keGzCi/HM8=
-X-Received: by 2002:a17:902:cf01:b0:2b0:5e19:1862 with SMTP id d9443c01a7336-2b603f4969amr20900125ad.5.1776986869309;
-        Thu, 23 Apr 2026 16:27:49 -0700 (PDT)
-Received: from google.com (195.236.83.34.bc.googleusercontent.com. [34.83.236.195])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c7976f9cabfsm18153636a12.9.2026.04.23.16.27.48
+        d=1e100.net; s=20251104; t=1776988135; x=1777592935;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Lki0JX5m/qaGqm5DoBE8zLiop+9ooQpoPeZ7HcosWXk=;
+        b=czfdBn62ESNLOrrDDih6rpyJkjtr18AyrsYNRM5JZyPkd0slhi6CvRddnmGYLX1/gC
+         zpgzjSHfF0DCay6eU6BTx6H3S+kiSS3dgEyQVjvrVP4KeeoFYtBg+JruatCPHvxGvuap
+         c6d9eAr/qHaG8S+arTcP0hLc7uKZWzSthSxBiRp53S3of6ulW7gY4FrrnRH/iAwTLW//
+         KalSY+K2SSqQFCzXd43tnAFrg/KOCnrpg7Yk58JuO4swYA9vjQapjoTYzZEGXKFzMVtw
+         jkn17ITxhSFlgd1nRSs9/7eOe4iqv+gs4bACsX/3zc5+kjU+hKldInH8a8WJEtcmNjT0
+         B8Hw==
+X-Gm-Message-State: AOJu0YzPeAVz/cD87hfgOAlF5l27OABaSzpsxYGyXceJr1qZ6EWL1RWi
+	AvyUWYHly/ScSKO4eb/yOjrJLuhoTWMrUmxMcLgbQDFmxcQU5mk3b+V188tMRQ==
+X-Gm-Gg: AeBDieuRLOHZEjbmGhPCRowt7TTxvlL9+slRgfz/xVuaFKy4lk1nsmCUHn/UOsl7XCs
+	e2rm7Q+v4GhT6oRpRGV4T2j+VW3qejXuvYbUSfc9MKvpYJD8Sj9NsKMxbooDQ8HhLcxg2D05OdU
+	t98y9TTwv3X0m5ij8vewCFujkYjjif0iC7kMxoqdH/8ElXLYxcDtdp8CSeSF4H0KpVggGtTsNqB
+	vdTalJIBahQ8R+WQ3OT+5LRkpw8WP9s3CCOldVB7VLf/1SgtpE8avMafg1OONkvp1b35gaplpBp
+	00VAcxXf/SdYR50qW3X2c2chVGPlg/lriopRJ8x0ky96RfrzGDmg+h+TQibko1PP2WJU5swBkSO
+	GDJeseSMXRSynHYH10i6QwwKOuRdsEGvUwQHuRBtg81rHn+UnbLO6gMK0Qm/2+zcU8kagvoECPB
+	O9CDtqvBLHmxN/ebAvRDMuZsrdcRKJqiKSP4M2BRs=
+X-Received: by 2002:a05:600c:4e4c:b0:48a:58ae:9938 with SMTP id 5b1f17b1804b1-48a58ae9f69mr190862345e9.19.1776988135082;
+        Thu, 23 Apr 2026 16:48:55 -0700 (PDT)
+Received: from localhost ([2a01:4b00:d036:ae00:e8d7:434e:1f34:2cb6])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-48a5c4b9e8dsm40476485e9.7.2026.04.23.16.48.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2026 16:27:48 -0700 (PDT)
-Date: Thu, 23 Apr 2026 23:27:46 +0000
-From: Samiullah Khawaja <skhawaja@google.com>
-To: David Matlack <dmatlack@google.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, iommu@lists.linux.dev, 
-	kexec@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-pci@vger.kernel.org, 
-	Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
-	Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Chris Li <chrisl@kernel.org>, David Rientjes <rientjes@google.com>, 
-	Jacob Pan <jacob.pan@linux.microsoft.com>, Joerg Roedel <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Josh Hilke <jrhilke@google.com>, Leon Romanovsky <leonro@nvidia.com>, 
-	Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
-	Saeed Mahameed <saeedm@nvidia.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Will Deacon <will@kernel.org>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v4 08/11] PCI: liveupdate: Require preserved devices are
- in immutable singleton IOMMU groups
-Message-ID: <aeqpJ7BeBtzoPIx4@google.com>
-References: <20260423212316.3431746-1-dmatlack@google.com>
- <20260423212316.3431746-9-dmatlack@google.com>
- <CALzav=dGpHEnEjyp8qc50iZrGeKJ47vjLvwtvkLCyNzOMJhozw@mail.gmail.com>
- <20260423225253.GA3444440@nvidia.com>
- <CALzav=fraXLgGs-XMc-=whMPhMbS99twFskGtV5Eo=UQ9mU5Fg@mail.gmail.com>
+        Thu, 23 Apr 2026 16:48:53 -0700 (PDT)
+From: luca.boccassi@gmail.com
+To: kexec@lists.infradead.org
+Cc: linux-mm@kvack.org,
+	rppt@kernel.org,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	linux-kernel@vger.kernel.org,
+	Luca Boccassi <luca.boccassi@gmail.com>
+Subject: [PATCH v10 0/4] liveupdate: bug fix for session name and new ioctl to read it
+Date: Fri, 24 Apr 2026 00:44:19 +0100
+Message-ID: <20260423234753.3873095-1-luca.boccassi@gmail.com>
+X-Mailer: git-send-email 2.47.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALzav=fraXLgGs-XMc-=whMPhMbS99twFskGtV5Eo=UQ9mU5Fg@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260423_162750_903742_1362E3F7 
-X-CRM114-Status: GOOD (  31.96  )
+X-CRM114-CacheID: sfid-20260423_164857_805126_9A963696 
+X-CRM114-Status: GOOD (  11.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -116,69 +98,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Apr 23, 2026 at 04:09:01PM -0700, David Matlack wrote:
->On Thu, Apr 23, 2026 at 3:53 PM Jason Gunthorpe <jgg@nvidia.com> wrote:
->>
->> On Thu, Apr 23, 2026 at 03:10:55PM -0700, David Matlack wrote:
->> > On Thu, Apr 23, 2026 at 2:23 PM David Matlack <dmatlack@google.com> wrote:
->> > >
->> > > Restrict support for preserving PCI devices across Live Update to
->> > > devices in immutable singleton IOMMU groups. A device's group is
->> > > considered immutable if all bridges upstream from the device up to the
->> > > root port have the required ACS features enabled.
->> > >
->> > > Since ACS flags are inherited across a Live Update for preserved devices
->> > > and all the way up to the root port, the preserved device should be in a
->> > > singleton IOMMU group after kexec in the new kernel.
->> > >
->> > > This change should still permit all the current use-cases for PCI device
->> > > preservation across Live Update, since it is intended to be used in
->> > > Cloud enviroments which should have the required ACS features enabled
->> > > for virtualization purposes.
->> > >
->> > > If a device is part of a multi-device IOMMU group, preserving it will
->> > > now fail with an error. This restriction may be lifted in the future if
->> > > support for preserving multi-device groups is desired.
->> > >
->> > > Signed-off-by: David Matlack <dmatlack@google.com>
->> >
->> > Jason, do you think requiring singleton iommu groups is still
->> > necessary/useful now that this series preserves ACS flags on preserved
->> > devices and upstream bridges?
->>
->> I have forgotten why we introduced that? There are alot of funky
->> things about iommu groups that might be important upon restoration..
->
->You had originally suggested it in this thread:
->
->  https://lore.kernel.org/kvm/20260301192236.GQ5933@nvidia.com/
->
->> Like if you preserve one group member but not the other what do you ?
->
->Yeah I imagine there could be some tricky cases there...
->
->I wonder if PCI core is the right layer to enforce this. Maybe this
->fits better into Sami's IOMMU core series since that is where all
->those tricky cases will be (I imagine?).
+From: Luca Boccassi <luca.boccassi@gmail.com>
 
-+1
+A series of patches matured while implementing LUO support in userspace
+in systemd.
 
-Also I think this should probably be checked by iommufd and invoked
-through vfio cdev. Basically when vfio cdev calls into iommufd to
-preserve IOMMU specific aspects of device (PASID table etc), iommufd can
-check this and return error.
->
->> Even if you have ACS flags there are cases where groups are still
->> aliasing DMA..
->
->Hm, if a DMA alias can be created after boot time enumeration even
->with the REQ_ACS_FLAGS check, then
->pci_device_group_immutable_singleton() is not really immutable.
->
->
->
->> Frankly, multi-device iommu groups don't even work fully last time we
->> tried to use them in a VMM. So I think I would not expect them to ever
->> intersect with live update. Blocking something tricky you can't test
->> does seem like a reasonable thing.
+- reject session names that are either empty strings or too long
+- add new ioctl to retrieve session name from FD, so that userspace
+  can query it without string parsing in procfs
+
+Both changes come with a follow-up patch add test coverage via the
+existing selftest.
+
+v2: apply one fix from bot review about cleanup on error path:
+    https://sashiko.dev/#/patchset/20260415184536.1155220-1-luca.boccassi%40gmail.com
+    the other comments are invalid: luo is not a kmod, and the write hooks are not set up
+v3: add test case to liveupdate selftest
+v4: split test case in separate follow-up patch
+v5: add r-b tag, merge series with LIVEUPDATE_SESSION_GET_NAME ioctl
+    as they both change the same unit test source file, to avoid merge conflicts
+    add '__u32 reserved' to the UAPI struct
+v6: add more test cases as suggested
+    more verbose commit message
+    fix docstring
+v7: apply suggestion from review bot to stub out setattr ops,
+    like it was done in 22bdf3d6581a
+v8: add new patches to reject session names that are empty or too long
+v9: fixes following review comments on LUO_SESSION_MAGIC
+v10: split out LUO_SESSION_MAGIC patch as it is undergoing more discussions,
+     and the other two patches are independent aside from adding test cases
+     to the same unit test source file
+
+Luca Boccassi (4):
+  liveupdate: reject LIVEUPDATE_IOCTL_CREATE_SESSION with invalid name
+    length
+  selftests/liveupdate: add test cases for
+    LIVEUPDATE_IOCTL_CREATE_SESSION calls with invalid length
+  liveupdate: add LIVEUPDATE_SESSION_GET_NAME ioctl
+  selftests/liveupdate: add test cases for LIVEUPDATE_SESSION_GET_NAME
+
+ include/uapi/linux/liveupdate.h               |  21 ++++
+ kernel/liveupdate/luo_session.c               |  17 +++
+ .../testing/selftests/liveupdate/liveupdate.c | 113 ++++++++++++++++++
+ 3 files changed, 151 insertions(+)
+
+-- 
+2.47.3
+
 
