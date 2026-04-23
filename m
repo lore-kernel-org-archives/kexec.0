@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 21552FDEE52
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BE9E2FDEE4D
 	for <kexec@archiver.kernel.org>; Thu, 23 Apr 2026 21:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,61 +12,61 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ys4uatxpJYM7Kl1KgUYRndxIbkLNusGMab4h1bmL7Us=; b=xZbNNx82rurw1zUgyU77vAB5UG
-	Q8Hi8YPha8cPBqPXlpznzym2j8GzlXYUFRs+M3n5b9s+me7To+iCItdsrYiPxBk9H346m/TZmImd+
-	ypj/n4erzH6Xpvl6cvCeTmAcigExuiFFOJ2bKRnN81KJuaGa/vadz1U8c/pqDE5PtnT+wUAHGaeJc
-	NYjZzXIn4AT89KVuuwWca1KT3uWd3a5iNpA7c1MmECwYRUhIC3U3tBzOi4MrgrX/Dq6uIoM70mH7z
-	YTeqPY2uBj2NRG2vx816A7wL42LJ0tbFbvwMsTTFbygzxB1x5bkLTqi2bFsXjCOMdiDmMFynLO5Ma
-	xke6SQSA==;
+	bh=eZtY+EWHg3/BRWz3H3Wx+cRr9MZM3880uCt4Dp7O+PI=; b=NYIjywRK/3EE/Vmb+yqzl0/lKZ
+	We1frhqPS1Iaw0gdf7lMyASm7GUVTpoXhMolm8GDShhOKQAuPHtswYMMF5IbV0ho8cep4RiAfpdQ8
+	dDNdrr9wvSysBPNkgI2MS5qUoAYYWRCJxtEvmgPe/1I+7z1KbwaMXG0Rc6Tv8biRswiIk5DJ+F4Oi
+	hbEPTjuAZVm76xha9KSvK7SaseF14/KV+0DrIqR12vVmDatdoi7Jv6dazA2CK7KsGLfE/tMeoDcqg
+	O7nQgtRv6A1sISHR0Jl1rc0PPZM+IMiCBqnfl16144f29JmSKl8G5pZiRzY1dPLG80DV/wakocQ3i
+	mFRnKwRA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wG1WJ-0000000CLB1-3aiM;
+	id 1wG1WJ-0000000CLAd-29RE;
 	Thu, 23 Apr 2026 21:23:35 +0000
-Received: from mail-pj1-x1049.google.com ([2607:f8b0:4864:20::1049])
+Received: from mail-pl1-x64a.google.com ([2607:f8b0:4864:20::64a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wG1WH-0000000CL8O-2IiK
+	id 1wG1WG-0000000CL77-061q
 	for kexec@lists.infradead.org;
-	Thu, 23 Apr 2026 21:23:34 +0000
-Received: by mail-pj1-x1049.google.com with SMTP id 98e67ed59e1d1-35fbb5779e8so8012729a91.3
-        for <kexec@lists.infradead.org>; Thu, 23 Apr 2026 14:23:33 -0700 (PDT)
+	Thu, 23 Apr 2026 21:23:33 +0000
+Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-2b2e06219cbso90189545ad.3
+        for <kexec@lists.infradead.org>; Thu, 23 Apr 2026 14:23:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776979412; x=1777584212; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1776979411; x=1777584211; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ys4uatxpJYM7Kl1KgUYRndxIbkLNusGMab4h1bmL7Us=;
-        b=clr4m108rB36ZS2B1bBH00aq0bLNJ5YuKgrQtufGbGx0DQS4AdIVp5lD7X5GLYb+XP
-         suw1yPYiQdMfw3w5zzS/2YZdPM0CjE9u3NolOvKPBzMJFvqdvj/8h5egVdq4dSonzq3Q
-         cAA8LPxKGnzhsLJRcpo6LYw9keJY8FX3GoYULgMtiH39aUSHAhwpqIRCZDHfvbgqcBuR
-         1CA70pP162ETpFR2J0zIwf8mYLBN/aincU4CrDkvLEcuGWNd4ZD6jioUOId9eZTvcQHt
-         yjV7Ect7/en/vf3Zvuww5GML0dQzQq3xlRlrz/9iKSgbVYaKvyrvS0Yldct5Z6Xu+/b/
-         5IJQ==
+        bh=eZtY+EWHg3/BRWz3H3Wx+cRr9MZM3880uCt4Dp7O+PI=;
+        b=ufL+69G2A1HPpXLY9go0URex/R0XVxDdPjaT2cOJ8qg8ftgDWAjtmk2LoaLn/y7jN+
+         p3NUsMYOZB1+OW0HPLxFPeEVc1qINYyd0VJww55V3hT3VvyicZiLfOwPjpGW12T1RyCh
+         qL/4/PoK80QvPesvOLC5g/siVy4ntoEXY/sheao7KaLE0eX8bkVIAZzMOsZbV/BgvxZm
+         zjNFnGFOiPz10MyaaBgH3iLVcBIunOc+ktyyDhDCdS0CP0PyJyfXrIsbHWexrt9jSqlp
+         S+IuQYrwfxtWju6ULM55lVvgasVSwGxzpvzjjbLIp80NVWIVurIEj+HJSiewmzmumV66
+         R2rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776979412; x=1777584212;
+        d=1e100.net; s=20251104; t=1776979411; x=1777584211;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ys4uatxpJYM7Kl1KgUYRndxIbkLNusGMab4h1bmL7Us=;
-        b=XHtYZlzFa9/zjk965kd7wnM1k9gb3DZPUboWl4Zun3+8iWNOYXgJx+4VJgy7b5tquj
-         GMX1/4ueNBToitYNym5uDhJRvI374CT9qFkdqx8Za+5wTnDJP/HJtAG3Yp400UsAw3zv
-         0Xq5OoBGDMNwc3Xd7mkX787QoccU52TL0Oj8nxWntvlVFHRM/shA0Il/xxV6TTObSICU
-         AGrbBkRgvr3K97fp9TafkAyg250ZandQ+xgzEK7dzPmm1nfScuEMa6mgOGnf23D5NgbC
-         6lDw4x30ay3u+fV8p9MmS6/m3U0mLAsfCbE5cpbFYw9xh+uVIA9nxUPUk9TuBVPtjS5n
-         /klQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+281oayL70LfnTl+WDHPyMep3JIeRYH7SyEUvWYTkM8T37kHEezSAFqCOs+4aTDEolYSZcVw==@lists.infradead.org
-X-Gm-Message-State: AOJu0Ywiuv09MWWDlKDmZ9y5gNgxwkkvAI6SJHSAzEJLx+hEWURBdFTU
-	KZch753O+cHoT9RV3QWXU1EnOD+9qQ5glqgbZCFAzwDdQB3Ugirfts2HzU+F15nTFGXYQIaI1HN
-	YzwtWyL8pjdVn0Q==
-X-Received: from pjbbj17.prod.google.com ([2002:a17:90b:891:b0:362:b5ab:9cd3])
+        bh=eZtY+EWHg3/BRWz3H3Wx+cRr9MZM3880uCt4Dp7O+PI=;
+        b=OUvBKafw0QPsD9q8N61EhhvvnQIxhUSj2bgnLF9TBvm8J1vKvkhrHXbCnWWO3EPxMX
+         nRdB95zdobCVVVRXgpbPyzy+Mz0i6fPKhDJSYNMFBjt1uDuoiwZ9tcbmrABm9BdiKDCl
+         ApCeLRURx9vy/W50Q3LKm167Zw4sglrz5NaXpcqTN4Wa8y2gr05bKIjoTZsgqZoC8nZf
+         fkpGE6mP5yDZBP2hNBSTpDCHhSu7BXNdcychiHz4OhO3A7cVwZkkkTM3FeLquaUVqztz
+         UA5DDFbmYNnOgwz3YuL62vqGO5BkdPvDse9ZxcynGssPFDjboihW2pALxqCKD7LOKMUv
+         HkQg==
+X-Forwarded-Encrypted: i=1; AFNElJ9aY7OLDfmvPwMNMFwpoKmecFFpvaM0vKOLIt7S+oNRSpEfqcW5A42eblNb3pUajF+ZO6807g==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yx6AFQgb7dmlkM1v6SB33jU65bYmvZkSG+AKV4MhMASwNqJD/pq
+	5Q8dk3OZVLp+Vo5BRWxK5nADQ2lEaUlJWJadgnfKgIMLyW6xCGO/OAYRC3/9nnF/1RRxVTLpG8G
+	Iz1tuMFN/PU+mKA==
+X-Received: from pghu17.prod.google.com ([2002:a63:ef11:0:b0:c74:321:201a])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90a:51a3:b0:362:bb93:f25e with SMTP id 98e67ed59e1d1-362bb93f462mr8872524a91.23.1776979412273;
- Thu, 23 Apr 2026 14:23:32 -0700 (PDT)
-Date: Thu, 23 Apr 2026 21:23:11 +0000
+ 2002:a05:6a20:3949:b0:39f:27ab:2438 with SMTP id adf61e73a8af0-3a08d90bdbamr33243244637.48.1776979410524;
+ Thu, 23 Apr 2026 14:23:30 -0700 (PDT)
+Date: Thu, 23 Apr 2026 21:23:10 +0000
 In-Reply-To: <20260423212316.3431746-1-dmatlack@google.com>
 Mime-Version: 1.0
 References: <20260423212316.3431746-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.54.0.rc2.544.gc7ae2d5bb8-goog
-Message-ID: <20260423212316.3431746-8-dmatlack@google.com>
-Subject: [PATCH v4 07/11] PCI: liveupdate: Inherit ACS flags in incoming
- preserved devices
+Message-ID: <20260423212316.3431746-7-dmatlack@google.com>
+Subject: [PATCH v4 06/11] PCI: liveupdate: Auto-preserve upstream bridges
+ across Live Update
 From: David Matlack <dmatlack@google.com>
 To: iommu@lists.linux.dev, kexec@lists.infradead.org, 
 	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
@@ -84,8 +84,8 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.
 	Will Deacon <will@kernel.org>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260423_142333_588003_1BBBBC94 
-X-CRM114-Status: GOOD (  13.53  )
+X-CRM114-CacheID: sfid-20260423_142332_078716_6A1BBC88 
+X-CRM114-Status: GOOD (  22.17  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,70 +100,229 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Inherit Access Control Services (ACS) flags on all incoming preserved
-devices (endpoints and upstream bridges) during a Live Update.
+When a PCI device is preserved across a Live Update, all of its upstream
+bridges up to the root port must also be preserved. This enables the PCI
+core and any drivers bound to the bridges to manage bridges correctly
+across a Live Update.
 
-Inheriting ACS flags avoids changing routing rules while memory
-transactions are in flight from preserved devices. This is also strictly
-necessary to ensure that IOMMU group assignments do not change across
-a Live Update for preserved devices, as changing ACS configurations can
-split or merge IOMMU groups.
+Notably, this will be used in subsequent commits to ensure that
+preserved devices can continue performing memory transactions without a
+disruption or change in routing.
+
+To preserve bridges, the PCI core tracks the number of downstream
+devices preserved under each bridge using a reference count in struct
+pci_dev_ser. This allows a bridge to remain preserved until all its
+downstream preserved devices are unpreserved or finish their
+participation in the Live Update.
 
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- drivers/pci/liveupdate.c | 10 ++++++++++
- drivers/pci/pci.c        | 10 +++++++++-
- 2 files changed, 19 insertions(+), 1 deletion(-)
+ drivers/pci/liveupdate.c | 149 +++++++++++++++++++++++++++++----------
+ 1 file changed, 111 insertions(+), 38 deletions(-)
 
 diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-index 88125f9a2c6b..a9a89f7bd3e5 100644
+index cf8cff134a75..88125f9a2c6b 100644
 --- a/drivers/pci/liveupdate.c
 +++ b/drivers/pci/liveupdate.c
-@@ -118,6 +118,16 @@
-  * This enables the PCI core and any drivers bound to the bridge to participate
-  * in the Live Update so that preserved endpoints can continue issuing memory
-  * transactions during the Live Update.
+@@ -106,6 +106,18 @@
+  * If a misconfigured or unconfigured bridge is encountered during enumeration
+  * while there are incoming preserved devices, it's secondary and subordinate
+  * bus numbers will be cleared and devices below it will not be enumerated.
 + *
-+ * Handling Preserved Devices
-+ * ==========================
++ * PCI-to-PCI Bridges
++ * ==================
 + *
-+ * The PCI core treats preserved devices differently than non-preserved devices.
-+ * This section enumerates those differences.
++ * Any PCI-to-PCI bridges upstream of a preserved device are automatically
++ * preserved when the device is preserved. The PCI core keeps track of the
++ * number of downstream devices that are preserved under a bridge so that the
++ * bridge is only unpreserved once all downstream devices are unpreserved.
 + *
-+ *  * The PCI core inherits all ACS flags enabled on incoming preserved devices
-+ *    rather than assigning new ones. This ensures that TLPs are routed the same
-+ *    way after Live Update and ensures that IOMMU groups do not change.
++ * This enables the PCI core and any drivers bound to the bridge to participate
++ * in the Live Update so that preserved endpoints can continue issuing memory
++ * transactions during the Live Update.
   */
  
  #define pr_fmt(fmt) "PCI: liveupdate: " fmt
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 8f7cfcc00090..e615b7c3e430 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1017,6 +1017,15 @@ void pci_enable_acs(struct pci_dev *dev)
- 	bool enable_acs = false;
- 	int pos;
+@@ -233,25 +245,14 @@ static struct liveupdate_flb pci_liveupdate_flb = {
+ 	.compatible = PCI_LUO_FLB_COMPATIBLE,
+ };
  
-+	/*
-+	 * ACS flags must be inherited from the previous kernel during a Live
-+	 * Update for preserved devices (which includes endpoints and any
-+	 * upstream bridges) to avoid changing routing while memory transactions
-+	 * are in flight.
-+	 */
-+	if (pci_liveupdate_incoming(dev))
-+		return;
-+
- 	/* If an iommu is present we start with kernel default caps */
- 	if (pci_acs_enable) {
- 		if (pci_dev_specific_enable_acs(dev))
-@@ -1041,7 +1050,6 @@ void pci_enable_acs(struct pci_dev *dev)
- 			 PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC,
- 			 ~(PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC));
- 	__pci_config_acs(dev, &caps, config_acs_param, 0, 0);
+-int pci_liveupdate_preserve(struct pci_dev *dev)
++static int pci_liveupdate_preserve_device(struct pci_ser *ser, struct pci_dev *dev)
+ {
+-	struct pci_ser *ser;
+-	int i, ret;
 -
- 	pci_write_config_word(dev, pos + PCI_ACS_CTRL, caps.ctrl);
+-	guard(mutex)(&pci_flb_outgoing_lock);
+-
+-	ret = liveupdate_flb_get_outgoing(&pci_liveupdate_flb, (void **)&ser);
+-	if (ret)
+-		return ret;
++	int i;
+ 
+-	if (!ser)
+-		return -ENOENT;
+-
+-	if (dev->is_virtfn)
+-		return -EINVAL;
+-
+-	if (dev->liveupdate_outgoing)
+-		return -EBUSY;
++	if (dev->liveupdate_outgoing) {
++		dev->liveupdate_outgoing->refcount++;
++		return 0;
++	}
+ 
+ 	if (ser->nr_devices == ser->max_nr_devices)
+ 		return -ENOSPC;
+@@ -281,11 +282,82 @@ int pci_liveupdate_preserve(struct pci_dev *dev)
+ 
+ 	return -ENOSPC;
+ }
++
++static void pci_liveupdate_unpreserve_path(struct pci_ser *ser, struct pci_dev *dev)
++{
++	struct pci_dev *upstream_bridge = dev->bus->self;
++	struct pci_dev_ser *dev_ser;
++
++	if (upstream_bridge)
++		pci_liveupdate_unpreserve_path(ser, upstream_bridge);
++
++	dev_ser = dev->liveupdate_outgoing;
++	if (!dev_ser) {
++		pci_warn(dev, "Cannot unpreserve device that is not preserved\n");
++		return;
++	}
++
++	if (--dev_ser->refcount == 0) {
++		pci_info(dev, "Device will no longer be preserved across next Live Update\n");
++		ser->nr_devices--;
++		memset(dev_ser, 0, sizeof(*dev_ser));
++		dev->liveupdate_outgoing = NULL;
++	}
++}
++
++static int pci_liveupdate_preserve_path(struct pci_ser *ser, struct pci_dev *dev)
++{
++	struct pci_dev *upstream_bridge = dev->bus->self;
++	int ret = 0;
++
++	if (upstream_bridge) {
++		ret = pci_liveupdate_preserve_path(ser, upstream_bridge);
++		if (ret)
++			return ret;
++	} else if (!pci_is_root_bus(dev->bus)) {
++		pci_err(dev, "Failed to preserve up to root port\n");
++		return -EINVAL;
++	}
++
++	ret = pci_liveupdate_preserve_device(ser, dev);
++	if (ret)
++		goto err;
++
++	return 0;
++
++err:
++	if (upstream_bridge)
++		pci_liveupdate_unpreserve_path(ser, upstream_bridge);
++
++	return ret;
++}
++
++int pci_liveupdate_preserve(struct pci_dev *dev)
++{
++	struct pci_ser *ser;
++	int ret;
++
++	guard(mutex)(&pci_flb_outgoing_lock);
++
++	ret = liveupdate_flb_get_outgoing(&pci_liveupdate_flb, (void **)&ser);
++	if (ret)
++		return ret;
++
++	if (!ser)
++		return -ENOENT;
++
++	if (dev->is_virtfn)
++		return -EINVAL;
++
++	if (dev->liveupdate_outgoing)
++		return -EBUSY;
++
++	return pci_liveupdate_preserve_path(ser, dev);
++}
+ EXPORT_SYMBOL_GPL(pci_liveupdate_preserve);
+ 
+ void pci_liveupdate_unpreserve(struct pci_dev *dev)
+ {
+-	struct pci_dev_ser *dev_ser;
+ 	struct pci_ser *ser = NULL;
+ 	int ret;
+ 
+@@ -296,19 +368,9 @@ void pci_liveupdate_unpreserve(struct pci_dev *dev)
+ 	if (ret || !ser) {
+ 		pci_warn(dev, "Cannot unpreserve device without outgoing Live Update state\n");
+ 		return;
+-
+-	}
+-
+-	dev_ser = dev->liveupdate_outgoing;
+-	if (!dev_ser) {
+-		pci_warn(dev, "Cannot unpreserve device that is not preserved\n");
+-		return;
+ 	}
+ 
+-	pci_info(dev, "Device will no longer be preserved across next Live Update\n");
+-	ser->nr_devices--;
+-	memset(dev_ser, 0, sizeof(*dev_ser));
+-	dev->liveupdate_outgoing = NULL;
++	pci_liveupdate_unpreserve_path(ser, dev);
+ }
+ EXPORT_SYMBOL_GPL(pci_liveupdate_unpreserve);
+ 
+@@ -428,6 +490,25 @@ void pci_liveupdate_cleanup_device(struct pci_dev *dev)
+ 		pci_liveupdate_flb_put_incoming();
  }
  
++static void pci_liveupdate_finish_path(struct pci_dev *dev)
++{
++	struct pci_dev *upstream_bridge = dev->bus->self;
++
++	if (upstream_bridge)
++		pci_liveupdate_finish_path(upstream_bridge);
++
++	/*
++	 * Decrement the refcount so this device does not get treated as an
++	 * incoming device again, e.g. in case pci_liveupdate_setup_device()
++	 * gets called again becase the device is hot-plugged.
++	 */
++	if (--dev->liveupdate_incoming->refcount)
++		return;
++
++	pci_info(dev, "Device is finished participating in Live Update\n");
++	dev->liveupdate_incoming = NULL;
++}
++
+ void pci_liveupdate_finish(struct pci_dev *dev)
+ {
+ 	if (!dev->liveupdate_incoming) {
+@@ -435,15 +516,7 @@ void pci_liveupdate_finish(struct pci_dev *dev)
+ 		return;
+ 	}
+ 
+-	pci_info(dev, "Device is finished participating in Live Update\n");
+-
+-	/*
+-	 * Drop the refcount so this device does not get treated as an incoming
+-	 * device again, e.g. in case pci_liveupdate_setup_device() gets called
+-	 * again becase the device is hot-plugged.
+-	 */
+-	dev->liveupdate_incoming->refcount = 0;
+-	dev->liveupdate_incoming = NULL;
++	pci_liveupdate_finish_path(dev);
+ 
+ 	/* Drop this device's reference on the incoming FLB. */
+ 	pci_liveupdate_flb_put_incoming();
 -- 
 2.54.0.rc2.544.gc7ae2d5bb8-goog
 
