@@ -4,89 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DA2C9FDEE4D
-	for <kexec@archiver.kernel.org>; Thu, 23 Apr 2026 23:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0DDFCFB44CA
+	for <kexec@archiver.kernel.org>; Fri, 24 Apr 2026 08:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=otwtwCMsuSRZKjyxndrTmRFvCENq1yZJOmlAXqb99W8=; b=Kgnqzvaa1Ta59I1u4Q6yXIPpHX
-	448FvuVOIK4DDJRqoDKgB09lFt6cbq1BT3i006wsZbG7YobXiCjdZOnMy/zTPYVEdrKOFtFnKteNb
-	iaZ/GDKM0QhyTNhFMZK/fvEo3bP1NlTu/0cF6k5CF3yGmiOH4ROxFzJbwnyqmZfExLVwK1jgrDekM
-	htTNJ/E+uv70M9C63uZaHTwvd4d7+TFGcpHAylR2st80JBr4dsMIJx5ulDkOyt0GQHVA4Zlef288g
-	QpiraFQ2IuVfUBqQfpTSCxSs4Bs0MJNVYrRy6udFVyqzOP8Ivf6MizSUv8/+f7SiRU3u6qehcErRn
-	DiCppZ9g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=/d8iutfeRBc4rt+6EkV/tU8ld5/4v9ivToNBJ3BxGeU=; b=G+9dxG8GDEV+aTbJmMt8x01kzM
+	M23RVgrF8QBtZafyFq0OeixW74zs9o1y1FJa4z9nApVzLygzTXuZ/UAB2vkTVSYsdbavYPEYCEkOU
+	lkH7vfAcLuOo/J2MYXpyvY6Syop7yaYaxxztqpCf+rqhDmh8ZzxmnEVk0KVOjQDj+5AmhCVEkSnov
+	ZE/TcOwUsNCyWIrqe8BTBMbBFlmCYwYVJSh40b9cJb+RkKu7NacOiNfAvTIeg5qzKdP7PqCIy2Y/6
+	d+eYSENxGYibaOY4rUpoiFbne3L0iV/5ljF5NdvkTSHiSDrddbQ5mOrB/8QkD0RcTZ44ie6+P7LsK
+	3BJT9Jjw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wG3nD-0000000CQDW-3WfG;
-	Thu, 23 Apr 2026 23:49:11 +0000
-Received: from mail-wm1-x333.google.com ([2a00:1450:4864:20::333])
+	id 1wGBf2-0000000CqgL-3ze7;
+	Fri, 24 Apr 2026 08:13:16 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wG3n4-0000000CQ8X-0jB1
+	id 1wGBew-0000000CqfW-1HeP
 	for kexec@lists.infradead.org;
-	Thu, 23 Apr 2026 23:49:10 +0000
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-4896c22fcbaso44144395e9.0
-        for <kexec@lists.infradead.org>; Thu, 23 Apr 2026 16:49:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776988140; x=1777592940; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=otwtwCMsuSRZKjyxndrTmRFvCENq1yZJOmlAXqb99W8=;
-        b=lQ/QAoy3ONFfgybGlF0BNiel8c0FyqrSfSCUfrtxtjxx/dRGYVBNdT61jUUSuu2OIl
-         GKp8PW/24ql2qC2Bwym3Pge9wkkIqUes+wbrmCZMS7s9GA8EYYVIhz6yvopMQ6vVDELg
-         9G2nxXlKH1laF2Qr6MNEDtxqo92ptGVhwqiBjN7dqoBkBtc4jZL72r/oDA8ADmdDjRsq
-         YFC2r19N+Kq7YrwS7PPdPV942RfQpAFirY1TTa9cWlREwEtnOIMvlKx3MxuCtV2cz0k9
-         cBhBLA3ho+Qlvq1RLsMhSAJUtCfOy1THwYcCEQGxCrh2O+ZtrojIm1N2pfekG6tECLqk
-         cg7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776988140; x=1777592940;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=otwtwCMsuSRZKjyxndrTmRFvCENq1yZJOmlAXqb99W8=;
-        b=U26VHn4+K8+8vs89sP9CvlAplu0tFTvrlEPP8e1JL90l3MAOY2tyrqnRpc1mh4tkaE
-         MXIvIKooyx6HhjsA0W4i2kHq7iTb+pdTgLwcEVk873Raw02i9KG/EGKO4K435Jq4nEWe
-         x7T+HuVF3seVhTfsY3q8N5FXjxh5TUrEIvhgq/SZvZk04UJR8TMymtucxclh6rKvT54q
-         JhZb9iEDg3ZccnFjJX0Uljzst3LFvuez/xr/6uoUA5R9+AXKpoqxH9itXpiI6H+BqAj8
-         NpWygxvWI/LPsi/ZJ7rdJqNFk6r7BeBsd4FYTSU7/0ADDFSO/YC9OuC2rBZjVySuhZAv
-         vVBw==
-X-Gm-Message-State: AOJu0Yz0bff94514yXveQkzevLrei6kJ8SJ0M4hOftel4YxJ95moyiu+
-	NSoPVYOm0cG2NLvpo2dfEwAqeRGRODU7DM4l9+dJwcyTUz9NCIPZdJzWHo7BMg==
-X-Gm-Gg: AeBDiesbgUfjMGTHooM8zd+qKhGsJZfvYEkfNod1XEXKF+qrwpAfiJEJv5n3jtoLY0F
-	lJ/W0ijOMcQd+nBjsPsWm4E2GtWwR14yMDqDe0TWRF7iuJK9kTnszvKNgQ9D0Ucs31v2zv1/SWh
-	KR6zgDGQk2WQV+xHHXPDoxBOLSY4KmyjI1HGAxNpTrvMj4LxC3ZNmsQWXOF2Na+xX3V9BwfmRAW
-	VzXjrtnQR9hpJYj+YaukP51PF8xfGFwR1KB8aPn3DcdYHcJjMB5fJLapOmlPnfHgW55tfxHr5Mh
-	DQtxuKrFBBENlEZyC1zNsKHejEis8ZU8LZ62f9ZH23Hhq61MngCsDQNqfPb8y8T1Npb6VJOyA+j
-	8OVO1IId97NaJUweies9PAtwDiJ41voAIcdVODD41qLCUL2YX0ww6e/oUuOQhTyERpKTocy/rUW
-	+QTkSTGqdqWmKcHnGQZ+O2xP7juONHss5QSTSzNfY=
-X-Received: by 2002:a05:600c:8586:b0:489:e49:f766 with SMTP id 5b1f17b1804b1-4890e49f7d8mr213607325e9.17.1776988139971;
-        Thu, 23 Apr 2026 16:48:59 -0700 (PDT)
-Received: from localhost ([2a01:4b00:d036:ae00:e8d7:434e:1f34:2cb6])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-488fb7a0b60sm161135075e9.17.2026.04.23.16.48.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Apr 2026 16:48:59 -0700 (PDT)
-From: luca.boccassi@gmail.com
-To: kexec@lists.infradead.org
-Cc: linux-mm@kvack.org,
-	rppt@kernel.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Luca Boccassi <luca.boccassi@gmail.com>
-Subject: [PATCH v10 3/4] liveupdate: add LIVEUPDATE_SESSION_GET_NAME ioctl
-Date: Fri, 24 Apr 2026 00:44:22 +0100
-Message-ID: <20260423234753.3873095-4-luca.boccassi@gmail.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260423234753.3873095-1-luca.boccassi@gmail.com>
-References: <20260423234753.3873095-1-luca.boccassi@gmail.com>
+	Fri, 24 Apr 2026 08:13:15 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id D95F140940;
+	Fri, 24 Apr 2026 08:13:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFAA7C19425;
+	Fri, 24 Apr 2026 08:13:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777018388;
+	bh=qgvCxMI7V6qiyZyTa6rjMBoEoZe+9V9lvHMQ4vCYLNc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p104CO/foXsz/Pf6Y2U1PSA7BMFxZkMCy4lhBNoln9aqcU8N/6nynR+UhKRFvK0mV
+	 K6pHpRNTWV1EhcMs/77l0v2ZdnNe3zPlpMl0nyyE6XpI7qEQk56NkGcQMtc4iSehac
+	 4mbv7PmPRbdtI8DnVbp/4xIf2pRshmbpnAYGkmnZwUca1f5luG/ebPXPKkO1xCA7vi
+	 rNS6chXo9lOruhRxAhOFdC9c2J0N+sKsveLMlKb1GJbeUyPuvR2bCVErLaJ23rHoH1
+	 6pyosZ0L1PY3VYolQwXgeD/1E5E2bdEQo2ARMzYwIBxTJPRhONcaSDGbogE4soO8oJ
+	 7V5yC1SEicWIA==
+Date: Fri, 24 Apr 2026 11:12:59 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Michal Clapinski <mclapinski@google.com>
+Cc: Evangelos Petrongonas <epetron@amazon.de>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Alexander Graf <graf@amazon.com>,
+	Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>
+Subject: Re: [PATCH v9 1/3] kho: fix deferred initialization of scratch areas
+Message-ID: <aesmC_VVWQwfKAF8@kernel.org>
+References: <20260423122538.140993-1-mclapinski@google.com>
+ <20260423122538.140993-2-mclapinski@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260423122538.140993-2-mclapinski@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260423_164902_227724_087E110F 
-X-CRM114-Status: GOOD (  16.61  )
+X-CRM114-CacheID: sfid-20260424_011310_399456_5685CEAA 
+X-CRM114-Status: GOOD (  27.23  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,98 +82,288 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Luca Boccassi <luca.boccassi@gmail.com>
+On Thu, Apr 23, 2026 at 02:25:36PM +0200, Michal Clapinski wrote:
+> Currently, if CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled,
+> kho_release_scratch() will initialize the struct pages and set migratetype
+> of KHO scratch. Unless the whole scratch fits below first_deferred_pfn,
+> some of that will be overwritten either by deferred_init_pages() or
+> memmap_init_reserved_range().
+> 
+> To fix it, make memmap_init_range(), deferred_init_memmap_chunk() and
+> __init_page_from_nid() recognize KHO scratch regions and set
+> migratetype of pageblocks in those regions to MIGRATE_CMA.
+> 
+> Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Michal Clapinski <mclapinski@google.com>
 
-Userspace when requesting a session via the ioctl specifies a name and
-gets a FD, but then there is no ioctl to go back the other way and get
-the name given a LUO session FD. This is problematic especially when
-there is a userspace orchestrator that wants to check what FDs it is
-handling for clients without having to do manual string scraping of
-procfs, or without procfs at all.
+Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-Add a ioctl to simply get the name from an FD.
+> ---
+>  include/linux/memblock.h           | 21 +++++++++--
+>  kernel/liveupdate/kexec_handover.c | 25 -------------
+>  mm/memblock.c                      | 56 ++++++++++++------------------
+>  mm/mm_init.c                       | 30 +++++++++-------
+>  4 files changed, 58 insertions(+), 74 deletions(-)
+> 
+> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> index b0f750d22a7b..5afcd99aa8c1 100644
+> --- a/include/linux/memblock.h
+> +++ b/include/linux/memblock.h
+> @@ -613,11 +613,28 @@ static inline void memtest_report_meminfo(struct seq_file *m) { }
+>  #ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
+>  void memblock_set_kho_scratch_only(void);
+>  void memblock_clear_kho_scratch_only(void);
+> -void memmap_init_kho_scratch_pages(void);
+> +bool memblock_is_kho_scratch_memory(phys_addr_t addr);
+> +
+> +static inline enum migratetype kho_scratch_migratetype(unsigned long pfn,
+> +						       enum migratetype mt)
+> +{
+> +	if (memblock_is_kho_scratch_memory(PFN_PHYS(pfn)))
+> +		return MIGRATE_CMA;
+> +	return mt;
+> +}
+>  #else
+>  static inline void memblock_set_kho_scratch_only(void) { }
+>  static inline void memblock_clear_kho_scratch_only(void) { }
+> -static inline void memmap_init_kho_scratch_pages(void) {}
+> +static inline bool memblock_is_kho_scratch_memory(phys_addr_t addr)
+> +{
+> +	return false;
+> +}
+> +
+> +static inline enum migratetype kho_scratch_migratetype(unsigned long pfn,
+> +						       enum migratetype mt)
+> +{
+> +	return mt;
+> +}
+>  #endif
+>  
+>  #endif /* _LINUX_MEMBLOCK_H */
+> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> index 18509d8082ea..a507366a2cf9 100644
+> --- a/kernel/liveupdate/kexec_handover.c
+> +++ b/kernel/liveupdate/kexec_handover.c
+> @@ -1576,35 +1576,10 @@ static __init int kho_init(void)
+>  }
+>  fs_initcall(kho_init);
+>  
+> -static void __init kho_release_scratch(void)
+> -{
+> -	phys_addr_t start, end;
+> -	u64 i;
+> -
+> -	memmap_init_kho_scratch_pages();
+> -
+> -	/*
+> -	 * Mark scratch mem as CMA before we return it. That way we
+> -	 * ensure that no kernel allocations happen on it. That means
+> -	 * we can reuse it as scratch memory again later.
+> -	 */
+> -	__for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
+> -			     MEMBLOCK_KHO_SCRATCH, &start, &end, NULL) {
+> -		ulong start_pfn = pageblock_start_pfn(PFN_DOWN(start));
+> -		ulong end_pfn = pageblock_align(PFN_UP(end));
+> -		ulong pfn;
+> -
+> -		for (pfn = start_pfn; pfn < end_pfn; pfn += pageblock_nr_pages)
+> -			init_pageblock_migratetype(pfn_to_page(pfn),
+> -						   MIGRATE_CMA, false);
+> -	}
+> -}
+> -
+>  void __init kho_memory_init(void)
+>  {
+>  	if (kho_in.scratch_phys) {
+>  		kho_scratch = phys_to_virt(kho_in.scratch_phys);
+> -		kho_release_scratch();
+>  
+>  		if (kho_mem_retrieve(kho_get_fdt()))
+>  			kho_in.fdt_phys = 0;
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index a6a1c91e276d..01a962681726 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -1026,40 +1026,6 @@ int __init_memblock memblock_physmem_add(phys_addr_t base, phys_addr_t size)
+>  }
+>  #endif
+>  
+> -#ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
+> -__init void memblock_set_kho_scratch_only(void)
+> -{
+> -	kho_scratch_only = true;
+> -}
+> -
+> -__init void memblock_clear_kho_scratch_only(void)
+> -{
+> -	kho_scratch_only = false;
+> -}
+> -
+> -__init void memmap_init_kho_scratch_pages(void)
+> -{
+> -	phys_addr_t start, end;
+> -	unsigned long pfn;
+> -	int nid;
+> -	u64 i;
+> -
+> -	if (!IS_ENABLED(CONFIG_DEFERRED_STRUCT_PAGE_INIT))
+> -		return;
+> -
+> -	/*
+> -	 * Initialize struct pages for free scratch memory.
+> -	 * The struct pages for reserved scratch memory will be set up in
+> -	 * memmap_init_reserved_pages()
+> -	 */
+> -	__for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
+> -			     MEMBLOCK_KHO_SCRATCH, &start, &end, &nid) {
+> -		for (pfn = PFN_UP(start); pfn < PFN_DOWN(end); pfn++)
+> -			init_deferred_page(pfn, nid);
+> -	}
+> -}
+> -#endif
+> -
+>  /**
+>   * memblock_setclr_flag - set or clear flag for a memory region
+>   * @type: memblock type to set/clear flag for
+> @@ -2533,6 +2499,28 @@ int reserve_mem_release_by_name(const char *name)
+>  	return 1;
+>  }
+>  
+> +#ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
+> +__init void memblock_set_kho_scratch_only(void)
+> +{
+> +	kho_scratch_only = true;
+> +}
+> +
+> +__init void memblock_clear_kho_scratch_only(void)
+> +{
+> +	kho_scratch_only = false;
+> +}
+> +
+> +bool __init_memblock memblock_is_kho_scratch_memory(phys_addr_t addr)
+> +{
+> +	int i = memblock_search(&memblock.memory, addr);
+> +
+> +	if (i == -1)
+> +		return false;
+> +
+> +	return memblock_is_kho_scratch(&memblock.memory.regions[i]);
+> +}
+> +#endif
+> +
+>  #ifdef CONFIG_KEXEC_HANDOVER
+>  
+>  static int __init reserved_mem_preserve(void)
+> diff --git a/mm/mm_init.c b/mm/mm_init.c
+> index f9f8e1af921c..eddc0f03a779 100644
+> --- a/mm/mm_init.c
+> +++ b/mm/mm_init.c
+> @@ -692,9 +692,11 @@ void __meminit __init_page_from_nid(unsigned long pfn, int nid)
+>  	}
+>  	__init_single_page(pfn_to_page(pfn), pfn, zid, nid);
+>  
+> -	if (pageblock_aligned(pfn))
+> -		init_pageblock_migratetype(pfn_to_page(pfn), MIGRATE_MOVABLE,
+> -				false);
+> +	if (pageblock_aligned(pfn)) {
+> +		enum migratetype mt =
+> +			kho_scratch_migratetype(pfn, MIGRATE_MOVABLE);
+> +		init_pageblock_migratetype(pfn_to_page(pfn), mt, false);
+> +	}
+>  }
+>  
+>  #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+> @@ -927,7 +929,8 @@ void __meminit memmap_init_range(unsigned long size, int nid, unsigned long zone
+>  static void __init memmap_init_zone_range(struct zone *zone,
+>  					  unsigned long start_pfn,
+>  					  unsigned long end_pfn,
+> -					  unsigned long *hole_pfn)
+> +					  unsigned long *hole_pfn,
+> +					  enum migratetype mt)
+>  {
+>  	unsigned long zone_start_pfn = zone->zone_start_pfn;
+>  	unsigned long zone_end_pfn = zone_start_pfn + zone->spanned_pages;
+> @@ -940,8 +943,7 @@ static void __init memmap_init_zone_range(struct zone *zone,
+>  		return;
+>  
+>  	memmap_init_range(end_pfn - start_pfn, nid, zone_id, start_pfn,
+> -			  zone_end_pfn, MEMINIT_EARLY, NULL, MIGRATE_MOVABLE,
+> -			  false);
+> +			  zone_end_pfn, MEMINIT_EARLY, NULL, mt, false);
+>  
+>  	if (*hole_pfn < start_pfn)
+>  		init_unavailable_range(*hole_pfn, start_pfn, zone_id, nid);
+> @@ -957,6 +959,8 @@ static void __init memmap_init(void)
+>  
+>  	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
+>  		struct pglist_data *node = NODE_DATA(nid);
+> +		enum migratetype mt =
+> +			kho_scratch_migratetype(start_pfn, MIGRATE_MOVABLE);
+>  
+>  		for (j = 0; j < MAX_NR_ZONES; j++) {
+>  			struct zone *zone = node->node_zones + j;
+> @@ -965,7 +969,7 @@ static void __init memmap_init(void)
+>  				continue;
+>  
+>  			memmap_init_zone_range(zone, start_pfn, end_pfn,
+> -					       &hole_pfn);
+> +					       &hole_pfn, mt);
+>  			zone_id = j;
+>  		}
+>  	}
+> @@ -1970,7 +1974,7 @@ unsigned long __init node_map_pfn_alignment(void)
+>  
+>  #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+>  static void __init deferred_free_pages(unsigned long pfn,
+> -		unsigned long nr_pages)
+> +		unsigned long nr_pages, enum migratetype mt)
+>  {
+>  	struct page *page;
+>  	unsigned long i;
+> @@ -1983,8 +1987,7 @@ static void __init deferred_free_pages(unsigned long pfn,
+>  	/* Free a large naturally-aligned chunk if possible */
+>  	if (nr_pages == MAX_ORDER_NR_PAGES && IS_MAX_ORDER_ALIGNED(pfn)) {
+>  		for (i = 0; i < nr_pages; i += pageblock_nr_pages)
+> -			init_pageblock_migratetype(page + i, MIGRATE_MOVABLE,
+> -					false);
+> +			init_pageblock_migratetype(page + i, mt, false);
+>  		__free_pages_core(page, MAX_PAGE_ORDER, MEMINIT_EARLY);
+>  		return;
+>  	}
+> @@ -1994,8 +1997,7 @@ static void __init deferred_free_pages(unsigned long pfn,
+>  
+>  	for (i = 0; i < nr_pages; i++, page++, pfn++) {
+>  		if (pageblock_aligned(pfn))
+> -			init_pageblock_migratetype(page, MIGRATE_MOVABLE,
+> -					false);
+> +			init_pageblock_migratetype(page, mt, false);
+>  		__free_pages_core(page, 0, MEMINIT_EARLY);
+>  	}
+>  }
+> @@ -2053,6 +2055,8 @@ deferred_init_memmap_chunk(unsigned long start_pfn, unsigned long end_pfn,
+>  	for_each_free_mem_range(i, nid, 0, &start, &end, NULL) {
+>  		unsigned long spfn = PFN_UP(start);
+>  		unsigned long epfn = PFN_DOWN(end);
+> +		enum migratetype mt =
+> +			kho_scratch_migratetype(spfn, MIGRATE_MOVABLE);
+>  
+>  		if (spfn >= end_pfn)
+>  			break;
+> @@ -2065,7 +2069,7 @@ deferred_init_memmap_chunk(unsigned long start_pfn, unsigned long end_pfn,
+>  			unsigned long chunk_end = min(mo_pfn, epfn);
+>  
+>  			nr_pages += deferred_init_pages(zone, spfn, chunk_end);
+> -			deferred_free_pages(spfn, chunk_end - spfn);
+> +			deferred_free_pages(spfn, chunk_end - spfn, mt);
+>  
+>  			spfn = chunk_end;
+>  
+> -- 
+> 2.54.0.rc2.533.g4f5dca5207-goog
+> 
 
-Signed-off-by: Luca Boccassi <luca.boccassi@gmail.com>
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
- include/uapi/linux/liveupdate.h | 21 +++++++++++++++++++++
- kernel/liveupdate/luo_session.c | 13 +++++++++++++
- 2 files changed, 34 insertions(+)
-
-diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveupdate.h
-index 30bc66ee9436..3a9ff53b02e0 100644
---- a/include/uapi/linux/liveupdate.h
-+++ b/include/uapi/linux/liveupdate.h
-@@ -59,6 +59,7 @@ enum {
- 	LIVEUPDATE_CMD_SESSION_PRESERVE_FD = LIVEUPDATE_CMD_SESSION_BASE,
- 	LIVEUPDATE_CMD_SESSION_RETRIEVE_FD = 0x41,
- 	LIVEUPDATE_CMD_SESSION_FINISH = 0x42,
-+	LIVEUPDATE_CMD_SESSION_GET_NAME = 0x43,
- };
- 
- /**
-@@ -213,4 +214,24 @@ struct liveupdate_session_finish {
- #define LIVEUPDATE_SESSION_FINISH					\
- 	_IO(LIVEUPDATE_IOCTL_TYPE, LIVEUPDATE_CMD_SESSION_FINISH)
- 
-+/**
-+ * struct liveupdate_session_get_name - ioctl(LIVEUPDATE_SESSION_GET_NAME)
-+ * @size:  Input; sizeof(struct liveupdate_session_get_name)
-+ * @reserved: Input; Must be zero. Reserved for future use.
-+ * @name:  Output; A null-terminated string with the full session name.
-+ *
-+ * Retrieves the full name of the session associated with this file descriptor.
-+ * This is useful because the kernel may truncate the name shown in /proc.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+struct liveupdate_session_get_name {
-+	__u32		size;
-+	__u32		reserved;
-+	__u8		name[LIVEUPDATE_SESSION_NAME_LENGTH];
-+};
-+
-+#define LIVEUPDATE_SESSION_GET_NAME					\
-+	_IO(LIVEUPDATE_IOCTL_TYPE, LIVEUPDATE_CMD_SESSION_GET_NAME)
-+
- #endif /* _UAPI_LIVEUPDATE_H */
-diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
-index 5e316a4c5d71..0bcf2def074e 100644
---- a/kernel/liveupdate/luo_session.c
-+++ b/kernel/liveupdate/luo_session.c
-@@ -289,10 +289,21 @@ static int luo_session_finish(struct luo_session *session,
- 	return luo_ucmd_respond(ucmd, sizeof(*argp));
- }
- 
-+static int luo_session_get_name(struct luo_session *session,
-+				struct luo_ucmd *ucmd)
-+{
-+	struct liveupdate_session_get_name *argp = ucmd->cmd;
-+
-+	strscpy((char *)argp->name, session->name, sizeof(argp->name));
-+
-+	return luo_ucmd_respond(ucmd, sizeof(*argp));
-+}
-+
- union ucmd_buffer {
- 	struct liveupdate_session_finish finish;
- 	struct liveupdate_session_preserve_fd preserve;
- 	struct liveupdate_session_retrieve_fd retrieve;
-+	struct liveupdate_session_get_name get_name;
- };
- 
- struct luo_ioctl_op {
-@@ -319,6 +330,8 @@ static const struct luo_ioctl_op luo_session_ioctl_ops[] = {
- 		 struct liveupdate_session_preserve_fd, token),
- 	IOCTL_OP(LIVEUPDATE_SESSION_RETRIEVE_FD, luo_session_retrieve_fd,
- 		 struct liveupdate_session_retrieve_fd, token),
-+	IOCTL_OP(LIVEUPDATE_SESSION_GET_NAME, luo_session_get_name,
-+		 struct liveupdate_session_get_name, name),
- };
- 
- static long luo_session_ioctl(struct file *filep, unsigned int cmd,
 -- 
-2.47.3
-
+Sincerely yours,
+Mike.
 
