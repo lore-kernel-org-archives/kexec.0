@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BF4EBFF8870
-	for <kexec@archiver.kernel.org>; Mon, 27 Apr 2026 21:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D9BB0FF8864
+	for <kexec@archiver.kernel.org>; Mon, 27 Apr 2026 21:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-	List-Owner; bh=w/ZY/a428dOMEzZCQMPOjC/dr2v2uct5csHJwh7YqPM=; b=bG0m3+Z8Boso3q
-	KdlmidcBsXv1evrbmaqe+EhYhMX5rXbpVIKA7/UITci+XmDH+CD/0YkgRoZgJ4+RXsYJzRfotHT6B
-	55cMkpx3cJmpBNWWONvCMDUtaUZrVczJRQwRHRH572ot6bDKXXBLRc8K7RoupWhF4v7iAC+g4iDXZ
-	XGEHQahYeSiei+WYFb4QBeepXlxZPNV0E/UoRUImzGiGvebjgnSfzCFKwBdKfGt5Bzz1Migr9kkTo
-	PiDq+NQ/pkbyCUph9BL77rPn4w+qJhTxykgXnzUUKlVQ5VbAfuuzQLHbleR3hElTIC7eP7KeZzc4g
-	iAlzaShrQ4zuDr3gg1fw==;
+	List-Owner; bh=nULIG7ClBBNI/AWIbW76qlekbMCSvE2pfN+/Fn6exkg=; b=n+b1NLPsX8ccaR
+	rVtnZ2WZxNKsPaZ9+mKr9BrQC7XPkxgsHlZjKtXShCM0VgqzLWp9v0Bh4GvcnXJ9YdvhgE/yPNx66
+	F41uamntV77SC+AommN4gEpV0rahfgqOMrQz5hwcF40oHPkBKkODQ2mQocHVBvplEwfF1SJVazkg6
+	uykyHRrO2xRCUrH2Owaz3xsxPkm+Q6JCDE8iWANdTUi5k5SOU+WvA+6HGNopAyybHnqbWqPgRqOir
+	CNs8BgILJ4sc/RhCOB25v9CX27UtxfnWRMvbjhfgafOcAQ+rQKubUQFJJQyYmaAwmTPMtMlk5ZdHk
+	huLqUPGMkQxz/kRsK9LQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHTAy-00000000A6X-0zL2;
-	Mon, 27 Apr 2026 21:07:32 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wHTBT-00000000AAG-2a2Y;
+	Mon, 27 Apr 2026 21:08:03 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHTAw-00000000A66-2y0l
+	id 1wHTBT-00000000AA8-04XK
 	for kexec@lists.infradead.org;
-	Mon, 27 Apr 2026 21:07:30 +0000
+	Mon, 27 Apr 2026 21:08:03 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 28B4F60154;
-	Mon, 27 Apr 2026 21:07:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5968C19425;
-	Mon, 27 Apr 2026 21:07:29 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 76E9160139;
+	Mon, 27 Apr 2026 21:08:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 010B0C19425;
+	Mon, 27 Apr 2026 21:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777324049;
-	bh=eTCpxLZv7LpMubk8KJGg69LwpKjJ4rCvsaQuqSw9Ybs=;
+	s=k20201202; t=1777324082;
+	bh=HAhIww82BvlkJia3sROkCN1IHhF5mIbxG7w4f+smGgw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=YXALoBTZ96HEbK/in8Mcqf+FcEg3cZ5fOQmzXfQw8l37KdDHJKEmdE1SvjbZeiRUV
-	 VjQLZPadaTR3oR6VVLBF0kc78fhKbe+XimUyJpt/bNLks1VVxuBNFtwP4Eey0qEitS
-	 d5cnToMQIQCGp38txEqfX8AkS3c9uVTSLVP9ETBVw0YALt9UsN8VG7oBDzRgckokRb
-	 tVJHOiw5mnG6eLdlPfV7lNskftueKD74BpFt5HaWzYuh4tsk9k1bgjN+gzC9jPc4vn
-	 BLwseIuVEzRz0DUfkLvXU9vK1VX7WcRcJJ10fQd2yr6magkpA+cv8wcamZrmJjRPwO
-	 QDO5vWHVk853w==
-Date: Mon, 27 Apr 2026 16:07:28 -0500
+	b=FGEjjy4FAaFY3A5PuDOdwJ8Xj4EEJiA4g1yL5cIGR7Vn92lO9AV/7gQgs0RIJp88+
+	 RSTByY/JniJOtzZ0Blkp+9wjKoA/q3uA/W4Os0CJ2ORUAWPdqd+ACdpKfo/pIUhQ/n
+	 Qz/f5MkmYFlb4sXREbt/X0QQc7hmBvgosVjVBeM8qOrO81b8+/BOPDEXGa885+Ix5I
+	 avII16tNuOj8GG1TOOxM4oUwXtc8+P8ELkjcrD4GHUMnMVFQWLd8ZhsTj4bKZOsp2d
+	 akjmbU2gDr8yaabA9KPzS3D4e/OQNnGX3sOg3vJEwuK7mMSs6wnM/Ur/TEtpTvdF36
+	 lF/CQTdsWnCAQ==
+Date: Mon, 27 Apr 2026 16:08:01 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: David Matlack <dmatlack@google.com>
 Cc: iommu@lists.linux.dev, kexec@lists.infradead.org,
@@ -67,13 +67,13 @@ Cc: iommu@lists.linux.dev, kexec@lists.infradead.org,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Will Deacon <will@kernel.org>, William Tu <witu@nvidia.com>,
 	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v4 05/11] PCI: liveupdate: Inherit bus numbers during
- Live Update
-Message-ID: <20260427210728.GA186712@bhelgaas>
+Subject: Re: [PATCH v4 10/11] PCI: liveupdate: Do not disable bus mastering
+ on preserved devices during kexec
+Message-ID: <20260427210801.GA185338@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260423212316.3431746-6-dmatlack@google.com>
+In-Reply-To: <20260423212316.3431746-11-dmatlack@google.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,28 +88,18 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Apr 23, 2026 at 09:23:09PM +0000, David Matlack wrote:
-> Inherit bus numbers from the previous kernel during a Live Update when
-> one or more PCI devices are being preserved.
+On Thu, Apr 23, 2026 at 09:23:14PM +0000, David Matlack wrote:
+> Do not disable bus mastering on outgoing preserved devices during
+> pci_device_shutdown() for kexec.
 
 > +++ b/drivers/pci/liveupdate.c
-> @@ -93,6 +93,19 @@
->   * bound to the correct driver. i.e. The PCI core does not protect against a
->   * device getting preserved by driver A in the outgoing kernel and then getting
->   * bound to driver B in the incoming kernel.
+> @@ -132,6 +132,10 @@
+>   *  * The PCI core inherits ARI Forwarding Enable on all bridges with downstream
+>   *    preserved devices to ensure that all preserved devices on the bridge's
+>   *    secondary bus are addressable after the Live Update.
 > + *
-> + * BDF Stability
-> + * =============
-> + *
-> + * The PCI core guarantees that incoming preserved devices can be identified by
-> + * the same bus, device, and function numbers as prior to kexec. To accomplish
-> + * this, the PCI core always inherits the secondary and subordinate bus numbers
-> + * assigned to bridges during enumeration, rather than assigning new ones (the
-> + * PCI core assumes that the previous kernel established a sane topology).
-> + *
-> + * If a misconfigured or unconfigured bridge is encountered during enumeration
-> + * while there are incoming preserved devices, it's secondary and subordinate
-> + * bus numbers will be cleared and devices below it will not be enumerated.
+> + *  * The PCI core does not disable bus mastering on outoing preserved devices
+> + *    during kexec. This allows preserved devices to issue memory transactions
 
-s/it's/its/
+s/outoing/outgoing/
 
