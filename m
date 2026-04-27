@@ -4,73 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AD3E0FF8864
-	for <kexec@archiver.kernel.org>; Mon, 27 Apr 2026 20:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6DD36FF8867
+	for <kexec@archiver.kernel.org>; Mon, 27 Apr 2026 21:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=w4+T1q5j1gjl12AzNykoZ9kgKNsM0AyLqJTGq2x4mJw=; b=RbuvJSRxaxKFTBDxp0V9PCkPZP
-	2pR5jxli8b5V7XGhyJUQDX1nr2cMjFBpyaS4eW9ReSBvHpfX+0o8fjPC0ksJKez3bx3CU+Z4SIklv
-	k267N6vbNInNkDY/q7inL4Tr97iMJNPuXR/S0WJgWOsaTNcND2lrPoVovItJtbdQdQxydNI1M8b+b
-	/gYjTg7S8mCqdEaSZ8seoOvViar2Orho4JDY8YoFEqU1PBASJu4MIRm+2pyyIfywlfagWyWmS9fVc
-	9UFxB6gl52PZtKyCsM+Yn9WMGmHUVFc/QC+LiWjsPlZsGtUvopmnrKtjBLqCu53QGEcqQ29PiRbzw
-	R1Fy+TTw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+	List-Owner; bh=eR7WRDEIu0A3ltOUaleJIJZmRlJgFK+aFlYE1BqZCLk=; b=BDOjrAXoZHz6XU
+	RyjGJcQhumNOqVwUsDfIFWEk2FqEJGYyYWDhZlYhwCWbMnXL5uFJGo96RVKNCueR7O6BJmJBalZo6
+	XSqIT8LFUEmGT00DpKD0pIbsUUfbgEfMwp1WdhHjFw9uissuHgoMaRiP1PbMRvTNL+BCCxqcnqkpm
+	0MmrU/U3AK7vXpXWeKB5uf25yC824jiUKApz0hcLsFg7QaxssD2mTX+jALh20RBJn6pbBZnfbX4iw
+	7fUXf3BrkpPVyVWpBmF8ShOOeQ5wS4/YC4oREaWafp2u9UvYeQ+BzkLWPlhvAncEXuoAbekMMgRgZ
+	xNOc2dh6aYZGu9pQWIsQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHT0J-000000009YR-3Pv8;
-	Mon, 27 Apr 2026 20:56:31 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHT0H-000000009Y6-3hoZ
+	id 1wHT93-000000009q2-36Sf;
+	Mon, 27 Apr 2026 21:05:33 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1wHT92-000000009pq-2Dba
 	for kexec@lists.infradead.org;
-	Mon, 27 Apr 2026 20:56:31 +0000
-Received: from localhost (unknown [20.29.225.195])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 80A2820B716A;
-	Mon, 27 Apr 2026 13:56:28 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 80A2820B716A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1777323389;
-	bh=w4+T1q5j1gjl12AzNykoZ9kgKNsM0AyLqJTGq2x4mJw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=g3klIaNv0aZDwiuY6aSr9d1ovw1UNaC1yS0v955Li3fu510xl6luT8FxEwoEqgsV9
-	 qO5XgODem35nBKQSBw1Y/oPQwo73ezTIvaKLd6m9LDkmCPmXDtkuNmar6v6P8E4uZZ
-	 NJTPwgA90pNAQX3lXJdDUBe1VtE8QmuErhznSO4I=
-Date: Mon, 27 Apr 2026 13:56:25 -0700
-From: Jacob Pan <jacob.pan@linux.microsoft.com>
+	Mon, 27 Apr 2026 21:05:32 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 97C1360139;
+	Mon, 27 Apr 2026 21:05:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 222BEC2BCB5;
+	Mon, 27 Apr 2026 21:05:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777323931;
+	bh=BKvU8n8CmmLGOo/iWjExHY4UTAHtpbclc/VETFqsn3Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=f2Yasvoienx7V+cC4PCEeVthUNsSP6+lU5/iKedPkKipBTK3W9hQlKQOizBDpjzWt
+	 tmNepResRGa9Robr+yPwMgrRAe7aQXzQ2jhIQgRJwvJEOo5f7UtB42dPaDXfDIIcUX
+	 afIekttok4tFW/iR+rCngQveUvcIZiUoA3WIpOc8oBp48Bn3VRBy58KHuIkjYwkEFc
+	 ftQaqsh5nTtMk8ievxIuK556Wzq+jWivXo+c6aFEfpXiH+ww+Ds4y1wq8ksZKb1Iiu
+	 FW8X5Rtq0CoA/Jo+Rum76rkryfic5YtzKPIShtN7H0Nv1vappKhtvXjZXcsJO2PIOL
+	 MZ+Bgj4uYDiiQ==
+Date: Mon, 27 Apr 2026 16:05:29 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
 To: David Matlack <dmatlack@google.com>
 Cc: iommu@lists.linux.dev, kexec@lists.infradead.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-pci@vger.kernel.org, Adithya Jayachandran
- <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, Alex
- Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>, Chris
- Li <chrisl@kernel.org>, David Rientjes <rientjes@google.com>, Jason
- Gunthorpe <jgg@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Jonathan Corbet
- <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, Leon Romanovsky
- <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, Mike Rapoport
- <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, Pasha Tatashin
- <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>,
- Pratyush Yadav <pratyush@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja
- <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, Will Deacon
- <will@kernel.org>, William Tu <witu@nvidia.com>, Yi Liu
- <yi.l.liu@intel.com>, jacob.pan@linux.microsoft.com
-Subject: Re: [PATCH v4 08/11] PCI: liveupdate: Require preserved devices are
- in immutable singleton IOMMU groups
-Message-ID: <20260427135625.0000413e@linux.microsoft.com>
-In-Reply-To: <20260423212316.3431746-9-dmatlack@google.com>
-References: <20260423212316.3431746-1-dmatlack@google.com>
-	<20260423212316.3431746-9-dmatlack@google.com>
-Organization: LSG
-X-Mailer: Claws Mail 3.21.0 (GTK+ 2.24.33; x86_64-w64-mingw32)
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-pci@vger.kernel.org,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Joerg Roedel <joro@8bytes.org>,
+	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pranjal Shrivastava <praan@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Will Deacon <will@kernel.org>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v4 01/11] PCI: liveupdate: Set up FLB handler for the PCI
+ core
+Message-ID: <20260427210529.GA186381@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260427_135629_986005_1AFC63B2 
-X-CRM114-Status: GOOD (  29.80  )
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260423212316.3431746-2-dmatlack@google.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,140 +88,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi David,
+On Thu, Apr 23, 2026 at 09:23:05PM +0000, David Matlack wrote:
+> Set up a File-Lifecycle-Bound (FLB) handler for the PCI core to enable
+> it to participate in the preservation of PCI devices across Live Update.
+> Essentially, this commit enables the PCI core to allocate a struct
+> (struct pci_ser) and preserve it across a Live Update whenever at least
+> one device is preserved.
+> 
+> Preserving PCI devices across Live Update is built on top of the Live
+> Update Orchestrator's (LUO) support for file preservation. Drivers are
+> expected to expose a file to userspace to represent a single PCI device
+> and support preservation of that file. This is itended primarily to
+> support preservation of PCI devices bound to VFIO drivers.
 
-On Thu, 23 Apr 2026 21:23:12 +0000
-David Matlack <dmatlack@google.com> wrote:
+s/itended/intended/
 
-> Restrict support for preserving PCI devices across Live Update to
-> devices in immutable singleton IOMMU groups. A device's group is
-> considered immutable if all bridges upstream from the device up to the
-> root port have the required ACS features enabled.
-> 
-> Since ACS flags are inherited across a Live Update for preserved
-> devices and all the way up to the root port, the preserved device
-> should be in a singleton IOMMU group after kexec in the new kernel.
-> 
-> This change should still permit all the current use-cases for PCI
-> device preservation across Live Update, since it is intended to be
-> used in Cloud enviroments which should have the required ACS features
-> enabled for virtualization purposes.
-> 
-> If a device is part of a multi-device IOMMU group, preserving it will
-> now fail with an error. This restriction may be lifted in the future
-> if support for preserving multi-device groups is desired.
-> 
-> Signed-off-by: David Matlack <dmatlack@google.com>
-> ---
->  drivers/iommu/iommu.c    | 35 +++++++++++++++++++++++++++++++++++
->  drivers/pci/liveupdate.c |  6 ++++++
->  include/linux/iommu.h    |  7 +++++++
->  3 files changed, 48 insertions(+)
-> 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 61c12ba78206..782e73a9d45f 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -1664,6 +1664,41 @@ struct iommu_group *pci_device_group(struct
-> device *dev) }
->  EXPORT_SYMBOL_GPL(pci_device_group);
+> +++ b/MAINTAINERS
+> @@ -20555,6 +20555,18 @@ L:	linux-pci@vger.kernel.org
+>  S:	Supported
+>  F:	Documentation/PCI/pci-error-recovery.rst
 >  
-> +bool pci_device_group_immutable_singleton(struct pci_dev *dev)
-> +{
-> +	struct iommu_group *group;
-> +	struct group_device *d;
-> +	struct pci_bus *bus;
-> +	int nr_devices = 0;
-> +
-> +	group = iommu_group_get(&dev->dev);
-> +	if (!group)
-> +		return false;
-This may not work for noiommu mode where we could have a null group.
-Maybe I can add special case later?
+> +PCI LIVE UPDATE
+> +M:	Bjorn Helgaas <bhelgaas@google.com>
 
-> +	mutex_lock(&group->mutex);
-> +
-> +	for_each_group_device(group, d)
-> +		nr_devices++;
-> +
-> +	mutex_unlock(&group->mutex);
-> +	iommu_group_put(group);
-nit:
-	scoped_guard(mutex, &group->mutex) {
-        	for_each_group_device(group, d)
-                	nr_devices++;
- 	}
-> +
-> +	if (nr_devices != 1)
-> +		return false;
-> +
-> +	for (bus = dev->bus; !pci_is_root_bus(bus); bus =
-> bus->parent) {
-> +		if (!bus->self)
-> +			continue;
-> +
-> +		if (!pci_acs_path_enabled(bus->self, NULL,
-> REQ_ACS_FLAGS))
-> +			return false;
-> +
-> +		break;
-> +	}
-> +
-> +	return true;
-> +}
-> +
->  /* Get the IOMMU group for device on fsl-mc bus */
->  struct iommu_group *fsl_mc_device_group(struct device *dev)
->  {
-> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-> index a9a89f7bd3e5..54a90ff02bdd 100644
-> --- a/drivers/pci/liveupdate.c
-> +++ b/drivers/pci/liveupdate.c
-> @@ -133,6 +133,7 @@
->  #define pr_fmt(fmt) "PCI: liveupdate: " fmt
->  
->  #include <linux/io.h>
-> +#include <linux/iommu.h>
->  #include <linux/kexec_handover.h>
->  #include <linux/kho/abi/pci.h>
->  #include <linux/liveupdate.h>
-> @@ -359,6 +360,11 @@ int pci_liveupdate_preserve(struct pci_dev *dev)
->  	if (dev->is_virtfn)
->  		return -EINVAL;
->  
-> +	if (!pci_device_group_immutable_singleton(dev)) {
-> +		pci_warn(dev, "Device preservation limited to
-> immutable singleton iommu groups\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	if (dev->liveupdate_outgoing)
->  		return -EBUSY;
->  
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index e587d4ac4d33..6f5d1dec3f89 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -1096,6 +1096,8 @@ extern struct iommu_group
-> *generic_device_group(struct device *dev); struct iommu_group
-> *fsl_mc_device_group(struct device *dev); extern struct iommu_group
-> *generic_single_device_group(struct device *dev); 
-> +bool pci_device_group_immutable_singleton(struct pci_dev *dev);
-> +
->  /**
->   * struct iommu_fwspec - per-device IOMMU instance data
->   * @iommu_fwnode: firmware handle for this device's IOMMU
-> @@ -1528,6 +1530,11 @@ static inline int
-> pci_dev_reset_iommu_prepare(struct pci_dev *pdev) static inline void
-> pci_dev_reset_iommu_done(struct pci_dev *pdev) {
->  }
-> +
-> +static inline bool pci_device_group_immutable_singleton(struct
-> pci_dev *dev) +{
-> +	return false;
-> +}
->  #endif /* CONFIG_IOMMU_API */
->  
->  #ifdef CONFIG_IRQ_MSI_IOMMU
+I don't think I want to be the primary contact here.  I'll see patches
+regardless since they're on linux-pci.
 
+> +M:	David Matlack <dmatlack@google.com>
+> +L:	linux-pci@vger.kernel.org
+> +S:	Supported
+> +Q:	https://patchwork.kernel.org/project/linux-pci/list/
+> +B:	https://bugzilla.kernel.org
+> +C:	irc://irc.oftc.net/linux-pci
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
+> +F:	drivers/pci/liveupdate.c
+> +F:	include/linux/kho/abi/pci.h
 
