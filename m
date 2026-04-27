@@ -4,87 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4AC8BFF8868
-	for <kexec@archiver.kernel.org>; Mon, 27 Apr 2026 15:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 03114FF8860
+	for <kexec@archiver.kernel.org>; Mon, 27 Apr 2026 15:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
-	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ECSSlTyhJvtyzyV12bRiciUTZEMt5lG0F0BW5PZ9epA=; b=xOYa/NLS7TKfno9kyNqNvMlac/
-	qdautI79yOArDdSQGFGuTLpR4ohlhItHpynVr0cgrGZXO7h/GK6FerM1FjKv8pP4LSo4G4FgomKav
-	girXoHxSA2qHZbK/UbW0RkmAHyOG3CnxejtYIjHS4zF5WQ/crJau3LQbTK51Kiyvr4PEjFvQScxQa
-	Pe3NOWc5xxOiI7ADauZw34t0vqfVBBd5W9JAzubrbwmpY20LAY8nmMF40pEfw9/BPC/CusdLryane
-	CTQZ/+RjGvKKGEew0bBgP6TboG7tPIjA4MAM0Ftt4pNMgvLR+JyFtDfuAG+0xQV51/CfDzj+nzr73
-	lmMyH8tQ==;
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=9LeH8B86nKcZOpLZaBsejYDxB8jSKUcx+rF/bpcYhS4=; b=atfKrqOZmsJjvYqo5CoP19XC68
+	GrssSsNYghLMQg/jXGjNHwyIWfcKrkVKQuMJEIsSTTX+0iSThE/IaqhSWmXGaMPn9H40Jd73TeSV5
+	wJvKM0fcKbEzEM0cS5Ae29NOYELgm22Q0Cg2F0ZlrXyL6yl5zOwDeWjrQN9RS5lFTAeOT3dHAdnpQ
+	LMpWYlRZ8L2C4598kgC0VNWhFQ5/gpn0QqRhZmFR0LXjkkj6/O+f0CIEBrMKRekaTH12iu1LJTcp5
+	X5IWFosnVsnuySZidxBFKPI2eWYXsiq8zT3daXsDKudLAjXDDR4qaRgMHfFec1d3w1uciAMPtpfg+
+	gZ09SIIQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHOIL-0000000HFH8-3esE;
-	Mon, 27 Apr 2026 15:54:49 +0000
-Received: from canpmsgout03.his.huawei.com ([113.46.200.218])
+	id 1wHOL3-0000000HFs3-2SSV;
+	Mon, 27 Apr 2026 15:57:37 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wCx6y-00000000woW-1yxV;
-	Wed, 15 Apr 2026 10:04:47 +0000
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=ECSSlTyhJvtyzyV12bRiciUTZEMt5lG0F0BW5PZ9epA=;
-	b=XwGRhLne6TgIRHTpnVjff9jL3j2nEOUg/4fZqohVv7IVECo3hpMZzFAeQRSYPfQpZazp8xLIF
-	L4BvOv/i1ejypeY+N7Bw7ro/40TcmqZH93SdaTwdtLVozGchElPUhdWYant6q56kDs/Fs1058fD
-	SLf1DVLYrM2j/JVPi7gaTBc=
-Received: from mail.maildlp.com (unknown [172.19.162.140])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4fwc651DVGzpSyb;
-	Wed, 15 Apr 2026 17:58:21 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id AD24820104;
-	Wed, 15 Apr 2026 18:04:33 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 15 Apr 2026 18:04:30 +0800
-Message-ID: <3e861ad2-a57d-45a5-94d0-0a8c4d58f7b6@huawei.com>
-Date: Wed, 15 Apr 2026 18:04:26 +0800
+	id 1wHOL1-0000000HFrL-1Xdi
+	for kexec@bombadil.infradead.org;
+	Mon, 27 Apr 2026 15:57:35 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=9LeH8B86nKcZOpLZaBsejYDxB8jSKUcx+rF/bpcYhS4=; b=QNW9iK/hQiy1Q9ZKpWv+JSuOD1
+	SsPbntofs70HcMq+8WNn6Azz5z/U9WJlEKUCmEOHUkAz7EdStUmM/ObMD0R+lkRUHLB4O+XOe/t7m
+	7eO6wIfRV402oDEfFLIaHgtnenqUSb37DKyvSfctj7frJzJaQJxatI6PQTXe2KvzPpLfT9yVP5dmN
+	ZvLpigb5zvj8q/q4rWplBT9s0tbQ+itkV/nfwmkvtHv34k4f7b1kwGxUIcJWkKVZRE4zM6tLurGLK
+	0JbWto5zDoQHiM/8YZ2BFucli2pigg9F4ntdz2W5aI80R5hGDR0+f0Mx6DPwmnZgXeINONW5J3pSg
+	ep6+Fepg==;
+Received: from linux.microsoft.com ([13.77.154.182])
+	by desiato.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1wHOKy-000000012br-28PQ
+	for kexec@lists.infradead.org;
+	Mon, 27 Apr 2026 15:57:34 +0000
+Received: from localhost (unknown [40.65.108.177])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D338920B716A;
+	Mon, 27 Apr 2026 08:57:27 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D338920B716A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1777305448;
+	bh=9LeH8B86nKcZOpLZaBsejYDxB8jSKUcx+rF/bpcYhS4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=OhQoS5cTppvzXia529YlPHyl3gEpjLWlCpqEjC0wytPu1aoMn+auy5b+Twna7AZOq
+	 Lvng4260i2n0yzHjGfSp5eYpSAvQTyiXS2IYISChFXvH/uD1Pd2GiYxD6n9fpiMfwn
+	 a+1mc9wLudzyJ4EU5tC+TsVbZknBuN1SpzNpVqY8=
+Date: Mon, 27 Apr 2026 08:57:25 -0700
+From: Jacob Pan <jacob.pan@linux.microsoft.com>
+To: David Matlack <dmatlack@google.com>
+Cc: iommu@lists.linux.dev, kexec@lists.infradead.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-pci@vger.kernel.org, Adithya Jayachandran
+ <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, Alex
+ Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>, Chris
+ Li <chrisl@kernel.org>, David Rientjes <rientjes@google.com>, Jason
+ Gunthorpe <jgg@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Jonathan Corbet
+ <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, Leon Romanovsky
+ <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, Mike Rapoport
+ <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, Pasha Tatashin
+ <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>,
+ Pratyush Yadav <pratyush@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja
+ <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, Will Deacon
+ <will@kernel.org>, William Tu <witu@nvidia.com>, Yi Liu
+ <yi.l.liu@intel.com>
+Subject: Re: [PATCH v4 02/11] PCI: liveupdate: Track outgoing preserved PCI
+ devices
+Message-ID: <20260427085725.00005283@linux.microsoft.com>
+In-Reply-To: <20260423212316.3431746-3-dmatlack@google.com>
+References: <20260423212316.3431746-1-dmatlack@google.com>
+	<20260423212316.3431746-3-dmatlack@google.com>
+Organization: LSG
+X-Mailer: Claws Mail 3.21.0 (GTK+ 2.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 00/15] arm64/riscv: Add support for crashkernel CMA
- reservation
-To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
-	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
-	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
-	<akpm@linux-foundation.org>, <bhe@redhat.com>, <vgoyal@redhat.com>,
-	<dyoung@redhat.com>, <rdunlap@infradead.org>, <peterz@infradead.org>,
-	<pawan.kumar.gupta@linux.intel.com>, <feng.tang@linux.alibaba.com>,
-	<dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
-	<paulmck@kernel.org>, <lirongqing@baidu.com>, <rppt@kernel.org>,
-	<leitao@debian.org>, <ardb@kernel.org>, <jbohac@suse.cz>,
-	<cfsworks@gmail.com>, <tangyouling@kylinos.cn>, <sourabhjain@linux.ibm.com>,
-	<ritesh.list@gmail.com>, <hbathini@linux.ibm.com>, <eajames@linux.ibm.com>,
-	<guoren@kernel.org>, <songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
-	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <coxu@redhat.com>,
-	<fuqiang.wang@easystack.cn>, <liaoyuanhong@vivo.com>,
-	<takahiro.akashi@linaro.org>, <james.morse@arm.com>, <lizhengyu3@huawei.com>,
-	<x86@kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<kexec@lists.infradead.org>
-References: <20260402072701.628293-1-ruanjinjie@huawei.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20260402072701.628293-1-ruanjinjie@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.109.254]
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260415_030445_616560_BAEB9168 
-X-CRM114-Status: GOOD (  19.40  )
-X-Mailman-Approved-At: Mon, 27 Apr 2026 08:54:43 -0700
+X-CRM114-CacheID: sfid-20260427_165732_799805_DDC42C35 
+X-CRM114-Status: GOOD (  39.58  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,114 +100,259 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Hi David,
 
+On Thu, 23 Apr 2026 21:23:06 +0000
+David Matlack <dmatlack@google.com> wrote:
 
-On 4/2/2026 3:26 PM, Jinjie Ruan wrote:
-> The crash memory allocation, and the exclude of crashk_res, crashk_low_res
-> and crashk_cma memory are almost identical across different architectures,
-> This patch set handle them in crash core in a general way, which eliminate
-> a lot of duplication code.
+> Add APIs to allow drivers to notify the PCI core of which devices are
+> being preserved across a Live Update for the next kernel, i.e.
+> "outgoing" devices.
 > 
-> And add support for crashkernel CMA reservation for arm64 and riscv.
+> Drivers must notify the PCI core when devices are preserved so that
+> the PCI core can update its FLB data (struct pci_ser) and track the
+> list of outgoing devices. pci_liveupdate_preserve() notifies the PCI
+> core that a device must be preserved across Live Update.
+> pci_liveupdate_unpreserve() reverses this (cancels the preservation
+> of the device).
 > 
-> Rebased on v7.0-rc1.
+> This tracking ensures the PCI core is fully aware of which devices may
+> need special handling during shutdown and kexec, and so that it can be
+> handed off to the next kernel.
 > 
-> Basic second kernel boot test were performed on QEMU platforms for x86,
-> ARM64, and RISC-V architectures with the following parameters:
+> Signed-off-by: David Matlack <dmatlack@google.com>
+> ---
+>  drivers/pci/liveupdate.c    | 101
+> ++++++++++++++++++++++++++++++++++++ include/linux/kho/abi/pci.h |
+> 7 +-- include/linux/pci.h         |  26 ++++++++++
+>  3 files changed, 131 insertions(+), 3 deletions(-)
 > 
-> 	"cma=256M crashkernel=256M crashkernel=64M,cma"
-> 
-> Changes in v12:
-> - Remove the unused "nr_mem_ranges" for x86.
-> - Add "Fix crashk_low_res not exclude bug" test log.
-> - Provide a separate patch for each architecture for using
->   crash_prepare_headers(), which will make the review more convenient.
-> - Add Reviewed-by and Tested-by.
-> - Link to v11: https://lore.kernel.org/all/20260328074013.3589544-1-ruanjinjie@huawei.com/
-> 
-> Changes in v11:
-> - Avoid silently drop crash memory if the crash kernel is built without
->   CONFIG_CMA.
-> - Remove unnecessary "cmem->nr_ranges = 0" for arch_crash_populate_cmem()
->   as we use kvzalloc().
-> - Provide a separate patch for each architecture to fix the existing
->   buffer overflow issue.
+> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+> index d4fa61625d56..2dd8daa2f17c 100644
+> --- a/drivers/pci/liveupdate.c
+> +++ b/drivers/pci/liveupdate.c
+> @@ -43,6 +43,26 @@
+>   *
+>   *  * ``pci_liveupdate_register_flb(driver_file_handler)``
+>   *  * ``pci_liveupdate_unregister_flb(driver_file_handler)``
+> + *
+> + * Device Tracking
+> + * ===============
+> + *
+> + * Drivers must notify the PCI core when specific devices are
+> preserved or
+> + * unpreserved with the following APIs:
+> + *
+> + *  * ``pci_liveupdate_preserve(pci_dev)``
+> + *  * ``pci_liveupdate_unpreserve(pci_dev)``
+> + *
+> + * This allows the PCI core to keep it's FLB data (struct pci_ser)
+> up to date
+> + * with the list of **outgoing** preserved devices for the next
+> kernel.
+> + *
+> + * Restrictions
+> + * ============
+> + *
+> + * The PCI core enforces the following restrictions on which devices
+> can be
+> + * preserved. These may be relaxed in the future:
+> + *
+> + *  * The device cannot be a Virtual Function (VF).
+>   */
+>  
+>  #define pr_fmt(fmt) "PCI: liveupdate: " fmt
+> @@ -57,6 +77,8 @@
+>  #include <linux/pci.h>
+>  #include <linux/sort.h>
+>  
+> +static DEFINE_MUTEX(pci_flb_outgoing_lock);
+> +
+>  static int pci_flb_preserve(struct liveupdate_flb_op_args *args)
+>  {
+>  	struct pci_dev *dev = NULL;
+> @@ -124,6 +146,85 @@ static struct liveupdate_flb pci_liveupdate_flb
+> = { .compatible = PCI_LUO_FLB_COMPATIBLE,
+>  };
+>  
+> +int pci_liveupdate_preserve(struct pci_dev *dev)
+> +{
+> +	struct pci_ser *ser;
+> +	int i, ret;
+> +
+> +	guard(mutex)(&pci_flb_outgoing_lock);
+> +
+> +	ret = liveupdate_flb_get_outgoing(&pci_liveupdate_flb, (void
+> **)&ser);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!ser)
+> +		return -ENOENT;
+> +
+> +	if (dev->is_virtfn)
+> +		return -EINVAL;
+This can be left outside the mutex?
 
-Are there any further review comments? Especially regarding the patch
-for fixing out-of-bounds access (suggested by the AI review), as well as
-the changes for LoongArch, x86 and riscv architectures.
-
-> - Add Acked-bys for arm64.
-> 
-> Changes in v10:
-> - Fix crashk_low_res not excluded bug in the existing
->   RISC-V code.
-> - Fix an existing memory leak issue in the existing PowerPC code.
-> - Fix the ordering issue of adding CMA ranges to
->   "linux,usable-memory-range".
-> - Fix an existing concurrency issue. A Concurrent memory hotplug may occur
->   between reading memblock and attempting to fill cmem during kexec_load()
->   for almost all existing architectures.
-> - Link to v9: https://lore.kernel.org/all/20260323072745.2481719-1-ruanjinjie@huawei.com/
-> 
-> Changes in v9:
-> - Collect Reviewed-by and Acked-by, and prepare for Sashiko AI review.
-> - Link to v8: https://lore.kernel.org/all/20260302035315.3892241-1-ruanjinjie@huawei.com/
-> 
-> Changes in v8:
-> - Fix the build issues reported by kernel test robot and Sourabh.
-> - Link to v7: https://lore.kernel.org/all/20260226130437.1867658-1-ruanjinjie@huawei.com/
-> 
-> Changes in v7:
-> - Correct the inclusion of CMA-reserved ranges for kdump kernel in of/kexec
->   for arm64 and riscv.
-> - Add Acked-by.
-> - Link to v6: https://lore.kernel.org/all/20260224085342.387996-1-ruanjinjie@huawei.com/
-> 
-> Changes in v6:
-> - Update the crash core exclude code as Mike suggested.
-> - Rebased on v7.0-rc1.
-> - Add acked-by.
-> - Link to v5: https://lore.kernel.org/all/20260212101001.343158-1-ruanjinjie@huawei.com/
-> 
-> Jinjie Ruan (14):
->   riscv: kexec_file: Fix crashk_low_res not exclude bug
->   powerpc/crash: Fix possible memory leak in update_crash_elfcorehdr()
->   x86/kexec: Fix potential buffer overflow in prepare_elf_headers()
->   arm64: kexec_file: Fix potential buffer overflow in
->     prepare_elf_headers()
->   riscv: kexec_file: Fix potential buffer overflow in
->     prepare_elf_headers()
->   LoongArch: kexec: Fix potential buffer overflow in
->     prepare_elf_headers()
->   crash: Add crash_prepare_headers() to exclude crash kernel memory
->   arm64: kexec_file: Use crash_prepare_headers() helper to simplify code
->   x86/kexec: Use crash_prepare_headers() helper to simplify code
->   riscv: kexec_file: Use crash_prepare_headers() helper to simplify code
->   LoongArch: kexec: Use crash_prepare_headers() helper to simplify code
->   crash: Use crash_exclude_core_ranges() on powerpc
->   arm64: kexec: Add support for crashkernel CMA reservation
->   riscv: kexec: Add support for crashkernel CMA reservation
-> 
-> Sourabh Jain (1):
->   powerpc/crash: sort crash memory ranges before preparing elfcorehdr
-> 
->  .../admin-guide/kernel-parameters.txt         |  16 +--
->  arch/arm64/kernel/machine_kexec_file.c        |  43 +++-----
->  arch/arm64/mm/init.c                          |   5 +-
->  arch/loongarch/kernel/machine_kexec_file.c    |  43 +++-----
->  arch/powerpc/include/asm/kexec_ranges.h       |   1 -
->  arch/powerpc/kexec/crash.c                    |   7 +-
->  arch/powerpc/kexec/ranges.c                   | 101 +-----------------
->  arch/riscv/kernel/machine_kexec_file.c        |  42 +++-----
->  arch/riscv/mm/init.c                          |   5 +-
->  arch/x86/kernel/crash.c                       |  92 +++-------------
->  drivers/of/fdt.c                              |   9 +-
->  drivers/of/kexec.c                            |   9 ++
->  include/linux/crash_core.h                    |   9 ++
->  include/linux/crash_reserve.h                 |   4 +-
->  kernel/crash_core.c                           |  89 ++++++++++++++-
->  15 files changed, 193 insertions(+), 282 deletions(-)
-> 
+> +
+> +	if (dev->liveupdate_outgoing)
+> +		return -EBUSY;
+> +
+> +	if (ser->nr_devices == ser->max_nr_devices)
+> +		return -ENOSPC;
+> +
+> +	for (i = 0; i < ser->max_nr_devices; i++) {
+> +		/*
+> +		 * Start searching at index ser->nr_devices. This
+> should result
+> +		 * in a constant time search under expected
+> conditions (devices
+> +		 * are not getting unpreserved).
+> +		 */
+> +		int index = (ser->nr_devices + i) %
+> ser->max_nr_devices;
+> +		struct pci_dev_ser *dev_ser = &ser->devices[index];
+> +
+> +		if (dev_ser->refcount)
+> +			continue;
+> +
+> +		pci_info(dev, "Device will be preserved across next
+> Live Update\n");
+> +		ser->nr_devices++;
+> +
+> +		dev_ser->domain = pci_domain_nr(dev->bus);
+> +		dev_ser->bdf = pci_dev_id(dev);
+> +		dev_ser->refcount = 1;
+> +
+> +		dev->liveupdate_outgoing = dev_ser;
+> +		return 0;
+> +	}
+> +
+> +	return -ENOSPC;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_liveupdate_preserve);
+> +
+> +void pci_liveupdate_unpreserve(struct pci_dev *dev)
+> +{
+> +	struct pci_dev_ser *dev_ser;
+> +	struct pci_ser *ser = NULL;
+> +	int ret;
+> +
+> +	guard(mutex)(&pci_flb_outgoing_lock);
+> +
+> +	ret = liveupdate_flb_get_outgoing(&pci_liveupdate_flb, (void
+> **)&ser); +
+> +	if (ret || !ser) {
+> +		pci_warn(dev, "Cannot unpreserve device without
+> outgoing Live Update state\n");
+> +		return;
+> +
+> +	}
+> +
+> +	dev_ser = dev->liveupdate_outgoing;
+> +	if (!dev_ser) {
+> +		pci_warn(dev, "Cannot unpreserve device that is not
+> preserved\n");
+> +		return;
+> +	}
+> +
+> +	pci_info(dev, "Device will no longer be preserved across
+> next Live Update\n");
+> +	ser->nr_devices--;
+> +	memset(dev_ser, 0, sizeof(*dev_ser));
+> +	dev->liveupdate_outgoing = NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_liveupdate_unpreserve);
+> +
+>  int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh)
+>  {
+>  	pr_debug("Registering file handler \"%s\"\n",
+> fh->compatible); diff --git a/include/linux/kho/abi/pci.h
+> b/include/linux/kho/abi/pci.h index 5c0e92588c00..5b4c8d9e462c 100644
+> --- a/include/linux/kho/abi/pci.h
+> +++ b/include/linux/kho/abi/pci.h
+> @@ -23,19 +23,20 @@
+>   * incrementing the version number in the PCI_LUO_FLB_COMPATIBLE
+> string. */
+>  
+> -#define PCI_LUO_FLB_COMPATIBLE "pci-v1"
+> +#define PCI_LUO_FLB_COMPATIBLE "pci-v2"
+>  
+>  /**
+>   * struct pci_dev_ser - Serialized state about a single PCI device.
+>   *
+>   * @domain: The device's PCI domain number (segment).
+>   * @bdf: The device's PCI bus, device, and function number.
+> - * @reserved: Reserved (to naturally align struct pci_dev_ser).
+> + * @refcount: Reference count used by the PCI core to keep track of
+> whether it
+> + *            is done using a device's struct pci_dev_ser.
+>   */
+>  struct pci_dev_ser {
+>  	u32 domain;
+>  	u16 bdf;
+> -	u16 reserved;
+> +	u16 refcount;
+>  } __packed;
+>  
+>  /**
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index d70080babd52..eb94cbd8ab9d 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -41,6 +41,7 @@
+>  #include <linux/msi_api.h>
+>  #include <uapi/linux/pci.h>
+>  #include <linux/liveupdate.h>
+> +#include <linux/kho/abi/pci.h>
+>  
+>  #include <linux/pci_ids.h>
+>  
+> @@ -594,6 +595,9 @@ struct pci_dev {
+>  	u8		tph_mode;	/* TPH mode */
+>  	u8		tph_req_type;	/* TPH requester type
+> */ #endif
+> +#ifdef CONFIG_PCI_LIVEUPDATE
+> +	struct pci_dev_ser *liveupdate_outgoing; /* State preserved
+> for next kernel */ +#endif
+>  };
+>  
+>  static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
+> @@ -2880,6 +2884,14 @@ void pci_uevent_ers(struct pci_dev *pdev, enum
+>  pci_ers_result err_type); #ifdef CONFIG_PCI_LIVEUPDATE
+>  int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh);
+>  void pci_liveupdate_unregister_flb(struct liveupdate_file_handler
+> *fh); +
+> +int pci_liveupdate_preserve(struct pci_dev *dev);
+> +void pci_liveupdate_unpreserve(struct pci_dev *dev);
+> +
+> +static inline struct pci_dev_ser *pci_liveupdate_outgoing(struct
+> pci_dev *dev) +{
+> +	return dev->liveupdate_outgoing;
+> +}
+>  #else
+>  static inline int pci_liveupdate_register_flb(struct
+> liveupdate_file_handler *fh) {
+> @@ -2889,6 +2901,20 @@ static inline int
+> pci_liveupdate_register_flb(struct liveupdate_file_handler *fh static
+> inline void pci_liveupdate_unregister_flb(struct
+> liveupdate_file_handler *fh) { }
+> +
+> +static inline int pci_liveupdate_preserve(struct pci_dev *dev)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static inline void pci_liveupdate_unpreserve(struct pci_dev *dev)
+> +{
+> +}
+> +
+> +static inline struct pci_dev_ser *pci_liveupdate_outgoing(struct
+> pci_dev *dev) +{
+> +	return NULL;
+> +}
+>  #endif
+>  
+>  #endif /* LINUX_PCI_H */
 
 
