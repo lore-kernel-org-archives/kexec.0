@@ -4,122 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 597E7FF885A
-	for <kexec@archiver.kernel.org>; Tue, 28 Apr 2026 14:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CE2FAFF886F
+	for <kexec@archiver.kernel.org>; Tue, 28 Apr 2026 17:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=uPBj3aFfkjaWl1LiThsZHrs0x+5eU0+WkHxwR8A2xRE=; b=Q+s05cSaSKcij5+Trytx4TwL0A
-	nU9LqbbK900u/A2Syj2vs6i+xUrrL8w33oDCADterbZqVnGkyPiDeHan0km1F9/eI4hW5V0S93WpA
-	lybUcVkmoQ/IpCFVehozIIWcIIRO+RKty2Ko6LGuKQTTVsgVE7kgGP6wRwnpaYXEh2M7+izLJ2vZw
-	T3i35/L81RCLCF5Pj2cabIARzmUen8qxv8hoBDOTNpoNfoCBHrvjYv0xv+QPO7uOcivFHhwBjchrI
-	GSrjaBe9brTbk/Ahj7HWd9OVubujV/9fYy52NA85bPnnb6Eoze/PdcRHps6A7iV549lTXNUpRIKQi
-	hVj9b69g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=3rrqnMSkJK7r/cDlRpksXyGq7DpXCCWEbuMA7lgNfeg=; b=vydph6Ql0O/ZR3TUl0wiEVNfSi
+	do6WJBfihcxmA4LHn5Soc28olasF4nFslM/YHOHMXDoXFp8UDZl1xOb7b7PSN6uZv0fMsOPkZjO0+
+	77UGrxDCRgceXI8hr6eKm7qQA0tM7xJBmOo8eUcoSUDySeT+RXXjHOoYy/bzaoeE+AEk5AJVsv3zf
+	rNZi+rTPe1K+QKRmx6icb8NUKUszx63O+RivKxS3JsxeKGUH9+QmmojkIqb3Ac7YpRWg4qPtSWUN3
+	lwnxq4B/Ept6lENRHU7IR7BG73IHPcFtyMDW75/RScUJeuPnNyK+y7ioEytgyeLfX3D9iYp2xKTqZ
+	KZUMTDgA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHjKR-00000001dUj-2ZWt;
-	Tue, 28 Apr 2026 14:22:23 +0000
-Received: from mgamail.intel.com ([198.175.65.16])
+	id 1wHmBE-0000000215t-3Tjq;
+	Tue, 28 Apr 2026 17:25:04 +0000
+Received: from mail-pl1-x62c.google.com ([2607:f8b0:4864:20::62c])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHjKO-00000001dUJ-3M1b
+	id 1wHmBA-0000000214j-2bPz
 	for kexec@lists.infradead.org;
-	Tue, 28 Apr 2026 14:22:22 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777386141; x=1808922141;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=dUCQkpbT88wl/XLTLum+epq98V0eiO2a6jBYIzkd6N0=;
-  b=ZAoymWtk06IwBaKHFvBmwldzwGxnsHvqYqyNmPkbHK4TrRguajVhkGV7
-   JgvkyDC5sb8f0dvZz8R+TRsxaoDHL1QNJWoQyZatSA8koZytEGVs1HJD3
-   E5S6jl3IY3qyKfwk5lMza5Z+PEUY/JgLDPSfa6Y/aHGxp0Ap2G2hQmYpz
-   ZR79kKiXTPKDvFxjBPMbJGqXQ7wUby9yzfHmOrrR0B2Ctdn+9jFUFvyQw
-   sStvKcDrBRag+rmGfVXTIHdCXLE1FWcHRbHdeWSNFfJyRrjwvTQCbZkrW
-   iddYU8GXRfiRy84sMWXLaZuqAxWqTK4J44jyj+3uUAVAFndhvy8URlNZu
-   g==;
-X-CSE-ConnectionGUID: PtffhAT4SmuJLb1eHKJJvw==
-X-CSE-MsgGUID: aTRH42uHRouDh6EEclpDcg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11770"; a="78484694"
-X-IronPort-AV: E=Sophos;i="6.23,204,1770624000"; 
-   d="scan'208";a="78484694"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2026 07:22:18 -0700
-X-CSE-ConnectionGUID: lFylsWLHSLuQ+0SIc46nNA==
-X-CSE-MsgGUID: GCW9qc5oSa6Bb+lLvRtX1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,204,1770624000"; 
-   d="scan'208";a="230817648"
-Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.108.208]) ([10.125.108.208])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2026 07:22:17 -0700
-Message-ID: <89a77277-1d61-470d-ab8b-342020c6d6c6@intel.com>
-Date: Tue, 28 Apr 2026 07:22:15 -0700
+	Tue, 28 Apr 2026 17:25:01 +0000
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-2b46da8c48eso117365ad.1
+        for <kexec@lists.infradead.org>; Tue, 28 Apr 2026 10:24:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1777397099; x=1778001899; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3rrqnMSkJK7r/cDlRpksXyGq7DpXCCWEbuMA7lgNfeg=;
+        b=AJJwKMD74YvdknCOZ3608W8DRi9EOuydHv6ENwkc0faACji/r+Qwo9z+0616ZzeT1c
+         p5vcDmR+91RvJ/Fjlltp4J3cu46cZJv9xMKZNzjelF26Ob5cweHUaaxXJ2ZYqPZpKGdA
+         qGH5yKiSF4eLXsNYkLmDJ1c6xqWElkFFQEGwLxsjLmFOy/sNj8eovzDLTGXlpXlM6NLZ
+         bo8MhWgLbz4z7bZUjAzYVnlGtQXnhrZ6yExXD9/xPR0kUI7Qp4PaK/hlZXvn6e0emkia
+         CzUWjgmw95XrNzP2fAkDWFWxUExrbOgn2UDdcOLE573AVVbwIyjJ/f70XGhv3rZ6tySk
+         /3/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777397099; x=1778001899;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3rrqnMSkJK7r/cDlRpksXyGq7DpXCCWEbuMA7lgNfeg=;
+        b=QxTqTMdUaQ+N5KBNm7ETgD5bK3wQOhfGwod+t8oUDF7HlEb1oYNkNnaZFE1uHoohg3
+         5ZKaqcoIXyzW2+QJ1n8dF69e8bPqUJBG2cwotAR8lJcHA4ytSGP7mKHXflj0XuAG8r7e
+         8+CU1+d4zbkASslWMsE4z0zl0H+UqTDXmuvbNpUvHTu5rUkSGd8zxwMZQS2h0cEItq6i
+         duBh5RZnCDSSRKkKrMNcJUi9nB0X69/guZi1sUrEau1AhU/Fu01YQrBRXHviAM6/GjSF
+         6Y4CLBaTAeWFU6wY0oWnRc50u8YkSZBNVVHzivBoYVuMxMeN3IlXkNMyZlXW6xpbrY54
+         CKZA==
+X-Forwarded-Encrypted: i=1; AFNElJ8EpT6kCbLklQaqSL0OmnjTzEAOOy+HgKQfB/nJ8F5Z27XWut7Kwkv/k1G8dqgDi+eSh1XSag==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwDq+77o5NM+ilysmT08vEVDKsw0DtDgI965reyYlkrB7946qOQ
+	tDZGDSGacF7c2Nw3WGLMidJkjA5wDyPfvsQj1s/FD+//imI/idiSq3yLs97jSP8GPw==
+X-Gm-Gg: AeBDievH03T3d0M/nSn12AeVXOBlOGnj/Wa58h8CEOYGC/1KEBguD8kXk89GlSwZw/8
+	ozO6o2oGox4R2oxmk76/oRTLb5XL/8KD28+R1MURtIRdnvsLzKz94yUWEBKH2H4Ak0QjFb34ItQ
+	k5W18MQeLfE24jJshEJ2FnB9nV07Bk2za9zVVQehSB/yBfjVLns3fRblig6wPROzUBKxMbaRQik
+	hyyzzICvPqOBaUqKQbkuXxOZoAP9BK7cnkjNwe3iwqR5Lo2JrTAYGRRuzFdJWSQQqumRmG6HTnJ
+	Vv0Px1SiVBLl4upc6dYhNng2icrI9urBouJMhQjwV9B/w3CBmBB4/59hxXYmO/Aibxskjpxi4zn
+	GKBGPhNbfpHoiiDMHDfO92kcVHhOhjFobYFYUV8CSQjWq+i6HOxcYqUgW7F18FfhMq9Qgb5LH4A
+	YgMXnmGL1xvWMcEskgieCyVrwX5XuzB6SCafd6GXiI5WVmWE+td/wq+WjU+rFy1HliTURvIY6/X
+	uJ5Ps8uU7U=
+X-Received: by 2002:a17:903:380e:b0:2ae:80a3:98a9 with SMTP id d9443c01a7336-2b987f6d05dmr24355ad.11.1777397097903;
+        Tue, 28 Apr 2026 10:24:57 -0700 (PDT)
+Received: from google.com (195.236.83.34.bc.googleusercontent.com. [34.83.236.195])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b97aca8369sm31190845ad.75.2026.04.28.10.24.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2026 10:24:57 -0700 (PDT)
+Date: Tue, 28 Apr 2026 17:24:53 +0000
+From: Samiullah Khawaja <skhawaja@google.com>
+To: David Matlack <dmatlack@google.com>
+Cc: iommu@lists.linux.dev, kexec@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-pci@vger.kernel.org, Adithya Jayachandran <ajayachandra@nvidia.com>, 
+	Alexander Graf <graf@amazon.com>, Alex Williamson <alex@shazbot.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Josh Hilke <jrhilke@google.com>, Leon Romanovsky <leonro@nvidia.com>, 
+	Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Will Deacon <will@kernel.org>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v4 02/11] PCI: liveupdate: Track outgoing preserved PCI
+ devices
+Message-ID: <afDqs6oqWlhoVqMN@google.com>
+References: <20260423212316.3431746-1-dmatlack@google.com>
+ <20260423212316.3431746-3-dmatlack@google.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/kexec: Push kjump return address even for non-kjump
- kexec
-To: David Woodhouse <dwmw2@infradead.org>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, David Woodhouse <dwmw@amazon.co.uk>,
- Kai Huang <kai.huang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Uros Bizjak <ubizjak@gmail.com>, Sohil Mehta <sohil.mehta@intel.com>,
- linux-kernel@vger.kernel.org
-Cc: Rohan Kakulawaram <rohanka@google.com>, kexec <kexec@lists.infradead.org>
-References: <cd41e6485a72ee5488c3bc83b8acedff7a485523.camel@infradead.org>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <cd41e6485a72ee5488c3bc83b8acedff7a485523.camel@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20260423212316.3431746-3-dmatlack@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260428_072220_885160_F85E96FA 
-X-CRM114-Status: GOOD (  10.83  )
+X-CRM114-CacheID: sfid-20260428_102500_677082_C59D4558 
+X-CRM114-Status: GOOD (  25.23  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -134,27 +111,247 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 4/2/26 03:34, David Woodhouse wrote:
-> The version of purgatory code shipped by kexec-tools attempts to look
-> above the top of its stack to find a return address for a kjump
+On Thu, Apr 23, 2026 at 09:23:06PM +0000, David Matlack wrote:
+>Add APIs to allow drivers to notify the PCI core of which devices are
+>being preserved across a Live Update for the next kernel, i.e.
+>"outgoing" devices.
+>
+>Drivers must notify the PCI core when devices are preserved so that the
+>PCI core can update its FLB data (struct pci_ser) and track the list of
+>outgoing devices. pci_liveupdate_preserve() notifies the PCI core that a
+>device must be preserved across Live Update. pci_liveupdate_unpreserve()
+>reverses this (cancels the preservation of the device).
+>
+>This tracking ensures the PCI core is fully aware of which devices may
+>need special handling during shutdown and kexec, and so that it can be
+>handed off to the next kernel.
+>
+>Signed-off-by: David Matlack <dmatlack@google.com>
+>---
+> drivers/pci/liveupdate.c    | 101 ++++++++++++++++++++++++++++++++++++
+> include/linux/kho/abi/pci.h |   7 +--
+> include/linux/pci.h         |  26 ++++++++++
+> 3 files changed, 131 insertions(+), 3 deletions(-)
+>
+>diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+>index d4fa61625d56..2dd8daa2f17c 100644
+>--- a/drivers/pci/liveupdate.c
+>+++ b/drivers/pci/liveupdate.c
+>@@ -43,6 +43,26 @@
+>  *
+>  *  * ``pci_liveupdate_register_flb(driver_file_handler)``
+>  *  * ``pci_liveupdate_unregister_flb(driver_file_handler)``
+>+ *
+>+ * Device Tracking
+>+ * ===============
+>+ *
+>+ * Drivers must notify the PCI core when specific devices are preserved or
+>+ * unpreserved with the following APIs:
+>+ *
+>+ *  * ``pci_liveupdate_preserve(pci_dev)``
+>+ *  * ``pci_liveupdate_unpreserve(pci_dev)``
+>+ *
+>+ * This allows the PCI core to keep it's FLB data (struct pci_ser) up to date
+>+ * with the list of **outgoing** preserved devices for the next kernel.
+>+ *
+>+ * Restrictions
+>+ * ============
+>+ *
+>+ * The PCI core enforces the following restrictions on which devices can be
+>+ * preserved. These may be relaxed in the future:
+>+ *
+>+ *  * The device cannot be a Virtual Function (VF).
+>  */
+>
+> #define pr_fmt(fmt) "PCI: liveupdate: " fmt
+>@@ -57,6 +77,8 @@
+> #include <linux/pci.h>
+> #include <linux/sort.h>
+>
+>+static DEFINE_MUTEX(pci_flb_outgoing_lock);
+>+
+> static int pci_flb_preserve(struct liveupdate_flb_op_args *args)
+> {
+> 	struct pci_dev *dev = NULL;
+>@@ -124,6 +146,85 @@ static struct liveupdate_flb pci_liveupdate_flb = {
+> 	.compatible = PCI_LUO_FLB_COMPATIBLE,
+> };
+>
+>+int pci_liveupdate_preserve(struct pci_dev *dev)
+>+{
+>+	struct pci_ser *ser;
+>+	int i, ret;
+>+
+>+	guard(mutex)(&pci_flb_outgoing_lock);
+>+
+>+	ret = liveupdate_flb_get_outgoing(&pci_liveupdate_flb, (void **)&ser);
+>+	if (ret)
+>+		return ret;
+>+
+>+	if (!ser)
+>+		return -ENOENT;
+>+
+>+	if (dev->is_virtfn)
+>+		return -EINVAL;
+>+
+>+	if (dev->liveupdate_outgoing)
+>+		return -EBUSY;
+>+
+>+	if (ser->nr_devices == ser->max_nr_devices)
+>+		return -ENOSPC;
+>+
+>+	for (i = 0; i < ser->max_nr_devices; i++) {
+>+		/*
+>+		 * Start searching at index ser->nr_devices. This should result
+>+		 * in a constant time search under expected conditions (devices
+>+		 * are not getting unpreserved).
+>+		 */
+>+		int index = (ser->nr_devices + i) % ser->max_nr_devices;
+>+		struct pci_dev_ser *dev_ser = &ser->devices[index];
 
-This is a bug in kexec-tools, right? Has kexec-tools been fixed?
+nit: Maybe we can move this logic in a separate function as down the road
+when we expand this to add VFs and Hotpluggable devices, this might
+change significantly? It's good if it is self-contained.
+>+
+>+		if (dev_ser->refcount)
+>+			continue;
+>+
+>+		pci_info(dev, "Device will be preserved across next Live Update\n");
+>+		ser->nr_devices++;
+>+
+>+		dev_ser->domain = pci_domain_nr(dev->bus);
+>+		dev_ser->bdf = pci_dev_id(dev);
+>+		dev_ser->refcount = 1;
+>+
+>+		dev->liveupdate_outgoing = dev_ser;
+>+		return 0;
+>+	}
+>+
+>+	return -ENOSPC;
+>+}
+>+EXPORT_SYMBOL_GPL(pci_liveupdate_preserve);
+>+
+>+void pci_liveupdate_unpreserve(struct pci_dev *dev)
+>+{
+>+	struct pci_dev_ser *dev_ser;
+>+	struct pci_ser *ser = NULL;
+>+	int ret;
+>+
+>+	guard(mutex)(&pci_flb_outgoing_lock);
+>+
+>+	ret = liveupdate_flb_get_outgoing(&pci_liveupdate_flb, (void **)&ser);
+>+
+>+	if (ret || !ser) {
+>+		pci_warn(dev, "Cannot unpreserve device without outgoing Live Update state\n");
+>+		return;
+>+
+>+	}
+>+
+>+	dev_ser = dev->liveupdate_outgoing;
+>+	if (!dev_ser) {
+>+		pci_warn(dev, "Cannot unpreserve device that is not preserved\n");
+>+		return;
+>+	}
+>+
+>+	pci_info(dev, "Device will no longer be preserved across next Live Update\n");
+>+	ser->nr_devices--;
+>+	memset(dev_ser, 0, sizeof(*dev_ser));
+>+	dev->liveupdate_outgoing = NULL;
+>+}
+>+EXPORT_SYMBOL_GPL(pci_liveupdate_unpreserve);
+>+
+> int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh)
+> {
+> 	pr_debug("Registering file handler \"%s\"\n", fh->compatible);
+>diff --git a/include/linux/kho/abi/pci.h b/include/linux/kho/abi/pci.h
+>index 5c0e92588c00..5b4c8d9e462c 100644
+>--- a/include/linux/kho/abi/pci.h
+>+++ b/include/linux/kho/abi/pci.h
+>@@ -23,19 +23,20 @@
+>  * incrementing the version number in the PCI_LUO_FLB_COMPATIBLE string.
+>  */
+>
+>-#define PCI_LUO_FLB_COMPATIBLE "pci-v1"
+>+#define PCI_LUO_FLB_COMPATIBLE "pci-v2"
+>
+> /**
+>  * struct pci_dev_ser - Serialized state about a single PCI device.
+>  *
+>  * @domain: The device's PCI domain number (segment).
+>  * @bdf: The device's PCI bus, device, and function number.
+>- * @reserved: Reserved (to naturally align struct pci_dev_ser).
+>+ * @refcount: Reference count used by the PCI core to keep track of whether it
+>+ *            is done using a device's struct pci_dev_ser.
+>  */
+> struct pci_dev_ser {
+> 	u32 domain;
+> 	u16 bdf;
+>-	u16 reserved;
+>+	u16 refcount;
+> } __packed;
+>
+> /**
+>diff --git a/include/linux/pci.h b/include/linux/pci.h
+>index d70080babd52..eb94cbd8ab9d 100644
+>--- a/include/linux/pci.h
+>+++ b/include/linux/pci.h
+>@@ -41,6 +41,7 @@
+> #include <linux/msi_api.h>
+> #include <uapi/linux/pci.h>
+> #include <linux/liveupdate.h>
+>+#include <linux/kho/abi/pci.h>
+>
+> #include <linux/pci_ids.h>
+>
+>@@ -594,6 +595,9 @@ struct pci_dev {
+> 	u8		tph_mode;	/* TPH mode */
+> 	u8		tph_req_type;	/* TPH requester type */
+> #endif
+>+#ifdef CONFIG_PCI_LIVEUPDATE
+>+	struct pci_dev_ser *liveupdate_outgoing; /* State preserved for next kernel */
+>+#endif
+> };
+>
+> static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
+>@@ -2880,6 +2884,14 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
+> #ifdef CONFIG_PCI_LIVEUPDATE
+> int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh);
+> void pci_liveupdate_unregister_flb(struct liveupdate_file_handler *fh);
+>+
+>+int pci_liveupdate_preserve(struct pci_dev *dev);
+>+void pci_liveupdate_unpreserve(struct pci_dev *dev);
+>+
+>+static inline struct pci_dev_ser *pci_liveupdate_outgoing(struct pci_dev *dev)
+>+{
+>+	return dev->liveupdate_outgoing;
+>+}
 
-The purgatory code is injected by userspace, so are you kinda asserting
-here that the this change in the kernel stack "breaks userspace"?
-
-I guess one little push isn't the end of the world. But, can we please
-comment it to this effect:
-
-	/*
-	 * Work around a kexec-tools' <version here> purgatory bug that
-	 * accesses the stack one long out of bounds. Push a dummy value
-	 * to make the access harmless and avoid a fault.
-	 */
-
-Without that, we'll be scratching our heads for the next decade about
-what this 0 on the stack does. The comment you suggested tells us what
-it is doing, but not why.
-
-It all feels kinda icky though. Our stack is an ABI?!?!?!
+Is this expected to be called under the outgoing lock?
+> #else
+> static inline int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh)
+> {
+>@@ -2889,6 +2901,20 @@ static inline int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh
+> static inline void pci_liveupdate_unregister_flb(struct liveupdate_file_handler *fh)
+> {
+> }
+>+
+>+static inline int pci_liveupdate_preserve(struct pci_dev *dev)
+>+{
+>+	return -EOPNOTSUPP;
+>+}
+>+
+>+static inline void pci_liveupdate_unpreserve(struct pci_dev *dev)
+>+{
+>+}
+>+
+>+static inline struct pci_dev_ser *pci_liveupdate_outgoing(struct pci_dev *dev)
+>+{
+>+	return NULL;
+>+}
+> #endif
+>
+> #endif /* LINUX_PCI_H */
+>-- 
+>2.54.0.rc2.544.gc7ae2d5bb8-goog
+>
 
