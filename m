@@ -4,60 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5C3DBFF8875
-	for <kexec@archiver.kernel.org>; Tue, 28 Apr 2026 20:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 543EFFF886D
+	for <kexec@archiver.kernel.org>; Tue, 28 Apr 2026 21:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
-	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=78CAQOhjB01S2r2vp2nbeO5i4q8K5AGh4LOnQJsj+38=; b=JVnsSjUZOet9g7w6UGReb30hiF
-	AgOrQMg4Q+ITVX33N5xXu9mQDkihemsIXmFNuU7ARKRpX5bY5t7VD7tv52NJIhn/0sSdNMg/FDx+9
-	kixG/kyEjAvUP7SpnSRaKhKgqh216Zn8kfJM82t/CUZIIli2uHojbgo/fSKCbVTWAKELyRYav3vDq
-	73xkVccDztA4uLEJ8S3ooFFKsDyrY7exVrWKHFqSRYnQ5v/d6kplLgYEq1GhVX85qGIVCjbFygRFn
-	//TZt9OmTTmw3Hd6BH4uXJt5JDJFc2xB2iPL3UQPwUblsV/CoHNrr5vyB9kzcK6oa70J6dEQmywoV
-	J/5W5d2A==;
+	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=YPQl5BVXffamppcPqN4s196/1UPL/Y4VqRKKr30eMl0=; b=1E2pBx7HkRdcB64gJf5Rc2zfMp
+	3ObwroUnD0NG6qgn6ctcQVkJJt3yILfoJP99o45ycC8QWq1F357uTT5x8PvHonGHMhHJ++7pLOGH1
+	CKQPt714kFWmOfM82kNzUzRhPP0R+KW7fUQwMQG4AQwgLe9KnRwKHCpwIIZ+RZPp6pPEOuGEfF0B/
+	RRnWo34jFDoPnx9/zrqe2bQ6WbW15065Nimk5Q79bXXhKo97MGNgAa3wmQgcMdloxecKKLtKO9ulS
+	0W7StDJ3w5M39RfZKJcq9RDPJssglHCU55tFY9lV+6uE1n6t5MtysfcNX333/OBvXEpPLbYBbdpTk
+	jI6lAaUQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHp3l-00000002SKx-3kcy;
-	Tue, 28 Apr 2026 20:29:33 +0000
+	id 1wHpXj-00000002UuS-01db;
+	Tue, 28 Apr 2026 21:00:31 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHp3k-00000002SJi-2dTR
+	id 1wHpXg-00000002UuB-3mu6
 	for kexec@bombadil.infradead.org;
-	Tue, 28 Apr 2026 20:29:32 +0000
+	Tue, 28 Apr 2026 21:00:29 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=78CAQOhjB01S2r2vp2nbeO5i4q8K5AGh4LOnQJsj+38=; b=bBMEktLDf8H3uwr+lzg1Oi3yzg
-	owTLhHGD30A8/uK4e6+iVP/kzJYCWdO47BO6jeu1/liJhAMIcePn96VWLV68pFK61Wy7ZE9HtwBaR
-	Swv7bzok7HGX0ShVHdiDxMJ/up4BWVsXdukQH5/HwlRST+XNZgQGYTWuKYevJTYfEjr8CjuvKI5b3
-	gANMODorie+gglT9Q/5YPft+7UV6gU0oUhAEWeOKWUDjjTZACi8L6KymyPxVbmnFGhmN/gDNH8c/5
-	8xaZi4AYMQc4obNyvB3EeSHjHwr5SfIsL8T9lz69LC/MjaDHXFziF3p7zzwJkCEyb3SyoWjQvETKw
-	r0VojWBA==;
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:Date:Cc:To:
+	From:Subject:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=YPQl5BVXffamppcPqN4s196/1UPL/Y4VqRKKr30eMl0=; b=eKc/p7ATblj5l7kQ3KL+Qu5X5x
+	TMOMGyceslCo7kvm7+CVc2Jj3fR9qPZzeTBxvofXZAFC3WfVMGMF3xZEbEmyGyzFmivP76s9cvUQB
+	tStwAoRbG4UEB2gj3LXn1MSg+ua4T62ZJF+NuzBjVDQMnFYihJNCnnGIZqGbvf+B92vWadYRolrhs
+	S1c7GPxXzA2zFPVs+oQP4FWIYhnS7EDUwB91piob+5SZ1D6Dvwg/qX1TRiyHBsu3n/EMNcMk4NBxN
+	D5TMDucwbpxI3VGTEvURLaSSuwO6WIV9pp0AGvKE4pc7YV8Cy/IoPr7dts9yHYBo+rytJJ0G62iqc
+	/KAaePsg==;
 Received: from [172.31.31.148] (helo=u09cd745991455d.ant.amazon.com)
 	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHp3e-000000042Bh-0S8H;
-	Tue, 28 Apr 2026 20:29:26 +0000
-Message-ID: <4422099d2b0c41c794233d57e15be7072e57326d.camel@infradead.org>
-Subject: Re: [PATCH] x86/kexec: Push kjump return address even for non-kjump
+	id 1wHpX7-000000045yN-1RVm;
+	Tue, 28 Apr 2026 21:00:03 +0000
+Message-ID: <32d627134143ffd957891cb697138e839c623211.camel@infradead.org>
+Subject: [PATCH v2] x86/kexec: Push kjump return address even for non-kjump
  kexec
 From: David Woodhouse <dwmw2@infradead.org>
-To: Dave Hansen <dave.hansen@intel.com>, Thomas Gleixner <tglx@kernel.org>, 
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>,  x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Kai Huang <kai.huang@intel.com>,  Paolo Bonzini
+To: Dave Hansen <dave.hansen@intel.com>, Rohan Kakulawaram
+ <rohanka@google.com>,  kexec <kexec@lists.infradead.org>
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, David Woodhouse
+ <dwmw@amazon.co.uk>, Kai Huang <kai.huang@intel.com>, Paolo Bonzini
  <pbonzini@redhat.com>, Uros Bizjak <ubizjak@gmail.com>, Sohil Mehta
- <sohil.mehta@intel.com>,  linux-kernel@vger.kernel.org
-Cc: Rohan Kakulawaram <rohanka@google.com>, kexec <kexec@lists.infradead.org>
-Date: Tue, 28 Apr 2026 21:29:25 +0100
-In-Reply-To: <89a77277-1d61-470d-ab8b-342020c6d6c6@intel.com>
-References: <cd41e6485a72ee5488c3bc83b8acedff7a485523.camel@infradead.org>
-	 <89a77277-1d61-470d-ab8b-342020c6d6c6@intel.com>
+ <sohil.mehta@intel.com>, linux-kernel <linux-kernel@vger.kernel.org>
+Date: Tue, 28 Apr 2026 21:59:52 +0100
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-k0YgMrvsqsUx9Xlfj7rl"
+	boundary="=-gxU9ucmlKYxzjeBoeZFx"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 MIME-Version: 1.0
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
@@ -76,61 +74,61 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
---=-k0YgMrvsqsUx9Xlfj7rl
+--=-gxU9ucmlKYxzjeBoeZFx
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2026-04-28 at 07:22 -0700, Dave Hansen wrote:
-> On 4/2/26 03:34, David Woodhouse wrote:
-> > The version of purgatory code shipped by kexec-tools attempts to look
-> > above the top of its stack to find a return address for a kjump
->=20
-> This is a bug in kexec-tools, right? Has kexec-tools been fixed?
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-There isn't any other way to tell the difference between kjump and a
-normal kexec, is there?
+The version of purgatory code shipped by kexec-tools attempts to look
+above the top of its stack to find a return address for a kjump, even
+in a non-kjump kexec. Since commit 2cacf7f23a02 ("x86/kexec: Fix stack
+and handling of re-entry point for ::preserve_context") the word above
+the stack might not be there, leading to a fault (which is at least
+now caught by my exception-handling code in kexec).
 
-> The purgatory code is injected by userspace, so are you kinda asserting
-> here that the this change in the kernel stack "breaks userspace"?
+That commit fixed things for the actual kjump path, but no longer
+"gratuitously" pushes the unused return address to the stack in the
+non-kjump path. Put that *back* in the non-kjump path, to prevent
+purgatory from crashing when trying to access it.
 
-Essentially, yes. Rohan found that kexec broke on a kernel update,
-bisected it to my commit, and worked out why.
+Reported-by: Rohan Kakulawaram <rohanka@google.com>
+Tested-by: Rohan Kakulawaram <rohanka@google.com>
+Fixes: 2cacf7f23a02 ("x86/kexec: Fix stack and handling of re-entry point f=
+or ::preserve_context")
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+---
+v2: Improve comment
 
-This isn't just the "kernel stack". This is the stack that the kernel
-sets up specifically for the kexec target.
+ arch/x86/kernel/relocate_kernel_64.S | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> I guess one little push isn't the end of the world. But, can we please
-> comment it to this effect:
->=20
-> 	/*
-> 	 * Work around a kexec-tools' <version here> purgatory bug that
-> 	 * accesses the stack one long out of bounds. Push a dummy value
-> 	 * to make the access harmless and avoid a fault.
-> 	 */
->=20
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocat=
+e_kernel_64.S
+index 4ffba68dc57b..eaeb77464c06 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -136,6 +136,14 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ 	 * %r13 original CR4 when relocate_kernel() was invoked
+ 	 */
+=20
++	/*
++	 * Set return address to 0 if not preserving context. The purgatory
++	 * shipped in kexec-tools will unconditionally look for the return
++	 * address on the stack and set a kexec_jump_back_entry=3D command
++	 * line option if it's non-zero. There's no other way that it can
++	 * tell a preserve-context (kjump) kexec from a normal one.
++	 */
++	pushq	$0
+ 	/* store the start address on the stack */
+ 	pushq   %rdx
+=20
+--=20
+2.43.0
 
-Sure. Will phrase it thus in v2:
-
-+       /*
-+        * Set return address to 0 if not preserving context. The purgatory
-+        * shipped in kexec-tools will unconditionally look for the return
-+        * address on the stack and set a kexec_jump_back_entry=3D command
-+        * line option if it's non-zero. There's no other way that it can
-+        * tell a preserve-context (kjump) kexec from a normal one.
-+        */
 
 
-> Without that, we'll be scratching our heads for the next decade about
-> what this 0 on the stack does. The comment you suggested tells us what
-> it is doing, but not why.
->=20
-> It all feels kinda icky though. Our stack is an ABI?!?!?!
-
-Well, it's kexec. Where else are we going to put things? Wanna declare
-that we're going to use %rbx instead? Or the BIOS Data Area in segment
-0x40? :)
-
---=-k0YgMrvsqsUx9Xlfj7rl
+--=-gxU9ucmlKYxzjeBoeZFx
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -209,22 +207,22 @@ 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
-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
+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
-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
+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
 
 
---=-k0YgMrvsqsUx9Xlfj7rl--
+--=-gxU9ucmlKYxzjeBoeZFx--
 
