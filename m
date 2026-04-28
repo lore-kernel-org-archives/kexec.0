@@ -4,102 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 60E33FF8877
-	for <kexec@archiver.kernel.org>; Tue, 28 Apr 2026 17:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 03BBBFF886D
+	for <kexec@archiver.kernel.org>; Tue, 28 Apr 2026 18:04:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=nLQfCSN8EWjiFZX7iYk3vg7MUEyfn/VCYlErQ2TNxjE=; b=z1ksfdffbMkjzKJDlKXbrfck5x
-	EU/KMnmuS3bi5gDzAYXy6GZcRsor2WS74+1Bse7vVvWYEDzrFi77TxId0x8MCPI9Q9j0qdWbWRDMO
-	2jXM4Cc4aRmekIXyTUwarEI7+Wlt0v0ljo8Wnm9Ygca3w9JmZiYGn8ECpG6SpjfOYUOE2cSqIuMXZ
-	muP7BuCgEI9BoRETZHK04uR3k2dB8LuayAd1eKRh4KKF2GgCDUM0ZRSUTnvXwv8wxVQw9WKOFRlfB
-	OAQ4uMw43WCoeHvKBNNmrAnLVBiCKTqsphLWvq4O7q6b48obYWNEZfJLObTfApvc5v3Vk8MXMishh
-	zb46ehNg==;
+	bh=ygmvO+HjfQ/QIT3NrCn1jU7XYrLjEGC/1MHEcBERi+E=; b=K1tYS5vTcdeKppyclbS5xzcAnO
+	uJY3bLuvomuueV0xvHveHAc81OE/F76RRxI7ZiyyYRo6t1PQkuNYUy3xqmq4TVPpO9+LKKiMD60wC
+	dz49cXfnpjNi8LDdf6otpOHnMlzWo+IRwenbe6x+nRkRnu2sld1bGELgm7AaEoEh9/HVoCMacAOlE
+	urNojCvMfVhpe9GM0JxVj3GqTO1IP3orFFQOZ9Q2VQvlq2BSKPizRdot4NRoTpT8evVkLkl5iF0SA
+	qnSA1Cons0KXOwy9x0tjzr6bNmjByvFAzvKEDtJ1Cl4iG/diZWEhFWcBAiJXZrVH9/bznO9ZxpE2T
+	Aevfsiyw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHma3-000000022pJ-0Hwj;
-	Tue, 28 Apr 2026 17:50:43 +0000
-Received: from mail-qv1-xf2c.google.com ([2607:f8b0:4864:20::f2c])
+	id 1wHmmw-000000023OS-298M;
+	Tue, 28 Apr 2026 18:04:02 +0000
+Received: from mail-qt1-x829.google.com ([2607:f8b0:4864:20::829])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHma0-000000022os-1PFl
+	id 1wHmmu-000000023O3-47qQ
 	for kexec@lists.infradead.org;
-	Tue, 28 Apr 2026 17:50:41 +0000
-Received: by mail-qv1-xf2c.google.com with SMTP id 6a1803df08f44-8a3b0242631so147275886d6.3
-        for <kexec@lists.infradead.org>; Tue, 28 Apr 2026 10:50:39 -0700 (PDT)
+	Tue, 28 Apr 2026 18:04:02 +0000
+Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-506251815a3so98296171cf.0
+        for <kexec@lists.infradead.org>; Tue, 28 Apr 2026 11:04:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1777398638; x=1778003438; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1777399439; x=1778004239; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nLQfCSN8EWjiFZX7iYk3vg7MUEyfn/VCYlErQ2TNxjE=;
-        b=DmcmMclBzDGiY2H/FFUtOLjBg2uHoVjM8TLyjJmhdwHbwW1GTX0rMt3NECgmx4Rj7+
-         xYWB9NHkOrdaksn4c0gzBq4dwuPpH3FY4MCArbLBdFQLf6iYgP6FfB26QMxvk+WDbB+H
-         BERsiEYP55ZxMBeKQEN/2KCowzpBuX0w8Dqrb5TxnZ4ecI7uroMsyQf//84d0LSHWzm8
-         uxl7+9Ntp5eJA4SbpHCX0e1ctUHJU2X5fkGGFeULB3Kk34b/YfVpHiS7MQcuR20qFLDr
-         nybWoLTO2QsndXFC0CpvJ+ZDyyq0+O3tGcfiez8AZtuM8sEQ7y/8maHeGVrqZxBx+W5Z
-         Dwnw==
+        bh=ygmvO+HjfQ/QIT3NrCn1jU7XYrLjEGC/1MHEcBERi+E=;
+        b=cS/GVodA46sfjpReUlUuRriZ2FWeFHipq546nLQjl9py1Eljrr7ebZmZzMk8xkl0Y+
+         e2fHLzkQQtfYejrcmSNiAihhKtqvs6+3n2znL9U0Mi6WhCHvr/88gtHU64PJVexM2waJ
+         9O+pp5XNOdjC66wMvAjrGlvXqYeJCCq5Lh4/8XIY/NqlOVYHKLUJwVIW2kdOYOqrKwQb
+         DM0qT8Bt3eGAvzjFfXbs1AaVOuhlLAygOg4Z1cldEXs4ckO+te4oT0DZJESeyOkW7uhW
+         6bxxmPWYWG22exhid2S1fQo12RWA1UQBFk/G2gp+7oFhdJFpibCHcRAE0RX7K6HqTlqc
+         ZQeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777398638; x=1778003438;
+        d=1e100.net; s=20251104; t=1777399439; x=1778004239;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nLQfCSN8EWjiFZX7iYk3vg7MUEyfn/VCYlErQ2TNxjE=;
-        b=gLs2Z5ccahwkNH4x1UclitG54UMxny/PaEDNP1sledMq1PE042g5GxHiP8rYcbiifl
-         80Gga8bnOMsz4ecAexEhTYO57h/B6zD+h3Zdvd1UGVyI5N490zJARL4lRIRGXX08WGFk
-         Z94pXq1Xbi6wg4XjxuS7zVqMj1f2qGRytg3h27ky1K55T6W5YLMSZ4YNFs566/W/qWkC
-         dIP2ZTdbScmGfT7n/HoRj69rOVFKsxHAnjt/6tuwSMbSd3caxN9sGW4iyUac94OYwuV2
-         edPXNSiUJhPcQSUwB4z8gtnvt9iV5jjeWoBe/6Uqd4R1J6ao4ln9naGNEnF1qnLPV6lR
-         ou5A==
-X-Forwarded-Encrypted: i=1; AFNElJ+NS4GnsszsCNoP5he5VUwvkLCCLHWQWc20M9dllpwgOYToMGs0Y7aK2yeS7wtLE/11vzyZAA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxSUWc665JEuGisIuiokZ7cjGyqROxLQqSsXLE0LgXsYAz8xrFY
-	vvOU+RCYbtTUc22hEeck17qgjaZjE3oSeDmdhClHjIZzy4W2J9CK0LqUBDnfAdDw1CM=
-X-Gm-Gg: AeBDievE1xMfO7rMoTA52sJWHJ0mcJrFOqPoTNFgEIXAvFL/8RhXZyMO+KyAPK3r+Vi
-	SuewV+ZnDulLBUiTG+Ww2iPyphqfDMlCNZHR3TPTa/vvEywbeVDgQK60h2kZ1PJhOtPLXo3QsqK
-	qdcCoUdPalioQY/gIn2egt7pLQJFsXg+oZL8kIoOU0Aa5VOPMfxVmlkGlQ/ENCSsENZB1JgHDMu
-	sGqCcByI1l5FpxBi46fCQl7bcSu3QQCtbclGtUGafRHcf4e7oh9beUbJNVAHQGNPYDgTRMXCbVQ
-	JPaDwXFeeN3hXGpvzvHfVRc0gGQyU5If9BzaukSbiLDb65QWDWucJBbjcekB7d6ddTU4Gu15r21
-	Adqe1XrT6VJhO/cDYUEZ2EeCrJJO6KRnr6EwQG/bV1KN9OpXEAlJVjrMU//+009tu1U3BYhY/Mw
-	1zbBOHKGKuvttocKrvTxJBk5pb58sy4XX7tmzKI/GEUzWPJzZ5l9MFc2kW3nuPCw==
-X-Received: by 2002:a0c:f40e:0:b0:8ac:b14d:fbe5 with SMTP id 6a1803df08f44-8b3e306950emr64326106d6.13.1777398637724;
-        Tue, 28 Apr 2026 10:50:37 -0700 (PDT)
+        bh=ygmvO+HjfQ/QIT3NrCn1jU7XYrLjEGC/1MHEcBERi+E=;
+        b=rnvusZOLnmoK8XEd3k7XOJwMZFVz5EP7dxJ2TfDiVCMV40AYQnxPOcvN/uOix3/VaC
+         TsDTAvB4hRnvjdaEk1O0TEVBL7fMVllb95SH3nerVeLcdHjYymHZuUTBvHKyDnruqjuU
+         b5RxtLsqpWC2Dfu81TyKOYOdMyJ2YS7lml1hbGTUPMhYjL7N7Pd7WcE2lFhxLmo2wS5k
+         kTxIuYZF2M33dZc9YER9mHXFC3bRIkqkXoYXjTH4PGr38//yYmUm2t2BJ6wHeM0ebWkE
+         aoDNvQSF6qRbFoQwBdOHLGX/c4js4ui/n38p9wwWsZeVEEnyYeRUj1u0vv7a3ZDX3Tj3
+         lUoQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+OGVsXpkx8Ah5K7kk1FtI2TcbJv3+RLKBJoXf8s8IVi4VcA9x6B57Iw8AQ+0x8Zjxzl7nebg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxO81iaODx7zoOCuP9j6UcrBApmDm5EUo2s1yd8ZMoPO0bsICHD
+	uFRSkh5U+JsymHxPMCfk6xwlUy0fExfJ6sEpwdC0sdI4QxDnVpO2xo6FGVgpSXVLqNoCfR/ises
+	8LVAzJgc=
+X-Gm-Gg: AeBDievRMjZPq8pxPQQJbjy4SPVYFmiL8nlKOkkWPiKKd6SA9oUJkIVrBjmyxKKFR1p
+	0zsrClaT/JL1Ie1qchD3HFgWZRZpDEE8BholL/VUre1riAdZhv3kSVibvBNpiTTuitXby9o20o7
+	stadAUwLLOIWntG9exll5zyApKrmWU1GU4gH5sQWw9ADs/OrzS0xTbG77WsKo+Fo++u+PkKZmnM
+	Cnhl/PeAhwcqm0u6M0Ir7LH3GeveXOTcH2JKU/GqY4Wdsixk8L1nZ9Vf6uyfz5rX6u1/d8/jP7o
+	hNsE3p1yfo8c5S5wYcJ6/ekUDPZD7FyItvM/ci0azKWoB2W7FLEWC50E1yUID+TCIgnx4mjcHDR
+	spl7v8evOj8KaU3HHzjyXxJRq/15AoDCXJ7pok9ajXd3iWOzCdAMRVvsct3Q1FFZiztjmoZIT7P
+	E0sd+XEaEdziCaU7SzEhnmOUlx/xCB4I8jptwDEyN6Zbuzo6Jhns945pOeB3qrWA==
+X-Received: by 2002:a05:622a:2b46:b0:50d:72e4:6df9 with SMTP id d75a77b69052e-5100e1d5947mr53671811cf.50.1777399439130;
+        Tue, 28 Apr 2026 11:03:59 -0700 (PDT)
 Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8b3e281bd11sm26479316d6.8.2026.04.28.10.50.35
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5100db4d0d6sm23431901cf.24.2026.04.28.11.03.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2026 10:50:37 -0700 (PDT)
-Date: Tue, 28 Apr 2026 17:50:35 +0000
+        Tue, 28 Apr 2026 11:03:58 -0700 (PDT)
+Date: Tue, 28 Apr 2026 18:03:57 +0000
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: David Matlack <dmatlack@google.com>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, iommu@lists.linux.dev, kexec@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-pci@vger.kernel.org, Adithya Jayachandran <ajayachandra@nvidia.com>, 
-	Alexander Graf <graf@amazon.com>, Alex Williamson <alex@shazbot.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
-	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Josh Hilke <jrhilke@google.com>, Leon Romanovsky <leonro@nvidia.com>, 
-	Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
-	Pranjal Shrivastava <praan@google.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Will Deacon <will@kernel.org>, William Tu <witu@nvidia.com>, 
-	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v4 01/11] PCI: liveupdate: Set up FLB handler for the PCI
- core
-Message-ID: <afDroRNDr9ttY4O9@plex>
-References: <20260423212316.3431746-1-dmatlack@google.com>
- <20260423212316.3431746-2-dmatlack@google.com>
- <2vxzeck45yin.fsf@kernel.org>
- <aetvAkM0y45WAmfV@plex>
- <ae_4fg_18Rli2_Nt@google.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Baoquan He <baoquan.he@linux.dev>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>, kexec@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] MAINTAINERS: add kexec@ list to LIVE UPDATE ENTRY
+Message-ID: <afD2eRh4yxP6Fq9g@plex>
+References: <20260428124833.1903302-1-rppt@kernel.org>
+ <20260428124833.1903302-3-rppt@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ae_4fg_18Rli2_Nt@google.com>
+In-Reply-To: <20260428124833.1903302-3-rppt@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260428_105040_419251_44B3A0FE 
-X-CRM114-Status: GOOD (  39.76  )
+X-CRM114-CacheID: sfid-20260428_110401_026814_FCC1D945 
+X-CRM114-Status: GOOD (  12.40  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -114,112 +101,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 04-27 23:59, David Matlack wrote:
-> On 2026-04-24 01:29 PM, Pasha Tatashin wrote:
-> > On 04-24 14:33, Pratyush Yadav wrote:
-> > > Hi David,
-> > > 
-> > > On Thu, Apr 23 2026, David Matlack wrote:
-> > > [...]
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > > index c9b7b6f9828e..94af31837375 100644
-> > > > --- a/MAINTAINERS
-> > > > +++ b/MAINTAINERS
-> > > > @@ -20555,6 +20555,18 @@ L:	linux-pci@vger.kernel.org
-> > > >  S:	Supported
-> > > >  F:	Documentation/PCI/pci-error-recovery.rst
-> > > >  
-> > > > +PCI LIVE UPDATE
-> > > > +M:	Bjorn Helgaas <bhelgaas@google.com>
-> > > > +M:	David Matlack <dmatlack@google.com>
-> > > > +L:	linux-pci@vger.kernel.org
-> > > > +S:	Supported
-> > > > +Q:	https://patchwork.kernel.org/project/linux-pci/list/
-> > > > +B:	https://bugzilla.kernel.org
-> > > > +C:	irc://irc.oftc.net/linux-pci
-> > > > +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
-> > > > +F:	drivers/pci/liveupdate.c
-> > > > +F:	include/linux/kho/abi/pci.h
-> > > > +
-> > > 
-> > > Can we please also add these files under the "LIVE UPDATE" entry. The
-> > > code here concerns both live update and PCI.
+On 04-28 15:48, Mike Rapoport wrote:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 > 
-> Covering that intersection of Live Update and PCI was exactly my
-> intention with introducing this new PCI LIVE UPDATE entry. This ensures
-> we have maintenance coverage with knowledge of that intersection.
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+
+Acked-by: Pasha Tatashin <pasha.tatashin@soleen.com> 
+
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> > > We can figure out the
-> > > maintenance details as we go along, but I think the live update
-> > > maintainers should at least get all the patches for PCI live update.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2685cbf89b5e..1be7d97bdd8c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14895,6 +14895,7 @@ LIVE UPDATE
+>  M:	Pasha Tatashin <pasha.tatashin@soleen.com>
+>  M:	Mike Rapoport <rppt@kernel.org>
+>  M:	Pratyush Yadav <pratyush@kernel.org>
+> +L:	kexec@lists.infradead.org
+>  L:	linux-kernel@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
+> -- 
+> 2.53.0
 > 
-> Would adding kexec@ here be sufficient or do you want to be CC'd
-> directly?
-> 
-> If you want to be CC'd directly do you think makes more sense to add the
-> Live Update maintainers as Reviewers under PCI LIVE UPDATE, or add
-> drivers/pci/liveupdate.c under LIVE UPDATE?
-> 
-> > > 
-> > > Perhaps also add the kexec list here? We plan to use it to maintain the
-> > > LUO patches, and adding it will make sure we get the patches in case
-> > > someone updates the file list here but forgets to update it in the LIVE
-> > > UPDATE entry.
-> > 
-> > +1
-> > 
-> > These files should also be added to the Live Update entry, and the kexec
-> > mailing list should be included.
-> > 
-> > Changes specific to Live Update should be routed through the
-> > liveupdate/linux.git tree, while generic PCI changes should go through
-> > pci/pci.git. In either case, if liveupdate.c or abi/pci.h are modified,
-> > acks are required from the Live Update group.
-> 
-> Do you want to merge changes to drivers/pci/liveupdate.c through the
-> live update tree or PCI tree? We should probably decide now. I was
-> assuming the PCI tree since its part of PCI core.
-> 
-> As we project this out there are going to be users of the Live Update
-> API across different parts of the kernel: PCI core, IOMMU core, IOMMU
-> drivers, VFIO core, VFIO PCI drivers, and KVM. I don't think it will
-> scale to take all that code through the live update tree.
-
-All Live-Update-specific changes should go through the liveupdate tree. 
-The liveupdate tree is the only Linux tree that will cover full Live 
-Update regression testing, and it contains reviewers and maintainers who 
-know the details of the Live Update process, its lifecycle, and its 
-requirements.
-
-The request we are hearing from other subsystem maintainers is that they 
-want to make sure Live Update is isolated enough not to make their lives 
-harder. This means reducing the number of conflicts, the maintenance 
-burden, and testing responsibilities.
-
-Therefore, the "PCI LIVE UPDATE" entry should specify you as a 
-maintainer, "kexec@lists.infradead.org" as the list to which all LU 
-changes should be CC'd, and "liveupdate/linux.git" as the git tree 
-against which changes should be applied.
-
-It should also include "linux-pci@vger.kernel.org" so the PCI 
-maintainers are CC'd. In case there are larger changes that touch core 
-PCI and liveupdate.c/abi, we can ACK them, ensuring we are aware of 
-incoming conflicts during the current or next merge cycle.
-
-It should also specify the members of LU group so we can stage the 
-changes.
-
-This is the way we agreed to handle kexec changes: Baoquan He is the 
-maintainer, and without his Reviewed-by tag, we won't take changes to 
-kexec. This is the approach we follow with MM for KHO changes to 
-memblock and memfd preservation, as well as the upcoming 
-hugetlb/guestmemfd preservation. 
-
-This is also the approach we should continue using when adding LUO 
-support to other components like PCI, VFIO, IOMMU, and KVM. It keeps 
-life easier for the core component maintainers and ensures we do not 
-regress LU by staging everything in the same tree and sending LU merge 
-requests from a single tree.
-
-Pasha
 
