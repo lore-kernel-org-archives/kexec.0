@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90F06FF885D
-	for <kexec@archiver.kernel.org>; Tue, 28 Apr 2026 12:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 94FE8FF886D
+	for <kexec@archiver.kernel.org>; Tue, 28 Apr 2026 12:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=kx4Z9S7Bpa9HQO0cTr3r0xlBexxh+B79sMRxGg6I3tc=; b=SOJomjLBXksHM2dEKNDEId5og9
-	nDZYMhD+lRn28N355jB/Jd+2a7QqD1as1UBFu2H1cj8G/yARmnJVHH0DWJzwoZXve5UELct/MlHKo
-	xKyyHqFMC14xJf0g/pf7H8ioJf8/Wgz1yjuvpxE6itJvk3Z3gNFu95VIyUFLznfSnOiX4ECmUQk+c
-	9hExKOg/o/IeEmV9PMdAUw+jvANAVrR2g4cmpVrp2O3Y3WYBqho9UzORk/cIn6rfwpvK/Z1D7qZHc
-	a4TDx6O/pMNZJYJhF/6aEEBgDaaS8jbcqYNe5ydrWk9EDW9it5q3OgwupZ2wbPJy0jQMOL15b3ISt
-	9DjA1Fog==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=SaYkhtIf8uCy4S4m99sp7NZ8D56a7mMdSX80a5X82MQ=; b=FJb9VpkMwX/79f/GEp31znQhog
+	yzqurpOuIMHEXv8Gj0DrmIkRL9MPuI7GO8tH8PWIeIycvYR/PwYjHvnl745P+r8uNnSYNTBzcE9Zy
+	msoisNcU80H1QZD76mVANYplpHEYnZv0UOw3VzEUcl8JrWg8D0rznsFcQafy4rev5vQgHZWWtIrXz
+	/XpGLWnHIxEj9N9ayb0Y2a19CnPjQBVjY4LCt6O3sXCpjTKUfOxKrvEWLRWHgzZ+l19ZYwbCchYy8
+	fvJkSVIEYvePthAdzSSTUsJRoy+BKGdiGkuIHLfsG04utBkc0TSsTAPi9P5a8bV6zGpkg08yRrOM/
+	XAXHYT1A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHhro-00000001So0-0HuC;
-	Tue, 28 Apr 2026 12:48:44 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wHhrp-00000001SoO-1Npj;
+	Tue, 28 Apr 2026 12:48:45 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHhrk-00000001SnY-2n3C
+	id 1wHhrn-00000001Sns-2qkf
 	for kexec@lists.infradead.org;
-	Tue, 28 Apr 2026 12:48:41 +0000
+	Tue, 28 Apr 2026 12:48:43 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 0B00143F50;
+	by tor.source.kernel.org (Postfix) with ESMTP id CF74861333;
+	Tue, 28 Apr 2026 12:48:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C751C2BCB5;
 	Tue, 28 Apr 2026 12:48:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB479C2BCAF;
-	Tue, 28 Apr 2026 12:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777380519;
-	bh=9s6njrQfVXz8FNQXaWepEeYdK9+qlp8ItB6D7QszUrc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IuT5nf+2hiV14doqDZdjDBHZT3I6iUautGjelvnuZFZyaEeIxRepTX2T8YcxzZ82c
-	 vU1W7PfbG0tC4YP7Dl/WBH1zdGjV+a/zFE9fVV+9tnU8ipy4ffVImqj5/HRiTEF8hj
-	 I35mAJE2byTwZOr0ym6FN016VM46mO1V4nEsUZB4fDqGW9tNDDIBvIMeLOlrzVt+3y
-	 WDquhwQgq+sI+7uMX8+QVXVbGq0YTtGU7S7Xm3TzENcSeEtxKK4s2p3tHZo+B6IFZk
-	 2TVfTvkHIqNuXX21a+065EHMJlYkkHDhKW2BmhHNIrkMTtdGqiDrXOMApZrFD3zDHl
-	 N6NNkOZGOEL3w==
+	s=k20201202; t=1777380522;
+	bh=n5wCm15+K3+O44nSoPI+pxf4Moq6WiC8pN5zqLPu6y4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=jBYDFTqgY74W3Nx4q4t4eeLXg0fv06ArwPH8T3Lpm3nQfZpI/p9jOTRkxVQYbU4nm
+	 cjDZwTjRSOc2KM2HqbZluQsumaLCCERATaE47SwFCOUx3CjQ5ZY/S3ZVAqwV9Q18a1
+	 yhEWMNINnZicNm4hETuhbi6V1wOsfqJIjr0/hFNLF5uTd3lDEvjKTg/uLGzfVAas1r
+	 QDN/zAImaFFPtbO78SVoGcvCnkl1mGmkHrkuhjF6rokTXZ296qVm1uTmWNKYPkyfl+
+	 QO+f3Pmk9fMawYShQFwrH8M40VegvRZ3kjdvPLlhJ6f51UIYxP7/WCm/fiBcAfRMZF
+	 yIS92dCWcwy/g==
 From: Mike Rapoport <rppt@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Baoquan He <baoquan.he@linux.dev>,
@@ -51,16 +51,14 @@ Cc: Baoquan He <baoquan.he@linux.dev>,
 	Dave Young <ruirui.yang@linux.dev>,
 	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] MAINTAINERS: update KEXEC, KDUMP and LIVE UPDATE
-Date: Tue, 28 Apr 2026 15:48:31 +0300
-Message-ID: <20260428124833.1903302-1-rppt@kernel.org>
+Subject: [PATCH 1/2] MAINTAINERS: add tree for KDUMP and KEXEC
+Date: Tue, 28 Apr 2026 15:48:32 +0300
+Message-ID: <20260428124833.1903302-2-rppt@kernel.org>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260428124833.1903302-1-rppt@kernel.org>
+References: <20260428124833.1903302-1-rppt@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260428_054840_725728_B1E1C552 
-X-CRM114-Status: UNSURE (   6.49  )
-X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,25 +75,38 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-Hi,
-
 KHO and LiveUpdate team is going to pick kdump and kexec patches to
 their tree at
-    
+
 https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
 
-Update MAINTAINERS to reflect this change and add kexec@ list to LIVE
-UPDATE entry.
-   
-Mike Rapoport (Microsoft) (2):
-  MAINTAINERS: add tree for KDUMP and KEXEC
-  MAINTAINERS: add kexec@ list to LIVE UPDATE ENTRY
+Update MAINTAINERS to reflect it.
 
- MAINTAINERS | 3 +++
- 1 file changed, 3 insertions(+)
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+---
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-
-base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2fb1c75afd16..2685cbf89b5e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13861,6 +13861,7 @@ R:	Dave Young <ruirui.yang@linux.dev>
+ L:	kexec@lists.infradead.org
+ S:	Maintained
+ W:	http://lse.sourceforge.net/kdump/
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
+ F:	Documentation/admin-guide/kdump/
+ F:	fs/proc/vmcore.c
+ F:	include/linux/crash_core.h
+@@ -14177,6 +14178,7 @@ M:	Pasha Tatashin <pasha.tatashin@soleen.com>
+ M:	Pratyush Yadav <pratyush@kernel.org>
+ L:	kexec@lists.infradead.org
+ W:	http://kernel.org/pub/linux/utils/kernel/kexec/
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
+ F:	include/linux/kexec.h
+ F:	include/uapi/linux/kexec.h
+ F:	kernel/kexec*
 -- 
 2.53.0
 
