@@ -4,57 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B16A2FF885D
-	for <kexec@archiver.kernel.org>; Tue, 28 Apr 2026 12:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90F06FF885D
+	for <kexec@archiver.kernel.org>; Tue, 28 Apr 2026 12:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=LoHauB0aNDClHjbqEf5BAwuhOPLpZPLJG/TketrMVSU=; b=gkFiQkz8aR/OjQJoywtAjQEP4G
-	diePPR5bEOemoMSnjbUpuqAA6MzTCktEtEZbQbmvULeutI6fYWVUfO0HX8iUG73vfVDBhCB4OqYoF
-	uFlXRD89rV2CWO8bIxsDWaxE5pnF166SPP0s7+9LdfdLcWOu8PmeSHTPL84Mj6MBSlAAfltH6P0jA
-	mjtfbQXlv1eoexAkAdz9BP189fgCWyZ9mx6SFkywsNYVLRoPlwIGETJ+7N9Ml247hdTvA4BP1JK98
-	pXWgpPyAH9sT6W/U/GUNnPq6R7KimrMy52zTjuOYxi2BGbBLma51+Ottn7d0H7L6qL/zY77a85uez
-	PtPxRA6A==;
+	bh=kx4Z9S7Bpa9HQO0cTr3r0xlBexxh+B79sMRxGg6I3tc=; b=SOJomjLBXksHM2dEKNDEId5og9
+	nDZYMhD+lRn28N355jB/Jd+2a7QqD1as1UBFu2H1cj8G/yARmnJVHH0DWJzwoZXve5UELct/MlHKo
+	xKyyHqFMC14xJf0g/pf7H8ioJf8/Wgz1yjuvpxE6itJvk3Z3gNFu95VIyUFLznfSnOiX4ECmUQk+c
+	9hExKOg/o/IeEmV9PMdAUw+jvANAVrR2g4cmpVrp2O3Y3WYBqho9UzORk/cIn6rfwpvK/Z1D7qZHc
+	a4TDx6O/pMNZJYJhF/6aEEBgDaaS8jbcqYNe5ydrWk9EDW9it5q3OgwupZ2wbPJy0jQMOL15b3ISt
+	9DjA1Fog==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHhmt-00000001SFG-3xVU;
-	Tue, 28 Apr 2026 12:43:39 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wHhro-00000001So0-0HuC;
+	Tue, 28 Apr 2026 12:48:44 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHhms-00000001SEr-2fzC
+	id 1wHhrk-00000001SnY-2n3C
 	for kexec@lists.infradead.org;
-	Tue, 28 Apr 2026 12:43:38 +0000
+	Tue, 28 Apr 2026 12:48:41 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id B00076132F;
-	Tue, 28 Apr 2026 12:43:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BD76C2BCAF;
-	Tue, 28 Apr 2026 12:43:36 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 0B00143F50;
+	Tue, 28 Apr 2026 12:48:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB479C2BCAF;
+	Tue, 28 Apr 2026 12:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777380217;
-	bh=XA/hR8vGDtkQcnxAa7Wf9ciY6ktlRZfPEn8Qv3ob+8M=;
+	s=k20201202; t=1777380519;
+	bh=9s6njrQfVXz8FNQXaWepEeYdK9+qlp8ItB6D7QszUrc=;
 	h=From:To:Cc:Subject:Date:From;
-	b=XVAHdLN4NCDGZ6CRXZMuo6K45PrNy8VREQO9d3SWKayaxzpYg6ubiQbmoFm6TzOrs
-	 oTI8Xdb1C0EJ6fPB88QKwHGHgKx2gpJYI3BQzaFMv/fxJb4kX12qWIjTbL0dpCC0NY
-	 lbh3/c3iDsr42dAPfPCguDSiJB7udvHlEpaVWD6YGSEnp0/9pWeRIevKTNZnBmnl5I
-	 xbLEpZ6LCvLTW0Prbl+wB0ubNK9R+GqImWoLCvGiokLfPJx9bTF+BKArvqdxzr+DWa
-	 +KzVy563xyhfbD0nuIh9imSFNFvtyAW7b1oJxGDz6M4qJPtu89t0oR4mbnchD/QLXs
-	 kpqxRU1J92Q7A==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	b=IuT5nf+2hiV14doqDZdjDBHZT3I6iUautGjelvnuZFZyaEeIxRepTX2T8YcxzZ82c
+	 vU1W7PfbG0tC4YP7Dl/WBH1zdGjV+a/zFE9fVV+9tnU8ipy4ffVImqj5/HRiTEF8hj
+	 I35mAJE2byTwZOr0ym6FN016VM46mO1V4nEsUZB4fDqGW9tNDDIBvIMeLOlrzVt+3y
+	 WDquhwQgq+sI+7uMX8+QVXVbGq0YTtGU7S7Xm3TzENcSeEtxKK4s2p3tHZo+B6IFZk
+	 2TVfTvkHIqNuXX21a+065EHMJlYkkHDhKW2BmhHNIrkMTtdGqiDrXOMApZrFD3zDHl
+	 N6NNkOZGOEL3w==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan He <baoquan.he@linux.dev>,
 	Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
 	Pratyush Yadav <pratyush@kernel.org>,
-	David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org,
+	Dave Young <ruirui.yang@linux.dev>,
+	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: add kexec list to LIVE UPDATE
-Date: Tue, 28 Apr 2026 14:43:20 +0200
-Message-ID: <20260428124325.4189486-1-pratyush@kernel.org>
-X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
+Subject: [PATCH 0/2] MAINTAINERS: update KEXEC, KDUMP and LIVE UPDATE
+Date: Tue, 28 Apr 2026 15:48:31 +0300
+Message-ID: <20260428124833.1903302-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.53.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260428_054840_725728_B1E1C552 
+X-CRM114-Status: UNSURE (   6.49  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,29 +75,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-We plan to use the kexec list to track live update patches. Make sure it
-gets Cced.
+Hi,
 
-Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+KHO and LiveUpdate team is going to pick kdump and kexec patches to
+their tree at
+    
+https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2fb1c75afd16..e0859f186864 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14893,6 +14893,7 @@ LIVE UPDATE
- M:	Pasha Tatashin <pasha.tatashin@soleen.com>
- M:	Mike Rapoport <rppt@kernel.org>
- M:	Pratyush Yadav <pratyush@kernel.org>
-+L:	kexec@lists.infradead.org
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
+Update MAINTAINERS to reflect this change and add kexec@ list to LIVE
+UPDATE entry.
+   
+Mike Rapoport (Microsoft) (2):
+  MAINTAINERS: add tree for KDUMP and KEXEC
+  MAINTAINERS: add kexec@ list to LIVE UPDATE ENTRY
+
+ MAINTAINERS | 3 +++
+ 1 file changed, 3 insertions(+)
+
+
+base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
 -- 
-2.54.0.545.g6539524ca2-goog
+2.53.0
 
 
