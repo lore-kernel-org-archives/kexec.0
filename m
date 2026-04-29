@@ -4,109 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 423F8FF8875
-	for <kexec@archiver.kernel.org>; Tue, 28 Apr 2026 23:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 911A8FF8864
+	for <kexec@archiver.kernel.org>; Wed, 29 Apr 2026 06:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=in+mysCXNp4IJcp8wpKV/ePcsC7P4CQwStR4ajhF2Xo=; b=mAm4ykrE7G0IIQUVCBvRUIRYq/
-	dPRSnNxdcPMUj90j0gKqyAwqozI2K2/SAm60p5v4CTfR51nDNIs8nTzGZUkpBlzRM+5hHTkx10FbW
-	XWts8vA3IJe04JShTnVzslgbLIMdDd6HbpKxAJm+RmUp9fU8wD0MyEmym8hgr5m4hGemURbppFUJU
-	yLDd8dGsGWCE9cyqcg//qdp9De7R2w4mR/507oJAaScrMPeMAgg2NOwHs4tMSXqEydJBki98TcoYv
-	7dMQp/08XhTyP/IJwoBaLqWOd22O8ma7ysUWxFBtwd4GEgutCYTvP4b3hJUtBW8TEPWXYMkz29tZd
-	fHV0UNzw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=2YAMiQdl0y9iAuHJeag5d0legeH39piZcT0MdhE3hIc=; b=txBobthohhKAgNz3O8T4Rqc6/u
+	MGxcfVcUw1HY6d0+R0+zANf1En3xKy1Zy9ENjHvkjDk4NjQn08zwUBwtvaz7mhuocOWq9T6V6Xcr0
+	E1dCDv8TnjJKU4xbkzqaIeOd1VA6ai7z2ozTJvYN4sjDAhsr6n8/7YVvkkv9zPAHj1qL6xPJtOzP5
+	pQcue9PnvBtDm/6ts+ojocgM4Ou3GCm0e690lSIKKz/A3vc6R2e6T+CV3yYuDZ0+LyryXmbRunjuK
+	qcEnDUiM7ygiqOv51jUkRgHgitR9w4WGyUyosYSJ4JibK2+qqmVWqmZoUvszzDvC8iTmwSoy0jWHV
+	vZn7lJpg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHsDS-00000002dbV-2aNs;
-	Tue, 28 Apr 2026 23:51:46 +0000
-Received: from mail-pl1-x62f.google.com ([2607:f8b0:4864:20::62f])
+	id 1wHysk-000000034gH-0QdP;
+	Wed, 29 Apr 2026 06:58:50 +0000
+Received: from mail-pf1-x443.google.com ([2607:f8b0:4864:20::443])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHsDQ-00000002db5-17gp
+	id 1wHysg-000000034ei-1c3Y
 	for kexec@lists.infradead.org;
-	Tue, 28 Apr 2026 23:51:45 +0000
-Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-2b45cb89f7eso74796465ad.0
-        for <kexec@lists.infradead.org>; Tue, 28 Apr 2026 16:51:43 -0700 (PDT)
+	Wed, 29 Apr 2026 06:58:49 +0000
+Received: by mail-pf1-x443.google.com with SMTP id d2e1a72fcca58-82f1bfc9b8fso5570001b3a.1
+        for <kexec@lists.infradead.org>; Tue, 28 Apr 2026 23:58:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777420303; x=1778025103; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=in+mysCXNp4IJcp8wpKV/ePcsC7P4CQwStR4ajhF2Xo=;
-        b=FVjp0y0fWDim0DXgSipeFm4KWlJyi0Pufggp4gs/m9kO7V0seDww4U8GTQBl7BqSq+
-         3hUV9mqkYgT5Zj2r3aQ6dWgn0uTqFF3hcs1z+ZbRl/nmSvTy7YRIMmeRP/nWLjEZbSeM
-         h9xsKKswH6/JPzpCQ3J/Ay8PSHlvg2IvRzUqP3P064enTSU2DegTwCiuxyfDUfm2dBmj
-         EonjkrN8H6Z+oq5DHdu/mJzd/5NgkphcLqf+6fjFyJcG8azOVH5C0YK+Dy5ZgHUsQu3x
-         0fUdQQP+tWFzPEv0JPCyCJeaR1XddP/56FGo/VclQUHtJI1rZGgJHCAKyBroZK0SD1vB
-         1AEA==
+        d=gmail.com; s=20251104; t=1777445924; x=1778050724; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2YAMiQdl0y9iAuHJeag5d0legeH39piZcT0MdhE3hIc=;
+        b=QLg36gI+wGys2j35WqN7gtqnDrd9OzgnLr3YZ4t9MOpj9Lm0IJLXQWlC6HSV4ZggW9
+         ghjX+Wwx6IQ6Q967zvaHUegagcHEYeVHFo9kleEtekn1i7DlVyJMLQvV5pTFR8YxWan0
+         u51vJN+xyTPQIhSQCWy+XY09fbscdsK/n1auLPk4rbx0JUpWF+He+z8mc5MKkKDpba+6
+         hEYxw9NTqg515FboRRr1ZgjfHgcmccRvVOnl7UPSNk6nCvMjeeUhYUoN7uGHJaTW7XcC
+         1EsMyeRzTRDap+vCEUrXZ+NYm9CX5L06q7LoinOAs4Ngv551CR9SkYNxNUHmcyavsPNH
+         NWpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777420303; x=1778025103;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=in+mysCXNp4IJcp8wpKV/ePcsC7P4CQwStR4ajhF2Xo=;
-        b=Qksiv8bGiVJ0dmvQA1R6eqDroqBS1prn4IW281L2zYKtU+ve740hlvPbboo5hZop8X
-         iUOWxUvu+Sc7U56KKYu6Jm1vj2mtI3BKYNYz1Dml/sF4YV5vmcJ0WvmxlCEfkvjCYa4T
-         DuL5czZTW65UrWU3mJrda6gIaLt96b0Tc7aVJ9yXnQboLKPea6XeBaP5l6kQmUzPsly2
-         zA9ypi7h7eQ3CTN7/Z7vb/Y006eHRqATi4ZmHq2KFirI9h+Wu4Fi5VIPIHY6MlJg5avS
-         0IxwnH7h3gYnYZ7GOE5Rsi/oZzDd5DNq9e9CkcDlIhKyP8jpw+Jp3WhizJPFMvzEt/er
-         nN0Q==
-X-Forwarded-Encrypted: i=1; AFNElJ8scgaeBqkSmmd6XR4Uhk4H+Z4R1XGw2qzSMySKE5u8LgZS2Vjprj022tnaDLttUA3ZvRQLqw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzCFdGN/FINoJ8qda2LgLzY7zlHBlxRSGQMDLe0T0PbkgRcC0PL
-	4h3IRWdKGlwOy4NLNM82yYl+EEGUnSHNgVT1Ca455fdxOHBj642m8oDo9w1Je1AGgQ==
-X-Gm-Gg: AeBDies8BaWh+MNzyenSgNduVepImJ7yhfu7YPdYxljzuQvd0qYvnenSeDExwefBKxm
-	Y3Ly7FAsXmr9Wt3ngQCCdogdLyqStf3+tWsRR9Z8sD1ByuYelIch1GGe33nDOQ/qLPzNJdYCz69
-	6UVhDxdFgnqznW4nJH5kUkDJyyIqMgKwr9ncfcZ6PM7Y5lPTSSXlWylAgi18e1WjiFzj6AHvj5V
-	vHcz9uSB1tYnEJ6bHVHOxqsbEJPZ6I3p95Q6hWBqXYVE9VLTDnOuokYtXwt8IebGZ7uwnNxp5MH
-	bq9Y4s/qJy+fiQdJLVfDJWWh1mPh+WcQ4vgu684GddpazYz8Au0YeFoLoqLWGOjSME7JNDYOggc
-	QTHsBtm//mI1LmESmwvbDtTvvMr+lOd7xES+RKkI9/PqhfedtBXbnarlTVMwIjolMqwz61qXtml
-	d81SjbqqcIU0BN/5MER/Ayoeakx61X+CMY4qr1KC/Am7THRRfZnXZ/QcPYBzgLzINGOvSQU7OXo
-	UfVyA==
-X-Received: by 2002:a17:903:a90:b0:2b2:65db:8c5f with SMTP id d9443c01a7336-2b97c4c8995mr46570035ad.27.1777420302688;
-        Tue, 28 Apr 2026 16:51:42 -0700 (PDT)
-Received: from google.com (76.9.127.34.bc.googleusercontent.com. [34.127.9.76])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b98859f629sm3480345ad.0.2026.04.28.16.51.41
+        d=1e100.net; s=20251104; t=1777445924; x=1778050724;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2YAMiQdl0y9iAuHJeag5d0legeH39piZcT0MdhE3hIc=;
+        b=fpYST8OlwYnanlUMG7y6k9kV31R17hWYY37bi7Ld1jZRaABLhxlRW2PUrEsyi3KinL
+         nH9/Y+w9YkKJSTrJXx6Ffuah0tMibv0dAR1NCrtKfnAUL1WjYNidnd7uuMGN9PP1rfGv
+         4ua561X+Itoxl/8D1s4zEoFHPJXmx0nAkfAThvQTFmOQ85m5ZnWvhmQ+dFflrYJuVJ9X
+         LNTnY9f8543A499uPaWrrOPSsd2htx4zwShSGUOyQxYV4WR9CRvM9AN1a01hUjO4wnOa
+         O2npkkbmUmdWB1R1Y18lNmJzKW0w4ijTTro0rPizh1lDQjZKntVroUBedywGX7zX2df0
+         /t5A==
+X-Gm-Message-State: AOJu0YzIc3hzEsLiaGPb1Lu5hs8PgXUTDLpn81tHsdM43J83DWAL70Ff
+	KBsAceQmwNH96ENrYjizCmvViId/632Iq0FzYUaVKstCefQV0Jts7DbTtRAqwk/Gqx3yLkEu
+X-Gm-Gg: AeBDietI96c0Yl81mf7+1zD/6Xwh5aNzhQYfDERUDovvWvXl7LAa22bi2AfToFgCtee
+	wCLbOL1PFP7DkV+ihwZ5fVAVYngrtlGnEEUjmpgIr94Wvdrg9h53n7pYfh4IYay9CvIg8N7PjC+
+	aNmiHr5XLsncZIlDMcBNyRlazxNzEhgRo/SghXEcHn3bucNYmueM7Ryjv7FFSeqSpLI4p3mO7B2
+	cq4qM8xEEwxIjS+jmU/Z2pL04XmzFPFddccT19o4UeLU2ywE5ynVj1iEL312knRjmQg/YSNgfDh
+	QZFi9KrzhfB3KAqdqUYunqf5wJJlirPHT+DtsZXr90AZHQ79rUGh9ZuAS/6BoB4zgh2NNtgwWdh
+	vnxgeQjrcArqAwBqEP8sxs1lr5aYI+doOPdPp9igw5VitUspMAjj3zXviGcraN01XrdifioeuLC
+	kBbU1jPxKSxdBEArCU3IDEtVvNEMyXyokyqtr3TKMB6AZwnN/L
+X-Received: by 2002:a05:6a00:883:b0:829:7d31:dd99 with SMTP id d2e1a72fcca58-834ddbd42f5mr6432638b3a.38.1777445924448;
+        Tue, 28 Apr 2026 23:58:44 -0700 (PDT)
+Received: from intel.company.local ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-834ed7eaf93sm1043146b3a.40.2026.04.28.23.58.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2026 16:51:41 -0700 (PDT)
-Date: Tue, 28 Apr 2026 23:51:37 +0000
-From: David Matlack <dmatlack@google.com>
-To: Vipin Sharma <vipinsh@google.com>
-Cc: iommu@lists.linux.dev, kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-pci@vger.kernel.org,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Joerg Roedel <joro@8bytes.org>,
-	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
-	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pranjal Shrivastava <praan@google.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Will Deacon <will@kernel.org>, William Tu <witu@nvidia.com>,
-	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v4 01/11] PCI: liveupdate: Set up FLB handler for the PCI
- core
-Message-ID: <afFICT9mSL1XG0v_@google.com>
-References: <20260423212316.3431746-1-dmatlack@google.com>
- <20260423212316.3431746-2-dmatlack@google.com>
- <20260428185242.GB3825533.vipinsh@google.com>
+        Tue, 28 Apr 2026 23:58:43 -0700 (PDT)
+From: Chen Wandun <chenwandun1@gmail.com>
+X-Google-Original-From: Chen Wandun <chenwandun@lixiang.com>
+To: kexec@lists.infradead.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org
+Cc: akpm@linux-foundation.org,
+	bhe@redhat.com,
+	rppt@kernel.org,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	ruirui.yang@linux.dev,
+	corbet@lwn.net,
+	skhan@linuxfoundation.org,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	robh@kernel.org,
+	saravanak@kernel.org,
+	chenwandun@lixiang.com,
+	zhaomeijing@lixiang.com,
+	everyzhao@126.com
+Subject: [PATCH 00/11] kdump: reduce vmcore size and capture time via linux,no-dump
+Date: Wed, 29 Apr 2026 14:58:20 +0800
+Message-ID: <20260429065831.1510858-1-chenwandun@lixiang.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260428185242.GB3825533.vipinsh@google.com>
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260428_165144_312418_D1F5C849 
-X-CRM114-Status: GOOD (  21.36  )
+X-CRM114-CacheID: sfid-20260428_235846_420763_0A127D7C 
+X-CRM114-Status: GOOD (  12.88  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,71 +119,129 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-04-28 12:45 PM, Vipin Sharma wrote:
-> On Thu, Apr 23, 2026 at 09:23:05PM +0000, David Matlack wrote:
-> > +	pr_debug("Preserving struct pci_ser with room for %u devices\n",
-> > +		 max_nr_devices);
-> > +
-> > +	ser = kho_alloc_preserve(size);
-> > +	if (IS_ERR(ser))
-> > +		return PTR_ERR(ser);
-> 
-> Should there be a similar pr_debug() in case of failure to denote that above
-> "Preserving ..." message didn't finish, or, maybe just print one
-> pr_debug() after the error check above?
+This series has two parts:
 
-Hm... I guess there could always be more pr_debug()s but I don't want to
-instrument every error path. I could move it to the success path but I
-don't see how that makes it any better.
+ - Patches 1-4 are OF reserved_mem bug fixes and small hardening
+   changes. They stand on their own and at the same time prepare the
+   ground for the feature work that follows (accurate region counts,
+   consistent two-pass save/reserve state, and an early-out when the
+   array is empty).
 
-> 
-> > +/**
-> > + * struct pci_dev_ser - Serialized state about a single PCI device.
-> > + *
-> > + * @domain: The device's PCI domain number (segment).
-> > + * @bdf: The device's PCI bus, device, and function number.
-> > + * @reserved: Reserved (to naturally align struct pci_dev_ser).
-> > + */
-> > +struct pci_dev_ser {
-> > +	u32 domain;
-> > +	u16 bdf;
-> > +	u16 reserved;
-> 
-> Should this be renamed to 'u8 __padding[2];' instead? This will allow to
-> just change the array length based on the need (0, 1, 2, 3).
+ - Patches 5-11 introduce a new 'linux,no-dump' reserved-memory
+   device tree property and the kdump plumbing to honour it, split
+   further as:
 
-Sorry I'm not following what you mean here. What is the reason to rename
-this field and change it to an array?
+     * Patches 5-7: core OF changes - parse 'linux,no-dump' on
+       /reserved-memory/ children, save /memreserve/ firmware regions
+       into reserved_mem[] with no_dump defaulted on, and add generic
+       no-dump crash_mem exclusion helpers.
 
-> > +} __packed;
-> > +
-> > +/**
-> > + * struct pci_ser - PCI Subsystem Live Update State
-> > + *
-> > + * This struct tracks state about all devices that are being preserved across
-> > + * a Live Update for the next kernel.
-> > + *
-> > + * @max_nr_devices: The length of the devices[] flexible array.
-> > + * @nr_devices: The number of devices that were preserved.
-> > + * @devices: Flexible array of pci_dev_ser structs for each device.
-> > + */
-> > +struct pci_ser {
-> > +	u32 max_nr_devices;
-> > +	u32 nr_devices;
-> > +	struct pci_dev_ser devices[];
-> > +} __packed;
-> > +
-> > +/* Ensure all elements of devices[] are naturally aligned. */
-> > +static_assert(offsetof(struct pci_ser, devices) % sizeof(unsigned long) == 0);
-> > +static_assert(sizeof(struct pci_dev_ser) % sizeof(unsigned long) == 0);
-> 
-> Nit: Maybe move this assert to be near to the definition of this struct,
-> easier to find it when editing the struct vs finding it later during
-> build.
+     * Patches 8-10: arch kdump consumers - arm64, riscv and
+       loongarch each call the helpers from patch 7 in their
+       prepare_elf_headers() so that 'linux,no-dump' /reserved-memory/
+       children and /memreserve/ regions are filtered out of the
+       vmcore ELF PT_LOAD segments.
 
-The combination of these 2 asserts is what guarantees that every element
-of the devices[] array are naturally aligned, that's why I put them
-together here.
+     * Patch 11: user-facing documentation in
+       Documentation/admin-guide/kdump/kdump.rst.
 
-I can move it up though if you think it's better.
+Motivation
+==========
+
+On SoCs that carve out large firmware-owned reserved memory (GPU
+firmware, DSP, modem, camera ISP, NPU, ...), kdump currently dumps
+those carveouts as part of system RAM even though their contents are
+firmware state that is not useful for kernel crash analysis. On a
+machine with several hundred MiB of such carveouts, the overhead per
+vmcore is substantial.
+
+This series adds a declarative way for DT authors to mark such
+regions:
+
+    reserved-memory {
+        npu_fw@a0000000 {
+            reg = <0x0 0xa0000000 0x0 0x10000000>;
+            linux,no-dump;
+        };
+    };
+
+and also defaults /memreserve/ firmware regions (Trusted Firmware /
+BL31 images, secondary-CPU spin-table pens, bootloader scratch per
+Documentation/arch/arm64/booting.rst and upstream DTS files) to
+no_dump=true.
+
+Interaction with existing reserved-memory flags is kept simple:
+'linux,no-dump' is an OS hint, it is redundant (but harmless) when
+combined with 'no-map' and silently ignored on 'reusable' (CMA)
+regions whose contents are relevant for crash analysis. The 'linux,'
+prefix follows existing precedents like 'linux,cma-default' since
+kdump is a Linux-specific concept.
+
+Benefits
+========
+
+ - Smaller vmcore. The excluded firmware carveouts are omitted from
+   the ELF PT_LOAD segments entirely, so the resulting dump file is
+   smaller by roughly the sum of the tagged regions - on SoCs with
+   hundreds of MiB of GPU/DSP/modem/NPU carveouts this is a
+   substantial saving, both on disk and in transit to a dump server.
+
+ - Faster kdump. The dump-capture kernel writes less data to storage
+   or over the network, which directly shortens the crash-to-dump
+   turnaround. Tools that walk the dump (makedumpfile, crash) also
+   spend less time on regions that were never going to be useful
+   anyway.
+
+ - No existing behaviour change for DTs that do not opt in: regions
+   without 'linux,no-dump' and systems without /memreserve/ entries
+   are dumped exactly as before.
+
+DT binding
+==========
+
+The 'linux,no-dump' property is maintained in dt-schema
+(reserved-memory.yaml moved there from the kernel tree).
+Corresponding PR:
+
+  https://github.com/devicetree-org/dt-schema/pull/193
+
+Follow-ups
+==========
+
+ - powerpc also uses kexec_file and /reserved-memory/, but its
+   arch/powerpc/kexec/ranges.c uses the _guarded variant of
+   crash_exclude_mem_range with dynamic realloc and collects
+   additional RTAS/OPAL firmware ranges. Adapting it needs a small
+   extra helper; left as a follow-up.
+
+---
+
+Chen Wandun (11):
+  of: reserved_mem: fix region count for nodes with multiple reg entries
+  of: reserved_mem: reject reserved memory outside physical address
+    range
+  of: reserved_mem: avoid unconditional save of reg entries in
+    fdt_scan_reserved_mem_late()
+  of: reserved_mem: skip reserved_mem array allocation when there is
+    nothing to save
+  of: reserved_mem: add linux,no-dump property support for reserved
+    memory regions
+  of: reserved_mem: save /memreserve/ entries into reserved_mem array
+  of: reserved_mem: add no-dump crash_mem exclusion helpers
+  arm64: kdump: exclude no-dump reserved memory regions from vmcore
+  riscv: kdump: exclude no-dump reserved memory regions from vmcore
+  loongarch: kdump: exclude no-dump reserved memory regions from vmcore
+  Documentation: admin-guide: kdump: document linux,no-dump DT property
+
+ Documentation/admin-guide/kdump/kdump.rst  |  59 ++++++
+ arch/arm64/kernel/machine_kexec_file.c     |   6 +
+ arch/loongarch/kernel/machine_kexec_file.c |   6 +
+ arch/riscv/kernel/machine_kexec_file.c     |   4 +
+ drivers/of/of_reserved_mem.c               | 233 ++++++++++++++++++---
+ include/linux/of_reserved_mem.h            |  16 ++
+ 6 files changed, 295 insertions(+), 29 deletions(-)
+
+-- 
+2.43.0
+
 
