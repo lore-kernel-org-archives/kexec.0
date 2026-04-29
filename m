@@ -4,70 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 82B40CCFA13
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 96B93CD13D3
 	for <kexec@archiver.kernel.org>; Wed, 29 Apr 2026 21:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=pxqYhYsj7HU7oN1/TsDhDPzLzeP41V18doSZqNDu2iE=; b=OaCKLwyeYvrE93X6CfI767xIEW
-	K7UKBrAyrj4tGLpO30uLP2LjDiDP+5J0WjLL/ArlHU8bI/w+ddedYpGimoopc5nF/8P1YAmQxoLHc
-	AGxM9SkaqKpHRMXJ4YDMbEFJAnpgslJDtkEf7xKsZHTc7PZC69QYntCn4wmyJOtiuYip17PdXJSGN
-	KqmACYEigE84xX5arOyLJdXj7DoUo7k3cWpAbpvtcaVdBEVVX1x/qTAo2dZzj4NFgwk+PPD5wdn2V
-	uw+MoZwY+mFYrIvV3lUJVNpwrBvo0b5l9hQN0uPL1wT55c1ASxV+6rcs3WvKm5QEJ1R4pydIvgxN7
-	mX8BOoUw==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=fi2jtxPM+vxOvAFAOVnwPs3gIOYE8Xix9RkoDR4vGnA=; b=bdR0+sRI6/cBAvWqtqBORlkPn7
+	nG35+PEeKmB9uLnohO3WuBn1JgmumebpX+D33PaXVIJ7ZyNv1TsW8a8kDqjt7XuoT0NyHXvEE9unq
+	M4w2geGOf2zmdMx5Gd9courLvy+HCS8XOIU9JwlHqSboOJx+d39JLciFcS6r/pxFvMoXeGCkVDHCj
+	eLGNxjWrE6ZgQyyGnsLMHl9ZUNR2Dg+Ij25g1+K7cNltZMtH0P9EEYmr8yehTumzFx/+YMQFxex6s
+	KwAkpJNxTBGh+Tq1bsmBq6pJ+NiOxK0WhRsg9/lpycKc1zxp01dWIiypvRV/K8unS1GoW0iEQWcmR
+	YM7DTXEA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wICMY-00000004EMX-3YM7;
+	id 1wICMY-00000004EMR-2RsO;
 	Wed, 29 Apr 2026 21:22:30 +0000
-Received: from mail-wm1-x32f.google.com ([2a00:1450:4864:20::32f])
+Received: from mail-wr1-x430.google.com ([2a00:1450:4864:20::430])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wICMW-00000004ELe-3aDA
+	id 1wICMV-00000004ELc-3NZV
 	for kexec@lists.infradead.org;
 	Wed, 29 Apr 2026 21:22:29 +0000
-Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-4891e5b9c1fso2028035e9.2
-        for <kexec@lists.infradead.org>; Wed, 29 Apr 2026 14:22:28 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-43cfbd17589so209076f8f.0
+        for <kexec@lists.infradead.org>; Wed, 29 Apr 2026 14:22:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777497747; x=1778102547; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pxqYhYsj7HU7oN1/TsDhDPzLzeP41V18doSZqNDu2iE=;
-        b=P5Sx7UE7xEebnHrnmZMy0VrJyaWSswhxrLofnaCsmhktARdhZQp3usyxmmmCqfH/aX
-         Kdp6S9DI5A7K0BIkJHnI8IQU/Lp5H17fTEJGxPHxvQmheWbtOUQlN7uh3w01m5a0NoqZ
-         oIs0jFytPcOX2AisFNd/mXYIUc3pNud12u2wE+6OkCPqgK7ixkymGK4cSS5hlLkJMPJK
-         aRpnMwXoxwwPfmPWU6al5MrnTjcUoYq3UCp25HQECQQM2l6Lo6BFmvZzak9lPPRf/AiB
-         K5foq3uDysCcuP5ld1mXycnFNTjxokibVU3eM9zAMgyrzBWLrVuyMIFEeB7x060L4gG7
-         YhyQ==
+        d=gmail.com; s=20251104; t=1777497746; x=1778102546; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fi2jtxPM+vxOvAFAOVnwPs3gIOYE8Xix9RkoDR4vGnA=;
+        b=erOEHoYmgrbYkRcs3qDv4oFn/+E9NVe3cHSSp3rqFCObJRR0Y+bq8RelwgPs55bHl4
+         Dx/5l4LOI88KBBEkJlsyGXh0KB49Xyyfdx56aApXxJ0vJmIxqYHjIciQWP7za55LAaIs
+         XTlZdV0+DQXZM/Z4Rno336kcsBQlBYo2sYTqvAZSIU/3DVJUuyZNBdQAtY6hw7QJH7bF
+         t/fZo/kwepJSoOiG4WPt/YC1o14hcu5diOP6L54nfB7QE7RbrIj5LUYgu4mKFTFrhkBv
+         wk9lG4KtKhyqwjlR2NN+Qa+tpq0RUDugrfCfqBaQX3N3aE67axJ1321RsZiGqLn/YClx
+         Q42Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777497747; x=1778102547;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=pxqYhYsj7HU7oN1/TsDhDPzLzeP41V18doSZqNDu2iE=;
-        b=S+M9cE6pi4xtaXI89hWA5dP1NFjGZQEXcJNc4PlHKPU1WyJAjk5Xz4oNuv3Pldi5au
-         YlzcRv7j+6HZVPUh+9mH1zw2NZF6LDYMHOzkOpMz77xkPuxpW3GDs8GjBB0Jka5gxPC7
-         ws33/6g7MumY1XdeXagzvQ76FP78gLSti3UGH+AogCOUsXiuqPvTnCebiPEqW/d+Gb0d
-         riCzsD1syH+FxyKkgu1NJmPwWxFDOYg2Tro0zJ5pRZcXAOEv+XA5H6D0oIW7yFOsEeq9
-         gcqmZB+s7KEmJHDHkN4uI4Z2ivLbXSuVBfC+yKWL/g7T0RnVB4zf8bEKtFg9bodhnIng
-         Axyw==
-X-Gm-Message-State: AOJu0YyDHf3Frpu6VC/ZtVYNRsbDKtXGCf8K5K8K1ZUbhYfSCyhUGXWz
-	VT25Ad+BTVntUMCu/qU+eOGfSWIYvEVWRpqttpme8jsvrydmJiQLRNih0l6Jkw==
-X-Gm-Gg: AeBDietNxcF4f7q0vHvPsx0193Ew/D6nWai8JQSxyY/367p/zyL4zEGfZ12QtZmurXn
-	/PowARdSDR8d0pf5cEBdMz4ElR0FaDqf9i6jFG0TU24aTPjqt2XdwEq8HnpxWEHU9JJAIsebKgv
-	QBoq3uH7EKSDX4Nuq+BgQf4L9jWCy0rZ7jhanGLo6w3tvgLQS32ZEOI6k7Rqx9mAn+ICQoHG+YI
-	BJycUyBYussm81xqfob18Gty1L5nd53I3WR1I6GI0X8auLb1h9mH44eL5XW5QaMEpo7rbORkvs6
-	pjV0XYPe6V+eVgxtdsRV44cFWoe15Oc7uD2XCqRLQTjf6wedmTujUyhGUmu9G+mFM+UO/C5npwn
-	b9VcLyTQndjVMKRnC+9nTcfphCN0U9w1mI3e0uNR2dqN88LsFWtBEYArd689C+YnZuGUA8G8XsV
-	DN0T1TPn9VbMIeJFV+CEQHLHGYU9lqSYHS0acd9mo=
-X-Received: by 2002:a05:600c:1f8e:b0:488:a824:fe04 with SMTP id 5b1f17b1804b1-48a8447f466mr3197815e9.26.1777497746519;
-        Wed, 29 Apr 2026 14:22:26 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1777497746; x=1778102546;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fi2jtxPM+vxOvAFAOVnwPs3gIOYE8Xix9RkoDR4vGnA=;
+        b=JmJG9uIAAonUhg7BewwXWREdFGU+iESu0cfLFf2MOyMCNwkk4CBvW1eQAbI5nAi1MV
+         dxWrVW0l5y8QfHAWHxHXoRN8hVNcpRCS221xXV9GaM9gKVoPSug7l/+u+I6kvX2bJrs8
+         b/xh798OU2m/vY5NvfrpNBYtk3L5ywgsQRhyl7AWfpo+8ysftLOHvRPQsfrrxevP2cFQ
+         dRtymA9kXQhpwaZCbAlBtrXCE8wHSear4F4ufwx8HnZ3vKhHdkd0aVdXSV3pQu5uDhrL
+         CExmu7OpvnBraWrJsIexE6USwgzhYyNreW42IPaDRIXLFGg3H8mczGkPVG6KGEWLvDpy
+         bRAw==
+X-Gm-Message-State: AOJu0YzuQMM3jVSCfE7baY5UulechhARArx3rbcf1N7r30/VQlYDDP3z
+	ao5IhSuHGYvz3hlKityWul7S3EEyabBWH830edioCd+2o2hnbz0KkjTTk2ks7g==
+X-Gm-Gg: AeBDietfGAFXf+rYFQCiZc/6BAE7gzgknygPXZ74NPVqRU/dniD6jZMwsKROIMHLU6H
+	Sgydw0ZE56P7XRvcF3RNPgRCFDRMRxL3ccvZpFwqUn1ecchTdpX6KeikeZm1reENg5Sy7WElMfa
+	2d89Krj/pyaF1A+XRhAM70MGnof8DPfYQ4b94vlTlMW4m65qHc8fmNro1rYS7rgW8RXlP/EOTCH
+	T3ZRUBR41I6DbRsTxKdIiogW5mMN8Khm3DOKrVBSF0GCWCtZQB7FejKHXowFUMsP0ju8UFNo85l
+	ReE0xgrJx0bdHgL1nhy4Q9aIKCw/CE4hisXkb67MUZ1Msnzy7Q1+MffX+lBDHL9kJ4e1yaa/mEq
+	1WuD2jRCtEhhI9qVuUvXvmFRSCHSEljLi1GMANWPdXLHsD4P57OoOodjClvo+E2fJjQLs3SOOIs
+	wB2eSPzk3WSHWDYIWGuXYg/MDzmBy2Tfpv8oRjoSM=
+X-Received: by 2002:a5d:5f46:0:b0:43c:ef4f:79e4 with SMTP id ffacd0b85a97d-44649ba18f0mr16916072f8f.37.1777497745370;
+        Wed, 29 Apr 2026 14:22:25 -0700 (PDT)
 Received: from localhost ([2a01:4b00:d036:ae00:8fc7:44bf:8aca:ebae])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-48a822d4b57sm45356905e9.15.2026.04.29.14.22.25
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-447b76e5c7csm8096196f8f.26.2026.04.29.14.22.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2026 14:22:26 -0700 (PDT)
+        Wed, 29 Apr 2026 14:22:24 -0700 (PDT)
 From: luca.boccassi@gmail.com
 To: kexec@lists.infradead.org
 Cc: linux-mm@kvack.org,
@@ -75,19 +74,16 @@ Cc: linux-mm@kvack.org,
 	pasha.tatashin@soleen.com,
 	pratyush@kernel.org,
 	linux-kernel@vger.kernel.org,
-	Luca Boccassi <luca.boccassi@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v11 1/4] liveupdate: reject LIVEUPDATE_IOCTL_CREATE_SESSION with invalid name length
-Date: Wed, 29 Apr 2026 22:21:14 +0100
-Message-ID: <20260429212221.814107-2-luca.boccassi@gmail.com>
+	Luca Boccassi <luca.boccassi@gmail.com>
+Subject: [PATCH v11 0/4] liveupdate: bug fix for session name and new ioctl to read it
+Date: Wed, 29 Apr 2026 22:21:13 +0100
+Message-ID: <20260429212221.814107-1-luca.boccassi@gmail.com>
 X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260429212221.814107-1-luca.boccassi@gmail.com>
-References: <20260429212221.814107-1-luca.boccassi@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260429_142228_896125_BD7F4E33 
-X-CRM114-Status: GOOD (  10.27  )
+X-CRM114-CacheID: sfid-20260429_142227_884927_D0A4CEB7 
+X-CRM114-Status: GOOD (  12.74  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,37 +100,48 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Luca Boccassi <luca.boccassi@gmail.com>
 
-A session name must not be an empty string, and must not exceed the
-maximum size define in the uapi header, including null termination.
+A series of patches matured while implementing LUO support in userspace
+in systemd.
 
-Fixes: 0153094d03df ("liveupdate: luo_session: add sessions support")
-Cc: stable@vger.kernel.org
+- reject session names that are either empty strings or too long
+- add new ioctl to retrieve session name from FD, so that userspace
+  can query it without string parsing in procfs
 
-Signed-off-by: Luca Boccassi <luca.boccassi@gmail.com>
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
----
- kernel/liveupdate/luo_session.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Both changes come with a follow-up patch add test coverage via the
+existing selftest.
 
-diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
-index a3327a28fc1f..24b4f381d3c8 100644
---- a/kernel/liveupdate/luo_session.c
-+++ b/kernel/liveupdate/luo_session.c
-@@ -382,9 +382,13 @@ static int luo_session_getfile(struct luo_session *session, struct file **filep)
- 
- int luo_session_create(const char *name, struct file **filep)
- {
-+	size_t len = strnlen(name, LIVEUPDATE_SESSION_NAME_LENGTH);
- 	struct luo_session *session;
- 	int err;
- 
-+	if (len == 0 || len > LIVEUPDATE_SESSION_NAME_LENGTH - 1)
-+		return -EINVAL;
-+
- 	session = luo_session_alloc(name);
- 	if (IS_ERR(session))
- 		return PTR_ERR(session);
+v2: apply one fix from bot review about cleanup on error path:
+    https://sashiko.dev/#/patchset/20260415184536.1155220-1-luca.boccassi%40gmail.com
+    the other comments are invalid: luo is not a kmod, and the write hooks are not set up
+v3: add test case to liveupdate selftest
+v4: split test case in separate follow-up patch
+v5: add r-b tag, merge series with LIVEUPDATE_SESSION_GET_NAME ioctl
+    as they both change the same unit test source file, to avoid merge conflicts
+    add '__u32 reserved' to the UAPI struct
+v6: add more test cases as suggested
+    more verbose commit message
+    fix docstring
+v7: apply suggestion from review bot to stub out setattr ops,
+    like it was done in 22bdf3d6581a
+v8: add new patches to reject session names that are empty or too long
+v9: fixes following review comments on LUO_SESSION_MAGIC
+v10: split out LUO_SESSION_MAGIC patch as it is undergoing more discussions,
+     and the other two patches are independent aside from adding test cases
+     to the same unit test source file
+v11: rebased on liveupdate/next
+     reject LIVEUPDATE_SESSION_GET_NAME when 'reserved' is not zero
+
+Luca Boccassi (4):
+  liveupdate: reject LIVEUPDATE_IOCTL_CREATE_SESSION with invalid name length
+  selftests/liveupdate: add test cases for LIVEUPDATE_IOCTL_CREATE_SESSION calls with invalid length
+  liveupdate: add LIVEUPDATE_SESSION_GET_NAME ioctl
+  selftests/liveupdate: add test cases for LIVEUPDATE_SESSION_GET_NAME
+
+ include/uapi/linux/liveupdate.h               |  21 ++++
+ kernel/liveupdate/luo_session.c               |  20 ++++
+ .../testing/selftests/liveupdate/liveupdate.c | 113 ++++++++++++++++++
+ 3 files changed, 154 insertions(+)
+
 -- 
 2.47.3
 
