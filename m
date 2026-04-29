@@ -4,69 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 96B93CD13D3
-	for <kexec@archiver.kernel.org>; Wed, 29 Apr 2026 21:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1CD3AFF8873
+	for <kexec@archiver.kernel.org>; Wed, 29 Apr 2026 21:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=fi2jtxPM+vxOvAFAOVnwPs3gIOYE8Xix9RkoDR4vGnA=; b=bdR0+sRI6/cBAvWqtqBORlkPn7
-	nG35+PEeKmB9uLnohO3WuBn1JgmumebpX+D33PaXVIJ7ZyNv1TsW8a8kDqjt7XuoT0NyHXvEE9unq
-	M4w2geGOf2zmdMx5Gd9courLvy+HCS8XOIU9JwlHqSboOJx+d39JLciFcS6r/pxFvMoXeGCkVDHCj
-	eLGNxjWrE6ZgQyyGnsLMHl9ZUNR2Dg+Ij25g1+K7cNltZMtH0P9EEYmr8yehTumzFx/+YMQFxex6s
-	KwAkpJNxTBGh+Tq1bsmBq6pJ+NiOxK0WhRsg9/lpycKc1zxp01dWIiypvRV/K8unS1GoW0iEQWcmR
-	YM7DTXEA==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ykJFzTkCkC0C2lj+ZZ4uY5vhivTKu7ETItTHYfKS1Gw=; b=1bT1D/poF6PAcp7ha6jem8a4iv
+	u/eBBef4dX32ldX+BE9aoOGfvc5qqZvBhGn9AvQl/xxhj/LCzHkNk/HfCCYQFfhR6u1vKJLNhxIne
+	KOSLc4mdJyIAOsDzv2XXCRou6MLJvsg4ii2kCnFcTKcJhLNVFYV1FrRSnp8gA7lML2Cp6MgRRIPq9
+	4J1OgdeIsbJ6CcYqO1E5IctIZ0KjgBatJfFVq0/m81QnVxYTy2IADooUk25SwhokjJi0K6XWxRwB3
+	L6x+q8iz+nvi2Q4hg3+f1nf381s7nghJGmICIXk1DZgjkMocvdYYiiUxNaYI/tHAdA4Lmo1zoE3tn
+	8GW6Xt/g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wICMY-00000004EMR-2RsO;
-	Wed, 29 Apr 2026 21:22:30 +0000
-Received: from mail-wr1-x430.google.com ([2a00:1450:4864:20::430])
+	id 1wICMc-00000004EO4-0Yph;
+	Wed, 29 Apr 2026 21:22:34 +0000
+Received: from mail-wm1-x331.google.com ([2a00:1450:4864:20::331])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wICMV-00000004ELc-3NZV
+	id 1wICMZ-00000004EMQ-2BjU
 	for kexec@lists.infradead.org;
-	Wed, 29 Apr 2026 21:22:29 +0000
-Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-43cfbd17589so209076f8f.0
-        for <kexec@lists.infradead.org>; Wed, 29 Apr 2026 14:22:27 -0700 (PDT)
+	Wed, 29 Apr 2026 21:22:32 +0000
+Received: by mail-wm1-x331.google.com with SMTP id 5b1f17b1804b1-488d2079582so2006005e9.2
+        for <kexec@lists.infradead.org>; Wed, 29 Apr 2026 14:22:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777497746; x=1778102546; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fi2jtxPM+vxOvAFAOVnwPs3gIOYE8Xix9RkoDR4vGnA=;
-        b=erOEHoYmgrbYkRcs3qDv4oFn/+E9NVe3cHSSp3rqFCObJRR0Y+bq8RelwgPs55bHl4
-         Dx/5l4LOI88KBBEkJlsyGXh0KB49Xyyfdx56aApXxJ0vJmIxqYHjIciQWP7za55LAaIs
-         XTlZdV0+DQXZM/Z4Rno336kcsBQlBYo2sYTqvAZSIU/3DVJUuyZNBdQAtY6hw7QJH7bF
-         t/fZo/kwepJSoOiG4WPt/YC1o14hcu5diOP6L54nfB7QE7RbrIj5LUYgu4mKFTFrhkBv
-         wk9lG4KtKhyqwjlR2NN+Qa+tpq0RUDugrfCfqBaQX3N3aE67axJ1321RsZiGqLn/YClx
-         Q42Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777497746; x=1778102546;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1777497749; x=1778102549; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fi2jtxPM+vxOvAFAOVnwPs3gIOYE8Xix9RkoDR4vGnA=;
-        b=JmJG9uIAAonUhg7BewwXWREdFGU+iESu0cfLFf2MOyMCNwkk4CBvW1eQAbI5nAi1MV
-         dxWrVW0l5y8QfHAWHxHXoRN8hVNcpRCS221xXV9GaM9gKVoPSug7l/+u+I6kvX2bJrs8
-         b/xh798OU2m/vY5NvfrpNBYtk3L5ywgsQRhyl7AWfpo+8ysftLOHvRPQsfrrxevP2cFQ
-         dRtymA9kXQhpwaZCbAlBtrXCE8wHSear4F4ufwx8HnZ3vKhHdkd0aVdXSV3pQu5uDhrL
-         CExmu7OpvnBraWrJsIexE6USwgzhYyNreW42IPaDRIXLFGg3H8mczGkPVG6KGEWLvDpy
-         bRAw==
-X-Gm-Message-State: AOJu0YzuQMM3jVSCfE7baY5UulechhARArx3rbcf1N7r30/VQlYDDP3z
-	ao5IhSuHGYvz3hlKityWul7S3EEyabBWH830edioCd+2o2hnbz0KkjTTk2ks7g==
-X-Gm-Gg: AeBDietfGAFXf+rYFQCiZc/6BAE7gzgknygPXZ74NPVqRU/dniD6jZMwsKROIMHLU6H
-	Sgydw0ZE56P7XRvcF3RNPgRCFDRMRxL3ccvZpFwqUn1ecchTdpX6KeikeZm1reENg5Sy7WElMfa
-	2d89Krj/pyaF1A+XRhAM70MGnof8DPfYQ4b94vlTlMW4m65qHc8fmNro1rYS7rgW8RXlP/EOTCH
-	T3ZRUBR41I6DbRsTxKdIiogW5mMN8Khm3DOKrVBSF0GCWCtZQB7FejKHXowFUMsP0ju8UFNo85l
-	ReE0xgrJx0bdHgL1nhy4Q9aIKCw/CE4hisXkb67MUZ1Msnzy7Q1+MffX+lBDHL9kJ4e1yaa/mEq
-	1WuD2jRCtEhhI9qVuUvXvmFRSCHSEljLi1GMANWPdXLHsD4P57OoOodjClvo+E2fJjQLs3SOOIs
-	wB2eSPzk3WSHWDYIWGuXYg/MDzmBy2Tfpv8oRjoSM=
-X-Received: by 2002:a5d:5f46:0:b0:43c:ef4f:79e4 with SMTP id ffacd0b85a97d-44649ba18f0mr16916072f8f.37.1777497745370;
-        Wed, 29 Apr 2026 14:22:25 -0700 (PDT)
+        bh=ykJFzTkCkC0C2lj+ZZ4uY5vhivTKu7ETItTHYfKS1Gw=;
+        b=KZC2iwTf13JN0kQEWO+X9+9PsOhT6uN/5oUQmjziFYmjtwWHMBRa3kXX6bYtNzEuyW
+         nCT5Epu6RQH+YI72OdTSeCIAaCt5xdj0ATX+sfSmAOHqqynefilJP4O2LvdBVJ3AacU7
+         7bUOPptv3Pavf9gyLNIkiNuxRJq6AwLgtQmCMsi6WJ6MapWF2NMc+F49ti/R+bvbxSvC
+         lAsgYcX74G7Ip1k43yiQlKGbwdWwOmJw5FCL0M+RsdPTUu8mCK5Ttk6PmWdXiaRKBpZn
+         iqCUOaCaXfKjp0qwSsCBWzhliV0HT474wxobRr8oJMHxuonreMbOTKSxxrSXOI6YUw5U
+         L0sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777497749; x=1778102549;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ykJFzTkCkC0C2lj+ZZ4uY5vhivTKu7ETItTHYfKS1Gw=;
+        b=jSUXnA9tDWfHttcZSUU0DDcO26qabTU9u3XxPnHWgYwuF/D4fnyU3yrLAAZ784XoeM
+         jGyX4NB9Yr50ZvpZa1Ba8tWagcz3llV8QcdMVjfYV1ao+UBk0l/2rJI1aHOQ+UNqFZ+V
+         wjIFyKzKrFaNJCFL0il3d0o9Zvw0B2YkTX36WR+VzPnSHnAjjZ1HZp5mR93gUrXGZmB1
+         58sIj4Z9LtjN+wrT4V6pC5vGV8Vy/RV7V+Xc8ngLkwgjZf4aZ34nZBEiHOiU0o9tfRuL
+         VZ29BhiPKbUySS2Dv9leAI0XzpZ+LK2s7Th6TKxm3nO/EsqpctKzFCPk2xRUyGLCLatF
+         pEdA==
+X-Gm-Message-State: AOJu0Yx9KyUTVfrr2xEvNLkMhf23aZ06oEBrhQJgbuCOsEn0FikOCYH9
+	kP4vYUw9PWLg6h35bfSI8Vl663UVJWYtyIlZwWs4tcXz7bEgm68Z7XWW6jmOrQ==
+X-Gm-Gg: AeBDietX2BaMpqrMqvHUl9YMoOGW7FktWaArB6LKNCgdI1cR0C8mPvxcFsYTLaKa3zL
+	PstmORLDB4cO6q0ypfqO2jRO8nEyXUcOO8sLt4BGA5nTtHhIAOEH7fTw65FFuJ3rZ0Gii085erB
+	A5WBDm0eCNPAkKGEBBkRrwqYFl8GvcF+jFixgKqztpTPVWY2yZVF9itsMkkhn+06qFQ9NI3YVfL
+	pw/hFMXBrkFMt+7fd38cM3dOQr+9wOpfOLfAZCP4dSD/BZ3FyB7vIUCEo0v0QAtHMNS5cPORG0p
+	OW+wc4w6VHqbfNbP8ABsnCaFeE/v5ae4FldqgtJ2SzWha8qVecwS5uoxGEGmi+cwlXepiMdcWDg
+	XVszzBVDybdj/Qdebu9ueG4HbAwwAkbC/BrWyW1p7btidQEUaiK/lMAVAbpN89kklT+EnGNfkZM
+	EjK5Akqx8QXd6mqyMDdDyFJm48Fqb5uiWwHqsbKVw=
+X-Received: by 2002:a05:600c:8b22:b0:485:3a03:ceca with SMTP id 5b1f17b1804b1-48a844582c3mr4663845e9.23.1777497749079;
+        Wed, 29 Apr 2026 14:22:29 -0700 (PDT)
 Received: from localhost ([2a01:4b00:d036:ae00:8fc7:44bf:8aca:ebae])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-447b76e5c7csm8096196f8f.26.2026.04.29.14.22.24
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-48a7c3057f8sm26200425e9.14.2026.04.29.14.22.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2026 14:22:24 -0700 (PDT)
+        Wed, 29 Apr 2026 14:22:27 -0700 (PDT)
 From: luca.boccassi@gmail.com
 To: kexec@lists.infradead.org
 Cc: linux-mm@kvack.org,
@@ -74,16 +75,20 @@ Cc: linux-mm@kvack.org,
 	pasha.tatashin@soleen.com,
 	pratyush@kernel.org,
 	linux-kernel@vger.kernel.org,
-	Luca Boccassi <luca.boccassi@gmail.com>
-Subject: [PATCH v11 0/4] liveupdate: bug fix for session name and new ioctl to read it
-Date: Wed, 29 Apr 2026 22:21:13 +0100
-Message-ID: <20260429212221.814107-1-luca.boccassi@gmail.com>
+	Luca Boccassi <luca.boccassi@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v11 2/4] selftests/liveupdate: add test cases for LIVEUPDATE_IOCTL_CREATE_SESSION calls with invalid length
+Date: Wed, 29 Apr 2026 22:21:15 +0100
+Message-ID: <20260429212221.814107-3-luca.boccassi@gmail.com>
 X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260429212221.814107-1-luca.boccassi@gmail.com>
+References: <20260429212221.814107-1-luca.boccassi@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260429_142227_884927_D0A4CEB7 
-X-CRM114-Status: GOOD (  12.74  )
+X-CRM114-CacheID: sfid-20260429_142231_579641_E1A97E60 
+X-CRM114-Status: UNSURE (   9.88  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,48 +105,69 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Luca Boccassi <luca.boccassi@gmail.com>
 
-A series of patches matured while implementing LUO support in userspace
-in systemd.
+Verify that LIVEUPDATE_IOCTL_CREATE_SESSION ioctl which provide a name
+that is an empty string or too long are not allowed.
 
-- reject session names that are either empty strings or too long
-- add new ioctl to retrieve session name from FD, so that userspace
-  can query it without string parsing in procfs
+Cc: stable@vger.kernel.org
 
-Both changes come with a follow-up patch add test coverage via the
-existing selftest.
+Signed-off-by: Luca Boccassi <luca.boccassi@gmail.com>
+Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+---
+ .../testing/selftests/liveupdate/liveupdate.c | 42 +++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-v2: apply one fix from bot review about cleanup on error path:
-    https://sashiko.dev/#/patchset/20260415184536.1155220-1-luca.boccassi%40gmail.com
-    the other comments are invalid: luo is not a kmod, and the write hooks are not set up
-v3: add test case to liveupdate selftest
-v4: split test case in separate follow-up patch
-v5: add r-b tag, merge series with LIVEUPDATE_SESSION_GET_NAME ioctl
-    as they both change the same unit test source file, to avoid merge conflicts
-    add '__u32 reserved' to the UAPI struct
-v6: add more test cases as suggested
-    more verbose commit message
-    fix docstring
-v7: apply suggestion from review bot to stub out setattr ops,
-    like it was done in 22bdf3d6581a
-v8: add new patches to reject session names that are empty or too long
-v9: fixes following review comments on LUO_SESSION_MAGIC
-v10: split out LUO_SESSION_MAGIC patch as it is undergoing more discussions,
-     and the other two patches are independent aside from adding test cases
-     to the same unit test source file
-v11: rebased on liveupdate/next
-     reject LIVEUPDATE_SESSION_GET_NAME when 'reserved' is not zero
-
-Luca Boccassi (4):
-  liveupdate: reject LIVEUPDATE_IOCTL_CREATE_SESSION with invalid name length
-  selftests/liveupdate: add test cases for LIVEUPDATE_IOCTL_CREATE_SESSION calls with invalid length
-  liveupdate: add LIVEUPDATE_SESSION_GET_NAME ioctl
-  selftests/liveupdate: add test cases for LIVEUPDATE_SESSION_GET_NAME
-
- include/uapi/linux/liveupdate.h               |  21 ++++
- kernel/liveupdate/luo_session.c               |  20 ++++
- .../testing/selftests/liveupdate/liveupdate.c | 113 ++++++++++++++++++
- 3 files changed, 154 insertions(+)
-
+diff --git a/tools/testing/selftests/liveupdate/liveupdate.c b/tools/testing/selftests/liveupdate/liveupdate.c
+index 37c808fbe1e9..90268d86684f 100644
+--- a/tools/testing/selftests/liveupdate/liveupdate.c
++++ b/tools/testing/selftests/liveupdate/liveupdate.c
+@@ -386,4 +386,46 @@ TEST_F(liveupdate_device, prevent_double_preservation)
+ 	ASSERT_EQ(close(session_fd2), 0);
+ }
+ 
++/*
++ * Test Case: Create Session with No Null Termination
++ *
++ * Verifies that filling the entire 64-byte name field with non-null characters
++ * (no '\0' terminator) is rejected by the kernel with EINVAL.
++ */
++TEST_F(liveupdate_device, create_session_no_null_termination)
++{
++	struct liveupdate_ioctl_create_session args = {};
++
++	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
++	if (self->fd1 < 0 && errno == ENOENT)
++		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
++	ASSERT_GE(self->fd1, 0);
++
++	/* Fill entire name field with 'X', no null terminator */
++	args.size = sizeof(args);
++	memset(args.name, 'X', sizeof(args.name));
++
++	EXPECT_LT(ioctl(self->fd1, LIVEUPDATE_IOCTL_CREATE_SESSION, &args), 0);
++	EXPECT_EQ(errno, EINVAL);
++}
++
++/*
++ * Test Case: Create Session with Empty Name
++ *
++ * Verifies that creating a session with an empty string name fails
++ * with EINVAL.
++ */
++TEST_F(liveupdate_device, create_session_empty_name)
++{
++	int session_fd;
++
++	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
++	if (self->fd1 < 0 && errno == ENOENT)
++		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
++	ASSERT_GE(self->fd1, 0);
++
++	session_fd = create_session(self->fd1, "");
++	EXPECT_EQ(session_fd, -EINVAL);
++}
++
+ TEST_HARNESS_MAIN
 -- 
 2.47.3
 
