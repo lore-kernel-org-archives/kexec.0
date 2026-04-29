@@ -4,76 +4,118 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48C1BCCFA13
-	for <kexec@archiver.kernel.org>; Wed, 29 Apr 2026 22:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E8CD2FF8875
+	for <kexec@archiver.kernel.org>; Wed, 29 Apr 2026 22:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=nNaeytT1WfkYlrb7aq4OM5BymIk3oCnk59yTBTmQPMc=; b=Q59IRLzegG4UHcy1kO2NAXvqKh
-	fD4o0GraUlnXpy4ZpNeSCfc9IUdvlC5tBYx6IO6cphV/13tzbtBMd0/XvStHXfEAtghftdEFNtp9D
-	3K6nNQp2WkCVDE6svlhQPkflZTIJYFefIG/IbvCEXUAQk12HUh8wHhdU5I89fXhAuv4+SPoUALJ40
-	fmLpnzomA/XWhpiPQCD4ZbrDX6xSVlMQV9AFqTL3iOUPst31gFimupqf4JipMaCsqn+l2uz/i5q9V
-	BeDJaM/JUF+KoUp0yfVjFLmm4Nsiy0oZWdNtSrgTQAUdoQ/G9p6LaBYnxqyEafa28v/8DDU0zB1td
-	EcMcdZ/A==;
+	bh=5PgOh4MKm9Ysku8H251/i15pXVhU7vwYYgGQfsH0l+s=; b=H+ZquigEYmvHfGkar8rkauo0lz
+	xWldn/LByat2A0IsVtQlAtAnbXACfMQmXKjY61K/DiXw3RMbTExxB/d1ESYfzU/b9APsoE6bxTqQy
+	7vzdkKyIld15/BdGtP/j4ZtmQC+4R/z3KfXc6NDODsOFMdBipucksac7gPbVNsvmDNfYzOSt0Uqr/
+	FM7EkrKpdJqiuF+90b10W3QAOUybrJjvafVCrW8Q47Q1QybU0/ey3cnI/RWO6CZu4DG9Mcr5cqI/x
+	5cBIlK62NuoZL4e3G3KUltYx/gGCeWPyMiE3KK8dPpELiKWjk1rKmJbFCNxhH25GCBaZ2DcObbraU
+	SLIWGC0w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIDOH-00000004Gym-43Xn;
-	Wed, 29 Apr 2026 22:28:21 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIDOE-00000004GyI-3WYl
+	id 1wIDqH-00000004IB3-2pw8;
+	Wed, 29 Apr 2026 22:57:17 +0000
+Received: from mail-lf1-x12c.google.com ([2a00:1450:4864:20::12c])
+	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1wIDqE-00000004IAd-3U9u
 	for kexec@lists.infradead.org;
-	Wed, 29 Apr 2026 22:28:21 +0000
-Received: from localhost (unknown [20.236.11.29])
-	by linux.microsoft.com (Postfix) with ESMTPSA id B332D20B716C;
-	Wed, 29 Apr 2026 15:28:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B332D20B716C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1777501697;
-	bh=nNaeytT1WfkYlrb7aq4OM5BymIk3oCnk59yTBTmQPMc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=W9PFJauSunK2M1P7HpxoCdIEe/7dds3W8ifeRq+H+GIEPZIql+z+ll5f8Oi8pnA5k
-	 stF9yPMgyiXGStTt9LoWiMYlFXVCGkHR4jBbO6Qv+M68ZVMuno2zYfiGGjcdCd8LfU
-	 3eBJCFTPEacmBO2mKO6fT5KCiB/jVoL0/2gljJdk=
-Date: Wed, 29 Apr 2026 15:28:14 -0700
-From: Jacob Pan <jacob.pan@linux.microsoft.com>
-To: David Matlack <dmatlack@google.com>
-Cc: iommu@lists.linux.dev, kexec@lists.infradead.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-pci@vger.kernel.org, Adithya Jayachandran
- <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, Alex
- Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>, Chris
- Li <chrisl@kernel.org>, David Rientjes <rientjes@google.com>, Jason
- Gunthorpe <jgg@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Jonathan Corbet
- <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, Leon Romanovsky
- <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, Mike Rapoport
- <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, Pasha Tatashin
- <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>,
- Pratyush Yadav <pratyush@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja
- <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, Will Deacon
- <will@kernel.org>, William Tu <witu@nvidia.com>, Yi Liu
- <yi.l.liu@intel.com>, jacob.pan@linux.microsoft.com
-Subject: Re: [PATCH v4 05/11] PCI: liveupdate: Inherit bus numbers during
- Live Update
-Message-ID: <20260429152814.000005f7@linux.microsoft.com>
-In-Reply-To: <ae_SHCjNGrEPurzH@google.com>
-References: <20260423212316.3431746-1-dmatlack@google.com>
-	<20260423212316.3431746-6-dmatlack@google.com>
-	<20260427114745.00000656@linux.microsoft.com>
-	<ae_J2pRWFf5qjZXb@google.com>
-	<ae_SHCjNGrEPurzH@google.com>
-Organization: LSG
-X-Mailer: Claws Mail 3.21.0 (GTK+ 2.24.33; x86_64-w64-mingw32)
+	Wed, 29 Apr 2026 22:57:16 +0000
+Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-5a413f83226so1285460e87.1
+        for <kexec@lists.infradead.org>; Wed, 29 Apr 2026 15:57:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777503431; cv=none;
+        d=google.com; s=arc-20240605;
+        b=NeOOd4GZ2N1DY92qEkZDFx0TDDJkPzVxVMtjcFK4lSgyhDYScOjJdcPGZ9ZnXAYAAS
+         8AsYg6OCy/Bmqcfmy/3/xL8DNYrEMGqKO5xVJJgapJG3DrE23/VHckTkFXU77PpIsIs0
+         5Ir/Vs0Soag0jY6pKpvGMtIlCwVdgvWtgXaP3xuHBTBdyen/cQwJDkZfMNP+w+NBDz7v
+         IA3uxZediya2XFZskuFJWhFMv9Iik3a0VoJ01BCJvQzUYZ8O/Gww671u5QCzjvwAu6H7
+         iptNSX+7V6WFnOnbscnXW3Jt+JeG45yr8MDwrKksvYktH8IQhlgnAyNQXfSG7IeyxujB
+         BzPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=5PgOh4MKm9Ysku8H251/i15pXVhU7vwYYgGQfsH0l+s=;
+        fh=k76FF3FR2QUGPylqRgQGputHo9YXktjALtaq4AIWRCY=;
+        b=ET9B1W/8L5TNFoBnOwZNS7k85EyB4PzdiT8NLkXYIr8vPdFnTFZjvkTb4lW/ftuHGa
+         4ttM2yY+EEEoEyMKwj5oHOVfl4Qw4U0/IQFA9d9sDu8lULannD6eHH+NzkSVrSja2WVI
+         Uk/fJOx+yVmmH3sDQZ3+mECI/JNF9XQScULiQ2tG7yVXJ59E0eqf/FcHID5b1dW8WWWI
+         Ox/ubMnBgC2xotp3GKZRBvXg5zipoERzEhrRhEq61y/E4oScpWAcB1rC4VJQEZtXPzsZ
+         zrxDNggoCIR/eptVnpvqXhMHUhVRizXjN9OechyWsubbFJEKLA99oCOIemJ/PEkS64mX
+         KYqQ==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1777503431; x=1778108231; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5PgOh4MKm9Ysku8H251/i15pXVhU7vwYYgGQfsH0l+s=;
+        b=s6+wTPtgTjefLim9l7XmPkbkp54fyQL4coRHlf+58JbvrxA+aNOT2aX6gnMXnqb4VJ
+         UIvTlDBVoyzAKbRuKRA+DIA1VGk4NCRYkR1Ao43VGfbGTss+vIzEoX/7f4znqPGtAKKW
+         T5lmikKP1Um6ouSqMi6oe/8M7zZ+OhbErmCAi3pUzuqAByUrgwpsujPzIVACTP+DS0JG
+         9IkWaohnRoobaYlavZpAR7jYu67/WxxV5+Laf/4+cBHWi7ttBNuQdxFns0u+hbrAh170
+         tjpBScEkysKqZbDGUez8UQXStwsADf4+55g9msApM9SC5HfEsmHkVq8u8u+Uv9olUwx6
+         1Lqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777503431; x=1778108231;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5PgOh4MKm9Ysku8H251/i15pXVhU7vwYYgGQfsH0l+s=;
+        b=HkT3h0px9lAJprCrb2n74MJ47t5HGNp/097YN2yuU3S6KmtgXHRUcl5loWDpGBBerN
+         yHbidmU2+gyl9RaUUFu6pWCutxd5QsaOq0BQEY6JdDKQlvW7JaBSYe3U1nWQE6hlbXEB
+         7MtrPs8cfNuqZjBS34ZbbDe39lEk+XS8CmwIGfVyYLVVzeiWIgrq2ZGk6tty/tSNUx/m
+         aRU8SCq6p0qiNqjrCg+AP1fRLxp5w+FigJp7+5BSkfQ3gE/hwdoueLpfhm2IC/GbvW5P
+         fjq9HYPWDTaafQTXfCpRnZC9eS0qhNnqoPf83lTDtwsg4aMigt6gTml9IGzOc5CRHdbC
+         8pqw==
+X-Forwarded-Encrypted: i=1; AFNElJ+bvVz9MuwToR4M3wrWmIvS8IjHHHxK0GryXSUOiAvqjAZMpu2WtfD5QUQKB5LzAl6uxTt4Og==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyPTtQSo0UemaLtsZ02Q3VB5wGzkQgkg6HN5wJQo6MSxf67wzks
+	3dIq/y1iZmrLsMBu3EVH3ZcZvDY6dKlyC8NUdhgyaWJfk1DgU6Ov1ZCTy7ALQhsLN4KOiuQ6Y14
+	HU84f4meondFuTqg32ALEHOiv/Qr3/ECodIMNzf6n
+X-Gm-Gg: AeBDieuYoTsDLPC6yQ639KEr+AkltqOMUN+JH3Qc2pvXErH8TNgOWzSqWjcAy2DYQfb
+	qxUd8U4W5m+aPftL+pd+LFuIyzMt8vgSp2qrlQkgjhO0NDZDEtXN8fWRBWOukzeABXXp3co1dld
+	GtljXK1L/gKrXt111dnezzWDxedpbC6U+mhDsTyoOaSdfl0nllPH12mpmgIkJuMr5GAPS0c2b1D
+	KT85Q3KKlATHs5pg4SOqNXMPWW6CPQz99SF7lGa5KOxJaobqdE+7eLdiAQEDPqLRxU/JNMTVQaz
+	nCSkN4njFIYeQ138/fqBotd0oWosng==
+X-Received: by 2002:a05:6512:1148:b0:5a7:4912:1a50 with SMTP id
+ 2adb3069b0e04-5a852741d7amr22979e87.20.1777503430946; Wed, 29 Apr 2026
+ 15:57:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20260423212316.3431746-1-dmatlack@google.com> <20260423212316.3431746-6-dmatlack@google.com>
+ <20260427114745.00000656@linux.microsoft.com> <ae_J2pRWFf5qjZXb@google.com>
+ <ae_SHCjNGrEPurzH@google.com> <20260429152814.000005f7@linux.microsoft.com>
+In-Reply-To: <20260429152814.000005f7@linux.microsoft.com>
+From: David Matlack <dmatlack@google.com>
+Date: Wed, 29 Apr 2026 15:56:43 -0700
+X-Gm-Features: AVHnY4Le9iheFK_YlZgcrAybDAS1kEhRs6kG_ymy3g2e8lI5OrgvcncvoFuHHPU
+Message-ID: <CALzav=djG6T_NfwDD+aoobMfqdCkG0Xo8hHU2YkPc20uJdb-qw@mail.gmail.com>
+Subject: Re: [PATCH v4 05/11] PCI: liveupdate: Inherit bus numbers during Live Update
+To: Jacob Pan <jacob.pan@linux.microsoft.com>
+Cc: iommu@lists.linux.dev, kexec@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-pci@vger.kernel.org, Adithya Jayachandran <ajayachandra@nvidia.com>, 
+	Alexander Graf <graf@amazon.com>, Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Chris Li <chrisl@kernel.org>, David Rientjes <rientjes@google.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Josh Hilke <jrhilke@google.com>, Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, 
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Will Deacon <will@kernel.org>, 
+	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260429_152818_941069_19BF019F 
-X-CRM114-Status: GOOD (  52.31  )
+X-CRM114-CacheID: sfid-20260429_155714_918099_E66D85AC 
+X-CRM114-Status: UNSURE (   8.66  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,295 +130,18 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi David,
+On Wed, Apr 29, 2026 at 3:28=E2=80=AFPM Jacob Pan <jacob.pan@linux.microsof=
+t.com> wrote:
 
-On Mon, 27 Apr 2026 21:16:12 +0000
-David Matlack <dmatlack@google.com> wrote:
+> Below looks correct to me, but I have another question. How do you
+> stablize PCI BARs? PCI BDF stability does not guarantee BARs don't get
+> moved, right?
 
-> On 2026-04-27 08:40 PM, David Matlack wrote:
-> > On 2026-04-27 11:47 AM, Jacob Pan wrote:  
-> > > On Thu, 23 Apr 2026 21:23:09 +0000
-> > > David Matlack <dmatlack@google.com> wrote:  
-> >   
-> > > > To keep things simple, inherit the secondary and subordinate bus
-> > > > numbers on all bridges if any PCI devices were preserved (i.e.
-> > > > even bridges without any downstream endpoints that were
-> > > > preserved). This avoids accidentally assigning a bridge a new
-> > > > window that overlaps with a preserved device that is downstream
-> > > > of a different bridge.
-> > > > 
-> > > > If a bridge is enumerated with a broken topology or has no bus
-> > > > numbers set during a Live Update, refuse to assign it new bus
-> > > > numbers and refuse to enumerate devices below it. This is a
-> > > > safety measure to prevent topology conflicts.
-> > > > 
-> > > > Require that CONFIG_CARDBUS is not enabled to enable
-> > > > CONFIG_PCI_LIVEUPDATE since inheriting bus numbers on
-> > > > PCI-to-CardBus bridges requires additional work but is not a
-> > > > priority at the moment.
-> > > > 
-> > > > Signed-off-by: David Matlack <dmatlack@google.com>  
-> >   
-> > > > +	/*
-> > > > +	 * During a Live Update, preserved devices are allowed
-> > > > to continue
-> > > > +	 * performing memory transactions. The kernel must not
-> > > > change the fabric
-> > > > +	 * topology, including bus numbers, since that would
-> > > > require disabling
-> > > > +	 * and flushing any memory transactions first.
-> > > > +	 *
-> > > > +	 * To keep things simple, inherit the secondary and
-> > > > subordinate bus
-> > > > +	 * numbers on _all_ bridges if _any_ PCI devices were
-> > > > preserved (i.e.
-> > > > +	 * even bridges without any downstream endpoints that
-> > > > were preserved).
-> > > > +	 * This avoids accidentally assigning a bridge a new
-> > > > window that
-> > > > +	 * overlaps with a preserved device that is downstream
-> > > > of a different
-> > > > +	 * bridge.
-> > > > +	 */
-> > > > +	dev->liveupdate_inherit_buses = true;
-> > > > +  
-> > > This flag never gets cleared after the incoming kernel boot up,
-> > > what if the user does a manual rescan via sysfs? i.e.
-> > > # echo 1 > /sys/bus/pci/rescan
-> > > pcibios_assign_all_busses() will never gets called for this
-> > > device, and may hit this
-> > > 	if (dev->liveupdate_inherit_buses) {
-> > > 		pci_err(dev, "Cannot reconfigure bridge during
-> > > 		Live Update!\n");
-> > > 
-> > > So, maybe clear it in pci_liveupdate_finish()?  
-> > 
-> > I think we can allo wa rescan to assign new bus numbers once all
-> > devices go through pci_liveupdate_finish() by clearing
-> > dev->liveupdate_inherit_buses on all devices in pci_flb_finish(). We
-> > would need to hold pci_rescan_remove_lock to avoid this racing with
-> > such a rescan.
-> > 
-> > Now that you bring up /sys/bus/pci/rescan... I think we also need to
-> > set dev->liveupdate_inherit_buses in the outgoing kernel, to avoid
-> > bus numbers changing on outgoing preserved devices.
-> > pci_flb_preserve() should take pci_rescan_remove_lock and set
-> > dev->liveupdate_inherit_buses on all devices, and
-> > pci_flb_unpreserve() should do the opposite.
-> > 
-> > If we did all then then /sys/bus/pci/rescan can work like normal as
-> > long as no devices are preserved (incoming or outgoing). If any
-> > devices are preserved then dev->liveupdate_inherit_buses gets set
-> > to prevent bus numbers from changing during a possible rescan.  
-> 
-> Something like this? This is a diff applied on top of this commit.
-Below looks correct to me, but I have another question. How do you
-stablize PCI BARs? PCI BDF stability does not guarantee BARs don't get
-moved, right?
+That's right, this series does not guarantee that BARs do not get
+moved or sized. For P2P use-cases, we do need BARs to remain
+stable and avoid sizing during enumeration. We also need to
+ensure bridge windows are preserved.
 
-> 
-> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-> index fead478e8a04..b1b0a5b1a5df 100644
-> --- a/drivers/pci/liveupdate.c
-> +++ b/drivers/pci/liveupdate.c
-> @@ -120,6 +120,20 @@
->  
->  #include "pci.h"
->  
-> +/*
-> + * During a Live Update, preserved devices are allowed to continue
-> performing
-> + * memory transactions. The kernel must not change the fabric
-> topology,
-> + * including bus numbers, since that would require disabling and
-> flushing any
-> + * memory transactions first.
-> + *
-> + * To keep things simple, inherit the secondary and subordinate bus
-> numbers on
-> + * _all_ bridges if _any_ PCI devices are preserved (i.e.  even
-> bridges without
-> + * any downstream endpoints that were preserved).  This avoids
-> accidentally
-> + * assigning a bridge a new window that overlaps with a preserved
-> device that is
-> + * downstream of a different bridge.
-> + */
-> +static atomic_t inherit_buses;
-> +
->  struct pci_flb_outgoing {
->  	/* The pci_ser struct to be passed to the next kernel */
->  	struct pci_ser *ser;
-> @@ -141,6 +155,29 @@ static unsigned long pci_ser_xa_key(unsigned
-> long domain, unsigned long bdf) return domain << 16 | bdf;
->  }
->  
-> +bool pci_liveupdate_inherit_buses(void)
-> +{
-> +	return atomic_read(&inherit_buses);
-> +}
-> +
-> +static void pci_set_liveupdate_inherit_buses(bool enable)
-> +{
-> +	/* Ensure updates to inherit_buses do not race with rescans
-> */
-> +	pci_lock_rescan_remove();
-> +
-> +	/*
-> +	 * Increment/decrement instead of setting directly to
-> true/false so that
-> +	 * pci_liveupdate_inherit_buses() returns true if any device
-> is outgoing
-> +	 * preserved or incoming preserved.
-> +	 */
-> +	if (enable)
-> +		atomic_inc(&inherit_buses);
-> +	else
-> +		atomic_dec(&inherit_buses);
-> +
-> +	pci_unlock_rescan_remove();
-> +}
-> +
->  static int pci_flb_preserve(struct liveupdate_flb_op_args *args)
->  {
->  	struct pci_flb_outgoing *outgoing;
-> @@ -180,6 +217,8 @@ static int pci_flb_preserve(struct
-> liveupdate_flb_op_args *args) 
->  	args->obj = outgoing;
->  	args->data = virt_to_phys(outgoing->ser);
-> +
-> +	pci_set_liveupdate_inherit_buses(true);
->  	return 0;
->  }
->  
-> @@ -187,6 +226,8 @@ static void pci_flb_unpreserve(struct
-> liveupdate_flb_op_args *args) {
->  	struct pci_flb_outgoing *outgoing = args->obj;
->  
-> +	pci_set_liveupdate_inherit_buses(false);
-> +
->  	pr_debug("Unpreserving struct pci_ser\n");
->  	WARN_ON_ONCE(outgoing->ser->nr_devices);
->  	kho_unpreserve_free(outgoing->ser);
-> @@ -223,6 +264,8 @@ static int pci_flb_retrieve(struct
-> liveupdate_flb_op_args *args) }
->  
->  	args->obj = incoming;
-> +
-> +	pci_set_liveupdate_inherit_buses(true);
->  	return 0;
->  }
->  
-> @@ -230,6 +273,8 @@ static void pci_flb_finish(struct
-> liveupdate_flb_op_args *args) {
->  	struct pci_flb_incoming *incoming = args->obj;
->  
-> +	pci_set_liveupdate_inherit_buses(false);
-> +
->  	xa_destroy(&incoming->xa);
->  	kho_restore_free(incoming->ser);
->  	kfree(incoming);
-> @@ -385,21 +430,6 @@ void pci_liveupdate_setup_device(struct pci_dev
-> *dev) if (!xa)
->  		return;
->  
-> -	/*
-> -	 * During a Live Update, preserved devices are allowed to
-> continue
-> -	 * performing memory transactions. The kernel must not
-> change the fabric
-> -	 * topology, including bus numbers, since that would require
-> disabling
-> -	 * and flushing any memory transactions first.
-> -	 *
-> -	 * To keep things simple, inherit the secondary and
-> subordinate bus
-> -	 * numbers on _all_ bridges if _any_ PCI devices were
-> preserved (i.e.
-> -	 * even bridges without any downstream endpoints that were
-> preserved).
-> -	 * This avoids accidentally assigning a bridge a new window
-> that
-> -	 * overlaps with a preserved device that is downstream of a
-> different
-> -	 * bridge.
-> -	 */
-> -	dev->liveupdate_inherit_buses = true;
-> -
->  	key = pci_ser_xa_key(pci_domain_nr(dev->bus),
-> pci_dev_id(dev)); dev_ser = xa_load(xa, key);
->  
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 09bab39738d7..abd8379b99cf 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -1442,6 +1442,7 @@ static inline int pci_msix_write_tph_tag(struct
-> pci_dev *pdev, unsigned int inde #ifdef CONFIG_PCI_LIVEUPDATE
->  void pci_liveupdate_setup_device(struct pci_dev *dev);
->  void pci_liveupdate_cleanup_device(struct pci_dev *dev);
-> +bool pci_liveupdate_inherit_buses(void);
->  #else
->  static inline void pci_liveupdate_setup_device(struct pci_dev *dev)
->  {
-> @@ -1450,6 +1451,11 @@ static inline void
-> pci_liveupdate_setup_device(struct pci_dev *dev) static inline void
-> pci_liveupdate_cleanup_device(struct pci_dev *dev) {
->  }
-> +
-> +static inline bool pci_liveupdate_inherit_buses(void)
-> +{
-> +	return false;
-> +}
->  #endif
->  
->  #endif /* DRIVERS_PCI_H */
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index fa26f4170add..f94fa1fc76cc 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1374,9 +1374,9 @@ bool pci_ea_fixed_busnrs(struct pci_dev *dev,
-> u8 *sec, u8 *sub) return true;
->  }
->  
-> -static bool pci_should_assign_new_buses(struct pci_dev *dev)
-> +static bool pci_should_assign_new_buses(void)
->  {
-> -	if (dev->liveupdate_inherit_buses)
-> +	if (pci_liveupdate_inherit_buses())
->  		return false;
->  
->  	return pcibios_assign_all_busses();
-> @@ -1409,7 +1409,7 @@ static int pci_scan_bridge_extend(struct
-> pci_bus *bus, struct pci_dev *dev, int max, unsigned int
-> available_buses, int pass)
->  {
-> -	const bool assign_new_buses =
-> pci_should_assign_new_buses(dev);
-> +	const bool assign_new_buses = pci_should_assign_new_buses();
->  	struct pci_bus *child;
->  	u32 buses;
->  	u16 bctl;
-> @@ -1518,7 +1518,7 @@ static int pci_scan_bridge_extend(struct
-> pci_bus *bus, struct pci_dev *dev, goto out;
->  		}
->  
-> -		if (dev->liveupdate_inherit_buses) {
-> +		if (pci_liveupdate_inherit_buses()) {
->  			pci_err(dev, "Cannot reconfigure bridge
-> during Live Update!\n"); pci_err(dev, "Downstream devices will not be
-> enumerated!\n"); goto out;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 9a602b322e3c..dd6b26ca9462 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -511,7 +511,6 @@ struct pci_dev {
->  	unsigned int	rom_bar_overlap:1;	/* ROM BAR
-> disable broken */ unsigned int	rom_attr_enabled:1;	/*
-> Display of ROM attribute enabled? */ unsigned int
-> non_mappable_bars:1;	/* BARs can't be mapped to user-space  */
-> -	unsigned int	liveupdate_inherit_buses:1; /* Inherit
-> bus numbers due to Live Update */ pci_dev_flags_t dev_flags;
->  	atomic_t	enable_cnt;	/* pci_enable_device has
-> been called */ 
-
+My plan is to send another series to ready the PCI core for P2P
+use-cases, sometime after this one.
 
