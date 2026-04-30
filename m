@@ -4,71 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE88FCD13DA
-	for <kexec@archiver.kernel.org>; Thu, 30 Apr 2026 15:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7DC12CD13D3
+	for <kexec@archiver.kernel.org>; Thu, 30 Apr 2026 18:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
-	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=lGigii9T1gEAttAYkjY0LCxvxQwQ0NizWdRhtvGGHf0=; b=2JCRaK1qmXRRyZs5zmRD1C+tGf
-	aKQxwxrKtGer+MMB388n920Ifzf9Coe/RcDTS6nBUXzOG8TQHRWN4Or0zRiIJeWKpvkhh/zJZN+6r
-	B1ECc+ELNaUGk9YdhRV3+3U7elllNNw0gQSu+cAMy9iXLbkikBm3rWhbKjONlnPkDXGYObqyhvR2/
-	638MVCBSqVjIOX8hBgUiDEE74UkpZOSzgTWa4uXNuP5rBhLIIg0XG/SBsRmpCYqc0IiwMSX6dwqdd
-	g8Ql1Eyj7MuOl1Vs85lNTaVChaMD+fFJ9MVd3PVKwBfRULsoIdB07gg1uDInBObGrRyMEwY8Xr56Z
-	g3xAu+ug==;
+	bh=eSG/yM4Jbprzjr8hlewRTOp1V59hFoclV98ulyGviIc=; b=RAFQfu0OrntHsFVSMrj/t5zk2A
+	HrOeuyEk+YmrSHgUvz+E8GF3z+JeahBPPWwBb6bn6FeV490e9zie5rDvnc1EQUAF5cKsqtFtArMP0
+	WqqcmTh1Y2vvKivX57G9Zn1Yz9GMhBUTjnrJ9QFA3Vgwv030dWssporcMsQ0nURep6tRX60yYRlNb
+	nuDMlR/1C/pFA2WdC42UkcngR2tvg7VTX/RiZLgjSONkl6TLKVO0t/rDtCwLtaAtvRFPOBkxgM0AR
+	JkLrc9XXDEsE1sDGb7Wt9G66XsJNihsbl3NLQNUDpYVS9bnXgcKPtXNdUYKjl/gCWqUkqRocUZwub
+	r5khLqfw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wITIL-00000005deQ-0ZNs;
-	Thu, 30 Apr 2026 15:27:17 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1wIW4q-00000005pGF-1m5x;
+	Thu, 30 Apr 2026 18:25:32 +0000
+Received: from mail-pl1-x634.google.com ([2607:f8b0:4864:20::634])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wITIK-00000005deG-16UL
-	for kexec@bombadil.infradead.org;
-	Thu, 30 Apr 2026 15:27:16 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=lGigii9T1gEAttAYkjY0LCxvxQwQ0NizWdRhtvGGHf0=; b=VqMUURJ/3wIXTvDuQIQ4cEFE6c
-	Ax5uHTc8jSj8p2xqqeyjK5in2X07Z2+ApIRnHVug6Tdad3dfm6gCmeZzPB6HSUjKW7r3Kxf7xhvXq
-	YqHUK7r/JIWuEpHHiEcp8VDUrrSzyUbVLfBK9nPFAtWu0et6KSq6kkMEiGqZqwroROnCijz0vGXPY
-	oLiK1VidbETT1wnDezcclvQiqzAYN4kOYlxLEJJgEqoSn1N5lPTHnZGEQ0IPkh3arvUyQtKS/HwQc
-	ZZGn9u0RrdrqdyA/xbZLg6SRHK2vZXJYSv5aZe6yvuHBgZd7cAIYxV6DItpowLQtQtr8mDU5cxb4E
-	KIUu6s7w==;
-Received: from [172.31.31.148] (helo=u09cd745991455d.lumleys.internal)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wITIF-00000007eQC-3sAc;
-	Thu, 30 Apr 2026 15:27:12 +0000
-Message-ID: <c004f333ed4f7dedae1383f22d43b009cd83837e.camel@infradead.org>
-Subject: Re: [RFC] proposal: KVM: Orphaned VMs: The Caretaker approach for
- Live Update
-From: David Woodhouse <dwmw2@infradead.org>
-To: Paolo Bonzini <pbonzini@redhat.com>, Pasha Tatashin
-	 <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, kvm@vger.kernel.org, linux-mm@kvack.org, 
-	kvmarm@lists.linux.dev
-Cc: rppt@kernel.org, graf@amazon.com, pratyush@kernel.org,
- seanjc@google.com,  maz@kernel.org, oupton@kernel.org,
- alex.williamson@redhat.com,  kevin.tian@intel.com, rientjes@google.com,
- Tycho.Andersen@amd.com,  anthony.yznaga@oracle.com,
- baolu.lu@linux.intel.com, david@kernel.org,  dmatlack@google.com,
- mheyne@amazon.de, jgowans@amazon.com, jgg@nvidia.com, 
- pankaj.gupta.linux@gmail.com, kpraveen.lkml@gmail.com, vipinsh@google.com, 
- vannapurve@google.com, corbet@lwn.net, loeser@linux.microsoft.com,
- tglx@kernel.org,  mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org,  hpa@zytor.com,
- roman.gushchin@linux.dev, akpm@linux-foundation.org, pjt@google.com
-Date: Thu, 30 Apr 2026 16:27:11 +0100
-In-Reply-To: <0a71472c-b397-4699-a518-61faffcf4ab2@redhat.com>
-References: <afEwWZksU0Fw61oT@plex>
-	 <0a71472c-b397-4699-a518-61faffcf4ab2@redhat.com>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-Q5uU99FSerI7+XMdGTFU"
-User-Agent: Evolution 3.52.3-0ubuntu1.1 
+	id 1wIW4k-00000005pFh-18ly
+	for kexec@lists.infradead.org;
+	Thu, 30 Apr 2026 18:25:27 +0000
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-2b2591757fbso18945ad.0
+        for <kexec@lists.infradead.org>; Thu, 30 Apr 2026 11:25:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1777573523; x=1778178323; darn=lists.infradead.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=eSG/yM4Jbprzjr8hlewRTOp1V59hFoclV98ulyGviIc=;
+        b=lSDMeIIC7N3xjev3FZ3hYlp5DTLzUlPevoGLzKkKm9ArAFDZphJkPhVoCm5fcVUFLE
+         ShmWcjwT0hWy6HOKyDbtFjtnhoN6Gq+SvR0VHnaT3vO6wRapCyjAISDaDe8WPnMoIl1e
+         b4owd/+Y/x5lScFGfwMv8P6AfCUWySimtjcHpQoGPDFwVh9W3L0jM2n8PJGmRgBJhWBr
+         hwiqh/0iY43vNdEPCStLT5yYxm+ecWMrqcXSEu5OjMjk06UXNEjW9yN2sLvEpY6yJ8T3
+         4Bga1Gyr6zOU3A2shQMlnlUc49qSo/ZIMhFVrz+ZgXjhH6MlDqRmqpMuIAI7aZanWDed
+         NBuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777573523; x=1778178323;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eSG/yM4Jbprzjr8hlewRTOp1V59hFoclV98ulyGviIc=;
+        b=YNqKvUwF4gWl+p5xRkyUchPbQomtomWSnAeu6/gG0sMbggq13hBh2E5/NAcCITrpIK
+         7rmxft59anXIKVVGmbWXYpkV0QKN6xcVjIV5r922nazgepJJhLkQW0PctJJzqAL8NXve
+         T/6DWK8m59Xg3tInry3/NSwo2yJfvtxx+D7y9rnxeRMvZq6YdeeBuRIJe0uAV0OO18ww
+         o6QjDGPfduDewJwlOjlnGMNZUtuF9FOKPrjwP8xcqht+26vy3BKDFOcHGGCbIVpiXxff
+         WKaErWx+HQ5mhjb5auzABcL/qLLsET9vw98oNsNB8N7y63QI3YI5dUfnT/j6kzvh5xI1
+         JWLg==
+X-Forwarded-Encrypted: i=1; AFNElJ/ETcgJH2kaouY3j5yiyzJepX+NPdcc+lDmSix0Syjle+ilnDtyhr/krCjtm80dmFM/uSP+ww==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yx2lLG+DDBdnFCnsAkkiRjiaNlyiBO1fiLkMC2syvhkrZ5Tdlr/
+	TuzWI1OSBwXSnklqk7+8o60UPGBw4Od2F9XOCmm3iP1gd2mGl5NDc8hjQZaOYREXrw==
+X-Gm-Gg: AeBDieu1YkqeCgQ3BS9ygE6k3JqYEhXibKk5S72d6/rsBrbPnxZcAqCsr60OJki3la2
+	BVSp1zHjaValWVEoEupA/3ZYifsQXPzG7TF+jRidBQtaP5dKIsm/z7GtJwX2986rKwNy42ap+uC
+	tJBH/Tw1/1yxmQGjymc5Ebjf5NpdXUu9J2sqnS0pV0iGIj0EUT+0hIvNyExbImb7se0bihjI9N5
+	B45FTiq+35u/hhcaouKGxL9l6hvCQA0RqXCnBHcs4uolc9/cAiAc9QkdtVSHyp0IIrHQ7J20BXg
+	j8Xszm97MSv22o51EVk9/3duL0au/ioO1T7Jem7A0rPysyRCnD8llGFDYfXvBoefN2deMULxhn0
+	FkSIgO/NeYJtJYHY3k2YTsS4a8PVxasn3ZDoZ/9uUqh9no9XmIPNED6lX8TVOhHav/D1Ptew0NE
+	7scW5uhgxMZnS/agh9VkkyfxyVcQ1iHjfhs0iEp2yX+csLwhgw5lIsmqOcbdKQs2ALn0jvBcbSU
+	h5qVsU=
+X-Received: by 2002:a17:903:2a8f:b0:2b4:6153:e541 with SMTP id d9443c01a7336-2b9ce26a5dcmr69445ad.3.1777573521791;
+        Thu, 30 Apr 2026 11:25:21 -0700 (PDT)
+Received: from google.com (60.89.247.35.bc.googleusercontent.com. [35.247.89.60])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c7ffbcaa477sm278266a12.31.2026.04.30.11.25.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2026 11:25:21 -0700 (PDT)
+Date: Thu, 30 Apr 2026 11:25:16 -0700
+From: Vipin Sharma <vipinsh@google.com>
+To: David Matlack <dmatlack@google.com>
+Cc: iommu@lists.linux.dev, kexec@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-pci@vger.kernel.org, Adithya Jayachandran <ajayachandra@nvidia.com>, 
+	Alexander Graf <graf@amazon.com>, Alex Williamson <alex@shazbot.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Josh Hilke <jrhilke@google.com>, Leon Romanovsky <leonro@nvidia.com>, 
+	Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Will Deacon <will@kernel.org>, William Tu <witu@nvidia.com>, 
+	Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v4 02/11] PCI: liveupdate: Track outgoing preserved PCI
+ devices
+Message-ID: <20260430175916.GA13902.vipinsh@google.com>
+References: <20260423212316.3431746-1-dmatlack@google.com>
+ <20260423212316.3431746-3-dmatlack@google.com>
+ <20260428201231.GA3885809.vipinsh@google.com>
+ <CALzav=dfLtdrPhkBkGwHpDAWUBMHnbGPccwhy1__doziNVZQJQ@mail.gmail.com>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALzav=dfLtdrPhkBkGwHpDAWUBMHnbGPccwhy1__doziNVZQJQ@mail.gmail.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260430_112526_319603_3B22C48B 
+X-CRM114-Status: GOOD (  34.04  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,139 +116,99 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Tue, Apr 28, 2026 at 02:12:13PM -0700, David Matlack wrote:
+> On Tue, Apr 28, 2026 at 1:20 PM Vipin Sharma <vipinsh@google.com> wrote:
+> >
+> > On Thu, Apr 23, 2026 at 09:23:06PM +0000, David Matlack wrote:
+> > > +int pci_liveupdate_preserve(struct pci_dev *dev)
+> > > +{
+> > > +     struct pci_ser *ser;
+> > > +     int i, ret;
+> > > +
+> > > +     guard(mutex)(&pci_flb_outgoing_lock);
+> > > +
+> > > +     ret = liveupdate_flb_get_outgoing(&pci_liveupdate_flb, (void **)&ser);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > > +     if (!ser)
+> > > +             return -ENOENT;
+> > > +
+> > > +     if (dev->is_virtfn)
+> > > +             return -EINVAL;
+> > > +
+> > > +     if (dev->liveupdate_outgoing)
+> > > +             return -EBUSY;
+> > > +
+> > > +     if (ser->nr_devices == ser->max_nr_devices)
+> > > +             return -ENOSPC;
+> > > +
+> > > +     for (i = 0; i < ser->max_nr_devices; i++) {
+> > > +             /*
+> > > +              * Start searching at index ser->nr_devices. This should result
+> > > +              * in a constant time search under expected conditions (devices
+> > > +              * are not getting unpreserved).
+> > > +              */
+> > > +             int index = (ser->nr_devices + i) % ser->max_nr_devices;
+> > > +             struct pci_dev_ser *dev_ser = &ser->devices[index];
+> > > +
+> > > +             if (dev_ser->refcount)
+> > > +                     continue;
+> > > +
+> > > +             pci_info(dev, "Device will be preserved across next Live Update\n");
+> > > +             ser->nr_devices++;
+> > > +
+> > > +             dev_ser->domain = pci_domain_nr(dev->bus);
+> > > +             dev_ser->bdf = pci_dev_id(dev);
+> > > +             dev_ser->refcount = 1;
+> > > +
+> > > +             dev->liveupdate_outgoing = dev_ser;
+> > > +             return 0;
+> > > +     }
+> > > +
+> > > +     return -ENOSPC;
+> >
+> > Since it is executing under a mutex, and we already failed
+> > 'if (ser->nr_devices == ser->max_nr_devices) check above, will we ever reach
+> > here and return -ENOSPC?
+> 
+> Yeah I wouldn't expect to ever reach here.
 
---=-Q5uU99FSerI7+XMdGTFU
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Will you be removing it or want to keep it just in case scenario?
 
-On Thu, 2026-04-30 at 15:28 +0200, Paolo Bonzini wrote:
-> I even wonder if, for long term simplicity, the interface for=20
-> host->caretaker should be just for the caretaker to swallow the host=20
-> into non-root mode, again as in Arm nVHE.=C2=A0
+> 
+> > > diff --git a/include/linux/kho/abi/pci.h b/include/linux/kho/abi/pci.h
+> > > index 5c0e92588c00..5b4c8d9e462c 100644
+> > > --- a/include/linux/kho/abi/pci.h
+> > > +++ b/include/linux/kho/abi/pci.h
+> > > @@ -23,19 +23,20 @@
+> > >   * incrementing the version number in the PCI_LUO_FLB_COMPATIBLE string.
+> > >   */
+> > >
+> > > -#define PCI_LUO_FLB_COMPATIBLE "pci-v1"
+> > > +#define PCI_LUO_FLB_COMPATIBLE "pci-v2"
+> >
+> > Just curious, why did we change the version here?
+> 
+> Because a field in struct pci_dev_ser changed.
+> 
+> > It's not like just
+> > previous patch is working enough to perform a live update. As the config
+> > is experimental, can't we just keep it PCI-v1 for the whole series?
+> 
+> What is the benefit of keeping "pci-v1"?
+>
 
-There's a lot of merit in that approach.
+I don't see any benefit in keeping v1 or changing to v2 as well.
 
-I talked about wanting to use this 'caretaker' for secret hiding.  But
-why have *voluntary* secret hiding with the kernel hiding things from
-its own address space, when you have have *mandatory* secret hiding
-with something running in EL2, like pKVM. Or the Nitro Isolation Engine
-which adds formal proof of correctness on top and is designed to allow
-for live update of both itself *and* the kernel it hosts.
+My reasoning is that before this series is merged, there is no real need
+for versioning here. This is first series which is introducing PCI
+liveupdate. It is not gonna be that someone has merged patch 1 only, run
+its kernel and then kexec to next kernel which has patch 2.
 
-Honestly, I don't see the *caretaker* being much of an ABI at all,
-except from one kernel to the next.
+> I think it makes sense to follow the rule we set which is to update
+> the compatibility string in any commit that changes the ABI.
 
-The *userspace* ABI considerations are all about how you make a vCPU
-that runs asynchronously (should it conceptually just be an async
-KVM_RUN call, which allows the vCPU to run in a kernel thread up to the
-point of kexec? Why is it fundamentally tied to kexec at all?).
+Okay, this is also fine.
 
-I'd love to start without kexec in the picture at all. Just show me the
-KVM API for starting a *confidential* guest (pKVM, SEV-SNP, whatever),
-leaving it running, completely stopping the VMM and then starting a new
-VMM to pick up from where it left off.
-
-Sometimes the vCPUs might all actually still be running. Sometimes they
-might have hit an exit that couldn't be handled.
-
-Doing kexec while the VMM is "hands-off" is then the *next* challenge.
-
-
---=-Q5uU99FSerI7+XMdGTFU
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
-ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
-AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
-BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
-MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
-a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
-jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
-GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
-aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
-nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
-8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
-HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
-IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
-KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
-BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
-QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
-QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
-ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
-/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
-uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
-xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
-W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
-c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
-VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
-NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
-DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
-sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
-w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
-i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
-kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
-0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
-ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
-blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
-hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
-VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
-HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
-ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
-AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
-cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
-cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
-AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
-aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
-hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
-iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
-8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
-JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
-xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
-EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
-B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
-MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
-KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
-Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
-nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
-WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
-W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
-nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
-g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
-9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
-9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
-sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
-a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
-ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
-AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
-dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
-Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
-MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
-YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
-4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
-6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
-QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
-nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
-MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
-VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
-ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDQzMDE1Mjcx
-MVowLwYJKoZIhvcNAQkEMSIEIAMMTSjDF/YzzlyOr9Cyrq9oj6P33gpYBUz/VXg3563QMGQGCSsG
-AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
-cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
-VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
-cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAbGTbtqlU6xYn
-aFU636O7DYd3LvVQ1+UlvFALEQlNg6mKhBXLJwJAq6l8J7LaGBECX2fjcNmna2zeAIHgb9cLz6qx
-+FCt2z/9Pn/zRWC2Ht2k3yePATUD78CYdYT6nORgUzB4Pi5ruFxZXHalnxd+tpROiYbQr5X31GZz
-U+0dHVzdD+HHrC/uxpjQSrI6bfln/Yy3aBfnEyPbbvoVmMJZiGNZzkUmSD3CRx4putCEb7iWsUTc
-wWG+6y7JyyOdUCgAqrtAXuLWIHs0XD2r4RcBHXtQf702JqSDauN+K26THZuga2JMaMuXeU5jjnov
-pyDwQqiCTvUmOpwpT9DMi8+8yAMV3cv1o0VdCMcYMYjewlRInOQhqi1fcLrmCv0dYg2WPvEVdqmT
-E5PIv1XntrVPggPUts3b48K19FUxl+Bma054jEONnSFbHYceZvaFcwk5y5DD9dn1fb/LkizTg/Zb
-j4IPK+gS2uBDJUzn0WRXdxgByQoe2wUVxroejaebPp5RQTTe0K2sEVY2wtU7imcBsvkXEuFotWyf
-LTbvdnzMoytH3KPyzd3x7uWfYbOZYoh3Potm5bLy4IaUp5WTLdBsnLZLVplWW6qh6l9UZlGVpb61
-MthSK1532OEOEWHxFcWGGgASKVKcyJrUNcfzJe1zYWTFcv305E7x9RCjYC4pHDwAAAAAAAA=
-
-
---=-Q5uU99FSerI7+XMdGTFU--
 
