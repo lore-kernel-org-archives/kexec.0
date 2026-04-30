@@ -4,108 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CA8B6CCFA13
-	for <kexec@archiver.kernel.org>; Thu, 30 Apr 2026 20:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 802BCCCFA13
+	for <kexec@archiver.kernel.org>; Thu, 30 Apr 2026 21:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	MIME-Version:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Hkx4tLK7DpveuSLFftKdSSEC4NdhOfO2fjr8Ook6ULw=; b=SJ4B9NGpvEHVeHFm9Mq/NNdsio
-	IstuIaIozAwmITAEVP79+ipyjrnSnpJaP4KH6ozG53MII729XAd3jPDffZhqUQlFy9SR56ux2+aiW
-	1k2nt5bppN36ScAh7o6Kf1y6hHDxwyf3hygi/tAO0ZN05iI0Y/PNzvRfuk1goEFk9favlVnQmMecO
-	e7F9aw94GeMVnI0Zyz+oAdYqFLP5UcTq16N9Fg9jjUlq9J0WRzjN6OgjIUfa0MfDvZfYODEsUjuFL
-	W4Uf3ntD3HDLrHcwqSGpQ91OPWKZaVA2Guy/di6Fv9m9n7oauXGcO5BUWdffTTZAE4Jgaqh0LUOzu
-	EjTBxK1w==;
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+	List-Owner; bh=C0vBoElXD1efBFNz8dKsovWrAybtaAyIXbJ5scKd1Rk=; b=qtetUEgK6WgQZK
+	J2w4oQZc2+saraLHMXHoGx4w7/ZJFAD6DyzYmcrWl2lXTd7ItrvJKTGQMB13k+XopCf7sO3DZBysz
+	f0x8GcyAmKK7R6SmLoy7Bs/fgl/aXM5vdHYOzQpezMdw6xbIe/VpVjmyHh1mpKG0UsmLcUi55KC0q
+	l03MdHVX5atEFciMeWglQq5rq5YtOfmZ4J34TpybvEINsn3XbgqvaeU+yXqZohEgR+306AozuGrQS
+	N3aWru8ZN90X6KzW/UEc3dOCypegZ2P2m49Upk6HOCZQhIg25vEXAdXnF6V7eRwdg71vt1CePvfgI
+	+BS7oZpGc3/j1M6yPLUw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIYKB-00000005wKn-0h2i;
-	Thu, 30 Apr 2026 20:49:31 +0000
-Received: from mail-pj1-x1033.google.com ([2607:f8b0:4864:20::1033])
+	id 1wIYau-00000005wqN-0DaT;
+	Thu, 30 Apr 2026 21:06:48 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIYK8-00000005wKI-3FXj
+	id 1wIYar-00000005wqD-30Wz
 	for kexec@lists.infradead.org;
-	Thu, 30 Apr 2026 20:49:29 +0000
-Received: by mail-pj1-x1033.google.com with SMTP id 98e67ed59e1d1-362bb3260f1so991831a91.2
-        for <kexec@lists.infradead.org>; Thu, 30 Apr 2026 13:49:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777582168; x=1778186968; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hkx4tLK7DpveuSLFftKdSSEC4NdhOfO2fjr8Ook6ULw=;
-        b=FfJpE/C+8Fm2hecllWLB1y6JNPBJLzmA/iCdkZ3nHKWnMo1K0gZ0bKW0GZk91BeluD
-         BgIFN2UZ1sGbzFhFKdX7uCYJY00S6qGVr/lRNCj3aS9R50rb3XbkcufhquEDcbPVydSF
-         ZDbk5mP8HTZnK35qmd1j+dbFrwc9N+SlBlJCLA/A92wIsfth5XYcYIu9ukR8cXNzblRK
-         bAykWXpR816pt9oypzdOAfi1+RTIhD39NDtRKmanAtunMgEzof86bmn/8uW7VDQnmCyi
-         +6dAptr1ik4lc8TJBqbnLdR72rl3RSHrpReaGE6PGwA+11DJ18wodr8Wxwv1YB3ZVmtJ
-         2sxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777582168; x=1778186968;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Hkx4tLK7DpveuSLFftKdSSEC4NdhOfO2fjr8Ook6ULw=;
-        b=cl15mHLIahtI3j6wKJj/qecvDaNIXPfpSs6Ddu9hQCbxrG65I7e9HfBRtZ8nOq3kpo
-         VDe5NjErmDpM6dC7N7byy2BoRm87QBtpTy7PBE87xOV7QBhAvKV/g0ci54/dJrsEr7n+
-         3YHtGAXnBnCLZG448FKQ1G0MvYVsFa5SMbT/MXe1pfI/JGiSncXKwir/vh7ikSo7SK4d
-         h14i0bXceXXtk+AtheInRfZkwM29FtIxRtGAR5pJ1De+4z7exIaThDVglDmFCMcTTgkm
-         UR3XL6rmybqC5c9cO/sKYTxJZdNgP77fxmDLbQ7pBzISxm+WrwN56dnxKwhGb3aYL72g
-         rpWg==
-X-Forwarded-Encrypted: i=1; AFNElJ/hhZpmj+emMsud9baKCqCgez1jqX5SPzelRe790X5BpQ2+9DXHVlyKc3lPi7kWl0rrbJYQ8A==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yy/eiuZiUoVqpusfWqGkkJkspZkQYg0PdiJn7TPZPCU99VBLWO6
-	DFwoXtJI7cpHw/ESnzLVuPBgK4clN7wCBIreHS1fFjjo/DSus+ayBg0qUpypnGv4qA==
-X-Gm-Gg: AeBDietqpGvZ9lplncuTxMOWFh0Y/lwu428ip2O+LIf1c9yL3/j3UsOlMpVqYQb7sDW
-	cclCzV4x7Fr54n3VD2TmjZyTV2t+94W0+2tmVLGngeEofR+4ac/3JLxVX6Z/RJJOS0aRG60jaM+
-	o2fpdRQBwEQ/AuQ9/CEcXZcGAuR0oTEOcsr/0I7QD8FBKNSQ0wG4aZ01xyE8z6Vy+HQiUcj51Fx
-	ztEzKARVqOiooHYsJHZ1Fp5DsV58EUMctWn2T9SUHvMgArs3S+tCMLyubENowesOpeKcvhAeA0n
-	UDAXqs+ckrcy22BN6oftXo0Mu4NZkdjefVqOcCbUBYfo+SSzKpKv2CnOzUdezzel8ENsqGGGsGz
-	H+Pxm5G1Dox6+dGdnYblQdAw4a+4LwbHENL+D50p28kZberzkJuMnv3GiTFCqOqlwPRFPGG6N8k
-	R0S4UKUActBLtB1NcCGMrfFt7SPNl6BIJIqlhyjJxFFTYOox99BXnIxsKPAzNb7gioEx9tQKFUE
-	5+RoA==
-X-Received: by 2002:a17:90b:3e4f:b0:35f:b288:8e4c with SMTP id 98e67ed59e1d1-364c30cb4f7mr4328476a91.15.1777582167388;
-        Thu, 30 Apr 2026 13:49:27 -0700 (PDT)
-Received: from google.com (76.9.127.34.bc.googleusercontent.com. [34.127.9.76])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-364ec00b094sm307888a91.9.2026.04.30.13.49.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2026 13:49:26 -0700 (PDT)
-Date: Thu, 30 Apr 2026 20:49:22 +0000
-From: David Matlack <dmatlack@google.com>
-To: Jacob Pan <jacob.pan@linux.microsoft.com>
-Cc: iommu@lists.linux.dev, kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-pci@vger.kernel.org,
+	Thu, 30 Apr 2026 21:06:45 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 657D860142;
+	Thu, 30 Apr 2026 21:06:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E40FAC2BCB3;
+	Thu, 30 Apr 2026 21:06:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777583204;
+	bh=fSFeh7LyM/VW+wkyTESwF1r98DYurH8l0qUBEQElk78=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=puQeAZObx6LcsJjZvu1WHP+8Qjize0ip9P2cmvV8hYk+1hbARQsBepTiOkBvWthHE
+	 APtvhoP5m8I/E1y18V1kD/BTX+C9Pm/HjCuQycbFK5Jfpa+ZiRcj/X5jsQaWJ9yA+Z
+	 gZ/MVR+TMtwrBvUy/REkOHTbIlNzOpb6jzNWtJHsZ4tT6+SSq2ep9KlR1Fsb5yi0rh
+	 3mZuRSvjEI/bYoelZD7EGAAq6Dn80fISgjTt8OAIkRxPbeKMYn2JqYdjFWaqkD5+fj
+	 svxk+yuFxLyw188ejvfehH9ozLGi75STutLaHibMhH6Z6IOF0uCXaxI2yaRttJVO7G
+	 jOJaHcSyl23Sw==
+Date: Thu, 30 Apr 2026 16:06:42 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: David Matlack <dmatlack@google.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>, iommu@lists.linux.dev,
+	kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
 	Adithya Jayachandran <ajayachandra@nvidia.com>,
 	Alexander Graf <graf@amazon.com>,
 	Alex Williamson <alex@shazbot.org>,
 	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
 	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
 	Jason Gunthorpe <jgg@nvidia.com>, Joerg Roedel <joro@8bytes.org>,
 	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
 	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
 	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
 	Pranjal Shrivastava <praan@google.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
 	Robin Murphy <robin.murphy@arm.com>,
 	Saeed Mahameed <saeedm@nvidia.com>,
 	Samiullah Khawaja <skhawaja@google.com>,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Will Deacon <will@kernel.org>, William Tu <witu@nvidia.com>,
 	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v4 08/11] PCI: liveupdate: Require preserved devices are
- in immutable singleton IOMMU groups
-Message-ID: <afPAUiHoqoZl1-4I@google.com>
-References: <20260423212316.3431746-1-dmatlack@google.com>
- <20260423212316.3431746-9-dmatlack@google.com>
- <20260427135625.0000413e@linux.microsoft.com>
+Subject: Re: [PATCH v4 01/11] PCI: liveupdate: Set up FLB handler for the PCI
+ core
+Message-ID: <20260430210642.GA439800@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260427135625.0000413e@linux.microsoft.com>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260430_134928_813674_F2D6E931 
-X-CRM114-Status: GOOD (  12.80  )
+In-Reply-To: <afFHC6C1Qbwio4pH@google.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -120,24 +88,69 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-04-27 01:56 PM, Jacob Pan wrote:
-> On Thu, 23 Apr 2026 21:23:12 +0000
-> David Matlack <dmatlack@google.com> wrote:
+On Tue, Apr 28, 2026 at 11:47:23PM +0000, David Matlack wrote:
+> On 2026-04-28 05:50 PM, Pasha Tatashin wrote:
+> > On 04-27 23:59, David Matlack wrote:
+> > > On 2026-04-24 01:29 PM, Pasha Tatashin wrote:
+> > > > On 04-24 14:33, Pratyush Yadav wrote:
+> > > > > On Thu, Apr 23 2026, David Matlack wrote:
+> > > > > [...]
+> > > > > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > > > > index c9b7b6f9828e..94af31837375 100644
+> > > > > > --- a/MAINTAINERS
+> > > > > > +++ b/MAINTAINERS
+> > > > > > @@ -20555,6 +20555,18 @@ L:	linux-pci@vger.kernel.org
+> > > > > >  S:	Supported
+> > > > > >  F:	Documentation/PCI/pci-error-recovery.rst
+> > > > > >  
+> > > > > > +PCI LIVE UPDATE
+> > > > > > +M:	Bjorn Helgaas <bhelgaas@google.com>
+> > > > > > +M:	David Matlack <dmatlack@google.com>
+> > > > > > +L:	linux-pci@vger.kernel.org
+> > > > > > +S:	Supported
+> > > > > > +Q:	https://patchwork.kernel.org/project/linux-pci/list/
+> > > > > > +B:	https://bugzilla.kernel.org
+> > > > > > +C:	irc://irc.oftc.net/linux-pci
+> > > > > > +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
+> > > > > > +F:	drivers/pci/liveupdate.c
+> > > > > > +F:	include/linux/kho/abi/pci.h
+> > > > > > +
+> > > > > 
+> > > > > Can we please also add these files under the "LIVE UPDATE" entry. The
+> > > > > code here concerns both live update and PCI.
+> > > 
+> > > Covering that intersection of Live Update and PCI was exactly my
+> > > intention with introducing this new PCI LIVE UPDATE entry. This ensures
+> > > we have maintenance coverage with knowledge of that intersection.
+> > > 
+> > > > > We can figure out the
+> > > > > maintenance details as we go along, but I think the live update
+> > > > > maintainers should at least get all the patches for PCI live update.
+> ...
 
-> > +bool pci_device_group_immutable_singleton(struct pci_dev *dev)
-> > +{
-> > +	struct iommu_group *group;
-> > +	struct group_device *d;
-> > +	struct pci_bus *bus;
-> > +	int nr_devices = 0;
-> > +
-> > +	group = iommu_group_get(&dev->dev);
-> > +	if (!group)
-> > +		return false;
-> This may not work for noiommu mode where we could have a null group.
-> Maybe I can add special case later?
+> > This is the way we agreed to handle kexec changes: Baoquan He is the 
+> > maintainer, and without his Reviewed-by tag, we won't take changes to 
+> > kexec. This is the approach we follow with MM for KHO changes to 
+> > memblock and memfd preservation, as well as the upcoming 
+> > hugetlb/guestmemfd preservation. 
+> > 
+> > This is also the approach we should continue using when adding LUO 
+> > support to other components like PCI, VFIO, IOMMU, and KVM. It keeps 
+> > life easier for the core component maintainers and ensures we do not 
+> > regress LU by staging everything in the same tree and sending LU merge 
+> > requests from a single tree.
+> 
+> Ok it sounds like we are aligned on keeping drivers/pci/liveupdate.c,
+> include/linux/kho/abi/pci.h, and Documentation/PCI/liveupdate.rst in the
+> PCI LIVE UPDATE entry and not duplicating them in the LIVE UPDATE entry.
+> 
+> I think the only open question is what tree to use for the PCI LIVE
+> UPDATE entry, PCI tree or Live Update tree. You are proposing the Live
+> Update tree.
+> 
+> Bjorn are you ok with that approach?
 
-Yeah depending which series goes in first. But based on the other thread
-I am going to drop this patch from v5.
-
+Yes, I think that makes sense, at least to start.  In early days, it
+would probably be a headache to coordinate LU things across multiple
+trees.
 
