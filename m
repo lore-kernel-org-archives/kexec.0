@@ -4,121 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C35AFFF8875
-	for <kexec@archiver.kernel.org>; Thu, 30 Apr 2026 13:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9E594FF8873
+	for <kexec@archiver.kernel.org>; Thu, 30 Apr 2026 14:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=JSxzFXZjopyLpFtclGQ88sUN+Inh+k833IrCrSgzaTI=; b=IczCJIV8LSd1GE7aOfosCV56kC
-	MJMjO7MRIr8SGvF6NB6HvvuAA8cWr/bzGrTrJB5JF+rrQ9NbRL7JeNZsnFcaNxnooax0Nc73B2THu
-	r1hiS/s1o++SS53ZSccBhMYeGdXRdh4AfmWLP3NYbD90tEfJ6e131UDhXI+Ao59KMaKDwUKFZOR2J
-	oOOBUSH/3aMhHnt29rQRpfAZSIsNuUIZKgtMUSM1EZOpme4zrV05zVQWzLJnY0y6iR/AHDGTO0jP8
-	a6UUUs0klxhUlHt82uf4m9VooxtkCvgef6WPZqR2+UgK2hTN1evYxNGuMMo7kG/NQsiInorswe3eh
-	X2y5UQ4w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=YYY9Vga998I3Mv/Iw3j2GNNHw+Mkg2M1W6w1Ii26+Hg=; b=NtgZlfoXCNhZdY7o5A/Ym/dTJu
+	DND0OYjo1FOY/XqWdgdS1CIAHq2676aBdHgyi47ETV2vn6ZpEqDQg1YPKT2XZw/lFoCGfcFHTEsUl
+	iCqAZC6OPWUX8WqGLefrAiVvU/7E4PZHhLYh9/FnV5YiqZB9MU6Yvn9pn7v2kBsp2l6t9MkC1CuaS
+	KdV4BMkjuVW4d5lw9eqi3IYnXTr6uxhXiPc+HVNJXCaCpMWp4rDAqfM1SoYNmX6n5pX4QrOoLrIK6
+	X0Uo7T5D3HVH42Ek1KAI06jnj/ZpEDq4vNNdmef3e7W2dXF720PhMA0jN35+2TCyk+cTVthKR0k6K
+	w0W1abRw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIRSG-00000005XP0-378f;
-	Thu, 30 Apr 2026 13:29:24 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1wISB1-00000005Zaf-0npR;
+	Thu, 30 Apr 2026 14:15:39 +0000
+Received: from mgamail.intel.com ([198.175.65.18])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIRSD-00000005XOb-2stm
+	id 1wISAx-00000005ZaH-1u3H
 	for kexec@lists.infradead.org;
-	Thu, 30 Apr 2026 13:29:23 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1777555758;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=JSxzFXZjopyLpFtclGQ88sUN+Inh+k833IrCrSgzaTI=;
-	b=eEziI1fFoztDHF90myczEoTFcbjG+c0O1Vk1PvqkXXhlbwqXz2Hh5SUNBjy9TzlmCHeTbF
-	1lmHyRpXKAX5EVshvhNJIAoRlcAyemW+Y0DSZT2ndG+Pdp0CaAKGypDW5EWJqLpfOG16Qg
-	FTbgMdLPssCmIgtOGaHb2JEXcsAXWH0=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-674-2wkaTtm3MWid4vDFKli5jg-1; Thu,
- 30 Apr 2026 09:29:13 -0400
-X-MC-Unique: 2wkaTtm3MWid4vDFKli5jg-1
-X-Mimecast-MFC-AGG-ID: 2wkaTtm3MWid4vDFKli5jg_1777555749
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C154319560AA;
-	Thu, 30 Apr 2026 13:29:06 +0000 (UTC)
-Received: from [10.44.50.160] (unknown [10.44.50.160])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6D7DC300019F;
-	Thu, 30 Apr 2026 13:28:53 +0000 (UTC)
-Message-ID: <0a71472c-b397-4699-a518-61faffcf4ab2@redhat.com>
-Date: Thu, 30 Apr 2026 15:28:51 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] proposal: KVM: Orphaned VMs: The Caretaker approach for
- Live Update
-To: Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, kvm@vger.kernel.org, linux-mm@kvack.org,
- kvmarm@lists.linux.dev
-Cc: rppt@kernel.org, graf@amazon.com, pratyush@kernel.org, seanjc@google.com,
- maz@kernel.org, oupton@kernel.org, dwmw2@infradead.org,
- alex.williamson@redhat.com, kevin.tian@intel.com, rientjes@google.com,
- Tycho.Andersen@amd.com, anthony.yznaga@oracle.com, baolu.lu@linux.intel.com,
- david@kernel.org, dmatlack@google.com, mheyne@amazon.de, jgowans@amazon.com,
- jgg@nvidia.com, pankaj.gupta.linux@gmail.com, kpraveen.lkml@gmail.com,
- vipinsh@google.com, vannapurve@google.com, corbet@lwn.net,
- loeser@linux.microsoft.com, tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- roman.gushchin@linux.dev, akpm@linux-foundation.org, pjt@google.com
-References: <afEwWZksU0Fw61oT@plex>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <afEwWZksU0Fw61oT@plex>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: KAlRzp-dWgxm6JnVY1O_r68n7hqiohTjxepsrv2NjRA_1777555749
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+	Thu, 30 Apr 2026 14:15:37 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777558535; x=1809094535;
+  h=date:from:to:cc:subject:message-id;
+  bh=IGDXBfCyiSChYJXtyLLlYMDgkWqVQVQUs3K7ZtYUmRA=;
+  b=kr4K9Kz0hg1KSNa0h+4eoAYdkZC6uDXJwSTaYMbsN2ZvvniNZd1EVUMl
+   i4kmYbISzkdmzjVTtTe+SvLa9IODkJP9crwIQ7DhAaBbzy6zOcgCQETjN
+   2vV7kQ5e2yYlmy7XmorT/japsKmA/tCpkSaDIQymA6xxTtJ8wWzwJrItX
+   d+iHZ4sMLrRMmJE6OVOo1BglyLRlQXDoCfLtRKjKB7KM9LHLXPy1wmOUt
+   j2R2PK9a/w7jA53HNCY6Du6lG4SsBWkLYtqLPGRTdXY6wyKJHtso1vec3
+   5Lm/buIVEvZD+Z8B5uRct1x5bgyHX0RVrVdbP6xZq+HTmaQOfA9yze03a
+   g==;
+X-CSE-ConnectionGUID: x80r6z3ZQ3ahiWShuDhjyA==
+X-CSE-MsgGUID: zRlc5zVUSjGLnuF+01H9Gw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11772"; a="78532769"
+X-IronPort-AV: E=Sophos;i="6.23,208,1770624000"; 
+   d="scan'208";a="78532769"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 07:15:32 -0700
+X-CSE-ConnectionGUID: fTTJDb6eTVSCkrDHH2sj/w==
+X-CSE-MsgGUID: 9qPeb4RkTIqaAHjMUdiZBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,208,1770624000"; 
+   d="scan'208";a="272704285"
+Received: from lkp-server01.sh.intel.com (HELO aa799cca880d) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 30 Apr 2026 07:15:31 -0700
+Received: from kbuild by aa799cca880d with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wISAq-00000000CSA-29Kb;
+	Thu, 30 Apr 2026 14:15:28 +0000
+Date: Thu, 30 Apr 2026 22:14:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
+Subject: [liveupdate:fixes] BUILD SUCCESS
+ 0fb1daf0b78d0e23b63b6b65de56d4a3fd83bc14
+Message-ID: <202604302243.pFlmt1TU-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260430_062921_879925_EAE39636 
-X-CRM114-Status: GOOD (  42.23  )
+X-CRM114-CacheID: sfid-20260430_071536_447176_E22D0A08 
+X-CRM114-Status: UNSURE (   4.21  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -133,229 +84,211 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-I have some very similar observations to Alex and some very similar 
-observations to David.  This has to imply that everyone will agree with 
-me. :)
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git fixes
+branch HEAD: 0fb1daf0b78d0e23b63b6b65de56d4a3fd83bc14  mm/memfd_luo: report error when restoring a folio fails mid-loop
 
-Seriously, the main contention point, from reading the thread, is the 
-placement and lifecycle of the caretaker.  More on this later...
+elapsed time: 2651m
 
-On 4/29/26 00:29, Pasha Tatashin wrote:
-> While this proposal focuses on its critical role in minimally disruptive
-> Live Update, the Caretaker is fundamentally designed as an extensible
-> primitive. Its architecture allows it to be leveraged for a variety of
-> other advanced virtualization use cases, such as running custom
-> lightweight hypervisors or completely offloading virtualization duties
-> to an accelerator card.
+configs tested: 191
+configs skipped: 2
 
-One step at a time please---and as an initial step, just place it inside 
-the kernel, a la Arm nVHE.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Since your design would have anyway the ability to update the caretaker, 
-you can embed that part into the reattachment process, so that the new 
-kernel can use its own caretaker.
+tested configs:
+alpha                             allnoconfig    gcc-15.2.0
+alpha                            allyesconfig    gcc-15.2.0
+alpha                               defconfig    gcc-15.2.0
+arc                              allmodconfig    clang-16
+arc                               allnoconfig    gcc-15.2.0
+arc                              allyesconfig    clang-23
+arc                                 defconfig    gcc-15.2.0
+arc                            randconfig-001    gcc-8.5.0
+arc                   randconfig-001-20260430    gcc-8.5.0
+arc                            randconfig-002    gcc-8.5.0
+arc                   randconfig-002-20260430    gcc-8.5.0
+arm                               allnoconfig    gcc-15.2.0
+arm                              allyesconfig    clang-16
+arm                                 defconfig    gcc-15.2.0
+arm                            randconfig-001    gcc-8.5.0
+arm                   randconfig-001-20260430    gcc-8.5.0
+arm                            randconfig-002    gcc-8.5.0
+arm                   randconfig-002-20260430    gcc-8.5.0
+arm                            randconfig-003    gcc-8.5.0
+arm                   randconfig-003-20260430    gcc-8.5.0
+arm                            randconfig-004    gcc-8.5.0
+arm                   randconfig-004-20260430    gcc-8.5.0
+arm64                            allmodconfig    clang-23
+arm64                             allnoconfig    gcc-15.2.0
+arm64                               defconfig    gcc-15.2.0
+arm64                          randconfig-001    clang-23
+arm64                 randconfig-001-20260430    clang-23
+arm64                          randconfig-002    clang-23
+arm64                 randconfig-002-20260430    clang-23
+arm64                          randconfig-003    clang-23
+arm64                 randconfig-003-20260430    clang-23
+arm64                          randconfig-004    clang-23
+arm64                 randconfig-004-20260430    clang-23
+csky                             allmodconfig    gcc-15.2.0
+csky                              allnoconfig    gcc-15.2.0
+csky                                defconfig    gcc-15.2.0
+csky                           randconfig-001    clang-23
+csky                  randconfig-001-20260430    clang-23
+csky                           randconfig-002    clang-23
+csky                  randconfig-002-20260430    clang-23
+hexagon                          allmodconfig    gcc-15.2.0
+hexagon                           allnoconfig    gcc-15.2.0
+hexagon                             defconfig    gcc-15.2.0
+hexagon               randconfig-001-20260430    gcc-14.3.0
+hexagon               randconfig-002-20260430    gcc-14.3.0
+i386                             allmodconfig    clang-20
+i386                              allnoconfig    gcc-15.2.0
+i386                             allyesconfig    clang-20
+i386        buildonly-randconfig-001-20260430    gcc-14
+i386        buildonly-randconfig-002-20260430    gcc-14
+i386        buildonly-randconfig-003-20260430    gcc-14
+i386        buildonly-randconfig-004-20260430    gcc-14
+i386        buildonly-randconfig-005-20260430    gcc-14
+i386        buildonly-randconfig-006-20260430    gcc-14
+i386                                defconfig    gcc-15.2.0
+i386                  randconfig-001-20260430    clang-20
+i386                  randconfig-002-20260430    clang-20
+i386                  randconfig-003-20260430    clang-20
+i386                  randconfig-004-20260430    clang-20
+i386                  randconfig-005-20260430    clang-20
+i386                  randconfig-006-20260430    clang-20
+i386                  randconfig-007-20260430    clang-20
+i386                           randconfig-011    clang-20
+i386                  randconfig-011-20260430    clang-20
+i386                           randconfig-012    clang-20
+i386                  randconfig-012-20260430    clang-20
+i386                           randconfig-013    clang-20
+i386                  randconfig-013-20260430    clang-20
+i386                           randconfig-014    clang-20
+i386                  randconfig-014-20260430    clang-20
+i386                           randconfig-015    clang-20
+i386                  randconfig-015-20260430    clang-20
+i386                           randconfig-016    clang-20
+i386                  randconfig-016-20260430    clang-20
+i386                           randconfig-017    clang-20
+i386                  randconfig-017-20260430    clang-20
+loongarch                        allmodconfig    clang-23
+loongarch                         allnoconfig    gcc-15.2.0
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20260430    gcc-14.3.0
+loongarch             randconfig-002-20260430    gcc-14.3.0
+m68k                             allmodconfig    gcc-15.2.0
+m68k                              allnoconfig    gcc-15.2.0
+m68k                             allyesconfig    clang-16
+m68k                                defconfig    clang-19
+microblaze                        allnoconfig    gcc-15.2.0
+microblaze                       allyesconfig    gcc-15.2.0
+microblaze                          defconfig    clang-19
+mips                             allmodconfig    gcc-15.2.0
+mips                              allnoconfig    gcc-15.2.0
+mips                             allyesconfig    gcc-15.2.0
+mips                           xway_defconfig    clang-23
+nios2                            allmodconfig    clang-23
+nios2                             allnoconfig    clang-23
+nios2                               defconfig    clang-19
+nios2                 randconfig-001-20260430    gcc-14.3.0
+nios2                 randconfig-002-20260430    gcc-14.3.0
+openrisc                         allmodconfig    clang-23
+openrisc                          allnoconfig    clang-23
+openrisc                            defconfig    gcc-15.2.0
+openrisc                 simple_smp_defconfig    gcc-15.2.0
+parisc                           allmodconfig    gcc-15.2.0
+parisc                            allnoconfig    clang-23
+parisc                           allyesconfig    clang-19
+parisc                              defconfig    gcc-15.2.0
+parisc                randconfig-001-20260430    gcc-13.4.0
+parisc                randconfig-002-20260430    gcc-13.4.0
+parisc64                            defconfig    clang-19
+powerpc                          allmodconfig    gcc-15.2.0
+powerpc                           allnoconfig    clang-23
+powerpc                    mvme5100_defconfig    gcc-15.2.0
+powerpc                      pasemi_defconfig    clang-23
+powerpc               randconfig-001-20260430    gcc-13.4.0
+powerpc               randconfig-002-20260430    gcc-13.4.0
+powerpc64             randconfig-001-20260430    gcc-13.4.0
+powerpc64             randconfig-002-20260430    gcc-13.4.0
+riscv                            allmodconfig    clang-23
+riscv                             allnoconfig    clang-23
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    gcc-15.2.0
+riscv                          randconfig-001    clang-23
+riscv                 randconfig-001-20260430    clang-23
+riscv                          randconfig-002    clang-23
+riscv                 randconfig-002-20260430    clang-23
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-23
+s390                             allyesconfig    gcc-15.2.0
+s390                                defconfig    gcc-15.2.0
+s390                           randconfig-001    clang-23
+s390                  randconfig-001-20260430    clang-23
+s390                           randconfig-002    clang-23
+s390                  randconfig-002-20260430    clang-23
+sh                               allmodconfig    gcc-15.2.0
+sh                                allnoconfig    clang-23
+sh                               allyesconfig    clang-19
+sh                                  defconfig    gcc-14
+sh                             randconfig-001    clang-23
+sh                    randconfig-001-20260430    clang-23
+sh                             randconfig-002    clang-23
+sh                    randconfig-002-20260430    clang-23
+sh                           se7206_defconfig    gcc-15.2.0
+sparc                             allnoconfig    clang-23
+sparc                               defconfig    gcc-15.2.0
+sparc                 randconfig-001-20260430    gcc-12.5.0
+sparc                 randconfig-002-20260430    gcc-12.5.0
+sparc64                          allmodconfig    clang-23
+sparc64                             defconfig    gcc-14
+sparc64               randconfig-001-20260430    gcc-12.5.0
+sparc64               randconfig-002-20260430    gcc-12.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-23
+um                               allyesconfig    gcc-15.2.0
+um                                  defconfig    gcc-14
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20260430    gcc-12.5.0
+um                    randconfig-002-20260430    gcc-12.5.0
+um                           x86_64_defconfig    gcc-14
+x86_64                           allmodconfig    clang-20
+x86_64                            allnoconfig    clang-23
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20260430    gcc-14
+x86_64      buildonly-randconfig-002-20260430    gcc-14
+x86_64      buildonly-randconfig-003-20260430    gcc-14
+x86_64      buildonly-randconfig-004-20260430    gcc-14
+x86_64      buildonly-randconfig-005-20260430    gcc-14
+x86_64      buildonly-randconfig-006-20260430    gcc-14
+x86_64                              defconfig    gcc-14
+x86_64                                  kexec    clang-20
+x86_64                randconfig-011-20260430    clang-20
+x86_64                randconfig-012-20260430    clang-20
+x86_64                randconfig-013-20260430    clang-20
+x86_64                randconfig-014-20260430    clang-20
+x86_64                randconfig-015-20260430    clang-20
+x86_64                randconfig-016-20260430    clang-20
+x86_64                randconfig-071-20260430    gcc-14
+x86_64                randconfig-072-20260430    gcc-14
+x86_64                randconfig-073-20260430    gcc-14
+x86_64                randconfig-074-20260430    gcc-14
+x86_64                randconfig-075-20260430    gcc-14
+x86_64                randconfig-076-20260430    gcc-14
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-14
+x86_64                          rhel-9.4-func    clang-20
+x86_64                    rhel-9.4-kselftests    clang-20
+x86_64                         rhel-9.4-kunit    gcc-14
+x86_64                           rhel-9.4-ltp    gcc-14
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    clang-23
+xtensa                           allyesconfig    clang-23
+xtensa                randconfig-001-20260430    gcc-12.5.0
+xtensa                randconfig-002-20260430    gcc-12.5.0
 
-This reduces a lot the need to establish a stable-ish ABI.  Only the 
-handover (kexec/LUO) needs to be stable, so that the new kernel can 
-populate its kvm and kvm_vcpu structs.  And for that we mostly have a 
-solution already: a stream of serialized ioctls.
-
-> During the execution of the KVM_SET_CARETAKER ioctl, instead of
-> pointing the hardware's return path to standard KVM entry points (e.g.,
-> vmx_vmexit or svm_vcpu_run), KVM reprograms the host-state return area
-> of the CPU's hardware virtualization control structures (e.g., Intel
-> VMCS, AMD VMCB, or ARM equivalent) to point directly into the
-> bare-metal Caretaker environment.
-
-This can be done unconditionally for all VMs based on a module 
-parameter, again as in Arm nVHE.
-
-> Note on Optimization vs. Security: Constantly switching the page table
-> (CR3) on every VM Exit can be expensive due to TLB flushing. To
-> optimize performance, the Caretaker can share the host kernel's page
-> tables while the kernel is still around, and dynamically replace
-> HOST_CR3 with the dedicated, isolated page tables only when the vCPU is
-> orphaned (during the detachment phase). On the other hand, maintaining
-> a permanently isolated CR3 for the Caretaker adds a strong security
-> boundary, achieving hardware-enforced separation similar to KVM Address
-> Space Isolation (ASI).
-
-Agreed on this.
-
-> The Caretaker requires a defined ABI to communicate with the host KVM
-> subsystem. This ABI is implemented via the shared, identity-mapped .ccb
-> section of the ELF payload, acting as the Caretaker Control Block
-> (CCB).
-> 
-> The CCB acts as the source of truth for the Caretaker's execution loop
-> and contains three primary elements:
-> 
->    * Attachment State Flag: An atomic variable indicating the current
->      relationship with the host KVM subsystem (e.g., KVM_ATTACHED or
->      KVM_DETACHED).
-
-This must be done atomically at the time Linux offlines/onlines a pCPU. 
-The interface from Linux to the caretaker must use some kind of IPI so 
-that the new kernel can force a VMEXIT (if needed) in the caretaker, ask 
-it to serialize the vm state, and pass it down to the new kernel's 
-caretaker.
-
->    * KVM Routing Pointers: The physical function pointers that the
->      Caretaker uses to safely jump into the host KVM's standard VM Exit
->      handlers when operating in normal mode.
->    * Shared Configuration Metadata: A physical pointer to dedicated
->      memory pages used by the kernel to share dynamic vCPU configuration
->      data with the Caretaker. Because every guest is configured
->      differently, KVM populates these pages with the specific parameters
->      negotiated during VM initialization (such as CPUID feature masks,
->      APIC routing, and timer states). These pages also include a
->      pre-allocated Telemetry Buffer for the Caretaker to log VM Exits
->      and spin-wait durations. These dedicated pages are explicitly
->      preserved across the host reboot via KHO, ensuring the Caretaker
->      maintains continuous access to the exact context required to
->      accurately emulate trivial exits during the gap.
-
-All this is mostly unnecessary if the caretaker is provided by the 
-kernel.  The recently introduced remote ring buffers can be used for 
-tracing too.
-
-> The Caretaker first evaluates the VM Exit reason. If the exit belongs to
-> a category that the Caretaker is programmed to resolve natively, it
-> handles it internally. For example, profiling of guests has identified
-> the following exit categories for potential local resolution:
-> 
->    * Guest Idle Exits (e.g., HLT): When the guest OS goes idle, it
->      triggers idle exits. The Caretaker intercepts these and halts the
->      physical core until the next guest-bound interrupt fires, preserving
->      host power.
-
-I don't think HLT can be handled entirely here.  Either you skip the 
-exit completely or you have to go out to the scheduler.  The HLT exit 
-could be skipped unconditionally for an orphaned VM, but while there is 
-a running kernel the caretaker has to run entirely with interrupts off 
-and that limits what you can do.
-
-In fact there is already a blueprint of what can be handled easily in 
-the caretaker, namely 
-vmx_exit_handlers_fastpath()/svm_exit_handlers_fastpath().  Stick to 
-what exists already.
-
->    * Timer and APIC Exits: Even an idle guest frequently writes to
->      interrupt controllers and system registers to configure internal
->      timers. The Caretaker handles these trivial writes directly,
->      acknowledging the timer updates.
-
-This depends heavily on the implementation of the hypervisor, for 
-example it can be done on Intel via the preemption timer but not on AMD 
-where an actual hrtimer is needed.
-
-[...]
-
-> When the new VMM process spawns, it retrieves the
->     preserved session and issues LIVEUPDATE_SESSION_RETRIEVE_FD using
->     its token. LUO invokes KVM's .retrieve() callback to map the
->     preserved vcpufd back into the new VMM's file descriptor table. As
->     part of this retrieval process, the host formally brings the
->     isolated pCPU back online, and the new VMM userspace thread is
->     attached back to the active VM thread running on the vCPU. Finally,
->     KVM populates the new KVM Routing Pointers in the CCB and
->     atomically flips the Host State Flag back to KVM_ATTACHED. This
->     breaks the Caretaker's spin-wait loop (if it is in this state),
->     allowing standard KVM operation to resume.
-
-This would also include some kind of serialization of the old VM into 
-the new kernel's struct kvm_vcpu.
-
-Also some kind of feature negotiation is needed (if that fails, the VMs 
-are terminated unceremoniously) so I believe that the transition into 
-and out of the gap must be synchronous.  For example with INIT/SIPI for 
-the entry, and an IPI for the exit?
-
-> Guest-to-Guest IPIs
-> -------------------
-> 
->    * The Problem: If the guest OS attempts to wake up a sleeping thread,
->      one orphaned vCPU will send an Inter-Processor Interrupt (IPI) to
->      another orphaned vCPU. In standard virtualization without hardware
->      assistance, writing to the APIC ICR (or sending an ARM SGI) causes
->      a VM Exit so the host KVM can emulate the message delivery. During
->      the gap, KVM is unavailable to route this message.
-> 
->    * Proposed Solution: The architecture may leverage hardware virtualized
->      interrupts (Intel APICv, AMD AVIC, or ARM GICv4.1 virtual SGIs).
->      This allows the hardware silicon to handle IPI delivery between the
->      isolated pCPUs natively, eliminating the VM Exit. Alternatively,
->      the Caretaker can be programmed to emulate the IPI delivery. By
->      utilizing the shared memory metadata, the Caretaker can determine
->      the target vCPU and directly update its pending interrupt state.
-
-Yeah, I think APIC emulation to some extent must be moved into the 
-VMX/SVM fastpaths.  The good news is that this can be done already as a 
-PoC without needing the whole caretaker and LUO infrastructure.
-
->    * The Problem: What happens if a Non-Maskable Interrupt (NMI), a
->      hardware timer tick, or a Machine Check Exception / System Error
->      (MCE / ARM SError) arrives while the CPU is actively executing
->      Caretaker code in KVM_DETACHED mode?
-> 
->    * Proposed Solution: To safely handle these asynchronous events, [...]
->      on x86, when transitioning into the gap, KVM explicitly programs
->      HOST_IDTR and HOST_GDTR to [the caretaker's] tables.
-
-Agreed and this also shows that the transition must be synchronous.
->    * The Problem: As the guest executes, it may attempt to access memory
->      that has not yet been mapped by the hypervisor, or it may interact
->      with MMIO regions. Normally, this triggers an EPT Violation (Intel)
->      or NPT Page Fault (AMD), prompting KVM to allocate host pages and
->      update the secondary page tables. How are these updates handled
->      when the host KVM subsystem is offline during the gap?
-> 
->    * Proposed Solution: During the "Management Gap," there are absolutely
->      no updates made to the NPT/EPT. The existing secondary page tables
->      are fully preserved in memory via LUO kvmfd preservation prior to
->      detachment, allowing the guest to seamlessly access all previously
->      mapped memory. If the guest triggers a new page fault (requiring an
->      NPT/EPT update) during the gap, the Caretaker simply categorizes it
->      as a Blocking Exit.
-
-Yes, by default everything is a blocking exit.  In particular, unless 
-one day we do x86/pKVM, page tables can be handled entirely by Linux 
-rather than the caretaker with no change to the existing MMU notifier 
-architecture.
-
-As a consequence, the caretaker is absolutely not going to be a TCB---at 
-least not in the beginning.
-
-> Compromised Caretaker
-> ---------------------
-> 
->    * The Problem: The Caretaker runs in Host Mode. If left unprotected,
->      this could allow a lightly privileged userspace process (e.g., QEMU
->      or crosvm) to inject arbitrary executable code directly into the
->      CPU's most privileged hardware state (VMX Root / Ring 0 / EL2).
-> 
->    * Proposed Solution: To mitigate this risk, the KVM_SET_CARETAKER
->      ioctl may adopt the security model used by the kexec_file_load()
->      syscall. Rather than trusting userspace to pass physical addresses,
->      the kernel must take full ownership of payload validation:
-
--EOVERENGINEERED.  Just shove it into the kernel.
-
-> Caretaker Update
-> ----------------
-> 
->    * The Problem: Given that the Caretaker is permanently installed
->      during VM setup, how does it get updated on long-running VMs?
-
-Via kexec. :)  I understand you have bigger plans, but we need to crawl 
-before walk^Wattempting a marathon.
-
-I even wonder if, for long term simplicity, the interface for 
-host->caretaker should be just for the caretaker to swallow the host 
-into non-root mode, again as in Arm nVHE.  That would make it much 
-harder to implement some kind of live update, but my answer to that 
-*really* is just to use kexec.
-
-Paolo
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
