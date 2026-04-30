@@ -4,79 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B7182CD3423
-	for <kexec@archiver.kernel.org>; Thu, 30 Apr 2026 20:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6C110CD13D3
+	for <kexec@archiver.kernel.org>; Thu, 30 Apr 2026 20:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Mime-Version:References:In-Reply-To:Message-Id:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=/kcAa+eYw+w8N+t1zkqKB0Re/K/IdRQcrTEU3juInUg=; b=qi8e+XKqaT23oBgKZohwRH0Pch
-	QW0tyVMoByIo1rTfmElDZ731FsiCoJu1hby1wRkbEZyUHMr48zHSLM1R6TumnZERIJHJWaxCJ/nfg
-	hahirKIr1LTQVWmjv0brLhyQzDgMol0SsfaN/QHye06IJEMZPYjZK0OfM0YMl2spRl3jJ0kL//pqI
-	AWo1WcvCTYwQySJdT2HR7KaPqUGrUFnldr77APOjxRMNuh4HYKAT0Z11C3xc5dZOAWN9DEowaG1e0
-	Ji5noiY4TLymsG47Z6b2vbJeWghJedihis0ACogXXtPu6/NfHv8e6b/FcrxhdllXB4ssOtj0Dm0Ta
-	qWlAbVhQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=h7XgKHoPXsQn1bRJuoPg0uZx0GmeDlDmcffd2v4MAfo=; b=QupJ8NtsE6LhNDs+1FB5tkvxSx
+	B3AaQpPIOGvwwQAk7s7tpGVkc2VX2H6TsOqRALRvLVEQ+iyqoLXQ3OPhyRyEL10oZkHOtikmPvPth
+	6GSaOqgY6mlLRL2/XhVBPutl2kepyoXNiClzAfK/kaXcPxNcv6nOHl/23gXDjIcahubOunf+Dshne
+	OJ873WckwSCfZUEvlVeV8OglqwDF6duXFDygfDjAmeU3fI4n0sSMFAPGmmBL4Gvap+d92lyIyg7Zl
+	spDDmOJ7PeE3ayXrJf+0ryIiTh6NBwiVESlX4A5be/buEXYNo5fuBA1R/hWVvEbsH7h530WgtBx8x
+	vTYy5RHg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIY68-00000005vJ9-3gto;
-	Thu, 30 Apr 2026 20:35:00 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wIY7o-00000005vZS-3XZg;
+	Thu, 30 Apr 2026 20:36:44 +0000
+Received: from mail-pl1-x633.google.com ([2607:f8b0:4864:20::633])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wHg3o-00000001Dpv-1zeW;
-	Tue, 28 Apr 2026 10:53:00 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 6A3D860141;
-	Tue, 28 Apr 2026 10:52:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CEE5C2BCAF;
-	Tue, 28 Apr 2026 10:52:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1777373579;
-	bh=FAkK0ftN7gWUbuk+HZ/TnP99n+RR4S9QM3ioJ/hUWvI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Qsqv6r1lJZq/c7ZPtIt0sZl/DuaHenFFdJWV+kUZfKy9lze4sbNHOT4ldBEvZsMcI
-	 IzA4ewciHKUUGkWs11knSBEVXzjvVrxdGd/P9JBd6VWThd9m0HhwDsNHUrAT8OtKfZ
-	 vkIpz9kt+ca77YyWoiGiskB7TOq8ICE0RWcWLVHM=
-Date: Tue, 28 Apr 2026 03:52:56 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: <corbet@lwn.net>, <skhan@linuxfoundation.org>,
- <catalin.marinas@arm.com>, <will@kernel.org>, <chenhuacai@kernel.org>,
- <kernel@xen0n.name>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
- <npiggin@gmail.com>, <chleroy@kernel.org>, <pjw@kernel.org>,
- <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
- <tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
- <dave.hansen@linux.intel.com>, <hpa@zytor.com>, <robh@kernel.org>,
- <saravanak@kernel.org>, <bhe@redhat.com>, <vgoyal@redhat.com>,
- <dyoung@redhat.com>, <rdunlap@infradead.org>, <peterz@infradead.org>,
- <pawan.kumar.gupta@linux.intel.com>, <feng.tang@linux.alibaba.com>,
- <dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
- <paulmck@kernel.org>, <lirongqing@baidu.com>, <rppt@kernel.org>,
- <leitao@debian.org>, <ardb@kernel.org>, <jbohac@suse.cz>,
- <cfsworks@gmail.com>, <tangyouling@kylinos.cn>,
- <sourabhjain@linux.ibm.com>, <ritesh.list@gmail.com>,
- <hbathini@linux.ibm.com>, <eajames@linux.ibm.com>, <guoren@kernel.org>,
- <songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
- <vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <coxu@redhat.com>,
- <fuqiang.wang@easystack.cn>, <liaoyuanhong@vivo.com>,
- <takahiro.akashi@linaro.org>, <james.morse@arm.com>,
- <lizhengyu3@huawei.com>, <x86@kernel.org>, <linux-doc@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
- <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
- <kexec@lists.infradead.org>
-Subject: Re: [PATCH v12 00/15] arm64/riscv: Add support for crashkernel CMA
- reservation
-Message-Id: <20260428035256.cbb3ac77c4bbb89bb7efcc19@linux-foundation.org>
-In-Reply-To: <dfa24c4b-a423-4c80-9a8f-28c577c9ec11@huawei.com>
-References: <20260402072701.628293-1-ruanjinjie@huawei.com>
-	<dfa24c4b-a423-4c80-9a8f-28c577c9ec11@huawei.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Mailman-Approved-At: Thu, 30 Apr 2026 13:34:59 -0700
+	id 1wIY7m-00000005vYf-3uls
+	for kexec@lists.infradead.org;
+	Thu, 30 Apr 2026 20:36:44 +0000
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-2b25cf1b5f0so8076725ad.3
+        for <kexec@lists.infradead.org>; Thu, 30 Apr 2026 13:36:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1777581402; x=1778186202; darn=lists.infradead.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=h7XgKHoPXsQn1bRJuoPg0uZx0GmeDlDmcffd2v4MAfo=;
+        b=oV8d2Oa0g9aUu/8ph89ZI5mEFIm0TMaekyo7YjRS+J9LujJbGSLXZyGQOWx85gud5g
+         HxsKwzCm1U13ei9lLjvfNao3On3Jf/EQUByoCQD9yQR+M7fs1W5zWjO+AM+gWHwMwhUS
+         5CBho+mlUM1JI6HWZx3C+z+pKEOMhpSExzg6ZDSSsrqSNOPUZT7nuHhnD9v0TYqb8m22
+         NIDfzyVPjc+388xHGXZH27v9Z3+8TiChDIMQDm1tMAEix/AXFN4T42gEvbfFiW7dPNGC
+         xyNDko1Wu0K1z6sfTsYGkJmBryOok6/kGh/Z9tgKlE4DiVc9V6yYGwkLBttYjgdA2+zv
+         c+WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777581402; x=1778186202;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h7XgKHoPXsQn1bRJuoPg0uZx0GmeDlDmcffd2v4MAfo=;
+        b=jlMm2E7iehAoU+DMQ9wDBHoHCQ+iguG+bStwQ7ux9bMaY4oRNUlB98UocmqN/2GLZc
+         WY0el1u+GXR/DPA2yQqB6I1gPezIyEmrse0W5+cFhFBtsLXX6epy8ikDMbqbGVElOpy6
+         i0PRMpWirnMWgbh6HgiZUfh7tJm04TOkPmLlOwx8+8Fk4LfdYu+xFyYO33Md3+2rjkuk
+         v3Qt1VSnh0wxXs7YT7njx/IpA4VI27OGqRq/KajkPBumEM6mBw4lJeevk2c+SeQmtgp8
+         7wRwAv/Osuboz2GAtDwHnUvEmYMAhSb9LSGeCe4Znh3fnavGN7mA7dX7oGv8BIPjBNfK
+         xQrg==
+X-Forwarded-Encrypted: i=1; AFNElJ/1ie5bH42lX2mjlvade7DsdgupabFgJ9X3kv5CEMNyuZQpImAK7BdKzOW3ihBJ2Oz97jyvoA==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yxzi0F29th31DR288x+pUL4GLqKkY1fgg1uqHxrG3U1blCd3DWr
+	YsS5xzVgltmSGXPJiVbve5wrDkq8mjOy0XuK1F7hWlsbKzFHCGqnaRvW72KE96J4Sw==
+X-Gm-Gg: AeBDievy6So5KECjQ1RdKujIZifazMXZscmI0p8irLLf59MhQ86XNHrx+d6D8Sp+Q/F
+	DQykt5Zbk/kFvipIXaJXVd/9PdnPT+EG2ngAm90I5KBuBi6IB3kMg3x+s5hCubyq+F8BzTHRepE
+	gM6FLJ4P7r0bUuYc7ivO+HGSGRcdONQv1fY4K3eFIzGLZhBSSyCZfXLONokaO9BoBAXb69XzcGS
+	QI/GCGxXJAnhUvDb362l4NhlttS2Ulfh+7FUORaUnX4+R7jwzw3rK0Q6/Q6KQtJUQAz5GNe5Uy0
+	hmi81DYHWspM2dBpwroLwjzbMSjgN/w1nRGrmXtV3FcRLyznXoSxlxfGu6cv++vwQZD6HQpLTZl
+	OQGTWTGdLmm2/tMHKQA+HmaNuyYOUNW3aKNtWv9ZXVYm+vG1Cs34sfwSX7rXf6+RpDCIGGbGHTE
+	BrLk3dWSKTasciN+6qbpjcrZiRRMz5sqf3HdaKzv+DQ+5+yCVYiCr0blImQMV+vGDxmvQRPFx71
+	/AX0A==
+X-Received: by 2002:a17:902:bcc4:b0:2b2:490c:410e with SMTP id d9443c01a7336-2b9a23195femr34674875ad.7.1777581401489;
+        Thu, 30 Apr 2026 13:36:41 -0700 (PDT)
+Received: from google.com (76.9.127.34.bc.googleusercontent.com. [34.127.9.76])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b9cae4a127sm5909845ad.67.2026.04.30.13.36.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2026 13:36:40 -0700 (PDT)
+Date: Thu, 30 Apr 2026 20:36:36 +0000
+From: David Matlack <dmatlack@google.com>
+To: Vipin Sharma <vipinsh@google.com>
+Cc: iommu@lists.linux.dev, kexec@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-pci@vger.kernel.org,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Joerg Roedel <joro@8bytes.org>,
+	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pranjal Shrivastava <praan@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Will Deacon <will@kernel.org>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v4 02/11] PCI: liveupdate: Track outgoing preserved PCI
+ devices
+Message-ID: <afO9VOckgyiiokw8@google.com>
+References: <20260423212316.3431746-1-dmatlack@google.com>
+ <20260423212316.3431746-3-dmatlack@google.com>
+ <20260428201231.GA3885809.vipinsh@google.com>
+ <CALzav=dfLtdrPhkBkGwHpDAWUBMHnbGPccwhy1__doziNVZQJQ@mail.gmail.com>
+ <20260430175916.GA13902.vipinsh@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260430175916.GA13902.vipinsh@google.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260430_133642_979269_6BFD2672 
+X-CRM114-Status: GOOD (  23.20  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,34 +125,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, 28 Apr 2026 11:30:13 +0800 Jinjie Ruan <ruanjinjie@huawei.com> wrote:
+On 2026-04-30 11:25 AM, Vipin Sharma wrote:
+> On Tue, Apr 28, 2026 at 02:12:13PM -0700, David Matlack wrote:
+> > On Tue, Apr 28, 2026 at 1:20 PM Vipin Sharma <vipinsh@google.com> wrote:
+> > >
+> > > On Thu, Apr 23, 2026 at 09:23:06PM +0000, David Matlack wrote:
+> > > > +int pci_liveupdate_preserve(struct pci_dev *dev)
+> > > > +{
 
-> It seems the patches for crash core rework, powerpc, riscv, and arm64
-> are mostly ready to be merged. Could any maintainer help pick these up,
-> or should I rebase the entire series against v7.1-rc1?
+> > > > +     if (ser->nr_devices == ser->max_nr_devices)
+> > > > +             return -ENOSPC;
+> > > > +
+> > > > +     for (i = 0; i < ser->max_nr_devices; i++) {
+> > > > +             /*
+> > > > +              * Start searching at index ser->nr_devices. This should result
+> > > > +              * in a constant time search under expected conditions (devices
+> > > > +              * are not getting unpreserved).
+> > > > +              */
+> > > > +             int index = (ser->nr_devices + i) % ser->max_nr_devices;
+> > > > +             struct pci_dev_ser *dev_ser = &ser->devices[index];
+> > > > +
+> > > > +             if (dev_ser->refcount)
+> > > > +                     continue;
+> > > > +
+> > > > +             pci_info(dev, "Device will be preserved across next Live Update\n");
+> > > > +             ser->nr_devices++;
+> > > > +
+> > > > +             dev_ser->domain = pci_domain_nr(dev->bus);
+> > > > +             dev_ser->bdf = pci_dev_id(dev);
+> > > > +             dev_ser->refcount = 1;
+> > > > +
+> > > > +             dev->liveupdate_outgoing = dev_ser;
+> > > > +             return 0;
+> > > > +     }
+> > > > +
+> > > > +     return -ENOSPC;
+> > >
+> > > Since it is executing under a mutex, and we already failed
+> > > 'if (ser->nr_devices == ser->max_nr_devices) check above, will we ever reach
+> > > here and return -ENOSPC?
+> > 
+> > Yeah I wouldn't expect to ever reach here.
+> 
+> Will you be removing it or want to keep it just in case scenario?
 
-April 2 is prehistoric ;)
-
-Yes, refresh, retest, resend.  Note that there have been maintainership
-shuffles in this area.  
-
-KDUMP
-M:	Andrew Morton <akpm@linux-foundation.org>
-M:	Baoquan He <bhe@redhat.com>
-M:	Mike Rapoport <rppt@kernel.org>
-M:	Pasha Tatashin <pasha.tatashin@soleen.com>
-M:	Pratyush Yadav <pratyush@kernel.org>
-R:	Dave Young <ruirui.yang@linux.dev>
-L:	kexec@lists.infradead.org
-S:	Maintained
-F:	Documentation/admin-guide/kdump/
-F:	fs/proc/vmcore.c
-F:	include/linux/crash_core.h
-F:	include/linux/crash_dump.h
-F:	include/uapi/linux/vmcore.h
-F:	kernel/crash_*.c
-
-I believe that Pasha/Mike/Pratyush are setting up a git tree, but there
-isn't one listed here?
-
+I'm not sure how I would remove it. The code doesn't not compile without
+a return.
 
