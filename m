@@ -4,97 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B6496CD3423
-	for <kexec@archiver.kernel.org>; Fri,  1 May 2026 21:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9A60ACD3423
+	for <kexec@archiver.kernel.org>; Fri,  1 May 2026 22:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=hc5RHLA5VFRb81K4SZGy+0XpIw2C1HBIpUMvPfNhCXc=; b=oXUhIYnwjtcruKIvI+6gg0208e
-	Ph7g5PmC7/ssjrZkXR7E2wOnPearm9QwyWSrInybvM/9MbUV/IOgu620RxD1HbNhuiZMb/ull+3AP
-	hV0j7qmcyX8jF/E0j593unb636duCyjZBZ5aT5oBJ1PkVl5vVZC05F53NU94Wu/OWQDKN6RtMI4ar
-	iGsNHUO+C9bkJSdPQN5XdMYqQRKAnzMpypXZHfMobiaCcEjyasAcgIDJ2cSc7dydvGVd9sUygZGWF
-	JIf7EBdT4bwYWGG3QrCp4tsdlW5L9uP9+MdDzL0pt1UIuoQVJjYyjmLs6TgH6xts7K3qbhvZZDCUk
-	sXYXHozQ==;
+	bh=ZngdolWCwMllVgRY4Z72RBKMe/hCThaUf6aiHf3a+Hc=; b=VNkt6vy7p2DyBHuYW8/Zia9Ynx
+	cXARN/BDoO+5it8mm/CkSBB90CFTf+xiV5RkQkanLNWF/v1Tv5jS6I81HI8vDMzQTsIC3Z/44b5Iu
+	FdIGsYFUspZUzOIc7Bpj/V82zaiiikmJDpmEYuymjI8NhsZkNXXrGkH5qrVMDlf0eHQTfeYm6WlsN
+	5BLkU1DRCKIsyHj+EixP8P6bUKjgHaf7g7QLqbOqqWzU6166B/2KIuj1Je96MddcTZkJ5aBTyVmEH
+	h8ImqNndVjHTdh+eRQJvlvE6tGyf9uhfleoc5VogjpVnCQ3beJ01ai5X+3ZmCPt6hj59ixgYCul0L
+	dR39DeLA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIvid-00000007iJx-1P9e;
-	Fri, 01 May 2026 21:48:19 +0000
-Received: from mail-qk1-x72b.google.com ([2607:f8b0:4864:20::72b])
+	id 1wIw18-00000007kAN-3MDS;
+	Fri, 01 May 2026 22:07:26 +0000
+Received: from mail-qk1-x731.google.com ([2607:f8b0:4864:20::731])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIvia-00000007iJO-1ZGe
+	id 1wIw16-00000007k9u-2gqr
 	for kexec@lists.infradead.org;
-	Fri, 01 May 2026 21:48:18 +0000
-Received: by mail-qk1-x72b.google.com with SMTP id af79cd13be357-8eae9229110so400878485a.1
-        for <kexec@lists.infradead.org>; Fri, 01 May 2026 14:48:15 -0700 (PDT)
+	Fri, 01 May 2026 22:07:25 +0000
+Received: by mail-qk1-x731.google.com with SMTP id af79cd13be357-8ef45a6d9dfso258930485a.0
+        for <kexec@lists.infradead.org>; Fri, 01 May 2026 15:07:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1777672095; x=1778276895; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hc5RHLA5VFRb81K4SZGy+0XpIw2C1HBIpUMvPfNhCXc=;
-        b=B9xEnXy2Nfu2oWLSfszHGawAjG3JTaRwrlVGaCcnPIjJXRXWIJLcvyqy6n4ZjHfKAW
-         cJvhKh1VazeT+1mcQ96n5vqat5l3Epqh8faQv2YFux656WTi8VD33clqmQNIOsvmFk4r
-         L6sTzUNu3F5b5DZPsVDRhs6nVM0Uj3a+KjawkOpXJoSN18ZiHs3rhKu4jtw+4JVZ0Ffl
-         8udlyU9ipuxFkt3uTrCKWCAkCskgfAhbteU+FV7x6EAr2NvQsx95Z3EFLj4/reOWl9QJ
-         kbNDZzTJnyFn5i0utjqOJpD6YLyY+4eAFBOizmhNs74Ms0acesLbYgd9W6OcMTCJSPw/
-         ekVA==
+        d=soleen.com; s=google; t=1777673243; x=1778278043; darn=lists.infradead.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ZngdolWCwMllVgRY4Z72RBKMe/hCThaUf6aiHf3a+Hc=;
+        b=W1v7eKjRNolcvPMmtP8zH+Oz/XXA+Fu7cg7ClN0FGh0txk9t4Mzh1lV4+Qe2dPE4Wq
+         ohiA08yaPqfLJRRZB9dWE8rP4BHYQWAzlGYJ2b7Rzjuy7sTI8XK05weFd1QVCB9TzstK
+         VBhiJoM+ZRn6SXlwaFM1ajAt8WLIXuey2E1UViYP66HnSoKccuTjQiOzBo0UZjNF0BUM
+         siveZb3ixkLAZWrX+PTyXn/GwdnLLr+MZZPgiIpJR9JbFXE7gv7TRXK/RelG7rXN1KT1
+         4Y95hav8KaLHMHZIOv1jno1RK0YDosV8Hq5BWdj3+GpPgdIgrb2egGQA1yOxxbMDcSQf
+         h2XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777672095; x=1778276895;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hc5RHLA5VFRb81K4SZGy+0XpIw2C1HBIpUMvPfNhCXc=;
-        b=qZfI+/3EJtJnfX6ty6qSesygFsvDxNRt0c3BxT8/+MWuBeOGTC/JNGJRQ4dLF+kGuw
-         jNovRk4VwOVr9e65tXqS/QfIWtcarzNWRt4hpq6qejAP9N2zhOA7/u3ipgTCfUWJK5mu
-         T3gir4tfCn8HkO3mKYkj78qCMBZZ990dvf3kS5YHOB/WpJ3VDTyd1pfG2GQusY2PT+OI
-         qtyvEJEv0hzQFD7V+4zuAy9cpTgn8CYVtGPAqkxabj145RYgPsD4Wx6WmItesitHNACV
-         Abcxd0Jqd3SWj/aiXXEN8iH12CFaDJmgaXpVUt+tBBVeMWu/HSU8zlG+TVbpRuDWW8Rm
-         3+zQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8klb9wi0VLpVTUYO684ia6ahZazwq88rOBKCy3AE8zqj/f2ZP0cVaJZB6Ucf0nWalZ7kHflQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yyr673IF9JLnjJ1ZhEPgfyZD32esRslVpH3PHlxqioBUFy/nYhm
-	+MYDt7RPqBJ4z9BWvttLIBFs1aAhOKiV85q6tSFHyvLx6HJk6991VgEfyVigIDTm5po=
-X-Gm-Gg: AeBDieuVAB+uI5pzBdxgj5W92utMtXe8A6LfdDT7rtVMq/ATCH8cZzAUqf6sWfYq48S
-	Y7AYaKE4AckhLiixjzj+xlVhVclC8A24Ji3u9zOVbQ283snz2orPmjXzozTC7PA42cJN1Xgfdbo
-	YFEK2JmfgmGzQZL7o9Ao1jG7WsVnfwUIXDMhkQp/5/q49CjzK/t/MgSghPEkIpVGxzVADU5lcT1
-	ZLDnBBJr+jJj7WjvhZu3aHKHl2EI4I6F7iq6m64SBJgKjie2KjQzIA8FhlMWIAfyC9aKzT657Bt
-	99JBpauCTFrSp4y1npIDV5+UelHtiw9FumKKfQQGTP6Nj+HzCfbsY9Jz77qf7h+D1tFJfKjoA7z
-	Ut+nWepiCXF6uGMRQlxqsZ2lZwlbWxErJSuZViiyTMFYAuuik1RtWQorOQiBk8b//igYYelExlR
-	j6xdEy2EXJvMM8UKbKWC4mD5X/55YMbYqQWV8iWp57jxIe5+2gQdC85EnTP6MPP6mww3NK4gG6
-X-Received: by 2002:a05:622a:1a82:b0:50e:a1ab:67eb with SMTP id d75a77b69052e-5104bee8fdemr16187191cf.33.1777672094661;
-        Fri, 01 May 2026 14:48:14 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1777673243; x=1778278043;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZngdolWCwMllVgRY4Z72RBKMe/hCThaUf6aiHf3a+Hc=;
+        b=hJwNG/sYcF5LIgUaknRuEdPh9Zda1jYHg83aaX4QhkzYPLSLzkJi23CH6nkbyCgoYW
+         z0FxvPyAoSttFq21Nhs3xYJMfNpe7vQCjeFe9cPEdGpVD85H0ZUPZds5gTo+WZvbfXwk
+         QeB3/5e6cC0+G0kEzmpBUYnE5bKROZwiqNP1MtyoHwCAzOU2rmzLPPONX0UTc8KiR7nF
+         jGt3ghB+XrbHTbV8jPPkPrutuKzddrireZ3pSN+RTMngnKYysoBOaarhvUzULZzc4x6D
+         jkpHliwVyDfLK52zMEr6lsGrLmeaSg4KOx+P00Om6nHixEnmB7tyysOYDX3tb6RsRiGC
+         wTHQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/FAoo5zruql9hyc2azITaZpcS6GLPFMzEkfbaKKHle9hSIs8F075arf5pBK7OtpMy3KnLVMA==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yyql8W118YIADWdixuGKq/TJgm8fatRxLkbiSgoUMJIftu2twVW
+	UMPKTxcrYPEZS+2jk5tkWfLWjkPo5HvnXsVaGymi5fPf9338eHxO2zKs7CjFRjxKz/Y=
+X-Gm-Gg: AeBDiet1fJbDHPkXp87OE3BL+OUtMM5d98hymo6N+h9njfplkwuEhoCS0vury7PUVkt
+	XgZ/AaiTepQqSGS56wd0ORDglWpnZFSBzzRetfxMv7rSG7ywCqersd9WMb9AadSXcUyQKouxn+s
+	1yULmbCa2uKm2kU9bJ1oTNsKYmSpY6pJNTe8ra01DxZuMtIVhstORMHi2n47tygGlkk5badzXUq
+	NbLXWCFdeySzaySnpTGOZAVqagjC4aHquyfs64urbWrFdNq0Rlf7V8xImUzMcWB7hmjYhn6HKCY
+	+KWRThFWHrKGtWhuzYRFFnegSV+3/VsHasdjJSpx98LeMV/mqDQWeUKjpjoZBW1uVwp5T/zQLdH
+	bGdZKbRRGVMt0Rfc6poI65o+hD2HgHGaVfr0y/6kNpW/lmYJZrzNVh2W8IgwlSMfKK8/ndFDRIl
+	opp+KZf9hmZdFpE1ZzEExJsABtRf5JZHG+noVVsWkyHaC6OkvhnG1WjOqBoDBhCA==
+X-Received: by 2002:a05:620a:454a:b0:8ee:18e7:9406 with SMTP id af79cd13be357-8fd17867649mr205532585a.29.1777673243076;
+        Fri, 01 May 2026 15:07:23 -0700 (PDT)
 Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51040b8174csm28918761cf.25.2026.05.01.14.48.12
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8fc29a80784sm280411885a.12.2026.05.01.15.07.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2026 14:48:14 -0700 (PDT)
-Date: Fri, 1 May 2026 21:48:12 +0000
+        Fri, 01 May 2026 15:07:22 -0700 (PDT)
+Date: Fri, 1 May 2026 22:07:20 +0000
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, kvm@vger.kernel.org, 
-	linux-mm@kvack.org, kvmarm@lists.linux.dev, rppt@kernel.org, graf@amazon.com, 
-	pratyush@kernel.org, seanjc@google.com, maz@kernel.org, oupton@kernel.org, 
-	dwmw2@infradead.org, alex.williamson@redhat.com, kevin.tian@intel.com, 
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+	kvm@vger.kernel.org, linux-mm@kvack.org, kvmarm@lists.linux.dev, rppt@kernel.org, 
+	graf@amazon.com, pratyush@kernel.org, seanjc@google.com, maz@kernel.org, 
+	oupton@kernel.org, alex.williamson@redhat.com, kevin.tian@intel.com, 
 	rientjes@google.com, Tycho.Andersen@amd.com, anthony.yznaga@oracle.com, 
 	baolu.lu@linux.intel.com, david@kernel.org, dmatlack@google.com, mheyne@amazon.de, 
 	jgowans@amazon.com, jgg@nvidia.com, pankaj.gupta.linux@gmail.com, 
 	kpraveen.lkml@gmail.com, vipinsh@google.com, vannapurve@google.com, corbet@lwn.net, 
-	loeser@linux.microsoft.com, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, roman.gushchin@linux.dev, 
+	tglx@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, 
+	x86@kernel.org, hpa@zytor.com, roman.gushchin@linux.dev, 
 	akpm@linux-foundation.org, pjt@google.com
 Subject: Re: [RFC] proposal: KVM: Orphaned VMs: The Caretaker approach for
  Live Update
-Message-ID: <afUNlL_lRDP6olHE@plex>
+Message-ID: <afUf7d3Zg2pBCfxs@plex>
 References: <afEwWZksU0Fw61oT@plex>
  <0a71472c-b397-4699-a518-61faffcf4ab2@redhat.com>
+ <c004f333ed4f7dedae1383f22d43b009cd83837e.camel@infradead.org>
+ <3ff53353-3842-4a63-80a1-90a60d09fe02@redhat.com>
+ <718a82870c8f3c913791f12a993e11b2d26d08d9.camel@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <0a71472c-b397-4699-a518-61faffcf4ab2@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <718a82870c8f3c913791f12a993e11b2d26d08d9.camel@infradead.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260501_144817_219931_8C31FB4D 
-X-CRM114-Status: GOOD (  55.75  )
+X-CRM114-CacheID: sfid-20260501_150724_727828_9847FDD9 
+X-CRM114-Status: GOOD (  51.50  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,337 +114,129 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 04-30 15:28, Paolo Bonzini wrote:
-> I have some very similar observations to Alex and some very similar
-> observations to David.  This has to imply that everyone will agree with me.
-> :)
-> 
-> Seriously, the main contention point, from reading the thread, is the
-> placement and lifecycle of the caretaker.  More on this later...
-> 
-> On 4/29/26 00:29, Pasha Tatashin wrote:
-> > While this proposal focuses on its critical role in minimally disruptive
-> > Live Update, the Caretaker is fundamentally designed as an extensible
-> > primitive. Its architecture allows it to be leveraged for a variety of
-> > other advanced virtualization use cases, such as running custom
-> > lightweight hypervisors or completely offloading virtualization duties
-> > to an accelerator card.
-> 
-> One step at a time please---and as an initial step, just place it inside the
-> kernel, a la Arm nVHE.
-> 
-> Since your design would have anyway the ability to update the caretaker, you
-> can embed that part into the reattachment process, so that the new kernel
-> can use its own caretaker.
-
-This is a good point. If we make the Caretaker built-in and always 
-enabled via a module parameter, the update to new Caretaker can be 
-handled in the new kernel when we adopt the Orphaned VM thread during 
-reattachment.
-
-> This reduces a lot the need to establish a stable-ish ABI.  Only the
-> handover (kexec/LUO) needs to be stable, so that the new kernel can populate
-> its kvm and kvm_vcpu structs.  And for that we mostly have a solution
-> already: a stream of serialized ioctls.
-
-The way I see it, vmfd and vcpufd need to support LUO preservation by 
-implementing the liveupdate_file_ops callbacks (.preserve, .restore).
-
-When userspace preserves the vcpufd, the kernel isolates the assigned 
-pCPU (probably requiring the vCPU to be pinned to the CPU, and the CPU 
-to be in an isolated cpuset), offlines it from the kernel's perspective, 
-and signals to the Caretaker that KVM is detached.
-
-We can start with the simplest form of the Caretaker for a PoC:
-
-* No ASI. It duplicates the kernel page tables and uses its own mappings.
-* It does not handle any VM exits locally. It passes everything down to 
-KVM during normal operation, and treats all exits as blocking events 
-when detached.
-
-The PoC can be demonstrated without kexec: execute vcpufd .preserve() to 
-isolate and offline the pCPU, and later use LUO .retrieve() to online 
-the pCPU and re-adopt the running vCPU thread.
-
-Even for this simplest form, we still need a defined ABI between the 
-host kernel and the Caretaker. The host must send an IPI to 
-synchronously notify the Caretaker of attach and detach transitions. 
-This ABI must also handle Caretaker replacement during the adoption 
-phase: when the new kernel retrieves the vCPU, it requires a protocol to 
-notify the running Caretaker that the pCPU is being onlined. The 
-Caretaker must reach a known, state at that moment so the kernel can 
-seamlessly replace the previous kernel's Caretaker version with the 
-current one. Finally, the Caretaker still relies on the CCB to access 
-KVM routing pointers for forwarding VM exits back to the host during 
-normal operation.
-
-> > During the execution of the KVM_SET_CARETAKER ioctl, instead of
-> > pointing the hardware's return path to standard KVM entry points (e.g.,
-> > vmx_vmexit or svm_vcpu_run), KVM reprograms the host-state return area
-> > of the CPU's hardware virtualization control structures (e.g., Intel
-> > VMCS, AMD VMCB, or ARM equivalent) to point directly into the
-> > bare-metal Caretaker environment.
-> 
-> This can be done unconditionally for all VMs based on a module parameter,
-> again as in Arm nVHE.
-
-Makes sense.
-
-> 
-> > Note on Optimization vs. Security: Constantly switching the page table
-> > (CR3) on every VM Exit can be expensive due to TLB flushing. To
-> > optimize performance, the Caretaker can share the host kernel's page
-> > tables while the kernel is still around, and dynamically replace
-> > HOST_CR3 with the dedicated, isolated page tables only when the vCPU is
-> > orphaned (during the detachment phase). On the other hand, maintaining
-> > a permanently isolated CR3 for the Caretaker adds a strong security
-> > boundary, achieving hardware-enforced separation similar to KVM Address
-> > Space Isolation (ASI).
-> 
-> Agreed on this.
-> 
-> > The Caretaker requires a defined ABI to communicate with the host KVM
-> > subsystem. This ABI is implemented via the shared, identity-mapped .ccb
-> > section of the ELF payload, acting as the Caretaker Control Block
-> > (CCB).
+On 05-01 09:56, David Woodhouse wrote:
+> On Fri, 2026-05-01 at 05:32 +0200, Paolo Bonzini wrote:
+> > On 4/30/26 17:27, David Woodhouse wrote:
+> > > On Thu, 2026-04-30 at 15:28 +0200, Paolo Bonzini wrote:
+> > > > I even wonder if, for long term simplicity, the interface for
+> > > > host->caretaker should be just for the caretaker to swallow the host
+> > > > into non-root mode, again as in Arm nVHE.
+> > > 
+> > > There's a lot of merit in that approach.
+> > > 
+> > > I talked about wanting to use this 'caretaker' for secret hiding.  But
+> > > why have *voluntary* secret hiding with the kernel hiding things from
+> > > its own address space, when you have have *mandatory* secret hiding
+> > > with something running in EL2, like pKVM.
 > > 
-> > The CCB acts as the source of truth for the Caretaker's execution loop
-> > and contains three primary elements:
+> > Well, other than because it's a lot of work? :)
+> 
+> If we avoided those things then we've never have any fun!
+> 
+> And in a week where there seems to be a new user-to-root exploit posted
+> every day, the 'deprivilege the VMM and assume the guest has owned it'
+> security model is looking rather scary. So the additional defence in
+> depth of knowing that even *root* can't get the kernel to access other
+> guests' memory might be the only thing that lets you sleep at night :)
+> 
+> Yes, it's a lot of work. But I think we've reached the point where
+> mandatory secret hiding is... well... mandatory.
+> 
+> > > The *userspace* ABI considerations are all about how you make a vCPU
+> > > that runs asynchronously (should it conceptually just be an async
+> > > KVM_RUN call, which allows the vCPU to run in a kernel thread up to the
+> > > point of kexec? Why is it fundamentally tied to kexec at all?).
 > > 
-> >    * Attachment State Flag: An atomic variable indicating the current
-> >      relationship with the host KVM subsystem (e.g., KVM_ATTACHED or
-> >      KVM_DETACHED).
-> 
-> This must be done atomically at the time Linux offlines/onlines a pCPU. The
-> interface from Linux to the caretaker must use some kind of IPI so that the
-> new kernel can force a VMEXIT (if needed) in the caretaker, ask it to
-> serialize the vm state, and pass it down to the new kernel's caretaker.
-
-Yes, agree.
-
-> 
-> >    * KVM Routing Pointers: The physical function pointers that the
-> >      Caretaker uses to safely jump into the host KVM's standard VM Exit
-> >      handlers when operating in normal mode.
-> >    * Shared Configuration Metadata: A physical pointer to dedicated
-> >      memory pages used by the kernel to share dynamic vCPU configuration
-> >      data with the Caretaker. Because every guest is configured
-> >      differently, KVM populates these pages with the specific parameters
-> >      negotiated during VM initialization (such as CPUID feature masks,
-> >      APIC routing, and timer states). These pages also include a
-> >      pre-allocated Telemetry Buffer for the Caretaker to log VM Exits
-> >      and spin-wait durations. These dedicated pages are explicitly
-> >      preserved across the host reboot via KHO, ensuring the Caretaker
-> >      maintains continuous access to the exact context required to
-> >      accurately emulate trivial exits during the gap.
-> 
-> All this is mostly unnecessary if the caretaker is provided by the kernel.
-> The recently introduced remote ring buffers can be used for tracing too.
-
-I will need to learn more about how remote ring buffers work, but it 
-would have to be possible to use them even when there is no kernel. So, 
-as I understand it, something like this would happen:
-
-The old kernel allocates the remote ring buffer, passes the physical 
-address to the Caretaker, and preserves this memory via KHO.
-
-During the kexec gap (when the host kernel is completely offline), the 
-Caretaker acts purely as a producer, writing trace events directly to 
-this physical memory block and advancing the ring buffer pointers.
-
-When the new kernel boots and re-adopts the orphaned vCPU, it retrieves 
-this memory from KHO and attaches it back to the tracing subsystem.
-
-> > The Caretaker first evaluates the VM Exit reason. If the exit belongs to
-> > a category that the Caretaker is programmed to resolve natively, it
-> > handles it internally. For example, profiling of guests has identified
-> > the following exit categories for potential local resolution:
+> > It's not tied to kexec.  kexec is just forcing a handoff + forcing an
+> > update.
 > > 
-> >    * Guest Idle Exits (e.g., HLT): When the guest OS goes idle, it
-> >      triggers idle exits. The Caretaker intercepts these and halts the
-> >      physical core until the next guest-bound interrupt fires, preserving
-> >      host power.
-> 
-> I don't think HLT can be handled entirely here.  Either you skip the exit
-> completely or you have to go out to the scheduler.  The HLT exit could be
-> skipped unconditionally for an orphaned VM, but while there is a running
-> kernel the caretaker has to run entirely with interrupts off and that limits
-> what you can do.
-> 
-> In fact there is already a blueprint of what can be handled easily in the
-> caretaker, namely vmx_exit_handlers_fastpath()/svm_exit_handlers_fastpath().
-> Stick to what exists already.
-
-I agree regarding HLT: during the gap, the simplest approach is to just 
-skip the exit and return directly to the VM without attempting to handle 
-it.
-
-Also, yes, vmx_exit_handlers_fastpath() and svm_exit_handlers_fastpath() 
-provide a good blueprint for the VM exits that can be handled directly 
-in the Caretaker.
-
-> 
-> >    * Timer and APIC Exits: Even an idle guest frequently writes to
-> >      interrupt controllers and system registers to configure internal
-> >      timers. The Caretaker handles these trivial writes directly,
-> >      acknowledging the timer updates.
-> 
-> This depends heavily on the implementation of the hypervisor, for example it
-> can be done on Intel via the preemption timer but not on AMD where an actual
-> hrtimer is needed.
-
-The Caretaker will have varying degrees of support depending on the 
-architecture.
-
-For the initial PoC, we can start with the most primitive form: treating 
-these as blocking exits across all relevant architectures (Intel, AMD, 
-ARM).
-
-Beyond the PoC, we will expand this functionality independently per 
-platform to reduce the blackout window, berpaps based on fastpath 
-support. If a specific architecture lacks the hardware features to 
-handle a certain exit natively in the Caretaker, it will remain a 
-blocking exit on that platform during the gap.
-
-> 
-> [...]
-> 
-> > When the new VMM process spawns, it retrieves the
-> >     preserved session and issues LIVEUPDATE_SESSION_RETRIEVE_FD using
-> >     its token. LUO invokes KVM's .retrieve() callback to map the
-> >     preserved vcpufd back into the new VMM's file descriptor table. As
-> >     part of this retrieval process, the host formally brings the
-> >     isolated pCPU back online, and the new VMM userspace thread is
-> >     attached back to the active VM thread running on the vCPU. Finally,
-> >     KVM populates the new KVM Routing Pointers in the CCB and
-> >     atomically flips the Host State Flag back to KVM_ATTACHED. This
-> >     breaks the Caretaker's spin-wait loop (if it is in this state),
-> >     allowing standard KVM operation to resume.
-> 
-> This would also include some kind of serialization of the old VM into the
-> new kernel's struct kvm_vcpu.
-
-> 
-> Also some kind of feature negotiation is needed (if that fails, the VMs are
-> terminated unceremoniously) so I believe that the transition into and out of
-> the gap must be synchronous.  For example with INIT/SIPI for the entry, and
-> an IPI for the exit?
-
-Yes, the serialization of the old VM state into the new kernel's struct 
-kvm_vcpu is handled via KHO (Kexec Handover) during the LUO .preserve() 
-and .retrieve() phases.
-
-Regarding feature negotiation, compatibility checks are a fundamental 
-requirement for live update. If the new kernel does not support the 
-features required by the preserved VM, the update should ideally be 
-aborted before the point of no return, or as you said, the VM must be 
-terminated unceremoniously.
-
-I completely agree that the transition into and out of the gap must be 
-synchronous. As discussed above, using an IPI is the right approach. For 
-entry, the host kernel signals the Caretaker via IPI to ensure it 
-reaches a known state before the pCPU is offlined. For exit, the new 
-kernel sends an IPI to the orphaned pCPU to force a VM exit, allowing 
-the new kernel to take control, update the Caretaker environment, 
-and complete the reattachment.
-
-> > Guest-to-Guest IPIs
-> > -------------------
+> > The big difference is that:
 > > 
-> >    * The Problem: If the guest OS attempts to wake up a sleeping thread,
-> >      one orphaned vCPU will send an Inter-Processor Interrupt (IPI) to
-> >      another orphaned vCPU. In standard virtualization without hardware
-> >      assistance, writing to the APIC ICR (or sending an ARM SGI) causes
-> >      a VM Exit so the host KVM can emulate the message delivery. During
-> >      the gap, KVM is unavailable to route this message.
+> > 1) if you don't tie it to kexec, a detached vCPU thread is a struct 
+> > vhost_task and a blocking vmexit schedules out the thread; while during 
+> > kexec you have s/kthread/pCPU/ and halting the CPU instead of scheduling 
+> > it out.
+> 
+> For now maybe. But "how does the caretaker do scheduling" is on
+> definitely the list of future problems, for any environment where a
+> physical host with N pCPUs is hosting >= N vCPUs.
+> 
+> (In the case of a true mandatory-secret-hiding caretaker at EL2, the
+> scheduling part *could* be done by the residual purgatory-caretaker-
+> thing at EL1 that all the secondary CPUs go to instead of being turned
+> off. It would just be calling into EL2 to run the actual vCPUs. Thus
+> leaving the EL2 code just to do its *one* job, which has the added
+> benefit that the automated reasoning people put the knives down and no
+> longer have that look in their eyes that they got when they thought you
+> wanted to put a scheduler in their formally-proven EL2 code...)
+
+For the initial PoC, however, we will bypass the scheduling problem 
+entirely by enforcing a 1:1 mapping of active vCPUs to isolated pCPUs. 
+If a system is overcommitted, we can either pin some vCPUs, or simply be 
+suspend the across the kexec gap and wait for the new kernel's scheduler 
+to resume them, i.e. the same as what we have now without Orphaned VM 
+support.
+
+> > 2) if you don't tie it to kexec, address space isolation is the only 
+> > real reason for the complication of treating the caretaker as a separate 
+> > bare metal program.  OTOH maybe that's a feature - you could do:
 > > 
-> >    * Proposed Solution: The architecture may leverage hardware virtualized
-> >      interrupts (Intel APICv, AMD AVIC, or ARM GICv4.1 virtual SGIs).
-> >      This allows the hardware silicon to handle IPI delivery between the
-> >      isolated pCPUs natively, eliminating the VM Exit. Alternatively,
-> >      the Caretaker can be programmed to emulate the IPI delivery. By
-> >      utilizing the shared memory metadata, the Caretaker can determine
-> >      the target vCPU and directly update its pending interrupt state.
-> 
-> Yeah, I think APIC emulation to some extent must be moved into the VMX/SVM
-> fastpaths.  The good news is that this can be done already as a PoC without
-> needing the whole caretaker and LUO infrastructure.
-
-Moving APIC emulation into the VMX/SVM fastpaths makes sense as a 
-standalone effort.
-
-> 
-> >    * The Problem: What happens if a Non-Maskable Interrupt (NMI), a
-> >      hardware timer tick, or a Machine Check Exception / System Error
-> >      (MCE / ARM SError) arrives while the CPU is actively executing
-> >      Caretaker code in KVM_DETACHED mode?
+> > - ioctl(KVM_RUN_ASYNC)
 > > 
-> >    * Proposed Solution: To safely handle these asynchronous events, [...]
-> >      on x86, when transitioning into the gap, KVM explicitly programs
-> >      HOST_IDTR and HOST_GDTR to [the caretaker's] tables.
+> > - then vmfd/vcpufd handoff to a new mm on top
 > 
-> Agreed and this also shows that the transition must be synchronous.
-> >    * The Problem: As the guest executes, it may attempt to access memory
-> >      that has not yet been mapped by the hypervisor, or it may interact
-> >      with MMIO regions. Normally, this triggers an EPT Violation (Intel)
-> >      or NPT Page Fault (AMD), prompting KVM to allocate host pages and
-> >      update the secondary page tables. How are these updates handled
-> >      when the host KVM subsystem is offline during the gap?
+> This much gives you a seamless upgrade of the userspace VMM without
+> having to play fd-handover tricks. The old VMM detaches, the new one
+> attaches. If you're quick, and the guests aren't doing much "admin"
+> work but only passing traffic through passthrough PCI devices, the
+> guests might not experience any non-negligible steal time at all.
+
+I agree. During development, we should maintain a workflow that is 
+functionally identical to the kexec transition. Even without a kernel 
+reboot, the process should be: preserve resources via LUO, isolate and 
+offline the pCPU, launch the new VMM, and then retrieve the resources to 
+online the pCPU and re-adopt the vCPU.
+
+> 
+> > - then address space isolation on top
+> 
+> Even voluntary secret hiding lets you sleep at night when the next
+> Retbleed happens.
+> 
+> > - then kexec (de)serialization on top
+> 
+> ... and this one is the holy grail.
+> 
+> So yes, that's exactly the kind of thing I was thinking, rather than
+> trying to boil the ocean. There are sensible milestones along the way
+> which give practical benefits.
+> 
+> But my point was *also* about understanding the actual userspace
+> interface for this, even if we were to just focus on the live update
+> and do it all in one amphetamine-and-tokens-fueled epic. What does it
+> even look like, from the VMM point of view? How does the new VMM under
+> the new kernel 'reattach' to the existing vCPUs?
+> 
+> I think we need the userspace API concepts for 'detach' and 'attach',
+> including the permissions model for reattach, and we might as well
+> implement and test them without the kexec in the middle to start with.
+
+From the VMM point of view, the interface would follow the standard Live 
+Update Orchestrator flow for file descriptor preservation. This is 
+the same mechanism used to preserve and restore resources like vfiofd, 
+iommufd, and memfd across a transition.
+
+> 
+> > > I'd love to start without kexec in the picture at all. Just show me the
+> > > KVM API for starting a *confidential* guest (pKVM, SEV-SNP, whatever),
+> > > leaving it running, completely stopping the VMM and then starting a new
+> > > VMM to pick up from where it left off.
 > > 
-> >    * Proposed Solution: During the "Management Gap," there are absolutely
-> >      no updates made to the NPT/EPT. The existing secondary page tables
-> >      are fully preserved in memory via LUO kvmfd preservation prior to
-> >      detachment, allowing the guest to seamlessly access all previously
-> >      mapped memory. If the guest triggers a new page fault (requiring an
-> >      NPT/EPT update) during the gap, the Caretaker simply categorizes it
-> >      as a Blocking Exit.
+> > Why confidential?
 > 
-> Yes, by default everything is a blocking exit.  In particular, unless one
-> day we do x86/pKVM, page tables can be handled entirely by Linux rather than
-> the caretaker with no change to the existing MMU notifier architecture.
-> 
-> As a consequence, the caretaker is absolutely not going to be a TCB---at
-> least not in the beginning.
+> Mostly so that confidential VMs aren't an *afterthought*, and the
+> design of the detach/attach userspace ABI gets them right from the
+> start.
 
-+1.
 
-> 
-> > Compromised Caretaker
-> > ---------------------
-> > 
-> >    * The Problem: The Caretaker runs in Host Mode. If left unprotected,
-> >      this could allow a lightly privileged userspace process (e.g., QEMU
-> >      or crosvm) to inject arbitrary executable code directly into the
-> >      CPU's most privileged hardware state (VMX Root / Ring 0 / EL2).
-> > 
-> >    * Proposed Solution: To mitigate this risk, the KVM_SET_CARETAKER
-> >      ioctl may adopt the security model used by the kexec_file_load()
-> >      syscall. Rather than trusting userspace to pass physical addresses,
-> >      the kernel must take full ownership of payload validation:
-> 
-> -EOVERENGINEERED.  Just shove it into the kernel.
-
-Ok.
-
-> 
-> > Caretaker Update
-> > ----------------
-> > 
-> >    * The Problem: Given that the Caretaker is permanently installed
-> >      during VM setup, how does it get updated on long-running VMs?
-> 
-> Via kexec. :)  I understand you have bigger plans, but we need to crawl
-> before walk^Wattempting a marathon.
-
-Sure.
-
-> 
-> I even wonder if, for long term simplicity, the interface for
-> host->caretaker should be just for the caretaker to swallow the host into
-> non-root mode, again as in Arm nVHE.  That would make it much harder to
-> implement some kind of live update, but my answer to that *really* is just
-> to use kexec.
-> 
-> Paolo
-> 
 
