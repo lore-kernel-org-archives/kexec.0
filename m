@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DD5FFFF885A
-	for <kexec@archiver.kernel.org>; Fri,  1 May 2026 09:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 27604FF885A
+	for <kexec@archiver.kernel.org>; Fri,  1 May 2026 09:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=D3bCYUylpNTAuWyS15iXLK7eGG+AcPbkT8lStAYKXTI=; b=1z9kIEJrvbyZVs/qneAf0e/8+p
-	Jeb+3VuVntKI4nIZPhLc5SDef/dW0a/AEkapUkwiqluwm6aWXsi5U2SP67cvmnRPup92K93jAfMqm
-	icDfKJgUBJf+mmtURxvYow0Y66CCzSw4H83xfVEnNLvB3L7UZmXfaSe3+XsyegIb1+34Dm6WgiRlR
-	mk/axGi+nj+wC3EH6VxMY0X9MOzRn7pACjtEo9G9kTDJQYuP7hAR90+yQyNXHAJtjrzTihr+Fyjbf
-	gFbh5RLrrSIyLIEDU9QNxcE1FxikaCnAxsrJQ5Y66HlRn6bMQncRIzwulwU9HU3MzRVlBUP62y90v
-	1w5uNi+A==;
+	bh=cQtRFGksInkULS0m8GB/jr8IDzzr0ObA1EgynOw28RQ=; b=X+8KbiP40NRE0I8/yHsKNMueD5
+	UIuR/23E2SNiG+LxSPfHWFm1+sEp2v/gp8+kZU5FgVqXn5QJXEY7DK5WrO6dlnFmSdCVXGtfDhw3l
+	fL9Ru4jVBWtzaeVEkq5yPi5PT5CJMBCMws13xSEpIqAl4HHAV13u1+6dFCC/LyvNiO9UosyYPB5Fg
+	reCOk6OqD3MAHqOStz6cW6gBDOGpgGBiygX/bUEkqTI7YTZMOgMHCoXn4V7AF1xGrB7vN6Tk8j5hW
+	rRAX/JGAIW6ICGjI3NGrEUJyTyYvAWsV+npGRZtLAFvFusUCYJL8kkL9APKCXD4AlvrnDlygi3Npq
+	oKYomTIg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIkV3-00000006YfZ-1kIt;
-	Fri, 01 May 2026 09:49:33 +0000
-Received: from mail-pf1-x429.google.com ([2607:f8b0:4864:20::429])
+	id 1wIkV7-00000006YhK-3txx;
+	Fri, 01 May 2026 09:49:37 +0000
+Received: from mail-pf1-x430.google.com ([2607:f8b0:4864:20::430])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIkV1-00000006Yet-12wc
+	id 1wIkV5-00000006YgF-271A
 	for kexec@lists.infradead.org;
-	Fri, 01 May 2026 09:49:32 +0000
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-82f33d28c1dso1033248b3a.3
-        for <kexec@lists.infradead.org>; Fri, 01 May 2026 02:49:30 -0700 (PDT)
+	Fri, 01 May 2026 09:49:36 +0000
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-82f431c0ab6so865582b3a.0
+        for <kexec@lists.infradead.org>; Fri, 01 May 2026 02:49:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777628970; x=1778233770; darn=lists.infradead.org;
+        d=gmail.com; s=20251104; t=1777628974; x=1778233774; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=D3bCYUylpNTAuWyS15iXLK7eGG+AcPbkT8lStAYKXTI=;
-        b=Ua6ovoFQBUt332yaBQBX5jQXICCL0SBk56aDk/nQ5B/seJSBccxK55/DXZrDWp+8pX
-         YaXDNnsWW2pCwsOkEfHxwARnKOPRZkjDWWzFt0tsc9zQzQcGivlLe33WaIFUnBxnDfEi
-         +7xF3JarjmFw4UiL6YbH4lWMTwiFm32ZQkFk3Y/uET9+sxNeYwMzHwT4SNQ9E+9tOXRD
-         0oX3thyEOlqEC1Z9TtL6IkeYxWZ9DWuKwp+EHIGy5FYw9t2+p4G8RhvixVGSW37D2ZA9
-         qezJdaLTo3gQrxrHCRSXhCHnOpD40HfEGQgDnLdtQTucUwBXl+l0gr9t8/TatzLowdTw
-         Zcjw==
+        bh=cQtRFGksInkULS0m8GB/jr8IDzzr0ObA1EgynOw28RQ=;
+        b=e7tG/8NboAc+cuR30RZ935zevAQinUvoUSREvma69Q9laH0K6S4cIDeN5DEXz/Xa+7
+         e0fV+++FXW8AqWLztQHCR7tF3amZffM1/LLwf21CipmENeaHY1gJp9sRCkpK6yqky9nA
+         a82tBmCiM5m5VqiIB3dUVfl0Jjx5Qb5M2z0D9+FFIA4Tjbs5rM4JAhjrtq7Il4dITkqc
+         1/kFl7DubXPpiViiqdmf290Rb1aWK1HBoGY+mzxOH1BM83r3/zpb031hxGtotS9649dr
+         xmdGAXctbpMYRsuDKEDUdGrcEExeZI7Pe0ETu1qBq734j1o1yHJkwwxl6XLquyCb529I
+         SRvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777628970; x=1778233770;
+        d=1e100.net; s=20251104; t=1777628974; x=1778233774;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=D3bCYUylpNTAuWyS15iXLK7eGG+AcPbkT8lStAYKXTI=;
-        b=CuByh7euR6QKftPUxjd63eqIMUz+yhrtRdP4ggPpH3daPjgXJ7PB3KO+hgo1cz7EI2
-         XQtLwjD01r6cliopogTPC8jQVTBOAqlH9t9f+7tQofSmPK/1DsnCa4AVKoU8OjCq2bF3
-         FWWJ77EE/Q2HzOgP2xkcILyAGPczUTCks58ZuqfAU118Pdz8y0+srXXI8igAjMuwvoUD
-         Ui5tSMoHwfpue7URomyNIocPibwdI/cASzeTb35JihcQIL7m3Goqyxv1O3fJUYIiRB7y
-         6G+d4Mr8fzKczC38EmUuxyE25Bz2XUH2Mv6GURKgKns9b7qOfAGFxI7sVkowEYfhNeYY
-         4GRw==
-X-Forwarded-Encrypted: i=1; AFNElJ/MfMJ7j/fb8XzKLKKSTL8+l1OP2hCe9dEIlf/VKfBnfvH7A/+nA/x3YcBp67B2/No5fV/b5A==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yy+iNgszo6UIYgVR+clzXdJiduRHT3xSBpVxyo+QVlalt1pzuFa
-	UKZ9iwbjtD9YaP9YuyETx38KcZxbgqod7P3Om/vevnoHqCZG2lX2Libf
-X-Gm-Gg: AeBDietgzDsxD7w8+9gaGr1YxEQumZUqL/J4A/pGi4PYCvvHCYtlgfy6WPq8xrFpgFM
-	Tsq0UrGXGdXHM7MVB9lh9ngoA5jWHMEEm1v7BWpuaJDPL+e62yuheGY8zOwDzvqGSyR94bSsiU1
-	U3+7t6H/IAN5cJKK3VVrElK41HR3qFo1PyxTUVHQz1+ZOR4/BEe0HiUn+pWqbM0EwiICc0rAZQs
-	2dLTcaOkMjj3HzSwNxIncfV2hOd4V9IAthoWHwC/e3T8/UU9n3YfdbxebSaOMuAvHU5sRJh9WgA
-	4xgS5IZbP/Er4fKCoU7njGUwqv9Cov3w697tXx5a8HtwJb1n8hAtcrgfPDgjjfED2eM33DDlD82
-	H2tBRw1W53av91xJ/OzWyV2RWJpkSnpWBPJrDX4DBXEy/ekmESpKjy+WmC11Z0oVrCylt05onId
-	t0+4ipTy562rXueITL8pzspfnplsWY2mOG++v8Xg==
-X-Received: by 2002:aa7:8886:0:b0:82f:9985:d4a1 with SMTP id d2e1a72fcca58-8351a58db50mr2518784b3a.24.1777628970155;
-        Fri, 01 May 2026 02:49:30 -0700 (PDT)
+        bh=cQtRFGksInkULS0m8GB/jr8IDzzr0ObA1EgynOw28RQ=;
+        b=gDW8ft2Syxu953Q4Fmb4K2CYYs9/PrM0h05ApFUxwGXVz2lgxaiN5fnV6IEd5GnDqJ
+         HbNWSTbe9ZCGw4kMw6bHEOaXthWRMJFkmw/f5p8dQIzCnJFVp2kYD3EhGO6OyR1PS/Mp
+         3pdU3oWAdEN81MVcq7/Qb2XI+OcRgaBbwFQGqNdbessfXXq0NlVJSCwSkA5mReneqyfO
+         dM0LJMnldUccwRAEVb8I+TYyWaRLQigbZX2RhojwOHVOLweiMebPahN6GCvKWGAsRVdJ
+         7mDeYXqTkOF2tebHYYILr1dRzt3lg6XY7QM6iYwdAxlPb7RltIlp2c3d1y5nIN9WgTW9
+         qPPQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/0oTliSebSxsAUWQKWNMWnLIsbVNRmNKxLr8VCQNz9AOZY6s7ROvMb2l23gbrOI1jhv9e2HQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YznKAF6mMb5rbtrzxjnrguFJAEgKeMjHsswrN/2dyYVa8Re0nzM
+	1tTFQdj1VwMICe1eaRiN9XO8oyNdJKFE3RJ7UhlHkJ9Y36g5WSDUadqF
+X-Gm-Gg: AeBDievPncitic4jct2k8KJUqElmUSb9LyQwQepdAU4U+2X8vwwfZ9nAQw+P7NsGDBD
+	TYHk/jNeGRhFXXpoA3fZy/MukJA++qynUrFt4fgIIlhUuORVi8EFFQ6TJ3rL0N4uOv3fXm+s2PH
+	qdysOeD+SJRTuxsNeIYgfWnWpEU6ZruHnNNTyRN4VHesvoT73xwUP+nLfTaxHXmPSHP3RT7TIPd
+	gQXWLUs/+OxLMuMTn/YoF1bj5ODbwhbwU8AYU3gIDwoClpmoSsZUfMdnnKqOHFHJ7nPlFiMBhN+
+	8wUVPepSAItigU2KBaGYKJMMqe+7Fy/S7WOy4iWyRoBoyLBOmzGG6oWLI0pcQo6jC4UgVDRv5c8
+	MShe4ENVAGSAwN/uYoc/QOwbj9Usdtp9GRiD6UxmUjzJfIHnxW/UxEiiREqCTvCLBGpYLZig9Ka
+	hy8nUCqXXb261G5fDBFlcnBcuNwq4RMyj8bHuKNg==
+X-Received: by 2002:a05:6a00:4b54:b0:82f:37e3:ae82 with SMTP id d2e1a72fcca58-8351a63b46emr2481911b3a.44.1777628974533;
+        Fri, 01 May 2026 02:49:34 -0700 (PDT)
 Received: from laptop ([2001:4455:8025:be00:eebe:247e:613c:24d7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8351582dd55sm2042729b3a.1.2026.05.01.02.49.26
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8351582dd55sm2042729b3a.1.2026.05.01.02.49.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2026 02:49:29 -0700 (PDT)
+        Fri, 01 May 2026 02:49:34 -0700 (PDT)
 From: Cris Jacob Maamor <crisjacobmaamor@gmail.com>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -80,17 +80,17 @@ Cc: Alexander Graf <graf@amazon.com>,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH RFC 1/5] kexec: handover: add helper to check preserved page ranges
-Date: Fri,  1 May 2026 17:46:33 +0800
-Message-ID: <20260501094637.38650-2-crisjacobmaamor@gmail.com>
+Subject: [PATCH RFC 2/5] liveupdate: validate restored LUO FDT before use
+Date: Fri,  1 May 2026 17:46:34 +0800
+Message-ID: <20260501094637.38650-3-crisjacobmaamor@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260501094637.38650-1-crisjacobmaamor@gmail.com>
 References: <20260501094637.38650-1-crisjacobmaamor@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260501_024931_291218_4B156641 
-X-CRM114-Status: GOOD (  12.94  )
+X-CRM114-CacheID: sfid-20260501_024935_545055_4C808CFD 
+X-CRM114-Status: GOOD (  11.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,87 +107,44 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 Signed-off-by: Cris Jacob Maamor <crisjacobmaamor@gmail.com>
 ---
- include/linux/kexec_handover.h     |  6 +++++
- kernel/liveupdate/kexec_handover.c | 35 ++++++++++++++++++++++++++++++
- 2 files changed, 41 insertions(+)
+ kernel/liveupdate/luo_core.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
-index 8968c56d2d73..fb09943ab232 100644
---- a/include/linux/kexec_handover.h
-+++ b/include/linux/kexec_handover.h
-@@ -19,6 +19,7 @@ struct page;
- #ifdef CONFIG_KEXEC_HANDOVER
- bool kho_is_enabled(void);
- bool is_kho_boot(void);
-+bool kho_is_preserved(phys_addr_t phys, unsigned long nr_pages);
+diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
+index 803f51c84275..633a16434164 100644
+--- a/kernel/liveupdate/luo_core.c
++++ b/kernel/liveupdate/luo_core.c
+@@ -82,6 +82,7 @@ early_param("liveupdate", early_liveupdate_param);
  
- int kho_preserve_folio(struct folio *folio);
- void kho_unpreserve_folio(struct folio *folio);
-@@ -51,6 +52,11 @@ static inline bool is_kho_boot(void)
- 	return false;
- }
- 
-+static inline bool kho_is_preserved(phys_addr_t phys, unsigned long nr_pages)
-+{
-+	return false;
-+}
-+
- static inline int kho_preserve_folio(struct folio *folio)
+ static int __init luo_early_startup(void)
  {
- 	return -EOPNOTSUPP;
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 94762de1fe5f..fe9f11190705 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -10,6 +10,7 @@
++	size_t fdt_size;
+ 	phys_addr_t fdt_phys;
+ 	int err, ln_size;
+ 	const void *ptr;
+@@ -94,7 +95,8 @@ static int __init luo_early_startup(void)
+ 	}
  
- #define pr_fmt(fmt) "KHO: " fmt
+ 	/* Retrieve LUO subtree, and verify its format. */
+-	err = kho_retrieve_subtree(LUO_FDT_KHO_ENTRY_NAME, &fdt_phys, NULL);
++	err = kho_retrieve_subtree(LUO_FDT_KHO_ENTRY_NAME, &fdt_phys,
++				   &fdt_size);
+ 	if (err) {
+ 		if (err != -ENOENT) {
+ 			pr_err("failed to retrieve FDT '%s' from KHO: %pe\n",
+@@ -105,6 +107,12 @@ static int __init luo_early_startup(void)
+ 		return 0;
+ 	}
  
-+#include <linux/bits.h>
- #include <linux/cleanup.h>
- #include <linux/cma.h>
- #include <linux/kmemleak.h>
-@@ -429,6 +430,40 @@ static struct page *kho_restore_page(phys_addr_t phys, bool is_folio)
- 	return page;
- }
- 
-+/**
-+ * kho_is_preserved - Verify that a physical page range belongs to KHO.
-+ * @phys: physical address of the first page in the range.
-+ * @nr_pages: number of pages that the caller expects to access.
-+ *
-+ * Use this before phys_to_virt() when a physical address comes from restored
-+ * metadata. It checks that @phys starts a KHO-preserved allocation large
-+ * enough to cover @nr_pages.
-+ *
-+ * This only checks the KHO marker. It does not restore, free, or take
-+ * ownership of the pages.
-+ *
-+ * Return: true if @phys starts a preserved KHO allocation large enough to cover
-+ * @nr_pages, false otherwise.
-+ */
-+bool kho_is_preserved(phys_addr_t phys, unsigned long nr_pages)
-+{
-+	struct page *page;
-+	union kho_page_info info;
++	if (!fdt_size || fdt_size > LUO_FDT_SIZE ||
++	    !kho_is_preserved(fdt_phys, DIV_ROUND_UP(fdt_size, PAGE_SIZE))) {
++		pr_err("Invalid LUO FDT from KHO\n");
++		return -EINVAL;
++	}
 +
-+	if (!nr_pages || !IS_ALIGNED(phys, PAGE_SIZE))
-+		return false;
-+
-+	page = pfn_to_online_page(PHYS_PFN(phys));
-+	if (!page)
-+		return false;
-+
-+	info.page_private = page->private;
-+	if (info.magic != KHO_PAGE_MAGIC || info.order >= BITS_PER_LONG)
-+		return false;
-+
-+	return nr_pages <= BIT(info.order);
-+}
-+
- /**
-  * kho_restore_folio - recreates the folio from the preserved memory.
-  * @phys: physical address of the folio.
+ 	luo_global.fdt_in = phys_to_virt(fdt_phys);
+ 	err = fdt_node_check_compatible(luo_global.fdt_in, 0,
+ 					LUO_FDT_COMPATIBLE);
 -- 
 2.53.0
 
