@@ -4,70 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5489DCCFA13
-	for <kexec@archiver.kernel.org>; Fri,  1 May 2026 23:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7BC72CD3427
+	for <kexec@archiver.kernel.org>; Fri,  1 May 2026 23:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=u2raLWGOHXV7U+bBCWk9otg1RvLIEFkuq+ZFzNDCnUU=; b=o19CsDb7jtrv3U9RE1zAY9YAwa
-	h6VynTI5eSY5MYsD+ZogFB8QPz/5lrfL4xCThAajY7hB/XdnlVLlPpSTySlFK3EblZ5+vRuVzrE9O
-	HHoHIN6CaIjiCF82zlvrSRZo6PcEn+XB1ANJ5JSapO0VCt6zFrfaU5NluEEWmwA2oo/7X3pigOm8S
-	GmHIVDo2GVdQ+Iae6VGvYZv7DeOdYAWM2yczICYGPN34ImQaAWW35G9oiYumZ2BHya2Uw4j6Oaqnm
-	1xu8pfKicwlKbhRFgHyyzJt2sbT7x0G2BjNWSIZtxhllmmfDBSfbsUK35+evoJILGvpQvndaEveDw
-	LGbspSjw==;
+	bh=0cMvZy0EdvXdtjZIbYJP2hPzOnX4/VXPNfSPuv9FZzE=; b=D/QxwqLLopelKcnTVuAZvmI661
+	GbCA4V+Q12knKCu0m/CvPwBjrrAkcEz+7ktGd0+dBL55mAFR38K3IPtkk9ScgmfvX06CPq/nnt5c8
+	Z5qTGmK1XUmFe5j6aD5y2ciegGvN7ryT7MIlZKJvXqGZscAmewY9sfFrX926KK+m3E3XWH/gHh23+
+	2DsGScxe3I+SJrn/IIGP5QMPQsRt6VyvONIP1pzheavL3ay5d1KaLsSUNnvcExLPmV7XHQLtE2YZa
+	cMcBCp8mkOBH8ag9zuE70sVsjSSVuej98bIk3Q9HB4HLK75VfV4MXg8Cpgr5/DPRPfUpGU7ABizrM
+	+WEdydTw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIxX4-00000007qf2-0KPU;
-	Fri, 01 May 2026 23:44:30 +0000
-Received: from mail-pj1-x102e.google.com ([2607:f8b0:4864:20::102e])
+	id 1wIxXD-00000007qhY-1X9W;
+	Fri, 01 May 2026 23:44:39 +0000
+Received: from mail-pj1-x102a.google.com ([2607:f8b0:4864:20::102a])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIxX1-00000007qdl-3ie4
+	id 1wIxXB-00000007qgl-1xki
 	for kexec@lists.infradead.org;
-	Fri, 01 May 2026 23:44:29 +0000
-Received: by mail-pj1-x102e.google.com with SMTP id 98e67ed59e1d1-358ed696623so1039140a91.0
-        for <kexec@lists.infradead.org>; Fri, 01 May 2026 16:44:27 -0700 (PDT)
+	Fri, 01 May 2026 23:44:38 +0000
+Received: by mail-pj1-x102a.google.com with SMTP id 98e67ed59e1d1-364f65f6eaeso966880a91.0
+        for <kexec@lists.infradead.org>; Fri, 01 May 2026 16:44:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777679067; x=1778283867; darn=lists.infradead.org;
+        d=gmail.com; s=20251104; t=1777679077; x=1778283877; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=u2raLWGOHXV7U+bBCWk9otg1RvLIEFkuq+ZFzNDCnUU=;
-        b=l5KH2qCbGmt+XNmTQhZtln05r9moYe2fNsVx3haeCt+hSG0QI093JrjnGzkFRTvYMN
-         5nNZ/JPSxVg09ugVDhdekcs/0/xia60mBI219j6t4QlLu4pQMuIzPE9L2PXFDYoiVeUt
-         iq6q+MeNI3yfNpxaOO44P/tqsmqG1BOL2dkQzO2NiEQxRaq9X3JSZSnIlqojrcY7MS/g
-         oGUmLx0FmxXiEmKTNNcRnHvG08S+xrIo3HW1AeCictUX8wTWglxRK01Z+HkBmp6cTkY6
-         pwWMnV5Dv9nd0CfMAaGihsQUyU+KWlt612OQlImFiKpopQof4QqfHd0AeWvW+yQ6N1z1
-         6WzA==
+        bh=0cMvZy0EdvXdtjZIbYJP2hPzOnX4/VXPNfSPuv9FZzE=;
+        b=F6stnb6MOis3bxUTdivIdXX6vhdK642q47Jvd5kUKTe1YgHDQMgYuM4Te51qQPo73U
+         a/tiiz/TL8RKdXkMJFS61zl/eTuHssS+bVjys3wEPkEZG47cIc8rmmPVU6kSEP8qm+/F
+         4ISuTXQXdYd19s4ZeC+ZJdMgdWUrgAHLDR7WoV6lsiKsgTAz10wvurtbi6UFRr/101Lb
+         0Bnsz9ejWVi6AO4j8lrfdCChRdGZY/4c9/wdsTevv6NniEuSe+fdJe9joUTSUXl3gJQC
+         1DV//SllvyUwBc9jUUGCNVUoSTyZcxWKOieGRuX3P6lAs95VlhhWJlJLtWsEhTw37y7C
+         IREg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777679067; x=1778283867;
+        d=1e100.net; s=20251104; t=1777679077; x=1778283877;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=u2raLWGOHXV7U+bBCWk9otg1RvLIEFkuq+ZFzNDCnUU=;
-        b=Ep17cgwQySLid4L3xadh8pJgNAOtvkyt7/ZaW0z2ztkGVWL0+zVwLYjH8xOg65aZW7
-         NCybpTEdgCS4lOUsAobM4Sm/gEk0UpdNaG1nLyo2dZHIQ6lnCdkJL2drRyRFLpv25LjB
-         6pe3T5mwUie47duTxefu4V7kZBlw9QVBN7zfBUA1kcsuCrD8395RKwQihiDHQ6Ddzc/I
-         CS5tpvkZSIJmZBluiz+uly8wF970jgayh+lgT/4XbWsglkif9eNQPYv2IBJqMuH/bKrz
-         Qkqrq/PWOJ0YZ6rnybDieDcaQYkMTj4mB0woTi4HBAaHaL5If2ymgF7QBg/V7i/+2e1k
-         p4Pg==
-X-Gm-Message-State: AOJu0Yw5KSVXl3sEMX0kSlhl+mT/A6QzAxwm/JX7wlrfP6PSqHN38EIM
-	0s9pdbNlVWLCOGib7l/5nNl7soaOtl8Zze8sqk0V2RmxbpZSEGImKVhgZxCswc7VXP1MUA==
-X-Gm-Gg: AeBDiesvKaazaLqmOpmhyKQHfbXcfHv7P89UJb6noby96csRjTrQ+Jj8kqyA1AeD+DS
-	mpmLXmgSYth6rqRnrVDyipGu/Jzms4PBn0hIxGtg2ooGQY+A6RU2OXSH7o5kADVocGW02g9LVR1
-	EDzEJDDRkiG4UNCHQmdrKeitU5tfZx492MERNLft3HqR6kCdMJIoAJizPlkqLhf9yLZWOWInf+w
-	AF5NCd8NrMgTeLNyPM5Piu9ywaE5tmMpdaNkdMRwqGFfcDpfHKrFTyo/T8sXqtMIAeL2zm/I21W
-	j65d3g1cPlI5OlOpjvxTFEPrWF22yNhVtPKLp6Vgq7EQULVjAZX7ZjY5nUDoDWEvCn9NKxKxiXL
-	865W7Ix/HDj77d2/F9GDy/KQU2C/6dXZLgEuIyPeHw1gtwjO6gOQJr+QQKJpdK/qDj6Xwx9cBPj
-	CgGaeebEtTaxAL+yrpJ0FR3khorjtLGw==
-X-Received: by 2002:a17:90b:580e:b0:364:534b:a898 with SMTP id 98e67ed59e1d1-3650cdfe2b3mr1282078a91.8.1777679067061;
-        Fri, 01 May 2026 16:44:27 -0700 (PDT)
+        bh=0cMvZy0EdvXdtjZIbYJP2hPzOnX4/VXPNfSPuv9FZzE=;
+        b=cMjDdFiBBW0m/rjuEf8sMgGmEGJ2nXIC1uBiDy/g3LLw+mKuyWg6KMinftyIoDWdVO
+         HZG9qHUJm15bDlXcV214JTHOOPQRSUO/XBKc3D/OjTh/oxVdl/jP6VU8lnAj8AHOnvF4
+         DKzQHypc8Wj07MU5jNFoAct3DpgXPKUb3fd1ms5Qe69y3F+IehU4+79rzGVuqrhLfuHD
+         GwIWFV8AX0la2izY74BDIljEod3ZJCHvG7Qpq5XE2R61F4Wft2weddCg7TybBx0xfN4Y
+         AFNOqWfglSBlE4lQYDaWPujSShL7qbHT/lZoVqSzRdhaUsgZfYC27dYNqhb85XvcFVCE
+         XvWg==
+X-Gm-Message-State: AOJu0YxJJGE6NyD3rvdUcqxxN+u7+UB5Z1pCG87sbFXWpTPGAdig3Iyx
+	995c7B2KWYuz4APUwCjuv01l0lBSaxX0N3VtcRab/ieLgEyG7N+fdxHl8xIp8YXjZlyUgQ==
+X-Gm-Gg: AeBDievTna7Y2r6Yr8jNYjhTpP3FzjCBcT4urw+PIerGQ7sRpH7dZZtsynyufns4zZa
+	GPW27q3yO4USEtFwmE5r8BqgbYCsL025cs7+UCF91NYPuCgESWxGe/rJdtIRpoVbCC4kqFyJHyI
+	z+woR8IhjHcjSfHraq4JRt7nq23ByxUJdGnJMdfA3hUltYYL14eh09GduYrMEoCNMBc8tXI0bXu
+	u/Z/ohTCdlc8pMxyrs0oO8O1BnIN+wxAg6zTzw1ZGNLnjSzjFyVbeAkZOMk6RMMzaxAJrOeawVd
+	Q2Sn62bdYkWDlLEoS+Cu/HbdvEO8MU8xXmqUXJlDADJG4nU9HTTWe2LcPTg/yXUldGO1vGUicY8
+	gtqP2GdTRzLVkl+BsMAke7M7XswDvsQbdY6qEzl962mEVSSnKnpxqGwzeJyhsew3/S8Yez4UD8r
+	+vY5hc+G0NLfthn6KDDHUv85rXwKbBNw==
+X-Received: by 2002:a17:90b:530b:b0:35d:a3b4:2f00 with SMTP id 98e67ed59e1d1-3650cdd0ab3mr1204489a91.8.1777679076659;
+        Fri, 01 May 2026 16:44:36 -0700 (PDT)
 Received: from localhost ([121.237.249.41])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-364ec00a280sm3433586a91.10.2026.05.01.16.44.24
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-364d1c70d8csm10098961a91.13.2026.05.01.16.44.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2026 16:44:26 -0700 (PDT)
+        Fri, 01 May 2026 16:44:36 -0700 (PDT)
 From: Coiby Xu <coiby.xu@gmail.com>
 To: kexec@lists.infradead.org
 Cc: Andrew Morton <akpm@linux-foundation.org>,
@@ -79,17 +79,18 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Pratyush Yadav <pratyush@kernel.org>,
 	Coiby Xu <coxu@redhat.com>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 4/9] crash_dump: Read the number of dm-crypt keys from reserved memory
-Date: Sat,  2 May 2026 07:43:33 +0800
-Message-ID: <20260501234342.2518281-5-coiby.xu@gmail.com>
+Subject: [PATCH v2 5/9] crash_dump: Free temporary dm-crypt keys_header buffer in kdump kernel
+Date: Sat,  2 May 2026 07:43:34 +0800
+Message-ID: <20260501234342.2518281-6-coiby.xu@gmail.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260501234342.2518281-1-coiby.xu@gmail.com>
 References: <20260501234342.2518281-1-coiby.xu@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260501_164427_925877_95CEDDE5 
-X-CRM114-Status: GOOD (  13.68  )
+X-CRM114-CacheID: sfid-20260501_164437_503245_1CC026D5 
+X-CRM114-Status: UNSURE (   9.27  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,86 +105,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-In case user adds/deletes the keys by mistake, it's safer to read the
-number of keys from reserved memory.
+Although we expect the system to reboot immediately after vmcore dumping
+is finished, it's still good to free the temporary keys_header buffer.
 
-Fixes: 9ebfa8dcaea7 ("crash_dump: reuse saved dm crypt keys for CPU/memory hot-plugging")
-Reported-and-Suggested-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+Fixes: 62f17d9df692 ("crash_dump: retrieve dm crypt keys in kdump kernel")
+Reported-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
 ---
- kernel/crash_dump_dm_crypt.c | 36 +++++++++++++++++++++++-------------
- 1 file changed, 23 insertions(+), 13 deletions(-)
+ kernel/crash_dump_dm_crypt.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
-index 6377ee86ec50..a3e460714d23 100644
+index a3e460714d23..72ae2dffb077 100644
 --- a/kernel/crash_dump_dm_crypt.c
 +++ b/kernel/crash_dump_dm_crypt.c
-@@ -88,21 +88,31 @@ static int get_keys_from_kdump_reserved_memory(void)
- {
- 	struct keys_header *keys_header_loaded;
- 	size_t keys_header_size;
--
--	keys_header_size = get_keys_header_size(key_count);
--	keys_header = kzalloc(keys_header_size, GFP_KERNEL);
--	if (!keys_header)
--		return -ENOMEM;
-+	int r = 0;
- 
- 	arch_kexec_unprotect_crashkres();
- 	keys_header_loaded = kmap_local_page(pfn_to_page(
- 		kexec_crash_image->dm_crypt_keys_addr >> PAGE_SHIFT));
- 
-+	if (keys_header_loaded->total_keys <= 0 ||
-+	    keys_header_loaded->total_keys > KEY_NUM_MAX) {
-+		pr_warn("keys_header saved to reserved memory may be corrupt\n");
-+		r = -EINVAL;
-+		goto kunmap;
-+	}
-+
-+	keys_header_size = get_keys_header_size(keys_header_loaded->total_keys);
-+	keys_header = kzalloc(keys_header_size, GFP_KERNEL);
-+	if (!keys_header) {
-+		r = -ENOMEM;
-+		goto kunmap;
-+	}
-+
- 	memcpy(keys_header, keys_header_loaded, keys_header_size);
-+kunmap:
- 	kunmap_local(keys_header_loaded);
- 	arch_kexec_protect_crashkres();
--
--	return 0;
-+	return r;
- }
+@@ -117,6 +117,7 @@ static int get_keys_from_kdump_reserved_memory(void)
  
  static int restore_dm_crypt_keys_to_thread_keyring(void)
-@@ -431,12 +441,12 @@ int crash_load_dm_crypt_keys(struct kimage *image)
- 
- 	mutex_lock(&config_keys_subsys.su_mutex);
- 
--	if (key_count <= 0) {
--		kexec_dprintk("No dm-crypt keys\n");
--		return 0;
--	}
--
- 	if (!is_dm_key_reused) {
-+		if (key_count <= 0) {
-+			kexec_dprintk("No dm-crypt keys\n");
-+			return 0;
-+		}
-+
- 		r = build_keys_header();
- 		if (r)
- 			goto out;
-@@ -447,7 +457,7 @@ int crash_load_dm_crypt_keys(struct kimage *image)
- 	 * cleaned up at the end of kexec_file_load syscall
- 	 */
- 	kbuf.buffer = keys_header;
--	kbuf.bufsz = get_keys_header_size(key_count);
-+	kbuf.bufsz = get_keys_header_size(keys_header->total_keys);
- 
- 	kbuf.memsz = kbuf.bufsz;
- 	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
+ {
++	struct keys_header *keys_header __free(kfree_sensitive) = NULL;
+ 	struct dm_crypt_key *key;
+ 	size_t keys_header_size;
+ 	key_ref_t keyring_ref;
 -- 
 2.54.0
 
