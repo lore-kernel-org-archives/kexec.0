@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6BF8FCD3423
-	for <kexec@archiver.kernel.org>; Fri,  1 May 2026 17:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0CA0ECCFA13
+	for <kexec@archiver.kernel.org>; Fri,  1 May 2026 17:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=KV7zz3IVCgqM4rAO8VDBmG5qW5sfO3INZmQIYnfF9qQ=; b=gEZK4JiuTpTBfIBlRwqtyLux8l
-	UR3/VEuiZ6uJJC1bgyIws0o2+DpW09Oj+k0WLyXsGF3QrC22vkE0ROH41wRwiKwmSbhoQTiZcRH43
-	R9CL9AxBqI+1T9KoOKEqafbXzi6iCPA3ffadM3QpXh5DwpOVE236eexMjgr+ILfCph6bPtGdT5CKR
-	HsBS4LX/bINDntK1PuZsjs0bFspJ+0TZkS6EPfXRgGibI7A4b/gx59OVQKKiewe5+TztkRuZ3m/5C
-	+WdlHTeLEKaJx/M3fR+tvuBmRI9uofveMDKA1GeWToSwf4PhRFlEXV4IRB4m9PcAdp6OpGT3U4ryo
-	O7uRYlDw==;
+	bh=kl2Z21aRDWvEO9ZM3F5D114Gv3b0H+mzb5aSolSK6U0=; b=HWgYvfyf/bKTm6/ivja+8DLWKc
+	MNqPhMA7atIXSKrmROrr0/tH3DAzY5qaQwBw5wzGA51WsgfmU8l6N1/GF2CNpfbSzXtzd77/I/Jug
+	kFkysEiyJYkazo7j4C5ehFqkXpgqaXs9cTFF1kBVFuVK5Hsc2Rijf6rVimk701NhZkjYH2owQC4u8
+	Vra+WjNxJaqTlfSpGt4vHfs+yzDywHxV/F00FnuuvbOuQPDE/d1tRAgtkfwSJu7VaD4aQuFeZ0QEd
+	lAJ4gNKocfs8VgPyp64ue33kBcVSbstLVJiqA5MzziK47pWT6YrX9IVZ0ONbpBb1HdlSuA0pDrkxS
+	JNn1qMDA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIriI-00000007Voj-0HBq;
-	Fri, 01 May 2026 17:31:42 +0000
-Received: from mail-pj1-x1033.google.com ([2607:f8b0:4864:20::1033])
+	id 1wIriO-00000007Vs4-1NxB;
+	Fri, 01 May 2026 17:31:48 +0000
+Received: from mail-pl1-x634.google.com ([2607:f8b0:4864:20::634])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIriF-00000007Vne-3uyy
+	id 1wIriK-00000007VqW-3zvF
 	for kexec@lists.infradead.org;
-	Fri, 01 May 2026 17:31:41 +0000
-Received: by mail-pj1-x1033.google.com with SMTP id 98e67ed59e1d1-3650453fb28so276957a91.2
-        for <kexec@lists.infradead.org>; Fri, 01 May 2026 10:31:39 -0700 (PDT)
+	Fri, 01 May 2026 17:31:46 +0000
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-2b9ea536877so2040195ad.1
+        for <kexec@lists.infradead.org>; Fri, 01 May 2026 10:31:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777656699; x=1778261499; darn=lists.infradead.org;
+        d=gmail.com; s=20251104; t=1777656704; x=1778261504; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KV7zz3IVCgqM4rAO8VDBmG5qW5sfO3INZmQIYnfF9qQ=;
-        b=Op9i6lB0BI+vX1xxLkWfbuPcbjTYGblHeLniGPJXq0vjF5k+l5hjkzaXNQl7v7oubL
-         nl5sCpXh97x7wOqqVu2Ok6JzmNECR148KJSiZfZHxchzvxtO6qxoybxqa4DO5/eJdnCg
-         29ITGGF7PPpMOr7goqTgnDfdKqPZNeK6cNgpxt8YYUMUF1pbgboP8fNa3UXCA8oPXhiq
-         mijbVGjrmFMUJWx06vL4qZfYCvXXu4eajuzM2GuB2xfCfmfhAiG09VLUHJAd++kLDfA9
-         HyQFk2fyERgCvbZako18oIndggvLRSSN4MBgKejaVZXc81MylZmcq8IBIQKLGBQ2FUBq
-         9Pcw==
+        bh=kl2Z21aRDWvEO9ZM3F5D114Gv3b0H+mzb5aSolSK6U0=;
+        b=bg4Ku8NOmAVMtbKiZh+pBECpJDBh5zFW7a4OYHZzYzTzbtfs/qF5USN8jUS0eEiHP7
+         1Qh8TsrSpJapzq0TQu1bz3j/q2TuH0wpkSYXiguUygX/BUadK/pzqKBIB8hB37Yb7knN
+         vOrIloS9z51xUxrF0t72tEtK96BAGoJ1GgBGKr8uSzyJZi39ScSCvq1VUvh/osBDKlnu
+         iCmxWZi1fZh4cW5G43dCaO38AszkWskIpPl0xgg8VjbijULXqLLV+mQBIfBCJiGe89Sg
+         wv+aAZI1qPXTnF0DboeBGWD/ZueMDujNjrTVJWg9Z+P3/IkpGSCoBYhlzyVEutXsK078
+         AxrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777656699; x=1778261499;
+        d=1e100.net; s=20251104; t=1777656704; x=1778261504;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=KV7zz3IVCgqM4rAO8VDBmG5qW5sfO3INZmQIYnfF9qQ=;
-        b=p1M7AqRhxFgaJ3CwSu8NpWMxNRxIhkMcx3kja4vGzU64mBUMDyGZz4XkW4U+Xg3++H
-         5JEh+oOIXrP6HSsEeSEtewtMbfgv52/KepT4QfrudG3Hoo2x4nzaL0OKWPpCOdNoijjb
-         xyZ+q98919DbNOY1zngt36O/znlt1VnSCRsKVYgLnhmwiMtVVJkggFdknKJm8Z2lQpRD
-         uzxKFIlj8WHCe72xs4z1MF7smQ6dq8U9P2JgGvkJjTYOjmfEEZ8GVZ8WEG05om8XD7++
-         mttFHqL6sQa1eaAKsVUHL1OanfbwBvkgo+z3C5W1DE5UcOhD/mG8AEHA3MluUnXKQvuL
-         B7fA==
-X-Forwarded-Encrypted: i=1; AFNElJ8im+EACBqtp3bmKE2SYvFR/NNCdSDX5YNM3JhOnxeZg49LLWNNOQyBhNIYHcafCDzBWTnhxw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YywWkMzeJhvmHeKmhmegIP+juo0StALiyI2cbTNYVyIGFmys0dS
-	3H0hnZKY3uRzCap+UK9SaMrykHRegj6MWOufMM+jVg421U4inAv6aUg3
-X-Gm-Gg: AeBDiesxLklN18awWH52UQ7JhNmr9x8YQUtjKaUWBW5+szOe5Mses7pmb0WwGwX9FPZ
-	D/aq23nWGBBW1eFXUeRRPJuaGOZ7YzJt4KlaFcELeCgBwebG6p9p18EW+5vtFaX0bGlzJyd3WZt
-	PPuOiLl5ooB9U3WricMllKEOwa6JZhPeP3a92Ka8v5Q6Rq92jcQL5NiDx9aMlxhyw1xWUB9bd2v
-	X11ipjeSWC+khBUegAbcT3CcLHGrl6h1137ooY9mMxOwCr5GRIaeChXukNfVm+H2FYodkccl6Vz
-	Hy8Pqz7iXZppvvXf3lZumAmCNo+R67Ta3kVq7zHbrBigcsLnOaXuO1XYwg5C36915cqMwl/hsYr
-	FTmo/OuoCtj+TdAjCDkZiSyguA/TL2Do8u3nmt7fQ1ij8bCMdEOyNATibNebE8xtoeF8qT+5V4A
-	slHPo669kGnIU/b2BB6vu7YkCUWK0QUvJVAhyxKg==
-X-Received: by 2002:a17:90b:1d44:b0:35b:e4d8:e21d with SMTP id 98e67ed59e1d1-3650cdd4a78mr173094a91.2.1777656699024;
-        Fri, 01 May 2026 10:31:39 -0700 (PDT)
+        bh=kl2Z21aRDWvEO9ZM3F5D114Gv3b0H+mzb5aSolSK6U0=;
+        b=hN9AfHZuret3NMgvIEDqlqXeK95m7NmDwjQ1io3ys9V9xsjLNJLi25OqkL0pXGFkMY
+         9xSWJ7ibJeQez40hYIJ34D0UvgClmchhPOtUuij4CFjFs2Ifoty369sZs3+HvhtgE7F2
+         SkcxjZvV25xxHaO/kdHCHyjMBGfous0rSJ29WetHv94ATvHZx1DkF3/6gLe1O1tDlazY
+         KmPAFicLlqSnQSnmxJcWHG2IFX9GUTea9RhXi2QdoB3ON2VoLRnBOnd892SFphM5SDaK
+         4NdEh0+y9gxi4jNbNbqrcc6mLRcnJ63/1UWT0I0M39jFMZrb0xAN8M5fu/JdEEKM4xJk
+         31kQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9QFhhYAy18ysZAgHvR/paroaVwD8WV1Vock7V+X6tLR5HDID+OjMeH/Hsv5Ry0gOMVgHkCbw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzFraN/wobDYHYHNXFxN+tGj5pBSN1jl+MA0YyRGlLVJkVLrCPc
+	8lp4riSdieMkRytz6vIFAQYDzORBElXO4Y+PeoK3JDYTKnKZwAavj7lM
+X-Gm-Gg: AeBDievdHVqu0CTaCSo9CxzCc00kME3P+Q5IB0uje6XmyOvwmft3+ghyXDNuFTv9pbt
+	eITNZI2RWUuMZZyNxLIeR/FxJ+S0pwpqHrDGCrRW7c1CxCkE8w+dUGbjvoEsC8fISFps4cU9zCt
+	5kegDgcACn8RtwG4XKRA9J2rJo5Fq2bk+FGAexl8IkMiMvrHptxa3wWjs6AIWVkEn2HCIX/q8ky
+	UALoi0gNyeNKbRzk7xkZ+Dj6e6eShVVgsDejp8i/p65gCKcaj59GUxda5j4qDR2m4HxGMKkDvVP
+	i6He7PBnwGrm8lPom0VDP5H0gy74S05iJy5ZDGoF1KDYuEIqQiQdu2ydXoX/j/e1mU9CkEEBbBC
+	lZphaU4KIrNjietf5ywzF8BxIATiGfqW0pHeK0OUQ9PAJO+Hj0zNz7ak8Z9ZeHWgepLD9AddtrE
+	un/0XCKbPnAwIbVOpoQv1ndt+UiHrvaPFC/meCzUHCPsAXLGQq
+X-Received: by 2002:a17:902:868d:b0:2b0:6068:4c5f with SMTP id d9443c01a7336-2b9a42fd480mr45822995ad.8.1777656703888;
+        Fri, 01 May 2026 10:31:43 -0700 (PDT)
 Received: from laptop ([2001:4455:8025:be00:15cc:43cd:8af9:5a8e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b9caad2459sm27094895ad.33.2026.05.01.10.31.35
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b9caad2459sm27094895ad.33.2026.05.01.10.31.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2026 10:31:38 -0700 (PDT)
+        Fri, 01 May 2026 10:31:42 -0700 (PDT)
 From: Cris Jacob Maamor <crisjacobmaamor@gmail.com>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -79,9 +79,9 @@ Cc: Alexander Graf <graf@amazon.com>,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/5] liveupdate: validate restored LUO file set metadata
-Date: Sat,  2 May 2026 01:30:52 +0800
-Message-ID: <20260501173053.73116-5-crisjacobmaamor@gmail.com>
+Subject: [PATCH v2 5/5] liveupdate: validate restored LUO FLB metadata
+Date: Sat,  2 May 2026 01:30:53 +0800
+Message-ID: <20260501173053.73116-6-crisjacobmaamor@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260501173053.73116-1-crisjacobmaamor@gmail.com>
 References: <20260501094637.38650-1-crisjacobmaamor@gmail.com>
@@ -89,8 +89,8 @@ References: <20260501094637.38650-1-crisjacobmaamor@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260501_103140_096303_10972BFD 
-X-CRM114-Status: GOOD (  11.01  )
+X-CRM114-CacheID: sfid-20260501_103144_988977_FA7A39E7 
+X-CRM114-Status: GOOD (  11.91  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,46 +105,67 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The restored session metadata provides the LUO file set address and count.
-LUO maps that address with phys_to_virt() and uses the restored count to
-walk the serialized file array.
+The restored FDT contains the physical address of the LUO FLB header, which
+LUO maps before using the restored FLB metadata.
 
-Reject invalid empty file set metadata, reject counts above LUO_FILE_MAX,
-and check that the physical range is KHO-preserved before mapping it.
+Check that the FLB header range is KHO-preserved before calling
+phys_to_virt(). Reject invalid page counts and counts above LUO_FLB_MAX
+before walking the restored FLB array.
 
 Signed-off-by: Cris Jacob Maamor <crisjacobmaamor@gmail.com>
 ---
- kernel/liveupdate/luo_file.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ kernel/liveupdate/luo_flb.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
-index a0a419085e28..cde43d822f8f 100644
---- a/kernel/liveupdate/luo_file.c
-+++ b/kernel/liveupdate/luo_file.c
-@@ -783,11 +783,21 @@ int luo_file_deserialize(struct luo_file_set *file_set,
- 	struct luo_file_ser *file_ser;
- 	u64 i;
+diff --git a/kernel/liveupdate/luo_flb.c b/kernel/liveupdate/luo_flb.c
+index 00f5494812c4..e80032669cea 100644
+--- a/kernel/liveupdate/luo_flb.c
++++ b/kernel/liveupdate/luo_flb.c
+@@ -162,6 +162,7 @@ static int luo_flb_retrieve_one(struct liveupdate_flb *flb)
+ 	struct luo_flb_header *fh = &luo_flb_global.incoming;
+ 	struct liveupdate_flb_op_args args = {0};
+ 	bool found = false;
++	u64 count;
+ 	int err;
  
--	if (!file_set_ser->files) {
--		WARN_ON(file_set_ser->count);
-+	if (!file_set_ser->count) {
-+		if (file_set_ser->files)
-+			return -EINVAL;
- 		return 0;
+ 	guard(mutex)(&private->incoming.lock);
+@@ -175,7 +176,14 @@ static int luo_flb_retrieve_one(struct liveupdate_flb *flb)
+ 	if (!fh->active)
+ 		return -ENODATA;
+ 
+-	for (int i = 0; i < fh->header_ser->count; i++) {
++	count = fh->header_ser->count;
++	if (count > LUO_FLB_MAX) {
++		pr_err("Invalid FLB count: %llu\n",
++		       (unsigned long long)count);
++		return -EINVAL;
++	}
++
++	for (u64 i = 0; i < count; i++) {
+ 		if (!strcmp(fh->ser[i].name, flb->compatible)) {
+ 			private->incoming.data = fh->ser[i].data;
+ 			private->incoming.count = fh->ser[i].count;
+@@ -620,7 +628,20 @@ int __init luo_flb_setup_incoming(void *fdt_in)
  	}
  
-+	if (file_set_ser->count > LUO_FILE_MAX)
+ 	header_ser_pa = get_unaligned((u64 *)ptr);
++	if (!kho_is_preserved(header_ser_pa, LUO_FLB_PGCNT)) {
++		pr_err("FLB header is not KHO preserved: %#llx\n",
++		       (unsigned long long)header_ser_pa);
 +		return -EINVAL;
++	}
 +
-+	if (!file_set_ser->files)
+ 	header_ser = phys_to_virt(header_ser_pa);
++	if (header_ser->pgcnt != LUO_FLB_PGCNT ||
++	    header_ser->count > LUO_FLB_MAX) {
++		pr_err("Invalid FLB header: pgcnt %llu count %llu\n",
++		       (unsigned long long)header_ser->pgcnt,
++		       (unsigned long long)header_ser->count);
 +		return -EINVAL;
-+
-+	if (!kho_is_preserved(file_set_ser->files, LUO_FILE_PGCNT))
-+		return -EINVAL;
-+
- 	file_set->count = file_set_ser->count;
- 	file_set->files = phys_to_virt(file_set_ser->files);
++	}
  
+ 	luo_flb_global.incoming.header_ser = header_ser;
+ 	luo_flb_global.incoming.ser = (void *)(header_ser + 1);
 -- 
 2.53.0
 
