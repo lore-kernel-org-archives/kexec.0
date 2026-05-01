@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 27604FF885A
-	for <kexec@archiver.kernel.org>; Fri,  1 May 2026 09:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 80F8DCD3424
+	for <kexec@archiver.kernel.org>; Fri,  1 May 2026 09:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=cQtRFGksInkULS0m8GB/jr8IDzzr0ObA1EgynOw28RQ=; b=X+8KbiP40NRE0I8/yHsKNMueD5
-	UIuR/23E2SNiG+LxSPfHWFm1+sEp2v/gp8+kZU5FgVqXn5QJXEY7DK5WrO6dlnFmSdCVXGtfDhw3l
-	fL9Ru4jVBWtzaeVEkq5yPi5PT5CJMBCMws13xSEpIqAl4HHAV13u1+6dFCC/LyvNiO9UosyYPB5Fg
-	reCOk6OqD3MAHqOStz6cW6gBDOGpgGBiygX/bUEkqTI7YTZMOgMHCoXn4V7AF1xGrB7vN6Tk8j5hW
-	rRAX/JGAIW6ICGjI3NGrEUJyTyYvAWsV+npGRZtLAFvFusUCYJL8kkL9APKCXD4AlvrnDlygi3Npq
-	oKYomTIg==;
+	bh=jpzP5NyCyl9kBFJtSorUnmMXLVo8P2gspi2fH3AtFbE=; b=qJdDTHERCE92vy6zciyYEvsXOs
+	wqFv9jU93TsbSlT7LQhCqzR39Ygl5UtCU6ujT090GC1nU646P7x1K4kwDY0z2sueratP6GMm4fwMk
+	ysunQ6c11tzFiEM5j28fiH/jdgyQADE4S/ei8/nW2sKgu8T3c3beRg/LCJn834SUmois9yx5AVeFY
+	UkYdimee0l1ieGYrcU1PBMNjVmU232h6rWJ7L2Knb3YCmqHvhV8J7YFFGr/anyPHEEPWAR0TqkfVf
+	6iN1aOv1SZvmKmQHVYE/ettVnj8d0W1+lWKJzLIhNOQ5PzjsP0bAHO3/3bWDGr2AUU4hJPtSmNJGs
+	QG83MMAA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIkV7-00000006YhK-3txx;
-	Fri, 01 May 2026 09:49:37 +0000
-Received: from mail-pf1-x430.google.com ([2607:f8b0:4864:20::430])
+	id 1wIkVC-00000006YjA-0uc4;
+	Fri, 01 May 2026 09:49:42 +0000
+Received: from mail-pf1-x435.google.com ([2607:f8b0:4864:20::435])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIkV5-00000006YgF-271A
+	id 1wIkV9-00000006Yi6-3x4f
 	for kexec@lists.infradead.org;
-	Fri, 01 May 2026 09:49:36 +0000
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-82f431c0ab6so865582b3a.0
-        for <kexec@lists.infradead.org>; Fri, 01 May 2026 02:49:35 -0700 (PDT)
+	Fri, 01 May 2026 09:49:40 +0000
+Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-8318293f02bso1027108b3a.0
+        for <kexec@lists.infradead.org>; Fri, 01 May 2026 02:49:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777628974; x=1778233774; darn=lists.infradead.org;
+        d=gmail.com; s=20251104; t=1777628979; x=1778233779; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cQtRFGksInkULS0m8GB/jr8IDzzr0ObA1EgynOw28RQ=;
-        b=e7tG/8NboAc+cuR30RZ935zevAQinUvoUSREvma69Q9laH0K6S4cIDeN5DEXz/Xa+7
-         e0fV+++FXW8AqWLztQHCR7tF3amZffM1/LLwf21CipmENeaHY1gJp9sRCkpK6yqky9nA
-         a82tBmCiM5m5VqiIB3dUVfl0Jjx5Qb5M2z0D9+FFIA4Tjbs5rM4JAhjrtq7Il4dITkqc
-         1/kFl7DubXPpiViiqdmf290Rb1aWK1HBoGY+mzxOH1BM83r3/zpb031hxGtotS9649dr
-         xmdGAXctbpMYRsuDKEDUdGrcEExeZI7Pe0ETu1qBq734j1o1yHJkwwxl6XLquyCb529I
-         SRvw==
+        bh=jpzP5NyCyl9kBFJtSorUnmMXLVo8P2gspi2fH3AtFbE=;
+        b=Rra82o/BCzj3FXse88inh2YPoYsxC7CFmN1pAaVzjNhLI5o+JB3kLwVhc/pi0MO+9p
+         bUTiGHMmdgRCTpL1BMUdu1J9l9EQNK9cP8m6F7WvY04kJTmsmoodhM0b28UazZkniCE5
+         E2VXXk8aErKIsdWbnP2rlYXa+2m/17x5zasLDmZlWfA3m2r3LD1rZP8dwR/w5A6Zmd2y
+         /f1PW1ArziFR9wnJNNQ0OGzGPqloW1gSml2vZaRPnFsLYx8kblgH4tCkfg81ydvA9vWa
+         SYuvdt8hEc3MFen1H1XqS9ik54MId5JijLDDP8TcLNgOYm9s4CgBS2s4XBTetolwo3ok
+         XqbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777628974; x=1778233774;
+        d=1e100.net; s=20251104; t=1777628979; x=1778233779;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=cQtRFGksInkULS0m8GB/jr8IDzzr0ObA1EgynOw28RQ=;
-        b=gDW8ft2Syxu953Q4Fmb4K2CYYs9/PrM0h05ApFUxwGXVz2lgxaiN5fnV6IEd5GnDqJ
-         HbNWSTbe9ZCGw4kMw6bHEOaXthWRMJFkmw/f5p8dQIzCnJFVp2kYD3EhGO6OyR1PS/Mp
-         3pdU3oWAdEN81MVcq7/Qb2XI+OcRgaBbwFQGqNdbessfXXq0NlVJSCwSkA5mReneqyfO
-         dM0LJMnldUccwRAEVb8I+TYyWaRLQigbZX2RhojwOHVOLweiMebPahN6GCvKWGAsRVdJ
-         7mDeYXqTkOF2tebHYYILr1dRzt3lg6XY7QM6iYwdAxlPb7RltIlp2c3d1y5nIN9WgTW9
-         qPPQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/0oTliSebSxsAUWQKWNMWnLIsbVNRmNKxLr8VCQNz9AOZY6s7ROvMb2l23gbrOI1jhv9e2HQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YznKAF6mMb5rbtrzxjnrguFJAEgKeMjHsswrN/2dyYVa8Re0nzM
-	1tTFQdj1VwMICe1eaRiN9XO8oyNdJKFE3RJ7UhlHkJ9Y36g5WSDUadqF
-X-Gm-Gg: AeBDievPncitic4jct2k8KJUqElmUSb9LyQwQepdAU4U+2X8vwwfZ9nAQw+P7NsGDBD
-	TYHk/jNeGRhFXXpoA3fZy/MukJA++qynUrFt4fgIIlhUuORVi8EFFQ6TJ3rL0N4uOv3fXm+s2PH
-	qdysOeD+SJRTuxsNeIYgfWnWpEU6ZruHnNNTyRN4VHesvoT73xwUP+nLfTaxHXmPSHP3RT7TIPd
-	gQXWLUs/+OxLMuMTn/YoF1bj5ODbwhbwU8AYU3gIDwoClpmoSsZUfMdnnKqOHFHJ7nPlFiMBhN+
-	8wUVPepSAItigU2KBaGYKJMMqe+7Fy/S7WOy4iWyRoBoyLBOmzGG6oWLI0pcQo6jC4UgVDRv5c8
-	MShe4ENVAGSAwN/uYoc/QOwbj9Usdtp9GRiD6UxmUjzJfIHnxW/UxEiiREqCTvCLBGpYLZig9Ka
-	hy8nUCqXXb261G5fDBFlcnBcuNwq4RMyj8bHuKNg==
-X-Received: by 2002:a05:6a00:4b54:b0:82f:37e3:ae82 with SMTP id d2e1a72fcca58-8351a63b46emr2481911b3a.44.1777628974533;
-        Fri, 01 May 2026 02:49:34 -0700 (PDT)
+        bh=jpzP5NyCyl9kBFJtSorUnmMXLVo8P2gspi2fH3AtFbE=;
+        b=K+hLVaHNQeNPhoLo/doEcPtAPHiZJZequXiK2wZwiSMC4+ZyomZKl0ec+Q2ybaZj/6
+         AKTjNIUnLGHixJ7iS2MielMsQ65W1YZ+RjYRjkmQIrXt59vN0o4/OPpEJpOphHWUNz0G
+         XKKJnVw7K2otGnaYOrMeZfd4HXEwiW9zowAAB/slOuPM1uLQ4tL3xMW4DHykk59iEz4O
+         lAYBSSQoIHCzoswE42/GNp+RuSiy6Q8Nn03Etylor58cwzZC01hZFmp1p4TrxL3s4Lrk
+         9+2WmFfxaZm4JliCnSYrNQQvOOyanFYHbbzn/OqRmCDrY9o57NKpiK+vzDX87jUeEO0E
+         2E5Q==
+X-Forwarded-Encrypted: i=1; AFNElJ8mWFa03uN6zvTc/0/GaWMpgpjbroFnQ8QxdbVg8I1QCWcPVWEK4SkdUE3bxkzgBx9m7EwXrg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzTwQ1hghEzbRwn4kctQReVVkCGtKtqenrzOyNAKcTYaRRSxUlC
+	CGMYBf43wS+Jz1gOVopRjPGLZ33HOHVRVEItWQNlgqeqUkW15ijRiMWg
+X-Gm-Gg: AeBDietWWFjQgjykbXzXm39jHGT7SVPSLrymNH7eFtjAjLHk01bZc8X7QlNP8Kk09yv
+	isScrylPAoFBqfK1ozbXTrGlX10gwoXtOa+6F8PWz93a55lFVXLJ1GkSYw00fAdha9K0z3q+xpy
+	N9VSr1BfD0xFP70G+luc8lva6ipisf+B05NPEb8kAEfEpSLCk/rcJqnhiORSf4qIoRH0Br1XdC5
+	tAiavUyrn2R+qr4i4LA8W6oqLZ+KovY1I+wFN0I8miBJ1gA1O7C7skCJrXzmFAS6LdMyaE02rg4
+	xFRjprMoq8GXqaNQA7FOZjZlOhkFopX8E9SPK7IIKeQOXHKNS+JC/YpWCtm+jlYqF/AtetrO4Z7
+	hj4Yx+AbstHsIfNtr0fSTOMuLfZmgSD6KxM0yspkogLGJ0wrNBDTQVf5FFVZm2XGY7wEwLpWw1F
+	pLnO5CFskOMcTfQSkh22KMW6KucIaxdgktoKddKg==
+X-Received: by 2002:aa7:88c6:0:b0:82c:9c4e:66ca with SMTP id d2e1a72fcca58-834fff74303mr5699537b3a.2.1777628978910;
+        Fri, 01 May 2026 02:49:38 -0700 (PDT)
 Received: from laptop ([2001:4455:8025:be00:eebe:247e:613c:24d7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8351582dd55sm2042729b3a.1.2026.05.01.02.49.30
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8351582dd55sm2042729b3a.1.2026.05.01.02.49.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2026 02:49:34 -0700 (PDT)
+        Fri, 01 May 2026 02:49:38 -0700 (PDT)
 From: Cris Jacob Maamor <crisjacobmaamor@gmail.com>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -80,17 +80,17 @@ Cc: Alexander Graf <graf@amazon.com>,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH RFC 2/5] liveupdate: validate restored LUO FDT before use
-Date: Fri,  1 May 2026 17:46:34 +0800
-Message-ID: <20260501094637.38650-3-crisjacobmaamor@gmail.com>
+Subject: [PATCH RFC 3/5] liveupdate: validate restored LUO session metadata
+Date: Fri,  1 May 2026 17:46:35 +0800
+Message-ID: <20260501094637.38650-4-crisjacobmaamor@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260501094637.38650-1-crisjacobmaamor@gmail.com>
 References: <20260501094637.38650-1-crisjacobmaamor@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260501_024935_545055_4C808CFD 
-X-CRM114-Status: GOOD (  11.10  )
+X-CRM114-CacheID: sfid-20260501_024939_980544_3F5860BD 
+X-CRM114-Status: GOOD (  12.03  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,44 +107,68 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 Signed-off-by: Cris Jacob Maamor <crisjacobmaamor@gmail.com>
 ---
- kernel/liveupdate/luo_core.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ kernel/liveupdate/luo_session.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
-index 803f51c84275..633a16434164 100644
---- a/kernel/liveupdate/luo_core.c
-+++ b/kernel/liveupdate/luo_core.c
-@@ -82,6 +82,7 @@ early_param("liveupdate", early_liveupdate_param);
- 
- static int __init luo_early_startup(void)
- {
-+	size_t fdt_size;
- 	phys_addr_t fdt_phys;
- 	int err, ln_size;
- 	const void *ptr;
-@@ -94,7 +95,8 @@ static int __init luo_early_startup(void)
+diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
+index a3327a28fc1f..0244c071936d 100644
+--- a/kernel/liveupdate/luo_session.c
++++ b/kernel/liveupdate/luo_session.c
+@@ -501,7 +501,18 @@ int __init luo_session_setup_incoming(void *fdt_in)
  	}
  
- 	/* Retrieve LUO subtree, and verify its format. */
--	err = kho_retrieve_subtree(LUO_FDT_KHO_ENTRY_NAME, &fdt_phys, NULL);
-+	err = kho_retrieve_subtree(LUO_FDT_KHO_ENTRY_NAME, &fdt_phys,
-+				   &fdt_size);
- 	if (err) {
- 		if (err != -ENOENT) {
- 			pr_err("failed to retrieve FDT '%s' from KHO: %pe\n",
-@@ -105,6 +107,12 @@ static int __init luo_early_startup(void)
- 		return 0;
- 	}
- 
-+	if (!fdt_size || fdt_size > LUO_FDT_SIZE ||
-+	    !kho_is_preserved(fdt_phys, DIV_ROUND_UP(fdt_size, PAGE_SIZE))) {
-+		pr_err("Invalid LUO FDT from KHO\n");
+ 	header_ser_pa = get_unaligned((u64 *)ptr);
++	if (!kho_is_preserved(header_ser_pa, LUO_SESSION_PGCNT)) {
++		pr_err("Session header is not KHO preserved: %#llx\n",
++		       (unsigned long long)header_ser_pa);
 +		return -EINVAL;
 +	}
 +
- 	luo_global.fdt_in = phys_to_virt(fdt_phys);
- 	err = fdt_node_check_compatible(luo_global.fdt_in, 0,
- 					LUO_FDT_COMPATIBLE);
+ 	header_ser = phys_to_virt(header_ser_pa);
++	if (header_ser->count > LUO_SESSION_MAX) {
++		pr_err("Invalid session count: %llu\n",
++		       (unsigned long long)header_ser->count);
++		return -EINVAL;
++	}
+ 
+ 	luo_session_global.incoming.header_ser = header_ser;
+ 	luo_session_global.incoming.ser = (void *)(header_ser + 1);
+@@ -515,6 +526,7 @@ int luo_session_deserialize(void)
+ 	struct luo_session_header *sh = &luo_session_global.incoming;
+ 	static bool is_deserialized;
+ 	static int err;
++	u64 count;
+ 
+ 	/* If has been deserialized, always return the same error code */
+ 	if (is_deserialized)
+@@ -524,6 +536,13 @@ int luo_session_deserialize(void)
+ 	if (!sh->active)
+ 		return 0;
+ 
++	count = sh->header_ser->count;
++	if (count > LUO_SESSION_MAX) {
++		pr_err("Invalid session count: %llu\n",
++		       (unsigned long long)count);
++		return -EINVAL;
++	}
++
+ 	/*
+ 	 * Note on error handling:
+ 	 *
+@@ -539,7 +558,7 @@ int luo_session_deserialize(void)
+ 	 * userspace to detect the failure and trigger a reboot, which will
+ 	 * reliably reset devices and reclaim memory.
+ 	 */
+-	for (int i = 0; i < sh->header_ser->count; i++) {
++	for (u64 i = 0; i < count; i++) {
+ 		struct luo_session *session;
+ 
+ 		session = luo_session_alloc(sh->ser[i].name);
+@@ -606,4 +625,3 @@ int luo_session_serialize(void)
+ 
+ 	return err;
+ }
+-
 -- 
 2.53.0
 
