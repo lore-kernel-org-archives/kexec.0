@@ -4,131 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9EC01CD3423
-	for <kexec@archiver.kernel.org>; Fri,  1 May 2026 18:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0EDE4CD3423
+	for <kexec@archiver.kernel.org>; Fri,  1 May 2026 19:34:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Ynp4A/JaH22lvkihT3nPFtsXKnzutYHpfXYULBKQQKo=; b=NRjEi9d2I4vJVvwlNwB2RhplLe
-	HPf55WXcz+/sbuk4GOMjmVpUmefZe30IbT0HYyn+Po8XSS5NzH8WnAoIjK+9feqxM0qC+TpAzZoTd
-	sffrWnBntE6rLxyIBcqNTcnQTR4Rf0srIpSOCKFvBJdnyEj53W05l2+shAq46DuNaT5Phmr8031dr
-	+ZmNvIwgzGEVthvoKqhxP9RZde1V5E/DaIL1B3ohsIp7uWEuGvAi/pOKK0aa0DxMcH/99Ow+txrM5
-	qLChLpKTLUoyqluVo7qgWm/0WZHUMgjAaDffdFWeojv2IxG7fa2MS2GwbRhplBk/rD6is+Ol4u0Et
-	UPR8JuMg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=W8gPN7kNDbm8qtyNa0nO5GiXBN5vG7cPKkydh+QrL3Q=; b=SUvhAWsonmUuRe8hLTw7P8H/+C
+	Zp/1nVox2gfF9hljnNvL+bj08wkSjdPB2KVWVQ5isquxQZOOMfoEvWgwdY4bQxy0mwfVGKsXIbq0d
+	OyipmSXFRIP38nMARbWMGJRo0VGkFjGJZyzu70SGjm/Z57U3bezsj+b5Dd3PnOM7mA7G2i0DgrRAd
+	CrJa286yQQPZeVt/INvsemZe68DWLZrQrLcnvvDpPF4BymYPXrj0/Sc3uXFwVPXyI6qJZy5kWL/lc
+	XsT34fZu2uliKLrAkb2b3OndTnB+Fq+Y8K+D4/HjsN5Zq6r+lecMdETRrQpcKZhBxHC9NBtCEVb1t
+	ho3j9UOw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIsYt-00000007ZHi-2EAh;
-	Fri, 01 May 2026 18:26:03 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1wItd9-00000007cgT-3fmW;
+	Fri, 01 May 2026 19:34:31 +0000
+Received: from mail-qt1-x833.google.com ([2607:f8b0:4864:20::833])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIsYp-00000007ZHP-33gI
-	for kexec@bombadil.infradead.org;
-	Fri, 01 May 2026 18:25:59 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:MIME-Version:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=Ynp4A/JaH22lvkihT3nPFtsXKnzutYHpfXYULBKQQKo=; b=h1FYxIFpWk9RRXlvEoj9nx8kTk
-	OdLB+heOHXZY8UX9nB+7VYyV8IuWnhozDCWjWw7DnQG1XBirlhCMHAj5lLvFBkvHzYhjx/PlPT4Ya
-	noMpaXvKnPIy6ADfGleos4SWpohJxordSxMHPJMPOXjE2dtyMhbTpta0BXUm1LK1kWgm2cnhsgbdY
-	0e46uAWsPjkOBE2uxr6l6LMwpCuO7yh6NI9Bzl53kJkHuQo5PYlUCF+MmKVKOBsWXkZQyNf1zfkLw
-	hScxvBAYSjTF6npISr0fE2zQkNzQ2c12FfH35k2o4IK50Qwxe63NHE0CPYVBVvZuKSY7KVUJgAUib
-	PUy5cW4Q==;
-Received: from mail-dl1-x1231.google.com ([2607:f8b0:4864:20::1231])
-	by desiato.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wIsYm-00000009Hm2-3sLd
+	id 1wItd8-00000007cfy-0qX9
 	for kexec@lists.infradead.org;
-	Fri, 01 May 2026 18:25:58 +0000
-Received: by mail-dl1-x1231.google.com with SMTP id a92af1059eb24-12c726ef332so3485903c88.1
-        for <kexec@lists.infradead.org>; Fri, 01 May 2026 11:25:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777659954; cv=none;
-        d=google.com; s=arc-20240605;
-        b=JlLgqhCDgGpfZRnfhBnDOCPrXfxCOashKJQ0i4m0rG4dknOj4j2F264lOqyw3vYIvJ
-         bRTTPZ9D1SVOCTFwvfmGpTOEuehlvK/FqN81tdmoJ/CdNMWCYR+Orb4g6nFjmkp4hsLp
-         wI0opnaxpJ44FGZaJKAxlsPOQY+4pOH5TanS4t8isZlw2KFWLys7seLmBSdJuudXxodf
-         KEZdMSj++Y0nzDNK7/V1RQRSZxUg7utjzXMEE59pf36w/H2jbTdRd8mu0Id3ztQiHaLo
-         qp4oLYAVB5AxBMiwEIZGz/v6eRsxWqqRSvYx8xUTXe7Vgz/Q+rfV6YodFH/us65c7mNc
-         +SoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Ynp4A/JaH22lvkihT3nPFtsXKnzutYHpfXYULBKQQKo=;
-        fh=GTcRK9lFZ8PHJXY0f5/tCvkJpO0ZkpDbtQFdIhICgIk=;
-        b=EVOIRfuA2FvL91IKpinEKBtX10WTqiv6XK6jxQbYLvQvtWPT/KPl6K/VfcEumlVbG5
-         6+HISCmuSZbICWvcrecfbOx2fCkOD6zkuD/kOOxJD0esEKq8F95ZrCwvyCQVLPSn9ZGf
-         DqhPZf8+RZwwvXwpcvPGFcnIRZy0G7qW0bJmWajaYRraaVZrfcNumDb+gwXux7ErP8B4
-         d6peGBUpYl0I/Wup9G6aIF+D9iGtJftqsxXWG4I2P4w8xHwMFWE3GOivo4vRjso+7tCI
-         jG/YPz91IzRFt6i8ZTHk2obGhPmDHWR2p8o7S7/7uVUit/QXIO49/iuSZqTaxnxP3LSF
-         /cYw==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	Fri, 01 May 2026 19:34:31 +0000
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-50e63771eb0so21304161cf.3
+        for <kexec@lists.infradead.org>; Fri, 01 May 2026 12:34:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777659954; x=1778264754; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ynp4A/JaH22lvkihT3nPFtsXKnzutYHpfXYULBKQQKo=;
-        b=KzZMoHAuFlcpIcLNS2xTqamkTkjtS/ynKt2/PKwExp04oWXsafz4PQ+dlJLIcj30xz
-         W8vkrYeQaNvnyVD+po9lUkrrThF5YNwTYg0aeGm18Kf1UWMrHOS6hwxAaHVRxW5sgUfc
-         oSM9pvfFwFyWItgwHQijclzeVhRRcrJ/gRzKxRKYXDyTsqEKDpwCe5Db4pjWWMPCieyK
-         qMnPbUWYV+yejvuO2MY5K8+zMvC5GZODJIBMoDXCI8z6l1i+QBYZL1z+Ls/rBS/0U2c0
-         InlYYIFvABMk4Sqg7WzrKNjPKr1HucPntPHzR3GwvDntMfXfiUVE3tJIobhOmQplqUOw
-         ng2Q==
+        d=soleen.com; s=google; t=1777664068; x=1778268868; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=W8gPN7kNDbm8qtyNa0nO5GiXBN5vG7cPKkydh+QrL3Q=;
+        b=VWCeftvmutZsGSlEqfy0h3bVeD2awN6BeERRdK5aEdzp7uR9KePrrWUZvXuqsQ+PvE
+         MvrfM8a0E0iauRR5wlA9XgQXw/hFWNMVVCWnVrLtPcRSICOhXkKkMMBDBXOc66yxTael
+         m3ii2EQ2BE6+wyY88VFiwWm1b1WqijnfDBQkL0QVW82OsWrC/1k+Xzg7xADPcNFoW98X
+         ROmzSPpbneZJrU5ADCH7nHGZXbuyKWUuLqdOismJuRujKjcvEqLVEL+SmGzhhiOxOJ6N
+         mEEdFqJGJM3Fn2YLCYm7e80t8Hdn2Ba63HPbzjDjUw9riBNXd9fwl5mriB4Qs+sDTtRc
+         aYdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777659954; x=1778264754;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Ynp4A/JaH22lvkihT3nPFtsXKnzutYHpfXYULBKQQKo=;
-        b=dqFoWchmnpvZjl9QCkK7hoWt7KcUQzbDy7JBPDNbPqTIFrUvDluiAuUrfuQsVa3GL+
-         caFYD8iVjThS6AV4m242QXa9SH6LxS2SUrUchBrHBVkbOZVLCnS4LAP+3YcMkyvwxbFc
-         jB6Nlq4qI26gMoZS7opyJO9yJvFnM3bC/qvcfYjntsj06dRdFNpOK1REzvMc1EEG+BYk
-         uPJIn+C0dqnw/NZ72VGZ+FTZf/cA9eMWLDefuOKagaAMWmG4LdTqhLIz1YIXKbaDVqif
-         IvoTMfcZXkhC+7vt79CRgKzBJ7A9KCIQfcRX8+Tz628HElIY7wiaGOjlzLW2eh5nO/Kp
-         mBGw==
-X-Forwarded-Encrypted: i=1; AFNElJ93WFt4gSe3JdVO4h8kHxRQwJ7kLtQDCapb9tkJbdcGzFwxlMje4khYiOwyLnK6HaO8BUH08Q==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzWNOrL5O4iYgamOurKo1aZTc3TA21ac/thu6m4XDkQDM8NUtoW
-	q7t/fqY/aJtmhpF2c+mBneGMGrkWVgY7GGJDbWidc2G9QlePVv0rfQ4ZwthDZVqBvdg+DRaTErT
-	sNK9sIgToER2+CATYGLkrip8IPy4UQaF00XQwsWNA
-X-Gm-Gg: AeBDieuWuoLOSejJZQsWahlPeOhRCAQC2w555qZKbDMHOnFGgBEUYipbQ/G+FxpSe5f
-	aMLI3nBIBd7LoqOP4HFVWKEFLuxJu7kWQZP2veSC8sqJ8zovU3TjG1nsps22zHnJqF0bubI+517
-	s+UUjFvVzmyeiRG6Fkjkpag5HnMWMSFhIwZoVjLoVy/K2P3qptKtBdlKMlo3r3Mex+8/4rEuZpP
-	Xf7v7ZWP0VusbCkxQK0WDDdJb/wUXZhJKRR3/oEWrroW894enCgwlQT5duXx4CIA2Ujr+QHNwGc
-	jNzeDUicHbqFq9lZqT/zgL6aetE2Nw==
-X-Received: by 2002:a05:7022:ebcc:b0:12b:ec15:69d3 with SMTP id
- a92af1059eb24-12dfd7d88femr150449c88.19.1777659953185; Fri, 01 May 2026
- 11:25:53 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1777664068; x=1778268868;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W8gPN7kNDbm8qtyNa0nO5GiXBN5vG7cPKkydh+QrL3Q=;
+        b=h808Y2FrbHY0t6hL6JjGPy6K2TQbn65NtDP5D5CmujL1wBTb/RpB7SDdIP9kqZBb2b
+         3yjsGg5mdhtM0g/JSb1lG0Z4die9NmWYn35M56fQGvC09fQpJQ0OiPCmLe5sq+nLWFG0
+         gsGIW9gwNHSSvp/Os1CvDRNf48JKA0FH1mZlQ4HUYAvu8iC1ADxt1six2q8h5E28dTnf
+         mdh4Qiyuquchv7bkAJdiQNDfZx5w1czmvDReXPZfWkcF7R463pHg1nwTCIq9fbAn5c+8
+         fjCSPQu68uzG+le+G3levw9uDZm3XAftrvBkyPzwgPf8Xd3VvpiiQkFPlZaXhikTHGms
+         ufMw==
+X-Forwarded-Encrypted: i=1; AFNElJ8o46zlQogu1McQ5O548aJjA4PleeMvtJua085UfI7B6ubNPKseAYEuH0Ru7ps0iiyU3DVUAA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwZiq0VLOHgW6vcHiY689KQeQvR0HNfM4zlogN3IbBJ8CksCjci
+	6CYI907vdOrMAbWYKgQ9E3qNl6m7IXyudVuamx0hyRjhkf6O8JCGiWW6NHd5CzTr5WI=
+X-Gm-Gg: AeBDies2NUPnsXEsvJifPus5HLe6zo2LZjrDbDHSQ4VZBC7D5IL0UGYV2C6RmQvWYPV
+	Gp4zvPguPnUiCj75s5/0Gix4bpRUPSsRe3ki5MgCYYDi4G91nQ96a7YOXxLVvwT7hHoTLqo8alV
+	w28ELSYpIYEJYsm+N1lsvTvTtJKYtlNzmQIbrj5DwEd9NHk8GiMEH/vmls3VGPSFUUVA2QaVC2X
+	eqrTyQ/MYe22Qm6z2tiaKsZnaX6wxtTU+YHbj6bHykXFHlcFfkr8b+q+sA2BDp/kbYvdAW6AaKC
+	XSS5ep0bZgHGFputSn2dqmcULh5iNauRCwX1MzVgx/lwC2aiiTjhUzEa/tcoYmPGZdMXsMzsONF
+	sMyXZ+6WnjK4dQuJwv3UQldjzB/4br+T8MXiXciIIhxXbaoOb5WWjeJ+lq71fLHpqRvMPJyYLk2
+	nxRCnG+uZs5Drd93zMpxdQTsXgC4Vv6+t7Hdz6vhlgdL0X+NDmEJ1kNdFsYwy5CQ==
+X-Received: by 2002:a05:622a:3d3:b0:50f:b1ca:6eb4 with SMTP id d75a77b69052e-5104bdf33b7mr9482351cf.3.1777664068181;
+        Fri, 01 May 2026 12:34:28 -0700 (PDT)
+Received: from plex ([71.181.43.54])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51040b5d1f8sm22318571cf.22.2026.05.01.12.34.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2026 12:34:27 -0700 (PDT)
+Date: Fri, 1 May 2026 19:34:25 +0000
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: Cris Jacob Maamor <crisjacobmaamor@gmail.com>
+Cc: Mike Rapoport <rppt@kernel.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] liveupdate: validate restored LUO metadata
+Message-ID: <afT_xHDuFwAUSR0X@plex>
+References: <20260501094637.38650-1-crisjacobmaamor@gmail.com>
+ <20260501173053.73116-1-crisjacobmaamor@gmail.com>
 MIME-Version: 1.0
-References: <20260423212316.3431746-1-dmatlack@google.com> <20260423212316.3431746-3-dmatlack@google.com>
- <afDqs6oqWlhoVqMN@google.com> <afPGYp145FbrvURR@google.com> <afTgOXpUNWMapPAS@google.com>
-In-Reply-To: <afTgOXpUNWMapPAS@google.com>
-From: David Matlack <dmatlack@google.com>
-Date: Fri, 1 May 2026 11:25:26 -0700
-X-Gm-Features: AVHnY4LHOeLRxPaffc9oaSUdxPiYe323BsN3VXy59mO0tVvOtZ5BkXLT2WRxf9Q
-Message-ID: <CALzav=cJLA3-gK=Ljfqf=YCPML60F=hM_teB67M_3PNCZE4T9w@mail.gmail.com>
-Subject: Re: [PATCH v4 02/11] PCI: liveupdate: Track outgoing preserved PCI devices
-To: Samiullah Khawaja <skhawaja@google.com>
-Cc: iommu@lists.linux.dev, kexec@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-pci@vger.kernel.org, Adithya Jayachandran <ajayachandra@nvidia.com>, 
-	Alexander Graf <graf@amazon.com>, Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Chris Li <chrisl@kernel.org>, David Rientjes <rientjes@google.com>, 
-	Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>, 
-	Joerg Roedel <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, 
-	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, 
-	Parav Pandit <parav@nvidia.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pranjal Shrivastava <praan@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Will Deacon <will@kernel.org>, 
-	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260501173053.73116-1-crisjacobmaamor@gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260501_192557_147905_A7DAC712 
-X-CRM114-Status: GOOD (  30.64  )
+X-CRM114-CacheID: sfid-20260501_123430_251222_C1EE712A 
+X-CRM114-Status: GOOD (  14.46  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -143,59 +101,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, May 1, 2026 at 11:17=E2=80=AFAM Samiullah Khawaja <skhawaja@google.=
-com> wrote:
->
-> On Thu, Apr 30, 2026 at 09:15:14PM +0000, David Matlack wrote:
-> >On 2026-04-28 05:24 PM, Samiullah Khawaja wrote:
-> >> On Thu, Apr 23, 2026 at 09:23:06PM +0000, David Matlack wrote:
-> >
-> >> > +  for (i =3D 0; i < ser->max_nr_devices; i++) {
-> >> > +          /*
-> >> > +           * Start searching at index ser->nr_devices. This should =
-result
-> >> > +           * in a constant time search under expected conditions (d=
-evices
-> >> > +           * are not getting unpreserved).
-> >> > +           */
-> >> > +          int index =3D (ser->nr_devices + i) % ser->max_nr_devices=
-;
-> >> > +          struct pci_dev_ser *dev_ser =3D &ser->devices[index];
-> >>
-> >> nit: Maybe we can move this logic in a separate function as down the r=
-oad
-> >> when we expand this to add VFs and Hotpluggable devices, this might
-> >> change significantly? It's good if it is self-contained.
-> >
-> >Did you mean to leave this comment on pci_flb_preserve() where it
-> >decides how many devices to allocate room for?
->
-> I was talking about this one, as I think depending on the scheme we take
-> this might change significantly. Just a nit, you can ignore it.
+On 05-02 01:30, Cris Jacob Maamor wrote:
+> LUO restores metadata from KHO/FDT during liveupdate. The restored
+> metadata contains physical addresses and count fields used to access and
+> walk preserved session, file set, and FLB arrays.
+> 
+> This series adds a non-consuming KHO preserved-range check and uses it
+> before phys_to_virt() on restored metadata addresses. It also rejects
+> restored counts above LUO_SESSION_MAX, LUO_FILE_MAX, and LUO_FLB_MAX
+> before traversal.
+> 
+> As far as I can tell, this is root/admin-only; I do not have evidence
+> that a normal unprivileged user can trigger it directly.
+> 
+> Changes since v1:
+> - Dropped RFC marking.
+> - Added changelog text to each patch.
+> - No code changes.
+> 
+> Cris Jacob Maamor (5):
+>   kexec: handover: add helper to check preserved page ranges
+>   liveupdate: validate LUO FDT physical address before mapping
+>   liveupdate: validate restored LUO session metadata
+>   liveupdate: validate restored LUO file set metadata
+>   liveupdate: validate restored LUO FLB metadata
 
-It would depend on if userspace is doing a lot of unpreserving as
-well... I'll see what I can do in v5.
+I have replied separately in the security report to clarify that this is 
+not a bug. The behavior follows the ABI specification exactly: we use 
+the PA addresses and ranges provided by the KHO FDT tree.
 
-> >
-> >> > +static inline struct pci_dev_ser *pci_liveupdate_outgoing(struct pc=
-i_dev *dev)
-> >> > +{
-> >> > +  return dev->liveupdate_outgoing;
-> >> > +}
-> >>
-> >> Is this expected to be called under the outgoing lock?
-> >
-> >For now this API is only used during shutdown, at which point userspace
-> >should have already been stopped so drivers should not be changing the
-> >preservation status of an outgoing device. So I don't think this needs
-> >to be under the outgoing lock, but it would be nice to have some more
-> >explicit synchronization.
->
-> Ok that makes sense. I have similar cases in my series, but maybe we can
-> add kdoc regarding these stating in which context this is expected to be
-> used?
+NAK
 
-Yes will do. I'll add some documentation and also restrict it to avoid
-misuse (move to internal pci.h, return a bool instead of pointer, and
-use READ_ONCE()).
+> 
+>  include/linux/kexec_handover.h     |  6 +++++
+>  kernel/liveupdate/kexec_handover.c | 35 ++++++++++++++++++++++++++++++
+>  kernel/liveupdate/luo_core.c       | 10 ++++++++-
+>  kernel/liveupdate/luo_file.c       | 14 ++++++++++--
+>  kernel/liveupdate/luo_flb.c        | 23 +++++++++++++++++++-
+>  kernel/liveupdate/luo_session.c    | 22 +++++++++++++++++--
+>  6 files changed, 104 insertions(+), 6 deletions(-)
+> 
+> -- 
+> 2.53.0
+> 
 
