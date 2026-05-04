@@ -4,63 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90CE5CD3430
-	for <kexec@archiver.kernel.org>; Mon,  4 May 2026 10:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 62DE6FF885A
+	for <kexec@archiver.kernel.org>; Mon,  4 May 2026 10:32:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=PLRTjFWBKckG37I6yYxV0GSOFolcA5HXN3IZ90cH5NI=; b=QDVLt3AI3ePIAZ8EWOOf655uSy
-	F2GIll3C1dTcWU2odxxsTrHy4+RzVob+xSTJAI8mrz0n+MB3gQ7iUIlGQm/nW+dNm+BPJ5s3tZezF
-	9RdeSKBTBzgUvDikju48h6K5vqd0VZ261i/4LA8JkxRVoycbneyVORA+PKF8UKFyJ689G27xVEDE/
-	fBPKYJCFOKsZqX2LUqtWJRQ2eA5JNuFmpxomo/iTbmT+N0gbTnbkQ4GoMzppK8lJ2ZdiUabpfGlXo
-	QTkoCUDCjdq8OytFcc+/2zVbTO18a2Gv64VMkceAotxsVQOLmVMMUfbLCaJ3sE1x3asxHi2LgWU9+
-	t9z/5+yw==;
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=k1pBQ3dmpauwMVc7roa8Vteafz4/mkMyRaEsDsPXXbk=; b=rL8Q7kNw+1omlj26nu1/NUIn8d
+	cOhJRicugX8458ovXy657HbdE7TlQVpLahEmU50kaiKxpJ95BLxKSnVi+VKYnJ23j26tp4+5mj7n4
+	0E5iwnqctRI6pFBf1s7cDJnHcunBzrNYqoZ4cCcWNP6DAlXnNcvNK7BiSKDToyDXlpqBZbRxTMOe3
+	5PqBwl6E9iTxbvOTH4g2jOmGGxMgai1weiGP6FHUpK4+dz64tkSC3v/bLRte6fxTHqM3v99Eb2UqT
+	2Ce/VyzMdc3Obbqx3Z/bIr0LWVoZTyS/IevWDzo8Y27Eoeu8i+UeyCXfBdCjcrORcLyuzZXE0gxbn
+	qoCIOCoA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wJqWq-0000000CvnH-1JeK;
-	Mon, 04 May 2026 10:27:56 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wJqbd-0000000CwNb-3QaY;
+	Mon, 04 May 2026 10:32:53 +0000
+Received: from mail-ed1-x52d.google.com ([2a00:1450:4864:20::52d])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wJqWn-0000000Cvmo-28UP
+	id 1wJqba-0000000CwN2-3BMj
 	for kexec@lists.infradead.org;
-	Mon, 04 May 2026 10:27:54 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id BD08942B1F;
-	Mon,  4 May 2026 10:27:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EFDDC2BCB8;
-	Mon,  4 May 2026 10:27:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777890472;
-	bh=Lm7HRhztFy2nXJJI8dsLt4KOHWAxV7mNAACnnwK3Ulk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=JFUIFciUSLwWOa7NdBlXoMOUqRJnXRW3JpBH7bb0mQP5HKAnyucIXhWo36zrzUid6
-	 xhxoFasBn98GpjRnkeBg+dWhXW/uUPdy8wWqoYQnyrV1FR6IMJf1xBw6bnut1ffovc
-	 0a18Svg8rvBHBtEDIMTMGlkCQfT7F7hWF2zdIGVe8oGQuflhBX0vTC1evldtBn9yVA
-	 2/RKkrbLLZLiavZ9bdEbjEdHd+2FOBwHg601JZHamnHDrq10naFpBsaplQNTNh/Ys0
-	 CNy/poKpl2XOOlc89xa30jvq+64VR6YgLr76amDqOI2l1/gsrDRaSu8SZcuOM/d1cb
-	 Gur7ELofq+kYQ==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Michal Clapinski <mclapinski@google.com>,
-	Pratyush Yadav <pratyush@kernel.org>
-Cc: kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] memblock tests: define MIGRATE_CMA
-Date: Mon,  4 May 2026 12:27:40 +0200
-Message-ID: <20260504102742.3833159-1-pratyush@kernel.org>
-X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
+	Mon, 04 May 2026 10:32:52 +0000
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-65c0891f4e9so6201114a12.1
+        for <kexec@lists.infradead.org>; Mon, 04 May 2026 03:32:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777890768; cv=none;
+        d=google.com; s=arc-20240605;
+        b=iEx+yessliZKkuLCHkZ9PWvNApYKKwfqb9ysU0khoHXz7v7O/N5AnIv9i2R/WTXHnZ
+         DhDtC5o431Mxirv9GiVBIXK1XHpNSWq1izUr7ewYxf7xcOCs4EjxkibwFbmnLBVyK2E8
+         +wGfgw97aGCR/pIvuYqQULOKW9FiFeIC5RhvK3mwZvvJqXFR324pGdmI8tZMochsD+ei
+         oUYXeUAMWkfmi60mXcJbhZpUrOUJ73zQ8bDxBMeh96NpPcwq/WbOIQ57GkXBSCj/0bls
+         +15xTEjbWSOBNCp6U8Q0r+ohm0YyvfaFKWpzMfeX+mtrg9CmdtcAxt/bELdaaoDoaxST
+         8axg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=k1pBQ3dmpauwMVc7roa8Vteafz4/mkMyRaEsDsPXXbk=;
+        fh=x0zaMcq2cfHQni9j03Qjj4BC/r1TlvlMPEmJv8fnttg=;
+        b=kifldW2OoxJM/gRA8wc/GQEk3QOFLnPFfROaQ2nnlcoocb6z+ERdNQVxqYqf/Dvbc1
+         ZmtiJh49ugsvwyKjnuFNfKf27QohxUf/Ap9CW1N/GJjQ3zgm+M+u/v2Zfz2opZngb+LM
+         IDcmUAM9RU7hMGlIbCJ7iG32Qkh8iQ3QKHlyFyI+o5iBlCzGW3EhIpKIW3UyBf+u04un
+         MoQyMNEU7uLEoHNq4aaV98nTdT7dw3WxWoY2eCqD0QI5zjv9z//oDQXeY1NQMJ7EJ0TU
+         qAl1ge1jzAXUUphdjmErAMo+U7VruDrpqrLnYyac7+aEskQExkbeXhmnIJro4ebUH/ww
+         ULNw==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1777890768; x=1778495568; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k1pBQ3dmpauwMVc7roa8Vteafz4/mkMyRaEsDsPXXbk=;
+        b=B0TQnri/083VjmmorlqdDQj4Vl+iKztQnXTc38CxoAM963NhoLXhvhpmOFG1Nv7FrC
+         X8FLyp5G4C7OyfskkO7Nn57uNlrlrE4iy6RNTH5AIi6FSg7qdOmq3kmi0nWzbCYLVj6u
+         j6I3talikmkRzgOlugsoKP6ZTAzYhHUX8MV1+MlPDWQYp+urcvZOmKD7d/+zwQ4G/+P0
+         4M5dlnX+1JMHDLrny/hprxWNUsSF8kaa5jjBgzsZhV2G3dYL9fwfSuLiexKetpRmVXRf
+         WNydiLnDgM4Ovl9OoztRWEz/T0iGQVbnlx+xGrLTPSpWX/EKE0e+U17ErJ/bKZ6VEeM0
+         UmhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777890768; x=1778495568;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=k1pBQ3dmpauwMVc7roa8Vteafz4/mkMyRaEsDsPXXbk=;
+        b=OeUTb30XqaXfXOH1rsFXjVmp25q/yyz4R0bfHXc1rdfrZh1Tj1aXLpTggiVyreqUwl
+         L+B6oytoX10Q1NGVvOq0y7wRbewisBNpZS8B6KU/A+PQBXHB49EWZwULJsLn+LWGEHBz
+         9xXdw8LrQHaTJ3dbMxLuLJQhWKtDpSJ9eeqVyDkGll5TTm7W6fQM0uRHuf7fC1mAbWEF
+         YyU2MHySpViRUrmFzTeWrkZk8Qh/3gViT858nnVYiABplwJk5GMGRPeJZ4ETOmiZ6gGW
+         2fXmd9JN5NpktwUXt4rDRv7XeYlYAPtWUwxE6TQ03TCXJpTwYWmUKLZpWGJjrOjorMzh
+         haVw==
+X-Forwarded-Encrypted: i=1; AFNElJ/GP+/e0lQHfNY3OfYEnd105NEnksvZw8yPQeJpWwZxQU3ICAZLOVbSJAuhsIdH9g0I15SrGg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzrNBkaT6E/wLTCF36eNMjWdMDYp82V2pGrGpES50u1mNSTZVn+
+	2MNuWO/9TZvyuFMIIJEJDpI5BolU5ZMSeNacU1EmNbDFzNaFzRG84EXCQMFIcbWk5voUgl0OCLl
+	IXCUzZBHWV9XxgIzgYG4mol6uGOWBrKLUUBPj6Lo0HPHGBvzj5qiDvVI=
+X-Gm-Gg: AeBDievXjorGR4Dp7DiJdMOp1ux0teoSIW11GdVk2HxCsNs70lTIhUas5IrVcUtk+Zv
+	tx+5rWsQuq9HfhiqofOh8S3XuKiDuZJQijiU9Pa8X6FgMwBvKZnbS9ZNl8Yvjlsb8u9+VUR8xVi
+	peiH4GqBO47nSB6RKgHlhviEtsh4+pDsoA+INOEoq7Unm8O9d6+r4setOHExNLJJmBg/w+ROtcN
+	nbzS461Riz0qUGzVdrrRCKAd/rvvafW5TWVG7xsn1hCN/H0+mGvMNkW091D3QVhkavyi7a5kcQ4
+	fTyU5YAQbtjQt5mf/FjLeo12zhPXz4RfnsrCrNxycs46wxjWWg==
+X-Received: by 2002:a05:6402:a0c6:b0:67c:1fd5:32c8 with SMTP id
+ 4fb4d7f45d1cf-67c1fd535c6mr2725210a12.19.1777890768158; Mon, 04 May 2026
+ 03:32:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20260504102742.3833159-1-pratyush@kernel.org>
+In-Reply-To: <20260504102742.3833159-1-pratyush@kernel.org>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Mon, 4 May 2026 06:32:11 -0400
+X-Gm-Features: AVHnY4L7O8G_KVLgdHkNSHNSESCfg5WNMWa7oZ57dDlBl8aWaYRhiLVDiqRj_wk
+Message-ID: <CA+CK2bChn3bAFBnmD-fNw2zh-JrAaA73DNmm416EbjXr=mTakA@mail.gmail.com>
+Subject: Re: [PATCH] memblock tests: define MIGRATE_CMA
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, Michal Clapinski <mclapinski@google.com>, kexec@lists.infradead.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260504_032753_617377_64026C8A 
-X-CRM114-Status: UNSURE (   8.93  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260504_033250_918722_E31EBCF2 
+X-CRM114-Status: GOOD (  18.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,48 +116,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+On Mon, May 4, 2026 at 6:27=E2=80=AFAM Pratyush Yadav <pratyush@kernel.org>=
+ wrote:
+>
+> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+>
+> kho_scratch_migratetype(), defined in include/linux/memblock.h uses enum
+> migratetype. This breaks build for memblock tests with:
+>
+> ./linux/memblock.h:634:73: error: parameter 2 (=E2=80=98mt=E2=80=99) has =
+incomplete type
+>   634 |                                                        enum migra=
+tetype mt)
+>
+> Fix it by defining enum migratetype and MIGRATE_CMA. As is the case with
+> the other headers in tools/testing/memblock, do not bring in the whole
+> thing, only what is needed.
+>
+> Reported-by: Mike Rapoport <rppt@kernel.org>
+> Closes: https://lore.kernel.org/linux-mm/afcdDm4aAJvNaQqH@kernel.org/
 
-kho_scratch_migratetype(), defined in include/linux/memblock.h uses enum
-migratetype. This breaks build for memblock tests with:
+Link does not open for me.
 
-./linux/memblock.h:634:73: error: parameter 2 (‘mt’) has incomplete type
-  634 |                                                        enum migratetype mt)
+Pasha
 
-Fix it by defining enum migratetype and MIGRATE_CMA. As is the case with
-the other headers in tools/testing/memblock, do not bring in the whole 
-thing, only what is needed.
-
-Reported-by: Mike Rapoport <rppt@kernel.org>
-Closes: https://lore.kernel.org/linux-mm/afcdDm4aAJvNaQqH@kernel.org/
-Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
----
-
-Notes:
-    I didn't add a Fixes here since the commit hash for the deferred series
-    isn't stable yet. Anyway, I think we should fold this into "kho: fix
-    deferred initialization of scratch areas". So random bisects don't land
-    on a broken test.
-
- tools/testing/memblock/linux/mmzone.h | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/tools/testing/memblock/linux/mmzone.h b/tools/testing/memblock/linux/mmzone.h
-index bb682659a12d..8d934ff5b080 100644
---- a/tools/testing/memblock/linux/mmzone.h
-+++ b/tools/testing/memblock/linux/mmzone.h
-@@ -35,4 +35,8 @@ typedef struct pglist_data {
- 
- } pg_data_t;
- 
-+enum migratetype {
-+	MIGRATE_CMA,
-+};
-+
- #endif
-
-base-commit: 74d1099bb4edfca3ce6edc61dbacbed96720034c
--- 
-2.54.0.545.g6539524ca2-goog
-
+> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+> ---
+>
+> Notes:
+>     I didn't add a Fixes here since the commit hash for the deferred seri=
+es
+>     isn't stable yet. Anyway, I think we should fold this into "kho: fix
+>     deferred initialization of scratch areas". So random bisects don't la=
+nd
+>     on a broken test.
+>
+>  tools/testing/memblock/linux/mmzone.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/tools/testing/memblock/linux/mmzone.h b/tools/testing/memblo=
+ck/linux/mmzone.h
+> index bb682659a12d..8d934ff5b080 100644
+> --- a/tools/testing/memblock/linux/mmzone.h
+> +++ b/tools/testing/memblock/linux/mmzone.h
+> @@ -35,4 +35,8 @@ typedef struct pglist_data {
+>
+>  } pg_data_t;
+>
+> +enum migratetype {
+> +       MIGRATE_CMA,
+> +};
+> +
+>  #endif
+>
+> base-commit: 74d1099bb4edfca3ce6edc61dbacbed96720034c
+> --
+> 2.54.0.545.g6539524ca2-goog
+>
 
