@@ -4,90 +4,116 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A8300FF885A
-	for <kexec@archiver.kernel.org>; Mon,  4 May 2026 14:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E6B1FF885A
+	for <kexec@archiver.kernel.org>; Mon,  4 May 2026 17:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=jMK9CbMmL+n4tiRm5m3IaX0DcVz+Sz54nDXJZPFiknU=; b=osaooQU/zy4ZEe+Ns5/m56decF
-	ucCTmjzzjlR484+ibzI07Xf1HaLFXV9qObaKeDj60i02MYEZQByXeSliq2OHQc1mdui5r+mWOsrxR
-	6q00Hpqa+j16GJzZ2rqUY71nRS02C91p/hdoX5bMuEZjPE/k5KUW6sy+yHiQMdVeSQiKk6QbESHNk
-	HGQFmhiIWBVKcw3PuXBas3ea75W+/y6XRPdXAoMFwGaX3fez/iGojchGTHMl9FtthqbxKkO9QhF0p
-	naX9zVa0i2HeGgmt7M8ukCLjS30PNhKhGGazysy+jE3aGY1+vNZL18mp+3ZMaQxzeDzx+53c7kcGh
-	zSH0XMuw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=8DRIGBANyTxbRVKczgT9uBMklmvWRVuW0duqUNmLE+k=; b=iw8m7ZXXu4qlTZrvQMuE5LxZhS
+	9cKw17iWs2k+02H8GKaTv9r8GOaeCuHcjSLlB3RKgKmk/VDpzoN0WwwbJKv0w8Qt7GkLASNS6qfLs
+	yQw4SZmhrEbTHPQ0OJtP/E3zV/GtBAS2WzQ07zpr2VUZQGXIylq2jKA6Sba5HdLRmDs+fU3KceK77
+	dPf2aep5x7a2SaW1o0ecW6lf8s5DG5BD8BG2TEDTh7t7rlaqEj5YjGqnV9FtYM4YfSBQI8jDcPNUO
+	v3/STNTJdY8xDlvW/k1NxUU1NcL0Df5i6Rt8PklEj09wNyHNMXIF2QH3m5TTn2YJr2aIZI2NGid6W
+	ZHfC8Ijw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wJuXW-0000000DUmu-2lLC;
-	Mon, 04 May 2026 14:44:54 +0000
-Received: from mail-qt1-x82d.google.com ([2607:f8b0:4864:20::82d])
+	id 1wJx1p-0000000Dq9p-3K2U;
+	Mon, 04 May 2026 17:24:21 +0000
+Received: from mail-dl1-x122b.google.com ([2607:f8b0:4864:20::122b])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wJuXT-0000000DUka-1VII
+	id 1wJx1l-0000000Dq6n-23Y6
 	for kexec@lists.infradead.org;
-	Mon, 04 May 2026 14:44:54 +0000
-Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-5102582e237so32912211cf.2
-        for <kexec@lists.infradead.org>; Mon, 04 May 2026 07:44:50 -0700 (PDT)
+	Mon, 04 May 2026 17:24:19 +0000
+Received: by mail-dl1-x122b.google.com with SMTP id a92af1059eb24-12c88e5f4aeso2499336c88.0
+        for <kexec@lists.infradead.org>; Mon, 04 May 2026 10:24:15 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777915455; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Wsp/pdm9SGlRTRVpIYhEq8+V27JqSbh1jdmf6npwg0NKx8/MYNL0arj5DJ5oxwEbNH
+         IL8y7woICf287Z+bgsQMfHcxID8rvZYJn7820m2GNZLLMZy5wJPDvEsgLsPT3X4VaDVT
+         PzNJzB0496+vQWz0Fro2bQjLyB8CuMD2c8A9wceAH+WXsxzW42Fn8UIcn7a8HrCgu2ZZ
+         J/QDNyzbZ659Fzp+o+HICE6IyxpRfvlAlBt9c4jXM7oQ5mlY+ArXnDsFv4xcCMOM6ziU
+         xLFi/XyTbNFdTsDFeavEVSXsQHAN0/TDCOmZDESP+vjm9jI6F4PazNEYeVADaOVg4enT
+         HbKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=8DRIGBANyTxbRVKczgT9uBMklmvWRVuW0duqUNmLE+k=;
+        fh=+EpyDx8cW8cXpEPmkdh2DT2CbZr5GIaWrvpmtiSKF/g=;
+        b=Zc0kPOGxBmHEUnR83EQ45pQxsLOsoOAwL1VAZcwQgvDF18M/594ZIccCQbbMBhQBnH
+         Z+mnwKagViPjq/3/wWwOab98ZhWfQoFyGCnvGlsBxH1mUMuOkGePQisDeBHqt9XXXkTR
+         4FCXIn7omzRitOgd57tZO5RmG/T5OW88GtEDRkdyqQRkIxajtrVz9XzuS4PMji7UoBs7
+         uqemS9gQyP02C9UFwZ86wHlVAs/n/GmU2jjFcrp5wLkOK7coexg5NhxrK68p68JmTsd8
+         GRhhjIGUBLIIIkznvfA3n6Mz2OaO/M6y1ZEJ2gJeD9jr3r/jpxT5wXvjXT0hVB91om0M
+         8D/g==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1777905890; x=1778510690; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jMK9CbMmL+n4tiRm5m3IaX0DcVz+Sz54nDXJZPFiknU=;
-        b=K8Nc/xrSyWtl53yh4Ui02qTGRZopImO+EX7Rhl1vc98FoULFzqdqmgF6pNUE9BVeDg
-         JokZywyp6vfEIQKKeH14MeFbCjz5TwTxfS8P7UtFiySYmYQc5zU7gfMuKfEUD4lUyDvb
-         6u8qq4GmbE7cfH4/t2dud7vqPrd6xXntqsuX1U9lDT5dlPRz402UwSDT803RTBXeswmK
-         xzWNBhp2Jv3fvAKZDymjVuO93mgxwVlqN0uguejVJqgqmQj9dH8LoLET7cWadOv2yCH3
-         r/ynizV6ZPn4xsJFEzJ49O55farOVkUj6pJRU7ZeoCOu3o1al+0WJVSzkTs72471V15M
-         OXhA==
+        d=google.com; s=20251104; t=1777915455; x=1778520255; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8DRIGBANyTxbRVKczgT9uBMklmvWRVuW0duqUNmLE+k=;
+        b=WJGmPRtIfMxpvSEPJYHU3FRjQ/BGYbkBh9cjqoS3TjUfmsYA0sFO6JC/puZge6/VAB
+         KaodZ9hltblezr7pXKsrknJJuiibyyY0cZgpvu0e6lCdibUgTPpgxHSfemZicOiL2MZw
+         lutwrW7+2i5+EOtfCvrUapwyLSYBu2vSJoUDut+aVf7zpEfaeOCOL/oqNc54c7fo3szj
+         3xE+oCIKpbNkauo1woaEfPFvj3fy+jcHXWds29ppb9/cjaiKMww5l7OjUIDCTkWWoML5
+         5nPq1l1Rm+y+hHLJ4Ufs/65JR8ahbS5yV9oZJHeq/heoxaMY4kL/+0yhJ0BuusPJqjhp
+         0b+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777905890; x=1778510690;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jMK9CbMmL+n4tiRm5m3IaX0DcVz+Sz54nDXJZPFiknU=;
-        b=dA3UnZIrKnx5QULX2qTn1IVg+33mOXy292oGN5GdP8ItvDJTVPb/Z2e+pT5IAlRjcx
-         8ee6PsWBDEqGYueF6p7Il0Yyz5llV8YwuIFaOy6HkyQ8vvox4dx2EgVZXMh6PxLPxZaA
-         7OuluNfTfMq9tr3j+OuFDGAScAbIhGzPlClGUEgtODkjpViG4QIvfyotWPQb6S8fD1zL
-         45EmvBNEEQTmbUk8VxIrDbC1O4Q3uZmic9KVuLNHTSxVzime7stbLkUkTX/z4RH2HS8C
-         2ma6EgROqF5v+LfNDW4+waoeyGTHVsYPnB7tMHY/jOR9WL3DKMsuwCvNUQ6NCXXVwQlO
-         rzHQ==
-X-Forwarded-Encrypted: i=1; AFNElJ93cwDZNhAQqv5+LxSNTPRMXqDZlv0+zXHalAcuCeAgVvHOSirO51cTKH4IYsj7k3WvezPoLg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyI0atNJlEsL6ekwWk7KlsO32rEfsidOk3glVbLpbPkI8L2Sqh4
-	uG0fVtTaL+8sxG1BsLWcFyjb91zTtvgVj0flHC3c6EGdLavgrs5JL9j8BYtMdvRBPsQ=
-X-Gm-Gg: AeBDiesgw34X+qRa9vPUt9WBeP5zi0t0g6mX8V6+Z9AhQysi6ruWYQ5OqMh3wyao7G3
-	qyTkMixWLua5so+W4H4swcWmdE5wePqc/pQz0w3MdsbMSxcqXxzvq6EidnakBrM8MFXE2vAPIYA
-	gEAk6A2OkxGnnx7cNJIEL2JTA+4w8UBHdmAnF7s1LbXEp256Q2BBw1abO9GnOq/qgJNneTLHEP9
-	2LwicfgKxi4MkWlVjkxIoq7k9eXpYopmmo0dQnZWZinqbjWmWiAGIQkUIytwhxlvHBLJBjt3smV
-	PDeh6MDZOY8e/9zcZJvi8ExAV/vVOCTzl0y8/g9L+TjZmv7yvYw5840tcuMcAcChScpaG1ufsca
-	DsTcGdNgWayCuiD+iHX6ACeNt8nDwiTuorFBEp36pr7qZSOvksM63ICD1WXdv8zpBnmVTLdndi9
-	WSSXzSZl0wMbKaEWvhHMnRMQRjuoIH/pEZTyFBNxSosfwHNYBATuInDUwymuD+5Q==
-X-Received: by 2002:a05:622a:4206:b0:50d:6a40:692a with SMTP id d75a77b69052e-5104be7625cmr148834121cf.18.1777905889904;
-        Mon, 04 May 2026 07:44:49 -0700 (PDT)
-Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51040ba8acdsm100582571cf.31.2026.05.04.07.44.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2026 07:44:49 -0700 (PDT)
-Date: Mon, 4 May 2026 14:44:48 +0000
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Alexander Graf <graf@amazon.com>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Jason Miu <jasonmiu@google.com>, kexec@lists.infradead.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/12] kho: generalize radix tree APIs
-Message-ID: <afiwy31X4WANSk1q@plex>
-References: <20260429133928.850721-1-pratyush@kernel.org>
- <20260429133928.850721-2-pratyush@kernel.org>
+        d=1e100.net; s=20251104; t=1777915455; x=1778520255;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=8DRIGBANyTxbRVKczgT9uBMklmvWRVuW0duqUNmLE+k=;
+        b=CAN2/g8ufaj7IsB2IMBYdCQu6PuK25jE5z88cAbApJbsyxqBZoAOZE/38gjZcWGY/A
+         jxuVxr9AHn6N21rfk67e9qEEfmo/VVh0/rZREUACtX4sUbmfGKjBorYKzUpetKFB9Gdt
+         ESa7P/UjbYo2kfpdJa4OatP+c4mVVpKwUaOQBzt564ByQ8xM7huCj0nWmQK881V5hHzV
+         Yepx31hZFcDJsJ4lQJcf1fAYjnrKRiBtiR86D5V6RMPns577rJ3Q84otYEa8CBUfq+2P
+         k/a5WWPjDU/Gtc/a7vwBxzskN8bP21xLFzr6/DV/1nlHZA4t1g5JiqWhAvthSfk/B8F4
+         AsUQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8CGL1qHWOsH4weoFa7Y7iwQyJK+tyCHUoSgNNSM6+1eIUqaIiDgMZhHqR2P9wEUEFemjQoGA==@lists.infradead.org
+X-Gm-Message-State: AOJu0Ywn2lBR6gWaiwVwu8Md8f2UCLJ1l/E9rxnRMtYic7RquR/TUo0H
+	jWhJQrO9RmX/fFaaLVYhhjBorP9utudO0GB19s8vyqm/SjD0mL45IkIq54A6x5udFheMWkEUoce
+	o5WrkNRqglzHS8cmWpbXWDd2GBzJs4xUpJ0SQH2zO
+X-Gm-Gg: AeBDievpKLNiDDu5bzbDHUQ/kQ7BchYDfMi8WITStebMvH+bp/VgX6FQ+kOP1rKXfxG
+	xCofU+X7cCFTu7CkUqTtKigF51xAh7L8M/BFgUTQ89rtermjgaxWJuwhuXZpwL3x2d+Vgkg5Qi6
+	qypDz8sMnlXZFgQDxrIZrNZRXtBU9+x2AV6jFHAZb7mXVS6yDxhnPh1jSgnJxTNGS8vHq7Ov2zU
+	bcWQGmfgRE6CX3/yPAWghOxKL6+J+wjqX8C+Ohhfdm4aA33DAZwB327YTxSb6l1p1WMXgZ4pPC5
+	t3q/VbjIIuTrViE2HWcb1Xbzcdy7EQ==
+X-Received: by 2002:a05:7022:497:b0:12d:de3e:86af with SMTP id
+ a92af1059eb24-130a9fec67emr177647c88.18.1777915454575; Mon, 04 May 2026
+ 10:24:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260429133928.850721-2-pratyush@kernel.org>
+References: <20260423212316.3431746-1-dmatlack@google.com> <20260423212316.3431746-8-dmatlack@google.com>
+In-Reply-To: <20260423212316.3431746-8-dmatlack@google.com>
+From: David Matlack <dmatlack@google.com>
+Date: Mon, 4 May 2026 10:23:48 -0700
+X-Gm-Features: AVHnY4KOWy2Xw7Jao5yCErgbS2iXWpg2-ZhNYfKSnvLQBaJlNVGZseag5k_UOKw
+Message-ID: <CALzav=cmZzNetCqWjQaG=VO+Fs=TTL3izU01vDUFd-=mRnDAuw@mail.gmail.com>
+Subject: Re: [PATCH v4 07/11] PCI: liveupdate: Inherit ACS flags in incoming
+ preserved devices
+To: iommu@lists.linux.dev, kexec@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-pci@vger.kernel.org
+Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
+	Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Josh Hilke <jrhilke@google.com>, Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, 
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Will Deacon <will@kernel.org>, 
+	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260504_074451_468007_948E635B 
-X-CRM114-Status: GOOD (  43.30  )
+X-CRM114-CacheID: sfid-20260504_102417_712545_B926614E 
+X-CRM114-Status: GOOD (  15.57  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,288 +128,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 04-29 15:39, Pratyush Yadav wrote:
-> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
-> 
-> The KHO radix tree is a data structure that can track the presence or
-> absence of an arbitrary key, with nothing inherently tied to KHO memory
-> preservation tracking. This was one of the design goals of the radix
-> tree. This was done to enable it to be re-used by other users of KHO.
-> 
-> Despite that, the radix tree APIs are very closely tied to KHO memory
-> preservation tracking. Adding a key is done by kho_radix_add_page(),
-> which encodes it as a page tracking operation and takes in PFN and
-> order. kho_radix_del_page() does the same. These functions encode the
-> key internally that goes into the radix tree. kho_radix_walk_tree() does
-> the same by baking the PFN and order into the callback arguments.
-> 
-> Generalize the APIs by taking the key directly and doing the encoding at
-> the callers. Rename the functions to kho_radix_add_key() and
-> kho_radix_del_key(). In practice, this removes a line each from the
-> functions and moves the encoding function call to the callers.
-> Similarly, update kho_radix_tree_walk_callback_t to take the key
-> directly.
-> 
-> To keep the naming convention clearer, rename
-> kho_radix_{encode,decode}_key() to kho_{encode,decode}_radix_key().
-> 
-> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+On Thu, Apr 23, 2026 at 2:23=E2=80=AFPM David Matlack <dmatlack@google.com>=
+ wrote:
+>
+> Inherit Access Control Services (ACS) flags on all incoming preserved
+> devices (endpoints and upstream bridges) during a Live Update.
+>
+> Inheriting ACS flags avoids changing routing rules while memory
+> transactions are in flight from preserved devices. This is also strictly
+> necessary to ensure that IOMMU group assignments do not change across
+> a Live Update for preserved devices, as changing ACS configurations can
+> split or merge IOMMU groups.
+>
+> Signed-off-by: David Matlack <dmatlack@google.com>
 
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com> 
+> @@ -1017,6 +1017,15 @@ void pci_enable_acs(struct pci_dev *dev)
+>         bool enable_acs =3D false;
+>         int pos;
+>
+> +       /*
+> +        * ACS flags must be inherited from the previous kernel during a =
+Live
+> +        * Update for preserved devices (which includes endpoints and any
+> +        * upstream bridges) to avoid changing routing while memory trans=
+actions
+> +        * are in flight.
+> +        */
+> +       if (pci_liveupdate_incoming(dev))
+> +               return;
 
-> ---
->  include/linux/kho_radix_tree.h     | 18 +++----
->  kernel/liveupdate/kexec_handover.c | 76 ++++++++++++++----------------
->  2 files changed, 42 insertions(+), 52 deletions(-)
-> 
-> diff --git a/include/linux/kho_radix_tree.h b/include/linux/kho_radix_tree.h
-> index 84e918b96e53..f368f3b9f923 100644
-> --- a/include/linux/kho_radix_tree.h
-> +++ b/include/linux/kho_radix_tree.h
-> @@ -34,30 +34,24 @@ struct kho_radix_tree {
->  	struct mutex lock; /* protects the tree's structure and root pointer */
->  };
->  
-> -typedef int (*kho_radix_tree_walk_callback_t)(phys_addr_t phys,
-> -					      unsigned int order);
-> +typedef int (*kho_radix_tree_walk_callback_t)(unsigned long key);
->  
->  #ifdef CONFIG_KEXEC_HANDOVER
->  
-> -int kho_radix_add_page(struct kho_radix_tree *tree, unsigned long pfn,
-> -		       unsigned int order);
-> -
-> -void kho_radix_del_page(struct kho_radix_tree *tree, unsigned long pfn,
-> -			unsigned int order);
-> -
-> +int kho_radix_add_key(struct kho_radix_tree *tree, unsigned long key);
-> +void kho_radix_del_key(struct kho_radix_tree *tree, unsigned long key);
->  int kho_radix_walk_tree(struct kho_radix_tree *tree,
->  			kho_radix_tree_walk_callback_t cb);
->  
->  #else  /* #ifdef CONFIG_KEXEC_HANDOVER */
->  
-> -static inline int kho_radix_add_page(struct kho_radix_tree *tree, long pfn,
-> -				     unsigned int order)
-> +static inline int kho_radix_add_key(struct kho_radix_tree *tree, unsigned long key)
->  {
->  	return -EOPNOTSUPP;
->  }
->  
-> -static inline void kho_radix_del_page(struct kho_radix_tree *tree,
-> -				      unsigned long pfn, unsigned int order) { }
-> +static inline void kho_radix_del_key(struct kho_radix_tree *tree,
-> +				     unsigned long key) { }
->  
->  static inline int kho_radix_walk_tree(struct kho_radix_tree *tree,
->  				      kho_radix_tree_walk_callback_t cb)
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> index 33fcf848ef95..ba568d34c5b4 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -85,7 +85,7 @@ static struct kho_out kho_out = {
->  };
->  
->  /**
-> - * kho_radix_encode_key - Encodes a physical address and order into a radix key.
-> + * kho_encode_radix_key - Encodes a physical address and order into a radix key.
->   * @phys: The physical address of the page.
->   * @order: The order of the page.
->   *
-> @@ -95,7 +95,7 @@ static struct kho_out kho_out = {
->   *
->   * Return: The encoded unsigned long radix key.
->   */
-> -static unsigned long kho_radix_encode_key(phys_addr_t phys, unsigned int order)
-> +static unsigned long kho_encode_radix_key(phys_addr_t phys, unsigned int order)
->  {
->  	/* Order bits part */
->  	unsigned long h = 1UL << (KHO_ORDER_0_LOG2 - order);
-> @@ -106,17 +106,17 @@ static unsigned long kho_radix_encode_key(phys_addr_t phys, unsigned int order)
->  }
->  
->  /**
-> - * kho_radix_decode_key - Decodes a radix key back into a physical address and order.
-> + * kho_decode_radix_key - Decodes a radix key back into a physical address and order.
->   * @key: The unsigned long key to decode.
->   * @order: An output parameter, a pointer to an unsigned int where the decoded
->   *         page order will be stored.
->   *
-> - * This function reverses the encoding performed by kho_radix_encode_key(),
-> + * This function reverses the encoding performed by kho_encode_radix_key(),
->   * extracting the original physical address and page order from a given key.
->   *
->   * Return: The decoded physical address.
->   */
-> -static phys_addr_t kho_radix_decode_key(unsigned long key, unsigned int *order)
-> +static phys_addr_t kho_decode_radix_key(unsigned long key, unsigned int *order)
->  {
->  	unsigned int order_bit = fls64(key);
->  	phys_addr_t phys;
-> @@ -144,24 +144,21 @@ static unsigned long kho_radix_get_table_index(unsigned long key,
->  }
->  
->  /**
-> - * kho_radix_add_page - Marks a page as preserved in the radix tree.
-> + * kho_radix_add_key - Add a key to the radix tree.
->   * @tree: The KHO radix tree.
-> - * @pfn: The page frame number of the page to preserve.
-> - * @order: The order of the page.
-> + * @key: The key to add.
->   *
-> - * This function traverses the radix tree based on the key derived from @pfn
-> - * and @order. It sets the corresponding bit in the leaf bitmap to mark the
-> - * page for preservation. If intermediate nodes do not exist along the path,
-> - * they are allocated and added to the tree.
-> + * This function traverses the radix tree based on the key provided. It sets the
-> + * corresponding bit in the leaf bitmap to mark the key as present. If
-> + * intermediate nodes do not exist along the path, they are allocated and added
-> + * to the tree.
->   *
->   * Return: 0 on success, or a negative error code on failure.
->   */
-> -int kho_radix_add_page(struct kho_radix_tree *tree,
-> -		       unsigned long pfn, unsigned int order)
-> +int kho_radix_add_key(struct kho_radix_tree *tree, unsigned long key)
->  {
->  	/* Newly allocated nodes for error cleanup */
->  	struct kho_radix_node *intermediate_nodes[KHO_TREE_MAX_DEPTH] = { 0 };
-> -	unsigned long key = kho_radix_encode_key(PFN_PHYS(pfn), order);
->  	struct kho_radix_node *anchor_node = NULL;
->  	struct kho_radix_node *node = tree->root;
->  	struct kho_radix_node *new_node;
-> @@ -224,22 +221,19 @@ int kho_radix_add_page(struct kho_radix_tree *tree,
->  
->  	return err;
->  }
-> -EXPORT_SYMBOL_GPL(kho_radix_add_page);
-> +EXPORT_SYMBOL_GPL(kho_radix_add_key);
->  
->  /**
-> - * kho_radix_del_page - Removes a page's preservation status from the radix tree.
-> + * kho_radix_del_key - Removes the key from the radix tree.
->   * @tree: The KHO radix tree.
-> - * @pfn: The page frame number of the page to unpreserve.
-> - * @order: The order of the page.
-> + * @key: The key to remove.
->   *
->   * This function traverses the radix tree and clears the bit corresponding to
-> - * the page, effectively removing its "preserved" status. It does not free
-> - * the tree's intermediate nodes, even if they become empty.
-> + * the key, effectively removing it from the tree. It does not free the tree's
-> + * intermediate nodes, even if they become empty.
->   */
-> -void kho_radix_del_page(struct kho_radix_tree *tree, unsigned long pfn,
-> -			unsigned int order)
-> +void kho_radix_del_key(struct kho_radix_tree *tree, unsigned long key)
->  {
-> -	unsigned long key = kho_radix_encode_key(PFN_PHYS(pfn), order);
->  	struct kho_radix_node *node = tree->root;
->  	struct kho_radix_leaf *leaf;
->  	unsigned int i, idx;
-> @@ -270,21 +264,18 @@ void kho_radix_del_page(struct kho_radix_tree *tree, unsigned long pfn,
->  	idx = kho_radix_get_bitmap_index(key);
->  	__clear_bit(idx, leaf->bitmap);
->  }
-> -EXPORT_SYMBOL_GPL(kho_radix_del_page);
-> +EXPORT_SYMBOL_GPL(kho_radix_del_key);
->  
->  static int kho_radix_walk_leaf(struct kho_radix_leaf *leaf,
->  			       unsigned long key,
->  			       kho_radix_tree_walk_callback_t cb)
->  {
->  	unsigned long *bitmap = (unsigned long *)leaf;
-> -	unsigned int order;
-> -	phys_addr_t phys;
->  	unsigned int i;
->  	int err;
->  
->  	for_each_set_bit(i, bitmap, PAGE_SIZE * BITS_PER_BYTE) {
-> -		phys = kho_radix_decode_key(key | i, &order);
-> -		err = cb(phys, order);
-> +		err = cb(key | i);
->  		if (err)
->  			return err;
->  	}
-> @@ -332,15 +323,14 @@ static int __kho_radix_walk_tree(struct kho_radix_node *root,
->  }
->  
->  /**
-> - * kho_radix_walk_tree - Traverses the radix tree and calls a callback for each preserved page.
-> + * kho_radix_walk_tree - Traverses the radix tree and calls a callback for each key.
->   * @tree: A pointer to the KHO radix tree to walk.
->   * @cb: A callback function of type kho_radix_tree_walk_callback_t that will be
-> - *      invoked for each preserved page found in the tree. The callback receives
-> - *      the physical address and order of the preserved page.
-> + *      invoked for each key in the tree.
->   *
->   * This function walks the radix tree, searching from the specified top level
-> - * down to the lowest level (level 0). For each preserved page found, it invokes
-> - * the provided callback, passing the page's physical address and order.
-> + * down to the lowest level (level 0). For each key found, it invokes the
-> + * provided callback.
->   *
->   * Return: 0 if the walk completed the specified tree, or the non-zero return
->   *         value from the callback that stopped the walk.
-> @@ -365,7 +355,8 @@ static void __kho_unpreserve(struct kho_radix_tree *tree,
->  	while (pfn < end_pfn) {
->  		order = min(count_trailing_zeros(pfn), ilog2(end_pfn - pfn));
->  
-> -		kho_radix_del_page(tree, pfn, order);
-> +		kho_radix_del_key(tree, kho_encode_radix_key(PFN_PHYS(pfn),
-> +							     order));
->  
->  		pfn += 1 << order;
->  	}
-> @@ -498,13 +489,16 @@ static struct page *__init kho_get_preserved_page(phys_addr_t phys,
->  	return pfn_to_page(pfn);
->  }
->  
-> -static int __init kho_preserved_memory_reserve(phys_addr_t phys,
-> -					       unsigned int order)
-> +static int __init kho_preserved_memory_reserve(unsigned long key)
->  {
->  	union kho_page_info info;
->  	struct page *page;
-> +	unsigned int order;
-> +	phys_addr_t phys;
->  	u64 sz;
->  
-> +	phys = kho_decode_radix_key(key, &order);
-> +
->  	sz = 1 << (order + PAGE_SHIFT);
->  	page = kho_get_preserved_page(phys, order);
->  
-> @@ -858,7 +852,8 @@ int kho_preserve_folio(struct folio *folio)
->  	if (WARN_ON(kho_scratch_overlap(pfn << PAGE_SHIFT, PAGE_SIZE << order)))
->  		return -EINVAL;
->  
-> -	return kho_radix_add_page(tree, pfn, order);
-> +	return kho_radix_add_key(tree, kho_encode_radix_key(PFN_PHYS(pfn),
-> +							    order));
->  }
->  EXPORT_SYMBOL_GPL(kho_preserve_folio);
->  
-> @@ -876,7 +871,7 @@ void kho_unpreserve_folio(struct folio *folio)
->  	const unsigned long pfn = folio_pfn(folio);
->  	const unsigned int order = folio_order(folio);
->  
-> -	kho_radix_del_page(tree, pfn, order);
-> +	kho_radix_del_key(tree, kho_encode_radix_key(PFN_PHYS(pfn), order));
->  }
->  EXPORT_SYMBOL_GPL(kho_unpreserve_folio);
->  
-> @@ -916,7 +911,8 @@ int kho_preserve_pages(struct page *page, unsigned long nr_pages)
->  		while (pfn_to_nid(pfn) != pfn_to_nid(pfn + (1UL << order) - 1))
->  			order--;
->  
-> -		err = kho_radix_add_page(tree, pfn, order);
-> +		err = kho_radix_add_key(tree, kho_encode_radix_key(PFN_PHYS(pfn),
-> +								   order));
->  		if (err) {
->  			failed_pfn = pfn;
->  			break;
-> -- 
-> 2.54.0.545.g6539524ca2-goog
-> 
+Sashiko caught that pci_enable_acs() is also called from
+pci_restore_state() so this patch needs a fix to ensure that ACS flags
+do not change or get lost after a save+reset+restore.
 
