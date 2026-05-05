@@ -4,81 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1A50FCD342C
-	for <kexec@archiver.kernel.org>; Tue,  5 May 2026 00:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0658ACD342C
+	for <kexec@archiver.kernel.org>; Tue,  5 May 2026 00:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zufAZqrs7wE5NdNZHdqCW4lBwECX6d0FSow8KZpRsP8=; b=hrA8oukfa4j49rBq543C3eFl3H
-	KHWktBIhrYfixmtCR1Z14XfQqjLtXViymBofqiwykAFFES6SFpTQhIOYu2zNV5MTeHyJ2kcvFw04/
-	TCBUp/y4pgIOzwmwuIu99PVEmsv0LTa4M9ZHcn1mm1NDGTAHvBDR4D4ZiFevMIdbDAoVEAfX7y6+L
-	wJvD9bPJ3bTI9wsxnMpExYtoPHJSPl29D3/AxQnv4+Ja/YZlWC6XvGZv3gR1suaxvared5xfG5gBI
-	6qCTGU02vz9h42DC2rqMdAAemi1G7Vt7DT2/VScOjgUVMIOARkXLipvxSc7UM76v6/NLj9jmq+tr5
-	59XLCPRQ==;
+	bh=mJ2Sv+3oMbNngKzUZrpFVSbPEqlLqAid/lINt850Zv4=; b=dOypxQP8VdT7+7XU8hmHaireAT
+	V6VPSmAvkcXWmzvT4zRHsp8AjFKNdeYQTPoHq4fjhOiCtBWixosdyMNd1GzibwkopXfO8R76hQd4Y
+	hI2EQfKb43qmhLgxdE0GyjVlWwBle3qJXhiWSM+wIqfIOLtRNHbK9jlPXX87d5jlny6ZnMU7xtBHq
+	Xkb/zZvIXk1mpIYhc1rtyT/U9aPz5b7ON0w5Cd3xNDC1775df654FjyBZD15PtQxGvJ/H8BJFuYZG
+	Jvjtcx+m5QCypFb05YmZ++C5Jb9mjZCKp3sP7EFWZWZ1fdTP/9B/FgrEpKtQ6CV8QK1RDT2zLVktC
+	VWNYVIOQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wK3de-0000000EiWz-3Ez4;
-	Tue, 05 May 2026 00:27:50 +0000
-Received: from mail-pf1-x449.google.com ([2607:f8b0:4864:20::449])
+	id 1wK3fr-0000000EipG-15j0;
+	Tue, 05 May 2026 00:30:07 +0000
+Received: from mail-pl1-x62c.google.com ([2607:f8b0:4864:20::62c])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wK3db-0000000EiTY-3FZA
+	id 1wK3fp-0000000EioU-2hJK
 	for kexec@lists.infradead.org;
-	Tue, 05 May 2026 00:27:48 +0000
-Received: by mail-pf1-x449.google.com with SMTP id d2e1a72fcca58-82fa5ecd760so2048374b3a.0
-        for <kexec@lists.infradead.org>; Mon, 04 May 2026 17:27:46 -0700 (PDT)
+	Tue, 05 May 2026 00:30:06 +0000
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-2b2e8b95bdbso23465ad.0
+        for <kexec@lists.infradead.org>; Mon, 04 May 2026 17:30:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777940866; x=1778545666; darn=lists.infradead.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zufAZqrs7wE5NdNZHdqCW4lBwECX6d0FSow8KZpRsP8=;
-        b=wmR9A5AMNZt24wjpk8uGc8wcgHhtqrG7/Xpuhu5E9lsqrmYxOPVVsr16xtiyivtu/t
-         KH1fTnt02ubpIo/32rF8IzbXdeH9zazkvctqdanxkOQvjb4qhpHqVbrxhcggUZ+cxGLo
-         HNTzmvtSndaVfTG8IwbhfsZVOUXAVl1XQ1jwhl6yeaR4z+1gOIynTxCJEQOhuIMUH106
-         1WuEuqiEzQ04/+1iwl52VnBneMH30TQQDYl9zTZPHkzemCefZyBQn7CSd3WqtbZIKp1P
-         TJHOc7ak7wx5/DUR5uGu39pK164MYvN1AyGToh+3UdUDo9OPw/r/8SJmhbiIsyjbBJYl
-         SqoA==
+        d=google.com; s=20251104; t=1777941004; x=1778545804; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mJ2Sv+3oMbNngKzUZrpFVSbPEqlLqAid/lINt850Zv4=;
+        b=h2uV1Bt0K4em2l73HMMVOm2zd/njSLfVoo8T79WUJQ2lrmvqM2EW7lu3z7Q4QcX/QS
+         AVpFHh6bmbNxktjLQboQRF57z2nfK3sqx9Hd9ACRuPNmA6wZvXP2QBVJvHfnggBd+Pv2
+         0tqjzL94RlkzqTLDxQZqI8Uqfv3WlFwvpRvVL8gXmx7GTlViZdVEqgPKHBCLGXFecXtf
+         gYSBJ2jKKEgUaisMuX46qK6nBikGVJYOlNIUrRfo/MRZLIV+Hz3bCU35d9n0ay5AP48v
+         PikO+ARB/tVbpv7NIBgskUuEQjZh6KvqfiBzXG49REY8aFv3bOl4/N0YhXM4qvxsDbFO
+         aRYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777940866; x=1778545666;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zufAZqrs7wE5NdNZHdqCW4lBwECX6d0FSow8KZpRsP8=;
-        b=ptZwb8zBrl38MSIqg9TcIqcGVK9mFuEJW+qnsXd30nkoRA8EHOw3IlYokQq9J+WSjC
-         UCZjZVM38uVacSnYD1DBNj08dAZJDc1E73EYBkb4taXRQH2oF1FY109tULSVqdReMqVR
-         1NYxutOaZj2M8krrRGT47F2phEeBEH7zBjPbKfYrTLni8xfasMm6r7WzrZGjQksE+syv
-         hhQEgvbwyALjiPDQt1ef2kolYD1QZAxR6UkixmExTpKArqIUxOkZZ7FNSAPHpiUbs9Ck
-         8Y0iRBjhDmbWb7YCVm/aUZ2y0SQ2hrLuaq3cSunGvX+42BtXkBfFe0bClkJ7OZllcHot
-         r3dQ==
-X-Forwarded-Encrypted: i=1; AFNElJ82yXWmZn+fF/ngVkR02kFlA+JrYy+3KrM7mHAQOSKWzePBAC3TGHN6yOGRaxn6XZHAHeNWcA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzAX2W+uMQ1QhgYZn/UrcztMNe140tL04soh6mvP5lNJMj9SocN
-	MZMoNss9oL9oBfrMzRo+RDHNrC8C0MQ1e/K6wj7foHmyPsmKMnfkEfeQmVmIYFazl4N2Y51uYwb
-	ZxxpCYZzkJB2I8Q==
-X-Received: from pfbmb14.prod.google.com ([2002:a05:6a00:760e:b0:838:5125:b5e4])
- (user=skhawaja job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:3003:b0:835:42cf:1f7a with SMTP id d2e1a72fcca58-83921ef6cf1mr905533b3a.6.1777940865363;
- Mon, 04 May 2026 17:27:45 -0700 (PDT)
-Date: Tue,  5 May 2026 00:27:37 +0000
-In-Reply-To: <20260505002737.2213734-1-skhawaja@google.com>
-Mime-Version: 1.0
-References: <20260505002737.2213734-1-skhawaja@google.com>
-X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-Message-ID: <20260505002737.2213734-5-skhawaja@google.com>
-Subject: [RFC PATCH 4/4] dma-mapping: Add API to preserve/restore DMA allocation
+        d=1e100.net; s=20251104; t=1777941004; x=1778545804;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mJ2Sv+3oMbNngKzUZrpFVSbPEqlLqAid/lINt850Zv4=;
+        b=fyVbzSk3WRI/MbBbnf+mMJkIYyU0pezbH39scoNC6IxHFw+TBo1w64vLkApwPL5aew
+         vnbmLzZGxXdlTFLXsP7Mck7pZuBbyfIPksd8BKzb296NU4WBFL/wWZa2+poAcZzvrHrh
+         vKnS5+A++KQARW/OiyuEUckhtVuSwFuETCjc2UTZYH6quIlefmQPSicBkaA1M9aXtAgt
+         lsaMVM2+kFKUbujPt43aYkQwQKIBVK93lulAyrwh5j4aycRCR5wPYrRrnwJK+i3pnlLV
+         sr3FjpjgyJDOjMAdg0vZd+LEvpWrojdcjvbtCCtGr2R/ECBsF87DdgFOu1VYDKar6hk4
+         6egw==
+X-Forwarded-Encrypted: i=1; AFNElJ/LF6GCfUfezuFlQoA5qFGkAdUxbt7KeuXKLnjbfvYOU5mCXFypxrGy6caP93na+KNQZenk4g==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yykqc8D6yP748nKb0srAjlmH58eFEL/enxxzPd99MkmA6xjlOA5
+	O96lzeYmZFrT1Ttay71cdzJ8sOtz3M5PwlB8byBOwxal5MfRuLc8igza3zEA45Gpng==
+X-Gm-Gg: AeBDieudBZ9hZzUyfjWGsl3vhK5ZT7m52kkJ6J0rhS3yz7lysSjdDX5agt8YPryvPHq
+	BJCmAo3xei6QIRlD9ZiwRWoL2qykG4rVionqA20mk8MzsvwoftXmLH1kFGzVuUhSoSlUsJ316hi
+	JRr2J3+c/FaeCQd6CJr6j7P+93BnFQL+Hx/AlMNvKMUO7TnAyE8bi/jYJr/MvPalgyFJoJNdTZJ
+	LIjTCPrrpfH2IDUqKTpdkAKkoBvZS5fEKuDd+D7Q1pnimSrfLLJyntXqWP7t5hl8KBj7GX27fQF
+	M7/zqjXSLjq56ce4ratIdK0TtektLAsF83fyOyhFFuh/0oyyRvfd/+gYZlOhXG7QGTi4ay0kOfi
+	53RvvDQGlS5mmIrxlT4khhzDOc8paBgkH0LmFu+Ad+uvDi5Y1HzUZFShwL0qweRA65N1t2ZbO40
+	AX0SCyWeXZWUUrRFO850skUVpKh2ohG01TaAuIlEWSejy7VaZlJzqlHftRSIEE4x0LQxBjgvU3x
+	lgLT9nRpUIzB5KdTr8/SA==
+X-Received: by 2002:a17:903:46c5:b0:2b7:b03d:9dce with SMTP id d9443c01a7336-2ba4f9cf2d3mr1830885ad.18.1777941003113;
+        Mon, 04 May 2026 17:30:03 -0700 (PDT)
+Received: from google.com (195.236.83.34.bc.googleusercontent.com. [34.83.236.195])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b9cae110acsm107750285ad.42.2026.05.04.17.30.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2026 17:30:02 -0700 (PDT)
+Date: Tue, 5 May 2026 00:29:58 +0000
 From: Samiullah Khawaja <skhawaja@google.com>
-To: Marek Szyprowski <m.szyprowski@samsung.com>, Will Deacon <will@kernel.org>, 
-	Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Samiullah Khawaja <skhawaja@google.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
-	Robin Murphy <robin.murphy@arm.com>, Kevin Tian <kevin.tian@intel.com>, iommu@lists.linux.dev, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+To: Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Will Deacon <will@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, 
+	Alexander Graf <graf@amazon.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Kevin Tian <kevin.tian@intel.com>, iommu@lists.linux.dev, kexec@lists.infradead.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	David Matlack <dmatlack@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
 	Pranjal Shrivastava <praan@google.com>, Vipin Sharma <vipinsh@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [RFC PATCH 0/4] dma-mapping: Add preservation of direct
+ allocations
+Message-ID: <afk5m8xwYqNstzPw@google.com>
+References: <20260505002320.2210067-1-skhawaja@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20260505002320.2210067-1-skhawaja@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260504_172747_820486_2F0E7A79 
-X-CRM114-Status: GOOD (  11.26  )
+X-CRM114-CacheID: sfid-20260504_173005_695299_8FEF8213 
+X-CRM114-Status: UNSURE (   8.72  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,161 +106,13 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add new DMA APIs that allow preserving/restoring DMA allocations across
-live update.
+On Tue, May 05, 2026 at 12:23:16AM +0000, Samiullah Khawaja wrote:
+>This is an RFC to discuss the preservation of DMA allocations for
+>devices that are using direct allocation mode. Note preservation here
+>means preservation of physical memory only using KHO. IOVAs and IOMMU
+>mappings are out of scope.
+>
 
-Signed-off-by: Samiullah Khawaja <skhawaja@google.com>
----
- include/linux/dma-mapping.h | 50 +++++++++++++++++++++++++++++++++++
- kernel/dma/mapping.c        | 52 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 102 insertions(+)
-
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index db8ab24a54f4..3756fc15467b 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -210,6 +210,15 @@ void *dma_vmap_noncontiguous(struct device *dev, size_t size,
- void dma_vunmap_noncontiguous(struct device *dev, void *vaddr);
- int dma_mmap_noncontiguous(struct device *dev, struct vm_area_struct *vma,
- 		size_t size, struct sg_table *sgt);
-+#ifdef CONFIG_DMA_LIVEUPDATE
-+int dma_preserve_allocation_attrs(struct device *dev, void *cpu_addr,
-+				  size_t size, dma_addr_t dma_handle,
-+				  unsigned long attrs, u64 *state);
-+void dma_unpreserve_allocation(struct device *dev, u64 state);
-+void *dma_restore_allocation_attrs(struct device *dev, size_t size,
-+				   dma_addr_t *dma_handle, gfp_t gfp,
-+				   unsigned long attrs, u64 state);
-+#endif
- #else /* CONFIG_HAS_DMA */
- static inline dma_addr_t dma_map_page_attrs(struct device *dev,
- 		struct page *page, size_t offset, size_t size,
-@@ -496,6 +505,26 @@ static inline bool dma_need_unmap(struct device *dev)
- }
- #endif /* !CONFIG_HAS_DMA || !CONFIG_DMA_NEED_SYNC */
- 
-+#if !defined(CONFIG_DMA_LIVEUPDATE) || !defined(CONFIG_HAS_DMA)
-+static inline int dma_preserve_allocation_attrs(struct device *dev, void *cpu_addr,
-+						size_t size, dma_addr_t dma_handle,
-+						unsigned long attrs, u64 *state)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static inline void dma_unpreserve_allocation(struct device *dev, u64 state)
-+{
-+}
-+
-+static inline void *dma_restore_allocation_attrs(struct device *dev, size_t size,
-+						 dma_addr_t *dma_handle, gfp_t gfp,
-+						 unsigned long attrs, u64 state)
-+{
-+	return NULL;
-+}
-+#endif
-+
- struct page *dma_alloc_pages(struct device *dev, size_t size,
- 		dma_addr_t *dma_handle, enum dma_data_direction dir, gfp_t gfp);
- void dma_free_pages(struct device *dev, size_t size, struct page *page,
-@@ -618,6 +647,27 @@ static inline void *dma_alloc_coherent(struct device *dev, size_t size,
- 			(gfp & __GFP_NOWARN) ? DMA_ATTR_NO_WARN : 0);
- }
- 
-+static inline int dma_preserve_coherent_allocation(struct device *dev, void *cpu_addr,
-+						   size_t size, dma_addr_t dma_handle, u64 *state)
-+{
-+	return dma_preserve_allocation_attrs(dev, cpu_addr, size,
-+					     dma_handle, 0, state);
-+}
-+
-+static inline void dma_unpreserve_coherent_allocation(struct device *dev, u64 state)
-+{
-+	dma_unpreserve_allocation(dev, state);
-+}
-+
-+static inline void *dma_restore_coherent_allocation(struct device *dev, size_t size,
-+						    dma_addr_t *dma_handle,
-+						    gfp_t gfp, u64 state)
-+{
-+	return dma_restore_allocation_attrs(dev, size, dma_handle, gfp,
-+					    (gfp & __GFP_NOWARN) ? DMA_ATTR_NO_WARN : 0,
-+					    state);
-+}
-+
- static inline void dma_free_coherent(struct device *dev, size_t size,
- 		void *cpu_addr, dma_addr_t dma_handle)
- {
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 23ed8eb9233e..c315b74a0884 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -12,6 +12,8 @@
- #include <linux/gfp.h>
- #include <linux/iommu-dma.h>
- #include <linux/kmsan.h>
-+#include <linux/kexec_handover.h>
-+#include <linux/kho/abi/dma_alloc.h>
- #include <linux/of_device.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
-@@ -628,6 +630,56 @@ u64 dma_get_required_mask(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(dma_get_required_mask);
- 
-+#ifdef CONFIG_DMA_LIVEUPDATE
-+int dma_preserve_allocation_attrs(struct device *dev, void *cpu_addr,
-+				  size_t size, dma_addr_t dma_handle,
-+				  unsigned long attrs, u64 *state)
-+{
-+	const struct dma_map_ops *ops = get_dma_ops(dev);
-+
-+#ifdef CONFIG_DMA_DECLARE_COHERENT
-+	return -EOPNOTSUPP;
-+#endif
-+
-+	if (dma_alloc_direct(dev, ops))
-+		return dma_direct_preserve_allocation(dev, cpu_addr, size,
-+						      dma_handle, attrs,
-+						      state);
-+
-+	return -EOPNOTSUPP;
-+}
-+EXPORT_SYMBOL(dma_preserve_allocation_attrs);
-+
-+void dma_unpreserve_allocation(struct device *dev, u64 state)
-+{
-+	const struct dma_map_ops *ops = get_dma_ops(dev);
-+
-+	if (dma_alloc_direct(dev, ops))
-+		dma_direct_unpreserve_allocation(dev, state);
-+}
-+EXPORT_SYMBOL(dma_unpreserve_allocation);
-+
-+void *dma_restore_allocation_attrs(struct device *dev, size_t size,
-+				   dma_addr_t *dma_handle, gfp_t gfp,
-+				   unsigned long attrs, u64 state)
-+{
-+	const struct dma_map_ops *ops = get_dma_ops(dev);
-+
-+	WARN_ON_ONCE(!dev->coherent_dma_mask);
-+
-+#ifdef CONFIG_DMA_DECLARE_COHERENT
-+	return NULL;
-+#endif
-+
-+	if (dma_alloc_direct(dev, ops))
-+		return dma_direct_restore_allocation(dev, size, dma_handle,
-+						     gfp, attrs, state);
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL(dma_restore_allocation_attrs);
-+#endif
-+
- void *dma_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_handle,
- 		gfp_t flag, unsigned long attrs)
- {
--- 
-2.54.0.545.g6539524ca2-goog
-
+Sorry, please ignore this separate cover letter email. It was sent by
+mistake and has wrong prerequisite-patch-id.
 
