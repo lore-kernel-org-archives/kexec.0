@@ -4,71 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4AD77CD3427
-	for <kexec@archiver.kernel.org>; Tue,  5 May 2026 14:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8F9C7FF8855
+	for <kexec@archiver.kernel.org>; Tue,  5 May 2026 14:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
 	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=A5XI44hKG77Ra0iqvcdb+6TyYaxDfDQPne1XKTTGPmw=; b=WXPZ582xMslpoJ8K8s8IuggIOi
-	B92irumJWckdQZ5hhQkhi731NckINSbBrYMwFZvK9AboWaeYnl9LkVicfiLFB4e389OVA5X4YmdnL
-	1sCPHbOrtPX15SwJZGlCwwGE40W53Ib/ZhxF+ouPY88Nkai1lt+3zDrPICd2abo1ZdCsnj8/hqFIk
-	wQ6oadRqY97KsqraHmoMAXZeEd/solnBCR26FJdKzceFZKaCgacNQKpGlvfRQwWoPfAJ7DA4nphtA
-	a58rfjik8Hs9hLb+km5hwfwQ2FvyHYyIX9NDWOZVo3eoMtzFr3/dNueFqn8NS1lsRCIzQiVQK0Gq5
-	qf2mqtYQ==;
+	bh=QIiq2TnXV7VX9raoqze+A9x750gza/lup4FagaRDuO0=; b=pF4lh+Zq1rgEs+lgi/6N7kizyZ
+	QSYbK9LKbw94/74WG5URh4l7B3aUAcShUBhbDboMhuvVduECga++FkNGty6b3eQX8Dk/gtxUE7GaK
+	IDpP63AlXMjVXW03FQkhoSwbWlYWqMyTkSsFgqgVG9/g9S50kyq59a4LyEx9IBXpeJavsk4Vh4P2O
+	i6oAUo5VJP/jjq4ESfUKOsxW6EGrNURPdmcWQvlmJQh6mh5pc4EMBvwJMzPmW4JU1vsvL0V9y/DKS
+	Ce7WSNq+Np3G4rq2KGCxzaZt+fy+MfiZ5Ue6PFPLjbdNhL/NJeYLmgDhItFJFd+lb5S6kJDbdGBfE
+	lIz9S4Uw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wKGwR-0000000GXfW-2y68;
-	Tue, 05 May 2026 14:40:07 +0000
-Received: from mgamail.intel.com ([192.198.163.9])
+	id 1wKGyL-0000000GY1d-1lSs;
+	Tue, 05 May 2026 14:42:05 +0000
+Received: from mgamail.intel.com ([198.175.65.17])
 	by bombadil.infradead.org with esmtps (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wKGwP-0000000GXeu-1lzp
+	id 1wKGyJ-0000000GY0j-1XNG
 	for kexec@lists.infradead.org;
-	Tue, 05 May 2026 14:40:06 +0000
+	Tue, 05 May 2026 14:42:04 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777992006; x=1809528006;
+  t=1777992124; x=1809528124;
   h=date:from:to:cc:subject:message-id;
-  bh=/AfrNIfZRXvwehyGvNnbMHbzzEppqydJTY6OMzet67o=;
-  b=dAHg0XbQyUwbTL6Dp2U4wg3T6ECpjfNwTeLU790/NM3tKL8XkHPpqJOF
-   MEVC4TTEr9wCsIMO4epNbmNiu2Bzunsm0KP3xw8VfPMlX/uPZjC0aml5D
-   CO3sr3k8nR2fflfzsLU0qchApTutdKarrF+MniTUKUqP1AbJyqpMSoHuI
-   lMWzBqJynX4fIxhQBnbaPsZQr9lsnEnG/CCo1YfFAC1qGiRCaApiXJUVv
-   VqGrEKSx1yyudZ9i+CqLODqZwPx6r5vAAUA3hEfy0Ys2DlIrVq/Aaktzg
-   8b7nr801v59cMdYc9JDSXpspq69Jub2svih1rBgNeUK4H6fvSGfFEvCfB
-   g==;
-X-CSE-ConnectionGUID: DKnAr/zjSGSEA5Def+E+cQ==
-X-CSE-MsgGUID: dOnUaQNpQHaA5kKvh+/Kiw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11777"; a="89560855"
+  bh=R2l/A68HQVp3IbjqC3S9JCzt16Z0+4ii9EKlQw3R2Sw=;
+  b=D9NqR0aFSFUlMGSAWGVxKqIhXduFwJmTfku2gfO22clWvtRdSPdeYFxi
+   A602b5u1sJMf2pPu/0mGelSLG4Htdg2cXQtOg1+EuTgMvlSI+L8yeUz9t
+   pw2i1fW7d7V+y/n7jXEf8xD0S8kqXaxJPBJqf82BzFoCQ7yL33CNc4+rI
+   uLg+CVtfcc65xILir3JKVI8tyiprStzTYDYjaqzxFl4JJzmfgooZk9ybc
+   32pWxcN7VXb+/uJjj55qiy18cD9LjRGvBdFAPChaz1c5pzRsSWtSCHUVR
+   9Zj9NBw+Vd8YMJs5AhfByMOm5gVhIXli9vaofztvcbgjX/Z/QtkMQK3YM
+   w==;
+X-CSE-ConnectionGUID: f3OuvZ9hTrGrRuJHt4H6yQ==
+X-CSE-MsgGUID: j0kHlZvZS7S2KfL0sZE58Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11777"; a="78855084"
 X-IronPort-AV: E=Sophos;i="6.23,217,1770624000"; 
-   d="scan'208";a="89560855"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2026 07:40:05 -0700
-X-CSE-ConnectionGUID: 3L+ffaT9Sn2M7TzIR9y3Ew==
-X-CSE-MsgGUID: I+U71LTNQliniS9K9oKmxQ==
+   d="scan'208";a="78855084"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2026 07:42:03 -0700
+X-CSE-ConnectionGUID: RCjeVhqjQoi5TiwzanVuCA==
+X-CSE-MsgGUID: UV+39sibQL+eL5w7qFRjXw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,217,1770624000"; 
-   d="scan'208";a="273963164"
 Received: from lkp-server01.sh.intel.com (HELO 9ec114424ce8) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 05 May 2026 07:40:01 -0700
+  by fmviesa003.fm.intel.com with ESMTP; 05 May 2026 07:42:01 -0700
 Received: from kbuild by 9ec114424ce8 with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1wKGwI-000000000BD-2EZ1;
-	Tue, 05 May 2026 14:39:58 +0000
-Date: Tue, 05 May 2026 22:39:37 +0800
+	id 1wKGyE-000000000BP-2c1R;
+	Tue, 05 May 2026 14:41:58 +0000
+Date: Tue, 05 May 2026 22:41:30 +0800
 From: kernel test robot <lkp@intel.com>
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
-Subject: [liveupdate:next] BUILD SUCCESS
- 34e8f02817e31826e76bb2ded48bf28fe921f20b
-Message-ID: <202605052226.KhaMXhKJ-lkp@intel.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, kexec@lists.infradead.org
+Subject: [liveupdate:fixes] BUILD SUCCESS
+ 7b0b68b2b95606e65594958686833e53423f58f2
+Message-ID: <202605052220.9ieZmn1z-lkp@intel.com>
 User-Agent: s-nail v14.9.25
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260505_074005_485351_DAE34E71 
-X-CRM114-Status: UNSURE (   3.79  )
+X-CRM114-CacheID: sfid-20260505_074203_505745_61A9C5DF 
+X-CRM114-Status: UNSURE (   3.69  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -84,10 +82,10 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git next
-branch HEAD: 34e8f02817e31826e76bb2ded48bf28fe921f20b  memblock tests: define MIGRATE_CMA
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git fixes
+branch HEAD: 7b0b68b2b95606e65594958686833e53423f58f2  mm/memfd_luo: document preservation of file seals
 
-elapsed time: 731m
+elapsed time: 733m
 
 configs tested: 221
 configs skipped: 14
