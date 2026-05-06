@@ -4,65 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D9B0BCD3440
-	for <kexec@archiver.kernel.org>; Wed,  6 May 2026 14:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 14E8ECD343B
+	for <kexec@archiver.kernel.org>; Wed,  6 May 2026 15:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=oQpUzOuM6UHL5MR8Yl9UG08QHq3QgEJ/816hCLFUfBw=; b=VVgJM3Z2VKE8k0x3xENJotbguX
-	x7bd3XO4tbdKM081MsJ91thrvZWNbFqCttwX590TQYnPA1HLqHByvKsDD7RdVEav/FavAOnQtUNMA
-	6BYjbuwPY9LSFbqf29/VMb59Vgl6W34iB8T2G5KlWdyK/xAAlc0RuP4Lf907UCI4JPk0mJznQ5WIb
-	otrUcV6jqjpCwBL3RBGwlx5UlfgOz08dCjiWQmNwv7Til+SkdR0gJGwlsBlntPQ9M2xhDSE9zKy+O
-	8/+KRhQI40Xy5JAvAPBbiiBDReDEd02vclWPOjrefZMlAsVxJdqQAxkBHG4MApqYnG/FzmLBfJRzb
-	omz/ZDuw==;
+	bh=pGancg+Hm6RuQ5CrvC9iAES266oQrizaBXy/zKyB4a8=; b=cIde2UckwWtp4yGDRrvxgqcIvK
+	aC54mBxXWqT1ScfaX24ri3tLmY3j7YRJ48SPUp+UN/a3Dxldm/NbXfucb80qKhYc2K2cDwPOwlow0
+	vRFyALPEnnIcY2/iN9+Zxp0H6OZtrzKiIQZ9ZRnQyn4x/mdTj5oxAWLKMMuf1tlbE9UH+2cDyusuo
+	ZK3f8BdHqH39WhvisPC3TmmtVr9Fo+kqhQQQXGbj/G+of58bWIRbBNLS7yVryUDz1fvv8/LoKjZXu
+	lzsVDbgGG2QY3FYWPo5Vj2kZuS+AHJtss5/mde55J/4JQpVUIC3ru+KcInlla3CglfjE8gFerg3pZ
+	r7UFtydA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wKdaT-00000001Ae5-1JjM;
-	Wed, 06 May 2026 14:50:57 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wKdof-00000001EVc-3uNx;
+	Wed, 06 May 2026 15:05:37 +0000
+Received: from mail-yw1-x112b.google.com ([2607:f8b0:4864:20::112b])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wKdaR-00000001AdE-1Tuu;
-	Wed, 06 May 2026 14:50:55 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id C95D360139;
-	Wed,  6 May 2026 14:50:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B0ADC2BCB0;
-	Wed,  6 May 2026 14:50:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778079024;
-	bh=CZrArw/oj5KuHDK0tXBG7dLbv82g9Q+f39sVJuaaXGo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y6TUxV34XzI+ncRRf/mLg+KIaFrcYHGltCpfI6F9PLZtKGMDFzHlEA+6uzHO1W/Ff
-	 PuipwjSYswUif3oyWQyRzZ985ozzFxYPVJAr7+dWyHDP2Am/kO0owTKxjP1hGgUlJ8
-	 f5IfHPQOEbID0Ndb0UdMoS35ufyK8ucGEdz6QhylU9g+1Bhsc2ThDYKGw5ncod6vRB
-	 5Mxxaqvg8h705i+G0A9OldBOWs/rtfAoxjWdFtOKLb21H8M+6dC1GP9zhEyFJoYOjS
-	 4rImJsWyBPDPqBkbm22VTED8BEP8k8B/Ttl9xuhcH887xrMHSQ6OuJAZTqRv1rUxjh
-	 tmx8iwFEkEJvA==
-Date: Wed, 6 May 2026 09:50:22 -0500
-From: Rob Herring <robh@kernel.org>
-To: Chen Wandun <chenwandun1@gmail.com>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, akpm@linux-foundation.org,
-	bhe@redhat.com, rppt@kernel.org, pasha.tatashin@soleen.com,
-	pratyush@kernel.org, ruirui.yang@linux.dev, corbet@lwn.net,
-	skhan@linuxfoundation.org, catalin.marinas@arm.com, will@kernel.org,
-	chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, saravanak@kernel.org,
-	chenwandun@lixiang.com, zhaomeijing@lixiang.com, everyzhao@126.com
-Subject: Re: [PATCH 07/11] of: reserved_mem: add no-dump crash_mem exclusion
- helpers
-Message-ID: <20260506145022.GA2084721-robh@kernel.org>
-References: <20260429065831.1510858-1-chenwandun@lixiang.com>
- <20260429065831.1510858-8-chenwandun@lixiang.com>
+	id 1wKdoe-00000001ETv-2K8s
+	for kexec@lists.infradead.org;
+	Wed, 06 May 2026 15:05:36 +0000
+Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-79a46260385so76542017b3.3
+        for <kexec@lists.infradead.org>; Wed, 06 May 2026 08:05:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1778079934; x=1778684734; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pGancg+Hm6RuQ5CrvC9iAES266oQrizaBXy/zKyB4a8=;
+        b=iIX6CtC6o8ZxA9uueCTCXrh/VsCXBI7Y5oSr/aptvPgJV0PIAtPZZq3mGklndX0KGM
+         tW8CFMnEZHMP9EpRIZse0VkW0vLUKZe7bD9jNecVXlf9ZyimsGZE/Ls6JvjVrt9Fw7ia
+         VoRZK13bX1588+rP0iYh/B/6aGooS2tpPubirkl3uJpSoZN+68nZ4taTuU6w9Ezv9Jvq
+         SPPZCjWYDWbI91yfqOcAFc5yl+WrEk/h+Pb4m17z1zlGPXrH1INxdh8tlm2dVSiOJO2a
+         RX0UoxyfZSgOCndQLlmIKZj05jLUFc1AtbU4Ws58JqWyGZkMUEo1YtPnp5lLd9C6D8B1
+         LGFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778079934; x=1778684734;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pGancg+Hm6RuQ5CrvC9iAES266oQrizaBXy/zKyB4a8=;
+        b=kpEfgxfMcBM35qZ6WJD1GzCni28TEab06lqMbMF4OAOG/zArDQMK0U4xH9kfmRwKFC
+         3pWQMeZ6Fki31eNJKcBDY8zvkKoCpBx2xtk0Pf7aLPvlyQZfzhPBB050zje+tYaq5kuA
+         Hy94cUtl7Auwea1ARXfUQ4oYzaqQJA2zQA5IGxuuEKvLZnEZ1a5Z7xwG0bcpU5Vyjmzf
+         ARzPA4Wpc3pBMjqHjWPtnG1+aWMxD80qOGni0CP9CBpJByaxHynDxeezuV1Ge9zw6f7f
+         BX7HlX9i9jiZrg2QHuR3shNqVC8g9SPFXDnUod/aMEgzWt2nZMyZFRRys4becIj5bMAv
+         qN/Q==
+X-Forwarded-Encrypted: i=1; AFNElJ+kZMUa3iAGN2SSKXqvEbZ/Dd6+RW+4OBFH8DNLYXWIkG4Ko0YAK62+PxaSntPPeCfjPzmGww==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxDRW+XLXHQvfZ8bB21gx2SLA+RXiCP6n3cz6tvteUHEUjB1jmZ
+	r1q558TI9eiX1gihwGkx4O9nZLvFCMTRvIQZL3iIQziI0PFXHuKr9nGAruGpFO7cVaQ=
+X-Gm-Gg: AeBDietzVOTplhBzm5IHiZ26r1eEpz7kmiq+95QunwYuCgHrsoowdAAT9+24yrv7e4x
+	VZvzJ1atRat7KpSjZrUyS70cxMhm2w9lM45BmNeHV0V7Gys2rCOzmrxSQu3rRpAd6u7MpMuKmQE
+	idHj867BiHo0tlF8XZHi+J9pLJgflYvJNZlHPa3sjQAB21Ve9lkQraF3KJlsuOrX5o337xPARQt
+	eqRpm5RLW3GPyflwDJFla/rFZVcAWNB8Yz85BbSYHOHgj5eeLdDePtwFVeV7mwUhWNp+ykyGKMP
+	QvHX3IXfgfOwcZb9YzaWFemIMhgPFzVirtKWyoBsJ6fsy2F3jdWz7glGBncPnhvvfGOl+8ERieI
+	kDZdtH3jNoT0+s0v+CayFP0sui/gPiOn8nbtk/5uhBcNNzx9AjQgayHznrEmHKnNFjw4CS1Jtof
+	+r3YZav+ppPcgOk+vCJFEwLDlE4CXxo4RnJsDIOXr4/d8W4f+xRTgUr/24Xer1Dp/valoGHNx4c
+	g/9LH3rCAS+MalGE0+iOHet98W17RQhwZdDUkqA
+X-Received: by 2002:a05:690c:f13:b0:7bd:4792:66f0 with SMTP id 00721157ae682-7bdf5f24c83mr42505907b3.46.1778079934356;
+        Wed, 06 May 2026 08:05:34 -0700 (PDT)
+Received: from google.com (57.233.150.34.bc.googleusercontent.com. [34.150.233.57])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7bd665694b8sm79860377b3.21.2026.05.06.08.05.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 May 2026 08:05:33 -0700 (PDT)
+Date: Wed, 6 May 2026 11:05:32 -0400
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Cris Jacob Maamor <crisjacobmaamor@gmail.com>, Mike Rapoport <rppt@kernel.org>, 
+	Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] liveupdate: validate restored LUO metadata
+Message-ID: <aftVd5RnpnAi2jdc@google.com>
+References: <20260501094637.38650-1-crisjacobmaamor@gmail.com>
+ <20260501173053.73116-1-crisjacobmaamor@gmail.com>
+ <afT_xHDuFwAUSR0X@plex>
+ <2vxzse84zzag.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260429065831.1510858-8-chenwandun@lixiang.com>
+In-Reply-To: <2vxzse84zzag.fsf@kernel.org>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260506_080536_616390_D5FD776D 
+X-CRM114-Status: GOOD (  32.81  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,104 +104,83 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Apr 29, 2026 at 02:58:27PM +0800, Chen Wandun wrote:
-> Provide two kdump-oriented helpers so that arch kexec_file code does
-> not have to open-code the no-dump filtering loop:
+On 05-06 11:02, Pratyush Yadav wrote:
+> Hi Pasha,
 > 
->  - of_reserved_mem_no_dump_nr_ranges() returns the number of reserved
->    regions flagged with linux,no-dump. Each exclusion may split one
->    existing crash_mem range into two, so callers use this count to
->    pre-size their crash_mem allocation.
+> On Fri, May 01 2026, Pasha Tatashin wrote:
 > 
->  - of_reserved_mem_exclude_no_dump() walks the reserved_mem[] array
->    and calls crash_exclude_mem_range() for each no-dump region.
+> > On 05-02 01:30, Cris Jacob Maamor wrote:
+> >> LUO restores metadata from KHO/FDT during liveupdate. The restored
+> >> metadata contains physical addresses and count fields used to access and
+> >> walk preserved session, file set, and FLB arrays.
+> >> 
+> >> This series adds a non-consuming KHO preserved-range check and uses it
+> >> before phys_to_virt() on restored metadata addresses. It also rejects
+> >> restored counts above LUO_SESSION_MAX, LUO_FILE_MAX, and LUO_FLB_MAX
+> >> before traversal.
+> >> 
+> >> As far as I can tell, this is root/admin-only; I do not have evidence
+> >> that a normal unprivileged user can trigger it directly.
+> >> 
+> >> Changes since v1:
+> >> - Dropped RFC marking.
+> >> - Added changelog text to each patch.
+> >> - No code changes.
+> >> 
+> >> Cris Jacob Maamor (5):
+> >>   kexec: handover: add helper to check preserved page ranges
+> >>   liveupdate: validate LUO FDT physical address before mapping
+> >>   liveupdate: validate restored LUO session metadata
+> >>   liveupdate: validate restored LUO file set metadata
+> >>   liveupdate: validate restored LUO FLB metadata
+> >
+> > I have replied separately in the security report to clarify that this is 
+> > not a bug. The behavior follows the ABI specification exactly: we use 
+> > the PA addresses and ranges provided by the KHO FDT tree.
+> >
+> > NAK
 > 
-> Both helpers are guarded by CONFIG_KEXEC_FILE; empty inline stubs are
-> provided for the !KEXEC_FILE case so architecture code can call them
-> unconditionally.
-> 
-> The consumers are added in the following arm64, riscv and loongarch
-> patches in this series.
-> 
-> Signed-off-by: Chen Wandun <chenwandun@lixiang.com>
-> Tested-by: Zhao Meijing <zhaomeijing@lixiang.com>
-> ---
->  drivers/of/of_reserved_mem.c    | 54 +++++++++++++++++++++++++++++++++
->  include/linux/of_reserved_mem.h | 15 +++++++++
->  2 files changed, 69 insertions(+)
-> 
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index 4b80420da2d2..038056a6408a 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -27,6 +27,10 @@
->  
->  #include "of_private.h"
->  
-> +#ifdef CONFIG_KEXEC_FILE
-> +#include <linux/crash_core.h>
-> +#endif
+> I really do think we should do a restore-only variant for the
+> kho_alloc_preserve() family of allocators and use it everywhere. It
 
-You shouldn't need ifdef around includes.
+That is unrelated to the provided patch series. The author of this 
+series reported this as a security issue to the Linux security ML, and 
+submitted this series at their request.
 
-> +
->  static struct reserved_mem reserved_mem_array[MAX_RESERVED_REGIONS] __initdata;
->  static struct reserved_mem *reserved_mem __refdata = reserved_mem_array;
->  static int total_reserved_mem_cnt = MAX_RESERVED_REGIONS;
-> @@ -916,6 +920,56 @@ struct reserved_mem *of_reserved_mem_lookup(struct device_node *np)
->  }
->  EXPORT_SYMBOL_GPL(of_reserved_mem_lookup);
->  
-> +#ifdef CONFIG_KEXEC_FILE
+This is not a security issue, and in fact, it is not an issue at all. A 
+restore-only variant can be added, but I do not see a reason for LUO to 
+use it.
 
-Use 'if (IS_ENABLED())' within the function.
+> would prevent problems in the future. Not because the previous kernel is
+> malicious, but because we might have bugs and the KHO page magic sanity
+> check acts as a defense in depth.
+> 
+> For example, I am currently looking at a LUO bug where LUO does not
+> track if a session is outgoing or incoming. So you can do a retrieve()
+> or finish() on an outgoing session. A lot of nastiness is saved because
+> of the page magic check. Things like kho_restore_vmalloc() or
+> kho_restore_folio() fail early and loudly.
 
-> +/**
-> + * of_reserved_mem_no_dump_nr_ranges() - count reserved regions flagged
-> + * with the linux,no-dump property.
-> + *
-> + * Each such region may split an existing crash_mem range into two when
-> + * it is excluded, so callers can use this count to pre-size their
-> + * crash_mem allocation.
-> + */
-> +unsigned int of_reserved_mem_no_dump_nr_ranges(void)
-> +{
-> +	unsigned int i, n = 0;
-> +
-> +	for (i = 0; i < reserved_mem_count; i++)
-> +		if (reserved_mem[i].no_dump)
-> +			n++;
-> +	return n;
-> +}
-> +
-> +/**
-> + * of_reserved_mem_exclude_no_dump() - exclude no-dump reserved regions
-> + * from a crash_mem list.
-> + * @cmem: crash memory list to modify
-> + *
-> + * Walks the reserved_mem[] array and calls crash_exclude_mem_range() for
-> + * every region with no_dump set. Intended to be called from arch kdump
-> + * code when constructing the elfcorehdr.
-> + *
-> + * Returns 0 on success, or a negative error returned by
-> + * crash_exclude_mem_range() on the first failure.
-> + */
-> +int of_reserved_mem_exclude_no_dump(struct crash_mem *cmem)
-> +{
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	for (i = 0; i < reserved_mem_count; i++) {
-> +		struct reserved_mem *r = &reserved_mem[i];
-> +
-> +		if (!r->no_dump || !r->size)
-> +			continue;
-> +		ret = crash_exclude_mem_range(cmem, r->base,
-> +					      r->base + r->size - 1);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +	return 0;
-> +}
-> +#endif /* CONFIG_KEXEC_FILE */
+I am not sure what bug you are looking at (please share the details!), 
+but the fix absolutely should be to use outgoing/incoming sessions 
+properly, and if we mixed them up somewhere, THAT should be fixed. Using 
+KHO restore is not going to help much; however, I agree it can add 
+some extra scrutiny (i.e., similar to an ASSERT), but it is not really 
+something that would help improve correctness in any meaningful way. The 
+correctness should lie in the LUO logic using incoming as incoming, and 
+outgoing as outgoing.
+
+> 
+> If we want to squeeze out more performance later down the line we can
+> move it behind a debug config, but having this usage pattern of always
+> restoring before using is going to be a lot more sane than just using
+> physical addresses willy nilly.
+> 
+> The approach this series takes with kho_is_preserved() is the wrong
+> design. But a kho_restore() or something similar (maybe we can find a
+> better name?) is really where we should be going.
+> 
+> -- 
+> Regards,
+> Pratyush Yadav
 
