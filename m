@@ -4,72 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 95A29CD343B
-	for <kexec@archiver.kernel.org>; Wed,  6 May 2026 18:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4768DCD342C
+	for <kexec@archiver.kernel.org>; Wed,  6 May 2026 18:21:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
-	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zeOlLbeySOVjo93lwLL44ciHnn2Ct1CFGUbHwbnHYfA=; b=HHimABpkEPL5u/bMWtaC0r5oEd
-	BhLtKMcQCCJuUG1vPYo/UAWTPPIU7h+fUDvOuZzp/7W/zc93NhDsJH5tGbDTpOtMiSIrY2J/SSR8E
-	XSSEFt+TlKrGRSY3h/lla0n6aRT7RozXyQ9dEHP2lKQfPVRZ+WA/9UeTtmYeo2Dw5kjiQEeFd0K0V
-	4YtRLUtCyW8II12GFLiMB16plv8qTMKmmc399oL6ot8o7R7Ii1uYwrIEzor8EeVve7oGRE5awO5Jb
-	BxF5yLvMemLOijxMW2a/uOFO0RiPfE4jjzY0NrOWmRUNkCUiFLyatReBH9AclhbwhWsOEbzXH4RLr
-	m3xwIUgA==;
+	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=Ue8RpWElOJWTzQpGzar1fgpzJp6JMDiEfdJn24IqziI=; b=Q+ui/pXKQZb2ZWJZg2PLp64HAk
+	4va8AiGs5+pA7F0G2xKHiVmqbZsGeAKDjJHI0e0sPI9BXy5tAHi/IPAgmpBtdWGQ6+M6AKj20n9on
+	17PSQPk6315SMJXwND6syDPiLU7P/dtS7hRQGz66YEMZ680FjX5z8uX6gYMm/flhngBv94tchccx6
+	W0MTiUQ689pgC1/Kfu1QaG4iQafQrQjJBSDfXeAlUYFYxWVnru+6/UXVuMuBmyd0I4UI+C98qFdSm
+	RZqN3y6dzZoVM2HujcVDhZSudlvd4qy1Nuw3nhY5ZzOgFNqFJgZFdEpNESXGHoKc2cyItK+2rlVHc
+	r7Lcd4cA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wKgrg-00000001lBk-0Ucg;
-	Wed, 06 May 2026 18:20:56 +0000
-Received: from mail-yx1-xb12c.google.com ([2607:f8b0:4864:20::b12c])
+	id 1wKgrc-00000001l9O-3dym;
+	Wed, 06 May 2026 18:20:52 +0000
+Received: from mail-yx1-xb12a.google.com ([2607:f8b0:4864:20::b12a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wKgrf-00000001lAU-01pt
+	id 1wKgrb-00000001l8w-21hy
 	for kexec@lists.infradead.org;
-	Wed, 06 May 2026 18:20:55 +0000
-Received: by mail-yx1-xb12c.google.com with SMTP id 956f58d0204a3-65c0bda7f15so7012786d50.0
-        for <kexec@lists.infradead.org>; Wed, 06 May 2026 11:20:54 -0700 (PDT)
+	Wed, 06 May 2026 18:20:51 +0000
+Received: by mail-yx1-xb12a.google.com with SMTP id 956f58d0204a3-65c7492a2ceso2189693d50.3
+        for <kexec@lists.infradead.org>; Wed, 06 May 2026 11:20:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1778091654; x=1778696454; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zeOlLbeySOVjo93lwLL44ciHnn2Ct1CFGUbHwbnHYfA=;
-        b=eEjkvajqB4tZ8QqBD7Lakgh5LySZH/4wI4hSqJ8zvpCpzE6biWFhoN2fZ8Qy6Abik9
-         3K+ziEnXNLlBAQsOUSH27MXtgtvWaml8Y4NHTkud4tEtYx767HWdYZtImmHaDnwlMfMb
-         QtMLKYrI7WeLbz8TUK8+YV3HgOzt573YpO4jJle9bZzvM+R6BJjXx/tkn3jiYHrj73Km
-         Ml1k3b0h1aWPUTVMfmlbtPZEpkuaM0RCFlcOVcD1IuUjspFIZAOZYGmDncI4JGwmN6Vn
-         3pOfm+pqOi0xa3ZAjQ86VfYWn+X8ciz3pl0c25/cFGy5ILmwDwSUVZyu9DQdnrsX3dWr
-         Mpeg==
+        d=soleen.com; s=google; t=1778091650; x=1778696450; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ue8RpWElOJWTzQpGzar1fgpzJp6JMDiEfdJn24IqziI=;
+        b=KvVVmb/e0IikcaOo9AJnWRjdFEpMzxo/FGTB/sK0z5DqtOd0EwYpZWWMnzuHvuA0mW
+         Lces/0uxJmV9qvUfASft0MucSTgbsFdfihMUP+agyb7RFcWOw4K23kDGlExbuW6j1OLw
+         0Ps9kp5D+6EwVXj6lIc1GdjwAhjl2V/VhgL8BG2Nd6u7wCtOgwQDROb8xf+aWsLbvLhG
+         G8E8DxLoDZD9Ii2usdd7oJXkrHW/t/6GVUYVx2N7mDQf+tuHP/o6w8jHr491ehKibEQo
+         swgRfC9194Ww6aDB7cARA+J0SyPQKkco1/GABLwkJUHKS84ndCC/UvigpgOUykuS7b9R
+         qihw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778091654; x=1778696454;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zeOlLbeySOVjo93lwLL44ciHnn2Ct1CFGUbHwbnHYfA=;
-        b=M/LGTvl7fw5Tej5ORojDf5IZ3MQ+y6lUjeYDNMtB5EheA+WtxyOvffXmqmi8o7Xe44
-         kPWOZ6Z4r00ihDdqe4ygXXRqZPn0UcysKvkwGAAWVyOCRTREpwMBLmRDOXXSRKpQP3AV
-         6c60l+H1mhaGOcGgVLEd1obn4YuNZfx7a82S3JkJ97bXgQ4TkmdPHBCslMiceFfLp75n
-         //AfbvCa6jYtRshp/+yT0GMa2YakxJ2scZ33He85lN8U1Z0krieNXnP/UjAXuwCy430a
-         PMsoXuDyD3+5tpyNX3kLP/t+IJBryCp+5Un3PyEmO/b5goLpxCUJu66xw2KX4Pa7teV4
-         SAsw==
-X-Forwarded-Encrypted: i=1; AFNElJ9DFzixphSoH+MREdMl6g9KNTa0Z0VRmAW+VPYkU1YBKmfxeY81s4f1WRrc6ufvXvS+ofVDKA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yx3nEwyDnXf1DMwFMK78SihCWSaI75KnawwJRctb0aGTR6gLVtn
-	BWT+CEDDppcDFaRSs7HAmUzpZsmU8GYNBrV/LKWMbUwVGbEe6GyC2/qExlmEqHoStnI=
-X-Gm-Gg: AeBDiet3eHG/5NpqNsmJZhkmOO4y3FwcXRKPv76xYAOqEMYNOqIctBrk1kGSiAub0/P
-	bg1QaxHgOvwVGeZw+0qz/2WsaeiRVqkk9SxAOHqd7tfR8MVaD5ONxsHkvM/v8chW6IR869VoLoM
-	99jZ/jLpuAo8l/6VBnYXSXFDTfrF+mkQNIZ56hmXTmqNe2+1uoAYMDyXpkuym5I2tJn+eRg89f8
-	sx6ZYQHpIh83hgrJA2QfKpQDYsP3ex/HC1a/PIju853cSOtj/vS0exidX0Ws3c81dlPwNDu8qr4
-	L2x7ZR0zF01wE9rWy6MQGcH7cIHGuROkbVIr4v9gDHAHJW6yDbPcnNnbRpR/M/Nd80wiDnaUpoQ
-	tisnqRuU0YLZ8XWITZC8gWD3p11GK3UAZqb/8sUj8UOfmT3cAGmecgqJhnJdeMgAl5BFzGxmjWg
-	drk4Y2RkqqrTWMEyrBrt/NcMVucsE4nYFgDv7R5KGYmIwIySXMuzPdz/z5mIdfG4mv5duD4wiqh
-	+2/nh9fP1u7q5CDssAkiJngZcLHthQVUnTbjDxN3HRa50WlzIYlZ36MY76BrKt8h18W6cU=
-X-Received: by 2002:a05:690e:418d:b0:657:656d:5686 with SMTP id 956f58d0204a3-65c79875ecamr4910797d50.4.1778091654158;
-        Wed, 06 May 2026 11:20:54 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1778091650; x=1778696450;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ue8RpWElOJWTzQpGzar1fgpzJp6JMDiEfdJn24IqziI=;
+        b=N/0sTEul/xCj4EmnnNbAlKYaw5TyfG/aX4gAcNgu2wI6u+vQZevT1KPuxgE0uRXrU+
+         92xTmh765beCC+DlDt9X+G9Mn1ARJrL+YhEVNZcZMGNJ1P7QeVIgrUpvXoR3qrq8JRo+
+         us4CRl0KLl70NgfGfxKa+c1N0UH12RGcfTRYwPiRk+u+svUGwGbGpe+pLlV8XpSEwC/I
+         NqrzKTN8U6Hd4Gd1A2/HE+Ha/DM7+BMqwEzAEtpXbEx+9X5PuzRYxDwdL404Eri29u38
+         7hxtHZcN0NkQcKHGtJqjuy/elOa9zXhUm6kNuHvOiAvrW/YWz8t/Nv0l5QIiGJgdLu0J
+         w00A==
+X-Forwarded-Encrypted: i=1; AFNElJ9htTOtt7mIv9yWSjH3mWTmveg1VrO3t1h3TZI7ZN2QJkBU+BPcbRTAtYs2SXDhIyxpdHcFog==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwZS8iYx3pCY4J7UmTdeQyVpEm2EQpV1tiMbVA6ydXdT8TzZwbt
+	hKBzavG/tkx31QriUOckU0N0uYxpw2MTufxVt6RKEttggPzjczFQYEfwshw4Z3P59Sg=
+X-Gm-Gg: AeBDieuj8BCrAWBGNL11a+RGXNxJ//RPk5eUNBvBd0OEHqDJeH4TgR92ZrqVu/NrE1P
+	9ly4gS884Eyy91/BdpNvPFVonSXTYXVL1h3+COO4FTwJuOjyz2lF9Qg7OxiqCsP6YJvd5Dgkxqx
+	4CGI+KG3xBw+hFJX4XFNGciOoC2eqSHFGmnXs5GnIz2JKnsdHvgbQrgyKCdrHYzFhV2MRciflZW
+	Xmq6Ju9PYaDkeL3A5/MOKxa2o+T0k+s0EgnzZFxOyL9A/S2q8PI03QArQzqeMZzn+DihNotVNdz
+	lGL3efxyufAyFyxJ8W7fihKtsyRGgg6S/COeidqpdKeKqiBXR0kIc8J7zVQqtgVtQ7+tF7Un9uO
+	O+dURDGC4nVCN4Oy5LRHzzv6Xj+R72twMq7M6M/SF67j7dFeTgEOcsML8bHuLamQQi0ZjCb48nz
+	m3myfkAOZQfLxbq6215vI75oeUTQVG14UNGy0fDjFfB9hv6sUpUOLwIHTyR/a0EYSdR+XBzFXue
+	i9FRE++0k4jW7x3RXDoQpnbkF5bE8jFtjWwGbPP8zZ3tZ0tMciGfuk8XVff
+X-Received: by 2002:a05:690e:4401:b0:654:6cd0:f96b with SMTP id 956f58d0204a3-65c79cf0597mr3598241d50.5.1778091650422;
+        Wed, 06 May 2026 11:20:50 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (57.233.150.34.bc.googleusercontent.com. [34.150.233.57])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-65c7af9f8e7sm1389917d50.13.2026.05.06.11.20.53
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-65c7af9f8e7sm1389917d50.13.2026.05.06.11.20.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2026 11:20:53 -0700 (PDT)
+        Wed, 06 May 2026 11:20:49 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: rppt@kernel.org,
 	sourabhjain@linux.ibm.com,
@@ -87,31 +86,30 @@ To: rppt@kernel.org,
 	graf@amazon.com,
 	changyuanl@google.com,
 	mario.limonciello@amd.com
-Subject: [PATCH v2 3/3] liveupdate: block outgoing session mutations
-Date: Wed,  6 May 2026 14:20:43 -0400
-Message-ID: <20260506182039.2623553-8-pasha.tatashin@soleen.com>
+Subject: [PATCH v2 0/3] liveupdate: serialization safety and race fixes
+Date: Wed,  6 May 2026 14:20:40 -0400
+Message-ID: <20260506182039.2623553-5-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
-In-Reply-To: <20260506182039.2623553-5-pasha.tatashin@soleen.com>
-References: <20260506182039.2623553-5-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2382; i=pasha.tatashin@soleen.com;
- h=from:subject; bh=9bYai8pKOAnNVwlD2anL3djes0qaooK823m/0bcYUZI=;
- b=owEBbQKS/ZANAwAKAbt3KEzbc3reAcsmYgBp+4Z7J1f7PoQHuaJFFbbJWThp8lFFG84B/LMl7
- 9tqkK87uKKJAjMEAAEKAB0WIQRBMaqT7LRvGvB/NmK7dyhM23N63gUCafuGewAKCRC7dyhM23N6
- 3u2JEACMQLgxhXLH2DdKJvtAaMwDkcMXd8y5qY4b6kqGDP9HGt5Ae/rRl+L+GRUL6wFCS+5gOQe
- OnusI0+diMcmjiZz5sFo7vBz/adytPClMKIvK2J1vb8PPy1dBuHrY0Z/Yx9mRrS1Ybztc2mIkwC
- VY4DcVknAahIhcU9pEG+HBT5oKMzP/9qf41PIcu2IR4+7xR7WAdFXO8V/wuVQ37h0BWKPgTqkU1
- MeJff9gJ8v1LT3CEtxKpJzHoQE1uxEGWV6bS0f2rsoKghbd6g5tpM/eIOh+c8NC88tIBAogisFN
- 5Z3VUiiNsPJGjXGnKQhekZe+MesIqRlFMeGMV4YVdqVeF2T27QX+cimb1R9zA0TIGEw15TPfSFb
- FOmypPe7gZ/NmuSn/S6mtYqOrMAZx603SX4wAx2sYXug3n+Ts5EUaCOyv2KNCzlwslUbetOZDSd
- rOHMRwejCyGaHNxG2WjKPZ9XgnG7TjLGaj/Fr2Mxd5AUZljPADQnzdE5O9+QhzxuVZy5wdqGbVb
- zRN1VMGOUwTAYrb6t67Mof+TkqLcw8GZNBn5yCDzJroX4MSH7HO6Ura7LbyfUBFK71ijKqY7d/Z
- 1P/ucoMBgY9W4+Qvs2edX/vhmMxOF6s0pdCyMxVWq2Slc4+9t41J6mSzP5B/K+7BrtLw1ctQKi7 PnPocLqD+gNpV8Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1961; i=pasha.tatashin@soleen.com;
+ h=from:subject; bh=m05vVKwcBsXuT9wz7QIzEMSInuOTC578ENDk+r34blM=;
+ b=owEBbQKS/ZANAwAKAbt3KEzbc3reAcsmYgBp+4Z3c0D+XpYi6VubNAAFYjxJmiLLxeKkGeG0q
+ Ve+c0QfVEWJAjMEAAEKAB0WIQRBMaqT7LRvGvB/NmK7dyhM23N63gUCafuGdwAKCRC7dyhM23N6
+ 3gtED/9AH1OD0iu7KRB44/No6yLpmYAfKN96w4BZ7rlCykWxr4qFFaxI0L5a9VLCh2S97yz1/bb
+ Zi0BODW3Bu6XNAC/jDR9TFSqYVUMpZfrR0041jj4aX9QDBCi5Q8uSbNIBZayt3jdu2pE3Lyi7um
+ 55Aj4d54qD5mHma+O3j2aA+L4fbPxrB+D55MT8A2e4ayRFIwZcAbITB71399LcAWizEDYBKXeAU
+ yr8mbMn/as9b9R99762WJIiNXsTXQzbSfCp4Cgabb/Upe7raCjpRpYTkCNTL2YqqfY9trpXECUw
+ pCPTLNe9HasqymbyBMkiYHrF2VaYa/KPY5+5gDnegxDedUD6Sbc3Gpe9ZGY7TymYcWWbVw2HmSI
+ Vf8LcJt2VovMWhhXR8uAzgI0ro7GHXRVEmr2gW3q3O4DvLcUJvoDVjmVlKnDUtBPnvoo6YcEzxi
+ /7OB8pcL9pBLstnWQNPc1UQFUBAG665rEbqlsh+NUCbaOHVIR0EVRR6sq6mUV0jlE9fx1Bj106v
+ REmN/PC1a9Z/GGaBqNDjhkD4YcCX/6HBQrq5+MIIyH1Z7javZQvc+9tAbzUYcfCu6hCJhBd6If9
+ r0JYXPk1bdRv5w9SRuhthsD0r104yMoncJv6T/riSnrrhiqYYcqjXqjZPvYH/41NS2VED6LmVYr 3I1BQSSPlrNAb4g==
 X-Developer-Key: i=pasha.tatashin@soleen.com; a=openpgp; fpr=CAAAB722DD22A081F0D49F35633A6A993D43B569
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260506_112055_073567_70DCA105 
-X-CRM114-Status: GOOD (  11.25  )
+X-CRM114-CacheID: sfid-20260506_112051_531373_F4E7477A 
+X-CRM114-Status: UNSURE (   8.71  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -126,67 +124,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-During the reboot() syscall, user processes may still be running
-concurrently and attempting to mutate sessions (e.g., adding files or
-closing sessions). To prevent this, hold the session header's rwsem and
-each session's mutex indefinitely on successful serialization.
+This series addresses several issues related to the synchronization
+between the reboot process and LUO session management.
 
-If serialization succeeds, these locks will never be released as the
-system transitions to the new kernel, effectively blocking any
-concurrent task attempting to modify or release a session. If
-liveupdate_reboot() fails, the locks are released in the error path,
-allowing normal operation to resume.
+Changes in v2:
+- Added a patch to skip KHO data for context-preserving kexec (suggested
+  by Pratyush Yadav).
+- Dropped the 'rebooting' flag and manual session pinning patches from
+  v1.
+- Implemented a locking approach in luo_session_serialize() to prevent
+  concurrent session mutations and release (suggested by Pratyush).
 
-Fixes: 0153094d03df ("liveupdate: luo_session: add sessions support")
-Reported-by: Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
-Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
----
- kernel/liveupdate/luo_session.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+1. Skip KHO data for context-preserving kexec: A preserve_context kexec
+returns to the current kernel, which means the 2nd kernel does not use
+KHO data. Passing KHO data via setup_data or devicetree is unnecessary.
 
-diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
-index a3327a28fc1f..12808c696def 100644
---- a/kernel/liveupdate/luo_session.c
-+++ b/kernel/liveupdate/luo_session.c
-@@ -189,14 +189,14 @@ static int luo_session_finish_one(struct luo_session *session)
- static void luo_session_unfreeze_one(struct luo_session *session,
- 				     struct luo_session_ser *ser)
- {
--	guard(mutex)(&session->mutex);
-+	lockdep_assert_held(&session->mutex);
- 	luo_file_unfreeze(&session->file_set, &ser->file_set_ser);
- }
- 
- static int luo_session_freeze_one(struct luo_session *session,
- 				  struct luo_session_ser *ser)
- {
--	guard(mutex)(&session->mutex);
-+	lockdep_assert_held(&session->mutex);
- 	return luo_file_freeze(&session->file_set, &ser->file_set_ser);
- }
- 
-@@ -583,7 +583,10 @@ int luo_session_serialize(void)
- 	int i = 0;
- 	int err;
- 
--	guard(rwsem_write)(&sh->rwsem);
-+	down_write(&sh->rwsem);
-+	list_for_each_entry(session, &sh->list, list)
-+		mutex_lock_nest_lock(&session->mutex, &sh->rwsem);
-+
- 	list_for_each_entry(session, &sh->list, list) {
- 		err = luo_session_freeze_one(session, &sh->ser[i]);
- 		if (err)
-@@ -603,6 +606,9 @@ int luo_session_serialize(void)
- 		luo_session_unfreeze_one(session, &sh->ser[i]);
- 		memset(sh->ser[i].name, 0, sizeof(sh->ser[i].name));
- 	}
-+	list_for_each_entry(session, &sh->list, list)
-+		mutex_unlock(&session->mutex);
-+	up_write(&sh->rwsem);
- 
- 	return err;
- }
+2. Skip LUO serialization for context-preserving kexec: A
+preserve_context kexec returns to the current kernel, which is unrelated
+to live update where state is passed to the next kernel. Skipping
+serialization avoids unnecessary work and prevents sessions from being
+left in a frozen state upon return.
+
+3. Block outgoing session mutations using locks: During the reboot()
+syscall, user processes may still be running concurrently and attempting
+to mutate sessions. To prevent this, we hold the session header's rwsem
+and each session's mutex indefinitely on successful serialization. This
+effectively pins the sessions and blocks concurrent modifications
+without needing custom flags.
+
+Tree: git.kernel.org/pub/scm/linux/kernel/git/tatashin/linux.git Branch:
+luo-reboot-sync/v2
+
+Pasha Tatashin (3):
+  kho: skip KHO data for context-preserving kexec
+  liveupdate: skip serialization for context-preserving kexec
+  liveupdate: block outgoing session mutations
+
+ kernel/kexec_core.c                |  8 +++++---
+ kernel/liveupdate/kexec_handover.c |  3 ++-
+ kernel/liveupdate/luo_session.c    | 12 +++++++++---
+ 3 files changed, 16 insertions(+), 7 deletions(-)
+
+
+base-commit: 7b0b68b2b95606e65594958686833e53423f58f2
 -- 
 2.54.0.545.g6539524ca2-goog
 
