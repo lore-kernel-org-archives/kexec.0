@@ -4,117 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4F4D4CD342C
-	for <kexec@archiver.kernel.org>; Wed,  6 May 2026 16:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D90E2CD343B
+	for <kexec@archiver.kernel.org>; Wed,  6 May 2026 16:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=R7lvIC0bxt4661XQeHUXYJKGM0xgbkG8N/Q+Sev8WqM=; b=jbqSs2LpNNT4ydtfNvhr0FWz0g
-	pjBO9zvzz0B4BZ+MJOb7tA5prTnVLn/gIi7VC0cOCkQh3zUzd/x8V6Er8Wf+W5QtL2GSU56jxnG9K
-	5zdizTQL4gZYNDcqE01p1T3LYfAwF536TdtzbdSqe+d0b8SO146btXQ6I5V6VNnJxY63jBj2tet8T
-	kPbrEX7e6w1+J3xjRzqiorYWo3k9xolkjJKxYpWhiBV9SDBb69KzE/C+2dizKoqkXq+h5Rzm6rslg
-	LolNh0jhwUwrXQeDamlsbi545FrROuPLmEgVogRQmdYFpHnaQtUuXI5Yl1NCnEc6A3Mn2UPmdv/6l
-	WC8B6Otw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=m4+1/o+xgo43F+2pBLdcVc3ZSu95uTHefiaNtMBxq4s=; b=Zyof7ltNMWT59ewvLwPgyF7Pxj
+	oOcEuBEtfsXFqTok2mLS48mIxV3wLAdpQw9xwTE+t9foFJfIhCJ5lYWl3o6h6NAO/ByQMQdoXwpZ/
+	lu9cvoO+2xvYzAmSkJO6v20ypmt7d+B2K+Vsb2sMw84pDjQJwXKMBcd7ApzsRFpTfbb8uKaWODr9H
+	Edpv9KkUcQ9dKD7v/hGPC9igtUc30e+3cqPQ0lSqccFQ/pjzRgnEJafJRIkIhXF/xlU9IJzXMaXK9
+	SyVKydXY34kVT7dRIkwqHW57u/mVUxn4ROkrnHyeMiaWXbTFELzYHvbMdtLufwkaeUk0D0QZDCmoW
+	SRMw7Y0A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wKep6-00000001SL3-3jIW;
-	Wed, 06 May 2026 16:10:08 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1wKetx-00000001TMZ-23r2;
+	Wed, 06 May 2026 16:15:09 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wKep5-00000001SKZ-40I9
+	id 1wKetv-00000001TKN-21Ym
 	for kexec@lists.infradead.org;
-	Wed, 06 May 2026 16:10:08 +0000
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6463ISFI1381065;
-	Wed, 6 May 2026 16:09:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=R7lvIC
-	0bxt4661XQeHUXYJKGM0xgbkG8N/Q+Sev8WqM=; b=XV8NvTYFwraDAMzouWWnXu
-	uxcROIYy3qbUaj22IOd/JsM6E7ZEjJBKarCetkgwxLZEwxhh1GDA9LqV0jvXoUgG
-	FbhSgtflGf0lVZv5vunXEfL5qy8JhL5EkhU+Zvdf/THBa4iEQAfTw4qkTm39QB5+
-	yAZGifrUTxNouanPfBzTTlrLkplo0MyB+aR5f3hNIWW4pUUDIUqJy4IG2BK92YdE
-	dwUk3CZPlh/OhCEtdBJe4/5F1MP98HVNqDsnM0SEnwxYfEBPt2l0NKgbC4y/micl
-	ikBYKsW7FeZHM5WNAfwYBl+xpJNBI9nLiQUkSvwYlZABafFoqgAgfU5UJPcfvXgQ
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4dw9x4sj9n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 May 2026 16:09:45 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 646G9Ye4023993;
-	Wed, 6 May 2026 16:09:44 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4dww3h6wuj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 May 2026 16:09:44 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 646G9g3R12976486
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 6 May 2026 16:09:42 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0A9642004B;
-	Wed,  6 May 2026 16:09:42 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AA57220040;
-	Wed,  6 May 2026 16:09:37 +0000 (GMT)
-Received: from [9.124.208.31] (unknown [9.124.208.31])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  6 May 2026 16:09:37 +0000 (GMT)
-Message-ID: <5af6fd0b-0eca-4089-b76c-45dcc4bf01ed@linux.ibm.com>
-Date: Wed, 6 May 2026 21:39:35 +0530
+	Wed, 06 May 2026 16:15:07 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id C34C66013B;
+	Wed,  6 May 2026 16:15:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD015C2BCB0;
+	Wed,  6 May 2026 16:15:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778084106;
+	bh=B3REzEcQHj5vktVYOp4io+MCxNEzgbT4NgOlD9ZnWao=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=XLSYvey9WPz2hBbTkwmzbkAclbXbGSfpdwIDc+Qakic8vcMii2sl4fpp8de9POwem
+	 YDOu5cwi+KZiAVLsrm3mGdBMpyoD0+pjJiiUDIBRGK2Z75SgVUfKbZKQ3EbuHgGXLI
+	 umXWjbt31/C/Y8k0UnXp6lWiuPUktxeicjqW/50yMWOCcOrnTpC/Nxflc50vgRWCqi
+	 UcxINZSro7yvGoiAgEI3exnmpg8W94PXXNH2EipqC9haLLDaXDQFAJur/55u8sYC7O
+	 PLORoNONKCwOlt/9tTopJlV/852N1qWWPEPw+iG14eRg2okK+Qswc5t0dTI/K5z37E
+	 awlvD2RGakkjA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Cris Jacob Maamor
+ <crisjacobmaamor@gmail.com>,  Mike Rapoport <rppt@kernel.org>,  Alexander
+ Graf <graf@amazon.com>,  Andrew Morton <akpm@linux-foundation.org>,  Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,  kexec@lists.infradead.org,
+  linux-mm@kvack.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] liveupdate: validate restored LUO metadata
+In-Reply-To: <aftVd5RnpnAi2jdc@google.com> (Pasha Tatashin's message of "Wed,
+	6 May 2026 11:05:32 -0400")
+References: <20260501094637.38650-1-crisjacobmaamor@gmail.com>
+	<20260501173053.73116-1-crisjacobmaamor@gmail.com> <afT_xHDuFwAUSR0X@plex>
+	<2vxzse84zzag.fsf@kernel.org> <aftVd5RnpnAi2jdc@google.com>
+Date: Wed, 06 May 2026 18:15:03 +0200
+Message-ID: <2vxzfr44zf94.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 8/9] crash_dump: Disallow
- configfs/crash_dm_crypt_key/reuse if CONFIG_CRASH_HOTPLUG enabled
-To: Coiby Xu <coiby.xu@gmail.com>, kexec@lists.infradead.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <baoquan.he@linux.dev>, Dave Young <ruirui.yang@linux.dev>,
-        Mike Rapoport <rppt@kernel.org>,
-        Pasha Tatashin <pasha.tatashin@soleen.com>,
-        Pratyush Yadav <pratyush@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <skhan@linuxfoundation.org>, Coiby Xu <coxu@redhat.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20260501234342.2518281-1-coiby.xu@gmail.com>
- <20260501234342.2518281-9-coiby.xu@gmail.com>
-Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <20260501234342.2518281-9-coiby.xu@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTA2MDE1OCBTYWx0ZWRfX9vEydiAyv6/h
- bIdaqRP0cDBpnu/Q4rBAsvqMtRuWQM8COohpwlH/id7D0mmgYGrAwzbpuDv7pnjpxnp9l7XNAyn
- 9I7pJYEK5KpDXo55qI9mDl7w3h4xO+ic3AryzUH0+pcHwDRiYzD/fgnB57Gqp0lW3VfdkceyXJH
- Rr+Im1H98NPYD4FOq54UUVRg+1Hc0gKR2zt3kmvEqSYcOO4t4cTnsIBLFpJXo18l+pzUizNMf6t
- OurTJh2WPyLq/oGuoWdWL5FZQtSIZz9m8zWI34MwrN1Db0njffOfRo9xe0QibPfUDiIjfLziG3I
- 0of6At05X0YaH+UX5kSoAlWfJbjLbQuhGcfIzI7cqiqMKMh6pqnU17ufOUhwupgnrHsPKjz0Rm5
- ODAB3+u33Z9aevoUvPlJGNzM2fmPU7Kn8gWAq3nvmvNhZZi+fMWVD9DJ4nPVTF8EXkH7BOBBHAL
- 5TW45vPLMfsxjKS1p9A==
-X-Proofpoint-ORIG-GUID: M9zjn8nAJ53d_-FP2PjULB3AD-cpGVm6
-X-Proofpoint-GUID: nDB7-9AbbLcAw4vmxN5TmVz8ATWXCOJc
-X-Authority-Analysis: v=2.4 cv=W7UIkxWk c=1 sm=1 tr=0 ts=69fb67c9 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=pGLkceISAAAA:8
- a=FAMLr4mYtRK9mEqtjuQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-05-06_01,2026-05-06_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 adultscore=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 spamscore=0 clxscore=1015 phishscore=0 bulkscore=0
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2604200000
- definitions=main-2605060158
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260506_091008_005610_4C09220C 
-X-CRM114-Status: GOOD (  27.08  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -129,109 +74,127 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Wed, May 06 2026, Pasha Tatashin wrote:
 
-
-On 02/05/26 05:13, Coiby Xu wrote:
-> If CONFIG_CRASH_HOTPLUG is enabled, dm-crypt keys saved to reserved
-> memory will be took care of automatically. Thus it doesn't make sense
-> to use configfs/crash_dm_crypt_key/reuse. Reserving
-> image->dm_crypt_keys_addr is also unnecessary. Currently x86_64 and
-> ppc64le have implemented CONFIG_CRASH_HOTPLUG feature.
+> On 05-06 11:02, Pratyush Yadav wrote:
+>> Hi Pasha,
+>> 
+>> On Fri, May 01 2026, Pasha Tatashin wrote:
+>> 
+>> > On 05-02 01:30, Cris Jacob Maamor wrote:
+>> >> LUO restores metadata from KHO/FDT during liveupdate. The restored
+>> >> metadata contains physical addresses and count fields used to access and
+>> >> walk preserved session, file set, and FLB arrays.
+>> >> 
+>> >> This series adds a non-consuming KHO preserved-range check and uses it
+>> >> before phys_to_virt() on restored metadata addresses. It also rejects
+>> >> restored counts above LUO_SESSION_MAX, LUO_FILE_MAX, and LUO_FLB_MAX
+>> >> before traversal.
+>> >> 
+>> >> As far as I can tell, this is root/admin-only; I do not have evidence
+>> >> that a normal unprivileged user can trigger it directly.
+>> >> 
+>> >> Changes since v1:
+>> >> - Dropped RFC marking.
+>> >> - Added changelog text to each patch.
+>> >> - No code changes.
+>> >> 
+>> >> Cris Jacob Maamor (5):
+>> >>   kexec: handover: add helper to check preserved page ranges
+>> >>   liveupdate: validate LUO FDT physical address before mapping
+>> >>   liveupdate: validate restored LUO session metadata
+>> >>   liveupdate: validate restored LUO file set metadata
+>> >>   liveupdate: validate restored LUO FLB metadata
+>> >
+>> > I have replied separately in the security report to clarify that this is 
+>> > not a bug. The behavior follows the ABI specification exactly: we use 
+>> > the PA addresses and ranges provided by the KHO FDT tree.
+>> >
+>> > NAK
+>> 
+>> I really do think we should do a restore-only variant for the
+>> kho_alloc_preserve() family of allocators and use it everywhere. It
 >
-> Also update the doc accordingly. Note two doc issues are fixed as well.
+> That is unrelated to the provided patch series. The author of this 
+> series reported this as a security issue to the Linux security ML, and 
+> submitted this series at their request.
+
+Oh yes, sure. I am not arguing for taking this series. I just figured
+this would be a good point to have this discussion.
+
 >
-> Fixes: 9ebfa8dcaea7 ("crash_dump: reuse saved dm crypt keys for CPU/memory hot-plugging")
-> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
-> ---
->   Documentation/admin-guide/kdump/kdump.rst |  9 ++++++---
->   kernel/crash_dump_dm_crypt.c              | 14 +++++++++++---
->   2 files changed, 17 insertions(+), 6 deletions(-)
+> This is not a security issue, and in fact, it is not an issue at all. A 
+> restore-only variant can be added, but I do not see a reason for LUO to 
+> use it.
 >
-> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-> index 7587caadbae1..73f2e9500c60 100644
-> --- a/Documentation/admin-guide/kdump/kdump.rst
-> +++ b/Documentation/admin-guide/kdump/kdump.rst
-> @@ -577,9 +577,10 @@ with /sys/kernel/config/crash_dm_crypt_keys for setup,
->   
->   1. Tell the first kernel what logon keys are needed to unlock the disk volumes,
->       # Add key #1
-> -    mkdir /sys/kernel/config/crash_dm_crypt_keys/7d26b7b4-e342-4d2d-b660-7426b0996720
-> +    VOL1_UUID=7d26b7b4-e342-4d2d-b660-7426b0996720
-> +    mkdir /sys/kernel/config/crash_dm_crypt_keys/$VOL1_UUID
->       # Add key #1's description
-> -    echo cryptsetup:7d26b7b4-e342-4d2d-b660-7426b0996720 > /sys/kernel/config/crash_dm_crypt_keys/description
-> +    echo cryptsetup:$VOL1_UUID > /sys/kernel/config/crash_dm_crypt_keys/$VOL1_UUID/description
->   
->       # how many keys do we have now?
->       cat /sys/kernel/config/crash_dm_crypt_keys/count
-> @@ -593,7 +594,9 @@ with /sys/kernel/config/crash_dm_crypt_keys for setup,
->   
->       # To support CPU/memory hot-plugging, reuse keys already saved to reserved
->       # memory
-> -    echo true > /sys/kernel/config/crash_dm_crypt_key/reuse
-> +    # Note if CONFIG_CRASH_HOTPLUG is enabled, this API is totally unnecessary
-> +    # thus will be disabled.
-> +    echo true > /sys/kernel/config/crash_dm_crypt_keys/reuse
->   
->   2. Load the dump-capture kernel
->   
-> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
-> index 36e51807d94f..7a7cae17f578 100644
-> --- a/kernel/crash_dump_dm_crypt.c
-> +++ b/kernel/crash_dump_dm_crypt.c
-> @@ -304,6 +304,11 @@ static ssize_t config_keys_reuse_store(struct config_item *item,
->   	bool val;
->   	int r;
->   
-> +	if (IS_ENABLED(CONFIG_CRASH_HOTPLUG)) {
-> +		pr_info("CONFIG_CRASH_HOTPLUG already enabled");
-> +		return -EINVAL;
-> +	}
-> +
+>> would prevent problems in the future. Not because the previous kernel is
+>> malicious, but because we might have bugs and the KHO page magic sanity
+>> check acts as a defense in depth.
+>> 
+>> For example, I am currently looking at a LUO bug where LUO does not
+>> track if a session is outgoing or incoming. So you can do a retrieve()
+>> or finish() on an outgoing session. A lot of nastiness is saved because
+>> of the page magic check. Things like kho_restore_vmalloc() or
+>> kho_restore_folio() fail early and loudly.
+>
+> I am not sure what bug you are looking at (please share the details!), 
 
-Deciding this solely at compile time can create issues. For example, the 
-kernel
-may be built with CONFIG_CRASH_HOTPLUG, but if kexec tool loads the kdump
-kernel using the kexec_load system call without hotplug support, it can
-cause problems. It is rare but possible.
+I was looking at LUO code and realized that we do not separate outgoing
+and incoming sessions when dealing with preserve/retrieve/finish ioctls.
+So you can create a session, preserve a FD, and then immediately call
+finish or retrieve without doing a kexec. Of course, LUO file handlers
+aren't able to cope with it.
 
-How about this:
+So for example, you can preserve a memfd and then immediately call
+finish. This will call memfd_luo_finish(), where it will try to
+kho_restore_vmalloc(). That fails with a bit WARN splat. And then later
+it calls kho_restore_free() which also fails in a similar fashion.
 
-#ifdef CONFIG_CRASH_HOTPLUG
-     if (kexec_crash_image->hotplug_support) {
-pr_info("crash image is loaded with hotplug support\n");return -EINVAL;
-     }
-#endif
+You can do the same thing with retrieve(), but that also fails early and
+loudly and does not cause any problems.
 
-This code should be placed after validating kexec_crash_image.
+I am working on a fix for it. Should have something out shortly.
 
+> but the fix absolutely should be to use outgoing/incoming sessions 
+> properly, and if we mixed them up somewhere, THAT should be fixed. Using 
+> KHO restore is not going to help much; however, I agree it can add 
+> some extra scrutiny (i.e., similar to an ASSERT), but it is not really 
+> something that would help improve correctness in any meaningful way. The 
+> correctness should lie in the LUO logic using incoming as incoming, and 
+> outgoing as outgoing.
 
-- Sourabh Jain
+I am not arguing that we shouldn't fix the logic bugs. Of course we
+should.
 
->   	if (!kexec_crash_image || !kexec_crash_image->dm_crypt_keys_addr) {
->   		pr_info("dm-crypt keys haven't be saved to crash-reserved memory\n");
->   		return -EINVAL;
-> @@ -486,15 +491,18 @@ int crash_load_dm_crypt_keys(struct kimage *image)
->   void kexec_file_post_load_cleanup_dm_crypt(struct kimage *image)
->   {
->   	/*
-> -	 * For CPU/memory hot-plugging, the kdump image will be reloaded. Prevent
-> -	 * keys_header from being cleaned up during unloading when
-> -	 * is_dm_key_reused=true
-> +	 * For CPU/memory hot-plugging without CONFIG_CRASH_HOTPLUG, the whole kdump
-> +	 * image will be reloaded. Prevent keys_header from being cleaned up during
-> +	 * unloading when is_dm_key_reused=true
->   	 */
->   	if (!is_dm_key_reused) {
->   		kfree_sensitive(keys_header);
->   		keys_header = NULL;
->   	}
->   
-> +	if (IS_ENABLED(CONFIG_CRASH_HOTPLUG))
-> +		image->dm_crypt_keys_addr = 0;
-> +
->   	if (mutex_is_locked(&config_keys_subsys.su_mutex))
->   		mutex_unlock(&config_keys_subsys.su_mutex);
->   }
+My point is that this sanity check acts as another layer of defence.
+Bugs happen, but the earlier we catch them the better and this sanity
+check helps us do exactly that.
 
+For example, if we did not have these sanity checks, the loud errors I
+described above would be replaced by silent use-after-free, double-free,
+struct page corruption, or other problems.
+
+So I would like to understand why you _don't_ want to have this line of
+defence. What's the problem? If you are worried about performance, we
+can go and measure it. If the overhead is too high this can be behind a
+debug config.
+
+>
+>> 
+>> If we want to squeeze out more performance later down the line we can
+>> move it behind a debug config, but having this usage pattern of always
+>> restoring before using is going to be a lot more sane than just using
+>> physical addresses willy nilly.
+>> 
+>> The approach this series takes with kho_is_preserved() is the wrong
+>> design. But a kho_restore() or something similar (maybe we can find a
+>> better name?) is really where we should be going.
+>> 
+>> -- 
+>> Regards,
+>> Pratyush Yadav
+
+-- 
+Regards,
+Pratyush Yadav
 
