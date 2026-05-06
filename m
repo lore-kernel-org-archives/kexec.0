@@ -4,112 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4768DCD342C
-	for <kexec@archiver.kernel.org>; Wed,  6 May 2026 18:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A7895CD342C
+	for <kexec@archiver.kernel.org>; Wed,  6 May 2026 18:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=Ue8RpWElOJWTzQpGzar1fgpzJp6JMDiEfdJn24IqziI=; b=Q+ui/pXKQZb2ZWJZg2PLp64HAk
-	4va8AiGs5+pA7F0G2xKHiVmqbZsGeAKDjJHI0e0sPI9BXy5tAHi/IPAgmpBtdWGQ6+M6AKj20n9on
-	17PSQPk6315SMJXwND6syDPiLU7P/dtS7hRQGz66YEMZ680FjX5z8uX6gYMm/flhngBv94tchccx6
-	W0MTiUQ689pgC1/Kfu1QaG4iQafQrQjJBSDfXeAlUYFYxWVnru+6/UXVuMuBmyd0I4UI+C98qFdSm
-	RZqN3y6dzZoVM2HujcVDhZSudlvd4qy1Nuw3nhY5ZzOgFNqFJgZFdEpNESXGHoKc2cyItK+2rlVHc
-	r7Lcd4cA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+	List-Owner; bh=fIaMoZAFPoptutV/byzcr7dLXQk0sTik7MpruNCabzE=; b=Idg3N6sLQDpiCW
+	p86BRKuO134aGAvx1SoZaovqfVlJirS6w13FN2G3O5LAOMfrIRYFqduqDF0qcwOyvg7nwg/M3indu
+	sEaYEkMzpo5m/aP6SU10iAqNxaPx+2Iz/QmvvkZcDwpPgfAA8GN7xv918odyd88uWJEtF9xZqrRSj
+	5qXzwOR+SGmUeE9+2u6nz7lssR3jzWo4lWr8wsM9QcEVPR4WdDYEyk/ikoN8gQiLLJDoDBEmyBBLw
+	wb0Wqyt2Z8WbBEDlGlJMXh+Tlm4+jAaWlhOA5/U95ZQPFUH3k5zBAZ8EnIO3u7sCyIADCF8mK/eqX
+	wIknRlB0sCBqdVfINWcw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wKgrc-00000001l9O-3dym;
-	Wed, 06 May 2026 18:20:52 +0000
-Received: from mail-yx1-xb12a.google.com ([2607:f8b0:4864:20::b12a])
+	id 1wKgyb-00000001m8e-3gAp;
+	Wed, 06 May 2026 18:28:05 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wKgrb-00000001l8w-21hy
+	id 1wKgya-00000001m8R-1ScE
 	for kexec@lists.infradead.org;
-	Wed, 06 May 2026 18:20:51 +0000
-Received: by mail-yx1-xb12a.google.com with SMTP id 956f58d0204a3-65c7492a2ceso2189693d50.3
-        for <kexec@lists.infradead.org>; Wed, 06 May 2026 11:20:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1778091650; x=1778696450; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ue8RpWElOJWTzQpGzar1fgpzJp6JMDiEfdJn24IqziI=;
-        b=KvVVmb/e0IikcaOo9AJnWRjdFEpMzxo/FGTB/sK0z5DqtOd0EwYpZWWMnzuHvuA0mW
-         Lces/0uxJmV9qvUfASft0MucSTgbsFdfihMUP+agyb7RFcWOw4K23kDGlExbuW6j1OLw
-         0Ps9kp5D+6EwVXj6lIc1GdjwAhjl2V/VhgL8BG2Nd6u7wCtOgwQDROb8xf+aWsLbvLhG
-         G8E8DxLoDZD9Ii2usdd7oJXkrHW/t/6GVUYVx2N7mDQf+tuHP/o6w8jHr491ehKibEQo
-         swgRfC9194Ww6aDB7cARA+J0SyPQKkco1/GABLwkJUHKS84ndCC/UvigpgOUykuS7b9R
-         qihw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778091650; x=1778696450;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ue8RpWElOJWTzQpGzar1fgpzJp6JMDiEfdJn24IqziI=;
-        b=N/0sTEul/xCj4EmnnNbAlKYaw5TyfG/aX4gAcNgu2wI6u+vQZevT1KPuxgE0uRXrU+
-         92xTmh765beCC+DlDt9X+G9Mn1ARJrL+YhEVNZcZMGNJ1P7QeVIgrUpvXoR3qrq8JRo+
-         us4CRl0KLl70NgfGfxKa+c1N0UH12RGcfTRYwPiRk+u+svUGwGbGpe+pLlV8XpSEwC/I
-         NqrzKTN8U6Hd4Gd1A2/HE+Ha/DM7+BMqwEzAEtpXbEx+9X5PuzRYxDwdL404Eri29u38
-         7hxtHZcN0NkQcKHGtJqjuy/elOa9zXhUm6kNuHvOiAvrW/YWz8t/Nv0l5QIiGJgdLu0J
-         w00A==
-X-Forwarded-Encrypted: i=1; AFNElJ9htTOtt7mIv9yWSjH3mWTmveg1VrO3t1h3TZI7ZN2QJkBU+BPcbRTAtYs2SXDhIyxpdHcFog==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwZS8iYx3pCY4J7UmTdeQyVpEm2EQpV1tiMbVA6ydXdT8TzZwbt
-	hKBzavG/tkx31QriUOckU0N0uYxpw2MTufxVt6RKEttggPzjczFQYEfwshw4Z3P59Sg=
-X-Gm-Gg: AeBDieuj8BCrAWBGNL11a+RGXNxJ//RPk5eUNBvBd0OEHqDJeH4TgR92ZrqVu/NrE1P
-	9ly4gS884Eyy91/BdpNvPFVonSXTYXVL1h3+COO4FTwJuOjyz2lF9Qg7OxiqCsP6YJvd5Dgkxqx
-	4CGI+KG3xBw+hFJX4XFNGciOoC2eqSHFGmnXs5GnIz2JKnsdHvgbQrgyKCdrHYzFhV2MRciflZW
-	Xmq6Ju9PYaDkeL3A5/MOKxa2o+T0k+s0EgnzZFxOyL9A/S2q8PI03QArQzqeMZzn+DihNotVNdz
-	lGL3efxyufAyFyxJ8W7fihKtsyRGgg6S/COeidqpdKeKqiBXR0kIc8J7zVQqtgVtQ7+tF7Un9uO
-	O+dURDGC4nVCN4Oy5LRHzzv6Xj+R72twMq7M6M/SF67j7dFeTgEOcsML8bHuLamQQi0ZjCb48nz
-	m3myfkAOZQfLxbq6215vI75oeUTQVG14UNGy0fDjFfB9hv6sUpUOLwIHTyR/a0EYSdR+XBzFXue
-	i9FRE++0k4jW7x3RXDoQpnbkF5bE8jFtjWwGbPP8zZ3tZ0tMciGfuk8XVff
-X-Received: by 2002:a05:690e:4401:b0:654:6cd0:f96b with SMTP id 956f58d0204a3-65c79cf0597mr3598241d50.5.1778091650422;
-        Wed, 06 May 2026 11:20:50 -0700 (PDT)
-Received: from soleen.c.googlers.com.com (57.233.150.34.bc.googleusercontent.com. [34.150.233.57])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-65c7af9f8e7sm1389917d50.13.2026.05.06.11.20.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2026 11:20:49 -0700 (PDT)
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: rppt@kernel.org,
-	sourabhjain@linux.ibm.com,
-	jbouron@amazon.com,
-	akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	bhe@redhat.com,
-	linux-kernel@vger.kernel.org,
-	dan.carpenter@linaro.org,
-	pasha.tatashin@soleen.com,
-	rafael.j.wysocki@intel.com,
-	piliu@redhat.com,
-	kexec@lists.infradead.org,
-	pratyush@kernel.org,
-	graf@amazon.com,
-	changyuanl@google.com,
-	mario.limonciello@amd.com
-Subject: [PATCH v2 0/3] liveupdate: serialization safety and race fixes
-Date: Wed,  6 May 2026 14:20:40 -0400
-Message-ID: <20260506182039.2623553-5-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.54.0.545.g6539524ca2-goog
+	Wed, 06 May 2026 18:28:04 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 7D95D6014B;
+	Wed,  6 May 2026 18:28:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03ABFC2BCB0;
+	Wed,  6 May 2026 18:28:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778092083;
+	bh=jlQrcIbWomenhNoj/8xHLnSkp47Vutmn92tD24BRgHg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=V80eYLLvvYNvUDbpR0K4vfgvU37Du3P8q/mYdWap7aJMgYwDVfSO4wTCRAtDACD0h
+	 if8CYVD1r+xRoM++8D5IRg2t6KdADvfkZ7Us4L9lL0g++faf+Avpg+E1BxS5O6Xzml
+	 Ay3LeydT62BJan98OtknbEk9aIakGsdHkB4MfbajWSXZZseGtyJdg4X9G4Bc8Xl3L+
+	 rh0RYgEgL0iEwPXt/YMWkj3rYtadi5KX5AqnxYROIBso6XsW186SWwX7wpJemQMiXE
+	 7Z+lDPWBGitu+v/QDhOV3zcum8sBM9VdkmzvoUu4XzpmzA5fgse/7h3s6wcXDoSVx6
+	 lQpbgbv+9SoDQ==
+Date: Wed, 6 May 2026 13:28:01 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: David Jeffery <djeffery@redhat.com>
+Cc: linux-kernel@vger.kernel.org, driver-core@lists.linux.dev,
+	linux-pci@vger.kernel.org, linux-scsi@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Tarun Sahu <tarunsahu@google.com>,
+	Pasha Tatashin <tatashin@google.com>,
+	=?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
+	Jordan Richards <jordanrichards@google.com>,
+	Ewan Milne <emilne@redhat.com>,
+	John Meneghini <jmeneghi@redhat.com>,
+	"Lombardi, Maurizio" <mlombard@redhat.com>,
+	Stuart Hayes <stuart.w.hayes@gmail.com>,
+	Laurence Oberman <loberman@redhat.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	John Garry <john.g.garry@oracle.com>, kexec@lists.infradead.org,
+	Pasha Tatashin <pasha.tatashin@soleen.com>
+Subject: Re: [PATCH 4/5] PCI: Enable async shutdown support
+Message-ID: <20260506182801.GA805231@bhelgaas>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1961; i=pasha.tatashin@soleen.com;
- h=from:subject; bh=m05vVKwcBsXuT9wz7QIzEMSInuOTC578ENDk+r34blM=;
- b=owEBbQKS/ZANAwAKAbt3KEzbc3reAcsmYgBp+4Z3c0D+XpYi6VubNAAFYjxJmiLLxeKkGeG0q
- Ve+c0QfVEWJAjMEAAEKAB0WIQRBMaqT7LRvGvB/NmK7dyhM23N63gUCafuGdwAKCRC7dyhM23N6
- 3gtED/9AH1OD0iu7KRB44/No6yLpmYAfKN96w4BZ7rlCykWxr4qFFaxI0L5a9VLCh2S97yz1/bb
- Zi0BODW3Bu6XNAC/jDR9TFSqYVUMpZfrR0041jj4aX9QDBCi5Q8uSbNIBZayt3jdu2pE3Lyi7um
- 55Aj4d54qD5mHma+O3j2aA+L4fbPxrB+D55MT8A2e4ayRFIwZcAbITB71399LcAWizEDYBKXeAU
- yr8mbMn/as9b9R99762WJIiNXsTXQzbSfCp4Cgabb/Upe7raCjpRpYTkCNTL2YqqfY9trpXECUw
- pCPTLNe9HasqymbyBMkiYHrF2VaYa/KPY5+5gDnegxDedUD6Sbc3Gpe9ZGY7TymYcWWbVw2HmSI
- Vf8LcJt2VovMWhhXR8uAzgI0ro7GHXRVEmr2gW3q3O4DvLcUJvoDVjmVlKnDUtBPnvoo6YcEzxi
- /7OB8pcL9pBLstnWQNPc1UQFUBAG665rEbqlsh+NUCbaOHVIR0EVRR6sq6mUV0jlE9fx1Bj106v
- REmN/PC1a9Z/GGaBqNDjhkD4YcCX/6HBQrq5+MIIyH1Z7javZQvc+9tAbzUYcfCu6hCJhBd6If9
- r0JYXPk1bdRv5w9SRuhthsD0r104yMoncJv6T/riSnrrhiqYYcqjXqjZPvYH/41NS2VED6LmVYr 3I1BQSSPlrNAb4g==
-X-Developer-Key: i=pasha.tatashin@soleen.com; a=openpgp; fpr=CAAAB722DD22A081F0D49F35633A6A993D43B569
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260506_112051_531373_F4E7477A 
-X-CRM114-Status: UNSURE (   8.71  )
-X-CRM114-Notice: Please train this message.
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260429175016.7915-5-djeffery@redhat.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -124,50 +83,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This series addresses several issues related to the synchronization
-between the reboot process and LUO session management.
+On Wed, Apr 29, 2026 at 01:50:15PM -0400, David Jeffery wrote:
+> Like its async suspend support, allow PCI device shutdown to be performed
+> asynchronously to reduce shutdown time.
+> 
+> Signed-off-by: David Jeffery <djeffery@redhat.com>
+> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+> Tested-by: Laurence Oberman <loberman@redhat.com>
+> Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+> Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 
-Changes in v2:
-- Added a patch to skip KHO data for context-preserving kexec (suggested
-  by Pratyush Yadav).
-- Dropped the 'rebooting' flag and manual session pinning patches from
-  v1.
-- Implemented a locking approach in luo_session_serialize() to prevent
-  concurrent session mutations and release (suggested by Pratyush).
+Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
 
-1. Skip KHO data for context-preserving kexec: A preserve_context kexec
-returns to the current kernel, which means the 2nd kernel does not use
-KHO data. Passing KHO data via setup_data or devicetree is unnecessary.
+I'm concerned about tripping over driver issues, but it's a pretty big
+benefit.  I think it's worth mentioning the "async_shutdown" module
+parameter somewhere in the commit logs and putting an example in
+Documentation/admin-guide/kernel-parameters.txt.
 
-2. Skip LUO serialization for context-preserving kexec: A
-preserve_context kexec returns to the current kernel, which is unrelated
-to live update where state is passed to the next kernel. Skipping
-serialization avoids unnecessary work and prevents sessions from being
-left in a frozen state upon return.
+Might even consider keeping in -next for a cycle+ and targeting v7.3.
 
-3. Block outgoing session mutations using locks: During the reboot()
-syscall, user processes may still be running concurrently and attempting
-to mutate sessions. To prevent this, we hold the session header's rwsem
-and each session's mutex indefinitely on successful serialization. This
-effectively pins the sessions and blocks concurrent modifications
-without needing custom flags.
-
-Tree: git.kernel.org/pub/scm/linux/kernel/git/tatashin/linux.git Branch:
-luo-reboot-sync/v2
-
-Pasha Tatashin (3):
-  kho: skip KHO data for context-preserving kexec
-  liveupdate: skip serialization for context-preserving kexec
-  liveupdate: block outgoing session mutations
-
- kernel/kexec_core.c                |  8 +++++---
- kernel/liveupdate/kexec_handover.c |  3 ++-
- kernel/liveupdate/luo_session.c    | 12 +++++++++---
- 3 files changed, 16 insertions(+), 7 deletions(-)
-
-
-base-commit: 7b0b68b2b95606e65594958686833e53423f58f2
--- 
-2.54.0.545.g6539524ca2-goog
-
+> ---
+>  drivers/pci/probe.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index b63cd0c310bc..86e855090553 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1045,6 +1045,7 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+>  
+>  	bus->bridge = get_device(&bridge->dev);
+>  	device_enable_async_suspend(bus->bridge);
+> +	device_enable_async_shutdown(bus->bridge);
+>  	pci_set_bus_of_node(bus);
+>  	pci_set_bus_msi_domain(bus);
+>  	if (bridge->msi_domain && !dev_get_msi_domain(&bus->dev) &&
+> @@ -2753,6 +2754,7 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
+>  	pci_reassigndev_resource_alignment(dev);
+>  
+>  	pci_init_capabilities(dev);
+> +	device_enable_async_shutdown(&dev->dev);
+>  
+>  	/*
+>  	 * Add the device to our list of discovered devices
+> -- 
+> 2.53.0
+> 
 
