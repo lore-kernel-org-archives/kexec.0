@@ -4,51 +4,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 34949CD37AA
-	for <kexec@archiver.kernel.org>; Thu,  7 May 2026 21:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 21BBBCD37AA
+	for <kexec@archiver.kernel.org>; Thu,  7 May 2026 22:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=gHxL4CuTHE/xU+MwtnsDox/Q15QV0vPZlV2TGMUZMd4=; b=PInABnEQITlxQz71NMAadjy0PU
-	M2Hrfx92XnZ4m80Xxly5glY1FUJincDC+e5hezkIOwqn69WCOtYd2ONh4OKqZo+NDeTiiNM86wpSc
-	otlxWNkiYazcxLvZEVkqqmHPMvRhvvIkJR+7Kr0498yEzXm8psP8QZafFoPgtBBXnYK84u68XTQ2N
-	ALcUwqEGtsV6YxVA7IZkhkrzG5XL7XPQ5+aeNmGvIKS80sec2mIjeiExKH4j/anTUPWxK7+3+nP0c
-	+nnVpFfxwYmAMFekdVwV5BrR5KncgvV1YRR9rSeHZJab83r9vV+8Zpw9v8rwtBCikBlwG6oY/DKeR
-	SwpC0Qvw==;
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=bx1uqEi7iXh/H/5HVEByybRA15cO6WYnHar51yDe/kA=; b=41CU0HXWAAGC0MnZGGJp2xKega
+	YysC/Kaf2EFIhLc4iwmsUu/SyEQN0Ux/g/z6eMoF0gvvsIU3KFYCqGE+dB/hKlrL1AgyNcO0ZjHZZ
+	A6B1apZCi8cUx6znN0D/2adkfiA8EYfXwdDx8bQKipXeSGJLVQv55s/LYiru/ocH9bzqv35oEIgj2
+	hPRv5jyNdK2D3rP3n07FJl/LDfDAAb6jqfGTJdcGWndnLy6HUTAlB5GNzB8uyY/XOFaUg/cnK0TnA
+	z8TwIr4hBGGGHOIzex9WcsKpHX7M+ewrXdEtbiKN3LssQjf8C9KaMC1PhJwQdYDmUTM+IWmsdhiId
+	8XZ/cGkw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wL6fy-00000004za7-1RwX;
-	Thu, 07 May 2026 21:54:34 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wL6fs-00000004zZG-3Hb1
+	id 1wL6v2-000000051JJ-3u9A;
+	Thu, 07 May 2026 22:10:08 +0000
+Received: from mgamail.intel.com ([198.175.65.21])
+	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wL6uz-0000000512A-2aXI
 	for kexec@lists.infradead.org;
-	Thu, 07 May 2026 21:54:29 +0000
-Received: from alhe-dev-ub.waqitnwczulubdoacjva2kqlvd.phxx.internal.cloudapp.net (unknown [134.33.52.9])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 506C520B7165
-	for <kexec@lists.infradead.org>; Thu,  7 May 2026 14:54:19 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 506C520B7165
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1778190859;
-	bh=gHxL4CuTHE/xU+MwtnsDox/Q15QV0vPZlV2TGMUZMd4=;
-	h=From:To:Subject:Date:From;
-	b=glXA4PxdY90LfA2GlTdQ46pU3SCWmsIHi9ZcfoS5STBc7XDUkAvzVbmcxAPcgeAZ5
-	 E4u83+iT7MBGfXvQSBLZnNaXm51RZqTzDiTiPymSk1GSZZFqV/YorLYhXIvkZolYYx
-	 pqplDwFubkJUN+YaUA9JecFpd84tCyETcO1x9hqY=
-From: Alejandro Hernandez <alhe@linux.microsoft.com>
-To: kexec@lists.infradead.org
-Subject: [PATCH] kexec: restore functionality to preserve fd xattrs for uncompressed kernel images
-Date: Thu,  7 May 2026 21:54:17 +0000
-Message-ID: <20260507215417.2674568-1-alhe@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
+	Thu, 07 May 2026 22:10:06 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778191806; x=1809727806;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dymmzARXZ2+YXOlyEyhz7/COp9gTCNtG46xdEIVx02k=;
+  b=INQHjurJOHF8e6xC/vANltVMTT2MTd+GufOh7WUQSz3WjhwXqIDEzROD
+   U2cGhx+fNrLE8Q6dkKrgB2TcW1VRoEVVTHZp9uVAhZRFcrmCBVC7Khetq
+   yiul+B55TuWEdw07WM1fOjBa9+kBX7V3IO8AeDrCT/NtmZIIdRtk9ZHBf
+   nt019OchyMF28IpHnVB4rLegJSbOug+AS+GkGhdwfM7b78Q9CWWDZdgRz
+   MMD1YZNZxsUh1Wpe/3fdhpf2YO+w8IJMFOkW72qBaXGR6eNOVRBcCAZgr
+   4mL/Jnhzn15fJ+vsd5TiybOPJPGXf/1UUS9oPMzTWs/IJ5F7G0ZsKLxhx
+   w==;
+X-CSE-ConnectionGUID: t3v2GwFiRYGbmooPmS1ueQ==
+X-CSE-MsgGUID: fS90KbP+S5aUiSVhIc3Gew==
+X-IronPort-AV: E=McAfee;i="6800,10657,11779"; a="79058053"
+X-IronPort-AV: E=Sophos;i="6.23,222,1770624000"; 
+   d="scan'208";a="79058053"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 15:08:04 -0700
+X-CSE-ConnectionGUID: wtNnmROwRquTYtvYp8JJdQ==
+X-CSE-MsgGUID: 1EwjL9QOTKaM7/Srf/QHRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,222,1770624000"; 
+   d="scan'208";a="236519100"
+Received: from spandruv-mobl5.amr.corp.intel.com (HELO [10.125.110.232]) ([10.125.110.232])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 15:08:04 -0700
+Message-ID: <01a9f690-11d4-41c6-a884-18958b4566cd@intel.com>
+Date: Thu, 7 May 2026 15:08:08 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] x86/kexec: Push kjump return address even for
+ non-kjump kexec
+To: David Woodhouse <dwmw2@infradead.org>,
+ Rohan Kakulawaram <rohanka@google.com>, kexec <kexec@lists.infradead.org>
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ David Woodhouse <dwmw@amazon.co.uk>, Kai Huang <kai.huang@intel.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Uros Bizjak <ubizjak@gmail.com>,
+ Sohil Mehta <sohil.mehta@intel.com>,
+ linux-kernel <linux-kernel@vger.kernel.org>
+References: <32d627134143ffd957891cb697138e839c623211.camel@infradead.org>
+Content-Language: en-US
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <32d627134143ffd957891cb697138e839c623211.camel@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260507_145428_850786_DED056F2 
-X-CRM114-Status: GOOD (  17.98  )
+X-CRM114-CacheID: sfid-20260507_151005_697034_D013FBBE 
+X-CRM114-Status: UNSURE (   8.19  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -63,99 +136,17 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Since commit 714fa115 xattrs attached to a kernel image file (such as IMA
-signatures) are not being preserved, do_kexec_file_load() was modified to use
-memfd_create() which now passes an anonymous file descriptor to
-kexec_file_load(). This change eliminated the filesystem inode identity of the
-original kernel file, hence attributes are no longer visible to the kernel IMA
-appraisal handler during kexec_file_load, causing IMA policy enforcement to fail
-even for validly signed kernel images.
+On 4/28/26 13:59, David Woodhouse wrote:
+> +	/*
+> +	 * Set return address to 0 if not preserving context. The purgatory
+> +	 * shipped in kexec-tools will unconditionally look for the return
+> +	 * address on the stack and set a kexec_jump_back_entry= command
+> +	 * line option if it's non-zero. There's no other way that it can
+> +	 * tell a preserve-context (kjump) kexec from a normal one.
+> +	 */
+> +	pushq	$0
 
-This patch attempts to restore such behavior although, only does it for
-uncompressed kernel images. To do this, we first figure out if the image file is
-compressed or not and call each method accordingly.
+Thanks for the update. LGTM:
 
-Compressed images continue to use memfd and cannot carry forward the original fd
-security attributes, since their decompressed bytes do not match the signed
-artifact. Proper handling of compressed images with IMA would require either
-signing the decompressed artifact or kernel-side support for decompression
-within the kexec_file_load path.
-
-Signed-off-by: Alejandro Hernandez Samaniego <alhe@linux.microsoft.com>
----
- kexec/kexec.c | 42 +++++++++++++++++++++++++++++++++++-------
- 1 file changed, 35 insertions(+), 7 deletions(-)
-
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 08edfca..a388762 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -1328,17 +1328,41 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
- 
- 	kernel = argv[fileind];
- 
--	/* slurp in the input kernel */
-+        /* Hold original fd with its xattrs */
-+	kernel_fd = open(kernel, O_RDONLY);
-+	if (kernel_fd == -1) {
-+		fprintf(stderr, "Failed to open file %s:%s\n", kernel,
-+				strerror(errno));
-+		return EFAILED;
-+	}
-+
-+	/* Compressed vs Uncompressed */
-+	struct stat kernel_stat;
-+	off_t kernel_file_size = -1;
-+	if (fstat(kernel_fd, &kernel_stat) == 0)
-+		kernel_file_size = kernel_stat.st_size;
-+
-+        /* slurp in the input kernel */
- 	kernel_buf = slurp_decompress_file(kernel, &kernel_size);
- 	if (!kernel_buf) {
- 		fprintf(stderr, "Failed to decompress file %s:%s\n", kernel,
- 				strerror(errno));
-+		close(kernel_fd);
- 		return EFAILED;
- 	}
--	kernel_fd = copybuf_memfd(kernel_buf, kernel_size);
--	if (kernel_fd < 0) {
--		fprintf(stderr, "Failed to copy decompressed buf\n");
--		return EFAILED;
-+
-+	if (kernel_file_size != kernel_size) {
-+		close(kernel_fd);
-+		kernel_fd = copybuf_memfd(kernel_buf, kernel_size);
-+		if (kernel_fd < 0) {
-+			fprintf(stderr, "Failed to copy decompressed buf\n");
-+			return EFAILED;
-+		}
-+		dbgprintf("%s: compressed input, using memfd kernel fd %d\n",
-+			  __func__, kernel_fd);
-+	} else {
-+		dbgprintf("%s: using original kernel file fd %d\n",
-+			  __func__, kernel_fd);
- 	}
- 
- 	for (i = 0; i < file_types; i++) {
-@@ -1361,11 +1385,15 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
- 	}
- 
-        /*
--	* image type specific load functioin detect the capsule kernel type
-+	* image type specific load function detect the capsule kernel type
- 	* and create another fd for file load. For example the zboot kernel.
- 	*/
--	if (info.kernel_fd != -1)
-+	if (info.kernel_fd != -1) {
-+		dbgprintf("%s: using image-specific kernel fd %d\n",
-+			  __func__, info.kernel_fd);
-+		close(kernel_fd);
- 		kernel_fd = info.kernel_fd;
-+	}
- 
- 	/*
- 	 * If there is no initramfs, set KEXEC_FILE_NO_INITRAMFS flag so that
--- 
-2.43.0
-
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
 
