@@ -4,72 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7452ACD3439
-	for <kexec@archiver.kernel.org>; Wed,  6 May 2026 21:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6312BCD3427
+	for <kexec@archiver.kernel.org>; Thu,  7 May 2026 08:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:List-Owner;
-	bh=enQWhg6QtmVPkhQqID7Zl415vjJPeJyWdjw4unLNDAY=; b=PX6VWgNEf0tKDIiqHq57cS4SIz
-	bOz9B2HGiLpma3UmXcQC4Rd5WSy0JZ/qN8WuWkVmRXXP+KU7DLifSzUIPP0yQyArktGcbBNhuFH5J
-	X2fANHFNcSSW3TFstCQmjBH3jJvJNDfrvTwx3QTnlCIH/eO1fauxyBstcYafufcQLDJm8lTZZFgNd
-	iF0Lns8Urc9IBKascYlbMwmpZzAiRYWotFVxSbj7L3pxMmNXTuKHbmGkWxWHx8yofA7W2E4xXCSxG
-	YkvpHcil78fsLyOldkFjtCl0b+5xYtef4izdmSGsFDphIMpHvk8UkheDje3+Z02CUAlJis/hHFJRy
-	TYVHxZBw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=tYLd8a4rOgJ0HgA5aFHjScXvqopFgzBf/Pbs3wYF8a8=; b=CyonNR19/nhMu+Il+ophsjiESK
+	nvSlMqxZdSdqcHmZh7Kbj9LgRalPha7+tmGSdE+kRLckvbWz42OctPMSqAjqdfiBGl9ZylyEsw3ve
+	63eeugkhCrbAkoOJVa2ou+qhbY1PH+kU1FHv8aFrQQQEwzIwdc7J034qPuFdJzz80FTSd7jcSHEtz
+	u/XG8zQnWjDQjkvcS3qWcB/5lGbMtwippbtdK+WA9e13/f+VJ5SH4ipKXLfjRIpUOALobDKzJNjTO
+	2y2r3feAUtUpw4Tw4vfDu9KZvBa5kliEyu0cT+rdA9J9Gwwg2BvrVprMOYUTK0Y2AFFwfRLJ+qLGq
+	98InkbhQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wKjjo-0000000260V-0Uts;
-	Wed, 06 May 2026 21:25:00 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wKuIW-00000003Cx0-2XrD;
+	Thu, 07 May 2026 08:41:32 +0000
+Received: from mail-pg1-x542.google.com ([2607:f8b0:4864:20::542])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wKjjm-0000000260K-394G
+	id 1wKuIT-00000003Cuv-1tFT
 	for kexec@lists.infradead.org;
-	Wed, 06 May 2026 21:24:58 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id CDF3D6013B;
-	Wed,  6 May 2026 21:24:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63937C2BCB0;
-	Wed,  6 May 2026 21:24:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778102697;
-	bh=XyPxJfPyf0GdPyGr96MwQqjICS2aXF/AB6T7qNKrr/8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=N6v0d4sHE8VSxC7zqCPU8NvyAVWyDGStGcQnoBbIYY/vKFrk6WWUlIxHmpnRdEA/V
-	 +poSMbxdBaPJy2dg8IIYv4WmkKYp9Ttib05o9yudzRJE8g0a256xWfqqRUcwDqGe3O
-	 ucClFN+6obVGZThlSsczy23T2ML9VhtxaG+c0D1yb8Is36jmYbuggq5P3f5gkXj902
-	 pbkTW/LIUk3SdssbTNQQ4E1lGYBwwUtowyNxFff/G7y10PhhKkMYM+wXKd7PuIybaX
-	 rdS+3yGXD0cKFtY7KQ+m1bNF5rURA5i6oBY3wjxo/LVjqc1u3qL3lV/PqxXjHbY6hQ
-	 +QkcVfbIH8oLA==
-Date: Wed, 6 May 2026 16:24:56 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: David Jeffery <djeffery@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, driver-core@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-scsi@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Tarun Sahu <tarunsahu@google.com>,
-	Pasha Tatashin <tatashin@google.com>,
-	=?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
-	Jordan Richards <jordanrichards@google.com>,
-	Ewan Milne <emilne@redhat.com>,
-	John Meneghini <jmeneghi@redhat.com>,
-	"Lombardi, Maurizio" <mlombard@redhat.com>,
-	Stuart Hayes <stuart.w.hayes@gmail.com>,
-	Laurence Oberman <loberman@redhat.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	John Garry <john.g.garry@oracle.com>, kexec@lists.infradead.org,
-	Pasha Tatashin <pasha.tatashin@soleen.com>
-Subject: Re: [PATCH 4/5] PCI: Enable async shutdown support
-Message-ID: <20260506212456.GA880761@bhelgaas>
+	Thu, 07 May 2026 08:41:31 +0000
+Received: by mail-pg1-x542.google.com with SMTP id 41be03b00d2f7-c8173b2af32so382512a12.0
+        for <kexec@lists.infradead.org>; Thu, 07 May 2026 01:41:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778143287; x=1778748087; darn=lists.infradead.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tYLd8a4rOgJ0HgA5aFHjScXvqopFgzBf/Pbs3wYF8a8=;
+        b=ej2U1T871X7xAnfuXp3jCB/0CtLmoAPt0yLVPD98LEq+DyvGiml1Vr9qEMyBEWghsf
+         CgbFbdL35C7Dachi4grlvMV3zBKQBfJgjZyO1cKag5QSdh94sY+x5dXDCyKRnXW7b1ze
+         BtLcHc6Wy3KrB33IEesAiLOPtbQHS2kZnyrj4FfNmVtx55pxV2Q6xpCcz5kERDShuG1H
+         PifSX6mfC9vH4q/MKMngJYt6DxQRahAqOy8euFbhzyFWHbAZYmbzFNXeVCV1zmmNPadN
+         m7EJfiWjf2oAd9CysBVr+g67HEhwv8J+6Z/xf07zsTOllNS86IutCXc4sw5otl9Sr957
+         rkkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778143287; x=1778748087;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tYLd8a4rOgJ0HgA5aFHjScXvqopFgzBf/Pbs3wYF8a8=;
+        b=BaJYFJwMfDEiUOzKo80xUVe7KC2W1CaXbrWRTIZgAUNIVs+4L6HBxmLqDKAbp9kmC+
+         U9ECvMwFKx1dAfprgplJCss2ApDdGJo7iVpkuT+FrJIx0JgGLYKU+ZocaKFb3pRiAL+B
+         7t1KK0uu+9DDBN/U7gpDkYu8TtusgD+j6O/ebHqAn/tkLvhyxRo1tBqvs/nht3Ke15R9
+         xNLipYu/qZWCH5RD4++aVNWqslJBUf7SZUfzoSM8qHM0s6cfoVd/w+NRQfF7cpF+T4q/
+         ewmtlG+E4DA4FcKRvDGkMNkYVADorFCkst6gt1WWeYDA/Pb17xoTX2uvBzMGVLdKI/y8
+         sIKA==
+X-Gm-Message-State: AOJu0YwvwXWY3uaBfDE8loMbblI4VChszyvhgqQ9bDJEMWhFpk8Skk6C
+	1ykTlXYsalGzzcAg/L4TZIudjluov/B/hizgifLJhL0dIyXDdCtZIceA
+X-Gm-Gg: AeBDietgbW8FVZ9MFAeNx4ZG7r75oC5eIUc+Sn8W2k6/+FW3mw/FpeBP5Hwz0XY4aWI
+	bvAMHnyiv16Q4dsgdD80I92AKx147hBKSKD35aW5zQbZkV7EkQaI8TByD8Z+KjJkrnIUTIbTswN
+	t+TOUwFOw1Lq9CjBslFoWL+tRX4H5mJLzmseQFaIm6dUIh/jycqQz3+0IFK+K+cOpqLWJ1b4LJ1
+	BuoNEpd/lwgivMqYpsC55YSkMAxspeb01x2bpf54A4tfXJxYNatVSqrRaP4nsg9iY9sAhRI5FYK
+	MbypvU9Sn7xlescN0XXQgTkJSx1iReZsZjQN4+IwA4nlO75oui/K2U7u8C5ZNnczXXS+OIJAC2Y
+	aSn7Nu+yuRhf5O3CY4cHXng4iYRZql/dNQjlVcqzs4bclqtkwy/BjLwLqJeYPusESsGmfDeWHbE
+	5YbVjFzikQ4zSjLGiedd/+O1hqLLeabndoKN+QQo84Yw==
+X-Received: by 2002:a05:6a20:a106:b0:3a2:dc51:445 with SMTP id adf61e73a8af0-3aa5ab6853cmr7732684637.36.1778143287552;
+        Thu, 07 May 2026 01:41:27 -0700 (PDT)
+Received: from [10.125.112.20] ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c8253586c6asm1305583a12.4.2026.05.07.01.41.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 May 2026 01:41:26 -0700 (PDT)
+Message-ID: <126f4fd0-0a1c-41e0-8746-fa7ab85d6773@gmail.com>
+Date: Thu, 7 May 2026 16:41:15 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/11] of: reserved_mem: fix region count for nodes with
+ multiple reg entries
+To: Rob Herring <robh@kernel.org>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ devicetree@vger.kernel.org, akpm@linux-foundation.org, bhe@redhat.com,
+ rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
+ ruirui.yang@linux.dev, corbet@lwn.net, skhan@linuxfoundation.org,
+ catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+ kernel@xen0n.name, pjw@kernel.org, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, saravanak@kernel.org, chenwandun@lixiang.com,
+ zhaomeijing@lixiang.com, everyzhao@126.com
+References: <20260429065831.1510858-1-chenwandun@lixiang.com>
+ <20260429065831.1510858-2-chenwandun@lixiang.com>
+ <20260506014752.GA280279-robh@kernel.org>
+Content-Language: en-US
+From: Wandun <chenwandun1@gmail.com>
+In-Reply-To: <20260506014752.GA280279-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+-xHTFj_J4r2oqG8cPOU_wx7pChjHt9SgyHzKbTD8+KgeSFXw@mail.gmail.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260507_014129_493865_4F454CC0 
+X-CRM114-Status: GOOD (  14.46  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,40 +111,57 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, May 06, 2026 at 05:10:19PM -0400, David Jeffery wrote:
-> On Wed, May 6, 2026 at 2:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Wed, Apr 29, 2026 at 01:50:15PM -0400, David Jeffery wrote:
-> > > Like its async suspend support, allow PCI device shutdown to be performed
-> > > asynchronously to reduce shutdown time.
-> > >
-> > > Signed-off-by: David Jeffery <djeffery@redhat.com>
-> > > Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> > > Tested-by: Laurence Oberman <loberman@redhat.com>
-> > > Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-> > > Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> >
-> > Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-> >
-> > I'm concerned about tripping over driver issues, but it's a pretty big
-> > benefit.  I think it's worth mentioning the "async_shutdown" module
-> > parameter somewhere in the commit logs and putting an example in
-> > Documentation/admin-guide/kernel-parameters.txt.
-> 
-> Sure, I can see about adding a document patch to it.
-> 
-> > Might even consider keeping in -next for a cycle+ and targeting v7.3.
-> 
-> I would be happy for it to spend as much time in linux-next as needed
-> for people to be comfortable with the risk of odd interactions with
-> all the pci drivers it will indirectly impact.
-> 
-> But I must admit my ignorance with some of the details of linux-next.
-> Looking at the main code changes, the patchset would seem to want to
-> go through driver-core to get to linux-next. But as far as indirect
-> impact, it is the diverse collection of devices and drivers under PCI
-> which are most affected by the changes. Is there a consensus on how to
-> steward a patchset like this one into linux-next?
 
-My guess is it should all go via the driver-core tree, given acks or
-reviewed-by from the other subsystems it touches.
+在 2026/5/6 09:47, Rob Herring 写道:
+> On Wed, Apr 29, 2026 at 02:58:21PM +0800, Chen Wandun wrote:
+>> When a reserved-memory node contains multiple reg entries (e.g.,
+>> reg = <base1 size1>, <base2 size2>), the count used for
+>> total_reserved_mem_cnt is wrong in two places:
+>>
+>> 1) __reserved_mem_reserve_reg() returns 0 on success regardless of how
+>>     many regions it reserved in memblock. The caller in
+>>     fdt_scan_reserved_mem() then increments count by just 1.
+> Just to make sure, more than 1 worked before the referenced commits? It
+> would be easier to just define we only expect/support 1 entry.
+Looking at the pre-8a6e02d0c00e code, __reserved_mem_reserve_reg()
+reserved memblock memory for all reg entries, but only called
+fdt_reserved_mem_save_node() for the first one (guarded by an 'if 
+(first)' flag).
+
+So multiple reg entries were never fully supported: subsequent entries
+got their memory reserved in memblock, but their metadata was lost
+and driver-specific init callbacks were never invoked for them.
+
+The referenced commits made this worse by also breaking the count
+tracking, but the root limitation predates them.
+
+I support documenting "only 1 entry supported" based on the
+following reasons:
+
+   - of_reserved_mem_lookup() does a name-based linear scan and returns
+     the *first* matching entry. A node with N reg entries would create
+     N entries with identical names; entries [1..N-1] are permanently
+     unreachable via lookup.
+
+   - Drivers like CMA and DMA coherent are designed to initialize a
+     single contiguous pool per node_init call. Calling node_init
+     multiple times with the same FDT node is not a supported usage.
+
+
+>
+>> 2) fdt_scan_reserved_mem_late() uses of_flat_dt_get_addr_size() which
+>>     only reads the first reg entry. Subsequent entries are never
+>>     initialized via fdt_init_reserved_mem_node(), so their metadata is
+>>     lost.
+>>
+>> Fix both issues:
+>>   - Make __reserved_mem_reserve_reg() return the actual number of
+>>     regions successfully reserved. Update the caller to accumulate
+>>     the returned count.
+>>   - Rewrite fdt_scan_reserved_mem_late() to use
+>>     of_flat_dt_get_addr_size_prop() and iterate all reg entries,
+>>     initializing each one via fdt_init_reserved_mem_node().
+>>
+>> Fixes: 8a6e02d0c00e ("of: reserved_mem: Restructure how the reserved memory regions are processed")
+>> Fixes: 00c9a452a235 ("of: reserved_mem: Add code to dynamically allocate reserved_mem array")
 
