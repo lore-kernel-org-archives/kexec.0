@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0E9ABCD37B5
-	for <kexec@archiver.kernel.org>; Mon, 11 May 2026 11:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A75AECD37B9
+	for <kexec@archiver.kernel.org>; Mon, 11 May 2026 11:32:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=nruSBVin2AnJ4xuEZsU7eASbiUQRmQz7coGwKMFwyGU=; b=gQ3/2vo8yeEfUGEcEgjKGW5Kps
-	4yQw8iMjaJvqjmqQ65yu/KVF8S8/VTzFo7bgkGa6IG0zz0NiE+JJxQ5VmVKZ2l4HoPPEMONIaqbEY
-	FVf8m6CmUgBAKk/ifVm02nunPCSxWwcknw7DlqdHQSW/iaCCLlkDWX36zhTe4DLTUSMcrj3lHjpDC
-	fg+v30G+3tVC3JlujSdAfntEmE4QgladN1DY7qGGLDYCsDWiTANGQLE9KMxnq0xaq8OZMZzatm/C7
-	T9nTf7zey1x/WWljfPGz1GKMwAjwjf7nVjwi0jeUzJfavQH2WZ86bckb7lyktSfxezrbOW2YLAJCF
-	chcA/zdw==;
+	bh=Z2zffpQEMSxbFE0uJA4SQFtegz0TpogLtn+Le+lt3tk=; b=amtEtQJDXdSTvVuApUFG5H+nZz
+	KohkRnqAePARaEGwk6+TZXgGJIiSCcAWq68wXoZl21+MCEEjtD8NDAg/DcRQB5PKwopuMcUVZmjy/
+	86A8FcnLdnKGKh/J2Eug5Apu48jRPeKXIWGSqqwxYFGu71rg9aMznDa9h+xlGDhE5m5J+UIcgNHdf
+	7zZdZXQA9EeWUZj3rMnMM4OQzk+ewwnpYCaY8xJvMbNlLZVoKAAJzSylCVx1+XTrEx+5JhrzVKZJJ
+	BF/QmUhUxlCJyWLbg4Uu0hS+WT3pnbGc1FJ/J5FZVNMAFy84FljPRc7oYN8od66ZU16J8Ub/nUHgd
+	PtKDCPOA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMOcQ-0000000DHwG-1z7C;
-	Mon, 11 May 2026 11:16:14 +0000
+	id 1wMOs0-0000000DKnl-31b0;
+	Mon, 11 May 2026 11:32:20 +0000
 Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMOcP-0000000DHvt-0vb6
+	id 1wMOrz-0000000DKnL-1Aop
 	for kexec@lists.infradead.org;
-	Mon, 11 May 2026 11:16:13 +0000
+	Mon, 11 May 2026 11:32:19 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 94F7560120;
-	Mon, 11 May 2026 11:16:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C53BEC2BCB0;
-	Mon, 11 May 2026 11:16:09 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 61BCA6001A;
+	Mon, 11 May 2026 11:32:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BFE1C2BCB0;
+	Mon, 11 May 2026 11:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778498172;
-	bh=Cgr7dbdvhm+vZKERk5dxhhhYWa222txnv0pTlKfbbPA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=XxDLx8OQlTJzTWhzEJVMPQxzWbFEUDSCJSCegy80OPVoDTShXI2Tdm4lfz33ZL4PS
-	 54OVbyNThxvluqIIA2UTAXbzddMOUCH20W5rJiX6TPY7tNr/+r3uBTk12Dp6STSbQ/
-	 u4jk+TQanegSXftX5NC9CQary5YfBScG3s1SxsOyT475F4Wr1lWNik0F+ihmDe1Uaz
-	 lDpdL6DKACihz3aVjsR9LGkpGy3KUxYsqG2M4/Yz5JSnokvXMst9UVLl8a2USUBon7
-	 sTvOeve5KCd2HBslzPxND+MbXaIwXB9+4qnspcwDN96IMiZP9ie8EAi0qJoR/knnq9
-	 FJHkv5gIEzJkg==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  sourabhjain@linux.ibm.com,
-  jbouron@amazon.com,  akpm@linux-foundation.org,  linux-mm@kvack.org,
-  bhe@redhat.com,  linux-kernel@vger.kernel.org,  dan.carpenter@linaro.org,
-  rafael.j.wysocki@intel.com,  piliu@redhat.com,
-  kexec@lists.infradead.org,  pratyush@kernel.org,  graf@amazon.com,
-  changyuanl@google.com,  mario.limonciello@amd.com
-Subject: Re: [PATCH v2 1/3] kho: skip KHO data for context-preserving kexec
-In-Reply-To: <agGxkHPx7W7P5AUS@kernel.org> (Mike Rapoport's message of "Mon,
-	11 May 2026 13:38:08 +0300")
-References: <20260506182039.2623553-5-pasha.tatashin@soleen.com>
-	<20260506182039.2623553-6-pasha.tatashin@soleen.com>
-	<agGxkHPx7W7P5AUS@kernel.org>
-Date: Mon, 11 May 2026 13:16:08 +0200
-Message-ID: <2vxzik8uci2v.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=k20201202; t=1778499138;
+	bh=qNNqg0dnTiPNdw7XCSPl1o8PJe8uHezO/mLjClsBB+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mUh8viXlk8oQo393EqkU4YkTeVj3ZpVUXp0PN/Ad7bPd9Ezgc8lq3+2nL/ZRxppyj
+	 aEPVqg4XfaJvMtLRm6IZp8dvIui5iGZrZGlejvS6S4Vn6r3o0IdiZH5TCM+UNfE2z/
+	 8vAYGoqba9jYzfa2W2u0sHconpFBsvfBSazyCAGr+uCR3kkRvguHqk/ovbgjQ7bpxC
+	 9VBtGVVzL7XT3bwGB+vg7UIdqAYT5stR/fsd4Tg9tTTSpVU7bgnLKVGXnR/rGdM1Nn
+	 CqK0vF8ya8wli7tvt066pA3NbJBe+MdFm3jHEo9YcPJCFXcPTLi+LFgfszgc0j2KY3
+	 xw7LdbQKbr47g==
+Date: Mon, 11 May 2026 14:32:10 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Alexander Graf <graf@amazon.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jason Miu <jasonmiu@google.com>, kexec@lists.infradead.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/12] kho: generalize radix tree APIs
+Message-ID: <agG-OuOTAg5YD-CV@kernel.org>
+References: <20260429133928.850721-1-pratyush@kernel.org>
+ <20260429133928.850721-2-pratyush@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260429133928.850721-2-pratyush@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,45 +75,85 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, May 11 2026, Mike Rapoport wrote:
+On Wed, Apr 29, 2026 at 03:39:03PM +0200, Pratyush Yadav wrote:
+> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+> 
+> The KHO radix tree is a data structure that can track the presence or
+> absence of an arbitrary key, with nothing inherently tied to KHO memory
+> preservation tracking. This was one of the design goals of the radix
+> tree. This was done to enable it to be re-used by other users of KHO.
+> 
+> Despite that, the radix tree APIs are very closely tied to KHO memory
+> preservation tracking. Adding a key is done by kho_radix_add_page(),
+> which encodes it as a page tracking operation and takes in PFN and
+> order. kho_radix_del_page() does the same. These functions encode the
+> key internally that goes into the radix tree. kho_radix_walk_tree() does
+> the same by baking the PFN and order into the callback arguments.
+> 
+> Generalize the APIs by taking the key directly and doing the encoding at
+> the callers. Rename the functions to kho_radix_add_key() and
+> kho_radix_del_key(). In practice, this removes a line each from the
+> functions and moves the encoding function call to the callers.
+> Similarly, update kho_radix_tree_walk_callback_t to take the key
+> directly.
+> 
+> To keep the naming convention clearer, rename
+> kho_radix_{encode,decode}_key() to kho_{encode,decode}_radix_key().
+> 
+> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+> ---
+>  include/linux/kho_radix_tree.h     | 18 +++----
+>  kernel/liveupdate/kexec_handover.c | 76 ++++++++++++++----------------
+>  2 files changed, 42 insertions(+), 52 deletions(-)
+> 
+> diff --git a/include/linux/kho_radix_tree.h b/include/linux/kho_radix_tree.h
+> index 84e918b96e53..f368f3b9f923 100644
+> --- a/include/linux/kho_radix_tree.h
+> +++ b/include/linux/kho_radix_tree.h
+> @@ -85,7 +85,7 @@ static struct kho_out kho_out = {
+>  };
+>  
+>  /**
+> - * kho_radix_encode_key - Encodes a physical address and order into a radix key.
+> + * kho_encode_radix_key - Encodes a physical address and order into a radix key.
 
-> On Wed, May 06, 2026 at 02:20:41PM -0400, Pasha Tatashin wrote:
->> A preserve_context kexec returns to the current kernel, which means the
->> 2nd kernel does not use KHO data (and their memory spaces don't
->> overlap). Passing KHO data to the 2nd kernel via setup_data or
->> devicetree is unnecessary.
->> 
->> Add a check in kho_fill_kimage() and return early if preserve_context is
->> set, to avoid passing KHO state during context-preserving kexecs.
->> 
->> Fixes: 3bdecc3c93f9 ("kexec: add KHO support to kexec file loads")
->> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
->> ---
->>  kernel/liveupdate/kexec_handover.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->> 
->> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
->> index 4fde8325c49f..2eec2a169c83 100644
->> --- a/kernel/liveupdate/kexec_handover.c
->> +++ b/kernel/liveupdate/kexec_handover.c
->> @@ -1702,7 +1702,8 @@ int kho_fill_kimage(struct kimage *image)
->>  	int err = 0;
->>  	struct kexec_buf scratch;
->>  
->> -	if (!kho_enable || image->type == KEXEC_TYPE_CRASH)
->> +	if (!kho_enable || image->type == KEXEC_TYPE_CRASH ||
->> +	    image->preserve_context)
->>  		return 0;
->
-> Sashiko says it's unnecessary:
->
-> https://sashiko.dev/#/patchset/20260506182039.2623553-5-pasha.tatashin@soleen.com
->
-> I tend to agree :)
+Let's keep kho_radix_ prefix for namespasing please.
+This is the common practice these days.
 
-Hmm, good point. I take back my suggestion then.
+>   * @phys: The physical address of the page.
+>   * @order: The order of the page.
+>   *
+
+...
+
+> @@ -144,24 +144,21 @@ static unsigned long kho_radix_get_table_index(unsigned long key,
+>  }
+>  
+>  /**
+> - * kho_radix_add_page - Marks a page as preserved in the radix tree.
+> + * kho_radix_add_key - Add a key to the radix tree.
+>   * @tree: The KHO radix tree.
+> - * @pfn: The page frame number of the page to preserve.
+> - * @order: The order of the page.
+> + * @key: The key to add.
+>   *
+> - * This function traverses the radix tree based on the key derived from @pfn
+> - * and @order. It sets the corresponding bit in the leaf bitmap to mark the
+> - * page for preservation. If intermediate nodes do not exist along the path,
+> - * they are allocated and added to the tree.
+> + * This function traverses the radix tree based on the key provided. It sets the
+
+Nit:                                                     @key here and in
+the comments below.
+
+> + * corresponding bit in the leaf bitmap to mark the key as present. If
+> + * intermediate nodes do not exist along the path, they are allocated and added
+> + * to the tree.
+>   *
+>   * Return: 0 on success, or a negative error code on failure.
+>   */
 
 -- 
-Regards,
-Pratyush Yadav
+Sincerely yours,
+Mike.
 
