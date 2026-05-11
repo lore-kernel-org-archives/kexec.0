@@ -4,61 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D50CBCD37B5
-	for <kexec@archiver.kernel.org>; Mon, 11 May 2026 11:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0E9ABCD37B5
+	for <kexec@archiver.kernel.org>; Mon, 11 May 2026 11:16:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
 	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=KlgXK9fh/c6tJ8MpzfSz/1fsc65vT6RTYi2FsbqUuhk=; b=Sk7sS3Evxe/UiHHcLORgKXQ9ag
-	akpq/BTAbtTE5EQktU9vWbQ+UnJKvd6E4q2wKTJJXjFMtHI5T9aGFMZWlk+NQd150fwg1QtO5kTFr
-	/spfHFhB8QMGLmeE96ZaiKl6/DChQQPZY97UdxTnvBfRVU6206LTz3kNOqSng95aFuV5L5bGaOh1H
-	W+f3mwk6kcIE+iLJIOkktkkbcRljmWMxKF2Ye9BT4ROdUt0btM2N0xCF9zIudgHkzQp31TLgBwjXt
-	TCUenHV7fe4WALRgMEEhDfcH4t5P/nPgjUgnYL+Bgc676Jp3aOlaPr/bTNiuOFepxQgaMJM0qeQbp
-	DAMucHmw==;
+	bh=nruSBVin2AnJ4xuEZsU7eASbiUQRmQz7coGwKMFwyGU=; b=gQ3/2vo8yeEfUGEcEgjKGW5Kps
+	4yQw8iMjaJvqjmqQ65yu/KVF8S8/VTzFo7bgkGa6IG0zz0NiE+JJxQ5VmVKZ2l4HoPPEMONIaqbEY
+	FVf8m6CmUgBAKk/ifVm02nunPCSxWwcknw7DlqdHQSW/iaCCLlkDWX36zhTe4DLTUSMcrj3lHjpDC
+	fg+v30G+3tVC3JlujSdAfntEmE4QgladN1DY7qGGLDYCsDWiTANGQLE9KMxnq0xaq8OZMZzatm/C7
+	T9nTf7zey1x/WWljfPGz1GKMwAjwjf7nVjwi0jeUzJfavQH2WZ86bckb7lyktSfxezrbOW2YLAJCF
+	chcA/zdw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMORz-0000000DDuq-2i3y;
-	Mon, 11 May 2026 11:05:27 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wMOcQ-0000000DHwG-1z7C;
+	Mon, 11 May 2026 11:16:14 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMORy-0000000DDuD-0cYs
+	id 1wMOcP-0000000DHvt-0vb6
 	for kexec@lists.infradead.org;
-	Mon, 11 May 2026 11:05:26 +0000
+	Mon, 11 May 2026 11:16:13 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 7257B600CB;
-	Mon, 11 May 2026 11:05:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15789C2BCB0;
-	Mon, 11 May 2026 11:05:22 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 94F7560120;
+	Mon, 11 May 2026 11:16:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C53BEC2BCB0;
+	Mon, 11 May 2026 11:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778497525;
-	bh=BztAq8w5VK1b2+D1NkvixBxhvrkj9m6ZLycQeOZt3oo=;
+	s=k20201202; t=1778498172;
+	bh=Cgr7dbdvhm+vZKERk5dxhhhYWa222txnv0pTlKfbbPA=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=AFb7kFFrakJ+O+jIq9DJ95cMQOTl61XQ/4sHtzYYZqyQCviZDiQzLDqgQt7e27XuY
-	 iC+uHAtm/SC2kbJmzJYRtHLEjiTxtZgqKN7wf7rNoS8P6cRmII+qOOe6ZsM+XQ9uTg
-	 A//Z5SCKYxT6VT8GnUl/0o5bKJOax0kxZEKZjVHn8W6q672EhOPi/KOCHWElpDSXHs
-	 Cg3LvoQ7KrKXB4aJKttls3nJL7CcRSWeo4qhPcQU9hC75d12Ph3VvqG+D3QwcEujum
-	 cCTvbypIMDtzDOO/tsg8TjldwDHZOF1M89vfkGRvYtL/RRZD+nqbraI2wrD889SpVK
-	 4+AfaswtV6ZqQ==
+	b=XxDLx8OQlTJzTWhzEJVMPQxzWbFEUDSCJSCegy80OPVoDTShXI2Tdm4lfz33ZL4PS
+	 54OVbyNThxvluqIIA2UTAXbzddMOUCH20W5rJiX6TPY7tNr/+r3uBTk12Dp6STSbQ/
+	 u4jk+TQanegSXftX5NC9CQary5YfBScG3s1SxsOyT475F4Wr1lWNik0F+ihmDe1Uaz
+	 lDpdL6DKACihz3aVjsR9LGkpGy3KUxYsqG2M4/Yz5JSnokvXMst9UVLl8a2USUBon7
+	 sTvOeve5KCd2HBslzPxND+MbXaIwXB9+4qnspcwDN96IMiZP9ie8EAi0qJoR/knnq9
+	 FJHkv5gIEzJkg==
 From: Pratyush Yadav <pratyush@kernel.org>
-To: Jork Loeser <jloeser@linux.microsoft.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Mike Rapoport <rppt@kernel.org>,
-  Pasha Tatashin <pasha.tatashin@soleen.com>,  Alexander Graf
- <graf@amazon.com>,  Muchun Song <muchun.song@linux.dev>,  Oscar Salvador
- <osalvador@suse.de>,  David Hildenbrand <david@kernel.org>,  Andrew Morton
- <akpm@linux-foundation.org>,  Jason Miu <jasonmiu@google.com>,
-  kexec@lists.infradead.org,  linux-mm@kvack.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/12] kho: add kho_radix_init_tree()
-In-Reply-To: <e5e9c15f-a030-423e-de79-757c20d084e1@linux.microsoft.com> (Jork
-	Loeser's message of "Wed, 6 May 2026 03:51:07 -0700 (PDT)")
-References: <20260429133928.850721-1-pratyush@kernel.org>
-	<20260429133928.850721-9-pratyush@kernel.org>
-	<e5e9c15f-a030-423e-de79-757c20d084e1@linux.microsoft.com>
-Date: Mon, 11 May 2026 13:05:21 +0200
-Message-ID: <2vxzqzniciku.fsf@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  sourabhjain@linux.ibm.com,
+  jbouron@amazon.com,  akpm@linux-foundation.org,  linux-mm@kvack.org,
+  bhe@redhat.com,  linux-kernel@vger.kernel.org,  dan.carpenter@linaro.org,
+  rafael.j.wysocki@intel.com,  piliu@redhat.com,
+  kexec@lists.infradead.org,  pratyush@kernel.org,  graf@amazon.com,
+  changyuanl@google.com,  mario.limonciello@amd.com
+Subject: Re: [PATCH v2 1/3] kho: skip KHO data for context-preserving kexec
+In-Reply-To: <agGxkHPx7W7P5AUS@kernel.org> (Mike Rapoport's message of "Mon,
+	11 May 2026 13:38:08 +0300")
+References: <20260506182039.2623553-5-pasha.tatashin@soleen.com>
+	<20260506182039.2623553-6-pasha.tatashin@soleen.com>
+	<agGxkHPx7W7P5AUS@kernel.org>
+Date: Mon, 11 May 2026 13:16:08 +0200
+Message-ID: <2vxzik8uci2v.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -76,21 +75,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, May 06 2026, Jork Loeser wrote:
+On Mon, May 11 2026, Mike Rapoport wrote:
 
-> On Wed, 29 Apr 2026, Pratyush Yadav wrote:
+> On Wed, May 06, 2026 at 02:20:41PM -0400, Pasha Tatashin wrote:
+>> A preserve_context kexec returns to the current kernel, which means the
+>> 2nd kernel does not use KHO data (and their memory spaces don't
+>> overlap). Passing KHO data to the 2nd kernel via setup_data or
+>> devicetree is unnecessary.
+>> 
+>> Add a check in kho_fill_kimage() and return early if preserve_context is
+>> set, to avoid passing KHO state during context-preserving kexecs.
+>> 
+>> Fixes: 3bdecc3c93f9 ("kexec: add KHO support to kexec file loads")
+>> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+>> ---
+>>  kernel/liveupdate/kexec_handover.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+>> index 4fde8325c49f..2eec2a169c83 100644
+>> --- a/kernel/liveupdate/kexec_handover.c
+>> +++ b/kernel/liveupdate/kexec_handover.c
+>> @@ -1702,7 +1702,8 @@ int kho_fill_kimage(struct kimage *image)
+>>  	int err = 0;
+>>  	struct kexec_buf scratch;
+>>  
+>> -	if (!kho_enable || image->type == KEXEC_TYPE_CRASH)
+>> +	if (!kho_enable || image->type == KEXEC_TYPE_CRASH ||
+>> +	    image->preserve_context)
+>>  		return 0;
 >
->> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
->>
->> Move the initialization logic of the radix tree into
->> kho_radix_init_tree() instead of having users open-code it. Makes the
->> boundaries cleaner and reduces code duplication when a new user of the
->> radix tree will be added in a future commit.
+> Sashiko says it's unnecessary:
 >
-> Consider using kho_radix_init_tree() in kho_init() as well. This will also
-> remove the kzalloc() one-off use. Similar for kho_radix_destroy_tree().
+> https://sashiko.dev/#/patchset/20260506182039.2623553-5-pasha.tatashin@soleen.com
+>
+> I tend to agree :)
 
-Good point. Will do.
+Hmm, good point. I take back my suggestion then.
 
 -- 
 Regards,
