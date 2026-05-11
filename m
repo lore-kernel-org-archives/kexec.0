@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C85F1CD4F40
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CFE8BCD4F42
 	for <kexec@archiver.kernel.org>; Tue, 12 May 2026 17:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=WZbejJz9IzXhSi2FwZ3FOLXtXYE/8lEFJ1Ev2AmcWeA=; b=wNkJ3G/BxrH4F5Pxl5oYaTI/UD
-	KbQrvHpdlL4hKDte5nkDEuPocvCCFNB91lwW6jq2O/RdROF7Z5w1qxinaOjXH9TxXxxVbcjMaBr2G
-	ffRdIB4BBTLI45msJi/x3gl0aIzocAxcAnQbAVr7V+Kph85pW8IqglVeem42idv2J90nSquRy7YLI
-	X1GTx9HPR+nueiR4ELuYO53Sz4c3caviQLr/sspO6xmcQM3DTwKYsNJoAgSDqK1m7zG8rlifOQ/3m
-	Ld7Z1sONEmwjP5UEuTrihhKYNmLbQCKXHABDaRqmH8bUsAX3h7ESqkszAFbuohhcApdUUQQ/U/Ab7
-	f3cPEKRg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:To:From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=U4jtzDZtWo7cF+gZeuLHaS2l2XtHZ+YGddqo2ESPw+M=; b=TKSeNjzKSPlQRoVv91NEVqqm/s
+	xhQPMb9Pz5bCyCnPxx09ADg94IKy30I+WMK26WBOl+09q2U2q/qVIBZcqBt30pCvct3bE1X3BhtCn
+	rduwzTbwhZO3l//aNGRXbeDc4Vzh5ak+8RgXIvqZg0pMWjW38oNxeSE7ITjcPRUV4ingf2UFtaM/1
+	uQ8DdD3ZuDH+dCBO93Oi68ksF4XuSJyzapDzhbJlxpzU3vuDn7VHLrS4Wo74ywfK0tn4WFwqdHgic
+	QUhh8xnsBtcdtOp5/QB5Qubv9ub7fGWRrJUPRzlRQzLFjlzu+4BspdFCO8agsRHwODfpWI8I0P11/
+	d1TDLC6g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMrLK-0000000018m-2PSq;
-	Tue, 12 May 2026 17:56:30 +0000
-Received: from canpmsgout03.his.huawei.com ([113.46.200.218])
+	id 1wMrLL-0000000019o-1zVl;
+	Tue, 12 May 2026 17:56:31 +0000
+Received: from canpmsgout07.his.huawei.com ([113.46.200.222])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMGxx-0000000C6g3-2euS;
-	Mon, 11 May 2026 03:06:00 +0000
+	id 1wMGyF-0000000C6pM-1Huo;
+	Mon, 11 May 2026 03:06:18 +0000
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=WZbejJz9IzXhSi2FwZ3FOLXtXYE/8lEFJ1Ev2AmcWeA=;
-	b=QsX3YgPsZ5+8XqwZyY62LqFrLmo9SzriLDrgIFBD7djm0IXFQfPf23OTml7t1XA19m+cZHjKm
-	XqTyC5tS5D3vdaYLNxPGT9IN47WI4WIAenxjLf3fhK6H/STxVdEMc3tr/zVo4ZgmZ3Xv2BBvDAt
-	unpbIlmk6arw8lTkKwT2jc8=
-Received: from mail.maildlp.com (unknown [172.19.162.197])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4gDPYz0rZZzpStP;
-	Mon, 11 May 2026 10:58:47 +0800 (CST)
+	bh=U4jtzDZtWo7cF+gZeuLHaS2l2XtHZ+YGddqo2ESPw+M=;
+	b=tHQP0t7gIMX2cCSqAt+i2/k7s2vZpFgrRW6gmUB/xrxQ+G1ZN3SNp1MHpsFC5ZCK1662fqsis
+	pH5Kc/U1PA5tkbhCRfVpLmW77m4JEH1YxiMIvRkqDeQP9VGzwOC6RETd/mxpnUG53u6qOt+dh+n
+	i2PWzMn7sFPkx7CpWmohKAs=
+Received: from mail.maildlp.com (unknown [172.19.163.200])
+	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4gDPYm42nwzLlYY;
+	Mon, 11 May 2026 10:58:36 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 93CAB40576;
-	Mon, 11 May 2026 11:05:44 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id C3BF24055B;
+	Mon, 11 May 2026 11:06:11 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
  (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 11 May
- 2026 11:05:41 +0800
+ 2026 11:06:08 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
@@ -71,19 +71,21 @@ To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
 	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
 	<kexec@lists.infradead.org>
-Subject: [PATCH v13 00/15] arm64/riscv: Add support for crashkernel CMA reservation
-Date: Mon, 11 May 2026 11:04:39 +0800
-Message-ID: <20260511030454.1730881-1-ruanjinjie@huawei.com>
+Subject: [PATCH v13 09/15] arm64: kexec_file: Use crash_prepare_headers() helper to simplify code
+Date: Mon, 11 May 2026 11:04:48 +0800
+Message-ID: <20260511030454.1730881-10-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260511030454.1730881-1-ruanjinjie@huawei.com>
+References: <20260511030454.1730881-1-ruanjinjie@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-Originating-IP: [10.90.53.73]
 X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
  dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260510_200558_369935_FB4A43FF 
-X-CRM114-Status: GOOD (  13.93  )
+X-CRM114-CacheID: sfid-20260510_200615_868856_B74839FD 
+X-CRM114-Status: GOOD (  12.29  )
 X-Mailman-Approved-At: Tue, 12 May 2026 10:56:26 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -99,131 +101,104 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The crash memory allocation, and the exclude of crashk_res, crashk_low_res
-and crashk_cma memory are almost identical across different architectures,
-This patch set handle them in crash core in a general way, which eliminate
-a lot of duplication code.
+Use the newly introduced crash_prepare_headers() function to replace
+the existing prepare_elf_headers(), allocate cmem and exclude crash
+kernel memory in the crash core, which reduce code duplication.
 
-And add support for crashkernel CMA reservation for arm64 and riscv.
+Only the following two architecture functions need to be implemented:
+- arch_get_system_nr_ranges(). Use for_each_mem_range() to traverse
+  and pre-count the max number of memory ranges.
 
-Rebased on v7.1-rc1.
+- arch_crash_populate_cmem(). Use for_each_mem_range to traverse
+  and collect the memory ranges and fills them into cmem.
 
-Basic second kernel boot test were performed on QEMU platforms for x86,
-ARM64 and RISC-V architectures with the following parameters:
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+Acked-by: Baoquan He <bhe@redhat.com>
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
+ arch/arm64/kernel/machine_kexec_file.c | 46 ++++++++------------------
+ 1 file changed, 14 insertions(+), 32 deletions(-)
 
-	"cma=256M crashkernel=4G crashkernel=64M,cma"
-
-For first kernel, there will be such log:
-
-	# dmesg | grep crash
-	[    0.000000] crashkernel low memory reserved: 0xe8000000 - 0xf0000000 (128 MB)
-	[    0.000000] crashkernel reserved: 0x000000023e600000 - 0x000000033e600000 (4096 MB)
-	[    0.000000] crashkernel CMA reserved: 64 MB in 1 ranges
-
-	# dmesg | grep cma
-	[    0.000000] cma: Reserved 256 MiB at 0x00000000f0000000
-	[    0.000000] cma: Reserved 64 MiB at 0x0000000100000000
-
-For second kernel, there will be such log:
-
-	[    0.000000] OF: fdt: Looking for usable-memory-range property...
-	[    0.000000] OF: fdt: cap_mem_regions[0]: base=0x000000023e600000, size=0x0000000100000000
-	[    0.000000] OF: fdt: cap_mem_regions[1]: base=0x00000000e8000000, size=0x0000000008000000
-	[    0.000000] OF: fdt: cap_mem_regions[2]: base=0x0000000100000000, size=0x0000000004000000
-
-Changes in v13:
-- Rebased on v7.1-rc1.
-- Update the commit message.
-- Add Reviewed-by.
-- Link to v12: https://lore.kernel.org/all/20260402072701.628293-1-ruanjinjie@huawei.com/
-
-Changes in v12:
-- Remove the unused "nr_mem_ranges" for x86.
-- Add "Fix crashk_low_res not exclude bug" test log.
-- Provide a separate patch for each architecture for using
-  crash_prepare_headers(), which will make the review more convenient.
-- Add Reviewed-by and Tested-by.
-- Link to v11: https://lore.kernel.org/all/20260328074013.3589544-1-ruanjinjie@huawei.com/
-
-Changes in v11:
-- Avoid silently drop crash memory if the crash kernel is built without
-  CONFIG_CMA.
-- Remove unnecessary "cmem->nr_ranges = 0" for arch_crash_populate_cmem()
-  as we use kvzalloc().
-- Provide a separate patch for each architecture to fix the existing
-  buffer overflow issue.
-- Add Acked-bys for arm64.
-
-Changes in v10:
-- Fix crashk_low_res not excluded bug in the existing
-  RISC-V code.
-- Fix an existing memory leak issue in the existing PowerPC code.
-- Fix the ordering issue of adding CMA ranges to
-  "linux,usable-memory-range".
-- Fix an existing concurrency issue. A Concurrent memory hotplug may occur
-  between reading memblock and attempting to fill cmem during kexec_load()
-  for almost all existing architectures.
-- Link to v9: https://lore.kernel.org/all/20260323072745.2481719-1-ruanjinjie@huawei.com/
-
-Changes in v9:
-- Collect Reviewed-by and Acked-by, and prepare for Sashiko AI review.
-- Link to v8: https://lore.kernel.org/all/20260302035315.3892241-1-ruanjinjie@huawei.com/
-
-Changes in v8:
-- Fix the build issues reported by kernel test robot and Sourabh.
-- Link to v7: https://lore.kernel.org/all/20260226130437.1867658-1-ruanjinjie@huawei.com/
-
-Changes in v7:
-- Correct the inclusion of CMA-reserved ranges for kdump kernel in of/kexec
-  for arm64 and riscv.
-- Add Acked-by.
-- Link to v6: https://lore.kernel.org/all/20260224085342.387996-1-ruanjinjie@huawei.com/
-
-Changes in v6:
-- Update the crash core exclude code as Mike suggested.
-- Rebased on v7.0-rc1.
-- Add acked-by.
-- Link to v5: https://lore.kernel.org/all/20260212101001.343158-1-ruanjinjie@huawei.com/
-
-Jinjie Ruan (14):
-  riscv: kexec_file: Fix crashk_low_res not exclude bug
-  powerpc/crash: Fix possible memory leak in update_crash_elfcorehdr()
-  x86/kexec: Fix potential buffer overflow in prepare_elf_headers()
-  arm64: kexec_file: Fix potential buffer overflow in
-    prepare_elf_headers()
-  riscv: kexec_file: Fix potential buffer overflow in
-    prepare_elf_headers()
-  LoongArch: kexec: Fix potential buffer overflow in
-    prepare_elf_headers()
-  crash: Add crash_prepare_headers() to exclude crash kernel memory
-  arm64: kexec_file: Use crash_prepare_headers() helper to simplify code
-  x86/kexec: Use crash_prepare_headers() helper to simplify code
-  riscv: kexec_file: Use crash_prepare_headers() helper to simplify code
-  LoongArch: kexec: Use crash_prepare_headers() helper to simplify code
-  crash: Use crash_exclude_core_ranges() on powerpc
-  arm64: kexec: Add support for crashkernel CMA reservation
-  riscv: kexec: Add support for crashkernel CMA reservation
-
-Sourabh Jain (1):
-  powerpc/crash: sort crash memory ranges before preparing elfcorehdr
-
- .../admin-guide/kernel-parameters.txt         |  16 +--
- arch/arm64/kernel/machine_kexec_file.c        |  43 +++-----
- arch/arm64/mm/init.c                          |   5 +-
- arch/loongarch/kernel/machine_kexec_file.c    |  43 +++-----
- arch/powerpc/include/asm/kexec_ranges.h       |   1 -
- arch/powerpc/kexec/crash.c                    |   7 +-
- arch/powerpc/kexec/ranges.c                   | 101 +-----------------
- arch/riscv/kernel/machine_kexec_file.c        |  42 +++-----
- arch/riscv/mm/init.c                          |   5 +-
- arch/x86/kernel/crash.c                       |  92 +++-------------
- drivers/of/fdt.c                              |   9 +-
- drivers/of/kexec.c                            |   9 ++
- include/linux/crash_core.h                    |   9 ++
- include/linux/crash_reserve.h                 |   4 +-
- kernel/crash_core.c                           |  98 ++++++++++++++++-
- 15 files changed, 202 insertions(+), 282 deletions(-)
-
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index a67e7b1abbab..8d72038f206d 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -40,51 +40,33 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+ }
+ 
+ #ifdef CONFIG_CRASH_DUMP
+-static int prepare_elf_headers(void **addr, unsigned long *sz)
++unsigned int arch_get_system_nr_ranges(void)
+ {
+-	struct crash_mem *cmem;
+-	unsigned int nr_ranges;
+-	int ret;
+-	u64 i;
++	unsigned int nr_ranges = 2; /* for exclusion of crashkernel region */
+ 	phys_addr_t start, end;
++	u64 i;
+ 
+-	nr_ranges = 2; /* for exclusion of crashkernel region */
+ 	for_each_mem_range(i, &start, &end)
+ 		nr_ranges++;
+ 
+-	cmem = kmalloc_flex(*cmem, ranges, nr_ranges);
+-	if (!cmem)
+-		return -ENOMEM;
++	return nr_ranges;
++}
++
++int arch_crash_populate_cmem(struct crash_mem *cmem)
++{
++	phys_addr_t start, end;
++	u64 i;
+ 
+-	cmem->max_nr_ranges = nr_ranges;
+-	cmem->nr_ranges = 0;
+ 	for_each_mem_range(i, &start, &end) {
+-		if (cmem->nr_ranges >= cmem->max_nr_ranges) {
+-			ret = -ENOMEM;
+-			goto out;
+-		}
++		if (cmem->nr_ranges >= cmem->max_nr_ranges)
++			return -ENOMEM;
+ 
+ 		cmem->ranges[cmem->nr_ranges].start = start;
+ 		cmem->ranges[cmem->nr_ranges].end = end - 1;
+ 		cmem->nr_ranges++;
+ 	}
+ 
+-	/* Exclude crashkernel region */
+-	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
+-	if (ret)
+-		goto out;
+-
+-	if (crashk_low_res.end) {
+-		ret = crash_exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
+-		if (ret)
+-			goto out;
+-	}
+-
+-	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
+-
+-out:
+-	kfree(cmem);
+-	return ret;
++	return 0;
+ }
+ #endif
+ 
+@@ -114,7 +96,7 @@ int load_other_segments(struct kimage *image,
+ 	void *headers;
+ 	unsigned long headers_sz;
+ 	if (image->type == KEXEC_TYPE_CRASH) {
+-		ret = prepare_elf_headers(&headers, &headers_sz);
++		ret = crash_prepare_headers(true, &headers, &headers_sz, NULL);
+ 		if (ret) {
+ 			pr_err("Preparing elf core header failed\n");
+ 			goto out_err;
 -- 
 2.34.1
 
