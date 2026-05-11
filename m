@@ -4,107 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D3B31CD484A
-	for <kexec@archiver.kernel.org>; Mon, 11 May 2026 13:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 970F3CD37BE
+	for <kexec@archiver.kernel.org>; Mon, 11 May 2026 16:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=WdZp73JFANv1yjTZ6h8yU8Y68BeneeXC5aWjngszTTg=; b=iWWCMHaSPoauAwQkTG4gUCH0iN
-	1wT/lZAnW8/fwJ4EpkYzHHtg787JSZpE/P33Mw9JsHuSdBgFh3G+Ygc8KK9rILLdXxVDz/TEryLbW
-	TviJOWIOCkqO2bY63awzHys6zgTbhgcL2OkfhGD548RlViz/wzAAWbsvs0bJ8wd60smYA0fsqvqBk
-	JbsTM691MZ6KoedCZkhSMOFJmjUG+5XXUuB2U7ELHHPu9r6w51KjrAvCjZ4+CJjFkbgLOmtqPftGV
-	j7znacaJ+TLB+R1o9bOzarJGZVJTCeMdkF29LsuOXRlJNuZRdq3MTcbccecy4u6xWs0Sc6nEeE4zV
-	THW3nuww==;
+	bh=wrqTfVPdTZxJRp68YocSY09APfo4bTsMDgF1qR5U+20=; b=wZKB8eWWYX+fx8eue876JFCuZn
+	HlGRieiH3E5izb7b6dh5Q2Uu8uX9uWnbkQrJ7GiZJ/nUk/vPqhtju3ICrSSoKKio+/rnLUbpzDvCE
+	KZi/8O0OMPZaU3joJrx9NWYQQvxi9oe/O0a7yxKuwupaXwSnIT5br0O2EC2paTEDOWLfXTTbNtVLW
+	CmZdbrBJbETEsZD8uYLolY5K5+c6tvSf49OkmgEpLCNBWrW3Wv5Uox6f49skWOrQ12uDgXnR0yhB7
+	n5Me9FR1alSQltGyy5imEVE/9Zfeysk0accn1oMlmLLoX33eT9CVf68FFKUW6yh1qKseZuemiYoBN
+	wwR2frAQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMQvq-0000000DncJ-2UMd;
-	Mon, 11 May 2026 13:44:26 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1wMTSF-0000000ECTD-19nV;
+	Mon, 11 May 2026 16:26:03 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMQvp-0000000Dnbo-3rgV
-	for kexec@bombadil.infradead.org;
-	Mon, 11 May 2026 13:44:25 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=WdZp73JFANv1yjTZ6h8yU8Y68BeneeXC5aWjngszTTg=; b=G00bCfs71U3z45/N/0e0JKnazV
-	KjDdQStGS4lL4X6gwvS1Nj8p+/NWtRlnzgYuEfyK45BpHHYN9f5bzU0NFfAUO3Nd/6Z04uqjp/EA6
-	UN/PFHry4pjiTZp9z9hu6YP/5B7HHj2YjV2CMrQM4x4Bd/fP9SkvlMrKjzYTISL3CANmX5368NJvJ
-	yvRTG+Tc3asZDJjYmMXk3SDIdbG9umUoGdwse4QIMSXfff8CISzTS0XaqHNV4qo3eDGeWetsKkS0j
-	/O2zf5K7414FoeXL3oD7BC5+9VFvrCkxgNe3WVdTjtxgg9u/2tn9sNFjFdIjF/Y/AeMnkkphXQXcg
-	oQl+yE5A==;
-Received: from mail-yw1-x112d.google.com ([2607:f8b0:4864:20::112d])
-	by desiato.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMQvc-0000000BqFb-0APa
+	id 1wMTS9-0000000ECSs-2MA6
 	for kexec@lists.infradead.org;
-	Mon, 11 May 2026 13:44:18 +0000
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-7bf0b47d2f1so38456327b3.3
-        for <kexec@lists.infradead.org>; Mon, 11 May 2026 06:44:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1778507050; x=1779111850; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WdZp73JFANv1yjTZ6h8yU8Y68BeneeXC5aWjngszTTg=;
-        b=Y2CNVudoXpzzwhQ9mATNLM/TatOvVJO7Ru4rItmWkia4zAIwCdzNIzpAMjxpQd1h31
-         Jdx7ZXpdymYywYOvE0m1eTXtNCaZwVPSY9pD0bOf/xSBI+p98fqT5PXDhdMWBti+EREp
-         wAdGank2Ro5dXPdCBfXqvcSt1IdrB96y5gd/KrowQ+vujTctPg8dmzt6TDHlltx5RkSV
-         MJfikFQE1aEOBCG7uW3MqEFdbXcIcKGqm0FrGL0ACauS9++DpRBvHd8gYBWcMl7AjjO0
-         Qss/LHJ1bpSs3HCjoBk1zrV+7MnZc0vyVQEelYKvJ7VLMwljLzvcBS0dYFpG2Hj86hee
-         WPeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778507050; x=1779111850;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WdZp73JFANv1yjTZ6h8yU8Y68BeneeXC5aWjngszTTg=;
-        b=oqcmjh6LEGWTIEvy2uVBCmDGOR9mU7a6i8Sd/ziLHiwnpNmOyoG9Ha7N5Cjgx0Ho6I
-         vE9Rq1vBL9OP6rsn6Ml2LRaIn9QQ6YQIvG2U2CH3Hy5///pkpawODhQIc6XCD0HFxqdZ
-         CV3WIts1kkUN/p0bl79IBcMOPQAzwHEP2MI9J1o17Tzs6K04Y31qasuZfF7c0B2gpiqt
-         tK++b/cwlzQNeExJW2kjQLnFKW6RsPYbnX/LU//cMuxTa2lS0s1uF+IFNpllj5AQivY3
-         j4exseKy7+7zgvtvMZT0I2U8jAE8ksZZhsWg3CqIo4x+UeVOOZbxEhODhacBh6k8PyC6
-         mQqg==
-X-Forwarded-Encrypted: i=1; AFNElJ8+Ev43jmi/TyLU7V8dkiktAeQXvytcyftZGUpVv2lSGuhmg0/y+dpds1y+S8fH+d+sS4Bb9g==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxouTSnS49lsNc1bXuV/gcH/Qh7vkFwqNf/ypUXjgw1jsHdts73
-	2x4YJG6tFjdFCOiN0AEXCr7BTiyvGKIKA/rTE0Ao1B1+/doRUieESrcKhiUdzVeQulE=
-X-Gm-Gg: Acq92OHpfRc6f11KjBWzjcJc59itxtKbvmhJOs4We6K6WzxZhfOhuBVlYbM2Yyce1I4
-	VbOu871fMGDRJpK+BhIWn1+BLB4M2Ei8uaG0jUsHDMeyynq82fi3fR59HX15Q2+I7f44Zs5y96h
-	XWS1yAouGos1dlctLprFOv8jFifadfQcyPl6QxZxjez6ls5RN20ahfssgPtMO50ix6RKuiOYGMP
-	ybGlKnNRV6WkmyDlEldIXL0Koy784EZCWzBlP+AjvNJeaxjNMvMCJuOXP85efBvtCTxE+atfw8f
-	8wmiBbfFO5L3a/rHcMyG2uUb5n4T7hM3a56uTqoRclwMM6QBxCsOswayfI3rh3zZU8OYhStd92B
-	s0xtm6UgnIjlDpSTkjWRGRZa52fl9+bSsW7CPqKukjeRVb+nLtrQsrd6hCMM10DoA/3YE/Cu1Sn
-	bKUWU5ZxQbLCQ2Pl3T2i+9APzhPzgIeAEQ7CNW9apj7KVBIDMhSAW479iO/gTT1ZehoQMg3Uu1k
-	ivIEA2Rdn3dun+V8Xuz9oNHnnXYcPo4uj0ebcNMcJg=
-X-Received: by 2002:a05:690c:3482:b0:7ba:eefe:9f9c with SMTP id 00721157ae682-7bfb93b91bfmr134951057b3.23.1778507049874;
-        Mon, 11 May 2026 06:44:09 -0700 (PDT)
-Received: from google.com (138.200.150.34.bc.googleusercontent.com. [34.150.200.138])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7bd6686ead7sm150263157b3.39.2026.05.11.06.44.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2026 06:44:09 -0700 (PDT)
-Date: Mon, 11 May 2026 09:44:08 -0400
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, rppt@kernel.org, 
-	sourabhjain@linux.ibm.com, jbouron@amazon.com, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, bhe@redhat.com, linux-kernel@vger.kernel.org, 
-	dan.carpenter@linaro.org, rafael.j.wysocki@intel.com, piliu@redhat.com, 
-	kexec@lists.infradead.org, graf@amazon.com, changyuanl@google.com, 
-	mario.limonciello@amd.com
-Subject: Re: [PATCH v2 3/3] liveupdate: block outgoing session mutations
-Message-ID: <agHcu9_eSolgNZFT@google.com>
-References: <20260506182039.2623553-5-pasha.tatashin@soleen.com>
- <20260506182039.2623553-8-pasha.tatashin@soleen.com>
- <2vxzv7cucint.fsf@kernel.org>
+	Mon, 11 May 2026 16:25:57 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id C91B36001A;
+	Mon, 11 May 2026 16:25:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C686C2BCC9;
+	Mon, 11 May 2026 16:25:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778516756;
+	bh=qrw+cNWHzlyf8OR75OuLW8AXYM+NnLkhDwF7fpuKwm0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=pUXVVVwGAJN+u+9N0+31sblPJ4F4UWk6pPMzc+qZHLlm+J+vKIZu7kcFcW6uDlS1+
+	 3r2woy3sazFt2w9ffUCV7Krk1EzPmX/B3GcNzzFK/kniGNb0eMAHWqmQfgeQhWyjul
+	 X7fbOi4vvdOEUKwpqV3YvdanWBdGW9GcWhFuTOKAeLBW8EBV3S+UySWxIrykPBLokI
+	 4rijrpU4jyvbO8oJDUmfCezSBrvYyh6rjhP4+Qogwjxnqg+X9rcNi4I7z7DWmoBb6I
+	 jhdDXGVYZddJIbK6/63qYps2PN7hnbkJTcF/45ycA5jJsglIYnIdlofPbhc/157lc8
+	 XHvOmN2BIMubw==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Pasha Tatashin
+ <pasha.tatashin@soleen.com>,  Alexander Graf <graf@amazon.com>,  Muchun
+ Song <muchun.song@linux.dev>,  Oscar Salvador <osalvador@suse.de>,  David
+ Hildenbrand <david@kernel.org>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Jason Miu <jasonmiu@google.com>,
+  kexec@lists.infradead.org,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/12] kho: generalize radix tree APIs
+In-Reply-To: <agG-OuOTAg5YD-CV@kernel.org> (Mike Rapoport's message of "Mon,
+	11 May 2026 14:32:10 +0300")
+References: <20260429133928.850721-1-pratyush@kernel.org>
+	<20260429133928.850721-2-pratyush@kernel.org>
+	<agG-OuOTAg5YD-CV@kernel.org>
+Date: Mon, 11 May 2026 18:25:52 +0200
+Message-ID: <2vxz8q9pdib3.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2vxzv7cucint.fsf@kernel.org>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260511_144412_550562_C2BFCD4F 
-X-CRM114-Status: GOOD (  13.42  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -119,34 +76,100 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 05-11 13:03, Pratyush Yadav wrote:
-> On Wed, May 06 2026, Pasha Tatashin wrote:
-> 
-> > During the reboot() syscall, user processes may still be running
-> > concurrently and attempting to mutate sessions (e.g., adding files or
-> > closing sessions). To prevent this, hold the session header's rwsem and
-> > each session's mutex indefinitely on successful serialization.
-> >
-> > If serialization succeeds, these locks will never be released as the
-> > system transitions to the new kernel, effectively blocking any
-> > concurrent task attempting to modify or release a session. If
-> > liveupdate_reboot() fails, the locks are released in the error path,
-> > allowing normal operation to resume.
-> >
-> > Fixes: 0153094d03df ("liveupdate: luo_session: add sessions support")
-> > Reported-by: Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
-> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> 
-> Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+On Mon, May 11 2026, Mike Rapoport wrote:
 
-Sashiko also provided a good comment about this patch: We run over 
-MAX_LOCK_DEPTH limit with this patch. I am going to refactor to not take 
-every session lock simultaneously during serialization.
+> On Wed, Apr 29, 2026 at 03:39:03PM +0200, Pratyush Yadav wrote:
+>> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+>> 
+>> The KHO radix tree is a data structure that can track the presence or
+>> absence of an arbitrary key, with nothing inherently tied to KHO memory
+>> preservation tracking. This was one of the design goals of the radix
+>> tree. This was done to enable it to be re-used by other users of KHO.
+>> 
+>> Despite that, the radix tree APIs are very closely tied to KHO memory
+>> preservation tracking. Adding a key is done by kho_radix_add_page(),
+>> which encodes it as a page tracking operation and takes in PFN and
+>> order. kho_radix_del_page() does the same. These functions encode the
+>> key internally that goes into the radix tree. kho_radix_walk_tree() does
+>> the same by baking the PFN and order into the callback arguments.
+>> 
+>> Generalize the APIs by taking the key directly and doing the encoding at
+>> the callers. Rename the functions to kho_radix_add_key() and
+>> kho_radix_del_key(). In practice, this removes a line each from the
+>> functions and moves the encoding function call to the callers.
+>> Similarly, update kho_radix_tree_walk_callback_t to take the key
+>> directly.
+>> 
+>> To keep the naming convention clearer, rename
+>> kho_radix_{encode,decode}_key() to kho_{encode,decode}_radix_key().
+>> 
+>> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+>> ---
+>>  include/linux/kho_radix_tree.h     | 18 +++----
+>>  kernel/liveupdate/kexec_handover.c | 76 ++++++++++++++----------------
+>>  2 files changed, 42 insertions(+), 52 deletions(-)
+>> 
+>> diff --git a/include/linux/kho_radix_tree.h b/include/linux/kho_radix_tree.h
+>> index 84e918b96e53..f368f3b9f923 100644
+>> --- a/include/linux/kho_radix_tree.h
+>> +++ b/include/linux/kho_radix_tree.h
+>> @@ -85,7 +85,7 @@ static struct kho_out kho_out = {
+>>  };
+>>  
+>>  /**
+>> - * kho_radix_encode_key - Encodes a physical address and order into a radix key.
+>> + * kho_encode_radix_key - Encodes a physical address and order into a radix key.
+>
+> Let's keep kho_radix_ prefix for namespasing please.
+> This is the common practice these days.
 
-> 
-> [...]
-> 
-> -- 
-> Regards,
-> Pratyush Yadav
+I am keeping the namespacing, just moving it out of the "kho_radix"
+namespace to "kho" namespace. The mental model is that this function has
+nothing to do with the radix tree. It is just something KHO uses for one
+of its radix tree, so it should live in the "kho" namespace not
+"kho_radix".
+
+Does that make sense? I can add this explanation to the commit message
+as well.
+
+>
+>>   * @phys: The physical address of the page.
+>>   * @order: The order of the page.
+>>   *
+>
+> ...
+>
+>> @@ -144,24 +144,21 @@ static unsigned long kho_radix_get_table_index(unsigned long key,
+>>  }
+>>  
+>>  /**
+>> - * kho_radix_add_page - Marks a page as preserved in the radix tree.
+>> + * kho_radix_add_key - Add a key to the radix tree.
+>>   * @tree: The KHO radix tree.
+>> - * @pfn: The page frame number of the page to preserve.
+>> - * @order: The order of the page.
+>> + * @key: The key to add.
+>>   *
+>> - * This function traverses the radix tree based on the key derived from @pfn
+>> - * and @order. It sets the corresponding bit in the leaf bitmap to mark the
+>> - * page for preservation. If intermediate nodes do not exist along the path,
+>> - * they are allocated and added to the tree.
+>> + * This function traverses the radix tree based on the key provided. It sets the
+>
+> Nit:                                                     @key here and in
+> the comments below.
+
+ACK.
+
+>
+>> + * corresponding bit in the leaf bitmap to mark the key as present. If
+>> + * intermediate nodes do not exist along the path, they are allocated and added
+>> + * to the tree.
+>>   *
+>>   * Return: 0 on success, or a negative error code on failure.
+>>   */
+
+-- 
+Regards,
+Pratyush Yadav
 
