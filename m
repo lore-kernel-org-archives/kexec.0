@@ -4,83 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 96336CD4F46
-	for <kexec@archiver.kernel.org>; Tue, 12 May 2026 17:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 80F4ACD4F3F
+	for <kexec@archiver.kernel.org>; Tue, 12 May 2026 17:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:To:From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=M8lmcQvjJ5LUpDA4EmGDDTnt8GNDhiFnrJNCJhkuZWM=; b=Ai1t93MMXV9Ms3Ewe7PV2xyHdN
-	Nu5S9CdygaGl0zIdPIvfSIzvLBR7e6R8r6mX5/2VKg7HCFB/akWb2iz/2OXaQuEQdewVTaXhiTyw4
-	NhKSytV0rYxfuhCHylbzT96w6yUS4pTSo6d1B6F1U7Fdw6hyHhUmCgEgcE08A7GbC4yey01+BBlTj
-	aY0wK8OeUUe7/PxPTw6UQp5e8qKy98N5wza/xuwzBBksg5jtQnoKEzt10BjqWG5ywgeXGS2T0tGzV
-	mhe5/EJ+xWkBGJDxl6P1kyq6q5xZ/mNLaQBYH1gZxBS471A2rQBaJBl6X5ZwfHVKQ7vePhQQ/vOgl
-	zIbi4VJQ==;
+	bh=fRXPrtwsx6C0jpjzdQI+cUWxazi1W4PMSHJ3uRhXwqk=; b=NDXVopw8D2WMDXrJtk2fz5DCGQ
+	Om22+pzpSdpfK22glJEDShqNNKz9Ae8wfjCdLksejVfyTNfCNFtlEZYL+eb3dlsJEnEG2nz1uKRmm
+	f3hzA2Y5ma6nbtnUJlOZAGKzmviT766VTmmCKCNE/bNK1dX+TEJVmKwRUsbvGKNie6/ponzg1YHS/
+	OftU67kxTp8v8i4m+FjcDs3QwNCHdd5HgXI3+2kDgJbzU7RLMOP4n0QZBM/caZC7KQ4eTwvZnJcpG
+	AY/Gch0ad8RCIV4u0M8GwRsOeopWG9oPjrhTVtzJhe87h+2crkYaLcI/aFF0ieEdXoMr4ZpigkrPd
+	vVsU4jXA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMrLM-000000001C9-1tTm;
-	Tue, 12 May 2026 17:56:32 +0000
-Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
+	id 1wMrLL-000000001AC-35B1;
+	Tue, 12 May 2026 17:56:31 +0000
+Received: from canpmsgout07.his.huawei.com ([113.46.200.222])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMQRv-0000000DghE-1o3s;
-	Mon, 11 May 2026 13:13:32 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=M8lmcQvjJ5LUpDA4EmGDDTnt8GNDhiFnrJNCJhkuZWM=; b=XmiFKaklZ3QQYtH8/ygJpRi6/c
-	cJ9m6w27ps4ZkaQs+L3zmaULdxP92hxNU3mBsUHkvC5gV/Gr2OWyX7UNQwKGJQMGSIgDGnMR05nSr
-	6Hz3vsI22lcNtQs/VMzI48fbeiQc3TW5qrsNxcffxftFa5xlDo5LQ3kJ7Q0m2F5+M5D8c3G+2BDUt
-	Wr7OwYwQSZNfs/cIihoRG+30TDa9XqeX3dKysWM/Sidq9OVS27lVgnLamFYvGQfr7bsghipMWPyrI
-	mYwBzzTjZXPAId0EF/iDyo+lUuvmMRF8iddzWl4iCApO3hINgAD4OJDf0mLBEMdj/gGrp5p3Xx6ka
-	a7gITkwQ==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wMPmt-001bCJ-0c;
-	Mon, 11 May 2026 12:31:07 +0000
-Date: Mon, 11 May 2026 05:30:54 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com, 
-	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com, 
-	mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org, 
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org, bhe@redhat.com, 
-	rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, 
-	ruirui.yang@linux.dev, rdunlap@infradead.org, pmladek@suse.com, 
-	dapeng1.mi@linux.intel.com, kees@kernel.org, elver@google.com, kuba@kernel.org, 
-	ebiggers@kernel.org, lirongqing@baidu.com, paulmck@kernel.org, 
-	sourabhjain@linux.ibm.com, coxu@redhat.com, jbohac@suse.cz, ryan.roberts@arm.com, 
-	osandov@fb.com, cfsworks@gmail.com, tangyouling@kylinos.cn, 
-	ritesh.list@gmail.com, adityag@linux.ibm.com, guoren@kernel.org, 
-	songshuaishuai@tinylab.org, kevin.brodsky@arm.com, vishal.moola@gmail.com, 
-	junhui.liu@pigmoral.tech, wangruikang@iscas.ac.cn, namcao@linutronix.de, 
-	chao.gao@intel.com, seanjc@google.com, fuqiang.wang@easystack.cn, ardb@kernel.org, 
-	chenjiahao16@huawei.com, hbathini@linux.ibm.com, takahiro.akashi@linaro.org, 
-	james.morse@arm.com, lizhengyu3@huawei.com, x86@kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	kexec@lists.infradead.org
-Subject: Re: [PATCH v13 04/15] arm64: kexec_file: Fix potential buffer
- overflow in prepare_elf_headers()
-Message-ID: <agHL1zzC5bzgoCiJ@gmail.com>
+	id 1wMGyN-0000000C6xG-1GYv;
+	Mon, 11 May 2026 03:06:26 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=fRXPrtwsx6C0jpjzdQI+cUWxazi1W4PMSHJ3uRhXwqk=;
+	b=fbggNsPHAJwAAnnFfEh47QNAH7b4tPFQXCTiE15iQ2ovOEfAFiSNx1EBKgVqwtUWoIGmSxzkr
+	9Vskexm7o8EFhI8ffgDc09WwrVQgpROLwFd/YsmlCmoozH4B9YK1UZB+rLMNkK2ciCMQhFKEd/P
+	mLLj0qif99LiAwM3QwbeQnQ=
+Received: from mail.maildlp.com (unknown [172.19.163.127])
+	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4gDPYx4LxgzLm4W;
+	Mon, 11 May 2026 10:58:45 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id D409E402AB;
+	Mon, 11 May 2026 11:06:20 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
+ (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 11 May
+ 2026 11:06:17 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
+	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
+	<akpm@linux-foundation.org>, <bhe@redhat.com>, <rppt@kernel.org>,
+	<pasha.tatashin@soleen.com>, <pratyush@kernel.org>, <ruirui.yang@linux.dev>,
+	<rdunlap@infradead.org>, <pmladek@suse.com>, <dapeng1.mi@linux.intel.com>,
+	<kees@kernel.org>, <elver@google.com>, <kuba@kernel.org>,
+	<ebiggers@kernel.org>, <lirongqing@baidu.com>, <paulmck@kernel.org>,
+	<ruanjinjie@huawei.com>, <sourabhjain@linux.ibm.com>, <coxu@redhat.com>,
+	<leitao@debian.org>, <jbohac@suse.cz>, <ryan.roberts@arm.com>,
+	<osandov@fb.com>, <cfsworks@gmail.com>, <tangyouling@kylinos.cn>,
+	<ritesh.list@gmail.com>, <adityag@linux.ibm.com>, <guoren@kernel.org>,
+	<songshuaishuai@tinylab.org>, <kevin.brodsky@arm.com>,
+	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>,
+	<wangruikang@iscas.ac.cn>, <namcao@linutronix.de>, <chao.gao@intel.com>,
+	<seanjc@google.com>, <fuqiang.wang@easystack.cn>, <ardb@kernel.org>,
+	<chenjiahao16@huawei.com>, <hbathini@linux.ibm.com>,
+	<takahiro.akashi@linaro.org>, <james.morse@arm.com>, <lizhengyu3@huawei.com>,
+	<x86@kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<kexec@lists.infradead.org>
+Subject: [PATCH v13 12/15] LoongArch: kexec: Use crash_prepare_headers() helper to simplify code
+Date: Mon, 11 May 2026 11:04:51 +0800
+Message-ID: <20260511030454.1730881-13-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260511030454.1730881-1-ruanjinjie@huawei.com>
 References: <20260511030454.1730881-1-ruanjinjie@huawei.com>
- <20260511030454.1730881-5-ruanjinjie@huawei.com>
- <agGkvrg06KNDNfDi@gmail.com>
- <79c14bee-b1f5-4d70-8345-6582d6cf0128@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <79c14bee-b1f5-4d70-8345-6582d6cf0128@huawei.com>
-X-Debian-User: leitao
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.73]
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260511_061331_499273_B74E62CF 
-X-CRM114-Status: GOOD (  24.30  )
+X-CRM114-CacheID: sfid-20260510_200625_042632_82BADB4B 
+X-CRM114-Status: GOOD (  12.92  )
 X-Mailman-Approved-At: Tue, 12 May 2026 10:56:26 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -96,60 +101,108 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, May 11, 2026 at 07:30:44PM +0800, Jinjie Ruan wrote:
-> 
-> 
-> On 5/11/2026 5:46 PM, Breno Leitao wrote:
-> > On Mon, May 11, 2026 at 11:04:43AM +0800, Jinjie Ruan wrote:
-> >> There is a race condition between the kexec_load() system call
-> >> (crash kernel loading path) and memory hotplug operations that can
-> >> lead to buffer overflow and potential kernel crash.
-> >>
-> >> During prepare_elf_headers(), the following steps occur:
-> >> 1. The first for_each_mem_range() queries current System RAM memory ranges
-> >> 2. Allocates buffer based on queried count
-> >> 3. The 2st for_each_mem_range() populates ranges from memblock
-> >>
-> >> If memory hotplug occurs between step 1 and step 3, the number of ranges
-> >> can increase, causing out-of-bounds write when populating cmem->ranges[].
-> >>
-> >> This happens because kexec_load() uses kexec_trylock (atomic_t) while
-> >> memory hotplug uses device_hotplug_lock (mutex), so they don't serialize
-> >> with each other.
-> >>
-> >> Add the explicit bounds checking to prevent out-of-bounds access.
-> > 
-> > It seems you have a TOCTOU type of issue, and this seems to be shrinking
-> > the window, but not fully solving it?
-> 
-> Hi Breno,
-> 
-> Thanks for your comments regarding the TOCTOU issue.
-> 
-> You are correct that the current bounds checking only "shrinks the
-> window" and prevents a kernel crash, but doesn't fully guarantee header
-> consistency if a race occurs.
-> 
-> In my local environment, this race is extremely difficult to reproduce,
-> but it is theoretically possible.
-> 
-> To address this properly for arm64, I am considering two steps:
-> 
-> - For this patch: I will change the return value to -EAGAIN and keep the
-> bounds check. This ensures that even if a race happens, the kernel
-> remains safe (no OOB access), and user-space is notified to retry.
-> 
-> - Long-term solution: A better way to solve this is to implement ARM64
-> CRASH_HOTPLUG support (similar to x86). With crash hotplug, the kernel
-> will automatically re-generate the crash headers whenever a memory
-> hotplug event occurs. This makes the TOCTOU during the initial
-> kexec_load less critical, as any transient inconsistency will be
-> immediately corrected by the subsequent hotplug handler.
-> 
-> Does it make sense to you to use this patch as a safety guard first, and
-> then I (or someone else) follow up with the full CRASH_HOTPLUG support
-> for arm64 as [1]?
+Use the newly introduced crash_prepare_headers() function to replace
+the existing prepare_elf_headers(), allocate cmem and exclude crash kernel
+memory in the crash core, which reduce code duplication.
 
-It would be OK for me, but, make it explict that there is a TOCTOU
-issue, that depends on CRASH_HOTPLUG.
+Only the following two architecture functions need to be implemented:
+- arch_get_system_nr_ranges(). Use for_each_mem_range to traverse
+  and pre-count the max number of memory ranges.
+
+- arch_crash_populate_cmem(). Use for_each_mem_range to traverse
+  and collect the memory ranges and fills them into cmem.
+
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Youling Tang <tangyouling@kylinos.cn>
+Cc: Baoquan He <bhe@redhat.com>
+Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+Acked-by: Baoquan He <bhe@redhat.com>
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
+ arch/loongarch/kernel/machine_kexec_file.c | 46 +++++++---------------
+ 1 file changed, 14 insertions(+), 32 deletions(-)
+
+diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+index 167392c1da33..3d0386ee18ef 100644
+--- a/arch/loongarch/kernel/machine_kexec_file.c
++++ b/arch/loongarch/kernel/machine_kexec_file.c
+@@ -56,51 +56,33 @@ static void cmdline_add_initrd(struct kimage *image, unsigned long *cmdline_tmpl
+ }
+ 
+ #ifdef CONFIG_CRASH_DUMP
+-
+-static int prepare_elf_headers(void **addr, unsigned long *sz)
++unsigned int arch_get_system_nr_ranges(void)
+ {
+-	int ret, nr_ranges;
+-	uint64_t i;
++	int nr_ranges = 2; /* for exclusion of crashkernel region */
+ 	phys_addr_t start, end;
+-	struct crash_mem *cmem;
++	uint64_t i;
+ 
+-	nr_ranges = 2; /* for exclusion of crashkernel region */
+ 	for_each_mem_range(i, &start, &end)
+ 		nr_ranges++;
+ 
+-	cmem = kmalloc_flex(*cmem, ranges, nr_ranges);
+-	if (!cmem)
+-		return -ENOMEM;
++	return nr_ranges;
++}
++
++int arch_crash_populate_cmem(struct crash_mem *cmem)
++{
++	phys_addr_t start, end;
++	uint64_t i;
+ 
+-	cmem->max_nr_ranges = nr_ranges;
+-	cmem->nr_ranges = 0;
+ 	for_each_mem_range(i, &start, &end) {
+-		if (cmem->nr_ranges >= cmem->max_nr_ranges) {
+-			ret = -ENOMEM;
+-			goto out;
+-		}
++		if (cmem->nr_ranges >= cmem->max_nr_ranges)
++			return -ENOMEM;
+ 
+ 		cmem->ranges[cmem->nr_ranges].start = start;
+ 		cmem->ranges[cmem->nr_ranges].end = end - 1;
+ 		cmem->nr_ranges++;
+ 	}
+ 
+-	/* Exclude crashkernel region */
+-	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
+-	if (ret < 0)
+-		goto out;
+-
+-	if (crashk_low_res.end) {
+-		ret = crash_exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
+-		if (ret < 0)
+-			goto out;
+-	}
+-
+-	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
+-
+-out:
+-	kfree(cmem);
+-	return ret;
++	return 0;
+ }
+ 
+ /*
+@@ -168,7 +150,7 @@ int load_other_segments(struct kimage *image,
+ 		void *headers;
+ 		unsigned long headers_sz;
+ 
+-		ret = prepare_elf_headers(&headers, &headers_sz);
++		ret = crash_prepare_headers(true, &headers, &headers_sz, NULL);
+ 		if (ret < 0) {
+ 			pr_err("Preparing elf core header failed\n");
+ 			goto out_err;
+-- 
+2.34.1
+
 
