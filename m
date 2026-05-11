@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 970F3CD37BE
-	for <kexec@archiver.kernel.org>; Mon, 11 May 2026 16:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1FDA7CD4840
+	for <kexec@archiver.kernel.org>; Mon, 11 May 2026 16:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
 	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=wrqTfVPdTZxJRp68YocSY09APfo4bTsMDgF1qR5U+20=; b=wZKB8eWWYX+fx8eue876JFCuZn
-	HlGRieiH3E5izb7b6dh5Q2Uu8uX9uWnbkQrJ7GiZJ/nUk/vPqhtju3ICrSSoKKio+/rnLUbpzDvCE
-	KZi/8O0OMPZaU3joJrx9NWYQQvxi9oe/O0a7yxKuwupaXwSnIT5br0O2EC2paTEDOWLfXTTbNtVLW
-	CmZdbrBJbETEsZD8uYLolY5K5+c6tvSf49OkmgEpLCNBWrW3Wv5Uox6f49skWOrQ12uDgXnR0yhB7
-	n5Me9FR1alSQltGyy5imEVE/9Zfeysk0accn1oMlmLLoX33eT9CVf68FFKUW6yh1qKseZuemiYoBN
-	wwR2frAQ==;
+	bh=ISXCqu7Dapk2X/iDVs449kzp7kPa/3NYbJqZeg9B4PI=; b=nf7eZ338liBWlk2QHuoM5D9PWd
+	BXgKvDMkOHANO8qmAMXcYVjdsn4nkICDT7q91gzvJ/3g8wOYSUnOuj7KnzQWgMOO6Z5hpKwENtxGD
+	qwJAMBV9OAEVqKvSuTo04IQkXmv7y/6sEHGIT0LJ7bXVc/7BMXElsSLIT3iOnZAOxEtCts/X0ygji
+	iy2qxu+skIEdAGLai1J/oUTnT7FME9mC15/KmglVB1YMj1dkL5Px7uGuO1ZcQKL29B02Ajye9YpCO
+	4KJV7vVZrakpGUmiokReEXbQJgYbGPPyVySf+C35bm3aT6hEBIcdz9Irzj3ZhS3uF4T1BifW77n6y
+	SpJdDnaw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMTSF-0000000ECTD-19nV;
-	Mon, 11 May 2026 16:26:03 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wMTUZ-0000000ECjs-0Xic;
+	Mon, 11 May 2026 16:28:27 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMTS9-0000000ECSs-2MA6
+	id 1wMTUX-0000000ECjS-0Q05
 	for kexec@lists.infradead.org;
-	Mon, 11 May 2026 16:25:57 +0000
+	Mon, 11 May 2026 16:28:26 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id C91B36001A;
-	Mon, 11 May 2026 16:25:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C686C2BCC9;
-	Mon, 11 May 2026 16:25:54 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id ABD3D439CD;
+	Mon, 11 May 2026 16:28:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D586C2BCB0;
+	Mon, 11 May 2026 16:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778516756;
-	bh=qrw+cNWHzlyf8OR75OuLW8AXYM+NnLkhDwF7fpuKwm0=;
+	s=k20201202; t=1778516904;
+	bh=u5JXHEfkMPoZSqSacIx/XE1J9UzNOfNs7ZcjLVjNd/w=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=pUXVVVwGAJN+u+9N0+31sblPJ4F4UWk6pPMzc+qZHLlm+J+vKIZu7kcFcW6uDlS1+
-	 3r2woy3sazFt2w9ffUCV7Krk1EzPmX/B3GcNzzFK/kniGNb0eMAHWqmQfgeQhWyjul
-	 X7fbOi4vvdOEUKwpqV3YvdanWBdGW9GcWhFuTOKAeLBW8EBV3S+UySWxIrykPBLokI
-	 4rijrpU4jyvbO8oJDUmfCezSBrvYyh6rjhP4+Qogwjxnqg+X9rcNi4I7z7DWmoBb6I
-	 jhdDXGVYZddJIbK6/63qYps2PN7hnbkJTcF/45ycA5jJsglIYnIdlofPbhc/157lc8
-	 XHvOmN2BIMubw==
+	b=o7FW2XxXRBGQ8nfAo9dFMeDzenLwFr5eECqJwnbVmgMyiw5p8jdDRLdXgOrXzTjJj
+	 7x6AbZ9eMVptgkc4wbEdnNy/O+Iv3N7nTo8ftFOhKFmXVdl95Wbn3dETbq4sPA5LIx
+	 kPTVdQK0EgSHXiqD1o2sgdnc7GhQna80NaZglPCQ+hvuHHKx9E101fHPbvR3a2KzmB
+	 Ju6MC6ubbO+lT+62igLLYQ8cEYJXv+G1AOlo4Y4Y5Jn1PgtUBfotQPCc00nKWfaYty
+	 0KV46X6QjdM1qQaKlR7TE13d3puNKJkj/veUh76++YNF/iHFIRlNStUuARkvttHjwR
+	 imhnJT0gJCRdA==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>
 Cc: Pratyush Yadav <pratyush@kernel.org>,  Pasha Tatashin
@@ -51,17 +51,20 @@ Cc: Pratyush Yadav <pratyush@kernel.org>,  Pasha Tatashin
  <akpm@linux-foundation.org>,  Jason Miu <jasonmiu@google.com>,
   kexec@lists.infradead.org,  linux-mm@kvack.org,
   linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/12] kho: generalize radix tree APIs
-In-Reply-To: <agG-OuOTAg5YD-CV@kernel.org> (Mike Rapoport's message of "Mon,
-	11 May 2026 14:32:10 +0300")
+Subject: Re: [PATCH 02/12] kho: store incoming radix tree in kho_in
+In-Reply-To: <agHA2imH5hdMSlId@kernel.org> (Mike Rapoport's message of "Mon,
+	11 May 2026 14:43:22 +0300")
 References: <20260429133928.850721-1-pratyush@kernel.org>
-	<20260429133928.850721-2-pratyush@kernel.org>
-	<agG-OuOTAg5YD-CV@kernel.org>
-Date: Mon, 11 May 2026 18:25:52 +0200
-Message-ID: <2vxz8q9pdib3.fsf@kernel.org>
+	<20260429133928.850721-3-pratyush@kernel.org>
+	<agHA2imH5hdMSlId@kernel.org>
+Date: Mon, 11 May 2026 18:28:21 +0200
+Message-ID: <2vxz4ikddi6y.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260511_092825_178103_FF6C8C0D 
+X-CRM114-Status: GOOD (  20.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,96 +81,91 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On Mon, May 11 2026, Mike Rapoport wrote:
 
-> On Wed, Apr 29, 2026 at 03:39:03PM +0200, Pratyush Yadav wrote:
+> On Wed, Apr 29, 2026 at 03:39:04PM +0200, Pratyush Yadav wrote:
 >> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 >> 
->> The KHO radix tree is a data structure that can track the presence or
->> absence of an arbitrary key, with nothing inherently tied to KHO memory
->> preservation tracking. This was one of the design goals of the radix
->> tree. This was done to enable it to be re-used by other users of KHO.
->> 
->> Despite that, the radix tree APIs are very closely tied to KHO memory
->> preservation tracking. Adding a key is done by kho_radix_add_page(),
->> which encodes it as a page tracking operation and takes in PFN and
->> order. kho_radix_del_page() does the same. These functions encode the
->> key internally that goes into the radix tree. kho_radix_walk_tree() does
->> the same by baking the PFN and order into the callback arguments.
->> 
->> Generalize the APIs by taking the key directly and doing the encoding at
->> the callers. Rename the functions to kho_radix_add_key() and
->> kho_radix_del_key(). In practice, this removes a line each from the
->> functions and moves the encoding function call to the callers.
->> Similarly, update kho_radix_tree_walk_callback_t to take the key
->> directly.
->> 
->> To keep the naming convention clearer, rename
->> kho_radix_{encode,decode}_key() to kho_{encode,decode}_radix_key().
+>> This allows other functions to also use the radix tree. While at it,
+>> also use kho_get_mem_map_phys() instead of duplicating the code to get
+>> the radix tree root from the FDT.
 >> 
 >> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 >> ---
->>  include/linux/kho_radix_tree.h     | 18 +++----
->>  kernel/liveupdate/kexec_handover.c | 76 ++++++++++++++----------------
->>  2 files changed, 42 insertions(+), 52 deletions(-)
+>>  kernel/liveupdate/kexec_handover.c | 27 ++++++++-------------------
+>>  1 file changed, 8 insertions(+), 19 deletions(-)
 >> 
->> diff --git a/include/linux/kho_radix_tree.h b/include/linux/kho_radix_tree.h
->> index 84e918b96e53..f368f3b9f923 100644
->> --- a/include/linux/kho_radix_tree.h
->> +++ b/include/linux/kho_radix_tree.h
->> @@ -85,7 +85,7 @@ static struct kho_out kho_out = {
+>> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+>> index ba568d34c5b4..5758dc6fab5d 100644
+>> --- a/kernel/liveupdate/kexec_handover.c
+>> +++ b/kernel/liveupdate/kexec_handover.c
+>> @@ -1294,6 +1294,7 @@ struct kho_in {
+>>  	char previous_release[__NEW_UTS_LEN + 1];
+>>  	u32 kexec_count;
+>>  	struct kho_debugfs dbg;
+>> +	struct kho_radix_tree radix_tree;
 >>  };
 >>  
->>  /**
->> - * kho_radix_encode_key - Encodes a physical address and order into a radix key.
->> + * kho_encode_radix_key - Encodes a physical address and order into a radix key.
+>>  static struct kho_in kho_in = {
+>> @@ -1373,24 +1374,10 @@ EXPORT_SYMBOL_GPL(kho_retrieve_subtree);
+>>  
+>>  static int __init kho_mem_retrieve(const void *fdt)
+>>  {
+>> -	struct kho_radix_tree tree;
+>> -	const phys_addr_t *mem;
+>> -	int len;
+>> -
+>> -	/* Retrieve the KHO radix tree from passed-in FDT. */
+>> -	mem = fdt_getprop(fdt, 0, KHO_FDT_MEMORY_MAP_PROP_NAME, &len);
+>> -
+>> -	if (!mem || len != sizeof(*mem)) {
+>> -		pr_err("failed to get preserved KHO memory tree\n");
+>> -		return -ENOENT;
+>> -	}
+>> -
+>> -	if (!*mem)
+>> -		return -EINVAL;
+>> -
+>> -	tree.root = phys_to_virt(*mem);
+>> -	mutex_init(&tree.lock);
+>> -	return kho_radix_walk_tree(&tree, kho_preserved_memory_reserve);
+>> +	kho_in.radix_tree.root = phys_to_virt(kho_get_mem_map_phys(fdt));
 >
-> Let's keep kho_radix_ prefix for namespasing please.
-> This is the common practice these days.
+> Do we really want to remove an explicit check for 0 and get a WARN() in
+> kho_radix_walk_tree()?
 
-I am keeping the namespacing, just moving it out of the "kho_radix"
-namespace to "kho" namespace. The mental model is that this function has
-nothing to do with the radix tree. It is just something KHO uses for one
-of its radix tree, so it should live in the "kho" namespace not
-"kho_radix".
+If mem_map_phys is 0 then kho_populate() never sets kho_in.scratch_phys
+and thus kho_mem_retrieve() never gets called. So here it will never be
+0, and if it is, a WARN() is certainly warranted.
 
-Does that make sense? I can add this explanation to the commit message
-as well.
+Perhaps I should add a comment since this isn't so obvious?
 
 >
->>   * @phys: The physical address of the page.
->>   * @order: The order of the page.
->>   *
->
-> ...
->
->> @@ -144,24 +144,21 @@ static unsigned long kho_radix_get_table_index(unsigned long key,
+>> +	mutex_init(&kho_in.radix_tree.lock);
+>> +	return kho_radix_walk_tree(&kho_in.radix_tree,
+>> +				   kho_preserved_memory_reserve);
 >>  }
 >>  
->>  /**
->> - * kho_radix_add_page - Marks a page as preserved in the radix tree.
->> + * kho_radix_add_key - Add a key to the radix tree.
->>   * @tree: The KHO radix tree.
->> - * @pfn: The page frame number of the page to preserve.
->> - * @order: The order of the page.
->> + * @key: The key to add.
->>   *
->> - * This function traverses the radix tree based on the key derived from @pfn
->> - * and @order. It sets the corresponding bit in the leaf bitmap to mark the
->> - * page for preservation. If intermediate nodes do not exist along the path,
->> - * they are allocated and added to the tree.
->> + * This function traverses the radix tree based on the key provided. It sets the
+>>  static __init int kho_out_fdt_setup(void)
+>> @@ -1597,8 +1584,10 @@ void __init kho_memory_init(void)
+>>  	if (kho_in.scratch_phys) {
+>>  		kho_scratch = phys_to_virt(kho_in.scratch_phys);
+>>  
+>> -		if (kho_mem_retrieve(kho_get_fdt()))
+>> +		if (kho_mem_retrieve(kho_get_fdt())) {
+>>  			kho_in.fdt_phys = 0;
+>> +			kho_in.radix_tree.root = NULL;
 >
-> Nit:                                                     @key here and in
-> the comments below.
+> I'd make kho_mem_retrieve() void and put these there.
 
-ACK.
+Sure, will do.
 
 >
->> + * corresponding bit in the leaf bitmap to mark the key as present. If
->> + * intermediate nodes do not exist along the path, they are allocated and added
->> + * to the tree.
->>   *
->>   * Return: 0 on success, or a negative error code on failure.
->>   */
+>> +		}
+>>  	} else {
+>>  		kho_reserve_scratch();
+>>  	}
+>> -- 
+>> 2.54.0.545.g6539524ca2-goog
+>> 
 
 -- 
 Regards,
