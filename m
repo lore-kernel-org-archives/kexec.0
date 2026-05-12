@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 35B37CD4F25
-	for <kexec@archiver.kernel.org>; Tue, 12 May 2026 13:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 57495CD4F24
+	for <kexec@archiver.kernel.org>; Tue, 12 May 2026 14:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
 	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=eC9gZXpJ4EPF9vZd09rRVNcgnC7OXE4OW3hXTqSmu6U=; b=Oc7/GSacZDg1KZwYlts/7GiFTQ
-	/+1RfrWkSsHmR7PZsWxmEedMLFUL+eu3NIMxWgBtsTs03HM54PQqOnq+45cU+4Kirs8Qy8694utpY
-	rNlAI4kYjKVAB3sH7P8vw5KjJ67fPIqVu+m52V33e/2W2YC309IxzLueTsPUJlH3EzA65FJ15U6Kk
-	O62IQoDNP0c/7Vs0wRFd/JtWZvO5ShWUF3ngqfD67mM3/8xIa4Omn/kc0qMzJV5RzJ2pUYGky3asB
-	vpSzJMin1h73/d4pQU4y6nRDRrfUq/HbIIBUbMlKRj2ZLsJ+1cgfxNdhkcyYsOiIjDc66SzM6Wgbi
-	DbjpegZg==;
+	bh=SeXyZ2K2XEjBeKwwGeb4rWTFXw2PqWPPbiWdlJeVqhc=; b=PQqCUbtifj8K99lOKvR48cVaV7
+	/zJD8nzOwWPx5amn+/fH5FNjzY2/ZI0D6BGBIyzLxuTvjpqZKTLXOb2VH/dS4W+O0nYpfulz6eYjv
+	wJi7Ar1puOvhQ6ih95PUEfCpCdZSymp/LY5XJSXpLqJzzYe6OnxY3PhRCVT6BNR0SRIhNlx9kRuY6
+	Sa2BmmQywLpIEe+jpqwoC6LO+625xdsu91Zh+mFJLn9gORwaoji5V7KIp4Ukkz61PDJcSYH7cHYly
+	6rSnIopGOzzrgfozQON4PYI64vY1qunnL0xcFWxQoAtGcmvnJjveuE0AV+/V6X1pGKMvc4uUxYnr9
+	tPjmtXuw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMnd0-0000000Gvda-0q7T;
-	Tue, 12 May 2026 13:58:30 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wMnih-0000000Gwp0-12K8;
+	Tue, 12 May 2026 14:04:23 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMncy-0000000Gvd0-3iQi
+	id 1wMnid-0000000Gwni-401c
 	for kexec@lists.infradead.org;
-	Tue, 12 May 2026 13:58:28 +0000
+	Tue, 12 May 2026 14:04:22 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 0F36A621A1;
-	Tue, 12 May 2026 13:58:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A61B1C2BCF6;
-	Tue, 12 May 2026 13:58:24 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 4ACED42B86;
+	Tue, 12 May 2026 14:04:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AE51C2BCB0;
+	Tue, 12 May 2026 14:04:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778594307;
-	bh=lxZVRh2O9sGOeox3/BIKDSfpBEkbcre7CnidujNM3PU=;
+	s=k20201202; t=1778594659;
+	bh=Q8yAjyxfHY28L//mLfMimLlu3G9TMaVuo/gBH1FBvpA=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=eUdrwDoL5ga34Pd2pR9ISntLsSuma2iCTXvgmVA3b6kYl4Mfi3lqJnqjJtNvFIi61
-	 RomM96APQtCGXQ/E/BH1Cp6pjr/sdi1fk9LHIhlUbMcvz/KSsoT48Rvp/AbDS4nk5y
-	 TdKzu8MVFakMEwO1K1rn+MxqUJDrMKQDaj1yLxl/UDIdYl8p64pQcaHfbfmp0QEO9C
-	 WQXQF75Qts3AQoKlNIxT+3sGkiUQ/A53t49dHujHkAbnu+pw3RTXXb5Z3sRTTwRsH7
-	 BXIVFeaqEPzlBj6HrKxrS6wlACZr/abS70OVsAo79hrUeO9dVBqLffmsaQYb+0Ll2m
-	 /xvKKiyWs7oMg==
+	b=cq2MuUjxZaaz+oJSEXJdEeDtgTFAJIvx2jPoPT4P6i2bH/XG9P0Onm/6MTLHNcxKw
+	 qoLuRi9AHWEatgSAaWFT5oiZwoPK1T5hcGQLdHc+Lg72YDYnVs3g2tzz1MTl1RiiR3
+	 C4v1FuubXlphP8LVjCu4oVy53Rjqb12zvaF1rA7/dZ036+hm6IWAne2C34nnB7tcTp
+	 auxKGuYUl/ylMxcMga0/vMAqhTqfNHr1cbjup6I/LfIcwOeI2Ylh14yHINQabwAWJN
+	 y+kSgpKNsEWxbyTw/oGT1Obf5TzYUoR0dyqv4Xq6fVs201SJt7/HF3JZhvpg4n/SPH
+	 nMxBaKQbDnbVw==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>
 Cc: linux-kselftest@vger.kernel.org,  rppt@kernel.org,  shuah@kernel.org,
@@ -49,17 +49,20 @@ Cc: linux-kselftest@vger.kernel.org,  rppt@kernel.org,  shuah@kernel.org,
   linux-kernel@vger.kernel.org,  dmatlack@google.com,
   kexec@lists.infradead.org,  pratyush@kernel.org,  skhawaja@google.com,
   graf@amazon.com
-Subject: Re: [PATCH 2/5] liveupdate: Remove limit on the number of files per
- session
-In-Reply-To: <20260414200237.444170-3-pasha.tatashin@soleen.com> (Pasha
-	Tatashin's message of "Tue, 14 Apr 2026 20:02:34 +0000")
+Subject: Re: [PATCH 3/5] selftests/liveupdate: Test session and file limit
+ removal
+In-Reply-To: <20260414200237.444170-4-pasha.tatashin@soleen.com> (Pasha
+	Tatashin's message of "Tue, 14 Apr 2026 20:02:35 +0000")
 References: <20260414200237.444170-1-pasha.tatashin@soleen.com>
-	<20260414200237.444170-3-pasha.tatashin@soleen.com>
-Date: Tue, 12 May 2026 15:58:23 +0200
-Message-ID: <2vxzwlx8afwg.fsf@kernel.org>
+	<20260414200237.444170-4-pasha.tatashin@soleen.com>
+Date: Tue, 12 May 2026 16:04:15 +0200
+Message-ID: <2vxzse7wafmo.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260512_070420_028991_D24D5ECF 
+X-CRM114-Status: GOOD (  24.80  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,535 +79,140 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On Tue, Apr 14 2026, Pasha Tatashin wrote:
 
-> To remove the fixed limit on the number of preserved files per session,
-> transition the file metadata serialization from a single contiguous memory
-> block to a chain of linked blocks.
-
-Same comment as previous patch about a general linked block data
-structure here.
-
+> With the removal of static limits on the number of sessions and files per
+> session, the orchestrator now uses dynamic allocation.
 >
-> ABI Changes:
-> - Define 'struct luo_file_header_ser' to manage linked blocks in preserved
->   memory.
-> - Update 'struct luo_file_set_ser' to point to the head of the block chain.
-> - Bump the session ABI version to 'luo-session-v4' to reflect these breaking
->   changes.
+> Add new test cases to verify that the system can handle a large number of
+> sessions and files. These tests ensure that the dynamic block allocation
+> and reuse logic for session metadata and outgoing files work correctly
+> beyond the previous static limits.
 >
 > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 > ---
->  include/linux/kho/abi/luo.h      |  35 ++++-
->  kernel/liveupdate/luo_file.c     | 226 ++++++++++++++++++++-----------
->  kernel/liveupdate/luo_internal.h |  17 ++-
->  3 files changed, 189 insertions(+), 89 deletions(-)
+>  .../testing/selftests/liveupdate/liveupdate.c | 99 +++++++++++++++++++
+>  1 file changed, 99 insertions(+)
 >
-> diff --git a/include/linux/kho/abi/luo.h b/include/linux/kho/abi/luo.h
-> index f5732958545e..a15f6a0f3d93 100644
-> --- a/include/linux/kho/abi/luo.h
-> +++ b/include/linux/kho/abi/luo.h
-> @@ -84,8 +84,13 @@
->   *
->   *   - struct luo_session_ser:
->   *     Metadata for a single session, including its name and a physical pointer
-> - *     to another preserved memory block containing an array of
-> - *     `struct luo_file_ser` for all files in that session.
-> + *     to the first `struct luo_file_header_ser` for all files in that session.
-> + *     Multiple blocks are linked via the `next` field in the header.
-> + *
-> + *   - struct luo_file_header_ser:
-> + *     Header for the file data block. Contains the physical address of the
-> + *     next file data block and the number of `struct luo_file_ser` entries
-> + *     that follow this header in the current block.
->   *
->   *   - struct luo_file_ser:
->   *     Metadata for a single preserved file. Contains the `compatible` string to
-> @@ -134,11 +139,29 @@ struct luo_file_ser {
->  	u64 token;
->  } __packed;
+> diff --git a/tools/testing/selftests/liveupdate/liveupdate.c b/tools/testing/selftests/liveupdate/liveupdate.c
+> index 37c808fbe1e9..0eaf97b19267 100644
+> --- a/tools/testing/selftests/liveupdate/liveupdate.c
+> +++ b/tools/testing/selftests/liveupdate/liveupdate.c
+> @@ -22,6 +22,7 @@
+>  #include <fcntl.h>
+>  #include <string.h>
+>  #include <sys/ioctl.h>
+> +#include <sys/resource.h>
+>  #include <unistd.h>
 >  
-> +/**
-> + * struct luo_file_header_ser - Header for the serialized file data block.
-> + * @next:  Physical address of the next struct luo_file_header_ser.
-> + * @count: The number of `struct luo_file_ser` entries that immediately
-> + *         follow this header in the memory block.
-> + *
-> + * This structure is located at the beginning of a block of
-> + * physical memory preserved across the kexec. It provides the necessary
-> + * metadata to interpret the array of file entries that follow.
-> + *
-> + * If this structure is modified, `LUO_FDT_SESSION_COMPATIBLE` must be updated.
-> + */
-> +struct luo_file_header_ser {
-
-Nit: Same as before, can we rename it to make it clear that this is a
-block header?
-
-> +	u64 next;
-> +	u64 count;
-> +} __packed;
-> +
->  /**
->   * struct luo_file_set_ser - Represents the serialized metadata for file set
-> - * @files:   The physical address of a contiguous memory block that holds
-> - *           the serialized state of files (array of luo_file_ser) in this file
-> - *           set.
-> + * @files:   The physical address of the first `struct luo_file_header_ser`.
-> + *           This structure is the header for a block of memory containing
-> + *           an array of `struct luo_file_ser` entries. Multiple blocks are
-> + *           linked via the `next` field in the header.
->   * @count:   The total number of files that were part of this session during
->   *           serialization. Used for iteration and validation during
->   *           restoration.
-> @@ -154,7 +177,7 @@ struct luo_file_set_ser {
->   *                          luo_session_header_ser
->   */
->  #define LUO_FDT_SESSION_NODE_NAME	"luo-session"
-> -#define LUO_FDT_SESSION_COMPATIBLE	"luo-session-v3"
-> +#define LUO_FDT_SESSION_COMPATIBLE	"luo-session-v4"
->  #define LUO_FDT_SESSION_HEADER		"luo-session-header"
->  
->  /**
-> diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
-> index dedbb8d02e6a..20a2d776cff4 100644
-> --- a/kernel/liveupdate/luo_file.c
-> +++ b/kernel/liveupdate/luo_file.c
-> @@ -119,10 +119,12 @@ static LIST_HEAD(luo_file_handler_list);
->  /* Keep track of files being preserved by LUO */
->  static DEFINE_XARRAY(luo_preserved_files);
->  
-> -/* 2 4K pages, give space for 128 files per file_set */
-> +/* 2 4K pages, give space for 127 files per block */
->  #define LUO_FILE_PGCNT		2ul
-> -#define LUO_FILE_MAX							\
-> -	((LUO_FILE_PGCNT << PAGE_SHIFT) / sizeof(struct luo_file_ser))
-> +#define LUO_FILE_BLOCK_MAX					\
-> +	(((LUO_FILE_PGCNT << PAGE_SHIFT) -			\
-> +	  sizeof(struct luo_file_header_ser)) /			\
-> +	 sizeof(struct luo_file_ser))
->  
->  /**
->   * struct luo_file - Represents a single preserved file instance.
-> @@ -158,7 +160,7 @@ static DEFINE_XARRAY(luo_preserved_files);
->   * and the serialized state handle returned by the handler's .preserve()
->   * operation.
->   *
-> - * These instances are tracked in a per-file_set list. The @serialized_data
-> + * These structures are tracked in a per-file_set list. The @serialized_data
->   * field, which holds a handle to the file's serialized state, may be updated
->   * during the .freeze() callback before being serialized for the next kernel.
->   * After reboot, these structures are recreated by luo_file_deserialize() and
-> @@ -175,37 +177,68 @@ struct luo_file {
->  	u64 token;
->  };
->  
-> -static int luo_alloc_files_mem(struct luo_file_set *file_set)
-> +static int luo_file_add_block(struct luo_file_set *file_set,
-> +			      struct luo_file_header_ser *ser)
->  {
-> -	size_t size;
-> -	void *mem;
-> +	struct luo_file_block *block;
->  
-> -	if (file_set->files)
-> -		return 0;
-> -
-> -	WARN_ON_ONCE(file_set->count);
-> +	if (file_set->nblocks >= LUO_MAX_BLOCKS)
-> +		return -ENOSPC;
->  
-> -	size = LUO_FILE_PGCNT << PAGE_SHIFT;
-> -	mem = kho_alloc_preserve(size);
-> -	if (IS_ERR(mem))
-> -		return PTR_ERR(mem);
-> +	block = kzalloc_obj(*block);
-> +	if (!block)
-> +		return -ENOMEM;
->  
-> -	file_set->files = mem;
-> +	block->ser = ser;
-> +	list_add_tail(&block->list, &file_set->blocks);
-> +	file_set->nblocks++;
->  
->  	return 0;
+>  #include <linux/liveupdate.h>
+> @@ -386,4 +387,102 @@ TEST_F(liveupdate_device, prevent_double_preservation)
+>  	ASSERT_EQ(close(session_fd2), 0);
 >  }
 >  
-> -static void luo_free_files_mem(struct luo_file_set *file_set)
-> +static int luo_file_create_ser_block(struct luo_file_set *file_set)
->  {
-> -	/* If file_set has files, no need to free preservation memory */
-> -	if (file_set->count)
-> -		return;
-> +	struct luo_file_block *last = NULL;
-> +	struct luo_file_header_ser *ser;
-> +	int err;
->  
-> -	if (!file_set->files)
-> -		return;
-> +	ser = kho_alloc_preserve(LUO_FILE_PGCNT << PAGE_SHIFT);
-> +	if (IS_ERR(ser))
-> +		return PTR_ERR(ser);
+> +static void ensure_nofile_limit(struct __test_metadata *_metadata,
+> +				long min_limit)
+> +{
+> +	struct rlimit hl;
 > +
-> +	if (!list_empty(&file_set->blocks))
-> +		last = list_last_entry(&file_set->blocks, struct luo_file_block, list);
+> +	if (getrlimit(RLIMIT_NOFILE, &hl) < 0)
+> +		ksft_exit_fail_msg("getrlimit failed: %s\n", strerror(errno));
 > +
-> +	err = luo_file_add_block(file_set, ser);
-> +	if (err)
-> +		goto err_unpreserve;
+> +	if (hl.rlim_cur >= min_limit)
+> +		return;
 > +
-> +	if (last)
-> +		last->ser->next = virt_to_phys(ser);
-
-Same comments as last patch about list_last_entry_or_null() and moving
-this to luo_file_add_block().
-
+> +	hl.rlim_cur = min_limit;
+> +	if (hl.rlim_cur > hl.rlim_max)
+> +		hl.rlim_max = hl.rlim_cur;
 > +
-> +	return 0;
->  
-> -	kho_unpreserve_free(file_set->files);
-> -	file_set->files = NULL;
-> +err_unpreserve:
-> +	kho_unpreserve_free(ser);
-> +	return err;
+> +	if (setrlimit(RLIMIT_NOFILE, &hl) < 0) {
+> +		if (errno == EPERM) {
+> +			SKIP(return, "Insufficient privileges to set RLIMIT_NOFILE to %ld",
+> +			     hl.rlim_cur);
+> +		}
+> +		ksft_exit_fail_msg("setrlimit to %ld failed: %s\n",
+> +				   hl.rlim_cur, strerror(errno));
+> +	}
 > +}
 > +
-> +static void luo_file_destroy_ser_blocks(struct luo_file_set *file_set,
-> +					bool unpreserve)
-> +{
-> +	struct luo_file_block *block, *tmp;
-> +
-> +	list_for_each_entry_safe(block, tmp, &file_set->blocks, list) {
-> +		if (block->ser) {
-
-Same here. block is always created with its ser, so why have this check?
-
-> +			if (unpreserve)
-> +				kho_unpreserve_free(block->ser);
-> +			else
-> +				kho_restore_free(block->ser);
-
-And same comment about the nastiness here, but once again I have nothing
-better to offer.
-
-> +		}
-> +		list_del(&block->list);
-> +		kfree(block);
-> +		file_set->nblocks--;
-> +	}
->  }
->  
->  static unsigned long luo_get_id(struct liveupdate_file_handler *fh,
-> @@ -247,7 +280,9 @@ static bool luo_token_is_used(struct luo_file_set *file_set, u64 token)
->   * 3. Iterates through registered handlers, calling can_preserve() to find one
->   *    compatible with the given @fd.
->   * 4. Calls the handler's .preserve() operation, which saves the file's state
-> - *    and returns an opaque private data handle.
-> + *    and returns an opaque u64 handle. This is typically performed while the
-> + *    workload is still active to minimize the downtime during the
-> + *    actual reboot transition.
->   * 5. Adds the new instance to the file_set's internal list.
->   *
->   * On success, LUO takes a reference to the 'struct file' and considers it
-> @@ -277,17 +312,16 @@ int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd)
->  	if (luo_token_is_used(file_set, token))
->  		return -EEXIST;
->  
-> -	if (file_set->count == LUO_FILE_MAX)
-> -		return -ENOSPC;
-> +	if (file_set->count == file_set->nblocks * LUO_FILE_BLOCK_MAX) {
-> +		err = luo_file_create_ser_block(file_set);
-> +		if (err)
-> +			return err;
-> +	}
->  
->  	file = fget(fd);
->  	if (!file)
->  		return -EBADF;
->  
-> -	err = luo_alloc_files_mem(file_set);
-> -	if (err)
-> -		goto  err_fput;
-> -
->  	err = -ENOENT;
->  	down_read(&luo_register_rwlock);
->  	list_private_for_each_entry(fh, &luo_file_handler_list, list) {
-> @@ -301,7 +335,7 @@ int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd)
->  
->  	/* err is still -ENOENT if no handler was found */
->  	if (err)
-> -		goto err_free_files_mem;
-> +		goto err_fput;
->  
->  	/* safe to use fh because its module is pinned */
->  	err = xa_insert(&luo_preserved_files, luo_get_id(fh, file),
-> @@ -345,8 +379,6 @@ int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd)
->  	xa_erase(&luo_preserved_files, luo_get_id(fh, file));
->  err_module_put:
->  	module_put(fh->ops->owner);
-> -err_free_files_mem:
-> -	luo_free_files_mem(file_set);
->  err_fput:
->  	fput(file);
->  
-> @@ -399,7 +431,7 @@ void luo_file_unpreserve_files(struct luo_file_set *file_set)
->  		kfree(luo_file);
->  	}
->  
-> -	luo_free_files_mem(file_set);
-> +	luo_file_destroy_ser_blocks(file_set, true);
->  }
->  
->  static int luo_file_freeze_one(struct luo_file_set *file_set,
-> @@ -446,6 +478,7 @@ static void __luo_file_unfreeze(struct luo_file_set *file_set,
->  				struct luo_file *failed_entry)
->  {
->  	struct list_head *files_list = &file_set->files_list;
-> +	struct luo_file_block *block;
->  	struct luo_file *luo_file;
->  
->  	list_for_each_entry(luo_file, files_list, list) {
-> @@ -455,7 +488,11 @@ static void __luo_file_unfreeze(struct luo_file_set *file_set,
->  		luo_file_unfreeze_one(file_set, luo_file);
->  	}
->  
-> -	memset(file_set->files, 0, LUO_FILE_PGCNT << PAGE_SHIFT);
-> +	list_for_each_entry(block, &file_set->blocks, list) {
-> +		block->ser->count = 0;
-> +		memset(block->ser + 1, 0,
-> +		       (LUO_FILE_PGCNT << PAGE_SHIFT) - sizeof(*block->ser));
-> +	}
->  }
->  
->  /**
-> @@ -494,7 +531,8 @@ static void __luo_file_unfreeze(struct luo_file_set *file_set,
->  int luo_file_freeze(struct luo_file_set *file_set,
->  		    struct luo_file_set_ser *file_set_ser)
->  {
-> -	struct luo_file_ser *file_ser = file_set->files;
-> +	struct luo_file_block *block;
-> +	struct luo_file_ser *file_ser;
->  	struct luo_file *luo_file;
->  	int err;
->  	int i;
-> @@ -502,11 +540,18 @@ int luo_file_freeze(struct luo_file_set *file_set,
->  	if (!file_set->count)
->  		return 0;
->  
-> -	if (WARN_ON(!file_ser))
-> -		return -EINVAL;
-> +	block = list_first_entry(&file_set->blocks, struct luo_file_block, list);
-> +	file_ser = (void *)(block->ser + 1);
->  
->  	i = 0;
->  	list_for_each_entry(luo_file, &file_set->files_list, list) {
-> +		if (i == LUO_FILE_BLOCK_MAX) {
-> +			block->ser->count = i;
-> +			block = list_next_entry(block, list);
-> +			file_ser = (void *)(block->ser + 1);
-> +			i = 0;
-> +		}
-> +
->  		err = luo_file_freeze_one(file_set, luo_file);
->  		if (err < 0) {
->  			pr_warn("Freeze failed for token[%#0llx] handler[%s] err[%pe]\n",
-> @@ -521,10 +566,13 @@ int luo_file_freeze(struct luo_file_set *file_set,
->  		file_ser[i].token = luo_file->token;
->  		i++;
->  	}
-> +	block->ser->count = i;
->  
->  	file_set_ser->count = file_set->count;
-> -	if (file_set->files)
-> -		file_set_ser->files = virt_to_phys(file_set->files);
-> +	if (!list_empty(&file_set->blocks)) {
-> +		block = list_first_entry(&file_set->blocks, struct luo_file_block, list);
-> +		file_set_ser->files = virt_to_phys(block->ser);
-> +	}
->  
->  	return 0;
->  
-> @@ -746,10 +794,7 @@ int luo_file_finish(struct luo_file_set *file_set)
->  		kfree(luo_file);
->  	}
->  
-> -	if (file_set->files) {
-> -		kho_restore_free(file_set->files);
-> -		file_set->files = NULL;
-> -	}
-> +	luo_file_destroy_ser_blocks(file_set, false);
->  
->  	return 0;
->  }
-> @@ -782,8 +827,10 @@ int luo_file_finish(struct luo_file_set *file_set)
->  int luo_file_deserialize(struct luo_file_set *file_set,
->  			 struct luo_file_set_ser *file_set_ser)
->  {
-> -	struct luo_file_ser *file_ser;
-> -	u64 i;
-> +	struct luo_file_header_ser *header_ser;
-> +	struct luo_file_block *block;
-> +	u64 header_ser_pa;
-> +	int err;
->  
->  	if (!file_set_ser->files) {
->  		WARN_ON(file_set_ser->count);
-> @@ -791,7 +838,15 @@ int luo_file_deserialize(struct luo_file_set *file_set,
->  	}
->  
->  	file_set->count = file_set_ser->count;
-> -	file_set->files = phys_to_virt(file_set_ser->files);
-> +	header_ser_pa = file_set_ser->files;
-> +
-> +	while (header_ser_pa) {
-> +		header_ser = phys_to_virt(header_ser_pa);
-> +		err = luo_file_add_block(file_set, header_ser);
-> +		if (err)
-> +			return err;
-> +		header_ser_pa = header_ser->next;
-> +	}
->  
->  	/*
->  	 * Note on error handling:
-> @@ -808,42 +863,51 @@ int luo_file_deserialize(struct luo_file_set *file_set,
->  	 * userspace to detect the failure and trigger a reboot, which will
->  	 * reliably reset devices and reclaim memory.
->  	 */
-> -	file_ser = file_set->files;
-> -	for (i = 0; i < file_set->count; i++) {
-> -		struct liveupdate_file_handler *fh;
-> -		bool handler_found = false;
-> -		struct luo_file *luo_file;
-> -
-> -		down_read(&luo_register_rwlock);
-> -		list_private_for_each_entry(fh, &luo_file_handler_list, list) {
-> -			if (!strcmp(fh->compatible, file_ser[i].compatible)) {
-> -				if (try_module_get(fh->ops->owner))
-> -					handler_found = true;
-> -				break;
-> -			}
-> -		}
-> -		up_read(&luo_register_rwlock);
-> +	list_for_each_entry(block, &file_set->blocks, list) {
-> +		struct luo_file_ser *file_ser = (void *)(block->ser + 1);
->  
-> -		if (!handler_found) {
-> -			pr_warn("No registered handler for compatible '%.*s'\n",
-> -				(int)sizeof(file_ser[i].compatible),
-> -				file_ser[i].compatible);
-> -			return -ENOENT;
-> +		if (block->ser->count > LUO_FILE_BLOCK_MAX) {
-> +			pr_warn("File block contains too many entries: %llu\n",
-> +				block->ser->count);
-> +			return -EINVAL;
->  		}
->  
-> -		luo_file = kzalloc_obj(*luo_file);
-> -		if (!luo_file) {
-> -			module_put(fh->ops->owner);
-> -			return -ENOMEM;
-> -		}
-> +		for (int i = 0; i < block->ser->count; i++) {
-> +			struct liveupdate_file_handler *fh;
-> +			bool handler_found = false;
-> +			struct luo_file *luo_file;
-> +
-> +			down_read(&luo_register_rwlock);
-> +			list_private_for_each_entry(fh, &luo_file_handler_list, list) {
-> +				if (!strcmp(fh->compatible, file_ser[i].compatible)) {
-> +					if (try_module_get(fh->ops->owner))
-> +						handler_found = true;
-> +					break;
-> +				}
-> +			}
-> +			up_read(&luo_register_rwlock);
->  
-> -		/* safe to use fh because its module is pinned */
-> -		luo_file->fh = fh;
-> -		luo_file->file = NULL;
-> -		luo_file->serialized_data = file_ser[i].data;
-> -		luo_file->token = file_ser[i].token;
-> -		mutex_init(&luo_file->mutex);
-> -		list_add_tail(&luo_file->list, &file_set->files_list);
-> +			if (!handler_found) {
-> +				pr_warn("No registered handler for compatible '%.*s'\n",
-> +					(int)sizeof(file_ser[i].compatible),
-> +					file_ser[i].compatible);
-> +				return -ENOENT;
-> +			}
-> +
-> +			luo_file = kzalloc_obj(*luo_file);
-> +			if (!luo_file) {
-> +				module_put(fh->ops->owner);
-> +				return -ENOMEM;
-> +			}
-> +
-> +			/* safe to use fh because its module is pinned */
-> +			luo_file->fh = fh;
-> +			luo_file->file = NULL;
-> +			luo_file->serialized_data = file_ser[i].data;
-> +			luo_file->token = file_ser[i].token;
-> +			mutex_init(&luo_file->mutex);
-> +			list_add_tail(&luo_file->list, &file_set->files_list);
-> +		}
-
-Nit: this diff is very hard to read. Perhaps splitting this into helper
-functions would help?
-
->  	}
->  
->  	return 0;
-> @@ -852,12 +916,14 @@ int luo_file_deserialize(struct luo_file_set *file_set,
->  void luo_file_set_init(struct luo_file_set *file_set)
->  {
->  	INIT_LIST_HEAD(&file_set->files_list);
-> +	INIT_LIST_HEAD(&file_set->blocks);
->  }
->  
->  void luo_file_set_destroy(struct luo_file_set *file_set)
->  {
->  	WARN_ON(file_set->count);
->  	WARN_ON(!list_empty(&file_set->files_list));
-> +	WARN_ON(!list_empty(&file_set->blocks));
->  }
->  
->  /**
-> diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_internal.h
-> index a73f42069301..a92aaa9c073d 100644
-> --- a/kernel/liveupdate/luo_internal.h
-> +++ b/kernel/liveupdate/luo_internal.h
-> @@ -50,19 +50,30 @@ static inline int luo_ucmd_respond(struct luo_ucmd *ucmd,
->   */
->  #define luo_restore_fail(__fmt, ...) panic(__fmt, ##__VA_ARGS__)
->  
-> +/**
-> + * struct luo_file_block - Internal representation of a file serialization block.
-> + * @list: List head for linking blocks in memory.
-> + * @ser:  Pointer to the serialized header in preserved memory.
+> +/*
+> + * Test Case: Manage Many Sessions
+> + *
+> + * Verifies that a large number of sessions can be created and then
+> + * destroyed during normal system operation. This specifically tests the
+> + * dynamic block allocation and reuse logic for session metadata management
+> + * without preserving any files.
 > + */
-> +struct luo_file_block {
-> +	struct list_head list;
-> +	struct luo_file_header_ser *ser;
-> +};
+> +TEST_F(liveupdate_device, preserve_many_sessions)
+> +{
+> +#define MANY_SESSIONS 2000
+> +	int session_fds[MANY_SESSIONS];
+> +	int i;
 > +
->  /**
->   * struct luo_file_set - A set of files that belong to the same sessions.
->   * @files_list: An ordered list of files associated with this session, it is
->   *              ordered by preservation time.
-> - * @files:      The physically contiguous memory block that holds the serialized
-> - *              state of files.
-> + * @blocks:     The list of serialization blocks (struct luo_file_block).
->   * @count:      A counter tracking the number of files currently stored in the
->   *              @files_list for this session.
-> + * @nblocks:    The number of allocated serialization blocks.
->   */
->  struct luo_file_set {
->  	struct list_head files_list;
-> -	struct luo_file_ser *files;
-> +	struct list_head blocks;
->  	long count;
-> +	long nblocks;
->  };
->  
->  /**
+> +	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
+> +	if (self->fd1 < 0 && errno == ENOENT)
+> +		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
+> +	ASSERT_GE(self->fd1, 0);
+> +
+> +	ensure_nofile_limit(_metadata, MANY_SESSIONS + 10);
+> +	if (_metadata->exit_code == KSFT_SKIP)
+> +		return;
+
+Nit: This is strange. Why not just return errno in ensure_nofile_limit()
+and handle the skipping here? Same below.
+
+LGTM otherwise.
+
+> +
+> +	for (i = 0; i < MANY_SESSIONS; i++) {
+> +		char name[64];
+> +
+> +		snprintf(name, sizeof(name), "many-session-%d", i);
+> +		session_fds[i] = create_session(self->fd1, name);
+> +		ASSERT_GE(session_fds[i], 0);
+> +	}
+> +
+> +	for (i = 0; i < MANY_SESSIONS; i++)
+> +		ASSERT_EQ(close(session_fds[i]), 0);
+> +}
+> +
+> +/*
+> + * Test Case: Preserve Many Files
+> + *
+> + * Verifies that a large number of files can be preserved in a single session
+> + * and then destroyed during normal system operation. This tests the dynamic
+> + * block allocation and management for outgoing files.
+> + */
+> +TEST_F(liveupdate_device, preserve_many_files)
+> +{
+> +#define MANY_FILES 500
+> +	int mem_fds[MANY_FILES];
+> +	int session_fd;
+> +	int i;
+> +
+> +	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
+> +	if (self->fd1 < 0 && errno == ENOENT)
+> +		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
+> +	ASSERT_GE(self->fd1, 0);
+> +
+> +	session_fd = create_session(self->fd1, "many-files-test");
+> +	ASSERT_GE(session_fd, 0);
+> +
+> +	ensure_nofile_limit(_metadata, MANY_FILES + 10);
+> +	if (_metadata->exit_code == KSFT_SKIP)
+> +		return;
+> +
+> +	for (i = 0; i < MANY_FILES; i++) {
+> +		mem_fds[i] = memfd_create("test-memfd", 0);
+> +		ASSERT_GE(mem_fds[i], 0);
+> +		ASSERT_EQ(preserve_fd(session_fd, mem_fds[i], i), 0);
+> +	}
+> +
+> +	for (i = 0; i < MANY_FILES; i++)
+> +		ASSERT_EQ(close(mem_fds[i]), 0);
+> +
+> +	ASSERT_EQ(close(session_fd), 0);
+> +}
+> +
+>  TEST_HARNESS_MAIN
 
 -- 
 Regards,
