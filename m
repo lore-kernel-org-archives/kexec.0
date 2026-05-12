@@ -4,90 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0CA4BCD4F24
-	for <kexec@archiver.kernel.org>; Tue, 12 May 2026 20:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1F809CD343F
+	for <kexec@archiver.kernel.org>; Tue, 12 May 2026 20:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=DIIRS0CpXrVK8EEE9qFLP9/pCIOhI1EfpJW18IQe0rY=; b=gy3/5Egg1JztjxQAezODYUjcRs
-	gpQXvNwu4/u5cRv32eUzLD436j5ZxgXOBScFtzGk8psdElT2gDE8HpuoJKWohD85/OCldWXlhxIMn
-	7gAZeXD2spZ5YGkGOsjn+HdBGVistnFiJ0+LUskhW77pV21EKlplXkByc9RZ1URXb1u49/yNP3c7o
-	8LY582N5Tz4czdU5Y9pXh/DSEL/Aq0YM+pVUYZDz9rXNWyUPUMlfuDdkjXgVKwl+HWZzc3XmV7ng1
-	1a6C+7f+5OY83UlduJd9FqBycpdWMdi+p66pKDqvAw5Ww42Bs+Spc53EhZryy0rIsfHZfskIEyWrS
-	hqnMppIw==;
+	bh=Sq67mJ1Mle/Wjax+ZhdINyyVrcamDgHQ2bN9yr1Zbf8=; b=Ab4F2E/AVjHFiGdhHtszcGNfXa
+	sZ9gOHGzCrtwm6kArZWJjgenq/ZlmCdeXt/xWKFtcJboq+X7VTIGhRzwuwStok3htxjx5UPQzM+Gy
+	WpZVZwyjyAj9X4n5G7EjsBY9oeaxwci6NqHUi8fOcxVFsXAI23zFlVbog2wQqk8gs4W6ZO62z4D16
+	cWErB3ENkz63nz2jBNvnjOy/gEq6PyRSaDKGyQFiOxt4xF+okWg3WcrLDhYjjZTXZxDYMfuKObOhF
+	pbM+b0PU1Z5R/Dv5zCr7CsobyEDzedW9F7J1NrKAcTaGXQOrdZc3v29zbXVBr3FZmkFXsdqREzQCg
+	1KcoJHnA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMtTX-00000000IoE-3bSh;
-	Tue, 12 May 2026 20:13:07 +0000
-Received: from mail-qt1-x829.google.com ([2607:f8b0:4864:20::829])
+	id 1wMtux-00000000MlQ-2U1A;
+	Tue, 12 May 2026 20:41:27 +0000
+Received: from mail-qk1-x733.google.com ([2607:f8b0:4864:20::733])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMtTV-00000000Ina-1FRt
+	id 1wMtuu-00000000Mkq-2sCk
 	for kexec@lists.infradead.org;
-	Tue, 12 May 2026 20:13:06 +0000
-Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-50fc496c8baso57014731cf.3
-        for <kexec@lists.infradead.org>; Tue, 12 May 2026 13:13:04 -0700 (PDT)
+	Tue, 12 May 2026 20:41:25 +0000
+Received: by mail-qk1-x733.google.com with SMTP id af79cd13be357-8ec37d52c0dso839509285a.0
+        for <kexec@lists.infradead.org>; Tue, 12 May 2026 13:41:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1778616784; x=1779221584; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1778618483; x=1779223283; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DIIRS0CpXrVK8EEE9qFLP9/pCIOhI1EfpJW18IQe0rY=;
-        b=NthVwjaDqSIVB7eN10X4OVpI5+KH8+Fifaj//bEFAAscVULaXf+Kw+kJPpBbbJU2Jl
-         Jic0lHksVcH81XVDU/9DCFM+g+bqHW6CuK1Q/PRwTKVBmzI7aAKzgwVeN0PyHhMYQ7x8
-         4ISppfjX3eTdu6stlAicMS5NPoxmqgjwiNwWj2VncYmZzSeMdnmaHyZ+rUKuzwjLxH2t
-         YCn6zZWPmJOm6lvXDdtqLxw9WKN526MFSHFR754SS8b55asivd+3RRNQM9uSJ9FIPGO8
-         pKlL1Doxdf16RvBJeudHeRBDJQ+8HsD3+IqEogHv3cmyZHAFvnHhjnXoooA7nJtBDSLb
-         T3LA==
+        bh=Sq67mJ1Mle/Wjax+ZhdINyyVrcamDgHQ2bN9yr1Zbf8=;
+        b=RI2N2WJlrc/HHcauOvPa8rVx6o6YIKlVSmifvhwDz/qntlh1+1fYiJJN/TnLjKbAcV
+         ahIqY5OLu544jqMYY7WRO5WmGuyzI0UbdOYXvXQuZDdt35iewpecsjHxzdyoImN+IDUM
+         f3q/9u8NhnLKSJGFVOzeo1J+lfcGdykBfDhA8NSN2h3rDDXTMjpAbDgLInbSh1hCpiWU
+         WiVP5vJmKLmwHOct7QD/i0J+Oz1r4lfY29OYyPirR4mn5xmsoKYxE33mhy1Lqzdh2/pG
+         BPT/hsREzX8Vj26eZvfInbJHpXRkl8B5Mzn7yd8YYxwW26lWqBx31dVkZIOUTi7MR4Bo
+         fBUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778616784; x=1779221584;
+        d=1e100.net; s=20251104; t=1778618483; x=1779223283;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DIIRS0CpXrVK8EEE9qFLP9/pCIOhI1EfpJW18IQe0rY=;
-        b=QO31LnC8Zoj7jaMuaUYXLFe0Sc+WixVjC7MyJEBnTvSgUexcHk11xM6bGx6ROuf3BA
-         ODu0bZkDiLjvjXaEOvm2MMtNOHJOBIBUnfliKbeL5bcWP8M4CZ/0aTApA1ExDlsykTVQ
-         m421j4hHz2aYJ+xvuZkJJv6sEnzuQdLMCxWmgCLWl6ecBGF/0kHc91LzyW8y6tfX8dTN
-         BcHSgziBhRxa2U08j/pcX7t6ktpgwP4ILrScRCSEyK790Ppm61m0ILLGsgm9M6I1Az35
-         nFaD716a7/f6y0h5hDT14qXfMoSOE/hOf2iw5d4I+jrUC6e2FiXpswc/Xi+zuQnnLNY7
-         dbIg==
-X-Forwarded-Encrypted: i=1; AFNElJ9FBpjPwoF9WI2rpSKJzTyEM84ALKi5BIK97jhaNPgQHBmq3gUgV56H9H+SNy8VrRZRuICn+w==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxKeLcXC/vl3ewMxMO/XXesPOBlwj9ciYlB0IRbrYMpHK4m0G+x
-	LwbzT05hxLss5rp4GN5H2Z87VNYj/g1WGTq1LCF1o9J3wyiBYJX1+oXVfh+fP4NeeRU=
-X-Gm-Gg: Acq92OE49ARpKbWzEZUraiajUmQQqzyOjO6i4TWeL6Vc6rF2EHBDBm1TG6OFrp/JW5j
-	1mEMnDMcd5fu+0y7OsmCp7T0kznCVI9xKB8KtxAhwJir35/8YOBQoMFEtvwRydeXFvpb9OoR6Aq
-	z/3c9ulakH+GHxFtWD6y/KIEuxxT66CzBIxo1ghLzhdJHWiBOlCQHcUW4egC5cPpFkQUTnylnsP
-	r8kqgvPgRqYqimhYywE0QuMvrnEhf0VxGX5n72n6DLO5E76YIxQoHnMse4Wx2RlfnDEva9Qtw/n
-	P+Vh+dhIWKc1xyQjU7NOuANJOOFbnawpaL8YNke+hP1unquerPNypeK89bYj6z8jQ4TVrdDoSB1
-	KkQ6KUtHDtl1orm60yiR/ggXv181stXfIjapBdMwyHg/SAtMP2pb1qVphcW55/2si1VpKdO5JN+
-	L3oKh83W6XjT5lReNOFvV863jJmLErQOkQ326fFx/JNYLxTFK5vAU=
-X-Received: by 2002:a05:622a:92:b0:514:9ece:a15a with SMTP id d75a77b69052e-5162f5fedb6mr2218391cf.45.1778616783708;
-        Tue, 12 May 2026 13:13:03 -0700 (PDT)
+        bh=Sq67mJ1Mle/Wjax+ZhdINyyVrcamDgHQ2bN9yr1Zbf8=;
+        b=EkxpCPm22zt56XF5lkySVUw+NpVgCOScGvSF3z3jhi4sBw+H8nTW8TdmyXHhTRAgCH
+         QUYf56zZU5XbmJf8EZcZKBajMws2PWl0yUlMgryKmQdpbN/1B1s6YzOzo0RstAVUL2pw
+         PECTUVp9e2r0DEaT/JXWlJ6yeqv9ADXtpS7Odg6+PGMLDVkd2LWXo+pKX0zn6c5xkkgK
+         Fx0cFYmDlqaBoiGcTYouhXEb0cDP25jn99U8DoZ22VfTEhJfPU33IUkJ6ZIB+x402b+Q
+         kwXAfN5zi9cfX/0LDkvo4At37JDFbZPEj3NrmUlRyBVoc/QwE+MYtQkLsBIxNw3VjBoU
+         iv9w==
+X-Forwarded-Encrypted: i=1; AFNElJ+EuVeLVrXC1XuQcAGnjmQ/IysU5A+wW1iqX0+0ynzANdg9HQlK4kgCgIQL1FR/PbX90zDePw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yxjkuz4ywXCbDvQrffDfFF0q3RddXw1ua9oqoeKIqMCmxwIiVYD
+	LGapetNaPCYA8+eIXPdEAXLPnyMtDl/ZQmQlJCiLtZn9fjscY7SmKsyggNcHUH1j/Mg=
+X-Gm-Gg: Acq92OGpQ/2P29OETX3hkc4y9B4CqGC9Xnhnr5js28vD2NiqMTDDuzf4KZqcIL0xI9f
+	qs5QN/POB2IcjOh76Zm098Q8SVjP1agBhWAzT3f+0y/5BMhDAdQhDlCa5hwfYY2Hbsup5iC/H5j
+	vP2C+xI6CG/DnSilAp6dHHXnPrU+3y7cvtOCGqF09OA7BsV7vBOlsJU/hPN6nM9Lmlj6Evs22F1
+	cNDiARO5iz29Jy68sIQXyV/sDIcwbKP+3xTtltfnsKOjo7QoaqSIpjvb5HCed/Mqlt10NiP5N/P
+	fdJOw8sj8+D3+ZtT0A0WROyw49Y9/57e/pgvyjLwRasa8agfG5D6kESefC+bGxsgD6woW1N5CHM
+	H0ZCOWVu7g6yaV8M/xpWSipJedLmYp3eWZCrgTvvIQ0bglR5UUnNAUOrRyc4yUnLLzfbubgiwru
+	ry+pAPehgG9v9LUzfIEy7vAkPLJZ0nkDN6yNJEWOYnyymvZc2pcbA=
+X-Received: by 2002:a05:620a:4593:b0:8da:d152:b7e2 with SMTP id af79cd13be357-90f88f92e19mr94041885a.25.1778618483528;
+        Tue, 12 May 2026 13:41:23 -0700 (PDT)
 Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5148e675b9csm125582881cf.11.2026.05.12.13.13.02
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-90cd7a6c35csm354234285a.42.2026.05.12.13.41.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2026 13:13:03 -0700 (PDT)
-Date: Tue, 12 May 2026 20:13:02 +0000
+        Tue, 12 May 2026 13:41:23 -0700 (PDT)
+Date: Tue, 12 May 2026 20:41:21 +0000
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: Pratyush Yadav <pratyush@kernel.org>
 Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
 	linux-kselftest@vger.kernel.org, rppt@kernel.org, shuah@kernel.org, akpm@linux-foundation.org, 
 	linux-mm@kvack.org, linux-kernel@vger.kernel.org, dmatlack@google.com, 
 	kexec@lists.infradead.org, skhawaja@google.com, graf@amazon.com
-Subject: Re: [PATCH 3/5] selftests/liveupdate: Test session and file limit
- removal
-Message-ID: <agOJui6EOiJR3cgn@plex>
+Subject: Re: [PATCH 4/5] selftests/liveupdate: Add stress-sessions kexec test
+Message-ID: <agOQa0aGZMVRlCu2@plex>
 References: <20260414200237.444170-1-pasha.tatashin@soleen.com>
- <20260414200237.444170-4-pasha.tatashin@soleen.com>
- <2vxzse7wafmo.fsf@kernel.org>
+ <20260414200237.444170-5-pasha.tatashin@soleen.com>
+ <2vxzlddoafel.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2vxzse7wafmo.fsf@kernel.org>
+In-Reply-To: <2vxzlddoafel.fsf@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260512_131305_348131_F959C2AE 
-X-CRM114-Status: GOOD (  24.75  )
+X-CRM114-CacheID: sfid-20260512_134124_736772_B1ACA6DE 
+X-CRM114-Status: GOOD (  21.12  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,40 +101,42 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 05-12 16:04, Pratyush Yadav wrote:
+On 05-12 16:09, Pratyush Yadav wrote:
 > On Tue, Apr 14 2026, Pasha Tatashin wrote:
 > 
-> > With the removal of static limits on the number of sessions and files per
-> > session, the orchestrator now uses dynamic allocation.
-> >
-> > Add new test cases to verify that the system can handle a large number of
-> > sessions and files. These tests ensure that the dynamic block allocation
-> > and reuse logic for session metadata and outgoing files work correctly
-> > beyond the previous static limits.
+> > Add a new test that creates 2000 LUO sessions before a kexec
+> > reboot and verifies their presence after the reboot. This ensures
+> > that the linked-block serialization mechanism works correctly for
+> > a large number of sessions.
 > >
 > > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 > > ---
-> >  .../testing/selftests/liveupdate/liveupdate.c | 99 +++++++++++++++++++
-> >  1 file changed, 99 insertions(+)
-> >
-> > diff --git a/tools/testing/selftests/liveupdate/liveupdate.c b/tools/testing/selftests/liveupdate/liveupdate.c
-> > index 37c808fbe1e9..0eaf97b19267 100644
-> > --- a/tools/testing/selftests/liveupdate/liveupdate.c
-> > +++ b/tools/testing/selftests/liveupdate/liveupdate.c
-> > @@ -22,6 +22,7 @@
-> >  #include <fcntl.h>
-> >  #include <string.h>
-> >  #include <sys/ioctl.h>
+> > diff --git a/tools/testing/selftests/liveupdate/luo_test_utils.c b/tools/testing/selftests/liveupdate/luo_test_utils.c
+> > index 3c8721c505df..37c330b9bb36 100644
+> > --- a/tools/testing/selftests/liveupdate/luo_test_utils.c
+> > +++ b/tools/testing/selftests/liveupdate/luo_test_utils.c
+> > @@ -20,6 +20,7 @@
+> >  #include <sys/stat.h>
+> >  #include <errno.h>
+> >  #include <stdarg.h>
 > > +#include <sys/resource.h>
-> >  #include <unistd.h>
 > >  
-> >  #include <linux/liveupdate.h>
-> > @@ -386,4 +387,102 @@ TEST_F(liveupdate_device, prevent_double_preservation)
-> >  	ASSERT_EQ(close(session_fd2), 0);
+> >  #include "luo_test_utils.h"
+> >  
+> > @@ -28,6 +29,30 @@ int luo_open_device(void)
+> >  	return open(LUO_DEVICE, O_RDWR);
 > >  }
 > >  
-> > +static void ensure_nofile_limit(struct __test_metadata *_metadata,
-> > +				long min_limit)
+> > +void luo_ensure_nofile_limit(long min_limit)
+> 
+> Since you are adding this to luo_test_utils anyway, I think you should
+> do it in patch 3 and use it there too.
+
+Done
+
+> 
+> LGTM otherwise.
+> 
 > > +{
 > > +	struct rlimit hl;
 > > +
@@ -151,42 +152,19 @@ On 05-12 16:04, Pratyush Yadav wrote:
 > > +
 > > +	if (setrlimit(RLIMIT_NOFILE, &hl) < 0) {
 > > +		if (errno == EPERM) {
-> > +			SKIP(return, "Insufficient privileges to set RLIMIT_NOFILE to %ld",
-> > +			     hl.rlim_cur);
+> > +			ksft_exit_skip("Insufficient privileges to set RLIMIT_NOFILE to %ld\n",
+> > +				       hl.rlim_cur);
 > > +		}
 > > +		ksft_exit_fail_msg("setrlimit to %ld failed: %s\n",
 > > +				   hl.rlim_cur, strerror(errno));
 > > +	}
 > > +}
 > > +
-> > +/*
-> > + * Test Case: Manage Many Sessions
-> > + *
-> > + * Verifies that a large number of sessions can be created and then
-> > + * destroyed during normal system operation. This specifically tests the
-> > + * dynamic block allocation and reuse logic for session metadata management
-> > + * without preserving any files.
-> > + */
-> > +TEST_F(liveupdate_device, preserve_many_sessions)
-> > +{
-> > +#define MANY_SESSIONS 2000
-> > +	int session_fds[MANY_SESSIONS];
-> > +	int i;
-> > +
-> > +	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
-> > +	if (self->fd1 < 0 && errno == ENOENT)
-> > +		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
-> > +	ASSERT_GE(self->fd1, 0);
-> > +
-> > +	ensure_nofile_limit(_metadata, MANY_SESSIONS + 10);
-> > +	if (_metadata->exit_code == KSFT_SKIP)
-> > +		return;
+> >  int luo_create_session(int luo_fd, const char *name)
+> >  {
+> >  	struct liveupdate_ioctl_create_session arg = { .size = sizeof(arg) };
 > 
-> Nit: This is strange. Why not just return errno in ensure_nofile_limit()
-> and handle the skipping here? Same below.
-> 
-> LGTM otherwise.
-
-Good suggestion. Done.
-
+> -- 
+> Regards,
+> Pratyush Yadav
 
