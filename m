@@ -4,45 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D199DCD484E
-	for <kexec@archiver.kernel.org>; Tue, 12 May 2026 06:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9B43FCD4855
+	for <kexec@archiver.kernel.org>; Tue, 12 May 2026 06:52:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=DqJXMG4AbbLvtxyV8k0pDme0ixuoamEMGaG4tQgEDmE=; b=Xrw2fLObYgzkYSbSut3fXWZCQZ
-	puYV02z6kqBJCA7jiImziRJTksLHuFLJcJiKnc2lhGy3gwGciI0PB8P5xStGRYt4EFHxhnlV2d+WC
-	Y1Y/vtT2J5L+m4v/zNQQpRocp4gE7WVGkWMINI7TlVlAY1MlVQ1IgSEVxA/ib6u0XTJHyt1Lg2SGY
-	O3xYbUn65/nJEFkDmpEkTctCxXqkzVg1GGmp6kYQ4vsj/0S8R1cjBZL1BImDk20IAGRtiMaFLo+ga
-	GbPelZi4JhPPC8/D9Pn6pCl7RBNgWw774s7wlTqOyyVfXjRO5NpP3f5cFG7Olx0YRWmOmtwQbUaRA
-	CFLwVBjg==;
+	bh=nts3d11hQEbWfK9I61sLETdJHahMN5gMF0KYY0lf5cQ=; b=ZdOg1bNJ6zqX2qPoy+1Kn9CHdI
+	nxAUVg1xmqwf6Ecka7o66dGLxuHoQI/jmg+UdMfz1a6wb0S6Z2j/YwLQxhZp6IA/PrUyrkO8YIsmB
+	xiG5o/0HKaWPnpOAI+nIxem7fv/74F8pbLS+KAyOPO1CG2Nh3bfOY/zQPGQpK6MQpU41kjc1ce07z
+	TDWa4NgiwwcLISjvaKX3Rz+Odjr6sMq6Me2nsKFIQUU4SiRBSTMWR4eCf75HumtUW0QB0ShbHhzQu
+	TpGE1oYHMV73ifaU8j7NHmP+ITkv2/T9DQu/cd8jGKyCXiG7TzOH7qPmOfPeLBVPOpti3m8Hmm6TL
+	A6W7pIlw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMgvJ-0000000FpJB-0RPz;
-	Tue, 12 May 2026 06:48:57 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wMgyK-0000000FpwF-2eBd;
+	Tue, 12 May 2026 06:52:04 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMgvI-0000000FpIz-2hEN
+	id 1wMgyJ-0000000Fpvf-1N2u
+	for kexec@bombadil.infradead.org;
+	Tue, 12 May 2026 06:52:03 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=nts3d11hQEbWfK9I61sLETdJHahMN5gMF0KYY0lf5cQ=; b=KA78dOX5rCTEcwiiorhig7U6xA
+	fN4idVGuP8CpWHcYEKZSb0cVok/kC1fwGbxj7QOgOAbEMgLTOQLe/zyv8KaL8lbsz/tP2gumVUb8S
+	AGn10TwWyLww4vDv2KpmbvnZB0T2LIxynonSR2rU3Oa8PXbIInv8l/EPobG8YWneCyyuV5t9A3Nii
+	b0x6ns2A5lJdv0USyqzFOmHtCh+Ieiipw2//HsX6S9FYLpwcLm+zxyGV4it2qNDEm51N5eAgc28sX
+	qMuipGFyUOp8HeQPyDDdLzqzTG3NMvRAtnMqdlBt+SyzdmA9eP275IhkEcrcEiB7mbLRULsMjSFLL
+	iTvky2Ew==;
+Received: from sea.source.kernel.org ([172.234.252.31])
+	by desiato.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wMgyD-0000000Ds1F-28VZ
 	for kexec@lists.infradead.org;
-	Tue, 12 May 2026 06:48:56 +0000
+	Tue, 12 May 2026 06:52:01 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 1E1276012A;
-	Tue, 12 May 2026 06:48:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33335C2BCB0;
-	Tue, 12 May 2026 06:48:51 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 3CAFC438DA;
+	Tue, 12 May 2026 06:51:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71BACC2BCB0;
+	Tue, 12 May 2026 06:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778568535;
-	bh=7xqrAItGMPFyfU6pVB+y7187hkbW+5r5jDMYDqJoTiQ=;
+	s=k20201202; t=1778568714;
+	bh=JrQbMHAIUgObA1+mKB9cmwyGVWli0GV/3xeXEfKec+Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fS1MMDK/QN+dzfCxgYeQoTcjMJ6ttyRYGb+GSjpCa2iG+uGxKaqxoEaqAY7XgpLqj
-	 h7gUD3lvWerOn0JiTixBa6c19jpcru3ryNOL92poGX3XMSk1iRVr+IZnyFSMn7o7EV
-	 EHiWqSP27esFnTSHl9Vxf/76IRsntTbyDzIF/9pucqUWazVu/9m2QRMtcjEwNsJBu+
-	 ML7cfHnDWBi/7OR5wTxB6MpCzVeZH47EHccjWxf4mrJcm6pyMhLYCveiPX3vPceR4Z
-	 vq8d/Z6DZ+GeD2vrRL20SRAT3tW5YhAY2yZCz7B/NDHxTUN+Z8LVjZLJUE+dNqebCY
-	 62nm+RXEgU0sg==
-Date: Tue, 12 May 2026 09:48:48 +0300
+	b=iy9X4nJLqbWsnvDt8maKE5p+Nu099G37eshBismCInFuhZUp0yS0mHJRGNOCYas3Z
+	 Ptisd0du9040+8gjOTnEODmTYnmAgnmQR2ks9AC63/6/+Cx5tWjISj+mj4QDivKrWP
+	 eiAExqCh7de66jSYTZAAcA2sff0U9HMTGo1yLPIZJRtEoBpeKwJA2DRVWe8+GkJuzl
+	 KZZ4pqd6K+LF8Yc7wqZ0/SWrEW6flO9Gw7x5jg/bnfAthyENKsc4+9CVAk9CxbHBel
+	 CYfiaFBj3tSQNgvexfXGwBg9CQjLGmUFhZcDMuS5hpWrRf3mFLvbVMoACa2QMBSAPe
+	 rQf21poTG03oA==
+Date: Tue, 12 May 2026 09:51:46 +0300
 From: Mike Rapoport <rppt@kernel.org>
 To: Pratyush Yadav <pratyush@kernel.org>
 Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -53,16 +68,19 @@ Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Jason Miu <jasonmiu@google.com>, kexec@lists.infradead.org,
 	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/12] kho: add a struct for radix callbacks
-Message-ID: <agLNUKE5LZqcoUex@kernel.org>
+Subject: Re: [PATCH 11/12] kho: return virtual address of mem_map
+Message-ID: <agLOAtdL0rXL1HJ2@kernel.org>
 References: <20260429133928.850721-1-pratyush@kernel.org>
- <20260429133928.850721-4-pratyush@kernel.org>
- <agHB7HB-p_vkLS7R@kernel.org>
- <2vxzzf25c39x.fsf@kernel.org>
+ <20260429133928.850721-12-pratyush@kernel.org>
+ <agHHzJS7bLPHk1GJ@kernel.org>
+ <2vxza4u5c2oq.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2vxzzf25c39x.fsf@kernel.org>
+In-Reply-To: <2vxza4u5c2oq.fsf@kernel.org>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260512_075159_852915_5999118C 
+X-CRM114-Status: GOOD (  19.54  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,55 +95,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, May 11, 2026 at 06:35:54PM +0200, Pratyush Yadav wrote:
+On Mon, May 11, 2026 at 06:48:37PM +0200, Pratyush Yadav wrote:
 > On Mon, May 11 2026, Mike Rapoport wrote:
 > 
-> > On Wed, Apr 29, 2026 at 03:39:05PM +0200, Pratyush Yadav wrote:
+> > On Wed, Apr 29, 2026 at 03:39:13PM +0200, Pratyush Yadav wrote:
 > >> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 > >> 
-> >> A future commit will add more callbacks for the KHO radix tree. Add a
-> >> struct for collecting the callbacks.
-> >> 
+> >> There are currently 3 callers of kho_get_mem_map_phys(). Two of them,
+> >> kho_mem_retrieve() and kho_extend_scratch() need the virtual address.
+> >> The third, kho_populate() doesn't care. Make things simpler by
+> >> directly returning the virtual address. Rename kho_get_mem_map_phys() to
+> >> kho_get_mem_map() to accurately reflect what it returns.
+> >
+> > This should be moved earlier, before replacing open-coded get_mem_map()
+> > with a call to kho_get_mem_map_phys().
+> 
+> Do you mean move it before patch 2 "kho: store incoming radix tree in
+> kho_in"?
+
+Yes.
+ 
+> I can do that. I did it this way to show a clear need for this function,
+> but I don't mind doing it as a preparatory step.
+
+With the usual "it will be used in the upcoming changes" text in the log
+it's fine :)
+ 
+> >  
 > >> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 > >> ---
-> [...]
-> >> --- a/kernel/liveupdate/kexec_handover.c
-> >> +++ b/kernel/liveupdate/kexec_handover.c
-> >> @@ -266,16 +266,18 @@ void kho_radix_del_key(struct kho_radix_tree *tree, unsigned long key)
-> >>  }
-> >>  EXPORT_SYMBOL_GPL(kho_radix_del_key);
-> >>  
-> >> -static int kho_radix_walk_leaf(struct kho_radix_leaf *leaf,
-> >> -			       unsigned long key,
-> >> -			       kho_radix_tree_walk_callback_t cb)
-> >> +static int kho_radix_walk_leaf(struct kho_radix_leaf *leaf, unsigned long key,
-> >> +			       const struct kho_radix_walk_cb *cb)
-> >>  {
-> >>  	unsigned long *bitmap = (unsigned long *)leaf;
-> >>  	unsigned int i;
-> >>  	int err;
-> >>  
-> >> +	if (!cb->key)
-> >> +		return 0;
-> >> +
-> >>  	for_each_set_bit(i, bitmap, PAGE_SIZE * BITS_PER_BYTE) {
-> >> -		err = cb(key | i);
-> >> +		err = cb->key(key | i);
-> >
-> > key(key) reads weird :)
-> > Can't say I have a good name, maybe key_action()?
-> 
-> I thought the context of it being under a callback struct would make it
-> more obvious. I don't like key_action() much better TBH, but I don't
-> have a strong opinion. Perhaps Pasha can suggest a 3rd option and we
-> pick on randomly ;-)
-
-Another option I thought is to call them ->leaf() and ->node().
- 
-> >
-> >>  		if (err)
-> >>  			return err;
-> >>  	}
+> >>  kernel/liveupdate/kexec_handover.c | 28 +++++++++++++++-------------
+> >>  1 file changed, 15 insertions(+), 13 deletions(-)
 > 
 > -- 
 > Regards,
