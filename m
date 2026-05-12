@@ -4,86 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F0F93CD343F
-	for <kexec@archiver.kernel.org>; Tue, 12 May 2026 18:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A8211CD4F24
+	for <kexec@archiver.kernel.org>; Tue, 12 May 2026 19:51:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zAKIEIbekI8e2jyBQPj/1aDykzqqCbaXW0rj6vQUpoI=; b=kSZhCOjsq3QochoW4v0uUf4ZLa
-	LI9ffhrIBWcuGQRqeqihJ52lYH3UrVGvOqsrWjcgJq8F1/RjTX18Yc6xSGhAmv5aiY7ti6SgJbTLd
-	7s1N3NbZr2uXkRnJ4vOm4dqVsu6qQhju8pyTCDaqMsI0hf1vls6lyB3nIvOwWeUIIFNs7RF7rlZca
-	yrEBhFTgYMDn6orCGE+1MPKefhQAsWO/F2KdQqguYLyyqdpJG9C08bt5DaaEuHKm8mSjzhLiLB+7j
-	MKA9wAsmoHyZaJ0okEDSO5dQIaLY9+as5O0x4aFYr5qNWJD/IT7k3N8xg6r9711VCzCXfLWKJ8b8r
-	ZNpiCh7g==;
+	bh=v7TVTYRDvcEKHxiAe879U7fECAlukFuq2rcibnBNqK4=; b=fz0vbL/emdjsAj0PLXSdWj2dCC
+	9E07KDNPN6chC+YNLZPeSDaoHeIlH1fE1io3/Kb60yyEuUfFuYUrgdBjAEsDii4wDp9q7y/Wbd4oo
+	5GnbnH4OruxqlLZqeIoCrny+9xGXyX0IGXO7vCvD80vhYuPkfdBgbt+3X6ITqLdJQq3rKk+D7rXhs
+	8/YCVhqy1oXWkLCOR3BkWcoANt1mtbwQuYHADKfvulzlbotWv4cdkIPpde3QpKfu8Bv2sgYH3b0SI
+	tig7/z9xvMQ744Yj7tWvmgZmTJGmaTrq2KAKXhXF/qugi+B06X97YTIvuCByn3B8x0QfGPa84OdR9
+	dQak0MiA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMsAC-000000008np-4AE5;
-	Tue, 12 May 2026 18:49:04 +0000
-Received: from mail-pf1-x449.google.com ([2607:f8b0:4864:20::449])
+	id 1wMt8n-00000000Ghf-2OvA;
+	Tue, 12 May 2026 19:51:41 +0000
+Received: from mail-pg1-x54a.google.com ([2607:f8b0:4864:20::54a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMsA9-000000008hz-1g2h
+	id 1wMt8l-00000000GgL-3Iom
 	for kexec@lists.infradead.org;
-	Tue, 12 May 2026 18:49:02 +0000
-Received: by mail-pf1-x449.google.com with SMTP id d2e1a72fcca58-837c4eb3bdfso3989867b3a.2
-        for <kexec@lists.infradead.org>; Tue, 12 May 2026 11:49:00 -0700 (PDT)
+	Tue, 12 May 2026 19:51:40 +0000
+Received: by mail-pg1-x54a.google.com with SMTP id 41be03b00d2f7-c82751074c8so4271994a12.0
+        for <kexec@lists.infradead.org>; Tue, 12 May 2026 12:51:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778611740; x=1779216540; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1778615498; x=1779220298; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zAKIEIbekI8e2jyBQPj/1aDykzqqCbaXW0rj6vQUpoI=;
-        b=cVSVsz1kejD5yMNdDQJIabSf3Nf4qS5Di+w+B8yYLAF8FuLw6DI74zb7TLpyseHuJc
-         i5WcYva4+XjOvSINMMH4qnj/0V8KPZAQt/HSs+xFVFzFaNXuoxYpP+gclkkuwVUhEG5i
-         xDnJc9h/c9DcwHPtsKqcHVCEgFLtSEng7ST7KctOJAk/v2ZWaBGaS7OCyG/xPk01M6+T
-         RyS3fHFhKaYKN9q76zUDepGf2NwC9enCMtAD0HzpMMsttfW6Za092qKhZWFsIdph1jm9
-         I53rXX9CRvi8GZN0Zr6jpMSFAv6QOu7ZktztfzNYOXKQeQKtE0SnqdsB0XI74q3uNjha
-         JsCg==
+        bh=v7TVTYRDvcEKHxiAe879U7fECAlukFuq2rcibnBNqK4=;
+        b=q7k5QVI9GEBMPon67DtqxnWAsJAZJXo9JkQaSK5zLuGAmrx5+I2Z3wRAZ9oZsTCWiM
+         i4NJqUKXR69HEuyyVANy4yp0btsIzwSntMYZTCXv8CDTCxJnGUd2CvqGss469F9Hcd59
+         0UCYCkWtcyygwKYL/7JYQCsO8BT3Y9VAV59cjkwz+WU1xaSJUv7hwwf42snvW8unH7bW
+         Wwgk/hCsXVBuwm1YvbDoFwy84MO+lldRRPCD6NCToD+1w50uf4r1viVB8XICTzAe/FxM
+         /b8fOClA23z6boQ7UhCN/scNeF2CfGNywnJArVfUocKJEINEq9dQO4b+Br1b7dPwxFFb
+         cL/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778611740; x=1779216540;
+        d=1e100.net; s=20251104; t=1778615498; x=1779220298;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zAKIEIbekI8e2jyBQPj/1aDykzqqCbaXW0rj6vQUpoI=;
-        b=FuxXuVZRa4IkcLgIqzZYTs6wAm5H4pWx11NJoyTAlIwfSQ+1thbTmIJQuqOmbwaGIL
-         2tvWmVU/wLAeRVVKzwgekiNTvUU82dLQ8Up6wJ6jFStu5Mx4HsomvzYnp4Qn9OtK0HLf
-         GfymUg3AkR0Kx+3WHuFGZ1b9BOoYiuvuoPxbSFQqUTBATsf053QJ0O2iiq0/+f6fqIe2
-         HyJ22xhZfawKgnzH+lO+oRfz0YPpIaLoOvoZj7r0Tr9nQ5VqiqL0xHFO8t0z2F/kWCBY
-         fDJwC6XYs5VoaDrOeDK8+ce3B0Jgp8AVVOlgdlFVPACcBwgg8at2XFJZtqGpLEHmge/Q
-         /TyA==
-X-Gm-Message-State: AOJu0YyKCIDLJPIgAJrG/r+scdIHOEvewZylE2alT+E4wOUTO2OcJv6L
-	cqzKh7GFEBiVFdybNI5ApDy/uOAVRTnK/xW3tApqZtDfxoSP6ne+7KBxHk+ECNue8bgOAxCVXrL
-	niXZiomgwV/d0SKS5+1gyGty9emF8X2vxW0YcilEjlIHokZwE0T08BL/aOI4ErUoY4t1sssrnfV
-	nybHUfu4oyqeQl+ORZIBav5Fuf6ac+cbaev4d9VZDadL8eBaeSWko=
-X-Received: from pfbks2.prod.google.com ([2002:a05:6a00:4b82:b0:82f:b296:c01b])
- (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:12e4:b0:82c:f035:6748 with SMTP id d2e1a72fcca58-83a5dd560e6mr29210159b3a.42.1778611739675;
- Tue, 12 May 2026 11:48:59 -0700 (PDT)
-Date: Tue, 12 May 2026 18:48:45 +0000
-In-Reply-To: <20260512184846.119396-1-dmatlack@google.com>
+        bh=v7TVTYRDvcEKHxiAe879U7fECAlukFuq2rcibnBNqK4=;
+        b=phUYvexU7XBSCmA41yjRJryZJc5PCMdPCjslMtG7Mb33i3UULF8WVx3PuBJsJDUE4r
+         9ik4HKkjoafJk5WBaTGRfNqCIsAHdX6LYJ+FhFjsV1Rjc7D+1PKTDTdp5vb9VvICRfG/
+         HXV5zN0uwZDvHkeVWfdoEpR5nrGgn/L80sXMHO+ZC0k/esWa4RmWM3DR85oHNUDfEykG
+         8AY4slSyXP3Db7Q8K0EmEsFQPF77++DZowfAZEBCELtx8tGpvbU3E6B3ZPDFsLsw64B9
+         Er7I0wpjhw8MqIm9ZsaejBBhyMxtTrYu8cUM9UXUhPEPpZXfJDoZdkNEpjy2ngjhuuHd
+         QAgQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8OPGyk9Kuw6QWyl/GSlUEspqrVMIOWVH/GZLVfHkqazDwFNKTUtVS1Lha/X/RhU1gSrV108Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yws0UhlIE6MKvMXIDg9YB0xHlJ5s6SSgokMPnhpJ2HHBhEk1CcF
+	VUQoHxr8JPyQQYlPoYZIb16aHVujHFC2W+zaq7e8uHytqYuVdJpeAtoqB8cfoi78lDYmJvK40ho
+	hz2U9xSTsai5wUg==
+X-Received: from pfbcg6.prod.google.com ([2002:a05:6a00:2906:b0:836:ed4a:203f])
+ (user=skhawaja job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:298f:b0:82f:390a:69c7 with SMTP id d2e1a72fcca58-83f0429e3c3mr90865b3a.33.1778615498220;
+ Tue, 12 May 2026 12:51:38 -0700 (PDT)
+Date: Tue, 12 May 2026 19:51:35 +0000
+In-Reply-To: <20260512195135.804833-1-skhawaja@google.com>
 Mime-Version: 1.0
-References: <20260512184846.119396-1-dmatlack@google.com>
+References: <20260512195135.804833-1-skhawaja@google.com>
 X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
-Message-ID: <20260512184846.119396-11-dmatlack@google.com>
-Subject: [PATCH v5 10/11] PCI: liveupdate: Do not disable bus mastering on
- preserved devices during kexec
-From: David Matlack <dmatlack@google.com>
-To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org
-Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
-	Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
-	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
-	Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, Leon Romanovsky <leonro@nvidia.com>, 
-	Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
+Message-ID: <20260512195135.804833-4-skhawaja@google.com>
+Subject: [PATCH 3/3] kho: Add kunit test to verify preserve/restore pages and folio
+From: Samiullah Khawaja <skhawaja@google.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>, 
+	Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>
+Cc: Samiullah Khawaja <skhawaja@google.com>, David Matlack <dmatlack@google.com>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:KEXEC HANDOVER (KHO)" <kexec@lists.infradead.org>, 
+	"open list:KEXEC HANDOVER (KHO)" <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260512_114901_445935_2F1F1EF6 
-X-CRM114-Status: GOOD (  19.09  )
+X-CRM114-CacheID: sfid-20260512_125139_832427_6ABE8F8E 
+X-CRM114-Status: GOOD (  18.63  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,122 +91,185 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Do not disable bus mastering on outgoing preserved devices during
-pci_device_shutdown() for kexec.
+Add a kunit test to verify the preserve/unpreserve and restore of pages
+and folios by mocking the kho kunit restore stubs.
 
-Preserved devices must be allowed to perform memory transactions during
-a Live Update to minimize downtime and ensure continuous operation.
-Clearing the bus mastering bit would prevent these devices from issuing
-any memory requests while the new kernel boots.
-
-Because bridges upstream of preserved endpoint devices are also
-automatically preserved, this change also avoids clearing bus mastering
-on them. This is critical because clearing bus mastering on an upstream
-bridge prevents the bridge from forwarding memory requests upstream (i.e.
-it would prevent the endpoint device from accessing system RAM and doing
-peer-to-peer transactions with devices not downstream of the bridge).
-
-Signed-off-by: David Matlack <dmatlack@google.com>
+Signed-off-by: Samiullah Khawaja <skhawaja@google.com>
 ---
- drivers/pci/liveupdate.c |  4 ++++
- drivers/pci/liveupdate.h | 12 ++++++++++++
- drivers/pci/pci-driver.c | 31 ++++++++++++++++++++++---------
- 3 files changed, 38 insertions(+), 9 deletions(-)
+ kernel/liveupdate/Kconfig               |  10 ++
+ kernel/liveupdate/Makefile              |   1 +
+ kernel/liveupdate/kexec_handover_test.c | 130 ++++++++++++++++++++++++
+ 3 files changed, 141 insertions(+)
+ create mode 100644 kernel/liveupdate/kexec_handover_test.c
 
-diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-index 825166a57913..6c4b57d8f780 100644
---- a/drivers/pci/liveupdate.c
-+++ b/drivers/pci/liveupdate.c
-@@ -136,6 +136,10 @@
-  *  * The PCI core inherits ARI Forwarding Enable on all bridges with downstream
-  *    preserved devices to ensure that all preserved devices on the bridge's
-  *    secondary bus are addressable after the Live Update.
-+ *
-+ *  * The PCI core does not disable bus mastering on outgoing preserved devices
-+ *    during kexec. This allows preserved devices to issue memory transactions
-+ *    throughout the Live Update.
-  */
+diff --git a/kernel/liveupdate/Kconfig b/kernel/liveupdate/Kconfig
+index c13af38ba23a..ffdfdc4080ef 100644
+--- a/kernel/liveupdate/Kconfig
++++ b/kernel/liveupdate/Kconfig
+@@ -49,6 +49,16 @@ config KEXEC_HANDOVER_ENABLE_DEFAULT
+ 	  The default behavior can still be overridden at boot time by
+ 	  passing 'kho=off'.
  
- #define pr_fmt(fmt) "PCI: liveupdate: " fmt
-diff --git a/drivers/pci/liveupdate.h b/drivers/pci/liveupdate.h
-index 30deaa673efe..8ad404307a70 100644
---- a/drivers/pci/liveupdate.h
-+++ b/drivers/pci/liveupdate.h
-@@ -18,6 +18,13 @@ bool pci_liveupdate_inherit_buses(void);
- void pci_liveupdate_init_acs(struct pci_dev *dev);
- bool pci_liveupdate_inherit_acs(struct pci_dev *dev);
- bool pci_liveupdate_inherit_ari(struct pci_dev *dev);
++config KEXEC_HANDOVER_KUNIT_TEST
++	tristate "KUnit test for Kexec Handover (KHO)"
++	depends on KEXEC_HANDOVER && KUNIT
++	default KUNIT_ALL_TESTS
++	help
++	  Enable Kunit tests for Kexec Handover to verify preservation and
++	  unpreservation of memory using KHO API without triggering kexec.
 +
-+static inline bool pci_liveupdate_is_outgoing(struct pci_dev *dev)
-+{
-+	guard(read_lock)(&dev->liveupdate.lock);
-+	pci_WARN_ONCE(dev, !dev->liveupdate.frozen, "Preservation status is unstable!\n");
-+	return dev->liveupdate.outgoing;
-+}
- #else
- static inline void pci_liveupdate_setup_device(struct pci_dev *dev)
- {
-@@ -49,6 +56,11 @@ static inline bool pci_liveupdate_inherit_ari(struct pci_dev *dev)
- {
- 	return false;
- }
++	  If unsure, say N.
 +
-+static inline bool pci_liveupdate_is_outgoing(struct pci_dev *dev)
-+{
-+	return false;
-+}
- #endif
+ config LIVEUPDATE
+ 	bool "Live Update Orchestrator"
+ 	depends on KEXEC_HANDOVER
+diff --git a/kernel/liveupdate/Makefile b/kernel/liveupdate/Makefile
+index d2f779cbe279..ed798b2401a8 100644
+--- a/kernel/liveupdate/Makefile
++++ b/kernel/liveupdate/Makefile
+@@ -9,5 +9,6 @@ luo-y :=								\
+ obj-$(CONFIG_KEXEC_HANDOVER)		+= kexec_handover.o
+ obj-$(CONFIG_KEXEC_HANDOVER_DEBUG)	+= kexec_handover_debug.o
+ obj-$(CONFIG_KEXEC_HANDOVER_DEBUGFS)	+= kexec_handover_debugfs.o
++obj-$(CONFIG_KEXEC_HANDOVER_KUNIT_TEST) += kexec_handover_test.o
  
- #endif /* DRIVERS_PCI_LIVEUPDATE_H */
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index f7a5e65a7c75..b6c931ebd3be 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -532,6 +532,27 @@ static void pci_device_remove(struct device *dev)
- 	pci_dev_put(pci_dev);
- }
- 
+ obj-$(CONFIG_LIVEUPDATE)		+= luo.o
+diff --git a/kernel/liveupdate/kexec_handover_test.c b/kernel/liveupdate/kexec_handover_test.c
+new file mode 100644
+index 000000000000..1113007f9ac5
+--- /dev/null
++++ b/kernel/liveupdate/kexec_handover_test.c
+@@ -0,0 +1,130 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Disable bus mastering on the device so that it does not perform memory
-+ * transactions during kexec.
-+ *
-+ * Don't touch devices that are being preserved across kexec for Live
-+ * Update or that are in D3cold or unknown states.
++ * Copyright (C) 2026, Google LLC
++ * Author: Samiullah Khawaja <skhawaja@google.com>
 + */
-+static void pci_clear_master_for_shutdown(struct pci_dev *pci_dev)
++
++#include <kunit/test.h>
++#include <kunit/static_stub.h>
++#include <linux/kexec_handover.h>
++#include <linux/gfp.h>
++#include <linux/mm.h>
++
++static struct page *kho_test_restore_pages_mock(phys_addr_t phys,
++						unsigned long nr_pages)
 +{
-+	if (!kexec_in_progress)
-+		return;
++	struct page *page = phys_to_page(phys);
 +
-+	if (pci_liveupdate_is_outgoing(pci_dev))
-+		return;
++	if (!kho_test_pages_preserved(phys, nr_pages))
++		return NULL;
 +
-+	if (pci_dev->current_state > PCI_D3hot)
-+		return;
-+
-+	pci_clear_master(pci_dev);
++	kho_unpreserve_pages(page, nr_pages);
++	return page;
 +}
 +
- static void pci_device_shutdown(struct device *dev)
- {
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
-@@ -543,15 +564,7 @@ static void pci_device_shutdown(struct device *dev)
- 	if (drv && drv->shutdown)
- 		drv->shutdown(pci_dev);
- 
--	/*
--	 * If this is a kexec reboot, turn off Bus Master bit on the
--	 * device to tell it to not continue to do DMA. Don't touch
--	 * devices in D3cold or unknown states.
--	 * If it is not a kexec reboot, firmware will hit the PCI
--	 * devices with big hammer and stop their DMA any way.
--	 */
--	if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
--		pci_clear_master(pci_dev);
-+	pci_clear_master_for_shutdown(pci_dev);
- }
- 
- #ifdef CONFIG_PM_SLEEP
++static struct folio *kho_test_restore_folio_mock(phys_addr_t phys)
++{
++	struct folio *folio = page_folio(phys_to_page(phys));
++
++	if (!kho_test_pages_preserved(phys, (1 << folio_order(folio))))
++		return NULL;
++
++	kho_unpreserve_folio(folio);
++	return folio;
++}
++
++static int kho_test_init(struct kunit *test)
++{
++	kunit_activate_static_stub(test, kho_restore_pages,
++				   kho_test_restore_pages_mock);
++	kunit_activate_static_stub(test, kho_restore_folio,
++				   kho_test_restore_folio_mock);
++	return 0;
++}
++
++static void kho_test_alloc_preserve(struct kunit *test)
++{
++	void *mem;
++
++	mem = kho_alloc_preserve(PAGE_SIZE);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, mem);
++
++	/* Verify if memory is preserved */
++	KUNIT_EXPECT_TRUE(test, kho_test_pages_preserved(__pa(mem), 1));
++
++	kho_restore_free(mem);
++
++	/* Memory should be unpreserved after restore_free */
++	KUNIT_EXPECT_FALSE(test, kho_test_pages_preserved(__pa(mem), 1));
++}
++
++static void kho_test_preserve_pages(struct kunit *test)
++{
++	struct page *restored;
++	struct page *page;
++	int err;
++
++	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, 1);
++	KUNIT_ASSERT_NOT_NULL(test, page);
++
++	/* Preserve and verify that pages are preserved */
++	err = kho_preserve_pages(page, 2);
++	KUNIT_EXPECT_EQ(test, err, 0);
++	KUNIT_EXPECT_TRUE(test,
++			  kho_test_pages_preserved(page_to_phys(page), 2));
++
++	restored = kho_restore_pages(page_to_phys(page), 2);
++	KUNIT_EXPECT_NOT_NULL(test, restored);
++	KUNIT_EXPECT_PTR_EQ(test, restored, page);
++
++	/* Verify that the pages are not preserved */
++	KUNIT_EXPECT_FALSE(test, kho_test_pages_preserved(page_to_phys(page), 2));
++
++	__free_pages(page, 1);
++}
++
++static void kho_test_preserve_folio(struct kunit *test)
++{
++	struct folio *restored;
++	unsigned long nr_pages;
++	struct folio *folio;
++	int err;
++
++	folio = folio_alloc(GFP_KERNEL | __GFP_ZERO, 1);
++	KUNIT_ASSERT_NOT_NULL(test, folio);
++
++	nr_pages = 1 << folio_order(folio);
++
++	/* Preserve and verify that folio is preserved */
++	err = kho_preserve_folio(folio);
++	KUNIT_EXPECT_EQ(test, err, 0);
++	KUNIT_EXPECT_TRUE(test, kho_test_pages_preserved(PFN_PHYS(folio_pfn(folio)), nr_pages));
++
++	restored = kho_restore_folio(PFN_PHYS(folio_pfn(folio)));
++	KUNIT_EXPECT_NOT_NULL(test, restored);
++	KUNIT_EXPECT_PTR_EQ(test, restored, folio);
++
++	/* Verify that the folio is not preserved */
++	KUNIT_EXPECT_FALSE(test, kho_test_pages_preserved(PFN_PHYS(folio_pfn(folio)), nr_pages));
++
++	folio_put(folio);
++}
++
++static struct kunit_case kho_test_cases[] = {
++	KUNIT_CASE(kho_test_alloc_preserve),
++	KUNIT_CASE(kho_test_preserve_pages),
++	KUNIT_CASE(kho_test_preserve_folio),
++	{}
++};
++
++static struct kunit_suite kho_test_suite = {
++	.name = "kho_test",
++	.init = kho_test_init,
++	.test_cases = kho_test_cases,
++};
++
++kunit_test_suite(kho_test_suite);
++
++MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
++MODULE_DESCRIPTION("KUnit tests for Kexec Handover");
++MODULE_LICENSE("GPL");
 -- 
 2.54.0.563.g4f69b47b94-goog
 
