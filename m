@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 57495CD4F24
-	for <kexec@archiver.kernel.org>; Tue, 12 May 2026 14:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AFB45CD4F35
+	for <kexec@archiver.kernel.org>; Tue, 12 May 2026 14:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
 	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=SeXyZ2K2XEjBeKwwGeb4rWTFXw2PqWPPbiWdlJeVqhc=; b=PQqCUbtifj8K99lOKvR48cVaV7
-	/zJD8nzOwWPx5amn+/fH5FNjzY2/ZI0D6BGBIyzLxuTvjpqZKTLXOb2VH/dS4W+O0nYpfulz6eYjv
-	wJi7Ar1puOvhQ6ih95PUEfCpCdZSymp/LY5XJSXpLqJzzYe6OnxY3PhRCVT6BNR0SRIhNlx9kRuY6
-	Sa2BmmQywLpIEe+jpqwoC6LO+625xdsu91Zh+mFJLn9gORwaoji5V7KIp4Ukkz61PDJcSYH7cHYly
-	6rSnIopGOzzrgfozQON4PYI64vY1qunnL0xcFWxQoAtGcmvnJjveuE0AV+/V6X1pGKMvc4uUxYnr9
-	tPjmtXuw==;
+	bh=CtmAVH/fHRTtD+JkmxFCFZ5OoR+7oWP3QexqZth9Y3c=; b=Z/pA7JpBQIv05ZS/VL6Oq2PTgZ
+	CN7KZ3zZFIIxSA6VLLzzh+ecfpb6E2Fh/KgoUA2ckcn75EhhufyYCZ5vBK3IBY4ZzCezdvUfVeASx
+	mfhBts9lXXlnKJwTvUmrT62pRbSVV0d9KWr96AKZl19p6UHbK3QZxG5Ah8rkIjKwLvdsiHn4gQ73D
+	wFsRUavAicHMeQAMzVfJfgc5XB+Yhbha1zB9t41MOhl7UwozoX/4sRNgPm3BNf53P4JaCTKx1zLhZ
+	ETbAi+DzWQQAvisL19DwDJ1Mvd+sP/JEQjkEWecjEUtpxP/lrxm0x8gZk8v1EwrpolSF9k93eOmUm
+	s+iFFjFQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMnih-0000000Gwp0-12K8;
-	Tue, 12 May 2026 14:04:23 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wMnnM-0000000Gy4F-1KaX;
+	Tue, 12 May 2026 14:09:12 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMnid-0000000Gwni-401c
+	id 1wMnnK-0000000Gy3J-3AMm
 	for kexec@lists.infradead.org;
-	Tue, 12 May 2026 14:04:22 +0000
+	Tue, 12 May 2026 14:09:10 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 4ACED42B86;
-	Tue, 12 May 2026 14:04:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AE51C2BCB0;
-	Tue, 12 May 2026 14:04:17 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 151A462C4A;
+	Tue, 12 May 2026 14:09:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEE69C2BCB0;
+	Tue, 12 May 2026 14:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778594659;
-	bh=Q8yAjyxfHY28L//mLfMimLlu3G9TMaVuo/gBH1FBvpA=;
+	s=k20201202; t=1778594949;
+	bh=kH+DBH602R/NCMQ8TNdgFnfzcA0HQ7TM7TcnLEWnzJc=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=cq2MuUjxZaaz+oJSEXJdEeDtgTFAJIvx2jPoPT4P6i2bH/XG9P0Onm/6MTLHNcxKw
-	 qoLuRi9AHWEatgSAaWFT5oiZwoPK1T5hcGQLdHc+Lg72YDYnVs3g2tzz1MTl1RiiR3
-	 C4v1FuubXlphP8LVjCu4oVy53Rjqb12zvaF1rA7/dZ036+hm6IWAne2C34nnB7tcTp
-	 auxKGuYUl/ylMxcMga0/vMAqhTqfNHr1cbjup6I/LfIcwOeI2Ylh14yHINQabwAWJN
-	 y+kSgpKNsEWxbyTw/oGT1Obf5TzYUoR0dyqv4Xq6fVs201SJt7/HF3JZhvpg4n/SPH
-	 nMxBaKQbDnbVw==
+	b=YXy7tjHeVafWgkoh9kZB1s2WPWxRJwh4XA7F5ZYdpJ6KoFS3923iDL7eSbj9ghHBy
+	 WEnYBAPKilqVYayl34sHEjYVC69JVD9Bigj3GJC2RaIY1ftgbrh9AlP6r+Y5KuxvEH
+	 VEBUpDmxRymvetc5ItvkvIldJvreqDWFy2vAt50XQmCaWnM6wZbEIpCBIJ4U4xoS3Q
+	 yyMe5OzzolcfMf8q8KL5uKNv69XgqVgX/ToKmTXB6tY/CvMIbeoDm87e/Ey1ZfX7Jh
+	 uAYA1JEJPmOrSKV6mCxTYTftUsfm9YswWSYMiyiSiBRTErbDFnidoWtLK6DPSJfBtC
+	 8MRuSkpinkQ2w==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>
 Cc: linux-kselftest@vger.kernel.org,  rppt@kernel.org,  shuah@kernel.org,
@@ -49,20 +49,16 @@ Cc: linux-kselftest@vger.kernel.org,  rppt@kernel.org,  shuah@kernel.org,
   linux-kernel@vger.kernel.org,  dmatlack@google.com,
   kexec@lists.infradead.org,  pratyush@kernel.org,  skhawaja@google.com,
   graf@amazon.com
-Subject: Re: [PATCH 3/5] selftests/liveupdate: Test session and file limit
- removal
-In-Reply-To: <20260414200237.444170-4-pasha.tatashin@soleen.com> (Pasha
-	Tatashin's message of "Tue, 14 Apr 2026 20:02:35 +0000")
+Subject: Re: [PATCH 4/5] selftests/liveupdate: Add stress-sessions kexec test
+In-Reply-To: <20260414200237.444170-5-pasha.tatashin@soleen.com> (Pasha
+	Tatashin's message of "Tue, 14 Apr 2026 20:02:36 +0000")
 References: <20260414200237.444170-1-pasha.tatashin@soleen.com>
-	<20260414200237.444170-4-pasha.tatashin@soleen.com>
-Date: Tue, 12 May 2026 16:04:15 +0200
-Message-ID: <2vxzse7wafmo.fsf@kernel.org>
+	<20260414200237.444170-5-pasha.tatashin@soleen.com>
+Date: Tue, 12 May 2026 16:09:06 +0200
+Message-ID: <2vxzlddoafel.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260512_070420_028991_D24D5ECF 
-X-CRM114-Status: GOOD (  24.80  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,37 +75,36 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On Tue, Apr 14 2026, Pasha Tatashin wrote:
 
-> With the removal of static limits on the number of sessions and files per
-> session, the orchestrator now uses dynamic allocation.
->
-> Add new test cases to verify that the system can handle a large number of
-> sessions and files. These tests ensure that the dynamic block allocation
-> and reuse logic for session metadata and outgoing files work correctly
-> beyond the previous static limits.
+> Add a new test that creates 2000 LUO sessions before a kexec
+> reboot and verifies their presence after the reboot. This ensures
+> that the linked-block serialization mechanism works correctly for
+> a large number of sessions.
 >
 > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 > ---
->  .../testing/selftests/liveupdate/liveupdate.c | 99 +++++++++++++++++++
->  1 file changed, 99 insertions(+)
->
-> diff --git a/tools/testing/selftests/liveupdate/liveupdate.c b/tools/testing/selftests/liveupdate/liveupdate.c
-> index 37c808fbe1e9..0eaf97b19267 100644
-> --- a/tools/testing/selftests/liveupdate/liveupdate.c
-> +++ b/tools/testing/selftests/liveupdate/liveupdate.c
-> @@ -22,6 +22,7 @@
->  #include <fcntl.h>
->  #include <string.h>
->  #include <sys/ioctl.h>
+> diff --git a/tools/testing/selftests/liveupdate/luo_test_utils.c b/tools/testing/selftests/liveupdate/luo_test_utils.c
+> index 3c8721c505df..37c330b9bb36 100644
+> --- a/tools/testing/selftests/liveupdate/luo_test_utils.c
+> +++ b/tools/testing/selftests/liveupdate/luo_test_utils.c
+> @@ -20,6 +20,7 @@
+>  #include <sys/stat.h>
+>  #include <errno.h>
+>  #include <stdarg.h>
 > +#include <sys/resource.h>
->  #include <unistd.h>
 >  
->  #include <linux/liveupdate.h>
-> @@ -386,4 +387,102 @@ TEST_F(liveupdate_device, prevent_double_preservation)
->  	ASSERT_EQ(close(session_fd2), 0);
+>  #include "luo_test_utils.h"
+>  
+> @@ -28,6 +29,30 @@ int luo_open_device(void)
+>  	return open(LUO_DEVICE, O_RDWR);
 >  }
 >  
-> +static void ensure_nofile_limit(struct __test_metadata *_metadata,
-> +				long min_limit)
+> +void luo_ensure_nofile_limit(long min_limit)
+
+Since you are adding this to luo_test_utils anyway, I think you should
+do it in patch 3 and use it there too.
+
+LGTM otherwise.
+
 > +{
 > +	struct rlimit hl;
 > +
@@ -125,94 +120,17 @@ On Tue, Apr 14 2026, Pasha Tatashin wrote:
 > +
 > +	if (setrlimit(RLIMIT_NOFILE, &hl) < 0) {
 > +		if (errno == EPERM) {
-> +			SKIP(return, "Insufficient privileges to set RLIMIT_NOFILE to %ld",
-> +			     hl.rlim_cur);
+> +			ksft_exit_skip("Insufficient privileges to set RLIMIT_NOFILE to %ld\n",
+> +				       hl.rlim_cur);
 > +		}
 > +		ksft_exit_fail_msg("setrlimit to %ld failed: %s\n",
 > +				   hl.rlim_cur, strerror(errno));
 > +	}
 > +}
 > +
-> +/*
-> + * Test Case: Manage Many Sessions
-> + *
-> + * Verifies that a large number of sessions can be created and then
-> + * destroyed during normal system operation. This specifically tests the
-> + * dynamic block allocation and reuse logic for session metadata management
-> + * without preserving any files.
-> + */
-> +TEST_F(liveupdate_device, preserve_many_sessions)
-> +{
-> +#define MANY_SESSIONS 2000
-> +	int session_fds[MANY_SESSIONS];
-> +	int i;
-> +
-> +	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
-> +	if (self->fd1 < 0 && errno == ENOENT)
-> +		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
-> +	ASSERT_GE(self->fd1, 0);
-> +
-> +	ensure_nofile_limit(_metadata, MANY_SESSIONS + 10);
-> +	if (_metadata->exit_code == KSFT_SKIP)
-> +		return;
-
-Nit: This is strange. Why not just return errno in ensure_nofile_limit()
-and handle the skipping here? Same below.
-
-LGTM otherwise.
-
-> +
-> +	for (i = 0; i < MANY_SESSIONS; i++) {
-> +		char name[64];
-> +
-> +		snprintf(name, sizeof(name), "many-session-%d", i);
-> +		session_fds[i] = create_session(self->fd1, name);
-> +		ASSERT_GE(session_fds[i], 0);
-> +	}
-> +
-> +	for (i = 0; i < MANY_SESSIONS; i++)
-> +		ASSERT_EQ(close(session_fds[i]), 0);
-> +}
-> +
-> +/*
-> + * Test Case: Preserve Many Files
-> + *
-> + * Verifies that a large number of files can be preserved in a single session
-> + * and then destroyed during normal system operation. This tests the dynamic
-> + * block allocation and management for outgoing files.
-> + */
-> +TEST_F(liveupdate_device, preserve_many_files)
-> +{
-> +#define MANY_FILES 500
-> +	int mem_fds[MANY_FILES];
-> +	int session_fd;
-> +	int i;
-> +
-> +	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
-> +	if (self->fd1 < 0 && errno == ENOENT)
-> +		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
-> +	ASSERT_GE(self->fd1, 0);
-> +
-> +	session_fd = create_session(self->fd1, "many-files-test");
-> +	ASSERT_GE(session_fd, 0);
-> +
-> +	ensure_nofile_limit(_metadata, MANY_FILES + 10);
-> +	if (_metadata->exit_code == KSFT_SKIP)
-> +		return;
-> +
-> +	for (i = 0; i < MANY_FILES; i++) {
-> +		mem_fds[i] = memfd_create("test-memfd", 0);
-> +		ASSERT_GE(mem_fds[i], 0);
-> +		ASSERT_EQ(preserve_fd(session_fd, mem_fds[i], i), 0);
-> +	}
-> +
-> +	for (i = 0; i < MANY_FILES; i++)
-> +		ASSERT_EQ(close(mem_fds[i]), 0);
-> +
-> +	ASSERT_EQ(close(session_fd), 0);
-> +}
-> +
->  TEST_HARNESS_MAIN
+>  int luo_create_session(int luo_fd, const char *name)
+>  {
+>  	struct liveupdate_ioctl_create_session arg = { .size = sizeof(arg) };
 
 -- 
 Regards,
