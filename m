@@ -4,83 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9B43FCD4855
-	for <kexec@archiver.kernel.org>; Tue, 12 May 2026 06:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7EED5CD4F26
+	for <kexec@archiver.kernel.org>; Tue, 12 May 2026 07:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=nts3d11hQEbWfK9I61sLETdJHahMN5gMF0KYY0lf5cQ=; b=ZdOg1bNJ6zqX2qPoy+1Kn9CHdI
-	nxAUVg1xmqwf6Ecka7o66dGLxuHoQI/jmg+UdMfz1a6wb0S6Z2j/YwLQxhZp6IA/PrUyrkO8YIsmB
-	xiG5o/0HKaWPnpOAI+nIxem7fv/74F8pbLS+KAyOPO1CG2Nh3bfOY/zQPGQpK6MQpU41kjc1ce07z
-	TDWa4NgiwwcLISjvaKX3Rz+Odjr6sMq6Me2nsKFIQUU4SiRBSTMWR4eCf75HumtUW0QB0ShbHhzQu
-	TpGE1oYHMV73ifaU8j7NHmP+ITkv2/T9DQu/cd8jGKyCXiG7TzOH7qPmOfPeLBVPOpti3m8Hmm6TL
-	A6W7pIlw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:References:Mime-Version:Date
+	:Subject:In-Reply-To:From:Content-Type:Content-Transfer-Encoding:Message-Id:
+	Cc:To:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=SK3vFTqQy3kkPGC8qGl4oYX8UeCavT8YGzJtI087N0I=; b=IeRAI+1Cg0qpEPde3N/oqQOXBf
+	37cpzD2I9YwkTlUE/KzlQOukwSk/WEHFMOnrevfoe6pyFrihMc96Y9BzxZ67oOxn1cqiWKL8sfs2L
+	9s2b6PrC6daASb3BNK3qetjgvOXhCMwzG1wfU4kyjHm/PPwo2orjCwgQM99sw7qY+P5MOmn1MPaEs
+	fV7ZcHo4j/CKMN9PJtj1glnZrSIb1XZzHM0S3IHbLUAZm+7udm/Q2WvsxxMUR/oOc9HuSGs77pfno
+	j4sOKFA0lVHMtaUXeJORGcISJodoK6h/x1F7yxfjG5KDLAP1Unfkk0MQKwcaOSBUBDW6BKvfFRsB5
+	d45b0D+Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMgyK-0000000FpwF-2eBd;
-	Tue, 12 May 2026 06:52:04 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1wMhRV-0000000FuJ8-00gS;
+	Tue, 12 May 2026 07:22:13 +0000
+Received: from va-1-111.ptr.blmpb.com ([209.127.230.111])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMgyJ-0000000Fpvf-1N2u
-	for kexec@bombadil.infradead.org;
-	Tue, 12 May 2026 06:52:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=nts3d11hQEbWfK9I61sLETdJHahMN5gMF0KYY0lf5cQ=; b=KA78dOX5rCTEcwiiorhig7U6xA
-	fN4idVGuP8CpWHcYEKZSb0cVok/kC1fwGbxj7QOgOAbEMgLTOQLe/zyv8KaL8lbsz/tP2gumVUb8S
-	AGn10TwWyLww4vDv2KpmbvnZB0T2LIxynonSR2rU3Oa8PXbIInv8l/EPobG8YWneCyyuV5t9A3Nii
-	b0x6ns2A5lJdv0USyqzFOmHtCh+Ieiipw2//HsX6S9FYLpwcLm+zxyGV4it2qNDEm51N5eAgc28sX
-	qMuipGFyUOp8HeQPyDDdLzqzTG3NMvRAtnMqdlBt+SyzdmA9eP275IhkEcrcEiB7mbLRULsMjSFLL
-	iTvky2Ew==;
-Received: from sea.source.kernel.org ([172.234.252.31])
-	by desiato.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wMgyD-0000000Ds1F-28VZ
+	id 1wMhRS-0000000FuI6-2hJz
 	for kexec@lists.infradead.org;
-	Tue, 12 May 2026 06:52:01 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 3CAFC438DA;
-	Tue, 12 May 2026 06:51:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71BACC2BCB0;
-	Tue, 12 May 2026 06:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778568714;
-	bh=JrQbMHAIUgObA1+mKB9cmwyGVWli0GV/3xeXEfKec+Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iy9X4nJLqbWsnvDt8maKE5p+Nu099G37eshBismCInFuhZUp0yS0mHJRGNOCYas3Z
-	 Ptisd0du9040+8gjOTnEODmTYnmAgnmQR2ks9AC63/6/+Cx5tWjISj+mj4QDivKrWP
-	 eiAExqCh7de66jSYTZAAcA2sff0U9HMTGo1yLPIZJRtEoBpeKwJA2DRVWe8+GkJuzl
-	 KZZ4pqd6K+LF8Yc7wqZ0/SWrEW6flO9Gw7x5jg/bnfAthyENKsc4+9CVAk9CxbHBel
-	 CYfiaFBj3tSQNgvexfXGwBg9CQjLGmUFhZcDMuS5hpWrRf3mFLvbVMoACa2QMBSAPe
-	 rQf21poTG03oA==
-Date: Tue, 12 May 2026 09:51:46 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Alexander Graf <graf@amazon.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jason Miu <jasonmiu@google.com>, kexec@lists.infradead.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/12] kho: return virtual address of mem_map
-Message-ID: <agLOAtdL0rXL1HJ2@kernel.org>
-References: <20260429133928.850721-1-pratyush@kernel.org>
- <20260429133928.850721-12-pratyush@kernel.org>
- <agHHzJS7bLPHk1GJ@kernel.org>
- <2vxza4u5c2oq.fsf@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2vxza4u5c2oq.fsf@kernel.org>
+	Tue, 12 May 2026 07:22:12 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1778570521; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=SK3vFTqQy3kkPGC8qGl4oYX8UeCavT8YGzJtI087N0I=;
+ b=AR1ro+1MTYdxuPYfD8u0/E2h274yJBCQv6PM2b4aeHjsvIZPwt6ncwSM06Hgb1Cbh4Q21p
+ LAQ8GAAyXbf5X4OSA9khuad4SRX6QWMr+og7SFq1FI90fhqujZWulGGOz0UOwprkzKtf4F
+ 0HgsT1DeAM/Xcs22vqCZ5y0ZkD2w0cVqn4wgZZbg9xw5jfXjRAUdBA+hSFjL/00+s8WXCy
+ h3y8pxfk9/oStqMBEa6ELDrxnlfq5f2e2xJzXsY01BTtMF0OsAHUvPESapt7oJGtlVq60u
+ BGOTCUWqB+e/sMod4vJ1BJTRqUaEUQYHq7KZYn0MGB2iNVbDNbjwrcAdVh8MUA==
+To: <kexec@lists.infradead.org>
+Cc: <k-hagio-ab@nec.com>, "Rui Qi" <qirui.001@bytedance.com>
+Message-Id: <20260512072142.58396-1-qirui.001@bytedance.com>
+X-Original-From: Rui Qi <qirui.001@bytedance.com>
+X-Lms-Return-Path: <lba+26a02d516+a3d232+lists.infradead.org+qirui.001@bytedance.com>
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+From: "Rui Qi" <qirui.001@bytedance.com>
+In-Reply-To: <20260506115758.2497610-1-qirui.001@bytedance.com>
+Subject: Re: [PATCH][makedumpfile] Fix riscv64 virtual-to-physical address translation
+Date: Tue, 12 May 2026 15:21:42 +0800
+Mime-Version: 1.0
+References: <20260506115758.2497610-1-qirui.001@bytedance.com>
+X-Mailer: git-send-email 2.52.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260512_075159_852915_5999118C 
-X-CRM114-Status: GOOD (  19.54  )
+X-CRM114-CacheID: sfid-20260512_002210_757366_4838F1D9 
+X-CRM114-Status: UNSURE (   2.56  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,43 +69,13 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, May 11, 2026 at 06:48:37PM +0200, Pratyush Yadav wrote:
-> On Mon, May 11 2026, Mike Rapoport wrote:
-> 
-> > On Wed, Apr 29, 2026 at 03:39:13PM +0200, Pratyush Yadav wrote:
-> >> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
-> >> 
-> >> There are currently 3 callers of kho_get_mem_map_phys(). Two of them,
-> >> kho_mem_retrieve() and kho_extend_scratch() need the virtual address.
-> >> The third, kho_populate() doesn't care. Make things simpler by
-> >> directly returning the virtual address. Rename kho_get_mem_map_phys() to
-> >> kho_get_mem_map() to accurately reflect what it returns.
-> >
-> > This should be moved earlier, before replacing open-coded get_mem_map()
-> > with a call to kho_get_mem_map_phys().
-> 
-> Do you mean move it before patch 2 "kho: store incoming radix tree in
-> kho_in"?
+Ping.
 
-Yes.
- 
-> I can do that. I did it this way to show a clear need for this function,
-> but I don't mind doing it as a preparatory step.
+This patchset has been out for 6 days without feedback. Could anyone
+please take a look?
 
-With the usual "it will be used in the upcoming changes" text in the log
-it's fine :)
- 
-> >  
-> >> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-> >> ---
-> >>  kernel/liveupdate/kexec_handover.c | 28 +++++++++++++++-------------
-> >>  1 file changed, 15 insertions(+), 13 deletions(-)
-> 
-> -- 
-> Regards,
-> Pratyush Yadav
+Link: https://lists.infradead.org/pipermail/kexec/2026-May/036059.html
 
--- 
-Sincerely yours,
-Mike.
+Thanks,
+Rui Qi
 
