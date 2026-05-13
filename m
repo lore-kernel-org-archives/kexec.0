@@ -4,76 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C976CD37AC
-	for <kexec@archiver.kernel.org>; Wed, 13 May 2026 21:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A4538CD37AC
+	for <kexec@archiver.kernel.org>; Wed, 13 May 2026 22:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2ll7YfgaZYKbKPVF2FoQZiNWQVqfngOu2EHndRqB0ZM=; b=SPD15arhlWolTFXrybmbW+8TB+
-	NDiOuL8V+hZeJ+JJ8H3BD+Ex0z8R77jhXDs4NdQLd1RV4qHaD6ydkDRHyZyxRKXzQN3kNZInhXKPC
-	TmpJpyo8OpCi5hyBygNzwdgpYoWDLimDRVUK8XFAxNH6kET5AyVjofni1X76Be4zNAaCsImOyXqVK
-	g8caUrRBw2UggM9VpV/z2aCL0WtBai8PfyXzmdt14jVTV2cd0mpoGxd/J+0ix5WvpMvGmvk5iQ8av
-	OzpKPryaW97vt5U6ug1hTrZL1nk4sSF07zbInkNqydQC1Tg6G5vZaGIjuZv5UbEjABWAJOMriANfL
-	VMkKTW+w==;
+	bh=mA4XPxt99InvEi52HHcECLiAVCsaocxzcIUnAfAs5LA=; b=mUR7WizMyj6un0XpvQPICN2g88
+	M25mYK2cFeD8MYb3F13XWtPAMxVwcj9p7K4vp1P72yqpw+90ZLstB1ibwJBTyPdis7aRvw8N/9vM0
+	5mIIR9GvQPtD5Gug7fhpljLInWsFcSYrZ14pSNBoq3m55J1oRVgfW3AYSOn/+Q9JewR4y9+1ke4Qp
+	7RLpwNDH88AULIZTjhWWtRRv/Ma8c6Ws40yIifzShNgo6t+TMhx98cXDSVxMalZHp7jTffNQoZ0sv
+	sfV97anmSHesjasWZJYC62sXJtN2Go6NY1vaGg0OskvWrsjLT6T6Wjc7s5TN4PazhrNBo1hFDG1Wy
+	Cyr1AufQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNHAC-00000003pa6-49Es;
-	Wed, 13 May 2026 21:30:44 +0000
-Received: from mgamail.intel.com ([192.198.163.14])
+	id 1wNI0T-00000003ufh-09SB;
+	Wed, 13 May 2026 22:24:45 +0000
+Received: from mgamail.intel.com ([198.175.65.21])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNHA4-00000003pYu-1NzL
+	id 1wNI0P-00000003uf2-0VJq
 	for kexec@lists.infradead.org;
-	Wed, 13 May 2026 21:30:39 +0000
+	Wed, 13 May 2026 22:24:42 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778707836; x=1810243836;
+  t=1778711081; x=1810247081;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=g3wMfuEDUADeG/Bz9ZkpBAT2Wx94bpqi+QsWArtwE8s=;
-  b=H8QGxiAgSejRH5e9wQWMzyNl/YZxhuPCLWc7kGwPnZCbiQh4BShyv6AC
-   KXTgMQylL6xsWiNsvIyN/bsJA9e8OJXvUyqsJGkVAgY/RVRQrobD8m8Y5
-   jBNr/FMpJ7oljGLX+sa1pwjlMZKHAi9CkI6NidT75fC8Mm//oUQKL8Nvm
-   shTClVsiXAnggvah9+AXzKYOA4vaR100ky2jBJdA0vBKjPCsb4Mn7wW7c
-   sEH1Q6t4E8pvgoXRTgJ97qJioZqsqGYyo7kITPNxzOv/yHXbjq80AQ7k1
-   iWyfAapVUZFgVrmfFXkWna4WctZwmOC6+mJScvhsEk8TDFqReImMZvvR1
-   g==;
-X-CSE-ConnectionGUID: 6DnYohIjQhiYeZvMh8UeJw==
-X-CSE-MsgGUID: s7p5FEMBQku6eHwrhcYZow==
-X-IronPort-AV: E=McAfee;i="6800,10657,11785"; a="79679785"
+  bh=9izmYS1Q0D0k4I5HeNs52Eo1sxcceosqE8+HHZxbOIE=;
+  b=l+7WKc7VNxY1IOo7DgEdrccsk53XUds9IBpmBAN+Pl7Amm6In742Noky
+   hmugLLbOFACHEqCGAVsowxLi6F7HjdW/ohVzUux4BeIm5p4MAf/qdng3X
+   kXoDoARVjHap8DExUqALTeYdZjefv8WZRV9f4sGDXyEMIuidCNKzu+IuY
+   nmpZd4OPth+Y6szK6IEQ+niqlitdY7lb5FT+Cx09CCAAhg3WFhInbsBve
+   eJUNbxia4FGa7+oEDmYxiSllSvMcKk8s5LVdEDU3y8CZB2VUIsdEjOu5B
+   aL0uJ/VsGXVVZUhmt1k9JJRAh640CBYh5qhZ2TkXQHGfPt/qeP9xDkxmA
+   w==;
+X-CSE-ConnectionGUID: KCPayg9RR2CF3ZkM+E4EaQ==
+X-CSE-MsgGUID: JUPGRozgSDmKwPiLmEgI8Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11785"; a="79545923"
 X-IronPort-AV: E=Sophos;i="6.23,233,1770624000"; 
-   d="scan'208";a="79679785"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2026 14:30:36 -0700
-X-CSE-ConnectionGUID: nNPTa2otShGAdZpu7RZ+tw==
-X-CSE-MsgGUID: N9TK/gvNQouXUa3DubQDXw==
+   d="scan'208";a="79545923"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2026 15:24:40 -0700
+X-CSE-ConnectionGUID: 5twPmlezQ+m5PPCvlGRG0Q==
+X-CSE-MsgGUID: V9jclXIDSDaPJYHx+rFwIg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,233,1770624000"; 
-   d="scan'208";a="276296913"
+   d="scan'208";a="237345529"
 Received: from lkp-server01.sh.intel.com (HELO dca79079c3eb) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 13 May 2026 14:30:34 -0700
+  by orviesa010.jf.intel.com with ESMTP; 13 May 2026 15:24:38 -0700
 Received: from kbuild by dca79079c3eb with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1wNH9z-0000000059X-0KIs;
-	Wed, 13 May 2026 21:30:31 +0000
-Date: Thu, 14 May 2026 05:30:09 +0800
+	id 1wNI0I-000000005Dr-3o3n;
+	Wed, 13 May 2026 22:24:34 +0000
+Date: Thu, 14 May 2026 06:23:54 +0800
 From: kernel test robot <lkp@intel.com>
 To: hangej <hangej@amazon.com>, bhelgaas@google.com
 Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org, dwmw2@infradead.org,
 	kexec@lists.infradead.org, hangej@amazon.com
 Subject: Re: [PATCH] pci_crash: capture PCI config space at panic time
-Message-ID: <202605140501.1tSG7lxR-lkp@intel.com>
+Message-ID: <202605140624.Tw71sECt-lkp@intel.com>
 References: <20260512162402.1929687-1-hangej@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20260512162402.1929687-1-hangej@amazon.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260513_143037_160215_8307D044 
-X-CRM114-Status: GOOD (  15.71  )
+X-CRM114-CacheID: sfid-20260513_152441_238334_D2B95844 
+X-CRM114-Status: GOOD (  16.04  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,27 +102,25 @@ url:    https://github.com/intel-lab-lkp/linux/commits/hangej/pci_crash-capture-
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
 patch link:    https://lore.kernel.org/r/20260512162402.1929687-1-hangej%40amazon.com
 patch subject: [PATCH] pci_crash: capture PCI config space at panic time
-config: i386-randconfig-r071-20260514 (https://download.01.org/0day-ci/archive/20260514/202605140501.1tSG7lxR-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+config: x86_64-randconfig-161-20260514 (https://download.01.org/0day-ci/archive/20260514/202605140624.Tw71sECt-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
 smatch: v0.5.0-9185-gbcc58b9c
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260514/202605140501.1tSG7lxR-lkp@intel.com/reproduce)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260514/202605140624.Tw71sECt-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202605140501.1tSG7lxR-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202605140624.Tw71sECt-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   kernel/pci_crash.c: In function 'pci_crash_save':
->> kernel/pci_crash.c:661:53: error: 'struct pci_dev' has no member named 'aer_cap'; did you mean 'acs_cap'?
+>> kernel/pci_crash.c:661:25: error: no member named 'aer_cap' in 'struct pci_dev'
      661 |                                 if (!pdev || !pdev->aer_cap)
-         |                                                     ^~~~~~~
-         |                                                     acs_cap
-   kernel/pci_crash.c:666:68: error: 'struct pci_dev' has no member named 'aer_cap'; did you mean 'acs_cap'?
+         |                                               ~~~~  ^
+   kernel/pci_crash.c:666:19: error: no member named 'aer_cap' in 'struct pci_dev'
      666 |                                                              pdev->aer_cap + PCI_ERR_ROOT_STATUS,
-         |                                                                    ^~~~~~~
-         |                                                                    acs_cap
+         |                                                              ~~~~  ^
+   2 errors generated.
 
 
 vim +661 kernel/pci_crash.c
