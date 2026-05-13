@@ -4,63 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A53A6CD4F24
-	for <kexec@archiver.kernel.org>; Wed, 13 May 2026 10:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 68764CD37B6
+	for <kexec@archiver.kernel.org>; Wed, 13 May 2026 10:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=pr7dARIqK00yCxhYhbkD1anSUq6hc0OaN5jqWiJwO3Q=; b=EybYeZyVkN4s5IGZLywmwpbN87
-	IwC6RFmQenqg8K+jWWYEdq4+catoPt1gX2jao75GN108QPAktBTDDTZtzmtqkOXQiHIaT387kk8lp
-	mTN6+3ycPI5LgIDcyjyQimd9G4r9zVuh8wAV8z3Tf/yi7pPJz+Yfq42pBcpPx++koC61M9UTV7Tc3
-	d0hon6NUc8p3maRaOmMDozqOpDm8e6vwe6zzbMaTH0whGi6JUIFpHQbBdKAKFtKQ02MTG58I593+p
-	hvesJdd5kMM42miOvbbVZpPDX5KRXwdYQvTEeYGS6jziN5gcrjr+Fr2FYeHYBmA9FZAauovSWhlZF
-	17DwpqUA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=6Vays8x+y+TnHpt//KEgyCfpbymoIR7MVrgJDMaqlXI=; b=iTb+RFEKLKzrD/zDJ1ihPu2+Ml
+	IDYD24213yGaw/1FXk4zSjTQ5BKH+pAskM58GnpQ0ravJ32AzJQjSn0jeYY+56exAY9DbMjTe7H/5
+	wAXCRvOeGnxqpCR9iRChJKmR6Muv6lkYC02l0QBwiNWGDufxX3Q+d9GECOLG89OHeVGYuUxNdZ2gP
+	7ngwHsh1Xd8A0H4QeDKGcIOcxq94de9AYdDi+jeklR8tnG7kt/vvKDH0SxIpPLUvG6074lWmT12Ia
+	pjGgZWtpUE8VWwqT+xNNnEtud1vi+qOIHcy9AzjKiPNkVnU5/dcaB2giDH2ON4VPPh6yUwiSuNFcb
+	fxG5CmRw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wN6jS-000000029ti-2TYf;
-	Wed, 13 May 2026 10:22:26 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wN6tP-00000002C5m-2Q8A;
+	Wed, 13 May 2026 10:32:43 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wN6jQ-000000029s0-2AVD
+	id 1wN6tN-00000002C5L-3TZP
 	for kexec@lists.infradead.org;
-	Wed, 13 May 2026 10:22:25 +0000
+	Wed, 13 May 2026 10:32:41 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id F1C5E409A2;
-	Wed, 13 May 2026 10:22:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DE50C2BCB7;
-	Wed, 13 May 2026 10:22:21 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 0EA3A60121;
+	Wed, 13 May 2026 10:32:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23970C2BCB7;
+	Wed, 13 May 2026 10:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778667743;
-	bh=1DYgdZzlhmRaiikUzEm1OxduP6ObZQtAfPa74GcnTQk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=pvgZqZU/12y+6wJxVUEhDGuzGP86yD23cqn7pwJTdOB9Z1awiUX69w2aaRPkNdmnq
-	 z62juYMPcbXwCdfroQEAEbOKDW+Dt+eD8VDGaAXdPucl62xwmvYkZ3mLmLBtK7/t3+
-	 ApemIKPXE89HAho8u0azAf26rA7W5rRouJFU31SvQ97Z8AIS3xbc6J8JlALSCETBIs
-	 gQiDogwno7LNGYaNxedkDBjadltMZhCDtrnTvkT8s1MVqI3l8Q+SsJTYfsmf/ZhUbW
-	 NCEfkAEffZejBBbEKUQ9UdqyF7jNCenrCQweAr8OM2cNL40+EH7FLevaKov+TBgMly
-	 MvXMqSNQRVTDQ==
-Date: Wed, 13 May 2026 13:22:18 +0300
+	s=k20201202; t=1778668360;
+	bh=ZzMQKwrs8B6u4WEOzanO567l+RO2hrydIn7OzIi6yAM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PkdigcFqYg7kgngvmc1Zg+e8nSoebVC897YRbfvvcVJb338fBeXZLs8HdeIzRy354
+	 SzKevcBnEP4R3NeTNSCKNCcQfv4lNzl0Nf4bWMNfIQLLzJ8IQOtb9tAwaJpqKbEuKm
+	 d6tvQ1P8fm/l9DZ3Oq94JuNh2/qbdFT4nVQneTibUmCVhcgQepdkHNVZqwadU3ZRv3
+	 wNtg//yn0q1p8KhJlxevexxGaBX0RI6Gk3we/zAvKpKuw36Q2rX0CebFL/U/0trcCI
+	 GwD+B+a7LSlauF2OQVxcVbzB5Htoar2TJgBhYC88x2NIeSpViE3GfKmXsvtT+HDnwe
+	 61/OXJ9VmdcBg==
+Date: Wed, 13 May 2026 13:32:32 +0300
 From: Mike Rapoport <rppt@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Carlier <devnexen@gmail.com>,
-	Evangelos Petrongonas <epetron@amazon.de>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: [GIT PULL] liveupdate updates for v7.1-rc4
-Message-ID: <agRQ2pV1vsO-MoTB@kernel.org>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Alexander Graf <graf@amazon.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jason Miu <jasonmiu@google.com>, kexec@lists.infradead.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/12] kho: generalize radix tree APIs
+Message-ID: <agRTQLJv9pMEZe_7@kernel.org>
+References: <20260429133928.850721-1-pratyush@kernel.org>
+ <20260429133928.850721-2-pratyush@kernel.org>
+ <agG-OuOTAg5YD-CV@kernel.org>
+ <2vxz8q9pdib3.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260513_032224_576612_35E632F7 
-X-CRM114-Status: UNSURE (   8.31  )
-X-CRM114-Notice: Please train this message.
+In-Reply-To: <2vxz8q9pdib3.fsf@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,42 +77,69 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Linus,
+On Mon, May 11, 2026 at 06:25:52PM +0200, Pratyush Yadav wrote:
+> On Mon, May 11 2026, Mike Rapoport wrote:
+> 
+> > On Wed, Apr 29, 2026 at 03:39:03PM +0200, Pratyush Yadav wrote:
+> >> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+> >> 
+> >> The KHO radix tree is a data structure that can track the presence or
+> >> absence of an arbitrary key, with nothing inherently tied to KHO memory
+> >> preservation tracking. This was one of the design goals of the radix
+> >> tree. This was done to enable it to be re-used by other users of KHO.
+> >> 
+> >> Despite that, the radix tree APIs are very closely tied to KHO memory
+> >> preservation tracking. Adding a key is done by kho_radix_add_page(),
+> >> which encodes it as a page tracking operation and takes in PFN and
+> >> order. kho_radix_del_page() does the same. These functions encode the
+> >> key internally that goes into the radix tree. kho_radix_walk_tree() does
+> >> the same by baking the PFN and order into the callback arguments.
+> >> 
+> >> Generalize the APIs by taking the key directly and doing the encoding at
+> >> the callers. Rename the functions to kho_radix_add_key() and
+> >> kho_radix_del_key(). In practice, this removes a line each from the
+> >> functions and moves the encoding function call to the callers.
+> >> Similarly, update kho_radix_tree_walk_callback_t to take the key
+> >> directly.
+> >> 
+> >> To keep the naming convention clearer, rename
+> >> kho_radix_{encode,decode}_key() to kho_{encode,decode}_radix_key().
+> >> 
+> >> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+> >> ---
+> >>  include/linux/kho_radix_tree.h     | 18 +++----
+> >>  kernel/liveupdate/kexec_handover.c | 76 ++++++++++++++----------------
+> >>  2 files changed, 42 insertions(+), 52 deletions(-)
+> >> 
+> >> diff --git a/include/linux/kho_radix_tree.h b/include/linux/kho_radix_tree.h
+> >> index 84e918b96e53..f368f3b9f923 100644
+> >> --- a/include/linux/kho_radix_tree.h
+> >> +++ b/include/linux/kho_radix_tree.h
+> >> @@ -85,7 +85,7 @@ static struct kho_out kho_out = {
+> >>  };
+> >>  
+> >>  /**
+> >> - * kho_radix_encode_key - Encodes a physical address and order into a radix key.
+> >> + * kho_encode_radix_key - Encodes a physical address and order into a radix key.
+> >
+> > Let's keep kho_radix_ prefix for namespasing please.
+> > This is the common practice these days.
+> 
+> I am keeping the namespacing, just moving it out of the "kho_radix"
+> namespace to "kho" namespace. The mental model is that this function has
+> nothing to do with the radix tree. It is just something KHO uses for one
+> of its radix tree, so it should live in the "kho" namespace not
+> "kho_radix".
+> 
+> Does that make sense? I can add this explanation to the commit message
+> as well.
 
-The following changes since commit 254f49634ee16a731174d2ae34bc50bd5f45e731:
+With this explanation it makes sense, with "to keep the naming convention
+clearer" it felt the opposite :)
 
-  Linux 7.1-rc1 (2026-04-26 14:19:00 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git tags/fixes-2026-05-13
-
-for you to fetch changes up to 7b0b68b2b95606e65594958686833e53423f58f2:
-
-  mm/memfd_luo: document preservation of file seals (2026-05-04 14:03:16 +0000)
-
-----------------------------------------------------------------
-liveupdate fixes for v7.1-rc4
-
-A few fixes for kexec handover and liveupdate:
-
-* make sure KHO is skipped for crash kernel
-* fix error reporting in memfd preservation if it fails mid-loop
-* don't allow preserving memfds whose page count exceeds UINT_MAX
-* fix documentation of memfd seals preservation to match the code
-
-----------------------------------------------------------------
-David Carlier (3):
-      mm/memfd_luo: report error when restoring a folio fails mid-loop
-      mm/memfd_luo: reject memfds whose page count exceeds UINT_MAX
-      mm/memfd_luo: document preservation of file seals
-
-Evangelos Petrongonas (1):
-      kho: skip KHO for crash kernel
-
- kernel/liveupdate/kexec_handover.c |  2 +-
- mm/memfd_luo.c                     | 25 +++++++++++++++++++------
- 2 files changed, 20 insertions(+), 7 deletions(-)
+> -- 
+> Regards,
+> Pratyush Yadav
 
 -- 
 Sincerely yours,
