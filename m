@@ -4,65 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A2D8ACD4851
-	for <kexec@archiver.kernel.org>; Wed, 13 May 2026 15:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5653DCD4851
+	for <kexec@archiver.kernel.org>; Wed, 13 May 2026 15:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=U5FgpYdWutcIouGicjgojW9gOVO0tiNobAoLydLLHpI=; b=WqR3WKv910FNUaoKqfTpOZY0e3
-	kiKA8SFek3orEwol+ugaC6UZN5vhPGc/UCc6/p2PWoZ/UMjJNsWF93nchDu8tO10X1q6sdA+dO6Ko
-	NyzZAUbBTrA5mgoR2LKy43teTBN/M/7axFQWIGCrDZh7WFRBLKn5CxYQqNr/XQS+6q6P/SUFk9Rex
-	9Q06YvBcelp8biR3XVoAcMe5xZLXqfKxi2tEiESORvpFpzd4upPuJelqYiob1a5DCKWALndinl71l
-	HiP37NjYgbBwOWrzAFq4rB0+m4MQOOrdRJgY4yXfZ3Tb+POFL2ui0TyG6dKepUwTtJ15h76JwmSlU
-	S1PFonBA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:Date:Message-Id:
+	References:In-Reply-To:From:Subject:Reply-To:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=iLlOdkfp7QSNnUgF2BNs1mDqIRB05WnP42VaWXM4hMo=; b=kyVlfWotGwV9SBn0NRkyBiczqk
+	JNbNHM8O4uZFoQDZqNwlZ4JKUu+mt9zaSxQYHzmabvUq8l8gzKQVnaywL4yZXHzmJA/WP0WYhCZR7
+	WbogoRK1g0IYT8IMRHPPvmMbxClX3A6PdJ3zOAdA2Xv0s/aKqjicwYWWNgX/QKANXzWw3zTPbJago
+	08T9F9zWGLplEGV4Y/OaX9Tlj1RSw7UudncZU6xuTsGyVDL1fixKsUKUya/SMzMgB+xQREdfqf7ll
+	7ESel2JE1HdCxIunlAQUHF0dVB5jlQMep8LQfGSO1ZFvVJJ4vEwkF+LTSRpd55/xAK7Pk5rmq4g4S
+	jTRS7ytw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNBCg-000000031ph-3tJW;
-	Wed, 13 May 2026 15:08:54 +0000
-Received: from mta1.migadu.com ([2001:41d0:203:375::] helo=out-172.mta1.migadu.com)
+	id 1wNBXS-000000035KZ-0BBG;
+	Wed, 13 May 2026 15:30:22 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNBCd-000000031gM-2ks7
+	id 1wNBXQ-000000035Jv-06XN
 	for kexec@lists.infradead.org;
-	Wed, 13 May 2026 15:08:53 +0000
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1778684848;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U5FgpYdWutcIouGicjgojW9gOVO0tiNobAoLydLLHpI=;
-	b=NE/mD9WC9zOAcd3zhlSYl0Cqj9YZsIOlgArz6a2uSxTzDzgPNbdatWQb46xgsRMfDyQyuO
-	FbhokL+ZCFFbeOjECotujV7IQL/rnfpmKH9ArHa+ck4pceT+KZILLm/yK/zSjPk4buHBk5
-	/v8g66veXLhfQVWNf+k3kxmXnoKJajI=
-From: George Guo <dongtai.guo@linux.dev>
-To: pratyush@kernel.org
-Cc: akpm@linux-foundation.org,
-	dongtai.guo@linux.dev,
-	graf@amazon.com,
-	guodongtai@kylinos.cn,
-	jasonmiu@google.com,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	liukexin@kylinos.cn,
-	pasha.tatashin@soleen.com,
-	ran.xiaokai@zte.com.cn,
-	rppt@kernel.org
-Subject: Re: [PATCH 1/1] kho: fix KHO_TREE_MAX_DEPTH for non-4KB page sizes
-Date: Wed, 13 May 2026 23:07:18 +0800
-Message-Id: <20260513150718.182224-1-dongtai.guo@linux.dev>
-In-Reply-To: <2vxzcxz2dybi.fsf@kernel.org>
-References: <2vxzcxz2dybi.fsf@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260513_080851_835610_0E37834A 
-X-CRM114-Status: GOOD (  11.06  )
+	Wed, 13 May 2026 15:30:20 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 4EA546012A;
+	Wed, 13 May 2026 15:29:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FC52C2BCB3;
+	Wed, 13 May 2026 15:29:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778686189;
+	bh=uI4vmPRYaOkKsG1dsiYOsQI9DoKlxqJpqxVwBQAaxqc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=L+Vu+Jp+2FX8Qfuuzc7PzEh9i337pkhDzNUaHJTS40QaG1axFrmsId5eKwUx4NKSJ
+	 hPO8m2k1uEC7VDwKB6wBsDIsV+A9jikvCKp1NHWKN6QXHoPjER8JFmRAAvuNzl3PaH
+	 laDqsxGbMdeKqZDwFHuWcJ8YwCLT7GPKIvlNSPN6dLpWpDhYlnTTwA8UvRurYtjkJn
+	 391iVlc8xvbsJBH3B+nOhXHUelKcm990h5bjxAehvfMRRYj0ycDVGDoKei4lY8IHWU
+	 wEObrI7FRy4lXxl3QpfWEDYT/8KvQHQ7MmL1bav8ONi2na/NNHpbWA5SArxOtqrk05
+	 H2xDZQg0oHurQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id BA16839301B5;
+	Wed, 13 May 2026 15:28:55 +0000 (UTC)
+Subject: Re: [GIT PULL] liveupdate updates for v7.1-rc4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <agRQ2pV1vsO-MoTB@kernel.org>
+References: <agRQ2pV1vsO-MoTB@kernel.org>
+X-PR-Tracked-List-Id: <kexec.lists.infradead.org>
+X-PR-Tracked-Message-Id: <agRQ2pV1vsO-MoTB@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git tags/fixes-2026-05-13
+X-PR-Tracked-Commit-Id: 7b0b68b2b95606e65594958686833e53423f58f2
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 1f63dd8ca0dc05a8272bb8155f643c691d29bb11
+Message-Id: <177868613426.3700920.13576586222009152264.pr-tracker-bot@kernel.org>
+Date: Wed, 13 May 2026 15:28:54 +0000
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, David Carlier <devnexen@gmail.com>, Evangelos Petrongonas <epetron@amazon.de>, Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,52 +74,16 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Sorry for the late reply.
+The pull request you sent on Wed, 13 May 2026 13:22:18 +0300:
 
-On Mon, May 11 2026, Pratyush Yadav wrote:
+> https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git tags/fixes-2026-05-13
 
-> As of now, we only support KHO on x86 and arm64. Are you working on
-> supporting it for LoongArch? What is your use case?
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/1f63dd8ca0dc05a8272bb8155f643c691d29bb11
 
-Yes, we are adding KHO support for LoongArch (16KB page size). The
-LoongArch patches are being prepared separately. This fix is a
-prerequisite.
+Thank you!
 
-> Maybe I don't understand the math so well, but I can't see the problem.
-> ...
-> level = 4, s = 50, idx = 1
-> What am I missing?
-
-The issue is that all three operations start the traversal at
-KHO_TREE_MAX_DEPTH - 1, not KHO_TREE_MAX_DEPTH:
-
-  kho_radix_add_page()  line 180: for (i = KHO_TREE_MAX_DEPTH - 1; i > 0; i--)
-  kho_radix_del_page()  line 255: for (i = KHO_TREE_MAX_DEPTH - 1; i > 0; i--)
-  kho_radix_walk_tree() line 356: __kho_radix_walk_tree(..., KHO_TREE_MAX_DEPTH - 1, ...)
-
-So with depth=4 the effective top level is 3, not 4.
-
-phys_to_page() of that address faults in kho_preserved_memory_reserve().
-
-This is confirmed by a kernel panic on 7.1-rc3 LoongArch (16KB pages)
-without the fix. With depth=5 the top level is 4 (shift=50):
-
-  (key >> 50) % 2048 = 1   /* order bit correctly captured */
-
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
-
-Panic log on 7.1-rc3 LoongArch (16KB pages) without the fix:
-
-[    0.000000] CPU 0 Unable to handle kernel paging request at virtual address 00003d3ffe000028, era == 90000000c162f10c, ra == 90000000c162f0f8
-[    0.000000] Oops[#1]:
-...
-[    0.000000] Call Trace:
-[    0.000000] [<90000000c162f10c>] kho_preserved_memory_reserve+0xc4/0xe8
-[    0.000000] [<90000000c0129f88>] __kho_radix_walk_tree+0xf0/0x138
-[    0.000000] [<90000000c0129f10>] __kho_radix_walk_tree+0x78/0x138
-[    0.000000] [<90000000c012b730>] kho_radix_walk_tree+0x88/0xe8
-[    0.000000] [<90000000c162f874>] kho_memory_init+0x220/0x4e4
-[    0.000000] [<90000000c1639b38>] mm_core_init+0x168/0x1a0
-[    0.000000] [<90000000c1620d50>] start_kernel+0x5c4/0x778
-[    0.000000] Kernel panic - not syncing: Attempted to kill the idle task!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
