@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 51873CD4851
-	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 21:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6D402CD4851
+	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 21:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=h8RkPwRSQGNgtwFGhMa45mhqNtBX9nLmlB3IzWi1i0E=; b=ae8C8tcaENe5QSUeDn8FQgXk6Y
-	loCE2w5wwzuLfnWgSKA3rcUrb7P+go53F+ebmzNXvrry62Pkfn9u2YlUG1W5SMkhcqWqgN9iqfjF6
-	UyVg99B2FkypLZoyy5O0OscMxm7mhn3pGn5wazFSqT3GUzcFb2PsV/9hhAqchWiDXsmgoQT9dII7J
-	UdLdz+n8hEVsRi6jNReJziL3GGJ3ofM+PdnNYgPsy4Izk4LqdGzq7HsAzu92vzrLzw6DTx62Ysz0L
-	RRBEUdhzEze4ZAeFFQAcQcp/Xl2Uy9QML5h+mHOAEPReHKVWV0pJnMCWdABGMat/OZw71g/9l14Q0
-	MPFUnHRg==;
+	bh=6v1a1pQ4RntgauZdGQ/AgmAZlKsDK24ag7JDuVxfuOw=; b=FLSAJRDscqgVOflswA+EoDxM+Z
+	D3HgWs09uMTi7XYCKL7dS6qOY0asLxWXkP6L77Gn9jqSAM5isMEHIdlNC9x353/PMRsWl3ehXhazC
+	/lSe+FMUH1cIPJE2QRyRSpu/ofnamSDnIY4fGJEym0QuvJZi+opgakie7nchhJbptXYYvW3hUH2ba
+	V4DIE38xJ2k9F+zxhbPSRIgRMSsQ7lSfQurU4BS8iUM8p+qlkbfm5UT/G8p/OCtq+mKXvx4Xyxkjf
+	QuzeRvkHou/XRzSD1wHLQohy1l4F4g5xguncXOLzTZDJ2lM+cFtMBYhXyJzG3ySPEV83+f8xK/aWA
+	XwBlphwA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNzz3-00000009VYW-43lH;
-	Fri, 15 May 2026 21:22:13 +0000
-Received: from mail-dy1-x1333.google.com ([2607:f8b0:4864:20::1333])
+	id 1wNzzV-00000009Vem-0Fvz;
+	Fri, 15 May 2026 21:22:41 +0000
+Received: from mail-oi1-x230.google.com ([2607:f8b0:4864:20::230])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNzz1-00000009VXu-2AJj
+	id 1wNzzS-00000009Ve3-0Oyj
 	for kexec@lists.infradead.org;
-	Fri, 15 May 2026 21:22:12 +0000
-Received: by mail-dy1-x1333.google.com with SMTP id 5a478bee46e88-2f0d3e07e30so1384202eec.0
-        for <kexec@lists.infradead.org>; Fri, 15 May 2026 14:22:11 -0700 (PDT)
+	Fri, 15 May 2026 21:22:39 +0000
+Received: by mail-oi1-x230.google.com with SMTP id 5614622812f47-47c918c62b4so293132b6e.0
+        for <kexec@lists.infradead.org>; Fri, 15 May 2026 14:22:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778880130; x=1779484930; darn=lists.infradead.org;
+        d=gmail.com; s=20251104; t=1778880157; x=1779484957; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h8RkPwRSQGNgtwFGhMa45mhqNtBX9nLmlB3IzWi1i0E=;
-        b=IpemdFWDkDLoL8WhJVYFmd9Oweje/4CRe8sfVUIkYL1J+XKM2ieCtA3sbvQTWzJWG2
-         G/Fe/l+eQPu8rIxz5bBCjTxFQxTSzMGJKYtj0xfXgqrL7Uhtccfs9z0fu3RQDZ26FWvM
-         5QamNfo/aoeTSt85ASU+yJTuG6z9gkLIo605xj7GwtSGxCW/Hu3OZ8tEh1FDg/riezl4
-         jS/DbroBpcenyHIJxrHwANsRdWPl1533Vt0v/i0XNjNafl3mIwBuzNDMvqMq2R/6fTQC
-         O6cUq05ajcxpaLle86Wefu/HXXuH6x8pekan4ynEqLooQkeL/zLu4LyeNfLUs8u2WYR6
-         GEHg==
+        bh=6v1a1pQ4RntgauZdGQ/AgmAZlKsDK24ag7JDuVxfuOw=;
+        b=oRN1vuspbrqCCGZgwo8N1qEpjFpbxHe06hDrPjf6xubzcgBxLVTqt8SRolrGF4vYvx
+         +hOZZkheFmUcGpKOX1busAvHRf12YX0UCDiNdvJHzlHUjNG+hOcVSXfOWrYIdXK8M3Iq
+         30lV5lnPmYJJnZ11p9U8ec+GSOpy+tOHYYOBFpP8fzur4jEV8hkiyObKs7TAm9QPqArO
+         5o/HcFbufvyJlBYw1vgPkyoVTuzXahinTB8nOqdO0dLssT9xbWoSE44VrE0721xgEek1
+         v1FeLOBXe7xQAqIx6eVcidU4ZOjR0DQT3IEH/mYjI62OPgvRnHhDS1htnfAqmWgE2EDk
+         fgqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778880130; x=1779484930;
+        d=1e100.net; s=20251104; t=1778880157; x=1779484957;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=h8RkPwRSQGNgtwFGhMa45mhqNtBX9nLmlB3IzWi1i0E=;
-        b=I9cwCk1/qZfv7+aDKpMHLhl1lMJ0gHiuiLtUXlZ8+tK1PaNQLiuYQnjoBmmxbR2skA
-         sNslXqoHctyfECePKASwe7CkYJn0kZxwOHnGTHUHNS2OTc14K9X5k395EkH40WINcZ8H
-         cFd+N2sZDOstUFGkpcXu1slN6vSJDH/gtYDPNJflt8Dv/jCu5CBRp7DNywInXxZOWJa2
-         g+vn9XotMhW1WBDuvitoFOyRsVkK1d3DrizoQOD1jio98q5/fc/8MFpg+inPp8GTbALn
-         Uc/V+S2FDVUu9ixVjKcpdlZmKvC4iDCN2wkOww4UsBpk0mZE/Y1IG7em0qjNpyLdmGw0
-         x23w==
-X-Forwarded-Encrypted: i=1; AFNElJ/huBZYQj0a6yUGUDrXrcGrzp2vcJDlABNeBCgZJUYC+DRF9Hb6bIYx/tRwN8KRULLw2FEkcw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxzNsYu4HYx2iH/YbT5KfS2xkfqwsZjjJrbJiAbuenZD7CYyARB
-	mxGEh0QaF7Wa/n5z3r+P+6Pyb4T5dcAxJ8O87vMCLq0TzIwIcXGKViSu8U0wZuSV
-X-Gm-Gg: Acq92OE7gT8EovkyunJW+uJc3X/aKMx23hyxx4Ydow4f0MomF8OtqFqXgUpNH39FJFE
-	e5hjIL/MvJpoQ96XWh+VlfdZMrFvtuVkGN7u7H7CIjZD6Ui5/yKzQABKJWH1H6qykzjPBY0yZDH
-	jpjBJ5n813d1+mlewr9sZb+N+YJYp6hXW9GaxlBmt/gD+8jw5splM1QPrzg+/hzo0mWuLwTgp1f
-	ItL0NKvVROC0kObOMFBRGNpxUWboUvp++d/IbXGuKt/rlYLooQC3WhIo3oxRa0zQrczdMtPBTWk
-	gRzTJ2RpfXd2DQBOjGDv4bPny31fGuJ3TspdbuJL9+9j9SrMnz+Yrp4KOf/GWy4gvHwrHjZWlUG
-	d7jWXHrH7U/8s/WqPUBLXsDKGP8EtAm/pjuIA8ktXE7LBSJ5L6BX9iblIvUVeaJ0tH97rO0pbyC
-	z8nNKnJOasvqzRxJFDtPHbSngpvyuOKjcDeFfr37Fy2Q==
-X-Received: by 2002:a05:7300:ad30:b0:2e7:5737:8364 with SMTP id 5a478bee46e88-303984e17ffmr3028118eec.15.1778879717789;
-        Fri, 15 May 2026 14:15:17 -0700 (PDT)
+        bh=6v1a1pQ4RntgauZdGQ/AgmAZlKsDK24ag7JDuVxfuOw=;
+        b=rDqM0eA53CE+6CpGBVHiQzg2+enCQV4KOllxKPMwCNmv26ccCcyH0NkD43MAkOkAq7
+         FnyPp5V08DiLf/TpdsvBuU4yAY93VkripxqFTtjoTsCsDL+g3sFQ2Iepv4h8UzX7jJbg
+         t6LaKKfMPAtdGMA94P0DSYfQONruafxpxloVngAUHRiscEaRydGCN2QvA3SxGKHLlHiT
+         jUIl2ES4XvB5KqU9LHjZzDK+43aP8vU6gYNdJcZQ06ppRjbhr/4P0FKs+Uz4ta6OuOF2
+         Gd4uAEIV4CJzeZxY/Udmbdd5PuQP3OytiaT0iDic09wftvlWjg/j3XpGpX19qVdU+iRN
+         cLVA==
+X-Forwarded-Encrypted: i=1; AFNElJ9SofRn8xmqxvMwolp1mNF9ZddLpDiJvqgLamImaIUqAaNQCocsws6xsGsS3Im3Ac6flFT3Mw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzHPJRVrsOo70P62K8D5Hxog8Y0D0Mh7WnPHavQDs1+fucapgb8
+	F5vSGxnXfzyNAFFb43gXjmcN0y72nHkDn/7VxiFFiYcwc/SxuXwYkJ9xQXrVj57v
+X-Gm-Gg: Acq92OF4D2f7eHpwxsHGInd9syg5hCN4W9LIh+uOGxC99yR5iW696MXK0uJZFvA+fyC
+	4JVg0kGOCXImsOSS7CV7csCIpCUYQKL+cAbjTs/hQbFfISRQb8l/r3IloygvjRWipPCFFPDHLPK
+	josz/yRcx4ITZxTdHRz4zmOdYD9gjs3lWc4yxq2maMn+VbTdUoij5w5iI9D7k5ZiKlTt0bl40PF
+	Gqg4WLUdFMSq6bGyvnEtSORvHd7eBmF+rl20I88bdxXZdv3nMjiSBhflzxC2glzM7ZGxkAOOc/K
+	btHhODIvbn5RcMIu6TonOdi8mHTGdNVueTpzMG1mCiw9o2xgJs/F6XU+HMkUDPPnoqZbiahIPQq
+	FN2ywVgAz1JyAGgxYukiSFyCGpIKTtwVD6ujO2eLSwI/NER83RlIiN/uP3mCCnLqqQ40VdyxGtG
+	y1S8W9fDjDwBBMkAVpGwAxHue2TwcPxc+rt7Qt3qqydQ==
+X-Received: by 2002:a05:7300:818b:b0:2be:7885:31df with SMTP id 5a478bee46e88-30398618b3fmr3091136eec.17.1778879729276;
+        Fri, 15 May 2026 14:15:29 -0700 (PDT)
 Received: from mimas.lan ([2603:8000:df01:38f7:a6bb:6dff:fecf:e71a])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-302947e917dsm8005268eec.12.2026.05.15.14.15.16
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30293e2ea6dsm8268038eec.4.2026.05.15.14.15.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2026 14:15:17 -0700 (PDT)
+        Fri, 15 May 2026 14:15:29 -0700 (PDT)
 From: Ross Philipson <ross.philipson@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	x86@kernel.org,
@@ -103,17 +103,17 @@ Cc: ross.philipson@gmail.com,
 	daniel.kiper@oracle.com,
 	andrew.cooper3@citrix.com,
 	trenchboot-devel@googlegroups.com
-Subject: [PATCH v16 23/38] x86: Allow WARN_trap() macro to be included in pre-boot environments
-Date: Fri, 15 May 2026 14:13:55 -0700
-Message-ID: <20260515211410.31440-24-ross.philipson@gmail.com>
+Subject: [PATCH v16 27/38] x86: Add early SHA-256 support for Secure Launch early measurements
+Date: Fri, 15 May 2026 14:13:59 -0700
+Message-ID: <20260515211410.31440-28-ross.philipson@gmail.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260515211410.31440-1-ross.philipson@gmail.com>
 References: <20260515211410.31440-1-ross.philipson@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260515_142211_559337_DE07D6EB 
-X-CRM114-Status: GOOD (  10.13  )
+X-CRM114-CacheID: sfid-20260515_142238_142540_70B39BAA 
+X-CRM114-Status: GOOD (  11.54  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -128,43 +128,45 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-For pre-boot environments, do not use the static call definition of the
-WARN_trap() macro.
+From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
+The SHA-256 algorithm is necessary to measure configuration information
+into the TPM as early as possible before using the values. This
+implementation uses the established approach of #including the SHA-256
+library directly in the early boot code.
+
+Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
 Signed-off-by: Ross Philipson <ross.philipson@gmail.com>
 ---
- arch/x86/include/asm/bug.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/x86/boot/startup/Makefile     | 1 +
+ arch/x86/boot/startup/lib-sha256.c | 6 ++++++
+ 2 files changed, 7 insertions(+)
+ create mode 100644 arch/x86/boot/startup/lib-sha256.c
 
-diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
-index 80c1696d8d59..7899768ae644 100644
---- a/arch/x86/include/asm/bug.h
-+++ b/arch/x86/include/asm/bug.h
-@@ -138,8 +138,14 @@ do {									\
- #ifdef HAVE_ARCH_BUG_FORMAT_ARGS
+diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makefile
+index e283ee4c1f45..071a90f23ae0 100644
+--- a/arch/x86/boot/startup/Makefile
++++ b/arch/x86/boot/startup/Makefile
+@@ -22,6 +22,7 @@ obj-$(CONFIG_X86_64)		+= gdt_idt.o map_kernel.o
+ obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= sme.o sev-startup.o
  
- #ifndef __ASSEMBLER__
+ slaunch-objs			+= lib-sha1.o
++slaunch-objs			+= lib-sha256.o
+ obj-$(CONFIG_SECURE_LAUNCH)	+= $(slaunch-objs)
+ 
+ pi-objs				:= $(patsubst %.o,$(obj)/%.o,$(obj-y))
+diff --git a/arch/x86/boot/startup/lib-sha256.c b/arch/x86/boot/startup/lib-sha256.c
+new file mode 100644
+index 000000000000..f60df97f9244
+--- /dev/null
++++ b/arch/x86/boot/startup/lib-sha256.c
+@@ -0,0 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2026 Apertus Solutions, LLC
++ */
 +
-+#ifndef __DISABLE_EXPORTS
- #include <linux/static_call_types.h>
- DECLARE_STATIC_CALL(WARN_trap, __WARN_trap);
-+#define WARN_trap(...)	static_call_mod(WARN_trap)(__VA_ARGS__)
-+#else /* __DISABLE_EXPORTS */
-+#define WARN_trap(...)	__WARN_trap(__VA_ARGS__)
-+#endif /* __DISABLE_EXPORTS */
- 
- struct pt_regs;
- struct sysv_va_list { /* from AMD64 System V ABI */
-@@ -172,7 +178,7 @@ extern void *__warn_args(struct arch_va_list *args, struct pt_regs *regs);
- #define __WARN_print_arg(flags, format, arg...)				\
- do {									\
- 	int __flags = (flags) | BUGFLAG_WARNING | BUGFLAG_ARGS ;	\
--	static_call_mod(WARN_trap)(__WARN_bug_entry(__flags, format), ## arg); \
-+	WARN_trap(__WARN_bug_entry(__flags, format), ## arg);		\
- 	asm (""); /* inhibit tail-call optimization */			\
- } while (0)
- 
++#include "../../../../lib/crypto/sha256.c"
 -- 
 2.47.3
 
