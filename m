@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7C7FECD4F3C
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3F98BCD343F
 	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 21:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,63 +12,63 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=vEqPpKnlZT3emBFthAb9OgKvlsNPtI0KrHZvILeiAis=; b=mpbjty1RxiOGzkXypdUy81jkpn
-	1ZO+8VjIKtlsjiYMMjISY8TqckhAxLrdDZvEOC0Ac/MpU7oE4yQq7iaQEFOOR/tFMVK/WfQctBZq0
-	aZ16AImsTnd7dPEPeJx2exZ19wXOr0mIMl5ZOZoOkoG2euCjuXP1OQDuHXqaGvU8K3bKTYx2okS0L
-	vTuBezfj7bdSOy2Fsd+hQrxHpdPoB6BcxumJX5iGi9lVXnIb9iHPw6A2whWux9SbrUkCJnmNInOLI
-	CThs/SUxtdBzkPWa7WI3oOTNMxXR+PYj9FlT4FJ7UFMZs4JqRoVBkCon8EitQnT03HvIOxKPQKR1h
-	KGV4SkVg==;
+	bh=R8y+5pcm0AAt3l5YBSo5Gboi+epX/2lV4aopgke6Vsw=; b=DY/7Cgrp8H7ATtq4u7j14vmSQK
+	Vh/NUokeA9mDZhY0m2QRBxxq1/mtSTmVFTPmiWJpHXNPwoGHnjSBHXSDsHIegrSLaZ5uOPBx+2oLz
+	dgSWcSH/mCEByDrqUU0eEstFxGi0tBkHzpokjk4t75Us2D76PN/oIl10RQmAAM9GxojirFToQUS0j
+	AlfQ3keRtG+HdqscBXQfJ0eoSMMxHVfDs7dWsjFFd14XvufwDOb5IYp9BAklDSlOcYhKGV++J+Fny
+	p42M94QbuAA4/w+JF+rBZiHppddrEQ7I9iqmBAiT6WuK5l+MfR72Ddi5frwlBEvSRxJviiKeMOYFd
+	x9ALNgmQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNzsm-00000009UAL-0jKc;
-	Fri, 15 May 2026 21:15:44 +0000
-Received: from mail-dl1-x1232.google.com ([2607:f8b0:4864:20::1232])
-	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNzsj-00000009U8J-3rXC
-	for kexec@lists.infradead.org;
+	id 1wNzsl-00000009U8r-40Sv;
 	Fri, 15 May 2026 21:15:43 +0000
-Received: by mail-dl1-x1232.google.com with SMTP id a92af1059eb24-132c338a537so1027091c88.0
-        for <kexec@lists.infradead.org>; Fri, 15 May 2026 14:15:41 -0700 (PDT)
+Received: from mail-dy1-x132d.google.com ([2607:f8b0:4864:20::132d])
+	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wNzsh-00000009U5r-0utQ
+	for kexec@lists.infradead.org;
+	Fri, 15 May 2026 21:15:41 +0000
+Received: by mail-dy1-x132d.google.com with SMTP id 5a478bee46e88-2f7ca62a3c4so297387eec.0
+        for <kexec@lists.infradead.org>; Fri, 15 May 2026 14:15:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778879741; x=1779484541; darn=lists.infradead.org;
+        d=gmail.com; s=20251104; t=1778879738; x=1779484538; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vEqPpKnlZT3emBFthAb9OgKvlsNPtI0KrHZvILeiAis=;
-        b=ZPWrFRdILyTjUF1Nvre+XnKf9Iuh31cKPaw6QhJFK4LPmTG6ynoXxWkdGEkoo6mo1P
-         /8/C4TA7AZbrRCedmC9zPYcEP/ed0ZSXugPnpe50Ajifdq0jOvB3I0sF9wCj2FdXCsod
-         0+4+lmI802oWbgN/hV0hpb73zInsf1Pk5oiZg7j/DwRFp7z4Gf9jYQnmbframA6ZOD6u
-         CHoy1UOOvLav4cWDQxy9Ehh8Ap8rE3ahSIFbfK5u1Ya79DO6cyTu+3tiWZ2PgARJvNRO
-         3Dsii7chseMBmnhy2in/AiuWq0soo+OmsYbi6mXqlTL8itMHN53eGbGZsM23YE0b+nFu
-         XN8Q==
+        bh=R8y+5pcm0AAt3l5YBSo5Gboi+epX/2lV4aopgke6Vsw=;
+        b=ESUfZage4ugcjhIIdwFFOmIdusnaCm4PBLiYtAccCN2zDsstTAwDy/g8KvcAGABgtZ
+         /9NmXCUcEOnsX1MspKfvu/7alhxpGTk4I0R1peE9WdDxDrz1wjbKtGdwmD2/IE164Gtk
+         eWGjjs1YRkFeL46iAglvhDgw0wcXEjLKfW1b3GiNJtmnvuf8UNl0z5mO5mAEWlCNOKzC
+         tRlugNjYp/EE2LB93ap3RNlmJbGhXGoA0KIGktApCsC5tz6wzN/G3kZhPt3mnDKVYGNW
+         c9Gzk3oBbGzQnydUQmoWyvlgD+3krN/wnH4NZSIQQgGrJB9RQWkjnzS13v3i+jugxHga
+         X3OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778879741; x=1779484541;
+        d=1e100.net; s=20251104; t=1778879738; x=1779484538;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=vEqPpKnlZT3emBFthAb9OgKvlsNPtI0KrHZvILeiAis=;
-        b=Ydj7xfLJwhrZzsSPjJybTsd9h7ZafBZ0AbaJ2Re9IaUVSdmMbAOHyomyaFgWdK+U4u
-         Unc5lNv0lg0+vYRUyoiwv/V9VNywJyF+SMcwg0JOfcc1I9xstK4ZEqeZQIS477tG39p8
-         J/pjnJdb5vZeejoSYF0ZXFbnHX+9d6IJtyPc4qltGfq10JxQFV+L3WKOEp/tD12QodZN
-         gjKNuHyeWlwnF0LPC9j1A5JDpUCPsNpFy/iHBEJ78MkFtXRlap6z/R/otnZ6JDRb630s
-         2QfmzthB20Xa7RGncfT4NFO62AdxZCtA71NvKf0WJJXmcVYhl7I1aEKK+4lYDXQNLXJS
-         UHqg==
-X-Forwarded-Encrypted: i=1; AFNElJ8ncRMSyrWaiQiItQWaNDr5SZTaIAYNdnSFIJbk3Ka7CEns9yU8C22WFd+krYT4MvuomoguqQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yypg/n3HXWuQ7VT505VoiOn1+c7Rgyu2eyeKsN0xXX9r7GpJwCC
-	4Iq8CFgrP/JDG+ZYDHFqUkVNBkC0BwoEINYE7O6v4Tnual7wL/StRltl
-X-Gm-Gg: Acq92OFf+tcMB43ZxlMPSWRXnOlcmHjHoJ2d/M62DDtiwhW/gBgjTNYHaGumh7Pts/R
-	pyvThtwNgOgfQJ9oz4zvP+8w+BtTkE7EcXTg+o1+4vxRPs0+VyWE+mJ3J/bLleUszMdxJ6JXgaR
-	kEEmR94DmwHnujJScwjCZCCQ+fK6Rjz1Dg/BqRXTUplq7nEkaUhJ+sQlvUdnkCFWSAI6M8JFg35
-	NjDgSF3tEurtkcShdLgADBde+gKh16PA42vTK4ygzuWfYVzo28LDH94psH1N//U7QTIauO03sH5
-	RvAC/LTSIzUrJVt8HMYkN+8SUrCDgGxHeRcmLqZGKcNat0plnAf07vhR+oeYCKyvdI2NGSLzGDL
-	BT+s0m+Odm0cBsI7bMNSg2WNdLeo7RQxdLierELithbV0+cdWVADn5mEzMfgCEHkOdUqqIhJPzp
-	j35x2LgjQP/l6GWPnT5Pu5pUNoVjDGt3Q=
-X-Received: by 2002:a05:7300:d511:b0:2f9:1004:b2cd with SMTP id 5a478bee46e88-30262f3895emr5218501eec.20.1778879740764;
-        Fri, 15 May 2026 14:15:40 -0700 (PDT)
+        bh=R8y+5pcm0AAt3l5YBSo5Gboi+epX/2lV4aopgke6Vsw=;
+        b=fAgDcfkx/xHZuEPk9LV1lampsTRxliu6Fy0Bb8OU5wctW3FunKPvEkNGnKfUIyc/N7
+         EU56RVMrp0EnZRAt80wel8J5aUK3fVdU8WSB6x+oW5v8m97nXJ6pKOJeq7yvgoGxw7ba
+         vwUay6N+QxAaHox/Zi+2xD3qGNQnrRTS+Nw71d9aTLBwoQ9lrJ46B0EHmQ1cNSGvDkJS
+         FXoBBLWIlJnL0rct6/zDNJ+Vpfpi/9UnuTLIMW6Lh3CTHwQt/mkO9+Y6n1BkazHCWDQy
+         PAHydLk86q2FeL20cWIfrk09XUr/cR3oGq1vRjIt+JjIUtBrM8nPKqO5XzTosfJFcT3Z
+         AR1Q==
+X-Forwarded-Encrypted: i=1; AFNElJ9XKt4ahMsgb37VZ8VIROh+TpotC37cxtPsQrP6rv1zx7+eQpYmcMYK4+qpI/RvhNTZ+Yo2tg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyITXRKmfGMadRP/+FT+eDFXrD8ZaXuj9BtLmw28qx2gvYwtHEz
+	fc+B2vFKQoeoviAVb4/rB02d8nnFXaamdDJmL6cahhmnb8LoF7Sg4Yi+
+X-Gm-Gg: Acq92OHstV0Iq892mNhS2yT5MmIgHKiVVP8Ra5MYrv4ubJFlnNQCiLuQ12infVxucEe
+	j+4QQrmoPStUSdJav86rFBdmw4IIx44p6YHkavJX7HkZSzY2OE/Z98S6TQY5s3haLo6FSzu6BYz
+	0uaKPSQEsGrw+HrpaiSTBbwEAAT8mOW0iM3NuvJ2dXXHleIwyEOh1s3z4UeMOT88Qsc+G/NjKFi
+	Y/A2ZyXszF+YLB0jPC2HBTxJ726lwfMxLAWkd0+J5f1q6S6e8lKguGL18c9o5B+RCSETd+hyweJ
+	5XJK/lTjWCWRUdFFtDEREcUgi3x9acvIocF7zt8nXdxh3DcJ9kJ8ZI4b+QRLK6twCA9A0XyrySt
+	RKpn6Ywt/oZOic+OKHt/rUp8TFQb22Jb2MkjVtSuCEIBXKkVPQuNrSJzt4rwSvXf29hEcnp8vCo
+	DfUhYtnJxv2AqdQySu8p8poS/lnU5f5Zw=
+X-Received: by 2002:a05:7300:e7a2:b0:2dd:5641:f01 with SMTP id 5a478bee46e88-303986ab2a1mr2521759eec.28.1778879737961;
+        Fri, 15 May 2026 14:15:37 -0700 (PDT)
 Received: from mimas.lan ([2603:8000:df01:38f7:a6bb:6dff:fecf:e71a])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30293e2e3c0sm9976142eec.3.2026.05.15.14.15.39
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30294500a97sm9157996eec.9.2026.05.15.14.15.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2026 14:15:40 -0700 (PDT)
+        Fri, 15 May 2026 14:15:37 -0700 (PDT)
 From: Ross Philipson <ross.philipson@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	x86@kernel.org,
@@ -103,17 +103,17 @@ Cc: ross.philipson@gmail.com,
 	daniel.kiper@oracle.com,
 	andrew.cooper3@citrix.com,
 	trenchboot-devel@googlegroups.com
-Subject: [PATCH v16 31/38] x86/slaunch: Secure Launch kernel early boot initialization
-Date: Fri, 15 May 2026 14:14:03 -0700
-Message-ID: <20260515211410.31440-32-ross.philipson@gmail.com>
+Subject: [PATCH v16 30/38] x86/slaunch: Add MLE header and Secure Launch entrypoint to the core kernel
+Date: Fri, 15 May 2026 14:14:02 -0700
+Message-ID: <20260515211410.31440-31-ross.philipson@gmail.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260515211410.31440-1-ross.philipson@gmail.com>
 References: <20260515211410.31440-1-ross.philipson@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260515_141541_983798_55F986E4 
-X-CRM114-Status: GOOD (  28.26  )
+X-CRM114-CacheID: sfid-20260515_141539_296542_1194B776 
+X-CRM114-Status: GOOD (  27.29  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -128,650 +128,1067 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The sl_main() routine is responsible for measuring configuration and module
-information before it is used by the kernel. An example of entities
-measured on Intel x86 are the boot params, the kernel command line,
-the TXT heap, any external initramfs, etc. In addition this routine
-does some early setup and validation of the environment like locating
-the TPM event log and validating the location of various buffers to
-ensure they are protected and not overlapping.
+The Measured Launch Environment (MLE) header is an Intel TXT specific
+structure that is used by the Intel ACM and Secure Launch implementation
+to determine the location and attributes of the secure kernel being
+launched.
 
+Also introduce the sl_stub.S code to create a 32-bit Secure Launch entry
+point into the core kernel and expose it via an MLE header. This is the
+entry point for starting a Secure Launch kernel, handling the
+post-launch CPU states and validating the environment.
+
+Co-developed-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Co-developed-by: Daniel P. Smith <dpsmith@apertussolutions.com>
 Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
 Signed-off-by: Ross Philipson <ross.philipson@gmail.com>
 ---
- arch/x86/boot/startup/sl_main.c | 610 ++++++++++++++++++++++++++++++++
- 1 file changed, 610 insertions(+)
+ arch/x86/boot/compressed/Makefile     |   2 +-
+ arch/x86/boot/compressed/misc.c       |   4 +
+ arch/x86/boot/startup/Makefile        |   1 +
+ arch/x86/boot/startup/sl_main.c       |  28 +
+ arch/x86/include/asm/boot.h           |   4 +
+ arch/x86/include/uapi/asm/bootparam.h |   1 +
+ arch/x86/kernel/Makefile              |   1 +
+ arch/x86/kernel/asm-offsets.c         |  22 +
+ arch/x86/kernel/sl_stub.S             | 847 ++++++++++++++++++++++++++
+ arch/x86/kernel/vmlinux.lds.S         |   5 +
+ arch/x86/tools/relocs.c               |   1 +
+ 11 files changed, 915 insertions(+), 1 deletion(-)
+ create mode 100644 arch/x86/boot/startup/sl_main.c
+ create mode 100644 arch/x86/kernel/sl_stub.S
 
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index b8b2b7bea1d3..8b2e234d18cb 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -76,7 +76,7 @@ LDFLAGS_vmlinux += -T
+ hostprogs	:= mkpiggy
+ HOST_EXTRACFLAGS += -I$(srctree)/tools/include
+ 
+-sed-voffset := -e 's/^\([0-9a-fA-F]*\) [ABbCDGRSTtVW] \(_text\|__start_rodata\|_sinittext\|__inittext_end\|__bss_start\|_end\)$$/\#define VO_\2 _AC(0x\1,UL)/p'
++sed-voffset := -e 's/^\([0-9a-fA-F]*\) [ABbCDGRSTtVW] \(_text\|__start_rodata\|_sinittext\|mle_header\|__inittext_end\|__bss_start\|_end\)$$/\#define VO_\2 _AC(0x\1,UL)/p'
+ 
+ quiet_cmd_voffset = VOFFSET $@
+       cmd_voffset = $(NM) $< | sed -n $(sed-voffset) > $@
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index 0f41ca0e52c0..e3b5177bfa6f 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -336,6 +336,10 @@ const unsigned long kernel_inittext_offset = VO__sinittext - VO__text;
+ const unsigned long kernel_inittext_size = VO___inittext_end - VO__sinittext;
+ const unsigned long kernel_total_size = VO__end - VO__text;
+ 
++#ifdef CONFIG_SECURE_LAUNCH
++const unsigned long mle_header_offset = VO_mle_header - VO__text;
++#endif
++
+ static u8 boot_heap[BOOT_HEAP_SIZE] __aligned(4);
+ 
+ extern unsigned char input_data[];
+diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makefile
+index ecf86ce5ebf7..c4b150a0253b 100644
+--- a/arch/x86/boot/startup/Makefile
++++ b/arch/x86/boot/startup/Makefile
+@@ -25,6 +25,7 @@ slaunch-objs			+= lib-sha1.o
+ slaunch-objs			+= lib-sha256.o
+ slaunch-objs			+= lib-sha512.o
+ slaunch-objs			+= tpm_drv.o
++slaunch-objs			+= sl_main.o
+ obj-$(CONFIG_SECURE_LAUNCH)	+= $(slaunch-objs)
+ 
+ pi-objs				:= $(patsubst %.o,$(obj)/%.o,$(obj-y))
 diff --git a/arch/x86/boot/startup/sl_main.c b/arch/x86/boot/startup/sl_main.c
-index 1982cfb461dd..0110392470d0 100644
---- a/arch/x86/boot/startup/sl_main.c
+new file mode 100644
+index 000000000000..1982cfb461dd
+--- /dev/null
 +++ b/arch/x86/boot/startup/sl_main.c
-@@ -15,14 +15,624 @@
- #include <linux/efi.h>
- #include <linux/slr_table.h>
- #include <linux/slaunch.h>
-+#include <linux/tpm_ptp.h>
+@@ -0,0 +1,28 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Secure Launch early measurement and validation routines.
++ *
++ * Copyright (c) 2026, Oracle and/or its affiliates.
++ * Copyright (c) 2026 Apertus Solutions, LLC
++ */
++
++#include <asm/msr.h>
++#include <asm/mtrr.h>
++#include <asm/processor-flags.h>
++#include <asm/asm-offsets.h>
++#include <asm/bootparam.h>
++#include <asm/shared/msr.h>
++#include <linux/efi.h>
++#include <linux/slr_table.h>
++#include <linux/slaunch.h>
++
++#include "tpm.h"
++
++u32 sl_cpu_type __initdata;
++u32 sl_mle_start __initdata;
++
++void sl_main(void *bootparams);
++
++asmlinkage __visible __init void sl_main(void *bootparams)
++{
++}
+diff --git a/arch/x86/include/asm/boot.h b/arch/x86/include/asm/boot.h
+index f7b67cb73915..84e87e0d3d82 100644
+--- a/arch/x86/include/asm/boot.h
++++ b/arch/x86/include/asm/boot.h
+@@ -86,6 +86,10 @@ extern const unsigned long kernel_inittext_offset;
+ extern const unsigned long kernel_inittext_size;
+ extern const unsigned long kernel_total_size;
  
- #include "tpm.h"
++#ifdef CONFIG_SECURE_LAUNCH
++extern const unsigned long mle_header_offset;
++#endif
++
+ unsigned long decompress_kernel(unsigned char *outbuf, unsigned long virt_addr,
+ 				void (*error)(char *x));
  
-+#define CAPS_VARIABLE_MTRR_COUNT_MASK	0xff
-+
-+#define SL_TPM_LOG		1
-+#define SL_TPM2_LOG		2
-+
-+static void *evtlog_base;
-+static u32 evtlog_size;
-+static struct txt_heap_event_log_pointer2_1_element *log21_elem;
-+static u32 tpm_log_ver = SL_TPM_LOG;
-+static u32 tpm_num_algs;
-+static struct tcg_efi_specid_event_algs *tpm_algs;
-+static u8 event_buf[PAGE_SIZE];
-+
-+/* Simple instance of a TPM chip object */
-+static struct tpm_chip chip __initdata;
-+
-+static struct slr_table *slrt __initdata;
-+
- u32 sl_cpu_type __initdata;
- u32 sl_mle_start __initdata;
+diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
+index dafbf581c515..8155fa899f50 100644
+--- a/arch/x86/include/uapi/asm/bootparam.h
++++ b/arch/x86/include/uapi/asm/bootparam.h
+@@ -12,6 +12,7 @@
+ /* loadflags */
+ #define LOADED_HIGH	(1<<0)
+ #define KASLR_FLAG	(1<<1)
++#define SLAUNCH_FLAG	(1<<2)
+ #define QUIET_FLAG	(1<<5)
+ #define KEEP_SEGMENTS	(1<<6)
+ #define CAN_USE_HEAP	(1<<7)
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index 47a32f583930..7e247064b7d0 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -89,6 +89,7 @@ obj-y			+= resource.o
+ obj-y			+= irqflags.o
+ obj-y			+= static_call.o
  
- void sl_main(void *bootparams);
- 
-+static void *txt_regs = (void *)TXT_PRIV_CONFIG_REGS_BASE;
-+#define sl_txt_read(r) readq(txt_regs + r)
-+#define sl_txt_write(r, v) writeq(v, txt_regs + r)
-+
-+static void *txt_heap __initdata;
-+static struct sl_txt_heap_info txt_heap_map[TXT_SINIT_TABLE_MAX] __initdata;
-+
-+struct sl_txt_heap_info * __init sl_txt_get_heap_map(void);
-+void * __init sl_txt_get_heap_table(void *heap, u8 index);
-+
-+struct sl_txt_heap_info * __init sl_txt_get_heap_map(void)
-+{
-+	return txt_heap_map;
-+}
-+
-+void * __init sl_txt_get_heap_table(void *heap, u8 index)
-+{
-+	return heap + txt_heap_map[index].offset;
-+}
-+
-+static void __init txt_parse_heap_map(void *heap)
-+{
-+	void *tmp = heap;
-+
-+	for (u8 i = 0; i < TXT_SINIT_TABLE_MAX; i++) {
-+		txt_heap_map[i].size = *((u64 *) tmp);
-+		txt_heap_map[i].offset = tmp - heap + sizeof(txt_heap_map[i].size);
-+		tmp += txt_heap_map[i].size;
-+	}
-+}
-+
-+void __warn_printk(const char *fmt, ...)
-+{
-+}
-+
-+static void __noreturn __init sl_txt_reset(u64 error)
-+{
-+	/* Reading the E2STS register acts as a barrier for TXT registers */
-+	sl_txt_write(TXT_CR_ERRORCODE, error);
-+	sl_txt_read(TXT_CR_E2STS);
-+	sl_txt_write(TXT_CR_CMD_UNLOCK_MEM_CONFIG, 1);
-+	sl_txt_read(TXT_CR_E2STS);
-+	sl_txt_write(TXT_CR_CMD_RESET, 1);
-+
-+	for ( ; ; )
-+		asm volatile ("hlt");
-+
-+	unreachable();
-+}
-+
-+static inline u64 __init sl_rdmsr(u32 reg)
-+{
-+	struct msr m;
-+
-+	raw_rdmsr(reg, &m);
-+
-+	return m.q;
-+}
-+
-+static struct slr_table *__init sl_locate_and_validate_slrt(void)
-+{
-+	struct txt_os_mle_data *os_mle_data;
-+	struct slr_table *slrt;
-+
-+	os_mle_data = sl_txt_get_heap_table(txt_heap, TXT_OS_MLE_DATA_TABLE);
-+
-+	if (!os_mle_data->slrt)
-+		sl_txt_reset(SL_ERROR_INVALID_SLRT);
-+
-+	slrt = (struct slr_table *)os_mle_data->slrt;
-+
-+	if (slrt->magic != SLR_TABLE_MAGIC)
-+		sl_txt_reset(SL_ERROR_INVALID_SLRT);
-+
-+	if (slrt->architecture != SLR_INTEL_TXT)
-+		sl_txt_reset(SL_ERROR_INVALID_SLRT);
-+
-+	return slrt;
-+}
-+
-+/*
-+ * This is a validation routine that allows checking if a block of memory
-+ * is protected from external access by being in a PMR range. If allow_hi is
-+ * set, ranges above 4GB are allowed.
-+ */
-+static void __init sl_check_pmr_coverage(void *base, u32 size, bool allow_hi)
-+{
-+	struct txt_os_sinit_data *os_sinit_data;
-+	void *end = base + size;
-+
-+	if (!(sl_cpu_type & SL_CPU_INTEL))
-+		return;
-+
-+	os_sinit_data = sl_txt_get_heap_table(txt_heap, TXT_OS_SINIT_DATA_TABLE);
-+
-+	if ((u64)end >= SZ_4G && (u64)base < SZ_4G)
-+		sl_txt_reset(SL_ERROR_REGION_STRADDLE_4GB);
-+
-+	/*
-+	 * Note that the late stub code validates that the hi PMR covers
-+	 * all memory above 4G. At this point the code can only check that
-+	 * regions are within the hi PMR but that is sufficient.
-+	 */
-+	if ((u64)end > SZ_4G && (u64)base >= SZ_4G) {
-+		if (allow_hi) {
-+			if (end >= (void *)(os_sinit_data->vtd_pmr_hi_base +
-+					    os_sinit_data->vtd_pmr_hi_size))
-+				sl_txt_reset(SL_ERROR_BUFFER_BEYOND_PMR);
-+		} else {
-+			sl_txt_reset(SL_ERROR_REGION_ABOVE_4GB);
-+		}
-+	}
-+
-+	if (end >= (void *)os_sinit_data->vtd_pmr_lo_size)
-+		sl_txt_reset(SL_ERROR_BUFFER_BEYOND_PMR);
-+}
-+
-+/*
-+ * Some MSRs are modified by the pre-launch code including the MTRRs.
-+ * The early MLE code has to restore these values. This code validates
-+ * the values after they are measured.
-+ */
-+static void __init sl_txt_validate_msrs(struct txt_os_mle_data *os_mle_data)
-+{
-+	struct slr_txt_mtrr_state *saved_bsp_mtrrs;
-+	u64 mtrr_caps, mtrr_def_type, mtrr_var;
-+	struct slr_entry_intel_info *txt_info;
-+	u64 misc_en_msr;
-+	u32 vcnt, i;
-+
-+	txt_info = (struct slr_entry_intel_info *)os_mle_data->txt_info;
-+	saved_bsp_mtrrs = &txt_info->saved_bsp_mtrrs;
-+
-+	mtrr_caps = sl_rdmsr(MSR_MTRRcap);
-+	vcnt = (u32)(mtrr_caps & CAPS_VARIABLE_MTRR_COUNT_MASK);
-+
-+	if (saved_bsp_mtrrs->mtrr_vcnt > vcnt)
-+		sl_txt_reset(SL_ERROR_MTRR_INV_VCNT);
-+	if (saved_bsp_mtrrs->mtrr_vcnt > TXT_OS_MLE_MAX_VARIABLE_MTRRS)
-+		sl_txt_reset(SL_ERROR_MTRR_INV_VCNT);
-+
-+	mtrr_def_type = sl_rdmsr(MSR_MTRRdefType);
-+	if (saved_bsp_mtrrs->default_mem_type != mtrr_def_type)
-+		sl_txt_reset(SL_ERROR_MTRR_INV_DEF_TYPE);
-+
-+	for (i = 0; i < saved_bsp_mtrrs->mtrr_vcnt; i++) {
-+		mtrr_var = sl_rdmsr(MTRRphysBase_MSR(i));
-+		if (saved_bsp_mtrrs->mtrr_pair[i].mtrr_physbase != mtrr_var)
-+			sl_txt_reset(SL_ERROR_MTRR_INV_BASE);
-+		mtrr_var = sl_rdmsr(MTRRphysMask_MSR(i));
-+		if (saved_bsp_mtrrs->mtrr_pair[i].mtrr_physmask != mtrr_var)
-+			sl_txt_reset(SL_ERROR_MTRR_INV_MASK);
-+	}
-+
-+	misc_en_msr = sl_rdmsr(MSR_IA32_MISC_ENABLE);
-+	if (txt_info->saved_misc_enable_msr != misc_en_msr)
-+		sl_txt_reset(SL_ERROR_MSR_INV_MISC_EN);
-+}
-+
-+static void __init sl_find_drtm_event_log(struct slr_table *slrt)
-+{
-+	struct txt_os_sinit_data *os_sinit_data;
-+	struct slr_entry_log_info *log_info;
-+
-+	log_info = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_LOG_INFO);
-+	if (!log_info)
-+		sl_txt_reset(SL_ERROR_SLRT_MISSING_ENTRY);
-+
-+	evtlog_base = (void *)log_info->addr;
-+	evtlog_size = log_info->size;
-+
-+	/*
-+	 * For TPM 2.0, the TXT event log 2.1 extended data structure has to also
-+	 * be located to find the actual log.
-+	 */
-+	os_sinit_data = sl_txt_get_heap_table(txt_heap, TXT_OS_SINIT_DATA_TABLE);
-+
-+	/*
-+	 * Only support version 6 and later that properly handle the
-+	 * list of ExtDataElements in the OS-SINIT structure.
-+	 */
-+	if (os_sinit_data->version < 6)
-+		sl_txt_reset(SL_ERROR_OS_SINIT_BAD_VERSION);
-+
-+	/* Find the TPM2.0 logging extended heap element */
-+	log21_elem = txt_find_log2_1_element(os_sinit_data);
-+
-+	/* If found, this implies TPM2 log and family */
-+	if (log21_elem)
-+		tpm_log_ver = SL_TPM2_LOG;
-+}
-+
-+static void __init sl_validate_event_log_buffer(void)
-+{
-+	struct txt_os_sinit_data *os_sinit_data;
-+	void *mle_base, *mle_end;
-+	void *evtlog_end;
-+	void *txt_end;
-+
-+	if ((u64)evtlog_size > (LLONG_MAX - (u64)evtlog_base))
-+		sl_txt_reset(SL_ERROR_INTEGER_OVERFLOW);
-+	evtlog_end = evtlog_base + evtlog_size;
-+
-+	txt_end = txt_heap + sl_txt_read(TXT_CR_HEAP_SIZE);
-+	os_sinit_data = sl_txt_get_heap_table(txt_heap, TXT_OS_SINIT_DATA_TABLE);
-+
-+	mle_base = (void *)(u64)sl_mle_start;
-+	mle_end = mle_base + os_sinit_data->mle_size;
-+
-+	/*
-+	 * This check is to ensure the event log buffer does not overlap with
-+	 * the MLE image.
-+	 */
-+	if (evtlog_base >= mle_end && evtlog_end > mle_end)
-+		goto pmr_check; /* above */
-+
-+	if (evtlog_end <= mle_base && evtlog_base < mle_base)
-+		goto pmr_check; /* below */
-+
-+	sl_txt_reset(SL_ERROR_MLE_BUFFER_OVERLAP);
-+
-+pmr_check:
-+	/*
-+	 * The TXT heap is protected by the DPR. If the TPM event log is
-+	 * inside the TXT heap, there is no need for a PMR check.
-+	 */
-+	if (evtlog_base > txt_heap && evtlog_end < txt_end)
-+		return;
-+
-+	sl_check_pmr_coverage(evtlog_base, evtlog_size, true);
-+}
-+
-+static void __init sl_find_event_log_algorithms(void)
-+{
-+	struct tcg_efi_specid_event_head *efi_head =
-+		(struct tcg_efi_specid_event_head *)(evtlog_base +
-+						     sizeof(struct tcg_pcr_event));
-+	u32 i;
-+
-+	if (efi_head->num_algs == 0)
-+		sl_txt_reset(SL_ERROR_TPM_INVALID_ALGS);
-+
-+	tpm_algs = &efi_head->digest_sizes[0];
-+	tpm_num_algs = efi_head->num_algs;
-+
-+	for (i = 0; i < tpm_num_algs; i++) {
-+		if (tpm_algs[i].digest_size > TPM2_MAX_DIGEST_SIZE)
-+			sl_txt_reset(SL_ERROR_TPM_INVALID_ALGS);
-+		/* Alg ID 0 is invalid and maps to TPM_ALG_ERROR */
-+		if (tpm_algs[i].alg_id == TPM_ALG_ERROR)
-+			sl_txt_reset(SL_ERROR_TPM_INVALID_ALGS);
-+	}
-+}
-+
-+static void __init sl_tpm1_extend(u32 pcr, u32 event_type,
-+				  const u8 *data, u32 length,
-+				  const u8 *event_data, u32 event_size)
-+{
-+	u8 sha1_hash[SHA1_DIGEST_SIZE] = {0};
-+	struct tcg_pcr_event *pcr_event;
-+	u32 total_size;
-+
-+	/* Clear on each use */
-+	memset(event_buf, 0, PAGE_SIZE);
-+
-+	pcr_event = (struct tcg_pcr_event *)event_buf;
-+	pcr_event->pcr_idx = pcr;
-+	pcr_event->event_type = event_type;
-+	if (length > 0) {
-+		sha1(data, length, &sha1_hash[0]);
-+		memcpy(&pcr_event->digest[0], &sha1_hash[0], SHA1_DIGEST_SIZE);
-+	}
-+	pcr_event->event_size = event_size;
-+	if (event_size > 0)
-+		memcpy((u8 *)pcr_event + sizeof(*pcr_event),
-+		       event_data, event_size);
-+
-+	total_size = sizeof(*pcr_event) + event_size;
-+
-+	/* Do the TPM extend then log the event */
-+	if (tpm1_pcr_extend(&chip, pcr, &sha1_hash[0]))
-+		sl_txt_reset(SL_ERROR_TPM_EXTEND);
-+
-+	if (tpm_log_event(evtlog_base, evtlog_size, total_size, pcr_event))
-+		sl_txt_reset(SL_ERROR_TPM_LOGGING_FAILED);
-+}
-+
-+static void __init sl_tpm2_extend(u32 pcr, u32 event_type,
-+				  const u8 *data, u32 length,
-+				  const u8 *event_data, u32 event_size)
-+{
-+	struct tcg_pcr_event2_head *head;
-+	struct tcg_event_field *event;
-+	u8 digest[TPM2_MAX_DIGEST_SIZE];
-+	u32 total_size, alg_idx;
-+	u16 *alg_ptr;
-+	u8 *dgst_ptr;
-+	int rc;
-+
-+	/* Clear on each use */
-+	memset(event_buf, 0, PAGE_SIZE);
-+
-+	head = (struct tcg_pcr_event2_head *)event_buf;
-+	head->pcr_idx = pcr;
-+	head->event_type = event_type;
-+	total_size = sizeof(*head);
-+	alg_ptr = (u16 *)(event_buf + sizeof(*head));
-+
-+	for (alg_idx = 0; alg_idx < tpm_num_algs; alg_idx++) {
-+		memset(digest, 0, TPM2_MAX_DIGEST_SIZE);
-+
-+		*alg_ptr = tpm_algs[alg_idx].alg_id;
-+		dgst_ptr = (u8 *)alg_ptr + sizeof(u16);
-+
-+		if (tpm_algs[alg_idx].alg_id == TPM_ALG_SHA256) {
-+			sha256(data, length, &digest[0]);
-+		} else if (tpm_algs[alg_idx].alg_id == TPM_ALG_SHA384) {
-+			sha384(data, length, &digest[0]);
-+		} else if (tpm_algs[alg_idx].alg_id == TPM_ALG_SHA512) {
-+			sha512(data, length, &digest[0]);
-+		} else if (tpm_algs[alg_idx].alg_id == TPM_ALG_SHA1) {
-+			sha1(data, length, &digest[0]);
-+		} else {
-+			/*
-+			 * If there are TPM banks in use that are not supported
-+			 * in software here, the PCR in that bank will be capped with
-+			 * the well-known value 1 as the Intel ACM does.
-+			 */
-+			digest[0] = 0x01;
-+		}
-+
-+		memcpy(dgst_ptr, &digest[0], tpm_algs[alg_idx].digest_size);
-+		total_size += tpm_algs[alg_idx].digest_size + sizeof(u16);
-+		alg_ptr = (u16 *)((u8 *)alg_ptr +
-+			      tpm_algs[alg_idx].digest_size + sizeof(u16));
-+
-+		head->count++;
-+	}
-+
-+	event = (struct tcg_event_field *)(event_buf + total_size);
-+	event->event_size = event_size;
-+	if (event_size > 0)
-+		memcpy((u8 *)event + sizeof(*event), event_data, event_size);
-+	total_size += sizeof(*event) + event_size;
-+
-+	/*
-+	 * Do the TPM extend then log the event. Note the digest list is packed
-+	 * in the event behind the event header.
-+	 */
-+	rc = tpm2_pcr_extend(&chip, pcr, (struct tpm_digest *)(event_buf + sizeof(*head)),
-+			     head->count);
-+	if (rc)
-+		sl_txt_reset(SL_ERROR_TPM_EXTEND);
-+
-+	if (tpm2_log_event(log21_elem, evtlog_base, evtlog_size,
-+			   total_size, &event_buf[0]))
-+		sl_txt_reset(SL_ERROR_TPM_LOGGING_FAILED);
-+}
-+
-+static void __init sl_tpm_extend(u32 pcr, u32 type, const u8 *data, u32 length,
-+				 const char *desc)
-+{
-+	if (chip.family == TPM_FAMILY_20)
-+		sl_tpm2_extend(pcr, type, data, length, (const u8 *)desc, strlen(desc));
-+	else
-+		sl_tpm1_extend(pcr, type, data, length, (const u8 *)desc, strlen(desc));
-+}
-+
-+static void __init sl_handle_setup_data(struct setup_data *curr,
-+					struct slr_policy_entry *entry)
-+{
-+	struct setup_indirect *ind;
-+
-+	/* SETUP_INDIRECT instances have to be handled differently */
-+	if (curr->type == SETUP_INDIRECT) {
-+		ind = (struct setup_indirect *)((u8 *)curr +
-+						offsetof(struct setup_data, data));
-+
-+		sl_check_pmr_coverage((void *)ind->addr, ind->len, true);
-+
-+		sl_tpm_extend(entry->pcr, SL_EVTYPE_SECURE_LAUNCH, (void *)ind->addr,
-+			      ind->len, entry->evt_info);
-+	}
-+
-+	sl_check_pmr_coverage(((u8 *)curr) + sizeof(*curr),
-+			      curr->len, true);
-+
-+	sl_tpm_extend(entry->pcr, SL_EVTYPE_SECURE_LAUNCH, ((u8 *)curr) + sizeof(*curr),
-+		      curr->len, entry->evt_info);
-+}
-+
-+/*
-+ * The setup_data linked list in the boot_params (if present) must be
-+ * processed element by element. Indirect elements need to have their
-+ * pointers followed to the actual data to measure.
-+ */
-+static void __init sl_extend_setup_data(struct slr_policy_entry *entry)
-+{
-+	struct setup_data *data = (void *)(unsigned long)entry->entity;
-+
-+	/*
-+	 * Measure any setup_data entries including e820 extended entries.
-+	 * Note that the e820 fixed entries are in the boot params structure
-+	 * itself and measured there.
-+	 */
-+	while (data) {
-+		sl_handle_setup_data(data, entry);
-+		data = (void *)(unsigned long)data->next;
-+	}
-+}
-+
-+static void __init sl_extend_slrt(struct slr_policy_entry *entry)
-+{
-+	struct slr_table *slrt = (struct slr_table *)entry->entity;
-+	struct slr_entry_intel_info *intel_info;
-+	struct slr_entry_intel_info intel_tmp;
-+
-+	/*
-+	 * In revision one of the SLRT, the only table that needs to be
-+	 * measured is the Intel info table. Everything else is meta-data,
-+	 * addresses and sizes. Note the size of what to measure is not set.
-+	 * The flag SLR_POLICY_IMPLICIT_SIZE leaves it to the measuring code
-+	 * to sort out.
-+	 */
-+	if (slrt->revision == 1) {
-+		intel_info = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_INTEL_INFO);
-+		if (!intel_info)
-+			sl_txt_reset(SL_ERROR_SLRT_MISSING_ENTRY);
-+
-+		/*
-+		 * Make a temp copy and zero out address fields since they should
-+		 * not be measured.
-+		 */
-+		intel_tmp = *intel_info;
-+		intel_tmp.boot_params_addr = 0;
-+		intel_tmp.txt_heap = 0;
-+
-+		sl_tpm_extend(entry->pcr, SL_EVTYPE_SECURE_LAUNCH, (void *)&intel_tmp,
-+			      sizeof(*intel_info), entry->evt_info);
-+	}
-+}
-+
-+static void __init sl_extend_txt_os2mle(struct slr_policy_entry *entry)
-+{
-+	struct txt_os_mle_data *os_mle_data;
-+
-+	os_mle_data = sl_txt_get_heap_table(txt_heap, TXT_OS_MLE_DATA_TABLE);
-+
-+	/*
-+	 * Version 1 of the OS-MLE heap structure has no fields to measure. It just
-+	 * has addresses and sizes and a scratch buffer.
-+	 */
-+	if (os_mle_data->version == 1)
-+		return;
-+}
-+
-+/*
-+ * Process all policy entries and extend the measurements to the evtlog. Note
-+ * that some entries need special processing which is done in subroutines.
-+ */
-+static void __init sl_process_extend_policy(struct slr_table *slrt)
-+{
-+	struct slr_entry_policy *policy;
-+	u16 i;
-+
-+	policy = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_ENTRY_POLICY);
-+	if (!policy)
-+		sl_txt_reset(SL_ERROR_SLRT_MISSING_ENTRY);
-+
-+	for (i = 0; i < policy->nr_entries; i++) {
-+		switch (policy->policy_entries[i].entity_type) {
-+		case SLR_ET_SETUP_DATA:
-+			sl_extend_setup_data(&policy->policy_entries[i]);
-+			break;
-+		case SLR_ET_SLRT:
-+			sl_extend_slrt(&policy->policy_entries[i]);
-+			break;
-+		case SLR_ET_TXT_OS2MLE:
-+			sl_extend_txt_os2mle(&policy->policy_entries[i]);
-+			break;
-+		case SLR_ET_UNUSED:
-+			continue;
-+		default:
-+			sl_tpm_extend(policy->policy_entries[i].pcr,
-+				      SL_EVTYPE_SECURE_LAUNCH,
-+				      (void *)policy->policy_entries[i].entity,
-+				      policy->policy_entries[i].size,
-+				      policy->policy_entries[i].evt_info);
-+		}
-+	}
-+}
-+
-+/*
-+ * Process all EFI config entries and extend the measurements to the evtlog
-+ */
-+static void __init sl_process_extend_uefi_config(struct slr_table *slrt)
-+{
-+	struct slr_entry_uefi_config *uefi_config;
-+	u16 i;
-+
-+	uefi_config = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_UEFI_CONFIG);
-+
-+	/* Optionally here depending on how SL kernel was booted */
-+	if (!uefi_config)
-+		return;
-+
-+	for (i = 0; i < uefi_config->nr_entries; i++) {
-+		sl_tpm_extend(uefi_config->uefi_cfg_entries[i].pcr,
-+			      SL_EVTYPE_SECURE_LAUNCH,
-+			      (void *)uefi_config->uefi_cfg_entries[i].cfg,
-+			      uefi_config->uefi_cfg_entries[i].size,
-+			      uefi_config->uefi_cfg_entries[i].evt_info);
-+	}
-+}
-+
- asmlinkage __visible __init void sl_main(void *bootparams)
- {
-+	struct boot_params *bp = (struct boot_params *)bootparams;
-+	struct txt_os_mle_data *os_mle_data;
-+
-+	/*
-+	 * Ensure loadflags do not indicate a secure launch was done
-+	 * unless it really was.
-+	 */
-+	bp->hdr.loadflags &= ~SLAUNCH_FLAG;
-+
-+	/*
-+	 * Currently only Intel TXT is supported for Secure Launch. Testing
-+	 * this value also indicates that the kernel was booted successfully
-+	 * through the Secure Launch entry point and is in SMX mode.
-+	 */
-+	if (!(sl_cpu_type & SL_CPU_INTEL))
-+		return;
-+
-+	txt_heap = (void *)sl_txt_read(TXT_CR_HEAP_BASE);
-+	txt_parse_heap_map(txt_heap);
-+
-+	/* Find the SLRT setup by the pre-launch stage */
-+	slrt = sl_locate_and_validate_slrt();
-+
-+	/* Locate the TPM event log. */
-+	sl_find_drtm_event_log(slrt);
-+
-+	/* Validate the location of the event log buffer before using it */
-+	sl_validate_event_log_buffer();
-+
-+	/*
-+	 * Find the TPM hash algorithms used by the ACM and recorded in the
-+	 * event log.
-+	 */
-+	if (tpm_log_ver == SL_TPM2_LOG)
-+		sl_find_event_log_algorithms();
-+
-+	/*
-+	 * Prepare the early TPM driver to do PCR extends for the DRTM
-+	 * measurements. On a successful DRTM launch, TPM locality 2
-+	 * should be available to open/acquire.
-+	 *
-+	 * Note that the early TPM driver does not use interrupts but
-+	 * rather polling for command completion (there is no infrastructure
-+	 * setup for servicing interrupts in the setup kernel).
-+	 */
-+	if (early_tpm_init(&chip, TIS_MEM_X86_LPC_BASE))
-+		sl_txt_reset(SL_ERROR_TPM_INIT);
-+	if (tpm_tis_request_locality(&chip, TPM_LOCALITY_2) < 0)
-+		sl_txt_reset(SL_ERROR_TPM_INIT);
-+	if (chip.family == TPM_FAMILY_20 && tpm_log_ver != SL_TPM2_LOG)
-+		sl_txt_reset(SL_ERROR_TPM_INIT);
-+	tpm_tis_disable_interrupts(&chip);
-+
-+	/*
-+	 * Set the SLAUNCH_FLAG early since if anything fails, the system will
-+	 * reset anyway.
-+	 */
-+	bp->hdr.loadflags |= SLAUNCH_FLAG;
-+
-+	sl_check_pmr_coverage(bootparams, PAGE_SIZE, false);
-+
-+	/*
-+	 * Extend measurements into the TPM for entities specified in the
-+	 * SLRT policies.
-+	 */
-+	sl_process_extend_policy(slrt);
-+	sl_process_extend_uefi_config(slrt);
-+
-+	/* No PMR check is needed, the TXT heap is covered by the DPR */
-+	os_mle_data = sl_txt_get_heap_table(txt_heap, TXT_OS_MLE_DATA_TABLE);
-+
-+	/*
-+	 * Now that the OS-MLE data is measured, ensure the MTRR and
-+	 * misc enable MSRs are what we expect.
-+	 */
-+	sl_txt_validate_msrs(os_mle_data);
++obj-$(CONFIG_SECURE_LAUNCH)	+= sl_stub.o
+ obj-y				+= process.o
+ obj-y				+= fpu/
+ obj-y				+= ptrace.o
+diff --git a/arch/x86/kernel/asm-offsets.c b/arch/x86/kernel/asm-offsets.c
+index 081816888f7a..684e6552d973 100644
+--- a/arch/x86/kernel/asm-offsets.c
++++ b/arch/x86/kernel/asm-offsets.c
+@@ -13,6 +13,9 @@
+ #include <linux/hardirq.h>
+ #include <linux/suspend.h>
+ #include <linux/kbuild.h>
++#include <linux/efi.h>
++#include <linux/slr_table.h>
++#include <linux/slaunch.h>
+ #include <asm/processor.h>
+ #include <asm/thread_info.h>
+ #include <asm/sigframe.h>
+@@ -133,4 +136,23 @@ static void __used common(void)
+ 	BLANK();
+ 	DEFINE(ALT_INSTR_SIZE,	sizeof(struct alt_instr));
+ 	DEFINE(EXTABLE_SIZE,	sizeof(struct exception_table_entry));
++
++#ifdef CONFIG_SECURE_LAUNCH
++	BLANK();
++	OFFSET(SL_txt_info, txt_os_mle_data, txt_info);
++	OFFSET(SL_mle_scratch, txt_os_mle_data, mle_scratch);
++	OFFSET(SL_ap_wake_block, txt_os_mle_data, ap_wake_block);
++	OFFSET(SL_ap_wake_block_size, txt_os_mle_data, ap_wake_block_size);
++	OFFSET(SL_boot_params_addr, slr_entry_intel_info, boot_params_addr);
++	OFFSET(SL_saved_misc_enable_msr, slr_entry_intel_info, saved_misc_enable_msr);
++	OFFSET(SL_saved_bsp_mtrrs, slr_entry_intel_info, saved_bsp_mtrrs);
++	OFFSET(SL_num_logical_procs, txt_bios_data, num_logical_procs);
++	OFFSET(SL_capabilities, txt_os_sinit_data, capabilities);
++	OFFSET(SL_mle_size, txt_os_sinit_data, mle_size);
++	OFFSET(SL_vtd_pmr_lo_base, txt_os_sinit_data, vtd_pmr_lo_base);
++	OFFSET(SL_vtd_pmr_lo_size, txt_os_sinit_data, vtd_pmr_lo_size);
++	OFFSET(SL_rlp_wakeup_addr, txt_sinit_mle_data, rlp_wakeup_addr);
++	OFFSET(SL_rlp_gdt_base, smx_rlp_mle_join, rlp_gdt_base);
++	OFFSET(SL_rlp_entry_point, smx_rlp_mle_join, rlp_entry_point);
++#endif
  }
+diff --git a/arch/x86/kernel/sl_stub.S b/arch/x86/kernel/sl_stub.S
+new file mode 100644
+index 000000000000..5121de563310
+--- /dev/null
++++ b/arch/x86/kernel/sl_stub.S
+@@ -0,0 +1,847 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/*
++ * Secure Launch protected mode entry point.
++ *
++ * Copyright (c) 2026, Oracle and/or its affiliates.
++ * Copyright (c) 2026 Assured Information Security, Inc.
++ */
++
++#include <linux/linkage.h>
++#include <linux/init.h>
++#include <asm/segment.h>
++#include <asm/msr.h>
++#include <asm/apicdef.h>
++#include <asm/trapnr.h>
++#include <asm/pgtable_types.h>
++#include <asm/processor-flags.h>
++#include <asm/asm-offsets.h>
++#include <asm/bootparam.h>
++#include <asm/page_types.h>
++#include <asm/irq_vectors.h>
++#include <asm/unwind_hints.h>
++#include <linux/slr_table.h>
++#include <linux/slaunch.h>
++
++/* CPUID: leaf 1, ECX, SMX feature bit */
++#define X86_FEATURE_BIT_SMX	(1 << 6)
++
++#define IDT_VECTOR_LO_BITS	0
++#define IDT_VECTOR_HI_BITS	6
++
++/*
++ * See the comment in head_64.S for detailed information on what this macro
++ * and others like it are used for. The comment appears right at the top of
++ * the file.
++ */
++#define rva(X) ((X) - sl_stub_entry)
++
++/*
++ * The GETSEC op code is open coded because older versions of
++ * GCC do not support the getsec mnemonic.
++ */
++.macro GETSEC leaf
++	pushl	%ebx
++	xorl	%ebx, %ebx	/* Must be zero for SMCTRL */
++	movl	\leaf, %eax	/* Leaf function */
++	.byte 	0x0f, 0x37	/* GETSEC opcode */
++	popl	%ebx
++.endm
++
++.macro TXT_RESET error
++	/*
++	 * Set a sticky error value and reset. Note the movs to %eax act as
++	 * TXT register barriers.
++	 */
++	movl	\error, (TXT_PRIV_CONFIG_REGS_BASE + TXT_CR_ERRORCODE)
++	movl	(TXT_PRIV_CONFIG_REGS_BASE + TXT_CR_E2STS), %eax
++	movl	$1, (TXT_PRIV_CONFIG_REGS_BASE + TXT_CR_CMD_NO_SECRETS)
++	movl	(TXT_PRIV_CONFIG_REGS_BASE + TXT_CR_E2STS), %eax
++	movl	$1, (TXT_PRIV_CONFIG_REGS_BASE + TXT_CR_CMD_UNLOCK_MEM_CONFIG)
++	movl	(TXT_PRIV_CONFIG_REGS_BASE + TXT_CR_E2STS), %eax
++	movl	$1, (TXT_PRIV_CONFIG_REGS_BASE + TXT_CR_CMD_RESET)
++1:
++	hlt
++	jmp	1b
++.endm
++
++	.code32
++	__INIT
++SYM_CODE_START(sl_stub_entry)
++	UNWIND_HINT_END_OF_STACK
++	/*
++	 * On entry, %ebx has the entry absolute offset to sl_stub_entry. The rva()
++	 * macro is used to generate relative references using %ebx as a base, as
++	 * to avoid absolute relocations, which would require fixups at runtime.
++	 * Only %cs and %ds segments are known good after a TXT launch and can be
++	 * used to establish a new GDT and segments.
++	 */
++
++	/* Load GDT, set segment regs and lret to __SL32_CS */
++	leal	rva(sl_gdt_desc)(%ebx), %eax
++	addl	%eax, 2(%eax)
++	lgdt	(%eax)
++
++	movl	$(__SL32_DS), %eax
++	movw	%ax, %ds
++	movw	%ax, %es
++	movw	%ax, %fs
++	movw	%ax, %gs
++	movw	%ax, %ss
++
++	/*
++	 * Now that %ss is known good, take the first stack for the BSP. The
++	 * AP stacks are only used on Intel.
++	 */
++	leal	rva(sl_stacks_end)(%ebx), %esp
++
++	leal	rva(.Lsl_cs)(%ebx), %eax
++	pushl	$(__SL32_CS)
++	pushl	%eax
++	lret
++
++.Lsl_cs:
++	UNWIND_HINT_END_OF_STACK
++	/* Save our base pointer reg and page table for MLE */
++	pushl	%ebx
++	movl	%ecx, %ebp
++
++	/* See if SMX feature is supported. */
++	movl	$1, %eax
++	cpuid
++	testl	$(X86_FEATURE_BIT_SMX), %ecx
++	jz	.Ldo_unknown_cpu
++
++	popl	%ebx
++
++	/* Know it is Intel */
++	movl	$(SL_CPU_INTEL), rva(__pi_sl_cpu_type)(%ebx)
++
++	/* Locate the base of the MLE using the page tables in %ecx */
++	call	sl_find_mle_base
++
++	/* Increment CPU count for BSP */
++	incl	rva(sl_txt_cpu_count)(%ebx)
++
++	/*
++	 * On the BSP, enable SMI with GETSEC[SMCTRL] which were disabled by SENTER.
++	 * NMIs were also disabled by SENTER. Since there is no IDT for the BSP,
++	 * allow the mainline kernel to re-enable them in the normal course of
++	 * booting.
++	 */
++	GETSEC	$(SMX_X86_GETSEC_SMCTRL)
++
++	/* Clear the TXT error registers for a clean start of day */
++	movl	$0, (TXT_PRIV_CONFIG_REGS_BASE + TXT_CR_ERRORCODE)
++	movl	$0xffffffff, (TXT_PRIV_CONFIG_REGS_BASE + TXT_CR_ESTS)
++
++	/* Read physical base of the TXT heap into %eax */
++	movl	(TXT_PRIV_CONFIG_REGS_BASE + TXT_CR_HEAP_BASE), %eax
++	/* Read the size of the BIOS data into ECX (first 8 bytes) */
++	movl	(%eax), %ecx
++	/* Skip over BIOS data and size of OS to MLE data section */
++	leal	8(%eax, %ecx), %eax
++
++	/* Need to verify the values in the OS-MLE struct passed in */
++	call	sl_txt_verify_os_mle_struct
++
++	/*
++	 * Get the boot params address from the TXT info table in the SLRT.
++	 * Note %esi and %ebx MUST be preserved across calls and operations.
++	 */
++	movl	SL_txt_info(%eax), %edi
++	movl	SL_boot_params_addr(%edi), %esi
++
++	/* Save %ebx so the APs can find their way home */
++	movl	%ebx, (SL_mle_scratch + SL_SCRATCH_AP_EBX)(%eax)
++
++	/* Fetch the AP wake code block address from the heap */
++	movl	SL_ap_wake_block(%eax), %edi
++	movl	%edi, rva(sl_txt_ap_wake_block)(%ebx)
++
++	/* Store the offset in the AP wake block to the jmp address */
++	movl	$(sl_ap_jmp_offset - sl_txt_ap_wake_begin), \
++		(SL_mle_scratch + SL_SCRATCH_AP_JMP_OFFSET)(%eax)
++
++	/* Store the offset in the AP wake block to the AP stacks block */
++	movl	$(sl_stacks - sl_txt_ap_wake_begin), \
++		(SL_mle_scratch + SL_SCRATCH_AP_STACKS_OFFSET)(%eax)
++
++	/* %eax still is the base of the OS-MLE block, save it */
++	pushl	%eax
++
++	/* Relocate the AP wake code to the safe block */
++	call	sl_txt_reloc_ap_wake
++
++	/*
++	 * Wake up all APs that are blocked in the ACM and wait for them to
++	 * halt. This should be done before restoring the MTRRs so the ACM is
++	 * still properly in WB memory.
++	 */
++	call	sl_txt_wake_aps
++
++	/* Restore OS-MLE in %eax */
++	popl	%eax
++
++	/*
++	 * %edi is used by this routine to find the MTRRs which are in the SLRT
++	 * in the Intel info.
++	 */
++	movl	SL_txt_info(%eax), %edi
++	call	sl_txt_load_regs
++
++	jmp	.Lcpu_setup_done
++
++.Ldo_unknown_cpu:
++	/* Non-Intel CPUs are not yet supported */
++	ud2
++
++.Lcpu_setup_done:
++	/*
++	 * Don't enable MCE at this point. The kernel will enable
++	 * it on the BSP later when it is ready.
++	 */
++
++	/* Set up 1:1 mapping using 1G mappings in the page tables in %EBP */
++	xorl	%ecx, %ecx
++	movl	$128, %edx
++1:	leal	(,%ecx,4), %eax
++	.irpc	l, 0123
++	movl	$(\l * PUD_SIZE) | _PAGE_PRESENT | _PAGE_RW | _PAGE_PSE, (\l * 8)(%ebp,%eax,8)
++	movl	%ecx, (\l * 8 + 4)(%ebp,%eax,8)
++	.endr
++	incl	%ecx
++	cmpl	%edx, %ecx
++	jc	1b
++
++	leal	(_PAGE_PRESENT | _PAGE_RW)(%ebp), %edx
++	addl	$PAGE_SIZE, %ebp
++
++	xorl	%eax, %eax
++	movl	%ebp, %edi
++	movl	$PAGE_SIZE / 4, %ecx
++	rep	stosl
++
++	movl	%edx, (%ebp)
++	movl	%ebp, %cr3
++
++	/* Enable PAE */
++	movl	%cr4, %eax
++	btsl	$X86_CR4_PAE_BIT, %eax
++	movl	%eax, %cr4
++
++	/* Enable long mode */
++	movl	$MSR_EFER, %ecx
++	rdmsr
++	btsl	$_EFER_LME, %eax
++	wrmsr
++
++	/* Set up long return to 64-bit mode */
++	leal	rva(2f)(%ebx), %eax
++	pushl	$__SL64_CS
++	pushl	%eax
++
++	/* Enable paging */
++	movl	$CR0_STATE, %eax
++	movl	%eax, %cr0
++	lretl
++
++	.code64
++	UNWIND_HINT_END_OF_STACK
++2:	andq	$~0xf, %rsp
++	movq	%rsi, %r15
++	movq	%rsi, %rdi
++	callq	__pi_sl_main
++	movq	%r15, %rsi
++	jmp	startup_64
++SYM_CODE_END(sl_stub_entry)
++
++	.code32
++SYM_FUNC_START_LOCAL(sl_find_mle_base)
++	/* %ecx has PDPT, get first PD */
++	movl	(%ebp), %eax
++	andl	$(PAGE_MASK), %eax
++	/* Get first PT from first PDE */
++	movl	(%eax), %eax
++	andl	$(PAGE_MASK), %eax
++	/* Get MLE base from first PTE */
++	movl	(%eax), %eax
++	andl	$(PAGE_MASK), %eax
++
++	movl	%eax, rva(__pi_sl_mle_start)(%ebx)
++	RET
++SYM_FUNC_END(sl_find_mle_base)
++
++SYM_FUNC_START_LOCAL(sl_check_buffer_mle_overlap)
++	/* %ecx: buffer begin %edx: buffer end */
++	/* %ebx: MLE begin %edi: MLE end */
++	/* %eax: region may be inside MLE */
++
++	cmpl	%edi, %ecx
++	jb	.Lnext_check
++	cmpl	%edi, %edx
++	jbe	.Lnext_check
++	jmp	.Lvalid /* Buffer above MLE */
++
++.Lnext_check:
++	cmpl	%ebx, %edx
++	ja	.Linside_check
++	cmpl	%ebx, %ecx
++	jae	.Linside_check
++	jmp	.Lvalid /* Buffer below MLE */
++
++.Linside_check:
++	cmpl	$0, %eax
++	jz	.Linvalid
++	cmpl	%ebx, %ecx
++	jb	.Linvalid
++	cmpl	%edi, %edx
++	ja	.Linvalid
++	jmp	.Lvalid /* Buffer in MLE */
++
++.Linvalid:
++	TXT_RESET $(SL_ERROR_MLE_BUFFER_OVERLAP)
++
++.Lvalid:
++	RET
++SYM_FUNC_END(sl_check_buffer_mle_overlap)
++
++SYM_FUNC_START_LOCAL(sl_txt_verify_os_mle_struct)
++	pushl	%ebx
++	/*
++	 * %eax points to the base of the OS-MLE struct. Need to also
++	 * read some values from the OS-SINIT struct too.
++	 */
++	movl	-8(%eax), %ecx
++	/* Skip over OS to MLE data section and size of OS-SINIT structure */
++	leal	(%eax, %ecx), %edx
++
++	/* Load MLE image base absolute offset */
++	movl	rva(__pi_sl_mle_start)(%ebx), %ebx
++
++	/* Verify the value of the low PMR base. It should always be 0. */
++	movl	SL_vtd_pmr_lo_base(%edx), %esi
++	cmpl	$0, %esi
++	jz	.Lvalid_pmr_base
++	TXT_RESET $(SL_ERROR_LO_PMR_BASE)
++
++.Lvalid_pmr_base:
++	/* Grab some values from OS-SINIT structure */
++	movl	SL_mle_size(%edx), %edi
++	addl	%ebx, %edi
++	jc	.Loverflow_detected
++	movl	SL_vtd_pmr_lo_size(%edx), %esi
++
++	/* Check the AP wake block */
++	movl	SL_ap_wake_block(%eax), %ecx
++	movl	SL_ap_wake_block_size(%eax), %edx
++	addl	%ecx, %edx
++	jc	.Loverflow_detected
++	pushl	%eax
++	xorl	%eax, %eax
++	call	sl_check_buffer_mle_overlap
++	popl	%eax
++	cmpl	%esi, %edx
++	ja	.Lbuffer_beyond_pmr
++
++	/*
++	 * Check the boot params. Note during a UEFI boot, the boot
++	 * params will be inside the MLE image. Test for this case
++	 * in the overlap case.
++	 */
++	movl	SL_boot_params_addr(%eax), %ecx
++	movl	$(PAGE_SIZE), %edx
++	addl	%ecx, %edx
++	jc	.Loverflow_detected
++	pushl	%eax
++	movl	$1, %eax
++	call	sl_check_buffer_mle_overlap
++	popl	%eax
++	cmpl	%esi, %edx
++	ja	.Lbuffer_beyond_pmr
++
++	/* Check that the AP wake block is big enough */
++	cmpl	$(sl_txt_ap_wake_end - sl_txt_ap_wake_begin), \
++		SL_ap_wake_block_size(%eax)
++	jae	.Lwake_block_ok
++	TXT_RESET $(SL_ERROR_WAKE_BLOCK_TOO_SMALL)
++
++.Lwake_block_ok:
++	popl	%ebx
++	RET
++
++.Loverflow_detected:
++	TXT_RESET $(SL_ERROR_INTEGER_OVERFLOW)
++
++.Lbuffer_beyond_pmr:
++	TXT_RESET $(SL_ERROR_BUFFER_BEYOND_PMR)
++SYM_FUNC_END(sl_txt_verify_os_mle_struct)
++
++SYM_CODE_START_LOCAL(sl_txt_ap_entry)
++	UNWIND_HINT_END_OF_STACK
++	/*
++	 * AP entry point, first order of business is to find where we are and
++	 * save it in %ebx.
++	 */
++
++	/* Read physical base of heap into EAX */
++	movl	(TXT_PRIV_CONFIG_REGS_BASE + TXT_CR_HEAP_BASE), %eax
++	/* Read the size of the BIOS data into ECX (first 8 bytes) */
++	movl	(%eax), %ecx
++	/* Skip over BIOS data and size of OS to MLE data section */
++	leal	8(%eax, %ecx), %eax
++
++	/* Saved %ebx from the BSP and stash OS-MLE pointer */
++	movl	(SL_mle_scratch + SL_SCRATCH_AP_EBX)(%eax), %ebx
++
++	/* Save TXT info ptr in %edi for call to sl_txt_load_regs */
++	movl	SL_txt_info(%eax), %edi
++
++	/*
++	 * Only the %cs and %ds segments are known good after waking the AP,
++	 * as with entry on the BSP. First locate a stack to use then establish
++	 * a new GDT and segments.
++	 */
++
++	/* Lock and get our stack index */
++	movl	$1, %ecx
++.Lspin:
++	xorl	%eax, %eax
++	lock cmpxchgl	%ecx, rva(sl_txt_spin_lock)(%ebx)
++	pause
++	jnz	.Lspin
++
++	/* Increment the stack index and use the next value inside lock */
++	incl	rva(sl_txt_stack_index)(%ebx)
++	movl	rva(sl_txt_stack_index)(%ebx), %eax
++
++	/* Unlock */
++	movl	$0, rva(sl_txt_spin_lock)(%ebx)
++
++	/* Location of the relocated AP wake block */
++	movl	rva(sl_txt_ap_wake_block)(%ebx), %ecx
++
++	/* Load reloc GDT, set segment regs and lret to __SL32_CS */
++	lgdt	(sl_ap_gdt_desc - sl_txt_ap_wake_begin)(%ecx)
++
++	movl	$(__SL32_DS), %edx
++	movw	%dx, %ds
++	movw	%dx, %es
++	movw	%dx, %fs
++	movw	%dx, %gs
++	movw	%dx, %ss
++
++	/* Load our reloc AP stack */
++	movl	$(SL_BOOT_STACK_SIZE), %edx
++	mull	%edx
++	leal	(sl_stacks_end - sl_txt_ap_wake_begin)(%ecx), %esp
++	subl	%eax, %esp
++
++	/* Switch to AP code segment */
++	leal	rva(.Lsl_ap_cs)(%ebx), %eax
++	pushl	$(__SL32_CS)
++	pushl	%eax
++	lret
++
++.Lsl_ap_cs:
++	UNWIND_HINT_END_OF_STACK
++	/* Load the relocated AP IDT */
++	lidt	(sl_ap_idt_desc - sl_txt_ap_wake_begin)(%ecx)
++
++	/* Fixup MTRRs and misc enable MSR on APs too */
++	call	sl_txt_load_regs
++
++	/* Enable SMI with GETSEC[SMCTRL] */
++	GETSEC $(SMX_X86_GETSEC_SMCTRL)
++
++	/* IRET-to-self can be used to enable NMIs which SENTER disabled */
++	leal	rva(.Lnmi_enabled_ap)(%ebx), %eax
++	pushfl
++	pushl	$(__SL32_CS)
++	pushl	%eax
++	iret
++
++.Lnmi_enabled_ap:
++	UNWIND_HINT_END_OF_STACK
++	/* Put APs in X2APIC mode like the BSP */
++	movl	$(MSR_IA32_APICBASE), %ecx
++	rdmsr
++	orl	$(XAPIC_ENABLE | X2APIC_ENABLE), %eax
++	wrmsr
++
++	/*
++	 * Basically done, increment the CPU count and jump off to the AP
++	 * wake block to wait.
++	 */
++	lock incl	rva(sl_txt_cpu_count)(%ebx)
++
++	/*
++	 * Final jump to the AP wake block (see comment below). Here the APs
++	 * will idle until the Secure Launch SMP MONITOR/MWAIT framework
++	 * releases them to mainline kernel control.
++	 */
++	movl	rva(sl_txt_ap_wake_block)(%ebx), %eax
++	jmp	*%eax
++	int3
++SYM_CODE_END(sl_txt_ap_entry)
++
++SYM_FUNC_START_LOCAL(sl_txt_reloc_ap_wake)
++	/*
++	 * What is called the "AP wake block" is simply a chunk of protected
++	 * memory that the bootloader handed the MLE. The MLE implementation will
++	 * shuffle the AP entry point code from here in the setup kernel into this wake
++	 * block where it cannot be overwritten by kernel decompression, relocation, etc.
++	 */
++
++	/* Save boot params register */
++	pushl	%esi
++
++	movl	rva(sl_txt_ap_wake_block)(%ebx), %edi
++
++	/* Fixup AP IDT and GDT descriptor before relocating */
++	leal	rva(sl_ap_idt_desc)(%ebx), %eax
++	addl	%edi, 2(%eax)
++	leal	rva(sl_ap_gdt_desc)(%ebx), %eax
++	addl	%edi, 2(%eax)
++
++	/*
++	 * Copy the AP wake code and AP GDT/IDT to the protected wake block
++	 * provided by the loader. Destination already in %edi.
++	 */
++	movl	$(sl_txt_ap_wake_end - sl_txt_ap_wake_begin), %ecx
++	leal	rva(sl_txt_ap_wake_begin)(%ebx), %esi
++	rep movsb
++
++	/* Setup the IDT for the APs to use in the relocation block */
++	movl	rva(sl_txt_ap_wake_block)(%ebx), %ecx
++	addl	$(sl_ap_idt - sl_txt_ap_wake_begin), %ecx
++	xorl	%edx, %edx
++
++	/* Form the default reset vector relocation address */
++	movl	rva(sl_txt_ap_wake_block)(%ebx), %esi
++	addl	$(sl_txt_int_reset - sl_txt_ap_wake_begin), %esi
++
++1:
++	cmpw	$(NR_VECTORS), %dx
++	jz	.Lap_idt_done
++
++	cmpw	$(X86_TRAP_NMI), %dx
++	jz	2f
++
++	/* Load all other fixed vectors with reset handler */
++	movl	%esi, %eax
++	movw	%ax, (IDT_VECTOR_LO_BITS)(%ecx)
++	shrl	$16, %eax
++	movw	%ax, (IDT_VECTOR_HI_BITS)(%ecx)
++	jmp	3f
++
++2:
++	/* Load single wake NMI IPI vector at the relocation address */
++	movl	rva(sl_txt_ap_wake_block)(%ebx), %eax
++	addl	$(sl_txt_int_nmi - sl_txt_ap_wake_begin), %eax
++	movw	%ax, (IDT_VECTOR_LO_BITS)(%ecx)
++	shrl	$16, %eax
++	movw	%ax, (IDT_VECTOR_HI_BITS)(%ecx)
++
++3:
++	incw	%dx
++	addl	$8, %ecx
++	jmp	1b
++
++.Lap_idt_done:
++	popl	%esi
++	RET
++SYM_FUNC_END(sl_txt_reloc_ap_wake)
++
++SYM_FUNC_START_LOCAL(sl_txt_load_regs)
++	/* Save base pointer register */
++	pushl	%ebx
++
++	/*
++	 * On Intel, the original variable MTRRs and Misc Enable MSR are
++	 * restored on the BSP at early boot. Each AP will also restore
++	 * its MTRRs and Misc Enable MSR.
++	 */
++	pushl	%edi
++	addl	$(SL_saved_bsp_mtrrs), %edi
++	movl	(%edi), %ebx
++	pushl	%ebx /* default_mem_type lo */
++	addl	$4, %edi
++	movl	(%edi), %ebx
++	pushl	%ebx /* default_mem_type hi */
++	addl	$4, %edi
++	movl	(%edi), %ebx /* mtrr_vcnt lo, don't care about hi part */
++	addl	$8, %edi /* now at MTRR pair array */
++	/* Write the variable MTRRs */
++	movl	$(MSR_MTRRphysBase0), %ecx
++1:
++	cmpl	$0, %ebx
++	jz	2f
++
++	movl	(%edi), %eax /* MTRRphysBaseX lo */
++	addl	$4, %edi
++	movl	(%edi), %edx /* MTRRphysBaseX hi */
++	wrmsr
++	addl	$4, %edi
++	incl	%ecx
++	movl	(%edi), %eax /* MTRRphysMaskX lo */
++	addl	$4, %edi
++	movl	(%edi), %edx /* MTRRphysMaskX hi */
++	wrmsr
++	addl	$4, %edi
++	incl	%ecx
++
++	decl	%ebx
++	jmp	1b
++2:
++	/* Write the default MTRR register */
++	popl	%edx
++	popl	%eax
++	movl	$(MSR_MTRRdefType), %ecx
++	wrmsr
++
++	/* Return to beginning and write the misc enable msr */
++	popl	%edi
++	addl	$(SL_saved_misc_enable_msr), %edi
++	movl	(%edi), %eax /* saved_misc_enable_msr lo */
++	addl	$4, %edi
++	movl	(%edi), %edx /* saved_misc_enable_msr hi */
++	movl	$(MSR_IA32_MISC_ENABLE), %ecx
++	wrmsr
++
++	popl	%ebx
++	RET
++SYM_FUNC_END(sl_txt_load_regs)
++
++SYM_FUNC_START_LOCAL(sl_txt_wake_aps)
++	/* Save boot params register */
++	pushl	%esi
++
++	/*
++	 * First setup the MLE join structure and load it into the TXT register.
++	 * This structure defines the information needed to wake the APs and
++	 * safely be joined with the DRTM.
++	 */
++	leal	rva(sl_gdt)(%ebx), %eax
++	leal	rva(sl_txt_ap_entry)(%ebx), %ecx
++	leal	rva(sl_smx_rlp_mle_join)(%ebx), %edx
++	movl	%eax, SL_rlp_gdt_base(%edx)
++	movl	%ecx, SL_rlp_entry_point(%edx)
++	movl	%edx, (TXT_PRIV_CONFIG_REGS_BASE + TXT_CR_MLE_JOIN)
++
++	/* Another TXT heap walk to find various values needed to wake APs */
++	movl	(TXT_PRIV_CONFIG_REGS_BASE + TXT_CR_HEAP_BASE), %eax
++	/* At BIOS data size, find the number of logical processors */
++	movl	(SL_num_logical_procs + 8)(%eax), %edx
++	/* Skip over BIOS data */
++	movl	(%eax), %ecx
++	addl	%ecx, %eax
++	/* Skip over OS to MLE */
++	movl	(%eax), %ecx
++	addl	%ecx, %eax
++	/* At OS-SNIT size, get capabilities to know how to wake up the APs */
++	movl	(SL_capabilities + 8)(%eax), %esi
++	/* Skip over OS to SNIT */
++	movl	(%eax), %ecx
++	addl	%ecx, %eax
++	/* At SINIT-MLE size, get the AP wake MONITOR address */
++	movl	(SL_rlp_wakeup_addr + 8)(%eax), %edi
++
++	/* Determine how to wake up the APs */
++	testl	$(1 << TXT_SINIT_MLE_CAP_RLP_WAKE_MONITOR), %esi
++	jz	.Lwake_getsec
++
++	/* Wake using MWAIT MONITOR */
++	movl	$1, (%edi)
++	jmp	.Laps_awake
++
++.Lwake_getsec:
++	/* Wake using GETSEC(WAKEUP) */
++	GETSEC	$(SMX_X86_GETSEC_WAKEUP)
++
++.Laps_awake:
++	/*
++	 * All of the APs are woken up and rendezvous in the relocated wake
++	 * block starting at sl_txt_ap_wake_begin. Wait for all of them to
++	 * halt.
++	 */
++	pause
++	cmpl	rva(sl_txt_cpu_count)(%ebx), %edx
++	jne	.Laps_awake
++
++	popl	%esi
++	RET
++SYM_FUNC_END(sl_txt_wake_aps)
++
++	__INITDATA
++/* This is the beginning of the relocated AP wake code block */
++sl_txt_ap_wake_begin:
++	/*
++	 * Note on the stack layout for the APs. The individual 128 byte stacks
++	 * fully occupy 2 cache lines. The first is for the MONITOR address
++	 * and the second contains the APICID written to it. Note the whole
++	 * cache line is unused other than the monitor field; nothing else should
++	 * write the cache line and wake the monitor.
++	 *
++	 * esp -> +-----------+
++	 *        |  APIC ID  |
++	 *        |-----------|
++	 *        |  PAD[15]  |
++	 *        |-----------|
++	 *        |  PAD[15]  |
++	 *        |-----------|
++	 *        |  MONITOR  |
++	 *        +-----------+
++	 */
++
++	/* Get the LAPIC ID for each AP and stash it on the stack */
++	movl	$(MSR_IA32_X2APIC_APICID), %ecx
++	rdmsr
++	pushl	%eax
++
++	/*
++	 * Get a pointer to the monitor location on this APs stack to test below
++	 * after mwait returns. Currently %esp points to just past the pushed APIC
++	 * ID value.
++	 */
++	movl	%esp, %edi
++	subl	$(SL_BOOT_STACK_SIZE - 4), %edi
++	movl	$0, (%edi)
++
++1:
++	/* Load eax and clear ecx/edx so no invalid extensions or hints are passed to monitor */
++	movl	%edi, %eax
++	xorl	%ecx, %ecx
++	xorl	%edx, %edx
++
++	/*
++	 * Arm the monitor and wait for it to be triggered by the SMP bringup code. The mwait
++	 * instruction can return for a number of reasons. Test to see if it returned
++	 * because the monitor was written to.
++	 */
++	monitor
++
++	cmpl	$0, (%eax)
++	jnz	2f
++
++	/* Clear eax since there are no hints sent to mwait */
++	xorl	%eax, %eax
++
++	mwait
++	jmp	1b
++
++2:
++	/*
++	 * This is the long absolute jump to the 32b Secure Launch protected mode stub
++	 * code in sl_trampoline_start32() in the rmpiggy. The jump address will be
++	 * fixed in the SMP boot code when the first AP is brought up. This whole area
++	 * is provided and protected in the memory map by the prelaunch code.
++	 */
++	.byte	0xea
++sl_ap_jmp_offset:
++	.long	0x00000000
++	.word	__SL32_CS
++
++SYM_CODE_START_LOCAL(sl_txt_int_nmi)
++	/* NMI context, just IRET */
++	iret
++SYM_CODE_END(sl_txt_int_nmi)
++
++SYM_FUNC_START_LOCAL(sl_txt_int_reset)
++	TXT_RESET $(SL_ERROR_INV_AP_INTERRUPT)
++SYM_FUNC_END(sl_txt_int_reset)
++
++	.balign 8
++SYM_DATA_START_LOCAL(sl_ap_idt_desc)
++	.word	sl_ap_idt_end - sl_ap_idt - 1		/* Limit */
++	.long	sl_ap_idt - sl_txt_ap_wake_begin	/* Base */
++SYM_DATA_END_LABEL(sl_ap_idt_desc, SYM_L_LOCAL, sl_ap_idt_desc_end)
++
++	.balign 8
++SYM_DATA_START_LOCAL(sl_ap_idt)
++	.rept	NR_VECTORS
++	.word	0x0000		/* Offset 15 to 0 */
++	.word	__SL32_CS	/* Segment selector */
++	.word	0x8e00		/* Present, DPL=0, 32b Vector, Interrupt */
++	.word	0x0000		/* Offset 31 to 16 */
++	.endr
++SYM_DATA_END_LABEL(sl_ap_idt, SYM_L_LOCAL, sl_ap_idt_end)
++
++	.balign 8
++SYM_DATA_START_LOCAL(sl_ap_gdt_desc)
++	.word	sl_ap_gdt_end - sl_ap_gdt - 1
++	.long	sl_ap_gdt - sl_txt_ap_wake_begin
++SYM_DATA_END_LABEL(sl_ap_gdt_desc, SYM_L_LOCAL, sl_ap_gdt_desc_end)
++
++	.balign	8
++SYM_DATA_START_LOCAL(sl_ap_gdt)
++	.quad	0x0000000000000000	/* NULL */
++	.quad	0x00cf9a000000ffff	/* __SL32_CS */
++	.quad	0x00cf92000000ffff	/* __SL32_DS */
++SYM_DATA_END_LABEL(sl_ap_gdt, SYM_L_LOCAL, sl_ap_gdt_end)
++
++	/* Small stacks for BSP and APs to work with */
++	.balign 64
++SYM_DATA_START_LOCAL(sl_stacks)
++	.fill (SL_MAX_CPUS * SL_BOOT_STACK_SIZE), 1, 0
++SYM_DATA_END_LABEL(sl_stacks, SYM_L_LOCAL, sl_stacks_end)
++
++/* This is the end of the relocated AP wake code block */
++sl_txt_ap_wake_end:
++
++	.balign 8
++SYM_DATA_START_LOCAL(sl_gdt_desc)
++	.word	sl_gdt_end - sl_gdt - 1
++	.long	sl_gdt - sl_gdt_desc
++SYM_DATA_END_LABEL(sl_gdt_desc, SYM_L_LOCAL, sl_gdt_desc_end)
++
++	.balign	8
++SYM_DATA_START_LOCAL(sl_gdt)
++	.quad	0x0000000000000000	/* NULL */
++	.quad	0x00cf9a000000ffff	/* __SL32_CS */
++	.quad	0x00cf92000000ffff	/* __SL32_DS */
++	.quad	0x00af9a000000ffff	/* __SL64_CS */
++SYM_DATA_END_LABEL(sl_gdt, SYM_L_LOCAL, sl_gdt_end)
++
++	.balign 8
++SYM_DATA_START_LOCAL(sl_smx_rlp_mle_join)
++	.long	sl_gdt_end - sl_gdt - 1	/* GDT limit */
++	.long	0x00000000		/* GDT base */
++	.long	__SL32_CS	/* Seg Sel - CS (DS, ES, SS = seg_sel+8) */
++	.long	0x00000000	/* Entry point physical address */
++SYM_DATA_END(sl_smx_rlp_mle_join)
++
++SYM_DATA_LOCAL(sl_txt_spin_lock, .long 0x00000000)
++
++SYM_DATA_LOCAL(sl_txt_stack_index, .long 0x00000000)
++
++SYM_DATA_LOCAL(sl_txt_cpu_count, .long 0x00000000)
++
++SYM_DATA_LOCAL(sl_txt_ap_wake_block, .long 0x00000000)
++
++	__INITRODATA
++	.balign 8
++	/*
++	 * The MLE Header per the TXT Specification, section 2.1
++	 * MLE capabilities, see table 4. Capabilities set:
++	 * bit 0: Support for GETSEC[WAKEUP] for RLP wakeup
++	 * bit 1: Support for RLP wakeup using MONITOR address
++	 * bit 2: The ECX register will contain the pointer to the MLE page table
++	 * bit 5: TPM 1.2 family: Details/authorities PCR usage support
++	 * bit 9: Supported format of TPM 2.0 event log - TCG compliant
++	 */
++SYM_DATA_START(mle_header)
++0:	.long	0x9082ac5a			/* UUID0 */
++	.long	0x74a7476f			/* UUID1 */
++	.long	0xa2555c0f			/* UUID2 */
++	.long	0x42b651cb			/* UUID3 */
++	.long	0x00000034			/* MLE header size */
++	.long	0x00020002			/* MLE version 2.2 */
++	.long	__sl_stub_entry_offset - 0b	/* Linear entry point of MLE (virt. address) */
++	.long	0x00000000			/* First valid page of MLE */
++	.long	0x00000000			/* Offset within binary of first byte of MLE */
++	.long	__sl_mle_end_offset - 0b	/* Offset within binary of last byte + 1 of MLE */
++	.long	0x00000227			/* Bit vector of MLE-supported capabilities */
++	.long	0x00000000			/* Starting linear address of command line (unused) */
++	.long	0x00000000			/* Ending linear address of command line (unused) */
++SYM_DATA_END(mle_header)
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 4711a35e706c..fc22a2b9c7d1 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -537,4 +537,9 @@ xen_elfnote_phys32_entry_value =
+ 	ABSOLUTE(xen_elfnote_phys32_entry) + ABSOLUTE(pvh_start_xen - LOAD_OFFSET);
+ #endif
+ 
++#ifdef CONFIG_SECURE_LAUNCH
++__sl_stub_entry_offset = ABSOLUTE(mle_header) + ABSOLUTE(sl_stub_entry - _text);
++__sl_mle_end_offset    = ABSOLUTE(mle_header) + ABSOLUTE(__bss_start - _text);
++#endif
++
+ #include "../boot/startup/exports.h"
+diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
+index e5a2b9a912d1..d4a5fc607c54 100644
+--- a/arch/x86/tools/relocs.c
++++ b/arch/x86/tools/relocs.c
+@@ -88,6 +88,7 @@ static const char * const	sym_regex_kernel[S_NSYMTYPES] = {
+ 	"__end_rodata|"
+ 	"__end_rodata_aligned|"
+ 	"__initramfs_start|"
++	"__sl_.+offset|"
+ 	"(jiffies|jiffies_64)|"
+ #if ELF_BITS == 64
+ 	"__end_rodata_hpage_align|"
 -- 
 2.47.3
 
