@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3D38ECD4851
-	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 21:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5A3BCCD343F
+	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 21:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=aF0BH6dZpM5RACWLo6N4NcvxHw87HpE9a7jatFY2Xnk=; b=ff1koqxGddNGZbJ4kh3xu1zcCn
-	BkMERxq982FXqY9ZcmiiyiBzlEzxD+YdnKfbLTryVPEnGepGcbyyOGg8AIfOoahy4XzEvNBRTbgO2
-	mdjX2roNTZoRyP2aKp5Oc72niAN5OAEyMm9MOv71BWf91kXjTX3zum7twkHtxklHtVUqPphBClo3t
-	kn0tLbsBo0mTDZdG8QpgL4Aghk3vPXC1IeBD5WB7V3I+FLoZGvjfZtloH5YnHp8Dd3/7y7vIbViPC
-	iTBVsi4dSyOiUe92UdsLEb8HGV1AFKlY8++U9+tH68hn5Y2gRSRwLJuJnJ+E1/xR1UkInFGvyvi5V
-	2jsi2G3w==;
+	bh=ViurL0csUM0y6zC2/BziEDI+4nTSab4FjJtc7RqXPgw=; b=OrpGUMMUw1QLAv4abWnwsNm4iZ
+	lpje86Nt5PPbsSvBfU+FWubcl4jpVXWVuWlz+UcEoQN+ErNe3NGttnfuAgY5fWAnm6R6it+MEX+c/
+	iro190jGmic7ku+cLxSVe37OKELeM6e1hB0Hbc7iVVI+wunXe2MBAx0blOSkAvDujDXvqoQUCRsKB
+	eRYZg5JJbTv2CulXrOtsfDr6DdcJIqOOUZPk9awryAJeyzNhWOUMYUtZUTPvQdVe5hMK2pyBs+lsG
+	N6HY+i5A/yoEy5XhPBdD+3gE/8gpmM2gEckKbZX9TxrUazdnlBkCRA2hc0QyHkleTt76dM4E+TcW4
+	FsZJQQfA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNzse-00000009U4h-3puV;
-	Fri, 15 May 2026 21:15:36 +0000
-Received: from mail-dl1-x1233.google.com ([2607:f8b0:4864:20::1233])
+	id 1wNzsi-00000009U6o-00L4;
+	Fri, 15 May 2026 21:15:40 +0000
+Received: from mail-dy1-x132b.google.com ([2607:f8b0:4864:20::132b])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNzsa-00000009U1n-3Q3n
+	id 1wNzsd-00000009U3j-3WyK
 	for kexec@lists.infradead.org;
-	Fri, 15 May 2026 21:15:35 +0000
-Received: by mail-dl1-x1233.google.com with SMTP id a92af1059eb24-12c1a170a50so288801c88.0
-        for <kexec@lists.infradead.org>; Fri, 15 May 2026 14:15:32 -0700 (PDT)
+	Fri, 15 May 2026 21:15:38 +0000
+Received: by mail-dy1-x132b.google.com with SMTP id 5a478bee46e88-2f0d3e07e30so1354428eec.0
+        for <kexec@lists.infradead.org>; Fri, 15 May 2026 14:15:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778879732; x=1779484532; darn=lists.infradead.org;
+        d=gmail.com; s=20251104; t=1778879735; x=1779484535; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aF0BH6dZpM5RACWLo6N4NcvxHw87HpE9a7jatFY2Xnk=;
-        b=S59HdEasGOffR6+wdiUnpfB/2XlnlNQv7Dr6wXjWnZpSYO20qIWBUDXX/ib08CGLLq
-         BF6FmcjAzsU1AKpVdo1gOf9D2GxeV+74Y9xlysValjyBREJEzW1tdkjH+w03ZaVSs7V6
-         i9Y6aaN4ObRpcSAhwbtbayJN3jkPFyXAkic/KVhU6teTOi7YbRKUR/BJd8nJ6PKbB1rU
-         +WSflQDhGfoiksYIOsdOb2gHMtnMW6FrYYT0grj7xnPzGe4+VDvfA8W8+dLi4y0wdacI
-         Z9G1gL/IKq+6tjHuDUQIk/l7ewxsh1zALfSbwbI0e8XC6kR17BCaC9hLDxKUkCDdMsAz
-         bSoQ==
+        bh=ViurL0csUM0y6zC2/BziEDI+4nTSab4FjJtc7RqXPgw=;
+        b=FjelquUUQF+AZriCsVtSVc/oaQqwMLrItESMkhH9bcNQ7eWwSRzZDylu7dCB8gKWlD
+         R1fxuybsUraULbiR1Ce21r2yrpU4JzCJi2BdQPsJrBs5y7Uh0z1QBzpoR6fm8Zq4Jevu
+         N5b6D7hpUUPVJitWCWKUYyGz5P0uYsK/yRcgWwXDlGN5lNHP59yOc3txuMQHGaLC1BTU
+         63OUb1JL2P9QKGdeLCODx+LzN1F42+hmNpLggFvRI2q2LHECcIxY+YdxFqRBz3ZsBa0s
+         f0Y+V921VeJ3GYIteMLZwVpJAFUjpsLLGGB6u564JwxLnIsyipwcTsF4cDmPqIS/s7mA
+         VCqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778879732; x=1779484532;
+        d=1e100.net; s=20251104; t=1778879735; x=1779484535;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=aF0BH6dZpM5RACWLo6N4NcvxHw87HpE9a7jatFY2Xnk=;
-        b=W5mVeOFKmbz5kIf9fXbuTTIlQir8CxGjjFi1TiiAps+WoHqAHGIeNHZs/n6INfNhbS
-         2wex+qtChUGgqeObpCZ2+6SOtpjiKxZ0qtYSxN3iO+MZ5G9CgSKyDBosu4a/FmWfeJ95
-         MkjJNz8BiRPX8xkeeFqzLDF2A1IFZCRW843DfVBG8cBHy16OsToICboUdQweAasoxhJN
-         4T+gsh4oYtW5noYOGTJVEwVueHYeOkKmy4d0SjMjC8s+QZYbxuM7b2IO1Lv+HRCWQLAq
-         DPBdi00QfmuoliPkvpA2edCF1kUqzF0BeoKgGe6Hn4t/TSDuJqLx7yiLB4Q9A8ASp2O4
-         u2Yg==
-X-Forwarded-Encrypted: i=1; AFNElJ9d9TBDJwFk1eQNie+/2KHveOgU8kHB5KkpIsfZYdzj1ABTXWs5Ol2LtTBosvSgbrll2MgRcg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwVt/HcSdCZSkbCA9iYh5H7gTmUdgzMiNlbxWn0nj3M88e0H5QO
-	coUpoYs90Ox1bkGVlmhdFzjfmgAQjebUE3vD4YL4I1VgPcyY1mhSgpxC
-X-Gm-Gg: Acq92OGUmFtMP9jp7nYj+//p8Mj820DWtr0qDSpap8m0zrqMdbE2UDvaMVzN7hPoY5n
-	p8+AhzRFkbdUNWlAHyGTeUiaq2AQvHgxLQE4QKGR+4dAvFNcBGABrRIhWg2wHrTAxOw8A5yBAxB
-	Mv+NtPHSp1vh+8wGSL1DfIZKTgjUhP28FZnhwKIMDG77DO1ckFa8hpueIml2RK9cEBNlZEYyuBv
-	VW3ROsBaX+AwpFiytUsRrAktYds0/vdXas04OHt0vBR/C3nFO4zj2YJrL/vRAgggPncMEubljpz
-	AAX+bBUk8KVtPdEhCag5/A6TEjnAWLgnqleM9m/y3+jBCQHmlDPKKzIrfl6U1IXB5s3AlOILFJH
-	INLm2D5l0DMm4+Y4Jf7Kdux6ePqcnbdycur7tK4dWpaPo7+BJZ/Az7rWStyxzsT/8uzxlSO3tEA
-	/7uAs4Cgh/dBeHpJm4anzYDN48YJzDepllDpT6YltnSA==
-X-Received: by 2002:a05:7022:6621:b0:134:a710:d908 with SMTP id a92af1059eb24-1350451887emr2398095c88.13.1778879732067;
-        Fri, 15 May 2026 14:15:32 -0700 (PDT)
+        bh=ViurL0csUM0y6zC2/BziEDI+4nTSab4FjJtc7RqXPgw=;
+        b=gmY2hZOXaoI3frHSA63EuYcoOKyoH3DZD7DIYVuewbfRQk6t5xzNzoese69RliLdDQ
+         QSLfykvuc8n+LiaKKqnty0BiDxIlQgn4UMuOwVNJOvYlfNqIjbOxVD8EfkK0WCSV94d9
+         lhrW9IVDa21o3WQQl3oyzPNOrf2T0u5lTXCg3qqqfNtk8QjU2oGXEo0Z7Sba38mz1U9t
+         aMRooUmPPhlwysVm71xzs+HhcjBaAhV+IQSiJLieskkpk7DJilXwh5B8E5bVwq2B08HW
+         CdAhaJmuBZyJDffHkpJn03qC7tg1A16GpXheesPrTuni+ARzZBL2TTRgJfquRFhWBpYR
+         bQ4Q==
+X-Forwarded-Encrypted: i=1; AFNElJ9zggIPFMAH7XNYGxXAkIf/njl9jWC/VfGL+KcV+b6KXMWA60r/8sI9r+DzL7mkQILO/Utu9g==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwRUQQ9KmAxb7pREE4o5JDZ1/tCPZ65k9AP8L6XniT98zodujPW
+	6dbXRpPz8MaI3UhpeJ6X81AkKmAwzbtFSi0kZchytCBK6Xi24RXxRgry
+X-Gm-Gg: Acq92OEUh1ul/bKagoEczEOt2kOorrD3pFnzqcWPgjRhtbAtVfK5IRN0rzwuWn//N0k
+	rzUq2O/NifI4M/6LJGV78y8ye5BMEWyTSbZNmw+O9iu9ytpx6+jaIEVNQHH6bwrmQUVu4kVhwbR
+	IqPuu05rd9IbmlsDmn+KNrUkJf3NO1T7eHWgEz55zYxadzZUoDktq50buHhQPCwyVVqiv2pQfgM
+	nYN9tJsAMlCfditCfoWYRzdoDYfaZsd+3M8ge0LcHa+/dulyqBLCBGevVpKYPNC+rjXYqGtonxx
+	jkyleybSOgUe4rGLOmDs+NEesegCifWvUAlx5G3PIXxaR67S1L/Q1Pkn0rxYhb/GxW82wtrPIYg
+	wRHXh7V78HNhp0ARDzUnm5A6fP8N8FF1HZh8EZwScnVkJKY7RZ5LPvJRAFJwy2QNxSn3FNA6RoJ
+	N01u6zt/AjFSB3LwNG8VEX4BNXhanaL+BwiuKTnjT+Hw==
+X-Received: by 2002:a05:7300:510:b0:2c1:7b61:8731 with SMTP id 5a478bee46e88-303982be4d0mr3180070eec.10.1778879734916;
+        Fri, 15 May 2026 14:15:34 -0700 (PDT)
 Received: from mimas.lan ([2603:8000:df01:38f7:a6bb:6dff:fecf:e71a])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-134cc33a618sm11245224c88.12.2026.05.15.14.15.30
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-302944ffb85sm8214358eec.7.2026.05.15.14.15.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2026 14:15:31 -0700 (PDT)
+        Fri, 15 May 2026 14:15:34 -0700 (PDT)
 From: Ross Philipson <ross.philipson@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	x86@kernel.org,
@@ -103,17 +103,17 @@ Cc: ross.philipson@gmail.com,
 	daniel.kiper@oracle.com,
 	andrew.cooper3@citrix.com,
 	trenchboot-devel@googlegroups.com
-Subject: [PATCH v16 28/38] x86: Add early SHA-384/512 support for Secure Launch early measurements
-Date: Fri, 15 May 2026 14:14:00 -0700
-Message-ID: <20260515211410.31440-29-ross.philipson@gmail.com>
+Subject: [PATCH v16 29/38] x86/tpm: Early startup TPM PCR extending driver
+Date: Fri, 15 May 2026 14:14:01 -0700
+Message-ID: <20260515211410.31440-30-ross.philipson@gmail.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260515211410.31440-1-ross.philipson@gmail.com>
 References: <20260515211410.31440-1-ross.philipson@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260515_141532_883292_EEDC0B6A 
-X-CRM114-Status: GOOD (  12.16  )
+X-CRM114-CacheID: sfid-20260515_141535_912723_C992F39C 
+X-CRM114-Status: GOOD (  30.07  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -128,47 +128,688 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+Introduce a driver that can interact minimally with the TPM. This
+allows the Secure Launch startup code to extend measurement values
+into the TPM's DRTM PCR banks early in the launch process.
 
-On newer TPM 2 implementations, SHA 384 and 512 banks may be available
-for use. If these banks are enabled in firmware, they will be used for
-the Dynamic Launch. The DLME will also use these algorithms to measure
-configuration information into the TPM as early as possible before using
-the values. This implementation uses the established approach of #including
-the SHA-512 library directly in the early boot code.
+The driver implementation only currently supports basic initialization
+and PCR extend commands. An extend command can be sent to both TPM 2.0 or
+1.2 chip but only the TIS/FIFO interface is currently supported. The TCG
+specs for these interface can be found here:
 
+https://trustedcomputinggroup.org/resource/pc-client-work-group-pc-client-specific-tpm-interface-specification-tis/
+https://trustedcomputinggroup.org/resource/tpm-2-0-mobile-command-response-buffer-interface-specification/
+
+Note this TPM driver implementation relies as much as possible on
+existing mainline kernel TPM code.
+
+Co-developed-by: Daniel P. Smith <dpsmith@apertussolutions.com>
 Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+Co-developed-by: Alec Brown <alec.r.brown@oracle.com>
+Signed-off-by: Alec Brown <alec.r.brown@oracle.com>
 Signed-off-by: Ross Philipson <ross.philipson@gmail.com>
 ---
- arch/x86/boot/startup/Makefile     | 1 +
- arch/x86/boot/startup/lib-sha512.c | 6 ++++++
- 2 files changed, 7 insertions(+)
- create mode 100644 arch/x86/boot/startup/lib-sha512.c
+ arch/x86/boot/startup/Makefile  |   1 +
+ arch/x86/boot/startup/exports.h |   7 +
+ arch/x86/boot/startup/tpm.h     |  47 +++
+ arch/x86/boot/startup/tpm_drv.c | 567 ++++++++++++++++++++++++++++++++
+ 4 files changed, 622 insertions(+)
+ create mode 100644 arch/x86/boot/startup/tpm.h
+ create mode 100644 arch/x86/boot/startup/tpm_drv.c
 
 diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makefile
-index 071a90f23ae0..527cba7e4560 100644
+index 527cba7e4560..ecf86ce5ebf7 100644
 --- a/arch/x86/boot/startup/Makefile
 +++ b/arch/x86/boot/startup/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= sme.o sev-startup.o
- 
+@@ -24,6 +24,7 @@ obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= sme.o sev-startup.o
  slaunch-objs			+= lib-sha1.o
  slaunch-objs			+= lib-sha256.o
-+slaunch-objs			+= lib-sha512.o
+ slaunch-objs			+= lib-sha512.o
++slaunch-objs			+= tpm_drv.o
  obj-$(CONFIG_SECURE_LAUNCH)	+= $(slaunch-objs)
  
  pi-objs				:= $(patsubst %.o,$(obj)/%.o,$(obj-y))
-diff --git a/arch/x86/boot/startup/lib-sha512.c b/arch/x86/boot/startup/lib-sha512.c
+diff --git a/arch/x86/boot/startup/exports.h b/arch/x86/boot/startup/exports.h
+index 01d2363dc445..4b82ddbd62a8 100644
+--- a/arch/x86/boot/startup/exports.h
++++ b/arch/x86/boot/startup/exports.h
+@@ -12,3 +12,10 @@ PROVIDE(snp_cpuid			= __pi_snp_cpuid);
+ PROVIDE(snp_cpuid_get_table		= __pi_snp_cpuid_get_table);
+ PROVIDE(svsm_issue_call			= __pi_svsm_issue_call);
+ PROVIDE(svsm_process_result_codes	= __pi_svsm_process_result_codes);
++
++#ifdef CONFIG_SECURE_LAUNCH
++__pi_bcmp				= bcmp;
++__pi_memcmp				= memcmp;
++__pi_strlen				= strlen;
++__pi___WARN_trap			= __WARN_trap;
++#endif
+diff --git a/arch/x86/boot/startup/tpm.h b/arch/x86/boot/startup/tpm.h
 new file mode 100644
-index 000000000000..2afd5c5935cd
+index 000000000000..1a11396b68c6
 --- /dev/null
-+++ b/arch/x86/boot/startup/lib-sha512.c
-@@ -0,0 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/arch/x86/boot/startup/tpm.h
+@@ -0,0 +1,47 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +/*
++ * TPM early extend header file.
++ *
 + * Copyright (c) 2026 Apertus Solutions, LLC
++ * Copyright (c) 2026, Oracle and/or its affiliates.
 + */
 +
-+#include "../../../../lib/crypto/sha512.c"
++#ifndef BOOT_COMPRESSED_TPM_H
++#define BOOT_COMPRESSED_TPM_H
++
++enum early_tis_defaults {
++	TPM_TIMEOUT		= 5, /* ms */
++	TIS_DURATION		= 120000, /* 120 secs in ms */
++};
++
++enum tpm_family {
++	TPM_FAMILY_INVALID	= 0,
++	TPM_FAMILY_12		= 1,
++	TPM_FAMILY_20		= 2
++};
++
++struct tpm_chip {
++	enum tpm_family family;
++	u64 baseaddr;
++	int locality;
++	int did;
++	int vid;
++
++	/* in ms */
++	ktime_t timeout_a;
++	ktime_t timeout_b;
++	ktime_t timeout_c;
++	ktime_t timeout_d;
++};
++
++bool tpm_tis_check_locality(struct tpm_chip *chip, int loc);
++void tpm_tis_release_locality(struct tpm_chip *chip);
++int tpm_tis_request_locality(struct tpm_chip *chip, int loc);
++void tpm_tis_disable_interrupts(struct tpm_chip *chip);
++int tpm1_pcr_extend(struct tpm_chip *chip, u32 pcr_idx, const u8 *hash);
++int tpm2_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
++		    struct tpm_digest *digests, u32 digest_count);
++int early_tpm_init(struct tpm_chip *chip, u64 baseaddr);
++int early_tpm_fini(struct tpm_chip *chip);
++
++#endif /* BOOT_COMPRESSED_TPM_H */
+diff --git a/arch/x86/boot/startup/tpm_drv.c b/arch/x86/boot/startup/tpm_drv.c
+new file mode 100644
+index 000000000000..99971b06f768
+--- /dev/null
++++ b/arch/x86/boot/startup/tpm_drv.c
+@@ -0,0 +1,567 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Based of the original tpm_tis.c implementation as found in the
++ * Linux 2.6 code base.
++ *
++ * Copyright (C) 2005, 2006 IBM Corporation
++ *
++ * Authors:
++ * Leendert van Doorn <leendert@watson.ibm.com>
++ * Kylene Hall <kjhall@us.ibm.com>
++ */
++
++#include <crypto/sha2.h>
++#include <asm/io.h>
++
++#include <linux/tpm_command.h>
++#include <linux/tpm_ptp.h>
++#include <linux/tpm_buf.h>
++
++#include "tpm.h"
++
++static u8 tpm_buf_page[PAGE_SIZE];
++
++/*
++ * Single threaded environment only running on BSP. Use a single shared
++ * page for all TPM extend operations.
++ */
++static inline struct tpm_buf *tpm_buf_alloc_page(void)
++{
++	memset(tpm_buf_page, 0, PAGE_SIZE);
++	return (struct tpm_buf *)tpm_buf_page;
++}
++
++static inline void tpm_buf_free_page(void)
++{
++	memset(tpm_buf_page, 0, PAGE_SIZE);
++}
++
++/* Pull in TPM buffer management support */
++#include "../../../../drivers/char/tpm/tpm-buf.c"
++
++static u32 __init tpm_get_alg_size(u16 alg_id)
++{
++	switch (alg_id) {
++	case TPM_ALG_SHA1:
++		return TPM_DIGEST_SIZE;
++	case TPM_ALG_SHA256:
++	case TPM_ALG_SM3_256:
++		return SHA256_DIGEST_SIZE;
++	case TPM_ALG_SHA384:
++		return SHA384_DIGEST_SIZE;
++	case TPM_ALG_SHA512:
++	default:
++		return SHA512_DIGEST_SIZE;
++	};
++}
++
++static inline u8 tpm_read8(struct tpm_chip *chip, u32 field)
++{
++	return readb((void *)(chip->baseaddr | field));
++}
++
++static inline void tpm_write8(struct tpm_chip *chip, u32 field, u8 val)
++{
++	writeb(val, (void *)(chip->baseaddr | field));
++}
++
++static inline u32 tpm_read32(struct tpm_chip *chip, u32 field)
++{
++	return readl((void *)(chip->baseaddr | field));
++}
++
++static inline void tpm_write32(struct tpm_chip *chip, u32 field, u32 val)
++{
++	writel(val, (void *)(chip->baseaddr | field));
++}
++
++/*
++ * In the setup kernel environment, it is far too early to calibrate time.
++ * Assume a 5GHz processor (the upper end of the Fam19h range), allowing
++ * reasonable timeouts on slower systems.
++ */
++static unsigned long ticks_per_ms = (5UL * 1000 * 1000 /* CPU in KHz */);
++
++static inline ktime_t tpm_now_ms(void)
++{
++	return rdtsc()/ticks_per_ms;
++}
++
++static inline void tpm_mdelay(unsigned int msecs)
++{
++	unsigned long ticks = msecs * ticks_per_ms;
++	unsigned long s, e;
++
++	s = rdtsc();
++	do {
++		cpu_relax();
++		e = rdtsc();
++	} while ((e - s) < ticks);
++}
++
++static inline u8 __tis_status(struct tpm_chip *chip)
++{
++	return tpm_read8(chip, TPM_STS(chip->locality));
++}
++
++static inline void __tis_cancel(struct tpm_chip *chip)
++{
++	/* This causes the current command to be aborted */
++	tpm_write8(chip, TPM_STS(chip->locality), TPM_STS_COMMAND_READY);
++}
++
++static int __init __tis_get_burstcount(struct tpm_chip *chip)
++{
++	ktime_t stop;
++	int burstcnt;
++
++	stop = tpm_now_ms() + chip->timeout_d;
++	do {
++		burstcnt = tpm_read8(chip, (TPM_STS(chip->locality) + 1));
++		burstcnt += tpm_read8(chip, TPM_STS(chip->locality) + 2) << 8;
++
++		if (burstcnt)
++			return burstcnt;
++
++		tpm_mdelay(TPM_TIMEOUT);
++	} while (tpm_now_ms() < stop);
++
++	return -EBUSY;
++}
++
++static int __init __tis_wait_for_stat(struct tpm_chip *chip, u8 mask, ktime_t timeout)
++{
++	ktime_t stop;
++	u8 status;
++
++	if ((__tis_status(chip) & mask) == mask)
++		return 0;
++
++	stop = tpm_now_ms() + timeout;
++	do {
++		tpm_mdelay(TPM_TIMEOUT);
++
++		status = __tis_status(chip);
++		if ((status & mask) == mask)
++			return 0;
++	} while (tpm_now_ms() < stop);
++
++	return -ETIME;
++}
++
++static int __init __tis_recv_data(struct tpm_chip *chip, u8 *buf, int count)
++{
++	int size = 0;
++	int burstcnt;
++
++	while (size < count &&
++	       __tis_wait_for_stat(chip,
++				   TPM_STS_DATA_AVAIL | TPM_STS_VALID,
++				   chip->timeout_c) == 0) {
++		burstcnt = __tis_get_burstcount(chip);
++
++		for ( ; burstcnt > 0 && size < count; --burstcnt)
++			buf[size++] = tpm_read8(chip, TPM_DATA_FIFO(chip->locality));
++	}
++
++	return size;
++}
++
++/**
++ * tpm_tis_check_locality - Check if the given locality is the active one
++ * @chip:	The TPM chip instance
++ * @loc:	The locality to check
++ *
++ * Return: true - locality active, false - not active
++ */
++bool __init tpm_tis_check_locality(struct tpm_chip *chip, int loc)
++{
++	u8 res = tpm_read8(chip, TPM_ACCESS(loc));
++
++	if ((res & (TPM_ACCESS_ACTIVE_LOCALITY | TPM_ACCESS_VALID)) ==
++		   (TPM_ACCESS_ACTIVE_LOCALITY | TPM_ACCESS_VALID)) {
++		chip->locality = loc;
++		return true;
++	}
++
++	return false;
++}
++
++/**
++ * tpm_tis_release_locality - Release the active locality
++ * @chip:	The TPM chip instance
++ */
++void __init tpm_tis_release_locality(struct tpm_chip *chip)
++{
++	u8 res = tpm_read8(chip, TPM_ACCESS(chip->locality));
++
++	if ((res & (TPM_ACCESS_REQUEST_PENDING | TPM_ACCESS_VALID)) ==
++		   (TPM_ACCESS_REQUEST_PENDING | TPM_ACCESS_VALID))
++		tpm_write8(chip, TPM_ACCESS(chip->locality), TPM_ACCESS_RELINQUISH_LOCALITY);
++
++	chip->locality = 0;
++}
++
++/**
++ * tpm_tis_request_locality - Request to make the given locality the active one
++ * @chip:	The TPM chip instance
++ * @loc:	The locality to make active/set as current
++ *
++ * Return:
++ *  >= 0 - Success, new active locality returned or locality already active
++ *  < 0  - Error occurred
++ */
++int __init tpm_tis_request_locality(struct tpm_chip *chip, int loc)
++{
++	ktime_t stop;
++
++	if (tpm_tis_check_locality(chip, loc))
++		return loc;
++
++	/* Set the new locality */
++	tpm_write8(chip, TPM_ACCESS(loc), TPM_ACCESS_REQUEST_USE);
++
++	stop = tpm_now_ms() + chip->timeout_b;
++	do {
++		if (tpm_tis_check_locality(chip, loc))
++			return loc;
++
++		tpm_mdelay(TPM_TIMEOUT);
++	} while (tpm_now_ms() < stop);
++
++	return -1;
++}
++
++/**
++ * tpm_tis_disable_interrupts - Disable interrupts for the TPM, use polling mode only
++ * @chip:	The TPM chip instance
++ */
++void __init tpm_tis_disable_interrupts(struct tpm_chip *chip)
++{
++	u32 intmask;
++
++	intmask = tpm_read32(chip, TPM_INT_ENABLE(chip->locality));
++	/* Disable everything to make sure it is in a consistent state */
++	intmask &= ~(TPM_GLOBAL_INT_ENABLE | TPM_INTF_CMD_READY_INT |
++		     TPM_INTF_LOCALITY_CHANGE_INT | TPM_INTF_STS_VALID_INT |
++		     TPM_INTF_DATA_AVAIL_INT);
++	tpm_write32(chip, TPM_INT_ENABLE(chip->locality), intmask);
++}
++
++/**
++ * tpm_tis_recv - Receive response data from TPM via TIS FIFO
++ * @chip:	The TPM chip instance
++ * @buf:	The response buffer
++ * @count:	Length of the response buffer
++ *
++ * Return:
++ *  = 0 - Success, no response data
++ *  > 0 - Success, value is the response data length
++ *  < 0 - Error occurred
++ */
++static int __init tpm_tis_recv(struct tpm_chip *chip, u8 *buf, int count)
++{
++	int expected, status, size = 0, rc = -EIO;
++
++	if (count < TPM_HEADER_SIZE)
++		goto out;
++
++	/* Read first 10 bytes, including tag, paramsize, and result */
++	size = __tis_recv_data(chip, buf, TPM_HEADER_SIZE);
++	if (size < TPM_HEADER_SIZE)
++		goto out;
++
++	expected = be32_to_cpu(*((u32 *)(buf + 2)));
++	if (expected > count)
++		goto out;
++
++	size += __tis_recv_data(chip, &buf[TPM_HEADER_SIZE], expected - TPM_HEADER_SIZE);
++	if (size < expected) {
++		rc = -ETIME;
++		goto out;
++	}
++
++	__tis_wait_for_stat(chip, TPM_STS_VALID, chip->timeout_c);
++
++	status = __tis_status(chip);
++	if (status & TPM_STS_DATA_AVAIL) {
++		rc = -EIO;
++		goto out;
++	}
++
++	/* Done with receive, move to Command Ready state */
++	__tis_cancel(chip);
++
++	return size;
++out:
++	__tis_cancel(chip);
++	tpm_tis_release_locality(chip);
++	return rc;
++}
++
++/**
++ * tpm_tis_send - Send command to TPM via TIS FIFO
++ * @chip:	The TPM chip instance
++ * @buf:	The command buffer
++ * @len:	Length of the command buffer to send
++ *
++ * Return:
++ *  = len - Success, all data sent
++ *  < 0	  - Error occurred
++ */
++static int __init tpm_tis_send(struct tpm_chip *chip, u8 *buf, int len)
++{
++	int status, burstcnt = 0;
++	int count = 0;
++	int rc = 0;
++
++	status = __tis_status(chip);
++	if ((status & TPM_STS_COMMAND_READY) == 0) {
++		__tis_cancel(chip);
++		if (__tis_wait_for_stat(chip, TPM_STS_COMMAND_READY, chip->timeout_b) < 0) {
++			rc = -ETIME;
++			goto out_err;
++		}
++	}
++
++	while (count < len - 1) {
++		burstcnt = __tis_get_burstcount(chip);
++		for ( ; burstcnt > 0 && count < len - 1; --burstcnt)
++			tpm_write8(chip, TPM_DATA_FIFO(chip->locality), buf[count++]);
++
++		__tis_wait_for_stat(chip, TPM_STS_VALID, chip->timeout_c);
++		status = __tis_status(chip);
++		if ((status & TPM_STS_DATA_EXPECT) == 0) {
++			rc = -EIO;
++			goto out_err;
++		}
++	}
++
++	/* Write last byte */
++	tpm_write8(chip, TPM_DATA_FIFO(chip->locality), buf[count]);
++	__tis_wait_for_stat(chip, TPM_STS_VALID, chip->timeout_c);
++	status = __tis_status(chip);
++	if ((status & TPM_STS_DATA_EXPECT) != 0) {
++		rc = -EIO;
++		goto out_err;
++	}
++
++	/* Go and do it */
++	tpm_write8(chip, TPM_STS(chip->locality), TPM_STS_GO);
++
++	return len;
++
++out_err:
++	__tis_cancel(chip);
++	tpm_tis_release_locality(chip);
++	return rc;
++}
++
++/**
++ * tpm_tis_transmit - Transmit a TPM FIFO command
++ * @chip:	The TPM chip instance
++ * @buf:	The request and response buffer object
++ * @bufsize:	Entire size available in buffer
++ *
++ * Return:
++ *  = 0 - Success, no returned data
++ *  > 0 - Success, value is the return data length
++ *  < 0 - Error occurred
++ */
++static int __init tpm_tis_transmit(struct tpm_chip *chip, u8 *buf, u32 bufsize)
++{
++	ktime_t stop;
++	u32 count;
++	u8 status;
++	int rc;
++
++	count = be32_to_cpu(*((u32 *) (buf + 2)));
++	if (count == 0)
++		return -ENODATA;
++
++	if (count > bufsize)
++		return -E2BIG;
++
++	rc = tpm_tis_send(chip, buf, count);
++	if (rc < 0)
++		goto out;
++
++	stop = tpm_now_ms() + TIS_DURATION;
++	do {
++		status = __tis_status(chip);
++		if ((status & (TPM_STS_DATA_AVAIL | TPM_STS_VALID)) ==
++			      (TPM_STS_DATA_AVAIL | TPM_STS_VALID))
++			goto out_recv;
++
++		if (status == TPM_STS_COMMAND_READY) {
++			rc = -ECANCELED;
++			goto out;
++		}
++
++		tpm_mdelay(TPM_TIMEOUT);
++		rmb();
++	} while (tpm_now_ms() < stop);
++
++	/* Cancel the command */
++	__tis_cancel(chip);
++	rc = -ETIME;
++	goto out;
++
++out_recv:
++	rc = tpm_tis_recv(chip, buf, bufsize);
++	if (rc >= 0) {
++		if (rc > 0 && rc < TPM_HEADER_SIZE)
++			return -EFAULT;
++		return rc;
++	}
++	/* Else return was an error, nothing to receive */
++
++out:
++	return rc;
++}
++
++/**
++ * tpm_find_interface_and_family - interface FIFO/CRB, family 2.0 or 1.2
++ * @chip:	The TPM chip instance
++ *
++ * Return: TPM family ID enum
++ */
++static enum tpm_family __init tpm_find_interface_and_family(struct tpm_chip *chip)
++{
++	struct tpm_intf_capability intf_cap;
++	struct tpm_interface_id intf_id;
++
++	/* Sort out whether it is 1.x */
++	intf_cap.val = tpm_read32(chip, TPM_INTF_CAPS(0));
++	if ((intf_cap.interface_version == TPM_TIS_INTF_12) ||
++	    (intf_cap.interface_version == TPM_TIS_INTF_13))
++		return TPM_FAMILY_12; /* Always TIS */
++
++	/* Assume that it is 2.0 but check if the interface is CRB */
++	intf_id.val = tpm_read32(chip, TPM_INTF_ID(0));
++	if (intf_id.interface_type == TPM_CRB_INTF_ACTIVE)
++		return TPM_FAMILY_INVALID;
++
++	/* Else TPM 2.0 with TIS interface */
++	return TPM_FAMILY_20;
++}
++
++/**
++ * tpm1_pcr_extend - send a TPM1 extend command to the device
++ * @chip:	a TPM chip to use
++ * @pcr_idx:	the PCR index to extend for the current locality
++ * @hash:	the SHA1 hash digest to extend
++ *
++ * Return:
++ * * 0		- OK
++ * * -errno	- A system error
++ * * TPM_RC	- A TPM error
++ */
++int __init tpm1_pcr_extend(struct tpm_chip *chip, u32 pcr_idx, const u8 *hash)
++{
++	struct tpm_buf *buf = tpm_buf_alloc_page();
++	int rc = 0;
++
++	tpm_buf_init(buf, TPM_BUFSIZE);
++	tpm_buf_reset(buf, TPM_TAG_RQU_COMMAND, TPM_ORD_PCR_EXTEND);
++
++	tpm_buf_append_u32(buf, pcr_idx);
++	tpm_buf_append(buf, hash, TPM_DIGEST_SIZE);
++
++	rc = tpm_tis_transmit(chip, buf->data, PAGE_SIZE);
++
++	/* Ignoring output */
++	if (rc > 0)
++		rc = 0;
++
++	tpm_buf_free_page();
++
++	return rc;
++}
++
++/**
++ * tpm2_pcr_extend() - send a TPM2 extend command to the device
++ *
++ * @chip:		TPM chip to use.
++ * @pcr_idx:		index of the PCR.
++ * @digests:		list of PCR banks and corresponding digest values to extend.
++ * @digest_count:	count of digests to extend
++ *
++ * Return:
++ * * 0		- OK
++ * * -errno	- A system error
++ * * TPM_RC	- A TPM error
++ */
++int __init tpm2_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
++			   struct tpm_digest *digests, u32 digest_count)
++{
++	struct tpm_buf *buf = tpm_buf_alloc_page();
++	int rc = 0, i;
++
++	tpm_buf_init(buf, TPM_BUFSIZE);
++	tpm_buf_reset(buf, TPM2_ST_SESSIONS, TPM2_CC_PCR_EXTEND);
++
++	tpm_buf_append_u32(buf, pcr_idx);
++
++	/* Setup a NULL auth session for the command */
++	tpm_buf_append_u32(buf, 9);
++	/* auth handle */
++	tpm_buf_append_u32(buf, TPM2_RS_PW);
++	/* nonce */
++	tpm_buf_append_u16(buf, 0);
++	/* attributes */
++	tpm_buf_append_u8(buf, 0);
++	/* passphrase */
++	tpm_buf_append_u16(buf, 0);
++
++	tpm_buf_append_u32(buf, digest_count);
++
++	for (i = 0; i < digest_count; i++) {
++		tpm_buf_append_u16(buf, digests[i].alg_id);
++		tpm_buf_append(buf, (const unsigned char *)&digests[i].digest,
++			       tpm_get_alg_size(digests[i].alg_id));
++	}
++
++	rc = tpm_tis_transmit(chip, buf->data, PAGE_SIZE);
++
++	/* Ignoring output */
++	if (rc > 0)
++		rc = 0;
++
++	tpm_buf_free_page();
++
++	return rc;
++}
++
++int __init early_tpm_init(struct tpm_chip *chip, u64 baseaddr)
++{
++	u32 didvid;
++
++	memset(chip, 0, sizeof(*chip));
++	chip->baseaddr = baseaddr;
++
++	chip->family = tpm_find_interface_and_family(chip);
++	if (chip->family == TPM_FAMILY_INVALID)
++		return TPM_ERR_INVALID_FAMILY;
++
++	/* Set default timeouts */
++	chip->timeout_a = TIS_SHORT_TIMEOUT;
++	chip->timeout_b = TIS_LONG_TIMEOUT;
++	chip->timeout_c = TIS_SHORT_TIMEOUT;
++	chip->timeout_d = TIS_SHORT_TIMEOUT;
++
++	/* Get the vendor and device ids */
++	didvid = tpm_read32(chip, TPM_DID_VID(0));
++	chip->did = didvid >> 16;
++	chip->vid = didvid & 0xFFFF;
++
++	return TPM_SUCCESS;
++}
++
++int __init early_tpm_fini(struct tpm_chip *chip)
++{
++	tpm_tis_release_locality(chip);
++	memset(chip, 0, sizeof(*chip));
++
++	return TPM_SUCCESS;
++}
 -- 
 2.47.3
 
