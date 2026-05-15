@@ -4,116 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6D402CD4851
-	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 21:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 86FFBCD4851
+	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 22:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6v1a1pQ4RntgauZdGQ/AgmAZlKsDK24ag7JDuVxfuOw=; b=FLSAJRDscqgVOflswA+EoDxM+Z
-	D3HgWs09uMTi7XYCKL7dS6qOY0asLxWXkP6L77Gn9jqSAM5isMEHIdlNC9x353/PMRsWl3ehXhazC
-	/lSe+FMUH1cIPJE2QRyRSpu/ofnamSDnIY4fGJEym0QuvJZi+opgakie7nchhJbptXYYvW3hUH2ba
-	V4DIE38xJ2k9F+zxhbPSRIgRMSsQ7lSfQurU4BS8iUM8p+qlkbfm5UT/G8p/OCtq+mKXvx4Xyxkjf
-	QuzeRvkHou/XRzSD1wHLQohy1l4F4g5xguncXOLzTZDJ2lM+cFtMBYhXyJzG3ySPEV83+f8xK/aWA
-	XwBlphwA==;
+	bh=0GGVXnEvwyvUGTIvy68sh7LB/BlAa3dzEnbAfye67mM=; b=1+CK2buQBawmq99rm1CI+XlXGn
+	IiEbN5Dp3Py7FeHL8IyJnJTGEH+eWBN7OkWfmiR0OZAZm1tk5iKLAhNmW+6qlVd4cex0LQGPjkKFR
+	cy0n+DgFvuVD2io6Lloj5dwoTVw7odKYSl3nVwtp8hxqPnXyjEh6lGwbHNY2Y1alw+iNWtP6hx2Fx
+	izRYbTnELyUBPNSdAk5l2BmA94tYy9Ee9EVUqa/llQMilKLor4moNMH0ryVp8/fp56dWDYXqzodz+
+	+elnWufUrW5O8XTDtNNqOB4Ix9geQ4g5N3e/XajbrrEHaiLr4CB5AJScP62uf8FU7TBuc+CB1eqRQ
+	T8QAy0oA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNzzV-00000009Vem-0Fvz;
-	Fri, 15 May 2026 21:22:41 +0000
-Received: from mail-oi1-x230.google.com ([2607:f8b0:4864:20::230])
-	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNzzS-00000009Ve3-0Oyj
-	for kexec@lists.infradead.org;
-	Fri, 15 May 2026 21:22:39 +0000
-Received: by mail-oi1-x230.google.com with SMTP id 5614622812f47-47c918c62b4so293132b6e.0
-        for <kexec@lists.infradead.org>; Fri, 15 May 2026 14:22:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778880157; x=1779484957; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6v1a1pQ4RntgauZdGQ/AgmAZlKsDK24ag7JDuVxfuOw=;
-        b=oRN1vuspbrqCCGZgwo8N1qEpjFpbxHe06hDrPjf6xubzcgBxLVTqt8SRolrGF4vYvx
-         +hOZZkheFmUcGpKOX1busAvHRf12YX0UCDiNdvJHzlHUjNG+hOcVSXfOWrYIdXK8M3Iq
-         30lV5lnPmYJJnZ11p9U8ec+GSOpy+tOHYYOBFpP8fzur4jEV8hkiyObKs7TAm9QPqArO
-         5o/HcFbufvyJlBYw1vgPkyoVTuzXahinTB8nOqdO0dLssT9xbWoSE44VrE0721xgEek1
-         v1FeLOBXe7xQAqIx6eVcidU4ZOjR0DQT3IEH/mYjI62OPgvRnHhDS1htnfAqmWgE2EDk
-         fgqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778880157; x=1779484957;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=6v1a1pQ4RntgauZdGQ/AgmAZlKsDK24ag7JDuVxfuOw=;
-        b=rDqM0eA53CE+6CpGBVHiQzg2+enCQV4KOllxKPMwCNmv26ccCcyH0NkD43MAkOkAq7
-         FnyPp5V08DiLf/TpdsvBuU4yAY93VkripxqFTtjoTsCsDL+g3sFQ2Iepv4h8UzX7jJbg
-         t6LaKKfMPAtdGMA94P0DSYfQONruafxpxloVngAUHRiscEaRydGCN2QvA3SxGKHLlHiT
-         jUIl2ES4XvB5KqU9LHjZzDK+43aP8vU6gYNdJcZQ06ppRjbhr/4P0FKs+Uz4ta6OuOF2
-         Gd4uAEIV4CJzeZxY/Udmbdd5PuQP3OytiaT0iDic09wftvlWjg/j3XpGpX19qVdU+iRN
-         cLVA==
-X-Forwarded-Encrypted: i=1; AFNElJ9SofRn8xmqxvMwolp1mNF9ZddLpDiJvqgLamImaIUqAaNQCocsws6xsGsS3Im3Ac6flFT3Mw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzHPJRVrsOo70P62K8D5Hxog8Y0D0Mh7WnPHavQDs1+fucapgb8
-	F5vSGxnXfzyNAFFb43gXjmcN0y72nHkDn/7VxiFFiYcwc/SxuXwYkJ9xQXrVj57v
-X-Gm-Gg: Acq92OF4D2f7eHpwxsHGInd9syg5hCN4W9LIh+uOGxC99yR5iW696MXK0uJZFvA+fyC
-	4JVg0kGOCXImsOSS7CV7csCIpCUYQKL+cAbjTs/hQbFfISRQb8l/r3IloygvjRWipPCFFPDHLPK
-	josz/yRcx4ITZxTdHRz4zmOdYD9gjs3lWc4yxq2maMn+VbTdUoij5w5iI9D7k5ZiKlTt0bl40PF
-	Gqg4WLUdFMSq6bGyvnEtSORvHd7eBmF+rl20I88bdxXZdv3nMjiSBhflzxC2glzM7ZGxkAOOc/K
-	btHhODIvbn5RcMIu6TonOdi8mHTGdNVueTpzMG1mCiw9o2xgJs/F6XU+HMkUDPPnoqZbiahIPQq
-	FN2ywVgAz1JyAGgxYukiSFyCGpIKTtwVD6ujO2eLSwI/NER83RlIiN/uP3mCCnLqqQ40VdyxGtG
-	y1S8W9fDjDwBBMkAVpGwAxHue2TwcPxc+rt7Qt3qqydQ==
-X-Received: by 2002:a05:7300:818b:b0:2be:7885:31df with SMTP id 5a478bee46e88-30398618b3fmr3091136eec.17.1778879729276;
-        Fri, 15 May 2026 14:15:29 -0700 (PDT)
-Received: from mimas.lan ([2603:8000:df01:38f7:a6bb:6dff:fecf:e71a])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30293e2ea6dsm8268038eec.4.2026.05.15.14.15.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2026 14:15:29 -0700 (PDT)
-From: Ross Philipson <ross.philipson@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	linux-integrity@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-efi@vger.kernel.org,
-	iommu@lists.linux.dev
-Cc: ross.philipson@gmail.com,
-	dpsmith@apertussolutions.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	hpa@zytor.com,
-	dave.hansen@linux.intel.com,
-	ardb@kernel.org,
-	mjg59@srcf.ucam.org,
-	James.Bottomley@hansenpartnership.com,
-	peterhuewe@gmx.de,
-	jarkko@kernel.org,
-	jgg@ziepe.ca,
-	luto@amacapital.net,
-	nivedita@alum.mit.edu,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	corbet@lwn.net,
-	ebiederm@xmission.com,
-	dwmw2@infradead.org,
-	baolu.lu@linux.intel.com,
-	kanth.ghatraju@oracle.com,
-	daniel.kiper@oracle.com,
-	andrew.cooper3@citrix.com,
-	trenchboot-devel@googlegroups.com
-Subject: [PATCH v16 27/38] x86: Add early SHA-256 support for Secure Launch early measurements
-Date: Fri, 15 May 2026 14:13:59 -0700
-Message-ID: <20260515211410.31440-28-ross.philipson@gmail.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260515211410.31440-1-ross.philipson@gmail.com>
-References: <20260515211410.31440-1-ross.philipson@gmail.com>
+	id 1wO0bv-00000009afu-1wAH;
+	Fri, 15 May 2026 22:02:23 +0000
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wO0bp-00000009af0-2lX8;
+	Fri, 15 May 2026 22:02:17 +0000
+Message-ID: <130c4cfa-7388-462f-9b0f-7939680a90ed@infradead.org>
+Date: Fri, 15 May 2026 15:02:16 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260515_142238_142540_70B39BAA 
-X-CRM114-Status: GOOD (  11.54  )
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v16 15/38] Documentation/security: Secure Launch kernel
+ documentation
+To: Ross Philipson <ross.philipson@gmail.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+ linux-efi@vger.kernel.org, iommu@lists.linux.dev
+Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
+ mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
+ peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+ nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
+ corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
+ baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
+ daniel.kiper@oracle.com, andrew.cooper3@citrix.com,
+ trenchboot-devel@googlegroups.com
+References: <20260515211410.31440-1-ross.philipson@gmail.com>
+ <20260515211410.31440-16-ross.philipson@gmail.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20260515211410.31440-16-ross.philipson@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -128,46 +66,131 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
 
-The SHA-256 algorithm is necessary to measure configuration information
-into the TPM as early as possible before using the values. This
-implementation uses the established approach of #including the SHA-256
-library directly in the early boot code.
 
-Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
-Signed-off-by: Ross Philipson <ross.philipson@gmail.com>
----
- arch/x86/boot/startup/Makefile     | 1 +
- arch/x86/boot/startup/lib-sha256.c | 6 ++++++
- 2 files changed, 7 insertions(+)
- create mode 100644 arch/x86/boot/startup/lib-sha256.c
+On 5/15/26 2:13 PM, Ross Philipson wrote:
+> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+> 
+> Introduce documentation for the Linux Secure Launch feature.
+> 
+> Co-developed-by: Ross Philipson <ross.philipson@gmail.com>
+> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+> Signed-off-by: Ross Philipson <ross.philipson@gmail.com>
+> ---
+>  Documentation/arch/x86/boot.rst               |   8 +
+>  Documentation/security/index.rst              |   1 +
+>  .../security/launch-integrity/index.rst       |   9 +
+>  .../launch-integrity/secure_launch.rst        | 681 ++++++++++++++++++
+>  4 files changed, 699 insertions(+)
+>  create mode 100644 Documentation/security/launch-integrity/index.rst
+>  create mode 100644 Documentation/security/launch-integrity/secure_launch.rst
+> 
 
-diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makefile
-index e283ee4c1f45..071a90f23ae0 100644
---- a/arch/x86/boot/startup/Makefile
-+++ b/arch/x86/boot/startup/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_X86_64)		+= gdt_idt.o map_kernel.o
- obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= sme.o sev-startup.o
- 
- slaunch-objs			+= lib-sha1.o
-+slaunch-objs			+= lib-sha256.o
- obj-$(CONFIG_SECURE_LAUNCH)	+= $(slaunch-objs)
- 
- pi-objs				:= $(patsubst %.o,$(obj)/%.o,$(obj-y))
-diff --git a/arch/x86/boot/startup/lib-sha256.c b/arch/x86/boot/startup/lib-sha256.c
-new file mode 100644
-index 000000000000..f60df97f9244
---- /dev/null
-+++ b/arch/x86/boot/startup/lib-sha256.c
-@@ -0,0 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2026 Apertus Solutions, LLC
-+ */
-+
-+#include "../../../../lib/crypto/sha256.c"
+
+> diff --git a/Documentation/security/launch-integrity/secure_launch.rst b/Documentation/security/launch-integrity/secure_launch.rst
+> new file mode 100644
+> index 000000000000..b4c61fdceaf0
+> --- /dev/null
+> +++ b/Documentation/security/launch-integrity/secure_launch.rst
+> @@ -0,0 +1,681 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +.. Copyright (c) 2019-2026 Daniel P. Smith <dpsmith@apertussolutions.com>
+> +
+> +======================
+> +Secure Launch Overview
+> +======================
+> +
+> +:Author: Daniel P. Smith
+> +:Date: February 2026
+
+maybe update?
+
+> +
+> +Overview
+> +========
+
+[snip]
+
+> +Error Codes
+> +===========
+> +
+> +The TXT specification defines the layout for TXT 32 bit error code values.
+
+                                                    32-bit
+
+> +The bit encodings indicate where the error originated (e.g. with the CPU,
+> +in the SINIT ACM, in software). The error is written to a sticky TXT
+> +register that persists across resets called TXT.ERRORCODE (see the TXT
+> +MLE Development Guide). The errors defined by the Secure Launch feature are
+> +those generated in the MLE software. They have the format::
+> +
+> +  0xc0008XXX
+> +
+> +The low 12 bits are free for defining the following Secure Launch specific
+> +error codes.
+
+[snip]
+
+> +Resources
+> +=========
+> +
+> +The TrenchBoot project:
+> +
+> +https://trenchboot.org
+> +
+> +Secure Launch Specification:
+> +
+> +https://trenchboot.org/specifications/Secure_Launch/
+> +
+> +Trusted Computing Group's D-RTM Architecture:
+> +
+> +https://trustedcomputinggroup.org/wp-content/uploads/TCG_D-RTM_Architecture_v1-0_Published_06172013.pdf
+> +
+> +TXT documentation in the Intel TXT MLE Development Guide:
+> +
+> +https://www.intel.com/content/dam/www/public/us/en/documents/guides/intel-txt-software-development-guide.pdf
+> +
+> +TXT instructions documentation in the Intel SDM Instruction Set volume:
+> +
+> +https://software.intel.com/en-us/articles/intel-sdm
+> +
+> +AMD SKINIT documentation in the System Programming manual:
+> +
+> +https://www.amd.com/system/files/TechDocs/24593.pdf
+> +
+> +GRUB Secure Launch support:
+> +
+> +https://github.com/TrenchBoot/grub/tree/grub-sl-fc-38-dlstub
+> +
+> +FOSDEM 2021: Secure Upgrades with DRTM
+> +
+> +https://archive.fosdem.org/2021/schedule/event/firmware_suwd/
+> +
+> +.. [1]
+> +    MLE: Measured Launch Environment is the binary runtime that is measured and
+> +    then run by the TXT SINIT ACM. The TXT MLE Development Guide describes the
+> +    requirements for the MLE in detail.
+> +
+> +.. [2]
+> +    PMR: Intel VTd has a feature in the IOMMU called Protected Memory Registers.
+> +    There are two of these registers and they allow all DMA to be blocked
+> +    to large areas of memory. The low PMR can cover all memory below 4Gb on 2Mb
+> +    boundaries. The high PMR can cover all RAM on the system, again on 2Mb
+> +    boundaries. This feature is used during a Secure Launch by TXT.
+> +
+> +.. [3]
+> +    Secure Launch Specification: https://trenchboot.org/specifications/Secure_Launch/
+> +
+> +.. [4]
+> +    ACM: Intel's Authenticated Code Module. This is the 32b bit binary blob that
+
+Does "32b" mean something or should that be 32-bit?
+
+> +    is run securely by the GETSEC[SENTER] during a measured launch. It is described
+> +    in the Intel documentation on TXT and versions for various chipsets are
+> +    signed and distributed by Intel.
+
 -- 
-2.47.3
+~Randy
 
 
