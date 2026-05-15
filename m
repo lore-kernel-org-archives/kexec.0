@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 50A59CD4851
-	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 21:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4F77CCD4851
+	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 21:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=vsy43cKdjjquhJVv3pJ2fPEZtWZ9VhRxjDQaQqinW+s=; b=FzjbYN2yqbqvt6sBE3SxZraIf9
-	wQIStaC538ty35qFCbr70E3rBWO6SNUFvf9slK5qgkgp+AsZIdI1wKxegso7xlROO7lthQe0Y86+m
-	Kxa3DoGwd2uf5AQFYcMYjq5p1XTunX5pUQS6FSXCFkRcGtkRK6/4fH8kFs1xd5GQtgOLk1UcW1Lom
-	Z6VhXXLm15m7SjdHLN9m6Jy1oa87kxt9t9s85NzvFqiL5iOsjLYAlulPhE1gMsa+3YE9c5zDMnRL4
-	kq6Ob4yDTGpCQhMVfcrq6TzYCKtGImH1IVDqUI3QgHmHC+TAxvB3ykxfNdYLJcYJk/QHYw5kCnUtD
-	oXL0vD6g==;
+	bh=q5U2oXqABMo/EXd3140iU8ar3y05m7m/a9rRtZzhgJM=; b=NOvue6OJaszENPoqheksWLiiHU
+	PmrvniigJzSmPrmwO6IqShewDIDJcJ5rcEhWYzxcjiYlC8olAks94+EgkUTKu/vE/bNmL1nyfSSQB
+	7hWIMMOvqi6s4+VkNUskW8sZhk8bM7ZHs5MFd3M2pS57C8og79/B6XjixrgkmhCoInXyHM5o3RgEC
+	5gWBC2XD7nGzKu063Ef0spYpBFkxg7hgemeaeKltPmHkJY2/aJP8KVaJ51JqSJRmmn1IvEHvNfabH
+	EzUcK2zIja6l1omx43xIA/eL/hln8smfdgPKNDvyeE3+khkUDKmOfteOgsneH3SKrvarURGM4eB8V
+	EhyLGYNQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNzrd-00000009TAl-22Qm;
-	Fri, 15 May 2026 21:14:33 +0000
-Received: from mail-dy1-x132b.google.com ([2607:f8b0:4864:20::132b])
+	id 1wNzrg-00000009TCv-2JTw;
+	Fri, 15 May 2026 21:14:36 +0000
+Received: from mail-dy1-x132f.google.com ([2607:f8b0:4864:20::132f])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNzra-00000009T8P-2nl2
+	id 1wNzrd-00000009TAh-2Im9
 	for kexec@lists.infradead.org;
-	Fri, 15 May 2026 21:14:31 +0000
-Received: by mail-dy1-x132b.google.com with SMTP id 5a478bee46e88-2ef2a1cc06dso1354201eec.0
-        for <kexec@lists.infradead.org>; Fri, 15 May 2026 14:14:30 -0700 (PDT)
+	Fri, 15 May 2026 21:14:34 +0000
+Received: by mail-dy1-x132f.google.com with SMTP id 5a478bee46e88-2f68f3b075fso1100943eec.0
+        for <kexec@lists.infradead.org>; Fri, 15 May 2026 14:14:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778879670; x=1779484470; darn=lists.infradead.org;
+        d=gmail.com; s=20251104; t=1778879673; x=1779484473; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vsy43cKdjjquhJVv3pJ2fPEZtWZ9VhRxjDQaQqinW+s=;
-        b=LatJamDMoaGW8XToLLzEZzbKT6VG3PT9GXnS1K+tT4OhjFoRYny5CRqrJ5Djb1roNj
-         GB7TrnfcYCPhACuTjBTlzwMuYLmH2mFI2J9SdpFJESERrduMKLVOnvYlUwhT/YSF4pa2
-         UTl2Cj0uId2g7cT2pZ/3C/3FZytvTrlAkmRqAsDg89lge88MBn1uo5brRWLFm2Kwx6gr
-         kc+9r1GqjPWxqyASgEYQbEYb1Zx6H8nlLr3R0f52HSibccInC4reiAMf+VyW1+u1TPvS
-         mE4JB2ndHMCVNjoVUiby2/Wt1lIxZRAb8Dnc4SrLeEZ1nDrua/sszy7pzZWhqm/UkQIv
-         dYdg==
+        bh=q5U2oXqABMo/EXd3140iU8ar3y05m7m/a9rRtZzhgJM=;
+        b=csxWevuWlY/+JWDNGaR9LRdbOwXDQFECAVhZXUzkM9EktKkJPbrV+3SrJyB4MfOtMu
+         Ua5NGae6O7rSAKvF6U5N6vQTRI4TofGHs4wXqU6pPND8JooS2Ifie1OzAq9i9r68X+Cq
+         j3PbotCDOdqup/bDtaMHGQt7qlODU8MlDfCaP1gS9SJhGXawlc2dYZU4f3ZfYgChaEKb
+         vxcmbON2Ju1MpE/jZRlLWoiWzQPJpbAI3Da8iHSMn9AfzBLiozo4JAa61SE1eW8/NDI2
+         nK72XwpOwXp23CuUFmAisnyH+hnH4g7Qb73n6Xo5mxmbYrzFety3O1mUK4XT+3DP9PeG
+         /QMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778879670; x=1779484470;
+        d=1e100.net; s=20251104; t=1778879673; x=1779484473;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=vsy43cKdjjquhJVv3pJ2fPEZtWZ9VhRxjDQaQqinW+s=;
-        b=LiGIIcP5pXpGfeM64V2NY+JrikWtG51l+YqJ4C2TWjriwiqwR+lI/dAqIHpYwTeK9w
-         bvRdKK4oGkRsAGGX6DmhJS/Pwu61K64B/9pJYHPJve3dD0he/29QqHGsrb/FlMU5iAtW
-         abasiGClwrqjENIk4KTYvFe38A6l7PglAOu7hnT+SGOSVIRSGMzVfgDwU8ib6IWaqs9a
-         WBg2w0m48ba4T3roAW/dNBFRD5IcxomKpPdzD7tChbkIN010UnVF5lRRHvGdFumsVu1O
-         SQcFOAOlZz1VZUY/GklJC6T81qTCI8DfFoYV1Wknz/Gou4PtDq96S+GLyCntqjoOGP0G
-         uGRw==
-X-Forwarded-Encrypted: i=1; AFNElJ+sRqhQfScxao0HHTT4qog7Fik8vl6KjO3JiARFKNpY6Wbv6nNkwDPhXFdJE2vigHWG3aqh4Q==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzFhLVu0biZfcIwxgJrkDLFasn8Fg1h8mei0zle7JbgvgLAWIPb
-	/oX05YfJVlNxjgGebujVwD9I/U0Z28XxS9rb/6H+p/1sX0E8xKZYWQyB
-X-Gm-Gg: Acq92OH3eXEBBiP0bSioYT+4Yhcq4bx3n26VqaAYRsp/x/coaFk2BGHpRu4NyGrA4lK
-	Xp+pjuTXHkkuDJ0GTf/8+zYvsxVgsnGGS56bNn9JDlSRnk424VqVERJHMTwA4WL4lBMP+NXNiFy
-	m4wYsWj4i6xYbW+KCGguacledFBCvNB0/7FpocREXdrhMjaTBamAX0p15NRRiEc/yvLuNbjfECo
-	7AlGmLEN9XUqkXnXbci7angMu4Nr4iqHhFv66jwPVkejPFH/CvUXTsx/6ENq6FqZ70kILB5TVMe
-	cnDdRhU2m/ocG3pYsaKKFVU58n6IezJu98RSR1v5NCA2m5Fyz8Ok25bUuSNQUS2xONGP9nm2Gk+
-	gIqeHxUlC7b65+kwPOngTBOQfivBpRH36yZrW5wJxg71h1Jf333uKhV9klVMztG6fMaxv58ECgu
-	msamkFSDt8uoQICieh8NmgBZdFUZca5hs=
-X-Received: by 2002:a05:7300:e6c4:b0:2ff:c84d:44d2 with SMTP id 5a478bee46e88-3039815cae2mr2917959eec.12.1778879669685;
-        Fri, 15 May 2026 14:14:29 -0700 (PDT)
+        bh=q5U2oXqABMo/EXd3140iU8ar3y05m7m/a9rRtZzhgJM=;
+        b=mrYEr4e0VzAfV0/ZZxBXtlJikMbG8gFSSvZGfF2OchHq7GCmrw3Zf+fCCKOUmZYXeB
+         3/6JghIr35/IP8kcmuMTWbxLOiBTo0Ehe2vtg7PyGfv+HTa6nbKfVzioaLKcZTpX2sAs
+         PauQu4B0Sxg5847zLwVIG4iCbo7rIlA5unonSSzaaF9l5HixQpSdUWrEEomBKGCHkTis
+         m33PUWAgRM4MR2IxAPBprSHYMaCQ4NTteZFKbd2yLOyft3I57HZEpFnDPy98CZlDO62q
+         xDu1Mn2gjML6nv1CXIGtRfOLE99zpPuDNADpJiCG/gpledPAxiC0SKpCiZ1+Lrf7litw
+         yqpA==
+X-Forwarded-Encrypted: i=1; AFNElJ8VDAUAGz+P/VelaUdBtmj3LVlz1hUKLCdb6nPvvEHFyn1wp2yeIDB2XRSgEBtAl09sHPHQuw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzV02Ka4F+9cDY9qz5N9UyCNaMcR3YvcAc3Vvj4RdQ5HAFPUr6Q
+	GTVrW6kIXmOFMS07CcBV77dYxFZZ4M9FmiOn81uxk4EvVhws4JQfG1wL
+X-Gm-Gg: Acq92OFVcoYzoqJK7BTujd5j3U6Fve6hdiiLwbWxFIW3E2wycrSpfzTV4SQsH+Z/4m4
+	OeWjveQ2M+pavGjNZvaX3CPiJVApyLMcxvBkCJWzQ8IbbtGW1pxaJx5I+M2JiLfbCWuyZAJjk47
+	bYZ+OKKpH17BktQ2aS93xRUw0Uah9MUd4hd8YKZ6tglqsnW31iZ9XjPG1cAfBKraAoe6O7BGbmD
+	HRUREJf6tfu6eXJ1fQFpWoC6NOoRobjO5MryGyEnQqYUdBxZoCSDTnLvju9F+QbCtHHNLIIV3AN
+	8eLnWFTvNUmgXiqc4fpABx5dh6Y5C44LMZb6jkHvXgV9SsugkHvfZeBnn8U6Y46aKdEIjrYUvx3
+	MqXtrXdzSaVr+HWxv+YaE3Jsf3JvwJaZEk/70gLIX7COZ3ZS52Q6I3+YPTXo257SgTgDeYcOpI3
+	+odlKlLS9NLkaBtquzlSSQUwMp2jeGqDk=
+X-Received: by 2002:a05:7300:b913:b0:2f4:3a9c:8193 with SMTP id 5a478bee46e88-3039862655amr2733579eec.16.1778879672589;
+        Fri, 15 May 2026 14:14:32 -0700 (PDT)
 Received: from mimas.lan ([2603:8000:df01:38f7:a6bb:6dff:fecf:e71a])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-302978b3cb2sm10323215eec.30.2026.05.15.14.14.28
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-302973bc8ddsm7829907eec.21.2026.05.15.14.14.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2026 14:14:29 -0700 (PDT)
+        Fri, 15 May 2026 14:14:32 -0700 (PDT)
 From: Ross Philipson <ross.philipson@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	x86@kernel.org,
@@ -103,18 +103,17 @@ Cc: ross.philipson@gmail.com,
 	daniel.kiper@oracle.com,
 	andrew.cooper3@citrix.com,
 	trenchboot-devel@googlegroups.com
-Subject: [PATCH v16 06/38] tpm: Remove main TPM header from TPM event log header
-Date: Fri, 15 May 2026 14:13:38 -0700
-Message-ID: <20260515211410.31440-7-ross.philipson@gmail.com>
+Subject: [PATCH v16 07/38] tpm-buf: Merge TPM_BUF_BOUNDARY_ERROR and TPM_BUF_OVERFLOW
+Date: Fri, 15 May 2026 14:13:39 -0700
+Message-ID: <20260515211410.31440-8-ross.philipson@gmail.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260515211410.31440-1-ross.philipson@gmail.com>
 References: <20260515211410.31440-1-ross.philipson@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260515_141430_752888_C8DEEE9D 
-X-CRM114-Status: UNSURE (   9.42  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260515_141433_600401_9B00BBA5 
+X-CRM114-Status: GOOD (  13.05  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -129,32 +128,113 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Alec Brown <alec.r.brown@oracle.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
 
-Allow the TPM event log functionality to be used without including
-the main TPM driver definitions.
+Merge TPM_BUF_BOUNDARY_ERROR and TPM_BUF_OVERFLOW into TPM_BUF_INVALID,
+given that they are identical (the only difference being the associated
+log messages).
 
-Signed-off-by: Alec Brown <alec.r.brown@oracle.com>
+In addition, add a missing TPM_BUF_INVALID check to tpm_buf_append_handle()
+following the pattern from other functions in tpm-buf.c.
+
+Message-ID: <20260125192526.782202-11-jarkko@kernel.org>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+Reviewed-by: Jonathan McDowell <noodles@meta.com>
 Signed-off-by: Ross Philipson <ross.philipson@gmail.com>
 ---
- include/linux/tpm_eventlog.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/char/tpm/tpm-buf.c                | 10 ++++------
+ include/linux/tpm.h                       |  8 +++-----
+ security/keys/trusted-keys/trusted_tpm2.c |  6 +++---
+ 3 files changed, 10 insertions(+), 14 deletions(-)
 
-diff --git a/include/linux/tpm_eventlog.h b/include/linux/tpm_eventlog.h
-index 891368e82558..367b70ecc4b1 100644
---- a/include/linux/tpm_eventlog.h
-+++ b/include/linux/tpm_eventlog.h
-@@ -3,7 +3,9 @@
- #ifndef __LINUX_TPM_EVENTLOG_H__
- #define __LINUX_TPM_EVENTLOG_H__
+diff --git a/drivers/char/tpm/tpm-buf.c b/drivers/char/tpm/tpm-buf.c
+index 4c4f450630df..61833b4d81f0 100644
+--- a/drivers/char/tpm/tpm-buf.c
++++ b/drivers/char/tpm/tpm-buf.c
+@@ -103,13 +103,12 @@ EXPORT_SYMBOL_GPL(tpm_buf_length);
+  */
+ void tpm_buf_append(struct tpm_buf *buf, const u8 *new_data, u16 new_length)
+ {
+-	/* Return silently if overflow has already happened. */
+-	if (buf->flags & TPM_BUF_OVERFLOW)
++	if (buf->flags & TPM_BUF_INVALID)
+ 		return;
  
--#include <linux/tpm.h>
-+#include <crypto/sha1.h>
-+#include <crypto/sha2.h>
-+#include <linux/tpm_command.h>
+ 	if ((buf->length + new_length) > PAGE_SIZE) {
+ 		WARN(1, "tpm_buf: write overflow\n");
+-		buf->flags |= TPM_BUF_OVERFLOW;
++		buf->flags |= TPM_BUF_INVALID;
+ 		return;
+ 	}
  
- #define TCG_EVENT_NAME_LEN_MAX	255
- #define MAX_TEXT_EVENT		1000	/* Max event string length */
+@@ -176,14 +175,13 @@ static void tpm_buf_read(struct tpm_buf *buf, off_t *offset, size_t count, void
+ {
+ 	off_t next_offset;
+ 
+-	/* Return silently if overflow has already happened. */
+-	if (buf->flags & TPM_BUF_BOUNDARY_ERROR)
++	if (buf->flags & TPM_BUF_INVALID)
+ 		return;
+ 
+ 	next_offset = *offset + count;
+ 	if (next_offset > buf->length) {
+ 		WARN(1, "tpm_buf: read out of boundary\n");
+-		buf->flags |= TPM_BUF_BOUNDARY_ERROR;
++		buf->flags |= TPM_BUF_INVALID;
+ 		return;
+ 	}
+ 
+diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+index 3630b2ea6aef..3c6a5bcc138a 100644
+--- a/include/linux/tpm.h
++++ b/include/linux/tpm.h
+@@ -201,12 +201,10 @@ enum tpm_chip_flags {
+ #define to_tpm_chip(d) container_of(d, struct tpm_chip, dev)
+ 
+ enum tpm_buf_flags {
+-	/* the capacity exceeded: */
+-	TPM_BUF_OVERFLOW	= BIT(0),
+ 	/* TPM2B format: */
+-	TPM_BUF_TPM2B		= BIT(1),
+-	/* read out of boundary: */
+-	TPM_BUF_BOUNDARY_ERROR	= BIT(2),
++	TPM_BUF_TPM2B		= BIT(0),
++	/* The buffer is in invalid and unusable state: */
++	TPM_BUF_INVALID		= BIT(1),
+ };
+ 
+ /*
+diff --git a/security/keys/trusted-keys/trusted_tpm2.c b/security/keys/trusted-keys/trusted_tpm2.c
+index 29d79c05ed6b..779a2e66ac20 100644
+--- a/security/keys/trusted-keys/trusted_tpm2.c
++++ b/security/keys/trusted-keys/trusted_tpm2.c
+@@ -312,7 +312,7 @@ int tpm2_seal_trusted(struct tpm_chip *chip,
+ 	/* creation PCR */
+ 	tpm_buf_append_u32(&buf, 0);
+ 
+-	if (buf.flags & TPM_BUF_OVERFLOW) {
++	if (buf.flags & TPM_BUF_INVALID) {
+ 		rc = -E2BIG;
+ 		tpm2_end_auth_session(chip);
+ 		goto out;
+@@ -328,7 +328,7 @@ int tpm2_seal_trusted(struct tpm_chip *chip,
+ 		goto out;
+ 
+ 	blob_len = tpm_buf_read_u32(&buf, &offset);
+-	if (blob_len > MAX_BLOB_SIZE || buf.flags & TPM_BUF_BOUNDARY_ERROR) {
++	if (blob_len > MAX_BLOB_SIZE || buf.flags & TPM_BUF_INVALID) {
+ 		rc = -E2BIG;
+ 		goto out;
+ 	}
+@@ -441,7 +441,7 @@ static int tpm2_load_cmd(struct tpm_chip *chip,
+ 
+ 	tpm_buf_append(&buf, blob, blob_len);
+ 
+-	if (buf.flags & TPM_BUF_OVERFLOW) {
++	if (buf.flags & TPM_BUF_INVALID) {
+ 		rc = -E2BIG;
+ 		tpm2_end_auth_session(chip);
+ 		goto out;
 -- 
 2.47.3
 
