@@ -4,73 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 74315CD4851
-	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 23:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E513FCD343F
+	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 23:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=gKxOeVmHdv7m2nvLzi4OVn2uH6igdr9y7RAhqeRv70U=; b=BCEp7fM2FbWFcCp//zccYnd8od
-	dwwudvYQOrPr+zm+5eg+4/0qcw+HoYHQWuzqnokveWfRtAW42b58PYvnUiRFzL9RmtFdL40B4ERvS
-	znvXpfjuZMG1MXkNhWY0Myc1ghjTOjQWGFvDtGlYqBSuia+S85a3LJltWJ3yvI7QdihTd3WwMiC2R
-	wsLpilnywGJLloBBcOPA1QioOW7Txje/Ns30Agkadbhix6BopnQlDqynd0MSbqVAcIGI3gyKF1CQM
-	eMp/7btQsQPpTZIpPVz2ezJT9dp/nhpLrHbU5f53ELrI3AZn5K7otFHIsQyK3n1kmRu5Wq8lpb1zx
-	xJOEyJvQ==;
+	bh=NziRoAw9HSfsIxI7N4WC0v3NR/TwGKQztxd+B+F2bZg=; b=zIjVRGnr9uu50OwOicnGlq8xAw
+	OazC7sVupfzwg0j5B0dg7jSofWZjqyCVwkPHutE+2lgaO/dhDTc/BNB4CPpffPLjgwOEZDLjOQx3i
+	md3MEAtja9+f5C9tUcgNxuXvrqzOA01c+HyWgNNZhRwZztz+K33E8K8+Fb7uxzZWA9iOliNgXVN0f
+	bde2BZH6nsG1dEhS/lwlV/7Q3C3TgfERJLk8TRkQeygEh0GC02UzGFMYrnkF1hDFx02BvMVwy6K2Y
+	s4+H0BsoyclpZKExDyKRUPeHPFnQxPYmuM7HOXDg4Je2F5aclNhz0AyONWBnWHUR9y4iEt6Jno3E9
+	79trydVA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wO1rg-00000009iPh-2fJI;
-	Fri, 15 May 2026 23:22:44 +0000
+	id 1wO2JV-00000009kjJ-0q3s;
+	Fri, 15 May 2026 23:51:29 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wO1re-00000009iPF-2Dq4
+	id 1wO2JS-00000009kiq-2BK1
 	for kexec@lists.infradead.org;
-	Fri, 15 May 2026 23:22:43 +0000
+	Fri, 15 May 2026 23:51:27 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 4708142DA1;
-	Fri, 15 May 2026 23:22:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9971DC2BCB0;
-	Fri, 15 May 2026 23:22:39 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 8C529406CA;
+	Fri, 15 May 2026 23:51:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDE60C2BCB0;
+	Fri, 15 May 2026 23:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778887360;
-	bh=JjdiscWBA7In+U808NTJOLwYQaUm2OEpp51K4Ey+p44=;
+	s=k20201202; t=1778889085;
+	bh=+YzNzv7+8ANMNSfpUKGBa4/M7FpU0LJIdO4rB6Fn/kE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q2iOld4olFaHTJRGBeyZvyj92sWp+Y17gtpKe3TEepX4oKM34zMmuakyRbrgKE3ge
-	 pvWEthzo2xMZjEAYU3OHlHlQIJ/haRJ3AYfgZ87H3I2M+tNVFEojjVNONutewDW2xb
-	 DQ9+QwDjwwKw5mxnmM1lEGHXIKUsAHJHhrw0+iY05zX15wyKHzxVoiC4prXFclJpQJ
-	 q37++DG72iRmFdsDAuUPvqx3YaxoJvbDbDJTAXjUOyc2YE3qRGtZcBd+jGTnlzwbDc
-	 br5x1RiU59q40dnIMPyNHUKsGsuzCmE7LLTVeNj1y6MFdpNT1QeUvOFBzx6AM3pm50
-	 pnbBHdbCNB5Ww==
-Date: Sat, 16 May 2026 02:22:36 +0300
+	b=JsLvklbzrw4NVy9ivGINX2a36fbGi+ygffgepGdJ5hG6qyRf8Q3nqxgS3QcinfRrB
+	 e5KpYLoJhrppPPjF2+sNnfN+Mq6Lk8g7B2uZMU5EfcRk35pIXiqn92mahYDw0h5UhY
+	 7+Bvclxqd2QZrPlQx1tWgTdXJN/w31+PcP+8FPYlw+ovzGBICFhpBwJIfSwEz3Ru9n
+	 8+wldIff/nA144OZx1CwHzDaXKjo5SDfzdWUlTbIK5qfrrHqz2WNoJ309w6VbcEwW8
+	 VgRZDrMFI0wtKR/5dZf4227iefM6Xwz7ZZgw3Hy7aj15i34hehJuUfWtvCI/DZL22X
+	 OhKMaqeIAFe7A==
+Date: Sat, 16 May 2026 02:51:22 +0300
 From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Ross Philipson <ross.philipson@gmail.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
-	linux-efi@vger.kernel.org, iommu@lists.linux.dev,
-	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-	ardb@kernel.org, mjg59@srcf.ucam.org,
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Ross Philipson <ross.philipson@gmail.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, linux-integrity@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-crypto@vger.kernel.org,
+	kexec@lists.infradead.org, linux-efi@vger.kernel.org,
+	iommu@lists.linux.dev, dpsmith@apertussolutions.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+	dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
 	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-	jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu,
+	luto@amacapital.net, nivedita@alum.mit.edu,
 	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
 	ebiederm@xmission.com, dwmw2@infradead.org,
 	baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
 	daniel.kiper@oracle.com, andrew.cooper3@citrix.com,
 	trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v16 04/38] tpm: Move TPM common base definitions to the
- command header
-Message-ID: <ageqvDfgVk1nh2-w@kernel.org>
+Subject: Re: [PATCH v16 01/38] tpm: Initial step to reorganize TPM public
+ headers
+Message-ID: <agexemLOag0eAiJB@kernel.org>
 References: <20260515211410.31440-1-ross.philipson@gmail.com>
- <20260515211410.31440-5-ross.philipson@gmail.com>
+ <20260515211410.31440-2-ross.philipson@gmail.com>
+ <agemXwxVb9jvAbYM@kernel.org>
+ <20260515230553.GO7702@ziepe.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260515211410.31440-5-ross.philipson@gmail.com>
+In-Reply-To: <20260515230553.GO7702@ziepe.ca>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260515_162242_610111_8CB40167 
-X-CRM114-Status: GOOD (  24.30  )
+X-CRM114-CacheID: sfid-20260515_165126_587085_76AC1F5F 
+X-CRM114-Status: GOOD (  12.92  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,212 +87,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, May 15, 2026 at 02:13:36PM -0700, Ross Philipson wrote:
-> These are top level definitions shared by both TPM 1 and 2
-> family chips. This includes core definitions like TPM localities,
-> common crypto algorithm IDs, and the base TPM command header.
+On Fri, May 15, 2026 at 08:05:53PM -0300, Jason Gunthorpe wrote:
+> On Sat, May 16, 2026 at 02:03:59AM +0300, Jarkko Sakkinen wrote:
 > 
-> Co-developed-by: Daniel P. Smith <dpsmith@apertussolutions.com>
-> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
-> Co-developed-by: Alec Brown <alec.r.brown@oracle.com>
-> Signed-off-by: Alec Brown <alec.r.brown@oracle.com>
-> Signed-off-by: Ross Philipson <ross.philipson@gmail.com>
-> ---
->  include/linux/tpm.h         | 50 +--------------------
->  include/linux/tpm_command.h | 89 +++++++++++++++++++++++++++++++++++++
->  2 files changed, 90 insertions(+), 49 deletions(-)
+> > LGTM
+> > 
+> > I'll hold on from actual tags up until there is some consensus with the
+> > patch set.
 > 
-> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> index 8551b24c2bff..3630b2ea6aef 100644
-> --- a/include/linux/tpm.h
-> +++ b/include/linux/tpm.h
-> @@ -27,49 +27,12 @@
->  
->  #include <linux/tpm_command.h>
->  
-> -#define TPM_DIGEST_SIZE 20	/* Max TPM v1.2 PCR size */
-> -
-> -#define TPM2_MAX_DIGEST_SIZE	SHA512_DIGEST_SIZE
-> -#define TPM2_MAX_PCR_BANKS	8
-> -
->  struct tpm_chip;
->  struct trusted_key_payload;
->  struct trusted_key_options;
->  /* opaque structure, holds auth session parameters like the session key */
->  struct tpm2_auth;
->  
-> -/* if you add a new hash to this, increment TPM_MAX_HASHES below */
-> -enum tpm_algorithms {
-> -	TPM_ALG_ERROR		= 0x0000,
-> -	TPM_ALG_SHA1		= 0x0004,
-> -	TPM_ALG_AES		= 0x0006,
-> -	TPM_ALG_KEYEDHASH	= 0x0008,
-> -	TPM_ALG_SHA256		= 0x000B,
-> -	TPM_ALG_SHA384		= 0x000C,
-> -	TPM_ALG_SHA512		= 0x000D,
-> -	TPM_ALG_NULL		= 0x0010,
-> -	TPM_ALG_SM3_256		= 0x0012,
-> -	TPM_ALG_ECC		= 0x0023,
-> -	TPM_ALG_CFB		= 0x0043,
-> -};
-> -
-> -/*
-> - * maximum number of hashing algorithms a TPM can have.  This is
-> - * basically a count of every hash in tpm_algorithms above
-> - */
-> -#define TPM_MAX_HASHES	5
-> -
-> -struct tpm_digest {
-> -	u16 alg_id;
-> -	u8 digest[TPM2_MAX_DIGEST_SIZE];
-> -} __packed;
-> -
-> -struct tpm_bank_info {
-> -	u16 alg_id;
-> -	u16 digest_size;
-> -	u16 crypto_id;
-> -};
-> -
->  enum TPM_OPS_FLAGS {
->  	TPM_OPS_AUTO_STARTUP = BIT(0),
->  };
-> @@ -127,7 +90,7 @@ struct tpm_chip_seqops {
->  	const struct seq_operations *seqops;
->  };
->  
-> -/* fixed define for the curve we use which is NIST_P256 */
-> +/* Fixed define for the curve we use which is NIST_P256 */
->  #define EC_PT_SZ	32
->  
->  /*
-> @@ -209,8 +172,6 @@ struct tpm_chip {
->  #endif
->  };
->  
-> -#define TPM_HEADER_SIZE		10
-> -
->  static inline enum tpm2_mso_type tpm2_handle_mso(u32 handle)
->  {
->  	return handle >> 24;
-> @@ -239,15 +200,6 @@ enum tpm_chip_flags {
->  
->  #define to_tpm_chip(d) container_of(d, struct tpm_chip, dev)
->  
-> -struct tpm_header {
-> -	__be16 tag;
-> -	__be32 length;
-> -	union {
-> -		__be32 ordinal;
-> -		__be32 return_code;
-> -	};
-> -} __packed;
-> -
->  enum tpm_buf_flags {
->  	/* the capacity exceeded: */
->  	TPM_BUF_OVERFLOW	= BIT(0),
-> diff --git a/include/linux/tpm_command.h b/include/linux/tpm_command.h
-> index 9dd903dd6b5c..96edebd9610f 100644
-> --- a/include/linux/tpm_command.h
-> +++ b/include/linux/tpm_command.h
-> @@ -427,4 +427,93 @@ struct tpm2_context {
->  	__be16 blob_size;
->  } __packed;
->  
-> +/*
-> + * == TPM Common Defs ==
-> + */
-> +
-> +#define TPM_DIGEST_SIZE		20	/* Max TPM v1.2 PCR size */
-> +#define TPM_BUFSIZE		4096
-> +
-> +/*
-> + * SHA-512 is, as of today, the largest digest in the TCG algorithm repository.
-> + */
-> +#define TPM2_MAX_DIGEST_SIZE	SHA512_DIGEST_SIZE
-> +
-> +/*
-> + * A TPM name digest i.e., TPMT_HA, is a concatenation of TPM_ALG_ID of the
-> + * name algorithm and hash of TPMT_PUBLIC.
-> + */
-> +#define TPM2_MAX_NAME_SIZE	(TPM2_MAX_DIGEST_SIZE + 2)
-> +
-> +/*
-> + * Fixed define for the size of a name.  This is actually HASHALG size
-> + * plus 2, so 32 for SHA256
-> + */
-> +#define TPM2_NULL_NAME_SIZE	34
-> +
-> +/*
-> + * The maximum number of PCR banks.
-> + */
-> +#define TPM2_MAX_PCR_BANKS	8
-> +
-> +/* If you add a new hash to this, increment TPM_MAX_HASHES below */
-> +enum tpm_algorithms {
-> +	TPM_ALG_ERROR		= 0x0000,
-> +	TPM_ALG_SHA1		= 0x0004,
-> +	TPM_ALG_AES		= 0x0006,
-> +	TPM_ALG_KEYEDHASH	= 0x0008,
-> +	TPM_ALG_SHA256		= 0x000B,
-> +	TPM_ALG_SHA384		= 0x000C,
-> +	TPM_ALG_SHA512		= 0x000D,
-> +	TPM_ALG_NULL		= 0x0010,
-> +	TPM_ALG_SM3_256		= 0x0012,
-> +	TPM_ALG_ECC		= 0x0023,
-> +	TPM_ALG_CFB		= 0x0043,
-> +};
-> +
-> +/*
-> + * The locality (0 - 4) for a TPM, as defined in section 3.2 of the
-> + * Client Platform Profile Specification.
-> + */
-> +enum tpm_localities {
-> +	TPM_LOCALITY_0		= 0, /* Static RTM */
-> +	TPM_LOCALITY_1		= 1, /* Dynamic OS */
-> +	TPM_LOCALITY_2		= 2, /* DRTM Environment */
-> +	TPM_LOCALITY_3		= 3, /* Aux Components */
-> +	TPM_LOCALITY_4		= 4, /* CPU DRTM Establishment */
-> +	TPM_MAX_LOCALITY	= TPM_LOCALITY_4
-> +};
-> +
-> +/*
-> + * Structure to represent active PCR algorithm banks usable by the
-> + * TPM chip.
-> + */
-> +struct tpm_bank_info {
-> +	u16 alg_id;
-> +	u16 digest_size;
-> +	u16 crypto_id;
-> +};
-> +
-> +/*
-> + * Maximum number of hashing algorithms a TPM can have.  This is
-> + * basically a count of every hash in tpm_algorithms above
-> + */
-> +#define TPM_MAX_HASHES		5
-> +
-> +struct tpm_digest {
-> +	u16 alg_id;
-> +	u8 digest[TPM2_MAX_DIGEST_SIZE];
-> +} __packed;
-> +
-> +#define TPM_HEADER_SIZE		10
-> +
-> +struct tpm_header {
-> +	__be16 tag;
-> +	__be32 length;
-> +	union {
-> +		__be32 ordinal;
-> +		__be32 return_code;
-> +	};
-> +} __packed;
-> +
->  #endif
-> -- 
-> 2.47.3
+> This patch set is huge, and I know there is alot of interest now in
+> DRTM.
 > 
+> Can we please split out and progress the TPM reorg mini-series at the
+> front?
 
-LGTM
+I'm not usually for "non-functional" series but in the case of D-RTM
+that could stil bel a good idea.
+
+I.e. let's iterate it through faster than the main series and get it to
+the mainline before next merge window,  and then switch gears back to
+the "main series".
+
+> 
+> Jason
 
 BR, Jarkko
 
