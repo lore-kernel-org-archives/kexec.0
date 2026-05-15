@@ -4,56 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 24264CD343F
-	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 23:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B9EA2CD4851
+	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 23:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ncQcZRDsgglHwvNoqyFsbo3D8zZP2MATC2vbIkY8uBs=; b=n1HNmYe7/1pPKtv08U5LnBaOdd
-	Dadk3lWXB6Dk5lbC0mahvg4zYF+QX82kjUh/GzZ/IBoLlw0RMwniRury7cad0/Ob/jdZjRTJkYIfP
-	Ght3WzOkYEaegZOkNqUO7Ucki6OvadKKgq6kXA0joJ0U2G+72Uw8XimJox1LdUpp23FTeWSUI/aDo
-	T1tbfgd9NBsS9H5j4qPySA2Tss0VOpqGSRK8sn9VEHqTNQAHm7jL8xqaTXZYsE/UxIXSir1Ya1G/d
-	Y0aa5jO9TkbyXZfgxSeh2R+lWsxwo3FVSVlvtk3uFnz32LiJYCqEYuTiCaITOGg2MoLIg1MMqG3Tl
-	daQq/syg==;
+	bh=D7nklUCScqv2NitQOcHmOlp1LpHmTXVfX8MzcU0yUSA=; b=1g+Tm87jNt/txw0jEDHUutryu4
+	5M8x8laRSvWyMMEj1wShyWDv/31wXG64/+TNVN7DxxvfM2AMkyeMUAD3AQR+i7VPYui8kPtRHbcKl
+	A5NyX1v3M4Gc0cSxYc67K8W/47b3uRkdya3RqIp3Lu0+wQkeyvBmNOwamzDPhOGIJ6Qt0M70HYgE9
+	1T2mSRg4Ujqqf0O2zI7rGj0luo2/0sYCiLVonUrk+3RGVfEM0w2bplVjz3QLaUGMY0H9jVSfFMaJ3
+	QC/2UgOKpdv9cr/cMicw1vkiDDXxvlRXhclxhV+z2XDmFhpy6vHCWZGOYXoq1vcDETK/yJVwSmhu8
+	yaFZgTrg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wO1Zf-00000009gc1-0vln;
-	Fri, 15 May 2026 23:04:07 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wO1bR-00000009goi-2VNW;
+	Fri, 15 May 2026 23:05:57 +0000
+Received: from mail-qv1-xf2c.google.com ([2607:f8b0:4864:20::f2c])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wO1Zc-00000009gbL-40yh
+	id 1wO1bP-00000009go6-1kLn
 	for kexec@lists.infradead.org;
-	Fri, 15 May 2026 23:04:06 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id A95CB43C3E;
-	Fri, 15 May 2026 23:04:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0599BC2BCB0;
-	Fri, 15 May 2026 23:04:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778886243;
-	bh=PhQDSx6wqerXO7jp1SJIU+zkyjxdLRzIzDp+gw4Vw0Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q5BaN2DoPrhb61jy1QKZ5LIBvFxgxcTzdzmJU3iVH3FjkufQerI72LCScJbcjuQ7T
-	 W6dFcxj1mvS7hcMx1zhKOYozHElZ/lmUmomUGV0tOmZDp6vr06wfSbRWDilmRl7tG3
-	 SfeItDd7AAF3QAg1Q5FClPyjcW2USYRVsx43w173yTB75mR4GlXYDxGZSB+qAPtYzw
-	 P2M1X2jAjtRSzgg4UpJI9r9Mq3o4UnF4f66HRHU2YaA9lZqMldwFNPcU7MOJswlxWx
-	 1zWdskK8k7tjmjhENLWRiY8raPEjV4W9Lbl7jL3lDQRxzD2o5t3boN7uqFob9PK64g
-	 iedr4bo1BYvRQ==
-Date: Sat, 16 May 2026 02:03:59 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Ross Philipson <ross.philipson@gmail.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
-	linux-efi@vger.kernel.org, iommu@lists.linux.dev,
-	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-	ardb@kernel.org, mjg59@srcf.ucam.org,
+	Fri, 15 May 2026 23:05:56 +0000
+Received: by mail-qv1-xf2c.google.com with SMTP id 6a1803df08f44-8b7dccd6fe4so4148776d6.1
+        for <kexec@lists.infradead.org>; Fri, 15 May 2026 16:05:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1778886354; x=1779491154; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=D7nklUCScqv2NitQOcHmOlp1LpHmTXVfX8MzcU0yUSA=;
+        b=Wdf0/TdKStAr1LvYteFBZiu73IpztWdBt3T4a1ePU5EUavrgLPX+MjnHX+c9MF87zJ
+         yuGsRmrD6qqpbLlnLwdqpeEj1mGsGbwqzXzzhoqqrDJaDpJT6RrD/wpO3WhP5y2GpwNi
+         KlVBYcT4zLEM1PT1zNiKTrsmivhc/U0lhufR8xM4+oN6t8PYex2NAc8dsiaowG1gFjs3
+         Id6FPDdh7H/bcWW/soZ0gV0Cq84WfC57OxgfQIq6dym2VctnC63LaEFXgAGK9EAqLupe
+         8ZP6mwkvPykNu8PVRIf1Tq/RnGnYOZUFmFt5WqERwWMGuxNpQ4hKdU+wDyc03tUWv1U+
+         00WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778886354; x=1779491154;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=D7nklUCScqv2NitQOcHmOlp1LpHmTXVfX8MzcU0yUSA=;
+        b=hmznN6mBf+CpV/EVY+7WKEs7gmV5/9upIOjUy9/sqGfYMCJvbvTz4qr3DsfmlyCet8
+         NWnj3XWgslH9ykg7agjYfDViilOs5Mi4sUXHyrXXgCXgc4cQcdDEaBYhDJuu6TJtI7da
+         E1uH3N23OID8ya+vayPUOsSMx/QwGWjL3CRrj8ssh0VRYuLvqcdH4WXJG7tg7US1cfa+
+         jtnQBbsZuAKd6vvbIxtqUckNclR6PlWpfpImq3Q1xrrMPgpXMNnZ7IMNPsdGpTyyErlz
+         H9glku+RXYtDPXxBjI8n4uUGU8/beP3STbqhuqm7+ZsNNnp6QGCw3xkcCVets00HKSbH
+         H0tw==
+X-Forwarded-Encrypted: i=1; AFNElJ8ygXMl7kubWC+8KkZld/0UfdweBq2nGNdIbivHC0scn6MKir5LFr3cGN1t2Q+nhLxnvLjX4g==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzVYENQIVig9PejqlYM5Ywc65dS5ZdqVHpuudVjuLN5U/2NCUgg
+	MjH9p4CRJah8y1pXI6sDE1PnPK2x8D4/ZyX9KpYnz6Lhr4ArjEgr/NOeEkVEH2EhR7A=
+X-Gm-Gg: Acq92OHSg94x+o2cEh/47YcWHRujcgAKPRAh88C9uNCTI2d+oCdQCwtB5WBG0+uHUve
+	TCUZhTIikde+YWv8TtDJxkiD3LwQo1qC34atoRZWjUAdoJWPjbxALZw/pT47vHmDbbH/gBG0Upn
+	MitkpGBeniR2aJsXkKLMV67fi54ZdJH2o4OQ29pJ9GUE8ftde0q2KImLQRuLEg5o6G3195tjkR2
+	tX7QHNG2oPl3V3hhPcQ04kvBOWx3h8MPiCP31qGZD1dWfnjYJHFnJItyqP08CGv3PHJ0X6fyMrT
+	mAxUysjUWglFkmYt84e28zf0rLz0+t3B2lMycxztJOK2PHKq7CJEiNMK3xWPt7u/ersyXSStc89
+	pZwQPMUiHZwWPrsyuCRj6ZZSAlOONWPVdHCh+ff88SfWu4WCP88GBwsdteoVbhL0Wo6MFFegRS4
+	YKTtgzQ7H7kJ7tcJVFDtaaPt5s7lwm/Ejh9NNWbRxZLPMvTyPpICqqBPcYISclainCZb9954Gjb
+	EjFKA==
+X-Received: by 2002:a05:6214:1c82:b0:8c2:b36d:4fc1 with SMTP id 6a1803df08f44-8ca0f66afc4mr87385476d6.14.1778886354080;
+        Fri, 15 May 2026 16:05:54 -0700 (PDT)
+Received: from ziepe.ca (crbknf0213w-47-54-130-67.pppoe-dynamic.high-speed.nl.bellaliant.net. [47.54.130.67])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8c90c374469sm64030376d6.49.2026.05.15.16.05.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 May 2026 16:05:53 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1wO1bN-00000008GrB-0jOE;
+	Fri, 15 May 2026 20:05:53 -0300
+Date: Fri, 15 May 2026 20:05:53 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Ross Philipson <ross.philipson@gmail.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, linux-integrity@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-crypto@vger.kernel.org,
+	kexec@lists.infradead.org, linux-efi@vger.kernel.org,
+	iommu@lists.linux.dev, dpsmith@apertussolutions.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+	dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
 	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-	jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu,
+	luto@amacapital.net, nivedita@alum.mit.edu,
 	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
 	ebiederm@xmission.com, dwmw2@infradead.org,
 	baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
@@ -61,16 +92,18 @@ Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
 	trenchboot-devel@googlegroups.com
 Subject: Re: [PATCH v16 01/38] tpm: Initial step to reorganize TPM public
  headers
-Message-ID: <agemXwxVb9jvAbYM@kernel.org>
+Message-ID: <20260515230553.GO7702@ziepe.ca>
 References: <20260515211410.31440-1-ross.philipson@gmail.com>
  <20260515211410.31440-2-ross.philipson@gmail.com>
+ <agemXwxVb9jvAbYM@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260515211410.31440-2-ross.philipson@gmail.com>
+In-Reply-To: <agemXwxVb9jvAbYM@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260515_160405_054528_D4B8F355 
-X-CRM114-Status: GOOD (  19.26  )
+X-CRM114-CacheID: sfid-20260515_160555_459798_B012E693 
+X-CRM114-Status: UNSURE (   7.87  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,233 +118,18 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, May 15, 2026 at 02:13:33PM -0700, Ross Philipson wrote:
-> Consolidate TPM1 constants in tpm_command.h and remove duplicate
-> constants from tpm1-cmd.c.
-> 
-> Co-developed-by: Daniel P. Smith <dpsmith@apertussolutions.com>
-> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
-> Co-developed-by: Alec Brown <alec.r.brown@oracle.com>
-> Signed-off-by: Alec Brown <alec.r.brown@oracle.com>
-> Signed-off-by: Ross Philipson <ross.philipson@gmail.com>
-> ---
->  drivers/char/tpm/tpm-buf.c                |  1 -
->  drivers/char/tpm/tpm1-cmd.c               | 14 +-------
->  include/keys/trusted_tpm.h                |  1 -
->  include/linux/tpm.h                       |  2 ++
->  include/linux/tpm_command.h               | 41 ++++++++++++++++-------
->  security/keys/trusted-keys/trusted_tpm1.c |  1 -
->  security/keys/trusted-keys/trusted_tpm2.c |  1 -
->  7 files changed, 31 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm-buf.c b/drivers/char/tpm/tpm-buf.c
-> index dc882fc9fa9e..4c4f450630df 100644
-> --- a/drivers/char/tpm/tpm-buf.c
-> +++ b/drivers/char/tpm/tpm-buf.c
-> @@ -3,7 +3,6 @@
->   * Handling of TPM command and other buffers.
->   */
->  
-> -#include <linux/tpm_command.h>
->  #include <linux/module.h>
->  #include <linux/tpm.h>
->  
-> diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
-> index b49a790f1bd5..664ca1fff2e8 100644
-> --- a/drivers/char/tpm/tpm1-cmd.c
-> +++ b/drivers/char/tpm/tpm1-cmd.c
-> @@ -22,8 +22,6 @@
->  
->  #include "tpm.h"
->  
-> -#define TPM_MAX_ORDINAL 243
-> -
->  /*
->   * Array with one entry per ordinal defining the maximum amount
->   * of time the chip could take to return the result.  The ordinal
-> @@ -308,9 +306,6 @@ unsigned long tpm1_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal)
->  		return duration;
->  }
->  
-> -#define TPM_ORD_STARTUP 153
-> -#define TPM_ST_CLEAR 1
-> -
->  /**
->   * tpm1_startup() - turn on the TPM
->   * @chip: TPM chip to use
-> @@ -459,7 +454,6 @@ int tpm1_get_timeouts(struct tpm_chip *chip)
->  	return 0;
->  }
->  
-> -#define TPM_ORD_PCR_EXTEND 20
->  int tpm1_pcr_extend(struct tpm_chip *chip, u32 pcr_idx, const u8 *hash,
->  		    const char *log_msg)
->  {
-> @@ -478,7 +472,6 @@ int tpm1_pcr_extend(struct tpm_chip *chip, u32 pcr_idx, const u8 *hash,
->  	return rc;
->  }
->  
-> -#define TPM_ORD_GET_CAP 101
->  ssize_t tpm1_getcap(struct tpm_chip *chip, u32 subcap_id, cap_t *cap,
->  		    const char *desc, size_t min_cap_length)
->  {
-> @@ -511,7 +504,6 @@ ssize_t tpm1_getcap(struct tpm_chip *chip, u32 subcap_id, cap_t *cap,
->  }
->  EXPORT_SYMBOL_GPL(tpm1_getcap);
->  
-> -#define TPM_ORD_GET_RANDOM 70
->  struct tpm1_get_random_out {
->  	__be32 rng_data_len;
->  	u8 rng_data[TPM_MAX_RNG_DATA];
-> @@ -580,13 +572,12 @@ int tpm1_get_random(struct tpm_chip *chip, u8 *dest, size_t max)
->  	return rc;
->  }
->  
-> -#define TPM_ORD_PCRREAD 21
->  int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf)
->  {
->  	struct tpm_buf buf;
->  	int rc;
->  
-> -	rc = tpm_buf_init(&buf, TPM_TAG_RQU_COMMAND, TPM_ORD_PCRREAD);
-> +	rc = tpm_buf_init(&buf, TPM_TAG_RQU_COMMAND, TPM_ORD_PCR_READ);
->  	if (rc)
->  		return rc;
->  
-> @@ -609,7 +600,6 @@ int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf)
->  	return rc;
->  }
->  
-> -#define TPM_ORD_CONTINUE_SELFTEST 83
->  /**
->   * tpm1_continue_selftest() - run TPM's selftest
->   * @chip: TPM chip to use
-> @@ -726,8 +716,6 @@ int tpm1_auto_startup(struct tpm_chip *chip)
->  	return rc;
->  }
->  
-> -#define TPM_ORD_SAVESTATE 152
-> -
->  /**
->   * tpm1_pm_suspend() - pm suspend handler
->   * @chip: TPM chip to use.
-> diff --git a/include/keys/trusted_tpm.h b/include/keys/trusted_tpm.h
-> index 0fadc6a4f166..3a0fa3bc8454 100644
-> --- a/include/keys/trusted_tpm.h
-> +++ b/include/keys/trusted_tpm.h
-> @@ -3,7 +3,6 @@
->  #define __TRUSTED_TPM_H
->  
->  #include <keys/trusted-type.h>
-> -#include <linux/tpm_command.h>
->  
->  extern struct trusted_key_ops trusted_key_tpm_ops;
->  
-> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> index 202da079d500..1846d5485a2c 100644
-> --- a/include/linux/tpm.h
-> +++ b/include/linux/tpm.h
-> @@ -25,6 +25,8 @@
->  #include <crypto/hash_info.h>
->  #include <crypto/aes.h>
->  
-> +#include <linux/tpm_command.h>
-> +
->  #define TPM_DIGEST_SIZE 20	/* Max TPM v1.2 PCR size */
->  
->  #define TPM2_MAX_DIGEST_SIZE	SHA512_DIGEST_SIZE
-> diff --git a/include/linux/tpm_command.h b/include/linux/tpm_command.h
-> index f5c03e9c3913..174b043d8bbc 100644
-> --- a/include/linux/tpm_command.h
-> +++ b/include/linux/tpm_command.h
-> @@ -3,27 +3,42 @@
->  #define __LINUX_TPM_COMMAND_H__
->  
->  /*
-> - * TPM Command constants from specifications at
-> - * http://www.trustedcomputinggroup.org
-> + * == TPM 1 Family Chips ==
-> + *
-> + * TPM 1.2 Main Specification:
-> + * https://trustedcomputinggroup.org/resource/tpm-main-specification/
->   */
->  
-> +#define TPM_MAX_ORDINAL	243
-> +
->  /* Command TAGS */
-> -#define TPM_TAG_RQU_COMMAND             193
-> -#define TPM_TAG_RQU_AUTH1_COMMAND       194
-> -#define TPM_TAG_RQU_AUTH2_COMMAND       195
-> -#define TPM_TAG_RSP_COMMAND             196
-> -#define TPM_TAG_RSP_AUTH1_COMMAND       197
-> -#define TPM_TAG_RSP_AUTH2_COMMAND       198
-> +enum tpm_command_tags {
-> +	TPM_TAG_RQU_COMMAND		= 193,
-> +	TPM_TAG_RQU_AUTH1_COMMAND	= 194,
-> +	TPM_TAG_RQU_AUTH2_COMMAND	= 195,
-> +	TPM_TAG_RSP_COMMAND		= 196,
-> +	TPM_TAG_RSP_AUTH1_COMMAND	= 197,
-> +	TPM_TAG_RSP_AUTH2_COMMAND	= 198,
-> +};
->  
->  /* Command Ordinals */
-> -#define TPM_ORD_GETRANDOM               70
-> -#define TPM_ORD_OSAP                    11
-> -#define TPM_ORD_OIAP                    10
-> -#define TPM_ORD_SEAL                    23
-> -#define TPM_ORD_UNSEAL                  24
-> +enum tpm_command_ordinals {
-> +	TPM_ORD_CONTINUE_SELFTEST	= 83,
-> +	TPM_ORD_GET_CAP			= 101,
-> +	TPM_ORD_GET_RANDOM		= 70,
-> +	TPM_ORD_PCR_EXTEND		= 20,
-> +	TPM_ORD_PCR_READ		= 21,
-> +	TPM_ORD_OSAP			= 11,
-> +	TPM_ORD_OIAP			= 10,
-> +	TPM_ORD_SAVESTATE		= 152,
-> +	TPM_ORD_SEAL			= 23,
-> +	TPM_ORD_STARTUP			= 153,
-> +	TPM_ORD_UNSEAL			= 24,
-> +};
->  
->  /* Other constants */
->  #define SRKHANDLE                       0x40000000
->  #define TPM_NONCE_SIZE                  20
-> +#define TPM_ST_CLEAR			1
->  
->  #endif
-> diff --git a/security/keys/trusted-keys/trusted_tpm1.c b/security/keys/trusted-keys/trusted_tpm1.c
-> index 6ea728f1eae6..0d3244af8de3 100644
-> --- a/security/keys/trusted-keys/trusted_tpm1.c
-> +++ b/security/keys/trusted-keys/trusted_tpm1.c
-> @@ -18,7 +18,6 @@
->  #include <keys/trusted-type.h>
->  #include <linux/key-type.h>
->  #include <linux/tpm.h>
-> -#include <linux/tpm_command.h>
->  
->  #include <keys/trusted_tpm.h>
->  
-> diff --git a/security/keys/trusted-keys/trusted_tpm2.c b/security/keys/trusted-keys/trusted_tpm2.c
-> index 6340823f8b53..29d79c05ed6b 100644
-> --- a/security/keys/trusted-keys/trusted_tpm2.c
-> +++ b/security/keys/trusted-keys/trusted_tpm2.c
-> @@ -9,7 +9,6 @@
->  #include <linux/string.h>
->  #include <linux/err.h>
->  #include <linux/tpm.h>
-> -#include <linux/tpm_command.h>
->  
->  #include <keys/trusted-type.h>
->  #include <keys/trusted_tpm.h>
-> -- 
-> 2.47.3
-> 
+On Sat, May 16, 2026 at 02:03:59AM +0300, Jarkko Sakkinen wrote:
 
-LGTM
+> LGTM
+> 
+> I'll hold on from actual tags up until there is some consensus with the
+> patch set.
 
-I'll hold on from actual tags up until there is some consensus with the
-patch set.
+This patch set is huge, and I know there is alot of interest now in
+DRTM.
 
-BR, Jarkko
+Can we please split out and progress the TPM reorg mini-series at the
+front?
+
+Jason
 
