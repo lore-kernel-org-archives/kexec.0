@@ -4,54 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D480CCD4851
-	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 08:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A3F53CD343F
+	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 08:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:From:
-	Content-Transfer-Encoding:Message-Id:Mime-Version:Cc:To:Content-Type:Subject:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=/hxc1vX8X4GE0Ao60BjBpK+FRAblTuGkhsKBimUdVSM=; b=hBHPyItvz8qhZWUgD+v8DzfYE4
-	/NQzPVG7GS83BaplkK1iHNSl+AXaCFH5cqqipMzfA+z4xwpvwY8hWThwvDs3RGsotfpL3wnP+eg2C
-	OJhadqDq8qmoTM1Gvn5LJD/gFbdgXpdP9lclOt2t36E2Vx4BV/jTjYgSL3cWnt34IPaBOrduFf5gM
-	1JGql54SjTs1QOWQ+wa4Xb6IDqUpWhzIRCNz8afRLl/4SFQcvf9/09K8iIcvfPqjOYoxuFZOD8m+o
-	dvbTUQIumrpFq5SUN8KAcjwVHTbjhiOaAVqhoACKMukiNrLu0U5uOntOSK95g1eYtlfQ6JG73Ubhc
-	tWEhpwRQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Message-Id:Date:From:Content-Type:In-Reply-To:Cc:To:References:Mime-Version:
+	Subject:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=YeS0QPnSv0aM0izN7SJxmYTtXB7tT4UpcetS6NXsMMA=; b=Ens/y1fm0IWzAtaw+NJDEgceSR
+	m0VjVhc+kI/9XgrqzPbfPZUlKRMynYHPBebuHHoCw3aB5wOqezBA+B6b10A2RS7E2fbKL7Zfq4qiK
+	AntCsYXUtsaxrDjskxtK7yXPO0H259FcH4vKiEPynIxTaEMnxefpjW8BcuObo8RwvYucqWk7U72TL
+	H4cE6eSZNII1XZOWTOGhzcMS8jwkCLTNVomrAO9Sa0VFcVRE7WCthCxLffoc0CXN3mz5RfDm1xDZB
+	06pVft540A6ot1dgSES120V5jL6gCa+StWLfj1rmho2o9AWweY0CiE7yD6IPkqq+8DNUrP3b8k/uk
+	KNs1RivA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNnaf-00000007hBV-2bs7;
-	Fri, 15 May 2026 08:08:13 +0000
-Received: from va-1-115.ptr.blmpb.com ([209.127.230.115])
+	id 1wNnan-00000007hE4-2slE;
+	Fri, 15 May 2026 08:08:21 +0000
+Received: from va-1-111.ptr.blmpb.com ([209.127.230.111])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNnac-00000007hAM-47Ds
+	id 1wNnal-00000007hCx-0qC9
 	for kexec@lists.infradead.org;
-	Fri, 15 May 2026 08:08:13 +0000
+	Fri, 15 May 2026 08:08:21 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1778832483; h=from:subject:
+ s=2212171451; d=bytedance.com; t=1778832493; h=from:subject:
  mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
  mime-version:in-reply-to:message-id;
- bh=/hxc1vX8X4GE0Ao60BjBpK+FRAblTuGkhsKBimUdVSM=;
- b=IeVsPriLlGOfdbj7392jsr/TI3mQgmi5610R+0x7EFGBiXgQZPDyNsLkSajYbJ/HsWDI66
- yAZ8J7Iu3SDOkCzRL/Jr/EXVIo1pmduKuQQLFGD3HjasPSirD3VmLKlzH4+3g/aOyZTmsD
- UboX6cGnEBdYvHzPLb75SRrF5FtEM1sHE82tM5BeQ9trltDA6izvYjF+HHlagaHoqRC1le
- Us+9jyLqLdONxS4OLWkAm60sLs5P1OoWvCIwopJopSLRDwqKmmPzTLkN02NUPt4yl3J4qo
- +7gCaJ0fFHR42W2dScPJkUzCjNqyyY2JqkFC5ojIMzga44gURYGo+UzRnbq4jw==
-X-Lms-Return-Path: <lba+26a06d461+c9e41f+lists.infradead.org+qirui.001@bytedance.com>
-Subject: [PATCH v2 0/2] Fix riscv64 virtual-to-physical address translation
-X-Mailer: git-send-email 2.52.0
-Content-Type: text/plain; charset=UTF-8
-To: <kexec@lists.infradead.org>
-Cc: <k-hagio-ab@nec.com>, "Rui Qi" <qirui.001@bytedance.com>
+ bh=YeS0QPnSv0aM0izN7SJxmYTtXB7tT4UpcetS6NXsMMA=;
+ b=HB7RCGCjLuZPEBBSs6cN6JLarGLGQtgMDjaeJQuFD/+vKAzyN3pVed2eumIS0kkjn/aRh9
+ JADdTzl2TKiR6VEoY2aoA2dPVebczqxiMExefsMHqCYSH36vK6r82SatkntCc05zmsCTmo
+ n71MjvZjh8b2FvguswGvg5AuzGZtWgVOU1khSWcSDo4UBHNY3epyh19Sg2qw7wQl7b7G3I
+ XACL1MfjNtshFK31dR+St//Cj3IVTGBiNfvPuwEIDs25H8/rfIibOge7l2WA/zLLTXpu3k
+ EQxFzVlz6SIjHNYG69hxkXu9AQivPo78P/ZYKFRbmQX12gCKAa93w0bbQ5Rqnw==
+X-Lms-Return-Path: <lba+26a06d46a+575906+lists.infradead.org+qirui.001@bytedance.com>
+Subject: [PATCH v2 1/2] riscv64: Fix vaddr_to_paddr for vmalloc and vmemmap regions
 Mime-Version: 1.0
-Message-Id: <20260515080745.70110-1-qirui.001@bytedance.com>
 X-Original-From: Rui Qi <qirui.001@bytedance.com>
-Content-Transfer-Encoding: 7bit
+References: <20260515080745.70110-1-qirui.001@bytedance.com>
+To: <kexec@lists.infradead.org>
+Cc: <k-hagio-ab@nec.com>, "Rui Qi" <qirui.001@bytedance.com>, 
+	"Shuan He" <heshuan@bytedance.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260515080745.70110-1-qirui.001@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
 From: "Rui Qi" <qirui.001@bytedance.com>
-Date: Fri, 15 May 2026 16:07:42 +0800
+Date: Fri, 15 May 2026 16:07:43 +0800
+Message-Id: <20260515080745.70110-2-qirui.001@bytedance.com>
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260515_010811_375103_6F5CFC27 
-X-CRM114-Status: UNSURE (   5.72  )
+X-CRM114-CacheID: sfid-20260515_010819_946170_005F5833 
+X-CRM114-Status: UNSURE (   6.94  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -67,30 +70,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This patchset fixes two bugs in the riscv64 architecture support of
-makedumpfile related to virtual-to-physical address translation.
+The current vaddr_to_paddr_riscv64() incorrectly uses VTOP() linear
+mapping for vmalloc and vmemmap addresses, which are not linearly
+mapped. Add checks to exclude these regions so they fall through to
+page table walk via vtop_riscv64().
 
-Patch 1 fixes vaddr_to_paddr_riscv64() to exclude vmalloc and vmemmap
-regions from the VTOP() fast path. These regions are not linearly mapped
-and must go through page table walk.
+Co-developed-by: Rui Qi <qirui.001@bytedance.com>
+Signed-off-by: Shuan He <heshuan@bytedance.com>
+---
+ arch/riscv64.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Patch 2 fixes vtop_riscv64() to correctly handle huge pages when
-_PAGE_LEAF is set at PGD/P4D/PUD/PMD level. The original code incorrectly
-fell through to the next level, causing wrong physical address computation.
-
-
-Changes in v2:
-- Patch 2: Changed `goto invalid;` to `return paddr;` when huge page
-  (_PAGE_LEAF) hits, as the calculated physical address is valid.
-- Patch 2: Removed the unused `out:` label to fix a compiler warning.
-
-Rui Qi (2):
-  riscv64: Fix vaddr_to_paddr for vmalloc and vmemmap regions
-  riscv64: Fix huge page translation in vtop_riscv64()
-
- arch/riscv64.c | 31 +++++++++++++++++++++----------
- 1 file changed, 21 insertions(+), 10 deletions(-)
-
+diff --git a/arch/riscv64.c b/arch/riscv64.c
+index 1b43ec4f62a1..28365fa0cc5b 100644
+--- a/arch/riscv64.c
++++ b/arch/riscv64.c
+@@ -202,6 +202,8 @@ vaddr_to_paddr_riscv64(unsigned long vaddr)
+ 	unsigned long long swapper_phys;
+ 
+ 	if (vaddr >= PAGE_OFFSET &&
++	    !(vaddr >= NUMBER(vmalloc_start) && vaddr <= NUMBER(vmalloc_end)) &&
++	    !(vaddr >= NUMBER(vmemmap_start) && vaddr <= NUMBER(vmemmap_end)) &&
+ 	    !(vaddr >= NUMBER(modules_vaddr) && vaddr <= NUMBER(modules_end))){
+ 		return VTOP(vaddr);
+ 	}
 -- 
 2.20.1
 
