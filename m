@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5A3BCCD343F
-	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 21:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7C7FECD4F3C
+	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 21:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ViurL0csUM0y6zC2/BziEDI+4nTSab4FjJtc7RqXPgw=; b=OrpGUMMUw1QLAv4abWnwsNm4iZ
-	lpje86Nt5PPbsSvBfU+FWubcl4jpVXWVuWlz+UcEoQN+ErNe3NGttnfuAgY5fWAnm6R6it+MEX+c/
-	iro190jGmic7ku+cLxSVe37OKELeM6e1hB0Hbc7iVVI+wunXe2MBAx0blOSkAvDujDXvqoQUCRsKB
-	eRYZg5JJbTv2CulXrOtsfDr6DdcJIqOOUZPk9awryAJeyzNhWOUMYUtZUTPvQdVe5hMK2pyBs+lsG
-	N6HY+i5A/yoEy5XhPBdD+3gE/8gpmM2gEckKbZX9TxrUazdnlBkCRA2hc0QyHkleTt76dM4E+TcW4
-	FsZJQQfA==;
+	bh=vEqPpKnlZT3emBFthAb9OgKvlsNPtI0KrHZvILeiAis=; b=mpbjty1RxiOGzkXypdUy81jkpn
+	1ZO+8VjIKtlsjiYMMjISY8TqckhAxLrdDZvEOC0Ac/MpU7oE4yQq7iaQEFOOR/tFMVK/WfQctBZq0
+	aZ16AImsTnd7dPEPeJx2exZ19wXOr0mIMl5ZOZoOkoG2euCjuXP1OQDuHXqaGvU8K3bKTYx2okS0L
+	vTuBezfj7bdSOy2Fsd+hQrxHpdPoB6BcxumJX5iGi9lVXnIb9iHPw6A2whWux9SbrUkCJnmNInOLI
+	CThs/SUxtdBzkPWa7WI3oOTNMxXR+PYj9FlT4FJ7UFMZs4JqRoVBkCon8EitQnT03HvIOxKPQKR1h
+	KGV4SkVg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNzsi-00000009U6o-00L4;
-	Fri, 15 May 2026 21:15:40 +0000
-Received: from mail-dy1-x132b.google.com ([2607:f8b0:4864:20::132b])
+	id 1wNzsm-00000009UAL-0jKc;
+	Fri, 15 May 2026 21:15:44 +0000
+Received: from mail-dl1-x1232.google.com ([2607:f8b0:4864:20::1232])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNzsd-00000009U3j-3WyK
+	id 1wNzsj-00000009U8J-3rXC
 	for kexec@lists.infradead.org;
-	Fri, 15 May 2026 21:15:38 +0000
-Received: by mail-dy1-x132b.google.com with SMTP id 5a478bee46e88-2f0d3e07e30so1354428eec.0
-        for <kexec@lists.infradead.org>; Fri, 15 May 2026 14:15:35 -0700 (PDT)
+	Fri, 15 May 2026 21:15:43 +0000
+Received: by mail-dl1-x1232.google.com with SMTP id a92af1059eb24-132c338a537so1027091c88.0
+        for <kexec@lists.infradead.org>; Fri, 15 May 2026 14:15:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778879735; x=1779484535; darn=lists.infradead.org;
+        d=gmail.com; s=20251104; t=1778879741; x=1779484541; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ViurL0csUM0y6zC2/BziEDI+4nTSab4FjJtc7RqXPgw=;
-        b=FjelquUUQF+AZriCsVtSVc/oaQqwMLrItESMkhH9bcNQ7eWwSRzZDylu7dCB8gKWlD
-         R1fxuybsUraULbiR1Ce21r2yrpU4JzCJi2BdQPsJrBs5y7Uh0z1QBzpoR6fm8Zq4Jevu
-         N5b6D7hpUUPVJitWCWKUYyGz5P0uYsK/yRcgWwXDlGN5lNHP59yOc3txuMQHGaLC1BTU
-         63OUb1JL2P9QKGdeLCODx+LzN1F42+hmNpLggFvRI2q2LHECcIxY+YdxFqRBz3ZsBa0s
-         f0Y+V921VeJ3GYIteMLZwVpJAFUjpsLLGGB6u564JwxLnIsyipwcTsF4cDmPqIS/s7mA
-         VCqw==
+        bh=vEqPpKnlZT3emBFthAb9OgKvlsNPtI0KrHZvILeiAis=;
+        b=ZPWrFRdILyTjUF1Nvre+XnKf9Iuh31cKPaw6QhJFK4LPmTG6ynoXxWkdGEkoo6mo1P
+         /8/C4TA7AZbrRCedmC9zPYcEP/ed0ZSXugPnpe50Ajifdq0jOvB3I0sF9wCj2FdXCsod
+         0+4+lmI802oWbgN/hV0hpb73zInsf1Pk5oiZg7j/DwRFp7z4Gf9jYQnmbframA6ZOD6u
+         CHoy1UOOvLav4cWDQxy9Ehh8Ap8rE3ahSIFbfK5u1Ya79DO6cyTu+3tiWZ2PgARJvNRO
+         3Dsii7chseMBmnhy2in/AiuWq0soo+OmsYbi6mXqlTL8itMHN53eGbGZsM23YE0b+nFu
+         XN8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778879735; x=1779484535;
+        d=1e100.net; s=20251104; t=1778879741; x=1779484541;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=ViurL0csUM0y6zC2/BziEDI+4nTSab4FjJtc7RqXPgw=;
-        b=gmY2hZOXaoI3frHSA63EuYcoOKyoH3DZD7DIYVuewbfRQk6t5xzNzoese69RliLdDQ
-         QSLfykvuc8n+LiaKKqnty0BiDxIlQgn4UMuOwVNJOvYlfNqIjbOxVD8EfkK0WCSV94d9
-         lhrW9IVDa21o3WQQl3oyzPNOrf2T0u5lTXCg3qqqfNtk8QjU2oGXEo0Z7Sba38mz1U9t
-         aMRooUmPPhlwysVm71xzs+HhcjBaAhV+IQSiJLieskkpk7DJilXwh5B8E5bVwq2B08HW
-         CdAhaJmuBZyJDffHkpJn03qC7tg1A16GpXheesPrTuni+ARzZBL2TTRgJfquRFhWBpYR
-         bQ4Q==
-X-Forwarded-Encrypted: i=1; AFNElJ9zggIPFMAH7XNYGxXAkIf/njl9jWC/VfGL+KcV+b6KXMWA60r/8sI9r+DzL7mkQILO/Utu9g==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwRUQQ9KmAxb7pREE4o5JDZ1/tCPZ65k9AP8L6XniT98zodujPW
-	6dbXRpPz8MaI3UhpeJ6X81AkKmAwzbtFSi0kZchytCBK6Xi24RXxRgry
-X-Gm-Gg: Acq92OEUh1ul/bKagoEczEOt2kOorrD3pFnzqcWPgjRhtbAtVfK5IRN0rzwuWn//N0k
-	rzUq2O/NifI4M/6LJGV78y8ye5BMEWyTSbZNmw+O9iu9ytpx6+jaIEVNQHH6bwrmQUVu4kVhwbR
-	IqPuu05rd9IbmlsDmn+KNrUkJf3NO1T7eHWgEz55zYxadzZUoDktq50buHhQPCwyVVqiv2pQfgM
-	nYN9tJsAMlCfditCfoWYRzdoDYfaZsd+3M8ge0LcHa+/dulyqBLCBGevVpKYPNC+rjXYqGtonxx
-	jkyleybSOgUe4rGLOmDs+NEesegCifWvUAlx5G3PIXxaR67S1L/Q1Pkn0rxYhb/GxW82wtrPIYg
-	wRHXh7V78HNhp0ARDzUnm5A6fP8N8FF1HZh8EZwScnVkJKY7RZ5LPvJRAFJwy2QNxSn3FNA6RoJ
-	N01u6zt/AjFSB3LwNG8VEX4BNXhanaL+BwiuKTnjT+Hw==
-X-Received: by 2002:a05:7300:510:b0:2c1:7b61:8731 with SMTP id 5a478bee46e88-303982be4d0mr3180070eec.10.1778879734916;
-        Fri, 15 May 2026 14:15:34 -0700 (PDT)
+        bh=vEqPpKnlZT3emBFthAb9OgKvlsNPtI0KrHZvILeiAis=;
+        b=Ydj7xfLJwhrZzsSPjJybTsd9h7ZafBZ0AbaJ2Re9IaUVSdmMbAOHyomyaFgWdK+U4u
+         Unc5lNv0lg0+vYRUyoiwv/V9VNywJyF+SMcwg0JOfcc1I9xstK4ZEqeZQIS477tG39p8
+         J/pjnJdb5vZeejoSYF0ZXFbnHX+9d6IJtyPc4qltGfq10JxQFV+L3WKOEp/tD12QodZN
+         gjKNuHyeWlwnF0LPC9j1A5JDpUCPsNpFy/iHBEJ78MkFtXRlap6z/R/otnZ6JDRb630s
+         2QfmzthB20Xa7RGncfT4NFO62AdxZCtA71NvKf0WJJXmcVYhl7I1aEKK+4lYDXQNLXJS
+         UHqg==
+X-Forwarded-Encrypted: i=1; AFNElJ8ncRMSyrWaiQiItQWaNDr5SZTaIAYNdnSFIJbk3Ka7CEns9yU8C22WFd+krYT4MvuomoguqQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yypg/n3HXWuQ7VT505VoiOn1+c7Rgyu2eyeKsN0xXX9r7GpJwCC
+	4Iq8CFgrP/JDG+ZYDHFqUkVNBkC0BwoEINYE7O6v4Tnual7wL/StRltl
+X-Gm-Gg: Acq92OFf+tcMB43ZxlMPSWRXnOlcmHjHoJ2d/M62DDtiwhW/gBgjTNYHaGumh7Pts/R
+	pyvThtwNgOgfQJ9oz4zvP+8w+BtTkE7EcXTg+o1+4vxRPs0+VyWE+mJ3J/bLleUszMdxJ6JXgaR
+	kEEmR94DmwHnujJScwjCZCCQ+fK6Rjz1Dg/BqRXTUplq7nEkaUhJ+sQlvUdnkCFWSAI6M8JFg35
+	NjDgSF3tEurtkcShdLgADBde+gKh16PA42vTK4ygzuWfYVzo28LDH94psH1N//U7QTIauO03sH5
+	RvAC/LTSIzUrJVt8HMYkN+8SUrCDgGxHeRcmLqZGKcNat0plnAf07vhR+oeYCKyvdI2NGSLzGDL
+	BT+s0m+Odm0cBsI7bMNSg2WNdLeo7RQxdLierELithbV0+cdWVADn5mEzMfgCEHkOdUqqIhJPzp
+	j35x2LgjQP/l6GWPnT5Pu5pUNoVjDGt3Q=
+X-Received: by 2002:a05:7300:d511:b0:2f9:1004:b2cd with SMTP id 5a478bee46e88-30262f3895emr5218501eec.20.1778879740764;
+        Fri, 15 May 2026 14:15:40 -0700 (PDT)
 Received: from mimas.lan ([2603:8000:df01:38f7:a6bb:6dff:fecf:e71a])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-302944ffb85sm8214358eec.7.2026.05.15.14.15.33
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30293e2e3c0sm9976142eec.3.2026.05.15.14.15.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2026 14:15:34 -0700 (PDT)
+        Fri, 15 May 2026 14:15:40 -0700 (PDT)
 From: Ross Philipson <ross.philipson@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	x86@kernel.org,
@@ -103,17 +103,17 @@ Cc: ross.philipson@gmail.com,
 	daniel.kiper@oracle.com,
 	andrew.cooper3@citrix.com,
 	trenchboot-devel@googlegroups.com
-Subject: [PATCH v16 29/38] x86/tpm: Early startup TPM PCR extending driver
-Date: Fri, 15 May 2026 14:14:01 -0700
-Message-ID: <20260515211410.31440-30-ross.philipson@gmail.com>
+Subject: [PATCH v16 31/38] x86/slaunch: Secure Launch kernel early boot initialization
+Date: Fri, 15 May 2026 14:14:03 -0700
+Message-ID: <20260515211410.31440-32-ross.philipson@gmail.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260515211410.31440-1-ross.philipson@gmail.com>
 References: <20260515211410.31440-1-ross.philipson@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260515_141535_912723_C992F39C 
-X-CRM114-Status: GOOD (  30.07  )
+X-CRM114-CacheID: sfid-20260515_141541_983798_55F986E4 
+X-CRM114-Status: GOOD (  28.26  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -128,688 +128,650 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Introduce a driver that can interact minimally with the TPM. This
-allows the Secure Launch startup code to extend measurement values
-into the TPM's DRTM PCR banks early in the launch process.
-
-The driver implementation only currently supports basic initialization
-and PCR extend commands. An extend command can be sent to both TPM 2.0 or
-1.2 chip but only the TIS/FIFO interface is currently supported. The TCG
-specs for these interface can be found here:
-
-https://trustedcomputinggroup.org/resource/pc-client-work-group-pc-client-specific-tpm-interface-specification-tis/
-https://trustedcomputinggroup.org/resource/tpm-2-0-mobile-command-response-buffer-interface-specification/
-
-Note this TPM driver implementation relies as much as possible on
-existing mainline kernel TPM code.
+The sl_main() routine is responsible for measuring configuration and module
+information before it is used by the kernel. An example of entities
+measured on Intel x86 are the boot params, the kernel command line,
+the TXT heap, any external initramfs, etc. In addition this routine
+does some early setup and validation of the environment like locating
+the TPM event log and validating the location of various buffers to
+ensure they are protected and not overlapping.
 
 Co-developed-by: Daniel P. Smith <dpsmith@apertussolutions.com>
 Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
-Co-developed-by: Alec Brown <alec.r.brown@oracle.com>
-Signed-off-by: Alec Brown <alec.r.brown@oracle.com>
 Signed-off-by: Ross Philipson <ross.philipson@gmail.com>
 ---
- arch/x86/boot/startup/Makefile  |   1 +
- arch/x86/boot/startup/exports.h |   7 +
- arch/x86/boot/startup/tpm.h     |  47 +++
- arch/x86/boot/startup/tpm_drv.c | 567 ++++++++++++++++++++++++++++++++
- 4 files changed, 622 insertions(+)
- create mode 100644 arch/x86/boot/startup/tpm.h
- create mode 100644 arch/x86/boot/startup/tpm_drv.c
+ arch/x86/boot/startup/sl_main.c | 610 ++++++++++++++++++++++++++++++++
+ 1 file changed, 610 insertions(+)
 
-diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makefile
-index 527cba7e4560..ecf86ce5ebf7 100644
---- a/arch/x86/boot/startup/Makefile
-+++ b/arch/x86/boot/startup/Makefile
-@@ -24,6 +24,7 @@ obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= sme.o sev-startup.o
- slaunch-objs			+= lib-sha1.o
- slaunch-objs			+= lib-sha256.o
- slaunch-objs			+= lib-sha512.o
-+slaunch-objs			+= tpm_drv.o
- obj-$(CONFIG_SECURE_LAUNCH)	+= $(slaunch-objs)
- 
- pi-objs				:= $(patsubst %.o,$(obj)/%.o,$(obj-y))
-diff --git a/arch/x86/boot/startup/exports.h b/arch/x86/boot/startup/exports.h
-index 01d2363dc445..4b82ddbd62a8 100644
---- a/arch/x86/boot/startup/exports.h
-+++ b/arch/x86/boot/startup/exports.h
-@@ -12,3 +12,10 @@ PROVIDE(snp_cpuid			= __pi_snp_cpuid);
- PROVIDE(snp_cpuid_get_table		= __pi_snp_cpuid_get_table);
- PROVIDE(svsm_issue_call			= __pi_svsm_issue_call);
- PROVIDE(svsm_process_result_codes	= __pi_svsm_process_result_codes);
-+
-+#ifdef CONFIG_SECURE_LAUNCH
-+__pi_bcmp				= bcmp;
-+__pi_memcmp				= memcmp;
-+__pi_strlen				= strlen;
-+__pi___WARN_trap			= __WARN_trap;
-+#endif
-diff --git a/arch/x86/boot/startup/tpm.h b/arch/x86/boot/startup/tpm.h
-new file mode 100644
-index 000000000000..1a11396b68c6
---- /dev/null
-+++ b/arch/x86/boot/startup/tpm.h
-@@ -0,0 +1,47 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * TPM early extend header file.
-+ *
-+ * Copyright (c) 2026 Apertus Solutions, LLC
-+ * Copyright (c) 2026, Oracle and/or its affiliates.
-+ */
-+
-+#ifndef BOOT_COMPRESSED_TPM_H
-+#define BOOT_COMPRESSED_TPM_H
-+
-+enum early_tis_defaults {
-+	TPM_TIMEOUT		= 5, /* ms */
-+	TIS_DURATION		= 120000, /* 120 secs in ms */
-+};
-+
-+enum tpm_family {
-+	TPM_FAMILY_INVALID	= 0,
-+	TPM_FAMILY_12		= 1,
-+	TPM_FAMILY_20		= 2
-+};
-+
-+struct tpm_chip {
-+	enum tpm_family family;
-+	u64 baseaddr;
-+	int locality;
-+	int did;
-+	int vid;
-+
-+	/* in ms */
-+	ktime_t timeout_a;
-+	ktime_t timeout_b;
-+	ktime_t timeout_c;
-+	ktime_t timeout_d;
-+};
-+
-+bool tpm_tis_check_locality(struct tpm_chip *chip, int loc);
-+void tpm_tis_release_locality(struct tpm_chip *chip);
-+int tpm_tis_request_locality(struct tpm_chip *chip, int loc);
-+void tpm_tis_disable_interrupts(struct tpm_chip *chip);
-+int tpm1_pcr_extend(struct tpm_chip *chip, u32 pcr_idx, const u8 *hash);
-+int tpm2_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
-+		    struct tpm_digest *digests, u32 digest_count);
-+int early_tpm_init(struct tpm_chip *chip, u64 baseaddr);
-+int early_tpm_fini(struct tpm_chip *chip);
-+
-+#endif /* BOOT_COMPRESSED_TPM_H */
-diff --git a/arch/x86/boot/startup/tpm_drv.c b/arch/x86/boot/startup/tpm_drv.c
-new file mode 100644
-index 000000000000..99971b06f768
---- /dev/null
-+++ b/arch/x86/boot/startup/tpm_drv.c
-@@ -0,0 +1,567 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Based of the original tpm_tis.c implementation as found in the
-+ * Linux 2.6 code base.
-+ *
-+ * Copyright (C) 2005, 2006 IBM Corporation
-+ *
-+ * Authors:
-+ * Leendert van Doorn <leendert@watson.ibm.com>
-+ * Kylene Hall <kjhall@us.ibm.com>
-+ */
-+
-+#include <crypto/sha2.h>
-+#include <asm/io.h>
-+
-+#include <linux/tpm_command.h>
+diff --git a/arch/x86/boot/startup/sl_main.c b/arch/x86/boot/startup/sl_main.c
+index 1982cfb461dd..0110392470d0 100644
+--- a/arch/x86/boot/startup/sl_main.c
++++ b/arch/x86/boot/startup/sl_main.c
+@@ -15,14 +15,624 @@
+ #include <linux/efi.h>
+ #include <linux/slr_table.h>
+ #include <linux/slaunch.h>
 +#include <linux/tpm_ptp.h>
-+#include <linux/tpm_buf.h>
+ 
+ #include "tpm.h"
+ 
++#define CAPS_VARIABLE_MTRR_COUNT_MASK	0xff
 +
-+#include "tpm.h"
++#define SL_TPM_LOG		1
++#define SL_TPM2_LOG		2
 +
-+static u8 tpm_buf_page[PAGE_SIZE];
++static void *evtlog_base;
++static u32 evtlog_size;
++static struct txt_heap_event_log_pointer2_1_element *log21_elem;
++static u32 tpm_log_ver = SL_TPM_LOG;
++static u32 tpm_num_algs;
++static struct tcg_efi_specid_event_algs *tpm_algs;
++static u8 event_buf[PAGE_SIZE];
++
++/* Simple instance of a TPM chip object */
++static struct tpm_chip chip __initdata;
++
++static struct slr_table *slrt __initdata;
++
+ u32 sl_cpu_type __initdata;
+ u32 sl_mle_start __initdata;
+ 
+ void sl_main(void *bootparams);
+ 
++static void *txt_regs = (void *)TXT_PRIV_CONFIG_REGS_BASE;
++#define sl_txt_read(r) readq(txt_regs + r)
++#define sl_txt_write(r, v) writeq(v, txt_regs + r)
++
++static void *txt_heap __initdata;
++static struct sl_txt_heap_info txt_heap_map[TXT_SINIT_TABLE_MAX] __initdata;
++
++struct sl_txt_heap_info * __init sl_txt_get_heap_map(void);
++void * __init sl_txt_get_heap_table(void *heap, u8 index);
++
++struct sl_txt_heap_info * __init sl_txt_get_heap_map(void)
++{
++	return txt_heap_map;
++}
++
++void * __init sl_txt_get_heap_table(void *heap, u8 index)
++{
++	return heap + txt_heap_map[index].offset;
++}
++
++static void __init txt_parse_heap_map(void *heap)
++{
++	void *tmp = heap;
++
++	for (u8 i = 0; i < TXT_SINIT_TABLE_MAX; i++) {
++		txt_heap_map[i].size = *((u64 *) tmp);
++		txt_heap_map[i].offset = tmp - heap + sizeof(txt_heap_map[i].size);
++		tmp += txt_heap_map[i].size;
++	}
++}
++
++void __warn_printk(const char *fmt, ...)
++{
++}
++
++static void __noreturn __init sl_txt_reset(u64 error)
++{
++	/* Reading the E2STS register acts as a barrier for TXT registers */
++	sl_txt_write(TXT_CR_ERRORCODE, error);
++	sl_txt_read(TXT_CR_E2STS);
++	sl_txt_write(TXT_CR_CMD_UNLOCK_MEM_CONFIG, 1);
++	sl_txt_read(TXT_CR_E2STS);
++	sl_txt_write(TXT_CR_CMD_RESET, 1);
++
++	for ( ; ; )
++		asm volatile ("hlt");
++
++	unreachable();
++}
++
++static inline u64 __init sl_rdmsr(u32 reg)
++{
++	struct msr m;
++
++	raw_rdmsr(reg, &m);
++
++	return m.q;
++}
++
++static struct slr_table *__init sl_locate_and_validate_slrt(void)
++{
++	struct txt_os_mle_data *os_mle_data;
++	struct slr_table *slrt;
++
++	os_mle_data = sl_txt_get_heap_table(txt_heap, TXT_OS_MLE_DATA_TABLE);
++
++	if (!os_mle_data->slrt)
++		sl_txt_reset(SL_ERROR_INVALID_SLRT);
++
++	slrt = (struct slr_table *)os_mle_data->slrt;
++
++	if (slrt->magic != SLR_TABLE_MAGIC)
++		sl_txt_reset(SL_ERROR_INVALID_SLRT);
++
++	if (slrt->architecture != SLR_INTEL_TXT)
++		sl_txt_reset(SL_ERROR_INVALID_SLRT);
++
++	return slrt;
++}
 +
 +/*
-+ * Single threaded environment only running on BSP. Use a single shared
-+ * page for all TPM extend operations.
++ * This is a validation routine that allows checking if a block of memory
++ * is protected from external access by being in a PMR range. If allow_hi is
++ * set, ranges above 4GB are allowed.
 + */
-+static inline struct tpm_buf *tpm_buf_alloc_page(void)
++static void __init sl_check_pmr_coverage(void *base, u32 size, bool allow_hi)
 +{
-+	memset(tpm_buf_page, 0, PAGE_SIZE);
-+	return (struct tpm_buf *)tpm_buf_page;
-+}
++	struct txt_os_sinit_data *os_sinit_data;
++	void *end = base + size;
 +
-+static inline void tpm_buf_free_page(void)
-+{
-+	memset(tpm_buf_page, 0, PAGE_SIZE);
-+}
++	if (!(sl_cpu_type & SL_CPU_INTEL))
++		return;
 +
-+/* Pull in TPM buffer management support */
-+#include "../../../../drivers/char/tpm/tpm-buf.c"
++	os_sinit_data = sl_txt_get_heap_table(txt_heap, TXT_OS_SINIT_DATA_TABLE);
 +
-+static u32 __init tpm_get_alg_size(u16 alg_id)
-+{
-+	switch (alg_id) {
-+	case TPM_ALG_SHA1:
-+		return TPM_DIGEST_SIZE;
-+	case TPM_ALG_SHA256:
-+	case TPM_ALG_SM3_256:
-+		return SHA256_DIGEST_SIZE;
-+	case TPM_ALG_SHA384:
-+		return SHA384_DIGEST_SIZE;
-+	case TPM_ALG_SHA512:
-+	default:
-+		return SHA512_DIGEST_SIZE;
-+	};
-+}
++	if ((u64)end >= SZ_4G && (u64)base < SZ_4G)
++		sl_txt_reset(SL_ERROR_REGION_STRADDLE_4GB);
 +
-+static inline u8 tpm_read8(struct tpm_chip *chip, u32 field)
-+{
-+	return readb((void *)(chip->baseaddr | field));
-+}
-+
-+static inline void tpm_write8(struct tpm_chip *chip, u32 field, u8 val)
-+{
-+	writeb(val, (void *)(chip->baseaddr | field));
-+}
-+
-+static inline u32 tpm_read32(struct tpm_chip *chip, u32 field)
-+{
-+	return readl((void *)(chip->baseaddr | field));
-+}
-+
-+static inline void tpm_write32(struct tpm_chip *chip, u32 field, u32 val)
-+{
-+	writel(val, (void *)(chip->baseaddr | field));
-+}
-+
-+/*
-+ * In the setup kernel environment, it is far too early to calibrate time.
-+ * Assume a 5GHz processor (the upper end of the Fam19h range), allowing
-+ * reasonable timeouts on slower systems.
-+ */
-+static unsigned long ticks_per_ms = (5UL * 1000 * 1000 /* CPU in KHz */);
-+
-+static inline ktime_t tpm_now_ms(void)
-+{
-+	return rdtsc()/ticks_per_ms;
-+}
-+
-+static inline void tpm_mdelay(unsigned int msecs)
-+{
-+	unsigned long ticks = msecs * ticks_per_ms;
-+	unsigned long s, e;
-+
-+	s = rdtsc();
-+	do {
-+		cpu_relax();
-+		e = rdtsc();
-+	} while ((e - s) < ticks);
-+}
-+
-+static inline u8 __tis_status(struct tpm_chip *chip)
-+{
-+	return tpm_read8(chip, TPM_STS(chip->locality));
-+}
-+
-+static inline void __tis_cancel(struct tpm_chip *chip)
-+{
-+	/* This causes the current command to be aborted */
-+	tpm_write8(chip, TPM_STS(chip->locality), TPM_STS_COMMAND_READY);
-+}
-+
-+static int __init __tis_get_burstcount(struct tpm_chip *chip)
-+{
-+	ktime_t stop;
-+	int burstcnt;
-+
-+	stop = tpm_now_ms() + chip->timeout_d;
-+	do {
-+		burstcnt = tpm_read8(chip, (TPM_STS(chip->locality) + 1));
-+		burstcnt += tpm_read8(chip, TPM_STS(chip->locality) + 2) << 8;
-+
-+		if (burstcnt)
-+			return burstcnt;
-+
-+		tpm_mdelay(TPM_TIMEOUT);
-+	} while (tpm_now_ms() < stop);
-+
-+	return -EBUSY;
-+}
-+
-+static int __init __tis_wait_for_stat(struct tpm_chip *chip, u8 mask, ktime_t timeout)
-+{
-+	ktime_t stop;
-+	u8 status;
-+
-+	if ((__tis_status(chip) & mask) == mask)
-+		return 0;
-+
-+	stop = tpm_now_ms() + timeout;
-+	do {
-+		tpm_mdelay(TPM_TIMEOUT);
-+
-+		status = __tis_status(chip);
-+		if ((status & mask) == mask)
-+			return 0;
-+	} while (tpm_now_ms() < stop);
-+
-+	return -ETIME;
-+}
-+
-+static int __init __tis_recv_data(struct tpm_chip *chip, u8 *buf, int count)
-+{
-+	int size = 0;
-+	int burstcnt;
-+
-+	while (size < count &&
-+	       __tis_wait_for_stat(chip,
-+				   TPM_STS_DATA_AVAIL | TPM_STS_VALID,
-+				   chip->timeout_c) == 0) {
-+		burstcnt = __tis_get_burstcount(chip);
-+
-+		for ( ; burstcnt > 0 && size < count; --burstcnt)
-+			buf[size++] = tpm_read8(chip, TPM_DATA_FIFO(chip->locality));
-+	}
-+
-+	return size;
-+}
-+
-+/**
-+ * tpm_tis_check_locality - Check if the given locality is the active one
-+ * @chip:	The TPM chip instance
-+ * @loc:	The locality to check
-+ *
-+ * Return: true - locality active, false - not active
-+ */
-+bool __init tpm_tis_check_locality(struct tpm_chip *chip, int loc)
-+{
-+	u8 res = tpm_read8(chip, TPM_ACCESS(loc));
-+
-+	if ((res & (TPM_ACCESS_ACTIVE_LOCALITY | TPM_ACCESS_VALID)) ==
-+		   (TPM_ACCESS_ACTIVE_LOCALITY | TPM_ACCESS_VALID)) {
-+		chip->locality = loc;
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
-+/**
-+ * tpm_tis_release_locality - Release the active locality
-+ * @chip:	The TPM chip instance
-+ */
-+void __init tpm_tis_release_locality(struct tpm_chip *chip)
-+{
-+	u8 res = tpm_read8(chip, TPM_ACCESS(chip->locality));
-+
-+	if ((res & (TPM_ACCESS_REQUEST_PENDING | TPM_ACCESS_VALID)) ==
-+		   (TPM_ACCESS_REQUEST_PENDING | TPM_ACCESS_VALID))
-+		tpm_write8(chip, TPM_ACCESS(chip->locality), TPM_ACCESS_RELINQUISH_LOCALITY);
-+
-+	chip->locality = 0;
-+}
-+
-+/**
-+ * tpm_tis_request_locality - Request to make the given locality the active one
-+ * @chip:	The TPM chip instance
-+ * @loc:	The locality to make active/set as current
-+ *
-+ * Return:
-+ *  >= 0 - Success, new active locality returned or locality already active
-+ *  < 0  - Error occurred
-+ */
-+int __init tpm_tis_request_locality(struct tpm_chip *chip, int loc)
-+{
-+	ktime_t stop;
-+
-+	if (tpm_tis_check_locality(chip, loc))
-+		return loc;
-+
-+	/* Set the new locality */
-+	tpm_write8(chip, TPM_ACCESS(loc), TPM_ACCESS_REQUEST_USE);
-+
-+	stop = tpm_now_ms() + chip->timeout_b;
-+	do {
-+		if (tpm_tis_check_locality(chip, loc))
-+			return loc;
-+
-+		tpm_mdelay(TPM_TIMEOUT);
-+	} while (tpm_now_ms() < stop);
-+
-+	return -1;
-+}
-+
-+/**
-+ * tpm_tis_disable_interrupts - Disable interrupts for the TPM, use polling mode only
-+ * @chip:	The TPM chip instance
-+ */
-+void __init tpm_tis_disable_interrupts(struct tpm_chip *chip)
-+{
-+	u32 intmask;
-+
-+	intmask = tpm_read32(chip, TPM_INT_ENABLE(chip->locality));
-+	/* Disable everything to make sure it is in a consistent state */
-+	intmask &= ~(TPM_GLOBAL_INT_ENABLE | TPM_INTF_CMD_READY_INT |
-+		     TPM_INTF_LOCALITY_CHANGE_INT | TPM_INTF_STS_VALID_INT |
-+		     TPM_INTF_DATA_AVAIL_INT);
-+	tpm_write32(chip, TPM_INT_ENABLE(chip->locality), intmask);
-+}
-+
-+/**
-+ * tpm_tis_recv - Receive response data from TPM via TIS FIFO
-+ * @chip:	The TPM chip instance
-+ * @buf:	The response buffer
-+ * @count:	Length of the response buffer
-+ *
-+ * Return:
-+ *  = 0 - Success, no response data
-+ *  > 0 - Success, value is the response data length
-+ *  < 0 - Error occurred
-+ */
-+static int __init tpm_tis_recv(struct tpm_chip *chip, u8 *buf, int count)
-+{
-+	int expected, status, size = 0, rc = -EIO;
-+
-+	if (count < TPM_HEADER_SIZE)
-+		goto out;
-+
-+	/* Read first 10 bytes, including tag, paramsize, and result */
-+	size = __tis_recv_data(chip, buf, TPM_HEADER_SIZE);
-+	if (size < TPM_HEADER_SIZE)
-+		goto out;
-+
-+	expected = be32_to_cpu(*((u32 *)(buf + 2)));
-+	if (expected > count)
-+		goto out;
-+
-+	size += __tis_recv_data(chip, &buf[TPM_HEADER_SIZE], expected - TPM_HEADER_SIZE);
-+	if (size < expected) {
-+		rc = -ETIME;
-+		goto out;
-+	}
-+
-+	__tis_wait_for_stat(chip, TPM_STS_VALID, chip->timeout_c);
-+
-+	status = __tis_status(chip);
-+	if (status & TPM_STS_DATA_AVAIL) {
-+		rc = -EIO;
-+		goto out;
-+	}
-+
-+	/* Done with receive, move to Command Ready state */
-+	__tis_cancel(chip);
-+
-+	return size;
-+out:
-+	__tis_cancel(chip);
-+	tpm_tis_release_locality(chip);
-+	return rc;
-+}
-+
-+/**
-+ * tpm_tis_send - Send command to TPM via TIS FIFO
-+ * @chip:	The TPM chip instance
-+ * @buf:	The command buffer
-+ * @len:	Length of the command buffer to send
-+ *
-+ * Return:
-+ *  = len - Success, all data sent
-+ *  < 0	  - Error occurred
-+ */
-+static int __init tpm_tis_send(struct tpm_chip *chip, u8 *buf, int len)
-+{
-+	int status, burstcnt = 0;
-+	int count = 0;
-+	int rc = 0;
-+
-+	status = __tis_status(chip);
-+	if ((status & TPM_STS_COMMAND_READY) == 0) {
-+		__tis_cancel(chip);
-+		if (__tis_wait_for_stat(chip, TPM_STS_COMMAND_READY, chip->timeout_b) < 0) {
-+			rc = -ETIME;
-+			goto out_err;
++	/*
++	 * Note that the late stub code validates that the hi PMR covers
++	 * all memory above 4G. At this point the code can only check that
++	 * regions are within the hi PMR but that is sufficient.
++	 */
++	if ((u64)end > SZ_4G && (u64)base >= SZ_4G) {
++		if (allow_hi) {
++			if (end >= (void *)(os_sinit_data->vtd_pmr_hi_base +
++					    os_sinit_data->vtd_pmr_hi_size))
++				sl_txt_reset(SL_ERROR_BUFFER_BEYOND_PMR);
++		} else {
++			sl_txt_reset(SL_ERROR_REGION_ABOVE_4GB);
 +		}
 +	}
 +
-+	while (count < len - 1) {
-+		burstcnt = __tis_get_burstcount(chip);
-+		for ( ; burstcnt > 0 && count < len - 1; --burstcnt)
-+			tpm_write8(chip, TPM_DATA_FIFO(chip->locality), buf[count++]);
-+
-+		__tis_wait_for_stat(chip, TPM_STS_VALID, chip->timeout_c);
-+		status = __tis_status(chip);
-+		if ((status & TPM_STS_DATA_EXPECT) == 0) {
-+			rc = -EIO;
-+			goto out_err;
-+		}
-+	}
-+
-+	/* Write last byte */
-+	tpm_write8(chip, TPM_DATA_FIFO(chip->locality), buf[count]);
-+	__tis_wait_for_stat(chip, TPM_STS_VALID, chip->timeout_c);
-+	status = __tis_status(chip);
-+	if ((status & TPM_STS_DATA_EXPECT) != 0) {
-+		rc = -EIO;
-+		goto out_err;
-+	}
-+
-+	/* Go and do it */
-+	tpm_write8(chip, TPM_STS(chip->locality), TPM_STS_GO);
-+
-+	return len;
-+
-+out_err:
-+	__tis_cancel(chip);
-+	tpm_tis_release_locality(chip);
-+	return rc;
++	if (end >= (void *)os_sinit_data->vtd_pmr_lo_size)
++		sl_txt_reset(SL_ERROR_BUFFER_BEYOND_PMR);
 +}
 +
-+/**
-+ * tpm_tis_transmit - Transmit a TPM FIFO command
-+ * @chip:	The TPM chip instance
-+ * @buf:	The request and response buffer object
-+ * @bufsize:	Entire size available in buffer
-+ *
-+ * Return:
-+ *  = 0 - Success, no returned data
-+ *  > 0 - Success, value is the return data length
-+ *  < 0 - Error occurred
++/*
++ * Some MSRs are modified by the pre-launch code including the MTRRs.
++ * The early MLE code has to restore these values. This code validates
++ * the values after they are measured.
 + */
-+static int __init tpm_tis_transmit(struct tpm_chip *chip, u8 *buf, u32 bufsize)
++static void __init sl_txt_validate_msrs(struct txt_os_mle_data *os_mle_data)
 +{
-+	ktime_t stop;
-+	u32 count;
-+	u8 status;
++	struct slr_txt_mtrr_state *saved_bsp_mtrrs;
++	u64 mtrr_caps, mtrr_def_type, mtrr_var;
++	struct slr_entry_intel_info *txt_info;
++	u64 misc_en_msr;
++	u32 vcnt, i;
++
++	txt_info = (struct slr_entry_intel_info *)os_mle_data->txt_info;
++	saved_bsp_mtrrs = &txt_info->saved_bsp_mtrrs;
++
++	mtrr_caps = sl_rdmsr(MSR_MTRRcap);
++	vcnt = (u32)(mtrr_caps & CAPS_VARIABLE_MTRR_COUNT_MASK);
++
++	if (saved_bsp_mtrrs->mtrr_vcnt > vcnt)
++		sl_txt_reset(SL_ERROR_MTRR_INV_VCNT);
++	if (saved_bsp_mtrrs->mtrr_vcnt > TXT_OS_MLE_MAX_VARIABLE_MTRRS)
++		sl_txt_reset(SL_ERROR_MTRR_INV_VCNT);
++
++	mtrr_def_type = sl_rdmsr(MSR_MTRRdefType);
++	if (saved_bsp_mtrrs->default_mem_type != mtrr_def_type)
++		sl_txt_reset(SL_ERROR_MTRR_INV_DEF_TYPE);
++
++	for (i = 0; i < saved_bsp_mtrrs->mtrr_vcnt; i++) {
++		mtrr_var = sl_rdmsr(MTRRphysBase_MSR(i));
++		if (saved_bsp_mtrrs->mtrr_pair[i].mtrr_physbase != mtrr_var)
++			sl_txt_reset(SL_ERROR_MTRR_INV_BASE);
++		mtrr_var = sl_rdmsr(MTRRphysMask_MSR(i));
++		if (saved_bsp_mtrrs->mtrr_pair[i].mtrr_physmask != mtrr_var)
++			sl_txt_reset(SL_ERROR_MTRR_INV_MASK);
++	}
++
++	misc_en_msr = sl_rdmsr(MSR_IA32_MISC_ENABLE);
++	if (txt_info->saved_misc_enable_msr != misc_en_msr)
++		sl_txt_reset(SL_ERROR_MSR_INV_MISC_EN);
++}
++
++static void __init sl_find_drtm_event_log(struct slr_table *slrt)
++{
++	struct txt_os_sinit_data *os_sinit_data;
++	struct slr_entry_log_info *log_info;
++
++	log_info = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_LOG_INFO);
++	if (!log_info)
++		sl_txt_reset(SL_ERROR_SLRT_MISSING_ENTRY);
++
++	evtlog_base = (void *)log_info->addr;
++	evtlog_size = log_info->size;
++
++	/*
++	 * For TPM 2.0, the TXT event log 2.1 extended data structure has to also
++	 * be located to find the actual log.
++	 */
++	os_sinit_data = sl_txt_get_heap_table(txt_heap, TXT_OS_SINIT_DATA_TABLE);
++
++	/*
++	 * Only support version 6 and later that properly handle the
++	 * list of ExtDataElements in the OS-SINIT structure.
++	 */
++	if (os_sinit_data->version < 6)
++		sl_txt_reset(SL_ERROR_OS_SINIT_BAD_VERSION);
++
++	/* Find the TPM2.0 logging extended heap element */
++	log21_elem = txt_find_log2_1_element(os_sinit_data);
++
++	/* If found, this implies TPM2 log and family */
++	if (log21_elem)
++		tpm_log_ver = SL_TPM2_LOG;
++}
++
++static void __init sl_validate_event_log_buffer(void)
++{
++	struct txt_os_sinit_data *os_sinit_data;
++	void *mle_base, *mle_end;
++	void *evtlog_end;
++	void *txt_end;
++
++	if ((u64)evtlog_size > (LLONG_MAX - (u64)evtlog_base))
++		sl_txt_reset(SL_ERROR_INTEGER_OVERFLOW);
++	evtlog_end = evtlog_base + evtlog_size;
++
++	txt_end = txt_heap + sl_txt_read(TXT_CR_HEAP_SIZE);
++	os_sinit_data = sl_txt_get_heap_table(txt_heap, TXT_OS_SINIT_DATA_TABLE);
++
++	mle_base = (void *)(u64)sl_mle_start;
++	mle_end = mle_base + os_sinit_data->mle_size;
++
++	/*
++	 * This check is to ensure the event log buffer does not overlap with
++	 * the MLE image.
++	 */
++	if (evtlog_base >= mle_end && evtlog_end > mle_end)
++		goto pmr_check; /* above */
++
++	if (evtlog_end <= mle_base && evtlog_base < mle_base)
++		goto pmr_check; /* below */
++
++	sl_txt_reset(SL_ERROR_MLE_BUFFER_OVERLAP);
++
++pmr_check:
++	/*
++	 * The TXT heap is protected by the DPR. If the TPM event log is
++	 * inside the TXT heap, there is no need for a PMR check.
++	 */
++	if (evtlog_base > txt_heap && evtlog_end < txt_end)
++		return;
++
++	sl_check_pmr_coverage(evtlog_base, evtlog_size, true);
++}
++
++static void __init sl_find_event_log_algorithms(void)
++{
++	struct tcg_efi_specid_event_head *efi_head =
++		(struct tcg_efi_specid_event_head *)(evtlog_base +
++						     sizeof(struct tcg_pcr_event));
++	u32 i;
++
++	if (efi_head->num_algs == 0)
++		sl_txt_reset(SL_ERROR_TPM_INVALID_ALGS);
++
++	tpm_algs = &efi_head->digest_sizes[0];
++	tpm_num_algs = efi_head->num_algs;
++
++	for (i = 0; i < tpm_num_algs; i++) {
++		if (tpm_algs[i].digest_size > TPM2_MAX_DIGEST_SIZE)
++			sl_txt_reset(SL_ERROR_TPM_INVALID_ALGS);
++		/* Alg ID 0 is invalid and maps to TPM_ALG_ERROR */
++		if (tpm_algs[i].alg_id == TPM_ALG_ERROR)
++			sl_txt_reset(SL_ERROR_TPM_INVALID_ALGS);
++	}
++}
++
++static void __init sl_tpm1_extend(u32 pcr, u32 event_type,
++				  const u8 *data, u32 length,
++				  const u8 *event_data, u32 event_size)
++{
++	u8 sha1_hash[SHA1_DIGEST_SIZE] = {0};
++	struct tcg_pcr_event *pcr_event;
++	u32 total_size;
++
++	/* Clear on each use */
++	memset(event_buf, 0, PAGE_SIZE);
++
++	pcr_event = (struct tcg_pcr_event *)event_buf;
++	pcr_event->pcr_idx = pcr;
++	pcr_event->event_type = event_type;
++	if (length > 0) {
++		sha1(data, length, &sha1_hash[0]);
++		memcpy(&pcr_event->digest[0], &sha1_hash[0], SHA1_DIGEST_SIZE);
++	}
++	pcr_event->event_size = event_size;
++	if (event_size > 0)
++		memcpy((u8 *)pcr_event + sizeof(*pcr_event),
++		       event_data, event_size);
++
++	total_size = sizeof(*pcr_event) + event_size;
++
++	/* Do the TPM extend then log the event */
++	if (tpm1_pcr_extend(&chip, pcr, &sha1_hash[0]))
++		sl_txt_reset(SL_ERROR_TPM_EXTEND);
++
++	if (tpm_log_event(evtlog_base, evtlog_size, total_size, pcr_event))
++		sl_txt_reset(SL_ERROR_TPM_LOGGING_FAILED);
++}
++
++static void __init sl_tpm2_extend(u32 pcr, u32 event_type,
++				  const u8 *data, u32 length,
++				  const u8 *event_data, u32 event_size)
++{
++	struct tcg_pcr_event2_head *head;
++	struct tcg_event_field *event;
++	u8 digest[TPM2_MAX_DIGEST_SIZE];
++	u32 total_size, alg_idx;
++	u16 *alg_ptr;
++	u8 *dgst_ptr;
 +	int rc;
 +
-+	count = be32_to_cpu(*((u32 *) (buf + 2)));
-+	if (count == 0)
-+		return -ENODATA;
++	/* Clear on each use */
++	memset(event_buf, 0, PAGE_SIZE);
 +
-+	if (count > bufsize)
-+		return -E2BIG;
++	head = (struct tcg_pcr_event2_head *)event_buf;
++	head->pcr_idx = pcr;
++	head->event_type = event_type;
++	total_size = sizeof(*head);
++	alg_ptr = (u16 *)(event_buf + sizeof(*head));
 +
-+	rc = tpm_tis_send(chip, buf, count);
-+	if (rc < 0)
-+		goto out;
++	for (alg_idx = 0; alg_idx < tpm_num_algs; alg_idx++) {
++		memset(digest, 0, TPM2_MAX_DIGEST_SIZE);
 +
-+	stop = tpm_now_ms() + TIS_DURATION;
-+	do {
-+		status = __tis_status(chip);
-+		if ((status & (TPM_STS_DATA_AVAIL | TPM_STS_VALID)) ==
-+			      (TPM_STS_DATA_AVAIL | TPM_STS_VALID))
-+			goto out_recv;
++		*alg_ptr = tpm_algs[alg_idx].alg_id;
++		dgst_ptr = (u8 *)alg_ptr + sizeof(u16);
 +
-+		if (status == TPM_STS_COMMAND_READY) {
-+			rc = -ECANCELED;
-+			goto out;
++		if (tpm_algs[alg_idx].alg_id == TPM_ALG_SHA256) {
++			sha256(data, length, &digest[0]);
++		} else if (tpm_algs[alg_idx].alg_id == TPM_ALG_SHA384) {
++			sha384(data, length, &digest[0]);
++		} else if (tpm_algs[alg_idx].alg_id == TPM_ALG_SHA512) {
++			sha512(data, length, &digest[0]);
++		} else if (tpm_algs[alg_idx].alg_id == TPM_ALG_SHA1) {
++			sha1(data, length, &digest[0]);
++		} else {
++			/*
++			 * If there are TPM banks in use that are not supported
++			 * in software here, the PCR in that bank will be capped with
++			 * the well-known value 1 as the Intel ACM does.
++			 */
++			digest[0] = 0x01;
 +		}
 +
-+		tpm_mdelay(TPM_TIMEOUT);
-+		rmb();
-+	} while (tpm_now_ms() < stop);
++		memcpy(dgst_ptr, &digest[0], tpm_algs[alg_idx].digest_size);
++		total_size += tpm_algs[alg_idx].digest_size + sizeof(u16);
++		alg_ptr = (u16 *)((u8 *)alg_ptr +
++			      tpm_algs[alg_idx].digest_size + sizeof(u16));
 +
-+	/* Cancel the command */
-+	__tis_cancel(chip);
-+	rc = -ETIME;
-+	goto out;
-+
-+out_recv:
-+	rc = tpm_tis_recv(chip, buf, bufsize);
-+	if (rc >= 0) {
-+		if (rc > 0 && rc < TPM_HEADER_SIZE)
-+			return -EFAULT;
-+		return rc;
-+	}
-+	/* Else return was an error, nothing to receive */
-+
-+out:
-+	return rc;
-+}
-+
-+/**
-+ * tpm_find_interface_and_family - interface FIFO/CRB, family 2.0 or 1.2
-+ * @chip:	The TPM chip instance
-+ *
-+ * Return: TPM family ID enum
-+ */
-+static enum tpm_family __init tpm_find_interface_and_family(struct tpm_chip *chip)
-+{
-+	struct tpm_intf_capability intf_cap;
-+	struct tpm_interface_id intf_id;
-+
-+	/* Sort out whether it is 1.x */
-+	intf_cap.val = tpm_read32(chip, TPM_INTF_CAPS(0));
-+	if ((intf_cap.interface_version == TPM_TIS_INTF_12) ||
-+	    (intf_cap.interface_version == TPM_TIS_INTF_13))
-+		return TPM_FAMILY_12; /* Always TIS */
-+
-+	/* Assume that it is 2.0 but check if the interface is CRB */
-+	intf_id.val = tpm_read32(chip, TPM_INTF_ID(0));
-+	if (intf_id.interface_type == TPM_CRB_INTF_ACTIVE)
-+		return TPM_FAMILY_INVALID;
-+
-+	/* Else TPM 2.0 with TIS interface */
-+	return TPM_FAMILY_20;
-+}
-+
-+/**
-+ * tpm1_pcr_extend - send a TPM1 extend command to the device
-+ * @chip:	a TPM chip to use
-+ * @pcr_idx:	the PCR index to extend for the current locality
-+ * @hash:	the SHA1 hash digest to extend
-+ *
-+ * Return:
-+ * * 0		- OK
-+ * * -errno	- A system error
-+ * * TPM_RC	- A TPM error
-+ */
-+int __init tpm1_pcr_extend(struct tpm_chip *chip, u32 pcr_idx, const u8 *hash)
-+{
-+	struct tpm_buf *buf = tpm_buf_alloc_page();
-+	int rc = 0;
-+
-+	tpm_buf_init(buf, TPM_BUFSIZE);
-+	tpm_buf_reset(buf, TPM_TAG_RQU_COMMAND, TPM_ORD_PCR_EXTEND);
-+
-+	tpm_buf_append_u32(buf, pcr_idx);
-+	tpm_buf_append(buf, hash, TPM_DIGEST_SIZE);
-+
-+	rc = tpm_tis_transmit(chip, buf->data, PAGE_SIZE);
-+
-+	/* Ignoring output */
-+	if (rc > 0)
-+		rc = 0;
-+
-+	tpm_buf_free_page();
-+
-+	return rc;
-+}
-+
-+/**
-+ * tpm2_pcr_extend() - send a TPM2 extend command to the device
-+ *
-+ * @chip:		TPM chip to use.
-+ * @pcr_idx:		index of the PCR.
-+ * @digests:		list of PCR banks and corresponding digest values to extend.
-+ * @digest_count:	count of digests to extend
-+ *
-+ * Return:
-+ * * 0		- OK
-+ * * -errno	- A system error
-+ * * TPM_RC	- A TPM error
-+ */
-+int __init tpm2_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
-+			   struct tpm_digest *digests, u32 digest_count)
-+{
-+	struct tpm_buf *buf = tpm_buf_alloc_page();
-+	int rc = 0, i;
-+
-+	tpm_buf_init(buf, TPM_BUFSIZE);
-+	tpm_buf_reset(buf, TPM2_ST_SESSIONS, TPM2_CC_PCR_EXTEND);
-+
-+	tpm_buf_append_u32(buf, pcr_idx);
-+
-+	/* Setup a NULL auth session for the command */
-+	tpm_buf_append_u32(buf, 9);
-+	/* auth handle */
-+	tpm_buf_append_u32(buf, TPM2_RS_PW);
-+	/* nonce */
-+	tpm_buf_append_u16(buf, 0);
-+	/* attributes */
-+	tpm_buf_append_u8(buf, 0);
-+	/* passphrase */
-+	tpm_buf_append_u16(buf, 0);
-+
-+	tpm_buf_append_u32(buf, digest_count);
-+
-+	for (i = 0; i < digest_count; i++) {
-+		tpm_buf_append_u16(buf, digests[i].alg_id);
-+		tpm_buf_append(buf, (const unsigned char *)&digests[i].digest,
-+			       tpm_get_alg_size(digests[i].alg_id));
++		head->count++;
 +	}
 +
-+	rc = tpm_tis_transmit(chip, buf->data, PAGE_SIZE);
++	event = (struct tcg_event_field *)(event_buf + total_size);
++	event->event_size = event_size;
++	if (event_size > 0)
++		memcpy((u8 *)event + sizeof(*event), event_data, event_size);
++	total_size += sizeof(*event) + event_size;
 +
-+	/* Ignoring output */
-+	if (rc > 0)
-+		rc = 0;
++	/*
++	 * Do the TPM extend then log the event. Note the digest list is packed
++	 * in the event behind the event header.
++	 */
++	rc = tpm2_pcr_extend(&chip, pcr, (struct tpm_digest *)(event_buf + sizeof(*head)),
++			     head->count);
++	if (rc)
++		sl_txt_reset(SL_ERROR_TPM_EXTEND);
 +
-+	tpm_buf_free_page();
-+
-+	return rc;
++	if (tpm2_log_event(log21_elem, evtlog_base, evtlog_size,
++			   total_size, &event_buf[0]))
++		sl_txt_reset(SL_ERROR_TPM_LOGGING_FAILED);
 +}
 +
-+int __init early_tpm_init(struct tpm_chip *chip, u64 baseaddr)
++static void __init sl_tpm_extend(u32 pcr, u32 type, const u8 *data, u32 length,
++				 const char *desc)
 +{
-+	u32 didvid;
-+
-+	memset(chip, 0, sizeof(*chip));
-+	chip->baseaddr = baseaddr;
-+
-+	chip->family = tpm_find_interface_and_family(chip);
-+	if (chip->family == TPM_FAMILY_INVALID)
-+		return TPM_ERR_INVALID_FAMILY;
-+
-+	/* Set default timeouts */
-+	chip->timeout_a = TIS_SHORT_TIMEOUT;
-+	chip->timeout_b = TIS_LONG_TIMEOUT;
-+	chip->timeout_c = TIS_SHORT_TIMEOUT;
-+	chip->timeout_d = TIS_SHORT_TIMEOUT;
-+
-+	/* Get the vendor and device ids */
-+	didvid = tpm_read32(chip, TPM_DID_VID(0));
-+	chip->did = didvid >> 16;
-+	chip->vid = didvid & 0xFFFF;
-+
-+	return TPM_SUCCESS;
++	if (chip.family == TPM_FAMILY_20)
++		sl_tpm2_extend(pcr, type, data, length, (const u8 *)desc, strlen(desc));
++	else
++		sl_tpm1_extend(pcr, type, data, length, (const u8 *)desc, strlen(desc));
 +}
 +
-+int __init early_tpm_fini(struct tpm_chip *chip)
++static void __init sl_handle_setup_data(struct setup_data *curr,
++					struct slr_policy_entry *entry)
 +{
-+	tpm_tis_release_locality(chip);
-+	memset(chip, 0, sizeof(*chip));
++	struct setup_indirect *ind;
 +
-+	return TPM_SUCCESS;
++	/* SETUP_INDIRECT instances have to be handled differently */
++	if (curr->type == SETUP_INDIRECT) {
++		ind = (struct setup_indirect *)((u8 *)curr +
++						offsetof(struct setup_data, data));
++
++		sl_check_pmr_coverage((void *)ind->addr, ind->len, true);
++
++		sl_tpm_extend(entry->pcr, SL_EVTYPE_SECURE_LAUNCH, (void *)ind->addr,
++			      ind->len, entry->evt_info);
++	}
++
++	sl_check_pmr_coverage(((u8 *)curr) + sizeof(*curr),
++			      curr->len, true);
++
++	sl_tpm_extend(entry->pcr, SL_EVTYPE_SECURE_LAUNCH, ((u8 *)curr) + sizeof(*curr),
++		      curr->len, entry->evt_info);
 +}
++
++/*
++ * The setup_data linked list in the boot_params (if present) must be
++ * processed element by element. Indirect elements need to have their
++ * pointers followed to the actual data to measure.
++ */
++static void __init sl_extend_setup_data(struct slr_policy_entry *entry)
++{
++	struct setup_data *data = (void *)(unsigned long)entry->entity;
++
++	/*
++	 * Measure any setup_data entries including e820 extended entries.
++	 * Note that the e820 fixed entries are in the boot params structure
++	 * itself and measured there.
++	 */
++	while (data) {
++		sl_handle_setup_data(data, entry);
++		data = (void *)(unsigned long)data->next;
++	}
++}
++
++static void __init sl_extend_slrt(struct slr_policy_entry *entry)
++{
++	struct slr_table *slrt = (struct slr_table *)entry->entity;
++	struct slr_entry_intel_info *intel_info;
++	struct slr_entry_intel_info intel_tmp;
++
++	/*
++	 * In revision one of the SLRT, the only table that needs to be
++	 * measured is the Intel info table. Everything else is meta-data,
++	 * addresses and sizes. Note the size of what to measure is not set.
++	 * The flag SLR_POLICY_IMPLICIT_SIZE leaves it to the measuring code
++	 * to sort out.
++	 */
++	if (slrt->revision == 1) {
++		intel_info = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_INTEL_INFO);
++		if (!intel_info)
++			sl_txt_reset(SL_ERROR_SLRT_MISSING_ENTRY);
++
++		/*
++		 * Make a temp copy and zero out address fields since they should
++		 * not be measured.
++		 */
++		intel_tmp = *intel_info;
++		intel_tmp.boot_params_addr = 0;
++		intel_tmp.txt_heap = 0;
++
++		sl_tpm_extend(entry->pcr, SL_EVTYPE_SECURE_LAUNCH, (void *)&intel_tmp,
++			      sizeof(*intel_info), entry->evt_info);
++	}
++}
++
++static void __init sl_extend_txt_os2mle(struct slr_policy_entry *entry)
++{
++	struct txt_os_mle_data *os_mle_data;
++
++	os_mle_data = sl_txt_get_heap_table(txt_heap, TXT_OS_MLE_DATA_TABLE);
++
++	/*
++	 * Version 1 of the OS-MLE heap structure has no fields to measure. It just
++	 * has addresses and sizes and a scratch buffer.
++	 */
++	if (os_mle_data->version == 1)
++		return;
++}
++
++/*
++ * Process all policy entries and extend the measurements to the evtlog. Note
++ * that some entries need special processing which is done in subroutines.
++ */
++static void __init sl_process_extend_policy(struct slr_table *slrt)
++{
++	struct slr_entry_policy *policy;
++	u16 i;
++
++	policy = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_ENTRY_POLICY);
++	if (!policy)
++		sl_txt_reset(SL_ERROR_SLRT_MISSING_ENTRY);
++
++	for (i = 0; i < policy->nr_entries; i++) {
++		switch (policy->policy_entries[i].entity_type) {
++		case SLR_ET_SETUP_DATA:
++			sl_extend_setup_data(&policy->policy_entries[i]);
++			break;
++		case SLR_ET_SLRT:
++			sl_extend_slrt(&policy->policy_entries[i]);
++			break;
++		case SLR_ET_TXT_OS2MLE:
++			sl_extend_txt_os2mle(&policy->policy_entries[i]);
++			break;
++		case SLR_ET_UNUSED:
++			continue;
++		default:
++			sl_tpm_extend(policy->policy_entries[i].pcr,
++				      SL_EVTYPE_SECURE_LAUNCH,
++				      (void *)policy->policy_entries[i].entity,
++				      policy->policy_entries[i].size,
++				      policy->policy_entries[i].evt_info);
++		}
++	}
++}
++
++/*
++ * Process all EFI config entries and extend the measurements to the evtlog
++ */
++static void __init sl_process_extend_uefi_config(struct slr_table *slrt)
++{
++	struct slr_entry_uefi_config *uefi_config;
++	u16 i;
++
++	uefi_config = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_UEFI_CONFIG);
++
++	/* Optionally here depending on how SL kernel was booted */
++	if (!uefi_config)
++		return;
++
++	for (i = 0; i < uefi_config->nr_entries; i++) {
++		sl_tpm_extend(uefi_config->uefi_cfg_entries[i].pcr,
++			      SL_EVTYPE_SECURE_LAUNCH,
++			      (void *)uefi_config->uefi_cfg_entries[i].cfg,
++			      uefi_config->uefi_cfg_entries[i].size,
++			      uefi_config->uefi_cfg_entries[i].evt_info);
++	}
++}
++
+ asmlinkage __visible __init void sl_main(void *bootparams)
+ {
++	struct boot_params *bp = (struct boot_params *)bootparams;
++	struct txt_os_mle_data *os_mle_data;
++
++	/*
++	 * Ensure loadflags do not indicate a secure launch was done
++	 * unless it really was.
++	 */
++	bp->hdr.loadflags &= ~SLAUNCH_FLAG;
++
++	/*
++	 * Currently only Intel TXT is supported for Secure Launch. Testing
++	 * this value also indicates that the kernel was booted successfully
++	 * through the Secure Launch entry point and is in SMX mode.
++	 */
++	if (!(sl_cpu_type & SL_CPU_INTEL))
++		return;
++
++	txt_heap = (void *)sl_txt_read(TXT_CR_HEAP_BASE);
++	txt_parse_heap_map(txt_heap);
++
++	/* Find the SLRT setup by the pre-launch stage */
++	slrt = sl_locate_and_validate_slrt();
++
++	/* Locate the TPM event log. */
++	sl_find_drtm_event_log(slrt);
++
++	/* Validate the location of the event log buffer before using it */
++	sl_validate_event_log_buffer();
++
++	/*
++	 * Find the TPM hash algorithms used by the ACM and recorded in the
++	 * event log.
++	 */
++	if (tpm_log_ver == SL_TPM2_LOG)
++		sl_find_event_log_algorithms();
++
++	/*
++	 * Prepare the early TPM driver to do PCR extends for the DRTM
++	 * measurements. On a successful DRTM launch, TPM locality 2
++	 * should be available to open/acquire.
++	 *
++	 * Note that the early TPM driver does not use interrupts but
++	 * rather polling for command completion (there is no infrastructure
++	 * setup for servicing interrupts in the setup kernel).
++	 */
++	if (early_tpm_init(&chip, TIS_MEM_X86_LPC_BASE))
++		sl_txt_reset(SL_ERROR_TPM_INIT);
++	if (tpm_tis_request_locality(&chip, TPM_LOCALITY_2) < 0)
++		sl_txt_reset(SL_ERROR_TPM_INIT);
++	if (chip.family == TPM_FAMILY_20 && tpm_log_ver != SL_TPM2_LOG)
++		sl_txt_reset(SL_ERROR_TPM_INIT);
++	tpm_tis_disable_interrupts(&chip);
++
++	/*
++	 * Set the SLAUNCH_FLAG early since if anything fails, the system will
++	 * reset anyway.
++	 */
++	bp->hdr.loadflags |= SLAUNCH_FLAG;
++
++	sl_check_pmr_coverage(bootparams, PAGE_SIZE, false);
++
++	/*
++	 * Extend measurements into the TPM for entities specified in the
++	 * SLRT policies.
++	 */
++	sl_process_extend_policy(slrt);
++	sl_process_extend_uefi_config(slrt);
++
++	/* No PMR check is needed, the TXT heap is covered by the DPR */
++	os_mle_data = sl_txt_get_heap_table(txt_heap, TXT_OS_MLE_DATA_TABLE);
++
++	/*
++	 * Now that the OS-MLE data is measured, ensure the MTRR and
++	 * misc enable MSRs are what we expect.
++	 */
++	sl_txt_validate_msrs(os_mle_data);
+ }
 -- 
 2.47.3
 
