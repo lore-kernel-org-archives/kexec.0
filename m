@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 19054CD4851
-	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 21:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 51873CD4851
+	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 21:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=UCBpSoWd+DzhR5w/L2qTUePdSLNQuDLLzBvZ0vft3Fw=; b=2JtzFQR5TSZ2ftteAvmMxUxY45
-	3VzcoC2AwWuB8/+jfmrRZRgVjCKm/zfV+wWMb29nzsIlmyrkew6l2H8YcQoMU8kafauNSleICUmra
-	CQzhy+7WDxlANySX6KoRysj4zAJOVKmowL3EiDvQPBgdfLM+wRJePqGzUEQTc/+37QBTlilQNdTLW
-	pR4C4qLcDvtW6rLgwIUvt+Sprio8MTlmXzob/a5RKPRTBt51C5U3rnV7ay5UpXFhNm5FPtAl3qtGp
-	/9loBZOC8HStvWf/pvlu+7In3cOF38ipWVc715Y496MGOHSGVyVfZxtJctyOoIaEwOLOmdRr899ep
-	3JvX6Bbw==;
+	bh=h8RkPwRSQGNgtwFGhMa45mhqNtBX9nLmlB3IzWi1i0E=; b=ae8C8tcaENe5QSUeDn8FQgXk6Y
+	loCE2w5wwzuLfnWgSKA3rcUrb7P+go53F+ebmzNXvrry62Pkfn9u2YlUG1W5SMkhcqWqgN9iqfjF6
+	UyVg99B2FkypLZoyy5O0OscMxm7mhn3pGn5wazFSqT3GUzcFb2PsV/9hhAqchWiDXsmgoQT9dII7J
+	UdLdz+n8hEVsRi6jNReJziL3GGJ3ofM+PdnNYgPsy4Izk4LqdGzq7HsAzu92vzrLzw6DTx62Ysz0L
+	RRBEUdhzEze4ZAeFFQAcQcp/Xl2Uy9QML5h+mHOAEPReHKVWV0pJnMCWdABGMat/OZw71g/9l14Q0
+	MPFUnHRg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNzt8-00000009UVu-3J12;
-	Fri, 15 May 2026 21:16:06 +0000
-Received: from mail-dl1-x1233.google.com ([2607:f8b0:4864:20::1233])
+	id 1wNzz3-00000009VYW-43lH;
+	Fri, 15 May 2026 21:22:13 +0000
+Received: from mail-dy1-x1333.google.com ([2607:f8b0:4864:20::1333])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wNzt3-00000009UP2-2yGG
+	id 1wNzz1-00000009VXu-2AJj
 	for kexec@lists.infradead.org;
-	Fri, 15 May 2026 21:16:04 +0000
-Received: by mail-dl1-x1233.google.com with SMTP id a92af1059eb24-1354403c610so394523c88.0
-        for <kexec@lists.infradead.org>; Fri, 15 May 2026 14:16:01 -0700 (PDT)
+	Fri, 15 May 2026 21:22:12 +0000
+Received: by mail-dy1-x1333.google.com with SMTP id 5a478bee46e88-2f0d3e07e30so1384202eec.0
+        for <kexec@lists.infradead.org>; Fri, 15 May 2026 14:22:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778879761; x=1779484561; darn=lists.infradead.org;
+        d=gmail.com; s=20251104; t=1778880130; x=1779484930; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UCBpSoWd+DzhR5w/L2qTUePdSLNQuDLLzBvZ0vft3Fw=;
-        b=FzahcbNyQT8iEbsCpt0C03aNM2Wb0rvVQIzSAhfu8sWY2umqzTQ+Fot+5fUwg9GH0I
-         yQWu2htZcp7tPIPfkxLVhH+Tca8/F+VnLehJ25aa02+9UIC43NhzOBpePf5pi4i0CIFA
-         FGYIuSBh8tM+kC8gKd95/jwhXmCV+26VJfb1vBjHkDYlPDXOQBY2T2wVtO6hKllFauwl
-         u5M6ZLbpp9iHRgI6JtCDJ/SYbUNd0/zsRn8XsAS+JMHETuPpA/vM0y5gcEFwYkp9UU2J
-         CZIYH8HkkC3MnRvVNJiF7DCwZJtdqQuFt9V0PJoajacd/qa0/37bcv8jwkAKwaac482Y
-         Et1A==
+        bh=h8RkPwRSQGNgtwFGhMa45mhqNtBX9nLmlB3IzWi1i0E=;
+        b=IpemdFWDkDLoL8WhJVYFmd9Oweje/4CRe8sfVUIkYL1J+XKM2ieCtA3sbvQTWzJWG2
+         G/Fe/l+eQPu8rIxz5bBCjTxFQxTSzMGJKYtj0xfXgqrL7Uhtccfs9z0fu3RQDZ26FWvM
+         5QamNfo/aoeTSt85ASU+yJTuG6z9gkLIo605xj7GwtSGxCW/Hu3OZ8tEh1FDg/riezl4
+         jS/DbroBpcenyHIJxrHwANsRdWPl1533Vt0v/i0XNjNafl3mIwBuzNDMvqMq2R/6fTQC
+         O6cUq05ajcxpaLle86Wefu/HXXuH6x8pekan4ynEqLooQkeL/zLu4LyeNfLUs8u2WYR6
+         GEHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778879761; x=1779484561;
+        d=1e100.net; s=20251104; t=1778880130; x=1779484930;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=UCBpSoWd+DzhR5w/L2qTUePdSLNQuDLLzBvZ0vft3Fw=;
-        b=SMlLHYCm4mN1X+umkSYGpNM59cKBAXIfDrWtFVpe0lBDaEz0BUx5NY3NCTR9fllcoy
-         idUeHrafMX3o37IxqNSYpj24ek/Qsg631MWbHV38FXgWRqLSKMZ7sWQNhDwmadmX0t+B
-         y+i6QLwhCc/C2KZRzsYkiOejmnJJ5NTJK56fgvlaIdE0wLR++K1a2zZFdL+gLscjob7H
-         cQ/2jyDX17wkkn5z1sMDLTzmgRCd0Ext/1/lMkK7ti9WdVXJkiCE9u50fzbCExzVPJ+0
-         3VfOFdSO8T0fQb69rAYfb5z0kEOC9f4o15J+ZhfQvOG7/UyaN3haie3bRV5+85DXu1qZ
-         LQcg==
-X-Forwarded-Encrypted: i=1; AFNElJ+Sy+zIO+6rMEtlm+fM97c2FEwmludFcN1ma2uyCE7fp7RxyVrBfhbaT/lqkV1/Lx/qqy6SXA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwZ3HjIn5s7nxXvGJCXsSWAocHKuBOXS8Fc0kXtB0IrfPpFZPHO
-	83GRinr3EeAwoazMo6AtW4rffijEOBiAfVYal4KjvH2O1Xo1eTG9vRB4
-X-Gm-Gg: Acq92OFcUP+zbtgC4J4ZbLkjvRp5tSjNjvMWV6qATi8xrv/CJaK+XXdw+6fV8yIRskE
-	1C5QWXQhyz1ZtabkkIYOvqywmBQRcrgteUPT4YD5XsUXbnxwDc1cRFZsWsNgEgaCvWuZhdRJ8si
-	kOkVNe4YGCdM7s/bYwuFrhKfsWdBMiFNQTErqtIxU2jaOXzAufFGW5CpB9IsA3VNZKC1PlnxzGc
-	CvHlCZnnXZQyAYjOUuCd64ivl0utpI1bGIHbkuwaLSpiVmofD+q8dWStWE1oVCunHEPhpsjqs/3
-	6FMBkKrItVaJ+OkerAqsofxV6qBhj4SkA8yEethqqEqmmHgSTZsT+PgU6inaZKJ6n2bCajq+qD3
-	AZ658XSWIO9Mm4W8t/CEAvQwrXtwElEHjirX+JpYtLU7qEBVIza6Lh/rpI9ImK73x/oalDVpDVy
-	vvX/bxBPNOzziJ4BBwZl9kWsAnlJ8+QSo=
-X-Received: by 2002:a05:7022:1a85:b0:12d:d972:b96e with SMTP id a92af1059eb24-1350542e8e5mr2758254c88.20.1778879760953;
-        Fri, 15 May 2026 14:16:00 -0700 (PDT)
+        bh=h8RkPwRSQGNgtwFGhMa45mhqNtBX9nLmlB3IzWi1i0E=;
+        b=I9cwCk1/qZfv7+aDKpMHLhl1lMJ0gHiuiLtUXlZ8+tK1PaNQLiuYQnjoBmmxbR2skA
+         sNslXqoHctyfECePKASwe7CkYJn0kZxwOHnGTHUHNS2OTc14K9X5k395EkH40WINcZ8H
+         cFd+N2sZDOstUFGkpcXu1slN6vSJDH/gtYDPNJflt8Dv/jCu5CBRp7DNywInXxZOWJa2
+         g+vn9XotMhW1WBDuvitoFOyRsVkK1d3DrizoQOD1jio98q5/fc/8MFpg+inPp8GTbALn
+         Uc/V+S2FDVUu9ixVjKcpdlZmKvC4iDCN2wkOww4UsBpk0mZE/Y1IG7em0qjNpyLdmGw0
+         x23w==
+X-Forwarded-Encrypted: i=1; AFNElJ/huBZYQj0a6yUGUDrXrcGrzp2vcJDlABNeBCgZJUYC+DRF9Hb6bIYx/tRwN8KRULLw2FEkcw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxzNsYu4HYx2iH/YbT5KfS2xkfqwsZjjJrbJiAbuenZD7CYyARB
+	mxGEh0QaF7Wa/n5z3r+P+6Pyb4T5dcAxJ8O87vMCLq0TzIwIcXGKViSu8U0wZuSV
+X-Gm-Gg: Acq92OE7gT8EovkyunJW+uJc3X/aKMx23hyxx4Ydow4f0MomF8OtqFqXgUpNH39FJFE
+	e5hjIL/MvJpoQ96XWh+VlfdZMrFvtuVkGN7u7H7CIjZD6Ui5/yKzQABKJWH1H6qykzjPBY0yZDH
+	jpjBJ5n813d1+mlewr9sZb+N+YJYp6hXW9GaxlBmt/gD+8jw5splM1QPrzg+/hzo0mWuLwTgp1f
+	ItL0NKvVROC0kObOMFBRGNpxUWboUvp++d/IbXGuKt/rlYLooQC3WhIo3oxRa0zQrczdMtPBTWk
+	gRzTJ2RpfXd2DQBOjGDv4bPny31fGuJ3TspdbuJL9+9j9SrMnz+Yrp4KOf/GWy4gvHwrHjZWlUG
+	d7jWXHrH7U/8s/WqPUBLXsDKGP8EtAm/pjuIA8ktXE7LBSJ5L6BX9iblIvUVeaJ0tH97rO0pbyC
+	z8nNKnJOasvqzRxJFDtPHbSngpvyuOKjcDeFfr37Fy2Q==
+X-Received: by 2002:a05:7300:ad30:b0:2e7:5737:8364 with SMTP id 5a478bee46e88-303984e17ffmr3028118eec.15.1778879717789;
+        Fri, 15 May 2026 14:15:17 -0700 (PDT)
 Received: from mimas.lan ([2603:8000:df01:38f7:a6bb:6dff:fecf:e71a])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-134cb5b3c20sm11529163c88.0.2026.05.15.14.15.59
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-302947e917dsm8005268eec.12.2026.05.15.14.15.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2026 14:16:00 -0700 (PDT)
+        Fri, 15 May 2026 14:15:17 -0700 (PDT)
 From: Ross Philipson <ross.philipson@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	x86@kernel.org,
@@ -103,17 +103,17 @@ Cc: ross.philipson@gmail.com,
 	daniel.kiper@oracle.com,
 	andrew.cooper3@citrix.com,
 	trenchboot-devel@googlegroups.com
-Subject: [PATCH v16 38/38] x86/boot: Legacy boot DRTM support for Secure Launch
-Date: Fri, 15 May 2026 14:14:10 -0700
-Message-ID: <20260515211410.31440-39-ross.philipson@gmail.com>
+Subject: [PATCH v16 23/38] x86: Allow WARN_trap() macro to be included in pre-boot environments
+Date: Fri, 15 May 2026 14:13:55 -0700
+Message-ID: <20260515211410.31440-24-ross.philipson@gmail.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260515211410.31440-1-ross.philipson@gmail.com>
 References: <20260515211410.31440-1-ross.philipson@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260515_141601_779780_C1F3EAC7 
-X-CRM114-Status: GOOD (  26.06  )
+X-CRM114-CacheID: sfid-20260515_142211_559337_DE07D6EB 
+X-CRM114-Status: GOOD (  10.13  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -128,165 +128,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+For pre-boot environments, do not use the static call definition of the
+WARN_trap() macro.
 
-Implement Secure Launch D-RTM of the decompressed kernel via a
-callback interface exposed by the Secure Launch Resource Table (SLRT), a
-reference to which is added to struct boot_params.
-
-This permits a boot loader to set up the Secure Launch, allow the
-decompressor to execute up to the point where it would otherwise boot the
-core kernel, and at that point, perform the Dynamic Launch Event in a
-architecture/vendor specific manner. This is similar to how EFI boot
-achieves this, using a EFI protocol exposed by the boot loader.
-
-This requires that the decompressor unpacks the kernel into the buffer that
-it was started from itself, and so physical KASLR needs to be omitted
-(although the boot loader is free to place the decompressor at any
-suitably aligned locations in system memory, and so it can perform the
-physical randomization itself).
-
-It also relies on the demand paging logic in the decompressor, to ensure
-that the SLRT and the entry point it describes are callable, at least to
-the extent that allows the callback code to re-establish its own
-execution environment.
-
-Co-developed-by: Ross Philipson <ross.philipson@gmail.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Ross Philipson <ross.philipson@gmail.com>
 ---
- Documentation/arch/x86/zero-page.rst  |  1 +
- arch/x86/boot/compressed/misc.c       | 51 ++++++++++++++++++++++++---
- arch/x86/boot/compressed/pgtable_64.c |  7 ++++
- arch/x86/include/uapi/asm/bootparam.h |  2 +-
- 4 files changed, 56 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/bug.h | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/arch/x86/zero-page.rst b/Documentation/arch/x86/zero-page.rst
-index 45aa9cceb4f1..dd98b467929c 100644
---- a/Documentation/arch/x86/zero-page.rst
-+++ b/Documentation/arch/x86/zero-page.rst
-@@ -20,6 +20,7 @@ Offset/Size	Proto	Name			Meaning
- 060/010		ALL	ist_info		Intel SpeedStep (IST) BIOS support information
- 						(struct ist_info)
- 070/008		ALL	acpi_rsdp_addr		Physical address of ACPI RSDP table
-+078/008		ALL	slr_table_addr		Physical address of Secure Launch Resource Table
- 080/010		ALL	hd0_info		hd0 disk parameter, OBSOLETE!!
- 090/010		ALL	hd1_info		hd1 disk parameter, OBSOLETE!!
- 0A0/010		ALL	sys_desc_table		System description table (struct sys_desc_table),
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index e3b5177bfa6f..eaaface4cd7d 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -17,6 +17,7 @@
- #include "../string.h"
- #include "../voffset.h"
- #include <asm/bootparam_utils.h>
-+#include <linux/slr_table.h>
+diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+index 80c1696d8d59..7899768ae644 100644
+--- a/arch/x86/include/asm/bug.h
++++ b/arch/x86/include/asm/bug.h
+@@ -138,8 +138,14 @@ do {									\
+ #ifdef HAVE_ARCH_BUG_FORMAT_ARGS
  
- /*
-  * WARNING!!
-@@ -391,6 +392,36 @@ static void early_sev_detect(void)
- 		lines = cols = 0;
- }
+ #ifndef __ASSEMBLER__
++
++#ifndef __DISABLE_EXPORTS
+ #include <linux/static_call_types.h>
+ DECLARE_STATIC_CALL(WARN_trap, __WARN_trap);
++#define WARN_trap(...)	static_call_mod(WARN_trap)(__VA_ARGS__)
++#else /* __DISABLE_EXPORTS */
++#define WARN_trap(...)	__WARN_trap(__VA_ARGS__)
++#endif /* __DISABLE_EXPORTS */
  
-+#ifdef CONFIG_SECURE_LAUNCH
-+static void sl_initiate_launch(unsigned long table, unsigned long base)
-+{
-+	struct slr_table *slrt = (void *)table;
-+	struct slr_entry_dl_info *dl_info;
-+	struct slr_setup_dlme dlme;
-+	dl_launch_func launch_fn;
-+
-+	dlme.dlme_base = base;
-+	dlme.dlme_header_offset = mle_header_offset;
-+	dlme.dlme_table = 0;
-+
-+	if (!slrt)
-+		return;
-+
-+	dl_info = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_DL_INFO);
-+	if (!dl_info)
-+		return;
-+
-+	launch_fn = (void *)dl_info->dl_launch;
-+
-+	/* Do the Dynamic Launch Event */
-+	launch_fn(&dl_info->bl_context, &dlme);
-+}
-+#else
-+static inline void sl_initiate_launch(unsigned long table, unsigned long base)
-+{
-+}
-+#endif
-+
- /*
-  * The compressed kernel image (ZO), has been moved so that its position
-  * is against the end of the buffer used to hold the uncompressed kernel
-@@ -491,10 +522,15 @@ asmlinkage __visible void *extract_kernel(void *rmode, unsigned char *output)
- 	debug_putaddr(trampoline_32bit);
- #endif
+ struct pt_regs;
+ struct sysv_va_list { /* from AMD64 System V ABI */
+@@ -172,7 +178,7 @@ extern void *__warn_args(struct arch_va_list *args, struct pt_regs *regs);
+ #define __WARN_print_arg(flags, format, arg...)				\
+ do {									\
+ 	int __flags = (flags) | BUGFLAG_WARNING | BUGFLAG_ARGS ;	\
+-	static_call_mod(WARN_trap)(__WARN_bug_entry(__flags, format), ## arg); \
++	WARN_trap(__WARN_bug_entry(__flags, format), ## arg);		\
+ 	asm (""); /* inhibit tail-call optimization */			\
+ } while (0)
  
--	choose_random_location((unsigned long)input_data, input_len,
--				(unsigned long *)&output,
--				needed_size,
--				&virt_addr);
-+	/*
-+	 * When doing a secure launch, the actual launch will be initiated by
-+	 * jumping back to the bootloader. Omit physical KASLR in that case, to
-+	 * avoid trampling on its code or data inadvertently.
-+	 */
-+	if (!boot_params_ptr->slr_table_addr)
-+		choose_random_location((unsigned long)input_data, input_len,
-+				       (unsigned long *)&output,
-+				       needed_size, &virt_addr);
- 
- 	/* Validate memory location choices. */
- 	if ((unsigned long)output & (MIN_KERNEL_ALIGN - 1))
-@@ -528,6 +564,13 @@ asmlinkage __visible void *extract_kernel(void *rmode, unsigned char *output)
- 	debug_puthex(entry_offset);
- 	debug_putstr(").\n");
- 
-+	/*
-+	 * Secure Launch involves calling back into the bootloader, so this
-+	 * needs to happen before disabling exception handling, to ensure that
-+	 * the entry point will be mapped on demand if needed.
-+	 */
-+	sl_initiate_launch(boot_params_ptr->slr_table_addr, (unsigned long)output);
-+
- 	/* Disable exception handling before booting the kernel */
- 	cleanup_exception_handling();
- 
-diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
-index 3e9d651da73e..f82094669ac0 100644
---- a/arch/x86/boot/compressed/pgtable_64.c
-+++ b/arch/x86/boot/compressed/pgtable_64.c
-@@ -124,6 +124,13 @@ asmlinkage void configure_5level_paging(struct boot_params *bp, void *pgtable)
- 
- 	l5_required = !cmdline_find_option_bool("no5lvl");
- 
-+	/*
-+	 * Don't change the number of levels when doing a Secure Launch. The
-+	 * Secure Launch stub will take care of that if needed.
-+	 */
-+	if (bp->slr_table_addr)
-+		l5_required = l5_enabled;
-+
- 	if (l5_required) {
- 		/* Initialize variables for 5-level paging */
- 		__pgtable_l5_enabled = 1;
-diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
-index 8155fa899f50..bc2ef37096af 100644
---- a/arch/x86/include/uapi/asm/bootparam.h
-+++ b/arch/x86/include/uapi/asm/bootparam.h
-@@ -121,7 +121,7 @@ struct boot_params {
- 	__u64  tboot_addr;				/* 0x058 */
- 	struct ist_info ist_info;			/* 0x060 */
- 	__u64 acpi_rsdp_addr;				/* 0x070 */
--	__u8  _pad3[8];					/* 0x078 */
-+	__u64 slr_table_addr;				/* 0x078 */
- 	__u8  hd0_info[16];	/* obsolete! */		/* 0x080 */
- 	__u8  hd1_info[16];	/* obsolete! */		/* 0x090 */
- 	struct sys_desc_table sys_desc_table; /* obsolete! */	/* 0x0a0 */
 -- 
 2.47.3
 
