@@ -4,62 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C6BDDCD4F25
-	for <kexec@archiver.kernel.org>; Sat, 16 May 2026 07:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 764D7CD4F25
+	for <kexec@archiver.kernel.org>; Sat, 16 May 2026 08:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2w+A10RNn3haPdSCgGA8e51o+4+IUVl1uiDV7wnVml8=; b=J3SCeD+myVtPN2iX5kY4MLA2aN
-	2zhK2WtcyDVwdp767Ckn2XEJPhd/J+j1KvVwTx6ovO1nrRrhRMmAVPZL57tUAZ/Ex6i8oAVlch3O6
-	WYpLBj1GPRKRl/ELZQiR1NWepTy4ZQkR3UTt4st0+ccqmgTz9iknxoA/YaonAvNUb8AJ23J7vgvEV
-	RMJ6qerK/wCiR02QS6N89+ud8pwMd0/eyT+5RyeXGFYCX3EBVIzzJM2V3HbysETPY4ylAwulFtRWg
-	B3G1C+Oj8fCevgyMFoH97+wsDvsWMYtLKhS8ZD6CMA/iox7Q6YJ7g+7fcFmxGcLyKcBZQUahT3MjZ
-	xg27bgfQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=QjaYcWriodSEoCqMrJuw9IVAugpAkEJ1mwDWlGPZRAU=; b=4HsBCrbaxF89q0ZOtoNocDiAvx
+	gZwBzfSqF0DnvnP7VkSOBAydIMjjJdW5QV3hOhw5yrSQqlRVnH6mD/xnDixcC8ibicNWoFvl4s/Fx
+	EpTHdxiOfcnl+jRGmzQdNFUWOkTW3vP0c/T+8BXOJlDTXNScCBxHqF0y0OsbKkJ9lVN1aVZO7nS1S
+	rqL+Buss7tS96t2Z+ksD+1wp79jcmHZH5h8fWRVaaqqA3XJjJ1yBm1y/9PxES/HkkmafSwIwLkF29
+	A2qzS5TvWkIsnaboC15jdtl9bIC+sglKR+9vXNridWGp9ADKwxe295MNr3W3eSZprH998hbg8hxeG
+	S00noJLw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wO9cm-0000000AMwR-0Mqm;
-	Sat, 16 May 2026 07:39:52 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wOAq7-0000000ASJx-3CnF;
+	Sat, 16 May 2026 08:57:43 +0000
+Received: from canpmsgout05.his.huawei.com ([113.46.200.220])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wO9cl-0000000AMw3-08R1
+	id 1wOAq4-0000000ASI5-2E17
 	for kexec@lists.infradead.org;
-	Sat, 16 May 2026 07:39:51 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 21DBD60138;
-	Sat, 16 May 2026 07:39:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A082C19425;
-	Sat, 16 May 2026 07:39:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778917189;
-	bh=9s5hcQU1qJOng7EpP/1GD0C/FrCAs0eJD5DJJG+YdWc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SOcGyOP3uRqRREsFCbj4kXH8iRAplLOSa9T+BwriiMyUVZeM+FfujrtfK2JKkSINy
-	 SSWvrbC0Kuv8LsFRvtH3OrIRSdrrenlj56oLuZviMLTO009t1uXT54+CY6bj52Q9YJ
-	 jX7dJRSJJf1rQuG7sVEFRL7OB4xaE00YsZDR0AnA6/IYwySA04l5XmeVJwOl1FoVVv
-	 t9h7//o80okplijw+v2OJpIWSUs7Dql1EmKoqpNNwENUmwpYvMo7qWrvwUTZGRoA07
-	 d0zVHd53GPaaX0UFCr9jMyhqrZ0c8s4B0lgoZp0AV9E5NOayydAJqrTb7zL5lpYaWv
-	 J1lUcJCNSx46A==
-Date: Sat, 16 May 2026 10:39:43 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Samiullah Khawaja <skhawaja@google.com>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Alexander Graf <graf@amazon.com>,
-	David Matlack <dmatlack@google.com>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:KEXEC HANDOVER (KHO)" <kexec@lists.infradead.org>,
-	"open list:KEXEC HANDOVER (KHO)" <linux-mm@kvack.org>
-Subject: Re: [PATCH 1/3] kho: Add kunit static stubs
-Message-ID: <aggfP-0A-i-bYlP7@kernel.org>
-References: <20260512195135.804833-1-skhawaja@google.com>
- <20260512195135.804833-2-skhawaja@google.com>
+	Sat, 16 May 2026 08:57:42 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=QjaYcWriodSEoCqMrJuw9IVAugpAkEJ1mwDWlGPZRAU=;
+	b=5/kOT0xAo529umWuyJH8mRArjYelYi7J9WS81w7UxBT1GyZTNORqp9XxgOreuzPTSd63gCqH4
+	gbCcJueaO/eCPaDuItwK569uuJ1yjOz2XjGX3mAxrDPZSqlbQcyL0pzJD+c0V43fi7WctaMeWNq
+	XEmeluWL9DGz/94Z1F3SW08=
+Received: from mail.maildlp.com (unknown [172.19.162.140])
+	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4gHd7H1JjYz12LDl;
+	Sat, 16 May 2026 16:50:19 +0800 (CST)
+Received: from kwepemk100009.china.huawei.com (unknown [7.202.194.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id A3C12203AC;
+	Sat, 16 May 2026 16:57:22 +0800 (CST)
+Received: from huawei.com (10.50.159.234) by kwepemk100009.china.huawei.com
+ (7.202.194.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Sat, 16 May
+ 2026 16:57:21 +0800
+From: longwei <longwei27@huawei.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport
+	<rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, Alexander Graf
+	<graf@amazon.com>
+CC: <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+	<hewenliang4@huawei.com>, LongWei <longwei27@huawei.com>
+Subject: [PATCH] kho: docs: fix typo in ABI documentation
+Date: Sat, 16 May 2026 16:56:53 +0800
+Message-ID: <20260516085653.2193872-1-longwei27@huawei.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260512195135.804833-2-skhawaja@google.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.50.159.234]
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemk100009.china.huawei.com (7.202.194.57)
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260516_015741_068893_45F67942 
+X-CRM114-Status: UNSURE (   7.65  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,59 +78,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Sami,
+From: LongWei <longwei27@huawei.com>
 
-On Tue, May 12, 2026 at 07:51:33PM +0000, Samiullah Khawaja wrote:
-> Add kunit stubs in kho_restore_folio() and kho_restore_pages() so the
-> users can mock these functions in kunit tests.
-> 
-> Signed-off-by: Samiullah Khawaja <skhawaja@google.com>
-> ---
->  kernel/liveupdate/kexec_handover.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> index d5718bef6d4d..1375291d9b07 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -11,6 +11,7 @@
->  #define pr_fmt(fmt) "KHO: " fmt
->  
->  #include <linux/cleanup.h>
-> +#include <kunit/static_stub.h>
+Replace "Indentifies" with "Identifies".
 
-Can we include kunit headers before linux headers?
+Signed-off-by: Long Wei <longwei27@huawei.com>
+---
+ include/linux/kho/abi/kexec_handover.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->  #include <linux/cma.h>
->  #include <linux/kmemleak.h>
->  #include <linux/count_zeros.h>
-> @@ -437,7 +438,11 @@ static struct page *kho_restore_page(phys_addr_t phys, bool is_folio)
->   */
->  struct folio *kho_restore_folio(phys_addr_t phys)
->  {
-> -	struct page *page = kho_restore_page(phys, true);
-> +	struct page *page;
-> +
-> +	KUNIT_STATIC_STUB_REDIRECT(kho_restore_folio, phys);
-> +
-> +	page = kho_restore_page(phys, true);
->  
->  	return page ? page_folio(page) : NULL;
->  }
-> @@ -459,6 +464,8 @@ struct page *kho_restore_pages(phys_addr_t phys, unsigned long nr_pages)
->  	const unsigned long end_pfn = start_pfn + nr_pages;
->  	unsigned long pfn = start_pfn;
->  
-> +	KUNIT_STATIC_STUB_REDIRECT(kho_restore_pages, phys, nr_pages);
-> +
->  	while (pfn < end_pfn) {
->  		const unsigned int order =
->  			min(count_trailing_zeros(pfn), ilog2(end_pfn - pfn));
-> -- 
-> 2.54.0.563.g4f69b47b94-goog
-> 
-
+diff --git a/include/linux/kho/abi/kexec_handover.h b/include/linux/kho/abi/kexec_handover.h
+index 7e847a2339b0..7682a94871f5 100644
+--- a/include/linux/kho/abi/kexec_handover.h
++++ b/include/linux/kho/abi/kexec_handover.h
+@@ -64,7 +64,7 @@
+  *   Root KHO Node (/):
+  *     - compatible: "kho-v3"
+  *
+- *       Indentifies the overall KHO ABI version.
++ *       Identifies the overall KHO ABI version.
+  *
+  *     - preserved-memory-map: u64
+  *
 -- 
-Sincerely yours,
-Mike.
+2.43.0
+
 
