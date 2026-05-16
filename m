@@ -4,75 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E513FCD343F
-	for <kexec@archiver.kernel.org>; Fri, 15 May 2026 23:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 52CB6CD4F21
+	for <kexec@archiver.kernel.org>; Sat, 16 May 2026 06:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=NziRoAw9HSfsIxI7N4WC0v3NR/TwGKQztxd+B+F2bZg=; b=zIjVRGnr9uu50OwOicnGlq8xAw
-	OazC7sVupfzwg0j5B0dg7jSofWZjqyCVwkPHutE+2lgaO/dhDTc/BNB4CPpffPLjgwOEZDLjOQx3i
-	md3MEAtja9+f5C9tUcgNxuXvrqzOA01c+HyWgNNZhRwZztz+K33E8K8+Fb7uxzZWA9iOliNgXVN0f
-	bde2BZH6nsG1dEhS/lwlV/7Q3C3TgfERJLk8TRkQeygEh0GC02UzGFMYrnkF1hDFx02BvMVwy6K2Y
-	s4+H0BsoyclpZKExDyKRUPeHPFnQxPYmuM7HOXDg4Je2F5aclNhz0AyONWBnWHUR9y4iEt6Jno3E9
-	79trydVA==;
+	bh=hMWN5x9HDweBHTWqub8cOMnSL0hVe7z+jiQtlb1v9fs=; b=0/w+ObWmSXd2g9Sou5xubygwjW
+	eWhwwd4E9gXgooqawr8UuBzKNz6evNa0q9439uDrD6xjpXDA6EUywSKddXXpRgGjnEObW5AwBmwv7
+	XP3rCwQ3TP4COJMH/emBXzdeLY5uXo7RaU/Gf0EvKwl5vgT8DSPoj4Pt65i9vrb759Le/c1yi/yYv
+	pELJwYCBUHoBfa5nkVoHMD0N/kQuBB8S83YQayN11QNbDFUNDExCUOammSoaqo4lQVluyVgMKAirn
+	CHnH7mOm0sMPQmB6WLtKt1SycO4VJDtMoRl1gcm5Jzo0dP4IHuRe+TBJWP5l0Z1NZiPm2AM+ynvta
+	JxGUjlsg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wO2JV-00000009kjJ-0q3s;
-	Fri, 15 May 2026 23:51:29 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wO8WW-0000000AH3W-3B4e;
+	Sat, 16 May 2026 06:29:20 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wO2JS-00000009kiq-2BK1
+	id 1wO8WV-0000000AH3G-2KvW
 	for kexec@lists.infradead.org;
-	Fri, 15 May 2026 23:51:27 +0000
+	Sat, 16 May 2026 06:29:19 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 8C529406CA;
-	Fri, 15 May 2026 23:51:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDE60C2BCB0;
-	Fri, 15 May 2026 23:51:24 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 9883560138;
+	Sat, 16 May 2026 06:29:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A321AC19425;
+	Sat, 16 May 2026 06:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778889085;
-	bh=+YzNzv7+8ANMNSfpUKGBa4/M7FpU0LJIdO4rB6Fn/kE=;
+	s=k20201202; t=1778912958;
+	bh=ZR5pqbdOhcWFPqqwmv82cPJPye/uvugLSCbv0N6QbM4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JsLvklbzrw4NVy9ivGINX2a36fbGi+ygffgepGdJ5hG6qyRf8Q3nqxgS3QcinfRrB
-	 e5KpYLoJhrppPPjF2+sNnfN+Mq6Lk8g7B2uZMU5EfcRk35pIXiqn92mahYDw0h5UhY
-	 7+Bvclxqd2QZrPlQx1tWgTdXJN/w31+PcP+8FPYlw+ovzGBICFhpBwJIfSwEz3Ru9n
-	 8+wldIff/nA144OZx1CwHzDaXKjo5SDfzdWUlTbIK5qfrrHqz2WNoJ309w6VbcEwW8
-	 VgRZDrMFI0wtKR/5dZf4227iefM6Xwz7ZZgw3Hy7aj15i34hehJuUfWtvCI/DZL22X
-	 OhKMaqeIAFe7A==
-Date: Sat, 16 May 2026 02:51:22 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Ross Philipson <ross.philipson@gmail.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, linux-integrity@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-crypto@vger.kernel.org,
-	kexec@lists.infradead.org, linux-efi@vger.kernel.org,
-	iommu@lists.linux.dev, dpsmith@apertussolutions.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-	dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
-	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-	luto@amacapital.net, nivedita@alum.mit.edu,
-	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
-	ebiederm@xmission.com, dwmw2@infradead.org,
-	baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
-	daniel.kiper@oracle.com, andrew.cooper3@citrix.com,
-	trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v16 01/38] tpm: Initial step to reorganize TPM public
- headers
-Message-ID: <agexemLOag0eAiJB@kernel.org>
-References: <20260515211410.31440-1-ross.philipson@gmail.com>
- <20260515211410.31440-2-ross.philipson@gmail.com>
- <agemXwxVb9jvAbYM@kernel.org>
- <20260515230553.GO7702@ziepe.ca>
+	b=qwi8CWz1w5ulb9PLUPbHTEbs7y/Vl34wzfo8Pk5rUkyASU1oH1tNbT4rLipp1CFD+
+	 TiRaqXn6F7l932ffIUus35HrPUrYo46R4gXuactMgmhQFXLmmdFpfCp8QGB1Fa4S4/
+	 /Rhb5r7+d5erAUBioXwR1gmQ8n4UX8fLxqLWxWI8bZcBglSQsMqpPesGE8NuJ4K/I8
+	 sHZ69prfFbUPzBHJ2huJxsbU3Qvhl+U+kA1Lbq+Y89xOmI0YgZ0fQpywauBhpOZ52M
+	 KTBmFV7gwhlJsR43/4aadxCi6KUWs6ypjY9J7+Jc94r/Y9zO6JvA4N782iX0r3SQrX
+	 lf0KanB+MQDHA==
+Date: Sat, 16 May 2026 09:29:10 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: George Guo <dongtai.guo@linux.dev>
+Cc: pratyush@kernel.org, akpm@linux-foundation.org, graf@amazon.com,
+	guodongtai@kylinos.cn, jasonmiu@google.com,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, liukexin@kylinos.cn, pasha.tatashin@soleen.com,
+	ran.xiaokai@zte.com.cn
+Subject: Re: [PATCH 1/1] kho: fix KHO_TREE_MAX_DEPTH for non-4KB page sizes
+Message-ID: <aggOtl4HUcph3VSF@kernel.org>
+References: <2vxzcxz2dybi.fsf@kernel.org>
+ <20260513150718.182224-1-dongtai.guo@linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260515230553.GO7702@ziepe.ca>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260515_165126_587085_76AC1F5F 
-X-CRM114-Status: GOOD (  12.92  )
+In-Reply-To: <20260513150718.182224-1-dongtai.guo@linux.dev>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,29 +72,23 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, May 15, 2026 at 08:05:53PM -0300, Jason Gunthorpe wrote:
-> On Sat, May 16, 2026 at 02:03:59AM +0300, Jarkko Sakkinen wrote:
+On Wed, May 13, 2026 at 11:07:18PM +0800, George Guo wrote:
+> Sorry for the late reply.
 > 
-> > LGTM
-> > 
-> > I'll hold on from actual tags up until there is some consensus with the
-> > patch set.
+> On Mon, May 11 2026, Pratyush Yadav wrote:
 > 
-> This patch set is huge, and I know there is alot of interest now in
-> DRTM.
+> > As of now, we only support KHO on x86 and arm64. Are you working on
+> > supporting it for LoongArch? What is your use case?
 > 
-> Can we please split out and progress the TPM reorg mini-series at the
-> front?
+> Yes, we are adding KHO support for LoongArch (16KB page size). The
+> LoongArch patches are being prepared separately. This fix is a
+> prerequisite.
 
-I'm not usually for "non-functional" series but in the case of D-RTM
-that could stil bel a good idea.
+I massaged the changelog and reapplied this to the liveupdate tree:
 
-I.e. let's iterate it through faster than the main series and get it to
-the mainline before next merge window,  and then switch gears back to
-the "main series".
+https://git.kernel.org/liveupdate/c/d13dfb48dfa3
 
-> 
-> Jason
-
-BR, Jarkko
+-- 
+Sincerely yours,
+Mike.
 
