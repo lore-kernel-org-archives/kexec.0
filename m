@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id ECB3ECD4F3D
-	for <kexec@archiver.kernel.org>; Sun, 17 May 2026 19:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 69C2ACD4F51
+	for <kexec@archiver.kernel.org>; Sun, 17 May 2026 19:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=IaFXHj+nOOniyoasttf/PvlR/IAc0qdJJnVbcz5jRsQ=; b=dSYsUIPQk96kYIEkSFNRaKjQXV
-	tAMhi7Mq4n7Eg2kwizaO8ZDOzAAV+Mx6VhQzXk4P+kdbG915Hgx09GbrXFZ4Mh5vCqfW8iA8/q6RI
-	Wr9ouQ3Yq626jcbEH2sofkFD5mfp3myVTTT6s/37FCNmfSu71Zf2FWZkJLgL7UOIACp7X7Oy0jgSK
-	G71uU1bUBTAEWT1zR6o6AF6hLzmvyMjgFkKa6tkvISXk3OvFX8oHkoJhtlo5gct1K0Ue32JT2XWfd
-	40a78P9dWB6qUI9Kk5u8un8sezd5tcBUgyFF+qQ2yfCMrNGY1v5T/7X4L80nscvJtbyEdoXmcMHgA
-	JRQ8MhKw==;
+	bh=BlG8LpAFp+hKa95DX8x1G7ey+RY4RgJIzHYj7htm+bo=; b=Vdnl0mdoWWSIO+2YPqVKxEyexB
+	KE1mVb1oV+BozkjESsi6LvmhMuWoNcSZr3F+L2f2OUgK9kD/unqHItutcmJiQubvSw4QwEGCSZ6GZ
+	e+OcFAgBs/+Ouy2WydGuHCrHUiJgL4SAj/RSlRhUlswqyYC3TsQsTtucJ0aG14Fxtzn0doju4xr33
+	J/W6fy7GbDL6EC9cd3jZhfuKRRPscOgUAVw55zT+0qMZS/LoRErYaez4kYqZAri9c3B4aAgpGqQ0W
+	6LesRKR1RYjpvzAGJ0pNi7FbYi9KxFWZGeSnHbs5ZBHF8foMobZRacr2j/u7fF6YDWrJ3LZjv8ihg
+	ydcC4EJQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wOh8g-0000000DKTf-0K54;
-	Sun, 17 May 2026 19:27:02 +0000
-Received: from mail-qt1-x82b.google.com ([2607:f8b0:4864:20::82b])
+	id 1wOh8i-0000000DKVb-14bU;
+	Sun, 17 May 2026 19:27:04 +0000
+Received: from mail-qk1-x731.google.com ([2607:f8b0:4864:20::731])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wOh8d-0000000DKQQ-33FX
+	id 1wOh8g-0000000DKTo-3M29
 	for kexec@lists.infradead.org;
-	Sun, 17 May 2026 19:27:00 +0000
-Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-50fb1ad3734so30410351cf.1
-        for <kexec@lists.infradead.org>; Sun, 17 May 2026 12:26:59 -0700 (PDT)
+	Sun, 17 May 2026 19:27:03 +0000
+Received: by mail-qk1-x731.google.com with SMTP id af79cd13be357-90d1f03238bso263968985a.1
+        for <kexec@lists.infradead.org>; Sun, 17 May 2026 12:27:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1779046018; x=1779650818; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1779046022; x=1779650822; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IaFXHj+nOOniyoasttf/PvlR/IAc0qdJJnVbcz5jRsQ=;
-        b=h52fu1v7+t03h3DzgQFH8YUSh8przlOZrJZGF8HFeJjPsguDVLiWbknv//e7rNHv4K
-         QSKMDwU59GTp9AHYdh2LgufMG18qo96B0cHxUqOtyREnVAgV4DP+vbM1uirnjCDx3dKR
-         fRNvbQpzcpWZO5tiayAsAz+1xjwsxlWuIxJlKkdEx8dgXsEyvTYOHwFh25udi8HsWy8X
-         nD0FY1Yezrx+7Nc28SIq2sNSsPfQ3dE0q+2bkYqsoQKdvdU5PoG/0UkFfAhgaAlKDP37
-         z+vQ/wqlGjN+zuddfwtigGVJQH7DiXzKpxZW2XWXyZQungR6TxPy16bxObJxzku75QLf
-         cWEQ==
+        bh=BlG8LpAFp+hKa95DX8x1G7ey+RY4RgJIzHYj7htm+bo=;
+        b=ZyfP4nVQmNIUonXj2ocAdBZ6KiifDhlylFlcpAcu7M0qp9wFjwN+y2ubjuMwyTwofg
+         a+QxmY7SOIgOP4aLmr4OJuXTaRk2kbeEXz0h61CuGbpJbXROmEww9tBmj5zFKSxJsfkL
+         rluTPau5Hq0pldR6OcqWMQmQZVTifNXhWns8VRO7MWrZOz1Hp6WNEkQgNPTvb4jeMJ8b
+         fnR0wrCBFVVZ/Ctd01gg6WujlFvI7c11ycsWS24VpZxxijhDUgQea32aH9kvJuw5hIPh
+         eu/tZVNlChGPqZKrhshWkdgU7Vvt8Qyndui02NiT3j+iTKPIO3VannNWLqb/0XjeCmpb
+         pgiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779046018; x=1779650818;
+        d=1e100.net; s=20251104; t=1779046022; x=1779650822;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=IaFXHj+nOOniyoasttf/PvlR/IAc0qdJJnVbcz5jRsQ=;
-        b=resnaSYUCyf002v+fSbOXpfzsfyzr6UO80TxwAYDhBzg1v0ba0ivcMZYZOQM7GxpoQ
-         MCA62EnGYe9a7cFYFSsbkMuXpyUiuIjI9Mg3nG+6ulNoBNix/ZnDH2/ZV8azdn3lDXwY
-         hVuUQV2L0bBkK9XsBM6S4DkFL7IU7WvQRWCrZhvtIRCCjxW+BcBijALyQtwo+by4RisT
-         EgNu1wsoyFuf2NBI5xPW+wTkVaesytM0z6wXnp5ROUp6mOnmrkzs75TIzPlHy+akvjYP
-         Q1BZEQywr7wsTRYZ+WAqkX6PMM6mu/91IjR4h6rfyAgwC+cVG9FyYe2dn8GHKOQTJlen
-         Nu2A==
-X-Forwarded-Encrypted: i=1; AFNElJ9Zl8mo5eCmGPhM6CQc+2aelrGLagIlHlBJ8svHp9Jc9u2C3159YJ0g/dbWEyTYmhNy52BuEA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yzs+SOiQWL/lmUB2LfnL8ezCARTZfnZ3eWk9cB4cGxD8ZWfgoaW
-	eGPmjngOWhbkLzuOP4rZYtFXx8kZ3IH24P93aoGG6G4w3gOgYSioIS11Uvj0tr/+yFs=
-X-Gm-Gg: Acq92OHARYzwKxROhYZRZV+9wc6h8jirK6cpDOK+y2Bk7MLk0xX+snZR6k6soystqly
-	ifr3lsEVRRCXwbTVDcmAD8CI94GNRACuryoyckdUd4FKHzERmqZH+IMGS37bRA50S0ejSbsWuej
-	ks5WA4rCA4WMlBqITlDm3qOdYjn8L0mWf7JTv5Gbn0toR1N0tYh/+vVOYDA9zr5SiSIEupUI1Lz
-	F8D8mfk1hX6QyiO8omjfEfDklb2j7GfQXKHnUc8D34IJSkz26UHAj8emnI3Uz9vTqi1Y3zFQGag
-	TxNgqe1Jyq8yz5Xxzaf16an6u8Rn4jdnit7D163IVpJ3EdUC3wLWdvPfVB4h9RbCbYqEZWCUNTU
-	bEH+B97mBiALqyxL50muXS2bZSbhnh9ibjSJvIKFTXA+oy0nNmMxcj9K9U5Xezj+Z/baCwydKgW
-	LCcFnZc+qhkqCnqX8uc6JQMj04eJt+Q2ONoUoRpYR67FOF068SjLdZ+jG0O2YMZg==
-X-Received: by 2002:a05:622a:4acd:b0:50e:61ea:d8e0 with SMTP id d75a77b69052e-5165984aa8bmr143676721cf.21.1779046018539;
-        Sun, 17 May 2026 12:26:58 -0700 (PDT)
+        bh=BlG8LpAFp+hKa95DX8x1G7ey+RY4RgJIzHYj7htm+bo=;
+        b=RwvnwyTW/fYwVIsyj+t+Je8THX8mHf6fgBc9Iq7Jm0iS9R1AwUlqQ3T++wR5AmUmhx
+         NcQYvQqKH9jodBxU/5zC7ampyo1DIBp0oF49f7uXExGZTiHfTm5ik4eo89RwXgMoaaAV
+         W78YuVc4J1HVOqlfDk3Ku1Y568VJeIbzbgCNF1viiTYCl/rh7Z2EXWqvLiKSagGTaiQq
+         y4GeEFngB7ApFq9XJqBOXByHmFStSjIlMgpViLDYGk3zp9fz3t9wvBUpSLXsQeOPWsPK
+         kIaPJ/G23wFrB2HVMoyecCbrwpnNehT7jQGzjH0xMjPY0o+Sb9RSXdL6QBpPTvT04fe7
+         JXgw==
+X-Forwarded-Encrypted: i=1; AFNElJ8x648AIFGNIQe/Cf/Lf4Y1A/Lk23QpCWh/eZJirFKGW6t2WIu8NdL8vpZANiKqUiu30xzNSA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzK1hZ2p+jzhaozYqeoBoX0TI2/fxz4Ucx68YlFTayQin/FgWXa
+	x9sq7ZUSw1igENsLk3w830Wr9Yo3m9J3Y2SdCrwgTmgBChRD14HTdvubcOX5iaHf36g=
+X-Gm-Gg: Acq92OFph5BneoXU5CXeyLFQx5rqWkwO7kXemA/soV1en8hYMcot84nkzW5gA9AE8FI
+	PpnEHdg6s+J6GKExNHAg+blj3RYYlTkLqlyZ1MY/7xcCCrdJ/EsyQ2+nQeEUZHZWWJaobxpVR87
+	DSCWU2JaetwCQQ6tpOPwxwYsTSx8ngkHUY9c7ZHmjZBOwnwp7x8tOlzHOPMuhJS4HOz+Gj7UPRB
+	jUD0xobf/AEDAxygMGuZc/l4xxuBNe4V2iC/PP8ZbW4tCiY/OKkWijpY+kBvrkq+LG00YVlmJd2
+	14GP5kUC/i8bEQw2sAPQBkYJVsoFOKK4lrL6jd8NvNbv/EtL7lG+EEHmN133lWq8Z14Tfp97XaH
+	0LJg3EgqEUV2znCkWGCbRQ1+Jyra2MsLYRQp9bh9GXRqZ0xfq5U6k0V4uy1mU4tl1flNa7plnuK
+	nEJ4LsuVmLvRFEVuirsjwYX8HgaS3hjMKTC/SfsFfWZiGp5gW7jII=
+X-Received: by 2002:ac8:5e4e:0:b0:50f:ba60:2dd4 with SMTP id d75a77b69052e-516419629f0mr204707541cf.40.1779046021672;
+        Sun, 17 May 2026 12:27:01 -0700 (PDT)
 Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-516456d5c4dsm108828621cf.12.2026.05.17.12.26.56
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-516456d5c4dsm108828621cf.12.2026.05.17.12.27.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2026 12:26:57 -0700 (PDT)
+        Sun, 17 May 2026 12:27:01 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: rppt@kernel.org,
 	sourabhjain@linux.ibm.com,
@@ -86,17 +86,17 @@ To: rppt@kernel.org,
 	skhawaja@google.com,
 	graf@amazon.com,
 	mario.limonciello@amd.com
-Subject: [PATCH v4 3/5] liveupdate: block session mutations during reboot
-Date: Sun, 17 May 2026 19:26:48 +0000
-Message-ID: <20260517192650.1019314-4-pasha.tatashin@soleen.com>
+Subject: [PATCH v4 5/5] liveupdate: Remove unused ser field from struct luo_session
+Date: Sun, 17 May 2026 19:26:50 +0000
+Message-ID: <20260517192650.1019314-6-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260517192650.1019314-1-pasha.tatashin@soleen.com>
 References: <20260517192650.1019314-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260517_122659_802370_24A72AB4 
-X-CRM114-Status: GOOD (  14.27  )
+X-CRM114-CacheID: sfid-20260517_122702_837827_A2356798 
+X-CRM114-Status: GOOD (  10.63  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,126 +111,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-During the reboot() syscall, user processes may still be running
-concurrently and attempting to mutate sessions (e.g., creating,
-retrieving, or releasing sessions). To prevent this, introduce
-luo_session_serialize_rwsem to synchronize mutations with the
-serialization process.
+The ser field in struct luo_session was intended to point to the
+serialized data for a session, but it was never actually utilized in the
+implementation. All serialization and deserialization logic consistently
+uses the pointers maintained in struct luo_session_header.
 
-All session mutation operations (create, retrieve, release, ioctl) take
-the read lock. The serialization process (luo_session_serialize) takes
-the write lock and holds it indefinitely on success. This effectively
-freezes the LUO session subsystem during the transition to the new
-kernel. If serialization fails, the lock is released to allow recovery.
+Remove the dead field to clean up the structure.
 
-Fixes: 0153094d03df ("liveupdate: luo_session: add sessions support")
-Reported-by: Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- kernel/liveupdate/luo_session.c | 27 ++++++++++++++++++++++++---
- 1 file changed, 24 insertions(+), 3 deletions(-)
+ kernel/liveupdate/luo_internal.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
-index 59b37d17db6b..6099213275d8 100644
---- a/kernel/liveupdate/luo_session.c
-+++ b/kernel/liveupdate/luo_session.c
-@@ -75,6 +75,13 @@
- 		sizeof(struct luo_session_header_ser)) /		\
- 		sizeof(struct luo_session_ser))
- 
-+/*
-+ * Protects session mutations during serialization. All session mutation
-+ * operations must hold the read lock. The serialization process holds the write
-+ * lock indefinitely on success to block all concurrent and future mutations.
-+ */
-+static DECLARE_RWSEM(luo_session_serialize_rwsem);
-+
- /**
-  * struct luo_session_header - Header struct for managing LUO sessions.
-  * @count:      The number of sessions currently tracked in the @list.
-@@ -205,6 +212,7 @@ static int luo_session_release(struct inode *inodep, struct file *filep)
- 	struct luo_session *session = filep->private_data;
- 	struct luo_session_header *sh;
- 
-+	guard(rwsem_read)(&luo_session_serialize_rwsem);
- 	/* If retrieved is set, it means this session is from incoming list */
- 	if (session->retrieved) {
- 		int err = luo_session_finish_one(session);
-@@ -354,6 +362,7 @@ static long luo_session_ioctl(struct file *filep, unsigned int cmd,
- 	if (ret)
- 		return ret;
- 
-+	guard(rwsem_read)(&luo_session_serialize_rwsem);
- 	return op->execute(session, &ucmd);
- }
- 
-@@ -385,9 +394,12 @@ int luo_session_create(const char *name, struct file **filep)
- 	struct luo_session *session;
- 	int err;
- 
-+	down_read(&luo_session_serialize_rwsem);
- 	session = luo_session_alloc(name);
--	if (IS_ERR(session))
--		return PTR_ERR(session);
-+	if (IS_ERR(session)) {
-+		err = PTR_ERR(session);
-+		goto err_unlock;
-+	}
- 
- 	err = luo_session_insert(&luo_session_global.outgoing, session);
- 	if (err)
-@@ -398,12 +410,16 @@ int luo_session_create(const char *name, struct file **filep)
- 	if (err)
- 		goto err_remove;
- 
-+	up_read(&luo_session_serialize_rwsem);
-+
- 	return 0;
- 
- err_remove:
- 	luo_session_remove(&luo_session_global.outgoing, session);
- err_free:
- 	luo_session_free(session);
-+err_unlock:
-+	up_read(&luo_session_serialize_rwsem);
- 
- 	return err;
- }
-@@ -415,6 +431,7 @@ int luo_session_retrieve(const char *name, struct file **filep)
- 	struct luo_session *it;
- 	int err;
- 
-+	guard(rwsem_read)(&luo_session_serialize_rwsem);
- 	guard(rwsem_read)(&sh->rwsem);
- 	list_for_each_entry(it, &sh->list, list) {
- 		if (!strncmp(it->name, name, sizeof(it->name))) {
-@@ -582,7 +599,8 @@ int luo_session_serialize(void)
- 	int i = 0;
- 	int err;
- 
--	guard(rwsem_write)(&sh->rwsem);
-+	down_write(&luo_session_serialize_rwsem);
-+	down_write(&sh->rwsem);
- 	list_for_each_entry(session, &sh->list, list) {
- 		err = luo_session_freeze_one(session, &sh->ser[i]);
- 		if (err)
-@@ -593,6 +611,7 @@ int luo_session_serialize(void)
- 		i++;
- 	}
- 	sh->header_ser->count = sh->count;
-+	up_write(&sh->rwsem);
- 
- 	return 0;
- 
-@@ -602,6 +621,8 @@ int luo_session_serialize(void)
- 		luo_session_unfreeze_one(session, &sh->ser[i]);
- 		memset(sh->ser[i].name, 0, sizeof(sh->ser[i].name));
- 	}
-+	up_write(&sh->rwsem);
-+	up_write(&luo_session_serialize_rwsem);
- 
- 	return err;
- }
+diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_internal.h
+index 875844d7a41d..dd53d4a7277e 100644
+--- a/kernel/liveupdate/luo_internal.h
++++ b/kernel/liveupdate/luo_internal.h
+@@ -59,7 +59,6 @@ struct luo_file_set {
+  * struct luo_session - Represents an active or incoming Live Update session.
+  * @name:       A unique name for this session, used for identification and
+  *              retrieval.
+- * @ser:        Pointer to the serialized data for this session.
+  * @list:       A list_head member used to link this session into a global list
+  *              of either outgoing (to be preserved) or incoming (restored from
+  *              previous kernel) sessions.
+@@ -70,7 +69,6 @@ struct luo_file_set {
+  */
+ struct luo_session {
+ 	char name[LIVEUPDATE_SESSION_NAME_LENGTH];
+-	struct luo_session_ser *ser;
+ 	struct list_head list;
+ 	bool retrieved;
+ 	struct luo_file_set file_set;
 -- 
 2.53.0
 
