@@ -4,71 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 14BAFCD4F47
-	for <kexec@archiver.kernel.org>; Sun, 17 May 2026 18:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6D26DCD4F50
+	for <kexec@archiver.kernel.org>; Sun, 17 May 2026 18:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=qSvR3pUa7/2OkCu/xeQoYakjb0Jx3U+q13XWt8GPix0=; b=wtTvBtEv8mmfOTyI8y8Rj7LTuS
-	zBiLL1194eDxYAaWA6bEwdNeVCm514HW7BZUBBH1dqjujPf1375jrE0GsIa/pvucKIAJPU0wB01pQ
-	7tEUDe0eahRawgR3gLcgtpeEVogqkQVf5kYW8BCKW9Vc53fCld/3Gb1wwo/g5km0xs3OzCSzcV4Dh
-	J9e6is6S3Wwm6zNvWD3WuOhnczBEytK//Dgz5m9Nm2R5H3aV8F37C3EB4hWua9yhVOImGYOdi227k
-	GdmI9H7uo6Q5tlQNWUQBfya+pQC0wuwyLGDwAsLlbm9SvwcjOzUvESp4Rb4BjguvhfdZi3r6Evs8M
-	JTm1El1g==;
+	bh=yO9O8pu4RjDyHVPuvzyCd3iEZISD+KMOY00JM/YV72g=; b=kD26+0g/ysU/1K0ZeiH5Umc75a
+	eTewdaS/14akN7RmVtHwTLfG9m5QBgoZl9QCXpd3fSiI50a9JeR495Ssfy8l8cRjydvag0/J1WYrI
+	jEqWw0t2n6qOkFwsZBG3Ovgy8ZtmpCtu5lEzgUSCIKtxhNHzL32tbSr+SVTTY6dVhqCgbbNu2isvJ
+	x1wysZdRRWb3t36TgeW9G/X22ch9IredT5p6jBdr0lb4C40jlzjJYr+tzN2bSUf+i6fJlWG597QIw
+	WJgTsfjeySsJ7++nUzwONnUVmAXkGGmoE/KxkkzEGjTQ7wb/oakhKeoJcpodoEP9u8SFgx9Y9kusa
+	ryLPmiTg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wOgMd-0000000DFA9-0iic;
-	Sun, 17 May 2026 18:37:23 +0000
-Received: from mail-qk1-x72a.google.com ([2607:f8b0:4864:20::72a])
+	id 1wOgQ4-0000000DFXm-2C8Z;
+	Sun, 17 May 2026 18:40:56 +0000
+Received: from mail-qv1-xf2d.google.com ([2607:f8b0:4864:20::f2d])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wOgMa-0000000DF94-3mG4
+	id 1wOgQ2-0000000DFX4-26jH
 	for kexec@lists.infradead.org;
-	Sun, 17 May 2026 18:37:22 +0000
-Received: by mail-qk1-x72a.google.com with SMTP id af79cd13be357-910f734b477so210913985a.0
-        for <kexec@lists.infradead.org>; Sun, 17 May 2026 11:37:20 -0700 (PDT)
+	Sun, 17 May 2026 18:40:55 +0000
+Received: by mail-qv1-xf2d.google.com with SMTP id 6a1803df08f44-8bb09239328so15457666d6.3
+        for <kexec@lists.infradead.org>; Sun, 17 May 2026 11:40:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1779043039; x=1779647839; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1779043253; x=1779648053; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qSvR3pUa7/2OkCu/xeQoYakjb0Jx3U+q13XWt8GPix0=;
-        b=HLgGS/3G6ZjiKpSkMU0IpSqgnTJ82IE+iym7U0q2B+G0ri/24Ot3Q0HCXZ7Tkaw1Qe
-         gDENJ6V2TzWQT2w2v4C+lvLyB5M3vpYr2MQz0pHjCTTSsO0mZQC/POM/LXQv7TO9qIvT
-         trx2lrVGndtMjlO9RGxq7mMtAxGH9pqVhjMbs08d8wzVVZZNjyGF3G7OSe1SgdMkS8j3
-         /Ht2oYJW4M6Wlssxi2IhKPTHe45ae8SmGluL+naWBEsLSezz+awhZG8MdFYcH529hGB4
-         E0WyU3ukMCrxg0lSdBhpZNMzFwls7xwrdRJDSJaa0BQD54Rhghk4FmH16gu6SC9DyH5Z
-         nBPQ==
+        bh=yO9O8pu4RjDyHVPuvzyCd3iEZISD+KMOY00JM/YV72g=;
+        b=jIKdrxf5t15mTCCYAXnxHn59FW4JhSe9Ty5c1P/TROSMDEvWvO1LyHFzDtZiihRbnG
+         PzRdStKf4DqQCJ9CnwFiabzclco/rUL5s2B6OYi+oNF+ikdIzTHa+UfRYUehoc/T4KeM
+         gTHuCJGSRkrcS+5AwvTvvD/s9vszVOPNL+x5EIccQ4h7CWMr9pkg+bU0XjAAYibRwWoL
+         7EVyu9lPKRdfK85I1gWeUYgdEYIlUKRB0CIMu9UgfyDeWtSZlAjSE2M1rnTgOwL+gsUh
+         UZiIokWhKbAfZtkdDjuRQVU5NBGs/tyD4tdGWwF31HYgjp2EbPdsWHxtemHfZQyTBVg/
+         kcOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779043039; x=1779647839;
+        d=1e100.net; s=20251104; t=1779043253; x=1779648053;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qSvR3pUa7/2OkCu/xeQoYakjb0Jx3U+q13XWt8GPix0=;
-        b=hE4vRdz0xVGBCrB1H+bu0AGefeCvZzs3jbtpn36iM+hVinzzF2PEGvdPfJMaN0toxT
-         vkv8Vpse/ZfJIFfpUa4gwySF4HHV7EK+Csvha107oAsAxfovDwaa27cZgiikd3E1Xrx9
-         4Z9QNNGRuYW2DMztxVbkUsvA8coFDByV1u5nD+VwvCT9/Tw/0dWi5033qhtIlCNIlp3r
-         PPGQdoPHxxAhDKKWEFqDgfvoh83Jya9w/syKcRI7p+1aHV/S42atkTfWCbk9LBJHpVw/
-         1XlOSugg5ZragmAtrT6gfse3xuRYFU+zjvih9KDIOd0cLKZokc6GFPxtQpjTMrpZrZiI
-         KzRg==
-X-Forwarded-Encrypted: i=1; AFNElJ+zW8KElM5i2IVut8MYvz/iLOQIRz1CtbZnjbudPcmNKnTUJBLkQNblRZnAK5P0sofX7XfikQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzWujxp63I06Me2KjbW9Mhbr+sfZlYyysY7+nq2OL3w0taeVIwm
-	w3PjNZt9fkTffRnFnDj3GaUCnKzcx3JRWBXJfSGOAqzjJB9dboq0sw1M+LHAxNJzKvY=
-X-Gm-Gg: Acq92OGe43xXKq50d+gHJD2SojkeZqLoCQMdzFquRJCuv80RP9ffV1Vya5DDSxX6yQ1
-	hQSi4P74tuHY2opn/oEa8/RI43JdoegwPzrieSoBAhLbAcRgYU3kgJMyNrfcSi9mtMPonZI3riR
-	JkSd+z/pDzsiL7KUGFwSC160+/7eSoIHQZzahuYSdcshwZ8LGiY2r4QzvixrrkVVWGvmGQbcmeP
-	KAlxsnHy3mRUAQMIZ9lFpnSYKYHkrjjsZYYI/5xMMcPykQ7bfMQG9OFL0hbL48nU2O819XmhXMn
-	W2pJZYyS9F5QPk/ps4w+xgSQMxQ6mYswkM82WGdALYq1jUA1HDEav1QuoXxoCApkEIQcfGUxsyw
-	7qJu6U6rqLizB85mxwCG/32Q22CjTRg7ftjiFPzkzzFrSmA/91n/Pe35KJNl5v7A7P8+7vGcFTE
-	K5pGB7GGE8oU4+4ZEZyY3ZkKBFOt57u/cZwg05KvKtW2QeUspaTZM=
-X-Received: by 2002:a05:620a:258d:b0:8cf:c513:349c with SMTP id af79cd13be357-911cdd431f7mr1842710185a.9.1779043039579;
-        Sun, 17 May 2026 11:37:19 -0700 (PDT)
+        bh=yO9O8pu4RjDyHVPuvzyCd3iEZISD+KMOY00JM/YV72g=;
+        b=JqjqmFg0LdUbH2vFjXrw/gOaRcfGWC9+wIb3jLTeotcCYXK2XLIliSRaZUz9E4PlxN
+         QJDoWJspTsPAuqDg9JNnz/MwcN9dHzin0Hs7+HynYmSLjyhy7MzdkGHWqRupr1uls33k
+         Y5dm474iWPXAnFzQ2bhDKYdo8BHVzf2zPj0aBHaCrBxlz0PIoY6UPNEtFLiIRhC8yEKX
+         z796xeFcHWFCVQuNgvZpIowQUafsFOMb+gUVS5uJQvbBvSsGX05DYuqhUV5XCuhucCS9
+         0/Q8fIiA4fY8guqu/JZNClQt/aASpalIULVkjFkFq/clOsZklMusg5DstRB72VhcrS+C
+         Iwuw==
+X-Forwarded-Encrypted: i=1; AFNElJ/L035Iag0/0dQmvXuOAvmVHbmdnW/96O4vrqe08XsRE6WvBiX6Jd03WvMpi4D7fpRbIHkBOw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwL6m2wIpul2PbUmYK9SM+emJhWOi/etMz1D2NKqT1qxyFb9MKo
+	eVUryCYMQXsemj0BLaHZQYX346J6bMqcGsxCqRkGLAHWjIc4DDQdjr9JbotatSXLYnnmimQi7Zp
+	JHNXfM34=
+X-Gm-Gg: Acq92OHo2ciQ+oUDy7ojC64ZnBCPH2UsriRhAbDBRXh7KiiM0eyNoC//pGVF0u3M7hm
+	dvBjPl/OR3ZYWvlbf4iE9mBln+Jj0I1qeRcWRgUVWCPwc6P6innH+SoXrXelioWxO4+7YR8T9+n
+	15MDLcPeequsz3YjhTuJrPS8tpNq6cGzOaxo3bY6rI9pCmp3v1DHvLrIYfgZXRnceBv6RHZoml8
+	nEtEY1z/IZBk5sIYTuh8yCJDR7awOn+MCfhbYrQadPZROApbkEr1isk8ATghxHXvb7nmZ7hurk9
+	XLX/v1no3tP+34r7J90nu+rpUczxoJ7CsQ0AmjItbBL/csnOvwKoQ+nF5VFIpLPZ0K4GpSu0PNC
+	pvuOzNWAhtO+AVXcOrR3EeTTocmfO+wljbNCEwpdR13c+D1eb143jogO+kzheHR9f1/IQE8rHMc
+	SqLTYUqp5n2axympqLlXVqdn2ord0Tk+5hq12o1UB1y5h/9FAD0H4=
+X-Received: by 2002:a05:6214:23cc:b0:89a:f0b:60e9 with SMTP id 6a1803df08f44-8ca1ecce8bbmr127423436d6.13.1779043253347;
+        Sun, 17 May 2026 11:40:53 -0700 (PDT)
 Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-910ba36e1acsm1238613585a.3.2026.05.17.11.37.18
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ca3619c7d9sm29192256d6.36.2026.05.17.11.40.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2026 11:37:19 -0700 (PDT)
-Date: Sun, 17 May 2026 18:37:18 +0000
+        Sun, 17 May 2026 11:40:52 -0700 (PDT)
+Date: Sun, 17 May 2026 18:40:50 +0000
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: Mike Rapoport <rppt@kernel.org>
 Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
@@ -76,19 +77,19 @@ Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
 	skhan@linuxfoundation.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	corbet@lwn.net, dmatlack@google.com, kexec@lists.infradead.org, 
 	pratyush@kernel.org, skhawaja@google.com, graf@amazon.com
-Subject: Re: [PATCH v2 02/10] liveupdate: Extract luo_file_deserialize_one
- helper
-Message-ID: <agoKzw8mR21K7cCJ@plex>
+Subject: Re: [PATCH v2 04/10] liveupdate: add support for linked-block
+ serialization
+Message-ID: <agoK7TRpT1LErW8H@plex>
 References: <20260514222628.931312-1-pasha.tatashin@soleen.com>
- <20260514222628.931312-3-pasha.tatashin@soleen.com>
- <agn50TRvhDpGm_9v@kernel.org>
+ <20260514222628.931312-5-pasha.tatashin@soleen.com>
+ <agn6QeIamoeMkesv@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <agn50TRvhDpGm_9v@kernel.org>
+In-Reply-To: <agn6QeIamoeMkesv@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260517_113720_944087_93C80684 
-X-CRM114-Status: GOOD (  13.57  )
+X-CRM114-CacheID: sfid-20260517_114054_552018_E5B6B1F8 
+X-CRM114-Status: GOOD (  17.78  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,24 +104,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 05-17 20:24, Mike Rapoport wrote:
-> On Thu, May 14, 2026 at 10:26:20PM +0000, Pasha Tatashin wrote:
-> > Extract the logic for deserializing single entries for files into
-> > separate helper functions. In preparation to a linked-block
-> > serialization for files.
+On 05-17 20:26, Mike Rapoport wrote:
+> On Thu, May 14, 2026 at 10:26:22PM +0000, Pasha Tatashin wrote:
+> > Introduce a linked-block serialization mechanism for LUO state.
+> > 
+> > Previously, LUO used contiguous memory blocks for serializing sessions
+> > and files, which imposed limits on the total number of items that could
+> > be preserved across a live update.
+> > 
+> > This commit adds the infrastructure for a more flexible, block-based
+> > approach where serialized data is stored in a chain of linked blocks.
+> > This is a preparatory step to allow an unlimited number of
+> > luo_sessions and luo_files to be preserved.
 > 
-> It would be nice to mention that this is a pure code movement without
-> indented changes.
+> Shouldn't it be a part of KHO?
 
-OK, will do that if there is another spin.
+It can be. However, at the moment, it is only used by LUO, so I kept it 
+there. Sami is also planning to use it for IOMMU; if so, he will adopt 
+the interface for his usage as well, and move it to a separate KHO 
+library.
 
 >  
 > > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 > > ---
-> >  kernel/liveupdate/luo_file.c | 77 ++++++++++++++++++++----------------
-> >  1 file changed, 44 insertions(+), 33 deletions(-)
-> 
-> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> >  Documentation/core-api/liveupdate.rst |   8 +
+> >  include/linux/kho/abi/luo.h           |  22 ++
+> >  kernel/liveupdate/Makefile            |   1 +
+> >  kernel/liveupdate/luo_block.c         | 388 ++++++++++++++++++++++++++
+> >  kernel/liveupdate/luo_internal.h      |  57 ++++
+> >  5 files changed, 476 insertions(+)
+> >  create mode 100644 kernel/liveupdate/luo_block.c
 > 
 > -- 
 > Sincerely yours,
