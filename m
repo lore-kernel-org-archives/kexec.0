@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CF5A5CD4F3C
-	for <kexec@archiver.kernel.org>; Sun, 17 May 2026 19:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 065F0CD4F51
+	for <kexec@archiver.kernel.org>; Sun, 17 May 2026 19:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=kzbLbrBxTj3Os65r+VG8KyOSku+VVjAs9NkmdJFxbWQ=; b=KRHj38MP7FeX3Q96F9tm2ZerKx
-	ujYkMdXpnBEdeP6zw/66PGPx70VTC8INCBbPGBjh0/8KBjfpCNgHdND/CnM5O0gb190XI8a6/bGA1
-	6LZpObbOfjbhUNpeBXfb2v9kXOu8IRv51+KJhS3/W9wXXB9320evPEhStbbaWxRHXKLdOzoHa0flf
-	dDo0m1Je0nUQOjUNIkjhNWw6P0eXsjL31gwURx1dxV20bK0/znsywyOsu9iC+bDz8qMkrI43lrUv7
-	AApj3LKc6zK4GzJx+brdhbR0xNbEyju54rAPQfMWIFbxtQL5zRRqdhMa3JWV3zOJ7y2PkMJzDz9dB
-	O6knt01w==;
+	bh=4LnA2m0HBgYoRoNlBSHl4zr1o2yEpdKjWvd1WzFSz2c=; b=NgYchRPYp4X56qvJrV96Ojjefe
+	bqmFrT+iKt/mGrhWLIJHXs6/a0CAoGmXo9C0HQlnFeblKNdLovoZtZ0EMADFSnww+vE3NYjTnpIM8
+	OQxer4CWgh3W2Am1o26G1onY515M81UF2YUw39rI8eT2d6qlNcQ0vVtJ6wU5E6oFFhicyrgZYM1JA
+	DWOKgu8ALh2799tnVxxb4vEp8IDNSO+Un5ezW8Cp1DRs0HJFRPCs+YInkBk7CDFojZBa+1NYmfuFt
+	D3LhCIN5vGQRP4lHTHxP0wSa2AVcSVtu7T4eGToE2VYrD1MZbYwJc9V3JvGjdguf0r3RTF204Hxcm
+	Vj/N/MvQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wOh8c-0000000DKQB-3d0C;
-	Sun, 17 May 2026 19:26:58 +0000
-Received: from mail-qt1-x830.google.com ([2607:f8b0:4864:20::830])
+	id 1wOh8d-0000000DKRG-3yVO;
+	Sun, 17 May 2026 19:26:59 +0000
+Received: from mail-qt1-x82a.google.com ([2607:f8b0:4864:20::82a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wOh8a-0000000DKOV-0ZOu
+	id 1wOh8b-0000000DKP8-2D1A
 	for kexec@lists.infradead.org;
-	Sun, 17 May 2026 19:26:57 +0000
-Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-50d880e6fbbso30374201cf.0
-        for <kexec@lists.infradead.org>; Sun, 17 May 2026 12:26:55 -0700 (PDT)
+	Sun, 17 May 2026 19:26:58 +0000
+Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-51306c9f2e1so22986711cf.0
+        for <kexec@lists.infradead.org>; Sun, 17 May 2026 12:26:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1779046015; x=1779650815; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1779046016; x=1779650816; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kzbLbrBxTj3Os65r+VG8KyOSku+VVjAs9NkmdJFxbWQ=;
-        b=ZgGGEW5S6ehTedsblcRAYjr5/n5mrIvOjpF8e0Vvsl87G4cjOtA5oi+/7y/lRsf2nN
-         9gCzDYZwZErBAI56o/A8/2B9xymJKdARbOe6x81FwZNewI2YgpMThir7l1/XO/cU4HtU
-         ElbTtq9TPpUs8nDL8MvoXZ/wUSBP5YopC33rwSDzxHb0jPcwzPbpeTP2+Ak4qKTwF5mU
-         xcJePyiSAPYzB1HYz8gKfX27ockvPQXDqWU5FNnmsrC7bcG3mRFbxjxgnyspqroDWio+
-         YuH/rz0nplvUQJFt6Ew6epq/Ww7YtIthgD9LMx/pXqAlL6JVB8NR7NUbcYgu92bX+hwd
-         IhLA==
+        bh=4LnA2m0HBgYoRoNlBSHl4zr1o2yEpdKjWvd1WzFSz2c=;
+        b=bgJF6vS8QYnBUwwxmkZwWd1CBpbb3K5T95JOTcqrS0LK/bP/ECDMCrP2NvjP3X0U3X
+         oZKSaHsOMJG3s86WbrOAYJtigIoXrxHd479I5EUJMxtINogUhBh6iccMk3pBqq0TsfQE
+         +IyjdtCsiIs2QUGyWiu4WAdfVNJm4lZt1Mj0Quvncy0VQLw0WwPo/CGjbrdNNxFRAEh3
+         bMpWrJVDA5RLoQUhpUndM3kpUWYEC6THfB6j/sdNR2BxBlcOOatTiro0oFBuuzLjnARw
+         2aJx0AAH5SRX1DBvXG9nTqXhZJdcRDPwrLyvbB5i5JZ4QOAvBGMF1GQfc71X5p9ASDZi
+         6yHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779046015; x=1779650815;
+        d=1e100.net; s=20251104; t=1779046016; x=1779650816;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=kzbLbrBxTj3Os65r+VG8KyOSku+VVjAs9NkmdJFxbWQ=;
-        b=OssT51JuAEBv9VNt7FuA9Klg60NtPyxI5fPbV+GgCPVaU/5zyxQUYd1A5OW6gJ13Fs
-         3tjNct1x+R3e9C9NCv4hU+u+K3XrQ6mwQ/6ljBR1l9yzWGMKqhPyGj3Fg2C0gYeP+f6j
-         hH3yKT4HuOVFlRdVKpu0miUajydg8Db9Q7/HsqiweC+hdtHNH6vkoG5ZeB+JtlLt+Sgh
-         fbQrdHF1/o8PNsq0s+idkdyHIWnUsXK1f5XEt1FHzx6QoCwSn7Ls6NvMKXiu/mMqyroD
-         HzgVVt51BZ196emF+GlLlxfixUD1C7aCh2plKY5j40W+/WxLhQ4hbWIlG2OkUKOawrIx
-         flRg==
-X-Forwarded-Encrypted: i=1; AFNElJ9T5KardfHMMy/oISeXGEAR68CBdc74h9S9gsfgjXdHug7GHmhuW5vCeURJBPvCscR37Z9zRg==@lists.infradead.org
-X-Gm-Message-State: AOJu0Ywke3fgtPjI9a9c94GSBU3VVK8qLkmvj+zGOC0DJn5tQU1GHYxB
-	yrjmUVsmVi8Y6wSfQDQaQN7ir2NRLyme+U+Bl1wyQIiVDL5CDL3BQu2SKIQaVc+JAU0=
-X-Gm-Gg: Acq92OFupjPZ66yz8qNkTDAa9xNAK3wg/7oFm+b6wk6CN9kzZ+NAsFstYK1QHqx3t3b
-	KrywZQ5pcMGLSn06hfgdGKig0VsC/xI2LQxhmJFxni7Oi+cVtjZae6g4vcxnPAT98LU4HFh3Ikm
-	dxiqdt2KdKN25xADOpwBH7mtPOz6lY37w34KFeKb90o4qCiZUhyqL2khnJ8Z8+lcmKYHST/4yts
-	AtCmoGruF+QoUfzrtl+Rikmn10ET6ZF9QonuYpLDRRxtY37PdAxunMWphda6WXDpWMwo3Q4xV9+
-	Og5072Mm63CWVRBNdr37C73qqTdTd6Rln4cnV9trTfF40wo1vy+uqUWz65qAvf1/bad/ofA+gGu
-	MLo2o5EuPgobgCHj/Jpzji62Z6PEyS+y1G/gGUcYONk0GyK+49uHugN2MTCuPVEtR1BQ+0B9CVV
-	T5L3IaQPt0eimiIBHnG4hupCbZ/lyvGkKIuLJlh9U4aBoVCFA+WQE=
-X-Received: by 2002:a05:622a:211:b0:50b:2542:e16f with SMTP id d75a77b69052e-516597f0c9cmr161422881cf.15.1779046015040;
-        Sun, 17 May 2026 12:26:55 -0700 (PDT)
+        bh=4LnA2m0HBgYoRoNlBSHl4zr1o2yEpdKjWvd1WzFSz2c=;
+        b=Qyq1aE62pBCp8buZRzcfo52u5fNNWs6pt+pBAYh3nMbfW8utjc6+akNSHC+TiW6T1x
+         uTPcn8U+GXJurh3hqTmJrIqvQ2YuK+t+hJokaflvUY6DNRUb0SNqqSOSjseXYW2el/XD
+         2N5A3nsbXNFcPnAlq+19P18vuNB7ZOYRibVJyzQLj86u4S1umerGzNiYkItLYohB0cGQ
+         1o5KIhKE4Goz24cdocDN+1shBfvXAe2zPhWrHleQJu6Nx0ZBevSgYMOjLm49eBQ2TcM8
+         oYdqgXOLlQEQGSH8RVA4LyQvn21QeSXfDNF6SeU9MnIw40QnON82RonF1xlbb8BpBy+1
+         yH7g==
+X-Forwarded-Encrypted: i=1; AFNElJ+x+7NO24tTibepogkn8Rdvn4KdysmTLpGRiOTF7CXDGd5Qkb6cC1pFuS5OobQFXAINbqtJeg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YypoIiPDndMKGG+kzJkKiBEgsMA+pj2yJmoC7WLBFOoAJyz/Fi5
+	rOJhA/zaKvEern5m+ko20XAfkS+EwmXZupN2V91yISLAU900PLRuhkohF5u67EO5u2o=
+X-Gm-Gg: Acq92OG4KJ5LNw47LnPK1lraVZqI7Mf8P+WC+fc/DvkV+xp2RwvO+ylg1MH6+8rfsj7
+	4Vuy84fX3wC2YFbwlmNvw/vmdnGkV0MIeejJrzBi2GG2wUutw6Cfwj1psIgOtGMqjgl9XRT//QY
+	aCNfumMGCtBy1zrbDYnNEm6dMOQZnZRPVbG8/seHejZLAfkaRrl93kluAJ4eCVoipd/I0IUk5nc
+	y+iqRawDwhheo1Y4+e9WpK9wNZR9wU7jz/kmK7aDdz+03KILKSDj5bWq0fFCcmabv1+hBsWMsu4
+	81k4YI5Frt1/E6cPpdJBbxMRtL8Kk2WvxAYjwed/QI5FlHW+bnQHV1wvTWMJMxpXFcGV1OTNdxP
+	UBmIYQQcBymtF4ZTQMpPRqytItMyu4CQO4MV4/n3BvPg0BPD2TS932Kb9g5f7lZy/wHyi5gX9BX
+	f/l18J6JPNYUGpojPE5Loqbykaeo/Qrmj6vqHFHqvY3uakwz7Wa0IHVz4DE2TX1A==
+X-Received: by 2002:a05:622a:4a0f:b0:50d:8009:2b3d with SMTP id d75a77b69052e-5165a03ad85mr178171821cf.13.1779046016534;
+        Sun, 17 May 2026 12:26:56 -0700 (PDT)
 Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-516456d5c4dsm108828621cf.12.2026.05.17.12.26.53
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-516456d5c4dsm108828621cf.12.2026.05.17.12.26.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2026 12:26:54 -0700 (PDT)
+        Sun, 17 May 2026 12:26:55 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: rppt@kernel.org,
 	sourabhjain@linux.ibm.com,
@@ -86,17 +86,17 @@ To: rppt@kernel.org,
 	skhawaja@google.com,
 	graf@amazon.com,
 	mario.limonciello@amd.com
-Subject: [PATCH v4 1/5] liveupdate: skip serialization for context-preserving kexec
-Date: Sun, 17 May 2026 19:26:46 +0000
-Message-ID: <20260517192650.1019314-2-pasha.tatashin@soleen.com>
+Subject: [PATCH v4 2/5] liveupdate: fix TOCTOU race in luo_session_retrieve()
+Date: Sun, 17 May 2026 19:26:47 +0000
+Message-ID: <20260517192650.1019314-3-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260517192650.1019314-1-pasha.tatashin@soleen.com>
 References: <20260517192650.1019314-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260517_122656_170868_64C9E52A 
-X-CRM114-Status: UNSURE (   9.18  )
+X-CRM114-CacheID: sfid-20260517_122657_564735_8ED88894 
+X-CRM114-Status: UNSURE (   9.81  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -112,38 +112,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-A preserve_context kexec returns to the current kernel, which is
-unrelated to live update where the state is passed to the next kernel.
-Skip liveupdate_reboot() in this case to avoid serialization and prevent
-sessions from being left in a frozen state upon return.
+Extend the scope of the rwsem_read lock in luo_session_retrieve() to
+overlap with the acquisition of the session mutex. This prevents a
+concurrent thread from releasing and freeing the session between the
+lookup and the mutex lock.
 
-Fixes: db8bed8082dc ("kexec: call liveupdate_reboot() before kexec")
-Reported-by: Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
-Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+Fixes: 0153094d03df ("liveupdate: luo_session: add sessions support")
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- kernel/kexec_core.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ kernel/liveupdate/luo_session.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index a43d2da0fe3e..dc770b9a6d05 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -1146,9 +1146,11 @@ int kernel_kexec(void)
- 		goto Unlock;
+diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
+index a3327a28fc1f..59b37d17db6b 100644
+--- a/kernel/liveupdate/luo_session.c
++++ b/kernel/liveupdate/luo_session.c
+@@ -415,12 +415,11 @@ int luo_session_retrieve(const char *name, struct file **filep)
+ 	struct luo_session *it;
+ 	int err;
+ 
+-	scoped_guard(rwsem_read, &sh->rwsem) {
+-		list_for_each_entry(it, &sh->list, list) {
+-			if (!strncmp(it->name, name, sizeof(it->name))) {
+-				session = it;
+-				break;
+-			}
++	guard(rwsem_read)(&sh->rwsem);
++	list_for_each_entry(it, &sh->list, list) {
++		if (!strncmp(it->name, name, sizeof(it->name))) {
++			session = it;
++			break;
+ 		}
  	}
  
--	error = liveupdate_reboot();
--	if (error)
--		goto Unlock;
-+	if (!kexec_image->preserve_context) {
-+		error = liveupdate_reboot();
-+		if (error)
-+			goto Unlock;
-+	}
- 
- #ifdef CONFIG_KEXEC_JUMP
- 	if (kexec_image->preserve_context) {
 -- 
 2.53.0
 
