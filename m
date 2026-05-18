@@ -4,93 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1F11DCD4F4A
-	for <kexec@archiver.kernel.org>; Mon, 18 May 2026 19:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4AFE0CD4F4A
+	for <kexec@archiver.kernel.org>; Mon, 18 May 2026 23:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6NRtUq4tdDKEDZRdGQPjS5xvGqYmmi7/Q1au3JiknCE=; b=37zMdEB6UwsNItX2J0KxqfdUDW
-	tN9kxp/pF3W8LSzXwtfaHZcKk64oU3fNGbDqRF9y9Jptovsi2RgQysehcQ4v3DTZkE54lty18cYh+
-	E/9MjYW4TK19tqNPA4WsLrqf7Sc74Ja43KEvOjwN9yOZnAMWks402GSQtI3AgudOhjjgifTvoSHi6
-	eAEq902W1GiIqZyRg45nv56nlHA2fbu0Viz9aaQuFNKVLqSZPnJvRJrTWSTo6c8i71V7voqskQMbq
-	CBLIiuzce5+w+O2coXARgJCUX9BBwKIkt51D+P1sGGkzoOgxCZy51IMpkkojEXYO6d4qhc5YzX9RX
-	dlThhZYA==;
+	bh=7KNTaIG0lsIqN03Ekvf0L0UIuEbXXSLWDvqyaaegcdY=; b=jcWjED98j4lFV8jEtTFiKiyTfT
+	Dtqmazd9hYKx9QpYUt8uangtvjIl0xTY4dAKvVP/j/9khV95AXCdszmsoOjIDZ1r9Mou2i8EShZEy
+	pQ/QVXVmVafUzjpQBo8hk1fDB5gfBpH3ZxTLNMc0YtRfzOzkq86/7kwEALsS/r8b6cH2fvFOy4R5I
+	YHTrrxBArn3zbWJlbyPFvhOXQ6s8IYb0LdnHTMOjlLhxAd9RkWWLZGsElx3uyODvdcC0M5hlXPGJL
+	ZK3fBQh+BdCsGPiS6FC+3KRlrLP++6KEYSgwX+IwYqOXQJ5cG1aDRqFTbrUcsfxtyphYVsbp+/nHq
+	fjTYbuQw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wP3i1-0000000GhAi-1PKs;
-	Mon, 18 May 2026 19:33:01 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1wP7BD-0000000HAUJ-0Kcv;
+	Mon, 18 May 2026 23:15:23 +0000
+Received: from mail-qt1-x82e.google.com ([2607:f8b0:4864:20::82e])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wP3hz-0000000Gh8r-17bn
+	id 1wP7BB-0000000HATo-0zvk
 	for kexec@lists.infradead.org;
-	Mon, 18 May 2026 19:33:00 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779132778;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6NRtUq4tdDKEDZRdGQPjS5xvGqYmmi7/Q1au3JiknCE=;
-	b=QuN1QxRRyxzPKsI4S3JHB78Ho6wd1COkNAMNKHPK/vIHbxIrksURnG2Oy/k2Tq3wpgxQOb
-	5UfSdjw3yg7gePINfj7qaU+Xl3jFeaH1lKNyuH3MtKdhF5zpmCBcodlTArxgRK5zvle5tJ
-	OwUgb97oDhroB+n4Eon32mVe1WJoZCs=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-597-PTUTGaNwPNeIevaoNKwCVQ-1; Mon,
- 18 May 2026 15:32:56 -0400
-X-MC-Unique: PTUTGaNwPNeIevaoNKwCVQ-1
-X-Mimecast-MFC-AGG-ID: PTUTGaNwPNeIevaoNKwCVQ_1779132774
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7B13A1956089;
-	Mon, 18 May 2026 19:32:54 +0000 (UTC)
-Received: from fedora-work.redhat.com (unknown [10.22.65.152])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0E4BD18004A3;
-	Mon, 18 May 2026 19:32:48 +0000 (UTC)
-From: David Jeffery <djeffery@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	driver-core@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>
-Cc: Tarun Sahu <tarunsahu@google.com>,
-	Pasha Tatashin <tatashin@google.com>,
-	=?UTF-8?q?Micha=C5=82=20C=C5=82api=C5=84ski?= <mclapinski@google.com>,
-	Jordan Richards <jordanrichards@google.com>,
-	Ewan Milne <emilne@redhat.com>,
-	John Meneghini <jmeneghi@redhat.com>,
-	"Lombardi, Maurizio" <mlombard@redhat.com>,
-	Stuart Hayes <stuart.w.hayes@gmail.com>,
-	Laurence Oberman <loberman@redhat.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	John Garry <john.g.garry@oracle.com>,
-	kexec@lists.infradead.org,
-	David Jeffery <djeffery@redhat.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH 5/5] scsi: Enable async shutdown support
-Date: Mon, 18 May 2026 15:32:04 -0400
-Message-ID: <20260518193204.14273-6-djeffery@redhat.com>
-In-Reply-To: <20260518193204.14273-1-djeffery@redhat.com>
-References: <20260518193204.14273-1-djeffery@redhat.com>
+	Mon, 18 May 2026 23:15:22 +0000
+Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-50fbd79350dso34230281cf.3
+        for <kexec@lists.infradead.org>; Mon, 18 May 2026 16:15:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1779146119; x=1779750919; darn=lists.infradead.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7KNTaIG0lsIqN03Ekvf0L0UIuEbXXSLWDvqyaaegcdY=;
+        b=faBhyj5ZB5EApWj5xVdMsx4BGBMYDpn80T5uPwlH1Kdy2MeonFwlDLBVSAXRC/SRb1
+         hDPbRI05NMS9lZCR9fjqn4eh5DAD96WP2idsVc4pO99hqXF96/tT84/pgEZg381xXjA3
+         DYodpnOjhwxL3AvMLVoAWaoaQPGXtoi2At44tv4HuypvyO+Gz0tCbnc7pKvGDPfPQ3g/
+         abIW28BGpcP3ZR2cN69BxtoeJo84NtYAaAJ3u/HVwxvpCBkC1YGUJtCB7o/Pj2UAYE1U
+         g2RfnHNuEquXqE7aWvmCSGb3PUZAXYq3Ap4Gss03yQVzWWysFU6jmEy9dbfdXezpcIVp
+         wQww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779146119; x=1779750919;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7KNTaIG0lsIqN03Ekvf0L0UIuEbXXSLWDvqyaaegcdY=;
+        b=m6lUWZo+u5svVzYl37WbaqjpnnfVCwwjw87ZXckim/9wlHMLfhRJGW+YLjj4HoQJtE
+         IusgxFvqLqZoQO6XK3wEknVYhxIJD8jWWjFhDQmJlRRuSD/PP9QSPyyxi5dSrO3B+OX6
+         zUEfvIG6dBPoyZL8IGP7SpdCtamsCXBgC7mnnzvgdcplxj7JDsEjCmXWoo270x65W9Ge
+         kWOXlnee25wo/A5CL0XXAnds8UEHnDkcZLNv755UmSmu2dpYAUaJRI7EwlWYCzZGnVQ7
+         9+jzLgEzEbn/BtGD333foI+8AAY+YQmezTMsaoZMoWWiGR71pz3pbpBnIbL4ZYfA9CWh
+         mTsQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8tA3gSiSPSoTI3gczJHo20h+5nNSIkpw4jsTrDiqYfQpuXIFVWSlj8rxx7yBW2UuC3JtOS7w==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxB2YXoJGVbiDBt0hx2ymHbVFECf8kh0ul88WjBrddFVqhQScPj
+	clyxgsiWF7anO3robYnYnQzeJ7LmmvmWT2P2Ny1ORh+uJEu//2dTFNebbDBp+o92mTc=
+X-Gm-Gg: Acq92OH+Sg+0xINe2mtbONj5RUfSWd7OxMjXdRe/bQWiaFlreqxc/hk2t9WZAOhj16J
+	mXn5Q89rdOcmKYJeMaFd1skZ3VaL9+blUUDnFmtitcOMyBEG+4Os8H0YmU6c54uymhbGAgFJSxi
+	L1bMHN/q5VLj1CNfztXHaIRXznaqCBDqhMpkc+eslykHT+sykoMH9zkHH7C4zSBLdLmcPX0dKfH
+	t4QhbBGgX3rCt+cGwVjvmlbRAmdv+k2p2pL9SCBhW/jUg9+jXpZPYm5LNpMMKsmYM0+D7030Ocb
+	5HE1Kq/ZciP76DhE4NeZV3gQglIEcBmX0M/IzcUmJlZb1YFwfDWkZjzcPiq3s0qIAF3+3ZuATMv
+	cvDH9tcU2pi2/29OnxXV+AhODpV72HCY7kvp3uD52Q7c7NrsmTPAtV+qscxaq4sKCNO5/4Ot3HS
+	yuRsXx4dz2aY9SICupsgEt6WyzZA08xJcmNCkjd819DmBXXqOV37E=
+X-Received: by 2002:ac8:7f8f:0:b0:50f:b3d0:c5ed with SMTP id d75a77b69052e-5165a0e568fmr252479931cf.31.1779146119282;
+        Mon, 18 May 2026 16:15:19 -0700 (PDT)
+Received: from plex ([71.181.43.54])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-516456df09csm146874721cf.13.2026.05.18.16.15.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2026 16:15:18 -0700 (PDT)
+Date: Mon, 18 May 2026 23:15:17 +0000
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, rppt@kernel.org, 
+	sourabhjain@linux.ibm.com, jbouron@amazon.com, akpm@linux-foundation.org, bhe@redhat.com, 
+	linux-kernel@vger.kernel.org, dan.carpenter@linaro.org, rafael.j.wysocki@intel.com, 
+	piliu@redhat.com, kexec@lists.infradead.org, skhawaja@google.com, graf@amazon.com, 
+	mario.limonciello@amd.com
+Subject: Re: [PATCH v5 3/5] liveupdate: block session mutations during reboot
+Message-ID: <aguXhxrjhvmxAyb2@plex>
+References: <20260518125459.1092373-1-pasha.tatashin@soleen.com>
+ <20260518125459.1092373-4-pasha.tatashin@soleen.com>
+ <2vxzo6ic8ysn.fsf@kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: tjknHr1XpWSDwm3SnZFjWQohjYiT8v4OdZvi9zUCyos_1779132774
-X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+In-Reply-To: <2vxzo6ic8ysn.fsf@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260518_123259_372582_FD8B7B3B 
-X-CRM114-Status: GOOD (  10.45  )
+X-CRM114-CacheID: sfid-20260518_161521_291632_0FB8142A 
+X-CRM114-Status: GOOD (  17.83  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,69 +104,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Like scsi's async suspend support, allow scsi devices to be shut down
-asynchronously to reduce system shutdown time.
+On 05-18 18:31, Pratyush Yadav wrote:
+> On Mon, May 18 2026, Pasha Tatashin wrote:
+> 
+> > During the reboot() syscall, user processes may still be running
+> > concurrently and attempting to mutate sessions (e.g., creating,
+> > retrieving, or releasing sessions). To prevent this, introduce
+> > luo_session_serialize_rwsem to synchronize mutations with the
+> > serialization process.
+> >
+> > All session mutation operations (create, retrieve, release, ioctl) take
+> > the read lock. The serialization process (luo_session_serialize) takes
+> > the write lock and holds it indefinitely on success. This effectively
+> > freezes the LUO session subsystem during the transition to the new
+> > kernel. If serialization fails, the lock is released to allow recovery.
+> 
+> Good idea I think.
 
-Signed-off-by: David Jeffery <djeffery@redhat.com>
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-Tested-by: Laurence Oberman <loberman@redhat.com>
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: John Garry <john.g.garry@oracle.com>
----
- drivers/scsi/hosts.c      | 2 ++
- drivers/scsi/scsi_sysfs.c | 3 +++
- 2 files changed, 5 insertions(+)
+Hi Pratyush,
 
-diff --git a/drivers/scsi/hosts.c b/drivers/scsi/hosts.c
-index e047747d4ecf..bf691acc7a67 100644
---- a/drivers/scsi/hosts.c
-+++ b/drivers/scsi/hosts.c
-@@ -273,6 +273,7 @@ int scsi_add_host_with_dma(struct Scsi_Host *shost, struct device *dev,
- 	pm_runtime_set_active(&shost->shost_gendev);
- 	pm_runtime_enable(&shost->shost_gendev);
- 	device_enable_async_suspend(&shost->shost_gendev);
-+	dev_set_async_shutdown(&shost->shost_gendev);
- 
- 	error = device_add(&shost->shost_gendev);
- 	if (error)
-@@ -282,6 +283,7 @@ int scsi_add_host_with_dma(struct Scsi_Host *shost, struct device *dev,
- 	get_device(shost->shost_gendev.parent);
- 
- 	device_enable_async_suspend(&shost->shost_dev);
-+	dev_set_async_shutdown(&shost->shost_dev);
- 
- 	get_device(&shost->shost_gendev);
- 	error = device_add(&shost->shost_dev);
-diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
-index dfc3559e7e04..8fd317aef37b 100644
---- a/drivers/scsi/scsi_sysfs.c
-+++ b/drivers/scsi/scsi_sysfs.c
-@@ -1386,6 +1386,7 @@ static int scsi_target_add(struct scsi_target *starget)
- 	pm_runtime_set_active(&starget->dev);
- 	pm_runtime_enable(&starget->dev);
- 	device_enable_async_suspend(&starget->dev);
-+	dev_set_async_shutdown(&starget->dev);
- 
- 	return 0;
- }
-@@ -1412,6 +1413,7 @@ int scsi_sysfs_add_sdev(struct scsi_device *sdev)
- 	transport_configure_device(&starget->dev);
- 
- 	device_enable_async_suspend(&sdev->sdev_gendev);
-+	dev_set_async_shutdown(&sdev->sdev_gendev);
- 	scsi_autopm_get_target(starget);
- 	pm_runtime_set_active(&sdev->sdev_gendev);
- 	if (!sdev->rpm_autosuspend)
-@@ -1431,6 +1433,7 @@ int scsi_sysfs_add_sdev(struct scsi_device *sdev)
- 	}
- 
- 	device_enable_async_suspend(&sdev->sdev_dev);
-+	dev_set_async_shutdown(&sdev->sdev_dev);
- 	error = device_add(&sdev->sdev_dev);
- 	if (error) {
- 		sdev_printk(KERN_INFO, sdev,
--- 
-2.53.0
+> 
+> But, do we need a new mutex? Can't we use luo_session_header->rwsem?
+> Session creation and release take the header rwsem at one point anyway,
+> so perhaps we can just reuse that?
 
+The sh->rwsem is for protecting the the session list. We only take it as 
+a writer when modifying the list (insert/remove) and as a reader when 
+traversing it. Also, we drop sh->rwsem as soon as we've acquired the 
+per-session mutex to allow other list operations to proceed while a 
+session is being modified.
+
+Because of this, many session mutation operations (specifically ioctl 
+calls) don't touch sh->rwsem at all—they jump straight to the  session 
+state via the file's private_data. To use sh->rwsem to block
+these mutations, we would be forced to add down_read(&sh->rwsem) to 
+every ioctl path. This would be a layering violation, coupling list 
+management to per-session data mutations, and would introduce a global
+bottleneck for operations that are otherwise independent.
+
+The only other way to prevent mutations without a new global lock would 
+be for the reboot process to acquire every individual session mutex. 
+However, since LUO_SESSION_MAX can be large, this would exceed lockdep's 
+maximum lock tracking limit and trigger failures. The 
+luo_session_serialize_rwsem provides a dedicated signal to freeze the 
+entire subsystem without messing with the existing fine-grained locking 
+logic.
+
+> 
+> Also, do we need to block incoming sessions? They won't participate in
+> serialization, so perhaps we can leave those alone, and all the outgoing
+> sessions get protected by the outgoing session header rwsem?
+
+Incoming sessions don't participate in serialization, but blocking them 
+makes the code more robust. This provides a level of future proofing if 
+new ioctls or operations are added later, we won't accidentally miss a 
+path that should have been frozen during reboot. It's safer to treat the 
+subsystem as a single unit that freezes entirely once the transition 
+begins.
+
+Pasha
 
