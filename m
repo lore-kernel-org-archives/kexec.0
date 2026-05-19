@@ -4,61 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5D8E3CD4F3C
-	for <kexec@archiver.kernel.org>; Tue, 19 May 2026 13:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 948C1CD4F3C
+	for <kexec@archiver.kernel.org>; Tue, 19 May 2026 14:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=8tDEDF47lmmor5B3dnH0s0HGKympEpVrQWKFC3NXQyA=; b=m1b54jRal5ADA6LAcGBc1X6jK/
-	Ny20lHitWx1xwOZIrz/vWCxEIYwAavVChSxTPwK9/lhKGtFWek/YgsaXq/4ykPb0NnvgqzIr89c2E
-	9nzlaXss9WYSNsgK5LpittFccmTMZVTCvbvolrbFYfuV6iIN+yAb8Ghf03c0VPNPWu3MZtic9U2or
-	vaY+9E7MN4juj0XRx8ee/djH4mFTYa5LLNQ6U4el0Srf0tcVDnuqRmYptRDUOYXyBJD62TZQNjwP2
-	NhlGQKiH3xU3Cn+APHNIHMGwF2HQ04NHv7xYOz35EllmjDwaiVUG6CtoCnguLs2+2uDP5Mlz81oCO
-	POFvh7Mg==;
+	Content-Type:MIME-Version:Date:Message-Id:Subject:References:In-Reply-To:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=YAmPSe9oMJmb2SDflrLo6XOZ/WBxHlp4jcSg2KpdbhQ=; b=QO9UnkxdpTmO7/M6/zv37L544s
+	eFpSdqfwIudXdkL9OVtqH+eA4I2E+gYfqyJ4t6bibZpURYWWVhb/D54+jtgmG+PFOLW++zkgypHGF
+	5u7ErQHL67Euj6Uj/re9XK/3ghRGWWnPdnbC69AhunUTZ88/NQe2JPP1WrqrOc3fGL22F9xFG3Duh
+	B+H+kEXxMUHYYBPgWhkBPVV4hYI1ojocCQpA8J7W21Rb9Bazs2gsP3lIDRRBi1q04LN1//pfUerxi
+	KmSBoamsJ+I18RNbAOSqB/w5ViJngPxZt+IK8ytZkYt0ca4nhSLndBQ054Js5KnXxEhf8GtwXunr4
+	GuPRjpPQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPKZu-00000001ftc-0PuJ;
-	Tue, 19 May 2026 13:33:46 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wPL2n-00000001lEL-0bWA;
+	Tue, 19 May 2026 14:03:37 +0000
+Received: from mail-oi1-x22a.google.com ([2607:f8b0:4864:20::22a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPKZt-00000001ftG-1qxY
+	id 1wPL2k-00000001lDe-2Scj
 	for kexec@lists.infradead.org;
-	Tue, 19 May 2026 13:33:45 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 0ECC060129;
-	Tue, 19 May 2026 13:33:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11D31C2BCB3;
-	Tue, 19 May 2026 13:33:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779197623;
-	bh=JxQkTyZSRlzMs7ib8qBrrp+DMXE6y2eWvhI1wckhkbU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Eau0cmanZKHslnj0CVI8LxPTFGCh1FTLiuC+Lkq1wU6hXTEkwm3YjuIn13sBtWjTU
-	 5k+RRgEs8l1OjQqtmCeVW6GFmcWX6zZs2+HnvOx4PEGYX259ZNIPI0FTwxEj8onqAj
-	 +RXegkCMlEwSyn7oFbe6erQM01UBm2ucDcfDEV3jv0+Vxs4jFFBF53fBL7TOC8Haam
-	 jeIPjJESRmjSJcflE3K6FL5vNeZ8Q63KLJ5B03EYRgXAhHoVgZmKLwfxU5yEOWbOSK
-	 l9aAnt+zDwBdIG8b3mNwWnGUe9gWji6Qz0n3KOlgA2spnUYYs7J6kFWFu1S2rRvO3p
-	 /wc8VgON+0C5Q==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Alexander Graf <graf@amazon.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] kho: fix order calculation for kho_unpreserve_pages()
-Date: Tue, 19 May 2026 15:33:30 +0200
-Message-ID: <20260519133332.2498092-1-pratyush@kernel.org>
-X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
+	Tue, 19 May 2026 14:03:35 +0000
+Received: by mail-oi1-x22a.google.com with SMTP id 5614622812f47-47cacb4ed99so2299214b6e.1
+        for <kexec@lists.infradead.org>; Tue, 19 May 2026 07:03:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1779199413; x=1779804213; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YAmPSe9oMJmb2SDflrLo6XOZ/WBxHlp4jcSg2KpdbhQ=;
+        b=UJF9Ppx2Uq4V0ax4woMrne4fyOx4vDJX4tD0Lb8uHXkGFOKrak328uGTUMKOSWI2lT
+         wuB6KP01ggaD5vwZbRtPwL76WMGhSXtwsaZ4Yt/lxgz0vkaztPgvOSSuIiXCEcf4KKPR
+         YP1lTYUtH4UBwcLDOgf7rfW6NZSmrBWs6ejtVg74lyS34ptebNmreKdL6hYRRNbGytc8
+         LkugGopnU22g2Xs0Bf3Cq5Vwu/mlA8H1DbvGpDOGyjLYFwUuxfO4o7y2mTOKREzzmuXX
+         0I6ZCS7m+xsig4G5EnijLtkX1gMwVDctmoXwT7+FtmRjBlY29y+1vVY+Xo3rzVaYqLcW
+         rsCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779199413; x=1779804213;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=YAmPSe9oMJmb2SDflrLo6XOZ/WBxHlp4jcSg2KpdbhQ=;
+        b=pavq/triIpUPpEK71JYtZWuPH3QuwEs6jyWEUTvXkeqPYXF8fBlWHfI2c3puHC2vec
+         vh8bSspnj4e4e9IRHczqpcF+4//ErMW94rnVeZLiX6w4B3Zz6bBaReNdoLkE93tMdZjU
+         YycPtMxvPOEec6xC1+mhvPpKLg5xFjrONyPDl71cOSnaRU4Y8oJoJbSO+Jqp5fBcyaZH
+         Ps3nxn/eqABZb6jQ3SSBPpY/WQ4wrIaSN2vtPo1INGQcf+brOe1cy5YZ9aPaLTiW5dI8
+         7jMMB1TO2bj1C+TkKUjErAoJOM9ROXAGLm+C6lwaRRU3S3aNt/W23cht9zO/t7U+TZmJ
+         V6uA==
+X-Forwarded-Encrypted: i=1; AFNElJ9YEBx0bLt1lsB+Ik4+HawakKGDf1Ej3d/HnTtLwi8qLqffCYCBO6W6GQM9sSP5USZamWWlGA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwRrHoeTEwWoR981bwjIRbp6KkVEba1gmVIrg7YmlDVEJrViHQM
+	aEnFzxmzH7/qza+P5WO3ez473/2hqthtiw+60OPoDZ5evaHzf3n3OLaydqGlcYUTymA=
+X-Gm-Gg: Acq92OFDrkB2DXSVIepMCKSIJCUUTB1/xZTaHLB/oiJj5yonVpMFzsiYg12Iq6VVKaH
+	XT/nS5trCvb8f/oYB7GFH4a+qSZ3D7Pv245HthgT/6OUU9pgLd3kSj/QOtAG/ne9SuCqN9c6oLS
+	C0sM320djh6Ch0aIL/51MOWnY2kWTM0+ADxxyBB321uCU13/ibFaTkHtxz3Y385uWPqvPlF2nh2
+	KztJxfNRssGceeJ04g7XrzkOAohdp5vz0vBYLY5PRuUY699upoaqyB3G84hIk/D/R87eMDMK3Z9
+	47xsoSgPVkFyftbLyLlJ86+po1LF2Nd/CmTxzKnHxmNQ2del4vpxPKewBSUF7xXTorCggMCXsod
+	llvLQVZu/Ksv8AlB5TnS7gUBTYCI2ICgHAnjQ3bpQDWMAIwCorN17X0/ETiM/Nq56azlydXxOqH
+	lCbfmJBMHA1EfvwLUQiGKh7WcyeQnYvwMkJJ3EFQxK+ZJGPOmNxfIpEuIYR04Z
+X-Received: by 2002:a05:6808:2f0e:b0:479:d605:64a0 with SMTP id 5614622812f47-482e54e90cfmr13118969b6e.0.1779199413144;
+        Tue, 19 May 2026 07:03:33 -0700 (PDT)
+Received: from [127.0.1.1] ([71.181.43.54])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5164581fdf9sm164071241cf.24.2026.05.19.07.03.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2026 07:03:32 -0700 (PDT)
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: Mike Rapoport <rppt@kernel.org>, 
+ Luca Boccassi <luca.boccassi@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Pratyush Yadav <pratyush@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+ linux-doc@vger.kernel.org
+In-Reply-To: <20260519125714.2435640-1-pratyush@kernel.org>
+References: <20260519125714.2435640-1-pratyush@kernel.org>
+Subject: Re: [PATCH] liveupdate: document liveupdate=on
+Message-Id: <177919941198.1116313.3518745939102714040.b4-ty@soleen.com>
+Date: Tue, 19 May 2026 14:03:31 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260519_070334_636256_6A865130 
+X-CRM114-Status: UNSURE (   9.25  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,119 +102,25 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-Commit 91e74fa8b1bc ("kho: make sure preservations do not span multiple
-NUMA nodes") made sure preservations from kho_preserve_pages() do not
-span multiple NUMA nodes. If they do, the order is reduced and tried
-again.
+On Tue, 19 May 2026 14:57:06 +0200, Pratyush Yadav wrote:
+> While the liveupdate= parameter is documented in kernel-parameters.txt,
+> it is not listed in LUO's user facing documentation. This can make it
+> hard for users to figure out how to enable the subsystem, since enabling
+> just the config isn't enough.
+> 
+> Note the need for the kernel parameter in LUO core documentation, which
+> gets exported to Documentation/core-api/liveupdate.rst.
+> 
+> [...]
 
-The same logic was not implemented for kho_unpreserve_pages(). This can
-result in unpreserve calculating a different order than preserve, and
-thus not actually unpreserving the pages.
+Applied, thanks!
 
-Fix this by moving the order calculation logic to
-__kho_preserve_pages_order() and use it from both preserve and
-unpreserve paths.
+[1/1] liveupdate: document liveupdate=on
+      commit: d65d7e28888a6f3a1999908cacadd99f4c14ddd9
 
-Move __kho_unpreserve() down to avoid having a forward declaration. Its
-users are further down in the file anyway. Also, it results in grouping
-for all the page-level preservation and unpreservation functions. This
-unfortunately makes the diff hard to read, but the main change in
-__kho_unpreserve() is to call __kho_preserve_pages_order() instead of
-open-coding the order calculation.
-
-Fixes: 91e74fa8b1bc ("kho: make sure preservations do not span multiple NUMA nodes")
-Cc: stable@vger.kernel.org
-Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
----
- kernel/liveupdate/kexec_handover.c | 56 +++++++++++++++++-------------
- 1 file changed, 32 insertions(+), 24 deletions(-)
-
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 4fde8325c49f..11855e275397 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -357,20 +357,6 @@ int kho_radix_walk_tree(struct kho_radix_tree *tree,
- }
- EXPORT_SYMBOL_GPL(kho_radix_walk_tree);
- 
--static void __kho_unpreserve(struct kho_radix_tree *tree,
--			     unsigned long pfn, unsigned long end_pfn)
--{
--	unsigned int order;
--
--	while (pfn < end_pfn) {
--		order = min(count_trailing_zeros(pfn), ilog2(end_pfn - pfn));
--
--		kho_radix_del_page(tree, pfn, order);
--
--		pfn += 1 << order;
--	}
--}
--
- /* For physically contiguous 0-order pages. */
- static void kho_init_pages(struct page *page, unsigned long nr_pages)
- {
-@@ -855,6 +841,37 @@ void kho_unpreserve_folio(struct folio *folio)
- }
- EXPORT_SYMBOL_GPL(kho_unpreserve_folio);
- 
-+static unsigned int __kho_preserve_pages_order(unsigned long start_pfn,
-+					       unsigned long end_pfn)
-+{
-+	unsigned int order = min(count_trailing_zeros(start_pfn),
-+				 ilog2(end_pfn - start_pfn));
-+
-+	/*
-+	 * Make sure all the pages in a single preservation are in the same NUMA
-+	 * node. The restore machinery can not cope with a preservation spanning
-+	 * multiple NUMA nodes.
-+	 */
-+	while (pfn_to_nid(start_pfn) != pfn_to_nid(start_pfn + (1UL << order) - 1))
-+		order--;
-+
-+	return order;
-+}
-+
-+static void __kho_unpreserve(struct kho_radix_tree *tree,
-+			     unsigned long pfn, unsigned long end_pfn)
-+{
-+	unsigned int order;
-+
-+	while (pfn < end_pfn) {
-+		order = __kho_preserve_pages_order(pfn, end_pfn);
-+
-+		kho_radix_del_page(tree, pfn, order);
-+
-+		pfn += 1 << order;
-+	}
-+}
-+
- /**
-  * kho_preserve_pages - preserve contiguous pages across kexec
-  * @page: first page in the list.
-@@ -880,16 +897,7 @@ int kho_preserve_pages(struct page *page, unsigned long nr_pages)
- 	}
- 
- 	while (pfn < end_pfn) {
--		unsigned int order =
--			min(count_trailing_zeros(pfn), ilog2(end_pfn - pfn));
--
--		/*
--		 * Make sure all the pages in a single preservation are in the
--		 * same NUMA node. The restore machinery can not cope with a
--		 * preservation spanning multiple NUMA nodes.
--		 */
--		while (pfn_to_nid(pfn) != pfn_to_nid(pfn + (1UL << order) - 1))
--			order--;
-+		unsigned int order = __kho_preserve_pages_order(pfn, end_pfn);
- 
- 		err = kho_radix_add_page(tree, pfn, order);
- 		if (err) {
-
-base-commit: b1378127003b61930ce30064328640503ad3ef6d
+Best regards,
 -- 
-2.54.0.563.g4f69b47b94-goog
+Pasha Tatashin <pasha.tatashin@soleen.com>
 
 
