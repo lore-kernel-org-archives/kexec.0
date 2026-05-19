@@ -4,87 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 50183CD4F3C
-	for <kexec@archiver.kernel.org>; Tue, 19 May 2026 14:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9631ECD4F5B
+	for <kexec@archiver.kernel.org>; Tue, 19 May 2026 14:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=LyJqfMx5Ks1exoptQvYh/tS2q82SfLe8ov3UKKxLEwc=; b=c473TjbtGzfchVfOJygR/TB9KA
-	s2nRtyqlG+0MgMn+HJpVRRg4IRsamlZvjF/55Y/XX+SqMh9QqwBpzpe9NKU2e1Akszw+g2ffWPM7Z
-	KpOPP4cr2Gu5LsMEoQsE9p6/8iru3zg4gDBjeN0nDOAxxuJI7Cr+4qbvOWUKVNb2ogan2u3+naMUc
-	56gWhznIOrQfAZu1uR5Ium+DeMg6cthXgzqWq2Rit7TYYTPgEVOQE7cpxNRL64FNtapBaNbXn5iWS
-	aoFUfNe88w2Z20C/Ce7CE6RGleV7RCkuxaqUBmfKAqGqU2gUvS/PnzKaCv8/OX9jBYPxVLZCLCONV
-	zPqCt40g==;
+	bh=0sGtfsMt+NWWfWgP1GuryhPZenTz+43P15Viqh/cz5I=; b=hjxbeuF694Tl93rj1LrdE1Piqx
+	Dk3ijbjkhcUMTVKRkFBIWzKuwJYLmaaCXGc22IgNjBH9sEkUvhH/Ggiee93ukSxg6rhkvcMJRYF9l
+	HG4/Cr+f5lHoH99jKd6YxTRCRbO0lzTBw46A6ysyY6RfblMPE07n7RK7Ave2GrjxKxLeOC84lrigF
+	VqZreBDH8HwG6YqYah4jmFZdKc+pMMUxnEbBxJqa+lARjWXNfxuP0y8jBLMH0vs910w/gNtQqXZp6
+	OzggvQyLpL+Qvd3Z0vwN8S9fPgLUVeLlJkX2PKMCOF2vvginggnnXywLlvdpvxiF4ktsK/12tjZww
+	uYxNbbGg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPLAR-00000001mG1-0fJ0;
-	Tue, 19 May 2026 14:11:31 +0000
-Received: from mail-qt1-x831.google.com ([2607:f8b0:4864:20::831])
+	id 1wPLC4-00000001mdc-213T;
+	Tue, 19 May 2026 14:13:12 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPLAO-00000001mEv-3YYy
+	id 1wPLC3-00000001mdK-49y1
+	for kexec@bombadil.infradead.org;
+	Tue, 19 May 2026 14:13:11 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=0sGtfsMt+NWWfWgP1GuryhPZenTz+43P15Viqh/cz5I=; b=QpJ6WGhsTUXd6b0bSGGrlu77Lm
+	KsxUZV2Aa8QcQo00HntfFKbT4KYBlro5rVt3TyH1ORODhzN6dKFNnHOIVA8SEtvPLG7+Ntni9LHln
+	NOjbKuGWeuNyizfRzA7efuBfjZeDD3s51StqnN5WAGBKv+4x8bORMsRzzbSWBUP4ydww+tXDa0Ovo
+	lf9+AZHCneesBOpW42port+P7Ifh0xifv1QjijuLYUJUUXUdqoSfmyR7bRee7ER3bavx5O9L4wbTM
+	/beZ4x8m5EZfq64nJcvqAgYp9qgB3+2kAGUqL86psMZ2FWDx49jtLWXHTuHHG7ikIM81ZJGMNx2/Z
+	onpp+XXg==;
+Received: from mail-qv1-xf2d.google.com ([2607:f8b0:4864:20::f2d])
+	by desiato.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wPLC0-0000000ETNq-45Uh
 	for kexec@lists.infradead.org;
-	Tue, 19 May 2026 14:11:29 +0000
-Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-50e5dbd8e0eso43883551cf.1
-        for <kexec@lists.infradead.org>; Tue, 19 May 2026 07:11:28 -0700 (PDT)
+	Tue, 19 May 2026 14:13:10 +0000
+Received: by mail-qv1-xf2d.google.com with SMTP id 6a1803df08f44-8b6ea7716bfso46217306d6.0
+        for <kexec@lists.infradead.org>; Tue, 19 May 2026 07:13:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1779199887; x=1779804687; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1779199987; x=1779804787; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LyJqfMx5Ks1exoptQvYh/tS2q82SfLe8ov3UKKxLEwc=;
-        b=i68Q7xyE0t2jXebAaSjq4Plia0Pd8YG7a/Zu0ZRry1qeuV3EtCutIH0AY7Xv2bBfB0
-         HQ8TpQj1gV0WxwwLJIFhfX2fn5jj+XB+M5fcKSlXzgmXBS6jN+KD650ukFyiQq4Cej4X
-         Y5i5rf5mvOojerIuV9Nv3DdWeMytp5QjP92pUygLzDyjARcrTA8B4RDEQ3H6hgie0h4Q
-         M+s0e1QKkGYpuHQl3vr9oqwaFUjAt0iM9SntJiBrpCBnpWNC+tadBJmPOJIpgPbNiPEC
-         l63DjLXXuy/M1CSmba/SW4A3iLDSdL24gflLbqeZF7UD2QWxFVkBn7eslZEVyPjVFzMQ
-         ZvXw==
+        bh=0sGtfsMt+NWWfWgP1GuryhPZenTz+43P15Viqh/cz5I=;
+        b=T/0+bgDy6j8gcNStbATUrw+rqsl74zxI4acd2DQlGzXP2Krvuql119c+gAYLA+K/hf
+         zVi/hkOgPQXJCcyln74GhoqNJL592Hkp3GK0M2oQmrSHMg2SHcgaVRjaezhaBkY3wzMy
+         3lq+r5ZsUr6nq9wYMzV2eVuYf8gZFnESiodJPmqouclsLYeIptMMwofdl/97v2U8OfBP
+         Opz2tzSTn4pjDQJ3mfStMBKz3Jf4GtU55OL5krBfbEwlVPtc0QzL0QUZNon053Q9LwlT
+         IXq2aIZp8E+cPvKpC5QnZbnM9hJ0WSa2e/9E72mTiOn/n/yWE794uNPJGFTpDjNjLOmT
+         SseA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779199887; x=1779804687;
+        d=1e100.net; s=20251104; t=1779199987; x=1779804787;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LyJqfMx5Ks1exoptQvYh/tS2q82SfLe8ov3UKKxLEwc=;
-        b=A4jbb8mVXf03jQ978um6Kj9yYjz+ITs4CMPaXxCR28PilAsHkIyIw1/Ygj8JJ629x5
-         UKrpyTqKg44LFj923GfpoxlejGyvVrmS2hiGoNybzmq2/TQmYbM/WuTn3sZLzEdBvJGO
-         PJU2g1JhhTmfqiE3ZcRB43yJP5kSfk7NzlU3OOD7W9SiiU9OUbDPDQuQu6GzXdY8tozQ
-         08d5ooKAzkkhNGLeGgOMycEn1f/1pmuyT3IEwGT36K+LLPRr+nVMx9m/qlXXS94aSgQ1
-         BXHjvK3OJW7V0nEIFtMcD97r8F71tbFQpBgNqfyGrRVeb814Q/VIwB258OkR8x0Jg9PS
-         y7iA==
-X-Forwarded-Encrypted: i=1; AFNElJ+q/EVVq+V5GYdJ1+2I5XCv2rPbgtL+bgE1t8Lyzoy+c7S8myjJ0CsbIim0azKC8Ig79/xCcg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyCsPt6A355J41e8+uLdY0tTN7rpftOfem79ovFwF4EJiM30veF
-	x2rRd0dB/bSnS7MVhwKZ0Dc1vZcqUTja+Su5wrEe01SuAoAGJ3fDK40f0A3iQULvLhU=
-X-Gm-Gg: Acq92OGrCHdaZ1kodmDIrjZ3/dO1gDWMb313GjUFF57bOQdvEL75ODwNGgzqqxgMszp
-	zDpPlyv5CssZrH7MkZCpAuknIDkkATswxIXOh6nlzSKX4MNNB744ZNdM0tV8OJhSCYw8/9Cvu9d
-	tgVpL+B6KnunSlUc+DAIhL4DdvCicWVXjHFCRDW0hkMa6aJAFXjmK8Us4a12Pj58oMyOKU9ILTz
-	o+Ne5889mKVyDWgnOdVf93IyZvrZbg706fHMorDhIb/WvVy0Rh2xOTfXsN5QkqtMN3HdFSNNsMY
-	VgY5yS1DN1h+C5EVTvcIAE4P5u+KHRUlsrJ+RRiU621gdOJxg7ziMPrZ3D20LMuJpKR1xTKtnvO
-	Xd6v9inLey1RzgxNOM7t6ClPOR0v2ljS70xxuWjOkp5RXZkymLJ9+zj6Kzo9K/YOgc1/7Cuj2Gz
-	aQGDWbVNqjUS5b4dJJg/39n00fHmUtrMxo2JOf9yvStvXj3wrijmo=
-X-Received: by 2002:a05:622a:90e:b0:50e:635b:5579 with SMTP id d75a77b69052e-5165a00702cmr265768101cf.19.1779199887300;
-        Tue, 19 May 2026 07:11:27 -0700 (PDT)
+        bh=0sGtfsMt+NWWfWgP1GuryhPZenTz+43P15Viqh/cz5I=;
+        b=kH8ZLu1OVOI/VWEq+Cdqj6OiWSzUQftPEoLgc+CYNvupckZFJ3lRjEhVp9jdj3Rv1O
+         2sw/vFBm/igML3wDvEBOGFqnux7hOx1UP7MkeHqZKgehtTNDETcg1QK05kZU1st/n5Uw
+         1JU6PQtsxlY5PA6hCLa6L0aLVksyuUwJit/xsLHt6cPC1RdArPXjt9XYTaHDtoQ0ICUb
+         2PyM9+UhjSUxH7MOiXxWO5yTs4rPVQYuXes5Q7UBFvnH1cY4C5il4dz8xkEy9z00g0gt
+         z/t7ZMXl5AcJgpBl3feIFfsUZTe24A1wYtEFKU7EcE/w+gEBKk68/pnYU9MWQPEC1Yee
+         8dRw==
+X-Forwarded-Encrypted: i=1; AFNElJ87JFIkMWU91ENSlDWNaHyTm1FPQG9NNUH3oMPBl2PPdRfzTQV7AIjK8v6/1OTGyH+N55S/xQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YykYQNRut7p8I3Pp41RN4R/cXPNekR4HpurmnvPrZKp8WTuUOlg
+	wSA12ASaxkyO3Wg8ATRMGRqIbeWXO6DR3ikLzNSXjCtzaZ6YDXpkdkPc11QnZnKNSiA=
+X-Gm-Gg: Acq92OElEWdliOj7M0MlQkEMGF/iuxMthxkGr1kPFbCO13Bf+Bd547ZVhupZjopohq8
+	b3l9GMV976tro3MLSVqA97AkAFT3AXiew1D+MdnVL+wvnNyVUYU0xkeopXBRLLjaWgOHtFi8P03
+	jxJsn5P5E5XvVPZM87j/SFTixkWlYvZA3thUizCsEv03HvO+QHFgC9FtfucgpbtHA5g9mdG1opL
+	u7MMq+ETe5eB/OVTFYNXfwyaaoi7qC85g/TVohJCelZrrd78xHfN4QVt5k6pO5A4+xUepmZTLtG
+	xj2zH23sUNS4mRu5WZcktnhHmHWa0enFe2uNbSn/Q6bthKb4GrpgrYTKtAi3JrQsMhJ+4tGz4Ty
+	ETuMrMepcMZ0fjYRn7KGu54K5FWgRLbXd0Jhp7DazlIf/z94vaH5U7O8EBoR4pP9hkmp1NifIWn
+	liTWwQdVRt2bWa5sh8dIHEl60QCXTNUOHhXqR6l9fUhUegnDTcIyY=
+X-Received: by 2002:a05:6214:590a:b0:8ae:5fcc:8069 with SMTP id 6a1803df08f44-8ca0f62bc61mr376033696d6.22.1779199986811;
+        Tue, 19 May 2026 07:13:06 -0700 (PDT)
 Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5164585fa0asm177729321cf.31.2026.05.19.07.11.26
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ca3608c424sm92013666d6.3.2026.05.19.07.13.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2026 07:11:26 -0700 (PDT)
-Date: Tue, 19 May 2026 14:11:26 +0000
+        Tue, 19 May 2026 07:13:06 -0700 (PDT)
+Date: Tue, 19 May 2026 14:13:05 +0000
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, stable@vger.kernel.org
-Subject: Re: [PATCH] liveupdate: validate session type before performing
- operation
-Message-ID: <agxuNavjtB8T_xRO@plex>
-References: <20260519122428.2378446-1-pratyush@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Alexander Graf <graf@amazon.com>, 
+	Samiullah Khawaja <skhawaja@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	kexec@lists.infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Subject: Re: [PATCH] kho: fix order calculation for kho_unpreserve_pages()
+Message-ID: <agxv3w--GPrc85De@plex>
+References: <20260519133332.2498092-1-pratyush@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260519122428.2378446-1-pratyush@kernel.org>
+In-Reply-To: <20260519133332.2498092-1-pratyush@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260519_071128_902515_18201E16 
-X-CRM114-Status: GOOD (  36.90  )
+X-CRM114-CacheID: sfid-20260519_151309_334241_3E592DF9 
+X-CRM114-Status: GOOD (  15.82  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,139 +115,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 05-19 14:24, Pratyush Yadav wrote:
+On 05-19 15:33, Pratyush Yadav wrote:
 > From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 > 
-> The sessions ioctls are not applicable to all session types. PRESERVE_FD
-> is only applicable to outgoing sessions. RETRIEVE_FD and FINISH are only
-> valid for incoming session. Calling a incoming ioctl on an outgoing
-> session is invalid and can cause file handlers to run into unexpected
-> errors.
+> Commit 91e74fa8b1bc ("kho: make sure preservations do not span multiple
+> NUMA nodes") made sure preservations from kho_preserve_pages() do not
+> span multiple NUMA nodes. If they do, the order is reduced and tried
+> again.
 > 
-> For example, a user can create a (outgoing) session, preserve a memfd,
-> and then immediately do a retrieve without doing a kexec in between.
-
-Please add a self-test tools/testing/selftests/liveupdate/liveupdate.c
-to verify that outgoing sessions do not accept retrieve_fd ioctl.
-Option, you could also add to luo_multi_session.c a test to verifying 
-that incoming does not accept preserve_fd
-
-> This would result in memfd's retrieve handler to run. The handlers
-> expects to be called from a post-kexec context, and will try to do a
-> kho_restore_vmalloc() or kho_restore_folio() to try and restore memory.
+> The same logic was not implemented for kho_unpreserve_pages(). This can
+> result in unpreserve calculating a different order than preserve, and
+> thus not actually unpreserving the pages.
 > 
-> KHO catches this (thanks to KHO_PAGE_MAGIC) and returns an error, but
-> since this is considered an internal error and KHO throws out a bunch of
-> WARN()s.
+> Fix this by moving the order calculation logic to
+> __kho_preserve_pages_order() and use it from both preserve and
+> unpreserve paths.
 > 
-> Associate a type with each ioctl op and validate the type in
-> luo_session_ioctl() before dispatching the ioctl handler to make sure
-> the op is being called for the right session type.
+> Move __kho_unpreserve() down to avoid having a forward declaration. Its
+> users are further down in the file anyway. Also, it results in grouping
+> for all the page-level preservation and unpreservation functions. This
+> unfortunately makes the diff hard to read, but the main change in
+> __kho_unpreserve() is to call __kho_preserve_pages_order() instead of
+> open-coding the order calculation.
 > 
-> Fixes: 16cec0d26521 ("liveupdate: luo_session: add ioctls for file preservation")
+> Fixes: 91e74fa8b1bc ("kho: make sure preservations do not span multiple NUMA nodes")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-> ---
-> 
-> Notes:
->     I added LUO_IOCTL_ALL but there is no user in this patch. The type is
->     for LIVEUPDATE_SESSION_GET_NAME which is supported for both session
->     types. The support for GET_NAME is in next and this patch should go
->     through fixes.
->     
->     Alternatively, we can remove LUO_IOCTL_ALL from this patch and add it to
->     the LIVEUPDATE_SESSION_GET_NAME patch in next. But that would need us to
->     rebase to an rc that contains this fix.
 
-Let's keep LUO_IOCTL_ALL change in this patch.
-
-Please add tests, otherwise LGTM.
+Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com> 
 
 Pasha
-
-> 
->  kernel/liveupdate/luo_session.c | 36 +++++++++++++++++++++++++++++----
->  1 file changed, 32 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
-> index a3327a28fc1f..e84218e3cacb 100644
-> --- a/kernel/liveupdate/luo_session.c
-> +++ b/kernel/liveupdate/luo_session.c
-> @@ -295,32 +295,58 @@ union ucmd_buffer {
->  	struct liveupdate_session_retrieve_fd retrieve;
->  };
->  
-> +/* Type of sessions the ioctl applies to. */
-> +enum luo_ioctl_type {
-> +	LUO_IOCTL_INCOMING,
-> +	LUO_IOCTL_OUTGOING,
-> +	LUO_IOCTL_ALL,
-> +};
-> +
->  struct luo_ioctl_op {
->  	unsigned int size;
->  	unsigned int min_size;
->  	unsigned int ioctl_num;
-> +	enum luo_ioctl_type type;
->  	int (*execute)(struct luo_session *session, struct luo_ucmd *ucmd);
->  };
->  
-> -#define IOCTL_OP(_ioctl, _fn, _struct, _last)                                  \
-> +#define IOCTL_OP(_ioctl, _fn, _struct, _last, _type)                           \
->  	[_IOC_NR(_ioctl) - LIVEUPDATE_CMD_SESSION_BASE] = {                    \
->  		.size = sizeof(_struct) +                                      \
->  			BUILD_BUG_ON_ZERO(sizeof(union ucmd_buffer) <          \
->  					  sizeof(_struct)),                    \
->  		.min_size = offsetofend(_struct, _last),                       \
->  		.ioctl_num = _ioctl,                                           \
-> +		.type = _type,                                                 \
->  		.execute = _fn,                                                \
->  	}
->  
->  static const struct luo_ioctl_op luo_session_ioctl_ops[] = {
->  	IOCTL_OP(LIVEUPDATE_SESSION_FINISH, luo_session_finish,
-> -		 struct liveupdate_session_finish, reserved),
-> +		 struct liveupdate_session_finish, reserved, LUO_IOCTL_INCOMING),
->  	IOCTL_OP(LIVEUPDATE_SESSION_PRESERVE_FD, luo_session_preserve_fd,
-> -		 struct liveupdate_session_preserve_fd, token),
-> +		 struct liveupdate_session_preserve_fd, token, LUO_IOCTL_OUTGOING),
->  	IOCTL_OP(LIVEUPDATE_SESSION_RETRIEVE_FD, luo_session_retrieve_fd,
-> -		 struct liveupdate_session_retrieve_fd, token),
-> +		 struct liveupdate_session_retrieve_fd, token, LUO_IOCTL_INCOMING),
->  };
->  
-> +static bool luo_ioctl_type_valid(struct luo_session *session,
-> +				 const struct luo_ioctl_op *op)
-> +{
-> +	switch (op->type) {
-> +	case LUO_IOCTL_INCOMING:
-> +		/* Retrieved is only set on incoming sessions */
-> +		return session->retrieved;
-> +	case LUO_IOCTL_OUTGOING:
-> +		return !session->retrieved;
-> +	case LUO_IOCTL_ALL:
-> +		return true;
-> +	}
-> +
-> +	/* Catch-all. */
-> +	return false;
-> +}
-> +
->  static long luo_session_ioctl(struct file *filep, unsigned int cmd,
->  			      unsigned long arg)
->  {
-> @@ -345,6 +371,8 @@ static long luo_session_ioctl(struct file *filep, unsigned int cmd,
->  	op = &luo_session_ioctl_ops[nr - LIVEUPDATE_CMD_SESSION_BASE];
->  	if (op->ioctl_num != cmd)
->  		return -ENOIOCTLCMD;
-> +	if (!luo_ioctl_type_valid(session, op))
-> +		return -EINVAL;
->  	if (ucmd.user_size < op->min_size)
->  		return -EINVAL;
->  
-> 
-> base-commit: b1378127003b61930ce30064328640503ad3ef6d
-> -- 
-> 2.54.0.563.g4f69b47b94-goog
-> 
 
