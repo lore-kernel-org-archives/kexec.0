@@ -4,137 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D742FCD4851
-	for <kexec@archiver.kernel.org>; Tue, 19 May 2026 04:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4B9EFCD5BA3
+	for <kexec@archiver.kernel.org>; Tue, 19 May 2026 09:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:Message-ID:Date:Subject:To:From:
-	Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=EESihxfa/wTLxEBrFN/lgUUvkHDrHL7HdvkITC38s2k=; b=kNdLB8oqTtld/P
-	7dLR4xlDe60kQyGge68WZHY+Utd5pvqmk4p8Hf3q5t0hJTRNSMRCPokt3s6Nd5mD1UvlKiovnCdzz
-	ghxmAqGYVIz36h1ivsv+YpaoWREQPZbV5rww56no5LrBIo9h5ou3rC1fPNjPTezh7KKsKFhiyp99a
-	EbYC6Sohu07YccrZztHDTjIJvvkeBmSg7PQUU51RDe3bY27MkM52YDU/Gpdtwqsgq3BotmxvRreee
-	g4dzrPMICQyUlKeLep6xvxHF9t7d3hCItjFYqnCCkOPT5BXngfQ2eJZy2yc/nvdvxvGWnPC3JygMi
-	3S8ZBGd91rmLZtwom0pw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=82a7qdPVs5Gd632/5g4LY7OgPlVC00agc3Fj1Sc0t9Y=; b=ZFLqvjDCParx7aH6AxuevIiHy9
+	nkhMDnW1ycKo6PBzk49gpAj5+JYz0gAj2Hauy9MaNUbSurlxmi6t11sb11JXaKKSjECXEZ39rVtg5
+	sFaSWrVyHCeL0ENUk1lvWDy4iCjks+gyUM6a9NWv38Cp5RblyKMGszTU/FZKSyT2s8IHS06gkJSMf
+	weANq5FOmBrfjnyd/PA6yBCMoCQiiSc8jGiXQ9tavFqBf9sLpvC3cMbmw9PzO8pbiDi77+MAlZxcF
+	tKn2/T+Cw/pik23ACj85vEz1Cf2G2MjM5Bilj2ljN0g0gjIgblOtDGg08djLI3ZWyOR6yy1Ec135b
+	THxAS9sw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPCVr-00000000961-1V9N;
-	Tue, 19 May 2026 04:57:03 +0000
-Received: from mail-japaneastazlp170100000.outbound.protection.outlook.com ([2a01:111:f403:c405::] helo=TY3P286CU002.outbound.protection.outlook.com)
+	id 1wPGxe-00000000yHm-0cRf;
+	Tue, 19 May 2026 09:42:02 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPCVo-0000000095C-0yx5
+	id 1wPGxY-00000000yH4-42fB
 	for kexec@lists.infradead.org;
-	Tue, 19 May 2026 04:57:02 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NzJjW93zZhrZo86etEHKUpM8PfO82IjZsiF7Wzuzo5Bsl1HXUMUS83+sbQ/EUhFrxnaO3BQXg1tdZUwZW6r84RTjFDQLEfwHa2nJsA4rtiaboi/VIhJPiFO86ZcYGZj2Sg1MjmvWD8yVR/ht4/ZkywbfQE0SDB5jRe51J5xz9Jjx6W9PnZ6EXsaKoThQgdoLZd0dej3gkJ/WWDpHUkAGBYf+urZQ7nmfo9lYIMXP/UjxFlV+MfOg0Avzzav3Y6XTCBKZ0YGDFFndx0p63rheOxzek2J3pfWf77Z60idDw9oCJliAAfmkB3H52qlI0Yak5LKCLHZhchH3GP9pkywKIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EESihxfa/wTLxEBrFN/lgUUvkHDrHL7HdvkITC38s2k=;
- b=YmUFba0dLO+ZhacF+ZqrwnuvFoV1YDojikA1vV9dzO1IP+qAa1S5T/6+0ro8BTkEyzqs1djzI6txDea9Ufl34aj67H/CxuLz1iS0RvDTbzh400ajaQRN2ihyOH7t5IhGMzi07njCwb5A5a6V9nhtCBlSxVu5QIXbtcnXLm/3hzDk3/KWV1M5sAoDj6GQHBxfMiOe/YVlNKbQpbLRy5oWZ19bpdv/z6ctFkRrxID+isYZvlc6PUsrrXaoJ3sTTemSrKoUdiAoj2KYBGwnlBd1EiAT6n13puexmCetrBTMRSF0PlpX6DcQONDuYOijWd39BUYhMNq9n/8nsnnoGvRTcA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
- header.d=nec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EESihxfa/wTLxEBrFN/lgUUvkHDrHL7HdvkITC38s2k=;
- b=DtfWMqHQMfbV9umeoSTSEa8oNmnh79jVPQJeVVsKm3IxHjYAd2HYszf8XpXJ/6UioxAv/xMc4OKd065b9pnvb5ZtwqwkA5GFmhmhxzD4owc9cDCZSjPcVRDT1OBzqXzGXKd2gk1iYnwE7NO+tf/nNE63ZkxWmwmgxw1oNH7nZN4qFy++2V2N8sghksFdT8XVp6s+P01JinbRPQfS/e5OlERqfdVBQYdzPqSYIy3wzdbdNlc5V0kTNLRVmvHVuCpE0+f38BqP2+iszqSJ75RNxPEG0ctSU9xt+6jR89tOFgKkM/xfpFeQKpeuIRbDbrXFp+dlKj+7mXzGFFhZwQx/LA==
-Received: from TY4PR01MB13462.jpnprd01.prod.outlook.com
- (2603:1096:405:1d7::13) by TYCPR01MB12014.jpnprd01.prod.outlook.com
- (2603:1096:400:388::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.24; Tue, 19 May
- 2026 04:56:38 +0000
-Received: from TY4PR01MB13462.jpnprd01.prod.outlook.com
- ([fe80::8dd0:19c7:2047:1820]) by TY4PR01MB13462.jpnprd01.prod.outlook.com
- ([fe80::8dd0:19c7:2047:1820%6]) with mapi id 15.21.0025.022; Tue, 19 May 2026
- 04:56:37 +0000
-From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
-	<k-hagio-ab@nec.com>
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Subject: [PATCH makedumpfile] Fix wrong exclusion of compound tail pages on
- Linux 7.1 and later
-Thread-Topic: [PATCH makedumpfile] Fix wrong exclusion of compound tail pages
- on Linux 7.1 and later
-Thread-Index: AQHc50vfurS4+ZDcBUq7S2/JQAquxQ==
-Date: Tue, 19 May 2026 04:56:37 +0000
-Message-ID: <1779166595-32596-1-git-send-email-k-hagio-ab@nec.com>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 1.8.3.1
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nec.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY4PR01MB13462:EE_|TYCPR01MB12014:EE_
-x-ms-office365-filtering-correlation-id: f312c286-ebb7-4208-37c1-08deb563021a
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700021|11063799003|18002099003|56012099003;
-x-microsoft-antispam-message-info: /lt5rFzAyx8YMp4wqP21zGpsAF+yCqd02oljJt7YuQ+efLb/zVJl4yBxMWJMtEzEBFqHirapCO1sCKR0KJFyKzTEbWsjhYupPLbql+t/zKEqUrHUgCvs4EvGLllPLgMZc4I45HOl8OyMZrZIGKf3Oi8GWAOGlpGtueI3XsuzXD8K4F4d01nQXQXdHbZ0TIZ1RH1PtWoFIpzCyFU7kOX224CVhBeORGSpnRM4/PO7g/IATCk0gcFC/SrIUtiU0jvsdaG2ECAyfS0z7YRm13fi6C+CtibcpjMhtsau6tFRODGyNhoqexeALhq4BG13iOWvroXE7kH36dn7egskK+A2HIg3NJVXG3mjCuDMPS6zUcJx8hm3jUhcVyl9XegU1gjrR2iOr55MXflHbpGhgkt/pCiQ2mV/ERKLvHTYCmwsBpT3nwU1A/rj8hhxLtQ3ej8O3O/xVLPTuBIWLbpzsAxMUF9kiVLazIlt4okxqwPQawwHrGTgcDc3YZ4mwCBlLmXjHvhgkr8eGbkUzXKJp6SdCp86jpJfY4HJleOZ7iyOZXur9cGb0Sva9pVV6xGV42CU9FRat0iYZFs9aZHfcWzjr/U9oKFbA6k2go7HsPNYAc8Z+AlBUlwgSqCmu2EfJxuWkMfRgM0QaOTLqMYmQf3soYOQZtQIhPpfJINlgdl0rquuGKmdpaS6n27TWcmDgRRUDgJLl/XNBnrF0VnHc7ZNJK0r41qy3U1BCPekf7adV+w5Aq//7NTuYYzUZZDI0V7i
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY4PR01MB13462.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700021)(11063799003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-2022-jp?B?TGpZR09ZTzUzTTJkc1p6dkQzNlFoalRVd282TFNRc3BvOU5HZ0ZMdjB5?=
- =?iso-2022-jp?B?RnFWN0ZZSlBlT3ZxMzhGLzlFbUxmdG5ha3plQzdWVjVlckJobGppQ2tr?=
- =?iso-2022-jp?B?WmZwMXBwVzN3bDhScUt6N2xneFNhWFdWbmFwVjljaHFVTVVtcFNqbnZL?=
- =?iso-2022-jp?B?NnBCbEorbVc2VHlpR3I5T2txZURnRmNjOThnUWFhOGl2S2ZOaGRGSDVC?=
- =?iso-2022-jp?B?aE5xRHFraFpZZGJTSUlFMWZnb1g3VWhSSEdwOG5DSmI0NGZLMHFsZkNk?=
- =?iso-2022-jp?B?Y2xSN2hvVHY4R2sxb1NvVG1UdWRLWFB0dTRmYkRmdzVjZzNwQXZTZU5k?=
- =?iso-2022-jp?B?cVZuL2tJbUVnT3ArNngxY2FxalRhOXlLMXZicDFzSVVYazl2U0xRRTVX?=
- =?iso-2022-jp?B?dUwzd3NNTXVQNWpVdG1MMnRsV0JGckRPcFlnY2xsMkJmcEp0c0FmRGZD?=
- =?iso-2022-jp?B?OE9QdHYrNXU3aGRzcTRhMno5bGwzVVJSZ2sydXpGWHVTeWpqQlNHSHp2?=
- =?iso-2022-jp?B?d1U3bUJ1UFhmcUtrVzBQa0xqd2J3aEh4bEdsOEpkOCtUcnpKS3F4cVBK?=
- =?iso-2022-jp?B?Wm9MYTN5ZmU3aVNKR212cHZScjhldFZwUlYvejZRbWt5UEZNNCtnQU5y?=
- =?iso-2022-jp?B?YlZlY0liZmZVSHY2MGkwNmhJd0N5TVAycTBRVjVmaHZ3a0FUczdyaG5o?=
- =?iso-2022-jp?B?SERMVkxXb2U4UG1yMnIwaWhSaTlBMFNEaEkzMXdDWDFSOWxNK1pXYTZZ?=
- =?iso-2022-jp?B?Sks1a0NoYytaMGRoQ2xsNEk5UlBXSDdSbjdQekVrNXNscFh4NDY1d3Q4?=
- =?iso-2022-jp?B?SnFWaFJNemRleWQ4L2hNaStSRzF4YmROSzZ2NFRyNUk3emFncXpERytH?=
- =?iso-2022-jp?B?VGt2czVEZ0Qwa3FIRFNJUGFRbWUxWlFvdHR3dENYQ0xkOGp0ZDFlTWJH?=
- =?iso-2022-jp?B?d0dOY3Q0ME41aGdRVkVOM1laUVY0NFpxajN0VVBFVXRQNVJ2MUkyQ2N2?=
- =?iso-2022-jp?B?eUhrM25PeVRaaGJ5SStLWmU2ZDExYXBaVjhEcWloK1dxdUtkTTZsNW9v?=
- =?iso-2022-jp?B?ZTlId1AvcGZ4ZkN6NEdHVHFjQlNCUjlCVk9hYzJOYUlDeHY0d29vem1o?=
- =?iso-2022-jp?B?VlRWWTgzOWlXR0pRK2trTXRsUjJIREdXOTF2VmR5M1VIMlVXM0hjbjBE?=
- =?iso-2022-jp?B?b2FOTG9zTkVIajlpVytWa3hnS3JMY2tPSUhNcmNlMUpMSmtSVk9nelFO?=
- =?iso-2022-jp?B?OFRYV3lIR0lKcTJ2US81Q1FscWNIZjU3OWJmZFVSaFYwUklEQXRIMkVj?=
- =?iso-2022-jp?B?SWlMNUd0VEtIVzJ6RVNXSVk0NFZDalZWcTVKQnhaOVpFMDRVaGIvS3ZM?=
- =?iso-2022-jp?B?TVFaYjBxRHdlbGpqRWIwNHd6ajlqS0tqcVNuR0FyZnl4YTBZcWN4b1ov?=
- =?iso-2022-jp?B?Z0FUYVZ2RW1YU3p1bWpnd2tjRm5FMmxpbmN1LzNTZlpzeEdVMCs5dTVZ?=
- =?iso-2022-jp?B?a1VrbUJ6SHhwZzAvTkVMb2FiVkZOV2pJMVdPbTFmMHZnZHBmOTRoaVRo?=
- =?iso-2022-jp?B?L3QzamFaTXhxVENCUFYvS3BpYTlpelFWMU9OSE5VQlQ3ODVmZG1JajNm?=
- =?iso-2022-jp?B?VldSRjVpd2VaWkZMcTkzREYwRVBpVlI0RkN5M3BEV2ZmZnZLRzVTZVVv?=
- =?iso-2022-jp?B?VHhadGF6a1U0RVplN0tEQTV5aUw3QzNhOEFpNktTSmRJSmZINWs3L0pL?=
- =?iso-2022-jp?B?VTNadTBhTEV1N3RKdk5WWmc2YmFma2w4QWhHNlFRQ2JYUzU2RmFJa0lp?=
- =?iso-2022-jp?B?ZnFaYWFxOEdxaHVsZFNmWGI0Y2VsYmlBbkNONW5jSXhtdC9KUXd6blJD?=
- =?iso-2022-jp?B?STQvbnIzQ2dYdGY1eW1EYWpuQlVxREtMdGZaeHp2VTBTaXdsS0FFQWk1?=
- =?iso-2022-jp?B?czBZWmJsdkxYajV4TVdVNXhSNklIRlhEY3luaENXYzc2NStQMXd0NHZX?=
- =?iso-2022-jp?B?eTBacE5kSVBhN0UvQWM0VnFiWURkQ3Vnc1YyZjNvb3NmSnp5c3ZiME9l?=
- =?iso-2022-jp?B?NXRpeFNKU2ZucklFaWt1MFZsUEJlc1h5ZmxVNUxLbFZrbmFQSmw3c3c4?=
- =?iso-2022-jp?B?ZnpnbW9DaS80UGxSNTRIZGVuSDFFbnVuZ3hiM1N5UDY3Z2lpeVdwa2pR?=
- =?iso-2022-jp?B?ekdKWU5FVWpZS05IdDBLVy9FYVdUYmpSN05rQTRJU2R5eHBCYmw3V0w0?=
- =?iso-2022-jp?B?WVp5dkxTSVVDYXFJemxmbjFmQTNQVTlTMHIwYWNSME90VVkwNHAwOWt6?=
- =?iso-2022-jp?B?TVNiSnMrSi9kcytjdWRST0pqNTBOZkxGM0FqdEh5dUJzZGQveVpKclJ4?=
- =?iso-2022-jp?B?TnZHVjZjMVZvV1lPYXBaRk8vaVRiOVVUeTZibEtDMkpEck02QnF3bVRa?=
- =?iso-2022-jp?B?eEpCS1grV0FPWTc4YUwwQ1FUdE16UmcrUWxXOEx4aWR5Y2t3eDZZUjVB?=
- =?iso-2022-jp?B?V1FQdnBFcHdIZzZvQXV5UmpJSkZOcU5LODVmdz09?=
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+	Tue, 19 May 2026 09:41:57 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 5294F60210;
+	Tue, 19 May 2026 09:41:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 673F3C2BCC6;
+	Tue, 19 May 2026 09:41:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779183716;
+	bh=1GMVyqPtItYw+4ZYeMdSgc9+7flqn2nQUEy5yu+ZH88=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hc/jrytA3Kkcsz7psqmycpl4umryx8z5FunI4h8w82UYRiJlgo8uUuQTrmLBHvFcG
+	 1uzeZyy44PxAxS037pYRnkorLlzMaNHTK7jFR0R5m06pRY/FkNkA6TTiUdwTUvdpiH
+	 fGEyXCTAueF/9CRDHYdRZlcE4wqJb+XWIFbDVZm8ewrtrOYRtqoABN6KLb19lI5ZTH
+	 DEfE8jNVENxFwmGUaV1jEQ0C6KJNiaxZV2H/Moj/I89PciFPRcaKNRV4TjzsebLdFq
+	 zV+uK4/FEfusNd2CwoOnMTvt+sO8BhzcNLR4RdAP5hMgfoTyVkHPOmr2QR66jSaAv+
+	 uDKfOxgCoEg6A==
+Date: Tue, 19 May 2026 10:41:53 +0100
+From: Simon Horman <horms@kernel.org>
+To: Alejandro Hernandez <alhe@linux.microsoft.com>
+Cc: kexec@lists.infradead.org
+Subject: Re: [PATCH] kexec: restore functionality to preserve fd xattrs for
+ uncompressed kernel images
+Message-ID: <20260519094153.GA227450@horms.kernel.org>
+References: <20260507215417.2674568-1-alhe@linux.microsoft.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nec.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY4PR01MB13462.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f312c286-ebb7-4208-37c1-08deb563021a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 May 2026 04:56:37.3875
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xjE4Ntf5RHTI00+dGFcL2xxbTtFR7iCbwwC7UX3dkx0/NrYAIeGazNLhtGepcLOsZJrhmXga9pNlqxZ+mFquzw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB12014
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260518_215700_563387_FF4299FB 
-X-CRM114-Status: GOOD (  10.97  )
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260507215417.2674568-1-alhe@linux.microsoft.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -149,57 +68,73 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Kazuhito Hagio <k-hagio-ab@nec.com>
+On Thu, May 07, 2026 at 09:54:17PM +0000, Alejandro Hernandez wrote:
+> Since commit 714fa115 xattrs attached to a kernel image file (such as IMA
+> signatures) are not being preserved, do_kexec_file_load() was modified to use
+> memfd_create() which now passes an anonymous file descriptor to
+> kexec_file_load(). This change eliminated the filesystem inode identity of the
+> original kernel file, hence attributes are no longer visible to the kernel IMA
+> appraisal handler during kexec_file_load, causing IMA policy enforcement to fail
+> even for validly signed kernel images.
+> 
+> This patch attempts to restore such behavior although, only does it for
+> uncompressed kernel images. To do this, we first figure out if the image file is
+> compressed or not and call each method accordingly.
+> 
+> Compressed images continue to use memfd and cannot carry forward the original fd
+> security attributes, since their decompressed bytes do not match the signed
+> artifact. Proper handling of compressed images with IMA would require either
+> signing the decompressed artifact or kernel-side support for decompression
+> within the kexec_file_load path.
+> 
+> Signed-off-by: Alejandro Hernandez Samaniego <alhe@linux.microsoft.com>
 
-* Required for kernel 7.1
+Hi Alejandro,
 
-Kernel commit d50569612c29 ("mm: rename the 'compound_head' field in the
-'struct page' to 'compound_info'), which is contained in Linux 7.1 and
-later kernels, renamed its vmcoreinfo entry too.
+Thanks for the patch.
 
-Without the patch, makedumpfile cannot get the offset of it from the
-vmcoreinfo, and cannot determine whether a page is a tail page or not.
-As a result, makedumpfile can exclude required tail pages wrongly.
+Overall this looks good to me. But I'm wondering if you could spin a v2
+to address a minor code-style issue I have noted inline.
 
-Signed-off-by: Kazuhito Hagio <k-hagio-ab@nec.com>
----
- makedumpfile.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> ---
+>  kexec/kexec.c | 42 +++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 35 insertions(+), 7 deletions(-)
+> 
+> diff --git a/kexec/kexec.c b/kexec/kexec.c
+> index 08edfca..a388762 100644
+> --- a/kexec/kexec.c
+> +++ b/kexec/kexec.c
+> @@ -1328,17 +1328,41 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
+>  
+>  	kernel = argv[fileind];
+>  
+> -	/* slurp in the input kernel */
+> +        /* Hold original fd with its xattrs */
+> +	kernel_fd = open(kernel, O_RDONLY);
+> +	if (kernel_fd == -1) {
+> +		fprintf(stderr, "Failed to open file %s:%s\n", kernel,
+> +				strerror(errno));
+> +		return EFAILED;
+> +	}
+> +
+> +	/* Compressed vs Uncompressed */
+> +	struct stat kernel_stat;
+> +	off_t kernel_file_size = -1;
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 12fb0d816726..80637a7233f3 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -1751,6 +1751,9 @@ get_structure_info(void)
- 	OFFSET_INIT(page.compound_dtor, "page", "compound_dtor");
- 	OFFSET_INIT(page.compound_order, "page", "compound_order");
- 	OFFSET_INIT(page.compound_head, "page", "compound_head");
-+	/* Linux 7.1 and later */
-+	if (OFFSET(page.compound_head) =3D=3D NOT_FOUND_STRUCTURE)
-+		OFFSET_INIT(page.compound_head, "page", "compound_info");
- 	/* Linux 6.3 and later */
- 	OFFSET_INIT(folio._folio_dtor, "folio", "_folio_dtor");
- 	OFFSET_INIT(folio._folio_order, "folio", "_folio_order");
-@@ -2426,6 +2429,10 @@ write_vmcoreinfo_data(void)
- 	WRITE_MEMBER_OFFSET("page.private", page.private);
- 	WRITE_MEMBER_OFFSET("page.compound_dtor", page.compound_dtor);
- 	WRITE_MEMBER_OFFSET("page.compound_order", page.compound_order);
-+	/*
-+	 * on Linux 7.1 and later, this has page.compound_info's value, but
-+	 * it's OK to write it as 'page.compound_head'. See read_vmcoreinfo().
-+	 */
- 	WRITE_MEMBER_OFFSET("page.compound_head", page.compound_head);
- 	/* Linux 6.3 and later */
- 	WRITE_MEMBER_OFFSET("folio._folio_dtor", folio._folio_dtor);
-@@ -2876,6 +2883,8 @@ read_vmcoreinfo(void)
- 	READ_MEMBER_OFFSET("page.compound_dtor", page.compound_dtor);
- 	READ_MEMBER_OFFSET("page.compound_order", page.compound_order);
- 	READ_MEMBER_OFFSET("page.compound_head", page.compound_head);
-+	/* Linux 7.1 and later */
-+	READ_MEMBER_OFFSET("page.compound_info", page.compound_head);
- 	/* Linux 6.3 and later */
- 	READ_MEMBER_OFFSET("folio._folio_dtor", folio._folio_dtor);
- 	READ_MEMBER_OFFSET("folio._folio_order", folio._folio_order);
---=20
-2.31.1
+I would prefer if we stuck to declaring local variables
+at the top of this function.
+
+> +	if (fstat(kernel_fd, &kernel_stat) == 0)
+> +		kernel_file_size = kernel_stat.st_size;
+> +
+> +        /* slurp in the input kernel */
+>  	kernel_buf = slurp_decompress_file(kernel, &kernel_size);
+>  	if (!kernel_buf) {
+>  		fprintf(stderr, "Failed to decompress file %s:%s\n", kernel,
+>  				strerror(errno));
+> +		close(kernel_fd);
+>  		return EFAILED;
+>  	}
+
+...
 
