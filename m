@@ -4,60 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B3F26CD4F3C
-	for <kexec@archiver.kernel.org>; Tue, 19 May 2026 16:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 16D60CD4F5B
+	for <kexec@archiver.kernel.org>; Tue, 19 May 2026 18:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=9QW5SgZY12q+CtgpE3Pdsd4CEZVaIO577Em6GvO5TO8=; b=B3QbeK24zQuPRzFfUQmk6u1K+C
-	p2Ys1SDc70hTZzDY43eyitdtmNMRR7jTaAfBhpg40fx8z7Y6ehwp0w8m6yeJ4XksoofIAATvTEaXt
-	rAnYDKrDwIo7+rUo6tgdgqYilZ0PtBaHfgV4ZUFo8BRPJOERTk2H6XAqiETBmqpN2BueEiT3Cf5U5
-	6IXKpbfBylk924vK8pSElC9VHevsHZdtnUWUioK9Y7cT88kFqQu27F5axN/DWgvaupRU7/9MuxFxZ
-	tzUqMFEbdDQvPP0yr7pVIh29cj40E2+g759WGq54ITTm+wleUf1PXqfyI+OBkU1uWOZWknmp+qenW
-	EXxSFy4g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=6bDFKloV9wCzA7ym/ab7C+z4oYqNZXRFYLSn9rPO1gY=; b=u4tRm7+c9ZoDztVGbm4cbKihLU
+	6EsJSEsOaEq277ZQGJ+k+rD78E5TUTLk2O6T2MScdKAdb8W/LlPeWwpjr/ssJZJnaIuZ8ZYC/10I2
+	LrKfvjjxcRJC83t2lb+WAG88f/cPTNl942wsfgdOguIUHD3OETKy2NRVhNzmMjJfiSg51yE86qCdr
+	Vovz5drK6IwZxZswinqXFI+IEnnb45tUeTf2rkhIlD0vRqfIxLl5P9YNV2lmwJrW4OD1fMlzsmHzn
+	QKHr3CMWuFt0wIBfBmVoH5kvT0Eehg/fvTYuzCgNWIhSmwW3UUxuLh3LYljp/4d8rFYlxxjcXSYGz
+	3LJmXqGw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPMxL-00000002Afs-2CLa;
-	Tue, 19 May 2026 16:06:07 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wPPTg-00000002XUk-3jYL;
+	Tue, 19 May 2026 18:47:40 +0000
+Received: from mail-pl1-x635.google.com ([2607:f8b0:4864:20::635])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPMxJ-00000002AfF-39Wh
+	id 1wPPTd-00000002XTy-3QIu
 	for kexec@lists.infradead.org;
-	Tue, 19 May 2026 16:06:05 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 3884660145;
-	Tue, 19 May 2026 16:06:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65C34C2BCB3;
-	Tue, 19 May 2026 16:06:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779206764;
-	bh=3G28d0TOyfNRinSp659QFq62b49e9yvwWyjT8rXN4fw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qY9x92PrTGloGMB4sUwDGgLF5j6PDvzeOQDKL4aKnBN+UdjLDRJLp8M4OhkH0o0f/
-	 v34wNqWmM/VimJEDe5e1axaWRWXocyGKR6cWpMAs+hfake/ZMolhuYIdXauXdv6Z43
-	 C9Lf46v9wMzUX2HBhfo4vkdIRUEcBwCmzArpc0DXnR9W5Ehv07QpSAfM7VSHqFlGmC
-	 6gZ8RmjgSn5/KzNcnP/8Ov/aRKVGkBBrQNTHa2OnMgj78lNa1N1uF/WMyVaoX0d7Ac
-	 atazB59bpZ1DxNW8juJScVZDXLqjM3PRxw1QOQ1HwEMYzwriQ8HkQ4WwF9X/1pLTuQ
-	 KFtCIzvbMnZCg==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Changyuan Lyu <changyuanl@google.com>
-Cc: kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] kho: make sure scratch size is always aligned by CMA_MIN_ALIGNMENT_BYTES
-Date: Tue, 19 May 2026 18:05:49 +0200
-Message-ID: <20260519160554.2713361-1-pratyush@kernel.org>
-X-Mailer: git-send-email 2.54.0.563.g4f69b47b94-goog
+	Tue, 19 May 2026 18:47:39 +0000
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-2b46da8c48eso2525ad.1
+        for <kexec@lists.infradead.org>; Tue, 19 May 2026 11:47:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1779216457; x=1779821257; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6bDFKloV9wCzA7ym/ab7C+z4oYqNZXRFYLSn9rPO1gY=;
+        b=sdR7lbS+5GMdKpgRpMe+lHDq49Q5ASeGaN6cY8xj2g4W1COfIN897YonRLkV/t0bPD
+         xsi9jLL4CnNVj+KqNcxpqOFyT1N9hBVAAfc6Zqmb3fqw4f7iS0lOK+YuyMIw+7KS9DEt
+         vcp5RvFLNSziTXD4kwCnTE3nK1pTDbYPrhEkYGPv41vP8m1YUR2BWjgvc8jNfKwOPIow
+         WK1GzZsRZPNaFkTxKaQgzPtmnahRl32xoc7eLNUafYTFs8WLVGisDiYTXvnWJFCbc5Ta
+         I5k84EPF5/VFhajIDNqx8vhhnY9+pCKEiUHYeedOtYx2YXBxF7rFI24lE3Ha8u0aISfq
+         WnJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779216457; x=1779821257;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6bDFKloV9wCzA7ym/ab7C+z4oYqNZXRFYLSn9rPO1gY=;
+        b=NslJj7VRsTfBFUysfzkxBkefchak9vsEBzzpgeUAUz1+HcJsymCAY1n28ZYcqPrk12
+         cFRvbjJ0F9Qfe2/VW/WHUXiPRqxJhmF4STD2/ZHMROK+J69ZsTf5MHc3JO8JIkaWnLBM
+         xJufgtqaEWn6n740K4B37A5bJIrn+PG7P+1B9cfh/U0eqEMQSSaM8fur2uPnjP7j5UJw
+         9a83g1cv2S+8fN/ngSW+P9io6g+eIGCngVBlaIj2s17M1JFg7JySo9yLb2n2n0RDa2ED
+         ueb5RuHdnOiOl36sZSmOKikwOkBBg/YEDI6fvWRFicAY4kx4NXSXLQ7XZTOZ2h58JMnj
+         zCyQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+8h/qYw5jjVe5aFLkD4Y9zf+DPVfA+AhlKiXVpfaGInQ9zMQBzDIsq3Q+vVzlBFLfD90wVVg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwfQMtahnBWyPSYBqbsJyanOxBRnMkdro0u7Cj92zibMMSxs4Wb
+	pIctCTnAjUIGLkMJ9mACRihUSZ03HFxeztaLsMY/zvU6EWoDX2Ez4D4wg/NCMM0yeg==
+X-Gm-Gg: Acq92OGvf3lk2HFZ2UdR72EElYIPFOUAmVLGdf6SBoilxAALOD8MUixJY+mh48d6BLs
+	/huA/D7MN9DSfpsJAAYKZJcYINqh+BYL30FWQefVbhz6pEv5Ow7LrILcXtZLp7ksk+D/xrKy/9e
+	imnlZ5zPuMdcuvsZkLc6BW6J1eh5r5QkVg+qH3k8QrH01lG5BICCjuYHz6wjeU2lwKBHcIZfcDo
+	uDGBGMBjwFTSCD7RHBn4Ddp6S32S6Ra1Qfk/1okbLQAxioKtmnghyFL4UO6uliY3i1+esQ6jAu+
+	XbmlG6tQ4AxXMN/DqrZmKILFbS7uxr5mslOqOmDCsUqyZxvZZ/bVU7h4M0IXIEAqv9NLZ0ViEFE
+	DpHVOnyWAQ24P4CMhYH14UcQ3aOJNSqP19fvZCD7yGJoC/WpXKVew3CsDVX2aXWzjTw+K6333LE
+	70CyAJPRK7l049i4Ni5WMFvgTJApBFUNviDUVa7/ISWB9zdwcroh/3+8s1AyldjUF1aGuYUw==
+X-Received: by 2002:a17:903:1983:b0:2bd:6dad:3dfc with SMTP id d9443c01a7336-2bdb041156emr6226085ad.26.1779216456323;
+        Tue, 19 May 2026 11:47:36 -0700 (PDT)
+Received: from google.com (153.46.83.34.bc.googleusercontent.com. [34.83.46.153])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bd5d11ce67sm198205895ad.74.2026.05.19.11.47.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2026 11:47:35 -0700 (PDT)
+Date: Tue, 19 May 2026 18:47:32 +0000
+From: Samiullah Khawaja <skhawaja@google.com>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Alexander Graf <graf@amazon.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] kho: fix order calculation for kho_unpreserve_pages()
+Message-ID: <agyvXfrf6aX8LE19@google.com>
+References: <20260519133332.2498092-1-pratyush@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20260519133332.2498092-1-pratyush@kernel.org>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260519_114737_859066_7DEF72AB 
+X-CRM114-Status: GOOD (  11.97  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,71 +99,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+On Tue, May 19, 2026 at 03:33:30PM +0200, Pratyush Yadav wrote:
+>From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+>
+>Commit 91e74fa8b1bc ("kho: make sure preservations do not span multiple
+>NUMA nodes") made sure preservations from kho_preserve_pages() do not
+>span multiple NUMA nodes. If they do, the order is reduced and tried
+>again.
+>
+>The same logic was not implemented for kho_unpreserve_pages(). This can
+>result in unpreserve calculating a different order than preserve, and
+>thus not actually unpreserving the pages.
+>
+>Fix this by moving the order calculation logic to
+>__kho_preserve_pages_order() and use it from both preserve and
+>unpreserve paths.
+>
+>Move __kho_unpreserve() down to avoid having a forward declaration. Its
+>users are further down in the file anyway. Also, it results in grouping
+>for all the page-level preservation and unpreservation functions. This
+>unfortunately makes the diff hard to read, but the main change in
+>__kho_unpreserve() is to call __kho_preserve_pages_order() instead of
+>open-coding the order calculation.
+>
+>Fixes: 91e74fa8b1bc ("kho: make sure preservations do not span multiple NUMA nodes")
+>Cc: stable@vger.kernel.org
+>Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 
-When using scratch_scale, the scratch sizes are rounded up to
-CMA_MIN_ALIGNMENT_BYTES since they will be released as MIGRATE_CMA. This
-is not done when using fixed scratch sizes via command line. This can
-result in user specifying a size which is not aligned, and thus kernel
-releasing a pageblock that is only partially scratch.
+Nice find, sashiko was also complaining about same on my kunit series:
+https://sashiko.dev/#/patchset/20260512195135.804833-1-skhawaja%40google.com
 
-Do the rounding up for both cases in scratch_size_update().
-
-Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
-Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
----
- kernel/liveupdate/kexec_handover.c | 32 ++++++++++++++++++++----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
-
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 4fde8325c49f..c26e4df37479 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -607,20 +607,30 @@ early_param("kho_scratch", kho_parse_scratch_size);
- 
- static void __init scratch_size_update(void)
- {
--	phys_addr_t size;
-+	/*
-+	 * If fixed sizes are not provided via command line, calculate them
-+	 * now.
-+	 */
-+	if (scratch_scale) {
-+		phys_addr_t size;
- 
--	if (!scratch_scale)
--		return;
-+		size = memblock_reserved_kern_size(ARCH_LOW_ADDRESS_LIMIT,
-+						   NUMA_NO_NODE);
-+		size = size * scratch_scale / 100;
-+		scratch_size_lowmem = size;
- 
--	size = memblock_reserved_kern_size(ARCH_LOW_ADDRESS_LIMIT,
--					   NUMA_NO_NODE);
--	size = size * scratch_scale / 100;
--	scratch_size_lowmem = round_up(size, CMA_MIN_ALIGNMENT_BYTES);
-+		size = memblock_reserved_kern_size(MEMBLOCK_ALLOC_ANYWHERE,
-+						   NUMA_NO_NODE);
-+		size = size * scratch_scale / 100 - scratch_size_lowmem;
-+		scratch_size_global = size;
-+	}
- 
--	size = memblock_reserved_kern_size(MEMBLOCK_ALLOC_ANYWHERE,
--					   NUMA_NO_NODE);
--	size = size * scratch_scale / 100 - scratch_size_lowmem;
--	scratch_size_global = round_up(size, CMA_MIN_ALIGNMENT_BYTES);
-+	/*
-+	 * Scratch areas are released as MIGRATE_CMA. Round them up to the right
-+	 * size.
-+	 */
-+	scratch_size_lowmem = round_up(scratch_size_lowmem, CMA_MIN_ALIGNMENT_BYTES);
-+	scratch_size_global = round_up(scratch_size_global, CMA_MIN_ALIGNMENT_BYTES);
- }
- 
- static phys_addr_t __init scratch_size_node(int nid)
-
-base-commit: b1378127003b61930ce30064328640503ad3ef6d
--- 
-2.54.0.563.g4f69b47b94-goog
-
+Reviewed-by: Samiullah Khawaja <skhawaja@google.com>
 
