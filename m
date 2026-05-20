@@ -4,68 +4,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DEAF0CD5BA4
-	for <kexec@archiver.kernel.org>; Wed, 20 May 2026 07:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7A0C7CD4F3C
+	for <kexec@archiver.kernel.org>; Wed, 20 May 2026 09:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Subject:Cc:To:
-	From:Mime-Version:Date:References:In-Reply-To:Message-ID:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=StzRqy0JU9cpwZ654MMD/6mr+8t2Igu3nLEsuBaoNo8=; b=Uuwibv5LApQoEgtLjnUrQoG8Si
-	uvRmn0jaqi3/LqZuARhjhIl9gIQ99l0b0m1xBEmVD+jQ7OXaGXRmRV9ARyEaVR6k9BYdr+82JtTk9
-	Rzm+xoolTKuwt6iCJTCJKA05UlJoqr8V08VEZEXmkFgNFDM01PZ7Je6eadcO0o51v2Ul2m5vk9L6M
-	EVFzsrC8tutoVncm9w8chCNIQ9vildWXZNAiOKw2P5oRq2iGXn2xtaRQsBmAymEPZOmUY0+Zs5aK5
-	oUDB7/xd0zHDUvYQ3+XF8I8YxVm2LtDJuzC3aR8NeyBJdhi54x/+euhEoSSjg7fSCaYaDO9JnlGXf
-	67T+B+wA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=mxzEWL1R2sDou1abx9yR2WoOGdqqnaGEsR/cU7KUoPM=; b=oz/Vj9lBjXq9FzHVC8a96bZjeH
+	ZbD/B0pjE6dKYKG9F73S42Ojs6Q9Vu7/jAanGYfT9l0a2+e7goe5lrtPZdqvx9tMbYoae1R4YCnSf
+	xRKlWl7d5j9iNcshiS5OUNwwm0NzV8kLbMloZbGoXS611c9DanWnuEYWZa3MY2a/5yIEN6BiDt0ft
+	+mxuYFLZEw1Q1+nwBmXTvdrohzW5VFzkMnvKaFb5AOIWbRH5v6UTkxCom6hcSOyA1epw6nX1KeSj2
+	U3iesc3wvr1TOC2aGPOQDqsNIxrC9/aBLH88SUNdZgzdr5xk6h1NWnERYYc68Dhr0UpUX/j7ju78l
+	clqdCvsA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPbSw-00000003ojN-2qAq;
-	Wed, 20 May 2026 07:35:42 +0000
-Received: from mxhk.zte.com.cn ([160.30.148.34])
+	id 1wPd4y-0000000469A-1N7h;
+	Wed, 20 May 2026 09:19:04 +0000
+Received: from mail-pf1-x442.google.com ([2607:f8b0:4864:20::442])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPbSs-00000003ofb-3qjs
+	id 1wPd4v-0000000467m-2lUA
 	for kexec@lists.infradead.org;
-	Wed, 20 May 2026 07:35:41 +0000
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4gL3H42hZ8z5BNS0;
-	Wed, 20 May 2026 15:35:28 +0800 (CST)
-Received: from xaxapp04.zte.com.cn ([10.99.98.157])
-	by mse-fl1.zte.com.cn with SMTP id 64K7ZIB3029282;
-	Wed, 20 May 2026 15:35:18 +0800 (+08)
-	(envelope-from hu.shengming@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Wed, 20 May 2026 15:35:20 +0800 (CST)
-X-Zmail-TransId: 2af96a0d6438ad0-71bd6
-X-Mailer: Zmail v1.0
-Message-ID: <20260520153520587dSDah6BTNL9aPVMV_nsAo@zte.com.cn>
-In-Reply-To: <20260519124412.GB227450@horms.kernel.org>
-References: 20260518145742805S2A5Zwk9KwoEtGDh4p3Pl@zte.com.cn,20260518150140578xGhdr-ct94HGGS4gmP_it@zte.com.cn,20260519124412.GB227450@horms.kernel.org
-Date: Wed, 20 May 2026 15:35:20 +0800 (CST)
-Mime-Version: 1.0
-From: <hu.shengming@zte.com.cn>
-To: <horms@kernel.org>
-Cc: <kexec@lists.infradead.org>, <luo.haiyang@zte.com.cn>,
-        <zhang.run@zte.com.cn>, <yang.tao172@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCAzLzNdIFJJU0MtVjogYWRkIGJzcyBzZWN0aW9uIHRvIGtlcm5lbCB0ZXh0IGVsZiBoZWFkZXI=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL: mse-fl1.zte.com.cn 64K7ZIB3029282
-X-TLS: YES
-X-SPF-DOMAIN: zte.com.cn
-X-ENVELOPE-SENDER: hu.shengming@zte.com.cn
-X-SPF: None
-X-SOURCE-IP: 10.5.228.132 unknown Wed, 20 May 2026 15:35:28 +0800
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6A0D6440.001/4gL3H42hZ8z5BNS0
-X-Bad-Reply: References and In-Reply-To but no 'Re:' in Subject.
+	Wed, 20 May 2026 09:19:03 +0000
+Received: by mail-pf1-x442.google.com with SMTP id d2e1a72fcca58-8383fb7143aso2046031b3a.3
+        for <kexec@lists.infradead.org>; Wed, 20 May 2026 02:19:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779268740; x=1779873540; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mxzEWL1R2sDou1abx9yR2WoOGdqqnaGEsR/cU7KUoPM=;
+        b=rThKbcT7/XKF2v96OpBMLALAgvHsj0e1EvJKpNrLrsrhTovLRYGr8hVlcwlnVetKah
+         haGYjWFwW+tTTcnGwUvQjD/g6MmbsZRagSRBMH+OkkJafy6ZuvxT82E/qkPRBjfbWWdj
+         dkcWmuLRTYNiztqHlXlC1Hg6AcRtdBW4gr1C/Wp9692E2GhwhE2A1cLZFZ8mQwFsH3Zk
+         nor5Ts7yrzV9oNv8GJfoiA1dPpgVkE7LkcFwAfV3AJorBY3EXZRol0vTOPKhmkf/Zfc2
+         eAK5x7/dVJ8xBxhngMnZepI06aAcoatREgd8NzrgFNQZWUT83OBzElEt6blOK4aFwcoT
+         z6bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779268740; x=1779873540;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mxzEWL1R2sDou1abx9yR2WoOGdqqnaGEsR/cU7KUoPM=;
+        b=BQLkFoNq3DvJc0VD53+c21Y1cCZhqj2s1mvvF8BE1Zb+DbiKoDQhPEDYbeHuu52MUs
+         DsB2MwX6MnMQmI3C2AkiQvA84cu3DlxG/hUFYUqZ8IeZ37bUZ59Lhs5Kk9ZDSBKB2bNo
+         1Uhaqi2A2HW8oz9x2pzvuLFx3hb+XsjsJ/zDPHIdsg7trVa1RzeLlGlrmuo8tLq2x4DA
+         4WVt1GUqG4XjAOpO5SH0/nOuEjwXqZTnFv1hWbdX7v4OJk2jZ/Q82LyKGgdTV4ls9Qrk
+         CPQs/lMCunAE7Fyju1UY57t5V8k/vy3XFtcRengH2p87GOsoOXrtKGVgJBJwFRXZNZsC
+         vYqA==
+X-Forwarded-Encrypted: i=1; AFNElJ9gldJWh48m76FFCu3hHQDA5lT0VSIIuoIJN1JV1hb+Fq5adCLQI6691JU2UTXCp8FztQNzgw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yx1U129A6CcaURG8tXbGLzP32K09DZ9F3Lf7FJtJWU5HGvCtvKu
+	236QrIbCuyOuzaBHi8Eul6zW3xgI8qhIwOaUYlEvG1mwavJ1V5Oh/9AW
+X-Gm-Gg: Acq92OHV4SUutEz6FXB1IBOE8R/RDiC/M514GQ4ja5ZVLifnNqmxE+hfJ8Ouxtutoci
+	SeB06J7M/Qj4Q23rQILjDDuwKns1gZU12c9O2BodMsIbUyxpmOkBoagRnMSxy8HUxItog85EdIW
+	pMqjBOpM41t6idLTkxjzdeFOpEVHM/QDlwU8wkpcjAL2k+nYilqqX85dWDbrkryQdtM8emBdnTK
+	YKdJF38h0rxiQQdu5zNo1LRp1WEXzeDsUBqmvRHgySjc0H3K8oZusxHV3XWLOj97eNwie3s8SNQ
+	Gkhb6gOcjL4SSiHfOF/iyAujWD54aD/spP62k1+bv+MK7+5NM3Qwq/wAxG3njYDf0oHq6TKRfDy
+	GN3vMUaywlRGUb4bNkTYXPRAVzVIvTpQQviQK+8MquWsw24cPMNEa2K1BQ0iNQx+r9KWBLyp9tm
+	CKkK3osVUOjeahOVKUu95Q1DYdoYz0Ezj+gcEAKg==
+X-Received: by 2002:a05:6a00:2c95:b0:82c:e816:4135 with SMTP id d2e1a72fcca58-83f33de9724mr22532227b3a.47.1779268740373;
+        Wed, 20 May 2026 02:19:00 -0700 (PDT)
+Received: from intel.company.local ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-83f63bb986dsm10208967b3a.48.2026.05.20.02.18.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2026 02:18:59 -0700 (PDT)
+From: Wandun Chen <chenwandun1@gmail.com>
+X-Google-Original-From: Wandun Chen <chenwandun@lixiang.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	kexec@lists.infradead.org,
+	iommu@lists.linux.dev,
+	zhaomeijing@lixiang.com
+Cc: catalin.marinas@arm.com,
+	will@kernel.org,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	robh@kernel.org,
+	saravanak@kernel.org,
+	akpm@linux-foundation.org,
+	bhe@redhat.com,
+	rppt@kernel.org,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	ruirui.yang@linux.dev,
+	m.szyprowski@samsung.com,
+	robin.murphy@arm.com,
+	leitao@debian.org,
+	kees@kernel.org,
+	coxu@redhat.com,
+	tangyouling@kylinos.cn,
+	songshuaishuai@tinylab.org
+Subject: [PATCH v2 0/8] kdump: reduce vmcore size and capture time
+Date: Wed, 20 May 2026 17:18:36 +0800
+Message-ID: <20260520091844.592753-1-chenwandun@lixiang.com>
+X-Mailer: git-send-email 2.43.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260520_003539_114548_8E742948 
-X-CRM114-Status: GOOD (  15.38  )
+X-CRM114-CacheID: sfid-20260520_021901_699945_AD6BB22F 
+X-CRM114-Status: GOOD (  10.29  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,69 +124,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-horms@kernel.org wrote:
-> On Mon, May 18, 2026 at 03:01:40PM +0800, hu.shengming@zte.com.cn wrote:
-> > From: Luo Haiyang <luo.haiyang@zte.com.cn>
-> > 
-> > The kdump service reported the following error:
-> > 
-> >   No program header covering vaddr 0xffffffff819fa200 found kexec bug?
-> >   saving vmcore-dmesg.txt failed
-> > 
-> > prb stores the address of printk_rb_dynamic. Since printk_rb_dynamic
-> > resides in the bss segment and the PHDR (Program Header) does not include
-> > the bss segment address. Therefore,  add the bss segment to the Kernel text.
-> > 
-> > Signed-off-by: Luo Haiyang <luo.haiyang@zte.com.cn>
-> 
-> Hi,
-> 
-> I am wondering if to_be_excluded() also needs to be updated.
-> And, if so, should that change also be made for ARM64.
-> 
-> Review assisted by gemini-3-pro-preview
+This is v2 of the vmcore size optimization series.
 
-Thanks for taking a look.
+The original v1 [1] contains two parts of work:
+ - Bug fixes and small cleanups about reserved memory.
+ - A vmcore size optimization that excludes reserved memory out of
+   vmcore.
 
-On arm64, the kernel code contains text and rodata section, and the kernel data 
-contains data and bss section. Therefore, the arm64 architecture does not have
-a similar issue.
+For the convenience of review, I have split it into two independent
+patchsets. This patchset focuses on the vmcore size optimization.
 
-Yes, on RISC-V, the to_be_excluded function does not properly handle the kernel
-memory range, it is still being excluded.
+Motivation
+==========
 
-  cat /proc/iomem | grep Kernel
-    878a02000-87a8426e7 : Kernel image
-    878a02000-87944d309 : Kernel code
-    879c00000-87a1fffff : Kernel rodata
-    87a400000-87a7741ff : Kernel data
-    87a775000-87a8426e7 : Kernel bss
+On SoCs that carve out large firmware-owned reserved memory (GPU
+firmware, DSP, modem, camera ISP, NPU, ...), kdump currently dumps
+those carveouts as part of system RAM even though their contents are
+firmware state that is not useful for kernel crash analysis.
 
-Maybe we can directly use the kernel image in iomem_range_callback, and only the
-reserved memory needs to be excluded, like this:
+This series excludes /reserved-memory regions from vmcore by default,
+and also for /memreserve/ firmware regions. The corresponding kdump
+time has decreased, and the vmcore size has become smaller.
 
-  static int iomem_range_callback(...)
-  {
-  	....
-  	else if (!strncmp(str, KERNEL_IMAGE, strlen(KERNEL_IMAGE))) {
-  			elf_info.kern_paddr_start = base;
-  			elf_info.kern_size = length;
-  	}
-  
-  	return 0;
-  }
+v1 --> v2:
+1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
+   feedback [2], v2 drop that property and exclude reserve memory
+   by default.
+2. Split some prepared patches from the original patches.
+3. Address coding-style comments on patch 5 from Rob.
 
-  static bool to_be_excluded(...)
-  {
-   ...
-  	  if (!strncmp(str, IOMEM_RESERVED, strlen(IOMEM_RESERVED)))
-  		  return true;
-  
-  	  return false;
-  }
+[1] https://lore.kernel.org/lkml/20260429065831.1510858-1-chenwandun@lixiang.com/
+[2] https://lore.kernel.org/lkml/20260506144542.GA2072596-robh@kernel.org/
 
-If you think this change is acceptable, I will resubmit patch v3 later.
----
-Thanks
-Luo Haiyang
+Wandun Chen (8):
+  of: reserved_mem: handle NULL name in of_reserved_mem_lookup()
+  kexec/crash: provide crash_exclude_mem_range() stub when
+    CONFIG_CRASH_DUMP=n
+  of: reserved_mem: add dumpable flag to opt-in vmcore
+  of: reserved_mem: save /memreserve/ entries into the reserved_mem
+    array
+  of: reserved_mem: add kdump helpers to exclude non-dumpable regions
+  arm64: kdump: exclude non-dumpable reserved memory regions from vmcore
+  riscv: kdump: exclude non-dumpable reserved memory regions from vmcore
+  loongarch: kdump: exclude non-dumpable reserved memory regions from
+    vmcore
+
+ arch/arm64/kernel/machine_kexec_file.c     |  6 ++
+ arch/loongarch/kernel/machine_kexec_file.c |  6 ++
+ arch/riscv/kernel/machine_kexec_file.c     |  4 +
+ drivers/of/fdt.c                           |  5 ++
+ drivers/of/of_private.h                    |  2 +
+ drivers/of/of_reserved_mem.c               | 92 +++++++++++++++++++++-
+ include/linux/crash_core.h                 |  6 ++
+ include/linux/of_reserved_mem.h            | 15 ++++
+ kernel/dma/contiguous.c                    |  1 +
+ 9 files changed, 136 insertions(+), 1 deletion(-)
+
+-- 
+2.43.0
+
 
