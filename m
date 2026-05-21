@@ -4,63 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 32004CD4F3D
-	for <kexec@archiver.kernel.org>; Thu, 21 May 2026 03:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EAE99CD343F
+	for <kexec@archiver.kernel.org>; Thu, 21 May 2026 03:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Subject:Cc:To:
 	From:Mime-Version:Date:Message-ID:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=M5h9ipYjtxpoLNaKdM0o4KPSdzIzH0aDpLJCuLdwzGk=; b=HnSU2ZLEv7oDtrVUNacT1aUTMp
-	7VysiXzxMMpPvqDoEWvu0d3KQtCj2mwBLIGEOl3r7it5nuaq9W3xD/piiUL7sWx5dMrHGPH/oKnuy
-	IEqv8corB1hFwcDBgbvFAjFbDJjor2fNBKTrNhsVDelviDvd/rrVe2qpb38cP29ORiRu5XAp9Lkne
-	SdyNDRARC+Okq++emGCLDg1mv+gTy4Li5BFj73j1syoBxAsIwqaiu1c/BnVwHZ5PNOJjmzCaG1m51
-	VuG8imYflXGKaxuNKY5WABZr1f0sFZncBnfRqFYTI64Eo/46o4WjB06D4bqrsTymPxb1NjKBFx4Cw
-	z9E/uZVw==;
+	bh=M5h9ipYjtxpoLNaKdM0o4KPSdzIzH0aDpLJCuLdwzGk=; b=gp4vU3cu8LgVz1JXi9iX7xNFBk
+	iAkIbYKAGA77H49ShBCp8M/HHTbNQeeDtsuQJjIMvcDhIHhebfIuwV6w+egJH0rYdYdYgtSegPxgk
+	QkOyZZGOdKfkmnLrhy3X5dlUuNnsyURvS2cPSTzhLKL0t7aSsGOM88yVfeA0J4elLbOjtHHIfk0C4
+	Y89CsU3CmVk/0Ry1uwRktQp98S3LE4dDz9wi8lddo2XmQWPyibc/QsEELBxzsaHM5JzwpFjvFOzu/
+	JwyOYmTXLEr7ctOBpUAWrO/zIzTojWpLCLRmUMFgZPJyVtEGzcLnlU92BWpgI/BqqO+dqIJde2Ic4
+	bTP+QYqw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPuLL-00000006aQX-1FvX;
-	Thu, 21 May 2026 03:45:07 +0000
-Received: from mxct.zte.com.cn ([183.62.165.209])
+	id 1wPuNu-00000006adY-2Ub0;
+	Thu, 21 May 2026 03:47:46 +0000
+Received: from mxhk.zte.com.cn ([160.30.148.34])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wPuLH-00000006aPC-36Db
+	id 1wPuNs-00000006ad0-0pao
 	for kexec@lists.infradead.org;
-	Thu, 21 May 2026 03:45:06 +0000
+	Thu, 21 May 2026 03:47:45 +0000
 Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4gLZ6W4Sl2z51Srv
-	for <kexec@lists.infradead.org>; Thu, 21 May 2026 11:44:51 +0800 (CST)
-Received: from szxlzmapp03.zte.com.cn ([10.5.231.207])
-	by mse-fl1.zte.com.cn with SMTP id 64L3iiIp093731
-	for <kexec@lists.infradead.org>; Thu, 21 May 2026 11:44:44 +0800 (+08)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4gLZ9l6JdWz4yjRX;
+	Thu, 21 May 2026 11:47:39 +0800 (CST)
+Received: from szxlzmapp02.zte.com.cn ([10.5.231.79])
+	by mse-fl1.zte.com.cn with SMTP id 64L3lW9G097413;
+	Thu, 21 May 2026 11:47:32 +0800 (+08)
 	(envelope-from luo.haiyang@zte.com.cn)
-Received: from mapi (szxl2zmapp07[null])
+Received: from mapi (szxl2zmapp06[null])
 	by mapi (Zmail) with MAPI id mid18;
-	Thu, 21 May 2026 11:44:46 +0800 (CST)
-X-Zmail-TransId: 2b096a0e7fae7ee-9b2df
+	Thu, 21 May 2026 11:47:33 +0800 (CST)
+X-Zmail-TransId: 2b086a0e8055331-52ea6
 X-Mailer: Zmail v1.0
-Message-ID: <20260521114446317oQrRN5l2oZcTCKtgKgYrH@zte.com.cn>
-Date: Thu, 21 May 2026 11:44:46 +0800 (CST)
+Message-ID: <202605211147336599soXOrzLshSGck0QWydIB@zte.com.cn>
+Date: Thu, 21 May 2026 11:47:33 +0800 (CST)
 Mime-Version: 1.0
 From: <luo.haiyang@zte.com.cn>
-To: <kexec@lists.infradead.org>
+To: <kexec@lists.infradead.org>, <horms@kernel.org>
 Cc: <zhang.run@zte.com.cn>, <cai.qu@zte.com.cn>
 Subject: =?UTF-8?B?W1BBVENIIHYzIDAvNF0ga2V4ZWMtdG9vbO+8mmJ1ZyBmaXggZm9yIGNyYXNoZHVtcCBsb2FkIG9uIHJpc2N2?=
 Content-Type: text/plain;
 	charset="UTF-8"
-X-MAIL: mse-fl1.zte.com.cn 64L3iiIp093731
+X-MAIL: mse-fl1.zte.com.cn 64L3lW9G097413
 X-TLS: YES
+X-SPF-DOMAIN: zte.com.cn
 X-ENVELOPE-SENDER: luo.haiyang@zte.com.cn
-X-SOURCE-IP: 10.5.228.132 unknown Thu, 21 May 2026 11:44:51 +0800
-X-CLEAN: YES
+X-SPF: None
+X-SOURCE-IP: 10.5.228.132 unknown Thu, 21 May 2026 11:47:39 +0800
 X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6A0E7FB3.001/4gLZ6W4Sl2z51Srv
+X-Fangmail-MID-QID: 6A0E805B.001/4gLZ9l6JdWz4yjRX
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260520_204503_935865_5A97D20F 
-X-CRM114-Status: UNSURE (   9.12  )
+X-CRM114-CacheID: sfid-20260520_204744_388269_F299D399 
+X-CRM114-Status: UNSURE (   8.84  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
