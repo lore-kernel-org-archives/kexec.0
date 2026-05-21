@@ -4,66 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 62BF5CD4F3D
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C1123CD5BB4
 	for <kexec@archiver.kernel.org>; Thu, 21 May 2026 19:32:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=jj2uKcpS/Lnn6/o0vTIHKLE80CeHYkd6tam2XF0iGgs=; b=XoXDPqc4gbz1fYM+eMUJ7RAou2
-	/KZLMHClMp27g7dYMh/keSJeRpD4svvz7Ldg9jKw7xbTqyeDcuq9CxeIklarLE6GqlIShJ8NW8DL4
-	rqqyhWDh/HZXXxnCdEAjKrYo9NeFAAHBmRniq6l5vy0DYfpORndgX/xFSfgLbBhxUbwwFjms0sFiz
-	iK+vKKLoa0ZD/up2cnH3WwzkBNfFUJrf2wdZ7vYsnuTLHqfo/ylXrTszXkJfnwsnImtD9c/peIB3W
-	OC9V0en2c0V1B/hDUEof+mKp26kz6D+rHaAL/epC7xcBtXo0x+nsnks4izCuK+1AZ2FJLTqye7Bu+
-	STYpRhgw==;
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Skwk48BYilyHQDMbYjOBqYYKx+CCGojb2mWZPJknBhk=; b=2FtM79DaIl76aWzWjoV7HQ4XlV
+	Oh5NiwLad4UkEraMR3EQbW45tBXGjtAMUVPN3o15jnbpLC5k+gsUVSVyTs06U71AjuFKGLuOEjHe5
+	V0ZgYBaMUl3fw6HNJC/7WlpV3qQ9CqTAwfav5RBR9vZzmXdasloS/OgJDcJhY5VXe3DBMikVcjDrG
+	CvMygv2Iy5vP8PmQxwySaKTCXWedWAOrY9VVBXA8imxBWRQcigeA6HjIVOg0zGCnB6J36AQGNBGoA
+	SQTvMmE+EPHKVSMrkNs7mRe9Fd9OmChYlhvhH9cNIvlLjoRhoGMSujTaRLTCJmsDkgNhfD+EH/yMA
+	XbgVYF8w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wQ97m-00000008uuq-3mnI;
-	Thu, 21 May 2026 19:32:06 +0000
-Received: from mail-pg1-x549.google.com ([2607:f8b0:4864:20::549])
+	id 1wQ97n-00000008uvW-45Xm;
+	Thu, 21 May 2026 19:32:07 +0000
+Received: from mail-pg1-x54a.google.com ([2607:f8b0:4864:20::54a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wQ97k-00000008utx-2Piz
+	id 1wQ97l-00000008uu0-17OL
 	for kexec@lists.infradead.org;
-	Thu, 21 May 2026 19:32:05 +0000
-Received: by mail-pg1-x549.google.com with SMTP id 41be03b00d2f7-c828ab3b033so9169636a12.3
-        for <kexec@lists.infradead.org>; Thu, 21 May 2026 12:32:03 -0700 (PDT)
+	Thu, 21 May 2026 19:32:06 +0000
+Received: by mail-pg1-x54a.google.com with SMTP id 41be03b00d2f7-c8510f91ce8so801925a12.2
+        for <kexec@lists.infradead.org>; Thu, 21 May 2026 12:32:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779391923; x=1779996723; darn=lists.infradead.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jj2uKcpS/Lnn6/o0vTIHKLE80CeHYkd6tam2XF0iGgs=;
-        b=n3mji+q4pmV07qEse5fuWsjt1CkGtywZG1KEej2U3Or54MhAmwtAVk2o6OreOOFZTd
-         mnw25wS0PJQvYSqGhNKxFahCstO9Tfje1GawdvRRGKefXaEIFaiSuM48zN/ONLBoyiwF
-         4SkcZuwsoJBWlExU3IvrXRfHSHGMJ1uFwDe7Di9E1tIJjT0s3H6zzuwurOzKrx71tmzu
-         PnRvm5RqglUDwQ/j7Ab0tncDW8Kg7m/evBaT/VobUwGA3WCJWMJdeAXeyc1YEKeo/+2d
-         lIRgdaEbwfP0vv2AIkgKFA9swdze9hQ8lXe4nfU6M/n8O8L0c4h3HtYDAyiRSc9XvHJ5
-         aheQ==
+        d=google.com; s=20251104; t=1779391924; x=1779996724; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Skwk48BYilyHQDMbYjOBqYYKx+CCGojb2mWZPJknBhk=;
+        b=OD8nooW4TFrOKTFBbpjw1n/vitqxqBwSvm2BO//BGQQFkNmHdZoXLNCAVv8F/4reNk
+         +DfIYjIiLRxxdQ9MwdUFeNEkE009dWu4mPAtan/onRhZ3HMt5dhWKcvpQS9Kmj2Na5/z
+         Cq7omRqflBQBdj0Gv4VmvMbVzt1ORXCJrrYtKzkp/CII1Bs5ly2UgBkmXntaoSHD6quF
+         NCK32ox+eMrIZwuAZAWPRdD+WNORSuj3jBly4rYlliEsQmbs8ODdvkcdhqNElmEEwsJZ
+         Ogzv91v0j8/TSfTguZ6uqeVuYjKNqg0wkwDds7ZL5hXzavVw4G9y936BNWWdR7rhxZZZ
+         wQoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779391923; x=1779996723;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jj2uKcpS/Lnn6/o0vTIHKLE80CeHYkd6tam2XF0iGgs=;
-        b=A+z74lzw7ZeAR+JmvMMvjPcMVSNIxs3VNwCaFqE2pAn2cSS8fEz5W+t0p9ZYydikQs
-         T7ddNdUyurxqaFhkydq/4dhlcor9KwnQrAnPixLhhmyR04vN00uLdYEnXbj/bPls3Jit
-         qY22gdbNynGbSm0c0LJQHbZWYaLtrr0f8eIBqGZrVr947Ive7ahjrR99qN7tHCKA8m4j
-         EsHGcf3CDVQiD219dofP38vgjkUgjtH0VRvyl+e2l9VOEiyezKOjkDrdA3aR4L0iaV1m
-         HL5YTbGjuQOvdb9EcYnvj7N1H98KsVv9GKjC2WupWXJkSiHjMnxBDoyOnxJxmbtOa9Dw
-         oixw==
-X-Forwarded-Encrypted: i=1; AFNElJ9u+fe7fYMANl8eBnDrN75QoeUWADtj/T+3o9bxRmG0zvAYtVQFMflGHCJ1vhsn8D7UnpVS9A==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yy2e4EgVoL0UUcPeSC7TkbEz9Rd9SMW+86bms6h3a/7seroaS/N
-	GaASOXzTev1yvP7J3Z5Iy2CKa9UVTmyDCSWlGHeLz/EzCknqnhHUU4VqpeHuG34VcErpiW0peTs
-	zk+fK3jJ1+FPpLg==
-X-Received: from pfbdu2.prod.google.com ([2002:a05:6a00:2b42:b0:82f:4d28:b8c5])
+        d=1e100.net; s=20251104; t=1779391924; x=1779996724;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Skwk48BYilyHQDMbYjOBqYYKx+CCGojb2mWZPJknBhk=;
+        b=U+QTwkU9ZB6FDS23XQ/MbP3lptZ5RjSL0WATekgg9ebBUyfsLuiUg+2R2RQFyBQioj
+         grhsj3T6MR4Y/sz9vkGVtJXZOMGvgQKwlmnclVFVsqcJui1oFelLYZKsUOUmUsJ7uFCd
+         KSZ9EQp5OozVzKVEcY55AUQwDDLw20/AImCZPn1iREKUQDFN9XgeGxpeyxagj1TXVcRN
+         Ad1F/RjEKTBhlLZJsJvlz99V/bQmTGuo4LtYyWHyJBncv9k+/gsg6GzQULiThbXCKVTI
+         rGyQncfcHppQ1eJEarpKJcUTHKwVMOgimtNN7lU8/c8wjLQT2NIgqCqDhew7hwXe/tvy
+         0w7w==
+X-Forwarded-Encrypted: i=1; AFNElJ+rH069OB8kiL01JwAgj6uaDo9vx9oRR/cWIX+6tEhjULb/x+Z5Ukib5AXf189q4YSCD6JW9g==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yxizg4vlU+uhguGp1wx6cumry+Z5WaDrXepcK+B28rWKRR4f0Xj
+	ej8cqAbmlnIhy1NGnSLnW+5V8VmdRrVmbr4udhDi4CMdbqtsv/vGw/tzognsLKnZTGVDaVwWZ5g
+	1lGZIlJdvnj5wZQ==
+X-Received: from pggk2.prod.google.com ([2002:a63:d102:0:b0:c74:664d:4080])
  (user=skhawaja job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:6d85:b0:3a2:c685:f9af with SMTP id adf61e73a8af0-3b328fc0643mr327670637.50.1779391922774;
- Thu, 21 May 2026 12:32:02 -0700 (PDT)
-Date: Thu, 21 May 2026 19:31:59 +0000
+ 2002:a05:6a21:32a0:b0:39b:a997:9e40 with SMTP id adf61e73a8af0-3b328eeeac0mr350862637.46.1779391923585;
+ Thu, 21 May 2026 12:32:03 -0700 (PDT)
+Date: Thu, 21 May 2026 19:32:00 +0000
+In-Reply-To: <20260521193202.746810-1-skhawaja@google.com>
 Mime-Version: 1.0
+References: <20260521193202.746810-1-skhawaja@google.com>
 X-Mailer: git-send-email 2.54.0.746.g67dd491aae-goog
-Message-ID: <20260521193202.746810-1-skhawaja@google.com>
-Subject: [PATCH v2 0/3] kho: Add support for kunit mocking KHO restore API
+Message-ID: <20260521193202.746810-2-skhawaja@google.com>
+Subject: [PATCH v2 1/3] kho: Add kunit static stubs
 From: Samiullah Khawaja <skhawaja@google.com>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>, 
 	Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>
@@ -73,8 +75,8 @@ Cc: Samiullah Khawaja <skhawaja@google.com>, David Matlack <dmatlack@google.com>
 	"open list:KEXEC HANDOVER (KHO)" <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260521_123204_653838_CC0E1C39 
-X-CRM114-Status: GOOD (  12.64  )
+X-CRM114-CacheID: sfid-20260521_123205_308729_9A720F03 
+X-CRM114-Status: GOOD (  11.57  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,57 +91,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-To write kunit tests for preservation and restoration of liveupdate
-state in various subsystems without triggering the actual kexec, the KHO
-restore API needs to be mocked by the test writer. The mocking is done
-to allow testing of the individual components or functions in isolation.
+Add kunit stubs in kho_restore_folio() and kho_restore_pages() so the
+users can mock these functions in kunit tests.
 
-The patch series adds the following to support kunit testing when using the KHO
-API:
+Signed-off-by: Samiullah Khawaja <skhawaja@google.com>
+---
+ kernel/liveupdate/kexec_handover.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-- Add static stub hooks to mock the KHO restore API so the restore path
-  can be tested without triggering kexec.
-- Add helper function that can be used by the test writer to check if
-  memory is preserved in KHO tree.
-
-Finally, it adds a KUnit test for the KHO API that verifies the allocation of
-preserved memory, and the preservation/restoration of pages and folios.
-
-KHO Kunit test run:
-
- KTAP version 1
- 1..1
-     KTAP version 1
-     # Subtest: kho_test
-     # module: kexec_handover_test
-     1..3
-     ok 1 kho_test_alloc_preserve
-     ok 2 kho_test_preserve_pages
-     ok 3 kho_test_preserve_folio
- # kho_test: pass:3 fail:0 skip:0 total:3
- # Totals: pass:3 fail:0 skip:0 total:3
- ok 1 kho_test
-
-v2:
- - Move kunit header includes above linux header includes.
- - Use the __kho_preserve_pages_order() to get the order of preserved
-   pages instead of open order calculation math.
-
-Samiullah Khawaja (3):
-  kho: Add kunit static stubs
-  kho: Add helper function to check if pages are preserved
-  kho: Add kunit test to verify preserve/restore pages and folio
-
- include/linux/kexec_handover.h          |   5 +
- kernel/liveupdate/Kconfig               |  10 ++
- kernel/liveupdate/Makefile              |   1 +
- kernel/liveupdate/kexec_handover.c      |  63 +++++++++++-
- kernel/liveupdate/kexec_handover_test.c | 131 ++++++++++++++++++++++++
- 5 files changed, 209 insertions(+), 1 deletion(-)
- create mode 100644 kernel/liveupdate/kexec_handover_test.c
-
-
-base-commit: ec4084bc445027a52f600e30a976928be1ba1950
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 11855e275397..902019f36c24 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -10,6 +10,8 @@
+ 
+ #define pr_fmt(fmt) "KHO: " fmt
+ 
++#include <kunit/static_stub.h>
++
+ #include <linux/cleanup.h>
+ #include <linux/cma.h>
+ #include <linux/kmemleak.h>
+@@ -423,7 +425,11 @@ static struct page *kho_restore_page(phys_addr_t phys, bool is_folio)
+  */
+ struct folio *kho_restore_folio(phys_addr_t phys)
+ {
+-	struct page *page = kho_restore_page(phys, true);
++	struct page *page;
++
++	KUNIT_STATIC_STUB_REDIRECT(kho_restore_folio, phys);
++
++	page = kho_restore_page(phys, true);
+ 
+ 	return page ? page_folio(page) : NULL;
+ }
+@@ -445,6 +451,8 @@ struct page *kho_restore_pages(phys_addr_t phys, unsigned long nr_pages)
+ 	const unsigned long end_pfn = start_pfn + nr_pages;
+ 	unsigned long pfn = start_pfn;
+ 
++	KUNIT_STATIC_STUB_REDIRECT(kho_restore_pages, phys, nr_pages);
++
+ 	while (pfn < end_pfn) {
+ 		const unsigned int order =
+ 			min(count_trailing_zeros(pfn), ilog2(end_pfn - pfn));
 -- 
 2.54.0.746.g67dd491aae-goog
 
