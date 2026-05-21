@@ -4,83 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EB2D2CD5BAC
-	for <kexec@archiver.kernel.org>; Thu, 21 May 2026 18:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C6041CD5BAC
+	for <kexec@archiver.kernel.org>; Thu, 21 May 2026 18:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Type:MIME-Version:References:Message-ID:Subject:To:From:Date:Reply-To
-	:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=nHTbJEuXZdHx6N6WJcPrdnqUBqgjkQoTRJUUIZxSOGk=; b=1Y+DrhrBZWR9W4ghIwhtSVqizp
-	0KG4GNIW45CG/KOYFVQn++gmlZNCdokt0THMJ5MZuFGKDqI2/DIYFdkF7J/gVv0oy/6Lf4pAAY9/8
-	uKAtm8yhxJhTcGcgf+op8VgGapFXq1ANJlO8g343iH9N5Olkrl5PQfzbpiqOz7l5aN+ltBW/d03h6
-	rIIiJzUXtboyilWTvziMabj2iLxo3sqRXLHP/crv0FgeqAabzs1GAoBwATBA2+inJXmd8Wcb5FcR1
-	x850z2ZyYdcgKJ/BSrvUfql2V/muzBIzTswS2/mZ8+8NtoLSUMfDh8hvnnd5vmxJr1YnmgZhHzWlT
-	qUqSavhw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Date:Message-Id:Subject:References:In-Reply-To:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=O43uMa51N36nEinrWO9reEuS/JlOyHUwEmdF+rTGNKM=; b=CcgkFiW5HEHtnSoDUnp9Z/LdRK
+	J3GVim/kNZHi+kdz24qwutyCTuVJNiafqs0euOMfJcnbgcoB5KdtPDrW7/scvL3pAzzVPOa5FjADf
+	r54oaRymGdOp4KBhgcTJnvrZp0za6/ZyEYLZ5REppwbMLLU5imz311nAXpaz3mxry4wS29GdazOzY
+	FmyzlAGs1GIERvklt0tbB+ywN/XEk3AGOUrzXrEnEDxrl9BOtHmYxEZv8oVbDkCE9f5X0k2WUGKTF
+	zJqco8S9iYYE2YPk0pHpyxDpmJ7EWW5dCY85Zj9K4KsDsC3dBnzsH+STqmxWNXOOQ/+DbOsxllAA6
+	Y1bS15Ow==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wQ8Hr-00000008oCh-1PKW;
-	Thu, 21 May 2026 18:38:27 +0000
-Received: from mail-qt1-x829.google.com ([2607:f8b0:4864:20::829])
+	id 1wQ8XM-00000008qGr-1XMi;
+	Thu, 21 May 2026 18:54:28 +0000
+Received: from mail-qt1-x830.google.com ([2607:f8b0:4864:20::830])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wQ8Hn-00000008oBs-1TXM
+	id 1wQ8XJ-00000008qGM-1yJp
 	for kexec@lists.infradead.org;
-	Thu, 21 May 2026 18:38:24 +0000
-Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-512f09ecc67so46115961cf.3
-        for <kexec@lists.infradead.org>; Thu, 21 May 2026 11:38:22 -0700 (PDT)
+	Thu, 21 May 2026 18:54:26 +0000
+Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-50e5ad864a6so74444721cf.0
+        for <kexec@lists.infradead.org>; Thu, 21 May 2026 11:54:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1779388702; x=1779993502; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nHTbJEuXZdHx6N6WJcPrdnqUBqgjkQoTRJUUIZxSOGk=;
-        b=Y5n1UelPOTQVPV2zDDJt7sEsBcDkVFIi34LozeMcNCiWMMlioql/pfu9JmwgUpgSPO
-         K52uUbdyUkDXdnmC0JTHV0/Vs16GpQOHhtLOTcD62xz96Is4mIesMAJronb7USQInKbS
-         SfOS1uJKA12lvt5smHbLE4lL0XSZj26rQBgeeKnquOr64E/CZThisdfl1ZoPSp3YZeMM
-         +DMbgnB0+Z12edh82lZPfeY22Ct4l9GT0dsdwmhhorhCmpwHHqDV27rnZR/81CTxS+kw
-         CImcIL/I8r5mo2HSIDNoK58PAegly6mtiI7BGLMqE6MU8p7UJV56QVwXfekG9b6oeir+
-         rVuQ==
+        d=soleen.com; s=google; t=1779389664; x=1779994464; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O43uMa51N36nEinrWO9reEuS/JlOyHUwEmdF+rTGNKM=;
+        b=SZsyIGQK47WKas58utbFhLJax2hB1R0bgq6Tm2fod0vdyqvGXrwA78JkYqtiYvbuhy
+         cDweqVarnzBcRx14bP/6hZ2HUaB0W5s/v4X84h0y9L/YuzBmoyS2k/tcwCN0pSxTbdLT
+         D5gULuLxlkTQSEjJ+CPb6x/4MOP1upbRKB6qrI0JPJtgmoe04NR0FpWGdzWUE+E2HOhD
+         bryFz4/UUNnk6br6cPBkRnLQdPabOyl6O7AGITl/f6wh3agaGXKLi+7bKmtXfjLoxWKP
+         7vmAzg0MSIks3dNwy2xR8drSlzXt/1VEiQGOi/05DD14q4uH/dDDBXUS86xn2oBQjTNS
+         3qZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779388702; x=1779993502;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nHTbJEuXZdHx6N6WJcPrdnqUBqgjkQoTRJUUIZxSOGk=;
-        b=n08k8ZubPQEJOz2gknMmzjywFgXTymorh7xMcpXS2kCXtCWDhTyWurjtFrEzODT7aQ
-         EYV3tFAj7EpHjMyfp2/Im+BWwjqJL70E/WjFL6K0sicS3PhwV76MUjAmBka5TKqlVaQg
-         M1j3bq26NsB/eYQCzf3J6Kzqa8+qeZwItDT0KiQi1WgTMYHObimIW4g1O16Dwsr9qsT0
-         SHArTWBHuY1R1v7oVGEjTNhrIM4XzvVO2pbNUjFOUyhtuSLPZqplKLoqhdUEwM34nWxL
-         RHXwro+RK9WMFs9xf3MKShUT8zMraJ/wI6J1ZgHSR2dfVuo96Ui4qDSUIuCrlYBTbw+7
-         23RQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8EoP1XTAzZzJ7lnCq32bbr2ZT8kyR1P2jIwVi/C4Zg563SlcevSw7Tm34eqQO0HWLtNZCMug==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzKFQVbO3+xf9WYaymAjGhONI9+6/0tC8KujQ4ccQonqmxBARGz
-	JY1X9jU08+ipc68rf/wcuEKJCcXl4ydJ3BuvKomH0PgpTUeePQHY+1gq+pO0ch9zNQ0=
-X-Gm-Gg: Acq92OHvbJc41x6c6oTPSERLxZbKk4EfVRvUd22WKLFIgYTdQ4rBMOwAGxZeK0MsslJ
-	q/1rvdMEcGXvFq4rBiINR8Ltz/bOEKzZ3dP1fmCrmm8LzccXXO/krfW01+6UBzUfb0kt09Ht7+2
-	kVb7JYzt86tfkIrbCA2/R+geawsQ7HR4kie9UJsSufu+wBfOtXPSXnJhBoSKWQK5yQzkrK9rYh9
-	ZfOw1fr4N2+2DPXBH46frr2wmbOG20K2rcSQbY2r/ej36q/XEJfgz7IqYmkaibhq0009CAamp2B
-	Swg+vZ1aK/jIksJe+iJztptyMorTajBPSUg+OF6ClGmhHVJQQPM2BXXlyoWwvhPPp4whvrmwS/k
-	GqoYoFxK8nmbTI/14gBx1zBjcsQMUYP587u6oXxZmPnCG3eulBDAC9NtJ2BYZ5vRfu1DF7F3894
-	ccgzRyh+a7FW3Wf3k635wlyoPpkDCatk4ZpvZW92TBzZCehgv8G8U=
-X-Received: by 2002:a05:622a:207:b0:50f:b904:457 with SMTP id d75a77b69052e-516d4316d1fmr7975701cf.25.1779388701888;
-        Thu, 21 May 2026 11:38:21 -0700 (PDT)
-Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8cc781b383csm12094556d6.27.2026.05.21.11.38.21
+        d=1e100.net; s=20251104; t=1779389664; x=1779994464;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=O43uMa51N36nEinrWO9reEuS/JlOyHUwEmdF+rTGNKM=;
+        b=B5D6iyiKItuLVY2s3SGHxm9dbnK5GuZXpr1ymuCWOUDI+KxWhlZoZLrmPolKch57oJ
+         Umphz3tLyvqCNqx3zdSWeYxamEPxjx4Phsn/Om7SdUKXvECg8iFMBVXrKYtx/pGJG6Su
+         bYOOzW0Vdv3jwVncj4yLu4EXqDQXP2BV/u6gXQq/L0BphD3/G9+fUNwCudLoLlS4IreB
+         1XG5LmQImlUWUHQLRjtNqIRClIEmCxkJup4vHol6kMGibyU5E2jRCEKeDiLbm5q/tmba
+         d9BQgYzps10xvh19/Saye6qkGpZOZcTrBjT39MojK/D+W7QhsKayyqW0DVPF0DQVFKeB
+         kU1g==
+X-Gm-Message-State: AOJu0YwqNEZqOXGuDVUi2KavLzcxPMA7RNjiKPYiRXEFw4KrdF1j8dGH
+	4zaGGXEtG8PbiX9buugCXw6t0/ig+lmk6N1v7Gh02sbVlVZslF8JgiJf1SFbvcmk/fR2NIsIFsJ
+	ZvDrD
+X-Gm-Gg: Acq92OE2c+RBcCsVi+G7WZop/LGtSPYnDamxY4I0QCsqwnFzY/tQ2+RcA2/9PPbSmpS
+	fCeH5uC4/6WBgI23LugF6/YzIK9hbz12XvMo74Ucs0zdvqHEv52cxoUO1P9wk7y+W6DoU4RCByR
+	N8Aw+M9lCvSMNdO2zptU5TxZMrJpeByk5yGEnqETr+IjKDHwDYiC2kmkczhmQ41SNbwxllI8xMu
+	XQIJtyav673JG4A2dHZ2PJfFvjexE33qKAobJOoo22Vg0YGAzP/mFiuC6Bdr327G/axOaoQOT7O
+	7wxGOw/A5R30gL4Ls+ZUa6SgbbWQlD2+XGrF0hNtzDV73piQmA4HqnhqXVItudYEjSIAeV5Mj+n
+	pZRS1njkBjKBJOStw9t2RzfaHSuy4ex+wa1IcadZHrl94EaR2ZXpuHBuFQ9oUeLhtdRNEM2PqPl
+	W4aXvowWZb7kWhHUNNox8yF7OBvuU3I69FQ0TXnbWDVVNgvV7XS69S13MkE0Hw
+X-Received: by 2002:ac8:5912:0:b0:50f:c1d4:d9e1 with SMTP id d75a77b69052e-516d4376f6cmr8327631cf.38.1779389663980;
+        Thu, 21 May 2026 11:54:23 -0700 (PDT)
+Received: from [127.0.1.1] ([71.181.43.54])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-516ccf4c8d2sm13751251cf.29.2026.05.21.11.54.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2026 11:38:21 -0700 (PDT)
-Date: Thu, 21 May 2026 18:38:20 +0000
+        Thu, 21 May 2026 11:54:23 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Michal Clapinski <mclapinski@google.com>
-Subject: Re: [PATCH] pstore: add a KHO backend
-Message-ID: <ag9LehR5HdX14M9s@plex>
-References: <20260520174332.921186-1-mclapinski@google.com>
+To: Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Changyuan Lyu <changyuanl@google.com>, Pratyush Yadav <pratyush@kernel.org>
+Cc: kexec@lists.infradead.org, linux-mm@kvack.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20260519160554.2713361-1-pratyush@kernel.org>
+References: <20260519160554.2713361-1-pratyush@kernel.org>
+Subject: Re: [PATCH] kho: make sure scratch size is always aligned by
+ CMA_MIN_ALIGNMENT_BYTES
+Message-Id: <177938966317.1212271.16034923918291092372.b4-ty@soleen.com>
+Date: Thu, 21 May 2026 18:54:23 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260520174332.921186-1-mclapinski@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260521_113823_406102_D84288C4 
-X-CRM114-Status: GOOD (  24.40  )
+X-CRM114-CacheID: sfid-20260521_115425_521862_50ADDFCB 
+X-CRM114-Status: UNSURE (   8.47  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,118 +100,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: Tony Luck <tony.luck@intel.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, Kees Cook <kees@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 05-20 19:43, Michal Clapinski wrote:
-> Up to this point to preserve late shutdown logs in memory, users had to
-> predefine a memory region using ramoops. This commit changes this by
-> preserving a buffer using kexec-handover.
+
+On Tue, 19 May 2026 18:05:49 +0200, Pratyush Yadav wrote:
+> When using scratch_scale, the scratch sizes are rounded up to
+> CMA_MIN_ALIGNMENT_BYTES since they will be released as MIGRATE_CMA. This
+> is not done when using fixed scratch sizes via command line. This can
+> result in user specifying a size which is not aligned, and thus kernel
+> releasing a pageblock that is only partially scratch.
 > 
-> For now it supports preserving only 1 dmesg buffer.
-
-"only" sounds like a limitation, but I do not think it is. If userspace 
-is configured properly after every boot, it can back up the dmesg from 
-the previous kernel instance if needed.
-
-> It gets replaced with the new buffer on every kexec, so the user has to
-> copy the file out of pstore after every kexec.
-> There is no erase() support.
+> Do the rounding up for both cases in scratch_size_update().
 > 
-> Signed-off-by: Michal Clapinski <mclapinski@google.com>
-> ---
->  fs/pstore/Kconfig      |   9 ++
->  fs/pstore/Makefile     |   2 +
->  fs/pstore/pstore_kho.c | 267 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 278 insertions(+)
->  create mode 100644 fs/pstore/pstore_kho.c
-> 
-> diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
-> index 3acc38600cd1..70853799e211 100644
-> --- a/fs/pstore/Kconfig
-> +++ b/fs/pstore/Kconfig
-> @@ -81,6 +81,15 @@ config PSTORE_RAM
->  
->  	  For more information, see Documentation/admin-guide/ramoops.rst.
->  
-> +config PSTORE_KHO
-> +	tristate "Preserve logs over kexec"
-> +	depends on PSTORE
-> +	depends on KEXEC_HANDOVER
-> +	help
-> +	  A pstore backend for preserving dmesg over KHO (kexec handover).
-> +
-> +	  It supports preservation of only 1 dmesg file.
-> +
->  config PSTORE_ZONE
->  	tristate
->  	depends on PSTORE
-> diff --git a/fs/pstore/Makefile b/fs/pstore/Makefile
-> index c270467aeece..518cd408bf8e 100644
-> --- a/fs/pstore/Makefile
-> +++ b/fs/pstore/Makefile
-> @@ -13,6 +13,8 @@ pstore-$(CONFIG_PSTORE_PMSG)	+= pmsg.o
->  ramoops-objs += ram.o ram_core.o
->  obj-$(CONFIG_PSTORE_RAM)	+= ramoops.o
->  
-> +obj-$(CONFIG_PSTORE_KHO)	+= pstore_kho.o
-> +
->  pstore_zone-objs += zone.o
->  obj-$(CONFIG_PSTORE_ZONE)	+= pstore_zone.o
->  
-> diff --git a/fs/pstore/pstore_kho.c b/fs/pstore/pstore_kho.c
-> new file mode 100644
-> index 000000000000..3bc679273c8d
-> --- /dev/null
-> +++ b/fs/pstore/pstore_kho.c
-> @@ -0,0 +1,267 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * KHO (Kexec Handover) backend for pstore
-> + */
+> [...]
 
-We need a proper Doc comment here explaining the benefits of using a 
-KHO-based pstore. It has some very significant advantages, such as 
-removing the need to manage a hardcoded memmap or rely on firmware 
-support. Also, you can mention that pstore also provides the ability to 
-preserve every single dmesg even after filesystem unmounts, without 
-being limited by the console baud rate.
+Applied, thanks!
 
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/kexec_handover.h>
-> +#include <linux/libfdt.h>
-> +#include <linux/module.h>
-> +#include <linux/pstore.h>
-> +#include <linux/slab.h>
-> +#include <linux/unaligned.h>
-> +
-> +#define KHO_PSTORE_FDT_NAME	"pstore-kho"
-> +#define KHO_PSTORE_COMPAT	"pstore-kho-v1"
-> +#define KHO_PSTORE_DATA		"pstore_kho_record"
-> +
-> +static const size_t record_max_size = 1 << CONFIG_LOG_BUF_SHIFT;
+[1/1] kho: make sure scratch size is always aligned by CMA_MIN_ALIGNMENT_BYTES
+      commit: 4129715f7ac5b71183350f1983023caf0464cb9b
 
-The above should be added to include/linux/kho/abi/pstore.h
+Best regards,
+-- 
+Pasha Tatashin <pasha.tatashin@soleen.com>
 
-Also, there is no need to add an FDT subtree; it is much cleaner to add 
-a sub-blob and use a C-struct directly. Let's add something like struct 
-pstore_ser to the pstore ABI header to act as an anchor for everything 
-this code references.
-
-Additionally, what happens if CONFIG_LOG_BUF_SHIFT changes between two 
-kexec'd kernels? Will this still work? If not, then the buffer size 
-needs to be explicitly defined as part of the ABI.
-
-[...]
-
-Pleae review 
-https://sashiko.dev/#/patchset/20260520174332.921186-1-mclapinski%40google.com 
-review comments.
-
-Pasha
 
