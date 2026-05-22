@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A5403CD5BAB
-	for <kexec@archiver.kernel.org>; Thu, 21 May 2026 23:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 883F8CD5BAF
+	for <kexec@archiver.kernel.org>; Fri, 22 May 2026 00:48:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ALlc+rSkkMdtbljNag13qxzB8Q5Vali1I2lgtUdeRqk=; b=uIA8ODdObvNfwT4FXRdF0etQcN
-	R6szK0ugtMekQejPuu8X2rXszCXITmI3jGYX+BghQujURUAh1iDEDn4ly1kNNrjCiVOVQi5o7b/cq
-	SHF/80jegTpwIYfDm/wCQK2Y91yL4fzVa/CrOPs6PPJSZqoldBWEcyz9ZMDUEezrCoyiZ8Z/jwvTc
-	2MkzUbdN6ndSxIeIrkh/1XeKqlL4UVHKTGB7kQJuWgzWlz+Ba8q6Y0jO1LFc+RP4d3p+xHzIRCi26
-	p4zb6pNPLx9YCi1WtUGmoIIrBCrjwdE3Ntrmz74BwzR9BazY/xo6mnMNCq7i/yrAI2RhtmCfuE2sx
-	SNe9/ejQ==;
+	bh=AUuo4Wsm5kupCrQA3m4DdC09avG22p4BEbUBdKbxJRo=; b=YweB60+XC2ZiTA8sbiLs+kuPQ7
+	h/a1e5+o0/cSG1HrzA1v6JCL2POV62EeSH+TkN+Hnsr9dVGsg7v3+dPU/kQaGSI89Lqd3E3f4u/a5
+	4EggihfdFcApxvF9XU7AVmAHrPPtTAgxukFWJ75afqSCw5LkCWTDKWuXL7uWfxIWZrriYgSd4i5vl
+	1QDP7Wxc+59IYrhCIfcQU96sHO80Xyygcpcy1/AeJTJ8PZZdmTDsu0uwrHTcelyQeVveidRPKxq4v
+	4yGv+77+SEX+IEGKAJB+WQy485Fxma2o7FpLUtvW4P0q49NZ6IH9AO6GLhVfVlDS6tfHJwS3I0zp7
+	XIO3+kTQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wQD5w-00000009LWQ-1NmZ;
-	Thu, 21 May 2026 23:46:28 +0000
-Received: from mail-qt1-x82e.google.com ([2607:f8b0:4864:20::82e])
+	id 1wQE48-00000009Qw4-3Xhi;
+	Fri, 22 May 2026 00:48:40 +0000
+Received: from mail-qv1-xf2b.google.com ([2607:f8b0:4864:20::f2b])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wQD5u-00000009LVx-1jAV
+	id 1wQE46-00000009QvI-0tNS
 	for kexec@lists.infradead.org;
-	Thu, 21 May 2026 23:46:27 +0000
-Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-51306c9f2a8so78919831cf.1
-        for <kexec@lists.infradead.org>; Thu, 21 May 2026 16:46:25 -0700 (PDT)
+	Fri, 22 May 2026 00:48:39 +0000
+Received: by mail-qv1-xf2b.google.com with SMTP id 6a1803df08f44-8bc3ef10cc4so92080756d6.1
+        for <kexec@lists.infradead.org>; Thu, 21 May 2026 17:48:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1779407185; x=1780011985; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1779410917; x=1780015717; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ALlc+rSkkMdtbljNag13qxzB8Q5Vali1I2lgtUdeRqk=;
-        b=XO30vRb2bMJB7KOS+ufVgvkcAqtip8OZAm27BSrGYR4zIKNjtwfjwjgTvRVNzzTE6m
-         3YDMnkt2phdZIyz2nx9WnuOZ8o6t84Fp+HaDuwntQRRvMIUD4U6IDPIE+iBetr6VPdSn
-         eoR1z/63hmWgjBelT/HiTjgTjm6jNmhBFhCKiisnCHbbRUySwi4ahsm/8DA8XC4NBuPc
-         /rMddUtBF60RbK+T7eDNNECuMf3m+AxbjbKTF++JEBa69LsBH+ZfXGGozXr8WdLTvY3H
-         YNZNUbmsWxA7LK1R5uawUMEDTEcWFxKSsElfTU500lAs9ys9MY0wdx6TcblnMKdDGWAf
-         rKkw==
+        bh=AUuo4Wsm5kupCrQA3m4DdC09avG22p4BEbUBdKbxJRo=;
+        b=huPKnsjync6vNIlG77mIYrqA/e37t1PJSaatpj/Rn5MZ8RY1oNY/clvIZDvJ/QwURj
+         q3YIDebtlYRoubZZFiQI5w+taAlM2mFx6TyIOJWbja0sxNjU0qVOJpAcNgJdYJHI+qUw
+         2MzYCuWL+4hcMhrr8u1MBHshTy4ETVhbnO6aMFs2genQgedcjqg7BdLNCitb2ilEh5ny
+         prFP7YW6WDvq7ssQPM7pOv2FlExUuzNUTTJyXoIYfTBujsoUXR6Ffm0PC5UCvsjm9ODm
+         2lpgODsfiPwI36M+bnRlY56egNb6OLpkCKn1OoyxOJd0KLRwN8AN4/mZTlbVFtRW+gBz
+         D1MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779407185; x=1780011985;
+        d=1e100.net; s=20251104; t=1779410917; x=1780015717;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ALlc+rSkkMdtbljNag13qxzB8Q5Vali1I2lgtUdeRqk=;
-        b=BJzSsWYswI7E3k0089mkfONK3LVnYYlgqUr7eOSsO607JpEw/0rVud8GG4UzTi1/54
-         ZH6CZiseF7Aj+n9UguzxOzGaRflAc1/wtScaD/tLltQ3fE5Jv5tw0e2RrXgAbTWni/Fr
-         9qv2ug/OtbZ+bawjsV/yHKzH8owO1FI3jkC29rNmgaJ1LCGN9/CjS5o65HigZnE9v09r
-         gTTy4+V4xf5XsClySlmbNuuSwx0aF/1PiwTo88xi1geUpzAHSsVY0PZDPQOpQ6BNaaS/
-         S1DGZMkx6nyCPfNCAkWL0pCuuR+mFjMGvaO0DpjN1FvJtld1dk3dJSGyEh20EyR9xfFk
-         Y5bg==
-X-Forwarded-Encrypted: i=1; AFNElJ8p8waUjOL/yBqsxnXfrBRoNMzIX/BXhwLrguaOYAAcGABR0JZiZ2DaP9suNcj2589VtC/G7A==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzEjGZNLJMZxPpEnXohMoaNtRxbKB3CAlUF3BlU2k+q0euw1v7x
-	2+BUKtYhZbRNjjSEL08roiXjfslcFgHlYGvDstXXpry/R7kxWvlHQ6bYU3g02kn5inQ=
-X-Gm-Gg: Acq92OFUkTxLPIBYQAfvkZIQc77scVM3FXJBEDENL3rWk6S3/1WyVJ+yUVYAOOUHI98
-	FpYWuVyYZN/TSU3dYrbkqD1WdbP+/KVDD/Z9JBeaiTbOm13dPD0+nJtLmgZtTEPvmX59bjllyCV
-	fXn3qmNBr9HbT+LXlU0j6DuOXn0VSpjJ0b0o/TcuWYAlTiR7YszgCnj17iTj2a/a3iocHqTejE8
-	HTROWE7K1bSUYVR3N8whKCDYv7eok/ecyDF41X1QmPT92qvgNf2yHEe8sdrI3YaY7xRzMytZD0O
-	Op+kvEBhkCcSyAHiP+OUXrlgwJC0L0MrYd6E4qiPLhcvkGhqIaeHiQTfpbFqEdNFiJpOf1JALAS
-	YMzvghtpfEY36jf/0A2cCf7ssRtCzmMC7FEUTpBEcO7GODGQT+kVJHPByMacXDBSFkHeRFvxYPI
-	1YzZafyvhrBmKnUaCJLGcjRXS3mcVL+UjUmL9kPvPtlH7JQw/yDVVJbq7UQz4l6w==
-X-Received: by 2002:ac8:5749:0:b0:516:d191:f006 with SMTP id d75a77b69052e-516d45c9215mr21944911cf.42.1779407184872;
-        Thu, 21 May 2026 16:46:24 -0700 (PDT)
+        bh=AUuo4Wsm5kupCrQA3m4DdC09avG22p4BEbUBdKbxJRo=;
+        b=YJ10hwXdjy8j9T+aa1QwOcOkbKaB600mildc6ntcaBlI/Us45OlNE3zijUuUl76fgf
+         pWeaegHeXBfy2sSLKaahCFRukSr0I5j/LEXs0/ZdIA9aExeh/UGS7l9VMBCMy6GFvJpQ
+         Jf6PGNpCdIWKXF3dIJGlkqLzhf2u1hOV6nDRgxfWjYAooYkvzOt7sKVMXU4acr+A7/tB
+         1AErWXc+C+bkhMnZQDxIS1oWax/8nSulTGhomyyu74tjT8VTSUA0RHLg3mfVEOhe9Mt6
+         l7PgijolcT4aEmuDug20jmrJt51mVFQhHM1dh/w+JWEHiBV1qOM/+PjDkj0l2fhDZrxw
+         jozg==
+X-Forwarded-Encrypted: i=1; AFNElJ+Z2BMNTwnNNev0K0vS2xdmFv3rOux2kJ+RF/ghxE+K6tYB7oLHIYN2RR9k6MsnHEU5ZXXq3A==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yz1Qhkhc0X/idrxOocVZtrmuVjSDuhgYkW3QSrvFGGrWUoKXqJC
+	kccYAijy9vAGKP1tNSi3Zqhc08LxLvFCH4jnFM8iPh3J+gEuHzFyuHUc7jBDxt85P+c=
+X-Gm-Gg: Acq92OE6/qUDty+Xw05j50Hvu/3/4fLq5kJOgoCHhzQTiuaxX8buiOee0Ace6iylPQx
+	ObbOf3mmp8PelEoTUTWt0eAGMhY5ePV8a+pm3vZBgg5oHh8lS69DLdJiKJGfxLDTKnSPL9TLY21
+	DNXZQXiG+wbrcH9v/RoRPDyT8JRoF3SHHI0DwdLmHQ4saFg/vnuxwoee0ekwQ8gL8DHnbMXaHSN
+	CmjGuxMq1Sz+2oNKf5sk/HHGSx98TXHC4g+OPpurpYm6u5tH36SJtHxBzneFJaEBqLKgeGX844J
+	Z0YF2qJvA/IlfluQFNgKYmMax0JtRTxUc0ttGAOdN87xCgCnUCxeintm4CaE0q2mGQkuXffj57C
+	UU5eEt5IGkZ9T9aIi3qGDYfpA0uEryU2n/0CHZ3BvXMv35J/2jNcd8/uYkHZv/H6wS/eDAL8ECV
+	E4sk+IN/qeV1JpeNozzT/3/WI9HHcWPWcGYleny9nY0RCJN2yT1rg=
+X-Received: by 2002:a05:6214:3204:b0:8cc:3546:2612 with SMTP id 6a1803df08f44-8cc7b55066fmr31946416d6.14.1779410916844;
+        Thu, 21 May 2026 17:48:36 -0700 (PDT)
 Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-516d6438635sm4789871cf.17.2026.05.21.16.46.23
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8cc81316e4esm3013256d6.41.2026.05.21.17.48.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2026 16:46:24 -0700 (PDT)
-Date: Thu, 21 May 2026 23:46:23 +0000
+        Thu, 21 May 2026 17:48:36 -0700 (PDT)
+Date: Fri, 22 May 2026 00:48:35 +0000
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: Pratyush Yadav <pratyush@kernel.org>
 Cc: Mike Rapoport <rppt@kernel.org>, 
@@ -77,17 +77,19 @@ Cc: Mike Rapoport <rppt@kernel.org>,
 	David Hildenbrand <david@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
 	Jason Miu <jasonmiu@google.com>, kexec@lists.infradead.org, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/12] kho: allow destroying KHO radix tree
-Message-ID: <ag-Xa-bDOouXAFXb@plex>
+Subject: Re: [PATCH 09/12] memblock: introduce MEMBLOCK_KHO_SCRATCH_EXT
+Message-ID: <ag-a4ru9bMkDMthO@plex>
 References: <20260429133928.850721-1-pratyush@kernel.org>
- <20260429133928.850721-8-pratyush@kernel.org>
+ <20260429133928.850721-10-pratyush@kernel.org>
+ <agHGOxSnP_VraH1M@kernel.org>
+ <2vxzecjhc2s8.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260429133928.850721-8-pratyush@kernel.org>
+In-Reply-To: <2vxzecjhc2s8.fsf@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260521_164626_464509_8258B83B 
-X-CRM114-Status: GOOD (  21.07  )
+X-CRM114-CacheID: sfid-20260521_174838_274906_EC0ECCCA 
+X-CRM114-Status: GOOD (  32.52  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,94 +104,87 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 04-29 15:39, Pratyush Yadav wrote:
-> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+On 05-11 18:46, Pratyush Yadav wrote:
+> On Mon, May 11 2026, Mike Rapoport wrote:
 > 
-> Add kho_radix_destroy_tree() which allows destroying the radix tree and
-> freeing all its pages.
+> > On Wed, Apr 29, 2026 at 03:39:11PM +0200, Pratyush Yadav wrote:
+> >> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+> >> 
+> >> In the upcoming commits, the KHO will learn how to discover free blocks
+> >> of memory by walking the KHO radix tree. It will then mark those regions
+> >> as scratch to allow memory allocation in case scratch runs low.
+> >> 
+> >> To differentiate the extended scratch areas from the main scratch areas,
+> >> introduce MEMBLOCK_KHO_SCRATCH_EXT. Use it when choosing memblock flags
+> >> for allocations during scratch-only. Teach should_skip_region() to check
+> >> for both flags before deciding if the region should be skipped.
+> >
+> > Why there's a need to differentiate SCRATCH and SCRATCH_EXT?
+> > SCRATCH (I still hate the name) means "memory memblock can safely use for
+
+ +1000
+
+I also strongly dislike this name and mentioned it in another thread
+earlier today.
+
+If we ever decide to s/scratch/something-else/ globally, that should be a
+separate cleanup effort. However, since we are introducing a brand new flag
+here, we can discuss a better name for the _ext portion to avoid overloading
+the "scratch" concept.
+
+> > the allocations". Initially this memory comes from the reservations in the
+> > first kernel, but if the second kernel can find more memory to extend it,
+> > why that additional memory should be treated differently? 
 > 
-> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-> ---
->  include/linux/kho_radix_tree.h     |  3 +++
->  kernel/liveupdate/kexec_handover.c | 34 ++++++++++++++++++++++++++++++
->  2 files changed, 37 insertions(+)
+> Two reasons:
+> 
+> 1. We mark SCRATCH as MIGRATE_CMA. We don't want to do that for
+>    SCRATCH_EXT since this memory can be used for non-movable
+>    allocations.
+> 
+> 2. Gigantic (1G) huge pages can not be allocated from scratch. They can
+>    be preserved memory and thus should not be allocated from SCRATCH.
+>    See patch 12 that does allocations for gigantic huge pages only from
+>    SCRATCH_EXT.
+> 
+> I will add this in the commit message for the next version.
+> 
+> Naming is hard, so if you have any better names I'm all ears :-)
 
-Generally, in Linux, recursion is avoided due to statically sized kernel 
-stacks. However, here we are bound by a relatively shallow KHO tree, and 
-kho_radix_walk_tree() is already recursive, so I think it is alright. We 
-just need to be mindful of local variable usage (frame sizes) within these 
-recursive functions.
+IMO, this scratch_ext is not "scratch" in the traditional KHO sense at all.
+The traditional KHO scratch is what is passed from kernel to kernel and is
+guaranteed to contain zero preserved memory. This new memory is not passed
+from kernel to kernel and can contain preserved memory at runtime. It's
+essentially just memory that we identify as currently unpreserved and release
+early to the system.
 
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com> 
+If we want to keep the naming aligned with the existing codebase for now:
+MEMBLOCK_KHO_SCRATCH      -> original scratch
+MEMBLOCK_KHO_UNPRESERVED  -> for the new memory (instead of SCRATCH_EXT)
+
+Alternatively, if we do want to tackle the global rename of "scratch" later:
+MEMBLOCK_KHO_BOOTSTRAP    -> for the original scratch
+MEMBLOCK_KHO_UNPRESERVED  -> for this new dynamic memory
+
+What do you think?
+
+Pasha
 
 > 
-> diff --git a/include/linux/kho_radix_tree.h b/include/linux/kho_radix_tree.h
-> index 6c0f7d82716b..617395a6647a 100644
-> --- a/include/linux/kho_radix_tree.h
-> +++ b/include/linux/kho_radix_tree.h
-> @@ -54,6 +54,7 @@ int kho_radix_add_key(struct kho_radix_tree *tree, unsigned long key);
->  void kho_radix_del_key(struct kho_radix_tree *tree, unsigned long key);
->  int kho_radix_walk_tree(struct kho_radix_tree *tree,
->  			const struct kho_radix_walk_cb *cb, void *data);
-> +void kho_radix_destroy_tree(struct kho_radix_tree *tree);
->  
->  #else  /* #ifdef CONFIG_KEXEC_HANDOVER */
->  
-> @@ -71,6 +72,8 @@ static inline int kho_radix_walk_tree(struct kho_radix_tree *tree,
->  	return -EOPNOTSUPP;
->  }
->  
-> +static inline void kho_radix_destroy_tree(struct kho_radix_tree *tree) { }
-> +
->  #endif /* #ifdef CONFIG_KEXEC_HANDOVER */
->  
->  #endif	/* _LINUX_KHO_RADIX_TREE_H */
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> index 47f7c4a2865e..29479534f65d 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -286,6 +286,40 @@ void kho_radix_del_key(struct kho_radix_tree *tree, unsigned long key)
->  }
->  EXPORT_SYMBOL_GPL(kho_radix_del_key);
->  
-> +static void __kho_radix_destroy_tree(struct kho_radix_node *root,
-> +				     unsigned int level)
-> +{
-> +	unsigned long i;
-> +
-> +	if (level == 0) {
-> +		kho_radix_free_node(root);
-> +		return;
-> +	}
-> +
-> +	for (i = 0; i < PAGE_SIZE / sizeof(phys_addr_t); i++) {
-> +		if (root->table[i])
-> +			__kho_radix_destroy_tree(phys_to_virt(root->table[i]),
-> +						 level - 1);
-> +	}
-> +
-> +	kho_radix_free_node(root);
-> +}
-> +
-> +/**
-> + * kho_radix_destroy_tree - Destroy the radix tree
-> + * @tree: The radix tree to destroy
-> + *
-> + * Walk @tree and free all its nodes.
-> + */
-> +void kho_radix_destroy_tree(struct kho_radix_tree *tree)
-> +{
-> +	if (!tree->root)
-> +		return;
-> +
-> +	__kho_radix_destroy_tree(tree->root, KHO_TREE_MAX_DEPTH - 1);
-> +}
-> +EXPORT_SYMBOL_GPL(kho_radix_destroy_tree);
-> +
->  static int kho_radix_walk_leaf(struct kho_radix_leaf *leaf, unsigned long key,
->  			       const struct kho_radix_walk_cb *cb, void *data)
->  {
+> >
+> >> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+> >> ---
+> >> 
+> >> Notes:
+> >>     Checkpatch complains about no space after MEMBLOCK_KHO_SCRATCH_EXT in
+> >>     the declaration, but doing so makes it nicely align with all the other
+> >>     numbers. Mike, if you'd like I can add some whitespace.
+> >> 
+> >>  include/linux/memblock.h | 10 ++++++++++
+> >>  mm/memblock.c            | 41 ++++++++++++++++++++++++++++++++++------
+> >>  2 files changed, 45 insertions(+), 6 deletions(-)
+> 
 > -- 
-> 2.54.0.545.g6539524ca2-goog
-> 
+> Regards,
+> Pratyush Yadav
 
