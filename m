@@ -4,69 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 757C0CD5BAC
-	for <kexec@archiver.kernel.org>; Fri, 22 May 2026 20:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EF667CD5BB7
+	for <kexec@archiver.kernel.org>; Fri, 22 May 2026 20:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=07zUHNcjisF6FOuU9N0CtQnOBIzxNou2anoHgJH+mP8=; b=u/MxEGqu5TSqlZxWgUF4gy4g3k
-	Dfzf4rUREcaEZXdszVSRNHWX7AYphP8DsuzGl3+JT+lIxmaO7QQwVhr21Eu1q1y3pzKG752Vt5cFm
-	JlcYftaSqsd+mG3aUVdK5CpU4mX4BpyFKpq4/li++ayb0qz2hBc4UXy1Dlti/m13oz8WrZBWvfp6w
-	qWaNOs3oIBD6gRlkPMvaK5+wGmXgzQhBRBRnle7BTxTBfqQ5dedBP60YNUEkjV6/SgF2yDmLcwT5C
-	U5ekBtJb6UC3DUezZKdb3mXTsG8ghuUd+1J/SDRXXn043InevSA4tyvfweF2yPVhTEBFqN94efVms
-	H7ArDRPw==;
+	bh=jD8Dp8WjVDfBtyvW+7yZYOtj2UMzN2TZIRigqz140zs=; b=cTQR/M8vxiVjZu2BK5Bp/04/kD
+	aJHJrxqZdgIDxz/7BSDzIVgX1gvRelC9bGrermtlF8nWOPKPWn7hxpBZ9CstY9f4USeuggZy+RpaH
+	anXstXRhT1apMrYOhMAhBGbgtIwA9QxmyQ3/wcDgRtWq4F87jM9Li78g5ftVEQTJl4qM9/gOrqKod
+	p1uwGOBHzUQigazbPUZtZgEuXukiVc5nTlfpb81OsPq/pXFq8P592gR+ba7GbFLWFLZ0BSfUIRcY2
+	4m7s4oD28E3PiOlJKgNRV6EpP0lLopUCr24p+z6yrmd6spgZ6hg7ceHqpMnTrhSX1qsHG65Nq7clz
+	EqGt6yMA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wQWPy-0000000Bs0d-2QPk;
-	Fri, 22 May 2026 20:24:26 +0000
-Received: from mail-pg1-x549.google.com ([2607:f8b0:4864:20::549])
+	id 1wQWQ1-0000000Bs4G-09YH;
+	Fri, 22 May 2026 20:24:29 +0000
+Received: from mail-pf1-x44a.google.com ([2607:f8b0:4864:20::44a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wQWPt-0000000Brsq-194d
+	id 1wQWPw-0000000Bry2-33jX
 	for kexec@lists.infradead.org;
-	Fri, 22 May 2026 20:24:22 +0000
-Received: by mail-pg1-x549.google.com with SMTP id 41be03b00d2f7-c8525f0807aso719083a12.3
-        for <kexec@lists.infradead.org>; Fri, 22 May 2026 13:24:21 -0700 (PDT)
+	Fri, 22 May 2026 20:24:25 +0000
+Received: by mail-pf1-x44a.google.com with SMTP id d2e1a72fcca58-82f756ebd0dso4504526b3a.1
+        for <kexec@lists.infradead.org>; Fri, 22 May 2026 13:24:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779481460; x=1780086260; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1779481463; x=1780086263; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=07zUHNcjisF6FOuU9N0CtQnOBIzxNou2anoHgJH+mP8=;
-        b=vZvDonz/UuUVk+90mUyQoVnmL2bjzYc3VM3ntLDvhVncvGHIuH22tb/4TbtAk9utua
-         4roP3uMp+6ZkOmp5Oq5xzKSE4VyF13hw6c0uUZP5z3ddz+7Nm9w6z5zTjH5c3Lnet6qn
-         sLsnutHQUxV7OzA43Hx0R3PJPgY3bGeoD1KDPI6zmhrzTKoikSJhmFcquWM6Ek0wwFSz
-         27ddVIIbSlB1otD2WIVamo9J/ceVG2RKKoiRFcUzCQ+q7OINiELmSOl43cWgdq0VtuAn
-         ZVpMUSI7sgVLQEbDYmeLn2Ti8au5ZCyD37Rs+t7mKiRTNbUZg1IBNKLBs0c62ZFRbffb
-         g78g==
+        bh=jD8Dp8WjVDfBtyvW+7yZYOtj2UMzN2TZIRigqz140zs=;
+        b=hGZsUgfziiEDikQmL+i0KCPiGRsvjC+qF+BkRZEniBLmxkV7dCrsIl1qq3e5iLAnzc
+         9ZjZbsJjSSFx/Qef8grWz0Dfgwb7gZvH7KGcXC7ilGnpBObN0CA4Kyqv/a1j4EhF6T0+
+         QfeBvq5JFLIJhvZVBL0lgieIsDu5vKTQgOqQTO9R8cbJN0i394mGxrhzWEXm6S7PRrVg
+         kW4+DIEFhdeb6HPdPanzqGA8p5PeThLeLYc+BWyFLpnO0LJZ6VSSaSf5/vbzeOV28OAi
+         PWqlYhru9FGZ1mPhjNjMrw/0m/6t48OEIsHTkH07f9AKqKlAucd0tGAMT3cRUfYEDHsC
+         UA8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779481460; x=1780086260;
+        d=1e100.net; s=20251104; t=1779481463; x=1780086263;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=07zUHNcjisF6FOuU9N0CtQnOBIzxNou2anoHgJH+mP8=;
-        b=J+3ztn0mDa8QpfC+ngSU/3NvSZMEIl4LgasUVnYApdP4xSNVHW0KYRiN3SKs59W20f
-         36PK/8UrF/bzlpkQrWuEVCJ3StcCTCwfOa5u1Jsu9P2ms+MC/Xn+6pQQw5p4TL2hJ7HE
-         EZYV/OkTXUO4Db9zZCdAofbzPHozwIvUkJXxEhyBSrux0b1+llA4Q9XNenMdQtlFHp61
-         Tvrbh7/p8/UsryoGpG0nfEnOp8NWggX6QgpTg18vbJf0XatWJS6St4kxdVKbPkP2CSZG
-         o7N5GqfeOxjNjK2m5TUecZ0MaJ15jzx6IM0WsscN7m6otgphSttlaRK6IZZH6VcCTcO1
-         Nu0g==
-X-Gm-Message-State: AOJu0Yyp1lqc7G+LMVxsC21wiC3H79kF4hqiL1HfxowlVqEQvHy7jTNn
-	utAY+V/KnYksgi3oovgETL9c2YP+uKMBngwVtNTay0B2X2pqvwUZiRW6jf0d8aUy4Bhcl67Uc9K
-	G5QLW/SkYZparbOWoWLUJmS6sacoX1tLbhuK1NklecrUqmPFaQC/MKmw5bgorjWTRFfbfe3k43B
-	cFNRW08DwfD0RvG3OQReSJxiiKnpKKxqV41+Lk262e41SJtJvPlXQ=
-X-Received: from pgt6.prod.google.com ([2002:a63:1346:0:b0:c82:7a06:d5f5])
+        bh=jD8Dp8WjVDfBtyvW+7yZYOtj2UMzN2TZIRigqz140zs=;
+        b=mcLoA2QBTOH5jmSm0rxYYnSqRe1KpGuIMhhpwOnupmNQB2gh3iQDKUhL9gOXNaJvM7
+         nqy4KB65OtGaKuUl7NEDWpIIN8JTrtwsuEifbPuUb70/cy9VXYgEZqAxCLQd1dZdEJH9
+         v/oRIh31iVFPyJs3A7+WYK00hyxEQfTguOn63XXiaz0QeTU6aeAkC7Hn6/Vtv1qH00eA
+         tLJCJ7pZiWdwxqO4FESx2YYX1FjqdauiUnPokYBd+TpRB6Zy9BotW0WJWSCXGwszd18z
+         CUFcLF+RZmVU2iIk1+tkfZ21COyRNA8Yd52WOewoQfO3pN1WOXF4zXNn0NARw00UR4Wr
+         puPg==
+X-Gm-Message-State: AOJu0YxnWoLhFHjK6HneiuS5T4IvDsFKrofColIRcm8rPW3YrqJmcLkv
+	r2MniyTZ6NoH2eatQO06gX779k4hsOBe1889WINfn8rJGt5DMOK5+yR5W+cYNK4+gI3fmpeHOIj
+	FCsQZFqeDHiHn7XkzpSDtckcb/Zpse4xdZVrPRlOMyRV5yMaDaSs7RwTh93h2hBHFs70tvHE5+o
+	AXjm4MicpsbHYqAKsPP0BB/TtKXwvJQv64plB6ZsdkeIvDTP6SkCA=
+X-Received: from pfcs23.prod.google.com ([2002:a05:6a00:6fd7:b0:82f:6a57:a9aa])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:d709:b0:3b3:c28:45b3 with SMTP id adf61e73a8af0-3b328e4f8d7mr5132386637.26.1779481459861;
- Fri, 22 May 2026 13:24:19 -0700 (PDT)
-Date: Fri, 22 May 2026 20:24:07 +0000
+ 2002:a05:6a00:1c8b:b0:82c:7f08:8826 with SMTP id d2e1a72fcca58-8415f15b50emr4877330b3a.17.1779481462682;
+ Fri, 22 May 2026 13:24:22 -0700 (PDT)
+Date: Fri, 22 May 2026 20:24:10 +0000
 In-Reply-To: <20260522202410.3104264-1-dmatlack@google.com>
 Mime-Version: 1.0
 References: <20260522202410.3104264-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.54.0.746.g67dd491aae-goog
-Message-ID: <20260522202410.3104264-10-dmatlack@google.com>
-Subject: [PATCH v6 09/12] PCI: liveupdate: Inherit ARI Forwarding Enable on
- preserved bridges
+Message-ID: <20260522202410.3104264-13-dmatlack@google.com>
+Subject: [PATCH v6 12/12] Documentation: PCI: Add documentation for Live Update
 From: David Matlack <dmatlack@google.com>
 To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org
@@ -82,8 +81,8 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.
 	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260522_132421_320160_B39B33F3 
-X-CRM114-Status: GOOD (  14.59  )
+X-CRM114-CacheID: sfid-20260522_132424_813846_82FD2899 
+X-CRM114-Status: GOOD (  14.02  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,104 +97,89 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Inherit the ARI Forwarding Enable on preserved bridges and update
-pci_dev->ari_enabled accordingly during a Live Update. This ensures that
-the preserved devices on the bridge's secondary bus can be identified
-with the same expanded 8-bit function number after a Live Update.
+Add documentation files for the PCI subsystem's participation in Live
+Update.
+
+These documentation files are generated from the kernel-doc comments
+in the PCI Live Update source code. They describe the File-Lifecycle
+Bound (FLB) API, the device tracking API, and the specific policies
+applied to preserved devices (such as bus number inheritance and bus
+mastering preservation).
 
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- drivers/pci/liveupdate.c | 18 ++++++++++++++++++
- drivers/pci/liveupdate.h |  6 ++++++
- drivers/pci/pci.c        |  8 +++++++-
- 3 files changed, 31 insertions(+), 1 deletion(-)
+ Documentation/PCI/index.rst           |  1 +
+ Documentation/PCI/liveupdate.rst      | 29 +++++++++++++++++++++++++++
+ Documentation/core-api/liveupdate.rst |  1 +
+ MAINTAINERS                           |  1 +
+ 4 files changed, 32 insertions(+)
+ create mode 100644 Documentation/PCI/liveupdate.rst
 
-diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-index a93b7ef065f2..701276ef6cfb 100644
---- a/drivers/pci/liveupdate.c
-+++ b/drivers/pci/liveupdate.c
-@@ -128,6 +128,10 @@
-  *    way after Live Update and ensures that IOMMU groups do not change. Note
-  *    that a device will use its inherited ACS flags for the lifetime of its
-  *    struct pci_dev (i.e. even after pci_liveupdate_finish()).
-+ *
-+ *  * The PCI core inherits ARI Forwarding Enable on all bridges with downstream
-+ *    preserved devices to ensure that all preserved devices on the bridge's
-+ *    secondary bus are addressable after the Live Update.
-  */
+diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
+index 5d720d2a415e..23fb737ac969 100644
+--- a/Documentation/PCI/index.rst
++++ b/Documentation/PCI/index.rst
+@@ -20,3 +20,4 @@ PCI Bus Subsystem
+    controller/index
+    boot-interrupts
+    tph
++   liveupdate
+diff --git a/Documentation/PCI/liveupdate.rst b/Documentation/PCI/liveupdate.rst
+new file mode 100644
+index 000000000000..eba55f8a92ae
+--- /dev/null
++++ b/Documentation/PCI/liveupdate.rst
+@@ -0,0 +1,29 @@
++.. SPDX-License-Identifier: GPL-2.0-or-later
++
++===========================
++PCI Support for Live Update
++===========================
++
++.. kernel-doc:: drivers/pci/liveupdate.c
++   :doc: PCI Live Update
++
++Driver API
++==========
++
++.. kernel-doc:: drivers/pci/liveupdate.c
++   :export:
++
++Live Update ABI
++===============
++
++.. kernel-doc:: include/linux/kho/abi/pci.h
++   :doc: PCI File-Lifecycle Bound (FLB) Live Update ABI
++
++.. kernel-doc:: include/linux/kho/abi/pci.h
++   :internal:
++
++See Also
++========
++
++ * :doc:`/core-api/liveupdate`
++ * :doc:`/core-api/kho/index`
+diff --git a/Documentation/core-api/liveupdate.rst b/Documentation/core-api/liveupdate.rst
+index 5a292d0f3706..d56a7760978a 100644
+--- a/Documentation/core-api/liveupdate.rst
++++ b/Documentation/core-api/liveupdate.rst
+@@ -70,3 +70,4 @@ See Also
  
- #define pr_fmt(fmt) "PCI: liveupdate: " fmt
-@@ -756,6 +760,20 @@ int pci_liveupdate_enable_acs(struct pci_dev *dev)
- 	return 0;
- }
- 
-+int pci_liveupdate_configure_ari(struct pci_dev *dev)
-+{
-+	u16 val;
-+
-+	guard(rwsem_read)(&pci_liveupdate.rwsem);
-+
-+	if (!dev->liveupdate.incoming)
-+		return -EINVAL;
-+
-+	pcie_capability_read_word(dev, PCI_EXP_DEVCTL2, &val);
-+	dev->ari_enabled = !!(val & PCI_EXP_DEVCTL2_ARI);
-+	return 0;
-+}
-+
- /**
-  * pci_liveupdate_is_incoming() - Check if a device is incoming-preserved
-  * @dev: The PCI device to check
-diff --git a/drivers/pci/liveupdate.h b/drivers/pci/liveupdate.h
-index 4e8a01bcb4bb..6f21ec50927b 100644
---- a/drivers/pci/liveupdate.h
-+++ b/drivers/pci/liveupdate.h
-@@ -18,6 +18,7 @@ bool pci_liveupdate_scan_bridge_begin(struct pci_bus *bus, struct pci_dev *dev,
- void pci_liveupdate_scan_bridge_end(struct pci_dev *dev, int pass);
- void pci_liveupdate_init_acs(struct pci_dev *dev);
- int pci_liveupdate_enable_acs(struct pci_dev *dev);
-+int pci_liveupdate_configure_ari(struct pci_dev *dev);
- #else
- static inline void pci_liveupdate_setup_device(struct pci_dev *dev)
- {
-@@ -46,6 +47,11 @@ static inline int pci_liveupdate_enable_acs(struct pci_dev *dev)
- {
- 	return -EINVAL;
- }
-+
-+static inline int pci_liveupdate_configure_ari(struct pci_dev *dev)
-+{
-+	return -EINVAL;
-+}
- #endif
- 
- #endif /* DRIVERS_PCI_LIVEUPDATE_H */
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 211df4618164..271da55af270 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3495,7 +3495,7 @@ void pci_configure_ari(struct pci_dev *dev)
- 	u32 cap;
- 	struct pci_dev *bridge;
- 
--	if (pcie_ari_disabled || !pci_is_pcie(dev) || dev->devfn)
-+	if (!pci_is_pcie(dev) || dev->devfn)
- 		return;
- 
- 	bridge = dev->bus->self;
-@@ -3506,6 +3506,12 @@ void pci_configure_ari(struct pci_dev *dev)
- 	if (!(cap & PCI_EXP_DEVCAP2_ARI))
- 		return;
- 
-+	if (!pci_liveupdate_configure_ari(bridge))
-+		return;
-+
-+	if (pcie_ari_disabled)
-+		return;
-+
- 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ARI)) {
- 		pcie_capability_set_word(bridge, PCI_EXP_DEVCTL2,
- 					 PCI_EXP_DEVCTL2_ARI);
+ - :doc:`Live Update uAPI </userspace-api/liveupdate>`
+ - :doc:`/core-api/kho/index`
++- :doc:`PCI </PCI/liveupdate>`
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0e262c0ceb43..6f0b0ebf67cd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20536,6 +20536,7 @@ L:	kexec@lists.infradead.org
+ L:	linux-pci@vger.kernel.org
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
++F:	Documentation/PCI/liveupdate.rst
+ F:	drivers/pci/liveupdate.c
+ F:	drivers/pci/liveupdate.h
+ F:	include/linux/kho/abi/pci.h
 -- 
 2.54.0.746.g67dd491aae-goog
 
