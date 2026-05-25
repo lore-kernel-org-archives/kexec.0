@@ -4,40 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 888DACD5BCB
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00CDECD5BBF
 	for <kexec@archiver.kernel.org>; Mon, 25 May 2026 06:28:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=RpXKe3wAdCVMwU6Llg7SIPesFhMG6uKuOmrHw+vv3aU=; b=HZ52EeozXecXLf18J7IQuOs3Fx
-	Iel/WVX7Bb1K/xhji+iG8BH5AkKfZvRPTS0AB35+BHx/U4Lw+7eakOOWTHquD4BPnTpr4o3wFsgWn
-	yVHuLcPMnBvid28e3DowIwUvp8Aj3jU+kAo8SQfqLg5ltYuHBDmdpFuWzhWMiF7panDAQSKUXLiZ4
-	KleC2V3zAIyB4mL4AdB7AnTAHT1juKunsQb15S/pEtHG06FPOpXR6WdAHujIXJN6Iq+dJ4jL8YJ2L
-	PapxUOhicaFcMq3EnCSr6Mocrb82CSp9AdedZQysD3nhY+imGPWOe0t6co4ioxw43Zygs8K8Lyng2
-	iTvg1RWg==;
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=hIRi3HO9e8xA8aknZ+Hmyg9qLaGWZHy9zhx8wJx1Ids=; b=T3oGVAGlsR2kxqQt+0TPIIfj8m
+	uML3DGyf6teNf2sxmuk2kAgjYUzSWehmdCz7+R+uxefzBm7NqIFTw9/zDFZ8oZjjA4J9sk5z2Ac/f
+	aXjECtV4DnwibNc+NX4sEBm9PGV4gBT97gt4iOzvjCvSeC8zXXyMZYWgk3OUJOeaSQtS+rv//x8Be
+	By8os3NpyjbfStP7dFfd6JL2W2tQcq5H0fr5ONUWBRf1i08u7fQN9hJbfp5Ik+JNNyT3iSwsswsX5
+	M3e+X1ovc5+YxFcrvigBizYRBomLbupqSMUowSMzyYrh/96MEWNTfDcn8pQ3Xq6Iwjc5UnhztTlzW
+	VS2tgZpA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wROnk-0000000GQ4y-00Rf;
-	Mon, 25 May 2026 06:28:36 +0000
-Received: from out-178.mta1.migadu.com ([95.215.58.178])
+	id 1wROnl-0000000GQ5z-0Pxb;
+	Mon, 25 May 2026 06:28:37 +0000
+Received: from out-187.mta1.migadu.com ([95.215.58.187])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wROng-0000000GQ2f-3Zt4
+	id 1wROnh-0000000GQ0F-2UTA
 	for kexec@lists.infradead.org;
 	Mon, 25 May 2026 06:28:34 +0000
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1779690510;
+	t=1779690497;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RpXKe3wAdCVMwU6Llg7SIPesFhMG6uKuOmrHw+vv3aU=;
-	b=vUYWyZ1CdvfZMVBvkgDZVbpei57KgtJs9mNpdIt8reqlu40mKSoS6h5RB2R2LDIOZMvIA3
-	7wD1tTsQvzyaW5cW3fY+xdCoerMSlFATNZAzoiFX+PB+IxAQ6fG/swWTRU8fGQxzBcT63L
-	bQbqgORkRf7hUz3cU/du0doFMLefN78=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hIRi3HO9e8xA8aknZ+Hmyg9qLaGWZHy9zhx8wJx1Ids=;
+	b=IIr3jMS+wd34Awp2PESkNwbtIVAd+PlWxSlG7OC5DEjyjpcqSEGLbiw8523AvvMPLjdbqo
+	CjeS0Nnk6q1Kaqdn0L0rv13USlnXLplGl//9Cqz6+d65uyv5Ei7w9OvQVTRHFhvZmhqxdS
+	/ykMAAqLGv18mjCxo0qCjhE5lwvUY4M=
 From: George Guo <dongtai.guo@linux.dev>
 To: chenhuacai@kernel.org,
 	rppt@kernel.org,
@@ -52,17 +51,15 @@ Cc: kernel@xen0n.name,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	George Guo <guodongtai@kylinos.cn>
-Subject: [PATCH 4/7] LoongArch: kexec: avoid overwriting QEMU's machine FDT at 0x100000
-Date: Mon, 25 May 2026 14:28:07 +0800
-Message-Id: <20260525062810.103367-5-dongtai.guo@linux.dev>
-In-Reply-To: <20260525062810.103367-1-dongtai.guo@linux.dev>
-References: <20260525062810.103367-1-dongtai.guo@linux.dev>
+Subject: [PATCH 0/7] LoongArch: add KHO support and selftests
+Date: Mon, 25 May 2026 14:28:03 +0800
+Message-Id: <20260525062810.103367-1-dongtai.guo@linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260524_232833_043687_E9BF0C22 
-X-CRM114-Status: GOOD (  11.35  )
+X-CRM114-CacheID: sfid-20260524_232833_776158_A973C447 
+X-CRM114-Status: GOOD (  13.25  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,46 +74,74 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: George Guo <guodongtai@kylinos.cn>
+From: George Guo <guodongtai@kylinos.cn>>
 
-QEMU places its machine FDT at physical address 0x100000 when booting
-with '-kernel'.  KEXEC_CONTROL_CODE was defined at the same address, so
-machine_kexec_prepare() overwrites the FDT with the relocation trampoline
-before jumping to the new kernel.
+This series adds Kexec Handover (KHO) support for LoongArch64 and
+extends the KHO selftest infrastructure to run on LoongArch under QEMU.
 
-The kexec'd kernel's fdt_setup() reads the FDT pointer from the EFI
-config table (FDTPTR = 0x100000) and finds trampoline code instead of a
-valid FDT, so earlycon auto-detection fails and the second kernel boots
-silently with no console output.
+KHO support (patches 1-2)
+--------------------------
+Patch 1 wires up the three pieces needed for KHO on LoongArch:
+ - Kconfig: select ARCH_SUPPORTS_KEXEC_HANDOVER for 64BIT
+ - machine_kexec_file: call cmdline_add_kho() to pass the KHO FDT and
+   scratch buffer addresses via "kho_handover=" on the kernel cmdline
+ - setup: parse "kho_handover=" early and call kho_populate()
 
-Move KEXEC_CONTROL_CODE to 0x180000, which is still within the first 2MB
-reserved by memblock_init() and does not conflict with the QEMU FDT.
+Patch 2 fixes a duplicate-parameter bug when kexec is invoked with
+--reuse-cmdline: the running kernel's cmdline already contains a stale
+kho_handover= from the previous load.  load_other_segments() prepends a
+fresh entry but appends the original cmdline verbatim, so early_param()
+calls kho_populate() twice and the second call overwrites the first with
+a stale FDT pointer, panicking early in mm_core_init().
 
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
----
- arch/loongarch/kernel/machine_kexec.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Bug fixes (patches 3-4)
+------------------------
+Patch 3 fixes a build failure with CONFIG_KFENCE=y: virt_to_phys() and
+phys_to_virt() in asm/io.h expand to use offset_in_page() and
+page_address(), which require <linux/mm.h> that was not included.
 
-diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
-index d7fafda1d541..44df7dbd3de5 100644
---- a/arch/loongarch/kernel/machine_kexec.c
-+++ b/arch/loongarch/kernel/machine_kexec.c
-@@ -21,8 +21,13 @@
- #include <asm/cacheflush.h>
- #include <asm/page.h>
- 
--/* 0x100000 ~ 0x200000 is safe */
--#define KEXEC_CONTROL_CODE	TO_CACHE(0x100000UL)
-+/*
-+ * Both addresses are within the first 2MB which is always reserved by
-+ * memblock_init().  Avoid 0x100000 because QEMU places its machine FDT
-+ * there when using '-kernel'; overwriting it silences earlycon in the
-+ * kexec'd kernel.
-+ */
-+#define KEXEC_CONTROL_CODE	TO_CACHE(0x180000UL)
- #define KEXEC_CMDLINE_ADDR	TO_CACHE(0x108000UL)
- 
- static unsigned long reboot_code_buffer;
+Patch 4 moves KEXEC_CONTROL_CODE from 0x100000 to 0x180000.  QEMU
+places its machine FDT at 0x100000 when booting with '-kernel'; the
+previous placement silently overwrote the FDT with the relocation
+trampoline, breaking earlycon in the kexec'd kernel.
+
+Selftest support (patches 5-7)
+-------------------------------
+Patch 5 adds loongarch.conf and extends vmtest.sh to recognise
+loongarch64 as a build target.  QEMU's LoongArch virt machine is
+FDT-only (no ACPI), so 'earlycon' must appear on the kernel cmdline or
+the console UART is never discovered and the test log stays empty.
+
+Patch 6 disables SERIO_I8042 and its dependents in the QEMU_KCONFIG
+fragment.  QEMU's LoongArch virt machine has no i8042 controller; the
+fallback port probe hits a page fault on the memory-mapped I/O range and
+panics before reaching userspace.
+
+Patch 7 polls the serial output for the test verdict and kills QEMU once
+it appears.  QEMU provides no EFI runtime services on LoongArch, so
+machine_restart() falls through to an infinite idle loop and QEMU never
+exits after kexec.
+
+
+George Guo (7):
+  LoongArch: Add KHO basic support
+  LoongArch: kho: strip stale kho_handover= from reused cmdline
+  LoongArch: Add missing linux/mm.h include in asm/io.h
+  LoongArch: kexec: avoid overwriting QEMU's machine FDT at 0x100000
+  selftests/kho: add LoongArch vmtest support
+  selftests/kho: LoongArch: disable PS/2 input devices for QEMU virt
+  selftests/kho: handle QEMU not exiting after kexec on LoongArch
+
+ arch/loongarch/Kconfig                     |  3 ++
+ arch/loongarch/include/asm/io.h            |  1 +
+ arch/loongarch/kernel/machine_kexec.c      |  9 +++-
+ arch/loongarch/kernel/machine_kexec_file.c | 57 ++++++++++++++++++++++
+ arch/loongarch/kernel/setup.c              | 27 ++++++++++
+ tools/testing/selftests/kho/loongarch.conf | 10 ++++
+ tools/testing/selftests/kho/vmtest.sh      | 38 ++++++++++++---
+ 7 files changed, 135 insertions(+), 10 deletions(-)
+ create mode 100644 tools/testing/selftests/kho/loongarch.conf
+
 -- 
 2.25.1
 
