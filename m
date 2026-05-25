@@ -4,70 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4FC70CD5BC9
-	for <kexec@archiver.kernel.org>; Mon, 25 May 2026 15:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 74F46CD5BC9
+	for <kexec@archiver.kernel.org>; Mon, 25 May 2026 16:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
 	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=4RU4mhDc8qVs92H5+4lAVgCVBlE9tWSHjhCyliyrIDc=; b=HnwLdd5zc2THbX1LvqNFSUOJ9X
-	uS7I3DZabDDTKG6xySS9TsaDmd3uuFqR0pfrCqFCfMP6h+TAK9ayKiN+U2i0pWMSQqj2a7W26HRyR
-	5JeuH5NKehOcOCRBeCFaeSr5HeBTMGzEbIkIhthd7DH0w9jhF0OHa2wjbQx8N4YlERDwv53homesY
-	Rnc94Q4LLMRKYvrYzOe7MhMeCSjhe8227wczVu1RlgNngSi3g1alLnxwRtGSP4tTYmW3pMibUREtj
-	q+JMJxEK436CBN7yjVkRG+tCBfohTyHn7qNlIFQdCUITMv6ZOAmYjAPRA71raVA85A8aKy2hGcu4V
-	/yiteaJQ==;
+	bh=z/uYM7Uc7JRbhfGHHhf03rXJodyqFN96ymQHCiubqvk=; b=RMmSiPacubFbzZyeMzu5oOI9mf
+	w+8RMIHx9fCZ82vwNRbXZYMrMquN8zlZg6IdbTnakC8U5wPSHLwItj2RCmKoVn8tjAfZa6tOh1xmI
+	JEUz+cUH2fFXC05s7LoL8H1AKUMdAPGhygh+qka35vKhpVF2GWvRlZm1b7CREsnB/hMpbtYIGeM+9
+	PmT40xEGBmZSzkALGX2D8b3TQRyA2qt2AvxL38JzRPzAvpQlmV3SxTa25J8i0SEZs6onLQBPAxUqy
+	yKN2W8NgW2a9NGChYFTb1EdvZZNR9H8RnSkvj0XxMk8HKVJa/cQ2pY55K+3C6fQ3v4CnXhHSYoMOO
+	pEFEI5DA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wRXKw-0000000HXLq-1DbA;
-	Mon, 25 May 2026 15:35:26 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wRY6M-000000000ht-0oz8;
+	Mon, 25 May 2026 16:24:26 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wRXKu-0000000HXLk-0Qcv
+	id 1wRY6K-000000000hb-1Fla
 	for kexec@lists.infradead.org;
-	Mon, 25 May 2026 15:35:24 +0000
+	Mon, 25 May 2026 16:24:24 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 49F64600AB;
-	Mon, 25 May 2026 15:35:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75D641F000E9;
-	Mon, 25 May 2026 15:35:18 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 547876008A;
+	Mon, 25 May 2026 16:24:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A0731F000E9;
+	Mon, 25 May 2026 16:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779723323;
-	bh=4RU4mhDc8qVs92H5+4lAVgCVBlE9tWSHjhCyliyrIDc=;
+	s=k20260515; t=1779726263;
+	bh=z/uYM7Uc7JRbhfGHHhf03rXJodyqFN96ymQHCiubqvk=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=m9G55K0gx7YOL4cj4gOb2FGACR+7Bfe15lfJS/RfnYvFNkyHit4NSk1tP58/sP/tB
-	 I6BOAYqUijW0t3roijovmeXpwe+RYWH4i0wH4oy+ac1ZmzLdvi66K+wjlpUQYpNELv
-	 1lKvOPvFAcdMFR7xUTT8lv/k3BEsHVZjwLIy4VZsl7ih4LD+H4fnh6ZTddSBJ7KQJw
-	 tzMDh6byuS6tJ5F0VQVYeWFeuc/ElBGk2PStD2NUvnfeS5t3Zrq8qkwLCKvMmrrO5Z
-	 fErvA3e6nOrwsEakVqIgbbUUd47FrMMe1YW6ktTI03sm1dOOu/0NjeGsKqitzfLIP0
-	 aKLB5Pny4Xk8Q==
+	b=e6XDvUQsx2eTcRuCA1irVbXIxaLJohA8c4vcRWz1eC76UVWyXAyC7fbfnNjlrutj7
+	 gju+RUO0DX6Wdxv2wd45akCscpQbUFeYuR/iT89vvfZ8OYMZp/G9bWDrglUvOussLH
+	 UVEDKAAa8qgS3ng+sx5vcKgs8AWPvPfN8D+YCccc+GtIlf9jAwvUPx7Z6yE5ogsqAd
+	 /gtJeqsN/8BUsHFqXyiqFi8IpZKZvDotnuqL9hrRO4+DCbp6o6fGmQn8b+JjzqXuNv
+	 c+qkFRmCkpe9v5zFgQAEGcKqIrs1VjFpUsZ1iO/1m/wxCVgRrBbzEwcdrw/eyWiHib
+	 /0Uo9hBFqHCfA==
 From: Pratyush Yadav <pratyush@kernel.org>
-To: David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org,  linux-doc@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
-  linux-pci@vger.kernel.org,  Adithya Jayachandran
- <ajayachandra@nvidia.com>,  Alexander Graf <graf@amazon.com>,  Alex
- Williamson <alex@shazbot.org>,  Bjorn Helgaas <bhelgaas@google.com>,
-  Chris Li <chrisl@kernel.org>,  David Rientjes <rientjes@google.com>,
-  Jacob Pan <jacob.pan@linux.microsoft.com>,  Jason Gunthorpe
- <jgg@nvidia.com>,  Jonathan Corbet <corbet@lwn.net>,  Josh Hilke
- <jrhilke@google.com>,  Leon Romanovsky <leonro@nvidia.com>,  Lukas Wunner
- <lukas@wunner.de>,  Mike Rapoport <rppt@kernel.org>,  Parav Pandit
- <parav@nvidia.com>,  Pasha Tatashin <pasha.tatashin@soleen.com>,  Pranjal
- Shrivastava <praan@google.com>,  Pratyush Yadav <pratyush@kernel.org>,
-  Saeed Mahameed <saeedm@nvidia.com>,  Samiullah Khawaja
- <skhawaja@google.com>,  Shuah Khan <skhan@linuxfoundation.org>,  Vipin
- Sharma <vipinsh@google.com>,  William Tu <witu@nvidia.com>,  Yi Liu
- <yi.l.liu@intel.com>
-Subject: Re: [PATCH v6 04/12] PCI: liveupdate: Document driver binding
- responsibilities
-In-Reply-To: <20260522202410.3104264-5-dmatlack@google.com> (David Matlack's
-	message of "Fri, 22 May 2026 20:24:02 +0000")
-References: <20260522202410.3104264-1-dmatlack@google.com>
-	<20260522202410.3104264-5-dmatlack@google.com>
-Date: Mon, 25 May 2026 17:35:16 +0200
-Message-ID: <2vxzbje37b9n.fsf@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: linux-kselftest@vger.kernel.org,  rppt@kernel.org,  shuah@kernel.org,
+  akpm@linux-foundation.org,  linux-mm@kvack.org,
+  skhan@linuxfoundation.org,  linux-doc@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  corbet@lwn.net,  dmatlack@google.com,
+  kexec@lists.infradead.org,  pratyush@kernel.org,  skhawaja@google.com,
+  graf@amazon.com
+Subject: Re: [PATCH v2 01/10] liveupdate: centralize state management into
+ struct luo_ser
+In-Reply-To: <20260514222628.931312-2-pasha.tatashin@soleen.com> (Pasha
+	Tatashin's message of "Thu, 14 May 2026 22:26:19 +0000")
+References: <20260514222628.931312-1-pasha.tatashin@soleen.com>
+	<20260514222628.931312-2-pasha.tatashin@soleen.com>
+Date: Mon, 25 May 2026 18:24:19 +0200
+Message-ID: <2vxz7bor78zw.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -85,49 +75,211 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, May 22 2026, David Matlack wrote:
+On Thu, May 14 2026, Pasha Tatashin wrote:
 
-> Document how driver binding works during a Live Update and what the PCI
-> core expects of drivers and users. Note that this is only a description
-> of the current division of responsibilities. These can change in the
-> future if we decide.
+> Transition the LUO to ABI v2, which centralizes state management into a
+> single struct luo_ser header.
+>
+> Previously, LUO state was spread across multiple FDT properties and
+> subnodes. ABI v2 simplifies this by placing all core state, including
+> the liveupdate number and physical addresses for sessions and FLB
+> headers into a centralized struct luo_ser.
 
-Nit: Should you also note this in the documentation that this can change
-in the future?
+Makes a lot of sense I think.
+
+But nit: this brings about a semantic difference: now sessions and FLB
+serialization format is no longer independent of LUO. I think that makes
+sense but can you please spell that out in the commit message.
 
 >
-> Signed-off-by: David Matlack <dmatlack@google.com>
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 > ---
->  drivers/pci/liveupdate.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  include/linux/kho/abi/luo.h      | 91 +++++++++++---------------------
+>  kernel/liveupdate/luo_core.c     | 59 ++++++++++++++-------
+>  kernel/liveupdate/luo_flb.c      | 65 ++++-------------------
+>  kernel/liveupdate/luo_internal.h |  8 +--
+>  kernel/liveupdate/luo_session.c  | 57 +++-----------------
+>  5 files changed, 93 insertions(+), 187 deletions(-)
 >
-> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-> index 96c43b84532c..4f2ec6ffdd16 100644
-> --- a/drivers/pci/liveupdate.c
-> +++ b/drivers/pci/liveupdate.c
-> @@ -70,6 +70,22 @@
->   * preserved. These may be relaxed in the future:
+> diff --git a/include/linux/kho/abi/luo.h b/include/linux/kho/abi/luo.h
+> index 46750a0ddf88..1b2f865a771a 100644
+> --- a/include/linux/kho/abi/luo.h
+> +++ b/include/linux/kho/abi/luo.h
+> @@ -30,52 +30,25 @@
+>   *   .. code-block:: none
 >   *
->   *  * The device cannot be a Virtual Function (VF).
-> + *
-> + * Driver Binding
-> + * ==============
-> + *
-> + * In the outgoing kernel, it is the driver's responsibility to ensure that it
-> + * does not release a device between pci_liveupdate_preserve() and
-> + * pci_liveupdate_unpreserve().
-> + *
-> + * In the incoming kernel, it is the driver's responsibility to ensure that it
-> + * does not release a preserved device between probe() and
-> + * pci_liveupdate_finish().
-> + *
-> + * It is the user's responsibility to ensure that incoming preserved devices are
-> + * bound to the correct driver. i.e. The PCI core does not protect against a
-> + * device getting preserved by driver A in the outgoing kernel and then getting
-> + * bound to driver B in the incoming kernel.
->   */
+>   *     / {
+> - *         compatible = "luo-v1";
+> - *         liveupdate-number = <...>;
+> - *
+> - *         luo-session {
+> - *             compatible = "luo-session-v1";
+> - *             luo-session-header = <phys_addr_of_session_header_ser>;
+> - *         };
+> - *
+> - *         luo-flb {
+> - *             compatible = "luo-flb-v1";
+> - *             luo-flb-header = <phys_addr_of_flb_header_ser>;
+> - *         };
+> + *         compatible = "luo-v2";
+> + *         luo-abi-header = <phys_addr_of_luo_ser>;
+
+While you are at it, perhaps also get rid of the LUO FDT entirely? With
+this change it only holds the compatible and a pointer to a blob. Might
+as well move the compatible string to the blob and use it directly. Do
+you see any benefits of sticking with the FDT here? We have already
+removed it from memfd for example (and AFAIK the upcoming PCI and VFIO
+patches also do not use it).
+
+>   *     };
+>   *
+>   * Main LUO Node (/):
+>   *
+> - *   - compatible: "luo-v1"
+> + *   - compatible: "luo-v2"
+>   *     Identifies the overall LUO ABI version.
+> - *   - liveupdate-number: u64
+> - *     A counter tracking the number of successful live updates performed.
+> @@ -109,13 +82,26 @@
 >  
->  #define pr_fmt(fmt) "PCI: liveupdate: " fmt
+>  /*
+>   * The LUO FDT hooks all LUO state for sessions, fds, etc.
+> - * In the root it also carries "liveupdate-number" 64-bit property that
+> - * corresponds to the number of live-updates performed on this machine.
+>   */
+>  #define LUO_FDT_SIZE		PAGE_SIZE
+>  #define LUO_FDT_KHO_ENTRY_NAME	"LUO"
+> -#define LUO_FDT_COMPATIBLE	"luo-v1"
+> -#define LUO_FDT_LIVEUPDATE_NUM	"liveupdate-number"
+> +#define LUO_FDT_COMPATIBLE	"luo-v2"
+> +#define LUO_FDT_ABI_HEADER	"luo-abi-header"
+
+Nit: If we do go with FDT, I suppose "luo-ser-pa" (or "luo-ser"?) would
+be more descriptive?
+
+> +
+> +/**
+> + * struct luo_ser - Centralized LUO ABI header.
+> diff --git a/kernel/liveupdate/luo_flb.c b/kernel/liveupdate/luo_flb.c
+> index 8f5c5dd01cd0..7ccc59981297 100644
+> --- a/kernel/liveupdate/luo_flb.c
+> +++ b/kernel/liveupdate/luo_flb.c
+> @@ -159,8 +159,8 @@ static void luo_flb_file_unpreserve_one(struct liveupdate_flb *flb)
+>  
+>  static int luo_flb_retrieve_one(struct liveupdate_flb *flb)
+>  {
+> -	struct luo_flb_private *private = luo_flb_get_private(flb);
+>  	struct luo_flb_header *fh = &luo_flb_global.incoming;
+> +	struct luo_flb_private *private = luo_flb_get_private(flb);
+
+Nit: this doesn't seem to do anything. Is this a stray change?
+
+>  	struct liveupdate_flb_op_args args = {0};
+>  	bool found = false;
+>  	int err;
+
+> -int __init luo_flb_setup_incoming(void *fdt_in)
+> +void __init luo_flb_setup_incoming(u64 flbs_pa)
+>  {
+>  	struct luo_flb_header_ser *header_ser;
+> -	int err, header_size, offset;
+> -	const void *ptr;
+> -	u64 header_ser_pa;
+> -
+> -	offset = fdt_subnode_offset(fdt_in, 0, LUO_FDT_FLB_NODE_NAME);
+> -	if (offset < 0) {
+> -		pr_err("Unable to get FLB node [%s]\n", LUO_FDT_FLB_NODE_NAME);
+>  
+> -		return -ENOENT;
+> +	if (flbs_pa) {
+> +		header_ser = phys_to_virt(flbs_pa);
+> +		luo_flb_global.incoming.header_ser = header_ser;
+> +		luo_flb_global.incoming.ser = (void *)(header_ser + 1);
+> +		luo_flb_global.incoming.active = true;
+
+Nit: Not getting FLB data resulted in a error print. I suppose we should
+keep that here as well.
+
+>  	}
+> -
+> -	err = fdt_node_check_compatible(fdt_in, offset,
+> -					LUO_FDT_FLB_COMPATIBLE);
+> -	if (err) {
+> -		pr_err("FLB node is incompatible with '%s' [%d]\n",
+> -		       LUO_FDT_FLB_COMPATIBLE, err);
+> -
+> -		return -EINVAL;
+> -	}
+> -
+> -	header_size = 0;
+> -	ptr = fdt_getprop(fdt_in, offset, LUO_FDT_FLB_HEADER, &header_size);
+> -	if (!ptr || header_size != sizeof(u64)) {
+> -		pr_err("Unable to get FLB header property '%s' [%d]\n",
+> -		       LUO_FDT_FLB_HEADER, header_size);
+> -
+> -		return -EINVAL;
+> -	}
+> -
+> -	header_ser_pa = get_unaligned((u64 *)ptr);
+> -	header_ser = phys_to_virt(header_ser_pa);
+> -
+> -	luo_flb_global.incoming.header_ser = header_ser;
+> -	luo_flb_global.incoming.ser = (void *)(header_ser + 1);
+> -	luo_flb_global.incoming.active = true;
+> -
+> -	return 0;
+>  }
+>  
+>  /**
+
+> -int __init luo_session_setup_incoming(void *fdt_in)
+> +int __init luo_session_setup_incoming(u64 sessions_pa)
+>  {
+>  	struct luo_session_header_ser *header_ser;
+> -	int err, header_size, offset;
+> -	u64 header_ser_pa;
+> -	const void *ptr;
+> -
+> -	offset = fdt_subnode_offset(fdt_in, 0, LUO_FDT_SESSION_NODE_NAME);
+> -	if (offset < 0) {
+> -		pr_err("Unable to get session node: [%s]\n",
+> -		       LUO_FDT_SESSION_NODE_NAME);
+> -		return -EINVAL;
+> -	}
+>  
+> -	err = fdt_node_check_compatible(fdt_in, offset,
+> -					LUO_FDT_SESSION_COMPATIBLE);
+> -	if (err) {
+> -		pr_err("Session node incompatible [%s]\n",
+> -		       LUO_FDT_SESSION_COMPATIBLE);
+> -		return -EINVAL;
+> -	}
+> -
+> -	header_size = 0;
+> -	ptr = fdt_getprop(fdt_in, offset, LUO_FDT_SESSION_HEADER, &header_size);
+> -	if (!ptr || header_size != sizeof(u64)) {
+> -		pr_err("Unable to get session header '%s' [%d]\n",
+> -		       LUO_FDT_SESSION_HEADER, header_size);
+> -		return -EINVAL;
+> +	if (sessions_pa) {
+
+Nit: same thing about the error print here.
+
+> +		header_ser = phys_to_virt(sessions_pa);
+> +		luo_session_global.incoming.header_ser = header_ser;
+> +		luo_session_global.incoming.ser = (void *)(header_ser + 1);
+> +		luo_session_global.incoming.active = true;
+>  	}
+>  
+> -	header_ser_pa = get_unaligned((u64 *)ptr);
+> -	header_ser = phys_to_virt(header_ser_pa);
+> -
+> -	luo_session_global.incoming.header_ser = header_ser;
+> -	luo_session_global.incoming.ser = (void *)(header_ser + 1);
+> -	luo_session_global.incoming.active = true;
+> -
+>  	return 0;
+>  }
 
 -- 
 Regards,
