@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 344CECD6E64
-	for <kexec@archiver.kernel.org>; Tue,  2 Jun 2026 15:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AEB46CD6E6B
+	for <kexec@archiver.kernel.org>; Tue,  2 Jun 2026 15:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=W7FFPW8Lk6WEAAMWm/n8GNKcLipzBq5QihkmPU/i+3A=; b=e+2TO87yXpY3EkucnuEmFEpXc5
-	uKRGpwOtNG8+5VefyGfZ3WfYyOFSaO2F56oqsJjDEZL1CRY9+tkiqutJzTbBxIVn9+41J7ApUaAVH
-	PfUGIdZAPx9agbcaTUcX2GnZ3NuxmB9AF7zUwo3K3b+D/1dSeNh8QkXgQ1K6hkWcYsrWL1INzv6Fm
-	p2voySUQiji7Tlu4XAdOmm3tzLKfQjkyvZhhAYSYmpPjAFuZq4/ew0YJV4UHzNcWQIvg3TdNYWf51
-	urmpDxaYL/Xtyd3JXNkibk54WgLla8WFak50pihxqgbcIae1KTmbZmsPz8RwQAFlbEtTNXAjSWbAV
-	IDrMeAbQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=VctIRm5lAJFH3/3rqu7TJDBqStDg22GQQJGyxd6VQOU=; b=mH979YGOHkdhJMD/xs5mTEgncw
+	O+MFV5N0vsjJzBCLhzBTmeJtj5bfVJw9gPuqP1tbtMosTpMfIbmmS2AelmKbfRjgldgX0JD+O55es
+	76B9ApXIRDMSOLTktrVW1sjStQYFBpRh8A+aulMAxnuu4sDxIydQoSIPYM1LyuhucTGxyIUMqFD8V
+	ad1XaULgNoAnVNcJK4YGLax9d7ioT78gU0eDSdoj4EEo1kUiRm9oHaUEpiJjDDMbADQn0CJ5Wv0eA
+	M54Q5LQl9hz109qUdiIMuve7DH0nSZwpeGjx0GN/IyYvP7eJY6HZK11AsINN3fdqR0BHZ69TGikiu
+	e4X2IdQQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUQrh-0000000DIDX-44p8;
-	Tue, 02 Jun 2026 15:17:13 +0000
-Received: from canpmsgout06.his.huawei.com ([113.46.200.221])
+	id 1wUQrj-0000000DIFo-1o0h;
+	Tue, 02 Jun 2026 15:17:15 +0000
+Received: from canpmsgout01.his.huawei.com ([113.46.200.216])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wRR0v-0000000Ghpp-2w4u;
-	Mon, 25 May 2026 08:50:24 +0000
+	id 1wRR13-0000000Ghu0-39mB;
+	Mon, 25 May 2026 08:50:31 +0000
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=W7FFPW8Lk6WEAAMWm/n8GNKcLipzBq5QihkmPU/i+3A=;
-	b=xybeSqvTcwvebwEh5BmsykUbQSCPdwLg69wchrH09f6zkpqQPcfdqgz6weVDHzOez4FTazarG
-	fCYfMLxZ9125EehdoTB8Bgt0DaDsxYu9xtUZxxqZQgmxRZ7+AbXnrnqanD0vaAUxODZA3l5Xp4w
-	F7ZWHWbwn0PAa3QlNZTQX1c=
+	bh=VctIRm5lAJFH3/3rqu7TJDBqStDg22GQQJGyxd6VQOU=;
+	b=JjTb9ZuyRL81W05a2ZBznFhspS+1KKmgedq2x2Y+WumyYTG0iD+s7V3MhQMw82JC3RKO3Ago9
+	t4W0o/j8lAJZ3Qs8fmF1pr65YGN3prxXmWgDGSyH/9WtS0AdZJ103vFo6uUM8v/PF7Pv5jBaOR+
+	zggbZqXICCr7ifTlx9gBH10=
 Received: from mail.maildlp.com (unknown [172.19.162.140])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4gP8X32ZqkzRhRD;
-	Mon, 25 May 2026 16:42:27 +0800 (CST)
+	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4gP8X44M72z1T4KB;
+	Mon, 25 May 2026 16:42:28 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 617D9202E6;
-	Mon, 25 May 2026 16:50:11 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id DA7B3202E6;
+	Mon, 25 May 2026 16:50:26 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
  (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 25 May
- 2026 16:50:07 +0800
+ 2026 16:50:22 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
@@ -72,20 +72,22 @@ To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
 	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v14 00/17] arm64/riscv: Add support for crashkernel CMA reservation
-Date: Mon, 25 May 2026 16:49:15 +0800
-Message-ID: <20260525084932.934910-1-ruanjinjie@huawei.com>
+Subject: [PATCH v14 04/17] arm64: kexec: Fix image->elf_headers memory leak during retry loop
+Date: Mon, 25 May 2026 16:49:19 +0800
+Message-ID: <20260525084932.934910-5-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260525084932.934910-1-ruanjinjie@huawei.com>
+References: <20260525084932.934910-1-ruanjinjie@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-Originating-IP: [10.90.53.73]
 X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
  dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260525_015022_378768_1336E836 
-X-CRM114-Status: GOOD (  16.59  )
-X-Mailman-Approved-At: Tue, 02 Jun 2026 08:17:10 -0700
+X-CRM114-CacheID: sfid-20260525_015030_134709_ADABC7EE 
+X-CRM114-Status: GOOD (  19.37  )
+X-Mailman-Approved-At: Tue, 02 Jun 2026 08:17:11 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,151 +102,166 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The crash memory allocation, and the exclude of crashk_res, crashk_low_res
-and crashk_cma memory are almost identical across different architectures,
-This patch set handle them in crash core in a general way, which eliminate
-a lot of duplication code.
+Sashiko AI code review pointed out a potential memory leak of
+image->elf_headers when load_other_segments() fails on error paths.
 
-And add support for crashkernel CMA reservation for arm64 and riscv.
+In the arm64 kexec_file file-load path, kexec_image.c runs a retry loop
+calling kexec_add_buffer() to find a suitable location for the kernel
+segment. On each iteration, load_other_segments() is invoked to allocate
+and populate alternative segments such as initrd, DTB, and ELF headers.
 
-Also add support for arm64 crash hotplug.
+However, if a placement or allocation failure occurs later in
+load_other_segments() (e.g., when adding initrd or dtb), the execution
+jumps to the out_err label. While this path restores image->nr_segments
+via orig_segments, it returns an error back to the caller without freeing
+the previously allocated image->elf_headers vmalloc buffer.
 
-This patch set is rebased on v7.1-rc1.
+As a result, the retry loop in image_load() unconditionally allocates
+new ELF headers on the next iteration and overwrites image->elf_headers,
+permanently leaking the memory blocks allocated in previous iterations.
 
-Basic second kernel boot test were performed on QEMU platforms for x86,
-ARM64 and RISC-V architectures with the following parameters:
+To fix this, decouple the ELF header allocation from the target-seeking
+retry loop. Since the contents and size of ELF headers only depend on
+the host memory layout and do not change with the kernel's physical
+placement, move prepare_elf_headers() completely outside and prior to
+the while retry loop in image_load().
 
-	"cma=256M crashkernel=4G crashkernel=64M,cma"
+Concurrently, remove the prepare_elf_headers() call from inside
+load_other_segments() and have it directly reuse the single, pre-allocated
+image->elf_headers. Also, ensure that image->nr_segments is explicitly
+rolled back to kernel_segment_number on retry failures to safely discard
+stale segment tracking state.
 
-For first kernel, there will be such log:
+This optimization eliminates redundant memory allocation/deallocation
+overhead during kexec placement retries and eradicates the Use-After-Free
+and memory leak risk.
 
-	# dmesg | grep crash
-	[    0.000000] crashkernel low memory reserved: 0xe8000000 - 0xf0000000 (128 MB)
-	[    0.000000] crashkernel reserved: 0x000000023e600000 - 0x000000033e600000 (4096 MB)
-	[    0.000000] crashkernel CMA reserved: 64 MB in 1 ranges
+Fixes: 108aa503657e ("arm64: kexec_file: try more regions if loading segments fails")
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
+ arch/arm64/include/asm/kexec.h         |  3 ++-
+ arch/arm64/kernel/kexec_image.c        | 22 ++++++++++++++++++++--
+ arch/arm64/kernel/machine_kexec_file.c | 16 +++-------------
+ 3 files changed, 25 insertions(+), 16 deletions(-)
 
-	# dmesg | grep cma
-	[    0.000000] cma: Reserved 256 MiB at 0x00000000f0000000
-	[    0.000000] cma: Reserved 64 MiB at 0x0000000100000000
-
-For second kernel, there will be such log:
-
-	[    0.000000] OF: fdt: Looking for usable-memory-range property...
-	[    0.000000] OF: fdt: cap_mem_regions[0]: base=0x000000023e600000, size=0x0000000100000000
-	[    0.000000] OF: fdt: cap_mem_regions[1]: base=0x00000000e8000000, size=0x0000000008000000
-	[    0.000000] OF: fdt: cap_mem_regions[2]: base=0x0000000100000000, size=0x0000000004000000
-
-Changes in v14:
-- Fix image->elf_headers memory leak during retry loop for arm64 as Sashiko
-  AI code review pointed out.
-- Solve the hotplug notifier arch_crash_handle_hotplug_event() AA
-  self-deadlock problem as Sashiko AI code review pointed out.
-- Fix the TOCTOU issue in prepare_elf_headers() by get_online_mems().
-- -ENOMEM -> -EAGAIN as Breno suggested.
-- Add support for arm64 crash hotplug.
-- Link to v13: https://lore.kernel.org/all/20260511030454.1730881-1-ruanjinjie@huawei.com/
-
-Changes in v13:
-- Rebased on v7.1-rc1.
-- Update the commit message.
-- Add Reviewed-by.
-- Link to v12: https://lore.kernel.org/all/20260402072701.628293-1-ruanjinjie@huawei.com/
-
-Changes in v12:
-- Remove the unused "nr_mem_ranges" for x86.
-- Add "Fix crashk_low_res not exclude bug" test log.
-- Provide a separate patch for each architecture for using
-  crash_prepare_headers(), which will make the review more convenient.
-- Add Reviewed-by and Tested-by.
-- Link to v11: https://lore.kernel.org/all/20260328074013.3589544-1-ruanjinjie@huawei.com/
-
-Changes in v11:
-- Avoid silently drop crash memory if the crash kernel is built without
-  CONFIG_CMA.
-- Remove unnecessary "cmem->nr_ranges = 0" for arch_crash_populate_cmem()
-  as we use kvzalloc().
-- Provide a separate patch for each architecture to fix the existing
-  buffer overflow issue.
-- Add Acked-bys for arm64.
-
-Changes in v10:
-- Fix crashk_low_res not excluded bug in the existing
-  RISC-V code.
-- Fix an existing memory leak issue in the existing PowerPC code.
-- Fix the ordering issue of adding CMA ranges to
-  "linux,usable-memory-range".
-- Fix an existing concurrency issue. A Concurrent memory hotplug may occur
-  between reading memblock and attempting to fill cmem during kexec_load()
-  for almost all existing architectures.
-- Link to v9: https://lore.kernel.org/all/20260323072745.2481719-1-ruanjinjie@huawei.com/
-
-Changes in v9:
-- Collect Reviewed-by and Acked-by, and prepare for Sashiko AI review.
-- Link to v8: https://lore.kernel.org/all/20260302035315.3892241-1-ruanjinjie@huawei.com/
-
-Changes in v8:
-- Fix the build issues reported by kernel test robot and Sourabh.
-- Link to v7: https://lore.kernel.org/all/20260226130437.1867658-1-ruanjinjie@huawei.com/
-
-Changes in v7:
-- Correct the inclusion of CMA-reserved ranges for kdump kernel in of/kexec
-  for arm64 and riscv.
-- Add Acked-by.
-- Link to v6: https://lore.kernel.org/all/20260224085342.387996-1-ruanjinjie@huawei.com/
-
-Changes in v6:
-- Update the crash core exclude code as Mike suggested.
-- Rebased on v7.0-rc1.
-- Add acked-by.
-- Link to v5: https://lore.kernel.org/all/20260212101001.343158-1-ruanjinjie@huawei.com/
-
-Jinjie Ruan (16):
-  riscv: kexec_file: Fix crashk_low_res not exclude bug
-  powerpc/crash: Fix possible memory leak in update_crash_elfcorehdr()
-  arm64: kexec: Fix image->elf_headers memory leak during retry loop
-  x86/kexec: Fix potential buffer overflow in prepare_elf_headers()
-  arm64: kexec_file: Fix potential buffer overflow in
-    prepare_elf_headers()
-  riscv: kexec_file: Fix potential buffer overflow in
-    prepare_elf_headers()
-  LoongArch: kexec: Fix potential buffer overflow in
-    prepare_elf_headers()
-  crash: Add crash_prepare_headers() to exclude crash kernel memory
-  arm64: kexec_file: Use crash_prepare_headers() helper to simplify code
-  x86/kexec: Use crash_prepare_headers() helper to simplify code
-  riscv: kexec_file: Use crash_prepare_headers() helper to simplify code
-  LoongArch: kexec: Use crash_prepare_headers() helper to simplify code
-  crash: Use crash_exclude_core_ranges() on powerpc
-  arm64: kexec: Add support for crashkernel CMA reservation
-  riscv: kexec: Add support for crashkernel CMA reservation
-  arm64/crash: Add crash hotplug support
-
-Sourabh Jain (1):
-  powerpc/crash: sort crash memory ranges before preparing elfcorehdr
-
- .../admin-guide/kernel-parameters.txt         |  16 +--
- arch/arm64/Kconfig                            |   3 +
- arch/arm64/include/asm/kexec.h                |  14 +-
- arch/arm64/kernel/Makefile                    |   1 +
- arch/arm64/kernel/crash.c                     | 125 ++++++++++++++++++
- arch/arm64/kernel/kexec_image.c               |  22 ++-
- arch/arm64/kernel/machine_kexec_file.c        |  78 ++++++-----
- arch/arm64/mm/init.c                          |   5 +-
- arch/loongarch/kernel/machine_kexec_file.c    |  43 +++---
- arch/powerpc/include/asm/kexec_ranges.h       |   1 -
- arch/powerpc/kexec/crash.c                    |   7 +-
- arch/powerpc/kexec/ranges.c                   | 101 +-------------
- arch/riscv/kernel/machine_kexec_file.c        |  42 +++---
- arch/riscv/mm/init.c                          |   5 +-
- arch/x86/kernel/crash.c                       |  92 ++-----------
- drivers/of/fdt.c                              |   9 +-
- drivers/of/kexec.c                            |   9 ++
- include/linux/crash_core.h                    |  11 ++
- include/linux/crash_reserve.h                 |   4 +-
- kernel/crash_core.c                           | 102 +++++++++++++-
- 20 files changed, 392 insertions(+), 298 deletions(-)
- create mode 100644 arch/arm64/kernel/crash.c
-
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 892e5bebda95..cc2f36b1b0d4 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -127,7 +127,8 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image);
+ extern int load_other_segments(struct kimage *image,
+ 		unsigned long kernel_load_addr, unsigned long kernel_size,
+ 		char *initrd, unsigned long initrd_len,
+-		char *cmdline);
++		char *cmdline, void *headers, unsigned long headers_size);
++extern int prepare_elf_headers(void **addr, unsigned long *sz);
+ #endif
+ 
+ #endif /* __ASSEMBLER__ */
+diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
+index b70f4df15a1a..79efeaeb71e9 100644
+--- a/arch/arm64/kernel/kexec_image.c
++++ b/arch/arm64/kernel/kexec_image.c
+@@ -44,6 +44,11 @@ static void *image_load(struct kimage *image,
+ 	struct kexec_buf kbuf = {};
+ 	unsigned long text_offset, kernel_segment_number;
+ 	struct kexec_segment *kernel_segment;
++#ifdef CONFIG_CRASH_DUMP
++	/* load elf core header */
++	unsigned long headers_sz;
++	void *headers;
++#endif
+ 	int ret;
+ 
+ 	/*
+@@ -89,6 +94,18 @@ static void *image_load(struct kimage *image,
+ 
+ 	kernel_segment_number = image->nr_segments;
+ 
++#ifdef CONFIG_CRASH_DUMP
++	if (image->type == KEXEC_TYPE_CRASH) {
++		ret = prepare_elf_headers(&headers, &headers_sz);
++		if (ret) {
++			pr_err("Preparing elf core header failed\n");
++			return ERR_PTR(ret);
++		}
++		image->elf_headers = headers;
++		image->elf_headers_sz = headers_sz;
++	}
++#endif
++
+ 	/*
+ 	 * The location of the kernel segment may make it impossible to satisfy
+ 	 * the other segment requirements, so we try repeatedly to find a
+@@ -99,7 +116,8 @@ static void *image_load(struct kimage *image,
+ 		kernel_segment = &image->segment[kernel_segment_number];
+ 		ret = load_other_segments(image, kernel_segment->mem,
+ 					  kernel_segment->memsz, initrd,
+-					  initrd_len, cmdline);
++					  initrd_len, cmdline,
++					  headers, headers_sz);
+ 		if (!ret)
+ 			break;
+ 
+@@ -107,7 +125,7 @@ static void *image_load(struct kimage *image,
+ 		 * We couldn't find space for the other segments; erase the
+ 		 * kernel segment and try the next available hole.
+ 		 */
+-		image->nr_segments -= 1;
++		image->nr_segments = kernel_segment_number;
+ 		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
+ 		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+ 	}
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index e31fabed378a..daf81a873bbd 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -40,7 +40,7 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+ }
+ 
+ #ifdef CONFIG_CRASH_DUMP
+-static int prepare_elf_headers(void **addr, unsigned long *sz)
++int prepare_elf_headers(void **addr, unsigned long *sz)
+ {
+ 	struct crash_mem *cmem;
+ 	unsigned int nr_ranges;
+@@ -92,7 +92,8 @@ int load_other_segments(struct kimage *image,
+ 			unsigned long kernel_load_addr,
+ 			unsigned long kernel_size,
+ 			char *initrd, unsigned long initrd_len,
+-			char *cmdline)
++			char *cmdline, void *headers,
++			unsigned long headers_sz)
+ {
+ 	struct kexec_buf kbuf = {};
+ 	void *dtb = NULL;
+@@ -105,16 +106,7 @@ int load_other_segments(struct kimage *image,
+ 	kbuf.buf_min = kernel_load_addr + kernel_size;
+ 
+ #ifdef CONFIG_CRASH_DUMP
+-	/* load elf core header */
+-	void *headers;
+-	unsigned long headers_sz;
+ 	if (image->type == KEXEC_TYPE_CRASH) {
+-		ret = prepare_elf_headers(&headers, &headers_sz);
+-		if (ret) {
+-			pr_err("Preparing elf core header failed\n");
+-			goto out_err;
+-		}
+-
+ 		kbuf.buffer = headers;
+ 		kbuf.bufsz = headers_sz;
+ 		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+@@ -128,9 +120,7 @@ int load_other_segments(struct kimage *image,
+ 			vfree(headers);
+ 			goto out_err;
+ 		}
+-		image->elf_headers = headers;
+ 		image->elf_load_addr = kbuf.mem;
+-		image->elf_headers_sz = headers_sz;
+ 
+ 		kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+ 			      image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
 -- 
 2.34.1
 
