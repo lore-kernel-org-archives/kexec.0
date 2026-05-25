@@ -4,62 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0661ACD6E57
-	for <kexec@archiver.kernel.org>; Tue,  2 Jun 2026 15:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7B642CD6E64
+	for <kexec@archiver.kernel.org>; Tue,  2 Jun 2026 15:16:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=aVwfuIF8XzrapwauUCEB2fp3FWLAi/e4fM+1gNagxHo=; b=TofIr4ZtR7s9mm60K/HJ1lijLL
-	qOuI0vNBh2GWL1aIjk7zj/y+ur6bhcc99NE40Q4x8Q4mTbwjD/PAfvq2xjXxj3IuSI0s1/lFwzTSz
-	2ZsURYBAdr64GT5dyJwa7ZDSJghUibgTOTa54wS149sUen+WIvCY8F9SamadTZaFrg12bC9aLuzK8
-	iAiqPUxIls4SpeliPBbIUkTifW4vL6Wuq3y7FerRAhFjfha4p/WYTxhp2R9EBWPhsXeFFWaTHv+Hd
-	jZ5yt817Fr8n+5vVfuFJ5PR16L7+h7OBEYCkmcZ28GsHzoxeqEXSUL3obNGTifAkNTqbfwMbZ4l/Y
-	ghRYa7vA==;
+	bh=kPbn/f1fuyb07lSfD/0s4GT4WdFio8z3401p2vvqFyE=; b=PBIFUOiUMvihU2j1TeFXUl6jlG
+	+GdcU1vy4SzNLxmG2TpDOxXcmDGkO6rL97jiKfJAGymH++soHLj1ZQkA+OkeVXI6wV8/61XoCPUU6
+	DyNWYbC+CSCuhRcGRuW0i8NzGArBStKBsoZABzBO3yB0TQy9Gb+DHogS6e8mLAtdyljFmy/T5JWqS
+	BU1tboOmSVBlAHb708kaQsc8zTuH6GsvwTVmD3JM87DsTnNoCEYyXNOZ7OQgX8emMq49SIi3YqsUH
+	cI+IlNRciwJX0WQtc7PBTQ03QA6UseUDl4egFkHW7xXm2Vwp/9WkL/xWORId+bU2uL3Q+yNy545A2
+	gsJc5UoQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUQqx-0000000DHzU-19fU;
-	Tue, 02 Jun 2026 15:16:27 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wUQr6-0000000DI1P-25DU;
+	Tue, 02 Jun 2026 15:16:36 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUQqu-0000000DHyy-45Qr
-	for kexec@lists.infradead.org;
-	Tue, 02 Jun 2026 15:16:26 +0000
+	id 1wRTca-0000000H6gd-2DnF;
+	Mon, 25 May 2026 11:37:24 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 584A34420B;
-	Tue,  2 Jun 2026 15:16:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03EBA1F00893;
-	Tue,  2 Jun 2026 15:16:22 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 41F3A600BB;
+	Mon, 25 May 2026 11:37:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17BBD1F000E9;
+	Mon, 25 May 2026 11:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780413384;
-	bh=aVwfuIF8XzrapwauUCEB2fp3FWLAi/e4fM+1gNagxHo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=dYNdQRf/t6+z4UqPKk5Bpi9o0wNX8u+CQPH7XlQaPprvPBDA3LuRDqogn8DXnRdzq
-	 0DGglkcBIyoVJjYSFXd+UoA1LVPioxE/HfEQF44Zr5NNRNHshmb8EMMS7hGySYadwZ
-	 aH0QJgFwUZ7ZI6IOIB2w7VAdcgTN74eS/adOeGNKKrEsiAh4AcwPB/MN+rdL402Nby
-	 zpZPdik9yW+bMWl8RRHq1qWNMlnFGQOTrTglkZIVbybWRgPhmv6/5FvqROguN4iQ+t
-	 e8SnzxVNRY7pCRrSJd1CxvHgXgCNKYygWO4utbnqq3iaCRMvwsuFK3SbiHrn5zXzjX
-	 hYoRoh+ObenOg==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Michal Clapinski <mclapinski@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  Baoquan He <bhe@redhat.com>,
-  Pasha Tatashin <pasha.tatashin@soleen.com>,  Mike Rapoport
- <rppt@kernel.org>,  Pratyush Yadav <pratyush@kernel.org>,
-  kexec@lists.infradead.org
-Subject: Re: [PATCH v2] kexec_file: skip checksum verification when safe
-In-Reply-To: <20260602123311.1841746-1-mclapinski@google.com> (Michal
-	Clapinski's message of "Tue, 2 Jun 2026 14:33:11 +0200")
-References: <20260602123311.1841746-1-mclapinski@google.com>
-Date: Tue, 02 Jun 2026 17:16:21 +0200
-Message-ID: <2vxzik81dlbu.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=k20260515; t=1779709043;
+	bh=kPbn/f1fuyb07lSfD/0s4GT4WdFio8z3401p2vvqFyE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=W9sT/QL/8R3LJxQuJnqULPdrM1nsn4daH1Hjg/KpYXguHjTqD086qv20sIL6mYl7R
+	 XvOBmsbGn+aUBuuD7YmCOeIBLyz0kPBoaqx8/W3s5VRN8Uno0zD9eWzhOy98TVtqHK
+	 uA5YsM6E1BhscTKFZqCHI7pnI0htTV0tK3UF7zLRCukCjMI3DNJkV8VmQGJ6ffOdN0
+	 iYCyXUqWwY3mrHjVk0kX4Rj4QjgL5c4kWpv5gUyVC+8qN/Ciuck/k/UyX3sdsCSWpw
+	 EdG7Pg1gWabsDFCJzyUMK6eYBu2NWAC8UFjZF4q/8uJvLDBi9zqnwL/M3hikizHgFZ
+	 G0HKwZWWlmGyg==
+Date: Mon, 25 May 2026 14:36:57 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Jinjie Ruan <ruanjinjie@huawei.com>, corbet@lwn.net,
+	skhan@linuxfoundation.org, catalin.marinas@arm.com, will@kernel.org,
+	kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au,
+	npiggin@gmail.com, chleroy@kernel.org, pjw@kernel.org,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+	tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, robh@kernel.org,
+	saravanak@kernel.org, akpm@linux-foundation.org, bhe@redhat.com,
+	pasha.tatashin@soleen.com, pratyush@kernel.org,
+	ruirui.yang@linux.dev, rdunlap@infradead.org, pmladek@suse.com,
+	feng.tang@linux.alibaba.com, dapeng1.mi@linux.intel.com,
+	kees@kernel.org, elver@google.com, kuba@kernel.org,
+	lirongqing@baidu.com, ebiggers@kernel.org, paulmck@kernel.org,
+	thuth@redhat.com, ardb@kernel.org, masahiroy@kernel.org,
+	mark.rutland@arm.com, maz@kernel.org, james.morse@arm.com,
+	leitao@debian.org, sourabhjain@linux.ibm.com, yeoreum.yun@arm.com,
+	coxu@redhat.com, jbohac@suse.cz, ryan.roberts@arm.com,
+	cfsworks@gmail.com, tangyouling@kylinos.cn, ritesh.list@gmail.com,
+	songshuaishuai@tinylab.org, junhui.liu@pigmoral.tech,
+	vishal.moola@gmail.com, kas@kernel.org, debug@rivosinc.com,
+	namcao@linutronix.de, liaoyuanhong@vivo.com,
+	fuqiang.wang@easystack.cn, seanjc@google.com, guoren@kernel.org,
+	chenjiahao16@huawei.com, hbathini@linux.ibm.com, bgwin@google.com,
+	takahiro.akashi@linaro.org, lizhengyu3@huawei.com, x86@kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, kexec@lists.infradead.org
+Subject: Re: [PATCH v14 00/17] arm64/riscv: Add support for crashkernel CMA
+ reservation
+Message-ID: <ahQ0WRiMsB011tym@kernel.org>
+References: <20260525084932.934910-1-ruanjinjie@huawei.com>
+ <CAAhV-H4NA7vgyxKnK+N_3C6pWBnwXc2URUyLh_h1m-MO=MnsGQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260602_081625_110572_4F882AE2 
-X-CRM114-Status: GOOD (  44.86  )
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H4NA7vgyxKnK+N_3C6pWBnwXc2URUyLh_h1m-MO=MnsGQ@mail.gmail.com>
+X-Mailman-Approved-At: Tue, 02 Jun 2026 08:16:35 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,176 +97,42 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jun 02 2026, Michal Clapinski wrote:
+Hi Huacai,
 
-> Checksum verification is needed
-> 1. for crash kernels. In a crash, we can't be sure the kernel is
->    intact.
-> 2. if we're worried about relocating the kernel into a region used by
->    some DMA that wasn't properly cancelled.
->
-> If KHO is enabled then relocations will happen to KHO scratch, which
-> is free from DMA regions.
-> If we used CMA to allocate segments then relocations are not going to
-> happen at all.
-> Therefore, we can safely disable checksum verification in both of those
-> cases.
->
-> Instead of adding a new variable to purgatory, just skip adding regions
-> and save the default value of SHA256 hash.
->
-> Saves ~250ms on my 4.0 GHz CPU. This is an important saving for the
-> live-update project.
->
-> Signed-off-by: Michal Clapinski <mclapinski@google.com>
-> ---
-> v2:
-> - also skip checksum verification if KHO is enabled
-> - small fixes from reviews
->
-> My original idea was to do 2 changes:
-> 1. Skip checksum if all segments are CMA.
-> 2. If KHO is enabled, allocate the kernel inside kho_scratch using CMA.
->
-> This way we could skip both relocations and checksum verification when
-> KHO is enabled.
-> But I realized that step 2 might not be possible on warm boots.
+On Mon, May 25, 2026 at 06:14:52PM +0800, Huacai Chen wrote:
+> On Mon, May 25, 2026 at 4:50 PM Jinjie Ruan <ruanjinjie@huawei.com> wrote:
+> >
+> > Jinjie Ruan (16):
+> >   riscv: kexec_file: Fix crashk_low_res not exclude bug
+> >   powerpc/crash: Fix possible memory leak in update_crash_elfcorehdr()
+> >   arm64: kexec: Fix image->elf_headers memory leak during retry loop
+> >   x86/kexec: Fix potential buffer overflow in prepare_elf_headers()
+> >   arm64: kexec_file: Fix potential buffer overflow in
+> >     prepare_elf_headers()
+> >   riscv: kexec_file: Fix potential buffer overflow in
+> >     prepare_elf_headers()
+> >   LoongArch: kexec: Fix potential buffer overflow in
+> >     prepare_elf_headers()
+> >   crash: Add crash_prepare_headers() to exclude crash kernel memory
+> >   arm64: kexec_file: Use crash_prepare_headers() helper to simplify code
+> >   x86/kexec: Use crash_prepare_headers() helper to simplify code
+> >   riscv: kexec_file: Use crash_prepare_headers() helper to simplify code
+> >   LoongArch: kexec: Use crash_prepare_headers() helper to simplify code
+> >   crash: Use crash_exclude_core_ranges() on powerpc
+> >   arm64: kexec: Add support for crashkernel CMA reservation
+> >   riscv: kexec: Add support for crashkernel CMA reservation
+> >   arm64/crash: Add crash hotplug support
+> I have some bikesheedings about the subjects. Can we unify the prefix formats?
+> x86/kexec, arm64: kexec_file, riscv: kexec_file, LoongArch: kexec .....
 
-AFAIU we only relocate into scratch since relocating anywhere else might
-over-write preserved memory. If there is no relocation, there is no need
-for the kernel image to be in scratch, since the image won't be
-preserved memory anyway.
+It might look weird in the series, but powerpc and x86 use '/' and arm64 and
+riscv use ':' so in the logs in arch/ this would be actually fine.
 
-So perhaps we can just use CMA directly, and only fall back to
-kho_locate_mem_hole() if that fails? This should be a simple enough
-change.
-
-Do you know how much time we can save by skipping relocations? I would
-guess it is in the hundreds of milliseconds.
-
-Can you try this (COMPLETELY UNTESTED) patch out and see if it works and
-if it further improves kexec time?
-
---- 8< ---
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 2bfbb2d144e6..0ccc7b6d67c1 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -720,14 +720,6 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
- 	if (kbuf->mem != KEXEC_BUF_MEM_UNKNOWN)
- 		return 0;
+With the only exception of arm64/crash that should have been arm64: crash:
  
--	/*
--	 * If KHO is active, only use KHO scratch memory. All other memory
--	 * could potentially be handed over.
--	 */
--	ret = kho_locate_mem_hole(kbuf, locate_mem_hole_callback);
--	if (ret <= 0)
--		return ret;
--
- 	/*
- 	 * Try to find a free physically contiguous block of memory first. With that, we
- 	 * can avoid any copying at kexec time.
-@@ -735,6 +727,14 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
- 	if (!kexec_alloc_contig(kbuf))
- 		return 0;
- 
-+	/*
-+	 * If KHO is active and relocations are to be done,, only use KHO
-+	 * scratch memory. All other memory could potentially be handed over.
-+	 */
-+	ret = kho_locate_mem_hole(kbuf, locate_mem_hole_callback);
-+	if (ret <= 0)
-+		return ret;
-+
- 	if (!IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK))
- 		ret = kexec_walk_resources(kbuf, locate_mem_hole_callback);
- 	else
---- >8 ---
-
-Of course this is not directly related to this patch so it shouldn't
-block it, but I reckon we might be able to squeeze a bit more
-performance out this way as a follow up.
-
-> I have no idea how to fix that (except weird ideas like 2 kho_scratches
-> that we swap on every warm boot), so I decided to just skip checksum
-> verification when KHO is enabled. This unfortunately means relocations
-> will still happen.
-> ---
->  kernel/kexec_file.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 2bfbb2d144e6..db25a14692ab 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -27,6 +27,7 @@
->  #include <linux/syscalls.h>
->  #include <linux/vmalloc.h>
->  #include <linux/dma-map-ops.h>
-> +#include <linux/kexec_handover.h>
->  #include "kexec_internal.h"
->  
->  #ifdef CONFIG_KEXEC_SIG
-> @@ -798,6 +799,16 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
->  	return 0;
->  }
->  
-> +static bool kexec_only_cma_segments(struct kimage *image)
-> +{
-> +	for (int i = 0; i < image->nr_segments; i++) {
-> +		if (!image->segment_cma[i])
-> +			return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
->  /* Calculate and store the digest of segments */
->  static int kexec_calculate_store_digests(struct kimage *image)
->  {
-> @@ -822,6 +833,21 @@ static int kexec_calculate_store_digests(struct kimage *image)
->  
->  	sha256_init(&sctx);
->  
-> +	/*
-> +	 * If KHO is enabled, the destinations are located in KHO scratch.
-> +	 * KHO scratch can only contain early boot allocations and movable
-> +	 * allocations. That means there is no risk of memory corruption by
-> +	 * uncancelled DMA.
-> +	 *
-> +	 * If all segments were loaded into contiguous memory, there will be no
-> +	 * relocations at all, so also no risk no corruption.
-
-Typo: "so also no risk *of* corruption".
-
-We can fix that up when applying I think, so no need for a v3 just for
-this.
-
-Other than this,
-
-Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-
-> +	 */
-> +	if (image->type != KEXEC_TYPE_CRASH &&
-> +	    (kho_is_enabled() || kexec_only_cma_segments(image))) {
-> +		pr_debug("disabling checksum verification in purgatory\n");
-> +		goto skip_checksum;
-> +	}
-> +
->  	for (j = i = 0; i < image->nr_segments; i++) {
->  		struct kexec_segment *ksegment;
->  
-> @@ -867,6 +893,7 @@ static int kexec_calculate_store_digests(struct kimage *image)
->  		j++;
->  	}
->  
-> +skip_checksum:
->  	sha256_final(&sctx, digest);
->  
->  	ret = kexec_purgatory_get_set_symbol(image, "purgatory_sha_regions",
+> Huacai
 
 -- 
-Regards,
-Pratyush Yadav
+Sincerely yours,
+Mike.
 
