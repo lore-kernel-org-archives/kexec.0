@@ -4,58 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E8D7FCD5BB1
-	for <kexec@archiver.kernel.org>; Mon, 25 May 2026 15:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4FC70CD5BC9
+	for <kexec@archiver.kernel.org>; Mon, 25 May 2026 15:35:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
 	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=OtJlsoM2fF6Cnpl17HukfO1fqAnQBAvmo87VBXGoBmo=; b=2UFSZMLX534k1QV0HUPGTK9e0F
-	4LsRg0kP1cQq9Aqm0a6MjJZ6yE1yw5+vYsU1oy1vGLQ/bPekmzMVrf2fuwiaPI7JLH26ZUZLFzouJ
-	OnAjix3IKSbpxPSZbM/L8OJi8LNLjP39piYWhMjrcX/3/qICqE6OjubL+w8s10wZ0c2oqibE7m2rt
-	V/AWazH7jssL06fBliB5RLDAL3M0jtjDU/AskisEghb8ATBrUszqnS4Lsq7e6VA44AngDmBd9yfnV
-	ntpRonXiWwGlzN5XI/o/g5Ep3H3jLNK7IhUeec1BkPaG6eaVdARAuAAXNVlrKHsOHBJKi95lSio6T
-	cRlB5pDg==;
+	bh=4RU4mhDc8qVs92H5+4lAVgCVBlE9tWSHjhCyliyrIDc=; b=HnwLdd5zc2THbX1LvqNFSUOJ9X
+	uS7I3DZabDDTKG6xySS9TsaDmd3uuFqR0pfrCqFCfMP6h+TAK9ayKiN+U2i0pWMSQqj2a7W26HRyR
+	5JeuH5NKehOcOCRBeCFaeSr5HeBTMGzEbIkIhthd7DH0w9jhF0OHa2wjbQx8N4YlERDwv53homesY
+	Rnc94Q4LLMRKYvrYzOe7MhMeCSjhe8227wczVu1RlgNngSi3g1alLnxwRtGSP4tTYmW3pMibUREtj
+	q+JMJxEK436CBN7yjVkRG+tCBfohTyHn7qNlIFQdCUITMv6ZOAmYjAPRA71raVA85A8aKy2hGcu4V
+	/yiteaJQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wRXGK-0000000HWmo-0voD;
-	Mon, 25 May 2026 15:30:40 +0000
+	id 1wRXKw-0000000HXLq-1DbA;
+	Mon, 25 May 2026 15:35:26 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wRXGI-0000000HWmb-2oAv
+	id 1wRXKu-0000000HXLk-0Qcv
 	for kexec@lists.infradead.org;
-	Mon, 25 May 2026 15:30:38 +0000
+	Mon, 25 May 2026 15:35:24 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 140F3600AB;
-	Mon, 25 May 2026 15:30:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B50B1F000E9;
-	Mon, 25 May 2026 15:30:36 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 49F64600AB;
+	Mon, 25 May 2026 15:35:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75D641F000E9;
+	Mon, 25 May 2026 15:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779723037;
-	bh=OtJlsoM2fF6Cnpl17HukfO1fqAnQBAvmo87VBXGoBmo=;
+	s=k20260515; t=1779723323;
+	bh=4RU4mhDc8qVs92H5+4lAVgCVBlE9tWSHjhCyliyrIDc=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=S415AHNc03IacdvQbnISEPk2z1abb4XVpEac+IYMKNL9F1T65+bfcN7/vL7fDcTGs
-	 k1Xo6TYD8kyRb+MZZ3ENaTNByGpWEMCVtiTRgVFpKqGzqgqNQ9xtVnHXPClP9EXaPb
-	 PECYEHpyJ0oY5f5i58xKCWrexuNtdvWil+ULjWJky+EIZAFDD9KzhG6ukX2rHZdAUo
-	 5gR4E1/5hHfaq6mcMKV5dynarDuH78p69AqniiNyE+bVzTOR/s0fGUp5yKAX4ED7Eg
-	 dZ511PZk/USgwGcq3z4JmYrxjbQgP0Mg+QR2tQ3utqOU8kUjgz5FZuHPp5FCHexA66
-	 w9vJIQ8e/3Plg==
+	b=m9G55K0gx7YOL4cj4gOb2FGACR+7Bfe15lfJS/RfnYvFNkyHit4NSk1tP58/sP/tB
+	 I6BOAYqUijW0t3roijovmeXpwe+RYWH4i0wH4oy+ac1ZmzLdvi66K+wjlpUQYpNELv
+	 1lKvOPvFAcdMFR7xUTT8lv/k3BEsHVZjwLIy4VZsl7ih4LD+H4fnh6ZTddSBJ7KQJw
+	 tzMDh6byuS6tJ5F0VQVYeWFeuc/ElBGk2PStD2NUvnfeS5t3Zrq8qkwLCKvMmrrO5Z
+	 fErvA3e6nOrwsEakVqIgbbUUd47FrMMe1YW6ktTI03sm1dOOu/0NjeGsKqitzfLIP0
+	 aKLB5Pny4Xk8Q==
 From: Pratyush Yadav <pratyush@kernel.org>
-To: Yifei Chu <yifeichu24@gmail.com>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  Mike Rapoport
- <rppt@kernel.org>,  linux-kernel@vger.kernel.org,  Pratyush Yadav
- <pratyush@kernel.org>,  Andrew Morton <akpm@linux-foundation.org>,
-  Alexander Graf <graf@amazon.com>,  linux-mm@kvack.org,
-  kexec@lists.infradead.org
-Subject: Re: [BUG] liveupdate/memfd: duplicate memfd preserve restores same
- KHO folio twice
-In-Reply-To: <CAPJnbg+nrOfyYGaX7rPP1pQunzuLb9QXVbi_cnBhj8NoiXjM5g@mail.gmail.com>
-	(Yifei Chu's message of "Sun, 24 May 2026 10:44:40 -0400")
-References: <CAPJnbg+nrOfyYGaX7rPP1pQunzuLb9QXVbi_cnBhj8NoiXjM5g@mail.gmail.com>
-Date: Mon, 25 May 2026 17:30:34 +0200
-Message-ID: <2vxzfr3f7bhh.fsf@kernel.org>
+To: David Matlack <dmatlack@google.com>
+Cc: kexec@lists.infradead.org,  linux-doc@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
+  linux-pci@vger.kernel.org,  Adithya Jayachandran
+ <ajayachandra@nvidia.com>,  Alexander Graf <graf@amazon.com>,  Alex
+ Williamson <alex@shazbot.org>,  Bjorn Helgaas <bhelgaas@google.com>,
+  Chris Li <chrisl@kernel.org>,  David Rientjes <rientjes@google.com>,
+  Jacob Pan <jacob.pan@linux.microsoft.com>,  Jason Gunthorpe
+ <jgg@nvidia.com>,  Jonathan Corbet <corbet@lwn.net>,  Josh Hilke
+ <jrhilke@google.com>,  Leon Romanovsky <leonro@nvidia.com>,  Lukas Wunner
+ <lukas@wunner.de>,  Mike Rapoport <rppt@kernel.org>,  Parav Pandit
+ <parav@nvidia.com>,  Pasha Tatashin <pasha.tatashin@soleen.com>,  Pranjal
+ Shrivastava <praan@google.com>,  Pratyush Yadav <pratyush@kernel.org>,
+  Saeed Mahameed <saeedm@nvidia.com>,  Samiullah Khawaja
+ <skhawaja@google.com>,  Shuah Khan <skhan@linuxfoundation.org>,  Vipin
+ Sharma <vipinsh@google.com>,  William Tu <witu@nvidia.com>,  Yi Liu
+ <yi.l.liu@intel.com>
+Subject: Re: [PATCH v6 04/12] PCI: liveupdate: Document driver binding
+ responsibilities
+In-Reply-To: <20260522202410.3104264-5-dmatlack@google.com> (David Matlack's
+	message of "Fri, 22 May 2026 20:24:02 +0000")
+References: <20260522202410.3104264-1-dmatlack@google.com>
+	<20260522202410.3104264-5-dmatlack@google.com>
+Date: Mon, 25 May 2026 17:35:16 +0200
+Message-ID: <2vxzbje37b9n.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -73,20 +85,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, May 24 2026, Yifei Chu wrote:
+On Fri, May 22 2026, David Matlack wrote:
 
-> Hello,
+> Document how driver binding works during a Live Update and what the PCI
+> core expects of drivers and users. Note that this is only a description
+> of the current division of responsibilities. These can change in the
+> future if we decide.
+
+Nit: Should you also note this in the documentation that this can change
+in the future?
+
 >
-> Short version: I found that the same memfd can be preserved more than once in a single liveupdate session under different
-> tokens. After kexec, those tokens can both refer to the same preserved KHO folio, and the second restore path hits
-> kho_restore_page(). With panic_on_warn=1, this is a reproducible panic.
-
-Pasha fixed this with 00d0b372374f ("liveupdate: prevent double
-management of files"). It landed in v7.1-rc1.
-
-Since you seem to be using 7.0.9, please port this patch to the 7.0.y
-series and try again. If this fixes the problem, please send it to
-stable@vger.kernel.org so it can be included in the 7.0.y series.
+> Signed-off-by: David Matlack <dmatlack@google.com>
+> ---
+>  drivers/pci/liveupdate.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>
+> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+> index 96c43b84532c..4f2ec6ffdd16 100644
+> --- a/drivers/pci/liveupdate.c
+> +++ b/drivers/pci/liveupdate.c
+> @@ -70,6 +70,22 @@
+>   * preserved. These may be relaxed in the future:
+>   *
+>   *  * The device cannot be a Virtual Function (VF).
+> + *
+> + * Driver Binding
+> + * ==============
+> + *
+> + * In the outgoing kernel, it is the driver's responsibility to ensure that it
+> + * does not release a device between pci_liveupdate_preserve() and
+> + * pci_liveupdate_unpreserve().
+> + *
+> + * In the incoming kernel, it is the driver's responsibility to ensure that it
+> + * does not release a preserved device between probe() and
+> + * pci_liveupdate_finish().
+> + *
+> + * It is the user's responsibility to ensure that incoming preserved devices are
+> + * bound to the correct driver. i.e. The PCI core does not protect against a
+> + * device getting preserved by driver A in the outgoing kernel and then getting
+> + * bound to driver B in the incoming kernel.
+>   */
+>  
+>  #define pr_fmt(fmt) "PCI: liveupdate: " fmt
 
 -- 
 Regards,
