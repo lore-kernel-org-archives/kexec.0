@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 08774CD5BD0
-	for <kexec@archiver.kernel.org>; Mon, 25 May 2026 06:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 30B60CD5BC0
+	for <kexec@archiver.kernel.org>; Mon, 25 May 2026 06:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=RQwJVQQJjFYaN+yiFzOfDgwbwCm5RC8KKUcRaw9Pru0=; b=25uGIVkxD3k6nWVLe+exGhAlbG
-	EygDY9iQV0WCgd+y3nY10TAMYlwJYcCFlwNfBPX0GOx+PcSU1Upzi/4fQYMjvGmMqVsigBE9ZBYWP
-	K15O+gJo0UMPUgKViZbhlyKzVzMbyej5giRfXMYMC9O4AAmIAOamcLIGJJHFRKdBwKzPumUv5UTjx
-	IjMnVY0mRLGkW/NS3W7WCdWEIRJ9ytdMa7ADLnqVPxaBa0I/DFkdcwi83YS5fJiU4end8SzF3TmQh
-	OWwH8yRGJwTJHRPp/apyZ87G2SrKBSuLUyA0r/qILS4dGByLHRQEkziJipj6OG4m2HHAuiD9NgwWB
-	86LC9oKQ==;
+	bh=mcgnzkCekxGDxlLfZgjscpscBgEbQ0p2mN6z74HWjig=; b=lwg9RLPAajp89+LrTkoVfFig+O
+	ZOguKwHnKwWS24klsS87sy0YazXcHGaZRVZl5DztBbrwFJxz2gzTccfO9cFGiyKurq9c4VepO82QW
+	rlPKh0aIRGzyL2TfcL1Mp+MmWSvLj8ZmYkjyRG9Y+zAYbZN+3rk1Xt/bG5pYjxlpWu6kByaXy/Xui
+	GWQ95LJCXJyZP2eZ0BvNfvJV3kFhEUk83P0MnZZhqbRgZ+cvCCYYwj5PHZdKm1ilwSiDBuL1t6VoV
+	Ay5pzUrix1NG+mVOnJKYuC4H+MsD0Q/YUnFCbm5JfJ6flf8mzZRE8/NaF7Th4K7PPZxc8/MsMapzL
+	+OFiY3+w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wROnm-0000000GQ6a-0m94;
-	Mon, 25 May 2026 06:28:38 +0000
-Received: from out-189.mta1.migadu.com ([95.215.58.189])
+	id 1wROno-0000000GQ8Q-1Gf3;
+	Mon, 25 May 2026 06:28:40 +0000
+Received: from out-172.mta1.migadu.com ([95.215.58.172])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wROnj-0000000GQ0V-2XJ6
+	id 1wROnk-0000000GQ4W-3TTL
 	for kexec@lists.infradead.org;
-	Mon, 25 May 2026 06:28:37 +0000
+	Mon, 25 May 2026 06:28:38 +0000
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1779690501;
+	t=1779690514;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RQwJVQQJjFYaN+yiFzOfDgwbwCm5RC8KKUcRaw9Pru0=;
-	b=NPvavMM7LwpyRPOk7aLy9mf3jwBIuy2kBfc/x0X7+veNaUruj/PKBV9g3H44cZGIqQOtqN
-	z5a7J/msPcok+wpXXNboGsyf/g3pC+OABmW5zuB0p0D1VJ/ZG5lvhGIBmzeBHKH3aQRs10
-	96vEyP3OkIMyCnw1q7e8sKiXci2FbPc=
+	bh=mcgnzkCekxGDxlLfZgjscpscBgEbQ0p2mN6z74HWjig=;
+	b=wF4CAHMKnaTjqP7CgZmhq1gjjZcsaQDDnRTJ7BOOXGt2R4+eBKLdLu6nFi1Etz86WDKBUm
+	9eIv/D+TXkOgB43kU/9ITlfPggrXIbYYowsynT59if8vuDhnasmeCa25X6FhnqXoDxoTVg
+	kRRqpHBBSpRR8UA7tn4RIUkQmoAWafA=
 From: George Guo <dongtai.guo@linux.dev>
 To: chenhuacai@kernel.org,
 	rppt@kernel.org,
@@ -53,17 +53,17 @@ Cc: kernel@xen0n.name,
 	linux-kernel@vger.kernel.org,
 	George Guo <guodongtai@kylinos.cn>,
 	Kexin Liu <liukexin@kylinos.cn>
-Subject: [PATCH 1/7] LoongArch: Add KHO basic support
-Date: Mon, 25 May 2026 14:28:04 +0800
-Message-Id: <20260525062810.103367-2-dongtai.guo@linux.dev>
+Subject: [PATCH 5/7] selftests/kho: add LoongArch vmtest support
+Date: Mon, 25 May 2026 14:28:08 +0800
+Message-Id: <20260525062810.103367-6-dongtai.guo@linux.dev>
 In-Reply-To: <20260525062810.103367-1-dongtai.guo@linux.dev>
 References: <20260525062810.103367-1-dongtai.guo@linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260524_232835_794174_FE6EC052 
-X-CRM114-Status: GOOD (  12.58  )
+X-CRM114-CacheID: sfid-20260524_232837_026100_31B3A069 
+X-CRM114-Status: GOOD (  12.63  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,123 +80,61 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: George Guo <guodongtai@kylinos.cn>
 
-Enable Kexec Handover on LoongArch64:
+Add loongarch.conf to configure QEMU's LoongArch virt machine with a
+la464 CPU, enable the 8250 serial console, and set the kernel image
+to vmlinux.efi. Extend vmtest.sh to recognize loongarch64 as a
+supported target and map it to the 'loongarch' kernel arch name.
 
-- Kconfig: select ARCH_SUPPORTS_KEXEC_HANDOVER for 64BIT
-- machine_kexec_file: add cmdline_add_kho() to pass the KHO FDT and
-  scratch buffer addresses to the next kernel via the "kho_handover="
-  command-line parameter
-- setup: parse "kho_handover=" early and call kho_populate() to hand
-  memory regions to the KHO core
+QEMU's LoongArch virt machine provides no ACPI tables and relies on
+FDT to describe hardware. Without 'earlycon' on the kernel command
+line, the FDT is not scanned for a console UART, no output reaches
+the console, and vmtest.sh's console log stays empty causing the test
+to always fail. Add 'earlycon' to KERNEL_CMDLINE in loongarch.conf
+to fix this.
 
 Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
 Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
 Signed-off-by: George Guo <guodongtai@kylinos.cn>
 ---
- arch/loongarch/Kconfig                     |  3 +++
- arch/loongarch/kernel/machine_kexec_file.c | 22 ++++++++++++++++++
- arch/loongarch/kernel/setup.c              | 27 ++++++++++++++++++++++
- 3 files changed, 52 insertions(+)
+ tools/testing/selftests/kho/loongarch.conf | 7 +++++++
+ tools/testing/selftests/kho/vmtest.sh      | 3 ++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/kho/loongarch.conf
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 606597da46b8..d494418545f5 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -684,6 +684,9 @@ config ARCH_SUPPORTS_KEXEC
- config ARCH_SUPPORTS_KEXEC_FILE
- 	def_bool 64BIT
- 
-+config ARCH_SUPPORTS_KEXEC_HANDOVER
-+	def_bool 64BIT
-+
- config ARCH_SELECTS_KEXEC_FILE
- 	def_bool 64BIT
- 	depends on KEXEC_FILE
-diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-index 5584b798ba46..ddf4d0e0e7fd 100644
---- a/arch/loongarch/kernel/machine_kexec_file.c
-+++ b/arch/loongarch/kernel/machine_kexec_file.c
-@@ -55,6 +55,24 @@ static void cmdline_add_initrd(struct kimage *image, unsigned long *cmdline_tmpl
- 	*cmdline_tmplen += initrd_strlen;
+diff --git a/tools/testing/selftests/kho/loongarch.conf b/tools/testing/selftests/kho/loongarch.conf
+new file mode 100644
+index 000000000000..b0551e0c2d77
+--- /dev/null
++++ b/tools/testing/selftests/kho/loongarch.conf
+@@ -0,0 +1,7 @@
++QEMU_CMD="qemu-system-loongarch64 -M virt -cpu la464"
++QEMU_KCONFIG="
++CONFIG_SERIAL_8250=y
++CONFIG_SERIAL_8250_CONSOLE=y
++"
++KERNEL_IMAGE="vmlinux.efi"
++KERNEL_CMDLINE="console=ttyS0 earlycon"
+diff --git a/tools/testing/selftests/kho/vmtest.sh b/tools/testing/selftests/kho/vmtest.sh
+index 49fdac8e8b15..a6ae9ac09595 100755
+--- a/tools/testing/selftests/kho/vmtest.sh
++++ b/tools/testing/selftests/kho/vmtest.sh
+@@ -21,7 +21,7 @@ Options:
+ 	-d)	path to the kernel build directory
+ 	-j)	number of jobs for compilation, similar to -j in make
+ 	-t)	run test for target_arch, requires CROSS_COMPILE set
+-		supported targets: aarch64, x86_64
++		supported targets: aarch64, x86_64, loongarch64
+ 	-h)	display this help
+ EOF
  }
- 
-+#ifdef CONFIG_KEXEC_HANDOVER
-+/* Add "kho_handover=<fdt_size>@<fdt_addr>,<scratch_size>@<scratch_addr>" to cmdline. */
-+static void cmdline_add_kho(struct kimage *image, unsigned long *cmdline_tmplen,
-+			    char *modified_cmdline)
-+{
-+	int n;
-+
-+	if (!image->kho.fdt || !image->kho.scratch)
-+		return;
-+
-+	n = sprintf(modified_cmdline + *cmdline_tmplen,
-+	    "kho_handover=0x%llx@0x%llx,0x%lx@0x%llx ",
-+	    (u64)PAGE_SIZE,               image->kho.fdt,
-+	    image->kho.scratch->bufsz,    (u64)image->kho.scratch->mem);
-+	*cmdline_tmplen += n;
-+}
-+#endif
-+
- #ifdef CONFIG_CRASH_DUMP
- 
- static int prepare_elf_headers(void **addr, unsigned long *sz)
-@@ -220,6 +238,10 @@ int load_other_segments(struct kimage *image,
- 		cmdline_add_initrd(image, &cmdline_tmplen, modified_cmdline, initrd_load_addr);
- 	}
- 
-+#ifdef CONFIG_KEXEC_HANDOVER
-+	cmdline_add_kho(image, &cmdline_tmplen, modified_cmdline);
-+#endif
-+
- 	if (cmdline_len + cmdline_tmplen > COMMAND_LINE_SIZE) {
- 		pr_err("Appending command line exceeds COMMAND_LINE_SIZE\n");
- 		ret = -EINVAL;
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index 839b23edee87..5934ba6f13e3 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -48,6 +48,7 @@
- #include <asm/setup.h>
- #include <asm/time.h>
- #include <asm/unwind.h>
-+#include <linux/kexec_handover.h>
- 
- #define SMBIOS_BIOSSIZE_OFFSET		0x09
- #define SMBIOS_BIOSEXTERN_OFFSET	0x13
-@@ -227,6 +228,32 @@ static int __init early_parse_mem(char *p)
+@@ -123,6 +123,7 @@ function target_to_arch() {
+ 	case $target in
+ 	     aarch64) echo "arm64" ;;
+ 	     x86_64) echo "x86" ;;
++	     loongarch64) echo "loongarch" ;;
+ 	     *) skip "architecture $target is not supported"
+ 	esac
  }
- early_param("mem", early_parse_mem);
- 
-+#ifdef CONFIG_KEXEC_HANDOVER
-+static int __init early_parse_kho(char *p)
-+{
-+	phys_addr_t fdt_addr, scratch_addr;
-+	u64 fdt_size, scratch_size;
-+
-+	if (!p)
-+		return -EINVAL;
-+
-+	fdt_size = memparse(p, &p);
-+	if (*p++ != '@')
-+		return -EINVAL;
-+	fdt_addr = memparse(p, &p);
-+	if (*p++ != ',')
-+		return -EINVAL;
-+	scratch_size = memparse(p, &p);
-+	if (*p++ != '@')
-+		return -EINVAL;
-+	scratch_addr = memparse(p, &p);
-+
-+	kho_populate(fdt_addr, fdt_size, scratch_addr, scratch_size);
-+	return 0;
-+}
-+early_param("kho_handover", early_parse_kho);
-+#endif
-+
- static void __init arch_reserve_vmcore(void)
- {
- #ifdef CONFIG_PROC_VMCORE
 -- 
 2.25.1
 
