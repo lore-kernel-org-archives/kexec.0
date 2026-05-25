@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AF239CD6E60
-	for <kexec@archiver.kernel.org>; Tue,  2 Jun 2026 15:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3CE3FCD6E6D
+	for <kexec@archiver.kernel.org>; Tue,  2 Jun 2026 15:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
 	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
 	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bcX9HjiEbGg7f71Q7AP/2Z09pmF5dkj6QNfgVhUcmto=; b=i+c5Ug9ez10036ZEh9CJTpJqjJ
-	f0t6Jpt3M4rJP47rgNHKIVikPkIftqSG1t21V7eEOTUGy8SxhidBKeNGCO4TcFedlt8TPtEL6S7Ky
-	h/w92ouQvHz4VVnCJ5W2uQsH+fDCT0/Y9PsswhVsoUsE7vR82THGgl25JtmFITYngypOxIYqoSYp5
-	ZLbqPLo3geS2LN9NvhFrjUk/33GsUcJEm+KRIecc55aROmn36A+JLWo5wGONsbA+eeIsKnh9+MdBY
-	Bq30WEhCo0TwIutCUQuc57TYVOtW6/eyCJycyiAcsJXFE0iJsTVJ8Vks0dBCMqJan45UGjJSNc8PW
-	aoYiXa+w==;
+	bh=j3PJUzj96ZS5dWKXwlgFG1d8kJSCnZuYsDxIEYeopI0=; b=1w+PkN/AUJckj66K/Aq8STnw0k
+	AXIlqQhCP4W8Wi9s/t0mNxqu9U8idSeYfMQ0IQEkexhKY+UqMD2jorWXrBf0x2KB0DbtuEinGIW++
+	3ckYDTc8pT2ZC05XbK3+zzaqtIISkLyAgm/MfX4cUKPXHtHfqAh+4B93O6J50qdg8nvWysUjmpoC9
+	zu04iWCrHjjkRwTKaB5yYGabKKm5ai2VUVPILSjH8waatkENjCxZWmfmqH/z8kzXOdlzHoKtpBL7k
+	EB/YDdqjZ703KToTWHErq20b1ucJq1h7ruZ+lGBBnuekK1ESNbyCL/W8ZG9yXABZJgv7sVbS9skGU
+	7OE0VqTg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUQrk-0000000DIGi-0grl;
-	Tue, 02 Jun 2026 15:17:16 +0000
+	id 1wUQrm-0000000DIK5-0wdS;
+	Tue, 02 Jun 2026 15:17:18 +0000
 Received: from canpmsgout06.his.huawei.com ([113.46.200.221])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wRR18-0000000GhzL-35Uw;
-	Mon, 25 May 2026 08:50:36 +0000
+	id 1wRR1I-0000000GiBq-3R0D;
+	Mon, 25 May 2026 08:50:46 +0000
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=bcX9HjiEbGg7f71Q7AP/2Z09pmF5dkj6QNfgVhUcmto=;
-	b=dFHJWB249QFlGlFHOy6ZE500+O7Y6Go7EYZWpo2PD5C2ETZFmE2OhEAAQqUbNbGHZLdoUkUzy
-	aUffoy6HlPyhDspsD7T+9CdIKWu3U9UF65suaTjGl79nQZ+/1TpwQRM8EZ5zBnrfCXjAZMMlyyz
-	L5gJkYm3A7wXyxFWeEBpMR0=
-Received: from mail.maildlp.com (unknown [172.19.163.104])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4gP8XQ4t5szRhRD;
-	Mon, 25 May 2026 16:42:46 +0800 (CST)
+	bh=j3PJUzj96ZS5dWKXwlgFG1d8kJSCnZuYsDxIEYeopI0=;
+	b=isbuAmGNg2O3W0u52hS/fSaiucVNDUOxwZ8sVqcigttUSPYLegIvhabkTPOrlXnl64WhE7h2B
+	8d3oGFo4Wq78I8sROnCShtwag7c6lREpDYuzswGzS7PeKzDYu8x0FKbhd6KUS/VTCtm2dMjh75L
+	iF9fHGgllxkTuMzRN1EHFmE=
+Received: from mail.maildlp.com (unknown [172.19.162.140])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4gP8Xf3fMkzRhRD;
+	Mon, 25 May 2026 16:42:58 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id B59BF4056D;
-	Mon, 25 May 2026 16:50:30 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 89878202E6;
+	Mon, 25 May 2026 16:50:42 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
  (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 25 May
- 2026 16:50:26 +0800
+ 2026 16:50:38 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
@@ -72,9 +72,9 @@ To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
 	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v14 05/17] x86/kexec: Fix potential buffer overflow in prepare_elf_headers()
-Date: Mon, 25 May 2026 16:49:20 +0800
-Message-ID: <20260525084932.934910-6-ruanjinjie@huawei.com>
+Subject: [PATCH v14 08/17] LoongArch: kexec: Fix potential buffer overflow in prepare_elf_headers()
+Date: Mon, 25 May 2026 16:49:23 +0800
+Message-ID: <20260525084932.934910-9-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260525084932.934910-1-ruanjinjie@huawei.com>
 References: <20260525084932.934910-1-ruanjinjie@huawei.com>
@@ -85,8 +85,8 @@ X-Originating-IP: [10.90.53.73]
 X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
  dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260525_015035_123653_D9AA956A 
-X-CRM114-Status: GOOD (  15.26  )
+X-CRM114-CacheID: sfid-20260525_015045_172406_F3DEAC0D 
+X-CRM114-Status: GOOD (  12.73  )
 X-Mailman-Approved-At: Tue, 02 Jun 2026 08:17:11 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -102,7 +102,7 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Sashiko AI code review pointed out a there is a TOCTOU (Time-of-Check to
+Sashiko AI code review pointed out there is a TOCTOU (Time-of-Check to
 Time-of-Use) race condition in prepare_elf_headers() between the initial
 pass that counts System RAM ranges and the second pass that populates them.
 If a memory hotplug event occurs between these two steps, the number of
@@ -122,58 +122,56 @@ approach physically isolates the locking contexts. The system memory ranges
 are forced to be statically frozen during the entire layout generation,
 eradicating the buffer overflow vulnerability.
 
-Cc: Thomas Gleixner <tglx@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Youling Tang <tangyouling@kylinos.cn>
+Cc: Huacai Chen <chenhuacai@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>
 Cc: stable@vger.kernel.org
-Fixes: 8d5f894a3108 ("x86: kexec_file: lift CRASH_MAX_RANGES limit on crash_mem buffer")
+Fixes: 1bcca8620a91 ("LoongArch: Add crash dump support for kexec_file")
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- arch/x86/kernel/crash.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ arch/loongarch/kernel/machine_kexec_file.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index cd796818d94d..f319308b06ee 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -25,6 +25,7 @@
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
+diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
+index 5584b798ba46..2a1a6124f043 100644
+--- a/arch/loongarch/kernel/machine_kexec_file.c
++++ b/arch/loongarch/kernel/machine_kexec_file.c
+@@ -14,6 +14,7 @@
+ #include <linux/kernel.h>
+ #include <linux/kexec.h>
  #include <linux/memblock.h>
 +#include <linux/memory_hotplug.h>
- 
- #include <asm/bootparam.h>
- #include <asm/processor.h>
-@@ -226,6 +227,9 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
- {
- 	struct crash_mem *cmem = arg;
- 
-+	if (WARN_ON_ONCE(cmem->nr_ranges >= cmem->max_nr_ranges))
-+		return -EAGAIN;
+ #include <linux/slab.h>
+ #include <linux/string.h>
+ #include <linux/types.h>
+@@ -75,6 +76,11 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+ 	cmem->max_nr_ranges = nr_ranges;
+ 	cmem->nr_ranges = 0;
+ 	for_each_mem_range(i, &start, &end) {
++		if (WARN_ON_ONCE(cmem->nr_ranges >= cmem->max_nr_ranges)) {
++			ret = -EAGAIN;
++			goto out;
++		}
 +
- 	cmem->ranges[cmem->nr_ranges].start = res->start;
- 	cmem->ranges[cmem->nr_ranges].end = res->end;
- 	cmem->nr_ranges++;
-@@ -419,10 +423,14 @@ int crash_load_segments(struct kimage *image)
- 				  .buf_max = ULONG_MAX, .top_down = false };
+ 		cmem->ranges[cmem->nr_ranges].start = start;
+ 		cmem->ranges[cmem->nr_ranges].end = end - 1;
+ 		cmem->nr_ranges++;
+@@ -163,12 +169,15 @@ int load_other_segments(struct kimage *image,
+ 		void *headers;
+ 		unsigned long headers_sz;
  
- 	/* Prepare elf headers and add a segment */
-+	get_online_mems();
- 	ret = prepare_elf_headers(&kbuf.buffer, &kbuf.bufsz, &pnum);
--	if (ret)
-+	if (ret) {
++		get_online_mems();
+ 		ret = prepare_elf_headers(&headers, &headers_sz);
+ 		if (ret < 0) {
++			put_online_mems();
+ 			pr_err("Preparing elf core header failed\n");
+ 			goto out_err;
+ 		}
+ 
 +		put_online_mems();
- 		return ret;
-+	}
- 
-+	put_online_mems();
- 	image->elf_headers	= kbuf.buffer;
- 	image->elf_headers_sz	= kbuf.bufsz;
- 	kbuf.memsz		= kbuf.bufsz;
+ 		kbuf.buffer = headers;
+ 		kbuf.bufsz = headers_sz;
+ 		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
 -- 
 2.34.1
 
