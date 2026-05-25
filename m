@@ -4,62 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5739CCD5BCE
-	for <kexec@archiver.kernel.org>; Mon, 25 May 2026 07:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 85A5ECD5BD0
+	for <kexec@archiver.kernel.org>; Mon, 25 May 2026 10:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
-	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=wjY9MInIrdeSdVKHsoHljcvbmHUlFL7f0hkiG9rqDjI=; b=nyRNzVefNK3J1Qw8ZZcccsOZ5A
-	Fs5wPmqUpXQz7unsMZLJxu4bB0K04RpXTfd8zHPCYUF1Ta2ws0FVZnLr/qQLvLJVRxwOXhdO7cwE9
-	xWaCmCcKxJrCtnv8o2ipP6qmdIt5ZRuNYdL4K9ggDWrgxxkYqY5in2LRbUKKLb9ROKZmwisrZmzY0
-	NRUpkat1SuCAH2X1YmawmfkbgYTJYqplTJCSWeA7S8ykbxvI24oJZLkdVPA3hZBq76FAm7RTB0T6r
-	jQafTQ11CjtEtKAe6n2Y/pcngqPB+giFl4HlBqV5b5iPA4BWOVV8sgLnb2U1+4qaZrHjzTJ5tt3u7
-	a2D3vhhQ==;
+	bh=/TRhXlL7M+bh0nA0422zvkrUv8DgtfhlLo+sCPkC9ec=; b=PvHTwA3Z43r0ASbMXaD7piaoZt
+	YuWM1VRsD+ij3rr+eO4d93QuOOs727eZq8pXahzh56KW71h+xPBzz0B2DXr1jlIgyp3dkTnn7jESf
+	ZzC2r6RhIo4YBSNg2HgG6zBMRbT0WYZe+m+OnvBikGKKcuA4ZHj//sixtXL2l5JH2hNxOw829aAMf
+	yBQ/hMZZmwhh6+i4XZKWomh9v8ZFTMBxkQnoSRW35dv29/1D2VKWR58O2S7O6w1m7goBWVh0B4cKE
+	7CHHgX6wrgbu1sD6ke3JXDV5vw6yteikqlOt7MxNps0g98aWyhK4TR8BePmzMgPZ3Uuy1zL5ILvLE
+	e810QiFQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wRQ32-0000000GYvi-0O0H;
-	Mon, 25 May 2026 07:48:28 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wRSUO-0000000GwXL-2Ipz;
+	Mon, 25 May 2026 10:24:52 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wRQ30-0000000GYv3-1YMB
+	id 1wRSUL-0000000GwWf-1wSF
 	for kexec@lists.infradead.org;
-	Mon, 25 May 2026 07:48:26 +0000
+	Mon, 25 May 2026 10:24:50 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 87430601FC;
-	Mon, 25 May 2026 07:48:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42D4C1F00A3A;
-	Mon, 25 May 2026 07:48:22 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 0B50443E70
+	for <kexec@lists.infradead.org>; Mon, 25 May 2026 10:24:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3DA31F00A3D
+	for <kexec@lists.infradead.org>; Mon, 25 May 2026 10:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779695305;
-	bh=wjY9MInIrdeSdVKHsoHljcvbmHUlFL7f0hkiG9rqDjI=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=VgFiOYr6S0DjulovWK0ttkMDGLLywevPI+YoML7qLCufLrKNwD3HggOMvcwOvMZaq
-	 ZUXcaANqTQn6CBaR2TxSV7UQP9sudD33jQ+3G3cXfeZzHr1P0J7uDno03Tjf/m3Brd
-	 dZLaEJgrFCwqUxTxcgRgmtxmdGPU8kx6GdhoMcVFWnjdW9KkXlDIDReZbfy+uJSznU
-	 Zc49VqyBE/QJwZ3fKbhtsyqEFRw9kgbLPbmv1uYAd9/3rO+6jdvqzz9V7Khxhqa59D
-	 QgRJB8XB7KoTHf5deafYNRqiLNNXUxfR2fStlLk4NhXKHFpMLmACTdxGgBRtAwAs2r
-	 I2EekSJyNzmow==
+	s=k20260515; t=1779704688;
+	bh=/TRhXlL7M+bh0nA0422zvkrUv8DgtfhlLo+sCPkC9ec=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=bf8jOchER9UmNKlRNawyfjT1ivoJbbX7MT8VhTo5F9z75N9pO7kJWma7lGm2m/kHn
+	 I1QhvcGCNQQ959H+Iprj7T7YtUPqToevhsV9cjOvPTugFQcrE4VSaJ9e89NtmJ2Gbn
+	 wSoQIo7Mk/kQscLsnw8D6Hn2AD+T8usnAbwODg84DK057URyMq/ffh3YrYex4N5fou
+	 fU0q/B2ilf3olT08OalSriAvL81oPOcPhZl8UoCm0VfjJDFtwrx6jrgIw0M3w4zgwC
+	 gnRyCF3XJTAt0kYZ0+YH+4dXUoPDSLFQrGOiIEMVZJ5nS6ixOvnuIJ1vnYN8E9LDkh
+	 VFyPdNxtyHRRQ==
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-bd4f8260e4eso1713180066b.1
+        for <kexec@lists.infradead.org>; Mon, 25 May 2026 03:24:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9/KLTgzkBPdcplqrSf6Q1McRw+R/6vAfSjPilXxKAqRhYqLnISwTzxY2ITArPwQR1hToqPrw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwSp3YJFSNSfy7tbNsrtGVqM9jAAwIoMXpyKU2FgHEItJPCKn1u
+	oP4nf0b8+kRq9AR/p521VsR4CMi24VUzy0PFAwq9Ey9Ggqv36tauGrq6+ok23BJM3ls1Q1VdlkH
+	dqKsRjvR3X2LdbHnf+MthQ2obuOoJ6Jw=
+X-Received: by 2002:a17:906:dc8b:b0:bd2:aeaf:470c with SMTP id
+ a640c23a62f3a-bdd267c8024mr853835966b.40.1779704687546; Mon, 25 May 2026
+ 03:24:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 7/7] selftests/kho: handle QEMU not exiting after kexec
- on LoongArch
-From: Mike Rapoport <rppt@kernel.org>
-To: George Guo <dongtai.guo@linux.dev>
-Cc: chenhuacai@kernel.org, rppt@kernel.org, pasha.tatashin@soleen.com, 
- pratyush@kernel.org, kernel@xen0n.name, graf@amazon.com, shuah@kernel.org, 
- loongarch@lists.linux.dev, kexec@lists.infradead.org, linux-mm@kvack.org, 
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
- George Guo <guodongtai@kylinos.cn>
-In-Reply-To: <20260525062810.103367-8-dongtai.guo@linux.dev>
-References: <20260525062810.103367-1-dongtai.guo@linux.dev>
- <20260525062810.103367-8-dongtai.guo@linux.dev>
-Date: Mon, 25 May 2026 10:48:14 +0300
-Message-Id: <177969529482.4047269.8837009779600841681.b4-review@b4>
-X-Mailer: b4 0.15.2
+References: <20260525062810.103367-1-dongtai.guo@linux.dev> <177969529480.4047269.2120994507098781563.b4-review@b4>
+In-Reply-To: <177969529480.4047269.2120994507098781563.b4-review@b4>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 25 May 2026 18:25:08 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4p8xe_Hfx81kjxNrp5g7RKvi4f1QM7avLvnf_r+VazFA@mail.gmail.com>
+X-Gm-Features: AVHnY4LTd0Kg3PKCCZqbfiXECjfM-2DhE2l34GPEKNdQUAn6_sdoLxbmWOkvxmI
+Message-ID: <CAAhV-H4p8xe_Hfx81kjxNrp5g7RKvi4f1QM7avLvnf_r+VazFA@mail.gmail.com>
+Subject: Re: [PATCH 0/7] LoongArch: add KHO support and selftests
+To: Mike Rapoport <rppt@kernel.org>
+Cc: George Guo <dongtai.guo@linux.dev>, pasha.tatashin@soleen.com, pratyush@kernel.org, 
+	kernel@xen0n.name, graf@amazon.com, shuah@kernel.org, 
+	loongarch@lists.linux.dev, kexec@lists.infradead.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	George Guo <guodongtai@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260525_032449_539678_44E99193 
+X-CRM114-Status: GOOD (  25.04  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,30 +85,81 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, 25 May 2026 14:28:10 +0800, George Guo <dongtai.guo@linux.dev> wrote:
-> diff --git a/tools/testing/selftests/kho/vmtest.sh b/tools/testing/selftests/kho/vmtest.sh
-> index a6ae9ac09595..3cb9674e4475 100755
-> --- a/tools/testing/selftests/kho/vmtest.sh
-> +++ b/tools/testing/selftests/kho/vmtest.sh
-> @@ -103,16 +103,37 @@ function run_qemu() {
->  	local qemu_cmd=$1
->  	local cmdline=$2
->  	local kernel=$3
-> +	local arch=$4
->  	local serial="$tmp_dir/qemu.serial"
->  
->  	cmdline="$cmdline kho=on panic=-1"
->  
-> -	$qemu_cmd -m 1G -smp 2 -no-reboot -nographic -nodefaults \
+Hi, Mike,
 
-Just make it 
+On Mon, May 25, 2026 at 3:48=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wro=
+te:
+>
+> On Mon, 25 May 2026 14:28:03 +0800, George Guo <dongtai.guo@linux.dev> wr=
+ote:
+>
+> Hi,
+>
+> > [...]
+> >
+> > Bug fixes (patches 3-4)
+> > ------------------------
+> > Patch 3 fixes a build failure with CONFIG_KFENCE=3Dy: virt_to_phys() an=
+d
+> > phys_to_virt() in asm/io.h expand to use offset_in_page() and
+> > page_address(), which require <linux/mm.h> that was not included.
+>
+> This fix looks unrelated to KHO, it makes sense to send it as a separate
+> patch.
+He tried, but it causes new problems, but I agree this patch has
+nothing to do with KHO.
+https://lore.kernel.org/loongarch/202605211925.DbDvQ6ii-lkp@intel.com/T/#t
 
-	timeout 100 $qemu_cmd ...
+>
+> >
+> > Patch 4 moves KEXEC_CONTROL_CODE from 0x100000 to 0x180000.  QEMU
+> > places its machine FDT at 0x100000 when booting with '-kernel'; the
+> > previous placement silently overwrote the FDT with the relocation
+>
+> And I believe that patch 2 and patch 4 can be folded into patch 1 so
+> that addition of KHO support will be a single patch.
+Patch 2 should be folded, but Patch 4 can be separate, because it
+should be backported.
 
-for all architectures.
+>
+> > trampoline, breaking earlycon in the kexec'd kernel.
+> >
+> > Selftest support (patches 5-7)
+> > -------------------------------
+> > Patch 5 adds loongarch.conf and extends vmtest.sh to recognise
+> > loongarch64 as a build target.  QEMU's LoongArch virt machine is
+> > FDT-only (no ACPI), so 'earlycon' must appear on the kernel cmdline or
+> > the console UART is never discovered and the test log stays empty.
+> >
+> > Patch 6 disables SERIO_I8042 and its dependents in the QEMU_KCONFIG
+> > fragment.  QEMU's LoongArch virt machine has no i8042 controller; the
+> > fallback port probe hits a page fault on the memory-mapped I/O range an=
+d
+> > panics before reaching userspace.
+>
+> This should be folded into patch 5 for sure.
+I completely don't know why Patch 6 is needed, for normal use I8042
+doesn't cause problems in virtual machines.
 
--- 
-Sincerely yours,
-Mike.
+Huacai
 
+>
+> >
+> > Patch 7 polls the serial output for the test verdict and kills QEMU onc=
+e
+> > it appears.  QEMU provides no EFI runtime services on LoongArch, so
+> > machine_restart() falls through to an infinite idle loop and QEMU never
+> > exits after kexec.
+>
+> And since without this selftest would hang on loongarch, the timeout
+> handing should be folded into patch 5.
+>
+> In general, the rationale when adding new features is to make sure that
+> after each patch there are no regressions and the new functionality
+> either works or cannot be enabled until completely implemented.
+>
+> --
+> Sincerely yours,
+> Mike.
+>
 
