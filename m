@@ -4,66 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2856ECD5BC8
-	for <kexec@archiver.kernel.org>; Tue, 26 May 2026 15:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2C22ECD5BB1
+	for <kexec@archiver.kernel.org>; Tue, 26 May 2026 18:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Type:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=yXJHT/nl7RJyzhR5KfCpyXi9LiUdlUUFWLId5lh91pI=; b=g0LadXKbxP+hhipKXlkgYN9NNz
-	IgiP3jU7vC/JOWxlUXFH/gVPpE2kl1bQtSrCleeHPWPva+thAcKrOQQaIJ1bJkP/vfDkgYRkngKoS
-	CC2not3OWBe36W/i9NGyYnX4zdyE6PK2k8Iu1j8A9MWO0T8zGiY3UhOjldWIpNFv0cxbhZitJP05W
-	MXYm9CXBh8JyyfuLRNINHtYTytkEK4dck2KCttn6/Hxdf6BmFdBlES1w2Arhh2mcNNdL2ai45QjBu
-	BhGg/9bvK05R4SQjfRLUia/wNjfmshMb8RfI5Hi5VBUtrFWEZbSD+ml2GPDg9L34oqsB3sK/NCsrr
-	gVS8LYsg==;
+	bh=act60vUxIIaCqxwJhQbB9YMS0EUrx0ri9T2HmFauSng=; b=Sz7mgnX27mpz5sNmeUeJIMreVJ
+	FUL6bFzpIuXJ7z4PzOvQZifvPIarO7d6ToNlNIXXDcoEJyozEc7LnIJt0KzEVW5PAKyWGSMhI8lWe
+	KAf19w7FJ9oifsQ1zjMC4r6aD3DD6w8Atv2rgyLV/UJ0T2uE/jAxXx294WVDb0aed8lhuhL710siv
+	zXEkDs3wClQ/d1QQFcZJKTFEFSY219R2hk5VL+1BaPAYEVyAgHbecocZkOrMW2Hf7EpjH1+3Ph+Op
+	Bxd8/jESHp9vcmJ3EC1Wh/HMfpoFx6w9kF8XgBZsL53cR1HTDYPfaDQ2Dckd0h8av+wSZZklhTxSv
+	FXAwJsFg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wRtXI-00000002LFW-3rQB;
-	Tue, 26 May 2026 15:17:40 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1wRweP-00000002rSW-14Ms;
+	Tue, 26 May 2026 18:37:13 +0000
+Received: from mail-yw1-x1131.google.com ([2607:f8b0:4864:20::1131])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wRtXG-00000002LFE-45kW
-	for kexec@bombadil.infradead.org;
-	Tue, 26 May 2026 15:17:38 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
-	:Message-ID:Date:Subject:To:From:Sender:Reply-To:Cc:Content-Type:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=yXJHT/nl7RJyzhR5KfCpyXi9LiUdlUUFWLId5lh91pI=; b=BhdiHvp5//Rbb6uVHLIW6svevL
-	UFdrWWvcXianolBI0VvVdHzlRgp2EPXB5Lmzy4rhGMsFCZaoQMtScSsarl03Qt6wNH2AX4tt3elGd
-	K+gZ2kTYNUoMqIl7wpx/xYX+INivUDuS+bIUQQTz6kb3h0R3Ia0Iv44skN6aMBcZqHNYW6bCr+gPM
-	qPc69117xOyiNtF4QMEnrc0lJoihiHLIbQ+WPYuTt8gx/wu/syfdHLSh1zbdNJegt0AlqpQpICFYf
-	R6efEDY9RmB9syTw+Jf0UgeKKIk5vPwWP5s1xHH67gk54VcWJX67pEkE8So3ABMZLxvp/fz2172BR
-	4mscD1xQ==;
-Received: from linux.microsoft.com ([13.77.154.182])
-	by desiato.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wRtXD-0000000Berc-1xEQ
+	id 1wRweM-00000002rRk-2Vgr
 	for kexec@lists.infradead.org;
-	Tue, 26 May 2026 15:17:37 +0000
-Received: from alhe-dev-ub.waqitnwczulubdoacjva2kqlvd.phxx.internal.cloudapp.net (unknown [134.33.52.9])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 0602E20B7167
-	for <kexec@lists.infradead.org>; Tue, 26 May 2026 08:17:14 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0602E20B7167
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1779808635;
-	bh=yXJHT/nl7RJyzhR5KfCpyXi9LiUdlUUFWLId5lh91pI=;
-	h=From:To:Subject:Date:From;
-	b=SVeiUvrRvL2olN2ncYKY5o9ChWPsc/pBYeLlZ7BJyU1QB073AJegnwPUN7AFad2UW
-	 a8NcaFzsdJX3d+UNbC63uzyH6dC+MpLJSsN3SLlAa5Rsc3HSOs3YqHcTHXtgukVKbt
-	 XIeW7kvVB53GSNiDw+gmj/C0z2TATPJlJSApXvNU=
-From: Alejandro Hernandez <alhe@linux.microsoft.com>
-To: kexec@lists.infradead.org
-Subject: [PATCH v2] kexec: restore functionality to preserve fd xattrs for uncompressed kernel images
-Date: Tue, 26 May 2026 15:17:14 +0000
-Message-ID: <20260526151714.4181388-1-alhe@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
+	Tue, 26 May 2026 18:37:12 +0000
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-7c7fc722b50so84599267b3.2
+        for <kexec@lists.infradead.org>; Tue, 26 May 2026 11:37:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1779820629; x=1780425429; darn=lists.infradead.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=act60vUxIIaCqxwJhQbB9YMS0EUrx0ri9T2HmFauSng=;
+        b=WDl9zL/q537KA+P9vOj6BRWGWCwRU9bGkWtUd3XjhcoQIB2cHI3RHsN4hgM8a17xhy
+         8XMo6E+rJQXkRlHBgoaKFiu8JxT1WWefairdHzreS9HIRmnKexbKNufixhlXJj9m4onw
+         VaQul7Qolrx+xwKgGOWO3+FTL42q8SlSgPzfOH8M/uOKf645r1sAWYS2wq0m2pWG/JDw
+         dknD9K1rx0LNU3dE1QVGS+cwp2Ltc/EwzRxTM6ZoHdV8IAbOMsMFW2WhT1dIDE1p8dT0
+         pFuPbQIql2y7o4O48OzOmk4+vQ1rmTf5DH47L9W/+bOzmC9KB6Cq4UwE3uIuobc6LHuu
+         H78Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779820629; x=1780425429;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=act60vUxIIaCqxwJhQbB9YMS0EUrx0ri9T2HmFauSng=;
+        b=FQSVTpaU6O5tpcXvhSsBTCOmYRhShZFgvE8L7WPK9OG2zqXOu7G8cE1Hxw7sg6Eets
+         itFXgK4/4yA1AVob53mVS2kuTIOQIEGjSpPfkKDuR/rOVJMOt/99cbZYHVA1NnjRQ1N+
+         PGjfjcnSyk3cTFzXBt1BFtLKLtlp67nKSedJEFxOdYTQF73wuedjLF7UfmJpuQ3Wyksx
+         PrODMqnUhbTpjloJd5pLImytclBcVU8VA7Sw46rx4wnUeCwLziWbckM38LTILzvGgnt5
+         gNCsEPcuFsZR7tj3hYu+VX4kosfhoauHJWD/VJLU7ejpXvr8mX9rdJGqH5W4o+JxiLqQ
+         EeWQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/qRselez7DdZri6pmcVCFhov7o1eF+bqiBOfxhEn9Y/8Nnb4zdBpWTk5UBSWgB7Ye040Ahfw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yx6douTx9H7bkTpDkD03CaEisUGotPF7xtKiYL+mWLbWWJKOxmh
+	Fpw8esOBtxTT4pK0EkepuAHdcwt+BjvaLwcm8GANMPbWdXMGH+qh5UJnknZSVWiQ2kE=
+X-Gm-Gg: Acq92OFWVtNmYxbxrBXS7MqG/s8riAiIjQBY7ZaBsa8r6SAhoTM02YunME7OuLkfqLx
+	68sx1azPsXgv8XbNhWFbzcvPV53VVaG4Lcx1rHXCx/RSRlkkbVL5PJsY7f11/z0Pi26SQ5LDM+e
+	vw64HrCVLnPQvbFpNfZS5+w4z27xyh+8QnfqQrIGxjp7cJ1DSlRyFIDnmmgMi7iNEQqRky7elgh
+	zAWrh72b+Xw8bH2ApkxH+uf5gnoIZzi+EDTVN0IGY6HXqAlPv0d/1DP4JSicVEeP+LdujalvDSm
+	iK4CGpdbM4LG6ruxHuk5nCDdqo7hQ9AccefM23hmNG8gUA5CY8XfX6AT5+TVv9DxbTVegYK926U
+	PTj5GOJX1Z+evc1aD7ZlHjG0U8x3klbwgyJfxWGQpzEWPk2m2R8bZnP4Cz0GVzTd5JNyN2+1NGZ
+	VqU9nRVTE5f4MOGeJ5mPik1stnOg1VrTStIScdyZ1KCbIu+g8rqN3Ip+5+5w0h6oC5wwa1xbdQi
+	0jA0vkJq0d6m973Cm6935s4anLwb5w2
+X-Received: by 2002:a05:690c:4d05:b0:7cf:ab4d:a0d7 with SMTP id 00721157ae682-7d3341d5e82mr196847047b3.19.1779820628942;
+        Tue, 26 May 2026 11:37:08 -0700 (PDT)
+Received: from google.com (138.200.150.34.bc.googleusercontent.com. [34.150.200.138])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7d389e1291asm65377997b3.12.2026.05.26.11.37.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2026 11:37:08 -0700 (PDT)
+Date: Tue, 26 May 2026 14:37:07 -0400
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: Alexander Graf <graf@amazon.com>, 
+	"Andersen, Tycho" <Tycho.Andersen@amd.com>, Anthony Yznaga <anthony.yznaga@oracle.com>, 
+	Baolu Lu <baolu.lu@linux.intel.com>, David Hildenbrand <david@kernel.org>, 
+	David Matlack <dmatlack@google.com>, "Heyne, Maximillian" <mheyne@amazon.de>, 
+	James Gowans <jgowans@amazon.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Mike Rapoport <rppt@kernel.org>, Pankaj Gupta <pankaj.gupta.linux@gmail.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Praveen Kumar <kpraveen.lkml@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
+	Vishal Annapurve <vannapurve@google.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, 
+	Luca Boccassi <luca.boccassi@gmail.com>, Samiullah Khawaja <skhawaja@google.com>, 
+	Jork Loeser <jloeser@linux.microsoft.com>
+Cc: linux-mm@kvack.org, kexec@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: [Hypervisor Live Update] Notes from May 18, 2026
+Message-ID: <ahXiYGo-IWI94IVP@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260526_161736_003138_A93E60F9 
-X-CRM114-Status: GOOD (  18.71  )
+X-CRM114-CacheID: sfid-20260526_113710_658579_CA353FA8 
+X-CRM114-Status: GOOD (  14.07  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,106 +106,127 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Since commit 714fa115 xattrs attached to a kernel image file (such as IMA
-signatures) are not being preserved, do_kexec_file_load() was modified to use
-memfd_create() which now passes an anonymous file descriptor to
-kexec_file_load(). This change eliminated the filesystem inode identity of the
-original kernel file, hence attributes are no longer visible to the kernel IMA
-appraisal handler during kexec_file_load, causing IMA policy enforcement to fail
-even for validly signed kernel images.
+Hi everybody,
 
-This patch attempts to restore such behavior although, only does it for
-uncompressed kernel images. To do this, we first figure out if the image file is
-compressed or not and call each method accordingly.
+Here are the notes from the last Hypervisor Live Update call that 
+happened on Monday, May 18. Thanks to everybody who was involved!
 
-Compressed images continue to use memfd and cannot carry forward the original fd
-security attributes, since their decompressed bytes do not match the signed
-artifact. Proper handling of compressed images with IMA would require either
-signing the decompressed artifact or kernel-side support for decompression
-within the kexec_file_load path.
+These notes are intended to bring people up to speed who could not 
+attend the call as well as keep the conversation going in between 
+meetings.
 
-Signed-off-by: Alejandro Hernandez Samaniego <alhe@linux.microsoft.com>
----
- kexec/kexec.c | 42 +++++++++++++++++++++++++++++++++++-------
- 1 file changed, 35 insertions(+), 7 deletions(-)
+----->o-----
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 08edfca..68f23dc 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -1305,6 +1305,8 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
- 	int ret = 0;
- 	char *kernel_buf;
- 	off_t kernel_size;
-+	struct stat kernel_stat;
-+	off_t kernel_file_size = -1;
- 
- 	memset(&info, 0, sizeof(info));
- 	info.segment = NULL;
-@@ -1328,17 +1330,39 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
- 
- 	kernel = argv[fileind];
- 
--	/* slurp in the input kernel */
-+       /* Hold original fd with its xattrs */
-+	kernel_fd = open(kernel, O_RDONLY);
-+	if (kernel_fd == -1) {
-+		fprintf(stderr, "Failed to open file %s:%s\n", kernel,
-+				strerror(errno));
-+		return EFAILED;
-+	}
-+
-+	/* Compressed vs Uncompressed */
-+	if (fstat(kernel_fd, &kernel_stat) == 0)
-+		kernel_file_size = kernel_stat.st_size;
-+
-+        /* slurp in the input kernel */
- 	kernel_buf = slurp_decompress_file(kernel, &kernel_size);
- 	if (!kernel_buf) {
- 		fprintf(stderr, "Failed to decompress file %s:%s\n", kernel,
- 				strerror(errno));
-+		close(kernel_fd);
- 		return EFAILED;
- 	}
--	kernel_fd = copybuf_memfd(kernel_buf, kernel_size);
--	if (kernel_fd < 0) {
--		fprintf(stderr, "Failed to copy decompressed buf\n");
--		return EFAILED;
-+
-+	if (kernel_file_size != kernel_size) {
-+		close(kernel_fd);
-+		kernel_fd = copybuf_memfd(kernel_buf, kernel_size);
-+		if (kernel_fd < 0) {
-+			fprintf(stderr, "Failed to copy decompressed buf\n");
-+			return EFAILED;
-+		}
-+		dbgprintf("%s: compressed input, using memfd kernel fd %d\n",
-+			  __func__, kernel_fd);
-+	} else {
-+		dbgprintf("%s: using original kernel file fd %d\n",
-+			  __func__, kernel_fd);
- 	}
- 
- 	for (i = 0; i < file_types; i++) {
-@@ -1361,11 +1385,15 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
- 	}
- 
-        /*
--	* image type specific load functioin detect the capsule kernel type
-+	* image type specific load function detect the capsule kernel type
- 	* and create another fd for file load. For example the zboot kernel.
- 	*/
--	if (info.kernel_fd != -1)
-+	if (info.kernel_fd != -1) {
-+		dbgprintf("%s: using image-specific kernel fd %d\n",
-+			  __func__, info.kernel_fd);
-+		close(kernel_fd);
- 		kernel_fd = info.kernel_fd;
-+	}
- 
- 	/*
- 	 * If there is no initramfs, set KEXEC_FILE_NO_INITRAMFS flag so that
--- 
-2.43.0
+Administrative Updates & LPC 2026
 
+To kick off the meeting, it was announced that I will be taking
+over the management of the Hypervisor Live Update meetings going
+forward, with David Matlack serving as a backup for scheduling
+conflicts. Thank you to David Rientjes for running these up to this
+point!
+
+Additionally, the Live Update micro-conference has been officially
+accepted for LPC 2026. Attendees are highly encouraged to submit topics
+and proposals as the micro-conference will be listed among the available
+tracks.
+
+----->o-----
+Systemd LUO Integration
+
+Systemd: Luca's patch has been successfully merged into systemd. This
+allows for the use of the fdstore to pass file descriptors across a live
+update, which is a major milestone for adoption.
+
+----->o-----
+MSHV + KHO
+
+Pratyush and I discussed using the Radix Tree as a
+sparse bitmap for MSHV. To improve code modularity, we agreed to explore
+establishing a new lib directory to house common data structures (e.g.,
+blocked linked lists, memory management structures) that can be easily
+shared by the other KHO users.
+
+----->o-----
+KHO, Boot Time & HugeTLB Preservation
+
+LSF/MM/BPF Debrief: Pratyush provided an update on the HugeTLB
+preservation talk. The consensus is that VFS hooks must be made aware of
+the freezing process. Generic fallocate and setattr functions will be
+updated to return errors up the stack immediately, rather than requiring
+individual filesystems to handle freezing logic.
+
+Boot Time Performance: The struct page initialization patch is ready for
+the upcoming merge window. Broader boot time optimizations (like
+refactoring the buddy memory allocator) remain a future project.
+
+HugeTLB Preservation: Progress is currently gated by the I/O freezing
+work and the fallback allocation strategy (which helps the kernel
+discover free memory ranges lacking preserved pages for HugeTLB
+allocation). Pratyush has requested reviews to unblock this.
+
+----->o-----
+VFIO, PCI Core, & IOMMU Persistence
+
+PCI Core: David Matlack sent v5 last week and is planning to send v6 this
+week after incorporating recent feedback. He is currently awaiting
+reviews from Bjorn on the refactored code.
+
+IOMMU Persistence: Samiullah Khawaja noted that v2 of the series
+received positive feedback from Intel. He is preparing v3 and has also
+submitted related series for VFIO self-tests and DMA lock preservation.
+
+IOMMU Development Roadmap:
+Samiullah outlined the following milestones, noting that
+architecture-specific streams can run in parallel once foundational hooks
+land:
+
+Milestone 1 (Foundations): Intel IOMMU state persistence.
+
+Milestone 2 (Multi-Arch): ARM SMMU persistence; Intel 2nd stage
+hitless domain replacement.
+
+Milestone 3 (PASID): PASID support across core and driver components.
+
+Milestone 4 (Virtualization): vIOMMU and nested IOMMU virtualization
+(Intel VT-d, then ARM/AMD).
+
+----->o-----
+guest_memfd & Confidential VMs
+
+guest_memfd: The team discussed the guest_memfd HugeTLB enlightenment
+RFC, highlighting challenges with handling shared vs. private mappings
+(since LU currently only supports fully shared guest memory). There is an
+ongoing debate regarding flags and whether one-time creation flags need
+dynamic conversions.
+
+CVMs: We acknowledged that supporting Confidential VMs will act as a
+massive stress test for KVM due to the high volume of 4K page table
+preservations. This topic was tabled for a future meeting.
+
+----->o-----
+Process Memory Persistence (CRIU & Kexec)
+
+Maximilian Heyne presented a PoC using CRIU to preserve process memory
+across a kexec reboot without writing image files to disk, successfully
+keeping 10GB of memory in a memfd.
+
+----->o-----
+Next meeting will be on Monday, June 1 at 8am PDT (UTC-7), everybody is
+welcome: https://meet.google.com/rjn-dmzu-hgq
+
+Topics for the next meeting:
+- Vipin and David Matlack roadmap for PCI and VFIO changes to solicit
+  upstream feedback
+- Status of I/O freezing implementations and HugeTLB fallback allocation
+  patches
+- PCI core changes v6 review and next steps
+- IOMMU persistence v3 and roadmap progress
+- Updates on vm_splice investigations for CRIU memory preservation
+- later: KHO support for Confidential VMs including page table
+  preservation and pinning
+- later: versioning support for luo to negotiate
+- later: KHO enlightenment for ASI
+- later: testing methodology to allow downstream consumers to qualify
+  that live update works from one version to another
+- later: reducing blackout window during live update
 
