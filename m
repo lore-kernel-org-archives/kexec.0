@@ -4,73 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D84BFCD5BD0
-	for <kexec@archiver.kernel.org>; Tue, 26 May 2026 12:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2856ECD5BC8
+	for <kexec@archiver.kernel.org>; Tue, 26 May 2026 15:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=RmDJAqGKM/ksShAqBTWgLgvF5EBn9yG49TTpjD3uJ+Y=; b=wJg5X11C6vyUik4YD0KVHOMHtc
-	9Q1fG8bq73bwIE73zXZbraivFeoYQJan9Csgr7rfEcG8iqysViB7mcU/Jx9LzS96XWHDgAShX6L9Z
-	uLQh9wfugR9C9/vdTv0hXs/Q4HEB6fbuADGv4mv+tDgVD2ksZKdmH4w3F7pTcihoiOJNKG0jEM9m7
-	ilr9TCztsBXFI1BNT30Y5NdzYJuLDH48WM8G15CNc+zag6lhYPBUsS4xgAMU3nKMa+ni/zFJN+MUw
-	LkldsqaJzBkVv+koz6BQ5ufeKFu1/aPpGtBZgDuPWJCCVdlu5xpp7BYX7OVgVEaFc41DUCofN4CFB
-	IWOhFx2g==;
+	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=yXJHT/nl7RJyzhR5KfCpyXi9LiUdlUUFWLId5lh91pI=; b=g0LadXKbxP+hhipKXlkgYN9NNz
+	IgiP3jU7vC/JOWxlUXFH/gVPpE2kl1bQtSrCleeHPWPva+thAcKrOQQaIJ1bJkP/vfDkgYRkngKoS
+	CC2not3OWBe36W/i9NGyYnX4zdyE6PK2k8Iu1j8A9MWO0T8zGiY3UhOjldWIpNFv0cxbhZitJP05W
+	MXYm9CXBh8JyyfuLRNINHtYTytkEK4dck2KCttn6/Hxdf6BmFdBlES1w2Arhh2mcNNdL2ai45QjBu
+	BhGg/9bvK05R4SQjfRLUia/wNjfmshMb8RfI5Hi5VBUtrFWEZbSD+ml2GPDg9L34oqsB3sK/NCsrr
+	gVS8LYsg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wRrFA-00000001xyB-1hVs;
-	Tue, 26 May 2026 12:50:48 +0000
-Received: from out30-118.freemail.mail.aliyun.com ([115.124.30.118])
+	id 1wRtXI-00000002LFW-3rQB;
+	Tue, 26 May 2026 15:17:40 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wRrEw-00000001xfe-2aD8;
-	Tue, 26 May 2026 12:50:36 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1779799831; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=RmDJAqGKM/ksShAqBTWgLgvF5EBn9yG49TTpjD3uJ+Y=;
-	b=dKK6B1RDu+2d8sU5TLuJAL+N8LDRj2/tOMMDkQo8iaPuuZ5+wUfa3tu/VHRZKi0TvjsXaGgFnq70uk81vwNQwlAnw/uPuNtN64l92qdvJDSh8RJPeG+6p58NBBCfPegP3zYiXdgh7kbudJ/CTs2DicURgZIOm7N0KgauhUJ1e0Y=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=fangyu.yu@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0X3gDNLy_1779799821;
-Received: from localhost.localdomain(mailfrom:fangyu.yu@linux.alibaba.com fp:SMTPD_---0X3gDNLy_1779799821 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 26 May 2026 20:50:22 +0800
-From: fangyu.yu@linux.alibaba.com
-To: Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Nick Kossifidis <mick@ics.forth.gr>
-Cc: Song Shuai <songshuaishuai@tinylab.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Richard Lyu <richard.lyu@suse.com>,
-	Nam Cao <namcao@linutronix.de>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	guoren@kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	kvm-riscv@lists.infradead.org,
-	kvm@vger.kernel.org,
-	Fangyu Yu <fangyu.yu@linux.alibaba.com>
-Subject: [PATCH v2 5/7] riscv: kexec: Always build the trampoline page table
-Date: Tue, 26 May 2026 20:50:07 +0800
-Message-Id: <20260526125009.2404-6-fangyu.yu@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20260526125009.2404-1-fangyu.yu@linux.alibaba.com>
-References: <20260526125009.2404-1-fangyu.yu@linux.alibaba.com>
+	id 1wRtXG-00000002LFE-45kW
+	for kexec@bombadil.infradead.org;
+	Tue, 26 May 2026 15:17:38 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
+	:Message-ID:Date:Subject:To:From:Sender:Reply-To:Cc:Content-Type:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=yXJHT/nl7RJyzhR5KfCpyXi9LiUdlUUFWLId5lh91pI=; b=BhdiHvp5//Rbb6uVHLIW6svevL
+	UFdrWWvcXianolBI0VvVdHzlRgp2EPXB5Lmzy4rhGMsFCZaoQMtScSsarl03Qt6wNH2AX4tt3elGd
+	K+gZ2kTYNUoMqIl7wpx/xYX+INivUDuS+bIUQQTz6kb3h0R3Ia0Iv44skN6aMBcZqHNYW6bCr+gPM
+	qPc69117xOyiNtF4QMEnrc0lJoihiHLIbQ+WPYuTt8gx/wu/syfdHLSh1zbdNJegt0AlqpQpICFYf
+	R6efEDY9RmB9syTw+Jf0UgeKKIk5vPwWP5s1xHH67gk54VcWJX67pEkE8So3ABMZLxvp/fz2172BR
+	4mscD1xQ==;
+Received: from linux.microsoft.com ([13.77.154.182])
+	by desiato.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wRtXD-0000000Berc-1xEQ
+	for kexec@lists.infradead.org;
+	Tue, 26 May 2026 15:17:37 +0000
+Received: from alhe-dev-ub.waqitnwczulubdoacjva2kqlvd.phxx.internal.cloudapp.net (unknown [134.33.52.9])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 0602E20B7167
+	for <kexec@lists.infradead.org>; Tue, 26 May 2026 08:17:14 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0602E20B7167
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1779808635;
+	bh=yXJHT/nl7RJyzhR5KfCpyXi9LiUdlUUFWLId5lh91pI=;
+	h=From:To:Subject:Date:From;
+	b=SVeiUvrRvL2olN2ncYKY5o9ChWPsc/pBYeLlZ7BJyU1QB073AJegnwPUN7AFad2UW
+	 a8NcaFzsdJX3d+UNbC63uzyH6dC+MpLJSsN3SLlAa5Rsc3HSOs3YqHcTHXtgukVKbt
+	 XIeW7kvVB53GSNiDw+gmj/C0z2TATPJlJSApXvNU=
+From: Alejandro Hernandez <alhe@linux.microsoft.com>
+To: kexec@lists.infradead.org
+Subject: [PATCH v2] kexec: restore functionality to preserve fd xattrs for uncompressed kernel images
+Date: Tue, 26 May 2026 15:17:14 +0000
+Message-ID: <20260526151714.4181388-1-alhe@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260526_055034_862857_109A3CE0 
-X-CRM114-Status: GOOD (  11.39  )
+X-CRM114-CacheID: sfid-20260526_161736_003138_A93E60F9 
+X-CRM114-Status: GOOD (  18.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,67 +78,106 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Fangyu Yu <fangyu.yu@linux.alibaba.com>
+Since commit 714fa115 xattrs attached to a kernel image file (such as IMA
+signatures) are not being preserved, do_kexec_file_load() was modified to use
+memfd_create() which now passes an anonymous file descriptor to
+kexec_file_load(). This change eliminated the filesystem inode identity of the
+original kernel file, hence attributes are no longer visible to the kernel IMA
+appraisal handler during kexec_file_load, causing IMA policy enforcement to fail
+even for validly signed kernel images.
 
-The trampoline page table and the kexec_tramp_satp value are
-currently built only on the crash path. A follow-up patch needs
-the same infrastructure for the normal kexec path.
+This patch attempts to restore such behavior although, only does it for
+uncompressed kernel images. To do this, we first figure out if the image file is
+compressed or not and call each method accordingly.
 
-Pull the trampoline build and the WRITE_ONCE() that publishes the
-SATP value out of the crash-only else branch in
-machine_kexec_prepare(). The crash path keeps recording its own
-riscv_kexec_norelocate_pa; the normal path keeps its existing
-control_code_buffer copy.
+Compressed images continue to use memfd and cannot carry forward the original fd
+security attributes, since their decompressed bytes do not match the signed
+artifact. Proper handling of compressed images with IMA would require either
+signing the decompressed artifact or kernel-side support for decompression
+within the kexec_file_load path.
 
-No functional change.
-
-Signed-off-by: Fangyu Yu <fangyu.yu@linux.alibaba.com>
+Signed-off-by: Alejandro Hernandez Samaniego <alhe@linux.microsoft.com>
 ---
- arch/riscv/kernel/machine_kexec.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ kexec/kexec.c | 42 +++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 35 insertions(+), 7 deletions(-)
 
-diff --git a/arch/riscv/kernel/machine_kexec.c b/arch/riscv/kernel/machine_kexec.c
-index 00fdc42d650d..556b76bcf96e 100644
---- a/arch/riscv/kernel/machine_kexec.c
-+++ b/arch/riscv/kernel/machine_kexec.c
-@@ -119,6 +119,16 @@ machine_kexec_prepare(struct kimage *image)
- 		return -EINVAL;
- 	}
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 08edfca..68f23dc 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -1305,6 +1305,8 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
+ 	int ret = 0;
+ 	char *kernel_buf;
+ 	off_t kernel_size;
++	struct stat kernel_stat;
++	off_t kernel_file_size = -1;
  
-+	/*
-+	 * Build the trampoline page table and capture its SATP value.
-+	 * The crash path consumes it today; the non-crash kexec path
-+	 * will use the same setup as well.
-+	 */
-+	riscv_kexec_build_tramp((unsigned long)__kexec_tramp_text_start,
-+				__pa_symbol(__kexec_tramp_text_start));
-+	WRITE_ONCE(kexec_tramp_satp,
-+		   PFN_DOWN(__pa_symbol(kexec_tramp_pgd)) | satp_mode);
+ 	memset(&info, 0, sizeof(info));
+ 	info.segment = NULL;
+@@ -1328,17 +1330,39 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
+ 
+ 	kernel = argv[fileind];
+ 
+-	/* slurp in the input kernel */
++       /* Hold original fd with its xattrs */
++	kernel_fd = open(kernel, O_RDONLY);
++	if (kernel_fd == -1) {
++		fprintf(stderr, "Failed to open file %s:%s\n", kernel,
++				strerror(errno));
++		return EFAILED;
++	}
 +
- 	/* Copy the assembler code for relocation to the control page */
- 	if (image->type != KEXEC_TYPE_CRASH) {
- 		control_code_buffer = page_address(image->control_code_page);
-@@ -135,19 +145,8 @@ machine_kexec_prepare(struct kimage *image)
- 		/* Mark the control page executable */
- 		set_memory_x((unsigned long) control_code_buffer, 1);
- 	} else {
--		/*
--		 * Crash kexec uses riscv_kexec_norelocate as a trampoline.
--		 * Pre-build the trampoline page tables and capture the
--		 * trampoline SATP value plus the physical address of
--		 * riscv_kexec_norelocate so that the panic path only has
--		 * to switch satp and jump.
--		 */
--		riscv_kexec_build_tramp((unsigned long)__kexec_tramp_text_start,
--					__pa_symbol(__kexec_tramp_text_start));
- 		WRITE_ONCE(riscv_kexec_norelocate_pa,
- 			   __pa_symbol(&riscv_kexec_norelocate));
--		WRITE_ONCE(kexec_tramp_satp,
--			   PFN_DOWN(__pa_symbol(kexec_tramp_pgd)) | satp_mode);
++	/* Compressed vs Uncompressed */
++	if (fstat(kernel_fd, &kernel_stat) == 0)
++		kernel_file_size = kernel_stat.st_size;
++
++        /* slurp in the input kernel */
+ 	kernel_buf = slurp_decompress_file(kernel, &kernel_size);
+ 	if (!kernel_buf) {
+ 		fprintf(stderr, "Failed to decompress file %s:%s\n", kernel,
+ 				strerror(errno));
++		close(kernel_fd);
+ 		return EFAILED;
+ 	}
+-	kernel_fd = copybuf_memfd(kernel_buf, kernel_size);
+-	if (kernel_fd < 0) {
+-		fprintf(stderr, "Failed to copy decompressed buf\n");
+-		return EFAILED;
++
++	if (kernel_file_size != kernel_size) {
++		close(kernel_fd);
++		kernel_fd = copybuf_memfd(kernel_buf, kernel_size);
++		if (kernel_fd < 0) {
++			fprintf(stderr, "Failed to copy decompressed buf\n");
++			return EFAILED;
++		}
++		dbgprintf("%s: compressed input, using memfd kernel fd %d\n",
++			  __func__, kernel_fd);
++	} else {
++		dbgprintf("%s: using original kernel file fd %d\n",
++			  __func__, kernel_fd);
  	}
  
- 	return 0;
+ 	for (i = 0; i < file_types; i++) {
+@@ -1361,11 +1385,15 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
+ 	}
+ 
+        /*
+-	* image type specific load functioin detect the capsule kernel type
++	* image type specific load function detect the capsule kernel type
+ 	* and create another fd for file load. For example the zboot kernel.
+ 	*/
+-	if (info.kernel_fd != -1)
++	if (info.kernel_fd != -1) {
++		dbgprintf("%s: using image-specific kernel fd %d\n",
++			  __func__, info.kernel_fd);
++		close(kernel_fd);
+ 		kernel_fd = info.kernel_fd;
++	}
+ 
+ 	/*
+ 	 * If there is no initramfs, set KEXEC_FILE_NO_INITRAMFS flag so that
 -- 
-2.50.1
+2.43.0
 
 
