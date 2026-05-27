@@ -4,91 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 12924CD4F54
-	for <kexec@archiver.kernel.org>; Wed, 27 May 2026 07:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 06DADCD4F54
+	for <kexec@archiver.kernel.org>; Wed, 27 May 2026 08:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=KZb+3VL3Tdj6KXmr/Gl2VfCXYL/H+zHDAxXTGV9/oRQ=; b=GIJWgt7c8qNVUmKTnSjUhVzCCS
-	p4ysohQWJwr2LqlWwjmhFUWlCACp56YWqZ6+lMRjlX+ASL6xC0EgTcec0+zjgToBbpwXwdIEnMS7o
-	ceyr/cVQiCTVBlvR/0Q5M3fv2TnApzXHwOAV+fdx7YDbkNxxupIUBr5OESi7NvMQuMA8fKSW/NmJD
-	asxUPZnjC3e3Q940OX6hHDxMj1JmBoQusVgM8dK5hFOWI9GGUqTrbdirXYRea9rFHSSqO/7AfzAQs
-	YEfLbvpsudiJRDfhV7Ty9C6VafCrQw068zPKkHVa8pDnuudEDUCMrSapuuG6MgFCSpPBnUgmyXui2
-	VSoYzkMA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Subject:Cc:To:
+	From:Mime-Version:Date:References:In-Reply-To:Message-ID:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=zj5onQORcwTcXqGaMlslqUfVIKyafxiuDV0ciH4VDSI=; b=pR0hHIW3vENc/uR1l+11cSRWWV
+	5Z3uwbI+fh+LmBpHfsVTLROzqcNqcnPN/h7bLhmpqWwzj/weEdTNYpMV50Mq2U5t+XPvuYKNpLDW6
+	5fTY85wKmxhLzY+Zv9lHG2EMi9GzF7f7H44zox0LCEmuTBz/Uuvs4xzdlDJAwBBtO+78vf+bPmZrB
+	IXozWp/KjOmhnEeb05hUCNDpDUWz/6unsaOWy4vtvGVQcejlRQ3nZHxDhczR5k23MEUnXEqene2zE
+	n7sTWvTypYpVZKK23QnKr5Hm++wR/1S0tQnlO0+O2Fq/OESS/XakDRlghMM5ux+wc7OP/tq0x9NEt
+	KxrNmf6w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wS94P-00000003Uch-3neC;
-	Wed, 27 May 2026 07:52:53 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1wS9TJ-00000003X58-1qNw;
+	Wed, 27 May 2026 08:18:37 +0000
+Received: from mxhk.zte.com.cn ([160.30.148.34])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wS94N-00000003UcI-0CzN
+	id 1wS9TD-00000003X3y-1vQ7
 	for kexec@lists.infradead.org;
-	Wed, 27 May 2026 07:52:52 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779868368;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KZb+3VL3Tdj6KXmr/Gl2VfCXYL/H+zHDAxXTGV9/oRQ=;
-	b=UDCU/GicPVEhHqFaqGjRCbEdQA/YE70GG5N4XnfDGeO5sdK4Ja86lx8n/5NDn1sVeLrqEC
-	Lhgl8KZltbaAGToflPkRAyh0s3Tm7AnTa4UyZQhYtEbijfpgsF5DNHqzPxBA35MinvJi51
-	PzjhTRCE+MwV3VCsI0l7Oqv49hc0qLo=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-629-ovsKi2ZRNk-ynjfTkZdIvA-1; Wed, 27 May 2026 03:52:46 -0400
-X-MC-Unique: ovsKi2ZRNk-ynjfTkZdIvA-1
-X-Mimecast-MFC-AGG-ID: ovsKi2ZRNk-ynjfTkZdIvA_1779868366
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-5165d10e036so199652051cf.3
-        for <kexec@lists.infradead.org>; Wed, 27 May 2026 00:52:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779868366; x=1780473166;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=KZb+3VL3Tdj6KXmr/Gl2VfCXYL/H+zHDAxXTGV9/oRQ=;
-        b=ixJDGY4zpK42X9zCf7wqYrg47O+PGGc+Er2c1H6Qc8icn/8nkmjW7Ns1pbX04H5mcR
-         6fzAVOY8IHptfVmoY/bg+WpUb6VN5YGtGJ9kkiYAsgWZl+TwMp36Ggm6k0w3yoNAq0S2
-         C9vVhlzQ4OkU32eHE9JNHl7jayrxaAoYONJdNIy6pZc/DrEIj+AK+Mrs8Sh3APED5j/3
-         RlfuYdsqOP7cRcOi42imKZf2+tjVU4GC5kWkC5ZXwfzAa1ySm/iFDgfmn8swM2a0RZY9
-         iizoOH9q3cKcbO5DavNsGfVDa4upfm+pgYVU/W+SCBjTKQXrKE6JKWyTMnEO5OQvqUVZ
-         Ph9Q==
-X-Gm-Message-State: AOJu0Yw1NEmaRkI9dgNto/vyC4ayNDY4L+A5wJaAqcfTTgCQgdW2qFNb
-	m/NEsVjpuomWdUQHcqXBlL8bOwIroiNpZdlYnem2oy1fq8cdWZM46xR3Jf5d2vK9wWkVNKOWNOd
-	qyxKwhndDDPhZwOFUOWaX9WzgPwiOVLdwN0tUfLvBG+/KGBheIGkdJBmgacZPSYRuY57adgs6dI
-	hKAWdQVjoRCMRSwqUG8D3whXhwK1nNSx2vVlM6YscFQyabOEs=
-X-Gm-Gg: Acq92OEPhz2FgaYmDPiduybysiRuw39OmdRbVfFyLwhv2exwwLyh/XhAMsbAMdeTme5
-	abzgcfMYaHsNtdtSF4Fwl2GxcSHqR6vwhRh1zvjfHhj412WarTJMVwbeN6W1yO72SSVgzQtCvOv
-	+A8jlN0vJUI2I6vTUQAEwjK8LXxYIyUKhRvK3FlkJe8DbDnCCQdVt0vGGiXLUysoOoyKW6tm85+
-	s7uSqUGuGDa7kg=
-X-Received: by 2002:a05:622a:1a8c:b0:516:dc6d:acd0 with SMTP id d75a77b69052e-516dc6db837mr262107111cf.29.1779868365619;
-        Wed, 27 May 2026 00:52:45 -0700 (PDT)
-X-Received: by 2002:a05:622a:1a8c:b0:516:dc6d:acd0 with SMTP id
- d75a77b69052e-516dc6db837mr262106931cf.29.1779868364965; Wed, 27 May 2026
- 00:52:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20260526045806.23933-2-ltao@redhat.com> <20260527074112.GB51310@horms.kernel.org>
- <20260527074239.GD51310@horms.kernel.org>
-In-Reply-To: <20260527074239.GD51310@horms.kernel.org>
-From: Tao Liu <ltao@redhat.com>
-Date: Wed, 27 May 2026 19:52:08 +1200
-X-Gm-Features: AVHnY4IDoMC_L4AdOLQQ5xTH8aFSEHcbjeDUhTLfBlGU32ki5ZfY7g5lvi0leAI
-Message-ID: <CAO7dBbW2ECfKHt18-B7LUYaJgTe8wvun3ccoSSbMkG8LynZ4bw@mail.gmail.com>
-Subject: Re: [kexec-tools][PATCH] RISC-V: add kexec_load support for vmlinuz
-To: Simon Horman <horms@kernel.org>
-Cc: kexec@lists.infradead.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: eKXly07A86QQesDoQ3jLniuM1uzoAkqsVQVzZnJ3oCY_1779868366
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	Wed, 27 May 2026 08:18:33 +0000
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4gQMvK1jRwz5B102;
+	Wed, 27 May 2026 16:18:21 +0800 (CST)
+Received: from szxlzmapp02.zte.com.cn ([10.5.231.79])
+	by mse-fl1.zte.com.cn with SMTP id 64R8IExe098640;
+	Wed, 27 May 2026 16:18:14 +0800 (+08)
+	(envelope-from luo.haiyang@zte.com.cn)
+Received: from mapi (szxl2zmapp07[null])
+	by mapi (Zmail) with MAPI id mid18;
+	Wed, 27 May 2026 16:18:16 +0800 (CST)
+X-Zmail-TransId: 2b096a16a8c89b8-1f6ba
+X-Mailer: Zmail v1.0
+Message-ID: <20260527161816860TEMFvictPcT54b-t7QAFz@zte.com.cn>
+In-Reply-To: <20260527072709.GA51310@horms.kernel.org>
+References: 20260521120643491yZJMsKq2fLbFcvtV5ukN1@zte.com.cn,20260521120946097C8qpZkVC2mBT_ozYEHlhp@zte.com.cn,20260527072709.GA51310@horms.kernel.org
+Date: Wed, 27 May 2026 16:18:16 +0800 (CST)
+Mime-Version: 1.0
+From: <luo.haiyang@zte.com.cn>
+To: <horms@kernel.org>
+Cc: <kexec@lists.infradead.org>, <zhang.run@zte.com.cn>, <cai.qu@zte.com.cn>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2NCAyLzRdIFJJU0NWOiBGaXggaW5jb3JyZWN0IHZpcnR1YWwgYWRkcmVzcyB0cmFuc2xhdGlvbiBpbiBjcmFzaGR1bXAgbG9hZA==?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL: mse-fl1.zte.com.cn 64R8IExe098640
+X-TLS: YES
+X-SPF-DOMAIN: zte.com.cn
+X-ENVELOPE-SENDER: luo.haiyang@zte.com.cn
+X-SPF: None
+X-SOURCE-IP: 10.5.228.132 unknown Wed, 27 May 2026 16:18:21 +0800
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6A16A8CD.000/4gQMvK1jRwz5B102
+X-Bad-Reply: References and In-Reply-To but no 'Re:' in Subject.
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260527_005251_153847_0CF908B4 
-X-CRM114-Status: GOOD (  11.40  )
+X-CRM114-CacheID: sfid-20260527_011831_802338_B881E5C9 
+X-CRM114-Status: GOOD (  15.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,31 +79,187 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Simon,
+From: Luo Haiyang <luo.haiyang@zte.com.cn>
 
-On Wed, May 27, 2026 at 7:42=E2=80=AFPM Simon Horman <horms@kernel.org> wro=
-te:
->
-> On Wed, May 27, 2026 at 08:41:12AM +0100, Simon Horman wrote:
-> > On Tue, May 26, 2026 at 04:58:07PM +1200, Tao Liu wrote:
-> > > Copy arm64 code and change for riscv so that the kexec -c can load
-> > > a vmlinuz image.
-> > >
-> > > Signed-off-by: Tao Liu <ltao@redhat.com>
-> >
-> > Thanks, applied.
->
-> ... here:
->
-> - RISC-V: add kexec_load support for vmlinuz
->   https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commi=
-t/?id=3D771e89dc104e
+The kexec shows the following crashdump log:
 
-Thanks a lot for that! :)
+  Elf header: p_type = 1, p_offset = 0x80100000 p_paddr = 0x80100000 p_vaddr = 0xcff000 ...
+  Elf header: p_type = 1, p_offset = 0x100000000 p_paddr = 0x100000000 p_vaddr = 0x80bff000 ...
+  Elf header: p_type = 1, p_offset = 0x87ffff000 p_paddr = 0x87ffff000 p_vaddr = 0x800bfe000 ...
 
-Thanks,
-Tao Liu
+Obviously, phys_to_virt returns an incorrect virtual address (vaddr). On the RISC-V architecture,
+the linear address mapping is defined as:
+  va = pa + kernel_map.va_pa_offset (kernel_map.va_pa_offset = PAGE_OFFSET - phys_ram_base)
+Both PAGE_OFFSET and phys_ram_base can be read from /proc/kcore.
 
->
+Signed-off-by: Luo Haiyang <luo.haiyang@zte.com.cn>
+---
+ kexec/arch/riscv/Makefile          |  2 ++
+ kexec/arch/riscv/crashdump-riscv.c | 55 ++++++++++++++++++++++++------
+ util_lib/elf_info.c                | 41 +++++++++++++++++-----
+ util_lib/include/elf_info.h        |  1 +
+ 4 files changed, 80 insertions(+), 19 deletions(-)
 
+diff --git a/kexec/arch/riscv/Makefile b/kexec/arch/riscv/Makefile
+index 18a997b..e886770 100644
+--- a/kexec/arch/riscv/Makefile
++++ b/kexec/arch/riscv/Makefile
+@@ -14,6 +14,8 @@ riscv_ARCH_REUSE_INITRD =
+
+ riscv_CPPFLAGS += -I $(srcdir)/kexec/
+
++riscv_PHYS_TO_VIRT =
++
+ dist += $(riscv_KEXEC_SRCS)				\
+ 	kexec/arch/riscv/image-header.h			\
+ 	kexec/arch/riscv/include/arch/options.h		\
+diff --git a/kexec/arch/riscv/crashdump-riscv.c b/kexec/arch/riscv/crashdump-riscv.c
+index e923a71..6875249 100644
+--- a/kexec/arch/riscv/crashdump-riscv.c
++++ b/kexec/arch/riscv/crashdump-riscv.c
+@@ -1,5 +1,6 @@
+ #include <errno.h>
+ #include <elf.h>
++#include <elf_info.h>
+ #include <unistd.h>
+
+ #include "kexec.h"
+@@ -22,18 +23,45 @@ static struct memory_ranges crash_mem_ranges = {0};
+ static struct memory_ranges system_mem_ranges = {0};
+ struct memory_range elfcorehdr_mem = {0};
+
+-static unsigned long long get_page_offset(struct kexec_info *info)
++static unsigned long long phys_offset;
++
++static int get_page_offset(unsigned long long *page_offset)
+ {
+-	unsigned long long vaddr_off = 0;
+-	unsigned long long page_size = sysconf(_SC_PAGESIZE);
+-	unsigned long long init_start = get_kernel_sym("_sinittext");
++	int fd, ret = 0;
+
+-	/*
+-	 * Begining of init section is aligned to page size
+-	 */
+-	vaddr_off = init_start - page_size;
++	if ((fd = open("/proc/kcore", O_RDONLY)) < 0) {
++		fprintf(stderr, "Can't open (%s).\n", "/proc/kcore");
++		return EFAILED;
++	}
++
++	ret = read_page_offset_elf_kcore(fd, (long *)page_offset);
++	if (ret)
++		fprintf(stderr, "Can't get page_offset from /proc/kcore\n");
++
++	close(fd);
++	return ret;
++}
++
++static int get_phys_offset(unsigned long long *phys_offset)
++{
++	int fd, ret = 0;
++
++	if ((fd = open("/proc/kcore", O_RDONLY)) < 0) {
++		fprintf(stderr, "Can't open (%s).\n", "/proc/kcore");
++		return EFAILED;
++	}
++
++	ret = read_phys_offset_elf_kcore(fd, (long *)phys_offset);
++	if (ret)
++		fprintf(stderr, "Can't get phys_offset from /proc/kcore\n");
+
+-	return vaddr_off;
++	close(fd);
++	return ret;
++}
++
++unsigned long phys_to_virt(struct crash_elf_info *elf_info, unsigned long long p)
++{
++	return elf_info->page_offset - phys_offset + p;
+ }
+
+ /*
+@@ -124,7 +152,14 @@ int load_elfcorehdr(struct kexec_info *info)
+ 	if (crash_get_memory_ranges())
+ 		return EFAILED;
+
+-	elf_info.page_offset = get_page_offset(info);
++	if (get_phys_offset(&phys_offset))
++		return EFAILED;
++
++	dbgprintf("phys_offset:   %016llx\n", phys_offset);
++
++	if (get_page_offset(&elf_info.page_offset))
++		return EFAILED;
++
+ 	dbgprintf("page_offset:   %016llx\n", elf_info.page_offset);
+
+ #if __riscv_xlen == 64
+diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
+index 589bc1a..36eb895 100644
+--- a/util_lib/elf_info.c
++++ b/util_lib/elf_info.c
+@@ -1308,16 +1308,39 @@ int read_phys_offset_elf_kcore(int fd, long *phys_off)
+
+ 	*phys_off = ULONG_MAX;
+
++	if (phys_offset != UINT64_MAX) {
++		*phys_off = phys_offset;
++		return 0;
++	}
++
++	/* If we have a valid 'PHYS_OFFSET' by now,
++	 * return it to the caller now.
++	 */
+ 	ret = read_elf(fd);
+-	if (!ret) {
+-		/* If we have a valid 'PHYS_OFFSET' by now,
+-		 * return it to the caller now.
+-		 */
+-		if (phys_offset != UINT64_MAX) {
+-			*phys_off = phys_offset;
+-			return ret;
+-		}
++	if (!ret && phys_offset != UINT64_MAX) {
++		*phys_off = phys_offset;
++		return 0;
++	}
++
++	return -EFAULT;
++}
++
++int read_page_offset_elf_kcore(int fd, long *page_off)
++{
++	int ret;
++
++	*page_off = ULONG_MAX;
++
++	if (page_offset != UINT64_MAX) {
++		*page_off = page_offset;
++		return 0;
++	}
++
++	ret = read_elf(fd);
++	if (!ret && page_offset != UINT64_MAX) {
++		*page_off = page_offset;
++		return 0;
+ 	}
+
+-	return 2;
++	return -EFAULT;
+ }
+diff --git a/util_lib/include/elf_info.h b/util_lib/include/elf_info.h
+index fdf4c3d..3ccc950 100644
+--- a/util_lib/include/elf_info.h
++++ b/util_lib/include/elf_info.h
+@@ -29,6 +29,7 @@ int get_pt_load(int idx,
+ 	unsigned long long *virt_start,
+ 	unsigned long long *virt_end);
+ int read_phys_offset_elf_kcore(int fd, long *phys_off);
++int read_page_offset_elf_kcore(int fd, long *page_off);
+ int read_elf(int fd);
+ void dump_dmesg(int fd, void (*handler)(char*, unsigned int));
+ extern void (*arch_scan_vmcoreinfo)(char *pos);
+-- 
+2.27.0
 
