@@ -4,86 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8E662CD4F54
-	for <kexec@archiver.kernel.org>; Wed, 27 May 2026 17:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 33449CD5BD0
+	for <kexec@archiver.kernel.org>; Wed, 27 May 2026 17:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=1GcOO2GPQK8jdA6YOoDMMrcpIA56zbk0ZcDAGkYIqsw=; b=fD8OjZUMDb0nlMDpta47GC4oZp
-	J48pJZPaPlVv5SKGIpc41EFQiNjK0lJum9df0opFiBTfiM+d8D2+ycVb3fcODetkHH+HI+x43iTDc
-	K3pHYYWcMnV9Jr6Ol/O5Yjpjtc0XJX+gdJueuiTpTw066+DiVq5ONBwflpU7NtEMLgjFX4Pdc9Bq8
-	xQIAUwrKDN0VaNpkQdlH+ROPnf1j6rJKMr+SlOTnqCZzXG8oEI7+lEveBLlXvjQBbnobFqgoE1kWs
-	y7TEKEXApfpL9hUTp0HahmmBbJihTiL9bDfF2MLKoj0WGMdiGPpav6Bz1Cbt5v4zl0rwG494OEAS4
-	aq+nNvpw==;
+	bh=rBSXiIFXNgXvoNV6rzPUz8xexiPcAz++SKcaTtvcXf4=; b=XOSAZP4Y8TwlzvsrJgN0FQbQEv
+	a+G7Ya03pKffoMhnIxbDLIbl8s1+v1+rZ1tGeNVQGdM0CM+lt/4Avu/PGgHzRj7/xWuCTVZbaGtnM
+	yGrv+1hujJWvmvC2/JrYIuHpJ98QCTmrQGTBVfi8nx3txMMKp+NL/Vr3kke0q1fWXA0nn3/KydcVM
+	5cWtx0Y/HboW+9ploncQCIrjG2TYvIGeftW4oo19uTCS06NPsIhARSnboN5s+3GIQPx2LxCempkBF
+	iL6SHyjOsjR9WaEsSKAJryguGd58uzidSpqfMAEljNX5cfkonRtOZq4M/DwnpCgVMQ0yTnmpE1FRQ
+	b9N3FSJA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wSHhA-00000004Yz9-45KC;
-	Wed, 27 May 2026 17:05:28 +0000
-Received: from mail-qk1-x736.google.com ([2607:f8b0:4864:20::736])
+	id 1wSHvo-00000004Zjt-3Dwy;
+	Wed, 27 May 2026 17:20:36 +0000
+Received: from mgamail.intel.com ([192.198.163.14])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wSHh8-00000004YyL-1SDs
+	id 1wSHvm-00000004Zj6-0GLx
 	for kexec@lists.infradead.org;
-	Wed, 27 May 2026 17:05:27 +0000
-Received: by mail-qk1-x736.google.com with SMTP id af79cd13be357-914bf8abeaeso427383385a.0
-        for <kexec@lists.infradead.org>; Wed, 27 May 2026 10:05:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1779901525; x=1780506325; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1GcOO2GPQK8jdA6YOoDMMrcpIA56zbk0ZcDAGkYIqsw=;
-        b=f+MMx9+CmLRV2UNMN00FVOh8+iwTEG1/iBLHE44by9s1vxbxGKu4q0Nf8JZsC/1gsc
-         T2VFG6RJycNgRYKwVXYpLaWZb30kZddn0qf7e+gE9TO/MqX2YgYe+qHHq14V3l17sFFx
-         +xZAnqf6UEGh+MS65deFFozG2BJf29f64aaLxI8gCpVIvzJPP5fSXINOgKvEbOYrUL87
-         qJEfpkcL/mQpW8tMUD+XqMlvQeARbAanKrz+fyBzRvmhk9YcqtC589s0DAn+p79b2JqO
-         zY4i/85/eqeIAHX6p88+1OBYApjjhPjcVeBGdFHrXaCWm3pZxhuGdijZZJH9pcvam7WE
-         q8tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779901525; x=1780506325;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=1GcOO2GPQK8jdA6YOoDMMrcpIA56zbk0ZcDAGkYIqsw=;
-        b=iGYVfFnWihJyWhA7z5hVsmP3rxhAUfdrCz0Qo4bZpaZ0CyW79LvVLRwgXHA2ud/IqZ
-         ncEETX/44eQJO4qLFIfkWVFZxwVZ8yx6qvy1yBRqYPLKM38u74yMFhamtkgHYCA3SWw1
-         OIKnwbkWOzuRokHoCt2lFuABlqDBQcSW7cvgNOMOWW98QLmfOGTXoy2vPe/T+UHh70QO
-         BsOuPNw1QshPFBQMxThEgEpXgGQDP687sH8cCtfadonQJCex1kuS5clk6wltij7vzbeS
-         gK1v2f7YYKvh02bn3/fJV3eFXHKftSwkqdE4925QeGY2X0PctGJOZTO/XCJEeZwGq5Zl
-         Td3Q==
-X-Gm-Message-State: AOJu0YxUyy5Zs2zPV4m9uRbtodm3ezp80ykyK1JkCpGRjoxlCj1Zf08B
-	6t0S5vjClFQ57bUJzao7vs83ACMI1fsB3a9zomYmzgkfoldQLnp9ZDVCz2TO10Cfsp/bJHnWH5A
-	qrjoG
-X-Gm-Gg: Acq92OG0RuQqDBzDUAFEk2fxDfR4+SkDLhUcWjWFuZV4VF//SvtzDHTL2DSrHf/hdYA
-	57K65gXssCDIhifAcXHti7B/nSBqmlbhxE6g0gIGyjr6HAbsa+NFSXCM1j4xiMW8lpjrw2fXL1/
-	Lk8L4fWr8Hcuz08Y/P8Vx3OlXLfaIXdY2qhuNQS9Vyy/NupRm07hlJMDY8gWEaIpvkZNzzE0H46
-	0yPGiEUIovoWyiv3R17u6GhqKVe6Diu2ebAgatDoYmMdp6Bm5pvbOiCefCu7XDXRXEQAOVnoGN/
-	gzuEePKMm7FNr2PhrUUVjH4iboXr/9rz4T5d/Mkzgr0QzdN7P6ppoCYGIWBeUHVPP8K7UH5FUok
-	piEddb9oTzy896YMS+xBEh+6KsoOGlPDk//iGxyBMeSkbR0k4RY5SViQ80SbSEXUAJ4VwVTqvCu
-	8dZldKEL5AOshieOpzxUdaT4YaJrrkwg0UT89EtYzM7Tnd3YkOzcLIBJJsjc/XMg==
-X-Received: by 2002:a05:620a:2a08:b0:914:7b4f:cf5b with SMTP id af79cd13be357-914b48e5b0emr3398167485a.16.1779901524976;
-        Wed, 27 May 2026 10:05:24 -0700 (PDT)
-Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-914f86fbce3sm525372285a.11.2026.05.27.10.05.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2026 10:05:24 -0700 (PDT)
-Date: Wed, 27 May 2026 17:05:23 +0000
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: kexec@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Mike Rapoport <rppt@kernel.org>, 
-	David Matlack <dmatlack@google.com>, Alexander Graf <graf@amazon.com>, 
-	Steven Rostedt <rostedt@goodmis.org>
-Subject: [ANNOUNCE/CFP] LPC 2026 Live Update Microconference
-Message-ID: <ahcc3Qyuy7Oy03Iq@plex>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+	Wed, 27 May 2026 17:20:35 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779902434; x=1811438434;
+  h=date:from:to:cc:subject:message-id;
+  bh=qQjUoE6OT9W8V8CpecDNqQPpXP+1el1WW3Sge8+xgeY=;
+  b=XAsRXhB5ATOhzEsA016I7Ziciq7pYK77aaxO8o1abC4YhlJNLgD1cFkO
+   aH3RKtFJ/dX/VaTDCybk29zGYVSQjxfJQRTqnlY0qU2e2i0aqTJyCzdnd
+   0mEzFcM3xNCQWuF8ej2hDQlebc03KiKg+GNzb8xDXYutaGyDrAA5g6Lhy
+   py6xuDcSm0iHH0Q54JEIyi1g7W18aCVFNfE/NvXbDy2wKkeaMup4sGpew
+   3LACPsi7Bp+zK/9/swalxIl5dtAXrOridAl4Dq8iygUw0uRQ4doTfeyhy
+   t5ck/pXaB2Tq8GR43SdbEdY1AntGfKgrUQYZSJklnWGxiBRSuFnyq+LjP
+   Q==;
+X-CSE-ConnectionGUID: jUhCOEO6R0SpRrZ8SqcN9w==
+X-CSE-MsgGUID: UzxI68F9Qp2BhkzPcpqq+w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11799"; a="80772563"
+X-IronPort-AV: E=Sophos;i="6.24,171,1774335600"; 
+   d="scan'208";a="80772563"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 10:20:32 -0700
+X-CSE-ConnectionGUID: 0O4rotYEQPaIuNUJqI0Isg==
+X-CSE-MsgGUID: wk5p3MMtRj6O6p+iOE4eFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,171,1774335600"; 
+   d="scan'208";a="242451572"
+Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 27 May 2026 10:20:31 -0700
+Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wSHvf-000000004GE-12G1;
+	Wed, 27 May 2026 17:20:27 +0000
+Date: Thu, 28 May 2026 01:19:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
+Subject: [liveupdate:fixes] BUILD SUCCESS
+ 3a29a9841f4bfb79840f7d1f8115cc7b25e744e3
+Message-ID: <202605280143.Rnjk00YT-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260527_100526_424495_44FAAEDB 
-X-CRM114-Status: UNSURE (   7.77  )
+X-CRM114-CacheID: sfid-20260527_102034_115148_656BF9DA 
+X-CRM114-Status: UNSURE (   4.08  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -99,62 +84,83 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git fixes
+branch HEAD: 3a29a9841f4bfb79840f7d1f8115cc7b25e744e3  kho: make sure scratch size is always aligned by CMA_MIN_ALIGNMENT_BYTES
 
-The Call for Proposals is now open for the Live Update Microconference 
-[1], taking place at the Linux Plumbers Conference this October 5-7 in 
-Prague [2].
+elapsed time: 1514m
 
-As infrastructure scales, minimizing workload disruption during host 
-updates has become a critical operational requirement. This 
-microconference focuses on the evolving engineering challenges behind 
-seamless software handovers, state preservation, and warm reboots that 
-bypass traditional hardware reset cycles.
+configs tested: 63
+configs skipped: 10
 
-We are seeking technical presentations, and problem statements spanning 
-the entire stack—including kexec optimizations, hypervisor integration, 
-user-space checkpoint/restore, firmware coordination, and device state 
-handovers.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
----
-A few focus areas we hope to cover during this year's sessions include:
----
- * Orphaned Virtual Machine for zer-downtime upgrades.
- * Live Update Orchestrator (LUO) enhancements and architecture
- * Kexec HandOver (KHO) framework advancements
- * Kexec reboot latencies to minimize guest/workload downtime
- * Preserving guest states across live updates (guest_memfd, hugetlb)
- * In-flight DMA, IOMMU tracking, and preservation
- * VFIO device state preservation and live update migration mechanics
- * PCI/PCIe device handovers, reset avoidance, and state restoration
- * Live Update in Confidential Computing (TDX/SEV-SNP)
- * Building robust testing, fuzzing, and validation frameworks for 
-   upgrade paths
+tested configs:
+alpha            allnoconfig    gcc-15.2.0
+alpha           allyesconfig    gcc-15.2.0
+arc             allmodconfig    gcc-15.2.0
+arc              allnoconfig    gcc-15.2.0
+arc             allyesconfig    gcc-15.2.0
+arm              allnoconfig    clang-23
+arm             allyesconfig    gcc-15.2.0
+arm64           allmodconfig    clang-19
+arm64            allnoconfig    gcc-15.2.0
+csky            allmodconfig    gcc-15.2.0
+csky             allnoconfig    gcc-15.2.0
+hexagon         allmodconfig    clang-17
+hexagon          allnoconfig    clang-23
+i386            allmodconfig    gcc-14
+i386             allnoconfig    gcc-14
+i386            allyesconfig    gcc-14
+loongarch       allmodconfig    clang-19
+loongarch        allnoconfig    clang-23
+m68k            allmodconfig    gcc-15.2.0
+m68k             allnoconfig    gcc-15.2.0
+m68k            allyesconfig    gcc-15.2.0
+microblaze       allnoconfig    gcc-15.2.0
+microblaze      allyesconfig    gcc-15.2.0
+mips            allmodconfig    gcc-15.2.0
+mips             allnoconfig    gcc-15.2.0
+mips            allyesconfig    gcc-15.2.0
+nios2           allmodconfig    gcc-11.5.0
+nios2            allnoconfig    gcc-11.5.0
+openrisc        allmodconfig    gcc-15.2.0
+openrisc         allnoconfig    gcc-15.2.0
+openrisc           defconfig    gcc-15.2.0
+parisc          allmodconfig    gcc-15.2.0
+parisc           allnoconfig    gcc-15.2.0
+parisc          allyesconfig    gcc-15.2.0
+powerpc         allmodconfig    gcc-15.2.0
+powerpc          allnoconfig    gcc-15.2.0
+powerpc     arches_defconfig    gcc-15.2.0
+riscv           allmodconfig    clang-23
+riscv            allnoconfig    gcc-15.2.0
+riscv           allyesconfig    clang-16
+s390            allmodconfig    clang-18
+s390             allnoconfig    clang-23
+s390            allyesconfig    gcc-15.2.0
+sh              allmodconfig    gcc-15.2.0
+sh               allnoconfig    gcc-15.2.0
+sh              allyesconfig    gcc-15.2.0
+sh                 defconfig    gcc-15.2.0
+sparc            allnoconfig    gcc-15.2.0
+sparc              defconfig    gcc-15.2.0
+sparc64         allmodconfig    clang-23
+sparc64            defconfig    clang-20
+um              allmodconfig    clang-19
+um               allnoconfig    clang-23
+um              allyesconfig    gcc-14
+um                 defconfig    clang-23
+um            i386_defconfig    gcc-14
+um          x86_64_defconfig    clang-23
+x86_64          allmodconfig    clang-20
+x86_64           allnoconfig    clang-20
+x86_64          allyesconfig    clang-20
+x86_64             defconfig    gcc-14
+x86_64         rhel-9.4-rust    clang-20
+xtensa           allnoconfig    gcc-15.2.0
 
----
-Submission Details & Deadlines:
----
- * CFP Portal: https://lpc.events/event/20/abstracts/
- * Track Selection: "Live Update MC"
- * Deadline: July 24th, 2026
-
-Session Format Reminder:
-LPC sessions are highly interactive working groups, not static lecture 
-slots. Proposals should be designed to introduce a concrete technical 
-challenge quickly and leave substantial time open for real-time debate, 
-consensus-building, and problem-solving with the room. Keep slides 
-focused on architecture and open issues rather than heavy text blocks.
-
-We hope to see you in Prague to help push the live update ecosystem 
-forward.
-
-(Note: LPC attendance caps fill up exceptionally fast. We strongly 
-advise booking your passes early, as track organizers cannot always 
-guarantee speaker registration overrides once the event sells out.)
-
-[1] https://lpc.events/event/20/contributions/2321/
-[2] https://lpc.events/
-
-Best regards,
-Pasha
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
