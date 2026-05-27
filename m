@@ -4,110 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AFD8BCD5BD2
-	for <kexec@archiver.kernel.org>; Wed, 27 May 2026 03:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90032CD4F54
+	for <kexec@archiver.kernel.org>; Wed, 27 May 2026 07:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=HcszoUDc7316A03Dx3QXGOd8FcU7DWvjuNUEWPnVcI4=; b=TShjS/BpyDeL/LGn6GGcB/vw4R
-	RIsCtmaTwh2sIRRiMD5vPF3Oj2F0Pp51lr0BD2Nq/lNLmXC7INi8+L8YZhnqbAuZHrvhGEG6pls4L
-	r3QoUxbv3GqP5AxxE4DKHa2R7EBIbAanJxRPhBDUm3uDKdfAgsIOdY4LrAkJE/vMCPtSDfmXAZpX4
-	5dQdsuY4XLKljAeTvNwFfLxuovf+RHKPuE085/sVc5otzuU2Q2P+p9rfI9XCKawaeSI4IFdu/6Rxh
-	3wIDHKLRFebwWP+Eq2psH3iGWeDwEQESRf0zxRs51m7reIInwJioTUw6YLx6LdHJXyPzPV0nKNfdU
-	AiQ863ig==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=/ngk4gUL5eOt+YzcG2pEJx/fEU902BO0rDrmbW7CZbM=; b=cjFCSlGNSAgOQ3kdF6SFEpPv4E
+	ZtIzQtuUVpnJvTc2PAW4tVng3yUAR9HLdygXb6HhIzX2TIEZ8O/2AeKsETgmte3srIuQDo/AR8iuH
+	EtQHHwuW+/PMXHeyXVgq1xrbxyii/QiPTYvSZI1SV1FElPgk+clMULFQKV4wIv887wpIb4GO4Zv/x
+	Omj+1E/s4xePWC0vFqgD9EVt7vOKcMvjcxEw846ki4TBsaBYouQ+3f7dNApOfl56G5O516cg1e0Om
+	h0gvIllnLmuad28yMoxUCY5yUGmuqNqaNHZ7ZClLZ3MCRfpcnmd9jPtkkSHmbTifBRVQNr590wKMT
+	yhorEQMw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wS4zb-00000003G96-3apg;
-	Wed, 27 May 2026 03:31:39 +0000
-Received: from mail-pf1-x443.google.com ([2607:f8b0:4864:20::443])
+	id 1wS8fa-00000003Seg-3xj4;
+	Wed, 27 May 2026 07:27:14 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wS4zZ-00000003G70-0XqB
+	id 1wS8fZ-00000003SeH-1WQl
 	for kexec@lists.infradead.org;
-	Wed, 27 May 2026 03:31:38 +0000
-Received: by mail-pf1-x443.google.com with SMTP id d2e1a72fcca58-83d5bbef760so4689061b3a.1
-        for <kexec@lists.infradead.org>; Tue, 26 May 2026 20:31:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779852696; x=1780457496; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HcszoUDc7316A03Dx3QXGOd8FcU7DWvjuNUEWPnVcI4=;
-        b=blf/MMtZ4GsUxGzz2WFUPCJ/Y+JiH80/1wfva7NQ9KlfDRI22vmrFMVYHu+I2HCybB
-         Y7tbubCdC9bJnNH3NSY1RzXEIZUysu+g5aOQV/uer95zx+3gzAWjO5pLs8esjHyVdz4H
-         FGoLEcBFymAN0jaFDa7RKMf8GfBJA9dYihsTlPGL4pAO10mXZTy7TW3nMmHeXBRSVZK7
-         RRnt1wPbW32iSpxZbFTvUDyVcy2+O0WNrwxjSlt8gN2vvVpbqsdQCLGgnagjmNcFvb2E
-         N7PtozNe1LDxyhq6kXNwASa+ua/rWmEO5BNdFRenl3RLIqvwlmCz6XWKY2Z7j7lbaAOW
-         RuVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779852696; x=1780457496;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=HcszoUDc7316A03Dx3QXGOd8FcU7DWvjuNUEWPnVcI4=;
-        b=JwKhFCz47NqvSS+GEq9PQ9EuFA7oNgdhZfLGCocTmRdkKVswbm13uvDS6a+XTzjYaq
-         ZP/koaF6tUq/n4lLE7N0prduTUmiHokPUNZG6FZoZIUwKFtQSCerRS4yGrFEifHXXwP5
-         6W5T2KiSs6gixYlQyHxNOvR+fy7exW1mGUwqw8bkTVOtRzw0fwXlvnVYc/dUj8EAoMs8
-         xxEqn9rH//FCKmGSCc9HdN8giL/JUeq27wwet51dOfAzpi3UTWujo3cFWGQQHquJw3mP
-         wD0GnXoT6mo3TcTcj6tWse1Yio9NXD7vQRLJx69FxpQJfJJe6f8x+oaI6/96+8T4yaKu
-         VMmA==
-X-Forwarded-Encrypted: i=1; AFNElJ83ejjMVQOMlAnEL41UP4zjHQDkogSSPPLJGNnGY3AlbZ4YCHkhq8nKHDDMXna6N+QYWvIljQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwVYvW8CLFpJtGZHy/cybz6+PO+g/VAtSmyg0S36IVB8ZgzpWxW
-	vkLQXB4Dcxu0TW8Js4tJdxkLyPvplM4Mo3d6YZDt2eNsdO1hJjkj5Esq
-X-Gm-Gg: Acq92OHySr4PtCcPcEcHSucZObp8y+37wU22YFBp2NFcmvYiUdRB3MH2WSNjxZOclTU
-	xYX24PnddFreMgJ5Rb4M8mXKJsoTQfWlhMc/UAChxdmYKS3QFHkXzRDfHm7uRZZGw7Iac5/shT7
-	5kksvLOxwOT6MCy9y6JROZTBYW+CRcRq2fDYAKT0tuMfE6twv711aUPGVx368XGlIRJ6WzIe0A+
-	UesAJ4EjP3Yl35jQjGpnD00mSUK/jK7MZW1gj7i96xqxtjmF9y9PyLguOrYWA0QQ+w78iUZstn/
-	4dEbB8EKFZ7EgiemDy12XYHP/9Ocp8sdZDFKNG/RoB+I5Y3RkuiiKUKdAv6+A9q8IU0dF6eESry
-	09PPJc5zOWwgWSleO3JF2qkRk27Nl6XQtkxDyFk3eOaM/zLjmYXkPCJU/L67CyNklklDbfTkNhy
-	f8lx0Dq+bnyLqOa94ST9OTkjC2zqPAvw2BnqTzp4pM1GtTK8zpKmS0g7Y2eg==
-X-Received: by 2002:a05:6a00:3a0d:b0:837:8c8f:8f51 with SMTP id d2e1a72fcca58-8415f3bdb92mr20798104b3a.47.1779852696430;
-        Tue, 26 May 2026 20:31:36 -0700 (PDT)
-Received: from intel.company.local ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-841d7307596sm749688b3a.59.2026.05.26.20.31.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2026 20:31:35 -0700 (PDT)
-From: Wandun Chen <chenwandun1@gmail.com>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	kexec@lists.infradead.org,
-	iommu@lists.linux.dev,
-	zhaomeijing@lixiang.com
-Cc: catalin.marinas@arm.com,
-	will@kernel.org,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	pjw@kernel.org,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	robh@kernel.org,
-	saravanak@kernel.org,
-	akpm@linux-foundation.org,
-	bhe@redhat.com,
-	rppt@kernel.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	ruirui.yang@linux.dev,
-	m.szyprowski@samsung.com,
-	robin.murphy@arm.com,
-	quic_obabatun@quicinc.com
-Subject: [PATCH v3 11/11] loongarch: kdump: exclude non-dumpable reserved memory regions from vmcore
-Date: Wed, 27 May 2026 11:29:17 +0800
-Message-ID: <20260527032917.3385849-12-chenwandun1@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260527032917.3385849-1-chenwandun1@gmail.com>
-References: <20260527032917.3385849-1-chenwandun1@gmail.com>
+	Wed, 27 May 2026 07:27:14 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 3B8EF439F7;
+	Wed, 27 May 2026 07:27:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 301391F00A3A;
+	Wed, 27 May 2026 07:27:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779866832;
+	bh=/ngk4gUL5eOt+YzcG2pEJx/fEU902BO0rDrmbW7CZbM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=bDR1RSYUmx0vT2tYjybhmh8RbA3S+AQAakPr7zo6AkXKsFX91fdQuGdKGW6ndK1jx
+	 bfnxYU8U4HSYwE1ZYTATUNlbMtvAjZ+005n1lUa0dD+6jfab/oRY5zWG5kL1cy1+RB
+	 /f4fhLC9EC2/9MCnRPER+H3XaTd9bYoz/Mx+JD+cy0l3Hzbih+KoIiJeqbK1jkB4E3
+	 BljznW8HdXa8vkH/mtWpJEdpunhoM6l+47e2z7exOFFcLVXmP+9nKO7FRj1rWOW/lo
+	 pfxZlzyDX6DW4yLNBHp8VVILL2305SyqTmCOykVtOS0j5X2fZBWqB1zlSEp3yaUkB1
+	 rRbg30n7komXg==
+Date: Wed, 27 May 2026 08:27:09 +0100
+From: Simon Horman <horms@kernel.org>
+To: luo.haiyang@zte.com.cn
+Cc: kexec@lists.infradead.org, zhang.run@zte.com.cn, cai.qu@zte.com.cn
+Subject: Re: [PATCH v4 2/4] RISCV: Fix incorrect virtual address translation
+ in? crashdump load
+Message-ID: <20260527072709.GA51310@horms.kernel.org>
+References: <20260521120643491yZJMsKq2fLbFcvtV5ukN1@zte.com.cn>
+ <20260521120946097C8qpZkVC2mBT_ozYEHlhp@zte.com.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260521120946097C8qpZkVC2mBT_ozYEHlhp@zte.com.cn>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260526_203137_178645_22984041 
-X-CRM114-Status: GOOD (  10.69  )
+X-CRM114-CacheID: sfid-20260527_002713_423087_C0D22D00 
+X-CRM114-Status: UNSURE (   9.60  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -122,50 +73,26 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Wandun Chen <chenwandun@lixiang.com>
+On Thu, May 21, 2026 at 12:09:46PM +0800, luo.haiyang@zte.com.cn wrote:
+> From: Luo Haiyang <luo.haiyang@zte.com.cn>
+> 
+> The kexec shows the following crashdump log:
+> 
+> Elf header: p_type = 1, p_offset = 0x80100000 p_paddr = 0x80100000 p_vaddr = 0xcff000 ...
+> Elf header: p_type = 1, p_offset = 0x100000000 p_paddr = 0x100000000 p_vaddr = 0x80bff000 ...
+> Elf header: p_type = 1, p_offset = 0x87ffff000 p_paddr = 0x87ffff000 p_vaddr = 0x800bfe000 ...
+> 
+> Obviously, phys_to_virt returns an incorrect virtual address (vaddr). On the RISC-V architecture,
+> the linear address mapping is defined as:
+> va = pa + kernel_map.va_pa_offset (kernel_map.va_pa_offset = PAGE_OFFSET - phys_ram_base)
+> Both PAGE_OFFSET and phys_ram_base can be read from /proc/kcore.
+> 
+> Signed-off-by: Luo Haiyang <luo.haiyang@zte.com.cn>
 
-Apply the same non-dumpable reserved memory filtering to LoongArch
-kdump as was done for arm64. Use of_reserved_mem_kdump_exclude() to
-drop flagged regions from the elfcorehdr PT_LOAD segments, and
-of_reserved_mem_kdump_nr_ranges() to pre-size the crash_mem array.
+Hi,
 
-Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
----
- arch/loongarch/kernel/machine_kexec_file.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Unfortunately this patch seems to be somewhat mangled
+and does not apply. Could you look into that?
 
-diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-index 5584b798ba46..4b918c3d4a28 100644
---- a/arch/loongarch/kernel/machine_kexec_file.c
-+++ b/arch/loongarch/kernel/machine_kexec_file.c
-@@ -14,6 +14,7 @@
- #include <linux/kernel.h>
- #include <linux/kexec.h>
- #include <linux/memblock.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/types.h>
-@@ -67,6 +68,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
- 	nr_ranges = 2; /* for exclusion of crashkernel region */
- 	for_each_mem_range(i, &start, &end)
- 		nr_ranges++;
-+	nr_ranges += of_reserved_mem_kdump_nr_ranges();
- 
- 	cmem = kmalloc_flex(*cmem, ranges, nr_ranges);
- 	if (!cmem)
-@@ -91,6 +93,10 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
- 			goto out;
- 	}
- 
-+	ret = of_reserved_mem_kdump_exclude(cmem);
-+	if (ret)
-+		goto out;
-+
- 	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
- 
- out:
--- 
-2.43.0
 
 
