@@ -4,68 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 08583CD4F54
-	for <kexec@archiver.kernel.org>; Wed, 27 May 2026 08:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BB9E2CD5BD0
+	for <kexec@archiver.kernel.org>; Wed, 27 May 2026 14:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Subject:Cc:To:
-	From:Mime-Version:Date:References:In-Reply-To:Message-ID:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=23tNGzKufb9LUZc/tsRFVwpewXfb7+y8vSwqWTbtWSk=; b=DjlD4u76/nBN0JxzddHrq6eWcY
-	jYQlWbdYSWt5IrKoyLpWADr2e3V865fR2DTZ5I8XTSIN2C/v6metZfTsiFZxGw615/l3wU0u7CvlL
-	QiZUgnpjx11iha3p094UwgeqEgHe2o522Anul3ljfSR+qIi41mt5L69QriD1n9auisAyMEyu0RYBd
-	ZY+2tUjDMZBjeS0Vq5JaqjkyN2nw1MTd4UXYkimTsj4oDqMvgGWvWP/8XfY89euyFEuXHTBaAwXfg
-	3dGbeQoVBqxkaztix+P/Z0PlEan7PBydACYiw5h7r3Saa3d4ZhwFaSDMoKh9JF3VwcIPF/FpboOZU
-	Pm0XdULA==;
+	bh=CbYyflbi1csVccgC7xokEK3x+MW2cvMKopZtfNHzrQY=; b=lcf2kHNyXvNAx8dagAmbNYhat1
+	zGLKky7WBwpaOf0FLcgoAdm5DAhPakOGqdd/egQfClYxN+jHDvLRjdGWFdhMAu8ohv7qtALHBBBcN
+	GeYHFkd3YIehxAiOeSJcMvmd34pxBRNbbDepry59JawWeyon1h9GpKwIXvXmEIC8RpPnPhDNfwpCh
+	xyxqUo9uYVC+zH1QIvq1m5wzSPdpxrJiM7fhf3MflljZ7FQFOC6hrHmMczUPAN3zde1U4Sl7POUN4
+	Um2FUyTep4d8Z1swRuEFLP1B/aEYxNjD+m7MDlrHk+Jxagv7LwG2tMFeuGFYN1CL8bkYONSledqMY
+	rTRAOZrQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wS9fG-00000003Y60-2DIG;
-	Wed, 27 May 2026 08:30:58 +0000
-Received: from mxhk.zte.com.cn ([160.30.148.34])
+	id 1wSFS3-00000004Ja4-2XQz;
+	Wed, 27 May 2026 14:41:43 +0000
+Received: from mail-qk1-x72a.google.com ([2607:f8b0:4864:20::72a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wS9fE-00000003Y5g-0E8T
+	id 1wSFS0-00000004JZX-3oze
 	for kexec@lists.infradead.org;
-	Wed, 27 May 2026 08:30:57 +0000
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4gQN9n5B5fz5B104;
-	Wed, 27 May 2026 16:30:53 +0800 (CST)
-Received: from szxl2zmapp07.zte.com.cn ([10.1.32.52])
-	by mse-fl1.zte.com.cn with SMTP id 64R8Umr9014294;
-	Wed, 27 May 2026 16:30:48 +0800 (+08)
-	(envelope-from luo.haiyang@zte.com.cn)
-Received: from mapi (szxl2zmapp07[null])
-	by mapi (Zmail) with MAPI id mid18;
-	Wed, 27 May 2026 16:30:50 +0800 (CST)
-X-Zmail-TransId: 2b096a16abba25c-41f3b
-X-Mailer: Zmail v1.0
-Message-ID: <20260527163050630HR4Ri1nkGfW93wsEmfqOO@zte.com.cn>
-In-Reply-To: <20260527072709.GA51310@horms.kernel.org>
-References: 20260521120643491yZJMsKq2fLbFcvtV5ukN1@zte.com.cn,20260521120946097C8qpZkVC2mBT_ozYEHlhp@zte.com.cn,20260527072709.GA51310@horms.kernel.org
-Date: Wed, 27 May 2026 16:30:50 +0800 (CST)
-Mime-Version: 1.0
-From: <luo.haiyang@zte.com.cn>
-To: <horms@kernel.org>
-Cc: <kexec@lists.infradead.org>, <zhang.run@zte.com.cn>, <cai.qu@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2NCAyLzRdIFJJU0NWOiBGaXggaW5jb3JyZWN0IHZpcnR1YWwgYWRkcmVzcyB0cmFuc2xhdGlvbiBpbj8gY3Jhc2hkdW1wIGxvYWQ=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL: mse-fl1.zte.com.cn 64R8Umr9014294
-X-TLS: YES
-X-SPF-DOMAIN: zte.com.cn
-X-ENVELOPE-SENDER: luo.haiyang@zte.com.cn
-X-SPF: None
-X-SOURCE-IP: 10.5.228.132 unknown Wed, 27 May 2026 16:30:53 +0800
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6A16ABBD.002/4gQN9n5B5fz5B104
-X-Bad-Reply: References and In-Reply-To but no 'Re:' in Subject.
+	Wed, 27 May 2026 14:41:42 +0000
+Received: by mail-qk1-x72a.google.com with SMTP id af79cd13be357-913cc4d7c71so1282730385a.2
+        for <kexec@lists.infradead.org>; Wed, 27 May 2026 07:41:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1779892899; x=1780497699; darn=lists.infradead.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=CbYyflbi1csVccgC7xokEK3x+MW2cvMKopZtfNHzrQY=;
+        b=J3Gw37W9gtxaj3gsHTuOmotHuAkCjEoCJEp2f2SnvXh8skw4kzAEvRZPcAqKMkgXq1
+         RWxskOZ6pPJ/7cwV8PvkBlI5c9YbUAS8Ger7cC+te3vpo+MoD2jebpKCNI+HcjJuJoOz
+         bd9Ae8enneoofhl+qAIUsIlJYs6ac0e6sDGiG0pt6jHDkNeUvbQrcP+bVBIxx7ElRyKt
+         IEUlKR7rz/6BmLRkwMb1I98QVE9Fm696BktYDUP1dbl4dqLRxE4MIYjN2pfKxBou9QcL
+         sGoORj08jvXo6SHvhf3BAa58o5UxajPQDLCH0niMt/yoP1yX7WXSLekqlEqPKidQKpUg
+         4zuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779892899; x=1780497699;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CbYyflbi1csVccgC7xokEK3x+MW2cvMKopZtfNHzrQY=;
+        b=VYbMhcmmFu9YjShUjxcxkZcugT39uhtNlMQipgGX/dgg4CqSDIR86QD88nUEq3aSOr
+         evZ4rMMqExRBgtD+CFivemJRsI5OcHyO4olya8PpLSYc+alHt+WLUsHGJemykao7gIM0
+         QeQenu8B7uNIXU6sPxy/RsKUVFCfkThQt0VPMQqTKl79eM1M39T/GZPEUYcLEXhL+YMD
+         jCFrGXV6d1Pm3+RMG6S3N6Zu8Rx02hsOalbWSFkTXJced15Z8lRfMIOqHzIlnEcw/NYm
+         fY3hIaIzzyUNS2TEwT4tCbznvqoBs5/ZcNIHMcnydUsZiuAdK9uaHLyZpipO+6qhgwxI
+         dCQQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9vIojZPjYIZcbMMgw+w4GcIizXIkkJ5KY6+6qQrtCpj1u4F9SsmTehcGH5eu9YkmCJP9bN0w==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwR9EPhpx0a9b7BVGfPmaVOaQVLgS7auxfuHk0wb0mc0edWw1AJ
+	eXCTbCNh/e1+uGvx/pcxz4X4t+dgVMD8whLftA5DhoahOWvAc1johprEc5oJgIrm56E=
+X-Gm-Gg: Acq92OHFMfhmcsDjfq34Aoky9uF+BeyUbzq8Ja+dsAtUkW1XvZMMcKWHTRhvQTZQ5Jv
+	Ij6l0jbxODrMYRbNxCa2kFXpyaRjOXYX+lIHhNgu2O4v3XLPatooX+MkAog975W7ols6VJyZ9tt
+	cETsvqeMav71NJzNltDsyw4Nq/fl/17DzGfE1koTJ97E8B3KoI7Ib9ntxFvTRGlRka5WP0zOvew
+	VV7kRd9xKVVPZPjK0UBGxGXus2TnPJix3yIgsChADVrk8egt2CDr+zzH9f6x/E4Gj1nrRiTouey
+	KTGn8cKHaAto1MEklNc4pdq6u4EzuJ5kLDgnnYpEWvRu36iKtGWb8+OQOirCmveLgWLX/FLs5qL
+	eZ3Lw+OrqunwyocU/merbrhBnxaodFAcmaFLcSYfyF9stY0WGWxx9ObSi9B1r0hDlDEZggNosqK
+	/1a4cBp1MD5dDARNhdcpcuzFY0qg9Q1YuhYucVtZ3z5jCcKbG0Lt24ZOm0kn29AVl1mxcQ7eSP
+X-Received: by 2002:a05:620a:45a4:b0:913:7bc8:79b4 with SMTP id af79cd13be357-914b49f711dmr3312535085a.51.1779892899207;
+        Wed, 27 May 2026 07:41:39 -0700 (PDT)
+Received: from plex ([71.181.43.54])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-914f86fbce3sm487939485a.11.2026.05.27.07.41.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2026 07:41:38 -0700 (PDT)
+Date: Wed, 27 May 2026 14:41:37 +0000
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: David Matlack <dmatlack@google.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Alexander Graf <graf@amazon.com>, "Andersen, Tycho" <Tycho.Andersen@amd.com>, 
+	Anthony Yznaga <anthony.yznaga@oracle.com>, Baolu Lu <baolu.lu@linux.intel.com>, 
+	David Hildenbrand <david@kernel.org>, "Heyne, Maximillian" <mheyne@amazon.de>, 
+	James Gowans <jgowans@amazon.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Mike Rapoport <rppt@kernel.org>, Pankaj Gupta <pankaj.gupta.linux@gmail.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Praveen Kumar <kpraveen.lkml@gmail.com>, 
+	Vipin Sharma <vipinsh@google.com>, Vishal Annapurve <vannapurve@google.com>, 
+	"Woodhouse, David" <dwmw@amazon.co.uk>, Luca Boccassi <luca.boccassi@gmail.com>, 
+	Samiullah Khawaja <skhawaja@google.com>, Jork Loeser <jloeser@linux.microsoft.com>, linux-mm@kvack.org, 
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [Hypervisor Live Update] Notes from May 18, 2026
+Message-ID: <ahcCXlbbnsxUAfeb@plex>
+References: <ahXiYGo-IWI94IVP@google.com>
+ <CALzav=dkVWYmbWCO6wDuQrxetAcqYkitJiRF_BhDDGqn2_-RKA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALzav=dkVWYmbWCO6wDuQrxetAcqYkitJiRF_BhDDGqn2_-RKA@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260527_013056_242472_717D2723 
-X-CRM114-Status: UNSURE (   6.19  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260527_074140_980050_C686D9E1 
+X-CRM114-Status: GOOD (  15.11  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,30 +109,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-SimonHorman <horms@kernel.org> wrote:
->On Thu, May 21, 2026 at 12:09:46PM +0800, luo.haiyang@zte.com.cn wrote:
->> From: Luo Haiyang <luo.haiyang@zte.com.cn>
->> 
->> The kexec shows the following crashdump log:
->> 
->> Elf header: p_type = 1, p_offset = 0x80100000 p_paddr = 0x80100000 p_vaddr = 0xcff000 ...
->> Elf header: p_type = 1, p_offset = 0x100000000 p_paddr = 0x100000000 p_vaddr = 0x80bff000 ...
->> Elf header: p_type = 1, p_offset = 0x87ffff000 p_paddr = 0x87ffff000 p_vaddr = 0x800bfe000 ...
->> 
->> Obviously, phys_to_virt returns an incorrect virtual address (vaddr). On the RISC-V architecture,
->> the linear address mapping is defined as:
->> va = pa + kernel_map.va_pa_offset (kernel_map.va_pa_offset = PAGE_OFFSET - phys_ram_base)
->> Both PAGE_OFFSET and phys_ram_base can be read from /proc/kcore.
->> 
->> Signed-off-by: Luo Haiyang <luo.haiyang@zte.com.cn>
->
->Hi,
->
->Unfortunately this patch seems to be somewhat mangled
->and does not apply. Could you look into that?
+On 05-26 11:53, David Matlack wrote:
+> On Tue, May 26, 2026 at 11:37 AM Pasha Tatashin
+> <pasha.tatashin@soleen.com> wrote:
+> 
+> > Next meeting will be on Monday, June 1 at 8am PDT (UTC-7), everybody is
+> > welcome: https://meet.google.com/rjn-dmzu-hgq
+> >
+> > Topics for the next meeting:
+> > - Vipin and David Matlack roadmap for PCI and VFIO changes to solicit
+> >   upstream feedback
+> 
+> Hey Pasha,
+> 
+> We'll need to push this back by one meeting (June 15th) due to the US
+> holiday and some out-of-office leave we didn't account for.
 
-Seems something got broken, I've resent the patch. Could you please see if it works?
+Understood. We will address this on June 15th.
 
-Thanks
-Luo haiyang
+Thank you,
+Pasha
+
+> 
+> > - Status of I/O freezing implementations and HugeTLB fallback allocation
+> >   patches
+> > - PCI core changes v6 review and next steps
+> > - IOMMU persistence v3 and roadmap progress
+> > - Updates on vm_splice investigations for CRIU memory preservation
+> > - later: KHO support for Confidential VMs including page table
+> >   preservation and pinning
+> > - later: versioning support for luo to negotiate
+> > - later: KHO enlightenment for ASI
+> > - later: testing methodology to allow downstream consumers to qualify
+> >   that live update works from one version to another
+> > - later: reducing blackout window during live update
 
