@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 78FF7CD5BC9
-	for <kexec@archiver.kernel.org>; Thu, 28 May 2026 00:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0023FCD6E48
+	for <kexec@archiver.kernel.org>; Thu, 28 May 2026 00:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=UVWiM4xIUXWQ8VX4lQw/ZW4DJ6yNUs4CT4NEYGNtMTc=; b=yltMUzCWNIdIxzQZZTWNTRwx9q
-	KP5os4cWXrgYZwTOvu08r0pjp149klS26BSnwQEnebJo4H4HRIqjjuxy+U9mQV9/Y0vTNYgavI+gr
-	V+EU6odVnaH2aZ0THoMgd/QQRNSdeMpz9HgNugYVN74wdN7/pZUcvZCdOmn+Bdz480Nro/Hpc1ZuK
-	qHMwPDD0gpBqBre1WQbzzX3BJ1lAlicUdKacMM4+bQrjMLG4gb+URKvSqAG0vuHQihkpqfm6MHZM5
-	Qr/jzsfUyH37COoIho8iQeqFx9uCqo/qA3zUumjBd+yBG1M4zTs/mU2FhuO63fKjp2q1AHXif0E4P
-	PfIpSq0w==;
+	bh=GXatuMO/Fdjo1jy8ticG6q7fzNlcTDCEPHvUu9k6XTs=; b=cKI+48q/yNGYNGcROIsgeuYNAH
+	pUOJcoY6O2DTX5jKr5c+NGp/OtG3qHBoT6cJ3qQAsljBamYvUSgfWLwcyLp43N4SqkXE8iUIO+O0f
+	/DMHMlwiost7sF+NJ3WCuWxNSgVFaL3fvg8pYpMxd4CqH6RMFNd1S+qao4aQiki2tPXNFETSo7e8W
+	YCL1BB1mVBv06uM+zTan46ESz0B2J+2OfisvFJcWRqbO7L0Cii8wBuOwJp9ZW8SVoaiT15EPDocS5
+	rS7dLBNvlLnJTbJHNuYTcpT3MJhOKDCYlO9Q+UU0yTU86jYO5Od0IDuArqaB0F/UK0a4fqMvXxdxD
+	pi51i3gg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wSOq0-00000004sg7-2uwy;
-	Thu, 28 May 2026 00:43:04 +0000
+	id 1wSOq2-00000004skI-3gD6;
+	Thu, 28 May 2026 00:43:06 +0000
 Received: from linux.microsoft.com ([13.77.154.182])
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wSOpQ-00000004s4F-29ub;
-	Thu, 28 May 2026 00:42:29 +0000
+	id 1wSOpR-00000004s53-1Jy9;
+	Thu, 28 May 2026 00:42:30 +0000
 Received: by linux.microsoft.com (Postfix, from userid 1241)
-	id D9FB720B716A; Wed, 27 May 2026 17:42:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D9FB720B716A
+	id 8823120B717B; Wed, 27 May 2026 17:42:18 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8823120B717B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1779928936;
-	bh=UVWiM4xIUXWQ8VX4lQw/ZW4DJ6yNUs4CT4NEYGNtMTc=;
+	s=default; t=1779928938;
+	bh=GXatuMO/Fdjo1jy8ticG6q7fzNlcTDCEPHvUu9k6XTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CZTqfsUmcLLXJT7YbU5UN7KLqaA6BUVha/oeK47UmZZXNYo/M9YmHZPL+JhzXFPDl
-	 RWF8g92V93FnpwT+SmnnZeHh/vF+yOyFDUxwz1pmiBwtOYjGVvrjhDig9SvmrS9iOD
-	 5izCOplWYR99E1vx1VZ1orE4q8bJcRWFlJ9ijylo=
+	b=L1MrNbUnl/bErE+GLw9HkkjzskqoK7iud5XrEq+OeWG2+T2sOAFJjOi2GFtbc2Yes
+	 hm/RFZ8SG+bQV9DEktiBvoSAD2TJs48jxv/gP+eV9+5DDplNG7oFfqyxc+uKmPg8IQ
+	 MmOtFPTJQnM1YU/9If1U44KJl0gWnwzDq7STNasM=
 From: Jork Loeser <jloeser@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
 	linux-mm@kvack.org,
@@ -74,17 +74,17 @@ Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
 	linux-kernel@vger.kernel.org,
 	Michael Kelley <mhklinux@outlook.com>,
 	Jork Loeser <jloeser@linux.microsoft.com>
-Subject: [RFC PATCH 08/20] kho: add kho_radix_init_tree()
-Date: Wed, 27 May 2026 17:41:50 -0700
-Message-ID: <20260528004204.1484584-9-jloeser@linux.microsoft.com>
+Subject: [RFC PATCH 10/20] kho: extended scratch
+Date: Wed, 27 May 2026 17:41:52 -0700
+Message-ID: <20260528004204.1484584-11-jloeser@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260528004204.1484584-1-jloeser@linux.microsoft.com>
 References: <20260528004204.1484584-1-jloeser@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260527_174228_592980_FF23CF40 
-X-CRM114-Status: GOOD (  16.79  )
+X-CRM114-CacheID: sfid-20260527_174229_400534_C3EAB99B 
+X-CRM114-Status: GOOD (  30.79  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,98 +101,333 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-Move the initialization logic of the radix tree into
-kho_radix_init_tree() instead of having users open-code it. Makes the
-boundaries cleaner and reduces code duplication when a new user of the
-radix tree will be added in a future commit.
+Motivation
+==========
+
+The scratch space is allocated by the first kernel in the KHO chain, and
+is reused by all subsequent kernels. The size of the space is either set
+via the commandline by the system administrator or by calculating the
+amount of memory used by the kernel and adding a multiplier. In either
+case, the scratch space is a heuristic and is liable to fill up and fail
+allocation if a kernel uses more memory than expected.
+
+In addition, gigantic huge pages (usually 1 GiB) are allocated via
+memblock, and in a KHO boot that memory comes from the scratch space. In
+hypervisors it is common to dedicate a major part of the system's memory
+to gigantic hugepages for VM memory.
+
+If this memory needs to come from scratch space, then scratch needs to
+be greater than the memory needed for huge pages, which is impractical.
+In addition, hugepages can be preserved memory. Allocating them from
+scratch violates the assumption that scratch contains no preserved
+memory.
+
+Methodology
+===========
+
+Introduce extended scratch areas. These areas are discovered at boot by
+walking the preserved memory radix tree and looking for free blocks of
+memory. They then marked as scratch to allow allocations from them. This
+makes KHO more resilient to memory pressure and allows supporting huge
+page preservation.
+
+Since the preserved memory radix tree mixes both physical address and
+order into a single key, and does not track table pages, it is difficult
+to identify free areas from it directly. Walk the tree and digest it
+down into another radix tree. The latter tracks blocks of
+KHO_EXT_SHIFT (1 GiB as of now) granularity. Then walk the digested tree
+and mark the areas between the present keys as scratch.
+
+Performance
+===========
+
+The discovery algorithm traverses the preserved memory radix tree
+exactly once. While it does use memory for the digested radix tree,
+since the blocks are split by 1 GiB, a single bitmap with 4k pages can
+track up to 32 TiB of memory. So there are likely to be very few radix
+tree pages used in this tracking. For systems with all physical memory
+below 32 TiB, this should result in a total of 6 pages being
+used (KHO_TREE_MAX_DEPTH == 6).
+
+An alternate way of achieving this would be to call kho_mem_retrieve()
+earlier in boot and mark all the KHO preservations as reserved. But that
+can blow up memblock.reserved with a bunch of 4K pages scattered
+everywhere, which will reduce performance of subsequent allocations.
+Since the free blocks are tracked in chunks of 1 GiB, this won't blow up
+memblock.memory as much.
+
+Practical evaluation
+====================
+
+The testing is done on a x86_64 qemu VM running under KVM with 64G
+memory and 12 CPUs. The machine pre-allocates 50 1G pages.
+
+Since the performance scales with how busy the radix tree is, tests are
+done with 2 preservation patterns: first with two 1M memfds, second with
+two 1G memfds, both using 4k pages.
+
+Test case 1 - 1M memfd
+~~~~~~~~~~~~~~~~~~~~~~
+
+This test case has two memfds with 1M memory each in 4k pages, plus
+other preservations from LUO core and other KHO users.
+
+This is how the radix tree stats look like:
+
+    radix_nodes:       0x2f
+    nr_preservations:  0x22d
+    mem_preserved:     0xa2b000
+
+    per order preservations:
+    order  0:  0x215
+    order  1:  0x9
+    order  2:  0x1
+    order  3:  0x2
+    order  4:  0x5
+    order  5:  0x1
+    order  6:  0x2
+    order  7:  0x2
+    order  9:  0x1
+    order 10:  0x1
+
+and this is how long it takes to extend the scratch after KHO boot:
+
+    kho_extend_scratch(): time taken: 88 us
+    kho_extend_scratch(): total memory recovered: 0xf7ff7b000 (~62G)
+
+Test case 2 - 1G memfd
+~~~~~~~~~~~~~~~~~~~~~~
+
+This test case has two memfds with 1G memory each in 4k pages, plus
+other preservations from LUO core and other KHO users.
+
+This is how the radix tree stats look like:
+
+    radix_nodes:       0x45
+    nr_preservations:  0x80832
+    mem_preserved:     0x8102d000
+
+    per order preservations:
+    order  0:  0x80817
+    order  1:  0x7
+    order  2:  0x2
+    order  3:  0x4
+    order  4:  0x2
+    order  5:  0x2
+    order  6:  0x4
+    order  7:  0x3
+    order  8:  0x1
+    order  9:  0x2
+
+and this is how long it takes to extend the scratch after KHO boot:
+
+    kho_extend_scratch(): time taken: 21769 us
+    kho_extend_scratch(): total memory recovered: 0xe40000000 (57G)
 
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 Signed-off-by: Jork Loeser <jloeser@linux.microsoft.com>
 ---
- include/linux/kho_radix_tree.h     |  7 ++++++
- kernel/liveupdate/kexec_handover.c | 37 ++++++++++++++++++++++++++++--
- 2 files changed, 42 insertions(+), 2 deletions(-)
+ include/linux/kexec_handover.h     |   1 +
+ kernel/liveupdate/kexec_handover.c | 148 +++++++++++++++++++++++++----
+ mm/mm_init.c                       |   1 +
+ 3 files changed, 133 insertions(+), 17 deletions(-)
 
-diff --git a/include/linux/kho_radix_tree.h b/include/linux/kho_radix_tree.h
-index 617395a6647a..c0840ecb230c 100644
---- a/include/linux/kho_radix_tree.h
-+++ b/include/linux/kho_radix_tree.h
-@@ -54,6 +54,7 @@ int kho_radix_add_key(struct kho_radix_tree *tree, unsigned long key);
- void kho_radix_del_key(struct kho_radix_tree *tree, unsigned long key);
- int kho_radix_walk_tree(struct kho_radix_tree *tree,
- 			const struct kho_radix_walk_cb *cb, void *data);
-+int kho_radix_init_tree(struct kho_radix_tree *tree, struct kho_radix_node *root);
- void kho_radix_destroy_tree(struct kho_radix_tree *tree);
+diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
+index 8968c56d2d73..6ce46f36ed99 100644
+--- a/include/linux/kexec_handover.h
++++ b/include/linux/kexec_handover.h
+@@ -37,6 +37,7 @@ void kho_remove_subtree(void *blob);
+ int kho_retrieve_subtree(const char *name, phys_addr_t *phys, size_t *size);
  
- #else  /* #ifdef CONFIG_KEXEC_HANDOVER */
-@@ -72,6 +73,12 @@ static inline int kho_radix_walk_tree(struct kho_radix_tree *tree,
- 	return -EOPNOTSUPP;
- }
+ void kho_memory_init(void);
++void kho_extend_scratch(void);
  
-+static inline int kho_radix_init_tree(struct kho_radix_tree *tree,
-+				      struct kho_radix_node *root)
-+{
-+	return 0;
-+}
-+
- static inline void kho_radix_destroy_tree(struct kho_radix_tree *tree) { }
- 
- #endif /* #ifdef CONFIG_KEXEC_HANDOVER */
+ void kho_populate(phys_addr_t fdt_phys, u64 fdt_len, phys_addr_t scratch_phys,
+ 		  u64 scratch_len);
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 3f3ea71baa1a..b2d1572808eb 100644
+index b2d1572808eb..a006a883ee94 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -305,6 +305,34 @@ static void __kho_radix_destroy_tree(struct kho_radix_node *root,
- 	kho_radix_free_node(root);
- }
+@@ -84,6 +84,23 @@ static struct kho_out kho_out = {
+ 	},
+ };
  
-+/**
-+ * kho_radix_init_tree - initialize the radix tree.
-+ * @tree:   the tree to initialize.
-+ * @root:   root table of the radix tree.
-+ *
-+ * Initialize the radix tree with the given root node. If root is %NULL, an
-+ * empty root table is allocated. If root is not %NULL, it is the caller's
-+ * responsibility to make sure the root is valid and in the correct format.
-+ *
-+ * Return: 0 on success, -errno on failure.
-+ */
-+int kho_radix_init_tree(struct kho_radix_tree *tree, struct kho_radix_node *root)
++struct kho_in {
++	phys_addr_t fdt_phys;
++	phys_addr_t scratch_phys;
++	char previous_release[__NEW_UTS_LEN + 1];
++	u32 kexec_count;
++	struct kho_debugfs dbg;
++	struct kho_radix_tree radix_tree;
++};
++
++static struct kho_in kho_in = {
++};
++
++static const void *kho_get_fdt(void)
 +{
-+	/* Already initialized. */
-+	if (tree->root)
-+		return 0;
-+
-+	if (!root)
-+		root = kho_radix_alloc_node();
-+	if (!root)
-+		return -ENOMEM;
-+
-+	tree->root = root;
-+	mutex_init(&tree->lock);
-+	return 0;
++	return kho_in.fdt_phys ? phys_to_virt(kho_in.fdt_phys) : NULL;
 +}
-+EXPORT_SYMBOL_GPL(kho_radix_init_tree);
 +
  /**
-  * kho_radix_destroy_tree - Destroy the radix tree
-  * @tree: The radix tree to destroy
-@@ -1467,9 +1495,14 @@ static int __init kho_mem_retrieve(const void *fdt)
- 	const struct kho_radix_walk_cb cb = {
- 		.key = kho_preserved_memory_reserve,
- 	};
-+	phys_addr_t mem_map_phys;
+  * kho_encode_radix_key - Encodes a physical address and order into a radix key.
+  * @phys: The physical address of the page.
+@@ -825,6 +842,120 @@ static void __init kho_reserve_scratch(void)
+ 	kho_enable = false;
+ }
+ 
++#define KHO_EXT_SHIFT 30 /* 1 GiB */
++
++static int __init kho_ext_walk_key(unsigned long key, void *data)
++{
++	struct kho_radix_tree *tree = data;
++	phys_addr_t start, end;
++	unsigned int order;
 +	int err;
 +
-+	mem_map_phys = kho_get_mem_map_phys(fdt);
++	start = kho_decode_radix_key(key, &order);
++	end = start + (1UL << (order + PAGE_SHIFT));
++
++	while (start < end) {
++		err = kho_radix_add_key(tree, start >> KHO_EXT_SHIFT);
++		if (err)
++			return err;
++
++		start += (1UL << KHO_EXT_SHIFT);
++	}
++
++	return 0;
++}
++
++static int __init kho_ext_walk_table(phys_addr_t phys, void *data)
++{
++	struct kho_radix_tree *tree = data;
++
++	return kho_radix_add_key(tree, phys >> KHO_EXT_SHIFT);
++}
++
++static int __init kho_ext_mark_scratch(unsigned long key, void *data)
++{
++	phys_addr_t *prev_end = data;
++	phys_addr_t start = key << KHO_EXT_SHIFT;
++	int err;
++
++	if (start > *prev_end) {
++		err = memblock_mark_kho_scratch_ext(*prev_end, start - *prev_end);
++		if (err)
++			return err;
++	}
++
++	*prev_end = start + (1UL << KHO_EXT_SHIFT);
++	return 0;
++}
++
++/**
++ * kho_extend_scratch - Extend the scratch regions
++ *
++ * The KHO radix tree mixes both physical address and order into a single key.
++ * This makes it hard to look for free ranges directly. This function first
++ * walks the radix tree and digests it down into another radix tree, whose keys
++ * identify blocks of KHO_EXT_SHIFT which contain preserved memory.
++ *
++ * Then it walks the digested radix tree and marks everything that doesn't have
++ * preserved memory as scratch.
++ *
++ * NOTE: This function allocates memory so it should be called when scratch has
++ * available space.
++ *
++ * NOTE: The pages of the KHO radix tree tables are not marked as preserved in
++ * the KHO tree. But they are expected to remain untouched until the tree is
++ * fully parsed. So this function also considers them to be "preserved memory"
++ * and marks their blocks as busy.
++ */
++void __init kho_extend_scratch(void)
++{
++	const struct kho_radix_walk_cb kho_cb = {
++		.key = kho_ext_walk_key,
++		.table = kho_ext_walk_table,
++	};
++	const struct kho_radix_walk_cb ext_cb = {
++		.key = kho_ext_mark_scratch,
++	};
++	struct kho_radix_tree radix;
++	phys_addr_t prev_end = 0, mem_map_phys;
++	int err = 0;
++
++	if (!is_kho_boot())
++		return;
++
++	/* Make sure the KHO radix tree is initialized. */
++	mem_map_phys = kho_get_mem_map_phys(kho_get_fdt());
 +	err = kho_radix_init_tree(&kho_in.radix_tree, phys_to_virt(mem_map_phys));
 +	if (err)
-+		return err;
- 
--	kho_in.radix_tree.root = phys_to_virt(kho_get_mem_map_phys(fdt));
--	mutex_init(&kho_in.radix_tree.lock);
- 	return kho_radix_walk_tree(&kho_in.radix_tree, &cb, NULL);
++		goto print;
++
++	err = kho_radix_init_tree(&radix, NULL);
++	if (err)
++		goto print;
++
++	/* Walk the KHO radix tree to find busy blocks. */
++	err = kho_radix_walk_tree(&kho_in.radix_tree, &kho_cb, &radix);
++	if (err)
++		goto out;
++
++	/* Walk the blocks and mark everything between keys as scratch. */
++	err = kho_radix_walk_tree(&radix, &ext_cb, &prev_end);
++	if (err)
++		goto out;
++
++	/* Mark everything from last busy block to end of DRAM. */
++	if (prev_end < memblock_end_of_DRAM())
++		err = memblock_mark_kho_scratch_ext(prev_end,
++						    memblock_end_of_DRAM() - prev_end);
++
++	/* fallthrough */
++out:
++	kho_radix_destroy_tree(&radix);
++print:
++	if (err)
++		pr_err("Failed to extend scratch: %pe\n", ERR_PTR(err));
++}
++
+ /**
+  * kho_add_subtree - record the physical address of a sub blob in KHO root tree.
+  * @name: name of the sub tree.
+@@ -1406,23 +1537,6 @@ void kho_restore_free(void *mem)
  }
+ EXPORT_SYMBOL_GPL(kho_restore_free);
+ 
+-struct kho_in {
+-	phys_addr_t fdt_phys;
+-	phys_addr_t scratch_phys;
+-	char previous_release[__NEW_UTS_LEN + 1];
+-	u32 kexec_count;
+-	struct kho_debugfs dbg;
+-	struct kho_radix_tree radix_tree;
+-};
+-
+-static struct kho_in kho_in = {
+-};
+-
+-static const void *kho_get_fdt(void)
+-{
+-	return kho_in.fdt_phys ? phys_to_virt(kho_in.fdt_phys) : NULL;
+-}
+-
+ /**
+  * is_kho_boot - check if current kernel was booted via KHO-enabled
+  * kexec
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 6de3a77eb9ae..bbca4cc9b912 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -2702,6 +2702,7 @@ void __init __weak mem_init(void)
+ 
+ void __init mm_core_init_early(void)
+ {
++	kho_extend_scratch();
+ 	hugetlb_cma_reserve();
+ 	hugetlb_bootmem_alloc();
  
 -- 
 2.43.0
