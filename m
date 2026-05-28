@@ -4,65 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3DF18CD6E44
-	for <kexec@archiver.kernel.org>; Thu, 28 May 2026 14:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 20F4DCD4F54
+	for <kexec@archiver.kernel.org>; Thu, 28 May 2026 15:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mak8BcDRmJI9QTAk7PBzShu7AY5kBLAAqcpwHsNXbNo=; b=YsHqOc8jOGyrlwc39RU7+xPo0+
-	ufockQ6RpdW3sqqhtn9D99NXvWAlwVzPfjdh6KmOORMC4tn41dOdOkaxrD9LPMrP9pTXADuKfe4JC
-	A6SU3OOfLI/qC5IoirB/eYRO+8O8B31gzxrxKreMBsWG9w/YByac0AboMW3L2LHU0pwXezDFw4LyM
-	PrH269REdd5r+PdwLVfrM3eJPzN9r/Pyy/TMombWhuR7h24ki1rKge5l3Egzib9As/zkpd2cV0dLa
-	ocY8JLA1pYQsjqVZYgFpPYpx1SGpK0VwLFj7JLL3HNVAW6Adyq9XI+KNLud0dwkPgB7ZC93v7AoDj
-	8ddGtAKA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=p+m7PVKaXI1aH5GvoQay43qZF0QetiKnHaFlSk944tM=; b=FhVq/pTVHdpfL5/ikpjrhmS8UC
+	UuPz3HGXassI0FKHYjR+0DVNfTuBrFytOjbklEN4weMffG4+N6F9rIt2gT71pbEgLj+LvVKCFeFDL
+	Qt8hv58i6Wlw5due7xsqPCrfEEPgHGJP6Ueh6d3lfICuLowvbcPbHJpTIaORXPbgoMimzfpf6+s0t
+	F3jI8pEN+IJMgrCSplg7AqPV8PUQ2p6lD44v8Osvqqgwr3jY2cTdq3ErqSVIucsC+U733K5RjLn1T
+	W05pUecM25DozFAuxl5emvZQnCSrKkq5iYie9dkX8aPVnfM8ylSd3GXw3Gyfc3lVFqx3Z82hKnvWz
+	yAGJsIBA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wSc5X-00000005skK-2LyC;
-	Thu, 28 May 2026 14:51:59 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wScLC-00000005tvz-3DRe;
+	Thu, 28 May 2026 15:08:10 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wSc5U-00000005sjb-2tik
+	id 1wScLC-00000005tvs-0D0M
 	for kexec@lists.infradead.org;
-	Thu, 28 May 2026 14:51:58 +0000
+	Thu, 28 May 2026 15:08:10 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 048E940B55;
-	Thu, 28 May 2026 14:51:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82AC81F000E9;
-	Thu, 28 May 2026 14:51:51 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 54D7E6020A;
+	Thu, 28 May 2026 15:08:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BB471F000E9;
+	Thu, 28 May 2026 15:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779979915;
-	bh=mak8BcDRmJI9QTAk7PBzShu7AY5kBLAAqcpwHsNXbNo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Uwp9VVVlovjSGtHdqmf9FDdQqQcGbFNt+BgKqZ+lBhGJS8evJUIMk6guf3KfKHcg3
-	 UfiNS+sgaTVfYr9eIcBK3aDZy1MFXYN/Bi/+vaeF8GYN94P7oafAntf0JS3KUf+JER
-	 tI0H2Ida5sJmysfH1nljjpNMpOxFH1/LXYiS9K0Axpmhqob5+vwIwjK7NuGkIGDQsM
-	 7jsVEp+iFtvZACdjK0tjg0ECdgYGaA9isRlBhzIHbrA/R1XUpiLW+e0P0TV0kk7row
-	 jP1MbP+/8xMwhNyuqvGJcCtFjWJEUWtBgd42uoWcjc9LSDKT7GwPlKwSLbWfNqHAUl
-	 GxAMXX2OD/jiA==
-Date: Thu, 28 May 2026 17:51:47 +0300
+	s=k20260515; t=1779980889;
+	bh=p+m7PVKaXI1aH5GvoQay43qZF0QetiKnHaFlSk944tM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=GstNKpFJn1BqMn29fmUnfaTEeEKBSwtxZLRMmYGXQIIe/iiAvmyTQ5W0vzYGtfV/c
+	 lNeROYsbux3poXkKRbI3sTDTWukWkEpIJktoJPH3pozN7pu6Au6jl8ZY5DLue6OQ/3
+	 /7h+poVvHEHTtTAKGMesvcEtrlVGjfGBHLdQmq1oaw13lf9+/29IRzuPbZsMg41zAz
+	 +Hvqpa6D+ml4XLqTjNrBDbG++CBK3bzgMYTwJaVIpuaE+OgPKRzpYF24YcqyN3qtb8
+	 CfVoubZN8+rAsi9TVrxzsAkVCshz99GWbpTCyhXh5zj2IgxvHG/x83wbOnOT6OXjAZ
+	 NxOjNAEOeYILg==
 From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, sourabhjain@linux.ibm.com,
-	jbouron@amazon.com, akpm@linux-foundation.org, error27@gmail.com,
-	bhe@redhat.com, linux-kernel@vger.kernel.org,
-	rafael.j.wysocki@intel.com, piliu@redhat.com,
-	kexec@lists.infradead.org, skhawaja@google.com, graf@amazon.com,
-	mario.limonciello@amd.com
-Subject: Re: [PATCH v6 3/5] liveupdate: block session mutations during reboot
-Message-ID: <ahhWgyYC-OJwBYgq@kernel.org>
-References: <20260527202737.1345192-1-pasha.tatashin@soleen.com>
- <20260527202737.1345192-4-pasha.tatashin@soleen.com>
- <2vxzv7c739a2.fsf@kernel.org>
+To: kexec@lists.infradead.org,
+	luca.boccassi@gmail.com
+Cc: Mike Rapoport <rppt@kernel.org>,
+	linux-mm@kvack.org,
+	pasha.tatashin@soleen.com,
+	pratyush@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] liveupdate: document current compatibility status
+Date: Thu, 28 May 2026 18:08:02 +0300
+Message-ID: <177998087846.707577.12006390274464324360.b4-ty@b4>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260527153725.1770394-1-luca.boccassi@gmail.com>
+References: <20260527153725.1770394-1-luca.boccassi@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2vxzv7c739a2.fsf@kernel.org>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260528_075156_750453_2A34D1B1 
-X-CRM114-Status: GOOD (  18.50  )
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,54 +73,23 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, May 28, 2026 at 04:20:53PM +0200, Pratyush Yadav wrote:
-> On Wed, May 27 2026, Pasha Tatashin wrote:
-> 
-> > During the reboot() syscall, user processes may still be running
-> > concurrently and attempting to mutate sessions (e.g., creating,
-> > retrieving, or releasing sessions). To prevent this, introduce
-> > luo_session_serialize_rwsem to synchronize mutations with the
-> > serialization process.
-> >
-> > All session mutation operations (create, retrieve, release, ioctl) take
-> > the read lock. The serialization process (luo_session_serialize) takes
-> > the write lock and holds it indefinitely on success. This effectively
-> > freezes the LUO session subsystem during the transition to the new
-> > kernel. If serialization fails, the lock is released to allow recovery.
-> >
-> > Fixes: 0153094d03df ("liveupdate: luo_session: add sessions support")
-> > Reported-by: Oskar Gerlicz Kowalczuk <oskar@gerlicz.space>
-> > Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> > ---
-> >  kernel/liveupdate/luo_session.c | 56 +++++++++++++++++++++++++++++++--
-> >  1 file changed, 53 insertions(+), 3 deletions(-)
-> >  
-> > +/*
-> > + * Protects session mutations during serialization. All session mutation
-> > + * operations must hold the read lock. The serialization process holds the write
-> > + * lock indefinitely on success to block all concurrent and future mutations.
-> > + */
-> 
-> Nit: this comment is redundant now. I guess you can remove this when
-> applying.
+From: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-Done :)
- 
-> Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-> 
-> > +static DECLARE_RWSEM(luo_session_serialize_rwsem);
-> > +
-> >  /**
-> >   * struct luo_session_header - Header struct for managing LUO sessions.
-> >   * @count:      The number of sessions currently tracked in the @list.
-> [...]
-> 
-> -- 
-> Regards,
-> Pratyush Yadav
+On Wed, 27 May 2026 16:37:12 +0100, luca.boccassi@gmail.com wrote:
+> We currently do not guarantee compatibility due to ongoing
+> development, so mention this explicitly in the user-facing
+> documentation.
 
--- 
+Applied to next branch of liveupdate/linux.git tree, thanks!
+
+[1/1] liveupdate: document current compatibility status
+      commit: d72c0a7b321cfe3a3cb510c599fd5e9cf3df24fc
+
+tree: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux
+branch: next
+
+--
 Sincerely yours,
 Mike.
+
 
