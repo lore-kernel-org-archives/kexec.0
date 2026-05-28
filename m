@@ -4,68 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 080BDCD6E57
-	for <kexec@archiver.kernel.org>; Tue,  2 Jun 2026 15:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2B549CD6E64
+	for <kexec@archiver.kernel.org>; Tue,  2 Jun 2026 15:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=4yR5CPO0KLLo3uOC/5zlV3U1Y37VvnS9l3MG4spR538=; b=U8khsPcmClKs6EzZNG+aCAKVOS
-	Fyy3iyzxCYvxAfYom9kFEPoYpsZ1RseQ47x7HXhGVQMvX0GOywsVIoiUqBz7ABWmU3J5nXOgtNNpq
-	wAhJlDHKbqM9DwxOHJKTGzaf6bDmwad6y0lv2WWgDIq7yxqTawnS5MePtlVT/4aFMZigD/ki4x8I/
-	KTUqwpDyfUnICNve4ae+11Tv4gHo3ndJFLdpzF4/yEIJSm1KfJzypsE74Uaf3i1TlNPlZC91OM8ci
-	bCqk3b+JlsKM+QWw0MrvxOGrxrNJ4nX1RIQprDE9x1NWse9Ceo5Nys1uu2L/mLwBciCTuv6t0hm57
-	nbmS09sw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=u5ZL+hZHbV/pTWWeaWLQdg762ZQtOkbcULKixMOn0bQ=; b=5CAco53T7JbDODrBLI+BiUgezF
+	EB8SY8BNiKfjn49mCGpm3U76AsC8qx/A//8tE9Pha9RWYFoNRHHEX7cbdrUv8Xc41+A2dfwuQzrOA
+	R+ZxDB0dTXPbc5geWpTH6ce1KteSzFPuqAYUecI5eK03bJL58+/pl8vk1tqOwfJ3zWMBUf3L+bqIZ
+	aXAa/jGHSRva0wFdmzKmfawkBxlt+q3enaiPF+SvdiAwhDzXHbuxKfg7YSrg9tZjuvv+C8i9bro0E
+	wuf47mxCpi1q3J7TbrWgulEP0LrDEC27m0IIwxRbl87LDK9yq+Rn89SoEWT19seaoTwBman8PW1Iv
+	k1MzDsdA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUQrq-0000000DIUN-44kU;
+	id 1wUQrr-0000000DIW3-3D3h;
 	Tue, 02 Jun 2026 15:17:23 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+Received: from canpmsgout02.his.huawei.com ([113.46.200.217])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wRR21-0000000Gj0Z-10wr;
-	Mon, 25 May 2026 08:51:29 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Type:Content-Transfer-Encoding
-	:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=4yR5CPO0KLLo3uOC/5zlV3U1Y37VvnS9l3MG4spR538=; b=IdouUqnjhRAOv2s2jY0JzXt1g7
-	zvH+vB+QByPsTT/aGCdc+1qFjOLyBRiJVSyDdz8HnQi/dM7pRhT+TuRhFHOHrH0nf8M1X5c/ZU0Nh
-	AjtO8OIPqeAF13m1Qg3KKkA8ys0a96SKqPL4BWriANv87D8XGqUIH0f1qxSJi2HcO0hLON7bd9XBN
-	rS3k2vTqFF2HdnU8BxhGsG8LAQOaLzzHRBdUW6B5nMcyrO4EBdLtRoEdIwACMelnyKZnKnTlqgaYt
-	bf4BXl5qd2cqBol4sZuLApzaR4xTwBhQNl2z/TN4g8jejCr39O5Urnd0Hd+OpvdWRQCbNpVMTlBcu
-	PjRw4GAw==;
-Received: from canpmsgout11.his.huawei.com ([113.46.200.226])
-	by desiato.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wRR1v-00000008obR-3yUH;
-	Mon, 25 May 2026 08:51:28 +0000
+	id 1wSVL9-00000005HJx-1hSk;
+	Thu, 28 May 2026 07:39:41 +0000
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=4yR5CPO0KLLo3uOC/5zlV3U1Y37VvnS9l3MG4spR538=;
-	b=HiLPBKvL7AzcvDG+y+e5GKF8frq9ouAG5ppEoxmTckOGLNLMzmqvf/OcmcGJfXr4k2bTiVE3u
-	B9XH/S5lwN1WhqRdoJM8vJ/HPUF9EAUeYVirJ3Ufs6MiOEVQt5bHzDcmZwC6kaA6V/yyQeOquCT
-	b4FAK9eUPsKBR6NjNwUhCRY=
-Received: from mail.maildlp.com (unknown [172.19.163.15])
-	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gP8YH1hCdzKmSw;
-	Mon, 25 May 2026 16:43:31 +0800 (CST)
+	bh=u5ZL+hZHbV/pTWWeaWLQdg762ZQtOkbcULKixMOn0bQ=;
+	b=1WB2GNzIiq2qfSiouaY2eBpNlTCp9CXSIQnP/DR+JRdUP9LOzMG39nBxhaSnx3i1EvTkk0koF
+	MP95rV5mkYXdTAj5/1AL8Fatw2aQLMSIwUnEOl/84G4vPpz+9p58t8kHNA5P7Gcj6jk63HEJBED
+	bJc80/B28puWomV5/AKUkWE=
+Received: from mail.maildlp.com (unknown [172.19.163.104])
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4gQyq556rjzcb23;
+	Thu, 28 May 2026 15:31:45 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1417940539;
-	Mon, 25 May 2026 16:51:18 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
- (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 25 May
- 2026 16:51:14 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
-	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
-	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
-	<akpm@linux-foundation.org>, <bhe@redhat.com>, <rppt@kernel.org>,
+	by mail.maildlp.com (Postfix) with ESMTPS id 13B044056A;
+	Thu, 28 May 2026 15:39:34 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 28 May 2026 15:39:28 +0800
+Message-ID: <8aaa1d2e-09cc-4d58-b90e-1869d1bf55b2@huawei.com>
+Date: Thu, 28 May 2026 15:39:27 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 00/17] arm64/riscv: Add support for crashkernel CMA
+ reservation
+To: Mike Rapoport <rppt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>
+CC: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
+	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
+	<pjw@kernel.org>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+	<alex@ghiti.fr>, <tglx@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <robh@kernel.org>,
+	<saravanak@kernel.org>, <akpm@linux-foundation.org>, <bhe@redhat.com>,
 	<pasha.tatashin@soleen.com>, <pratyush@kernel.org>, <ruirui.yang@linux.dev>,
 	<rdunlap@infradead.org>, <pmladek@suse.com>, <feng.tang@linux.alibaba.com>,
 	<dapeng1.mi@linux.intel.com>, <kees@kernel.org>, <elver@google.com>,
@@ -85,22 +76,20 @@ To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
 	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
 	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v14 17/17] arm64/crash: Add crash hotplug support
-Date: Mon, 25 May 2026 16:49:32 +0800
-Message-ID: <20260525084932.934910-18-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260525084932.934910-1-ruanjinjie@huawei.com>
 References: <20260525084932.934910-1-ruanjinjie@huawei.com>
-MIME-Version: 1.0
+ <CAAhV-H4NA7vgyxKnK+N_3C6pWBnwXc2URUyLh_h1m-MO=MnsGQ@mail.gmail.com>
+ <ahQ0WRiMsB011tym@kernel.org>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <ahQ0WRiMsB011tym@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+X-Originating-IP: [10.67.109.254]
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
  dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260525_095124_961429_4388AAC0 
-X-CRM114-Status: GOOD (  34.46  )
+X-CRM114-CacheID: sfid-20260528_003940_521672_9DDD9D16 
+X-CRM114-Status: UNSURE (   9.85  )
+X-CRM114-Notice: Please train this message.
 X-Mailman-Approved-At: Tue, 02 Jun 2026 08:17:11 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -116,352 +105,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Due to CPU/Memory hotplug or online/offline events, the elfcorehdr
-(which describes the CPUs and memory of the crashed kernel) of kdump
-image becomes outdated. Consequently, attempting dump collection with
-an outdated elfcorehdr can lead to inaccurate dump collection.
 
-The current solution to address the above issue involves monitoring
-the CPU/Memory add/remove events in userspace using udev rules and
-whenever there are changes in CPU and memory resources, the entire
-kdump image is loaded again. The kdump image includes kernel, initrd,
-elfcorehdr, FDT, purgatory. Given that only elfcorehdr gets outdated
-due to CPU/Memory add/remove events, reloading the entire kdump image
-is inefficient. More importantly, kdump remains inactive for a
-substantial amount of time until the kdump reload completes.
 
-To address the aforementioned issue, commit 247262756121 ("crash: add
-generic infrastructure for crash hotplug support") added a generic
-infrastructure that allows architectures to selectively update the
-kdump image component during CPU or memory add/remove events within
-the kernel itself.
+On 5/25/2026 7:36 PM, Mike Rapoport wrote:
+> Hi Huacai,
+> 
+> On Mon, May 25, 2026 at 06:14:52PM +0800, Huacai Chen wrote:
+>> On Mon, May 25, 2026 at 4:50 PM Jinjie Ruan <ruanjinjie@huawei.com> wrote:
+>>>
+>>> Jinjie Ruan (16):
+>>>   riscv: kexec_file: Fix crashk_low_res not exclude bug
+>>>   powerpc/crash: Fix possible memory leak in update_crash_elfcorehdr()
+>>>   arm64: kexec: Fix image->elf_headers memory leak during retry loop
+>>>   x86/kexec: Fix potential buffer overflow in prepare_elf_headers()
+>>>   arm64: kexec_file: Fix potential buffer overflow in
+>>>     prepare_elf_headers()
+>>>   riscv: kexec_file: Fix potential buffer overflow in
+>>>     prepare_elf_headers()
+>>>   LoongArch: kexec: Fix potential buffer overflow in
+>>>     prepare_elf_headers()
+>>>   crash: Add crash_prepare_headers() to exclude crash kernel memory
+>>>   arm64: kexec_file: Use crash_prepare_headers() helper to simplify code
+>>>   x86/kexec: Use crash_prepare_headers() helper to simplify code
+>>>   riscv: kexec_file: Use crash_prepare_headers() helper to simplify code
+>>>   LoongArch: kexec: Use crash_prepare_headers() helper to simplify code
+>>>   crash: Use crash_exclude_core_ranges() on powerpc
+>>>   arm64: kexec: Add support for crashkernel CMA reservation
+>>>   riscv: kexec: Add support for crashkernel CMA reservation
+>>>   arm64/crash: Add crash hotplug support
+>> I have some bikesheedings about the subjects. Can we unify the prefix formats?
+>> x86/kexec, arm64: kexec_file, riscv: kexec_file, LoongArch: kexec .....
+> 
+> It might look weird in the series, but powerpc and x86 use '/' and arm64 and
+> riscv use ':' so in the logs in arch/ this would be actually fine.
+> 
+> With the only exception of arm64/crash that should have been arm64: crash:
 
-In the event of a CPU or memory add/remove events, the generic crash
-hotplug event handler, crash_handle_hotplug_event(), is triggered. It
-then acquires the necessary locks to update the kdump image and invokes
-the architecture-specific crash hotplug handler,
-arch_crash_handle_hotplug_event(), to update the required kdump image
-components.
+Thanks, will update it in next version.
 
-[1] has supported virtual CPU hotplug in virtual machines for ARM64,
-allowing vCPUs to be added or removed at runtime to meet Kubernetes
-demands.
-
-On ARM64, only memory add/remove events are handled. Here's why:
-
-1. Physical CPU hotplug: Not supported on ARM64 hardware.
-
-2. ACPI vCPU hotplug (KVM virtual machine):
-   - vCPU hotplug is implemented as a static firmware policy where all
-     possible vCPUs are pre-described in the MADT table at boot.
-   - The vCPU status will be automatically updated after vCPU hotplug.
-   - No FDT or elfcorehdr update needed.
-
-3. Device tree booted Virtual Machine vCPU hotplug:
-  - The elfcorehdr is built using for_each_possible_cpu(), so it
-    already includes all possible CPUs and doesn't need updates.
-
-For memory add/remove events, the elfcorehdr is updated to reflect
-the current memory layout.
-
-This patch adds the ARCH_SUPPORTS_CRASH_HOTPLUG config option and
-implements:
-- arch_crash_hotplug_support(): Check if hotplug update is supported
-- arch_crash_get_elfcorehdr_size(): Return elfcorehdr buffer size
-- arch_crash_handle_hotplug_event(): Handle memory hotplug events
-
-This follows the same approach as x86 commit
-ea53ad9cf73b ("x86/crash: add x86 crash hotplug support") and powerpc
-commit b741092d5976 ("powerpc/crash: add crash CPU hotplug support")
-and commit 849599b702ef ("powerpc/crash: add crash memory hotplug
-support").
-
-The test is based on the following QEMU version:
-	https://github.com/salil-mehta/qemu.git virt-cpuhp-armv8/rfc-v2
-
-Replace your '-smp' argument with something like:
- | -smp cpus=1,maxcpus=3,cores=3,threads=1,sockets=1
-
-then feed the following to the Qemu montior to hotplug vCPU;
- | (qemu) device_add driver=host-arm-cpu,core-id=1,id=cpu1
- | (qemu) device_del cpu1
-
-feed the following to the Qemu montior to hotplug memory;
- | (qemu) object_add memory-backend-ram,id=mem1,size=256M
- | (qemu) device_add pc-dimm,id=dimm1,memdev=mem1
- | (qemu) device_del dimm1
-
-The qemu startup configuration is as follows:
-qemu-system-aarch64 \
-		-M virt,gic-version=3,acpi=on,highmem=on \
-		-enable-kvm \
-		-cpu host \
-		-kernel Image \
-		-smp cpus=1,maxcpus=3,cores=3,threads=1,sockets=1 \
-		-bios /usr/share/edk2/aarch64/QEMU_EFI.fd \
-		-m 2G,slots=64,maxmem=16G \
-		-nographic \
-		-no-reboot \
-		-device virtio-rng-pci \
-		-append "root=/dev/vda rw console=ttyAMA0 kgdboc=ttyAMA0,115200 \
-			earlycon acpi=on crashkernel=512M" \
-		-drive if=none,file=images/rootfs.ext4,format=raw,id=hd0 \
-		-device virtio-blk-device,drive=hd0 \
-
-There are two system calls, `kexec_file_load` and `kexec_load`, used to
-load the kdump image. Only kexec_file_load syscall way is tested now.
-
-This patch is based on following rework:
-	https://lore.kernel.org/all/20260328074013.3589544-1-ruanjinjie@huawei.com/
-
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Breno Leitao <leitao@debian.org>
-Cc: Kees Cook <kees@kernel.org>
-[1]: https://lore.kernel.org/all/20240529133446.28446-1-Jonathan.Cameron@huawei.com/
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- arch/arm64/Kconfig                     |   3 +
- arch/arm64/include/asm/kexec.h         |  11 +++
- arch/arm64/kernel/Makefile             |   1 +
- arch/arm64/kernel/crash.c              | 125 +++++++++++++++++++++++++
- arch/arm64/kernel/machine_kexec_file.c |  23 ++++-
- 5 files changed, 161 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm64/kernel/crash.c
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index fe60738e5943..9091c67e1cc2 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1609,6 +1609,9 @@ config ARCH_DEFAULT_CRASH_DUMP
- config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
- 	def_bool CRASH_RESERVE
- 
-+config ARCH_SUPPORTS_CRASH_HOTPLUG
-+	def_bool y
-+
- config TRANS_TABLE
- 	def_bool y
- 	depends on HIBERNATION || KEXEC_CORE
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index cc2f36b1b0d4..f338d162dec1 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -131,6 +131,17 @@ extern int load_other_segments(struct kimage *image,
- extern int prepare_elf_headers(void **addr, unsigned long *sz);
- #endif
- 
-+#ifdef CONFIG_CRASH_HOTPLUG
-+void arch_crash_handle_hotplug_event(struct kimage *image, void *arg);
-+#define arch_crash_handle_hotplug_event arch_crash_handle_hotplug_event
-+
-+int arch_crash_hotplug_support(struct kimage *image, unsigned long kexec_flags);
-+#define arch_crash_hotplug_support arch_crash_hotplug_support
-+
-+unsigned int arch_crash_get_elfcorehdr_size(void);
-+#define crash_get_elfcorehdr_size arch_crash_get_elfcorehdr_size
-+#endif
-+
- #endif /* __ASSEMBLER__ */
- 
- #endif
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 74b76bb70452..629e962813ab 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -65,6 +65,7 @@ obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o kexec_image.o
- obj-$(CONFIG_ARM64_RELOC_TEST)		+= arm64-reloc-test.o
- arm64-reloc-test-y := reloc_test_core.o reloc_test_syms.o
- obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
-+obj-$(CONFIG_CRASH_HOTPLUG)		+= crash.o
- obj-$(CONFIG_VMCORE_INFO)		+= vmcore_info.o
- obj-$(CONFIG_ARM_SDE_INTERFACE)		+= sdei.o
- obj-$(CONFIG_ARM64_PTR_AUTH)		+= pointer_auth.o
-diff --git a/arch/arm64/kernel/crash.c b/arch/arm64/kernel/crash.c
-new file mode 100644
-index 000000000000..2114375820da
---- /dev/null
-+++ b/arch/arm64/kernel/crash.c
-@@ -0,0 +1,125 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Architecture specific functions for kexec based crash dumps.
-+ */
-+
-+#define pr_fmt(fmt)	"crash hp: " fmt
-+
-+#include <linux/kexec.h>
-+#include <linux/elf.h>
-+#include <linux/vmalloc.h>
-+#include <linux/crash_core.h>
-+
-+#include <asm/kexec.h>
-+
-+#ifdef CONFIG_CRASH_HOTPLUG
-+
-+int arch_crash_hotplug_support(struct kimage *image, unsigned long kexec_flags)
-+{
-+#ifdef CONFIG_KEXEC_FILE
-+	if (image->file_mode)
-+		return 1;
-+#endif
-+	/*
-+	 * For kexec_load syscall, crash hotplug support requires
-+	 * KEXEC_CRASH_HOTPLUG_SUPPORT flag to be passed by userspace.
-+	 */
-+	return kexec_flags & KEXEC_CRASH_HOTPLUG_SUPPORT;
-+}
-+
-+unsigned int arch_crash_get_elfcorehdr_size(void)
-+{
-+	unsigned int phdr_cnt;
-+
-+	/* A program header for possible CPUs, vmcoreinfo and kernel_map */
-+	phdr_cnt = 2 + num_possible_cpus();
-+	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
-+		phdr_cnt += CONFIG_CRASH_MAX_MEMORY_RANGES;
-+
-+	return sizeof(Elf64_Ehdr) + phdr_cnt * sizeof(Elf64_Phdr);
-+}
-+
-+/**
-+ * update_crash_elfcorehdr() - Recreate the elfcorehdr and replace it with old
-+ *			       elfcorehdr in the kexec segment array.
-+ * @image: the active struct kimage
-+ */
-+static void update_crash_elfcorehdr(struct kimage *image)
-+{
-+	void *elfbuf = NULL, *old_elfcorehdr;
-+	unsigned long mem, memsz;
-+	unsigned long elfsz = 0;
-+
-+	/*
-+	 * Create the new elfcorehdr reflecting the changes to CPU and/or
-+	 * memory resources.
-+	 */
-+	if (crash_prepare_headers(true, &elfbuf, &elfsz, NULL)) {
-+		pr_err("unable to create new elfcorehdr");
-+		goto out;
-+	}
-+
-+	/*
-+	 * Obtain address and size of the elfcorehdr segment, and
-+	 * check it against the new elfcorehdr buffer.
-+	 */
-+	mem = image->segment[image->elfcorehdr_index].mem;
-+	memsz = image->segment[image->elfcorehdr_index].memsz;
-+	if (elfsz > memsz) {
-+		pr_err("update elfcorehdr elfsz %lu > memsz %lu",
-+			elfsz, memsz);
-+		goto out;
-+	}
-+
-+	/*
-+	 * Copy new elfcorehdr over the old elfcorehdr at destination.
-+	 */
-+	old_elfcorehdr = (void *)__va(mem);
-+	if (!old_elfcorehdr) {
-+		pr_err("mapping elfcorehdr segment failed\n");
-+		goto out;
-+	}
-+
-+	/*
-+	 * Temporarily invalidate the crash image while the
-+	 * elfcorehdr is updated.
-+	 */
-+	xchg(&kexec_crash_image, NULL);
-+	memcpy_flushcache(old_elfcorehdr, elfbuf, elfsz);
-+	xchg(&kexec_crash_image, image);
-+	pr_debug("updated elfcorehdr\n");
-+
-+out:
-+	vfree(elfbuf);
-+}
-+
-+/**
-+ * arch_crash_handle_hotplug_event() - Handle hotplug elfcorehdr changes
-+ * @image: a pointer to kexec_crash_image
-+ * @arg: struct memory_notify handler for memory hotplug case and
-+ *       NULL for CPU hotplug case.
-+ *
-+ * Update the kdump image based on the type of hotplug event:
-+ * - CPU add and remove: No action is needed.
-+ * - Memory add/remove: Update the elfcorehdr to reflect the current memory layout.
-+ *
-+ * Prepare the new elfcorehdr and replace the existing elfcorehdr.
-+ */
-+void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
-+{
-+	switch (image->hp_action) {
-+	case KEXEC_CRASH_HP_ADD_CPU:
-+		fallthrough;
-+	case KEXEC_CRASH_HP_REMOVE_CPU:
-+		if (image->file_mode || image->elfcorehdr_updated)
-+			return;
-+		fallthrough;
-+	case KEXEC_CRASH_HP_ADD_MEMORY:
-+	case KEXEC_CRASH_HP_REMOVE_MEMORY:
-+		update_crash_elfcorehdr(image);
-+		return;
-+	default:
-+		pr_warn_once("Unknown hotplug action\n");
-+	}
-+}
-+#endif /* CONFIG_CRASH_HOTPLUG */
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index d2985ce62306..781febd0f6db 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -82,10 +82,11 @@ int load_other_segments(struct kimage *image,
- 			char *cmdline, void *headers,
- 			unsigned long headers_sz)
- {
--	struct kexec_buf kbuf = {};
--	void *dtb = NULL;
- 	unsigned long initrd_load_addr = 0, dtb_len,
- 		      orig_segments = image->nr_segments;
-+	struct kexec_buf kbuf = {};
-+	unsigned long pnum = 0;
-+	void *dtb = NULL;
- 	int ret = 0;
- 
- 	kbuf.image = image;
-@@ -98,6 +99,23 @@ int load_other_segments(struct kimage *image,
- 		kbuf.bufsz = headers_sz;
- 		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
- 		kbuf.memsz = headers_sz;
-+
-+#ifdef CONFIG_CRASH_HOTPLUG
-+		/*
-+		 * The elfcorehdr segment size accounts for VMCOREINFO, kernel_map
-+		 * maximum CPUs and maximum memory ranges.
-+		 */
-+		if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
-+			pnum = 2 + num_possible_cpus() + CONFIG_CRASH_MAX_MEMORY_RANGES;
-+		else
-+			pnum += 2 + num_possible_cpus();
-+
-+		if (pnum < (unsigned long)PN_XNUM)
-+			kbuf.memsz = pnum * sizeof(Elf64_Phdr) + sizeof(Elf64_Ehdr);
-+		else
-+			pr_err("number of Phdrs %lu exceeds max\n", pnum);
-+#endif
-+
- 		kbuf.buf_align = SZ_64K; /* largest supported page size */
- 		kbuf.buf_max = ULONG_MAX;
- 		kbuf.top_down = true;
-@@ -108,6 +126,7 @@ int load_other_segments(struct kimage *image,
- 			goto out_err;
- 		}
- 		image->elf_load_addr = kbuf.mem;
-+		image->elf_headers_sz = kbuf.memsz;
- 
- 		kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
- 			      image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
--- 
-2.34.1
+>  
+>> Huacai
+> 
 
 
