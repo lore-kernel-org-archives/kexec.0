@@ -4,69 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BB2D3CD4F54
-	for <kexec@archiver.kernel.org>; Thu, 28 May 2026 15:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 229E4CD4F54
+	for <kexec@archiver.kernel.org>; Thu, 28 May 2026 17:20:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=UGM5KvKWLvExd3E+G1wrD71i5d76a1GTqdZ3/HSVK7M=; b=CptqECLJajwoDGm7NgrH+36EI1
-	I3v7c/mHr1A/OgOxOrIlpEY1ZxOyZkWk6Y6reN8fahlMWylaDHOhhwveY+xFsOO7Sy1LQUGiorpfn
-	u6TIZFcgAUhj/9Dkz90LYh+t5+VuPQEPbXblE290kv/JElN0oKUXdAWijp51QLqyRdO9OOxJLdK4q
-	dsP6gz0oCz8fDDDWbboKsGCzZTCkpF1NUy0AKlo7XrpMEk2eypKEDchw5oU/q42WshzJrnA8gbDCg
-	r/uoKB+xI+O40tDuKzn6hxYhnqjhSebeGRUpCsbKxR1ktP/ifKFNYryQ+FXlYuVgu0VPhU4/Wiedo
-	bmAV+/8w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=G1jqnliR98jneaD+lQwah17DldevvtYlAZzFvc5/oGg=; b=GVcUGOo1J1I+QATZDjgLD6TeRI
+	/vkWXSFfTuiZZp5WR/NoMqeHIWwssCA/WsWS5XnjwC0dWtSwZ7LE/K4yMOCXqmEAc8R4/IxCZWNOh
+	3ux0pmHEDEfjtOiAmQ7jqeQzwTD2bxQCZIfMYMGTDtfjYPOIPImEk1x85BLjIJptWFNZJNotETNjQ
+	RDqyEiZqi+68Uk8ZFQUn54gG5MqiKiroy/sE8oJ1BducBvPRePMF9hvKvtLhO/VQATatdzFUZ5Q1i
+	G3gj6asfKt63HyD8cmThR4SKbHYgI0NETOmYfS3p+7S4h1jkMUgXffd+nQfGqgyM+94yps6n76Kjn
+	CSeVqEJQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wScLH-00000005txL-3WVG;
-	Thu, 28 May 2026 15:08:15 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wSePN-000000064zX-1waK;
+	Thu, 28 May 2026 17:20:37 +0000
+Received: from mail-ej1-x64a.google.com ([2a00:1450:4864:20::64a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wScLG-00000005tx1-3O9h
+	id 1wSePK-000000064yx-1vfX
 	for kexec@lists.infradead.org;
-	Thu, 28 May 2026 15:08:14 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 4651D6020A;
-	Thu, 28 May 2026 15:08:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 770651F00A3A;
-	Thu, 28 May 2026 15:08:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779980894;
-	bh=UGM5KvKWLvExd3E+G1wrD71i5d76a1GTqdZ3/HSVK7M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=nHZkqjwfdaygQVKG7bpOtkEdHsBJ2MKkZH3mUIhVAZUjNPmg02/IZvIXbwqY3lJ1q
-	 rhgtoha2IfP59eZoEp2TkwRYYcLHPvXkyj0Q14O7P+oFh5+XVmzK6R5JwQiXJFk0Mz
-	 kmjGLdLpGFwUHCfuVN8FoVAg46/VYZR5uNzXEUiIjPliQbH2eRZsDAMm7siaQAqjzK
-	 uJbqzUGBVAoac18pjOXIuj0MyFy56ykcT3N4cqhB/Osc5Vjxbn4tL5sCXZW+EKxqzN
-	 oYnlbA6cFPKzXSEVAw2KYrbEPE9fL/3HOJ8pO7VvSgsUESpETDWH9hdO3VET2g4fXe
-	 NDVhH/KuO72zQ==
-From: Mike Rapoport <rppt@kernel.org>
-To: sourabhjain@linux.ibm.com,
-	jbouron@amazon.com,
-	akpm@linux-foundation.org,
-	error27@gmail.com,
-	bhe@redhat.com,
-	linux-kernel@vger.kernel.org,
-	rafael.j.wysocki@intel.com,
-	piliu@redhat.com,
-	kexec@lists.infradead.org,
-	pratyush@kernel.org,
-	skhawaja@google.com,
-	graf@amazon.com,
-	mario.limonciello@amd.com,
+	Thu, 28 May 2026 17:20:36 +0000
+Received: by mail-ej1-x64a.google.com with SMTP id a640c23a62f3a-be2ac42926dso329669266b.3
+        for <kexec@lists.infradead.org>; Thu, 28 May 2026 10:20:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1779988832; x=1780593632; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=G1jqnliR98jneaD+lQwah17DldevvtYlAZzFvc5/oGg=;
+        b=gMm/G97OLrcHsZV/9y3CK31uFOhQExDscTSBRUFfwevqFt+ewGYpHoe2Qcnn+aawUQ
+         2RNnDyAfzWRCCF0dECBej7FrkGtyXtgHaWpS1zgX7ftbSnE+VDtmiLTORpGPO2xhJFhI
+         PNHHoGxH0Qz5TTtihfZr68xxAZRN/3DYPsa7irixmvW2BeeW2tQDYUHrmQjBiO4noZkL
+         Eoy7BmUQ1TCMh+QlKxBibrkOQO0dxOtG0APlgOEck3w9nqE3Kv3cRdZejtyZleVeIMAg
+         3idDcaqyBkXTjAKqpNBPQdpBlulTWcPDqmLVGm2SOGKC9TMPUxUjiJeYpqJ918YrN3IY
+         nudw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779988832; x=1780593632;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G1jqnliR98jneaD+lQwah17DldevvtYlAZzFvc5/oGg=;
+        b=CxGER2b+mnYMRJqhJ13h78WlyjXgOLLkhODlWsSfoWoAYtv56ikwOvE7Y+MLfgkBCx
+         r7/RFdeW+awVG71Xy1Tm2gAJWprYF9xXG/yUH7beoJEnycPGvzMvRUJAtSt6lfFIGUdu
+         GEr/YFzRW/pEFV07Ya1EIDBYIG+YEuJcGbdaa7bhronF1shU3Y2bxgUXyC8M3g1Aj7HC
+         T31V4NhdaD4ILJU+qAZy43q9YcWhd/UttOu7SNwtvhT3AhwH0ct8rgqarK5NnY7nxAHY
+         YJW5MuFXFS15jhzh7A9UeZYqRsysaYL4RVJnqA7A/H3gry/L49V/evPnV9grcB+6Wu2f
+         Wssw==
+X-Forwarded-Encrypted: i=1; AFNElJ+iTy5AlbhNREeCxdtE1311QZljtW3zXCnZWBDJJw9Ov0Z5/5XaFw1aC0CpreiPkQA6kTt3kA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzLhyzVKYcn5+UQoVykdn4wu/u5CQlbpiyIuRUfXEtITZP2I5lF
+	rQxbllSYEDdJwehV9W0AAWD/5qsgXFyejETEOL8kNThCC/SyVq/16/5SXg3khR/HueO/FFzp6/E
+	4SezZ1NzshyI5b8Ye4g==
+X-Received: from edbay13.prod.google.com ([2002:a05:6402:202d:b0:67c:4a59:4f8d])
+ (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:907:3d49:b0:bde:4dd2:6312 with SMTP id a640c23a62f3a-be974019025mr6289866b.37.1779988831481;
+ Thu, 28 May 2026 10:20:31 -0700 (PDT)
+Date: Thu, 28 May 2026 17:20:30 +0000
+In-Reply-To: <cover.1779080766.git.tarunsahu@google.com>
+Mime-Version: 1.0
+References: <cover.1779080766.git.tarunsahu@google.com>
+Message-ID: <9huzwlwnbgdd.fsf@tarunix.c.googlers.com>
+Subject: Re: [RFC PATCH v1 0/8] liveupdate: kvm: Guest_memfd preservation
+From: tarunsahu@google.com
+To: axelrasmussen@google.com, mark.rutland@arm.com, skhawaja@google.com, 
+	Mike Rapoport <rppt@kernel.org>, sagis@google.com, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Shuah Khan <shuah@kernel.org>, ackerleytng@google.com, corbet@lwn.net, 
+	dmatlack@google.com, Paolo Bonzini <pbonzini@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, vannapurve@google.com, 
+	Pratyush Yadav <pratyush@kernel.org>, david@redhat.com, aneesh.kumar@kernel.org, 
+	vipinsh@google.com, Alexander Graf <graf@amazon.com>, David Hildenbrand <david@kernel.org>, 
 	Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Mike Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH v6 0/5] liveupdate: serialization safety and race fixes
-Date: Thu, 28 May 2026 18:08:03 +0300
-Message-ID: <177998087859.707577.17373849853815129202.b4-ty@b4>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260527202737.1345192-1-pasha.tatashin@soleen.com>
-References: <20260527202737.1345192-1-pasha.tatashin@soleen.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	kexec@lists.infradead.org, linux-kselftest@vger.kernel.org, 
+	kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260528_102034_648281_E9B50BD0 
+X-CRM114-Status: GOOD (  64.83  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,38 +95,381 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Tarun Sahu <tarunsahu@google.com> writes:
 
-On Wed, 27 May 2026 20:27:32 +0000, Pasha Tatashin wrote:
-> This series addresses several issues related to the synchronization
-> between the reboot process and LUO session management.
-> 
-> 1. Skip LUO serialization for context-preserving kexec: A
-> preserve_context kexec returns to the current kernel, which is unrelated
-> to live update where state is passed to the next kernel. Skipping
-> serialization avoids unnecessary work and prevents sessions from being
-> left in a frozen state upon return.
-> 
-> [...]
 
-Applied to next branch of liveupdate/linux.git tree, thanks!
+Hi,
 
-[1/5] liveupdate: skip serialization for context-preserving kexec
-      commit: ef4448795cf193b2828019978d872bc0d301abe4
-[2/5] liveupdate: fix TOCTOU race in luo_session_retrieve()
-      commit: aedeca39112a2bee13e54097fbb98896010f375f
-[3/5] liveupdate: block session mutations during reboot
-      commit: 6f070471ce4fc9084165b77bfd7457ef85dc8c8c
-[4/5] liveupdate: fix u-a-f in luo_file_unpreserve_files() and luo_file_finish()
-      commit: 051c2ed7b42077c511654261f5efb52ab368817f
-[5/5] liveupdate: Remove unused ser field from struct luo_session
-      commit: 5428435567cbe06c19914592fc22ca23c9ca1de5
+Based on the discussion on Bi-weekly guest_memfd upstream call.
 
-tree: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux
-branch: next
+The following suggestions are made:
+1. Remove the prefaulted condition and During preservation, let the VMM
+   have the policy to either pause the VM or avoid any upcoming faults/conversion
+   (conversion is not part of this series, but design concept for future
+   extension) occurs. If new fault/conversion requests are originated,
+   Kernel will return error to notify VMM.
 
---
-Sincerely yours,
-Mike.
+   In future, We will revisit if this functionality can be extended
+   to handle post-preserve fault/conversion with having data on preservation
+   latency and complexity. Pratyush is already working on implementing
+   similar thing for memfd and hugetlb preservation.
 
+2. We are going with preserving the vm file along with guest_memfd file
+
+3. No need to preserve kvm->mem_attr_array, as this is on deprecating
+   path and For this series, where only fully shared guest_memfd is
+   supported for liveupdate, preservation of these attributes not
+   required.
+
+Due to time constraints:
+we have one open Question left:
+1. How to check guest_memfd is fully shared. Currently that is being
+   done by INIT_SHARED flag. But with in-place it is going to change
+   its meaning and it will mean only durng the creation of guest_memfd
+   it is shared whose folios can be converted to private.
+   So for this series, I am looking for suggestion, what is the best way
+   to find the sharedness of guest_memfd which will be compatible with
+   in-place series. OR we can go like this (my personnel recommendation):
+
+   if (guest_memfd_is_fully_shared())
+      return true; // support the preservation
+
+   // This series
+   int guest_memfd_is_fully_shared(void) {
+       if (guest_memfd->flags & GUEST_MEMFD_FLAG_INIT_SHARED)
+          return true;
+         return false;
+   }
+
+   TO::
+   // Once in-place conversion series lands.
+   int guest_memfd_is_fully_shared(void) {
+       if (No Private flags in (guest_memfd->attributes))
+          return true;
+         return false;
+   }
+
+~ Tarun
+
+
+> Hello,
+>
+> I am proposing this series as RFC, to initiate the discussion for
+> supporting the guest_memfd preservation. This will setup basic arhitecture
+> for VM preservation during liveupdate. This Cover letter has three
+> sections (please feel free to skip the on you already know):
+>
+> A. Guest_memfd introduction:
+> To make the audience familiar with guest_memfd
+> B. Liveupdate introduction:
+> To make the audience familiar with liveupdate
+> C. Actual Implementation Design and questions.
+>
+> **GUEST MEMFD INTRODUCTION**
+>
+> Initially, guest_memfd was created to support guest private memory in
+> confidential computing VMs (CoCo VMs). It was designed so that whenever
+> a guest wants to grant the host access to private memory, a series of
+> calls occurs: from the guest to KVM, KVM to the host userspace, host
+> userspace back to KVM, and finally a new page fault maps the memory into
+> a separate shared address space. Conversely, if the guest transitions the
+> memory back to private, the subsequent fault is handled by guest_memfd.
+> (Dual Mapping Architecture). In such a VM, all guest memory is initially
+> shared. On the fly, the guest may request to change pages to private; the
+> metadata indicating which parts of memory are private is stored in an
+> xarray inside struct kvm (mem_attr_array). This array serves as the source
+> of truth for the fault mechanism, determining whether a mapping should be
+> created from host-userspace-mapped pages or directly from the guest_memfd
+> file. For private memory, Fault also calls architecture-specific function
+> to set up private hardware access (e.g., on SEV-SNP or TDX). This type of
+> guest_memfd is fully-private where shared mapping comes from userspace
+> mapped address space.
+>
+> Subsequently, support was added to allow the entire guest memory to be
+> backed by guest_memfd. This led to the implementation of the MMAP and
+> INIT_SHARED flags for the guest_memfd inode. When KVM_CREATE_GUEST_MEMFD
+> is called with these flags, the guest_memfd becomes mmap-able by host
+> userspace. The INIT_SHARED flag is used to make the guest_memfd completely
+> shared between the host and the guest. Consequently, page faults from both
+> host userspace and the guest resolve to the same guest_memfd page cache.
+> However, under this configuration, marking a portion of this memory as
+> private is not possible. This type of guest_memfd is fully-shared.
+>
+> If guest_memfd is created with INIT_SHARED without MMAP, the host
+> can never access the guest_memfd. But the memory is still considered
+> shared.
+>
+> Hence, At this point, Only use-case of guest_memfd is either fully-shared
+> or fully-private.
+>
+> There is ongoing work to make shared and private mapping in-place backed
+> by guest_memfd. [1] There is also ongoing work to back guest_memfd by
+> hugetlb pages. [2]
+>
+> **LIVEUPDATE INTRODUCTION (LIVEUPDATE ORCHESTRATOR - LUO)**
+>
+> Livepdate support was added in kernel to update the host kernel by
+> minimizing the downtime to minimal. This is generally achieved by
+> preserving the current state of the system and retrieve after boot to
+> resume from where we left it.
+>
+> Any subsystem that wants to preserve themselves, register their handler
+> with liveupdate system. This handler includes calls to the following
+>
+> *can_preserve (file)*:
+> This tells the luo system about the eligibility of the file. When
+> preserve ioctl is called, it first loop through all the file handlers
+> and call can_preserve, the one which return true, luo uses this file
+> handler fh->preserve call to preserve the file.
+>
+> *preserve(file)*:
+> This actually preserves the file.
+>
+> *unpreserve(file)*:
+> This unpreserve the file incase userspace want to go back.
+>
+> *retrieve(file)*:
+> On new kernel boot, this function retrieves the file.
+>
+> *finish(file)*:
+> When userspace decides that all the files in the liveupdate session has
+> been retrieved, it can trigger this to do final work of cleaning up.
+>
+> LUO preserve its memory using KHO (kexec-handover). All these APIs will
+> be implemented using KHO calls.
+>
+> **GUEST MEMFD PRESERVATION**
+>
+> This patch sets up the basic infrastructure to preserve the guest_memfd.
+> Currently this supports only fully-shared, pre-faulted guest_memfd
+> (INIT_SHARED) backed by PAGE_SIZE pages.
+>
+> It registers a new LUO file handler for guest_memfd file to serialize
+> and deserialize guest memory. This allows preserving guest memory backed
+> by guest_memfd across updates, ensuring that guest instances can be
+> resumed seamlessly without losing their memory contents.
+>
+> The preservation call is straight forward. It walks through the page
+> cache, serialize the folios and preserve them.
+>
+> On the retrieval path:
+> Currently, creating a guest_memfd requires an associated struct kvm
+> (derived from vm_file / vm_fd). Since there is no direct way to pass a
+> VM file descriptor via the LUO API, we considered two main approaches:
+>
+> Approach (1)
+> Split the KVM_CREATE_GUEST_MEMFD ioctl into two separate ioctl: one
+> to create the guest_memfd without a VM file (without struct kvm)
+> descriptor, and another to attach a newly created VM file descriptor to
+> a retrieved guest_memfd.
+>
+> Introducing a new ioctl is in itself a problem (UAPI). Currently, a
+> guest_memfd file belongs to a single VM. Decoupling creation and
+> attachment could allow a guest_memfd to be attached to any VM, or shared
+> among multiple VMs when passed at different offsets. Fully supporting
+> this feature would require extensive work, and it is unclear if there
+> are any non-LUO use cases that justify this complexity.
+> There is related work going on here [4], but not exactly same. It still
+> does not allow guest_memfd to be created without vm_fd. But there be
+> other ways to use it, I would like to discuss the idea.
+>
+> Approach (2)
+> Leverage a companion patch [3] (Also added as part of this series
+> PATCH[1]) that allows one file to retrieve another file from the same LUO
+> session. This enables the guest_memfd retrieval path to obtain the
+> preserved KVM file, use it during guest_memfd file creation, and
+> subsequently populate its preserved memory.
+>
+> Preserving the KVM file allows us to preserve additional VM-specific
+> metadata, which will be crucial in the future for cleanly resuming the
+> VM. Currently, it preserves only the VM type and kvm->mem_attr_array.
+>
+> Though the ongoing in-place sharing series [1] transfers attributes to
+> the guest_memfd file, But preserving the kvm file opens the opportunity
+> to preserve other VM state in future like registers state, vCPU etc.
+>
+> Having the extensive usecases for preserving the kvm file, I went
+> ahead with Approach (2). In future, if approach (1) become possible, it
+> can easily be integrated with approach (2).
+>
+> Following the first approach (preserving vm_fd along with guest_memfd),
+>
+> ** VM FILE LIVEUPDATE ** PATCH[3] && [4]
+>
+> *PATCH[3]* has refactored few functions to support kvm preservation.
+> During retrieval, vm_file needs to be recreated which will require kvm
+> api. This patch exports those APIs. There is a new addition to struct
+> kvm, vm_file. Which will be used by guest_memfd. I will discuss about
+> this later.
+>
+> *PATCH[4]*
+> The preservation of the vm file is straightforward.
+>
+> On the retrieval path:
+> KVM normally requires a unique identifier (fdname) upon creation,
+> which KVM typically assigns based on the newly created file descriptor
+> number. However, in the LUO retrieval path, the retrieve call restores
+> the underlying file structure and delegates actual file descriptor
+> allocation to LUO (check luo_session_retrieve_fd). Currently, I used an
+> atomically incremented sequence number as the fdname. I would like to
+> discuss whether userspace services rely on specific naming conventions
+> here. Or if we can change underlying the retrieve call
+> (luo_retrieve_file) to pass fd?
+>
+> **GUEST_MEMFD FILE LIVEUPDATE** PATCH[5], [6] & [7]
+>
+> *PATCH[5]*
+> During retrieval of guest_memfd file, for its creation, this patch has
+> exported APIs from guest_memfd.c to be used for guest_memfd_luo.c
+>
+> *PATCH[6]*
+> This patch implements the API for gmem inode freeze, which freeze the
+> fallocate operation on this inode. Freeze check can be extended in
+> future to prevent new page faults as well, when liveupdate support
+> for non-pre-faulted guest_memfd will be implemented.
+>
+> *PATCH[7]*
+> Preservation Path:
+> We have discussed about this before,
+> I would like to add to that and discuss here a major design decision:
+> "Preservation order in between VM File and guest_memfd file"
+>
+> Preservation Ordering is required because guest_memfd needs to store
+> vm file token as one of its data, which it can use during retrieval to
+> get the vm file and use (file->private_data: struct kvm ) for its
+> creation using [3]. So KVM file must be preserved before guest_memfd
+> file, so that guest_memfd preserve call can find vm file token from the
+> same luo session.
+>
+> Currently My preservation implementation does not require any strict
+> ordering, they can be preserved in any sequence from userspace. I
+> achieved this by implementing the freeze call for guest_memfd which
+> gets run at the end just before kexec. This call freeze the luo session
+> and no further changes can be done to the session. Inside guest_memfd
+> luo_freeze handler, I update the token for vm_file. Which enable us to
+> preserve the vm file and guest_memfd file in any order.
+>
+> The drawback is, incase vm_file is not preserved, freeze will fail. And
+> in enforcing the preserving order fails the guest_memfd preservation
+> from the start. As with VM preservation will evolve in future, it will
+> keep getting complicated so avoiding the preservation order should be
+> the better choice to make the userspace simpler. I would be happy to
+> disucss on this further.
+>
+> To get the token, we need the vm_file and there is no way to get the
+> vm_file from the struct kvm, as guest_memfd file only store the
+> struct kvm. I have introduced a new member in struct kvm, vm_file.
+> But with weak circular dependency as it is just to get the pointer
+> for the file. we don't want to keep the reference of the file as vm_file
+> takes for the kvm to keep itself (vm_file) alive. So whenever there is a
+> need to use of kvm->vm_file, we take the reference and drop it suddenly.
+>
+> Retrieval Path:
+> During retrieval path, we just retrieve the data from kho and populate
+> into the newly created guest_memfd.
+> To create guest_memfd itself, it needs struct kvm, as we discussed
+> above, which will come from vm_file, hence retrieval order is needed
+> here. VM file needs to be retrieved first before guest_memfd.
+>
+> To handle this situation, I had three approaches in mind with their own
+> pros and cons:
+>
+> Approach (1):
+> Use [3], retrieve internally using liveupdate_get_file_incoming which
+> inherently retrieves the file incase it was not retrieved by the
+> userspace already. But this creates an scenerio, that userspace might
+> call luo_finish which will drop all the references of vm_file (and
+> userspace not holding any as it has not retrieved it yet explicitly).
+> And vm_file will get released. But this is a valid situation as when vm
+> is going to be put down. Userspace can close the vm_fd and have
+> guest_memfd yet opened and so other user of struct kvm like vCPUs etc.
+> Only thing, this makes retrieved guest_memfd unusable unless, there is
+> a mechanism to link to another VM (Nope).
+> This leaves us with following situation:
+> 	(A): As it is a valid situation, We can leave it as it, No
+> 	retrieval order enforcement.
+> 	(B): We can implement can_finish to check if userspace has
+> 	retrieved the vm_file, otherwise can stop luo_finish from
+> 	succeeding, but I did not find a way to implement such check.
+> Approach (2):
+> Enforce the strict order, by implementing a new call which will first
+> check whether the vm_file is retrieved or not, if not, it will not
+> retrieve it internally and retrurn err to the caller which is
+> guest_memfd retrieve function in this case. So guest_memfd can report
+> the userspace about this error.
+>
+> I have implemented Approach (1)(A), as it is a valid case, and does not
+> enforce any retrieve order on userspace, which relieves the burden from
+> the userspace when vm_file preservation will evolve. But userspace is
+> now expected to retrieve the vm_file before calling luo_finish or
+> guest_memfd will become unusable. As per LUO philosphy, It is userspace
+> error.
+>
+> **KERNEL SELFTEST FOR POC** PATCH[8] & [9]
+>
+> *PATCH[8]* refactor kvm selftest framework to expose some raw apis to
+> setup the VM.
+> *PATCH[9]* implements the basic test, where it spawn a VM with guest_memfd
+> or 16MB and fault it completely and write data to its 5MB portion. After
+> LUO preserve call, and kexec, On retrieve, a new VM is spawn with the
+> restored vm_file and restored guest_memfd and the data is verified.
+>
+> I will update this test in the next version to use the liveupdate
+> selftests library [5].
+>
+> Future Work:
+> 1. To support preservation for non-prefaulted guest_memfd to save memory
+> in KHO. (Already working on this, will post another series soon)
+> 2. Support private guest_memfd preservation.
+> 3. Extend the support for guest_memfd with in-place conversion of
+> shared/private.
+>
+> [1] https://lore.kernel.org/all/20260507-gmem-inplace-conversion-v6-0-91ab5a8b19a4@google.com/
+> [2] https://lore.kernel.org/all/cover.1747264138.git.ackerleytng@google.com/
+> [3] https://lore.kernel.org/all/20260427175633.1978233-2-skhawaja@google.com/
+> [4] https://lore.kernel.org/all/cover.1691446946.git.ackerleytng@google.com/
+> [5] https://lore.kernel.org/all/20260511201155.1488670-1-vipinsh@google.com/
+>
+> Pasha Tatashin (1):
+>   liveupdate: luo_file: Add internal APIs for file preservation
+>
+> Tarun Sahu (8):
+>   liveupdate: Add LIVEUPDATE_GUEST_MEMFD config option
+>   kvm: Prepare core VM structs and helpers for LUO support
+>   kvm: kvm_luo: Allow kvm preservation with LUO
+>   kvm: guest_memfd: Move internal definitions and helper to new header
+>   kvm: guest_memfd: Add support for freezing and unfreezing mappings
+>   kvm: guest_memfd_luo: add support for guest_memfd preservation
+>   selftests: kvm: Split ____vm_create() to expose init helpers
+>   selftests: kvm: Add guest_memfd_preservation_test
+>
+>  MAINTAINERS                                   |  13 +
+>  include/linux/kho/abi/kvm.h                   | 121 +++++
+>  include/linux/kvm_host.h                      |  14 +
+>  include/linux/liveupdate.h                    |  21 +
+>  kernel/liveupdate/Kconfig                     |  15 +
+>  kernel/liveupdate/luo_file.c                  |  69 +++
+>  kernel/liveupdate/luo_internal.h              |  17 +
+>  tools/testing/selftests/kvm/Makefile.kvm      |   2 +
+>  .../kvm/guest_memfd_preservation_test.c       | 285 ++++++++++
+>  .../testing/selftests/kvm/include/kvm_util.h  |   2 +
+>  tools/testing/selftests/kvm/lib/kvm_util.c    |  26 +-
+>  virt/kvm/Makefile.kvm                         |   1 +
+>  virt/kvm/guest_memfd.c                        | 180 +++++--
+>  virt/kvm/guest_memfd.h                        |  44 ++
+>  virt/kvm/guest_memfd_luo.c                    | 495 ++++++++++++++++++
+>  virt/kvm/kvm_luo.c                            | 346 ++++++++++++
+>  virt/kvm/kvm_main.c                           |  79 ++-
+>  virt/kvm/kvm_mm.h                             |   3 +
+>  18 files changed, 1653 insertions(+), 80 deletions(-)
+>  create mode 100644 include/linux/kho/abi/kvm.h
+>  create mode 100644 tools/testing/selftests/kvm/guest_memfd_preservation_test.c
+>  create mode 100644 virt/kvm/guest_memfd.h
+>  create mode 100644 virt/kvm/guest_memfd_luo.c
+>  create mode 100644 virt/kvm/kvm_luo.c
+>
+>
+> base-commit: 5200f5f493f79f14bbdc349e402a40dfb32f23c8
+> -- 
+> 2.54.0.563.g4f69b47b94-goog
 
