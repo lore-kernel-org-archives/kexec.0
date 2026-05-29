@@ -4,72 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D6B59CD4F54
-	for <kexec@archiver.kernel.org>; Fri, 29 May 2026 17:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9EECECD4F54
+	for <kexec@archiver.kernel.org>; Fri, 29 May 2026 21:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=NnR6byJK24AWzUyMAwKFy36yWBp82UtECELRMEvIWAk=; b=UUM36vD2v9E6IX0ZICNBWXE44l
-	Ivxjh+nYdMzd/q/+vv0aZgjX67lXoXrtETJky+l1Mo5kg45ddI14bxBkNp4yV891Fub9W5+YLJUH2
-	aJsRgXfHoc7TILqKvFBB3azU/NGp8X4+oXahJWEixOcNrlzXuoCGaRriOSJD39v95gEtni7SlQKdm
-	TJbz+oIf5tFqAefnJ4aQ1hePjgGYhuAWljYTSoUzdbQiLEJL8YXTWCcXSvWgIMxhSaL0mEcR6OOHJ
-	nH05ECwOtEQVyXrc9Lsun3y0gvm/06inDqa3HBXetscZl88yKbijF4xEKtkK2OMkPtQmICFlsg6LU
-	UjGuOtyg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=GG/5GCoeUNsrfPDvW1y+TyKN6C1lDobHYKQB8oiejhg=; b=S2W3Y89IAa7NHgtrXpOTd0Ytpd
+	6Yz5xz95uYMqZTazvaQpvb6QNh5oBAcIw7wEHEJ1NIMnrgb0NJe9tBtCNDpiw+fcjzg/M/XD6CKr1
+	d4EyLBY3932mheDJM9nAynDpLwsnPUajqZaT3OXZLxyuUEnt+jDDhYWDygIX5dsa1fdWKyfrXIwXg
+	1oC6Pdq1BbiKrYxEenrXedwin/vtHKJMqNVITJsYSlYZAubaNWetkLGg/xJke3ArnikpDqDSKmVJH
+	1gIuX8iK0sEs6d+t1+5uHXqPX2j0/FWj1iVmCgJ1iMewjFcSMFRs1VsJju6yilLm12im73++UH305
+	W7bx1hvg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wT0qB-00000007yq7-3NwW;
-	Fri, 29 May 2026 17:17:47 +0000
-Received: from mgamail.intel.com ([198.175.65.13])
+	id 1wT4Uc-00000008Ew1-2lsc;
+	Fri, 29 May 2026 21:11:46 +0000
+Received: from out-178.mta0.migadu.com ([2001:41d0:1004:224b::b2])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wT0q9-00000007ypZ-23g8
+	id 1wT4UZ-00000008Ev1-2e7A
 	for kexec@lists.infradead.org;
-	Fri, 29 May 2026 17:17:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780075065; x=1811611065;
-  h=date:from:to:cc:subject:message-id;
-  bh=jqELYto172FaiuSZRAFfyTyv58F6aslCVIqy/i0tFcU=;
-  b=HDx7Wbx6RTwzJtR6F3Ucs9SOutIxvkKCL2XHZCkTTigJW/grg4HeVeyZ
-   DHpZfaDcpO/kOOo+8gguVh1XiUxLDaDIXtiZJtDJRbmxGgGZSWW9LDFaF
-   rf0eGyF99Xo/ccFG7iVDkc19CnVua761yvv1WgnnNlU5U1penpsnwhq9Y
-   VqLGbQzk+v+AIFYxh7fj12jPDh1RWH+8XzD7Vw/25nLbiS2g90sXmVFxM
-   aeTiz98uABbHRH2Kq5bzIUOYsOpxloxRYV7KKOqakRVS5Y5MpX+v2FxU9
-   oHyB0PRUEoRIkJPcD973VL3LlpVnrl16n84s3F1P6sYlwP32nsJed4VKv
-   w==;
-X-CSE-ConnectionGUID: X9qkdF7ZQzyPoepIMyhOfg==
-X-CSE-MsgGUID: ySP/0ZOxSNSnDD6PDsLojQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11801"; a="92047723"
-X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="92047723"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 10:17:43 -0700
-X-CSE-ConnectionGUID: /3CrhS0CQKO+putQXXSY7w==
-X-CSE-MsgGUID: wqZM89q0STa2PmZjHGX6fg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="247845796"
-Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 29 May 2026 10:17:42 -0700
-Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wT0q3-000000007XG-0qHn;
-	Fri, 29 May 2026 17:17:39 +0000
-Date: Sat, 30 May 2026 01:17:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
-Subject: [liveupdate:next] BUILD SUCCESS
- 5428435567cbe06c19914592fc22ca23c9ca1de5
-Message-ID: <202605300156.CijG3CV5-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	Fri, 29 May 2026 21:11:45 +0000
+Date: Fri, 29 May 2026 14:11:27 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
+	s=key1; t=1780089100;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GG/5GCoeUNsrfPDvW1y+TyKN6C1lDobHYKQB8oiejhg=;
+	b=JnH/IUB+yUZ+0i59/kNTQ7Fn6NoTlkzZgqYd5GGytHRXFwVBdL41P1R8q2hwP2TvJPqbXp
+	//3zQgg2Yf5zrlvY8CTyQ5ybkYpI/9HSOkO+g3QoDOEzY83AdEHkzzhNqKQcyvijrBFfYH
+	6ptASG3En9xDOc5nzeIdF39Y9dEv17ymzJr2nm9VtET1AqsfKt475ClPOmAZndVvPZ8tdw
+	5jJVwqVFNdEBeV2ZksOVHwT2fREIuoF17HIFRmJPiQtKpcpyRXZMBtDfqrGNOMXkBgTF1k
+	5kPsyLusjA36bTtD3UEs2dhbDEEF0dn5WN2zhzf5xxjYJw52DWD0wFoc9PK4mw==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Krister Johansen <kjlx@templeofstupid.com>
+To: Tao Liu <ltao@redhat.com>
+Cc: yamazaki-msmt@nec.com, k-hagio-ab@nec.com, kexec@lists.infradead.org,
+	aravinda@linux.vnet.ibm.com, stephen.s.brennan@oracle.com
+Subject: Re: [PATCH v5][makedumpfile 0/9] btf/kallsyms based makedumpfile
+ extension for mm page filtering
+Message-ID: <ahoA_5MfC7FuC8CQ@templeofstupid.com>
+References: <20260414102656.55200-1-ltao@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260414102656.55200-1-ltao@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260529_101745_573628_B34F96C5 
-X-CRM114-Status: UNSURE (   4.15  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260529_141143_911552_EA5F3FB0 
+X-CRM114-Status: GOOD (  28.44  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,192 +70,76 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git next
-branch HEAD: 5428435567cbe06c19914592fc22ca23c9ca1de5  liveupdate: Remove unused ser field from struct luo_session
+On Tue, Apr 14, 2026 at 10:26:47PM +1200, Tao Liu wrote:
+> A) This patchset will introduce the following features to makedumpfile:
+> 
+>   1) Add .so extension support to makedumpfile
+>   2) Enable btf and kallsyms for symbol type and address resolving.
+> 
+> B) The purpose of the features are:
+> 
+>   1) Currently makedumpfile filters mm pages based on page flags, because flags
+>      can help to determine one page's usage. But this page-flag-checking method
+>      lacks of flexibility in certain cases, e.g. if we want to filter those mm
+>      pages occupied by GPU during vmcore dumping due to:
+> 
+>      a) GPU may be taking a large memory and contains sensitive data;
+>      b) GPU mm pages have no relations to kernel crash and useless for vmcore
+>         analysis.
+> 
+>      But there is no GPU mm page specific flags, and apparently we don't need
+>      to create one just for kdump use. A programmable filtering tool is more
+>      suitable for such cases. In addition, different GPU vendors may use
+>      different ways for mm pages allocating, programmable filtering is better
+>      than hard coding these GPU specific logics into makedumpfile in this case.
+> 
+>   2) Currently makedumpfile already contains a programmable filtering tool, aka
+>      eppic script, which allows user to write customized code for data erasing.
+>      However it has the following drawbacks:
+> 
+>      a) cannot do mm page filtering.
+>      b) need to access to debuginfo of both kernel and modules, which is not
+>         applicable in the 2nd kernel.
+>      c) eppic library has memory leaks which are not all resolved [1]. This
+>         is not acceptable in 2nd kernel.
+> 
+>      makedumpfile need to resolve the dwarf data from debuginfo, to get symbols
+>      types and addresses. In recent kernel there are dwarf alternatives such
+>      as btf/kallsyms which can be used for this purpose. And btf/kallsyms info
+>      are already packed within vmcore, so we can use it directly.
+> 
+>   With these, this patchset introduces makedumpfile extensions, which is based
+>   on btf/kallsyms symbol resolving, and is programmable for mm page filtering.
+>   The following section shows its usage and performance, please note the tests
+>   are performed in 1st kernel.
+> 
+>   3) Compile and run makedumpfile extensions:
+> 
+>   $ make LINKTYPE=dynamic USELZO=on USESNAPPY=on USEZSTD=on EXTENSION=on
+>   $ make extensions
 
-elapsed time: 1481m
+I love this idea.  Do you have time to take it further, and if not are
+you open to making the extension framework more modular so that we could
+add others in the future?
 
-configs tested: 172
-configs skipped: 2
+Could the btf lookups be extended to cover the symbol lookups used by
+eppic and the erase filters so that the -x option is unnecessary for
+kernels that have BTF support?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The current extension implementation is focused just on skipping pages,
+but it would be great to be able to use this to erase data in structures
+like the config filters and eppic, but without having to provide a
+vmlinux at dump time.  What do you think about adding the ability to
+use the extensions to also erase parts of data structures, in addition
+to filtering whole pages?
 
-tested configs:
-alpha                             allnoconfig    gcc-15.2.0
-alpha                            allyesconfig    gcc-15.2.0
-arc                              allmodconfig    gcc-15.2.0
-arc                               allnoconfig    gcc-15.2.0
-arc                              allyesconfig    gcc-15.2.0
-arc                   randconfig-001-20260529    clang-23
-arc                   randconfig-002-20260529    clang-23
-arm                               allnoconfig    clang-23
-arm                               allnoconfig    gcc-15.2.0
-arm                              allyesconfig    gcc-15.2.0
-arm                         lpc32xx_defconfig    clang-17
-arm                   randconfig-001-20260529    clang-23
-arm                   randconfig-002-20260529    clang-23
-arm                   randconfig-003-20260529    clang-23
-arm                   randconfig-004-20260529    clang-23
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.2.0
-csky                             allmodconfig    gcc-15.2.0
-csky                              allnoconfig    gcc-15.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    gcc-15.2.0
-hexagon                           allnoconfig    clang-23
-hexagon                           allnoconfig    gcc-15.2.0
-hexagon               randconfig-001-20260529    gcc-8.5.0
-hexagon               randconfig-002-20260529    gcc-8.5.0
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    gcc-14
-i386                              allnoconfig    gcc-15.2.0
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20260529    gcc-12
-i386        buildonly-randconfig-002-20260529    gcc-12
-i386        buildonly-randconfig-003-20260529    gcc-12
-i386        buildonly-randconfig-004-20260529    gcc-12
-i386        buildonly-randconfig-005-20260529    gcc-12
-i386        buildonly-randconfig-006-20260529    gcc-12
-i386                  randconfig-001-20260529    gcc-14
-i386                  randconfig-002-20260529    gcc-14
-i386                  randconfig-003-20260529    gcc-14
-i386                  randconfig-004-20260529    gcc-14
-i386                  randconfig-005-20260529    gcc-14
-i386                  randconfig-006-20260529    gcc-14
-i386                  randconfig-007-20260529    gcc-14
-i386                  randconfig-011-20260529    gcc-14
-i386                  randconfig-012-20260529    gcc-14
-i386                  randconfig-013-20260529    gcc-14
-i386                  randconfig-014-20260529    gcc-14
-i386                  randconfig-015-20260529    gcc-14
-i386                  randconfig-016-20260529    gcc-14
-i386                  randconfig-017-20260529    gcc-14
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-23
-loongarch                         allnoconfig    gcc-15.2.0
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20260529    gcc-8.5.0
-loongarch             randconfig-002-20260529    gcc-8.5.0
-m68k                             allmodconfig    gcc-15.2.0
-m68k                              allnoconfig    gcc-15.2.0
-m68k                             allyesconfig    gcc-15.2.0
-m68k                                defconfig    clang-19
-microblaze                        allnoconfig    gcc-15.2.0
-microblaze                       allyesconfig    gcc-15.2.0
-microblaze                          defconfig    clang-19
-mips                             allmodconfig    gcc-15.2.0
-mips                              allnoconfig    gcc-15.2.0
-mips                             allyesconfig    gcc-15.2.0
-nios2                            allmodconfig    clang-23
-nios2                             allnoconfig    clang-23
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    clang-19
-nios2                 randconfig-001-20260529    gcc-8.5.0
-nios2                 randconfig-002-20260529    gcc-8.5.0
-openrisc                         allmodconfig    clang-23
-openrisc                          allnoconfig    clang-23
-openrisc                          allnoconfig    gcc-15.2.0
-openrisc                            defconfig    gcc-15.2.0
-parisc                           allmodconfig    gcc-15.2.0
-parisc                            allnoconfig    clang-23
-parisc                            allnoconfig    gcc-15.2.0
-parisc                           allyesconfig    clang-19
-parisc                           allyesconfig    gcc-15.2.0
-parisc                              defconfig    gcc-15.2.0
-parisc                         randconfig-001    clang-19
-parisc                randconfig-001-20260529    clang-19
-parisc                         randconfig-002    clang-19
-parisc                randconfig-002-20260529    clang-19
-parisc64                            defconfig    clang-19
-powerpc                          allmodconfig    gcc-15.2.0
-powerpc                           allnoconfig    clang-23
-powerpc                           allnoconfig    gcc-15.2.0
-powerpc                        randconfig-001    clang-19
-powerpc               randconfig-001-20260529    clang-19
-powerpc                        randconfig-002    clang-19
-powerpc               randconfig-002-20260529    clang-19
-powerpc64                      randconfig-001    clang-19
-powerpc64             randconfig-001-20260529    clang-19
-powerpc64                      randconfig-002    clang-19
-powerpc64             randconfig-002-20260529    clang-19
-riscv                            allmodconfig    clang-23
-riscv                             allnoconfig    clang-23
-riscv                             allnoconfig    gcc-15.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    gcc-15.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-23
-s390                             allyesconfig    gcc-15.2.0
-s390                                defconfig    gcc-15.2.0
-sh                               allmodconfig    gcc-15.2.0
-sh                                allnoconfig    clang-23
-sh                                allnoconfig    gcc-15.2.0
-sh                               allyesconfig    clang-19
-sh                               allyesconfig    gcc-15.2.0
-sh                                  defconfig    gcc-14
-sparc                             allnoconfig    clang-23
-sparc                             allnoconfig    gcc-15.2.0
-sparc                               defconfig    gcc-15.2.0
-sparc                 randconfig-001-20260529    gcc-11.5.0
-sparc                 randconfig-002-20260529    gcc-11.5.0
-sparc64                          allmodconfig    clang-23
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20260529    gcc-11.5.0
-sparc64               randconfig-002-20260529    gcc-11.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-23
-um                               allyesconfig    gcc-14
-um                               allyesconfig    gcc-15.2.0
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20260529    gcc-11.5.0
-um                    randconfig-002-20260529    gcc-11.5.0
-um                           x86_64_defconfig    gcc-14
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-20
-x86_64                            allnoconfig    clang-23
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20260529    gcc-14
-x86_64      buildonly-randconfig-002-20260529    gcc-14
-x86_64      buildonly-randconfig-003-20260529    gcc-14
-x86_64      buildonly-randconfig-004-20260529    gcc-14
-x86_64      buildonly-randconfig-005-20260529    gcc-14
-x86_64      buildonly-randconfig-006-20260529    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20260529    clang-20
-x86_64                randconfig-002-20260529    clang-20
-x86_64                randconfig-003-20260529    clang-20
-x86_64                randconfig-004-20260529    clang-20
-x86_64                randconfig-005-20260529    clang-20
-x86_64                randconfig-006-20260529    clang-20
-x86_64                         randconfig-071    clang-20
-x86_64                randconfig-071-20260529    clang-20
-x86_64                         randconfig-072    clang-20
-x86_64                randconfig-072-20260529    clang-20
-x86_64                         randconfig-073    clang-20
-x86_64                randconfig-073-20260529    clang-20
-x86_64                         randconfig-074    clang-20
-x86_64                randconfig-074-20260529    clang-20
-x86_64                         randconfig-075    clang-20
-x86_64                randconfig-075-20260529    clang-20
-x86_64                         randconfig-076    clang-20
-x86_64                randconfig-076-20260529    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-14
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-x86_64                         rhel-9.4-kunit    gcc-14
-x86_64                           rhel-9.4-ltp    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    clang-23
-xtensa                            allnoconfig    gcc-15.2.0
-xtensa                           allyesconfig    clang-23
-xtensa                randconfig-001-20260529    gcc-11.5.0
-xtensa                randconfig-002-20260529    gcc-11.5.0
+Would you be willing to modify the extension registration options to
+allow an extension to specify what kind it is? That way, in the future
+we could register multiple different kinds without breaking existing
+ones.  One for filtering pages, one for erasing / modifying dump
+content, and others based upon whatever additional use cases develop.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+
+-K
 
