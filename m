@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6371ACD6E50
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0F133CD6E4F
 	for <kexec@archiver.kernel.org>; Fri, 29 May 2026 03:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,63 +12,63 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zMNVhv3SnOTuZ3xqpMfMs2g7riJHPagItEAHtnUEWTI=; b=jL1p9sdtpfNS/bihP9FfpDUQbp
-	+7ZbAQuxz737JQZcQdjlXgGEzW9b/0f6e58xqunjXis/73JqGqcKWbem77DirX6qhq1DT+FxuPeLh
-	g6cBvZGrxOCk2qhsmKd23oddPSN+B96ehmmsr+cTg8g4oZclWs5x++eJIfo7V08r8xEUCn9Q8pxyQ
-	De+hUZZneXoxdD71ZCtUIXy/X0Vn6U8W2098pSobRPULUBNeM3vnerIx7/wR8mmmIRCGW8XwPIzBy
-	n+6SKU2/Q2QnQN9mNcSeh5vH+kSP4HU9lpLaDWVs8a9pVUv2gm92Kc2lVPyyvS7wMeRpbH6l4CoLi
-	WKCxTg2Q==;
+	bh=l/PRPWvWF9f7qW0XjjBpwGc/NadY8LWCtXHDn2RYoSI=; b=RSGs45e1qvQZSQPhXphLsQ5mWf
+	L5QbgLhsBy04raQXquwbc+gX7Mw1Be0kXj2LAV7ylsEfN2hv0RU4iHsylGsRspkeesHrCpggR7xBC
+	bcQT9fciwmGC4DEzmiufw7nLlGFbrQ7BtDSaOI/FyDZLP8Yv500pocHBmS1IFLhJ6IodNjgonCegJ
+	U8sfUcWvUrCStiZImU9sWzGWvaYBiX3MxAj6oJfq8pq48mCfoNuxDUAYjIpNoXArDzGyIznBF1UwZ
+	VnrlFWT63enAY4HE2nBlYEr4NikJ5RYdD7WXMH9yOWLZK1yHzRlRp3K9tOwSEfsl0wYYR0AfQYfrj
+	gYXks3bw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wSnmq-00000006gcg-1LiF;
+	id 1wSnmq-00000006gcP-0i9P;
 	Fri, 29 May 2026 03:21:28 +0000
-Received: from mail-qv1-xf2e.google.com ([2607:f8b0:4864:20::f2e])
+Received: from mail-qt1-x82b.google.com ([2607:f8b0:4864:20::82b])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wSnmk-00000006gXt-39NI
+	id 1wSnmj-00000006gWI-3jIK
 	for kexec@lists.infradead.org;
 	Fri, 29 May 2026 03:21:23 +0000
-Received: by mail-qv1-xf2e.google.com with SMTP id 6a1803df08f44-8bb4e8a5240so168601306d6.1
-        for <kexec@lists.infradead.org>; Thu, 28 May 2026 20:21:22 -0700 (PDT)
+Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-51306c9f2e1so155573201cf.0
+        for <kexec@lists.infradead.org>; Thu, 28 May 2026 20:21:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1780024882; x=1780629682; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1780024880; x=1780629680; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=zMNVhv3SnOTuZ3xqpMfMs2g7riJHPagItEAHtnUEWTI=;
-        b=jDScEK/fx2r3NQns1vfE7PqSTE+JswYAVUk+NvjGtx+n3/43RzSZEeATQo1mzPiv91
-         TgywAlSYPEm+dAPKf1qDi7pu/FaBw7nsjpUZPtOdDJoAFtZXbY3/oHqM/kG7aAYplq/j
-         yoekOKvMyB8DqOxQ3QE+3aCtJqwB8JRW8MdaWCfYsbZRONVgDatJLwR6dbaez0LPHTdw
-         5j5iAnNKW+kc3JRGcBAhM1qog/S8Xy8tMBu0n0UNQe0NW1sQCxqrWCE4E/QfQY9hEvE0
-         H+bRZcPv99I+Io/vteWjSELdIqYmAh0/K+XDf3BqNekoWapRBi3roT4KAn7Ry3jKVp3v
-         FnTA==
+        bh=l/PRPWvWF9f7qW0XjjBpwGc/NadY8LWCtXHDn2RYoSI=;
+        b=cS+W7KR8l6bXmeaGDgKLxBTLJxNZ6+pR+HTfJIxg/CN04P5ZWq66/ATEzNUmprm485
+         /Ejs9vCe4HPU+21hBKF6Oof9qn8nBJgx0OG8Pibd/CmFnRIMOXAeGSB5TUh4HnDTb/38
+         G/U/Zvzo3bHfM8cRiWQ3wU7L93GlAlX6rM1wSx1yWMvnefMUmDjKPN3OQkIAjOCW6RGf
+         +LYQCezi4Y1/sAdFM/22g2/P8/WXT6uwg2U0b4AhkbPGa7e3p0zsaRlpan6wULPebcHz
+         Jse2wjnIam8ISOYyv+wYEHsGysjNKSOd1UYFU8o7xS9R8RMWNNf3eAhuAXuBDVNGpvmg
+         Szmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780024882; x=1780629682;
+        d=1e100.net; s=20251104; t=1780024880; x=1780629680;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=zMNVhv3SnOTuZ3xqpMfMs2g7riJHPagItEAHtnUEWTI=;
-        b=hsw7mTM6HCQd/o307aaBrkuOCa/RXUIDa0RB6M+9h3bXkYh9dlFenBmYib8ZzOCyu+
-         a1et4D9LyiOTryV3QZBc8UCssAIi2GOMHaZvi6bFYdARNGg3jIUVeZayPfMN2HnaFKSt
-         KOMRQjikbLRKKXWib7r2F2j+/UylXMY2pKDcYXIAep/y2DIJVnFopZDGArkuhJeFxX5h
-         YR0KfpeM/3k5QyhZ4NkmIjbRyMXTSxP3ZQsmtLpmwkAhpy5Dke5rLD8T3N8tDlynNxzK
-         zwvLkH+wSCUrfd1qEfbpWLYEGLBSwXNekKOIQpEf33LAs9OMF+mgHDyT3OuHqjAgmYYs
-         hU0w==
-X-Forwarded-Encrypted: i=1; AFNElJ/V70JNw0tF3poErDaxA84x9PdGkF8id67JBvn8tV/neGaMH5POMT/mJo5eV6FBHWBuhqYFjA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyG/kBhixyBaFHQfD+cq4jtOvCFZHpPa5qB1NDZHWmnfz43At0F
-	B54DRfz0XLsB0Y+7ldvdMtx4TnRjwD24Inoa/4EwhRXRInqYFyCfa+EWuBEVZIjlS50=
-X-Gm-Gg: Acq92OFJ7wkJbdmDpgL4MVXDJwEpAh6t24YaJNaTQSM45SZmqRk1RWbXHsPMmKsjrJ1
-	BS5gpFtqzZk87Gwr9YMehW7mDamVsFQr6jK/Y6B/nPf2TXu63vTmJuT7weeAOCAyCPlpaSMLG3M
-	AZ2z+2HXqGLMhc5C0qbYkteHS7A17IVEo6JsjVCfg16XVcAEBIB5S/d6CiBoI78lFll5sITBRRh
-	z5mouMvn5upNsKvGslaT0R0lWG1edweDNYWt3qeVT7iCW5z0y+ogfsHE2xms3GhGcdoJC6W0DQA
-	N29FadWVUFawQNMWJnYY2mWOyegGOKhHMuO/UQUvmqB5G9O9p0luRoPJNuynC82JCvuD7rN23fu
-	d4MdP9S5xfv04y59qSvTwXbqP7bl9GqS/5LkJK4fxKsa6WIPyfSWwuyVrUalhJQndalMhnF9V39
-	PT5uzI4x0rsy8s7VcXCMknOjx0G794nLvZiL7s+e8toxr3MqowSx7p2oe+R+cPnA==
-X-Received: by 2002:a05:6214:518b:b0:8ca:deb:3f9f with SMTP id 6a1803df08f44-8cce82412d1mr11698806d6.34.1780024881756;
-        Thu, 28 May 2026 20:21:21 -0700 (PDT)
+        bh=l/PRPWvWF9f7qW0XjjBpwGc/NadY8LWCtXHDn2RYoSI=;
+        b=EvEt0yCex7g9mN5oNdstSzN0wc2YNmfqxp2eD8piKpjyyXIb2mIQmwxBGavWE76oIV
+         pADl8pnqWll68zXNonbr+Lg7LFu5/9eoqtsAsQcScfkUACfQ3P6MYm9j7s90pD1Aon1D
+         cUILyyqsELX4DyYXTCFXqS0WLorcd2caSKz2TZX/oQHqOkqsZbESiLdr5arVwD+5BVcw
+         7rvXDqmtiN5rX5PQFMCSiox3uZi3RNqMCyVY3ZY9dBxXft98NZcnzVR0S/2UWXOuQOxs
+         Czdo2GxiCXN4ldhCDT3U71PmDa+k7eulFTTl7n7o0FPwjPQziFxEobMqfBe71qaBi4hi
+         2ZsQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+z6dexeIYJhmdbuQV8tNq7f4Eo6mEk+FCSjYcsYv+wYW8V/pTKVd7eou85f9JSYqco+ZAtTQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyFBQuLImQlkjkWE2msOc4uUeT0WlJlYUJdiJDwTyBRW2xbNLuz
+	PdLWXjCsAvbhvOrtEwy99iYrzpyc7pVO2FL3vkKAG9LQwOOGk92XawlOVAVjO4qHq8g=
+X-Gm-Gg: Acq92OHWIv3LnvCbGr/aaSPOPIzf/p2YhQgMPhsdHFVqJdR3tlhSqnrHkMpkDsj6aZ1
+	9vAQ4OWb2nN70wyAtSHm8Z+C1a4AXoQFXyGR4b+Qdy18T6kAxW1ZErd/omOvYUDUazh15gIIM1L
+	53+l8LXk4cHnpRvZ8CQAtoyJFV3joLpan5T9bEq/n1D65QUt3xupiw5r+cEFcTa+plp11T7Fgkw
+	B3GR4oBHbmoyhlfE2IHVfTr9wyzYjjoWLGk646EnMJyC6ekGT8xkxxFRmVpqBnHtS2gDrODYyQO
+	rANN/yvOarrEQfCwUrKzrsg35Wp9qORwIJ9hePbuxdcCzjkL3AzaQY/b3NUAvO9Fz8ZXTWWG2oP
+	0uVnhDfAbRka5iM7s+yB8iMT+qOlH5nZ1RG6IEyNqvis7Uw/LBAn6anZAhbM0WkVl41iXE83rOA
+	VR7SgHkDdGdeO4vUTOClgRQ/l9lQejLmY4Eu4r+YQWOG0EySVC7I1rFzd/ZpJkgFxJIWDd8i7X
+X-Received: by 2002:a05:622a:5805:b0:516:e722:5ed1 with SMTP id d75a77b69052e-5172dd1e2a1mr15106211cf.29.1780024880588;
+        Thu, 28 May 2026 20:21:20 -0700 (PDT)
 Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ccea26d286sm1179476d6.48.2026.05.28.20.21.20
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ccea26d286sm1179476d6.48.2026.05.28.20.21.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2026 20:21:21 -0700 (PDT)
+        Thu, 28 May 2026 20:21:20 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: linux-kselftest@vger.kernel.org,
 	rppt@kernel.org,
@@ -85,17 +85,17 @@ To: linux-kselftest@vger.kernel.org,
 	pratyush@kernel.org,
 	skhawaja@google.com,
 	graf@amazon.com
-Subject: [PATCH v3 10/11] selftests/liveupdate: Add stress-sessions kexec test
-Date: Fri, 29 May 2026 03:21:05 +0000
-Message-ID: <20260529032106.1505796-11-pasha.tatashin@soleen.com>
+Subject: [PATCH v3 09/11] selftests/liveupdate: Test session and file limit removal
+Date: Fri, 29 May 2026 03:21:04 +0000
+Message-ID: <20260529032106.1505796-10-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260529032106.1505796-1-pasha.tatashin@soleen.com>
 References: <20260529032106.1505796-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260528_202122_801627_F9CB3BAD 
-X-CRM114-Status: GOOD (  16.69  )
+X-CRM114-CacheID: sfid-20260528_202121_946059_6F4A6624 
+X-CRM114-Status: GOOD (  17.44  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,139 +110,168 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add a new test that creates 2000 LUO sessions before a kexec
-reboot and verifies their presence after the reboot. This ensures
-that the linked-block serialization mechanism works correctly for
-a large number of sessions.
+With the removal of static limits on the number of sessions and files per
+session, the orchestrator now uses dynamic allocation.
+
+Add new test cases to verify that the system can handle a large number of
+sessions and files. These tests ensure that the dynamic block allocation
+and reuse logic for session metadata and outgoing files work correctly
+beyond the previous static limits.
 
 Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- tools/testing/selftests/liveupdate/Makefile   |   1 +
- .../liveupdate/luo_stress_sessions.c          | 102 ++++++++++++++++++
- 2 files changed, 103 insertions(+)
- create mode 100644 tools/testing/selftests/liveupdate/luo_stress_sessions.c
+ .../testing/selftests/liveupdate/liveupdate.c | 75 +++++++++++++++++++
+ .../selftests/liveupdate/luo_test_utils.c     | 24 ++++++
+ .../selftests/liveupdate/luo_test_utils.h     |  2 +
+ 3 files changed, 101 insertions(+)
 
-diff --git a/tools/testing/selftests/liveupdate/Makefile b/tools/testing/selftests/liveupdate/Makefile
-index 080754787ede..ed7534468386 100644
---- a/tools/testing/selftests/liveupdate/Makefile
-+++ b/tools/testing/selftests/liveupdate/Makefile
-@@ -6,6 +6,7 @@ TEST_GEN_PROGS += liveupdate
+diff --git a/tools/testing/selftests/liveupdate/liveupdate.c b/tools/testing/selftests/liveupdate/liveupdate.c
+index c7d94b9181e1..502fb3567e38 100644
+--- a/tools/testing/selftests/liveupdate/liveupdate.c
++++ b/tools/testing/selftests/liveupdate/liveupdate.c
+@@ -26,6 +26,7 @@
  
- TEST_GEN_PROGS_EXTENDED += luo_kexec_simple
- TEST_GEN_PROGS_EXTENDED += luo_multi_session
-+TEST_GEN_PROGS_EXTENDED += luo_stress_sessions
+ #include <linux/liveupdate.h>
  
- TEST_FILES += do_kexec.sh
- 
-diff --git a/tools/testing/selftests/liveupdate/luo_stress_sessions.c b/tools/testing/selftests/liveupdate/luo_stress_sessions.c
-new file mode 100644
-index 000000000000..f201b1839d1d
---- /dev/null
-+++ b/tools/testing/selftests/liveupdate/luo_stress_sessions.c
-@@ -0,0 +1,102 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+/*
-+ * Copyright (c) 2026, Google LLC.
-+ * Pasha Tatashin <pasha.tatashin@soleen.com>
-+ *
-+ * Validate that LUO can handle a large number of sessions across a kexec
-+ * reboot.
-+ */
-+
-+#include <stdio.h>
-+#include <unistd.h>
 +#include "luo_test_utils.h"
-+
-+#define NUM_SESSIONS 2000
-+#define STATE_SESSION_NAME "kexec_many_state"
-+#define STATE_MEMFD_TOKEN 999
-+
-+/* Stage 1: Executed before the kexec reboot. */
-+static void run_stage_1(int luo_fd)
+ #include "../kselftest.h"
+ #include "../kselftest_harness.h"
+ 
+@@ -499,4 +500,78 @@ TEST_F(liveupdate_device, get_session_name_max_length)
+ 	ASSERT_EQ(close(session_fd), 0);
+ }
+ 
++/*
++ * Test Case: Manage Many Sessions
++ *
++ * Verifies that a large number of sessions can be created and then
++ * destroyed during normal system operation. This specifically tests the
++ * dynamic block allocation and reuse logic for session metadata management
++ * without preserving any files.
++ */
++TEST_F(liveupdate_device, preserve_many_sessions)
 +{
++#define MANY_SESSIONS 2000
++	int session_fds[MANY_SESSIONS];
 +	int ret, i;
 +
-+	ksft_print_msg("[STAGE 1] Increasing ulimit for open files...\n");
-+	ret = luo_ensure_nofile_limit(NUM_SESSIONS);
++	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
++	if (self->fd1 < 0 && errno == ENOENT)
++		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
++	ASSERT_GE(self->fd1, 0);
++
++	ret = luo_ensure_nofile_limit(MANY_SESSIONS);
 +	if (ret == -EPERM)
-+		ksft_exit_skip("Insufficient privileges to set RLIMIT_NOFILE\n");
-+	if (ret < 0)
-+		ksft_exit_fail_msg("luo_ensure_nofile_limit failed: %s\n", strerror(-ret));
++		SKIP(return, "Insufficient privileges to set RLIMIT_NOFILE");
++	ASSERT_EQ(ret, 0);
 +
-+	ksft_print_msg("[STAGE 1] Creating state file for next stage (2)...\n");
-+	create_state_file(luo_fd, STATE_SESSION_NAME, STATE_MEMFD_TOKEN, 2);
++	for (i = 0; i < MANY_SESSIONS; i++) {
++		char name[64];
 +
-+	ksft_print_msg("[STAGE 1] Creating %d sessions...\n", NUM_SESSIONS);
-+
-+	for (i = 0; i < NUM_SESSIONS; i++) {
-+		char name[LIVEUPDATE_SESSION_NAME_LENGTH];
-+		int s_fd;
-+
-+		snprintf(name, sizeof(name), "many-test-%d", i);
-+		s_fd = luo_create_session(luo_fd, name);
-+		if (s_fd < 0) {
-+			fail_exit("luo_create_session for '%s' at index %d",
-+				  name, i);
-+		}
++		snprintf(name, sizeof(name), "many-session-%d", i);
++		session_fds[i] = create_session(self->fd1, name);
++		ASSERT_GE(session_fds[i], 0);
 +	}
 +
-+	ksft_print_msg("[STAGE 1] Successfully created %d sessions.\n",
-+		       NUM_SESSIONS);
-+
-+	close(luo_fd);
-+	daemonize_and_wait();
++	for (i = 0; i < MANY_SESSIONS; i++)
++		ASSERT_EQ(close(session_fds[i]), 0);
 +}
 +
-+/* Stage 2: Executed after the kexec reboot. */
-+static void run_stage_2(int luo_fd, int state_session_fd)
++/*
++ * Test Case: Preserve Many Files
++ *
++ * Verifies that a large number of files can be preserved in a single session
++ * and then destroyed during normal system operation. This tests the dynamic
++ * block allocation and management for outgoing files.
++ */
++TEST_F(liveupdate_device, preserve_many_files)
 +{
-+	int i, stage;
++#define MANY_FILES 500
++	int mem_fds[MANY_FILES];
++	int session_fd, ret, i;
 +
-+	ksft_print_msg("[STAGE 2] Starting post-kexec verification...\n");
++	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
++	if (self->fd1 < 0 && errno == ENOENT)
++		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
++	ASSERT_GE(self->fd1, 0);
 +
-+	restore_and_read_stage(state_session_fd, STATE_MEMFD_TOKEN, &stage);
-+	if (stage != 2) {
-+		fail_exit("Expected stage 2, but state file contains %d",
-+			  stage);
++	session_fd = create_session(self->fd1, "many-files-test");
++	ASSERT_GE(session_fd, 0);
++
++	ret = luo_ensure_nofile_limit(MANY_FILES + 10);
++	if (ret == -EPERM)
++		SKIP(return, "Insufficient privileges to set RLIMIT_NOFILE");
++	ASSERT_EQ(ret, 0);
++
++	for (i = 0; i < MANY_FILES; i++) {
++		mem_fds[i] = memfd_create("test-memfd", 0);
++		ASSERT_GE(mem_fds[i], 0);
++		ASSERT_EQ(preserve_fd(session_fd, mem_fds[i], i), 0);
 +	}
 +
-+	ksft_print_msg("[STAGE 2] Retrieving and finishing %d sessions...\n",
-+		       NUM_SESSIONS);
++	for (i = 0; i < MANY_FILES; i++)
++		ASSERT_EQ(close(mem_fds[i]), 0);
 +
-+	for (i = 0; i < NUM_SESSIONS; i++) {
-+		char name[LIVEUPDATE_SESSION_NAME_LENGTH];
-+		int s_fd;
-+
-+		snprintf(name, sizeof(name), "many-test-%d", i);
-+		s_fd = luo_retrieve_session(luo_fd, name);
-+		if (s_fd < 0) {
-+			fail_exit("luo_retrieve_session for '%s' at index %d",
-+				  name, i);
-+		}
-+
-+		if (luo_session_finish(s_fd) < 0) {
-+			fail_exit("luo_session_finish for '%s' at index %d",
-+				  name, i);
-+		}
-+		close(s_fd);
-+	}
-+
-+	ksft_print_msg("[STAGE 2] Finalizing state session...\n");
-+	if (luo_session_finish(state_session_fd) < 0)
-+		fail_exit("luo_session_finish for state session");
-+	close(state_session_fd);
-+
-+	ksft_print_msg("\n--- MANY-SESSIONS KEXEC TEST PASSED (%d sessions) ---\n",
-+		       NUM_SESSIONS);
++	ASSERT_EQ(close(session_fd), 0);
 +}
 +
-+int main(int argc, char *argv[])
+ TEST_HARNESS_MAIN
+diff --git a/tools/testing/selftests/liveupdate/luo_test_utils.c b/tools/testing/selftests/liveupdate/luo_test_utils.c
+index 3c8721c505df..333a3530051b 100644
+--- a/tools/testing/selftests/liveupdate/luo_test_utils.c
++++ b/tools/testing/selftests/liveupdate/luo_test_utils.c
+@@ -17,6 +17,7 @@
+ #include <sys/syscall.h>
+ #include <sys/mman.h>
+ #include <sys/types.h>
++#include <sys/resource.h>
+ #include <sys/stat.h>
+ #include <errno.h>
+ #include <stdarg.h>
+@@ -28,6 +29,29 @@ int luo_open_device(void)
+ 	return open(LUO_DEVICE, O_RDWR);
+ }
+ 
++int luo_ensure_nofile_limit(long min_limit)
 +{
-+	return luo_test(argc, argv, STATE_SESSION_NAME,
-+			run_stage_1, run_stage_2);
++	struct rlimit hl;
++
++	/* Allow to extra files to be used by test itself */
++	min_limit += 32;
++
++	if (getrlimit(RLIMIT_NOFILE, &hl) < 0)
++		return -errno;
++
++	if (hl.rlim_cur >= min_limit)
++		return 0;
++
++	hl.rlim_cur = min_limit;
++	if (hl.rlim_cur > hl.rlim_max)
++		hl.rlim_max = hl.rlim_cur;
++
++	if (setrlimit(RLIMIT_NOFILE, &hl) < 0)
++		return -errno;
++
++	return 0;
 +}
++
+ int luo_create_session(int luo_fd, const char *name)
+ {
+ 	struct liveupdate_ioctl_create_session arg = { .size = sizeof(arg) };
+diff --git a/tools/testing/selftests/liveupdate/luo_test_utils.h b/tools/testing/selftests/liveupdate/luo_test_utils.h
+index 90099bf49577..6a0d85386613 100644
+--- a/tools/testing/selftests/liveupdate/luo_test_utils.h
++++ b/tools/testing/selftests/liveupdate/luo_test_utils.h
+@@ -26,6 +26,8 @@ int luo_create_session(int luo_fd, const char *name);
+ int luo_retrieve_session(int luo_fd, const char *name);
+ int luo_session_finish(int session_fd);
+ 
++int luo_ensure_nofile_limit(long min_limit);
++
+ int create_and_preserve_memfd(int session_fd, int token, const char *data);
+ int restore_and_verify_memfd(int session_fd, int token, const char *expected_data);
+ 
 -- 
 2.53.0
 
