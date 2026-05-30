@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 69455CD6E56
-	for <kexec@archiver.kernel.org>; Sat, 30 May 2026 22:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1C993CD6E52
+	for <kexec@archiver.kernel.org>; Sat, 30 May 2026 22:20:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=tnOZ578sANpIwoJ8k/GY/+cuz8LX/+y1E1AZj+iRbjA=; b=UoEOxUKqMP4tEXFfKvWFI4+bPL
-	nTtzPRJzwYt45BhoW4ynZLygRe+QAQwu3xYtV/nKSbdZvNPl0voamuK/TRNayqzppBf3iE4U7g601
-	s2vWYBT79AOUtBywjDLfXMPMcs8dce70zxDvnbXtT3AgA+6m3vwN42AmeNtIa+V6SSkRquZO85NHQ
-	05nfemf6RYe0H2xvCathtC8JSsy046veB4Bk4lYVvuqOJqsi8NbryYf696l92ZI/8yL21SIk6gKDp
-	0agHAayhD+E2ZnMc1OABHfOtWK1cBvDvSwqF/20/p3JFXYOGxeUPUbAB9eewH2GEF6Gl8ge9tqDpi
-	2SR8OmzQ==;
+	bh=l/PRPWvWF9f7qW0XjjBpwGc/NadY8LWCtXHDn2RYoSI=; b=Vjezwu1EJE1ASxjw4jvUNPIODu
+	8iPb3CHc3m5uzGNvoFt/OGQBGBERO/+HztTeyhKoQNlxedKWx3ThzC9rpa+ywEU8Jx0QOutL9d59l
+	heI/xOedKsLhaACCNSMRzBlCHnGtD8UaX+lqxIDh1C60LK0HVIOdW0G67ZG31sm94qG3Lx7ijRa1c
+	MjkxRkwTPcnqE5OvK4yZEOntof0Q9aSIFAzyuKixHoPiqLzQBSicewsShWGsXuzOucsiV2z7PhiaX
+	ZkU5eaLcOgnwfOKpO8RW68CksjeP5QUwH7c3+6FhdEZ9dRfJfKaUPCoIR89wijvraqCdSQLboFnIB
+	Dkv23gvQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wTS2H-000000095yZ-0gEL;
-	Sat, 30 May 2026 22:20:05 +0000
-Received: from mail-qk1-x72e.google.com ([2607:f8b0:4864:20::72e])
+	id 1wTS2J-0000000962A-1Gzb;
+	Sat, 30 May 2026 22:20:07 +0000
+Received: from mail-qk1-x735.google.com ([2607:f8b0:4864:20::735])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wTS2E-000000095tg-05tv
+	id 1wTS2F-000000095v9-0Xzy
 	for kexec@lists.infradead.org;
-	Sat, 30 May 2026 22:20:03 +0000
-Received: by mail-qk1-x72e.google.com with SMTP id af79cd13be357-9155183b42cso13944685a.0
-        for <kexec@lists.infradead.org>; Sat, 30 May 2026 15:20:01 -0700 (PDT)
+	Sat, 30 May 2026 22:20:04 +0000
+Received: by mail-qk1-x735.google.com with SMTP id af79cd13be357-914ad42e617so1038404585a.2
+        for <kexec@lists.infradead.org>; Sat, 30 May 2026 15:20:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1780179601; x=1780784401; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1780179602; x=1780784402; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=tnOZ578sANpIwoJ8k/GY/+cuz8LX/+y1E1AZj+iRbjA=;
-        b=dkG/9Wzvxf+y1Ihl2nXISOc2PmrBfVDZqwlV6wIIm088hgflBhXw+kov6IkB4ZRWCK
-         8X16rzBSKBahD1U5pHpi0waunPg7PC79cUjZM7mvHcXI+j/R7qsPQmltHVlf2XlFVjaf
-         QOWaTc8pp26uHmu6hRgIddCP/3y2DgG7b4442ulidPzWAVSanPq96seqTHVUI/nnkuQr
-         MKxtslMNfM5Duwo8nNxR8/kVUSVO+LVFot+C9kr0+5T9ugRikLTPsabq9ZIHVgUdz96M
-         WycG40Js4qpzt3NzeAKEcv01QgpWHSGMq0r4IQ0qzNuv7djfwOc0aAyZbDm8C3JMPbXW
-         IQqQ==
+        bh=l/PRPWvWF9f7qW0XjjBpwGc/NadY8LWCtXHDn2RYoSI=;
+        b=k5sXGrD6Q6e6l47Fa1C41W2ANpoXkn/snZL9QybCKhgqmuVNA6ocE6zC5Ere3c99Ah
+         PWTo629ip+EYDMIUOzA6PVhZuUs7bt17SvX3T/SsV7MUYRAJ8xSzOpDNr3rDNvZkZdPS
+         y1DTdfHcVcQBq+oGlyg2+W5P6pncaS0GKCPjhSWUn0BjC416eMJMgj6BHDVL/iOxejai
+         ogVmFlqLSHeDWw+2+3VqMmVar9TZJp4BkdA3ZNeNg1meFUVkvIpMMX+cPcllQC8vVY2S
+         0UeVA2bMjF2qByYUz3FSRMCWYMlQjVofIVZINlG8Ns0yum62KKDxhLt4xAphgmtPD1/O
+         8Lhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780179601; x=1780784401;
+        d=1e100.net; s=20251104; t=1780179602; x=1780784402;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=tnOZ578sANpIwoJ8k/GY/+cuz8LX/+y1E1AZj+iRbjA=;
-        b=YUO/RY3pWTCZeinfvB3f2X6p710ukOpTWFgADWwxGOn3wWW0l6UDxlnuYVxPKaN64d
-         JRyItDb1LnaW8MQK7TJWnfFTEZa+Ou4vVO2yzacn5V8Gxup7jBfgzyqmKGqpa6DvOuLm
-         hb6EolcCEFRe2QZvRw9kCCDh19RjrIg3ffkdnjoG1gsHTLw+WEXtRvBBR8SsUgOi+5XV
-         76jbsWwWDa9A/yrJMV0NpAgMwEuxGcwL/J5UN3KoXSp9Lpf0HOFK8/UZtOmpNOK3LYfI
-         LtiRuEKo0WgrYX2nFF6xEHLU8Tn7objv5/LJK9Q5cBVi2q3SgKIi43emjZExbiqaL0wj
-         Gzyw==
-X-Forwarded-Encrypted: i=1; AFNElJ+14d8JRCIZluJ9tYr+Zju4mPvlWkLPbtkvRJ1gueIl5UXxuDENMsot/xpSj1xiz5WXl73X3Q==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzEHiBklraTCTfv6NN1xTwM1cXnIfOe3qGrmeFxSVhF9Pnq+Hhg
-	8YnXA02QRSYDuIVTyHaOrq3NgEDUheOjNf/aDTisGzbDT1oGHApUL9qzIVe3Za/xufI=
-X-Gm-Gg: Acq92OFXZbdKwqS0hsBkZAL3yHpE2wxDVIBbe4NFIs5/uNK2i1H7k6fFLpTxx/ysxFa
-	W7PZHO12VrAE2Ze6Sju2d2dT8wlMN9/fml4HC1FEb5FfjSJt79Jr++YXOIuClZauusw+mLJkZbR
-	s/422kaBrJyo9tVlTYG5k65CHNzcMIAeNyPxvSmz1m0kkVUOkePCEUe63r6PH4ZzYSi/+9x60th
-	udk9/rddbqv2NTiwsg/Qf4AF2Iv8YUrwNZB2o2EV6l5IOyEZRSxvwKk7I0kqNCqEEmkbu6WMk5b
-	lehsEGHX6qnYBnFe3fHgiUhtmD9sXvnCdJzJD2TjPTD5GPg+vPOkxEp2l4HBoyWCTs4+/Rd76AP
-	hVpCTlVaKPCKhhv7qo7/OxAkU6WSMDcH6AuHhtY8yQWvGcPf3EiPWA2abJ+juu+acKSjqFX8aN+
-	IUJb1V0yCO10i8kC7c95aQJneGO8/KGsHr1VAeBvWO1DbA0GDIkAXpCodK83MMsA==
-X-Received: by 2002:a05:620a:3181:b0:915:351b:3ad5 with SMTP id af79cd13be357-9153e16e848mr609702785a.29.1780179600683;
-        Sat, 30 May 2026 15:20:00 -0700 (PDT)
+        bh=l/PRPWvWF9f7qW0XjjBpwGc/NadY8LWCtXHDn2RYoSI=;
+        b=K0PcECVw4u2ZnbI+77WUSDiLiSROkJ8V9k3yogYL6+IcEIw0zkts429kc9XyFH+F8P
+         lU4YICHK7FQez2F+10TVlxHkiKWWCDsCz/LB5yQwCoMN1FisQA5TKgkMI0mWqDBkXkXF
+         quAzx61L5aH9HIgTxCmkX/6DtGcvx0Sm/lRxXTVpDpS5Dd5Xan/nlBVBsJUC+xo/P2QN
+         po7KyHk138wvhM25mU+nwDl6gxVv9mfJsxM9x1nMrIdxbRLgLZ9daBqDaBnSq+CGVROR
+         a+YUCTKrVSLQs8CKz4SsnvnfZaHA/qrfDHWEgYm1jfWXw35NY4Hc4YjESUGRxeNQ9D3m
+         wRog==
+X-Forwarded-Encrypted: i=1; AFNElJ8+Zw8qtzN/iTjB/joYkKakzPO+SBWPSR7VpyOX0c4SQiCoZg8dZxTLDDvXpnKyNS2SLOqERw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yw+Sx9ZVR8pIgUyixOL3I2YaXpz2RR7WxzwS1UcnWm3qVv7zeBq
+	74DHCwyJx5VFvl15YeAojgzzasKUvmbMcTpp1Vl5WSTxjILLLnHKIp9zNN9fQjElNrs=
+X-Gm-Gg: Acq92OFUy3REEx8vuSXGpaTzgiGId4x+2k2rbL4bIP9CV+84Bfh2xn3eXxLoCrs/Hnn
+	K7Mu7gVJ4xXjDGYfxQtGEJk1qTy08IhbtszqVyHB/Cn9o2tZQ8SBP4eOgzzC3NVpDB6Wl5t+I8Z
+	hv5l1Z9Tms3ISW9ALaKISjqint74O2EQRktD+ffmdDpms2iIxyYUcgyVmKWfNHoWNRSsGDLglGi
+	Ol82FJnLVrQXJnsYBmYqKyZtHEyAUnqPHKTDYtiovnVDqI0XjhC7ceHpRZ79lEyy5Iq7RIgvKyV
+	pnvj6PXwJ6vqTIMQJyDZQWF+uaV7UEhZg198YL2V3PWkDo6jhRGKJ0805DPyVBORCcYSOmXrB/H
+	50J5+qtd/fslSUFvzn5BdOWf4S6loUq5fig1Xsvk8MKoEz3AdVDw/IElXhTASIUdpcYz/vygZXL
+	tDqNFbtvWOq3Slb6sScV0MR6QrqEzRL8eamvV8RMujwP1pX9t3ez+fzF/FYDGhmCA6Q7iyAK77
+X-Received: by 2002:a05:620a:648d:b0:914:db82:f791 with SMTP id af79cd13be357-9153dc29a52mr727746685a.49.1780179601868;
+        Sat, 30 May 2026 15:20:01 -0700 (PDT)
 Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-915324868a0sm651790085a.18.2026.05.30.15.19.59
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-915324868a0sm651790085a.18.2026.05.30.15.20.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 May 2026 15:20:00 -0700 (PDT)
+        Sat, 30 May 2026 15:20:01 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: linux-kselftest@vger.kernel.org,
 	rppt@kernel.org,
@@ -85,17 +85,17 @@ To: linux-kselftest@vger.kernel.org,
 	pratyush@kernel.org,
 	skhawaja@google.com,
 	graf@amazon.com
-Subject: [PATCH v4 10/13] liveupdate: Remove limit on the number of files per session
-Date: Sat, 30 May 2026 22:19:35 +0000
-Message-ID: <20260530221938.115978-11-pasha.tatashin@soleen.com>
+Subject: [PATCH v4 11/13] selftests/liveupdate: Test session and file limit removal
+Date: Sat, 30 May 2026 22:19:36 +0000
+Message-ID: <20260530221938.115978-12-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260530221938.115978-1-pasha.tatashin@soleen.com>
 References: <20260530221938.115978-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260530_152002_117853_8FE969CF 
-X-CRM114-Status: GOOD (  27.01  )
+X-CRM114-CacheID: sfid-20260530_152003_653827_9B5EA02E 
+X-CRM114-Status: GOOD (  17.50  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,363 +110,167 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-To remove the fixed limit on the number of preserved files per session,
-transition the file metadata serialization from a single contiguous
-memory block to a chain of linked blocks.
+With the removal of static limits on the number of sessions and files per
+session, the orchestrator now uses dynamic allocation.
+
+Add new test cases to verify that the system can handle a large number of
+sessions and files. These tests ensure that the dynamic block allocation
+and reuse logic for session metadata and outgoing files work correctly
+beyond the previous static limits.
 
 Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- include/linux/kho/abi/luo.h      |  13 +--
- kernel/liveupdate/luo_file.c     | 144 +++++++++++++++----------------
- kernel/liveupdate/luo_internal.h |   6 +-
- 3 files changed, 80 insertions(+), 83 deletions(-)
+ .../testing/selftests/liveupdate/liveupdate.c | 75 +++++++++++++++++++
+ .../selftests/liveupdate/luo_test_utils.c     | 24 ++++++
+ .../selftests/liveupdate/luo_test_utils.h     |  2 +
+ 3 files changed, 101 insertions(+)
 
-diff --git a/include/linux/kho/abi/luo.h b/include/linux/kho/abi/luo.h
-index 79758d92ed5f..16df550ef143 100644
---- a/include/linux/kho/abi/luo.h
-+++ b/include/linux/kho/abi/luo.h
-@@ -35,8 +35,8 @@
-  *
-  *   - struct luo_session_ser:
-  *     Metadata for a single session, including its name and a physical pointer
-- *     to another preserved memory block containing an array of
-- *     `struct luo_file_ser` for all files in that session.
-+ *     to the first `struct kho_block_header_ser` for all files in that session.
-+ *     Multiple blocks are linked via the `next` field in the header.
-  *
-  *   - struct luo_file_ser:
-  *     Metadata for a single preserved file. Contains the `compatible` string to
-@@ -65,7 +65,7 @@
-  * The LUO state is registered under this KHO entry name.
-  */
- #define LUO_KHO_ENTRY_NAME	"LUO"
--#define LUO_COMPAT_BASE		"luo-v3"
-+#define LUO_COMPAT_BASE		"luo-v4"
- #define LUO_ABI_COMPATIBLE	LUO_COMPAT_BASE "-" KHO_BLOCK_ABI_COMPATIBLE
- #define LUO_ABI_COMPAT_LEN	ALIGN(sizeof(LUO_ABI_COMPATIBLE), 8)
- 
-@@ -103,9 +103,10 @@ struct luo_file_ser {
- 
- /**
-  * struct luo_file_set_ser - Represents the serialized metadata for file set
-- * @files:   The physical address of a contiguous memory block that holds
-- *           the serialized state of files (array of luo_file_ser) in this file
-- *           set.
-+ * @files:   The physical address of the first `struct kho_block_header_ser`.
-+ *           This structure is the header for a block of memory containing
-+ *           an array of `struct luo_file_ser` entries. Multiple blocks are
-+ *           linked via the `next` field in the header.
-  * @count:   The total number of files that were part of this session during
-  *           serialization. Used for iteration and validation during
-  *           restoration.
-diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
-index 9eec07a9e9fc..a445b1950ca7 100644
---- a/kernel/liveupdate/luo_file.c
-+++ b/kernel/liveupdate/luo_file.c
-@@ -118,11 +118,6 @@ static LIST_HEAD(luo_file_handler_list);
- /* Keep track of files being preserved by LUO */
- static DEFINE_XARRAY(luo_preserved_files);
- 
--/* 2 4K pages, give space for 128 files per file_set */
--#define LUO_FILE_PGCNT		2ul
--#define LUO_FILE_MAX							\
--	((LUO_FILE_PGCNT << PAGE_SHIFT) / sizeof(struct luo_file_ser))
--
- /**
-  * struct luo_file - Represents a single preserved file instance.
-  * @fh:            Pointer to the &struct liveupdate_file_handler that manages
-@@ -174,39 +169,6 @@ struct luo_file {
- 	u64 token;
- };
- 
--static int luo_alloc_files_mem(struct luo_file_set *file_set)
--{
--	size_t size;
--	void *mem;
--
--	if (file_set->files)
--		return 0;
--
--	WARN_ON_ONCE(file_set->count);
--
--	size = LUO_FILE_PGCNT << PAGE_SHIFT;
--	mem = kho_alloc_preserve(size);
--	if (IS_ERR(mem))
--		return PTR_ERR(mem);
--
--	file_set->files = mem;
--
--	return 0;
--}
--
--static void luo_free_files_mem(struct luo_file_set *file_set)
--{
--	/* If file_set has files, no need to free preservation memory */
--	if (file_set->count)
--		return;
--
--	if (!file_set->files)
--		return;
--
--	kho_unpreserve_free(file_set->files);
--	file_set->files = NULL;
--}
--
- static unsigned long luo_get_id(struct liveupdate_file_handler *fh,
- 				struct file *file)
- {
-@@ -276,16 +238,15 @@ int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd)
- 	if (luo_token_is_used(file_set, token))
- 		return -EEXIST;
- 
--	if (file_set->count == LUO_FILE_MAX)
--		return -ENOSPC;
-+	err = kho_block_grow(&file_set->block_set, file_set->count);
-+	if (err)
-+		return err;
- 
- 	file = fget(fd);
--	if (!file)
--		return -EBADF;
--
--	err = luo_alloc_files_mem(file_set);
--	if (err)
--		goto  err_fput;
-+	if (!file) {
-+		err = -EBADF;
-+		goto err_shrink;
-+	}
- 
- 	err = -ENOENT;
- 	down_read(&luo_register_rwlock);
-@@ -300,7 +261,7 @@ int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd)
- 
- 	/* err is still -ENOENT if no handler was found */
- 	if (err)
--		goto err_free_files_mem;
-+		goto err_fput;
- 
- 	err = xa_insert(&luo_preserved_files, luo_get_id(fh, file),
- 			file, GFP_KERNEL);
-@@ -343,10 +304,10 @@ int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd)
- 	xa_erase(&luo_preserved_files, luo_get_id(fh, file));
- err_module_put:
- 	module_put(fh->ops->owner);
--err_free_files_mem:
--	luo_free_files_mem(file_set);
- err_fput:
- 	fput(file);
-+err_shrink:
-+	kho_block_shrink(&file_set->block_set, file_set->count);
- 
- 	return err;
- }
-@@ -392,13 +353,14 @@ void luo_file_unpreserve_files(struct luo_file_set *file_set)
- 
- 		list_del(&luo_file->list);
- 		file_set->count--;
-+		kho_block_shrink(&file_set->block_set, file_set->count);
- 
- 		fput(luo_file->file);
- 		mutex_destroy(&luo_file->mutex);
- 		kfree(luo_file);
- 	}
- 
--	luo_free_files_mem(file_set);
-+	kho_block_destroy(&file_set->block_set);
- }
- 
- static int luo_file_freeze_one(struct luo_file_set *file_set,
-@@ -454,7 +416,7 @@ static void __luo_file_unfreeze(struct luo_file_set *file_set,
- 		luo_file_unfreeze_one(file_set, luo_file);
- 	}
- 
--	memset(file_set->files, 0, LUO_FILE_PGCNT << PAGE_SHIFT);
-+	kho_block_set_clear(&file_set->block_set);
- }
- 
- /**
-@@ -493,19 +455,23 @@ static void __luo_file_unfreeze(struct luo_file_set *file_set,
- int luo_file_freeze(struct luo_file_set *file_set,
- 		    struct luo_file_set_ser *file_set_ser)
- {
--	struct luo_file_ser *file_ser = file_set->files;
- 	struct luo_file *luo_file;
-+	struct kho_block_it it;
- 	int err;
--	int i;
- 
- 	if (!file_set->count)
- 		return 0;
- 
--	if (WARN_ON(!file_ser))
--		return -EINVAL;
-+	kho_block_it_init(&it, &file_set->block_set);
- 
--	i = 0;
- 	list_for_each_entry(luo_file, &file_set->files_list, list) {
-+		struct luo_file_ser *file_ser = kho_block_it_next(&it);
-+
-+		if (!file_ser) {
-+			err = -ENOSPC;
-+			goto err_unfreeze;
-+		}
-+
- 		err = luo_file_freeze_one(file_set, luo_file);
- 		if (err < 0) {
- 			pr_warn("Freeze failed for token[%#0llx] handler[%s] err[%pe]\n",
-@@ -514,16 +480,21 @@ int luo_file_freeze(struct luo_file_set *file_set,
- 			goto err_unfreeze;
- 		}
- 
--		strscpy(file_ser[i].compatible, luo_file->fh->compatible,
--			sizeof(file_ser[i].compatible));
--		file_ser[i].data = luo_file->serialized_data;
--		file_ser[i].token = luo_file->token;
--		i++;
-+		strscpy(file_ser->compatible, luo_file->fh->compatible,
-+			sizeof(file_ser->compatible));
-+		file_ser->data = luo_file->serialized_data;
-+		file_ser->token = luo_file->token;
- 	}
-+	kho_block_it_finalize(&it);
- 
- 	file_set_ser->count = file_set->count;
--	if (file_set->files)
--		file_set_ser->files = virt_to_phys(file_set->files);
-+	if (!list_empty(&file_set->block_set.blocks)) {
-+		struct kho_block *block;
-+
-+		block = list_first_entry(&file_set->block_set.blocks,
-+					 struct kho_block, list);
-+		file_set_ser->files = virt_to_phys(block->ser);
-+	}
- 
- 	return 0;
- 
-@@ -741,14 +712,12 @@ int luo_file_finish(struct luo_file_set *file_set)
- 		module_put(luo_file->fh->ops->owner);
- 		list_del(&luo_file->list);
- 		file_set->count--;
-+		kho_block_shrink(&file_set->block_set, file_set->count);
- 		mutex_destroy(&luo_file->mutex);
- 		kfree(luo_file);
- 	}
- 
--	if (file_set->files) {
--		kho_restore_free(file_set->files);
--		file_set->files = NULL;
--	}
-+	kho_block_destroy(&file_set->block_set);
- 
- 	return 0;
- }
-@@ -822,16 +791,18 @@ int luo_file_deserialize(struct luo_file_set *file_set,
- 			 struct luo_file_set_ser *file_set_ser)
- {
- 	struct luo_file_ser *file_ser;
-+	struct kho_block_it it;
- 	int err;
--	u64 i;
- 
- 	if (!file_set_ser->files) {
- 		WARN_ON(file_set_ser->count);
- 		return 0;
- 	}
- 
--	file_set->count = file_set_ser->count;
--	file_set->files = phys_to_virt(file_set_ser->files);
-+	file_set->count = 0;
-+	err = kho_block_restore(&file_set->block_set, file_set_ser->files);
-+	if (err)
-+		return err;
- 
- 	/*
- 	 * Note on error handling:
-@@ -848,25 +819,50 @@ int luo_file_deserialize(struct luo_file_set *file_set,
- 	 * userspace to detect the failure and trigger a reboot, which will
- 	 * reliably reset devices and reclaim memory.
- 	 */
--	file_ser = file_set->files;
--	for (i = 0; i < file_set->count; i++) {
--		err = luo_file_deserialize_one(file_set, &file_ser[i]);
-+	kho_block_it_init(&it, &file_set->block_set);
-+	while ((file_ser = kho_block_it_read(&it))) {
-+		err = luo_file_deserialize_one(file_set, file_ser);
- 		if (err)
--			return err;
-+			goto err_destroy_blocks;
-+		file_set->count++;
-+	}
-+
-+	if (file_set->count != file_set_ser->count) {
-+		pr_warn("File count mismatch: expected %llu, found %llu\n",
-+			file_set_ser->count, file_set->count);
-+		err = -EINVAL;
-+		goto err_destroy_blocks;
- 	}
- 
- 	return 0;
-+
-+err_destroy_blocks:
-+	while (!list_empty(&file_set->files_list)) {
-+		struct luo_file *luo_file;
-+
-+		luo_file = list_first_entry(&file_set->files_list,
-+					    struct luo_file, list);
-+		list_del(&luo_file->list);
-+		module_put(luo_file->fh->ops->owner);
-+		mutex_destroy(&luo_file->mutex);
-+		kfree(luo_file);
-+	}
-+	file_set->count = 0;
-+	kho_block_destroy(&file_set->block_set);
-+	return err;
- }
- 
- void luo_file_set_init(struct luo_file_set *file_set)
- {
- 	INIT_LIST_HEAD(&file_set->files_list);
-+	kho_block_set_init(&file_set->block_set, sizeof(struct luo_file_ser));
- }
- 
- void luo_file_set_destroy(struct luo_file_set *file_set)
- {
- 	WARN_ON(file_set->count);
- 	WARN_ON(!list_empty(&file_set->files_list));
-+	WARN_ON(!list_empty(&file_set->block_set.blocks));
- }
- 
- /**
-diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_internal.h
-index ee18f9a11b91..64879ffe7378 100644
---- a/kernel/liveupdate/luo_internal.h
-+++ b/kernel/liveupdate/luo_internal.h
-@@ -10,6 +10,7 @@
+diff --git a/tools/testing/selftests/liveupdate/liveupdate.c b/tools/testing/selftests/liveupdate/liveupdate.c
+index c7d94b9181e1..502fb3567e38 100644
+--- a/tools/testing/selftests/liveupdate/liveupdate.c
++++ b/tools/testing/selftests/liveupdate/liveupdate.c
+@@ -26,6 +26,7 @@
  
  #include <linux/liveupdate.h>
- #include <linux/uaccess.h>
-+#include <linux/kho_block.h>
  
- struct luo_ucmd {
- 	void __user *ubuffer;
-@@ -44,14 +45,13 @@ static inline int luo_ucmd_respond(struct luo_ucmd *ucmd,
-  * struct luo_file_set - A set of files that belong to the same sessions.
-  * @files_list: An ordered list of files associated with this session, it is
-  *              ordered by preservation time.
-- * @files:      The physically contiguous memory block that holds the serialized
-- *              state of files.
-+ * @block_set:  The set of serialization blocks.
-  * @count:      A counter tracking the number of files currently stored in the
-  *              @files_list for this session.
-  */
- struct luo_file_set {
- 	struct list_head files_list;
--	struct luo_file_ser *files;
-+	struct kho_block_set block_set;
- 	u64 count;
- };
++#include "luo_test_utils.h"
+ #include "../kselftest.h"
+ #include "../kselftest_harness.h"
+ 
+@@ -499,4 +500,78 @@ TEST_F(liveupdate_device, get_session_name_max_length)
+ 	ASSERT_EQ(close(session_fd), 0);
+ }
+ 
++/*
++ * Test Case: Manage Many Sessions
++ *
++ * Verifies that a large number of sessions can be created and then
++ * destroyed during normal system operation. This specifically tests the
++ * dynamic block allocation and reuse logic for session metadata management
++ * without preserving any files.
++ */
++TEST_F(liveupdate_device, preserve_many_sessions)
++{
++#define MANY_SESSIONS 2000
++	int session_fds[MANY_SESSIONS];
++	int ret, i;
++
++	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
++	if (self->fd1 < 0 && errno == ENOENT)
++		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
++	ASSERT_GE(self->fd1, 0);
++
++	ret = luo_ensure_nofile_limit(MANY_SESSIONS);
++	if (ret == -EPERM)
++		SKIP(return, "Insufficient privileges to set RLIMIT_NOFILE");
++	ASSERT_EQ(ret, 0);
++
++	for (i = 0; i < MANY_SESSIONS; i++) {
++		char name[64];
++
++		snprintf(name, sizeof(name), "many-session-%d", i);
++		session_fds[i] = create_session(self->fd1, name);
++		ASSERT_GE(session_fds[i], 0);
++	}
++
++	for (i = 0; i < MANY_SESSIONS; i++)
++		ASSERT_EQ(close(session_fds[i]), 0);
++}
++
++/*
++ * Test Case: Preserve Many Files
++ *
++ * Verifies that a large number of files can be preserved in a single session
++ * and then destroyed during normal system operation. This tests the dynamic
++ * block allocation and management for outgoing files.
++ */
++TEST_F(liveupdate_device, preserve_many_files)
++{
++#define MANY_FILES 500
++	int mem_fds[MANY_FILES];
++	int session_fd, ret, i;
++
++	self->fd1 = open(LIVEUPDATE_DEV, O_RDWR);
++	if (self->fd1 < 0 && errno == ENOENT)
++		SKIP(return, "%s does not exist", LIVEUPDATE_DEV);
++	ASSERT_GE(self->fd1, 0);
++
++	session_fd = create_session(self->fd1, "many-files-test");
++	ASSERT_GE(session_fd, 0);
++
++	ret = luo_ensure_nofile_limit(MANY_FILES + 10);
++	if (ret == -EPERM)
++		SKIP(return, "Insufficient privileges to set RLIMIT_NOFILE");
++	ASSERT_EQ(ret, 0);
++
++	for (i = 0; i < MANY_FILES; i++) {
++		mem_fds[i] = memfd_create("test-memfd", 0);
++		ASSERT_GE(mem_fds[i], 0);
++		ASSERT_EQ(preserve_fd(session_fd, mem_fds[i], i), 0);
++	}
++
++	for (i = 0; i < MANY_FILES; i++)
++		ASSERT_EQ(close(mem_fds[i]), 0);
++
++	ASSERT_EQ(close(session_fd), 0);
++}
++
+ TEST_HARNESS_MAIN
+diff --git a/tools/testing/selftests/liveupdate/luo_test_utils.c b/tools/testing/selftests/liveupdate/luo_test_utils.c
+index 3c8721c505df..333a3530051b 100644
+--- a/tools/testing/selftests/liveupdate/luo_test_utils.c
++++ b/tools/testing/selftests/liveupdate/luo_test_utils.c
+@@ -17,6 +17,7 @@
+ #include <sys/syscall.h>
+ #include <sys/mman.h>
+ #include <sys/types.h>
++#include <sys/resource.h>
+ #include <sys/stat.h>
+ #include <errno.h>
+ #include <stdarg.h>
+@@ -28,6 +29,29 @@ int luo_open_device(void)
+ 	return open(LUO_DEVICE, O_RDWR);
+ }
+ 
++int luo_ensure_nofile_limit(long min_limit)
++{
++	struct rlimit hl;
++
++	/* Allow to extra files to be used by test itself */
++	min_limit += 32;
++
++	if (getrlimit(RLIMIT_NOFILE, &hl) < 0)
++		return -errno;
++
++	if (hl.rlim_cur >= min_limit)
++		return 0;
++
++	hl.rlim_cur = min_limit;
++	if (hl.rlim_cur > hl.rlim_max)
++		hl.rlim_max = hl.rlim_cur;
++
++	if (setrlimit(RLIMIT_NOFILE, &hl) < 0)
++		return -errno;
++
++	return 0;
++}
++
+ int luo_create_session(int luo_fd, const char *name)
+ {
+ 	struct liveupdate_ioctl_create_session arg = { .size = sizeof(arg) };
+diff --git a/tools/testing/selftests/liveupdate/luo_test_utils.h b/tools/testing/selftests/liveupdate/luo_test_utils.h
+index 90099bf49577..6a0d85386613 100644
+--- a/tools/testing/selftests/liveupdate/luo_test_utils.h
++++ b/tools/testing/selftests/liveupdate/luo_test_utils.h
+@@ -26,6 +26,8 @@ int luo_create_session(int luo_fd, const char *name);
+ int luo_retrieve_session(int luo_fd, const char *name);
+ int luo_session_finish(int session_fd);
+ 
++int luo_ensure_nofile_limit(long min_limit);
++
+ int create_and_preserve_memfd(int session_fd, int token, const char *data);
+ int restore_and_verify_memfd(int session_fd, int token, const char *expected_data);
  
 -- 
 2.53.0
