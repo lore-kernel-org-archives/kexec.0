@@ -4,66 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 18569CD6E49
-	for <kexec@archiver.kernel.org>; Sat, 30 May 2026 22:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E6360CD6E56
+	for <kexec@archiver.kernel.org>; Sun, 31 May 2026 09:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:Date:Message-Id:
-	References:In-Reply-To:From:Subject:Reply-To:MIME-Version:Content-Type:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=AqHHEDBCPx6eeTdQuLTbUwe3Ba19PriW4VAa7ABkIPE=; b=1nxx5r88qrAETnLvBcJDsXl5DS
-	bWjfAP/akYW8i3w+V/4N110Is/738QB03N/TWfS70M+tc5+Qn8GpQITJcYtzvcNJxDVXIHc8k/tIV
-	fSWxW7oM2uj804YzZmc5Izage/okPwqxe6enmb0C9PLUgzbjcCbLOxfQJLf4L9FEfR/+gQnVdtU0o
-	Ko4K21EVgdAwKyaJD/7flgJDltyS3jDfKMLPpDZpoS4c62Pfdq8wwIxa8OO5f6sp+KTniWj/mBPEo
-	mGVrj0dSFETEdgk6/coB0PDFHtZblnVDbnimDHbu1+yvcKVPLugspv8RbU+oIPWn83g4XCzEszjwN
-	+cxBUExw==;
+	bh=sKVLCLu8XTfsvb4XdRoPm7KvsQtWzPp56I8MFy8zhao=; b=IJXlLYb0q7H8LDOKZu5orGAQ7I
+	GQ99H3y/vdam9jbDg9+NXFfF1BPOEoFHc+DIjIigyQoLXn39ePMTdVQbOSDbotXh6g1EtqiJk4Ymj
+	Yz+M/oAkPgVNfsqN6dM44z9a0IB7+T7mR8m12jKDBVj2YQdvw77u4d3U5rgWLTv8d71c35vTszVb2
+	X0WtaDMRbcQdeKKe2eUp+96AsTwpjTpsiLEHQua9q1+863oNtI6FkJZEXU1wiJCEFtXeQ4CA28gEI
+	UR7uC+cN+mDxHG53kvUR2GFC7PEDIH3wkTUmi+BuZBOxS/1muN34V3xFYcbqt/pbhFKJTiRRILIAU
+	MkmR1k8A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wTSPD-000000096qe-23hF;
-	Sat, 30 May 2026 22:43:47 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wTcTa-00000009QTa-0o8G;
+	Sun, 31 May 2026 09:28:58 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wTSPA-000000096qJ-29OJ
+	id 1wTcTZ-00000009QTN-0eC8
 	for kexec@lists.infradead.org;
-	Sat, 30 May 2026 22:43:45 +0000
+	Sun, 31 May 2026 09:28:57 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 475804419B;
-	Sat, 30 May 2026 22:43:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28AEF1F00893;
-	Sat, 30 May 2026 22:43:43 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 40A66600AF;
+	Sun, 31 May 2026 09:28:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF0A11F00893;
+	Sun, 31 May 2026 09:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780181023;
-	bh=AqHHEDBCPx6eeTdQuLTbUwe3Ba19PriW4VAa7ABkIPE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc;
-	b=HUVdjpm55vVXCd/rXrwyIjaRGzI/fs2NJX0EBQ6KrxBOOuvU6xnttiGhlUzfLbCXd
-	 5P1LCXQH84oX1vvDDO27joomvFYSw8kj7jpAuZxWwlCvZ7WEf3DnmvQAWKGn9VrEDz
-	 JpHeZRtDluioBAlJ06fdEtZSdjJkYED9uPjWXinXSlCvOIonez1GpaBvVFJarWq7Mj
-	 BfW5wXs7pI7DnKmuHrzCoayfxEOE/i4/qPQPlmnx7a2mwwBmOEKlDpL8ta609wtPG6
-	 4T/gtosrA9PX4gervwVl8jpkRy6ODC9KCHAIUjC7Jz+xDgon3BpCHf5L/u04D/WHBB
-	 1PegnMM4Kecuw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 9393739302C0;
-	Sat, 30 May 2026 22:43:47 +0000 (UTC)
-Subject: Re: [GIT PULL] liveupdate: kho: two regression fixes
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20260530171420.1430298-1-rppt@kernel.org>
-References: <20260530171420.1430298-1-rppt@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20260530171420.1430298-1-rppt@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git tags/liveupdate-fixes-2026-05-30
-X-PR-Tracked-Commit-Id: 8fd2f26fa2a33cfe8ac043f976137ecf5b567f03
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9d87d0fc8c8e0a2a2b5026a169db2f270b4828c1
-Message-Id: <178018102619.2731103.8401182140479584451.pr-tracker-bot@kernel.org>
-Date: Sat, 30 May 2026 22:43:46 +0000
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>, George Guo <guodongtai@kylinos.cn>, Kexin Liu <liukexin@kylinos.cn>, Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, Samiullah Khawaja <skhawaja@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260530_154344_596693_046FA75F 
-X-CRM114-Status: UNSURE (   3.94  )
-X-CRM114-Notice: Please train this message.
+	s=k20260515; t=1780219735;
+	bh=sKVLCLu8XTfsvb4XdRoPm7KvsQtWzPp56I8MFy8zhao=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Rez7EVFpovoH5ATL25xVJfV9kmDIZar9McePukksCWV9f6z3A32X4rp/Miehff7Pu
+	 pSh6vOduka57MCJpt/oqUNBbev7WkZ5mUBS0z3YjxCJ+35wmJDqb3J8CGYMuup9CyX
+	 RW3OhrJVLdjgyVZqAD6WN68jTQ2yPuTvwRu3G2tA5TrCR0kPk9trY3R4kZ1Xj5jGJc
+	 Jd0iGSgxC68WFOdG3BFEzZ9IK9qw7cLjJ3CBAMzBGNbAuJ2ynJO1HTugu1aLHbuHTu
+	 HBjZu/5dhv30F1d9FKs5DpoYZRJMKkKwAAyr8947gK76H1CPrR+CsHX00AZJ1MBpbD
+	 hm+oilmW9WQTA==
+Date: Sun, 31 May 2026 12:28:47 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: George Guo <dongtai.guo@linux.dev>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Alexander Graf <graf@amazon.com>,
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, George Guo <guodongtai@kylinos.cn>
+Subject: Re:
+Message-ID: <ahv_T6WwFEysgIeg@kernel.org>
+References: <20260529143238.169169-1-dongtai.guo@linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260529143238.169169-1-dongtai.guo@linux.dev>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,16 +73,86 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The pull request you sent on Sat, 30 May 2026 20:14:20 +0300:
+Hi,
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git tags/liveupdate-fixes-2026-05-30
+On Fri, May 29, 2026 at 10:32:34PM +0800, George Guo wrote:
+> From: George Guo <guodongtai@kylinos.cn>
+> 
+> WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit description?)
+> #26: 
+> containing only /chosen with the two KHO properties.  Since DEVICE_TREE_GUID
+> 
+> ERROR: Invalid commit separator - some tools may have problems applying this
+> #34: 
+> -------------------------------
+> 
+> total: 2 errors, 1 warnings, 0 lines checked
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9d87d0fc8c8e0a2a2b5026a169db2f270b4828c1
+I believe something went wrong with sending the emails :)
 
-Thank you!
+Please include changes from revision to revision in the cover letter next
+time.
+
+You also may want to consider using b4 prep/send for sending the patches.
+
+> >
+> Date: Fri, 29 May 2026 21:54:01 +0800
+> Subject: [PATCH v2 0/4] LoongArch: add KHO support and selftests
+> 
+> This series adds Kexec Handover (KHO) support for LoongArch and extends
+> the KHO selftest infrastructure to run on LoongArch under QEMU.
+> 
+> KHO passes metadata (the KHO state FDT and scratch area addresses) to the
+> second kernel via the FDT /chosen node, using the linux,kho-fdt and
+> linux,kho-scratch properties that drivers/of/kexec.c:kho_add_chosen()
+> writes and drivers/of/fdt.c:early_init_dt_check_kho() reads.
+> 
+> Selftest support (patches 3-4):
+> 
+> Patch 3 adds loongarch.conf and extends vmtest.sh to recognise loongarch64
+> as a build target.  The LoongArch virt machine is FDT-only (no ACPI), so
+> 'earlycon' must appear on the kernel cmdline or the console UART is never
+> discovered.  PS/2 input devices are also disabled since QEMU's LoongArch
+> virt machine has no i8042 controller; the fallback port probe hits a page
+> fault and panics before reaching userspace.
+
+Patch 3 should not introduce regressions
+ 
+> Patch 4 handles QEMU not exiting after kexec on LoongArch.  QEMU provides
+> no EFI runtime services, so machine_restart() falls through to an infinite
+> idle loop.  QEMU_NEEDS_KILL=1 in loongarch.conf signals vmtest.sh to run
+> QEMU in the background, poll the serial output for the test verdict, and
+> kill QEMU once it appears, so the test completes unattended.
+
+And patch 4 should be folded into patch 3.
+As I said during v1 review, the whole wait and kill loop can be replaced
+with 'timeout' command which does not need to be specific for LoongArch.
+The actual timeout value might, though.
+
+Will wait for v3 for more detailed review.
+ 
+> George Guo (4):
+>   LoongArch: kexec: add KHO support for FDT-based systems
+>   LoongArch: kexec: add KHO support for ACPI-only systems
+>   selftests/kho: add LoongArch vmtest support
+>   selftests/kho: handle QEMU not exiting after kexec on LoongArch
+> 
+>  arch/loongarch/Kconfig                     |   3 +
+>  arch/loongarch/include/asm/kexec.h         |   7 +
+>  arch/loongarch/kernel/machine_kexec.c      |  38 +++
+>  arch/loongarch/kernel/machine_kexec_file.c | 256 +++++++++++++++++++++
+>  arch/loongarch/kernel/setup.c              |  21 +-
+>  tools/testing/selftests/kho/loongarch.conf |  13 ++
+>  tools/testing/selftests/kho/vmtest.sh      |  35 ++-
+>  7 files changed, 365 insertions(+), 8 deletions(-)
+>  create mode 100644 tools/testing/selftests/kho/loongarch.conf
+> 
+> -- 
+> 2.25.1
+> 
+> 
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Sincerely yours,
+Mike.
 
