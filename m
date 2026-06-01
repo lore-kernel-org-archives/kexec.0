@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E9F10CD6E68
-	for <kexec@archiver.kernel.org>; Tue,  2 Jun 2026 15:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 65EC7CD6E64
+	for <kexec@archiver.kernel.org>; Tue,  2 Jun 2026 15:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=FnjP1QobxPs/w6p6RHmbGEPXnhvzKB2623I/PNNfmCM=; b=MTC/grLiT5EgXtu4GxQj2GR75o
-	PD+xqb2t2UJGD0OVjpcIlFgne9FlNejtNbO83ZNpz+26ZCGu8YEi2U/+YVSoBVjKHmzslK8Jg6KUH
-	oynojDcH6MTYaL4nMKNIBMkttaKWBM+1QIpwZy8Al2SETZFVb2pm0t/l1GA9cYpMEVNVi3voWkW6n
-	HdqA3Qrscyjh2feTprm2U4sUcS3edIrBZvGAw+aZJOe3XXEBzhESQa6/vkL5Me+U6v75nFvI7kQyu
-	US/GK2+bMnP8JgyIIGSS6laZvpRy53EVFrWjq1Jm96h3se+haW8VZ4n8WtfuzGP+F8Ul2YkdxYM+X
-	6kB3ZUsA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=8EnmU9JMCid8f25OUQXP00boV0OiTYhaVmjNgi7O15U=; b=I6sK4Nr19HfJGXQG8lDu44CABi
+	CZDMytyS8/ONTyGyAC3kS1AvnGL8UK80vDDtC+LQpM9gEjWOKRgSODb3k0q5PdGcbDveE6/uRLokG
+	0M/c2beKUg10cz8zhxponWRm9tvyE2ilVSUo/sJXFqea2Oji9jpSxZ16BozQublF0kSlvkobSA6Kt
+	9Q9kV4K0mfr7TfiLTYOMhkNCHydgcZP26Bi7XuEf5WyAXvCysz87fftMdNc+g8kA4E8Mwrl0ngxBU
+	IX4xtF1VaucJlXsZ9oeU6FctLyOLb/5muNMVNq10hAuUF9oczSaA9Jl00lzZ4hCQN/ZhQM7FVjKvI
+	PyzspHkQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUQrw-0000000DIcd-3hMC;
-	Tue, 02 Jun 2026 15:17:28 +0000
-Received: from canpmsgout07.his.huawei.com ([113.46.200.222])
+	id 1wUQrx-0000000DIfI-3oRe;
+	Tue, 02 Jun 2026 15:17:29 +0000
+Received: from canpmsgout05.his.huawei.com ([113.46.200.220])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wTzGF-0000000AWg5-1NZo;
-	Mon, 01 Jun 2026 09:48:46 +0000
+	id 1wTzGN-0000000AWic-3uvH;
+	Mon, 01 Jun 2026 09:48:53 +0000
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=FnjP1QobxPs/w6p6RHmbGEPXnhvzKB2623I/PNNfmCM=;
-	b=jIX1hvddX9TfsNd66mTq8qZFUoxm/bsn0AEZJbbGskiOnhTbpUeqimLZdzos3fq+SBmq2h185
-	ZofLf+7S2BOjMGjaRCfph+2+kjV0Aj6rIHwyg9ibQgu7fHXx4BUvU/lyNSHfnOvz7TNYuNJh2EF
-	Adv+PapdiIZJZ0vB92OHkK8=
-Received: from mail.maildlp.com (unknown [172.19.163.127])
-	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4gTTV56hm4zLlTs;
-	Mon,  1 Jun 2026 17:40:45 +0800 (CST)
+	bh=8EnmU9JMCid8f25OUQXP00boV0OiTYhaVmjNgi7O15U=;
+	b=FxpfysxrDR9Z3N/z2FzLQ1redjsb8v9bYZrgwkOLY1V7vvU9WSoFF5k9qkeJwx1wfpRWLcpVx
+	swZvy2I8bsFWOiKD4o+W6S6rk20znDPInkJynNfB+gPu1Dd8JseMuHQSc1kNWZ6yZFBauRJxmHj
+	33qeJTuPJ77dl1V2na7GErY=
+Received: from mail.maildlp.com (unknown [172.19.162.140])
+	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4gTTVD753tz12LGX;
+	Mon,  1 Jun 2026 17:40:52 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3F964402AB;
-	Mon,  1 Jun 2026 17:48:34 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id CDEA2201E9;
+	Mon,  1 Jun 2026 17:48:49 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
  (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 1 Jun
- 2026 17:48:30 +0800
+ 2026 17:48:45 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
@@ -77,19 +77,21 @@ To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
 	<kexec@lists.infradead.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v15 00/23] arm64/riscv: Add support for crashkernel CMA reservation
-Date: Mon, 1 Jun 2026 17:47:42 +0800
-Message-ID: <20260601094805.2928614-1-ruanjinjie@huawei.com>
+Subject: [PATCH v15 04/23] powerpc/kexec_file: Fix memory range truncation in __merge_memory_ranges()
+Date: Mon, 1 Jun 2026 17:47:46 +0800
+Message-ID: <20260601094805.2928614-5-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260601094805.2928614-1-ruanjinjie@huawei.com>
+References: <20260601094805.2928614-1-ruanjinjie@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-Originating-IP: [10.90.53.73]
 X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
  dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260601_024844_056074_27753C8F 
-X-CRM114-Status: GOOD (  17.86  )
+X-CRM114-CacheID: sfid-20260601_024852_283387_23407842 
+X-CRM114-Status: GOOD (  14.93  )
 X-Mailman-Approved-At: Tue, 02 Jun 2026 08:17:11 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -105,189 +107,90 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The crash memory allocation, and the exclude of crashk_res, crashk_low_res
-and crashk_cma memory are almost identical across different architectures,
-This patch set handle them in crash core in a general way, which eliminate
-a lot of duplication code.
+Sashiko AI review pointed out the following issue.
 
-And add support for crashkernel CMA reservation for arm64 and riscv.
+The __merge_memory_ranges() function incorrectly handles overlapping
+memory ranges when merging them. Although sort_memory_ranges() sorts all
+ranges by their start address in ascending order beforehand, the merge
+logic remains defective in two ways:
 
-Also add support for arm64 crash hotplug.
+1. It compares the current range's start against the previous element (i-1)
+   instead of the running target index (idx)
 
-This patch set is rebased on v7.1-rc1.
+2. It unconditionally overwrites 'ranges[idx].end' with 'ranges[i].end'.
 
-Basic second kernel boot test were performed on QEMU platforms for x86,
-ARM64 and RISC-V architectures with the following parameters:
+This logic flaw leads to critical memory truncation when a larger memory
+range completely subsumes subsequent smaller ranges.
 
-        "cma=256M crashkernel=4G crashkernel=64M,cma"
+For example, consider a sorted input array with three ranges:
+  Range A (idx=0): [0x1000 - 0x9000]
+  Range B (i=1):   [0x2000 - 0x5000] (completely inside Range A)
+  Range C (i=2):   [0x6000 - 0x8000] (completely inside Range A)
 
-For first kernel, there will be such log:
+1. When i=1 (Range B):
+   ranges[1].start (0x2000) <= ranges[0].end + 1 (0x9001) is TRUE.
+   The code executes: ranges[0].end = ranges[1].end, which erroneously
+   shrinks Range A's end from 0x9000 down to 0x5000.
 
-        # dmesg | grep crash
-        [    0.000000] crashkernel low memory reserved: 0xe8000000 - 0xf0000000 (128 MB)
-        [    0.000000] crashkernel reserved: 0x000000023e600000 - 0x000000033e600000 (4096 MB)
-        [    0.000000] crashkernel CMA reserved: 64 MB in 1 ranges
+2. When i=2 (Range C):
+   ranges[2].start (0x6000) <= ranges[1].end + 1 (0x5001) is FALSE.
+   The code falls into the else block, creating a broken new range.
 
-        # dmesg | grep cma
-        [    0.000000] cma: Reserved 256 MiB at 0x00000000f0000000
-        [    0.000000] cma: Reserved 64 MiB at 0x0000000100000000
+As a result, valid memory fragments [0x5001 - 0x5fff] and [0x8001 - 0x9000]
+are completely lost from the kexec exclude lists, potentially allowing
+the crash kernel to overwrite active memory, causing data corruption
+or crashes.
 
-For second kernel, there will be such log:
+Fix this by ensuring the start of the current range is compared against the
+end of the active merged range (idx), and use max() to safely prevent the
+outer boundary from being truncated.
 
-        [    0.000000] OF: fdt: Looking for usable-memory-range property...
-        [    0.000000] OF: fdt: cap_mem_regions[0]: base=0x000000023e600000, size=0x0000000100000000
-        [    0.000000] OF: fdt: cap_mem_regions[1]: base=0x00000000e8000000, size=0x0000000008000000
-        [    0.000000] OF: fdt: cap_mem_regions[2]: base=0x0000000100000000, size=0x0000000004000000
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: stable@vger.kernel.org
+Fixes: 180adfc532a8 ("powerpc/kexec_file: Add helper functions for getting memory ranges")
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+---
+ arch/powerpc/kexec/ranges.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-Changes in v15:
-- Unify the subject prefix formats as Huacai suggested.
-- Fix powerpc pre-existing NULL pointer dereference [Sashiko [1]]
-- Fix powerpc pre-existing __merge_memory_ranges() memory range
-  truncation [Sashiko [1]].
-- Fix pre-existing arm64 CMA page leaks [Sashiko[2]].
-- Fix pre-existing crash_load_dm_crypt_keys() Use-After-Free and
-  Double Free issue [Sashiko[3]].
-- Fix vfree(headers) and uninitialized variables issue
-  and simplify the fix [Sashiko[2]].
-- As walk_system_ram_res() and for_each_mem_range() use different
-  lock, unify and simplify the fix of TOCTOU buffer overflow via memory
-  region padding [Sashiko[4]].
-- Fix the arm64 crash dump issues in Sashiko[5].
-- Link to v14: https://lore.kernel.org/all/20260525084932.934910-1-ruanjinjie@huawei.com/
-
-[1]: https://lore.kernel.org/all/20260525092207.96B9D1F000E9@smtp.kernel.org/
-[2]: https://lore.kernel.org/all/20260525091149.1A1E01F00A3D@smtp.kernel.org/
-[3]: https://lore.kernel.org/all/20260525105227.3C2421F000E9@smtp.kernel.org/
-[4]: https://lore.kernel.org/all/20260525095447.944E11F000E9@smtp.kernel.org/
-[5]: https://lore.kernel.org/all/20260525101746.9959D1F000E9@smtp.kernel.org/
-
-Changes in v14:
-- Fix image->elf_headers memory leak during retry loop for arm64 as Sashiko
-  AI code review pointed out.
-- Solve the hotplug notifier arch_crash_handle_hotplug_event() AA
-  self-deadlock problem as Sashiko AI code review pointed out.
-- Fix the TOCTOU issue in prepare_elf_headers() by get_online_mems().
-- -ENOMEM -> -EAGAIN as Breno suggested.
-- Add support for arm64 crash hotplug.
-- Link to v13: https://lore.kernel.org/all/20260511030454.1730881-1-ruanjinjie@huawei.com/
-
-Changes in v13:
-- Rebased on v7.1-rc1.
-- Update the commit message.
-- Add Reviewed-by.
-- Link to v12: https://lore.kernel.org/all/20260402072701.628293-1-ruanjinjie@huawei.com/
-
-Changes in v12:
-- Remove the unused "nr_mem_ranges" for x86.
-- Add "Fix crashk_low_res not exclude bug" test log.
-- Provide a separate patch for each architecture for using
-  crash_prepare_headers(), which will make the review more convenient.
-- Add Reviewed-by and Tested-by.
-- Link to v11: https://lore.kernel.org/all/20260328074013.3589544-1-ruanjinjie@huawei.com/
-
-Changes in v11:
-- Avoid silently drop crash memory if the crash kernel is built without
-  CONFIG_CMA.
-- Remove unnecessary "cmem->nr_ranges = 0" for arch_crash_populate_cmem()
-  as we use kvzalloc().
-- Provide a separate patch for each architecture to fix the existing
-  buffer overflow issue.
-- Add Acked-bys for arm64.
-
-Changes in v10:
-- Fix crashk_low_res not excluded bug in the existing
-  RISC-V code.
-- Fix an existing memory leak issue in the existing PowerPC code.
-- Fix the ordering issue of adding CMA ranges to
-  "linux,usable-memory-range".
-- Fix an existing concurrency issue. A Concurrent memory hotplug may occur
-  between reading memblock and attempting to fill cmem during kexec_load()
-  for almost all existing architectures.
-- Link to v9: https://lore.kernel.org/all/20260323072745.2481719-1-ruanjinjie@huawei.com/
-
-Changes in v9:
-- Collect Reviewed-by and Acked-by, and prepare for Sashiko AI review.
-- Link to v8: https://lore.kernel.org/all/20260302035315.3892241-1-ruanjinjie@huawei.com/
-
-Changes in v8:
-- Fix the build issues reported by kernel test robot and Sourabh.
-- Link to v7: https://lore.kernel.org/all/20260226130437.1867658-1-ruanjinjie@huawei.com/
-
-Changes in v7:
-- Correct the inclusion of CMA-reserved ranges for kdump kernel in of/kexec
-  for arm64 and riscv.
-- Add Acked-by.
-- Link to v6: https://lore.kernel.org/all/20260224085342.387996-1-ruanjinjie@huawei.com/
-
-Changes in v6:
-- Update the crash core exclude code as Mike suggested.
-- Rebased on v7.0-rc1.
-- Add acked-by.
-- Link to v5: https://lore.kernel.org/all/20260212101001.343158-1-ruanjinjie@huawei.com/
-
-Jinjie Ruan (22):
-  riscv: kexec_file: Fix crashk_low_res not exclude bug
-  powerpc/crash: Fix possible memory leak in update_crash_elfcorehdr()
-  powerpc/kexec_file: Fix NULL pointer dereference in
-    kexec_extra_fdt_size_ppc64()
-  powerpc/kexec_file: Fix memory range truncation in
-    __merge_memory_ranges()
-  kexec: Extract kexec_free_segment_cma() from kimage_free_cma()
-  arm64: kexec_file: Fix CMA page leaks during segment placement retry
-    loops
-  arm64: kexec_file: Fix image->elf_headers memory leak during retry
-    loop
-  kexec: Fix UAF and Double Free in crash_load_dm_crypt_keys()
-  crash_core: Introduce CRASH_HOTPLUG_SAFETY_PADDING for memory hotplug
-    safety
-  x86: kexec_file: Fix TOCTOU buffer overflow via memory region padding
-  arm64: kexec_file: Fix TOCTOU buffer overflow via memory region
-    padding
-  riscv: kexec_file: Fix TOCTOU buffer overflow via memory region
-    padding
-  LoongArch: kexec_file: Fix TOCTOU buffer overflow via memory region
-    padding
-  crash: Add crash_prepare_headers() to exclude crash kernel memory
-  arm64: kexec_file: Use crash_prepare_headers() helper to simplify code
-  x86: kexec_file: Use crash_prepare_headers() helper to simplify code
-  riscv: kexec_file: Use crash_prepare_headers() helper to simplify code
-  LoongArch: kexec_file: Use crash_prepare_headers() helper to simplify
-    code
-  powerpc/kexec_file: Use crash_exclude_core_ranges() helper
-  arm64: kexec_file: Add support for crashkernel CMA reservation
-  riscv: kexec_file: Add support for crashkernel CMA reservation
-  arm64: crash: Add crash hotplug support
-
-Sourabh Jain (1):
-  powerpc/crash: sort crash memory ranges before preparing elfcorehdr
-
- .../admin-guide/kernel-parameters.txt         |  16 +-
- arch/arm64/Kconfig                            |   3 +
- arch/arm64/include/asm/kexec.h                |  13 ++
- arch/arm64/kernel/Makefile                    |   2 +-
- arch/arm64/kernel/crash.c                     | 152 ++++++++++++++++++
- arch/arm64/kernel/kexec_image.c               |  34 ++++
- arch/arm64/kernel/machine_kexec_file.c        |  78 ++-------
- arch/arm64/mm/init.c                          |   5 +-
- arch/loongarch/kernel/machine_kexec_file.c    |  44 ++---
- arch/powerpc/include/asm/kexec_ranges.h       |   1 -
- arch/powerpc/kexec/crash.c                    |   7 +-
- arch/powerpc/kexec/file_load_64.c             |   3 +
- arch/powerpc/kexec/ranges.c                   | 113 ++-----------
- arch/riscv/kernel/machine_kexec_file.c        |  43 ++---
- arch/riscv/mm/init.c                          |   5 +-
- arch/x86/kernel/crash.c                       |  92 ++---------
- drivers/of/fdt.c                              |   9 +-
- drivers/of/kexec.c                            |   9 ++
- include/linux/crash_core.h                    |  15 ++
- include/linux/crash_reserve.h                 |   4 +-
- include/linux/kexec.h                         |   2 +
- kernel/crash_core.c                           |  89 +++++++++-
- kernel/crash_dump_dm_crypt.c                  |   4 +-
- kernel/kexec_core.c                           |  25 +--
- 24 files changed, 430 insertions(+), 338 deletions(-)
- create mode 100644 arch/arm64/kernel/crash.c
-
+diff --git a/arch/powerpc/kexec/ranges.c b/arch/powerpc/kexec/ranges.c
+index 867135560e5c..eb45e89502ca 100644
+--- a/arch/powerpc/kexec/ranges.c
++++ b/arch/powerpc/kexec/ranges.c
+@@ -21,6 +21,7 @@
+ #include <linux/of.h>
+ #include <linux/slab.h>
+ #include <linux/memblock.h>
++#include <linux/minmax.h>
+ #include <linux/crash_core.h>
+ #include <asm/sections.h>
+ #include <asm/kexec_ranges.h>
+@@ -105,19 +106,16 @@ static void __merge_memory_ranges(struct crash_mem *mem_rngs)
+ 	struct range *ranges;
+ 	int i, idx;
+ 
+-	if (!mem_rngs)
++	if (!mem_rngs || mem_rngs->nr_ranges <= 1)
+ 		return;
+ 
+ 	idx = 0;
+-	ranges = &(mem_rngs->ranges[0]);
++	ranges = mem_rngs->ranges;
+ 	for (i = 1; i < mem_rngs->nr_ranges; i++) {
+-		if (ranges[i].start <= (ranges[i-1].end + 1))
+-			ranges[idx].end = ranges[i].end;
++		if (ranges[i].start <= (ranges[idx].end + 1))
++			ranges[idx].end = max(ranges[idx].end, ranges[i].end);
+ 		else {
+ 			idx++;
+-			if (i == idx)
+-				continue;
+-
+ 			ranges[idx] = ranges[i];
+ 		}
+ 	}
 -- 
 2.34.1
 
