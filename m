@@ -4,87 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DC2DBCD6E55
-	for <kexec@archiver.kernel.org>; Mon,  1 Jun 2026 22:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1AC91CD5BD1
+	for <kexec@archiver.kernel.org>; Mon,  1 Jun 2026 23:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=dKPzH+TPpagHmXQ5tpUx95/DULoRSEM1RHR2mpVghr8=; b=aDg7tiqcvzKIyU1eIMps/o2Qfs
-	flLeGG3fX/sHjvqIrd4RlYLdYqzhEiVFXG5smiKQEKcrrK2/YtXc2alZgtYG1FtDL1Q9wb2XHOYVd
-	5k3sNZSVXCWs8hVEvOWuiEcOFvWJTKmtmGIsr1oyo/FZxu20d5pE+HqU9d9vcdKCPENY6x4RgkU42
-	dM78D+JGYezUw8pP7VOyUJGLZ5hC0BWwNc6zNpwHSCEiVuw43bmfWWXqU/H/NvbitgbBkqsWjaJRl
-	Unk4vYjEcSmLPda+B6eMu0Lbgp4ox0YYAtCxeMzkCDrIoWUFeMi3P9N19qIuF8Dgadksx6HSINZld
-	B6nSDYaQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=RNgVF9TEy/caXgQVeIMxyPx0m1lO15Jde8bB+011DoI=; b=rGdZh0YLLgEipN0jDF4S5E8AbP
+	x5Gy51H41lRSMiOYCOoRXtdXFnni1RC3FcwtV9WYNaJRaYzw12bllq8rd3LBzjkCZfq7dNtPDlqaO
+	MIglydPsXOoP9JAazyvXJgKeZal9RmhXcucFZipbvtKZFyIDHtTWWF7IlkUtEnxdIw53xC7K9V4yI
+	0IVj0CUKniWiNRYRATN0sd2r+VzzIKUz5K6l0Ym+/BBZtTGX8LtMwBarvIOK2r01SSI4H/Hk91Kby
+	SUV38f8/hfq/ICRdEmJfnRvFEPbs4nx8IBenLTzHZPo96PeOsC1PE9TkPENwWWPr1NWsPRfbM1d8K
+	4hePTDPQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUBY1-0000000C1mf-2MTz;
-	Mon, 01 Jun 2026 22:55:53 +0000
-Received: from mail-qv1-xf2f.google.com ([2607:f8b0:4864:20::f2f])
+	id 1wUBoQ-0000000C2f1-31Pb;
+	Mon, 01 Jun 2026 23:12:50 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUBXy-0000000C1mG-3ZfO
+	id 1wUBoO-0000000C2e5-0Geg
 	for kexec@lists.infradead.org;
-	Mon, 01 Jun 2026 22:55:52 +0000
-Received: by mail-qv1-xf2f.google.com with SMTP id 6a1803df08f44-8cbe69b122bso108600336d6.2
-        for <kexec@lists.infradead.org>; Mon, 01 Jun 2026 15:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1780354549; x=1780959349; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dKPzH+TPpagHmXQ5tpUx95/DULoRSEM1RHR2mpVghr8=;
-        b=focQhANsSFN7HZy+mAY/vGYGU/03jZ9lmp48Y9O54dre8n3dSTpOvn9LwsSS3OVgqf
-         B0vKvaqPfqkoeVfknDbvNBXP7+1M5eXlcXfeE4D5uxGIJFc5PN9MP+lls5pMu57jCDd5
-         srDu3PaoupKdaVdaX405dIFJ7OUMW8Wl0hFzRTU+8GjJw9ucl78BqXigR39D+FlAV5IM
-         YB7ST2DTJ3cnLTx0Eh4nupTuOA07OqxTqvokG1gmqHySnJHLnc2nbOop4B7ennLxATGi
-         IgoHifOBuM0RN/30/+ftUjRPT4EJETPW4ChdLvPOkFYnRV3TxN/PGOLSwiu/Pn0OFYuG
-         uRIw==
+	Mon, 01 Jun 2026 23:12:49 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1780355565;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RNgVF9TEy/caXgQVeIMxyPx0m1lO15Jde8bB+011DoI=;
+	b=fqa9InAPzOVOZerTA5e9AScYl/b21dB2V7TE76ih2K4yFk2HyVCOzypiC4wqBkUejYJmhM
+	Akxu3sad3MswZDorrTaY6/YbEYvJKkk2Ej9W//AynWpRDFJB8VzbCYCH2SW7QNrFqUi+Yl
+	Su02d/KdPH5L5x/h8g5Soj1iHdhVnek=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-554-VQQ76ddhMcGb2-1EPRgKcQ-1; Mon, 01 Jun 2026 19:12:43 -0400
+X-MC-Unique: VQQ76ddhMcGb2-1EPRgKcQ-1
+X-Mimecast-MFC-AGG-ID: VQQ76ddhMcGb2-1EPRgKcQ_1780355563
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-51766317074so9959331cf.3
+        for <kexec@lists.infradead.org>; Mon, 01 Jun 2026 16:12:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780354549; x=1780959349;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dKPzH+TPpagHmXQ5tpUx95/DULoRSEM1RHR2mpVghr8=;
-        b=Thjl9KbtoDsqgoWP1+pld1Z08clo6nTe5gMFMQkl5dw/Dxh+Q+LP8g5yY9WUp0wUho
-         eHHpCsOxGDx4UdWbS/iqDZ7HaonGu54h3yvh0Zfy0QcZqiwSVzmeSBHf8xJ1UILyRe8m
-         FaQ/btt86yf9iVhPxSzKRWxcIJ0Nd1nF473hXcPlXQRAvszsJjRUURl5DJvImJTGfOMW
-         YFwhTW34a0lSPRzvqQ1flOc9kV0XhYoAcX3te05nHB1QbO5oincRt/4URC/8sKQeIAzM
-         jnscm96UCZ97H+J+6EeiHD4klgkYFnjYZF+Ld+urDqzzBmZex51lVQLpPtx85Ats/z1i
-         58/g==
-X-Forwarded-Encrypted: i=1; AFNElJ8qaHDDYlFLDd8iI10VIgLjPM6bcbBZkfEfmK60aU7Emd/UqxQlwht+1ChMyKHJuTnPOwkyow==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yx078TXOlhW6JsoEC7qMtmD2mwfdU7nj/QCLJZU7Dv8QsXhyuv0
-	/K5xILznCWBYhJ65fKb+c9NqRHYsfDQXXyprHit2xmSu7FIFMthtVSk2m7QzQjnb6fo=
-X-Gm-Gg: Acq92OGiLpy5DBzlZ6ktD/IU/P00JtGGOt3ljaHSnW5BIe3bg3J0nQ240HWvBZv6jKl
-	v2beIIbiFBbuAvXcYC9sEgC2MZeN/QgCVXDzyQ9ON/1fb+I3cac8qb1xhieFeipCFtV75v/1G6K
-	Q9eTUGMdgx0Pb0Lu7pwq0a9i5qvcR/0E16Kf8UH9ODGfs5GY1t/Q5uN7u9BH6dwkeQo/HxqeQPD
-	D80JB/qEdAorsQ2zJ4oda3WGOREkPDBNNOTXC1Xw5YazSo7u2GVnkTeX6iP81zViCQOObryWCFi
-	IO0UsvlRC1dgo8+zIBZX0dnvhG13W5v0hl5mTaTcIKfcpsidKYq4f17FJWvgH9V+qHJ2VmhOl2x
-	mNsinZ0/SLr26yMx3WETB3XEb7VuFExsRX00Uy6071ph9n7aQw/emylNt5iRrIlZvpTLUJdggz3
-	u9O6tUrzdixQCd5/gfkv/hu8WtQRGKU1gBLUMT2BMZbdZSfNHPquRHYDwjBVWQ7g==
-X-Received: by 2002:a05:6214:5092:b0:8ca:268b:13b2 with SMTP id 6a1803df08f44-8ccefda892fmr206605196d6.32.1780354549060;
-        Mon, 01 Jun 2026 15:55:49 -0700 (PDT)
-Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8cec1d7ebd4sm2424146d6.23.2026.06.01.15.55.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2026 15:55:48 -0700 (PDT)
-Date: Mon, 1 Jun 2026 22:55:47 +0000
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Michal Clapinski <mclapinski@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
-Subject: Re: [PATCH] kexec_file: skip checksum verification when relocations
- aren't needed
-Message-ID: <ah4MSSuiElD2fZMs@plex>
-References: <20260601191136.799134-1-mclapinski@google.com>
+        d=1e100.net; s=20251104; t=1780355563; x=1780960363;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=RNgVF9TEy/caXgQVeIMxyPx0m1lO15Jde8bB+011DoI=;
+        b=LXWCSIrU+lgj01UaokjrqiIOeIL6NWZuKOlXn6c36VUE2SDH9QZN/q5UV4hNPl4mWk
+         8N99M2A8o3P+YwVnDAfGwAKCGXSA0sL94DT+7+LagXaEibuJVhF7kM83m1t1WaF55QXf
+         LqzPr7z+IjRf8HswY4jBBBLWri/Z7yt4UIan8EjiCWFvVaE+IKSkolJOP+X4KAfleuHo
+         duOKdLiU9+YlT7q3kng3pWII3WeEICx2c9WdMizW2V7GjUnRjIx6d1rC87zFnU1D3gBU
+         fdlnKvf5Eg9gXYj9PqQbursw3D4ocr91PYlKIlAFe485V1DlN869Q8GzdKavlrSNJhxf
+         7jTQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8bIJqts3dzNoS77bMtoLedXgTIf+Bd87hjYcCBskql8jW/g2ByHihcqibX1crKfAZs9cvjmw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yy4xWI4HUOk5ep3x4CYbTjhttCQ31E4PI3cfzeP2nSVQxJOaTe/
+	XjQYoWrFymG33tEb1RcptCBl68G4hArrtFuWxc3GcacSfNQEQAORdrRBFTvFoAXkjc7qv25NmqQ
+	wjMKZodnVUFEr0gZq2/hojLrj7O00BeaMC9n7H3aeU9YawmaOgqt4xJoIgtNYlBYpsUHXw7FTGc
+	uztkCZE2qyPIvaOjmYX4J7pJ5lntT6PuQdGUZ3
+X-Gm-Gg: Acq92OE8S+AoxsrmahuAF0NO5UPOBtCK3iGJx/SQJDmotHJ6FEZoVT2pooZAJknhyf9
+	Q5bsU0wX1mBxFHV4Pw84amSn0XmAlglIJsmvP2NiCvTATCENzfdstr/rp+UafEEI8f4R/Ub5Qny
+	svg/ykH73XgbENUe5EEKbzLHwP1aucZ5t2yXyVxmi8NCFyql8U6jkDN8f5prOsDnqptelEf6KDp
+	+z0rP5VGyYf07qv
+X-Received: by 2002:a05:622a:2a1a:b0:517:5d7c:98ad with SMTP id d75a77b69052e-5175d7c9a00mr58043191cf.29.1780355563094;
+        Mon, 01 Jun 2026 16:12:43 -0700 (PDT)
+X-Received: by 2002:a05:622a:2a1a:b0:517:5d7c:98ad with SMTP id
+ d75a77b69052e-5175d7c9a00mr58042811cf.29.1780355562650; Mon, 01 Jun 2026
+ 16:12:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260601191136.799134-1-mclapinski@google.com>
+References: <20260414102656.55200-1-ltao@redhat.com> <ahoA_5MfC7FuC8CQ@templeofstupid.com>
+In-Reply-To: <ahoA_5MfC7FuC8CQ@templeofstupid.com>
+From: Tao Liu <ltao@redhat.com>
+Date: Tue, 2 Jun 2026 11:12:05 +1200
+X-Gm-Features: AVHnY4JBnUNLbT-cf1X95eaxyPA09YdWJDfs50D9I2SY0j-nApTauRPMRxiWETg
+Message-ID: <CAO7dBbWOgztZPrazUGN6q+L_62ipywj4Myurcd4R4q95J0_XMw@mail.gmail.com>
+Subject: Re: [PATCH v5][makedumpfile 0/9] btf/kallsyms based makedumpfile
+ extension for mm page filtering
+To: Krister Johansen <kjlx@templeofstupid.com>
+Cc: yamazaki-msmt@nec.com, k-hagio-ab@nec.com, kexec@lists.infradead.org, 
+	aravinda@linux.vnet.ibm.com, stephen.s.brennan@oracle.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: vPcoTn6443DMefGG3B-p8Y8cWEEOOU6hraRSVgZyyYs_1780355563
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260601_155550_910396_EAD89675 
-X-CRM114-Status: GOOD (  27.30  )
+X-CRM114-CacheID: sfid-20260601_161248_177311_4DFB7500 
+X-CRM114-Status: GOOD (  45.08  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,89 +105,142 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Nit: The crash kernel also does not perform relocations, yet a checksum 
-is still required. The subject should be something like:
-kexec_file: skip purgatory checksum if all segments are CMA allocated
+Hi Krister,
+
+Thanks a lot for your suggestions and comments!
+
+On Sat, May 30, 2026 at 9:11=E2=80=AFAM Krister Johansen
+<kjlx@templeofstupid.com> wrote:
+>
+> On Tue, Apr 14, 2026 at 10:26:47PM +1200, Tao Liu wrote:
+> > A) This patchset will introduce the following features to makedumpfile:
+> >
+> >   1) Add .so extension support to makedumpfile
+> >   2) Enable btf and kallsyms for symbol type and address resolving.
+> >
+> > B) The purpose of the features are:
+> >
+> >   1) Currently makedumpfile filters mm pages based on page flags, becau=
+se flags
+> >      can help to determine one page's usage. But this page-flag-checkin=
+g method
+> >      lacks of flexibility in certain cases, e.g. if we want to filter t=
+hose mm
+> >      pages occupied by GPU during vmcore dumping due to:
+> >
+> >      a) GPU may be taking a large memory and contains sensitive data;
+> >      b) GPU mm pages have no relations to kernel crash and useless for =
+vmcore
+> >         analysis.
+> >
+> >      But there is no GPU mm page specific flags, and apparently we don'=
+t need
+> >      to create one just for kdump use. A programmable filtering tool is=
+ more
+> >      suitable for such cases. In addition, different GPU vendors may us=
+e
+> >      different ways for mm pages allocating, programmable filtering is =
+better
+> >      than hard coding these GPU specific logics into makedumpfile in th=
+is case.
+> >
+> >   2) Currently makedumpfile already contains a programmable filtering t=
+ool, aka
+> >      eppic script, which allows user to write customized code for data =
+erasing.
+> >      However it has the following drawbacks:
+> >
+> >      a) cannot do mm page filtering.
+> >      b) need to access to debuginfo of both kernel and modules, which i=
+s not
+> >         applicable in the 2nd kernel.
+> >      c) eppic library has memory leaks which are not all resolved [1]. =
+This
+> >         is not acceptable in 2nd kernel.
+> >
+> >      makedumpfile need to resolve the dwarf data from debuginfo, to get=
+ symbols
+> >      types and addresses. In recent kernel there are dwarf alternatives=
+ such
+> >      as btf/kallsyms which can be used for this purpose. And btf/kallsy=
+ms info
+> >      are already packed within vmcore, so we can use it directly.
+> >
+> >   With these, this patchset introduces makedumpfile extensions, which i=
+s based
+> >   on btf/kallsyms symbol resolving, and is programmable for mm page fil=
+tering.
+> >   The following section shows its usage and performance, please note th=
+e tests
+> >   are performed in 1st kernel.
+> >
+> >   3) Compile and run makedumpfile extensions:
+> >
+> >   $ make LINKTYPE=3Ddynamic USELZO=3Don USESNAPPY=3Don USEZSTD=3Don EXT=
+ENSION=3Don
+> >   $ make extensions
+>
+> I love this idea.  Do you have time to take it further, and if not are
+> you open to making the extension framework more modular so that we could
+> add others in the future?
+
+The purpose of extension is to make the framework modular. My original
+thought is, we can implement several makedumpfile extensions, each
+restricted to one specific function. Like one extension deals with AMD
+gpu mm filtering only, one deals with Intel gpu only etc. For distros
+we can ship all extensions along with makedumpfile once, but the
+respective extensions will only take effect if the machine has AMD /
+Intel gpu. This is the same case if you'd like to add other customized
+functions while the makedumpfile core remains unchanged.
+
+>
+> Could the btf lookups be extended to cover the symbol lookups used by
+> eppic and the erase filters so that the -x option is unnecessary for
+> kernels that have BTF support?
+
+Yes, from my view it is doable and not difficult to implement.
+
+>
+> The current extension implementation is focused just on skipping pages,
+> but it would be great to be able to use this to erase data in structures
+> like the config filters and eppic, but without having to provide a
+> vmlinux at dump time.  What do you think about adding the ability to
+> use the extensions to also erase parts of data structures, in addition
+> to filtering whole pages?
+
+That's the step 2 for the BTF/kallsyms work of makedumpfile, and I
+have planed to work on this once the patchset(step 1) is accepted. The
+reason for the task dividing is, the GPU mm page filtering is more
+urgent than data erasing from my view. For data erasing, at least we
+can do the erasing in 1st kernel with the help of dwarf, cumbersome
+but working; For GPU mm filtering, as far as I know, there are no
+handy tools in 2nd kernel.
+
+I think erasing the data is doable upon the current page filtering code.
+
+>
+> Would you be willing to modify the extension registration options to
+> allow an extension to specify what kind it is? That way, in the future
+
+I'm not sure what you mean by "what kind". Do you mean an extension
+needs to tell makedumpfile what purpose it is for when loading?
+
+> we could register multiple different kinds without breaking existing
+> ones.  One for filtering pages, one for erasing / modifying dump
+> content, and others based upon whatever additional use cases develop.
+
+That's the goal of extensions, each extension deals with its own
+business. Could you point out the code that doesn't match the goal?
+I'm happy to correct it in v6.
+
+Thanks,
+Tao Liu
 
 
-On 06-01 21:11, Michal Clapinski wrote:
-> Checksum verification is needed
-> 1. for crash kernels. In a crash, we can't be sure the kernel is
->    intact.
-> 2. if we're worried about relocating the kernel into a region used by
->    some DMA that wasn't properly cancelled.
+>
+> Thanks,
+>
+> -K
+>
 
-Nit: Please add a little background information about CMA segments being 
-recently added, as well as the necessity for a fast reboot due to the 
-live update use case.
-
-> 
-> If we used CMA to allocate segments then
-> 1. we're not working with a crash kernel.
-> 2. relocations are not going to happen.
-> 
-> Therefore, we can safely disable checksum verification.
-> 
-> Instead of adding a new variable to purgatory, just skip adding regions
-> and save the default value of SHA256 hash.
-> 
-> Saves ~250ms on my 4.0 GHz CPU.
-> 
-> Signed-off-by: Michal Clapinski <mclapinski@google.com>
-> ---
->  kernel/kexec_file.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 2bfbb2d144e6..2dc8b0435fe6 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -808,6 +808,7 @@ static int kexec_calculate_store_digests(struct kimage *image)
->  	void *zero_buf;
->  	struct kexec_sha_region *sha_regions;
->  	struct purgatory_info *pi = &image->purgatory_info;
-> +	bool can_skip_checksum = true;
->  
->  	if (!IS_ENABLED(CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY))
->  		return 0;
-> @@ -822,6 +823,23 @@ static int kexec_calculate_store_digests(struct kimage *image)
->  
->  	sha256_init(&sctx);
->  
-> +	/*
-> +	 * If all segments were loaded into contiguous memory, there will be no
-> +	 * relocations. In that case there is no risk of memory corruption by
-> +	 * uncancelled DMA and we can skip checksum calculation.
-> +	 */
-> +	for (i = 0; i < image->nr_segments; i++) {
-> +		if (!image->segment_cma[i]) {
-> +			can_skip_checksum = false;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (can_skip_checksum) {
-> +		pr_info("disabling checksum verification in purgatory\n");
-> +		goto skip_checksum;
-> +	}
-> +
->  	for (j = i = 0; i < image->nr_segments; i++) {
->  		struct kexec_segment *ksegment;
->  
-> @@ -867,6 +885,7 @@ static int kexec_calculate_store_digests(struct kimage *image)
->  		j++;
->  	}
->  
-> +skip_checksum:
->  	sha256_final(&sctx, digest);
-
-With the few nits:
-
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com> 
-
->  
->  	ret = kexec_purgatory_get_set_symbol(image, "purgatory_sha_regions",
-> -- 
-> 2.54.0.929.g9b7fa37559-goog
-> 
 
