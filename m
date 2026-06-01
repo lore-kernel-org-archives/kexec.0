@@ -4,103 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6B520CD6E55
-	for <kexec@archiver.kernel.org>; Mon,  1 Jun 2026 15:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0EC59CD5BD1
+	for <kexec@archiver.kernel.org>; Mon,  1 Jun 2026 15:10:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=YjouT4r9OqoZMrQ0tTNPIpsZn3OGl8wc9VmtokceP+I=; b=Ywr7FwPpLKAiukJb0tnXxx0Qam
-	dreWuxeBmzCWtr/abnxr3vELADvoM7im5IPsxysNxgwR912iWkz3QaOOnkPCmbszgakT5v4/9UI3u
-	EFE35ncllXBwcaNPEiJOkSYkBleWCAodYBLXa2LX+VYSjOb/EC6+1x/E5CMt6DJqQRPPh52nAizwV
-	KzkfriL0md09YEwq6hrk5j2UPC8PZE4qcOITmxkkAAYgajeefp+da84FScCxRWb1WKCL+3lAOHa9I
-	1/+EjJRDG17GWfQ0eI6Yi8tPIeMJSGB5YVHY+96kKv6aXXHzsYDpVKJ4fsxHwB1cgR2FlvKRcN9hL
-	mbHqyy0w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:From:
+	To:Cc:Subject:Message-Id:Date:Content-Type:Content-Transfer-Encoding:
+	Mime-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=CQQ3fHPI7z0+oYhhy2SS2++wUzwKs9NFKfTFjo35QFE=; b=1l1a0fXcD5ERFD+XqCah/A4UXZ
+	ECq32HShFeJn5JFw0xPNjwFllVey0yUhJcAIAoQBnQf9wxFQa1XZYskLyhkmRhk46czKkQteX1JSX
+	Gij76W8oLFFmHKj5J9NLddmSkL7jlajfKjftzCxgxggFBcnQnC6OvfOJBQbLDwtj7R4S7dD1sbu03
+	YUnMIv9zA/oAQMLdNRXAvgTJ1ti823G64unxnQ3A/EiIRY2Qt89UPifQcd844NFrO7e965yil6r1+
+	C/4xDjSSxwKMVehDKSCIr3J/7FXer2+zyxq0VSQvYCB9L/c484sgvPrnkZ1a9KK2ZYUlxS3db08By
+	3J6jFAGw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wU4Dk-0000000BLRq-0Dpo;
-	Mon, 01 Jun 2026 15:06:28 +0000
-Received: from mail-yw1-x112c.google.com ([2607:f8b0:4864:20::112c])
+	id 1wU4HG-0000000BLsh-37ub;
+	Mon, 01 Jun 2026 15:10:06 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wU4Di-0000000BLRU-0Bd7
+	id 1wU4HF-0000000BLsR-3V8H
 	for kexec@lists.infradead.org;
-	Mon, 01 Jun 2026 15:06:27 +0000
-Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-7e1916922b9so17655387b3.1
-        for <kexec@lists.infradead.org>; Mon, 01 Jun 2026 08:06:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1780326385; x=1780931185; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YjouT4r9OqoZMrQ0tTNPIpsZn3OGl8wc9VmtokceP+I=;
-        b=TnJH/wN4vlPFMuMTW4ZpJRAlzEw5I+7CMzTjKsIbnGXPQKozbjU/ox1omH21rnt61+
-         Kt1IUdCQ48L+oybB4l06uUcaG2pRJS6rZajHBKtK1yuqCrZgDLGyZAzn9iRf5Ghq3rVu
-         g9ZcKNijQKOsQND6ctxlyN09/3fkSrwCLzRMwxlnshHxqXTuyrOJWygjguDM6S0V63uy
-         jkqxtcZ8scT9C8sTTS/PxON/hgQ4uy32v5c7uJ1r8+n//2RfJQVfV4GVKpj05nn9+qEx
-         MGm401sFjn/nb5Ea4IAexJ8uT1smqdi6U0xj2edJIKIBrrIYH/0l97LO8ZEUZHzbJkQi
-         NT2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780326385; x=1780931185;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YjouT4r9OqoZMrQ0tTNPIpsZn3OGl8wc9VmtokceP+I=;
-        b=YV6MDcN8ff3u2nWXLt9LEiRkso2nWp12vLQ3hR7+gdIG3ZwMTu4hAdYaGCDRkVSwbZ
-         1KiskpMp9uO40gNX7XkndmcMTbFyimIJPr/ZG2TCx/uyr6CPFeXvr4pk0OQwzk7tOpge
-         +pXy2O4mJ1CPm/1TIXksxAbJnXAVP7OJca4jsBAgI1QONx9TO1fu1Cah3FdflJItDhpO
-         Ac/sgfaH2KtkcrOgxlpZKVhggyMuWb69CwMSMjn6MLPwmLxKNU3MSFTBsWQd2NvUFLYi
-         qiRHg+NOyAaBRN4L2AgKr7O5yYJ6Z3Rj6+ZbndUPhTY+VmVqcy9sGbSoujoKWCZJGwvR
-         I2vA==
-X-Forwarded-Encrypted: i=1; AFNElJ/ej1C00XZegdnFFtPw2ulMZAgDnJlPgVFwMp/qgCIVEqxtVpFRKL3RDZhgxBJdrQHU974gRQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yxhot/D+bMsIUFccjyzjrkBug3vPO7XXJuZ4DE101KuI5MrSybF
-	Ikmf2byodts5is3Cn5MgNBMqLoJMY0QT+5j6G/47D2QRaDTsQZBVve9xV3zZ1KSonhM48YTW7kg
-	bHiZ8
-X-Gm-Gg: Acq92OFzbL1GX9PmThPNtgrcHq0+3sl+Aa4IWLAKwhofqcWO7QnseewtWEUrAWKLtW2
-	r+mWv3nFVG51SnlY2HWrY/xu5oKHxvnQ5VmHWVvYlFVmUUMdhIRStUd0LNBVRx5sHnZONaqKtjq
-	21QbQyR2zHiT7IVCOnX8Bt8fqsm0o3DKhMfMdrpOcC2M1ptU251dxvbxMR2J4tSpYxxfmc8Hols
-	ZdeuB63nR0xxZKshcZnCYWOej1Vs9i/OSxEGflGJ48vLT53AOLZNBQimREy/wlIar+HXQ9ai3wb
-	8a9BbKBsrl2vCSpQ9rPz+N7/8GqCqMAMOBLtBW6Y2+7i8G9+xDOCFeiAgQy9qz0xTgfNoCu6eZj
-	PotiDsYfP81Pmtj4opD3tyPjrw7AeDrYXQMiKNnhvHB/agkr5dzN/Fxqp4VFBPc0P44nwz205id
-	bazdx1dgUOTrUnO0Vpsea02NBcQKtSDvtOGMhzhLgxowS9lhwaGvLTjWny6SsYCR++cWSAsw3Wl
-	jqEo2Q+V02tTjVS40XCGVb/+TXATPvkA9pqJS0kgK0=
-X-Received: by 2002:a05:690c:88b:b0:7a2:3d38:337c with SMTP id 00721157ae682-7e05d5e4ec2mr97204177b3.32.1780326061363;
-        Mon, 01 Jun 2026 08:01:01 -0700 (PDT)
-Received: from google.com (138.200.150.34.bc.googleusercontent.com. [34.150.200.138])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7e175de02fdsm41868227b3.7.2026.06.01.08.00.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2026 08:01:00 -0700 (PDT)
-Date: Mon, 1 Jun 2026 11:00:59 -0400
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Jork Loeser <jloeser@linux.microsoft.com>, 
-	linux-hyperv@vger.kernel.org, linux-mm@kvack.org, kexec@lists.infradead.org, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Alexander Graf <graf@amazon.com>, Jason Miu <jasonmiu@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, Baoquan He <bhe@redhat.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Kees Cook <kees@kernel.org>, 
-	Ran Xiaokai <ran.xiaokai@zte.com.cn>, Justinien Bouron <jbouron@amazon.com>, 
-	Sourabh Jain <sourabhjain@linux.ibm.com>, Pingfan Liu <piliu@redhat.com>, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mario Limonciello <mario.limonciello@amd.com>, 
-	linux-arm-kernel@lists.infradead.org, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [RFC PATCH 00/20] mshv: enable kexec with Hyper-V donated pages
- and partitions
-Message-ID: <ah2eBxaBnVs_1j5n@google.com>
-References: <20260528004204.1484584-1-jloeser@linux.microsoft.com>
- <ahxrc4pTvVU20RTX@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ahxrc4pTvVU20RTX@kernel.org>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260601_080626_233611_73A49508 
-X-CRM114-Status: GOOD (  31.96  )
+	Mon, 01 Jun 2026 15:10:05 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 48FBF601E4;
+	Mon,  1 Jun 2026 15:10:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D74AC1F00898;
+	Mon,  1 Jun 2026 15:10:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780326605;
+	bh=CQQ3fHPI7z0+oYhhy2SS2++wUzwKs9NFKfTFjo35QFE=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To;
+	b=H6GKp/dzqdK9ORxjj0B40gPyyI+Oji2zXc3Le5Sabsl/dFTi0wga5rdS2Kf9sYveJ
+	 XADB9m10hTqyRD5XENfhigGHA6xbgGDk5NPtM7BRolacY8BQaIOlaU446uf7Dmi2zl
+	 hmTmsBeVFgywVd9Y3U6r51xN20vw8Ze9xskMuxrAa47Xae4rrZ8vgH4MN2CEybz50K
+	 t0WarlKSDJf6hW39j5PwA/N/G5xNTmutyB0YQ00tyPqnfT86uMY8B+GdTphTkwt7P2
+	 LdEJxogDT4R4mCI3zNbccAbuKOvpgTUNEVxQ8s0MVQxcsYAv5scNpsLLfUgtDOeX68
+	 YjwLO0KryJm/Q==
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 01 Jun 2026 17:09:59 +0200
+Message-Id: <DIXT3WV9XAWK.3E0JOPV2K6NC1@kernel.org>
+Subject: Re: [PATCH v16 0/5] shut down devices asynchronously
+Cc: <linux-kernel@vger.kernel.org>, <driver-core@lists.linux.dev>,
+ <linux-pci@vger.kernel.org>, <linux-scsi@vger.kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Tarun Sahu" <tarunsahu@google.com>, "Pasha Tatashin"
+ <tatashin@google.com>, =?utf-8?q?Micha=C5=82_C=C5=82api=C5=84ski?=
+ <mclapinski@google.com>, "Jordan Richards" <jordanrichards@google.com>,
+ "Ewan Milne" <emilne@redhat.com>, "John Meneghini" <jmeneghi@redhat.com>,
+ "Lombardi, Maurizio" <mlombard@redhat.com>, "Stuart Hayes"
+ <stuart.w.hayes@gmail.com>, "Laurence Oberman" <loberman@redhat.com>, "Bart
+ Van Assche" <bvanassche@acm.org>, "Bjorn Helgaas" <helgaas@kernel.org>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>, "John Garry"
+ <john.g.garry@oracle.com>, <kexec@lists.infradead.org>, "James E.J.
+ Bottomley" <James.Bottomley@HansenPartnership.com>
+To: "David Jeffery" <djeffery@redhat.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20260518193204.14273-1-djeffery@redhat.com>
+In-Reply-To: <20260518193204.14273-1-djeffery@redhat.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -115,92 +79,58 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 05-31 20:10, Mike Rapoport wrote:
-> Hi Jork,
-> 
-> Only had time to skim through the patches.
-> I have a couple of high level questions for now.
-> 
-> On Wed, May 27, 2026 at 05:41:42PM -0700, Jork Loeser wrote:
-> > When Linux runs as an L1 Virtual Host (L1VH) under Hyper-V, the MSHV
-> > root partition driver deposits pages to the hypervisor and creates
-> > partitions for guest VMs. Prior patches enabled kexec for L1VH, but
-> > only when no partitions had been created and no memory had been donated.
-> > 
-> > This series lifts that limitation. It uses KHO (Kexec Handover) to:
-> > 
-> >  - Track all pages deposited to the hypervisor in a KHO radix tree
-> >    and preserve them across kexec so the new kernel knows which pages
-> >    are owned by the hypervisor.
-> > 
-> >  - Freeze running partitions before kexec, record their IDs in the
-> >    KHO FDT, and vacuum (tear down + reclaim memory) stale partitions
-> >    after kexec.
-> > 
-> >  - In case of a crash, exclude hypervisor-owned pages from crash
-> >    dump collection by passing the radix tree root PA via Hyper-V
-> >    crash MSR P2 to the crash kernel.
-> > 
-> > Dependency on Pratyush's KHO series
-> > ===================================
-> > 
-> > Patches 1-12 are cherry-picked from Pratyush Yadav's v1 series
-> > "kho: make boot time huge page allocation work nicely with KHO" [1],
-> > which is still under discussion. This series uses functionality from
-> > those patches -- specifically the meta-data page enumeration via table
-> > callbacks and the restructured radix tree API. It also extends the
-> > KHO radix tree with:
-> > 
-> >  - A freeze mechanism to lock the tree before serializing for kexec
-> >    (patch 13).
-> 
-> There were a lot of effort to make KHO stateless and drop the requirement
-> for finalization/freeze.
+On Mon May 18, 2026 at 9:31 PM CEST, David Jeffery wrote:
+> These patches are now rebased against the driver-core tree's driver-core-=
+next
+> branch.
 
-Yes, using KHO directly here is incorrect. The state machine is provided 
-by LUO, so we should use LUO here. MSHV should provide a file that 
-userspace adds to LUO, and all state machine management would be the 
-same as for all other clients participating in LU.
+[...]
 
-> 
-> Why is this necessary to add a freeze mechanism to kho_radix_tree?
-> If it's a hard requirement of mshv maybe the freeze part should be handled
-> there?
-j  
-> >  - A crash-kernel-safe variant that memremaps radix nodes for use
-> >    outside the direct map (patch 14).
-> > 
-> > Patch overview
-> > ==============
-> > 
-> > Patches 1-12:  KHO radix tree and memblock changes (from [1])
-> > Patch 13:      Radix tree freeze and del_key() error reporting
-> 
-> del_key() error reporting sounds like something we'd want to avoid.
-> del_key() is called on "freeing" path and during error handling, it would
-> be hard if at all possible to deal with errors from del_key().
-> 
-> > Patch 14:      Crash-kernel-safe radix tree presence check
-> > Patch 15:      Page tracker using KHO radix tree for deposited pages
-> > Patch 16:      Debugfs interface for page tracker
-> > Patches 17-18: Crash MSR reshuffling + crash dump page exclusion
-> > Patch 19:      Export kexec_in_progress for modules
-> 
-> Isn't there another way to differentiate kexec reboot?
-> 
-> > Patch 20:      Freeze and vacuum partitions across kexec
-> > 
-> > Feedback
-> > ========
-> > 
-> > This is an RFC. I am looking for feedback on the overall approach as
-> > well as the KHO changes (patches 13-14).
-> > 
-> > [1] https://lore.kernel.org/linux-mm/20260429133928.850721-1-pratyush@kernel.org/
-> > 
-> > Based-on: linux-next/master (next-20260527)
-> 
-> -- 
-> Sincerely yours,
-> Mike.
+> Changes from V15:
+>
+> The async_shutdown bit field is converted to a device flags bit Convert a=
+ll
+> patches to use the flag bit accessor macros to set or check if async shut=
+down
+> should be used Added documentation on the kernel parameter to control use=
+ of
+> async shutdown
+
+Did you have a look at the Sashiko report from v15 [1]? Some of the concern=
+s
+raised seem valid at a quick glance.
+
+(It seems that this version has not been picked up by Sashiko (despite you
+mentioning they are based on driver-core-next). I'd assume it doesn't like =
+that
+the series was not sent with '--base'.)
+
+Can you have a look at [1] please?
+
+Thanks,
+Danilo
+
+[1] https://sashiko.dev/#/patchset/20260429175016.7915-1-djeffery%40redhat.=
+com
+
+> Stuart Hayes (2):
+>   driver core: separate function to shutdown one device
+>   driver core: do not always lock parent in shutdown
+>
+> David Jeffery (3):
+>   driver core: async device shutdown infrastructure
+>   PCI: Enable async shutdown support
+>   scsi: Enable async shutdown support
+
+Not sure it will make it for 7.2, but I think it would be good to give this=
+ some
+more time in linux-next anyways.
+
+Bjorn, James, Martin:
+
+Should the PCI and scsi patch go through the driver-core tree too?
+
+Do you prefer a signed tag with the driver-core changes to merge into the P=
+CI
+and scsi trees?
 
