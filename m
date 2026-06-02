@@ -4,88 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 54D13CD5BD1
-	for <kexec@archiver.kernel.org>; Tue,  2 Jun 2026 17:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3BECECD6E60
+	for <kexec@archiver.kernel.org>; Tue,  2 Jun 2026 17:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2orsdr+v6yIbfcC4d109Ztib1WHfFanWjEmldcE7TJ4=; b=4wch+yTDowEmh3xxHsvo+9a9GT
-	KCLNGfSicGIep5h0/hk56YO489GhB2W5zLncowaPxohqemQZ/E7iMLa9qJ+nDKq+5zYf6Aw+lJRoV
-	dxwJ2t4QSOOGkGOSRHgTKGY1b+cKJr6PQNASPwMoFXpg2Os0E/HSDP8LNTgg4szbQ4fYE0o6b0fS4
-	g/XS63Kj1T+yAI7NrbnbtLFyZ0/JtDAwtFu5GknwMqsuEx4qOCEEV8dqsonKiNCIkGl9GE78fgaRz
-	d1FmykcEguWCooY7cOD9OSJruwhjlOJILsqp9KKPV0EmM31UA9XoItw7A5GqqNMSp2Fiorn6kZO7J
-	ksRnGqgw==;
+	bh=GO0ughoX6tIBN7Rfl1sxm5xunBsDcVGcFMz2bkL4sxs=; b=JgHxlBASXdCmWBVanzckvYsZ2e
+	ZQfgmEDj8mhSEnyhUgJ7SHglpdWxORNTjBPf8DLjPiB2yKn6Dr94iurygwdS3zB1MghpRgdsTHSya
+	0GoApszv+Kj9XGSzsClAJ5MAh8JJ+3VU4FPi7kBV2kpNZxBPmFpXMrTJ2/9cYRhIYhZ8LEFKsvn9Z
+	8a0eEaEaTeJ9olsdbuvyipmCdY4wGSlgOrEX8MO0akydF2Fg7WoThn8n83t7CX1QIxutlitaxnm9s
+	egX3cCJxG4jYTsKRqUeRYmqFZm4Iy+MOOFPhXwPU4qLNIZlSl/dCjn8EAXhhsPFKc0i4A6fq1ezsf
+	r8OOGb0Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUSs4-0000000Da9Y-1zxe;
-	Tue, 02 Jun 2026 17:25:44 +0000
-Received: from mail-pg1-x52a.google.com ([2607:f8b0:4864:20::52a])
+	id 1wUTFp-0000000Dbx7-0FgN;
+	Tue, 02 Jun 2026 17:50:17 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUSs1-0000000Da91-2Vuu
+	id 1wUTFo-0000000Dbwv-1rXN
 	for kexec@lists.infradead.org;
-	Tue, 02 Jun 2026 17:25:43 +0000
-Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-c8587427468so1315925a12.1
-        for <kexec@lists.infradead.org>; Tue, 02 Jun 2026 10:25:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780421139; x=1781025939; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2orsdr+v6yIbfcC4d109Ztib1WHfFanWjEmldcE7TJ4=;
-        b=kb+FGom2lwjx0NFZMsaYx6Xbn+UnH5ciCcmDKloGSum4PiC0PYcWma7EjePCGAYWpn
-         I8oe5yyC/BGOhYUZD24efHHqgJFoPEeeZon5Cv91w3fT+4LgjzZ1+YskmbjeCjNO4r10
-         Zre7CU2Kk9Zt9EgMx7EEgBewFeXoYxjVU3rlx250900Sp159XNZtyW9w3SFL78etkWzs
-         6ON/CTziG3OPSj9Ie+dBsYtECjXe+5nRiP8kzZJHMw2J6Olo5hMMdvwtcswAK+R6Y4jh
-         J0uYlDVuqFJjcM0OshQq8bsExrYthvHtPxR+akOiUU/Nd6WlI/WkRbgaqEV5CbzJCPAZ
-         P+ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780421139; x=1781025939;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2orsdr+v6yIbfcC4d109Ztib1WHfFanWjEmldcE7TJ4=;
-        b=TkDsxvenfYIWf2f1Jgj/PYgN1lscexxSNyEuoIrb5mt02VDv7oQC+7Qqoi6ubdGqP8
-         1yCyWN/Och+ozX5AlHsazwsfobjeY0AkacpVl5Yoot+JSYR7ocBEdO7/M0hX2TYmNcK2
-         I1Db5GCYgrdqroYm07cMjitzsg6l8GJT1li18g+HDjfSTlYUhxXgD2CjRg3x7u8Hc3IM
-         AZJ7Of94jr7AmtBfvoiM4+GuhEiFMTl4O/IwPGYsCy9duKTMnwU82ipT82QD/dpsb2JL
-         L2JSPNFasU293pmIGwBZvFfzTuiIdxAm3BS7/MpHbMTAxqoIYRB6aVHYz8fMz20vZ38Q
-         0xDg==
-X-Gm-Message-State: AOJu0Yz6l3SD9T8TgcpQppXK5mIpENpPZ3etNeVGfLd4mQWlnxgFKbAP
-	KQI6RzObVhSbrh451T+7NioBSOzPMchIFlXgCKWL/153thS9OH5j2QvOThE8ZKVPEA==
-X-Gm-Gg: Acq92OGO/wPb4JoZ3w9DG93pmKi65EtLfGKLiVW0Q6CRjz7Utalru4HOpf0nlfcrx5+
-	nWFcTH+0QpOK5q+ov3MhodCfeiHYUdj/vjxQxpLp0o6TGHqGRdX1tymULbIUeunx3b322HyVAiD
-	7iaVLP5QcqUD12tHkC2ooVOTCt4ZJf7hlmtjADnFsYysY+PvazZE5/xm5anE+qcS8dbXSNyQ2OU
-	41Jn6QxFichOnGU8WEDbEFILY/7w0nWjJVL/8qHb1bGMaBc/VbBSRS1thl8G3djQaM+E/BWkyPE
-	wyjY/hAVH4u9j65uhsSVWQkdOLJbBDCj6XpKlwkWhalADdgQNGcwiKD83mvWEUESCTo1wrDXytE
-	i54DQmN8s/mmemkvLM1MiBl+G7169VZphusLS0z9bM22NTG7Zx12G8luqQ7UBUv7XrPz+o+wEEW
-	xda9WPaMwNyWpXtzC3jJ2UP+vY/ajiVmxPEqMBdkgI12xN2HSLDYM0PRJpzzkp77jiVK4TeCIV
-X-Received: by 2002:a17:903:390c:b0:2c0:c625:4001 with SMTP id d9443c01a7336-2c0c6254226mr131813415ad.39.1780421138788;
-        Tue, 02 Jun 2026 10:25:38 -0700 (PDT)
-Received: from google.com (56.149.168.34.bc.googleusercontent.com. [34.168.149.56])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bf23b01214sm141692365ad.50.2026.06.02.10.25.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2026 10:25:38 -0700 (PDT)
-Date: Tue, 2 Jun 2026 17:25:34 +0000
-From: David Matlack <dmatlack@google.com>
+	Tue, 02 Jun 2026 17:50:16 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 1D3CD60098;
+	Tue,  2 Jun 2026 17:50:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EE481F00893;
+	Tue,  2 Jun 2026 17:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780422614;
+	bh=GO0ughoX6tIBN7Rfl1sxm5xunBsDcVGcFMz2bkL4sxs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=NSmFgoehKN8l7Nu3qFjPX9PA1JKtgCb0OnvBI+IS4vrCZ3nnMOE6EM83u9fGdOUah
+	 4xXfTfQB/neJj095AmqowvVzylbkcIxgu8Jk2pKdqQH4uACdBr5UHRJ7v33TdcKgvJ
+	 E88mOvzEP8uCWRy7hie9kecWXK0/gaDvIfXTC+4gHrK9GB9AMFAVwlvK3Hj4RyjLUa
+	 K105NrN4t1D0EqCEE9lcUmUiFRmpQ1XHDtQHq0KcM+4S2NxVRa2AxycnWf9bfs0mSU
+	 7GfLZN3Lwc3KC2e6hqwYf5ZxrulvHck5J3aRNpfHCsunz8GxgLf7mXkzGHJy6HrsN8
+	 +J9ORV2bzB5Mg==
+Date: Tue, 2 Jun 2026 20:50:07 +0300
+From: Mike Rapoport <rppt@kernel.org>
 To: Pratyush Yadav <pratyush@kernel.org>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Alexander Graf <graf@amazon.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>
-Subject: Re: [PATCH 1/2] liveupdate: Reference count outgoing FLB data
-Message-ID: <ah8SDsIuZQXyvpZq@google.com>
-References: <20260528174140.1921129-1-dmatlack@google.com>
- <20260528174140.1921129-2-dmatlack@google.com>
- <2vxzfr34dfty.fsf@kernel.org>
+	Jason Miu <jasonmiu@google.com>, kexec@lists.infradead.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/12] mm/hugetlb: make bootmem allocation work with KHO
+Message-ID: <ah8Xz3qc3cbHkiuK@kernel.org>
+References: <20260429133928.850721-1-pratyush@kernel.org>
+ <20260429133928.850721-13-pratyush@kernel.org>
+ <agmS5yZRflzN1M8U@kernel.org>
+ <2vxzo6i37bs6.fsf@kernel.org>
+ <ahyAhyVGzXdrigIw@kernel.org>
+ <2vxzpl29dpzj.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2vxzfr34dfty.fsf@kernel.org>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260602_102541_650516_68AD8A25 
-X-CRM114-Status: GOOD (  28.95  )
+In-Reply-To: <2vxzpl29dpzj.fsf@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,69 +79,78 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-06-02 07:15 PM, Pratyush Yadav wrote:
-> Hi David,
+On Tue, Jun 02, 2026 at 03:35:44PM +0200, Pratyush Yadav wrote:
+> On Sun, May 31 2026, Mike Rapoport wrote:
 > 
-> On Thu, May 28 2026, David Matlack wrote:
-> 
-> > Increment the outgoing FLB refcount in liveupdate_flb_get_outgoing() so
-> > that the FLB structure cannot be freed while the caller is actively
-> > using it. Add an additional liveupdate_flb_put_outgoing() function so
-> > the caller can explicitly indicate when it is done using the outgoing
-> > FLB.
+> > On Mon, May 25, 2026 at 05:24:09PM +0200, Pratyush Yadav wrote:
+> >> On Sun, May 17 2026, Mike Rapoport wrote:
+> >> > On Wed, Apr 29, 2026 at 03:39:14PM +0200, Pratyush Yadav wrote:
+> >> >> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+> >> 
+> >> So, in summary, I would like to pursue option 1 and try to make it more
+> >> appetizing. But I would like to at least know if you hate the "extended
+> >> scratch" (ignore the name) as a concept or only the code it results in.
 > >
-> > During a Live Update, the kernel may need to fetch the outgoing FLB
-> > outside of the scope of a file handler's preserve() and unpreserve()
-> > callbacks. In that situation there is no way for the caller to protect
-> > itself against the outgoing FLB from being freed while it is using it.
-> > Incrementing the reference count in liveupdate_flb_get_outgoing()
-> > ensures it cannot be freed.
-> 
-> We grab a reference to the FLB's module when the first file using the
-> FLB is preserved. So the FLB should never go away while preserved files
-> exist. Once all preserved files go away, you normally shouldn't be doing
-> anything with the FLB anyway.
-> 
-> Can you please elaborate on the use case and why this is a problem?
-> Using the FLB outside of the standard LUO file callbacks sounds
-> problematic.
-
-The scenario I had in mind was to remove a PCI device from the outgoing
-FLB if the device is forcibly removed while the file is still preserved,
-for example someone writes 1 to /sys/bus/pci/devices/.../remove or a
-device is physically hot-unplugged.
-
-Specifically this call here from the patch below:
-
-+void pci_liveupdate_cleanup_device(struct pci_dev *dev)
-+{
-+	/*
-+	 * It should be safe to READ_ONCE() outside of the rwsem during cleanup
-+	 * since there should no longer be any references to @dev on the system.
-+	 */
-+	if (READ_ONCE(dev->liveupdate.outgoing)) {
-+		pci_WARN(dev, 1, "Destroying outgoing-preserved device!\n");
-+		pci_liveupdate_unpreserve(dev);
-+	}
-+}
-
-https://lore.kernel.org/linux-pci/20260522202410.3104264-3-dmatlack@google.com/
-
-I can do this without adding reference counting to
-liveupdate_flb_get_outgoing(), but the reference counting makes it
-obvious that the outgoing FLB will not be freed while I am using it
-here, and also aligns with liveupdate_flb_get_incoming().
-
+> > Let's retry this one :)
 > >
-> > This change also aligns the outgoing FLB lifecycle management with the
-> > incoming FLB, since the latter uses the same get/put semantics.
-> >
-> > Fixes: cab056f2aae7 ("liveupdate: luo_flb: introduce File-Lifecycle-Bound global state")
-> > Assisted-by: Gemini:gemini-3-pro-preview
-> > Signed-off-by: David Matlack <dmatlack@google.com>
-> [...]
+> > I looked more closely, and it seems that mixing SCRATCH and SCRATCH_EXT
+> > should be a lesser headache than going with option 4.
 > 
+> I also had some time to ruminate on this. I still think option 1 has the
+> most promise, but my opinion on option 4 has improved a bit. While I
+> still am not sure adding a 3rd phase to struct page/MM init (early ->
+> deferred -> KHO reserved blocks) is a good idea, I think it might not be
+> as bad as I first thought. Dunno...
+
+Until (if ever) we enlighten memblock_free_all()/deferred_init_pages()
+about KHO, small scattered reservation make memblock slower. It's hard to
+tell if delaying more complex initialization of the large reserved chunks
+until SMP is worth speedup in a few memblock operations between
+kho_memory_init() and the end of deferred_init_pages().
+ 
+> Anyway, for now I think I will try to make option 1 more appetizing.
+> 
+> Here's an idea I want to try out: I get rid of SCRATCH_EXT and mark the
+> free blocks as SCRATCH. For HugeTLB, I can teach the special
+> memblock_alloc_hugetlb_something() function to exclude scratch areas
+> when looking for free memory ranges. So core memblock does not get a new
+> memory type, and the complexity of hugepage allocation does not leak
+> into memblock.
+> 
+> How does that sound?
+
+It sounds fine, let's see how it looks :) 
+
+> > Tracking the changes in gigantic pages in hugetlb also does not seem
+> > something we'd like to pursue especially considering that memory from freed
+> > or demoted gigantic pages could be reserved.
+> >
+> > If we add a dedicated memblock_something to allocate gigantic pages, we
+> > can reduce branching in alloc_bootmem() to
+> >
+> > 	if (cma)
+> > 		do_cma()
+> > 	else
+> > 		do_memblock()
+> >
+> > For hugetlb_cma we might want to teach CMA to create pre-allocated areas
+> > and then it could reuse the same memblock API. This seems useful even
+> > regardless of KHO.
+> 
+> Sorry, I don't get what you mean by this. What pre-allocated areas? When
+> creating CMA areas it calls cma_alloc_mem() which calls into memblock.
+> What would we change about this?
+
+s/teach CMA to create/teach CMA to use/
+
+I mean that we might want to be able first allocate gigantic pages and then
+feed them to empty CMA areas.
+ 
 > -- 
 > Regards,
 > Pratyush Yadav
+
+-- 
+Sincerely yours,
+Mike.
 
