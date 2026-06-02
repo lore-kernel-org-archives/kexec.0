@@ -4,75 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E3528CD6E60
-	for <kexec@archiver.kernel.org>; Tue,  2 Jun 2026 12:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 694EACD6E60
+	for <kexec@archiver.kernel.org>; Tue,  2 Jun 2026 12:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=VDGW0w8sKFr9y+yQO1wAjpaei9XRMCKNAmjogGC5NxM=; b=EIOg7u+cz41Y2bRP3CZEUtgKSh
-	grIoWWph1R8tYsvM0cQJn82bY1+Eg2+IRgkLjLGfp3BXKSvAZuJSfMg/HeDKQ9oqTzqTvz1uUEEhC
-	ADW/ku8/JmKBhzD4Uf4Oqlmti9Z62khaYOnPZuBrFavoFBHKF/3TsRh6lzJ016J094WXLuXKw6h0b
-	kLyibaYmfM3xElmSo5kzbKODYs2RL/rrL/eeAhwDvUR82bgxZDfiJ4baJRnwsqKeSZwZC+JMFmdUL
-	Q/ZRDOkZG7u5eYZ2Uonn0Q017taX+FrOFlnUQWTl6txx2XCKg/WGRpL3MWJP9BUEdAqnGdYcd7tw/
-	/lpGP98g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=QoEDHLDPjah5bpcTq5+xdPnUnkR+I3T5o+EEfuYH6c0=; b=jn55xtW2iU2Hxbc9L2SHJoBvkv
+	qdqB17dAvx9+bQy3cYOWnsVx/CAk4MQzdGq3XtofIbhEJi/n9SSP0ZyYtpAd6CUaKpwj0hMi4qCHN
+	RLGV3DMN4/vINYiPCsFzUZg5dcoyraCyZuNZg5GwGmlQi0AigeZChweLTuMF32eDFv6g8E2nkIaK3
+	UtoVua8Qz2dr2l2NSwyqhHoRnQtHJmWCWTvRU3fMfif5T6ouwKjpM8HjWibeGQuGxSoY+OBrKDXy5
+	Vm3XOZVylWiHVMB0GmgVyFtMaDmqU8pGmTdhZAjNBTPh6l30HsL+hiwpa8gW/n4M5l+9mU/6ai3ab
+	rKdPgu4w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUOJB-0000000CzTF-3XVb;
-	Tue, 02 Jun 2026 12:33:25 +0000
-Received: from mail-lf1-x149.google.com ([2a00:1450:4864:20::149])
+	id 1wUObI-0000000D1ek-3Sai;
+	Tue, 02 Jun 2026 12:52:08 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUOJA-0000000CzSh-0VRp
+	id 1wUObG-0000000D1eM-2YIl
 	for kexec@lists.infradead.org;
-	Tue, 02 Jun 2026 12:33:25 +0000
-Received: by mail-lf1-x149.google.com with SMTP id 2adb3069b0e04-5aa6dbdee74so1184776e87.2
-        for <kexec@lists.infradead.org>; Tue, 02 Jun 2026 05:33:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780403601; x=1781008401; darn=lists.infradead.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VDGW0w8sKFr9y+yQO1wAjpaei9XRMCKNAmjogGC5NxM=;
-        b=GA2yLPh4eI5J9UK96d4ALcjPAZLuymDYd+jWtj9EaMxamP/haMJEgf41Zh9xGJTzh+
-         s5z7FSIa+w65I4gJaBBin4u3T1D9VKZtLINgdsn56Qg6dKqUGQKF8Q2oYdbSihaYh4Uv
-         a0+PT/YhUbAXpFRkPlcy56jQOMrb4fksfNRW3BAkq3WOju+2ktEqnMi4IN2cn/Nf4YXd
-         vCKWIik7PeZ/pUTZhd8G38yAt6dPelWf3PYdbVsZUHA+Wqrp2IfdLPqlHGeC9cbpRdIT
-         N7uSf2p1F2ghTWL68VEx0QwEaapEm1VnVFM3a8en6O26yTAf6p8VQAoPFv8mDp0TydGm
-         OOgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780403601; x=1781008401;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VDGW0w8sKFr9y+yQO1wAjpaei9XRMCKNAmjogGC5NxM=;
-        b=oZxihQ/x0SThasqTLtB2Mtuzso6bALZ+YCsZpRjLK1QH+R+A/ToJZBwco7iGRXvAeX
-         DTv4BnufVx2c7p8bYti9XsefBNmRO8N0xmaBHiMINrRShrywy5LZHvH4gqh/E0kBCV/r
-         ALPLjB5q+hYqU0xJfe14jPqti9H78CxqB5TTb3xBIMFD7OcuaG6A1gbmlQV+94LFdohQ
-         FeFR06KNUnByeBEvNSqqzHGwGp9pVr30/xpvrHncEsI4HBmRf5t2mpDAVmH6y9b8xTZF
-         MesgwtQI9iPq+4CxRYkbEykchSw2ncLMl79Ai3goMePMKSAtYa3gcD0CxbP9cbOQQ5Dw
-         B8xQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8IASpFpLrBZV3UTjAHRZUH9LCbp7WwziImC16lBtmorj3eUAJo/7mFG6gBk/6v/WuwI9fNYw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzJcHpnOB8Aa3/RDrW6Dvw2QnXkT9fT7BCS32Uf6jHupxbf/LFo
-	hqHAG+DKjdkEO2lxL0GoQaoytcEFidVcrMb7aD5P2qwdEjWBoz/eirt0Sd/IyNo9AnfeWDS8JGt
-	Zm+ZYurLUAsIZBnIQr0WWUQ==
-X-Received: from lfbf26.prod.google.com ([2002:ac2:509a:0:b0:5aa:6821:c3d1])
- (user=mclapinski job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6512:39c3:b0:5aa:6ede:62 with SMTP id 2adb3069b0e04-5aa6ede020fmr2156947e87.17.1780403600611;
- Tue, 02 Jun 2026 05:33:20 -0700 (PDT)
-Date: Tue,  2 Jun 2026 14:33:11 +0200
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.54.0.929.g9b7fa37559-goog
-Message-ID: <20260602123311.1841746-1-mclapinski@google.com>
-Subject: [PATCH v2] kexec_file: skip checksum verification when safe
-From: Michal Clapinski <mclapinski@google.com>
-To: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
-Cc: Michal Clapinski <mclapinski@google.com>
-Content-Type: text/plain; charset="UTF-8"
+	Tue, 02 Jun 2026 12:52:07 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 7BA1043E7A;
+	Tue,  2 Jun 2026 12:52:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F8561F00893;
+	Tue,  2 Jun 2026 12:52:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780404725;
+	bh=QoEDHLDPjah5bpcTq5+xdPnUnkR+I3T5o+EEfuYH6c0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=IiXf1nVAnO6t8NjlmzVhB2FDUs+qCYUsODkAWZ8sJTmk6a3lKVlf7tG67+VzbgBNQ
+	 J7k5dqFFIF6+G5gn8Eq+IwMN4aNjsd2ONhT4EHoruasOEleK7cSmsQB4YdlAAqGEz5
+	 4FFIzpTYiIeOCxlkgCfydz5dzQERCV/6b4kvoHr8KvCEruq64LWvoxFZdT6q5i006q
+	 iwkVYLG0Ss7xNCtzrvg/VjiGJkSmKi+s2M36PLANDh6Y4h0ZjEEtyAlvpn63SbHQ0l
+	 Jjk5kCalZ1XzlknpjzXB5XVn3uybFmWbzn4yCt1wGKZNiOh2bkPsibCvLd99WXllys
+	 7B1hR1+e6qUMQ==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Pasha Tatashin
+ <pasha.tatashin@soleen.com>,  Alexander Graf <graf@amazon.com>,  Muchun
+ Song <muchun.song@linux.dev>,  Oscar Salvador <osalvador@suse.de>,  David
+ Hildenbrand <david@kernel.org>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Jason Miu <jasonmiu@google.com>,
+  kexec@lists.infradead.org,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/12] memblock: introduce MEMBLOCK_KHO_SCRATCH_EXT
+In-Reply-To: <ahyDHVSH5eLsnp3C@kernel.org> (Mike Rapoport's message of "Sun,
+	31 May 2026 21:51:09 +0300")
+References: <20260429133928.850721-1-pratyush@kernel.org>
+	<20260429133928.850721-10-pratyush@kernel.org>
+	<agHGOxSnP_VraH1M@kernel.org> <2vxzecjhc2s8.fsf@kernel.org>
+	<ag-a4ru9bMkDMthO@plex> <2vxzse7j7ai9.fsf@kernel.org>
+	<ahyDHVSH5eLsnp3C@kernel.org>
+Date: Tue, 02 Jun 2026 14:52:02 +0200
+Message-ID: <2vxztsrlds0d.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+MIME-Version: 1.0
+Content-Type: text/plain
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260602_053324_177506_C2D9322D 
-X-CRM114-Status: GOOD (  20.35  )
+X-CRM114-CacheID: sfid-20260602_055206_690972_4BF47532 
+X-CRM114-Status: GOOD (  39.08  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,106 +81,113 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Checksum verification is needed
-1. for crash kernels. In a crash, we can't be sure the kernel is
-   intact.
-2. if we're worried about relocating the kernel into a region used by
-   some DMA that wasn't properly cancelled.
+On Sun, May 31 2026, Mike Rapoport wrote:
 
-If KHO is enabled then relocations will happen to KHO scratch, which
-is free from DMA regions.
-If we used CMA to allocate segments then relocations are not going to
-happen at all.
-Therefore, we can safely disable checksum verification in both of those
-cases.
+> On Fri, May 22, 2026 at 05:02:38PM +0200, Pratyush Yadav wrote:
+>> On Fri, May 22 2026, Pasha Tatashin wrote:
+>> 
+>> > On 05-11 18:46, Pratyush Yadav wrote:
+>> >> On Mon, May 11 2026, Mike Rapoport wrote:
+>> >> 
+>> >> > On Wed, Apr 29, 2026 at 03:39:11PM +0200, Pratyush Yadav wrote:
+>> >> >> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+>> >> >> 
+>> >> >> In the upcoming commits, the KHO will learn how to discover free blocks
+>> >> >> of memory by walking the KHO radix tree. It will then mark those regions
+>> >> >> as scratch to allow memory allocation in case scratch runs low.
+>> >> >> 
+>> >> >> To differentiate the extended scratch areas from the main scratch areas,
+>> >> >> introduce MEMBLOCK_KHO_SCRATCH_EXT. Use it when choosing memblock flags
+>> >> >> for allocations during scratch-only. Teach should_skip_region() to check
+>> >> >> for both flags before deciding if the region should be skipped.
+>> >> >
+>> >> > Why there's a need to differentiate SCRATCH and SCRATCH_EXT?
+>> >> > SCRATCH (I still hate the name) means "memory memblock can safely use for
+>> >
+>> >  +1000
+>> >
+>> > I also strongly dislike this name and mentioned it in another thread
+>> > earlier today.
+>> >
+>> > If we ever decide to s/scratch/something-else/ globally, that should be a
+>> > separate cleanup effort. However, since we are introducing a brand new flag
+>> > here, we can discuss a better name for the _ext portion to avoid overloading
+>> > the "scratch" concept.
+>> >
+>> >> > the allocations". Initially this memory comes from the reservations in the
+>> >> > first kernel, but if the second kernel can find more memory to extend it,
+>> >> > why that additional memory should be treated differently? 
+>> >> 
+>> >> Two reasons:
+>> >> 
+>> >> 1. We mark SCRATCH as MIGRATE_CMA. We don't want to do that for
+>> >>    SCRATCH_EXT since this memory can be used for non-movable
+>> >>    allocations.
+>> >> 
+>> >> 2. Gigantic (1G) huge pages can not be allocated from scratch. They can
+>> >>    be preserved memory and thus should not be allocated from SCRATCH.
+>> >>    See patch 12 that does allocations for gigantic huge pages only from
+>> >>    SCRATCH_EXT.
+>> >> 
+>> >> I will add this in the commit message for the next version.
+>> >> 
+>> >> Naming is hard, so if you have any better names I'm all ears :-)
+>> >
+>> > IMO, this scratch_ext is not "scratch" in the traditional KHO sense at all.
+>> > The traditional KHO scratch is what is passed from kernel to kernel and is
+>> > guaranteed to contain zero preserved memory. This new memory is not passed
+>> > from kernel to kernel and can contain preserved memory at runtime. It's
+>> > essentially just memory that we identify as currently unpreserved and release
+>> > early to the system.
+>> >
+>> > If we want to keep the naming aligned with the existing codebase for now:
+>> > MEMBLOCK_KHO_SCRATCH      -> original scratch
+>> > MEMBLOCK_KHO_UNPRESERVED  -> for the new memory (instead of SCRATCH_EXT)
+>> 
+>> UNPRESERVED sounds good to me. I will use that for the next revision
+>> unless Mike objects.
+>  
+> Can we make it shorter? ;-)
+>
+> UNPRESERVED makes sense, although I'd love to completely remove KHO_ notion
+> and make the name reflect how it's used by memblock. I was toying with
+> PREFERRED instead of SCRATCH, but it didn't feel right enough.
+> With two of them that surely won't work :)
 
-Instead of adding a new variable to purgatory, just skip adding regions
-and save the default value of SHA256 hash.
+I don't think you really can remove KHO_ notion. These memory regions
+only make sense on a KHO boot, and won't exist otherwise. And PREFERRED
+sounds like a suggestion/priority hint, not a hard limit. "With KHO
+boot, you can _only_ use PREFERRED memory", doesn't sound right...
 
-Saves ~250ms on my 4.0 GHz CPU. This is an important saving for the
-live-update project.
+I think MEMBLOCK_KHO_BOOTMEM for scratch and MEMBLOCK_KHO_NOPRESERVE
+(which I think is a tiny bit better than UNPRESERVED) for scratch_ext
+are my top picks. To make it shorter, perhaps MEMBLOCK_KHO_NOPRSRV, in
+similar fashion to RSRV_KERN?
 
-Signed-off-by: Michal Clapinski <mclapinski@google.com>
----
-v2:
-- also skip checksum verification if KHO is enabled
-- small fixes from reviews
+>
+>> > Alternatively, if we do want to tackle the global rename of "scratch" later:
+>> > MEMBLOCK_KHO_BOOTSTRAP    -> for the original scratch
+>> > MEMBLOCK_KHO_UNPRESERVED  -> for this new dynamic memory
+>> 
+>> Or perhaps BOOTMEM? I suppose either of the two are somewhat better than
+>> scratch.
+>
+> Well, if we have BOOTMEM_HVO, we can have BOOTMEM_KHO as well :)
+>
+>> Anyway, can we please do the SCRATCH rename as a separate series? I
+>
+> Sure. We can continue bikeshedding in parallel.
+>
+>> would like this series to not get muddled in the naming discussion. I
+>> will use UNPRESERVED for the new concept in v2 though.
+>
+> That might warrant v3 even if everything else is perfect :)
 
-My original idea was to do 2 changes:
-1. Skip checksum if all segments are CMA.
-2. If KHO is enabled, allocate the kernel inside kho_scratch using CMA.
+I can live with that. As long as we can agree on the easy part (the
+code), I don't mind doing another version for the hard part (the naming)
+;-)
 
-This way we could skip both relocations and checksum verification when
-KHO is enabled.
-But I realized that step 2 might not be possible on warm boots.
-I have no idea how to fix that (except weird ideas like 2 kho_scratches
-that we swap on every warm boot), so I decided to just skip checksum
-verification when KHO is enabled. This unfortunately means relocations
-will still happen.
----
- kernel/kexec_file.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
-
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 2bfbb2d144e6..db25a14692ab 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -27,6 +27,7 @@
- #include <linux/syscalls.h>
- #include <linux/vmalloc.h>
- #include <linux/dma-map-ops.h>
-+#include <linux/kexec_handover.h>
- #include "kexec_internal.h"
- 
- #ifdef CONFIG_KEXEC_SIG
-@@ -798,6 +799,16 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
- 	return 0;
- }
- 
-+static bool kexec_only_cma_segments(struct kimage *image)
-+{
-+	for (int i = 0; i < image->nr_segments; i++) {
-+		if (!image->segment_cma[i])
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
- /* Calculate and store the digest of segments */
- static int kexec_calculate_store_digests(struct kimage *image)
- {
-@@ -822,6 +833,21 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 
- 	sha256_init(&sctx);
- 
-+	/*
-+	 * If KHO is enabled, the destinations are located in KHO scratch.
-+	 * KHO scratch can only contain early boot allocations and movable
-+	 * allocations. That means there is no risk of memory corruption by
-+	 * uncancelled DMA.
-+	 *
-+	 * If all segments were loaded into contiguous memory, there will be no
-+	 * relocations at all, so also no risk no corruption.
-+	 */
-+	if (image->type != KEXEC_TYPE_CRASH &&
-+	    (kho_is_enabled() || kexec_only_cma_segments(image))) {
-+		pr_debug("disabling checksum verification in purgatory\n");
-+		goto skip_checksum;
-+	}
-+
- 	for (j = i = 0; i < image->nr_segments; i++) {
- 		struct kexec_segment *ksegment;
- 
-@@ -867,6 +893,7 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 		j++;
- 	}
- 
-+skip_checksum:
- 	sha256_final(&sctx, digest);
- 
- 	ret = kexec_purgatory_get_set_symbol(image, "purgatory_sha_regions",
 -- 
-2.54.0.929.g9b7fa37559-goog
-
+Regards,
+Pratyush Yadav
 
