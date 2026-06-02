@@ -4,62 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0E77ACD6E60
-	for <kexec@archiver.kernel.org>; Tue,  2 Jun 2026 16:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 83AF4CD5BD1
+	for <kexec@archiver.kernel.org>; Tue,  2 Jun 2026 17:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
 	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bQ18P4Rtva2V1dnwLC35V2xECHbwpYcWUGfZy2CqNMI=; b=NjUbqwV37UqpudzWXI3h9dWfNN
-	QVYyuxRF2hEE30R/oyQnLWV+NL6RhrVwyyHh3n3d9cZ/zllL0J/Kfw0BOSlmOrkLBTV0SOYiWVGW9
-	8fImV+MWsZ/qvuOe57knISGqIUpB9Mnr4A3AAF4dxpBpHR4DQDUuPR3Ez9KWVYRGdJ75WH9oUdwEA
-	pFMmuKIXc6l/SzQz3Zj7hYK2GYqTZJbneKdpelehg6xLGjl4v98KRfjyAzE6JqyWAgeNICWm4R94v
-	PN2/hP3BYe4qdL2SyLUnBaNAyQaL2AdqJp+AtRy9QG4DZcrusv8XUOui/pDOHJHcOgceDiZ8Z/eeE
-	rztvlDVQ==;
+	bh=ShcL7r50dfVkd1EvhBq+OIaa4ZXVW5H9HttcXDcV92M=; b=lvpmBi3IAHk28v2pcN6UYWEWpk
+	+qINwbQ74VWKtmZ7aU391F0Ye4Am1ZTsuKY+YBesq05LcGSWDQH6Nz4noKMq1RpD6muQGbOF62LRy
+	vzm0hlyI6wkGS7GSBZ+Nq+iUxAlw9pJeT8xYvXHJcdw3zCVmmVHswESN2Zuw57IgjK3CbqsUDU9OV
+	EMHq61BkX0bENEFSEhZoZ9nNsclgC422N55vESuy8d2ZaYvu6/45NojixIw7AumuJbWpcwqJ0U485
+	8PydKp4KjZ/qF/Hwu/0Z16BmQIJ4kQ2ln0gQ1uxwc4awwbuutNJy7imSkr8kUgcgTiYtLb0OUpH2l
+	iYoBfw1w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUSSA-0000000DVnH-3VVT;
-	Tue, 02 Jun 2026 16:58:58 +0000
+	id 1wUSVK-0000000DX2N-1PP1;
+	Tue, 02 Jun 2026 17:02:14 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUSS8-0000000DVmW-3sXW
+	id 1wUSVH-0000000DX0u-3gSV
 	for kexec@lists.infradead.org;
-	Tue, 02 Jun 2026 16:58:58 +0000
+	Tue, 02 Jun 2026 17:02:12 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 2940A41B70;
-	Tue,  2 Jun 2026 16:58:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAFD51F00893;
-	Tue,  2 Jun 2026 16:58:53 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 8A9F343D50;
+	Tue,  2 Jun 2026 17:02:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 188071F00898;
+	Tue,  2 Jun 2026 17:02:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780419535;
-	bh=bQ18P4Rtva2V1dnwLC35V2xECHbwpYcWUGfZy2CqNMI=;
+	s=k20260515; t=1780419731;
+	bh=ShcL7r50dfVkd1EvhBq+OIaa4ZXVW5H9HttcXDcV92M=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=mFkg6QUXdBtOZiOz8FOhkKUhWAbS6Mxo0Q939D8EF/TmogBhU8ec9TTQV4MYbboZi
-	 XIoVcBQ6Ze7qt14Bk1JIusq14cc+CcPfDxT3cf/sVeDqNFBlPmhev/uU0797vhxB4R
-	 HfWjUm/1pHvbvzTYBhgp69UT3g/Wb9tarzvn4VnEfvmKCiD+vXScZINin5xNiWXYNs
-	 9WDR2Vvz2MZoknO5ejAySKQv0U0TzYWBZ5aRjKqO2CMMhFKkHi2fKndcFb+JDozdMp
-	 WsPrizDwBo00dWNbCDKYcMlWvdYX62Z2JevZN3e8R9X7pNC+aosPFF853Gk3al+596
-	 8Qjy5FXg5vfuQ==
+	b=gPdpn2UgiboYZax3m1sudcCd1Bz3IObeQJ8gFwBLw0ARzbS0bi9eNPJOjxEYtg/FT
+	 +pTvMg2hqxgWZUEM0Kz7DhvMRGLQXfTXKJbKZJM0QAQRunrgiTYrUfOlMnOannZwSj
+	 yIRSczh7SteOl8ldrFzPnskPV5NFZcUtQJO7jXtzVEo1jsPiLGcACshrJdZzoWTnbD
+	 p9JiYBo3MYfttrr20G00bzhqRwVrvnCKqoT62F1/0NWk3rEdSWmae1ZNFTlZSP6jC+
+	 X7PEVjIoDqoIoV2IDAoEZEeRvpjdav5LJjcOPT2SVuhTtmqN7xGDUBaAiPJ7N8ZoU/
+	 3jIo1lx4Jxx3A==
 From: Pratyush Yadav <pratyush@kernel.org>
-To: Michal Clapinski <mclapinski@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  Baoquan He <bhe@redhat.com>,
-  Pasha Tatashin <pasha.tatashin@soleen.com>,  Mike Rapoport
- <rppt@kernel.org>,  Pratyush Yadav <pratyush@kernel.org>,
-  kexec@lists.infradead.org
-Subject: Re: [PATCH] kho: try to allocate contiguous memory for kexec segments
-In-Reply-To: <20260601193014.896405-1-mclapinski@google.com> (Michal
-	Clapinski's message of "Mon, 1 Jun 2026 21:30:14 +0200")
-References: <20260601193014.896405-1-mclapinski@google.com>
-Date: Tue, 02 Jun 2026 18:58:52 +0200
-Message-ID: <2vxz4ijkev5f.fsf@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: linux-kselftest@vger.kernel.org,  rppt@kernel.org,  shuah@kernel.org,
+  akpm@linux-foundation.org,  linux-mm@kvack.org,
+  skhan@linuxfoundation.org,  linux-doc@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  corbet@lwn.net,  dmatlack@google.com,
+  kexec@lists.infradead.org,  pratyush@kernel.org,  skhawaja@google.com,
+  graf@amazon.com
+Subject: Re: [PATCH v5 04/13] liveupdate: register luo_ser as KHO subtree
+In-Reply-To: <20260602031717.197696-5-pasha.tatashin@soleen.com> (Pasha
+	Tatashin's message of "Tue, 2 Jun 2026 03:17:08 +0000")
+References: <20260602031717.197696-1-pasha.tatashin@soleen.com>
+	<20260602031717.197696-5-pasha.tatashin@soleen.com>
+Date: Tue, 02 Jun 2026 19:02:07 +0200
+Message-ID: <2vxzzf1cdgfk.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260602_095856_987062_0E693D8B 
-X-CRM114-Status: GOOD (  10.29  )
+X-CRM114-CacheID: sfid-20260602_100211_937458_1A1C12EE 
+X-CRM114-Status: UNSURE (   6.18  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,26 +78,17 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jun 01 2026, Michal Clapinski wrote:
+On Tue, Jun 02 2026, Pasha Tatashin wrote:
 
-> This allows us to skip relocations (and maybe checksum calculation
-> in the future).
-
-I'm confused. Doesn't your patch "kexec_file: skip checksum verification
-when safe" [0] skip the checksum for KHO already? So this only skips the
-relocations part then?
-
-And based on the discussion on that thread, relocations don't seem to
-take much time. So is there a real need for this patch?
-
-[0] https://lore.kernel.org/kexec/20260602123311.1841746-1-mclapinski@google.com/
-
+> Entirely remove the LUO FDT wrapper since the FDT only carries the
+> compatible string and the pointer to the centralized struct luo_ser.
+> Instead, register the struct luo_ser via the KHO raw subtree
+> API, placing the compatibility string inside the structure itself.
 >
-> kho_scratch is marked as MIGRATE_CMA but isn't actually given to the
-> CMA, so it should only contain movable allocations, therefore this
-> should always succeed.
->
-> Signed-off-by: Michal Clapinski <mclapinski@google.com>
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+
+Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+
 [...]
 
 -- 
