@@ -4,66 +4,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E2B29CD6E57
-	for <kexec@archiver.kernel.org>; Wed,  3 Jun 2026 14:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1F63ACD6E57
+	for <kexec@archiver.kernel.org>; Wed,  3 Jun 2026 14:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
-	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yu2f5FIaIpPGb9LsISKA98pvWiCaazPbEtHtZWNusVY=; b=07gaBoM3Bd9jnUxvVG8Nx11UMC
-	QQzAVTy53J/YZnUJf2Vb2fzJTYOjJNc9ddx6SXRALaFNiKTlZX/RpeqpwPJMPq1fwJ2PrljUCsdjX
-	v51+Cq5L86D8zYQ8pWvGP4Z4gqGqhz2yacbk3KtWHwrLbF1PtX/OdYyStzacxX9qGLgrZWPjRuLm5
-	qzQ/c8filnPDMvZ7IHZZMLVr9NKI1lcG/gAfC1jzsnpb+pEVWmqAxer484W0zUke8ojCysFW3GdGz
-	5kB/Un1MXOJFbR0aStwaXL1hPqXIGdwTQuulZzyiGLaHWiRKpbDZQCeQeUR2UnK90/ntOw9W6M/Ao
-	1bllOHvA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=OheaLw7H7tyd+BHT4gfjavgl+y762p06dYjTVkjAzDY=; b=k239r+heUu7FosirlqDuCJjqE0
+	kgE8ZiMVy5MNYZAUDhVG1PmA4JshA1iz3QEQfJ63r9hcwgKmVNlRpvA461HcR5imvpwTvUQBRTUOA
+	VF7yh3dawnnncTZ0ZBEErsNBDV13Hr4gfccLg4WsiXqnreQE2GkpcB8MFWK/PKOwAEWzJiUHhdMNW
+	9yJeAHe3pVk482d3zUErr3dudk7Vo856UZe0+aEHuF5YD1gcAY5q7SkS3wQL0ZVrIDTWuCfljIPGX
+	u01gGE/AazFvYVFYNSvunTFdlKaI9lmPKE+Ts0DTU/wQtMrvvSmUn+esAZgzFVZPPXQ8iYWb/CBz7
+	AZmNMRlQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUmfn-0000000FG9J-2Dsj;
-	Wed, 03 Jun 2026 14:34:23 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wUmi5-0000000FGKp-3cYX;
+	Wed, 03 Jun 2026 14:36:45 +0000
+Received: from fhigh-a3-smtp.messagingengine.com ([103.168.172.154])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUmfl-0000000FG9B-1ahR
-	for kexec@lists.infradead.org;
-	Wed, 03 Jun 2026 14:34:21 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 4E54D60233;
-	Wed,  3 Jun 2026 14:34:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA2ED1F00893;
-	Wed,  3 Jun 2026 14:34:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780497260;
-	bh=yu2f5FIaIpPGb9LsISKA98pvWiCaazPbEtHtZWNusVY=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=RncmSrbYsIH29DH7UOSflSaLWXVrOKpLLAkTNCb1nluOnMdGip2i37TURU6W4HJeJ
-	 TZmp9pFP/lbNDNr3NmDkkjJQARDS1Em4yc4OBjvD/HMqo5Kld1S1vJuw7KOZcI/GDd
-	 IjXr1uUeuaJ6ivMy9Kcf1kEZLJ30C1L9MYns8jf2EuhRyGX6snzePBcWJ0eCFfN0FT
-	 focV5Pz8fwOO1Xg4xet9jBisJNLqZE3MMFs794fvDkya9D/WUwSrHHZT26Bl5MLnrR
-	 fi6kk90xXakTHdzzz88I1gudGHOY/XZtbx+xIuSYhxAJQiCjkJycHRHBYMAZXRurbj
-	 7KVS/pipaYesw==
+	id 1wUmi2-0000000FGJP-41EO;
+	Wed, 03 Jun 2026 14:36:44 +0000
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 93D551400039;
+	Wed,  3 Jun 2026 10:36:39 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Wed, 03 Jun 2026 10:36:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:message-id:mime-version
+	:reply-to:subject:subject:to:to; s=fm2; t=1780497399; x=
+	1780583799; bh=OheaLw7H7tyd+BHT4gfjavgl+y762p06dYjTVkjAzDY=; b=y
+	4AAeLcIAosGZmFRwqCK+BBjoPCvgFztoAa/REVbkrNMIfAuLkEH78EnsBht8m31l
+	but5YiHjaglwPi1vgIuCfsnCgwyN83xzn0ST0GPVuxIElFwKPCtnGQEQ/qlf1qlL
+	jN/f0oWxLRHQKw2LQD1TkxRrXNcGj0oL96eGn8S4aBUgce4mQt98scVt2xfUyUZk
+	PCUa1ij2/h/7JrNTlwPtJBCkXbCpm1+XIOG61k1g5zCR4DuTgnqVDWmD3NHjozok
+	BrFP43Xh3jAu2n6EOMn7DRO7meKjxdtCglRnvL8JUSZeYG/tWtqdBBfnIj1SEbc6
+	9+Ahir13QS7wObe7VaCeA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1780497399; x=1780583799; bh=OheaLw7H7tyd+BHT4gfjavgl+y76
+	2p06dYjTVkjAzDY=; b=bgq+9lWMzUqeoV/StyV5EF5K6IyJwPSS5iGHpLfM8jqY
+	jjtDRJmSLqQ5fjB01J5AeC6TqouJVZ2VmS0W5oTs8k+HhLEx+G/28Nez143z700x
+	rwa3eP/K3Knsjqm+nh9Ptgu88v0LvoagGatf8zRAHR4X/UraWtSGz7znJ2FgIcoP
+	UiZkPNT04+YiX9Bs/qrVxZ/6KqwJIsyfZgaTqJOdmVjImnlAnuTBiVs5WvGlU7VV
+	sV1p3NqSe3s8MOdjWkt6KtwntkUEpbMd3cTBWlw52Dr31AaxgnlxmHsgQMoH3KYU
+	qlR4jE+WtbcUdSZyWVFgGb4UgKUvrClAF0pm/QK7iw==
+X-ME-Sender: <xms:9jsgamsqxGc_zLR6x0jRwP5oUG1YCP1Xez1dLVg0IWm5wrdY0uHw-Q>
+    <xme:9jsgaijIoREFdnJZ1z0UYLdRI_JF3BPuPPM1QpAmFIdUCNVLSa36LD2ZSWqUuEZZX
+    kYLcSMTeDsI_JdQ1dlXzBPc6mC3juXy4bvBobj7RpidYH2iM9vJTeo>
+X-ME-Received: <xmr:9jsgapdKYBrNhCAjTXgWejnYgtEr4mKzTb3cyeGIgvMZWDLNHMEnRhx7_N2eog>
+X-ME-Proxy-Cause: dmFkZTEjTgKslv0txJe9JDV9s5+yYqMAlo5cbXDWY1lTzUDzhnWvj/qU7G7UOxyg05j+Lb
+    i0XxANFqB6x9qiV8FthQDLuRhwNlS7tpzFo/9gUxilOqsEQfe2s6n1VYSLEJQ0/UE4NP43
+    YO4HedeJYcbiNjEiUos07Q3L1EjJVZpKdtHupDxJYaxDbua5v5ltbPBfYN60b8y4dxsJLj
+    jwWlAojK/8B+Jn6BciuPxDe+sSwkZd7BEjx0wZUMl9j26woj3+DEEMt9dy8F9Wg+zIPI55
+    fT2kz8qpH3In3aqhKZI6vvVOXnromy3aY/9CEtJpAv8PjvowGt2dmmjhhpjS+yBpotwBlC
+    JADGuVciFInm69iYjA3vk/0A1/28cQsqC4M/+kz1NSvd7JjT4VkNkh3cedDzzJnxWnQK8u
+    +zQ6Q06RarEzXdQzQG8KoUhN683EvAx72MV0U9uFeLIU2jEaAZJbxhOeLLeaOKM7fLrkeo
+    km0hyOtFQk82XA6R62eKq5CH9n5je3rQTgB8f+DCZF/qxuLOrBVNfkCpWNsnGsZFNQ0xnf
+    KLaXv1BNIqf7Jg8nE2d2dTtcbfqCMH85Fvy/Fbzyv72HCRKivBJ41pOrJT+K9Z+mcpBd7h
+    3ok+PGvUnIvZer1ls0a+gjFfPQrqIyexxYQ8Nk196IkvMssErrCgSF1AoDZQ
+X-ME-Proxy: <xmx:9jsgankgRj0e2d5pDQPkvCnUpP-aTV70M4IXcI5r0g9ziKHN0bCmow>
+    <xmx:9jsgajqXTnSeYHjPIst4y5HQOMK5vmCl11NBaZZzfba1YysZPoBVDw>
+    <xmx:9jsgau8wnnQTxhpzBLljjzpbOjZFe_EfDjnwt3sJDRo7maCSXrNmtQ>
+    <xmx:9jsgak2U1MBgkXhPIJElb69UYUrSHiT0odanaTcULteS-yhCoytYGQ>
+    <xmx:9zsganQoyPODWFw1_A4CbIwtTZgkh0rXCbm0YP4uOeNKlh6PkSIc3HeV>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 3 Jun 2026 10:36:38 -0400 (EDT)
+From: Kiryl Shutsemau <kirill@shutemov.name>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Doug Anderson <dianders@chromium.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Usama Arif <usama.arif@linux.dev>,
+	Breno Leitao <leitao@debian.org>,
+	Julien Thierry <julien.thierry.kdev@gmail.com>,
+	Lecopzer Chen <lecopzer.chen@mediatek.com>,
+	Sumit Garg <sumit.garg@kernel.org>,
+	kernel-team@meta.com,
+	kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	"Kiryl Shutsemau (Meta)" <kas@kernel.org>
+Subject: [PATCH 0/4] arm64: cross-CPU NMI via SDEI
+Date: Wed,  3 Jun 2026 15:36:31 +0100
+Message-ID: <cover.1780496779.git.kas@kernel.org>
+X-Mailer: git-send-email 2.54.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v6 07/13] kho: add support for linked-block
- serialization
-From: Mike Rapoport <rppt@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Mike Rapoport <rppt@kernel.org>, linux-kselftest@vger.kernel.org, 
- shuah@kernel.org, akpm@linux-foundation.org, linux-mm@kvack.org, 
- skhan@linuxfoundation.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, corbet@lwn.net, dmatlack@google.com, 
- kexec@lists.infradead.org, pratyush@kernel.org, skhawaja@google.com, 
- graf@amazon.com
-In-Reply-To: <aiA1slnqPnC4_8XY@plex>
-References: <20260603032905.344462-1-pasha.tatashin@soleen.com>
- <20260603032905.344462-8-pasha.tatashin@soleen.com>
- <178046937151.468621.13398573538792303093.b4-review@b4>
- <aiANtYRRDr5iO5QR@plex> <aiAzT9TvGYjITiB8@kernel.org>
- <aiA1slnqPnC4_8XY@plex>
-Date: Wed, 03 Jun 2026 17:34:14 +0300
-Message-Id: <178049725439.475072.11560134126837430744.b4-reply@b4>
-X-Mailer: b4 0.15.2
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260603_073643_237087_9060D850 
+X-CRM114-Status: GOOD (  18.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,78 +122,134 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-06-03 14:11 +0000, Pasha Tatashin wrote:
-> On 06-03 16:59, Mike Rapoport wrote:
-> > On Wed, Jun 03, 2026 at 12:05:04PM +0000, Pasha Tatashin wrote:
-> > > On 06-03 09:49, Mike Rapoport wrote:
-> > > > On Wed, 03 Jun 2026 03:28:58 +0000, Pasha Tatashin <pasha.tatashin@soleen.com> wrote:
-> > > > > diff --git a/include/linux/kho/abi/block.h b/include/linux/kho/abi/block.h
-> > > > > new file mode 100644
-> > > > > index 000000000000..8641c20b379b
-> > > > > --- /dev/null
-> > > > > +++ b/include/linux/kho/abi/block.h
-> > > > > @@ -0,0 +1,56 @@
-> > > > > [ ... skip 25 lines ... ]
-> > > > > +#define _LINUX_KHO_ABI_BLOCK_H
-> > > > > +
-> > > > > +#include <asm/page.h>
-> > > > > +#include <linux/types.h>
-> > > > > +
-> > > > > +#define KHO_BLOCK_ABI_COMPATIBLE	"kho-block-v1"
-> > > > 
-> > > > It's never used by block set and after looking at the following patches I
-> > > > found that it's appended to LUO compatible string.
-> > > > 
-> > > > While this works for LUO, I think it should be kho_block_set_restore()
-> > > > responsibility to verify the compatibility.
-> > > 
-> > > It should work for any component that relies on  kho_block. My proposal 
-> > > is to use this method for other common KHO data structures (e.g.,  kho 
-> > > vmalloc,  kho radix, future kho xarray). There is no need for them to 
-> > > carry the compatibility string in their metadata, as whoever uses them 
-> > > will include their compatibility string.
-> > 
-> > So if, say, memfd_luo uses kho vmalloc, xarray and blocks it'll have five
-> > compatibility strings glued together?
-> 
-> That is correct, but it will be in only one place: the header of the 
-> client's KHO subtree. Since it is dynamically sized and 8-byte aligned, 
-> it should be safe to include in any struct.
+From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
 
-This is safe, you are right.
-But I have more usability concerns from one side and the duplication it
-causes from the other.
+A class of debug/observability features needs to interrupt a CPU that has
+its interrupts locally masked: hard-lockup detection, the all-CPU
+backtrace behind sysrq-l / RCU-stall / hung-task dumps, and
+crash_smp_send_stop() capturing a stuck CPU's state into the vmcore. On
+arm64 these need a mechanism that reaches a CPU spinning with DAIF masked,
+which a normal IPI cannot.
 
-I can see the downside of putting the version information in the data
-structure itself as it either requires a different header for the first
-element or needlessly increases all the headers.
+arm64 has two such mechanisms today:
 
-But 
+  - GICv3 pseudo-NMI (interrupt priority masking). This is the preferred
+    path and what the perf-based hard-lockup detector
+    (HAVE_HARDLOCKUP_DETECTOR_PERF) is built on. Its cost, however, is on
+    the interrupt mask/unmask hot path: local_irq_enable() becomes an
+    ICC_PMR_EL1 write plus a synchronising barrier, and exception
+    entry/exit save and restore the PMR, paid on every CPU whether or not
+    an NMI is ever delivered.
 
-#define LUO_ABI_COMPATIBLE     LUO_COMPAT_BASE "-" KHO_BLOCK_ABI_COMPATIBLE "-" KHO_VMALLOC_ABI_COMPATIBLE "-" KHO_RADIX_COMPATIBLE
+    In our measurements, enabling pseudo-NMI costs up to ~5% on real
+    workloads, and ~66% on a syscall-in-a-loop microbenchmark that
+    maximises exception entry/exit (where pseudo-NMI adds the PMR
+    save/restore). A fleet-wide ~5% regression is not acceptable, so these
+    systems run with pseudo-NMI disabled — and therefore have no
+    hard-lockup detector and degraded backtrace/crash-stop today.
 
-is not really digestible too. And it forces KHO users to potentially
-track KHO internal changes.
+  - FEAT_NMI (Armv8.8) — the architectural fix, but absent from deployed
+    silicon and from most of the fleet for years to come.
 
-We still don't promise any compatibility between different kernel
-versions so to avoid blocking this series on the decision what is the
-best way to convey KHO data structures compatibility I suggest to bump
-kho ABI version in v6.2* of the patch that adds KHO blocks and postpone
-this discussion to after rc1 when we'll have plenty of time.
+For deployments that do not run pseudo-NMI (to avoid that standing
+hot-path cost), the hard-lockup detector and the backtrace/crash paths
+are degraded: a plain IPI can't reach the masked CPU, so the lockup goes
+undetected, the backtrace of the CPU you care about comes back empty, and
+the kdump is missing the culprit's registers.
 
-* sending a new version of a single file does same email traffic, but it
-confuses b4 and quite possibly other tools, so I think v7 is better.
+This series adds a third delivery backend that costs nothing on the hot
+path: SDEI. Firmware delivers an SDEI event into a CPU regardless of its
+DAIF state, so interrupt masking stays the cheap PSTATE.DAIF operation and
+the firmware round-trip is paid only at the rare moment a CPU must be
+interrupted.
 
-> Pasha
-> 
-> >  
-> > > For now, reviewers will have to make sure that if the ABI header content 
-> > > is changed, the compatibility string is updated.
-> > 
-> -- 
-> > Sincerely yours,
-> > Mike.
-> 
+Mechanism
+=========
 
+It uses the standard SDEI software-signalled event (event 0) and the
+SDEI_EVENT_SIGNAL call (DEN0054) — a spec-defined cross-PE signal, not a
+vendor extension. The driver registers a handler for event 0 and pokes a
+target CPU with sdei_event_signal(0, target_mpidr); firmware makes event 0
+pending on that PE and dispatches the handler NMI-like.
+
+No firmware change is required beyond SDEI being enabled, which
+firmware-first RAS (APEI/GHES) deployments already have; the only
+SDEI-core addition is a thin sdei_event_signal() wrapper over the standard
+call.
+
+Clean kdump when a CPU panics from inside the SDEI handler (the
+hard-lockup case) is handled by the already-merged sdei_handler_abort(),
+which crash_smp_send_stop() calls: it issues SDEI_EVENT_COMPLETE_AND_RESUME
+so the firmware-side priority is dropped before the capture kernel boots.
+
+Prior SDEI watchdog work
+========================
+
+Out-of-tree SDEI hard-lockup watchdogs exist (e.g. in the openEuler and
+Anolis kernels). They take a different mechanism: they bind the secure
+physical timer as an SDEI event, so firmware delivers a periodic self-CPU
+tick that drives the detector. That requires a new SDEI interrupt-binding
+API, pushes the watchdog period (watchdog_thresh) into firmware, and adds
+secure-timer EOI handling on the kexec path.
+
+This series instead uses only the standard software-signalled event 0:
+the kernel keeps the timing (a per-CPU hrtimer with a buddy heartbeat
+check) and firmware does nothing but deliver the cross-CPU poke when a
+buddy looks stalled. The result is a smaller, far less firmware-coupled
+change — no secure-timer dependency, no new SDEI API, no period in
+firmware — and the same delivery primitive serves the backtrace and
+crash-stop users, not just the watchdog.
+
+Testing
+=======
+
+Developed on QEMU (Trusted Firmware-A with SDEI enabled) and
+validated on NVIDIA Grace (Neoverse V2) hardware, under
+irqchip.gicv3_pseudo_nmi=0:
+
+  - hard lockup (LKDTM) caught by the SDEI watchdog and panicked, with the
+    stack pointing at the wedged code;
+  - sysrq-l backtrace of an interrupt-masked CPU returning its real stack;
+  - kdump via crash_smp_send_stop() with a wedged CPU, and via a watchdog
+    panic from inside the event-0 handler — sdei_handler_abort() fires and
+    the capture kernel boots to userspace on the formerly-wedged CPU, with
+    its registers present in the vmcore.
+
+Series
+======
+
+  [1/4] firmware: arm_sdei: add SDEI_EVENT_SIGNAL support
+        Thin sdei_event_signal() wrapper over the standard call; NMI/crash
+        safe (no locks).
+  [2/4] drivers/firmware: add SDEI cross-CPU NMI service for arm64
+        Register event 0; first user, arch_trigger_cpumask_backtrace().
+  [3/4] arm64: wire SDEI NMI into the hardlockup watchdog
+        HAVE_HARDLOCKUP_DETECTOR_ARCH backend; boot-time source selection
+        with perf-NMI fallback.
+  [4/4] arm64: route crash_smp_send_stop() last resort through SDEI
+        SDEI as the final escalation rung for CPUs that ignored the normal
+        and pseudo-NMI stop IPIs.
+
+Also available at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kas/linux.git sdei-nmi
+
+ arch/arm64/Kconfig            |   1 +
+ arch/arm64/include/asm/nmi.h  |  30 ++
+ arch/arm64/kernel/smp.c       |  33 +++
+ drivers/firmware/Kconfig      |  23 ++
+ drivers/firmware/Makefile     |   1 +
+ drivers/firmware/arm_sdei.c   |  12 +
+ drivers/firmware/sdei_nmi.c   | 523 ++++++++++++++++++++++++++++++++++
+ include/linux/arm_sdei.h      |   6 +
+ include/uapi/linux/arm_sdei.h |   1 +
+ 9 files changed, 630 insertions(+)
+ create mode 100644 arch/arm64/include/asm/nmi.h
+ create mode 100644 drivers/firmware/sdei_nmi.c
+
+
+base-commit: e7ae89a0c97ce2b68b0983cd01eda67cf373517d
+-- 
+2.54.0
 
 
