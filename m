@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BF2B4CD6E57
-	for <kexec@archiver.kernel.org>; Wed,  3 Jun 2026 15:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0E110CD6E57
+	for <kexec@archiver.kernel.org>; Wed,  3 Jun 2026 15:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=M0UeBGKKNpBDiXtsHx+XK9ecjuYaKOuvdeJHksP7ylQ=; b=2z2W4BBEd/xTYpwyvjV2/Ee9Jd
-	9vcEiU1XwH8V/aeXzy1/t4PqUTPAGzD3B1Dr5xxMPr6rZ2gEPqesdVKH48DExu21s5vENAJ7N9K/0
-	idhahzMQb4HytrfM5ku6XOtHD4WPt3r7XRtGwr3FBQ2TtBKp+an6nnN8Fwlyr5/fLldVO/r3iOgrF
-	/Huhwa59pvAYX62FpxuSrzFupgVz/WgXGtW/lXksYk5LbhdmV8yVvoRv6rBa05BO6Vk95wJ2t8Lzf
-	K/XfheyZc5zR16AQSLzhGmMuvegN9ydW6r3mTc+BVjrgP3Zvb2zMXzHi1S5MzItzbvW52bHkz8OiY
-	TpJ4RmKQ==;
+	bh=QfziVgpqRfO53l/kiKYNLloUUY6f9C5CrjqJQDvl8iE=; b=V2ILSkKYtgyD2jTx99N4r4UHo5
+	6F3vAG9yKAmWDT6mfuNFqEBSG41cXG93bu5LxxgaFG5bMRvrlftezAhS+kwapIXUhrDRKp/Qy3dNa
+	zC75UtqKqjRX2bxw3vamMMhbXwm9bzotQgNQlHzOYULMcNVMB77t3UrH7OTdJ5FxgYu7euAUHYIEL
+	oHyOD3zwa6mmh8t6GLa40wlXJLhYMiwdBXrH2QzOWZoPGkKSYrDJa4/GYbYKPoGEvb+ZZvxF63sK/
+	RzHb2FkkuT7JIpXicmq2ygUxd0LoFjsY/zKhrHobhxlqx2P7QOxH/cibvAlUt3++EqCiFuBFuINrT
+	GgHEoycg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUnmE-0000000FRvU-3Te3;
-	Wed, 03 Jun 2026 15:45:06 +0000
-Received: from mail-qk1-x735.google.com ([2607:f8b0:4864:20::735])
+	id 1wUnmP-0000000FRxn-3nVv;
+	Wed, 03 Jun 2026 15:45:17 +0000
+Received: from mail-qk1-x733.google.com ([2607:f8b0:4864:20::733])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUnmC-0000000FRuh-2Q2g
+	id 1wUnmO-0000000FRxA-0QZ0
 	for kexec@lists.infradead.org;
-	Wed, 03 Jun 2026 15:45:05 +0000
-Received: by mail-qk1-x735.google.com with SMTP id af79cd13be357-9159477c893so60199685a.0
-        for <kexec@lists.infradead.org>; Wed, 03 Jun 2026 08:45:04 -0700 (PDT)
+	Wed, 03 Jun 2026 15:45:17 +0000
+Received: by mail-qk1-x733.google.com with SMTP id af79cd13be357-9157b94a07aso253818685a.0
+        for <kexec@lists.infradead.org>; Wed, 03 Jun 2026 08:45:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1780501503; x=1781106303; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1780501515; x=1781106315; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=M0UeBGKKNpBDiXtsHx+XK9ecjuYaKOuvdeJHksP7ylQ=;
-        b=GFZs1fcWEm/GnfPnTvFw2dSKdiWev2vvq88ljX46rVMvkuqZZ6ak747jZMiW0SVcHC
-         2qtEOdVJpcr14UUvJd7w+OrY/20TcD6cf1Pc8cPAT4TpHhL5yvzBXNMcU+9jQP/ba8P+
-         ciSkUavVojnGWKN11d49dK95KmTsuzYYU6gxyBEjNOCcWRPXb48u0KuxCiD4dYeQ1RxQ
-         HlhtTaa4TMGkx9aDvUeQn3FwJWy4BJS0Dt/TzIVpJL06CipCDUg5TeAEYFIr8UqJ4uLq
-         OVtzEFnU64/goyZKBofBl7Q/tczgeVdOeFz+fY78e5pqIYUnfm4d3iyIvuuWIIgOC/Rf
-         mlYw==
+        bh=QfziVgpqRfO53l/kiKYNLloUUY6f9C5CrjqJQDvl8iE=;
+        b=WPJO/QhiqCXfrZUmidvUQOszbxY8m1NSIE4BtM9DabPUePs6rcDNkgn1i9I85Icaqf
+         981LGQtuqSQJ2V1ms1OBmPKYIy+8u4URClu5NxFD7rswM+/6H/Noi7BeSP0NOJ8K4bYu
+         b1aMUpAuFFs2TGk7MlRIS+kyQbE4HVW9v0hti7ZFUZKQP+w6XNfHMPjC0Eaye6hnp0dT
+         +PW/6CwmxxlMWoHVfktSMDV0jp1f35f+Qem8cKlsd4V0esVNP2u+ynmuBWM7C7PiV3xY
+         h6OqosYbuKQIVz/34UANyKBFrNbWkKIkbss3VsaOUdTidu7So0PwKpX6hJFm9g20X6Mb
+         CyJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780501503; x=1781106303;
+        d=1e100.net; s=20251104; t=1780501515; x=1781106315;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=M0UeBGKKNpBDiXtsHx+XK9ecjuYaKOuvdeJHksP7ylQ=;
-        b=aNHTpuiDFqBxGRP0ij/yapVO5MDXy2/jG6LFGdxxZcMDBf/PKQ8X5nYPdxUxOiMAmi
-         OOaS3sqzTEKv0fAP7I0NjvSzD3bmBAm0Bk3rpRWYfc418FVyR83/2I5YnvmNmcY6PmT1
-         gTKCmSrlcKgQnETU37SufAu8gmMbxEa/bbkNF4hiO0lQmh4HD+l0LXqfxzbojXApTZk/
-         uOer30zWDiKnxQX9P0DaQLXa2rtxeD6sL+cKag76onGWac0+4UmwnaEZgAMMbc0iEWEr
-         VIDHFYGNkABxKd6ShnRAq4HHxbeXx+d2olg26kJkV+tSsLN1NS5Fpv4AffSwjX158434
-         gHTA==
-X-Forwarded-Encrypted: i=1; AFNElJ8bbP4Owbjyy8fGKPyBuC8sXIc5VUZ+RyO/T4+SM40ujHEkkFoI4P6/zWV1kjb/cMmOfYkkxA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyiEmaQTI1Q0N/9YnUhgkMCPsddCMT+lLGcdhVONElV5a8ERp+N
-	Gvt3AmAPUfxB0fH1nAs0CXdd9kNUxahrGMLyrk99qzMGC/yPe0khWav9wkFI0UnGcFE=
-X-Gm-Gg: Acq92OEZWhcwfGrERqzID9DZbyRs23XUyQ7z/6uO18wYnru6SwkRkO8olIfFvpTRZCQ
-	HXg38dXnDt+5Lf7IZdGgrJUFLmDA9Ea3cz2cgrwhemjRzpGFRix8yUg8poQQb64L62A0fzmtKbk
-	ZOBvsxOEetGGItpNIUlMMV3KyfCcjImgmB/XjiaDb3N0VJD/HzOnqisd0ofZOOWErSzFcVGkAu3
-	rPdIBC9YeV3/fUSKOcTfkfYLRLmAQhEZBHQEApJGLvGtn7mFa58mMDUcJbNjSbLV6i9LZkjpBCx
-	oSBpssfU49TBx1Lv2LH6NILYtEPAkSCgWI/Qf/0V5ffjj5iGoOAdjozeg4bboaPdlppgf8YCY8o
-	/VsWLtvvObbwZF0L48+tZRwtgHgB/qHuzUG3fey/U5Zm2PKxHlW2WTvq6pXb29tx/mQqOq+XL3j
-	CSacnJOcgS8HVVpI/0R109xpENVLe6l6c3bbhW1PeoVb6fYg6du4CKirrlNf83KA==
-X-Received: by 2002:a05:620a:1a09:b0:915:4212:c483 with SMTP id af79cd13be357-9158a7dfdb2mr674935885a.45.1780501503068;
-        Wed, 03 Jun 2026 08:45:03 -0700 (PDT)
+        bh=QfziVgpqRfO53l/kiKYNLloUUY6f9C5CrjqJQDvl8iE=;
+        b=mk/gORbF012yo8p5aolexlolxYaWvD5cqFAzEwxpPj0IO2Byq6kuFBlhe4Snl0J17p
+         ha862GIUeOo45FpF5CgD5iIworPgFX+QV6Pw+644JTGrlWnw1qLPZfuHcDQKDBLWhNnA
+         mGWXLMYj1y/Cd6CbfuT4v7LuZsM6v/T+08ql4etA5qPkyY6ChlX3DpKBOLxSQTtUKq6r
+         Di5JW7T7Vcu6DFTirVHZcfCdVt5cBueZxuFYk4B6HAHZh6DVaAkhpNo90ERJXuacR2uD
+         dNPNyrLB7oxASQ+gnYzJu8OVVJxa3IJScBmJaVAt0+DThmNY8DHtMnBgak4bq1dLHupe
+         rgcw==
+X-Forwarded-Encrypted: i=1; AFNElJ8NzNWQXjtRE7jiiR6xwg2K5//QqGNfJYwt2c83Y6LbM2PchTLn3tIe4/nRsaXqjtvoEdRHAw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Ywe0BjKcpOQizDdG4CPKhqvMLZgx60DJn1l7xpAq0iM6kC0Ayzn
+	LuIo9e95kr7lT2Z9sMTwB8CyCknFLLIGrFMLxwqkEHPGDAdYMEJ/6pA303wWCnYJuzI=
+X-Gm-Gg: Acq92OEud7QH6+cVP4VO/5CBNCO95LHz5SbeRXPSa2i4F6t9KLRU9NsHPORcZ8WXRhP
+	YcFeYKuMREN7g5nBIuyjIc+gSkVHyn5ZHm4XFr1OmWu70uTSUUMfZkUt6fSfyhuSW0ikYGY+J13
+	cr69YeqCSd3zNQJ1iHG3yMo1NQoGswCDLKyPvbZsgS07RdkTFHWrY6TbNO7vcUGted2PENjIF9V
+	+qw7TSzC02DeTy7QKXNUl2nlioYMQL14J0kiPuDwKXq9xZpA1jbGwwg4bRRZiFTyeD1lKVeVMrO
+	nsgVtcJ1j7TiBC2Dhx/Ty65BO1ZZvin/VHiwpKoTU+aRiJVKhH4kSsCFTobDSVjeYkIKF2EI8kY
+	4EKoGoOCY/45gak2/vkZHXSLU1p006UVUCRrZLMKE9aFPpk3eTju0JpZ2f75TnrOJ15jbQAZVs/
+	TTn50Ht+g6l8BThk9hsxgCrS6mohC0NQ+3XZIlEwQLyBnlxr3IvCfkoQ3Z/IfTQg==
+X-Received: by 2002:a05:620a:2406:10b0:915:6c4d:d74b with SMTP id af79cd13be357-9158a7aa7d7mr477899185a.31.1780501514839;
+        Wed, 03 Jun 2026 08:45:14 -0700 (PDT)
 Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-9158a259428sm273352585a.21.2026.06.03.08.45.01
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9158a237330sm280242385a.16.2026.06.03.08.45.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2026 08:45:02 -0700 (PDT)
+        Wed, 03 Jun 2026 08:45:14 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: linux-kselftest@vger.kernel.org,
 	rppt@kernel.org,
@@ -85,17 +85,17 @@ To: linux-kselftest@vger.kernel.org,
 	pratyush@kernel.org,
 	skhawaja@google.com,
 	graf@amazon.com
-Subject: [PATCH v7 05/13] liveupdate: Extract luo_file_deserialize_one helper
-Date: Wed,  3 Jun 2026 15:43:54 +0000
-Message-ID: <20260603154402.468928-6-pasha.tatashin@soleen.com>
+Subject: [PATCH v7 06/13] liveupdate: Extract luo_session_deserialize_one helper
+Date: Wed,  3 Jun 2026 15:43:55 +0000
+Message-ID: <20260603154402.468928-7-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260603154402.468928-1-pasha.tatashin@soleen.com>
 References: <20260603154402.468928-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260603_084504_755142_0E88545D 
-X-CRM114-Status: GOOD (  13.65  )
+X-CRM114-CacheID: sfid-20260603_084516_143306_DD5AE266 
+X-CRM114-Status: GOOD (  12.75  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,9 +110,9 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Extract the logic for deserializing single entries for files into
+Extract the logic for deserializing single entries for sessions into
 separate helper functions. In preparation to a linked-block
-serialization for files.
+serialization for sessions.
 
 This is a pure code movement, no other changes intended.
 
@@ -120,111 +120,91 @@ Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- kernel/liveupdate/luo_file.c | 77 ++++++++++++++++++++----------------
- 1 file changed, 44 insertions(+), 33 deletions(-)
+ kernel/liveupdate/luo_session.c | 63 +++++++++++++++++++--------------
+ 1 file changed, 36 insertions(+), 27 deletions(-)
 
-diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
-index 208987502f73..9eec07a9e9fc 100644
---- a/kernel/liveupdate/luo_file.c
-+++ b/kernel/liveupdate/luo_file.c
-@@ -753,6 +753,46 @@ int luo_file_finish(struct luo_file_set *file_set)
+diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
+index 85782c6f3d6c..1cd315e0f6de 100644
+--- a/kernel/liveupdate/luo_session.c
++++ b/kernel/liveupdate/luo_session.c
+@@ -555,6 +555,40 @@ int __init luo_session_setup_incoming(u64 sessions_pa)
  	return 0;
  }
  
-+static int luo_file_deserialize_one(struct luo_file_set *file_set,
-+				    struct luo_file_ser *ser)
++static int luo_session_deserialize_one(struct luo_session_header *sh,
++				       struct luo_session_ser *ser)
 +{
-+	struct liveupdate_file_handler *fh;
-+	bool handler_found = false;
-+	struct luo_file *luo_file;
++	struct luo_session *session;
++	int err;
 +
-+	down_read(&luo_register_rwlock);
-+	list_private_for_each_entry(fh, &luo_file_handler_list, list) {
-+		if (!strcmp(fh->compatible, ser->compatible)) {
-+			if (try_module_get(fh->ops->owner))
-+				handler_found = true;
-+			break;
-+		}
-+	}
-+	up_read(&luo_register_rwlock);
-+
-+	if (!handler_found) {
-+		pr_warn("No registered handler for compatible '%.*s'\n",
-+			(int)sizeof(ser->compatible),
-+			ser->compatible);
-+		return -ENOENT;
++	session = luo_session_alloc(ser->name);
++	if (IS_ERR(session)) {
++		pr_warn("Failed to allocate session [%.*s] during deserialization %pe\n",
++			(int)sizeof(ser->name), ser->name, session);
++		return PTR_ERR(session);
 +	}
 +
-+	luo_file = kzalloc_obj(*luo_file);
-+	if (!luo_file) {
-+		module_put(fh->ops->owner);
-+		return -ENOMEM;
++	err = luo_session_insert(sh, session);
++	if (err) {
++		pr_warn("Failed to insert session [%s] %pe\n",
++			session->name, ERR_PTR(err));
++		luo_session_free(session);
++		return err;
 +	}
 +
-+	luo_file->fh = fh;
-+	luo_file->file = NULL;
-+	luo_file->serialized_data = ser->data;
-+	luo_file->token = ser->token;
-+	mutex_init(&luo_file->mutex);
-+	list_add_tail(&luo_file->list, &file_set->files_list);
++	scoped_guard(mutex, &session->mutex) {
++		err = luo_file_deserialize(&session->file_set,
++					   &ser->file_set_ser);
++	}
++	if (err) {
++		pr_warn("Failed to deserialize files for session [%s] %pe\n",
++			session->name, ERR_PTR(err));
++		return err;
++	}
 +
 +	return 0;
 +}
 +
- /**
-  * luo_file_deserialize - Reconstructs the list of preserved files in the new kernel.
-  * @file_set:     The incoming file_set to fill with deserialized data.
-@@ -782,6 +822,7 @@ int luo_file_deserialize(struct luo_file_set *file_set,
- 			 struct luo_file_set_ser *file_set_ser)
+ int luo_session_deserialize(void)
  {
- 	struct luo_file_ser *file_ser;
-+	int err;
- 	u64 i;
- 
- 	if (!file_set_ser->files) {
-@@ -809,39 +850,9 @@ int luo_file_deserialize(struct luo_file_set *file_set,
+ 	struct luo_session_header *sh = &luo_session_global.incoming;
+@@ -586,34 +620,9 @@ int luo_session_deserialize(void)
+ 	 * reliably reset devices and reclaim memory.
  	 */
- 	file_ser = file_set->files;
- 	for (i = 0; i < file_set->count; i++) {
--		struct liveupdate_file_handler *fh;
--		bool handler_found = false;
--		struct luo_file *luo_file;
+ 	for (int i = 0; i < sh->header_ser->count; i++) {
+-		struct luo_session *session;
 -
--		down_read(&luo_register_rwlock);
--		list_private_for_each_entry(fh, &luo_file_handler_list, list) {
--			if (!strcmp(fh->compatible, file_ser[i].compatible)) {
--				if (try_module_get(fh->ops->owner))
--					handler_found = true;
--				break;
--			}
--		}
--		up_read(&luo_register_rwlock);
--
--		if (!handler_found) {
--			pr_warn("No registered handler for compatible '%.*s'\n",
--				(int)sizeof(file_ser[i].compatible),
--				file_ser[i].compatible);
--			return -ENOENT;
+-		session = luo_session_alloc(sh->ser[i].name);
+-		if (IS_ERR(session)) {
+-			pr_warn("Failed to allocate session [%.*s] during deserialization %pe\n",
+-				(int)sizeof(sh->ser[i].name),
+-				sh->ser[i].name, session);
+-			err = PTR_ERR(session);
+-			goto save_err;
 -		}
 -
--		luo_file = kzalloc_obj(*luo_file);
--		if (!luo_file) {
--			module_put(fh->ops->owner);
--			return -ENOMEM;
+-		err = luo_session_insert(sh, session);
+-		if (err) {
+-			pr_warn("Failed to insert session [%s] %pe\n",
+-				session->name, ERR_PTR(err));
+-			luo_session_free(session);
+-			goto save_err;
 -		}
 -
--		luo_file->fh = fh;
--		luo_file->file = NULL;
--		luo_file->serialized_data = file_ser[i].data;
--		luo_file->token = file_ser[i].token;
--		mutex_init(&luo_file->mutex);
--		list_add_tail(&luo_file->list, &file_set->files_list);
-+		err = luo_file_deserialize_one(file_set, &file_ser[i]);
+-		scoped_guard(mutex, &session->mutex) {
+-			err = luo_file_deserialize(&session->file_set,
+-						   &sh->ser[i].file_set_ser);
+-		}
+-		if (err) {
+-			pr_warn("Failed to deserialize files for session [%s] %pe\n",
+-				session->name, ERR_PTR(err));
++		err = luo_session_deserialize_one(sh, &sh->ser[i]);
 +		if (err)
-+			return err;
+ 			goto save_err;
+-		}
  	}
  
- 	return 0;
+ 	kho_restore_free(sh->header_ser);
 -- 
 2.53.0
 
