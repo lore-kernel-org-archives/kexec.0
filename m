@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 09A33CD6E55
-	for <kexec@archiver.kernel.org>; Wed,  3 Jun 2026 03:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7362ACD6E56
+	for <kexec@archiver.kernel.org>; Wed,  3 Jun 2026 03:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From:Reply-To:
 	Cc:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yVlCXZe8SHDSOJUkKVBaYBikNvs5G4Pkl6SfmcOaAr0=; b=qn5781Fv/GJNVvvXBes5qVm6dG
-	yIRi9ETrwe9H2hd56x5ikG1/WRhbVyEp/YU6FQCV0/aG3REEbqR+GQueqsgvETB9wWMQbBo/+3WLZ
-	0MfonigJirffqwpyc19uEDg4msnM+DsYfJBfAmPv/CDtE2DiqgAeyKOxFXUXz85JTk0ixx+O7zfgT
-	eUAo3HmsfIlwHWttogrr4Py/6P3fvM78xhRLFHPUwOp7csw8sLS7fr/s8IDguk+k+0znnt1f4ceJf
-	PvxOmJPHYAIu0YnnqvlOdxUNvayr6wbDNmnjP2rKoL5JDrzISKZmdKJoUnzjEPzENl94v44mW6+bv
-	4lY7E3iw==;
+	bh=EeknQ7K2aMvDWr+2KhWa4BnSPX1nCQezxpcXmui2530=; b=0gZlIdO0Tbg+lo0DF41fE04ZJ9
+	5ITIz8onzN7fvwSA02zbqTo2D74N3gaha6fxPX3sK11HA5qligHYcdDNfWgEf4nSH/dhC0Tnp6EtR
+	2+zqo3IVedwndQS57p6RYym66NoG8N5owXxreA8+ZcxO8cQI8ggdfEz+ivvtNFumB/9Q9+CrudO17
+	cMrx1UTII5LGAPd7uc4gFeV4GOoBF5rdpS/ZwKzXbRT9/kEr+osJzMtQKzRB0q5Tnnn49Ro37W1Hm
+	Epb+qH83jTRaEdfgpSmpyb5l8fUcBLXHbBouO1e+Hc77ub1iXEuRMB0Dy3nRm5j4wba+JGVqpFys5
+	7qTE7uyA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUcI4-0000000EAt5-3s6U;
-	Wed, 03 Jun 2026 03:29:12 +0000
-Received: from mail-qv1-xf32.google.com ([2607:f8b0:4864:20::f32])
+	id 1wUcI5-0000000EAuA-4BxU;
+	Wed, 03 Jun 2026 03:29:14 +0000
+Received: from mail-qv1-xf36.google.com ([2607:f8b0:4864:20::f36])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUcI2-0000000EAs0-0Jid
+	id 1wUcI3-0000000EAsI-16Pc
 	for kexec@lists.infradead.org;
-	Wed, 03 Jun 2026 03:29:11 +0000
-Received: by mail-qv1-xf32.google.com with SMTP id 6a1803df08f44-8ce9df31840so25831876d6.1
-        for <kexec@lists.infradead.org>; Tue, 02 Jun 2026 20:29:09 -0700 (PDT)
+	Wed, 03 Jun 2026 03:29:12 +0000
+Received: by mail-qv1-xf36.google.com with SMTP id 6a1803df08f44-8ccef25789fso31532576d6.3
+        for <kexec@lists.infradead.org>; Tue, 02 Jun 2026 20:29:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1780457349; x=1781062149; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1780457350; x=1781062150; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yVlCXZe8SHDSOJUkKVBaYBikNvs5G4Pkl6SfmcOaAr0=;
-        b=I7ctJhQOvWg7VEMacWCvuMwiuP2Kxed/VV6gt4smLnIuECkbjrmi8pW0/HotZlRsX/
-         Lzvy0zoUrT1/rB7cqDpHCRj+aKpw/NfaxoA6B2avPBuRHOZ8AUsnT8HMOc6ss1q4+/xd
-         7gVqe8BZbTpKSqvM77WcVe7kcIhmcw3BQRCjPHktfGvX63Z04644Q1su7md5e1sqwds9
-         74cMrK/ZsELRTIGFNczKnyG3INqDeC7kFCrDlkSj4qxOe6zJ3E1ZtwS6LP0p8kSFVzFd
-         73O95k3elNtscL6QqAcpzCjtHHxunH44HSQQf2pVNCRnlGBJejdJKVhmpmwkK4/PvQLT
-         tZ1w==
+        bh=EeknQ7K2aMvDWr+2KhWa4BnSPX1nCQezxpcXmui2530=;
+        b=Og2AUFerXoQi50HorQkcGw+VyM+Tn2TkVgeHw1STjYSJVf0SaYMR55BzABnFTVVueL
+         PlMQV5TWB+X6KNkefR4oMkf6t8JWvPOkMC34GAyLDjH8ASwo4488XigwEcdGK+JxH7Cu
+         a9y6itktBiEXqTkw2MMn3FCjoCPG53EHDfX3jIW/gNb6lGQrb51HUb5HB6CaxKZdlJww
+         5dT7dOtv6T4rKPknYGe2rtpHvey3SMAUbxmjhuGJBK7S+zn8Tr1GunHrR6Kjl3LqujvV
+         uxLn0jdybUplXNkFUE1LDOTRt+l+FCc2wmBLutf5TU9+GeGVAKBixcu+jD7znD7NTFQo
+         4qOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780457349; x=1781062149;
+        d=1e100.net; s=20251104; t=1780457350; x=1781062150;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=yVlCXZe8SHDSOJUkKVBaYBikNvs5G4Pkl6SfmcOaAr0=;
-        b=V0CdbQEO7kmC5KXr0Wn97lX2kLRznhY9IGAHYiobTx4Yz4hRaVarFay8nL5HgKE2Zo
-         P3rJ5R1g8phORV5Huml2Exlt54bJxGslGd1IYHjDq6u7ZBkfQE6JV4v3zWbAbznS8MJP
-         KHXKXp+An+AiCkBGOA+SaNS6bgfGhnFTiXkpV1eeq0EMDqGGO8F8t1sG90rmZqkr3aCO
-         57jHPkOISrPzG7GPrK+eD5Gh3BCS+DBH58l5ZYrVKAUafo3Rt2Aw9bjTzzlBR/nFrzDA
-         7Ma1zdMUv7gbIG7YBiaaVCkTY55pzc9ADmQ6/iOzA4/5b4+QP67KKFe5PTs0F4GC9OuK
-         4ciA==
-X-Forwarded-Encrypted: i=1; AFNElJ/9PwiK16xoRuWIzC3TFHB4X03YuS1S4EJrLEwQXkYcyqksyk2yDUwtLnhvLG1Y+1PdxEoZug==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzT5+v63+DHTQqiv3SaxLGB7IMJe3CYvdzxbAN1UbKFHyGEls7i
-	tfxYNHEWc7QwCyXoLidPc4y7SpOG0YSGpAWLenPVlk47xwruixJHflTTsgBoStzIyzo=
-X-Gm-Gg: Acq92OEB6cBTYuwX2Om8oxUwWrvbjTwPwVZteE1z2qfFqWGPt360ARw84OAmEJdQSTs
-	l9xFtMGVxlFWuX7P8V8zQTeXeug4druPDLwNeHoMWLhl2YIMiItXKVlMZHlO/o8LCJAYMNfn9Uf
-	Xx2fWe8nzxG24zh2zlsrZuO5s82i1KMSoQwOqqTcoDhTQOoahOqOGVuMNrrgKZucpX6bskxF7B+
-	fPi9uXbAeoUr2f7eOu1cNxeE76EMxrciCw1afkCM0rydQ85V70f1K3w2Qxu1LmsTptnMgasB9zl
-	Qwav23c1H97lI3tYf1pxzkglcpr4Sn6cYmgpcKoIc30Q7/hgfqW7MS7gBpBLI8akJC0XtPJeAhT
-	o7WmKVC5lP+e8BGsf6IhcP7v6EZUx/oUqHd72s8Zg2jl4CzP5T1hOWeJU3RFNPyPsa0nIEvjqSE
-	9HyvEuw3abjx3DHwJ/gQDoc4pYGFO37QeLIO5DTzO1p7ZWo2oOUzxr6DbEbFT3FQ==
-X-Received: by 2002:a0c:f09c:0:b0:8cc:dfa6:3333 with SMTP id 6a1803df08f44-8cece028a1amr19783726d6.32.1780457348680;
-        Tue, 02 Jun 2026 20:29:08 -0700 (PDT)
+        bh=EeknQ7K2aMvDWr+2KhWa4BnSPX1nCQezxpcXmui2530=;
+        b=ccObFSzMzVH2KCFpk/nQmnNiLVsUgPu04Lx+Fkoq5sBjEGbXiNA+1eR2IupwId+ma/
+         Y/sQ0K5qwuRp2/KuvQhqEhvbMI6OhN2/xP3oWpqR9ZihBPbsFe7h0raSw7PkvYfoebop
+         WJheIoERSnZaCmalZEQEWfOFnMemXqOwOgMkoCfccERw9+UHkRwNeWuNeuOoVvmUDOvz
+         fG82z7tNEFoXzct/+YylinMFJR4x9quhZ/rS3/3JUzpujJLF1wr/ch93Nf9Ce9uydrqV
+         vR7bUIlh9+B/uM7uQMNC8Q39QPPcMK+UBqMYkKWRJl3SlQk9ooqwDM4QacO+y26S0uo9
+         b4LQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/jBjl1lJfaANGKWg0ehW0Ntq6LSqA4ieZNesll+Rai1kMTf/KTnX8a+6mgpx3bQuQj878tCQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwxZLAGd6vBcFsumDmzOsrD+7Wd0JgEVJ8s9NTi5ZlKDRk7jwnV
+	mKTiAPViiaXhwQey2tRGZk5m5rziOTynzjMMwm3+Q4aYU5x5iF8QLL+TzM5aAzYNiuw=
+X-Gm-Gg: Acq92OHCoOvabxXTveRJ2LyvUqyg+YA7l0689EakbY+2g60zqd6OQ90nIZjDGhIh/I9
+	ZdXd4usXYz/pqT4rsi2Qvowu+nkwwSe38JP8bLfXQMAFf59ehi14QQjuRBKVHw6tzV+wInBLinM
+	InPvzZnqGvY6FTKcueqK5/CEHmb4i0nzkk6TC3txO5N6edVSLqiNHzz6Ssz8aOhrP5haLzUqOSS
+	yuHh0Ie24sXzriReQXkr2cEmy8Q6E/bxBMXyXJTxlYiyICt5QO4ZFOB5yEeg/fhrSUOLyj0A7Ym
+	p6itUtgVQjiMaIw6x0XVUfccIdlWOU5BFFkQRWLcpqTq8y3c+IN4FnpH0+kJ8bOU0b4sycgeUQe
+	bTlMiXtWnxcaGzka2ou18JsEbjsFMIokoRWtmFYPm9pVbGAwALouCUS+C+650p3BZVIlD0ao9fx
+	vXjDU1/jWzoDP19Vkfbz25p6n9Uk8dsw05gvWqbN7WP8CEjRUja4lMZnP7Pln3lA==
+X-Received: by 2002:a0c:e086:0:b0:8ce:ade5:e8fd with SMTP id 6a1803df08f44-8cecdf0cdfdmr18753906d6.25.1780457349833;
+        Tue, 02 Jun 2026 20:29:09 -0700 (PDT)
 Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8cecd26b3b9sm9244566d6.45.2026.06.02.20.29.06
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8cecd26b3b9sm9244566d6.45.2026.06.02.20.29.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2026 20:29:08 -0700 (PDT)
+        Tue, 02 Jun 2026 20:29:09 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: linux-kselftest@vger.kernel.org,
 	rppt@kernel.org,
@@ -85,18 +85,17 @@ To: linux-kselftest@vger.kernel.org,
 	pratyush@kernel.org,
 	skhawaja@google.com,
 	graf@amazon.com
-Subject: [PATCH v6 01/13] liveupdate: change file_set->count type to u64 for type safety
-Date: Wed,  3 Jun 2026 03:28:52 +0000
-Message-ID: <20260603032905.344462-2-pasha.tatashin@soleen.com>
+Subject: [PATCH v6 02/13] liveupdate: avoid mixing cleanup guards with goto in luo_session_retrieve_fd
+Date: Wed,  3 Jun 2026 03:28:53 +0000
+Message-ID: <20260603032905.344462-3-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260603032905.344462-1-pasha.tatashin@soleen.com>
 References: <20260603032905.344462-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260602_202910_137498_AFD73DC1 
-X-CRM114-Status: UNSURE (   9.98  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260602_202911_324953_3C2B0C7B 
+X-CRM114-Status: GOOD (  10.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,30 +110,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This improves type safety and aligns the in-memory file_set->count with
-the serialized count type. It avoids potential truncation or sign
-conversion mismatch issues.
+Refactoring luo_session_retrieve_fd() to avoid mixing automated
+cleanup-style guards with goto-based resource release, which is not
+recommended under the Linux kernel coding style.
 
 Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- kernel/liveupdate/luo_internal.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/liveupdate/luo_session.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_internal.h
-index dd53d4a7277e..ae58206f14ac 100644
---- a/kernel/liveupdate/luo_internal.h
-+++ b/kernel/liveupdate/luo_internal.h
-@@ -52,7 +52,7 @@ static inline int luo_ucmd_respond(struct luo_ucmd *ucmd,
- struct luo_file_set {
- 	struct list_head files_list;
- 	struct luo_file_ser *files;
--	long count;
-+	u64 count;
- };
+diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
+index 5c6cebc6e326..47566db64598 100644
+--- a/kernel/liveupdate/luo_session.c
++++ b/kernel/liveupdate/luo_session.c
+@@ -291,10 +291,11 @@ static int luo_session_retrieve_fd(struct luo_session *session,
+ 	if (argp->fd < 0)
+ 		return argp->fd;
  
- /**
+-	guard(mutex)(&session->mutex);
++	mutex_lock(&session->mutex);
+ 	err = luo_retrieve_file(&session->file_set, argp->token, &file);
++	mutex_unlock(&session->mutex);
+ 	if (err < 0)
+-		goto  err_put_fd;
++		goto err_put_fd;
+ 
+ 	err = luo_ucmd_respond(ucmd, sizeof(*argp));
+ 	if (err)
 -- 
 2.53.0
 
