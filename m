@@ -4,77 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EAA5CCD6E57
-	for <kexec@archiver.kernel.org>; Wed,  3 Jun 2026 17:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E8E0CD6E55
+	for <kexec@archiver.kernel.org>; Wed,  3 Jun 2026 18:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:MIME-Version:Date:Message-Id:Subject:References:In-Reply-To:To:
+	From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=FUParyONVI2Qj3PwFGzLdK26Nc4Lc+7LxeqmGfzlOkM=; b=b1lkyfK2YQNA2PoQkutk47F7mE
-	Tf81dtz5LH6D6aY7Hk7prNJPe96ZXOennl+19EByLCQLMh0dwP6ZuR5suXd6ddoTLV3uhXFIN3RKW
-	WhAPIzWgpWJZhaM+iK4NaY7sDAqqdjUb6GDiPRXtPapUA4utbEkjg6MQV8M1VNjgOYuZnDap1FUYN
-	AX7+YCvHkgBRGztgfRfqfJJy1y1gfjzLJC2iMVCwPWWvUtKXnSTUfkHx7bvi5556ewhJX1n+PuVXp
-	LxTnA2pSV2e8bceiCZ2CtGclkMYVEQFL8tF689+BKV9tRqbDLQqrP+x6eLgpaFAbCKPoFzcySU2C3
-	eTmph/sw==;
+	bh=nxQ22KcJJP7bVCdFVSScm4T4WK7bH7Ys2cqAdls6sJQ=; b=cpf0KF8RgX6+bP7d1+6QW/KTPQ
+	1O1Yw5cMd4OMTFHru43/9/Xy4KKfqPrtukMHJURK7ufdGxJWwVeUDIBNIjdUe39LKgcN1X4aWFCkh
+	/vPfD7nrmkXR0djWC38NRmNgqb0L9T9JRlRFpBNbADzc4h52mMl4yAteBwxxY+eNZ0r1/zuHuNvno
+	L9l7rbgnR2Pl+H57UtI0d70LR7LR1Pu7q7G5Jl8FqEL/nFLhghpKpAvmRQmi+qCrXmLf0anb2yOGp
+	5MXEFSbF8nTHhFq1ORx0cQfzk+uppOa+DEDumTwbITrsv1QPeXGnKS1b1Arn5fWyeAK03/21jLjBW
+	J0sJTmsA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUpe6-0000000Fb7n-1lh0;
-	Wed, 03 Jun 2026 17:44:50 +0000
+	id 1wUq9H-0000000Fens-0KlW;
+	Wed, 03 Jun 2026 18:17:03 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUpe5-0000000Fb7J-1ydb
+	id 1wUq9F-0000000Fenk-20kA
 	for kexec@lists.infradead.org;
-	Wed, 03 Jun 2026 17:44:49 +0000
+	Wed, 03 Jun 2026 18:17:01 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id B2914601E8
-	for <kexec@lists.infradead.org>; Wed,  3 Jun 2026 17:44:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 692CB1F008A1
-	for <kexec@lists.infradead.org>; Wed,  3 Jun 2026 17:44:48 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id AFF1E6008A;
+	Wed,  3 Jun 2026 18:17:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5594A1F00893;
+	Wed,  3 Jun 2026 18:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780508688;
-	bh=FUParyONVI2Qj3PwFGzLdK26Nc4Lc+7LxeqmGfzlOkM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=XVmh5ADe07P1f9LqFCukv3auT/xdl4cJ45wk/gD5dFRsMpz5sCJ4B7u+9tu3rhoZr
-	 EXPTc7jDaVUDZVie2L60Kjm9z+Et2iGuPB/8li6Yihuhm6C/vAgimQKCYm7I3iU9Ni
-	 BAvD4RjcCj2uEjB0DPlu5xRwpj8sNtSMqh6Ys9dy01dbEly2l7JWXAUmkqCKqkzeRu
-	 TOja3UUzgCCzYccSqtJ8e+7JHAIAY29bLR0W+6ngtd94yZnkXBu6WVcpOMVpyyyglD
-	 TRhj0tCqeEQgsrH3txoTP5WOoxU1eCm2PH+w1gEMtJQdBcU/ccnxYYY1xY2vWFZgzn
-	 ZM0drYjJBYo4w==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-68ae265815aso2676414a12.1
-        for <kexec@lists.infradead.org>; Wed, 03 Jun 2026 10:44:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8mlXOLpJCVU/iqZnagv8uT4qJdaHqDONEeBbtac7muYMOsf6bb5SlBNCphyMh8U70LuFoO/Q==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxFMcvp3KwC9f5l8wML/rhnc1IASULLCXLwEHegT9k3OOCS12sS
-	Bmgo1xT8h8s7qyp1gRqDFLeyy7tfYzWhWNhAQowKrclOMhcigZ9eAhkRgqrQPB049MYy+Xun0Co
-	BgQYu7/1TpR08Fzs+qRG620H4aPvmaw==
-X-Received: by 2002:a05:6402:3224:b0:67f:9124:8815 with SMTP id
- 4fb4d7f45d1cf-68e71e788c3mr2143257a12.17.1780508687065; Wed, 03 Jun 2026
- 10:44:47 -0700 (PDT)
+	s=k20260515; t=1780510620;
+	bh=nxQ22KcJJP7bVCdFVSScm4T4WK7bH7Ys2cqAdls6sJQ=;
+	h=From:To:In-Reply-To:References:Subject:Date;
+	b=YSLKO+Uty9Cb7gb0+g+YURmGlAfgJDL1bkZ3upC7pCzRW257ES511XK59cObIdiLp
+	 HQLBUG3vDvVuHsHby5F8udil1Anpb1xIEsfKK6txziKZubb3wr6xFoqqDdA6qeIGi+
+	 IlXPtzuptxb2JFv/3bKMtDLvilfFAJF/lDPbXMlmFK3r0ygLOVQbjzEtiVBB0FTZuH
+	 IhdHRNMtb/2RYH0gjiarVrBSivGLVN6SJ5wOArrtGfyPFukeCboLnQBsBtzGIKDjda
+	 SC1r3BaxKQTAvqhGzJ/IlLGkLhuWSL9lCQwPbyV0EZsAaZEv0ok9PIFUHxdq9AFQho
+	 nY/BZsoKlHezw==
+From: Mike Rapoport <rppt@kernel.org>
+To: linux-kselftest@vger.kernel.org, shuah@kernel.org, 
+ akpm@linux-foundation.org, linux-mm@kvack.org, skhan@linuxfoundation.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, corbet@lwn.net, 
+ dmatlack@google.com, kexec@lists.infradead.org, pratyush@kernel.org, 
+ skhawaja@google.com, graf@amazon.com, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>
+In-Reply-To: <20260603154402.468928-1-pasha.tatashin@soleen.com>
+References: <20260603154402.468928-1-pasha.tatashin@soleen.com>
+Subject: Re: [PATCH v7 00/13] liveupdate: Remove limits on sessions and
+ files
+Message-Id: <178051061274.867224.3632796902576075261.b4-ty@b4>
+Date: Wed, 03 Jun 2026 21:16:52 +0300
 MIME-Version: 1.0
-References: <20260527032917.3385849-1-chenwandun1@gmail.com>
- <20260527032917.3385849-4-chenwandun1@gmail.com> <20260602162450.GA442759-robh@kernel.org>
- <79932afc-2e91-4a54-aff9-f550be784c36@gmail.com>
-In-Reply-To: <79932afc-2e91-4a54-aff9-f550be784c36@gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 3 Jun 2026 12:44:34 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJOC1ko1Len3Dyc5SNKrHmhQn9uiDAkFfVbYa2wAfFUTg@mail.gmail.com>
-X-Gm-Features: AVHnY4Jg1TFYCpbsJd3VXxxqiBkj66MRmp2Oem1kgjUPEYvvmBJ9wL6Wox9sVrg
-Message-ID: <CAL_JsqJOC1ko1Len3Dyc5SNKrHmhQn9uiDAkFfVbYa2wAfFUTg@mail.gmail.com>
-Subject: Re: [PATCH v3 03/11] of: reserved_mem: avoid post-init UAF when
- alloc_reserved_mem_array() fails
-To: Wandun <chenwandun1@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, kexec@lists.infradead.org, iommu@lists.linux.dev, 
-	zhaomeijing@lixiang.com, catalin.marinas@arm.com, will@kernel.org, 
-	chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org, palmer@dabbelt.com, 
-	aou@eecs.berkeley.edu, alex@ghiti.fr, saravanak@kernel.org, 
-	akpm@linux-foundation.org, bhe@redhat.com, rppt@kernel.org, 
-	pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev, 
-	m.szyprowski@samsung.com, robin.murphy@arm.com, quic_obabatun@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.2
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,102 +73,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jun 3, 2026 at 1:44=E2=80=AFAM Wandun <chenwandun1@gmail.com> wrote=
-:
->
->
->
-> On 6/3/26 00:24, Rob Herring wrote:
-> > On Wed, May 27, 2026 at 11:29:09AM +0800, Wandun Chen wrote:
-> >> From: Wandun Chen <chenwandun@lixiang.com>
-> >>
-> >> The global pointer 'reserved_mem' continues to reference the
-> >> reserved_mem_array which lives in __initdata if
-> >> alloc_reserved_mem_array() fails. of_reserved_mem_lookup() is
-> >> exported for post-init use, that would dereference freed memory
-> >> and trigger a use-after-free.
-> >>
-> >> So reset reserved_mem_count to 0 when alloc_reserved_mem_array()
-> >> fails.
-> >>
-> >> Fixes: 00c9a452a235 ("of: reserved_mem: Add code to dynamically alloca=
-te reserved_mem array")
-> > Fixes should come first in a series.
-> Understood, will do in future submissions.
-> >
-> >> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
-> >> ---
-> >>   drivers/of/of_reserved_mem.c | 20 ++++++++++++++------
-> >>   1 file changed, 14 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem=
-.c
-> >> index 313cbc57aa45..6d479381ff1f 100644
-> >> --- a/drivers/of/of_reserved_mem.c
-> >> +++ b/drivers/of/of_reserved_mem.c
-> >> @@ -69,29 +69,31 @@ static int __init early_init_dt_alloc_reserved_mem=
-ory_arch(phys_addr_t size,
-> >>    * the initial static array is copied over to this new array and
-> >>    * the new array is used from this point on.
-> >>    */
-> >> -static void __init alloc_reserved_mem_array(void)
-> >> +static bool __init alloc_reserved_mem_array(void)
-> >>   {
-> >>      struct reserved_mem *new_array;
-> >>      size_t alloc_size, copy_size, memset_size;
-> >>
-> >> +    if (!total_reserved_mem_cnt)
-> >> +            return true;
-> >> +
-> >>      alloc_size =3D array_size(total_reserved_mem_cnt, sizeof(*new_arr=
-ay));
-> >>      if (alloc_size =3D=3D SIZE_MAX) {
-> >>              pr_err("Failed to allocate memory for reserved_mem array =
-with err: %d", -EOVERFLOW);
-> >> -            return;
-> >> +            goto fail;
-> >>      }
-> >>
-> >>      new_array =3D memblock_alloc(alloc_size, SMP_CACHE_BYTES);
-> >>      if (!new_array) {
-> >>              pr_err("Failed to allocate memory for reserved_mem array =
-with err: %d", -ENOMEM);
-> >> -            return;
-> >> +            goto fail;
-> >>      }
-> >>
-> >>      copy_size =3D array_size(reserved_mem_count, sizeof(*new_array));
-> >>      if (copy_size =3D=3D SIZE_MAX) {
-> >>              memblock_free(new_array, alloc_size);
-> >> -            total_reserved_mem_cnt =3D MAX_RESERVED_REGIONS;
-> >>              pr_err("Failed to allocate memory for reserved_mem array =
-with err: %d", -EOVERFLOW);
-> > These prints could be moved to 'fail'. Perhaps instead of just printing
-> > an error value, you can return the error value instead of boolean.
-> Will do, consolidating pr_err() under 'fail' and changing the return type
-> to int.
-> >
-> > If you respin just this patch, I can pick it up for 7.2.
-> Before I respin, I'd like to flag a dependency:
-> patch 05/07 in this series build on the signature change introduced by th=
-is
-> patch ("the void -> bool return type change of alloc_reserved_mem_array()=
-")
->
-> Could you let me know which of the following you'd prefer:
-> a) Take patch 03 alone via your tree as you suggested, after it lands, I'=
-ll
->     respin the remaining patches of this series.
+On Wed, 03 Jun 2026 15:43:49 +0000, Pasha Tatashin wrote:
+> liveupdate: Remove limits on sessions and files
+> 
+> Hi all,
+> 
+> This series removes the fixed limits on the number of files that can
+> be preserved within a single session, and the total number of sessions
+> managed by the Live Update Orchestrator (LUO).
+> 
+> [...]
 
-I would go with this option. AIUI, this series isn't going to land in
-7.2, so ultimately you will rebase on v7.2-rc1 which will have the
-fix.
+Applied to next branch of liveupdate/linux.git tree, thanks!
 
->
-> b) Keep patch 03 in the v4 respin of the full series, reordered to the fr=
-ont
->     per your earlier comment.
+[01/13] liveupdate: change file_set->count type to u64 for type safety
+        commit: 81fbb909ec07868415f6b2269922c8d1cc6a215a
+[02/13] liveupdate: avoid mixing cleanup guards with goto in luo_session_retrieve_fd
+        commit: 6af06e11bd48bdefaf9381f6ff0bd65b1e5d98ab
+[03/13] liveupdate: centralize state management into struct luo_ser
+        commit: d376e4b55c9a0adb3e701c7eaff21d9ba655a1c6
+[04/13] liveupdate: register luo_ser as KHO subtree
+        commit: cf071b3536df76a2a75b83ca1fe8c043824352c3
+[05/13] liveupdate: Extract luo_file_deserialize_one helper
+        commit: 51b71af922a7145e63fdc0cab075d681ecd89e4a
+[06/13] liveupdate: Extract luo_session_deserialize_one helper
+        commit: be9d10d167652e11283cd07c7daf187222808db1
+[07/13] kho: add support for linked-block serialization
+        commit: 0349ff2887059112ce06831ab29aec47a2a7285a
+[08/13] liveupdate: defer session block allocation and physical address setting
+        commit: b5a58a922e6f2f9f40faddd8e0e1fe3ce0ea9c56
+[09/13] liveupdate: Remove limit on the number of sessions
+        commit: 2a441a14c2c03b39d1c89438dd28cef9d8fa57d5
+[10/13] liveupdate: Remove limit on the number of files per session
+        commit: 1d1153097f4dd417e2ea00404edec9fbd1d88f28
+[11/13] selftests/liveupdate: Test session and file limit removal
+        commit: 5ba3f30643cbdd79fb82e525aa1ca55b62fcc7ac
+[12/13] selftests/liveupdate: Add stress-sessions kexec test
+        commit: 3432292fb9130191dca57953941f7ae3888d52d8
+[13/13] selftests/liveupdate: Add stress-files kexec test
+        commit: 46429a15a6dfe522880d5085f1f6999357758872
+
+tree: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux
+branch: next
+
+--
+Sincerely yours,
+Mike.
 
 
-Rob
 
