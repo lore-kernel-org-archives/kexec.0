@@ -4,66 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1510CD6E4A
-	for <kexec@archiver.kernel.org>; Wed,  3 Jun 2026 06:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6F1BFCD6E6A
+	for <kexec@archiver.kernel.org>; Wed,  3 Jun 2026 09:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
-	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=QmR72pv0JwZwlXfpmXou2svlXcH18CS10GD95f37blg=; b=gqKsHxKcj4DwMKDiVu5+pgRSRl
-	aORw6497TI9DCDWmSxO1hGPExB3hWAhsnqrtaQpgVb36OkuXTg5jKhg3EZ7KcFjgAJOp97oTDqo64
-	l8PD+Lx0MWjYhLwgv1d3gxaoCQOgrJ3bz5oURLj3cdGlWgqyRCllHLIBo8YO5UvVOw969NQI7sZ+S
-	o3Tl6Pf4cC0/2Ck0pXLJOD8wJcoiYMgCX5TYbPvNS6IomgryucBkK12oHwN5G1ezrxP7MKRiyu/Gr
-	87BsY0+sGm+8WXrBaVcVrkAfntOuEi3YF6ptfHQkiIrEPnJcbfq75RLzOsDRmkTYzBBW63yt1n5Ww
-	UfdcjZZg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=0YKYxaewRvA3lfBC/tETR3ZEPA7XYWmFAA/XZnPbico=; b=JDGtKULgA8ZonmhHn1EIBenqOK
+	GN5N9quZw47GeldJETeJ00Y6n9qO9NT2nl8e9FUSjqnGXkTJPvYVCSeUNqsQxG5iC7TTS9MPmTlhF
+	AlUY3Bu/HhHrdRveEmQnu8m3ye1fSvYZnBaygoDhMHVdwoqUQxHbz2eU9h7Sk1Y88dfpWXTkS5bbv
+	CIsfK7uWOA+FTy76tCzpe6gzqTBpw/884l/6xR8Ih0/3bUsP54mefpW4FGlICOq2WQRqJl8tJT/bE
+	/lZs6OQ1boMp0d6E1oC3mg08kprlTZBdouQB87+twzr4JYMEiNqOqbpihh3ViwIdeXaQjDye/VTgn
+	wyJ5h4qw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUfSa-0000000EPl0-006D;
-	Wed, 03 Jun 2026 06:52:16 +0000
+	id 1wUhuY-0000000Ehxb-38vZ;
+	Wed, 03 Jun 2026 09:29:18 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUfSX-0000000EPk3-2RD9
-	for kexec@lists.infradead.org;
-	Wed, 03 Jun 2026 06:52:14 +0000
+	id 1wUhuW-0000000Ehwc-0RbU;
+	Wed, 03 Jun 2026 09:29:17 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id DD22943E4D;
-	Wed,  3 Jun 2026 06:52:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E1921F00898;
-	Wed,  3 Jun 2026 06:52:09 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id E648D4430D;
+	Wed,  3 Jun 2026 09:29:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97B8A1F00893;
+	Wed,  3 Jun 2026 09:29:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780469532;
-	bh=QmR72pv0JwZwlXfpmXou2svlXcH18CS10GD95f37blg=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=GiRBMgVXBSYgeTevLYva+/l8q+IIkbd8tlCWMESYx3M+lpYhlTsV/YFhmgyIeJmBv
-	 aSjS2E2FrVsyR7LerMnXedSvoQUQYDpRMuwqXSWxYXeaf1uwfvCkybxOZ3Fgmhi3sR
-	 FmtcC9rbPfxKV/XQOad3sLgErg6alckvnSGr4fX8AAnrQBt0dfFYuKCas8Nfq+MKWI
-	 2pP3whGsj78x4ObF026jDMh3ewLDz4dDUR9POyKPjSiJrZFW7QpaHianGLth+gpj8P
-	 rP+6NRi2pQpwr0trxX0Mzk20NatXXQ3xr6yZ7lGOdcJ3lnhARBb0X2wy2qG8pD0Jwo
-	 zqCBoEsbhOKOQ==
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v6 03/13] liveupdate: centralize state management into
- struct luo_ser
+	s=k20260515; t=1780478954;
+	bh=0YKYxaewRvA3lfBC/tETR3ZEPA7XYWmFAA/XZnPbico=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=aROTsNtP0NwcPyhOGg9EN7SaKgxWgmBik4nkTEgxduPxK5HRWw3N84c9Y+ACmVTN1
+	 wgGQ5LmSO16hd/kW00Z44oqbucTBUZSCI5qkU4XBMgLuDQlQoPU5Q7drqrxWizzv3f
+	 rrWFolACkQfVjWy8P7nyYRfKI3cGxZO78QELntbROjZh2g+LwBwdTl5Zzy83wMh8Ah
+	 +jsOcKbtZk9aA7P96fnDV/449Ef6mxs1KgAP+RaMN8fr1epn59jCUIuT3pzqyXrl2/
+	 Cty+iU235/fJlfaqEQKiPp5aeuN6LGB+fM5/HMK485/qyjL0EeNknVF9PU08lbGj8F
+	 jYzXoc72/R2Ow==
+Date: Wed, 3 Jun 2026 12:29:00 +0300
 From: Mike Rapoport <rppt@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: linux-kselftest@vger.kernel.org, rppt@kernel.org, shuah@kernel.org, 
- akpm@linux-foundation.org, linux-mm@kvack.org, skhan@linuxfoundation.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, corbet@lwn.net, 
- dmatlack@google.com, kexec@lists.infradead.org, pratyush@kernel.org, 
- skhawaja@google.com, graf@amazon.com
-In-Reply-To: <20260603032905.344462-4-pasha.tatashin@soleen.com>
-References: <20260603032905.344462-1-pasha.tatashin@soleen.com>
- <20260603032905.344462-4-pasha.tatashin@soleen.com>
-Date: Wed, 03 Jun 2026 09:52:02 +0300
-Message-Id: <178046952228.468621.17532660334285388424.b4-review@b4>
-X-Mailer: b4 0.15.2
+To: Jork Loeser <jloeser@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-mm@kvack.org,
+	kexec@lists.infradead.org, "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Alexander Graf <graf@amazon.com>, Jason Miu <jasonmiu@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>, Baoquan He <bhe@redhat.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <kees@kernel.org>,
+	Ran Xiaokai <ran.xiaokai@zte.com.cn>,
+	Justinien Bouron <jbouron@amazon.com>,
+	Sourabh Jain <sourabhjain@linux.ibm.com>,
+	Pingfan Liu <piliu@redhat.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+	linux-kernel@vger.kernel.org, Michael Kelley <mhklinux@outlook.com>
+Subject: Re: [RFC PATCH 00/20] mshv: enable kexec with Hyper-V donated pages
+ and partitions
+Message-ID: <ah_z3GV55RY3ZnT-@kernel.org>
+References: <20260528004204.1484584-1-jloeser@linux.microsoft.com>
+ <ahxrc4pTvVU20RTX@kernel.org>
+ <f9d95fb1-ef3-d4a-19e4-afe7cdde5d1f@linux.microsoft.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f9d95fb1-ef3-d4a-19e4-afe7cdde5d1f@linux.microsoft.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260602_235213_646638_D1F565A7 
-X-CRM114-Status: UNSURE (   5.83  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260603_022916_164891_EBD14BF6 
+X-CRM114-Status: GOOD (  11.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,21 +96,26 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 03 Jun 2026 03:28:54 +0000, Pasha Tatashin <pasha.tatashin@soleen.com> wrote:
-> Transition the LUO to ABI v2, which centralizes state management into a
-> single struct luo_ser header.
+On Mon, Jun 01, 2026 at 01:09:41PM -0700, Jork Loeser wrote:
+> On Sun, 31 May 2026, Mike Rapoport wrote:
 > 
-> Previously, LUO state was spread across multiple FDT properties and
-> subnodes. ABI v2 simplifies this by placing all core state, including
-> the liveupdate number and physical addresses for sessions and FLB
-> headers into a centralized struct luo_ser.
-> 
-> [...]
+> > > Patch 19:      Export kexec_in_progress for modules
+> > 
+> > Isn't there another way to differentiate kexec reboot?
 
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+There's that "kexec reboot" string passed as the cmd to the reboot
+notifier.
+Maybe we can make it somehow more well defined API and use it?
+ 
+> I could not find one, unfortunately.
+> 
+> > Sincerely yours,
+> > Mike.
+> 
+> Best,
+> Jork
 
 -- 
 Sincerely yours,
 Mike.
-
 
