@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 042D3CD6E5D
-	for <kexec@archiver.kernel.org>; Wed,  3 Jun 2026 02:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 122FFCD6E5D
+	for <kexec@archiver.kernel.org>; Wed,  3 Jun 2026 02:57:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=1IZPLWBHqvJvl4gIvSvnZxXOnDR854hRgX/CoDKx5XU=; b=ItXFPJPeVYtRtqjOxzWCfkPAIR
-	S3DOijon13UrQwtWra7T8QGPhwgI1Srir/zCQ66AFS7fE+MsXambUtsC85rc1uEVt7t43c2/TeHMe
-	7F+pOfSXRTlonx3aQQWLM7RnQNNSCCBT40CePF6rV8yL9RSjpc1wGLa+C1ftD6ObG/2Iv2kF0xnt7
-	Zrda8kI2pxOamcwYceeQBy7rzN3qKVhRLsW0cZMMzSkyuQaLppICD2ym2Mk47OQH/QHRl9KZZQll1
-	tts/7lHtFVYX0QB+8HeFTA8ZAORoov044yeEXtMz/foIlwICMFt0wRW8BiX6OCVhiRYydo4k75p35
-	0k5MkXmg==;
+	bh=y3awZDWC/0BEHXSInI6v/h4g63e1F9fJCkxQA7vD56Q=; b=4CxFKVMr6tZEDUcWk86tuZe9Fx
+	NMqsOzbXJWd/UoPaSPf9tNsJLHD08BmjR8cegFXZ+JIRYHPqv6oPVzVtmqYmbZszVBCQwGIyvqrcd
+	ceWNp1NwzCShTSPI4/MXz7+ToKiiPfxU8b/7TPs4zMHciMFB1JINp48MH7+kclxoj3tC01fhynJP0
+	Vq4L0g0HNlDNtNzSWOoFmSbiiOLqhzE8naE/aM1UgiTxqTtavdBzeMiByCXxLG8AhiyRmNzeBn1aS
+	AygaVtuNgS8jmbHDSlHrhNgbOQRL65PYCBFtGle+Rme3fiXnjYWXFFcb4tDGDU100gjTw0STLTb21
+	TXCHX4pw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUbh4-0000000E872-2xdn;
-	Wed, 03 Jun 2026 02:50:58 +0000
-Received: from mail-qk1-x734.google.com ([2607:f8b0:4864:20::734])
+	id 1wUbnJ-0000000E8cu-363f;
+	Wed, 03 Jun 2026 02:57:25 +0000
+Received: from mail-qk1-x72d.google.com ([2607:f8b0:4864:20::72d])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUbh1-0000000E86h-26ot
+	id 1wUbnH-0000000E8ca-23w7
 	for kexec@lists.infradead.org;
-	Wed, 03 Jun 2026 02:50:56 +0000
-Received: by mail-qk1-x734.google.com with SMTP id af79cd13be357-91564c3a968so30099685a.1
-        for <kexec@lists.infradead.org>; Tue, 02 Jun 2026 19:50:54 -0700 (PDT)
+	Wed, 03 Jun 2026 02:57:24 +0000
+Received: by mail-qk1-x72d.google.com with SMTP id af79cd13be357-91562bf6c12so267778485a.2
+        for <kexec@lists.infradead.org>; Tue, 02 Jun 2026 19:57:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1780455054; x=1781059854; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1780455442; x=1781060242; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1IZPLWBHqvJvl4gIvSvnZxXOnDR854hRgX/CoDKx5XU=;
-        b=ic/pKrNi5SMzuS327AzWH3mURW0nl1u6VL6i3mKicSsEH2Gsi2zZPm96vf89RZm3TP
-         D5/xgAP25TgJPCkiEuMpexvONK7ia5zNqAYhY91jfL3KjAeHQm71gyzev9JtSBICQK18
-         brRE1MUy4MTD/m/VfHCVONb9NBgQWpEY9d6IRZFsREzw8A3zwLA6Zi17e1xlPvmXWZH5
-         VI03RyqMvE621duXLz/s/I7jrTEyaWbUpfKqC401Zy4cJoaZeyFOwB4TGFqs2Dxi77Na
-         uLskJb/kNezrRPbrnwTzEeMO8wLZ7isVNrDuu6Si478sEZq0RCIYmDEc0JF/rthl0zsx
-         dBIg==
+        bh=y3awZDWC/0BEHXSInI6v/h4g63e1F9fJCkxQA7vD56Q=;
+        b=RFJlQt62IY55W9c1vGxNv8gdiOc/R+Peq8UuGgQOoPYcy/3UNDR0M8ljk5VbZMDFtd
+         9YPqtG13QJ+AjU3SCR1YSDqw8VaVp4AiMWiz2pLI0u2f3uWTF389b7n7wbyEGhxQfRUc
+         aYdx0WlzsouSSOnWr/YD+LPJBjpOmFs/SV2Kjt4LwbVneUrcHZWPxq4VFRVfdsbKx7g3
+         x58YCinK4wt4OIsusJ/mx4JJmUuX3itKCH+wcCe8I5uCWsNj5/zBJLo16MY1EJsZKXog
+         ZX/YbH/UUP1M6n4GJ8a6nmxPt//6ecA1VdDDHFF4EeB3lz7qMD+ByuruOgT00X38YSWh
+         8HnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780455054; x=1781059854;
+        d=1e100.net; s=20251104; t=1780455442; x=1781060242;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1IZPLWBHqvJvl4gIvSvnZxXOnDR854hRgX/CoDKx5XU=;
-        b=TRV4Fz7PMpHAyP7++Z5SIe40AJF7IyXvdxmMj6ZNWtJYXMNPQ3DCtI+aeizX8OjuPu
-         oe9/FUUTYIhW+2nWX3PQet11JdJMdT1Bj9Yl+BZeqVacNnFHr49JVfMYptDQIdjM6mot
-         NthbvopExX3apaCmS0znYJir7+7/pWqgF+u70rcDsJg30HynLCCLm1sdnNxwqMtnKB4Q
-         LSshC+mG2Fpo6L0TRAPGPAtDp2fYEE/g50F8C70wpo6paJm0CDpldWZx9R46l7E0Q16c
-         OH8LUY9sTVD5L5G9AguxRCsJxY2xb/ybwrpp0CGkL3LTfh+5uu5CFoeVU8O+hh/eR9Mj
-         Rt3g==
-X-Forwarded-Encrypted: i=1; AFNElJ8m6pkG2SMYa9/HO1+HCjs1HC/mJtqaG8d4+Y+2vUqt0aJ9w+/T94Mmxsx+hg0uQumFjVGDBA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzTTDy2hqBnQVyvTZh8jLhpA1oodkZ26uJ5ohP6lCak6B3FrXbW
-	3O+6aLuQMjCaYvC3g65nNkIGTZ4dapTSk5X3JFol5np6SSKQGzG9JV46pyJbWbunybo=
-X-Gm-Gg: Acq92OFYNWqFXdLHIX0qrCbFCZ4zXnaiJoLZvG1fdWG4fOitUUkJnXQe04sR04gqM7M
-	HcG7A7t5TnvZ4MnYTCRK6lU0tOL0Ay0pePhDuCk6+/ghtOybSN8Rzf9DTAZIMHz7qNRUE9z19Un
-	nYvmyhlE/+SKHH5v4PFGE3B2niQ4o9nrR/ux+V90NTxbrxUg4wdCFMT27jbFUNXC5kNkWM2Jy9V
-	DjVBNrQxibqnKtkcVs53Ba89ZNJDjla6pqeT80APDNEihNNk0BnlHlb1ArxxqmaoN3katGUq89k
-	mMrLv68/cAQ92LfapLRJXZvkBf/wOUFNsznwaEcLVuSX8kUScUUYIVG6CpeaJooZmD9jpZyo8dr
-	xtscNeU+xOpPkseCqcrHxEkfN90a3nH9rJpsa2UnpHAYhwIdlorKC9OsC/df9r1ts1P9OJ6Z1w9
-	mFxVvAKLeAwvAyFVkY0UIXLB76DmSZscpWQG5CzSHJbPYqxRrMQfZ5w0aH/dAXOA==
-X-Received: by 2002:a05:620a:a2c5:20b0:915:8f64:6056 with SMTP id af79cd13be357-9158f646703mr47560885a.16.1780455054088;
-        Tue, 02 Jun 2026 19:50:54 -0700 (PDT)
+        bh=y3awZDWC/0BEHXSInI6v/h4g63e1F9fJCkxQA7vD56Q=;
+        b=KbfKEF61DY9E5yspGuSDlhGlZ1mmh0ilHL0A2vD7H0kpr+PJdIBxlHf/elphU79vaQ
+         AI8FMQaxekFYsGO7mFxLvPxr8j2O02FsasvHX6bImzqwQGgc5Ng16L1Ie9hNZfYUE2gG
+         doqj3OAEfz1zDedr9Vz4u58CPuKntwnLow0cXJj7H0pXdDhe3639W9Jb6/a5foUqSh0k
+         jX9cHzE1kry9btnGYepf3rebLWurEI9Z/Qt7GD+Lptgjh9+HTPfxB9jcZ32AlUmuhNse
+         7J2mDCCsRs8Xit2e2qqMe7A4WkNVNctuUp4TCQYhozjlNfKcCULf5T1z59kWgpo54Oxy
+         pI8g==
+X-Forwarded-Encrypted: i=1; AFNElJ8SOkL7Y5a3xCf5Cn2cX+L4wScFVC5mmgNFyWNsuIGKbYbHotcqxwn0Eb0kegLYtattQ0c61Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0YytG1G2eO3ewTMBRIWSl82AjQC2Mb+YcIM3Y8L/2iLG6GHKAkuz
+	pGbgtyRtfL5sk9O94rSODSyuX2Rn4yrb+D0xtAV20s5dVelfB7EYgaB/vcQhEEgxQy0=
+X-Gm-Gg: Acq92OEmO/O3ousEIe+NNwJocpGng9dMlSGvGCDNHt4JJSbtazGXxsicm1SLsOsjqWC
+	8kjZly364Qmw4Kler8P7422Q6gcY9KzFUVmXZqBBVqNAiFb1f1pL6arWFlmiCmJkEDDuInX4SA/
+	TzXXW9x01p1kENfgryFMH75xQZ6BuCiIc1c+RO55ZRbxHcCz9P58jJqM3bO2Y4JTlqARnpq8AFm
+	CCDauezTJrHynGYaPMXZdBnRGWI/52AfeZA4uMTy86jFFJWakN2gW7HLbAGQsqGjFn1EmxTbgfe
+	wWMpPJSeEoWW3MQYHFy7uhX8CrfZGg9iBYMtZnx6NWRGpJljKrZTcrKSz/OflNg6JTBtP/eCtNK
+	O0Y1/vGbJYdAbSDGogWwiNwrvb5eB34CbNvuvwjnRihiaiurc6fGsNSIHNC/WiuE4eOzxoVg/J/
+	1UJwbNSB2Co4Eb14r0cPqknBR8rXutMfbowIdeDISuoYUQkQH6I6o3yLsEHby5yg==
+X-Received: by 2002:a05:620a:3199:b0:915:86c6:8432 with SMTP id af79cd13be357-9158a6979f0mr317963585a.14.1780455442182;
+        Tue, 02 Jun 2026 19:57:22 -0700 (PDT)
 Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ceccd9fc7dsm8925566d6.5.2026.06.02.19.50.53
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9158a37bae6sm118824085a.31.2026.06.02.19.57.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2026 19:50:53 -0700 (PDT)
-Date: Wed, 3 Jun 2026 02:50:52 +0000
+        Tue, 02 Jun 2026 19:57:21 -0700 (PDT)
+Date: Wed, 3 Jun 2026 02:57:19 +0000
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: Mike Rapoport <rppt@kernel.org>
 Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
@@ -76,20 +76,19 @@ Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
 	skhan@linuxfoundation.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	corbet@lwn.net, dmatlack@google.com, kexec@lists.infradead.org, 
 	pratyush@kernel.org, skhawaja@google.com, graf@amazon.com
-Subject: Re: [PATCH v4 08/13] liveupdate: defer session block allocation and
- PA setting
-Message-ID: <ah-Vp6xKSPWkuCyR@plex>
+Subject: Re: [PATCH v4 03/13] liveupdate: centralize state management into
+ struct luo_ser
+Message-ID: <ah-Wov2fvjYbpjHX@plex>
 References: <20260530221938.115978-1-pasha.tatashin@soleen.com>
- <20260530221938.115978-9-pasha.tatashin@soleen.com>
- <178038801492.119771.3419366349068848854.b4-review@b4>
+ <20260530221938.115978-4-pasha.tatashin@soleen.com>
+ <178038801487.119771.6308607614059754603.b4-review@b4>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <178038801492.119771.3419366349068848854.b4-review@b4>
+In-Reply-To: <178038801487.119771.6308607614059754603.b4-review@b4>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260602_195055_568042_13722550 
-X-CRM114-Status: UNSURE (   8.30  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260602_195723_538658_039226A7 
+X-CRM114-Status: GOOD (  14.09  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,16 +104,47 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 06-02 11:13, Mike Rapoport wrote:
-> On Sat, 30 May 2026 22:19:33 +0000, Pasha Tatashin <pasha.tatashin@soleen.com> wrote:
-> > Currently, luo_session_setup_outgoing() allocates the session block and
+> On Sat, 30 May 2026 22:19:28 +0000, Pasha Tatashin <pasha.tatashin@soleen.com> wrote:
+> > diff --git a/kernel/liveupdate/luo_flb.c b/kernel/liveupdate/luo_flb.c
+> > index 8f5c5dd01cd0..c8dd30b41238 100644
+> > --- a/kernel/liveupdate/luo_flb.c
+> > +++ b/kernel/liveupdate/luo_flb.c
+> > @@ -579,53 +565,18 @@ int __init luo_flb_setup_outgoing(void *fdt_out)
+> > [ ... skip 18 lines ... ]
+> > -	offset = fdt_subnode_offset(fdt_in, 0, LUO_FDT_FLB_NODE_NAME);
+> > -	if (offset < 0) {
+> > -		pr_err("Unable to get FLB node [%s]\n", LUO_FDT_FLB_NODE_NAME);
+> > -
+> > -		return -ENOENT;
+> > +	if (flbs_pa) {
 > 
-> "liveupdate: defer session block allocation and PA setting"
+> I like 
 > 
-> PA as "Public Assistance"? ;-)
+> 	if (!flbs_pa)
+> 		return;
 > 
-> Let's spell it out.
+> more
 
-Done
+Ok.
+
+> 
+> >
+> > diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
+> > index 8d9201c25412..3b760fefa7b9 100644
+> > --- a/kernel/liveupdate/luo_session.c
+> > +++ b/kernel/liveupdate/luo_session.c
+> > @@ -497,75 +494,34 @@ int luo_session_retrieve(const char *name, struct file **filep)
+> > [ ... skip 58 lines ... ]
+> > +	if (sessions_pa) {
+> > +		header_ser = phys_to_virt(sessions_pa);
+> > +		luo_session_global.incoming.header_ser = header_ser;
+> > +		luo_session_global.incoming.ser = (void *)(header_ser + 1);
+> > +		luo_session_global.incoming.active = true;
+> >  	}
+> 
+> Ditto
+
+This functions get's re-written with early return later in the serires.
 
 > 
 > -- 
