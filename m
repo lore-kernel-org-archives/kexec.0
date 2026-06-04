@@ -4,55 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 33F1BCD6E4A
-	for <kexec@archiver.kernel.org>; Thu,  4 Jun 2026 11:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 32F13CD6E6E
+	for <kexec@archiver.kernel.org>; Thu,  4 Jun 2026 12:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=qk2XO2YZX9Ln1pAdVPnMLvfveYauig7cdWN65Sl46ws=; b=NUPOYMsqKvKBiye2CKYFsUbuaN
-	pjjpZ3u52UsLkl9X/bMDWDirIcFfp81o1MdPba+Q1hZomAF6h/PcZbW6it8V9aSBD9xCHh3dceIc0
-	vJi4L4ejkrA/RkBqRZF37K+ZxuF5+rjLfHhJ/ThPqaUWIyzpj8YT/tLxNg1JMlX1eKSwBjDq4bJlU
-	kxuQvlVtths/xefOAxco5BaQk6Fb6A3foeAuVUGKWbMWUGDhdrgBXerluTjqiRYCbfkQi2TmSGoMY
-	Y7XRNnBjPcdxM+fRgTB5paHXC65Sb/bu3nBwrNK4sUA3qlgcSGuF9xwjt/c4bfSyi9TOd4iCWKrlX
-	gXedLGHw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=6tcDaEhePlIudWCcnW0SAhasLmYK5dwxdEw+RSf4P8c=; b=J8mLB9MWDR9ovX5wF8qOv5io66
+	/iYN56Ry36P+Auiy1uHMfPpFHy2EaNWg+11wsofOtGwN33/WXoJfO5Knb3OcOgMQ+HAVVmS8PPjlS
+	S06Ra3QEUJNoYboohfEdRmT1CajzejJA/H27oxH+IN3q++8b38YYUeXdTpU5gLMA7jReeIIDQOUXA
+	2SHxxoP6PopoXzHO+vbws4YvVRBKkrxtFGTYpobGi2ehtjbQuhXDeyb8RSz8P5jtenfG+hgTc6zwg
+	ZXHNTcTDZqFI71sdDnyiDB6GYasAyUaYdkMilFRYVXHGBJHSLD16zcbeb7zJPGAx4rQkgU4XF+Zzd
+	ItIxcQQA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wV6Rq-0000000GeuA-2w21;
-	Thu, 04 Jun 2026 11:41:18 +0000
-Received: from out-185.mta0.migadu.com ([2001:41d0:1004:224b::b9])
+	id 1wV70z-0000000GhsO-2RGN;
+	Thu, 04 Jun 2026 12:17:37 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wV6Rn-0000000GetU-0Mo5
-	for kexec@lists.infradead.org;
-	Thu, 04 Jun 2026 11:41:16 +0000
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780573271;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=qk2XO2YZX9Ln1pAdVPnMLvfveYauig7cdWN65Sl46ws=;
-	b=jekSMxMNlV3iCVVB/1ug/bBO3WGo78aS1KipNbzed843YMtOz9JLpaG8RA7QBx/6p1mvW+
-	Hiw/YxGZQt8IlRhdE+G7JrIhBUSRPz4/VSu0JgUQa2v2onfp/dyCM658KfDnqLxLPwuJ5C
-	lf5SJjSbC7Xy0vF71N+Xh3i+ZZ8+pWw=
-From: George Guo <dongtai.guo@linux.dev>
-To: chenhuacai@kernel.org
-Cc: maobibo@loongson.cn,
-	loongarch@lists.linux.dev,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	George Guo <guodongtai@kylinos.cn>
-Subject: [PATCH v3] LoongArch: kexec: use core control page for relocation trampoline to avoid QEMU FDT conflict
-Date: Thu,  4 Jun 2026 19:41:06 +0800
-Message-Id: <20260604114106.391502-1-dongtai.guo@linux.dev>
+	id 1wV70y-0000000Ghs3-0GcR;
+	Thu, 04 Jun 2026 12:17:36 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 68D8E43FA4;
+	Thu,  4 Jun 2026 12:17:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F7A51F00893;
+	Thu,  4 Jun 2026 12:17:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780575455;
+	bh=6tcDaEhePlIudWCcnW0SAhasLmYK5dwxdEw+RSf4P8c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=eJT1W+a7yBFj5f0F08Rf3p+a5QNdyb2ZOlFDLriNmO2DidwrP1SwEKpexjiYGbXtI
+	 mrg493otE2WPbKmxOLVcQEDVxAX81TPqkPR+YF4hP2pW2devqPit639cMGJgjtMQU2
+	 AG5qUsLs7SRJ21lXhntgVzwUiRdBV+CiXRLXYlK6qyIFJt6HP6BjhjpLKcTCpN1C2j
+	 MdccibZC2LGohJqgT2WVSxIER2+5wQcA79GHLyl16IhYbrBbCKfylMKEou3aoGT+1W
+	 lAJpv/fbjL+hlGx0tzVtdTaV/qtZTay37HLuxRbIdBk7BuKOR6T5UqLLfSh4toAoP4
+	 y4lbtqS/nGtOA==
+Date: Thu, 4 Jun 2026 15:17:20 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Jork Loeser <jloeser@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-mm@kvack.org,
+	kexec@lists.infradead.org, "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Alexander Graf <graf@amazon.com>, Jason Miu <jasonmiu@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>, Baoquan He <bhe@redhat.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <kees@kernel.org>,
+	Ran Xiaokai <ran.xiaokai@zte.com.cn>,
+	Justinien Bouron <jbouron@amazon.com>,
+	Sourabh Jain <sourabhjain@linux.ibm.com>,
+	Pingfan Liu <piliu@redhat.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+	linux-kernel@vger.kernel.org, Michael Kelley <mhklinux@outlook.com>
+Subject: Re: [RFC PATCH 00/20] mshv: enable kexec with Hyper-V donated pages
+ and partitions
+Message-ID: <aiFs0OLJQWtIbJEF@kernel.org>
+References: <20260528004204.1484584-1-jloeser@linux.microsoft.com>
+ <ahxrc4pTvVU20RTX@kernel.org>
+ <f9d95fb1-ef3-d4a-19e4-afe7cdde5d1f@linux.microsoft.com>
+ <ah_z3GV55RY3ZnT-@kernel.org>
+ <3197c9c9-9e4f-c592-bb7-ac422f89115@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260604_044115_269726_C69E4027 
-X-CRM114-Status: GOOD (  17.30  )
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3197c9c9-9e4f-c592-bb7-ac422f89115@linux.microsoft.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -67,83 +95,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: George Guo <guodongtai@kylinos.cn>
+On Wed, Jun 03, 2026 at 10:25:58AM -0700, Jork Loeser wrote:
+> 
+> 
+> On Wed, 3 Jun 2026, Mike Rapoport wrote:
+> 
+> > On Mon, Jun 01, 2026 at 01:09:41PM -0700, Jork Loeser wrote:
+> > > On Sun, 31 May 2026, Mike Rapoport wrote:
+> > > 
+> > > > > Patch 19:      Export kexec_in_progress for modules
+> > > > 
+> > > > Isn't there another way to differentiate kexec reboot?
+> > 
+> > There's that "kexec reboot" string passed as the cmd to the reboot
+> > notifier.
+> > Maybe we can make it somehow more well defined API and use it?
+> 
+> A string? Dear my - the compiler won't flag it on an API change then, not
+> ideal clearly. What's wrong with exporting kexec_in_progress()?
 
-KEXEC_CONTROL_CODE was hardcoded to TO_CACHE(0x100000).  QEMU places its
-machine FDT at physical 0x100000 when booting with '-kernel', so
-machine_kexec_prepare() overwrote the FDT with the relocation trampoline.
-The kexec'd kernel's fdt_setup() then read trampoline code instead of a
-valid FDT, earlycon auto-detection failed, and the second kernel booted
-silently with no console output.
+The policy in general is avoid exports unless strictly necessary.
+A string can be declared as const char *KEXEC_REBOOT = "kexec reboot" and
+used in both kexec and mshv. Not ideal, but still better.
 
-The trampoline does not need a fixed address.  It is executed by the
-current kernel to relocate and enter the new kernel, and is dead once the
-new kernel starts.  Drop KEXEC_CONTROL_CODE and reuse the
-control_code_page that the kexec core already allocates (as arm64 and
-riscv do).  That page is excluded from the relocation copy and lives
-nowhere near 0x100000, so the QEMU FDT is left intact.
-
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
----
-Changes in v3:
-- Only the relocation trampoline is moved off the hardcoded address onto
-  the core-allocated control_code_page.  v2 also moved the kernel command
-  line to a kexec control page, but as Huacai pointed out a control page
-  only avoids being clobbered by the relocation copy in the current
-  kernel; it is not reserved in the new kernel, which reads the command
-  line early in boot.  The command line therefore stays at the existing
-  fixed KEXEC_CMDLINE_ADDR in the reserved first 2MB (unchanged).
-
-Changes in v2:
-- Instead of moving KEXEC_CONTROL_CODE to a different fixed address, reuse
-  the kexec core's control_code_page for the trampoline.
-
-v2: https://lore.kernel.org/all/20260601033820.38805-1-dongtai.guo@linux.dev/
-v1: https://lore.kernel.org/all/20260528135828.196953-1-dongtai.guo@linux.dev/
-
- arch/loongarch/kernel/machine_kexec.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
-
-diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
-index d7fafda1d541..3527da57234d 100644
---- a/arch/loongarch/kernel/machine_kexec.c
-+++ b/arch/loongarch/kernel/machine_kexec.c
-@@ -21,8 +21,14 @@
- #include <asm/cacheflush.h>
- #include <asm/page.h>
+No strong feelings from my side, just EXPORT_SYMBOL there felt a bit off.
  
--/* 0x100000 ~ 0x200000 is safe */
--#define KEXEC_CONTROL_CODE	TO_CACHE(0x100000UL)
-+/*
-+ * The kexec'd kernel reads its command line from this pointer early in
-+ * boot, so the command line must live in memory the new kernel will not
-+ * reuse.  Keep it at a fixed address in the first 2MB, which both the
-+ * current and the kexec'd kernel always keep reserved (see
-+ * memblock_reserve(PHYS_OFFSET, 0x200000) in arch/loongarch/kernel/mem.c).
-+ * 0x108000 does not overlap QEMU's machine FDT at 0x100000.
-+ */
- #define KEXEC_CMDLINE_ADDR	TO_CACHE(0x108000UL)
- 
- static unsigned long reboot_code_buffer;
-@@ -72,9 +78,14 @@ int machine_kexec_prepare(struct kimage *kimage)
- 		}
- 	}
- 
--	/* kexec/kdump need a safe page to save reboot_code_buffer */
--	kimage->control_code_page = virt_to_page((void *)KEXEC_CONTROL_CODE);
--
-+	/*
-+	 * kexec/kdump need a safe page to save reboot_code_buffer.  Reuse the
-+	 * control_code_page allocated by the kexec core (as arm64 and riscv
-+	 * do) instead of a fixed address: the trampoline is only executed by
-+	 * the current kernel before entering the new kernel, so it needs no
-+	 * fixed or reserved location.  This also stops machine_kexec_prepare()
-+	 * from overwriting QEMU's machine FDT at 0x100000.
-+	 */
- 	reboot_code_buffer = (unsigned long)page_address(kimage->control_code_page);
- 	memcpy((void *)reboot_code_buffer, relocate_new_kernel, relocate_new_kernel_size);
- 
+> Best,
+> Jork
+
 -- 
-2.25.1
-
+Sincerely yours,
+Mike.
 
