@@ -4,61 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6A4E9CD6E4A
-	for <kexec@archiver.kernel.org>; Thu,  4 Jun 2026 05:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 642B5CD6E4A
+	for <kexec@archiver.kernel.org>; Thu,  4 Jun 2026 09:22:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Os6BChiKMmQET3OKPbwcH6PuboYuxn41oT3xzkui4Vk=; b=tbfGXpSQJzCOzAiL0vlm/m+WS1
-	UcbMeRwxEPzTuoUUHvgIn0oVPk9nDMH0NAmHQKCi2hMfci++Xh8pUdnYtwXObf3fmgIw/Rz3GY/Lh
-	ZeffmexuGVzqU5RBz1YC1XH888dlf/MBzg/Kfb4N3kDm9CwLQLrG+JwkeTXUMN20JowdfkGXOdeus
-	15gyw7v1tmjPdZrZhCIjlowMXrmCSIjf3kdMR5XWncKYyH5hzdC8elUTlXK1mriR7zCHMnCWRShtU
-	/Fd7VBth1LzjY7xZyFu1+4um6yhSmJ69W0UYCiAgx1W069JwVfPkWGIz1B6f6+SG84eOM6z3Jqf1m
-	rPecBYFg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=MpDsKqtekJF/ott3Wm9QFal8yf1kb3vz/4aJWlmRjiw=; b=WAX6dbFWTr5lpXfcQjKnaiZJIy
+	npday/KZhTAkoFlB3sypgsvxSowtIUuqGd9gdSTA+vyoCnivahIW0zr2ByLyhZ4o9OJdkUMj0gydU
+	upzRVOaJhlR3oTeO9B0c34ml+2TDA0kuzKsCn0UZXzmmRSny1VHkcK/c9B6HbfDsM6J5Mr/POFQd0
+	02RqedWWBkBVj5Uf+R+zmRev7rUF2rPt7foPeMXuatYu8Ipvdlizh9P6N4b/CRCmu+tIPoBo9/ExJ
+	u2Ya4SaM+blJqj9RQLoyl3/o/4T8Ht3iHo1Z6Vn07namfHEBKQJ5bbKuaR3Lc3GeWrIBUL+8lsZqx
+	PdUBqDrg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wV0df-0000000GAtI-2BP6;
-	Thu, 04 Jun 2026 05:29:07 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wV4H8-0000000GUTZ-1Sjc;
+	Thu, 04 Jun 2026 09:22:06 +0000
+Received: from out-181.mta0.migadu.com ([2001:41d0:1004:224b::b5])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wV0dc-0000000GAsx-2VsH
+	id 1wV4H4-0000000GUQw-3p3G
 	for kexec@lists.infradead.org;
-	Thu, 04 Jun 2026 05:29:05 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id DBC114058D;
-	Thu,  4 Jun 2026 05:29:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E49E1F00893;
-	Thu,  4 Jun 2026 05:29:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780550943;
-	bh=Os6BChiKMmQET3OKPbwcH6PuboYuxn41oT3xzkui4Vk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Hi4u3/zv/smM5I0QakpRwwmSwlJ9Vjgpw74YmySQaUaiHmTdeQc2DbCL2hY0n3Y/B
-	 xc5Ku6Tr45wthcdg007u+mQs9qUa6KWprYb/3VbAE3Kl+hCnI685uvOAtkMx3t6/W3
-	 ta7PG3wR62pF9XQRdAfgglEQZunMoXcKw6mp7CDKZBeVCRBai7Hf/iPf45pZ9L9a69
-	 QUJQUJ6K8oWCgBFAwBq+uW7N4NFMtB2ZzrKJlb+bFWWWmwZO67jGBKNtwiByrq4cBG
-	 leE/m7HrjT5g4Lj8Q/BTtVA4TODa1ENbgJXgHiVe0PIYuLPDSeo14kCFoGpuBQDa6T
-	 6ucu5rFt+5BGg==
-Date: Thu, 4 Jun 2026 08:28:57 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>
-Subject: Re: [PATCH 0/2] liveupdate: Small FLB fixes
-Message-ID: <aiENGcp1UCq5XMme@kernel.org>
-References: <20260528174140.1921129-1-dmatlack@google.com>
+	Thu, 04 Jun 2026 09:22:05 +0000
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1780564913;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MpDsKqtekJF/ott3Wm9QFal8yf1kb3vz/4aJWlmRjiw=;
+	b=fY9klKKlP4cXfhABmPRlqYQP+b6Iu9wu75MwA7pQElSgeZMor7qdyydSudzS3Kjz5MZkDy
+	iPnHz85+14rrN+cZvmJi2kNolTohKYjYGyKWSM+sCV6IOktlJOTj6H+bZOVbNIGyJgE+JC
+	0+7Mi11pATjgp3/WiglhFnDG+hcyIQw=
+From: George Guo <dongtai.guo@linux.dev>
+To: pasha.tatashin@soleen.com,
+	rppt@kernel.org,
+	pratyush@kernel.org
+Cc: kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	chenhuacai@kernel.org,
+	loongarch@lists.linux.dev,
+	George Guo <guodongtai@kylinos.cn>,
+	Kexin Liu <liukexin@kylinos.cn>
+Subject: [PATCH v2] liveupdate: luo_session: include linux/mm.h for virt/phys translation
+Date: Thu,  4 Jun 2026 17:19:13 +0800
+Message-Id: <20260604091913.306603-1-dongtai.guo@linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260528174140.1921129-1-dmatlack@google.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260603_222904_665897_AD5038D3 
-X-CRM114-Status: GOOD (  14.60  )
+X-CRM114-CacheID: sfid-20260604_022203_643354_5A44A4ED 
+X-CRM114-Status: UNSURE (   6.92  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,37 +71,48 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, May 28, 2026 at 05:41:38PM +0000, David Matlack wrote:
-> This series has 2 small fixes to how FLBs are managed. First is to
-> increase the outgoing FLB refcount during liveupdate_flb_get_outgoing()
-> so it cannot be freed while the caller is using it, and to align with
-> the semantics of liveupdate_flb_get_incoming(). The second is to prevent
-> FLB retrieve() from being called multiple times if the first attempt
-> fails.
-> 
-> Both of these changes are needed for the correctness of the PCI core
-> support for Live Update:
-> 
->   https://lore.kernel.org/linux-pci/20260522202410.3104264-1-dmatlack@google.com/
+From: George Guo <guodongtai@kylinos.cn>
 
-We are late in the release cycle and since there no in-tree flb users let's
-postpone this after rc1.
- 
-> David Matlack (2):
->   liveupdate: Reference count outgoing FLB data
->   liveupdate: Remember FLB retrieve() status
-> 
->  include/linux/liveupdate.h  | 11 +++++++++--
->  kernel/liveupdate/luo_flb.c | 20 ++++++++++++++------
->  2 files changed, 23 insertions(+), 8 deletions(-)
-> 
-> 
-> base-commit: 5428435567cbe06c19914592fc22ca23c9ca1de5
-> -- 
-> 2.54.0.823.g6e5bcc1fc9-goog
-> 
+luo_session.c calls virt_to_phys() and phys_to_virt(). On LoongArch with
+CONFIG_KFENCE=y, these macros (in arch/loongarch/include/asm/io.h) expand
+to offset_in_page() and page_address(), both declared in <linux/mm.h>.
 
+Since luo_session.c only includes <linux/io.h>, the translation unit fails
+to build with CONFIG_KFENCE=y:
+
+  asm/io.h: error: implicit declaration of function 'offset_in_page'
+  asm/io.h: error: implicit declaration of function 'page_address'
+
+Add the missing include to fix these build errors.
+
+Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
+Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
+Signed-off-by: George Guo <guodongtai@kylinos.cn>
+---
+v2: Move the include from arch/loongarch/include/asm/io.h to the consumer
+    luo_session.c, instead of pulling the heavy <linux/mm.h> into the
+    low-level asm/io.h header (per review feedback). The 0-day report
+    confirmed the v1 approach introduces a circular include
+    (slab.h -> kasan.h -> asm/kasan.h -> asm/io.h -> mm.h, where mm.h
+    needs kfree() before slab.h declares it).
+Link: https://lore.kernel.org/r/20260521063310.52926-1-dongtai.guo@linux.dev/ # v1
+
+ kernel/liveupdate/luo_session.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
+index 7a42385dabe2..4ce7128a4ae9 100644
+--- a/kernel/liveupdate/luo_session.c
++++ b/kernel/liveupdate/luo_session.c
+@@ -62,6 +62,7 @@
+ #include <linux/libfdt.h>
+ #include <linux/list.h>
+ #include <linux/liveupdate.h>
++#include <linux/mm.h>
+ #include <linux/mutex.h>
+ #include <linux/rwsem.h>
+ #include <linux/slab.h>
 -- 
-Sincerely yours,
-Mike.
+2.25.1
+
 
