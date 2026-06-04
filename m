@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3D724CD6E7B
-	for <kexec@archiver.kernel.org>; Thu,  4 Jun 2026 13:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1BE69CD8C80
+	for <kexec@archiver.kernel.org>; Thu,  4 Jun 2026 13:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=z8aT4Za5Qhsy8uIIRwj+ts//dCl77c8YOPDnJ67EKYk=; b=JrsdwcvgLww0w3zYLbjACjBNIz
-	sZD1ulHdsTZi43BR+ClpfXshFA4hEZEsyajMhW8lWoA0HlTHIkUukqZ1a/MYmpjXOOiTYwKsRIGF1
-	/36KLD9Q7naNN9omaE6R8Dc6r0aTw4efk/iGQ1LHE85aLTZ5MrIR7GwbASWxG1LUviJrid4wiNpzj
-	uSsQ/v1baTZi/zjZrOI8iw55Mly4K7SW7N5mAfSTamFuGu+mSCgPDGA29Dy6de+Q4PKAiTKWZMUT1
-	CbhJ4XjNpOI0sPBWtGuYZd79WoJtVSy8iexohEJ8a268JX6OCe+ea7ChCHMi6w0+1gTRs9ayuA7K0
-	AfmkpH7g==;
+	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=vVBcY3pGKXN86VwrQOSMTZKS6zJWPeD7faRkNJrB9t8=; b=YfX5mPfy36mXgFVPg6FBU3yuON
+	Db3W66rSXpZfoBuvtFr/L4JP3IFTmmukLAZQCwcu+DrAZHfiQbQeAwiYIUVqhLAu7wgOax21yxlge
+	V9Jr8PWepmdJ9xS1UBXNPkSml0ZH2vXKrWJdbapiuf3M0YSMCm9fnnwSvZwCxV5grbbQB5AzyPwyH
+	4YhyEQr4UerOuFmYt1ez3AaiTjcKB+8bSZQ62QFJ65QJ1C4CPByZx64BtVpaI42BSE6HUywwiMDRa
+	0Did9qL75iBkI53aR5U5AbK+a2vMmal7UB7lX7IEuQkq4yOHk2yp0MS3ZN+iXXSTOEJAyGc7j7EWL
+	wkCiFOGA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wV83w-0000000GmIw-3WtA;
-	Thu, 04 Jun 2026 13:24:44 +0000
-Received: from out30-118.freemail.mail.aliyun.com ([115.124.30.118])
+	id 1wV83y-0000000GmOP-3Wem;
+	Thu, 04 Jun 2026 13:24:46 +0000
+Received: from out30-124.freemail.mail.aliyun.com ([115.124.30.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wV83p-0000000GmAX-07Wx;
-	Thu, 04 Jun 2026 13:24:41 +0000
+	id 1wV83r-0000000GmBK-22qf;
+	Thu, 04 Jun 2026 13:24:42 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1780579465; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=z8aT4Za5Qhsy8uIIRwj+ts//dCl77c8YOPDnJ67EKYk=;
-	b=OA00UcI2Mb5YO2RKZw7DI2O8hY/Mb+Q2tTKQt+oRgCh73qLmb0pU8WKBXgbqGVUoC76QICB7OXWEoBg4bLK+hztdAhRNsWv22+uea5ffdS/oitg/UlzzdwEPnSfcD3SwnEer5LpJXGVb+8jzmfI00BUgevDODLcB+q3I3bV6V/0=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=fangyu.yu@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0X4AKnWJ_1780579461;
-Received: from localhost.localdomain(mailfrom:fangyu.yu@linux.alibaba.com fp:SMTPD_---0X4AKnWJ_1780579461 cluster:ay36)
+	t=1780579476; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=vVBcY3pGKXN86VwrQOSMTZKS6zJWPeD7faRkNJrB9t8=;
+	b=nql2M3KPNeZJn8dHovHmbkhmbzkxor8DNfMdcruWISkkRbckDKjGJAIFVOugzdi6bZl/bKPOdDNDDpiUgEdeBBSi/z6FKtggr9ea5hVWr+HPtVzkDIoxR/IlRdlS52wNAkyEo0KkBpU5UtZNGUf4ktMyhncI5tM3qR5AQjtQPh8=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=fangyu.yu@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0X4AKnYU_1780579469;
+Received: from localhost.localdomain(mailfrom:fangyu.yu@linux.alibaba.com fp:SMTPD_---0X4AKnYU_1780579469 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 04 Jun 2026 21:24:23 +0800
+          Thu, 04 Jun 2026 21:24:30 +0800
 From: fangyu.yu@linux.alibaba.com
 To: Paul Walmsley <pjw@kernel.org>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
@@ -60,15 +60,17 @@ Cc: Song Shuai <songshuaishuai@tinylab.org>,
 	kvm-riscv@lists.infradead.org,
 	kvm@vger.kernel.org,
 	Fangyu Yu <fangyu.yu@linux.alibaba.com>
-Subject: [PATCH v3 0/9] riscv: kexec: Make kexec/kdump robust under VS-mode
-Date: Thu,  4 Jun 2026 21:24:09 +0800
-Message-Id: <20260604132418.15725-1-fangyu.yu@linux.alibaba.com>
+Subject: [PATCH v3 5/9] riscv: kexec: Build trampoline page tables for crash kernel entry
+Date: Thu,  4 Jun 2026 21:24:14 +0800
+Message-Id: <20260604132418.15725-6-fangyu.yu@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20260604132418.15725-1-fangyu.yu@linux.alibaba.com>
+References: <20260604132418.15725-1-fangyu.yu@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260604_062437_999638_B66BF0AD 
-X-CRM114-Status: GOOD (  12.40  )
+X-CRM114-CacheID: sfid-20260604_062439_850377_49E8D049 
+X-CRM114-Status: GOOD (  13.21  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,84 +87,130 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Fangyu Yu <fangyu.yu@linux.alibaba.com>
 
-In a RISC-V kernel, both kexec and crashdump need to hand off execution
-to the next kernel after tearing down the current kernel address space.
-However, under virtualization the guest uses two-stage address
-translation, and pc does not jump to stvec after setting satp to zero,
-so the legacy single-step "csrw satp,0 + stvec redirect" sequence
-traps with "kvm run failed Operation not supported" and the VCPU dies.
+Crash kexec uses riscv_kexec_norelocate as a trampoline to jump into
+the crashkernel. Pre-build dedicated 4 KB page tables in
+machine_kexec_prepare() that map the trampoline page as executable,
+so the panic path only has to switch satp and jump.
 
-This patch set introduces a dedicated kexec trampoline text section and
-builds a minimal trampoline page table for it. Both handoffs are then
-reworked into a two-pass trampoline:
+Two mappings are installed into a shared pgd:
+  - VA(__kexec_tramp_text_start) -> PA(__kexec_tramp_text_start)
+  - PA(__kexec_tramp_text_start) -> PA(__kexec_tramp_text_start)
 
-    1. First enter via the kernel VA, install the trampoline page table,
-       and jump to the trampoline VA(=PA) of the entry stub;
-    2. Continue execution with PC already on a PA, drop SATP with
-       csrw satp,0 (now safe because PC re-anchoring is moot), and
-       jump directly to the target -- either the crash kernel entry
-       (crash path) or the per-image control_code_buffer that runs
-       the relocate body with SATP=0 throughout (normal path).
+The lower-level tables (p4d/pud/pmd/pte) are shared between both
+mappings; map_tramp_page() walks the existing tree and only
+populates entries that are still zero, so the two installs coexist
+even when their indices happen to collide at any level.
 
-With this, both kexec and crashdump in RISC-V guests become robust
-against the two-stage translation.
-
-Tested on QEMU virt under two configurations:
-
-  * HS-mode bare (QEMU TCG) -- regression check
-      - normal kexec: kexec -l/-e succeeds, second kernel boots and
-                      prints the userspace SECOND BOOT marker.
-      - crash kdump: panic triggers crash kernel boot, /proc/vmcore
-                     opens cleanly in crash(1) and shows the panic
-                     backtrace.
-
-  * VS-mode (L0 x86 + QEMU TCG -> L1 riscv64 + KVM -> L2)
-      Before this series, both paths die with
-          kvm run failed Operation not supported
-      and an all-zero M-mode register dump on the SATP transition.
-      After this series, both paths succeed end-to-end and the
-      vmcore opens cleanly in crash.
-
+Signed-off-by: Fangyu Yu <fangyu.yu@linux.alibaba.com>
 ---
-Changes in v3 (Sashiko AI review):
-    - Add two new Fixes: patches at the start of the series:
-      #1: machine_kexec_cleanup() was empty, so the set_memory_x()
-          call in prepare() leaked an executable direct-map page back
-          to the buddy allocator on kexec -u (W^X bypass). Fix: add
-          set_memory_nx() in cleanup.
-      #2: machine_kexec_prepare() FDT search checked
-          memsz <= sizeof(fdt) but read sizeof(fdt) bytes from
-          segment[i].buf, which can be smaller than memsz. Fix: check
-          bufsz instead.
-    - Inline the .kexec.tramp.text section definition directly into
-      vmlinux.lds.S instead of using a macro in image-vars.h.
-    - Rewrite map_tramp_page() to share a single set of lower-level
-      page tables between the VA and PA mappings (5 BSS pages instead
-      of 9), with a collision-safe walker that only populates entries
-      still zero. Add Sv32 support.
-    - Link to v2:
-      https://lore.kernel.org/linux-riscv/20260526125009.2404-1-fangyu.yu@linux.alibaba.com/
-    - Link to v1:
-      https://lore.kernel.org/linux-riscv/20260324114527.91494-1-fangyu.yu@linux.alibaba.com/
+ arch/riscv/kernel/machine_kexec.c | 87 +++++++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
 
-
-Fangyu Yu (9):
-  riscv: kexec: Reset executable bit on the control code page in cleanup
-  riscv: kexec: Bound FDT search by source buffer size, not destination
-  riscv: Add kexec trampoline text section to vmlinux.lds.S
-  riscv: kexec: Place norelocate trampoline into .kexec.tramp.text
-  riscv: kexec: Build trampoline page tables for crash kernel entry
-  riscv: kexec: Switch to trampoline page table before norelocate
-  riscv: kexec: Always build the trampoline page table
-  riscv: kexec: Add the relocate-trampoline wrapper
-  riscv: kexec: Route normal kexec through the trampoline page table
-
- arch/riscv/include/asm/kexec.h     |   5 +
- arch/riscv/kernel/kexec_relocate.S |  92 +++++++++++-----
- arch/riscv/kernel/machine_kexec.c  | 171 +++++++++++++++++++++++++++--
- arch/riscv/kernel/vmlinux.lds.S    |  10 ++
- 4 files changed, 241 insertions(+), 37 deletions(-)
-
+diff --git a/arch/riscv/kernel/machine_kexec.c b/arch/riscv/kernel/machine_kexec.c
+index e6e179cffc44..1947b7bdf5c4 100644
+--- a/arch/riscv/kernel/machine_kexec.c
++++ b/arch/riscv/kernel/machine_kexec.c
+@@ -18,6 +18,85 @@
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ 
++/*
++ * Trampoline page tables. Both the VA(trampoline)->PA and the
++ * PA(trampoline)->PA identity mapping are installed in this single
++ * pgd; the lower-level tables are shared so the two mappings can
++ * coexist even if they happen to collide at any level (the walker
++ * only populates entries that are still zero).
++ *
++ * Pre-allocate for the largest paging mode (Sv57). Levels that the
++ * runtime mode does not use simply waste a page or two of BSS, in
++ * exchange for a builder that is infallible and safe to run from
++ * the panic path.
++ */
++static pgd_t kexec_tramp_pgd[PTRS_PER_PGD] __aligned(PAGE_SIZE);
++#ifdef CONFIG_64BIT
++static p4d_t kexec_tramp_p4d[PTRS_PER_P4D] __aligned(PAGE_SIZE);
++static pud_t kexec_tramp_pud[PTRS_PER_PUD] __aligned(PAGE_SIZE);
++static pmd_t kexec_tramp_pmd[PTRS_PER_PMD] __aligned(PAGE_SIZE);
++#endif
++static pte_t kexec_tramp_pte[PTRS_PER_PTE] __aligned(PAGE_SIZE);
++
++static void map_tramp_page(unsigned long va, unsigned long pa)
++{
++	pgd_t *pgd = kexec_tramp_pgd + pgd_index(va);
++
++#ifdef CONFIG_64BIT
++	p4d_t *p4d;
++	pud_t *pud;
++	pmd_t *pmd;
++
++	if (pgtable_l5_enabled) {
++		if (pgd_val(*pgd) == 0)
++			set_pgd(pgd, pfn_pgd(PFN_DOWN(__pa_symbol(kexec_tramp_p4d)),
++					     PAGE_TABLE));
++		p4d = kexec_tramp_p4d + p4d_index(va);
++	} else {
++		p4d = (p4d_t *)pgd;
++	}
++
++	if (pgtable_l4_enabled) {
++		if (p4d_val(*p4d) == 0)
++			set_p4d(p4d, pfn_p4d(PFN_DOWN(__pa_symbol(kexec_tramp_pud)),
++					     PAGE_TABLE));
++		pud = kexec_tramp_pud + pud_index(va);
++	} else {
++		pud = (pud_t *)p4d;
++	}
++
++	if (pud_val(*pud) == 0)
++		set_pud(pud, pfn_pud(PFN_DOWN(__pa_symbol(kexec_tramp_pmd)),
++				     PAGE_TABLE));
++	pmd = kexec_tramp_pmd + pmd_index(va);
++
++	if (pmd_val(*pmd) == 0)
++		set_pmd(pmd, pfn_pmd(PFN_DOWN(__pa_symbol(kexec_tramp_pte)),
++				     PAGE_TABLE));
++#else
++	/* Sv32: PGD points directly to the PTE table. */
++	if (pgd_val(*pgd) == 0)
++		set_pgd(pgd, pfn_pgd(PFN_DOWN(__pa_symbol(kexec_tramp_pte)),
++				     PAGE_TABLE));
++#endif
++
++	set_pte(kexec_tramp_pte + pte_index(va),
++		pfn_pte(PFN_DOWN(pa), PAGE_KERNEL_EXEC));
++}
++
++static void riscv_kexec_build_tramp(unsigned long va, unsigned long pa)
++{
++	/* VA -> PA: map the trampoline page via its kernel VA. */
++	map_tramp_page(va, pa);
++
++	/*
++	 * PA -> PA: identity-map the same page so the second-pass code
++	 * can keep executing after the kernel VA mapping is dropped.
++	 */
++	map_tramp_page(pa, pa);
++}
++
++
+ /*
+  * machine_kexec_prepare - Initialize kexec
+  *
+@@ -73,6 +152,14 @@ machine_kexec_prepare(struct kimage *image)
+ 
+ 		/* Mark the control page executable */
+ 		set_memory_x((unsigned long) control_code_buffer, 1);
++	} else {
++		/*
++		 * Crash kexec uses riscv_kexec_norelocate as a trampoline.
++		 * Pre-build the trampoline page tables here so the panic
++		 * path only has to switch satp and jump.
++		 */
++		riscv_kexec_build_tramp((unsigned long)__kexec_tramp_text_start,
++					__pa_symbol(__kexec_tramp_text_start));
+ 	}
+ 
+ 	return 0;
 -- 
 2.50.1
 
