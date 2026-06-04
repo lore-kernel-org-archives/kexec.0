@@ -4,83 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 32F13CD6E6E
-	for <kexec@archiver.kernel.org>; Thu,  4 Jun 2026 12:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 35419CD6E76
+	for <kexec@archiver.kernel.org>; Thu,  4 Jun 2026 13:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6tcDaEhePlIudWCcnW0SAhasLmYK5dwxdEw+RSf4P8c=; b=J8mLB9MWDR9ovX5wF8qOv5io66
-	/iYN56Ry36P+Auiy1uHMfPpFHy2EaNWg+11wsofOtGwN33/WXoJfO5Knb3OcOgMQ+HAVVmS8PPjlS
-	S06Ra3QEUJNoYboohfEdRmT1CajzejJA/H27oxH+IN3q++8b38YYUeXdTpU5gLMA7jReeIIDQOUXA
-	2SHxxoP6PopoXzHO+vbws4YvVRBKkrxtFGTYpobGi2ehtjbQuhXDeyb8RSz8P5jtenfG+hgTc6zwg
-	ZXHNTcTDZqFI71sdDnyiDB6GYasAyUaYdkMilFRYVXHGBJHSLD16zcbeb7zJPGAx4rQkgU4XF+Zzd
-	ItIxcQQA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=hnfOs1moHlmKQb6ZUmVUxruUKOqYR4tMlxRWD85j61U=; b=pzTo7HNfL4kLJZ5lWxFIT+tz/e
+	KQNHuRKzlD7RpQwJ8sgU2UTWeXGnxVUy+hRyVXxUzaY/8/BmT1u9RxqYUid+ZQJy9Cxg3frAL9NP0
+	mGhZJgTuYDkKytAJNpQF7b0CRcqKBzQg0zaiCrNV84Mbx4ZG2EHKAx1AwPYrqqWtocWwfN2Kg/Pc3
+	GpBTO9RvjRqAQR2fWQxvMmlcv43OfLl9FaRoGO1au3sXj/F6smklD6JLHTqgqxLzwlRKyovd1gerq
+	0/QrZrMrksG1UH7sXCyZhrK6jr7mysDJZ14V21el0WNm4IZUj/QLFpxZ76yh5oiRimBZi+7Vwx8ae
+	3Yfs5Ukw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wV70z-0000000GhsO-2RGN;
-	Thu, 04 Jun 2026 12:17:37 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wV83t-0000000GmE9-2ACL;
+	Thu, 04 Jun 2026 13:24:41 +0000
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wV70y-0000000Ghs3-0GcR;
-	Thu, 04 Jun 2026 12:17:36 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 68D8E43FA4;
-	Thu,  4 Jun 2026 12:17:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F7A51F00893;
-	Thu,  4 Jun 2026 12:17:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780575455;
-	bh=6tcDaEhePlIudWCcnW0SAhasLmYK5dwxdEw+RSf4P8c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=eJT1W+a7yBFj5f0F08Rf3p+a5QNdyb2ZOlFDLriNmO2DidwrP1SwEKpexjiYGbXtI
-	 mrg493otE2WPbKmxOLVcQEDVxAX81TPqkPR+YF4hP2pW2devqPit639cMGJgjtMQU2
-	 AG5qUsLs7SRJ21lXhntgVzwUiRdBV+CiXRLXYlK6qyIFJt6HP6BjhjpLKcTCpN1C2j
-	 MdccibZC2LGohJqgT2WVSxIER2+5wQcA79GHLyl16IhYbrBbCKfylMKEou3aoGT+1W
-	 lAJpv/fbjL+hlGx0tzVtdTaV/qtZTay37HLuxRbIdBk7BuKOR6T5UqLLfSh4toAoP4
-	 y4lbtqS/nGtOA==
-Date: Thu, 4 Jun 2026 15:17:20 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Jork Loeser <jloeser@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-mm@kvack.org,
-	kexec@lists.infradead.org, "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Alexander Graf <graf@amazon.com>, Jason Miu <jasonmiu@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>, Baoquan He <bhe@redhat.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <kees@kernel.org>,
-	Ran Xiaokai <ran.xiaokai@zte.com.cn>,
-	Justinien Bouron <jbouron@amazon.com>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>,
-	Pingfan Liu <piliu@redhat.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-	linux-kernel@vger.kernel.org, Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [RFC PATCH 00/20] mshv: enable kexec with Hyper-V donated pages
- and partitions
-Message-ID: <aiFs0OLJQWtIbJEF@kernel.org>
-References: <20260528004204.1484584-1-jloeser@linux.microsoft.com>
- <ahxrc4pTvVU20RTX@kernel.org>
- <f9d95fb1-ef3-d4a-19e4-afe7cdde5d1f@linux.microsoft.com>
- <ah_z3GV55RY3ZnT-@kernel.org>
- <3197c9c9-9e4f-c592-bb7-ac422f89115@linux.microsoft.com>
+	id 1wV83n-0000000GmAe-170N;
+	Thu, 04 Jun 2026 13:24:40 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1780579468; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=hnfOs1moHlmKQb6ZUmVUxruUKOqYR4tMlxRWD85j61U=;
+	b=ac2IZqhg1BOO+0PS3TFqpaskgR0v4BA/ngc8TgWSq/HvnsBfQl/kAf0gNuitAmrrCe4cYU+SBuF8bU12Gvr1C3wxu+VGgl08ju7u8l2he+Jejo1ghqIqMY/TtVuTLN7P/5vO4vS6Xxy5MQ+gvFeViPhr8rxAM7ETbfzsim3JEmY=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=fangyu.yu@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0X4AKnXP_1780579465;
+Received: from localhost.localdomain(mailfrom:fangyu.yu@linux.alibaba.com fp:SMTPD_---0X4AKnXP_1780579465 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 04 Jun 2026 21:24:26 +0800
+From: fangyu.yu@linux.alibaba.com
+To: Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Nick Kossifidis <mick@ics.forth.gr>
+Cc: Song Shuai <songshuaishuai@tinylab.org>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Richard Lyu <richard.lyu@suse.com>,
+	Nam Cao <namcao@linutronix.de>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	guoren@kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	kvm-riscv@lists.infradead.org,
+	kvm@vger.kernel.org,
+	Fangyu Yu <fangyu.yu@linux.alibaba.com>
+Subject: [PATCH v3 2/9] riscv: kexec: Bound FDT search by source buffer size, not destination
+Date: Thu,  4 Jun 2026 21:24:11 +0800
+Message-Id: <20260604132418.15725-3-fangyu.yu@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20260604132418.15725-1-fangyu.yu@linux.alibaba.com>
+References: <20260604132418.15725-1-fangyu.yu@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3197c9c9-9e4f-c592-bb7-ac422f89115@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260604_062438_001118_C3392CA2 
+X-CRM114-Status: GOOD (  11.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,35 +85,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jun 03, 2026 at 10:25:58AM -0700, Jork Loeser wrote:
-> 
-> 
-> On Wed, 3 Jun 2026, Mike Rapoport wrote:
-> 
-> > On Mon, Jun 01, 2026 at 01:09:41PM -0700, Jork Loeser wrote:
-> > > On Sun, 31 May 2026, Mike Rapoport wrote:
-> > > 
-> > > > > Patch 19:      Export kexec_in_progress for modules
-> > > > 
-> > > > Isn't there another way to differentiate kexec reboot?
-> > 
-> > There's that "kexec reboot" string passed as the cmd to the reboot
-> > notifier.
-> > Maybe we can make it somehow more well defined API and use it?
-> 
-> A string? Dear my - the compiler won't flag it on an API change then, not
-> ideal clearly. What's wrong with exporting kexec_in_progress()?
+From: Fangyu Yu <fangyu.yu@linux.alibaba.com>
 
-The policy in general is avoid exports unless strictly necessary.
-A string can be declared as const char *KEXEC_REBOOT = "kexec reboot" and
-used in both kexec and mshv. Not ideal, but still better.
+The FDT search loop in machine_kexec_prepare() reads sizeof(fdt) bytes
+from segment[i].buf to identify the device tree, but it gates the read
+on segment[i].memsz, which is the destination size in the next kernel.
+kexec allows bufsz < memsz (the loaded image is zero-padded at the
+destination), so a caller can craft a segment with bufsz=10 and
+memsz=1MB:
 
-No strong feelings from my side, just EXPORT_SYMBOL there felt a bit off.
+	if (image->segment[i].memsz <= sizeof(fdt))   /* 1MB > 40, OK */
+		continue;
+	memcpy(&fdt, image->segment[i].buf, sizeof(fdt));  /* reads 40
+							      from a 10-byte
+							      kbuf */
+
+For kexec_file_load (image->file_mode), the read walks 30 bytes past
+the kernel-allocated kbuf. In the worst case the trailing bytes fall
+in an unmapped guard page and the read faults the kernel; in the
+common case the read returns garbage which fdt_check_header() rejects
+and the loop continues. The plain kexec_load path is shielded by
+copy_from_user(), which validates the read against the user mapping.
+
+Replace the memsz check with the bufsz check, which is the right
+bound for the read site.
+
+Fixes: fba8a8674f68 ("RISC-V: Add kexec support")
+Signed-off-by: Fangyu Yu <fangyu.yu@linux.alibaba.com>
+---
+ arch/riscv/kernel/machine_kexec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/riscv/kernel/machine_kexec.c b/arch/riscv/kernel/machine_kexec.c
+index ea6794c9f4c2..e6e179cffc44 100644
+--- a/arch/riscv/kernel/machine_kexec.c
++++ b/arch/riscv/kernel/machine_kexec.c
+@@ -38,7 +38,7 @@ machine_kexec_prepare(struct kimage *image)
  
-> Best,
-> Jork
-
+ 	/* Find the Flattened Device Tree and save its physical address */
+ 	for (i = 0; i < image->nr_segments; i++) {
+-		if (image->segment[i].memsz <= sizeof(fdt))
++		if (image->segment[i].bufsz < sizeof(fdt))
+ 			continue;
+ 
+ 		if (image->file_mode)
 -- 
-Sincerely yours,
-Mike.
+2.50.1
+
 
