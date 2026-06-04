@@ -4,116 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7ECC4CD6E55
-	for <kexec@archiver.kernel.org>; Wed,  3 Jun 2026 22:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 52F00CD6E57
+	for <kexec@archiver.kernel.org>; Thu,  4 Jun 2026 01:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
-	Message-ID:Date:MIME-Version:References:In-Reply-To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=V6pazkEL6DFXw7u78OwlQURha9CAXkBpjIcDT/R6oxE=; b=tjhOCFf7LtNBMVePzfiIs89I+2
-	FDQjdSwYZ99b9gB7SLz8TWcclVJpSwi2KjdCl1JWgzC8ZTCOLOrHesH9Vtud8kDFn51hfi1f73igS
-	9MSC1F0MRDqN9rUaQLmb9UtoEfazHkEgIYofsziEUNEDkfluDM9ACEM9m2Ob8qcWstQI8Xh0xWES8
-	NyNSOF4lcpbuNGHiWzkc5B89KO5ktwOjlBNEni3EsvNm44xjh4yuaBpEqE1NL5RD3lHptW2kS6tia
-	rJ4zrOgMdnuekDXV/wwYCzriUA6HY30NOYc4N/LJb2U76g8LkBG0Y1krrdAyKwaHgnSoc5FCvUlEU
-	qpqvSoDA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=R9vTs/JHnHpc6BmzGsq91wlnVhg5cqc1lx/XeBVEZpQ=; b=gLn6088GONUSGMg9fvqbkr3Uhj
+	GdcQ+ZvovNO3dohvMVaswuYRGiJ/0pwdg8KUroC6G5Bo35tZLCXnMSOdYzhWO7iMm2SCo1PvzhUfw
+	fuTW67DWcG/mr8+aJLhEtoA6/eosJ+Hbx//FBpplcxpwezfsyZNdVDoQwwPVXn42gt1axWyXUtr69
+	usSlrK1Qgb/lExM5IjPXEHddLtHq3NJkZhWeH4pNh4P5k0buuI22t9jghFWtRe1PBOCJjzmrlX8ji
+	78dmPndBdROekBUrFme9YbvIwJ8MW1r5W7SBS28ZeZ7zSXNmCl+cjyeSo5W+c1mlWL46Pt3wTp/CE
+	IBAAEJFw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUttj-0000000Fsuj-2Z8S;
-	Wed, 03 Jun 2026 22:17:15 +0000
-Received: from mail-dl1-x1233.google.com ([2607:f8b0:4864:20::1233])
+	id 1wUxCj-0000000G0wv-2B7R;
+	Thu, 04 Jun 2026 01:49:05 +0000
+Received: from mail-pf1-x441.google.com ([2607:f8b0:4864:20::441])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wUtte-0000000FsuF-0SpK
+	id 1wUxCg-0000000G0vX-26zT
 	for kexec@lists.infradead.org;
-	Wed, 03 Jun 2026 22:17:11 +0000
-Received: by mail-dl1-x1233.google.com with SMTP id a92af1059eb24-13721dfd471so59617c88.1
-        for <kexec@lists.infradead.org>; Wed, 03 Jun 2026 15:17:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780525028; cv=none;
-        d=google.com; s=arc-20240605;
-        b=J9Dw3NP0gVcq5z2aK52HcnQRjISw2pANvk9d6aTzIew5Ad5UEKTvz69jc1DoeMI/GN
-         RnYhN/dLiwJC9/hW844t63z7QDjtdQg0+ekOOpyVPpyqlU4m2rDI+W4YikaF07QE/Qto
-         o7sKhJ1gW7CQ/fr4b0fobonXb8DQB4/91dQSVAqlsXl1LfLh46kDQlwJmzquKhuYMqY4
-         TOKCcYpMXTjo2GyAXR3AZFWCnZsTvSQWDRTYJleZSeiQU2q1iY67RZQKpsJyMDKnfXnU
-         3D6mHxOEeqsp7/PpegSk7oVqPv4twXMqX0tzEyfRK9p68MaWlNDJ9n+7KipL4mW4hPro
-         2wYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:dkim-signature;
-        bh=V6pazkEL6DFXw7u78OwlQURha9CAXkBpjIcDT/R6oxE=;
-        fh=mZTeV2NmX6AyCVRERgCXr72TZ9FrgFw5V5gQPVNC/ec=;
-        b=Z126rgg/jMIL+aMs0Eeg4epqunFmaSDR8BwWpYZ6+6Nj6DUblfnwwS+8DjJIFua42G
-         P2LSw67PHZuuuZTa5YbQ27d2eKisHf6eTSuw6WFZPwbLulmReKgRU59G6G8akMGJ2DGQ
-         a0pp7+FIkQzT0mv6xudhGzZHn/UMN6zEplmk+3JG2jQiKhGM9Xc/sEHMUeJmVRz6jbVq
-         aF8POTTxbvOBe2mF6JRhtnuDr5QpgZt0LFLZsaJW1rVqTlw5Wu7n6XnvpRK+oSVOAnw7
-         j80DoMQRrTeskQwv4nNwo93ZY3w2uv+wkyenTgIWZS9hSJiE9RQlU1syc+T+6tq/ZtSW
-         tt0w==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	Thu, 04 Jun 2026 01:49:04 +0000
+Received: by mail-pf1-x441.google.com with SMTP id d2e1a72fcca58-8423efd76c8so122833b3a.0
+        for <kexec@lists.infradead.org>; Wed, 03 Jun 2026 18:49:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780525028; x=1781129828; darn=lists.infradead.org;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=V6pazkEL6DFXw7u78OwlQURha9CAXkBpjIcDT/R6oxE=;
-        b=V3OmNprIeHaHACN/uzSsrfU99SQmlbSZozBPXzlDDchqkvf0z3BHG75IU36jqHCi3p
-         hV+vq+0w+mfhQVeniJZoa/jPklOkt0obRoCO0l2d5zM6KxEig/6qPTQbTAxug1wnrGhx
-         mxwMBMlJYqCSiCzw+ttp4LnSQsGyqUBRBdk1xFSyLHuxY+rC/cgHUSt6vyCEMgc/ctHW
-         NdNNibdR0LoXd6Hao2eggINM4OzhQS2lw5XtBV1oHNwBI1heLe+obaOj8283q5I8vLC8
-         EOJhIxCjO5ykqRQlJxo96Q9B4VK5ILpo4EoozFM6MwwIvWq9dLOyoqoW3LRsAqWY1iXZ
-         X1bg==
+        d=gmail.com; s=20251104; t=1780537741; x=1781142541; darn=lists.infradead.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=R9vTs/JHnHpc6BmzGsq91wlnVhg5cqc1lx/XeBVEZpQ=;
+        b=L4XKFYKONzxQnpbJmaajbcoZwf2Mb1ccFOtp52+V8Ox4dNkaqq+iZOgJnRViqZn82F
+         d7h2bvhnSeMQqeQSFRprqdf4VfAF2+gRj4UdVOMaVTR+pqc8Du4gGuA68ty634It7mu7
+         Oi1vjIjvEceEnxmEqEmE34BPY6sOpRoV1CkYvgBzEUFsH0yXGQ3wL653VQaOoksfQ0C/
+         jOWTA1gImpf9aRTI86kS4HGC2RXBAUIbV3MHsPR/7DwfhHdS8duI/wc/NRol5zcRUvIa
+         j/TrOdlXC+Eu7Y2yYsx32BgGfmxtlk5VOo/T0iTW5Fia6SLD7oOt8DKWQPq+pN8M/UEE
+         EJTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780525028; x=1781129828;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20251104; t=1780537741; x=1781142541;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=V6pazkEL6DFXw7u78OwlQURha9CAXkBpjIcDT/R6oxE=;
-        b=GxhJUZGRCoWQaffbCvpFFI5NClwhaZn7aTQq/zi6sggJZAi8EGLfdzRhjXNuEaWY5+
-         LwYcfX/X+Rw3QaOplhXpv5SUljtbuVcNioBGUER4+nq0yvGrOAhcFo30ejMWPC75LkPB
-         YfROVAzXPt5FhT/O5+0TtqMnzBoLh9ZOCMh6b8KLPVrtnIZk4XE3P8DVXBXUFhzDo9lW
-         WgD6NjqS7ASHVCOPMKkIu6MpBkGVijCdu4CQdOuaHavXL4lt6iRgaRI7TWIrUBB970ei
-         j68o55AnscRMoldeuDEKazGEAkccel+HgtLa8OsPdiHVWYLA41TD5fsSWOU4vd6kQPhF
-         QUkw==
-X-Forwarded-Encrypted: i=1; AFNElJ8jAC8EBJW62qjTt9hQhb4fSLQQCAKRcoy1CtVoWcRIArBj306qEC7cD4UQvcpoRfcVmowxuw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwKhhPPcMHQNy7BZ4ctWkzoLQnIcLCYaEkiiyZG2SIzE0pfFQvk
-	D9URRfiOX0z2rqSxFYCbwRCR4aIWWDVH3vXnl8TrhPPHNds9vdWStG8X+BWqMj3BazLDEqAqKNi
-	Zkynbxek9ouVsih1JFn/8qGlRXEAw9Xl4tRCNEzf7
-X-Gm-Gg: Acq92OHyE473+v1fkXB4arTcC4oBVa1ILcfuiTg2Npg/oSYmHuCysF3+j590ospKi74
-	7h2kwwE+uEBxvDHC7B7JbDcEGw/YnAAPdiJDtWyRtrfStsbWgYhzJhLZReo5gpsKTXk7ajV+Vau
-	08m1LksjnwMIHJdSllbC5NVy2L2BVB8aPfa+d8p1FPXKHN40aRcbIEV9oDfSsqoqsh7XIURpXtg
-	RJ1FReOdI3tunUmBWPr6KFZSSNh0tVNj8BtVyyeI79i8W08++tKcxFpEEnatcnhlwpjnJRQ2EZ5
-	+7v6uzRHZrTC9KeojKuEBsYd5scS1OxtF1UAuWfaNXT2RtR4f3ClcECq9AekZosX4qxBtflBqim
-	fbdoS
-X-Received: by 2002:a05:7022:7f19:b0:137:ef27:e29d with SMTP id
- a92af1059eb24-137f6c126b1mr1478374c88.31.1780525027812; Wed, 03 Jun 2026
- 15:17:07 -0700 (PDT)
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 3 Jun 2026 15:17:06 -0700
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 3 Jun 2026 15:17:06 -0700
-From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <ahmbVaCUcBrYK8qO@google.com>
-References: <cover.1779080766.git.tarunsahu@google.com> <9huzwlwnbgdd.fsf@tarunix.c.googlers.com>
- <ahmbVaCUcBrYK8qO@google.com>
+        bh=R9vTs/JHnHpc6BmzGsq91wlnVhg5cqc1lx/XeBVEZpQ=;
+        b=MiOm0frM23GF6Ia9FkRDjttOukeSicAXXYnkojcE/wY1ZmA7DC7Tr6KMWSXXVYzuwo
+         S92ufsQIp+I1fUY3zsu4O+QEHhfvJPAfveyt60vlEl0zQanbdXY1EEC1bs0d9kdEhzHs
+         Fjt3CMuwH4k9NG/jGODWkfItvHFAtPvcD/ry6bFCJQAhqfQF2rrnFtf7G/yJ1DrXr5F2
+         A9sV+yJ8n8ACR4DM8g/JBlLtKDCIyBNme/j3c0dNd6pKGOx/B0GiDwXsawcMPRGVs4Y7
+         +5QNlFdnefl1JxlSMDzfwrctzRXQ9e+cxzydwyDM0it7VmCPkGNczdrvXD9psRXEsfDL
+         ofrQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8yBYdqrKJ3du8IhUQ9Jkl1xYLFU1Z1Hs/k5uRZhzleyU5d6QQA6HZ0nIiAvUzrnbSpCBszAw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyF/9cpcR4EWP3YFH/puMaN0HHqLiKsu2RxE7XjQ8vcWVY/4/GM
+	J/1T1SSk8Px8x1mhrWT4nlzEZ1gUydl49VB134gXI3jxtNesaZo8YtFI
+X-Gm-Gg: Acq92OEB/NVtJVcmGkORONIlvutjQntsdBuWe6tQWsQM08un7jCAkup/A6u5SfVAnDB
+	dDCRFerOvHnHZRo9HA4XfS8eSrKXgemDEHKYDfgszGhvzU6km3Q4/JsGVzBNIPXF3E3Yj8iUfoQ
+	fmFh7DRw+9YZb5WNP0eAOz4nAF9Fm7swzAPD0geZG3BeThBR6xx0mPBM5gsSIjH4hNRjB4hJ9vI
+	Tojawge6degl7GTL17lNCsWlA9ZbgPjhNRcNA4uy3WGQHrow/IoDnvrc1Zl110xD33QFZf2bmqY
+	8xpg6pKO2GTkSMVSMD1tphBqHNP7Y0/FLcsiHwT2K5DbNlWWVrfDCskJpzhgEHfx5FhpnPfXWpO
+	oZFZQwsdUVi7TQ998uz4BZxt7F1+hB8MjFfc+VdDG5zIQskP87wt92vbQDi6HnSdJHZrxRFF3rQ
+	hVIs7Y3BVTXetZfTFq+vCA24RNcWym6K28cbrM+uQTMg==
+X-Received: by 2002:aa7:8882:0:b0:842:38d2:a35f with SMTP id d2e1a72fcca58-84284e8dc75mr6032800b3a.31.1780537741272;
+        Wed, 03 Jun 2026 18:49:01 -0700 (PDT)
+Received: from [10.125.112.20] ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84282350f8csm4439444b3a.14.2026.06.03.18.48.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jun 2026 18:49:00 -0700 (PDT)
+Message-ID: <8e088395-c22d-4bc8-9e58-84235af1e56b@gmail.com>
+Date: Thu, 4 Jun 2026 09:48:44 +0800
 MIME-Version: 1.0
-Date: Wed, 3 Jun 2026 15:17:06 -0700
-X-Gm-Features: AVHnY4KwIBznOQxPeeZp-k-7DNYvQD8SHlCWDjhKoWsxt_QvgGRs8hmrB0P3Bno
-Message-ID: <CAEvNRgHsJbGz8k8vgCn_HSxeeQ8agEm4oBYQQ0+b3gFb-aVokg@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 0/8] liveupdate: kvm: Guest_memfd preservation
-To: Sean Christopherson <seanjc@google.com>, tarunsahu@google.com
-Cc: axelrasmussen@google.com, mark.rutland@arm.com, skhawaja@google.com, 
-	Mike Rapoport <rppt@kernel.org>, sagis@google.com, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Shuah Khan <shuah@kernel.org>, corbet@lwn.net, dmatlack@google.com, 
-	Paolo Bonzini <pbonzini@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, vannapurve@google.com, 
-	Pratyush Yadav <pratyush@kernel.org>, david@redhat.com, aneesh.kumar@kernel.org, 
-	vipinsh@google.com, Alexander Graf <graf@amazon.com>, David Hildenbrand <david@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kexec@lists.infradead.org, 
-	linux-kselftest@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 03/11] of: reserved_mem: avoid post-init UAF when
+ alloc_reserved_mem_array() fails
+To: Rob Herring <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ devicetree@vger.kernel.org, kexec@lists.infradead.org,
+ iommu@lists.linux.dev, zhaomeijing@lixiang.com, catalin.marinas@arm.com,
+ will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+ saravanak@kernel.org, akpm@linux-foundation.org, bhe@redhat.com,
+ rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
+ ruirui.yang@linux.dev, m.szyprowski@samsung.com, robin.murphy@arm.com,
+ quic_obabatun@quicinc.com
+References: <20260527032917.3385849-1-chenwandun1@gmail.com>
+ <20260527032917.3385849-4-chenwandun1@gmail.com>
+ <20260602162450.GA442759-robh@kernel.org>
+ <79932afc-2e91-4a54-aff9-f550be784c36@gmail.com>
+ <CAL_JsqJOC1ko1Len3Dyc5SNKrHmhQn9uiDAkFfVbYa2wAfFUTg@mail.gmail.com>
+Content-Language: en-US
+From: Wandun <chenwandun1@gmail.com>
+In-Reply-To: <CAL_JsqJOC1ko1Len3Dyc5SNKrHmhQn9uiDAkFfVbYa2wAfFUTg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260603_151710_173154_59453B17 
-X-CRM114-Status: UNSURE (   7.81  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260603_184902_548466_06738117 
+X-CRM114-Status: GOOD (  20.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -128,34 +114,92 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Sean Christopherson <seanjc@google.com> writes:
 
+
+On 6/4/26 01:44, Rob Herring wrote:
+> On Wed, Jun 3, 2026 at 1:44 AM Wandun <chenwandun1@gmail.com> wrote:
 >>
->> [...snip...]
 >>
->> we have one open Question left:
->> 1. How to check guest_memfd is fully shared.
+>> On 6/3/26 00:24, Rob Herring wrote:
+>>> On Wed, May 27, 2026 at 11:29:09AM +0800, Wandun Chen wrote:
+>>>> From: Wandun Chen <chenwandun@lixiang.com>
+>>>>
+>>>> The global pointer 'reserved_mem' continues to reference the
+>>>> reserved_mem_array which lives in __initdata if
+>>>> alloc_reserved_mem_array() fails. of_reserved_mem_lookup() is
+>>>> exported for post-init use, that would dereference freed memory
+>>>> and trigger a use-after-free.
+>>>>
+>>>> So reset reserved_mem_count to 0 when alloc_reserved_mem_array()
+>>>> fails.
+>>>>
+>>>> Fixes: 00c9a452a235 ("of: reserved_mem: Add code to dynamically allocate reserved_mem array")
+>>> Fixes should come first in a series.
+>> Understood, will do in future submissions.
+>>>> Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
+>>>> ---
+>>>>    drivers/of/of_reserved_mem.c | 20 ++++++++++++++------
+>>>>    1 file changed, 14 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+>>>> index 313cbc57aa45..6d479381ff1f 100644
+>>>> --- a/drivers/of/of_reserved_mem.c
+>>>> +++ b/drivers/of/of_reserved_mem.c
+>>>> @@ -69,29 +69,31 @@ static int __init early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
+>>>>     * the initial static array is copied over to this new array and
+>>>>     * the new array is used from this point on.
+>>>>     */
+>>>> -static void __init alloc_reserved_mem_array(void)
+>>>> +static bool __init alloc_reserved_mem_array(void)
+>>>>    {
+>>>>       struct reserved_mem *new_array;
+>>>>       size_t alloc_size, copy_size, memset_size;
+>>>>
+>>>> +    if (!total_reserved_mem_cnt)
+>>>> +            return true;
+>>>> +
+>>>>       alloc_size = array_size(total_reserved_mem_cnt, sizeof(*new_array));
+>>>>       if (alloc_size == SIZE_MAX) {
+>>>>               pr_err("Failed to allocate memory for reserved_mem array with err: %d", -EOVERFLOW);
+>>>> -            return;
+>>>> +            goto fail;
+>>>>       }
+>>>>
+>>>>       new_array = memblock_alloc(alloc_size, SMP_CACHE_BYTES);
+>>>>       if (!new_array) {
+>>>>               pr_err("Failed to allocate memory for reserved_mem array with err: %d", -ENOMEM);
+>>>> -            return;
+>>>> +            goto fail;
+>>>>       }
+>>>>
+>>>>       copy_size = array_size(reserved_mem_count, sizeof(*new_array));
+>>>>       if (copy_size == SIZE_MAX) {
+>>>>               memblock_free(new_array, alloc_size);
+>>>> -            total_reserved_mem_cnt = MAX_RESERVED_REGIONS;
+>>>>               pr_err("Failed to allocate memory for reserved_mem array with err: %d", -EOVERFLOW);
+>>> These prints could be moved to 'fail'. Perhaps instead of just printing
+>>> an error value, you can return the error value instead of boolean.
+>> Will do, consolidating pr_err() under 'fail' and changing the return type
+>> to int.
+>>> If you respin just this patch, I can pick it up for 7.2.
+>> Before I respin, I'd like to flag a dependency:
+>> patch 05/07 in this series build on the signature change introduced by this
+>> patch ("the void -> bool return type change of alloc_reserved_mem_array()")
 >>
->> [...snip...]
->>
+>> Could you let me know which of the following you'd prefer:
+>> a) Take patch 03 alone via your tree as you suggested, after it lands, I'll
+>>      respin the remaining patches of this series.
+> I would go with this option. AIUI, this series isn't going to land in
+> 7.2, so ultimately you will rebase on v7.2-rc1 which will have the
+> fix.
+OK, will send v4.
+
+Best regards,
+Wandun
 >
-> Given that lack of support isn't going to be limited to _just_ guest_memfd,
-> simply disallow preservation if the VM supports private memory:
+>> b) Keep patch 03 in the v4 respin of the full series, reordered to the front
+>>      per your earlier comment.
 >
-> 	if (kvm_arch_has_private_mem(kvm))
-> 		return -EOPNOTSUPP;
+> Rob
 
-Makes sense. Tarun this was the other option that I was suggesting when
-we discussed offline.
-
-I think (?) it is possible to create a fully-private guest_memfd for a
-non-Confidential VM, and even after conversion lands, for both
-vm_memory_attributes=true and vm_memory_attributes=false.
-
-In that case, your preservation series can still preserve memory tracked
-as private by guest_memfd but not used as private, right?
-
-I don't think anyone will use this combination before guest_memfd
-write() support lands, we just need to make sure there's no kernel crash
-or corruption in this case.
 
