@@ -4,100 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 24C09CD6E7B
-	for <kexec@archiver.kernel.org>; Fri,  5 Jun 2026 20:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C0259CD6E7C
+	for <kexec@archiver.kernel.org>; Fri,  5 Jun 2026 21:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=/3kdr6qrmm7a2qwk5wi4DJkHk54J0i+2AKmaQ2WBomY=; b=n46unwu5PZXrp9Dfm9wl7Mqf6b
-	SHwqrwPZ3SXHrQ6PCcLJKW/JY/kPehDVrVkE8gvIBgxEQND8Fw1lnifZpdETEKW2kYY/8S5Z0IbDk
-	Rs3HFSPWmf+7GX152fr86uYen+6mtxXfFnKKKNRfdQRa+AeWbI8DxyICV7nQdBL92E1F9AeW5+lLI
-	DVimI61FvCYlrKmRQRmsyc12p8XFi3ipMRELV2+d3/MPxy2xoiyRoSLmN7LbOoM0oCsZWUGysJifO
-	WArIuynFKpjuAKvWZRVAFpLNMGGPtXwdvzr7Az1YySbf/BqJuGSOdbrVULsYemvWxvUfDdHSrHJFG
-	D9LXiUZw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=czHxBAolVx1VraDScwu9+FjCluhxvvdJOEu/z08ODOE=; b=Y5Us+ZpJQ646ruFOxgsG0Quc5x
+	nPniO8mcXzZ9Gr4L/pE2s9iV6995WvSR7lmSMT1gGJoB5Kp1cDqxuGj6Wt4dyP+PGNbpBRg3+y/lR
+	8c8iZhzfVQpKhJ18g7qH8Nlq4osgjF+wpzD5c8MvuisT+Lj91gBdngOaSdO1KF505AoGvk6rLF7/c
+	R1zDu0WEMxaycH8qPXqYF2Veqqx3loYKzCNaMARCgUxUf/DMzK7OXYMeMymMX2Fq0S93DOqfO8/p3
+	M0/78H3Yt1d6n/9034bfmnsAyQ44ujFv+mpLeNwKXRAs0vN9r6aB3x3pk6FlZyREwyIqOqnOI4xiJ
+	u4AnlcKA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wVbYW-00000001B3V-32HE;
-	Fri, 05 Jun 2026 20:54:16 +0000
-Received: from mail-ua1-x930.google.com ([2607:f8b0:4864:20::930])
+	id 1wVbpq-00000001Bku-0suR;
+	Fri, 05 Jun 2026 21:12:10 +0000
+Received: from fout-a8-smtp.messagingengine.com ([103.168.172.151])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wVbYU-00000001B2a-4BbU
-	for kexec@lists.infradead.org;
-	Fri, 05 Jun 2026 20:54:16 +0000
-Received: by mail-ua1-x930.google.com with SMTP id a1e0cc1a2514c-96358d0a024so1679988241.3
-        for <kexec@lists.infradead.org>; Fri, 05 Jun 2026 13:54:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1780692854; x=1781297654; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/3kdr6qrmm7a2qwk5wi4DJkHk54J0i+2AKmaQ2WBomY=;
-        b=Lm/sz+m2PgR/zYNaBGVQL5iamOoqK7RdwFGdBjWAB5dJB4D241dhMA2Ow1VdOWjeod
-         bi/tlysHIlUjaJrslJcorTop6Iiwm2FJ+UnfaGzLHPgXBCcUaAbw7Z02Q+EWnw91bYH5
-         kolPkV0JSlTMV89O3cJ7OKAAkfUYcSXDxjktQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780692854; x=1781297654;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/3kdr6qrmm7a2qwk5wi4DJkHk54J0i+2AKmaQ2WBomY=;
-        b=aQo0CqpDkiJabg0DbdpJQohliKL490RVRzBoTAfGUccma42ympH2SWQ8dCjNVlfwUa
-         gIFVD9Hkq9w6DmQAxmvtNrsFp8hfuNPWn2dMfedy3Csgksddw2VLbTpTB/Oko6+2m9qO
-         4kFVobdkGSxdzmthiINmxiTCh/MyF49KivfMsoCzcXaHWdtdISRV8rWj+9RsA5DmjW4d
-         EhlkTXXt2lBvutsa56KV86VtkPeJtapzvy55TkHU81mCMiaBFfJ9GITo6Um81agyFaoU
-         AnMnFmPI0gzVL7ivuynpR/PryV2ZDvJ/v1zin2SjpxqPwCcZfvhvEDO+GTJ7Gu7hIVhb
-         PyIQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8mMRovGc8+adw93ucHnWlED1OVgMs4CF+nMe6EBJ+ZpeY47vvtTOnMpAhJgWu7Si4rCtCELA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzjiU7622yOFcz6o8kLjMB30Lw9jN4lGuorki8nJxF1k6WWN8rG
-	4D49VU/QS6x7dHhrSZHJUhDkR/Kh70hQV9NcEuBBM3aYoa5X2jV3qTNPX33aYlfv0QjfNsNHRGv
-	co9A=
-X-Gm-Gg: Acq92OG+cY3L9lZa+EQ17FkQk8bXuy7mD3EdR1bPDKXg71H+iywP/HxzzwqrGjIKkgR
-	1UTqpIPxhY1Ma8INQvHU78z8o7zo8FGXr/KnFcJILITgJaDpJLDJ+KPOKvjX9akeLY4DfOQtLCr
-	yDWDyl+7qjt5gW6JaqeXbF2UJNoq+IKhaCN0l0L2aT5RST7rhvA/prOEOrWkDrQK0Yy/9XLeGBi
-	3JKDCgrekPaeMMo6JUXbqw5TIGGvOAx2mbb4cANgNQCHOJYjTW+j7Lfo7ws6KJzEEBvOy2Fl4kP
-	ubvzgsLmdOK4+oAQVIdrTdEnJksfq5SbUoxx05w/Ewwam6JhPv5yZs3aH5AcB4LhzbSi5RPaVGI
-	VsFOf/P1SjB8yUA/F5t80+Hg+G8ekwxuvehG0p7hwI1F9xahe/2HAHI4K2RI8jE89gbfOoQl2nA
-	eiuW+YTbKKrUBOrhXhRvbPVj1ygrOGF+FdfJPLmEFdzsjOIKWYrlqf5PFhEDAzHkPWM+td2c8/
-X-Received: by 2002:a05:6102:54ac:b0:6c5:d55d:c093 with SMTP id ada2fe7eead31-6feef48d084mr3393142137.8.1780692853598;
-        Fri, 05 Jun 2026 13:54:13 -0700 (PDT)
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-96413f5c578sm8568017241.1.2026.06.05.13.54.12
-        for <kexec@lists.infradead.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2026 13:54:12 -0700 (PDT)
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-6c4db0bf752so1545087137.0
-        for <kexec@lists.infradead.org>; Fri, 05 Jun 2026 13:54:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+Hsc04Km+106+FF2RDB9rkog9JPe4y0jAlIHRkedVHyarIgkyXdlv+V2TbDfMcrnXYXGCAcA==@lists.infradead.org
-X-Received: by 2002:a05:6102:cc8:b0:62f:3abe:907f with SMTP id
- ada2fe7eead31-6feed1adbffmr3683635137.4.1780692851321; Fri, 05 Jun 2026
- 13:54:11 -0700 (PDT)
+	id 1wVbpl-00000001BkP-3Bxh;
+	Fri, 05 Jun 2026 21:12:09 +0000
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfout.phl.internal (Postfix) with ESMTP id A7DAEEC0206;
+	Fri,  5 Jun 2026 17:12:02 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Fri, 05 Jun 2026 17:12:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm2;
+	 t=1780693922; x=1780780322; bh=czHxBAolVx1VraDScwu9+FjCluhxvvdJ
+	OEu/z08ODOE=; b=VX88Al8obcXfoxjRgExahYgKrjn6grnWRYAtkqsTPjILQATZ
+	J3t20mfP+NfKYuC0Dllw9PNsU54XX6DGRv9Bu+kOLn7rkGn2PvkIvRly6thsDQEn
+	r2yTEvI2v2bSBXAqUmvHsCeYHMqK0RGBaiuDB0DTH3E0ta+OhbitYYh1wz5q8xew
+	ZVIXJy033PEFMrFbHqVFwrKqzdb+bhtHXeAxpqvDLICR7AJW5I8yJ0CV8GtDjQBM
+	r8lO/QURITe9ZO2k4nk9UrfV74q+SJ9HvwFKfnYFSrCDZRt12zy1zgNQr3pFG2IH
+	nXff37xobHDhCqtzVD2YLT7MOh0AgxfBL53j0Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1780693922; x=
+	1780780322; bh=czHxBAolVx1VraDScwu9+FjCluhxvvdJOEu/z08ODOE=; b=H
+	00p6Q+nSFkftXzqgz7gPw81toaQYLcmOYe6+W8ZtVkTkByEY7IIEn6ideF3Yh2cs
+	DJAw8iux16SCb8SV2tXO0bRBiyUeBB2SYWku6IiEesG2eOO3aHY1zKwtKdn6lr9y
+	zGReszzPchLrP2ew7WCDYNSTP5CZm0UAl9M2srmmgdHPAvjscQn/0Yhxz1DD8VKf
+	JB7P2M+LExZw9wZurOKbvxx2JVqOWO/kP10cYNRnCbsbQ0wtzb9SnBuulKFT9t9z
+	DJTQ26IXcnEcP/okvPKwjQje0ae6QSOmRttWn1kb4bF/bKmQLmGAlu1cozdP9gH1
+	vp38StTLP63z2PKkdq1rg==
+X-ME-Sender: <xms:oTsjat85PCeYoOqO-_tPnLM2cq4BuoZFt-WOmd2w9hSpOEVTPVU2xg>
+    <xme:oTsjak0AW1-0zxbVG-BVE4cgxe99b5QqiC6GvBCwSaxExlRMantsFmvAXmzata_qC
+    9HJrr1oJYZCAIj4vARcXVa668k27WmEjZN9flsB9z1cMF-zqgWPvXk>
+X-ME-Received: <xmr:oTsjaofgQI0e0VbyaHSzdJ3zAMs8Wf77Zgr2-xdbA9A6crx-_hKBjz5GlBONwg>
+X-ME-Proxy-Cause: dmFkZTF6+RKNZQ2h+QZZ8V84GlsXWPKSHungM30Fc2pouxwSgqJm7MhKo7fs1dVyDK80uK
+    qVH1x23rAWqn68hP3ng2DhcPR3tdN2vJOh29+FqGNN8qmvvrT7QVsG6qTgoDZ8AZbY3GDF
+    qYi30DLyYPbfUHxkJmp9UfscujcPyGgkaak4vgoKESCkjHKbKiVahv2rlAbaxf5CYfrUAH
+    MdDCLTFfmbgtZZSt/KFntxNdHe6iLMgz2Xjcv3o0g5Jued/LU8AafSnXk8UJM/4R1pN20c
+    lJ7wXeHCu7nWm3FJnFNFC58hHGbWMeFznbu6FvQN/RfjXs28ubTdarP7m/30ALyBYCF7Kv
+    ibcrV2d2hccGjRSGooJESWPsyJSHGanboeSvcWpxk6dajLu0U3TKJqMArDmkBQN0lmPTkD
+    YVD/oPiezwPSN4FK634KjHM+zT16KLv/gMzgcpuWMPNgxNEHMvEeTY/E/VseHFOJ/ijPea
+    KmEptg8112QdDRxOB1DZ5uRQEUUivPIiFF6K21MJvfIzYhhnRm7A1UqaWTt8xaBs6HyPmC
+    IdC/F50Zus/uc7S6v6itFS3RiXsff3sWHgXjAkxmICcE/zV7M6QD9oYLlF+kZqNoqNHF/0
+    u0a9LaV0KZPNOfNudiQ45D1hkY8+4EwFrWBlnfKKXUx7VV3N/udJDMwFwAbQ
+X-ME-Proxy: <xmx:oTsjamBi74uXOSgp6IQUc-nKhUhAuRBO13WGIhGc0G4H_Ob1mpW4fg>
+    <xmx:oTsjag1RrNKUst8DZ8tv2InyPk_D5DTwCkvq-MZHa2c6T73HrQfZ9A>
+    <xmx:oTsjahMUt38BSOy88J9zHzQdE2yWOoB0Ib3avqNk1baU4OAMzMPuIg>
+    <xmx:oTsjavZPsqKhI93Kvu847cCaVtYrNUUCPjukXaH9UFG9OwpwnVNuHQ>
+    <xmx:ojsjailwItGn8nimtB2Zpm3krK0fGJOreir145z2GuaOShnhzq3c6d86>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 5 Jun 2026 17:12:00 -0400 (EDT)
+Date: Fri, 5 Jun 2026 22:11:57 +0100
+From: Kiryl Shutsemau <kirill@shutemov.name>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>, 
+	Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>, Petr Mladek <pmladek@suse.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, 
+	Baoquan He <bhe@redhat.com>, Puranjay Mohan <puranjay@kernel.org>, 
+	Usama Arif <usama.arif@linux.dev>, Breno Leitao <leitao@debian.org>, 
+	Julien Thierry <julien.thierry.kdev@gmail.com>, Lecopzer Chen <lecopzer.chen@mediatek.com>, 
+	Sumit Garg <sumit.garg@kernel.org>, kernel-team@meta.com, kexec@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] arm64: wire SDEI NMI into the hardlockup watchdog
+Message-ID: <aiM69AZXtGduS4VY@thinkstation>
+References: <cover.1780496779.git.kas@kernel.org>
+ <6172eafcb9de6e626c0f1c36426d67e1e562ed32.1780496779.git.kas@kernel.org>
+ <CAD=FV=U4eJ__dQc1e8CGgj5sMDNrD1MgEEy9Cgj9M5n-WmYAXA@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.1780496779.git.kas@kernel.org> <145b9e98b12a7d314fc4a203075f65c3a0c3a913.1780496779.git.kas@kernel.org>
-In-Reply-To: <145b9e98b12a7d314fc4a203075f65c3a0c3a913.1780496779.git.kas@kernel.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 5 Jun 2026 13:54:00 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XMqFVnri1aVGbFJhN6Ts3SeJUzEZrfN0Pqp9WeOzE=OA@mail.gmail.com>
-X-Gm-Features: AVVi8Ce5lMqSEWZVqGZM1FY6-oeUDRbFaZ9laA85TwkYWEFSDqaKWmanEo0FJTk
-Message-ID: <CAD=FV=XMqFVnri1aVGbFJhN6Ts3SeJUzEZrfN0Pqp9WeOzE=OA@mail.gmail.com>
-Subject: Re: [PATCH 2/4] drivers/firmware: add SDEI cross-CPU NMI service for arm64
-To: Kiryl Shutsemau <kirill@shutemov.name>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	James Morse <james.morse@arm.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Marc Zyngier <maz@kernel.org>, Petr Mladek <pmladek@suse.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
-	Puranjay Mohan <puranjay@kernel.org>, Usama Arif <usama.arif@linux.dev>, 
-	Breno Leitao <leitao@debian.org>, Julien Thierry <julien.thierry.kdev@gmail.com>, 
-	Lecopzer Chen <lecopzer.chen@mediatek.com>, Sumit Garg <sumit.garg@kernel.org>, kernel-team@meta.com, 
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, "Kiryl Shutsemau (Meta)" <kas@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=U4eJ__dQc1e8CGgj5sMDNrD1MgEEy9Cgj9M5n-WmYAXA@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260605_135415_091685_CD533C23 
-X-CRM114-Status: GOOD (  24.35  )
+X-CRM114-CacheID: sfid-20260605_141206_177474_854C51B7 
+X-CRM114-Status: GOOD (  19.89  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,87 +116,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
+On Fri, Jun 05, 2026 at 01:03:05PM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Wed, Jun 3, 2026 at 7:36 AM Kiryl Shutsemau <kirill@shutemov.name> wrote:
+> >
+> > From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
+> >
+> > Select HAVE_HARDLOCKUP_DETECTOR_ARCH so the framework takes its backend
+> > from this driver. A per-CPU hrtimer checks its buddy's heartbeat and
+> > signals event 0 at a stalled CPU, which runs watchdog_hardlockup_check()
+> > NMI-like.
+> >
+> > The source is chosen at boot: SDEI if firmware provides it, otherwise a
+> > perf-NMI counter (pseudo-NMI) fallback -- one image covers both.
+> >
+> > Signed-off-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
+> > ---
+> >  arch/arm64/Kconfig          |   1 +
+> >  drivers/firmware/Kconfig    |   3 +
+> >  drivers/firmware/sdei_nmi.c | 247 +++++++++++++++++++++++++++++++++++-
+> >  3 files changed, 248 insertions(+), 3 deletions(-)
+> 
+> I'm a little confused about this patch. We already have a buddy
+> hardlockup detector using the hrtimer, and it's even been improved
+> recently to trigger in a smaller time bound. It looks as if you're
+> duplicating bits of the perf and buddy detector here?
+> 
+> I don't think you need this patch at all. The existing buddy detector
+> + patches #1 and #2 in your series should be sufficient.
 
-On Wed, Jun 3, 2026 at 7:36=E2=80=AFAM Kiryl Shutsemau <kirill@shutemov.nam=
-e> wrote:
->
-> @@ -928,11 +929,19 @@ static void arm64_backtrace_ipi(cpumask_t *mask)
->  void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_c=
-pu)
->  {
->         /*
-> +        * Prefer the SDEI cross-CPU NMI provider when active: firmware
-> +        * dispatches the event out of EL3 and reaches CPUs that have
-> +        * interrupts locally masked, without the per-IRQ-mask cost that
-> +        * pseudo-NMI pays for the same reach. The plain IPI path below
-> +        * can't reach such a CPU unless pseudo-NMI is enabled.
-> +        *
->          * NOTE: though nmi_trigger_cpumask_backtrace() has "nmi_" in the=
- name,
->          * nothing about it truly needs to be implemented using an NMI, i=
-t's
->          * just that it's _allowed_ to work with NMIs. If ipi_should_be_n=
-mi()
->          * returned false our backtrace attempt will just use a regular I=
-PI.
->          */
-> +       if (sdei_nmi_trigger_cpumask_backtrace(mask, exclude_cpu))
-> +               return;
->         nmi_trigger_cpumask_backtrace(mask, exclude_cpu, arm64_backtrace_=
-ipi);
+You're mostly right.
 
-nit: instead of one comment block, I would have broken it up in two. Like:
+Buddy + #2 covers the console case (the remote branch triggers the
+culprit's backtrace, which #2 makes deliverable), and #4 gets the wedged
+CPU's registers into the vmcore.
 
-/*
- * Prefer the SDEI ...
- */
-if (sdei_nmi_trigger_cpumask_backtrace(mask, exclude_cpu))
-  return;
+The one thing this patch adds that a config can't is boot-time source
+selection: PERF-compiled kernels have no detector on a pseudo_nmi=0
+boot, and PREFER_BUDDY costs the pseudo-NMI machines perf
+self-detection. But that's arguably out of scope for the patchset.
 
-/*
- * NOTE: though ...
- */
-nmi_trigger_cpumask_backtrace(...);
+I'll drop this patch in v2 and run PREFER_BUDDY here. If a runtime
+perf->buddy fallback ever materializes, the gap closes entirely.
 
-
-
->  }
->
-> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> index bbd2155d8483..6501087ff90d 100644
-> --- a/drivers/firmware/Kconfig
-> +++ b/drivers/firmware/Kconfig
-> @@ -36,6 +36,25 @@ config ARM_SDE_INTERFACE
->           standard for registering callbacks from the platform firmware
->           into the OS. This is typically used to implement RAS notificati=
-ons.
->
-> +config ARM_SDEI_NMI
-> +       bool "SDEI-based cross-CPU NMI service (arm64)"
-> +       depends on ARM64 && ARM_SDE_INTERFACE
-> +       help
-> +         Provides SDEI-based cross-CPU NMI delivery for hooks that need
-> +         to reach interrupt-masked CPUs on silicon that lacks FEAT_NMI:
-> +
-> +           - arch_trigger_cpumask_backtrace()  (sysrq-l, RCU stalls,
-> +             hardlockup_all_cpu_backtrace, soft-lockup secondary dumps,
-> +             hung-task auxiliary dumps)
-> +
-> +         The driver registers a handler for the SDEI software-signalled
-> +         event (event 0) and reaches a target CPU by signalling it with
-> +         SDEI_EVENT_SIGNAL. Firmware delivers the event out of EL3
-> +         regardless of the target's PSTATE.DAIF -- forced delivery into =
-a
-> +         CPU wedged with interrupts locally masked.
-> +
-> +         If unsure, say N.
-
-Is there some downside to this? It seems like anyone who has the SDE
-interface would want this. Not sure why you'd suggest people say "N".
-
-Other than the nit, this looks reasoanble to me, though I'm a complete
-noob when it comes to SDEI...
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
