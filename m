@@ -4,72 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3F647CD6E6B
-	for <kexec@archiver.kernel.org>; Fri,  5 Jun 2026 07:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 31BFDCD6E7C
+	for <kexec@archiver.kernel.org>; Fri,  5 Jun 2026 12:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=28SepQle7O8hZgldH3OXg4NUtpbIb5yofovfIawvhHk=; b=sytqCNZNESy/cgSri6+7WTZocp
-	/5J7VfgtimfGvX2nNgYzeitLLGcEMhHFYiC6HidnSu/TnC5dH5Kdno3Q2kowImY3Xa6t+2cRaJIKg
-	6V95ri4+DaJ3qlY2aLKSS8AfSvLWQEKshCd7DY0nti4Hm9LNwjx1pvf/UyXppXLkqP5nzSMN2W/qe
-	yzR+QuEbkOthgXeF6EM9r+3wT4eH7ilY/jBGUNdDnj1NPQetpr6Nsn+HPhmhHdOhVbdUo9NvPV1cg
-	wghg/l3XD3RLOfiL6QBEP8WtTVHihyL6gfOligqBT8/U41U4BUeKu6nrIqzga/8oZ+g6mixhB0SRb
-	z6+dpZzQ==;
+	bh=58P1q1XUXWtvX8VsXYXNzBZuVvbe3GtJn7syrrjTljc=; b=F2xIE/iy6XQYkYC4806UnuQ4yo
+	leSwEcxRIe7w+dbwsM8h12YMWdIF1eDbbOeE77c7DQg/egg8AMJRDhEXN43g1tZDLEXv4TH49q5wp
+	rhZy1dG66u2ScMTI+XZ0rUpogG3sktAxKfiFhw274JWs+U2YS+zCypAeQjmlnV4ZmGkvca6YWQ4jz
+	+JrYBzyEROUUk1dQKHNIUCYYil9DBfElvKs3LrHLXmGzD0x/pk/Japi5Bc2edpXtbRsCXlHqx/RBW
+	eTI26CiYo6GXx029hcRRBmcmIPZUgvX9ihLxFJkZcdQ3XCDySSoj8mCeL4DcpW+exTLuOtAfHhcnj
+	xSuOCI1g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wVOo1-00000000Dx3-1gZn;
-	Fri, 05 Jun 2026 07:17:25 +0000
-Received: from mgamail.intel.com ([192.198.163.12])
+	id 1wVTO0-00000000ayq-37bO;
+	Fri, 05 Jun 2026 12:10:52 +0000
+Received: from mail-wm1-x34a.google.com ([2a00:1450:4864:20::34a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wVOny-00000000Dwl-3ryi
+	id 1wVTNy-00000000ayP-1wf9
 	for kexec@lists.infradead.org;
-	Fri, 05 Jun 2026 07:17:24 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780643843; x=1812179843;
-  h=date:from:to:cc:subject:message-id;
-  bh=rfw/aCck171KR6E/HtUbZZVrwp/Oon0a9v0zGRSsiqY=;
-  b=SRxHRV0N+hfnzotPNGW1+Cpy7GuyIx6HIG0Nj/x1oq7nrkKOlgYcDdN2
-   ftsQiBThJW3RylksSY+SCje7VSKlW5Bn6oBksF9H7QSi3kWG9qsYzYOfz
-   NIpByH624chY2SSaZaeBI3JUL4JJXYQgUEEmHYUFQ/TonROAS2Er0gnuv
-   eXHDZ+jVe6gfyfsOEl4Ih+vWpXWAuIh8zwMz8U6K3WIIXHKXIMavvUIkb
-   8WlqtMA3OM8D98uX0q9ZT49DBV/oiDT7+YjEaGRtuWNjp+MM7vH9jHgxs
-   O8QZ++V9+JH3S8fHxYTh66BYcbABk2tgg0vKofMy4vPaSWvRvvPTni/+/
-   Q==;
-X-CSE-ConnectionGUID: iHZc7qaQSkKkktJSDm41sg==
-X-CSE-MsgGUID: HFFURS9ATkmgzbIbzl1Gsw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11807"; a="85328771"
-X-IronPort-AV: E=Sophos;i="6.24,188,1774335600"; 
-   d="scan'208";a="85328771"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2026 00:17:21 -0700
-X-CSE-ConnectionGUID: uiX7LQYeRzWlc8TmIwes5Q==
-X-CSE-MsgGUID: DoY0wzzcR+iATnKPUq1jPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,188,1774335600"; 
-   d="scan'208";a="249108724"
-Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 05 Jun 2026 00:17:19 -0700
-Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wVOns-00000000Ff4-1mVx;
-	Fri, 05 Jun 2026 07:17:16 +0000
-Date: Fri, 05 Jun 2026 15:16:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, kexec@lists.infradead.org
-Subject: [liveupdate:kexec-next] BUILD SUCCESS
- 7eb5f7c5b5d58b4abe78f6a1b0817391c291f199
-Message-ID: <202606051527.ebVGd2F3-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	Fri, 05 Jun 2026 12:10:51 +0000
+Received: by mail-wm1-x34a.google.com with SMTP id 5b1f17b1804b1-490b5d2e394so14031715e9.3
+        for <kexec@lists.infradead.org>; Fri, 05 Jun 2026 05:10:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1780661448; x=1781266248; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=58P1q1XUXWtvX8VsXYXNzBZuVvbe3GtJn7syrrjTljc=;
+        b=wKJ8Newm5T3F8qFYCSf2CJCzfD0Z8pdZ0xHZV78hpgygpFIO1/u8RQP7G7IAVrTpDx
+         riMPHwuzz60JdSSShHdPco1BR9BrFKR3UD4ysOzj4BlTsyyiOjbaYjuWz2wmtHYunkIX
+         O4wa6yjEMigdToqTyjJ1psFFagPzSx5rgQKLH0h9Oi3hhRJ3b/ZKkrcxwfF8LPnmDU1r
+         XYMY4rwFqhXcXUhMlYBHPHkvW57KtXY03KP8xOsf2LgXpNM+pnGnvZDvWFV2u+hMeyYc
+         PIpN7kEbK7tJr86jwpx3QQAVd0+i4qxWuEt9iCkVobzwz0RtkIEH0w2s7EDeNI6xEGgw
+         LY9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780661448; x=1781266248;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=58P1q1XUXWtvX8VsXYXNzBZuVvbe3GtJn7syrrjTljc=;
+        b=eceHsQ0dc057JjyRtrfqjM7zPVMSRcz2IIUcshe2Z0HglHFcCvV+o3ayx2EpOEBqU8
+         Dl4AHwZ1sGvA3dfFiC2HAHvQzvHeXuaYd5knjp1TbvCsFlxP5EweFIMug26DpyGxdX0Y
+         ZUQ0Ze/ji3VNk7zHuPIGF/KVlRmwgbcWmQDJ7D1UglYITVg6g/GbY6T2JxPJ9g+D1IWh
+         Wag6R/MoHAaQnJxamXf9xqgSV7zZOq6qzZWBIEsJ/XoxwZ5F2o9rMtP8dhSbPHT5s3lb
+         9NH7UNAI5EkZaTdpUkxxziNnS+HPhUfxUzMSm5n8np6dHvNIyu9vSNhiwJB795+xhrqk
+         J/Qg==
+X-Forwarded-Encrypted: i=1; AFNElJ/jdE87TMXnAPfPBfRtQjH9NX/VJxo1Seay1csa9NX/wB6HGDrRTjykixuhaefeLAh1ZOnuMg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyCSUQbFHx+ocaKRa/R8KkmuT4y7JGoY4Yj+MgZSVGHnKaBOIbk
+	1zD9zq505t9ILuQruMpJLx1VXog8RlyZofO0LQ+Wg5VJQdt28ZxgI0d4T/pT00LQmZ0gF4rYoO1
+	jejsQScWh2d9iMolpGjsjIg==
+X-Received: from wmoq17.prod.google.com ([2002:a05:600c:46d1:b0:490:beee:59ba])
+ (user=mclapinski job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:81c9:b0:490:b724:507d with SMTP id 5b1f17b1804b1-490c259f6e2mr43633315e9.11.1780661447497;
+ Fri, 05 Jun 2026 05:10:47 -0700 (PDT)
+Date: Fri,  5 Jun 2026 14:10:40 +0200
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
+Message-ID: <20260605121040.1177072-1-mclapinski@google.com>
+Subject: [PATCH v2] pstore: add a KHO backend
+From: Michal Clapinski <mclapinski@google.com>
+To: Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: Michal Clapinski <mclapinski@google.com>
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260605_001722_981219_47E54465 
-X-CRM114-Status: UNSURE (   3.67  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260605_051050_555860_2833B549 
+X-CRM114-Status: GOOD (  26.81  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,213 +88,338 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git kexec-next
-branch HEAD: 7eb5f7c5b5d58b4abe78f6a1b0817391c291f199  kexec_file: skip checksum verification when safe
+Up to this point to preserve late shutdown logs in memory, users had to
+predefine a memory region using ramoops. This commit changes this by
+preserving a buffer using kexec-handover.
 
-elapsed time: 2068m
+pstore_kho supports preserving only 1 dmesg buffer.
+It gets replaced with the new buffer on every kexec, so the user has to
+copy the file out of pstore after every kexec.
+There is no erase() support.
 
-configs tested: 193
-configs skipped: 3
+Signed-off-by: Michal Clapinski <mclapinski@google.com>
+---
+v2:
+- Added a comment explaining the benefits of pstore_kho.
+- Created include/linux/kho/abi/pstore.h.
+- Got rid of the KHO subtree.
+- Made sure never to free incoming kho data.
+  This way the module can be safely reloaded.
+- Sashiko complained that I trust the data coming from the old kernel.
+  I ignored it. LMK if I shouldn't trust the old kernel.
+---
+ fs/pstore/Kconfig              |  10 ++
+ fs/pstore/Makefile             |   2 +
+ fs/pstore/pstore_kho.c         | 230 +++++++++++++++++++++++++++++++++
+ include/linux/kho/abi/pstore.h |  27 ++++
+ 4 files changed, 269 insertions(+)
+ create mode 100644 fs/pstore/pstore_kho.c
+ create mode 100644 include/linux/kho/abi/pstore.h
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
+index 3acc38600cd1..455790fec955 100644
+--- a/fs/pstore/Kconfig
++++ b/fs/pstore/Kconfig
+@@ -81,6 +81,16 @@ config PSTORE_RAM
+ 
+ 	  For more information, see Documentation/admin-guide/ramoops.rst.
+ 
++config PSTORE_KHO
++	tristate "Preserve logs over kexec"
++	depends on PSTORE
++	depends on KEXEC_HANDOVER
++	help
++	  A pstore backend for preserving dmesg over KHO (kexec handover).
++	  It does not require any additional cmdline params to work.
++
++	  It supports preservation of only 1 dmesg file.
++
+ config PSTORE_ZONE
+ 	tristate
+ 	depends on PSTORE
+diff --git a/fs/pstore/Makefile b/fs/pstore/Makefile
+index c270467aeece..518cd408bf8e 100644
+--- a/fs/pstore/Makefile
++++ b/fs/pstore/Makefile
+@@ -13,6 +13,8 @@ pstore-$(CONFIG_PSTORE_PMSG)	+= pmsg.o
+ ramoops-objs += ram.o ram_core.o
+ obj-$(CONFIG_PSTORE_RAM)	+= ramoops.o
+ 
++obj-$(CONFIG_PSTORE_KHO)	+= pstore_kho.o
++
+ pstore_zone-objs += zone.o
+ obj-$(CONFIG_PSTORE_ZONE)	+= pstore_zone.o
+ 
+diff --git a/fs/pstore/pstore_kho.c b/fs/pstore/pstore_kho.c
+new file mode 100644
+index 000000000000..6d4187d91642
+--- /dev/null
++++ b/fs/pstore/pstore_kho.c
+@@ -0,0 +1,230 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * KHO (Kexec Handover) backend for pstore.
++ *
++ * KHO-based pstore provides a mechanism to hand over pstore data (specifically
++ * dmesg logs) from one kernel to another across a kexec reboot using the
++ * Kexec Handover (KHO) framework.
++ *
++ * Key advantages of KHO-based pstore include:
++ * - No hardcoded memmap: Unlike ramoops, it does not require reserving a static
++ *   memory region in the bootloader or device tree. Memory is allocated
++ *   dynamically and handed over to the next kernel.
++ * - Firmware independence: It does not rely on platform firmware support (like
++ *   ACPI ERST or UEFI variable storage) to preserve logs across reboots.
++ * - High throughput: It avoids the performance bottlenecks of serial consoles,
++ *   not being limited by console baud rates.
++ * - Complete log preservation: It preserves all dmesg logs, including those
++ *   generated late in the reboot cycle after filesystems have been unmounted,
++ *   up to the point of the kexec jump.
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/kho/abi/pstore.h>
++#include <linux/init.h>
++#include <linux/io.h>
++#include <linux/kexec_handover.h>
++#include <linux/module.h>
++#include <linux/pstore.h>
++#include <linux/slab.h>
++#include <linux/string.h>
++
++/*
++ * The in and out buffers are separate and they need not be the same size.
++ * Therefore, this is not part of ABI.
++ */
++#define RECORD_MAX_SIZE		(1 << CONFIG_LOG_BUF_SHIFT)
++
++struct pstore_kho_context {
++	struct pstore_info pstore;
++	bool read_done;
++};
++
++static struct pstore_ser *kho_ser_in;
++static struct pstore_ser *kho_ser_out;
++
++static int pstore_kho_open(struct pstore_info *psi)
++{
++	struct pstore_kho_context *cxt = psi->data;
++
++	cxt->read_done = false;
++	return 0;
++}
++
++static ssize_t pstore_kho_read(struct pstore_record *record)
++{
++	struct pstore_kho_context *cxt = record->psi->data;
++	struct pstore_kho_record *kho_data_in;
++
++	if (cxt->read_done || !kho_ser_in)
++		return 0;
++
++	cxt->read_done = true;
++	kho_data_in = &kho_ser_in->record;
++
++	record->buf = kmemdup(kho_data_in->buf, kho_data_in->size, GFP_KERNEL);
++	if (!record->buf)
++		return -ENOMEM;
++
++	record->type = PSTORE_TYPE_DMESG;
++	record->id = 0;
++	record->size = kho_data_in->size;
++	record->time.tv_sec = kho_data_in->time_sec;
++	record->time.tv_nsec = kho_data_in->time_nsec;
++	record->count = kho_data_in->count;
++	record->reason = kho_data_in->reason;
++	record->part = kho_data_in->part;
++	record->compressed = kho_data_in->compressed;
++
++	return record->size;
++}
++
++static int pstore_kho_write(struct pstore_record *record)
++{
++	struct pstore_kho_record *kho_data_out = &kho_ser_out->record;
++
++	if (record->type != PSTORE_TYPE_DMESG)
++		return -EINVAL;
++
++	if (kho_data_out->size != 0) {
++		pr_err("pstore kho already contains a record\n");
++		return -ENOSPC;
++	}
++
++	if (record->size > RECORD_MAX_SIZE) {
++		pr_err("dmesg record too big, record size: %lu, available space: %d\n",
++		       record->size, RECORD_MAX_SIZE);
++		return -ENOSPC;
++	}
++
++	memcpy(kho_data_out->buf, record->buf, record->size);
++	kho_data_out->size = record->size;
++	kho_data_out->time_sec = record->time.tv_sec;
++	kho_data_out->time_nsec = record->time.tv_nsec;
++	kho_data_out->count = record->count;
++	kho_data_out->reason = record->reason;
++	kho_data_out->part = record->part;
++	kho_data_out->compressed = record->compressed;
++
++	return 0;
++}
++
++static struct pstore_kho_context pstore_kho_cxt = {
++	.pstore = {
++		.owner		= THIS_MODULE,
++		.name		= "kho",
++		.bufsize	= RECORD_MAX_SIZE,
++		.flags		= PSTORE_FLAGS_DMESG,
++		.max_reason	= KMSG_DUMP_SHUTDOWN,
++		.open		= pstore_kho_open,
++		.read		= pstore_kho_read,
++		.write		= pstore_kho_write,
++	},
++};
++
++static void __init kho_setup_incoming(void)
++{
++	phys_addr_t kho_ser_phys;
++	int err;
++
++	err = kho_retrieve_subtree(KHO_PSTORE_FDT_NAME, &kho_ser_phys);
++	if (err) {
++		if (err != -ENOENT)
++			pr_err("failed to retrieve KHO data %s: %d\n",
++			       KHO_PSTORE_FDT_NAME, err);
++		return;
++	}
++
++	kho_ser_in = phys_to_virt(kho_ser_phys);
++
++	if (kho_ser_in->version != KHO_PSTORE_VERSION) {
++		pr_err("unsupported KHO pstore version: %d\n", kho_ser_in->version);
++		kho_ser_in = NULL;
++		return;
++	}
++
++	pr_info("successfully restored preserved data\n");
++}
++
++static int __init kho_setup_outgoing(void)
++{
++	int err;
++	size_t total_size = sizeof(struct pstore_ser) + RECORD_MAX_SIZE;
++
++	kho_ser_out = kho_alloc_preserve(total_size);
++	if (IS_ERR(kho_ser_out)) {
++		pr_err("failed to allocate pstore kho ser anchor\n");
++		return PTR_ERR(kho_ser_out);
++	}
++	memset(kho_ser_out, 0, total_size);
++	kho_ser_out->version = KHO_PSTORE_VERSION;
++
++	err = kho_add_subtree(KHO_PSTORE_FDT_NAME, kho_ser_out);
++	if (err) {
++		pr_err("failed to add KHO data\n");
++		goto err_free_ser;
++	}
++
++	return 0;
++
++err_free_ser:
++	kho_unpreserve_free(kho_ser_out);
++	return err;
++}
++
++static int __init pstore_kho_init(void)
++{
++	int err;
++	struct pstore_kho_context *cxt = &pstore_kho_cxt;
++
++	if (!kho_is_enabled()) {
++		pr_info("KHO is disabled, pstore_kho cannot start\n");
++		return -ENODEV;
++	}
++
++	kho_setup_incoming();
++	err = kho_setup_outgoing();
++	if (err) {
++		pr_err("failed to setup outgoing KHO\n");
++		return err;
++	}
++
++	cxt->pstore.data = cxt;
++	cxt->pstore.buf = kmalloc(cxt->pstore.bufsize, GFP_KERNEL);
++	if (!cxt->pstore.buf) {
++		err = -ENOMEM;
++		goto err_free_outgoing;
++	}
++
++	err = pstore_register(&cxt->pstore);
++	if (err) {
++		pr_err("failed to register with pstore\n");
++		goto err_free_pstore_buf;
++	}
++
++	return 0;
++
++err_free_pstore_buf:
++	kfree(cxt->pstore.buf);
++
++err_free_outgoing:
++	kho_remove_subtree(kho_ser_out);
++	kho_unpreserve_free(kho_ser_out);
++
++	return err;
++}
++module_init(pstore_kho_init);
++
++static void __exit pstore_kho_exit(void)
++{
++	pstore_unregister(&pstore_kho_cxt.pstore);
++	kfree(pstore_kho_cxt.pstore.buf);
++
++	kho_remove_subtree(kho_ser_out);
++	kho_unpreserve_free(kho_ser_out);
++}
++module_exit(pstore_kho_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("Pstore backend for dmesg preservation over kexec");
+diff --git a/include/linux/kho/abi/pstore.h b/include/linux/kho/abi/pstore.h
+new file mode 100644
+index 000000000000..743ec64d67fc
+--- /dev/null
++++ b/include/linux/kho/abi/pstore.h
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef _LINUX_KHO_ABI_PSTORE_H
++#define _LINUX_KHO_ABI_PSTORE_H
++
++#include <linux/types.h>
++
++#define KHO_PSTORE_FDT_NAME	"pstore-kho"
++#define KHO_PSTORE_VERSION	1
++
++struct pstore_kho_record {
++	s64			size;
++	s64			time_sec;
++	u32			time_nsec;
++	s32			count;
++	u32			reason;
++	u32			part;
++	u32			compressed;
++	char			buf[];
++};
++
++struct pstore_ser {
++	u32			version;
++	struct pstore_kho_record record;
++};
++
++#endif /* _LINUX_KHO_ABI_PSTORE_H */
+-- 
+2.54.0.1032.g2f8565e1d1-goog
 
-tested configs:
-alpha                             allnoconfig    gcc-15.2.0
-alpha                            allyesconfig    gcc-15.2.0
-alpha                               defconfig    gcc-16.1.0
-arc                              allmodconfig    clang-17
-arc                               allnoconfig    gcc-15.2.0
-arc                              allyesconfig    clang-23
-arc                                 defconfig    gcc-16.1.0
-arc                   randconfig-001-20260604    clang-17
-arc                   randconfig-002-20260604    clang-17
-arm                               allnoconfig    gcc-15.2.0
-arm                              allyesconfig    clang-17
-arm                                 defconfig    gcc-16.1.0
-arm                   randconfig-001-20260604    clang-17
-arm                   randconfig-002-20260604    clang-17
-arm                   randconfig-003-20260604    clang-17
-arm                   randconfig-004-20260604    clang-17
-arm64                            allmodconfig    clang-23
-arm64                             allnoconfig    gcc-15.2.0
-arm64                               defconfig    gcc-16.1.0
-arm64                 randconfig-001-20260604    clang-17
-arm64                 randconfig-002-20260604    clang-17
-arm64                 randconfig-003-20260604    clang-17
-arm64                 randconfig-004-20260604    clang-17
-csky                             allmodconfig    gcc-16.1.0
-csky                              allnoconfig    gcc-15.2.0
-csky                                defconfig    gcc-16.1.0
-csky                  randconfig-001-20260604    clang-17
-csky                  randconfig-002-20260604    clang-17
-hexagon                          allmodconfig    gcc-15.2.0
-hexagon                           allnoconfig    gcc-15.2.0
-hexagon                             defconfig    gcc-16.1.0
-hexagon                        randconfig-001    gcc-11.5.0
-hexagon               randconfig-001-20260604    gcc-11.5.0
-hexagon                        randconfig-002    gcc-11.5.0
-hexagon               randconfig-002-20260604    gcc-11.5.0
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    gcc-15.2.0
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20260604    clang-20
-i386        buildonly-randconfig-002-20260604    clang-20
-i386        buildonly-randconfig-003-20260604    clang-20
-i386        buildonly-randconfig-004-20260604    clang-20
-i386        buildonly-randconfig-005-20260604    clang-20
-i386        buildonly-randconfig-006-20260604    clang-20
-i386                                defconfig    gcc-16.1.0
-i386                  randconfig-001-20260604    clang-20
-i386                  randconfig-002-20260604    clang-20
-i386                  randconfig-003-20260604    clang-20
-i386                  randconfig-004-20260604    clang-20
-i386                  randconfig-005-20260604    clang-20
-i386                  randconfig-006-20260604    clang-20
-i386                  randconfig-007-20260604    clang-20
-i386                  randconfig-011-20260604    gcc-14
-i386                  randconfig-012-20260604    gcc-14
-i386                  randconfig-013-20260604    gcc-14
-i386                  randconfig-014-20260604    gcc-14
-i386                  randconfig-015-20260604    gcc-14
-i386                  randconfig-016-20260604    gcc-14
-i386                  randconfig-017-20260604    gcc-14
-loongarch                        allmodconfig    clang-23
-loongarch                         allnoconfig    gcc-15.2.0
-loongarch                           defconfig    clang-23
-loongarch                      randconfig-001    gcc-11.5.0
-loongarch             randconfig-001-20260604    gcc-11.5.0
-loongarch                      randconfig-002    gcc-11.5.0
-loongarch             randconfig-002-20260604    gcc-11.5.0
-m68k                             allmodconfig    gcc-16.1.0
-m68k                              allnoconfig    gcc-15.2.0
-m68k                             allyesconfig    clang-17
-m68k                                defconfig    clang-23
-microblaze                        allnoconfig    gcc-15.2.0
-microblaze                       allyesconfig    gcc-16.1.0
-microblaze                          defconfig    clang-23
-mips                             allmodconfig    gcc-15.2.0
-mips                              allnoconfig    gcc-15.2.0
-mips                             allyesconfig    gcc-16.1.0
-nios2                            allmodconfig    clang-23
-nios2                             allnoconfig    clang-17
-nios2                               defconfig    clang-23
-nios2                          randconfig-001    gcc-11.5.0
-nios2                 randconfig-001-20260604    gcc-11.5.0
-nios2                          randconfig-002    gcc-11.5.0
-nios2                 randconfig-002-20260604    gcc-11.5.0
-openrisc                          allnoconfig    clang-17
-openrisc                            defconfig    gcc-16.1.0
-parisc                           allmodconfig    gcc-15.2.0
-parisc                            allnoconfig    clang-17
-parisc                           allyesconfig    clang-19
-parisc                              defconfig    gcc-16.1.0
-parisc                         randconfig-001    gcc-8.5.0
-parisc                randconfig-001-20260604    gcc-8.5.0
-parisc                         randconfig-002    gcc-8.5.0
-parisc                randconfig-002-20260604    gcc-8.5.0
-parisc64                            defconfig    clang-23
-powerpc                          allmodconfig    gcc-15.2.0
-powerpc                           allnoconfig    clang-17
-powerpc                        randconfig-001    gcc-8.5.0
-powerpc               randconfig-001-20260604    gcc-8.5.0
-powerpc                        randconfig-002    gcc-8.5.0
-powerpc               randconfig-002-20260604    gcc-8.5.0
-powerpc64                      randconfig-001    gcc-8.5.0
-powerpc64             randconfig-001-20260604    gcc-8.5.0
-powerpc64                      randconfig-002    gcc-8.5.0
-powerpc64             randconfig-002-20260604    gcc-8.5.0
-riscv                            allmodconfig    clang-23
-riscv                             allnoconfig    clang-17
-riscv                            allyesconfig    clang-17
-riscv                               defconfig    gcc-16.1.0
-riscv                          randconfig-001    clang-17
-riscv                 randconfig-001-20260604    clang-17
-riscv                          randconfig-002    clang-17
-riscv                 randconfig-002-20260604    clang-17
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-17
-s390                             allyesconfig    gcc-15.2.0
-s390                                defconfig    gcc-16.1.0
-s390                           randconfig-001    clang-17
-s390                  randconfig-001-20260604    clang-17
-s390                           randconfig-002    clang-17
-s390                  randconfig-002-20260604    clang-17
-sh                               allmodconfig    gcc-15.2.0
-sh                                allnoconfig    clang-17
-sh                               allyesconfig    clang-19
-sh                                  defconfig    gcc-14
-sh                             randconfig-001    clang-17
-sh                    randconfig-001-20260604    clang-17
-sh                             randconfig-002    clang-17
-sh                    randconfig-002-20260604    clang-17
-sh                          urquell_defconfig    gcc-16.1.0
-sparc                             allnoconfig    clang-17
-sparc                               defconfig    gcc-16.1.0
-sparc                          randconfig-001    gcc-11.5.0
-sparc                 randconfig-001-20260604    gcc-11.5.0
-sparc                          randconfig-002    gcc-11.5.0
-sparc                 randconfig-002-20260604    gcc-11.5.0
-sparc64                          allmodconfig    clang-23
-sparc64                             defconfig    gcc-14
-sparc64                        randconfig-001    gcc-11.5.0
-sparc64               randconfig-001-20260604    gcc-11.5.0
-sparc64                        randconfig-002    gcc-11.5.0
-sparc64               randconfig-002-20260604    gcc-11.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-17
-um                               allyesconfig    gcc-15.2.0
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                             randconfig-001    gcc-11.5.0
-um                    randconfig-001-20260604    gcc-11.5.0
-um                             randconfig-002    gcc-11.5.0
-um                    randconfig-002-20260604    gcc-11.5.0
-um                           x86_64_defconfig    gcc-14
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-17
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20260604    gcc-14
-x86_64      buildonly-randconfig-002-20260604    gcc-14
-x86_64      buildonly-randconfig-003-20260604    gcc-14
-x86_64      buildonly-randconfig-004-20260604    gcc-14
-x86_64      buildonly-randconfig-005-20260604    gcc-14
-x86_64      buildonly-randconfig-006-20260604    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-22
-x86_64                randconfig-001-20260604    clang-20
-x86_64                randconfig-002-20260604    clang-20
-x86_64                randconfig-003-20260604    clang-20
-x86_64                randconfig-004-20260604    clang-20
-x86_64                randconfig-005-20260604    clang-20
-x86_64                randconfig-006-20260604    clang-20
-x86_64                randconfig-011-20260604    clang-22
-x86_64                randconfig-012-20260604    clang-22
-x86_64                randconfig-013-20260604    clang-22
-x86_64                randconfig-014-20260604    clang-22
-x86_64                randconfig-015-20260604    clang-22
-x86_64                randconfig-016-20260604    clang-22
-x86_64                randconfig-071-20260604    clang-22
-x86_64                randconfig-072-20260604    clang-22
-x86_64                randconfig-073-20260604    clang-22
-x86_64                randconfig-074-20260604    clang-22
-x86_64                randconfig-075-20260604    clang-22
-x86_64                randconfig-076-20260604    clang-22
-x86_64                               rhel-9.4    clang-22
-x86_64                           rhel-9.4-bpf    gcc-14
-x86_64                          rhel-9.4-func    clang-22
-x86_64                    rhel-9.4-kselftests    clang-22
-x86_64                         rhel-9.4-kunit    gcc-14
-x86_64                           rhel-9.4-ltp    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    clang-17
-xtensa                           allyesconfig    clang-23
-xtensa                         randconfig-001    gcc-11.5.0
-xtensa                randconfig-001-20260604    gcc-11.5.0
-xtensa                         randconfig-002    gcc-11.5.0
-xtensa                randconfig-002-20260604    gcc-11.5.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
