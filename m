@@ -4,80 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DEA66CD6E7C
-	for <kexec@archiver.kernel.org>; Fri,  5 Jun 2026 21:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E25D8CD6E7C
+	for <kexec@archiver.kernel.org>; Fri,  5 Jun 2026 21:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=GvUn30TBCS4Zm3lx2W+s/4iNVlrmIOOcdyF2l5T6bVw=; b=HgyzXsfrZIBEOTPQj/Z5iFx2Z2
-	JLPGmjPzjU5tYIaw17vd1PTYp4TfxFxAVm+LPBHAy0yPM1TGJedWwV0KFWyubvSwpA4iOc8qlVD48
-	BjJ8fYlxXtChk+Z05ZH8sku8b+tHelAYqpWsYntjlvVTxPazj7c9kyOHgMTJBkH6KxE7quJwG4pBq
-	wzrNrZCji6QnGmW19vx8jaGyu9ei+FDEl/wM30sQlodPEnZTqSJUIhhoYPliRsxABM/5A2UVSaCN3
-	HTnVvhZXDNvG43b3SMtHX38WS2UnR9L6VQ4OZzKS9TXvFzizheDLCNJcIVrtFZaxKbqsWtLBGMCTp
-	8tH+GaGg==;
+	bh=1+3OWqiUrkFxJENq9oUtcFjYhrvK0bni0JrOu1K6jSU=; b=GNjjhi8gQs1RaKM0BLiIPupCBR
+	cTiLFHYN7raeW5a1u/TnU99ddLad6igfz/0eW7Pi8w7NZFyi2FpPsC5ZJexbG87g/BMrunJP0p/hG
+	Jw1rVS/y4vRfso+zTyJr5u/IPltn/7UURBRzOI/uHSWMaFy4atmVhFIO2TJU9a50gV6AUCJ8Z0jPd
+	kwa35mysoLL556GPD/mNRMGkK8E+PJLzTrwokrJQdf7rGSazpKuT6ow6zuH959w4dR5ODd7VVn2pH
+	XZ1ePMgVKOJ4a5ejD1D0B/2UZhax6+OhJi22RJT4uX/VPRZNOJyJXxjCtBHaNZ+yjhkbblwdJOMfp
+	sqOP6rqQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wVc7C-00000001CaI-3FpJ;
-	Fri, 05 Jun 2026 21:30:06 +0000
-Received: from fout-a8-smtp.messagingengine.com ([103.168.172.151])
+	id 1wVcMp-00000001D7M-1qh3;
+	Fri, 05 Jun 2026 21:46:15 +0000
+Received: from fout-a1-smtp.messagingengine.com ([103.168.172.144])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wVc79-00000001CZq-3dde;
-	Fri, 05 Jun 2026 21:30:05 +0000
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.phl.internal (Postfix) with ESMTP id 57255EC01F2;
-	Fri,  5 Jun 2026 17:30:02 -0400 (EDT)
+	id 1wVcMm-00000001D6q-3X3a;
+	Fri, 05 Jun 2026 21:46:14 +0000
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfout.phl.internal (Postfix) with ESMTP id 71CB9EC01CE;
+	Fri,  5 Jun 2026 17:46:11 -0400 (EDT)
 Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Fri, 05 Jun 2026 17:30:02 -0400
+  by phl-compute-01.internal (MEProxy); Fri, 05 Jun 2026 17:46:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm2;
-	 t=1780695002; x=1780781402; bh=GvUn30TBCS4Zm3lx2W+s/4iNVlrmIOOc
-	dyF2l5T6bVw=; b=lsV4jnVMMml2Z5JVZZSb3QqYvP5fOhplJHutkEpZOC0P6eQw
-	UUUURrnvSh41zAvkFxCHOtpAWjW3DwLne8okVnDcoyHmEiTqNVG6oYX+5/ZjqKrR
-	4RaOu9nnl5WvNEUp+1wrafWjwT+3HLMQph+EGE8n1ClYbKuUnn2P7wQMVYe4/73a
-	3CNKV98sD65duhm/xwZUvgXt25Ik6UDWB09MoB05YcoLeEXcEug4otb15eYY9WMs
-	IA5gtP6iJPe2XAxb+gdjN34K9a1MShHJE6Z7OkSR0iUs+cHc+emp899ja5JVxzEa
-	tXZZEPNS1M8d26+Upf0I3j0kL4yWZ/sm6NMGUw==
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1780695971; x=
+	1780782371; bh=1+3OWqiUrkFxJENq9oUtcFjYhrvK0bni0JrOu1K6jSU=; b=2
+	3cjWCnCrrBfr26y/w07U1sneFXm6ziJuzaNuwTTTxQSKZBSsHr8/dyT6HM/F0lZQ
+	S2Qb7wDh2EVuuZT9ux9gW3iKG4BgG1E3IGA5GH10BUy0Ii8KoJejmqK7Dcz6xuk5
+	HG5OhGATGZzKadzXxJkxWyfkXexNFIhkwUCgFrvAIItmosD4DqCYByo/zMHKlApr
+	vi0p/vneA3rxr4rvdbDcrG1zZG1T4YL2MihtA0xIhE4fp+NyouDSYU0KrO3PCCry
+	JlSIVBzf45YPtDgUzP0JQgjF9GrC3Pu1prIgQbTcUIuVCND/AU3Ivc8uTekoQ7qQ
+	FYjXvD5msA8/nCEXmvJLA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1780695002; x=
-	1780781402; bh=GvUn30TBCS4Zm3lx2W+s/4iNVlrmIOOcdyF2l5T6bVw=; b=E
-	r1ZaO7Tzo+mBX7PCOSNme2T6Vt3IA9DsvVagP2Pnvsa/CJJdR8lXnb4vsx1e0jKu
-	UHZxb1WdT1Cat7phtlQX7d9uRphkr4yIsvqTcB+hAflMcC+xK9PlFzFFS6kpYBvE
-	Cwc2oah9/iI4SbhRoUmCf4FMUv+ULGaNb7Wx7JgWE5VJs+neI3Tdz7CtXTk/LTpS
-	C747dgnNXrAH1ikREfr6U47wHpvz9pzMGoPn2VP1bLZK9kP9IgIbnCA5rqMHOKN2
-	fJKtnh/CE8jgR9DBZR/H9/oQiJtgp+iRS6Vy/9VvmtkWgsHGdRedlUxxih7d8GIo
-	9XSojEOt2XknQ007yeqvw==
-X-ME-Sender: <xms:2T8jalssGXKnC9Cflirnc1-YLcAclPb8TE5gA6PgAQ2YmR0UsjRN7w>
-    <xme:2T8jahmnmdPwin_UaJW4nVipwI_cqWyWu154MojMkwsU-lDcJZdmUzmaXqDQR9bbi
-    yjp0nqeZS3EwBP-UQCqYbEM6XZjWCeLIdIZx83a4N5SqlfiUbMcU9Iq>
-X-ME-Received: <xmr:2T8jamMt2QHnbMt5gyZN2bWsPnn0WsathLEZ8kHu-jB33FHoUbc3r49sdKO7dw>
-X-ME-Proxy-Cause: dmFkZTGT3vO/WGTlEyxfWXbodvnZRmgEDm1o9LlJ/+LRF68W8Z2nser0+LniSG+96nKb+H
-    pOylecktyziBagvY49pxEJBjjkpQL8mgWF5v1uGd1s+h6I5zzlQbM7AHlbCH/iTWEAPmW6
-    PSVh7KQ0UpCrZmv2ekvGKVSTBMc2xq77fqnB36j51Xf/btMi0DPvJiVEVJ113sswsm72zM
-    c1Ob4ECtKaqLnjX8INndbIsjJj8TAReV3dVZrqx+gKmV/udgPeAOLBMtvJtf5Xi9z/fM4q
-    zR3wvjNvuZLT+4A5ZR9Gslu7kzxa47KFBhqSuq1/K8gU/GNvl3Ruhc3zbNG7sLUDfGaJGq
-    S+v+TTf2sRUv+yvDSjBcWsL/beNP5PcN8l6vkgxpLyoIgUkloXaV5tVsHfW5/HjFbM1h9H
-    ++ReRsw/33SuNMrKvyLTaBLJ0Qp1NfUY6nhOKYg6hcvFMElvJ+RIQYH6e1x4wLXqK04P5M
-    QywHw21Le7e0o7Kg15x0VvpUbbbWe6CIzAvq04cBt6emSLOwBrL2o5+itaggLzzHPm65kR
-    zhsqtRFAP1ZPEHvwqTbxdjekEWiuZRNN6v+w/arDgJD9tjnHje7FvwH5if5ceAd36/H91q
-    3Kz/hAFVuYEEhHohAIbtn6hndoyzzKUd9fSuUTZO1fnswAD5ykflsXC7qQhQ
-X-ME-Proxy: <xmx:2T8jagzEpajFW89wSipzYjkpGI2BmCFv63JmyI5rY0u_-T2h6Yb8SA>
-    <xmx:2T8jaklvpBpO4DpbRkwiUufbqrg-R28H64_6ZxIGwChkp2uTUBtfag>
-    <xmx:2T8jap_b1fZPnGTtgaJPL4QMwfrti_bySBjS_uoKQ3n5R0cdeOpv7Q>
-    <xmx:2T8japIOJV-XrUpotfmPO7MmJMRrgSpXQOElrHhYHW0KwPh5eIOi5Q>
-    <xmx:2j8jatWKeiFLsQjzo8ma0SA-g4_EYoxp9yWPwI3dlr48nxe8GlP67eJ0>
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1780695971; x=1780782371; bh=1+3OWqiUrkFxJENq9oUtcFjYhrvK0bni0Jr
+	Ou1K6jSU=; b=jTVlvPX94K+KWtwzY3+9glRSSHe5SvcpYomzsQ+C2pgFvNyhjZ4
+	n3005XfkIrBU/T0U2UA/qIzgaEnLNMXa8aRwYxljVcLJiyyNz2vfI+fGCWejCJsu
+	Rpgpy8Wph10VmjnbZuWlywQWYAZcJHnD6z3YQuEdyMLHKfCSXDLnphYlSFfaGeUv
+	fx5sy3Uu5v8c2/dnouVfvq+7hSHguaoyK0tl5UdfQyQrO2dsyIcG6/FenVmVyQhD
+	Xzr8pSXi++6wx8UhyYdjmbatsB1Sz06pE2MJwaH0uvqBRepNVYTX0kgVytNaSPcA
+	c78coD/3+0ZBY733VAEpb976JMg56gr/PMQ==
+X-ME-Sender: <xms:okMjarnvES_ZxKOnz9fMITLoYbS6fOccjjCBk4EcXDJYW5FQww4ndA>
+    <xme:okMjah9Ks2eh-I2IN7-TQP5DVgWJDI99XcnDby7BGVQh8JnQhTQ9alVwPXaz3a41W
+    pPLYDWPp6wlwSTd_qSaIauaB_YkPeLwyYRE0iF815hge6mHc4CAkAwn>
+X-ME-Received: <xmr:okMjavH6wpZq2tMz816XvGRe2wWXbh9CA0L13s-2kru8DWRUytPePC5EZK8iUQ>
+X-ME-Proxy-Cause: dmFkZTFZ6rAbR2GMHTid5wNQ1HjyoZpQYbTjcFFBK/N5lbGTfynlRXMekiZKWNKb2tUotG
+    bo9OCxe360C69aeh2/apMnYP5gTDbXtnQqf1kRmOXi86jFeg5DwhUW9SOCznLRo80VyDMV
+    tDtHcIkLt1KJCvmXSZ2wSLythxmgF3+GaMJwohFlCSqyBugAtUct8QZf3IGsZucFLJH1za
+    T2T/LmSRn5RsqnKVFgGmIT9VCqwJwO5RrhnjI0MrAZ75P2/vPU2jsFs01O7VBwTJGx+4NO
+    jxYIZNglxQNdejWBHAZgliIvru8kj8HDbiICk40eeV4ad6KKJpKOJIReFFm2su4kjoLwpL
+    Eb3llxKasvEjmqw9mJscZaqews3HoxUzxYDktcMh/paO3imJOlZbak87iepAixSNZe30wJ
+    gh/J559gqZM0ARZA5LKwy72IlN9xbDUqgtW0PsLFcEI18+pG1tBtTqgeSZn7PUk2kvwgO7
+    cXpuP2EFcM5A+ttbeqnR/M0rgP3l9514b9qnJFjn2XLRGuCcFcfdrVhrU1JRP49Vcb+4ep
+    xC1d3sjJ987lUu7XiTUzPcCFiQekODFgnpDtbLSXkrarmXPhLwToCQZ/XcYTn3L9ZnWf6u
+    UmAjYCQTXES+mmXH2OVKgihkIAzM6FnmbizrHoy3JxZb7a+/+Sl62ltawrkQ
+X-ME-Proxy: <xmx:okMjaoLdx8FVPXJJnjBpSfsaVc8Rq20gnss0jBGC8ZVCg622BSZdPQ>
+    <xmx:okMjaodK0T09EsAEHemFml2rlbfBl4dvHoqyARJWJj0P8n7RdMv_bg>
+    <xmx:okMjagXpEB8YnT9JfkqPFFF4MqEvJZdlGAD5pPK6v-8aXo9rhimhIw>
+    <xmx:okMjagBnW1yHabdj3RyflUUa_aO76g_8rekOq3YkiW51Z9N6XKrNIQ>
+    <xmx:o0MjarJp02hP8BFOr6AqmTJxnq_6V_931MWvd0rnv6tnGCBk1tre1_p3>
 Feedback-ID: ie3994620:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 5 Jun 2026 17:30:00 -0400 (EDT)
-Date: Fri, 5 Jun 2026 22:29:59 +0100
+ 5 Jun 2026 17:46:10 -0400 (EDT)
+Date: Fri, 5 Jun 2026 22:46:09 +0100
 From: Kiryl Shutsemau <kirill@shutemov.name>
 To: Doug Anderson <dianders@chromium.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>, 
@@ -89,20 +88,19 @@ Cc: Catalin Marinas <catalin.marinas@arm.com>,
 	Julien Thierry <julien.thierry.kdev@gmail.com>, Lecopzer Chen <lecopzer.chen@mediatek.com>, 
 	Sumit Garg <sumit.garg@kernel.org>, kernel-team@meta.com, kexec@lists.infradead.org, 
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] drivers/firmware: add SDEI cross-CPU NMI service for
- arm64
-Message-ID: <aiM861HRKlrDqaXl@thinkstation>
+Subject: Re: [PATCH 4/4] arm64: route crash_smp_send_stop() last resort
+ through SDEI
+Message-ID: <aiNCk2M0OlD7VaEs@thinkstation>
 References: <cover.1780496779.git.kas@kernel.org>
- <145b9e98b12a7d314fc4a203075f65c3a0c3a913.1780496779.git.kas@kernel.org>
- <CAD=FV=XMqFVnri1aVGbFJhN6Ts3SeJUzEZrfN0Pqp9WeOzE=OA@mail.gmail.com>
+ <54cb99db3c981dc39eb3031aff5caeaadb09e8b9.1780496779.git.kas@kernel.org>
+ <CAD=FV=X5++c-6Wd6babajiPbn07cfPcG0uW3ZeepznXgSVO2+w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=XMqFVnri1aVGbFJhN6Ts3SeJUzEZrfN0Pqp9WeOzE=OA@mail.gmail.com>
+In-Reply-To: <CAD=FV=X5++c-6Wd6babajiPbn07cfPcG0uW3ZeepznXgSVO2+w@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260605_143004_005135_0091FD97 
-X-CRM114-Status: GOOD (  31.48  )
+X-CRM114-CacheID: sfid-20260605_144612_966054_770C1D84 
+X-CRM114-Status: GOOD (  17.68  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,95 +115,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jun 05, 2026 at 01:54:00PM -0700, Doug Anderson wrote:
-> Hi,
+On Fri, Jun 05, 2026 at 01:42:57PM -0700, Doug Anderson wrote:
+> > +       sdei_nmi_crash_smp_send_stop();
 > 
-> On Wed, Jun 3, 2026 at 7:36 AM Kiryl Shutsemau <kirill@shutemov.name> wrote:
-> >
-> > @@ -928,11 +929,19 @@ static void arm64_backtrace_ipi(cpumask_t *mask)
-> >  void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
-> >  {
-> >         /*
-> > +        * Prefer the SDEI cross-CPU NMI provider when active: firmware
-> > +        * dispatches the event out of EL3 and reaches CPUs that have
-> > +        * interrupts locally masked, without the per-IRQ-mask cost that
-> > +        * pseudo-NMI pays for the same reach. The plain IPI path below
-> > +        * can't reach such a CPU unless pseudo-NMI is enabled.
-> > +        *
-> >          * NOTE: though nmi_trigger_cpumask_backtrace() has "nmi_" in the name,
-> >          * nothing about it truly needs to be implemented using an NMI, it's
-> >          * just that it's _allowed_ to work with NMIs. If ipi_should_be_nmi()
-> >          * returned false our backtrace attempt will just use a regular IPI.
-> >          */
-> > +       if (sdei_nmi_trigger_cpumask_backtrace(mask, exclude_cpu))
-> > +               return;
-> >         nmi_trigger_cpumask_backtrace(mask, exclude_cpu, arm64_backtrace_ipi);
+> It feels weird to me that you're adding SDEI for "crash stop" but not
+> for regular "stop". It feels like you should modify smp_send_stop() to
+> fall back to SDEI if sending the NMI failed, instead of adding this
+> separate path.
+
+Fair. A wedged CPU ignores the reboot-path stop just the same, and the
+escalation logic already lives in smp.c, so I'll restructure in v2.
+
+One thing to sort out there: this patch parks the stopped CPU inside
+its SDEI handler without completing the event, which is fine for the
+crash case (nothing expects the CPU back before reset), but a generic
+stop path probably wants SDEI_EVENT_COMPLETE_AND_RESUME into a parking
+stub instead, so that e.g. a regular kexec can bring all CPUs back up
+in the new kernel. I'll look into that as part of the rework.
+
+> > +               cpu_park_loop();
+> > +               /* unreachable */
 > 
-> nit: instead of one comment block, I would have broken it up in two. Like:
+> Any chance we could avoid duplicating stuff from ipi_cpu_crash_stop()?
+
+Yes -- falls out of the above. I will look into this.
+
+Maybe pull the save/offline/park body into a shared helper that both the
+IPI handler and the SDEI handler call.
+
+> > +bool sdei_nmi_crash_smp_send_stop(void)
+> > +{
+> > +       unsigned int this_cpu, cpu, remaining;
+> > +       unsigned long timeout;
+> > +       cpumask_t mask;
 > 
-> /*
->  * Prefer the SDEI ...
->  */
-> if (sdei_nmi_trigger_cpumask_backtrace(mask, exclude_cpu))
->   return;
-> 
-> /*
->  * NOTE: though ...
->  */
-> nmi_trigger_cpumask_backtrace(...);
+> The above will probably get you a yell. Putting "cpumask_t" on the
+> stack is a no-no since it can be quite large under certain CONFIG
+> options. This is why it's nearly always defined as "static".
 
-Makes sense.
-
-> >  }
-> >
-> > diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> > index bbd2155d8483..6501087ff90d 100644
-> > --- a/drivers/firmware/Kconfig
-> > +++ b/drivers/firmware/Kconfig
-> > @@ -36,6 +36,25 @@ config ARM_SDE_INTERFACE
-> >           standard for registering callbacks from the platform firmware
-> >           into the OS. This is typically used to implement RAS notifications.
-> >
-> > +config ARM_SDEI_NMI
-> > +       bool "SDEI-based cross-CPU NMI service (arm64)"
-> > +       depends on ARM64 && ARM_SDE_INTERFACE
-> > +       help
-> > +         Provides SDEI-based cross-CPU NMI delivery for hooks that need
-> > +         to reach interrupt-masked CPUs on silicon that lacks FEAT_NMI:
-> > +
-> > +           - arch_trigger_cpumask_backtrace()  (sysrq-l, RCU stalls,
-> > +             hardlockup_all_cpu_backtrace, soft-lockup secondary dumps,
-> > +             hung-task auxiliary dumps)
-> > +
-> > +         The driver registers a handler for the SDEI software-signalled
-> > +         event (event 0) and reaches a target CPU by signalling it with
-> > +         SDEI_EVENT_SIGNAL. Firmware delivers the event out of EL3
-> > +         regardless of the target's PSTATE.DAIF -- forced delivery into a
-> > +         CPU wedged with interrupts locally masked.
-> > +
-> > +         If unsure, say N.
-> 
-> Is there some downside to this? It seems like anyone who has the SDE
-> interface would want this. Not sure why you'd suggest people say "N".
-
-No real downside -- without the software-signalled event the driver
-stays inert, and there is no cost until an event actually fires.
-
-The "say N" is caution, not a technical limit: so far this has run on
-QEMU (TF-A) and one hardware platform, and the interesting paths depend
-on each vendor's SDEI implementation at EL3. I'm not sure vendors would
-care to run SDEI_EVENT_SIGNAL validation. Maybe we want to see more
-data points first?
-
-But maybe I am too cautious. Happy to flip the recommendation (or add
-default y) in v2 if that the consensus.
-
-> Other than the nit, this looks reasoanble to me, though I'm a complete
-> noob when it comes to SDEI...
-> 
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-
-Thanks!
+Doh! Will make it static in v2 -- safe here since the path is serialized
+by the crash_stop guard.
 
 -- 
   Kiryl Shutsemau / Kirill A. Shutemov
