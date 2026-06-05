@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EFFCBCD6E7C
-	for <kexec@archiver.kernel.org>; Fri,  5 Jun 2026 18:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E0126CD6E7E
+	for <kexec@archiver.kernel.org>; Fri,  5 Jun 2026 18:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZkWvf8Em4F4xpQ20Sn9ei7Pk/pLFMxxTuWJ2jy/x258=; b=z1ayc/20Oh2K+xg8Csf8wUcXSn
-	kA5UHLewyM7lbJ2xyCLS4dvcwINX9saymNnbN975I6z/tnn/XUrBOEQgPmCaD8foAogc54edO32TV
-	1ziSpwZZFk2w69IhbY9wxbD62/USr96q06POyQ03C3/O50BMyj8uHjh7Xk8aKRaa4uOeESxCFqi3f
-	/wM3cTtXoJqsPesg/Mc6L4E3vF3ZBs9J3CpGJ7DnV9joaqqj2dsPM3zC4fi7ErDmF0+UhPbW8/Umy
-	XXimBF/72hnMfe9nM7Ony4MN2nDK5Qz6LDaFQlWfM6g3WUkp6FHB6dr2kytCLprLBYBeGo5UD6V6N
-	NAqMsVeQ==;
+	bh=LOiNopfyqH+evMdJ4RgcQZeJWf2liHs2K6IwtzYjoWE=; b=dF5FaEUBJ+b7VNaI80ACYN3veS
+	Q5P/B2S2Sh8ihqviZQCN7iFwiNYnfEu18IcnatQZE4uo2vdcFZ/wdB6LGwiDpPb7ySRFazJ0yyOTu
+	XSwYSKbMejN/xeFuHR8Ebdk/lphTo1ovGmqsxQneeV2RCLdPFClnVrigOE8guP6yMVZattm5EITrr
+	O8A+OZp4Htq6vN/CyRT8iVSJ+2VeN9kRw+fK8An+b/Rvt/lSUEnKkxEg17pH0L/Jw5RmTFcFaAjb6
+	Z8uxl2vvSK0VW2dZgzC5xETXuQ1pGwGBfOCf/UzAQd2xSPXv3CA97LvNuJzahjfQrTAt6GvcEiYnT
+	vV0Ue3dw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wVZOP-000000013K5-0I6m;
-	Fri, 05 Jun 2026 18:35:41 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wVZOR-000000013Lz-0uDG;
+	Fri, 05 Jun 2026 18:35:43 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wVZOO-000000013JM-1V2n
+	id 1wVZOQ-000000013LQ-1LqT
 	for kexec@lists.infradead.org;
-	Fri, 05 Jun 2026 18:35:40 +0000
+	Fri, 05 Jun 2026 18:35:42 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id C9D2A601F2;
+	by sea.source.kernel.org (Postfix) with ESMTP id 1941243BE7;
+	Fri,  5 Jun 2026 18:35:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCB0A1F00899;
 	Fri,  5 Jun 2026 18:35:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B9811F00893;
-	Fri,  5 Jun 2026 18:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780684539;
-	bh=ZkWvf8Em4F4xpQ20Sn9ei7Pk/pLFMxxTuWJ2jy/x258=;
+	s=k20260515; t=1780684542;
+	bh=LOiNopfyqH+evMdJ4RgcQZeJWf2liHs2K6IwtzYjoWE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=TXKNcMEK8ZHWObM629hgW5Sx/MnPTwMvjNI5ep5QCLxUwosJq3IHU+PK8DMXF0K+X
-	 nZ5jVgzl1ww8zJaj5c/HwyY1iOrlm8X6ygGSsszb/sqBbYLsABo9zI/r4nR6JN1+O6
-	 AcYhdl4OvZw+wwDBZQ3t8kZPD3ro8dMdpuh0M50mSFJIpf43lAhtxxnfwXTf58U5N5
-	 TRtIu0qUUY2HBJiekh/uJo0gNTV8bbDOiDOvc/NGbCBrOuLNWz1V/lbZnw57RrLB3L
-	 YAXVcnYpOB39Dz4G/t0GD38KXJ3JC22B7GiOkDPSPHRJxH4YApZddskdrzbZD2YRwt
-	 oTOz7+fqNCcew==
+	b=CCVRNwyby+ygQUpFDO97aU/NeI3sJPjkf8B7Mrxw243tA405VrgkDHfzpVkBBL75D
+	 sCr3NTa3AYl5JZTLxRwqzRbnanUFMoh/VLphQ/GLQzn/4gznLTDZWd2iaQAQoc+RGh
+	 Mf/kq93HkUIqFIr1IWwHSPNVZ4jHg8gQz1vNXBMjbnx2HktU968oZ8H2jk7/8hges9
+	 NvBQBbNXrvbyrsHM4bGiVPxBTCQLW6LMLNM6TQQ+u6adVZHnf6wzo57oKx3m7Q6+pi
+	 HKoIhKEVOIUyk/hFcoDJxNyFviWxzqFUNXy5mVs0zWcdGGtC7RRpOtDav5xI7xVF7p
+	 xS1nTEabVjOdA==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -56,9 +56,9 @@ To: Mike Rapoport <rppt@kernel.org>,
 Cc: kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 11/18] kho: add kho_radix_init_tree()
-Date: Fri,  5 Jun 2026 20:34:44 +0200
-Message-ID: <20260605183501.3884950-12-pratyush@kernel.org>
+Subject: [PATCH v2 12/18] kho: export kho_scratch_overlap()
+Date: Fri,  5 Jun 2026 20:34:45 +0200
+Message-ID: <20260605183501.3884950-13-pratyush@kernel.org>
 X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
 In-Reply-To: <20260605183501.3884950-1-pratyush@kernel.org>
 References: <20260605183501.3884950-1-pratyush@kernel.org>
@@ -80,147 +80,163 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-Move the initialization logic of the radix tree into
-kho_radix_init_tree() instead of having users open-code it. Makes the
-boundaries cleaner and reduces code duplication when a new user of the
-radix tree will be added in a future commit.
+Support for discovering memory blocks with no preserved memory will be
+added in coming patches. These areas will also be marked as scratch to
+allow allocations from them. Memblock will switch to looking through the
+scratch array to decide the right migratetype.
+
+Export kho_scratch_overlap(). Since it is now used by non-debug code,
+move it out of kexec_handover_debug.c and into kexec_handover.c. Gate
+the overlap checks in kho_preserve_folio() and kho_preserve_pages() by
+IS_ENABLED(CONFIG_KEXEC_HANDOVER_DEBUG) instead.
+
+Since kexec_handover_debug.c is now empty, delete it.
+
+No functional changes.
 
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- include/linux/kho_radix_tree.h     |  7 ++++
- kernel/liveupdate/kexec_handover.c | 66 ++++++++++++++++++++++--------
- 2 files changed, 55 insertions(+), 18 deletions(-)
+ include/linux/kexec_handover.h              |  7 ++++++
+ kernel/liveupdate/Makefile                  |  1 -
+ kernel/liveupdate/kexec_handover.c          | 22 ++++++++++++++++--
+ kernel/liveupdate/kexec_handover_debug.c    | 25 ---------------------
+ kernel/liveupdate/kexec_handover_internal.h |  9 --------
+ 5 files changed, 27 insertions(+), 37 deletions(-)
+ delete mode 100644 kernel/liveupdate/kexec_handover_debug.c
 
-diff --git a/include/linux/kho_radix_tree.h b/include/linux/kho_radix_tree.h
-index 66ca936b3f06..5d6ae2893684 100644
---- a/include/linux/kho_radix_tree.h
-+++ b/include/linux/kho_radix_tree.h
-@@ -54,6 +54,7 @@ int kho_radix_add_key(struct kho_radix_tree *tree, unsigned long key);
- void kho_radix_del_key(struct kho_radix_tree *tree, unsigned long key);
- int kho_radix_walk_tree(struct kho_radix_tree *tree,
- 			const struct kho_radix_walk_cb *cb, void *data);
-+int kho_radix_init_tree(struct kho_radix_tree *tree, struct kho_radix_node *root);
- void kho_radix_destroy_tree(struct kho_radix_tree *tree);
+diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
+index 8968c56d2d73..3740c14d970d 100644
+--- a/include/linux/kexec_handover.h
++++ b/include/linux/kexec_handover.h
+@@ -40,6 +40,8 @@ void kho_memory_init(void);
  
- #else  /* #ifdef CONFIG_KEXEC_HANDOVER */
-@@ -72,6 +73,12 @@ static inline int kho_radix_walk_tree(struct kho_radix_tree *tree,
- 	return -EOPNOTSUPP;
- }
- 
-+static inline int kho_radix_init_tree(struct kho_radix_tree *tree,
-+				      struct kho_radix_node *root)
-+{
-+	return 0;
-+}
+ void kho_populate(phys_addr_t fdt_phys, u64 fdt_len, phys_addr_t scratch_phys,
+ 		  u64 scratch_len);
 +
- static inline void kho_radix_destroy_tree(struct kho_radix_tree *tree) { }
++bool kho_scratch_overlap(phys_addr_t phys, size_t size);
+ #else
+ static inline bool kho_is_enabled(void)
+ {
+@@ -116,6 +118,11 @@ static inline void kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 				phys_addr_t scratch_phys, u64 scratch_len)
+ {
+ }
++
++static inline bool kho_scratch_overlap(phys_addr_t phys, size_t size)
++{
++	return false;
++}
+ #endif /* CONFIG_KEXEC_HANDOVER */
  
- #endif /* #ifdef CONFIG_KEXEC_HANDOVER */
+ #endif /* LINUX_KEXEC_HANDOVER_H */
+diff --git a/kernel/liveupdate/Makefile b/kernel/liveupdate/Makefile
+index d2f779cbe279..dc352839ccf0 100644
+--- a/kernel/liveupdate/Makefile
++++ b/kernel/liveupdate/Makefile
+@@ -7,7 +7,6 @@ luo-y :=								\
+ 		luo_session.o
+ 
+ obj-$(CONFIG_KEXEC_HANDOVER)		+= kexec_handover.o
+-obj-$(CONFIG_KEXEC_HANDOVER_DEBUG)	+= kexec_handover_debug.o
+ obj-$(CONFIG_KEXEC_HANDOVER_DEBUGFS)	+= kexec_handover_debugfs.o
+ 
+ obj-$(CONFIG_LIVEUPDATE)		+= luo.o
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index df3f5eb01bf1..8ab2c7e234e1 100644
+index 8ab2c7e234e1..a66f23a35389 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -317,6 +317,34 @@ static void __kho_radix_destroy_tree(struct kho_radix_node *root,
- 	kho_radix_free_node(root);
+@@ -766,6 +766,22 @@ static phys_addr_t __init scratch_size_node(int nid)
+ 	return round_up(size, CMA_MIN_ALIGNMENT_BYTES);
  }
  
-+/**
-+ * kho_radix_init_tree - initialize the radix tree.
-+ * @tree:   the tree to initialize.
-+ * @root:   root table of the radix tree.
-+ *
-+ * Initialize the radix tree with the given root node. If root is %NULL, an
-+ * empty root table is allocated. If root is not %NULL, it is the caller's
-+ * responsibility to make sure the root is valid and in the correct format.
-+ *
-+ * Return: 0 on success, -errno on failure.
-+ */
-+int kho_radix_init_tree(struct kho_radix_tree *tree, struct kho_radix_node *root)
++bool kho_scratch_overlap(phys_addr_t phys, size_t size)
 +{
-+	/* Already initialized. */
-+	if (tree->root)
-+		return 0;
++	phys_addr_t scratch_start, scratch_end;
++	unsigned int i;
 +
-+	if (!root)
-+		root = kho_radix_alloc_node();
-+	if (!root)
-+		return -ENOMEM;
++	for (i = 0; i < kho_scratch_cnt; i++) {
++		scratch_start = kho_scratch[i].addr;
++		scratch_end = kho_scratch[i].addr + kho_scratch[i].size;
 +
-+	tree->root = root;
-+	mutex_init(&tree->lock);
-+	return 0;
++		if (phys < scratch_end && (phys + size) > scratch_start)
++			return true;
++	}
++
++	return false;
 +}
-+EXPORT_SYMBOL_GPL(kho_radix_init_tree);
 +
  /**
-  * kho_radix_destroy_tree - Destroy the radix tree
-  * @tree: The radix tree to destroy
-@@ -1496,18 +1524,23 @@ static void __init kho_mem_retrieve(void)
- 	 * catches that and never sets kho_in.scratch_phys, which stops memory
- 	 * retrieval.
- 	 */
--	kho_in.radix_tree.root = kho_get_mem_map(fdt);
--	mutex_init(&kho_in.radix_tree.lock);
-+	err = kho_radix_init_tree(&kho_in.radix_tree, kho_get_mem_map(fdt));
-+	if (err)
-+		goto err;
+  * kho_reserve_scratch - Reserve a contiguous chunk of memory for kexec
+  *
+@@ -963,7 +979,8 @@ int kho_preserve_folio(struct folio *folio)
+ 	const unsigned long pfn = folio_pfn(folio);
+ 	const unsigned int order = folio_order(folio);
  
- 	err = kho_radix_walk_tree(&kho_in.radix_tree, &cb, NULL);
--	if (err) {
--		/*
--		 * Failed to initialize preserved memory. Clear FDT and radix
--		 * so KHO users don't treat it as a KHO boot.
--		 */
--		kho_in.fdt_phys = 0;
--		kho_in.radix_tree.root = NULL;
--	}
-+	if (err)
-+		goto err;
-+
-+	return;
-+
-+err:
-+	/*
-+	 * Failed to initialize preserved memory. Clear FDT and radix so KHO
-+	 * users don't treat it as a KHO boot.
-+	 */
-+	kho_in.fdt_phys = 0;
-+	kho_in.radix_tree.root = NULL;
- }
+-	if (WARN_ON(kho_scratch_overlap(pfn << PAGE_SHIFT, PAGE_SIZE << order)))
++	if (IS_ENABLED(CONFIG_KEXEC_HANDOVER_DEBUG) &&
++	    WARN_ON(kho_scratch_overlap(pfn << PAGE_SHIFT, PAGE_SIZE << order)))
+ 		return -EINVAL;
  
- static __init int kho_out_fdt_setup(void)
-@@ -1633,16 +1666,14 @@ static __init int kho_init(void)
- 	if (!kho_enable)
- 		return 0;
+ 	return kho_radix_add_key(tree, kho_encode_radix_key(PFN_PHYS(pfn),
+@@ -1040,7 +1057,8 @@ int kho_preserve_pages(struct page *page, unsigned long nr_pages)
+ 	unsigned long failed_pfn = 0;
+ 	int err = 0;
  
--	tree->root = kzalloc(PAGE_SIZE, GFP_KERNEL);
--	if (!tree->root) {
--		err = -ENOMEM;
-+	err = kho_radix_init_tree(tree, NULL);
-+	if (err)
- 		goto err_free_scratch;
--	}
- 
- 	kho_out.fdt = kho_alloc_preserve(PAGE_SIZE);
- 	if (IS_ERR(kho_out.fdt)) {
- 		err = PTR_ERR(kho_out.fdt);
--		goto err_free_kho_radix_tree_root;
-+		goto err_free_kho_radix_tree;
+-	if (WARN_ON(kho_scratch_overlap(start_pfn << PAGE_SHIFT,
++	if (IS_ENABLED(CONFIG_KEXEC_HANDOVER_DEBUG) &&
++	    WARN_ON(kho_scratch_overlap(start_pfn << PAGE_SHIFT,
+ 					nr_pages << PAGE_SHIFT))) {
+ 		return -EINVAL;
  	}
+diff --git a/kernel/liveupdate/kexec_handover_debug.c b/kernel/liveupdate/kexec_handover_debug.c
+deleted file mode 100644
+index 6efb696f5426..000000000000
+--- a/kernel/liveupdate/kexec_handover_debug.c
++++ /dev/null
+@@ -1,25 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * kexec_handover_debug.c - kexec handover optional debug functionality
+- * Copyright (C) 2025 Google LLC, Pasha Tatashin <pasha.tatashin@soleen.com>
+- */
+-
+-#define pr_fmt(fmt) "KHO: " fmt
+-
+-#include "kexec_handover_internal.h"
+-
+-bool kho_scratch_overlap(phys_addr_t phys, size_t size)
+-{
+-	phys_addr_t scratch_start, scratch_end;
+-	unsigned int i;
+-
+-	for (i = 0; i < kho_scratch_cnt; i++) {
+-		scratch_start = kho_scratch[i].addr;
+-		scratch_end = kho_scratch[i].addr + kho_scratch[i].size;
+-
+-		if (phys < scratch_end && (phys + size) > scratch_start)
+-			return true;
+-	}
+-
+-	return false;
+-}
+diff --git a/kernel/liveupdate/kexec_handover_internal.h b/kernel/liveupdate/kexec_handover_internal.h
+index 0399ff107775..805d2a76c388 100644
+--- a/kernel/liveupdate/kexec_handover_internal.h
++++ b/kernel/liveupdate/kexec_handover_internal.h
+@@ -41,13 +41,4 @@ static inline void kho_debugfs_blob_remove(struct kho_debugfs *dbg,
+ 					   void *blob) { }
+ #endif /* CONFIG_KEXEC_HANDOVER_DEBUGFS */
  
- 	err = kho_debugfs_init();
-@@ -1693,9 +1724,8 @@ static __init int kho_init(void)
- 
- err_free_fdt:
- 	kho_unpreserve_free(kho_out.fdt);
--err_free_kho_radix_tree_root:
--	kfree(tree->root);
--	tree->root = NULL;
-+err_free_kho_radix_tree:
-+	kho_radix_destroy_tree(tree);
- err_free_scratch:
- 	kho_out.fdt = NULL;
- 	for (int i = 0; i < kho_scratch_cnt; i++) {
+-#ifdef CONFIG_KEXEC_HANDOVER_DEBUG
+-bool kho_scratch_overlap(phys_addr_t phys, size_t size);
+-#else
+-static inline bool kho_scratch_overlap(phys_addr_t phys, size_t size)
+-{
+-	return false;
+-}
+-#endif /* CONFIG_KEXEC_HANDOVER_DEBUG */
+-
+ #endif /* LINUX_KEXEC_HANDOVER_INTERNAL_H */
 -- 
 2.54.0.1032.g2f8565e1d1-goog
 
