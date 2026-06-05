@@ -4,84 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1E583CD8C86
-	for <kexec@archiver.kernel.org>; Fri,  5 Jun 2026 17:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E97D0CD6E7E
+	for <kexec@archiver.kernel.org>; Fri,  5 Jun 2026 18:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=JKOif6j4jVPzr5ukiPmavhItUicYy0w0O5SDkKy/EaQ=; b=nmS7P2AxQZCqwC0iiaGFJ8u9Gv
-	9XO16LWlDcQZij/3ddlsC6mDzmqZWa2kjyin4mdr4Qo1VZ/J5fCpzEIpupGMInZSJkAC42/Osb34C
-	Al1hxwEfRupmLeNlALWgqpo6zOleKP496h2xD9wo4VfTJuch68RElM4V+uyvNqr1g2IA+fGvrrWkD
-	c6a9t4gNyUu30seyiH6AW+1D39ND3M7R8oc8A8Wqc5k5cTi2xqGEHPjRAuyzb49yaiSosDKw1LA3r
-	1IN63EVi2VWyD99UCo95z0xnm2gQY1grmtOmvr9/BJWB5tdfMluN1KK9kYb6mdZjOl24muvftbMVh
-	4/SbQliQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=YfLHlVxyR5EYNIvS2b9hctrQDZeBzNQYJP8K26NqgQo=; b=t8PMrmlQVNq6gZgEiCbV7nLQtP
+	ksCIa6rZgODx2PNUnPYHgFbqtS/DnoDkKPGnix3NHekiCyx5wcAzMJXw2WWHhwioKXJt6wGsZaSZt
+	ZJAnK8YCqmmPM/mO85Q8EpPagMPEBa7MbMi5rwhD34oT9RdVomWFhOFkA4+oTHzR2ih7gHioHUWVU
+	9+evlCCSphvfL8QAFFCnvir1jAJ7h6Kp0fxuDk1cniV3n6NYQObAQL5pARudidwv7OJ6DY3TIsLZx
+	3qYgPOB6CRB4mvtAaGifBSbIaaE7afkgLnV3de0js5PKaLwyOt2b3VG8am8cQSJJ0Jz4m06ekK/Jx
+	xamUqDlA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wVY2U-00000000xOW-411m;
-	Fri, 05 Jun 2026 17:08:58 +0000
-Received: from mail-ej1-x64a.google.com ([2a00:1450:4864:20::64a])
+	id 1wVZNz-0000000130F-0N17;
+	Fri, 05 Jun 2026 18:35:15 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wVY2R-00000000xHF-1c7W
+	id 1wVZNx-00000001306-2S6a
 	for kexec@lists.infradead.org;
-	Fri, 05 Jun 2026 17:08:57 +0000
-Received: by mail-ej1-x64a.google.com with SMTP id a640c23a62f3a-bec3fcb280eso25993266b.0
-        for <kexec@lists.infradead.org>; Fri, 05 Jun 2026 10:08:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780679333; x=1781284133; darn=lists.infradead.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JKOif6j4jVPzr5ukiPmavhItUicYy0w0O5SDkKy/EaQ=;
-        b=CqCrbifsWY5gmEGChZKhFWt0uWNF5656WCf9qaGsOOYOidtJFRUfO1kF06XeppL2aQ
-         sKs/XCt0ga7f6usdn2MN8LIdkSmO8ucwHAVBRjiohRGm36d6CgEgofuB/5wokJloDU1h
-         ixnpTMFpXX1u53j+S8fPSWDKCYzOfnG5ZsjxQ96CIVmrSAhGRQGtlcZNjmABx1Nysq9R
-         6bdk0BIV/Dc/PRpAGrCDJg/OGBfXM1guWtLuvnUA+H7ESc6yGbEeQeI9wq1f3WhjTwZY
-         gi92zASfGm6LesbPYH6j9dgyzNcDzD8hYmr5Su0lYO4qRR7iMInc516QJLHddZeh5Tw8
-         EXQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780679333; x=1781284133;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JKOif6j4jVPzr5ukiPmavhItUicYy0w0O5SDkKy/EaQ=;
-        b=bFLttdWbvW6PKTplpdT3daKHQRlIhTGvpCUY7wcWKx3plY1j1v4gCpVw27JHXraxZ9
-         EWmlIlCLVngTS8lVWOWQ0UunCI0+TlUs+Z3BfyZk6mJyK3OpdaVlYFjM62DR7XKEte32
-         TtSPNUnj/Pfqv46IeWNaTutiJHMi//C4bdY67VmsVNUfi+K+M1VDFDRaSztq5Cf8lbD1
-         065xZZ3YNWzgApuPiY7MiBNsUFWVF+H06yLGCtO+XK+jtpxIBCgLwPRa6+DD9hdb/fJx
-         ruh9pPzwcLK7ELCUxBDucRhhU1RLJZ9VDV3dLdN0yLp4L0C0U1hnDufo6ie+AFTKJgY2
-         7S4A==
-X-Forwarded-Encrypted: i=1; AFNElJ8V0+0GQqtjsD5NmVcUL50PmMpA95op9ODyXWZvPpb4LB14ktf9gmvs7W+lJR2WFFanWo0VRw==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yy18XVToPJW9q/0bnB067+fS/uoRyunsH8mgb8+URms6nynzbmf
-	c4BVoFISr+wVOeaDDoNePBwDxMZf+PRU0Kb0LMpqTwbJoABP0an7ydeZTpInV/CDc+oYuMnfv/5
-	qeLdAbcTkNBbgfowlfA==
-X-Received: from ejgi16.prod.google.com ([2002:a17:906:3c50:b0:bee:1279:f6c5])
- (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:907:7a8f:b0:bee:31b0:b53c with SMTP id a640c23a62f3a-bf3748d76f8mr236059566b.47.1780679332631;
- Fri, 05 Jun 2026 10:08:52 -0700 (PDT)
-Date: Fri,  5 Jun 2026 17:08:35 +0000
-In-Reply-To: <cover.1780676742.git.tarunsahu@google.com>
-Mime-Version: 1.0
-References: <cover.1780676742.git.tarunsahu@google.com>
+	Fri, 05 Jun 2026 18:35:13 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id B1398600AE;
+	Fri,  5 Jun 2026 18:35:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50BE11F00893;
+	Fri,  5 Jun 2026 18:35:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780684512;
+	bh=YfLHlVxyR5EYNIvS2b9hctrQDZeBzNQYJP8K26NqgQo=;
+	h=From:To:Cc:Subject:Date;
+	b=B4SkuHOwbpSMPXI9ruNO7rv/8yWdd8bv8ro0F9nWQkm6nqfl+gyMpWpb0cKTLPHie
+	 z/XNlFaOrjGa4VmKsmdR+GkdbJld7zgVRxUgGudXk3+BbEzNetVxmx5HHBp54QJLB6
+	 niasdzmUY36GOFGOUfi1DPrL8DSjIv7gcq2VZYdpjECJtyP+NUoXAPI1CZkniE0VB7
+	 zfWER+QtNuRfTU6o5Vu9HD6dRTd7zj2b4pU49RpuriOG/7MPIM0mkcXoiv5H987Ljk
+	 V58MtYDpC8vh8tEyZhOH5BAvoQrG27WKhS0+Va/VqG3yjfig4ipQJL3dQ42cAim+b1
+	 VIHJwm+goFsLg==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Alexander Graf <graf@amazon.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jason Miu <jasonmiu@google.com>,
+	Jork Loeser <jloeser@linux.microsoft.com>
+Cc: kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/18] kho: make boot time huge page allocation work nicely with KHO
+Date: Fri,  5 Jun 2026 20:34:33 +0200
+Message-ID: <20260605183501.3884950-1-pratyush@kernel.org>
 X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
-Message-ID: <deb20fbe3584a8c6bfda276447fe464c6553737d.1780676742.git.tarunsahu@google.com>
-Subject: [RFC PATCH v2 10/10] selftests: kvm: Add guest_memfd_preservation_test
-From: Tarun Sahu <tarunsahu@google.com>
-To: Jonathan Corbet <corbet@lwn.net>, vannapurve@google.com, 
-	Tarun Sahu <tarunsahu@google.com>, fvdl@google.com, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Shuah Khan <skhan@linuxfoundation.org>, sagis@google.com, 
-	aneesh.kumar@kernel.org, skhawaja@google.com, vipinsh@google.com, 
-	ackerleytng@google.com, Pratyush Yadav <pratyush@kernel.org>, david@redhat.com, 
-	dmatlack@google.com, mark.rutland@arm.com, 
-	Paolo Bonzini <pbonzini@redhat.com>, Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>, 
-	seanjc@google.com, axelrasmussen@google.com
-Cc: linux-kselftest@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260605_100855_474830_39B59806 
-X-CRM114-Status: GOOD (  25.27  )
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,314 +76,105 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add a new KVM selftest `guest_memfd_preservation_test` to verify that
-guest memory backed by guest_memfd is preserved properly.
+From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-The test leverages the Live Update Orchestrator (LUO) infrastructure
-to validate that memory folios and configuration layouts are
-successfully saved and then restored during kernel live updates,
-preventing any memory loss for the guest.
+Hi,
 
-Here, I have used the kvm selftests framework by creating a new
-vm and mapping two memory slots to it. One is the code that is executed
-inside the vm and other is the guest_memfd whose memory is being
-written by the guest code.
+Gigantic huge page allocation is somewhat broken currently with KHO.
 
-In Phase 1: Once data is written the vm exits and wait for the user
-to trigger the kexec.
+First, they break scratch size accounting. Since they are allocated
+using the memblock alloc APIs, they count towards RSRV_KERN, and this
+scratch size when using scratch_scale. This means if huge pages take a
+large enough chunk of system memory scratch size will blow up and fail
+to allocate.
 
-In Phase 2: A new vm is created with retrieved kvm and again two
-memory slots are assigned. Once for guest code, and another is for
-retrieved guest_memfd where guest_memfd memory is verified by the
-executed guest code. If verification succeeds, The test passes.
+Second, scratch can not contain preserved memory, and if hugepages are
+allocated from scratch, they will fail to be preserved with the upcoming
+hugetlb preservation series [0].
 
-Signed-off-by: Tarun Sahu <tarunsahu@google.com>
----
- MAINTAINERS                                   |   1 +
- tools/testing/selftests/kvm/Makefile.kvm      |   6 +-
- .../kvm/guest_memfd_preservation_test.c       | 230 ++++++++++++++++++
- 3 files changed, 236 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/kvm/guest_memfd_preservation_test.c
+Fix this by introducing the concept of extended scratch areas. They are
+areas that the kernel discovers on boot by walking the radix tree and
+finding free memory ranges. See patch 10 for more details.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ca459d032712..76e59620d2f1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14419,6 +14419,7 @@ L:	kvm@vger.kernel.org
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
- F:	Documentation/liveupdate/vmm.rst
-+F:	tools/testing/selftests/kvm/guest_memfd_preservation_test.c
- F:	virt/kvm/guest_memfd_luo.c
- F:	virt/kvm/kvm_luo.c
- 
-diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-index 9118a5a51b89..68584d4ee1b0 100644
---- a/tools/testing/selftests/kvm/Makefile.kvm
-+++ b/tools/testing/selftests/kvm/Makefile.kvm
-@@ -161,6 +161,8 @@ TEST_GEN_PROGS_x86 += pre_fault_memory_test
- 
- # Compiled outputs used by test targets
- TEST_GEN_PROGS_EXTENDED_x86 += x86/nx_huge_pages_test
-+# Manual test that forks a persistent background daemon; skip auto CI run
-+TEST_GEN_PROGS_EXTENDED_x86 += guest_memfd_preservation_test
- 
- TEST_GEN_PROGS_arm64 = $(TEST_GEN_PROGS_COMMON)
- TEST_GEN_PROGS_arm64 += arm64/aarch32_id_regs
-@@ -254,6 +256,7 @@ OVERRIDE_TARGETS = 1
- # which causes the environment variable to override the makefile).
- include ../lib.mk
- include ../cgroup/lib/libcgroup.mk
-+include ../liveupdate/lib/libliveupdate.mk
- 
- INSTALL_HDR_PATH = $(top_srcdir)/usr
- LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
-@@ -308,7 +311,8 @@ LIBKVM_S := $(filter %.S,$(LIBKVM))
- LIBKVM_C_OBJ := $(patsubst %.c, $(OUTPUT)/%.o, $(LIBKVM_C))
- LIBKVM_S_OBJ := $(patsubst %.S, $(OUTPUT)/%.o, $(LIBKVM_S))
- LIBKVM_STRING_OBJ := $(patsubst %.c, $(OUTPUT)/%.o, $(LIBKVM_STRING))
--LIBKVM_OBJS = $(LIBKVM_C_OBJ) $(LIBKVM_S_OBJ) $(LIBKVM_STRING_OBJ) $(LIBCGROUP_O)
-+LIBKVM_OBJS = $(LIBKVM_C_OBJ) $(LIBKVM_S_OBJ) $(LIBKVM_STRING_OBJ) \
-+						$(LIBCGROUP_O) $(LIBLIVEUPDATE_O)
- SPLIT_TEST_GEN_PROGS := $(patsubst %, $(OUTPUT)/%, $(SPLIT_TESTS))
- SPLIT_TEST_GEN_OBJ := $(patsubst %, $(OUTPUT)/$(ARCH)/%.o, $(SPLIT_TESTS))
- 
-diff --git a/tools/testing/selftests/kvm/guest_memfd_preservation_test.c b/tools/testing/selftests/kvm/guest_memfd_preservation_test.c
-new file mode 100644
-index 000000000000..74f90c5c4bf5
---- /dev/null
-+++ b/tools/testing/selftests/kvm/guest_memfd_preservation_test.c
-@@ -0,0 +1,230 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2026, Google LLC.
-+ *
-+ * Author: Tarun Sahu <tarunsahu@google.com>
-+ *
-+ * Test for VM and guest_memfd preservation across kexec (Live Update) via LUO.
-+ *
-+ * NOTE: This is a MANUAL test and is excluded from automated CI/testing
-+ * frameworks because Phase 1 daemonizes into the background to pin resources
-+ * and requires a human operator to manually trigger kexec before Phase 2
-+ * is executed. Running Phase 1 automatically would leak the background daemon
-+ * and cause CI runners to falsely interpret it as a passed test.
-+ *
-+ * Usage:
-+ * Phase 1: ./guest_memfd_preservation_test
-+ * Phase 2: ./guest_memfd_preservation_test --phase2
-+ */
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <errno.h>
-+#include <stdio.h>
-+#include <fcntl.h>
-+#include <sys/mman.h>
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <sys/ioctl.h>
-+#include <linux/sizes.h>
-+#include <linux/falloc.h>
-+
-+#include "kvm_util.h"
-+#include "processor.h"
-+#include "test_util.h"
-+#include "ucall_common.h"
-+#include "../kselftest.h"
-+#include "../kselftest_harness.h"
-+
-+#include <libliveupdate.h>
-+
-+#define SESSION_NAME "gmem_vm_preservation_session"
-+#define VM_TOKEN 0x1001
-+#define GMEM_TOKEN 0x1002
-+
-+#define GMEM_SIZE (16ULL * 1024 * 1024)
-+#define DATA_SIZE (5ULL * 1024 * 1024)
-+
-+static size_t page_size;
-+
-+/* Deterministic byte pattern generation based on offset */
-+static inline uint8_t get_pattern_byte(size_t offset)
-+{
-+	return (uint8_t)(offset ^ 0x5A);
-+}
-+
-+static void guest_code_phase1(uint64_t gpa, uint64_t size, uint64_t data_size)
-+{
-+	uint8_t *mem = (uint8_t *)gpa;
-+	size_t i;
-+
-+	for (i = 0; i < data_size; i++)
-+		mem[i] = get_pattern_byte(i);
-+
-+	GUEST_DONE();
-+}
-+
-+static void guest_code_phase2(uint64_t gpa, uint64_t size, uint64_t data_size)
-+{
-+	uint8_t *mem = (uint8_t *)gpa;
-+	size_t i;
-+
-+	for (i = 0; i < data_size; i++) {
-+		uint8_t val = get_pattern_byte(i);
-+
-+		__GUEST_ASSERT(mem[i] == val,
-+			       "Data mismatch at offset %lu! Expected 0x%x, got 0x%x",
-+			       i, val, mem[i]);
-+	}
-+
-+	GUEST_DONE();
-+}
-+
-+static void do_phase1(void)
-+{
-+	uint64_t flags = GUEST_MEMFD_FLAG_MMAP | GUEST_MEMFD_FLAG_INIT_SHARED;
-+	int gmem_fd, dev_luo_fd, session_fd, ret;
-+	const uint64_t gpa = SZ_4G;
-+	struct kvm_vcpu *vcpu;
-+	const int slot = 1;
-+	struct kvm_vm *vm;
-+
-+	vm = __vm_create_shape_with_one_vcpu(VM_SHAPE_DEFAULT, &vcpu, 1,
-+					guest_code_phase1);
-+	gmem_fd = vm_create_guest_memfd(vm, GMEM_SIZE, flags);
-+	vm_set_user_memory_region2(vm, slot, KVM_MEM_GUEST_MEMFD, gpa, GMEM_SIZE, NULL,
-+				 gmem_fd, 0);
-+
-+	for (size_t i = 0; i < GMEM_SIZE; i += page_size)
-+		virt_pg_map(vm, gpa + i, gpa + i);
-+
-+	vcpu_args_set(vcpu, 3, gpa, GMEM_SIZE, DATA_SIZE);
-+
-+	vcpu_run(vcpu);
-+	TEST_ASSERT_EQ(get_ucall(vcpu, NULL), UCALL_DONE);
-+
-+	dev_luo_fd = luo_open_device();
-+	TEST_ASSERT(dev_luo_fd >= 0, "Failed to open /dev/liveupdate");
-+
-+	session_fd = luo_create_session(dev_luo_fd, SESSION_NAME);
-+	TEST_ASSERT(session_fd >= 0, "Failed to create LUO session");
-+
-+	ret = luo_session_preserve_fd(session_fd, vm->fd, VM_TOKEN);
-+	TEST_ASSERT(ret == 0, "Failed to preserve VM file descriptor");
-+
-+	ret = luo_session_preserve_fd(session_fd, gmem_fd, GMEM_TOKEN);
-+	TEST_ASSERT(ret == 0, "Failed to preserve guest_memfd file descriptor");
-+
-+	printf("\n============================================================\n");
-+	printf("Phase 1 Complete Successfully!\n");
-+	printf("VM file and guest_memfd file have been preserved via LUO.\n");
-+	printf("Tokens: VM_TOKEN=0x%x, GMEM_TOKEN=0x%x\n", VM_TOKEN, GMEM_TOKEN);
-+	printf("Machine Size: %llu MB, Data Size: %llu MB\n", GMEM_SIZE / SZ_1M,
-+				 DATA_SIZE / SZ_1M);
-+	printf("------------------------------------------------------------\n");
-+
-+	daemonize_and_wait();
-+}
-+
-+static struct kvm_vm *vm_create_from_fd(int resurrected_vm_fd,
-+					struct vm_shape shape)
-+{
-+	struct kvm_vm *vm;
-+
-+	vm = calloc(1, sizeof(*vm));
-+	TEST_ASSERT(vm != NULL, "Insufficient Memory");
-+
-+	vm_init_fields(vm, shape);
-+
-+	vm->kvm_fd = open_path_or_exit(KVM_DEV_PATH, O_RDWR);
-+	vm->fd = resurrected_vm_fd;
-+
-+	if (kvm_has_cap(KVM_CAP_BINARY_STATS_FD))
-+		vm->stats.fd = vm_get_stats_fd(vm);
-+	else
-+		vm->stats.fd = -1;
-+
-+	vm_init_memory_properties(vm);
-+
-+	return vm;
-+}
-+
-+static void do_phase2(void)
-+{
-+	int retrieved_vm_fd, retrieved_gmem_fd, dev_luo_fd, session_fd;
-+	struct vm_shape shape = VM_SHAPE_DEFAULT;
-+	const uint64_t gpa = SZ_4G;
-+	struct kvm_vcpu *vcpu;
-+	const int slot = 1;
-+	struct kvm_vm *vm;
-+
-+	dev_luo_fd = luo_open_device();
-+	TEST_ASSERT(dev_luo_fd >= 0, "Failed to open /dev/liveupdate");
-+
-+	session_fd = luo_retrieve_session(dev_luo_fd, SESSION_NAME);
-+	TEST_ASSERT(session_fd >= 0, "Failed to retrieve LUO session");
-+
-+	retrieved_vm_fd = luo_session_retrieve_fd(session_fd, VM_TOKEN);
-+	TEST_ASSERT(retrieved_vm_fd >= 0, "Failed to retrieve VM file descriptor");
-+
-+	retrieved_gmem_fd = luo_session_retrieve_fd(session_fd, GMEM_TOKEN);
-+	TEST_ASSERT(retrieved_gmem_fd >= 0, "Failed to retrieve guest_memfd file descriptor");
-+
-+	vm = vm_create_from_fd(retrieved_vm_fd, shape);
-+
-+	u64 nr_pages = 2048; /* 8MB is plenty for slot0 pages */
-+
-+	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS, 0, 0, nr_pages, 0);
-+	kvm_vm_elf_load(vm, program_invocation_name);
-+
-+	for (int i = 0; i < NR_MEM_REGIONS; i++)
-+		vm->memslots[i] = 0;
-+
-+	struct userspace_mem_region *slot0 = memslot2region(vm, 0);
-+
-+	ucall_init(vm, slot0->region.guest_phys_addr + slot0->region.memory_size);
-+
-+	vm_set_user_memory_region2(vm, slot, KVM_MEM_GUEST_MEMFD, gpa, GMEM_SIZE, NULL,
-+				   retrieved_gmem_fd, 0);
-+
-+	for (size_t i = 0; i < GMEM_SIZE; i += page_size)
-+		virt_pg_map(vm, gpa + i, gpa + i);
-+
-+	vcpu = vm_vcpu_add(vm, 0, guest_code_phase2);
-+	kvm_arch_vm_finalize_vcpus(vm);
-+
-+	vcpu_args_set(vcpu, 3, gpa, GMEM_SIZE, DATA_SIZE);
-+
-+	printf("Resuming / Running VM in Phase 2...\n");
-+	vcpu_run(vcpu);
-+	TEST_ASSERT_EQ(get_ucall(vcpu, NULL), UCALL_DONE);
-+
-+	printf("\nSUCCESS: Phase 2 Complete! All 5MB complex data verified intact!\n");
-+
-+	luo_session_finish(session_fd);
-+	close(session_fd);
-+	close(dev_luo_fd);
-+	/* This will also close the vm_fd */
-+	kvm_vm_free(vm);
-+	close(retrieved_gmem_fd);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	bool phase2 = false;
-+
-+	TEST_REQUIRE(kvm_has_cap(KVM_CAP_GUEST_MEMFD));
-+	page_size = getpagesize();
-+
-+	for (int i = 1; i < argc; i++) {
-+		if (strcmp(argv[i], "--phase2") == 0)
-+			phase2 = true;
-+	}
-+
-+	if (phase2)
-+		do_phase2();
-+	else
-+		do_phase1();
-+
-+	return 0;
-+}
+Discovering the scratch areas needs some preparatory changes to KHO, the
+radix tree APIs, and to memblock. Patches 1-14 do that.
+
+Patch 15 adds the scratch discovery logic.
+
+Patch 16 adds the dedicated memblock hugetlb allocator.
+
+Patch 17-18 fix the scratch size calculation with using scratch_scale.
+
+[0] https://lore.kernel.org/linux-mm/20251206230222.853493-1-pratyush@kernel.org/T/#u
+
+Changes in v2:
+
+Detailed changelog below.
+
+At a high level, the major change in this version is to remove
+MEMBLOCK_KHO_SCRATCH_EXT. Keep MEMBLOCK_KHO_SCRATCH as the only memory
+type and mark the discovered areas with it. For HugeTLB, add a dedicated
+allocation routine and if allocated memory lands in scratch, do a retry.
+Also introduce MEMBLOCK_RSRV_HUGETLB to help with accounting of scratch
+area sizes.
+
+- Fixup commit message in patch 1 to make namespacing change clearer.
+- Use @key in kernel-doc for radix functions.
+- Add a runtime check on key width.
+- Move all mem retrieval logic to kho_mem_retrieve().
+- Add a comment in kho_mem_retrieve() explaining why mem_map won't be NULL.
+- Rename callbacks to ->leaf() and ->node().
+- Fixup commit messages.
+- Clear tree->root in kho_radix_destroy_tree(). This lets the tree be
+  re-initialized by calling kho_radix_init_tree()
+- Add kho_get_mem_map() earlier in the series.
+- Export kho_scratch_overlap() and use it in memblock_is_kho_scratch_memory().
+- Get rid of MEMBLOCK_KHO_SCRATCH_EXT.
+- Introduce MEMBLOCK_RSRV_HUGETLB.
+- Introduce memblock_alloc_hugetlb() for hugetlb bootmem allocations.
+- Refactor memblock_reserved_kern_size() to allow calculating size by flags.
+- Exclude hugetlb memory from scratch size calculation.
+- Collect R-bys.
+
+Regards,
+Pratyush Yadav
+
+Pratyush Yadav (Google) (18):
+  kho: generalize radix tree APIs
+  kho: disallow wide keys in radix tree
+  kho: return virtual address of mem_map
+  kho: store incoming radix tree in kho_in
+  kho: move all memory retrieval logic to kho_mem_retrieve()
+  kho: add a struct for radix callbacks
+  kho: add callback for table pages
+  kho: add data argument to radix walk callback
+  kho: allow early-boot usage of the KHO radix tree
+  kho: allow destroying KHO radix tree
+  kho: add kho_radix_init_tree()
+  kho: export kho_scratch_overlap()
+  kho: initialize kho_scratch pointer earlier in boot
+  memblock: use kho_scratch_overlap() to decide migratetype
+  kho: extend scratch
+  memblock: make HugeTLB bootmem allocation work with KHO
+  memblock: allow calculating reserved size by flags
+  kho: exclude hugetlb memory from scratch size calculation
+
+ include/linux/kexec_handover.h              |  10 +
+ include/linux/kho/abi/kexec_handover.h      |   8 +
+ include/linux/kho_radix_tree.h              |  44 +-
+ include/linux/memblock.h                    |   9 +-
+ kernel/liveupdate/Makefile                  |   1 -
+ kernel/liveupdate/kexec_handover.c          | 495 +++++++++++++++-----
+ kernel/liveupdate/kexec_handover_debug.c    |  25 -
+ kernel/liveupdate/kexec_handover_internal.h |   9 -
+ mm/hugetlb.c                                |  22 +-
+ mm/memblock.c                               | 120 ++++-
+ mm/mm_init.c                                |   1 +
+ 11 files changed, 540 insertions(+), 204 deletions(-)
+ delete mode 100644 kernel/liveupdate/kexec_handover_debug.c
+
+
+base-commit: 2935777b418d2bfcbfe96705bb2c0fa6c0d94e18
 -- 
 2.54.0.1032.g2f8565e1d1-goog
 
