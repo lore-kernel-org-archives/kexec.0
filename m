@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 61B83CD8C83
-	for <kexec@archiver.kernel.org>; Fri,  5 Jun 2026 18:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6DF1FCD6E7C
+	for <kexec@archiver.kernel.org>; Fri,  5 Jun 2026 18:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=R6yDcpji1C+GYUKGpWyVAnr/m2Kie2TV2BOTVneeC1s=; b=WQ5LNQzJLWvDrxO2UFM+0MrCD/
-	RGZ9lpNNi7gc1U9dh61Butedn6si3rLr1rVPoBXCkQx2pIHKECcymlIOhWswsYLNlnrFX/DvqH0PJ
-	nUW34+gl51jB4KJgC5WmOvsZBFAcTUsPOLlFJ9WM+tkRaubKY6LfH+Qycr0AowwOgbdzYbA70TIje
-	2wVYRjZBCF33PgRDMHCszBLKsAs/PX3GGS8v1Ftrs0DGUZwXFGnU9Mw6Bqe3mjucMXRWbrzk8C+G3
-	yKooYUNRmB8IebHGQKMzPIeanjzePiPxi4znn8vGa0GlFp0rLLto65xfw4w2hNe5vyGEZNAdz1txt
-	CcvCa1Zg==;
+	bh=v/RGerRyxm8aTVCl41zoP38L2i7Ee87yOlG4ezqSjQo=; b=rks5hIWhVeN8Y+kHuSp28+oNaD
+	odgj6+FfoG8+9L1Wb9a18TtWBMAR41VlHqKfGwnZ4w1xhXyu1IOLBIM6KFy4Nt4XUCkpk1rkJwV34
+	bsk1+SM1Klq7QKB/ZqWSDxG/Yc1HDNY30/gL9F80YZAyBaidU9OSApuDTzCX0id5l3urzBgWoAvsY
+	obPcSho3DNyRIie7KIwz4jLQN5DsIrRdMn+qHqo60De6dk9+lR9k/90cCLtc4JORTulr0Ar/wAKTK
+	f5AXbys9BL4sDTDPBdunNW2/cNiitqFgpAUwAaUOiRKL8TGVozoJCWkd3+Fq7lU6AmDfaRDctEHed
+	/Uvg4thg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wVZO5-0000000133y-1ROY;
-	Fri, 05 Jun 2026 18:35:21 +0000
+	id 1wVZO7-0000000135b-1jSf;
+	Fri, 05 Jun 2026 18:35:23 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wVZO4-0000000133A-29B9
+	id 1wVZO6-0000000134l-2XXO
 	for kexec@lists.infradead.org;
-	Fri, 05 Jun 2026 18:35:20 +0000
+	Fri, 05 Jun 2026 18:35:22 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id E750E4385C;
-	Fri,  5 Jun 2026 18:35:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B14F11F00898;
-	Fri,  5 Jun 2026 18:35:17 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 5EBC444277;
+	Fri,  5 Jun 2026 18:35:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E09D1F00893;
+	Fri,  5 Jun 2026 18:35:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780684519;
-	bh=R6yDcpji1C+GYUKGpWyVAnr/m2Kie2TV2BOTVneeC1s=;
+	s=k20260515; t=1780684522;
+	bh=v/RGerRyxm8aTVCl41zoP38L2i7Ee87yOlG4ezqSjQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=XfzK9R9w/+8j97Px+AmChM/ZPMAXQowShQTxBd5VUEBg+YEwWjMWhB0B6YsyVkPO+
-	 GjB/7x0yCdaGCzZ8sxAZ/EE/hxP8QlxBiOJJ+gwE8p+KWWB/VuK1lk07m0UZTjsWBq
-	 cyHcRCjsUdF7+sZjLUA5E55RAgute94fLjtEcDtAbM7hQ1TM76OZEObpy+PL8+M66m
-	 kHWBuG90PapNjA3UsFO8LNgzplcVXSfi45kX9pPIaZiK7SocUu9CDbiBCr5JQDEXIZ
-	 OFbQtfkQS4PwE3ghGzotdfuDdTBG3uACNcT5bA+3546BO52jNNQK4scjWbvzP3++qY
-	 swHEtglvX23lw==
+	b=MPgdUrBersvdIeiDJvd3LrUzlJMbmXc7u1YjP1PjvngfbnOg1wTMed/fISSH2vkVk
+	 eBSrWcyzbcOa0R9swpxLwaqTyUddu6ao3yUL8xKCDAN+N9Gp2VQqeXfynMFPggmv++
+	 hMyo7fR3rde1IXG7mxJf3wKg9r9gOR/rJCgkI6xqG6n0sbmCkqc+B0kk/++ipOEwBF
+	 F7lKau1V1WtMfkSYGEK6vZYrTjxT5GZtaxWGKT8dPb/DE3jaKX3IuvrYdl1M27/k8F
+	 cwBxsx9XgdMuGiqDZMQ6GidAqfuioEjCuFMdGwOI1CaYau8zZ272Azz3K2wTHrBDDH
+	 Mjp/oWSKjc6DQ==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -56,9 +56,9 @@ To: Mike Rapoport <rppt@kernel.org>,
 Cc: kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 03/18] kho: return virtual address of mem_map
-Date: Fri,  5 Jun 2026 20:34:36 +0200
-Message-ID: <20260605183501.3884950-4-pratyush@kernel.org>
+Subject: [PATCH v2 04/18] kho: store incoming radix tree in kho_in
+Date: Fri,  5 Jun 2026 20:34:37 +0200
+Message-ID: <20260605183501.3884950-5-pratyush@kernel.org>
 X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
 In-Reply-To: <20260605183501.3884950-1-pratyush@kernel.org>
 References: <20260605183501.3884950-1-pratyush@kernel.org>
@@ -80,72 +80,73 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-Currently it is only used by kho_populate(), which doesn't care whether
-the address is virtual or physical and only cares that it exists and is
-valid. In coming patches, more callers will be added, all of which will
-need the virtual address.
-
-Make things simpler by directly returning the virtual address. Rename
-kho_get_mem_map_phys() to kho_get_mem_map() to accurately reflect what
-it returns.
+This allows other functions to also use the radix tree. While at it,
+also use kho_get_mem_map_phys() instead of duplicating the code to get
+the radix tree root from the FDT.
 
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- kernel/liveupdate/kexec_handover.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ kernel/liveupdate/kexec_handover.c | 32 ++++++++++++------------------
+ 1 file changed, 13 insertions(+), 19 deletions(-)
 
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index e8454dc5b489..d8dd0ede4f87 100644
+index d8dd0ede4f87..61e436f5077e 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -509,10 +509,11 @@ static int __init kho_preserved_memory_reserve(unsigned long key)
- 	return 0;
+@@ -1334,6 +1334,7 @@ struct kho_in {
+ 	char previous_release[__NEW_UTS_LEN + 1];
+ 	u32 kexec_count;
+ 	struct kho_debugfs dbg;
++	struct kho_radix_tree radix_tree;
+ };
+ 
+ static struct kho_in kho_in = {
+@@ -1413,24 +1414,15 @@ EXPORT_SYMBOL_GPL(kho_retrieve_subtree);
+ 
+ static int __init kho_mem_retrieve(const void *fdt)
+ {
+-	struct kho_radix_tree tree;
+-	const phys_addr_t *mem;
+-	int len;
+-
+-	/* Retrieve the KHO radix tree from passed-in FDT. */
+-	mem = fdt_getprop(fdt, 0, KHO_FDT_MEMORY_MAP_PROP_NAME, &len);
+-
+-	if (!mem || len != sizeof(*mem)) {
+-		pr_err("failed to get preserved KHO memory tree\n");
+-		return -ENOENT;
+-	}
+-
+-	if (!*mem)
+-		return -EINVAL;
+-
+-	tree.root = phys_to_virt(*mem);
+-	mutex_init(&tree.lock);
+-	return kho_radix_walk_tree(&tree, kho_preserved_memory_reserve);
++	/*
++	 * kho_get_mem_map() should always succeed. If it fails, kho_populate()
++	 * catches that and never sets kho_in.scratch_phys, which stops memory
++	 * retrieval.
++	 */
++	kho_in.radix_tree.root = kho_get_mem_map(fdt);
++	mutex_init(&kho_in.radix_tree.lock);
++	return kho_radix_walk_tree(&kho_in.radix_tree,
++				   kho_preserved_memory_reserve);
  }
  
--/* Returns physical address of the preserved memory map from FDT */
--static phys_addr_t __init kho_get_mem_map_phys(const void *fdt)
-+/* Returns virtual address of the preserved memory map from FDT */
-+static __init void *kho_get_mem_map(const void *fdt)
- {
- 	const void *mem_ptr;
-+	phys_addr_t mem_map_phys;
- 	int len;
+ static __init int kho_out_fdt_setup(void)
+@@ -1637,8 +1629,10 @@ void __init kho_memory_init(void)
+ 	if (kho_in.scratch_phys) {
+ 		kho_scratch = phys_to_virt(kho_in.scratch_phys);
  
- 	mem_ptr = fdt_getprop(fdt, 0, KHO_FDT_MEMORY_MAP_PROP_NAME, &len);
-@@ -521,7 +522,11 @@ static phys_addr_t __init kho_get_mem_map_phys(const void *fdt)
- 		return 0;
+-		if (kho_mem_retrieve(kho_get_fdt()))
++		if (kho_mem_retrieve(kho_get_fdt())) {
+ 			kho_in.fdt_phys = 0;
++			kho_in.radix_tree.root = NULL;
++		}
+ 	} else {
+ 		kho_reserve_scratch();
  	}
- 
--	return get_unaligned((const u64 *)mem_ptr);
-+	mem_map_phys = get_unaligned((const u64 *)mem_ptr);
-+	if (!mem_map_phys)
-+		return NULL;
-+
-+	return phys_to_virt(mem_map_phys);
- }
- 
- /*
-@@ -1644,8 +1649,7 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
- {
- 	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
- 	struct kho_scratch *scratch = NULL;
--	phys_addr_t mem_map_phys;
--	void *fdt = NULL;
-+	void *fdt = NULL, *mem_map;
- 	bool populated = false;
- 	int err;
- 
-@@ -1668,8 +1672,8 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
- 		goto unmap_fdt;
- 	}
- 
--	mem_map_phys = kho_get_mem_map_phys(fdt);
--	if (!mem_map_phys)
-+	mem_map = kho_get_mem_map(fdt);
-+	if (!mem_map)
- 		goto unmap_fdt;
- 
- 	scratch = early_memremap(scratch_phys, scratch_len);
 -- 
 2.54.0.1032.g2f8565e1d1-goog
 
