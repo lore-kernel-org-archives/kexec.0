@@ -4,72 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 784FBCD8C88
-	for <kexec@archiver.kernel.org>; Sun,  7 Jun 2026 00:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 79709CD8C88
+	for <kexec@archiver.kernel.org>; Sun,  7 Jun 2026 00:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=LsVnAb3M6ghY8IfcgDFFyEWPxQ2Ma8V9L0a8RkeT7IM=; b=0hggh0KQWgt9WASEHVUOsa++NL
-	ixLHNtpeKasQRt+25lg6yQYYEgQTkEjF/WE+xSHv8OMfRqsxSaTNoYn/zLv6Q5oAdMPWzr88djeQ0
-	liXJqZ3VLHwDXYJrvSqw+YL+JvTTp/yDXTIpg8NUW6RiSdB7/fbf7HDpAC7ZBN69y6hJ31p/zja0M
-	/8J1tLVyIZTGeMRqVZctaz0CGIasDZTQxxHIzwFe2B85reWXuf9SRiTlMKWPsUj4V5eQUs3k+6p5t
-	XQEkgIO+ZwxGnaTOOSjpn+Or2bsxuhmyU8804Oild0RlRO6Kvh93qrwb46LJnHsqUyATmJUMhUTwb
-	sF28RXog==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=XnUUCXZJSSezsNhIoSCoYnkWRzWUK1TZUzSaS2Q+eGY=; b=UyHAzN6gLHB2NUjymOonnQxXEH
+	/uACqXZ0q8NN2bc1+i5vPyVMkrGrcH4YbKiH02T2NvFkYGZc1j1fNOneDv4sr7CDLg6BQWaqjiLHZ
+	XqaK/uhSqK8gpoeJv+t9vFQeIoItr7Z7ePxVb+2yVQz1muQU4ataI04ed3WEVmGOgb2LaoC+L8/Nq
+	IUfjzzqopPVHJ7iiK4X7COzV6p07jex++HIDHTCE2yLlFNsOSU2YSTrMmPfQuVYQiNRRrWTES5vSV
+	Rt8uSCESnqRdItvGbSVKxxAYEbNdiQDrOLSNdRw8HQ8sANPSMVHRs8B2jCkCoX9MehH6esGlGNEiF
+	jhq+RbeA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wW1BU-00000001uNw-1vA4;
-	Sun, 07 Jun 2026 00:16:12 +0000
-Received: from mgamail.intel.com ([192.198.163.10])
+	id 1wW1Pp-00000001we8-3qHk;
+	Sun, 07 Jun 2026 00:31:01 +0000
+Received: from mail-ej1-x649.google.com ([2a00:1450:4864:20::649])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wW1BR-00000001uNW-2yAM
+	id 1wW1Pm-00000001wdg-1oc5
 	for kexec@lists.infradead.org;
-	Sun, 07 Jun 2026 00:16:11 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780791369; x=1812327369;
-  h=date:from:to:cc:subject:message-id;
-  bh=kxfLynBRYBbULw25p42nxKNsZLUNihwxc4yaZRBAXP0=;
-  b=HixJz+3QdmjVVMqulFqDQLKosYf15PbhApmvQMEGrAEP6qzrFxeHmHIo
-   C3b+QfCS0g+d8sr3fqh7PQTouby06tIq1brtC2be0kJXGUONOXWA2uqGP
-   VDdCdTB0h0z6KWvW3vsbCV/4Kk79cG3NNLHcYov4NKKc53/Vf5bajWbBF
-   DlBdaIb2SBaAgLHah9rjN0+pVJx7+CTE9fKDCqq0K26BjF3DDFb+G1pZl
-   rzc/PBbNObW8fzm7YBNxG+pwtUGnY2uHk1U2NqIdpnfEtiTxXu5tixLSC
-   o3jxH4vwJmOnTvyrVXPWapvwmsx9yVFjNrVoX+W+XVgJBwvQCFkahyZA5
-   g==;
-X-CSE-ConnectionGUID: qSt4dDJdTZ2z+/X8Hm0RfA==
-X-CSE-MsgGUID: siMOjBaiQWaLQkZHPpS1kA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11809"; a="92960011"
-X-IronPort-AV: E=Sophos;i="6.24,191,1774335600"; 
-   d="scan'208";a="92960011"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2026 17:16:07 -0700
-X-CSE-ConnectionGUID: SONaG1zFRY+z0uTW6yJkJA==
-X-CSE-MsgGUID: q8RlKgzkQQOtuNL58JIFMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,191,1774335600"; 
-   d="scan'208";a="244318159"
-Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 06 Jun 2026 17:16:06 -0700
-Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wW1BK-00000000HUM-480J;
-	Sun, 07 Jun 2026 00:16:02 +0000
-Date: Sun, 07 Jun 2026 08:15:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
-Subject: [liveupdate:next] BUILD SUCCESS
- 5fb813ae0009d97fc414f08ad73286f562e9a123
-Message-ID: <202606070821.m6pqKPAo-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	Sun, 07 Jun 2026 00:30:59 +0000
+Received: by mail-ej1-x649.google.com with SMTP id a640c23a62f3a-bf4ba05fd18so115085966b.1
+        for <kexec@lists.infradead.org>; Sat, 06 Jun 2026 17:30:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1780792256; x=1781397056; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XnUUCXZJSSezsNhIoSCoYnkWRzWUK1TZUzSaS2Q+eGY=;
+        b=cbN5TqU6r3kbGpOk924sEVRS+xlL3aNA7SaJ+Epi9np24nqyr1WhwOgTAK5gpNMYvx
+         ryyV1jI0+FLV8Q/mlOJ14m1QEpoIKdEKUN9lmI//narrSq1A8K1Twfuy+CmA3rQiN3no
+         zspWnMTDqEgRBZfkK02ZfohBPVP5k3YY6iQ7ydB7V9m4bJ8fRohljs4bzr1InjUYMhib
+         x5A7YHssI1l8eESy2hetWG86e2Yx1YP+96Zh8vuh6dREplezbKihz7bkfZErxhSHSRnx
+         FXBB8x6t08iGyerOCeUojRZC8dMzPmZweUlUfQQpKpCjp3sGndaPW3/yG4mEQ86vP2Fy
+         cZWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780792256; x=1781397056;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XnUUCXZJSSezsNhIoSCoYnkWRzWUK1TZUzSaS2Q+eGY=;
+        b=F+WdCAfsnXdisO3YwuM8QFXzCsQc08EklPxy5ZxCHiPMoyjNhkEEFESxiYSalvtUQq
+         jCKwHnhsvmCyQqUYgzciGrnRJA8Zp1hDwM8wvfGJyYCLnVrvyZ+EGkqRSCUDArgjPYWu
+         gdKB5PlEWgS4XGeUU0aVMEJnhzxCYLNdL10qOG6BYN4FFRbP4yFjhHzKx1Y3f1pytCaH
+         2X13DT10NDW2DyJNMfEYPit/+vz3hwxWjz02tDu0yqX2eapp2cESMKe9AHY29LMF5H/C
+         pptSoj3t12q44hfNdo7lw9zpMlg20+7kpzc49+uqiTvEySdUJBFovezx4kAwhui4pos4
+         4SQw==
+X-Forwarded-Encrypted: i=1; AFNElJ/fiAV+bF4TZ4yRKW/eh9jVzDV/7uMRamRe/i2uvRAPCfnJ0rPVYyhaBRAY+DwPSHjcbAoTEA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxfXkMHuWB9QwFJLi8AC5g6eXGS4RdSr8/tuHG6caxT9wlUGFJT
+	d0H+I1ynR2uDiZBu/VWJ4l6xT2Vrhpef42ZpFr3w94Ona4JoR2g8fMnKjmQOEJyMTBMOzTop+cQ
+	KJYqkc72ynFcy8e0rbg==
+X-Received: from ejri14.prod.google.com ([2002:a17:906:698e:b0:bec:674f:724a])
+ (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:907:94c6:b0:bd5:27b7:adaf with SMTP id a640c23a62f3a-bf372933d1emr494159766b.33.1780792255269;
+ Sat, 06 Jun 2026 17:30:55 -0700 (PDT)
+Date: Sun, 07 Jun 2026 00:30:54 +0000
+In-Reply-To: <CAEvNRgEQ8SbqOL3yAri2NO7BoPd=-tqura9O5MKq57m1OLwkGw@mail.gmail.com>
+Mime-Version: 1.0
+References: <cover.1779080766.git.tarunsahu@google.com> <9huzwlwnbgdd.fsf@tarunix.c.googlers.com>
+ <ahmbVaCUcBrYK8qO@google.com> <CAEvNRgHsJbGz8k8vgCn_HSxeeQ8agEm4oBYQQ0+b3gFb-aVokg@mail.gmail.com>
+ <9huz33z06bu1.fsf@tarunix.c.googlers.com> <CAEvNRgEQ8SbqOL3yAri2NO7BoPd=-tqura9O5MKq57m1OLwkGw@mail.gmail.com>
+Message-ID: <9huzldcrxkch.fsf@tarunix.c.googlers.com>
+Subject: Re: [RFC PATCH v1 0/8] liveupdate: kvm: Guest_memfd preservation
+From: tarunsahu@google.com
+To: Ackerley Tng <ackerleytng@google.com>, Sean Christopherson <seanjc@google.com>
+Cc: axelrasmussen@google.com, mark.rutland@arm.com, skhawaja@google.com, 
+	Mike Rapoport <rppt@kernel.org>, sagis@google.com, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Shuah Khan <shuah@kernel.org>, corbet@lwn.net, dmatlack@google.com, 
+	Paolo Bonzini <pbonzini@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, vannapurve@google.com, 
+	Pratyush Yadav <pratyush@kernel.org>, david@redhat.com, aneesh.kumar@kernel.org, 
+	vipinsh@google.com, Alexander Graf <graf@amazon.com>, David Hildenbrand <david@kernel.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kexec@lists.infradead.org, 
+	linux-kselftest@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260606_171609_796818_C377837B 
-X-CRM114-Status: UNSURE (   4.09  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260606_173058_545261_18C16FC0 
+X-CRM114-Status: GOOD (  37.07  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,211 +96,178 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git next
-branch HEAD: 5fb813ae0009d97fc414f08ad73286f562e9a123  Merge patch series "liveupdate: Remove limits on sessions and files"
 
-elapsed time: 4526m
+Hi,
 
-configs tested: 191
-configs skipped: 4
+Ackerley Tng <ackerleytng@google.com> writes:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> tarunsahu@google.com writes:
+>
+>> Hi,
+>>
+>> Ackerley Tng <ackerleytng@google.com> writes:
+>>
+>>> Sean Christopherson <seanjc@google.com> writes:
+>>>
+>>>>>
+>>>>> [...snip...]
+>>>>>
+>>>>> we have one open Question left:
+>>>>> 1. How to check guest_memfd is fully shared.
+>>>>>
+>>>>> [...snip...]
+>>>>>
+>>>>
+>>>> Given that lack of support isn't going to be limited to _just_ guest_memfd,
+>>>> simply disallow preservation if the VM supports private memory:
+>>>>
+>>>> 	if (kvm_arch_has_private_mem(kvm))
+>>>> 		return -EOPNOTSUPP;
+>>>
+>> This is a good idea, I have implemented it in V2 (sent it recently).
+>>
+>
+> Will look at RFC v2 in a bit :) Thanks!
+>
+Thankyou.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.2.0
-alpha                            allyesconfig    gcc-15.2.0
-alpha                               defconfig    gcc-16.1.0
-arc                              allmodconfig    clang-17
-arc                               allnoconfig    gcc-15.2.0
-arc                                 defconfig    gcc-16.1.0
-arc                   randconfig-001-20260606    clang-23
-arc                   randconfig-002-20260606    clang-23
-arm                               allnoconfig    gcc-15.2.0
-arm                              allyesconfig    clang-17
-arm                                 defconfig    gcc-16.1.0
-arm                   randconfig-001-20260606    clang-23
-arm                   randconfig-002-20260606    clang-23
-arm                   randconfig-003-20260606    clang-23
-arm                   randconfig-004-20260606    clang-23
-arm64                             allnoconfig    gcc-15.2.0
-arm64                               defconfig    gcc-16.1.0
-arm64                          randconfig-001    clang-23
-arm64                 randconfig-001-20260606    clang-23
-arm64                          randconfig-002    clang-23
-arm64                 randconfig-002-20260606    clang-23
-arm64                          randconfig-003    clang-23
-arm64                 randconfig-003-20260606    clang-23
-arm64                          randconfig-004    clang-23
-arm64                 randconfig-004-20260606    clang-23
-csky                             allmodconfig    gcc-15.2.0
-csky                              allnoconfig    gcc-15.2.0
-csky                                defconfig    gcc-16.1.0
-csky                           randconfig-001    clang-23
-csky                  randconfig-001-20260606    clang-23
-csky                           randconfig-002    clang-23
-csky                  randconfig-002-20260606    clang-23
-hexagon                          allmodconfig    gcc-15.2.0
-hexagon                           allnoconfig    gcc-15.2.0
-hexagon                             defconfig    gcc-16.1.0
-hexagon                        randconfig-001    gcc-11.5.0
-hexagon               randconfig-001-20260606    gcc-11.5.0
-hexagon                        randconfig-002    gcc-11.5.0
-hexagon               randconfig-002-20260606    gcc-11.5.0
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    gcc-15.2.0
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20260606    gcc-13
-i386        buildonly-randconfig-002-20260606    gcc-13
-i386        buildonly-randconfig-003-20260606    gcc-13
-i386        buildonly-randconfig-004-20260606    gcc-13
-i386        buildonly-randconfig-005-20260606    gcc-13
-i386        buildonly-randconfig-006-20260606    gcc-13
-i386                                defconfig    gcc-16.1.0
-i386                  randconfig-001-20260606    clang-20
-i386                  randconfig-002-20260606    clang-20
-i386                  randconfig-003-20260606    clang-20
-i386                  randconfig-004-20260606    clang-20
-i386                  randconfig-005-20260606    clang-20
-i386                  randconfig-006-20260606    clang-20
-i386                  randconfig-007-20260606    clang-20
-i386                           randconfig-011    clang-20
-i386                  randconfig-011-20260606    clang-20
-i386                           randconfig-012    clang-20
-i386                  randconfig-012-20260606    clang-20
-i386                           randconfig-013    clang-20
-i386                  randconfig-013-20260606    clang-20
-i386                           randconfig-014    clang-20
-i386                  randconfig-014-20260606    clang-20
-i386                           randconfig-015    clang-20
-i386                  randconfig-015-20260606    clang-20
-i386                           randconfig-016    clang-20
-i386                  randconfig-016-20260606    clang-20
-i386                           randconfig-017    clang-20
-i386                  randconfig-017-20260606    clang-20
-loongarch                        allmodconfig    clang-23
-loongarch                         allnoconfig    gcc-15.2.0
-loongarch                           defconfig    clang-23
-loongarch                      randconfig-001    gcc-11.5.0
-loongarch             randconfig-001-20260606    gcc-11.5.0
-loongarch                      randconfig-002    gcc-11.5.0
-loongarch             randconfig-002-20260606    gcc-11.5.0
-m68k                             allmodconfig    gcc-15.2.0
-m68k                              allnoconfig    gcc-15.2.0
-m68k                             allyesconfig    clang-17
-m68k                                defconfig    clang-23
-microblaze                        allnoconfig    gcc-15.2.0
-microblaze                       allyesconfig    gcc-15.2.0
-microblaze                          defconfig    clang-23
-mips                             allmodconfig    gcc-15.2.0
-mips                              allnoconfig    gcc-15.2.0
-mips                             allyesconfig    gcc-15.2.0
-mips                      malta_kvm_defconfig    gcc-16.1.0
-nios2                            allmodconfig    clang-23
-nios2                             allnoconfig    clang-17
-nios2                               defconfig    clang-23
-nios2                          randconfig-001    gcc-11.5.0
-nios2                 randconfig-001-20260606    gcc-11.5.0
-nios2                          randconfig-002    gcc-11.5.0
-nios2                 randconfig-002-20260606    gcc-11.5.0
-openrisc                         allmodconfig    clang-23
-openrisc                          allnoconfig    clang-17
-openrisc                            defconfig    gcc-16.1.0
-parisc                           allmodconfig    gcc-15.2.0
-parisc                            allnoconfig    clang-17
-parisc                           allyesconfig    clang-19
-parisc                              defconfig    gcc-16.1.0
-parisc                randconfig-001-20260606    gcc-8.5.0
-parisc                randconfig-002-20260606    gcc-8.5.0
-parisc64                            defconfig    clang-23
-powerpc                          allmodconfig    gcc-15.2.0
-powerpc                           allnoconfig    clang-17
-powerpc               randconfig-001-20260606    gcc-8.5.0
-powerpc               randconfig-002-20260606    gcc-8.5.0
-powerpc64             randconfig-001-20260606    gcc-8.5.0
-powerpc64             randconfig-002-20260606    gcc-8.5.0
-riscv                            allmodconfig    clang-23
-riscv                             allnoconfig    clang-17
-riscv                            allyesconfig    clang-17
-riscv                               defconfig    gcc-16.1.0
-riscv                          randconfig-001    gcc-8.5.0
-riscv                 randconfig-001-20260606    gcc-8.5.0
-riscv                          randconfig-002    gcc-8.5.0
-riscv                 randconfig-002-20260606    gcc-8.5.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-17
-s390                             allyesconfig    gcc-15.2.0
-s390                                defconfig    gcc-16.1.0
-s390                           randconfig-001    gcc-8.5.0
-s390                  randconfig-001-20260606    gcc-8.5.0
-s390                           randconfig-002    gcc-8.5.0
-s390                  randconfig-002-20260606    gcc-8.5.0
-sh                               allmodconfig    gcc-15.2.0
-sh                                allnoconfig    clang-17
-sh                               allyesconfig    clang-19
-sh                                  defconfig    gcc-14
-sh                             randconfig-001    gcc-8.5.0
-sh                    randconfig-001-20260606    gcc-8.5.0
-sh                             randconfig-002    gcc-8.5.0
-sh                    randconfig-002-20260606    gcc-8.5.0
-sparc                             allnoconfig    clang-17
-sparc                               defconfig    gcc-16.1.0
-sparc                 randconfig-001-20260606    gcc-11.5.0
-sparc                 randconfig-002-20260606    gcc-11.5.0
-sparc64                          allmodconfig    clang-23
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20260606    gcc-11.5.0
-sparc64               randconfig-002-20260606    gcc-11.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-17
-um                               allyesconfig    gcc-15.2.0
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20260606    gcc-11.5.0
-um                    randconfig-002-20260606    gcc-11.5.0
-um                           x86_64_defconfig    gcc-14
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-17
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20260606    gcc-14
-x86_64      buildonly-randconfig-002-20260606    gcc-14
-x86_64      buildonly-randconfig-003-20260606    gcc-14
-x86_64      buildonly-randconfig-004-20260606    gcc-14
-x86_64      buildonly-randconfig-005-20260606    gcc-14
-x86_64      buildonly-randconfig-006-20260606    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-22
-x86_64                randconfig-001-20260606    gcc-14
-x86_64                randconfig-002-20260606    gcc-14
-x86_64                randconfig-003-20260606    gcc-14
-x86_64                randconfig-004-20260606    gcc-14
-x86_64                randconfig-005-20260606    gcc-14
-x86_64                randconfig-006-20260606    gcc-14
-x86_64                randconfig-011-20260606    gcc-14
-x86_64                randconfig-012-20260606    gcc-14
-x86_64                randconfig-013-20260606    gcc-14
-x86_64                randconfig-014-20260606    gcc-14
-x86_64                randconfig-015-20260606    gcc-14
-x86_64                randconfig-016-20260606    gcc-14
-x86_64                randconfig-071-20260607    clang-22
-x86_64                randconfig-072-20260607    clang-22
-x86_64                randconfig-073-20260607    clang-22
-x86_64                randconfig-074-20260607    clang-22
-x86_64                randconfig-075-20260607    clang-22
-x86_64                randconfig-076-20260607    clang-22
-x86_64                               rhel-9.4    clang-22
-x86_64                           rhel-9.4-bpf    gcc-14
-x86_64                          rhel-9.4-func    clang-22
-x86_64                    rhel-9.4-kselftests    clang-22
-x86_64                         rhel-9.4-kunit    gcc-14
-x86_64                           rhel-9.4-ltp    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    clang-17
-xtensa                           allyesconfig    clang-23
-xtensa                randconfig-001-20260606    gcc-11.5.0
-xtensa                randconfig-002-20260606    gcc-11.5.0
+>> Below, I have mentioned a detailed analysis. Please let me know your thoughts.
+>>
+>>> Makes sense. Tarun this was the other option that I was suggesting when
+>>> we discussed offline.
+>>>
+>>> I think (?) it is possible to create a fully-private guest_memfd for a
+>>> non-Confidential VM, and even after conversion lands, for both
+>>> vm_memory_attributes=true and vm_memory_attributes=false.
+>>>
+>>> In that case, your preservation series can still preserve memory tracked
+>>> as private by guest_memfd but not used as private, right?
+>>>
+>>> I don't think anyone will use this combination before guest_memfd
+>>> write() support lands, we just need to make sure there's no kernel crash
+>>> or corruption in this case.
+>>
+>> IIUC, currently, private memory definition is where cocovm with HW based
+>> private memory is supported. Which is directly checked by
+>> kvm_arch_has_private_mem and this return false incase ARCH does not
+>> support it in HW (SEV/SNP, TDX).
+>>
+>> So about the combination where a guest_memfd is tracked as private but
+>> not actually private. (Created without the INIT_SHARED flags). Even
+>> though kvm_arch_has_private_mem is false.
+>>
+>> In this case the luo will preserve the guest_memfd. But it will not
+>> preserve any attributes, because
+>> 1. during creation, we dont populate any attributes, so by default
+>> guest_memfd memory always considered to be shared. (Even though no
+>> INIT_SHARED is passed). Conversion to private IOCTL will fail as
+>> kvm_arch_has_private_mem check will fail for non-COCOVM.
+>> for COCOVM,
+>> presevation will not be supported and conversion to private memory will
+>> be succeded. (No corruption and kernel crash in this case)
+>>
+>>
+>> ==== WHAT IF CONVERSION SERIES LANDS =========
+>>
+>
+> I think there are quite many cases to consider if we consider both
+> before and after conversion series lands. For preservation, shall we
+> assume it will go after conversion? :) This way we can avoid discussing
+> some cases.
+>
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+No, I dont prefer to make any assumption and try to make both the series
+independent of each other. Landing any of the series first should not
+break another. I am keeping this goal.
+
+>> In this case, we have two scenerio
+>> 1. kvm->attributes
+>>    In this case, Every logic remains same as above.
+>
+> This is the vm_memory_attributes=true case.
+>
+> Since kvm_supported_mem_attributes(kvm) returns 0 when
+> kvm_arch_has_private_mem(kvm) returns false, the vm's mem_attr_array
+> will always say shared for any vm where kvm_arch_has_private_mem() is
+> false.
+>
+> So yup, preservation doesn't preserve attributes but that's also
+> effectively preserving always-shared attributes, so all is good.
+>
+>> 2. gmem->attributes
+>>    if INIT_SHARED: memory is initially shared and no entry in maple tree, and if
+>>    kvm_arch_has_private_mem returns false (non-COCOVM), this will just
+>>    fails any conversion request. hence preserving the guest_memfd wont
+>>    have any problem (fully shared case).
+>>
+>
+> Yup, preservation doesn't preserve attributes but that's also
+> effectively preserving always-shared attributes, so all is good.
+>
+>>    if INIT_SHARED not set: memory is initially private, and there is an
+>>    entry in maple tree, marked the memory as private. During conversion:
+>>    A. To private: it fails as kvm_arch_has_private_mem return false.
+>>                   Preservation is safe and there will be no problem. as in preservation
+>>                   we dont preserve any attributes, but on retrieval, when a new gmem
+>>                   file is created, identical entry to attributes will also be assigned
+>>                   as INIT_SHARED flag is not set. So we wont have any issues in this case.
+>>    B. TO shared: it passes, and update the maple tree. preservation will
+>>    not be preserving the attributes with current patches, and it will
+>>    also allow the preservation as kvm_arch_has_private_mem is false. So
+>>    in this case, on retrieval, we will lose the data regarding the
+>>    private vs shared (non-cocovm). So if host want to access the shared
+>>    memory, it will try MMAP and which will fail in new kernel (which was
+>>    successful in old kernel as conversion happened). But I dont see any
+>>    kernel crash or corruption.
+>
+> Perhaps it should be this way: the process of preserving should first
+> freeze further conversions, then check for private/shared status, and if
+> private, return error to userspace.
+>
+> I haven't looked at RFC v2 yet, but IIUC this is kind of in line with
+> the other issue where we freeze allocations:
+>
+> + When preserving, freeze further allocations, preserve all pages that
+>   are already allocated. If there are pages that weren't allocated, too
+>   bad - allocations are frozen until unpreserve.
+> + When preserving, freeze further conversions, preserve all shared
+>   pages. If there are private pages, fail preservation.
+>
+For this series, I am strictly focusing on fully shared guest_memfd. And
+any guest_memfd that supports or will support conversion to private will
+not be allowed for preservation with this series.
+
+Freezing the conversion, is requirement for guest_memfd that will
+support private mapping. At this point I dont want to include this in
+this base support. We will look on this when we will work on
+preservation of private mapping.
+
+> This way, there's no loss of any private/shared state, since only shared
+> pages are preserved.
+>
+>>    This is an issue with only non-cocoVM support with conversion series
+>>    having the gmem attribute enabled without INIT_SHARED flag. I am not
+>>    sure, if there will be any user for this very soon (is it SW_PROTECTED_VM ?? ).
+>>
+>
+> So if a non-CoCo VM does use an all-private guest_memfd (didn't specify
+> INIT_SHARED) (don't think anyone will use this before guest_memfd
+> write() support), it'll just always fail preservation unless before
+> preserving everything was converted to shared.
+>
+
+yes, Also
+We will never know if everything is converted to shared unless we walk
+the maple tree, But for this base support, we dont want to depend on
+conversion series, So depending on INIT_SHARED flag along with
+kvm_arch_has_private_mem check makes this series immune to conversion series,
+INIT_SHARED makes the initial mapping shared, and
+kvm_arch_has_private_mem avoid any further conversion which is also true
+before and after conversion series.
+
+WDYT? V2 does not have INIT_SHARED check, it has only
+kvm_arch_has_private_mem. I can comment there to be updated in next
+version, if we are aligned on this.
+
+Thanks.
 
