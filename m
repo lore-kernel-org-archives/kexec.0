@@ -4,64 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8318BCD8C9F
-	for <kexec@archiver.kernel.org>; Sun,  7 Jun 2026 17:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 23CBCCD8C89
+	for <kexec@archiver.kernel.org>; Sun,  7 Jun 2026 19:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
-	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=p13qmOJLATrPkWrp+bXLKA89GU/CFXpglcWbzZhweFA=; b=YfeJKE65bjy5zO5hru/OWrhhH2
-	kf/qQbly+nxqTW257fp5hsQmulBphuZzfUugLJF/2tu7tX1cPUJO1XgJLM9J2WXxPSLLTQ74ywYX+
-	vUB2nfKGqRZDjC8FgxQC6bmt7b9NV5bpMQPBI1zBWe3U3CIfcL1V+Y6D0FaRj4xCpsnijaqDcY+QV
-	IKvQPBFSptrNc3V4gjYSzu9aHeKY4ltHyUI+tC64yQruoUV7D3f6zejTK8e0QEbUbakI7FvNMiCAu
-	WvrQF0z1cPPsuCiZMl0y/WLPuQ+KTaJtyo2O8gerzmxDFjncc6CWFKwBCj53ARiJU/O+36I6JaqTd
-	wwnne8Nw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=7bxnEjA/C3zuxdR051u14W5wOLjOO10IAKaN4C2htfQ=; b=lvUq7k9TTlcIUCLmeUKCZDFTs7
+	QdxpKapJKXRkB9bUYfRlkAX8b2xZbEuwfnsHAVcSxvYOC4WdqsU2v2fNLQ7AeLMMjM2mN1BtXX4LS
+	B0mC0Voif4Ef9pbB5UygVR2h9lHAgtB8W/Fav6p1kaGR3E0olRD7DJgqMEkLJOI4SMIRIKHR7pUWj
+	cWkTD/cIQoP4lDjWpOjr23jevmPVsK65xMePy2tnhq87s2OKgagcM3jZd7entyNjFEWM5aMB9LYCk
+	NOO9KnPK5cs9yGVKl1I2WQoWXEfI/qYWx6QJDkXaM2H3DBRDNwp5j9PBxAaFOL7JPEQIen8dwn6n/
+	+gFIUXWA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWHmm-00000002O52-2XuK;
-	Sun, 07 Jun 2026 17:59:48 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wWIke-00000002R4K-1qNX;
+	Sun, 07 Jun 2026 19:01:40 +0000
+Received: from mail-dl1-x122c.google.com ([2607:f8b0:4864:20::122c])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWHml-00000002O43-0DEP
+	id 1wWIkc-00000002R3w-23ml
 	for kexec@lists.infradead.org;
-	Sun, 07 Jun 2026 17:59:47 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 1416F436B8;
-	Sun,  7 Jun 2026 17:59:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A78311F00893;
-	Sun,  7 Jun 2026 17:59:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780855186;
-	bh=p13qmOJLATrPkWrp+bXLKA89GU/CFXpglcWbzZhweFA=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=Id3zNGSuQQrCyIBS1HT+yPq9MzOB1URA4ipc2w9gwWuXsYJn+RSzuj+IRWSYArMz/
-	 r2bAdENTeVv0i296ZT9xYlRvUGSy/MYOg6/1g60IR+s+L+Z+6wjl3Wlv27sFTA+ZHa
-	 g+ku3trRQZyP9yzZcg0Vuyx4YrhE77Uy3qJ55T6Hv3trt2dCAmenIsRF5fwiIv5biq
-	 iRzVn6CToE8JnrsJWUN9g0yy2GhPrzhWdQIknmaM8x+miwJ8IiaZm8ScgYlklx3qpF
-	 ysbiSHI8rHT/3stcctQKFTJKJtX9u/iaa+55KrYHvQ9k1KsqRNPGZym/EjN5c38y0t
-	 HQeZuTcMbavag==
+	Sun, 07 Jun 2026 19:01:39 +0000
+Received: by mail-dl1-x122c.google.com with SMTP id a92af1059eb24-1336742714fso24295c88.1
+        for <kexec@lists.infradead.org>; Sun, 07 Jun 2026 12:01:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1780858897; x=1781463697; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7bxnEjA/C3zuxdR051u14W5wOLjOO10IAKaN4C2htfQ=;
+        b=nIKODfih6AuiCt9R5FCWgTMUqiSg5NcHShbXl1t1lrraFtyXSBqypUHaNODwqBR6af
+         Q10DaGfpHgN2uZU21rB+v0wiA1hq9+5uIsKA5oBnX6AtJW86H/bCIfHTWb39iVCjOLp1
+         uOcyfpADrcCZoRgYgfVCrHTlPAeN3s8ZKoLW/0datA8azROopm+k1Jhca9oT7q+1aB01
+         8JauDMOog2NBywR2QCfAGpBlij+d0DkurgKDTKTIDExzmUop3Me8ydZpL3DprwnWzB/Y
+         2S7P2TuiWaeLb+eJoPGzqKKMDQnZov8blcU7YEp5DtPx+/83a5tEg/hyoXXV9k2xrRBP
+         OpRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780858897; x=1781463697;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7bxnEjA/C3zuxdR051u14W5wOLjOO10IAKaN4C2htfQ=;
+        b=ImdN1pwncfoNF4Vhlge+zBKkre1yq0xR/eP8qhgYgUVJZlq+SViPv5XbH3wqtT/8J0
+         NAMcQSst9oYUtNaQ87c5lgo7IqZy512RxyP2r8fOVdpLI68Wp7C+jETo1qgFq8LdznZk
+         jCsqk2OffsMu9/V970d23sKRtMDHTXP1BbBnJ8lp4O4QQSf23AUuYHACqixelWRZNsNg
+         5ypRpkA5bhwGrjPZplZJ03vEVxQTENczQiUQRqxaDNtQm200QteyLetMz803bkUxi/Bb
+         pmfTrFCZjk6njGm957cgHdIRN7cdiujPYvWw4oGar1pSM2Pw0+9SGvrH+5P4bX8BF76Q
+         gxTQ==
+X-Gm-Message-State: AOJu0Yz/acGTq+AMxFptOiwrleiaugUGWyPEDMVNd87Zm5NDxHsbErRW
+	2P6W4AhoV5y50q1epuvhz1ztU0KBRIHqD3rtKWprbtfGf/pwyyME+KLQNuv2stuolQ==
+X-Gm-Gg: Acq92OG+lfYxLWIORSGd/kGWeVHR6A9gxeShR+ZVPpAYyUJXzO1HfkyFBgtv63u8EBv
+	xGVMIXLf+eeel58coL1BXhzYJiCkUgOs0axkb4qaMB+OL/04aB0ZKxxfpX8i2KdOx6YFlxL/BYT
+	5haAyqESf6KrHfcb7uLwQTJVcYMHQpryutzJx4cYafXy0tef8nF0hVWTq0tJZfS+mFsj5YBJo4I
+	oZ9Y1T1rRQOi4DOBn7cp/Fu76Jg7cWL0qspLHG1HbamKgHTOTs5Rwkx1L7Iw2tZv88OT21qmDBM
+	Ej96rN/rXYPzdCGmCFhztJK6JbDnVup0mDYy2LMVfhQElqO5CZhdh9kiXzhWGkyyI2lD0ghGWfm
+	5e4EAH3YYAKIPgBAfn/2FD6fkP7Vffp0Xy/grQdYtHg7Kcqil4BMuZkU+nG0AoxKS1S4z9aAqnp
+	PjEHKFxe+MPXuVbpe6b7zmMQ6beiM/uzwe662qiqSjIR9mdTFCl/FTYiIcpK+8TbfBk1LPMR0=
+X-Received: by 2002:a05:7022:23a2:b0:138:888:32de with SMTP id a92af1059eb24-13808883386mr174298c88.30.1780858894965;
+        Sun, 07 Jun 2026 12:01:34 -0700 (PDT)
+Received: from google.com (199.255.142.34.bc.googleusercontent.com. [34.142.255.199])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3074dea8e76sm13773740eec.18.2026.06.07.12.01.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jun 2026 12:01:34 -0700 (PDT)
+Date: Sun, 7 Jun 2026 19:01:25 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: David Matlack <dmatlack@google.com>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
+	Josh Hilke <jrhilke@google.com>,
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v6 07/12] PCI: Refactor matching logic for pci_dev_acs_ops
+Message-ID: <aiW_M7y0fFwLN84G@google.com>
+References: <20260522202410.3104264-1-dmatlack@google.com>
+ <20260522202410.3104264-8-dmatlack@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [RFC v1 1/9] kho: split out radix tree tracker into
- kho_radix.c
-From: Mike Rapoport <rppt@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Mike Rapoport <rppt@kernel.org>, linux-kselftest@vger.kernel.org, 
- shuah@kernel.org, akpm@linux-foundation.org, linux-mm@kvack.org, 
- skhan@linuxfoundation.org, linux-doc@vger.kernel.org, jasonmiu@google.com, 
- linux-kernel@vger.kernel.org, corbet@lwn.net, ran.xiaokai@zte.com.cn, 
- kexec@lists.infradead.org, pratyush@kernel.org, graf@amazon.com
-In-Reply-To: <aiWYZhoSOAruIIM3@plex>
-References: <20260605033235.717351-1-pasha.tatashin@soleen.com>
- <20260605033235.717351-2-pasha.tatashin@soleen.com>
- <178083348873.1648214.11020626647820932506.b4-review@b4>
- <aiWYZhoSOAruIIM3@plex>
-Date: Sun, 07 Jun 2026 20:59:40 +0300
-Message-Id: <178085518028.1648214.13339471022594901667.b4-reply@b4>
-X-Mailer: b4 0.15.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260522202410.3104264-8-dmatlack@google.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260607_120138_560924_4AE7CFC1 
+X-CRM114-Status: GOOD (  17.91  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,48 +115,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-06-07 16:20:50+00:00, Pasha Tatashin wrote:
-> On 06-07 14:58, Mike Rapoport wrote:
+On Fri, May 22, 2026 at 08:24:05PM +0000, David Matlack wrote:
+> Refactor the logic to match devices to pci_dev_acs_ops by factoring out
+> the loop and device matching into its own routine. This eliminates some
+> duplicate code between pci_dev_specific_enable_acs() and
+> pci_dev_specific_disable_acs_redir(), and will also be used in a
+> subsequent commit to check if a device requires device-specific
+> enable_acs() during a Live Update.
 > 
-> > On Fri, 05 Jun 2026 03:32:27 +0000, Pasha Tatashin <pasha.tatashin@soleen.com> wrote:
-> > 
-> > It's radix tree data structure implementation, kho memory tracker is it's
-> > user. Please rephrase to keep the semantics clear.
+> No functional change intended.
 > 
-> Yeap, I will update it.
+> Signed-off-by: David Matlack <dmatlack@google.com>
+> ---
+>  drivers/pci/quirks.c | 50 ++++++++++++++++++--------------------------
+>  1 file changed, 20 insertions(+), 30 deletions(-)
 > 
-> > I don't see much value in moving kexec_handover.o to a separate line,
-> > btw, the same is true for luo_core.o, but it's not important enough to
-> > change.
-> 
-> This is purely for consistency. I wanted to use the exact same style in 
-> the Makefile instead of having two different ways of declaring the 
-> object lists.
-> 
-> This:
->     luo-y :=                                \
->             luo_core.o                      \
->             luo_file.o                      \
->             luo_flb.o                       \
->             luo_session.o
-> 
->     kho-y :=                                \
->             kexec_handover.o                \
->             kho_radix.o                     \
->             kho_block.o                     \
->             kho_vmalloc.o
- 
-I mean this:
 
-luo-y := luo_core.o		\
-	luo_file.o		\
-	luo_flb.o		\
-	luo_session.o
- 
-kho-y := kexec_handover.o	\
-	kho_radix.o		\
-	kho_block.o		\
-	kho_vmalloc.o
+[...]
 
+>  } pci_dev_acs_ops[] = {
+>  	{ PCI_VENDOR_ID_INTEL, PCI_ANY_ID,
+> +	    .match = pci_quirk_intel_pch_acs_match,
+>  	    .enable_acs = pci_quirk_enable_intel_pch_acs,
+>  	},
+>  	{ PCI_VENDOR_ID_INTEL, PCI_ANY_ID,
+> +	    .match = pci_quirk_intel_spt_pch_acs_match,
+>  	    .enable_acs = pci_quirk_enable_intel_spt_pch_acs,
+>  	    .disable_acs_redir = pci_quirk_disable_intel_spt_pch_acs_redir,
+>  	},
+>  };
+>  
+> -int pci_dev_specific_enable_acs(struct pci_dev *dev)
+> +static const struct pci_dev_acs_ops *pci_dev_acs_ops_get(struct pci_dev *dev)
+>  {
+>  	const struct pci_dev_acs_ops *p;
+> -	int i, ret;
+> +	int i;
+>  
+>  	for (i = 0; i < ARRAY_SIZE(pci_dev_acs_ops); i++) {
+>  		p = &pci_dev_acs_ops[i];
+> @@ -5481,33 +5475,29 @@ int pci_dev_specific_enable_acs(struct pci_dev *dev)
+>  		     p->vendor == (u16)PCI_ANY_ID) &&
+>  		    (p->device == dev->device ||
+>  		     p->device == (u16)PCI_ANY_ID) &&
+> -		    p->enable_acs) {
+> -			ret = p->enable_acs(dev);
+> -			if (ret >= 0)
+> -				return ret;
+> -		}
+> +		    p->match(dev))
+> +			return p;
 
+Nit:
+Should we check if (p->match != NULL) like we check for p->enable_acs &
+p->disable_acs_redir(). 
+
+Otherwise, it seems like we're mandating the existence of a match op in
+the pci_dev_acs_ops here? Today, we just have two Intel entries in that
+array, both of which need the match op. However, AFAICT, it shouldn't be
+mandatory for future SoCs that might only need a simple vid + devid match
+
+[...]
+
+with that nit:
+Reviewed-by: Pranjal Shrivastava <praan@google.com>
+
+Thanks,
+Praan
 
