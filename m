@@ -4,105 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 09D51CD8C9D
-	for <kexec@archiver.kernel.org>; Mon,  8 Jun 2026 12:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2B686CD8C9D
+	for <kexec@archiver.kernel.org>; Mon,  8 Jun 2026 14:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=tJaMwlHdD5ukSuw9Ddmz9W921lhUeR/xfWp0HtFNkEA=; b=whK5rhQ5xdVTGWijRwuOWd1X2+
-	fTPNz8QAmJYmPo4MorJO95frv60EGXnoEZ46LVtO3mfqkad8e3GyuW3T3iaFHxHiZ+1TrPCQLl09a
-	m4YwtsyX+IQH/IWKabqU/qH+yEzQtlY8w/tpu423zzpz2osW883FWRONbuKSlGB0oWFdmrRqkRlDn
-	ikSdiqamcdoxWMh8cdrjRG24JEEu5VUoTYWrXttKCjNtKh9lbTZJdyvUA1eTuavruqTtDsJAcirBI
-	AR9I5XpnmK34RK0RpByJVwTCCEB0iIBguBibe9/gH0Uhys5ToXdLcsR/rvEUTlqeJmyRL6+hvrsLz
-	vYrb54wQ==;
+	bh=gtvAtyIWkgcGh5bt/21vAHxAw/x3unUhXw573vaCzPc=; b=O+8WAHZAPzIMEMlHzjyfoHfY2o
+	LMc2UuqOQlPELQboQrEqKjAmWNkOjNbFwhHb3MfU0MJW5UGIgie98A2azjMtJKpoZun1yx6Zhk7fu
+	Qm+9iDP4b1WQDxknbWqyGeCYDJv4EDT2PJnyTcHIcnTXnBE4rapyUAQOIanyWkDwtijOWnT8d7sj+
+	quZ4EfenRC/MdYeZ7Qm0hE0SfQl9rXa/b4KqtEkct5lZQx4u28AeYBCUSv3AlQlh0bCxodnjhsjbN
+	W4cjMuDrnOan4Ql7VAgxxZvUR6l79Aaz/UTpcojiG8hPKNtGQqcSi2qvKluNKNLNhfsE0oGcpTdva
+	iNa56u6A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWYgC-00000003Tsh-3YQp;
-	Mon, 08 Jun 2026 12:02:08 +0000
-Received: from mail-pl1-x62e.google.com ([2607:f8b0:4864:20::62e])
+	id 1wWaou-00000003it6-3205;
+	Mon, 08 Jun 2026 14:19:16 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWYgB-00000003TsM-0Nql
+	id 1wWaot-00000003isy-1b1Z
 	for kexec@lists.infradead.org;
-	Mon, 08 Jun 2026 12:02:08 +0000
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-2bf2911f93cso298545ad.1
-        for <kexec@lists.infradead.org>; Mon, 08 Jun 2026 05:02:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780920126; x=1781524926; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tJaMwlHdD5ukSuw9Ddmz9W921lhUeR/xfWp0HtFNkEA=;
-        b=bMhH+IECLZGjx1RQRH9sKzGprnbV5pIeoqe0HAwhCRzrx3SINB0wFBKVfBgDCyhNtw
-         tGybxJcr0yC6R2+1p1P6gyLnaGmJ4Sm3HRyERmFwn0W59egUQsfJ0mfwF9756oJfZF6J
-         Yuu3tDEvWcbs25GkxYdXplACb6cV5+BxJfTqtQpTIn/tdFo3qamvXc2a4IxPCGayiR0l
-         LJsFwTR0V1+SkO1CmmyS25k/tcGYCU9QZP58rhfvw/YgAEje+QyrafXbyBixGth1bEb0
-         HcJbdeun49avmh6X7sdDWwpiwiPdom90D/OXFb0wDFZ2Sz7aEOjchtMAo84NsFhRydVD
-         YHeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780920126; x=1781524926;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tJaMwlHdD5ukSuw9Ddmz9W921lhUeR/xfWp0HtFNkEA=;
-        b=sIY0sntQnjIT1cxyuTMt87l4cuxSGDFvRjZ2XfdgWV9Ku2i9FqQ8JILIgQIb/A5CL4
-         G+UpmuZXf4Chl+eJvuBjVWx4VQ2NbVpeRaixWVtLWKda1XPdEZpY4QPrucDhzHhUVohx
-         5Zc2z0TjF5ie+jVhHEczRWrfD9x3G8i2FXtIdaVmuxzfMNaw36G0UWOguyNsQl7jxlfZ
-         lce0ORSianpSJYQ6UdvPdgBFGobmVspazdHIrjGp2M3q3pp0hRVWBVVvcwpVqvGKvzS/
-         nR9eGvgNmbDaLRxXxjOteeRXJ3zmJkaUvZZV44TBYF3pyqsDBh3id49zaoLbsRD3Bq4F
-         hNPA==
-X-Gm-Message-State: AOJu0Yx7TqKpkU6M086lDU3EPP/Y/AIxDE0OB/HpxqR1dOhxOmSD5d1+
-	wc9F1qTHard4G0fRELEJt3y5EckUR8sjiHBeikFRGuPFqHLMilz1t3myVQJTRpHyqQ==
-X-Gm-Gg: Acq92OEzw+wH0sg23a6DT2AHZ45pwkAwXlRPo4jjN5ryOgpjfG1AmQ6GzwQxrMm6Hvb
-	zOAJd9Vle7RjVshu6MHwe9gSf4U8qHYP3SemHTiPjzw30vPvwJdzB9NPDi0DRytBSPfCme0WrWL
-	MLBNTcSs0c3WgOJYg1eEbv/rdy0v8vK5FBaVIz0BtjwYJtiw9fztT/MiO/9azZJuaS253CTeF0w
-	fpKQAE3O6RwV0oO9SoCF377f5uTxBxfBcytwJCTf7NITfJnaw+uJRJNogsHnQTX0nCiBDpyPnRS
-	Rh4eIihW89cV/XCl9m9DhTUgfAqGlbNqE2kX/0oFm79XtMqRg4Jb3Yvdx1Je74VcI1UKtcKLzTv
-	pPDVQkJDET5NxHLnfjs5KEW41P1wBXMe6znrbQ+UViX5dgWoF4AyQlxhd2AieFaDBB+cL4Dy8mk
-	3ZV/EAqWHWcTL7SiaU9uCa9ZdneQf1iQ4qkv/cNY1gzaw8lI0OhPCFI0LUuipgZ9sF/ry1TR5Cs
-	wwPMIzASA==
-X-Received: by 2002:a17:903:ac6:b0:2b0:aee4:afe7 with SMTP id d9443c01a7336-2c1eb1dbf25mr5272565ad.10.1780920124143;
-        Mon, 08 Jun 2026 05:02:04 -0700 (PDT)
-Received: from google.com (199.255.142.34.bc.googleusercontent.com. [34.142.255.199])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c164f85de1sm180971895ad.20.2026.06.08.05.01.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2026 05:02:03 -0700 (PDT)
-Date: Mon, 8 Jun 2026 12:01:55 +0000
-From: Pranjal Shrivastava <praan@google.com>
+	Mon, 08 Jun 2026 14:19:15 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id A3A5840B69;
+	Mon,  8 Jun 2026 14:19:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 592671F00893;
+	Mon,  8 Jun 2026 14:19:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780928354;
+	bh=gtvAtyIWkgcGh5bt/21vAHxAw/x3unUhXw573vaCzPc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=OLD1qgx1Q2ALx/ykbqbh/knGOvOBQnjApDdNeZJB8b/ezkWqap+NYtRL28TkoF4Gb
+	 1rzfXZl7/bSff2jC9w5cHHfSythG4ByZ1aaIv5EBpq9w9g5qpsuL5/hIKF1mRO7L11
+	 lgaSK3xDhJJ4+Y3EtjOsO0RZGVSMzd61OBjSVlZCT8WVg5fKHqF9n0+gfgti40KCsV
+	 3R1zbLvvsJp5W6VQ60PfUnoMWGjgsCtB4gqk+Se2bL7BjB1LjECmWZH3K7wLr5oQfm
+	 w+7j6qBuiIWmNa599w6HPx7wVtYEE+sBgaobJ+bzASqAecdaY9yul/2LxhSh4xhnRy
+	 78L+TzX8YNGEw==
+From: Pratyush Yadav <pratyush@kernel.org>
 To: David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
-	Josh Hilke <jrhilke@google.com>,
-	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
-	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v6 12/12] Documentation: PCI: Add documentation for Live
- Update
-Message-ID: <aiavM2JWPds-mEfD@google.com>
-References: <20260522202410.3104264-1-dmatlack@google.com>
- <20260522202410.3104264-13-dmatlack@google.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  kexec@lists.infradead.org,
+  linux-kernel@vger.kernel.org,  Andrew Morton <akpm@linux-foundation.org>,
+  Mike Rapoport <rppt@kernel.org>,  Pasha Tatashin
+ <pasha.tatashin@soleen.com>
+Subject: Re: [PATCH 1/2] liveupdate: Reference count outgoing FLB data
+In-Reply-To: <ah8SDsIuZQXyvpZq@google.com> (David Matlack's message of "Tue, 2
+	Jun 2026 17:25:34 +0000")
+References: <20260528174140.1921129-1-dmatlack@google.com>
+	<20260528174140.1921129-2-dmatlack@google.com>
+	<2vxzfr34dfty.fsf@kernel.org> <ah8SDsIuZQXyvpZq@google.com>
+Date: Mon, 08 Jun 2026 16:19:12 +0200
+Message-ID: <2vxzse6xt8rj.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260522202410.3104264-13-dmatlack@google.com>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260608_050207_132167_0F7866BF 
-X-CRM114-Status: GOOD (  13.68  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,29 +73,128 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, May 22, 2026 at 08:24:10PM +0000, David Matlack wrote:
-> Add documentation files for the PCI subsystem's participation in Live
-> Update.
-> 
-> These documentation files are generated from the kernel-doc comments
-> in the PCI Live Update source code. They describe the File-Lifecycle
-> Bound (FLB) API, the device tracking API, and the specific policies
-> applied to preserved devices (such as bus number inheritance and bus
-> mastering preservation).
-> 
-> Signed-off-by: David Matlack <dmatlack@google.com>
-> ---
->  Documentation/PCI/index.rst           |  1 +
->  Documentation/PCI/liveupdate.rst      | 29 +++++++++++++++++++++++++++
->  Documentation/core-api/liveupdate.rst |  1 +
->  MAINTAINERS                           |  1 +
->  4 files changed, 32 insertions(+)
+On Tue, Jun 02 2026, David Matlack wrote:
 
-The kernel-doc directives seem to be wired up properly, along with 
-formatting/indentation while keeping MAINTAINERS in sync in the same go.
+> On 2026-06-02 07:15 PM, Pratyush Yadav wrote:
+>> Hi David,
+>> 
+>> On Thu, May 28 2026, David Matlack wrote:
+>> 
+>> > Increment the outgoing FLB refcount in liveupdate_flb_get_outgoing() so
+>> > that the FLB structure cannot be freed while the caller is actively
+>> > using it. Add an additional liveupdate_flb_put_outgoing() function so
+>> > the caller can explicitly indicate when it is done using the outgoing
+>> > FLB.
+>> >
+>> > During a Live Update, the kernel may need to fetch the outgoing FLB
+>> > outside of the scope of a file handler's preserve() and unpreserve()
+>> > callbacks. In that situation there is no way for the caller to protect
+>> > itself against the outgoing FLB from being freed while it is using it.
+>> > Incrementing the reference count in liveupdate_flb_get_outgoing()
+>> > ensures it cannot be freed.
+>> 
+>> We grab a reference to the FLB's module when the first file using the
+>> FLB is preserved. So the FLB should never go away while preserved files
+>> exist. Once all preserved files go away, you normally shouldn't be doing
+>> anything with the FLB anyway.
+>> 
+>> Can you please elaborate on the use case and why this is a problem?
+>> Using the FLB outside of the standard LUO file callbacks sounds
+>> problematic.
+>
+> The scenario I had in mind was to remove a PCI device from the outgoing
+> FLB if the device is forcibly removed while the file is still preserved,
+> for example someone writes 1 to /sys/bus/pci/devices/.../remove or a
+> device is physically hot-unplugged.
+>
+> Specifically this call here from the patch below:
+>
+> +void pci_liveupdate_cleanup_device(struct pci_dev *dev)
+> +{
+> +	/*
+> +	 * It should be safe to READ_ONCE() outside of the rwsem during cleanup
+> +	 * since there should no longer be any references to @dev on the system.
+> +	 */
+> +	if (READ_ONCE(dev->liveupdate.outgoing)) {
+> +		pci_WARN(dev, 1, "Destroying outgoing-preserved device!\n");
+> +		pci_liveupdate_unpreserve(dev);
+> +	}
+> +}
+>
+> https://lore.kernel.org/linux-pci/20260522202410.3104264-3-dmatlack@google.com/
+>
+> I can do this without adding reference counting to
+> liveupdate_flb_get_outgoing(), but the reference counting makes it
+> obvious that the outgoing FLB will not be freed while I am using it
+> here, and also aligns with liveupdate_flb_get_incoming().
 
-Reviewed-by: Pranjal Shrivastava <praan@google.com>
+The lifecycle of FLB is bound to _preserved_ files. So it is only valid
+as long as preserved files exist. So I think you should only get the FLB
+object when you are inside a file preservation callback for a file which
+the FLB is registered. Anywhere outside of that, you are not guaranteed
+to get anything sane.
 
-Thanks,
-Praan
+This refcounting scheme breaks the inherent "file-lifecycle-bound" part
+of FLB, since now anyone can grab a reference and hold the FLB as long
+as they like, even when no preserved files exist.
+
+For the normal case, your the VFIO driver gets probed, it registers its
+file handler, then when the device is preserved by VFIO, the VFIO file
+handler's callbacks can get the FLB and do whatever. LUO guarantees the
+FLB exists. Anywhere outside of that, you should _not_ touch the FLB
+because of the reasons above.
+
+Now for hot-unplug, I think that case is not supported right now. When a
+preserved file exists, LUO can only remove it when the user closes the
+session. Trying to clean up the file from any other context will leave
+dangling references to the file and we currently do not handle those.
+Trying to hold the file reference won't help much either since LUO
+callbacks will try to proceed as normal, and normal no longer applies.
+
+For example, say userspace preserved the file for your device in their
+session, then you hot-unplug the device, then userspace triggers a
+kexec. What is the freeze() callback supposed to do? Sure, the FLB
+object still exists, but the device doesn't. Similarly, if you force
+remove the module, the freeze() callback itself no longer exists, and
+you likely get a panic.
+
+We might at some point support "invalidating" preserved files. I imagine
+when you hot-unplug with a preserved device, you tell LUO to invalidate
+all preserved files with that device. They would still exist in their
+sessions, but all operations on them fail immediately, including
+freeze(), which prevents live update from proceeding until user cleans
+them up.
+
+So unless I am missing something, I think this refcounting is a band-aid
+and the real problem is to properly track these "invalidated" files.
+
+Also, I think the refcounting on the incoming path is also a mistake.
+Unfortunately for incoming, there is a need for accessing the FLB
+outside of the file handling callbacks, since subsystems needs to use it
+to initialize itself. But I suppose we can have a accessor that
+subsystems can call once on boot/init to get their object. Then they use
+it to initialize their state and refer to the state directly, with all
+later calls going through the usual file handler callbacks.
+
+If you are interested in solving this problem, we can have a chat to
+talk in more detail, or perhaps have a discussion at one of the
+bi-weeklies?
+
+>
+>> >
+>> > This change also aligns the outgoing FLB lifecycle management with the
+>> > incoming FLB, since the latter uses the same get/put semantics.
+>> >
+>> > Fixes: cab056f2aae7 ("liveupdate: luo_flb: introduce File-Lifecycle-Bound global state")
+>> > Assisted-by: Gemini:gemini-3-pro-preview
+>> > Signed-off-by: David Matlack <dmatlack@google.com>
+>> [...]
+>> 
+>> -- 
+>> Regards,
+>> Pratyush Yadav
+
+-- 
+Regards,
+Pratyush Yadav
 
