@@ -4,104 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C8203CD8C9F
-	for <kexec@archiver.kernel.org>; Sun,  7 Jun 2026 20:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 17184CD8CA6
+	for <kexec@archiver.kernel.org>; Mon,  8 Jun 2026 09:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=oir9rCALH4eHYpJVikC6mAKB9V6wqMG19r6g7e/slSE=; b=XuQTCpXPBBgR+omNNNfvhDEDrc
-	XojltMmbOylBPNtyIOWB6SZJy/lqplo4Aqt4nYkj4rsUT1zSAVCOTHcv8P+7kZJRtZYyqEkh8Ok1v
-	OT9x/jIPwNZBWtI0TV5r4va4/2Z2xGSEJp3Do52ctj6gswCH+i/LjJop1kSmUQHxSvU0W6R76hY+S
-	k3lXxB2mSPD6wOsUrgTnyLeIjURc4nM2PjsaW4lbsH9Mlfjs5HdFceG6H7ADacfeFFuMJWhshbzzv
-	lH69ulGluqlxDpd6pMfuOfSXEWM63+uKYmpcsY3P/T+A4Ya6ZbXRWE+hAePoautg1GQGOfPQu+EKK
-	iqMWrUCw==;
+	bh=BFff0qw1eQAiypeysJZENVXCeIwuiMgTCoupaaA1AGg=; b=mfIW9pM3nXg+XbnwZDBzoqHjhm
+	zXf3zkd0cvwW/+U1QuvIYd4+kemdJsov+jiDN3ea2i+y1/1z+g59i1L2+fS6JYi5rwbjHtprgr3pI
+	d5agOSfHg+Fpepp7uLsniQZvHMS3Fk/bPJ6lonYDVXQMWSJe72W+g3ynTcPCY2PuGz6T9D/Z6sCwB
+	JbN4q+LhcPEawwQCoacpl79th8sOCg9P6ZM3j6u6L2yV4zaCoebZm3hAA562zrCGd7BswnPGmRyDp
+	MYrJEYAi2ZqzfPq2Jwi3vaS8OEEEUrQPeEENP3XJsrp+poQs5PncrBtc80qNj793xPIyraNuR0YMT
+	6TzB43HQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWKFr-00000002TiX-3w3C;
-	Sun, 07 Jun 2026 20:37:59 +0000
-Received: from mail-dl1-x1236.google.com ([2607:f8b0:4864:20::1236])
+	id 1wWW0g-000000039O8-0Qqr;
+	Mon, 08 Jun 2026 09:11:06 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWKFp-00000002TiB-3Dv0
+	id 1wWW0e-000000039Nv-1eNB
 	for kexec@lists.infradead.org;
-	Sun, 07 Jun 2026 20:37:59 +0000
-Received: by mail-dl1-x1236.google.com with SMTP id a92af1059eb24-1380104f31eso20065c88.0
-        for <kexec@lists.infradead.org>; Sun, 07 Jun 2026 13:37:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780864677; x=1781469477; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oir9rCALH4eHYpJVikC6mAKB9V6wqMG19r6g7e/slSE=;
-        b=lH+s9IPcEWYIvn15JTvDN5p0gU873vvGRVE7NLvEUUksvQ/MjclisoTQBKlv0VLtIZ
-         IEztcMrenxt6nq2wBNkeiX9X89jJR8sJF7tr71vWsUIm1QFA8HNvFfHXeo8416LybMNi
-         uqiNBK/w+GH3kj3pz9YQD3LCz7MWgMBxe953GpLRpZ8M/iU9dgMjzQPY+fq8hddVKfKd
-         Qq+ldRvzBzkpNNweubLdJfQeM1h9cApkb3/yabJ1A72jkgtESZJkIZEZf8cxaO9UzXT4
-         olpC2fiUoCASqalHPCmIcyxpEqWB9ckzfy76Tq3g8frAY3din9RpYYSRidxbXb/ysZXQ
-         AuNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780864677; x=1781469477;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oir9rCALH4eHYpJVikC6mAKB9V6wqMG19r6g7e/slSE=;
-        b=T9Q9XRyPyub2DJatfwRRDpVkN0q2oERg34WFXnWh+Q2Ogk2EhfKqkX+Rlk17zWdTdF
-         yEWRfYhFrV8AM2VTq2rw9ZdRuCGGhhI7oHkvqPvVqJx1urCgQ+OsUKdnhcrAa+B0AGkP
-         tDG7q9V+aiY6sF5KZQiIZ9hVqG1VkQpTSrL4OQcBmmzxszl2p2RqG3XBjbX98yilOtC7
-         XAF/5+3dFxDHgXeal4QsyGhTqAiEgQJC0al+3KioqJsx6j7pgutwekMEtax2pmB1TLRh
-         85W4UpBIRltO2m+rxFAwR2r6T1864kDUVuVVG8v93OApVM7HdWNB/mL24kTndGCT0TWn
-         vrTg==
-X-Gm-Message-State: AOJu0YyPItjGfBV4RI0007RXUAQY0YrZK++EPKUu9MDi9C0RYdqJ1cTC
-	VORhQTokm9G6pcf7i8/5XB8Y6gMB0UYp+OiEHXv2VqmcK3jYlgLoa9i8HEKI2iUoQA==
-X-Gm-Gg: Acq92OHNRF0kfzFJAH5IqLSkN/Cbs2dCPe277AV+qoivlWA/gIIxLHtBVZyeZYmPScG
-	m1AyzhDV6W3s5AesqIM8O1xThvAH7ginJdZn6Z9GK2CXgoNpHtjeE2tU7A6fuSbYN1UfuyF51iP
-	Vua926vSb93tUOXMkKJaa8bRBGWhwlmKx/LnqSVZIacBPPvAVelTxW6VEN8RSpupI4VZaJvNTSP
-	lRzjKWD81CtCOIrISAtuPDNzkav6uesr59ieI5a7Fa3zZ+py9LeaotF5tpehsxwsEiE5MYhHVE4
-	5LXeKn1jzq24cLWycEi+dZ3D2Ovlp/ZowDb/rsg7+gjPiRyHvags/s6t/3otww5iIUO384PRlVo
-	x0NfoQHB83e53Gjc1KhL1P+KshVmMLTKSox0GfUzAHCrjLlvqB1QKv0enoX59S/HRXCsx66PCZ8
-	3JQSezGQhoQHdGKdqP/HMA8gAUqgbKPStMV45njmh4fjUJUkUzDwr4llPNx++cj2Bx868wPGk=
-X-Received: by 2002:a05:7022:504:b0:134:fc89:410b with SMTP id a92af1059eb24-13807c7c2e5mr279135c88.15.1780864674937;
-        Sun, 07 Jun 2026 13:37:54 -0700 (PDT)
-Received: from google.com (199.255.142.34.bc.googleusercontent.com. [34.142.255.199])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1381495bb00sm4230734c88.3.2026.06.07.13.37.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2026 13:37:54 -0700 (PDT)
-Date: Sun, 7 Jun 2026 20:37:45 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
-	Josh Hilke <jrhilke@google.com>,
-	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
-	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v6 08/12] PCI: liveupdate: Inherit ACS flags in incoming
- preserved devices
-Message-ID: <aiXWmR-ettxin4LC@google.com>
-References: <20260522202410.3104264-1-dmatlack@google.com>
- <20260522202410.3104264-9-dmatlack@google.com>
+	Mon, 08 Jun 2026 09:11:04 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 7A526600AE;
+	Mon,  8 Jun 2026 09:11:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DE0A1F00893;
+	Mon,  8 Jun 2026 09:11:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780909863;
+	bh=BFff0qw1eQAiypeysJZENVXCeIwuiMgTCoupaaA1AGg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=ItR0pG3QoAc09PLrAgHj7dzp9NWDYPsSmEmIv+MSZypxRomUz4VHNPTpGSviY7RiQ
+	 cG9rLDGeopY9FhwrDKxtb9zKgebONgf7oKI42YN06s+hl8oyL/wiygF/KfIBUJENCk
+	 QVj2IgTjlGCZU5CIalas4DHj4o+f8Tq/KPmmAvB3XJ5bm8O2YRveb9/2kD6q6P4u94
+	 hjUgvAyz5mDHWapAF0+agr/bJ1JzGbLgR+h11S+YMCbgzLu9cYD6I+it6y+XN1mHRA
+	 HRA4TRDC1U3dazGiyOnbRtx5X9PA2H4U5gc4IxN3Hd86rADLwxWX6/H6Bm/qmSXWrP
+	 UsHNoW4hwc/Kw==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Jork Loeser <jloeser@linux.microsoft.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Mike Rapoport <rppt@kernel.org>,
+  Pasha Tatashin <pasha.tatashin@soleen.com>,  Alexander Graf
+ <graf@amazon.com>,  Muchun Song <muchun.song@linux.dev>,  Oscar Salvador
+ <osalvador@suse.de>,  David Hildenbrand <david@kernel.org>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Jason Miu <jasonmiu@google.com>,
+  kexec@lists.infradead.org,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/18] kho: disallow wide keys in radix tree
+In-Reply-To: <fb7ed559-557-b8c1-1f6-5f879feab0ec@linux.microsoft.com> (Jork
+	Loeser's message of "Fri, 5 Jun 2026 15:06:05 -0700 (PDT)")
+References: <20260605183501.3884950-1-pratyush@kernel.org>
+	<20260605183501.3884950-3-pratyush@kernel.org>
+	<fb7ed559-557-b8c1-1f6-5f879feab0ec@linux.microsoft.com>
+Date: Mon, 08 Jun 2026 11:10:59 +0200
+Message-ID: <2vxzwlw9tn18.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260522202410.3104264-9-dmatlack@google.com>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260607_133757_817381_D784EA6E 
-X-CRM114-Status: GOOD (  25.11  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -116,100 +76,104 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, May 22, 2026 at 08:24:06PM +0000, David Matlack wrote:
-> Inherit Access Control Services (ACS) flags on all incoming preserved
-> devices (endpoints and upstream bridges) during a Live Update.
-> 
-> Inheriting ACS flags avoids changing routing rules while memory
-> transactions are in flight from preserved devices. This is also strictly
-> necessary to ensure that IOMMU group assignments do not change across
-> a Live Update for preserved devices, as changing ACS configurations can
-> split or merge IOMMU groups.
-> 
-> Cache the inherited ACS controls established by the previous kernel in
-> struct pci_dev so that ACS controls do not change after a reset
-> (pci_restore_state() calls pci_enable_acs()).
-> 
-> To simplify ACS inheritance, reject preserving any devices that require
-> quirks to enable ACS as those quirks would also have to take Live Update
-> into account.
-> 
-> Signed-off-by: David Matlack <dmatlack@google.com>
-> ---
->  drivers/pci/liveupdate.c       | 68 ++++++++++++++++++++++++++++++++++
->  drivers/pci/liveupdate.h       | 11 ++++++
->  drivers/pci/pci.c              |  5 +++
->  drivers/pci/pci.h              |  5 +++
->  drivers/pci/quirks.c           |  7 ++++
->  include/linux/pci_liveupdate.h |  6 +++
->  6 files changed, 102 insertions(+)
-> 
+On Fri, Jun 05 2026, Jork Loeser wrote:
+
+> On Fri, 5 Jun 2026, Pratyush Yadav wrote:
+>
+>> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+>>
+>> The KHO radix tree was designed to track preserved pages. So it does not
+>> provide the capability to track any 64-bit key. Instead, it limits the
+>> key width to how much it needs for tracking PFNs and their orders.
+>> Limiting the width reduces the number of levels in the tree.
+>>
+>> KHO is not expected to be the only user of the radix tree. With the API
+>> generalized to allow other users, now it is possible to add any key to
+>> the tree.
+>>
+>> Check the key width at kho_radix_add_key(), and error out if it exceeds
+>> what the tree can handle. Do this instead of increasing the tree depth
+>> since right now there are no users that need to use wider keys, so this
+>> avoids memory overhead and ABI breakage.
+>>
+>> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+>> ---
+>> include/linux/kho/abi/kexec_handover.h |  8 ++++++++
+>> kernel/liveupdate/kexec_handover.c     | 12 ++++++++++++
+>> 2 files changed, 20 insertions(+)
+>>
+>> diff --git a/include/linux/kho/abi/kexec_handover.h b/include/linux/kho/abi/kexec_handover.h
+>> index fb2d37417ad9..6dbb98bfb586 100644
+>> --- a/include/linux/kho/abi/kexec_handover.h
+>> +++ b/include/linux/kho/abi/kexec_handover.h
+>> @@ -278,6 +278,14 @@ enum kho_radix_consts {
+>> 			     KHO_TABLE_SIZE_LOG2) + 1,
+>> };
+>>
+>> +/*
+>> + * The maximum key width this radix tree can track.
+>> + *
+>> + * This value isn't ABI itself, but it is derived from values that are ABI.
+>> + */
+>> +#define KHO_RADIX_KEY_WIDTH (((KHO_TREE_MAX_DEPTH - 1) * KHO_TABLE_SIZE_LOG2) + \
+>> +			     KHO_BITMAP_SIZE_LOG2)
+>
+> Love the auto-derivation of these values, this totally makes sense. That said,
+> my lazy brain complained a bit when I asked it "so how many bits can a consumer
+> actually use?". So I wonder:
+>
+> 1) Why is the value not "ABI itself"; it feels like it should as it
+>    determines client behavior.
+
+The main idea was that if you delve into the details, the value is a
+combination of other values, and doesn't directly influence the binary
+structure. For example, KHO_ORDER_0_LOG2 (64 - PAGE_SHIFT) influences it
+directly. It decides the width of the keys that can be supported.
+
+But now that I think of this again, I think this patch is kind of
+stupid. The equation for KHO_RADIX_KEY_WIDTH is exactly the inverse of
+the equation KHO_TREE_MAX_DEPTH. The max key width is (KHO_ORDER_0_LOG2
++ 1), and the equation for KHO_TREE_MAX_DEPTH uses that to arrive at the
+tree depth.
+
+All this is very obscure unfortunately. First of all, KHO_ORDER_0_LOG2
+is a very undescriptive name. I have no idea what it is supposed to mean
+or represent. The comment above doesn't help much either and I think is
+misleading.
+
+Second, the equation for KHO_TREE_MAX_DEPTH hides in itself the fact
+that we need one extra bit on top of KHO_ORDER_0_LOG2. KHO_ORDER_0_LOG2
+is essentially the width of PFN. And we need one more bit for the order.
+That +1 is hidden in
+
+    DIV_ROUND_UP(KHO_ORDER_0_LOG2 - KHO_BITMAP_SIZE_LOG2 + 1, ...),
+
+I think we should to the following:
+
+1. Rename KHO_ORDER_0_LOG2 to KHO_RADIX_KEY_WIDTH and make its equation
+   (64 - PAGE_SHIFT + 1) with the comment above clearly explaining the
+   reasoning.
+
+2. Now that the +1 is in the key width itself, the equation for tree
+   depth can be simplified to:
+
+       ((KHO_RADIX_KEY_WIDTH - KHO_BITMAP_SIZE_LOG2) / KHO_TABLE_SIZE_LOG2) + 1
+
+   ... which is an improvement I think.
+
+I've been tripped by this radix tree math before, so I think this might
+help out a bit. Will fix that in the next version.
+
+>
+> 2) Would you consider expanding the actual values for the most relevant
+>    architectures (x86-64 w/ 4kb pages, arm64 w/ 4k/16/64k page-sizes) and
+>    put it in a block-comment?
+
+Good idea. Will do.
 
 [...]
 
->  
-> +void pci_liveupdate_init_acs(struct pci_dev *dev)
-> +{
-> +	guard(rwsem_read)(&pci_liveupdate.rwsem);
-> +
-> +	if (!dev->acs_cap || !dev->liveupdate.incoming)
-> +		return;
-> +
-> +	pci_read_config_word(dev, dev->acs_cap + PCI_ACS_CTRL, &dev->liveupdate.acs_ctrl);
-
-I might be thinking out loud here, but as an attacker, this motivates me
-to somehow hack the EP FW to mis-report the PCI_ACS_CTRL register across
-a liveupdate to fool the incoming kernel. If the FW feeds a 0, it silently
-strips ACS protections.
-
-Should we also serialize ACS state in ser somehow to ensure we aren't 
-fooled by something like this?
-
-> +}
-> +
-> +int pci_liveupdate_enable_acs(struct pci_dev *dev)
-> +{
-> +	u16 acs_ctrl = dev->liveupdate.acs_ctrl;
-> +	u16 acs_cap = dev->acs_cap;
-> +
-> +	/*
-> +	 * Use liveupdate.was_preserved instead of liveupdate.incoming since the
-> +	 * device's ACS controls should not change even after the device is
-> +	 * finished participating in the Live Update.
-> +	 */
-> +	if (!dev->liveupdate.was_preserved)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * The previous kernel should not have preserved any devices that
-> +	 * require device-specific quirks to enable ACS, but if such a device is
-> +	 * detected, log a big warning and fall back to the normal enable ACS
-> +	 * path.
-> +	 */
-
-Nit: It might be worth adding a note here that this can also happen if a
-new device-specific ACS quirk is introduced in the incoming kernel for a
-device that was preserved by the old kernel (which didn't have the quirk).
-In such cases, the two kernels are essentially non-LUO-compatible..
-
-> +	if (pci_need_dev_specific_enable_acs(dev)) {
-> +		pci_warn(dev, "Device-specific quirk required to enable ACS!\n");
-> +		WARN_ON_ONCE(true);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (acs_cap)
-> +		pci_write_config_word(dev, acs_cap + PCI_ACS_CTRL, acs_ctrl);
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * pci_liveupdate_is_incoming() - Check if a device is incoming-preserved
->   * @dev: The PCI device to check
-
-[...]
-
-Thanks,
-Praan
+-- 
+Regards,
+Pratyush Yadav
 
