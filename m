@@ -4,61 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2B686CD8C9D
-	for <kexec@archiver.kernel.org>; Mon,  8 Jun 2026 14:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2E06ECD8C9F
+	for <kexec@archiver.kernel.org>; Mon,  8 Jun 2026 14:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=gtvAtyIWkgcGh5bt/21vAHxAw/x3unUhXw573vaCzPc=; b=O+8WAHZAPzIMEMlHzjyfoHfY2o
-	LMc2UuqOQlPELQboQrEqKjAmWNkOjNbFwhHb3MfU0MJW5UGIgie98A2azjMtJKpoZun1yx6Zhk7fu
-	Qm+9iDP4b1WQDxknbWqyGeCYDJv4EDT2PJnyTcHIcnTXnBE4rapyUAQOIanyWkDwtijOWnT8d7sj+
-	quZ4EfenRC/MdYeZ7Qm0hE0SfQl9rXa/b4KqtEkct5lZQx4u28AeYBCUSv3AlQlh0bCxodnjhsjbN
-	W4cjMuDrnOan4Ql7VAgxxZvUR6l79Aaz/UTpcojiG8hPKNtGQqcSi2qvKluNKNLNhfsE0oGcpTdva
-	iNa56u6A==;
+	bh=5XaEoBFZ0wQN7RayZ7ZGkzrqQNmFAZboLFpyYk5DAFk=; b=5D50x7p6THi8quNuDO2u7P22GP
+	29AfxMKc+P3RYSgxRjz+dQoAy0xMD1Al9yXcodzf32YtOlA9fVC6YqbThAUx3rB+7GhrC05Lu1ZpP
+	1jkdC4diwxcjH9buJS942qiM885Ww1XchNeN3fC5Rt54O168q0SN9UQb4YcQYfvsPjU23GGAK0dgH
+	7lIqJCKAWbGlQn7zNuU+TB/oLFqrjuZcwrUmVmVZJdHxyekaTUqEJ1WJDyuQgYxdCSBL0kzYqQ2LY
+	Fyd1OV+pPcviPmd71xIexPXQDv08dIHDGW5N+ubRFCqznLQx/MgdypB9esgBbgT2ccAgduBg0+sBj
+	AwEFYWaw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWaou-00000003it6-3205;
-	Mon, 08 Jun 2026 14:19:16 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wWbP1-00000003tWY-3jw3;
+	Mon, 08 Jun 2026 14:56:35 +0000
+Received: from mail-qt1-x82b.google.com ([2607:f8b0:4864:20::82b])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWaot-00000003isy-1b1Z
+	id 1wWbOy-00000003tUQ-3W4f
 	for kexec@lists.infradead.org;
-	Mon, 08 Jun 2026 14:19:15 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id A3A5840B69;
-	Mon,  8 Jun 2026 14:19:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 592671F00893;
-	Mon,  8 Jun 2026 14:19:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780928354;
-	bh=gtvAtyIWkgcGh5bt/21vAHxAw/x3unUhXw573vaCzPc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=OLD1qgx1Q2ALx/ykbqbh/knGOvOBQnjApDdNeZJB8b/ezkWqap+NYtRL28TkoF4Gb
-	 1rzfXZl7/bSff2jC9w5cHHfSythG4ByZ1aaIv5EBpq9w9g5qpsuL5/hIKF1mRO7L11
-	 lgaSK3xDhJJ4+Y3EtjOsO0RZGVSMzd61OBjSVlZCT8WVg5fKHqF9n0+gfgti40KCsV
-	 3R1zbLvvsJp5W6VQ60PfUnoMWGjgsCtB4gqk+Se2bL7BjB1LjECmWZH3K7wLr5oQfm
-	 w+7j6qBuiIWmNa599w6HPx7wVtYEE+sBgaobJ+bzASqAecdaY9yul/2LxhSh4xhnRy
-	 78L+TzX8YNGEw==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: David Matlack <dmatlack@google.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  kexec@lists.infradead.org,
-  linux-kernel@vger.kernel.org,  Andrew Morton <akpm@linux-foundation.org>,
-  Mike Rapoport <rppt@kernel.org>,  Pasha Tatashin
- <pasha.tatashin@soleen.com>
-Subject: Re: [PATCH 1/2] liveupdate: Reference count outgoing FLB data
-In-Reply-To: <ah8SDsIuZQXyvpZq@google.com> (David Matlack's message of "Tue, 2
-	Jun 2026 17:25:34 +0000")
-References: <20260528174140.1921129-1-dmatlack@google.com>
-	<20260528174140.1921129-2-dmatlack@google.com>
-	<2vxzfr34dfty.fsf@kernel.org> <ah8SDsIuZQXyvpZq@google.com>
-Date: Mon, 08 Jun 2026 16:19:12 +0200
-Message-ID: <2vxzse6xt8rj.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Mon, 08 Jun 2026 14:56:34 +0000
+Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-5177945a279so47711831cf.0
+        for <kexec@lists.infradead.org>; Mon, 08 Jun 2026 07:56:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1780930591; x=1781535391; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5XaEoBFZ0wQN7RayZ7ZGkzrqQNmFAZboLFpyYk5DAFk=;
+        b=WKvOd0fzJHAsBqJqyu5DwQUh9x3swNzKqqE0dQMVhYrLDB3qGUGEM3BULrGrtLOrTo
+         9njW6mO0YnhVM+Eccwr1W7XaabrVjZQC4JtfM4C25aPWRNdeakjmNKVwkD/Hm1Zb7+2w
+         fkgQ6Gvh6L2tFWsBuvEkcI2qwUaWolV6RmXfpHUdRZl2uvCX2lALc7NYP2pWAVOvtTXg
+         IuMPHw74L5mnvNWs7r7tDcor/FUfylHR1wFMy1HZkpjTqYwlAPxOmtQfpPEy49iPdUV4
+         ygwxu4Mxv36bAT8NWeQoSZ128aXHGDt7VqFXfjGQwzrBRxJSOmxgQsUMo1XXrFlGPp3W
+         Fh/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780930591; x=1781535391;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5XaEoBFZ0wQN7RayZ7ZGkzrqQNmFAZboLFpyYk5DAFk=;
+        b=Wop8F7NH1mN2F3bhs8MLUzKR2MrMdi5IBJPfr71NHy3mxjDWjyl/ukV/T78REI/6Al
+         V64Ksuh6i54y1sR8mVz8FieC0NtsUCLAyGP2wSyoMAixGSZnzzKFpBL56AHnMUjnwE0/
+         MHWCj+956Zkg3v0Jx1oJUjIIfX/amWpTnbaqIDzvOPdNNyAq4uxOcg0NMTM+ZTt9fi0c
+         caU5bIdLSKupZSLxFdRFE3/nGQo+PX219w9SXCSyLBYtYKyXlG5ygpDJEP0zJmZ5eo9R
+         B7T+fQ/71anSfWksFvZ/BOCa2aQ2Pk9cEECo+aWCw5ieuKBO9074mNfKiVV2Gx90fxXz
+         8Kvg==
+X-Forwarded-Encrypted: i=1; AFNElJ9kWaCnPTm60wWz/UDZ8Dw2Gtp0QRK1eRrY2I6o/vizxVhj69oQ1n4W15yAPcMkISlkTE2PSw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yx8M8t+qYI7xIfnhu6lLdLJl8AX+ktdmgfk8HT2Fqy3N9qwblZR
+	zETvXPcEmxHo+lI//vCkhcYFruShc5+CkoSWfs9NdpOIcw4Qu2KvjeNG4WoQm0jUW6U=
+X-Gm-Gg: Acq92OFfYl+SuPN+Tl3F2W3kwBlTCdHjrpfaVKslp/337JNGR+n0DlUGCohoXyVnD9H
+	oai8UVwgY8zskuJlMrYWMipYyQc1Ov7yX0p6+Df3wZuV8T50ITFsyCY8w8gmcaeA+xqHsecPiHH
+	3t8towWYkgO6s8J1BNhzqE2PJWSx0ryTeJU9b5by3BgCzSgf5H1l42qmLuxZVraAR9x9KahxSFT
+	mOJZY6Fl2yOSY3a/iC3X/H074TruC9QjbotU6qilocNaOOyTAUIlpHAz5vR5ixFd3XNEV7ZawFV
+	lWZMlfkzkFfPoaP8aAJ01DpE3KpgdshLAGR2RDiGSP309xCm0KzcId3Bu6oWY0Jn9piIVrNAqWR
+	32Xpm1zCZyopRmXwjUOA1BjTjXyRpEMvCV14mkbFunL0JvlR4JoCA76Bl+oi1wo/3oRmrNPAH5K
+	xAgiNati/G7hLeM2Grw/jKIjKsduO7kcgPGRySeMb4lkEFiJOiobRPWD3C7+zPBw==
+X-Received: by 2002:a05:622a:1648:b0:517:6d75:a2cf with SMTP id d75a77b69052e-51795c5a18fmr245549391cf.43.1780930590664;
+        Mon, 08 Jun 2026 07:56:30 -0700 (PDT)
+Received: from plex ([71.181.43.54])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51775dbd2c9sm158664971cf.23.2026.06.08.07.56.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2026 07:56:30 -0700 (PDT)
+Date: Mon, 8 Jun 2026 14:56:28 +0000
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	linux-kselftest@vger.kernel.org, shuah@kernel.org, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	skhan@linuxfoundation.org, linux-doc@vger.kernel.org, jasonmiu@google.com, 
+	linux-kernel@vger.kernel.org, corbet@lwn.net, ran.xiaokai@zte.com.cn, 
+	kexec@lists.infradead.org, pratyush@kernel.org, graf@amazon.com
+Subject: Re: [RFC v1 1/9] kho: split out radix tree tracker into kho_radix.c
+Message-ID: <aibX8oS4toOVaCqm@plex>
+References: <20260605033235.717351-1-pasha.tatashin@soleen.com>
+ <20260605033235.717351-2-pasha.tatashin@soleen.com>
+ <178083348873.1648214.11020626647820932506.b4-review@b4>
+ <aiWYZhoSOAruIIM3@plex>
+ <178085518028.1648214.13339471022594901667.b4-reply@b4>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <178085518028.1648214.13339471022594901667.b4-reply@b4>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260608_075632_884581_41A76218 
+X-CRM114-Status: GOOD (  16.18  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,128 +104,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jun 02 2026, David Matlack wrote:
+On 06-07 20:59, Mike Rapoport wrote:
+> On 2026-06-07 16:20:50+00:00, Pasha Tatashin wrote:
+> > On 06-07 14:58, Mike Rapoport wrote:
+> > 
+> > > On Fri, 05 Jun 2026 03:32:27 +0000, Pasha Tatashin <pasha.tatashin@soleen.com> wrote:
+> > > 
+> > > It's radix tree data structure implementation, kho memory tracker is it's
+> > > user. Please rephrase to keep the semantics clear.
+> > 
+> > Yeap, I will update it.
+> > 
+> > > I don't see much value in moving kexec_handover.o to a separate line,
+> > > btw, the same is true for luo_core.o, but it's not important enough to
+> > > change.
+> > 
+> > This is purely for consistency. I wanted to use the exact same style in 
+> > the Makefile instead of having two different ways of declaring the 
+> > object lists.
+> > 
+> > This:
+> >     luo-y :=                                \
+> >             luo_core.o                      \
+> >             luo_file.o                      \
+> >             luo_flb.o                       \
+> >             luo_session.o
+> > 
+> >     kho-y :=                                \
+> >             kexec_handover.o                \
+> >             kho_radix.o                     \
+> >             kho_block.o                     \
+> >             kho_vmalloc.o
+>  
+> I mean this:
+> 
+> luo-y := luo_core.o		\
+> 	luo_file.o		\
+> 	luo_flb.o		\
+> 	luo_session.o
+>  
+> kho-y := kexec_handover.o	\
+> 	kho_radix.o		\
+> 	kho_block.o		\
+> 	kho_vmalloc.o
 
-> On 2026-06-02 07:15 PM, Pratyush Yadav wrote:
->> Hi David,
->> 
->> On Thu, May 28 2026, David Matlack wrote:
->> 
->> > Increment the outgoing FLB refcount in liveupdate_flb_get_outgoing() so
->> > that the FLB structure cannot be freed while the caller is actively
->> > using it. Add an additional liveupdate_flb_put_outgoing() function so
->> > the caller can explicitly indicate when it is done using the outgoing
->> > FLB.
->> >
->> > During a Live Update, the kernel may need to fetch the outgoing FLB
->> > outside of the scope of a file handler's preserve() and unpreserve()
->> > callbacks. In that situation there is no way for the caller to protect
->> > itself against the outgoing FLB from being freed while it is using it.
->> > Incrementing the reference count in liveupdate_flb_get_outgoing()
->> > ensures it cannot be freed.
->> 
->> We grab a reference to the FLB's module when the first file using the
->> FLB is preserved. So the FLB should never go away while preserved files
->> exist. Once all preserved files go away, you normally shouldn't be doing
->> anything with the FLB anyway.
->> 
->> Can you please elaborate on the use case and why this is a problem?
->> Using the FLB outside of the standard LUO file callbacks sounds
->> problematic.
->
-> The scenario I had in mind was to remove a PCI device from the outgoing
-> FLB if the device is forcibly removed while the file is still preserved,
-> for example someone writes 1 to /sys/bus/pci/devices/.../remove or a
-> device is physically hot-unplugged.
->
-> Specifically this call here from the patch below:
->
-> +void pci_liveupdate_cleanup_device(struct pci_dev *dev)
-> +{
-> +	/*
-> +	 * It should be safe to READ_ONCE() outside of the rwsem during cleanup
-> +	 * since there should no longer be any references to @dev on the system.
-> +	 */
-> +	if (READ_ONCE(dev->liveupdate.outgoing)) {
-> +		pci_WARN(dev, 1, "Destroying outgoing-preserved device!\n");
-> +		pci_liveupdate_unpreserve(dev);
-> +	}
-> +}
->
-> https://lore.kernel.org/linux-pci/20260522202410.3104264-3-dmatlack@google.com/
->
-> I can do this without adding reference counting to
-> liveupdate_flb_get_outgoing(), but the reference counting makes it
-> obvious that the outgoing FLB will not be freed while I am using it
-> here, and also aligns with liveupdate_flb_get_incoming().
+Got it, I thought you were against making the consistent :-)
 
-The lifecycle of FLB is bound to _preserved_ files. So it is only valid
-as long as preserved files exist. So I think you should only get the FLB
-object when you are inside a file preservation callback for a file which
-the FLB is registered. Anywhere outside of that, you are not guaranteed
-to get anything sane.
-
-This refcounting scheme breaks the inherent "file-lifecycle-bound" part
-of FLB, since now anyone can grab a reference and hold the FLB as long
-as they like, even when no preserved files exist.
-
-For the normal case, your the VFIO driver gets probed, it registers its
-file handler, then when the device is preserved by VFIO, the VFIO file
-handler's callbacks can get the FLB and do whatever. LUO guarantees the
-FLB exists. Anywhere outside of that, you should _not_ touch the FLB
-because of the reasons above.
-
-Now for hot-unplug, I think that case is not supported right now. When a
-preserved file exists, LUO can only remove it when the user closes the
-session. Trying to clean up the file from any other context will leave
-dangling references to the file and we currently do not handle those.
-Trying to hold the file reference won't help much either since LUO
-callbacks will try to proceed as normal, and normal no longer applies.
-
-For example, say userspace preserved the file for your device in their
-session, then you hot-unplug the device, then userspace triggers a
-kexec. What is the freeze() callback supposed to do? Sure, the FLB
-object still exists, but the device doesn't. Similarly, if you force
-remove the module, the freeze() callback itself no longer exists, and
-you likely get a panic.
-
-We might at some point support "invalidating" preserved files. I imagine
-when you hot-unplug with a preserved device, you tell LUO to invalidate
-all preserved files with that device. They would still exist in their
-sessions, but all operations on them fail immediately, including
-freeze(), which prevents live update from proceeding until user cleans
-them up.
-
-So unless I am missing something, I think this refcounting is a band-aid
-and the real problem is to properly track these "invalidated" files.
-
-Also, I think the refcounting on the incoming path is also a mistake.
-Unfortunately for incoming, there is a need for accessing the FLB
-outside of the file handling callbacks, since subsystems needs to use it
-to initialize itself. But I suppose we can have a accessor that
-subsystems can call once on boot/init to get their object. Then they use
-it to initialize their state and refer to the state directly, with all
-later calls going through the usual file handler callbacks.
-
-If you are interested in solving this problem, we can have a chat to
-talk in more detail, or perhaps have a discussion at one of the
-bi-weeklies?
-
->
->> >
->> > This change also aligns the outgoing FLB lifecycle management with the
->> > incoming FLB, since the latter uses the same get/put semantics.
->> >
->> > Fixes: cab056f2aae7 ("liveupdate: luo_flb: introduce File-Lifecycle-Bound global state")
->> > Assisted-by: Gemini:gemini-3-pro-preview
->> > Signed-off-by: David Matlack <dmatlack@google.com>
->> [...]
->> 
->> -- 
->> Regards,
->> Pratyush Yadav
-
--- 
-Regards,
-Pratyush Yadav
+> 
+> 
 
