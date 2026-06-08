@@ -4,70 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 231D7CD8C9F
-	for <kexec@archiver.kernel.org>; Mon,  8 Jun 2026 10:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A6780CD8C9D
+	for <kexec@archiver.kernel.org>; Mon,  8 Jun 2026 11:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=fmn+PdTc6vMvIeP/V6J1RAe1SscwIO8ISTB8QBGG6KU=; b=xI9UlC6gM/nuvzX2E7ZLqyArt/
-	9TSTsLN42HT/bXRMWKFT5b70Qd3/Nvn/gF53zQdvYzMvZY4y6l4+O2A8dqJ9sJ+yTukjWiIKf0R5q
-	7bKioRjelNqV7adLMpgpPqx7n5BVnEkVXn4s2zxMJWDZF7xFNCh09B+T/JZwuea+lfeeb3jlPbHvn
-	B0OEW7xaf2kIxN4o6yiSdsSc9PVkdv+0xTNQPgLzFXQFaI4eHdDSebkKG/ygF7o5iE1I+ibPh7r7a
-	8GAW9VuGqEmeQu8H5mnnOyhXG1F01vJggyQdiTAi5Ae6PIXQKw+KysjT69+3z5S7F97tdWv0zSFi4
-	Ld4aSp1Q==;
+	bh=/AClK5b2UGJLL9HjNCJk/rNNqh+8+sTLcKYFLOrhzbk=; b=U3POyjCbZ3+qEM7SKtjUgSLz14
+	uZJubf5F0kBwzrytzdMX2CvewXnBJ01+DkjfeWaaD03F/engr6ra27Gtj7dgIxE047pyStt28dXDc
+	L2HT8VR1dHzKyH37itywcWNv8/ZpczzkNL1D/ywwNpUrRR3/t9hYiqLri6HbO7GutGLJCy2FRSs7x
+	VN0iJOLnWefx8l4lAP1agfbTzAFzNG90evPcgNNRz8O1slA7nriQRtyswGE6PRgJ1PCE9oGIbwpvx
+	XUdwx9mp5oFn5aebdmT+iz/mIp2c32nV52xdZxZHNgR1YaHkz8lpQ4sJOY2frxxRwWvPth6YKUMSQ
+	yESjIMYw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWXY6-00000003MTS-3ou0;
-	Mon, 08 Jun 2026 10:49:42 +0000
-Received: from mail-pl1-x62a.google.com ([2607:f8b0:4864:20::62a])
+	id 1wWYEK-00000003R2W-24Re;
+	Mon, 08 Jun 2026 11:33:20 +0000
+Received: from mail-pl1-x62e.google.com ([2607:f8b0:4864:20::62e])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWXY4-00000003MT0-10g8
+	id 1wWYEH-00000003R28-3wiw
 	for kexec@lists.infradead.org;
-	Mon, 08 Jun 2026 10:49:41 +0000
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-2bf2911f93cso293775ad.1
-        for <kexec@lists.infradead.org>; Mon, 08 Jun 2026 03:49:40 -0700 (PDT)
+	Mon, 08 Jun 2026 11:33:19 +0000
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-2bf2d865383so300445ad.1
+        for <kexec@lists.infradead.org>; Mon, 08 Jun 2026 04:33:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780915779; x=1781520579; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1780918397; x=1781523197; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fmn+PdTc6vMvIeP/V6J1RAe1SscwIO8ISTB8QBGG6KU=;
-        b=t4CUzyrqRmwRMQ6g5JQF2HapdmLXooYtmcPaKMsjpquBrqnTDDzzePtWJAen5s/oiZ
-         A9EkHXtZ2+bzAVlxGgTr2GJIxkW5A0qhX/C6Necn/TFCGWBY0ZpbPVBVBayzGgWKCSxt
-         SgOuex0eI5EDI5/NWYA/1lhx2CTTs3nMc8g4Cmjt8WsRwCo88EECNG61PL6U61/0lpVP
-         AJXf6LXnoJ879zEGAXz+93dG1rn7e8ms/iPN87Sr6ylILpmBCcUIIIris7G8coht2tqo
-         Ordjz99xxGWUu1Mv0F3XkApKcqiWrRfySOfZeOFj18jbBmhRpwmxu8t4OG13iz/kK5Q0
-         k72w==
+        bh=/AClK5b2UGJLL9HjNCJk/rNNqh+8+sTLcKYFLOrhzbk=;
+        b=jLPr75nYPHdvpgDO6tbZ+/6/teBOQMCrsjTqNUOAYdcVCwFme4xGZQH2IOUP4ZZBOM
+         G31mYa2wZHDpSHfCJOe8dbd1oY6OuqYby1gmx/mtYO/hV2dE6X4qeQ/jorSdzaueUWjw
+         6HPaV9qzB9l4pyXRjJii14YqBCVsm4Vn3I/bvRtu3oudFakmAbbWJ+lFqaK/lfpxPpRi
+         ZjFsN41owxd9x3WXmExv+5l6iWBIXmLfyh79uMLy3vA7W9iLSaTPVrXlVx6Znw2y2CmU
+         X7oCjjLg301rlDiLM90ogbm3CSueLhPgQchmxvwstD3gjs1Mb70cLTxb7IHpjcQ29tXA
+         K2xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780915779; x=1781520579;
+        d=1e100.net; s=20251104; t=1780918397; x=1781523197;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fmn+PdTc6vMvIeP/V6J1RAe1SscwIO8ISTB8QBGG6KU=;
-        b=qROU72m0r07q60wwaQ+2MiuGWWvJ6RS4o9+tNtHScv9+TanP4i1beeMDP1EVzfdNvZ
-         5SAMB8GZJM0pRTi+qw5VAAOwA3LMPTwKi3mh1dmWlljaiCZmR9kFS1IvQdFS2Xnq9uzD
-         as7VApJJLA76X9ljyxC9J4ZSqUVATSOaQKuUvDMjsoBioWV2FVHLKkwUlpZenFBbL6iL
-         vuQDcPFTkWqasWT06ifVArHxQ/4Gr1r2Aa9mRBCaMBlbtKG2l5E+//1FbkWK1QNknGj3
-         XA3ZRrIo5PtT5FrY2Ixpeoz9FJGJ9t4m4/iau4uBVq2AMYDa2NJTdiAXitvczY5bkhLP
-         MZBg==
-X-Gm-Message-State: AOJu0YzCMPKDzrzBIFzFTk5MXgoUoK20eUGvbMO6s3e7RLJPqtW0YBYW
-	6rHSnKelRSjh5GoMGv63Af/GFTVYsBjDpru9jr8wLhrjd+Cyv9S7rc/TeXddeQqCow==
-X-Gm-Gg: Acq92OH/5PjyMPX44s2z4/jzjojCBi3d6fEBBXXqBzN0fOoA4CRNr1qQkQXLTM/9mXq
-	6CwerIVyFX+Tx969wSwynRgYKmWw80dBfFsDE7xrlhVU8QnVJnJmjdNbJzWu8hgJ45IRXJekmb5
-	4h+tIwozbayxKe9TAP8540tcG1KSVw4lKmItAoB7+rgSrMr4cchrNzCgP7R+3IMrCv0lgRjLjh3
-	cBRDUvTOmx4oVcmLzwP53k/q6QS/jFe5GNGzxGJcbj+q22w83UdpGFpM6o0vQZF9VR3xo5gm8J0
-	S+rsIHx0Ivfc4AEwX++/YcLMclg/g6dcGFQoZ/AM9U59upwXFH5S1Dq7+IkH7JM+gBJdxAAyOcu
-	p8hbBy/siC/AEPQparzF096N7Mhzls0ztJ2RHqREGf/lUz5OhFkwZHowhB1caLZXy66lV542ysu
-	H01OQwGhSxcDoP3d+7ZEyPLFAOY45Bq8tBSyWUq3N3O/I1N+vDAgfWxLEN9mpPjGpClYqaTEY=
-X-Received: by 2002:a17:903:1986:b0:2c1:ee6e:4e50 with SMTP id d9443c01a7336-2c1ee6e51d9mr4607285ad.33.1780915778977;
-        Mon, 08 Jun 2026 03:49:38 -0700 (PDT)
+        bh=/AClK5b2UGJLL9HjNCJk/rNNqh+8+sTLcKYFLOrhzbk=;
+        b=YWBfHhs2jxCkaeddvxVapWX+yviND6HZDgOh8zoh3PxcjGtWbUWA+x4FpHwbL4F+TK
+         fsrtXTg07y8vLf559W7KDK2SC+y4mlkiGEVyz17vle/mwRDNpsAvVI32WFC3mOglKVyB
+         kPSAPHarpoVJ04hxSS78Ft2pyIGGKXLixNxz7Cgf+GgReznjJ5J9UuNuzoOu9O+M2B8J
+         rHJZODJhSceuRxLtekPq2FMk3Fj4VE7hQPAizgkIkSmw+2cRjf+M5BmpKR01hHr15Fck
+         687Ns/WeFXLwgOWcA12peEFnAEUbeu7xlFjokUH6PjTXZ8dvSKAPT5PL/sEe3uVvWFes
+         TFTw==
+X-Gm-Message-State: AOJu0Yy56XHz9OaHcMQAQgjnMp1jHH6A7NNfi0FizNXIlFE/hsvb/MmK
+	uvi55TTAJsgpcaxnxMh7o43mO+hD667v1/G2/D2CkKufDR4W+dwoUh/ti2Cxi+9B0Q==
+X-Gm-Gg: Acq92OE9TmMCj35yc/JgvhkQvCcf8Q3424VpqMyvc7CbZXaSvJ1NclpBNFiXLrHK4W5
+	6e3iZm9tUWAb9A8fr1F8/TKgKcnaEj2mUQEpOE9IZXvYKE7axuahTe8T1+DcN5oj0JCy+8+Zbei
+	0UyWeEE8bDzPQJswDG/EIWErITzXGxhpsOlanDbwsUVKG5bc4DREWgR4yFJw2unjzpeRCbIz2K1
+	sAljkrFjbhE5XefsXRFCrQW3RgkyylN8BFxyAEkb53DOHA4Dr1vArHr8BakamOCol8SHVYOfwjb
+	jQR/duJ1C4Eww9dqwrCosFwrSLJQ0ULFnMAHTl1cVdpYTj2X3PBDTYwSB/N/HjsR/Rq8oMxrx0d
+	OXOUZLePc2wqmPx8p/mtwB7lKU4ahC9Qz61GSDYTZ//8/uF5AcengPmO5mZmqyw2XZZl9CnVU00
+	7JBWS1SfwQ9RyR/cxbvM9YJHxWKiU2yKmlGI+BcPuHqd1oHf9z1HkXt19/oDV45/zPNTlYIKI=
+X-Received: by 2002:a17:903:2349:b0:2bd:3c1b:3073 with SMTP id d9443c01a7336-2c1ebea9c71mr4318635ad.16.1780918396547;
+        Mon, 08 Jun 2026 04:33:16 -0700 (PDT)
 Received: from google.com (199.255.142.34.bc.googleusercontent.com. [34.142.255.199])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c16649c302sm173906215ad.73.2026.06.08.03.49.33
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c164f9ed6csm182143405ad.31.2026.06.08.04.33.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2026 03:49:38 -0700 (PDT)
-Date: Mon, 8 Jun 2026 10:49:29 +0000
+        Mon, 08 Jun 2026 04:33:15 -0700 (PDT)
+Date: Mon, 8 Jun 2026 11:33:07 +0000
 From: Pranjal Shrivastava <praan@google.com>
 To: David Matlack <dmatlack@google.com>
 Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
@@ -90,19 +90,18 @@ Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
 	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v6 08/12] PCI: liveupdate: Inherit ACS flags in incoming
- preserved devices
-Message-ID: <aiaeOVomxQZhoM3K@google.com>
+Subject: Re: [PATCH v6 09/12] PCI: liveupdate: Inherit ARI Forwarding Enable
+ on preserved bridges
+Message-ID: <aiaoc6Y6qeF_5Wn9@google.com>
 References: <20260522202410.3104264-1-dmatlack@google.com>
- <20260522202410.3104264-9-dmatlack@google.com>
- <aiXWmR-ettxin4LC@google.com>
+ <20260522202410.3104264-10-dmatlack@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aiXWmR-ettxin4LC@google.com>
+In-Reply-To: <20260522202410.3104264-10-dmatlack@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260608_034940_469043_B3C2169D 
-X-CRM114-Status: GOOD (  22.22  )
+X-CRM114-CacheID: sfid-20260608_043318_038255_CDF5A009 
+X-CRM114-Status: GOOD (  26.03  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,67 +116,73 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, Jun 07, 2026 at 08:37:45PM +0000, Pranjal Shrivastava wrote:
-> On Fri, May 22, 2026 at 08:24:06PM +0000, David Matlack wrote:
-> > Inherit Access Control Services (ACS) flags on all incoming preserved
-> > devices (endpoints and upstream bridges) during a Live Update.
-> > 
-> > Inheriting ACS flags avoids changing routing rules while memory
-> > transactions are in flight from preserved devices. This is also strictly
-> > necessary to ensure that IOMMU group assignments do not change across
-> > a Live Update for preserved devices, as changing ACS configurations can
-> > split or merge IOMMU groups.
-> > 
-> > Cache the inherited ACS controls established by the previous kernel in
-> > struct pci_dev so that ACS controls do not change after a reset
-> > (pci_restore_state() calls pci_enable_acs()).
-> > 
-> > To simplify ACS inheritance, reject preserving any devices that require
-> > quirks to enable ACS as those quirks would also have to take Live Update
-> > into account.
-> > 
-> > Signed-off-by: David Matlack <dmatlack@google.com>
-> > ---
-> >  drivers/pci/liveupdate.c       | 68 ++++++++++++++++++++++++++++++++++
-> >  drivers/pci/liveupdate.h       | 11 ++++++
-> >  drivers/pci/pci.c              |  5 +++
-> >  drivers/pci/pci.h              |  5 +++
-> >  drivers/pci/quirks.c           |  7 ++++
-> >  include/linux/pci_liveupdate.h |  6 +++
-> >  6 files changed, 102 insertions(+)
-> > 
+On Fri, May 22, 2026 at 08:24:07PM +0000, David Matlack wrote:
+> Inherit the ARI Forwarding Enable on preserved bridges and update
+> pci_dev->ari_enabled accordingly during a Live Update. This ensures that
+> the preserved devices on the bridge's secondary bus can be identified
+> with the same expanded 8-bit function number after a Live Update.
 > 
-> [...]
+> Signed-off-by: David Matlack <dmatlack@google.com>
+> ---
+>  drivers/pci/liveupdate.c | 18 ++++++++++++++++++
+>  drivers/pci/liveupdate.h |  6 ++++++
+>  drivers/pci/pci.c        |  8 +++++++-
+>  3 files changed, 31 insertions(+), 1 deletion(-)
 > 
-> >  
-> > +void pci_liveupdate_init_acs(struct pci_dev *dev)
-> > +{
-> > +	guard(rwsem_read)(&pci_liveupdate.rwsem);
-> > +
-> > +	if (!dev->acs_cap || !dev->liveupdate.incoming)
-> > +		return;
-> > +
-> > +	pci_read_config_word(dev, dev->acs_cap + PCI_ACS_CTRL, &dev->liveupdate.acs_ctrl);
-> 
-> I might be thinking out loud here, but as an attacker, this motivates me
-> to somehow hack the EP FW to mis-report the PCI_ACS_CTRL register across
-> a liveupdate to fool the incoming kernel. If the FW feeds a 0, it silently
-> strips ACS protections.
+> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+> index a93b7ef065f2..701276ef6cfb 100644
+> --- a/drivers/pci/liveupdate.c
+> +++ b/drivers/pci/liveupdate.c
+> @@ -128,6 +128,10 @@
+>   *    way after Live Update and ensures that IOMMU groups do not change. Note
+>   *    that a device will use its inherited ACS flags for the lifetime of its
+>   *    struct pci_dev (i.e. even after pci_liveupdate_finish()).
+> + *
+> + *  * The PCI core inherits ARI Forwarding Enable on all bridges with downstream
+> + *    preserved devices to ensure that all preserved devices on the bridge's
+> + *    secondary bus are addressable after the Live Update.
+>   */
+>  
+>  #define pr_fmt(fmt) "PCI: liveupdate: " fmt
+> @@ -756,6 +760,20 @@ int pci_liveupdate_enable_acs(struct pci_dev *dev)
+>  	return 0;
+>  }
+>  
+> +int pci_liveupdate_configure_ari(struct pci_dev *dev)
+> +{
+> +	u16 val;
+> +
+> +	guard(rwsem_read)(&pci_liveupdate.rwsem);
+> +
+> +	if (!dev->liveupdate.incoming)
+> +		return -EINVAL;
+> +
+> +	pcie_capability_read_word(dev, PCI_EXP_DEVCTL2, &val);
 
-Minor note here: I used "0" as an example value, I'm aware that'll
-effectively disable ACS and kernel will enforce more security.
+Again, I might be thinking out loud here, but since these are
+hot-pluggable devices, with some FW / SW running on them, I'm a little
+worried while assuming the HW registers can be trusted across a kexec.
 
-My point was that a FW exploit can meddle with the bitfields of the
-ACS_CTRL to spoof and mis-report the ACS flags.
+Say, if the bridge experiences a reset (e.g. link drop etc) during the
+kexec blackout, the PCI_EXP_DEVCTL2 register could revert to its default
+state, meaning the ARI bit will be 0.
 
-Additionally, we might give rise to use-cases that start depending on
-this, for e.g. if someone wants to change ACS policies in the
-new kernel, the FW may silently update these flags across a kexec.
+In that scenario, pci_liveupdate_configure_ari() will read 0, set
+bridge->ari_enabled = false, and bypass the pci_configure_ari() logic
+as well, permanently leaving ARI disabled on the bridge. Any preserved
+downstream devices with function numbers > 7 will instantly become
+unaddressable, breaking the Live Update. Even if that's desired it gets
+hard to identify why the Liveupdate broke.
 
-> 
-> Should we also serialize ACS state in ser somehow to ensure we aren't 
-> fooled by something like this?
-> 
+Should ari_enabled be serialized with bridge's pci_ser to ensure we
+correctly restore / match it in case HW changed it during the kexec?
+
+> +	dev->ari_enabled = !!(val & PCI_EXP_DEVCTL2_ARI);
+> +	return 0;
+> +}
+> +
+
+[...]
 
 Thanks,
 Praan
