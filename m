@@ -4,104 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1AF71CD8CA8
-	for <kexec@archiver.kernel.org>; Tue,  9 Jun 2026 10:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2D4B3CD8CAA
+	for <kexec@archiver.kernel.org>; Tue,  9 Jun 2026 10:45:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ilTpfhF1TQEFmYf28SNwirdITOkRxUVFe4Pi+3nX/fk=; b=4TprNIJoKIS3TzzNfcu/k+5lLw
-	Bd5LRGRuyAy/YcynSsvou7jKTK3mjjxpzS2XKYasRuuHyvQGyQJ8EQGA1N5s/z7RPrUCm4NFFa2uq
-	EvuBGb7g/n1TtXH4Y1UKlTDGL9WOGb+MW/N7EIJcp3Mp5s7TMWXiXZr2gwgruKsd4wQPW58uX7TvJ
-	5vLQjB2V50jwBd5TlTxfqBjM7X83IM37otawCIWSLIIb3HBcxGXXc0YVImgWNiAMzVengofuFHLFH
-	xBHC3njKtSpihzmxvKIiuF4mWheiOIY3C65jf/qX52iehZXGwtmjd5CbwmNibhZo5hbDeMMYo0y7F
-	t0eLhnFw==;
+	bh=No+49IMmQGsjPk0qMclq8vTdt88psTr6uq6iD4QVA2E=; b=YLNJQrIfMf2gIOzK0+tmx0uYKt
+	H6WZ3/MJrltpmAeilX9D84LEZ2m9D+uNfJsXTzIPKq3eUZe4zW3tMBdG4ExPKOVyCZ6pR6IFDzYFh
+	bg3pqbvy7zFeM0EHCJYBQ/ss9HxbMHhHz0cFsqQY1V16NHAtIHb4IEeRPeUPG8HOHbt4M4pPwC2TW
+	lQQCpVYbJzyTxpul0Y9YeiWBhPjXHjWjziF7Rg8tY4BySk53RZHZWVL8ggkFxAEDbtJf8RsGdF636
+	gzCiHNvp/fgSfe3UqZYMc5nJMixHZhpUjNPi9hEOsnh+cbLLctKFc82CWeLeiqwAk418zz2t6efx9
+	1FVeId5A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWtaq-00000005L42-0Ycw;
-	Tue, 09 Jun 2026 10:22:00 +0000
-Received: from fhigh-b2-smtp.messagingengine.com ([202.12.124.153])
+	id 1wWtxw-00000005NvW-32hT;
+	Tue, 09 Jun 2026 10:45:52 +0000
+Received: from mail-pl1-x62e.google.com ([2607:f8b0:4864:20::62e])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWtan-00000005L2q-1tVR;
-	Tue, 09 Jun 2026 10:21:58 +0000
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id F3E597A01DD;
-	Tue,  9 Jun 2026 06:21:52 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-10.internal (MEProxy); Tue, 09 Jun 2026 06:21:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1781000512; x=
-	1781086912; bh=ilTpfhF1TQEFmYf28SNwirdITOkRxUVFe4Pi+3nX/fk=; b=L
-	MvTZafklm6pirpgWULiMME4ofFgQnQyajJTBZ/JTk2kQdWbQ7usp5s93IejBMqHn
-	gd9lCLtjZonw4mI2GB+MFjmungjhswb+HHUzmVYkGjitZBTPzlQNIY+8GZwIVlF2
-	prYPOffuPcSqqufwgqdyA+OhTBy6RQueekuBbpa7oneutoxIuXL9R8UOst9xhfDd
-	6GCICWklYZeC7qsHUviSlY1P+YfldkhyzoxFiFDj7gFJ6PtGYwnShA7NoX0uf0g1
-	Yv6InD+tfK8Jgp14xM5IIq/h6Ag9MW6jdi3x+DxcNUYxPvq/AJpRWDwr73V5mupP
-	rqvd8iMrP43BqRYL9lOIg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1781000512; x=1781086912; bh=ilTpfhF1TQEFmYf28SNwirdITOkRxUVFe4P
-	i+3nX/fk=; b=F8dTsqwHKD1mtzn1fmk1xRl23AFGtIRXKARdiNRm3nn6B+jk7cs
-	PKNhxYSZRpAWCgzDi5TiMrxiSw5/uKKlSoB+SqN8T7SEA0CRnDwIUEVxFVpx/Zyc
-	uJ+sFRl1bSWDZKpzoy4LY0Z7juNVIwQqhvMYZBYJf+SLm2KPympCYI7WNbw0+a6+
-	tUtIHgjgyE0DjmlamAEaEXz1PxAh2Yzn1KMXuAKO1BLpa5qDeXsJjG0EHtsFwxlT
-	eR8QoCiH0ZAGkdAL88bZwWK88XaAiDrfuGn1FBtDuJpTTaTD6ycZ5bNT8Eqma0YL
-	xR8Huid/9DMaeTjV3Pm6tSsbp6nC8W4qXEw==
-X-ME-Sender: <xms:P-knanQeFK1VvVBcemZ9iBQTh1zTKNs5cg7NZz9FIIM3Aa6cbpZmFA>
-    <xme:P-knaiLBHZSv4fLSROgS69NVRK0oAOd0B62tq_z6A6Yppba5Qjihxx6puSSMnlEd0
-    EMpRv1_Vb29btKnQIobuhFSrQBRi9IXtDm9ogmQa0rAmokscFKQ>
-X-ME-Received: <xmr:P-knal9GqmJpBu88d53GLzGlM9HMvKVknhNENbEvbf1HHqntT3vv7IQxFNIijg>
-X-ME-Proxy-Cause: dmFkZTEw8PCireUhD2Te30Mqdwt+PvgCXGBAsv4g7AkCagsJvs/QPTVeTaGl5+FbMgDmWj
-    e2FLorIG0RlcycKDz0QZrQolMDi+MlHxcXJ/OLkDuQ5Mr6PMgKF5Zqm0y1R2oI5nMEP27Z
-    uoeYbA8E8RzrfluscWrFSgOtHEKaWCebeXcY7RSKuFu0cBuLAuP0yuHOG/L4rCXpUrWmuj
-    loojJ7MaoVuUQwSoZ0qRuQdxaF7jXkb+n3TcnSh3pJj2ZBalUN672m7lkPlTIvzXdLqgaC
-    //uoXljtwk76/m/TeaXrpPvmxQs/iAR0fTazfsbwet2RzDmA2siPiOaOCHHVj4xPDvtvih
-    nWqIMAErxw78eoPCcffU5cD1YNFRFy5U6op7QQPBrLBvIxGAhOOIgGuOrs4E5a8mc8zugO
-    E2WsPC3UQXpYmASxXMBFtLvpA0iuPg6cywqWbgubX53a/rAvG71/oGeltWq2sGfiuTX1s+
-    vtE7o2tY5cSpooqkwPFD9v5hxYzuog+tFj06AbAGutt27kp2zqkIJ+dhRK+9OHAKENr9Va
-    3z0URZ2WilEYExUgDT2sxgh1FRPdzfzpHJiywfd4yL6NYH41/Sd54xY3BCK4ptX3vSUBzg
-    VZDUDMJ16s5Ko+bMLq0B07li9+gAsc53ysNCQCMRieayJwIBBAJ56SX5KZxg
-X-ME-Proxy: <xmx:P-knaqB-KnryVATRi-bEpsfUA9GQuJ3sgbaGkPKsMKv4VhTQhiIiPg>
-    <xmx:P-knaqqN5qqCC1dnjNuP9VNkTnQ1s8xzsoEMOCFW2Q0deQepBzFoIg>
-    <xmx:P-knakG_WraszKzBAXQW5HtAUkBDLgZrGHLsdENcNbU7U_zvodtTqg>
-    <xmx:P-knaixq_KpRWZl26WWoWDU-hwnT_0JR9wSbRgmkobk0uTobyEi8aw>
-    <xmx:QOknamh5rmLfaaeGrBSddIAwNh1VSefNLv9j74zfnkdnGefeHPnzIV4I>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 9 Jun 2026 06:21:51 -0400 (EDT)
-Date: Tue, 9 Jun 2026 11:21:49 +0100
-From: Kiryl Shutsemau <kirill@shutemov.name>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>, Petr Mladek <pmladek@suse.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, 
-	Baoquan He <bhe@redhat.com>, Puranjay Mohan <puranjay@kernel.org>, 
-	Usama Arif <usama.arif@linux.dev>, Breno Leitao <leitao@debian.org>, 
-	Julien Thierry <julien.thierry.kdev@gmail.com>, Lecopzer Chen <lecopzer.chen@mediatek.com>, 
-	Sumit Garg <sumit.garg@kernel.org>, kernel-team@meta.com, kexec@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] arm64: route crash_smp_send_stop() last resort
- through SDEI
-Message-ID: <aifoH0Gy3v0DIZ1G@thinkstation>
-References: <cover.1780496779.git.kas@kernel.org>
- <54cb99db3c981dc39eb3031aff5caeaadb09e8b9.1780496779.git.kas@kernel.org>
- <CAD=FV=X5++c-6Wd6babajiPbn07cfPcG0uW3ZeepznXgSVO2+w@mail.gmail.com>
- <aiNCk2M0OlD7VaEs@thinkstation>
+	id 1wWtxu-00000005Nuy-0M03
+	for kexec@lists.infradead.org;
+	Tue, 09 Jun 2026 10:45:51 +0000
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-2bf22c18ad3so504285ad.0
+        for <kexec@lists.infradead.org>; Tue, 09 Jun 2026 03:45:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1781001949; x=1781606749; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=No+49IMmQGsjPk0qMclq8vTdt88psTr6uq6iD4QVA2E=;
+        b=Zth4bBV2fLhDpXGxRfnb6T9SWyH7q5dhKpqkhhbKwZojZAcoowjMYwkBEUbRYdWPOI
+         5wBAGRkmgb52j2WIgrfrmkVx6byDuGMPYT72Hlhmws3eg22mm9Aygx22DWsvKeVKZfgN
+         6auPC6k1XsqiYrEUHYPzWO/TYLpO32HqS/wSo7wuiY0LwVC33Q77tZoWKOaQ9KC+ynTY
+         02xNKFTdVFifE39fxDVYPdJ7bl4QnKKuUtLK2q7gGDx0ZALOwUxMbA4UhosfJ8l9vGKg
+         RZCPR8lHgasxYXWvEORGqFufJcM7YKAlHRPS5u4CTWRQBDGM0SRRH9gAlbseM/nvnI+G
+         N+kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781001949; x=1781606749;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=No+49IMmQGsjPk0qMclq8vTdt88psTr6uq6iD4QVA2E=;
+        b=WQoQ0O4R1fA1wRhNuQZQEE2KUumaOBIl6YZai/pfOn+F/snpWXu6yut6G661rymmEG
+         IFu4G9lb62k8yJ9AMThQuSNK4bX3vZnFFfdSXqfLwpHx+tfPv7VgF5QzbEQHNhiEfa3W
+         HwSUa6iaeeO618LMDXtb0zfYyCMZ7SQ+e/7/36+tNcALgLo2CB5/Qq+AwAiqf7OGTt9S
+         ooDjX0obPUJrZU8cLtDjYzfOTrtvQ92CqFxV6Y3ZG8sT7waXA1HLI4vDxDMp0IP0B58I
+         bGyDsC1XhLUQJaITRTiEpvoAd9ww/ew44yA/WWZqtKiyeHL2o4HaUzhewh3ts5Txv9GK
+         Zv+A==
+X-Gm-Message-State: AOJu0Yx+U5rz8HHJMHGA7Cuwo6aqjHmT3ef+YJm9wECW+o6gFtxQSi/o
+	mh3DKZM8iMYZpxsfMkyWGB4qTSn6nilBdTJkXZVOC4KItVR/24As2gKv1pCk+AI12w==
+X-Gm-Gg: Acq92OFGMByhsuFpXhAJ/7+XTfCCBFge9xFuy3xVTQ700TuhFotpGJYejJ1u0McF3in
+	+IYRS51qbEVE1Zku6uqVS0VO8vVw12TZ737wlLrVDlqH5SiQuNde3+JpBGaGqOsaEiSQVOgeJbj
+	1Wiwt+NbJ5eO/N4751r2GnRj3vhaLACTwHb21nJvEiuOl3DMo9v7i7YnI7pCozemPC8AXHQxYqM
+	P5OoILRtOWybetmZKN9ENUtSo3MXSBM94gVmi5F7lnHJ5wERWYvF70a3RpISdo9og+bAv7cL3tD
+	CTwjxNgNk33mto1bCSfo0xIuloNULBF/y81pQV2wUwfMPYlO3gTvKKVkhKjuJ/jTZ5XgfmGMWiw
+	G9Vi44Ia40bNcEWLuwJvKarYPg7z/+NNj0/eaLOVdm75a+fSqHlDAm9Bejgnd5u0fMNytdKM2jG
+	8koplo4QBbej2T+aHkTP1sbfmj/3hw4YdGUtUY9aJGDJn5puzFtoMhwOc+weFZqwsTfNopvH0=
+X-Received: by 2002:a17:903:fa5:b0:2c1:ee6e:4e4c with SMTP id d9443c01a7336-2c1ee6e51e8mr7663135ad.29.1781001948407;
+        Tue, 09 Jun 2026 03:45:48 -0700 (PDT)
+Received: from google.com (199.255.142.34.bc.googleusercontent.com. [34.142.255.199])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-842828e228asm22864909b3a.47.2026.06.09.03.45.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2026 03:45:47 -0700 (PDT)
+Date: Tue, 9 Jun 2026 10:45:39 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: David Matlack <dmatlack@google.com>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
+	Josh Hilke <jrhilke@google.com>,
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v6 01/12] PCI: liveupdate: Set up FLB handler for the PCI
+ core
+Message-ID: <aifu0wys8IENAK1C@google.com>
+References: <20260522202410.3104264-1-dmatlack@google.com>
+ <20260522202410.3104264-2-dmatlack@google.com>
+ <aiJhoq_Yj6-1Hl5r@google.com>
+ <aicrNNVrMBtJD2iZ@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aiNCk2M0OlD7VaEs@thinkstation>
+In-Reply-To: <aicrNNVrMBtJD2iZ@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260609_032157_654372_7303F9CF 
-X-CRM114-Status: GOOD (  17.22  )
+X-CRM114-CacheID: sfid-20260609_034550_131230_580969E8 
+X-CRM114-Status: GOOD (  26.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -116,34 +118,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jun 05, 2026 at 10:46:11PM +0100, Kiryl Shutsemau wrote:
-> On Fri, Jun 05, 2026 at 01:42:57PM -0700, Doug Anderson wrote:
-> > > +       sdei_nmi_crash_smp_send_stop();
+On Mon, Jun 08, 2026 at 08:51:00PM +0000, David Matlack wrote:
+> On 2026-06-05 05:41 AM, Pranjal Shrivastava wrote:
+> > On Fri, May 22, 2026 at 08:23:59PM +0000, David Matlack wrote:
+> > > Set up a File-Lifecycle-Bound (FLB) handler for the PCI core to enable
+> > > it to participate in the preservation of PCI devices across Live Update.
+> > > Essentially, this commit enables the PCI core to allocate a struct
+> > > (struct pci_ser) and preserve it across a Live Update whenever at least
+> > > one device is preserved.
+> > > 
+> > > Preserving PCI devices across Live Update is built on top of the Live
+> > > Update Orchestrator's (LUO) support for file preservation. Drivers are
+> > > expected to expose a file to userspace to represent a single PCI device
+> > > and support preservation of that file. This is intended primarily to
+> > > support preservation of PCI devices bound to VFIO drivers.
+> > > 
+
+[...]
+
+> > > + * struct pci_ser - PCI Subsystem Live Update State
+> > > + *
+> > > + * This struct tracks state about all devices that are being preserved across
+> > > + * a Live Update for the next kernel.
+> > > + *
+> > > + * @max_nr_devices: The length of the devices[] flexible array.
+> > > + * @nr_devices: The number of devices that were preserved.
+> > > + * @devices: Flexible array of pci_dev_ser structs for each device.
+> > > + */
+> > > +struct pci_ser {
+> > > +	u32 max_nr_devices;
+> > > +	u32 nr_devices;
+> > > +	struct pci_dev_ser devices[];
+> > > +} __packed;
+> > > +
+> > > +/* Ensure all elements of devices[] are naturally aligned. */
+> > > +static_assert(offsetof(struct pci_ser, devices) % sizeof(unsigned long) == 0);
+> > > +static_assert(sizeof(struct pci_dev_ser) % sizeof(unsigned long) == 0);
 > > 
-> > It feels weird to me that you're adding SDEI for "crash stop" but not
-> > for regular "stop". It feels like you should modify smp_send_stop() to
-> > fall back to SDEI if sending the NMI failed, instead of adding this
-> > separate path.
+> > Minor Nit: Shall we consider using specific bitwidth types here?
+> > I'm wondering if down the line another u32 field is added to 
+> > struct pci_dev_ser.. in that case on a 32-bit machine 12 % 4 == 0 but on
+> > a 64-bit machine 12 % 8 != 0..
 > 
-> Fair. A wedged CPU ignores the reboot-path stop just the same, and the
-> escalation logic already lives in smp.c, so I'll restructure in v2.
+> I think natural alignment is what matters for efficient access of the
+> array elements. So failing the assert only on 64-bit architectures seems
+> like the correct behavior.
 > 
-> One thing to sort out there: this patch parks the stopped CPU inside
-> its SDEI handler without completing the event, which is fine for the
-> crash case (nothing expects the CPU back before reset), but a generic
-> stop path probably wants SDEI_EVENT_COMPLETE_AND_RESUME into a parking
-> stub instead, so that e.g. a regular kexec can bring all CPUs back up
-> in the new kernel. I'll look into that as part of the rework.
 
-Regular kexec takes different path and offlines CPU normally. So the
-next kernel can start them. But crash kernel cannot re-use wedged CPU.
+Ack. I guess what I was trying to say was we'd anyway need to keep both
+architectures in mind, i.e. adding members should be 64-bit aligned
+(which implicitly also handles 32-bit) as with the current assert
+any new addition would have to be both 32 & 64-bit aligned. I guess we
+can keep this as is.
 
-C&R alone doesn't buy us anything. We need to get the CPU to CPU_OFF.
-
-I am trying to do this, but so far no luck. Crash kernel fails to start
-at all if try to do C&R and then CPU_OFF. C&R alone works, but CPU is
-still unreachable by the next kernel, as expected.
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Thanks,
+Praan
 
