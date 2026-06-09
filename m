@@ -4,107 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2EFF1CD8CB9
-	for <kexec@archiver.kernel.org>; Tue,  9 Jun 2026 17:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D9E78CD8CB2
+	for <kexec@archiver.kernel.org>; Tue,  9 Jun 2026 18:09:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=01u/8EAi6NGn4gFgEAFXoW9+VQRDowjxcP1j39dvRbk=; b=sg5YNDoVPWBasIpe4rWmhk/HQW
-	YcXpVzOqSthJ1g1frE6mt+/rhSRlJGE9QnvW9mk44mGaQZY2zf0mVkKDBMKWA7ZqEQaK6dx7V4GNK
-	YKNZrCFXj+l5hYz8WNyURcLEdsRcSy8BHxRcUeD5mybEGQeOaMIrwtmhkrcoj6+S3uwNt8RxfOFDr
-	iBKxb04qMDSCQdXddGzR5ilptbPSGXzmkTi8wz1YcGLCKtAzmXsgT1z5Rhk21rqWkSiiaNYa+jZdI
-	G/t2+C3K1mWJZUINZxMN6cOqpdfyuzhw5zp9pKysYzyncyS3/TRrkiLW87hQiTJW+77PATqb463/F
-	7DSvlPfA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=qcfo008Zm7brwkezNDYHV7n2X+7Wv1MSJej9rbrfBdw=; b=HmN8k0yAK/iBYRXy/oMVeBqI4Y
+	anwr8dWSQ2Mnw6+SK8wxL34Di32Y2OdvUR8GTkSLrqlVdon/RPR6Khxrpo48AROCF808E7bWlBiZn
+	ZLTX7/IDl7jL3YPHpko5xEs2x/g278JgO3n7gNfhif8HX7su0Pw6v8XIP9f5ui2TZ+OR09FYTyzcJ
+	UbTvNClBjUqguK1hvIcsheQiK4HsbGu1Z9QIPIHqGEvJHaelnsWLwnEIdQ7P7T0iNF95qbOnsKgIM
+	6C6EHfdCjHnWjFbnz7OmQgUgrZEv+/Ar+YDPnTWSBmqGYzw6KxI5GzPOrnxZRMk/v/iEFxV2M+0pS
+	Ps/OR8SQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wX07s-000000067Q2-3nqr;
-	Tue, 09 Jun 2026 17:20:35 +0000
-Received: from mail-pl1-x62e.google.com ([2607:f8b0:4864:20::62e])
+	id 1wX0tQ-00000006AaU-0ee8;
+	Tue, 09 Jun 2026 18:09:40 +0000
+Received: from mgamail.intel.com ([198.175.65.19])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wX07l-000000067PU-320f
+	id 1wX0tN-00000006Aa2-0Btg
 	for kexec@lists.infradead.org;
-	Tue, 09 Jun 2026 17:20:26 +0000
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-2bf22c18ad3so553725ad.0
-        for <kexec@lists.infradead.org>; Tue, 09 Jun 2026 10:20:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781025625; x=1781630425; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=01u/8EAi6NGn4gFgEAFXoW9+VQRDowjxcP1j39dvRbk=;
-        b=nhj5bOVK8w786vNOfbDYzSXCdfPS+HsE2PDafU1hKQFEknCHs8UiQKD9q5Q/5S0XTb
-         B+nnz7fu8mKPQSnWsAH0Iti3pmW5XMF+hRnexSDYxjMf+lHBsByMWL3P/mk7nByi7GQz
-         f0oD4QxmlVVm9IFWz5sRtbtH/1NcmauPgaA+eClSgccyb1bnkH7kvF64N0smkjb8mYLp
-         NR+jCT7MTg57Frcz8OgDaNPg6tuBFkpclPrtLcHko50o8DJYUV6em/aY94Z035jXn94n
-         nll+p0Lhv5MLwo4+esjdmQ7R8QedEDE4XW64CdqqI8UXZZdnw+GorPSjuzn5/fX1RScc
-         13mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781025625; x=1781630425;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=01u/8EAi6NGn4gFgEAFXoW9+VQRDowjxcP1j39dvRbk=;
-        b=Lswd9KIeD1ulbkuEIBr03VAlKT7WOtBvqQPdKuvsP5KbAhDg6QennF3A6lKHvAb06w
-         9FE+noFPHqlYtWxaogN1y0TAkMP0OnpPed4efopkYekKUajgbmquu7+DlbXh1I3W5qc9
-         OU57cNMcBJysZf+OH0z5ubUBOtfaV5V0gKfWpnTnpCdD82cBsuaXZ5JvmIwBV3QBfO+W
-         /rd/g+ZoBRWpKibaki2JOP4jCMBvMkOjhdJZHS26JIAqMDK+o0TZDX3DWOpgFE/ydyGC
-         b1UFFYhL7liXSHHYcOMwFG1WI01CLh/hItZhpwFgzoDC+U1LVn82Vg0loc40ushvF/Bd
-         S1CA==
-X-Gm-Message-State: AOJu0Yw/DCKkUbwoE1VTpK0fHear7lJ/x5Fpi+gaJU0D9M/fvUJFp1hj
-	tSDi50P0FZ9NE0RVg01lJubpr10P85XPTQ+++IPiXd5zQRojjTeeC1Lm8aTYg5wtjg==
-X-Gm-Gg: Acq92OHqBf4fNSDOqxhpdA2UrObW1W5DzzR5ym8o/Yl3oceYVZijmKH2I8Ah2NWVpR2
-	z0+jQnstGipYJkIgWderjkYZpD5O6Py7jWeEaMxSII8Hcdsf3JViO3xPZIPHDy4MdfW8pLQAg/Q
-	Nor7XwXPKk7PRDNj57Kz5rBIIg1MF5Ymn93+AdEwvuOZhkODlkuJop8U2UIetG5L3B3zCorBT4g
-	jQNcYYcv4XTr6Kl4s5R7o6azJfp0OHQMNw2lqHugHtWdyiUO+/e58C7NOcu4T2GsbmlCHUI463B
-	86a7ulHTWNhC+FLdfiuQBnARUba5T+/YVVo0AKaJjQL53auyMN07WDOFCKzAy7nPlcasSUfyAt9
-	4ISnpvJr723bqIOEe98ftNQuLI1+oFSLLZGyICy/fgmJ5VB/+nRMOJI+cem0a/K/SgjU7yz9Idt
-	eqj30a0VQiix0Z180tFSqvKtla+e4Q4WU31oWh+b794SP6usDSumXaf/urpmzCOlHmb/cvv45wj
-	7YHN2US4Q==
-X-Received: by 2002:a17:902:e744:b0:2bd:907:2ce5 with SMTP id d9443c01a7336-2c1eafbcbdamr9084545ad.7.1781025624007;
-        Tue, 09 Jun 2026 10:20:24 -0700 (PDT)
-Received: from google.com (199.255.142.34.bc.googleusercontent.com. [34.142.255.199])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36f6bf827e6sm25059778a91.1.2026.06.09.10.20.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 10:20:23 -0700 (PDT)
-Date: Tue, 9 Jun 2026 17:20:14 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
-	Josh Hilke <jrhilke@google.com>,
-	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
-	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v6 08/12] PCI: liveupdate: Inherit ACS flags in incoming
- preserved devices
-Message-ID: <aihLTgs1Y49OXQaV@google.com>
-References: <20260522202410.3104264-1-dmatlack@google.com>
- <20260522202410.3104264-9-dmatlack@google.com>
- <aiXWmR-ettxin4LC@google.com>
- <aic6mdiZ0qUJpFca@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aic6mdiZ0qUJpFca@google.com>
+	Tue, 09 Jun 2026 18:09:38 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781028578; x=1812564578;
+  h=date:from:to:cc:subject:message-id;
+  bh=/XunfoSHNyhyM6u9e3a7WY5CHsR4sQzPpeXpGugbGzg=;
+  b=eWLTtssPIK99Cjt6ttr/R7RsusH+tU/n8LuMZEFinSJi3k/hD9/L+8ij
+   ioSP+at6hVijg4FRLHrr1RMs8OX6VBUQOuucT5hPewbBYY2QpINMmaYif
+   KGrd7BMypyA4UHjy6/szn8W2TnkJcyQQtUmn5sZLVqbusglW/bOjl8orw
+   u6VZQeCuj98kMpjYv95twZr+dynFDPVkCNShllFiTjTDLa7+gZq2+Yrxm
+   01dID/AfDr+ruU1B0nMbBoSJX7wykUgBf34SEQcVC6D2h7v57V2jw5Hdc
+   uTlGQFMF3Dxxrg9lX0sWzcMp+lKk3AtnaQyzW2lTq1FvNrDf2bLCHfbPu
+   Q==;
+X-CSE-ConnectionGUID: oB/wrGXnSwKdPIfOHXUkTA==
+X-CSE-MsgGUID: 2QABAVUVRU+F1j4KI0ql6A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="81780195"
+X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
+   d="scan'208";a="81780195"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 11:09:37 -0700
+X-CSE-ConnectionGUID: E5pmVqTSQTiRMSdWkoYQqg==
+X-CSE-MsgGUID: daHd0vi9S6uMei/xfcE8rg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
+   d="scan'208";a="242969134"
+Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 09 Jun 2026 11:09:33 -0700
+Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wX0tG-00000000KOo-3hqk;
+	Tue, 09 Jun 2026 18:09:30 +0000
+Date: Wed, 10 Jun 2026 02:08:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
+Subject: [liveupdate:next] BUILD SUCCESS
+ 3a358c78093f98a70d84c934b7054f636bc846f2
+Message-ID: <202606100230.sVvt4W2L-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260609_102025_773790_87F53A08 
-X-CRM114-Status: GOOD (  28.70  )
+X-CRM114-CacheID: sfid-20260609_110937_126865_F30456D9 
+X-CRM114-Status: UNSURE (   4.24  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -119,79 +84,101 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jun 08, 2026 at 09:56:41PM +0000, David Matlack wrote:
-> On 2026-06-07 08:37 PM, Pranjal Shrivastava wrote:
-> > On Fri, May 22, 2026 at 08:24:06PM +0000, David Matlack wrote:
-> > > Inherit Access Control Services (ACS) flags on all incoming preserved
-> > > devices (endpoints and upstream bridges) during a Live Update.
-> > > 
-> > > Inheriting ACS flags avoids changing routing rules while memory
-> > > transactions are in flight from preserved devices. This is also strictly
-> > > necessary to ensure that IOMMU group assignments do not change across
-> > > a Live Update for preserved devices, as changing ACS configurations can
-> > > split or merge IOMMU groups.
-> > > 
-> > > Cache the inherited ACS controls established by the previous kernel in
-> > > struct pci_dev so that ACS controls do not change after a reset
-> > > (pci_restore_state() calls pci_enable_acs()).
-> > > 
-> > > To simplify ACS inheritance, reject preserving any devices that require
-> > > quirks to enable ACS as those quirks would also have to take Live Update
-> > > into account.
-> > > 
-> > > Signed-off-by: David Matlack <dmatlack@google.com>
-> > > ---
-> > >  drivers/pci/liveupdate.c       | 68 ++++++++++++++++++++++++++++++++++
-> > >  drivers/pci/liveupdate.h       | 11 ++++++
-> > >  drivers/pci/pci.c              |  5 +++
-> > >  drivers/pci/pci.h              |  5 +++
-> > >  drivers/pci/quirks.c           |  7 ++++
-> > >  include/linux/pci_liveupdate.h |  6 +++
-> > >  6 files changed, 102 insertions(+)
-> > > 
-> > 
-> > [...]
-> > 
-> > >  
-> > > +void pci_liveupdate_init_acs(struct pci_dev *dev)
-> > > +{
-> > > +	guard(rwsem_read)(&pci_liveupdate.rwsem);
-> > > +
-> > > +	if (!dev->acs_cap || !dev->liveupdate.incoming)
-> > > +		return;
-> > > +
-> > > +	pci_read_config_word(dev, dev->acs_cap + PCI_ACS_CTRL, &dev->liveupdate.acs_ctrl);
-> > 
-> > I might be thinking out loud here, but as an attacker, this motivates me
-> > to somehow hack the EP FW to mis-report the PCI_ACS_CTRL register across
-> > a liveupdate to fool the incoming kernel. If the FW feeds a 0, it silently
-> > strips ACS protections.
-> > 
-> > Should we also serialize ACS state in ser somehow to ensure we aren't 
-> > fooled by something like this?
-> 
-> What does "EP FW" mean?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git next
+branch HEAD: 3a358c78093f98a70d84c934b7054f636bc846f2  docs: memfd_preservation: fix rendering of ABI documentation
 
-I was referring to the Endpoint Firmware (basically any SW running on
-a downstream device)
+elapsed time: 3616m
 
-> 
-> Does such an attacker even need Live Update to attack the system? It
-> seems like such an attacker could route TLPs in whatever malicious way
-> they want regardless of Live Update.
-> 
+configs tested: 81
+configs skipped: 1
 
-I agree that compromised PCIe devices are a menace anyway. But I was
-talking about the potential window opened up by Live Update here,
-suppose we have Device A & B assigned to 2 different VMs (implying they
-are in separate IOMMU groups because the switch set ACS_RR = 1).
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Now, the attacker has an opportunity with Liveupdate, since the devices
-are already assigned, if *somehow* it flips a bit like ACS_RR, the
-incoming kernel might see both the devices in the same IOMMU group.
-Who detects this case and what happens if this happens if the devices
-are kept assigned to these VMs?
+tested configs:
+alpha               allnoconfig    gcc-16.1.0
+alpha              allyesconfig    gcc-16.1.0
+arc                allmodconfig    gcc-16.1.0
+arc                 allnoconfig    gcc-16.1.0
+arc                allyesconfig    clang-23
+arc                allyesconfig    gcc-16.1.0
+arm                 allnoconfig    clang-23
+arm                 allnoconfig    gcc-16.1.0
+arm                allyesconfig    gcc-16.1.0
+arm64              allmodconfig    clang-23
+arm64               allnoconfig    gcc-16.1.0
+csky               allmodconfig    gcc-16.1.0
+csky                allnoconfig    gcc-16.1.0
+hexagon            allmodconfig    clang-23
+hexagon            allmodconfig    gcc-16.1.0
+hexagon             allnoconfig    clang-23
+hexagon             allnoconfig    gcc-16.1.0
+i386               allmodconfig    gcc-14
+i386                allnoconfig    gcc-14
+i386                allnoconfig    gcc-16.1.0
+i386               allyesconfig    gcc-14
+loongarch          allmodconfig    clang-19
+loongarch          allmodconfig    clang-23
+loongarch           allnoconfig    clang-20
+loongarch           allnoconfig    gcc-16.1.0
+m68k               allmodconfig    gcc-16.1.0
+m68k                allnoconfig    gcc-16.1.0
+m68k               allyesconfig    gcc-16.1.0
+microblaze          allnoconfig    gcc-16.1.0
+microblaze         allyesconfig    gcc-16.1.0
+mips               allmodconfig    gcc-16.1.0
+mips                allnoconfig    gcc-16.1.0
+mips               allyesconfig    gcc-16.1.0
+nios2              allmodconfig    clang-20
+nios2               allnoconfig    clang-23
+nios2               allnoconfig    gcc-11.5.0
+openrisc           allmodconfig    clang-20
+openrisc           allmodconfig    gcc-16.1.0
+openrisc            allnoconfig    clang-23
+openrisc            allnoconfig    gcc-16.1.0
+parisc             allmodconfig    gcc-16.1.0
+parisc              allnoconfig    clang-23
+parisc              allnoconfig    gcc-16.1.0
+parisc             allyesconfig    gcc-16.1.0
+powerpc            allmodconfig    gcc-16.1.0
+powerpc             allnoconfig    clang-23
+powerpc             allnoconfig    gcc-16.1.0
+riscv              allmodconfig    clang-23
+riscv               allnoconfig    clang-23
+riscv               allnoconfig    gcc-16.1.0
+riscv              allyesconfig    clang-23
+s390               allmodconfig    clang-23
+s390                allnoconfig    clang-23
+s390               allyesconfig    gcc-16.1.0
+sh                 allmodconfig    gcc-16.1.0
+sh                  allnoconfig    clang-23
+sh                  allnoconfig    gcc-16.1.0
+sh                 allyesconfig    gcc-16.1.0
+sparc               allnoconfig    clang-23
+sparc               allnoconfig    gcc-16.1.0
+sparc64            allmodconfig    clang-20
+um                 allmodconfig    clang-23
+um                  allnoconfig    clang-16
+um                  allnoconfig    clang-23
+um                 allyesconfig    gcc-14
+um                 allyesconfig    gcc-16.1.0
+x86_64             allmodconfig    clang-22
+x86_64              allnoconfig    clang-22
+x86_64              allnoconfig    clang-23
+x86_64             allyesconfig    clang-22
+x86_64                    kexec    clang-22
+x86_64                 rhel-9.4    clang-22
+x86_64             rhel-9.4-bpf    gcc-14
+x86_64            rhel-9.4-func    clang-22
+x86_64      rhel-9.4-kselftests    clang-22
+x86_64           rhel-9.4-kunit    gcc-14
+x86_64             rhel-9.4-ltp    gcc-14
+x86_64            rhel-9.4-rust    clang-22
+xtensa              allnoconfig    clang-23
+xtensa              allnoconfig    gcc-16.1.0
+xtensa             allyesconfig    clang-20
 
-Thanks,
-Praan
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
