@@ -4,63 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8D520CD98C7
-	for <kexec@archiver.kernel.org>; Tue,  9 Jun 2026 15:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2EFF1CD8CB9
+	for <kexec@archiver.kernel.org>; Tue,  9 Jun 2026 17:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZbzCK1HDZ6UQM0wxmODd5gt3PhXikPzvdF+pmduOMD4=; b=T7o8n8wuWwjyoFrQMPJn42S5cL
-	2bRbfbO3/2D2KgUtwrH+jHsLqG1/StwbXSYdwd+0s6bfzbir89iyz7PPe8jUkXMXC1LIZCIHaVxdu
-	cop7jPHBmRadzRwmwhwsC5tfGLxDejW2qr3za7x+vSBPsARXqlPwlJIjazs5vap+ZOfQw3kzk2KIX
-	GfaytUhoC46CxncxHt3oc2Rqb6WrdpAeLceNB+yNjV5M0fZLfX4hEacc6Slbvxl2fAfVifKyPuUJ2
-	J68YMiMr/7q4omj/4FtcHuHQokk5/BuS4Ng2tb1w8DWUdVK50M31qpS5aEoXG3qE9YTE+hWExdF/i
-	8u5QedaA==;
+	bh=01u/8EAi6NGn4gFgEAFXoW9+VQRDowjxcP1j39dvRbk=; b=sg5YNDoVPWBasIpe4rWmhk/HQW
+	YcXpVzOqSthJ1g1frE6mt+/rhSRlJGE9QnvW9mk44mGaQZY2zf0mVkKDBMKWA7ZqEQaK6dx7V4GNK
+	YKNZrCFXj+l5hYz8WNyURcLEdsRcSy8BHxRcUeD5mybEGQeOaMIrwtmhkrcoj6+S3uwNt8RxfOFDr
+	iBKxb04qMDSCQdXddGzR5ilptbPSGXzmkTi8wz1YcGLCKtAzmXsgT1z5Rhk21rqWkSiiaNYa+jZdI
+	G/t2+C3K1mWJZUINZxMN6cOqpdfyuzhw5zp9pKysYzyncyS3/TRrkiLW87hQiTJW+77PATqb463/F
+	7DSvlPfA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWynX-00000005ybW-0vHA;
-	Tue, 09 Jun 2026 15:55:27 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wX07s-000000067Q2-3nqr;
+	Tue, 09 Jun 2026 17:20:35 +0000
+Received: from mail-pl1-x62e.google.com ([2607:f8b0:4864:20::62e])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWynV-00000005ybM-36tU
+	id 1wX07l-000000067PU-320f
 	for kexec@lists.infradead.org;
-	Tue, 09 Jun 2026 15:55:25 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 0869A60234;
-	Tue,  9 Jun 2026 15:55:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ACA31F00893;
-	Tue,  9 Jun 2026 15:55:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781020524;
-	bh=ZbzCK1HDZ6UQM0wxmODd5gt3PhXikPzvdF+pmduOMD4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=hHxclXE61EFMwxcZZ4ijcKdmZQrXuHFpw/8CotX43ijEM7cIj8eoOWyMjiEpkQs9z
-	 8s+wxGuYEcL7qIWh2PuqYhtJ6sViwxkpG7ntvpgu2+iqzL+PKZjbAqlVXkOA9EB3JM
-	 RXOop81ORKUegIcXQm2xuJUzqk3dxVGZP+7fF5udRvb4yV+c/UJA45i5eC40GfmVU7
-	 DatfDIxUwYt+satO6eHDulTBroOMM0WfB/mOWLojxGfwT4BDyImoIC9N801qlUZf0D
-	 TE0DXAd/e0ONGvRHfe6p72N+i7y/1poMqooU5WCKSx9FexX1x+6j+rR0jpJR23Q5/I
-	 ZOJgu/CycSMNg==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: George Guo <dongtai.guo@linux.dev>
-Cc: Mike Rapoport <rppt@kernel.org>,  Huacai Chen <chenhuacai@kernel.org>,
-  Pasha Tatashin <pasha.tatashin@soleen.com>,  Pratyush Yadav
- <pratyush@kernel.org>,  Shuah Khan <shuah@kernel.org>,  WANG Xuerui
- <kernel@xen0n.name>,  Alexander Graf <graf@amazon.com>,
-  loongarch@lists.linux.dev,  linux-kernel@vger.kernel.org,
-  kexec@lists.infradead.org,  linux-mm@kvack.org,
-  linux-kselftest@vger.kernel.org,  George Guo <guodongtai@kylinos.cn>
-Subject: Re: [PATCH v3 0/3] LoongArch: add KHO support and selftests
-In-Reply-To: <20260609143945.512688-1-dongtai.guo@linux.dev> (George Guo's
-	message of "Tue, 9 Jun 2026 22:39:45 +0800")
-References: <20260601092823.110362-1-dongtai.guo@linux.dev>
-	<20260609143945.512688-1-dongtai.guo@linux.dev>
-Date: Tue, 09 Jun 2026 17:55:21 +0200
-Message-ID: <2vxzbjdjso7q.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Tue, 09 Jun 2026 17:20:26 +0000
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-2bf22c18ad3so553725ad.0
+        for <kexec@lists.infradead.org>; Tue, 09 Jun 2026 10:20:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1781025625; x=1781630425; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=01u/8EAi6NGn4gFgEAFXoW9+VQRDowjxcP1j39dvRbk=;
+        b=nhj5bOVK8w786vNOfbDYzSXCdfPS+HsE2PDafU1hKQFEknCHs8UiQKD9q5Q/5S0XTb
+         B+nnz7fu8mKPQSnWsAH0Iti3pmW5XMF+hRnexSDYxjMf+lHBsByMWL3P/mk7nByi7GQz
+         f0oD4QxmlVVm9IFWz5sRtbtH/1NcmauPgaA+eClSgccyb1bnkH7kvF64N0smkjb8mYLp
+         NR+jCT7MTg57Frcz8OgDaNPg6tuBFkpclPrtLcHko50o8DJYUV6em/aY94Z035jXn94n
+         nll+p0Lhv5MLwo4+esjdmQ7R8QedEDE4XW64CdqqI8UXZZdnw+GorPSjuzn5/fX1RScc
+         13mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781025625; x=1781630425;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=01u/8EAi6NGn4gFgEAFXoW9+VQRDowjxcP1j39dvRbk=;
+        b=Lswd9KIeD1ulbkuEIBr03VAlKT7WOtBvqQPdKuvsP5KbAhDg6QennF3A6lKHvAb06w
+         9FE+noFPHqlYtWxaogN1y0TAkMP0OnpPed4efopkYekKUajgbmquu7+DlbXh1I3W5qc9
+         OU57cNMcBJysZf+OH0z5ubUBOtfaV5V0gKfWpnTnpCdD82cBsuaXZ5JvmIwBV3QBfO+W
+         /rd/g+ZoBRWpKibaki2JOP4jCMBvMkOjhdJZHS26JIAqMDK+o0TZDX3DWOpgFE/ydyGC
+         b1UFFYhL7liXSHHYcOMwFG1WI01CLh/hItZhpwFgzoDC+U1LVn82Vg0loc40ushvF/Bd
+         S1CA==
+X-Gm-Message-State: AOJu0Yw/DCKkUbwoE1VTpK0fHear7lJ/x5Fpi+gaJU0D9M/fvUJFp1hj
+	tSDi50P0FZ9NE0RVg01lJubpr10P85XPTQ+++IPiXd5zQRojjTeeC1Lm8aTYg5wtjg==
+X-Gm-Gg: Acq92OHqBf4fNSDOqxhpdA2UrObW1W5DzzR5ym8o/Yl3oceYVZijmKH2I8Ah2NWVpR2
+	z0+jQnstGipYJkIgWderjkYZpD5O6Py7jWeEaMxSII8Hcdsf3JViO3xPZIPHDy4MdfW8pLQAg/Q
+	Nor7XwXPKk7PRDNj57Kz5rBIIg1MF5Ymn93+AdEwvuOZhkODlkuJop8U2UIetG5L3B3zCorBT4g
+	jQNcYYcv4XTr6Kl4s5R7o6azJfp0OHQMNw2lqHugHtWdyiUO+/e58C7NOcu4T2GsbmlCHUI463B
+	86a7ulHTWNhC+FLdfiuQBnARUba5T+/YVVo0AKaJjQL53auyMN07WDOFCKzAy7nPlcasSUfyAt9
+	4ISnpvJr723bqIOEe98ftNQuLI1+oFSLLZGyICy/fgmJ5VB/+nRMOJI+cem0a/K/SgjU7yz9Idt
+	eqj30a0VQiix0Z180tFSqvKtla+e4Q4WU31oWh+b794SP6usDSumXaf/urpmzCOlHmb/cvv45wj
+	7YHN2US4Q==
+X-Received: by 2002:a17:902:e744:b0:2bd:907:2ce5 with SMTP id d9443c01a7336-2c1eafbcbdamr9084545ad.7.1781025624007;
+        Tue, 09 Jun 2026 10:20:24 -0700 (PDT)
+Received: from google.com (199.255.142.34.bc.googleusercontent.com. [34.142.255.199])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36f6bf827e6sm25059778a91.1.2026.06.09.10.20.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2026 10:20:23 -0700 (PDT)
+Date: Tue, 9 Jun 2026 17:20:14 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: David Matlack <dmatlack@google.com>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
+	Josh Hilke <jrhilke@google.com>,
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v6 08/12] PCI: liveupdate: Inherit ACS flags in incoming
+ preserved devices
+Message-ID: <aihLTgs1Y49OXQaV@google.com>
+References: <20260522202410.3104264-1-dmatlack@google.com>
+ <20260522202410.3104264-9-dmatlack@google.com>
+ <aiXWmR-ettxin4LC@google.com>
+ <aic6mdiZ0qUJpFca@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aic6mdiZ0qUJpFca@google.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260609_102025_773790_87F53A08 
+X-CRM114-Status: GOOD (  28.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,22 +119,79 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jun 09 2026, George Guo wrote:
+On Mon, Jun 08, 2026 at 09:56:41PM +0000, David Matlack wrote:
+> On 2026-06-07 08:37 PM, Pranjal Shrivastava wrote:
+> > On Fri, May 22, 2026 at 08:24:06PM +0000, David Matlack wrote:
+> > > Inherit Access Control Services (ACS) flags on all incoming preserved
+> > > devices (endpoints and upstream bridges) during a Live Update.
+> > > 
+> > > Inheriting ACS flags avoids changing routing rules while memory
+> > > transactions are in flight from preserved devices. This is also strictly
+> > > necessary to ensure that IOMMU group assignments do not change across
+> > > a Live Update for preserved devices, as changing ACS configurations can
+> > > split or merge IOMMU groups.
+> > > 
+> > > Cache the inherited ACS controls established by the previous kernel in
+> > > struct pci_dev so that ACS controls do not change after a reset
+> > > (pci_restore_state() calls pci_enable_acs()).
+> > > 
+> > > To simplify ACS inheritance, reject preserving any devices that require
+> > > quirks to enable ACS as those quirks would also have to take Live Update
+> > > into account.
+> > > 
+> > > Signed-off-by: David Matlack <dmatlack@google.com>
+> > > ---
+> > >  drivers/pci/liveupdate.c       | 68 ++++++++++++++++++++++++++++++++++
+> > >  drivers/pci/liveupdate.h       | 11 ++++++
+> > >  drivers/pci/pci.c              |  5 +++
+> > >  drivers/pci/pci.h              |  5 +++
+> > >  drivers/pci/quirks.c           |  7 ++++
+> > >  include/linux/pci_liveupdate.h |  6 +++
+> > >  6 files changed, 102 insertions(+)
+> > > 
+> > 
+> > [...]
+> > 
+> > >  
+> > > +void pci_liveupdate_init_acs(struct pci_dev *dev)
+> > > +{
+> > > +	guard(rwsem_read)(&pci_liveupdate.rwsem);
+> > > +
+> > > +	if (!dev->acs_cap || !dev->liveupdate.incoming)
+> > > +		return;
+> > > +
+> > > +	pci_read_config_word(dev, dev->acs_cap + PCI_ACS_CTRL, &dev->liveupdate.acs_ctrl);
+> > 
+> > I might be thinking out loud here, but as an attacker, this motivates me
+> > to somehow hack the EP FW to mis-report the PCI_ACS_CTRL register across
+> > a liveupdate to fool the incoming kernel. If the FW feeds a 0, it silently
+> > strips ACS protections.
+> > 
+> > Should we also serialize ACS state in ser somehow to ensure we aren't 
+> > fooled by something like this?
+> 
+> What does "EP FW" mean?
 
-> Hi Mike, Huacai,
->
-> Gentle ping on this v3. In the v2 review you mentioned you'd wait for
-> v3 for a more detailed look -- v3 addresses both points (folded the two
-> selftest patches into one, and replaced the LoongArch-specific kill
-> loop with timeout(1), with the timeout value set per-arch in the conf).
->
-> No rush, just making sure it didn't slip through the cracks. Happy to
-> spin a rebase if it's gone stale.
+I was referring to the Endpoint Firmware (basically any SW running on
+a downstream device)
 
-It is on my review list, and I hope to get to it soon. But no promises
-unfortunately.
+> 
+> Does such an attacker even need Live Update to attack the system? It
+> seems like such an attacker could route TLPs in whatever malicious way
+> they want regardless of Live Update.
+> 
 
--- 
-Regards,
-Pratyush Yadav
+I agree that compromised PCIe devices are a menace anyway. But I was
+talking about the potential window opened up by Live Update here,
+suppose we have Device A & B assigned to 2 different VMs (implying they
+are in separate IOMMU groups because the switch set ACS_RR = 1).
+
+Now, the attacker has an opportunity with Liveupdate, since the devices
+are already assigned, if *somehow* it flips a bit like ACS_RR, the
+incoming kernel might see both the devices in the same IOMMU group.
+Who detects this case and what happens if this happens if the devices
+are kept assigned to these VMs?
+
+Thanks,
+Praan
 
