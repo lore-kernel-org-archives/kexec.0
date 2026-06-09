@@ -4,106 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 35D6CCD8CAA
-	for <kexec@archiver.kernel.org>; Tue,  9 Jun 2026 11:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DAF21CD8CA4
+	for <kexec@archiver.kernel.org>; Tue,  9 Jun 2026 13:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=OIwRB/fzX43FvZDy8zd3F8cYltlmCTKmqxv8mTl/pb8=; b=EOpGA48/v8lZJgXKiHlfds8Ryp
-	38beyDe9t5dfId52EGUIPw7iB/CRVn7pr+TvtiYqhWRZ2wwa8kE+yVZoRxiNC4ScQVurTHtUf9H6+
-	6gHNUtIPPfAE31l6hDuTndmWHR0er3fPoaTgazdVwNGysnNk/NYFgiYJh9qSpZBRcaXhqRn5VSGEi
-	015LAclS0jyjkz+6anzTJd87aPQep951muxneiNzEnhZWxabOUPWNebHyIID64G9o8jG1Wys2nTts
-	ooGKTTMt63gLMrydRSjVbZPMaru0O+gbhSx66MQTCfZwjOBoaH6M7LzraqkpWYd83Dgyf5qeD9yJi
-	U8/58d+w==;
+	bh=mPyYTg0OHT/1olm05SvzdJMzrmZ5+gyo8bDaCSODScQ=; b=cUHkOgJ4MKdKORiXDqJB+hI4w6
+	28EENGiUbp0fxT7PLKF1T7wfCidiPolO+iZ0oH9NDD//bdoMNpBqduaq5msdWhTvLwrnJNoiOG2As
+	HHMUwBR+wXgcFdnQr5juLvTlynucCbrq4GIKkPFsBQLd6e/Z7/YyvYUE8xZOpBkWUV99tbvwXT6Wv
+	VVPpP3TJb7CuCg7y00E27QYDqNPMYRLK0wfUMlL5dZ9rsQro0rafaZOinPBRb83jwkhvh0cHVSarA
+	f0LFiont3GYUITQySWO+9bgSBWoNFYmzFmEe+Ea9gr978kAFOdOl01ddhgvkzJZGiTEU22WiukFpy
+	CUD/haPw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWuQO-00000005QZe-2qTX;
-	Tue, 09 Jun 2026 11:15:16 +0000
-Received: from mail-pl1-x629.google.com ([2607:f8b0:4864:20::629])
+	id 1wWwZy-00000005fcX-45KM;
+	Tue, 09 Jun 2026 13:33:20 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWuQL-00000005QZ8-3n5o
+	id 1wWwZt-00000005fc7-1cMv
 	for kexec@lists.infradead.org;
-	Tue, 09 Jun 2026 11:15:15 +0000
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-2c0b1a48855so497925ad.0
-        for <kexec@lists.infradead.org>; Tue, 09 Jun 2026 04:15:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781003713; x=1781608513; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OIwRB/fzX43FvZDy8zd3F8cYltlmCTKmqxv8mTl/pb8=;
-        b=FxQT4ZSIqUqcAlztIvdz+PVS5XihBzVD3W7VOfZjaj7vyIn0OvRQ6S6nFjih7d0MlZ
-         x+IG+aHt/5DkoyBX8tQY+60LYY0lGhPMmKq+q419UE45A7Ihh4LnHdDs84H9+poDdzcm
-         mt4PBVH9Y2MLI2XjTHNKzMDGFaot/jpyji9NyDZuIhM0bX9BTgnTYBCIaVjz1YWoO4Fh
-         MzCehqOdBPkJUoblT9dADrDZcWEx0CmJeZRHzyrqmyY3W1VzDoXWlYKV9Fl7raviZZi/
-         kVmTXeiEaeVRI2CWM/dUYw32Q4qG73fcmA/lQq/V3u/ouXPdwYSjBZTScxN7sfUMmsgE
-         32vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781003713; x=1781608513;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OIwRB/fzX43FvZDy8zd3F8cYltlmCTKmqxv8mTl/pb8=;
-        b=dICKOzmsOYwdayYJqIZbfD4S8MZUKgqzouZAzVmUlT/crswIsT+z7RaxLcZUsAtRBP
-         oPQO1GnWYU4+jTa4xPt9VXn/h6i9EWgG6ed9Guwo0pFA1lTHlejYjgHGkSmMVg5ddGmp
-         qXb1lV3kqJxlbJCFUV9csylDYgjTk1Nv0GQ4gNnawTu7VmEJmmrrqwiZei5+FKEPL2e5
-         k3USEE43DAkvYPhLgGiMhrpBLCrPvQ+QgkP93xLyf0ljefUmkPGDpqKB5f8rdHcnfHVm
-         rEZixcFt+FwECJEH/A21xlWUKTV/1iCvN15zfJueWk6+8gG9myXM2zw6N2h3mzHzXTCY
-         cXaw==
-X-Gm-Message-State: AOJu0YwDFEKsvxzWm9CQ7TL+PxDgLv5IjlvS4MjmjP+Qk45Fvnr6Wx6V
-	GVGAR28uIdTpvs0CSVBhgWlOSU2F7SR5xq5nn2xFja36q4Kmdhiry1jtxIZO1rL3ow==
-X-Gm-Gg: Acq92OHUuMLHs7fxT5HrNmJQhpPOGvE94jeVC4pnGXXDs8FFamxf6RcdM56Hfmtrs2X
-	Z7c39I7E/gZJPft9jHYj+iogHcMrUukZ/hm/wYoZkAsBiXaoCVJVGxMnN9oKsiT1fr0RDua4vaV
-	v74TsNxvSswwMgaq67+Qo6j41vaq3tNGQZ/gSvGj3HTmDC1km1lXbq0WRdCiZOEcYrprlQBM4Mp
-	MIUNtPJOhRFDPFEEx2pcm7xlKPWCRb5Mw9FuiuNjVOEtPBEAgrUJF40OubFIP0sgKgvZAiNjdA/
-	ypRGxXa+RaoJ/RfKkV7OTYg9gXwCWJoEwL9LNPoS2plPv7xoqHUszcz1eJ46WVy19higFpuG3zk
-	Jf02qy8KsQTp29N5RHdb7Mfw7PO3zSCwzPSSPgWZ7I4QaeuRVqgM02A6uKod+LF4dqELQOXJ9R5
-	RtaIL+gJDPzWVJafeXzygMUArS09YcwwJzQofeQB08ndyUgsaC6uWM8Shl+24VomIOO/YjW1I=
-X-Received: by 2002:a17:902:ffce:b0:2c2:50c7:5894 with SMTP id d9443c01a7336-2c250c75a1dmr4219375ad.24.1781003712132;
-        Tue, 09 Jun 2026 04:15:12 -0700 (PDT)
-Received: from google.com (199.255.142.34.bc.googleusercontent.com. [34.142.255.199])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36f6d109dcdsm21430052a91.9.2026.06.09.04.15.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 04:15:11 -0700 (PDT)
-Date: Tue, 9 Jun 2026 11:15:02 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
-	Josh Hilke <jrhilke@google.com>,
-	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
-	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v6 06/12] PCI: liveupdate: Auto-preserve upstream bridges
- across Live Update
-Message-ID: <aif1tq8TvHuYwUC-@google.com>
-References: <20260522202410.3104264-1-dmatlack@google.com>
- <20260522202410.3104264-7-dmatlack@google.com>
- <aiSb85Ec6jW4xPaE@google.com>
- <aic1gdmisIT4sqEN@google.com>
+	Tue, 09 Jun 2026 13:33:13 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 1E98B407D3;
+	Tue,  9 Jun 2026 13:33:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A74BD1F00893;
+	Tue,  9 Jun 2026 13:33:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781011993;
+	bh=mPyYTg0OHT/1olm05SvzdJMzrmZ5+gyo8bDaCSODScQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=a4lVSRIYOxSxERDL4P+xqbgfRFotgdtbU08mBzO4YA/mrhUUq73RAlWh3+51j2hEi
+	 9bxBRrFzcTRskjy8S7U11Ft2ctVHoKYhFJqs3sPnejuuxO4q+My92/tNd1gqjbgyJM
+	 PQNWbsSMeSfv4N/6tpBnTtCT1/3tJczEcJhY1bUiXt5vTtIhKJFbdaBnvUXLjSlmB/
+	 zGcRhvKh5I1ljLVk+A2ztHNEy7nKLilijsJ7XNAQLXT2rqYbZR6W36c1ZXSittdHzB
+	 R3eEnC9vmAL8v0k1VoSkeTizLhK5O1GqL+rudCiCi1rxVaWj1bBAi/v5DTiDYEZgNi
+	 wlrP2Y9LQTAGw==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: David Matlack <dmatlack@google.com>,  Pratyush Yadav
+ <pratyush@kernel.org>,  kexec@lists.infradead.org,
+  linux-kernel@vger.kernel.org,  Andrew Morton <akpm@linux-foundation.org>,
+  Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH 1/2] liveupdate: Reference count outgoing FLB data
+In-Reply-To: <aidpNcyBcee0HMCE@plex> (Pasha Tatashin's message of "Tue, 9 Jun
+	2026 02:17:17 +0000")
+References: <20260528174140.1921129-1-dmatlack@google.com>
+	<20260528174140.1921129-2-dmatlack@google.com>
+	<2vxzfr34dfty.fsf@kernel.org> <ah8SDsIuZQXyvpZq@google.com>
+	<2vxzse6xt8rj.fsf@kernel.org> <aidSKOlkw_XMvVKl@google.com>
+	<aidpNcyBcee0HMCE@plex>
+Date: Tue, 09 Jun 2026 15:33:10 +0200
+Message-ID: <2vxzv7brsusp.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aic1gdmisIT4sqEN@google.com>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260609_041513_951320_F46737DB 
-X-CRM114-Status: GOOD (  39.58  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -118,140 +75,225 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jun 08, 2026 at 09:34:57PM +0000, David Matlack wrote:
-> On 2026-06-06 10:15 PM, Pranjal Shrivastava wrote:
-> > On Fri, May 22, 2026 at 08:24:04PM +0000, David Matlack wrote:
-> > > When a PCI device is preserved across a Live Update, all of its upstream
-> > > bridges up to the root port must also be preserved. This enables the PCI
-> > > core and any drivers bound to the bridges to manage bridges correctly
-> > > across a Live Update.
-> > > 
-> > > Notably, this will be used in subsequent commits to ensure that
-> > > preserved devices can continue performing memory transactions without a
-> > > disruption or change in routing.
-> > > 
-> > > To preserve bridges, the PCI core tracks the number of downstream
-> > > devices preserved under each bridge using a reference count in struct
-> > > pci_dev_ser. This allows a bridge to remain preserved until all its
-> > > downstream preserved devices are unpreserved or finish their
-> > > participation in the Live Update.
-> > > 
-> > > Signed-off-by: David Matlack <dmatlack@google.com>
-> > > ---
-> > >  drivers/pci/liveupdate.c    | 136 +++++++++++++++++++++++++++++++-----
-> > >  include/linux/kho/abi/pci.h |   5 +-
-> > >  2 files changed, 122 insertions(+), 19 deletions(-)
-> > > 
-> > 
-> > [...]
-> > 
-> > > +
-> > > +#define for_each_pci_dev_in_path(_d, _start, _end) \
-> > > +	for ((_d) = (_start); (_d) != (_end); (_d) = (_d)->bus->self)
-> > > +
-> > > +static void __pci_liveupdate_unpreserve_path(struct pci_ser *ser,
-> > > +					     struct pci_dev *start,
-> > > +					     struct pci_dev *end)
-> > > +{
-> > > +	struct pci_dev *dev;
-> > > +
-> > > +	for_each_pci_dev_in_path(dev, start, end) {
-> > > +		if (pci_liveupdate_unpreserve_device(ser, dev))
-> > 
-> > I might be reading this wrong but are we leaking some upstream devs if 
-> > an intermediate node fails?
-> > 
-> > 			  EP0
-> > 			/
-> > Assume we have: RC -> B1 -> B2 
-> > 				\
-> > 				 EP1
-> > 
-> > and EP0 & EP1 were preserved successfully.
-> > 
-> > And then we try unpreserving EP1, we follow:
-> > 
-> > unpreserve EP1 -> unpreserve B2 failed due to a corruption.
-> > 
-> > This aborts the loop, skipping B1 and RC completely?
-> > Their refcounts remain elevated, effectively leaking them as preserved 
-> > state permanently? (i.e. if we unpreserve EP0 after this, B1 & RC will
-> > still get preserved).
-> 
-> Yes, but that would only happen if there is some sort of kernel bug or
-> silent data corruption. I guess we could proceed with trying to
-> unpreserve the bridges upstream. But I opted to log a big warning and
-> bail immediately.
-> 
-> pci_liveupdate_finish_path() has the same behavior BTW.
+On Tue, Jun 09 2026, Pasha Tatashin wrote:
 
-Fair point. I agree we are in a broken state if we hit this. 
+> On 06-08 23:37, David Matlack wrote:
+>> On 2026-06-08 04:19 PM, Pratyush Yadav wrote:
+>> > On Tue, Jun 02 2026, David Matlack wrote:
+>> > 
+>> > > On 2026-06-02 07:15 PM, Pratyush Yadav wrote:
+>> > >> Hi David,
+>> > >> 
+>> > >> On Thu, May 28 2026, David Matlack wrote:
+>> > >> 
+>> > >> > Increment the outgoing FLB refcount in liveupdate_flb_get_outgoing() so
+>> > >> > that the FLB structure cannot be freed while the caller is actively
+>> > >> > using it. Add an additional liveupdate_flb_put_outgoing() function so
+>> > >> > the caller can explicitly indicate when it is done using the outgoing
+>> > >> > FLB.
+>> > >> >
+>> > >> > During a Live Update, the kernel may need to fetch the outgoing FLB
+>> > >> > outside of the scope of a file handler's preserve() and unpreserve()
+>> > >> > callbacks. In that situation there is no way for the caller to protect
+>> > >> > itself against the outgoing FLB from being freed while it is using it.
+>> > >> > Incrementing the reference count in liveupdate_flb_get_outgoing()
+>> > >> > ensures it cannot be freed.
+>> > >> 
+>> > >> We grab a reference to the FLB's module when the first file using the
+>> > >> FLB is preserved. So the FLB should never go away while preserved files
+>> > >> exist. Once all preserved files go away, you normally shouldn't be doing
+>> > >> anything with the FLB anyway.
+>> > >> 
+>> > >> Can you please elaborate on the use case and why this is a problem?
+>> > >> Using the FLB outside of the standard LUO file callbacks sounds
+>> > >> problematic.
+>> > >
+>> > > The scenario I had in mind was to remove a PCI device from the outgoing
+>> > > FLB if the device is forcibly removed while the file is still preserved,
+>> > > for example someone writes 1 to /sys/bus/pci/devices/.../remove or a
+>> > > device is physically hot-unplugged.
+>> > >
+>> > > Specifically this call here from the patch below:
+>> > >
+>> > > +void pci_liveupdate_cleanup_device(struct pci_dev *dev)
+>> > > +{
+>> > > +	/*
+>> > > +	 * It should be safe to READ_ONCE() outside of the rwsem during cleanup
+>> > > +	 * since there should no longer be any references to @dev on the system.
+>> > > +	 */
+>> > > +	if (READ_ONCE(dev->liveupdate.outgoing)) {
+>> > > +		pci_WARN(dev, 1, "Destroying outgoing-preserved device!\n");
+>> > > +		pci_liveupdate_unpreserve(dev);
+>> > > +	}
+>> > > +}
+>> > >
+>> > > https://lore.kernel.org/linux-pci/20260522202410.3104264-3-dmatlack@google.com/
+>> > >
+>> > > I can do this without adding reference counting to
+>> > > liveupdate_flb_get_outgoing(), but the reference counting makes it
+>> > > obvious that the outgoing FLB will not be freed while I am using it
+>> > > here, and also aligns with liveupdate_flb_get_incoming().
+>> > 
+>> > The lifecycle of FLB is bound to _preserved_ files. So it is only valid
+>
+> An FLB is a shared global resource whose lifecycle is bound to the 
+> duration of first creation and final destruction across multiple files. 
+> It is not associated with any single preserved file, but rather with the 
+> fact that files of a particular type(s) are currently being preserved.
+>
+> Because the kernel is highly asynchronous, we must handle concurrent 
+> access and race conditions during teardown and FLB lookups. Reference 
+> counting provides a standard, robust, and methodical way to handle this 
+> safely.
 
-I was originally thinking of a situation where we'd want to keep the
-failure localized. For example: unpreserve EP1 fails -> user sees the
-warning -> resets EP1 -> retries preserving it later. 
+But that's my point. As you say, destruction is supposed to happen when
+the last file using the FLB goes away. That stops being true when any
+random caller can hold a reference. So now you can get a FLB with no
+files. It fundamentally breaks the model we started with FLBs.
 
-But given the recent discussion/decision that retrieve operations
-will no longer be retried, I guess there isn't really a use-case for
-retrying anything. It makes sense to just bail here.
+The FLB model also deals with asynchronicity, but it does so by managing
+the lifetime of the FLB directly in LUO instead of leaving it to
+subsystems. This reduces cognitive load on the users of the FLB API.
+They do not need to care about managing the lifecycle themselves.
 
-> 
-> > 
-> > > +			return;
-> > > +	}
-> > > +}
-> > > +
-> > > +static void pci_liveupdate_unpreserve_path(struct pci_ser *ser,
-> > > +					   struct pci_dev *start)
-> > > +{
-> > > +	__pci_liveupdate_unpreserve_path(ser, start, /*end=*/NULL);
-> > > +}
-> > > +
-> > > +static int pci_liveupdate_preserve_path(struct pci_ser *ser,
-> > > +					struct pci_dev *start)
-> > > +{
-> > > +	struct pci_dev *dev;
-> > > +	int ret;
-> > > +
-> > > +	for_each_pci_dev_in_path(dev, start, NULL) {
-> > > +		ret = pci_liveupdate_preserve_device(ser, dev);
-> > > +		if (ret) {
-> > > +			__pci_liveupdate_unpreserve_path(ser, start, dev);
-> > > +			return ret;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  /**
-> > >   * pci_liveupdate_preserve() - Preserve a PCI device across Live Update
-> > >   * @dev: The PCI device to preserve.
-> > > @@ -321,6 +403,9 @@ static int pci_liveupdate_preserve_device(struct pci_ser *ser, struct pci_dev *d
-> > >   * pci_liveupdate_preserve() from their struct liveupdate_file_handler
-> > >   * preserve() callback to ensure the outgoing struct pci_ser is already set up.
-> > >   *
-> > > + * pci_liveupdate_preserve() automatically preserves all bridges upstream of
-> > > + * @dev.
-> > > + *
-> > >   * Returns: 0 on success, <0 on failure.
-> > >   */
-> > >  int pci_liveupdate_preserve(struct pci_dev *dev)
-> > > @@ -336,7 +421,7 @@ int pci_liveupdate_preserve(struct pci_dev *dev)
-> > >  	if (IS_ERR(ser))
-> > >  		return PTR_ERR(ser);
-> > >  
-> > > -	return pci_liveupdate_preserve_device(ser, dev);
-> > > +	return pci_liveupdate_preserve_path(ser, dev);
-> > 
-> > Minor nit: I might be too nitpicky here (and it's NOT a strong opinion)
-> > but naming it pci_liveupdate_preserve_path_for_dev() reads better to me.
-> 
-> Noted :). I'll keep the current name for now since that is pretty long,
-> but if anyone else votes for it I'm happy to be overridden.
+If users of FLB are directly managing references, then why does LUO even
+need to manage anything? Then subsystems can just create their own
+global data structure, grab a reference and release it as they please.
+That is a perfectly valid way of managing this global object, but we
+decided to _not_ do this because letting LUO manage the lifecycle (and
+thus the refcount) results in code that is easier to understand and
+reason about.
 
-Sounds good.
+>
+>> > as long as preserved files exist. So I think you should only get the FLB
+>> > object when you are inside a file preservation callback for a file which
+>
+> Limiting access to only within a file preservation callback is not 
+> feasible. FLBs are global resources and may be queried early during boot 
+> or late during teardown, completely outside of a specific file's 
+> preservation callback.
 
-Thanks,
-Praan
+To clarify, I don't mean only the preservation callback. I mean during
+any of the file handler callbacks.
+
+And if the subsystem needs to do something with the FLB after all its
+files are frozen, we can provide a freeze() callback to
+liveupdate_flb_ops.
+
+Why do you need to access the FLB anywhere else outside of these
+callbacks? What's the use case?
+
+>
+>> > the FLB is registered. Anywhere outside of that, you are not guaranteed
+>> > to get anything sane.
+>> 
+>> LUO should enforce this then, IMO.
+>> 
+>> > This refcounting scheme breaks the inherent "file-lifecycle-bound" part
+>> > of FLB, since now anyone can grab a reference and hold the FLB as long
+>> > as they like, even when no preserved files exist.
+>
+> This is the standard design pattern for shared resources in the kernel. 
+> When the last file of that type is unpreserved, the FLB's reference 
+> count reaches zero, and it is cleanly destroyed.
+>
+> If there is a bug where someone holds onto a reference indefinitely, 
+> that is simply a leak/bug to be fixed. It is not a flaw in the 
+> reference-counting pattern itself, which is crucial for preventing 
+> use-after-free and race conditions under concurrent access.
+
+Going to my previous point, the whole reason for FLB to exist is that we
+don't want to burden subsystems with managing these references. If we do
+that, then I think it would be way easier to just get rid of FLBs
+entirely. It would be almost as easy for each subsystem to allocate a
+global struct with its state and a refcount.
+
+I don't get why we want to mix these approaches. FLB makes my life as a
+user of the API easier because I don't need to worry about the
+lifetimes. LUO takes care of that for me.
+
+>
+>> > For the normal case, your the VFIO driver gets probed, it registers its
+>> > file handler, then when the device is preserved by VFIO, the VFIO file
+>> > handler's callbacks can get the FLB and do whatever. LUO guarantees the
+>> > FLB exists. Anywhere outside of that, you should _not_ touch the FLB
+>> > because of the reasons above.
+>> > 
+>> > Now for hot-unplug, I think that case is not supported right now. When a
+>> > preserved file exists, LUO can only remove it when the user closes the
+>> > session. Trying to clean up the file from any other context will leave
+>> > dangling references to the file and we currently do not handle those.
+>> > Trying to hold the file reference won't help much either since LUO
+>> > callbacks will try to proceed as normal, and normal no longer applies.
+>> > 
+>> > For example, say userspace preserved the file for your device in their
+>> > session, then you hot-unplug the device, then userspace triggers a
+>> > kexec. What is the freeze() callback supposed to do? Sure, the FLB
+>> > object still exists, but the device doesn't. Similarly, if you force
+>> > remove the module, the freeze() callback itself no longer exists, and
+>> > you likely get a panic.
+>> > 
+>> > We might at some point support "invalidating" preserved files. I imagine
+>> > when you hot-unplug with a preserved device, you tell LUO to invalidate
+>> > all preserved files with that device. They would still exist in their
+>> > sessions, but all operations on them fail immediately, including
+>> > freeze(), which prevents live update from proceeding until user cleans
+>> > them up.
+>> > 
+>> > So unless I am missing something, I think this refcounting is a band-aid
+>> > and the real problem is to properly track these "invalidated" files.
+>> > 
+>> > Also, I think the refcounting on the incoming path is also a mistake.
+>
+> On incoming path FLBs may be accessed during early boot and later 
+> including once we enter userspace. We must have a way to ensure valid, 
+> race-free access to these shared resources. Without reference counting, 
+> querying the existence of an FLB or retrieving it would require 
+> introducing global locking, which is highly undesirable.
+
+Ideally, on the incoming path LUO should provide a subsystem init hook
+that lets them get their FLB data and use it during init. Unfortunately
+it isn't easy because of boot ordering. You might need the FLB before
+LUO comes up.
+
+But I think we should still tighten up access to the FLB on the incoming
+side as well. You can use the FLB early until it gets registered (or
+something similar) with LUO. Then you hand over the ownership to LUO and
+can only use it from the standard LUO callbacks. At this point the
+access model of incoming and outgoing become the same.
+
+Overall, my point is that we should pick one usage model. Either LUO
+manages the lifetime of the object or the subsystem. Mixing both this
+way sounds wrong.
+
+>
+> Also, having both the incoming and outgoing FLB paths behave 
+> symmetrically using the same reference-counting API makes the overall 
+> design uniform, clean, and less error-prone.
+>
+>> > Unfortunately for incoming, there is a need for accessing the FLB
+>> > outside of the file handling callbacks, since subsystems needs to use it
+>> > to initialize itself. But I suppose we can have a accessor that
+>> > subsystems can call once on boot/init to get their object. Then they use
+>> > it to initialize their state and refer to the state directly, with all
+>> > later calls going through the usual file handler callbacks.
+>> > 
+>> > If you are interested in solving this problem, we can have a chat to
+>> > talk in more detail, or perhaps have a discussion at one of the
+>> > bi-weeklies?
+>> 
+>> Thanks for the detailed reply but I think it's hard to discuss all these
+>> as theoretical situations since we can get bogged down in the parts that
+>> aren't clear yet and potential future use-cases.
+>> 
+>> Can you review the use of the outgoing and incoming FLB in the PCI core
+>> series and let me know what you think I am doing wrong?
+>> 
+>>   https://lore.kernel.org/linux-pci/20260522202410.3104264-1-dmatlack@google.com/
+
+Yes, good idea. Will do.
+
+-- 
+Regards,
+Pratyush Yadav
 
