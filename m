@@ -4,113 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7A236CD8CA4
-	for <kexec@archiver.kernel.org>; Tue,  9 Jun 2026 13:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 99F1ECD8CA4
+	for <kexec@archiver.kernel.org>; Tue,  9 Jun 2026 14:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
+	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=932CHg0JlRPr8pHThcm7pMsppUWkOrUH+PNyex/JXkE=; b=xoYzElmzhpCCdIVhphVfnZayct
-	PkOeSUI07wttA4Wjwgl2auDO8FQxi7VTQ0BzAgvyI4UmfEmwTfJNjdnevbJ4MfPd6LGsXGkWD+iW8
-	b5tkj87kPv+oVbZYw8KfyMoMO4unfKYFyYVbyklwLTcht0yKYNz6/v/jaWp4NfxL4QgzC/BopC//o
-	gfc4rN4fZ8jbQrkpUF4giyZS1Z6OVCT3HXK1MSccThgarixxEbqNYizHalfKhlk4d9yfefrMgq7kn
-	PBPQBl5XwCZyWpymPk8/hU6sgpVmYlngzs2ttzv9+UqguZwxNQmCyOJYNAA8gs0eiLYOeQ2blt9Tw
-	pT201Paw==;
+	bh=PjHIRpjtlXIyylASoF8WIzC6zkAZuxm/NxysGVUExR4=; b=A60/Af7nJBjyXVvP43nqRNGOzp
+	gtmkZBCMQ+wWU48VE+O0QcGLL1QhFKqoZdULZm0DgAEJZHM44ZOHjbI6NKXJ8hfqU2zggSCuWA3W2
+	1Tcj2dmzUzC5mCVlUnq00BcpT/l2Urekcp0lNaGzU9MQbUZ+kZq/tQZj+eao5Op0oo5MO2e1eeKd1
+	vEvGRWQ4P2JfJLz+fi3MDhaEF+NIZI2za1AemFQogx4PAwO+T/HefeqtvnA97lhGAesMCOjyU4zEz
+	DG1CBUK+nBPh8y3148avTTGaWHjVPeBWc/0BoXo7efUkX/yFpLo+zGErggtA636JdqSiw4CFf9pre
+	fJ5zExDw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWwyq-00000005iuR-1Is5;
-	Tue, 09 Jun 2026 13:59:00 +0000
-Received: from fhigh-b5-smtp.messagingengine.com ([202.12.124.156])
+	id 1wWxRC-00000005leM-26s8;
+	Tue, 09 Jun 2026 14:28:18 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWwye-00000005ipt-2YBE;
-	Tue, 09 Jun 2026 13:58:50 +0000
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 78E0C7A0113;
-	Tue,  9 Jun 2026 09:58:47 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Tue, 09 Jun 2026 09:58:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm2;
-	 t=1781013527; x=1781099927; bh=932CHg0JlRPr8pHThcm7pMsppUWkOrUH
-	+PNyex/JXkE=; b=jJAyQI4NkxK+oMAfwlyJ+06sXkNTPH0GBWuA8MvyAXyUb/LL
-	nrqourpxNe4w2TeHtF6lhZvN3DNbyfGZuTTt0gibE6yb3Rc0Corehy3izYIYs4+8
-	cR0jBfOBLV+w54m6bejctyl3YS/LHeuxKQlj8cdfb6nXh8vGpcai9FWUyCpYseRx
-	9UiGj7sC5MAMhn+K/UK1HZPqLXW+vYQfcdgTfQohd+OkA1UqwatIIin3e0BUDoAs
-	Om+1hsxtflV8fbWGGe5YckQL6cUe77R2ShRQ9IbcISFcGrnlIIjJ5zEJt69KUkLL
-	SVuyoKjLY6RGp2BbB2hFeVAdkdaWYGt0xEkUMg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1781013527; x=
-	1781099927; bh=932CHg0JlRPr8pHThcm7pMsppUWkOrUH+PNyex/JXkE=; b=X
-	V1mSzclkc6ypP8XYYcoDGQct//SJOJF6rEMeeBmc2q/Clrw8VKMrlDvEI7U9A3zF
-	hGYvYKXMgRRFf4DEcNhn83xh49HNNPstz+KMekV9mqpAlVzwF7YhLblLDmDwgk1h
-	S9hgrCI2treR5SOcos9IafqR0W2eFvERS9zkyl2K7EigVWu126bWBTjRX03O12Oy
-	zI1WLx+d/QOzf3uUx3oTVjVh4OHD1H0ZDIPS3Eajhpj+vOaGDI6x8qCemJt5WhOg
-	ucfiDl4C7jrwRmKmIjLS3Eivm7PmEou6v9xjQUQ40Kcj+X7hkrT2jdqj0a6xkGT0
-	O5mSUamtzSxu6VV/+OJGw==
-X-ME-Sender: <xms:FhwoauFxiJDLQxFg7H6KlbD94O3M_ZgCnbcu2O_K3Sghs48hN3wwjw>
-    <xme:FhwoamY5MPqj30ztLxZz6zqi6lPFOSNYwEOPHm3PGOS3oNYiO6G2MdGcreZ0LbUTv
-    AwjD7fsy8ZgR6ukQzt7THYau6hsmLjtfj5nr4dROcQiOWZNKw0adoc>
-X-ME-Received: <xmr:Fhwoav017EFWkpBbNVwoqxD_6fUfxFsZw7ynu2s-tYkrN5KqnghXR27mP4GaMQ>
-X-ME-Proxy-Cause: dmFkZTEpGzrJ89AXC6S2iHGKv09ECFVNPV6Be7gwUsMOQmv22ONfc0ba/6wvaBeFwA/cxg
-    MJ67lnxv/jrDU0sLpitFDCswUAl1U6wOOtidtXMRQHoHY7wZmqKkjtnA0V3SV3TpELWtpW
-    u4MmJ433Oi+Pmm8ElBYItZHtF5JCw1QOZygVilvC13wwtiDpB5a7YaBFS9/25iGnDOSLk4
-    O4fYFpEoy7p8jbSwcaXfg27PnAIYOxqtnu5GqN8DQt+ox7CgkGDY2Wy1e3Q8SU171xKLTp
-    MBkPN0M6Owd8rXHdDnN2AhkEBWjeOvcJmylqEUtHdQZqCRYUETtagrYVi+jiNBgo0hVZV6
-    GTulzbI20Hsr6f2MhccNNFQn0A+WcEs8L5f2AtG6QJwlkVaz3LjVE6/mo5oZhXAnezKjUg
-    4TqKDrkMwGsG7AS5vZOlFSCIwl3NGtaozi5S+CQ/F65t9qIm/Q+DiuJT7pORBpJOQ6qBfX
-    v7DwT2Xd5bQG5LtvBpg41dFz/csOxX8MeRHxShSXxq3SXrAO0JrhFzAXuMEtv2Z3VRoYAG
-    Fu1gHoRo4jrGaDHZBeJILn4LvGic0O9m3MgDBzJXRMsDEq2jPtqOoD4hPNvUfJjAR+6Vna
-    Xyc+JorQ+tbwJSuI0jOyrQIqPwlIrgGUYYAqglho1z7SxfnbuxU87J5VxYoA
-X-ME-Proxy: <xmx:Fhwoauf-Xj9brVa8LpvuNhowNeA2Ze6qlj5dkGTm3izj0-IKXqGdhQ>
-    <xmx:FhwoahAgJCIHYsSMAh7F0fFQBxZys-rAfVncDG9aspIT36IcRTi0Jg>
-    <xmx:Fhwoag24wQo1Q7pJbzj3X0k-iyUw0AUPpNlbN14Zua02WR5dMHuMfg>
-    <xmx:FhwoahMQAi3PIp8vKIXt1iVodTrlmC7OxMVWFOVwpgbiRBSIviAPEA>
-    <xmx:FxwoarhFvEw0HOiV3AxHm1m4rmtmlHBeJhvsoIPdLPlb-oT_7oW8JnQd>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 9 Jun 2026 09:58:46 -0400 (EDT)
-From: Kiryl Shutsemau <kirill@shutemov.name>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Doug Anderson <dianders@chromium.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Usama Arif <usama.arif@linux.dev>,
-	Breno Leitao <leitao@debian.org>,
-	Julien Thierry <julien.thierry.kdev@gmail.com>,
-	Lecopzer Chen <lecopzer@gmail.com>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	kernel-team@meta.com,
-	kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	"Kiryl Shutsemau (Meta)" <kas@kernel.org>
-Subject: [PATCH v2 3/3] arm64: escalate smp_send_stop() to an SDEI NMI as a last resort
-Date: Tue,  9 Jun 2026 14:58:35 +0100
-Message-ID: <a7ed093b78e6966c049bacc7644a8a00a9a52720.1781013134.git.kas@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <cover.1781013134.git.kas@kernel.org>
-References: <cover.1780496779.git.kas@kernel.org> <cover.1781013134.git.kas@kernel.org>
+	id 1wWxRB-00000005le7-00Hj
+	for kexec@lists.infradead.org;
+	Tue, 09 Jun 2026 14:28:17 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 6938940454;
+	Tue,  9 Jun 2026 14:28:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB4641F00898;
+	Tue,  9 Jun 2026 14:28:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781015296;
+	bh=PjHIRpjtlXIyylASoF8WIzC6zkAZuxm/NxysGVUExR4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=XjnfkonvBA7BPNQ+bKKY6oIc51fRqT6F7xQ5JkGtkh/+n3vxfPebE28AtnI121Tz2
+	 VY5M28uj9LWKoQr/N+8GKcqeMxutY2VcXRe+22FgmwDZiv4EAI2xGaDAukkgr6aIkl
+	 GZw2xTY619ykBheB5bPqXoEU+eRmKSJ3j/Pb0eMgaacWWtVljP7Djn42kDX3tlOANd
+	 oeWIJzCmqgwa4HLNDgS8Gzfmd5E66hbCgIYGHiqh2YC72J810QRKJJrBp4WyFR5CsV
+	 +JJQzoYVTrUwNt/1MaLPyCIaWdQEC0rK/onYbEg6TXottOQSyUkdmarinDxoUVsTEz
+	 h/Iy4rexr7Ydw==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Mike Rapoport <rppt@kernel.org>,  linux-kselftest@vger.kernel.org,
+	shuah@kernel.org,  akpm@linux-foundation.org,  linux-mm@kvack.org,
+	skhan@linuxfoundation.org,  linux-doc@vger.kernel.org,
+	jasonmiu@google.com,  linux-kernel@vger.kernel.org,  corbet@lwn.net,
+	ran.xiaokai@zte.com.cn,  kexec@lists.infradead.org,
+	pratyush@kernel.org,  graf@amazon.com,
+	Logan Odell <loganodell@google.com>
+Subject: Re: [RFC v1 0/9] kho: granular compatibility and header decoupling
+In-Reply-To: <aibYJvzQQnpoN6YW@plex> (Pasha Tatashin's message of "Mon, 8 Jun
+	2026 16:12:56 +0000")
+References: <20260605033235.717351-1-pasha.tatashin@soleen.com>
+	<178083348872.1648214.17778188633648887952.b4-review@b4>
+	<aiVp5RlbWRz5VnPB@plex>
+	<178091437240.1648214.10761111570005003901.b4-reply@b4>
+	<aibYJvzQQnpoN6YW@plex>
+Date: Tue, 09 Jun 2026 16:28:12 +0200
+Message-ID: <2vxzo6hjss8z.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260609_065848_836434_00A6C8A3 
-X-CRM114-Status: GOOD (  24.45  )
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -125,268 +79,152 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
+On Mon, Jun 08 2026, Pasha Tatashin wrote:
 
-A CPU wedged with interrupts masked ignores the stop IPI, and without
-pseudo-NMI there is no NMI IPI to escalate to: a reboot proceeds with
-the CPU still running, and a kdump misses its registers.
+> On 06-08 13:26, Mike Rapoport wrote:
+>> On 2026-06-07 13:43:09+00:00, Pasha Tatashin wrote:
+>> > On 06-07 14:58, Mike Rapoport wrote:
+>> >=20
+>> > > On Fri, 05 Jun 2026 03:32:26 +0000, Pasha Tatashin <pasha.tatashin@s=
+oleen.com> wrote:
+[...]
+>> > External users only need to include the headers they actually use. For
+>> > example, LUO shouldn't have to pull vmalloc or radix tree KHO
+>> > declarations, and memfd does not need block.
+>> >=20
+>> > From a maintenance point of view, it is much easier to catch ABI
+>> > changes when the file with the appropriate version has been changed,
+>> > and most likely the version of that file should be updated. If a single
+>> > header contains compatibility versions for several different data
+>> > structures, it is easier to miss the correct version update.
+>>=20
+>> No matter in what files the definition lives, someone can forget to
+>> update version and we may miss it during review.
 
-Add a third rung to smp_send_stop()'s escalation: signal SDEI event 0
-at whatever is still online after the IPI (and pseudo-NMI IPI, if
-enabled) rungs. The handler routes like the IPI handlers do --
-crash_stop distinguishes a kdump crash stop (crash_save_cpu() on the
-wedged context) from a plain stop -- and the CPU acks by marking
-itself offline, which the caller already polls.
+Perhaps we should have some tests (maybe with kunit?) that can catch
+this? If you change the format, the test fails. So you'd have to go and
+update the test, and at that point it should be more obvious that ABI
+version needs bumping.
 
-arm64_nmi_cpu_stop() lives in smp.c rather than the SDEI provider
-because it needs the crash_stop discriminator and shares its shape with
-ipi_cpu_crash_stop(); it is exported only so the provider's event-0
-handler, which owns the trigger, can route into it.
+[...]
+>>=20
+>> Sorry I wasn't clear. I agree that kho_vmalloc, block and radix tree
+>> should have their own versioning rather than rely on global KHO version.
+>>=20
+>> What I don't like in your proposal is mixing versioning of a component
+>> with its dependencies.
+>>=20
+>> I think that versioning should be completely local to each component.
+>> LUO should not care about kho_block "on wire" layout. This should be
+>> encapsulated in kho_block.
+>
+> That is a fair point.
+>
+> As I mentioned in my previous reply, we can definitely look into making=20
+> the version checking more modular. For example, each component could=20
+> implement a standard compatibility-checking interface.
+>
+> These checks could run early in boot to determine whether each component=
+=20
+> is capable of accepting the incoming preserved data format.
+>
+> Whenever the component is later used by LUO, memfd, etc., we can query=20
+> that cached status. This achieves four key benefits:
+>
+> 1. It avoids delaying the compatibility check to the actual time of data=
+=20
+> retrieval, which is too late to safely abort.
+>
+> 2. It prevents a local incompatibility from triggering a global kernel=20
+> panic, allowing us to handle failures gracefully for just that specific=20
+> component or session.
 
-Two differences against an IPI-stopped CPU: the SDEI event is never
-completed, since completing it would resume the wedged context, so EL3
-retains the event's dispatch slot until reset; and the CPU parks
-instead of trying PSCI CPU_OFF, which must not be called from inside
-an unfinished SDEI event.
+I think the right time to do the compatibility check is _before_ kexec.
+That is the only point where you can safely abort. Once you boot into
+the new kernel and discover you can't understand the passed data, you
+are in a bad spot already and should reboot. I don't think think you
+really can gracefully handle these failures.
 
-Signed-off-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
----
- arch/arm64/include/asm/nmi.h    | 14 +++++++
- arch/arm64/kernel/smp.c         | 53 ++++++++++++++++++++++++
- drivers/firmware/Kconfig        |  2 +
- drivers/firmware/arm_sdei_nmi.c | 71 +++++++++++++++++++++++++++++++++
- 4 files changed, 140 insertions(+)
+For example, say you fail to understand the incoming PCI data. So you
+have no idea which devices are participating in live update and cannot
+correctly probe any of them. Which effectively means you cannot resume
+any of your guests since you have no idea how to restore their device
+state. The only path you are left with is to reboot. I haven't read the
+IOMMU series, but I imagine the same story applies there.
 
-diff --git a/arch/arm64/include/asm/nmi.h b/arch/arm64/include/asm/nmi.h
-index 9366be419d18..2a9e6065f7af 100644
---- a/arch/arm64/include/asm/nmi.h
-+++ b/arch/arm64/include/asm/nmi.h
-@@ -4,21 +4,35 @@
- 
- #include <linux/cpumask.h>
- 
-+struct pt_regs;
-+
- /*
-  * Cross-CPU NMI provider hooks, consulted by the arm64 arch code before
-  * its regular-IRQ / pseudo-NMI IPI paths. The SDEI provider in
-  * drivers/firmware/arm_sdei_nmi.c implements them when active; a future
-  * FEAT_NMI provider could slot in here too. The stubs let callers stay
-  * unconditional when ARM_SDEI_NMI is off.
-+ *
-+ * arm64_nmi_cpu_stop() is the reverse direction: the arch entry point
-+ * (arch/arm64/kernel/smp.c) that the provider's NMI handler routes a
-+ * stop request into.
-  */
- #ifdef CONFIG_ARM_SDEI_NMI
- bool sdei_nmi_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu);
-+bool sdei_nmi_stop_cpus(const cpumask_t *mask);
-+
-+void __noreturn arm64_nmi_cpu_stop(struct pt_regs *regs);
- #else
- static inline bool sdei_nmi_trigger_cpumask_backtrace(const cpumask_t *mask,
- 						      int exclude_cpu)
- {
- 	return false;
- }
-+
-+static inline bool sdei_nmi_stop_cpus(const cpumask_t *mask)
-+{
-+	return false;
-+}
- #endif
- 
- #endif /* __ASM_NMI_H */
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index a670434a8cae..1af7fdae48db 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -33,6 +33,7 @@
- #include <linux/kernel_stat.h>
- #include <linux/kexec.h>
- #include <linux/kgdb.h>
-+#include <linux/kprobes.h>
- #include <linux/kvm_host.h>
- #include <linux/nmi.h>
- 
-@@ -910,6 +911,35 @@ static void __noreturn ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs
- #endif
- }
- 
-+#ifdef CONFIG_ARM_SDEI_NMI
-+/*
-+ * Stop entry for the SDEI cross-CPU NMI service: its event-0 handler
-+ * lands here when this CPU was asked to stop. The bookkeeping mirrors
-+ * the IPI_CPU_STOP{,_NMI} handling; the park happens inside the SDEI
-+ * event, which is never completed -- completing it would have firmware
-+ * resume the interrupted (typically wedged) context. No PSCI CPU_OFF
-+ * either: powering off a PE that EL3 still considers mid-event invites
-+ * firmware trouble.
-+ */
-+void __noreturn arm64_nmi_cpu_stop(struct pt_regs *regs)
-+{
-+	unsigned int cpu = smp_processor_id();
-+
-+	local_daif_mask();
-+
-+	if (IS_ENABLED(CONFIG_KEXEC_CORE) && crash_stop)
-+		crash_save_cpu(regs, cpu);
-+
-+	/* the ack the stop requester polls for */
-+	set_cpu_online(cpu, false);
-+
-+	sdei_mask_local_cpu();
-+
-+	cpu_park_loop();
-+}
-+NOKPROBE_SYMBOL(arm64_nmi_cpu_stop);
-+#endif
-+
- static void arm64_send_ipi(const cpumask_t *mask, unsigned int nr)
- {
- 	unsigned int cpu;
-@@ -1263,6 +1293,29 @@ void smp_send_stop(void)
- 			udelay(1);
- 	}
- 
-+	/*
-+	 * If CPUs are *still* online, try the SDEI cross-CPU NMI. Firmware
-+	 * delivers it regardless of the target's DAIF state, so it reaches
-+	 * a CPU spinning with interrupts masked, which neither rung above
-+	 * could (without pseudo-NMI there is no NMI rung at all). Allow
-+	 * 100ms: a firmware round-trip per CPU, with headroom.
-+	 */
-+	if (num_other_online_cpus()) {
-+		/* re-snapshot after the rungs above took CPUs offline */
-+		smp_rmb();
-+		cpumask_copy(&mask, cpu_online_mask);
-+		cpumask_clear_cpu(smp_processor_id(), &mask);
-+
-+		if (sdei_nmi_stop_cpus(&mask)) {
-+			pr_info("SMP: retry stop with SDEI NMI for CPUs %*pbl\n",
-+				cpumask_pr_args(&mask));
-+
-+			timeout = USEC_PER_MSEC * 100;
-+			while (num_other_online_cpus() && timeout--)
-+				udelay(1);
-+		}
-+	}
-+
- 	if (num_other_online_cpus()) {
- 		smp_rmb();
- 		cpumask_copy(&mask, cpu_online_mask);
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index 6501087ff90d..ab0ee36d46e7 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -46,6 +46,8 @@ config ARM_SDEI_NMI
- 	    - arch_trigger_cpumask_backtrace()  (sysrq-l, RCU stalls,
- 	      hardlockup_all_cpu_backtrace, soft-lockup secondary dumps,
- 	      hung-task auxiliary dumps)
-+	    - smp_send_stop() escalation         (reboot/halt and the
-+	      panic / kdump crash stop)
- 
- 	  The driver registers a handler for the SDEI software-signalled
- 	  event (event 0) and reaches a target CPU by signalling it with
-diff --git a/drivers/firmware/arm_sdei_nmi.c b/drivers/firmware/arm_sdei_nmi.c
-index a82776e7b55a..b34ea42cfe5c 100644
---- a/drivers/firmware/arm_sdei_nmi.c
-+++ b/drivers/firmware/arm_sdei_nmi.c
-@@ -29,6 +29,11 @@
-  *     hardlockup_all_cpu_backtrace, soft-lockup/hung-task secondary
-  *     dumps all reach interrupt-masked CPUs.
-  *
-+ *   - sdei_nmi_stop_cpus() — the last rung of smp_send_stop()'s
-+ *     escalation (reboot/halt and the panic/kdump crash stop alike),
-+ *     reaching CPUs that ignored the stop IPIs; on the kdump path the
-+ *     wedged context is captured into the vmcore before the CPU parks.
-+ *
-  * Delivery uses the standard SDEI software-signalled event (event 0) and
-  * SDEI_EVENT_SIGNAL. We register a handler for event 0, enable it, and
-  * poke a target CPU with sdei_event_signal(0, mpidr): firmware makes
-@@ -59,8 +64,45 @@ static bool sdei_nmi_available;
- 
- #define SDEI_NMI_EVENT			0
- 
-+/*
-+ * Stop-request dispatch lives on the same SDEI event 0 as everything
-+ * else. The requesting CPU sets each target's bit in sdei_nmi_stop_mask
-+ * before signalling event 0; the target's handler test-and-clears its
-+ * bit and hands the CPU to arm64_nmi_cpu_stop(), which saves crash
-+ * state when the stop is a kdump crash-stop, marks the CPU offline
-+ * (which is what the requester polls for) and parks it.
-+ *
-+ * This mirrors the cpumask the framework's nmi_cpu_backtrace() consults
-+ * just below, and a shared mask rather than a separate SDEI event avoids
-+ * extra registrations from firmware.
-+ */
-+static cpumask_t sdei_nmi_stop_mask;
-+
- static int sdei_nmi_handler(u32 event, struct pt_regs *regs, void *arg)
- {
-+	int cpu = smp_processor_id();
-+
-+	if (cpumask_test_and_clear_cpu(cpu, &sdei_nmi_stop_mask)) {
-+		/*
-+		 * Never returns, and deliberately never completes the SDEI
-+		 * event: SDEI_EVENT_COMPLETE has firmware restore the
-+		 * interrupted context, which would land the CPU back in
-+		 * the wedged loop (or in do_idle, which BUGs at
-+		 * cpuhp_report_idle_dead once it sees itself offline).
-+		 * Returning a modified pt_regs doesn't help --
-+		 * arch/arm64/kernel/sdei.c::do_sdei_event only honours a PC
-+		 * override via its IRQ-state heuristic and otherwise hands
-+		 * EL3 its own saved-context slot back.
-+		 *
-+		 * Trade-off: EL3 retains ~one saved-context slot per parked
-+		 * CPU until the next hardware reset (~hundreds of bytes per
-+		 * CPU). Recoverability is unchanged versus an IPI-stopped
-+		 * CPU: neither comes back without a reset.
-+		 */
-+		arm64_nmi_cpu_stop(regs);
-+		/* unreachable */
-+	}
-+
- 	/*
- 	 * nmi_cpu_backtrace() no-ops unless this CPU's bit is set in the
- 	 * global backtrace mask (driven by nmi_trigger_cpumask_backtrace()),
-@@ -115,6 +157,35 @@ bool sdei_nmi_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
- 	return true;
- }
- 
-+/*
-+ * Last rung of the stop escalation in smp_send_stop() (see
-+ * arch/arm64/kernel/smp.c). The caller runs the regular stop IPI (and
-+ * the pseudo-NMI stop IPI, where available) first; @mask holds whatever
-+ * stayed online through those -- typically CPUs wedged with interrupts
-+ * masked, unreachable by an IPI. Set each target's stop-request flag and
-+ * signal event 0 at it; a target acks by marking itself offline, which
-+ * the caller polls for.
-+ *
-+ * Returns false when SDEI isn't active, so the caller can skip the wait.
-+ */
-+bool sdei_nmi_stop_cpus(const cpumask_t *mask)
-+{
-+	unsigned int cpu;
-+
-+	if (!sdei_nmi_available)
-+		return false;
-+
-+	cpumask_or(&sdei_nmi_stop_mask, &sdei_nmi_stop_mask, mask);
-+
-+	/* Publish the mask before the SMCs read it on the target side. */
-+	smp_wmb();
-+
-+	for_each_cpu(cpu, mask)
-+		sdei_nmi_fire(cpu);
-+
-+	return true;
-+}
-+
- /*
-  * device_initcall (after arch_initcall(sdei_init), so the SDEI subsystem
-  * is up): probe the firmware, register the event, and turn on the
--- 
-2.54.0
+For a more benign example, let's assume one of your memfds that back VM
+memory fail to restore.
 
+In this case, you can safely leak that memory and run the other guests,
+but at that point the host is in impaired state. You don't want to keep
+running it in this state. You likely either do a reboot, or if you feel
+more adventurous, you do another live update.
+
+In either case, there is no "safely abort" after the kexec happens.
+
+So I think our energy is better spent solving the versioning story
+_before_ kexec. After kexec I think it is perfectly fine to error out
+and panic or expect a reboot. You can't salvage much at that point
+anyway.
+
+And I think how the versioning format looks also should be based on the
+design of this pre-kexec check, not the other way round.
+
+>
+> 3. It keeps the local version local, as you suggested, so it is checked=20
+> only by the consumers of that specific component.
+>
+> 4. It provides a clean path for backward compatibility, as components=20
+> can individually decide whether they understand the incoming data=20
+> format.
+>
+[...]
+>>=20
+>> Actually FDT "compatible" handles versioning nicer than composite strings
+>> You can have
+>>=20
+>> 	compatible=3D"kho-v4", "vmalloc-v1", "radix-v1", "block-v2";
+>>=20
+>> and check fdt_node_check_compatible("vmalloc-v1") for vmalloc and
+>> fdt_node_check_compatible("block-v2") for block.
+
+I agree. Even if we don't use FDT, something more structured than
+composite strings would be nice to have.
+
+>
+> That is actually very similar to what I am proposing=E2=80=94individual v=
+ersion=20
+> tokens (which in my current series are concatenated into a composite=20
+> compatibility string separated by ';').
+>
+> But let's not get too fixated on the composite string formatting. I=20
+> actually really like what you are proposing: using integers for versions=
+=20
+> and having each registered component carry its own "NAME" and version=20
+> number in the KHO FDT.
+
+There is another nice thing about numbers that Logan (+cc) recently
+pointed out. You can tell which one is bigger.
+
+At some point I think we will support multiple versions of a data
+structure to allow for upgrades. At that point, it will help to know
+which one is "newer". So if both kernel versions support version 3 and
+4, you can use 4 to serialize.
+
+This of course is harder to do with strings.
+
+>
+>> And we wouldn't need to reimplement string parsing ;-)
+>>=20
+>> But yeah, I do see value of making components versioning and KHO global
+>> versioning independent. I just don't like composite strings and I don't
+>> like mixing versioning with dependencies.
+>>=20
+>> Since we are moving from FDT for the most things, version should become
+>> a number rather than a string and version compatibility should be
+[...]
+
+--=20
+Regards,
+Pratyush Yadav
 
