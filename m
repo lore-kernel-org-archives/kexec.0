@@ -4,72 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 40E43CD8CAA
-	for <kexec@archiver.kernel.org>; Tue,  9 Jun 2026 15:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DDCE0CD8CB9
+	for <kexec@archiver.kernel.org>; Tue,  9 Jun 2026 15:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=w6VKUC1VUaetCGs5JJDLFKtb8dO63YSohjJ7JwyYLsY=; b=ZDse786T0mD7zvRMfrUcc/GV8O
-	iSyCixPXA08LmC5BR0yDY77gpiuWUYATb6JWHkfBGTmdqKfTxB+52hCUl5M+yL2pHHtwztWQzjiZy
-	7o12PDdfOrLytwO+i8CrRDrCXWuvaOh1wqB3CYS3cap3ZeRN5vpK/L72cPUwHboW/iZxdEnlSl99C
-	B8f+9CCSOBcfegy7XcypYct/Kk9o7X0lJ8JZV3ipos5JAwt6Die+M2h2Wi6aXcY2Brmnw3LSqpemH
-	9pzMimP9fnjCIt1CveLSRK5j09vozI5ZZTvXbTft2JpBH1lpgVAP7HBFElSZDITDKnmcRp5LQfe7O
-	GeKy1cYQ==;
+	bh=UyfvIUyYOvTVt/UpRIulwDCiz4s89QiTYmiwF1UuTbs=; b=M3wW6Tt/fwegL8YefQPeI0Lj+8
+	1WpudIP1T9z0MrpZvedYHzV3e7EMQF5RND1IJQnj7sa19r9EdJ6hsAIZ1hNrptmp7qA+nJvI77h0k
+	+Qbj6yzGe0Ni+NGBdBarTN+J9v18eO49QRZXymgevLZPJp8gMZw/NbUkRaPc9Q2HRP5MvuV3ZdgAF
+	8spVIb/osPCxKm3ukqGspEzSthbAKULstCHn4yzwvoTu8zz3ZdgJjmzWM2DwZvzXxxMjpZ5Dnxk6q
+	m6d3LdhUA5ax4MZi5voPXHCKe2XjLYPmsEmgioe+qSA+mJAoSy374J+fWB2bB83PZyIVD3qk/rCPD
+	sAdEwQJQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWy7t-00000005s0M-2gJ6;
-	Tue, 09 Jun 2026 15:12:25 +0000
-Received: from mail-pl1-x632.google.com ([2607:f8b0:4864:20::632])
+	id 1wWyTs-00000005w5J-48Cm;
+	Tue, 09 Jun 2026 15:35:09 +0000
+Received: from mail-pl1-x634.google.com ([2607:f8b0:4864:20::634])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWy7q-00000005s00-0425
+	id 1wWyTr-00000005w4v-0FUj
 	for kexec@lists.infradead.org;
-	Tue, 09 Jun 2026 15:12:23 +0000
-Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-2c0b1a48855so523655ad.0
-        for <kexec@lists.infradead.org>; Tue, 09 Jun 2026 08:12:21 -0700 (PDT)
+	Tue, 09 Jun 2026 15:35:08 +0000
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-2bf2911f93cso448885ad.1
+        for <kexec@lists.infradead.org>; Tue, 09 Jun 2026 08:35:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781017941; x=1781622741; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1781019306; x=1781624106; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=w6VKUC1VUaetCGs5JJDLFKtb8dO63YSohjJ7JwyYLsY=;
-        b=d81tRmo7Gg3GI8TlXeOqgx3DOnUk2LPpFXRB7VeKPUsIMwRv3hPCknNKwZ4B8GqtLi
-         ufjAmp9HIAzhcAKGAKSKoFuPjHVfA9BUlsnwJ5AoR04ltLc6DKR9sy2BYIsrbgeKaeR9
-         1/T/jm8nvZQhO8KAEGEj/26p8miHI68oKY70v5zOW/JJKwZvJFyt4Kk6uDtWKJJXgtdS
-         KPXsy/LGOTn6Qkv98nx6L6wNB2JS/Jnxr5DnoPmTm1OqEJ2E6ABZ+RuybZCdaCNv2gRr
-         Eyw5s0wwAgRbh+73l4vR/SDgAgNaybY/827irhl5am7QkVI3SlZzvCbK63qE2jvc0Cd7
-         wgYQ==
+        bh=UyfvIUyYOvTVt/UpRIulwDCiz4s89QiTYmiwF1UuTbs=;
+        b=gE7Yd+IYT+kW6T9EdNfwCTawFwLZrIEzk1BpuYfTtOR3qmqwBHmT1Qq0hqkF0+1TAb
+         0303LmauFeNWfo0D3yZyLKTZbwhB73Iipn5I2LyHQh8GyWaCFl9WqheSBWeu8gehf3im
+         2UNHuDyBylE4WGAIdTqNNCYM5KYuN6A/xv2GAQeqvaOoIyM9Yr9l9rlTD3tQoLLMmBrt
+         4FRZLS9r2mXUeJOnj//9BJ0fxBPQrKrYxu48Z/EC06/t4i8CVAvSxcL60HQVdDLYNnxO
+         QX2SqhN8+Fc02tUriGItaHaL/TuxUL+j4fXVaWgl2YGTnar74dEbivaLY/zmkQ7Yf43d
+         LpgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781017941; x=1781622741;
+        d=1e100.net; s=20251104; t=1781019306; x=1781624106;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=w6VKUC1VUaetCGs5JJDLFKtb8dO63YSohjJ7JwyYLsY=;
-        b=jH2y2XlS/6VtgY7K74x/e7oQaTazRov5s18HOQWomshQNEG00rd5NVFMWy1vQABGpA
-         FS/wxFyUn6KOSIQ3z7QKQcwLJMjguOhZrtPbysKAoQeV7qwJyp9tzb2eA/fv/vImZj2S
-         0QYR2Faz1EHWoFENqxT+i03Sx+NO23EkBaNIkf19PQQtkdhHu6HxnlyzKsb8FjjBHRCx
-         aquildOj0AKsVCf4nNYGrd+ZTI6Z1ZX4CuqcMxv+M6pCpVq5QUXjk7dI9BQXs9xLRTmy
-         QIoDRfTmd9dbiDSS+YPdClFMi/Cvd1da2BzdR0B9IJ0OmSBxxEodUBoHUShXO7q1HGjz
-         wyDw==
-X-Forwarded-Encrypted: i=1; AFNElJ/+peCjSQolFvEjVqJ5vctR4uUFasQyGNz+SSgETdkdeRzzWv/YhtN6MfiI1nozrLyOtK+zfQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yyx79HElm7Q4nN6aj8a3Zjc1s4x5iZ77CNwh84hdUASDtn58mOV
-	mc2mbDc4MfRxeioSHQmYhIWcLx9IBOQ6x97ks5W7cPdj0grFm9DMhBm93LboEmgCawy5YK/ONt3
-	SRBAv+nsI
-X-Gm-Gg: Acq92OHgDc3j/vMpNEj9ttXX1+/cwYq73sJ/s3uch1aZYyLLTRd6Z75uP+t970TFgFN
-	DluZb8tBmI0fodyLDVEnZb+ZItEpYC6qvCEHZUsWRHKhPS4Vp9C7GOkF0gE3jBuojSxkiexi2Uq
-	knRAoJDxYuYBLLkntSTaLaD3Y1d25wJrPuS1vDMAQpeJtHRAEliE2mbJirHE6s67ese29COqTt2
-	x2gLHkwvEY43nRucBsQrWphh6hsTELdGHzKuMBw9k/r92dQn+k60QYlpdF7ea6EmjXum/V5VNiO
-	hzSFZwu6R2Ke9SnLxr39lzfsK8PXJzV85tbjAoC2UsXwS+BzFRobX/ZmYDsrEXeb3uAnJaSPAjt
-	EICgTE2FJFZIvkK9v1vbLnsWYgf+SusSmE/fvRZcf8piiXJPDgi2C3G7CAFkCQ3WcaZBxBGf/En
-	C4orRibLBeWDHB1lkFjtg0TJY93HJFeXPG4irQJT4Z/QStvwIeyd4xiXkYrrToc4+t/X4zDW0=
-X-Received: by 2002:a17:903:19ed:b0:2bf:3579:cdaa with SMTP id d9443c01a7336-2c1eb942782mr7408845ad.10.1781017940616;
-        Tue, 09 Jun 2026 08:12:20 -0700 (PDT)
+        bh=UyfvIUyYOvTVt/UpRIulwDCiz4s89QiTYmiwF1UuTbs=;
+        b=Lr2s5VExMsuj/C+8j8TYyDf+bZaWzcukFQxNO6f5vmYidf9lPDXridN/W/ZoppCGOL
+         dHLw4U/IizhxVrEqTo+cNOUVrysmZKVI+wtEg3l5sWO9zT9SGUufBA7mWMJK1Agzp8iS
+         gHEx0EEezA389qfm8f5eJe9AOSK0EgHgBfsllgBYDK7f7n+fEns1WhMLfb69u2wlWJf9
+         sveB8ir0o/Flav/c5weMszpiYuGv06Gfcb3o6qjjxRwH5pO+m7xDQN1x1BaDLvQ0Sv2S
+         8vufmRD/XhhPNLEKXmJnXaqGlXbC+8ev+GDvJguTH9+xBPc1ca2fNfbbOk5jnn/JcgHI
+         i1Hg==
+X-Forwarded-Encrypted: i=1; AFNElJ+gWwzJfcku0XJHFixQPxvxqxFvfKkfg9lESzt6uqIot2JQuyqBS+fedxkywzbuyVIh4E2CUg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyDxN2zkX3VNqcWmviJb5PCkDyX0c4XD1xAUCeYWh/Guky5cY7I
+	VzvAu9JCBxUb3COO3NPocsTj3xWUoGBkYd7sjhRjEHpLFuEg4aFrt2u2dayGJ/Uc5A==
+X-Gm-Gg: Acq92OExhCDm+EgsoluX0Xw92SBcICx+5TEFalZeIX77lze51NfDu7Xk4miEDkqURys
+	yHGe1Sm2KWZJMRb78OvxSXDHm3tpymg6T+zYRDsRWFuNMoewYyt4I8RBVCn2F/fi4WEAk7J3JR+
+	JT+dEoHK4POdwDenchsWTJVgtAP+peW4P05OmCjRaZ7X8iGHWWP1GhwsPoISOR3TkHZd/XYYNHQ
+	h8JR02q96ZjgUfxmsG62ZcVVilbSHVe5MuNoP1TOWxAAPQLnUYxcM+1FNToH43PzBBav4aob1CL
+	ZrlWW7q7udTAYpIVxK1arNoqHsVZPC/1nj9oMeZTHqVKwwgT2rdZZr4zxlDAaB0M6T0+OmBD2r/
+	kM3cOj8ymlGQYvsVVZ7dMD2DDBqJeu/Biz5xQIdQwJRHxrHWyvVKYqO6RBVHRitqg/OBezcvr0c
+	dEpcvh4ruY4BHLFNzf6Z/WFZ+wPozI1XM+wOzGowTB7o95Itfs5Cm4U1ltrjqAZh8NffGjHX/wB
+	EHAIFcMhg==
+X-Received: by 2002:a17:902:e885:b0:2bd:7e8e:ad56 with SMTP id d9443c01a7336-2c1eafba702mr7653595ad.6.1781019305283;
+        Tue, 09 Jun 2026 08:35:05 -0700 (PDT)
 Received: from google.com (199.255.142.34.bc.googleusercontent.com. [34.142.255.199])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c16629d40asm208599735ad.64.2026.06.09.08.12.14
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36f6bf827e6sm24737580a91.1.2026.06.09.08.34.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 08:12:20 -0700 (PDT)
-Date: Tue, 9 Jun 2026 15:12:11 +0000
+        Tue, 09 Jun 2026 08:35:04 -0700 (PDT)
+Date: Tue, 9 Jun 2026 15:34:55 +0000
 From: Pranjal Shrivastava <praan@google.com>
 To: Jason Gunthorpe <jgg@nvidia.com>
 Cc: David Matlack <dmatlack@google.com>, kexec@lists.infradead.org,
@@ -93,19 +93,20 @@ Cc: David Matlack <dmatlack@google.com>, kexec@lists.infradead.org,
 	Yi Liu <yi.l.liu@intel.com>
 Subject: Re: [PATCH v6 08/12] PCI: liveupdate: Inherit ACS flags in incoming
  preserved devices
-Message-ID: <aigtS3UDdhUGp3m0@google.com>
+Message-ID: <aigyn66-xQ_9JBW6@google.com>
 References: <20260522202410.3104264-1-dmatlack@google.com>
  <20260522202410.3104264-9-dmatlack@google.com>
  <aiXWmR-ettxin4LC@google.com>
  <aiaeOVomxQZhoM3K@google.com>
  <20260608181640.GO1962447@nvidia.com>
+ <aigtS3UDdhUGp3m0@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260608181640.GO1962447@nvidia.com>
+In-Reply-To: <aigtS3UDdhUGp3m0@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260609_081222_279332_A2FC1F80 
-X-CRM114-Status: GOOD (  14.36  )
+X-CRM114-CacheID: sfid-20260609_083507_176248_728CAE3D 
+X-CRM114-Status: GOOD (  20.13  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -120,22 +121,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jun 08, 2026 at 03:16:40PM -0300, Jason Gunthorpe wrote:
-> On Mon, Jun 08, 2026 at 10:49:29AM +0000, Pranjal Shrivastava wrote:
+On Tue, Jun 09, 2026 at 03:12:11PM +0000, Pranjal Shrivastava wrote:
+> On Mon, Jun 08, 2026 at 03:16:40PM -0300, Jason Gunthorpe wrote:
+> > On Mon, Jun 08, 2026 at 10:49:29AM +0000, Pranjal Shrivastava wrote:
+> > 
+> > > My point was that a FW exploit can meddle with the bitfields of the
+> > > ACS_CTRL to spoof and mis-report the ACS flags.
+> > 
+> > Devices can also ignore the ACS flags. I don't think this is an area
+> > where we should be worrying about devices being actively hostile.
 > 
-> > My point was that a FW exploit can meddle with the bitfields of the
-> > ACS_CTRL to spoof and mis-report the ACS flags.
+> I'm wondering what happens if we preserve IOMMU groups across a kexec,
+> but a switch's ACS capability is dropped or the ACS_RR bit gets cleared?
+> The incoming kernel assumes that it's the same ACS cap from the old one
 > 
-> Devices can also ignore the ACS flags. I don't think this is an area
-> where we should be worrying about devices being actively hostile.
+> Now, the incoming kernel restores the groups assuming they're still 
+> isolated, but the hardware no longer enforces it, silently allowing DMAs
+> & breaking isolation? 
 
-I'm wondering what happens if we preserve IOMMU groups across a kexec,
-but a switch's ACS capability is dropped or the ACS_RR bit gets cleared?
-The incoming kernel assumes that it's the same ACS cap from the old one
-
-Now, the incoming kernel restores the groups assuming they're still 
-isolated, but the hardware no longer enforces it, silently allowing DMAs
-& breaking isolation? 
+Again, to clarify, I'm aware that we aren't preserving IOMMU groups,
+the incoming kernel has to rebuild the groups. My concern is that if the 
+ACS_RR bit is cleared during the kexec window, the produced grouping would
+be different than the old kernel. What happens if two devices on the
+same bridge were assigned to 2 different VMs?
 
 Thanks,
 Praan
