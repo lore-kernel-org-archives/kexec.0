@@ -4,77 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8DC67CD98CC
-	for <kexec@archiver.kernel.org>; Wed, 10 Jun 2026 23:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00CAECD98C7
+	for <kexec@archiver.kernel.org>; Wed, 10 Jun 2026 23:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xiUkUKbbG5deAylPZ6LVrWFSOhIO30paK4vC1S4mCjU=; b=aG3MUEl2tB3qL5Mkh3wJ3z3oqg
-	lQCQUTQxrZyevgZJl3wr1BThbg+n7E+j+ESpBsLtbVAjD/y9wHAZThEB4OD3xxi4EcZxQB6/0pUW3
-	ilXMPzZkLSUBh4GYB02+YJ8nneEhQdV/mKDrDdDCv/bbUDTp+eRHItKfQ7UvZDoNM2/EvvLctiBSB
-	pODNB3q/AydlS/F4xsFyzNmFKIupf9vh9CxA+IQFdY461YKJocfMciYKhYgTi9u+R8vQCdTSff5b1
-	lblLhTR7ByCVEDDakOlqksO6j5XwvDw+kJzhoTw3D8HdZAStpO96Hx3QM/9cHczlrh9Da9A+/DhHo
-	fymDzR/w==;
+	bh=6U/8h58hOQ0KU4AswNbQiD48SWNA4TQRDe0FWqtz3Wk=; b=NOjcYKcZ9qil7XSzU+iiDlC7MI
+	MK4/ZKVZKV7loig2ietF/NtRd9yX4Q6kuoG4VhXJij1HxzvZLKkczDuBLwfnb2OsoT5W5PsWfcWzI
+	UdDV5ZaDyJFSDE0Zrb83UlIH1UUAmDSdTetgr+jGKp7V7dRrYEtrMromO2dBS67I+KE9+OJoesoqu
+	6V8XGPJMZ3qAkj+Fy0HQUvDSxclJPdr+GTVuowGGsUkvzrEsYKbRq6ja+n0EstpKbfzNqGXN3rVlH
+	Ru68yOUFyiNLHof08Bi+Ixg09aAYtrrPV+nJ0uOyUbs9pBmRp04mz1bDZOUd2J48pvcBODLB8ZO7T
+	TVfOv5jw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wXS2y-00000008S8W-1VW2;
-	Wed, 10 Jun 2026 23:09:20 +0000
-Received: from mail-pl1-x649.google.com ([2607:f8b0:4864:20::649])
+	id 1wXSjc-00000008TYO-44Yu;
+	Wed, 10 Jun 2026 23:53:24 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wXS2w-00000008S6k-122g
+	id 1wXSjZ-00000008TXe-0e6S
 	for kexec@lists.infradead.org;
-	Wed, 10 Jun 2026 23:09:19 +0000
-Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-2bf3636d6c0so75989845ad.2
-        for <kexec@lists.infradead.org>; Wed, 10 Jun 2026 16:09:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781132957; x=1781737757; darn=lists.infradead.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xiUkUKbbG5deAylPZ6LVrWFSOhIO30paK4vC1S4mCjU=;
-        b=oRYzo9M4qDtnY/TXUzcC8dfH0PoIDPRRVQRttHLvdFGv08ggm8RRADi2ysSHmdck4I
-         Rj87u9tHoH3nSdqO3fjOh/2MJ4tznCkRzgPANWyzLYer/MQsGlXPt7ZngvZgUN3zVAdB
-         f9vcAJLT/k2N8PS2L4V2u3RGX8RHcfuSMabr9PXcFUl3i7bxAJ1AGCdKGxAO0k9DjNoi
-         LPecmXPy+ykJVUlbNZQdF/zCHhxB9LIqJWQWpW8sMg2Q42+1/WZtyaSG1PvLYgKHk1eS
-         DKW3FhY4Im+JcppRCHC6fc3/BJDIx1QHSv86K7/MK0rXrRxdk3fhAzC/pn5baGn6vPbB
-         dFUw==
+	Wed, 10 Jun 2026 23:53:23 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1781135598;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6U/8h58hOQ0KU4AswNbQiD48SWNA4TQRDe0FWqtz3Wk=;
+	b=I9nH5+bSYpNfogoN30fhVGinfrhYXv6czJTv0h0iFiXPNdt8XttzeDmB7vW0BBUEmiduI9
+	3p5xarDB5EfrUP0tNfKMdLzIqhcwSZaPdlXXIyz29uKNjcMGxOgHcnruT6aDyJCtQLjd+h
+	lCp3BqyupvCg8MV5c28MOQuQp5fhJek=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-387-mLg88_6NMjm_WSeMMlqBjg-1; Wed, 10 Jun 2026 19:53:14 -0400
+X-MC-Unique: mLg88_6NMjm_WSeMMlqBjg-1
+X-Mimecast-MFC-AGG-ID: mLg88_6NMjm_WSeMMlqBjg_1781135594
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-36d98b5a68fso12518911a91.2
+        for <kexec@lists.infradead.org>; Wed, 10 Jun 2026 16:53:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781132957; x=1781737757;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xiUkUKbbG5deAylPZ6LVrWFSOhIO30paK4vC1S4mCjU=;
-        b=AdGY58fX+6GzIKt4GxPQ8ZNKqYtgHtdkBPCUxS4ieBmbVcvwg6iNl4YXT57dXhwLR6
-         0GXz5UsTThMUcl7daFmK1GlaiZ+u22yEWykOMAb/BZMBPhArhuAWdc7SW1vDM5Ao6/Vn
-         5VLxmScbXIkV50pWGODuV6hdmolRfljew+PhmQwmF4HuNffIPyVANQzBZfggOHXsTqxT
-         9QGWGxUC5m3GkEHKSeY5l2WArCHffVwJ99sJfGAQCJN7SeMSuPYPLe39DLEI116ESdtN
-         CHB9A7pWJJ9p5iwqo55quqtShUyYFKgA3w0996U4OgCV7cGPbnIq5KnxWb/QrnIdIMxm
-         lUcQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8onSJMerVkUTbjVltbhuWpLAOsX2F1IsN5SaHX6GL3nMD56Bz9DGthx3RbmDemxdFeCuZwlw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzVZbYq1MXpNFAtz2rEuk47bpgp3KiW6j0xxJVKHNX1szWbCI8V
-	QFnp/sLpD1oUE3RhJDbyxEXT/5k+kitjoiM5lvgnvP1SpAUKcE9dnTzdp48tRSYY7P7PjYl25+3
-	ZMwpMXyw4kQ==
-X-Received: from plom12.prod.google.com ([2002:a17:903:3c0c:b0:2bf:1486:2669])
- (user=vipinsh job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3d10:b0:2c2:2a8a:af69
- with SMTP id d9443c01a7336-2c2f0f1f8a2mr906585ad.9.1781132956533; Wed, 10 Jun
- 2026 16:09:16 -0700 (PDT)
-Date: Wed, 10 Jun 2026 16:09:08 -0700
-In-Reply-To: <20260610230909.876546-1-vipinsh@google.com>
-Mime-Version: 1.0
-References: <20260610230909.876546-1-vipinsh@google.com>
-X-Mailer: git-send-email 2.54.0.1099.g489fc7bff1-goog
-Message-ID: <20260610230909.876546-3-vipinsh@google.com>
-Subject: [PATCH v2 2/2] selftests/liveupdate: Add helpers to preserve/retrieve FDs
-From: Vipin Sharma <vipinsh@google.com>
-To: pasha.tatashin@soleen.com, rppt@kernel.org, pratyush@kernel.org
-Cc: tarunsahu@google.com, skhawaja@google.com, shuah@kernel.org, 
-	dmatlack@google.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-kselftest@vger.kernel.org, Vipin Sharma <vipinsh@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        d=1e100.net; s=20251104; t=1781135593; x=1781740393;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=6U/8h58hOQ0KU4AswNbQiD48SWNA4TQRDe0FWqtz3Wk=;
+        b=EgsnTqVOoiJvlFfnvWBCj8+lT5me8eG7++Nxhg6mDKOcwCmBnCHK7pe6M2PLd9Lxxd
+         UylmFra5Gt/M1pwcRd2qUVLgNCzpN9ap6fU6oPrHwHaS1W9m6FLCadCAIBxuM+WRCefO
+         kfHUi2FX8TuPrKRhfcjX4KZQ6RXnOfN2+vGNjyWq5GNumOjlmxwuZmzps9D0V4+lrK4d
+         KmU+mxg80wR5X+mTM5Qi0YMZ9evEV0bI3eNo961eY6ZiDyyR/chH9MzSf5wqMeDRr3EZ
+         RMBNmnbqjxSI00ZO/+wmg7nQu6VVZ2y/hdmRFHa43nsatpHrGzO+YZvkCUPqjkeCl+vO
+         Ixrg==
+X-Forwarded-Encrypted: i=1; AFNElJ9mw4zyWEqg2LMTR+7X2OAZkv1OlRaGPh2PWj4P4NP1/aoZzlMXYOaqvEIhFO09Llw5wCTriA==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yzkx7LqgofPTagIgklQahkODTWAOaEH8fEMVv4Bi99VH55gkGZC
+	0PNb+B8suSkoYR3B7g7UXoUronSJJBO6VqhT+w3v2ghywJ0Y3b+yS3uaDPiLFcLFsoAneade9sK
+	W2fJItsmmBeME4Z3Knc7i0Or1sGTn9Gs2jVEZv4nGvPuDHFdL+aZEW8weixHTgw==
+X-Gm-Gg: Acq92OHMtzg9wqZ22JczqBTVv/ZOKYpAQgvxGU+jW5wGCf69bRfalxuhOs5+GpAXPFD
+	pI5pGEyheaHvzMODZINXbZWRYJsnf6ayEVyVTElxDR6tNrOgXIs+vDcJXfGr07pBxmwR98Tl95l
+	BcrafqE44arqcYNTLSjOsJKK5xt9lP1IwmC59hucaK932B/RF1b8XnoEJE+34NAIHRjTmZ8Ld2k
+	ke8MZ19Hy9jVpl4moNptXHyf2Vbphm2Ofu2rNC1D11puzkzUyH1tpRIRa3jW/bkUjScy3dNxKWi
+	HX64MmJIFbGCaRvOZD+rSk9OUP3tY4fptlNS8yt6FnqkRQPklbmm8buKxULOJbqwkJpSqIxM8zf
+	SMvzp4l/IOcM1Ftb7Q/TwNFWZldOQIikdMvHZ8u+bq9jfRW2zk53S8VGytXU2EKUgj0dEA4daew
+	==
+X-Received: by 2002:a17:90b:48cd:b0:36b:b3f4:d578 with SMTP id 98e67ed59e1d1-377a73e273dmr444887a91.15.1781135593535;
+        Wed, 10 Jun 2026 16:53:13 -0700 (PDT)
+X-Received: by 2002:a17:90b:48cd:b0:36b:b3f4:d578 with SMTP id 98e67ed59e1d1-377a73e273dmr444868a91.15.1781135593111;
+        Wed, 10 Jun 2026 16:53:13 -0700 (PDT)
+Received: from localhost.localdomain (122-63-81-176.mobile.spark.co.nz. [122.63.81.176])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84282915fe8sm25978204b3a.54.2026.06.10.16.53.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2026 16:53:12 -0700 (PDT)
+From: Tao Liu <ltao@redhat.com>
+To: yamazaki-msmt@nec.com,
+	k-hagio-ab@nec.com,
+	kexec@lists.infradead.org
+Cc: aravinda@linux.vnet.ibm.com,
+	stephen.s.brennan@oracle.com,
+	kjlx@templeofstupid.com,
+	Tao Liu <ltao@redhat.com>
+Subject: [PATCH] Add erase_sample extension as an data erase reference
+Date: Thu, 11 Jun 2026 11:42:50 +1200
+Message-ID: <20260610234249.10993-2-ltao@redhat.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20260414102656.55200-1-ltao@redhat.com>
+References: <20260414102656.55200-1-ltao@redhat.com>
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: WP_4p712INh0XjKq811wKIktl4S1SuiunuRtMqvGgSo_1781135594
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260610_160918_308502_562F94DE 
-X-CRM114-Status: GOOD (  14.12  )
+X-CRM114-CacheID: sfid-20260610_165321_270858_F9A2D80B 
+X-CRM114-Status: GOOD (  17.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,205 +113,136 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add helper functions to preserve and retrieve file descriptors from an
-LUO session. This allows library users to work with FD preservation.
+This patch will add a erase_sample.c as a data erase reference. It will
+erase all tasks & threads's comm[] member within their task_struct, as
+a result, you will see the ps info outputted by crash utility similiar
+as follows:
 
-Now that there are helpers, use them instead of direct ioctl calls
-in liveupdate.c
+ crash> ps
+  ...
+  1       0  10  ffff96b7c0980000  IN   0.0    25504    15704  XXXXXXXXXXXXXXX
+  2       0  15  ffff96b7c0982f40  IN   0.0        0        0  [XXXXXXXXXXXXXXX]
+  3       2   2  ffff96b7c09a0000  IN   0.0        0        0  [XXXXXXXXXXXXXXX]
+  4       2   0  ffff96b7c09a2f40  ID   0.0        0        0  [XXXXXXXXXXXXXXX]
+  5       2   0  ffff96b7c09a8000  ID   0.0        0        0  [XXXXXXXXXXXXXXX]
 
-No functional change intended.
+The comm[] erasure doesn't cause critical info loss and has slight
+impact on vmcore analyze, so it is safe to take it as an example for
+developers.
 
-Co-developed-by: David Matlack <dmatlack@google.com>
-Signed-off-by: David Matlack <dmatlack@google.com>
-Signed-off-by: Vipin Sharma <vipinsh@google.com>
+Signed-off-by: Tao Liu <ltao@redhat.com>
 ---
- .../liveupdate/lib/include/libliveupdate.h    |  2 +
- .../selftests/liveupdate/lib/liveupdate.c     | 41 +++++++++++++++----
- .../testing/selftests/liveupdate/liveupdate.c | 38 ++++++-----------
- 3 files changed, 46 insertions(+), 35 deletions(-)
 
-diff --git a/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
-index 6ff71d7c3d9c..2c6a6f6a2733 100644
---- a/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
-+++ b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
-@@ -27,6 +27,8 @@ int luo_retrieve_session(int luo_fd, const char *name);
- int luo_session_finish(int session_fd);
+Hi maintainers,
+
+This patch should be applied upon "[PATCH v5][makedumpfile 9/9] Add amdgpu mm
+pages filtering extension". Since this patch doesn't do 
+modifications on any previous patches, and you are reviewing v5, so I
+post appended to v5. If this causes any confusing, I'm happy to post a
+v6 with a cleaner format. Thanks!
+
+---
+ extensions/Makefile       |  2 +-
+ extensions/erase_sample.c | 78 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 79 insertions(+), 1 deletion(-)
+ create mode 100644 extensions/erase_sample.c
+
+diff --git a/extensions/Makefile b/extensions/Makefile
+index c1dbc4f..9dd4f8e 100644
+--- a/extensions/Makefile
++++ b/extensions/Makefile
+@@ -1,5 +1,5 @@
+ CC ?= gcc
+-CONTRIB_SO := sample.so amdgpu_filter.so
++CONTRIB_SO := sample.so erase_sample.so amdgpu_filter.so
  
- int luo_ensure_nofile_limit(long min_limit);
-+int luo_session_preserve_fd(int session_fd, int fd, __u64 token);
-+int luo_session_retrieve_fd(int session_fd, __u64 token);
+ all: $(CONTRIB_SO)
  
- int create_and_preserve_memfd(int session_fd, int token, const char *data);
- int restore_and_verify_memfd(int session_fd, int token, const char *expected_data);
-diff --git a/tools/testing/selftests/liveupdate/lib/liveupdate.c b/tools/testing/selftests/liveupdate/lib/liveupdate.c
-index 897c200f3845..961a732b541d 100644
---- a/tools/testing/selftests/liveupdate/lib/liveupdate.c
-+++ b/tools/testing/selftests/liveupdate/lib/liveupdate.c
-@@ -78,9 +78,35 @@ int luo_retrieve_session(int luo_fd, const char *name)
- 	return arg.fd;
- }
- 
-+int luo_session_preserve_fd(int session_fd, int fd, __u64 token)
+diff --git a/extensions/erase_sample.c b/extensions/erase_sample.c
+new file mode 100644
+index 0000000..7c935d1
+--- /dev/null
++++ b/extensions/erase_sample.c
+@@ -0,0 +1,78 @@
++#include <stdio.h>
++#include <stdlib.h>
++#include "../makedumpfile.h"
++#include "../btf_info.h"
++#include "../kallsyms.h"
++#include "../extension.h"
++#include "../erase_info.h"
++
++INIT_MOD_STRUCT_MEMBER(vmlinux, task_struct, tasks);
++INIT_MOD_STRUCT_MEMBER(vmlinux, task_struct, thread_node);
++INIT_MOD_STRUCT_MEMBER(vmlinux, task_struct, signal);
++INIT_MOD_STRUCT_MEMBER(vmlinux, signal_struct, thread_head);
++INIT_MOD_STRUCT_MEMBER(vmlinux, task_struct, comm);
++INIT_MOD_SYM(vmlinux, init_task);
++
++#define MOD_MEMBER_OFF(MOD, S, M) \
++	GET_MOD_STRUCT_MEMBER_MOFF(MOD, S, M) / 8
++#define KERN_MEMBER_OFF(S, M) MOD_MEMBER_OFF(vmlinux, S, M)
++#define GET_KERN_STRUCT_MEMBER_MSIZE(S, M) \
++	GET_MOD_STRUCT_MEMBER_MSIZE(vmlinux, S, M)
++#define GET_KERN_SYM(SYM) GET_MOD_SYM(vmlinux, SYM)
++
++/* task_struct.comm eraser */
++static bool erase_task_struct_comm(void)
 +{
-+	struct liveupdate_session_preserve_fd arg = {
-+		.size = sizeof(arg),
-+		.fd = fd,
-+		.token = token,
-+	};
++	uint64_t task_list, init_task, comm, signal, thread_head, thread_list;
++	uint32_t size;
 +
-+	if (ioctl(session_fd, LIVEUPDATE_SESSION_PRESERVE_FD, &arg) < 0)
-+		return -errno;
++	init_task = GET_KERN_SYM(init_task);
++	size = GET_KERN_STRUCT_MEMBER_MSIZE(task_struct, comm);
++	task_list = init_task + KERN_MEMBER_OFF(task_struct, tasks);
 +
-+	return 0;
++	/* Iterate all tasks */
++	do {
++		thread_list = task_list - KERN_MEMBER_OFF(task_struct, tasks) +
++			KERN_MEMBER_OFF(task_struct, thread_node);
++		if (!readmem(VADDR, task_list - KERN_MEMBER_OFF(task_struct, tasks) +
++			KERN_MEMBER_OFF(task_struct, signal), &signal, sizeof(uint64_t))) {
++			ERRMSG("Can't get task_struct member signal!\n");
++			goto out;
++		}
++		thread_head = signal + KERN_MEMBER_OFF(signal_struct, thread_head);
++
++		/* Iterate all threads of the task */
++		do {
++			comm = thread_list - KERN_MEMBER_OFF(task_struct, thread_node) +
++				KERN_MEMBER_OFF(task_struct, comm);
++
++			if (!update_filter_info_raw(comm, 'X', size)) {
++				ERRMSG("Failed update filter info!\n");
++				goto out;
++			}
++
++			thread_list = next_list(thread_list);
++		} while (thread_list != thread_head);
++
++		task_list = next_list(task_list);
++	} while (task_list != init_task + KERN_MEMBER_OFF(task_struct, tasks));
++
++	return true;
++out:
++	return false;
 +}
 +
-+int luo_session_retrieve_fd(int session_fd, __u64 token)
++void extension_init(void)
 +{
-+	struct liveupdate_session_retrieve_fd arg = {
-+		.size = sizeof(arg),
-+		.token = token,
-+	};
-+
-+	if (ioctl(session_fd, LIVEUPDATE_SESSION_RETRIEVE_FD, &arg) < 0)
-+		return -errno;
-+
-+	return arg.fd;
++	if (!erase_task_struct_comm()) {
++		ERRMSG("erase_sample.so: erase fail!\n");
++		goto out;
++	}
++	MSG("erase_sample.so: erase success!\n");
++out:
++	return;
 +}
 +
- int create_and_preserve_memfd(int session_fd, int token, const char *data)
- {
--	struct liveupdate_session_preserve_fd arg = { .size = sizeof(arg) };
- 	long page_size = sysconf(_SC_PAGE_SIZE);
- 	void *map = MAP_FAILED;
- 	int mfd = -1, ret = -1;
-@@ -99,9 +125,8 @@ int create_and_preserve_memfd(int session_fd, int token, const char *data)
- 	snprintf(map, page_size, "%s", data);
- 	munmap(map, page_size);
- 
--	arg.fd = mfd;
--	arg.token = token;
--	if (ioctl(session_fd, LIVEUPDATE_SESSION_PRESERVE_FD, &arg) < 0)
-+	ret = luo_session_preserve_fd(session_fd, mfd, token);
-+	if (ret)
- 		goto out;
- 
- 	ret = 0;
-@@ -116,15 +141,13 @@ int create_and_preserve_memfd(int session_fd, int token, const char *data)
- int restore_and_verify_memfd(int session_fd, int token,
- 			     const char *expected_data)
- {
--	struct liveupdate_session_retrieve_fd arg = { .size = sizeof(arg) };
- 	long page_size = sysconf(_SC_PAGE_SIZE);
- 	void *map = MAP_FAILED;
- 	int mfd = -1, ret = -1;
- 
--	arg.token = token;
--	if (ioctl(session_fd, LIVEUPDATE_SESSION_RETRIEVE_FD, &arg) < 0)
--		return -errno;
--	mfd = arg.fd;
-+	mfd = luo_session_retrieve_fd(session_fd, token);
-+	if (mfd < 0)
-+		return mfd;
- 
- 	map = mmap(NULL, page_size, PROT_READ, MAP_SHARED, mfd, 0);
- 	if (map == MAP_FAILED)
-diff --git a/tools/testing/selftests/liveupdate/liveupdate.c b/tools/testing/selftests/liveupdate/liveupdate.c
-index 6bfd4e53528c..e17a13136330 100644
---- a/tools/testing/selftests/liveupdate/liveupdate.c
-+++ b/tools/testing/selftests/liveupdate/liveupdate.c
-@@ -170,20 +170,6 @@ TEST_F(liveupdate_device, create_distinct_sessions)
- 	ASSERT_EQ(close(session_fd2), 0);
- }
- 
--static int preserve_fd(int session_fd, int fd_to_preserve, __u64 token)
--{
--	struct liveupdate_session_preserve_fd args = {};
--
--	args.size = sizeof(args);
--	args.fd = fd_to_preserve;
--	args.token = token;
--
--	if (ioctl(session_fd, LIVEUPDATE_SESSION_PRESERVE_FD, &args))
--		return -errno;
--
--	return 0;
--}
--
- /*
-  * Test Case: Preserve MemFD
-  *
-@@ -208,7 +194,7 @@ TEST_F(liveupdate_device, preserve_memfd)
- 	ASSERT_GE(mem_fd, 0);
- 
- 	ASSERT_EQ(write(mem_fd, test_str, strlen(test_str)), strlen(test_str));
--	ASSERT_EQ(preserve_fd(session_fd, mem_fd, 0x1234), 0);
-+	ASSERT_EQ(luo_session_preserve_fd(session_fd, mem_fd, 0x1234), 0);
- 	ASSERT_EQ(close(session_fd), 0);
- 
- 	ASSERT_EQ(lseek(mem_fd, 0, SEEK_SET), 0);
-@@ -247,8 +233,8 @@ TEST_F(liveupdate_device, preserve_multiple_memfds)
- 	ASSERT_EQ(write(mem_fd1, test_str1, strlen(test_str1)), strlen(test_str1));
- 	ASSERT_EQ(write(mem_fd2, test_str2, strlen(test_str2)), strlen(test_str2));
- 
--	ASSERT_EQ(preserve_fd(session_fd, mem_fd1, 0xAAAA), 0);
--	ASSERT_EQ(preserve_fd(session_fd, mem_fd2, 0xBBBB), 0);
-+	ASSERT_EQ(luo_session_preserve_fd(session_fd, mem_fd1, 0xAAAA), 0);
-+	ASSERT_EQ(luo_session_preserve_fd(session_fd, mem_fd2, 0xBBBB), 0);
- 
- 	memset(read_buf, 0, sizeof(read_buf));
- 	ASSERT_EQ(lseek(mem_fd1, 0, SEEK_SET), 0);
-@@ -303,10 +289,10 @@ TEST_F(liveupdate_device, preserve_complex_scenario)
- 	mem_fd_empty2 = memfd_create("empty2", 0);
- 	ASSERT_GE(mem_fd_empty2, 0);
- 
--	ASSERT_EQ(preserve_fd(session_fd1, mem_fd_data1, 0x1111), 0);
--	ASSERT_EQ(preserve_fd(session_fd1, mem_fd_empty1, 0x2222), 0);
--	ASSERT_EQ(preserve_fd(session_fd2, mem_fd_data2, 0x3333), 0);
--	ASSERT_EQ(preserve_fd(session_fd2, mem_fd_empty2, 0x4444), 0);
-+	ASSERT_EQ(luo_session_preserve_fd(session_fd1, mem_fd_data1, 0x1111), 0);
-+	ASSERT_EQ(luo_session_preserve_fd(session_fd1, mem_fd_empty1, 0x2222), 0);
-+	ASSERT_EQ(luo_session_preserve_fd(session_fd2, mem_fd_data2, 0x3333), 0);
-+	ASSERT_EQ(luo_session_preserve_fd(session_fd2, mem_fd_empty2, 0x4444), 0);
- 
- 	ASSERT_EQ(lseek(mem_fd_data1, 0, SEEK_SET), 0);
- 	ASSERT_EQ(read(mem_fd_data1, read_buf, sizeof(read_buf)), strlen(data1));
-@@ -355,7 +341,7 @@ TEST_F(liveupdate_device, preserve_unsupported_fd)
- 	unsupported_fd = open("/dev/null", O_RDWR);
- 	ASSERT_GE(unsupported_fd, 0);
- 
--	ret = preserve_fd(session_fd, unsupported_fd, 0xDEAD);
-+	ret = luo_session_preserve_fd(session_fd, unsupported_fd, 0xDEAD);
- 	EXPECT_EQ(ret, -ENOENT);
- 
- 	ASSERT_EQ(close(unsupported_fd), 0);
-@@ -388,14 +374,14 @@ TEST_F(liveupdate_device, prevent_double_preservation)
- 	ASSERT_GE(mem_fd, 0);
- 
- 	/* First preservation should succeed */
--	ASSERT_EQ(preserve_fd(session_fd1, mem_fd, 0x1111), 0);
-+	ASSERT_EQ(luo_session_preserve_fd(session_fd1, mem_fd, 0x1111), 0);
- 
- 	/* Second preservation in a different session should fail with EBUSY */
--	ret = preserve_fd(session_fd2, mem_fd, 0x2222);
-+	ret = luo_session_preserve_fd(session_fd2, mem_fd, 0x2222);
- 	EXPECT_EQ(ret, -EBUSY);
- 
- 	/* Second preservation in the same session (different token) should fail with EBUSY */
--	ret = preserve_fd(session_fd1, mem_fd, 0x3333);
-+	ret = luo_session_preserve_fd(session_fd1, mem_fd, 0x3333);
- 	EXPECT_EQ(ret, -EBUSY);
- 
- 	ASSERT_EQ(close(mem_fd), 0);
-@@ -565,7 +551,7 @@ TEST_F(liveupdate_device, preserve_many_files)
- 	for (i = 0; i < MANY_FILES; i++) {
- 		mem_fds[i] = memfd_create("test-memfd", 0);
- 		ASSERT_GE(mem_fds[i], 0);
--		ASSERT_EQ(preserve_fd(session_fd, mem_fds[i], i), 0);
-+		ASSERT_EQ(luo_session_preserve_fd(session_fd, mem_fds[i], i), 0);
- 	}
- 
- 	for (i = 0; i < MANY_FILES; i++)
++__attribute__((destructor))
++void extension_cleanup(void) { }
++
 -- 
-2.54.0.1099.g489fc7bff1-goog
+2.47.0
 
 
