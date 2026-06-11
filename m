@@ -4,77 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AB733CD98D2
-	for <kexec@archiver.kernel.org>; Thu, 11 Jun 2026 09:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 642DFCD98C7
+	for <kexec@archiver.kernel.org>; Thu, 11 Jun 2026 09:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=MaX7x21+nHDjl6ZC8E7UHL0betYQU1IeZDqIxfjL42A=; b=4WY+1Nsai7dZK2Qh2WSS5gkIP0
-	L+Ay3UdfqEz/vhS8W8gutGy0kQGDOOrK/qhEQFfBpye8QxDHrKEK0BKmBXbp38dno+Ur4l1fuHYYC
-	luIsttiPzxvjnFGdnNURN5yyzD282B4hB7pwG5H8cQaVrx0hE/Da4BcTqrcYs+5a/BZ8AlpCHCfM6
-	zqZs3Qc23qSP7UHK1Az1G89LBbtfXlqic9TT5BQPDSeMTu08EvFuGJ1x8AsveyROgNI4tebVkRUrs
-	TDEwmSA76q/iCbGriHS6t0NfaSXiEukWIn1mMJD0e7qeGnLsTk7Ry07gQNisFBPOIwDp6yi5Yw6Hj
-	VYm92IDg==;
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=jad+ABumvty4Afl/cOu2u5kAzyK5CuVnZh2s0pggACY=; b=PzA5FXePy2hO1J0BsPPvaKw0/O
+	LmFjXwv9KZZAnap7RG+x0rZOdkqEdrG2e5wuZ+AQaTqJASqMzGxyE7Vs1FgB0zpF6J4+BKkON9RQ9
+	YKX2sfQKa77s0QF/udbgbQFZLbjWNvBixscQJs4/NIW2I7tnFtFfge79btq7WYc0fhMkQYAtoo3VC
+	n2WwtCll41roW6MFA64IeWMJK5z8hQTcpeemP8tKGhrdi2Cw6Un4fSNWYGrstf9pHaOfQ+v+guV72
+	ydg1zTpHTBk5bF1iZaLghZyG9IUxAT0uCf7zjfpiWjnFb1xJ3CQT790il4lIskNA28U4QaLfAXVrs
+	dsa3rhnA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wXbk9-0000000981L-1tqw;
-	Thu, 11 Jun 2026 09:30:33 +0000
-Received: from mail-ed1-x54a.google.com ([2a00:1450:4864:20::54a])
+	id 1wXbkP-0000000985f-2EYW;
+	Thu, 11 Jun 2026 09:30:49 +0000
+Received: from mail-ej1-x64a.google.com ([2a00:1450:4864:20::64a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wXbk6-0000000980F-42mA
+	id 1wXbkN-0000000984R-1G73
 	for kexec@lists.infradead.org;
-	Thu, 11 Jun 2026 09:30:32 +0000
-Received: by mail-ed1-x54a.google.com with SMTP id 4fb4d7f45d1cf-68d232dc704so7944943a12.0
-        for <kexec@lists.infradead.org>; Thu, 11 Jun 2026 02:30:30 -0700 (PDT)
+	Thu, 11 Jun 2026 09:30:48 +0000
+Received: by mail-ej1-x64a.google.com with SMTP id a640c23a62f3a-bdad545342aso1076916966b.0
+        for <kexec@lists.infradead.org>; Thu, 11 Jun 2026 02:30:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781170229; x=1781775029; darn=lists.infradead.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MaX7x21+nHDjl6ZC8E7UHL0betYQU1IeZDqIxfjL42A=;
-        b=q6gQsndeWrx62stxT598/ezxzNn6OYxY7gZhfDo7WC3Kh7q/59faI/wCNyrs4TOyE/
-         oR/HzDllBUId/PRyg5qXTWVa/YrCPVE78QTdlkkgDfU/zKWu+oXJnAsDTOxbgNd3w+Ao
-         mcovXPT5KQvJf9Sg2mHwwA51K/d+TwXOAUbEjbVsgLpoP113YT65u1yLckQ5dzyhUBS+
-         nFXPLaZPl0PlMHi7+muPhUckzPZp2SGsPMCmsNwKOfnae3v9RqR6arFeHF4Y75ZXOZNz
-         m3VB7mIoCSAEtS7qK79DuqxHnDF6/Tfkd9KQxD0bDtAO3xvFYVoBs0o/LJTikTlZJRdj
-         Ce4w==
+        d=google.com; s=20251104; t=1781170245; x=1781775045; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jad+ABumvty4Afl/cOu2u5kAzyK5CuVnZh2s0pggACY=;
+        b=HLVCqLfZrPMN1AXhS/5tn6ABqB30xscPtCUR+fQ1xXrgYsnyOJEWVJ3xkc0LCfEQKd
+         RRDsgdb0M+JsKPi8W3gzwtNn/kEWXLfdOaU5pzwPur6C6nEMWzesuHZkSs8qaUdRo/55
+         eLXFl1NKZnR7gvAYVZArJsUw3kUm8rHm6d2bxV6rhaYgUVzSIGFMtJ9cMVRRbAXvKhs5
+         nOdaC6kcTCdCdOe4JwxvkKHIC3EA4Mz65FnrkF1Hh+smFjmyDcc4e0zoN5G2pCB/YS5l
+         l6hT8odsRcInlExq//xS1gQuanMhx7ZyxIKJUsC1vB0v2Id5VYUn3JWl0yPGr4lPGahU
+         K2wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781170229; x=1781775029;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MaX7x21+nHDjl6ZC8E7UHL0betYQU1IeZDqIxfjL42A=;
-        b=Kt3BP5vf37dJwpQUgC9Pxqu5ixR6Djk5anBCc4E0lyj/b1t1GIncfjFKEK4Z7iWcB3
-         XYOJurBPsa5jDot0xlAB750jqQHS9qJM75h0Xf4gkihl/30jNGJfefhumQlX4v7QdFJz
-         SpL+ho20DT8KG+6NB8QfOkhcrA6VHfcwCAIWFJnHkrKKEs9RT6Xm6Y2XJmnV0wYPLen7
-         WRFK9ZCfdG6Q/0o1+hUwNW0++k3O2HxiF690g2/imMZmuTGk3OiqG7Xugwp9kITh7u8f
-         +eajjQ77sgfuug09K/d7smeF54bC2ihzOxZCmxv4SbP6d5oDsFLWA8wz8zl4aSYpCcDd
-         6bmw==
-X-Forwarded-Encrypted: i=1; AFNElJ8wQn6K0V+Z15mcaHkDBwUXOjsL8wMBdMaLv61dZroWZZlOvJUx2lbV95WX7sV2bdSY3sTr2Q==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yw0UwYSzMkhHHjo2wVaYUMOhT/v6B12jnz3BtZyDwXLPgM1kxHz
-	RpmGwrz029CWDnFyPu+ybYMdBupegb1DQo1hp16Bs1uNJsEXiCTOCpxU5sR42Lzlvv/oVscUWO9
-	lTludgh4JCce0JiHC9Q==
-X-Received: from edvi16.prod.google.com ([2002:aa7:dd10:0:b0:68d:63b5:c714])
+        d=1e100.net; s=20251104; t=1781170245; x=1781775045;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jad+ABumvty4Afl/cOu2u5kAzyK5CuVnZh2s0pggACY=;
+        b=k8RR7lM+EfkhmfxV4ic8E4QphcdigBB+QIxebDfcs/QVWqWDDPCWvQ0P+9VPhD/yqu
+         z1K516z85/0phabfkRcdNasBQKZkw9f90ZiUfK2xZ6rdiTLq8HazBHjpnYd7zGxp1mlY
+         wNug+0dqn9X467z4r0uLQzxvYv+Y1yA9CKlzF1Cp+uVQnrkqnUC5k+N8UT76aAoHrzvk
+         rXxFR3u/YNJJeOIFD98tEyn9D+i4lNHZs/yS8AnMGHu4lS5K8ncOPuyOPqcwgCmK+NfK
+         xj+3Z+rdC1al0knOurgIUacwVPaJxHHWogEmDBf/a1QKyu12g2L5F5lxhrGMZoHyxLrC
+         f7gg==
+X-Forwarded-Encrypted: i=1; AFNElJ/HcH1GF22rUfEBdYeuOJLMGxT0VjQprLz11zAlvxSjircP9ibffzKqDspYPA7XyifRTI5WRQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzxtzIl7bhOCgXWp+JHkUX5NQwZ0c7vlp/cB5KnkccGnrFnrHTv
+	7TshiGvGK5q1Wit+LrHJFpRPOBSiQP5C/yVX8NmSIYplYrrD5gxbelMMra7Hd+9g8LoJ6A5iDUy
+	DfplvtMqN2LI+OEgrWA==
+X-Received: from edwt4.prod.google.com ([2002:a05:6402:3c4:b0:677:1dc7:ad3])
  (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:e0e:b0:68c:dbd5:a6ee with SMTP id 4fb4d7f45d1cf-6930e2e93c4mr874570a12.25.1781170228404;
- Thu, 11 Jun 2026 02:30:28 -0700 (PDT)
-Date: Thu, 11 Jun 2026 09:30:27 +0000
-In-Reply-To: <2vxzfr2vso9b.fsf@kernel.org>
+ 2002:a05:6402:4307:b0:691:b5aa:5a5c with SMTP id 4fb4d7f45d1cf-6930e2d10d3mr927852a12.20.1781170244568;
+ Thu, 11 Jun 2026 02:30:44 -0700 (PDT)
+Date: Thu, 11 Jun 2026 09:30:40 +0000
 Mime-Version: 1.0
-References: <074445fc4964961f12171ea129f2a7690322a78a.1780944056.git.tarunsahu@google.com>
- <2vxzfr2vso9b.fsf@kernel.org>
-Message-ID: <9huz1pedv2z0.fsf@tarunix.c.googlers.com>
-Subject: Re: [PATCH] liveupdate: Document that retrieve failure is permanent
-From: tarunsahu@google.com
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pratyush Yadav <pratyush@kernel.org>, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, vipinsh@google.com
+X-Mailer: git-send-email 2.54.0.1099.g489fc7bff1-goog
+Message-ID: <faec5df2a3e90240cde5897bae2250cd7d44aeac.1781170056.git.tarunsahu@google.com>
+Subject: [PATCH v2] liveupdate: Document that retrieve failure is permanent
+From: Tarun Sahu <tarunsahu@google.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>, 
+	Pratyush Yadav <pratyush@kernel.org>
+Cc: linux-kernel@vger.kernel.org, vipinsh@google.com, 
+	kexec@lists.infradead.org, Tarun Sahu <tarunsahu@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260611_023031_007991_5E9FA1B0 
-X-CRM114-Status: GOOD (  15.52  )
+X-CRM114-CacheID: sfid-20260611_023047_346526_91E71AFF 
+X-CRM114-Status: UNSURE (   9.71  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,44 +88,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Pratyush Yadav <pratyush@kernel.org> writes:
+Signed-off-by: Tarun Sahu <tarunsahu@google.com>
+---
+ include/uapi/linux/liveupdate.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> On Mon, Jun 08 2026, Tarun Sahu wrote:
->
->> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
->> ---
->>  include/uapi/linux/liveupdate.h | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveupdate.h
->> index 30bc66ee9436..a564d2bd05c1 100644
->> --- a/include/uapi/linux/liveupdate.h
->> +++ b/include/uapi/linux/liveupdate.h
->> @@ -168,7 +168,8 @@ struct liveupdate_session_preserve_fd {
->>   * associated with the token and populates the @fd field with a new file
->>   * descriptor referencing the restored resource in the current (new) kernel.
->>   * This operation must be performed *before* signaling completion via
->> - * %LIVEUPDATE_IOCTL_FINISH.
->> + * %LIVEUPDATE_IOCTL_FINISH. Once retrieve call is failed, retrieve status
->> + * is saved. So it is permanent failure and retry is pointless.
->
-> Perhaps the wording below is slightly better from a user perspective?
->
->     If a retrieve of a token fails, subsequent attempts to retrieve the
->     token fail with the same error code. Failed retrieves are not
->     retried.
+diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveupdate.h
+index 30bc66ee9436..d06aa24350b5 100644
+--- a/include/uapi/linux/liveupdate.h
++++ b/include/uapi/linux/liveupdate.h
+@@ -168,7 +168,9 @@ struct liveupdate_session_preserve_fd {
+  * associated with the token and populates the @fd field with a new file
+  * descriptor referencing the restored resource in the current (new) kernel.
+  * This operation must be performed *before* signaling completion via
+- * %LIVEUPDATE_IOCTL_FINISH.
++ * %LIVEUPDATE_IOCTL_FINISH. If a retrieve of a token fails, subsequent
++ * attempts to retrieve the token fail with the same error code. Failed
++ * retrieves are not retried.
+  *
+  * Return: 0 on success, negative error code on failure (e.g., invalid token).
+  */
 
-Updated!
+base-commit: 2d3090a8aeb596a26935db0955d46c9a5db5c6ce
+-- 
+2.54.0.1099.g489fc7bff1-goog
 
->
->>   *
->>   * Return: 0 on success, negative error code on failure (e.g., invalid token).
->>   */
->>
->> base-commit: 2d3090a8aeb596a26935db0955d46c9a5db5c6ce
->> prerequisite-patch-id: 30753743cdfab5c3c5355ecde725b6648f1b7a17
->
-> -- 
-> Regards,
-> Pratyush Yadav
 
