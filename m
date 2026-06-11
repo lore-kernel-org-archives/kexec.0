@@ -4,101 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00CAECD98C7
-	for <kexec@archiver.kernel.org>; Wed, 10 Jun 2026 23:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1639DCD98C5
+	for <kexec@archiver.kernel.org>; Thu, 11 Jun 2026 01:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6U/8h58hOQ0KU4AswNbQiD48SWNA4TQRDe0FWqtz3Wk=; b=NOjcYKcZ9qil7XSzU+iiDlC7MI
-	MK4/ZKVZKV7loig2ietF/NtRd9yX4Q6kuoG4VhXJij1HxzvZLKkczDuBLwfnb2OsoT5W5PsWfcWzI
-	UdDV5ZaDyJFSDE0Zrb83UlIH1UUAmDSdTetgr+jGKp7V7dRrYEtrMromO2dBS67I+KE9+OJoesoqu
-	6V8XGPJMZ3qAkj+Fy0HQUvDSxclJPdr+GTVuowGGsUkvzrEsYKbRq6ja+n0EstpKbfzNqGXN3rVlH
-	Ru68yOUFyiNLHof08Bi+Ixg09aAYtrrPV+nJ0uOyUbs9pBmRp04mz1bDZOUd2J48pvcBODLB8ZO7T
-	TVfOv5jw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=j5RaIGEaG96nSykq283O4N7mLcySz+gP7SKsno6HMF8=; b=YF+qRMA+12am2el2hGv0ozvz2b
+	62olZgawdgk2SYCY5TXSakYhRP4Tw/nFGetIYEqo43BmAJuptmubrBUPTDTD5NgOsVYQ5xEcFi0k2
+	FTXP/akDzpO4QGXAQUDy03tQagu+zJh64MAMNndPvre+H20wJuiF8HYRqvnQrqKMRaEzXSRUYUNfX
+	2kZrEa+OWdkINxwopFf3nE4Cpt3mVmVqe+ZksZpBbcT6/COrHJTC6UqzEOwvoH7jkdlKMlIQVIPbW
+	TUqqDVwkuYReNgaJf5trH+ITUiJJ4C+LSP4H4WbE22/Z84TdbuYnRAF9JkSJE5Cm60Q/ciXWCzINQ
+	qLFiXZow==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wXSjc-00000008TYO-44Yu;
-	Wed, 10 Jun 2026 23:53:24 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1wXUAp-00000008Wbo-2GVJ;
+	Thu, 11 Jun 2026 01:25:35 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wXSjZ-00000008TXe-0e6S
+	id 1wXUAl-00000008WbS-3i86
 	for kexec@lists.infradead.org;
-	Wed, 10 Jun 2026 23:53:23 +0000
+	Thu, 11 Jun 2026 01:25:33 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1781135598;
+	s=mimecast20190719; t=1781141130;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6U/8h58hOQ0KU4AswNbQiD48SWNA4TQRDe0FWqtz3Wk=;
-	b=I9nH5+bSYpNfogoN30fhVGinfrhYXv6czJTv0h0iFiXPNdt8XttzeDmB7vW0BBUEmiduI9
-	3p5xarDB5EfrUP0tNfKMdLzIqhcwSZaPdlXXIyz29uKNjcMGxOgHcnruT6aDyJCtQLjd+h
-	lCp3BqyupvCg8MV5c28MOQuQp5fhJek=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=j5RaIGEaG96nSykq283O4N7mLcySz+gP7SKsno6HMF8=;
+	b=Nd9mglK3nkqYLTISOMSoAGLJy6A8cTEumYBQoQQ8M/8hM0qEbtsILIzUCRvrv8VTwi0yQN
+	52nGscghHW0LVomyEsDOMLt+gB1E9IAbFCu1qrsY0vwRjslk8IChxbfEBflKischtbGSd9
+	C+pvCsYT/GTL9yUO+6NjvOE5V95gSrk=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-387-mLg88_6NMjm_WSeMMlqBjg-1; Wed, 10 Jun 2026 19:53:14 -0400
-X-MC-Unique: mLg88_6NMjm_WSeMMlqBjg-1
-X-Mimecast-MFC-AGG-ID: mLg88_6NMjm_WSeMMlqBjg_1781135594
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-36d98b5a68fso12518911a91.2
-        for <kexec@lists.infradead.org>; Wed, 10 Jun 2026 16:53:14 -0700 (PDT)
+ us-mta-624-NtOpQSRgPG60_mdt_iwRIQ-1; Wed, 10 Jun 2026 21:25:29 -0400
+X-MC-Unique: NtOpQSRgPG60_mdt_iwRIQ-1
+X-Mimecast-MFC-AGG-ID: NtOpQSRgPG60_mdt_iwRIQ_1781141128
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-8ccd83d58d9so121265966d6.0
+        for <kexec@lists.infradead.org>; Wed, 10 Jun 2026 18:25:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781135593; x=1781740393;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+        d=1e100.net; s=20251104; t=1781141128; x=1781745928;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=6U/8h58hOQ0KU4AswNbQiD48SWNA4TQRDe0FWqtz3Wk=;
-        b=EgsnTqVOoiJvlFfnvWBCj8+lT5me8eG7++Nxhg6mDKOcwCmBnCHK7pe6M2PLd9Lxxd
-         UylmFra5Gt/M1pwcRd2qUVLgNCzpN9ap6fU6oPrHwHaS1W9m6FLCadCAIBxuM+WRCefO
-         kfHUi2FX8TuPrKRhfcjX4KZQ6RXnOfN2+vGNjyWq5GNumOjlmxwuZmzps9D0V4+lrK4d
-         KmU+mxg80wR5X+mTM5Qi0YMZ9evEV0bI3eNo961eY6ZiDyyR/chH9MzSf5wqMeDRr3EZ
-         RMBNmnbqjxSI00ZO/+wmg7nQu6VVZ2y/hdmRFHa43nsatpHrGzO+YZvkCUPqjkeCl+vO
-         Ixrg==
-X-Forwarded-Encrypted: i=1; AFNElJ9mw4zyWEqg2LMTR+7X2OAZkv1OlRaGPh2PWj4P4NP1/aoZzlMXYOaqvEIhFO09Llw5wCTriA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yzkx7LqgofPTagIgklQahkODTWAOaEH8fEMVv4Bi99VH55gkGZC
-	0PNb+B8suSkoYR3B7g7UXoUronSJJBO6VqhT+w3v2ghywJ0Y3b+yS3uaDPiLFcLFsoAneade9sK
-	W2fJItsmmBeME4Z3Knc7i0Or1sGTn9Gs2jVEZv4nGvPuDHFdL+aZEW8weixHTgw==
-X-Gm-Gg: Acq92OHMtzg9wqZ22JczqBTVv/ZOKYpAQgvxGU+jW5wGCf69bRfalxuhOs5+GpAXPFD
-	pI5pGEyheaHvzMODZINXbZWRYJsnf6ayEVyVTElxDR6tNrOgXIs+vDcJXfGr07pBxmwR98Tl95l
-	BcrafqE44arqcYNTLSjOsJKK5xt9lP1IwmC59hucaK932B/RF1b8XnoEJE+34NAIHRjTmZ8Ld2k
-	ke8MZ19Hy9jVpl4moNptXHyf2Vbphm2Ofu2rNC1D11puzkzUyH1tpRIRa3jW/bkUjScy3dNxKWi
-	HX64MmJIFbGCaRvOZD+rSk9OUP3tY4fptlNS8yt6FnqkRQPklbmm8buKxULOJbqwkJpSqIxM8zf
-	SMvzp4l/IOcM1Ftb7Q/TwNFWZldOQIikdMvHZ8u+bq9jfRW2zk53S8VGytXU2EKUgj0dEA4daew
-	==
-X-Received: by 2002:a17:90b:48cd:b0:36b:b3f4:d578 with SMTP id 98e67ed59e1d1-377a73e273dmr444887a91.15.1781135593535;
-        Wed, 10 Jun 2026 16:53:13 -0700 (PDT)
-X-Received: by 2002:a17:90b:48cd:b0:36b:b3f4:d578 with SMTP id 98e67ed59e1d1-377a73e273dmr444868a91.15.1781135593111;
-        Wed, 10 Jun 2026 16:53:13 -0700 (PDT)
-Received: from localhost.localdomain (122-63-81-176.mobile.spark.co.nz. [122.63.81.176])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84282915fe8sm25978204b3a.54.2026.06.10.16.53.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 16:53:12 -0700 (PDT)
-From: Tao Liu <ltao@redhat.com>
-To: yamazaki-msmt@nec.com,
-	k-hagio-ab@nec.com,
-	kexec@lists.infradead.org
-Cc: aravinda@linux.vnet.ibm.com,
-	stephen.s.brennan@oracle.com,
-	kjlx@templeofstupid.com,
-	Tao Liu <ltao@redhat.com>
-Subject: [PATCH] Add erase_sample extension as an data erase reference
-Date: Thu, 11 Jun 2026 11:42:50 +1200
-Message-ID: <20260610234249.10993-2-ltao@redhat.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20260414102656.55200-1-ltao@redhat.com>
-References: <20260414102656.55200-1-ltao@redhat.com>
+        bh=j5RaIGEaG96nSykq283O4N7mLcySz+gP7SKsno6HMF8=;
+        b=PnHCIybK+TzPmv9Cln9u9o/JIAXeToYbM2aI/4KjupR1zA/gC44x92uKf505H5cXGa
+         sjlMh2IWYsCGrwdEEliOFUqxhGuogT8smiR+m6SbT922Yq76p+QNMY3D2e5tE7RzMGND
+         jqpvxrfAGLWtVnbVfXttVl6TXhp11br06KRuT25Nf/4R+4R1/QiskGtnfYaBx+D+hwSp
+         n6wLTnNDG5hR6n22+5TswDMD3sBGQH9B0xhJaUI1Qlwk0XqmIbWw+Iq/Nrz/QN0J7l9D
+         /J7OWYdAVxWwbXOThxLzTV6rPcxcnXERH9mWH5LDaS3VkUdWF8QPCEPQmLKHUrAysi0e
+         dkxw==
+X-Forwarded-Encrypted: i=1; AFNElJ96Lvf+cqwKtosueUh5fcFGPBwTdL8RFjnqurabqHxnQn9EeTDxLfcwMybWJuXWffoUq35M9g==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yy+wKRjxYJTYUwJbPqUoNDVnETd/p3rRI54ilGYIITdMxlVFl9L
+	c9YQcwpvy1/doH/auFKg4PkKreohpPBgxA6OzbCsAK491y7g0i+nMgwimAoljmmPcUZ4IWnUgPl
+	LJhtlkI97CahO+NK0a00TG7FR1XcsILs5L0DFWT4IKErYGuuP/8OAPp70LERzBnyhWlLfhHPF/o
+	KJ/qE0d8wQyKvEqVl5xjCgKOGx86tQz/NlxMuT
+X-Gm-Gg: Acq92OEk7Ly0JT4GoETsZoyctrjhbup7v47oAh27aZffQJmuDe9iZuyxySgtiyx2X5S
+	jwjxAKiu1KiiOmX/aaXZlGq/m10W36Hp/C2dH7KL7wRXJnhaAiV6e/sSFB/xwwhSpxdEOsrmjBe
+	xn3EViG52QdqWs9gNAQaHaVzOcoBjmepNwCF59O1nnsQiUjicRkmTAVcQqOUF8TBSXyGDXvOHC+
+	ksoDEvomItWcQOc
+X-Received: by 2002:a05:622a:903:b0:517:6d82:9aec with SMTP id d75a77b69052e-517ed686b2dmr14980841cf.0.1781141128245;
+        Wed, 10 Jun 2026 18:25:28 -0700 (PDT)
+X-Received: by 2002:a05:622a:903:b0:517:6d82:9aec with SMTP id
+ d75a77b69052e-517ed686b2dmr14980351cf.0.1781141127666; Wed, 10 Jun 2026
+ 18:25:27 -0700 (PDT)
 MIME-Version: 1.0
+References: <20260414102656.55200-1-ltao@redhat.com> <ahoA_5MfC7FuC8CQ@templeofstupid.com>
+ <CAO7dBbWOgztZPrazUGN6q+L_62ipywj4Myurcd4R4q95J0_XMw@mail.gmail.com>
+ <ah4oINLOlhxpQuFR@templeofstupid.com> <CAO7dBbWZ8V_33MnXfgd_DfAwOVEBYtjwwm2DQxy8OrbipYBuBQ@mail.gmail.com>
+ <ah5gyh2RfLg-JzDF@templeofstupid.com>
+In-Reply-To: <ah5gyh2RfLg-JzDF@templeofstupid.com>
+From: Tao Liu <ltao@redhat.com>
+Date: Thu, 11 Jun 2026 13:24:50 +1200
+X-Gm-Features: AVVi8Cc6vlbUeIDa7V2q4yL-Ed8z-pjXy49SCjL2tLYz9Svk3qgQoO7d6KamRHQ
+Message-ID: <CAO7dBbVqBKmCzAXrRLvEOJg_+VjZOXxLkjfVkVHE0Emg976wew@mail.gmail.com>
+Subject: Re: [PATCH v5][makedumpfile 0/9] btf/kallsyms based makedumpfile
+ extension for mm page filtering
+To: Krister Johansen <kjlx@templeofstupid.com>
+Cc: yamazaki-msmt@nec.com, k-hagio-ab@nec.com, kexec@lists.infradead.org, 
+	aravinda@linux.vnet.ibm.com, stephen.s.brennan@oracle.com
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: WP_4p712INh0XjKq811wKIktl4S1SuiunuRtMqvGgSo_1781135594
+X-Mimecast-MFC-PROC-ID: 4csBfc3ciiupwh_HahNtylPDctl42yAAfRjdeZhl8Fw_1781141128
 X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260610_165321_270858_F9A2D80B 
-X-CRM114-Status: GOOD (  17.55  )
+X-CRM114-CacheID: sfid-20260610_182532_030215_2DB1C713 
+X-CRM114-Status: GOOD (  60.83  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,136 +108,174 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This patch will add a erase_sample.c as a data erase reference. It will
-erase all tasks & threads's comm[] member within their task_struct, as
-a result, you will see the ps info outputted by crash utility similiar
-as follows:
+Hi Krister,
 
- crash> ps
-  ...
-  1       0  10  ffff96b7c0980000  IN   0.0    25504    15704  XXXXXXXXXXXXXXX
-  2       0  15  ffff96b7c0982f40  IN   0.0        0        0  [XXXXXXXXXXXXXXX]
-  3       2   2  ffff96b7c09a0000  IN   0.0        0        0  [XXXXXXXXXXXXXXX]
-  4       2   0  ffff96b7c09a2f40  ID   0.0        0        0  [XXXXXXXXXXXXXXX]
-  5       2   0  ffff96b7c09a8000  ID   0.0        0        0  [XXXXXXXXXXXXXXX]
+I took some time to think about the data erase functions as we
+discussed previously, and I have implemented one sample data eraser
+based on the current v5 extension framework in [1]. According to my
+test, this works well and has no conflict with the mm page filtering
+extensions. With this, people can do data erasure as well as page
+filtering in both 1st/2nd kernel as long as btf/kallsyms info is
+accessiable.
 
-The comm[] erasure doesn't cause critical info loss and has slight
-impact on vmcore analyze, so it is safe to take it as an example for
-developers.
+As for btf/kallsyms support for makedumpfile.conf based erasure, I
+forgot to mention there is one critical info missing compare with "-x
+vmlinux" dwarfinfo, is the type of global variables, please see the
+patch [2]. As far as I know, currently kernel hasn't enabled the btf's
+ability of including global variable's types. E.g. symbol "init_task",
+we can only know its address by lookup kallsyms, but btf have no
+record if its type, because it is a global variable. If we create
+makedumpfile.conf as follows:
 
-Signed-off-by: Tao Liu <ltao@redhat.com>
----
+[vmlinux]
+erase init_task
 
-Hi maintainers,
+It can work with no problem for "-x vmlinux" because dwarfinfo
+contains all info. But it will fail to btf/kallsyms, for btf doesn't
+know init_task's type is task_struct. However this is not a problem
+for makedumpfile extensions, because when programming, we can cast it
+as task_struct by "init_task =3D GET_KERN_SYM(init_task); task_list =3D
+init_task + KERN_MEMBER_OFF(task_struct, tasks); ...",  but we cannot
+do the same to makedumpfile.conf.
 
-This patch should be applied upon "[PATCH v5][makedumpfile 9/9] Add amdgpu mm
-pages filtering extension". Since this patch doesn't do 
-modifications on any previous patches, and you are reviewing v5, so I
-post appended to v5. If this causes any confusing, I'm happy to post a
-v6 with a cleaner format. Thanks!
+In summary, if we still want to use makedumpfile.conf for data
+erasure, "-x vmlinux"'s dwarfinfo is unavoidable for now.
 
----
- extensions/Makefile       |  2 +-
- extensions/erase_sample.c | 78 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 79 insertions(+), 1 deletion(-)
- create mode 100644 extensions/erase_sample.c
+Thanks,
+Tao Liu
 
-diff --git a/extensions/Makefile b/extensions/Makefile
-index c1dbc4f..9dd4f8e 100644
---- a/extensions/Makefile
-+++ b/extensions/Makefile
-@@ -1,5 +1,5 @@
- CC ?= gcc
--CONTRIB_SO := sample.so amdgpu_filter.so
-+CONTRIB_SO := sample.so erase_sample.so amdgpu_filter.so
- 
- all: $(CONTRIB_SO)
- 
-diff --git a/extensions/erase_sample.c b/extensions/erase_sample.c
-new file mode 100644
-index 0000000..7c935d1
---- /dev/null
-+++ b/extensions/erase_sample.c
-@@ -0,0 +1,78 @@
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include "../makedumpfile.h"
-+#include "../btf_info.h"
-+#include "../kallsyms.h"
-+#include "../extension.h"
-+#include "../erase_info.h"
-+
-+INIT_MOD_STRUCT_MEMBER(vmlinux, task_struct, tasks);
-+INIT_MOD_STRUCT_MEMBER(vmlinux, task_struct, thread_node);
-+INIT_MOD_STRUCT_MEMBER(vmlinux, task_struct, signal);
-+INIT_MOD_STRUCT_MEMBER(vmlinux, signal_struct, thread_head);
-+INIT_MOD_STRUCT_MEMBER(vmlinux, task_struct, comm);
-+INIT_MOD_SYM(vmlinux, init_task);
-+
-+#define MOD_MEMBER_OFF(MOD, S, M) \
-+	GET_MOD_STRUCT_MEMBER_MOFF(MOD, S, M) / 8
-+#define KERN_MEMBER_OFF(S, M) MOD_MEMBER_OFF(vmlinux, S, M)
-+#define GET_KERN_STRUCT_MEMBER_MSIZE(S, M) \
-+	GET_MOD_STRUCT_MEMBER_MSIZE(vmlinux, S, M)
-+#define GET_KERN_SYM(SYM) GET_MOD_SYM(vmlinux, SYM)
-+
-+/* task_struct.comm eraser */
-+static bool erase_task_struct_comm(void)
-+{
-+	uint64_t task_list, init_task, comm, signal, thread_head, thread_list;
-+	uint32_t size;
-+
-+	init_task = GET_KERN_SYM(init_task);
-+	size = GET_KERN_STRUCT_MEMBER_MSIZE(task_struct, comm);
-+	task_list = init_task + KERN_MEMBER_OFF(task_struct, tasks);
-+
-+	/* Iterate all tasks */
-+	do {
-+		thread_list = task_list - KERN_MEMBER_OFF(task_struct, tasks) +
-+			KERN_MEMBER_OFF(task_struct, thread_node);
-+		if (!readmem(VADDR, task_list - KERN_MEMBER_OFF(task_struct, tasks) +
-+			KERN_MEMBER_OFF(task_struct, signal), &signal, sizeof(uint64_t))) {
-+			ERRMSG("Can't get task_struct member signal!\n");
-+			goto out;
-+		}
-+		thread_head = signal + KERN_MEMBER_OFF(signal_struct, thread_head);
-+
-+		/* Iterate all threads of the task */
-+		do {
-+			comm = thread_list - KERN_MEMBER_OFF(task_struct, thread_node) +
-+				KERN_MEMBER_OFF(task_struct, comm);
-+
-+			if (!update_filter_info_raw(comm, 'X', size)) {
-+				ERRMSG("Failed update filter info!\n");
-+				goto out;
-+			}
-+
-+			thread_list = next_list(thread_list);
-+		} while (thread_list != thread_head);
-+
-+		task_list = next_list(task_list);
-+	} while (task_list != init_task + KERN_MEMBER_OFF(task_struct, tasks));
-+
-+	return true;
-+out:
-+	return false;
-+}
-+
-+void extension_init(void)
-+{
-+	if (!erase_task_struct_comm()) {
-+		ERRMSG("erase_sample.so: erase fail!\n");
-+		goto out;
-+	}
-+	MSG("erase_sample.so: erase success!\n");
-+out:
-+	return;
-+}
-+
-+__attribute__((destructor))
-+void extension_cleanup(void) { }
-+
--- 
-2.47.0
+[1]: https://lore.kernel.org/kexec/20260610234249.10993-2-ltao@redhat.com/
+[2]: https://lore.kernel.org/all/20250207012045.2129841-3-stephen.s.brennan=
+@oracle.com/
+
+On Tue, Jun 2, 2026 at 4:49=E2=80=AFPM Krister Johansen <kjlx@templeofstupi=
+d.com> wrote:
+>
+> Hi Tao,
+>
+> On Tue, Jun 02, 2026 at 03:04:12PM +1200, Tao Liu wrote:
+> > On Tue, Jun 2, 2026 at 12:47=E2=80=AFPM Krister Johansen
+> > <kjlx@templeofstupid.com> wrote:
+> > Thanks for your in-depth explanation, it's very helpful to me for
+> > designing the data erasing function.
+>
+> Thanks for the great discussion.
+>
+> > > On Tue, Jun 02, 2026 at 11:12:05AM +1200, Tao Liu wrote:
+> > > > On Sat, May 30, 2026 at 9:11=E2=80=AFAM Krister Johansen
+> > > I wondered about this, but for data-structures that are smaller than =
+a
+> > > page, wouldn't that mean that we're erasing other content?  The "eras=
+e"
+> > > plugins memset the output data to a chosen value (or 0), whereas the
+> > > filtering just drops the page.  Couldn't this also lead to a situatio=
+n
+> > > where the debugger can't find the page at all, versus giving us one
+> > > that's sanitized?  (I do understand why you want to drop the pages fo=
+r
+> > > the GPU cases)
+> >
+> > Frankly I didn't consider the data erasing as in-depth as you did. I
+> > think you are right, makedumpfile needs to know which extensions
+> > handle data erasing and which handle mm page filtering. I guess the mm
+> > page filtering extensions will need to perform a "dry-run" filter
+> > first, in case the "data erasing" extensions break any useful data
+> > structure. In this step, "dry-run" will only record pfn numbers of the
+> > pages that will be filtered. Then "data erasing" extensions are
+> > called, so all the sensitive data is memset to 0. Finally, all desired
+> > pages are filtered out based on the previous recording.
+> >
+> > With this, "data erase" and "page filtering" will not interfere with
+> > each other. What do you think?
+>
+> This is a great point.  It's probably worth documenting the precedence
+> order in which these callbacks are expected to be applied.  Naively, I
+> might expect filtering pages to take precedence over erasing data
+> structures.  For the GPU cases, these are orthogonal.  However, for
+> something where a user might be both trying to filter the page and erase
+> matching content, we don't have any rules defined.  It's probably less
+> surprising to allow pages to be filtered first.  (I think it is this way
+> in the code.) It also prevents the page filtering from completely
+> filtering a page.
+>
+> > > > > Would you be willing to modify the extension registration options=
+ to
+> > > > > allow an extension to specify what kind it is? That way, in the f=
+uture
+> > > >
+> > > > I'm not sure what you mean by "what kind". Do you mean an extension
+> > > > needs to tell makedumpfile what purpose it is for when loading?
+> > >
+> > > Yes, sorry I wasn't clear in writing the question.  Stating this
+> > > differently, if we want to allow the ability for different extensions=
+ to
+> > > do different things, how do the extensions declare to makedumpfile wh=
+at
+> > > they can do, so that it knows where to invoke their callbacks, and wh=
+at
+> > > callbacks of theirs to invoke.
+> > >
+> > > Looking at patch 6/9, right now run_extension_callback() is involved
+> > > from __exclude_unncessary_pages and always calls the
+> > > "extension_callback" symbol in the module.  This makes sense for a
+> > > single extension type that's focused on filtering pages.  However, if=
+ we
+> > > wanted to have multiple different extensions, this might be more
+> > > difficult.
+> > >
+> > > If we could determine what type of functionality the module implement=
+s
+> > > in load_extensions, then we could tell if this is a page filtering
+> > > extension, an erase extension, or some other kind of extension.
+> > >
+> > > For example, for an erase filter, perhaps we would want two callbacks=
+:
+> > > one to set up the ranges to filter "extension_gather_callback" and
+> > > another to actuallyf check the address range to see if it is filtered=
+,
+> > > "extension_filter_data_callback"
+> > >
+> > > I'm not sure about the names.  "extension_callback" seems generic, bu=
+t
+> > > this has a specific purpose.  It's a "extension_filter_page_callback"
+> > >
+> > > I may be overengineering this a bit, but having makedumpfile pass an =
+ops
+> > > vector to the extension in a load function could help here.  Then the
+> > > module's load function fills out the vector with the functions it
+> > > supports.  Depending on what's implemented, these can be placed into
+> > > different callback lists to get invoked at different points in the
+> > > program (e.g. one at pfn filter time, another in filter_data_buffer,
+> > > etc).
+> > >
+> > > It sounds like you had a plan here, though.  Were you thinking of add=
+ing
+> > > new extension types a different way?
+> >
+> > I see your idea: makedumpfile predefines a few hook points at
+> > different stages, and extensions can register their callbacks to these
+> > hook points. For now I think 2 hook points are enough, one for page
+> > filtering and other one for resiger the data erasing, which definitely
+> > shouldn't be within __exclude_unnecessary_pages().
+> >
+> > I'm willing to modify the code. Such as implementing a hooking point
+> > registration/management. But since I haven't work on the data erasing
+> > functions so far, the design might be superficial, personally I'd
+> > prefer to do this along with the data erasing functions in the next
+> > independent patchset, considering current patchset we already includes
+> > plenty of code/function implementations. @maintainers, What's your
+> > opinion?
+>
+> Just to clarify, I'm not asking that you implement any erase
+> functionality in the current patchset.  Rather, asking if there's a way
+> to implement the current functionality such that the extension modules
+> won't need recompilation when a new extension type is introduced. I
+> think there are a number of different ways to do this, but I didn't want
+> to be overly prescriptive in my feedback.
+>
+> Thanks again,
+>
+> -K
+>
 
 
