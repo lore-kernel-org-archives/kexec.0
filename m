@@ -4,56 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3D6BDCD98C7
-	for <kexec@archiver.kernel.org>; Thu, 11 Jun 2026 09:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AB733CD98D2
+	for <kexec@archiver.kernel.org>; Thu, 11 Jun 2026 09:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
-	MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:To:From:Reply-To:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bWzKKA513sGWS7gystdQPOj/dPx2tvXmn4sVux70dh4=; b=mZuzG9xWD/9blixPG5CcCZ4QhI
-	FMphFbAK0Qi/6nluc7mm6AAdtqYEVRy9/QWLzJWvhnQD+7LTYea7IZVhc7Rr30W+BV4/r5lQ/wfxn
-	pQ0Gy2zQTd3PLE2TO5mfjF8fvxGHXKwKJtXK2cYdKNGmb6IuI3d3jn0dUh0I5HRRMpzstSg+Vev5o
-	XVAH3oyUCuDi0s5ho0uQRBM/YPjRikYesOH5SnMeJ13LM+1S27rZ8Yn2kn8NjOIDiSnly42TCHfA5
-	2RcB96bRvoWTDoVk81vIp/iw8NyD/YczyAlwJ4TByEHsE4uzN2Mcue+tdlRt8m14YZZWvkqAgl1ox
-	RcNbZc/g==;
+	bh=MaX7x21+nHDjl6ZC8E7UHL0betYQU1IeZDqIxfjL42A=; b=4WY+1Nsai7dZK2Qh2WSS5gkIP0
+	L+Ay3UdfqEz/vhS8W8gutGy0kQGDOOrK/qhEQFfBpye8QxDHrKEK0BKmBXbp38dno+Ur4l1fuHYYC
+	luIsttiPzxvjnFGdnNURN5yyzD282B4hB7pwG5H8cQaVrx0hE/Da4BcTqrcYs+5a/BZ8AlpCHCfM6
+	zqZs3Qc23qSP7UHK1Az1G89LBbtfXlqic9TT5BQPDSeMTu08EvFuGJ1x8AsveyROgNI4tebVkRUrs
+	TDEwmSA76q/iCbGriHS6t0NfaSXiEukWIn1mMJD0e7qeGnLsTk7Ry07gQNisFBPOIwDp6yi5Yw6Hj
+	VYm92IDg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wXbYX-000000097EG-411w;
-	Thu, 11 Jun 2026 09:18:33 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wXbk9-0000000981L-1tqw;
+	Thu, 11 Jun 2026 09:30:33 +0000
+Received: from mail-ed1-x54a.google.com ([2a00:1450:4864:20::54a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wXbYW-000000097E4-1U8h
+	id 1wXbk6-0000000980F-42mA
 	for kexec@lists.infradead.org;
-	Thu, 11 Jun 2026 09:18:32 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id B2AE460052;
-	Thu, 11 Jun 2026 09:18:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCCF21F00893;
-	Thu, 11 Jun 2026 09:18:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781169511;
-	bh=bWzKKA513sGWS7gystdQPOj/dPx2tvXmn4sVux70dh4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=lU5HDb6KEPuf+i5iweN+1uq4PzaRUar82asCxKXNZoZVLuD2maPIYQxVhbxLTYYs8
-	 TfLn48EvXODOG+vZdJc1UAJISJo9ScuculIfqLv0Y6PrDKIndAGPztAdMiQg5NUt+w
-	 EaYzx2iODXJ3g034ttKNtUeSK6GMXCG8yKMc8TRvGI7EOlJpkJv/1UZMsQ7vep4uI7
-	 QRxvwrKlZDh2TJ84kJg1bcU1V1bvKYSx8qRebPQXgwBny9KmtQSWc7NmssGQ4Bv5yd
-	 nkyRHgHQYq303ENlT3ZfbeKSt55TD2R1IfkiRgcqrMX0jRYHz04rS6sSiF3XXn82Gh
-	 bF403Ri4fxFRA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH v2] pstore: add a KHO backend
-In-Reply-To: <202606101331.BDB11F097@keescook> (Kees Cook's message of "Wed,
-	10 Jun 2026 13:34:10 -0700")
-References: <20260605121040.1177072-1-mclapinski@google.com>
-	<202606101331.BDB11F097@keescook>
-Date: Thu, 11 Jun 2026 11:18:28 +0200
-Message-ID: <2vxzzf11qvtn.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
-MIME-Version: 1.0
-Content-Type: text/plain
+	Thu, 11 Jun 2026 09:30:32 +0000
+Received: by mail-ed1-x54a.google.com with SMTP id 4fb4d7f45d1cf-68d232dc704so7944943a12.0
+        for <kexec@lists.infradead.org>; Thu, 11 Jun 2026 02:30:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1781170229; x=1781775029; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MaX7x21+nHDjl6ZC8E7UHL0betYQU1IeZDqIxfjL42A=;
+        b=q6gQsndeWrx62stxT598/ezxzNn6OYxY7gZhfDo7WC3Kh7q/59faI/wCNyrs4TOyE/
+         oR/HzDllBUId/PRyg5qXTWVa/YrCPVE78QTdlkkgDfU/zKWu+oXJnAsDTOxbgNd3w+Ao
+         mcovXPT5KQvJf9Sg2mHwwA51K/d+TwXOAUbEjbVsgLpoP113YT65u1yLckQ5dzyhUBS+
+         nFXPLaZPl0PlMHi7+muPhUckzPZp2SGsPMCmsNwKOfnae3v9RqR6arFeHF4Y75ZXOZNz
+         m3VB7mIoCSAEtS7qK79DuqxHnDF6/Tfkd9KQxD0bDtAO3xvFYVoBs0o/LJTikTlZJRdj
+         Ce4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781170229; x=1781775029;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MaX7x21+nHDjl6ZC8E7UHL0betYQU1IeZDqIxfjL42A=;
+        b=Kt3BP5vf37dJwpQUgC9Pxqu5ixR6Djk5anBCc4E0lyj/b1t1GIncfjFKEK4Z7iWcB3
+         XYOJurBPsa5jDot0xlAB750jqQHS9qJM75h0Xf4gkihl/30jNGJfefhumQlX4v7QdFJz
+         SpL+ho20DT8KG+6NB8QfOkhcrA6VHfcwCAIWFJnHkrKKEs9RT6Xm6Y2XJmnV0wYPLen7
+         WRFK9ZCfdG6Q/0o1+hUwNW0++k3O2HxiF690g2/imMZmuTGk3OiqG7Xugwp9kITh7u8f
+         +eajjQ77sgfuug09K/d7smeF54bC2ihzOxZCmxv4SbP6d5oDsFLWA8wz8zl4aSYpCcDd
+         6bmw==
+X-Forwarded-Encrypted: i=1; AFNElJ8wQn6K0V+Z15mcaHkDBwUXOjsL8wMBdMaLv61dZroWZZlOvJUx2lbV95WX7sV2bdSY3sTr2Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yw0UwYSzMkhHHjo2wVaYUMOhT/v6B12jnz3BtZyDwXLPgM1kxHz
+	RpmGwrz029CWDnFyPu+ybYMdBupegb1DQo1hp16Bs1uNJsEXiCTOCpxU5sR42Lzlvv/oVscUWO9
+	lTludgh4JCce0JiHC9Q==
+X-Received: from edvi16.prod.google.com ([2002:aa7:dd10:0:b0:68d:63b5:c714])
+ (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6402:e0e:b0:68c:dbd5:a6ee with SMTP id 4fb4d7f45d1cf-6930e2e93c4mr874570a12.25.1781170228404;
+ Thu, 11 Jun 2026 02:30:28 -0700 (PDT)
+Date: Thu, 11 Jun 2026 09:30:27 +0000
+In-Reply-To: <2vxzfr2vso9b.fsf@kernel.org>
+Mime-Version: 1.0
+References: <074445fc4964961f12171ea129f2a7690322a78a.1780944056.git.tarunsahu@google.com>
+ <2vxzfr2vso9b.fsf@kernel.org>
+Message-ID: <9huz1pedv2z0.fsf@tarunix.c.googlers.com>
+Subject: Re: [PATCH] liveupdate: Document that retrieve failure is permanent
+From: tarunsahu@google.com
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>, 
+	Pratyush Yadav <pratyush@kernel.org>, linux-kernel@vger.kernel.org, 
+	kexec@lists.infradead.org, vipinsh@google.com
+Content-Type: text/plain; charset="UTF-8"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260611_023031_007991_5E9FA1B0 
+X-CRM114-Status: GOOD (  15.52  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -65,67 +86,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: Tony Luck <tony.luck@intel.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, Michal Clapinski <mclapinski@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>, Pratyush Yadav <pratyush@kernel.org>, Mike Rapoport <rppt@kernel.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jun 10 2026, Kees Cook wrote:
+Pratyush Yadav <pratyush@kernel.org> writes:
 
-> On Fri, Jun 05, 2026 at 02:10:40PM +0200, Michal Clapinski wrote:
->> Up to this point to preserve late shutdown logs in memory, users had to
->> predefine a memory region using ramoops. This commit changes this by
->> preserving a buffer using kexec-handover.
->> 
->> pstore_kho supports preserving only 1 dmesg buffer.
->> It gets replaced with the new buffer on every kexec, so the user has to
->> copy the file out of pstore after every kexec.
->> There is no erase() support.
->> 
->> Signed-off-by: Michal Clapinski <mclapinski@google.com>
+> On Mon, Jun 08 2026, Tarun Sahu wrote:
 >
-> I'm a fan of the idea! I'd love to see a selftest added for this
-> backend, since it should be possible to do a direct tests for dmesg
-> preservation across a kexec in tools/testing/selftests/pstore/
->
-> There is still good feedback from sashiko, which caught everything I was going
-> to mention and then some:
-> https://sashiko.dev/#/patchset/20260605121040.1177072-1-mclapinski%40google.com
->
+>> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
 >> ---
->> v2:
->> - Added a comment explaining the benefits of pstore_kho.
->> - Created include/linux/kho/abi/pstore.h.
->> - Got rid of the KHO subtree.
->> - Made sure never to free incoming kho data.
->>   This way the module can be safely reloaded.
->> - Sashiko complained that I trust the data coming from the old kernel.
->>   I ignored it. LMK if I shouldn't trust the old kernel.
+>>  include/uapi/linux/liveupdate.h | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveupdate.h
+>> index 30bc66ee9436..a564d2bd05c1 100644
+>> --- a/include/uapi/linux/liveupdate.h
+>> +++ b/include/uapi/linux/liveupdate.h
+>> @@ -168,7 +168,8 @@ struct liveupdate_session_preserve_fd {
+>>   * associated with the token and populates the @fd field with a new file
+>>   * descriptor referencing the restored resource in the current (new) kernel.
+>>   * This operation must be performed *before* signaling completion via
+>> - * %LIVEUPDATE_IOCTL_FINISH.
+>> + * %LIVEUPDATE_IOCTL_FINISH. Once retrieve call is failed, retrieve status
+>> + * is saved. So it is permanent failure and retry is pointless.
 >
-> We shouldn't trust the old kernel. :) Sashiko's suggestion here seems
-> reasonable which is to at least bounds-check the size against
-> RECORD_MAX_SIZE since that's the largest it should ever be.
+> Perhaps the wording below is slightly better from a user perspective?
+>
+>     If a retrieve of a token fails, subsequent attempts to retrieve the
+>     token fail with the same error code. Failed retrieves are not
+>     retried.
 
-I'll do my usual piece about trust when using KHO. You _have_ to trust
-the previous kernel. KHO has no way of validating the information from
-the previous kernel. It has to trust what it says. Because of this, the
-previous kernel has a lot of influence on the state of the current
-kernel. I don't think we can draw any sane security boundary here.
+Updated!
 
-So I think if you are using KHO, you should rely on chain of trust or
-other similar mechanisms to make sure you trust the previous kernel. KHO
-itself can't provide much of a security model.
-
-All that said, I think it makes perfect sense to do bounds checking. You
-should still protect yourself from a _buggy_ kernel.
-
-But be careful. Currently RECORD_MAX_SIZE depends on
-CONFIG_LOG_BUF_SHIFT. This can change between kernel versions and
-shouldn't be used to enforce correctness. Because otherwise, if the new
-kernel sets a smaller CONFIG_LOG_BUF_SHIFT, it will reject perfectly
-valid data. Come up with a reasonable value and use it as ABI. If you
-ever need to change it, you can do so with an ABI version bump.
-
--- 
-Regards,
-Pratyush Yadav
+>
+>>   *
+>>   * Return: 0 on success, negative error code on failure (e.g., invalid token).
+>>   */
+>>
+>> base-commit: 2d3090a8aeb596a26935db0955d46c9a5db5c6ce
+>> prerequisite-patch-id: 30753743cdfab5c3c5355ecde725b6648f1b7a17
+>
+> -- 
+> Regards,
+> Pratyush Yadav
 
