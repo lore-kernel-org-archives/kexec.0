@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E48B6CD98CC
-	for <kexec@archiver.kernel.org>; Thu, 11 Jun 2026 12:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C5961CD98CE
+	for <kexec@archiver.kernel.org>; Thu, 11 Jun 2026 12:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=aM4CFsjAfrgDrQU/fs6TDRb0SV1bxnyirTxwHZhtIEM=; b=y80bM9VZKOFiTKvF/tC/icZoHv
-	81HB05pLodAl+ERVsYFjE7EckmNqcFfYJPW2JYRVllwAJny9/DFv8adMGSgVmWR4yqZXdBF2iji27
-	owvCSHKI6HMat0CVNSpW59SBzSnHywBgUx53/qbsyNGNACb68G0/DMlzWYDQJ4sH7v3GecAR5jHNu
-	XTXrj8+p7M99Ue8q7XOWQ+fatR3nut8iqS5Hn60WxwrZS2Pp7gMIOHyZOctmGpZAaPujLL1lkQEtO
-	6oy8xzNAc7OdVJ5ZJ+CYXqEBs2bnyfHl+NIRDqcx9vdFsUIKpfWe4ccbvt+Y5euAofxPWd+9kxptN
-	Y+/bfosw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Date:Message-Id:Subject:References:In-Reply-To:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=RTxBAyxRVCg/U/4ECvI3vDi2RWcOyrJFqYDJvpHGCRM=; b=fJIwbADoiIZf7Qtzik7kEHitO+
+	fKDYnsG5nIb3XTRy/cI0xeX3fn73X6BhAO27HZdYRrWWIErGN6KIg0R8ZxRevPZEZb2AcYmn6ZUHX
+	yQi4TuMT/qPLACKOB8L8RHRw8gRX2OhpSVt5rmA5kXmcy6XOCCDRieaeI/2tGNUjXJA5j3m07bsV3
+	vU3V/WD/Ag/YCnl1vBOXkHmEWfeyX6129y1t0mRrmMSE1rwLjfAw7J7xeL3rwc3gmlAi7FzAdUqBb
+	u8V1UgB67mIbcgc0BCGA97hl6KvLTQ3AnIGj2Jt7ZAviuwYo3ifu99UPlXqICAfdFCcgywyT17v2S
+	2kMV+dkA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wXehg-00000009QNj-1o0m;
-	Thu, 11 Jun 2026 12:40:12 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wXerG-00000009RNZ-0Fm5;
+	Thu, 11 Jun 2026 12:50:06 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wXehf-00000009QNO-0Orf
+	id 1wXerE-00000009RNN-2uAn
 	for kexec@lists.infradead.org;
-	Thu, 11 Jun 2026 12:40:11 +0000
+	Thu, 11 Jun 2026 12:50:04 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id A57D44064D;
-	Thu, 11 Jun 2026 12:40:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E54021F00893;
-	Thu, 11 Jun 2026 12:40:07 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id BB1EC6001A;
+	Thu, 11 Jun 2026 12:50:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09E371F00893;
+	Thu, 11 Jun 2026 12:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781181610;
-	bh=aM4CFsjAfrgDrQU/fs6TDRb0SV1bxnyirTxwHZhtIEM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=EeN5KasIedx+VFynls428joJP2xO7wsQhXM+JE+dwrimD+izqGH64EN3R24ND7Bd8
-	 WOsmQK2462wD4Nl6UUnx+TeQLe6jZmeJzCxGbJE9kCTym7Y7F2+lYe9uwBjylfGNin
-	 fBshJXlf3l7DuGg/RQu28awc0CrVkW8mx2eOtPM1j+sJIYkq+hMiZHCS3DMgBFSKIh
-	 UZ9jIkl1vc56xvDb60tgS/o8bQqCic4lJ6dXyW8gDjEs0YfzC+zxSu3nXvBUji9mvc
-	 HY3ddRBs0PSon87+zIP8x9gb9rd2JQWVK/rCIWQIaAcpRpmkv4nvWaHSnfMrNYUoSb
-	 khYH9VNVAPXKQ==
-Date: Thu, 11 Jun 2026 15:40:03 +0300
+	s=k20260515; t=1781182203;
+	bh=RTxBAyxRVCg/U/4ECvI3vDi2RWcOyrJFqYDJvpHGCRM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=ZqwCpQ5giiEbZ6HPQXU57vzYbd0eqj1oQQQuG9Py9U81JcyZbOb9nxVdsABuFt8LP
+	 AN6lkVi9sWYi6JHHuHWDFzF/qar6P8XXBVBPJKVt0Gjp3Hv2dH0rsdNrE10qfYm6Ze
+	 u+OtFTDJ0INAO8f7fXKTzRzdmlMrUSRj29pBmPvRejiMqh6kYmYE4BYH/w2hztpIbt
+	 M0ikeXZD1KcOFmKpWTXGQsjF4nG1tRp6U9Mm1T2xZHq8P0s1DbTg//KGTnTi8oLCk2
+	 rcsT8sMekob13zVrLf3Xyvesg0AQwH/KfIQR0/uYt+O7SzJQatbFLTeuKbT/X74iZc
+	 +gUko3oBini6g==
 From: Mike Rapoport <rppt@kernel.org>
-To: Tarun Sahu <tarunsahu@google.com>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH] mm/memfd_luo: validate serialized_data before conversion
-Message-ID: <aiqso7rkpX6oMer7@kernel.org>
-References: <c2478f79207b10a13282d917c961261d17b86a15.1781173768.git.tarunsahu@google.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, Tarun Sahu <tarunsahu@google.com>
+Cc: linux-kernel@vger.kernel.org, vipinsh@google.com, 
+ kexec@lists.infradead.org
+In-Reply-To: <faec5df2a3e90240cde5897bae2250cd7d44aeac.1781170056.git.tarunsahu@google.com>
+References: <faec5df2a3e90240cde5897bae2250cd7d44aeac.1781170056.git.tarunsahu@google.com>
+Subject: Re: [PATCH v2] liveupdate: Document that retrieve failure is
+ permanent
+Message-Id: <178118219664.1648214.15000032478572564661.b4-ty@b4>
+Date: Thu, 11 Jun 2026 15:49:56 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c2478f79207b10a13282d917c961261d17b86a15.1781173768.git.tarunsahu@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.2
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -71,64 +71,20 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jun 11, 2026 at 10:30:03AM +0000, Tarun Sahu wrote:
-> In memfd_luo_finish() and memfd_luo_retrieve(), phys_to_virt() was called
-> on args->serialized_data before checking if the physical address is valid.
-> Since physical address 0 does not map to virtual NULL (due to direct
-> mapping offsets), the subsequent check 'if (!ser)' was ineffective at
-> catching a missing serialized_data, leading to unsafe dereferences later.
-> 
-> Validate that args->serialized_data is non-zero before calling
-> phys_to_virt().
-> 
-> Fixes: b3749f174d68 ("mm: memfd_luo: allow preserving memfd")
-> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
-> ---
->  mm/memfd_luo.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-> index 59de210bee5f..10f3983b0060 100644
-> --- a/mm/memfd_luo.c
-> +++ b/mm/memfd_luo.c
-> @@ -397,10 +397,11 @@ static void memfd_luo_finish(struct liveupdate_file_op_args *args)
->  	if (args->retrieve_status)
->  		return;
->  
-> -	ser = phys_to_virt(args->serialized_data);
-> -	if (!ser)
-> +	if (!args->serialized_data)
+On Thu, 11 Jun 2026 09:30:40 +0000, Tarun Sahu wrote:
+> liveupdate: Document that retrieve failure is permanent
 
-We really should make args->serialized_data a KHOSER_PTR
+Applied to next branch of liveupdate/linux.git tree, thanks!
 
->  		return;
->  
-> +	ser = phys_to_virt(args->serialized_data);
-> +
->  	if (ser->nr_folios) {
->  		folios_ser = kho_restore_vmalloc(&ser->folios);
->  		if (!folios_ser)
-> @@ -522,10 +523,11 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
->  	struct file *file;
->  	int err;
->  
-> -	ser = phys_to_virt(args->serialized_data);
-> -	if (!ser)
-> +	if (!args->serialized_data)
->  		return -EINVAL;
->  
-> +	ser = phys_to_virt(args->serialized_data);
-> +
->  	/* Make sure the file only has seals supported by this version. */
->  	if (ser->seals & ~MEMFD_LUO_ALL_SEALS) {
->  		err = -EOPNOTSUPP;
-> 
-> base-commit: 9716c086c8e8b141d35aa61f2e96a2e83de212a7
-> -- 
-> 2.54.0.1099.g489fc7bff1-goog
-> 
+[1/1] liveupdate: Document that retrieve failure is permanent
+      commit: e98a9c61721c14bcd29f11f4802e52e908701f7a
 
--- 
+tree: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux
+branch: next
+
+--
 Sincerely yours,
 Mike.
+
+
 
