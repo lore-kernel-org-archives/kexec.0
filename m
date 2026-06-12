@@ -4,96 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DAF69CD98CF
-	for <kexec@archiver.kernel.org>; Fri, 12 Jun 2026 19:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6B285CD98CE
+	for <kexec@archiver.kernel.org>; Fri, 12 Jun 2026 19:32:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=s08faKqvDPkMJtxJMkDBvBUzs4ZbUBDPlDmo4vFtWCY=; b=X/fAm78MoVIzzrSv9Tby9XGI8e
-	cz+2XXnw4Ohbc8jlNjHrScAlxfb+nU6lQybcVH8ClkD7N9E5/4qJpju4H90CFQ0stejRycm7ZlVJC
-	IGfvGGgY9ADtak4gfp6/lZm5a/LSOItJ0QWdm7z//j64PZmn+KhcBoH4u0KNzdjH2mpkIhn/915Ez
-	rftjevUPqAn/WltkP5H5YimGua2kjG/pmIgkxQp2Hoy8OE5drEOfvADEWfQZA0+P61y+WjKG3x46Y
-	V7zcDqez1jF/J97QB+3PxXEXir1H2bz82YeBHV/eG8QYcYp7tHpBMgH8oRnXWVZUpaBTEw9Q1wz12
-	wjASBLeA==;
+	bh=IdP+1KaTR40VhK3ScPAjSIhJkFP1yviJa4xgMjReCWw=; b=bcUq3E0rWBZ23ooxwdyVxv/Yb8
+	dZj4FZTv1M+0nRYsw4CYoEarhKJ2xqFf+AQbk1sKqFEXh+uWu2pFcc1c1/Jjfer3+PC0y7NwK6UfK
+	1T0FfsaaSjtRKvq67FB+zok+dSO5ZqqsWfAF5fuJMEuYGc5A7sF2tN6iMqdhxelrtNL82mxRB0JFd
+	6SHoehMZw3MNIHJKcyJzPVsk2fZF2ctqsihVRBpU2YV83dC4VeWkwvsk7lrS3IxypbIM7S9VLyLcn
+	QouGhO5yxkOqCw/wqo6w129c3ZkG1FVxTqTgLvfZyCYRDVhO+RSoraqEm894prXzaSY7teEjZzthU
+	cU/Og4uQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wY7Ey-0000000BR7l-2InH;
-	Fri, 12 Jun 2026 19:08:28 +0000
-Received: from mail-qk1-x72c.google.com ([2607:f8b0:4864:20::72c])
+	id 1wY7cf-0000000BUBh-0P3B;
+	Fri, 12 Jun 2026 19:32:57 +0000
+Received: from mail-pl1-x62c.google.com ([2607:f8b0:4864:20::62c])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wY7Ew-0000000BR7B-3dyl
+	id 1wY7cb-0000000BUBG-3a1X
 	for kexec@lists.infradead.org;
-	Fri, 12 Jun 2026 19:08:28 +0000
-Received: by mail-qk1-x72c.google.com with SMTP id af79cd13be357-91563382bcfso147700885a.0
-        for <kexec@lists.infradead.org>; Fri, 12 Jun 2026 12:08:26 -0700 (PDT)
+	Fri, 12 Jun 2026 19:32:54 +0000
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-2bf22c18ad3so18625ad.0
+        for <kexec@lists.infradead.org>; Fri, 12 Jun 2026 12:32:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1781291306; x=1781896106; darn=lists.infradead.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=s08faKqvDPkMJtxJMkDBvBUzs4ZbUBDPlDmo4vFtWCY=;
-        b=iX7xCtlFQJ6Fvue+8FyKMegozSKNqGWMMyR+d+RTLpyEHrPYw40nmq0ReAwiX47LPa
-         D2ALBmV6lU0LpBOUMYWaXBrKNyAGfZAh/R04VipIFHtyzVwkiFDMbOF7X3XZaGpRkKeP
-         dq31tqvNcomYK1WpBl3AkNIwwjlvjhUh5I0QY+SyWRVpPYicInPy0bjCwacsKApJpjKc
-         QIjDKlIPqEIKpuXs3tAS/XfbrEiVQDeUHqeNpGESJFaJake8Ok5aJOUmLb8MI7UmrNph
-         X+kCmM+0JB2dUuMa6smFWED17theRzPZ/fsm9WcAQ5Pl7FZ1jrAlqfYt7D2bQQ5Mfs2I
-         JUOQ==
+        d=google.com; s=20251104; t=1781292773; x=1781897573; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IdP+1KaTR40VhK3ScPAjSIhJkFP1yviJa4xgMjReCWw=;
+        b=wbVlbWTQK2fXmBpiRPvJmh7rwrk4P0BR+nyIVsDeTKWpIqkL45sHv80AwwGEy4NRea
+         /8VULGCKpeiVdDFBU6+Q9R/LifgzaW/7RODD4POITyJnLYiszGG8Wd0KyYPU3oVlKpKL
+         UFpqrVHAj4SLfj7x8GgHtOAunapeYAd9LtTD3V8LuYXHXwXzHDy1kBhYqD2nudCjYj5P
+         V2b5PMuE9FMYrtti953OTcVWlgiCieGOuqiMr4BMY/2Vaep8rzwYYXKLK+bDQ4G6qDlJ
+         rWZktWSJV6rWssh08nuFG9y5yTjSxv4uAQrp/UwBWh1mZImBblMsuFH4Gbf4XnOLS5Ag
+         qK+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781291306; x=1781896106;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s08faKqvDPkMJtxJMkDBvBUzs4ZbUBDPlDmo4vFtWCY=;
-        b=ksUY1tgfrl7IeEeRyqUDD3W/PlgRZTK6cOJE2fWu52v0u7SgTsruzJXf/cpeOPAqDN
-         Un3SkgXWkbpZFq/HzDIFPvWNjP8WsZ0b4TshWdRKM7d1JbK8TYolHWup4Z6zCnDQdO7s
-         WppDcxcmMqYjvkCJRN6FxqiioxmGmBW/ov7vekg0WQXgbq+k6egEAeCvYcPSTZtk7qO2
-         SgHkj9piLPumSj5cVDijzjujjoDErejACvIW+l4S5RNM2UPm8YJ8caBL4JMT5kBnNY2x
-         X5FywZI1fwh+jXMfozEqnNA7zxR6+cWP8PeKFlQ0VFSzsK3dUsI6UG0wc17bf7ZDnJo7
-         p5pA==
-X-Forwarded-Encrypted: i=1; AFNElJ/jzaCZwNfs0ujJLtGny63z8uUTc/M0uRFpmQrVT3MoR37acVhLO9ZaWconZyF22ih6u4R3aw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxJnL6Zq3W1HVy7g7wmLJmkbfdG5FFjk5+wRjK6QTq0nz07OKyM
-	LqVC2TeHuYv+0XCUe4TTA7tuXT+mZdOZUliNKTqnsVMnbVIaWE/HM0hVBfFVehM2fk0=
-X-Gm-Gg: Acq92OG4B+7u9VsaGXhJ++GgtHP7Q5k1x6fcuOczktKGaEwXG609VGjD3qCKrM8w5ou
-	fFemHyAWkkcibmqTAw4MjX/ZBlI63wfrNe1djl9zKY58i61U0t+GI4dZKX8wjMQUrdbGjWUFjuU
-	wox2QVNlcs3esSsvqvi+okf/lyDJL2jb7zoXZd/I1bnZRKUCaQt5QD2R1CV4ANZIX6T53/Umh/x
-	FiFjnXKAfDeN+QAzhCVaFC1veXxAHmiMZu7y6x1hDLgYH8veYPXn8KzY71f/E7GFdxBXmBtDctZ
-	BNMAYgJOPT0CDLOb6aVo4LoqBw2NEXJmOtza50Pw/zhERqGF8vgklgsCpXx7P4WZVQQANGs1D5D
-	jj7/XpfCMQmm+EqDuOA+eEwekb0RnVjHwjh49n2dZupk+u5yil5YLEfZrW9KffFsf3ynixIk1SN
-	qY1ie6KD9xJL1/y4VJFkfvB2vGoqkHzsdB72WA/3SEE1Hb+lpI7Zs=
-X-Received: by 2002:a05:620a:c45:b0:915:c858:7d42 with SMTP id af79cd13be357-9161bae70eamr627465485a.18.1781291305692;
-        Fri, 12 Jun 2026 12:08:25 -0700 (PDT)
-Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-91619f2d6a5sm291127785a.20.2026.06.12.12.08.24
+        d=1e100.net; s=20251104; t=1781292773; x=1781897573;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IdP+1KaTR40VhK3ScPAjSIhJkFP1yviJa4xgMjReCWw=;
+        b=AcYhZ7rI0KMrMtOkrRKA75pkVmw0o9qatC4KXOWpGdo7TUcNnRGPj9otqr1ot/1H4U
+         Q+IcJgnN0pElp/aRzLKBN6ktq0F4O0KZ8jn9nlb4BUXwkXeYK312HcBWbNKoBXws/oEv
+         DYs2b/DmVfiVYGHBrKBBv1j84pijBdu+GiZNdfdqrcxs2XjsQ9xGH6k6Q55Xw/Kws4eo
+         zng3IpcUiZyewD6E0JLUSALUbZk5psPgnBfx2T3A8WRfYvH9lYTHkzrFTm72YOh6XpCx
+         J5TBbv1bekgDxSlE/oehOI35381brjUwX4AnDMAeS5DxhDGf9WZePI9+FPyNE+O+Stn9
+         s1dw==
+X-Forwarded-Encrypted: i=1; AFNElJ9+LBxWMXmB80NTJZQAzzM7wriRu12frZyUqUQ2X+mYn9ZgiDVHBfiMmsCwv1n6Reho4CVbjA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwVsI7IzhUqgwOLpZkFuY/lCo7ntBwj7x+w7BgYJX0S2zfHO1UH
+	rgwzdNdoioh0ExeklcG3+8IXWINiTFyAnFzMLQa97TkGTe+3lQly62gLr+AAXqIinA==
+X-Gm-Gg: Acq92OH5PVpaKnAzBHr3T1dbbYjstqolkp6m3Wsr3fCBVNsSub2XEBRP9lomFUllBzz
+	ZGdbJ/gU/mLDXjm8Pxta1sn+37eSaA/GsxHAanTB6LG7/mow7hdDqw0ZiMISLMpY3bsUzGFj/L0
+	OzTvAkj5e+E9FLmjlcU+cCegAQKva8KWfpaGBNro3LhRL33WXoaEFluGQ9y8f41UCjVA6HT/8is
+	0eLALpE4mW1thYVmennGorAd3mvU9C0OWAEKpIHCOml74ssFmQgoLPAMh2naGYOWn3c5H8Y3UYD
+	oNmynmCwrnzN65sdUujoQrOoH0vfY86FdfW5tfyIXvLC0EXB5YQwGS77onDt2QAgwJM70NSQMbC
+	UsyvggLRspZ9exSNn6VCimXpTbJLgf6u3OGRg1LhAOLUqDek0euC3st5SAk02Zft2OG1e1D2Qms
+	46n/iYyEUwpaHIgEXgs92m7ajaz221o3RkwyDql4lrHc4QnCu/+/BGCyqLtEN/2d3YbAgvqWY=
+X-Received: by 2002:a17:902:f541:b0:2bf:2e8c:db96 with SMTP id d9443c01a7336-2c665e349c0mr9395ad.5.1781292772339;
+        Fri, 12 Jun 2026 12:32:52 -0700 (PDT)
+Received: from google.com (176.13.105.34.bc.googleusercontent.com. [34.105.13.176])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c42fbb4134sm25141365ad.30.2026.06.12.12.32.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2026 12:08:25 -0700 (PDT)
-Date: Fri, 12 Jun 2026 19:08:23 +0000
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Mike Rapoport <rppt@kernel.org>, linux-kselftest@vger.kernel.org, shuah@kernel.org, 
-	akpm@linux-foundation.org, linux-mm@kvack.org, skhan@linuxfoundation.org, 
-	linux-doc@vger.kernel.org, jasonmiu@google.com, linux-kernel@vger.kernel.org, 
-	corbet@lwn.net, ran.xiaokai@zte.com.cn, kexec@lists.infradead.org, 
-	graf@amazon.com, Logan Odell <loganodell@google.com>
-Subject: Re: [RFC v1 0/9] kho: granular compatibility and header decoupling
-Message-ID: <aixXuoCOCZZcBDci@plex>
-References: <20260605033235.717351-1-pasha.tatashin@soleen.com>
- <178083348872.1648214.17778188633648887952.b4-review@b4>
- <aiVp5RlbWRz5VnPB@plex>
- <178091437240.1648214.10761111570005003901.b4-reply@b4>
- <aibYJvzQQnpoN6YW@plex>
- <2vxzo6hjss8z.fsf@kernel.org>
+        Fri, 12 Jun 2026 12:32:51 -0700 (PDT)
+Date: Fri, 12 Jun 2026 12:32:47 -0700
+From: Vipin Sharma <vipinsh@google.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: rppt@kernel.org, pratyush@kernel.org, tarunsahu@google.com, 
+	skhawaja@google.com, shuah@kernel.org, dmatlack@google.com, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] selftests/liveupdate: Add helpers to
+ preserve/retrieve FDs
+Message-ID: <20260612193000.GB232424.vipinsh@google.com>
+References: <20260610230909.876546-1-vipinsh@google.com>
+ <20260610230909.876546-3-vipinsh@google.com>
+ <178123377287.908199.15268768789704684712.b4-review@b4>
+ <20260612173145.GB40404.vipinsh@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2vxzo6hjss8z.fsf@kernel.org>
+In-Reply-To: <20260612173145.GB40404.vipinsh@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260612_120826_935603_305A57FE 
-X-CRM114-Status: GOOD (  58.96  )
+X-CRM114-CacheID: sfid-20260612_123253_895017_A7EC2EEC 
+X-CRM114-Status: GOOD (  18.12  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,155 +102,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 06-09 16:28, Pratyush Yadav wrote:
-> On Mon, Jun 08 2026, Pasha Tatashin wrote:
+On Fri, Jun 12, 2026 at 10:34:32AM -0700, Vipin Sharma wrote:
+> On Fri, Jun 12, 2026 at 03:09:32AM +0000, Pasha Tatashin wrote:
+> > On Wed, 10 Jun 2026 16:09:08 -0700, Vipin Sharma <vipinsh@google.com> wrote:
+> > > diff --git a/tools/testing/selftests/liveupdate/lib/liveupdate.c b/tools/testing/selftests/liveupdate/lib/liveupdate.c
+> > > index 897c200f3845..961a732b541d 100644
+> > > --- a/tools/testing/selftests/liveupdate/lib/liveupdate.c
+> > > +++ b/tools/testing/selftests/liveupdate/lib/liveupdate.c
+> > > @@ -78,9 +78,35 @@ int luo_retrieve_session(int luo_fd, const char *name)
+> > >  	return arg.fd;
+> > >  }
+> > >  
+> > > +int luo_session_preserve_fd(int session_fd, int fd, __u64 token)
+> > > +{
+> > > +	struct liveupdate_session_preserve_fd arg = {
+> > > +		.size = sizeof(arg),
+> > > +		.fd = fd,
+> > > +		.token = token,
+> > > +	};
+> > > +
+> > > +	if (ioctl(session_fd, LIVEUPDATE_SESSION_PRESERVE_FD, &arg) < 0)
+> > > +		return -errno;
+> > 
+> > We do not return positive values on success either, so !ioctl() would 
+> > be a tighter check, but < 0 is also acceptable.
+> > 
+> > Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 > 
-> > On 06-08 13:26, Mike Rapoport wrote:
-> >> On 2026-06-07 13:43:09+00:00, Pasha Tatashin wrote:
-> >> > On 06-07 14:58, Mike Rapoport wrote:
-> >> > 
-> >> > > On Fri, 05 Jun 2026 03:32:26 +0000, Pasha Tatashin <pasha.tatashin@soleen.com> wrote:
-> [...]
-> >> > External users only need to include the headers they actually use. For
-> >> > example, LUO shouldn't have to pull vmalloc or radix tree KHO
-> >> > declarations, and memfd does not need block.
-> >> > 
-> >> > From a maintenance point of view, it is much easier to catch ABI
-> >> > changes when the file with the appropriate version has been changed,
-> >> > and most likely the version of that file should be updated. If a single
-> >> > header contains compatibility versions for several different data
-> >> > structures, it is easier to miss the correct version update.
-> >> 
-> >> No matter in what files the definition lives, someone can forget to
-> >> update version and we may miss it during review.
-> 
-> Perhaps we should have some tests (maybe with kunit?) that can catch
-> this? If you change the format, the test fails. So you'd have to go and
-> update the test, and at that point it should be more obvious that ABI
-> version needs bumping.
-> 
-> [...]
-> >> 
-> >> Sorry I wasn't clear. I agree that kho_vmalloc, block and radix tree
-> >> should have their own versioning rather than rely on global KHO version.
-> >> 
-> >> What I don't like in your proposal is mixing versioning of a component
-> >> with its dependencies.
-> >> 
-> >> I think that versioning should be completely local to each component.
-> >> LUO should not care about kho_block "on wire" layout. This should be
-> >> encapsulated in kho_block.
-> >
-> > That is a fair point.
-> >
-> > As I mentioned in my previous reply, we can definitely look into making 
-> > the version checking more modular. For example, each component could 
-> > implement a standard compatibility-checking interface.
-> >
-> > These checks could run early in boot to determine whether each component 
-> > is capable of accepting the incoming preserved data format.
-> >
-> > Whenever the component is later used by LUO, memfd, etc., we can query 
-> > that cached status. This achieves four key benefits:
-> >
-> > 1. It avoids delaying the compatibility check to the actual time of data 
-> > retrieval, which is too late to safely abort.
-> >
-> > 2. It prevents a local incompatibility from triggering a global kernel 
-> > panic, allowing us to handle failures gracefully for just that specific 
-> > component or session.
-> 
-> I think the right time to do the compatibility check is _before_ kexec.
+> I have to send v3 for other feedbacks, I will address this also in that
+> version.
 
-Absolutely agree; however, that is a bigger effort than what I am 
-attempting to do here. So, let's remove composite version strings and 
-integer strings from this series altogether, and simply make it more 
-granular. The versioning will be solved later once we are ready to 
-address the pre-kexec compatibility checking.
-
-> That is the only point where you can safely abort. Once you boot into
-> the new kernel and discover you can't understand the passed data, you
-> are in a bad spot already and should reboot. I don't think think you
-> really can gracefully handle these failures.
-> 
-> For example, say you fail to understand the incoming PCI data. So you
-> have no idea which devices are participating in live update and cannot
-> correctly probe any of them. Which effectively means you cannot resume
-> any of your guests since you have no idea how to restore their device
-> state. The only path you are left with is to reboot. I haven't read the
-> IOMMU series, but I imagine the same story applies there.
-> 
-> For a more benign example, let's assume one of your memfds that back VM
-> memory fail to restore.
-> 
-> In this case, you can safely leak that memory and run the other guests,
-> but at that point the host is in impaired state. You don't want to keep
-> running it in this state. You likely either do a reboot, or if you feel
-> more adventurous, you do another live update.
-> 
-> In either case, there is no "safely abort" after the kexec happens.
-> 
-> So I think our energy is better spent solving the versioning story
-> _before_ kexec. After kexec I think it is perfectly fine to error out
-> and panic or expect a reboot. You can't salvage much at that point
-> anyway.
-> 
-> And I think how the versioning format looks also should be based on the
-> design of this pre-kexec check, not the other way round.
-> 
-> >
-> > 3. It keeps the local version local, as you suggested, so it is checked 
-> > only by the consumers of that specific component.
-> >
-> > 4. It provides a clean path for backward compatibility, as components 
-> > can individually decide whether they understand the incoming data 
-> > format.
-> >
-> [...]
-> >> 
-> >> Actually FDT "compatible" handles versioning nicer than composite strings
-> >> You can have
-> >> 
-> >> 	compatible="kho-v4", "vmalloc-v1", "radix-v1", "block-v2";
-> >> 
-> >> and check fdt_node_check_compatible("vmalloc-v1") for vmalloc and
-> >> fdt_node_check_compatible("block-v2") for block.
-> 
-> I agree. Even if we don't use FDT, something more structured than
-> composite strings would be nice to have.
-> 
-> >
-> > That is actually very similar to what I am proposing—individual version 
-> > tokens (which in my current series are concatenated into a composite 
-> > compatibility string separated by ';').
-> >
-> > But let's not get too fixated on the composite string formatting. I 
-> > actually really like what you are proposing: using integers for versions 
-> > and having each registered component carry its own "NAME" and version 
-> > number in the KHO FDT.
-> 
-> There is another nice thing about numbers that Logan (+cc) recently
-> pointed out. You can tell which one is bigger.
-> 
-> At some point I think we will support multiple versions of a data
-> structure to allow for upgrades. At that point, it will help to know
-> which one is "newer". So if both kernel versions support version 3 and
-> 4, you can use 4 to serialize.
-> 
-> This of course is harder to do with strings.
-> 
-> >
-> >> And we wouldn't need to reimplement string parsing ;-)
-> >> 
-> >> But yeah, I do see value of making components versioning and KHO global
-> >> versioning independent. I just don't like composite strings and I don't
-> >> like mixing versioning with dependencies.
-> >> 
-> >> Since we are moving from FDT for the most things, version should become
-> >> a number rather than a string and version compatibility should be
-> [...]
-> 
-> -- 
-> Regards,
-> Pratyush Yadav
+I forgot this before, other two ioctls LIVEUPDATE_IOCTL_CREATE_SESSION
+and LIVEUPDATE_IOCTL_RETRIEVE_SESSION are using the same pattern of
+checking with '< 0'. Lets keep it same, I can send a separate patch if
+there is a desire to use tighter check.
 
