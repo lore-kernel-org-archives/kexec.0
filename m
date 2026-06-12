@@ -4,104 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CCA95CD98D2
-	for <kexec@archiver.kernel.org>; Fri, 12 Jun 2026 18:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3D06CCD98CF
+	for <kexec@archiver.kernel.org>; Fri, 12 Jun 2026 18:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
-	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
-	Content-Transfer-Encoding:Content-Type:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ZYv7z2e99bq8/9rGB+2ASRTLJy8QTrrW3Fih3Q9SFnI=; b=XhfbJBXMBSExgS
-	SKh5nbn+yYN+yjTyEhLPJ70xiyGb9wFmdbcHCrIjV5kc2TweJ7+7hb6lxA2Igfy6opIieu8Uu2Sc5
-	7WgZwDwCe1VSdBqk6CxEMeCn9X0uyFHxM9ljYA+zvM+ZP5WNW/EFx2iVr/rW5BbeBEE27sUwel06E
-	8WZWBede31lmtcgXw7/m5c3vlaP/HpmEP0Rka1q9+4pneHBWG6Bl3O1fXTWGJwJBqgVe7hgH1prte
-	GYCOKKdvrPsfqRpX7UTPqJV/dTtdrRSj35t6s4bpvnMS6z/ZjEifs+Bp4pCwdmUZvSYa5W8sYOlUv
-	ZYtUVRwA+XxvrW+JWIeQ==;
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=4fdlV1svnoMA4warxZ5zK3ylIeyyzAc6d3U562SAKBc=; b=U8d0ayoS0rvOQ0f7V6BE8ogp1K
+	E5Ha7H/VVNUILMRjIDY56lg56D6W/jojfcZfBzBo8GesoNiAatSwK48LXGUySBgz0pWDgqsaS3kDJ
+	VRJOrvetDOWI6r3XSWJIaMbHnL1bQ15EpDSGwskLsZ7I/zjsKatR6kGIK2ZUAzUaNl+3YSDx555Wh
+	iBAQ/DTGS1/+XY1dYY7sE6wgxI89bGy8guJwFQhnKrnlS072RjuiXtwABtSIZgRVnMpiyKbkPYYu0
+	xykiQHTmmHqvzP2s/1d3yQFm6RQXd6ygsNDQqTEanUKmjHYsdUup9mDjY/lbbVUon/mTcihqAIPnC
+	G0AIsexg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wY6wl-0000000BQ0w-0C8M;
-	Fri, 12 Jun 2026 18:49:39 +0000
-Received: from mail-dl1-x1231.google.com ([2607:f8b0:4864:20::1231])
+	id 1wY6yr-0000000BQ94-13uI;
+	Fri, 12 Jun 2026 18:51:49 +0000
+Received: from mail-qv1-xf2f.google.com ([2607:f8b0:4864:20::f2f])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wY6wi-0000000BQ0a-1orU
+	id 1wY6yo-0000000BQ8b-1xX0
 	for kexec@lists.infradead.org;
-	Fri, 12 Jun 2026 18:49:37 +0000
-Received: by mail-dl1-x1231.google.com with SMTP id a92af1059eb24-1336742714fso1218c88.1
-        for <kexec@lists.infradead.org>; Fri, 12 Jun 2026 11:49:36 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781290175; cv=none;
-        d=google.com; s=arc-20240605;
-        b=fvpPyAefcPRU8HM6eYWdtIh6GLMqOEr6lQoZxyH/Xj2/Z0uLmwM7fge8CjqrAuL94J
-         YNdxjRONiwGYltQivCszEQvX+vsSe8snTJ1OyBiROTgjeZWpoiVVQcA0gAWcMDuxjgu4
-         XQ2x8k5kkStBbWMju5x0E9++7cXMVZl7HVOc/VesQM6KCiB4KIv7EOzTu/VE4QwiOjyV
-         VmNJa9TgKx8j3mbjAlcSy5uZlWN79z78bUNofeBVQkiygkiSCnEzTVV0gu4mfEoA7L+k
-         hdDXc042K0J3bNK0+CSL2Jt+nfb8f2ZcBYSO2FjtF2NENrQkdiuyYEtrfPYkytt5Csh3
-         vOgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=ZYv7z2e99bq8/9rGB+2ASRTLJy8QTrrW3Fih3Q9SFnI=;
-        fh=8pCqZPqpKFj4FcAh/qVsnIkdrc3Y9wd0ZTQC1r5q9MU=;
-        b=BAYN7VmEF2jC3PW8ENsywA7c6EPS82yOrKc4pjQJUPYRIl8HCbkTUTZMpFwK6FLJeh
-         l5DpOHcVUZ6XqCwhIBExMKfWWAiddLagQZzoIZgGS3PH4BXEf/oGtkPxNQWLvVhG0hRu
-         lZjiZu+yDj40WgUI+MJzaBhahM1ov7dUCfmBmA+GoRU2EB6CtrL+9rm0jHNdsL6EbeHZ
-         VykX9Iy4tOc85fVckmzUgOG0T3ppB1x9n0HNw8K/BzymR7C9LW2q5tArSq/Tqbl6sn9P
-         KaeR6h6HbC1JfVYMufwkThmogEHhJ9D5OPDPthdUc/Q0k4RSfwCVF1ZD0123t/S9NUt0
-         yzxw==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	Fri, 12 Jun 2026 18:51:47 +0000
+Received: by mail-qv1-xf2f.google.com with SMTP id 6a1803df08f44-8ccef25789fso10335286d6.3
+        for <kexec@lists.infradead.org>; Fri, 12 Jun 2026 11:51:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781290175; x=1781894975; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZYv7z2e99bq8/9rGB+2ASRTLJy8QTrrW3Fih3Q9SFnI=;
-        b=T/t6qxVnuoxpsfV2ZoV/pZrCYKpU1yUWNtZq0t/id1YfnXAo77bbqMN6bLlytMdM4n
-         Aj1Ag8V2H1VCofxrgSgUoMNbIjI3cLBwQx6aSDO2CxCj3pjUeEJ4MvgCsAbT3I5sX3mf
-         YcsWLgGXWuhLKcoGsxUs8gHbZzDYOtE5mfiUwi9E8yaA7Mpz24w+iqZefaR9wtF37lSZ
-         Sp56tRmiW+OjPJHitbUqDKEdrCnk91JUpzHi53AFTL1FQarUZigcWusDJ0G4eF8hHD2k
-         J/fa0ovBUk5dVcz36KY/5wB4CMuR9MJ9VxtTBc8kfFc1Kb354vBI0+W5k4Agrib2DCWm
-         CD2Q==
+        d=soleen.com; s=google; t=1781290305; x=1781895105; darn=lists.infradead.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4fdlV1svnoMA4warxZ5zK3ylIeyyzAc6d3U562SAKBc=;
+        b=dG5LurNpuiy1MS5u02jPFj4T+oBxSG+DWalux5dIRg8hAhGIBS6Z3b9tBJYzOU2fl8
+         U5VOQcj9SBOhTYTGljDZ4o5pYtjhlVuT5lTevs1QDNFvl2GZDJdfwbtcqptQO2VqAy5D
+         J8TdCrTwLwycOIfWKVyZuI1c9ybR6waCwTvg3Tk+a/qr1fpIG7EN32gh4hBmEEGs+MsO
+         EDEHVJ/W+LWUgcI3C5wLqPz2uTOfgJ32GUeCzWGBQqzf/DeSW/L1qSErQYUCgs9BkkD0
+         bjdgUqHknkHVZHbKAvZ2Hmo4g0gI1TTp0+QcA6yfrF9Z4TC8V+3qD9P12i2HKj4PMAps
+         shZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781290175; x=1781894975;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZYv7z2e99bq8/9rGB+2ASRTLJy8QTrrW3Fih3Q9SFnI=;
-        b=I7tf6fGZkokdCpBINT0HZ6LiUwl1oImga6FoqrMOLwCDrQ0YGpvFoS7ToyqBGnq80N
-         L9EnEnprIrJckTYaUn7k4RS0ftZBJMM2TwcMgyWsX8TZLimx/u7WgnMpoZJzQmIIa1Uj
-         NmB6ftjuxPGxZbT62WaYiIQyb6MhU16zUokOcZZcmMGFlxJ/Njt3pCCVPEvOTAOj39Mk
-         0S36BzM3TOcdKvlWHzy1Ug1qq28F4+W2j50lzvdn+7cqFQlYnnZ+ZQjpPwlyRX8oWuLj
-         qMxEpvJBywoEXbdpWcitvqaYUTJzz/nvB8WSbv394yRe1Ldzx9lWvKnlQOnlD6aYQgcB
-         XrGw==
-X-Forwarded-Encrypted: i=1; AFNElJ++5X4bmF93x/cwfZYCzNSq8qEEV7oYVMYXZ5MnX0siJzib55TGfZm/sLbCJ9JAkr5BLL55wg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzHjGAsS/adTVspC0/lj8kwVE7YAitnTXeg8x36oqsbpZ1qWgAO
-	jqg2DYW3LVnR4G0LhiIoURfsgAtlzxG5kwazHc+XLk9UlX7YSrUjepheUPdnzpSTCRJy43vYlY4
-	v7lOrycdCWKdMBL6oXLX+svIRLpGv6T95BwYy+AXw
-X-Gm-Gg: Acq92OGGIMpDqL1HW7VIbBwFpV1dMw/eV3525+oswPhYyoShcCAieCmooANEbzYomeP
-	AhtwnRRfVCbfhW0nvET719s3NNqW9z4zIhS82gtH4qzfmF/SK5yel+8AmT2kRFXnem+VP4TTL+b
-	SaAf0Tu1VfMgQUn2A99kOkka4H1NvqAW3ra4WAee+UG3gZip3IRcjmzzoJn6a9PldGFKT7QzCDG
-	wKYwoOG7G3oZuPqNVQg6fFWFIXMxwg+U2i0YuHw2RlLnYN5OJRTKs2XWeQhBa8VPU+GDe56EEOD
-	55menA==
-X-Received: by 2002:a05:7022:6087:b0:135:2683:7615 with SMTP id
- a92af1059eb24-138aca2421dmr26817c88.6.1781290174631; Fri, 12 Jun 2026
- 11:49:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20260605121040.1177072-1-mclapinski@google.com>
- <aiwa4jIWEMsvfnVg@kernel.org> <aiwbUfeaF9RdCGR-@plex> <CAAi7L5cnRt6enZnrrbbhsVwtxUDBXrxj16zsg8TtRFvP70ocoQ@mail.gmail.com>
- <aixSCR1P2zVHDo3e@plex>
-In-Reply-To: <aixSCR1P2zVHDo3e@plex>
-From: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
-Date: Fri, 12 Jun 2026 20:49:22 +0200
-X-Gm-Features: AVVi8CeKk8At_xkeb87fYBvSAcL1TL6GNYPbLM8z4uoYHDRPZvbn8do-p0fpdTY
-Message-ID: <CAAi7L5fZTvhb5np=xGWnDEmr4bNXqoAcMhR_ePZ4Qga4E-KucQ@mail.gmail.com>
+        d=1e100.net; s=20251104; t=1781290305; x=1781895105;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4fdlV1svnoMA4warxZ5zK3ylIeyyzAc6d3U562SAKBc=;
+        b=VAbl/YwXiUlVnOA56j5OSURq59PRxUbkmknzlDJCMfNP/N5+i86m7GTfVh3E5S8P2g
+         KstRl8DH13ttd/rOaPaZH90bsE9oPtea+evvBe/vNmrTF15MVtrS+oaGKXBwNYp5PCGQ
+         lBDXJm3oxswVxbKDZXOe1uDLlB3ZCEREpxsrfT1mmmEdSeMDH9fzYK6DxZ8oFwfbA4MQ
+         uNL7zcN+QHotMkqbq51un2+K1zUTszKgjZaoDvdkdQOxFb/BRDW5kEZNqswEKSSK2b+O
+         0YCIHA9Q8ZT0BF52hon97aY7ordwDvZ0e/Jhv6nEXZ4BOXyFWgQfjatYQQIY80gGkFo5
+         Xe/A==
+X-Forwarded-Encrypted: i=1; AFNElJ/dr4cpsPECVrtCH3ubeGiytEtmlNxv+hpOZZpqGwek353VrfeYDdTPhXbS7gnfw4WJmtgqLg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxEPpGKHdMLDvm+QJsYuKZeaWJTsXZ1nDhaziGPRt5oL3y/FRtz
+	d8Wr2y5lGpEWLpLFV9N+I2lqo1NY8WsV0R/6/KWqHrPSyLGKpeG+tpG+YLCwCO7EDjY=
+X-Gm-Gg: Acq92OE2vIdtIphbehFZSa2TfBf8WvXYsRvprybqhbaW6XOwPn/sze8yUv1H+djPGu0
+	6FVBi33A4d8JXhUl2kRDPPlvBfO7hPXURLMVOw/cxJwH0SNtR0k0S9lisKK8iAifoxnM/h9GJcD
+	fuSmrXCC1c8NUid1lIeFpPbFxRLn+enoTc6oSEdLXhqDlJ6kGixaPJJ3Wcrpa5ZAWWPg1dd9Tbi
+	AGx6nngcXdy6iDFHCeSgAKdTKiyW3CIJZCG1t5afA/0IEqGpMpAdk1AwkwDIJU+SavfEAr/7fdA
+	hcN+UFvBIh4wqZ1iohUWl016hqmffn3le7SGrSFtiKspwnKa03VFprZv6h3wctspKXayPG7VpXX
+	zA9u9BXfmTm6b+0iY5hOySdhiwC7fTkwAV8+CWtFeB/I6FTEs5+IQ79XvK2Jul1EvEzXerwp/j1
+	MsPXkwtzByMo0Zk8hF/cyWi428U0xYwiEQyDFx8qN39ZebkKge6iY=
+X-Received: by 2002:ad4:5d6f:0:b0:8ce:c19a:3f03 with SMTP id 6a1803df08f44-8d32c010a68mr65033106d6.10.1781290305055;
+        Fri, 12 Jun 2026 11:51:45 -0700 (PDT)
+Received: from plex ([71.181.43.54])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8d2fdc9e3cesm31734306d6.0.2026.06.12.11.51.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2026 11:51:44 -0700 (PDT)
+Date: Fri, 12 Jun 2026 18:51:43 +0000
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
 Subject: Re: [PATCH v2] pstore: add a KHO backend
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <aixVD7vyjAcJBZDB@plex>
+References: <20260605121040.1177072-1-mclapinski@google.com>
+ <aiwa4jIWEMsvfnVg@kernel.org>
+ <aiwbUfeaF9RdCGR-@plex>
+ <CAAi7L5cnRt6enZnrrbbhsVwtxUDBXrxj16zsg8TtRFvP70ocoQ@mail.gmail.com>
+ <aixSCR1P2zVHDo3e@plex>
+ <CAAi7L5fZTvhb5np=xGWnDEmr4bNXqoAcMhR_ePZ4Qga4E-KucQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAi7L5fZTvhb5np=xGWnDEmr4bNXqoAcMhR_ePZ4Qga4E-KucQ@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260612_114936_484136_F5A4B09B 
-X-CRM114-Status: GOOD (  28.93  )
+X-CRM114-CacheID: sfid-20260612_115146_517630_418F14DD 
+X-CRM114-Status: GOOD (  33.09  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,82 +99,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: Tony Luck <tony.luck@intel.com>, Kees Cook <kees@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, Kees Cook <kees@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jun 12, 2026 at 8:38=E2=80=AFPM Pasha Tatashin
-<pasha.tatashin@soleen.com> wrote:
->
-> On 06-12 19:57, Micha=C5=82 C=C5=82api=C5=84ski wrote:
-> > On Fri, Jun 12, 2026 at 7:21=E2=80=AFPM Pasha Tatashin
-> > <pasha.tatashin@soleen.com> wrote:
-> > >
-> > > On 06-12 17:42, Mike Rapoport wrote:
-> > > > Hi,
+On 06-12 20:49, Michał Cłapiński wrote:
+> On Fri, Jun 12, 2026 at 8:38 PM Pasha Tatashin
+> <pasha.tatashin@soleen.com> wrote:
+> >
+> > On 06-12 19:57, Michał Cłapiński wrote:
+> > > On Fri, Jun 12, 2026 at 7:21 PM Pasha Tatashin
+> > > <pasha.tatashin@soleen.com> wrote:
 > > > >
-> > > > On Fri, Jun 05, 2026 at 02:10:40PM +0200, Michal Clapinski wrote:
-> > > > > Up to this point to preserve late shutdown logs in memory, users =
-had to
-> > > > > predefine a memory region using ramoops. This commit changes this=
- by
-> > > > > preserving a buffer using kexec-handover.
+> > > > On 06-12 17:42, Mike Rapoport wrote:
+> > > > > Hi,
 > > > > >
-> > > > > pstore_kho supports preserving only 1 dmesg buffer.
-> > > > > It gets replaced with the new buffer on every kexec, so the user =
-has to
-> > > > > copy the file out of pstore after every kexec.
-> > > > > There is no erase() support.
+> > > > > On Fri, Jun 05, 2026 at 02:10:40PM +0200, Michal Clapinski wrote:
+> > > > > > Up to this point to preserve late shutdown logs in memory, users had to
+> > > > > > predefine a memory region using ramoops. This commit changes this by
+> > > > > > preserving a buffer using kexec-handover.
+> > > > > >
+> > > > > > pstore_kho supports preserving only 1 dmesg buffer.
+> > > > > > It gets replaced with the new buffer on every kexec, so the user has to
+> > > > > > copy the file out of pstore after every kexec.
+> > > > > > There is no erase() support.
+> > > > >
+> > > > > Sorry I didn't jump at v1.
+> > > > >
+> > > > > pstore does not really need a KHO backend. It can use ram backend with
+> > > > > reserve_mem and reserve_mem can be preserved with KHO already.
 > > > >
-> > > > Sorry I didn't jump at v1.
+> > > > I just tested it, and it works well, I think it would be fine for
+> > > > Google's requirements:
 > > > >
-> > > > pstore does not really need a KHO backend. It can use ram backend w=
-ith
-> > > > reserve_mem and reserve_mem can be preserved with KHO already.
+> > > > CONFIG_PSTORE=y
+> > > > CONFIG_PSTORE_RAM=y
+> > > > CONFIG_PSTORE_CONSOLE=y
 > > >
-> > > I just tested it, and it works well, I think it would be fine for
-> > > Google's requirements:
-> > >
-> > > CONFIG_PSTORE=3Dy
-> > > CONFIG_PSTORE_RAM=3Dy
-> > > CONFIG_PSTORE_CONSOLE=3Dy
+> > > Is it common to write to this console? I think what I typically see in
+> > > the console are error logs that are also in dmesg, so if I preserve
+> > > console logs and dmesg I just have 2 files where one is a subset of
+> > > lines from the other.
 > >
-> > Is it common to write to this console? I think what I typically see in
-> > the console are error logs that are also in dmesg, so if I preserve
-> > console logs and dmesg I just have 2 files where one is a subset of
-> > lines from the other.
->
-> We need either your KHO backend, or the following patch:
-> https://lore.kernel.org/all/20260612172623.1218280-1-pasha.tatashin@solee=
-n.com/
->
-> We need all dmesg messages.
-
-We get all of the dmesg messages if you compile with
-
-CONFIG_PSTORE=3Dy
-CONFIG_PSTORE_RAM=3Dy
-
-and the cmdline:
-reserve_mem=3D2M:2M:dmesg_buffer ramoops.mem_name=3Ddmesg_buffer
-ramoops.max_reason=3D5 ramoops.console_size=3D0
-ramoops.record_size=3D2097152 ramoops.ftrace_size=3D0 ramoops.pmsg_size=3D0
-(the diff between yours and mine is I set console_size to 0 and
-record_size to 2M, you do it the other way round).
-
-Dmesg is kept in "record_size". We don't need to preserve the console
-at all (unless there is something in console that isn't in dmesg but
-I've never seen that).
-
+> > We need either your KHO backend, or the following patch:
+> > https://lore.kernel.org/all/20260612172623.1218280-1-pasha.tatashin@soleen.com/
 > >
-> > > With the following parameters:
-> > > 'reserve_mem=3D2M:2M:dmesg_buffer ramoops.mem_name=3Ddmesg_buffer ram=
-oops.max_reason=3D5 ramoops.console_size=3D2097152 ramoops.record_size=3D0 =
-ramoops.ftrace_size=3D0 ramoops.pmsg_size=3D0'
+> > We need all dmesg messages.
+> 
+> We get all of the dmesg messages if you compile with
+> 
+> CONFIG_PSTORE=y
+> CONFIG_PSTORE_RAM=y
+
+Ah awesome, thanks! My patch is not needed, I will reply to it.
+
+Pasha
+
+> 
+> and the cmdline:
+> reserve_mem=2M:2M:dmesg_buffer ramoops.mem_name=dmesg_buffer
+> ramoops.max_reason=5 ramoops.console_size=0
+> ramoops.record_size=2097152 ramoops.ftrace_size=0 ramoops.pmsg_size=0
+> (the diff between yours and mine is I set console_size to 0 and
+> record_size to 2M, you do it the other way round).
+> 
+> Dmesg is kept in "record_size". We don't need to preserve the console
+> at all (unless there is something in console that isn't in dmesg but
+> I've never seen that).
+> 
 > > >
-> > > KHO preserves pstore properly. However, we need one patch that would
-> > > allow for ramoops console to capture the output even when quiet is
-> > > provided.
-> > >
-> > > Pasha
+> > > > With the following parameters:
+> > > > 'reserve_mem=2M:2M:dmesg_buffer ramoops.mem_name=dmesg_buffer ramoops.max_reason=5 ramoops.console_size=2097152 ramoops.record_size=0 ramoops.ftrace_size=0 ramoops.pmsg_size=0'
+> > > >
+> > > > KHO preserves pstore properly. However, we need one patch that would
+> > > > allow for ramoops console to capture the output even when quiet is
+> > > > provided.
+> > > >
+> > > > Pasha
 
