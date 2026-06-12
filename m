@@ -4,78 +4,156 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AB2EFCD98DA
-	for <kexec@archiver.kernel.org>; Fri, 12 Jun 2026 21:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A350FCD98CF
+	for <kexec@archiver.kernel.org>; Fri, 12 Jun 2026 22:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Y63OIuewjJn4DM3LNPrZ6+3k1EeVNDYrDOZ6UJ5T9lM=; b=1mhoFULiILdhPZDIF9mHe5mNVv
-	Ll+iLJ1VYYn0hgkhdh40lFk0xjf39hqVuOrdCNj6B3rvTOo1drwx+l/0ztMxFhY/M+Q/4rIotzyuJ
-	M6zr3znSe3ZY+DVDS9j6eS98dZUy6iiJJpkuZ01LMnsQc+pjmONMzQSvD2spQRT2KZfZSCb4zZuXn
-	Gkv9/QxqkIxgo3mJPyO7HB4YObNAJerPpxdP/gTzo8dEaWDULaNRMc3Jb17ifCra+dVyw3wV4HJsj
-	G22qoaq6TcaGvujUJX7sYvL4lXvNTmpWgsh3Y5naum5O2g/hm1qGeZgyhDPPFHwD5kI8DwIXp3zq1
-	dUHjadww==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=9HkJ0K7uzUBITeLqVGhaWVQp+WCT+ww7FytE1TzOrLk=; b=yibgtWEZ4IIB++eqhr2VCIp2yS
+	lX2eyL7l/kvyKjtZxv5ajWBiSw4V1UYQDJbCMhOZjLY8vwFevbiY+SCVp7dTdVbtSdt5j1Qq8rC6Q
+	RYESyiKicKEMLPxiZnxgHCY6PHFfq2BtnxQNPQtYAVwpnDpo3fhrIUHYmpGlT0UmYOy4WuweXosW/
+	1eHxbBGely5RzWdmTg892y9tklf5P2XRTZZfFEdX8Vmoonz1bnw1zTNua+5d1/hkZM6o5XccFYqJC
+	EwKw6JNnTiI3HYSiMzbqIImCR2ehZNhAnMDjPizfw295/R9grMF4Nb4oiEidHcFhFjpU5Xc4DoxmI
+	zhcZYSUQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wY9gp-0000000BcBy-3F2w;
-	Fri, 12 Jun 2026 21:45:23 +0000
-Received: from mail-pj1-x104a.google.com ([2607:f8b0:4864:20::104a])
+	id 1wYAXy-0000000BhC8-0MbU;
+	Fri, 12 Jun 2026 22:40:18 +0000
+Received: from mx0b-00273201.pphosted.com ([67.231.152.164])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wY9gm-0000000BcAK-41fL
+	id 1wYAXs-0000000Bh4D-3wN8
 	for kexec@lists.infradead.org;
-	Fri, 12 Jun 2026 21:45:22 +0000
-Received: by mail-pj1-x104a.google.com with SMTP id 98e67ed59e1d1-36bd4146cb2so1574574a91.1
-        for <kexec@lists.infradead.org>; Fri, 12 Jun 2026 14:45:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781300720; x=1781905520; darn=lists.infradead.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y63OIuewjJn4DM3LNPrZ6+3k1EeVNDYrDOZ6UJ5T9lM=;
-        b=A+hgRLQKCtUDWp0SuDK0tlutWnOkMdFpDP2o5XMBShljry0QYjWgPCAtvvYw5C4QHH
-         uQsXNjGQk9Tr9cd6J2QccQnUToc/47pQ7VkyXp+F7Jx6DVw2mYD0C746NNcTTuKZvd0q
-         TcCkVq0BoSnXt26bjG/3PzEI+6Qf5HJswYNzs7iIXcyby6+OCJntKau5SKhfBf0KILaI
-         CexCvHVvEBA2T9uQeeWyxNTAUmbNIFF+VJLw1coVhEQu3QFNUsF4T9EI2IDqtBkU6gCQ
-         ZAftP6+/wMYrQREw50E6JbD9XNuzU1WrYPtF8d0uQhacbkNRcEKyRmtCpS2sZSbBW3RP
-         zSkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781300720; x=1781905520;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y63OIuewjJn4DM3LNPrZ6+3k1EeVNDYrDOZ6UJ5T9lM=;
-        b=ZnjMEl/uuSv0BRrYCIKiYQoIQr0dKfV3CF/XkI9p1PatSGCsJQdQgpWVH1t4RH3lKi
-         WlT6o97YT08kyYRYjYV+VdRnKkcV80UqUgRP0jK/OvusfqqsWM6Zkcw4YEnnSohtf42N
-         CGRVOdDr6TYBa0+rfM3JK7ngpt7Rf1YgXwDVNfRY5yBBzHJhuW3JcYN4ox8FQiKyH0ly
-         hh0scgqPjsRuA3cSXwhJGTUofe1q4OCznaOa9Csybz/sDtX5X/wyWrSCTtY2A6mEEbtv
-         Sve4uxhPjOcgAnnNzi3gNDPyt8tVaQU7oSbzYL/w5wzGEhd/yJJzZj/IZeyrBpBGey0W
-         IxYw==
-X-Forwarded-Encrypted: i=1; AFNElJ+vZlY0U8gySnsqKTZ5UHAda+v6DQRNpHdGdj8Ac5MFu5Q1kh3n36SN59+WIz9O02TaCEvwQg==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yxh5s2N4KQghmDR9JTLHK8CHfW6vbCdoNPd9HNKxyP48TwK6soD
-	Pnpg0GjVzuM4H8wphWXS39cSjxaw3wpHZvR17zAchIyarmLLBV+gprZpss+DSKLL/GrQbRTYFmX
-	3MRYvu2jjRQ==
-X-Received: from pghc6.prod.google.com ([2002:a63:da06:0:b0:c86:253f:3d70])
- (user=vipinsh job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3ec3:b0:35f:c493:cac5
- with SMTP id 98e67ed59e1d1-379eff366b7mr4487198a91.16.1781300719329; Fri, 12
- Jun 2026 14:45:19 -0700 (PDT)
-Date: Fri, 12 Jun 2026 14:45:12 -0700
-In-Reply-To: <20260612214512.464146-1-vipinsh@google.com>
-Mime-Version: 1.0
-References: <20260612214512.464146-1-vipinsh@google.com>
-X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260612214512.464146-3-vipinsh@google.com>
-Subject: [PATCH v3 2/2] selftests/liveupdate: Move luo_test_utils.* into a
- reusable library
-From: Vipin Sharma <vipinsh@google.com>
-To: pasha.tatashin@soleen.com, rppt@kernel.org, pratyush@kernel.org
-Cc: tarunsahu@google.com, skhawaja@google.com, shuah@kernel.org, 
-	dmatlack@google.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-kselftest@vger.kernel.org, Vipin Sharma <vipinsh@google.com>
-Content-Type: text/plain; charset="UTF-8"
+	Fri, 12 Jun 2026 22:40:16 +0000
+Received: from pps.filterd (m0108163.ppops.net [127.0.0.1])
+	by mx0b-00273201.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65CLmjEB106363;
+	Fri, 12 Jun 2026 15:40:10 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juniper.net; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=PPS03102026; bh=9HkJ0K7uzUBITeLqVGha
+	WVQp+WCT+ww7FytE1TzOrLk=; b=LCOAA9L/W5q9ePsBPZ4TwwvE0TrWz2QYiMOG
+	d84y0387v/dQ+JsC+bcFODd/1x1GBCPDp3CHRT+gs9mwS65sm4YbdGHwcS6AqXfS
+	uAVoxqqulDZOmOuOS82n+vUUbKX6eZTuy7i/KjVfbQxfeSlPw6bPjvk4C/Q+lLDF
+	lTsb8heZl1BKjNrwTjD2mLLj3UpdojUx7zku1t83BdL8rW1jzxgTCu1wt54j4KJ2
+	P28In7ArrZKiRAD2Fuh4OdidfncWf6W6K3RiyhT87t7rtJN6n2h/zAWBtLiSdznh
+	QJUVPjzMeFlfqrFY75aNFNYbXfYrAdkigFvQIFFhGU66pJYXbA==
+Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazon11011032.outbound.protection.outlook.com [52.101.52.32])
+	by mx0b-00273201.pphosted.com (PPS) with ESMTPS id 4erkdn271e-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 12 Jun 2026 15:40:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=o1gRvThKMFEGlvJn5sZCrJs6CfEn+LCJcMHxuZe4hqrdatlVVx2lgEvk2W2xPY562R5pn5rubNAYx0Wsk6p68T9AXF8a/heZv7NcGsUb6zwFX8C3fEZs8u3G2/4Z2tTt9kYnBPSLXqRqtkj6fCGtv4rwqBU9KKesyQAELsa7h0N2oaafCh2AL7sChUVsMY6a5Ct+atXANe+L4r/ZviJ6WGM1JdGPKnpz5/HLdS2LA6xQ/O3BodFH3xA8k6w8XZO97J5snFR8AX49liyqY/I1LoM/h3TZKBahDEjgJNBt5hKTl61lY/FagH15wmfECHisdHfoOCqiBORfKAGmSgJvKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=9HkJ0K7uzUBITeLqVGhaWVQp+WCT+ww7FytE1TzOrLk=;
+ b=ViPP0SFKpXwYdcvhiqkulZIv/TxGsWVHt+asfEVMzMsOnD+vB6FZQdtJajiM7Sy5WYpvUUwWYPCYyZmEZwbMrDfXfVV4uKVs1hBsrHEYEMVUzOfhDK7RHAbMiHcslBaoglzfh+OSp0jASycdLqZreepzL/D5g5qDEUC3A2+DFESw7WOwvWOsnWeKftt8kU1B6GJ+vtldFmdUJrRHsj8YCEsOreMDQ74JgabTn0Y+l+sObvCUGyvhil5wN2R6k+8xBurtrb6015QSLjNU45vN9Dg3BlvBz05nWDvpd9Y7wu+D0GdGwA+6LA+NMB87ZodVb2BBDGAIMn/MD20E30Uvrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 66.129.239.14) smtp.rcpttodomain=amazon.com smtp.mailfrom=juniper.net;
+ dmarc=fail (p=reject sp=reject pct=100) action=oreject
+ header.from=juniper.net; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juniper.net;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9HkJ0K7uzUBITeLqVGhaWVQp+WCT+ww7FytE1TzOrLk=;
+ b=F7Zg8fnhcUFJYAsV45XVOclJFZyvkLnK1XQp5QW9iutuuTQsT1iab3T9aG/iELrKLn3wioZmBeEwuBEel7J7i8LcyMdnXpTcQQGUB4cEq4JbAVwMVTFI7nF04SdKkHve2GeV1KT8CauHs8pVhw1bbLqxNmGPcipD/uTwEYa6rKU=
+Received: from SJ0PR13CA0158.namprd13.prod.outlook.com (2603:10b6:a03:2c7::13)
+ by PH0PR05MB998601.namprd05.prod.outlook.com (2603:10b6:510:3b5::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.15; Fri, 12 Jun
+ 2026 22:40:07 +0000
+Received: from SJ5PEPF000001EF.namprd05.prod.outlook.com
+ (2603:10b6:a03:2c7:cafe::64) by SJ0PR13CA0158.outlook.office365.com
+ (2603:10b6:a03:2c7::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.139.6 via Frontend Transport; Fri, 12
+ Jun 2026 22:40:07 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 66.129.239.14)
+ smtp.mailfrom=juniper.net; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=juniper.net;
+Received-SPF: Fail (protection.outlook.com: domain of juniper.net does not
+ designate 66.129.239.14 as permitted sender) receiver=protection.outlook.com;
+ client-ip=66.129.239.14; helo=juniper.net;
+Received: from juniper.net (66.129.239.14) by
+ SJ5PEPF000001EF.mail.protection.outlook.com (10.167.242.203) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.113.7 via Frontend Transport; Fri, 12 Jun 2026 22:40:07 +0000
+Received: from p-exchbe-eqx-03.jnpr.net (10.104.9.86) by
+ p-exchfe-eqx-04.jnpr.net (10.104.9.52) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Fri, 12 Jun 2026 15:40:07 -0700
+Received: from p-mailhub01.juniper.net (10.104.20.6) by
+ p-exchbe-eqx-03.jnpr.net (10.104.9.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Fri, 12 Jun 2026 15:40:07 -0700
+Received: from buildcontainer.juniper.net (qnc-bas-srv057d.juniper.net [10.46.0.146])
+	by p-mailhub01.juniper.net (8.14.4/8.11.3) with ESMTP id 65CMe5rZ013001;
+	Fri, 12 Jun 2026 15:40:06 -0700
+	(envelope-from makb@juniper.net)
+From: Brian Mak <makb@juniper.net>
+To: <kexec@lists.infradead.org>
+CC: Baoquan He <bhe@redhat.com>, Alexander Graf <graf@amazon.com>,
+        Brian Mak
+	<makb@juniper.net>
+Subject: [PATCH 0/3] kexec-tools: Add new KEXEC_FILE flags
+Date: Fri, 12 Jun 2026 15:39:42 -0700
+Message-ID: <20260612223945.1400554-1-makb@juniper.net>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001EF:EE_|PH0PR05MB998601:EE_
+X-MS-Office365-Filtering-Correlation-Id: f065d3cf-4e94-43bd-6c07-08dec8d38dbf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|36860700016|1800799024|376014|23010399003|82310400026|18002099003|56012099006|11063799006;
+X-Microsoft-Antispam-Message-Info: NZlKW3ihwv8ONHGQBDmlKeutZ4CyIq3+dNf/zy+/iJ3TnLjmkA6GldS838WrMnP8FXP1DpgcXmNZ4GNKBP84KuMoswfnlQDfuMPl6J1ek3R2HQUvpHHc60uUVtEhlBqK4e4dphJVYF68O4G9bKzsRKxmH73+nx/Eagvyp4d34C/G65lwNLWDnc10DbxcY6SN0TdRAhCm4wY9Gx+1cygDJ+cmEovK4IVs0OLSp3WiaIes4EQxRiNrfXhyUmOq5GZ890CZRcbhr0m8lZqLFL4re7F6wGtwRrId6cKYhhgRYNvtfiOZZ9C17YFrZa6EpYRoTwPusipzBM9GaCzgMCZ3ojhjGf7leI/8NO/qdoLMFeGwgjbx/JWeL3pjrBLnJUP1KE1YwwgNgw4ACg+Ol+s/DJ1gtBm2ejgTQP2fRqPpaqJTHwf3AIpJATWRSG4TLdgVv3w9NFEuSVlqb8uL4XBNPmprAOUIOZMWwUMkr1UdOBY2Yx9LmptGRajYydEnBqSq9YB3WJ4POXVezfKmivet2JqUax0U8qrS3F+4Xlk5yJ/d1SjjUAwtpAArTACuZ+GPxc4BQL8xA3QKYCRnB9aRTwE3ucp0PVDSf19ZppxoV5m2R98TCix8OxTpM0wny11Kfe97wWa94Dh8lI/uK0UJqurkYnjVCd7OrnQa60tQd/BAMwC1jqA1bUMFkG9UDwsMEq56GzK+9VaoN3AyFHkcso7rNcobS1QG6HIqra5e2vc=
+X-Forefront-Antispam-Report: CIP:66.129.239.14;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:juniper.net;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(1800799024)(376014)(23010399003)(82310400026)(18002099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: gkgC1WUfJb+CAJo6CsTC/ea2oZAXBND5r2Nl/9YWm9NDktYiVYF2hKnYSZcBIp04GRTe9hnr4XdHew/IRJhtgtayE7jgc5ThY+oEw0q0CGoydk41CNpeVrpp29eJLzgjH4md8X9NdaFOmmSTElYeZwgn4LavzknNF7DFuEWMuRfTCkPAujf+W2QW8WtOEZlyT1M7fk/TmQet7I2oAIFOBYjVU2SaK84Z7j/4QP4NZmEdLQXGcVWjt8Nm0fLOz2CaVtmDLxhTAAebgZIi5M94A+lyfn47CTWaODE1yDnDvxJ8vfsFRSGom/WnGNOrCpdoHmkpsqroTDrdjIEGhbSP5fCejkLBx617KAwpgMhwH/p/hchnsS9AMPYZ9TkwXQOBNC30EkBMs2e9OpyPBlF3pjjku5odQhIYc/2mUuzc+/PPI909cbZp8RU7VEkwRO1e
+X-Exchange-RoutingPolicyChecked: mCRPBvmURfQLy7LJR/1xxfr57jPxr2E29sUlM3Qa2w4AKMoVVTcL+vjz2hBSr7uSnIcHf3c5rZYghk4qHkbDYhXimoQQPMIY+ToAH2Hf/1XTCJeoiEqqKw3vW7yoNdKUl7tquSCVLdpZoIJ2V9hdsMbd0LLiQxKtcUshiVh1D9POLs+LshIoGspUHnZW3GhPTicHjc6UA3iqpw69eWV6I3locWhQDILdKLjlUz5rpT4zLfGzdK7XCaGwmAynuBVsHech3zJzPc/8wEAeg0lGEriKRA+P5puwxRT2MOyit3cZ0j8xyxovAZFkDTURff0WsUc22nB5nx0mo/wJ0upZQg==
+X-OriginatorOrg: juniper.net
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2026 22:40:07.4824
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f065d3cf-4e94-43bd-6c07-08dec8d38dbf
+X-MS-Exchange-CrossTenant-Id: bea78b3c-4cdb-4130-854a-1d193232e5f4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bea78b3c-4cdb-4130-854a-1d193232e5f4;Ip=[66.129.239.14];Helo=[juniper.net]
+X-MS-Exchange-CrossTenant-AuthSource: SJ5PEPF000001EF.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR05MB998601
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjEyMDIxNiBTYWx0ZWRfX1viP0f3Y2FBD
+ 3sEP8mW2uiA7blOb9jNKb0k/+iGj7YR84Cnzlhq7WFD3kJ9/HDY9bO1+8RtY7or7mOOKGPBAczQ
+ cjebg3dExy4E868jmQfFc4yfLE/8NZR9bAcZ9C7+4az2YeucYkhe
+X-Proofpoint-ORIG-GUID: wYcvTWfr8UvU5j11gcrArgH60-TWzcYc
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjEyMDIxNiBTYWx0ZWRfX/wLF0x9zsrFJ
+ ew76E3ui/AeglZAPUuRxX1z7cCFy1s+HERiRVC0JpP6l+TyBdYnhQVS4WENTnBvjTrGsgEskm34
+ IXjyXMoulMyZhpePwerdWyGOG2weOelgY3BlALhjJ8zzIsD+KWd/7GdYWFvmXL71i4hjV9c1z2L
+ ZorJdIf0zYAEwQFOQ6nH0xb6hc/ciAKWR0VQAPP2S3+8HxQLDlqy/e+wZs07P5d3Y+xmCV8Z4Fd
+ QdYzppI/JnMDmA7I7DhcVB2FMnimDt2BzHHbWAI0QuOG29lolEu6HimvFSt7yvl7N+UZ62QX1/V
+ wduxPBCWm+D/OddT5mxdEMV2HJ0D5Lrs6JfeDZeMqxLH9DfI+xWI4Mejf9/QT27kdR4eb0ocfIf
+ foxhUxfuwVZ577ZyHMHqOk20RBLmjGAuVYZPiH7suAikKEkcwO763TyUyt4gb6ExjN0j+BxzvES
+ mHNuNiau5ANQPAnDY3A==
+X-Proofpoint-GUID: wYcvTWfr8UvU5j11gcrArgH60-TWzcYc
+X-Authority-Analysis: v=2.4 cv=ZvPd7d7G c=1 sm=1 tr=0 ts=6a2c8ac9 cx=c_pps
+ a=vMZ8N8iCC09X6dpNzQs02g==:117 a=f/rncuQqEjTEF/G1odkJ9w==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=FelO9ux0wxsA:10 a=s63m1ICgrNkA:10
+ a=rhJc5-LppCAA:10 a=VkNPw1HP01LnGYTKEx00:22 a=7vL3O5uBSuztJ3xaqtyr:22
+ a=kT44gYg0zFKYNBFEzlFE:22 a=3faxXdAzTQvJ_3AARtQA:9 a=zZCYzV9kfG8A:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-12_03,2026-06-12_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_spam_notspam policy=outbound_spam
+ score=0 clxscore=1011 suspectscore=0 spamscore=0 phishscore=0 adultscore=0
+ priorityscore=1501 impostorscore=0 malwarescore=0 bulkscore=0
+ lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606040000
+ definitions=main-2606120216
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260612_144521_005336_C8E51DE8 
-X-CRM114-Status: GOOD (  14.13  )
+X-CRM114-CacheID: sfid-20260612_154013_292108_AEA4B78B 
+X-CRM114-Status: GOOD (  13.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,229 +168,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Move luo_test_utils.[ch] into a lib/ directory and make libliveupdate
-library. Pull the rules to build them out into a separate
-libliveupdate.mk script. This will enable these utilities to be
-also built by and used within other selftests (such as VFIO).
+Hi all,
 
-No functional change intended.
+I realized I forgot to raise a patch series for adding the new kexec_file flags.
+Apologies for the delay on this.
 
-Co-developed-by: David Matlack <dmatlack@google.com>
-Signed-off-by: David Matlack <dmatlack@google.com>
-Acked-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-Signed-off-by: Vipin Sharma <vipinsh@google.com>
----
- tools/testing/selftests/liveupdate/.gitignore |  1 +
- tools/testing/selftests/liveupdate/Makefile   | 14 ++++---------
- .../include/libliveupdate.h}                  |  8 ++++----
- .../selftests/liveupdate/lib/libliveupdate.mk | 20 +++++++++++++++++++
- .../{luo_test_utils.c => lib/lu_utils.c}      |  2 +-
- .../testing/selftests/liveupdate/liveupdate.c |  2 +-
- .../selftests/liveupdate/luo_kexec_simple.c   |  2 +-
- .../selftests/liveupdate/luo_multi_session.c  |  2 +-
- .../selftests/liveupdate/luo_stress_files.c   |  3 ++-
- .../liveupdate/luo_stress_sessions.c          |  3 ++-
- 10 files changed, 37 insertions(+), 20 deletions(-)
- rename tools/testing/selftests/liveupdate/{luo_test_utils.h => lib/include/libliveupdate.h} (89%)
- create mode 100644 tools/testing/selftests/liveupdate/lib/libliveupdate.mk
- rename tools/testing/selftests/liveupdate/{luo_test_utils.c => lib/lu_utils.c} (99%)
+This series adds support for the KEXEC_FILE_NO_CMA and KEXEC_FILE_FORCE_DTB
+flags, which are used by the --no-cma and --force-dtb options respectively.
 
-diff --git a/tools/testing/selftests/liveupdate/.gitignore b/tools/testing/selftests/liveupdate/.gitignore
-index 661827083ab6..18a0c7036cf3 100644
---- a/tools/testing/selftests/liveupdate/.gitignore
-+++ b/tools/testing/selftests/liveupdate/.gitignore
-@@ -3,6 +3,7 @@
- !/**/
- !*.c
- !*.h
-+!*.mk
- !*.sh
- !.gitignore
- !config
-diff --git a/tools/testing/selftests/liveupdate/Makefile b/tools/testing/selftests/liveupdate/Makefile
-index 30689d22cb02..634211c66652 100644
---- a/tools/testing/selftests/liveupdate/Makefile
-+++ b/tools/testing/selftests/liveupdate/Makefile
-@@ -1,7 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
--LIB_C += luo_test_utils.c
--
- TEST_GEN_PROGS += liveupdate
- 
- TEST_GEN_PROGS_EXTENDED += luo_kexec_simple
-@@ -12,25 +10,21 @@ TEST_GEN_PROGS_EXTENDED += luo_stress_files
- TEST_FILES += do_kexec.sh
- 
- include ../lib.mk
-+include lib/libliveupdate.mk
- 
- CFLAGS += $(KHDR_INCLUDES)
- CFLAGS += -Wall -O2 -Wno-unused-function
- CFLAGS += -MD
- 
--LIB_O := $(patsubst %.c, $(OUTPUT)/%.o, $(LIB_C))
- TEST_O := $(patsubst %, %.o, $(TEST_GEN_PROGS))
- TEST_O += $(patsubst %, %.o, $(TEST_GEN_PROGS_EXTENDED))
- 
--TEST_DEP_FILES := $(patsubst %.o, %.d, $(LIB_O))
-+TEST_DEP_FILES := $(patsubst %.o, %.d, $(LIBLIVEUPDATE_O))
- TEST_DEP_FILES += $(patsubst %.o, %.d, $(TEST_O))
- -include $(TEST_DEP_FILES)
- 
--$(LIB_O): $(OUTPUT)/%.o: %.c
--	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c $< -o $@
--
--$(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED): $(OUTPUT)/%: %.o $(LIB_O)
--	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH) $< $(LIB_O) $(LDLIBS) -o $@
-+$(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED): $(OUTPUT)/%: %.o $(LIBLIVEUPDATE_O)
-+	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH) $< $(LIBLIVEUPDATE_O) $(LDLIBS) -o $@
- 
--EXTRA_CLEAN += $(LIB_O)
- EXTRA_CLEAN += $(TEST_O)
- EXTRA_CLEAN += $(TEST_DEP_FILES)
-diff --git a/tools/testing/selftests/liveupdate/luo_test_utils.h b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
-similarity index 89%
-rename from tools/testing/selftests/liveupdate/luo_test_utils.h
-rename to tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
-index 49931ab90593..fa07fed08364 100644
---- a/tools/testing/selftests/liveupdate/luo_test_utils.h
-+++ b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
-@@ -7,13 +7,13 @@
-  * Utility functions for LUO kselftests.
-  */
- 
--#ifndef LUO_TEST_UTILS_H
--#define LUO_TEST_UTILS_H
-+#ifndef SELFTESTS_LIVEUPDATE_LIB_LIVEUPDATE_H
-+#define SELFTESTS_LIVEUPDATE_LIB_LIVEUPDATE_H
- 
- #include <errno.h>
- #include <string.h>
- #include <linux/liveupdate.h>
--#include "../kselftest.h"
-+#include "../../../kselftest.h"
- 
- #define LUO_DEVICE "/dev/liveupdate"
- 
-@@ -46,4 +46,4 @@ typedef void (*luo_test_stage2_fn)(int luo_fd, int state_session_fd);
- int luo_test(int argc, char *argv[], const char *state_session_name,
- 	     luo_test_stage1_fn stage1, luo_test_stage2_fn stage2);
- 
--#endif /* LUO_TEST_UTILS_H */
-+#endif /* SELFTESTS_LIVEUPDATE_LIB_LIVEUPDATE_H */
-diff --git a/tools/testing/selftests/liveupdate/lib/libliveupdate.mk b/tools/testing/selftests/liveupdate/lib/libliveupdate.mk
-new file mode 100644
-index 000000000000..634cd4c16c47
---- /dev/null
-+++ b/tools/testing/selftests/liveupdate/lib/libliveupdate.mk
-@@ -0,0 +1,20 @@
-+include $(top_srcdir)/scripts/subarch.include
-+ARCH ?= $(SUBARCH)
-+
-+LIBLIVEUPDATE_SRCDIR := $(selfdir)/liveupdate/lib
-+
-+LIBLIVEUPDATE_C := lu_utils.c
-+
-+LIBLIVEUPDATE_OUTPUT := $(OUTPUT)/libliveupdate
-+
-+LIBLIVEUPDATE_O := $(patsubst %.c, $(LIBLIVEUPDATE_OUTPUT)/%.o, $(LIBLIVEUPDATE_C))
-+
-+CFLAGS += -I$(LIBLIVEUPDATE_SRCDIR)/include
-+
-+$(LIBLIVEUPDATE_OUTPUT):
-+	$(Q)mkdir -p $@
-+
-+$(LIBLIVEUPDATE_O): $(LIBLIVEUPDATE_OUTPUT)/%.o : $(LIBLIVEUPDATE_SRCDIR)/%.c | $(LIBLIVEUPDATE_OUTPUT)
-+	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c $< -o $@
-+
-+EXTRA_CLEAN += $(LIBLIVEUPDATE_OUTPUT)
-diff --git a/tools/testing/selftests/liveupdate/luo_test_utils.c b/tools/testing/selftests/liveupdate/lib/lu_utils.c
-similarity index 99%
-rename from tools/testing/selftests/liveupdate/luo_test_utils.c
-rename to tools/testing/selftests/liveupdate/lib/lu_utils.c
-index ddb4123f5107..1f92daf3b372 100644
---- a/tools/testing/selftests/liveupdate/luo_test_utils.c
-+++ b/tools/testing/selftests/liveupdate/lib/lu_utils.c
-@@ -22,7 +22,7 @@
- #include <errno.h>
- #include <stdarg.h>
- 
--#include "luo_test_utils.h"
-+#include <libliveupdate.h>
- 
- int luo_open_device(void)
- {
-diff --git a/tools/testing/selftests/liveupdate/liveupdate.c b/tools/testing/selftests/liveupdate/liveupdate.c
-index 5c7ed2512710..2dedd5fc2534 100644
---- a/tools/testing/selftests/liveupdate/liveupdate.c
-+++ b/tools/testing/selftests/liveupdate/liveupdate.c
-@@ -24,9 +24,9 @@
- #include <sys/ioctl.h>
- #include <unistd.h>
- 
-+#include <libliveupdate.h>
- #include <linux/liveupdate.h>
- 
--#include "luo_test_utils.h"
- #include "../kselftest.h"
- #include "../kselftest_harness.h"
- 
-diff --git a/tools/testing/selftests/liveupdate/luo_kexec_simple.c b/tools/testing/selftests/liveupdate/luo_kexec_simple.c
-index d7ac1f3dc4cb..786ac93b9ae3 100644
---- a/tools/testing/selftests/liveupdate/luo_kexec_simple.c
-+++ b/tools/testing/selftests/liveupdate/luo_kexec_simple.c
-@@ -8,7 +8,7 @@
-  * across a single kexec reboot.
-  */
- 
--#include "luo_test_utils.h"
-+#include <libliveupdate.h>
- 
- #define TEST_SESSION_NAME "test-session"
- #define TEST_MEMFD_TOKEN 0x1A
-diff --git a/tools/testing/selftests/liveupdate/luo_multi_session.c b/tools/testing/selftests/liveupdate/luo_multi_session.c
-index 0ee2d795beef..aac24a5f5ce3 100644
---- a/tools/testing/selftests/liveupdate/luo_multi_session.c
-+++ b/tools/testing/selftests/liveupdate/luo_multi_session.c
-@@ -9,7 +9,7 @@
-  * files.
-  */
- 
--#include "luo_test_utils.h"
-+#include <libliveupdate.h>
- 
- #define SESSION_EMPTY_1 "multi-test-empty-1"
- #define SESSION_EMPTY_2 "multi-test-empty-2"
-diff --git a/tools/testing/selftests/liveupdate/luo_stress_files.c b/tools/testing/selftests/liveupdate/luo_stress_files.c
-index 0cdf9cd4bac7..a0d48490f4ed 100644
---- a/tools/testing/selftests/liveupdate/luo_stress_files.c
-+++ b/tools/testing/selftests/liveupdate/luo_stress_files.c
-@@ -10,7 +10,8 @@
- 
- #include <stdio.h>
- #include <unistd.h>
--#include "luo_test_utils.h"
-+
-+#include <libliveupdate.h>
- 
- #define NUM_FILES 500
- #define STATE_SESSION_NAME "kexec_many_files_state"
-diff --git a/tools/testing/selftests/liveupdate/luo_stress_sessions.c b/tools/testing/selftests/liveupdate/luo_stress_sessions.c
-index f201b1839d1d..278aebabe0e9 100644
---- a/tools/testing/selftests/liveupdate/luo_stress_sessions.c
-+++ b/tools/testing/selftests/liveupdate/luo_stress_sessions.c
-@@ -10,7 +10,8 @@
- 
- #include <stdio.h>
- #include <unistd.h>
--#include "luo_test_utils.h"
-+
-+#include <libliveupdate.h>
- 
- #define NUM_SESSIONS 2000
- #define STATE_SESSION_NAME "kexec_many_state"
+I also saw that there's no debug print for the flags passed to kexec_file_load,
+so I added a print for that as well, which was useful for me to verify these
+patches.
+
+Please let me know if there's any questions or comments.
+
+Thanks,
+Brian
+
+Brian Mak (3):
+  kexec: Add support for disabling usage of CMA
+  kexec: Add DTB carryover support on x86
+  kexec: Add kexec_file_load debug print
+
+ kexec/kexec-syscall.h |  2 ++
+ kexec/kexec.c         | 10 ++++++++++
+ kexec/kexec.h         | 10 +++++++---
+ 3 files changed, 19 insertions(+), 3 deletions(-)
+
+
+base-commit: f75be9241accb7a75e98998040933b9f3b988ac5
 -- 
-2.54.0.1136.gdb2ca164c4-goog
+2.34.1
 
 
