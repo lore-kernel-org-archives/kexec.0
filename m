@@ -4,64 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7AC70CD98CE
-	for <kexec@archiver.kernel.org>; Fri, 12 Jun 2026 14:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2D1A0CD98CF
+	for <kexec@archiver.kernel.org>; Fri, 12 Jun 2026 16:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=8pFVODsK8nCijCDNDLMgxkikkdJrQAhHnV+T+5T5zWc=; b=0kzWLHxB0Vqgp8xspNTZEYdarw
-	2dV2Mea0KLskZO7M+4BA4fiWOG9B5dA5GTiWBF0KEM/eXUL6qV7fAa3xoEwlYBJOEFoCo2KvK5+AJ
-	84EZ7QwWFlMJnxO5R7fAG7v845ZitV/a4Kv69IkY3qtccUQWH6IbizxpM2PJZnaSUGCDFr5nedKSl
-	aMRlutoYzJ5BEucRUKw1cemd5oqHN0D6T7tt7kWaaLHZvxI6iLsAl20Q/k4SOeAFiKTzCXLGsnbuI
-	ygF878FqMkiVh9xzrYKr0ifLC+DEB1ZuUpvkLRmsokmu2Qik/9pWCqEXP/+nexuyh4jKNsmGAPXdL
-	3juWDsGA==;
+	bh=pDX0q8phcP9mhqW5SB+yIq6adpUV680tO/gbdFTi4bg=; b=uIbUygtooPfHcAC6sbVxqd8xM7
+	/GFxH6a+OGDTNlFT/cjUifRVgVAn8t4/f7njoNFmj3I57gOVhNI6HoY9HpKCjx/K7u52cY0CVeDx4
+	COFypLyYYhSGM6Poma33SzqvFIqPEfFMGqrug4FcAwnJfzXcypkYEaVls4ABYduLMBt4AuJZEmwT6
+	KQAMLxIWDvDZz3BZiO1CSJuFph7652k4vwB2yk7N8KHsrEYJn1ULePpY/dgkzDIyWPpIXm57pbC4y
+	CCBHFlHyJRL8gTN6Y4gtf38IBOtdr/7oA18JhbY6tpsZuCviJUFyEiIi0XhikhVsquMiiAfAUwAat
+	LwCqTm+g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wY35z-0000000B652-2bPW;
-	Fri, 12 Jun 2026 14:42:55 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wY5D4-0000000BJwS-34dm;
+	Fri, 12 Jun 2026 16:58:22 +0000
+Received: from mail-ed1-x549.google.com ([2a00:1450:4864:20::549])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wY35y-0000000B64Z-1QY7;
-	Fri, 12 Jun 2026 14:42:54 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id C1FAF6008A;
-	Fri, 12 Jun 2026 14:42:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 500E61F00A3A;
-	Fri, 12 Jun 2026 14:42:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781275373;
-	bh=8pFVODsK8nCijCDNDLMgxkikkdJrQAhHnV+T+5T5zWc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Ym/KchFKUOtSqs03zw7p0bBmd751BWdKhFtBdtk19PaYskXhLxCiU2wKH8lvRvWHo
-	 gawVbS1RIGNl4PlNWJihz03okzNq9/cp6Ww5XKra5xbbcZYHNQxGCJ0q49orkQAj4O
-	 JuLqTbP3nCbWkFMcgWB1ax5EpO+Yvbszkg2J7nRwE6cp4YrWjLJE4Uw3zRwtSxj2zQ
-	 Mky2klprkntTIwKWcITUf5mHQeauSd798W7i3fnaExQYmYxPtva2ty6QfcfSaMh22m
-	 cuE8Pq1IJy/flcs5MBzQsONPlcb+IxnY5oTx1zADRCEiFV2M8MzGlLx8BMD5waisk/
-	 BKTkWBakHuGjw==
-Date: Fri, 12 Jun 2026 09:42:52 -0500
-From: Rob Herring <robh@kernel.org>
-To: Wandun Chen <chenwandun1@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org,
-	iommu@lists.linux.dev, zhaomeijing@lixiang.com,
-	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
-	kernel@xen0n.name, pjw@kernel.org, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, alex@ghiti.fr, saravanak@kernel.org,
-	akpm@linux-foundation.org, bhe@redhat.com, rppt@kernel.org,
-	pasha.tatashin@soleen.com, pratyush@kernel.org,
-	ruirui.yang@linux.dev, m.szyprowski@samsung.com,
-	robin.murphy@arm.com, quic_obabatun@quicinc.com
-Subject: Re: [PATCH v3 00/11] kdump: reduce vmcore size and capture time
-Message-ID: <20260612144252.GB974326-robh@kernel.org>
-References: <20260527032917.3385849-1-chenwandun1@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260527032917.3385849-1-chenwandun1@gmail.com>
+	id 1wY5D1-0000000BJvw-2BYa
+	for kexec@lists.infradead.org;
+	Fri, 12 Jun 2026 16:58:20 +0000
+Received: by mail-ed1-x549.google.com with SMTP id 4fb4d7f45d1cf-68f9ee927fcso970128a12.3
+        for <kexec@lists.infradead.org>; Fri, 12 Jun 2026 09:58:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1781283497; x=1781888297; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pDX0q8phcP9mhqW5SB+yIq6adpUV680tO/gbdFTi4bg=;
+        b=lHgP4Mh35sshGCCX1PGe47nAzoukBf30mcMkHVZQhqca5qw071mlfp2eAhmKRua4uF
+         SOtKxZbqOGMcY2Y1g0gHxA5C0c8F6EMGyadNgRu0Xw2mbaLYEAP2LG/CdRL0enCAWCv9
+         gmCn6A9uzt8XAbDtmpvyq5jWsYpDBcKSssQvTSPVQjyonG+s44WnxRbFfM2++KxWmUjp
+         sjIcpfSarduMikzRXsg2EoNub0iTEng8aaSyTjRody0FX20QS8p7ETmmlKqbCHbGDJBU
+         t+nmrDGvFZRPsLYi9H4Zml8GMNvxmxpjGP60PVexdyt5JYj6Y1KlZ6Q10EGMT6qQGaAJ
+         lFog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781283497; x=1781888297;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pDX0q8phcP9mhqW5SB+yIq6adpUV680tO/gbdFTi4bg=;
+        b=W+oxM+7xgyeyh+ik+sgE2S17M8lzmAHtrj5HmqR6yFdnJ9pDIZXXj7/JnSlMf9qCgI
+         +XSjrfFKwSSsRPYJlJlz4yAvznrGZCvAKAWCYM0resxVDqnvwSjHeys8CVxFeinsakwT
+         J4OztMp1txHg3Tb8xrM3DAXW/RPHLncoZ2uC4jnfApszuyTagApnABxrM5NM4y7b7SaE
+         Rkjq54lixhM2ZjUzj+bnyG/Spk1Ul8qcLq+hP81MFXuBjd9ahQKf4cpm1FB76PpNrDLA
+         ZPpMk5lH4bba3OureYPDYwB+irk/IUU8fq3t/YYl7moWYenuJ4YJYLU+tjk10qbpshiI
+         W5kA==
+X-Forwarded-Encrypted: i=1; AFNElJ+cXX0XNUO6jCzx9HeMhHfXH1vSFTlPilAGMOuFvfB1x5314dY15s6IuR7Cadi+eesEipXmUg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzoBMyIbZQyAHoH3rmA7Fx48jI6TlXMpH5BrcbFQB9H44eeaYru
+	vgCqT9vqPXD25t0whcxzENH6A/GB89IRxDclBOX0Oc1vVpcXy4yUAmGf88EOwJRHBZBnRYsWzdA
+	dRJY9684ilYQsuYtmoQ==
+X-Received: from edi8-n1.prod.google.com ([2002:a05:6402:3048:10b0:691:a21a:fec0])
+ (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6402:5405:b0:68b:f026:f381 with SMTP id 4fb4d7f45d1cf-693787ed75bmr1752058a12.8.1781283496255;
+ Fri, 12 Jun 2026 09:58:16 -0700 (PDT)
+Date: Fri, 12 Jun 2026 16:58:15 +0000
+In-Reply-To: <aiuu1QzAk_pkQKNV@kernel.org>
+Mime-Version: 1.0
+References: <c2478f79207b10a13282d917c961261d17b86a15.1781173768.git.tarunsahu@google.com>
+ <aiqso7rkpX6oMer7@kernel.org> <2vxzmrx1qjuf.fsf@kernel.org>
+ <airGIioUmTtU9326@kernel.org> <air5ho0LOIEKVzRG@plex> <aiuu1QzAk_pkQKNV@kernel.org>
+Message-ID: <9huzqzmbelw8.fsf@tarunix.c.googlers.com>
+Subject: Re: [PATCH] mm/memfd_luo: validate serialized_data before conversion
+From: tarunsahu@google.com
+To: Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260612_095819_579094_EF0E1591 
+X-CRM114-Status: GOOD (  25.12  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,51 +89,68 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, May 27, 2026 at 11:29:06AM +0800, Wandun Chen wrote:
-> From: Wandun Chen <chenwandun@lixiang.com>
-> 
-> On SoCs that carve out large firmware-owned reserved memory (GPU
-> firmware, DSP, modem, camera ISP, NPU, ...), kdump currently dumps
-> those carveouts as part of system RAM even though their contents are
-> firmware state that is not useful for kernel crash analysis.
-> 
-> This series introduces an opt-in 'dumpable' flag [1] on struct
-> reserved_mem and uses it to filter the elfcorehdr PT_LOAD ranges on
-> DT-based architectures (arm64, riscv, loongarch). By default reserved
-> regions are treated as non-dumpable; CMA regions are explicitly opted
-> in because their pages are returned to the buddy allocator and may
-> carry key crash-analysis data.
-> 
-> The series is organized as follows:
-> Patches 1-3: Pre-existing fixes and a small prep change.
-> Patches 4-5: Restructure to allow appending /memreserve/ entries.
-> Patches 6-7: Add a dumpable flag and append /memreserve/ entries.
-> Patch 8: Add generic kdump helpers.
-> Patches 9-11: Wire the helpers into arm64, riscv and loongarch kdump
->               elfcorehdr preparation.
-> 
-> v2 --> v3:
-> 1. Fix out-of-bounds issue if device tree lacks /reserved-memory node.[2]
-> 2. Fix UAF issue when alloc_reserved_mem_array() fails.
-> 3. Add some prepare patches.
-> 
-> v1 --> v2:
-> 1. v1 added an opt-out DT property ('linux,no-dump'). Per Rob's
->    feedback [1], v2 drop that property and exclude reserve memory
->    by default.
-> 2. Split some prepared patches from the original patches.
-> 3. Address coding-style comments on patch 5 from Rob.
-> 
-> [1] https://lore.kernel.org/lkml/20260506144542.GA2072596-robh@kernel.org/
-> [2] https://sashiko.dev/#/patchset/20260520091844.592753-1-chenwandun%40lixiang.com?part=4
-> 
-> Wandun Chen (11):
->   of: reserved_mem: handle NULL name in of_reserved_mem_lookup()
+Mike Rapoport <rppt@kernel.org> writes:
 
->   of: reserved_mem: zero total_reserved_mem_cnt if no valid
->     /reserved-memory entry
+> On Thu, Jun 11, 2026 at 06:11:13PM +0000, Pasha Tatashin wrote:
+>> On 06-11 17:28, Mike Rapoport wrote:
+>> > On Thu, Jun 11, 2026 at 03:37:12PM +0200, Pratyush Yadav wrote:
+>> > > On Thu, Jun 11 2026, Mike Rapoport wrote:
+>> > > 
+>> > > > On Thu, Jun 11, 2026 at 10:30:03AM +0000, Tarun Sahu wrote:
+>> > > >> In memfd_luo_finish() and memfd_luo_retrieve(), phys_to_virt() was called
+>> > > >> on args->serialized_data before checking if the physical address is valid.
+>> > > >> Since physical address 0 does not map to virtual NULL (due to direct
+>> > > >> mapping offsets), the subsequent check 'if (!ser)' was ineffective at
+>> > > >> catching a missing serialized_data, leading to unsafe dereferences later.
+>> > > >> 
+>> > > >> Validate that args->serialized_data is non-zero before calling
+>> > > >> phys_to_virt().
+>> > > >> 
+>> > > >> Fixes: b3749f174d68 ("mm: memfd_luo: allow preserving memfd")
+>> > > >> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
+>> > > >> ---
+>> > > >>  mm/memfd_luo.c | 10 ++++++----
+>> > > >>  1 file changed, 6 insertions(+), 4 deletions(-)
+>> > > >> 
+>> > > >> diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
+>> > > >> index 59de210bee5f..10f3983b0060 100644
+>> > > >> --- a/mm/memfd_luo.c
+>> > > >> +++ b/mm/memfd_luo.c
+>> > > >> @@ -397,10 +397,11 @@ static void memfd_luo_finish(struct liveupdate_file_op_args *args)
+>> > > >>  	if (args->retrieve_status)
+>> > > >>  		return;
+>> > > >>  
+>> > > >> -	ser = phys_to_virt(args->serialized_data);
+>> > > >> -	if (!ser)
+>> > > >> +	if (!args->serialized_data)
+>> > > >
+>> > > > We really should make args->serialized_data a KHOSER_PTR
+>> > > 
+>> > > Hmm, that would also be a good idea. I suppose then it would be a better
+>> > > to directly convert to using KHOSER_PTR() instead of this patch?
+>> > 
+>> > Makes sense.
+>> 
+>> I think we should systematically cover all  phys_to_virt  conversions 
+>> and add  KOSHER_PTR() , instead of an ad-hoc approach of adding it as we 
+>> go. So, let's take this patch and do a series where we properly convert 
+>> everything and provide guidance for others to use going forward.
+>
+> It's too late for this patch for -rc1. So let's systematically convert all
+> 4 or 5 direct phys_to_virt() conversions in the next cycle and be done with
+> it.
+>
+> We have enough time to make it by -rc2.
 
-I applied these 2 for 7.2.
+I am already working on converitng them to use KHOSER_PTR. I have patch
+ready, Will send soon after some testing.
 
-Rob
+~Tarun
+
+>  
+>> Pasha
+>
+> -- 
+> Sincerely yours,
+> Mike.
 
