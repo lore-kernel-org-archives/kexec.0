@@ -4,103 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4F0EACD98CE
-	for <kexec@archiver.kernel.org>; Fri, 12 Jun 2026 23:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D3E96CD98D2
+	for <kexec@archiver.kernel.org>; Sat, 13 Jun 2026 01:25:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=9+1wquOFgnZ8oMjOpJ6cj1f/PMKc50p9NZzPSCkIK6k=; b=FROemlvaFr2DopvRKM+PLcYPp9
-	ciMKjtET0JFYAa47gO2GWooybtTL2Rq0WTVA/F1LhaVA6kxylQ8Ms8c5TZVfJnDMOUzDEzTE4U3eo
-	4RQ2ZACmIfCI04dENVDQ/eJUJicFOHjA8kb76E84lZRTBGS/x1rPPUJ7vob5fro9/Ar5gkXdpZiJE
-	JJKWtgcknuAQp9UvjMds24IcWN4kQSdzygrEmQ7xErxy1sOOQpk4p9oJbPCoRggzL8qLYwRhsreWE
-	oVW5kx9qAUf5j4AavdxPt8MRvOHYTAPCcM4P8mfXjO0GDl8zQhnAoFiKfeTgW3akLA1EEGqBRIyDa
-	tGxYzIuA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=cu/yolJajqpUi6JPaZqDIqNimARDAvp56AZs+065qLg=; b=D3ICWlPKt7qEtHOsLJpowafJKS
+	HXq9yvlYksUvWoMJRsMdaN6Htd8gMC8VY/4sGjK+jkt30rDE6C/ylD2AkDfPlxP3NMSD5tDkJUGks
+	msRK7KhhDP2AFTT4kI8NrqGirMClW9xJFQQQCnaNKfQvbqkVp4zIIDAJuK8S+bQuhkQSn9iWV0YEg
+	IeZfM3fsy5QiBZV9VAEPaQ9gjO+FWHbo98RlymtJaFmX1zjg5enm6IVJ1JAWcLAxR7YdDYYEK2lwu
+	1Qrs1JIpX3dHXUPpaAIWdf3qywp6UfASg3s4+hNj9gHeY3dg9qR2LkcpM6cwEnFbaR5nRH9sTz92x
+	X41wntDw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wYBXy-0000000Blvo-34q7;
-	Fri, 12 Jun 2026 23:44:22 +0000
-Received: from mail-vs1-xe2c.google.com ([2607:f8b0:4864:20::e2c])
+	id 1wYD7n-0000000BtGD-0hVR;
+	Sat, 13 Jun 2026 01:25:27 +0000
+Received: from mail-pg1-x54a.google.com ([2607:f8b0:4864:20::54a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wYBXw-0000000BlvQ-1UsU
+	id 1wYD7k-0000000BtFZ-0ZLc
 	for kexec@lists.infradead.org;
-	Fri, 12 Jun 2026 23:44:21 +0000
-Received: by mail-vs1-xe2c.google.com with SMTP id ada2fe7eead31-6c6f47198e3so1181077137.1
-        for <kexec@lists.infradead.org>; Fri, 12 Jun 2026 16:44:19 -0700 (PDT)
+	Sat, 13 Jun 2026 01:25:25 +0000
+Received: by mail-pg1-x54a.google.com with SMTP id 41be03b00d2f7-c8584e3fc96so806667a12.1
+        for <kexec@lists.infradead.org>; Fri, 12 Jun 2026 18:25:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1781307858; x=1781912658; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9+1wquOFgnZ8oMjOpJ6cj1f/PMKc50p9NZzPSCkIK6k=;
-        b=cvguBupEIOYLfHqT7ZX4WGiPkwl/Pde8G+MJxRZ8ijs4CBinte+oUU+TSR2kYwA9I+
-         iYv2sWlKPWmYhANmdbqlp1xIr1BTy96rSbkqE57WVZVaicsQpTFX3JliG5UuSB7Dip1i
-         8Jm+DJKhY+Byck/Qb4crMIljcr0cBxso38bbk=
+        d=google.com; s=20251104; t=1781313922; x=1781918722; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=cu/yolJajqpUi6JPaZqDIqNimARDAvp56AZs+065qLg=;
+        b=DVm/XP2zDrPHx1EOeZpXVsi1ltrQpJJWoJJuji7nd6a5vSpXcuK3i8JLGFuj4pD8Mz
+         ZttnuJWSBnbcVJfbwvJm7URqGRjIPTmkHv1t5yNnw4w/tqSZgsPqdrV2RJijWM/527at
+         LhvDhPfby7QNEgtslF5cVN+4JvE6iuhE6K6QwAWgEwrOee+hUrxPpv7rWV7r12ts5cyW
+         RR7rApY2B8iEI3jiHl8LChMx96pqPuh4q/YPAPHHI6WSunAIuAi4zrSIUDXs4z56bfwF
+         BN56ajJ74V2ZoBZZyZaynnHBFPK+TgfyOUEwYehDWe/2OK4Ip8abWN3XJh3m21IvIX8x
+         Xshw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781307858; x=1781912658;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=9+1wquOFgnZ8oMjOpJ6cj1f/PMKc50p9NZzPSCkIK6k=;
-        b=sRU6arqbhQMCmLYv2uhig9gomOuGwKMDuuXUe3Kv8KG7Yv5FjDeGU2IeWZ3uBohQ0c
-         hyFAD217nsTqpRdeBIGKhUhseET1XaNjJ1MxatI/8l0kKb9j1gQYLD9iCYUrfHoaiNnm
-         Q6te2h9Vj6tC/d3n//hjsrUk7PExFcRr68vn31PtXd4rIxHntTr51WDbATyNhsAQNfOi
-         JUIVTtlNdlhVBLso6Bmn74GTLBik0va5vGX8F994v0Km0+e+y+g0qSct/hqqyT6/FQVM
-         RgdzEKP4ynwF7BjIeVaYDmlcmuLpnLTQcVMVpxoTpmYsN54k5prHR1ZEqdtGj1dzpRnm
-         I7tQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+6/iJiMA/i2lt8urQWULlkTMIzIdQzotK0I/hHRv5sZ8kU3cF4VYlcEluPWf9tOFEgS3WsSA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwKq+fjQYFqDzbfQkE+XedppPEgPQtHbMF6Nj2jia233jtKO4Uz
-	t0SXjmn+PcB1G4EpXEPtivj0xvn+HAfQnXSv/dvTHxYibii58Hxe0hFoI+Ze4WrdZwmNxnkacl0
-	yJik=
-X-Gm-Gg: Acq92OFqcA/9+3OqOIwlFpF5UeS0TrithKDRxVe24Xvp2nOQeEn6/uZYzhCpD4dMNpr
-	V+xB77NBKunb5hEl1+8CmTIbMuOUSfcpvWazDuu46I/DsrCygB+YN9rTX3FsgeS2CYi5sV+RT2L
-	pw/qopxMGj3fmevH7o9A0kfYZFTX5/2Mxnf4ajBgRpB/bFX1d9aDkewdHOE3KqwZ/WJ/lYrpiZ7
-	FnGxD8NzHbv5hdG89lcmermQDkw4lWHRoHenbdGpS7cT1dEL0ZcPSYiZGpllocHPXAp6908+dPL
-	eHt1WrEaC1ebCfLkne/XmahV4b2gFqwiVCkwC0HpfkdlTEwVy2SrMnpNI+h/Dwk0bgl8Sk43HQI
-	/lPJjSoZ7bKl4UGNMuZvtHo5fR1qW3jVraRTjTbioDPbCizo3IqPMpx1i4HaW1hXqI1w+Ta/caV
-	kIwujVXxxPyAntL546t95HlkNiS00cNqKwB42/ewB4zVkLPl35K97qR8xDnxKb5Q==
-X-Received: by 2002:a05:6102:44:b0:6cc:e6b1:7f84 with SMTP id ada2fe7eead31-71e672df42dmr1923002137.17.1781307858188;
-        Fri, 12 Jun 2026 16:44:18 -0700 (PDT)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-96673e76ba5sm2664708241.5.2026.06.12.16.44.16
-        for <kexec@lists.infradead.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2026 16:44:16 -0700 (PDT)
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-96387cf6335so1340589241.1
-        for <kexec@lists.infradead.org>; Fri, 12 Jun 2026 16:44:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/8DcGcL9ZxKnjGGxILYCmuRpejUajw0BK75xCsrMZE5/4RBdBjfeoniWjRJlO026P86SmKNg==@lists.infradead.org
-X-Received: by 2002:a05:6102:44:b0:6cc:e6b1:7f84 with SMTP id
- ada2fe7eead31-71e672df42dmr1922971137.17.1781307855477; Fri, 12 Jun 2026
- 16:44:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1780496779.git.kas@kernel.org> <cover.1781013134.git.kas@kernel.org>
- <a7ed093b78e6966c049bacc7644a8a00a9a52720.1781013134.git.kas@kernel.org>
- <CAD=FV=VLoJBMhDjb=3XAOCZWDBACn_=KdnkL0J6-Ch4uKrHjNA@mail.gmail.com> <airhxVP7vAVehIXQ@thinkstation>
-In-Reply-To: <airhxVP7vAVehIXQ@thinkstation>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 12 Jun 2026 16:44:04 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WVvhTY9NC3jZirrkfCMCs-=fFv2T3G1TxJ7cDat0jENw@mail.gmail.com>
-X-Gm-Features: AVVi8CfEd7n3wE6upMh5NdkDiiKerL0vNvKO0G860TyCtWMeiQp0kfSDQmZ7IEI
-Message-ID: <CAD=FV=WVvhTY9NC3jZirrkfCMCs-=fFv2T3G1TxJ7cDat0jENw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] arm64: escalate smp_send_stop() to an SDEI NMI as
- a last resort
-To: Kiryl Shutsemau <kirill@shutemov.name>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	James Morse <james.morse@arm.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Marc Zyngier <maz@kernel.org>, Petr Mladek <pmladek@suse.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
-	Puranjay Mohan <puranjay@kernel.org>, Usama Arif <usama.arif@linux.dev>, 
-	Breno Leitao <leitao@debian.org>, Julien Thierry <julien.thierry.kdev@gmail.com>, 
-	Lecopzer Chen <lecopzer@gmail.com>, Sumit Garg <sumit.garg@kernel.org>, kernel-team@meta.com, 
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
+        d=1e100.net; s=20251104; t=1781313922; x=1781918722;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cu/yolJajqpUi6JPaZqDIqNimARDAvp56AZs+065qLg=;
+        b=sVzBZdabBaixa7wVVIAoLrQDSDDM3L5U9Uc9DCBM/C/GhpeDqPiuxg1t0h52Fx/Eo0
+         gOpTaMiHBd3SySyCx6Ic5WIzLEma3ZDqeak7cWetCUKyRnVpBrrt2cfGRp1tJt3HBfyC
+         8bIUnjWUQ8/SU8hfEU7nd295DvXGzhn9/FC0bYMupWoHY0yotwlvHQiIrigo+ulErQE9
+         MRUMfnyhkV+d6TQLoA8xoBjn2ofeMA3rtFAcO2XwK1bJWdJjnGSrO4758bTySQjvFXiv
+         O/c36fr7SohuDwl15f4D5XUIMifoDqC1Qkm9pqJCw83q355OroCnpg9dGauv02Jh34wq
+         5Lcg==
+X-Forwarded-Encrypted: i=1; AFNElJ8aiMc+o5ZWwHjnSTarLwpHGd/IZyerXJFQr5okp5KMv2XA9USyizMje2PkmJ2eiyrI2RbgCw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzOUqz+7gxaWD8bjxFCGW0GSGqvlaIaJOb3obMTdoKS2RpK0Kp2
+	YhzlVF4Jna2pfMSER0vhtwpMBlPo+NjKSqdKvu5a6w/8LkqJky6ssArHnXe1GQkQnpnuJgehpwo
+	oZ3mdHg9pUDnk4g==
+X-Received: from pgce10.prod.google.com ([2002:a05:6a02:1ca:b0:c85:81b8:dc5f])
+ (user=skhawaja job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a21:7106:b0:3b4:7c33:296b with SMTP id adf61e73a8af0-3b7963cf4b5mr1901418637.32.1781313921702;
+ Fri, 12 Jun 2026 18:25:21 -0700 (PDT)
+Date: Sat, 13 Jun 2026 01:25:19 +0000
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
+Message-ID: <20260613012521.835490-1-skhawaja@google.com>
+Subject: [PATCH 0/1] liveupdate: Add internal APIs for file preservation
+From: Samiullah Khawaja <skhawaja@google.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>, 
+	Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>
+Cc: Samiullah Khawaja <skhawaja@google.com>, David Matlack <dmatlack@google.com>, tarunsahu@google.com, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:KEXEC HANDOVER (KHO)" <kexec@lists.infradead.org>, 
+	"open list:KEXEC HANDOVER (KHO)" <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260612_164420_472569_678299C7 
-X-CRM114-Status: GOOD (  29.10  )
+X-CRM114-CacheID: sfid-20260612_182524_198681_657A4CC1 
+X-CRM114-Status: UNSURE (   8.01  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -115,64 +90,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
+Live update orchestrator file handlers depend on the preservation of
+other files. To make sure that the dependency is preserved, the file
+handlers needs to fetch the preservation token of the preserved
+dependency. Similarly during restore, a file handler wants to fetch the
+restored file of the dependency.
 
-On Thu, Jun 11, 2026 at 10:47=E2=80=AFAM Kiryl Shutsemau <kirill@shutemov.n=
-ame> wrote:
->
-> > FWIW, I'm not totally sure I followed the logic for why "die_on_crash"
-> > needs to be "false" for the SDEI case,
->
-> It's not about kexec mechanics, it's about the SDEI dispatch state.
->
-> The SDEI stop handler parks inside an SDEI event that it deliberately
-> never completes =E2=80=94 completing it makes firmware resume the wedged
-> context, which is the opposite of what we want. PSCI CPU_OFF from inside
-> that not-yet-completed event silently wedges EL3 on at least one
-> production firmware (still root-causing on the firmware side), so the
-> SDEI path saves the crashed context and parks instead of powering off.
->
-> The only consequence is that an SMP capture kernel can't re-online that
-> CPU. The dump itself is complete. I've left "power the SDEI-stopped CPU
-> off too" as a follow-up and called it out in the cover letter. The IPI
-> crash path is unaffected and still does CPU_OFF, exactly as before.
+There are two known usecases of this,
 
-Ah, OK. This makes sense. I read the cover letter, but I guess this
-part of it didn't stick in my mind. I wouldn't mind an explanation of
-what's going on being included as a comment in the code. Then someone
-down the line won't be left wondering.
+- VFIO-Cdev preservation requires the preservation of iommufd. This is
+  required by the IOMMU preservation series:
+  https://lore.kernel.org/all/20260427175633.1978233-1-skhawaja@google.com/
+- guest_memfd preservation requires the preservation of kvmfd. This is
+  required by the guest_memfd preservation series:
+  https://lore.kernel.org/all/20ae20f9d1a198b289444ebb4c824314cbba1bcf.1780676742.git.tarunsahu@google.com/
 
+This patch was being sent as part of the IOMMU preservation series, but
+now it is being sent separately.
 
-> > Do you have any reasoning for why you don't pick a separate EVENT ID
-> > for "backtrace" vs. "stop". If you absolutely have to share an ID
-> > because they're a limited resource then I guess it's fine, but it
-> > would make the code easier to understand / reason about if they were
-> > separate IDs.
-> >
-> > If you had a separate EVENT ID, then it seems like you could
-> > completely eliminate the (potentially large) `sdei_nmi_stop_mask`
-> > variable, right? Any time a "STOP" event fires you can unconditionally
-> > consider it to be a stop w/ no globals needed, right?
->
-> Separate event IDs aren't available: SDEI_EVENT_SIGNAL only ever signals
-> event 0 =E2=80=94 it's the one architecturally software-signalled event. =
-Every
-> other event number is an interrupt-bound event that firmware has to
-> define and bind, which is the firmware dependency this series is
-> specifically trying not to add. So backtrace and stop are stuck sharing
-> event 0.
+Pasha Tatashin (1):
+  liveupdate: luo_file: Add internal APIs for file preservation
 
-Oh well.
+ include/linux/liveupdate.h       | 21 ++++++++++
+ kernel/liveupdate/luo_file.c     | 69 ++++++++++++++++++++++++++++++++
+ kernel/liveupdate/luo_internal.h | 17 ++++++++
+ 3 files changed, 107 insertions(+)
 
+base-commit: 34e8f02817e31826e76bb2ded48bf28fe921f20b
+-- 
+2.54.0.1136.gdb2ca164c4-goog
 
-> But you're right that the mask should go =E2=80=94 just not via a second =
-event. A
-> stop is terminal and system-wide (sdei_nmi_stop_cpus() is only reached
-> from smp_send_stop(), which never returns), so once a stop is requested
-> every later event-0 fire is a stop too. I replaced the cpumask with a
-> single write-once flag the handler reads; a backtrace that races in
-> after a stop has begun just stops that CPU, which is fine. So the
-> (potentially large) variable is gone.
-
-Yeah, this sounds much better, thanks!
 
