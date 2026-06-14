@@ -4,75 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A7F98CD98C5
-	for <kexec@archiver.kernel.org>; Sun, 14 Jun 2026 13:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 65531CD98DA
+	for <kexec@archiver.kernel.org>; Sun, 14 Jun 2026 13:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
 	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=XXg+GT95yYO4T14XPgWTJKtcxJfATzJGx0/pfKwDeqA=; b=uNTm4RUidCR3MMFe3hxLaXf4np
-	Jjb8fsAMi3gllLHYSLP1XEOysFjR2f7aGrRah7zLE8NRs2M6w1yNWiPD5GY2rBNcKqTwUiGOcaDc9
-	TzOTEwdRz/wkwcxcRFg/RbBE0Uq9Hy1sXwQayI+rGdy04tD4YzDXrfuFnqGaLLeMeX2AMP5MuJIJY
-	Ml6Y5n8FZ0wwuGnC8WtUXcoAmg0DMTVtw5vkj4clF0drgvQxvLYOON0tL5wI3IeGUguNzc+s/jB1A
-	z0njL25i2o/4wrsezr6zGu5o+WeBxqatf6llZpcXxHgfHoi3R2Lk1Zm7Zsc9q0gMAicgnv2wMQ8Ts
-	+Ar4/a6g==;
+	bh=ZeAw+vIhY6bA9mSRruzAQBCEt99MDj9JV/iQLow7qBM=; b=H8TZlQmd1U98hOY+AVg97zDO05
+	q8VDvK26ahDqjL5t/AEF5eo2xdnRi4vQosGwOA2jLJ+fNOezRu0h2bKJ/qq5Kp5nCJJM7rXhEZqx9
+	P5VSeNBlWfIc4SvqDsznC+5eCdpqOh6BtGlJEd1GxpHPjBjVXwyWHvYwwuPfabUeTElSkX+ZDiKMA
+	8AzZ87ii79HYXBBsncGm5XVBUJf4l/8NXQWwvXIAZsOg5slqWDrmXvlkJlzpWit/n9uEimObWj4pQ
+	wgMeCcbG6VWjeiCAAJUp/rZpMmPU9HNBcwM+zoY676qplq2igzaHg4FDVsMzE/uzqRtKc/btLMPwg
+	P9Nop4dQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wYl36-0000000D2yy-2bJb;
-	Sun, 14 Jun 2026 13:38:52 +0000
-Received: from mail-qt1-x832.google.com ([2607:f8b0:4864:20::832])
+	id 1wYl5X-0000000D3CH-17Ek;
+	Sun, 14 Jun 2026 13:41:23 +0000
+Received: from mail-qk1-x732.google.com ([2607:f8b0:4864:20::732])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wYl33-0000000D2yU-1AM7
+	id 1wYl5V-0000000D3Bp-0tst
 	for kexec@lists.infradead.org;
-	Sun, 14 Jun 2026 13:38:51 +0000
-Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-51764768c36so35958021cf.0
-        for <kexec@lists.infradead.org>; Sun, 14 Jun 2026 06:38:48 -0700 (PDT)
+	Sun, 14 Jun 2026 13:41:22 +0000
+Received: by mail-qk1-x732.google.com with SMTP id af79cd13be357-915d64fead9so365332285a.0
+        for <kexec@lists.infradead.org>; Sun, 14 Jun 2026 06:41:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1781444328; x=1782049128; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1781444480; x=1782049280; darn=lists.infradead.org;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XXg+GT95yYO4T14XPgWTJKtcxJfATzJGx0/pfKwDeqA=;
-        b=eUfrhLUij31SWTlQFRy+1QRSbvugAZJppiHmOs8fxonGBKCjZLecK4bXl/2DhHCr0h
-         buwo4Spuchxv2S6XX+XVAL64d87BF6BA07vQln4HBuMdGu/hRZkLjvvF6n0UxW7+Y3UH
-         FHIhqm9TWyn/y3aTTiQxf80Gusvt2zVm6gHhx5t1SKdL3BSearyBi/WpZkjuQasJcWzp
-         SKsN9oNF7CLliDZXWxIBNF0/87EQ4IE8HX1VWqhmN9JQ0j8NmOtS7ytLUD/wKZB9Kf+j
-         kfXgK1762DgMf2wyYfulbkSOJRz/SeDUyHt4HCk89L41LUD2acgnU+XQZH1TOyH24seO
-         PgtQ==
+        bh=ZeAw+vIhY6bA9mSRruzAQBCEt99MDj9JV/iQLow7qBM=;
+        b=CotNUvy+DWPPd76Cg4iQAhU8V3MGeq+YlJQt6Mu/zd3iD//GmvJbikVSCe+7+PPbHA
+         o9Z5ntTQ2c3K7W48Gvf2My6Lv4kpaMbDYaRyFpKsINdDWUXlxWNLScmnWX1imWV2M9HB
+         TcSugRhWdyfd5S64UstIc+Fm10TDBxiJTm2U1AOohRpKok6seclD9uYRJz6FTulmopsI
+         Juv/RrKWD2my2ZTxRgt+6TXRT2MV2aOAp02XE0vjtSPPp2vUu1ZmlxZ2Z4Kgmx0b+rN0
+         Og3hw94rnFMKThgBuHuLpKRO/t2UG5ApwgueHSZNQw2Dw46u6LVUWyGj6yXgSIbJ77TF
+         TP9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781444328; x=1782049128;
+        d=1e100.net; s=20251104; t=1781444480; x=1782049280;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=XXg+GT95yYO4T14XPgWTJKtcxJfATzJGx0/pfKwDeqA=;
-        b=D7y+yKCEK2VzdpuBIE94TkkHUXYSq8VoXimW4It/NBZrIfLt8rOG/kjFWsIgqilW0W
-         MSOfNk/tMRUbRWyuXxdJnnfuyL36xo/Lgl1rudgjcUHGhnTAxt5TNaOPW0fyOK9IxQ4Z
-         WlFIE8PTEGlLL2h7xk9ArXVFDsr/TsM692ymcFtdmUxqGF5xoa33E5aLVXfv16HpOTMx
-         XOct96zTBMUoHDLyVKZm+gYIP62TFSkvqd+FmXXBgxqQBPjanm75y6KJVzfGvQvu9sg8
-         MZm2ZqeJgSpIFn/bO+Ss28WY09UKY9HCPKwGax3XNgGMh/zROm1eiIDTWjUa6HQd90uc
-         BvhA==
-X-Gm-Message-State: AOJu0YzTxq2I8ERbRtZETdwkCgLJqjS9VBA+fI1PnCI+RytoDkTHuzfR
-	X3YHgz2TyFDqBuysbq1qqbgov1FRMdvMWtr3GcmgkyIi3gsWI9wFAiK3VF2RxbHlNdM=
-X-Gm-Gg: Acq92OFIkAhbLaqBFKgQdHGYnjPvSOFhxdmv8S3EOa0QysZKlJnFLSXR8aS+/7/R/hB
-	zbsn92ti11dT4q9XyOlgLRnuVOCDL/B632WE09E7UGVy1/LMfZ+6yw5Mj9GpPSNRl40oalWV2Ui
-	c5otX4eQqSbypQoQep3rrA3WF7fvArsthYkqfwnWAQ4AX2RumzpnzJP5lY6I1UMhvtyHxgCUj/I
-	jr5ZPFxIoz8awPWTNQzPAX93VeaSLKr/+y/OshQlrWW86cEB+2UVR5zRf4YHlLgOb5JNIkIFMek
-	tZyiZRyD49Z66h2PL5SP6gZJRkxzzTxOgKbPmODCjx4vGKIZOOi6zCoS3gRKBPgyWKgSDmRwsI5
-	c9R5eM3MEfKXECXMwKlzrPu+qMG+2mKRUwIjou8wRNWC313hO3RBz4nxWqMYd8GdNzB/3rVGEr6
-	zb8FLSjc/Mp6e5ZHC6KOJCuqB8sc31TsvJCtu9Mh7iPz43moENBY2zc9gtdJCN
-X-Received: by 2002:a05:622a:8387:b0:50d:66b6:1564 with SMTP id d75a77b69052e-51953503dcbmr85951991cf.14.1781444327877;
-        Sun, 14 Jun 2026 06:38:47 -0700 (PDT)
+        bh=ZeAw+vIhY6bA9mSRruzAQBCEt99MDj9JV/iQLow7qBM=;
+        b=K53SfpRKUvf7x1EN3PbBVK6bFO0zFbtv1ulr7f/beNhm0ub2bDwCGc2FQpf0XPfvFK
+         9ThYVi+9R0fFUbXFU17uMM6mZtt4QylEiz8dJbgIS96OICXugzlSf9uTjkM9AOjotEQ+
+         x2fPueyIqa9XQ3SYSLVtBALkyDqDAxla/3EXh6ckOJ5MWfEwDTE92Hdx97tr8DmluA44
+         O201tA7mV3PSTFb8TlW0gcxvZegN+XKqm2izAV8EYyYuPfAnaCh7lhqtJG1/5HCObV5w
+         GBSAvKMoXfljRV/IH+CwSbwtSQTsWMOpSr9aW7v8/ZX7gE/FqW4JlP46EFThCjR6C4uk
+         CwNg==
+X-Gm-Message-State: AOJu0Yw1fgftHsNovvhdBvkJ+VzAnsFfSnLDygf+SomdbxHEM6XRXySv
+	LqsrBWweV//qCdtW9kAmJWXYKT74L2LY9zMCqirwfBvjNJOW3JJToLQSpp/7Q3RhcTg=
+X-Gm-Gg: Acq92OFdKej4JUkkZkqZ/toFCZld64fciRkWsk5UVnTgQJgTt+Eh7sogsNW+vtY/btp
+	WwmZEbm/7PKpktFl2nqbiLgWxDTzIH4nkyxY0MJZKYHy7dypxx3fCRxw3VKiSLyehd5EUuTdyCC
+	XvJN7ZV+M6Xp4LCLBxlZpVRe06XqCfvAf5hdnCDSWPULRGm7kFEsrdFAQLety8xuLyGuh1tDmld
+	J3yq07H3NF9KkHckg7sapRnPuKYTVhHGWEC0pJUUjLwFysasgvRl1971po7ZXKXxzNoeWU6OPKN
+	/C/VvFQyv00P42Ku9rw2Hp+dLaHsmk+3hsdPpUJjRyO/hdmi+wU7YnwsZATJ3SnaGNkNyX5Ss/f
+	ALKbqIOw1PdMrkXMBteYVzkxaHEP7ACdniGbvwYdAHm3rB6FS92w1LK6k7fZsAAqL/uX79ElfAU
+	88TxjMUvFj8tAwCWLpgC47zwl1yxxiThGiovcqltvZIT448hqkMdNN5XccYM0ZqHrPmX77TYI=
+X-Received: by 2002:a05:620a:284a:b0:915:80ed:8327 with SMTP id af79cd13be357-91619f73cd3mr1359281985a.41.1781444480052;
+        Sun, 14 Jun 2026 06:41:20 -0700 (PDT)
 Received: from [127.0.1.1] ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-517fb7dad16sm73669631cf.21.2026.06.14.06.38.46
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9161a00af50sm804255185a.30.2026.06.14.06.41.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jun 2026 06:38:47 -0700 (PDT)
+        Sun, 14 Jun 2026 06:41:19 -0700 (PDT)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v6 03/12] PCI: liveupdate: Track incoming preserved PCI
- devices
+Subject: Re: [PATCH v6 04/12] PCI: liveupdate: Document driver binding
+ responsibilities
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: David Matlack <dmatlack@google.com>
 Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
@@ -91,32 +91,33 @@ Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
  Samiullah Khawaja <skhawaja@google.com>, 
  Shuah Khan <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>, 
  William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
-In-Reply-To: <20260522202410.3104264-4-dmatlack@google.com>
+In-Reply-To: <20260522202410.3104264-5-dmatlack@google.com>
 References: <20260522202410.3104264-1-dmatlack@google.com>
- <20260522202410.3104264-4-dmatlack@google.com>
-Date: Sun, 14 Jun 2026 13:38:40 +0000
-Message-Id: <178144432039.1257322.9644414453415904478.b4-review@b4>
+ <20260522202410.3104264-5-dmatlack@google.com>
+Date: Sun, 14 Jun 2026 13:41:12 +0000
+Message-Id: <178144447224.1257322.6028717050680465656.b4-review@b4>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3299;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=436;
  i=pasha.tatashin@soleen.com; h=from:subject:message-id;
- bh=imkMf1LWuc5WHnOYfzLBjY+C/lZku32PXLp//Z5mGeY=;
- b=owEBbQKS/ZANAwAKAbt3KEzbc3reAcsmYgBqLq7l1REohFN/W+c/zZvmZsiNBGib+GmmJ98Xn
- Q+7rb16wzOJAjMEAAEKAB0WIQRBMaqT7LRvGvB/NmK7dyhM23N63gUCai6u5QAKCRC7dyhM23N6
- 3kxIEADBd+AmGBTMM3+Eeu1O0iFW2mY7VSiDXVMIuYE2Aff07zDsPuFqh4iaxqw5y6yQq1RDRS9
- C+LCuvNoHjr972Bm+MNjX7C07NBMYiDKF/eZq0xHbj1XYcvY3GjqVzl5O2NnP0UkUp3d5XxdB2U
- kRMKTDUBoWa3SJaUak+oxi08sxN+Je36bFKJwqBY9dcpbDzgF/LY2TXsLUIsLhTK7mJJZ1Zua4D
- UllLotthUK/tr3huxjhNXxTtHxzpkCFabCnjYT8xZjmKs/WZmMMSP5laKjVC95NnLsDcZQZJcaY
- fVhlX1FaX9DSWDdZ7SsxAYVJ7Ur3pbt9FjS0jeI2lOhMlBGh/ybDkx4+LAnHvXuwa1taPVB55fP
- eavqiJEVaCFIZWubPMrJDMotiK4Re7Jw1ldxwPS0Qef24xJe0PBaNgnXCwEFfIGun6uZ2ev1uiD
- hsnw6UqUOs1u/utfaWudvAaNnZjzHo0l/k5+sc6C6QYbwAOSME6sT5ASpuABBfnrKTvMiveYmU9
- iSshqRHWh3vmaVHLAuamw7P21HrLeUpe1rAs+hC2gyfZ3ZKwrw4ErSfhqVMgkOBVovFuHcx1P/7
- lQyQjY82doo6RAVRWKXjvFekoAN0iqkrC5llrFeQHZvb2oyr/0eG3Rdd4Ga+VUaHcMzU3/xLWHV
- PULRypTcExsyIYg==
+ bh=9qCCo5jqZNYTFQYhvn1w10HthvCojM5bi7HQ3wIdz0Q=;
+ b=owEBbQKS/ZANAwAKAbt3KEzbc3reAcsmYgBqLq9+V5ehmqYdW7aqY5UC46rzyaBztHZtTXaEV
+ wNq3cD8aFeJAjMEAAEKAB0WIQRBMaqT7LRvGvB/NmK7dyhM23N63gUCai6vfgAKCRC7dyhM23N6
+ 3n8VEACd7+ln+qHdtrY009zcX3HQrr1PUWTlugPorIeOn8XmTJbgYuCm1D7mH91o1Qk0SZe2+wI
+ 2S0wRpAHlKaOVEtO68gKBmhZPDreEUWbyJPh2baoB7PEM0rHohe6beLyk9a0EDGyMoizfUQVlBE
+ elPL2YdcMN8btmVGap5fkjrisPb/6OsmU2lUYZ+KNnAx38aUZVcUvKDewIbq25zdwlZBUKGecSh
+ As9pDuvz/CVYl/3F2pe1wWh3q+WvNwNasidlW+NrS3zSIJVb0xbHv2NXEnOUJcJ127swxUuqvNJ
+ Q3siNX2gD5B3zi5rElvySm4JdLzs16A2WhlbSrwn1B93becCXOtZ1Opap0noIZ3rbnK57eIq2nD
+ pYRAwOqOK5KN423EhDkvTAWZGYyxMC9vWQBfaAa49JbYobhWtvnGWr1ezCJ8k8bEcf4RRLYXcoN
+ 8xYz7NI1pblzXU2nq5qcyacPiWBzU90F28R3+LuI6wz45GMTbHQZJynLNwaWubYDsQjEZHym77Z
+ X+89BTifV4853SOCW3d5PdFyp+NqcbzEkiRaNg8G2v+FxPzIY5B2QAbioj9U4pY8gLM/BoLASVh
+ xtPEpIr93n5If5K9gYKxSJDWp2YDmXIBrR1LD3sDnJ+q/TjpSVubUA9Pu3yUcMq3lQZSfZeqnKo
+ h5XFZvHeHeKTbBA==
 X-Developer-Key: i=pasha.tatashin@soleen.com; a=openpgp;
  fpr=CAAAB722DD22A081F0D49F35633A6A993D43B569
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260614_063849_364757_4D5C45EF 
-X-CRM114-Status: GOOD (  23.21  )
+X-CRM114-CacheID: sfid-20260614_064121_374917_3BF65E6C 
+X-CRM114-Status: UNSURE (   7.19  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -131,100 +132,13 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, 22 May 2026 20:24:01 +0000, David Matlack <dmatlack@google.com> wrote:
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 10c9b65aa242..e68ae5c172d4 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -330,7 +330,7 @@ config VGA_ARB_MAX_GPUS
->  
->  config PCI_LIVEUPDATE
->  	bool "PCI Live Update Support"
-> -	depends on PCI && LIVEUPDATE
-> +	depends on PCI && LIVEUPDATE && 64BIT
+On Fri, 22 May 2026 20:24:02 +0000, David Matlack <dmatlack@google.com> wrote:
+> Document how driver binding works during a Live Update and what the PCI
+> core expects of drivers and users. Note that this is only a description
+> of the current division of responsibilities. These can change in the
+> future if we decide.
 
-Please move this to the first patch, fewer changes between patches, and 
-also KHO does not support anything but 64-bit mode.
-
->
-> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-> index 065d5af822f7..96c43b84532c 100644
-> --- a/drivers/pci/liveupdate.c
-> +++ b/drivers/pci/liveupdate.c
-> @@ -128,13 +157,49 @@ static void pci_flb_unpreserve(struct liveupdate_flb_op_args *args)
-> [ ... skip 31 lines ... ]
-> +
-> +err_xa_destroy:
-> +	xa_destroy(&incoming->xa);
-> +	kfree(incoming);
-> +err_restore_free:
-> +	kho_restore_free(ser);
-
-This is the pattern we have been enforcing in other places in LUO. If 
-the first retrieval fails, return the same error thereafter.
-
-> @@ -270,6 +335,91 @@ void pci_liveupdate_unpreserve(struct pci_dev *dev)
->  }
->  EXPORT_SYMBOL_GPL(pci_liveupdate_unpreserve);
->  
-> +static struct pci_flb_incoming *pci_liveupdate_flb_get_incoming(void)
-> +{
-> +	struct pci_flb_incoming *incoming = NULL;
-> +	int ret;
-
-Maybe make the error return static, and avoid another search through compatible 
-FLBs if it failed before?
-
-1. Add "saved_err;"; if it is set, return it right away.
-2. Change all errors to use goto save_err;, and at the end of the 
-function, assign ret to saved_err;
-
-> [ ... skip 15 lines ... ]
-> +	 * This could mean that no PCI FLB data was passed by the previous
-> +	 * kernel, but it could also mean the previous kernel used a different
-> +	 * compatibility string (i.e. a different ABI).
-> +	 */
-> +	if (ret == -ENOENT) {
-> +		pr_info_once("No incoming FLB matched %s\n", pci_liveupdate_flb.compatible);
-
-I would assume this is very normal, e.g., no devices were preserved but 
-memfd+hugetlb was preserved. Maybe use pr_debug_once().
-
-> +		return NULL;
-> +	}
-> +
-> +	/*
-> +	 * There is incoming FLB data that matches pci_liveupdate_flb.compatible
-> +	 * but it cannot be retrieved.
-> +	 */
-> +	if (ret) {
-> +		WARN_ONCE(ret, "Failed to retrieve incoming FLB data\n");
-
-No need to print backtrace, please just print a warning:
-pr_warn_once("Failed to retrieve incoming FLB data: %pe\n", ERR_PTR(ret));
-
-> [ ... skip 34 lines ... ]
-> +	 * through pci_liveupdate_finish(). This can happen if PCI core probes
-> +	 * the same device multiple times, e.g. due to hotplug.
-> +	 */
-> +	if (!dev_ser->refcount) {
-> +		pci_liveupdate_flb_put_incoming();
-> +		return;
-
-Pleaes use 'goto put_incoming'
-
-> +	}
-> +
-> +	pci_info(dev, "Device was preserved by previous kernel across Live Update\n");
-> +	dev->liveupdate.incoming = dev_ser;
-> +
-> +	/*
-> +	 * Hold the ref on the incoming FLB until pci_liveupdate_finish() so
-> +	 * that dev->liveupdate.incoming does not get freed while it is in use.
-> +	 */
-
-How would that work? If finish is not called FLB stays around until the 
-next reboot.
+Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 
 -- 
 Pasha Tatashin <pasha.tatashin@soleen.com>
