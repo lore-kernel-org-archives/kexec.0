@@ -4,80 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4366CCD98C5
-	for <kexec@archiver.kernel.org>; Sun, 14 Jun 2026 13:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 778FBCD98D2
+	for <kexec@archiver.kernel.org>; Sun, 14 Jun 2026 14:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
 	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=oLWNaUJaCrsl1zSP87x78jJvGSQywThTy/hKOOZov1I=; b=3DEORIep90NLx8HTSup7PINM3V
-	O1XXPHFZStp4uAnApvIGTolVgVqQGFvkahw/hHCaeOTP78VCeKi6ZU6AF2nYsDXsGimLiHxYbcoY9
-	c8XVl3pLm8Qan9wEaJMuJ5BG+T+xFGKdDAWrtLij140CwvnWZSiAfs+RdVW6wwKoMfkLPC9BqfHMN
-	BLObIypL+G6Za0NQWvd7i69OrG4l79BqOAsIko+jBB7dsOXzMLhF+d4myettP4BeC4o57OCb0Hlj6
-	CvAFIv55BRXvUlZEmb0oeTz/AN1uzNbIx37L6XclwenP2/EoZmsrgDMCu0LVUgy1vEYlH+9YnKZLg
-	U03kL8yA==;
+	bh=fF8u6DKkckQuJavK70W0G+qrxbgEHWN1DTuCSFFIGv8=; b=F7f89Lm1mkEbVHcDUL93p32XWc
+	O84VJDlx6us/Y8ctXhzC9Fpj61mJxfyVSODjBtpZpyC0nwDQPob+22B3hAIVysQ/kGneDFbOfA/Qa
+	FWz4KIRmrhzijIx1AiHPYXRcwW/sEL+6f4FH9pMIz6O9XYwDr1rTFhu1Y8NHUCL1FYqL9dBcA72CR
+	VRoEK3RJ9DjT/1EI1uqt+j42WEQFEPzz8Z/qytB4d2f1EKXqCL0bRghsINut36Cdqkasd4OWBaSSZ
+	LuPtr7pc4niUpp9LBFqsvpeWplEV3qtozUfFAFP8/dIKs2xd6mVkDWoC3Z9qW1IEX2p8rCZPYz2eb
+	e46G0GDw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wYlLQ-0000000D3jv-3pB0;
-	Sun, 14 Jun 2026 13:57:48 +0000
-Received: from mail-qk1-x72f.google.com ([2607:f8b0:4864:20::72f])
+	id 1wYlOj-0000000D3qV-16DH;
+	Sun, 14 Jun 2026 14:01:13 +0000
+Received: from mail-qk1-x730.google.com ([2607:f8b0:4864:20::730])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wYlLO-0000000D3jY-0ZtX
+	id 1wYlOh-0000000D3q3-0LqX
 	for kexec@lists.infradead.org;
-	Sun, 14 Jun 2026 13:57:47 +0000
-Received: by mail-qk1-x72f.google.com with SMTP id af79cd13be357-9157b94a07aso273093985a.0
-        for <kexec@lists.infradead.org>; Sun, 14 Jun 2026 06:57:45 -0700 (PDT)
+	Sun, 14 Jun 2026 14:01:12 +0000
+Received: by mail-qk1-x730.google.com with SMTP id af79cd13be357-915c36e32abso222910585a.2
+        for <kexec@lists.infradead.org>; Sun, 14 Jun 2026 07:01:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1781445465; x=1782050265; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1781445670; x=1782050470; darn=lists.infradead.org;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oLWNaUJaCrsl1zSP87x78jJvGSQywThTy/hKOOZov1I=;
-        b=KywsrzsmTJDidKPqmXNUNKntNbREuWwimUJ7AElXpb4l3gGFZ4Kctl3sQDeKOPAp4c
-         B3xFleSnG+1P5aZH/ygtIxxbgPvjHc8qrFOevzYrdiJ4MKxdaLFZ73g2J/mGjO63PcL8
-         zEEcn2x8a198VEug7pOX8Wfr+qsun7LtlHCRCh+1uSz+vdB5yOaW79brqKCW8AULNipW
-         Y3XlgM5DFHx+S8/snn2Vjp1arWITlY8x6Mj6E5d3UCzRQPIkJ/yY6m7lit5Zk6SHl79R
-         aifglfzgQxuASguz7T4ztZ0clc0DyEbhEyT01vw6Z/azt2eEcOoRRjE3SfYqJ9u/Cl/z
-         bNxA==
+        bh=fF8u6DKkckQuJavK70W0G+qrxbgEHWN1DTuCSFFIGv8=;
+        b=J0sxX6B3rK7AzSSAIQDGkx1riggDmH/nAFWVkvoiVC3wul1vvFOFegF4PiAB4Y0k8L
+         DEmQ8Xag0mGOoSq7e53VpJYssOBpVwQbXzEDVSL7wqszZdfds2Plci9paptxpuH3xfuV
+         6zqnZpW7uLq56sKh/VGCs2bIF8n+iHGo17JmOgqbiHXWHsjCNVUMj6kStcRYPpxcRxbB
+         psDkmOie2zvCz6sZRgjGqSxcfNB/7sigyd32i1ct7WGIa/yCTLkTISOiJ6YdhqnLI+Eg
+         2nh2BItXFeYLz6RbIlziRlm/8LXRf8iOjmKbDE8mdPZh3d4MtYcepNl3KGcIlzTerFtF
+         9ZvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781445465; x=1782050265;
+        d=1e100.net; s=20251104; t=1781445670; x=1782050470;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=oLWNaUJaCrsl1zSP87x78jJvGSQywThTy/hKOOZov1I=;
-        b=L3tJ0vt6sbd0iNo3unp3rfbPQoSuUozx7rx0AWlaeEqqU8ywgydfqJoSzS75iK6Xuc
-         qrybu1UPYy1wRmZPinsDkkR27C3SBMgYPzraBiwwlWLtQUr9Es/GlaH+XxzOgwDUUn5W
-         oWD7jpEhTngaNHrr9ojIqxm+ZHAQo+faFn/V1uxbFGrw8FMgRm2BTxL597magoA6zBmA
-         qKmZn+ZuIl8u24v34uzgzSHNLzmpzVrlDAx4bh62NAirekPuWZ9g/I9tN9NdJGQysE89
-         z04w4j7LKBi0pKHO/7jMkQzlq2dfHQI5OkDDAj5AfKfL9p1a+SAIoAN7fl3RCVKQwFtd
-         o6vA==
-X-Gm-Message-State: AOJu0YwPxlW0i7UoJEpXYx1OahQi3ufzKZPsVbK/9rb0yn2DgCJx04Iq
-	Sk+7Xjtx9naKFMOrNr/oYAdNnwfCQLuHdki0fmzsmi6P0dS8a0hzkrrctmuJKM/9iG4=
-X-Gm-Gg: Acq92OHOS6gGxpU80guO1inm4t/odfboB/9+MGUtBfDJZMWzEPpR+IRrhSXoVpwjSEx
-	lmo15nMhGCijr+uDcJLzCKvJleYMJxXJFML5e0Swum2hCnhK/KqU7V62ykq2CCLRcJQAHPB6ldo
-	BpUu4l5O97XPhj5/U4T8+KjGX+EdNezhCNBrYKHYZaPJDIb6xyuKVTkdOsP2KIcRPcsyGUqbI/g
-	JQsTQRKEY7um8blcvqq1Im0whuHhhRsChX+D7+5c0t383Sn/nZk8eh6pFZwoxYh8gp2Zsu/FrOh
-	/5iz/J/dlKDtigLC+/hGOFC4PtoY32UJPn1YyWwaCS0OI8djHFUblPeq2jKsy1Un47+cpNKs647
-	bPmYkFMMpWrIKhpg2fiNIN2QT0ai3NaCgUelO5Hgf6yiTAXzXs1CUw4qQ4SWSk9iv+bF4ULC1AD
-	FBOk0iO2IFEt36mA6dr2+vxuCFl7rWqqKMsx42cE1rkHtTpzeqI2xR3kDT+ZB3
-X-Received: by 2002:a05:620a:2894:b0:915:cf88:1e3e with SMTP id af79cd13be357-9161bd3bcccmr1479704685a.41.1781445464857;
-        Sun, 14 Jun 2026 06:57:44 -0700 (PDT)
+        bh=fF8u6DKkckQuJavK70W0G+qrxbgEHWN1DTuCSFFIGv8=;
+        b=p8V9l8d2B2COI/oEW0bhqwJODPyqw/gPa6azvwxTZmqu0e9FFjTikmKrJm1BLI5HTh
+         AuqCQ3Rj8PS44WzfKmyu1XJwThAu0PyeR3ZeRcy0FKxM+Nk0zgf3EqWAZX/oZamcQp6a
+         xzDBy4enqjDjOjRSDgdRZ98T43Jtw2++GdwmtSKVmeigI777DaKwLDoZ0MlCh2D3aTl6
+         4GOj+A+GL5MldTqvmANomcS5UfIALGDQs5CywNGDOh+rwSd6Ds3aGldYruG8ajugU2v0
+         C18lH8c9H/e0mLwMfnKHZrFxvWhQHSxBfcirWLKhbLk20ODjoWFpmZijtGEnYWBVIMEt
+         y86w==
+X-Forwarded-Encrypted: i=1; AFNElJ/KGZVhnDI3TWAh7ZLtB9Wz1O5jgERjGL0IfpuNx5JKgFinhqD7UxGbTuNX4K6R58r8RPsVcg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyjKqDS8iFtJzFYTeda2mNko4B0+QV6hJywHoA9u001dcropjHT
+	/sXCJaUHZawVmObDCYic3NcArJUnxfDgKTCl2OQmzoJeF9fXY3xPnKPLE3cLZWuKpfU=
+X-Gm-Gg: Acq92OFoJ7pN+u8yCanhAvVrURbrMj5vWNCUUeNJvFVRimZmOxGZC6grUTGHSrltrXV
+	tnMjfequpusjaS9lPnykNNeY63M3JAEd18zK8NnWJZm+gJ6djxgbkVrVirrkN0AaC2d+meC/Z+b
+	fpJ7OlkJLIf3HQVfhuCAq3ApzLpB4rAhLnnCOd49MOsrDE1no3m2VibwrspkhnlHELg4/j5JNaJ
+	mBKGV0sqJ3CmbzTsU0WY9Qtyi0cyvQVyygWtKoKY/LSHTd0pV9RSREfVv273nINdXvAX02wxO21
+	VP/xcxC3YnxhCzAyQuxTiYZmI3XayUCffR7uKYdm0k05HMps5qzdNgfDKhbt+QOye6uhcS7r/bl
+	8IFWor9WwDcExJuaTApe2tqC1QLxUu4wqg/a8OZWiDg6pvAWvcPx4aOrdw3pg5wrcZ4+5Gt+b2P
+	xOGuHafsNJlCigRgWpkT5jx49WNc2Di7DIIABzVEF1EH8y5gMxsdA+IkfKXqoFjvlsZBYhSQg=
+X-Received: by 2002:a05:620a:3705:b0:914:ac45:a98 with SMTP id af79cd13be357-9161bb03ad9mr1608583285a.17.1781445669356;
+        Sun, 14 Jun 2026 07:01:09 -0700 (PDT)
 Received: from [127.0.1.1] ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-91619ed7f16sm753609385a.1.2026.06.14.06.57.43
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-91619f05fe7sm806892185a.12.2026.06.14.07.01.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jun 2026 06:57:44 -0700 (PDT)
+        Sun, 14 Jun 2026 07:01:08 -0700 (PDT)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Subject: Re: [PATCH v6 05/12] PCI: liveupdate: Keep bus numbers constant
  during Live Update
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, 
- Adithya Jayachandran <ajayachandra@nvidia.com>, 
+To: Pranjal Shrivastava <praan@google.com>
+Cc: David Matlack <dmatlack@google.com>, kexec@lists.infradead.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+ linux-pci@vger.kernel.org, Adithya Jayachandran <ajayachandra@nvidia.com>, 
  Alexander Graf <graf@amazon.com>, Alex Williamson <alex@shazbot.org>, 
  Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
  David Rientjes <rientjes@google.com>, 
@@ -86,37 +87,37 @@ Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
  Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, 
  Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
  Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pranjal Shrivastava <praan@google.com>, 
  Pratyush Yadav <pratyush@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>, 
  Samiullah Khawaja <skhawaja@google.com>, 
  Shuah Khan <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>, 
  William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
-In-Reply-To: <20260522202410.3104264-6-dmatlack@google.com>
+In-Reply-To: <aiQAJRINEKiwCmVm@google.com>
 References: <20260522202410.3104264-1-dmatlack@google.com>
  <20260522202410.3104264-6-dmatlack@google.com>
-Date: Sun, 14 Jun 2026 13:57:40 +0000
-Message-Id: <178144546090.1266136.8524338598480624580.b4-review@b4>
+ <aiQAJRINEKiwCmVm@google.com>
+Date: Sun, 14 Jun 2026 14:01:06 +0000
+Message-Id: <178144566685.1266136.10385355007970146916.b4-reply@b4>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1009;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4053;
  i=pasha.tatashin@soleen.com; h=from:subject:message-id;
- bh=irEWipl5ns1PQEI0PQ7c6jRmzsY6W3c0XtAe+hBan18=;
- b=owEBbQKS/ZANAwAKAbt3KEzbc3reAcsmYgBqLrNWjYliGNG1cbbcQyjqFHpsESyctol2Ow44V
- DNNc7IHDFWJAjMEAAEKAB0WIQRBMaqT7LRvGvB/NmK7dyhM23N63gUCai6zVgAKCRC7dyhM23N6
- 3kjiD/sG69As1zhiS1Jh7oTEbv0MuNGQBkOQh5lHVUPS0gj+oBdU0SL1qDkUsD/9tAvcLQXxhY4
- /QEBcSzMRn2+VM2nH5sCYgMn00iu1wLRgHbnApGT8gEYefLC6tqiTimjXxxYEZXpQz9ApF3QtQ7
- uQ7fuxVwij6aGg2dzzTM5o+j0r7I05Zok88+cCVU2rlO6EuoInjgmjv65Xe6oq+Ds1zxZqhOecx
- ot6V9j27xklbNWnMVwGIEJdBHXJhF7LIartFve0H3o0TexujPaYa6bopI9KtSCGp9zJTyA0pQpK
- gNj34151bnveyddJ8hiUhPtMTv79KN5ncUVS5aJfGxPn/aFWbtqxiiOp0eU2mnJqh/6wNrM8cQ/
- NUoxJmWLdWzpvK3xaAUQMjvhqW56TPer7DfuxcsKhmOK0edcg9c8QgScp5vl6gu85NR4OeFHf1B
- kKZPXsYx8Wp75O5nb7T0vLt0ObMjKLsM03C/GOUWMQVcDp44U7NhXWs++LiuSgyzxtbuoRturS1
- ao58aoq9qHw1Gk4BTfu8Cxz4xPVAEIaydrmMgiamFRw3PAZUYr1WUIZUIQbwfaGlWx4ERcVXuLY
- aXr04c4Tx1rxrNZMN32g400K0heMVZ+AZvJQ7vrmDVSnc3QEXEoOT45iZ03sYksa0HWdCPAbLBt
- te2BUIp8i7sqexA==
+ bh=0/f3k6YhFFNYqylgqcMG4vpeDMtx34OA88JRI3jDl7g=;
+ b=owEBbQKS/ZANAwAKAbt3KEzbc3reAcsmYgBqLrQjWixclC4MmfNpLIwWFqBCFzofhX0Jr8QQJ
+ bpVL95JpeyJAjMEAAEKAB0WIQRBMaqT7LRvGvB/NmK7dyhM23N63gUCai60IwAKCRC7dyhM23N6
+ 3kUaEACol4WdgDqN/9YA64JobY3TtWyKckwy4VgKxaRGy/1HiRGiXX5khGnvPxf/QUt2GqkrOAD
+ 9bfcRjR/HmwRhjEO8hkWUhHd5uwowgrsW2sn3Y0fs3qD3jwY1OCZ9WdrkMReE8b3B3ii5wzbOQd
+ +dlUHARMl3hjaiT9TSaHtHOkmSDKHM1UKPlzTWRDrCmh6+LnpuOakhfPOKFldJYDgw/YIBKmZQG
+ +YIWAWmBPRFGkUgCD9FoglbeuyIym39QFmBpPde0isIetl86PwQReKOb5H2Zi+aD+mm4ine49jq
+ KLbeKAxjqxMj1cXWKk84Xe40fr4H4wkU4vsfGH/eGK1o3wiQVoBbu2TPp1LCeB9N0cNWCVE9DH0
+ 7EizDfLEBK/1DKZaUprLyucUu/eA2S/S254GS3Jn5LDRzlNOj1al3yHR68VyCLeMWcZA/VgxYI5
+ dqQYd/bN6gOvwDlFB/xexPatXErOhIo0iGC1i84tXL4C1OQEi9uIY1CtDZ+Ztv0pgUNlVOhFyGb
+ kqDZniluCNmnn8OGPvNMZz+sCPJtmqQBEATH2Hv8dlOdlb4s8lSUeGD1aBMvKPKB5Bh0hAczvNh
+ Sj5W6biG4ZUAj1L8BivCr0gTvsEJ2WSr9VMRTzsZ+0+dMV96HGvU4RyHQY7IY0Mx6kLObjr8TRS
+ KOqR+oScoluku5w==
 X-Developer-Key: i=pasha.tatashin@soleen.com; a=openpgp;
  fpr=CAAAB722DD22A081F0D49F35633A6A993D43B569
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260614_065746_210759_9036D531 
-X-CRM114-Status: GOOD (  11.07  )
+X-CRM114-CacheID: sfid-20260614_070111_144740_526703D7 
+X-CRM114-Status: GOOD (  31.98  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -131,29 +132,121 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, 22 May 2026 20:24:03 +0000, David Matlack <dmatlack@google.com> wrote:
-> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-> index 4f2ec6ffdd16..2421bc218916 100644
-> --- a/drivers/pci/liveupdate.c
-> +++ b/drivers/pci/liveupdate.c
-> @@ -103,7 +118,7 @@
->  /**
->   * struct pci_liveupdate_global - Global state for PCI Live Update support
->   * @rwsem: Reader/writer semaphore used to protect the incoming and outgoing
-> - *         FLBs, and the references to them in struct pci_dev.
-> + *         FLBs and references to them in struct pci_dev.
+On 2026-06-06 11:10:29+00:00, Pranjal Shrivastava wrote:
+> On Fri, May 22, 2026 at 08:24:03PM +0000, David Matlack wrote:
+> 
+> > During a Live Update, preserved devices must be allowed to continue
+> > performing memory transactions so the kernel cannot change the fabric
+> > topology, including bus numbers, since that would require disabling
+> > and flushing any memory transactions first.
+> > 
+> > To keep bus numbers constant, always inherit the secondary and
+> > subordinate bus numbers assigned to bridges during scanning, instead of
+> > assigning new ones, if any PCI devices are being preserved. Note that
+> > the kernel inherits bus numbers even on bridges without any downstream
+> > endpoints that were preserved. This avoids accidentally assigning a
+> > bridge a new window that overlaps with a preserved device that is
+> > downstream of a different bridge.
+> > 
+> > If a bridge is scanned with a broken topology or has no bus numbers
+> > set during a Live Update, refuse to assign it new bus numbers and refuse
+> > to enumerate devices below it until the Live Update is finished. This is
+> > a safety measure to prevent topology conflicts.
+> > 
+> > Require that CONFIG_CARDBUS is not enabled to enable
+> > CONFIG_PCI_LIVEUPDATE since inheriting bus numbers on PCI-to-CardBus
+> > bridges requires additional work but is not a priority at the moment.
+> > 
+> > Signed-off-by: David Matlack <dmatlack@google.com>
+> > ---
+> >  .../admin-guide/kernel-parameters.txt         |  6 +-
+> >  drivers/pci/Kconfig                           |  2 +-
+> >  drivers/pci/liveupdate.c                      | 83 ++++++++++++++++++-
+> >  drivers/pci/liveupdate.h                      | 14 ++++
+> >  drivers/pci/probe.c                           | 17 +++-
+> >  include/linux/pci_liveupdate.h                |  4 +
+> >  6 files changed, 119 insertions(+), 7 deletions(-)
+> 
+> [...]
+> 
+> > +		incoming = pci_liveupdate_flb_get_incoming();
+> > +		if (!incoming) {
+> > +			dev->liveupdate.inherit_buses = false;
+> > +			goto out;
+> > +		}
+> > +
+> > +		/*
+> > +		 * It is safe to sample incoming->ser->nr_devices and then
+> > +		 * drop the rwsem since nr_devices will only decrease. Thus the
+> > +		 * only "race" is that the current scan will be overly
+> > +		 * conservative and force bus inheritance.
+> > +		 */
+> > +		dev->liveupdate.inherit_buses = incoming->ser->nr_devices;
+> 
+> Nit: inherit_buses is a bool, while compiler will handle it correctly,
+> maybe we could:
+> 
+> dev->liveupdate.inherit_buses = !!incoming->ser->nr_devices 
 
-This change does not belong to this patch.
++1
 
-> @@ -396,6 +411,72 @@ static void pci_liveupdate_flb_put_incoming(void)
->  	liveupdate_flb_put_incoming(&pci_liveupdate_flb);
->  }
->  
-> +bool pci_liveupdate_scan_bridge_begin(struct pci_bus *bus, struct pci_dev *dev,
-> +				      int pass)
+> 
+> OR
+> 
+> dev->liveupdate.inherit_buses = (incoming->ser->nr_devices > 0)
+> 
+> for readability?
+> 
+> > +		pci_liveupdate_flb_put_incoming();
+> > +	}
+> > +
+> > +out:
+> > +	return dev->liveupdate.inherit_buses;
+> > +}
+> > +
+> 
+> [...]
+> 
+> >  		/*
+> > @@ -1497,8 +1501,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+> >  		 * do in the second pass.
+> >  		 */
+> >  		if (!pass) {
+> > -			if (pcibios_assign_all_busses() || broken)
+> > -
+> > +			if (assign_new_buses || broken)
+> >  				/*
+> >  				 * Temporarily disable forwarding of the
+> >  				 * configuration cycles on all bridges in
+> > @@ -1512,6 +1515,11 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+> >  			goto out;
+> >  		}
+> >  
+> > +		if (liveupdate) {
+> > +			pci_err(dev, "Cannot reconfigure bridge during Live Update, skipping\n");
+> > +			goto out;
+> > +		}
+> 
+> Quite helpful! Thanks :)
+> 
+> > +
+> >  		/* Clear errors */
+> >  		pci_write_config_word(dev, PCI_STATUS, 0xffff);
+> >  
+> > @@ -1572,6 +1580,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+> >  	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, bctl);
+> >  
+> >  	pm_runtime_put(&dev->dev);
+> > +	pci_liveupdate_scan_bridge_end(dev, pass);
+> >  
+> >  	return max;
+> >  }
+> 
+> With the minor nit above,
+> Reviewed-by: Pranjal Shrivastava <praan@google.com>
+> 
+> Thanks,
+> Praan
 
-This function requires a header comment; it is public and not self-descriptive.
 
--- 
-Pasha Tatashin <pasha.tatashin@soleen.com>
 
