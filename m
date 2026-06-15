@@ -4,70 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5E52DCD98CE
-	for <kexec@archiver.kernel.org>; Mon, 15 Jun 2026 20:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7F749CD98CE
+	for <kexec@archiver.kernel.org>; Mon, 15 Jun 2026 20:29:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=8ynJ3evPKTv+CHJxYf+R9sPicm7rQMH20Hi7EX5GWIM=; b=G0ifkNfilV7O+ZHq0rfH2GmM6U
-	HpHsFBbx4nqQM3LyApeRDImhgeWbQHuisTsmkIGDl6JmhL4vSS4vP2pqRW4clF+POJg8GIGkAAUm5
-	LY3SgtYq8T8ORBcARoG5cnn13AKKchxCailLxAfu+pSjgq/lOvWBy9bvEICEasWY5LxnFQD/CXSSn
-	6bHkZWr/f4+6iYnuTMDVXShyiR8I3AsH2kKguUDx9ikF11JAcI37M5CHRwF7szrGCk/+EfXpqf0qy
-	eCYZtKPvpNwNain96H9VMthgbuRi0SwwX+sUeU78p2I0X/dnBnH7JRXjkJ58+PFGFUdIgJNpQACGi
-	dYAf0Rew==;
+	bh=6tMpN87VW6G86K/AtehrHKHoQYLtgbv5+V4AdiXXmO0=; b=TJt2nGGeYPEUKLWgSUOyri3SYK
+	whevR/H4JSaDfNHrfhzOTIe4r12PNbcmqZ5Hd9XuCqlJtN8HpRBdL4jx17SCrvkhPBwlIT8uE6yNF
+	QeKLIm+R1r/cBWUesBAXJONRUpBlBhpjltboC+tIyJafUBQhWdIkzY2kScPHko11YVPlSZrx0RFiu
+	6Tc6AdpNS7DCqmIJOSA5B1lTkGCBDt9cEARZ0c4u8ob2RZ+kG5e+pF5Rk2LpeLCM64h4MdnBDUqZU
+	ycFAkZOC3tbhThhWyeS1DQOMdKXtCznkkmui6Mbjwqn+xDzKUgxdqqktBnwoeMeCnqNhnp7SaeoHm
+	TtnzVuWg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZDnX-0000000EoQu-0uQm;
-	Mon, 15 Jun 2026 20:20:43 +0000
-Received: from mail-pj1-x102b.google.com ([2607:f8b0:4864:20::102b])
+	id 1wZDvj-0000000EoeL-49pJ;
+	Mon, 15 Jun 2026 20:29:11 +0000
+Received: from mail-pf1-x429.google.com ([2607:f8b0:4864:20::429])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZDnV-0000000EoQY-0FGX
+	id 1wZDvg-0000000Eody-1tLR
 	for kexec@lists.infradead.org;
-	Mon, 15 Jun 2026 20:20:42 +0000
-Received: by mail-pj1-x102b.google.com with SMTP id 98e67ed59e1d1-37474afe908so1950108a91.1
-        for <kexec@lists.infradead.org>; Mon, 15 Jun 2026 13:20:39 -0700 (PDT)
+	Mon, 15 Jun 2026 20:29:10 +0000
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-8434840cea8so2291579b3a.3
+        for <kexec@lists.infradead.org>; Mon, 15 Jun 2026 13:29:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781554839; x=1782159639; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1781555347; x=1782160147; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8ynJ3evPKTv+CHJxYf+R9sPicm7rQMH20Hi7EX5GWIM=;
-        b=kYDqHFBOhpmFM807u/zdCtNhqKjslsT6I+sdwRn8jexdkeefc/97pC8Z/6j+cw6yZi
-         6MCOpD0VzyFXzprwvT7uBDf/6pNwekkVE2hF/uSvveY9fLneqwXZrBkx6S7tbJpjW46B
-         hpHdORJeSz0/2sRDcuA5CKm2U7vrJYbj2zLVUf/ZQWzY07ec2ayQnH3f6ThWZxT+i+Z3
-         PGMgZsQHpHV5adX8spn9GlDyY4cqzLgCg1V/Nb8t7CXKsdrm8DsJ7TPRVnh9pdTM7W+R
-         7jsUWGJlkknvVAALHyqGVdmqmy5gcwfHXvplTOmf5mIZFox1adrWb6r9b1HaKLz6btUi
-         n5OA==
+        bh=6tMpN87VW6G86K/AtehrHKHoQYLtgbv5+V4AdiXXmO0=;
+        b=o6uGkpYS0gO/kda162GDQBLib+uisx2SLm9DYJDG6ObExAKtJniFWibWox1XrqPib4
+         odFFjipDsdUdT/YS2vrDWpsYXm0UjoHN3oIfD64fKlfEHMp7zHgEAHOAw3I84VB5tlca
+         LXA5UUlX+2qEegoDhiA5kKu/yJuwsIWX7MG1ps41eNdMxX7Cziy+EY2dP+4LyXKCR77h
+         r0PHgbBXs+8bC5A1QXCnwGgjhYHKsLwoMqBdxs4AD8HlapywNz0tO54gSWmI2P90fY5T
+         sznBZpPjHLyTXMKA7JZsSQEIx/MjaJbX9pm+2LKtSG7AZejtV3pUvCk3il+OWG8DDZBP
+         F4Tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781554839; x=1782159639;
+        d=1e100.net; s=20251104; t=1781555347; x=1782160147;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8ynJ3evPKTv+CHJxYf+R9sPicm7rQMH20Hi7EX5GWIM=;
-        b=J5V36KBesC0Pa/Zfsqzb5iN/JU2KU3UYR9RAuQLcxC7o7vPuPzm+9Vfu7uHO1rmjKS
-         Wa61BmPiyph0bsYMiFcUpDGqHxyZFypP6cof2xExxjW7wvZ94K5DAdXmveOWlWWXMcGq
-         6ncX80U55JPsTe4PZ5huLz3BaMqZgZrKLV7kziv9p/RDg9GGSep06P3fu5gQFEUCgYPS
-         Jgl+n3VaHPcoT3JPtc3isDlh8G/K4JLpqop3dfIAfg+7J6OJFS34/Afs6vhsZUiBJWUE
-         ipHWWFGcBSw/HuRTru5+6+7RpAKEGmNONZnBD6I33fc0+o7uPGLDJp6qGchdMEcb/tSk
-         Rn7w==
-X-Gm-Message-State: AOJu0Yx6D060MduPT5tgmvy73m4qTqRmkJ4sTEHkrJ0xIB3w0zFr3AT9
-	ktxN6T1iys3kQ9/7vBEavZvFFzCLTq7a2Y7VyE8s3fRDei6JzhX7tw4oJ+W4yksUGA==
-X-Gm-Gg: Acq92OGxBcxCziHGDa3lPw0B7N+aX8iNZJap8kKlsIDZDZb7wsClxEYy77+kTKJVHrD
-	jbHIj6l4Fyg+VBKBTaRYMjcPNGiTv+OQJynir6R1wQck7KwxYomphVSMyz61ShATGTve7qmiBEq
-	2vkVQPAu90fhJMuOsGjWbApRAjWo6SXuOeMM2Dcl8RQj6iC/Oka2FGMK4xO+sNCspGb9EKpczrs
-	x7kzeM/R3ee16f6U+WzXstEnPdboEsRiJALCHO8FVDcBj0ksegIaL3w4vLNvsIA81LHl2mDTBTz
-	pxqtun9LtxApVRnkUxZ60dHHwg2aL6otKi3A1GDEGdjuO4sXXCK2xLa3ZH5dvPihTvTruBd/vgL
-	jcHA8dCYBscKam8SsjBrDR6f25vP2ycz2wein/NmySzV2u/GCIg3lR6Pvh7KqPnX71ApXBbPvEY
-	hmZEjmPUuzE69bgr2h6+zkAsDsPbTCREqa1J5aznO4wAdf4Fk8sQzcqGhEOCsq3A==
-X-Received: by 2002:a17:90b:2f05:b0:368:6998:b4a9 with SMTP id 98e67ed59e1d1-37c2bc7c378mr12049662a91.11.1781554838812;
-        Mon, 15 Jun 2026 13:20:38 -0700 (PDT)
+        bh=6tMpN87VW6G86K/AtehrHKHoQYLtgbv5+V4AdiXXmO0=;
+        b=jt316WwVFZnELgKHQ4f92ayZzlqPDBuEnBDWll11c6BxPyYk6BK3IERsYaaLyxkAhG
+         9HnFsGZX8qxANvBWX5TD5RG68Jzr83CN3q/5YWOoP2oVzwVYMGm9dkrXq4nwAFVsh9Xq
+         SqAQ2fla46CkOPURWn6n7GvoLua4mgwdJqNlqt90Aelmzcss9J1F7nw+byYCa+dWPHMS
+         MOgdw00zBRJgrdrbQYA9cFsPn/ub3APgYgisgoGT3On+OK0vkPfZ3NMWNxU0vHpzpetq
+         F1MmMSp3tmxejgNxL2U6XkC1ViZc+Ht64lb9J4VHPue3Xabg6i5JvCvdnu0EWaDgtYWr
+         wy6w==
+X-Gm-Message-State: AOJu0Yz3VvuoZl2y9jAedlYrURT5/bdP8GU/7/limrTSlfbpMFAjxGtu
+	3GLliSpT2Gwy7e9Rb8wn7C1XtJcMAxUoQvRw05m70BgOFe+qZoZOtpfqRHbLd6Eakg==
+X-Gm-Gg: Acq92OEt1xHwCcxeLJmaL+nu9YAckwcfVnN6TtgbKrsj/Fm+rH5o3L5I0+tcpZdOwwG
+	/S/ydORResftZBxWx7W45KRho6Mc+2XcM9aO+RYJjR5CQxlOYSmEClMljeRuo/BmPBSuJrVx9VZ
+	h41LvaZ8oHIMvKBBMX9M/sINd/ZR6VfIZlO7dv5S3orYAyZoaN+mVSF5EnNlJvIVugFrwCQrmn/
+	tLipubScnkdEaboWH8PCcH3CMzayH3x2moCs+XrmXdEYy42h43gXTOdBGfLAbpggsXIzkhmQhMH
+	tyAmiqWCwCSoableBywktn5ZejjGFMt2xjUSTNQKijHI94Seh45T3I0qIsXZM6Dbb5Q1Tnt4BMO
+	zw3ybCO2s4tDC2WCCWQ2fTV4p/TsmvPEiipSr+BG7bJqC4zdd2bjhjlFHUbAWITEJW11NW3Sc7O
+	PVWXCkxDsb5aefLAPQ46SMldi5C895j9bsRxCtwWOuSawIt/NEgcjcVjaSkp46CQ==
+X-Received: by 2002:a05:6a00:2d01:b0:842:380a:1ee8 with SMTP id d2e1a72fcca58-8451530e10amr465722b3a.17.1781555346795;
+        Mon, 15 Jun 2026 13:29:06 -0700 (PDT)
 Received: from google.com (56.149.168.34.bc.googleusercontent.com. [34.168.149.56])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-37c521d96ddsm470060a91.6.2026.06.15.13.20.38
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8434afc8a84sm12817496b3a.38.2026.06.15.13.29.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2026 13:20:38 -0700 (PDT)
-Date: Mon, 15 Jun 2026 20:20:34 +0000
+        Mon, 15 Jun 2026 13:29:06 -0700 (PDT)
+Date: Mon, 15 Jun 2026 20:29:03 +0000
 From: David Matlack <dmatlack@google.com>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>
 Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
@@ -90,19 +90,19 @@ Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
 	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v6 05/12] PCI: liveupdate: Keep bus numbers constant
- during Live Update
-Message-ID: <ajBektwaDID-NqQk@google.com>
+Subject: Re: [PATCH v6 03/12] PCI: liveupdate: Track incoming preserved PCI
+ devices
+Message-ID: <ajBgj_aSuzMZG47e@google.com>
 References: <20260522202410.3104264-1-dmatlack@google.com>
- <20260522202410.3104264-6-dmatlack@google.com>
- <178144546090.1266136.8524338598480624580.b4-review@b4>
+ <20260522202410.3104264-4-dmatlack@google.com>
+ <178144432039.1257322.9644414453415904478.b4-review@b4>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <178144546090.1266136.8524338598480624580.b4-review@b4>
+In-Reply-To: <178144432039.1257322.9644414453415904478.b4-review@b4>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260615_132041_097904_54A91E0D 
-X-CRM114-Status: GOOD (  16.40  )
+X-CRM114-CacheID: sfid-20260615_132908_500084_BEFF288D 
+X-CRM114-Status: GOOD (  38.37  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,34 +117,130 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-06-14 01:57 PM, Pasha Tatashin wrote:
-> On Fri, 22 May 2026 20:24:03 +0000, David Matlack <dmatlack@google.com> wrote:
+On 2026-06-14 01:38 PM, Pasha Tatashin wrote:
+> On Fri, 22 May 2026 20:24:01 +0000, David Matlack <dmatlack@google.com> wrote:
+> > diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> > index 10c9b65aa242..e68ae5c172d4 100644
+> > --- a/drivers/pci/Kconfig
+> > +++ b/drivers/pci/Kconfig
+> > @@ -330,7 +330,7 @@ config VGA_ARB_MAX_GPUS
+> >  
+> >  config PCI_LIVEUPDATE
+> >  	bool "PCI Live Update Support"
+> > -	depends on PCI && LIVEUPDATE
+> > +	depends on PCI && LIVEUPDATE && 64BIT
+> 
+> Please move this to the first patch, fewer changes between patches, and 
+> also KHO does not support anything but 64-bit mode.
+
+I think it is preferred to introduce changes when they are needed. This
+is the exact patch that requires 64BIT so it makes sense to add the
+dependency within this patch no?
+
+> 
+> >
 > > diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-> > index 4f2ec6ffdd16..2421bc218916 100644
+> > index 065d5af822f7..96c43b84532c 100644
 > > --- a/drivers/pci/liveupdate.c
 > > +++ b/drivers/pci/liveupdate.c
-> > @@ -103,7 +118,7 @@
-> >  /**
-> >   * struct pci_liveupdate_global - Global state for PCI Live Update support
-> >   * @rwsem: Reader/writer semaphore used to protect the incoming and outgoing
-> > - *         FLBs, and the references to them in struct pci_dev.
-> > + *         FLBs and references to them in struct pci_dev.
+> > @@ -128,13 +157,49 @@ static void pci_flb_unpreserve(struct liveupdate_flb_op_args *args)
+> > [ ... skip 31 lines ... ]
+> > +
+> > +err_xa_destroy:
+> > +	xa_destroy(&incoming->xa);
+> > +	kfree(incoming);
+> > +err_restore_free:
+> > +	kho_restore_free(ser);
 > 
-> This change does not belong to this patch.
-
-Yes, will fix.
-
+> This is the pattern we have been enforcing in other places in LUO. If 
+> the first retrieval fails, return the same error thereafter.
 > 
-> > @@ -396,6 +411,72 @@ static void pci_liveupdate_flb_put_incoming(void)
-> >  	liveupdate_flb_put_incoming(&pci_liveupdate_flb);
+> > @@ -270,6 +335,91 @@ void pci_liveupdate_unpreserve(struct pci_dev *dev)
 > >  }
+> >  EXPORT_SYMBOL_GPL(pci_liveupdate_unpreserve);
 > >  
-> > +bool pci_liveupdate_scan_bridge_begin(struct pci_bus *bus, struct pci_dev *dev,
-> > +				      int pass)
+> > +static struct pci_flb_incoming *pci_liveupdate_flb_get_incoming(void)
+> > +{
+> > +	struct pci_flb_incoming *incoming = NULL;
+> > +	int ret;
 > 
-> This function requires a header comment; it is public and not self-descriptive.
+> Maybe make the error return static, and avoid another search through compatible 
+> FLBs if it failed before?
 
-It is private to the PCI core, but I can still add a comment in v7.
+Good idea, will do.
+
+> 
+> 1. Add "saved_err;"; if it is set, return it right away.
+> 2. Change all errors to use goto save_err;, and at the end of the 
+> function, assign ret to saved_err;
+> 
+> > [ ... skip 15 lines ... ]
+> > +	 * This could mean that no PCI FLB data was passed by the previous
+> > +	 * kernel, but it could also mean the previous kernel used a different
+> > +	 * compatibility string (i.e. a different ABI).
+> > +	 */
+> > +	if (ret == -ENOENT) {
+> > +		pr_info_once("No incoming FLB matched %s\n", pci_liveupdate_flb.compatible);
+> 
+> I would assume this is very normal, e.g., no devices were preserved but 
+> memfd+hugetlb was preserved. Maybe use pr_debug_once().
+
+The problem is described in the comment above. The PCI core cannot
+distinguish between:
+
+ 1. There was not PCI FLB preserved. and
+ 2. There was PCI FLB preserved, but it was not compatible.
+
+I agree we should not log anything for (1) but (2) definitely requires
+at least some kind of logging so that's why I went with info-level here
+and not debug.
+
+> 
+> > +		return NULL;
+> > +	}
+> > +
+> > +	/*
+> > +	 * There is incoming FLB data that matches pci_liveupdate_flb.compatible
+> > +	 * but it cannot be retrieved.
+> > +	 */
+> > +	if (ret) {
+> > +		WARN_ONCE(ret, "Failed to retrieve incoming FLB data\n");
+> 
+> No need to print backtrace, please just print a warning:
+> pr_warn_once("Failed to retrieve incoming FLB data: %pe\n", ERR_PTR(ret));
+
+SGTM
+
+> 
+> > [ ... skip 34 lines ... ]
+> > +	 * through pci_liveupdate_finish(). This can happen if PCI core probes
+> > +	 * the same device multiple times, e.g. due to hotplug.
+> > +	 */
+> > +	if (!dev_ser->refcount) {
+> > +		pci_liveupdate_flb_put_incoming();
+> > +		return;
+> 
+> Pleaes use 'goto put_incoming'
+
+SGTM.
+
+> 
+> > +	}
+> > +
+> > +	pci_info(dev, "Device was preserved by previous kernel across Live Update\n");
+> > +	dev->liveupdate.incoming = dev_ser;
+> > +
+> > +	/*
+> > +	 * Hold the ref on the incoming FLB until pci_liveupdate_finish() so
+> > +	 * that dev->liveupdate.incoming does not get freed while it is in use.
+> > +	 */
+> 
+> How would that work? If finish is not called FLB stays around until the 
+> next reboot.
+
+True... I think if the PCI core trusts drivers to call
+pci_liveupdate_finish() then we don't need to hold onto the incoming
+reference here.
 
 > 
 > -- 
