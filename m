@@ -4,68 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 20C61CD98CF
-	for <kexec@archiver.kernel.org>; Mon, 15 Jun 2026 19:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5E52DCD98CE
+	for <kexec@archiver.kernel.org>; Mon, 15 Jun 2026 20:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=h7B8DczUlZvoXStP+g9L9ex1t6hea3WLt+N+VMfAkwQ=; b=cO0VRrp0E6J3bVxJfZANM5kSFT
-	6mA/zsCktPiTbP3Ka/mmWb6peLhYQJpyMsvrYgEQfFPTrGS+2z5n4vFxAeJ//sMLdOayE7oDOsmq1
-	LOA15sudIS5BjEOGBDFmmg491nS0RBgv9/Mni2HnAEm1Sx3FUT1PFuLIIxhAectFl96dgs2Ma3i5u
-	I74DQWEc8Px6bqunTRuwfqpwSDuD6lNR7PWn7McF+j+A6nSmWgIVPNTMq7yhiBx0Gt4qaz4X0zGBc
-	cZUUMWJVtf4X/1CUotHGfg79MfAgt0HLY8ub/vlPAvvTyA81boMNfTNFnRSoVYI5eXFS438gWFHXU
-	52gp4ysA==;
+	bh=8ynJ3evPKTv+CHJxYf+R9sPicm7rQMH20Hi7EX5GWIM=; b=G0ifkNfilV7O+ZHq0rfH2GmM6U
+	HpHsFBbx4nqQM3LyApeRDImhgeWbQHuisTsmkIGDl6JmhL4vSS4vP2pqRW4clF+POJg8GIGkAAUm5
+	LY3SgtYq8T8ORBcARoG5cnn13AKKchxCailLxAfu+pSjgq/lOvWBy9bvEICEasWY5LxnFQD/CXSSn
+	6bHkZWr/f4+6iYnuTMDVXShyiR8I3AsH2kKguUDx9ikF11JAcI37M5CHRwF7szrGCk/+EfXpqf0qy
+	eCYZtKPvpNwNain96H9VMthgbuRi0SwwX+sUeU78p2I0X/dnBnH7JRXjkJ58+PFGFUdIgJNpQACGi
+	dYAf0Rew==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZDAH-0000000EmmI-2YLm;
-	Mon, 15 Jun 2026 19:40:09 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wZDnX-0000000EoQu-0uQm;
+	Mon, 15 Jun 2026 20:20:43 +0000
+Received: from mail-pj1-x102b.google.com ([2607:f8b0:4864:20::102b])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZDAG-0000000EmmA-2B6y
+	id 1wZDnV-0000000EoQY-0FGX
 	for kexec@lists.infradead.org;
-	Mon, 15 Jun 2026 19:40:08 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id D37FA40AAA;
-	Mon, 15 Jun 2026 19:40:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01C251F000E9;
-	Mon, 15 Jun 2026 19:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781552407;
-	bh=h7B8DczUlZvoXStP+g9L9ex1t6hea3WLt+N+VMfAkwQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=WKQue0AH0htjX4UnzX+Hx1GmH8vKLOTbqpeJ7AM4DBR/0gN8Lz3FXAQtOwe0fysZY
-	 +6C81/uwDS4zGXp7VX5qIkE8+MraetDUvRtVpm5Wz3LiSS7TXWi6GH3fhFrNlFI5UN
-	 4I7339GVUqdaNYa/SMZ9Hg1K+aB8gXDwIgPG4AYl/1GS2xwkXnmDLC9ZSbkWTMWLvb
-	 snXbil0WlO5o6bCGeqAkOAMKayAT+77FzegUGxIekv+Ho6iASyP9CXNnnrS1bdiV+/
-	 7Pb2XnLtIB1fo3koDUQ9pd+XgQwqi5VnPipybsMlwvUov2Y5uBd7mppz9OI/Y2ZgIz
-	 pEC8BIWKh32bw==
-Date: Mon, 15 Jun 2026 22:40:00 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Mon, 15 Jun 2026 20:20:42 +0000
+Received: by mail-pj1-x102b.google.com with SMTP id 98e67ed59e1d1-37474afe908so1950108a91.1
+        for <kexec@lists.infradead.org>; Mon, 15 Jun 2026 13:20:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1781554839; x=1782159639; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8ynJ3evPKTv+CHJxYf+R9sPicm7rQMH20Hi7EX5GWIM=;
+        b=kYDqHFBOhpmFM807u/zdCtNhqKjslsT6I+sdwRn8jexdkeefc/97pC8Z/6j+cw6yZi
+         6MCOpD0VzyFXzprwvT7uBDf/6pNwekkVE2hF/uSvveY9fLneqwXZrBkx6S7tbJpjW46B
+         hpHdORJeSz0/2sRDcuA5CKm2U7vrJYbj2zLVUf/ZQWzY07ec2ayQnH3f6ThWZxT+i+Z3
+         PGMgZsQHpHV5adX8spn9GlDyY4cqzLgCg1V/Nb8t7CXKsdrm8DsJ7TPRVnh9pdTM7W+R
+         7jsUWGJlkknvVAALHyqGVdmqmy5gcwfHXvplTOmf5mIZFox1adrWb6r9b1HaKLz6btUi
+         n5OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781554839; x=1782159639;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8ynJ3evPKTv+CHJxYf+R9sPicm7rQMH20Hi7EX5GWIM=;
+        b=J5V36KBesC0Pa/Zfsqzb5iN/JU2KU3UYR9RAuQLcxC7o7vPuPzm+9Vfu7uHO1rmjKS
+         Wa61BmPiyph0bsYMiFcUpDGqHxyZFypP6cof2xExxjW7wvZ94K5DAdXmveOWlWWXMcGq
+         6ncX80U55JPsTe4PZ5huLz3BaMqZgZrKLV7kziv9p/RDg9GGSep06P3fu5gQFEUCgYPS
+         Jgl+n3VaHPcoT3JPtc3isDlh8G/K4JLpqop3dfIAfg+7J6OJFS34/Afs6vhsZUiBJWUE
+         ipHWWFGcBSw/HuRTru5+6+7RpAKEGmNONZnBD6I33fc0+o7uPGLDJp6qGchdMEcb/tSk
+         Rn7w==
+X-Gm-Message-State: AOJu0Yx6D060MduPT5tgmvy73m4qTqRmkJ4sTEHkrJ0xIB3w0zFr3AT9
+	ktxN6T1iys3kQ9/7vBEavZvFFzCLTq7a2Y7VyE8s3fRDei6JzhX7tw4oJ+W4yksUGA==
+X-Gm-Gg: Acq92OGxBcxCziHGDa3lPw0B7N+aX8iNZJap8kKlsIDZDZb7wsClxEYy77+kTKJVHrD
+	jbHIj6l4Fyg+VBKBTaRYMjcPNGiTv+OQJynir6R1wQck7KwxYomphVSMyz61ShATGTve7qmiBEq
+	2vkVQPAu90fhJMuOsGjWbApRAjWo6SXuOeMM2Dcl8RQj6iC/Oka2FGMK4xO+sNCspGb9EKpczrs
+	x7kzeM/R3ee16f6U+WzXstEnPdboEsRiJALCHO8FVDcBj0ksegIaL3w4vLNvsIA81LHl2mDTBTz
+	pxqtun9LtxApVRnkUxZ60dHHwg2aL6otKi3A1GDEGdjuO4sXXCK2xLa3ZH5dvPihTvTruBd/vgL
+	jcHA8dCYBscKam8SsjBrDR6f25vP2ycz2wein/NmySzV2u/GCIg3lR6Pvh7KqPnX71ApXBbPvEY
+	hmZEjmPUuzE69bgr2h6+zkAsDsPbTCREqa1J5aznO4wAdf4Fk8sQzcqGhEOCsq3A==
+X-Received: by 2002:a17:90b:2f05:b0:368:6998:b4a9 with SMTP id 98e67ed59e1d1-37c2bc7c378mr12049662a91.11.1781554838812;
+        Mon, 15 Jun 2026 13:20:38 -0700 (PDT)
+Received: from google.com (56.149.168.34.bc.googleusercontent.com. [34.168.149.56])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-37c521d96ddsm470060a91.6.2026.06.15.13.20.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2026 13:20:38 -0700 (PDT)
+Date: Mon, 15 Jun 2026 20:20:34 +0000
+From: David Matlack <dmatlack@google.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
 	Alexander Graf <graf@amazon.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jason Miu <jasonmiu@google.com>,
-	Jork Loeser <jloeser@linux.microsoft.com>,
-	kexec@lists.infradead.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 16/18] memblock: make HugeTLB bootmem allocation work
- with KHO
-Message-ID: <ajBVELPz_tLKex8P@kernel.org>
-References: <20260605183501.3884950-1-pratyush@kernel.org>
- <20260605183501.3884950-17-pratyush@kernel.org>
- <178143855120.2123877.5431342391381982046.b4-review@b4>
- <2vxzpl1soris.fsf@kernel.org>
+	Alex Williamson <alex@shazbot.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
+	Josh Hilke <jrhilke@google.com>,
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pranjal Shrivastava <praan@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v6 05/12] PCI: liveupdate: Keep bus numbers constant
+ during Live Update
+Message-ID: <ajBektwaDID-NqQk@google.com>
+References: <20260522202410.3104264-1-dmatlack@google.com>
+ <20260522202410.3104264-6-dmatlack@google.com>
+ <178144546090.1266136.8524338598480624580.b4-review@b4>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2vxzpl1soris.fsf@kernel.org>
+In-Reply-To: <178144546090.1266136.8524338598480624580.b4-review@b4>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260615_132041_097904_54A91E0D 
+X-CRM114-Status: GOOD (  16.40  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,67 +117,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jun 15, 2026 at 03:35:39PM +0200, Pratyush Yadav wrote:
-> On Sun, Jun 14 2026, Mike Rapoport wrote:
-> > On Fri, 05 Jun 2026 20:34:49 +0200, Pratyush Yadav <pratyush@kernel.org> wrote:
-> >
-> >> First, it does not use mirrored memory for hugetlb. Mirrored memory is a
-> >> limited resource that is best saved for kernel data structures, not user
-> >> memory.
-> >> 
-> >> Second, if the memory found overlaps with KHO scratch areas, it discards
-> >> the memory and retries.
-> >
-> > This sentence is somewhat hard to parse.
+On 2026-06-14 01:57 PM, Pasha Tatashin wrote:
+> On Fri, 22 May 2026 20:24:03 +0000, David Matlack <dmatlack@google.com> wrote:
+> > diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+> > index 4f2ec6ffdd16..2421bc218916 100644
+> > --- a/drivers/pci/liveupdate.c
+> > +++ b/drivers/pci/liveupdate.c
+> > @@ -103,7 +118,7 @@
+> >  /**
+> >   * struct pci_liveupdate_global - Global state for PCI Live Update support
+> >   * @rwsem: Reader/writer semaphore used to protect the incoming and outgoing
+> > - *         FLBs, and the references to them in struct pci_dev.
+> > + *         FLBs and references to them in struct pci_dev.
 > 
-> Okay, let me retry:
-> 
->     Second, if the free memory area found by memblock_find_in_range_node()
->     is a part of a KHO scratch area, the free area is not used. Allocation
->     is retried starting after the free area to ensure no hugepages come from
->     KHO scratch.
-> 
-> Any better?
+> This change does not belong to this patch.
 
-Yep :)
- 
-> >
-> >>
-> >>
-> >> diff --git a/mm/memblock.c b/mm/memblock.c
-> >> index 6349c48154f4..131e54dd5d8d 100644
-> >> --- a/mm/memblock.c
-> >> +++ b/mm/memblock.c
-> >> @@ -1756,6 +1761,69 @@ void * __init memblock_alloc_try_nid_raw(
-> >> [ ... skip 51 lines ... ]
-> >> +		if (memblock_bottom_up())
-> >> +			start = addr + size;
-> >> +		else
-> >> +			start = addr - size;
-> >> +
-> >> +		goto retry;
-> >
-> > Hmm, two goto retry don't seem nice :/
-> > Although I can't see how to imporove it really.
-> 
-> Dunno, looked easy enough to understand to me.
-> >
-> > Maybe add a helper for going the node fallback?
-> 
-> There is a small downside. There will then be no way to know the
-> fallback was tried already, so if a retry is done because of scratch
-> overlap, the fallback needs to be done again.
-> 
-> I don't think it should be too bad, so if you still prefer this then I
-> can do it.
+Yes, will fix.
 
-Let's keep it for now, maybe will find something smarter later.
- 
+> 
+> > @@ -396,6 +411,72 @@ static void pci_liveupdate_flb_put_incoming(void)
+> >  	liveupdate_flb_put_incoming(&pci_liveupdate_flb);
+> >  }
+> >  
+> > +bool pci_liveupdate_scan_bridge_begin(struct pci_bus *bus, struct pci_dev *dev,
+> > +				      int pass)
+> 
+> This function requires a header comment; it is public and not self-descriptive.
+
+It is private to the PCI core, but I can still add a comment in v7.
+
+> 
 > -- 
-> Regards,
-> Pratyush Yadav
-
--- 
-Sincerely yours,
-Mike.
+> Pasha Tatashin <pasha.tatashin@soleen.com>
 
