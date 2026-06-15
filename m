@@ -4,105 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id ABB43CD98DE
-	for <kexec@archiver.kernel.org>; Mon, 15 Jun 2026 22:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 748ADCD98DE
+	for <kexec@archiver.kernel.org>; Mon, 15 Jun 2026 23:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=1hI+H0ca4Dm+4Rh5RqmuKXgYDTibOfqOeSOBb1qqYIE=; b=Kdq8JCHzcfQS6Ik1Q7JiTglpyA
-	qxSr1oPhcsxcu81NUJPjTT+GMcDIIHfykoLaBblO+dK0RbIv96+W2itgtcCw8DLdjplxDzXm4QN04
-	C/hI9DPyZNeLDfM1LoA2jcmjmEJcjUWfnruIzklmu+mF7tj+JhDM14IsuXQr5aOJu0qqYD+rUpzz2
-	B2WoW+0M/aXgVuVt2v0IRkmql/0ZNf0sKIT/WPb7OLfX7m1K/wZAnXz9uDH3Hxh7grl3/68z0QOZc
-	cqWBiL3j5mDgscWuf9xkAYQ8jQY3T3pxXU+OwekCWsxb2sdE5MEWdFdbdsgfSgSjjsbjoMek1YnfC
-	e3uR7SZA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=rU8PbGBJoPUku3x81mbrU+rfwVCtwy+1ozr856GX86E=; b=nor1FOWFx2vXvlVQ8MdMb16Dlg
+	5w4AMcCbGXQOxHBU3LFwbJ7408G4blPRVzCy8jRt2rQWRbYoNCxXhF3Gj62KTiZqxC941JWKLjgJQ
+	XL6z9QNF5zf0UqmXGxfIUamKKgMX40bsEMp6uqXVQBteJkjOLcpzQ80L95Wb9yfgDC4egVzeMFth+
+	WcJSs07X3QW7AWC0/i+1uVqsn9cHQo7W0y5HX06FcDWsgiPodNk4dkqZOIZFmO+I+X/oZrfK8AokD
+	LmKz2MXgihW4/rlUZewRJf8IQzn57NhtRjaYXQjN2nJdMtn+d80NEa07B58gdcqT8IkxYpO9N4bdp
+	s949z4pQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZFhB-0000000EtUb-0Gc7;
-	Mon, 15 Jun 2026 22:22:17 +0000
-Received: from mail-pf1-x42c.google.com ([2607:f8b0:4864:20::42c])
+	id 1wZGLd-0000000EvPp-0LA0;
+	Mon, 15 Jun 2026 23:04:05 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZFh8-0000000EtU6-2xUH
+	id 1wZGLZ-0000000EvPQ-26yn
 	for kexec@lists.infradead.org;
-	Mon, 15 Jun 2026 22:22:16 +0000
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-842288702fbso1827049b3a.1
-        for <kexec@lists.infradead.org>; Mon, 15 Jun 2026 15:22:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781562132; x=1782166932; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1hI+H0ca4Dm+4Rh5RqmuKXgYDTibOfqOeSOBb1qqYIE=;
-        b=LdAh7OCeO5CNlQ2vpOoL8x1NnxJbW4tx1lzVxoyaBrClX3lwLg3/Qxtoi4jPRU+iMe
-         /znp058Du4uKhiIUVHevkqUxr9agqRTcxAt1/+kP+ji/kl3U7ia2wj5ufxZVg3f5JXbr
-         5qGvglraXA1mS8awP4ewttOnpkMcA+qwbOd6eW0HMu9H8ZKlWuO220HtYDTis90dex6E
-         1TcjYuRBS2GIAqCbyoLmF2mt0lxyyFntV6kyWBU2ghyPz9wZUGBE7tWfLiSZKFKO0C9W
-         HhfEIfkSXGV4TmUe1Z9IBbPpC4x7gcZ4+mMK7Y6z6QzV+7RZI/JpwnD9/7iQe0zY15O+
-         3SPw==
+	Mon, 15 Jun 2026 23:04:03 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1781564639;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rU8PbGBJoPUku3x81mbrU+rfwVCtwy+1ozr856GX86E=;
+	b=UzvD6nD88P/7qPowEJYR6penOdI4xg/gM1ZFEsghc4p40WDzdyODN70H+5059W72HujPM/
+	DvfT2UH3WoLbJpkDBHIJi+gsv/fIHriYLhrt4xEs0VDvlYc7xUExbI10RpAAot/QRBeA7U
+	JKxNAZsK9+E05WEC4darYNqECL8XoAg=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-133-uniH-KbtOFq3qv9IHCjdqA-1; Mon, 15 Jun 2026 19:03:57 -0400
+X-MC-Unique: uniH-KbtOFq3qv9IHCjdqA-1
+X-Mimecast-MFC-AGG-ID: uniH-KbtOFq3qv9IHCjdqA_1781564637
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-517c65e497eso79105071cf.2
+        for <kexec@lists.infradead.org>; Mon, 15 Jun 2026 16:03:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781562132; x=1782166932;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1hI+H0ca4Dm+4Rh5RqmuKXgYDTibOfqOeSOBb1qqYIE=;
-        b=qys3W3/eEmjqxUhDrckZbeNkif+12TUcu4GVoQWaIi82PmZ7MJa94zuQIwtbLwB7vi
-         IsyqpUupvRQWJkwy8z7araoCSoK0Fur17rikKe5LT88tSkorX0JKMUB1Io/xFCmHb3GS
-         lsaBqy18l0yk97Pqz7x89vSuVIKOZHVnpukdSXHJ2aON1X9ODzTp9Sst73Pi0+IjdLwe
-         9HLp4OTAfLYQUpMj6Qy1Y7Je60yEOmVroQ8Yy2psPBmDNAixSXMC2EbJwtuA1CntBez+
-         0QxYoFgUpt8LUhJ3fsb0cf3/Y7dYFiu+DDF7m3eLCFTgMFKTdvu60W6ZzQ5KxFT758Bt
-         0XJQ==
-X-Gm-Message-State: AOJu0Yw0UiCGbsJMo1n0XCYeo1PxlS+t6lLeMxjq9tTH57N7hyo7K2Q3
-	dK1YFT0R8sQR9PEIbKLTBsfNYzG3VZODGD6etHBpf8anUr0hKyv7hs9bHMBz2oV5TA==
-X-Gm-Gg: Acq92OHpVLAAtc4h3mDerXhwzXWw0srqXF7V4cnZ2VjyKJCbK8VlshcgL0RAiH9bkVb
-	Q6UfyeJsgzsJdZwiXyQhV7bBqm906GsZCd/dMllgGJBG7dWaQxyQQlHlXT4FO0vw5ZdG8slxz5F
-	NBSf3AwzpzfMinY4pU4Rr3ixfjr7EpFj555UtjDrjY0i407A7dpVoIJTzUOqgmOGj+s4vmaw2iC
-	hk5+6gX8+lJ4/jq7Tz0vDrOOEnCTzGQETqBg0aJ+5+3Lr5mdp2BwjlhlnW/+SoDJnHeut5hWLHV
-	ypuWaLqopCPDBo9RJ/Q5Mm49IyA9FWzWLqjELCmgcJz0Hgh9TadHiS8lWzRRJvt+q1Sm8NmsELL
-	4B1ZlhjZsleYiU7wsm93kOCdb/1WRZSi/9/j3/XBSdNCkOW8iltQV2tVf1YsV9QVIjsIgNYmVO1
-	7mG/SFZtHWsYymCbtGfHbz3qaqHX+qjRVwBShBRNj1R9JIjHbRtb4Kw28S22ennQ==
-X-Received: by 2002:a05:6a00:3e20:b0:82c:7767:5bb2 with SMTP id d2e1a72fcca58-8434ce428cemr17610087b3a.21.1781562131898;
-        Mon, 15 Jun 2026 15:22:11 -0700 (PDT)
-Received: from google.com (56.149.168.34.bc.googleusercontent.com. [34.168.149.56])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8434acca7ecsm11283741b3a.13.2026.06.15.15.22.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2026 15:22:11 -0700 (PDT)
-Date: Mon, 15 Jun 2026 22:22:08 +0000
-From: David Matlack <dmatlack@google.com>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org,
-	Adithya Jayachandran <ajayachandra@nvidia.com>,
-	Alexander Graf <graf@amazon.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
-	Josh Hilke <jrhilke@google.com>,
-	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
-	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
-	Pranjal Shrivastava <praan@google.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
-	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v6 01/12] PCI: liveupdate: Set up FLB handler for the PCI
- core
-Message-ID: <ajB7EA4tAKqj5XV0@google.com>
-References: <20260522202410.3104264-1-dmatlack@google.com>
- <20260522202410.3104264-2-dmatlack@google.com>
- <178124130274.908199.14827357870284807134.b4-review@b4>
+        d=1e100.net; s=20251104; t=1781564637; x=1782169437;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=rU8PbGBJoPUku3x81mbrU+rfwVCtwy+1ozr856GX86E=;
+        b=HRtfJjtPyGXS6OHZxk6NsbUhyFQBDGQLhHRsPAFN6MnyC3CA8YZO1t5J08GT1MC6TB
+         2BdIaucEGypEEXmRImkDbR2BwVa3fU5qv7DGF0TNYLx3o63ufnkgFYWNvNGBEvcjSA6O
+         545eb3JFmco0ohIXfLtZh1ThPho/pxyud5y6xy3bFt2qywz4msOMITl4N29p37pcp688
+         QONu6jB0UCem0sQFgaA/27R09i2jSxRF0U1PHfUgJRUcnRM42EeS8FDiQ5h1iOVpXncv
+         2VlNdrR2d0obywuZ74Z8U+mKgYSv9XH1hZvCkl5j0f6EZHD8M9vRIIBCaIPRH8WmCqXM
+         hq5g==
+X-Forwarded-Encrypted: i=1; AFNElJ9AoBADfRECo2yftcAsUHfe37w8xVjUrZ3vdx5TGPITAKtIa1D2Fr89Jzga29cPFHSLGA17ig==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yya6OzTFx98G4wXWoxT5LQL4Miz1Fbo1903XqQeadW8b2T9db9Q
+	EgCZfkqfEm/X8kF6HS+Hu4IeXLavVxAuvuTJXC4994yul4jbc7e8Gsv9KU/c5VfeSG8rdm/J1hN
+	DvQTyBT33aLS1DwKJA3UaIuGSb9JNUl9pKiriT5lLevpVKFnFEIVTeVAuYOwxddrvf3N8CVdVpl
+	ZLMdIas7eAOkHmr2vcxl2wdiSAf4A5SbykO5zY
+X-Gm-Gg: Acq92OE9bK97+qneFQiDaK72k3C215vtkfluLVjDDUaAXw4LnkTmFOYUpeJfkx04B6y
+	zHIVGP6j5RZyNyTNrL7IqQEmcOvMD6+mxc8rDss0U8qggmUlfVptSy0p4Y8tKjGp3CG6VL2S3yV
+	/R50wIT6DhWxQj/IMSiwhgDUuPqpYt23R7cK/tcAR+I+bKIuoaZ+EhvbbE75iPjKl3oIo38O+5+
+	K51
+X-Received: by 2002:a05:622a:406:b0:517:7ecb:f01d with SMTP id d75a77b69052e-51991ae690emr16483971cf.28.1781564637098;
+        Mon, 15 Jun 2026 16:03:57 -0700 (PDT)
+X-Received: by 2002:a05:622a:406:b0:517:7ecb:f01d with SMTP id
+ d75a77b69052e-51991ae690emr16483461cf.28.1781564636523; Mon, 15 Jun 2026
+ 16:03:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <178124130274.908199.14827357870284807134.b4-review@b4>
+References: <20260414102656.55200-1-ltao@redhat.com> <20260414102656.55200-7-ltao@redhat.com>
+ <8b0079dd-e50a-4667-aabf-1612921b022a@nec.com> <874ij3zq1k.fsf@oracle.com>
+In-Reply-To: <874ij3zq1k.fsf@oracle.com>
+From: Tao Liu <ltao@redhat.com>
+Date: Tue, 16 Jun 2026 11:03:19 +1200
+X-Gm-Features: AVVi8CdMx2V-n2zcuZJ6rTfQLRnEXVkCM8ceAafNpXHnp8Y1eJ7TWb0G-Czl_pM
+Message-ID: <CAO7dBbU6V7XYYO9M+z_CK8UCnzfX7TB7DZka4Z_kqP-WvDbTaA@mail.gmail.com>
+Subject: Re: [PATCH v5][makedumpfile 6/9] Add makedumpfile extensions support
+To: Stephen Brennan <stephen.s.brennan@oracle.com>
+Cc: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>, 
+	=?UTF-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0jiDnnJ/lhYkp?= <yamazaki-msmt@nec.com>, 
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: JF4lz45lgVdbBVpvQnVnKmGkt8It3erHjxLWwCBhE5I_1781564637
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260615_152214_758231_84E7CE9E 
-X-CRM114-Status: GOOD (  27.85  )
+X-CRM114-CacheID: sfid-20260615_160401_617745_372252E9 
+X-CRM114-Status: GOOD (  22.19  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,128 +106,74 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-06-12 05:15 AM, Pasha Tatashin wrote:
-> On Fri, 22 May 2026 20:23:59 +0000, David Matlack <dmatlack@google.com> wrote:
+Hi Stephen & Kazu,
 
-> > + * PCI device preservation across Live Update is built on top of the Live Update
-> > + * Orchestrator's (LUO) support for file preservation across kexec. Drivers
-> 
-> I prefer to just use acronyms FLB, and LUO, but have links to the actual 
-> documentations about them.
-> 
-> So, something like this:
-> 
->   * :ref:`FLB <flb>` Data
->   * =====================
->   *
->   * PCI device preservation across Live Update is built on top of the
->   * :ref:`LUO <luo>` support for file preservation across kexec. Drivers
-> 
-> And also add _luo and _flb to Documentation/core-api/liveupdate.rst
-> 
-> .. _luo:
-> 
->  ========================
->  Live Update Orchestrator
->  ========================
-> 
-> .. _flb:
-
-Will do.
-
-I guess I will need to add another patch to add the link references to
-liveupdate.rst?
-
-> 
->  LUO File Lifecycle Bound Global Data
->  ====================================
-> 
-> > [ ... skip 17 lines ... ]
-> > + *
-> > + *  * ``pci_liveupdate_register_flb(driver_file_handler)``
-> > + *  * ``pci_liveupdate_unregister_flb(driver_file_handler)``
-> > + */
-> > +
-> > +#define pr_fmt(fmt) "PCI: liveupdate: " fmt
-> 
-> Nit, may be:
-
-Did you have a suggestion here that got lost?
-
-> 
-> > +
-> > +#include <linux/io.h>
-> > +#include <linux/kexec_handover.h>
-> > +#include <linux/kho/abi/pci.h>
-> > +#include <linux/liveupdate.h>
-> > +#include <linux/mutex.h>
-> > +#include <linux/mm.h>
-> 
-> Please sort alphabetically.
-
-Will do.
-
-> 
-> > [ ... skip 12 lines ... ]
-> > +	 * future to increase the chances that there is enough room to preserve
-> > +	 * devices that are not yet present on the system (e.g. VFs, hot-plugged
-> > +	 * devices).
-> > +	 */
-> > +	for_each_pci_dev(dev)
-> > +		max_nr_devices++;
-> 
-> I think, we want to use kho_block [1] (it is in liveupdate/next branch) 
-> to allow number of supported devices to be dynamic.
-> 
-> To support this, we would redefine the ABI and tracking structures like 
-> so:
-> 
-> /* include/linux/kho/abi/pci.h */
-> struct pci_ser {
-> 	u64 devices;      /* Phys address of the first block header of kho_block_set */
-> 	u64 nr_devices;   /* Total count of active preserved devices */
-> } __packed;
-> 
-> /* drivers/pci/liveupdate.c */
-> struct pci_flb_outgoing {
-> 	struct pci_ser *ser;            /* Points to the FDT/KHO-allocated ABI struct */
-> 	struct kho_block_set block_set;  /* Controls the active blocks on the fly */
-> };
-> 
-> In  __pci_liveupdate_preserve_device() , we would search for 
-> and reuse any inactive  pci_dev_ser  slot first, and only call 
-> kho_block_set_grow() to expand if no inactive slots are available.
-> 
-> In pci_liveupdate_unpreserve_device(), we would simply 
-> mark the  pci_dev_ser as inactive.
-
-Makes sense at a high level. I'll work on switching kho_block for v7 and
-get back to you if I hit any issues.
-
-> 
+On Tue, Jun 16, 2026 at 5:12=E2=80=AFAM Stephen Brennan
+<stephen.s.brennan@oracle.com> wrote:
+>
+> HAGIO KAZUHITO(=E8=90=A9=E5=B0=BE=E3=80=80=E4=B8=80=E4=BB=81)   <k-hagio-=
+ab@nec.com> writes:
+> > On 2026/04/14 19:26, Tao Liu wrote:
 > >
-> > diff --git a/include/linux/pci_liveupdate.h b/include/linux/pci_liveupdate.h
-> > new file mode 100644
-> > index 000000000000..8ec98beefcb4
-> > --- /dev/null
-> > +++ b/include/linux/pci_liveupdate.h
-> > @@ -0,0 +1,30 @@
-> > [ ... skip 24 lines ... ]
-> > +static inline void pci_liveupdate_unregister_flb(struct liveupdate_file_handler *fh)
-> > +{
-> > +}
-> > +#endif
-> > +
-> > +#endif /* LINUX_PCI_LIVEUPDATE_H */
-> 
-> [1] https://lore.kernel.org/all/20260603154402.468928-1-pasha.tatashin@soleen.com/
-> 
-> Preserving: In  __pci_liveupdate_preserve_device() , we would search for 
-> Unpreserving: In  pci_liveupdate_unpreserve_device(), we would simply
-> 
-> Preserving: In  __pci_liveupdate_preserve_device() , we would search for 
-> Unpreserving: In  pci_liveupdate_unpreserve_device(), we would simply 
-> 
-> -- 
-> Pasha Tatashin <pasha.tatashin@soleen.com>
+> >> +static bool init_kallsyms_btf(void)
+> >> +{
+> >> +    int count;
+> >> +    bool ret =3D false;
+> >> +    /* We will load module's btf/kallsyms on demand */
+> >> +    bool init_ksyms_module =3D false;
+> >> +    bool init_ktypes_module =3D false;
+> >> +
+> >> +    if (check_ksyms_require_modname("vmlinux", &count)) {
+> >
+> > Thank you for the explanation [1].
+> >
+> > so which code path adds "vmlinux" to the mods array before this line?
+> > I could not find it.
+>
+> Hello Kazu,
+>
+> In kallsyms.c from patch 2, there is the line:
+>   INIT_MOD_SYM(vmlinux, _stext);
+> This adds a struct ksym_info to the main makedumpfile executable's
+> array, which requests symbol "_stext" from vmlinux.
+>
+> In kallsyms.c "init_kernel_kallsyms()", again from patch 2, the first
+> step is to call:
+>    register_ksym_section((char *)__start_init_ksyms,
+>                          (char *)__stop_init_ksyms))
+> Which is a function generated by the macro REGISTER_SECTION(). The
+> implementation will use add_ksym_modname() whens it encounters this
+> symbol, ensuring that "vmlinux" is part of the modname array.
+
+Thanks for the detailed info, yes, it is exactly how "vmlinux" is
+added to the array.
+
+>
+> Thanks,
+> Stephen
+>
+> > [1] https://lore.kernel.org/kexec/CAO7dBbUa_8H0fe+9bTNTQWjMVy9qCPiu0fo3=
+g8XamiDS_Mr8eA@mail.gmail.com/
+> >
+> >
+> >> +
+> >> +bool has_extension_loaded(void)
+> >> +{
+> >> +    return extension_opts_len > 0;
+> >
+> > If an extension is skipped, this looks > 0 with no extention.
+> > handle_cbs_len is better?
+
+Yeah, I agree, `has_extension_loaded()` should also be updated to
+`has_extension_callback()`. I will fix it in v6.
+
+Thanks,
+Tao Liu
+
+> >
+> >
+> > Thanks,
+> > Kazu
+>
+
 
