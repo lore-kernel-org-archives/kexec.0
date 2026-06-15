@@ -4,76 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CC6E8CD98CE
-	for <kexec@archiver.kernel.org>; Mon, 15 Jun 2026 22:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id ABB43CD98DE
+	for <kexec@archiver.kernel.org>; Mon, 15 Jun 2026 22:22:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=XHiAwX7OKZgj8s+7kUMrC2Agg+yOPIiQF0+UWU7tqUg=; b=S7hgsU0FZBArncXbIANtY0Xc3z
-	ex/+iH0BjmdMM2FaQdtR0S9FU5BdaizIY2VmuhP5NOtnTfGpZIkrljyKsgsCpx315OUNXZLnsVOBK
-	/PzKTuci61ZgsejA2mpX5ZnXIU5Zg86ygPhDfee4xV3UYM/w5EEM6c33l4Y7vAwVntKIGU3Htuzbj
-	3D1XWhDcXs/ZpirD7TyI1K7O5HydB1a0EOW8JW10pwK7U44Wr3LcLN8b1MHBYmu2UuyPiwSbvrA+L
-	7BwKAJccj/vGAfypM6jktXiIEIag+Pj1YbuRDOceYRvbQxaOMATGJQS1f/uyOpn/YQgvpZ8o9Enpg
-	Aj/kUSyQ==;
+	bh=1hI+H0ca4Dm+4Rh5RqmuKXgYDTibOfqOeSOBb1qqYIE=; b=Kdq8JCHzcfQS6Ik1Q7JiTglpyA
+	qxSr1oPhcsxcu81NUJPjTT+GMcDIIHfykoLaBblO+dK0RbIv96+W2itgtcCw8DLdjplxDzXm4QN04
+	C/hI9DPyZNeLDfM1LoA2jcmjmEJcjUWfnruIzklmu+mF7tj+JhDM14IsuXQr5aOJu0qqYD+rUpzz2
+	B2WoW+0M/aXgVuVt2v0IRkmql/0ZNf0sKIT/WPb7OLfX7m1K/wZAnXz9uDH3Hxh7grl3/68z0QOZc
+	cqWBiL3j5mDgscWuf9xkAYQ8jQY3T3pxXU+OwekCWsxb2sdE5MEWdFdbdsgfSgSjjsbjoMek1YnfC
+	e3uR7SZA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZFeA-0000000EtOz-2O1Y;
-	Mon, 15 Jun 2026 22:19:10 +0000
-Received: from mail-pf1-x42f.google.com ([2607:f8b0:4864:20::42f])
+	id 1wZFhB-0000000EtUb-0Gc7;
+	Mon, 15 Jun 2026 22:22:17 +0000
+Received: from mail-pf1-x42c.google.com ([2607:f8b0:4864:20::42c])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZFe8-0000000EtOd-1bbz
+	id 1wZFh8-0000000EtU6-2xUH
 	for kexec@lists.infradead.org;
-	Mon, 15 Jun 2026 22:19:09 +0000
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-84229481d44so1893780b3a.0
-        for <kexec@lists.infradead.org>; Mon, 15 Jun 2026 15:19:08 -0700 (PDT)
+	Mon, 15 Jun 2026 22:22:16 +0000
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-842288702fbso1827049b3a.1
+        for <kexec@lists.infradead.org>; Mon, 15 Jun 2026 15:22:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781561947; x=1782166747; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1781562132; x=1782166932; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XHiAwX7OKZgj8s+7kUMrC2Agg+yOPIiQF0+UWU7tqUg=;
-        b=tklt4uBItgwNekkdx28hOvJ8ElRcWq0DkAGlB5hrCW+DSbiG974cdsv4wLp5CHRH+y
-         7EyOZYCwskUvzEagR6dNB7UAg0n49DgfE9Gb2/xZ3YUQ76Gav/gUcTAWUCKN8rkFGtm7
-         iKGmOsn79Y85TBVyCVfzrBx/u+89YdP2OyBHa2Yv8/cEcH9pqtzfApxcyySOtlDLUeWJ
-         lbYd08wzR5bVhJe5oMH7f//4wsoluqb7yg/77wK16cZvntDFrcqOJ//sTFzLnKdPw262
-         JVY4ZB8riIdPx+PWDeuT52SnCb/m/HS4OhjYeyWQHbx7l5Ez3KHX313Nn63yUGsHx4LC
-         r2aA==
+        bh=1hI+H0ca4Dm+4Rh5RqmuKXgYDTibOfqOeSOBb1qqYIE=;
+        b=LdAh7OCeO5CNlQ2vpOoL8x1NnxJbW4tx1lzVxoyaBrClX3lwLg3/Qxtoi4jPRU+iMe
+         /znp058Du4uKhiIUVHevkqUxr9agqRTcxAt1/+kP+ji/kl3U7ia2wj5ufxZVg3f5JXbr
+         5qGvglraXA1mS8awP4ewttOnpkMcA+qwbOd6eW0HMu9H8ZKlWuO220HtYDTis90dex6E
+         1TcjYuRBS2GIAqCbyoLmF2mt0lxyyFntV6kyWBU2ghyPz9wZUGBE7tWfLiSZKFKO0C9W
+         HhfEIfkSXGV4TmUe1Z9IBbPpC4x7gcZ4+mMK7Y6z6QzV+7RZI/JpwnD9/7iQe0zY15O+
+         3SPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781561947; x=1782166747;
+        d=1e100.net; s=20251104; t=1781562132; x=1782166932;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XHiAwX7OKZgj8s+7kUMrC2Agg+yOPIiQF0+UWU7tqUg=;
-        b=IqyXqSVQTM6psVrqiksarEemLOH0U2F10EvcK9GbCzNmlwoRqjW4elCR6W1jJ6loGf
-         suRIRJrGDf48ML/SNm/175yn6R7+PAxJlY4vOV3a/j3SpKOPmdl4Y0jQApRX1A4tOzk+
-         M7MREbpZAb0d33J5awa7NOliHwhPZYf3YSl7+R1Hv+bTLORlubfotVZRNSPZ2gufHDU+
-         LxwXNQ8WnkDGeZ0fhCW4GfkmD390tyVyTDhg0OU0GNs2/wedRSH49eYqxYp1fHuTZcpJ
-         soujDIZG1ZIHC4kmz2JNlL512oxrP7049SYJ0XmXxU3v5en9729iEdBjinoDV8NpnXqu
-         hU3Q==
-X-Forwarded-Encrypted: i=1; AFNElJ+cL2BtosF7WTr0SeTIF9jdB4Q3IMoymDmu9QG1SuL1WyVmSip0Fk8EOvVBWFyEXT8CzQ3ccA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YygIJG4uHXKfUPPo5Lh0Hm/8hS7yPbVzabJAKr2sRmzknD/KnE7
-	nPl6ZtbVYPcidJ91e0IhR5QMSUn5a4uWio+itYrYQcWD9gy8VbdWH9PfxYtn3llhsA==
-X-Gm-Gg: Acq92OFthQBNH79cSQvbaJQaz492zDzVziWdNR5H5fQhIwgr7Rno3APFs+syIUVAj8f
-	wWKFNNfodO51z3neAc/oMmOU9cYgc6oUTdB+A6+KLhtWEhiLbjrB+3L4uC94HC9j7zjeOkvlXf/
-	UNgFeI3YcH6SLwT8My+0CAX97eUAgpleXmj3xcilcVv81Yrc+wErqnZDoP0D54Hm+w4zl1JWNP1
-	l1YrgdYrR1BbiH64EH+E+HCo4VT7xafego0AUM8jyYGuug+ODZjh9Oh9PQjYriw35U67nenPLpJ
-	Ur0NVCNv72f4dwVcYDD4+KfILdWhJQmJ03gtZWcU/Mu+so2SDzvI9coM/DX0pmkfRJWjMOo3mB0
-	AVWde9P8XJvxWbajOuvC62Pyg5mTHzvqg3sgP/9IXwR9zv64mgqSKSBiqOVzQ6t2H5Ht9wD9fk0
-	rc4ORgMAzlmwyzQ8SYTkNUGM6+XXox5xhVz4PLEYUcFOhj3uq2NTSV8BiH97/sog==
-X-Received: by 2002:a05:6a00:3e02:b0:841:dc7d:306a with SMTP id d2e1a72fcca58-844e1a3d7c7mr13260407b3a.25.1781561946731;
-        Mon, 15 Jun 2026 15:19:06 -0700 (PDT)
+        bh=1hI+H0ca4Dm+4Rh5RqmuKXgYDTibOfqOeSOBb1qqYIE=;
+        b=qys3W3/eEmjqxUhDrckZbeNkif+12TUcu4GVoQWaIi82PmZ7MJa94zuQIwtbLwB7vi
+         IsyqpUupvRQWJkwy8z7araoCSoK0Fur17rikKe5LT88tSkorX0JKMUB1Io/xFCmHb3GS
+         lsaBqy18l0yk97Pqz7x89vSuVIKOZHVnpukdSXHJ2aON1X9ODzTp9Sst73Pi0+IjdLwe
+         9HLp4OTAfLYQUpMj6Qy1Y7Je60yEOmVroQ8Yy2psPBmDNAixSXMC2EbJwtuA1CntBez+
+         0QxYoFgUpt8LUhJ3fsb0cf3/Y7dYFiu+DDF7m3eLCFTgMFKTdvu60W6ZzQ5KxFT758Bt
+         0XJQ==
+X-Gm-Message-State: AOJu0Yw0UiCGbsJMo1n0XCYeo1PxlS+t6lLeMxjq9tTH57N7hyo7K2Q3
+	dK1YFT0R8sQR9PEIbKLTBsfNYzG3VZODGD6etHBpf8anUr0hKyv7hs9bHMBz2oV5TA==
+X-Gm-Gg: Acq92OHpVLAAtc4h3mDerXhwzXWw0srqXF7V4cnZ2VjyKJCbK8VlshcgL0RAiH9bkVb
+	Q6UfyeJsgzsJdZwiXyQhV7bBqm906GsZCd/dMllgGJBG7dWaQxyQQlHlXT4FO0vw5ZdG8slxz5F
+	NBSf3AwzpzfMinY4pU4Rr3ixfjr7EpFj555UtjDrjY0i407A7dpVoIJTzUOqgmOGj+s4vmaw2iC
+	hk5+6gX8+lJ4/jq7Tz0vDrOOEnCTzGQETqBg0aJ+5+3Lr5mdp2BwjlhlnW/+SoDJnHeut5hWLHV
+	ypuWaLqopCPDBo9RJ/Q5Mm49IyA9FWzWLqjELCmgcJz0Hgh9TadHiS8lWzRRJvt+q1Sm8NmsELL
+	4B1ZlhjZsleYiU7wsm93kOCdb/1WRZSi/9/j3/XBSdNCkOW8iltQV2tVf1YsV9QVIjsIgNYmVO1
+	7mG/SFZtHWsYymCbtGfHbz3qaqHX+qjRVwBShBRNj1R9JIjHbRtb4Kw28S22ennQ==
+X-Received: by 2002:a05:6a00:3e20:b0:82c:7767:5bb2 with SMTP id d2e1a72fcca58-8434ce428cemr17610087b3a.21.1781562131898;
+        Mon, 15 Jun 2026 15:22:11 -0700 (PDT)
 Received: from google.com (56.149.168.34.bc.googleusercontent.com. [34.168.149.56])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8434accac96sm11985798b3a.14.2026.06.15.15.19.06
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8434acca7ecsm11283741b3a.13.2026.06.15.15.22.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2026 15:19:06 -0700 (PDT)
-Date: Mon, 15 Jun 2026 22:19:03 +0000
+        Mon, 15 Jun 2026 15:22:11 -0700 (PDT)
+Date: Mon, 15 Jun 2026 22:22:08 +0000
 From: David Matlack <dmatlack@google.com>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Mike Rapoport <rppt@kernel.org>, kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-pci@vger.kernel.org,
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
 	Adithya Jayachandran <ajayachandra@nvidia.com>,
 	Alexander Graf <graf@amazon.com>,
 	Alex Williamson <alex@shazbot.org>,
@@ -83,7 +82,7 @@ Cc: Mike Rapoport <rppt@kernel.org>, kexec@lists.infradead.org,
 	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
 	Josh Hilke <jrhilke@google.com>,
 	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
-	Parav Pandit <parav@nvidia.com>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
 	Pranjal Shrivastava <praan@google.com>,
 	Pratyush Yadav <pratyush@kernel.org>,
 	Saeed Mahameed <saeedm@nvidia.com>,
@@ -93,19 +92,17 @@ Cc: Mike Rapoport <rppt@kernel.org>, kexec@lists.infradead.org,
 	Yi Liu <yi.l.liu@intel.com>
 Subject: Re: [PATCH v6 01/12] PCI: liveupdate: Set up FLB handler for the PCI
  core
-Message-ID: <ajB6V6yBHOjgK5ew@google.com>
+Message-ID: <ajB7EA4tAKqj5XV0@google.com>
 References: <20260522202410.3104264-1-dmatlack@google.com>
  <20260522202410.3104264-2-dmatlack@google.com>
  <178124130274.908199.14827357870284807134.b4-review@b4>
- <aiutNINqxhtlm2Dt@kernel.org>
- <178126123047.908199.12042730612990730743.b4-reply@b4>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <178126123047.908199.12042730612990730743.b4-reply@b4>
+In-Reply-To: <178124130274.908199.14827357870284807134.b4-review@b4>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260615_151908_429599_84521EE9 
-X-CRM114-Status: GOOD (  18.66  )
+X-CRM114-CacheID: sfid-20260615_152214_758231_84E7CE9E 
+X-CRM114-Status: GOOD (  27.85  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -120,33 +117,128 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-06-12 10:47 AM, Pasha Tatashin wrote:
-> On 2026-06-12 09:54:44+03:00, Mike Rapoport wrote:
-> > On Fri, Jun 12, 2026 at 05:15:02AM +0000, Pasha Tatashin wrote:
-> > 
-> > > On Fri, 22 May 2026 20:23:59 +0000, David Matlack <dmatlack@google.com> wrote:
-> > > 
-> > > Please add Pratyush, Mike, and myself so we are notified directly of 
-> > > incoming patches, the same as with other areas where the liveupdate/ 
-> > > tree is specified.
-> > 
-> > Or we can add PCI liveupdate files to LIVEUPDATE entry.
+On 2026-06-12 05:15 AM, Pasha Tatashin wrote:
+> On Fri, 22 May 2026 20:23:59 +0000, David Matlack <dmatlack@google.com> wrote:
+
+> > + * PCI device preservation across Live Update is built on top of the Live Update
+> > + * Orchestrator's (LUO) support for file preservation across kexec. Drivers
 > 
-> That will not work, as we cannot serve as maintainers for 
-> PCI/VFIO/IOMMU/KVM, etc. David Matlack will be the maintainer for the 
-> PCI components, and we will accept patches once they have been approved 
-> by him.
+> I prefer to just use acronyms FLB, and LUO, but have links to the actual 
+> documentations about them.
 > 
-> The simplification we could do is to create an email alias 
-> for the live-update tree maintainers. This would allow us to use a 
-> single entry instead of listing all three of us individually.
+> So, something like this:
+> 
+>   * :ref:`FLB <flb>` Data
+>   * =====================
+>   *
+>   * PCI device preservation across Live Update is built on top of the
+>   * :ref:`LUO <luo>` support for file preservation across kexec. Drivers
+> 
+> And also add _luo and _flb to Documentation/core-api/liveupdate.rst
+> 
+> .. _luo:
+> 
+>  ========================
+>  Live Update Orchestrator
+>  ========================
+> 
+> .. _flb:
 
-We could create a Live Update mailing list for all code that can be CCed
-on all patches that must be merged through the Live Update tree. I would
-also be interested in subscribing to that list.
+Will do.
 
-But if you want to create a LUO maintainers-only list that would work
-fine too.
+I guess I will need to add another patch to add the link references to
+liveupdate.rst?
 
-For now, I'll plan to add you as Reviewers under PCI LIVE UPDATE in v7.
+> 
+>  LUO File Lifecycle Bound Global Data
+>  ====================================
+> 
+> > [ ... skip 17 lines ... ]
+> > + *
+> > + *  * ``pci_liveupdate_register_flb(driver_file_handler)``
+> > + *  * ``pci_liveupdate_unregister_flb(driver_file_handler)``
+> > + */
+> > +
+> > +#define pr_fmt(fmt) "PCI: liveupdate: " fmt
+> 
+> Nit, may be:
+
+Did you have a suggestion here that got lost?
+
+> 
+> > +
+> > +#include <linux/io.h>
+> > +#include <linux/kexec_handover.h>
+> > +#include <linux/kho/abi/pci.h>
+> > +#include <linux/liveupdate.h>
+> > +#include <linux/mutex.h>
+> > +#include <linux/mm.h>
+> 
+> Please sort alphabetically.
+
+Will do.
+
+> 
+> > [ ... skip 12 lines ... ]
+> > +	 * future to increase the chances that there is enough room to preserve
+> > +	 * devices that are not yet present on the system (e.g. VFs, hot-plugged
+> > +	 * devices).
+> > +	 */
+> > +	for_each_pci_dev(dev)
+> > +		max_nr_devices++;
+> 
+> I think, we want to use kho_block [1] (it is in liveupdate/next branch) 
+> to allow number of supported devices to be dynamic.
+> 
+> To support this, we would redefine the ABI and tracking structures like 
+> so:
+> 
+> /* include/linux/kho/abi/pci.h */
+> struct pci_ser {
+> 	u64 devices;      /* Phys address of the first block header of kho_block_set */
+> 	u64 nr_devices;   /* Total count of active preserved devices */
+> } __packed;
+> 
+> /* drivers/pci/liveupdate.c */
+> struct pci_flb_outgoing {
+> 	struct pci_ser *ser;            /* Points to the FDT/KHO-allocated ABI struct */
+> 	struct kho_block_set block_set;  /* Controls the active blocks on the fly */
+> };
+> 
+> In  __pci_liveupdate_preserve_device() , we would search for 
+> and reuse any inactive  pci_dev_ser  slot first, and only call 
+> kho_block_set_grow() to expand if no inactive slots are available.
+> 
+> In pci_liveupdate_unpreserve_device(), we would simply 
+> mark the  pci_dev_ser as inactive.
+
+Makes sense at a high level. I'll work on switching kho_block for v7 and
+get back to you if I hit any issues.
+
+> 
+> >
+> > diff --git a/include/linux/pci_liveupdate.h b/include/linux/pci_liveupdate.h
+> > new file mode 100644
+> > index 000000000000..8ec98beefcb4
+> > --- /dev/null
+> > +++ b/include/linux/pci_liveupdate.h
+> > @@ -0,0 +1,30 @@
+> > [ ... skip 24 lines ... ]
+> > +static inline void pci_liveupdate_unregister_flb(struct liveupdate_file_handler *fh)
+> > +{
+> > +}
+> > +#endif
+> > +
+> > +#endif /* LINUX_PCI_LIVEUPDATE_H */
+> 
+> [1] https://lore.kernel.org/all/20260603154402.468928-1-pasha.tatashin@soleen.com/
+> 
+> Preserving: In  __pci_liveupdate_preserve_device() , we would search for 
+> Unpreserving: In  pci_liveupdate_unpreserve_device(), we would simply
+> 
+> Preserving: In  __pci_liveupdate_preserve_device() , we would search for 
+> Unpreserving: In  pci_liveupdate_unpreserve_device(), we would simply 
+> 
+> -- 
+> Pasha Tatashin <pasha.tatashin@soleen.com>
 
