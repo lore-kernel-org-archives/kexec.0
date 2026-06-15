@@ -4,66 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CE203CD98C5
-	for <kexec@archiver.kernel.org>; Mon, 15 Jun 2026 13:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 41FEFCD98CF
+	for <kexec@archiver.kernel.org>; Mon, 15 Jun 2026 13:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=fLKpx/jP4XiZTHLeIbQxXoF/roGoBMkQ9auwEVuefCU=; b=b/UZuWvJxSH7V/8JAYNzKapVcN
-	TzZVqv1fzxhbNfYJQVkmCd99JptU3AL5GQYUdSHvxu4G2wulk6cVHW9ae9ArR/IryxocCjpEfy7Fe
-	vCtR4F4zob6GKaFrfkEeMNBkCiP6ejo2TZMVhY60OX0rr8L9HWGYJqvG+aySDmrE/53UOJKcK03UQ
-	DXXEBBUNsGDU6+Xv95s3dmAk/LNd/5mDDtkIj7mtiijMjx0yr+PJ6Ch5npJiAeGoXvQSB+2jLKry3
-	VFwCA9qyZalxgnSlIC1I+fW+5/t5/Q858L1NFn4B913VQFpjYhkvX6wPPlU/bxWUjA+TAQNrw6z5A
-	PSo2qiXg==;
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=8KgmRpZ89lCyw7TnUs9IavIMjs9smvt+SzytEeojGlY=; b=CQwYvjtMRUqqLnUOAf1FSc3htl
+	ctR444/r/bTPQfwSKBDwFQYeomQDkA5yiYKGooGRQYWiH8srI7i5fc5xMqQSbP04Shv7yecDmEVte
+	BD9jFYKEDi36fMolpMvpWJRTrHofA7p9H1b969W1X9AhgAcPeNflY7YHpGM0et+LKlHo+rcynMAa2
+	Jp29a01m1OETAxsjXxKU+BCo9zfiD0Wu241nWvCK9svkO4JNWl3fiQwYho5aeAQVF2whVoqHtLu+s
+	XqbcAs4B7JLuAtvwA4h/qFQ+TQ+KDxi8L8q+RZNHMiAEtz5ZFsmjpLXUmh30fl79flo5fv0MNkxJP
+	RKSYiXVw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZ704-0000000EG2i-1Ebp;
-	Mon, 15 Jun 2026 13:05:12 +0000
+	id 1wZ705-0000000EG33-1UmQ;
+	Mon, 15 Jun 2026 13:05:13 +0000
 Received: from mail-ed1-x54a.google.com ([2a00:1450:4864:20::54a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZ702-0000000EG23-0LKw
+	id 1wZ702-0000000EG24-46qt
 	for kexec@lists.infradead.org;
-	Mon, 15 Jun 2026 13:05:11 +0000
-Received: by mail-ed1-x54a.google.com with SMTP id 4fb4d7f45d1cf-68b479cb98bso3127129a12.1
-        for <kexec@lists.infradead.org>; Mon, 15 Jun 2026 06:05:09 -0700 (PDT)
+	Mon, 15 Jun 2026 13:05:12 +0000
+Received: by mail-ed1-x54a.google.com with SMTP id 4fb4d7f45d1cf-68d2340cb67so3761301a12.2
+        for <kexec@lists.infradead.org>; Mon, 15 Jun 2026 06:05:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781528708; x=1782133508; darn=lists.infradead.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=fLKpx/jP4XiZTHLeIbQxXoF/roGoBMkQ9auwEVuefCU=;
-        b=k4Fz3forNb7feS9mvsV7v8d1Q5r5m+pQBYEf/PnihOzZWOrPQQw+Ap3GRPg8v+coY2
-         V7zdK0YnQvV1ObZarItsQFypN3RuHTqLxbeDTCEmImDsZDEPldh5aYO2RS96ksbiKPcK
-         17ny/lEBfDhoXhGO2Xv85YSiSzEa7Di6xDA5Q0EVCEm0PMebteh5Nnp1lFlv/2L4jF09
-         np/3BWJwLQ+NiUY32PHOG+jcKwDy5oNoHCGmc0mNpyS7Zkb/PWSkcFKFNyqrIzovZuzh
-         sKU0badj3hB+458Rxe4SSAeVxhCN2JhB6yn6hSPTst8sFDa6WHq05g47yTyBJ4jQ9C62
-         o4Xg==
+        d=google.com; s=20251104; t=1781528709; x=1782133509; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8KgmRpZ89lCyw7TnUs9IavIMjs9smvt+SzytEeojGlY=;
+        b=ZQfd+unYN8Awc7xKKwbhtSHdw8Mr+GTbEOm199NF8idVJTewccD1SNe/ujkMwAgI43
+         tNwHA8A2wiD8Wdgs1BTtc5I0jHS1fW/6/DEkW/o8Z3qlleTvKthX5oENnckYfYJP9RSV
+         Ac7t5ACNSSXpRfK6C2Xq4lNQx4zUp5iE8mSNR0qBz79uwT/IRbX/S433Us8wIT5CI8BQ
+         ANnj3636BOlCoNiw5aTF6EnMX6fVWeCbykzeXJBRz/LPWxo1N9ZkbUxuZfK3MMVRpO0E
+         shDebQ0VrKRyb3b+alSoKcpZbpBEBlZ2eqgboCq+R95VN59xCVY0HZNVXFnoIr0ECffX
+         RvvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781528708; x=1782133508;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fLKpx/jP4XiZTHLeIbQxXoF/roGoBMkQ9auwEVuefCU=;
-        b=YXqeKmNQGDYyhZ/t5o4L2m3hIhVJEaa2HAbRZ0espIdhrFvYir8aNH1t4x/Cut0+2A
-         SNiUpjfjTi+91qmykDUbbt3cmdCkRJURtUMENF8F5qe3nRzSFcUt9zqxuZadIiPG9uv+
-         bIHKHLC9Xh+uTXxP+uxIgsOMpoBHJPYaL2xmGyz5t2REVJz2BRgU+2hrhb52UcMWROre
-         +R1mFqN+IR9plkHfAQnnS0V7ez+C9fBVqdHxZhrpXTy+czjntsAvxz2tJIIv/MB915PY
-         q/q52qcdx5wZvJjM3KsmP4oFw6nDWVuvdPmMyhkwa4SmwVTIWJoh1HUPcrg5YpCwTQZY
-         ERGg==
-X-Forwarded-Encrypted: i=1; AFNElJ83gSUi25WmAAQzEek4qWjdTd64//7cGW41EMXCGDBmyzCMcpqgTa3ZHMIK6b6ZaU+bntkhOQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YydecvcNLhVOUdYuwCXNIa3P8UMJboSw1XQF1l70BcVNUIZMXiW
-	h386zyXJryUOd4fl6xRZOHeq0k7DOmuwpae2XiVW4nkBwukrgZB0YpA6LQ0uYnUcqPIbOWFhBWn
-	kQL79M+ogSjE23B+dyA==
-X-Received: from edo16.prod.google.com ([2002:a05:6402:52d0:b0:680:d43b:83b])
+        d=1e100.net; s=20251104; t=1781528709; x=1782133509;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8KgmRpZ89lCyw7TnUs9IavIMjs9smvt+SzytEeojGlY=;
+        b=B46N9K3btwBI7K1d9z5lHN7BBeaOIojewy83CqhLN0kmdiB2Cf7cJF40gKNg3SMItx
+         OuRHwFdt/UM2Y/L/9itNahoJko0t1112/HtNBvDcMtS0cMDNmhrf65iOslyiRayQqmTv
+         caTVqhJGu6exGsnlvncoezovFi6KdigooGBzLeoylucLD5YaCb5JwW4hQCecgJsDMcho
+         jGewHUw7+QLNMuZ3dSRHyWgYIa+2czhLbgrzw1Te9i83esHVLLCBGDyT0Vd3Ik2OOpNT
+         VQvwRZP7JLybUlE4LFOJlfOAYhRyOLlIAA+Q951QWQuG2nCknSGYpAauHGwGFe6VIENh
+         6R4A==
+X-Forwarded-Encrypted: i=1; AFNElJ90YuCtGEyhd6NKnC+PimuqfEGxTeoTCWuBidU3x3G6uyGHnF1D89yCApiONeJZnTmwTqrNYw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yw8gDVOj3WzkBAGJ6w3yITJS2F9fOtchFB689FaUQDH0i1TOSCJ
+	+0E0tyswMlWSskXSWivZA8C2Yc1K9kXFFArTWBYcPRv0EuJa5NJVoAfc7tXzn4KpJtd/et4VkWV
+	Z+xp86gt1Cp4MlDIdBA==
+X-Received: from edi25.prod.google.com ([2002:a05:6402:3059:b0:676:2118:1564])
  (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:4493:b0:691:af08:a9fd with SMTP id 4fb4d7f45d1cf-69378a03b9cmr6248742a12.11.1781528707628;
- Mon, 15 Jun 2026 06:05:07 -0700 (PDT)
-Date: Mon, 15 Jun 2026 13:05:04 +0000
+ 2002:a05:6402:40d5:b0:66e:56a2:b67b with SMTP id 4fb4d7f45d1cf-69378a457f8mr6300301a12.20.1781528708577;
+ Mon, 15 Jun 2026 06:05:08 -0700 (PDT)
+Date: Mon, 15 Jun 2026 13:05:05 +0000
+In-Reply-To: <cover.1781528022.git.tarunsahu@google.com>
 Mime-Version: 1.0
+References: <cover.1781528022.git.tarunsahu@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <cover.1781528022.git.tarunsahu@google.com>
-Subject: [PATCH 0/1] mm/memfd_luo: use KHOSER_PTR for serialized_data checks
+Message-ID: <9fe93604bac096dd3edfa48a0d2e2ce6e2683f56.1781528022.git.tarunsahu@google.com>
+Subject: [PATCH 1/1] mm/memfd_luo: use KHOSER_PTR for serialized_data checks
 From: Tarun Sahu <tarunsahu@google.com>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>, 
 	Pratyush Yadav <pratyush@kernel.org>
@@ -72,9 +74,8 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
 	Tarun Sahu <tarunsahu@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260615_060510_156976_002128D6 
-X-CRM114-Status: UNSURE (   8.56  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260615_060511_078212_71273A3B 
+X-CRM114-Status: GOOD (  13.43  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,32 +90,121 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Use the KHOSER_PTR interface for serialized_data in memfd_luo to
-perform type-safe pointer conversions and checks.
+In all callbacks (freeze, unpreserve, finish, retrieve), use the
+standard KHOSER_LOAD_PTR() and KHOSER_STORE_PTR() macros to safely load
+and store the serialized structure pointer.
 
-I have tried to keep the changes minimal. So only changed
-the memfd_luo. Would love the suggestions for if we should be changing
-struct liveupdate_file_op_args like the following.
+This resolves the issue where phys_to_virt() was previously called
+before checking if the physical address is valid, since KHOSER_LOAD_PTR()
+automatically handles translation and returns NULL if the physical
+address is 0.
 
-@@ -46,7 +47,7 @@ struct liveupdate_file_op_args {
- 	struct liveupdate_file_handler *handler;
- 	int retrieve_status;
- 	struct file *file;
--	u64 serialized_data;
-+	DECLARE_KHOSER_PTR(serialized_data, void *);
- 	void *private_data;
- };
-
-Ofcourse, it will require change in liveupdate and luo_file.
-
-Tarun Sahu (1):
-  mm/memfd_luo: use KHOSER_PTR for serialized_data checks
-
+Fixes: b3749f174d68 ("mm: memfd_luo: allow preserving memfd")
+Signed-off-by: Tarun Sahu <tarunsahu@google.com>
+---
  mm/memfd_luo.c | 30 +++++++++++++++++++++---------
  1 file changed, 21 insertions(+), 9 deletions(-)
 
-
-base-commit: 0e0611827f3349d0a2ac121c023a6d3260dcecdb
+diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
+index 59de210bee5f..ec37693841a6 100644
+--- a/mm/memfd_luo.c
++++ b/mm/memfd_luo.c
+@@ -257,6 +257,7 @@ static void memfd_luo_unpreserve_folios(struct kho_vmalloc *kho_vmalloc,
+ 
+ static int memfd_luo_preserve(struct liveupdate_file_op_args *args)
+ {
++	DECLARE_KHOSER_PTR(sd, struct memfd_luo_ser *);
+ 	struct inode *inode = file_inode(args->file);
+ 	struct memfd_luo_folio_ser *folios_ser;
+ 	struct memfd_luo_ser *ser;
+@@ -309,7 +310,8 @@ static int memfd_luo_preserve(struct liveupdate_file_op_args *args)
+ 	inode_unlock(inode);
+ 
+ 	args->private_data = folios_ser;
+-	args->serialized_data = virt_to_phys(ser);
++	KHOSER_STORE_PTR(sd, ser);
++	args->serialized_data = sd.phys;
+ 
+ 	return 0;
+ 
+@@ -323,13 +325,15 @@ static int memfd_luo_preserve(struct liveupdate_file_op_args *args)
+ 
+ static int memfd_luo_freeze(struct liveupdate_file_op_args *args)
+ {
++	DECLARE_KHOSER_PTR(sd, struct memfd_luo_ser *) = {
++		.phys = args->serialized_data
++	};
+ 	struct memfd_luo_ser *ser;
+ 
+-	if (WARN_ON_ONCE(!args->serialized_data))
++	ser = KHOSER_LOAD_PTR(sd);
++	if (WARN_ON_ONCE(!ser))
+ 		return -EINVAL;
+ 
+-	ser = phys_to_virt(args->serialized_data);
+-
+ 	/*
+ 	 * The pos might have changed since prepare. Everything else stays the
+ 	 * same.
+@@ -341,17 +345,19 @@ static int memfd_luo_freeze(struct liveupdate_file_op_args *args)
+ 
+ static void memfd_luo_unpreserve(struct liveupdate_file_op_args *args)
+ {
++	DECLARE_KHOSER_PTR(sd, struct memfd_luo_ser *) = {
++		.phys = args->serialized_data
++	};
+ 	struct inode *inode = file_inode(args->file);
+ 	struct memfd_luo_ser *ser;
+ 
+-	if (WARN_ON_ONCE(!args->serialized_data))
++	ser = KHOSER_LOAD_PTR(sd);
++	if (WARN_ON_ONCE(!ser))
+ 		return;
+ 
+ 	inode_lock(inode);
+ 	shmem_freeze(inode, false);
+ 
+-	ser = phys_to_virt(args->serialized_data);
+-
+ 	memfd_luo_unpreserve_folios(&ser->folios, args->private_data,
+ 				    ser->nr_folios);
+ 
+@@ -386,6 +392,9 @@ static void memfd_luo_discard_folios(const struct memfd_luo_folio_ser *folios_se
+ 
+ static void memfd_luo_finish(struct liveupdate_file_op_args *args)
+ {
++	DECLARE_KHOSER_PTR(sd, struct memfd_luo_ser *) = {
++		.phys = args->serialized_data
++	};
+ 	struct memfd_luo_folio_ser *folios_ser;
+ 	struct memfd_luo_ser *ser;
+ 
+@@ -397,7 +406,7 @@ static void memfd_luo_finish(struct liveupdate_file_op_args *args)
+ 	if (args->retrieve_status)
+ 		return;
+ 
+-	ser = phys_to_virt(args->serialized_data);
++	ser = KHOSER_LOAD_PTR(sd);
+ 	if (!ser)
+ 		return;
+ 
+@@ -517,12 +526,15 @@ static int memfd_luo_retrieve_folios(struct file *file,
+ 
+ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
+ {
++	DECLARE_KHOSER_PTR(sd, struct memfd_luo_ser *) = {
++		.phys = args->serialized_data
++	};
+ 	struct memfd_luo_folio_ser *folios_ser;
+ 	struct memfd_luo_ser *ser;
+ 	struct file *file;
+ 	int err;
+ 
+-	ser = phys_to_virt(args->serialized_data);
++	ser = KHOSER_LOAD_PTR(sd);
+ 	if (!ser)
+ 		return -EINVAL;
+ 
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
