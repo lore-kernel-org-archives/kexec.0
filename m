@@ -4,65 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9DB81CD98DA
-	for <kexec@archiver.kernel.org>; Tue, 16 Jun 2026 11:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4BB0ECD98E1
+	for <kexec@archiver.kernel.org>; Tue, 16 Jun 2026 13:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=PVrkjTNsI/ijcmHUN41Jsl0b0/mRiz+GKrYsk7fPAnU=; b=SwjonUgLN186QbNtOlTitAFo3N
-	gSbiA+B4mha0mb/uOjnM6+lLqIjvK0SPViQYO6aFn0x9Y/Nl7XF7g0EmL+XRUzm60QWyZFKNoV/iX
-	REjDHFN/tejqjq2d1oAQoGQzxqEFM5dgKsuVarMW7aZJXDqo+5E07Hx1s5nZ5fkNLGHeEtv1OiEiD
-	5oVB5s4ng3n8wTRnqJ/NzrzNhc96cQrLNN4T6TSIyeONltVKU8fhzpxyiU2qoBABgGp4qrvRNgqdj
-	R8c6am5wYpJRYu30kcTYIecoljxy7eyMQ9U8b9rYbR3bf/dFMKjM5LJ4FpZryq0YUOjV09X4p8aE1
-	4DBozskQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=bZH1+Yyqz6xQZNsOX4wfP6dQl35j3VE/PV0SUnY68BY=; b=dpM0y2+nZqhtygKEz766Y5A4q0
+	KaV4hAb1G3EVPxreBaSYmLYkditZ/jWx06aBifHkzR3ZOYO4g+NabYBrq6PONkVcjSM7IpqvsgOih
+	wu7RWcSmcmso6eqK5yTlpSjX1S/sn5H/5jCioSzpVP0ubGNWsqh7nh1fjmJW734fS/1tgG74TX+tO
+	V5CRJhQgfcY5ng/dImfauiOT36ha5xmTZOuxrWbD195RnL4t+Zw1LkJBeDi4FyRI4osjpfXydgJ5T
+	v+IMjksRzEHKSrQeAAj/JVvm11VEiz6XOh3zUicKnJqpOF1FxK4WtZDVp9BLwUlo7JWKY6R6rwp8Q
+	/FCnIu/w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZSOK-0000000FibX-3gpM;
-	Tue, 16 Jun 2026 11:55:40 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wZTlm-0000000FpgI-0ngY;
+	Tue, 16 Jun 2026 13:23:58 +0000
+Received: from mail-wr1-x449.google.com ([2a00:1450:4864:20::449])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZSOI-0000000Fias-09m1
+	id 1wZTlk-0000000FpfZ-27rS
 	for kexec@lists.infradead.org;
-	Tue, 16 Jun 2026 11:55:38 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 3BF1060132;
-	Tue, 16 Jun 2026 11:55:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E908E1F000E9;
-	Tue, 16 Jun 2026 11:55:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781610936;
-	bh=PVrkjTNsI/ijcmHUN41Jsl0b0/mRiz+GKrYsk7fPAnU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=iffZFXdPsqffUhK6CzGmq+YjTsVs6JW1/9oH/iS48OsaYOORC+kle/vWS9+/XW6Cb
-	 E8kukeHIZlFbBOeI+eoS9R0ASMC8+jY6EF87SEzoKAvZgoR0YBFVcLeRbdRkKHFOvi
-	 EMP+T7acLndMaIgC0bwEOFsIu8J5FjC5z8ZEE8Y2w8GWqBVMOHcnRoSRnR1MUD+Aiq
-	 fcwwOLizFw/MyK2eJWHufryllI6i59A16S9lmFL08DMF5yFxUEnphhdjcjNl3OJinw
-	 63Hwi/Kpi/ab+lIiZUAcXaJqMs4rjFmywr/g6WmNJEauIRtEMi4fuC1ehJ6uSQmDCw
-	 TUUoqzxJY+VRQ==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Pasha Tatashin
- <pasha.tatashin@soleen.com>,  Alexander Graf <graf@amazon.com>,  Muchun
- Song <muchun.song@linux.dev>,  Oscar Salvador <osalvador@suse.de>,  David
- Hildenbrand <david@kernel.org>,  Andrew Morton
- <akpm@linux-foundation.org>,  Jason Miu <jasonmiu@google.com>,  Jork
- Loeser <jloeser@linux.microsoft.com>,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 15/18] kho: extend scratch
-In-Reply-To: <ajBUgB8uG509JJ0A@kernel.org> (Mike Rapoport's message of "Mon,
-	15 Jun 2026 22:37:36 +0300")
-References: <20260605183501.3884950-1-pratyush@kernel.org>
-	<20260605183501.3884950-16-pratyush@kernel.org>
-	<178143855117.2123877.6330314807920146675.b4-review@b4>
-	<2vxztsr4orvg.fsf@kernel.org> <ajBUgB8uG509JJ0A@kernel.org>
-Date: Tue, 16 Jun 2026 13:55:33 +0200
-Message-ID: <2vxza4supumi.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
-MIME-Version: 1.0
-Content-Type: text/plain
+	Tue, 16 Jun 2026 13:23:57 +0000
+Received: by mail-wr1-x449.google.com with SMTP id ffacd0b85a97d-45efa2f7009so3145989f8f.3
+        for <kexec@lists.infradead.org>; Tue, 16 Jun 2026 06:23:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1781616234; x=1782221034; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bZH1+Yyqz6xQZNsOX4wfP6dQl35j3VE/PV0SUnY68BY=;
+        b=kDx2XWi5Sq9YyBKRWXgeStVo+ANK+0OTAUMP5b2KQ8S5tbTEojQDRe9lAp2aNbJW05
+         c817XUb6IaIG48eXiTo6ko6DonNPTMadWaWUBoQ8nQSS6gHdbx+Yn9CnhfcxyAJGUtW5
+         81m1TsW3NRNyh5UDf8XTCGb1z3oQZOid0s2jHiB2nXqyTC2iK/WtoyEivQsZ01B5leQx
+         iKq5xcPS0CmENBoFI/+t0LdrufrEJZg+M7DyAMN2wMOELXHNNfIG+GcXdFojQYgNfWQS
+         pu7BGDFLST43fkX/I/5Q7Nf0+uEjYNPJ6lpNRmoVAk+1pBngzz6HAM5LoX2M2m2QxTVN
+         yEww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781616234; x=1782221034;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bZH1+Yyqz6xQZNsOX4wfP6dQl35j3VE/PV0SUnY68BY=;
+        b=Bgt+AiWqxnH4Qu+UrCv1zkhOxGa1v9f+9QMnvAo4HNKVZxBym/8ST1+ujcVfsOxO3B
+         rewz0zaVJvpMiUsHiRCWTDKmP0bqEkBeLp1J6CC00KzL8HdJH5O9T0gd4JuXwddRVM3T
+         +KGeiEvBKhdsVoIzuQe4h8XbZyBOnTr5d2yD/yWfXjYZ+FUSXvB/EDL3VUgJq8bNHUG+
+         67GvUdoAt7RZyWzwebkphWnIzC17kUAkRBPxufwfW3sGxS57D2u10/7RCzdlyWtmaWl8
+         fSHx7AaOuQYVFEKv5vz643os3+vsephwsfGBSXYTPsKkTmH/XWq2V5BWTg6mzs1Mm+CB
+         y6NQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8+wSu5fRzcCGI2BpDwLuz77LO/3YMGwvxPZY40S54OHwVutvawICEaBVtxx0HMpNh0nglZaw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzUqbrOR3Tvu1vpoKo+Vj+m7NvUNjsuAE04Z+VdT3xWNotLvj+5
+	hPsxVx0SHYcHvNEHE2LSkN3i21ggWB6HqJp1/PJz2NkgrT1bqj3xAQ5svF0ozLTn5sASTZCJidf
+	g1cBrWunW8PjRlbE8/A==
+X-Received: from wrcl8.prod.google.com ([2002:a5d:5268:0:b0:460:18c0:dfeb])
+ (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:2584:b0:460:1967:abed with SMTP id ffacd0b85a97d-4607eaf7cfemr19334284f8f.39.1781616233699;
+ Tue, 16 Jun 2026 06:23:53 -0700 (PDT)
+Date: Tue, 16 Jun 2026 13:23:49 +0000
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
+Message-ID: <cover.1781615759.git.tarunsahu@google.com>
+Subject: [PATCH v2 0/2] luo: migrate serialized_data to type-safe KHO pointers
+From: Tarun Sahu <tarunsahu@google.com>
+To: Alexander Graf <graf@amazon.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	kexec@lists.infradead.org, Tarun Sahu <tarunsahu@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260616_062356_721934_010AEFCF 
+X-CRM114-Status: UNSURE (   7.30  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,28 +89,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jun 15 2026, Mike Rapoport wrote:
+Covvert raw serialized_data to KHO serializeable pointer (KHOSER_PTR).
+This series also takes care of resolving the bug with memfd of using
+phys_to_virt before checking the args->serialized_data value.
 
-> On Mon, Jun 15, 2026 at 03:28:03PM +0200, Pratyush Yadav wrote:
->> On Sun, Jun 14 2026, Mike Rapoport wrote:
->> > On Fri, 05 Jun 2026 20:34:48 +0200, Pratyush Yadav <pratyush@kernel.org> wrote:
->> >
->> >> +{
->> >> +	struct kho_radix_tree *tree = data;
->> >
->> > Would be nice to say which tree in the variable name ;)
->> 
->> How about preserved_mem_map?
->
-> But this is the new tree, isn't it?
-> Maybe keep the variable name and add a comment? 
+Tarun Sahu (2):
+  kho: add KHOSER_COPY_TYPE(UN)SAFE for phys copy
+  luo: Update serialized data to serializeable pointer
 
-Oh, right. The fact that I didn't remember it certainly means a comment
-is needed. Will add.
+ include/linux/kho/abi/kexec_handover.h | 12 ++++++++++++
+ include/linux/kho/abi/luo.h            |  6 ++++--
+ include/linux/liveupdate.h             |  4 ++--
+ kernel/liveupdate/luo_file.c           | 24 ++++++++++++------------
+ mm/memfd_luo.c                         | 18 +++++++++---------
+ 5 files changed, 39 insertions(+), 25 deletions(-)
 
-[...]
 
+base-commit: 0e0611827f3349d0a2ac121c023a6d3260dcecdb
 -- 
-Regards,
-Pratyush Yadav
+2.54.0.1136.gdb2ca164c4-goog
+
 
