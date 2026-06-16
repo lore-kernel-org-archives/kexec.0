@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A62AFCD98E1
-	for <kexec@archiver.kernel.org>; Tue, 16 Jun 2026 15:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C27F4CD98E4
+	for <kexec@archiver.kernel.org>; Tue, 16 Jun 2026 15:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
 	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
 	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=f4StedMv6W0NNcpbdFnJ73YCv2u3etwmHcP6mSakeug=; b=3OOz83wP3UmfkVNFQEwB98WVJ/
-	EeQ62np3BrJj5eSXrE3GmKyzT4dQJUzPlcv4C6MveX2+vlpd53P2wSxeCL4ZQvfiwrp50WEevSrK1
-	BPx1bYgUSPci9l9Xichy6GTiNE1VOmGnirHRq0yoI2JA7BBfa8PGiNAfy/5Z7SRHBf3RJu3uGeBWt
-	iCK23J+IwNF46jx3LR4KbcIKNvOk3SfN4iW0i6i7CK7rmIADwxgpMWRuX8L/TXCFp34hTcS9iKfOS
-	uNySvWl6h9cQ+LFVmcxUJsKJLXkwXKtdzOXmD/WHgsjUgy7uYaszihIIuq+o/LYgmH1tX4d5CUXIc
-	XQDJGEow==;
+	bh=qMS+SWEyDEjE+jxgzivY9c5ZtMduep7fGow2UpH8XlU=; b=JEcbWBNZEt5lPIpAGqUqQ4CvFU
+	he/s1TBKlY+/alT0DI8VzDl61DYsKC6kVLgbve3T22OxBhtveufCGs3kpXw2ZPYF0fAy4dvqKofvz
+	RwstSyEss1h1FQxBk21hXiNzmMPiRammWPk8v2KtsaVUZgZvwWgQP9B9vSq/BJqnNtiuu9lcqvdkT
+	V7FLXff9aWXhdsvislu1GK6C2osiVVvcuauzvI9WfbLUJ9PqKxtOU+I0MyJtqEUY+IcNQEYRLZwLV
+	BuoQCJwBrq1bzHhPY22yHIUR5c9IpT2vyrbqlixrKDFGTe0qlv/pMpTqM2MPFgnLCndj6EJcB6LTT
+	8lI/a5ZA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZVdD-0000000G0D4-3XSP;
-	Tue, 16 Jun 2026 15:23:15 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1wZVdG-0000000G0Es-3yy0;
+	Tue, 16 Jun 2026 15:23:18 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZVdB-0000000G0Bj-2y07
+	id 1wZVdE-0000000G0D5-1WWW
 	for kexec@lists.infradead.org;
-	Tue, 16 Jun 2026 15:23:14 +0000
+	Tue, 16 Jun 2026 15:23:17 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1781623392;
+	s=mimecast20190719; t=1781623395;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=f4StedMv6W0NNcpbdFnJ73YCv2u3etwmHcP6mSakeug=;
-	b=FO2seogDIkO4PXo8dxxKZYZG+RjZ09v8Cg0E5IVck9Ta4QVr5fADNA2qEg1rEKuImpnGUB
-	THQAPLebZvIxv5GHfhgodK9AU2EqNfkEYv3QIxfD3dlGgbPXX7E54z698MPpE1Y7zPqHZe
-	3GQzihRDatQdOo9GmnbRXheq2C0y9WQ=
+	bh=qMS+SWEyDEjE+jxgzivY9c5ZtMduep7fGow2UpH8XlU=;
+	b=EU9G6B79IGVAL9OcVtsKYf0M+2nmb/+SOZ03jQuLPlAWx+zMnWnhjYWRwjtmI8RuhRqJ25
+	dKXD+5z39FWy+CA76HN2LXCIc8sRzI5VY9vMq4djX86kb50likyEjeP1gm9bXn3MKp79HV
+	coALbjIQu1NBIAmzNtqUwRf2jouBTvc=
 Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-207-bF-NAUeFMGyYkPrph5B81Q-1; Tue,
- 16 Jun 2026 11:23:08 -0400
-X-MC-Unique: bF-NAUeFMGyYkPrph5B81Q-1
-X-Mimecast-MFC-AGG-ID: bF-NAUeFMGyYkPrph5B81Q_1781623386
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-108-4km-Gb8fOv-X_BbJWgTaGQ-1; Tue,
+ 16 Jun 2026 11:23:14 -0400
+X-MC-Unique: 4km-Gb8fOv-X_BbJWgTaGQ-1
+X-Mimecast-MFC-AGG-ID: 4km-Gb8fOv-X_BbJWgTaGQ_1781623391
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 66E0319560BF;
-	Tue, 16 Jun 2026 15:23:06 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 910FC19560B9;
+	Tue, 16 Jun 2026 15:23:11 +0000 (UTC)
 Received: from fedora-work.redhat.com (unknown [10.22.80.179])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 29FA9180034F;
-	Tue, 16 Jun 2026 15:23:00 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B7A08180034F;
+	Tue, 16 Jun 2026 15:23:06 +0000 (UTC)
 From: David Jeffery <djeffery@redhat.com>
 To: driver-core@lists.linux.dev,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -76,22 +76,21 @@ Cc: linux-kernel@vger.kernel.org,
 	John Garry <john.g.garry@oracle.com>,
 	kexec@lists.infradead.org,
 	David Jeffery <djeffery@redhat.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4/5] PCI: Enable async shutdown support
-Date: Tue, 16 Jun 2026 11:22:18 -0400
-Message-ID: <20260616152219.6268-5-djeffery@redhat.com>
+	Pasha Tatashin <pasha.tatashin@soleen.com>
+Subject: [PATCH 5/5] scsi: Enable async shutdown support
+Date: Tue, 16 Jun 2026 11:22:19 -0400
+Message-ID: <20260616152219.6268-6-djeffery@redhat.com>
 In-Reply-To: <20260616152219.6268-1-djeffery@redhat.com>
 References: <20260616152219.6268-1-djeffery@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: nwva2eYtja66vF3zpoodoBX3UtGv7dDDekZqdLfgbYA_1781623386
+X-Mimecast-MFC-PROC-ID: HpiLeyiiYdX6tN31lsnSA8OnpfsgDAmksuOuZ2JXgQA_1781623391
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260616_082313_818367_1EAF50B0 
-X-CRM114-Status: GOOD (  10.90  )
+X-CRM114-CacheID: sfid-20260616_082316_473202_B4F99F16 
+X-CRM114-Status: GOOD (  10.12  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,39 +105,68 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Like its async suspend support, allow PCI device shutdown to be performed
-asynchronously to reduce shutdown time.
+Like scsi's async suspend support, allow scsi devices to be shut down
+asynchronously to reduce system shutdown time.
 
 Signed-off-by: David Jeffery <djeffery@redhat.com>
 Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 Tested-by: Laurence Oberman <loberman@redhat.com>
 Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
 Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: John Garry <john.g.garry@oracle.com>
 ---
- drivers/pci/probe.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/hosts.c      | 2 ++
+ drivers/scsi/scsi_sysfs.c | 3 +++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index b63cd0c310bc..7cf3dabc885e 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1045,6 +1045,7 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+diff --git a/drivers/scsi/hosts.c b/drivers/scsi/hosts.c
+index e047747d4ecf..bf691acc7a67 100644
+--- a/drivers/scsi/hosts.c
++++ b/drivers/scsi/hosts.c
+@@ -273,6 +273,7 @@ int scsi_add_host_with_dma(struct Scsi_Host *shost, struct device *dev,
+ 	pm_runtime_set_active(&shost->shost_gendev);
+ 	pm_runtime_enable(&shost->shost_gendev);
+ 	device_enable_async_suspend(&shost->shost_gendev);
++	dev_set_async_shutdown(&shost->shost_gendev);
  
- 	bus->bridge = get_device(&bridge->dev);
- 	device_enable_async_suspend(bus->bridge);
-+	dev_set_async_shutdown(bus->bridge);
- 	pci_set_bus_of_node(bus);
- 	pci_set_bus_msi_domain(bus);
- 	if (bridge->msi_domain && !dev_get_msi_domain(&bus->dev) &&
-@@ -2753,6 +2754,7 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
- 	pci_reassigndev_resource_alignment(dev);
+ 	error = device_add(&shost->shost_gendev);
+ 	if (error)
+@@ -282,6 +283,7 @@ int scsi_add_host_with_dma(struct Scsi_Host *shost, struct device *dev,
+ 	get_device(shost->shost_gendev.parent);
  
- 	pci_init_capabilities(dev);
-+	dev_set_async_shutdown(&dev->dev);
+ 	device_enable_async_suspend(&shost->shost_dev);
++	dev_set_async_shutdown(&shost->shost_dev);
  
- 	/*
- 	 * Add the device to our list of discovered devices
+ 	get_device(&shost->shost_gendev);
+ 	error = device_add(&shost->shost_dev);
+diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
+index dfc3559e7e04..8fd317aef37b 100644
+--- a/drivers/scsi/scsi_sysfs.c
++++ b/drivers/scsi/scsi_sysfs.c
+@@ -1386,6 +1386,7 @@ static int scsi_target_add(struct scsi_target *starget)
+ 	pm_runtime_set_active(&starget->dev);
+ 	pm_runtime_enable(&starget->dev);
+ 	device_enable_async_suspend(&starget->dev);
++	dev_set_async_shutdown(&starget->dev);
+ 
+ 	return 0;
+ }
+@@ -1412,6 +1413,7 @@ int scsi_sysfs_add_sdev(struct scsi_device *sdev)
+ 	transport_configure_device(&starget->dev);
+ 
+ 	device_enable_async_suspend(&sdev->sdev_gendev);
++	dev_set_async_shutdown(&sdev->sdev_gendev);
+ 	scsi_autopm_get_target(starget);
+ 	pm_runtime_set_active(&sdev->sdev_gendev);
+ 	if (!sdev->rpm_autosuspend)
+@@ -1431,6 +1433,7 @@ int scsi_sysfs_add_sdev(struct scsi_device *sdev)
+ 	}
+ 
+ 	device_enable_async_suspend(&sdev->sdev_dev);
++	dev_set_async_shutdown(&sdev->sdev_dev);
+ 	error = device_add(&sdev->sdev_dev);
+ 	if (error) {
+ 		sdev_printk(KERN_INFO, sdev,
 -- 
 2.54.0
 
