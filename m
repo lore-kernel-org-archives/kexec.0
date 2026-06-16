@@ -4,101 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 62006CD98E1
-	for <kexec@archiver.kernel.org>; Tue, 16 Jun 2026 21:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1B18ACD98E1
+	for <kexec@archiver.kernel.org>; Tue, 16 Jun 2026 22:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Ku36PgmZ23d8x6k2ldFVCZ2r1RXJuytjTrS1Up4q2Vc=; b=ZA5n7KZa28r67/dPLVCLX1YMQ/
-	cdBIvCo8ZkCCHoF35BNzCuazNXr6RJK7AnBsL24ooQ5MF3ULXI1+zREKcBYRIc6yjQexa+xmQ7tie
-	Ck5avnFVDQN8N/Ow+RxXeVRTTvRsATzdYNypPDdBvYlZjF1KBV0UCmxn66U1EnTUt0dzpODA7DJ7d
-	o67hJ5f1xO2qiAryzB6UcZ815EOVa3rQB82VZg8lRIDwSz++wfF9ukiZ7eaeEE7BzKsy7x9xNWu9D
-	nFqBDrjPBIEC5opZjXSQebmtLDC/EZrDuxeW+UQXiiUnnc0BH8O/2KMEL+Q9PVod8yF+gWf0JQHv+
-	VpPbqktA==;
+	bh=5hm1HVaCy9nZT8d+x5IZzYgyaULXvQNG2Dw2s8INhX4=; b=GMw8awpPCxhmmTDFv8oVErFQ3m
+	tlaAWu+u3g9noRmCDPJLiCJG7PBjbNoQ14oCAgqkF/DsnQloPdKVd3k/DAOD/FXUgp1b26BCmHuoE
+	bFZQsTXbXyGq5HJ9d0Qio4oOHJcexQHCO3e8i1HTP3r6x73Kg7b8o5AGMMUzUxss6k6ydqQ5QGNIt
+	7+/eF8zR56vBrTsg6iOiVBCkzGrpZ8yFGidtyCxEUnbSpPlszphlFb1HMmFayEfdWGGgkoOAubifu
+	/Fl0PupyNR/FhiIDATxyAf8Kou5yahFMM8Bp/JbP7rxNPrT3zYC9CvMukeALm3YDbAAVbswAPapzk
+	hoOi5XXA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZbUQ-0000000GLsr-1KzR;
-	Tue, 16 Jun 2026 21:38:34 +0000
-Received: from mail-vk1-xa35.google.com ([2607:f8b0:4864:20::a35])
+	id 1wZc9a-0000000GNXg-0fDx;
+	Tue, 16 Jun 2026 22:21:06 +0000
+Received: from mail-dl1-x1235.google.com ([2607:f8b0:4864:20::1235])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZbUN-0000000GLsA-2PBa
+	id 1wZc9X-0000000GNXJ-02Mz
 	for kexec@lists.infradead.org;
-	Tue, 16 Jun 2026 21:38:32 +0000
-Received: by mail-vk1-xa35.google.com with SMTP id 71dfb90a1353d-5a7c7e13b84so2971511e0c.0
-        for <kexec@lists.infradead.org>; Tue, 16 Jun 2026 14:38:30 -0700 (PDT)
+	Tue, 16 Jun 2026 22:21:04 +0000
+Received: by mail-dl1-x1235.google.com with SMTP id a92af1059eb24-1384ebe7a10so207570c88.1
+        for <kexec@lists.infradead.org>; Tue, 16 Jun 2026 15:21:01 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781648461; cv=none;
+        d=google.com; s=arc-20240605;
+        b=aIZVaqAaxlZufxBSKY+iPVLiojkk78+4iHULNzvcfA22Ovv4EOVBAK8vWAIArWpoGm
+         9/RkA+6A4/RmbAWZDbYm6D1QrqPL2CJjVGgph7YkcJ2n5tBvm71g82Qlj8dQbHd7NK7l
+         JKv3WPYNIT0t0Mzt59C0xXdx4vDa0mZwhNVRQDhJEhtfvqXi/4W37p/1ebbdQYiyV6Bd
+         vMDLY5xM42WM2SatQiY/5Kpk4eghlL4GSbitkn500Lw7wHIsazTI9HL7S9Snef5+DgbI
+         WkVShs8qZv8pc19kHTuilrbnKEIOSE+Gy3s7Dgk0zJXbpmpbx1b1O6NY0H86eeTfK3iu
+         aiKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=5hm1HVaCy9nZT8d+x5IZzYgyaULXvQNG2Dw2s8INhX4=;
+        fh=z0UYNzvAPrV9W9ZVbVCB421wEVDM0g/iQzNLZPDoIks=;
+        b=VFzKjm7DnkAVoK1u4uuMWAHZD3Q3C6TNcw7asyWS7BiH02p9uzmowvgimdb/28F2W1
+         jdB5dPOE6HT2b9nDzRJEONrMtpxBEcAuDc+R2VG5xxbT8TpRIQrwE6WMM+l0jBBERoiV
+         W1fPRDhGE0mU7W5MG7IRgSXsPkmirDNFcec/cIlyWyWQQriNzfkseWTm7+YFj5+PdPCQ
+         HHcohao4ZTaLQ8t8ikswJDsjwm9Kfl4gRHkLdAS6RGPR9Y6xWAZw3yWX1WYXXB88zALy
+         z3cqpzPaXcyK7JYmxM1S4t6qGytpgBW9DUkr2Y9yJUjQVsdxnUIput3SQa/VR7xT+ceq
+         RGaQ==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1781645910; x=1782250710; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1781648461; x=1782253261; darn=lists.infradead.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ku36PgmZ23d8x6k2ldFVCZ2r1RXJuytjTrS1Up4q2Vc=;
-        b=OxBIhyS57tR/n+OvwMLuzrruC2iZCzQ97VIOhxYBB7nbjPXjAZirqutgE7AADY05TA
-         nMf1cRUPnI4mjlr2PKUUSzHZrhSy1puM7l4EyJkXNGsc/ZfJ5sB6kXKdHOg5zevD/Ay5
-         T4hWt0maezGeP60KQqNG1sP7V/1owYRyLA4Ko=
+        bh=5hm1HVaCy9nZT8d+x5IZzYgyaULXvQNG2Dw2s8INhX4=;
+        b=Xto5bUruwW4VbGckEX4TeFCrOffUB21BY5qN9Kk6EbGe9pBFlTp9jiemGlJ7clxkCB
+         XTTqAJ6JU+nwj1bCtixq8dr+YWg+X3UZD16B9bLdL/jafQQz91gxVqI7LyjrE9+AJrHU
+         dnFqi/0qvmslW9uslrANc2BAfytDXfvwA0QDxhjQW6HKGPJTT3pP+4cZiiyCDBlWv+BC
+         YCmkRW593X4oz7+oLglUJbz9mRtjt7MVoZurGfxC/BimagHVOWEskjtR+9t9X2DVlDxi
+         4knYo4S1MW62bzyaGfY6SZzjJQNFeBWqs1/cFAdPJyh73UwNGiXkwLgSwTd8dibF9KAs
+         Lffw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781645910; x=1782250710;
+        d=1e100.net; s=20251104; t=1781648461; x=1782253261;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=Ku36PgmZ23d8x6k2ldFVCZ2r1RXJuytjTrS1Up4q2Vc=;
-        b=btvcpBNONBpVf73AIEsGYuoWs2nF8zj0PKj1KruyZ/dL6qr2+88nuqdRLesEWr8kpZ
-         YpCQtPGqEsoMHizEVJlHyIK/UGqG1w7jdlFMJsJHCKm+BvGEDgIgjryCoXnsqpKvqyW5
-         4QVfrMG7Zh5moeeHMm9zO60iJheaeTUAJrE66dv6t3ZSZ98nzO1oxbz88sYL0Ax+awQy
-         1IYyjiAWffXIAAy7AY1hVCOzOujMY2sSW0surftBSd1F4HRjI4EyPtjXENHrJKBOOuQY
-         xOOdI92Z0bvIzs2u2CPGmtG/T9dJXn6vDfPSlAmFZMbEgxvymXHZKWztWTYk49/MMpky
-         9h6w==
-X-Forwarded-Encrypted: i=1; AFNElJ8NjJ5Q7thP4crkdRfAbWyqE2dkIYVzSWqPS9M+fDTeKU8oT9ZbINQ/a4aB2OdUVzp545pnHw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwPtZuLCQcPDm9dcC1vUpIV8V+nAYb/PI2xjhcX9viVvutwC6Yl
-	kXR32z/kGMavALgbOH7ux3nUkvEmGLefa1FNn7qCb33Ni77om9Aqnce9tWNoOIpUUnHyynUgJaF
-	WO64=
-X-Gm-Gg: Acq92OE0/N9N/2l8MzX/sUc8aOZhN6r6EeEEY+uvwJIE9RKXGSGzkkyZF/5ori9Efxl
-	Gb0LcNHm/2KFnSKTo2SDLUe1Wu5nagtJbH2pdUZKdAZJ+q0dmLHT3ry7CPfW42wmXzy7fdPHOkt
-	h9Wj89VSwrn3/7ZSulQHwQXKuIRjQT5Z+/AN16vIJ6KZw/YqXk7MzEnFBkYW0ow2M7WWW8fMMkV
-	MPGjwzQPH1mLTRb+jCrb9p0PKRXaHKkOW9kVNa9o74E+0RGS8rpp/GeR2uY72RurkpMxw+PQo33
-	QUfFDOrFa3Ho2K/O18GOBA7b8ci9UfxWBBldpj55E4bOpRY6WRK53KAkLbRMAWvvsVC37Q58eeV
-	y9TYVnwGc7nPxBVe09cT3/fvv9vBXQhEqB3MZpD1ws9BsBpJ4f6PfvmVMe2+6mNevwKAfoY7mE8
-	huglyfJrxsFgaqHaVC4c3s6pblPk1okZo2+WXrlU8bxs/YdV0PqNy8S5QdMwtUcA==
-X-Received: by 2002:a05:6122:e252:b0:59e:5bfa:e06c with SMTP id 71dfb90a1353d-5bbbe70b1dcmr785290e0c.13.1781645909777;
-        Tue, 16 Jun 2026 14:38:29 -0700 (PDT)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5bb90015ef9sm7059193e0c.7.2026.06.16.14.38.28
-        for <kexec@lists.infradead.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2026 14:38:28 -0700 (PDT)
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-6cb414a5d50so4042673137.3
-        for <kexec@lists.infradead.org>; Tue, 16 Jun 2026 14:38:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ96pzEbM3J3FrPe58WxL0vF16zuiMxQs0pb0Zi9q3RZB9q8ZJajOMkUAdczXGEtcdfcYpa+VQ==@lists.infradead.org
-X-Received: by 2002:a05:6102:3910:b0:631:ff40:22b2 with SMTP id
- ada2fe7eead31-7245d20641emr780692137.2.1781645907501; Tue, 16 Jun 2026
- 14:38:27 -0700 (PDT)
+        bh=5hm1HVaCy9nZT8d+x5IZzYgyaULXvQNG2Dw2s8INhX4=;
+        b=eQHYWZCAPYCBVAfUjiDe9HxCDmnSRYDRtP4FGm1CRi6fCajnlUkCUiXJ5b6NMy7/4X
+         u3LGGb1+JiIcSVP9b2L9o52DAhu/WxQ6WDezMjxDUE/EnxNqDHjtlIjyroc5fyjImISY
+         efiOUlj1Nxioney2KC+YgwIpeUebAtE2YaZ1XnX7CRIeTh0ggr2HZsYYee/5Y60GWPME
+         0NMCRFKI9t0GbvhMf9ykjMfbUq4rjNliN/7lOs/WJkLUKdry6ptf+R7lktVlIYoOUWPA
+         tRzCu8+JW3PyoUUwwKYNcWRzODTV/ROnWWNaiAzWt21UwcPAuD//uqU56bQowOqOVdgD
+         CnuQ==
+X-Gm-Message-State: AOJu0YxN0M033pON1OEEKO7IXYCmUuoQ5ZnR4Qp/mXlA6SYESfVpDE9n
+	B/5VxuBCNB6PcXZHzTjaKdmcJpMZC9KNAS9+7rpdMcXVy9SE/QRRWTu5iay3dC23wdfyvOOse1d
+	aPtEoscuxKOhl3aJDp/wlt7g6D3ex58JIR6cuoilQ2CKTMG1zyzYeyEv0
+X-Gm-Gg: Acq92OGHUaVkenQ0RsHOcl1/gJGbTFjkMJw52IJ4udNfi29hl5Zq6I+I1cNGTVM5bWp
+	cQmaZpQUI58VGJ1u/6ij8V8bv5vfV6OoOBJajsutLA8YwExVdRr+CLyNyqvoIHpvKHj5bnTEjea
+	7GFKGBR/Et9xJojRfF1H90YllJ/CtN+GqZz+QTBvFP4B4/iNjpD2FrgTrm01/zQdeUmjuiIC5Kg
+	RA0J40hwAJXXJYuNX2gI4kn9Gcmnd9151hYSoBOtZcfgVFmBVgwH2iY+C0X1wcxIcJ31kKggrQp
+	5XAhpwk=
+X-Received: by 2002:a05:7022:6ba8:b0:136:ac69:b0f7 with SMTP id
+ a92af1059eb24-1398f680985mr453889c88.16.1781648460211; Tue, 16 Jun 2026
+ 15:21:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1781490440.git.kas@kernel.org> <167493d30ef6c99a44291de14cddd41ced8149c4.1781490440.git.kas@kernel.org>
-In-Reply-To: <167493d30ef6c99a44291de14cddd41ced8149c4.1781490440.git.kas@kernel.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Tue, 16 Jun 2026 14:38:16 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WK0=xTZOWK+yDqEtGbbhkvoW50ekHKBBWhpoO9Zb8cBQ@mail.gmail.com>
-X-Gm-Features: AVVi8Ce2TIVRIg1dSgVrmoNtDRnxocNt72MHs5ddjhzazA-47T8vaWkWcQhOaik
-Message-ID: <CAD=FV=WK0=xTZOWK+yDqEtGbbhkvoW50ekHKBBWhpoO9Zb8cBQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] arm64: escalate smp_send_stop() to an SDEI NMI as
- a last resort
-To: Kiryl Shutsemau <kirill@shutemov.name>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	James Morse <james.morse@arm.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Marc Zyngier <maz@kernel.org>, Petr Mladek <pmladek@suse.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
-	Puranjay Mohan <puranjay@kernel.org>, Usama Arif <usama.arif@linux.dev>, 
-	Breno Leitao <leitao@debian.org>, Julien Thierry <julien.thierry.kdev@gmail.com>, 
-	Lecopzer Chen <lecopzer@gmail.com>, Sumit Garg <sumit.garg@kernel.org>, kernel-team@meta.com, 
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, "Kiryl Shutsemau (Meta)" <kas@kernel.org>
+References: <20260522202410.3104264-1-dmatlack@google.com> <20260522202410.3104264-4-dmatlack@google.com>
+ <ajGpxMXk9iyXLzC4@google.com>
+In-Reply-To: <ajGpxMXk9iyXLzC4@google.com>
+From: David Matlack <dmatlack@google.com>
+Date: Tue, 16 Jun 2026 15:20:33 -0700
+X-Gm-Features: AVVi8CfxK4mMKiv0sputj5dz4geA42BjbfG1FN5Obs96hOQRjIUk8-dblh_dgDE
+Message-ID: <CALzav=eo=UwoTNTYM8Z7uKoihxfB7NtVP701qidVgoqyBKhUig@mail.gmail.com>
+Subject: Re: [PATCH v6 03/12] PCI: liveupdate: Track incoming preserved PCI devices
+To: Samiullah Khawaja <skhawaja@google.com>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
+	Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, 
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, 
+	Parav Pandit <parav@nvidia.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pranjal Shrivastava <praan@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260616_143831_666599_D7E0C91E 
-X-CRM114-Status: GOOD (  25.40  )
+X-CRM114-CacheID: sfid-20260616_152103_090828_9664CED0 
+X-CRM114-Status: GOOD (  44.92  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,90 +125,201 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
-
-On Sun, Jun 14, 2026 at 7:36=E2=80=AFPM Kiryl Shutsemau <kirill@shutemov.na=
-me> wrote:
+On Tue, Jun 16, 2026 at 1:09=E2=80=AFPM Samiullah Khawaja <skhawaja@google.=
+com> wrote:
 >
-> +/*
-> + * Bring the local CPU to a stop, saving its register state into the vmc=
-ore
-> + * on the kdump crash path first. The single point every arm64 stop path
-> + * funnels through, so the bookkeeping (mask interrupts, mark offline, m=
-ask
-> + * SDEI, optionally power off) lives in one place:
-> + *
-> + *   - the regular IPI_CPU_STOP and pseudo-NMI IPI_CPU_STOP_NMI handlers=
-;
-> + *   - panic_smp_self_stop(), a CPU parking itself on a parallel panic()=
-;
-> + *   - the SDEI cross-CPU NMI handler (drivers/firmware/arm_sdei_nmi.c),
-> + *     which reaches CPUs the stop IPIs could not.
-> + *
-> + * @regs is the register state to record in the vmcore on a crash stop; =
-NULL
-> + * means "capture the current context". @die_on_crash decides the kdump =
-crash
-> + * path: the IPI stop handlers pass true and power the CPU off (PSCI CPU=
-_OFF,
-> + * via __cpu_try_die()) so a capture kernel can reclaim it. The SDEI han=
-dler
-> + * and panic_smp_self_stop() pass false and only park. For SDEI that is
-> + * required, not just conservative: it runs inside an SDEI event that is
-> + * deliberately never completed (completing it has firmware resume the w=
-edged
-> + * context), and a CPU_OFF from that not-yet-completed context wedges EL=
-3 on
-> + * some firmware -- a documented follow-up. Parking also matches this pa=
-th's
-> + * own fallback when CPU_OFF is unavailable.
-
-Nice to have all the details in the function comment. Any reason why
-you didn't use kernel-doc format? Nothing else in this file does, I
-guess, but it doesn't seem like it would be a problem to start the
-trend... ;-)
-
-
-> @@ -59,8 +64,51 @@ static bool sdei_nmi_available;
+> On Fri, May 22, 2026 at 08:24:01PM +0000, David Matlack wrote:
+> >During PCI enumeration, the previous kernel might have passed state abou=
+t
+> >devices that were preserved across kexec. The PCI core needs to fetch
+> >this state to identify which devices are "incoming" and require special
+> >handling.
+> >
+> >Add pci_liveupdate_setup_device() which is called during device setup
+> >to fetch the serialized state (struct pci_ser) from the Live Update
+> >Orchestrator. The first time this happens, pci_flb_retrieve() will run
+> >and convert the array of pci_dev_ser structs into an xarray so that it
+> >can be looked up efficiently.
+> >
+> >If a device is found in the xarray, the PCI core stores a pointer to its
+> >state in dev->liveupdate_incoming and holds a reference to the incoming
+> >FLB until pci_liveupdate_finish() is called by the driver.
+> >
+> >This ensures proper lifecycle management for incoming preserved devices
+> >and allows the PCI core and drivers to apply specific Live Update
+> >logic to them in subsequent commits.
+> >
+> >Drivers can check if a device is an incoming preserved device (e.g.
+> >during probe) by calling pci_liveupdate_is_incoming().
+> >
+> >CONFIG_64BIT is now required to enable CONFIG_PCI_LIVEUPDATE so that the
+> >domain and bdf can be guaranteed to fit in an unsigned long and be used
+> >as the xarray key.
+> >
+> >Signed-off-by: David Matlack <dmatlack@google.com>
+> >---
+> > MAINTAINERS                    |   1 +
+> > drivers/pci/Kconfig            |   2 +-
+> > drivers/pci/liveupdate.c       | 230 ++++++++++++++++++++++++++++++++-
+> > drivers/pci/liveupdate.h       |   5 +
+> > drivers/pci/probe.c            |   3 +
+> > include/linux/pci_liveupdate.h |  13 ++
+> > 6 files changed, 251 insertions(+), 3 deletions(-)
+> >
 >
->  #define SDEI_NMI_EVENT                 0
+> [snip]
+> >
+> > static int pci_flb_retrieve(struct liveupdate_flb_op_args *args)
+> > {
+> >-      args->obj =3D phys_to_virt(args->data);
+> >+      struct pci_ser *ser =3D phys_to_virt(args->data);
+> >+      struct pci_flb_incoming *incoming;
+> >+      int ret =3D -ENOMEM;
+> >+      u32 i;
+> >+
+> >+      incoming =3D kmalloc_obj(*incoming);
+> >+      if (!incoming)
+> >+              goto err_restore_free;
+> >+
+> >+      incoming->ser =3D ser;
+> >+      xa_init(&incoming->xa);
+> >+
+> >+      for (i =3D 0; i < incoming->ser->max_nr_devices; i++) {
+> >+              struct pci_dev_ser *dev_ser =3D &incoming->ser->devices[i=
+];
+> >+              unsigned long key;
+> >+
+> >+              if (!dev_ser->refcount)
+> >+                      continue;
+> >+
+> >+              key =3D pci_ser_xa_key(dev_ser->domain, dev_ser->bdf);
+> >+              ret =3D xa_insert(&incoming->xa, key, dev_ser, GFP_KERNEL=
+);
+> >+              if (ret)
+> >+                      goto err_xa_destroy;
+> >+      }
+> >+
+> >+      args->obj =3D incoming;
+> >       return 0;
+> >+
+> >+err_xa_destroy:
+> >+      xa_destroy(&incoming->xa);
+> >+      kfree(incoming);
+> >+err_restore_free:
+> >+      kho_restore_free(ser);
+> >+      return ret;
 >
-> +/*
-> + * Backtrace and stop both ride SDEI event 0. That is not a chosen econo=
-my:
-> + * event 0 is the only architecturally software-signalled event -- the s=
-ole
-> + * event SDEI_EVENT_SIGNAL can target at an arbitrary PE. Every other ev=
-ent
-> + * number is a firmware/platform interrupt-bound event, not something th=
-e
-> + * kernel can raise cross-CPU, so a dedicated "stop" event would need
-> + * firmware to define and bind it -- exactly the firmware dependency thi=
+> Hmm.. This is interesting, so the KHO state is freed and it cannot be
+> reused. I see you already pointed out that we are putting an LUO policy
+> to say that the retry is not allowed.
+>
+> But what should be the behaviour of liveupdate in this regard? Let the
+> system boot in a normal way? This might break other subsystems as they
+> might depend on PCIe restoring state properly. Also I think some of the
+> PCIe state, like device-id, BAR addresses, ACLs etc, might be used as
+> source of truth by other components.
+>
+> For example, lets say FLB retrieve() of PCIe fails, but succeeds for
+> VFIO/IOMMU, now VFIO/IOMMU are restoring state of a device that is not
+> restored/preserved?
+>
+> Should this be considered fatal?
+
+If PCI FLB retrieve fails then there are certain things that cannot be
+guaranteed, such as BDF (B specifically) remaining constant. This
+could lead to memory corruption as the IOMMU may have live
+translations in place for those specific RequesterIDs. And, in the
+future, preserved devices may be doing P2P which depends on BARs not
+moving. If the PCI core cannot retrieve the FLB saved by the previous
+kernel, it cannot make these guarantees.
+
+So yeah I think you're right that PCI core should treat FLB retrieve
+as fatal and just panic.
+
+> > }
+> >
+> > static void pci_flb_finish(struct liveupdate_flb_op_args *args)
+> > {
+> >-      kho_restore_free(args->obj);
+> >+      struct pci_flb_incoming *incoming =3D args->obj;
+> >+
+> >+      xa_destroy(&incoming->xa);
+> >+      kho_restore_free(incoming->ser);
+> >+      kfree(incoming);
+> > }
+> >
+> > static struct liveupdate_flb_ops pci_liveupdate_flb_ops =3D {
+> >@@ -270,6 +335,91 @@ void pci_liveupdate_unpreserve(struct pci_dev *dev)
+> > }
+> > EXPORT_SYMBOL_GPL(pci_liveupdate_unpreserve);
+> >
+> >+static struct pci_flb_incoming *pci_liveupdate_flb_get_incoming(void)
+> >+{
+> >+      struct pci_flb_incoming *incoming =3D NULL;
+> >+      int ret;
+> >+
+> >+      ret =3D liveupdate_flb_get_incoming(&pci_liveupdate_flb, (void **=
+)&incoming);
+> >+
+> >+      /* Live Update is not enabled. */
+> >+      if (ret =3D=3D -EOPNOTSUPP)
+> >+              return NULL;
+> >+
+> >+      /* Live Update is enabled, but there is no incoming FLB data. */
+> >+      if (ret =3D=3D -ENODATA)
+> >+              return NULL;
+> >+
+> >+      /*
+> >+       * Live Update is enabled and there is incoming FLB data, but non=
+e of it
+> >+       * matches pci_liveupdate_flb.compatible.
+> >+       *
+> >+       * This could mean that no PCI FLB data was passed by the previou=
 s
-> + * driver sets out to avoid.
-> + *
-> + * Sharing one event means the handler must tell a stop apart from a
-> + * backtrace. A stop is terminal and system-wide -- sdei_nmi_stop_cpus()=
- is
-> + * only reached from smp_send_stop() (reboot/halt/panic/kdump), which ne=
-ver
-> + * returns -- so once a stop is requested, every later event-0 fire is a
-> + * stop too. A single write-once flag therefore carries as much as a
-> + * per-CPU mask would: sdei_nmi_stop_cpus() sets it before signalling, a=
-nd
-> + * the handler reads a set flag as "stop this CPU" and a clear flag as
-> + * "backtrace" (handled by nmi_cpu_backtrace(), which self-gates on the
-> + * framework's backtrace mask). A backtrace fire that races in after a s=
-top
-> + * has begun just stops that CPU instead -- harmless, it is going down.
-> + */
-> +static bool sdei_nmi_stopping;
-> +
->  static int sdei_nmi_handler(u32 event, struct pt_regs *regs, void *arg)
->  {
-> +       if (READ_ONCE(sdei_nmi_stopping)) {
+> >+       * kernel, but it could also mean the previous kernel used a diff=
+erent
+> >+       * compatibility string (i.e. a different ABI).
+> >+       */
+> >+      if (ret =3D=3D -ENOENT) {
+> >+              pr_info_once("No incoming FLB matched %s\n", pci_liveupda=
+te_flb.compatible);
+> >+              return NULL;
+> >+      }
+> >+
+> >+      /*
+> >+       * There is incoming FLB data that matches pci_liveupdate_flb.com=
+patible
+> >+       * but it cannot be retrieved.
+> >+       */
+> >+      if (ret) {
+> >+              WARN_ONCE(ret, "Failed to retrieve incoming FLB data\n");
+>
+> I think this should probably be considered fatal as mentioned above or
+> the caller of this function should get an error so it can fail. I think
+> retrievel of preserved state should generally not fail unless there is
+> memory corruption or ABI is incompatible.
 
-Don't you need a smp_rmb() before that, to match with the smp_wmb()?
+Yeah. I think I will just call panic() here to cover all cases.
 
--Doug
+> >+              return NULL;
+> >+      }
+> >+
+> >+      return incoming;
+> >+}
+> >+
+>
+> [snip]
+> >+
+> >+static inline bool pci_liveupdate_is_incoming(struct pci_dev *dev)
+> >+{
+> >+      return false;
+> >+}
+> > #endif
+> >
+> > #endif /* LINUX_PCI_LIVEUPDATE_H */
+> >--
+> >2.54.0.746.g67dd491aae-goog
+> >
+>
+> Sami
 
