@@ -4,77 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2F277CD98EE
-	for <kexec@archiver.kernel.org>; Wed, 17 Jun 2026 05:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 06648CD98E1
+	for <kexec@archiver.kernel.org>; Wed, 17 Jun 2026 05:20:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
 	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
 	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=WRwifh+WHocL0GPrY4bxLe2c4rcrkgwIVSsB1QsK0tU=; b=p5xE14zRk3pd7YBd2b56HLIMhQ
-	wGjtZRw+ISz5M5a80vRS6IpAv2Qu6AdSof0nCI+H1w+opoAJ5AFWdZY2CbMNhWSF3YtTdURsGcwM9
-	Ku1QkmgLcUvlEzPUekaX+T2nDtcUVnFJlPU5hBgG9jWajO7g/6yD/kIp86Yvl91DjIRwm3Y2oh8yz
-	I+wu7Upww0VN4ulaLxYMQn7TYJChq0sItgUdjT0pHnUh3jhWzOAbyX33jFMcVpmE8nOAG3jmMkcy+
-	DkW6jL8evRUx3xA1pQBCCHlhKWrA7UbqVXJYHz4QVSSLefzYppQUW7dXp0Cm3p0H5AUJxfeh5z1St
-	00vDyWRw==;
+	bh=ChzNbBfrgdOaaIZi1uD6D+VBOdxwwRnVP1y9J+Nh4zc=; b=iJIE+Ieh1BZknMbmw+/DcJZRIH
+	AsIFcm8q477pxToBEkv+1R/w0fGk3Q2iuOMpmHQDMYAlHVYvY5NB9ogN/9BHa9NVDwwvgS4iRLZcA
+	C0svuFLPqE2N+qKibq3ZrNJisEH4tQkHKOxZ/tadactYEik3B9aYmvslpBGX2VO5OmWsBsR1Wt/X0
+	QnY1QowjPbHmQizqbYDZIEDeGdBoCzzp26EN69bR/ojAFN4SZ4NKL2HivgSRz2IcPIQ5PgqTOn4m8
+	5qXwZQ/LRBwHPsgAfL4lV6JGx7OfxEs7UePi5ovH+RQfREupDVGfKCihTyl4XN2UmVwHd7IEglsdN
+	ThzXVULg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZihL-0000000GdzY-0JOr;
-	Wed, 17 Jun 2026 05:20:23 +0000
+	id 1wZihO-0000000Ge12-0lPd;
+	Wed, 17 Jun 2026 05:20:26 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZihI-0000000GdyS-38mQ
+	id 1wZihM-0000000Gdzx-1PVP
 	for kexec@lists.infradead.org;
-	Wed, 17 Jun 2026 05:20:22 +0000
+	Wed, 17 Jun 2026 05:20:25 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1781673619;
+	s=mimecast20190719; t=1781673623;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WRwifh+WHocL0GPrY4bxLe2c4rcrkgwIVSsB1QsK0tU=;
-	b=HYAK+9CgF5181p/J5SevCbEJZdA57GGALO+lQV+sr/mML3LDRzySnx4I3DUxoYrfuY/J3x
-	bKquTJlXDyFZn08dUu1z3YgGvo6EEvMl/fUjUnFMbBwZCSWuRmXmkkwVCdYc9q1woRqzuU
-	QeWe04S8xGjOi6/x1wIRO13dc/AEl4k=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=ChzNbBfrgdOaaIZi1uD6D+VBOdxwwRnVP1y9J+Nh4zc=;
+	b=Diko+W0M7+hN5ihcCLPFFBYB+PifFDJh2SOQQa67B8fzJO63kwuY78YtuhMJl1GqjdRZc9
+	xFwnoNK4BF2BvQR5BY3JFecVhjsFBuXSgOx7Ri5lou+fKb3ItoU8p2+6dVeOUAGMgSoB3y
+	rKYWrME/nrTup/ykwDHH/wIYfB7BODE=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-371-o_gReyvxMuWrQky2lIzmUA-1; Wed, 17 Jun 2026 01:20:17 -0400
-X-MC-Unique: o_gReyvxMuWrQky2lIzmUA-1
-X-Mimecast-MFC-AGG-ID: o_gReyvxMuWrQky2lIzmUA_1781673616
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-842688fa7b8so517944b3a.0
-        for <kexec@lists.infradead.org>; Tue, 16 Jun 2026 22:20:17 -0700 (PDT)
+ us-mta-557-mwroJALWPN64oEmwBd_d1Q-1; Wed, 17 Jun 2026 01:20:22 -0400
+X-MC-Unique: mwroJALWPN64oEmwBd_d1Q-1
+X-Mimecast-MFC-AGG-ID: mwroJALWPN64oEmwBd_d1Q_1781673621
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-8426ed9f24dso333990b3a.1
+        for <kexec@lists.infradead.org>; Tue, 16 Jun 2026 22:20:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781673616; x=1782278416;
+        d=1e100.net; s=20251104; t=1781673621; x=1782278421;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=WRwifh+WHocL0GPrY4bxLe2c4rcrkgwIVSsB1QsK0tU=;
-        b=dZWAbwTgJuTesvqT7ZuiV5nrCnr/EPTGbOpugT/zr3Jc75unlR/SeayRFwINmaVHgg
-         i4VgCPtk84ly8y2TydoSNIWGt3piPddUO4J6elm2brqzk3SUUFS6LWcLd8cI3VRLhmME
-         48/zzcEvTTwm1HD4U69pB/ek1hZC2i7t8RjiTIcrW3HapXcZxtsqUHbjqiTqtcr8mj/d
-         OJfh46zSK/DDMdJtf9QXZKVAeaYxtaGnARgS9Zhl49iIzGlukGAHcpycba7+tO46nDaR
-         3MI+TdYV/Se9eg45ei5vAw0EtDxIsdrTcmzChXM7RqCX1A5f4JavUnDaxi2PWc7WZV9l
-         NIDA==
-X-Forwarded-Encrypted: i=1; AFNElJ+0Vw5XPyrE+aR0QQ/giQs95pKI7Xw1uyA9GvHS+MVsMeIWgKtFLyHsoyT+iKPcW7UJ8Ip4rQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwMa42uctw1Woc5mGFPc5A2hFsRFB5m9DF/St3lt1/MG0LMy/CA
-	RmMCLfnL/Odm3gpKDq1zs263BjZQ4/L4A3VJdrrGDoyxMM9CbwRsm32orZOd4ppO96MfGa8Z7oB
-	TZks6dWhXuNZpel1bWBcvIqRRpT5crhQfokzmnzRnR8gHDS5mHS30tLupG8+3SQ==
-X-Gm-Gg: Acq92OF80UgEnuo7NgCusvz4gNXyY6MzHrwbxclT8EM0ab1M+MWnSDgRv5lX9KhfkZE
-	DSxOVi9KeEiVAsMxSrt40aJ4zz6nCQT3ZrPE2EVONEqhOreyoEwvXwniNmSmENVWBD3GfWNFro7
-	Bkm1gIgY/25bQv9OLQQRxFocAKCni7y25cehW+YdHHoUuwpTN92FRvPgEAwBwh6lzW9LaUxQkXq
-	hhp+SZ/puYd9XlY1LQgf0KkIdWnqHA4qNZXYZQVTQl5LZdRvZQDlCPDCMlmF+q7k9uGHU9SZN6C
-	pqpu/6qBK6JbgXAlGoyvZgFQZA01BxUgx9lgItzhRfH1LefddkLTPFOoI2dvgkd40DlSyW8uxng
-	1kA9Bh3a+P73zUWq0jL00+xddDRsRqZGY2/8GA30HwQtEfo/D3w==
-X-Received: by 2002:a05:6a00:23cc:b0:837:f111:b70 with SMTP id d2e1a72fcca58-845269fc6c5mr1485582b3a.4.1781673616202;
-        Tue, 16 Jun 2026 22:20:16 -0700 (PDT)
-X-Received: by 2002:a05:6a00:23cc:b0:837:f111:b70 with SMTP id d2e1a72fcca58-845269fc6c5mr1485548b3a.4.1781673615595;
-        Tue, 16 Jun 2026 22:20:15 -0700 (PDT)
+        bh=ChzNbBfrgdOaaIZi1uD6D+VBOdxwwRnVP1y9J+Nh4zc=;
+        b=VwcmAt/Hf9Mkotb16Rl8bcgqwF5hNc0dLladD8QgiS1w4gkiFIzysoUihYR15u9Y5J
+         OkhBqI1UbpXsmbD2mQGUOU3jGgU8LVVI3spWuX5kLaLobWCe1Jadft1hQKkiLrGcbQRD
+         58UCZFxqRaIKZYD7cWq5nGnSYwdJMvYNBSHeyEZcKyZTNWNlvRSsyVa6vOxSqyzsF7NE
+         MpCqlPeHLLRBYTg4cWg6fgAxe8JJtQgPqPoFQsTLFrFn/CM3WSpsJNFGfo9n5RFxm8lE
+         x9TXSLbIlUrzaY0jPHexH/PEgYn16fM1ieewBKVgS2F2lQw3957n/z7uOrDiVwEzK/dZ
+         VAaw==
+X-Forwarded-Encrypted: i=1; AFNElJ/QTDl8LodkifpxFj9Jn7kkMxvILm0L1CTNRUoVj3/aS4kdFxfZM6fhds2WwWXPFPhDdpFv0Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyWaxH2l+N6Qr5BpEzzouEwTmAMeqypglburJ58yjMZ2XWQGKiN
+	Hjl/SvClkP2wXBNRfxog70muWsYG9rkcSTu7VUoAD+9AoPyOzFt6rXEx8w7xP7KgbGwCDWkegkw
+	0RLLQTHXqd/9dIiu2k+s3KMjDi5+sGBYq/SRao9unwU9PKg9U0GcR589+9P0MQdQDPnom0Q==
+X-Gm-Gg: Acq92OFC5uIok0NkmHqhfrklUVWLCwQOEp+ouSbba0xu6/7aokvBLqfEARw2Yfc8Jd+
+	o6yf2cfOCyljUZektcK4VE2s8MtR+gQ2BnE254/uU8pJPVEq+cio/BJn28ZMVUj/K9ESG/OCB7P
+	DG78U81xSoplvzo6alm24rRTkNskCs45XufJoVenMXd4TgjSQ0C23qN199sGRcpEm5TOCFo8dXg
+	Y/R1M42vaQISKjWYeba+fncsfD1t8VRR4qO9PSw0NcrY8n8Be9+AcZNAuToHu3Gp8WBnTP/zX7j
+	5cKBNo4mD9k6/f5x2eJM0imt5zkmJOgtlinZJYvLM6wXN0S2lpMZ8f2SIGTsGxk11+sKijg0bkQ
+	RR8Tn2JugzI4ftHf8h4MYyJ7mnvULYvpt/XFFlyMeNN4vp7gkCA==
+X-Received: by 2002:a05:6a00:2d86:b0:842:50fd:4c13 with SMTP id d2e1a72fcca58-845269ff02bmr1373052b3a.4.1781673620975;
+        Tue, 16 Jun 2026 22:20:20 -0700 (PDT)
+X-Received: by 2002:a05:6a00:2d86:b0:842:50fd:4c13 with SMTP id d2e1a72fcca58-845269ff02bmr1373026b3a.4.1781673620428;
+        Tue, 16 Jun 2026 22:20:20 -0700 (PDT)
 Received: from localhost.localdomain (122-63-72-97.mobile.spark.co.nz. [122.63.72.97])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8434afc8a84sm17234894b3a.38.2026.06.16.22.20.11
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8434afc8a84sm17234894b3a.38.2026.06.16.22.20.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2026 22:20:15 -0700 (PDT)
+        Tue, 16 Jun 2026 22:20:19 -0700 (PDT)
 From: Tao Liu <ltao@redhat.com>
 To: yamazaki-msmt@nec.com,
 	k-hagio-ab@nec.com,
@@ -83,21 +83,21 @@ Cc: aravinda@linux.vnet.ibm.com,
 	stephen.s.brennan@oracle.com,
 	kjlx@templeofstupid.com,
 	Tao Liu <ltao@redhat.com>
-Subject: [PATCH v6][makedumpfile 02/10] Implement kernel kallsyms resolving
-Date: Wed, 17 Jun 2026 17:18:26 +1200
-Message-ID: <20260617051834.95404-3-ltao@redhat.com>
+Subject: [PATCH v6][makedumpfile 03/10] Implement kernel btf resolving
+Date: Wed, 17 Jun 2026 17:18:27 +1200
+Message-ID: <20260617051834.95404-4-ltao@redhat.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260617051834.95404-1-ltao@redhat.com>
 References: <20260617051834.95404-1-ltao@redhat.com>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: TN7pbhaWPTUeI8fXagJLZBUbbAGDIp-52fLjcZyQ9UI_1781673616
+X-Mimecast-MFC-PROC-ID: 6VLuTZPT6_yCWVS6LHTZPwswf-I5Akyn8jseNsWJVj0_1781673621
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260616_222020_956566_3A3BA390 
-X-CRM114-Status: GOOD (  25.69  )
+X-CRM114-CacheID: sfid-20260616_222024_531454_3DC56E57 
+X-CRM114-Status: GOOD (  24.18  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,121 +112,81 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This patch will parse kernel's kallsyms data. During the parsing
-process, the .init_ksyms sections of makedumpfile and the
-extensions will be iterated, so the kallsyms symbols which belongs
-to vmlinux can be resolved at this moment.
+This patch will parse kernel's btf data using libbpf. The kernel's
+btf data is located between __start_BTF and __stop_BTF symbols which
+are resolved by kallsyms of the previous patch. Same as the previous
+one, the .init_ktypes section of makedumpfile and the extensions will
+be iterated, and any types which belongs to vmlinux can be resolved
+at this time.
+
+Another primary function implemented in this patch, is recursively
+diving into anonymous struct/union when encountered any, to find a
+member by given its name.
 
 Reviewed-by: Stephen Brennan <stephen.s.brennan@oracle.com>
 Signed-off-by: Tao Liu <ltao@redhat.com>
 ---
- Makefile       |   2 +-
- kallsyms.c     | 392 +++++++++++++++++++++++++++++++++++++++++++++++++
- kallsyms.h     |  83 +++++++++++
- makedumpfile.c |   3 +
- makedumpfile.h |  11 ++
- 5 files changed, 490 insertions(+), 1 deletion(-)
- create mode 100644 kallsyms.c
- create mode 100644 kallsyms.h
+ Makefile   |   2 +-
+ btf_info.c | 238 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ btf_info.h |  75 +++++++++++++++++
+ 3 files changed, 314 insertions(+), 1 deletion(-)
+ create mode 100644 btf_info.c
+ create mode 100644 btf_info.h
 
 diff --git a/Makefile b/Makefile
-index 9482332..3cd729f 100644
+index 3cd729f..1c51802 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -45,7 +45,7 @@ CFLAGS_ARCH += -m32
  endif
  
  SRC_BASE = makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h sadump_info.h
--SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c tools.c printk.c detect_cycle.c
-+SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c tools.c printk.c detect_cycle.c kallsyms.c
+-SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c tools.c printk.c detect_cycle.c kallsyms.c
++SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c tools.c printk.c detect_cycle.c kallsyms.c btf_info.c
  OBJ_PART=$(patsubst %.c,%.o,$(SRC_PART))
  SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c arch/sparc64.c arch/mips64.c arch/loongarch64.c arch/riscv64.c
  OBJ_ARCH=$(patsubst %.c,%.o,$(SRC_ARCH))
-diff --git a/kallsyms.c b/kallsyms.c
+diff --git a/btf_info.c b/btf_info.c
 new file mode 100644
-index 0000000..a55dcc6
+index 0000000..8d907f6
 --- /dev/null
-+++ b/kallsyms.c
-@@ -0,0 +1,392 @@
-+#define _GNU_SOURCE
-+#include <stdbool.h>
++++ b/btf_info.c
+@@ -0,0 +1,238 @@
 +#ifdef EXTENSION
++#include <stdio.h>
 +#include <stdlib.h>
-+#include <stdint.h>
 +#include <string.h>
++#include <bpf/btf.h>
++#include <bpf/libbpf_legacy.h>
 +#include "makedumpfile.h"
 +#include "kallsyms.h"
++#include "btf_info.h"
 +
-+static uint32_t *kallsyms_offsets = NULL;
-+static uint16_t *kallsyms_token_index = NULL;
-+static uint8_t  *kallsyms_token_table = NULL;
-+static uint8_t  *kallsyms_names = NULL;
-+static unsigned long kallsyms_relative_base = 0;
-+static unsigned int kallsyms_num_syms = 0;
++struct btf_arr_elem {
++	struct btf *btf;
++	char *module;
++};
 +
-+/* makedumpfile & extensions' .init_ksyms section range array */
++static struct btf_arr_elem **btf_arr = NULL;
++static int btf_arr_len = 0;
++static int btf_arr_cap = 0;
++
++/* makedumpfile & extensions' .init_ktypes section range array */
 +static struct section_range **sr = NULL;
 +static int sr_len = 0;
 +static int sr_cap = 0;
 +
-+/* Which mod's kallsyms should be inited? */
++/* Which mod's btf should be inited? */
 +static char **mods = NULL;
 +static int mods_len = 0;
 +static int mods_cap = 0;
 +
-+INIT_MOD_SYM(vmlinux, _stext);
-+
-+/*
-+ * Utility: add elem to arr, which can auto extend its capacity.
-+ * (*arr) is a pointer array, holding pointers of elem
-+*/
-+bool add_to_arr(void ***arr, int *arr_len, int *arr_cap, void *elem)
-+{
-+	void *tmp;
-+	int new_cap = 0;
-+
-+	if (*arr == NULL) {
-+		*arr_len = 0;
-+		new_cap = 4;
-+	} else if (*arr_len >= *arr_cap) {
-+		new_cap = (*arr_cap) + ((*arr_cap) >> 1);
-+	}
-+
-+	if (new_cap) {
-+		tmp = reallocarray(*arr, new_cap, sizeof(void *));
-+		if (!tmp)
-+			goto no_mem;
-+		*arr = tmp;
-+		*arr_cap = new_cap;
-+	}
-+
-+	(*arr)[(*arr_len)++] = elem;
-+	return true;
-+
-+no_mem:
-+	ERRMSG("Not enough memory!\n");
-+	return false;
-+}
-+
-+/*
-+ * Utility: add uniq string to arr, which can auto extend its capacity.
-+*/
-+bool push_uniq_str(void ***arr, int *arr_len, int *arr_cap, char *str)
-+{
-+	for (int i = 0; i < (*arr_len); i++) {
-+		if (!strcmp((*arr)[i], str))
-+			/* String already exists, skip it */
-+			return true;
-+	}
-+	return add_to_arr(arr, arr_len, arr_cap, str);
-+}
-+
-+static bool add_ksym_modname(char *modname)
++static bool add_ktype_modname(char *modname)
 +{
 +	return push_uniq_str((void ***)&mods, &mods_len, &mods_cap, modname);
 +}
 +
-+bool check_ksyms_require_modname(char *modname, int *total)
++bool check_ktypes_require_modname(char *modname, int *total)
 +{
 +	if (total)
 +		*total = mods_len;
@@ -237,7 +197,7 @@ index 0000000..a55dcc6
 +	return false;
 +}
 +
-+static void cleanup_ksyms_modname(void)
++static void cleanup_ktypes_modname(void)
 +{
 +	if (mods) {
 +		free(mods);
@@ -248,12 +208,12 @@ index 0000000..a55dcc6
 +}
 +
 +/*
-+ * Used by makedumpfile and extensions, to register their .init_ksyms section.
-+ * so kallsyms can know which module/sym should be inited.
++ * Used by makedumpfile and extensions, to register their .init_ktypes section,
++ * so btf_info can know which module/type should be inited.
 +*/
-+REGISTER_SECTION(ksym)
++REGISTER_SECTION(ktype)
 +
-+static void cleanup_ksyms_section_range(void)
++static void cleanup_ktypes_section_range(void)
 +{
 +	for (int i = 0; i < sr_len; i++) {
 +		free(sr[i]);
@@ -266,419 +226,251 @@ index 0000000..a55dcc6
 +	sr_cap = 0;
 +}
 +
-+static uint64_t absolute_percpu(uint64_t base, int32_t val)
++static void find_member_recursive(struct btf *btf, int struct_typeid,
++				  int base_offset, struct ktype_info *ki)
 +{
-+	if (val >= 0)
-+		return (uint64_t)val;
-+	else
-+		return base - 1 - val;
-+}
++	const struct btf_type *st;
++	struct btf_member *bm;
++	int i, vlen;
 +
-+static uint64_t calc_addr_absolute_percpu(struct ksym_info *p)
-+{
-+	return absolute_percpu(kallsyms_relative_base, p->value);
-+}
++	struct_typeid = btf__resolve_type(btf, struct_typeid);
++	st = btf__type_by_id(btf, struct_typeid);
 +
-+static uint64_t calc_addr_relative_base(struct ksym_info *p)
-+{
-+	return p->value + kallsyms_relative_base;
-+}
++	if (!st)
++		return;
 +
-+static uint64_t calc_addr_place_relative(struct ksym_info *p)
-+{
-+	return SYMBOL(kallsyms_offsets) + p->index * sizeof(uint32_t) +
-+		(int32_t)kallsyms_offsets[p->index];
-+}
++	if (BTF_INFO_KIND(st->info) != BTF_KIND_STRUCT &&
++	    BTF_INFO_KIND(st->info) != BTF_KIND_UNION)
++		return;
 +
-+static bool parse_kernel_kallsyms(void)
-+{
-+	char buf[BUFSIZE];
-+	int index = 0, i, j;
-+	uint8_t *compressd_data;
-+	uint8_t *uncompressd_data;
-+	uint8_t len, len_old;
-+	struct ksym_info **p;
-+	uint64_t (*calc_addr)(struct ksym_info *);
-+	struct ksym_info *stext_p;
-+	bool skip_symbol;
++	vlen = BTF_INFO_VLEN(st->info);
++	bm = btf_members(st);
 +
-+	for (i = 0; i < kallsyms_num_syms; i++) {
-+		skip_symbol = false;
-+		memset(buf, 0, BUFSIZE);
-+		len = kallsyms_names[index];
-+		if (len & 0x80) {
-+			index++;
-+			len_old = len;
-+			len = kallsyms_names[index];
-+			if (len & 0x80) {
-+				ERRMSG("BUG! Unexpected 3-byte length, "
-+				       "should be detected in init_kernel_kallsyms()\n");
-+				goto out;
-+			}
-+			len = (len_old & 0x7F) | (len << 7);
-+		}
-+		index++;
++	for (i = 0; i < vlen; i++, bm++) {
++		const char *name = btf__name_by_offset(btf, bm->name_off);
++		int member_bit_offset = btf_member_bit_offset(st, i) + base_offset;
++		int member_typeid = btf__resolve_type(btf, bm->type);
++		const struct btf_type *mt = btf__type_by_id(btf, member_typeid);
 +
-+		compressd_data = &kallsyms_names[index];
-+		index += len;
-+		while (len--) {
-+			uncompressd_data = &kallsyms_token_table[kallsyms_token_index[*compressd_data]];
-+			if (strlen(buf) + strlen((char *)uncompressd_data) >= BUFSIZE) {
-+				skip_symbol = true;
-+				break;
-+			}
-+			strcat(buf, (char *)uncompressd_data);
-+			compressd_data++;
++		if (name && strcmp(name, ki->member_name) == 0) {
++			ki->member_bit_offset = member_bit_offset;
++			ki->member_bit_sz = btf_member_bitfield_size(st, i);
++			ki->member_size = btf__resolve_size(btf, member_typeid);
++			ki->index = i;
++			return;
 +		}
 +
-+		if (skip_symbol)
++		if (!name || !name[0]) {
++			if (BTF_INFO_KIND(mt->info) == BTF_KIND_STRUCT ||
++			    BTF_INFO_KIND(mt->info) == BTF_KIND_UNION) {
++				find_member_recursive(btf, member_typeid,
++						      member_bit_offset, ki);
++			}
++		}
++	}
++}
++
++static void get_ktype_info(struct ktype_info *ki, char *mod_to_resolve)
++{
++	int i, j, start_id;
++
++	if (mod_to_resolve != NULL) {
++		if (strcmp(ki->modname, mod_to_resolve) != 0)
++			/* Exit safely */
++			return;
++	}
++
++	for (i = 0; i < btf_arr_len; i++) {
++		if (strcmp(btf_arr[i]->module, ki->modname) != 0)
 +			continue;
-+
-+		/* Now check if the symbol is we wanted */
-+		for (j = 0; j < sr_len; j++) {
-+			for (p = (struct ksym_info **)(sr[j]->start);
-+			     p < (struct ksym_info **)(sr[j]->stop);
-+			     p++) {
-+				if (!strcmp((*p)->modname, "vmlinux") &&
-+				    !strcmp((*p)->symname, &buf[1])) {
-+					(*p)->value = kallsyms_offsets[i];
-+					(*p)->index = i;
-+				}
-+			}
-+		}
-+	}
-+
-+	/* Check the approach for calc absolute kallsyms address
-+	 *
-+	 * A complete comment of each approaches please refer to:
-+	 * https://github.com/osandov/drgn/commit/744f36ec3c3f64d7e1323a0037898158698585c4
-+	 */
-+	if (!MOD_SYM_EXIST(vmlinux, _stext)) {
-+		ERRMSG("symbol _stext not found!\n");
-+		goto out;
-+	}
-+
-+	stext_p = GET_MOD_SYM_PTR(vmlinux, _stext);
-+
-+	if (SYMBOL(_stext) == calc_addr_absolute_percpu(stext_p)) {
-+		calc_addr = calc_addr_absolute_percpu;
-+	} else if (SYMBOL(_stext) == calc_addr_relative_base(stext_p)) {
-+		calc_addr = calc_addr_relative_base;
-+	} else if (SYMBOL(_stext) == calc_addr_place_relative(stext_p)) {
-+		calc_addr = calc_addr_place_relative;
-+	} else {
-+		ERRMSG("Wrong calculate kallsyms symbol value!\n");
-+		goto out;
-+	}
-+
-+	/* Now do the calc */
-+	for (j = 0; j < sr_len; j++) {
-+		for (p = (struct ksym_info **)(sr[j]->start);
-+		     p < (struct ksym_info **)(sr[j]->stop);
-+		     p++) {
-+			if (!strcmp((*p)->modname, "vmlinux") &&
-+			    SYM_EXIST(*p)) {
-+				(*p)->value = calc_addr(*p);
-+			}
-+		}
-+	}
-+
-+	return true;
-+out:
-+	return false;
-+}
-+
-+static bool vmcore_info_ready = false;
-+
-+bool read_vmcoreinfo_kallsyms(void)
-+{
-+	READ_SYMBOL("kallsyms_names", kallsyms_names);
-+	READ_SYMBOL("kallsyms_num_syms", kallsyms_num_syms);
-+	READ_SYMBOL("kallsyms_token_table", kallsyms_token_table);
-+	READ_SYMBOL("kallsyms_token_index", kallsyms_token_index);
-+	READ_SYMBOL("kallsyms_offsets", kallsyms_offsets);
-+	READ_SYMBOL("kallsyms_relative_base", kallsyms_relative_base);
-+	if (SYMBOL(kallsyms_names) != NOT_FOUND_SYMBOL) {
-+		vmcore_info_ready = true;
-+	} else {
-+		vmcore_info_ready = false;
-+	}
-+	return true;
-+}
-+
-+/*
-+ * Makedumpfile's .init_ksyms section
-+*/
-+extern struct ksym_info *__start_init_ksyms[];
-+extern struct ksym_info *__stop_init_ksyms[];
-+
-+bool init_kernel_kallsyms(void)
-+{
-+	const int token_index_size = (UINT8_MAX + 1) * sizeof(uint16_t);
-+	uint64_t last_token, len;
-+	unsigned char data, data_old;
-+	int i;
-+	bool ret = false;
-+
-+	if (vmcore_info_ready == false) {
-+		ERRMSG("vmcoreinfo not ready for kallsyms!\n");
-+		return ret;
-+	}
-+
-+	if (!readmem(VADDR, SYMBOL(kallsyms_num_syms), &kallsyms_num_syms,
-+		sizeof(kallsyms_num_syms))) {
-+		ERRMSG("Can't get kallsyms_num_syms!\n");
-+		goto out;
-+	}
-+	if (SYMBOL(kallsyms_relative_base) != NOT_FOUND_SYMBOL) {
-+		if (!readmem(VADDR, SYMBOL(kallsyms_relative_base),
-+			&kallsyms_relative_base, sizeof(kallsyms_relative_base))) {
-+			ERRMSG("Can't get kallsyms_relative_base!\n");
-+			goto out;
-+		}
-+	}
-+
-+	kallsyms_offsets = malloc(sizeof(uint32_t) * kallsyms_num_syms);
-+	if (!kallsyms_offsets)
-+		goto no_mem;
-+	if (!readmem(VADDR, SYMBOL(kallsyms_offsets), kallsyms_offsets,
-+		kallsyms_num_syms * sizeof(uint32_t))) {
-+		ERRMSG("Can't get kallsyms_offsets!\n");
-+		goto out;
-+	}
-+
-+	kallsyms_token_index = malloc(token_index_size);
-+	if (!kallsyms_token_index)
-+		goto no_mem;
-+	if (!readmem(VADDR, SYMBOL(kallsyms_token_index), kallsyms_token_index,
-+		token_index_size)) {
-+		ERRMSG("Can't get kallsyms_token_index!\n");
-+		goto out;
-+	}
-+
-+	last_token = SYMBOL(kallsyms_token_table) + kallsyms_token_index[UINT8_MAX];
-+	do {
-+		if (!readmem(VADDR, last_token++, &data, 1)) {
-+			ERRMSG("Can't get last_token!\n");
-+			goto out;
-+		}
-+	} while(data);
-+	len = last_token - SYMBOL(kallsyms_token_table);
-+	kallsyms_token_table = malloc(len);
-+	if (!kallsyms_token_table)
-+		goto no_mem;
-+	if (!readmem(VADDR, SYMBOL(kallsyms_token_table), kallsyms_token_table, len)) {
-+		ERRMSG("Can't get kallsyms_token_table!\n");
-+		goto out;
-+	}
-+
-+	for (len = 0, i = 0; i < kallsyms_num_syms; i++) {
-+		if (!readmem(VADDR, SYMBOL(kallsyms_names) + len, &data, 1)) {
-+			ERRMSG("Can't get kallsyms_names len1!\n");
-+			goto out;
-+		}
 +		/*
-+		 * The 2-byte representation was added in commit 73bbb94466fd3
-+		 * ("kallsyms: support "big" kernel symbols") in v6.1, thus for
-+		 * v6.1+, they indicate a long symbol, but for kernel versions
-+		 * prior to v6.1, they might be ambiguous.
++		 * vmlinux(btf_arr[0])'s typeid is 1~vmlinux_type_cnt,
++		 * modules(btf_arr[1...])'s typeid is vmlinux_type_cnt~btf__type_cnt
 +		 */
-+		if (data & 0x80) {
-+			len += 1;
-+			data_old = data;
-+			if (!readmem(VADDR, SYMBOL(kallsyms_names) + len, &data, 1)) {
-+				ERRMSG("Can't get kallsyms_names len2!\n");
-+				goto out;
-+			}
-+			if (data & 0x80) {
-+				ERRMSG("BUG! Unexpected 3-byte length "
-+					"encoding in kallsyms names\n");
-+				goto out;
-+			}
-+			data = (data_old & 0x7F) | (data << 7);
-+		}
-+		len += data + 1;
-+	}
-+	kallsyms_names = malloc(len);
-+	if (!kallsyms_names)
-+		goto no_mem;
-+	if (!readmem(VADDR, SYMBOL(kallsyms_names), kallsyms_names, len)) {
-+		ERRMSG("Can't get kallsyms_names!\n");
-+		goto out;
-+	}
++		start_id = (i == 0 ? 1 : btf__type_cnt(btf_arr[0]->btf));
 +
-+	ret = parse_kernel_kallsyms();
-+	goto out;
++		for (j = start_id; j < btf__type_cnt(btf_arr[i]->btf); j++) {
++			const struct btf_type *bt =
++				btf__type_by_id(btf_arr[i]->btf, j);
++			const char *name =
++				btf__name_by_offset(btf_arr[i]->btf, bt->name_off);
++
++			if (name && strcmp(ki->struct_name, name) == 0) {
++				if (ki->member_name != NULL) {
++					/* Retrieve member info */
++					find_member_recursive(btf_arr[i]->btf, j, 0, ki);
++				} else {
++					ki->index = j;
++				}
++				ki->struct_size = btf__resolve_size(btf_arr[i]->btf, j);
++				return;
++			}
++		}
++	}
++}
++
++static bool add_to_btf_arr(struct btf *btf, char *module_name)
++{
++	struct btf_arr_elem *new_p;
++
++	new_p = malloc(sizeof(struct btf_arr_elem));
++	if (!new_p)
++		goto no_mem;
++
++	new_p->btf = btf;
++	new_p->module = module_name;
++
++	return add_to_arr((void ***)&btf_arr, &btf_arr_len, &btf_arr_cap, new_p);
 +
 +no_mem:
 +	ERRMSG("Not enough memory!\n");
++	return false;
++}
++
++INIT_MOD_SYM(vmlinux, __start_BTF);
++INIT_MOD_SYM(vmlinux, __stop_BTF);
++
++#define GET_KERN_SYM(SYM) GET_MOD_SYM(vmlinux, SYM)
++#define KERN_SYM_EXIST(SYM) MOD_SYM_EXIST(vmlinux, SYM)
++
++/*
++ * Makedumpfile's .init_ktypes section
++*/
++extern struct ktype_info *__start_init_ktypes[];
++extern struct ktype_info *__stop_init_ktypes[];
++
++bool init_kernel_btf(void)
++{
++	uint64_t size;
++	struct btf *btf;
++	int i;
++	struct ktype_info **p;
++	char *buf = NULL;
++	bool ret = false;
++
++	uint64_t start_btf = GET_KERN_SYM(__start_BTF);
++	uint64_t stop_btf = GET_KERN_SYM(__stop_BTF);
++	if (!KERN_SYM_EXIST(__start_BTF) ||
++	    !KERN_SYM_EXIST(__stop_BTF)) {
++		ERRMSG("symbol __start/stop_BTF not found!\n");
++		goto out;
++	}
++
++	size = stop_btf - start_btf;
++	buf = (char *)malloc(size);
++	if (!buf) {
++		ERRMSG("Not enough memory!\n");
++		goto out;
++	}
++	if (!readmem(VADDR, start_btf, buf, size)) {
++		ERRMSG("Can't get kernel btf data!\n");
++		goto out;
++	}
++	btf = btf__new(buf, size);
++
++	if (libbpf_get_error(btf) != 0 ||
++	    add_to_btf_arr(btf, strdup("vmlinux")) == false) {	
++		ERRMSG("init vmlinux btf fail\n");
++		goto out;
++	}
++
++	for (i = 0; i < sr_len; i++) {
++		for (p = (struct ktype_info **)(sr[i]->start);
++		     p < (struct ktype_info **)(sr[i]->stop);
++		     p++) {
++			get_ktype_info(*p, "vmlinux");
++		}
++	}
++
++	ret = true;
 +out:
-+	if (kallsyms_offsets) {
-+		free(kallsyms_offsets);
-+		kallsyms_offsets = NULL;
-+	}
-+	if (kallsyms_token_index) {
-+		free(kallsyms_token_index);
-+		kallsyms_token_index = NULL;
-+	}
-+	if (kallsyms_token_table) {
-+		free(kallsyms_token_table);
-+		kallsyms_token_table = NULL;
-+	}
-+	if (kallsyms_names) {
-+		free(kallsyms_names);
-+		kallsyms_names = NULL;
-+	}
++	if (buf)
++		free(buf);
 +	return ret;
 +}
-+#else /* EXTENSION */
-+
-+bool read_vmcoreinfo_kallsyms(void)
-+{
-+	return true;
-+}
-+
 +#endif /* EXTENSION */
 +
-diff --git a/kallsyms.h b/kallsyms.h
+diff --git a/btf_info.h b/btf_info.h
 new file mode 100644
-index 0000000..5d605ce
+index 0000000..8eace67
 --- /dev/null
-+++ b/kallsyms.h
-@@ -0,0 +1,83 @@
-+#ifndef _KALLSYMS_H
-+#define _KALLSYMS_H
-+
++++ b/btf_info.h
+@@ -0,0 +1,75 @@
++#ifndef _BTF_INFO_H
++#define _BTF_INFO_H
 +#include <stdint.h>
 +#include <stdbool.h>
 +
-+struct ksym_info {
++struct ktype_info {
 +	/********in******/
-+	char *modname;
-+	char *symname;
-+	bool sym_required;
++	char *modname;		// Set to search within the module, in case
++				// name conflict of different modules
++	char *struct_name;	// Search by struct name
++	char *member_name;	// Search by member name
++	bool struct_required : 1;
++	bool member_required : 1;
 +	/********out*****/
-+	uint64_t value;
-+	int index;	// -1 if sym not found
++	uint32_t member_bit_offset;	// member offset in bits
++	uint32_t member_bit_sz;	// member width in bits
++	uint32_t member_size;	// member size in bytes
++	uint32_t struct_size;	// struct size in bytes
++	int index;		// -1 if type not found
 +};
 +
-+#define INIT_MOD_SYM_RQD(MOD, SYM, R)			\
-+	struct ksym_info _##MOD##_##SYM = {		\
-+		#MOD, #SYM, R, 0, -1			\
-+	};						\
-+	__attribute__((section(".init_ksyms"), used))	\
-+	struct ksym_info * _ptr_##MOD##_##SYM = &_##MOD##_##SYM
++bool check_ktypes_require_modname(char *modname, int *total);
++bool register_ktype_section(char *start, char *stop);
++bool init_kernel_btf(void);
 +
-+#define GET_MOD_SYM(MOD, SYM) (_##MOD##_##SYM.value)
-+#define GET_MOD_SYM_PTR(MOD, SYM) (&_##MOD##_##SYM)
-+#define MOD_SYM_EXIST(MOD, SYM) (_##MOD##_##SYM.index >= 0)
-+#define SYM_EXIST(p) ((p)->index >= 0)
++#define _GEN_NAME_PTR_IMPL(PTR, NAME)		PTR##NAME
++#define _GEN_NAME_PTR(PTR, NAME)		_GEN_NAME_PTR_IMPL(PTR, NAME)
++#define ___GEN_NAME_2(MOD, S)			_##MOD##_##S
++#define ___GEN_NAME_3(MOD, S, M)		_##MOD##_##S##_##M
++#define __GEN_NAME_SELECTOR(_1, _2, _3, NAME, ...) NAME
++#define _GEN_NAME(...) __GEN_NAME_SELECTOR(__VA_ARGS__, ___GEN_NAME_3, ___GEN_NAME_2)(__VA_ARGS__)
++
++#define _INIT_MOD_STRUCT_MEMBER_RQD(MOD, S, M, R)		\
++	struct ktype_info _GEN_NAME(MOD, S, M) = {		\
++		#MOD, #S, #M, R, R, 0, 0, 0, 0, -1		\
++	};							\
++	__attribute__((section(".init_ktypes"), used))		\
++	struct ktype_info * _GEN_NAME_PTR(_ptr, _GEN_NAME(MOD, S, M)) = &_GEN_NAME(MOD, S, M)
 +
 +/*
-+ * Required syms will be checked automatically before extension running.
-+ * Optinal syms should be checked manually at extension runtime.
++ * Required types will be checked automatically before extension running.
++ * Optinal types should be checked manually at extension runtime.
 + */
-+#define INIT_MOD_SYM(MOD, SYM) INIT_MOD_SYM_RQD(MOD, SYM, 1)
-+#define INIT_OPT_MOD_SYM(MOD, SYM) INIT_MOD_SYM_RQD(MOD, SYM, 0)
++#define INIT_MOD_STRUCT_MEMBER(MOD, S, M) \
++	_INIT_MOD_STRUCT_MEMBER_RQD(MOD, S, M, 1)
++#define INIT_OPT_MOD_STRUCT_MEMBER(MOD, S, M) \
++	_INIT_MOD_STRUCT_MEMBER_RQD(MOD, S, M, 0)
 +
-+struct section_range {
-+	char *start;
-+	char *stop;
-+};
++#define DECLARE_MOD_STRUCT_MEMBER(MOD, S, M) \
++	extern struct ktype_info _GEN_NAME(MOD, S, M)
 +
-+#define REGISTER_SECTION(T)						\
-+bool register_##T##_section(char *start, char *stop)			\
-+{									\
-+	struct section_range *new_sr;					\
-+	struct T##_info **p;						\
-+	bool ret = false;						\
-+									\
-+	if (!start || !stop) {						\
-+		ERRMSG("Invalid section start/stop\n");			\
-+		goto out;						\
-+	}								\
-+									\
-+	for (p = (struct T##_info **)start;				\
-+	     p < (struct T##_info **)stop;				\
-+	     p++) {							\
-+		if (!add_##T##_modname((*p)->modname))			\
-+			goto out;					\
-+	}								\
-+									\
-+	new_sr = malloc(sizeof(struct section_range));			\
-+	if (!new_sr) {							\
-+		ERRMSG("Not enough memory!\n");				\
-+		goto out;						\
-+	}								\
-+	new_sr->start = start;						\
-+	new_sr->stop = stop;						\
-+	if (!add_to_arr((void ***)&sr, &sr_len, &sr_cap, new_sr)) {	\
-+		free(new_sr);						\
-+		goto out;						\
-+	}								\
-+	ret = true;							\
-+out:									\
-+	return ret;							\
-+}
++#define GET_MOD_STRUCT_MEMBER_MOFF(MOD, S, M)	(_GEN_NAME(MOD, S, M).member_bit_offset)
++#define GET_MOD_STRUCT_MEMBER_MSIZE(MOD, S, M)	(_GEN_NAME(MOD, S, M).member_size)
++#define GET_MOD_STRUCT_MEMBER_SSIZE(MOD, S, M)	(_GEN_NAME(MOD, S, M).struct_size)
++#define MOD_STRUCT_MEMBER_EXIST(MOD, S, M)	(_GEN_NAME(MOD, S, M).index >= 0)
++#define TYPE_EXIST(p)				((p)->index >= 0)
 +
-+bool add_to_arr(void ***arr, int *arr_len, int *arr_cap, void *elem);
-+bool push_uniq_str(void ***arr, int *arr_len, int *arr_cap, char *str);
-+bool check_ksyms_require_modname(char *modname, int *total);
-+bool register_ksym_section(char *start, char *stop);
-+bool read_vmcoreinfo_kallsyms(void);
-+bool init_kernel_kallsyms(void);
-+#endif /* _KALLSYMS_H */
 +
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 80637a7..53a8812 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -27,6 +27,7 @@
- #include <limits.h>
- #include <assert.h>
- #include <zlib.h>
-+#include "kallsyms.h"
- 
- struct symbol_table	symbol_table;
- struct size_table	size_table;
-@@ -3114,6 +3115,8 @@ read_vmcoreinfo_from_vmcore(off_t offset, unsigned long size, int flag_xen_hv)
- 		if (!read_vmcoreinfo())
- 			goto out;
- 	}
-+	read_vmcoreinfo_kallsyms();
++#define _INIT_MOD_STRUCT_RQD(MOD, S, R)				\
++	struct ktype_info _GEN_NAME(MOD, S) = {			\
++		#MOD, #S, 0, R, 0, 0, 0, 0, 0, -1		\
++	};							\
++	__attribute__((section(".init_ktypes"), used))		\
++	struct ktype_info * _GEN_NAME_PTR(_ptr, _GEN_NAME(MOD, S)) = &_GEN_NAME(MOD, S)
 +
- 	close_vmcoreinfo();
- 
- 	ret = TRUE;
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 66cbd29..19bb6a5 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -259,6 +259,7 @@ static inline int string_exists(char *s) { return (s ? TRUE : FALSE); }
- #define UINT(ADDR)	*((unsigned int *)(ADDR))
- #define ULONG(ADDR)	*((unsigned long *)(ADDR))
- #define ULONGLONG(ADDR)	*((unsigned long long *)(ADDR))
-+#define VOID_PTR(ADDR)	*((void **)(ADDR))
- 
- 
- /*
-@@ -1919,6 +1920,16 @@ struct symbol_table {
- 	 * symbols on sparc64 arch
- 	 */
- 	unsigned long long		vmemmap_table;
++#define INIT_MOD_STRUCT(MOD, S)		_INIT_MOD_STRUCT_RQD(MOD, S, 1)
++#define INIT_OPT_MOD_STRUCT(MOD, S)	_INIT_MOD_STRUCT_RQD(MOD, S, 0)
 +
-+	/*
-+	 * kallsyms related
-+	 */
-+	unsigned long long		kallsyms_names;
-+	unsigned long long		kallsyms_num_syms;
-+	unsigned long long		kallsyms_token_table;
-+	unsigned long long		kallsyms_token_index;
-+	unsigned long long		kallsyms_offsets;
-+	unsigned long long		kallsyms_relative_base;
- };
- 
- struct size_table {
++#define DECLARE_MOD_STRUCT(MOD, S)	extern struct ktype_info _GEN_NAME(MOD, S);
++
++#define GET_MOD_STRUCT_SSIZE(MOD, S)	(_GEN_NAME(MOD, S).struct_size)
++#define MOD_STRUCT_EXIST(MOD, S)	(_GEN_NAME(MOD, S).index >= 0)
++
++#endif /* _BTF_INFO_H */
++
 -- 
 2.54.0
 
