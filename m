@@ -4,145 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A3623CD98D2
-	for <kexec@archiver.kernel.org>; Wed, 17 Jun 2026 01:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DD36DCD98E1
+	for <kexec@archiver.kernel.org>; Wed, 17 Jun 2026 02:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mp3yeeLCW/up8BTv/BVEdVnICb+pWb8OL6HUzJEe3Tw=; b=VFQnpsCciUI4lB4QBlIjfiMYl1
-	bzcKEUkmiDAxcenYNIgMUMTVbTn1xPvRT0j+/2XZHasbO6/zsFa2sHp8pSOpef0yH8uYwSf8NhIZq
-	ofUlLwmjX2X6lRocfkQkfBcuZ/3SL5UGSbZXVeza3roW1sqh5uIkKyhaww6VDxkGmZMKJ5MGKtCJq
-	4YFdn4SObvZfNHIDOPKKXCxfUi71RUXFw4tOwwcbOIZPa9u4+cZrIKWJcHiq0rT4Xv9JwD/6erAay
-	MiFvIQSuFEak5WulXwq5gMTgRQoflONvv/R8ktyjDeXI2eDib0FMiXmB2b8RmRFZ1b8CH0pZjCns7
-	e/jameAA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=/zRPFlFNV40UiifmpcsArwZtZ0GWpih5AZa2+q7NRi8=; b=WHHNZUC6xbdUvco6zLP0cZ0EtU
+	+We5prpPj8VFZ0kiECivlzPbHYuoybej7TnzcRf1lruNM/55KRajKSqfvL7d+UxaPC3Wj0xkehILm
+	1q1isC3ocAqYCIDhMeTq0UuJjufv888QrtHTINLOgFG7TGISBSuV0XsyF4v5vEfo69KzJE3t23kt2
+	vlW+lBZQQv3pRs3e4F6nBqPMiCp0YGECZFfB4Ne1n44dE10HlZyJLcqdctt1yxhx3tGjg/6iUqB8u
+	N4kTev/lX4SePltpV7vESN+9N1BJXhR7bXR+5Vi5arlE4wkzg85R42+ebDFewdf2x2KBL+P7vwNoB
+	eEgQPN3A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZfQq-0000000GTBr-2MHr;
-	Wed, 17 Jun 2026 01:51:08 +0000
-Received: from mail-japaneastazlp170100000.outbound.protection.outlook.com ([2a01:111:f403:c405::] helo=TY3P286CU002.outbound.protection.outlook.com)
+	id 1wZg7W-0000000GW37-0ekh;
+	Wed, 17 Jun 2026 02:35:14 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZfQk-0000000GTB6-23XI
+	id 1wZg7S-0000000GW2F-3wrP
 	for kexec@lists.infradead.org;
-	Wed, 17 Jun 2026 01:51:06 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OREuRfHm0NLQ6UKiPxSuGBjKF6cI/tkGLdH7cYTEZR1P0JVwLYO/843Nc/AaXD+biNbLf513OWIIlmDDnX+La7aR0N42i4VmuHlYTkIZTvtunelUqKAucFxQbb/MeZ65TX5v3mqp5mp6oBIyFE0c6+1Uw+D64XVAVXN2Wobx5xFGg5k0TXY5Z6CVgVL+0L3IHOEfaL50Zfa9ekvnuob/ftV6bFe4nnKtR2J1kRcOoaHK+5TvKe4qph+76uNo1cocxi4OJBfPTeIW+ScsM9CDwMLhwcEdDB/P/s2OghHDwe0JfcB1DZVvkHD35rS5SGRfc8sx6hlUt45Hxhz2Y+ZwlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mp3yeeLCW/up8BTv/BVEdVnICb+pWb8OL6HUzJEe3Tw=;
- b=m0jQ+QA4EJJg+F6PgmX7d7RhArFSn/HBgQmNLGl1ZbH0gfA+u8fZv7tosJW+FTqpe+42zwW3P0hgpw6wGRJunGuCdyrF0lm7RG2pZipSSG5ac+nexa2ySDqAP7XsyuE9WG2pZJkQsymPIhpa28blc6TyoVyeV8+mHpnN85+P0/8PotRGSkrluXoWEsa7+rDeTJFxMQG0TUGysEQ+J9vhaWMOxwYejIS6YlaprTR7SMJIM+N+GMKtAsH2qRL8jjyGq2ZklKI+tcizgqoDHkM1O17IfinFSTPDPqcuveBKJf8XK7tcfED748ZowVvkBcnedlLkCaUmlt21f/+svcJfeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
- header.d=nec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mp3yeeLCW/up8BTv/BVEdVnICb+pWb8OL6HUzJEe3Tw=;
- b=VOhLPzBXNedXjPyftHxpGM7cTf92tYpvBpZlyUuUHS9yO7yZktC/CNVFQMKLA4Y8LJW22sXEDgQGFZm0nso5lsKD3uKjubCDCvzovAhiF2qbgArZ0FnWxERV6LMXu+I0seeUkOF+1osElWQIUXiRwdPR+cQEDG41IK8sFq6EAlMkZXGOVKhscQQVKPvC7GUSdGBHb4vMC4/PKqWn5oBQ997YOzGC3/G5zsDlMAKo/S07Q/JvGxdSM/R7y/wtj5qm6X3ToA6hoA8dll0aIHUSEQSNQCZi8pHKc6ogpLCDeZyZ6JxFnNlvSKJTDykSxEgMFbI/v89qSRa6+UlqJev1Ag==
-Received: from TY4PR01MB13462.jpnprd01.prod.outlook.com
- (2603:1096:405:1d7::13) by TYRPR01MB13422.jpnprd01.prod.outlook.com
- (2603:1096:405:1cf::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.18; Wed, 17 Jun
- 2026 01:50:33 +0000
-Received: from TY4PR01MB13462.jpnprd01.prod.outlook.com
- ([fe80::8dd0:19c7:2047:1820]) by TY4PR01MB13462.jpnprd01.prod.outlook.com
- ([fe80::8dd0:19c7:2047:1820%6]) with mapi id 15.21.0113.015; Wed, 17 Jun 2026
- 01:50:33 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
-	<k-hagio-ab@nec.com>
-To: Tao Liu <ltao@redhat.com>
-CC: Stephen Brennan <stephen.s.brennan@oracle.com>,
-	=?utf-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0juOAgOecn+WFiSk=?=
-	<yamazaki-msmt@nec.com>, "kexec@lists.infradead.org"
-	<kexec@lists.infradead.org>
-Subject: Re: [PATCH v5][makedumpfile 6/9] Add makedumpfile extensions support
-Thread-Topic: [PATCH v5][makedumpfile 6/9] Add makedumpfile extensions support
-Thread-Index: AQHcy/lclxSqixzmRk+7o4cMJqDfsbY/pKkAgACXlICAAGIggIAAK62AgAAKcYCAAF1ngIAALNQAgAEAbAA=
-Date: Wed, 17 Jun 2026 01:50:33 +0000
-Message-ID: <33ce6e2b-516d-410d-8828-8be7fc77d182@nec.com>
-References: <20260414102656.55200-1-ltao@redhat.com>
- <20260414102656.55200-7-ltao@redhat.com>
+	Wed, 17 Jun 2026 02:35:13 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1781663707;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/zRPFlFNV40UiifmpcsArwZtZ0GWpih5AZa2+q7NRi8=;
+	b=RZr9D1EiUawKdCNR5yXwJEpVCsGhOgAdwEmaiD2dpk+7sDaugNo9zZFyTYg4GxX9AEbXEQ
+	/WjD1fj7qZfIFGbiamSPgfS1f844uNNQ8yp0q6m5GZauhZM18YDOCAlDsU8Jj5ytdjauRU
+	/wn4qoFoRmkMzaOz7358hRWb5U4JSkk=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-319-V9Hq7LCnMvGZ5i7Ou3iRdg-1; Tue, 16 Jun 2026 22:35:05 -0400
+X-MC-Unique: V9Hq7LCnMvGZ5i7Ou3iRdg-1
+X-Mimecast-MFC-AGG-ID: V9Hq7LCnMvGZ5i7Ou3iRdg_1781663705
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-51989985485so38618351cf.1
+        for <kexec@lists.infradead.org>; Tue, 16 Jun 2026 19:35:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781663705; x=1782268505;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=/zRPFlFNV40UiifmpcsArwZtZ0GWpih5AZa2+q7NRi8=;
+        b=JlGVZ/cFZumGbqDCAR4S/skukVZjUhhy1CpZPY0Chm9Espd4irfNObZjgbQub8r1Uk
+         7n8nnD0qlUhta2IJqf8FMKm/oP4i4Gdq0Qwcrh4nZ/wdWc4fo3nuV2qxm8420lYY1fOY
+         B466Ms0CpQ6nErCHW/X/h9qplG+MM/uO9zE3HzCBbiGK4inaEBx0+nR1jzUhUQqnIE5L
+         edlAiCzc+DkgoboC1M5KDioWpSI4ZJ0q4eF5qppEn2Wobx1t65hr+qUhnpFYg7pnkYIC
+         qQCfdaeJZreuRAUsLGPqabq1BFP4Rgag0Y2S8RHpbYcxA07vtLTIoBYYSez3okYy1LLs
+         bIeg==
+X-Forwarded-Encrypted: i=1; AFNElJ+7Zxz9fgQnR68vqC4LZn+vzHoHnxaS7C8ZI2ecC3rTnSLC6OsdFC+rnsMJqmA6paMoeKdFxg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyrTPZBm+APNhubtIX317V2dwdryoBCsP6bWcoLNbkBAOAvJatV
+	fFuzltvYIEqDM3NuHrMAvZJsFAw5gkdbnAOX2fb+UKsHPKvJZT9Yz4JXpKMxDa697DPW1ynHaxt
+	IfKoDEk77eByovBG1C26gyb2g4MbzBH8Rwp/ni7vc5htagfftU52o9L48pu2B/JlqK3MDMzBGB0
+	1e2Hhtd0DtOMkomQjnOpyCY2l3GMtYRSsV44Vsa1UMlQoE
+X-Gm-Gg: Acq92OHppmrmoh17hmWi2cASlLXc9Cv9USNlrc7DEEdeQK6NkbulMBg2rBFVoZP1lco
+	osBseoSqpVzXL5Wl5mEBnT5TxOWYUC4u/1zCl9mrCB9nTj1tt141DjWafGBVCb/WIXfxel8xFBR
+	sQrvulfr1mxkuz1KAaEt1rFfk5XBlQmwMPJ+OVO6wC6pblFneditC8eAbbKSLalnjZbg==
+X-Received: by 2002:a05:622a:1e0d:b0:517:5beb:9b17 with SMTP id d75a77b69052e-519a8ca3157mr36292701cf.1.1781663704936;
+        Tue, 16 Jun 2026 19:35:04 -0700 (PDT)
+X-Received: by 2002:a05:622a:1e0d:b0:517:5beb:9b17 with SMTP id
+ d75a77b69052e-519a8ca3157mr36292301cf.1.1781663704409; Tue, 16 Jun 2026
+ 19:35:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20260414102656.55200-1-ltao@redhat.com> <20260414102656.55200-7-ltao@redhat.com>
  <8b0079dd-e50a-4667-aabf-1612921b022a@nec.com> <874ij3zq1k.fsf@oracle.com>
  <CAO7dBbU6V7XYYO9M+z_CK8UCnzfX7TB7DZka4Z_kqP-WvDbTaA@mail.gmail.com>
- <f15ae344-bdcc-48a1-9c7b-0ea264d061d4@nec.com>
- <CAO7dBbXLBX9_Ut9yQDkOr3pWq-mSx-5=tMUU9FL83eA3Lz0c_g@mail.gmail.com>
- <ab1b5e58-bad6-4565-a408-b1fb3d489465@nec.com>
- <ajEmEtudVb_YqEkM@localhost.localdomain>
-In-Reply-To: <ajEmEtudVb_YqEkM@localhost.localdomain>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nec.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY4PR01MB13462:EE_|TYRPR01MB13422:EE_
-x-ms-office365-filtering-correlation-id: ca2284dd-ded5-427d-c39f-08decc12d1f1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|23010399003|38070700021|22082099003|18002099003|4143699003|11063799006|56012099006|6133799003;
-x-microsoft-antispam-message-info: /FZ4QUyZ6ml7kgj4vJq249m5aAI4edYUXQ3WjgUNdFRA/ahWBK+kBGDtARyeGmFAAebm3sN+dzpzrKnvGtHOl4CJa+k7vUaR41kB+Up20+YWRoyFjx0ReHRoPQpxXHTAM9wSiQmnNRkhe5Df/NB4R5adQ2nv5kHcoKDnsCnyUC1Tm7SWoBaFL24h49n1IyrCi2o0fkVUdTaVcg0k0C/Z2IA4uJJQ1Zh9myNNSdjB6IypmuikBQw/OIWSH5lmEYMkknKsB0c59alpSMKyneAHZxrPySHVS9uyElglW+oBhnUIWL9WXuSPz3GtuFVFPxXGpLRPee3DPk2PYx2aVk/SBWbHth7lwDUdLhmxoJlfB4MsveM3ckYVI2rfGsOH88eBEpTinTklkK5AQrR3C7c7yZohFkBQRVOSeQVUlizn/2H1722k6Z7NKHC/EhNpWr5QjGsEwDPTXEZ51uo33GuQHMApE7ouqcLAiEQOZVqyJIteRK58h7724qiJr/IwALMlitKF6Ra8glJ0xFC0D0teeojxQ8EsaKtkQ+RoLLVRJCgXo4kqcGsL+rEA0vMe10EyjgSVLHtIXeh5399z9D6x6VeJr5lcr3uwV63qb1nvpIK4wmf+Ghhi6XobUhbtSaCXAL2zsDHxmKOikI93a6TAF7C1CmQNXa1WfO85R9kaFmH1XrJSGYnBy3A/GUc70///upb32+APc3BVZ8MOkIf/YUZlLn+2C91phWg1B6prXYtrXPNzBL+k5xucVEPHhv71
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY4PR01MB13462.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(23010399003)(38070700021)(22082099003)(18002099003)(4143699003)(11063799006)(56012099006)(6133799003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?QnVFRm5yMzV2anBtR3RxTFBGZVFyaVQ0SXg1bVFMWXV3bitGK091RDdMb0Uy?=
- =?utf-8?B?bUVkSnEyM1N1blp6Z2Myb3pGbWt0MzJFS0FOZlk3THY5Y2x3UmpmVlVnbTJ5?=
- =?utf-8?B?bklHZ2FTNDlVY2xmbFFKRzR6QVhGRFoxVkl6MlNBR3M1bmNhUk5aVnV0STNo?=
- =?utf-8?B?ZmRyenJkeDRHMVJMZHl1RGZIbGFvQlhVemVKN0NHNFM3Rk5JNFdvVHliNFV1?=
- =?utf-8?B?QnlxeW1BbGtVcVN3YW9lMVplalk1czhwOFZpR3hpT1FtTEcwazh5ZlVMcVFz?=
- =?utf-8?B?UEpLYjhoSjVmT1FmS3E4TzJoajByVXBVYlFFMDNGMXhSZjcxVDQyVDFiUVl4?=
- =?utf-8?B?aVpTWnlMMkg2eTUvbEtLZDk4YmV5OEltYk5Gc0YzMlo1dTFDSjhWV0ZrZkto?=
- =?utf-8?B?czlTNCtHcXBIdXZmYnMrQTJGS3M2dGhDMUJoRzZkT0RpTVZBQ3A2dFZmUFZG?=
- =?utf-8?B?cC9lL1BnUy9HdDMyMWoxTmFCUGkzRkR5b2pJWnJiT2kzQU1GTXVYbEcyRVc2?=
- =?utf-8?B?bVpHbEFoN3Vvc1NRSEVDeHp1cWk3WWlwbVh2b0JhSWIwTTl2a1JoRGhQbXJP?=
- =?utf-8?B?bXJ2WTR6TWFmL2lLL2NhMXVDS216U0JpUFdLOHJGbE9CNFFNd1FoUUROT1VS?=
- =?utf-8?B?L1E2S0s1MytEYVY0SENNa0FPa0tET3VEYTMyczUzNUFHNUFHZ2kxZnRtM2Qx?=
- =?utf-8?B?NXBhZXJzdXJJM2ZJNkVnTDN1TE11UExiN2VndzhFcUdEeXVRQ3Y3RHRrZHAr?=
- =?utf-8?B?Y0t5RDZON0hFblk5bGlKNkR1LzcwTlNjZmVHMTZWL3lDMUw1VEVKOWRnWmQz?=
- =?utf-8?B?ZU52UUx4N3pSZnhpdEEwZUZuV0JGN1F6RFN0VXhkVU5nYkM0UERwbXRsK1pM?=
- =?utf-8?B?VmNza3RlODJibG8xVHAyZGV0Mm5BbWQ3YXBGbWl1TkUvWlRwSlMyeWVIamNM?=
- =?utf-8?B?cUFKWHBoa0NibjNtc3NzZEtHRkg0UFVBZjY2VG5WcjBhQUtFZEhkYXVnVHls?=
- =?utf-8?B?R1g2NlIzZFVNVkp5V2oxSzF0b1I0QWNGZWNLZEpHUjdaQTNmRmFzSHgrekdw?=
- =?utf-8?B?VytldVlnRmxXNEhuQnZFcGtxdnlKazlpaWpVS3pGVkplOG12bVVUNnVCMSt4?=
- =?utf-8?B?eDI4ajRoa3FVajJuTHlmMlhTMUtHeitlNVpkM3dtSlV0MjBRdUlTOHRERDkz?=
- =?utf-8?B?RFRLTmVIUUdPY0pwSjNZWTNCWFBkQVRZamV0NDdMTWY2NkFNMGpyZ1B5QmZT?=
- =?utf-8?B?T2lVbmNZckFDbDlDQzlsSFNFSWc4YlROKzZBK1hEQytscUU0N0F2alpkWUdZ?=
- =?utf-8?B?d3UvL1BvUkJOeFBXcWF6bGZrT0RIRTVrZlovRWFac1lmaFFEdXh6amYwOTlH?=
- =?utf-8?B?OW8xbHlJazkyUVlQU3lQSUhRbmxCSW5ocDROa0tNMkNrdFZVeldmbUpQaHFE?=
- =?utf-8?B?SnFzaDkzelNlNmNHR1phL0JZR1ptTEZvaHNaUmlHZittNTl4dEZNQUt3eGNR?=
- =?utf-8?B?UXh0SGFqWnIwVEZlY0xUUmE1ZFJ2OG0zczhYZEtObGxhajJhclpodmtMZlF0?=
- =?utf-8?B?cFNoY0EwNGREaHA2SmJSbTFNNjFYRVFnbGRxM2IvczVNMXJWSlpjTEhYdzFt?=
- =?utf-8?B?bzRKV2s2V0NkdDdmeHdjWHpyTEpmUnR2cWtrMk9xYSsveGN3T2lZbjRFODVX?=
- =?utf-8?B?MytGWkw5ZUNqQ1BVSzhwclpzT3hxYmlUa0M0emJoYjljSWdxbUZpTWxPeldj?=
- =?utf-8?B?UzJ0c3dLcHJ0V2NFdTQrVWlQdTJuTkRWODltaDRDZSt0MEtId3JwWlc3TlM0?=
- =?utf-8?B?dkVpVVphZXBJTjliamZFM21NVVl0ckNwS3RHWTFmQUxHQjRERVBFd3Awcmtp?=
- =?utf-8?B?dkdZVmF6TzFKb1FkMGdSbGJzRWtlanNuRkE0Y1hhRlpoTzRYOEtpOFAyeVVn?=
- =?utf-8?B?WEF4K0llMjBNNEVEbHhXVmIxR0VzeER4NEc0bWVYc0tKbHBpcFJtNVBHRjN4?=
- =?utf-8?B?SUpzMVFMMzZuYmxsV2o2R3pMVEduNWUySHZLeGZVUmNSS3NkcEIrZUs3aXBS?=
- =?utf-8?B?ZW9TRVhwWldwdTlsLzdRbjEvcEE1VzJwaGhyUnJ2RjJ5Wnp1RkVuZ2ZLZHVU?=
- =?utf-8?B?YURBbmNnWWNIM29rUVdkVkU3aXhpNDk3TnF1K0JkVktWYmFvSU5zWGVSZ0h2?=
- =?utf-8?B?c2hBY3JMeHBaSFRxU0RTQ2RyNENybXFSc2xCNXpLdWRSM09DT0RuSkxPMkJ0?=
- =?utf-8?B?WFFxZjZ4WTMvWGpYYkZYSFpyaGFVVFB2ZEtVdEVBQ2ZaSGt6NW94dUljdFo4?=
- =?utf-8?B?eDFpVDhSN2tad1d2dDJpZko4M0o4RzJtQVZYV2lISDcvNUdkNjM0Zz09?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <201E36DDBAEEB74DAD4C8093E5485088@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nec.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY4PR01MB13462.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca2284dd-ded5-427d-c39f-08decc12d1f1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2026 01:50:33.5963
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +yPvj6wFgqvDkPjz8vkxveg0PuMbKom64bZGS/JAINlX8O7ThvMlrIRnLKMhgBmn8NDu49sgILXKhlUoVmCm8A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYRPR01MB13422
+ <f15ae344-bdcc-48a1-9c7b-0ea264d061d4@nec.com> <CAO7dBbXLBX9_Ut9yQDkOr3pWq-mSx-5=tMUU9FL83eA3Lz0c_g@mail.gmail.com>
+ <ab1b5e58-bad6-4565-a408-b1fb3d489465@nec.com> <ajEmEtudVb_YqEkM@localhost.localdomain>
+ <33ce6e2b-516d-410d-8828-8be7fc77d182@nec.com>
+In-Reply-To: <33ce6e2b-516d-410d-8828-8be7fc77d182@nec.com>
+From: Tao Liu <ltao@redhat.com>
+Date: Wed, 17 Jun 2026 14:34:26 +1200
+X-Gm-Features: AVVi8CdObR9QvKVOk9qPGmH-GxFDPd1WF0s5AZUPkv9RkpwZf_hh1GZPmxZ5KD0
+Message-ID: <CAO7dBbV2VZjLkntmKM_=amf+v-oZDFb22WrFwT_AuHr3sYdntg@mail.gmail.com>
+Subject: Re: [PATCH v5][makedumpfile 6/9] Add makedumpfile extensions support
+To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
+Cc: Stephen Brennan <stephen.s.brennan@oracle.com>, 
+	=?UTF-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0jiDnnJ/lhYkp?= <yamazaki-msmt@nec.com>, 
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: psA8UVcboW6F48rW6vjqaNS0GYvoNm8KN1v8OP8T3sI_1781663705
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260616_185103_036392_2E601D58 
-X-CRM114-Status: GOOD (  18.34  )
+X-CRM114-CacheID: sfid-20260616_193511_073639_0F0E20B9 
+X-CRM114-Status: GOOD (  43.87  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -157,150 +109,262 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gMjAyNi8wNi8xNiAxOTozMSwgVGFvIExpdSB3cm90ZToNCj4gSGkgS2F6dSwNCj4gDQo+IE9u
-IFR1ZSwgSnVuIDE2LCAyMDI2IGF0IDA3OjUxOjQ3QU0gKzAwMDAsIEhBR0lPIEtBWlVISVRPKOiQ
-qeWwviDkuIDku4EpIHdyb3RlOg0KPj4gT24gMjAyNi8wNi8xNiAxMToxNywgVGFvIExpdSB3cm90
-ZToNCj4+PiBPbiBUdWUsIEp1biAxNiwgMjAyNiBhdCAxOjM54oCvUE0gSEFHSU8gS0FaVUhJVE8o
-6JCp5bC+44CA5LiA5LuBKQ0KPj4+IDxrLWhhZ2lvLWFiQG5lYy5jb20+IHdyb3RlOg0KPj4+Pg0K
-Pj4+PiBPbiAyMDI2LzA2LzE2IDg6MDMsIFRhbyBMaXUgd3JvdGU6DQo+Pj4+PiBIaSBTdGVwaGVu
-ICYgS2F6dSwNCj4+Pj4+DQo+Pj4+PiBPbiBUdWUsIEp1biAxNiwgMjAyNiBhdCA1OjEy4oCvQU0g
-U3RlcGhlbiBCcmVubmFuDQo+Pj4+PiA8c3RlcGhlbi5zLmJyZW5uYW5Ab3JhY2xlLmNvbT4gd3Jv
-dGU6DQo+Pj4+Pj4NCj4+Pj4+PiBIQUdJTyBLQVpVSElUTyjokKnlsL7jgIDkuIDku4EpICAgPGst
-aGFnaW8tYWJAbmVjLmNvbT4gd3JpdGVzOg0KPj4+Pj4+PiBPbiAyMDI2LzA0LzE0IDE5OjI2LCBU
-YW8gTGl1IHdyb3RlOg0KPj4+Pj4+Pg0KPj4+Pj4+Pj4gK3N0YXRpYyBib29sIGluaXRfa2FsbHN5
-bXNfYnRmKHZvaWQpDQo+Pj4+Pj4+PiArew0KPj4+Pj4+Pj4gKyAgICBpbnQgY291bnQ7DQo+Pj4+
-Pj4+PiArICAgIGJvb2wgcmV0ID0gZmFsc2U7DQo+Pj4+Pj4+PiArICAgIC8qIFdlIHdpbGwgbG9h
-ZCBtb2R1bGUncyBidGYva2FsbHN5bXMgb24gZGVtYW5kICovDQo+Pj4+Pj4+PiArICAgIGJvb2wg
-aW5pdF9rc3ltc19tb2R1bGUgPSBmYWxzZTsNCj4+Pj4+Pj4+ICsgICAgYm9vbCBpbml0X2t0eXBl
-c19tb2R1bGUgPSBmYWxzZTsNCj4+Pj4+Pj4+ICsNCj4+Pj4+Pj4+ICsgICAgaWYgKGNoZWNrX2tz
-eW1zX3JlcXVpcmVfbW9kbmFtZSgidm1saW51eCIsICZjb3VudCkpIHsNCj4+Pj4+Pj4NCj4+Pj4+
-Pj4gVGhhbmsgeW91IGZvciB0aGUgZXhwbGFuYXRpb24gWzFdLg0KPj4+Pj4+Pg0KPj4+Pj4+PiBz
-byB3aGljaCBjb2RlIHBhdGggYWRkcyAidm1saW51eCIgdG8gdGhlIG1vZHMgYXJyYXkgYmVmb3Jl
-IHRoaXMgbGluZT8NCj4+Pj4+Pj4gSSBjb3VsZCBub3QgZmluZCBpdC4NCj4+Pj4+Pg0KPj4+Pj4+
-IEhlbGxvIEthenUsDQo+Pj4+Pj4NCj4+Pj4+PiBJbiBrYWxsc3ltcy5jIGZyb20gcGF0Y2ggMiwg
-dGhlcmUgaXMgdGhlIGxpbmU6DQo+Pj4+Pj4gICAgICBJTklUX01PRF9TWU0odm1saW51eCwgX3N0
-ZXh0KTsNCj4+Pj4+PiBUaGlzIGFkZHMgYSBzdHJ1Y3Qga3N5bV9pbmZvIHRvIHRoZSBtYWluIG1h
-a2VkdW1wZmlsZSBleGVjdXRhYmxlJ3MNCj4+Pj4+PiBhcnJheSwgd2hpY2ggcmVxdWVzdHMgc3lt
-Ym9sICJfc3RleHQiIGZyb20gdm1saW51eC4NCj4+Pj4+Pg0KPj4+Pj4+IEluIGthbGxzeW1zLmMg
-ImluaXRfa2VybmVsX2thbGxzeW1zKCkiLCBhZ2FpbiBmcm9tIHBhdGNoIDIsIHRoZSBmaXJzdA0K
-Pj4+Pj4+IHN0ZXAgaXMgdG8gY2FsbDoNCj4+Pj4+PiAgICAgICByZWdpc3Rlcl9rc3ltX3NlY3Rp
-b24oKGNoYXIgKilfX3N0YXJ0X2luaXRfa3N5bXMsDQo+Pj4+Pj4gICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIChjaGFyICopX19zdG9wX2luaXRfa3N5bXMpKQ0KPj4+Pj4+IFdoaWNoIGlzIGEg
-ZnVuY3Rpb24gZ2VuZXJhdGVkIGJ5IHRoZSBtYWNybyBSRUdJU1RFUl9TRUNUSU9OKCkuIFRoZQ0K
-Pj4+Pj4+IGltcGxlbWVudGF0aW9uIHdpbGwgdXNlIGFkZF9rc3ltX21vZG5hbWUoKSB3aGVucyBp
-dCBlbmNvdW50ZXJzIHRoaXMNCj4+Pj4+PiBzeW1ib2wsIGVuc3VyaW5nIHRoYXQgInZtbGludXgi
-IGlzIHBhcnQgb2YgdGhlIG1vZG5hbWUgYXJyYXkuDQo+Pj4+Pg0KPj4+Pj4gVGhhbmtzIGZvciB0
-aGUgZGV0YWlsZWQgaW5mbywgeWVzLCBpdCBpcyBleGFjdGx5IGhvdyAidm1saW51eCIgaXMNCj4+
-Pj4+IGFkZGVkIHRvIHRoZSBhcnJheS4NCj4+Pj4NCj4+Pj4gaG1tLCBtYXliZSBJIHN0aWxsIG1p
-c3JlYWQgaXQgdGhvdWdoLi4NCj4+Pj4NCj4+Pj4gVGhlIGluaXRfa2VybmVsX2thbGxzeW1zKCkg
-aXMgY2FsbGVkIF9hZnRlcl8gY2hlY2tfa3N5bXNfcmVxdWlyZV9tb2RuYW1lKCkuDQo+Pj4+IHNv
-IEkndmUgbWVhbnQgdGhhdCBpZiBubyBleHRlbnNpb24gYWRkcyAidm1saW51eCIgdG8gdGhlIG1v
-ZG5hbWUgYXJyYXksDQo+Pj4+IG5vIG9uZSBjYWxscyBpdC4gIGlzIGl0IG9rPw0KPj4+Pg0KPj4+
-PiAgICAgICAgICAgIGlmIChjaGVja19rc3ltc19yZXF1aXJlX21vZG5hbWUoInZtbGludXgiLCAm
-Y291bnQpKSB7DQo+Pj4+ICAgICAgICAgICAgICAgICAgICBpZiAoIWluaXRfa2VybmVsX2thbGxz
-eW1zKCkpDQo+Pj4NCj4+PiBObywgZXZlbiBpZiB5b3UgY3JlYXRlIGEgZXh0ZW5zaW9uIHdoaWNo
-IGRvZXNuJ3QgcmVxdWlyZSBzeW1ib2xzIGZyb20NCj4+PiAidm1saW51eCIsIG9uY2UgeW91IGxv
-YWQgaXQsIHRoZSBjaGVja19rc3ltc19yZXF1aXJlX21vZG5hbWUoKSB3aWxsDQo+Pj4gc3RpbGwg
-YmUgdHJ1ZSBhbmQgaW5pdF9rZXJuZWxfa2FsbHN5bXMoKSBpcyBjYWxsZWQuDQo+Pj4NCj4+PiBU
-aGUgcmVhc29uIGlzLCB3aXRoIHRoZSBpbnRyb2R1Y3Rpb24gb2YgbWFrZWR1bXBmaWxlLmxkLCBh
-bmQgdGhlIGxpbmUNCj4+PiAiSU5JVF9NT0RfU1lNKHZtbGludXgsIF9zdGV4dCk7IiBpbiBrYWxs
-c3ltcy5jLCBtYWtlZHVtcGZpbGUgYW5kDQo+Pj4gZXh0ZW5zaW9ucyBoYXZlIGEgc2ltaWxhciBz
-ZWN0aW9uIHN0cnVjdHVyZSwgeW91IGNhbiByZWdhcmQNCj4+PiBtYWtlZHVtcGZpbGUgaXRzZWxm
-IGFzIGFuIGV4dGVuc2lvbjoNCj4+Pg0KPj4+ICQgcmVhZGVsZiAtUyBtYWtlZHVtcGZpbGUgfCBn
-cmVwIC1FICdrc3ltc3xrdHlwZXMnDQo+Pj4gICAgIFsyNV0gLmluaXRfa3N5bXMgICAgICAgUFJP
-R0JJVFMgICAgICAgICAwMDAwMDAwMDAwNDZlZTkwICAwMDA2ZGU5MA0KPj4+ICAgICBbMjZdIC5p
-bml0X2t0eXBlcyAgICAgIFBST0dCSVRTICAgICAgICAgMDAwMDAwMDAwMDQ2ZWViOCAgMDAwNmRl
-YjgNCj4+PiAkIHJlYWRlbGYgLVMgZXh0ZW5zaW9ucy9zYW1wbGUuc28gfCBncmVwIC1FICdrc3lt
-c3xrdHlwZXMnDQo+Pj4gICAgIFsyNF0gLmluaXRfa3N5bXMgICAgICAgUFJPR0JJVFMgICAgICAg
-ICAwMDAwMDAwMDAwMDAzMTA4ICAwMDAwMjEwOA0KPj4+ICAgICBbMjVdIC5pbml0X2t0eXBlcyAg
-ICAgIFBST0dCSVRTICAgICAgICAgMDAwMDAwMDAwMDAwMzExMCAgMDAwMDIxMTANCj4+Pg0KPj4+
-IElmIG1ha2VkdW1wZmlsZSBkb2Vzbid0IGxvYWQgYW55IGV4dGVuc2lvbnMsIHRoZW4gbWFrZWR1
-bXBmaWxlIGRvZXNuJ3QNCj4+PiBuZWVkIHRvIGluaXRpYWxpemUgaXRzIC5pbml0X2tzeW1zL2t0
-eXBlcyBzZWN0aW9uLCB0aGUgYmVoYXZpb3VyIHN0YXlzDQo+Pj4gdGhlIHNhbWUgYXMgYmVmb3Jl
-Ow0KPj4+IElmIG1ha2VkdW1wZmlsZSBsb2FkIGF0IGxlYXN0IG9uZSBleHRlbnNpb25zLCB0aGVu
-IHRoZSBleHRlbnNpb24NCj4+PiBzdWJzeXN0ZW0gd2lsbCByZWdpc3RlciBhbGwgLmluaXRfa3N5
-bXMva3R5cGVzIHNlY3Rpb25zLCBib3RoDQo+Pj4gZXh0ZW5pc29uJ3MgYW5kIG1ha2VkdW1wZmls
-ZSdzLg0KPj4+DQo+Pj4gVGhpcyBpcyBsaWtlLCBleHRlbnNpb24gc2F5ICJJIG5lZWQgc3ltMSAm
-IHN5bTIgdG8gYmUgcmVhZHkgYmVmb3JlIEkNCj4+PiBjYW4gcnVuIiwgdGhlbiBtYWtlZHVtcGZp
-bGUgc2F5ICJPSywgSSBnb3QgaXQsIGJ1dCBiZWZvcmUgSSBjYW4NCj4+PiByZXNvbHZlIHlvdXIg
-c3ltMSAmIHN5bTIsIEkgbmVlZCB0byByZXNvbHZlIHNvbWUgc3ltYm9sKGUuZy4gdm1saW51eCdz
-DQo+Pj4gX3N0ZXh0KSBmb3JteXNlbGYgZmlyc3QiLiBTbyBjaGVja19rc3ltc19yZXF1aXJlX21v
-ZG5hbWUoInZtbGludXgiLA0KPj4+ICZjb3VudCkgd2lsbCBiZSB0cnVlLg0KPj4NCj4+IGhtbSwg
-YnV0IGFzIGZhciBhcyBJJ3ZlIHRlc3RlZCB3aXRoICJleHRlbnNpb25zL3NhbXBsZS5jIiBvbiBS
-SEVMMTAuMjoNCj4+DQo+PiAxKSBhZGQgSU5JVF9NT0RfU1lNKHhmcywgeGZzc3RhdHMpIGFuZCBH
-RVRfTU9EX1NZTSh4ZnMsIHhmc3N0YXRzKQ0KPj4NCj4+IG9rDQo+Pg0KPj4gTG9hZGVkIGV4dGVu
-c2lvbjogL3NoYXJlL3RtcC9tYWtlZHVtcGZpbGUvZXh0ZW5zaW9ucy9zYW1wbGUuc28NCj4+IHNh
-bXBsZS5zbzogVGhlIGFkZHJlc3Mgb2YgeGZzc3RhdHMgaXM6IGZmZmZmZmZmYzBjMGI1NDAgICA8
-PC0tLSBvaw0KPj4gc2FtcGxlLnNvOiBUaGUgYWRkcmVzcyBvZiBpbml0X3Rhc2sgaXM6IGZmZmZm
-ZmZmYjQ0MTI5NDANCj4+IHNhbXBsZS5zbzogVGhlIHNpemUgb2YgdGFza19zdHJ1Y3QgaXM6IDEw
-MjQwIGJ5dGVzDQo+PiBzYW1wbGUuc286IFRoZSBvZmZzZXQgb2YgbWVtYmVyIG1tIHdpdGhpbiB0
-YXNrX3N0cnVjdCBpczogMjcwNCBieXRlcw0KPj4gc2FtcGxlLnNvOiBUaGUgc2l6ZSBvZiBtZW1i
-ZXIgbW0gd2l0aGluIHRhc2tfc3RydWN0IGlzOiA4IGJ5dGVzDQo+PiBzYW1wbGUuc286IFlvdXIg
-a2VybmVsIGlzIHVzaW5nIG1hcGxlIHRyZWUgaW4gbW1fc3RydWN0DQo+Pg0KPj4gMikgcmVtb3Zl
-IGFsbCAidm1saW51eCIgZW50cmllcyAob25seSBJTklUX01PRF9TWU0oeGZzLCB4ZnNzdGF0cykp
-DQo+Pg0KPj4gc2tpcHBlZA0KPj4NCj4+IExvYWRlZCBleHRlbnNpb246IC9zaGFyZS90bXAvbWFr
-ZWR1bXBmaWxlL2V4dGVuc2lvbnMvc2FtcGxlLnNvDQo+PiBjaGVja19yZXF1aXJlZF9rc3ltc19h
-bGxfcmVzb2x2ZWQ6IFN5bWJvbCB4ZnNzdGF0cyBpbiB4ZnMgbm90IGZvdW5kDQo+PiBpbml0X2V4
-dGVuc2lvbnM6IFNraXAgMXRoIGV4dGVuc2lvbg0KPj4NCj4gDQo+IFRoaXMgaXMgYSBidWcgd2hp
-Y2ggc2hvdWxkbid0IGhhcHBlbiwgdGhhbmtzIGZvciBwb2ludGluZyBpdCBvdXQuDQo+IA0KPj4g
-MykgcmVzdG9yZSBJTklUX01PRF9TWU0odm1saW51eCwgaW5pdF90YXNrKSBhbmQgR0VUX01PRF9T
-WU0odm1saW51eCwgaW5pdF90YXNrKQ0KPj4NCj4+IHN0aWxsIHNraXBwZWQNCj4+DQo+PiBMb2Fk
-ZWQgZXh0ZW5zaW9uOiAvc2hhcmUvdG1wL21ha2VkdW1wZmlsZS9leHRlbnNpb25zL3NhbXBsZS5z
-bw0KPj4gY2hlY2tfcmVxdWlyZWRfa3N5bXNfYWxsX3Jlc29sdmVkOiBTeW1ib2wgeGZzc3RhdHMg
-aW4geGZzIG5vdCBmb3VuZA0KPj4gaW5pdF9leHRlbnNpb25zOiBTa2lwIDF0aCBleHRlbnNpb24N
-Cj4+DQo+IA0KPiBBbHNvIGEgYnVnLiBJIG1hZGUgYSBjb2RlIG1vZGlmaWNhdGlvbiBiYXNlZCBv
-biB0aGUgdjUgdG8gZml4LCBjb3VsZCB5b3UgcGxlYXNlDQo+IGdpdmUgYSB0cnk/IElmIG5vIHBy
-b2JsZW0gSSB3aWxsIGludGVncmF0ZSBpdCB3aXRoIHY2Lg0KDQpUaGlzIHBhdGNoIHRlc3RlZCBv
-ayBhbmQgbG9va3MgZ29vZCBhbmQgY29uc2lzdGVudCB3aXRoIHRoZSBjb25kaXRpb24gY2hlY2tz
-DQppbiBpbml0X2thbGxzeW1zX2J0ZigpLg0KDQpUaGFua3MsDQpLYXp1DQoNCg0KPiANCj4gZGlm
-ZiAtLWdpdCBhL2J0Zl9pbmZvLmMgYi9idGZfaW5mby5jDQo+IGluZGV4IDE1MDYxNTIuLmZiYjQ4
-N2IgMTAwNjQ0DQo+IC0tLSBhL2J0Zl9pbmZvLmMNCj4gKysrIGIvYnRmX2luZm8uYw0KPiBAQCAt
-MjAyLDEwICsyMDIsNiBAQCBib29sIGluaXRfa2VybmVsX2J0Zih2b2lkKQ0KPiAgIAkJZ290byBv
-dXQ7DQo+ICAgCX0NCj4gICANCj4gLQlpZiAoIXJlZ2lzdGVyX2t0eXBlX3NlY3Rpb24oKGNoYXIg
-KilfX3N0YXJ0X2luaXRfa3R5cGVzLA0KPiAtCQkJCSAgICAoY2hhciAqKV9fc3RvcF9pbml0X2t0
-eXBlcykpDQo+IC0JCXJldHVybiByZXQ7DQo+IC0NCj4gICAJc2l6ZSA9IHN0b3BfYnRmIC0gc3Rh
-cnRfYnRmOw0KPiAgIAlidWYgPSAoY2hhciAqKW1hbGxvYyhzaXplKTsNCj4gICAJaWYgKCFidWYp
-IHsNCj4gZGlmZiAtLWdpdCBhL2V4dGVuc2lvbi5jIGIvZXh0ZW5zaW9uLmMNCj4gaW5kZXggMTkw
-ZGQ5ZS4uMjc2ZmZiMSAxMDA2NDQNCj4gLS0tIGEvZXh0ZW5zaW9uLmMNCj4gKysrIGIvZXh0ZW5z
-aW9uLmMNCj4gQEAgLTE1Myw3ICsxNTMsNyBAQCBzdGF0aWMgdm9pZCBsb2FkX2V4dGVuc2lvbnMo
-dm9pZCkNCj4gICAJfQ0KPiAgIH0NCj4gICANCj4gLXN0YXRpYyBib29sIHJlZ2lzdGVyX2V4dGVu
-c2lvbl9zZWN0aW9ucyh2b2lkKQ0KPiArc3RhdGljIGJvb2wgcmVnaXN0ZXJfa3N5bXNfa3R5cGVz
-X3NlY3Rpb25zKHZvaWQpDQo+ICAgew0KPiAgIAljaGFyICpzdGFydCwgKnN0b3A7DQo+ICAgCWlu
-dCBpOw0KPiBAQCAtMTcwLDYgKzE3MCwxOCBAQCBzdGF0aWMgYm9vbCByZWdpc3Rlcl9leHRlbnNp
-b25fc2VjdGlvbnModm9pZCkNCj4gICAJCWlmICghcmVnaXN0ZXJfa3R5cGVfc2VjdGlvbihzdGFy
-dCwgc3RvcCkpDQo+ICAgCQkJZ290byBvdXQ7DQo+ICAgCX0NCj4gKwkvKiBJZiBubyBleHRlbnNp
-b25zLCBkb24ndCByZWdpc3RlciBtYWtlZHVtcGZpbGUncyBzZWN0aW9uICovDQo+ICsJaWYgKGhh
-bmRsZV9jYnNfbGVuID4gMCkgew0KPiArCQlzdGFydCA9IGRsc3ltKE5VTEwsICJfX3N0YXJ0X2lu
-aXRfa3N5bXMiKTsNCj4gKwkJc3RvcCA9IGRsc3ltKE5VTEwsICJfX3N0b3BfaW5pdF9rc3ltcyIp
-Ow0KPiArCQlpZiAoIXJlZ2lzdGVyX2tzeW1fc2VjdGlvbihzdGFydCwgc3RvcCkpDQo+ICsJCQln
-b3RvIG91dDsNCj4gKw0KPiArCQlzdGFydCA9IGRsc3ltKE5VTEwsICJfX3N0YXJ0X2luaXRfa3R5
-cGVzIik7DQo+ICsJCXN0b3AgPSBkbHN5bShOVUxMLCAiX19zdG9wX2luaXRfa3R5cGVzIik7DQo+
-ICsJCWlmICghcmVnaXN0ZXJfa3R5cGVfc2VjdGlvbihzdGFydCwgc3RvcCkpDQo+ICsJCQlnb3Rv
-IG91dDsNCj4gKwl9DQo+ICAgCXJldCA9IHRydWU7DQo+ICAgb3V0Og0KPiAgIAlyZXR1cm4gcmV0
-Ow0KPiBAQCAtMjYwLDcgKzI3Miw3IEBAIHZvaWQgaW5pdF9leHRlbnNpb25zKHZvaWQpDQo+ICAg
-CXZvaWQgKCppbml0KSh2b2lkKTsNCj4gICANCj4gICAJbG9hZF9leHRlbnNpb25zKCk7DQo+IC0J
-aWYgKCFyZWdpc3Rlcl9leHRlbnNpb25fc2VjdGlvbnMoKSkNCj4gKwlpZiAoIXJlZ2lzdGVyX2tz
-eW1zX2t0eXBlc19zZWN0aW9ucygpKQ0KPiAgIAkJZ290byBmYWlsOw0KPiAgIAlpZiAoIWluaXRf
-a2FsbHN5bXNfYnRmKCkpDQo+ICAgCQlnb3RvIGZhaWw7DQo+IGRpZmYgLS1naXQgYS9rYWxsc3lt
-cy5jIGIva2FsbHN5bXMuYw0KPiBpbmRleCBmMjMxYTA2Li4wMDM3NjAwIDEwMDY0NA0KPiAtLS0g
-YS9rYWxsc3ltcy5jDQo+ICsrKyBiL2thbGxzeW1zLmMNCj4gQEAgLTI3NiwxMCArMjc2LDYgQEAg
-Ym9vbCBpbml0X2tlcm5lbF9rYWxsc3ltcyh2b2lkKQ0KPiAgIAkJcmV0dXJuIHJldDsNCj4gICAJ
-fQ0KPiAgIA0KPiAtCWlmICghcmVnaXN0ZXJfa3N5bV9zZWN0aW9uKChjaGFyICopX19zdGFydF9p
-bml0X2tzeW1zLA0KPiAtCQkJCSAgIChjaGFyICopX19zdG9wX2luaXRfa3N5bXMpKQ0KPiAtCQly
-ZXR1cm4gcmV0Ow0KPiAtDQo+ICAgCWlmICghcmVhZG1lbShWQUREUiwgU1lNQk9MKGthbGxzeW1z
-X251bV9zeW1zKSwgJmthbGxzeW1zX251bV9zeW1zLA0KPiAgIAkJc2l6ZW9mKGthbGxzeW1zX251
-bV9zeW1zKSkpIHsNCj4gICAJCUVSUk1TRygiQ2FuJ3QgZ2V0IGthbGxzeW1zX251bV9zeW1zIVxu
-Iik7DQo+IA0KPiANCj4+IDQpIGFsc28gcmVzdG9yZSBJTklUX01PRF9TVFJVQ1RfTUVNQkVSKHZt
-bGludXgsIHRhc2tfc3RydWN0LCBtbSkgYW5kDQo+PiAgICAgIEdFVF9NT0RfU1RSVUNUX01FTUJF
-Ul9TU0laRSh2bWxpbnV4LCB0YXNrX3N0cnVjdCwgbW0pDQo+Pg0KPj4gb2sNCj4+DQo+PiBMb2Fk
-ZWQgZXh0ZW5zaW9uOiAvc2hhcmUvdG1wL21ha2VkdW1wZmlsZS9leHRlbnNpb25zL3NhbXBsZS5z
-bw0KPj4gc2FtcGxlLnNvOiBUaGUgYWRkcmVzcyBvZiB4ZnNzdGF0cyBpczogZmZmZmZmZmZjMGMw
-YjU0MA0KPj4gc2FtcGxlLnNvOiBUaGUgYWRkcmVzcyBvZiBpbml0X3Rhc2sgaXM6IGZmZmZmZmZm
-YjQ0MTI5NDANCj4+IHNhbXBsZS5zbzogVGhlIHNpemUgb2YgdGFza19zdHJ1Y3QgaXM6IDEwMjQw
-IGJ5dGVzDQo+Pg0KPj4NCj4+IFNvLCBpdCBsb29rcyBsaWtlLCB3aXRoIHRoZSBjdXJyZW50IGNv
-bmRpdGlvbiBjaGVjayBpbiBpbml0X2thbGxzeW1zX2J0ZigpDQo+PiAoY2hlY2tfa3N5bXNfcmVx
-dWlyZV9tb2RuYW1lIGFuZCBjaGVja19rdHlwZXNfcmVxdWlyZV9tb2RuYW1lKSwNCj4+IGEgbW9k
-dWxlIG5lZWRzIHRvIHVzZSBJTklUXyogZm9yIHZtbGludXgncyBrYWxsc3ltcyBhbmQgQlRGLg0K
-Pj4NCj4+IEknbSBzdGlsbCBtaXNzaW5nIHNvbWV0aGluZy4uPw0KPj4NCj4+IFRoYW5rcywNCj4+
-IEthenU=
+Hi Kazu,
+
+On Wed, Jun 17, 2026 at 1:50=E2=80=AFPM HAGIO KAZUHITO(=E8=90=A9=E5=B0=BE=
+=E3=80=80=E4=B8=80=E4=BB=81)
+<k-hagio-ab@nec.com> wrote:
+>
+> On 2026/06/16 19:31, Tao Liu wrote:
+> > Hi Kazu,
+> >
+> > On Tue, Jun 16, 2026 at 07:51:47AM +0000, HAGIO KAZUHITO(=E8=90=A9=E5=
+=B0=BE =E4=B8=80=E4=BB=81) wrote:
+> >> On 2026/06/16 11:17, Tao Liu wrote:
+> >>> On Tue, Jun 16, 2026 at 1:39=E2=80=AFPM HAGIO KAZUHITO(=E8=90=A9=E5=
+=B0=BE=E3=80=80=E4=B8=80=E4=BB=81)
+> >>> <k-hagio-ab@nec.com> wrote:
+> >>>>
+> >>>> On 2026/06/16 8:03, Tao Liu wrote:
+> >>>>> Hi Stephen & Kazu,
+> >>>>>
+> >>>>> On Tue, Jun 16, 2026 at 5:12=E2=80=AFAM Stephen Brennan
+> >>>>> <stephen.s.brennan@oracle.com> wrote:
+> >>>>>>
+> >>>>>> HAGIO KAZUHITO(=E8=90=A9=E5=B0=BE=E3=80=80=E4=B8=80=E4=BB=81)   <k=
+-hagio-ab@nec.com> writes:
+> >>>>>>> On 2026/04/14 19:26, Tao Liu wrote:
+> >>>>>>>
+> >>>>>>>> +static bool init_kallsyms_btf(void)
+> >>>>>>>> +{
+> >>>>>>>> +    int count;
+> >>>>>>>> +    bool ret =3D false;
+> >>>>>>>> +    /* We will load module's btf/kallsyms on demand */
+> >>>>>>>> +    bool init_ksyms_module =3D false;
+> >>>>>>>> +    bool init_ktypes_module =3D false;
+> >>>>>>>> +
+> >>>>>>>> +    if (check_ksyms_require_modname("vmlinux", &count)) {
+> >>>>>>>
+> >>>>>>> Thank you for the explanation [1].
+> >>>>>>>
+> >>>>>>> so which code path adds "vmlinux" to the mods array before this l=
+ine?
+> >>>>>>> I could not find it.
+> >>>>>>
+> >>>>>> Hello Kazu,
+> >>>>>>
+> >>>>>> In kallsyms.c from patch 2, there is the line:
+> >>>>>>      INIT_MOD_SYM(vmlinux, _stext);
+> >>>>>> This adds a struct ksym_info to the main makedumpfile executable's
+> >>>>>> array, which requests symbol "_stext" from vmlinux.
+> >>>>>>
+> >>>>>> In kallsyms.c "init_kernel_kallsyms()", again from patch 2, the fi=
+rst
+> >>>>>> step is to call:
+> >>>>>>       register_ksym_section((char *)__start_init_ksyms,
+> >>>>>>                             (char *)__stop_init_ksyms))
+> >>>>>> Which is a function generated by the macro REGISTER_SECTION(). The
+> >>>>>> implementation will use add_ksym_modname() whens it encounters thi=
+s
+> >>>>>> symbol, ensuring that "vmlinux" is part of the modname array.
+> >>>>>
+> >>>>> Thanks for the detailed info, yes, it is exactly how "vmlinux" is
+> >>>>> added to the array.
+> >>>>
+> >>>> hmm, maybe I still misread it though..
+> >>>>
+> >>>> The init_kernel_kallsyms() is called _after_ check_ksyms_require_mod=
+name().
+> >>>> so I've meant that if no extension adds "vmlinux" to the modname arr=
+ay,
+> >>>> no one calls it.  is it ok?
+> >>>>
+> >>>>            if (check_ksyms_require_modname("vmlinux", &count)) {
+> >>>>                    if (!init_kernel_kallsyms())
+> >>>
+> >>> No, even if you create a extension which doesn't require symbols from
+> >>> "vmlinux", once you load it, the check_ksyms_require_modname() will
+> >>> still be true and init_kernel_kallsyms() is called.
+> >>>
+> >>> The reason is, with the introduction of makedumpfile.ld, and the line
+> >>> "INIT_MOD_SYM(vmlinux, _stext);" in kallsyms.c, makedumpfile and
+> >>> extensions have a similar section structure, you can regard
+> >>> makedumpfile itself as an extension:
+> >>>
+> >>> $ readelf -S makedumpfile | grep -E 'ksyms|ktypes'
+> >>>     [25] .init_ksyms       PROGBITS         000000000046ee90  0006de9=
+0
+> >>>     [26] .init_ktypes      PROGBITS         000000000046eeb8  0006deb=
+8
+> >>> $ readelf -S extensions/sample.so | grep -E 'ksyms|ktypes'
+> >>>     [24] .init_ksyms       PROGBITS         0000000000003108  0000210=
+8
+> >>>     [25] .init_ktypes      PROGBITS         0000000000003110  0000211=
+0
+> >>>
+> >>> If makedumpfile doesn't load any extensions, then makedumpfile doesn'=
+t
+> >>> need to initialize its .init_ksyms/ktypes section, the behaviour stay=
+s
+> >>> the same as before;
+> >>> If makedumpfile load at least one extensions, then the extension
+> >>> subsystem will register all .init_ksyms/ktypes sections, both
+> >>> extenison's and makedumpfile's.
+> >>>
+> >>> This is like, extension say "I need sym1 & sym2 to be ready before I
+> >>> can run", then makedumpfile say "OK, I got it, but before I can
+> >>> resolve your sym1 & sym2, I need to resolve some symbol(e.g. vmlinux'=
+s
+> >>> _stext) formyself first". So check_ksyms_require_modname("vmlinux",
+> >>> &count) will be true.
+> >>
+> >> hmm, but as far as I've tested with "extensions/sample.c" on RHEL10.2:
+> >>
+> >> 1) add INIT_MOD_SYM(xfs, xfsstats) and GET_MOD_SYM(xfs, xfsstats)
+> >>
+> >> ok
+> >>
+> >> Loaded extension: /share/tmp/makedumpfile/extensions/sample.so
+> >> sample.so: The address of xfsstats is: ffffffffc0c0b540   <<--- ok
+> >> sample.so: The address of init_task is: ffffffffb4412940
+> >> sample.so: The size of task_struct is: 10240 bytes
+> >> sample.so: The offset of member mm within task_struct is: 2704 bytes
+> >> sample.so: The size of member mm within task_struct is: 8 bytes
+> >> sample.so: Your kernel is using maple tree in mm_struct
+> >>
+> >> 2) remove all "vmlinux" entries (only INIT_MOD_SYM(xfs, xfsstats))
+> >>
+> >> skipped
+> >>
+> >> Loaded extension: /share/tmp/makedumpfile/extensions/sample.so
+> >> check_required_ksyms_all_resolved: Symbol xfsstats in xfs not found
+> >> init_extensions: Skip 1th extension
+> >>
+> >
+> > This is a bug which shouldn't happen, thanks for pointing it out.
+> >
+> >> 3) restore INIT_MOD_SYM(vmlinux, init_task) and GET_MOD_SYM(vmlinux, i=
+nit_task)
+> >>
+> >> still skipped
+> >>
+> >> Loaded extension: /share/tmp/makedumpfile/extensions/sample.so
+> >> check_required_ksyms_all_resolved: Symbol xfsstats in xfs not found
+> >> init_extensions: Skip 1th extension
+> >>
+> >
+> > Also a bug. I made a code modification based on the v5 to fix, could yo=
+u please
+> > give a try? If no problem I will integrate it with v6.
+>
+> This patch tested ok and looks good and consistent with the condition che=
+cks
+> in init_kallsyms_btf().
+
+Glad to know that! I'm working on v6 and will post it upstream later.
+
+Thanks,
+Tao Liu
+
+>
+> Thanks,
+> Kazu
+>
+>
+> >
+> > diff --git a/btf_info.c b/btf_info.c
+> > index 1506152..fbb487b 100644
+> > --- a/btf_info.c
+> > +++ b/btf_info.c
+> > @@ -202,10 +202,6 @@ bool init_kernel_btf(void)
+> >               goto out;
+> >       }
+> >
+> > -     if (!register_ktype_section((char *)__start_init_ktypes,
+> > -                                 (char *)__stop_init_ktypes))
+> > -             return ret;
+> > -
+> >       size =3D stop_btf - start_btf;
+> >       buf =3D (char *)malloc(size);
+> >       if (!buf) {
+> > diff --git a/extension.c b/extension.c
+> > index 190dd9e..276ffb1 100644
+> > --- a/extension.c
+> > +++ b/extension.c
+> > @@ -153,7 +153,7 @@ static void load_extensions(void)
+> >       }
+> >   }
+> >
+> > -static bool register_extension_sections(void)
+> > +static bool register_ksyms_ktypes_sections(void)
+> >   {
+> >       char *start, *stop;
+> >       int i;
+> > @@ -170,6 +170,18 @@ static bool register_extension_sections(void)
+> >               if (!register_ktype_section(start, stop))
+> >                       goto out;
+> >       }
+> > +     /* If no extensions, don't register makedumpfile's section */
+> > +     if (handle_cbs_len > 0) {
+> > +             start =3D dlsym(NULL, "__start_init_ksyms");
+> > +             stop =3D dlsym(NULL, "__stop_init_ksyms");
+> > +             if (!register_ksym_section(start, stop))
+> > +                     goto out;
+> > +
+> > +             start =3D dlsym(NULL, "__start_init_ktypes");
+> > +             stop =3D dlsym(NULL, "__stop_init_ktypes");
+> > +             if (!register_ktype_section(start, stop))
+> > +                     goto out;
+> > +     }
+> >       ret =3D true;
+> >   out:
+> >       return ret;
+> > @@ -260,7 +272,7 @@ void init_extensions(void)
+> >       void (*init)(void);
+> >
+> >       load_extensions();
+> > -     if (!register_extension_sections())
+> > +     if (!register_ksyms_ktypes_sections())
+> >               goto fail;
+> >       if (!init_kallsyms_btf())
+> >               goto fail;
+> > diff --git a/kallsyms.c b/kallsyms.c
+> > index f231a06..0037600 100644
+> > --- a/kallsyms.c
+> > +++ b/kallsyms.c
+> > @@ -276,10 +276,6 @@ bool init_kernel_kallsyms(void)
+> >               return ret;
+> >       }
+> >
+> > -     if (!register_ksym_section((char *)__start_init_ksyms,
+> > -                                (char *)__stop_init_ksyms))
+> > -             return ret;
+> > -
+> >       if (!readmem(VADDR, SYMBOL(kallsyms_num_syms), &kallsyms_num_syms=
+,
+> >               sizeof(kallsyms_num_syms))) {
+> >               ERRMSG("Can't get kallsyms_num_syms!\n");
+> >
+> >
+> >> 4) also restore INIT_MOD_STRUCT_MEMBER(vmlinux, task_struct, mm) and
+> >>      GET_MOD_STRUCT_MEMBER_SSIZE(vmlinux, task_struct, mm)
+> >>
+> >> ok
+> >>
+> >> Loaded extension: /share/tmp/makedumpfile/extensions/sample.so
+> >> sample.so: The address of xfsstats is: ffffffffc0c0b540
+> >> sample.so: The address of init_task is: ffffffffb4412940
+> >> sample.so: The size of task_struct is: 10240 bytes
+> >>
+> >>
+> >> So, it looks like, with the current condition check in init_kallsyms_b=
+tf()
+> >> (check_ksyms_require_modname and check_ktypes_require_modname),
+> >> a module needs to use INIT_* for vmlinux's kallsyms and BTF.
+> >>
+> >> I'm still missing something..?
+> >>
+> >> Thanks,
+> >> Kazu
+
 
