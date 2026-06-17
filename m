@@ -4,79 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B8BB1CD98E2
-	for <kexec@archiver.kernel.org>; Wed, 17 Jun 2026 19:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 414ACCD98E2
+	for <kexec@archiver.kernel.org>; Wed, 17 Jun 2026 19:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=dkNuY4BEl6fecffLQxRP0bSeac7mm9+FWjLH7RhfLkk=; b=Sa3aJDrIBZzNORexlQFQOflskq
-	i96GnEYSek+KrX/rJt+zQO8Xj+c/sdQv7EJFVmQ1g8YZe1mXUBtx3C7Jtys3eWggu6jChlky/6H6R
-	/BYkMtz1mz/it/LezcDQVI4wsMBUezOp2HiSRdn1Kdcru9hnynMtE0vyYA5HVQ9ttST/kvXc2xi5W
-	fyIB68//N0op2VW5ucmHqwGqaWhzZLAOFJu7VQHDimTa+idKMh5zKKdRSAfDbF7C3GtiP8bHdYYoQ
-	2ck1KJ5Tjkob1p2YfJ0Aw92pCJGXvAcQol9I/96/M+Tt4y6v1SDZU9FiFe1IY3knr4kcXPFU39KVi
-	iJBOhVMw==;
+	bh=gLZx3HaullBvnvWkQhxEqVHCdwkvAU77s/W3t2gOuew=; b=kBs+LAQqUmsq4ztktXv5XVRrSX
+	U0tjZKfSe48SgO5/sFQrrmHuJgtBz/mtcf3qFUb3QGvac6P8zO61WoD4FAu9ibYMJZ4+8i/Oe4k7+
+	lGdJbKOQOBiraOhCapCls52/mRKtX1hlF8G43OJgfiKxbSUjMkQPDqrmRVQJfd+UghQaLiJBIIqxe
+	htH5Rt+HTVLiVt3QccxICGBnjpTfUy6em+I6FSQMaHVMSeKDLZqcBGjMDkxO8L0XUqXxt3Oqy4pge
+	YspT9H3apuBIbqNarYVMGCNIH9xR44cfMiBqpsC9L2j6dcqr+WDOfYbi+Som7h0JchUm3i7ob76HV
+	hf/F5FfA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZvoF-00000000FXN-3JXa;
-	Wed, 17 Jun 2026 19:20:23 +0000
+	id 1wZvoJ-00000000Fao-0eeG;
+	Wed, 17 Jun 2026 19:20:27 +0000
 Received: from fhigh-b7-smtp.messagingengine.com ([202.12.124.158])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZvoD-00000000FU5-3VB2;
-	Wed, 17 Jun 2026 19:20:23 +0000
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 3A7E47A015B;
-	Wed, 17 Jun 2026 15:20:20 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Wed, 17 Jun 2026 15:20:20 -0400
+	id 1wZvoG-00000000FXi-1byd;
+	Wed, 17 Jun 2026 19:20:25 +0000
+Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 4FFBF7A0163;
+	Wed, 17 Jun 2026 15:20:23 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Wed, 17 Jun 2026 15:20:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
 	 h=cc:cc:content-transfer-encoding:content-type:content-type
 	:date:date:from:from:in-reply-to:in-reply-to:message-id
 	:mime-version:references:reply-to:subject:subject:to:to; s=fm2;
-	 t=1781724020; x=1781810420; bh=dkNuY4BEl6fecffLQxRP0bSeac7mm9+F
-	WjLH7RhfLkk=; b=JMOrx2iXPcU2nxpg/Tcu+HX80LVYzOaG6GQ8HsCldwyfrhmW
-	VNleG3cIXhXRn4xwVG8jUre51BIXXbIH5H5yL7znzmhoFWMm0zV3U8pP60JFTLJJ
-	u+10zBmR55YIUq4a9ax17ts+eSNIKVp8DYJsCVdxit8FkFI77Z36r6N4W0/Vlp8y
-	1agLoTkBz2u6ICva4+9lgY+5LXlYx6Bvb6XLRPePm5UjsqvD6OCW0QUXQHd5viro
-	ef5hNDoD9naF+6hydiJM2PrffXqr1Rz9uucZhkJfFrbXA52FToJJtWmYJa5lrvy+
-	tV8CM5402dkRRqG64vLm18VlfGTF8Q5Zr4bdvQ==
+	 t=1781724023; x=1781810423; bh=gLZx3HaullBvnvWkQhxEqVHCdwkvAU77
+	s/W3t2gOuew=; b=cS5xIlgsgsN7UIdf6j7B0Q9GV32AH/mnOKODpsgaMGyGnXRW
+	rCE0PKOnRCOw6Md28yDXIE5KigPH6NUWz8CHywz64NTOZm9nGTQXIWs+D80M9lTB
+	Ao0RH6QYSELLGXnnWHP+bv5ZCujc1tTrRjIXEH7RZnIDI05Zh2UclS2H4jnW+DQD
+	1ut/4gyYSB+iYGjFex8Qj6x/0b5mC2Ot+uEIjIxTrVZq89VxvbD3C+py2uCUS4xW
+	+YGrRZZ0suB7w6tXbK6JFP511SdA/8HhlQNaa2CJ44Ki5cam8Yw2hrzcV8IzczQ+
+	5EV9AlyivjxsjgE9t9A5/2EqLNN5EBCSYm5dUg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1781724020; x=
-	1781810420; bh=dkNuY4BEl6fecffLQxRP0bSeac7mm9+FWjLH7RhfLkk=; b=E
-	e/mIF1XawAqy8VtByNb8gMurQ9FJd7k9RAQ/J3b5gtaCgBSzYLe/IZaPWxp7c1T7
-	1P3n84qbYfcuvzTQIf49PpYpsZ4OblRa3fKeuOwCucEBfkloSMFfopdMS1BI8hh5
-	LLCJXHBv3G5KcyNZUgLUMRrw5ML4qJb0UZjNhfHbHXplP6hlqpDBuSwwmYUvOSq1
-	aiL50mVVYk6Q3w+HABaGYGWiWT5tYYZGhteCwnTTi5z0CeLbi6FSw+flGVqfMh9R
-	k5cbOX9acdYdUEnOKvs6GKTcS2R+dVmEpDC/j/Gr0g5NFOBHFtguYQyokTwscFJe
-	ZlOlwi2MmRKIc7Pz2eT3w==
-X-ME-Sender: <xms:c_MyaowYloXe_z1vsrLG15WElhYd1KpGQitvoCCmC8CjaO0-phZ8IA>
-    <xme:c_MyajXSYYRKoEX7LwZWk8ZSNhBoUWILxW-5ckxe_YT8DJeEYtiv5Jz5fUc99la-G
-    fKAsWGF62m2BjG3tjik6Lgh5cpqO_id5GPvJnjZCVS0BoxHrkf8ywM>
-X-ME-Received: <xmr:c_MyaiBAKAkQV_YtoiR89iv8ac96qGzzneEIS25M1qQl6hJ9b19dqt-4yFkutw>
-X-ME-Proxy-Cause: dmFkZTGr4wEqCimFoE3RsPP1Z5greKYABweAKpg4RI45hKUFYl5vWQ7FXUaz8F/r22AqqZ
-    omJPOaTXkHI3UZQ1hNTdCZ6m2EkUn1Dqujr/wUCpoJaDXpeTejApWWiqg3Q7uw2j7ac3Nc
-    EkklX6fmmAmCu+ztlI9aoF3sbEDbTX9j5K3JaIt1NkLjU9JTRzcP/AliaULqrXk0beJJq7
-    kLOg6AY2jnCg+x4YTjy2FcmOeUguJPiBzAKb/SSa8uUvLo0J7aDdf9ww4h0IX7sZz1kcJf
-    2jbCfDomb5lOMpwZAEduxdAs4BawyKVsJ38lE87xkxpyZV2dHTnNzwEjdmRsX9/wYaHcZa
-    nOWqSM77N4Qc65hQH1KHUk/HzyVyHxsDaWJ14ucii0823eUAUDHlkeCOLsTzlA7N2z4CWW
-    rKaznVlrMxV2+xAfioZ/JPYUXtIBHkH6L39Xmi31DOb7UHvsALIRajLgiiRU0ZbzCjHss4
-    6eEjBcvdHZ7Tdv9/nydocZeV9uSYQZPFJmfiwim2pMjTtUU0zttMuU4pte3u7KarhCml7S
-    DgZ/HbFAnmur+32PmcTDALVsuny4Vdzk1Tzdj6L36bjCQNb06JYaX+duUG0yO0XKqOB92l
-    JANz3miXdvIY0hi5AM7LXiyM9zlqBMOa2tZvZMOJYe68cJ3KLPqbqKMOAXFA
-X-ME-Proxy: <xmx:c_Myas7BTrcMgxYHut8eAnbGn-6AW4QA1J25b5YttQuKR3r2Ycdnpg>
-    <xmx:c_MyamumSZtZ9cxmZii64klhCjYELFJlJ43TbA8oOEPPRacOChqTCA>
-    <xmx:c_MyasyuVRweI7a27Sd3ipZVuRxnSTJtt4Sf5eAzmyioWriB5wujbA>
-    <xmx:c_Myama5xbK3NkjxI5V8RCX7d8BpgXMAca5dQWUJVVz2CpdEY8J9kg>
-    <xmx:dPMyapBMqBJaZO0AsZ0lMiXqk4kyqd1oAdFO19OxUiqRrZWUJ6OTZ6K->
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1781724023; x=
+	1781810423; bh=gLZx3HaullBvnvWkQhxEqVHCdwkvAU77s/W3t2gOuew=; b=U
+	EZGmBi1zcUy9EpRiCZwAu+s28aApVNeMUpV8/taLfSLfVMqTTcN76Alym9+JYxMv
+	z9DC/TKLYMru1D7zQxUg7MdvF40aWEjQjm+vcl6d3y4+C6i2JgndkFxvTcPam1ss
+	q3ytBv4M37yWngMtJvaqk3fI+ab7IFNW46J727s4dNGibaq5xDYGKuLA4QOdvkXZ
+	fL9OWNCtJ8E/0EABZGRg1798pPE0RLshnQcQCnY44wmC/EgaP7zKMDcH1Saef68l
+	NqXedPIdooWXUOcid7EnmZL1/Kfapll6DbFiJF16Zo0NIRuQnhRxPz3gu6zgEhXG
+	WmIbpNHP2LX2f3Cgoy42w==
+X-ME-Sender: <xms:dvMyanbTHChOVsVnqLf6lZ0FBzE_tqize7URoNosjebpfgDYDB3mfw>
+    <xme:dvMyatejZf9Sens00hwyj6Hq8YVrNJ7MVvzHFSwbJOx26T0jKAilWQziu45n93GqX
+    aN0WkZQEkIR_36hado6ZroGQWi4qaSTwE5_xDQs8l4a7p-Q3VKCpg>
+X-ME-Received: <xmr:dvMyahoOeJUcarn4PHmPuFPdIwX4tt9jHzYq3aHzTNHqj_EJEzQIds-nbtgD5Q>
+X-ME-Proxy-Cause: dmFkZTFsPFgKyXzv/v25r54hbk8/83/7RPJPQuFXGYgaxJPSyZ9FsTdZnBucijlFiTQe3w
+    ViMDjPN0jC5nQJG2pww4GLpAdl1QFV3uTqpESNhtBWBMz/Jqt+W48GMm21ryvs5z3IrMTn
+    2XLNXV6lgZEkvypoPSIXbxm+VlQs2BUioaI2baI9LCqQE0ayhkP+GV1iQtfHKRgcaqaRqV
+    h4KsLqIrVqes0jC1n9oObM8PQ+GqFG2xgVRisO7GtP7SfKt3BIy8J4TbB1Aty855YcQAiT
+    7e+T2JTw6+qQycUtMKLGbm/Iqs3hzqMCLbIF16iuOpeVK17h0T895evcMcrHmiWC8b36A3
+    lFtBacueNWO4GKc50KYbjvQ17Z+3j+U4/BLX9zp0bc4GuFimwPSzAEl90SFe71c+CTcMYN
+    21CjrD2pwWAAvJNKVgTCQg0XX1h7Dfh/6Lg7L6qyj14g3gKKlK2VJHGl8uOu4KlK0yT0cS
+    F5Dy1/kiid/+FAUwJy9jit41uzfrf/XR5dmIFUypCRJGlx56Od+OwnlDnM+wttKBa5PKfD
+    hiVba+80CqxXrczKYhPl8gc95XZN0oysathHNprnDIMSu5HmEoMUsQ+lvT9c9LV8muzsaZ
+    xR2jchKZoEVYE5gpm9Pzaqczu7N9vRSQH0Mk94fIb2jvFXoFrF4MVEncV5GA
+X-ME-Proxy: <xmx:dvMyakAR0NbjtMxmU49PoLK5e38kdy-57qrTZaPz7fPqoF3hv9XhBA>
+    <xmx:dvMyavXl0Esfhd5iOys8eqnlCGmH5U4S1JUoM2ttKIfHmsEtRrv_tQ>
+    <xmx:dvMyao64OQgM4O2ObaBmXWQH1TqEOzA7YMnbVakV3-9SOY1RxQzeng>
+    <xmx:dvMyagAtej6RPeWhyphZVmeKhbesGQ8h1GzDylwDhwES_LzS9RLS2A>
+    <xmx:d_MyalGku-PBXWqzYw7L5JuHi3X5ux2wt_gAlp30jn9FH3xJZxX7Pw8A>
 Feedback-ID: ie3994620:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 17 Jun 2026 15:20:19 -0400 (EDT)
+ 17 Jun 2026 15:20:22 -0400 (EDT)
 From: Kiryl Shutsemau <kirill@shutemov.name>
 To: Catalin Marinas <catalin.marinas@arm.com>,
 	Will Deacon <will@kernel.org>,
@@ -99,9 +99,9 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	"Kiryl Shutsemau (Meta)" <kas@kernel.org>
-Subject: [PATCH v4 3/4] drivers/firmware: add SDEI cross-CPU NMI service for arm64
-Date: Wed, 17 Jun 2026 20:20:04 +0100
-Message-ID: <ab745689c0bfd01438d98ed1c79328bf2121be3b.1781709543.git.kas@kernel.org>
+Subject: [PATCH v4 4/4] arm64: escalate smp_send_stop() to an SDEI NMI as a last resort
+Date: Wed, 17 Jun 2026 20:20:05 +0100
+Message-ID: <97a870d0670b7e1c2fb9f5142f6e36c594282017.1781709543.git.kas@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <cover.1781709543.git.kas@kernel.org>
 References: <cover.1781709543.git.kas@kernel.org> <cover.1781709543.git.kas@kernel.org>
@@ -109,8 +109,8 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260617_122021_993219_983B7C7A 
-X-CRM114-Status: GOOD (  31.59  )
+X-CRM114-CacheID: sfid-20260617_122024_548327_69E084D3 
+X-CRM114-Status: GOOD (  28.12  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -127,301 +127,371 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
 
-Deliver an NMI-like event to an interrupt-masked arm64 CPU via the
-standard SDEI software-signalled event (event 0), without the pseudo-NMI
-hot-path cost: register a handler for event 0 and poke a target with
-sdei_event_signal(0, mpidr).
+A CPU wedged with interrupts masked ignores the stop IPI, and without
+pseudo-NMI there is no NMI IPI to escalate to: a reboot proceeds with
+the CPU still running, and a kdump misses its registers.
 
-First user is arch_trigger_cpumask_backtrace() (sysrq-l, RCU stalls,
-hung-task/soft-lockup dumps), which otherwise rides an IPI that can't
-reach a masked CPU. Falls back to the IPI path when SDEI is absent; no
-watchdog backend yet, so the stock detector is untouched.
+Add a third rung to smp_send_stop(): once the IPI (and pseudo-NMI IPI,
+if enabled) rungs have run, signal SDEI event 0 at whatever stayed
+online. Firmware delivers it regardless of the target's DAIF, so it
+reaches a CPU a plain IPI cannot; the target acks by going offline,
+which the caller already polls for.
 
+Fold the stop bookkeeping into one arm64_nmi_cpu_stop(regs,
+die_on_crash), shared by the stop IPI handlers, panic_smp_self_stop()
+and the SDEI handler, replacing the near-duplicate local_cpu_stop() and
+ipi_cpu_crash_stop(). @die_on_crash is the only difference: the IPI
+handlers pass true and PSCI CPU_OFF the CPU on a crash stop so a capture
+kernel can reclaim it; the SDEI handler and self-stop pass false and
+park. The SDEI park is required, not conservative -- its handler runs
+inside an SDEI event that is never completed (completing it resumes the
+wedged context), and a CPU_OFF from that unfinished-event context wedges
+EL3 on some firmware (left as a follow-up). The dump is unaffected; only
+re-onlining the CPU in an SMP capture kernel is lost.
+
+Suggested-by: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
 ---
- MAINTAINERS                     |   2 +-
- arch/arm64/include/asm/nmi.h    |  24 +++++
- arch/arm64/kernel/smp.c         |  11 +++
- drivers/firmware/Kconfig        |  19 ++++
- drivers/firmware/Makefile       |   1 +
- drivers/firmware/arm_sdei_nmi.c | 152 ++++++++++++++++++++++++++++++++
- 6 files changed, 208 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/include/asm/nmi.h
- create mode 100644 drivers/firmware/arm_sdei_nmi.c
+ arch/arm64/include/asm/nmi.h    |  24 +++++++
+ arch/arm64/kernel/smp.c         | 113 +++++++++++++++++++++-----------
+ drivers/firmware/Kconfig        |   2 +
+ drivers/firmware/arm_sdei_nmi.c |  86 ++++++++++++++++++++++++
+ 4 files changed, 187 insertions(+), 38 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c8d4b913f26c..b5ddfb85dce9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -24797,7 +24797,7 @@ M:	James Morse <james.morse@arm.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	Documentation/devicetree/bindings/arm/firmware/sdei.txt
--F:	drivers/firmware/arm_sdei.c
-+F:	drivers/firmware/arm_sdei*
- F:	include/linux/arm_sdei.h
- F:	include/uapi/linux/arm_sdei.h
- 
 diff --git a/arch/arm64/include/asm/nmi.h b/arch/arm64/include/asm/nmi.h
-new file mode 100644
-index 000000000000..9366be419d18
---- /dev/null
+index 9366be419d18..2e8974ff8d63 100644
+--- a/arch/arm64/include/asm/nmi.h
 +++ b/arch/arm64/include/asm/nmi.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_NMI_H
-+#define __ASM_NMI_H
+@@ -4,21 +4,45 @@
+ 
+ #include <linux/cpumask.h>
+ 
++struct pt_regs;
 +
-+#include <linux/cpumask.h>
+ /*
+  * Cross-CPU NMI provider hooks, consulted by the arm64 arch code before
+  * its regular-IRQ / pseudo-NMI IPI paths. The SDEI provider in
+  * drivers/firmware/arm_sdei_nmi.c implements them when active; a future
+  * FEAT_NMI provider could slot in here too. The stubs let callers stay
+  * unconditional when ARM_SDEI_NMI is off.
++ *
++ * sdei_nmi_active() lets a caller test for the service before committing
++ * to (and waiting on) the SDEI stop rung; sdei_nmi_stop_cpus() then signals
++ * the targets, which ack by going offline.
+  */
+ #ifdef CONFIG_ARM_SDEI_NMI
+ bool sdei_nmi_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu);
++bool sdei_nmi_active(void);
++void sdei_nmi_stop_cpus(const cpumask_t *mask);
+ #else
+ static inline bool sdei_nmi_trigger_cpumask_backtrace(const cpumask_t *mask,
+ 						      int exclude_cpu)
+ {
+ 	return false;
+ }
 +
-+/*
-+ * Cross-CPU NMI provider hooks, consulted by the arm64 arch code before
-+ * its regular-IRQ / pseudo-NMI IPI paths. The SDEI provider in
-+ * drivers/firmware/arm_sdei_nmi.c implements them when active; a future
-+ * FEAT_NMI provider could slot in here too. The stubs let callers stay
-+ * unconditional when ARM_SDEI_NMI is off.
-+ */
-+#ifdef CONFIG_ARM_SDEI_NMI
-+bool sdei_nmi_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu);
-+#else
-+static inline bool sdei_nmi_trigger_cpumask_backtrace(const cpumask_t *mask,
-+						      int exclude_cpu)
++static inline bool sdei_nmi_active(void)
 +{
 +	return false;
 +}
-+#endif
 +
-+#endif /* __ASM_NMI_H */
++static inline void sdei_nmi_stop_cpus(const cpumask_t *mask) { }
+ #endif
+ 
++/*
++ * The common "stop this CPU" entry every arm64 stop path funnels through:
++ * the regular/pseudo-NMI stop IPI handlers, panic_smp_self_stop(), and the
++ * SDEI cross-CPU NMI handler. @die_on_crash powers the CPU off on the kdump
++ * crash path (IPI handlers) instead of parking it (SDEI / self-stop).
++ * Defined in arch/arm64/kernel/smp.c.
++ */
++void __noreturn arm64_nmi_cpu_stop(struct pt_regs *regs, bool die_on_crash);
++
+ #endif /* __ASM_NMI_H */
 diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 1aa324104afb..a670434a8cae 100644
+index a670434a8cae..05c7007a1f4a 100644
 --- a/arch/arm64/kernel/smp.c
 +++ b/arch/arm64/kernel/smp.c
-@@ -45,6 +45,7 @@
- #include <asm/daifflags.h>
- #include <asm/kvm_mmu.h>
- #include <asm/mmu_context.h>
-+#include <asm/nmi.h>
- #include <asm/numa.h>
- #include <asm/processor.h>
- #include <asm/smp_plat.h>
-@@ -927,6 +928,16 @@ static void arm64_backtrace_ipi(cpumask_t *mask)
+@@ -33,6 +33,7 @@
+ #include <linux/kernel_stat.h>
+ #include <linux/kexec.h>
+ #include <linux/kgdb.h>
++#include <linux/kprobes.h>
+ #include <linux/kvm_host.h>
+ #include <linux/nmi.h>
  
- void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+@@ -862,14 +863,62 @@ void arch_irq_work_raise(void)
+ }
+ #endif
+ 
+-static void __noreturn local_cpu_stop(unsigned int cpu)
++/**
++ * arm64_nmi_cpu_stop() - stop the local CPU after it is told to stop.
++ * @regs: register state to record in the vmcore on a crash stop, or NULL for
++ *        panic_smp_self_stop(), which has no interrupted context to save.
++ * @die_on_crash: on the kdump crash path, power the CPU off via PSCI CPU_OFF
++ *                (so a capture kernel can reclaim it) rather than parking it.
++ *
++ * The single point every arm64 stop path funnels through, keeping the
++ * bookkeeping (mask interrupts, save the crash context, mark offline, mask
++ * SDEI, optionally power off) in one place:
++ *
++ *   - the regular IPI_CPU_STOP and pseudo-NMI IPI_CPU_STOP_NMI handlers;
++ *   - panic_smp_self_stop(), a CPU parking itself on a parallel panic();
++ *   - the SDEI cross-CPU NMI handler (drivers/firmware/arm_sdei_nmi.c),
++ *     which reaches CPUs the stop IPIs could not.
++ *
++ * The IPI stop handlers pass @die_on_crash true. The SDEI handler and
++ * panic_smp_self_stop() pass false and only park. For SDEI that is required,
++ * not just conservative: it runs inside an SDEI event that is deliberately
++ * never completed (completing it has firmware resume the wedged context), and
++ * a CPU_OFF from that not-yet-completed context wedges EL3 on some firmware --
++ * a documented follow-up. Parking also matches this path's own fallback when
++ * CPU_OFF is unavailable.
++ */
++void __noreturn arm64_nmi_cpu_stop(struct pt_regs *regs, bool die_on_crash)
  {
-+	/*
-+	 * Prefer the SDEI cross-CPU NMI provider when active: firmware
-+	 * dispatches the event out of EL3 and reaches CPUs that have
-+	 * interrupts locally masked, without the per-IRQ-mask cost that
-+	 * pseudo-NMI pays for the same reach. The plain IPI path below
-+	 * can't reach such a CPU unless pseudo-NMI is enabled.
-+	 */
-+	if (sdei_nmi_trigger_cpumask_backtrace(mask, exclude_cpu))
-+		return;
++	unsigned int cpu = smp_processor_id();
++	bool crash = IS_ENABLED(CONFIG_KEXEC_CORE) && crash_stop;
 +
- 	/*
- 	 * NOTE: though nmi_trigger_cpumask_backtrace() has "nmi_" in the name,
- 	 * nothing about it truly needs to be implemented using an NMI, it's
++	/*
++	 * Use local_daif_mask() instead of local_irq_disable() to make sure
++	 * that pseudo-NMIs are disabled. The "stop" code starts with an IRQ
++	 * and falls back to NMI (which might be pseudo). If the IRQ finally
++	 * goes through right as we're timing out then the NMI could interrupt
++	 * us. It's better to prevent the NMI and let the IRQ finish since the
++	 * pt_regs will be better.
++	 */
++	local_daif_mask();
++
++#ifdef CONFIG_KEXEC_CORE
++	if (crash && regs)
++		crash_save_cpu(regs, cpu);
++#endif
++
++	/* the ack a stop requester (e.g. smp_send_stop()) polls for */
+ 	set_cpu_online(cpu, false);
+ 
+-	local_daif_mask();
+ 	sdei_mask_local_cpu();
++
++	if (crash && die_on_crash)
++		__cpu_try_die(cpu);
++
++	/* just in case */
+ 	cpu_park_loop();
+ }
++NOKPROBE_SYMBOL(arm64_nmi_cpu_stop);
+ 
+ /*
+  * We need to implement panic_smp_self_stop() for parallel panic() calls, so
+@@ -878,36 +927,7 @@ static void __noreturn local_cpu_stop(unsigned int cpu)
+  */
+ void __noreturn panic_smp_self_stop(void)
+ {
+-	local_cpu_stop(smp_processor_id());
+-}
+-
+-static void __noreturn ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs)
+-{
+-#ifdef CONFIG_KEXEC_CORE
+-	/*
+-	 * Use local_daif_mask() instead of local_irq_disable() to make sure
+-	 * that pseudo-NMIs are disabled. The "crash stop" code starts with
+-	 * an IRQ and falls back to NMI (which might be pseudo). If the IRQ
+-	 * finally goes through right as we're timing out then the NMI could
+-	 * interrupt us. It's better to prevent the NMI and let the IRQ
+-	 * finish since the pt_regs will be better.
+-	 */
+-	local_daif_mask();
+-
+-	crash_save_cpu(regs, cpu);
+-
+-	set_cpu_online(cpu, false);
+-
+-	sdei_mask_local_cpu();
+-
+-	if (IS_ENABLED(CONFIG_HOTPLUG_CPU))
+-		__cpu_try_die(cpu);
+-
+-	/* just in case */
+-	cpu_park_loop();
+-#else
+-	BUG();
+-#endif
++	arm64_nmi_cpu_stop(NULL, false);
+ }
+ 
+ static void arm64_send_ipi(const cpumask_t *mask, unsigned int nr)
+@@ -984,12 +1004,7 @@ static void do_handle_IPI(int ipinr)
+ 
+ 	case IPI_CPU_STOP:
+ 	case IPI_CPU_STOP_NMI:
+-		if (IS_ENABLED(CONFIG_KEXEC_CORE) && crash_stop) {
+-			ipi_cpu_crash_stop(cpu, get_irq_regs());
+-			unreachable();
+-		} else {
+-			local_cpu_stop(cpu);
+-		}
++		arm64_nmi_cpu_stop(get_irq_regs(), true);
+ 		break;
+ 
+ #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
+@@ -1263,6 +1278,28 @@ void smp_send_stop(void)
+ 			udelay(1);
+ 	}
+ 
++	/*
++	 * If CPUs are *still* online, try the SDEI cross-CPU NMI. Firmware
++	 * delivers it regardless of the target's DAIF state, so it reaches
++	 * a CPU spinning with interrupts masked, which neither rung above
++	 * could (without pseudo-NMI there is no NMI rung at all). Allow
++	 * 100ms: a firmware round-trip per CPU, with headroom.
++	 */
++	if (num_other_online_cpus() && sdei_nmi_active()) {
++		/* re-snapshot after the rungs above took CPUs offline */
++		smp_rmb();
++		cpumask_copy(&mask, cpu_online_mask);
++		cpumask_clear_cpu(smp_processor_id(), &mask);
++
++		pr_info("SMP: retry stop with SDEI NMI for CPUs %*pbl\n",
++			cpumask_pr_args(&mask));
++
++		sdei_nmi_stop_cpus(&mask);
++		timeout = USEC_PER_MSEC * 100;
++		while (num_other_online_cpus() && timeout--)
++			udelay(1);
++	}
++
+ 	if (num_other_online_cpus()) {
+ 		smp_rmb();
+ 		cpumask_copy(&mask, cpu_online_mask);
 diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index bbd2155d8483..6501087ff90d 100644
+index 6501087ff90d..ab0ee36d46e7 100644
 --- a/drivers/firmware/Kconfig
 +++ b/drivers/firmware/Kconfig
-@@ -36,6 +36,25 @@ config ARM_SDE_INTERFACE
- 	  standard for registering callbacks from the platform firmware
- 	  into the OS. This is typically used to implement RAS notifications.
+@@ -46,6 +46,8 @@ config ARM_SDEI_NMI
+ 	    - arch_trigger_cpumask_backtrace()  (sysrq-l, RCU stalls,
+ 	      hardlockup_all_cpu_backtrace, soft-lockup secondary dumps,
+ 	      hung-task auxiliary dumps)
++	    - smp_send_stop() escalation         (reboot/halt and the
++	      panic / kdump crash stop)
  
-+config ARM_SDEI_NMI
-+	bool "SDEI-based cross-CPU NMI service (arm64)"
-+	depends on ARM64 && ARM_SDE_INTERFACE
-+	help
-+	  Provides SDEI-based cross-CPU NMI delivery for hooks that need
-+	  to reach interrupt-masked CPUs on silicon that lacks FEAT_NMI:
-+
-+	    - arch_trigger_cpumask_backtrace()  (sysrq-l, RCU stalls,
-+	      hardlockup_all_cpu_backtrace, soft-lockup secondary dumps,
-+	      hung-task auxiliary dumps)
-+
-+	  The driver registers a handler for the SDEI software-signalled
-+	  event (event 0) and reaches a target CPU by signalling it with
-+	  SDEI_EVENT_SIGNAL. Firmware delivers the event out of EL3
-+	  regardless of the target's PSTATE.DAIF -- forced delivery into a
-+	  CPU wedged with interrupts locally masked.
-+
-+	  If unsure, say N.
-+
- config EDD
- 	tristate "BIOS Enhanced Disk Drive calls determine boot disk"
- 	depends on X86
-diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-index 4ddec2820c96..be46f1e1dc77 100644
---- a/drivers/firmware/Makefile
-+++ b/drivers/firmware/Makefile
-@@ -4,6 +4,7 @@
- #
- obj-$(CONFIG_ARM_SCPI_PROTOCOL)	+= arm_scpi.o
- obj-$(CONFIG_ARM_SDE_INTERFACE)	+= arm_sdei.o
-+obj-$(CONFIG_ARM_SDEI_NMI)	+= arm_sdei_nmi.o
- obj-$(CONFIG_DMI)		+= dmi_scan.o
- obj-$(CONFIG_DMI_SYSFS)		+= dmi-sysfs.o
- obj-$(CONFIG_EDD)		+= edd.o
+ 	  The driver registers a handler for the SDEI software-signalled
+ 	  event (event 0) and reaches a target CPU by signalling it with
 diff --git a/drivers/firmware/arm_sdei_nmi.c b/drivers/firmware/arm_sdei_nmi.c
-new file mode 100644
-index 000000000000..2a78cee203fb
---- /dev/null
+index 2a78cee203fb..68bbf981fdd7 100644
+--- a/drivers/firmware/arm_sdei_nmi.c
 +++ b/drivers/firmware/arm_sdei_nmi.c
-@@ -0,0 +1,152 @@
-+// SPDX-License-Identifier: GPL-2.0
+@@ -29,6 +29,11 @@
+  *     hardlockup_all_cpu_backtrace, soft-lockup/hung-task secondary
+  *     dumps all reach interrupt-masked CPUs.
+  *
++ *   - sdei_nmi_stop_cpus() — the last rung of smp_send_stop()'s
++ *     escalation (reboot/halt and the panic/kdump crash stop alike),
++ *     reaching CPUs that ignored the stop IPIs; on the kdump path the
++ *     wedged context is captured into the vmcore before the CPU parks.
++ *
+  * Delivery uses the standard SDEI software-signalled event (event 0) and
+  * SDEI_EVENT_SIGNAL. We register a handler for event 0, enable it, and
+  * poke a target CPU with sdei_event_signal(0, mpidr): firmware makes
+@@ -59,8 +64,57 @@ static bool sdei_nmi_available;
+ 
+ #define SDEI_NMI_EVENT			0
+ 
 +/*
-+ * arm64 SDEI-based cross-CPU NMI service.
++ * Backtrace and stop both ride SDEI event 0. That is not a chosen economy:
++ * event 0 is the only architecturally software-signalled event -- the sole
++ * event SDEI_EVENT_SIGNAL can target at an arbitrary PE. Every other event
++ * number is a firmware/platform interrupt-bound event, not something the
++ * kernel can raise cross-CPU, so a dedicated "stop" event would need
++ * firmware to define and bind it -- exactly the firmware dependency this
++ * driver sets out to avoid.
 + *
-+ * Delivering an "NMI-shaped" event to an EL1 context that has locally
-+ * masked interrupts, on silicon without FEAT_NMI, can be done two ways:
-+ *
-+ *   - pseudo-NMI: mask "interrupts" via the GIC priority register
-+ *     (ICC_PMR_EL1) instead of PSTATE.DAIF, leaving a high-priority band
-+ *     deliverable. Functionally this works -- but it reimplements every
-+ *     local_irq_disable()/enable() and exception entry/exit as a PMR
-+ *     write plus synchronisation, a cost paid on that hot path forever,
-+ *     whether or not an NMI is ever delivered.
-+ *
-+ *   - SDEI: leave interrupt masking as the cheap PSTATE.DAIF operation
-+ *     and have the firmware bounce an EL3-routed Group-0 SGI back to
-+ *     NS-EL1 as an event callback. The cost is a firmware round-trip,
-+ *     but only at the rare moment delivery is actually needed.
-+ *
-+ * This driver takes the second path: it keeps the IRQ-mask hot path
-+ * free and pays only when it fires, which is what makes cross-CPU NMI
-+ * affordable on hardware where the pseudo-NMI tax isn't, until FEAT_NMI
-+ * makes NMI masking cheap in the architecture itself.
-+ *
-+ * Capabilities provided:
-+ *
-+ *   - sdei_nmi_trigger_cpumask_backtrace() — override for arm64's
-+ *     arch_trigger_cpumask_backtrace(), so sysrq-l, RCU stall dumps,
-+ *     hardlockup_all_cpu_backtrace, soft-lockup/hung-task secondary
-+ *     dumps all reach interrupt-masked CPUs.
-+ *
-+ * Delivery uses the standard SDEI software-signalled event (event 0) and
-+ * SDEI_EVENT_SIGNAL. We register a handler for event 0, enable it, and
-+ * poke a target CPU with sdei_event_signal(0, mpidr): firmware makes
-+ * event 0 pending on that PE and dispatches the handler NMI-like,
-+ * regardless of the target's DAIF.
-+ * Availability is simply whether event 0 registers and enables -- if SDEI
-+ * and its software-signalled event are present we use it, otherwise the
-+ * driver stays inert.
++ * Sharing one event means the handler must tell a stop apart from a
++ * backtrace. A stop is terminal and system-wide -- sdei_nmi_stop_cpus() is
++ * only reached from smp_send_stop() (reboot/halt/panic/kdump), which never
++ * returns -- so once a stop is requested, every later event-0 fire is a
++ * stop too. A single write-once flag therefore carries as much as a
++ * per-CPU mask would: sdei_nmi_stop_cpus() sets it before signalling, and
++ * the handler reads a set flag as "stop this CPU" and a clear flag as
++ * "backtrace" (handled by nmi_cpu_backtrace(), which self-gates on the
++ * framework's backtrace mask). A backtrace fire that races in after a stop
++ * has begun just stops that CPU instead -- harmless, it is going down.
 + */
++static bool sdei_nmi_stopping;
 +
-+#define pr_fmt(fmt) "sdei_nmi: " fmt
-+
-+#include <linux/arm_sdei.h>
-+#include <linux/cpumask.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/kprobes.h>
-+#include <linux/nmi.h>
-+#include <linux/printk.h>
-+#include <linux/ptrace.h>
-+#include <linux/smp.h>
-+#include <linux/types.h>
-+
-+#include <asm/nmi.h>
-+#include <asm/smp_plat.h>
-+
-+static bool sdei_nmi_available;
-+
-+#define SDEI_NMI_EVENT			0
-+
-+static int sdei_nmi_handler(u32 event, struct pt_regs *regs, void *arg)
-+{
+ static int sdei_nmi_handler(u32 event, struct pt_regs *regs, void *arg)
+ {
 +	/*
-+	 * nmi_cpu_backtrace() no-ops unless this CPU's bit is set in the
-+	 * global backtrace mask (driven by nmi_trigger_cpumask_backtrace()),
-+	 * so a fire that reaches a CPU not being backtraced is harmless.
++	 * No smp_rmb() pairing sdei_nmi_stop_cpus()'s smp_wmb(): the flag is
++	 * the only shared value, and this handler runs only because firmware
++	 * delivered the event -- a round-trip past that store -- so the read
++	 * cannot be stale and there is no second load for a barrier to order.
 +	 */
-+	nmi_cpu_backtrace(regs);
-+	return SDEI_EV_HANDLED;
-+}
-+NOKPROBE_SYMBOL(sdei_nmi_handler);
++	if (READ_ONCE(sdei_nmi_stopping)) {
++		/*
++		 * Never returns, and deliberately never completes the SDEI
++		 * event: SDEI_EVENT_COMPLETE has firmware restore the
++		 * interrupted context, which would land the CPU back in
++		 * the wedged loop (or in do_idle, which BUGs at
++		 * cpuhp_report_idle_dead once it sees itself offline).
++		 * Returning a modified pt_regs doesn't help --
++		 * arch/arm64/kernel/sdei.c::do_sdei_event only honours a PC
++		 * override via its IRQ-state heuristic and otherwise hands
++		 * EL3 its own saved-context slot back.
++		 *
++		 * Trade-off: EL3 retains ~one saved-context slot per parked
++		 * CPU until the next hardware reset (~hundreds of bytes per
++		 * CPU). Recoverability is unchanged versus an IPI-stopped
++		 * CPU: neither comes back without a reset.
++		 */
++		arm64_nmi_cpu_stop(regs, false);
++		/* unreachable */
++	}
 +
-+static void sdei_nmi_fire(unsigned int target_cpu)
+ 	/*
+ 	 * nmi_cpu_backtrace() no-ops unless this CPU's bit is set in the
+ 	 * global backtrace mask (driven by nmi_trigger_cpumask_backtrace()),
+@@ -115,6 +169,38 @@ bool sdei_nmi_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
+ 	return true;
+ }
+ 
++bool sdei_nmi_active(void)
 +{
-+	int err = sdei_event_signal(SDEI_NMI_EVENT, cpu_logical_map(target_cpu));
-+
-+	if (err)
-+		pr_warn("SDEI_EVENT_SIGNAL to CPU %u failed: %d\n",
-+			target_cpu, err);
++	return sdei_nmi_available;
 +}
 +
 +/*
-+ * Raise callback for nmi_trigger_cpumask_backtrace(): signal event 0
-+ * at every CPU still pending in @mask. The framework excludes the local
-+ * CPU from @mask before calling us.
++ * Last rung of the stop escalation in smp_send_stop() (see
++ * arch/arm64/kernel/smp.c). The caller runs the regular stop IPI (and
++ * the pseudo-NMI stop IPI, where available) first; @mask holds whatever
++ * stayed online through those -- typically CPUs wedged with interrupts
++ * masked, unreachable by an IPI. Mark the stop in progress and signal
++ * event 0 at each target; a target acks by marking itself offline, which
++ * the caller polls for. The caller has already confirmed sdei_nmi_active().
 + */
-+static void sdei_nmi_raise_backtrace(cpumask_t *mask)
++void sdei_nmi_stop_cpus(const cpumask_t *mask)
 +{
 +	unsigned int cpu;
++
++	WRITE_ONCE(sdei_nmi_stopping, true);
++
++	/*
++	 * Publish the flag before signalling. The SMC is a context-sync
++	 * event, not a barrier, so WRITE_ONCE() alone could let the store be
++	 * observed after the event it triggers. The barrier is cumulative: a
++	 * target that sees the event is guaranteed to see the flag.
++	 */
++	smp_wmb();
 +
 +	for_each_cpu(cpu, mask)
 +		sdei_nmi_fire(cpu);
 +}
 +
-+/*
-+ * Override hook for arch_trigger_cpumask_backtrace() (see
-+ * arch/arm64/kernel/smp.c). Returns true when SDEI handled the request,
-+ * which is the case whenever SDEI is active; on a false return the arch
-+ * falls back to its regular-IRQ (or pseudo-NMI, if enabled) IPI.
-+ *
-+ * On a kernel built without paying the pseudo-NMI hot-path cost (the
-+ * usual case for this driver's target), the IPI can't reach a CPU that
-+ * has interrupts masked -- so the backtrace of the one CPU you care
-+ * about comes back empty. SDEI is dispatched out of EL3 and lands
-+ * regardless of the target's DAIF, without taxing the IRQ-mask path.
-+ */
-+bool sdei_nmi_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
-+{
-+	if (!sdei_nmi_available)
-+		return false;
-+
-+	nmi_trigger_cpumask_backtrace(mask, exclude_cpu,
-+				      sdei_nmi_raise_backtrace);
-+	return true;
-+}
-+
-+/*
-+ * device_initcall (after arch_initcall(sdei_init), so the SDEI subsystem
-+ * is up): probe the firmware, register the event, and turn on the
-+ * cross-CPU service. If the probe fails the driver stays inert and the
-+ * override hooks decline, leaving the arch's own paths in place.
-+ */
-+static int __init sdei_nmi_init(void)
-+{
-+	int err;
-+
-+	if (!sdei_is_present())
-+		return 0;
-+
-+	err = sdei_event_register(SDEI_NMI_EVENT, sdei_nmi_handler, NULL);
-+	if (err) {
-+		pr_err("sdei_event_register(%u) failed: %d\n",
-+		       SDEI_NMI_EVENT, err);
-+		return 0;
-+	}
-+
-+	err = sdei_event_enable(SDEI_NMI_EVENT);
-+	if (err) {
-+		pr_err("sdei_event_enable(%u) failed: %d\n",
-+		       SDEI_NMI_EVENT, err);
-+		sdei_event_unregister(SDEI_NMI_EVENT);
-+		return 0;
-+	}
-+
-+	sdei_nmi_available = true;
-+	pr_info("using SDEI cross-CPU NMI (SDEI_EVENT_SIGNAL, event %u)\n",
-+		SDEI_NMI_EVENT);
-+
-+	return 0;
-+}
-+device_initcall(sdei_nmi_init);
+ /*
+  * device_initcall (after arch_initcall(sdei_init), so the SDEI subsystem
+  * is up): probe the firmware, register the event, and turn on the
 -- 
 2.54.0
 
