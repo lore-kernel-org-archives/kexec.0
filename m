@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 03723CD98E2
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id ED142CD98E4
 	for <kexec@archiver.kernel.org>; Wed, 17 Jun 2026 13:34:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
-	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Message-Id:Date:Subject:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=/0WbWUM0YqRig6pLzRsihGyxNEeNAVR9TczamDwMF/4=; b=gAnmUDW9ULiTStejYs361thzSf
-	ikDv7N2z8FBlF5UGyfMdJAw9bD7PK6QLS7u62T9g2clLAW91eEgDHDYLrz0mrfpUIblux7eNJ40MX
-	ZdyZpBpJx5rOtVg1xjjc1YGGRxVGfDdmhBiWDHMoAiu7/mzM0xPKDp4E4n+evx+C8+xwv1UJp7uEL
-	eE53psbPnJOkqnMIFCVVkz4JorMrwQpCoEmKsFhd3ZH6QnjTC2Rj6aPAJzIYDXJtFBQdDsxkZtu15
-	erSc1egaHeRd0s3Ls3yhHztFYVkexMXOctIbb83GJ7DbRkn5j+AzbhfoP/PFvZxKDfNuvxKMiCvyH
-	bC7tDR2Q==;
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=EEC0qJTG8OKSyQhpTsBvNB9fPeFKMLfq9Aho3jBcd6E=; b=ScyNuFDP7oN3sW
+	WGfh1Vg9oDvuE69fQ/OvM1poEe+hpIYiiSK1p7Qi/DzdG5IwtVZ0Rx9qSK1Lh8+vanW+sRRcPjG74
+	n9GCs8WDg2lmsF71llpt3OfDj/E5mye9kckY6Htxe7efKzXc6u2DEvwoU+8TzLMiVjoZNCHHL8JPX
+	13wj5uJVCadeLr5aTMRX4/WkE7rcjRCSpN/AI1+iDenuxRS893M3LF37vqinUaGlL1UTJSEEOOC7L
+	PwhOn2N0SNVYbAHisz36ROzn/Iy+vb0Hnmb7pj2+KdhKWOaDzT+bIKjVlU4oYEfcRQFdjtty4F5Nm
+	vNP7vBpdaAmmYG+Y9xKA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZqPI-0000000HQ6N-3xVm;
-	Wed, 17 Jun 2026 13:34:16 +0000
+	id 1wZqPG-0000000HQ5D-3csL;
+	Wed, 17 Jun 2026 13:34:14 +0000
 Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZqPH-0000000HQ4E-0EMc
+	id 1wZqPA-0000000HQ4C-3WTM
 	for kexec@lists.infradead.org;
-	Wed, 17 Jun 2026 13:34:16 +0000
+	Wed, 17 Jun 2026 13:34:09 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:In-Reply-To:References:
-	Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
-	From:Reply-To:Content-ID:Content-Description;
-	bh=/0WbWUM0YqRig6pLzRsihGyxNEeNAVR9TczamDwMF/4=; b=N5eefuhLpBajkaaJT+OSbqc0iY
-	FGiQA+H2djSY6ZSYwleP88Pnp/zWXFUqA9uPPlN8bFYoIOgy7T+yP8kP5usWgViz2P9NBQpheOMHz
-	5fq2j0wPRSyqq3eWw8lduMrADGY64KocjwBIdVOM1QGxzHkdoeQITkdY+4SvmO5yUpC4F9zhgDAW1
-	HHvsFOks2nkksVP2qyZZQgw6ODo8ayLTjwfm7ZzKdQqrVkUW1JvajqDMO89g5jvIdkN1+FpuCJ0yT
-	b1FR3SEFZISFKb3tu4z7XxfFJ2X3RqbVdtKnGJ+CfuaqWTK3sR89rg1c2x8U4NZMsMzQWwe0+b330
-	TW3pZDTg==;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-Id:Date:Subject:From:Reply-To:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=EEC0qJTG8OKSyQhpTsBvNB9fPeFKMLfq9Aho3jBcd6E=; b=X79EW50QThJuRBql8sQN8YZJ2H
+	98AcES0FPmYRrraxKzT4B5jkqGVZGJjB0Vem/XnDD76WiFqGXJhNK/6PUYmk5IRVYsPAYn+BN08Bu
+	nQmyK67OcbQnzIvePlH/65Ed1Y86u4imScirUM1DzgK8GwyH2GMy3u2Zn4Ze6id2xBvNBVpNTAFbb
+	vb49+Qi1f/K72rtKB0OyeKHbWlvjpKe43/dZwpBjoeceNxZIbV521zUH7VH2l6ugcCE8cIj4TORpK
+	vet7YpKbaHro5ejhLxWzeyd0ZN6WKXq+Jd/6+2y6sOPJcW00nDStjBUZykKlsBMD1QLDwuI6RJU8y
+	YSPsncYg==;
 Received: from authenticated-user
 	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.96)
 	(envelope-from <leitao@debian.org>)
-	id 1wZqOf-00EeVC-0g;
-	Wed, 17 Jun 2026 13:33:37 +0000
+	id 1wZqOZ-00EeV7-1K;
+	Wed, 17 Jun 2026 13:33:32 +0000
 From: Breno Leitao <leitao@debian.org>
-Date: Wed, 17 Jun 2026 06:32:47 -0700
-Subject: [PATCH 1/2] ACPI: APEI: GHES: fix severity namespace in
- ghes_log_hwerr()
+Subject: [PATCH 0/2] vmcoreinfo: GHES: track fatal hardware errors
+Date: Wed, 17 Jun 2026 06:32:46 -0700
+Message-Id: <20260617-hwerr-v1-0-ff131cd6203c@debian.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260617-hwerr-v1-1-ff131cd6203c@debian.org>
-References: <20260617-hwerr-v1-0-ff131cd6203c@debian.org>
-In-Reply-To: <20260617-hwerr-v1-0-ff131cd6203c@debian.org>
+X-B4-Tracking: v=1; b=H4sIAP6hMmoC/x3MQQqAIBAF0KsMf62QQhpeJVpITjmbihEqiO4e9
+ A7wHjRW4YZED5RPabJvSOQMYa55W9lKQSL4zocuuGjrxao2+6H0JYTMQ4QhHMqL3P8zTu/7AZB
+ 4XRBXAAAA
+X-Change-ID: 20260617-hwerr-a28d5d66ae87
 To: "Rafael J. Wysocki" <rafael@kernel.org>, 
  Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
  Hanjun Guo <guohanjun@huawei.com>, 
@@ -66,26 +67,27 @@ Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
  riel@surriel.com, caggio@meta.com, kexec@lists.infradead.org, 
  Breno Leitao <leitao@debian.org>, kernel-team@meta.com
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1116; i=leitao@debian.org;
- h=from:subject:message-id; bh=IMYiUdETKsd9vslxX1nGBukt/xidhhV6uxKeG22G+Dg=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqMqIkNxoJNOROjiYczzba3ljNP3lHQN4V+VJtB
- 2jP68tv2fWJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCajKiJAAKCRA1o5Of/Hh3
- bebPD/0eyRiXYwI/eZz4VMGjbfYJbyIgQN4p41SffpyWjB2Uy9Uug7GKQyxzLWDaoERwM2IqYCz
- IbOnZ8ELzd32K0SFa+0D8MJt9h310hHlI3xn2ZftujlO9/z2AO6Akj5WQeZ9h0c7wrk0k1XCkfX
- ESjJUwpTzSSiiJlC3HbEf8wE+hu3qPN1IxtN4neHzj2axlajMq5518d56OoDruWAkV1G0Z5OUPK
- bbhy05BQevI+/Ob9pdZxcu4cvcrJl1GeSVfVorF7nzKRSVDP16/BSaK+3Dh0OrZTYIr2AufGM2j
- XdyoWwJA9CLkX70o50v9C21cXGzK/o3hrcSTfALh50MOcefeUM2/uPHFZtPCZBlPuWVXa1vmC2Y
- zAM/1NdYWwwsBCT8+nwe0vG/2Yms3lbF0yc6JQA9xgPL4iA+1tfeUZC82UuvR7EhV271dcEorx6
- GZDoT5F9dLPv3vf1/gFJ45wIbp0dcT7sP1Bgb4Mqc0sZaddjeukuEOrFcNXlreSj1buOYg3v/6E
- CKevbY7m90llzDduAa0yUeF2Aa5EP9QA1ZsG5NX/gmoEfeCLovyfLNyOitIjGKkTk2pz5KrCZ/Z
- YKS+gV0f+kI/sJas1cDCGsSOJuxHq6EAIBumbcw3K2rW7L8ZL7NlscjL1XoZCykATpxN2W2AjV7
- hXCI+yJlyoA4xow==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=897; i=leitao@debian.org;
+ h=from:subject:message-id; bh=4YrNXDncXnmKl+A8s140VbYwKQUDIRjgWGDf6s/6fk4=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqMqIkPriB/CZVfySHbrrGgN3toy1kx5+6UP9Cr
+ r+0mhO81bOJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCajKiJAAKCRA1o5Of/Hh3
+ bRGuEACowDrZxGFVCCGdYvWi67J+RKoA46lnaXuiZveyNlTjvUK4ac5KK/6XWnwTf7IxaNUVZ00
+ rfodx3caH3nIQplfmvoyFtqX6ufeGoGFzNCfppP0X1MIm0q0I5K1Dcl8gPWTXgpm4JkkZzOCUsP
+ T+bMVFmr8XV0uk4k8ccFRVMJBuSMZ8v4VOQi9ei60CtVaFWh3R6LyfJW8CHSeuhvHr7BGG7aZgH
+ Kr53FX2fIUmtXhTaoN5A+Sad1/tNB4qH0Rg0XQUKY6/a7ahk4YlZvJKZ1G2oeMvTSzjhTyb8NVq
+ MVPE5n2SHv1EuO242m9ijL1tBtWqSI1X3DAmzzjUhE6gW7uc7HPoxBH1sJ1lzQN8q4YGy7ZnIAT
+ YmXB1J0+rZVUuuvEqRUzDDOtvQP3sccqvnZXoOO+vlllTpZ1KLQ/uKkRgCunfKnwwl9FgsK3Eg5
+ ulJ740rWKgfrq9W/s3Mr6wwPp5wqyTRcDsJjQAKBdy+pFfBILlxBoN++eTGorjxpiUIDgq9igJP
+ +7LG5o2QpXy4PhEX0zqP7W6mK08qjiyiFplElUm+Xg5z3QLnkK1DnC+RPbnTk3tsfcgeBWc5e7y
+ szvZQkseCF5I0ZQvvR7m9bK6aoBlOCAW/wGra0uRWXlvWd7Cts+9XRho1att4kNnTURoW1ET2y1
+ NGBU+0Bc+Ap73rw==
 X-Developer-Key: i=leitao@debian.org; a=openpgp;
  fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 X-Debian-User: leitao
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260617_063415_107714_AC3E3839 
-X-CRM114-Status: GOOD (  10.01  )
+X-CRM114-CacheID: sfid-20260617_063408_892707_629E0517 
+X-CRM114-Status: UNSURE (   7.74  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,36 +102,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-ghes_log_hwerr() receives a GHES_SEV_* value from ghes_severity() but
-tests it against CPER_SEV_RECOVERABLE.  GHES_SEV_RECOVERABLE is 2 while
-CPER_SEV_RECOVERABLE is 0, so every recoverable error is dropped and
-only GHES_SEV_NO slips through; nothing useful is recorded through the
-APEI/GHES path, which is the only one arm64 has.
+Hardware errors reported through APEI/GHES are recorded in the kernel's
+hwerr_data array so that crash tooling can tell from the vmcore whether a
+hardware error preceded a crash.
 
-Compare against GHES_SEV_RECOVERABLE so recoverable hardware errors are
-tracked as intended.
+This short series improves that path:
 
-Fixes: 918e1507cff9 ("vmcoreinfo: track and log recoverable hardware errors")
+ * The first patch is just a fix.
+ * The second adds a HWERR_FATAL bucket that records panic-severity
+   errors -- the ones most likely to have caused the crash -- when GHES
+   reports them.
+
 Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
- drivers/acpi/apei/ghes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Breno Leitao (2):
+      ACPI: APEI: GHES: fix severity namespace in ghes_log_hwerr()
+      vmcore_info: track fatal hardware errors
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 3236a3ce79d6b..f0f9f1529e7aa 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -877,7 +877,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_cper_kfifo_get, "CXL");
- 
- static void ghes_log_hwerr(int sev, guid_t *sec_type)
- {
--	if (sev != CPER_SEV_RECOVERABLE)
-+	if (sev != GHES_SEV_RECOVERABLE)
- 		return;
- 
- 	if (guid_equal(sec_type, &CPER_SEC_PROC_ARM) ||
+ drivers/acpi/apei/ghes.c    | 7 ++++++-
+ include/uapi/linux/vmcore.h | 1 +
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+---
+base-commit: 4fa3f5fabb30bf00d7475d5a33459ea83d639bf9
+change-id: 20260617-hwerr-a28d5d66ae87
 
+Best regards,
 -- 
-2.53.0-Meta
+Breno Leitao <leitao@debian.org>
 
 
