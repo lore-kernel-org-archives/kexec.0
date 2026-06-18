@@ -4,46 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 30027C5DF79
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48337C5DF7E
 	for <kexec@archiver.kernel.org>; Sat, 15 Aug 2026 07:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=IPyotJxeR5uGcVVLMoJjwubMmXyJTsZGJCp+yFer/oU=; b=WhwAEMId+j+s6O59REFH6VkIDa
-	Ksoglr8RANtcpEwF2zMVRSdNgKeRDOe2FyHbJoutkoZjgiZNGEwcJk/3HnH3hK4DmVwwytJrTwBlH
-	5aJYYuRkGF3+S5XERb2Jwrs5Iver92gbwaY17lFQBQPHa/ESchQGsPffvFaYBiDT9yJ9TBQEpX3Ji
-	5Q9Ft711SwIif/scdTYQvvPQT0/5koxGRopxXItEGeO0wK1IaG1Rj8hOY/C51X8xlvol0ssIZBdse
-	tRD5ujHUtnJBPaOcCM8YujtezpT/L8uMOLAm6EvThdjLKUPGkCTHPi1ktO+J3gk5q66D+qqemsF72
-	MTcYKjsA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=UOH0r2GKmZinHZXHsCVUvBFIRyCZaXIIn59yPqlKYRQ=; b=NqDLHVTt+YAlwYFMDar7g3Jt7O
+	SB0jhg6fq/kVFzKo9b36sxnbvKXoXSxu+b+eDbdtN4sV/JrH7GPU7Vx9Qgb0MgdpKSDGIeuSQe3x1
+	nhLetvKqeBWBK2Wgt5G680M/SlLS5TO+P0Rpzapm2Qf98UGa3wgcZxAKdRlPQLkdFEDyA7XM0xshX
+	NwamnD+VcN2lxSGgjPCzpJXiEfifTMDG6Nd1KsFiAM6x8nccMeD6LdgCYvwV8IkXmculz93S3yRmB
+	jlzXLJOsceAx6K7L675i5yaohW3VGG2CpZjxWwMUKW1sY/+C4s3PspuQSTq1Yl9I9bKVMc3Fp7dV0
+	2nsTibhw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wv95L-00000003cxU-1ulB;
-	Sat, 15 Aug 2026 07:45:43 +0000
-Received: from canpmsgout04.his.huawei.com ([113.46.200.219])
+	id 1wv95K-00000003cwe-2hHe;
+	Sat, 15 Aug 2026 07:45:42 +0000
+Received: from canpmsgout02.his.huawei.com ([113.46.200.217])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1we8ar-0000000EEKp-2imm;
-	Mon, 29 Jun 2026 09:48:00 +0000
+	id 1wa1yG-00000000VOK-16Kv;
+	Thu, 18 Jun 2026 01:55:10 +0000
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=IPyotJxeR5uGcVVLMoJjwubMmXyJTsZGJCp+yFer/oU=;
-	b=ZvqXwk1LGLILo1sZWbW4Vwk7DohspdOETHMV+sQ5/kKKv3cidXYNYfIu10fUhh6jkU/DXHzWi
-	HUim2EaCJltc0yUZLhMVFyof+5gwRNiiqNjmI7iANvKL0RczTQISUyeGDF4p/4M7fm3xkHv24ie
-	VNh/G67tXRbC+w7DEbfgHxE=
+	bh=UOH0r2GKmZinHZXHsCVUvBFIRyCZaXIIn59yPqlKYRQ=;
+	b=35QD5KYBf8iWm3rSHGgu5lrD1IM1oRlAbbVOXF6oMi5OW7M8yZlBjxwAJDI7B4dZe3/wWYw3i
+	u1FsPuVNCgRGRIq4XPKt8ko5A2ZywXPGblpb9i9d6ACKRzVYyCRKVU0tJtsMiLrk1LIdelLq3nq
+	AYJjys3AV3rY6Q7icuxh40k=
 Received: from mail.maildlp.com (unknown [172.19.163.0])
-	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4gph6m6H2bz1prKR;
-	Mon, 29 Jun 2026 17:38:40 +0800 (CST)
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4ggk934xsfzcbNM;
+	Thu, 18 Jun 2026 09:46:31 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4C2B440537;
-	Mon, 29 Jun 2026 17:47:51 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
- (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 29 Jun
- 2026 17:47:48 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
+	by mail.maildlp.com (Postfix) with ESMTPS id A97B840561;
+	Thu, 18 Jun 2026 09:54:57 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 18 Jun 2026 09:54:53 +0800
+Message-ID: <7d8492c5-fc17-4c94-bc88-e77d6c1a849d@huawei.com>
+Date: Thu, 18 Jun 2026 09:54:52 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v16 06/10] riscv: kexec_file: Use crash_prepare_headers()
+ helper to simplify code
 To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
 	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
@@ -51,40 +56,34 @@ To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
 	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
 	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
 	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
-	<akpm@linux-foundation.org>, <baoquan.he@linux.dev>, <rppt@kernel.org>,
+	<akpm@linux-foundation.org>, <bhe@redhat.com>, <rppt@kernel.org>,
 	<pasha.tatashin@soleen.com>, <pratyush@kernel.org>, <ruirui.yang@linux.dev>,
 	<rdunlap@infradead.org>, <peterz@infradead.org>,
 	<feng.tang@linux.alibaba.com>, <dapeng1.mi@linux.intel.com>,
-	<elver@google.com>, <enelsonmoore@gmail.com>, <kuba@kernel.org>,
-	<ebiggers@kernel.org>, <lirongqing@baidu.com>, <leitao@debian.org>,
-	<kees@kernel.org>, <coxu@redhat.com>, <cfsworks@gmail.com>, <jbohac@suse.cz>,
-	<osandov@fb.com>, <ryan.roberts@arm.com>, <tangyouling@kylinos.cn>,
-	<sourabhjain@linux.ibm.com>, <ritesh.list@gmail.com>, <gaohan@iscas.ac.cn>,
-	<david@kernel.org>, <wangruikang@iscas.ac.cn>, <muchun.song@linux.dev>,
-	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <guoren@kernel.org>,
-	<namcao@linutronix.de>, <rick.p.edgecombe@intel.com>, <djbw@kernel.org>,
-	<liaoyuanhong@vivo.com>, <fuqiang.wang@easystack.cn>,
-	<vishal.l.verma@intel.com>, <chenjiahao16@huawei.com>, <x86@kernel.org>,
+	<kees@kernel.org>, <elver@google.com>, <kuba@kernel.org>,
+	<lirongqing@baidu.com>, <ebiggers@kernel.org>, <paulmck@kernel.org>,
+	<leitao@debian.org>, <coxu@redhat.com>, <Liam.Howlett@oracle.com>,
+	<ryan.roberts@arm.com>, <osandov@fb.com>, <jbohac@suse.cz>,
+	<cfsworks@gmail.com>, <tangyouling@kylinos.cn>, <sourabhjain@linux.ibm.com>,
+	<ritesh.list@gmail.com>, <adityag@linux.ibm.com>, <liaoyuanhong@vivo.com>,
+	<seanjc@google.com>, <fuqiang.wang@easystack.cn>, <ardb@kernel.org>,
+	<chenjiahao16@huawei.com>, <guoren@kernel.org>, <x86@kernel.org>,
 	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
 	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
 	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v17 02/10] powerpc/crash: sort crash memory ranges before preparing elfcorehdr
-Date: Mon, 29 Jun 2026 17:47:38 +0800
-Message-ID: <20260629094746.191843-3-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260629094746.191843-1-ruanjinjie@huawei.com>
-References: <20260629094746.191843-1-ruanjinjie@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+References: <20260608073459.3119290-1-ruanjinjie@huawei.com>
+ <20260608073459.3119290-7-ruanjinjie@huawei.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <20260608073459.3119290-7-ruanjinjie@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.109.254]
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
  dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260629_024758_048385_2BC62093 
-X-CRM114-Status: GOOD (  25.60  )
+X-CRM114-CacheID: sfid-20260617_185508_625123_3B747C8D 
+X-CRM114-Status: GOOD (  23.90  )
 X-Mailman-Approved-At: Sat, 15 Aug 2026 00:45:39 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -100,192 +99,134 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
 
-During a memory hot-remove event, the elfcorehdr is rebuilt to exclude
-the removed memory. While updating the crash memory ranges for this
-operation, the crash memory ranges array can become unsorted. This
-happens because remove_mem_range() may split a memory range into two
-parts and append the higher-address part as a separate range at the end
-of the array.
 
-So far, no issues have been observed due to the unsorted crash memory
-ranges. However, this could lead to problems once crash memory range
-removal is handled by generic code, as introduced in the upcoming
-patches in this series.
+On 6/8/2026 3:34 PM, Jinjie Ruan wrote:
+> Use the newly introduced crash_prepare_headers() function to replace
+> the existing prepare_elf_headers(), allocate cmem and exclude crash kernel
+> memory in the crash core, which reduce code duplication.
+> 
+> Only the following two architecture functions need to be implemented:
+> - arch_get_system_nr_ranges(). Call get_nr_ram_ranges_callback()
+>   to pre-counts the max number of memory ranges.
+> 
+> - arch_crash_populate_cmem(). Use prepare_elf64_ram_headers_callback()
+>   to collects the memory ranges and fills them into cmem.
 
-Currently, powerpc uses a platform-specific function,
-remove_mem_range(), to exclude hot-removed memory from the crash memory
-ranges. This function performs the same task as the generic
-crash_exclude_mem_range() in crash_core.c. The generic helper also
-ensures that the crash memory ranges remain sorted. So remove the
-redundant powerpc-specific implementation and instead call
-crash_exclude_mem_range_guarded() (which internally calls
-crash_exclude_mem_range()) to exclude the hot-removed memory ranges.
+Hi Paul, Palmer, Albert, Alexandre and RISC-V maintainers,
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan he <bhe@redhat.com>
-Cc: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org
-Acked-by: Baoquan He <bhe@redhat.com>
-Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- arch/powerpc/include/asm/kexec_ranges.h |  4 +-
- arch/powerpc/kexec/crash.c              |  5 +-
- arch/powerpc/kexec/ranges.c             | 87 +------------------------
- 3 files changed, 7 insertions(+), 89 deletions(-)
+Sorry for the interruption.
 
-diff --git a/arch/powerpc/include/asm/kexec_ranges.h b/arch/powerpc/include/asm/kexec_ranges.h
-index 14055896cbcb..ad95e3792d10 100644
---- a/arch/powerpc/include/asm/kexec_ranges.h
-+++ b/arch/powerpc/include/asm/kexec_ranges.h
-@@ -7,7 +7,9 @@
- void sort_memory_ranges(struct crash_mem *mrngs, bool merge);
- struct crash_mem *realloc_mem_ranges(struct crash_mem **mem_ranges);
- int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size);
--int remove_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size);
-+int crash_exclude_mem_range_guarded(struct crash_mem **mem_ranges,
-+				    unsigned long long mstart,
-+				    unsigned long long mend);
- int get_exclude_memory_ranges(struct crash_mem **mem_ranges);
- int get_reserved_memory_ranges(struct crash_mem **mem_ranges);
- int get_crash_memory_ranges(struct crash_mem **mem_ranges);
-diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
-index e6539f213b3d..2e88ec5c4356 100644
---- a/arch/powerpc/kexec/crash.c
-+++ b/arch/powerpc/kexec/crash.c
-@@ -493,7 +493,7 @@ static void update_crash_elfcorehdr(struct kimage *image, struct memory_notify *
- 	struct crash_mem *cmem = NULL;
- 	struct kexec_segment *ksegment;
- 	void *ptr, *mem, *elfbuf = NULL;
--	unsigned long elfsz, memsz, base_addr, size;
-+	unsigned long elfsz, memsz, base_addr, size, end;
- 
- 	ksegment = &image->segment[image->elfcorehdr_index];
- 	mem = (void *) ksegment->mem;
-@@ -512,7 +512,8 @@ static void update_crash_elfcorehdr(struct kimage *image, struct memory_notify *
- 	if (image->hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY) {
- 		base_addr = PFN_PHYS(mn->start_pfn);
- 		size = mn->nr_pages * PAGE_SIZE;
--		ret = remove_mem_range(&cmem, base_addr, size);
-+		end = base_addr + size - 1;
-+		ret = crash_exclude_mem_range_guarded(&cmem, base_addr, end);
- 		if (ret) {
- 			pr_err("Failed to remove hot-unplugged memory from crash memory ranges\n");
- 			goto out;
-diff --git a/arch/powerpc/kexec/ranges.c b/arch/powerpc/kexec/ranges.c
-index 867135560e5c..6c58bcc3e130 100644
---- a/arch/powerpc/kexec/ranges.c
-+++ b/arch/powerpc/kexec/ranges.c
-@@ -553,7 +553,7 @@ int get_usable_memory_ranges(struct crash_mem **mem_ranges)
- #endif /* CONFIG_KEXEC_FILE */
- 
- #ifdef CONFIG_CRASH_DUMP
--static int crash_exclude_mem_range_guarded(struct crash_mem **mem_ranges,
-+int crash_exclude_mem_range_guarded(struct crash_mem **mem_ranges,
- 					   unsigned long long mstart,
- 					   unsigned long long mend)
- {
-@@ -641,89 +641,4 @@ int get_crash_memory_ranges(struct crash_mem **mem_ranges)
- 		pr_err("Failed to setup crash memory ranges\n");
- 	return ret;
- }
--
--/**
-- * remove_mem_range - Removes the given memory range from the range list.
-- * @mem_ranges:    Range list to remove the memory range to.
-- * @base:          Base address of the range to remove.
-- * @size:          Size of the memory range to remove.
-- *
-- * (Re)allocates memory, if needed.
-- *
-- * Returns 0 on success, negative errno on error.
-- */
--int remove_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
--{
--	u64 end;
--	int ret = 0;
--	unsigned int i;
--	u64 mstart, mend;
--	struct crash_mem *mem_rngs = *mem_ranges;
--
--	if (!size)
--		return 0;
--
--	/*
--	 * Memory range are stored as start and end address, use
--	 * the same format to do remove operation.
--	 */
--	end = base + size - 1;
--
--	for (i = 0; i < mem_rngs->nr_ranges; i++) {
--		mstart = mem_rngs->ranges[i].start;
--		mend = mem_rngs->ranges[i].end;
--
--		/*
--		 * Memory range to remove is not part of this range entry
--		 * in the memory range list
--		 */
--		if (!(base >= mstart && end <= mend))
--			continue;
--
--		/*
--		 * Memory range to remove is equivalent to this entry in the
--		 * memory range list. Remove the range entry from the list.
--		 */
--		if (base == mstart && end == mend) {
--			for (; i < mem_rngs->nr_ranges - 1; i++) {
--				mem_rngs->ranges[i].start = mem_rngs->ranges[i+1].start;
--				mem_rngs->ranges[i].end = mem_rngs->ranges[i+1].end;
--			}
--			mem_rngs->nr_ranges--;
--			goto out;
--		}
--		/*
--		 * Start address of the memory range to remove and the
--		 * current memory range entry in the list is same. Just
--		 * move the start address of the current memory range
--		 * entry in the list to end + 1.
--		 */
--		else if (base == mstart) {
--			mem_rngs->ranges[i].start = end + 1;
--			goto out;
--		}
--		/*
--		 * End address of the memory range to remove and the
--		 * current memory range entry in the list is same.
--		 * Just move the end address of the current memory
--		 * range entry in the list to base - 1.
--		 */
--		else if (end == mend)  {
--			mem_rngs->ranges[i].end = base - 1;
--			goto out;
--		}
--		/*
--		 * Memory range to remove is not at the edge of current
--		 * memory range entry. Split the current memory entry into
--		 * two half.
--		 */
--		else {
--			size = mem_rngs->ranges[i].end - end + 1;
--			mem_rngs->ranges[i].end = base - 1;
--			ret = add_mem_range(mem_ranges, end + 1, size);
--		}
--	}
--out:
--	return ret;
--}
- #endif /* CONFIG_CRASH_DUMP */
--- 
-2.34.1
+This patch set aims to clean up and refactor the crash memory allocation
+and the exclusion logic of crashk_res, crashk_low_res, and crashk_cma.
+Currently, these  routines are almost identical across different
+architectures, leading to a lot of duplicated code.
+
+This series consolidates the logic into the generic crash core, removing
+redundant implementations from architecture-specific directories,
+including arch/riscv.
+
+There are no functional changes intended for RISC-V.
+
+The patches will be queued in the liveupdate tree for wider testing.
+Could you please take a look at the RISC-V side and consider providing
+an Acked-by?
+
+The patch series can be reviewed here:
+
+https://lore.kernel.org/all/20260608073459.3119290-1-ruanjinjie@huawei.com/
+
+Thank you very much for your time and review!
+
+Best regards,
+Jinjie
+
+> 
+> Cc: Paul Walmsley <pjw@kernel.org>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: Alexandre Ghiti <alex@ghiti.fr>
+> Cc: Guo Ren <guoren@kernel.org>
+> Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> Acked-by: Baoquan He <bhe@redhat.com>
+> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>  arch/riscv/kernel/machine_kexec_file.c | 47 +++++++-------------------
+>  1 file changed, 12 insertions(+), 35 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
+> index 3f7766057cac..439cbc50dfa6 100644
+> --- a/arch/riscv/kernel/machine_kexec_file.c
+> +++ b/arch/riscv/kernel/machine_kexec_file.c
+> @@ -44,6 +44,15 @@ static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
+>  	return 0;
+>  }
+>  
+> +unsigned int arch_get_system_nr_ranges(void)
+> +{
+> +	unsigned int nr_ranges = 2; /* For exclusion of crashkernel region */
+> +
+> +	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
+> +
+> +	return nr_ranges;
+> +}
+> +
+>  static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+>  {
+>  	struct crash_mem *cmem = arg;
+> @@ -55,41 +64,9 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+>  	return 0;
+>  }
+>  
+> -static int prepare_elf_headers(void **addr, unsigned long *sz)
+> +int arch_crash_populate_cmem(struct crash_mem *cmem)
+>  {
+> -	struct crash_mem *cmem;
+> -	unsigned int nr_ranges;
+> -	int ret;
+> -
+> -	nr_ranges = 2; /* For exclusion of crashkernel region */
+> -	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
+> -
+> -	cmem = kmalloc_flex(*cmem, ranges, nr_ranges);
+> -	if (!cmem)
+> -		return -ENOMEM;
+> -
+> -	cmem->max_nr_ranges = nr_ranges;
+> -	cmem->nr_ranges = 0;
+> -	ret = walk_system_ram_res(0, -1, cmem, prepare_elf64_ram_headers_callback);
+> -	if (ret)
+> -		goto out;
+> -
+> -	/* Exclude crashkernel region */
+> -	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
+> -	if (ret)
+> -		goto out;
+> -
+> -	if (crashk_low_res.end) {
+> -		ret = crash_exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
+> -		if (ret)
+> -			goto out;
+> -	}
+> -
+> -	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
+> -
+> -out:
+> -	kfree(cmem);
+> -	return ret;
+> +	return walk_system_ram_res(0, -1, cmem, prepare_elf64_ram_headers_callback);
+>  }
+>  
+>  static char *setup_kdump_cmdline(struct kimage *image, char *cmdline,
+> @@ -281,7 +258,7 @@ int load_extra_segments(struct kimage *image, unsigned long kernel_start,
+>  	if (image->type == KEXEC_TYPE_CRASH) {
+>  		void *headers;
+>  		unsigned long headers_sz;
+> -		ret = prepare_elf_headers(&headers, &headers_sz);
+> +		ret = crash_prepare_headers(true, &headers, &headers_sz, NULL);
+>  		if (ret) {
+>  			pr_err("Preparing elf core header failed\n");
+>  			goto out;
 
 
