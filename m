@@ -4,78 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1D673C5DF80
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 23EDBC5DF81
 	for <kexec@archiver.kernel.org>; Sat, 15 Aug 2026 07:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Date:Message-Id:Subject:References:In-Reply-To:To:
-	From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=orBYolOiVh8P+Gs6dp8/inZibU5jKERhYsBdgyU7ewg=; b=V76Wp5dcvzlZmJmtfttc5vnul2
-	eo6zOIywA1yWU28P+KR1DVZCIZ7ZZh3vuuumYoL7hBNJuvyYder6/uc78B2RnigK5HTYTjNpy7USz
-	SmAIs7q7Vksr/cPV74XMa6AKU+202x1I2Jrcutbq7onREnBQ66VYDrmyOM49EY/kTei6cLNBIjABv
-	/wNbTax3qx8sfj0BtF+lrTtQFiHuGg0E/hjhCwSBHO2+yq90s3Jgy9rsBz5MrujMw2nGF2pS3Nerw
-	ga2FFXvbI22PquLe5NfvFRSLT3ly0nwvhHPQ+d0ks0lcswjn5hy8DXxWQuwRRFYaOsBtWOHbQXzXI
-	FFKQF2hw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=IBHrtVXmPuRWQ7uBhktFTKcch7hAhRcfTxyn7mn7O4k=; b=XkJ+vfmL3dtt8mv3K2DRIbCAtt
+	YsqPc8Q3VCGXWaZk4jP0RZUmsGiHZrCg3u6+Uggt2/C3NruDFvZsJbPPY2KloEy3O4cYGrLzmR7ME
+	7kaS5ooGUO6ZtcYA/nrXsu0oMswSLA1j19bM1GOyG3no16wo9xhVi6El5tACopVmE2AUh32yo1jdy
+	tH96FNDgdgiWB1r4yChGK5O8xe5bv4RVuv6Tr+m8S9XfN//dPl1dIjKADt73K8//Z67VNARfeg7Ep
+	zCcU2MN9Hr1T+8XZMfYrWxC4QjDOdYkkfGnLvLaTB177sVmHMjQ3LySx7D5IA7/u4yoiK5ptQyBkz
+	eplm6uDw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wv95M-00000003d0K-46iH;
-	Sat, 15 Aug 2026 07:45:45 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wv95K-00000003cwP-2Adc;
+	Sat, 15 Aug 2026 07:45:42 +0000
+Received: from mail.alien8.de ([65.109.113.108])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weaj4-0000000HPfo-2Y3h;
-	Tue, 30 Jun 2026 15:50:18 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id ED39040314;
-	Tue, 30 Jun 2026 15:50:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 272C01F00A3A;
-	Tue, 30 Jun 2026 15:50:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782834617;
-	bh=orBYolOiVh8P+Gs6dp8/inZibU5jKERhYsBdgyU7ewg=;
-	h=From:To:In-Reply-To:References:Subject:Date;
-	b=hYaFsO0FH9QTvOvjL+VAVldlJ2YPFGk7Uv9Z6QoYCVHtTYFvz5GLpT1JPoGmvuzja
-	 MTy6IgtdK2zMOgBks1ci94yQnYzuxOJiLmpU/slEb508GaEKc1CAdIz3+/Zq6Bt0w9
-	 2FVSSC8lyJ1ZeKB8y1XDpUIRQvZEcPOZths6ZliY3SggfKoZOFKnqpC88EFu33XLTW
-	 sn6AnFxz4EW0LATrsCAmY8ssBo7Q13rik2AkR7zp8ALgguCfUFUhwRyu2d3NhQu+/K
-	 Y2AM6LawUcaWvPp3WCkTdmmqcN+TndJjAv7WwB1TzTqCVHBCGCID2JuhETb5Xb/WQQ
-	 rTUnWQuYsWNdQ==
-From: Mike Rapoport <rppt@kernel.org>
-To: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com, 
- will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, 
- maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
- chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com, 
- aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, 
- bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, robh@kernel.org, 
- saravanak@kernel.org, akpm@linux-foundation.org, baoquan.he@linux.dev, 
- pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev, 
- rdunlap@infradead.org, peterz@infradead.org, feng.tang@linux.alibaba.com, 
- dapeng1.mi@linux.intel.com, elver@google.com, enelsonmoore@gmail.com, 
- kuba@kernel.org, ebiggers@kernel.org, lirongqing@baidu.com, 
- leitao@debian.org, kees@kernel.org, coxu@redhat.com, cfsworks@gmail.com, 
- jbohac@suse.cz, osandov@fb.com, ryan.roberts@arm.com, 
- tangyouling@kylinos.cn, sourabhjain@linux.ibm.com, ritesh.list@gmail.com, 
- gaohan@iscas.ac.cn, david@kernel.org, wangruikang@iscas.ac.cn, 
- muchun.song@linux.dev, vishal.moola@gmail.com, junhui.liu@pigmoral.tech, 
- guoren@kernel.org, namcao@linutronix.de, rick.p.edgecombe@intel.com, 
- djbw@kernel.org, liaoyuanhong@vivo.com, fuqiang.wang@easystack.cn, 
- vishal.l.verma@intel.com, chenjiahao16@huawei.com, x86@kernel.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev, 
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
- devicetree@vger.kernel.org, kexec@lists.infradead.org, 
- Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20260629094746.191843-1-ruanjinjie@huawei.com>
-References: <20260629094746.191843-1-ruanjinjie@huawei.com>
-Subject: Re: [PATCH v17 00/10] arm64/riscv: Add support for crashkernel CMA
- reservation
-Message-Id: <178283459765.548295.14688999641870037803.b4-ty@b4>
-Date: Tue, 30 Jun 2026 18:49:57 +0300
+	id 1wa0q8-00000000SGx-3uco;
+	Thu, 18 Jun 2026 00:42:43 +0000
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3F62640E01D8;
+	Thu, 18 Jun 2026 00:42:24 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id mnKae5aeMqOk; Thu, 18 Jun 2026 00:42:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1781743333; bh=IBHrtVXmPuRWQ7uBhktFTKcch7hAhRcfTxyn7mn7O4k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V9/MYriXywS0hZanHFwwPwHTRJ7pTlal7SUCalcLgv7ntOufAz/28XqFVfI6uKyYI
+	 QOLvxM7ASQ95LAHtjtKQQSW5hRFWqG+Fvm3quBJrqpCYacEpBCfDudcD5TpKxYnvZo
+	 jNW2AguPUE125tOpIJbJKnbPZfOdFjNmXWtJtg63elp1Q41omZP/GgbbwBjA8nAloc
+	 PfGz8IIVcrme12XEvNdKQ2rv/GJag/unT3FlgXHVllVf0VJmtzm0IKtqLKpvRH2wud
+	 N8ImwjHLKfpq4lXe+fjyh782pmKmP87f26PxEGVjPzocmND+8U8oZGxvs6gpq3HXsZ
+	 RRdY/zh3823W1VfUzlz9XQHpfyKj3SugSAPLBNINUSipf0eUCFnf/ASD0chGphO2wd
+	 33XUogK9sPdnD3sSmcICjzmOBuNMU2bfQmSk8K3+YNoAcCC5j9/trjk57f1Z1l85fX
+	 sbPK3s36Q4+q3Rp8+7TUHJs/vXdR8gu2di4PbQr9EcAMuKEYesCn08iPjUwCw7VNCD
+	 XvHeVcsZsQz0RLmL5/C1IdWqyRSi8anYr36UHtEYZc5Ih+oxGgNdo8Nwmeh6BJ3ht2
+	 tqkphneIWVsqRJSVfAq1ynFwyWUfOHhtgqB+aDCAQiIvDR9Ri+cXHuftygbTEx6Z0P
+	 o2dtfp1sQOOLVA3iM8/qRkMM=
+Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::3a])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E63DE40E015B;
+	Thu, 18 Jun 2026 00:41:08 +0000 (UTC)
+Date: Wed, 17 Jun 2026 17:41:06 -0700
+From: Borislav Petkov <bp@alien8.de>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com,
+	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+	chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, alex@ghiti.fr, tglx@kernel.org,
+	mingo@redhat.com, dave.hansen@linux.intel.com, hpa@zytor.com,
+	robh@kernel.org, saravanak@kernel.org, akpm@linux-foundation.org,
+	bhe@redhat.com, rppt@kernel.org, pasha.tatashin@soleen.com,
+	pratyush@kernel.org, ruirui.yang@linux.dev, rdunlap@infradead.org,
+	peterz@infradead.org, feng.tang@linux.alibaba.com,
+	dapeng1.mi@linux.intel.com, kees@kernel.org, elver@google.com,
+	kuba@kernel.org, lirongqing@baidu.com, ebiggers@kernel.org,
+	paulmck@kernel.org, leitao@debian.org, coxu@redhat.com,
+	Liam.Howlett@oracle.com, ryan.roberts@arm.com, osandov@fb.com,
+	jbohac@suse.cz, cfsworks@gmail.com, tangyouling@kylinos.cn,
+	sourabhjain@linux.ibm.com, ritesh.list@gmail.com,
+	adityag@linux.ibm.com, liaoyuanhong@vivo.com, seanjc@google.com,
+	fuqiang.wang@easystack.cn, ardb@kernel.org, chenjiahao16@huawei.com,
+	guoren@kernel.org, x86@kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	kexec@lists.infradead.org
+Subject: Re: [PATCH v16 05/10] x86: kexec_file: Use crash_prepare_headers()
+ helper to simplify code
+Message-ID: <20260618004106.GCajM-oofpxU2jDsy0@fat_crate.local>
+References: <20260608073459.3119290-1-ruanjinjie@huawei.com>
+ <20260608073459.3119290-6-ruanjinjie@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260608073459.3119290-6-ruanjinjie@huawei.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260617_174241_137103_10A91025 
+X-CRM114-Status: GOOD (  14.47  )
 X-Mailman-Approved-At: Sat, 15 Aug 2026 00:45:40 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -91,45 +108,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, 29 Jun 2026 17:47:36 +0800, Jinjie Ruan wrote:
-> arm64/riscv: Add support for crashkernel CMA reservation
+On Mon, Jun 08, 2026 at 03:34:54PM +0800, Jinjie Ruan wrote:
+
+> Subject: Re: [PATCH v16 05/10] x86: kexec_file: Use crash_prepare_headers() helper to simplify code
+
+Use proper subject prefix: "x86/crash: ..."
+
+> Use the newly introduced crash_prepare_headers() function to replace
+> the existing prepare_elf_headers(), allocate cmem and exclude crash kernel
+> memory in the crash core, which reduce code duplication.
 > 
-> The crash memory allocation, and the exclude of crashk_res, crashk_low_res
-> and crashk_cma memory are almost identical across different architectures,
-> This patch set handle them in crash core in a general way, which eliminate
-> a lot of duplication code.
+> Only the following three architecture functions need to be implemented:
+> - arch_get_system_nr_ranges(). Call get_nr_ram_ranges_callback()
+>   to pre-count the max number of memory ranges.
 > 
-> [...]
+> - arch_crash_populate_cmem(). Use prepare_elf64_ram_headers_callback()
+>   to collect the memory ranges and fills them into cmem.
+> 
+> - arch_crash_exclude_ranges(). Exclude the low 1M for x86.
+> 
+> By the way, remove the unused "nr_mem_ranges" in
 
-Applied to crashkernel-cma branch of liveupdate/linux.git tree, thanks!
+s/By the way/While at it/
 
-[01/10] riscv: kexec_file: Fix crashk_low_res not exclude bug
-        commit: 5fc6e7d45373571d03cd04fd4c6069c0a97fa75a
-[02/10] powerpc/crash: sort crash memory ranges before preparing elfcorehdr
-        commit: 202b5de3ec34317d6a8944239fe227ef8f6853ec
-[03/10] crash: Add crash_prepare_headers() to exclude crash kernel memory
-        commit: 5beabef0cffaa1ea6e27e85dbd526b7a28e0e7c7
-[04/10] arm64: kexec_file: Use crash_prepare_headers() helper to simplify code
-        commit: 201b561cbc6c594aa1ef718a1204dd45720d96dd
-[05/10] x86/crash: Use crash_prepare_headers() helper to simplify code
-        commit: a8f09f2a7485956c3653696f6cb94faadd243645
-[06/10] riscv: kexec_file: Use crash_prepare_headers() helper to simplify code
-        commit: 7b078a0aa2753dcf5cae88e5349a25ac39998a9b
-[07/10] LoongArch: kexec_file: Use crash_prepare_headers() helper to simplify code
-        commit: 51ed0950adf05c99e393818887a2616dd4ab3e34
-[08/10] powerpc/kexec_file: Use crash_exclude_core_ranges() helper
-        commit: b0e06c5a30742bc6bc8523fe9c71c1a043a7661d
-[09/10] arm64: kexec_file: Add support for crashkernel CMA reservation
-        commit: c12c63d05dfe7088aa8b1b872fe261e25537c823
-[10/10] riscv: kexec_file: Add support for crashkernel CMA reservation
-        commit: a037fe3c58ed489ca8ad8531bd7e16b90a84badc
+> arch_crash_handle_hotplug_event().
+> 
+> Cc: Thomas Gleixner <tglx@kernel.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> Acked-by: Baoquan He <bhe@redhat.com>
+> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>  arch/x86/kernel/crash.c | 89 +++++------------------------------------
+>  1 file changed, 11 insertions(+), 78 deletions(-)
 
-tree: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux
-branch: crashkernel-cma
+With those nitpicks above addressed:
 
---
-Sincerely yours,
-Mike.
+Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
 
+-- 
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
 
