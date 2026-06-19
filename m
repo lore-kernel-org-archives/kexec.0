@@ -4,62 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1753FCDB466
-	for <kexec@archiver.kernel.org>; Fri, 19 Jun 2026 14:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4D644CD4F26
+	for <kexec@archiver.kernel.org>; Fri, 19 Jun 2026 14:26:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	References:In-Reply-To:Subject:Cc:To:From:Message-ID:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Ipm4VnnCUVKjt+hErgryje+qavsLSdr26B/MMNK2kNQ=; b=VxD8OW+GIbGJY5hKJ8+wepl2MK
-	L5QPlPIWKFl1vAMNdICko3DG54m0doEUmr1h+XCb+ZG6Le423MBS7jn9t+tM9wWNwwSJhshOrmFvA
-	VwD+Rpfg9KnQ2fKbHGUgIQWz61DkEaXqLiIVx7G0BWe5xknfqN7PgY1K952oC51H9xoBFDQ20zds9
-	o08mtBC+9u0ANMs+uFOkwohj52n99MtYauoioxCcTS1vqeuTj2TOclVUF6G7yxzNZ678KVS2bpr6c
-	AtIYyt1FTT+w+vOpiJVtRIsL8qCSlTKbP1oUwCi5c926iHsqhKNhtnTRv9GQBs2WUBLpJbTgAsB6M
-	A3G98Nqg==;
+	bh=bQopk2nLC00ieCYyPypfM07LSfdvG93z8e3u+EoauY8=; b=lX6gOReP14UZUWN9eCjWkabgL5
+	GN3QiS7NWaUPNUpsFE5hTvjyI5G+qrwOQ5wkekDiNMTQto/cFEP/+8/IOcKIvaY5RKpk912VN6xUh
+	oG0XPcP7NbyzDkfCfeLoGDjwPWNP8OZLa1/60gdOzjB6BpEOryV+MK8VNnXyO2UH2zePh3GxCNpwn
+	Yf6OGGHdjj4QBfFCnFS7w2yn53P2r1KgfQJEt7qYWh00+UGt7nLLEUZFfsfuXrVfcAbssl5BBMSqk
+	eTCSopGP654axQCMYX3siUFB0/T4/vXUFI3Imux5rolUAFUNJMGwAET7rnPZtU2/OFfcVPnAIYRla
+	JCyBuuyg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1waZwY-00000002Y7l-48XO;
-	Fri, 19 Jun 2026 14:11:38 +0000
+	id 1waaAt-00000002Zli-1tD1;
+	Fri, 19 Jun 2026 14:26:27 +0000
 Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1waZwW-00000002Y68-2BHY
-	for kexec@lists.infradead.org;
-	Fri, 19 Jun 2026 14:11:37 +0000
+	id 1waaAr-00000002ZlZ-1wto;
+	Fri, 19 Jun 2026 14:26:25 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id E30246020A;
-	Fri, 19 Jun 2026 14:11:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E4A31F00ACA;
-	Fri, 19 Jun 2026 14:11:34 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 84916601E1;
+	Fri, 19 Jun 2026 14:26:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 352EC1F000E9;
+	Fri, 19 Jun 2026 14:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781878295;
-	bh=Ipm4VnnCUVKjt+hErgryje+qavsLSdr26B/MMNK2kNQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=L+HldSM1+o+tWkDbIG8K43jsuVzgtp7NdNSEk+Jfu5jaNR8rxpCcgZQ1MW+aX0c84
-	 ouXIbhwhAm5lGTM1WmZActEB2i26IaKhRotfbVrV6y7ZtrJFbUSh8fyun8qtAftWem
-	 /zWPuOMsg5zELZf+0Ns/LUncVu87F4uUCHkmHWFSedkUVNDkXLW3w30OT/4k/nxMx0
-	 uWnROWM2Wa1zp5kmF86bOyH8vgVmiXn6lepY2aJlhkfkhLCJpu9AT1MjcbTcVQZ66u
-	 5ZOTyvO9Gx5ZSwSrtrL8e8MfzACbVoRLnAmhuTcrUtEsF94lZ7t3KEtMpEPmkIrYne
-	 G74ICyfzZFn2A==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: tarunsahu@google.com
-Cc: Alexander Graf <graf@amazon.com>,  Pratyush Yadav <pratyush@kernel.org>,
-  Mike Rapoport <rppt@kernel.org>,  Andrew Morton
- <akpm@linux-foundation.org>,  Pasha Tatashin <pasha.tatashin@soleen.com>,
-  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
-  kexec@lists.infradead.org
-Subject: Re: [PATCH v2 0/2] luo: migrate serialized_data to type-safe KHO
- pointers
-In-Reply-To: <9huzv7beloza.fsf@tarunix.c.googlers.com> (tarunsahu@google.com's
-	message of "Fri, 19 Jun 2026 12:00:09 +0000")
-References: <cover.1781615759.git.tarunsahu@google.com>
-	<9huzv7beloza.fsf@tarunix.c.googlers.com>
-Date: Fri, 19 Jun 2026 16:11:32 +0200
-Message-ID: <2vxzmrwqoc17.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
-MIME-Version: 1.0
-Content-Type: text/plain
+	s=k20260515; t=1781879184;
+	bh=bQopk2nLC00ieCYyPypfM07LSfdvG93z8e3u+EoauY8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=YXg9rxdyQw5KhPv6Z1WHhF9Hn/vGFplna790SFlA8QGz4ka1fL5KHiuhdI5GmuwYw
+	 z0lvQ6efm3WvTHRAhJFaE1TzyDwd1ZghWqYHl1N3wXeLlLK5uj/NdKCe6Jcbi90wMk
+	 Xt3ixNHnCM/CPjvE1OWFPLKw+SE+Reg3cp1rXRQapdTEuOTnI0yvDwG2rwpt+HkO1h
+	 eslzCZdWHV9nbrhdz5oYeiJpPK/rRBhDeKe/uB2GGOCo9N3zcNatu572qaO//xt5y8
+	 y9FdvPrfYlT7Ib/s3WdinN4eWuCdOqexggGwmBz5IzVNsEaodLO525HxcIE4Hzeokg
+	 DzmXG8dTcsnGA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1waaAn-0000000ELL4-2qrx;
+	Fri, 19 Jun 2026 14:26:21 +0000
+Date: Fri, 19 Jun 2026 15:26:21 +0100
+Message-ID: <868q8asj1u.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Kiryl Shutsemau <kirill@shutemov.name>,
+	Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Doug Anderson <dianders@chromium.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Usama Arif <usama.arif@linux.dev>,
+	Breno Leitao <leitao@debian.org>,
+	Julien Thierry <julien.thierry.kdev@gmail.com>,
+	Lecopzer Chen <lecopzer@gmail.com>,
+	Sumit Garg <sumit.garg@kernel.org>,
+	kernel-team@meta.com,
+	kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	"Kiryl Shutsemau (Meta)" <kas@kernel.org>
+Subject: Re: [PATCH v4 0/4] arm64: cross-CPU NMI via SDEI
+In-Reply-To: <ajVLeseWOZn0XXY2@arm.com>
+References: <cover.1781709543.git.kas@kernel.org>
+	<ajVLeseWOZn0XXY2@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: catalin.marinas@arm.com, kirill@shutemov.name, will@kernel.org, james.morse@arm.com, mark.rutland@arm.com, dianders@chromium.org, pmladek@suse.com, tglx@linutronix.de, akpm@linux-foundation.org, bhe@redhat.com, puranjay@kernel.org, usama.arif@linux.dev, leitao@debian.org, julien.thierry.kdev@gmail.com, lecopzer@gmail.com, sumit.garg@kernel.org, kernel-team@meta.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kas@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,29 +98,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jun 19 2026, tarunsahu@google.com wrote:
+On Fri, 19 Jun 2026 15:00:26 +0100,
+Catalin Marinas <catalin.marinas@arm.com> wrote:
+> 
+> Hi Kiryl,
+> 
+> On Wed, Jun 17, 2026 at 08:20:01PM +0100, Kiryl Shutsemau wrote:
+> >   - GICv3 pseudo-NMI (interrupt priority masking). Its cost is on the
+> >     interrupt mask/unmask hot path: local_irq_enable() becomes an
+> >     ICC_PMR_EL1 write plus a synchronising barrier, and exception
+> >     entry/exit save and restore the PMR, paid on every CPU whether or not
+> >     an NMI is ever delivered. In our measurements, enabling pseudo-NMI
+> >     costs up to ~5% on real workloads, and ~66% on a syscall-in-a-loop
+> >     microbenchmark. A fleet-wide ~5% regression is not acceptable, so
+> >     these systems run with pseudo-NMI disabled.
+> 
+> Does your firmware set ICC_CTLR_EL1.PMHE? I'd be curious to see the
+> numbers if the DSB was omitted on the enable path.
 
-> +Mike, +Pasha
->
-> This is currently rebased on top of mailine, also can be applied to
-> liveupdate/fixes with no conflict. I would like to know which release
-> cycle we are targeting for this, so That I can rebase it accordingly?
->
-> As for liveupdate/next, it needs some conlfict resolution.
+I certainly don't observe this sort of overhead on the HW I have
+access to, and would like to understand where this is coming from with
+actual profiling data.
 
-Base it on liveupdate/next after the merge window. Since nothing is
-actively broken (as far as I can tell), I don't think we should take it
-via fixes. We should do it via the 7.3 merge window.
-
->
-> Tarun Sahu <tarunsahu@google.com> writes:
->
->> Covvert raw serialized_data to KHO serializeable pointer (KHOSER_PTR).
->> This series also takes care of resolving the bug with memfd of using
->> phys_to_virt before checking the args->serialized_data value.
-[...]
+	M.
 
 -- 
-Regards,
-Pratyush Yadav
+Without deviation from the norm, progress is not possible.
 
