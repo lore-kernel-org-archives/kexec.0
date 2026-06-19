@@ -4,86 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4D644CD4F26
-	for <kexec@archiver.kernel.org>; Fri, 19 Jun 2026 14:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E5C3CD98F2
+	for <kexec@archiver.kernel.org>; Fri, 19 Jun 2026 16:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	References:In-Reply-To:Subject:Cc:To:From:Message-ID:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bQopk2nLC00ieCYyPypfM07LSfdvG93z8e3u+EoauY8=; b=lX6gOReP14UZUWN9eCjWkabgL5
-	GN3QiS7NWaUPNUpsFE5hTvjyI5G+qrwOQ5wkekDiNMTQto/cFEP/+8/IOcKIvaY5RKpk912VN6xUh
-	oG0XPcP7NbyzDkfCfeLoGDjwPWNP8OZLa1/60gdOzjB6BpEOryV+MK8VNnXyO2UH2zePh3GxCNpwn
-	Yf6OGGHdjj4QBfFCnFS7w2yn53P2r1KgfQJEt7qYWh00+UGt7nLLEUZFfsfuXrVfcAbssl5BBMSqk
-	eTCSopGP654axQCMYX3siUFB0/T4/vXUFI3Imux5rolUAFUNJMGwAET7rnPZtU2/OFfcVPnAIYRla
-	JCyBuuyg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=upm7hjjighMX28RxALYlLLqfXqHttETy53AIK73LdCk=; b=LY8C5mVgrPr9WJBvZ+/rzz1yMy
+	5FelUQe66b+0VVDflzNM1HdzOlhAxvtYjo2G7xVb6E32tMmFzvlvvRiSsGaUSatvv2TT2neNS4e7t
+	6qb7vSNzn4j2s/2PIpXn3X0xHsKB7xOBWR6pijXfdpaEZLNjn7RKblmU5D4cJbHtvBMoVp4KE6ZjB
+	lvSWiINkkS7oEgLztVsLgOWBW7qvjY8WHueJmpoXuTWmJQAer4Dfuc2RMx82sFIbJvq57ApIGCMum
+	5IYCSOgjI5uvlirLRWta0g3Y8OWxgmBW2SuDMaWc1OmLu8zVWF1hA4Nkbky0Kq43I8amkGNF43AaK
+	IH/yALEA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1waaAt-00000002Zli-1tD1;
-	Fri, 19 Jun 2026 14:26:27 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wabkM-00000002kob-1ws3;
+	Fri, 19 Jun 2026 16:07:10 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1waaAr-00000002ZlZ-1wto;
-	Fri, 19 Jun 2026 14:26:25 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 84916601E1;
-	Fri, 19 Jun 2026 14:26:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 352EC1F000E9;
-	Fri, 19 Jun 2026 14:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781879184;
-	bh=bQopk2nLC00ieCYyPypfM07LSfdvG93z8e3u+EoauY8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=YXg9rxdyQw5KhPv6Z1WHhF9Hn/vGFplna790SFlA8QGz4ka1fL5KHiuhdI5GmuwYw
-	 z0lvQ6efm3WvTHRAhJFaE1TzyDwd1ZghWqYHl1N3wXeLlLK5uj/NdKCe6Jcbi90wMk
-	 Xt3ixNHnCM/CPjvE1OWFPLKw+SE+Reg3cp1rXRQapdTEuOTnI0yvDwG2rwpt+HkO1h
-	 eslzCZdWHV9nbrhdz5oYeiJpPK/rRBhDeKe/uB2GGOCo9N3zcNatu572qaO//xt5y8
-	 y9FdvPrfYlT7Ib/s3WdinN4eWuCdOqexggGwmBz5IzVNsEaodLO525HxcIE4Hzeokg
-	 DzmXG8dTcsnGA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1waaAn-0000000ELL4-2qrx;
-	Fri, 19 Jun 2026 14:26:21 +0000
-Date: Fri, 19 Jun 2026 15:26:21 +0100
-Message-ID: <868q8asj1u.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Kiryl Shutsemau <kirill@shutemov.name>,
-	Will Deacon <will@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Doug Anderson <dianders@chromium.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Usama Arif <usama.arif@linux.dev>,
-	Breno Leitao <leitao@debian.org>,
-	Julien Thierry <julien.thierry.kdev@gmail.com>,
-	Lecopzer Chen <lecopzer@gmail.com>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	kernel-team@meta.com,
-	kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	"Kiryl Shutsemau (Meta)" <kas@kernel.org>
-Subject: Re: [PATCH v4 0/4] arm64: cross-CPU NMI via SDEI
-In-Reply-To: <ajVLeseWOZn0XXY2@arm.com>
-References: <cover.1781709543.git.kas@kernel.org>
-	<ajVLeseWOZn0XXY2@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: catalin.marinas@arm.com, kirill@shutemov.name, will@kernel.org, james.morse@arm.com, mark.rutland@arm.com, dianders@chromium.org, pmladek@suse.com, tglx@linutronix.de, akpm@linux-foundation.org, bhe@redhat.com, puranjay@kernel.org, usama.arif@linux.dev, leitao@debian.org, julien.thierry.kdev@gmail.com, lecopzer@gmail.com, sumit.garg@kernel.org, kernel-team@meta.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kas@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+	id 1wabkG-00000002ko8-3gXC
+	for kexec@lists.infradead.org;
+	Fri, 19 Jun 2026 16:07:06 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1781885223;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=upm7hjjighMX28RxALYlLLqfXqHttETy53AIK73LdCk=;
+	b=XUPCEX6eXjrPceLpFz1QRbX4T5VHFUxb/+f2mGQKSBshNh1CwoXza6Y+Ird3oiSdTL/Y0l
+	NVZecEwVoSg+7yo/c2nApls9rwx6jKbZRMmIFlseqnHu1z3D+od+rG5W0UUaGqxigzYQsr
+	J5crVENjfDD5/qh6MKLjwb5kWfkH7+0=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-283-p01PRTQeNjiOZ9xLcfZq5g-1; Fri,
+ 19 Jun 2026 12:07:00 -0400
+X-MC-Unique: p01PRTQeNjiOZ9xLcfZq5g-1
+X-Mimecast-MFC-AGG-ID: p01PRTQeNjiOZ9xLcfZq5g_1781885219
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CF661180AD54;
+	Fri, 19 Jun 2026 16:06:58 +0000 (UTC)
+Received: from thuth-p1g4.redhat.corp (headnet03.pony-001.prod.iad2.dc.redhat.com [10.2.32.114])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D7D56195419D;
+	Fri, 19 Jun 2026 16:06:55 +0000 (UTC)
+From: Thomas Huth <thuth@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>
+Cc: kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] kexec: Replace __ASSEMBLY__ with __ASSEMBLER__ in header file
+Date: Fri, 19 Jun 2026 18:06:54 +0200
+Message-ID: <20260619160654.75980-1-thuth@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-MFC-PROC-ID: EnUzsSZbrRrXgdWV_Nu4muve8vDsprAmGn2U3pdyxAo_1781885219
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260619_090704_995475_44504F05 
+X-CRM114-Status: GOOD (  11.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,30 +86,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, 19 Jun 2026 15:00:26 +0100,
-Catalin Marinas <catalin.marinas@arm.com> wrote:
-> 
-> Hi Kiryl,
-> 
-> On Wed, Jun 17, 2026 at 08:20:01PM +0100, Kiryl Shutsemau wrote:
-> >   - GICv3 pseudo-NMI (interrupt priority masking). Its cost is on the
-> >     interrupt mask/unmask hot path: local_irq_enable() becomes an
-> >     ICC_PMR_EL1 write plus a synchronising barrier, and exception
-> >     entry/exit save and restore the PMR, paid on every CPU whether or not
-> >     an NMI is ever delivered. In our measurements, enabling pseudo-NMI
-> >     costs up to ~5% on real workloads, and ~66% on a syscall-in-a-loop
-> >     microbenchmark. A fleet-wide ~5% regression is not acceptable, so
-> >     these systems run with pseudo-NMI disabled.
-> 
-> Does your firmware set ICC_CTLR_EL1.PMHE? I'd be curious to see the
-> numbers if the DSB was omitted on the enable path.
+From: Thomas Huth <thuth@redhat.com>
 
-I certainly don't observe this sort of overhead on the HW I have
-access to, and would like to understand where this is coming from with
-actual profiling data.
+While the GCC and Clang compilers already define __ASSEMBLER__
+automatically when compiling assembly code, __ASSEMBLY__ is a
+macro that only gets defined by the Makefiles in the kernel.
+This can be very confusing when switching between userspace
+and kernelspace coding, or when dealing with uapi headers that
+rather should use __ASSEMBLER__ instead. So let's standardize now
+on the __ASSEMBLER__ macro that is provided by the compilers.
 
-	M.
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+---
+ Note: This patch has been split from an earlier bigger patch of
+ mine to ease reviewing.
 
+ include/linux/kexec.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 8a22bc9b8c6c8..0af8ae4fdd087 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -13,7 +13,7 @@
+ #define IND_SOURCE       (1 << IND_SOURCE_BIT)
+ #define IND_FLAGS (IND_DESTINATION | IND_INDIRECTION | IND_DONE | IND_SOURCE)
+ 
+-#if !defined(__ASSEMBLY__)
++#if !defined(__ASSEMBLER__)
+ 
+ #include <linux/vmcore_info.h>
+ #include <linux/crash_reserve.h>
 -- 
-Without deviation from the norm, progress is not possible.
+2.54.0
+
 
