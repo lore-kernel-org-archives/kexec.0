@@ -4,74 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E5C3CD98F2
-	for <kexec@archiver.kernel.org>; Fri, 19 Jun 2026 16:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8A7CCCD98F0
+	for <kexec@archiver.kernel.org>; Sun, 21 Jun 2026 12:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
-	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=upm7hjjighMX28RxALYlLLqfXqHttETy53AIK73LdCk=; b=LY8C5mVgrPr9WJBvZ+/rzz1yMy
-	5FelUQe66b+0VVDflzNM1HdzOlhAxvtYjo2G7xVb6E32tMmFzvlvvRiSsGaUSatvv2TT2neNS4e7t
-	6qb7vSNzn4j2s/2PIpXn3X0xHsKB7xOBWR6pijXfdpaEZLNjn7RKblmU5D4cJbHtvBMoVp4KE6ZjB
-	lvSWiINkkS7oEgLztVsLgOWBW7qvjY8WHueJmpoXuTWmJQAer4Dfuc2RMx82sFIbJvq57ApIGCMum
-	5IYCSOgjI5uvlirLRWta0g3Y8OWxgmBW2SuDMaWc1OmLu8zVWF1hA4Nkbky0Kq43I8amkGNF43AaK
-	IH/yALEA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=dboNO/Kx/0uIBkqffpSvN7CDtPhD1ZkLmBxEBQA9/hQ=; b=WLr/L7w0BBazSSMkBcGjM2ft8L
+	EKi9PKxm6kg43MsNCKryiILaFpLl0KyPXM3yeeWFVynLuup6REBFdf8B1EVpWVeLglyih6JP/zXJz
+	CF7hNtJYfxuZHgXAxFUmMyRwn+paOHnD17IroNB2owW/Oy/g2kOnq0KXrI2U9YXp+nROsWVhsWa/k
+	Wy0rMoz6XEAB1sbwf5/LRB0RSaUF1wUZxACKR556ozAidf6teUD3+bvrOSqDwW2j7Iu7SJkUu7th6
+	XkON+1kuNSNl91QvuSH5sADlL7GXXWCWetc83OSzrQ0pFogZ+pBgWEGxDRZtm0O2wt7tQKGv5SqL6
+	a3Va4L6w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wabkM-00000002kob-1ws3;
-	Fri, 19 Jun 2026 16:07:10 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1wbHRM-00000003vzC-1iHE;
+	Sun, 21 Jun 2026 12:38:20 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wabkG-00000002ko8-3gXC
+	id 1wbHRH-00000003vz6-36mo
 	for kexec@lists.infradead.org;
-	Fri, 19 Jun 2026 16:07:06 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1781885223;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=upm7hjjighMX28RxALYlLLqfXqHttETy53AIK73LdCk=;
-	b=XUPCEX6eXjrPceLpFz1QRbX4T5VHFUxb/+f2mGQKSBshNh1CwoXza6Y+Ird3oiSdTL/Y0l
-	NVZecEwVoSg+7yo/c2nApls9rwx6jKbZRMmIFlseqnHu1z3D+od+rG5W0UUaGqxigzYQsr
-	J5crVENjfDD5/qh6MKLjwb5kWfkH7+0=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-283-p01PRTQeNjiOZ9xLcfZq5g-1; Fri,
- 19 Jun 2026 12:07:00 -0400
-X-MC-Unique: p01PRTQeNjiOZ9xLcfZq5g-1
-X-Mimecast-MFC-AGG-ID: p01PRTQeNjiOZ9xLcfZq5g_1781885219
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CF661180AD54;
-	Fri, 19 Jun 2026 16:06:58 +0000 (UTC)
-Received: from thuth-p1g4.redhat.corp (headnet03.pony-001.prod.iad2.dc.redhat.com [10.2.32.114])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D7D56195419D;
-	Fri, 19 Jun 2026 16:06:55 +0000 (UTC)
-From: Thomas Huth <thuth@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <baoquan.he@linux.dev>,
-	Mike Rapoport <rppt@kernel.org>,
+	Sun, 21 Jun 2026 12:38:15 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id E68AD60051;
+	Sun, 21 Jun 2026 12:38:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C18791F000E9;
+	Sun, 21 Jun 2026 12:38:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782045492;
+	bh=dboNO/Kx/0uIBkqffpSvN7CDtPhD1ZkLmBxEBQA9/hQ=;
+	h=From:To:Cc:Subject:Date;
+	b=lJ51hY+sttF6eVMMlBEz5/3DzI8/gZ7cQzove4YXfsb36/4wI098vZcmE5LsC6Jqm
+	 PZ7PKngs0lv1AvmWSiEsMuHEZ4WWMrx+0JgBY1YClT/Z9/+0+DvM67RlIEC2mrM+hi
+	 Kq1gwUHbK5H2a4Aj1TlAZeeyyA4e/Pw7R6BH867+ADqVuy7Tz5EZCrOJP4rnTfOCaf
+	 qMVIu0qCMSZDZd/nl8LfTO3dmnKyfy+Arqh8DJRyKcciSZy1+jbAKDLzGU1gL6L4Rt
+	 4JAZhp2KF2N2ZPd6y4H8zAnnnWZTLRYgcl4AzIH9Xi82yz7iIYOkS9NLx2zRa6lOTb
+	 y3M1t+LDrv1CQ==
+From: Mike Rapoport <rppt@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mike Rapoport <rppt@kernel.org>,
+	Alexander Graf <graf@amazon.com>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>
-Cc: kexec@lists.infradead.org,
+	Pratyush Yadav <pratyush@kernel.org>,
+	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] kexec: Replace __ASSEMBLY__ with __ASSEMBLER__ in header file
-Date: Fri, 19 Jun 2026 18:06:54 +0200
-Message-ID: <20260619160654.75980-1-thuth@redhat.com>
+Subject: [GIT PULL] liveupdate: updates for 7.2-rc1
+Date: Sun, 21 Jun 2026 15:38:04 +0300
+Message-ID: <20260621123807.2873974-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.53.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
-X-Mimecast-MFC-PROC-ID: EnUzsSZbrRrXgdWV_Nu4muve8vDsprAmGn2U3pdyxAo_1781885219
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260619_090704_995475_44504F05 
-X-CRM114-Status: GOOD (  11.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,38 +70,144 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Thomas Huth <thuth@redhat.com>
+The following changes since commit e43ffb69e0438cddd72aaa30898b4dc446f664f8:
 
-While the GCC and Clang compilers already define __ASSEMBLER__
-automatically when compiling assembly code, __ASSEMBLY__ is a
-macro that only gets defined by the Makefiles in the kernel.
-This can be very confusing when switching between userspace
-and kernelspace coding, or when dealing with uapi headers that
-rather should use __ASSEMBLER__ instead. So let's standardize now
-on the __ASSEMBLER__ macro that is provided by the compilers.
+  Linux 7.1-rc6 (2026-05-31 15:14:24 -0700)
 
-Signed-off-by: Thomas Huth <thuth@redhat.com>
----
- Note: This patch has been split from an earlier bigger patch of
- mine to ease reviewing.
+are available in the Git repository at:
 
- include/linux/kexec.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git tags/liveupdate-v7.2-rc1
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 8a22bc9b8c6c8..0af8ae4fdd087 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -13,7 +13,7 @@
- #define IND_SOURCE       (1 << IND_SOURCE_BIT)
- #define IND_FLAGS (IND_DESTINATION | IND_INDIRECTION | IND_DONE | IND_SOURCE)
- 
--#if !defined(__ASSEMBLY__)
-+#if !defined(__ASSEMBLER__)
- 
- #include <linux/vmcore_info.h>
- #include <linux/crash_reserve.h>
--- 
-2.54.0
+for you to fetch changes up to e98a9c61721c14bcd29f11f4802e52e908701f7a:
+
+  liveupdate: Document that retrieve failure is permanent (2026-06-11 15:49:51 +0300)
+
+----------------------------------------------------------------
+liveupdate: updates for 7.2-rc1
+
+- kho: make memory preservation compatible with deferred initialization of
+  the memory map
+
+- luo: add LIVEUPDATE_SESSION_GET_NAME ioctl and parameter verification for
+  LIVEUPDATE_IOCTL_CREATE_SESSION ioctl
+
+- luo: documentation updates for liveupdate=on command line option, systemd
+  support and the current compatibility status
+
+- luo: remove the fixed limits on the number of files that can be preserved
+  within a single session, and the total number of sessions managed by the
+  Live Update Orchestrator
+
+- fixes that didn't cut as urgent and were delayed until the merge window:
+
+  * reference count incoming File-Lifecycle-Bound (FLB) data so it cannot
+    be freed while a subsystem is still using it
+
+  * fixes for a TOCTOU race in luo_session_retrieve(), a use-after-free in
+    the file finish and unpreserve paths, concurrent session mutations
+    during reboot and serialization on preserve_context kexec
+
+  * make sure ioctls for incoming LUO sessions are blocked for outgoing
+    sessions and vice versa
+
+  * make sure KHO scratch size is always aligned by CMA_MIN_ALIGNMENT_BYTES
+
+  * fix memblock tests build issue introduced by KHO changes
+
+----------------------------------------------------------------
+David Matlack (2):
+      liveupdate: Use refcount_t for FLB reference counts
+      liveupdate: Reference count incoming FLB data
+
+Evangelos Petrongonas (1):
+      kho: make preserved pages compatible with deferred struct page init
+
+LongWei (1):
+      kho: docs: fix typo in ABI documentation
+
+Luca Boccassi (6):
+      liveupdate: reject LIVEUPDATE_IOCTL_CREATE_SESSION with invalid name length
+      selftests/liveupdate: add test cases for LIVEUPDATE_IOCTL_CREATE_SESSION calls with invalid length
+      liveupdate: add LIVEUPDATE_SESSION_GET_NAME ioctl
+      selftests/liveupdate: add test cases for LIVEUPDATE_SESSION_GET_NAME
+      liveupdate: document systemd support
+      liveupdate: document current compatibility status
+
+Michal Clapinski (2):
+      kho: fix deferred initialization of scratch areas
+      selftests: kho: test with deferred struct page init
+
+Mike Rapoport (Microsoft) (1):
+      Merge patch series "liveupdate: Remove limits on sessions and files"
+
+Pasha Tatashin (18):
+      liveupdate: skip serialization for context-preserving kexec
+      liveupdate: fix TOCTOU race in luo_session_retrieve()
+      liveupdate: block session mutations during reboot
+      liveupdate: fix u-a-f in luo_file_unpreserve_files() and luo_file_finish()
+      liveupdate: Remove unused ser field from struct luo_session
+      liveupdate: change file_set->count type to u64 for type safety
+      liveupdate: avoid mixing cleanup guards with goto in luo_session_retrieve_fd
+      liveupdate: centralize state management into struct luo_ser
+      liveupdate: register luo_ser as KHO subtree
+      liveupdate: Extract luo_file_deserialize_one helper
+      liveupdate: Extract luo_session_deserialize_one helper
+      kho: add support for linked-block serialization
+      liveupdate: defer session block allocation and physical address setting
+      liveupdate: Remove limit on the number of sessions
+      liveupdate: Remove limit on the number of files per session
+      selftests/liveupdate: Test session and file limit removal
+      selftests/liveupdate: Add stress-sessions kexec test
+      selftests/liveupdate: Add stress-files kexec test
+
+Pratyush Yadav (Google) (5):
+      memblock tests: define MIGRATE_CMA
+      liveupdate: validate session type before performing operation
+      liveupdate: document liveupdate=on
+      kho: make sure scratch size is always aligned by CMA_MIN_ALIGNMENT_BYTES
+      docs: memfd_preservation: fix rendering of ABI documentation
+
+Tarun Sahu (1):
+      liveupdate: Document that retrieve failure is permanent
+
+ Documentation/core-api/kho/abi.rst                 |   5 +
+ Documentation/core-api/kho/index.rst               |  11 +
+ Documentation/mm/memfd_preservation.rst            |   2 +-
+ Documentation/userspace-api/liveupdate.rst         |  31 ++
+ MAINTAINERS                                        |   1 +
+ include/linux/kho/abi/block.h                      |  54 +++
+ include/linux/kho/abi/kexec_handover.h             |   4 +-
+ include/linux/kho/abi/luo.h                        | 148 +++-----
+ include/linux/kho_block.h                          | 106 ++++++
+ include/linux/liveupdate.h                         |   9 +-
+ include/linux/memblock.h                           |  21 +-
+ include/uapi/linux/liveupdate.h                    |  25 +-
+ kernel/kexec_core.c                                |   8 +-
+ kernel/liveupdate/Kconfig                          |   2 -
+ kernel/liveupdate/Makefile                         |   1 +
+ kernel/liveupdate/kexec_handover.c                 |  84 +++--
+ kernel/liveupdate/kho_block.c                      | 416 +++++++++++++++++++++
+ kernel/liveupdate/luo_core.c                       | 103 +++--
+ kernel/liveupdate/luo_file.c                       | 210 +++++------
+ kernel/liveupdate/luo_flb.c                        | 112 ++----
+ kernel/liveupdate/luo_internal.h                   |  18 +-
+ kernel/liveupdate/luo_session.c                    | 336 ++++++++++-------
+ lib/tests/liveupdate.c                             |   3 +
+ mm/memblock.c                                      |  56 ++-
+ mm/mm_init.c                                       |  30 +-
+ tools/testing/memblock/linux/mmzone.h              |   4 +
+ tools/testing/selftests/kho/vmtest.sh              |   4 +
+ tools/testing/selftests/liveupdate/Makefile        |   2 +
+ tools/testing/selftests/liveupdate/liveupdate.c    | 188 ++++++++++
+ .../selftests/liveupdate/luo_stress_files.c        |  97 +++++
+ .../selftests/liveupdate/luo_stress_sessions.c     | 102 +++++
+ .../testing/selftests/liveupdate/luo_test_utils.c  |  24 ++
+ .../testing/selftests/liveupdate/luo_test_utils.h  |   2 +
+ 33 files changed, 1635 insertions(+), 584 deletions(-)
+ create mode 100644 include/linux/kho/abi/block.h
+ create mode 100644 include/linux/kho_block.h
+ create mode 100644 kernel/liveupdate/kho_block.c
+ create mode 100644 tools/testing/selftests/liveupdate/luo_stress_files.c
+ create mode 100644 tools/testing/selftests/liveupdate/luo_stress_sessions.c
 
 
