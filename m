@@ -4,77 +4,138 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AD93ACDB478
-	for <kexec@archiver.kernel.org>; Mon, 22 Jun 2026 11:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 28156CDB470
+	for <kexec@archiver.kernel.org>; Mon, 22 Jun 2026 11:27:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=YXbPmQmazgkFdDbtyTXXxgi0W9OrSOLs1ojwaV9lxRY=; b=Tlgk+e9H7LlYmAEXHjRZEuVbGb
-	1TLGHEVT9l3efuRn6gWjtoxGDiIepYB2SDJjMw1Vk2Z2GLutwJOyGnnxtIE7uDRdbEXAzpXcfvPY1
-	Ohj5NeDNOJtr2iVbGeI7/UBAz651SHAJBxKt7MAntz5hAfsw44Ha9Pp6Nj6KM6fwTS9BIICa1ehv9
-	IRd+FmQu090AqcSgEjdOcCo3lIz1KiROMYZS72mPY5esgG/17PKIem/RAXPQK2b5+CjuDH+sxsYlW
-	mSXUMNgm4goi2AGlFVhlYUMZtT94eMRwTxhP6771NzAK7fQtuq6rcxbMb/9b41IsoN5BCaUQ1eE7S
-	7ncUUQ3A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=CxKnwWbJ6o3Gp2gCYHflIyVCw0BGlYpweEWWlR7Zxlc=; b=TLwv2fmtGIEK7XF5XoK/aXLzlW
+	RDV7M1+kLwhIyFXUg4CKYxAxDL3PHmguAKCUkGJqu/ZkOoAotA63VHeGf82HgfxxOQBuqwgjJEHPt
+	wnIjBHJGw0b90yQ27oxLqdY8YBQ3j64yPCAgipMzlYTDAIhCg53/uhdA5WSQfeTn/CCGW2TLVQXIt
+	vZwLXIhCDEFVmba4IIQtUcz9P63LHky2Q4SId/nlz0IrDbddcEjYLJzqSil2Eqii6lqHk6jvJuR8A
+	HZR9DLykl1DolYnUx79/u1/rooISqVJB+1++7rjb0m5I+O/XniOcqmXW9ZpZS7cqn/A2xGdTSs3eZ
+	iWLCaQLQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wbcZk-00000004sab-2nb1;
-	Mon, 22 Jun 2026 11:12:24 +0000
-Received: from mail-ed1-x54a.google.com ([2a00:1450:4864:20::54a])
+	id 1wbcoh-00000004u8U-0b8S;
+	Mon, 22 Jun 2026 11:27:51 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wbcZh-00000004sYz-3apq
+	id 1wbcoe-00000004u8B-3rcs
 	for kexec@lists.infradead.org;
-	Mon, 22 Jun 2026 11:12:23 +0000
-Received: by mail-ed1-x54a.google.com with SMTP id 4fb4d7f45d1cf-6973d186db0so2469616a12.2
-        for <kexec@lists.infradead.org>; Mon, 22 Jun 2026 04:12:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782126740; x=1782731540; darn=lists.infradead.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YXbPmQmazgkFdDbtyTXXxgi0W9OrSOLs1ojwaV9lxRY=;
-        b=ZZ8vTycg3WbT2+oERFvjSUkfvJIkHR/5qQ0Tn7ztY/nGTZ/Q+/RL8QQF+I/wuVl69L
-         n9BMFbmKpMICxpiNT1rbYQvoYzdp+mCLcCXBl+CeoUTnmuaKxbwlYEEuUVRCppUne/EJ
-         wYBDS/XvsJuQucRd/4J+Dj4UZRGtALVcF8Ez0ZFPp+vSZFq0Y6HuncEj1XoAy1n2eUi9
-         ojn5BDyC5F0bW2dBIE6qgP8udm+5HbuYl645JSEjKpO482093TbrSvIUw5ADk/Lyas+A
-         8pul5lnDvfXUEw11lmgLeeAqASTm6tZ69vKxwXZseBPr1Fth8Q5HoDJ7oRtNqveSoYsS
-         87mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782126740; x=1782731540;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YXbPmQmazgkFdDbtyTXXxgi0W9OrSOLs1ojwaV9lxRY=;
-        b=EX2HMO1AerZrJmmFDzdQCz2FtBp5GeKc/bmIObwlCUZRLjcIZ8dKjSOkP4pBGOLZUO
-         5DaekBUNNZ216320/EwGAS+J1jBgsZB3cFb2bdTZObKClf4mODfIbe7ASYna8xNb2W0H
-         VvRQSWQTQb/Q+JbvEXR7n043Vywa0o/jn8nXQFnYVDE7UuIqiHiF8FDOOOGqttw0zqbK
-         Bwo3uk5hiiDEdiqg/Nr0evyDxGyxPzhm71SNk7rQCUM/DPNN06noumARYlsL/kY+IzXa
-         4nur2vDg4oEgrdp72+Co6y5cjM4yH1t/9I19GrSlVS5UghOBpXi+szvb2nPl93JwYvCN
-         aPKQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+/LOmYTWhv70cRGmQcQavxZsjlk1S7iShojsUFaDoRsJLPCRX13anbt8ucJZk7p2bgr4P+sQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxPWr0RmtZMHljjvypmni3lF9c0+vyDIsntegW1cJYCM46aMXEM
-	2PNHg/8DDqOozo1gz7+7pZMs1IEWEcoq3RNuFEfUpI4ATja+Cza2Rk1R0Q4TotqOrtamLiy1e6Q
-	fdysGhMUO4ojN3+uT5Q==
-X-Received: from edai33.prod.google.com ([2002:a05:6402:f21:b0:697:ade6:f966])
- (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:5215:b0:696:8f45:4ae7 with SMTP id 4fb4d7f45d1cf-696e5211777mr6088859a12.13.1782126739883;
- Mon, 22 Jun 2026 04:12:19 -0700 (PDT)
-Date: Mon, 22 Jun 2026 11:12:15 +0000
-In-Reply-To: <20260622111215.4157974-1-tarunsahu@google.com>
-Mime-Version: 1.0
-References: <20260622111215.4157974-1-tarunsahu@google.com>
-X-Mailer: git-send-email 2.55.0.rc0.738.g0c8ab3ebcc-goog
-Message-ID: <20260622111215.4157974-3-tarunsahu@google.com>
-Subject: [REESND PATCH v3 2/2] luo: Update serialized data to use KHOSER_PTR
-From: Tarun Sahu <tarunsahu@google.com>
-To: Andrew Morton <akpm@linux-foundation.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Alexander Graf <graf@amazon.com>, Pratyush Yadav <pratyush@kernel.org>, Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-mm@kvack.org, Tarun Sahu <tarunsahu@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260622_041221_936136_B4D5B4F0 
-X-CRM114-Status: GOOD (  19.26  )
+	Mon, 22 Jun 2026 11:27:49 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 8EBA7600AF;
+	Mon, 22 Jun 2026 11:27:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AED81F000E9;
+	Mon, 22 Jun 2026 11:27:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782127667;
+	bh=CxKnwWbJ6o3Gp2gCYHflIyVCw0BGlYpweEWWlR7Zxlc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=NP5vIVfjsp4feyIcuAfoiRvYPwPZKLTXzyb0N0wUNoKxJZDnW14mB+Ksso1zMBEZX
+	 fUxTpjrKClw00GwNOT/ge4xL2rriBHbh5PxOP732GJlaoArFBmxyEOXdYsklIEobB9
+	 /pFQVIcOni9/exs8OPh0iGTCF0YrB1elReGRM0Pk+0VV64ksMWO5Yff5O4AFlcbETU
+	 7oQHcuU8AyNBq9zKQ3Q/5sFiPWawUkfJJPp52WQ+UesWgVbFX7LlIhxh77+4lU8xhN
+	 0Mxv8uME2L+nRo7wVhECL6694CE+9AKg1Xt97qlcIjmOAoH39Xw4JyyfVaAkL3HiaO
+	 P5VjuChOEJC/w==
+Message-ID: <8f98a3a6-f97b-4673-964f-fb09c8879e2e@kernel.org>
+Date: Mon, 22 Jun 2026 13:27:34 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/7] Prepare mutable list iterators to cache cursor
+ state
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Kaitao Cheng <kaitao.cheng@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
+ Tejun Heo <tj@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Paul Moore <paul@paul-moore.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Shakeel Butt <shakeel.butt@linux.dev>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Howells <dhowells@redhat.com>, Simona Vetter <simona.vetter@ffwll.ch>,
+ Randy Dunlap <rdunlap@infradead.org>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Philipp Stanner <phasta@kernel.org>, linux-block@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>,
+ "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+ linux-ntfs-dev@lists.sourceforge.net,
+ Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
+ io-uring <io-uring@vger.kernel.org>, audit@vger.kernel.org,
+ bpf <bpf@vger.kernel.org>, Network Development <netdev@vger.kernel.org>,
+ dri-devel@lists.freedesktop.org,
+ "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+ kexec@lists.infradead.org, live-patching@vger.kernel.org,
+ linux-modules@vger.kernel.org,
+ Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+ Linux Power Management <linux-pm@vger.kernel.org>, rcu@vger.kernel.org,
+ sched-ext@lists.linux.dev, linux-mm <linux-mm@kvack.org>,
+ virtualization@lists.linux.dev, damon@lists.linux.dev,
+ clang-built-linux <llvm@lists.linux.dev>,
+ chengkaitao <chengkaitao@kylinos.cn>
+References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
+ <CAADnVQJmPWFT01b7DuLdtafv=8FyB84GYHNZ8zSTck+9Aw0JpA@mail.gmail.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzS5EYXZpZCBIaWxk
+ ZW5icmFuZCAoQ3VycmVudCkgPGRhdmlkQGtlcm5lbC5vcmc+wsGQBBMBCAA6AhsDBQkmWAik
+ AgsJBBUKCQgCFgICHgUCF4AWIQQb2cqtc1xMOkYN/MpN3hD3AP+DWgUCaYJt/AIZAQAKCRBN
+ 3hD3AP+DWriiD/9BLGEKG+N8L2AXhikJg6YmXom9ytRwPqDgpHpVg2xdhopoWdMRXjzOrIKD
+ g4LSnFaKneQD0hZhoArEeamG5tyo32xoRsPwkbpIzL0OKSZ8G6mVbFGpjmyDLQCAxteXCLXz
+ ZI0VbsuJKelYnKcXWOIndOrNRvE5eoOfTt2XfBnAapxMYY2IsV+qaUXlO63GgfIOg8RBaj7x
+ 3NxkI3rV0SHhI4GU9K6jCvGghxeS1QX6L/XI9mfAYaIwGy5B68kF26piAVYv/QZDEVIpo3t7
+ /fjSpxKT8plJH6rhhR0epy8dWRHk3qT5tk2P85twasdloWtkMZ7FsCJRKWscm1BLpsDn6EQ4
+ jeMHECiY9kGKKi8dQpv3FRyo2QApZ49NNDbwcR0ZndK0XFo15iH708H5Qja/8TuXCwnPWAcJ
+ DQoNIDFyaxe26Rx3ZwUkRALa3iPcVjE0//TrQ4KnFf+lMBSrS33xDDBfevW9+Dk6IISmDH1R
+ HFq2jpkN+FX/PE8eVhV68B2DsAPZ5rUwyCKUXPTJ/irrCCmAAb5Jpv11S7hUSpqtM/6oVESC
+ 3z/7CzrVtRODzLtNgV4r5EI+wAv/3PgJLlMwgJM90Fb3CB2IgbxhjvmB1WNdvXACVydx55V7
+ LPPKodSTF29rlnQAf9HLgCphuuSrrPn5VQDaYZl4N/7zc2wcWM7BTQRVy5+RARAA59fefSDR
+ 9nMGCb9LbMX+TFAoIQo/wgP5XPyzLYakO+94GrgfZjfhdaxPXMsl2+o8jhp/hlIzG56taNdt
+ VZtPp3ih1AgbR8rHgXw1xwOpuAd5lE1qNd54ndHuADO9a9A0vPimIes78Hi1/yy+ZEEvRkHk
+ /kDa6F3AtTc1m4rbbOk2fiKzzsE9YXweFjQvl9p+AMw6qd/iC4lUk9g0+FQXNdRs+o4o6Qvy
+ iOQJfGQ4UcBuOy1IrkJrd8qq5jet1fcM2j4QvsW8CLDWZS1L7kZ5gT5EycMKxUWb8LuRjxzZ
+ 3QY1aQH2kkzn6acigU3HLtgFyV1gBNV44ehjgvJpRY2cC8VhanTx0dZ9mj1YKIky5N+C0f21
+ zvntBqcxV0+3p8MrxRRcgEtDZNav+xAoT3G0W4SahAaUTWXpsZoOecwtxi74CyneQNPTDjNg
+ azHmvpdBVEfj7k3p4dmJp5i0U66Onmf6mMFpArvBRSMOKU9DlAzMi4IvhiNWjKVaIE2Se9BY
+ FdKVAJaZq85P2y20ZBd08ILnKcj7XKZkLU5FkoA0udEBvQ0f9QLNyyy3DZMCQWcwRuj1m73D
+ sq8DEFBdZ5eEkj1dCyx+t/ga6x2rHyc8Sl86oK1tvAkwBNsfKou3v+jP/l14a7DGBvrmlYjO
+ 59o3t6inu6H7pt7OL6u6BQj7DoMAEQEAAcLBfAQYAQgAJgIbDBYhBBvZyq1zXEw6Rg38yk3e
+ EPcA/4NaBQJonNqrBQkmWAihAAoJEE3eEPcA/4NaKtMQALAJ8PzprBEXbXcEXwDKQu+P/vts
+ IfUb1UNMfMV76BicGa5NCZnJNQASDP/+bFg6O3gx5NbhHHPeaWz/VxlOmYHokHodOvtL0WCC
+ 8A5PEP8tOk6029Z+J+xUcMrJClNVFpzVvOpb1lCbhjwAV465Hy+NUSbbUiRxdzNQtLtgZzOV
+ Zw7jxUCs4UUZLQTCuBpFgb15bBxYZ/BL9MbzxPxvfUQIPbnzQMcqtpUs21CMK2PdfCh5c4gS
+ sDci6D5/ZIBw94UQWmGpM/O1ilGXde2ZzzGYl64glmccD8e87OnEgKnH3FbnJnT4iJchtSvx
+ yJNi1+t0+qDti4m88+/9IuPqCKb6Stl+s2dnLtJNrjXBGJtsQG/sRpqsJz5x1/2nPJSRMsx9
+ 5YfqbdrJSOFXDzZ8/r82HgQEtUvlSXNaXCa95ez0UkOG7+bDm2b3s0XahBQeLVCH0mw3RAQg
+ r7xDAYKIrAwfHHmMTnBQDPJwVqxJjVNr7yBic4yfzVWGCGNE4DnOW0vcIeoyhy9vnIa3w1uZ
+ 3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
+ CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
+ qIws/H2t
+In-Reply-To: <CAADnVQJmPWFT01b7DuLdtafv=8FyB84GYHNZ8zSTck+9Aw0JpA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,251 +150,214 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Convert raw serialized_data to KHO serializeable pointer (KHOSER_PTR).
-This series also takes care of resolving the bug with memfd of using
-phys_to_virt before checking the args->serialized_data value.
+On 6/22/26 07:28, Alexei Starovoitov wrote:
+> On Sun, Jun 21, 2026 at 9:06 PM Kaitao Cheng <kaitao.cheng@linux.dev> wrote:
+>>
+>> From: chengkaitao <chengkaitao@kylinos.cn>
+>>
+>> The list_for_each*_safe() helpers are used when the loop body may remove
+>> the current entry.  Their current interface, however, forces every caller
+>> to define a temporary cursor outside the macro and pass it in, even when
+>> the caller never uses that cursor directly.  For most call sites this
+>> extra cursor is just boilerplate required by the macro implementation.
+>>
+>> This is awkward because the saved next pointer is an internal detail of
+>> the iteration.  Callers that only remove or move the current entry do not
+>> need to spell it out.
+>>
+>> The _safe() suffix has also caused confusion.  Christian Koenig pointed
+>> out that the name is easy to read as a thread-safe variant, especially
+>> for beginners, even though it only means that the iterator keeps enough
+>> state to tolerate removal of the current entry.  He suggested _mutable()
+>> as a clearer description of what the loop permits.
+>>
+>> Add *_mutable() iterator variants for list, hlist and llist.  The new
+>> helpers are variadic and support both forms.  In the common case, the
+>> caller omits the temporary cursor and the macro creates a unique internal
+>> cursor with typeof(pos) and __UNIQUE_ID().  If a loop really needs an
+>> explicit temporary cursor, the caller can still pass it and the helper
+>> keeps the existing *_safe() behaviour.
+>>
+>> For example, a call site may use the shorter form:
+>>
+>>   list_for_each_entry_mutable(pos, head, member)
+>>
+>> or keep the explicit temporary cursor form:
+>>
+>>   list_for_each_entry_mutable(pos, tmp, head, member)
+>>
+>> The existing *_safe() helpers remain available for compatibility.  This
+>> series only converts users in mm, block, kernel, init and io_uring.  If
+>> this approach looks acceptable, the remaining users can be converted in
+>> follow-up series.
+>>
+>> Changes in v3 (Christian König, Andy Shevchenko):
+>> - Convert safe list walks to mutable iterators
+>>
+>> Changes in v2 (Muchun Song, Andy Shevchenko):
+>> - Drop the list_for_each_entry_mutable*() helpers from v1 and make the
+>>   cursor change directly in the existing list_for_each_entry*() helpers.
+>> - Open-code special list walks that rely on updating the loop cursor in
+>>   the body, preserving their existing traversal semantics.
+>>
+>> Link to v2:
+>> https://lore.kernel.org/all/20260609061347.93688-1-kaitao.cheng@linux.dev/
+>>
+>> Link to v1:
+>> https://lore.kernel.org/all/20260529082149.76764-1-kaitao.cheng@linux.dev/
+>>
+>> Kaitao Cheng (7):
+>>   list: Add mutable iterator variants
+>>   llist: Add mutable iterator variants
+>>   mm: Use mutable list iterators
+>>   block: Use mutable list iterators
+>>   kernel: Use mutable list iterators
+>>   initramfs: Use mutable list iterator
+>>   io_uring: Use mutable list iterators
+>>
+>>  block/bfq-iosched.c                 |  17 +-
+>>  block/blk-cgroup.c                  |  12 +-
+>>  block/blk-flush.c                   |   4 +-
+>>  block/blk-iocost.c                  |  18 +-
+>>  block/blk-mq.c                      |   8 +-
+>>  block/blk-throttle.c                |   4 +-
+>>  block/kyber-iosched.c               |   4 +-
+>>  block/partitions/ldm.c              |   8 +-
+>>  block/sed-opal.c                    |   4 +-
+>>  include/linux/list.h                | 269 ++++++++++++++++++++++++----
+>>  include/linux/llist.h               |  81 +++++++--
+>>  init/initramfs.c                    |   5 +-
+>>  io_uring/cancel.c                   |   6 +-
+>>  io_uring/poll.c                     |   3 +-
+>>  io_uring/rw.c                       |   4 +-
+>>  io_uring/timeout.c                  |   8 +-
+>>  io_uring/uring_cmd.c                |   3 +-
+>>  kernel/audit_tree.c                 |   4 +-
+>>  kernel/audit_watch.c                |  16 +-
+>>  kernel/auditfilter.c                |   4 +-
+>>  kernel/auditsc.c                    |   4 +-
+>>  kernel/bpf/arena.c                  |  10 +-
+>>  kernel/bpf/arraymap.c               |   8 +-
+>>  kernel/bpf/bpf_local_storage.c      |   3 +-
+>>  kernel/bpf/bpf_lru_list.c           |  25 ++-
+>>  kernel/bpf/btf.c                    |  18 +-
+>>  kernel/bpf/cgroup.c                 |   7 +-
+>>  kernel/bpf/cpumap.c                 |   4 +-
+>>  kernel/bpf/devmap.c                 |  10 +-
+>>  kernel/bpf/helpers.c                |   8 +-
+>>  kernel/bpf/local_storage.c          |   4 +-
+>>  kernel/bpf/memalloc.c               |  16 +-
+>>  kernel/bpf/offload.c                |   8 +-
+>>  kernel/bpf/states.c                 |   4 +-
+>>  kernel/bpf/stream.c                 |   4 +-
+>>  kernel/bpf/verifier.c               |   6 +-
+>>  kernel/cgroup/cgroup-v1.c           |   4 +-
+>>  kernel/cgroup/cgroup.c              |  54 +++---
+>>  kernel/cgroup/dmem.c                |  12 +-
+>>  kernel/cgroup/rdma.c                |   8 +-
+>>  kernel/events/core.c                |  44 +++--
+>>  kernel/events/uprobes.c             |  12 +-
+>>  kernel/exit.c                       |   8 +-
+>>  kernel/fail_function.c              |   4 +-
+>>  kernel/gcov/clang.c                 |   4 +-
+>>  kernel/irq_work.c                   |   4 +-
+>>  kernel/kexec_core.c                 |   4 +-
+>>  kernel/kprobes.c                    |  16 +-
+>>  kernel/livepatch/core.c             |   4 +-
+>>  kernel/livepatch/core.h             |   4 +-
+>>  kernel/liveupdate/kho_block.c       |   4 +-
+>>  kernel/liveupdate/luo_flb.c         |   4 +-
+>>  kernel/locking/rwsem.c              |   2 +-
+>>  kernel/locking/test-ww_mutex.c      |   2 +-
+>>  kernel/module/main.c                |  11 +-
+>>  kernel/padata.c                     |   4 +-
+>>  kernel/power/snapshot.c             |   8 +-
+>>  kernel/power/wakelock.c             |   4 +-
+>>  kernel/printk/printk.c              |  11 +-
+>>  kernel/ptrace.c                     |   4 +-
+>>  kernel/rcu/rcutorture.c             |   3 +-
+>>  kernel/rcu/tasks.h                  |   9 +-
+>>  kernel/rcu/tree.c                   |   6 +-
+>>  kernel/resource.c                   |   4 +-
+>>  kernel/sched/core.c                 |   4 +-
+>>  kernel/sched/ext.c                  |  22 +--
+>>  kernel/sched/fair.c                 |  28 +--
+>>  kernel/sched/topology.c             |   4 +-
+>>  kernel/sched/wait.c                 |   4 +-
+>>  kernel/seccomp.c                    |   4 +-
+>>  kernel/signal.c                     |  11 +-
+>>  kernel/smp.c                        |   4 +-
+>>  kernel/taskstats.c                  |   8 +-
+>>  kernel/time/clockevents.c           |   6 +-
+>>  kernel/time/clocksource.c           |   4 +-
+>>  kernel/time/posix-cpu-timers.c      |   4 +-
+>>  kernel/time/posix-timers.c          |   3 +-
+>>  kernel/torture.c                    |   3 +-
+>>  kernel/trace/bpf_trace.c            |   4 +-
+>>  kernel/trace/ftrace.c               |  49 +++--
+>>  kernel/trace/ring_buffer.c          |  25 ++-
+>>  kernel/trace/trace.c                |  12 +-
+>>  kernel/trace/trace_dynevent.c       |   6 +-
+>>  kernel/trace/trace_dynevent.h       |   5 +-
+>>  kernel/trace/trace_events.c         |  35 ++--
+>>  kernel/trace/trace_events_filter.c  |   4 +-
+>>  kernel/trace/trace_events_hist.c    |   8 +-
+>>  kernel/trace/trace_events_trigger.c |  17 +-
+>>  kernel/trace/trace_events_user.c    |  16 +-
+>>  kernel/trace/trace_stat.c           |   4 +-
+>>  kernel/user-return-notifier.c       |   3 +-
+>>  kernel/workqueue.c                  |  16 +-
+>>  mm/backing-dev.c                    |   8 +-
+>>  mm/balloon.c                        |   8 +-
+>>  mm/cma.c                            |   4 +-
+>>  mm/compaction.c                     |   4 +-
+>>  mm/damon/core.c                     |   4 +-
+>>  mm/damon/sysfs-schemes.c            |   4 +-
+>>  mm/dmapool.c                        |   4 +-
+>>  mm/huge_memory.c                    |   8 +-
+>>  mm/hugetlb.c                        |  56 +++---
+>>  mm/hugetlb_vmemmap.c                |  16 +-
+>>  mm/khugepaged.c                     |  14 +-
+>>  mm/kmemleak.c                       |   7 +-
+>>  mm/ksm.c                            |  25 +--
+>>  mm/list_lru.c                       |   4 +-
+>>  mm/memcontrol-v1.c                  |   8 +-
+>>  mm/memory-failure.c                 |  12 +-
+>>  mm/memory-tiers.c                   |   4 +-
+>>  mm/migrate.c                        |  23 ++-
+>>  mm/mmu_notifier.c                   |   9 +-
+>>  mm/page_alloc.c                     |   8 +-
+>>  mm/page_reporting.c                 |   2 +-
+>>  mm/percpu.c                         |  11 +-
+>>  mm/pgtable-generic.c                |   4 +-
+>>  mm/rmap.c                           |  10 +-
+>>  mm/shmem.c                          |   9 +-
+>>  mm/slab_common.c                    |  14 +-
+>>  mm/slub.c                           |  33 ++--
+>>  mm/swapfile.c                       |   4 +-
+>>  mm/userfaultfd.c                    |  12 +-
+>>  mm/vmalloc.c                        |  24 +--
+>>  mm/vmscan.c                         |   7 +-
+>>  mm/zsmalloc.c                       |   4 +-
+>>  124 files changed, 875 insertions(+), 681 deletions(-)
+> 
+> Not sure what you were thinking, but this diff stat
+> is not landable.
 
-Fixes: b3749f174d68 ("mm: memfd_luo: allow preserving memfd")
-Signed-off-by: Tarun Sahu <tarunsahu@google.com>
----
- include/linux/kho/abi/luo.h  |  5 +++--
- include/linux/liveupdate.h   |  4 ++--
- kernel/liveupdate/luo_file.c | 24 ++++++++++++------------
- mm/memfd_luo.c               | 18 +++++++++---------
- 4 files changed, 26 insertions(+), 25 deletions(-)
+Agreed. If we decide we want this, I guess we should target per-subsystem
+conversions.
 
-diff --git a/include/linux/kho/abi/luo.h b/include/linux/kho/abi/luo.h
-index 288076de6d4a..d5b3b1c0fec1 100644
---- a/include/linux/kho/abi/luo.h
-+++ b/include/linux/kho/abi/luo.h
-@@ -59,6 +59,7 @@
- 
- #include <linux/align.h>
- #include <linux/kho/abi/block.h>
-+#include <linux/kho/abi/kexec_handover.h>
- #include <uapi/linux/liveupdate.h>
- 
- /*
-@@ -89,14 +90,14 @@ struct luo_ser {
- /**
-  * struct luo_file_ser - Represents the serialized preserves files.
-  * @compatible:  File handler compatible string.
-- * @data:        Private data
-+ * @serialized_data:  The serialized pointer union for this file
-  * @token:       User provided token for this file
-  *
-  * If this structure is modified, `LUO_ABI_COMPATIBLE` must be updated.
-  */
- struct luo_file_ser {
- 	char compatible[LIVEUPDATE_HNDL_COMPAT_LENGTH];
--	u64 data;
-+	DECLARE_KHOSER_PTR(serialized_data, void *);
- 	u64 token;
- } __packed;
- 
-diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
-index 88722e5caf02..480d638b7d18 100644
---- a/include/linux/liveupdate.h
-+++ b/include/linux/liveupdate.h
-@@ -33,7 +33,7 @@ struct file;
-  * @file:             The file object. For retrieve: [OUT] The callback sets
-  *                    this to the new file. For other ops: [IN] The caller sets
-  *                    this to the file being operated on.
-- * @serialized_data:  The opaque u64 handle, preserve/prepare/freeze may update
-+ * @serialized_data:  The serialized pointer union, preserve/prepare/freeze may update
-  *                    this field.
-  * @private_data:     Private data for the file used to hold runtime state that
-  *                    is not preserved. Set by the handler's .preserve()
-@@ -47,7 +47,7 @@ struct liveupdate_file_op_args {
- 	struct liveupdate_file_handler *handler;
- 	int retrieve_status;
- 	struct file *file;
--	u64 serialized_data;
-+	DECLARE_KHOSER_PTR(serialized_data, void *);
- 	void *private_data;
- };
- 
-diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
-index c39f96961a85..79cfa5201899 100644
---- a/kernel/liveupdate/luo_file.c
-+++ b/kernel/liveupdate/luo_file.c
-@@ -125,7 +125,7 @@ static DEFINE_XARRAY(luo_preserved_files);
-  * @file:          Pointer to the kernel's &struct file that is being preserved.
-  *                 This is NULL in the new kernel until the file is successfully
-  *                 retrieved.
-- * @serialized_data: The opaque u64 handle to the serialized state of the file.
-+ * @serialized_data: The serialized pointer union to the serialized state of the file.
-  *                 This handle is passed back to the handler's .freeze(),
-  *                 .retrieve(), and .finish() callbacks, allowing it to track
-  *                 and update its serialized state across phases.
-@@ -161,7 +161,7 @@ static DEFINE_XARRAY(luo_preserved_files);
- struct luo_file {
- 	struct liveupdate_file_handler *fh;
- 	struct file *file;
--	u64 serialized_data;
-+	DECLARE_KHOSER_PTR(serialized_data, void *);
- 	void *private_data;
- 	int retrieve_status;
- 	struct mutex mutex;
-@@ -289,7 +289,7 @@ int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd)
- 	if (err)
- 		goto err_kfree;
- 
--	luo_file->serialized_data = args.serialized_data;
-+	KHOSER_COPY_TYPESAFE(luo_file->serialized_data, args.serialized_data);
- 	luo_file->private_data = args.private_data;
- 	list_add_tail(&luo_file->list, &file_set->files_list);
- 	file_set->count++;
-@@ -342,7 +342,7 @@ void luo_file_unpreserve_files(struct luo_file_set *file_set)
- 
- 		args.handler = luo_file->fh;
- 		args.file = luo_file->file;
--		args.serialized_data = luo_file->serialized_data;
-+		KHOSER_COPY_TYPESAFE(args.serialized_data, luo_file->serialized_data);
- 		args.private_data = luo_file->private_data;
- 		luo_file->fh->ops->unpreserve(&args);
- 		luo_flb_file_unpreserve(luo_file->fh);
-@@ -375,12 +375,12 @@ static int luo_file_freeze_one(struct luo_file_set *file_set,
- 
- 		args.handler = luo_file->fh;
- 		args.file = luo_file->file;
--		args.serialized_data = luo_file->serialized_data;
-+		KHOSER_COPY_TYPESAFE(args.serialized_data, luo_file->serialized_data);
- 		args.private_data = luo_file->private_data;
- 
- 		err = luo_file->fh->ops->freeze(&args);
- 		if (!err)
--			luo_file->serialized_data = args.serialized_data;
-+			KHOSER_COPY_TYPESAFE(luo_file->serialized_data, args.serialized_data);
- 	}
- 
- 	return err;
-@@ -396,7 +396,7 @@ static void luo_file_unfreeze_one(struct luo_file_set *file_set,
- 
- 		args.handler = luo_file->fh;
- 		args.file = luo_file->file;
--		args.serialized_data = luo_file->serialized_data;
-+		KHOSER_COPY_TYPESAFE(args.serialized_data, luo_file->serialized_data);
- 		args.private_data = luo_file->private_data;
- 
- 		luo_file->fh->ops->unfreeze(&args);
-@@ -483,7 +483,7 @@ int luo_file_freeze(struct luo_file_set *file_set,
- 
- 		strscpy(file_ser->compatible, luo_file->fh->compatible,
- 			sizeof(file_ser->compatible));
--		file_ser->data = luo_file->serialized_data;
-+		KHOSER_COPY_TYPESAFE(file_ser->serialized_data, luo_file->serialized_data);
- 		file_ser->token = luo_file->token;
- 	}
- 
-@@ -587,7 +587,7 @@ int luo_retrieve_file(struct luo_file_set *file_set, u64 token,
- 	}
- 
- 	args.handler = luo_file->fh;
--	args.serialized_data = luo_file->serialized_data;
-+	KHOSER_COPY_TYPESAFE(args.serialized_data, luo_file->serialized_data);
- 	err = luo_file->fh->ops->retrieve(&args);
- 	if (err) {
- 		/* Keep the error code for later use. */
-@@ -621,7 +621,7 @@ static int luo_file_can_finish_one(struct luo_file_set *file_set,
- 
- 		args.handler = luo_file->fh;
- 		args.file = luo_file->file;
--		args.serialized_data = luo_file->serialized_data;
-+		KHOSER_COPY_TYPESAFE(args.serialized_data, luo_file->serialized_data);
- 		args.retrieve_status = luo_file->retrieve_status;
- 		can_finish = luo_file->fh->ops->can_finish(&args);
- 	}
-@@ -638,7 +638,7 @@ static void luo_file_finish_one(struct luo_file_set *file_set,
- 
- 	args.handler = luo_file->fh;
- 	args.file = luo_file->file;
--	args.serialized_data = luo_file->serialized_data;
-+	KHOSER_COPY_TYPESAFE(args.serialized_data, luo_file->serialized_data);
- 	args.retrieve_status = luo_file->retrieve_status;
- 
- 	luo_file->fh->ops->finish(&args);
-@@ -748,7 +748,7 @@ static int luo_file_deserialize_one(struct luo_file_set *file_set,
- 
- 	luo_file->fh = fh;
- 	luo_file->file = NULL;
--	luo_file->serialized_data = ser->data;
-+	KHOSER_COPY_TYPESAFE(luo_file->serialized_data, ser->serialized_data);
- 	luo_file->token = ser->token;
- 	mutex_init(&luo_file->mutex);
- 	list_add_tail(&luo_file->list, &file_set->files_list);
-diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-index 59de210bee5f..daf2c4c3da35 100644
---- a/mm/memfd_luo.c
-+++ b/mm/memfd_luo.c
-@@ -257,6 +257,7 @@ static void memfd_luo_unpreserve_folios(struct kho_vmalloc *kho_vmalloc,
- 
- static int memfd_luo_preserve(struct liveupdate_file_op_args *args)
- {
-+	DECLARE_KHOSER_PTR(sd, struct memfd_luo_ser *);
- 	struct inode *inode = file_inode(args->file);
- 	struct memfd_luo_folio_ser *folios_ser;
- 	struct memfd_luo_ser *ser;
-@@ -309,7 +310,8 @@ static int memfd_luo_preserve(struct liveupdate_file_op_args *args)
- 	inode_unlock(inode);
- 
- 	args->private_data = folios_ser;
--	args->serialized_data = virt_to_phys(ser);
-+	KHOSER_STORE_PTR(sd, ser);
-+	KHOSER_COPY_TYPEUNSAFE(args->serialized_data, sd);
- 
- 	return 0;
- 
-@@ -325,11 +327,10 @@ static int memfd_luo_freeze(struct liveupdate_file_op_args *args)
- {
- 	struct memfd_luo_ser *ser;
- 
--	if (WARN_ON_ONCE(!args->serialized_data))
-+	ser = KHOSER_LOAD_PTR(args->serialized_data);
-+	if (WARN_ON_ONCE(!ser))
- 		return -EINVAL;
- 
--	ser = phys_to_virt(args->serialized_data);
--
- 	/*
- 	 * The pos might have changed since prepare. Everything else stays the
- 	 * same.
-@@ -344,14 +345,13 @@ static void memfd_luo_unpreserve(struct liveupdate_file_op_args *args)
- 	struct inode *inode = file_inode(args->file);
- 	struct memfd_luo_ser *ser;
- 
--	if (WARN_ON_ONCE(!args->serialized_data))
-+	ser = KHOSER_LOAD_PTR(args->serialized_data);
-+	if (WARN_ON_ONCE(!ser))
- 		return;
- 
- 	inode_lock(inode);
- 	shmem_freeze(inode, false);
- 
--	ser = phys_to_virt(args->serialized_data);
--
- 	memfd_luo_unpreserve_folios(&ser->folios, args->private_data,
- 				    ser->nr_folios);
- 
-@@ -397,7 +397,7 @@ static void memfd_luo_finish(struct liveupdate_file_op_args *args)
- 	if (args->retrieve_status)
- 		return;
- 
--	ser = phys_to_virt(args->serialized_data);
-+	ser = KHOSER_LOAD_PTR(args->serialized_data);
- 	if (!ser)
- 		return;
- 
-@@ -522,7 +522,7 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
- 	struct file *file;
- 	int err;
- 
--	ser = phys_to_virt(args->serialized_data);
-+	ser = KHOSER_LOAD_PTR(args->serialized_data);
- 	if (!ser)
- 		return -EINVAL;
- 
+If this goes through the MM tree, I would even appreciate doing this on a per-MM
+component granularity.
+
+(unless we have some magic "Linus converts all of them" script, which I doubt we
+will have)
+
+Is there a way forward to replace list_for_each_*_safe entirely, possibly just
+reusing the old name but simply the parameter?
+
 -- 
-2.55.0.rc0.738.g0c8ab3ebcc-goog
+Cheers,
 
+David
 
