@@ -4,145 +4,129 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 36E76CDB46B
-	for <kexec@archiver.kernel.org>; Mon, 22 Jun 2026 05:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B0E5ECD98F6
+	for <kexec@archiver.kernel.org>; Mon, 22 Jun 2026 05:28:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=0SsI6VZd6FOpEeADCyFceIDCGKeKUM4g7+C0xQhOsSc=; b=kkQgf0Gxdpbd4ckn42lEiZZHp3
-	BzKH8x/vz/zj17PxRGZp7RQYQ3qf7wo7gdt6pOK+XJSLduiRul1CrRsSYwGIm/woQCB0YyzXif5UT
-	XRBAwhSmWrbxNhBDEAFlf//H6rhJgnxl0K7zfPqfHNliUHorrtOUFhmttYnybu5mlydESwa7VTJMt
-	/98zLRb5Ie2g50BomsjRA6lGEjjIhNRE1EhZ+XI5CR0EAC+vJZhrUV0y1j7tqK4obr5Y4RwZnuo+u
-	9mkMl6CT/VZ1w8WqcH5ECSm9qzXQRF/2/7II6+tzijDqfGTJdkCSV6kGnfZy3ULQPIcER/bPmNNvE
-	6PIb4fyA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=5KNOLAwZyaBThMY1NJgMdUSjBoVwiFJr4CThsL0B6VY=; b=pSqdLCRoMSbN9FxcCRfxCRsCt8
+	gBKX7tQ/4UyrxM98EBI3/WkH/CWdx5kFXW3DrFRf5gfvLkL7UNfyylXGBS55+iWMhrdxAXPK2PCwG
+	L5d2EoTKuGlcsASlDxQHzwGuAHispPCOCNyw9sXCqF6F7BfqMH+UvhxlR0HlE5aGP9X9L1j00wIbw
+	2GPfaLw7uNr9NiD+HTgQzHK79YHHQ9dOAwHw/agtnsrCyUAweLbnxTd8sUv174dNSp0YVXsKzGnVH
+	KcnZf5YnMZn+6pX3+gD87plyySfWwLJaVVFj27DB80vQfSCUyMuH8aLZv4cvg6NH4l3rW96VAhuhg
+	woQ18dyw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wbX3k-00000004RAS-0SDk;
-	Mon, 22 Jun 2026 05:19:00 +0000
-Received: from mail-japaneastazon11010001.outbound.protection.outlook.com ([52.101.229.1] helo=TY3P286CU002.outbound.protection.outlook.com)
+	id 1wbXDM-00000004ROp-0TPL;
+	Mon, 22 Jun 2026 05:28:56 +0000
+Received: from mail-pg1-x536.google.com ([2607:f8b0:4864:20::536])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wbX3g-00000004R9j-1nrc
+	id 1wbXDJ-00000004ROL-0iW3
 	for kexec@lists.infradead.org;
-	Mon, 22 Jun 2026 05:18:58 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FLikxfWO904mV7dvVZx1K3+FF/SWPcMAVS4gBnbBtjZWFe3pdY/xdw5wwzJL6YY45lb+hX+bqw+vREOs/InNPDyggsLFHenDqXczMvwkhqFP4C9W6hd9sZiEqWv4K3X0ckHfvRO9BkN879eLe/TcJXouckRU1hRh8GT5s4XEUBmGavxlKa5IGqpMMUf4S5XsJPBClND3SdqQLyYcBOzoMaloLYP+5KQ/TuaiVQyxA7JiR4DPtSviwfKE3a5uEoGf1svqOVfo7IVMwWi7Pbv1bLTn6z5nnmJi+63wT2AB1vM4p1N5cEd4H8tz9R+8yujvmlOTeVCx4ZKH5KaJqh9WCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0SsI6VZd6FOpEeADCyFceIDCGKeKUM4g7+C0xQhOsSc=;
- b=gDe07Ydt4MwW472E8OrUEAYkFrxclF5V5aXHtD9QCVPsZ/G/ho2ZyvNXge+fgROZEQBPLBj11289RpBuUeXOnlrzR54LzPwrf0f6vdjljnQnoyboQxcsErE71hw45zKunmXq6L2B/tiHu5iN1PNHwx/k88dSPf1ZrJs0gwcLKei0LmfMZ8NgUdxZDOOaUQMYLHebxMsJVGVJMHTW8IvQlLvoMvy4eMbYAuaz6DCEdxn1CbPlf5A2oJTO/MkV9SOtiJdt2fJ0VD/Jn2XSFMg/Cngsxc36oWUAC0X7o/Dg4kLCtXvUNorLjcyXfMvY2rWrflGcu/Y4vdt56YpiBUAwuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
- header.d=nec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0SsI6VZd6FOpEeADCyFceIDCGKeKUM4g7+C0xQhOsSc=;
- b=bOmW9w0WtaW68KrjsSltxLZuT1rNmfcrBtICLUqjWg5I2oSFpwjvRZ7H7RHbO/kYapQhfgjCGMjsTfOmr3gu4qbXnmAH5A5htAKehk4U1nn4ACsQqn9IMIqu3b1YGSnc2cfQ/QPzgWkwn7Yld4AblQFQF863RY8rIkZ3ULGBynITczk4IRy7SWcj7qB032FIDO43btGDrkv1FjriBbqg7MuNWWSgxb0ouLKwxnLdM1Hcgzj0eQgO/qCsy7ATUixo6fojijE00eI53HTViRHGmjkK+i+hukPlJ7UVet9c8Xuy47bw+KvxKO3yJPul9Ym6Sd3Hxrt0pJhhYcbFzbEYUQ==
-Received: from TY4PR01MB13462.jpnprd01.prod.outlook.com
- (2603:1096:405:1d7::13) by TYRPR01MB16474.jpnprd01.prod.outlook.com
- (2603:1096:405:2ee::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.19; Mon, 22 Jun
- 2026 05:18:40 +0000
-Received: from TY4PR01MB13462.jpnprd01.prod.outlook.com
- ([fe80::8dd0:19c7:2047:1820]) by TY4PR01MB13462.jpnprd01.prod.outlook.com
- ([fe80::8dd0:19c7:2047:1820%6]) with mapi id 15.21.0139.011; Mon, 22 Jun 2026
- 05:18:40 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
-	<k-hagio-ab@nec.com>
-To: Tao Liu <ltao@redhat.com>
-CC: =?utf-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0juOAgOecn+WFiSk=?=
-	<yamazaki-msmt@nec.com>, "kexec@lists.infradead.org"
-	<kexec@lists.infradead.org>, "stephen.s.brennan@oracle.com"
-	<stephen.s.brennan@oracle.com>, "kjlx@templeofstupid.com"
-	<kjlx@templeofstupid.com>
-Subject: Re: [PATCH v6][makedumpfile 02/10] Implement kernel kallsyms
- resolving
-Thread-Topic: [PATCH v6][makedumpfile 02/10] Implement kernel kallsyms
- resolving
-Thread-Index: AQHc/hkE7HzQWhD0REqk0i1Yn5AMU7ZD/FgAgAAGXYCABg4dgA==
-Date: Mon, 22 Jun 2026 05:18:40 +0000
-Message-ID: <5bea5724-44b1-4a59-b58f-876960357c37@nec.com>
-References: <20260617051834.95404-1-ltao@redhat.com>
- <20260617051834.95404-3-ltao@redhat.com>
- <30fe770e-286e-4272-bb7e-0e9ad01cecc5@nec.com>
- <CAO7dBbWUpZDRhKLG7XB7qcMONo-GuwBmhTZxnax+cNdmRYtU8g@mail.gmail.com>
-In-Reply-To: <CAO7dBbWUpZDRhKLG7XB7qcMONo-GuwBmhTZxnax+cNdmRYtU8g@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nec.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY4PR01MB13462:EE_|TYRPR01MB16474:EE_
-x-ms-office365-filtering-correlation-id: a639f91b-c442-49f7-d75a-08ded01db8b1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|23010399003|18002099003|22082099003|11063799006|4143699003|56012099006|38070700021;
-x-microsoft-antispam-message-info: sw0TiUUYty/qD154aEg7j5E/64mhGMbaw2JSMSQvYDhV6LtwwHevOlCx3cqMTDnftVsfphrrp1aDDU1/0Pl+yD8vPUioTVgXDLW9Vp3hrren4Is22IsOl5OnJBtn7M+vgzDM1V499chO+Y6ZIuOWozEGklySmgCZDDXqHcxsSoWjByItpxbyhm3M39xod69OhALxJ+wSI1f8HGcqX+k7UKCeBqphqAapjcPTW+wY3RDg7MIt9/0ndOK5yAPZwAcDD4SXBifNIAt9efI0tmssUbRrpkdENAg5/DOe4x9+6zi8s0ggGWeH6pSjeuPDO/rh6MQ4kJ0iRV5svQRTj1CGFQ1tyLqLI3tGOVZUuas9NCLdPLEmp0QbflKkGxsmcEGE7A8CBX3GY/um/ntjszzUfseF2xi1wnYf1UT0kb6LfIyVXP00dKt6GyCRTZmWBX93bhZBXxv1GxIdRiveqwQ6BrjCc2Gt4QOgOJM+/+N+3rvVexE7jrlUQ9D7FUgcL2245HWRoU2KYAH7B241TuIgPIB5XmAsZIe2nLbnFis/3tbiBTspS81D2uydlT0xGW7nOIXVougqgA+Lc1rLN7OJWyHhtOOvPBiWZJovmtntEfmwUgn6ZqKCik3Qh8cYBdL1z6KFGfK+rDi8PRjvzGqBvS9sap75JREZIlwrDNbAieeggz04x2TZN7WkttVJI+4/YZMllG9Xz5gCF83D3+ziS2L4JMJ5vPP0yT23uevTw5g=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY4PR01MB13462.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(23010399003)(18002099003)(22082099003)(11063799006)(4143699003)(56012099006)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ZzkyaFh5UXcrZmFrbjNqbUFSN2Rva0tCNjFncGhJR0VUUFpSUXNuZVE4bWoy?=
- =?utf-8?B?dlRHcW5XbmVnUmR2L1RMQ0VxTjlOOTJtLzFOVnVCWE51S2hHdEdDdk5HZG1h?=
- =?utf-8?B?WTZHZXdsTWJwUUFKK3FEV1ZkdFpLb1FvMFdBZnhGVERmZVI1U3NrVjk5eGl2?=
- =?utf-8?B?S1ZNc1lGK0RNWHh3dUVhVkpsNFJLT3crWkQrelloeURNeEFXN0ZZSW1SK3Zz?=
- =?utf-8?B?L3FWMU4yQStNajd6K0xUQ2VuK3BkYTNad2t2ZmRqalVoYTdvck1Cc3FsUjNk?=
- =?utf-8?B?Q201WUxMQVpDMmUrMEsvZTd5UGhFemNUZVJUSWk3TjVXb2xibmxzdnA2NGNv?=
- =?utf-8?B?dTQ5WE4vUVY3QmFkM1VpYThJQmRqc1Jad0cwVUEwUTlOYTNwVFVkVkpRK2Qy?=
- =?utf-8?B?TFFBNUhZM28wMDdTOG0wYXc0SW9nQWkrY0NVcVhlbFIvWWJOcFFSL2todWdo?=
- =?utf-8?B?UXZaeW83WFI5NTlFSGxrZXBCR2h2aVlFUTJEeHJIVUhWMTdGczBHdytTc0g2?=
- =?utf-8?B?SlJhUVdjTkoxTy9ORWxhUlIvTmdnNGthdmRjSkl4blppOTRuWmRjL215Z0NV?=
- =?utf-8?B?cHRvNSt5QUI3TWF6bHZnaDJWcnpsQUpiUTBFcjQ4WVFOTXVhbWJxVmFKdE9r?=
- =?utf-8?B?N0VoWFZmWDRnNnRiUXV4Qi9rRk91UTFRNHhlTnEwUTdLRjN6NEhPNUhhQlVB?=
- =?utf-8?B?MFRHZ21SMXBrYS9LYm03cUlrTEQzd0w2cDNWTHIvOWFsNUVONHp2Q1d0VjNQ?=
- =?utf-8?B?SVFXdGZHZmhEa3kxY1c2RVFhOWduOUhzSWRjNUcrcFVkSjhrK2JHQk9NR2Zv?=
- =?utf-8?B?MU1QQUpVazRqZnF4Z1hxbTdscTNVd3c5YnNqdU5VT1VhL3lTTXVBcWc3bGk0?=
- =?utf-8?B?ak1TUEVMVEZORTIxUk9zNlpiNjFwN2FiOElJYUNzN21Ea3VJdjBhQXJnQkwy?=
- =?utf-8?B?elo4TGM5dVdPU3c3TlF6d2x4L0hSMDBSajlvTlJENy8zTmtyOUJRTDZiSDhM?=
- =?utf-8?B?ZjZ0YmI0YjBPdzNPMVNNUUZWUWFLckMxeU5iWGhUL3ZqUVU4cWhhZmFySGR4?=
- =?utf-8?B?bUowbGJ2b2ticUc5bFZHb0tXcHRkMjF4OU9kM3Bpb3FQVWpOT1p5dmpyRXNp?=
- =?utf-8?B?MkhWV1lRdHRUN1JyU2VFTlZBZzNBU2xOZGJ2UUh0Z0xxd1pjOTRLQWMzaDgw?=
- =?utf-8?B?SGlSTkFPaXFmOE1OZ2JPNDBuL3dlS1VnRmJ4NStFMVZwQkxPbGZVakhOK0NV?=
- =?utf-8?B?VXBXcDk0c1RRdmVZTDB5N2FiTXVmUk9nVmM3SU13dy9DREovbEhGTVNwV0Yr?=
- =?utf-8?B?dnp2K0tLMmIxRmpOQmx3OUxKNnVaazE1Qmp5ajhMbG9EblY0cHR2dzUzUDBX?=
- =?utf-8?B?YnduYXZVYWxqSWZvT1NSWHE2R2kraDFuTzN2RUxYSzRUWjFqV0lNMjc0aTlN?=
- =?utf-8?B?RGdwV29pL1loRXRuMzRNQWltS08yZkdZRDl0S2hCaGJkUDVtSUJteG5mRXJH?=
- =?utf-8?B?c0dTYTlXSzFldDVRSTRpMUpWNVM0cTlaL2RMZFdPaElROVJsNzE0WjlRMDRL?=
- =?utf-8?B?cktHOVYvb1ZERm5UM0xFdHZhZTh4VytlbkpXdnFUS2lhcmJGbFh3T2puYkJz?=
- =?utf-8?B?QXdWdDJkUll4RFFuUEZBemFSSVM3TUVocHRybXJreHkrSWFMUTVxa3dPTTNr?=
- =?utf-8?B?RWo2WVcvWE9vS1F1QUx4M1hKcVB3QzVmbytBdnlVSnNsWUYvN3lsRWN2K2g1?=
- =?utf-8?B?YWt0cnFNWDN0TnNTZ1M0WkpjQXhncExxb3dCQ2FOYVA4dW9UVmFrcFhtU1Vv?=
- =?utf-8?B?bE5ZTFRxcEp3V3dVdE11RWpXdUpVemEvOVdqcmRvT1JTb2dKUnV5SDFhZm44?=
- =?utf-8?B?Uks5cXVBUFRkMWtWYWtmU1ZXWnBlclBtVTlzNHVlV21UQ3A1UUtPQnpXdnF2?=
- =?utf-8?B?aTFQNkFmOTczc0t4dU9HT3A4RjkzMWFtd3YrdE44SnVhTXlSVDVvSDBvTFRI?=
- =?utf-8?B?WUVzcUVRN1cwdnJCUVhQeHp2bGxRd1ZPaVcrckJvc0RsdXBMS28rdEFsK04x?=
- =?utf-8?B?bWtZNVBKNElMTEp4MnpIRDI5SHhPQ3BQTUVXNVdIUnQ3SklXNnNVcGhrVmVh?=
- =?utf-8?B?TC8xbHNwWEJMQXo2NER0cGFaektyVkdpUUlkK0xCL216d05id2J1U2lBUGZ3?=
- =?utf-8?B?SDdYbjBJVDFpRFg1L1VZbHBsSjRPY2VqVXo3SmcyVWdqeURKWktRaFJZRU1I?=
- =?utf-8?B?SHhKQVVYMEtRbGx6dDAxKzkrbHN6WXE4dHRuak9rQ01OUzllTTgwdHFBbmJM?=
- =?utf-8?B?WHRkSUdjbVNlWFZJWlBrVklDVDl0Rlh3bkwwazVZUDhmTXBzOUp4QT09?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F65439A1E212DC48A17CCCE3CE7EE81F@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	Mon, 22 Jun 2026 05:28:54 +0000
+Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-c85a297d2d2so2695032a12.0
+        for <kexec@lists.infradead.org>; Sun, 21 Jun 2026 22:28:52 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782106132; cv=none;
+        d=google.com; s=arc-20240605;
+        b=EIz8FCKtAgi8tdT9kLIIBLFYDTCanqV3zINqiiX/FnK/FaR7eTbpDLuBfb3x1dicYV
+         RaG1Nt+Osdm0Y79B22Z+2BLspWxbkP27u4T00IHKQKeiKmlVhjWAtTCFRd2Zryw8nFx+
+         YMpq/oYfoTv7lt3xO+cJiiw/AsNxkrrQCroc+TsEkZrgkFgXqUXqugzLk1Y5PDMhmpNH
+         gI522MlTVbZj6rK188qV7NUF5gmqFlBIQFWtTyAH0uV+aQcPVsFF4EsXQ2Xs8PQLKEmf
+         cwXbmJQWOhj05bURZaUR9FUqTdiKEK3d23VDo6vz/+JEjANBqGbicrCnPuWSogZKHDBg
+         JU0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=5KNOLAwZyaBThMY1NJgMdUSjBoVwiFJr4CThsL0B6VY=;
+        fh=9cBp4O4LP6NR/nZNOHKNjeVNeEbSgIYBYosy30HcS+w=;
+        b=hD/cJUSw27xBHJnViQy8m8QSFy54Y/3acurMST6oKWyYbf6REXMowZHVxQm8iUZ76S
+         XNGcibilR6unQJVRprFUy6G5M1g4kHzl346jI0fkQryfTDpSsqMBqgil0eHz+us+PU3s
+         weEhIdyNQf6sWx5n5DQQmESxbb/YyUVsJFc2o022G4iYq7cU5EKdW0TKHzIs01s++rx0
+         ZL9XYNzfZut2cFfkPynXm3vOwg47ZS/lmBn9yzy9yhurGOdI68TkHCVztNwSp9WCCVYp
+         N570/LsyZqEa7YxYhAs7ytGX+6Gk2JgYR6WwxIXqk/XNBKsgp6y7L3TY4MnOuuJrzAMu
+         CiwQ==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782106132; x=1782710932; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5KNOLAwZyaBThMY1NJgMdUSjBoVwiFJr4CThsL0B6VY=;
+        b=fWC4OYnu/0QvQmbzVgwZr1pOpkM5s2uY5JKwNfCkMVAi7biH4/UGDmLdcD+wfW0h/v
+         FbRiohPEy0Bnn+JbGxWqHxo8bWdwE/e4StFNVHLWR1FkbHlOV4nNYXeiEJM94vB/t8Ui
+         yOA7C5TzE+MmFptoPiMlLy7OCFTRNqetBsce3pOXqQ8s8EC6cBnUmDPzIU9zwT+oRuRc
+         fssUYhjKui9hAUkUygDPHbT6s1vu0+YtHj5j5bAUFXPAa4pny2/8YKTZsaMsCagqxMLH
+         4fhzw6/Y/wzwjdoKvENxFTofK8fCSxCCfnzeESNM4O/Kk0nKqhb3eU9ytLaRePGW0Jk6
+         XOvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782106132; x=1782710932;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5KNOLAwZyaBThMY1NJgMdUSjBoVwiFJr4CThsL0B6VY=;
+        b=Z6DwqV32se836FT1ZO97uj1MLwCgQsrfo5ukNAZof/lufl84xsiR0s4pzgi8qmPt9x
+         w3M4g4tbAeM2U5bMhnFVm19BBuogRV7C4TM/V7is9cD06ujCP7JqMNtdaEun/2AiJXUH
+         iYWhi+48LIxKmnUi5If81GP2YjqnHfwAxkOWRkNy9sS1MV3xv2BwT+VRdmEfvFYD5uc4
+         XclWsqe6257EyX3UvYChLH0NUUSrQw1OM2+D1hwRGrgsospKY51+4Rj6OjSfBYJYFWbb
+         1GgXxmb9iWnSD7Jra1OZHJzjH3ZNaRuVnXWdj917bXuBHz9/emSAV0boZ6RKJmysOjBc
+         j5QQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8FRVFW5vaP0gwtABHXvCv991CeFKahxwzCv2AajIFnTUCTiZhd5bLixPBqoToOPrioQkZ6Dw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxE1r5dZjehh4X6LUTEW5VzT5MaDUD5PUx2E47bLBkers+V6Cyj
+	CCP1UT8EjYEXt9/EJyskJNq4rX0H6obhumcyV6ZkTTtuQFpHd8rjxftiIxnc8A9B4/Dx0xu3OQH
+	AsT88ctkKMDXinkEEaMml1eIRU+znz8k=
+X-Gm-Gg: AfdE7cmZDc4G3FX/3A92R4p80xk8xrJlD6yphk/1WyVwDbDmVgoYPF56fojRWWcDEYj
+	TwSqYLJIZxnWzdJTVCjX1Ih+1ILd/meMm4niFhEAsCq2UBIQu9BsY4yiQhxoxpOqffw2ci/TFEt
+	CPU93lfXBx3wNYan4j0HI2kCFO3q6E89kL7YMOlBWUVRSOK3aZRlMX13y0PWhnXPU2VMDcSrmpS
+	HYNTPx2FgDrlelaZ82hcoU6e6AXo6JwWSVfDbf2NWBTDzyf4A20DVMrRHMAqjIyoZW0NOwA88TQ
+	cZnSH5su9x6oYAvgiGZ+YCcBat47qwiHafr9kMpjNd/WqQLZTReSypfFmfcCoJTbCBZtpbTXdvt
+	jQYfZnWz2K2Riqmclkyzz20X4
+X-Received: by 2002:a05:6a21:9102:b0:3b7:b328:4c8b with SMTP id
+ adf61e73a8af0-3bb3241d5bemr15602261637.19.1782106131632; Sun, 21 Jun 2026
+ 22:28:51 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nec.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY4PR01MB13462.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a639f91b-c442-49f7-d75a-08ded01db8b1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2026 05:18:40.3946
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tZ/1X96nfBGR490hVRC9CcYbdKwBVPRqjnZX9zPBSB9qcIfYaCiNL6Auu7KpMAmAKMTfWW0Dlzm1sPZRWaI/Pg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYRPR01MB16474
+References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
+In-Reply-To: <20260622040533.29824-1-kaitao.cheng@linux.dev>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Sun, 21 Jun 2026 22:28:40 -0700
+X-Gm-Features: AVVi8CdydPWkgrsWeukABG1V_xsA12RL457Ae_ewOX27KaNNGTwhs0J8OHNbSBg
+Message-ID: <CAADnVQJmPWFT01b7DuLdtafv=8FyB84GYHNZ8zSTck+9Aw0JpA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] Prepare mutable list iterators to cache cursor state
+To: Kaitao Cheng <kaitao.cheng@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
+	Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Paul Moore <paul@paul-moore.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	David Howells <dhowells@redhat.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
+	Randy Dunlap <rdunlap@infradead.org>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Philipp Stanner <phasta@kernel.org>, linux-block@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	"open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>, linux-ntfs-dev@lists.sourceforge.net, 
+	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, io-uring <io-uring@vger.kernel.org>, 
+	audit@vger.kernel.org, bpf <bpf@vger.kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, dri-devel@lists.freedesktop.org, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, kexec@lists.infradead.org, 
+	live-patching@vger.kernel.org, linux-modules@vger.kernel.org, 
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
+	Linux Power Management <linux-pm@vger.kernel.org>, rcu@vger.kernel.org, sched-ext@lists.linux.dev, 
+	linux-mm <linux-mm@kvack.org>, virtualization@lists.linux.dev, damon@lists.linux.dev, 
+	clang-built-linux <llvm@lists.linux.dev>, chengkaitao <chengkaitao@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260621_221856_764333_8A32C83B 
-X-CRM114-Status: UNSURE (   8.41  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260621_222853_247591_CA9730C4 
+X-CRM114-Status: GOOD (  27.40  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -157,14 +141,201 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gMjAyNi8wNi8xOCAxNzo1MCwgVGFvIExpdSB3cm90ZToNCj4gSGkgS2F6dSwNCj4gDQo+IFll
-cywgaXQgaXMgbmVlZGVkIGZvciByZWFsbG9jYXJyYXkoKSBpbiBrYWxsc3ltcy5jLiBGb3IgIm1h
-bg0KPiByZWFsbG9jYXJyYXkiIGdpdmVzOg0KPiANCj4gICAgICAgICByZWFsbG9jYXJyYXkoKToN
-Cj4gICAgICAgICAgICAgU2luY2UgZ2xpYmMgMi4yOToNCj4gICAgICAgICAgICAgICAgIF9ERUZB
-VUxUX1NPVVJDRQ0KPiAgICAgICAgICAgICBnbGliYyAyLjI4IGFuZCBlYXJsaWVyOg0KPiAgICAg
-ICAgICAgICAgICAgX0dOVV9TT1VSQ0UNCj4gDQo+IEZvciBnbGliYyA8PSAyLjI4LCB3ZSBuZWVk
-IHRvIHVzZSBfR05VX1NPVVJDRSBpbiBvcmRlciB0byB1c2UNCj4gcmVhbGxvY2FycmF5KCkuIEUu
-ZyBJIGNhbiBlbmNvdW50ZXIgdGhlIGNvbXBpbGluZyB3YXJuaW5nIGluIHJoZWw4DQo+IG9uY2Ug
-cmVtb3ZlZC4NCg0KVGhhbmtzIGZvciB0aGUgaW5mby4gc28gbGV0J3Mga2VlcCBpdC4NCg0KVGhh
-bmtzLA0KS2F6dQ==
+On Sun, Jun 21, 2026 at 9:06=E2=80=AFPM Kaitao Cheng <kaitao.cheng@linux.de=
+v> wrote:
+>
+> From: chengkaitao <chengkaitao@kylinos.cn>
+>
+> The list_for_each*_safe() helpers are used when the loop body may remove
+> the current entry.  Their current interface, however, forces every caller
+> to define a temporary cursor outside the macro and pass it in, even when
+> the caller never uses that cursor directly.  For most call sites this
+> extra cursor is just boilerplate required by the macro implementation.
+>
+> This is awkward because the saved next pointer is an internal detail of
+> the iteration.  Callers that only remove or move the current entry do not
+> need to spell it out.
+>
+> The _safe() suffix has also caused confusion.  Christian Koenig pointed
+> out that the name is easy to read as a thread-safe variant, especially
+> for beginners, even though it only means that the iterator keeps enough
+> state to tolerate removal of the current entry.  He suggested _mutable()
+> as a clearer description of what the loop permits.
+>
+> Add *_mutable() iterator variants for list, hlist and llist.  The new
+> helpers are variadic and support both forms.  In the common case, the
+> caller omits the temporary cursor and the macro creates a unique internal
+> cursor with typeof(pos) and __UNIQUE_ID().  If a loop really needs an
+> explicit temporary cursor, the caller can still pass it and the helper
+> keeps the existing *_safe() behaviour.
+>
+> For example, a call site may use the shorter form:
+>
+>   list_for_each_entry_mutable(pos, head, member)
+>
+> or keep the explicit temporary cursor form:
+>
+>   list_for_each_entry_mutable(pos, tmp, head, member)
+>
+> The existing *_safe() helpers remain available for compatibility.  This
+> series only converts users in mm, block, kernel, init and io_uring.  If
+> this approach looks acceptable, the remaining users can be converted in
+> follow-up series.
+>
+> Changes in v3 (Christian K=C3=B6nig, Andy Shevchenko):
+> - Convert safe list walks to mutable iterators
+>
+> Changes in v2 (Muchun Song, Andy Shevchenko):
+> - Drop the list_for_each_entry_mutable*() helpers from v1 and make the
+>   cursor change directly in the existing list_for_each_entry*() helpers.
+> - Open-code special list walks that rely on updating the loop cursor in
+>   the body, preserving their existing traversal semantics.
+>
+> Link to v2:
+> https://lore.kernel.org/all/20260609061347.93688-1-kaitao.cheng@linux.dev=
+/
+>
+> Link to v1:
+> https://lore.kernel.org/all/20260529082149.76764-1-kaitao.cheng@linux.dev=
+/
+>
+> Kaitao Cheng (7):
+>   list: Add mutable iterator variants
+>   llist: Add mutable iterator variants
+>   mm: Use mutable list iterators
+>   block: Use mutable list iterators
+>   kernel: Use mutable list iterators
+>   initramfs: Use mutable list iterator
+>   io_uring: Use mutable list iterators
+>
+>  block/bfq-iosched.c                 |  17 +-
+>  block/blk-cgroup.c                  |  12 +-
+>  block/blk-flush.c                   |   4 +-
+>  block/blk-iocost.c                  |  18 +-
+>  block/blk-mq.c                      |   8 +-
+>  block/blk-throttle.c                |   4 +-
+>  block/kyber-iosched.c               |   4 +-
+>  block/partitions/ldm.c              |   8 +-
+>  block/sed-opal.c                    |   4 +-
+>  include/linux/list.h                | 269 ++++++++++++++++++++++++----
+>  include/linux/llist.h               |  81 +++++++--
+>  init/initramfs.c                    |   5 +-
+>  io_uring/cancel.c                   |   6 +-
+>  io_uring/poll.c                     |   3 +-
+>  io_uring/rw.c                       |   4 +-
+>  io_uring/timeout.c                  |   8 +-
+>  io_uring/uring_cmd.c                |   3 +-
+>  kernel/audit_tree.c                 |   4 +-
+>  kernel/audit_watch.c                |  16 +-
+>  kernel/auditfilter.c                |   4 +-
+>  kernel/auditsc.c                    |   4 +-
+>  kernel/bpf/arena.c                  |  10 +-
+>  kernel/bpf/arraymap.c               |   8 +-
+>  kernel/bpf/bpf_local_storage.c      |   3 +-
+>  kernel/bpf/bpf_lru_list.c           |  25 ++-
+>  kernel/bpf/btf.c                    |  18 +-
+>  kernel/bpf/cgroup.c                 |   7 +-
+>  kernel/bpf/cpumap.c                 |   4 +-
+>  kernel/bpf/devmap.c                 |  10 +-
+>  kernel/bpf/helpers.c                |   8 +-
+>  kernel/bpf/local_storage.c          |   4 +-
+>  kernel/bpf/memalloc.c               |  16 +-
+>  kernel/bpf/offload.c                |   8 +-
+>  kernel/bpf/states.c                 |   4 +-
+>  kernel/bpf/stream.c                 |   4 +-
+>  kernel/bpf/verifier.c               |   6 +-
+>  kernel/cgroup/cgroup-v1.c           |   4 +-
+>  kernel/cgroup/cgroup.c              |  54 +++---
+>  kernel/cgroup/dmem.c                |  12 +-
+>  kernel/cgroup/rdma.c                |   8 +-
+>  kernel/events/core.c                |  44 +++--
+>  kernel/events/uprobes.c             |  12 +-
+>  kernel/exit.c                       |   8 +-
+>  kernel/fail_function.c              |   4 +-
+>  kernel/gcov/clang.c                 |   4 +-
+>  kernel/irq_work.c                   |   4 +-
+>  kernel/kexec_core.c                 |   4 +-
+>  kernel/kprobes.c                    |  16 +-
+>  kernel/livepatch/core.c             |   4 +-
+>  kernel/livepatch/core.h             |   4 +-
+>  kernel/liveupdate/kho_block.c       |   4 +-
+>  kernel/liveupdate/luo_flb.c         |   4 +-
+>  kernel/locking/rwsem.c              |   2 +-
+>  kernel/locking/test-ww_mutex.c      |   2 +-
+>  kernel/module/main.c                |  11 +-
+>  kernel/padata.c                     |   4 +-
+>  kernel/power/snapshot.c             |   8 +-
+>  kernel/power/wakelock.c             |   4 +-
+>  kernel/printk/printk.c              |  11 +-
+>  kernel/ptrace.c                     |   4 +-
+>  kernel/rcu/rcutorture.c             |   3 +-
+>  kernel/rcu/tasks.h                  |   9 +-
+>  kernel/rcu/tree.c                   |   6 +-
+>  kernel/resource.c                   |   4 +-
+>  kernel/sched/core.c                 |   4 +-
+>  kernel/sched/ext.c                  |  22 +--
+>  kernel/sched/fair.c                 |  28 +--
+>  kernel/sched/topology.c             |   4 +-
+>  kernel/sched/wait.c                 |   4 +-
+>  kernel/seccomp.c                    |   4 +-
+>  kernel/signal.c                     |  11 +-
+>  kernel/smp.c                        |   4 +-
+>  kernel/taskstats.c                  |   8 +-
+>  kernel/time/clockevents.c           |   6 +-
+>  kernel/time/clocksource.c           |   4 +-
+>  kernel/time/posix-cpu-timers.c      |   4 +-
+>  kernel/time/posix-timers.c          |   3 +-
+>  kernel/torture.c                    |   3 +-
+>  kernel/trace/bpf_trace.c            |   4 +-
+>  kernel/trace/ftrace.c               |  49 +++--
+>  kernel/trace/ring_buffer.c          |  25 ++-
+>  kernel/trace/trace.c                |  12 +-
+>  kernel/trace/trace_dynevent.c       |   6 +-
+>  kernel/trace/trace_dynevent.h       |   5 +-
+>  kernel/trace/trace_events.c         |  35 ++--
+>  kernel/trace/trace_events_filter.c  |   4 +-
+>  kernel/trace/trace_events_hist.c    |   8 +-
+>  kernel/trace/trace_events_trigger.c |  17 +-
+>  kernel/trace/trace_events_user.c    |  16 +-
+>  kernel/trace/trace_stat.c           |   4 +-
+>  kernel/user-return-notifier.c       |   3 +-
+>  kernel/workqueue.c                  |  16 +-
+>  mm/backing-dev.c                    |   8 +-
+>  mm/balloon.c                        |   8 +-
+>  mm/cma.c                            |   4 +-
+>  mm/compaction.c                     |   4 +-
+>  mm/damon/core.c                     |   4 +-
+>  mm/damon/sysfs-schemes.c            |   4 +-
+>  mm/dmapool.c                        |   4 +-
+>  mm/huge_memory.c                    |   8 +-
+>  mm/hugetlb.c                        |  56 +++---
+>  mm/hugetlb_vmemmap.c                |  16 +-
+>  mm/khugepaged.c                     |  14 +-
+>  mm/kmemleak.c                       |   7 +-
+>  mm/ksm.c                            |  25 +--
+>  mm/list_lru.c                       |   4 +-
+>  mm/memcontrol-v1.c                  |   8 +-
+>  mm/memory-failure.c                 |  12 +-
+>  mm/memory-tiers.c                   |   4 +-
+>  mm/migrate.c                        |  23 ++-
+>  mm/mmu_notifier.c                   |   9 +-
+>  mm/page_alloc.c                     |   8 +-
+>  mm/page_reporting.c                 |   2 +-
+>  mm/percpu.c                         |  11 +-
+>  mm/pgtable-generic.c                |   4 +-
+>  mm/rmap.c                           |  10 +-
+>  mm/shmem.c                          |   9 +-
+>  mm/slab_common.c                    |  14 +-
+>  mm/slub.c                           |  33 ++--
+>  mm/swapfile.c                       |   4 +-
+>  mm/userfaultfd.c                    |  12 +-
+>  mm/vmalloc.c                        |  24 +--
+>  mm/vmscan.c                         |   7 +-
+>  mm/zsmalloc.c                       |   4 +-
+>  124 files changed, 875 insertions(+), 681 deletions(-)
+
+Not sure what you were thinking, but this diff stat
+is not landable.
+
+pw-bot: cr
 
