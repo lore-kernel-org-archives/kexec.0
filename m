@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2634FCDB46F
-	for <kexec@archiver.kernel.org>; Mon, 22 Jun 2026 21:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 71A3BCD98F2
+	for <kexec@archiver.kernel.org>; Mon, 22 Jun 2026 21:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=rK+wdpTKwtUqqQbnzbovNKE4a949rchqs+3YgpItl4U=; b=YA7oQd2F5aa2MBPT5QbfBD9skr
-	hIdMf4qjaYdMJdflG/yy2fH/IV6Wil4Pzqi2ofZCemZipiMkRR04Fq4oVqnl1Ew/hc7xSRB+UYgjr
-	QdnUjXKQCW2FHb7pwKN5QS70i1RjPUbxy+DWATkIc0ZIzD72pU71teYMzvjjAqo54fU5DVKZD09mv
-	Wk+LeATnul8FlsYaxtttvosbWKUW7Tflulu3gFVysSJgoXSaOEfnK2L3P7JcP4KISxq03pGyN4gtr
-	HgBRMowDjjzeooYKPNJ27E4H2nF5rxZsesdNoUq/FF3RViNg24hYg3UVcHVvfixFwlH4PtOy3juIu
-	n81LlJaQ==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=wrJ2tQp5HE6LJ4UCkyFG7BUGy7iNPsLoQhjQzM8xHVE=; b=DJm1c8j4W5/1Z62t+y5cv3pCKA
+	fluRDOUfBaBCBfDEuxlYQy1j3Pvannrgao3ImAG1rI95+wjHuCPV1jLYu1ryOQf1Z36O7rv98T3L6
+	R/5QYmV/4/GN1laYje/hxde7OHskGg0tLAsryoJmEXZPNzzs0DJ7UNO24/RU8BijznlGF6eubYd+r
+	kvSb+ctzENzYMTfnWaZ7qC3F/KNLIYQ9EFbOKBOH9Hc93efxc7mdkBx2ImFhM+tCcHV7pRuUGwNJw
+	7QnLJ3CF7PVS0BuoLDlNZwnLBFjv2fItCRAKbqSMI1Ch/MXV+It57htXy5ONkwgz649RucxAD/16Z
+	4OKwOodg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wblyb-00000005OKz-166t;
-	Mon, 22 Jun 2026 21:14:41 +0000
-Received: from esa3.hc555-34.eu.iphmx.com ([207.54.77.50])
+	id 1wblye-00000005OM5-1oYO;
+	Mon, 22 Jun 2026 21:14:44 +0000
+Received: from esa2.hc555-34.eu.iphmx.com ([23.90.104.147])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wblyY-00000005OKU-2011;
-	Mon, 22 Jun 2026 21:14:40 +0000
+	id 1wblyb-00000005OKo-29LL;
+	Mon, 22 Jun 2026 21:14:42 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=mobileye.com; i=@mobileye.com; q=dns/txt; s=MoEyIP;
-  t=1782162878; x=1813698878;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=D3y8PBJx5rtb8CmEmDXgcyrYvH9ZgsAHrPcIa59UTq4=;
-  b=QOtJGwOcwDOtcQuxX9CcU1zqcauPlZRqUAvCTT4zaACEw0LbUVYC0/52
-   +9O2Eq+CrnGbg3ew1Huu6HY83/4zZkkSt4t8D08JgW+PoUxmOe2+cNPlZ
-   ALDhvqKDbaQRYzAq8cFRid2BkFji+tz2rzB2WG0gLEVw1SEzERG09Z1S/
-   1gRCGAS5JSwWAQOdQTWnUhS1qOxl+f4D7RUflKcA6cMo2KtkdvgdsOtuV
-   ouvESiu17V/vsOUAHZIJIWswWO9zILrIMyzZOiMsBr/euUTt2XDu0zVJz
-   hNrhZmwNj0zE/HOv7Rvjxsc2TqRgm9CTnVqbcSRVvR7g4cwgcJCctKnOr
-   Q==;
-X-CSE-ConnectionGUID: oT3kSS77Tyq+c7aft27FLg==
-X-CSE-MsgGUID: M7T8Y9deSDeaWl9YgpU/sw==
+  t=1782162881; x=1813698881;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=0GnAklF3R5+7SV6HzFwpD4jHkQJ4qLIj7qNgFyn8Qlc=;
+  b=HKeW2CPmGx6GSWwYojzOQKFjZEGbHNXdwurFflizcYKUeXf+Mn1z6P6P
+   digMB9W5i7snfMkTe9phb8Li4ykqNo6zznc6qcTVAoKkqcLD/Khzi2rS8
+   2/7xDnQraOeGxr/zu3IluT0FfdpCArn+a/BnfxYUZs63isT/9c3kCboYA
+   YV7eBh6UaXhIdUvSaogpu/CTD8WspRqfGQmXDbKS1AW/hT6SfvCSoPSRB
+   u14PWGR1qQ6RxVfWyamX4e2pG8J+Q7PWZGSobzFzpg4VB49+qJByJmaeF
+   DZ6V19P2fX9qh30zrdrwacLyq3y0r22fAnL6A3oMZDLfGsd3D3eZOO5kW
+   g==;
+X-CSE-ConnectionGUID: DK8CjaJ8QASegnTdm3zcqQ==
+X-CSE-MsgGUID: 7pztyn2zTYS2iRjZSDVQzA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from unknown (HELO ces04_data.me-crop.lan) ([146.255.191.134])
-  by esa3.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2026 00:14:36 +0300
-X-CSE-ConnectionGUID: IJ4IgnLqQFWzySBMiwjKVQ==
-X-CSE-MsgGUID: aQq98ZxbQ3KVyRPomf/Zzg==
-Received: from unknown (HELO epgd034.me-corp.lan) ([10.154.54.3])
-  by ces04_data.me-crop.lan with SMTP; 23 Jun 2026 00:19:42 +0300
-Received: by epgd034.me-corp.lan (sSMTP sendmail emulation); Tue, 23 Jun 2026 00:14:34 +0300
+Received: from unknown (HELO ces01_data.me-corp.lan) ([146.255.191.134])
+  by esa2.hc555-34.eu.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2026 00:14:39 +0300
+X-CSE-ConnectionGUID: HH8ymZBcRCKEdbjQP7zapg==
+X-CSE-MsgGUID: tUCgX8QNRNGOK4+kB7jsag==
+Received: from unknown (HELO epgd034.me-corp.lan) ([10.154.54.2])
+  by ces01_data.me-corp.lan with SMTP; 23 Jun 2026 00:19:48 +0300
+Received: by epgd034.me-corp.lan (sSMTP sendmail emulation); Tue, 23 Jun 2026 00:14:37 +0300
 From: Pnina Feder <pnina.feder@mobileye.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Baoquan He <bhe@redhat.com>,
@@ -69,14 +69,16 @@ Cc: Dave Young <ruirui.yang@linux.dev>,
 	linux-riscv@lists.infradead.org,
 	linux-doc@vger.kernel.org,
 	Pnina Feder <pnina.feder@mobileye.com>
-Subject: [PATCH 0/4] vmcore-tasks: export per-task metadata to vmcoreinfo
-Date: Tue, 23 Jun 2026 00:14:26 +0300
-Message-ID: <20260622211430.4008899-1-pnina.feder@mobileye.com>
+Subject: [PATCH 1/4] vmcoreinfo: increase vmcoreinfo buffer to 8KB
+Date: Tue, 23 Jun 2026 00:14:27 +0300
+Message-ID: <20260622211430.4008899-2-pnina.feder@mobileye.com>
+In-Reply-To: <20260622211430.4008899-1-pnina.feder@mobileye.com>
+References: <20260622211430.4008899-1-pnina.feder@mobileye.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260622_141438_816354_49484DA7 
-X-CRM114-Status: GOOD (  11.60  )
+X-CRM114-CacheID: sfid-20260622_141441_855900_5E149B54 
+X-CRM114-Status: GOOD (  11.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,66 +93,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This series extends vmcoreinfo with struct offsets and sizes needed by
-the vmcore-tasks userspace tool to extract per-task state from a vmcore
-dump without requiring kernel debug symbols (DWARF/BTF).
+Additional metadata will be exported to vmcoreinfo, requiring more
+buffer space than a single 4KB page provides.
 
-The vmcore-tasks tool reads /proc/vmcore (or a saved vmcore file) and
-reconstructs, for each task:
-  - task name, pid, state, flags
-  - VMA list (start, end, flags, backing file)
-  - user register state (saved on the kernel stack at kernel entry)
-  - user-space backtrace with VMA/filename mapping
-  - kernel dmesg buffer
+Change VMCOREINFO_BYTES from PAGE_SIZE to a fixed SZ_8K. This
+decouples the buffer size from the page size, avoiding waste on
+architectures with large pages (e.g. 16KB on MIPS, 64KB on arm64)
+while providing enough space on 4KB-page architectures like RISC-V.
 
-This provides a lightweight post-mortem crash analysis capability for
-production environments where full debug info (DWARF/BTF) is not
-available.
+The existing allocation in kimage_crash_copy_vmcoreinfo() already
+uses get_order() and DIV_ROUND_UP(), so it correctly rounds up to
+whole pages regardless of the constant's value.
 
-The companion userspace tool is submitted to kexec-tools:
-  https://lore.kernel.org/all/20260622205550.1087163-1-pnina.feder@mobileye.com/
+Signed-off-by: Pnina Feder <pnina.feder@mobileye.com>
+---
+ include/linux/vmcore_info.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-The series is structured as follows:
-
-  Patch 1: Increase vmcoreinfo buffer from PAGE_SIZE to a fixed SZ_8K,
-           decoupled from page size to avoid waste on large-page
-           architectures (MIPS 16KB, arm64 64KB).
-
-  Patch 2: Export generic struct offsets (task_struct, mm_struct,
-           vm_area_struct, maple_tree, file/dentry/path, pt_regs,
-           signal_struct) needed to walk task lists and VMAs.
-
-  Patch 3: Export RISC-V arch-specific offsets (signal frame layouts,
-           register context structures) for user register extraction.
-
-  Patch 4: Export MIPS arch-specific offsets (signal frame layouts,
-           register context structures) for user register extraction.
-
-Additional architecture support (arm64, x86, etc.) can follow the
-same pattern established by patches 3 and 4.
-
-Tested on MIPS64 (QEMU Malta) and RISC-V with full kdump pipeline:
-primary kernel -> kexec panic -> crash kernel -> vmcore-tasks analysis.
-
-Pnina Feder (4):
-  vmcoreinfo: increase vmcoreinfo buffer to 8KB
-  vmcoreinfo: export task and mm struct offsets to vmcoreinfo
-  riscv: vmcore_info: export riscv arch-specific struct offsets to
-    vmcoreinfo
-  mips: vmcore_info: export mips arch-specific struct offsets to
-    vmcoreinfo
-
- .../admin-guide/kdump/vmcoreinfo.rst          | 137 ++++++++++++++++++
- arch/mips/kernel/Makefile                     |   1 +
- arch/mips/kernel/signal.c                     |   8 +
- arch/mips/kernel/vmcore_info.c                |  22 +++
- arch/riscv/kernel/signal.c                    |   8 +
- arch/riscv/kernel/vmcore_info.c               |  11 ++
- include/linux/vmcore_info.h                   |   3 +-
- kernel/vmcore_info.c                          |  60 ++++++++
- 8 files changed, 249 insertions(+), 1 deletion(-)
- create mode 100644 arch/mips/kernel/vmcore_info.c
-
+diff --git a/include/linux/vmcore_info.h b/include/linux/vmcore_info.h
+index e71518caacdf..612dcf7b9ecd 100644
+--- a/include/linux/vmcore_info.h
++++ b/include/linux/vmcore_info.h
+@@ -20,7 +20,8 @@
+ 				     CRASH_CORE_NOTE_NAME_BYTES +	\
+ 				     CRASH_CORE_NOTE_DESC_BYTES)
+ 
+-#define VMCOREINFO_BYTES	   PAGE_SIZE
++/* Fixed size independent of PAGE_SIZE to avoid waste on large-page archs */
++#define VMCOREINFO_BYTES	   SZ_8K
+ #define VMCOREINFO_NOTE_NAME	   "VMCOREINFO"
+ #define VMCOREINFO_NOTE_NAME_BYTES ALIGN(sizeof(VMCOREINFO_NOTE_NAME), 4)
+ #define VMCOREINFO_NOTE_SIZE	   ((CRASH_CORE_NOTE_HEAD_BYTES * 2) +	\
 -- 
 2.43.0
 
