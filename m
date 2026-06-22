@@ -4,79 +4,134 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AF56CC5DF6D
-	for <kexec@archiver.kernel.org>; Sat, 15 Aug 2026 07:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 482FFC5DF7D
+	for <kexec@archiver.kernel.org>; Sat, 15 Aug 2026 07:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=thQT7xU5Czy7C6oKoA6xQ4uMEAxHUG/TuY7w2/dmQrk=; b=TxG4jH/uD2N7f3M2zZzyLBh4mF
-	HmwRvwVH97LF4g9HI2Tg/9abCCGLlyHoYyb9+M52FmhPX+kzqOkkNf/erjwSbfslaD7Ri4PlDQagp
-	pA8u/pO3puJmU0xW/H94y6hXWTBnnxqdFE3jvnGHhRHgBQLUGsO1dXM7VV5Yvo5wh4YCZ+/THIcjg
-	u87JYyBaFetDo3S4OGqlRKyKuBTvEGqm/AXR2NjQCcE41pZWr5QD2tphc/kgh4x4kRXES4JebtBnR
-	PTfDM5wv7cr6jRq5YUWitlpAz3DKYHbF6EhWFAWMstPXUeDs6G7i9RKqZ4KoO3E61eLTRCMd44nzJ
-	KJvnFfhQ==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=O0N/PPU5hMDuPcxDKVT07dl4VsMT4dEBTAX2VcBexvA=; b=KFzpS3lhC6NUc9Qv37esOA+7qK
+	klhz4D2BwjIduQ1+hE17om+iFFhKuMqRyQklE9BmH7R3SC9m6AfEENysT2JzJWhfy3r3q3ainaR+J
+	lHBC0a0kZswRzxZc/AS+5oFvgjxQu0m/b+bLh66It8CUOX15B4SVwiCe5oAmcSJBpLNS5cxpAzsC3
+	A/6I7YfPOu2q040TtHL1hOdC/bUncFuP/FMaADCqeVojP2JZQTLmtHc7QI+lWFSbmeER/+RedY8xt
+	iRs0g3aeuitIg0MnbIXLlrVl7Y34wYbvRwwWYXicwsBevrkj9JNFAOQpMsK7SEq1A4/SeXuoiI0Ea
+	xgeDglAg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wv95R-00000003d64-4C4m;
-	Sat, 15 Aug 2026 07:45:51 +0000
-Received: from pdx-out-014.esa.us-west-2.outbound.mail-perimeter.amazon.com ([35.83.148.184])
+	id 1wv95K-00000003cwl-3GHz;
+	Sat, 15 Aug 2026 07:45:42 +0000
+Received: from out-174.mta0.migadu.com ([91.218.175.174])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wmyX8-0000000Ev9G-46bC
+	id 1wbWI0-00000004P8y-0Rii
 	for kexec@lists.infradead.org;
-	Thu, 23 Jul 2026 18:52:42 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1784832758; x=1816368758;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=thQT7xU5Czy7C6oKoA6xQ4uMEAxHUG/TuY7w2/dmQrk=;
-  b=a5Y6zXcFUXQR709JPrvAN3L9WhnX39KTJP18O7N2Y1hbpS7hqXUDtl5f
-   5CF4UHyAGHgkcD9/FF+YKiqg/nJVJjIG+qb6pf4j57NSF8MVrR27xAGor
-   Dq3g5a+zs9Le0DC9dtRBk8SHTWJgv/UeQXzjOxO9SeuFH2yfdtEyaOofe
-   RoJN2jkywjZzAXFFdGe+Qq0qhcU8UE9q0KpNjy8cx5Qw1l/91u1JttQXA
-   sJYErmlISZ3CT6Q+U0RnqMXGe8rwcjWPNthzhwo5510mP9v1kn2uwXGxz
-   /ZU9b6PYfBKgQTJDHYsmmdpGUIDfWDEM6frpl2/4gwfy7qh2mdFoj1O6p
-   Q==;
-X-CSE-ConnectionGUID: HJj9IeJmSMO/iMnFunu0Nw==
-X-CSE-MsgGUID: EFaURUeoStKAHkmgJ2CgBQ==
-X-IronPort-AV: E=Sophos;i="6.25,181,1779148800"; 
-   d="scan'208";a="24042241"
-Received: from ip-10-5-9-48.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.9.48])
-  by internal-pdx-out-014.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2026 18:52:32 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [205.251.233.182:3063]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.10.59:2525] with esmtp (Farcaster)
- id 32bae614-a97b-4062-9b2a-82a7743f5c9d; Thu, 23 Jul 2026 18:52:32 +0000 (UTC)
-X-Farcaster-Flow-ID: 32bae614-a97b-4062-9b2a-82a7743f5c9d
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.217) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
- Thu, 23 Jul 2026 18:52:32 +0000
-Received: from uc3bb594dafa956.fritz.box (10.1.212.6) by
- EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
- Thu, 23 Jul 2026 18:52:29 +0000
-From: hangej <hangej@amazon.com>
-To: <bhelgaas@google.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<dwmw2@infradead.org>, <kexec@lists.infradead.org>,
-	<nh-open-source@amazon.com>, <hangej@amazon.com>
-Subject: [PATCH v4] pci_crash: capture PCI config space at panic time
-Date: Thu, 23 Jul 2026 20:49:58 +0200
-Message-ID: <20260723185216.1089927-1-hangej@amazon.com>
-X-Mailer: git-send-email 2.43.0
+	Mon, 22 Jun 2026 04:29:43 +0000
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782102575;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O0N/PPU5hMDuPcxDKVT07dl4VsMT4dEBTAX2VcBexvA=;
+	b=ieCQHQ2d3enbbGkNm28eneTrFqy9uqtbpGNzuLJhNK6WPtryodGq/spbhbW7rnD63Sq1FA
+	0OX9tGC7A8VJdKI1GGeCn1cqmOm0y+xm+Oi++lbMaxguelWyYPRwMJRbn28rnDCf+135uU
+	8CjMgSKstUV8jdnZGsckuZ9mNy7iC9s=
+From: Kaitao Cheng <kaitao.cheng@linux.dev>
+To: Paul Moore <paul@paul-moore.com>,
+	Eric Paris <eparis@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	Maarten Lankhorst <dev@lankhorst.se>,
+	Maxime Ripard <mripard@kernel.org>,
+	Natalie Vock <natalie.vock@gmx.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Oberparleiter <oberpar@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Naveen N Rao <naveen@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Miroslav Benes <mbenes@suse.cz>,
+	Petr Mladek <pmladek@suse.com>,
+	Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Daniel Gomez <da.gomez@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Daniel Jordan <daniel.m.jordan@oracle.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Kees Cook <kees@kernel.org>,
+	Balbir Singh <bsingharora@gmail.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Thomas Gleixner <tglx@kernel.org>,
+	John Stultz <jstultz@google.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Matt Bobrowski <mattbobrowski@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	David Vernet <void@manifault.com>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: audit@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	netdev@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-perf-users@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	live-patching@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	rcu@vger.kernel.org,
+	sched-ext@lists.linux.dev,
+	llvm@lists.linux.dev,
+	Kaitao Cheng <chengkaitao@kylinos.cn>
+Subject: [PATCH v3 5/7] kernel: Use mutable list iterators
+Date: Mon, 22 Jun 2026 12:28:11 +0800
+Message-ID: <20260622042811.31684-1-kaitao.cheng@linux.dev>
+In-Reply-To: <20260622040533.29824-1-kaitao.cheng@linux.dev>
+References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.1.212.6]
-X-ClientProxiedBy: EX19D032UWB003.ant.amazon.com (10.13.139.165) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260723_115239_224531_31E27514 
-X-CRM114-Status: GOOD (  28.07  )
-X-Mailman-Approved-At: Sat, 15 Aug 2026 00:45:40 -0700
+X-Migadu-Flow: FLOW_OUT
+X-Mailman-Approved-At: Sat, 15 Aug 2026 00:45:41 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,1687 +146,3177 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Johannes Hange <hangej@amazon.com>
+From: Kaitao Cheng <chengkaitao@kylinos.cn>
 
-Add CONFIG_PCI_CRASH, a crash-time PCI config-space capture facility.  A
-pre-allocated, RCU-published snapshot of all PCI devices is maintained via
-a bus notifier; at panic time pci_crash_save() reads config space into the
-buffer using a trylock-based accessor that skips devices on lock
-contention.  The buffer and a physical-page directory (pagemap) are
-exported through VMCOREINFO so crash analysis tools can extract PCI
-register state without relying on /proc or sysfs in the crashed kernel.
+The safe list iteration helpers require callers to provide a temporary
+cursor even when the cursor is only used internally by the loop. This
+leaves many functions with otherwise unused variables whose only purpose
+is to satisfy the old iterator interface.
 
-Key design points:
+Use the mutable list iteration helpers for those cases. The mutable
+helpers keep the same removal-safe traversal semantics, while allowing
+the temporary cursor to be internal to the macro when the caller does
+not need to observe it.
 
-  - Snapshot rebuild is debounced (200 ms) to coalesce VF enumeration
-    storms; rebuild runs in process context on system_wq.
+Convert list, hlist and llist users under kernel/ where the temporary
+cursor is not used outside the iteration. Keep the explicit cursor form
+where the next entry is still needed by the surrounding code.
 
-  - Retired snapshots are freed via queue_rcu_work() (process context)
-    because pci_dev_put() may trigger device_release() ->
-    devres_release_all() which can sleep -- incompatible with the softirq
-    context of plain call_rcu() callbacks.
+No functional change intended.
 
-  - pci_crash_endpoint_reachable() gates every config read with
-    software-state checks (pci_dev_is_disconnected, pci_channel_offline,
-    pci_dev_is_removed, D3cold) plus a live upstream-bridge LNKSTA read
-    to confirm link presence.  The pci_dev_is_removed() check catches
-    cleanly-removed devices whose host bridge module may have been
-    unloaded (bus->ops freed) but whose pci_dev struct persists due to
-    snapshot references.
-
-  - capture= module parameter selects 'always' (every panic) or 'aer'
-    (only when an uncorrectable AER error is detected on a root port).
-
-  - devices= parameter filters the capture set by class code or the
-    keyword 'bridges'.
-
-  - Buffer is kvmalloc'd with __GFP_ZERO; capped at 24 MiB, 4096 bytes
-    per device.  A pagemap records physical addresses of each buffer page
-    for the crash parser.
-
-Introduce pci_dev_is_removed() as a public read-only helper in
-include/linux/pci.h, mirroring the existing pci_dev_is_disconnected()
-pattern.  The PCI_DEV_REMOVED bit (set by pci_destroy_dev during clean
-removal) was previously only accessible via drivers/pci/pci.h.
-
-Signed-off-by: Johannes Hange <hangej@amazon.com>
+Signed-off-by: Kaitao Cheng <chengkaitao@kylinos.cn>
 ---
- Documentation/PCI/index.rst                   |    1 +
- Documentation/PCI/pci-crash-capture.rst       |  236 ++++
- .../admin-guide/kernel-parameters.txt         |   16 +
- MAINTAINERS                                   |    8 +
- drivers/pci/access.c                          |   60 +
- include/linux/pci.h                           |    8 +
- include/linux/pci_crash.h                     |  122 ++
- kernel/Kconfig.kexec                          |   16 +
- kernel/Makefile                               |    1 +
- kernel/pci_crash.c                            | 1013 +++++++++++++++++
- kernel/vmcore_info.c                          |   13 +
- 11 files changed, 1494 insertions(+)
- create mode 100644 Documentation/PCI/pci-crash-capture.rst
- create mode 100644 include/linux/pci_crash.h
- create mode 100644 kernel/pci_crash.c
+ kernel/audit_tree.c                 |  4 +--
+ kernel/audit_watch.c                | 16 ++++-----
+ kernel/auditfilter.c                |  4 +--
+ kernel/auditsc.c                    |  4 +--
+ kernel/bpf/arena.c                  | 10 +++---
+ kernel/bpf/arraymap.c               |  8 ++---
+ kernel/bpf/bpf_local_storage.c      |  3 +-
+ kernel/bpf/bpf_lru_list.c           | 25 ++++++-------
+ kernel/bpf/btf.c                    | 18 +++++-----
+ kernel/bpf/cgroup.c                 |  7 ++--
+ kernel/bpf/cpumap.c                 |  4 +--
+ kernel/bpf/devmap.c                 | 10 +++---
+ kernel/bpf/helpers.c                |  8 ++---
+ kernel/bpf/local_storage.c          |  4 +--
+ kernel/bpf/memalloc.c               | 16 ++++-----
+ kernel/bpf/offload.c                |  8 ++---
+ kernel/bpf/states.c                 |  4 +--
+ kernel/bpf/stream.c                 |  4 +--
+ kernel/bpf/verifier.c               |  6 ++--
+ kernel/cgroup/cgroup-v1.c           |  4 +--
+ kernel/cgroup/cgroup.c              | 54 ++++++++++++++---------------
+ kernel/cgroup/dmem.c                | 12 +++----
+ kernel/cgroup/rdma.c                |  8 ++---
+ kernel/events/core.c                | 44 +++++++++++------------
+ kernel/events/uprobes.c             | 12 +++----
+ kernel/exit.c                       |  8 ++---
+ kernel/fail_function.c              |  4 +--
+ kernel/gcov/clang.c                 |  4 +--
+ kernel/irq_work.c                   |  4 +--
+ kernel/kexec_core.c                 |  4 +--
+ kernel/kprobes.c                    | 16 ++++-----
+ kernel/livepatch/core.c             |  4 +--
+ kernel/livepatch/core.h             |  4 +--
+ kernel/liveupdate/kho_block.c       |  4 +--
+ kernel/liveupdate/luo_flb.c         |  4 +--
+ kernel/locking/rwsem.c              |  2 +-
+ kernel/locking/test-ww_mutex.c      |  2 +-
+ kernel/module/main.c                | 11 +++---
+ kernel/padata.c                     |  4 +--
+ kernel/power/snapshot.c             |  8 ++---
+ kernel/power/wakelock.c             |  4 +--
+ kernel/printk/printk.c              | 11 +++---
+ kernel/ptrace.c                     |  4 +--
+ kernel/rcu/rcutorture.c             |  3 +-
+ kernel/rcu/tasks.h                  |  9 +++--
+ kernel/rcu/tree.c                   |  6 ++--
+ kernel/resource.c                   |  4 +--
+ kernel/sched/core.c                 |  4 +--
+ kernel/sched/ext.c                  | 22 ++++++------
+ kernel/sched/fair.c                 | 28 +++++++--------
+ kernel/sched/topology.c             |  4 +--
+ kernel/sched/wait.c                 |  4 +--
+ kernel/seccomp.c                    |  4 +--
+ kernel/signal.c                     | 11 +++---
+ kernel/smp.c                        |  4 +--
+ kernel/taskstats.c                  |  8 ++---
+ kernel/time/clockevents.c           |  6 ++--
+ kernel/time/clocksource.c           |  4 +--
+ kernel/time/posix-cpu-timers.c      |  4 +--
+ kernel/time/posix-timers.c          |  3 +-
+ kernel/torture.c                    |  3 +-
+ kernel/trace/bpf_trace.c            |  4 +--
+ kernel/trace/ftrace.c               | 49 +++++++++++---------------
+ kernel/trace/ring_buffer.c          | 25 +++++++------
+ kernel/trace/trace.c                | 12 +++----
+ kernel/trace/trace_dynevent.c       |  6 ++--
+ kernel/trace/trace_dynevent.h       |  5 ++-
+ kernel/trace/trace_events.c         | 35 +++++++++----------
+ kernel/trace/trace_events_filter.c  |  4 +--
+ kernel/trace/trace_events_hist.c    |  8 ++---
+ kernel/trace/trace_events_trigger.c | 17 ++++-----
+ kernel/trace/trace_events_user.c    | 16 ++++-----
+ kernel/trace/trace_stat.c           |  4 +--
+ kernel/user-return-notifier.c       |  3 +-
+ kernel/workqueue.c                  | 16 ++++-----
+ 75 files changed, 353 insertions(+), 381 deletions(-)
 
-diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
-index 5d720d2a415e..7f499a43ddb4 100644
---- a/Documentation/PCI/index.rst
-+++ b/Documentation/PCI/index.rst
-@@ -19,4 +19,5 @@ PCI Bus Subsystem
-    endpoint/index
-    controller/index
-    boot-interrupts
-+   pci-crash-capture
-    tph
-diff --git a/Documentation/PCI/pci-crash-capture.rst b/Documentation/PCI/pci-crash-capture.rst
-new file mode 100644
-index 000000000000..3a57696afa6f
---- /dev/null
-+++ b/Documentation/PCI/pci-crash-capture.rst
-@@ -0,0 +1,236 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+========================
-+PCI Crash Capture Buffer
-+========================
-+
-+Overview
-+========
-+
-+The PCI crash capture module (``CONFIG_PCI_CRASH``) saves PCI configuration
-+space for all (or selected) devices at panic time.  The data is written into
-+a pre-allocated buffer whose physical pages are exported via VMCOREINFO,
-+allowing crash analysis tools to extract device state from the vmcore.
-+
-+This is useful because AER (Advanced Error Reporting) registers are volatile
-+and cleared by device reset during kexec into the crash kernel.  Capturing
-+them before kexec preserves the error state that caused or contributed to the
-+crash.
-+
-+Boot Parameters
-+===============
-+
-+``pci_crash.capture=`` (default: ``always``)
-+  When to capture PCI config space.  Comma-separated tokens:
-+
-+  ``aer``
-+    Capture only if a root port reports an uncorrectable error in its
-+    AER ROOT_STATUS register.  Non-PCI panics skip capture entirely
-+    (a handful of MMIO reads to root ports, sub-microsecond).
-+
-+  ``always``
-+    Capture on every panic regardless of AER state.  Useful for
-+    cascading failures where a PCI link-down causes an MCE or NMI
-+    watchdog timeout before DPC/AER fires, so the crash reason is
-+    unrelated but the AER registers still hold the originating error.
-+
-+``pci_crash.devices=`` (default: ``all``)
-+  Which devices to include in the capture buffer.  Comma-separated tokens:
-+
-+  ``all``
-+    Every PCI device in the system.
-+
-+  ``bridges``
-+    PCI-to-PCI bridges (class 0604) and CardBus bridges (class 0607).
-+
-+  ``root_ports``
-+    PCIe root ports only.
-+
-+  ``XXYY``
-+    Hex PCI class code (class byte XX, subclass byte YY).
-+    Up to 8 class codes may be specified.
-+
-+  Bridges are always implicitly included regardless of the filter value
-+  because they hold AER registers needed for root cause analysis.  The
-+  filter is applied at device enumeration and hotplug rebuild time, not at
-+  crash time (zero overhead on the panic path).
-+
-+Both parameters are writable at runtime via sysfs
-+(``/sys/module/pci_crash/parameters/``).
-+
-+Architecture
-+============
-+
-+::
-+
-+  late_initcall
-+      │
-+      ├── register PCI bus notifier (before the first rebuild)
-+      ├── enumerate PCI devices (filtered by devices= param)
-+      ├── allocate buffer via kvmalloc (may be vmalloc for >4 MiB)
-+      ├── build pagemap: kmalloc'd array of per-page physical addresses
-+      └── publish snapshot via rcu_assign_pointer()
-+
-+  hotplug (BUS_NOTIFY_ADD_DEVICE / BUS_NOTIFY_DEL_DEVICE)
-+      │
-+      └── schedule delayed rebuild (200 ms debounce)
-+              └── re-enumerate, re-allocate buffer + pagemap,
-+                  publish new snapshot, retire old via queue_rcu_work()
-+
-+  panic (__crash_kexec → crash_save_vmcoreinfo → pci_crash_save)
-+      │
-+      ├── rcu_read_lock(); sample the published snapshot
-+      ├── quick-scan root port AER ROOT_STATUS (capture=aer)
-+      │     └── bail if no uncorrectable errors
-+      ├── for each device: skip if unreachable, else read config space
-+      │     via pci_bus_read_config_dword_trylock()
-+      ├── flush dcache (buffer + pagemap) to RAM
-+      └── VMCOREINFO exports: PCI_CRASH_PAGEMAP, PCI_CRASH_BUF_SZ,
-+          PCI_CRASH_VERSION
-+
-+Buffer Format
-+=============
-+
-+The buffer consists of a 32-byte header followed by variable-length
-+device records:
-+
-+.. code-block:: c
-+
-+    struct pci_crash_buffer_header {   /* 32 bytes */
-+        __le32 magic;           /* 0x50434943 "PCIC" */
-+        __le32 version;         /* 1 */
-+        __le32 device_count;
-+        __le32 config_size;     /* 0 = variable-length records */
-+        __le64 timestamp;       /* ktime_get_real_fast_ns() */
-+        __le32 flags;           /* reserved */
-+        __le32 reserved;
-+    };
-+
-+    struct pci_crash_device_record {   /* 8 + cfg_size bytes */
-+        __le16 domain;
-+        __u8   bus;
-+        __u8   devfn;
-+        __le32 config_size;     /* 256 or 4096 */
-+        __u8   config_data[];   /* 0xffffffff for unreachable dwords */
-+    };
-+
-+The pagemap (exported via ``PCI_CRASH_PAGEMAP``) allows the parser to
-+locate buffer pages without walking page tables:
-+
-+.. code-block:: c
-+
-+    struct pci_crash_pagemap {
-+        __le32 magic;           /* 0x5043504d "PCPM" */
-+        __le32 num_pages;
-+        __le64 buf_size;
-+        __le32 buf_offset;      /* offset of buffer start within first page */
-+        __le64 addrs[];         /* physical address per page */
-+    };
-+
-+All multi-byte fields are little-endian.  The struct sizes and the
-+``addrs[]`` offset are asserted with ``BUILD_BUG_ON()`` so the on-wire
-+layout cannot drift away from the userspace parser silently.
-+
-+VMCOREINFO keys
-+===============
-+
-+``pci_crash_save()`` exports the following keys into VMCOREINFO (consumed by
-+makedumpfile / the crash-utility and any bespoke vmcore parser).  They are
-+emitted whenever a valid snapshot exists at panic time; the buffer may be
-+unfilled when the AER quick-scan found no errors and skipped the capture
-+(``capture=aer``).  Parsers must check the buffer header magic (``PCIC``)
-+to confirm config space was actually captured:
-+
-+``PCI_CRASH_PAGEMAP=<hex>``
-+  Physical address of the ``struct pci_crash_pagemap``.  The pagemap is
-+  always kmalloc'd (direct-mapped), so this physical address is stable and
-+  the parser can read it directly from the vmcore.  From the pagemap the
-+  parser reconstructs the (possibly vmalloc'd, physically discontiguous)
-+  buffer page by page.
-+
-+``PCI_CRASH_VERSION=<dec>``
-+  On-wire format version (``PCI_CRASH_VERSION``).  Parsers must reject a
-+  version they do not understand rather than misinterpret the layout.
-+
-+``PCI_CRASH_BUF_SZ=<dec>``
-+  Total buffer size in bytes, matching ``pci_crash_pagemap::buf_size``.
-+
-+Safety Considerations
-+=====================
-+
-+``pci_crash_save()`` runs from ``crash_save_vmcoreinfo()`` inside
-+``__crash_kexec()``, before ``machine_kexec()``.  It executes in crash
-+context, so every access on that path is constrained accordingly:
-+
-+- **Config reads use** ``pci_bus_read_config_dword_trylock()``, which takes
-+  ``pci_lock`` with a *trylock* and skips the device on contention.  Depending
-+  on ``crash_kexec_post_notifiers`` the other CPUs may still be running or may
-+  already be halted (possibly while holding ``pci_lock``), and the panicking
-+  CPU may itself have been interrupted mid config access while holding it.
-+  ``pci_lock`` is a raw, non-reentrant spinlock, so a blocking acquire could
-+  deadlock the dump in either case; the trylock skips the device instead.  This
-+  avoids the lock deadlock only; it does not make the read itself fault-safe,
-+  which is why unreachable devices are skipped first (below).
-+
-+- **Unreachable devices are skipped before any access to them.**  A config
-+  read to a device whose PCIe link is physically down can, on some
-+  architectures (notably arm64), raise a synchronous external abort.  Before
-+  reading an endpoint, the module establishes reachability *without touching
-+  the endpoint*:
-+
-+  - software state -- ``pci_dev_is_disconnected()``, ``pci_channel_offline()``,
-+    ``pci_dev_is_removed()`` and ``PCI_D3cold`` are flag reads (no MMIO); they
-+    catch devices a subsystem has already marked gone or powered off.
-+    ``pci_dev_is_removed()`` additionally covers a cleanly-removed device whose
-+    ``pci_dev`` is kept alive by a snapshot reference while its host bridge
-+    module (and thus ``bus->ops``) may already be freed; and
-+
-+  - the immediate upstream PCIe port's Link Status (Data Link Layer Link
-+    Active).  The upstream port is on-die and always responds, so reading its
-+    Link Status cannot fault on the endpoint's dead link; if the link is down,
-+    the endpoint is skipped and its record is filled with ``0xffffffff``.
-+
-+- ``ktime_get_real_fast_ns()`` is NMI-safe (lockless timekeeper snapshot).
-+
-+- **Live capture state is a single RCU-published snapshot.**  The rebuild
-+  worker (process context) swaps it via ``rcu_assign_pointer()`` and frees the
-+  old snapshot via ``queue_rcu_work()`` (the free runs in process context after
-+  a grace period, because dropping device references via ``pci_dev_put()`` can
-+  sleep); ``pci_crash_save()`` reads it under ``rcu_read_lock()``.  RCU keeps the snapshot alive for the *fill*, but the
-+  exported buffer/pagemap addresses are consumed after ``pci_crash_save()``
-+  returns (the VMCOREINFO export, and ``machine_kexec()`` snapshotting RAM),
-+  i.e. after ``rcu_read_unlock()`` -- and on the default panic path peer CPUs
-+  are still live and may retire snapshots.  ``pci_crash_save()`` therefore
-+  *pins* the snapshot it captured (``pci_crash_captured_snap``); the RCU free
-+  callback leaks a pinned snapshot instead of freeing it, which is harmless
-+  because the system is rebooting into the crash kernel.
-+
-+- Buffer capped at 24 MiB to bound allocation on systems with thousands of
-+  VFs; per-device reads are clamped to 4096 bytes and the fill loop
-+  bounds-checks every record against the buffer end.
-+
-+- ``pci_crash_ready`` defers param parsing and rebuild until ``late_initcall``
-+  completes; kernel command-line values are stored and take effect once the
-+  PCI subsystem is up.
-+
-+Architecture support and residual risk
-+---------------------------------------
-+
-+The upstream-port Link-Status pre-check eliminates the common and
-+deterministic hang: an endpoint whose link is already down at panic is never
-+read.  Two narrow residual cases remain on architectures where a config read
-+to a dead device raises a fatal abort (e.g. arm64 ``do_sea()``, which has no
-+kernel-mode recovery for an external abort):
-+
-+- a link that drops in the small window *between* the upstream-port check and
-+  the endpoint read (a true hardware race); and
-+
-+- a multi-level fabric collapse in which an upstream port is itself behind a
-+  dead link (only the immediate parent is checked).
-+
-+On x86 a read to an absent device returns all-ones harmlessly, so these cases
-+are arm64-specific.  Capturing such a device may therefore, in those narrow
-+races, abort the dump on arm64.  Making the read itself recoverable would
-+require new architecture support in the abort handler and is intentionally not
-+part of this module; it can be added later as a separate, properly-typed
-+arch facility without changing the on-wire format.
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index b5493a7f8f22..7ef515c8b849 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5298,6 +5298,22 @@ Kernel parameters
- 		nomsi	Do not use MSI for native PCIe PME signaling (this makes
- 			all PCIe root ports use INTx for all services).
+diff --git a/kernel/audit_tree.c b/kernel/audit_tree.c
+index 1ed19b775912..9652b0595ad4 100644
+--- a/kernel/audit_tree.c
++++ b/kernel/audit_tree.c
+@@ -543,10 +543,10 @@ static void audit_tree_log_remove_rule(struct audit_context *context,
  
-+	pci_crash.capture=
-+			[PCI] When to capture PCI config space at panic time.
-+			always (default): capture on every panic.
-+			aer: capture only if root port AER reports
-+				uncorrectable errors.
-+			Requires CONFIG_PCI_CRASH=y.
-+
-+	pci_crash.devices=
-+			[PCI] Which devices to include in crash capture.
-+			all (default): every PCI device.
-+			bridges: PCI bridges only.
-+			root_ports: PCIe root ports only.
-+			XXYY: hex class code (up to 8).
-+			Bridges always implicitly included.
-+			Requires CONFIG_PCI_CRASH=y.
-+
- 	pcmv=		[HW,PCMCIA] BadgePAD 4
- 
- 	pd_ignore_unused
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f37a81950e25..47a562820582 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20560,6 +20560,14 @@ S:	Maintained
- F:	drivers/leds/leds-pca9532.c
- F:	include/linux/leds-pca9532.h
- 
-+PCI CRASH BUFFER
-+M:	Johannes Hange <hangej@amazon.com>
-+L:	linux-pci@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/PCI/pci-crash-capture.rst
-+F:	include/linux/pci_crash.h
-+F:	kernel/pci_crash.c
-+
- PCI DRIVER FOR AARDVARK (Marvell Armada 3700)
- M:	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
- M:	Pali Rohár <pali@kernel.org>
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index b123da16b63b..c05d02efd602 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/pci.h>
-+#include <linux/pci_crash.h>
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/ioport.h>
-@@ -27,9 +28,11 @@ DEFINE_RAW_SPINLOCK(pci_lock);
- #ifdef CONFIG_PCI_LOCKLESS_CONFIG
- # define pci_lock_config(f)	do { (void)(f); } while (0)
- # define pci_unlock_config(f)	do { (void)(f); } while (0)
-+# define pci_trylock_config(f)	({ (void)(f); true; })
- #else
- # define pci_lock_config(f)	raw_spin_lock_irqsave(&pci_lock, f)
- # define pci_unlock_config(f)	raw_spin_unlock_irqrestore(&pci_lock, f)
-+# define pci_trylock_config(f)	raw_spin_trylock_irqsave(&pci_lock, f)
- #endif
- 
- #define PCI_OP_READ(size, type, len) \
-@@ -85,6 +88,63 @@ EXPORT_SYMBOL(pci_bus_write_config_byte);
- EXPORT_SYMBOL(pci_bus_write_config_word);
- EXPORT_SYMBOL(pci_bus_write_config_dword);
- 
-+#ifdef CONFIG_PCI_CRASH
-+/**
-+ * pci_bus_read_config_dword_trylock - non-blocking config read for the crash path
-+ * @bus: target PCI bus
-+ * @devfn: target device/function
-+ * @pos: dword-aligned config space offset
-+ * @value: result; set to ~0 (PCI "no response") if the read is skipped
-+ *
-+ * Like pci_bus_read_config_dword() but acquires pci_lock with a trylock instead
-+ * of blocking.  The PCI crash capture (CONFIG_PCI_CRASH) reads config space from
-+ * crash_save_vmcoreinfo() inside __crash_kexec(), which can run while a halted
-+ * peer CPU still holds pci_lock, or after this CPU was interrupted mid config
-+ * access while holding it.  pci_lock is a raw (non-reentrant) spinlock, so a
-+ * blocking acquire in either case would spin forever and hang the dump.  On
-+ * contention this skips the device (value ~0, PCIBIOS_SET_FAILED) instead.
-+ *
-+ * This only avoids the pci_lock deadlock.  On x86 with legacy conf1 or
-+ * mmconfig_32 port-I/O, a second blocking lock (pci_config_lock in
-+ * arch/x86/pci/common.c) is taken below bus->ops->read() and is NOT covered
-+ * by this trylock -- those paths can still hang the dump.  arm64 ECAM and
-+ * x86-64 MMCONFIG are fully covered (no second lock).  The trylock also does
-+ * not make the underlying MMIO access fault-tolerant: a read to a device whose
-+ * link is down can still raise an external abort, so callers must confirm the
-+ * device is reachable first.
-+ *
-+ * Context: crash/panic path only.  Returns 0 on success or a PCIBIOS_* error
-+ * (PCIBIOS_SET_FAILED on lock contention).
-+ */
-+int pci_bus_read_config_dword_trylock(struct pci_bus *bus, unsigned int devfn,
-+				      int pos, u32 *value)
-+{
-+	unsigned long flags;
-+	u32 data = 0;
-+	int res;
-+
-+	if (pos & 3) {
-+		PCI_SET_ERROR_RESPONSE(value);
-+		return PCIBIOS_BAD_REGISTER_NUMBER;
-+	}
-+	if (!bus || !bus->ops || !bus->ops->read) {
-+		PCI_SET_ERROR_RESPONSE(value);
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+	}
-+	if (!pci_trylock_config(flags)) {
-+		PCI_SET_ERROR_RESPONSE(value);
-+		return PCIBIOS_SET_FAILED;
-+	}
-+	res = bus->ops->read(bus, devfn, pos, 4, &data);
-+	if (res)
-+		PCI_SET_ERROR_RESPONSE(value);
-+	else
-+		*value = data;
-+	pci_unlock_config(flags);
-+	return res;
-+}
-+#endif /* CONFIG_PCI_CRASH */
-+
- int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
- 			    int where, int size, u32 *val)
+ static void kill_rules(struct audit_context *context, struct audit_tree *tree)
  {
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 64b308b6e61c..1f6e1cebaecd 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2709,6 +2709,14 @@ static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
- 	return READ_ONCE(dev->error_state) == pci_channel_io_perm_failure;
+-	struct audit_krule *rule, *next;
++	struct audit_krule *rule;
+ 	struct audit_entry *entry;
+ 
+-	list_for_each_entry_safe(rule, next, &tree->rules, rlist) {
++	list_for_each_entry_mutable(rule, &tree->rules, rlist) {
+ 		entry = container_of(rule, struct audit_entry, rule);
+ 
+ 		list_del_init(&rule->rlist);
+diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
+index 06dd0ebe73e2..f56812c8186f 100644
+--- a/kernel/audit_watch.c
++++ b/kernel/audit_watch.c
+@@ -247,14 +247,14 @@ static void audit_update_watch(struct audit_parent *parent,
+ 			       u64 ino, unsigned int invalidating,
+ 			       struct audit_watch_ctx *ctx)
+ {
+-	struct audit_watch *owatch, *nwatch, *nextw;
+-	struct audit_krule *r, *nextr;
++	struct audit_watch *owatch, *nwatch;
++	struct audit_krule *r;
+ 	struct audit_entry *oentry, *nentry;
+ 
+ 	mutex_lock(&audit_filter_mutex);
+ 	/* Run all of the watches on this parent looking for the one that
+ 	 * matches the given dname */
+-	list_for_each_entry_safe(owatch, nextw, &parent->watches, wlist) {
++	list_for_each_entry_mutable(owatch, &parent->watches, wlist) {
+ 		if (audit_compare_dname_path(dname, owatch->path,
+ 					     AUDIT_NAME_FULL))
+ 			continue;
+@@ -275,7 +275,7 @@ static void audit_update_watch(struct audit_parent *parent,
+ 		nwatch->dev = dev;
+ 		nwatch->ino = ino;
+ 
+-		list_for_each_entry_safe(r, nextr, &owatch->rules, rlist) {
++		list_for_each_entry_mutable(r, &owatch->rules, rlist) {
+ 
+ 			oentry = container_of(r, struct audit_entry, rule);
+ 			list_del(&oentry->rule.rlist);
+@@ -322,13 +322,13 @@ static void audit_update_watch(struct audit_parent *parent,
+ /* Remove all watches & rules associated with a parent that is going away. */
+ static void audit_remove_parent_watches(struct audit_parent *parent)
+ {
+-	struct audit_watch *w, *nextw;
+-	struct audit_krule *r, *nextr;
++	struct audit_watch *w;
++	struct audit_krule *r;
+ 	struct audit_entry *e;
+ 
+ 	mutex_lock(&audit_filter_mutex);
+-	list_for_each_entry_safe(w, nextw, &parent->watches, wlist) {
+-		list_for_each_entry_safe(r, nextr, &w->rules, rlist) {
++	list_for_each_entry_mutable(w, &parent->watches, wlist) {
++		list_for_each_entry_mutable(r, &w->rules, rlist) {
+ 			e = container_of(r, struct audit_entry, rule);
+ 			audit_watch_log_rule_change(r, w, "remove_rule");
+ 			if (e->rule.exe)
+diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+index 4401119b5275..6a4936870903 100644
+--- a/kernel/auditfilter.c
++++ b/kernel/auditfilter.c
+@@ -1445,14 +1445,14 @@ static int update_lsm_rule(struct audit_krule *r)
+  * updated rule. */
+ int audit_update_lsm_rules(void)
+ {
+-	struct audit_krule *r, *n;
++	struct audit_krule *r;
+ 	int i, err = 0;
+ 
+ 	/* audit_filter_mutex synchronizes the writers */
+ 	mutex_lock(&audit_filter_mutex);
+ 
+ 	for (i = 0; i < AUDIT_NR_FILTERS; i++) {
+-		list_for_each_entry_safe(r, n, &audit_rules_list[i], list) {
++		list_for_each_entry_mutable(r, &audit_rules_list[i], list) {
+ 			int res = update_lsm_rule(r);
+ 			if (!err)
+ 				err = res;
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index 6610e667c728..df9c6c9e9e49 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -929,9 +929,9 @@ static inline void audit_free_module(struct audit_context *context)
+ }
+ static inline void audit_free_names(struct audit_context *context)
+ {
+-	struct audit_names *n, *next;
++	struct audit_names *n;
+ 
+-	list_for_each_entry_safe(n, next, &context->names_list, list) {
++	list_for_each_entry_mutable(n, &context->names_list, list) {
+ 		list_del(&n->list);
+ 		if (n->name)
+ 			putname(n->name);
+diff --git a/kernel/bpf/arena.c b/kernel/bpf/arena.c
+index 80b7b8a69446..597c3cd428eb 100644
+--- a/kernel/bpf/arena.c
++++ b/kernel/bpf/arena.c
+@@ -842,7 +842,7 @@ static void arena_free_pages(struct bpf_arena *arena, long uaddr, long page_cnt,
+ 	long kaddr, pgoff;
+ 	struct page *page;
+ 	struct llist_head free_pages;
+-	struct llist_node *pos, *t;
++	struct llist_node *pos;
+ 	struct arena_free_span *s;
+ 	struct clear_range_data cdata;
+ 	unsigned long flags;
+@@ -889,7 +889,7 @@ static void arena_free_pages(struct bpf_arena *arena, long uaddr, long page_cnt,
+ 		/* bulk zap if multiple pages being freed */
+ 		zap_pages(arena, full_uaddr, page_cnt);
+ 
+-	llist_for_each_safe(pos, t, __llist_del_all(&free_pages)) {
++	llist_for_each_mutable(pos, __llist_del_all(&free_pages)) {
+ 		page = llist_entry(pos, struct page, pcp_llist);
+ 		if (page_cnt == 1 && page_ref_count(page) > 1) /* maybe mapped by user space */
+ 			/* Optimization for the common case of page_cnt==1:
+@@ -963,7 +963,7 @@ static void arena_free_worker(struct work_struct *work)
+ {
+ 	struct bpf_arena *arena = container_of(work, struct bpf_arena, free_work);
+ 	struct mem_cgroup *new_memcg, *old_memcg;
+-	struct llist_node *list, *pos, *t;
++	struct llist_node *list, *pos;
+ 	struct arena_free_span *s;
+ 	u64 arena_vm_start, user_vm_start;
+ 	struct llist_head free_pages;
+@@ -1002,7 +1002,7 @@ static void arena_free_worker(struct work_struct *work)
+ 	raw_res_spin_unlock_irqrestore(&arena->spinlock, flags);
+ 
+ 	/* Iterate the list again without holding spinlock to do the tlb flush and zap_pages */
+-	llist_for_each_safe(pos, t, list) {
++	llist_for_each_mutable(pos, list) {
+ 		s = llist_entry(pos, struct arena_free_span, node);
+ 		page_cnt = s->page_cnt;
+ 		full_uaddr = clear_lo32(user_vm_start) + s->uaddr;
+@@ -1018,7 +1018,7 @@ static void arena_free_worker(struct work_struct *work)
+ 	}
+ 
+ 	/* free all pages collected by apply_to_existing_page_range() in the first loop */
+-	llist_for_each_safe(pos, t, __llist_del_all(&free_pages)) {
++	llist_for_each_mutable(pos, __llist_del_all(&free_pages)) {
+ 		page = llist_entry(pos, struct page, pcp_llist);
+ 		__free_page(page);
+ 	}
+diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
+index 248b4818178c..1150179a90f7 100644
+--- a/kernel/bpf/arraymap.c
++++ b/kernel/bpf/arraymap.c
+@@ -1083,12 +1083,12 @@ static int prog_array_map_poke_track(struct bpf_map *map,
+ static void prog_array_map_poke_untrack(struct bpf_map *map,
+ 					struct bpf_prog_aux *prog_aux)
+ {
+-	struct prog_poke_elem *elem, *tmp;
++	struct prog_poke_elem *elem;
+ 	struct bpf_array_aux *aux;
+ 
+ 	aux = container_of(map, struct bpf_array, map)->aux;
+ 	mutex_lock(&aux->poke_mutex);
+-	list_for_each_entry_safe(elem, tmp, &aux->poke_progs, list) {
++	list_for_each_entry_mutable(elem, &aux->poke_progs, list) {
+ 		if (elem->aux == prog_aux) {
+ 			list_del_init(&elem->list);
+ 			kfree(elem);
+@@ -1196,11 +1196,11 @@ static struct bpf_map *prog_array_map_alloc(union bpf_attr *attr)
+ 
+ static void prog_array_map_free(struct bpf_map *map)
+ {
+-	struct prog_poke_elem *elem, *tmp;
++	struct prog_poke_elem *elem;
+ 	struct bpf_array_aux *aux;
+ 
+ 	aux = container_of(map, struct bpf_array, map)->aux;
+-	list_for_each_entry_safe(elem, tmp, &aux->poke_progs, list) {
++	list_for_each_entry_mutable(elem, &aux->poke_progs, list) {
+ 		list_del_init(&elem->list);
+ 		kfree(elem);
+ 	}
+diff --git a/kernel/bpf/bpf_local_storage.c b/kernel/bpf/bpf_local_storage.c
+index 6fc6a4b672b5..5f01ba032b12 100644
+--- a/kernel/bpf/bpf_local_storage.c
++++ b/kernel/bpf/bpf_local_storage.c
+@@ -161,14 +161,13 @@ void bpf_selem_free(struct bpf_local_storage_elem *selem,
+ static void bpf_selem_free_list(struct hlist_head *list, bool reuse_now)
+ {
+ 	struct bpf_local_storage_elem *selem;
+-	struct hlist_node *n;
+ 
+ 	/* The "_safe" iteration is needed.
+ 	 * The loop is not removing the selem from the list
+ 	 * but bpf_selem_free will use the selem->rcu_head
+ 	 * which is union-ized with the selem->free_node.
+ 	 */
+-	hlist_for_each_entry_safe(selem, n, list, free_node)
++	hlist_for_each_entry_mutable(selem, list, free_node)
+ 		bpf_selem_free(selem, reuse_now);
  }
  
-+/* Bit index in pci_dev->priv_flags for device removal state. */
-+#define PCI_DEV_REMOVED		3
-+
-+static inline bool pci_dev_is_removed(const struct pci_dev *dev)
-+{
-+	return test_bit(PCI_DEV_REMOVED, &dev->priv_flags);
-+}
-+
- void pci_request_acs(void);
- bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags);
- bool pci_acs_path_enabled(struct pci_dev *start,
-diff --git a/include/linux/pci_crash.h b/include/linux/pci_crash.h
-new file mode 100644
-index 000000000000..dc29fe120ba9
---- /dev/null
-+++ b/include/linux/pci_crash.h
-@@ -0,0 +1,122 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * PCI Crash Buffer - Capture PCI config space at panic time
-+ *
-+ * This module captures PCI configuration space data (including AER
-+ * extended capability registers) for all PCI devices at panic time.
-+ * The data is stored in a buffer whose pages are captured in the
-+ * vmcore for off-site analysis.
-+ *
-+ * Copyright (c) 2026 Amazon.com, Inc. or its affiliates.
-+ */
-+#ifndef _LINUX_PCI_CRASH_H
-+#define _LINUX_PCI_CRASH_H
-+
-+#include <linux/types.h>
-+
-+#define PCI_CRASH_MAGIC         0x50434943  /* "PCIC" in ASCII */
-+#define PCI_CRASH_VERSION       1
-+
-+/**
-+ * struct pci_crash_buffer_header - Header for PCI crash buffer
-+ * @magic:        Magic number (PCI_CRASH_MAGIC)
-+ * @version:      Format version (PCI_CRASH_VERSION)
-+ * @device_count: Number of device records following this header
-+ * @config_size:  0 -- indicates variable-length records. Each device
-+ *                record stores its own config_size (pdev->cfg_size:
-+ *                256 for legacy PCI, 4096 for PCIe). Parsers walk
-+ *                records sequentially using per-record config_size.
-+ * @timestamp:    Capture timestamp from ktime_get_real_fast_ns()
-+ * @flags:        Reserved for future use (0 for now)
-+ * @reserved:     Padding to align to 32 bytes
-+ *
-+ * Total size: 32 bytes
-+ */
-+struct pci_crash_buffer_header {
-+	__le32 magic;
-+	__le32 version;
-+	__le32 device_count;
-+	__le32 config_size;
-+	__le64 timestamp;
-+	__le32 flags;
-+	__le32 reserved;
-+} __packed;
-+
-+/**
-+ * struct pci_crash_device_record - Per-device record in crash buffer
-+ * @domain:      PCI domain number
-+ * @bus:         PCI bus number
-+ * @devfn:       Device and function number (PCI_DEVFN format)
-+ * @config_size: Config space size for this device (pdev->cfg_size:
-+ *               256 for legacy PCI, 4096 for PCIe)
-+ * @config_data: Raw PCI config space (config_size bytes)
-+ *
-+ * Records are variable-length: total size per record is
-+ * PCI_CRASH_RECORD_META + config_size bytes.
-+ */
-+struct pci_crash_device_record {
-+	__le16 domain;
-+	__u8   bus;
-+	__u8   devfn;
-+	__le32 config_size;
-+	__u8   config_data[];
-+} __packed;
-+
-+#define PCI_CRASH_HEADER_SIZE  sizeof(struct pci_crash_buffer_header)
-+#define PCI_CRASH_RECORD_META  sizeof(struct pci_crash_device_record)
-+
-+/**
-+ * struct pci_crash_pagemap - Physical page directory for crash buffer
-+ *
-+ * The PCI crash buffer may be allocated via vmalloc (for buffers
-+ * exceeding ~4 MB where the buddy allocator cannot provide contiguous
-+ * pages).  virt_to_phys() returns garbage for vmalloc addresses, so
-+ * we maintain this small kmalloc'd directory that maps the buffer's
-+ * virtual pages to their actual physical addresses.
-+ *
-+ * At panic time, crash_core.c exports the pagemap's physical address
-+ * via VMCOREINFO.  The parser reads the pagemap, then reads each
-+ * physical page from the vmcore to reconstruct the full buffer.
-+ *
-+ * The pagemap itself is always kmalloc'd (direct-mapped), so
-+ * virt_to_phys() works correctly on it.
-+ *
-+ * @magic:     0x5043504d ("PCPM") -- validates this is a pagemap
-+ * @num_pages: Number of entries in the addrs[] array
-+ * @buf_size:  Exact buffer size in bytes (last page may be partial)
-+ * @buf_offset: Offset of buffer start within the first page
-+ * @addrs:     Physical address of each PAGE_SIZE page backing the buffer
-+ */
-+struct pci_crash_pagemap {
-+	__le32 magic;
-+	__le32 num_pages;
-+	__le64 buf_size;
-+	__le32 buf_offset;
-+	__le64 addrs[];
-+} __packed;
-+
-+#define PCI_CRASH_PAGEMAP_MAGIC  0x5043504d  /* "PCPM" in ASCII */
-+
-+struct pci_bus;
-+
-+#ifdef CONFIG_PCI_CRASH
-+void pci_crash_save(void);
-+extern void *pci_crash_buffer;
-+extern size_t pci_crash_buffer_size;
-+extern phys_addr_t pci_crash_pagemap_phys;
-+
-+/*
-+ * Non-blocking config read used only by the crash capture path; defined in
-+ * drivers/pci/access.c (where pci_lock lives).  Not exported and not part of
-+ * the public PCI API -- it is specific to this feature.
-+ */
-+int pci_bus_read_config_dword_trylock(struct pci_bus *bus, unsigned int devfn,
-+				      int pos, u32 *value);
-+#else
-+static inline void pci_crash_save(void) {}
-+#define pci_crash_buffer        ((void *)NULL)
-+#define pci_crash_buffer_size   ((size_t)0)
-+#define pci_crash_pagemap_phys  ((phys_addr_t)0)
-+#endif
-+
-+#endif /* _LINUX_PCI_CRASH_H */
-diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-index 15632358bcf7..056767c8ea8d 100644
---- a/kernel/Kconfig.kexec
-+++ b/kernel/Kconfig.kexec
-@@ -179,4 +179,20 @@ config CRASH_MAX_MEMORY_RANGES
- 	  the computation behind the value provided through the
- 	  /sys/kernel/crash_elfcorehdr_size attribute.
+diff --git a/kernel/bpf/bpf_lru_list.c b/kernel/bpf/bpf_lru_list.c
+index 5ed7cb4b98c0..4b7306ade684 100644
+--- a/kernel/bpf/bpf_lru_list.c
++++ b/kernel/bpf/bpf_lru_list.c
+@@ -126,11 +126,11 @@ static void __bpf_lru_list_rotate_active(struct bpf_lru *lru,
+ 					 struct bpf_lru_list *l)
+ {
+ 	struct list_head *active = &l->lists[BPF_LRU_LIST_T_ACTIVE];
+-	struct bpf_lru_node *node, *tmp_node, *first_node;
++	struct bpf_lru_node *node, *first_node;
+ 	unsigned int i = 0;
  
-+
-+config PCI_CRASH
-+	bool "Capture PCI config space at panic time"
-+	depends on VMCORE_INFO && PCI && (ARM64 || X86)
-+	help
-+	  Capture PCI configuration space (including AER extended capability
-+	  registers) for all PCI devices at panic time.  The data is stored
-+	  in a buffer whose pages are recorded in VMCOREINFO for off-site
-+	  crash analysis.
-+
-+	  This is useful for diagnosing PCI errors that caused or contributed
-+	  to the crash, especially when AER registers are volatile and cleared
-+	  by device reset during kexec.
-+
-+	  If unsure, say Y.
-+
- endmenu
-diff --git a/kernel/Makefile b/kernel/Makefile
-index 1e1a31673577..584ab235496e 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -82,6 +82,7 @@ obj-$(CONFIG_KEXEC_CORE) += kexec_core.o
- obj-$(CONFIG_CRASH_DUMP) += crash_core.o
- obj-$(CONFIG_CRASH_DM_CRYPT) += crash_dump_dm_crypt.o
- obj-$(CONFIG_CRASH_DUMP_KUNIT_TEST) += crash_core_test.o
-+obj-$(CONFIG_PCI_CRASH) += pci_crash.o
- obj-$(CONFIG_KEXEC) += kexec.o
- obj-$(CONFIG_KEXEC_FILE) += kexec_file.o
- obj-$(CONFIG_KEXEC_ELF) += kexec_elf.o
-diff --git a/kernel/pci_crash.c b/kernel/pci_crash.c
-new file mode 100644
-index 000000000000..15d7fa0fc74f
---- /dev/null
-+++ b/kernel/pci_crash.c
-@@ -0,0 +1,1013 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * PCI Crash Buffer - Capture PCI config space for crash analysis
-+ *
-+ * Copyright (c) 2026 Amazon.com, Inc. or its affiliates.
-+ *
-+ * Captures PCI configuration space at crash time so AER error
-+ * registers reflect the crash-time state for off-site analysis.
-+ *
-+ * Design:
-+ * - Init (late_initcall): enumerate devices, allocate buffer.
-+ * - Hotplug: bus notifier queues deferred rebuild of device list
-+ *   and buffer via workqueue -- no PCI reads.
-+ * - Crash: crash_save_vmcoreinfo() calls pci_crash_save() which
-+ *   reads config space into buffer, flushes dcache to RAM so
-+ *   data survives kexec into crash kernel.
-+ *
-+ * Records are variable-length: each device's record is exactly
-+ * 8 + pdev->cfg_size bytes (264 for legacy PCI, 4104 for PCIe).
-+ * The parser walks records sequentially using per-record config_size.
-+ *
-+ * Buffer pages may be physically scattered (kvmalloc falls back to
-+ * vmalloc for buffers exceeding ~4 MB).  A small kmalloc'd pagemap
-+ * records each page's physical address so the crash parser can
-+ * reconstruct the buffer without page-table walking.
-+ *
-+ * Config reads at crash time use pci_bus_read_config_dword_trylock(), which
-+ * trylocks pci_lock and skips the device on contention.  pci_crash_save() runs
-+ * from crash_save_vmcoreinfo() inside __crash_kexec(); depending on
-+ * crash_kexec_post_notifiers, peer CPUs may already be halted (possibly while
-+ * holding pci_lock) and this CPU may itself hold pci_lock (a panic inside a
-+ * config access).  pci_lock is a raw, non-reentrant spinlock, so a blocking
-+ * acquire would deadlock the dump in either case; the trylock skips instead.
-+ * This guards against the lock deadlock only -- a read to an unreachable device
-+ * is handled separately by pci_crash_endpoint_reachable().
-+ * for_each_pci_dev() needs pci_bus_sem -- only used at init/hotplug.
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/crash_dump.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/mm.h>
-+#include <linux/moduleparam.h>
-+#include <linux/mutex.h>
-+#include <linux/pci.h>
-+#include <linux/pci_crash.h>
-+#include <linux/slab.h>
-+#include <linux/timekeeping.h>
-+#include <linux/workqueue.h>
-+#include <linux/rcupdate.h>
-+
-+#include <linux/cacheflush.h>
-+#include <linux/unaligned.h>
-+
-+/**
-+ * pci_crash_flush_dcache() - Flush a memory region from CPU cache to RAM
-+ * @addr: virtual address of region to flush
-+ * @size: size in bytes
-+ *
-+ * Used at crash time to ensure the crash kernel sees our buffer/pagemap
-+ * writes after kexec.
-+ */
-+static inline void pci_crash_flush_dcache(void *addr, size_t size)
-+{
-+	/* Only ARM64 and x86 implemented; Kconfig enforces depends on (ARM64 || X86). */
-+#ifdef CONFIG_ARM64
-+	unsigned long start = (unsigned long)addr;
-+	unsigned long end = start + size;
-+
-+	dcache_clean_inval_poc(start, end);
-+#elif defined(CONFIG_X86)
-+	clflush_cache_range(addr, size);
-+#else
-+#error "CONFIG_PCI_CRASH requires ARM64 or X86 dcache flush support (Kconfig depends)"
-+#endif
-+}
-+
-+/*
-+ * Live capture state is published as a single RCU-managed snapshot so the
-+ * lockless crash-time reader (pci_crash_save) always observes a consistent
-+ * {devs, num_devs, buffer, pagemap} set and can never race the rebuild
-+ * worker freeing the old arrays.  The retired snapshot is reclaimed via
-+ * queue_rcu_work() once no reader can hold it -- see pci_crash_rebuild_snapshot().
-+ */
-+struct pci_crash_snapshot {
-+	struct pci_dev		**devs;
-+	unsigned int		num_devs;
-+	void			*buffer;
-+	size_t			buffer_size;
-+	struct pci_crash_pagemap *pagemap;
-+	size_t			pagemap_size;
-+	phys_addr_t		pagemap_phys;
-+	struct rcu_work		rcu_work;
-+};
-+
-+static struct pci_crash_snapshot __rcu *pci_crash_snap;
-+
-+/*
-+ * Scalars consumed by crash_core.c's crash_save_vmcoreinfo() right AFTER it
-+ * calls pci_crash_save().  pci_crash_save() publishes them from the snapshot
-+ * it captured; on a skipped or failed capture they are set to 0 so no stale
-+ * pagemap is exported into the vmcore.
-+ */
-+void *pci_crash_buffer;
-+EXPORT_SYMBOL_GPL(pci_crash_buffer);
-+
-+size_t pci_crash_buffer_size;
-+EXPORT_SYMBOL_GPL(pci_crash_buffer_size);
-+
-+phys_addr_t pci_crash_pagemap_phys;
-+EXPORT_SYMBOL_GPL(pci_crash_pagemap_phys);
-+
-+/*
-+ * Set by pci_crash_save() to the snapshot it captured, so its buffer/pagemap
-+ * (whose addresses are exported into the vmcore via vmcore_info.c) cannot be
-+ * reclaimed out from under the crash kernel.  pci_crash_save() publishes the
-+ * buffer scalars and returns; vmcore_info.c then reads them and machine_kexec()
-+ * snapshots RAM -- all AFTER rcu_read_unlock(), so RCU read-side protection has
-+ * already ended by the time the buffer matters.  A rebuild racing on a live
-+ * peer CPU (the default panic path runs __crash_kexec() before halting peers)
-+ * could otherwise queue_rcu_work()-free this snapshot before kexec.  The free
-+ * callback below honours this pin and leaks the snapshot instead -- harmless,
-+ * the system is going down.  Written under rcu_read_lock() before the scalars
-+ * are published, so the grace period ordering guarantees the callback sees it.
-+ */
-+static struct pci_crash_snapshot *pci_crash_captured_snap;
-+
-+/*
-+ * Reclaim a retired snapshot after a grace period: drop dev refs + free.
-+ * Runs via queue_rcu_work() in process context -- pci_dev_put() may trigger
-+ * device_release() -> devres_release_all() which can sleep.
-+ */
-+static void pci_crash_snapshot_free_work(struct work_struct *work)
-+{
-+	struct pci_crash_snapshot *s =
-+		container_of(to_rcu_work(work), struct pci_crash_snapshot, rcu_work);
-+	unsigned int i;
-+
-+	/*
-+	 * Pinned by an in-progress crash capture: its buffer address is live in
-+	 * the vmcore export.  Leak it rather than free memory kexec will read.
-+	 */
-+	if (READ_ONCE(pci_crash_captured_snap) == s)
-+		return;
-+
-+	for (i = 0; i < s->num_devs; i++)
-+		if (s->devs && s->devs[i])
-+			pci_dev_put(s->devs[i]);
-+	kvfree(s->devs);
-+	kvfree(s->buffer);
-+	kfree(s->pagemap);
-+	kfree(s);
-+}
-+
-+static DEFINE_MUTEX(pci_crash_lock);
-+
-+/*
-+ * Set in pci_crash_init() after delayed_work, PCI bus and notifier are
-+ * ready.  Guards parse + rebuild in param setters: at boot (level -1)
-+ * the setter just stores the string; pci_crash_init() parses and does
-+ * the initial rebuild once PCI is up.
-+ */
-+static bool pci_crash_ready;
-+
-+/*
-+ * capture -- when to capture PCI config space.
-+ * Comma-separated tokens:
-+ *   aer    -- root port ROOT_STATUS has uncorrectable errors
-+ *   always -- every panic regardless of PCI error state (default)
-+ *
-+ * Writable at runtime (0644) so operators and tests can toggle without
-+ * reboot.  Writes re-parse capture_flags immediately.
-+ */
-+#define PCI_CRASH_PARAM_CAPTURE_LEN	32
-+static char capture[PCI_CRASH_PARAM_CAPTURE_LEN] = "always";
-+
-+#define PCI_CRASH_CAPTURE_AER		BIT(0)
-+#define PCI_CRASH_CAPTURE_ALWAYS	BIT(1)
-+static unsigned long capture_flags = PCI_CRASH_CAPTURE_ALWAYS;
-+
-+static void pci_crash_parse_capture(void);
-+
-+static int capture_param_set(const char *val, const struct kernel_param *kp)
-+{
-+	char *trimmed;
-+
-+	if (strlen(val) >= sizeof(capture))
-+		return -EINVAL;
-+
-+	/* Serialize against concurrent sysfs writers mutating the string. */
-+	mutex_lock(&pci_crash_lock);
-+	strscpy(capture, val, sizeof(capture));
-+	trimmed = strim(capture);
-+	if (trimmed != capture)
-+		memmove(capture, trimmed, strlen(trimmed) + 1);
-+	if (READ_ONCE(pci_crash_ready))
-+		pci_crash_parse_capture();
-+	mutex_unlock(&pci_crash_lock);
-+	return 0;
-+}
-+
-+static int capture_param_get(char *buf, const struct kernel_param *kp)
-+{
-+	return scnprintf(buf, PAGE_SIZE, "%s\n", capture);
-+}
-+
-+static const struct kernel_param_ops capture_param_ops = {
-+	.set = capture_param_set,
-+	.get = capture_param_get,
-+};
-+module_param_cb(capture, &capture_param_ops, NULL, 0644);
-+MODULE_PARM_DESC(capture, "When to capture: aer, always (default: always)");
-+
-+/*
-+ * devices -- which devices to capture.
-+ * Comma-separated tokens:
-+ *   all        -- every PCI device (default)
-+ *   bridges    -- PCI bridges (class 0604, 0607)
-+ *   root_ports -- PCIe root ports only
-+ *   XXYY       -- hex PCI class code (class + subclass)
-+ *
-+ * Bridges are always implicitly included regardless of filter value
-+ * because they hold the AER registers needed for root cause analysis.
-+ * Applies at rebuild time only -- zero cost at crash time.  Writable
-+ * at runtime (0644); writes re-parse and trigger async rebuild.
-+ */
-+#define PCI_CRASH_PARAM_DEVICES_LEN	256
-+static char devices[PCI_CRASH_PARAM_DEVICES_LEN] = "all";
-+
-+static void pci_crash_parse_devices(void);
-+static struct delayed_work pci_crash_rebuild_dwork;
-+
-+/* Debounce period for bus notifications (ms).
-+ * SR-IOV liveupdate can enumerate ~3000 VFs in ~1.5s -- this coalesces
-+ * the storm into a single rebuild after the last event.
-+ */
-+#define PCI_CRASH_REBUILD_DELAY_MS	200
-+
-+static int devices_param_set(const char *val, const struct kernel_param *kp)
-+{
-+	if (strlen(val) >= sizeof(devices))
-+		return -EINVAL;
-+
-+	mutex_lock(&pci_crash_lock);
-+	strscpy(devices, val, sizeof(devices));
-+	{
-+		char *trimmed = strim(devices);
-+
-+		if (trimmed != devices)
-+			memmove(devices, trimmed, strlen(trimmed) + 1);
-+	}
-+	if (READ_ONCE(pci_crash_ready)) {
-+		pci_crash_parse_devices();
-+		mod_delayed_work(system_wq, &pci_crash_rebuild_dwork,
-+				 msecs_to_jiffies(PCI_CRASH_REBUILD_DELAY_MS));
-+	}
-+	mutex_unlock(&pci_crash_lock);
-+	return 0;
-+}
-+
-+static int devices_param_get(char *buf, const struct kernel_param *kp)
-+{
-+	return scnprintf(buf, PAGE_SIZE, "%s\n", devices);
-+}
-+
-+static const struct kernel_param_ops devices_param_ops = {
-+	.set = devices_param_set,
-+	.get = devices_param_get,
-+};
-+module_param_cb(devices, &devices_param_ops, NULL, 0644);
-+MODULE_PARM_DESC(devices,
-+	"Which devices: all, bridges, root_ports, XXYY hex class (default: all)");
-+
-+#define PCI_CRASH_DEVICES_ALL		BIT(0)
-+#define PCI_CRASH_DEVICES_BRIDGES	BIT(1)
-+#define PCI_CRASH_DEVICES_ROOT_PORTS	BIT(2)
-+/* Max distinct class-code filters in a devices= list; 8 covers realistic use. */
-+#define PCI_CRASH_MAX_DEVICE_CLASSES	8
-+static unsigned long devices_flags = PCI_CRASH_DEVICES_ALL;
-+static u16 device_classes[PCI_CRASH_MAX_DEVICE_CLASSES];
-+static unsigned int device_class_count;
-+
-+static void pci_crash_parse_capture(void)
-+{
-+	char *buf, *token, *rest;
-+	unsigned long flags = 0;
-+
-+	if (!*capture) {
-+		WRITE_ONCE(capture_flags, PCI_CRASH_CAPTURE_ALWAYS);
-+		return;
-+	}
-+
-+	buf = kstrdup(capture, GFP_KERNEL);
-+	if (!buf) {
-+		WRITE_ONCE(capture_flags, PCI_CRASH_CAPTURE_ALWAYS);
-+		return;
-+	}
-+
-+	rest = buf;
-+	while ((token = strsep(&rest, ",")) != NULL) {
-+		if (strcmp(token, "aer") == 0)
-+			flags |= PCI_CRASH_CAPTURE_AER;
-+		else if (strcmp(token, "always") == 0)
-+			flags |= PCI_CRASH_CAPTURE_ALWAYS;
-+		else
-+			pr_warn("unknown capture token: %s\n",
-+				token);
-+	}
-+	kfree(buf);
-+
-+	if (!flags) {
-+		pr_warn("no valid capture tokens, defaulting to always\n");
-+		flags = PCI_CRASH_CAPTURE_ALWAYS;
-+	}
-+	WRITE_ONCE(capture_flags, flags);
-+}
-+
-+static void pci_crash_parse_devices(void)
-+{
-+	char *buf, *token, *rest;
-+	unsigned long val;
-+
-+	devices_flags = 0;
-+	device_class_count = 0;
-+
-+	if (!*devices) {
-+		devices_flags = PCI_CRASH_DEVICES_ALL;
-+		return;
-+	}
-+
-+	buf = kstrdup(devices, GFP_KERNEL);
-+	if (!buf) {
-+		devices_flags = PCI_CRASH_DEVICES_ALL;
-+		return;
-+	}
-+
-+	rest = buf;
-+	while ((token = strsep(&rest, ",")) != NULL) {
-+		if (strcmp(token, "all") == 0) {
-+			devices_flags |= PCI_CRASH_DEVICES_ALL;
-+		} else if (strcmp(token, "bridges") == 0) {
-+			devices_flags |= PCI_CRASH_DEVICES_BRIDGES;
-+		} else if (strcmp(token, "root_ports") == 0) {
-+			devices_flags |= PCI_CRASH_DEVICES_ROOT_PORTS;
-+		} else if (kstrtoul(token, 16, &val) == 0 && val <= 0xFFFF) {
-+			if (device_class_count < PCI_CRASH_MAX_DEVICE_CLASSES)
-+				device_classes[device_class_count++] = (u16)val;
-+			else
-+				pr_warn("too many device classes (max %d)\n",
-+					PCI_CRASH_MAX_DEVICE_CLASSES);
-+		} else {
-+			pr_warn("unknown devices token: %s\n",
-+				token);
-+		}
-+	}
-+	kfree(buf);
-+
-+	if (!devices_flags && device_class_count == 0) {
-+		pr_warn("no valid devices tokens, defaulting to all\n");
-+		devices_flags = PCI_CRASH_DEVICES_ALL;
-+	}
-+}
-+
-+static bool pci_crash_device_matches(struct pci_dev *pdev)
-+{
-+	unsigned int i;
-+	u16 dev_class = pdev->class >> 8;
-+
-+	if (devices_flags & PCI_CRASH_DEVICES_ALL)
-+		return true;
-+
-+	/* Bridges always included -- they hold AER registers */
-+	if (dev_class == PCI_CLASS_BRIDGE_PCI ||
-+	    dev_class == PCI_CLASS_BRIDGE_CARDBUS)
-+		return true;
-+
-+	if ((devices_flags & PCI_CRASH_DEVICES_ROOT_PORTS) &&
-+	    pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT)
-+		return true;
-+
-+	for (i = 0; i < device_class_count; i++) {
-+		if (dev_class == device_classes[i])
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+/* Sanity limit -- prevents multi-GB allocations on systems with many VFs */
-+#define PCI_CRASH_MAX_BUFFER_SIZE	(24 * 1024 * 1024)
-+
-+/*
-+ * PCIe extended config space size. Per-device reads are clamped to this in
-+ * case a device's cfg_size is corrupt at crash time.
-+ */
-+#define PCI_CRASH_MAX_CFG_SIZE		4096
-+
-+/**
-+ * pci_crash_build_pagemap() - Build physical page directory for buffer
-+ * @buf: buffer allocated via kvmalloc (may be vmalloc'd)
-+ * @buf_size: buffer size in bytes
-+ *
-+ * Allocates a kmalloc'd directory containing the physical address of
-+ * each page backing @buf.  The pagemap is always direct-mapped, so
-+ * virt_to_phys() works on it at crash time.
-+ *
-+ * Return: the new pagemap, or NULL on allocation failure.
-+ */
-+static struct pci_crash_pagemap *pci_crash_build_pagemap(void *buf,
-+							 size_t buf_size)
-+{
-+	unsigned int num_pages = DIV_ROUND_UP(offset_in_page(buf) + buf_size, PAGE_SIZE);
-+	struct pci_crash_pagemap *pm;
-+	unsigned int i;
-+
-+	pm = kmalloc(struct_size(pm, addrs, num_pages), GFP_KERNEL);
-+	if (!pm)
-+		return NULL;
-+
-+	pm->magic = cpu_to_le32(PCI_CRASH_PAGEMAP_MAGIC);
-+	pm->num_pages = cpu_to_le32(num_pages);
-+	pm->buf_size = cpu_to_le64(buf_size);
-+	pm->buf_offset = cpu_to_le32(offset_in_page(buf));
-+
-+	for (i = 0; i < num_pages; i++) {
-+		struct page *page;
-+		phys_addr_t pa;
-+
-+		if (is_vmalloc_addr(buf + i * PAGE_SIZE))
-+			page = vmalloc_to_page(buf + i * PAGE_SIZE);
-+		else
-+			page = virt_to_page(buf + i * PAGE_SIZE);
-+
-+		if (!page) {
-+			kfree(pm);
-+			return NULL;
-+		}
-+		pa = page_to_phys(page);
-+		pm->addrs[i] = cpu_to_le64(pa);
-+	}
-+
-+	return pm;
-+}
-+
-+/**
-+ * pci_crash_endpoint_reachable() - Decide if @pdev is safe to read at crash time
-+ * @pdev: PCI device about to be read
-+ *
-+ * A config read to a device whose PCIe link is physically down can, on some
-+ * architectures (notably arm64), raise a synchronous external abort.  In the
-+ * crash path that abort is unrecoverable -- the arm64 SEA handler (do_sea())
-+ * has no kernel-mode fixup and calls arm64_notify_die(), double-faulting the
-+ * panic and hanging the very dump we are trying to produce.  On x86 such a
-+ * read returns all-ones harmlessly.  So before touching an endpoint we must
-+ * establish reachability WITHOUT reading the endpoint itself.
-+ *
-+ * Two cheap, panic-safe signals are used, in order:
-+ *
-+ *  1. Software state -- pci_dev_is_disconnected(), pci_channel_offline(),
-+ *     pci_dev_is_removed() and PCI_D3cold are pure flag reads (no MMIO).  They
-+ *     catch devices a subsystem has already marked gone (hotplug remove, failed
-+ *     AER/DPC recovery, powered-off).  pci_dev_is_removed() also covers a
-+ *     cleanly-removed device whose pci_dev is pinned by a snapshot reference
-+ *     while its host bridge module (hence bus->ops) may already be freed.
-+ *     They are necessary but not sufficient: in the
-+ *     cascading-failure window this feature targets, a link can be down before
-+ *     any subsystem has updated error_state, so these flags can still read
-+ *     "live".
-+ *
-+ *  2. Parent-bridge link state -- read PCI_EXP_LNKSTA on the immediate upstream
-+ *     PCIe port and test Data Link Layer Link Active (DLLLA).  The upstream
-+ *     port is on-die and always responds, so reading *its* config space cannot
-+ *     raise an abort caused by the endpoint's dead link.  If DLLLA is clear,
-+ *     the endpoint is unreachable and is skipped without ever being touched.
-+ *     The bridge read uses the crash-safe trylock accessor so it cannot hang
-+ *     on pci_lock either.
-+ *
-+ * Return: false if @pdev should be skipped (record filled with 0xFFFFFFFF).
-+ *
-+ * Residual: a single immediate-parent check; a link that drops between this
-+ * check and the read (TOCTOU), or a multi-level fabric collapse where the
-+ * upstream port itself sits behind a dead link, is not covered here.  See
-+ * Documentation/PCI/pci-crash-capture.rst for the documented arm64 caveat.
-+ */
-+static bool pci_crash_endpoint_reachable(struct pci_dev *pdev)
-+{
-+	struct pci_dev *bridge;
-+	u32 lnksta = 0;
-+	u16 sta;
-+	int pos;
-+
-+	/* Software-state flags: pure reads, no MMIO -- always panic-safe. */
-+	if (pci_dev_is_disconnected(pdev) || pci_channel_offline(pdev) ||
-+	    pci_dev_is_removed(pdev) ||
-+	    pdev->current_state == PCI_D3cold)
-+		return false;
-+
-+	/*
-+	 * Live link check via the immediate upstream PCIe port.  Only meaningful
-+	 * for a device sitting below a PCIe downstream/root port; for non-PCIe
-+	 * or root-complex-integrated devices there is no such link to test, so
-+	 * treat them as reachable and let the crash-safe accessor handle the read.
-+	 */
-+	bridge = pci_upstream_bridge(pdev);
-+	if (bridge && pci_is_pcie(bridge) &&
-+	    (pci_pcie_type(bridge) == PCI_EXP_TYPE_ROOT_PORT ||
-+	     pci_pcie_type(bridge) == PCI_EXP_TYPE_DOWNSTREAM) &&
-+	    bridge->pcie_cap && bridge->bus) {
-+		pos = bridge->pcie_cap + PCI_EXP_LNKSTA;
-+		/*
-+		 * Read the aligned dword containing LNKSTA from the on-die
-+		 * upstream port (always present), then extract the 16-bit field.
-+		 *
-+		 * Fail closed: if the bridge read cannot complete -- lock
-+		 * contention (PCIBIOS_SET_FAILED) or any PCIBIOS error -- we
-+		 * cannot prove the link is up, so treat the endpoint as
-+		 * unreachable rather than issuing an MMIO read that may raise a
-+		 * fatal external abort.  Contention is exactly a crash-path
-+		 * condition we assume is likely, so "unknown" must mean "skip".
-+		 */
-+		if (pci_bus_read_config_dword_trylock(bridge->bus, bridge->devfn,
-+						      pos & ~0x3, &lnksta) != 0)
-+			return false;
-+
-+		sta = (pos & 0x2) ? (lnksta >> 16) : (lnksta & 0xffff);
-+		if (!(sta & PCI_EXP_LNKSTA_DLLLA))
-+			return false;	/* link down -> endpoint gone */
-+	}
-+
-+	return true;
-+}
-+
-+/**
-+ * pci_crash_read_config_space() - Read config space for one device
-+ * @pdev: PCI device to read
-+ * @ptr: destination pointer within the crash buffer
-+ * @cfg_size: number of config bytes to read (already clamped by the caller)
-+ *
-+ * Reads @cfg_size bytes one dword at a time.  Devices deemed unreachable by
-+ * pci_crash_endpoint_reachable() (disconnected, in error recovery, powered
-+ * off, or behind a down PCIe link) are skipped without being touched: on x86
-+ * such a read returns all-ones harmlessly, but on other architectures (e.g.
-+ * arm64) it can raise a fatal external abort that double-faults the panic
-+ * path.  Skipped or failed reads store 0xFFFFFFFF -- the standard PCI
-+ * convention for absent/unreachable registers.
-+ */
-+static void pci_crash_read_config_space(struct pci_dev *pdev, u8 *ptr,
-+					unsigned int cfg_size)
-+{
-+	struct pci_crash_device_record *record =
-+		(struct pci_crash_device_record *)ptr;
-+	u8 *cfg_data = ptr + PCI_CRASH_RECORD_META;
-+	unsigned int offset;
-+	u32 val;
-+
-+	/* Defensive: never trust cfg_size, never deref a torn-down bus. */
-+	if (cfg_size > PCI_CRASH_MAX_CFG_SIZE)
-+		cfg_size = PCI_CRASH_MAX_CFG_SIZE;
-+
-+	if (!pdev->bus) {
-+		record->domain = 0;
-+		record->bus = 0;
-+		record->devfn = pdev->devfn;
-+		record->config_size = cpu_to_le32(cfg_size);
-+		memset(cfg_data, 0xff, cfg_size);
-+		return;
-+	}
-+
-+	record->domain = cpu_to_le16(pci_domain_nr(pdev->bus));
-+	record->bus = pdev->bus->number;
-+	record->devfn = pdev->devfn;
-+	record->config_size = cpu_to_le32(cfg_size);
-+
-+	if (!pci_crash_endpoint_reachable(pdev)) {
-+		memset(cfg_data, 0xff, cfg_size);
-+		return;
-+	}
-+
-+	for (offset = 0; offset < cfg_size; offset += 4) {
-+		if (pci_bus_read_config_dword_trylock(pdev->bus, pdev->devfn,
-+						      offset, &val)) {
-+			put_unaligned_le32(0xFFFFFFFF, &cfg_data[offset]);
-+			continue;
-+		}
-+		put_unaligned_le32(val, &cfg_data[offset]);
-+	}
-+}
-+
-+/**
-+ * pci_crash_fill_buffer() - Populate buffer with config space
-+ * @s: snapshot whose buffer is filled from its captured device list
-+ *
-+ * Records are variable-length: each is PCI_CRASH_RECORD_META +
-+ * pdev->cfg_size bytes. The header's config_size is 0 to indicate
-+ * variable-length; parsers walk records using per-record config_size.
-+ *
-+ * Uses ktime_get_real_fast_ns() for the timestamp -- safe in NMI/panic
-+ * context (lockless, reads the NMI-safe timekeeper snapshot).
-+ *
-+ * Caller holds rcu_read_lock() so @s stays valid for the whole fill.
-+ */
-+static void pci_crash_fill_buffer(struct pci_crash_snapshot *s)
-+{
-+	struct pci_crash_buffer_header *header = s->buffer;
-+	struct pci_dev **devs = s->devs;
-+	u8 *ptr, *end;
-+	unsigned int i;
-+
-+	header->magic = cpu_to_le32(PCI_CRASH_MAGIC);
-+	header->version = cpu_to_le32(PCI_CRASH_VERSION);
-+	header->device_count = cpu_to_le32(s->num_devs);
-+	header->config_size = 0;
-+	header->timestamp = cpu_to_le64(ktime_get_real_fast_ns());
-+	header->flags = 0;
-+	header->reserved = 0;
-+
-+	ptr = (u8 *)s->buffer + PCI_CRASH_HEADER_SIZE;
-+	end = (u8 *)s->buffer + s->buffer_size;
-+	for (i = 0; i < s->num_devs; i++) {
-+		struct pci_dev *pdev = devs[i];
-+		unsigned int cfg_size;
-+		size_t rec_size;
-+
-+		if (unlikely(!pdev))
-+			break;
-+
-+		cfg_size = pdev->cfg_size;
-+		if (cfg_size > PCI_CRASH_MAX_CFG_SIZE)
-+			cfg_size = PCI_CRASH_MAX_CFG_SIZE;
-+		rec_size = PCI_CRASH_RECORD_META + cfg_size;
-+
-+		/*
-+		 * Never write past the buffer if the device set or a device's
-+		 * cfg_size grew since the buffer was sized at rebuild time.
-+		 */
-+		if (unlikely(ptr + rec_size > end))
-+			break;
-+
-+		pci_crash_read_config_space(pdev, ptr, cfg_size);
-+		ptr += rec_size;
-+	}
-+
-+	header->device_count = cpu_to_le32(i);
-+}
-+
-+/**
-+ * pci_crash_rebuild_snapshot() - Rebuild device list and allocate buffer
-+ *
-+ * Two-pass approach:
-+ *   Pass 1: count PCI devices
-+ *   Pass 2: populate device array (filtered) and compute exact buffer
-+ *            size from actual pdev->cfg_size per device (no padding)
-+ *
-+ * The devices param controls which devices are included.  Bridges are
-+ * always included regardless of devices setting (they hold AER registers).
-+ * devices=all (default) includes everything.
-+ *
-+ * Does NOT read PCI config space -- reads happen only at crash time.
-+ * This keeps rebuild fast during VF enumeration storms (~6000 ADD
-+ * events on large accelerator hosts during liveupdate).
-+ *
-+ * After allocation, builds the pagemap so the crash parser can
-+ * locate the buffer's physical pages in the vmcore.
-+ *
-+ * Publishes the new snapshot via rcu_assign_pointer() and retires the
-+ * previous one via queue_rcu_work(), so the lockless crash-time reader never
-+ * sees a half-updated state or a freed array.
-+ *
-+ * Caller must hold pci_crash_lock.
-+ */
-+static void pci_crash_rebuild_snapshot(void)
-+{
-+	struct pci_crash_snapshot *old, *new;
-+	struct pci_dev *pdev = NULL;
-+	unsigned int count = 0, i;
-+	size_t total_size;
-+
-+	old = rcu_dereference_protected(pci_crash_snap,
-+					lockdep_is_held(&pci_crash_lock));
-+
-+	/* Pass 1: count devices (upper bound). */
-+	for_each_pci_dev(pdev)
-+		count++;
-+
-+	new = kzalloc(sizeof(*new), GFP_KERNEL);
-+	if (!new) {
-+		pr_warn_ratelimited("snapshot alloc failed; keeping previous (capture may be stale)\n");
-+		return;
-+	}
-+	INIT_RCU_WORK(&new->rcu_work, pci_crash_snapshot_free_work);
-+
-+	if (count == 0) {
-+		pr_info("no PCI devices found\n");
-+		goto publish;	/* publish an empty snapshot */
-+	}
-+
-+	new->devs = kvmalloc_array(count, sizeof(*new->devs),
-+				   GFP_KERNEL | __GFP_ZERO);
-+	if (!new->devs) {
-+		kfree(new);
-+		pr_warn_ratelimited("devs alloc failed; keeping previous (capture may be stale)\n");
-+		return;
-+	}
-+
-+	/*
-+	 * Pass 2: populate filtered device array and compute the exact
-+	 * buffer size.  count (pass 1) is an upper bound; actual may be less.
-+	 */
-+	total_size = PCI_CRASH_HEADER_SIZE;
-+	pdev = NULL;
-+	i = 0;
-+	for_each_pci_dev(pdev) {
-+		if (i >= count) {
-+			pci_dev_put(pdev);
-+			break;
-+		}
-+		if (!pci_crash_device_matches(pdev))
-+			continue;
-+		new->devs[i] = pci_dev_get(pdev);
-+		total_size += PCI_CRASH_RECORD_META + pdev->cfg_size;
-+		i++;
-+	}
-+	new->num_devs = i;
-+
-+	if (new->num_devs == 0) {
-+		/* Publish empty: releases the previous (now stale) device set. */
-+		kvfree(new->devs);
-+		new->devs = NULL;
-+		pr_info("no devices match devices=%s\n", devices);
-+		goto publish;
-+	}
-+
-+	if (total_size > PCI_CRASH_MAX_BUFFER_SIZE) {
-+		pr_warn_ratelimited("buffer too large (%zu > %d bytes); keeping previous snapshot (capture may be stale)\n",
-+				    total_size, PCI_CRASH_MAX_BUFFER_SIZE);
-+		goto err_free_devs;
-+	}
-+
-+	new->buffer = kvmalloc(total_size, GFP_KERNEL | __GFP_ZERO);
-+	if (!new->buffer)
-+		goto err_free_devs;
-+	new->buffer_size = total_size;
-+
-+	new->pagemap = pci_crash_build_pagemap(new->buffer, total_size);
-+	if (!new->pagemap)
-+		goto err_free_buf;
-+	new->pagemap_size = struct_size(new->pagemap, addrs,
-+					le32_to_cpu(new->pagemap->num_pages));
-+	new->pagemap_phys = virt_to_phys(new->pagemap);
-+
-+	pr_info("rebuild: %u devices (%zu bytes, %u pages)\n",
-+		new->num_devs, total_size,
-+		le32_to_cpu(new->pagemap->num_pages));
-+
-+publish:
-+	/*
-+	 * Publish the new snapshot and retire the old one.  Readers in
-+	 * pci_crash_save() hold rcu_read_lock(), so queue_rcu_work() defers
-+	 * the old snapshot's frees until a grace period elapses, then runs
-+	 * the free in process context (pci_dev_put may sleep via
-+	 * device_release -> devres_release_all).
-+	 */
-+	rcu_assign_pointer(pci_crash_snap, new);
-+	if (old)
-+		WARN_ON(!queue_rcu_work(system_wq, &old->rcu_work));
-+	return;
-+
-+err_free_buf:
-+	kvfree(new->buffer);
-+err_free_devs:
-+	for (i = 0; i < new->num_devs; i++)
-+		pci_dev_put(new->devs[i]);
-+	kvfree(new->devs);
-+	kfree(new);
-+	/*
-+	 * Allocation failed building the new snapshot.  Keep the existing
-+	 * snapshot live (do not publish) so capture still works with the
-+	 * prior device set; warn (ratelimited) so persistent failures show.
-+	 */
-+	pr_warn_ratelimited("rebuild failed; keeping previous snapshot (capture may be stale)\n");
-+}
-+
-+#ifdef CONFIG_PCIEAER
-+/*
-+ * Quick-scan root ports for a received uncorrectable AER error -- the signal
-+ * that this panic is PCI-related and worth capturing.
-+ *
-+ * Return: true on the first root port whose ROOT_STATUS reports an
-+ * uncorrectable error.
-+ */
-+static bool pci_crash_aer_error_present(struct pci_crash_snapshot *s)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < s->num_devs; i++) {
-+		struct pci_dev *pdev = s->devs[i];
-+		u32 status = 0;
-+
-+		if (!pdev || !pdev->aer_cap)
-+			continue;
-+		if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT)
-+			continue;
-+		/*
-+		 * Same reachability gate as the capture path.  A root port is
-+		 * on-die (no upstream bridge), so this reduces to the software-
-+		 * state flags -- we read the port's own AER registers, never an
-+		 * endpoint behind a potentially-dead link.
-+		 */
-+		if (!pci_crash_endpoint_reachable(pdev))
-+			continue;
-+
-+		/*
-+		 * Fail closed, like the reachability check: a failed read
-+		 * (lock contention or PCIBIOS error) sets status to ~0, which
-+		 * would falsely test as "uncorrectable error present" and force
-+		 * a pointless full capture.  Unknown means "no error seen".
-+		 */
-+		if (pci_bus_read_config_dword_trylock(pdev->bus, pdev->devfn,
-+						      pdev->aer_cap + PCI_ERR_ROOT_STATUS,
-+						      &status) != 0)
-+			continue;
-+		if (status & PCI_ERR_ROOT_UNCOR_RCV)
-+			return true;
-+	}
-+	return false;
-+}
-+#else
-+static inline bool pci_crash_aer_error_present(struct pci_crash_snapshot *s)
-+{
-+	return false;
-+}
-+#endif
-+
-+/**
-+ * pci_crash_save() - Capture PCI config space at crash time
-+ *
-+ * Called from crash_save_vmcoreinfo() inside __crash_kexec(), which
-+ * runs before machine_kexec() boots the crash kernel.  This is the
-+ * only reliable capture point -- panic notifiers run AFTER kexec by
-+ * default (crash_kexec_post_notifiers=0).
-+ *
-+ * Capture check (capture param):
-+ *   always  -- capture unconditionally
-+ *   aer     -- quick-scan root port AER ROOT_STATUS for uncorrectable
-+ *             errors; skip if none found
-+ *
-+ * When capture=always, captures on every panic.
-+ * This is useful for cascading failures: a PCI link-down can cause
-+ * an MCE or NMI watchdog timeout before DPC/AER fires, so the crash
-+ * reason is UNKNOWN but AER registers may still hold error state.
-+ *
-+ * Reads config space fresh -- successful reads get current register
-+ * state, failed reads (offline devices) write 0xFFFFFFFF.
-+ *
-+ * Flushes both buffer and pagemap from CPU cache to RAM so data
-+ * survives kexec into crash kernel.
-+ *
-+ * Runs under rcu_read_lock(): a rebuild worker may still be mid-flight on a
-+ * peer CPU, so RCU keeps the sampled snapshot alive for the whole capture.
-+ */
-+void pci_crash_save(void)
-+{
-+	struct pci_crash_snapshot *s;
-+	unsigned long cflags;
-+
-+	/* Cleared first; set only on a successful capture below. */
-+	pci_crash_buffer = NULL;
-+	pci_crash_buffer_size = 0;
-+	pci_crash_pagemap_phys = 0;
-+
-+	rcu_read_lock();
-+	s = rcu_dereference(pci_crash_snap);
-+	if (!s || s->num_devs == 0)
-+		goto out;
-+	if (!s->buffer || s->buffer_size == 0)
-+		goto out;
-+
-+	/*
-+	 * Pin this snapshot so a rebuild racing on a live peer CPU cannot
-+	 * queue_rcu_work()-free its buffer/pagemap before machine_kexec() snapshots
-+	 * RAM.  The scalars below are read by vmcore_info.c AFTER we return and
-+	 * rcu_read_unlock() -- i.e. after RCU read-side protection has ended --
-+	 * so RCU alone does not keep the buffer alive that long.  Written here,
-+	 * under rcu_read_lock() and before the scalars are published; the free
-+	 * callback honours it (see pci_crash_snapshot_free_work).
-+	 */
-+	WRITE_ONCE(pci_crash_captured_snap, s);
-+
-+	/*
-+	 * Publish the buffer location now -- before the AER quick-scan that may
-+	 * skip the capture -- so vmcore_info.c always exports a valid (possibly
-+	 * empty) buffer.  vmcore_info.c reads only these scalars, immediately
-+	 * after we return and still inside __crash_kexec() before
-+	 * machine_kexec().
-+	 */
-+	pci_crash_buffer = s->buffer;
-+	pci_crash_buffer_size = s->buffer_size;
-+	pci_crash_pagemap_phys = s->pagemap_phys;
-+
-+	cflags = READ_ONCE(capture_flags);
-+	if (!(cflags & PCI_CRASH_CAPTURE_ALWAYS)) {
-+		if (!(cflags & PCI_CRASH_CAPTURE_AER)) {
-+			/* Neither 'always' nor a usable 'aer' mode -- skip. */
-+			goto out;
-+		}
-+		if (!pci_crash_aer_error_present(s)) {
-+			pr_info("no PCI errors detected, skipping capture\n");
-+			goto out;
-+		}
-+	}
-+
-+	pci_crash_fill_buffer(s);
-+
-+	/*
-+	 * Flush buffer and pagemap from CPU cache to RAM so the
-+	 * crash kernel sees our writes after kexec.
-+	 */
-+	pci_crash_flush_dcache(s->buffer, s->buffer_size);
-+	if (s->pagemap && s->pagemap_size > 0)
-+		pci_crash_flush_dcache(s->pagemap, s->pagemap_size);
-+
-+	pr_info("CAPTURE: %u devices, %zu bytes\n",
-+		s->num_devs, s->buffer_size);
-+out:
-+	rcu_read_unlock();
-+}
-+EXPORT_SYMBOL_GPL(pci_crash_save);
-+
-+static void pci_crash_rebuild_worker(struct work_struct *work)
-+{
-+	mutex_lock(&pci_crash_lock);
-+	pci_crash_rebuild_snapshot();
-+	mutex_unlock(&pci_crash_lock);
-+}
-+
-+static int pci_crash_bus_notifier(struct notifier_block *nb,
-+				  unsigned long action, void *data)
-+{
-+	if (action == BUS_NOTIFY_ADD_DEVICE ||
-+	    action == BUS_NOTIFY_DEL_DEVICE)
-+		mod_delayed_work(system_wq, &pci_crash_rebuild_dwork,
-+				 msecs_to_jiffies(PCI_CRASH_REBUILD_DELAY_MS));
-+
-+	return NOTIFY_OK;
-+}
-+
-+static struct notifier_block pci_crash_bus_nb = {
-+	.notifier_call = pci_crash_bus_notifier,
-+};
-+
-+static int __init pci_crash_init(void)
-+{
-+	/*
-+	 * The on-wire buffer/pagemap layout is shared with userspace vmcore
-+	 * parsers, which hardcode these sizes.  Catch any struct drift at
-+	 * build time.
-+	 */
-+	BUILD_BUG_ON(sizeof(struct pci_crash_buffer_header) != 32);
-+	BUILD_BUG_ON(sizeof(struct pci_crash_device_record) != 8);
-+	BUILD_BUG_ON(offsetof(struct pci_crash_pagemap, addrs) != 20);
-+
-+	/* Nothing to do in crash kernel -- the buffer from the first kernel
-+	 * is already in RAM (flushed before kexec) and the parser finds it
-+	 * via the pagemap in VMCOREINFO.
-+	 */
-+	if (is_kdump_kernel())
-+		return 0;
-+
-+	INIT_DELAYED_WORK(&pci_crash_rebuild_dwork, pci_crash_rebuild_worker);
-+
-+	pci_crash_parse_capture();
-+	pci_crash_parse_devices();
-+
-+	/*
-+	 * Register the hotplug notifier BEFORE the initial snapshot so no
-+	 * ADD/DEL event in the startup window is missed.  The notifier only
-+	 * schedules the debounced rebuild worker, which serializes on
-+	 * pci_crash_lock behind this initial rebuild.
-+	 */
-+	bus_register_notifier(&pci_bus_type, &pci_crash_bus_nb);
-+
-+	mutex_lock(&pci_crash_lock);
-+	pci_crash_rebuild_snapshot();
-+	mutex_unlock(&pci_crash_lock);
-+
-+	WRITE_ONCE(pci_crash_ready, true);
-+
-+#ifndef CONFIG_PCIEAER
-+	if ((capture_flags & PCI_CRASH_CAPTURE_AER) &&
-+	    !(capture_flags & PCI_CRASH_CAPTURE_ALWAYS))
-+		pr_warn("capture=aer but CONFIG_PCIEAER=n; capture will not trigger unless set to 'always'\n");
-+#endif
-+
-+	rcu_read_lock();
-+	{
-+		struct pci_crash_snapshot *s = rcu_dereference(pci_crash_snap);
-+
-+		pr_info("ready: %u devices (%zu bytes), capture=%s devices=%s\n",
-+			s ? s->num_devs : 0, s ? s->buffer_size : 0,
-+			capture, devices);
-+	}
-+	rcu_read_unlock();
-+
-+	return 0;
-+}
-+late_initcall(pci_crash_init);
-+
-+/* Built-in only: crash infrastructure must outlive all drivers. */
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("Capture PCI config space at panic time for crash analysis");
-+MODULE_AUTHOR("Amazon.com, Inc.");
-diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
-index 8614430ca212..8813f7e2e516 100644
---- a/kernel/vmcore_info.c
-+++ b/kernel/vmcore_info.c
-@@ -14,6 +14,7 @@
- #include <linux/cpuhotplug.h>
- #include <linux/memblock.h>
- #include <linux/kmemleak.h>
-+#include <linux/pci_crash.h>
+ 	first_node = list_first_entry(active, struct bpf_lru_node, list);
+-	list_for_each_entry_safe_reverse(node, tmp_node, active, list) {
++	list_for_each_entry_mutable_reverse(node, active, list) {
+ 		if (bpf_lru_node_is_ref(node))
+ 			__bpf_lru_node_move(l, node, BPF_LRU_LIST_T_ACTIVE);
+ 		else
+@@ -196,11 +196,11 @@ __bpf_lru_list_shrink_inactive(struct bpf_lru *lru,
+ 			       enum bpf_lru_list_type tgt_free_type)
+ {
+ 	struct list_head *inactive = &l->lists[BPF_LRU_LIST_T_INACTIVE];
+-	struct bpf_lru_node *node, *tmp_node;
++	struct bpf_lru_node *node;
+ 	unsigned int nshrinked = 0;
+ 	unsigned int i = 0;
  
- #include <asm/page.h>
- #include <asm/sections.h>
-@@ -91,6 +92,18 @@ void crash_save_vmcoreinfo(void)
- 		vmcoreinfo_data = vmcoreinfo_data_safecopy;
+-	list_for_each_entry_safe_reverse(node, tmp_node, inactive, list) {
++	list_for_each_entry_mutable_reverse(node, inactive, list) {
+ 		if (bpf_lru_node_is_ref(node) &&
+ 		    !READ_ONCE(node->pending_free)) {
+ 			__bpf_lru_node_move(l, node, BPF_LRU_LIST_T_ACTIVE);
+@@ -247,7 +247,7 @@ static unsigned int __bpf_lru_list_shrink(struct bpf_lru *lru,
+ 					  enum bpf_lru_list_type tgt_free_type)
  
- 	vmcoreinfo_append_str("CRASHTIME=%lld\n", ktime_get_real_seconds());
-+
-+	/* Capture PCI config space before kexec into crash kernel */
-+	pci_crash_save();
-+	if (pci_crash_pagemap_phys && pci_crash_buffer_size > 0) {
-+		vmcoreinfo_append_str("PCI_CRASH_PAGEMAP=0x%llx\n",
-+				      (unsigned long long)pci_crash_pagemap_phys);
-+		vmcoreinfo_append_str("PCI_CRASH_VERSION=%d\n",
-+				      PCI_CRASH_VERSION);
-+		vmcoreinfo_append_str("PCI_CRASH_BUF_SZ=%zu\n",
-+				      pci_crash_buffer_size);
-+	}
-+
- 	update_vmcoreinfo_note();
+ {
+-	struct bpf_lru_node *node, *tmp_node;
++	struct bpf_lru_node *node;
+ 	struct list_head *force_shrink_list;
+ 	unsigned int nshrinked;
+ 
+@@ -262,8 +262,7 @@ static unsigned int __bpf_lru_list_shrink(struct bpf_lru *lru,
+ 	else
+ 		force_shrink_list = &l->lists[BPF_LRU_LIST_T_ACTIVE];
+ 
+-	list_for_each_entry_safe_reverse(node, tmp_node, force_shrink_list,
+-					 list) {
++	list_for_each_entry_mutable_reverse(node, force_shrink_list, list) {
+ 		if (READ_ONCE(node->pending_free) ||
+ 		    lru->del_from_htab(lru->del_arg, node)) {
+ 			__bpf_lru_node_move_to_free(l, node, free_list,
+@@ -279,10 +278,9 @@ static unsigned int __bpf_lru_list_shrink(struct bpf_lru *lru,
+ static void __local_list_flush(struct bpf_lru_list *l,
+ 			       struct bpf_lru_locallist *loc_l)
+ {
+-	struct bpf_lru_node *node, *tmp_node;
++	struct bpf_lru_node *node;
+ 
+-	list_for_each_entry_safe_reverse(node, tmp_node,
+-					 &loc_l->pending_list, list) {
++	list_for_each_entry_mutable_reverse(node, &loc_l->pending_list, list) {
+ 		if (READ_ONCE(node->pending_free))
+ 			__bpf_lru_node_move_in(l, node, BPF_LRU_LIST_T_FREE);
+ 		else if (bpf_lru_node_is_ref(node))
+@@ -313,7 +311,7 @@ static void bpf_lru_list_pop_free_to_local(struct bpf_lru *lru,
+ 					   struct bpf_lru_locallist *loc_l)
+ {
+ 	struct bpf_lru_list *l = &lru->common_lru.lru_list;
+-	struct bpf_lru_node *node, *tmp_node;
++	struct bpf_lru_node *node;
+ 	unsigned int nfree = 0;
+ 	LIST_HEAD(tmp_free);
+ 
+@@ -324,8 +322,7 @@ static void bpf_lru_list_pop_free_to_local(struct bpf_lru *lru,
+ 
+ 	__bpf_lru_list_rotate(lru, l);
+ 
+-	list_for_each_entry_safe(node, tmp_node, &l->lists[BPF_LRU_LIST_T_FREE],
+-				 list) {
++	list_for_each_entry_mutable(node, &l->lists[BPF_LRU_LIST_T_FREE], list) {
+ 		__bpf_lru_node_move_to_free(l, node, &tmp_free,
+ 					    BPF_LRU_LOCAL_LIST_T_FREE);
+ 		if (++nfree == lru->target_free)
+@@ -343,7 +340,7 @@ static void bpf_lru_list_pop_free_to_local(struct bpf_lru *lru,
+ 	 * Transfer the harvested nodes from the temporary list_head into
+ 	 * the lockless per-CPU free llist.
+ 	 */
+-	list_for_each_entry_safe(node, tmp_node, &tmp_free, list) {
++	list_for_each_entry_mutable(node, &tmp_free, list) {
+ 		list_del(&node->list);
+ 		llist_add(&node->llist, &loc_l->free_llist);
+ 	}
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index 15ae7c43f594..983928bd774b 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -8439,7 +8439,7 @@ static void purge_cand_cache(struct btf *btf);
+ static int btf_module_notify(struct notifier_block *nb, unsigned long op,
+ 			     void *module)
+ {
+-	struct btf_module *btf_mod, *tmp;
++	struct btf_module *btf_mod;
+ 	struct module *mod = module;
+ 	struct btf *btf;
+ 	int err = 0;
+@@ -8512,7 +8512,7 @@ static int btf_module_notify(struct notifier_block *nb, unsigned long op,
+ 		break;
+ 	case MODULE_STATE_LIVE:
+ 		mutex_lock(&btf_module_mutex);
+-		list_for_each_entry_safe(btf_mod, tmp, &btf_modules, list) {
++		list_for_each_entry_mutable(btf_mod, &btf_modules, list) {
+ 			if (btf_mod->module != module)
+ 				continue;
+ 
+@@ -8523,7 +8523,7 @@ static int btf_module_notify(struct notifier_block *nb, unsigned long op,
+ 		break;
+ 	case MODULE_STATE_GOING:
+ 		mutex_lock(&btf_module_mutex);
+-		list_for_each_entry_safe(btf_mod, tmp, &btf_modules, list) {
++		list_for_each_entry_mutable(btf_mod, &btf_modules, list) {
+ 			if (btf_mod->module != module)
+ 				continue;
+ 
+@@ -8567,10 +8567,10 @@ struct module *btf_try_get_module(const struct btf *btf)
+ {
+ 	struct module *res = NULL;
+ #ifdef CONFIG_DEBUG_INFO_BTF_MODULES
+-	struct btf_module *btf_mod, *tmp;
++	struct btf_module *btf_mod;
+ 
+ 	mutex_lock(&btf_module_mutex);
+-	list_for_each_entry_safe(btf_mod, tmp, &btf_modules, list) {
++	list_for_each_entry_mutable(btf_mod, &btf_modules, list) {
+ 		if (btf_mod->btf != btf)
+ 			continue;
+ 
+@@ -8596,7 +8596,7 @@ struct module *btf_try_get_module(const struct btf *btf)
+ static struct btf *btf_get_module_btf(const struct module *module)
+ {
+ #ifdef CONFIG_DEBUG_INFO_BTF_MODULES
+-	struct btf_module *btf_mod, *tmp;
++	struct btf_module *btf_mod;
+ #endif
+ 	struct btf *btf = NULL;
+ 
+@@ -8609,7 +8609,7 @@ static struct btf *btf_get_module_btf(const struct module *module)
+ 
+ #ifdef CONFIG_DEBUG_INFO_BTF_MODULES
+ 	mutex_lock(&btf_module_mutex);
+-	list_for_each_entry_safe(btf_mod, tmp, &btf_modules, list) {
++	list_for_each_entry_mutable(btf_mod, &btf_modules, list) {
+ 		if (btf_mod->module != module)
+ 			continue;
+ 
+@@ -8773,7 +8773,7 @@ static int btf_check_iter_kfuncs(struct btf *btf, const char *func_name,
+ static int btf_check_kfunc_name(struct btf *btf, const char *func_name, u32 kind)
+ {
+ #ifdef CONFIG_DEBUG_INFO_BTF_MODULES
+-	struct btf_module *btf_mod, *tmp;
++	struct btf_module *btf_mod;
+ #endif
+ 	s32 id;
+ 
+@@ -8789,7 +8789,7 @@ static int btf_check_kfunc_name(struct btf *btf, const char *func_name, u32 kind
+ 
+ #ifdef CONFIG_DEBUG_INFO_BTF_MODULES
+ 	guard(mutex)(&btf_module_mutex);
+-	list_for_each_entry_safe(btf_mod, tmp, &btf_modules, list) {
++	list_for_each_entry_mutable(btf_mod, &btf_modules, list) {
+ 		if (btf_mod->btf == btf)
+ 			continue;
+ 		id = btf_find_by_name_kind(btf_mod->btf, func_name, kind);
+diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+index 83ce66296ac1..a3bd18ab9246 100644
+--- a/kernel/bpf/cgroup.c
++++ b/kernel/bpf/cgroup.c
+@@ -328,7 +328,7 @@ static void cgroup_bpf_release(struct work_struct *work)
+ 					       bpf.release_work);
+ 	struct bpf_prog_array *old_array;
+ 	struct list_head *storages = &cgrp->bpf.storages;
+-	struct bpf_cgroup_storage *storage, *stmp;
++	struct bpf_cgroup_storage *storage;
+ 
+ 	unsigned int atype;
+ 
+@@ -337,9 +337,8 @@ static void cgroup_bpf_release(struct work_struct *work)
+ 	for (atype = 0; atype < ARRAY_SIZE(cgrp->bpf.progs); atype++) {
+ 		struct hlist_head *progs = &cgrp->bpf.progs[atype];
+ 		struct bpf_prog_list *pl;
+-		struct hlist_node *pltmp;
+ 
+-		hlist_for_each_entry_safe(pl, pltmp, progs, node) {
++		hlist_for_each_entry_mutable(pl, progs, node) {
+ 			hlist_del(&pl->node);
+ 			if (pl->prog) {
+ 				if (pl->prog->expected_attach_type == BPF_LSM_CGROUP)
+@@ -360,7 +359,7 @@ static void cgroup_bpf_release(struct work_struct *work)
+ 		bpf_prog_array_free(old_array);
+ 	}
+ 
+-	list_for_each_entry_safe(storage, stmp, storages, list_cg) {
++	list_for_each_entry_mutable(storage, storages, list_cg) {
+ 		bpf_cgroup_storage_unlink(storage);
+ 		bpf_cgroup_storage_free(storage);
+ 	}
+diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
+index 5e59ab896f05..fa3a1b3559e2 100644
+--- a/kernel/bpf/cpumap.c
++++ b/kernel/bpf/cpumap.c
+@@ -821,9 +821,9 @@ int cpu_map_generic_redirect(struct bpf_cpu_map_entry *rcpu,
+ 
+ void __cpu_map_flush(struct list_head *flush_list)
+ {
+-	struct xdp_bulk_queue *bq, *tmp;
++	struct xdp_bulk_queue *bq;
+ 
+-	list_for_each_entry_safe(bq, tmp, flush_list, flush_node) {
++	list_for_each_entry_mutable(bq, flush_list, flush_node) {
+ 		local_lock_nested_bh(&bq->obj->bulkq->bq_lock);
+ 		bq_flush_to_queue(bq);
+ 		local_unlock_nested_bh(&bq->obj->bulkq->bq_lock);
+diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
+index dc7b859e8bbf..d85e4f955061 100644
+--- a/kernel/bpf/devmap.c
++++ b/kernel/bpf/devmap.c
+@@ -219,11 +219,10 @@ static void dev_map_free(struct bpf_map *map)
+ 		for (i = 0; i < dtab->n_buckets; i++) {
+ 			struct bpf_dtab_netdev *dev;
+ 			struct hlist_head *head;
+-			struct hlist_node *next;
+ 
+ 			head = dev_map_index_hash(dtab, i);
+ 
+-			hlist_for_each_entry_safe(dev, next, head, index_hlist) {
++			hlist_for_each_entry_mutable(dev, head, index_hlist) {
+ 				hlist_del_rcu(&dev->index_hlist);
+ 				if (dev->xdp_prog)
+ 					bpf_prog_put(dev->xdp_prog);
+@@ -426,9 +425,9 @@ static void bq_xmit_all(struct xdp_dev_bulk_queue *bq, u32 flags)
+  */
+ void __dev_flush(struct list_head *flush_list)
+ {
+-	struct xdp_dev_bulk_queue *bq, *tmp;
++	struct xdp_dev_bulk_queue *bq;
+ 
+-	list_for_each_entry_safe(bq, tmp, flush_list, flush_node) {
++	list_for_each_entry_mutable(bq, flush_list, flush_node) {
+ 		local_lock_nested_bh(&bq->dev->xdp_bulkq->bq_lock);
+ 		bq_xmit_all(bq, XDP_XMIT_FLUSH);
+ 		bq->dev_rx = NULL;
+@@ -1124,11 +1123,10 @@ static void dev_map_hash_remove_netdev(struct bpf_dtab *dtab,
+ 	for (i = 0; i < dtab->n_buckets; i++) {
+ 		struct bpf_dtab_netdev *dev;
+ 		struct hlist_head *head;
+-		struct hlist_node *next;
+ 
+ 		head = dev_map_index_hash(dtab, i);
+ 
+-		hlist_for_each_entry_safe(dev, next, head, index_hlist) {
++		hlist_for_each_entry_mutable(dev, head, index_hlist) {
+ 			if (netdev != dev->dev)
+ 				continue;
+ 
+diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+index c18f1e16edee..cfaf97dd970a 100644
+--- a/kernel/bpf/helpers.c
++++ b/kernel/bpf/helpers.c
+@@ -1662,7 +1662,7 @@ static void bpf_async_process_op(struct bpf_async_cb *cb, u32 op,
+ static void bpf_async_irq_worker(struct irq_work *work)
+ {
+ 	struct bpf_async_cb *cb = container_of(work, struct bpf_async_cb, worker);
+-	struct llist_node *pos, *n, *list;
++	struct llist_node *pos, *list;
+ 
+ 	list = llist_del_all(&cb->async_cmds);
+ 	if (!list)
+@@ -1670,7 +1670,7 @@ static void bpf_async_irq_worker(struct irq_work *work)
+ 
+ 	list = llist_reverse_order(list);
+ 	this_cpu_write(async_cb_running, cb);
+-	llist_for_each_safe(pos, n, list) {
++	llist_for_each_mutable(pos, list) {
+ 		struct bpf_async_cmd *cmd;
+ 
+ 		cmd = container_of(pos, struct bpf_async_cmd, node);
+@@ -2247,7 +2247,7 @@ EXPORT_SYMBOL_GPL(bpf_base_func_proto);
+ void bpf_list_head_free(const struct btf_field *field, void *list_head,
+ 			struct bpf_spin_lock *spin_lock)
+ {
+-	struct list_head *head = list_head, drain, *pos, *n;
++	struct list_head *head = list_head, drain, *pos;
+ 
+ 	BUILD_BUG_ON(sizeof(struct list_head) > sizeof(struct bpf_list_head));
+ 	BUILD_BUG_ON(__alignof__(struct list_head) > __alignof__(struct bpf_list_head));
+@@ -2262,7 +2262,7 @@ void bpf_list_head_free(const struct btf_field *field, void *list_head,
+ 	__bpf_spin_lock_irqsave(spin_lock);
+ 	if (!head->next || list_empty(head))
+ 		goto unlock;
+-	list_for_each_safe(pos, n, head) {
++	list_for_each_mutable(pos, head) {
+ 		struct bpf_list_node_kern *node;
+ 
+ 		node = container_of(pos, struct bpf_list_node_kern, list_head);
+diff --git a/kernel/bpf/local_storage.c b/kernel/bpf/local_storage.c
+index 23267213a17f..2595c5a4d171 100644
+--- a/kernel/bpf/local_storage.c
++++ b/kernel/bpf/local_storage.c
+@@ -342,11 +342,11 @@ static void cgroup_storage_map_free(struct bpf_map *_map)
+ {
+ 	struct bpf_cgroup_storage_map *map = map_to_storage(_map);
+ 	struct list_head *storages = &map->list;
+-	struct bpf_cgroup_storage *storage, *stmp;
++	struct bpf_cgroup_storage *storage;
+ 
+ 	cgroup_lock();
+ 
+-	list_for_each_entry_safe(storage, stmp, storages, list_map) {
++	list_for_each_entry_mutable(storage, storages, list_map) {
+ 		bpf_cgroup_storage_unlink(storage);
+ 		bpf_cgroup_storage_free(storage);
+ 	}
+diff --git a/kernel/bpf/memalloc.c b/kernel/bpf/memalloc.c
+index e9662db7198f..09adb1d0e101 100644
+--- a/kernel/bpf/memalloc.c
++++ b/kernel/bpf/memalloc.c
+@@ -264,10 +264,10 @@ static void free_one(void *obj, bool percpu)
+ 
+ static int free_all(struct bpf_mem_cache *c, struct llist_node *llnode, bool percpu)
+ {
+-	struct llist_node *pos, *t;
++	struct llist_node *pos;
+ 	int cnt = 0;
+ 
+-	llist_for_each_safe(pos, t, llnode) {
++	llist_for_each_mutable(pos, llnode) {
+ 		if (c->dtor)
+ 			c->dtor((void *)pos + LLIST_NODE_SZ, c->dtor_ctx);
+ 		free_one(pos, percpu);
+@@ -296,7 +296,7 @@ static void enque_to_free(struct bpf_mem_cache *c, void *obj)
+ 
+ static void do_call_rcu_ttrace(struct bpf_mem_cache *c)
+ {
+-	struct llist_node *llnode, *t;
++	struct llist_node *llnode;
+ 
+ 	if (atomic_xchg(&c->call_rcu_ttrace_in_progress, 1)) {
+ 		if (unlikely(READ_ONCE(c->draining))) {
+@@ -307,7 +307,7 @@ static void do_call_rcu_ttrace(struct bpf_mem_cache *c)
+ 	}
+ 
+ 	WARN_ON_ONCE(!llist_empty(&c->waiting_for_gp_ttrace));
+-	llist_for_each_safe(llnode, t, llist_del_all(&c->free_by_rcu_ttrace))
++	llist_for_each_mutable(llnode, llist_del_all(&c->free_by_rcu_ttrace))
+ 		llist_add(llnode, &c->waiting_for_gp_ttrace);
+ 
+ 	if (unlikely(READ_ONCE(c->draining))) {
+@@ -326,7 +326,7 @@ static void do_call_rcu_ttrace(struct bpf_mem_cache *c)
+ static void free_bulk(struct bpf_mem_cache *c)
+ {
+ 	struct bpf_mem_cache *tgt = c->tgt;
+-	struct llist_node *llnode, *t;
++	struct llist_node *llnode;
+ 	unsigned long flags;
+ 	int cnt;
+ 
+@@ -346,7 +346,7 @@ static void free_bulk(struct bpf_mem_cache *c)
+ 	} while (cnt > (c->high_watermark + c->low_watermark) / 2);
+ 
+ 	/* and drain free_llist_extra */
+-	llist_for_each_safe(llnode, t, llist_del_all(&c->free_llist_extra))
++	llist_for_each_mutable(llnode, llist_del_all(&c->free_llist_extra))
+ 		enque_to_free(tgt, llnode);
+ 	do_call_rcu_ttrace(tgt);
+ }
+@@ -374,13 +374,13 @@ static void __free_by_rcu(struct rcu_head *head)
+ 
+ static void check_free_by_rcu(struct bpf_mem_cache *c)
+ {
+-	struct llist_node *llnode, *t;
++	struct llist_node *llnode;
+ 	unsigned long flags;
+ 
+ 	/* drain free_llist_extra_rcu */
+ 	if (unlikely(!llist_empty(&c->free_llist_extra_rcu))) {
+ 		inc_active(c, &flags);
+-		llist_for_each_safe(llnode, t, llist_del_all(&c->free_llist_extra_rcu))
++		llist_for_each_mutable(llnode, llist_del_all(&c->free_llist_extra_rcu))
+ 			if (__llist_add(llnode, &c->free_by_rcu))
+ 				c->free_by_rcu_tail = llnode;
+ 		dec_active(c, &flags);
+diff --git a/kernel/bpf/offload.c b/kernel/bpf/offload.c
+index 0d6f5569588c..32a21613fe79 100644
+--- a/kernel/bpf/offload.c
++++ b/kernel/bpf/offload.c
+@@ -137,8 +137,8 @@ static void __bpf_offload_dev_netdev_unregister(struct bpf_offload_dev *offdev,
+ 						struct net_device *netdev)
+ {
+ 	struct bpf_offload_netdev *ondev, *altdev = NULL;
+-	struct bpf_offloaded_map *offmap, *mtmp;
+-	struct bpf_prog_offload *offload, *ptmp;
++	struct bpf_offloaded_map *offmap;
++	struct bpf_prog_offload *offload;
+ 
+ 	ASSERT_RTNL();
+ 
+@@ -165,9 +165,9 @@ static void __bpf_offload_dev_netdev_unregister(struct bpf_offload_dev *offdev,
+ 			offmap->netdev = altdev->netdev;
+ 		list_splice_init(&ondev->maps, &altdev->maps);
+ 	} else {
+-		list_for_each_entry_safe(offload, ptmp, &ondev->progs, offloads)
++		list_for_each_entry_mutable(offload, &ondev->progs, offloads)
+ 			__bpf_prog_offload_destroy(offload->prog);
+-		list_for_each_entry_safe(offmap, mtmp, &ondev->maps, offloads)
++		list_for_each_entry_mutable(offmap, &ondev->maps, offloads)
+ 			__bpf_map_offload_destroy(offmap);
+ 	}
+ 
+diff --git a/kernel/bpf/states.c b/kernel/bpf/states.c
+index 32f346ce3ffc..ec7942049c06 100644
+--- a/kernel/bpf/states.c
++++ b/kernel/bpf/states.c
+@@ -1241,7 +1241,7 @@ int bpf_is_state_visited(struct bpf_verifier_env *env, int insn_idx)
+ 	struct bpf_verifier_state *cur = env->cur_state, *new;
+ 	bool force_new_state, add_new_state, loop;
+ 	int n, err, states_cnt = 0;
+-	struct list_head *pos, *tmp, *head;
++	struct list_head *pos, *head;
+ 
+ 	force_new_state = env->test_state_freq || bpf_is_force_checkpoint(env, insn_idx) ||
+ 			  /* Avoid accumulating infinitely long jmp history */
+@@ -1267,7 +1267,7 @@ int bpf_is_state_visited(struct bpf_verifier_env *env, int insn_idx)
+ 
+ 	loop = false;
+ 	head = bpf_explored_state(env, insn_idx);
+-	list_for_each_safe(pos, tmp, head) {
++	list_for_each_mutable(pos, head) {
+ 		sl = container_of(pos, struct bpf_verifier_state_list, node);
+ 		states_cnt++;
+ 		if (sl->state.insn_idx != insn_idx)
+diff --git a/kernel/bpf/stream.c b/kernel/bpf/stream.c
+index be9ce98e9469..3d722cfd1d07 100644
+--- a/kernel/bpf/stream.c
++++ b/kernel/bpf/stream.c
+@@ -96,9 +96,9 @@ static void bpf_stream_free_elem(struct bpf_stream_elem *elem)
+ 
+ static void bpf_stream_free_list(struct llist_node *list)
+ {
+-	struct bpf_stream_elem *elem, *tmp;
++	struct bpf_stream_elem *elem;
+ 
+-	llist_for_each_entry_safe(elem, tmp, list, node)
++	llist_for_each_entry_mutable(elem, list, node)
+ 		bpf_stream_free_elem(elem);
  }
  
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 2abc79dbf281..7cd5d10b390a 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -18285,7 +18285,7 @@ static void sanitize_dead_code(struct bpf_verifier_env *env)
+ static void free_states(struct bpf_verifier_env *env)
+ {
+ 	struct bpf_verifier_state_list *sl;
+-	struct list_head *head, *pos, *tmp;
++	struct list_head *head, *pos;
+ 	struct bpf_scc_info *info;
+ 	int i, j;
+ 
+@@ -18293,7 +18293,7 @@ static void free_states(struct bpf_verifier_env *env)
+ 	env->cur_state = NULL;
+ 	while (!pop_stack(env, NULL, NULL, false));
+ 
+-	list_for_each_safe(pos, tmp, &env->free_list) {
++	list_for_each_mutable(pos, &env->free_list) {
+ 		sl = container_of(pos, struct bpf_verifier_state_list, node);
+ 		bpf_free_verifier_state(&sl->state, false);
+ 		kfree(sl);
+@@ -18316,7 +18316,7 @@ static void free_states(struct bpf_verifier_env *env)
+ 	for (i = 0; i < state_htab_size(env); i++) {
+ 		head = &env->explored_states[i];
+ 
+-		list_for_each_safe(pos, tmp, head) {
++		list_for_each_mutable(pos, head) {
+ 			sl = container_of(pos, struct bpf_verifier_state_list, node);
+ 			bpf_free_verifier_state(&sl->state, false);
+ 			kfree(sl);
+diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
+index a4337c9b5287..1c777b28861f 100644
+--- a/kernel/cgroup/cgroup-v1.c
++++ b/kernel/cgroup/cgroup-v1.c
+@@ -205,10 +205,10 @@ struct cgroup_pidlist {
+  */
+ void cgroup1_pidlist_destroy_all(struct cgroup *cgrp)
+ {
+-	struct cgroup_pidlist *l, *tmp_l;
++	struct cgroup_pidlist *l;
+ 
+ 	mutex_lock(&cgrp->pidlist_mutex);
+-	list_for_each_entry_safe(l, tmp_l, &cgrp->pidlists, links)
++	list_for_each_entry_mutable(l, &cgrp->pidlists, links)
+ 		mod_delayed_work(cgroup_pidlist_destroy_wq, &l->destroy_dwork, 0);
+ 	mutex_unlock(&cgrp->pidlist_mutex);
+ 
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 38f8d9df8fbc..2b619c1553ee 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -872,9 +872,9 @@ static void css_set_update_populated(struct css_set *cset, bool populated)
+ static void css_set_skip_task_iters(struct css_set *cset,
+ 				    struct task_struct *task)
+ {
+-	struct css_task_iter *it, *pos;
++	struct css_task_iter *it;
+ 
+-	list_for_each_entry_safe(it, pos, &cset->task_iters, iters_node)
++	list_for_each_entry_mutable(it, &cset->task_iters, iters_node)
+ 		css_task_iter_skip(it, task);
+ }
+ 
+@@ -951,7 +951,7 @@ static unsigned long css_set_hash(struct cgroup_subsys_state **css)
+ 
+ void put_css_set_locked(struct css_set *cset)
+ {
+-	struct cgrp_cset_link *link, *tmp_link;
++	struct cgrp_cset_link *link;
+ 	struct cgroup_subsys *ss;
+ 	int ssid;
+ 
+@@ -970,7 +970,7 @@ void put_css_set_locked(struct css_set *cset)
+ 	hash_del(&cset->hlist);
+ 	css_set_count--;
+ 
+-	list_for_each_entry_safe(link, tmp_link, &cset->cgrp_links, cgrp_link) {
++	list_for_each_entry_mutable(link, &cset->cgrp_links, cgrp_link) {
+ 		list_del(&link->cset_link);
+ 		list_del(&link->cgrp_link);
+ 		if (cgroup_parent(link->cgrp))
+@@ -1129,9 +1129,9 @@ static struct css_set *find_existing_css_set(struct css_set *old_cset,
+ 
+ static void free_cgrp_cset_links(struct list_head *links_to_free)
+ {
+-	struct cgrp_cset_link *link, *tmp_link;
++	struct cgrp_cset_link *link;
+ 
+-	list_for_each_entry_safe(link, tmp_link, links_to_free, cset_link) {
++	list_for_each_entry_mutable(link, links_to_free, cset_link) {
+ 		list_del(&link->cset_link);
+ 		kfree(link);
+ 	}
+@@ -1372,7 +1372,7 @@ void cgroup_free_root(struct cgroup_root *root)
+ static void cgroup_destroy_root(struct cgroup_root *root)
+ {
+ 	struct cgroup *cgrp = &root->cgrp;
+-	struct cgrp_cset_link *link, *tmp_link;
++	struct cgrp_cset_link *link;
+ 	int ret;
+ 
+ 	trace_cgroup_destroy_root(root);
+@@ -1395,7 +1395,7 @@ static void cgroup_destroy_root(struct cgroup_root *root)
+ 	 */
+ 	spin_lock_irq(&css_set_lock);
+ 
+-	list_for_each_entry_safe(link, tmp_link, &cgrp->cset_links, cset_link) {
++	list_for_each_entry_mutable(link, &cgrp->cset_links, cset_link) {
+ 		list_del(&link->cset_link);
+ 		list_del(&link->cgrp_link);
+ 		kfree(link);
+@@ -1887,7 +1887,7 @@ int rebind_subsystems(struct cgroup_root *dst_root, u32 ss_mask)
+ 		struct cgroup_root *src_root = ss->root;
+ 		struct cgroup *scgrp = &src_root->cgrp;
+ 		struct cgroup_subsys_state *css = cgroup_css(scgrp, ss);
+-		struct css_set *cset, *cset_pos;
++		struct css_set *cset;
+ 		struct css_task_iter *it;
+ 
+ 		WARN_ON(!css || cgroup_css(dcgrp, ss));
+@@ -1912,8 +1912,8 @@ int rebind_subsystems(struct cgroup_root *dst_root, u32 ss_mask)
+ 		spin_lock_irq(&css_set_lock);
+ 		css->cgroup = dcgrp;
+ 		WARN_ON(!list_empty(&dcgrp->e_csets[ss->id]));
+-		list_for_each_entry_safe(cset, cset_pos, &scgrp->e_csets[ss->id],
+-					 e_cset_node[ss->id]) {
++		list_for_each_entry_mutable(cset, &scgrp->e_csets[ss->id],
++					    e_cset_node[ss->id]) {
+ 			list_move_tail(&cset->e_cset_node[ss->id],
+ 				       &dcgrp->e_csets[ss->id]);
+ 			/*
+@@ -2689,8 +2689,8 @@ static int cgroup_migrate_execute(struct cgroup_mgctx *mgctx)
+ {
+ 	struct cgroup_taskset *tset = &mgctx->tset;
+ 	struct cgroup_subsys *ss;
+-	struct task_struct *task, *tmp_task;
+-	struct css_set *cset, *tmp_cset;
++	struct task_struct *task;
++	struct css_set *cset;
+ 	int ssid, failed_ssid, ret;
+ 
+ 	/* check that we can legitimately attach to the cgroup */
+@@ -2714,7 +2714,7 @@ static int cgroup_migrate_execute(struct cgroup_mgctx *mgctx)
+ 	 */
+ 	spin_lock_irq(&css_set_lock);
+ 	list_for_each_entry(cset, &tset->src_csets, mg_node) {
+-		list_for_each_entry_safe(task, tmp_task, &cset->mg_tasks, cg_list) {
++		list_for_each_entry_mutable(task, &cset->mg_tasks, cg_list) {
+ 			struct css_set *from_cset = task_css_set(task);
+ 			struct css_set *to_cset = cset->mg_dst_cset;
+ 
+@@ -2767,7 +2767,7 @@ static int cgroup_migrate_execute(struct cgroup_mgctx *mgctx)
+ out_release_tset:
+ 	spin_lock_irq(&css_set_lock);
+ 	list_splice_init(&tset->dst_csets, &tset->src_csets);
+-	list_for_each_entry_safe(cset, tmp_cset, &tset->src_csets, mg_node) {
++	list_for_each_entry_mutable(cset, &tset->src_csets, mg_node) {
+ 		list_splice_tail_init(&cset->mg_tasks, &cset->tasks);
+ 		list_del_init(&cset->mg_node);
+ 	}
+@@ -2825,14 +2825,14 @@ int cgroup_migrate_vet_dst(struct cgroup *dst_cgrp)
+  */
+ void cgroup_migrate_finish(struct cgroup_mgctx *mgctx)
+ {
+-	struct css_set *cset, *tmp_cset;
++	struct css_set *cset;
+ 
+ 	lockdep_assert_held(&cgroup_mutex);
+ 
+ 	spin_lock_irq(&css_set_lock);
+ 
+-	list_for_each_entry_safe(cset, tmp_cset, &mgctx->preloaded_src_csets,
+-				 mg_src_preload_node) {
++	list_for_each_entry_mutable(cset, &mgctx->preloaded_src_csets,
++				    mg_src_preload_node) {
+ 		cset->mg_src_cgrp = NULL;
+ 		cset->mg_dst_cgrp = NULL;
+ 		cset->mg_dst_cset = NULL;
+@@ -2840,8 +2840,8 @@ void cgroup_migrate_finish(struct cgroup_mgctx *mgctx)
+ 		put_css_set_locked(cset);
+ 	}
+ 
+-	list_for_each_entry_safe(cset, tmp_cset, &mgctx->preloaded_dst_csets,
+-				 mg_dst_preload_node) {
++	list_for_each_entry_mutable(cset, &mgctx->preloaded_dst_csets,
++				    mg_dst_preload_node) {
+ 		cset->mg_src_cgrp = NULL;
+ 		cset->mg_dst_cgrp = NULL;
+ 		cset->mg_dst_cset = NULL;
+@@ -2917,13 +2917,13 @@ void cgroup_migrate_add_src(struct css_set *src_cset,
+  */
+ int cgroup_migrate_prepare_dst(struct cgroup_mgctx *mgctx)
+ {
+-	struct css_set *src_cset, *tmp_cset;
++	struct css_set *src_cset;
+ 
+ 	lockdep_assert_held(&cgroup_mutex);
+ 
+ 	/* look up the dst cset for each src cset and link it to src */
+-	list_for_each_entry_safe(src_cset, tmp_cset, &mgctx->preloaded_src_csets,
+-				 mg_src_preload_node) {
++	list_for_each_entry_mutable(src_cset, &mgctx->preloaded_src_csets,
++				    mg_src_preload_node) {
+ 		struct css_set *dst_cset;
+ 		struct cgroup_subsys *ss;
+ 		int ssid;
+@@ -3225,10 +3225,10 @@ static int cgroup_update_dfl_csses(struct cgroup *cgrp)
+ 	spin_lock_irq(&css_set_lock);
+ 	list_for_each_entry(src_cset, &mgctx.preloaded_src_csets,
+ 			    mg_src_preload_node) {
+-		struct task_struct *task, *ntask;
++		struct task_struct *task;
+ 
+ 		/* all tasks in src_csets need to be migrated */
+-		list_for_each_entry_safe(task, ntask, &src_cset->tasks, cg_list)
++		list_for_each_entry_mutable(task, &src_cset->tasks, cg_list)
+ 			cgroup_migrate_add_task(task, &mgctx);
+ 	}
+ 	spin_unlock_irq(&css_set_lock);
+@@ -7106,10 +7106,10 @@ static DEFINE_PER_CPU(struct irq_work, cgrp_dead_tasks_iwork);
+ static void cgrp_dead_tasks_iwork_fn(struct irq_work *iwork)
+ {
+ 	struct llist_node *lnode;
+-	struct task_struct *task, *next;
++	struct task_struct *task;
+ 
+ 	lnode = llist_del_all(this_cpu_ptr(&cgrp_dead_tasks));
+-	llist_for_each_entry_safe(task, next, lnode, cg_dead_lnode) {
++	llist_for_each_entry_mutable(task, lnode, cg_dead_lnode) {
+ 		do_cgroup_task_dead(task);
+ 		put_task_struct(task);
+ 	}
+diff --git a/kernel/cgroup/dmem.c b/kernel/cgroup/dmem.c
+index 4753a67d0f0f..1daa8fb49fbe 100644
+--- a/kernel/cgroup/dmem.c
++++ b/kernel/cgroup/dmem.c
+@@ -203,10 +203,10 @@ static void dmemcs_offline(struct cgroup_subsys_state *css)
+ static void dmemcs_free(struct cgroup_subsys_state *css)
+ {
+ 	struct dmemcg_state *dmemcs = css_to_dmemcs(css);
+-	struct dmem_cgroup_pool_state *pool, *next;
++	struct dmem_cgroup_pool_state *pool;
+ 
+ 	spin_lock(&dmemcg_lock);
+-	list_for_each_entry_safe(pool, next, &dmemcs->pools, css_node) {
++	list_for_each_entry_mutable(pool, &dmemcs->pools, css_node) {
+ 		/*
+ 		 *The pool is dead and all references are 0,
+ 		 * no need for RCU protection with list_del_rcu or freeing.
+@@ -444,9 +444,9 @@ get_cg_pool_locked(struct dmemcg_state *dmemcs, struct dmem_cgroup_region *regio
+ static void dmemcg_free_rcu(struct rcu_head *rcu)
+ {
+ 	struct dmem_cgroup_region *region = container_of(rcu, typeof(*region), rcu);
+-	struct dmem_cgroup_pool_state *pool, *next;
++	struct dmem_cgroup_pool_state *pool;
+ 
+-	list_for_each_entry_safe(pool, next, &region->pools, region_node)
++	list_for_each_entry_mutable(pool, &region->pools, region_node)
+ 		free_cg_pool(pool);
+ 	kfree(region->name);
+ 	kfree(region);
+@@ -467,7 +467,7 @@ static void dmemcg_free_region(struct kref *ref)
+  */
+ void dmem_cgroup_unregister_region(struct dmem_cgroup_region *region)
+ {
+-	struct dmem_cgroup_pool_state *pool, *next;
++	struct dmem_cgroup_pool_state *pool;
+ 
+ 	if (!region)
+ 		return;
+@@ -477,7 +477,7 @@ void dmem_cgroup_unregister_region(struct dmem_cgroup_region *region)
+ 	/* Remove from global region list */
+ 	list_del_rcu(&region->region_node);
+ 
+-	list_for_each_entry_safe(pool, next, &region->pools, region_node) {
++	list_for_each_entry_mutable(pool, &region->pools, region_node) {
+ 		list_del_rcu(&pool->css_node);
+ 		list_del(&pool->region_node);
+ 		dmemcg_pool_put(pool);
+diff --git a/kernel/cgroup/rdma.c b/kernel/cgroup/rdma.c
+index 5e82a03b3270..5527375c16e1 100644
+--- a/kernel/cgroup/rdma.c
++++ b/kernel/cgroup/rdma.c
+@@ -444,7 +444,7 @@ EXPORT_SYMBOL(rdmacg_register_device);
+  */
+ void rdmacg_unregister_device(struct rdmacg_device *device)
+ {
+-	struct rdmacg_resource_pool *rpool, *tmp;
++	struct rdmacg_resource_pool *rpool;
+ 
+ 	/*
+ 	 * Synchronize with any active resource settings,
+@@ -457,7 +457,7 @@ void rdmacg_unregister_device(struct rdmacg_device *device)
+ 	 * Now that this device is off the cgroup list, its safe to free
+ 	 * all the rpool resources.
+ 	 */
+-	list_for_each_entry_safe(rpool, tmp, &device->rpools, dev_node)
++	list_for_each_entry_mutable(rpool, &device->rpools, dev_node)
+ 		free_cg_rpool_locked(rpool);
+ 
+ 	mutex_unlock(&rdmacg_mutex);
+@@ -747,11 +747,11 @@ rdmacg_css_alloc(struct cgroup_subsys_state *parent)
+ static void rdmacg_css_free(struct cgroup_subsys_state *css)
+ {
+ 	struct rdma_cgroup *cg = css_rdmacg(css);
+-	struct rdmacg_resource_pool *rpool, *tmp;
++	struct rdmacg_resource_pool *rpool;
+ 
+ 	/* Clean up rpools kept alive by non-zero peak values */
+ 	mutex_lock(&rdmacg_mutex);
+-	list_for_each_entry_safe(rpool, tmp, &cg->rpools, cg_node)
++	list_for_each_entry_mutable(rpool, &cg->rpools, cg_node)
+ 		free_cg_rpool_locked(rpool);
+ 	mutex_unlock(&rdmacg_mutex);
+ 
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 00e6dcb931d9..dd93436f8f2d 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2346,7 +2346,7 @@ static inline struct list_head *get_event_list(struct perf_event *event)
+ static void perf_group_detach(struct perf_event *event)
+ {
+ 	struct perf_event *leader = event->group_leader;
+-	struct perf_event *sibling, *tmp;
++	struct perf_event *sibling;
+ 	struct perf_event_context *ctx = event->ctx;
+ 
+ 	lockdep_assert_held(&ctx->lock);
+@@ -2376,7 +2376,7 @@ static void perf_group_detach(struct perf_event *event)
+ 	 * upgrade the siblings to singleton events by adding them
+ 	 * to whatever list we are on.
+ 	 */
+-	list_for_each_entry_safe(sibling, tmp, &event->sibling_list, sibling_list) {
++	list_for_each_entry_mutable(sibling, &event->sibling_list, sibling_list) {
+ 
+ 		/*
+ 		 * Events that have PERF_EV_CAP_SIBLING require being part of
+@@ -2405,8 +2405,8 @@ static void perf_group_detach(struct perf_event *event)
+ 	}
+ 
+ out:
+-	for_each_sibling_event(tmp, leader)
+-		perf_event__header_size(tmp);
++	for_each_sibling_event(sibling, leader)
++		perf_event__header_size(sibling);
+ 
+ 	perf_event__header_size(leader);
+ }
+@@ -3528,7 +3528,7 @@ static void __pmu_ctx_sched_out(struct perf_event_pmu_context *pmu_ctx,
+ 				enum event_type_t event_type)
+ {
+ 	struct perf_event_context *ctx = pmu_ctx->ctx;
+-	struct perf_event *event, *tmp;
++	struct perf_event *event;
+ 	struct pmu *pmu = pmu_ctx->pmu;
+ 
+ 	if (ctx->task && !(ctx->is_active & EVENT_ALL)) {
+@@ -3543,16 +3543,14 @@ static void __pmu_ctx_sched_out(struct perf_event_pmu_context *pmu_ctx,
+ 
+ 	perf_pmu_disable(pmu);
+ 	if (event_type & EVENT_PINNED) {
+-		list_for_each_entry_safe(event, tmp,
+-					 &pmu_ctx->pinned_active,
+-					 active_list)
++		list_for_each_entry_mutable(event, &pmu_ctx->pinned_active,
++					    active_list)
+ 			group_sched_out(event, ctx);
+ 	}
+ 
+ 	if (event_type & EVENT_FLEXIBLE) {
+-		list_for_each_entry_safe(event, tmp,
+-					 &pmu_ctx->flexible_active,
+-					 active_list)
++		list_for_each_entry_mutable(event, &pmu_ctx->flexible_active,
++					    active_list)
+ 			group_sched_out(event, ctx);
+ 		/*
+ 		 * Since we cleared EVENT_FLEXIBLE, also clear
+@@ -4738,7 +4736,7 @@ static void perf_event_exit_event(struct perf_event *event,
+ static void perf_event_remove_on_exec(struct perf_event_context *ctx)
+ {
+ 	struct perf_event_context *clone_ctx = NULL;
+-	struct perf_event *event, *next;
++	struct perf_event *event;
+ 	unsigned long flags;
+ 	bool modified = false;
+ 
+@@ -4747,7 +4745,7 @@ static void perf_event_remove_on_exec(struct perf_event_context *ctx)
+ 	if (WARN_ON_ONCE(ctx->task != current))
+ 		goto unlock;
+ 
+-	list_for_each_entry_safe(event, next, &ctx->event_list, event_entry) {
++	list_for_each_entry_mutable(event, &ctx->event_list, event_entry) {
+ 		if (!event->attr.remove_on_exec)
+ 			continue;
+ 
+@@ -11833,9 +11831,9 @@ perf_addr_filter_new(struct perf_event *event, struct list_head *filters)
+ 
+ static void free_filters_list(struct list_head *filters)
+ {
+-	struct perf_addr_filter *filter, *iter;
++	struct perf_addr_filter *filter;
+ 
+-	list_for_each_entry_safe(filter, iter, filters, entry) {
++	list_for_each_entry_mutable(filter, filters, entry) {
+ 		path_put(&filter->path);
+ 		list_del(&filter->entry);
+ 		kfree(filter);
+@@ -14436,7 +14434,7 @@ static void __perf_pmu_install_event(struct pmu *pmu,
+ static void __perf_pmu_install(struct perf_event_context *ctx,
+ 			       int cpu, struct pmu *pmu, struct list_head *events)
+ {
+-	struct perf_event *event, *tmp;
++	struct perf_event *event;
+ 
+ 	/*
+ 	 * Re-instate events in 2 passes.
+@@ -14446,7 +14444,7 @@ static void __perf_pmu_install(struct perf_event_context *ctx,
+ 	 * leader will enable its siblings, even if those are still on the old
+ 	 * context.
+ 	 */
+-	list_for_each_entry_safe(event, tmp, events, migrate_entry) {
++	list_for_each_entry_mutable(event, events, migrate_entry) {
+ 		if (event->group_leader == event)
+ 			continue;
+ 
+@@ -14458,7 +14456,7 @@ static void __perf_pmu_install(struct perf_event_context *ctx,
+ 	 * Once all the siblings are setup properly, install the group leaders
+ 	 * to make it go.
+ 	 */
+-	list_for_each_entry_safe(event, tmp, events, migrate_entry) {
++	list_for_each_entry_mutable(event, events, migrate_entry) {
+ 		list_del(&event->migrate_entry);
+ 		__perf_pmu_install_event(pmu, ctx, cpu, event);
+ 	}
+@@ -14592,7 +14590,7 @@ perf_event_exit_event(struct perf_event *event,
+ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
+ {
+ 	struct perf_event_context *ctx, *clone_ctx = NULL;
+-	struct perf_event *child_event, *next;
++	struct perf_event *child_event;
+ 
+ 	ctx = perf_pin_task_context(task);
+ 	if (!ctx)
+@@ -14642,7 +14640,7 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
+ 	if (exit)
+ 		perf_event_task(task, ctx, 0);
+ 
+-	list_for_each_entry_safe(child_event, next, &ctx->event_list, event_entry)
++	list_for_each_entry_mutable(child_event, &ctx->event_list, event_entry)
+ 		perf_event_exit_event(child_event, ctx, exit ? task : NULL, false);
+ 
+ 	mutex_unlock(&ctx->mutex);
+@@ -14675,13 +14673,13 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
+  */
+ void perf_event_exit_task(struct task_struct *task)
+ {
+-	struct perf_event *event, *tmp;
++	struct perf_event *event;
+ 
+ 	WARN_ON_ONCE(task != current);
+ 
+ 	mutex_lock(&task->perf_event_mutex);
+-	list_for_each_entry_safe(event, tmp, &task->perf_event_list,
+-				 owner_entry) {
++	list_for_each_entry_mutable(event, &task->perf_event_list,
++				    owner_entry) {
+ 		list_del_init(&event->owner_entry);
+ 
+ 		/*
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 4084e926e284..61aa48e3b5a6 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -258,13 +258,13 @@ static void delayed_uprobe_delete(struct delayed_uprobe *du)
+ 
+ static void delayed_uprobe_remove(struct uprobe *uprobe, struct mm_struct *mm)
+ {
+-	struct list_head *pos, *q;
++	struct list_head *pos;
+ 	struct delayed_uprobe *du;
+ 
+ 	if (!uprobe && !mm)
+ 		return;
+ 
+-	list_for_each_safe(pos, q, &delayed_uprobe_list) {
++	list_for_each_mutable(pos, &delayed_uprobe_list) {
+ 		du = list_entry(pos, struct delayed_uprobe, list);
+ 
+ 		if (uprobe && du->uprobe != uprobe)
+@@ -1562,13 +1562,13 @@ static void build_probe_list(struct inode *inode,
+ /* @vma contains reference counter, not the probed instruction. */
+ static int delayed_ref_ctr_inc(struct vm_area_struct *vma)
+ {
+-	struct list_head *pos, *q;
++	struct list_head *pos;
+ 	struct delayed_uprobe *du;
+ 	unsigned long vaddr;
+ 	int ret = 0, err = 0;
+ 
+ 	mutex_lock(&delayed_uprobe_lock);
+-	list_for_each_safe(pos, q, &delayed_uprobe_list) {
++	list_for_each_mutable(pos, &delayed_uprobe_list) {
+ 		du = list_entry(pos, struct delayed_uprobe, list);
+ 
+ 		if (du->mm != vma->vm_mm ||
+@@ -1597,7 +1597,7 @@ static int delayed_ref_ctr_inc(struct vm_area_struct *vma)
+ int uprobe_mmap(struct vm_area_struct *vma)
+ {
+ 	struct list_head tmp_list;
+-	struct uprobe *uprobe, *u;
++	struct uprobe *uprobe;
+ 	struct inode *inode;
+ 
+ 	if (no_uprobe_events())
+@@ -1622,7 +1622,7 @@ int uprobe_mmap(struct vm_area_struct *vma)
+ 	 * removed. But in this case filter_chain() must return false, all
+ 	 * consumers have gone away.
+ 	 */
+-	list_for_each_entry_safe(uprobe, u, &tmp_list, pending_list) {
++	list_for_each_entry_mutable(uprobe, &tmp_list, pending_list) {
+ 		if (!fatal_signal_pending(current) &&
+ 		    filter_chain(uprobe, vma->vm_mm)) {
+ 			unsigned long vaddr = offset_to_vaddr(vma, uprobe->offset);
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 1056422bc101..62ef6553253a 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -630,7 +630,7 @@ static struct task_struct *find_child_reaper(struct task_struct *father,
+ {
+ 	struct pid_namespace *pid_ns = task_active_pid_ns(father);
+ 	struct task_struct *reaper = pid_ns->child_reaper;
+-	struct task_struct *p, *n;
++	struct task_struct *p;
+ 
+ 	if (likely(reaper != father))
+ 		return reaper;
+@@ -644,7 +644,7 @@ static struct task_struct *find_child_reaper(struct task_struct *father,
+ 
+ 	write_unlock_irq(&tasklist_lock);
+ 
+-	list_for_each_entry_safe(p, n, dead, ptrace_entry) {
++	list_for_each_entry_mutable(p, dead, ptrace_entry) {
+ 		list_del_init(&p->ptrace_entry);
+ 		release_task(p);
+ 	}
+@@ -766,7 +766,7 @@ static void forget_original_parent(struct task_struct *father,
+ static void exit_notify(struct task_struct *tsk, int group_dead)
+ {
+ 	bool autoreap;
+-	struct task_struct *p, *n;
++	struct task_struct *p;
+ 	LIST_HEAD(dead);
+ 
+ 	write_lock_irq(&tasklist_lock);
+@@ -800,7 +800,7 @@ static void exit_notify(struct task_struct *tsk, int group_dead)
+ 		wake_up_process(tsk->signal->group_exec_task);
+ 	write_unlock_irq(&tasklist_lock);
+ 
+-	list_for_each_entry_safe(p, n, &dead, ptrace_entry) {
++	list_for_each_entry_mutable(p, &dead, ptrace_entry) {
+ 		list_del_init(&p->ptrace_entry);
+ 		release_task(p);
+ 	}
+diff --git a/kernel/fail_function.c b/kernel/fail_function.c
+index 2eaf55005f49..357c810c4908 100644
+--- a/kernel/fail_function.c
++++ b/kernel/fail_function.c
+@@ -226,9 +226,9 @@ static void fei_attr_remove(struct fei_attr *attr)
+ 
+ static void fei_attr_remove_all(void)
+ {
+-	struct fei_attr *attr, *n;
++	struct fei_attr *attr;
+ 
+-	list_for_each_entry_safe(attr, n, &fei_attr_list, list) {
++	list_for_each_entry_mutable(attr, &fei_attr_list, list) {
+ 		fei_attr_remove(attr);
+ 	}
+ }
+diff --git a/kernel/gcov/clang.c b/kernel/gcov/clang.c
+index fd98ced0e51d..e9a86a04d793 100644
+--- a/kernel/gcov/clang.c
++++ b/kernel/gcov/clang.c
+@@ -347,9 +347,9 @@ struct gcov_info *gcov_info_dup(struct gcov_info *info)
+  */
+ void gcov_info_free(struct gcov_info *info)
+ {
+-	struct gcov_fn_info *fn, *tmp;
++	struct gcov_fn_info *fn;
+ 
+-	list_for_each_entry_safe(fn, tmp, &info->functions, head) {
++	list_for_each_entry_mutable(fn, &info->functions, head) {
+ 		kvfree(fn->counters);
+ 		list_del(&fn->head);
+ 		kfree(fn);
+diff --git a/kernel/irq_work.c b/kernel/irq_work.c
+index f7e2dc2c30c6..ce454e12cd86 100644
+--- a/kernel/irq_work.c
++++ b/kernel/irq_work.c
+@@ -234,7 +234,7 @@ void irq_work_single(void *arg)
+ 
+ static void irq_work_run_list(struct llist_head *list)
+ {
+-	struct irq_work *work, *tmp;
++	struct irq_work *work;
+ 	struct llist_node *llnode;
+ 
+ 	/*
+@@ -248,7 +248,7 @@ static void irq_work_run_list(struct llist_head *list)
+ 		return;
+ 
+ 	llnode = llist_del_all(list);
+-	llist_for_each_entry_safe(work, tmp, llnode, node.llist)
++	llist_for_each_entry_mutable(work, llnode, node.llist)
+ 		irq_work_single(work);
+ }
+ 
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index dc770b9a6d05..d50d15d4709f 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -318,9 +318,9 @@ static void kimage_free_pages(struct page *page)
+ 
+ void kimage_free_page_list(struct list_head *list)
+ {
+-	struct page *page, *next;
++	struct page *page;
+ 
+-	list_for_each_entry_safe(page, next, list, lru) {
++	list_for_each_entry_mutable(page, list, lru) {
+ 		list_del(&page->lru);
+ 		kimage_free_pages(page);
+ 	}
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index bfc89083daa9..8e8fd6833d1c 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -228,12 +228,12 @@ static bool collect_one_slot(struct kprobe_insn_page *kip, int idx)
+ 
+ static int collect_garbage_slots(struct kprobe_insn_cache *c)
+ {
+-	struct kprobe_insn_page *kip, *next;
++	struct kprobe_insn_page *kip;
+ 
+ 	/* Ensure no-one is interrupted on the garbages */
+ 	synchronize_rcu();
+ 
+-	list_for_each_entry_safe(kip, next, &c->pages, list) {
++	list_for_each_entry_mutable(kip, &c->pages, list) {
+ 		int i;
+ 
+ 		if (kip->ngarbage == 0)
+@@ -563,7 +563,7 @@ static void do_optimize_kprobes(void)
+  */
+ static void do_unoptimize_kprobes(void)
+ {
+-	struct optimized_kprobe *op, *tmp;
++	struct optimized_kprobe *op;
+ 
+ 	lockdep_assert_held(&text_mutex);
+ 	/* See comment in do_optimize_kprobes() */
+@@ -573,7 +573,7 @@ static void do_unoptimize_kprobes(void)
+ 		arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
+ 
+ 	/* Loop on 'freeing_list' for disarming and removing from kprobe hash list */
+-	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
++	list_for_each_entry_mutable(op, &freeing_list, list) {
+ 		/* Switching from detour code to origin */
+ 		op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+ 		/* Disarm probes if marked disabled and not gone */
+@@ -594,9 +594,9 @@ static void do_unoptimize_kprobes(void)
+ /* Reclaim all kprobes on the 'freeing_list' */
+ static void do_free_cleaned_kprobes(void)
+ {
+-	struct optimized_kprobe *op, *tmp;
++	struct optimized_kprobe *op;
+ 
+-	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
++	list_for_each_entry_mutable(op, &freeing_list, list) {
+ 		list_del_init(&op->list);
+ 		if (WARN_ON_ONCE(!kprobe_unused(&op->kp))) {
+ 			/*
+@@ -2598,9 +2598,9 @@ static int __init populate_kprobe_blacklist(unsigned long *start,
+ /* Remove all symbols in given area from kprobe blacklist */
+ static void kprobe_remove_area_blacklist(unsigned long start, unsigned long end)
+ {
+-	struct kprobe_blacklist_entry *ent, *n;
++	struct kprobe_blacklist_entry *ent;
+ 
+-	list_for_each_entry_safe(ent, n, &kprobe_blacklist, list) {
++	list_for_each_entry_mutable(ent, &kprobe_blacklist, list) {
+ 		if (ent->start_addr < start || ent->start_addr >= end)
+ 			continue;
+ 		list_del(&ent->list);
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index 28d15ba58a26..6e433519bfff 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -788,9 +788,9 @@ void klp_free_patch_async(struct klp_patch *patch)
+ 
+ void klp_free_replaced_patches_async(struct klp_patch *new_patch)
+ {
+-	struct klp_patch *old_patch, *tmp_patch;
++	struct klp_patch *old_patch;
+ 
+-	klp_for_each_patch_safe(old_patch, tmp_patch) {
++	klp_for_each_patch_safe(old_patch) {
+ 		if (old_patch == new_patch)
+ 			return;
+ 		klp_free_patch_async(old_patch);
+diff --git a/kernel/livepatch/core.h b/kernel/livepatch/core.h
+index 38209c7361b6..274c8108062f 100644
+--- a/kernel/livepatch/core.h
++++ b/kernel/livepatch/core.h
+@@ -7,8 +7,8 @@
+ extern struct mutex klp_mutex;
+ extern struct list_head klp_patches;
+ 
+-#define klp_for_each_patch_safe(patch, tmp_patch)		\
+-	list_for_each_entry_safe(patch, tmp_patch, &klp_patches, list)
++#define klp_for_each_patch_safe(patch)		\
++	list_for_each_entry_mutable(patch, &klp_patches, list)
+ 
+ #define klp_for_each_patch(patch)	\
+ 	list_for_each_entry(patch, &klp_patches, list)
+diff --git a/kernel/liveupdate/kho_block.c b/kernel/liveupdate/kho_block.c
+index 0d2a342ef422..40e42a47751c 100644
+--- a/kernel/liveupdate/kho_block.c
++++ b/kernel/liveupdate/kho_block.c
+@@ -298,9 +298,9 @@ int kho_block_set_restore(struct kho_block_set *bs, u64 head_pa)
+  */
+ void kho_block_set_destroy(struct kho_block_set *bs)
+ {
+-	struct kho_block *block, *tmp;
++	struct kho_block *block;
+ 
+-	list_for_each_entry_safe(block, tmp, &bs->blocks, list) {
++	list_for_each_entry_mutable(block, &bs->blocks, list) {
+ 		list_del(&block->list);
+ 		kho_block_free_ser(bs, block->ser);
+ 		kfree(block);
+diff --git a/kernel/liveupdate/luo_flb.c b/kernel/liveupdate/luo_flb.c
+index 5c27134ce7ba..cf5d577e25e4 100644
+--- a/kernel/liveupdate/luo_flb.c
++++ b/kernel/liveupdate/luo_flb.c
+@@ -359,13 +359,13 @@ static void luo_flb_unregister_one(struct liveupdate_file_handler *fh,
+ void luo_flb_unregister_all(struct liveupdate_file_handler *fh)
+ {
+ 	struct list_head *flb_list = &ACCESS_PRIVATE(fh, flb_list);
+-	struct luo_flb_link *iter, *tmp;
++	struct luo_flb_link *iter;
+ 
+ 	if (!liveupdate_enabled())
+ 		return;
+ 
+ 	lockdep_assert_held_write(&luo_register_rwlock);
+-	list_for_each_entry_safe(iter, tmp, flb_list, list)
++	list_for_each_entry_mutable(iter, flb_list, list)
+ 		luo_flb_unregister_one(fh, iter->flb);
+ }
+ 
+diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+index b9c180ac1eee..8db6caf31e41 100644
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -567,7 +567,7 @@ static void rwsem_mark_wake(struct rw_semaphore *sem,
+ 		atomic_long_add(adjustment, &sem->count);
+ 
+ 	/* 2nd pass */
+-	list_for_each_entry_safe(waiter, next, &wlist, list) {
++	list_for_each_entry_mutable(waiter, &wlist, list) {
+ 		struct task_struct *tsk;
+ 
+ 		tsk = waiter->task;
+diff --git a/kernel/locking/test-ww_mutex.c b/kernel/locking/test-ww_mutex.c
+index 838d631544ed..f290061a8b48 100644
+--- a/kernel/locking/test-ww_mutex.c
++++ b/kernel/locking/test-ww_mutex.c
+@@ -546,7 +546,7 @@ static void stress_reorder_work(struct work_struct *work)
+ 	} while (!time_after(jiffies, stress->timeout));
+ 
+ out:
+-	list_for_each_entry_safe(ll, ln, &locks, link)
++	list_for_each_entry_mutable(ll, &locks, link)
+ 		kfree(ll);
+ 	kfree(order);
+ }
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index 46dd8d25a605..471448804053 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -725,10 +725,10 @@ static int ref_module(struct module *a, struct module *b)
+ /* Clear the unload stuff of the module. */
+ static void module_unload_free(struct module *mod)
+ {
+-	struct module_use *use, *tmp;
++	struct module_use *use;
+ 
+ 	mutex_lock(&module_mutex);
+-	list_for_each_entry_safe(use, tmp, &mod->target_list, target_list) {
++	list_for_each_entry_mutable(use, &mod->target_list, target_list) {
+ 		struct module *i = use->target;
+ 		pr_debug("%s unusing %s\n", mod->name, i->name);
+ 		module_put(i);
+@@ -3041,14 +3041,14 @@ struct mod_initfree {
+ 
+ static void do_free_init(struct work_struct *w)
+ {
+-	struct llist_node *pos, *n, *list;
++	struct llist_node *pos, *list;
+ 	struct mod_initfree *initfree;
+ 
+ 	list = llist_del_all(&init_free_list);
+ 
+ 	synchronize_rcu();
+ 
+-	llist_for_each_safe(pos, n, list) {
++	llist_for_each_mutable(pos, list) {
+ 		initfree = container_of(pos, struct mod_initfree, node);
+ 		execmem_free(initfree->init_text);
+ 		execmem_free(initfree->init_data);
+@@ -3701,11 +3701,10 @@ static int idempotent_complete(struct idempotent *u, int ret)
+ 	const void *cookie = u->cookie;
+ 	int hash = hash_ptr(cookie, IDEM_HASH_BITS);
+ 	struct hlist_head *head = idem_hash + hash;
+-	struct hlist_node *next;
+ 	struct idempotent *pos;
+ 
+ 	spin_lock(&idem_lock);
+-	hlist_for_each_entry_safe(pos, next, head, entry) {
++	hlist_for_each_entry_mutable(pos, head, entry) {
+ 		if (pos->cookie != cookie)
+ 			continue;
+ 		hlist_del_init(&pos->entry);
+diff --git a/kernel/padata.c b/kernel/padata.c
+index 0d3ea1b68b1f..270f7b0eca0a 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -134,13 +134,13 @@ static void padata_work_free(struct padata_work *pw)
+ 
+ static void __init padata_works_free(struct list_head *works)
+ {
+-	struct padata_work *cur, *next;
++	struct padata_work *cur;
+ 
+ 	if (list_empty(works))
+ 		return;
+ 
+ 	spin_lock_bh(&padata_works_lock);
+-	list_for_each_entry_safe(cur, next, works, pw_list) {
++	list_for_each_entry_mutable(cur, works, pw_list) {
+ 		list_del(&cur->pw_list);
+ 		padata_work_free(cur);
+ 	}
+diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
+index d933b5b2c05d..c4802f2a2e35 100644
+--- a/kernel/power/snapshot.c
++++ b/kernel/power/snapshot.c
+@@ -610,9 +610,9 @@ struct mem_extent {
+  */
+ static void free_mem_extents(struct list_head *list)
+ {
+-	struct mem_extent *ext, *aux;
++	struct mem_extent *ext;
+ 
+-	list_for_each_entry_safe(ext, aux, list, hook) {
++	list_for_each_entry_mutable(ext, list, hook) {
+ 		list_del(&ext->hook);
+ 		kfree(ext);
+ 	}
+@@ -633,7 +633,7 @@ static int create_mem_extents(struct list_head *list, gfp_t gfp_mask)
+ 
+ 	for_each_populated_zone(zone) {
+ 		unsigned long zone_start, zone_end;
+-		struct mem_extent *ext, *cur, *aux;
++		struct mem_extent *ext, *cur;
+ 
+ 		zone_start = zone->zone_start_pfn;
+ 		zone_end = zone_end_pfn(zone);
+@@ -665,7 +665,7 @@ static int create_mem_extents(struct list_head *list, gfp_t gfp_mask)
+ 
+ 		/* More merging may be possible */
+ 		cur = ext;
+-		list_for_each_entry_safe_continue(cur, aux, list, hook) {
++		list_for_each_entry_mutable_continue(cur, list, hook) {
+ 			if (zone_end < cur->start)
+ 				break;
+ 			if (zone_end < cur->end)
+diff --git a/kernel/power/wakelock.c b/kernel/power/wakelock.c
+index fd763da06a87..c8718aacfa5a 100644
+--- a/kernel/power/wakelock.c
++++ b/kernel/power/wakelock.c
+@@ -102,13 +102,13 @@ static inline void wakelocks_lru_most_recent(struct wakelock *wl)
+ 
+ static void __wakelocks_gc(struct work_struct *work)
+ {
+-	struct wakelock *wl, *aux;
++	struct wakelock *wl;
+ 	ktime_t now;
+ 
+ 	mutex_lock(&wakelocks_lock);
+ 
+ 	now = ktime_get();
+-	list_for_each_entry_safe_reverse(wl, aux, &wakelocks_lru_list, lru) {
++	list_for_each_entry_mutable_reverse(wl, &wakelocks_lru_list, lru) {
+ 		u64 idle_time_ns;
+ 		bool active;
+ 
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 2fe9a963c823..3f524c6bdf6e 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -3787,7 +3787,6 @@ static struct syscore printk_syscore = {
+  */
+ static void printk_kthreads_check_locked(void)
+ {
+-	struct hlist_node *tmp;
+ 	struct console *con;
+ 
+ 	lockdep_assert_console_list_lock_held();
+@@ -3805,7 +3804,7 @@ static void printk_kthreads_check_locked(void)
+ 			 * are any nbcon consoles, they will set up their own
+ 			 * kthread.
+ 			 */
+-			hlist_for_each_entry_safe(con, tmp, &console_list, node) {
++			hlist_for_each_entry_mutable(con, &console_list, node) {
+ 				if (con->flags & CON_NBCON)
+ 					continue;
+ 
+@@ -3833,7 +3832,7 @@ static void printk_kthreads_check_locked(void)
+ 	if (printk_kthreads_running)
+ 		return;
+ 
+-	hlist_for_each_entry_safe(con, tmp, &console_list, node) {
++	hlist_for_each_entry_mutable(con, &console_list, node) {
+ 		if (!(con->flags & CON_NBCON))
+ 			continue;
+ 
+@@ -4209,9 +4208,8 @@ void register_console(struct console *newcon)
+ 	if (bootcon_registered &&
+ 	    ((newcon->flags & (CON_CONSDEV | CON_BOOT)) == CON_CONSDEV) &&
+ 	    !keep_bootcon) {
+-		struct hlist_node *tmp;
+ 
+-		hlist_for_each_entry_safe(con, tmp, &console_list, node) {
++		hlist_for_each_entry_mutable(con, &console_list, node) {
+ 			if (con->flags & CON_BOOT)
+ 				unregister_console_locked(con);
+ 		}
+@@ -4426,12 +4424,11 @@ void __init console_init(void)
+  */
+ static int __init printk_late_init(void)
+ {
+-	struct hlist_node *tmp;
+ 	struct console *con;
+ 	int ret;
+ 
+ 	console_list_lock();
+-	hlist_for_each_entry_safe(con, tmp, &console_list, node) {
++	hlist_for_each_entry_mutable(con, &console_list, node) {
+ 		if (!(con->flags & CON_BOOT))
+ 			continue;
+ 
+diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+index d041645d9d17..8032b653af83 100644
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -619,9 +619,9 @@ static int ptrace_detach(struct task_struct *child, unsigned int data)
+  */
+ void exit_ptrace(struct task_struct *tracer, struct list_head *dead)
+ {
+-	struct task_struct *p, *n;
++	struct task_struct *p;
+ 
+-	list_for_each_entry_safe(p, n, &tracer->ptraced, ptrace_entry) {
++	list_for_each_entry_mutable(p, &tracer->ptraced, ptrace_entry) {
+ 		if (unlikely(p->ptrace & PT_EXITKILL))
+ 			send_sig_info(SIGKILL, SEND_SIG_PRIV, p);
+ 
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 882a158ada7b..9eb0007411a9 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -537,11 +537,10 @@ static void
+ rcu_torture_pipe_update(struct rcu_torture *old_rp)
+ {
+ 	struct rcu_torture *rp;
+-	struct rcu_torture *rp1;
+ 
+ 	if (old_rp)
+ 		list_add(&old_rp->rtort_free, &rcu_torture_removed);
+-	list_for_each_entry_safe(rp, rp1, &rcu_torture_removed, rtort_free) {
++	list_for_each_entry_mutable(rp, &rcu_torture_removed, rtort_free) {
+ 		if (rcu_torture_pipe_update_one(rp)) {
+ 			list_del(&rp->rtort_free);
+ 			rcu_torture_free(rp);
+diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+index f4da5fad70f5..e79380d93c85 100644
+--- a/kernel/rcu/tasks.h
++++ b/kernel/rcu/tasks.h
+@@ -1052,12 +1052,11 @@ static void rcu_tasks_postscan(struct list_head *hop)
+ 	for_each_possible_cpu(cpu) {
+ 		unsigned long j = jiffies + 1;
+ 		struct rcu_tasks_percpu *rtpcp = per_cpu_ptr(rcu_tasks.rtpcpu, cpu);
+-		struct task_struct *t;
+-		struct task_struct *t1;
++		struct task_struct *t, *t1;
+ 		struct list_head tmp;
+ 
+ 		raw_spin_lock_irq_rcu_node(rtpcp);
+-		list_for_each_entry_safe(t, t1, &rtpcp->rtp_exit_list, rcu_tasks_exit_list) {
++		list_for_each_entry_mutable(t, t1, &rtpcp->rtp_exit_list, rcu_tasks_exit_list) {
+ 			if (list_empty(&t->rcu_tasks_holdout_list))
+ 				rcu_tasks_pertask(t, hop);
+ 
+@@ -1120,9 +1119,9 @@ static void check_holdout_task(struct task_struct *t,
+ static void check_all_holdout_tasks(struct list_head *hop,
+ 				    bool needreport, bool *firstreport)
+ {
+-	struct task_struct *t, *t1;
++	struct task_struct *t;
+ 
+-	list_for_each_entry_safe(t, t1, hop, rcu_tasks_holdout_list) {
++	list_for_each_entry_mutable(t, hop, rcu_tasks_holdout_list) {
+ 		check_holdout_task(t, needreport, firstreport);
+ 		cond_resched();
+ 	}
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 03a43d3d2616..7c7792d62ac5 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -1664,7 +1664,7 @@ static void rcu_sr_normal_complete(struct llist_node *node)
+ 
+ static void rcu_sr_normal_gp_cleanup_work(struct work_struct *work)
+ {
+-	struct llist_node *done, *rcu, *next, *head;
++	struct llist_node *done, *rcu, *head;
+ 
+ 	/*
+ 	 * This work execution can potentially execute
+@@ -1694,7 +1694,7 @@ static void rcu_sr_normal_gp_cleanup_work(struct work_struct *work)
+ 	 * nodes is removed, in next round of cleanup
+ 	 * work execution.
+ 	 */
+-	llist_for_each_safe(rcu, next, head) {
++	llist_for_each_mutable(rcu, head) {
+ 		if (!rcu_sr_is_wait_head(rcu)) {
+ 			rcu_sr_normal_complete(rcu);
+ 			continue;
+@@ -1726,7 +1726,7 @@ static void rcu_sr_normal_gp_cleanup(void)
+ 	/*
+ 	 * Process (a) and (d) cases. See an illustration.
+ 	 */
+-	llist_for_each_safe(rcu, next, wait_tail->next) {
++	llist_for_each_mutable(rcu, next, wait_tail->next) {
+ 		if (rcu_sr_is_wait_head(rcu))
+ 			break;
+ 
+diff --git a/kernel/resource.c b/kernel/resource.c
+index e60539a55541..19b89b09e291 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -1951,9 +1951,9 @@ EXPORT_SYMBOL(resource_list_create_entry);
+ 
+ void resource_list_free(struct list_head *head)
+ {
+-	struct resource_entry *entry, *tmp;
++	struct resource_entry *entry;
+ 
+-	list_for_each_entry_safe(entry, tmp, head, node)
++	list_for_each_entry_mutable(entry, head, node)
+ 		resource_list_destroy_entry(entry);
+ }
+ EXPORT_SYMBOL(resource_list_free);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index e97e98c33be5..873e26f2a032 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3892,7 +3892,7 @@ void sched_ttwu_pending(void *arg)
+ {
+ 	struct llist_node *llist = arg;
+ 	struct rq *rq = this_rq();
+-	struct task_struct *p, *t;
++	struct task_struct *p;
+ 	struct rq_flags rf;
+ 
+ 	if (!llist)
+@@ -3901,7 +3901,7 @@ void sched_ttwu_pending(void *arg)
+ 	rq_lock_irqsave(rq, &rf);
+ 	update_rq_clock(rq);
+ 
+-	llist_for_each_entry_safe(p, t, llist, wake_entry.llist) {
++	llist_for_each_entry_mutable(p, llist, wake_entry.llist) {
+ 		if (WARN_ON_ONCE(p->on_cpu))
+ 			smp_cond_load_acquire(&p->on_cpu, !VAL);
+ 
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index 0db6fa2daea3..2119f2629fd1 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -4121,7 +4121,7 @@ static void process_ddsp_deferred_locals(struct rq *rq)
+ 	 * Now that @rq can be unlocked, execute the deferred enqueueing of
+ 	 * tasks directly dispatched to the local DSQs of other CPUs. See
+ 	 * direct_dispatch(). Keep popping from the head instead of using
+-	 * list_for_each_entry_safe() as dispatch_local_dsq() may unlock @rq
++	 * list_for_each_entry_mutable() as dispatch_local_dsq() may unlock @rq
+ 	 * temporarily.
+ 	 */
+ 	while ((p = list_first_entry_or_null(&rq->scx.ddsp_deferred_locals,
+@@ -4186,7 +4186,7 @@ static u32 reenq_local(struct scx_sched *sch, struct rq *rq, u64 reenq_flags)
+ {
+ 	LIST_HEAD(tasks);
+ 	u32 nr_enqueued = 0;
+-	struct task_struct *p, *n;
++	struct task_struct *p;
+ 
+ 	lockdep_assert_rq_held(rq);
+ 
+@@ -4200,8 +4200,8 @@ static u32 reenq_local(struct scx_sched *sch, struct rq *rq, u64 reenq_flags)
+ 	 * @rq->scx.local_dsq. Move all candidate tasks off to a private list
+ 	 * first to avoid processing the same tasks repeatedly.
+ 	 */
+-	list_for_each_entry_safe(p, n, &rq->scx.local_dsq.list,
+-				 scx.dsq_list.node) {
++	list_for_each_entry_mutable(p, &rq->scx.local_dsq.list,
++				    scx.dsq_list.node) {
+ 		struct scx_sched *task_sch = scx_task_sched(p);
+ 		u32 reason;
+ 
+@@ -4234,7 +4234,7 @@ static u32 reenq_local(struct scx_sched *sch, struct rq *rq, u64 reenq_flags)
+ 		list_add_tail(&p->scx.dsq_list.node, &tasks);
+ 	}
+ 
+-	list_for_each_entry_safe(p, n, &tasks, scx.dsq_list.node) {
++	list_for_each_entry_mutable(p, &tasks, scx.dsq_list.node) {
+ 		list_del_init(&p->scx.dsq_list.node);
+ 
+ 		do_enqueue_task(rq, p, SCX_ENQ_REENQ, -1);
+@@ -4786,9 +4786,9 @@ static void free_dsq_rcufn(struct rcu_head *rcu)
+ static void free_dsq_irq_workfn(struct irq_work *irq_work)
+ {
+ 	struct llist_node *to_free = llist_del_all(&dsqs_to_free);
+-	struct scx_dispatch_q *dsq, *tmp_dsq;
++	struct scx_dispatch_q *dsq;
+ 
+-	llist_for_each_entry_safe(dsq, tmp_dsq, to_free, free_node)
++	llist_for_each_entry_mutable(dsq, to_free, free_node)
+ 		call_rcu(&dsq->rcu, free_dsq_rcufn);
+ }
+ 
+@@ -5684,7 +5684,7 @@ static void scx_bypass(struct scx_sched *sch, bool bypass)
+ 	 */
+ 	for_each_possible_cpu(cpu) {
+ 		struct rq *rq = cpu_rq(cpu);
+-		struct task_struct *p, *n;
++		struct task_struct *p;
+ 
+ 		raw_spin_rq_lock(rq);
+ 		raw_spin_lock(&scx_sched_lock);
+@@ -5711,14 +5711,14 @@ static void scx_bypass(struct scx_sched *sch, bool bypass)
+ 		}
+ 
+ 		/*
+-		 * The use of list_for_each_entry_safe_reverse() is required
++		 * The use of list_for_each_entry_mutable_reverse() is required
+ 		 * because each task is going to be removed from and added back
+ 		 * to the runnable_list during iteration. Because they're added
+ 		 * to the tail of the list, safe reverse iteration can still
+ 		 * visit all nodes.
+ 		 */
+-		list_for_each_entry_safe_reverse(p, n, &rq->scx.runnable_list,
+-						 scx.runnable_node) {
++		list_for_each_entry_mutable_reverse(p, &rq->scx.runnable_list,
++						    scx.runnable_node) {
+ 			if (!scx_is_descendant(scx_task_sched(p), sch))
+ 				continue;
+ 
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index d78467ec6ee1..0f21a168fd9a 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -408,9 +408,9 @@ static inline void assert_list_leaf_cfs_rq(struct rq *rq)
+ }
+ 
+ /* Iterate through all leaf cfs_rq's on a runqueue */
+-#define for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos)			\
+-	list_for_each_entry_safe(cfs_rq, pos, &rq->leaf_cfs_rq_list,	\
+-				 leaf_cfs_rq_list)
++#define for_each_leaf_cfs_rq_safe(rq, cfs_rq)			\
++	list_for_each_entry_mutable(cfs_rq, &(rq)->leaf_cfs_rq_list,	\
++				    leaf_cfs_rq_list)
+ 
+ /* Do the two (enqueued) entities belong to the same group ? */
+ static inline struct cfs_rq *
+@@ -494,8 +494,8 @@ static inline void assert_list_leaf_cfs_rq(struct rq *rq)
+ {
+ }
+ 
+-#define for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos)	\
+-		for (cfs_rq = &rq->cfs, pos = NULL; cfs_rq; cfs_rq = pos)
++#define for_each_leaf_cfs_rq_safe(rq, cfs_rq)	\
++		for (cfs_rq = &(rq)->cfs; cfs_rq; cfs_rq = NULL)
+ 
+ static inline struct sched_entity *parent_entity(struct sched_entity *se)
+ {
+@@ -6724,7 +6724,7 @@ static int tg_unthrottle_up(struct task_group *tg, void *data)
+ {
+ 	struct rq *rq = data;
+ 	struct cfs_rq *cfs_rq = tg_cfs_rq(tg, cpu_of(rq));
+-	struct task_struct *p, *tmp;
++	struct task_struct *p;
+ 	LIST_HEAD(throttled_tasks);
+ 
+ 	/*
+@@ -6765,7 +6765,7 @@ static int tg_unthrottle_up(struct task_group *tg, void *data)
+ 	list_splice_init(&cfs_rq->throttled_limbo_list, &throttled_tasks);
+ 
+ 	/* Re-enqueue the tasks that have been throttled at this level. */
+-	list_for_each_entry_safe(p, tmp, &throttled_tasks, throttle_node) {
++	list_for_each_entry_mutable(p, &throttled_tasks, throttle_node) {
+ 		/*
+ 		 * Back to being throttled! Break out and put the remaining
+ 		 * tasks back onto the limbo_list to prevent running them
+@@ -6966,7 +6966,7 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+ 
+ static void __cfsb_csd_unthrottle(void *arg)
+ {
+-	struct cfs_rq *cursor, *tmp;
++	struct cfs_rq *cursor;
+ 	struct rq *rq = arg;
+ 
+ 	guard(rq_lock)(rq);
+@@ -6988,8 +6988,8 @@ static void __cfsb_csd_unthrottle(void *arg)
+ 	 */
+ 	guard(rcu)();
+ 
+-	list_for_each_entry_safe(cursor, tmp, &rq->cfsb_csd_list,
+-				 throttled_csd_list) {
++	list_for_each_entry_mutable(cursor, &rq->cfsb_csd_list,
++				    throttled_csd_list) {
+ 		list_del_init(&cursor->throttled_csd_list);
+ 
+ 		if (cfs_rq_throttled(cursor))
+@@ -11118,14 +11118,14 @@ static bool __update_blocked_others(struct rq *rq, bool *done)
+ 
+ static bool __update_blocked_fair(struct rq *rq, bool *done)
+ {
+-	struct cfs_rq *cfs_rq, *pos;
++	struct cfs_rq *cfs_rq;
+ 	bool decayed = false;
+ 
+ 	/*
+ 	 * Iterates the task_group tree in a bottom up fashion, see
+ 	 * list_add_leaf_cfs_rq() for details.
+ 	 */
+-	for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos) {
++	for_each_leaf_cfs_rq_safe(rq, cfs_rq) {
+ 		struct sched_entity *se;
+ 
+ 		if (update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq)) {
+@@ -15401,10 +15401,10 @@ DEFINE_SCHED_CLASS(fair) = {
+ 
+ void print_cfs_stats(struct seq_file *m, int cpu)
+ {
+-	struct cfs_rq *cfs_rq, *pos;
++	struct cfs_rq *cfs_rq;
+ 
+ 	rcu_read_lock();
+-	for_each_leaf_cfs_rq_safe(cpu_rq(cpu), cfs_rq, pos)
++	for_each_leaf_cfs_rq_safe(cpu_rq(cpu), cfs_rq)
+ 		print_cfs_rq(m, cpu, cfs_rq);
+ 	rcu_read_unlock();
+ }
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 622e2e01974c..062887738bff 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1753,7 +1753,7 @@ static inline void asym_cpu_capacity_update_data(int cpu)
+  */
+ static void asym_cpu_capacity_scan(void)
+ {
+-	struct asym_cap_data *entry, *next;
++	struct asym_cap_data *entry;
+ 	int cpu;
+ 
+ 	list_for_each_entry(entry, &asym_cap_list, link)
+@@ -1762,7 +1762,7 @@ static void asym_cpu_capacity_scan(void)
+ 	for_each_cpu_and(cpu, cpu_possible_mask, housekeeping_cpumask(HK_TYPE_DOMAIN))
+ 		asym_cpu_capacity_update_data(cpu);
+ 
+-	list_for_each_entry_safe(entry, next, &asym_cap_list, link) {
++	list_for_each_entry_mutable(entry, &asym_cap_list, link) {
+ 		if (cpumask_empty(cpu_capacity_span(entry))) {
+ 			list_del_rcu(&entry->link);
+ 			call_rcu(&entry->rcu, free_asym_cap_entry);
+diff --git a/kernel/sched/wait.c b/kernel/sched/wait.c
+index 20f27e2cf7ae..3411f9ac2073 100644
+--- a/kernel/sched/wait.c
++++ b/kernel/sched/wait.c
+@@ -92,7 +92,7 @@ EXPORT_SYMBOL(remove_wait_queue);
+ static int __wake_up_common(struct wait_queue_head *wq_head, unsigned int mode,
+ 			int nr_exclusive, int wake_flags, void *key)
+ {
+-	wait_queue_entry_t *curr, *next;
++	wait_queue_entry_t *curr;
+ 
+ 	lockdep_assert_held(&wq_head->lock);
+ 
+@@ -101,7 +101,7 @@ static int __wake_up_common(struct wait_queue_head *wq_head, unsigned int mode,
+ 	if (&curr->entry == &wq_head->head)
+ 		return nr_exclusive;
+ 
+-	list_for_each_entry_safe_from(curr, next, &wq_head->head, entry) {
++	list_for_each_entry_mutable_from(curr, &wq_head->head, entry) {
+ 		unsigned flags = curr->flags;
+ 		int ret;
+ 
+diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+index 066909393c38..7212e47703f9 100644
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -1168,7 +1168,7 @@ static int seccomp_do_user_notification(int this_syscall,
+ 	u32 flags = 0;
+ 	long ret = 0;
+ 	struct seccomp_knotif n = {};
+-	struct seccomp_kaddfd *addfd, *tmp;
++	struct seccomp_kaddfd *addfd;
+ 
+ 	mutex_lock(&match->notify_lock);
+ 	err = -ENOSYS;
+@@ -1225,7 +1225,7 @@ static int seccomp_do_user_notification(int this_syscall,
+ 
+ interrupted:
+ 	/* If there were any pending addfd calls, clear them out */
+-	list_for_each_entry_safe(addfd, tmp, &n.addfd, list) {
++	list_for_each_entry_mutable(addfd, &n.addfd, list) {
+ 		/* The process went away before we got a chance to handle it */
+ 		addfd->ret = -ESRCH;
+ 		list_del_init(&addfd->list);
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 9c2b32c4d755..072231bebf52 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -748,7 +748,7 @@ static void sigqueue_free_ignored(struct task_struct *tsk, struct sigqueue *q)
+ /* Remove signals in mask from the pending set and queue. */
+ static void flush_sigqueue_mask(struct task_struct *p, sigset_t *mask, struct sigpending *s)
+ {
+-	struct sigqueue *q, *n;
++	struct sigqueue *q;
+ 	sigset_t m;
+ 
+ 	lockdep_assert_held(&p->sighand->siglock);
+@@ -758,7 +758,7 @@ static void flush_sigqueue_mask(struct task_struct *p, sigset_t *mask, struct si
+ 		return;
+ 
+ 	sigandnsets(&s->signal, &s->signal, mask);
+-	list_for_each_entry_safe(q, n, &s->list, list) {
++	list_for_each_entry_mutable(q, &s->list, list) {
+ 		if (sigismember(mask, q->info.si_signo)) {
+ 			list_del_init(&q->list);
+ 			sigqueue_free_ignored(p, q);
+@@ -1899,12 +1899,12 @@ EXPORT_SYMBOL(kill_pid);
+ static void __flush_itimer_signals(struct sigpending *pending)
+ {
+ 	sigset_t signal, retain;
+-	struct sigqueue *q, *n;
++	struct sigqueue *q;
+ 
+ 	signal = pending->signal;
+ 	sigemptyset(&retain);
+ 
+-	list_for_each_entry_safe(q, n, &pending->list, list) {
++	list_for_each_entry_mutable(q, &pending->list, list) {
+ 		int sig = q->info.si_signo;
+ 
+ 		if (likely(q->info.si_code != SI_TIMER)) {
+@@ -2101,7 +2101,6 @@ static inline void posixtimer_sig_ignore(struct task_struct *tsk, struct sigqueu
+ static void posixtimer_sig_unignore(struct task_struct *tsk, int sig)
+ {
+ 	struct hlist_head *head = &tsk->signal->ignored_posix_timers;
+-	struct hlist_node *tmp;
+ 	struct k_itimer *tmr;
+ 
+ 	if (likely(hlist_empty(head)))
+@@ -2114,7 +2113,7 @@ static void posixtimer_sig_unignore(struct task_struct *tsk, int sig)
+ 	 * rearmed or not. This cannot be decided here w/o dropping sighand
+ 	 * lock and creating a loop retry horror show.
+ 	 */
+-	hlist_for_each_entry_safe(tmr, tmp , head, ignored_list) {
++	hlist_for_each_entry_mutable(tmr, head, ignored_list) {
+ 		struct task_struct *target;
+ 
+ 		/*
+diff --git a/kernel/smp.c b/kernel/smp.c
+index a0bb56bd8dda..305187e50b58 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -544,7 +544,7 @@ static void __flush_smp_call_function_queue(bool warn_cpu_offline)
+ 	 * First; run all SYNC callbacks, people are waiting for us.
+ 	 */
+ 	prev = NULL;
+-	llist_for_each_entry_safe(csd, csd_next, entry, node.llist) {
++	llist_for_each_entry_mutable(csd, csd_next, entry, node.llist) {
+ 		/* Do we wait until *after* callback? */
+ 		if (CSD_TYPE(csd) == CSD_TYPE_SYNC) {
+ 			smp_call_func_t func = csd->func;
+@@ -572,7 +572,7 @@ static void __flush_smp_call_function_queue(bool warn_cpu_offline)
+ 	 * Second; run all !SYNC callbacks.
+ 	 */
+ 	prev = NULL;
+-	llist_for_each_entry_safe(csd, csd_next, entry, node.llist) {
++	llist_for_each_entry_mutable(csd, csd_next, entry, node.llist) {
+ 		int type = CSD_TYPE(csd);
+ 
+ 		if (type != CSD_TYPE_TTWU) {
+diff --git a/kernel/taskstats.c b/kernel/taskstats.c
+index 2cd0172d0516..08932d4776d1 100644
+--- a/kernel/taskstats.c
++++ b/kernel/taskstats.c
+@@ -111,7 +111,7 @@ static void send_cpu_listeners(struct sk_buff *skb,
+ 					struct listener_list *listeners)
+ {
+ 	struct genlmsghdr *genlhdr = nlmsg_data(nlmsg_hdr(skb));
+-	struct listener *s, *tmp;
++	struct listener *s;
+ 	struct sk_buff *skb_next, *skb_cur = skb;
+ 	void *reply = genlmsg_data(genlhdr);
+ 	int delcount = 0;
+@@ -145,7 +145,7 @@ static void send_cpu_listeners(struct sk_buff *skb,
+ 
+ 	/* Delete invalidated entries */
+ 	down_write(&listeners->sem);
+-	list_for_each_entry_safe(s, tmp, &listeners->list, list) {
++	list_for_each_entry_mutable(s, &listeners->list, list) {
+ 		if (!s->valid) {
+ 			list_del(&s->list);
+ 			kfree(s);
+@@ -299,7 +299,7 @@ static void fill_tgid_exit(struct task_struct *tsk)
+ static int add_del_listener(pid_t pid, const struct cpumask *mask, int isadd)
+ {
+ 	struct listener_list *listeners;
+-	struct listener *s, *tmp, *s2;
++	struct listener *s, *s2;
+ 	unsigned int cpu;
+ 	int ret = 0;
+ 
+@@ -343,7 +343,7 @@ static int add_del_listener(pid_t pid, const struct cpumask *mask, int isadd)
+ 	for_each_cpu(cpu, mask) {
+ 		listeners = &per_cpu(listener_array, cpu);
+ 		down_write(&listeners->sem);
+-		list_for_each_entry_safe(s, tmp, &listeners->list, list) {
++		list_for_each_entry_mutable(s, &listeners->list, list) {
+ 			if (s->pid == pid) {
+ 				list_del(&s->list);
+ 				kfree(s);
+diff --git a/kernel/time/clockevents.c b/kernel/time/clockevents.c
+index 0014d163f989..a13eeab8d83f 100644
+--- a/kernel/time/clockevents.c
++++ b/kernel/time/clockevents.c
+@@ -678,7 +678,7 @@ void clockevents_resume(void)
+  */
+ void tick_offline_cpu(unsigned int cpu)
+ {
+-	struct clock_event_device *dev, *tmp;
++	struct clock_event_device *dev;
+ 
+ 	raw_spin_lock(&clockevents_lock);
+ 
+@@ -689,13 +689,13 @@ void tick_offline_cpu(unsigned int cpu)
+ 	 * Unregister the clock event devices which were
+ 	 * released above.
+ 	 */
+-	list_for_each_entry_safe(dev, tmp, &clockevents_released, list)
++	list_for_each_entry_mutable(dev, &clockevents_released, list)
+ 		list_del(&dev->list);
+ 
+ 	/*
+ 	 * Now check whether the CPU has left unused per cpu devices
+ 	 */
+-	list_for_each_entry_safe(dev, tmp, &clockevent_devices, list) {
++	list_for_each_entry_mutable(dev, &clockevent_devices, list) {
+ 		if (cpumask_test_cpu(cpu, dev->cpumask) &&
+ 		    cpumask_weight(dev->cpumask) == 1 &&
+ 		    !tick_is_broadcast_device(dev)) {
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index e48c4d379a7c..ac857d7ce4bb 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -776,12 +776,12 @@ static void clocksource_dequeue_watchdog(struct clocksource *cs)
+ 
+ static int __clocksource_watchdog_kthread(void)
+ {
+-	struct clocksource *cs, *tmp;
++	struct clocksource *cs;
+ 	unsigned long flags;
+ 	int select = 0;
+ 
+ 	spin_lock_irqsave(&watchdog_lock, flags);
+-	list_for_each_entry_safe(cs, tmp, &watchdog_list, wd_list) {
++	list_for_each_entry_mutable(cs, &watchdog_list, wd_list) {
+ 		if (cs->flags & CLOCK_SOURCE_UNSTABLE) {
+ 			list_del_init(&cs->wd_list);
+ 			clocksource_change_rating(cs, 0);
+diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+index 5e633d8750d1..1f2c5533d598 100644
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -1296,7 +1296,7 @@ static inline bool posix_cpu_timers_enable_work(struct task_struct *tsk,
+ 
+ static void handle_posix_cpu_timers(struct task_struct *tsk)
+ {
+-	struct k_itimer *timer, *next;
++	struct k_itimer *timer;
+ 	unsigned long flags, start;
+ 	LIST_HEAD(firing);
+ 
+@@ -1369,7 +1369,7 @@ static void handle_posix_cpu_timers(struct task_struct *tsk)
+ 	 * each timer's lock before clearing its firing flag, so no
+ 	 * timer call will interfere.
+ 	 */
+-	list_for_each_entry_safe(timer, next, &firing, it.cpu.elist) {
++	list_for_each_entry_mutable(timer, &firing, it.cpu.elist) {
+ 		bool cpu_firing;
+ 
+ 		/*
+diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+index 436ba794cc0b..d89307c4adb0 100644
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -1085,7 +1085,6 @@ SYSCALL_DEFINE1(timer_delete, timer_t, timer_id)
+ void exit_itimers(struct task_struct *tsk)
+ {
+ 	struct hlist_head timers;
+-	struct hlist_node *next;
+ 	struct k_itimer *timer;
+ 
+ 	/* Clear restore mode for exec() */
+@@ -1099,7 +1098,7 @@ void exit_itimers(struct task_struct *tsk)
+ 		hlist_move_list(&tsk->signal->posix_timers, &timers);
+ 
+ 	/* The timers are not longer accessible via tsk::signal */
+-	hlist_for_each_entry_safe(timer, next, &timers, list) {
++	hlist_for_each_entry_mutable(timer, &timers, list) {
+ 		scoped_guard (spinlock_irq, &timer->it_lock)
+ 			posix_timer_delete(timer);
+ 		posix_timer_unhash_and_free(timer);
+diff --git a/kernel/torture.c b/kernel/torture.c
+index 77cb3589b19f..047dcde729dd 100644
+--- a/kernel/torture.c
++++ b/kernel/torture.c
+@@ -510,10 +510,9 @@ EXPORT_SYMBOL_GPL(torture_shuffle_task_register);
+ static void torture_shuffle_task_unregister_all(void)
+ {
+ 	struct shuffle_task *stp;
+-	struct shuffle_task *p;
+ 
+ 	mutex_lock(&shuffle_task_mutex);
+-	list_for_each_entry_safe(stp, p, &shuffle_task_list, st_l) {
++	list_for_each_entry_mutable(stp, &shuffle_task_list, st_l) {
+ 		list_del(&stp->st_l);
+ 		kfree(stp);
+ 	}
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 82f8feea6931..7f6d8b287adb 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2276,7 +2276,7 @@ subsys_initcall(send_signal_irq_work_init);
+ static int bpf_event_notify(struct notifier_block *nb, unsigned long op,
+ 			    void *module)
+ {
+-	struct bpf_trace_module *btm, *tmp;
++	struct bpf_trace_module *btm;
+ 	struct module *mod = module;
+ 	int ret = 0;
+ 
+@@ -2297,7 +2297,7 @@ static int bpf_event_notify(struct notifier_block *nb, unsigned long op,
+ 		}
+ 		break;
+ 	case MODULE_STATE_GOING:
+-		list_for_each_entry_safe(btm, tmp, &bpf_trace_modules, list) {
++		list_for_each_entry_mutable(btm, &bpf_trace_modules, list) {
+ 			if (btm->module == module) {
+ 				list_del(&btm->list);
+ 				kfree(btm);
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index f93e34dd2328..422665c687ff 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -1252,7 +1252,6 @@ void ftrace_hash_remove(struct ftrace_hash *hash)
+ {
+ 	struct ftrace_func_entry *entry;
+ 	struct hlist_head *hhd;
+-	struct hlist_node *tn;
+ 	int size;
+ 	int i;
+ 
+@@ -1261,7 +1260,7 @@ void ftrace_hash_remove(struct ftrace_hash *hash)
+ 	size = 1 << hash->size_bits;
+ 	for (i = 0; i < size; i++) {
+ 		hhd = &hash->buckets[i];
+-		hlist_for_each_entry_safe(entry, tn, hhd, hlist)
++		hlist_for_each_entry_mutable(entry, hhd, hlist)
+ 			remove_hash_entry(hash, entry);
+ 	}
+ 	FTRACE_WARN_ON(hash->count);
+@@ -1270,7 +1269,6 @@ void ftrace_hash_remove(struct ftrace_hash *hash)
+ static void ftrace_hash_clear(struct ftrace_hash *hash)
+ {
+ 	struct hlist_head *hhd;
+-	struct hlist_node *tn;
+ 	struct ftrace_func_entry *entry;
+ 	int size = 1 << hash->size_bits;
+ 	int i;
+@@ -1280,7 +1278,7 @@ static void ftrace_hash_clear(struct ftrace_hash *hash)
+ 
+ 	for (i = 0; i < size; i++) {
+ 		hhd = &hash->buckets[i];
+-		hlist_for_each_entry_safe(entry, tn, hhd, hlist)
++		hlist_for_each_entry_mutable(entry, hhd, hlist)
+ 			free_hash_entry(hash, entry);
+ 	}
+ 	FTRACE_WARN_ON(hash->count);
+@@ -1296,14 +1294,14 @@ static void free_ftrace_mod(struct ftrace_mod_load *ftrace_mod)
+ 
+ static void clear_ftrace_mod_list(struct list_head *head)
+ {
+-	struct ftrace_mod_load *p, *n;
++	struct ftrace_mod_load *p;
+ 
+ 	/* stack tracer isn't supported yet */
+ 	if (!head)
+ 		return;
+ 
+ 	mutex_lock(&ftrace_lock);
+-	list_for_each_entry_safe(p, n, head, list)
++	list_for_each_entry_mutable(p, head, list)
+ 		free_ftrace_mod(p);
+ 	mutex_unlock(&ftrace_lock);
+ }
+@@ -1451,7 +1449,6 @@ static struct ftrace_hash *__move_hash(struct ftrace_hash *src, int size)
+ 	struct ftrace_func_entry *entry;
+ 	struct ftrace_hash *new_hash;
+ 	struct hlist_head *hhd;
+-	struct hlist_node *tn;
+ 	int bits = 0;
+ 	int i;
+ 
+@@ -1474,7 +1471,7 @@ static struct ftrace_hash *__move_hash(struct ftrace_hash *src, int size)
+ 	size = 1 << src->size_bits;
+ 	for (i = 0; i < size; i++) {
+ 		hhd = &src->buckets[i];
+-		hlist_for_each_entry_safe(entry, tn, hhd, hlist) {
++		hlist_for_each_entry_mutable(entry, hhd, hlist) {
+ 			remove_hash_entry(src, entry);
+ 			add_ftrace_hash_entry(new_hash, entry);
+ 		}
+@@ -3327,7 +3324,6 @@ static int append_hash(struct ftrace_hash **hash, struct ftrace_hash *new_hash,
+ static void remove_hash(struct ftrace_hash *hash, struct ftrace_hash *notrace_hash)
+ {
+ 	struct ftrace_func_entry *entry;
+-	struct hlist_node *tmp;
+ 	int size;
+ 	int i;
+ 
+@@ -3337,7 +3333,7 @@ static void remove_hash(struct ftrace_hash *hash, struct ftrace_hash *notrace_ha
+ 
+ 	size = 1 << hash->size_bits;
+ 	for (i = 0; i < size; i++) {
+-		hlist_for_each_entry_safe(entry, tmp, &hash->buckets[i], hlist) {
++		hlist_for_each_entry_mutable(entry, &hash->buckets[i], hlist) {
+ 			if (!__ftrace_lookup_ip(notrace_hash, entry->ip))
+ 				continue;
+ 			remove_hash_entry(hash, entry);
+@@ -5084,7 +5080,7 @@ static int ftrace_hash_move_and_update_ops(struct ftrace_ops *ops,
+ static int cache_mod(struct trace_array *tr,
+ 		     const char *func, char *module, int enable)
+ {
+-	struct ftrace_mod_load *ftrace_mod, *n;
++	struct ftrace_mod_load *ftrace_mod;
+ 	struct list_head *head = enable ? &tr->mod_trace : &tr->mod_notrace;
+ 
+ 	guard(mutex)(&ftrace_lock);
+@@ -5096,7 +5092,7 @@ static int cache_mod(struct trace_array *tr,
+ 		func++;
+ 
+ 		/* Look to remove this hash */
+-		list_for_each_entry_safe(ftrace_mod, n, head, list) {
++		list_for_each_entry_mutable(ftrace_mod, head, list) {
+ 			if (strcmp(ftrace_mod->module, module) != 0)
+ 				continue;
+ 
+@@ -5124,7 +5120,7 @@ static int cache_mod(struct trace_array *tr,
+ static void process_mod_list(struct list_head *head, struct ftrace_ops *ops,
+ 			     char *mod, bool enable)
+ {
+-	struct ftrace_mod_load *ftrace_mod, *n;
++	struct ftrace_mod_load *ftrace_mod;
+ 	struct ftrace_hash **orig_hash, *new_hash;
+ 	LIST_HEAD(process_mods);
+ 	char *func;
+@@ -5143,7 +5139,7 @@ static void process_mod_list(struct list_head *head, struct ftrace_ops *ops,
+ 
+ 	mutex_lock(&ftrace_lock);
+ 
+-	list_for_each_entry_safe(ftrace_mod, n, head, list) {
++	list_for_each_entry_mutable(ftrace_mod, head, list) {
+ 
+ 		if (strcmp(ftrace_mod->module, mod) != 0)
+ 			continue;
+@@ -5165,7 +5161,7 @@ static void process_mod_list(struct list_head *head, struct ftrace_ops *ops,
+ 
+ 	mutex_unlock(&ftrace_lock);
+ 
+-	list_for_each_entry_safe(ftrace_mod, n, &process_mods, list) {
++	list_for_each_entry_mutable(ftrace_mod, &process_mods, list) {
+ 
+ 		func = ftrace_mod->func;
+ 
+@@ -5616,7 +5612,6 @@ unregister_ftrace_function_probe_func(char *glob, struct trace_array *tr,
+ 	struct ftrace_hash **orig_hash;
+ 	struct ftrace_hash *old_hash;
+ 	struct ftrace_hash *hash = NULL;
+-	struct hlist_node *tmp;
+ 	struct hlist_head hhd;
+ 	char str[KSYM_SYMBOL_LEN];
+ 	int count = 0;
+@@ -5677,7 +5672,7 @@ unregister_ftrace_function_probe_func(char *glob, struct trace_array *tr,
+ 
+ 	size = 1 << hash->size_bits;
+ 	for (i = 0; i < size; i++) {
+-		hlist_for_each_entry_safe(entry, tmp, &hash->buckets[i], hlist) {
++		hlist_for_each_entry_mutable(entry, &hash->buckets[i], hlist) {
+ 
+ 			if (func_g.search) {
+ 				kallsyms_lookup(entry->ip, NULL, NULL,
+@@ -5715,7 +5710,7 @@ unregister_ftrace_function_probe_func(char *glob, struct trace_array *tr,
+ 				       &old_hash_ops);
+ 	synchronize_rcu();
+ 
+-	hlist_for_each_entry_safe(entry, tmp, &hhd, hlist) {
++	hlist_for_each_entry_mutable(entry, &hhd, hlist) {
+ 		hlist_del(&entry->hlist);
+ 		if (probe_ops->free)
+ 			probe_ops->free(probe_ops, tr, entry->ip, probe->data);
+@@ -5738,9 +5733,9 @@ unregister_ftrace_function_probe_func(char *glob, struct trace_array *tr,
+ 
+ void clear_ftrace_function_probes(struct trace_array *tr)
+ {
+-	struct ftrace_func_probe *probe, *n;
++	struct ftrace_func_probe *probe;
+ 
+-	list_for_each_entry_safe(probe, n, &tr->func_probes, list)
++	list_for_each_entry_mutable(probe, &tr->func_probes, list)
+ 		unregister_ftrace_function_probe_func(NULL, tr, probe->probe_ops);
+ }
+ 
+@@ -5771,11 +5766,11 @@ __init int register_ftrace_command(struct ftrace_func_command *cmd)
+  */
+ __init int unregister_ftrace_command(struct ftrace_func_command *cmd)
+ {
+-	struct ftrace_func_command *p, *n;
++	struct ftrace_func_command *p;
+ 
+ 	guard(mutex)(&ftrace_cmd_mutex);
+ 
+-	list_for_each_entry_safe(p, n, &ftrace_commands, list) {
++	list_for_each_entry_mutable(p, &ftrace_commands, list) {
+ 		if (strcmp(cmd->name, p->name) == 0) {
+ 			list_del_init(&p->list);
+ 			return 0;
+@@ -7876,10 +7871,9 @@ static void ftrace_free_mod_map(struct rcu_head *rcu)
+ {
+ 	struct ftrace_mod_map *mod_map = container_of(rcu, struct ftrace_mod_map, rcu);
+ 	struct ftrace_mod_func *mod_func;
+-	struct ftrace_mod_func *n;
+ 
+ 	/* All the contents of mod_map are now not visible to readers */
+-	list_for_each_entry_safe(mod_func, n, &mod_map->funcs, list) {
++	list_for_each_entry_mutable(mod_func, &mod_map->funcs, list) {
+ 		kfree(mod_func->name);
+ 		list_del(&mod_func->list);
+ 		kfree(mod_func);
+@@ -7891,7 +7885,6 @@ static void ftrace_free_mod_map(struct rcu_head *rcu)
+ void ftrace_release_mod(struct module *mod)
+ {
+ 	struct ftrace_mod_map *mod_map;
+-	struct ftrace_mod_map *n;
+ 	struct dyn_ftrace *rec;
+ 	struct ftrace_page **last_pg;
+ 	struct ftrace_page *tmp_page = NULL;
+@@ -7903,7 +7896,7 @@ void ftrace_release_mod(struct module *mod)
+ 	 * To avoid the UAF problem after the module is unloaded, the
+ 	 * 'mod_map' resource needs to be released unconditionally.
+ 	 */
+-	list_for_each_entry_safe(mod_map, n, &ftrace_mod_maps, list) {
++	list_for_each_entry_mutable(mod_map, &ftrace_mod_maps, list) {
+ 		if (mod_map->mod == mod) {
+ 			list_del_rcu(&mod_map->list);
+ 			call_rcu(&mod_map->rcu, ftrace_free_mod_map);
+@@ -8290,7 +8283,7 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
+ 	struct dyn_ftrace *rec;
+ 	struct dyn_ftrace key;
+ 	struct ftrace_mod_map *mod_map = NULL;
+-	struct ftrace_init_func *func, *func_next;
++	struct ftrace_init_func *func;
+ 	LIST_HEAD(clear_hash);
+ 
+ 	key.ip = start;
+@@ -8341,7 +8334,7 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
+ 	}
+ 	mutex_unlock(&ftrace_lock);
+ 
+-	list_for_each_entry_safe(func, func_next, &clear_hash, list) {
++	list_for_each_entry_mutable(func, &clear_hash, list) {
+ 		clear_func_from_hashes(func);
+ 		kfree(func);
+ 	}
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 56a328e94395..24b2deb1f7a6 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -2362,7 +2362,7 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+ {
+ 	struct trace_buffer *buffer = cpu_buffer->buffer;
+ 	struct ring_buffer_cpu_meta *meta = NULL;
+-	struct buffer_page *bpage, *tmp;
++	struct buffer_page *bpage;
+ 	bool user_thread = current->mm != NULL;
+ 	struct ring_buffer_desc *desc = NULL;
+ 	long i;
+@@ -2450,7 +2450,7 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+ 	return 0;
+ 
+ free_pages:
+-	list_for_each_entry_safe(bpage, tmp, pages, list) {
++	list_for_each_entry_mutable(bpage, pages, list) {
+ 		list_del_init(&bpage->list);
+ 		free_buffer_page(bpage);
+ 	}
+@@ -2609,7 +2609,7 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+ 	struct list_head *head = cpu_buffer->pages;
+-	struct buffer_page *bpage, *tmp;
++	struct buffer_page *bpage;
+ 
+ 	irq_work_sync(&cpu_buffer->irq_work.work);
+ 
+@@ -2621,7 +2621,7 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
+ 	if (head) {
+ 		rb_head_page_deactivate(cpu_buffer);
+ 
+-		list_for_each_entry_safe(bpage, tmp, head, list) {
++		list_for_each_entry_mutable(bpage, head, list) {
+ 			list_del_init(&bpage->list);
+ 			free_buffer_page(bpage);
+ 		}
+@@ -3163,9 +3163,9 @@ rb_insert_pages(struct ring_buffer_per_cpu *cpu_buffer)
+ 
+ 	/* free pages if they weren't inserted */
+ 	if (!success) {
+-		struct buffer_page *bpage, *tmp;
+-		list_for_each_entry_safe(bpage, tmp, &cpu_buffer->new_pages,
+-					 list) {
++		struct buffer_page *bpage;
++
++		list_for_each_entry_mutable(bpage, &cpu_buffer->new_pages, list) {
+ 			list_del_init(&bpage->list);
+ 			free_buffer_page(bpage);
+ 		}
+@@ -3395,7 +3395,7 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+ 
+  out_err:
+ 	for_each_buffer_cpu(buffer, cpu) {
+-		struct buffer_page *bpage, *tmp;
++		struct buffer_page *bpage;
+ 
+ 		cpu_buffer = buffer->buffers[cpu];
+ 		cpu_buffer->nr_pages_to_update = 0;
+@@ -3403,8 +3403,7 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+ 		if (list_empty(&cpu_buffer->new_pages))
+ 			continue;
+ 
+-		list_for_each_entry_safe(bpage, tmp, &cpu_buffer->new_pages,
+-					list) {
++		list_for_each_entry_mutable(bpage, &cpu_buffer->new_pages, list) {
+ 			list_del_init(&bpage->list);
+ 			free_buffer_page(bpage);
+ 
+@@ -7316,7 +7315,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_subbuf_order_get);
+ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+-	struct buffer_page *bpage, *tmp;
++	struct buffer_page *bpage;
+ 	int old_order, old_size;
+ 	int nr_pages;
+ 	int psize;
+@@ -7436,7 +7435,7 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+ 		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ 
+ 		/* Free old sub buffers */
+-		list_for_each_entry_safe(bpage, tmp, &old_pages, list) {
++		list_for_each_entry_mutable(bpage, &old_pages, list) {
+ 			list_del_init(&bpage->list);
+ 			free_buffer_page(bpage);
+ 		}
+@@ -7461,7 +7460,7 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+ 		if (!cpu_buffer->nr_pages_to_update)
+ 			continue;
+ 
+-		list_for_each_entry_safe(bpage, tmp, &cpu_buffer->new_pages, list) {
++		list_for_each_entry_mutable(bpage, &cpu_buffer->new_pages, list) {
+ 			list_del_init(&bpage->list);
+ 			free_buffer_page(bpage);
+ 		}
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 1146b83b711a..f1049850e986 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1380,7 +1380,7 @@ static int do_run_tracer_selftest(struct tracer *type)
+ 
+ static __init int init_trace_selftests(void)
+ {
+-	struct trace_selftests *p, *n;
++	struct trace_selftests *p;
+ 	struct tracer *t, **last;
+ 	int ret;
+ 
+@@ -1394,7 +1394,7 @@ static __init int init_trace_selftests(void)
+ 	pr_info("Running postponed tracer tests:\n");
+ 
+ 	tracing_selftest_running = true;
+-	list_for_each_entry_safe(p, n, &postponed_selftests, list) {
++	list_for_each_entry_mutable(p, &postponed_selftests, list) {
+ 		/* This loop can take minutes when sanitizers are enabled, so
+ 		 * lets make sure we allow RCU processing.
+ 		 */
+@@ -1434,11 +1434,11 @@ static void __init apply_trace_boot_options(void);
+ 
+ static void free_tracers(struct trace_array *tr)
+ {
+-	struct tracers *t, *n;
++	struct tracers *t;
+ 
+ 	lockdep_assert_held(&trace_types_lock);
+ 
+-	list_for_each_entry_safe(t, n, &tr->tracers, list) {
++	list_for_each_entry_mutable(t, &tr->tracers, list) {
+ 		list_del(&t->list);
+ 		kfree(t->flags);
+ 		kfree(t);
+@@ -6906,11 +6906,11 @@ void tracing_log_err(struct trace_array *tr,
+ 
+ static void clear_tracing_err_log(struct trace_array *tr)
+ {
+-	struct tracing_log_err *err, *next;
++	struct tracing_log_err *err;
+ 
+ 	guard(mutex)(&tracing_err_log_lock);
+ 
+-	list_for_each_entry_safe(err, next, &tr->err_log, list) {
++	list_for_each_entry_mutable(err, &tr->err_log, list) {
+ 		list_del(&err->list);
+ 		free_tracing_log_err(err);
+ 	}
+diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
+index c4dfbc293bae..9e076106bee7 100644
+--- a/kernel/trace/trace_dynevent.c
++++ b/kernel/trace/trace_dynevent.c
+@@ -100,7 +100,7 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
+ 		return -EINVAL;
+ 
+ 	mutex_lock(&event_mutex);
+-	for_each_dyn_event_safe(pos, n) {
++	for_each_dyn_event_safe(pos) {
+ 		if (type && type != pos->ops)
+ 			continue;
+ 		if (!pos->ops->match(system, event,
+@@ -207,7 +207,7 @@ static const struct seq_operations dyn_event_seq_op = {
+  */
+ int dyn_events_release_all(struct dyn_event_operations *type)
+ {
+-	struct dyn_event *ev, *tmp;
++	struct dyn_event *ev;
+ 	int ret = 0;
+ 
+ 	mutex_lock(&event_mutex);
+@@ -219,7 +219,7 @@ int dyn_events_release_all(struct dyn_event_operations *type)
+ 			goto out;
+ 		}
+ 	}
+-	for_each_dyn_event_safe(ev, tmp) {
++	for_each_dyn_event_safe(ev) {
+ 		if (type && ev->ops != type)
+ 			continue;
+ 		ret = ev->ops->free(ev);
+diff --git a/kernel/trace/trace_dynevent.h b/kernel/trace/trace_dynevent.h
+index beee3f8d7544..a4dc0812284f 100644
+--- a/kernel/trace/trace_dynevent.h
++++ b/kernel/trace/trace_dynevent.h
+@@ -115,10 +115,9 @@ int dyn_event_create(const char *raw_command, struct dyn_event_operations *type)
+ /*
+  * for_each_dyn_event	-	iterate over the dyn_event list safely
+  * @pos:	the struct dyn_event * to use as a loop cursor
+- * @n:		the struct dyn_event * to use as temporary storage
+  */
+-#define for_each_dyn_event_safe(pos, n)	\
+-	list_for_each_entry_safe(pos, n, &dyn_event_list, list)
++#define for_each_dyn_event_safe(pos)	\
++	list_for_each_entry_mutable(pos, &dyn_event_list, list)
+ 
+ extern void dynevent_cmd_init(struct dynevent_cmd *cmd, char *buf, int maxlen,
+ 			      enum dynevent_type type,
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index c46e623e7e0d..a34fb3e688d5 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -75,8 +75,7 @@ static int system_refcount_dec(struct event_subsystem *system)
+ 
+ #define do_for_each_event_file_safe(tr, file)			\
+ 	list_for_each_entry(tr, &ftrace_trace_arrays, list) {	\
+-		struct trace_event_file *___n;				\
+-		list_for_each_entry_safe(file, ___n, &tr->events, list)
++		list_for_each_entry_mutable(file, &tr->events, list)
+ 
+ #define while_for_each_event_file()		\
+ 	}
+@@ -219,11 +218,11 @@ static int trace_define_common_fields(void)
+ 
+ static void trace_destroy_fields(struct trace_event_call *call)
+ {
+-	struct ftrace_event_field *field, *next;
++	struct ftrace_event_field *field;
+ 	struct list_head *head;
+ 
+ 	head = trace_get_fields(call);
+-	list_for_each_entry_safe(field, next, head, link) {
++	list_for_each_entry_mutable(field, head, link) {
+ 		list_del(&field->link);
+ 		kmem_cache_free(field_cachep, field);
+ 	}
+@@ -928,9 +927,9 @@ static void free_event_mod(struct event_mod_load *event_mod)
+ 
+ static void clear_mod_events(struct trace_array *tr)
+ {
+-	struct event_mod_load *event_mod, *n;
++	struct event_mod_load *event_mod;
+ 
+-	list_for_each_entry_safe(event_mod, n, &tr->mod_events, list) {
++	list_for_each_entry_mutable(event_mod, &tr->mod_events, list) {
+ 		free_event_mod(event_mod);
+ 	}
+ }
+@@ -938,10 +937,10 @@ static void clear_mod_events(struct trace_array *tr)
+ static int remove_cache_mod(struct trace_array *tr, const char *mod,
+ 			    const char *match, const char *system, const char *event)
+ {
+-	struct event_mod_load *event_mod, *n;
++	struct event_mod_load *event_mod;
+ 	int ret = -EINVAL;
+ 
+-	list_for_each_entry_safe(event_mod, n, &tr->mod_events, list) {
++	list_for_each_entry_mutable(event_mod, &tr->mod_events, list) {
+ 		if (strcmp(event_mod->module, mod) != 0)
+ 			continue;
+ 
+@@ -3557,7 +3556,7 @@ static void update_event_fields(struct trace_event_call *call,
+ /* Update all events for replacing eval and sanitizing */
+ void trace_event_update_all(struct trace_eval_map **map, int len)
+ {
+-	struct trace_event_call *call, *p;
++	struct trace_event_call *call;
+ 	const char *last_system = NULL;
+ 	bool first = false;
+ 	bool updated;
+@@ -3565,7 +3564,7 @@ void trace_event_update_all(struct trace_eval_map **map, int len)
+ 	int i;
+ 
+ 	down_write(&trace_event_sem);
+-	list_for_each_entry_safe(call, p, &ftrace_events, list) {
++	list_for_each_entry_mutable(call, &ftrace_events, list) {
+ 		/* events are usually grouped together with systems */
+ 		if (!last_system || call->class->system != last_system) {
+ 			first = true;
+@@ -3892,9 +3891,9 @@ EXPORT_SYMBOL_GPL(trace_remove_event_call);
+ #ifdef CONFIG_MODULES
+ static void update_mod_cache(struct trace_array *tr, struct module *mod)
+ {
+-	struct event_mod_load *event_mod, *n;
++	struct event_mod_load *event_mod;
+ 
+-	list_for_each_entry_safe(event_mod, n, &tr->mod_events, list) {
++	list_for_each_entry_mutable(event_mod, &tr->mod_events, list) {
+ 		if (strcmp(event_mod->module, mod->name) != 0)
+ 			continue;
+ 
+@@ -3940,18 +3939,18 @@ static void trace_module_add_events(struct module *mod)
+ 
+ static void trace_module_remove_events(struct module *mod)
+ {
+-	struct trace_event_call *call, *p;
+-	struct module_string *modstr, *m;
++	struct trace_event_call *call;
++	struct module_string *modstr;
+ 
+ 	down_write(&trace_event_sem);
+-	list_for_each_entry_safe(call, p, &ftrace_events, list) {
++	list_for_each_entry_mutable(call, &ftrace_events, list) {
+ 		if ((call->flags & TRACE_EVENT_FL_DYNAMIC) || !call->module)
+ 			continue;
+ 		if (call->module == mod)
+ 			__trace_remove_event_call(call);
+ 	}
+ 	/* Check for any strings allocated for this module */
+-	list_for_each_entry_safe(modstr, m, &module_strings, next) {
++	list_for_each_entry_mutable(modstr, &module_strings, next) {
+ 		if (modstr->module != mod)
+ 			continue;
+ 		list_del(&modstr->next);
+@@ -4483,9 +4482,9 @@ void __trace_early_add_events(struct trace_array *tr)
+ static void
+ __trace_remove_event_dirs(struct trace_array *tr)
+ {
+-	struct trace_event_file *file, *next;
++	struct trace_event_file *file;
+ 
+-	list_for_each_entry_safe(file, next, &tr->events, list)
++	list_for_each_entry_mutable(file, &tr->events, list)
+ 		remove_event_file_dir(file);
+ }
+ 
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 609325f57942..d82128084a87 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -1352,9 +1352,9 @@ struct filter_head {
+ 
+ static void free_filter_list(struct filter_head *filter_list)
+ {
+-	struct filter_list *filter_item, *tmp;
++	struct filter_list *filter_item;
+ 
+-	list_for_each_entry_safe(filter_item, tmp, &filter_list->list, list) {
++	list_for_each_entry_mutable(filter_item, &filter_list->list, list) {
+ 		__free_filter(filter_item->filter);
+ 		list_del(&filter_item->list);
+ 		kfree(filter_item);
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 82ce492ab268..ff6016acab20 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -6765,7 +6765,7 @@ static bool hist_file_check_refs(struct trace_event_file *file)
+ 
+ static void hist_unreg_all(struct trace_event_file *file)
+ {
+-	struct event_trigger_data *test, *n;
++	struct event_trigger_data *test;
+ 	struct hist_trigger_data *hist_data;
+ 	struct synth_event *se;
+ 	const char *se_name;
+@@ -6775,7 +6775,7 @@ static void hist_unreg_all(struct trace_event_file *file)
+ 	if (hist_file_check_refs(file))
+ 		return;
+ 
+-	list_for_each_entry_safe(test, n, &file->triggers, list) {
++	list_for_each_entry_mutable(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+ 			hist_data = test->private_data;
+ 			list_del_rcu(&test->list);
+@@ -7002,9 +7002,9 @@ hist_enable_trigger(struct event_trigger_data *data,
+ 
+ static void hist_enable_unreg_all(struct trace_event_file *file)
+ {
+-	struct event_trigger_data *test, *n;
++	struct event_trigger_data *test;
+ 
+-	list_for_each_entry_safe(test, n, &file->triggers, list) {
++	list_for_each_entry_mutable(test, &file->triggers, list) {
+ 		if (test->cmd_ops->trigger_type == ETT_HIST_ENABLE) {
+ 			list_del_rcu(&test->list);
+ 			update_cond_flag(file);
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index 655db2e82513..8654cd83f64d 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -40,7 +40,7 @@ static void trigger_create_kthread_locked(void)
+ 
+ static void trigger_data_free_queued_locked(void)
+ {
+-	struct event_trigger_data *data, *tmp;
++	struct event_trigger_data *data;
+ 	struct llist_node *llnodes;
+ 
+ 	lockdep_assert_held(&trigger_data_kthread_mutex);
+@@ -51,14 +51,14 @@ static void trigger_data_free_queued_locked(void)
+ 
+ 	tracepoint_synchronize_unregister();
+ 
+-	llist_for_each_entry_safe(data, tmp, llnodes, llist)
++	llist_for_each_entry_mutable(data, llnodes, llist)
+ 		kfree(data);
+ }
+ 
+ /* Bulk garbage collection of event_trigger_data elements */
+ static int trigger_kthread_fn(void *ignore)
+ {
+-	struct event_trigger_data *data, *tmp;
++	struct event_trigger_data *data;
+ 	struct llist_node *llnodes;
+ 
+ 	/* Once this task starts, it lives forever */
+@@ -74,7 +74,7 @@ static int trigger_kthread_fn(void *ignore)
+ 		/* make sure current triggers exit before free */
+ 		tracepoint_synchronize_unregister();
+ 
+-		llist_for_each_entry_safe(data, tmp, llnodes, llist)
++		llist_for_each_entry_mutable(data, llnodes, llist)
+ 			kfree(data);
+ 	}
+ 
+@@ -477,11 +477,11 @@ __init int register_event_command(struct event_command *cmd)
+  */
+ __init int unregister_event_command(struct event_command *cmd)
+ {
+-	struct event_command *p, *n;
++	struct event_command *p;
+ 
+ 	guard(mutex)(&trigger_cmd_mutex);
+ 
+-	list_for_each_entry_safe(p, n, &trigger_commands, list) {
++	list_for_each_entry_mutable(p, &trigger_commands, list) {
+ 		if (strcmp(cmd->name, p->name) == 0) {
+ 			list_del_init(&p->list);
+ 			return 0;
+@@ -632,8 +632,9 @@ clear_event_triggers(struct trace_array *tr)
+ 	struct trace_event_file *file;
+ 
+ 	list_for_each_entry(file, &tr->events, list) {
+-		struct event_trigger_data *data, *n;
+-		list_for_each_entry_safe(data, n, &file->triggers, list) {
++		struct event_trigger_data *data;
++
++		list_for_each_entry_mutable(data, &file->triggers, list) {
+ 			trace_event_trigger_enable_disable(file, 0);
+ 			list_del_rcu(&data->list);
+ 			if (data->cmd_ops->free)
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index c4ba484f7b38..090d645eebf0 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -761,9 +761,9 @@ static struct user_event_mm *current_user_event_mm(void)
+ 
+ static void user_event_mm_destroy(struct user_event_mm *mm)
+ {
+-	struct user_event_enabler *enabler, *next;
++	struct user_event_enabler *enabler;
+ 
+-	list_for_each_entry_safe(enabler, next, &mm->enablers, mm_enablers_link)
++	list_for_each_entry_mutable(enabler, &mm->enablers, mm_enablers_link)
+ 		user_event_enabler_destroy(enabler, false);
+ 
+ 	mmdrop(mm->mm);
+@@ -1085,10 +1085,10 @@ static int user_field_size(const char *type)
+ 
+ static void user_event_destroy_validators(struct user_event *user)
+ {
+-	struct user_event_validator *validator, *next;
++	struct user_event_validator *validator;
+ 	struct list_head *head = &user->validators;
+ 
+-	list_for_each_entry_safe(validator, next, head, user_event_link) {
++	list_for_each_entry_mutable(validator, head, user_event_link) {
+ 		list_del(&validator->user_event_link);
+ 		kfree(validator);
+ 	}
+@@ -1096,10 +1096,10 @@ static void user_event_destroy_validators(struct user_event *user)
+ 
+ static void user_event_destroy_fields(struct user_event *user)
+ {
+-	struct ftrace_event_field *field, *next;
++	struct ftrace_event_field *field;
+ 	struct list_head *head = &user->fields;
+ 
+-	list_for_each_entry_safe(field, next, head, link) {
++	list_for_each_entry_mutable(field, head, link) {
+ 		list_del(&field->link);
+ 		kfree(field);
+ 	}
+@@ -2611,7 +2611,7 @@ static long user_events_ioctl_unreg(unsigned long uarg)
+ {
+ 	struct user_unreg __user *ureg = (struct user_unreg __user *)uarg;
+ 	struct user_event_mm *mm = current->user_event_mm;
+-	struct user_event_enabler *enabler, *next;
++	struct user_event_enabler *enabler;
+ 	struct user_unreg reg;
+ 	unsigned long flags;
+ 	long ret;
+@@ -2636,7 +2636,7 @@ static long user_events_ioctl_unreg(unsigned long uarg)
+ 	 */
+ 	mutex_lock(&event_mutex);
+ 
+-	list_for_each_entry_safe(enabler, next, &mm->enablers, mm_enablers_link) {
++	list_for_each_entry_mutable(enabler, &mm->enablers, mm_enablers_link) {
+ 		if (enabler->addr == reg.disable_addr &&
+ 		    ENABLE_BIT(enabler) == reg.disable_bit) {
+ 			set_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler));
+diff --git a/kernel/trace/trace_stat.c b/kernel/trace/trace_stat.c
+index 856ece13b7dc..3240b1ff7418 100644
+--- a/kernel/trace/trace_stat.c
++++ b/kernel/trace/trace_stat.c
+@@ -344,10 +344,10 @@ int register_stat_tracer(struct tracer_stat *trace)
+ 
+ void unregister_stat_tracer(struct tracer_stat *trace)
+ {
+-	struct stat_session *node, *tmp;
++	struct stat_session *node;
+ 
+ 	mutex_lock(&all_stat_sessions_mutex);
+-	list_for_each_entry_safe(node, tmp, &all_stat_sessions, session_list) {
++	list_for_each_entry_mutable(node, &all_stat_sessions, session_list) {
+ 		if (node->ts == trace) {
+ 			list_del(&node->session_list);
+ 			destroy_session(node);
+diff --git a/kernel/user-return-notifier.c b/kernel/user-return-notifier.c
+index 870ecd7c63ed..9f1dcd72b756 100644
+--- a/kernel/user-return-notifier.c
++++ b/kernel/user-return-notifier.c
+@@ -35,11 +35,10 @@ EXPORT_SYMBOL_GPL(user_return_notifier_unregister);
+ void fire_user_return_notifiers(void)
+ {
+ 	struct user_return_notifier *urn;
+-	struct hlist_node *tmp2;
+ 	struct hlist_head *head;
+ 
+ 	head = &get_cpu_var(return_notifier_list);
+-	hlist_for_each_entry_safe(urn, tmp2, head, link)
++	hlist_for_each_entry_mutable(urn, head, link)
+ 		urn->on_user_return(urn);
+ 	put_cpu_var(return_notifier_list);
+ }
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 78f25afb4a9d..8fbdf1664c38 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -1167,7 +1167,7 @@ static void move_linked_works(struct work_struct *work, struct list_head *head,
+ 	 * Linked worklist will always end before the end of the list,
+ 	 * use NULL for list head.
+ 	 */
+-	list_for_each_entry_safe_from(work, n, NULL, entry) {
++	list_for_each_entry_mutable_from(work, n, NULL, entry) {
+ 		list_move_tail(&work->entry, head);
+ 		if (!(*work_data_bits(work) & WORK_STRUCT_LINKED))
+ 			break;
+@@ -1193,7 +1193,7 @@ static void move_linked_works(struct work_struct *work, struct list_head *head,
+  *
+  * If @nextp is not NULL, it's updated to point to the next work of the last
+  * scheduled work. This allows assign_work() to be nested inside
+- * list_for_each_entry_safe().
++ * list_for_each_entry_mutable().
+  *
+  * Returns %true if @work was successfully assigned to @worker. %false if @work
+  * was punted to another worker already executing it.
+@@ -2912,9 +2912,9 @@ static void detach_dying_workers(struct list_head *cull_list)
+ 
+ static void reap_dying_workers(struct list_head *cull_list)
+ {
+-	struct worker *worker, *tmp;
++	struct worker *worker;
+ 
+-	list_for_each_entry_safe(worker, tmp, cull_list, entry) {
++	list_for_each_entry_mutable(worker, cull_list, entry) {
+ 		list_del_init(&worker->entry);
+ 		kthread_stop_put(worker->task);
+ 		kfree(worker);
+@@ -3550,7 +3550,7 @@ static bool assign_rescuer_work(struct pool_workqueue *pwq, struct worker *rescu
+ 		work = list_next_entry(cursor, entry);
+ 
+ 	/* find the next work item to rescue */
+-	list_for_each_entry_safe_from(work, n, &pool->worklist, entry) {
++	list_for_each_entry_mutable_from(work, n, &pool->worklist, entry) {
+ 		if (get_work_pwq(work) == pwq && assign_work(work, rescuer, &n)) {
+ 			pwq->stats[PWQ_STAT_RESCUED]++;
+ 			/* put the cursor for next search */
+@@ -4157,7 +4157,7 @@ void __flush_workqueue(struct workqueue_struct *wq)
+ 		struct wq_flusher *next, *tmp;
+ 
+ 		/* complete all the flushers sharing the current flush color */
+-		list_for_each_entry_safe(next, tmp, &wq->flusher_queue, list) {
++		list_for_each_entry_mutable(next, &wq->flusher_queue, list) {
+ 			if (next->flush_color != wq->flush_color)
+ 				break;
+ 			list_del_init(&next->list);
+@@ -7080,7 +7080,7 @@ static int workqueue_apply_unbound_cpumask(const cpumask_var_t unbound_cpumask)
+ 	LIST_HEAD(ctxs);
+ 	int ret = 0;
+ 	struct workqueue_struct *wq;
+-	struct apply_wqattrs_ctx *ctx, *n;
++	struct apply_wqattrs_ctx *ctx;
+ 
+ 	lockdep_assert_held(&wq_pool_mutex);
+ 
+@@ -7097,7 +7097,7 @@ static int workqueue_apply_unbound_cpumask(const cpumask_var_t unbound_cpumask)
+ 		list_add_tail(&ctx->list, &ctxs);
+ 	}
+ 
+-	list_for_each_entry_safe(ctx, n, &ctxs, list) {
++	list_for_each_entry_mutable(ctx, &ctxs, list) {
+ 		if (!ret)
+ 			apply_wqattrs_commit(ctx);
+ 		apply_wqattrs_cleanup(ctx);
 -- 
-2.47.3
+2.43.0
 
 
