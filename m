@@ -4,103 +4,145 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C73E1CDB46F
-	for <kexec@archiver.kernel.org>; Mon, 22 Jun 2026 04:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 36E76CDB46B
+	for <kexec@archiver.kernel.org>; Mon, 22 Jun 2026 05:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=vFaoYZTJfRDH9hDuVHVBgZkR1flChQcp5jR5STw0K2M=; b=c6meiuXAKPwtSxJIhnYQVXnEGs
-	mFcdLuWuBG2U1xM3+sWOOTidImQxsHvtm20aXNtLQqlxWyr+kqW4urPdtz75EpqmgfIHDD4zApv0Q
-	zlqSM0kQfqUTVP5CyzGgeZu6Pw+zeZ7z7rq7M+9OFzwApJ+0MyiGZGyNuOF/UcUwMZ3Ll/vBExWfR
-	eVTHVhlC53ca3mPnmt0xITpWdbneGYfqN0llhzuLS8n6l3ChGc/V5OT1E8PemtBgQNU+cLT+4yNBG
-	2n6RP3a6LiVEDVtVklU6QUEZ9EZEtC4of1IdZwGc6+J7xr8L8B27ZgZs4BrRG66d6FMOqRTx3Gsoc
-	7Xw//DTg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:
+	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=0SsI6VZd6FOpEeADCyFceIDCGKeKUM4g7+C0xQhOsSc=; b=kkQgf0Gxdpbd4ckn42lEiZZHp3
+	BzKH8x/vz/zj17PxRGZp7RQYQ3qf7wo7gdt6pOK+XJSLduiRul1CrRsSYwGIm/woQCB0YyzXif5UT
+	XRBAwhSmWrbxNhBDEAFlf//H6rhJgnxl0K7zfPqfHNliUHorrtOUFhmttYnybu5mlydESwa7VTJMt
+	/98zLRb5Ie2g50BomsjRA6lGEjjIhNRE1EhZ+XI5CR0EAC+vJZhrUV0y1j7tqK4obr5Y4RwZnuo+u
+	9mkMl6CT/VZ1w8WqcH5ECSm9qzXQRF/2/7II6+tzijDqfGTJdkCSV6kGnfZy3ULQPIcER/bPmNNvE
+	6PIb4fyA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wbVwF-00000004ODL-2vkS;
-	Mon, 22 Jun 2026 04:07:11 +0000
-Received: from out-173.mta0.migadu.com ([91.218.175.173])
+	id 1wbX3k-00000004RAS-0SDk;
+	Mon, 22 Jun 2026 05:19:00 +0000
+Received: from mail-japaneastazon11010001.outbound.protection.outlook.com ([52.101.229.1] helo=TY3P286CU002.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wbVwB-00000004OBt-2Pl6
+	id 1wbX3g-00000004R9j-1nrc
 	for kexec@lists.infradead.org;
-	Mon, 22 Jun 2026 04:07:10 +0000
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782101224;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vFaoYZTJfRDH9hDuVHVBgZkR1flChQcp5jR5STw0K2M=;
-	b=RKNYTOPII31SLlFemAcWqWE/TeS/HQJl7crveXc7GdzZz5I+TjbXRbbkZaQSvN3TmVtVYT
-	nSSDvsZk7jNyt6B/E4YmD4cYyLjd5RE2oOf/Hiy1FZ2NcIRHyitOaBZNUaYo6dvHseOLCi
-	TzRgynUCXY7wguiC8GKfv0LXaYiHBGc=
-From: Kaitao Cheng <kaitao.cheng@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Tejun Heo <tj@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Paul Moore <paul@paul-moore.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: David Howells <dhowells@redhat.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Philipp Stanner <phasta@kernel.org>,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-ntfs-dev@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org,
-	io-uring@vger.kernel.org,
-	audit@vger.kernel.org,
-	bpf@vger.kernel.org,
-	netdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-perf-users@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	live-patching@vger.kernel.org,
-	linux-modules@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	rcu@vger.kernel.org,
-	sched-ext@lists.linux.dev,
-	linux-mm@kvack.org,
-	virtualization@lists.linux.dev,
-	damon@lists.linux.dev,
-	llvm@lists.linux.dev,
-	Kaitao Cheng <chengkaitao@kylinos.cn>
-Subject: [PATCH v3 2/7] llist: Add mutable iterator variants
-Date: Mon, 22 Jun 2026 12:05:32 +0800
-Message-ID: <20260622040533.29824-3-kaitao.cheng@linux.dev>
-In-Reply-To: <20260622040533.29824-1-kaitao.cheng@linux.dev>
-References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
+	Mon, 22 Jun 2026 05:18:58 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FLikxfWO904mV7dvVZx1K3+FF/SWPcMAVS4gBnbBtjZWFe3pdY/xdw5wwzJL6YY45lb+hX+bqw+vREOs/InNPDyggsLFHenDqXczMvwkhqFP4C9W6hd9sZiEqWv4K3X0ckHfvRO9BkN879eLe/TcJXouckRU1hRh8GT5s4XEUBmGavxlKa5IGqpMMUf4S5XsJPBClND3SdqQLyYcBOzoMaloLYP+5KQ/TuaiVQyxA7JiR4DPtSviwfKE3a5uEoGf1svqOVfo7IVMwWi7Pbv1bLTn6z5nnmJi+63wT2AB1vM4p1N5cEd4H8tz9R+8yujvmlOTeVCx4ZKH5KaJqh9WCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0SsI6VZd6FOpEeADCyFceIDCGKeKUM4g7+C0xQhOsSc=;
+ b=gDe07Ydt4MwW472E8OrUEAYkFrxclF5V5aXHtD9QCVPsZ/G/ho2ZyvNXge+fgROZEQBPLBj11289RpBuUeXOnlrzR54LzPwrf0f6vdjljnQnoyboQxcsErE71hw45zKunmXq6L2B/tiHu5iN1PNHwx/k88dSPf1ZrJs0gwcLKei0LmfMZ8NgUdxZDOOaUQMYLHebxMsJVGVJMHTW8IvQlLvoMvy4eMbYAuaz6DCEdxn1CbPlf5A2oJTO/MkV9SOtiJdt2fJ0VD/Jn2XSFMg/Cngsxc36oWUAC0X7o/Dg4kLCtXvUNorLjcyXfMvY2rWrflGcu/Y4vdt56YpiBUAwuw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
+ header.d=nec.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0SsI6VZd6FOpEeADCyFceIDCGKeKUM4g7+C0xQhOsSc=;
+ b=bOmW9w0WtaW68KrjsSltxLZuT1rNmfcrBtICLUqjWg5I2oSFpwjvRZ7H7RHbO/kYapQhfgjCGMjsTfOmr3gu4qbXnmAH5A5htAKehk4U1nn4ACsQqn9IMIqu3b1YGSnc2cfQ/QPzgWkwn7Yld4AblQFQF863RY8rIkZ3ULGBynITczk4IRy7SWcj7qB032FIDO43btGDrkv1FjriBbqg7MuNWWSgxb0ouLKwxnLdM1Hcgzj0eQgO/qCsy7ATUixo6fojijE00eI53HTViRHGmjkK+i+hukPlJ7UVet9c8Xuy47bw+KvxKO3yJPul9Ym6Sd3Hxrt0pJhhYcbFzbEYUQ==
+Received: from TY4PR01MB13462.jpnprd01.prod.outlook.com
+ (2603:1096:405:1d7::13) by TYRPR01MB16474.jpnprd01.prod.outlook.com
+ (2603:1096:405:2ee::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.19; Mon, 22 Jun
+ 2026 05:18:40 +0000
+Received: from TY4PR01MB13462.jpnprd01.prod.outlook.com
+ ([fe80::8dd0:19c7:2047:1820]) by TY4PR01MB13462.jpnprd01.prod.outlook.com
+ ([fe80::8dd0:19c7:2047:1820%6]) with mapi id 15.21.0139.011; Mon, 22 Jun 2026
+ 05:18:40 +0000
+From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
+	<k-hagio-ab@nec.com>
+To: Tao Liu <ltao@redhat.com>
+CC: =?utf-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0juOAgOecn+WFiSk=?=
+	<yamazaki-msmt@nec.com>, "kexec@lists.infradead.org"
+	<kexec@lists.infradead.org>, "stephen.s.brennan@oracle.com"
+	<stephen.s.brennan@oracle.com>, "kjlx@templeofstupid.com"
+	<kjlx@templeofstupid.com>
+Subject: Re: [PATCH v6][makedumpfile 02/10] Implement kernel kallsyms
+ resolving
+Thread-Topic: [PATCH v6][makedumpfile 02/10] Implement kernel kallsyms
+ resolving
+Thread-Index: AQHc/hkE7HzQWhD0REqk0i1Yn5AMU7ZD/FgAgAAGXYCABg4dgA==
+Date: Mon, 22 Jun 2026 05:18:40 +0000
+Message-ID: <5bea5724-44b1-4a59-b58f-876960357c37@nec.com>
+References: <20260617051834.95404-1-ltao@redhat.com>
+ <20260617051834.95404-3-ltao@redhat.com>
+ <30fe770e-286e-4272-bb7e-0e9ad01cecc5@nec.com>
+ <CAO7dBbWUpZDRhKLG7XB7qcMONo-GuwBmhTZxnax+cNdmRYtU8g@mail.gmail.com>
+In-Reply-To: <CAO7dBbWUpZDRhKLG7XB7qcMONo-GuwBmhTZxnax+cNdmRYtU8g@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nec.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY4PR01MB13462:EE_|TYRPR01MB16474:EE_
+x-ms-office365-filtering-correlation-id: a639f91b-c442-49f7-d75a-08ded01db8b1
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|23010399003|18002099003|22082099003|11063799006|4143699003|56012099006|38070700021;
+x-microsoft-antispam-message-info: sw0TiUUYty/qD154aEg7j5E/64mhGMbaw2JSMSQvYDhV6LtwwHevOlCx3cqMTDnftVsfphrrp1aDDU1/0Pl+yD8vPUioTVgXDLW9Vp3hrren4Is22IsOl5OnJBtn7M+vgzDM1V499chO+Y6ZIuOWozEGklySmgCZDDXqHcxsSoWjByItpxbyhm3M39xod69OhALxJ+wSI1f8HGcqX+k7UKCeBqphqAapjcPTW+wY3RDg7MIt9/0ndOK5yAPZwAcDD4SXBifNIAt9efI0tmssUbRrpkdENAg5/DOe4x9+6zi8s0ggGWeH6pSjeuPDO/rh6MQ4kJ0iRV5svQRTj1CGFQ1tyLqLI3tGOVZUuas9NCLdPLEmp0QbflKkGxsmcEGE7A8CBX3GY/um/ntjszzUfseF2xi1wnYf1UT0kb6LfIyVXP00dKt6GyCRTZmWBX93bhZBXxv1GxIdRiveqwQ6BrjCc2Gt4QOgOJM+/+N+3rvVexE7jrlUQ9D7FUgcL2245HWRoU2KYAH7B241TuIgPIB5XmAsZIe2nLbnFis/3tbiBTspS81D2uydlT0xGW7nOIXVougqgA+Lc1rLN7OJWyHhtOOvPBiWZJovmtntEfmwUgn6ZqKCik3Qh8cYBdL1z6KFGfK+rDi8PRjvzGqBvS9sap75JREZIlwrDNbAieeggz04x2TZN7WkttVJI+4/YZMllG9Xz5gCF83D3+ziS2L4JMJ5vPP0yT23uevTw5g=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY4PR01MB13462.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(23010399003)(18002099003)(22082099003)(11063799006)(4143699003)(56012099006)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ZzkyaFh5UXcrZmFrbjNqbUFSN2Rva0tCNjFncGhJR0VUUFpSUXNuZVE4bWoy?=
+ =?utf-8?B?dlRHcW5XbmVnUmR2L1RMQ0VxTjlOOTJtLzFOVnVCWE51S2hHdEdDdk5HZG1h?=
+ =?utf-8?B?WTZHZXdsTWJwUUFKK3FEV1ZkdFpLb1FvMFdBZnhGVERmZVI1U3NrVjk5eGl2?=
+ =?utf-8?B?S1ZNc1lGK0RNWHh3dUVhVkpsNFJLT3crWkQrelloeURNeEFXN0ZZSW1SK3Zz?=
+ =?utf-8?B?L3FWMU4yQStNajd6K0xUQ2VuK3BkYTNad2t2ZmRqalVoYTdvck1Cc3FsUjNk?=
+ =?utf-8?B?Q201WUxMQVpDMmUrMEsvZTd5UGhFemNUZVJUSWk3TjVXb2xibmxzdnA2NGNv?=
+ =?utf-8?B?dTQ5WE4vUVY3QmFkM1VpYThJQmRqc1Jad0cwVUEwUTlOYTNwVFVkVkpRK2Qy?=
+ =?utf-8?B?TFFBNUhZM28wMDdTOG0wYXc0SW9nQWkrY0NVcVhlbFIvWWJOcFFSL2todWdo?=
+ =?utf-8?B?UXZaeW83WFI5NTlFSGxrZXBCR2h2aVlFUTJEeHJIVUhWMTdGczBHdytTc0g2?=
+ =?utf-8?B?SlJhUVdjTkoxTy9ORWxhUlIvTmdnNGthdmRjSkl4blppOTRuWmRjL215Z0NV?=
+ =?utf-8?B?cHRvNSt5QUI3TWF6bHZnaDJWcnpsQUpiUTBFcjQ4WVFOTXVhbWJxVmFKdE9r?=
+ =?utf-8?B?N0VoWFZmWDRnNnRiUXV4Qi9rRk91UTFRNHhlTnEwUTdLRjN6NEhPNUhhQlVB?=
+ =?utf-8?B?MFRHZ21SMXBrYS9LYm03cUlrTEQzd0w2cDNWTHIvOWFsNUVONHp2Q1d0VjNQ?=
+ =?utf-8?B?SVFXdGZHZmhEa3kxY1c2RVFhOWduOUhzSWRjNUcrcFVkSjhrK2JHQk9NR2Zv?=
+ =?utf-8?B?MU1QQUpVazRqZnF4Z1hxbTdscTNVd3c5YnNqdU5VT1VhL3lTTXVBcWc3bGk0?=
+ =?utf-8?B?ak1TUEVMVEZORTIxUk9zNlpiNjFwN2FiOElJYUNzN21Ea3VJdjBhQXJnQkwy?=
+ =?utf-8?B?elo4TGM5dVdPU3c3TlF6d2x4L0hSMDBSajlvTlJENy8zTmtyOUJRTDZiSDhM?=
+ =?utf-8?B?ZjZ0YmI0YjBPdzNPMVNNUUZWUWFLckMxeU5iWGhUL3ZqUVU4cWhhZmFySGR4?=
+ =?utf-8?B?bUowbGJ2b2ticUc5bFZHb0tXcHRkMjF4OU9kM3Bpb3FQVWpOT1p5dmpyRXNp?=
+ =?utf-8?B?MkhWV1lRdHRUN1JyU2VFTlZBZzNBU2xOZGJ2UUh0Z0xxd1pjOTRLQWMzaDgw?=
+ =?utf-8?B?SGlSTkFPaXFmOE1OZ2JPNDBuL3dlS1VnRmJ4NStFMVZwQkxPbGZVakhOK0NV?=
+ =?utf-8?B?VXBXcDk0c1RRdmVZTDB5N2FiTXVmUk9nVmM3SU13dy9DREovbEhGTVNwV0Yr?=
+ =?utf-8?B?dnp2K0tLMmIxRmpOQmx3OUxKNnVaazE1Qmp5ajhMbG9EblY0cHR2dzUzUDBX?=
+ =?utf-8?B?YnduYXZVYWxqSWZvT1NSWHE2R2kraDFuTzN2RUxYSzRUWjFqV0lNMjc0aTlN?=
+ =?utf-8?B?RGdwV29pL1loRXRuMzRNQWltS08yZkdZRDl0S2hCaGJkUDVtSUJteG5mRXJH?=
+ =?utf-8?B?c0dTYTlXSzFldDVRSTRpMUpWNVM0cTlaL2RMZFdPaElROVJsNzE0WjlRMDRL?=
+ =?utf-8?B?cktHOVYvb1ZERm5UM0xFdHZhZTh4VytlbkpXdnFUS2lhcmJGbFh3T2puYkJz?=
+ =?utf-8?B?QXdWdDJkUll4RFFuUEZBemFSSVM3TUVocHRybXJreHkrSWFMUTVxa3dPTTNr?=
+ =?utf-8?B?RWo2WVcvWE9vS1F1QUx4M1hKcVB3QzVmbytBdnlVSnNsWUYvN3lsRWN2K2g1?=
+ =?utf-8?B?YWt0cnFNWDN0TnNTZ1M0WkpjQXhncExxb3dCQ2FOYVA4dW9UVmFrcFhtU1Vv?=
+ =?utf-8?B?bE5ZTFRxcEp3V3dVdE11RWpXdUpVemEvOVdqcmRvT1JTb2dKUnV5SDFhZm44?=
+ =?utf-8?B?Uks5cXVBUFRkMWtWYWtmU1ZXWnBlclBtVTlzNHVlV21UQ3A1UUtPQnpXdnF2?=
+ =?utf-8?B?aTFQNkFmOTczc0t4dU9HT3A4RjkzMWFtd3YrdE44SnVhTXlSVDVvSDBvTFRI?=
+ =?utf-8?B?WUVzcUVRN1cwdnJCUVhQeHp2bGxRd1ZPaVcrckJvc0RsdXBMS28rdEFsK04x?=
+ =?utf-8?B?bWtZNVBKNElMTEp4MnpIRDI5SHhPQ3BQTUVXNVdIUnQ3SklXNnNVcGhrVmVh?=
+ =?utf-8?B?TC8xbHNwWEJMQXo2NER0cGFaektyVkdpUUlkK0xCL216d05id2J1U2lBUGZ3?=
+ =?utf-8?B?SDdYbjBJVDFpRFg1L1VZbHBsSjRPY2VqVXo3SmcyVWdqeURKWktRaFJZRU1I?=
+ =?utf-8?B?SHhKQVVYMEtRbGx6dDAxKzkrbHN6WXE4dHRuak9rQ01OUzllTTgwdHFBbmJM?=
+ =?utf-8?B?WHRkSUdjbVNlWFZJWlBrVklDVDl0Rlh3bkwwazVZUDhmTXBzOUp4QT09?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F65439A1E212DC48A17CCCE3CE7EE81F@jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-OriginatorOrg: nec.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY4PR01MB13462.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a639f91b-c442-49f7-d75a-08ded01db8b1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2026 05:18:40.3946
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tZ/1X96nfBGR490hVRC9CcYbdKwBVPRqjnZX9zPBSB9qcIfYaCiNL6Auu7KpMAmAKMTfWW0Dlzm1sPZRWaI/Pg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYRPR01MB16474
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260621_210707_765019_B4E5735D 
-X-CRM114-Status: GOOD (  17.59  )
+X-CRM114-CacheID: sfid-20260621_221856_764333_8A32C83B 
+X-CRM114-Status: UNSURE (   8.41  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -115,153 +157,14 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Kaitao Cheng <chengkaitao@kylinos.cn>
-
-llist_for_each_safe() and llist_for_each_entry_safe() require callers to
-provide a temporary cursor even when the cursor is only needed by the
-iterator itself.  This makes call sites noisier than necessary for the
-common case where the loop body may remove the current entry but does
-not otherwise inspect the saved next pointer.
-
-Add llist_for_each_mutable() and llist_for_each_entry_mutable() variants
-that support both forms.  Callers may omit the temporary cursor and let
-the helper create an internal unique cursor, or keep passing an explicit
-cursor when the loop needs to inspect or reset it.
-
-Keep the existing safe helpers as compatibility wrappers so current users
-continue to build unchanged while new code can use the shorter mutable
-form.
-
-Signed-off-by: Kaitao Cheng <chengkaitao@kylinos.cn>
----
- include/linux/llist.h | 81 ++++++++++++++++++++++++++++++++++---------
- 1 file changed, 65 insertions(+), 16 deletions(-)
-
-diff --git a/include/linux/llist.h b/include/linux/llist.h
-index 8846b7709669..1c6f12411d5e 100644
---- a/include/linux/llist.h
-+++ b/include/linux/llist.h
-@@ -49,6 +49,7 @@
-  */
- 
- #include <linux/atomic.h>
-+#include <linux/args.h>
- #include <linux/container_of.h>
- #include <linux/stddef.h>
- #include <linux/types.h>
-@@ -143,12 +144,33 @@ static inline bool llist_on_list(const struct llist_node *node)
- #define llist_for_each(pos, node)			\
- 	for ((pos) = (node); pos; (pos) = (pos)->next)
- 
-+/*
-+ * llist_for_each_safe is an old interface, use llist_for_each_mutable instead.
-+ */
-+#define llist_for_each_safe(pos, n, node)			\
-+	for ((pos) = (node); (pos) && ((n) = (pos)->next, true); (pos) = (n))
-+
-+#define __llist_for_each_mutable_internal(pos, tmp, node)		\
-+	for (typeof(pos) tmp = ((pos) = (node)) ? (pos)->next : NULL;	\
-+	     (pos);							\
-+	     (pos) = tmp, tmp = (pos) ? (pos)->next : NULL)
-+
-+#define __llist_for_each_mutable1(pos, node)				\
-+	__llist_for_each_mutable_internal(pos, __UNIQUE_ID(next), node)
-+
-+#define __llist_for_each_mutable2(pos, next, node)			\
-+	llist_for_each_safe(pos, next, node)
-+
- /**
-- * llist_for_each_safe - iterate over some deleted entries of a lock-less list
-- *			 safe against removal of list entry
-+ * llist_for_each_mutable - iterate over some deleted entries of a lock-less list
-+ *			    safe against removal of list entry
-  * @pos:	the &struct llist_node to use as a loop cursor
-- * @n:		another &struct llist_node to use as temporary storage
-- * @node:	the first entry of deleted list entries
-+ * @...:	either (node) or (next, node)
-+ *
-+ * next:	another &struct llist_node to use as optional temporary storage.
-+ *		The temporary cursor is internal unless explicitly supplied by
-+ *		the caller.
-+ * node:	the first entry of deleted list entries
-  *
-  * In general, some entries of the lock-less list can be traversed
-  * safely only after being deleted from list, so start with an entry
-@@ -159,8 +181,9 @@ static inline bool llist_on_list(const struct llist_node *node)
-  * you want to traverse from the oldest to the newest, you must
-  * reverse the order by yourself before traversing.
-  */
--#define llist_for_each_safe(pos, n, node)			\
--	for ((pos) = (node); (pos) && ((n) = (pos)->next, true); (pos) = (n))
-+#define llist_for_each_mutable(pos, ...)				\
-+	CONCATENATE(__llist_for_each_mutable, COUNT_ARGS(__VA_ARGS__))	\
-+		(pos, __VA_ARGS__)
- 
- /**
-  * llist_for_each_entry - iterate over some deleted entries of lock-less list of given type
-@@ -182,13 +205,41 @@ static inline bool llist_on_list(const struct llist_node *node)
- 	     member_address_is_nonnull(pos, member);			\
- 	     (pos) = llist_entry((pos)->member.next, typeof(*(pos)), member))
- 
-+/*
-+ * llist_for_each_entry_safe is an old interface, use llist_for_each_entry_mutable instead.
-+ */
-+#define llist_for_each_entry_safe(pos, n, node, member)			       \
-+	for (pos = llist_entry((node), typeof(*pos), member);		       \
-+	     member_address_is_nonnull(pos, member) &&			       \
-+	        (n = llist_entry(pos->member.next, typeof(*n), member), true); \
-+	     pos = n)
-+
-+#define __llist_for_each_entry_mutable_internal(pos, tmp, node, member)	\
-+	for (typeof(pos) tmp = ((pos) = llist_entry((node), typeof(*pos), member), \
-+		member_address_is_nonnull(pos, member) ?			\
-+		llist_entry((pos)->member.next, typeof(*pos), member) : NULL);	\
-+	     member_address_is_nonnull(pos, member);				\
-+	     (pos) = tmp, tmp = member_address_is_nonnull(pos, member) ?	\
-+		llist_entry((pos)->member.next, typeof(*pos), member) : NULL)
-+
-+#define __llist_for_each_entry_mutable2(pos, node, member)			\
-+	__llist_for_each_entry_mutable_internal(pos, __UNIQUE_ID(next), node, member)
-+
-+#define __llist_for_each_entry_mutable3(pos, next, node, member)		\
-+	llist_for_each_entry_safe(pos, next, node, member)
-+
- /**
-- * llist_for_each_entry_safe - iterate over some deleted entries of lock-less list of given type
-- *			       safe against removal of list entry
-+ * llist_for_each_entry_mutable - iterate over some deleted entries of
-+ *				  lock-less list of given type safe against
-+ *				  removal of list entry
-  * @pos:	the type * to use as a loop cursor.
-- * @n:		another type * to use as temporary storage
-- * @node:	the first entry of deleted list entries.
-- * @member:	the name of the llist_node with the struct.
-+ * @...:	either (node, member) or (next, node, member)
-+ *
-+ * next:	another type * to use as optional temporary storage. The
-+ *		temporary cursor is internal unless explicitly supplied by the
-+ *		caller.
-+ * node:	the first entry of deleted list entries.
-+ * member:	the name of the llist_node with the struct.
-  *
-  * In general, some entries of the lock-less list can be traversed
-  * safely only after being removed from list, so start with an entry
-@@ -199,11 +250,9 @@ static inline bool llist_on_list(const struct llist_node *node)
-  * you want to traverse from the oldest to the newest, you must
-  * reverse the order by yourself before traversing.
-  */
--#define llist_for_each_entry_safe(pos, n, node, member)			       \
--	for (pos = llist_entry((node), typeof(*pos), member);		       \
--	     member_address_is_nonnull(pos, member) &&			       \
--	        (n = llist_entry(pos->member.next, typeof(*n), member), true); \
--	     pos = n)
-+#define llist_for_each_entry_mutable(pos, ...)				\
-+	CONCATENATE(__llist_for_each_entry_mutable,			\
-+		COUNT_ARGS(__VA_ARGS__))(pos, __VA_ARGS__)
- 
- /**
-  * llist_empty - tests whether a lock-less list is empty
--- 
-2.43.0
-
+T24gMjAyNi8wNi8xOCAxNzo1MCwgVGFvIExpdSB3cm90ZToNCj4gSGkgS2F6dSwNCj4gDQo+IFll
+cywgaXQgaXMgbmVlZGVkIGZvciByZWFsbG9jYXJyYXkoKSBpbiBrYWxsc3ltcy5jLiBGb3IgIm1h
+bg0KPiByZWFsbG9jYXJyYXkiIGdpdmVzOg0KPiANCj4gICAgICAgICByZWFsbG9jYXJyYXkoKToN
+Cj4gICAgICAgICAgICAgU2luY2UgZ2xpYmMgMi4yOToNCj4gICAgICAgICAgICAgICAgIF9ERUZB
+VUxUX1NPVVJDRQ0KPiAgICAgICAgICAgICBnbGliYyAyLjI4IGFuZCBlYXJsaWVyOg0KPiAgICAg
+ICAgICAgICAgICAgX0dOVV9TT1VSQ0UNCj4gDQo+IEZvciBnbGliYyA8PSAyLjI4LCB3ZSBuZWVk
+IHRvIHVzZSBfR05VX1NPVVJDRSBpbiBvcmRlciB0byB1c2UNCj4gcmVhbGxvY2FycmF5KCkuIEUu
+ZyBJIGNhbiBlbmNvdW50ZXIgdGhlIGNvbXBpbGluZyB3YXJuaW5nIGluIHJoZWw4DQo+IG9uY2Ug
+cmVtb3ZlZC4NCg0KVGhhbmtzIGZvciB0aGUgaW5mby4gc28gbGV0J3Mga2VlcCBpdC4NCg0KVGhh
+bmtzLA0KS2F6dQ==
 
