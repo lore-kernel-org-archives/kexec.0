@@ -4,79 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A3850CDB470
-	for <kexec@archiver.kernel.org>; Tue, 23 Jun 2026 10:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3F57FCD98F2
+	for <kexec@archiver.kernel.org>; Tue, 23 Jun 2026 11:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Duz8Zx+8AiYnCdBwNjKZl5RmXQ31zXqUNM7RLp7vFfQ=; b=quvWqFjIfSaam3pk8qS2dV5gN7
-	+KuGLsU7x6E6PnQ69EEj/B7yU6DAda/AbpDyK+DOTKTKRcTG5A7W7mkSVMzcUExFogDLKEvKfvlL+
-	Q5xykQzSmEFkn9gnFbe/tbtkLJHLGHrD0L4ygRUp9jfRqXCXH70Fe7qmnzPSQf1q/CxksFjotzHgB
-	0dXgXaimOpUT2Dr9gq7f1PsHO3W1kFdUgB8b7zSTHGh09G2fkZ6/6bptCEPaHBSNQJtdzI77hZ//j
-	OP8lML6BIoqr/ZWlrusxVyrxAq/qH5MaXTBTqQyIDFhvCNO+ixvpmRakNMSiULSQuLnD6hxqK+KXe
-	JPgccU0Q==;
+	bh=0GTqVg+rgasX/S0lzuuc6nnVfnMSvL9+pic5H7oW7Ww=; b=LBGzfi6m0WSDecOsWTJSSt5jUp
+	rJnyPLZLDnifjRCDDuLsgXC/5Iqm5z1zJxHLXeDA7dqnfMVpAjVaNfk3xI1SLRnkeo6cTUiRueuI7
+	XDqb9PEfA97RgJ1fQDRionwgqhsOcQfiN7DjbUIEuD/jq69iw5UkuM+eX4a9OgG4LYbXRK2oBk6mx
+	8oAIC8wcghi5VCtrUh7qpP54g5P1ODfSkGCiT2bnNaa0BPtCkFkUcy1TI4+N8h6mZnq7ar1j6tZkY
+	J+HU8AZUPDaoUadUPST3gqoIJPdlGV2TFQaOfMY/ye85yKdvNp/hne9kY7hrke5wWDEIIadbWdnbF
+	7JUPWn6g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wbylK-000000067Ec-3OTo;
-	Tue, 23 Jun 2026 10:53:50 +0000
-Received: from mail-ed1-x54a.google.com ([2a00:1450:4864:20::54a])
+	id 1wbz3E-000000069z9-0PJy;
+	Tue, 23 Jun 2026 11:12:20 +0000
+Received: from mail-ed1-x549.google.com ([2a00:1450:4864:20::549])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wbylI-000000067Db-2YBe
+	id 1wbz3B-000000069yH-25GA
 	for kexec@lists.infradead.org;
-	Tue, 23 Jun 2026 10:53:49 +0000
-Received: by mail-ed1-x54a.google.com with SMTP id 4fb4d7f45d1cf-695e7929975so5223456a12.0
-        for <kexec@lists.infradead.org>; Tue, 23 Jun 2026 03:53:47 -0700 (PDT)
+	Tue, 23 Jun 2026 11:12:18 +0000
+Received: by mail-ed1-x549.google.com with SMTP id 4fb4d7f45d1cf-695c6b2814cso5634601a12.1
+        for <kexec@lists.infradead.org>; Tue, 23 Jun 2026 04:12:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782212026; x=1782816826; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1782213135; x=1782817935; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Duz8Zx+8AiYnCdBwNjKZl5RmXQ31zXqUNM7RLp7vFfQ=;
-        b=VJFDO12DTqOU78+YjJDNLHAPwdwF0K/AwyYQ+zFuxHKLi7HlaCazJTAuBPNzcTa8ir
-         l7yHltwA+xE6nh/nVvKK6e0xlof60uvFQ0FNwFrdEQc/PbMN4JDbbUKlfi2l4A04jg45
-         zbuMYsapHHW3xCPyzCY3OOkC181N3OM5qkEsKzi4ttzxnvmK1wNZxRmq92eP5wrnythJ
-         lYkIoaLhtuWTtPYrQfkb2n8oe3YYCeFHFXma9O5J57K/OVSFlRQ+Kj55bB3DOodXJ5iB
-         JTD3qcABSic6zT7OTmJJit4xae3g5HCucz6mnsm2aacwDN/6UReyuPHVwQw4c6A6c5Xl
-         CfKQ==
+        bh=0GTqVg+rgasX/S0lzuuc6nnVfnMSvL9+pic5H7oW7Ww=;
+        b=DM27t/UGoUdjet5o3w3VIjIfjbBTauv/WSZHjHGdmt/3nGjOxqVQvSUS/tIz/hV5Nc
+         GG1sTA2cmgVl5Ily/D+r79KrpkpwLf4QrBHNnntsASo7KoP4LeMBDysDvYXUgikIZkjQ
+         FRkSvujCdJFUPK8VG3Z6gcoxrwwng4NOXMk05oS0RIabRlVz0E4BLF80Cv1YADTAfkFL
+         l4R67d5h8mMXcdiTOjQSpNDkfAXQyHd3RUyxbEQPTp38Cb+oETGCC1JgQyJCszn9jfHu
+         AzcN3nA5fRCQcxPAdZYpk4RE8OclE6+IFRQhYKw9K/qoT2PGVU//CgjJSk51nPd1pPXA
+         847Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782212026; x=1782816826;
+        d=1e100.net; s=20251104; t=1782213135; x=1782817935;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Duz8Zx+8AiYnCdBwNjKZl5RmXQ31zXqUNM7RLp7vFfQ=;
-        b=Ylf0rhalv3AaMML51pbWsmKwFMzQQSbsY/+9sQEu/SKuvTezNfFtXDMZSrFudopLHJ
-         KCf0iBgrPQlLV5tLnNRfbGp43JfiWhchZ74I5uUbFkTK/UTlb3Wqr/eT086lAF0q2Dct
-         /2xSnSB1Q/CezcHo1uvQxEHjgwPSiH0bzpnW3cicE9INYUGNHPS4VJ609BisazRF3hks
-         tiV+LinoJwKx3HpNbm4gOxjIbPP+Ke1eZQfv1vG5uomWkA7rTxkAHaJEceOW45WtAO1j
-         hJADJW4bEXQKkqo6fteuQAbYvI4j/n9jx37WdMPulevdrdEGLq2MzOkE9FcTRTgdvr+m
-         eZ4Q==
-X-Forwarded-Encrypted: i=1; AFNElJ+tcRKWK1fxNRWnooGHBRLo2i6gncW1XXdEK5tc8mVjFfREVasY3nu+CgX0jBgVcBWJ1dYwIQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyEZUhh+pYIUqKigg79lkupg10FlZKawe69tCMRxxQmqSs5GvNM
-	PXqrey+l8koPQZ/1cXeGlgEvQT+YaNeKSEJYZDLlOLfiWpdDp3imUYBYKYlncrTALSiw985ndbY
-	k0VPdWrMBxh9TqXjpeA==
-X-Received: from edah41.prod.google.com ([2002:a05:6402:ea9:b0:68b:8a53:a28e])
+        bh=0GTqVg+rgasX/S0lzuuc6nnVfnMSvL9+pic5H7oW7Ww=;
+        b=MmhoOt6JGZbg87mPYBCxQvvU+by053jrceJlttrtKCkzN11Enp51tO2LnElfqJ/G/W
+         hR02XqHv02mRC2+aeroXBhQ1VaAqAvGq92anV5+MfJ8ECJf3/uE1YKTNbonHtiiWzVBB
+         zeE7hAVl+XmVShOrw772CBaeCd0hdE+Q1D2QdOlZVumtmiRNAPRrCATHuFRNHj0OZ2at
+         hJxIi49d/uZxxSqWT7Y8Fgk2cCexIyydpyPFpZ8LMXHKFvTZ8qxPkR/3CHErwdAWrg0Z
+         VAeIoQtbSd9toH1W+UPGapnLXvTgX7N1IBjEdNbkQxK+UVpAy1Ynnvc5tY3laNXGpodM
+         OEuQ==
+X-Gm-Message-State: AOJu0YxuVRmTbaoiwHFA2aVky13MASOugvaOSUzpo3W8SN/09iJd0Yir
+	BAaMTcZq3n3GEVzh+Ov5WLQOAcnAQbcOvLnESwEYqextVC3VUnZ570Ho9pYqi3YkFAGnCfXJDlt
+	40qerCXHhCEfP7qN6tw==
+X-Received: from edaa1.prod.google.com ([2002:a05:6402:24c1:b0:695:df16:a5b7])
  (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:380a:b0:691:b5aa:5a57 with SMTP id 4fb4d7f45d1cf-697dbb55ea4mr960674a12.18.1782212026359;
- Tue, 23 Jun 2026 03:53:46 -0700 (PDT)
-Date: Tue, 23 Jun 2026 10:53:45 +0000
-In-Reply-To: <ajpbHkuWiGQrUec8@kernel.org>
+ 2002:a05:6402:3205:b0:68d:4450:d21 with SMTP id 4fb4d7f45d1cf-696ee621b1amr9223700a12.8.1782213134747;
+ Tue, 23 Jun 2026 04:12:14 -0700 (PDT)
+Date: Tue, 23 Jun 2026 11:12:13 +0000
+In-Reply-To: <20260623105201.3724592-3-tarunsahu@google.com>
 Mime-Version: 1.0
-References: <20260622225736.2961438-1-tarunsahu@google.com>
- <20260622225736.2961438-3-tarunsahu@google.com> <178220761164.162773.6384380547612711985.b4-review@b4>
- <9huzpl1h37hj.fsf@tarunix.c.googlers.com> <ajpbHkuWiGQrUec8@kernel.org>
-Message-ID: <9huzse6dle86.fsf@tarunix.c.googlers.com>
-Subject: Re: [PATCH v4 2/2] luo: Update serialized data to use KHOSER_PTR
+References: <20260623105201.3724592-1-tarunsahu@google.com> <20260623105201.3724592-3-tarunsahu@google.com>
+Message-ID: <9huza4slo6ia.fsf@tarunix.c.googlers.com>
+Subject: Re: [PATCH v5 2/3] kho: add KHOSER_COPY_PTR to allow phys copy of
+ serialized ptr
 From: tarunsahu@google.com
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Mike Rapoport <rppt@kernel.org>, Breno Leitao <leitao@debian.org>
+To: Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Alexander Graf <graf@amazon.com>
+Cc: kexec@lists.infradead.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260623_035348_659370_C2B53990 
-X-CRM114-Status: GOOD (  16.70  )
+X-CRM114-CacheID: sfid-20260623_041217_571895_C7E7B471 
+X-CRM114-Status: GOOD (  16.60  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,46 +89,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Mike Rapoport <rppt@kernel.org> writes:
+Tarun Sahu <tarunsahu@google.com> writes:
 
-> On Tue, Jun 23, 2026 at 09:56:40AM +0000, tarunsahu@google.com wrote:
->> Mike Rapoport <rppt@kernel.org> writes:
->> 
->> > On Mon, 22 Jun 2026 22:57:36 +0000, Tarun Sahu <tarunsahu@google.com> wrote:
->> >> Convert raw serialized_data to KHO serializeable pointer (KHOSER_PTR).
->> >> This series also takes care of resolving the bug with memfd of using
->> >> phys_to_virt before checking the args->serialized_data value.
->> >
->> > For easier backporting the memfd fix should be a standalone commit that
->> > comes first in the series.
->> >
->> > Other than that
->> 
->> It will break compilation for individual patch. For example, memfd_luo
->> changes are hard coded dependent on the args->serialized_data
->> conversion to KHOSER_PTR?
->> 
->> Maybe I did not understand, Could you please explain what you mean?
+> Adding KHOSER_COPY_PTR to copy one serializeable pointer to
+> another. It basically allows copy of phys val of the
+> serializeable pointer.
 >
-> Sorry I wasn't clear. 
-> If people think it's important to have the memfd_luo fix in 7.1, the fix
-> should be the first patch in the series and shouldn't use KHOSER pointers.
-
-I dont think, this is critical issue. But it will be a good practice. I
-sent v5 with these changes.
-Thanks for the review!
-
-~Tarun
-
+> It ignores the typecheck if any of the argument is of void *
+>
+> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
+> ---
+>  include/linux/kho/abi/kexec_handover.h | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/include/linux/kho/abi/kexec_handover.h b/include/linux/kho/abi/kexec_handover.h
+> index 5e2eb8519bda..c1b61d875dcc 100644
+> --- a/include/linux/kho/abi/kexec_handover.h
+> +++ b/include/linux/kho/abi/kexec_handover.h
+> @@ -139,6 +139,17 @@
+>  		(typeof((s).ptr))((s).phys ? phys_to_virt((s).phys) : NULL); \
+>  	})
 >  
->> >
->> > Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
->> >
->> > -- 
->> > Sincerely yours,
->> > Mike.
->
+> +/* Copies one serializable pointer to another. */
+> +#define KHOSER_COPY_PTR(dest, src) \
+> +	({ \
+> +		static_assert( \
+> +			__builtin_types_compatible_p(typeof((dest).ptr), typeof((src).ptr)) || \
+> +			__builtin_types_compatible_p(typeof((dest).ptr), void *) || \
+> +			__builtin_types_compatible_p(typeof((src).ptr), void *), \
+> +			"pointer type mismatch in KHOSER_COPY_PTR" \
+> +		); \
+> +		(dest).phys = (src).phys; \
+> +	})
+
+This needs to be updated as per Mike's comment on v4.
+
+>  /*
+>   * This header is embedded at the beginning of each `kho_vmalloc_chunk`
+>   * and contains a pointer to the next chunk in the linked list,
 > -- 
-> Sincerely yours,
-> Mike.
+> 2.55.0.rc0.786.g65d90a0328-goog
 
