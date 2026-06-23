@@ -4,61 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C54DACD98F2
-	for <kexec@archiver.kernel.org>; Tue, 23 Jun 2026 12:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6BB67CD98F2
+	for <kexec@archiver.kernel.org>; Tue, 23 Jun 2026 14:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=DXBdTWEwdhn+XOGPfidzRwDwRildye8jC/CmG5OoRC4=; b=sCjyfpciLq+mNfn6x3ddk5LNnW
-	XjDJ/MMXkplSlmMkFz3ZXGHWN4HyfOBRtDLKLmcCUvbVOfnYrgajRT2VjECj4j9z8sAfSLV0zbpMc
-	hn+L9chxILUZxykKfQjNBk3nsTRTZzYr1wRXMJEIZpqwVy/iiLBYeFYmGQP6HsZVrdVbnqs7HTYOr
-	FPe6dN7Lfr8bOcKZczOnqP4YIDJxf/HfssALRkVdYoABQ5rJ1n17mefo7tR8oNfnUorJpvCDnDvNn
-	B5ZvMFllHzkAY3cc7Fvl4cUQIcf1JJhrIc24tWngdwL63iZ5HGAI7NfIuW7GaLqdkLjFIYRj2NQnh
-	FyGoaiAQ==;
+	bh=g8d+9heMc41zxWGzXNGvGuprR44PnpkmTW2E3tdN2iM=; b=GsBJpwTRogxExjj9jqKSu6n6U4
+	y4OS9JQJbNlATPqVm/UsQlavlnE9AGlSzGHJSZV8+TEZF7katjMlGil1hf2pmgaoEx1VE9adK9fwg
+	QL8IJAM6hI/y7zOtSXXfEKqAWvQjCdZGTIJFTsvhcD7A1Te5j6dCSr3rkQJhPSSlBX/L7dPMTBVGK
+	O/CUf08rTELi1ykesQ8zSim7lexHAGZJslXcwyXT0L52OJYAiH0vArC9j/zoTVP0c2SxVFKTE04NH
+	bjv+uaEhyLUJiEbvy7tbd3LClxj4OICNiS7on05SrSAiBntv2Y44tspV3/YDEB2uLUzdYjTf+ptSE
+	mM/HSvRw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wc0dx-00000006IB3-198n;
-	Tue, 23 Jun 2026 12:54:21 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wc1i8-00000006Oeg-2rXc;
+	Tue, 23 Jun 2026 14:02:44 +0000
+Received: from mail-ed1-x549.google.com ([2a00:1450:4864:20::549])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wc0dv-00000006IAx-3uPU
+	id 1wc1i3-00000006Odz-3iLn
 	for kexec@lists.infradead.org;
-	Tue, 23 Jun 2026 12:54:20 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 011D960052;
-	Tue, 23 Jun 2026 12:54:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 439211F000E9;
-	Tue, 23 Jun 2026 12:54:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782219258;
-	bh=DXBdTWEwdhn+XOGPfidzRwDwRildye8jC/CmG5OoRC4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=auscPAgcP/a+TQKaO7yckWkiM0hPzFSYepvdf8kaGBpKfFgU6BZxcXsRxyczANj1b
-	 K2O710KVT/ySlT5R2/38DIjHT5rO1FIPxdRCMHqiobjg/9SxhSFi/4oQefDaJLnL2E
-	 AqdqzFl0N9QvKcC8DTSgszeKIvSTZxY8t3pPiJ1lkmYPeiFhsqzkZMDidXGeRWg4J/
-	 jKSrQRkZORvk4m88ku5OcqjtpiMQHL0G2X7WVUf77XfEdbK2PzaTaoJHgpZg3LZwO5
-	 12t9IeK1wXUG4z7YbLsrMgn2R4HA7tm1RlUNOhNR3qLtedXXadOYShsz9nK7DOivaN
-	 CC8Qji6pgmnRA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Tarun Sahu <tarunsahu@google.com>
-Cc: Mike Rapoport <rppt@kernel.org>,  Pasha Tatashin
- <pasha.tatashin@soleen.com>,  Pratyush Yadav <pratyush@kernel.org>,
-  Andrew Morton <akpm@linux-foundation.org>,  Alexander Graf
- <graf@amazon.com>,  kexec@lists.infradead.org,  linux-mm@kvack.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] luo: Update serialized data to use KHOSER_PTR
-In-Reply-To: <20260623105201.3724592-4-tarunsahu@google.com> (Tarun Sahu's
-	message of "Tue, 23 Jun 2026 10:52:01 +0000")
-References: <20260623105201.3724592-1-tarunsahu@google.com>
-	<20260623105201.3724592-4-tarunsahu@google.com>
-Date: Tue, 23 Jun 2026 14:54:15 +0200
-Message-ID: <2vxztsqtmn7s.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
-MIME-Version: 1.0
-Content-Type: text/plain
+	Tue, 23 Jun 2026 14:02:41 +0000
+Received: by mail-ed1-x549.google.com with SMTP id 4fb4d7f45d1cf-695c0775f8aso7050312a12.0
+        for <kexec@lists.infradead.org>; Tue, 23 Jun 2026 07:02:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1782223357; x=1782828157; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=g8d+9heMc41zxWGzXNGvGuprR44PnpkmTW2E3tdN2iM=;
+        b=C74ql1RxoNjROUkzclGNBLJUayZoHB0lzB/s0l93Fuft3W7D0GBXXGpKspO3jrXwHr
+         ViAvee/5YjwRcbxp1H5yfxwyCZXipshvCDQBEgn2V9jdd/rQu85gUjkLN/DNj5Y062sY
+         p6VdXlVb+1susJ3IrlQhNcaQfseHUhpNEvT44JlXlvWDOzZhN53LiLjxD+QOh4jJeRwt
+         LtqDMbkWVX7anFpScb4dqyymGqQ6pi7Fg9BUjT3FMX39+jqVbwOeVziUFxTti/nQtJGX
+         KWgh4vZF/w45UqVSJTBn+HARtef5heEpca1WH18/ipi9RNwyQaELk0jNrlGu6NDDGm+v
+         rTDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782223357; x=1782828157;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g8d+9heMc41zxWGzXNGvGuprR44PnpkmTW2E3tdN2iM=;
+        b=mJTvzRgmu8qcUDuNasA4nGrOV08fnx2pWV3nQMpENd7Y+36BsF7Pb8OsgIGzpnIp8h
+         W0+SKw47YQsAHl9gG1j+YR2ztq40FBR+Qv5MpJl3tzhy1Y7gwpS69LIC5dk40BxEqf+x
+         QPbaF9uJP6r3jU+ttjzZOS4xOZuFuM1wxVKxPh8eoEM4ocu8miBZSeiaK+kkt3HBqZZ4
+         MYhw/JFdUiQAMRrlOVX8BWfP5Xwgmy4IvZG8UK+mVErNM4YfMfEDBDTW2Kp80lBE1oDV
+         u0/KbMvoJrnbpIrShBolwDP/zTn/a8fNKPXRLW/EnGsuvv97aRGAShY+4rvFhcI8KDyS
+         S41w==
+X-Forwarded-Encrypted: i=1; AFNElJ8i4N0DMiFHoTc52zYM+g8Olq6lm4Ui6KSTa0nWziVN77Uh63pPQRa7TlqOjWn2plmjfslFyw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yw1+4iAczBc1rGBX4P4HELwQEz3rMHv9jXmEBjznd9PKUP/j8IR
+	C5y/jdVv7YXavTM7lOAqNTX9mUbqUeJqJJtNhftALtXwUM4yrsLVr5wrJ+xi26SsKl5CTMRW2Jw
+	4BvBRmCOjYrjJqtL8rw==
+X-Received: from educ24.prod.google.com ([2002:a05:6402:1018:b0:688:baf2:39d7])
+ (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6402:3487:b0:693:2a2:9e41 with SMTP id 4fb4d7f45d1cf-69711df46a6mr10466827a12.19.1782223356390;
+ Tue, 23 Jun 2026 07:02:36 -0700 (PDT)
+Date: Tue, 23 Jun 2026 14:02:35 +0000
+In-Reply-To: <CAEvNRgFEHciT3T9y+qEYRvXhDwfrggoU7Rm=f9hT3OrV+wgpNQ@mail.gmail.com>
+Mime-Version: 1.0
+References: <cover.1780676742.git.tarunsahu@google.com> <48777f4749fa43d5648085dbb2037aa99c144a88.1780676742.git.tarunsahu@google.com>
+ <CAEvNRgFEHciT3T9y+qEYRvXhDwfrggoU7Rm=f9hT3OrV+wgpNQ@mail.gmail.com>
+Message-ID: <9huzzf0lmk1w.fsf@tarunix.c.googlers.com>
+Subject: Re: [RFC PATCH v2 06/10] kvm: guest_memfd: Add support for freezing
+ and unfreezing mappings
+From: tarunsahu@google.com
+To: Ackerley Tng <ackerleytng@google.com>, Jonathan Corbet <corbet@lwn.net>, vannapurve@google.com, 
+	fvdl@google.com, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, sagis@google.com, aneesh.kumar@kernel.org, 
+	skhawaja@google.com, vipinsh@google.com, Pratyush Yadav <pratyush@kernel.org>, 
+	david@redhat.com, dmatlack@google.com, mark.rutland@arm.com, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	seanjc@google.com, axelrasmussen@google.com
+Cc: linux-kselftest@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260623_070239_952384_7C8D8160 
+X-CRM114-Status: GOOD (  26.85  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,284 +96,182 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jun 23 2026, Tarun Sahu wrote:
 
-> Convert raw serialized_data to KHO serializeable pointer (KHOSER_PTR).
-> This series also takes care of resolving the bug with memfd of using
-> phys_to_virt before checking the args->serialized_data value.
+Thanks for reviewing!
+
+Ackerley Tng <ackerleytng@google.com> writes:
+
+> Tarun Sahu <tarunsahu@google.com> writes:
 >
-> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
-> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->  include/linux/kho/abi/luo.h  |  5 +++--
->  include/linux/liveupdate.h   |  4 ++--
->  kernel/liveupdate/luo_file.c | 24 ++++++++++++------------
->  mm/memfd_luo.c               | 20 +++++++++++---------
->  4 files changed, 28 insertions(+), 25 deletions(-)
+>> This patch introduces the freeze on gmem_inode which prevents
 >
-> diff --git a/include/linux/kho/abi/luo.h b/include/linux/kho/abi/luo.h
-> index 288076de6d4a..d5b3b1c0fec1 100644
-> --- a/include/linux/kho/abi/luo.h
-> +++ b/include/linux/kho/abi/luo.h
-> @@ -59,6 +59,7 @@
->  
->  #include <linux/align.h>
->  #include <linux/kho/abi/block.h>
-> +#include <linux/kho/abi/kexec_handover.h>
->  #include <uapi/linux/liveupdate.h>
->  
->  /*
-> @@ -89,14 +90,14 @@ struct luo_ser {
->  /**
->   * struct luo_file_ser - Represents the serialized preserves files.
->   * @compatible:  File handler compatible string.
-> - * @data:        Private data
-> + * @serialized_data:  The serialized pointer union for this file
+> Can't find the reference now, but commit messages should take the
+> imperative mood and avoid "this patch" [*]
+>
+> [*] https://lore.kernel.org/all/YKRWNaqzo4GVDxHP@google.com/
+>
 
-Nit: "serialized pointer union" makes very little sense once you lose
-the context of this patch. The union is an implementation detail. I
-think "serialized KHO pointer" makes more sense from documentation
-perspective.
+ACK. Will take care of it.
 
->   * @token:       User provided token for this file
->   *
->   * If this structure is modified, `LUO_ABI_COMPATIBLE` must be updated.
->   */
->  struct luo_file_ser {
->  	char compatible[LIVEUPDATE_HNDL_COMPAT_LENGTH];
-> -	u64 data;
-> +	DECLARE_KHOSER_PTR(serialized_data, void *);
->  	u64 token;
->  } __packed;
->  
-> diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
-> index 88722e5caf02..480d638b7d18 100644
-> --- a/include/linux/liveupdate.h
-> +++ b/include/linux/liveupdate.h
-> @@ -33,7 +33,7 @@ struct file;
->   * @file:             The file object. For retrieve: [OUT] The callback sets
->   *                    this to the new file. For other ops: [IN] The caller sets
->   *                    this to the file being operated on.
-> - * @serialized_data:  The opaque u64 handle, preserve/prepare/freeze may update
-> + * @serialized_data:  The serialized pointer union, preserve/prepare/freeze may update
+>> the fallocate call and any new page fault allocation. This will avoid
+>> gmem file modification when it is being preserved
+>>
+>> Used srcu lock to synchronise the freeze call, where write blocks
+>> until all the reads are free. And reads are re-entrant.
+>>
+>> Incase fault fails, It return -EPERM and VM_EXIT to userspace. userspace
+>> must handle this properly as every new fault will fail.
+>>
+>> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
+>>
+>> [...snip...]
+>>
+>> @@ -105,12 +108,20 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
+>>  	if (!IS_ERR(folio))
+>>  		return folio;
+>>
+>> +	idx = srcu_read_lock(&kvm_gmem_freeze_srcu);
+>> +	if (kvm_gmem_is_frozen(inode)) {
+>> +		srcu_read_unlock(&kvm_gmem_freeze_srcu, idx);
+>> +		return ERR_PTR(-EPERM);
+>> +	}
+>> +
+>>  	policy = mpol_shared_policy_lookup(&GMEM_I(inode)->policy, index);
+>>  	folio = __filemap_get_folio_mpol(inode->i_mapping, index,
+>>  					 FGP_LOCK | FGP_CREAT,
+>>  					 mapping_gfp_mask(inode->i_mapping), policy);
+>>  	mpol_cond_put(policy);
+>>
+>> +	srcu_read_unlock(&kvm_gmem_freeze_srcu, idx);
+>> +
+>>  	/*
+>>  	 * External interfaces like kvm_gmem_get_pfn() support dealing
+>>  	 * with hugepages to a degree, but internally, guest_memfd currently
+>> @@ -273,16 +284,30 @@ static long kvm_gmem_allocate(struct inode *inode, loff_t offset, loff_t len)
+>>  static long kvm_gmem_fallocate(struct file *file, int mode, loff_t offset,
+>>  			       loff_t len)
+>>  {
+>> +	struct inode *inode = file_inode(file);
+>>  	int ret;
+>> +	int idx;
+>>
+>> -	if (!(mode & FALLOC_FL_KEEP_SIZE))
+>> -		return -EOPNOTSUPP;
+>> +	idx = srcu_read_lock(&kvm_gmem_freeze_srcu);
+>> +	if (kvm_gmem_is_frozen(inode)) {
+>> +		srcu_read_unlock(&kvm_gmem_freeze_srcu, idx);
+>> +		return -EPERM;
+>> +	}
+>
+> fallocate may eventually go to kvm_gmem_get_folio(), so that would check
+> kvm_gmem_is_frozen() twice. Is this meant to catch the punch hole case?
+>
 
-Nit: Same here.
+Right. To catch punch hole case. And read lock being re-entrant, so I
+blocked the fallocate call completely.
 
->   *                    this field.
->   * @private_data:     Private data for the file used to hold runtime state that
->   *                    is not preserved. Set by the handler's .preserve()
-> @@ -47,7 +47,7 @@ struct liveupdate_file_op_args {
->  	struct liveupdate_file_handler *handler;
->  	int retrieve_status;
->  	struct file *file;
-> -	u64 serialized_data;
-> +	DECLARE_KHOSER_PTR(serialized_data, void *);
->  	void *private_data;
->  };
->  
-> diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
-> index c39f96961a85..aecf19033f95 100644
-> --- a/kernel/liveupdate/luo_file.c
-> +++ b/kernel/liveupdate/luo_file.c
-> @@ -125,7 +125,7 @@ static DEFINE_XARRAY(luo_preserved_files);
->   * @file:          Pointer to the kernel's &struct file that is being preserved.
->   *                 This is NULL in the new kernel until the file is successfully
->   *                 retrieved.
-> - * @serialized_data: The opaque u64 handle to the serialized state of the file.
-> + * @serialized_data: The serialized pointer union to the serialized state of the file.
->   *                 This handle is passed back to the handler's .freeze(),
->   *                 .retrieve(), and .finish() callbacks, allowing it to track
->   *                 and update its serialized state across phases.
-> @@ -161,7 +161,7 @@ static DEFINE_XARRAY(luo_preserved_files);
->  struct luo_file {
->  	struct liveupdate_file_handler *fh;
->  	struct file *file;
-> -	u64 serialized_data;
-> +	DECLARE_KHOSER_PTR(serialized_data, void *);
->  	void *private_data;
->  	int retrieve_status;
->  	struct mutex mutex;
-> @@ -289,7 +289,7 @@ int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd)
->  	if (err)
->  		goto err_kfree;
->  
-> -	luo_file->serialized_data = args.serialized_data;
-> +	KHOSER_COPY_PTR(luo_file->serialized_data, args.serialized_data);
->  	luo_file->private_data = args.private_data;
->  	list_add_tail(&luo_file->list, &file_set->files_list);
->  	file_set->count++;
-> @@ -342,7 +342,7 @@ void luo_file_unpreserve_files(struct luo_file_set *file_set)
->  
->  		args.handler = luo_file->fh;
->  		args.file = luo_file->file;
-> -		args.serialized_data = luo_file->serialized_data;
-> +		KHOSER_COPY_PTR(args.serialized_data, luo_file->serialized_data);
->  		args.private_data = luo_file->private_data;
->  		luo_file->fh->ops->unpreserve(&args);
->  		luo_flb_file_unpreserve(luo_file->fh);
-> @@ -375,12 +375,12 @@ static int luo_file_freeze_one(struct luo_file_set *file_set,
->  
->  		args.handler = luo_file->fh;
->  		args.file = luo_file->file;
-> -		args.serialized_data = luo_file->serialized_data;
-> +		KHOSER_COPY_PTR(args.serialized_data, luo_file->serialized_data);
->  		args.private_data = luo_file->private_data;
->  
->  		err = luo_file->fh->ops->freeze(&args);
->  		if (!err)
-> -			luo_file->serialized_data = args.serialized_data;
-> +			KHOSER_COPY_PTR(luo_file->serialized_data, args.serialized_data);
->  	}
->  
->  	return err;
-> @@ -396,7 +396,7 @@ static void luo_file_unfreeze_one(struct luo_file_set *file_set,
->  
->  		args.handler = luo_file->fh;
->  		args.file = luo_file->file;
-> -		args.serialized_data = luo_file->serialized_data;
-> +		KHOSER_COPY_PTR(args.serialized_data, luo_file->serialized_data);
->  		args.private_data = luo_file->private_data;
->  
->  		luo_file->fh->ops->unfreeze(&args);
-> @@ -483,7 +483,7 @@ int luo_file_freeze(struct luo_file_set *file_set,
->  
->  		strscpy(file_ser->compatible, luo_file->fh->compatible,
->  			sizeof(file_ser->compatible));
-> -		file_ser->data = luo_file->serialized_data;
-> +		KHOSER_COPY_PTR(file_ser->serialized_data, luo_file->serialized_data);
->  		file_ser->token = luo_file->token;
->  	}
->  
-> @@ -587,7 +587,7 @@ int luo_retrieve_file(struct luo_file_set *file_set, u64 token,
->  	}
->  
->  	args.handler = luo_file->fh;
-> -	args.serialized_data = luo_file->serialized_data;
-> +	KHOSER_COPY_PTR(args.serialized_data, luo_file->serialized_data);
->  	err = luo_file->fh->ops->retrieve(&args);
->  	if (err) {
->  		/* Keep the error code for later use. */
-> @@ -621,7 +621,7 @@ static int luo_file_can_finish_one(struct luo_file_set *file_set,
->  
->  		args.handler = luo_file->fh;
->  		args.file = luo_file->file;
-> -		args.serialized_data = luo_file->serialized_data;
-> +		KHOSER_COPY_PTR(args.serialized_data, luo_file->serialized_data);
->  		args.retrieve_status = luo_file->retrieve_status;
->  		can_finish = luo_file->fh->ops->can_finish(&args);
->  	}
-> @@ -638,7 +638,7 @@ static void luo_file_finish_one(struct luo_file_set *file_set,
->  
->  	args.handler = luo_file->fh;
->  	args.file = luo_file->file;
-> -	args.serialized_data = luo_file->serialized_data;
-> +	KHOSER_COPY_PTR(args.serialized_data, luo_file->serialized_data);
->  	args.retrieve_status = luo_file->retrieve_status;
->  
->  	luo_file->fh->ops->finish(&args);
-> @@ -748,7 +748,7 @@ static int luo_file_deserialize_one(struct luo_file_set *file_set,
->  
->  	luo_file->fh = fh;
->  	luo_file->file = NULL;
-> -	luo_file->serialized_data = ser->data;
-> +	KHOSER_COPY_PTR(luo_file->serialized_data, ser->serialized_data);
->  	luo_file->token = ser->token;
->  	mutex_init(&luo_file->mutex);
->  	list_add_tail(&luo_file->list, &file_set->files_list);
-> diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-> index 10f3983b0060..852b61678229 100644
-> --- a/mm/memfd_luo.c
-> +++ b/mm/memfd_luo.c
-> @@ -257,6 +257,7 @@ static void memfd_luo_unpreserve_folios(struct kho_vmalloc *kho_vmalloc,
->  
->  static int memfd_luo_preserve(struct liveupdate_file_op_args *args)
->  {
-> +	DECLARE_KHOSER_PTR(sd, struct memfd_luo_ser *);
->  	struct inode *inode = file_inode(args->file);
->  	struct memfd_luo_folio_ser *folios_ser;
->  	struct memfd_luo_ser *ser;
-> @@ -309,7 +310,8 @@ static int memfd_luo_preserve(struct liveupdate_file_op_args *args)
->  	inode_unlock(inode);
->  
->  	args->private_data = folios_ser;
-> -	args->serialized_data = virt_to_phys(ser);
-> +	KHOSER_STORE_PTR(sd, ser);
-> +	KHOSER_COPY_PTR(args->serialized_data, sd);
+>>
+>> -	if (mode & ~(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE))
+>> -		return -EOPNOTSUPP;
+>> +	if (!(mode & FALLOC_FL_KEEP_SIZE)) {
+>> +		ret = -EOPNOTSUPP;
+>> +		goto out;
+>> +	}
+>>
+>> -	if (!PAGE_ALIGNED(offset) || !PAGE_ALIGNED(len))
+>> -		return -EINVAL;
+>> +	if (mode & ~(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE)) {
+>> +		ret = -EOPNOTSUPP;
+>> +		goto out;
+>> +	}
+>> +
+>> +	if (!PAGE_ALIGNED(offset) || !PAGE_ALIGNED(len)) {
+>> +		ret = -EINVAL;
+>> +		goto out;
+>> +	}
+>
+> There's some reordering here. Why not let the validation happen like
+> before, then check kvm_gmem_is_frozen()?
+>
+>>
+>>  	if (mode & FALLOC_FL_PUNCH_HOLE)
+>>  		ret = kvm_gmem_punch_hole(file_inode(file), offset, len);
+>>
+>> [...snip...]
+>>
+>> +
+>> +/**
+>> + * kvm_gmem_freeze - Freeze or unfreeze a guest_memfd inode mapping.
+>> + * @inode: The guest_memfd inode.
+>> + * @freeze: True to freeze, false to unfreeze.
+>> + *
+>> + * This API is used strictly during the live update / preservation transition
+>> + * window to prevent host userspace and guest-side faults from making any
+>> + * mapping modifications (such as fallocate or page fault allocation)
+>> + * to the guest_memfd page cache.
+>> + *
+>> + * Synchronization Strategy (Sleepable RCU):
+>> + * To avoid high-contention VFS locks (like inode_lock or
+>> + * filemap_invalidate_lock) on the vCPU page fault hot paths, this subsystem
+>> + * implements a lightweight, system-wide Sleepable RCU (SRCU) mechanism
+>> + * (`kvm_gmem_freeze_srcu`):
+>> + *
+>> + * Global vs. Per-Inode SRCU
+>> + * ======================
+>> + * A single system-wide global static `srcu_struct` is used instead of a
+>> + * per-inode SRCU structure to completely prevent unprivileged users from
+>> + * exhausting the host's per-CPU memory allocator. Because
+>> + * `init_srcu_struct()` allocates per-CPU memory via `alloc_percpu()`, which
+>> + * is not accounted by memory cgroups (memcg),
+>> + * a per-inode SRCU structure would allow a tenant to bypass cgroup limits and
+>> + * trigger a system-wide Out-of-Memory (OOM) crash simply by spawning a large
+>> + * number of guest_memfd file descriptors (bounded only by RLIMIT_NOFILE).
+>> + *
+>> + * Flag Modification Note:
+>> + * Since `GUEST_MEMFD_F_MAPPING_FROZEN` is the ONLY flag in
+>> + * `GMEM_I(inode)->flags` that is mutated dynamically at runtime (all other
+>> + * flags are creation-time flags which remain strictly read-only), there is
+>> + * no possibility of concurrent bit-modification races. Therefore, a standard
+>> + * `WRITE_ONCE` is fully safe and does not require complex `cmpxchg`
+>> + * synchronization loops.
+>> + */
+>> +void kvm_gmem_freeze(struct inode *inode, bool freeze)
+>> +{
+>> +	u64 flags = READ_ONCE(GMEM_I(inode)->flags);
+>> +
+>> +	if (freeze)
+>> +		flags |= GUEST_MEMFD_F_MAPPING_FROZEN;
+>> +	else
+>> +		flags &= ~GUEST_MEMFD_F_MAPPING_FROZEN;
+>> +
+>> +	WRITE_ONCE(GMEM_I(inode)->flags, flags);
+>> +
+>> +	if (freeze)
+>> +		synchronize_srcu(&kvm_gmem_freeze_srcu);
+>
+> Why only synchronize on freeze but not unfreeze?
 
-This is awkward. Why do you even need sd? Why not just do
-KHOSER_STORE_PTR(args->serialized_data, ser)? KHOSER_COPY_PTR() doesn't
-give you any type safety for args->serialized_data anyway, so why the
-extra steps?
+It was not needed because
 
->  
->  	return 0;
->  
-> @@ -325,11 +327,10 @@ static int memfd_luo_freeze(struct liveupdate_file_op_args *args)
->  {
->  	struct memfd_luo_ser *ser;
->  
-> -	if (WARN_ON_ONCE(!args->serialized_data))
-> +	ser = KHOSER_LOAD_PTR(args->serialized_data);
-> +	if (WARN_ON_ONCE(!ser))
->  		return -EINVAL;
->  
-> -	ser = phys_to_virt(args->serialized_data);
-> -
->  	/*
->  	 * The pos might have changed since prepare. Everything else stays the
->  	 * same.
-> @@ -344,14 +345,13 @@ static void memfd_luo_unpreserve(struct liveupdate_file_op_args *args)
->  	struct inode *inode = file_inode(args->file);
->  	struct memfd_luo_ser *ser;
->  
-> -	if (WARN_ON_ONCE(!args->serialized_data))
-> +	ser = KHOSER_LOAD_PTR(args->serialized_data);
-> +	if (WARN_ON_ONCE(!ser))
->  		return;
->  
->  	inode_lock(inode);
->  	shmem_freeze(inode, false);
->  
-> -	ser = phys_to_virt(args->serialized_data);
-> -
->  	memfd_luo_unpreserve_folios(&ser->folios, args->private_data,
->  				    ser->nr_folios);
->  
-> @@ -397,7 +397,8 @@ static void memfd_luo_finish(struct liveupdate_file_op_args *args)
->  	if (args->retrieve_status)
->  		return;
->  
-> -	if (!args->serialized_data)
-> +	ser = KHOSER_LOAD_PTR(args->serialized_data);
-> +	if (!ser)
->  		return;
->  
->  	ser = phys_to_virt(args->serialized_data);
+Freeze => True
+When an user setting freeze to true.
 
-This doesn't compile :-(
+"Preservation will be stalled till all the current ongoing allocation
+finished, and future allocations are already stopped."
 
-You should always _test_ the changes you make. Compiling them is the
-first step. _Running_ them is the second. Both are important. Please do
-so in the next version. And for every code changes, no matter how
-trivial it seems. You never know if a simple looking change can trigger
-bugs.
+Freeze => False
+When an user unfreezing, current allocation/fallocate will
+return -EPERM, and future one will be succeeded as freeze is set
+to false. Synchronization will only stall the user, behviour does
+not change.
 
-You should at least run the LUO selftests and make sure they pass.
+Unless, user expects that it should be waiting for all the ongoing
+drains.
 
-> @@ -523,7 +524,8 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
->  	struct file *file;
->  	int err;
->  
-> -	if (!args->serialized_data)
-> +	ser = KHOSER_LOAD_PTR(args->serialized_data);
-> +	if (!ser)
->  		return -EINVAL;
->  
->  	ser = phys_to_virt(args->serialized_data);
-
-Here too, this doesn't compile.
-
--- 
-Regards,
-Pratyush Yadav
+>
+>> +}
+>> +
+>>
+>> [...snip...]
+>>
 
