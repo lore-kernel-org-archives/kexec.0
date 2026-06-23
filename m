@@ -4,62 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E2DF4CD98F2
-	for <kexec@archiver.kernel.org>; Tue, 23 Jun 2026 12:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 556EDCDB479
+	for <kexec@archiver.kernel.org>; Tue, 23 Jun 2026 12:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=rcjq+2Qi4hTz9gKpcoKUN1BL+JOY7raiZGGeg9KpcvI=; b=nF6DjVimb4nlD0vEYpqQc0UOc2
-	FtlnieXV+m1Py9DnQ0Tc0dtijU+o0j4w+yp2kHTVgU2QLC6fPKaXWrcTUHJTup6n3SMmUPnGp6NW5
-	quS10xm11EJgicD4n5uOhzBP1pdLyJlkqyrIktqbXbhR+smnliTc2KMnNEzbiCoZfVZSzWS5d8ZOQ
-	Z4MJ2EqSbQmLlS+/nXejtlKL7VsgYeP2P6hjM0TdLx7R76Iofo7RcETXbgQC8xwLYbCQSP0Kh/iYQ
-	S1hsuNpmfWyVw6ilL4qII5YAYi4U/9O8BTQ+oF+knk45l+iuvz72q3iVAE678yE7JQnUzGW5evUsf
-	CeA2wA9A==;
+	bh=C0THPKzcpbI+KoIcav1Em77/NkteBjAW5LeD9D18IyY=; b=DgN8MopKERqRR8mX39hCOOlMG/
+	rotssOSbmGgYPV1UyfPHLd51Hshl7YeSPE5f1q9T2Ie2CVPi9nk3ToEr/AC4pdHg31/EUTyAo4l6z
+	Teuw37QR/lwUOMsUeYud8BWYyQ+ftMFvwP4jUUwqb22YhgQN25IzDL0iT2qS27Zg19bPWh3Ue7EGJ
+	qqC+9gurvJYktO3+3PomdyAw4IEEDxrIaiyYZ0q3WCRq7Ngp141OZw9+t2waA8r+5VStDyWnIQ7+H
+	O6B+FEUNVfEAg1vbUFrb3fccyN7oJm9GtQIYxxLawh6424bME59+r+vokjyYO5U3N893a8k1hYdZG
+	FOFud+2g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wc0Cn-00000006GTi-2GGV;
-	Tue, 23 Jun 2026 12:26:17 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wc0Xz-00000006HXq-0AAl;
+	Tue, 23 Jun 2026 12:48:11 +0000
+Received: from mail-ed1-x54a.google.com ([2a00:1450:4864:20::54a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wc0Cl-00000006GTJ-2n33
+	id 1wc0Xw-00000006HXN-3gO8
 	for kexec@lists.infradead.org;
-	Tue, 23 Jun 2026 12:26:15 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 18B89401B5;
-	Tue, 23 Jun 2026 12:26:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8527B1F00A3A;
-	Tue, 23 Jun 2026 12:26:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782217575;
-	bh=rcjq+2Qi4hTz9gKpcoKUN1BL+JOY7raiZGGeg9KpcvI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=b3mI0J1Vj5tnmd4HneMBGK3p59ITz1VieMW/bOYNqdxbOLqd8N2r5t+cjcSOrLyya
-	 7jzMOUt1wqTPFDP89MqfmDtptnYY8qAei+XgbfUfs2t7s1C2fonAzHq4yxEixK5mGM
-	 xSaxJZn7aNqNDusQt5TDinrbc7WnHUeXMWYp6r+9oqTkrjij931bCW7OIhlSWp3z6p
-	 dNfzE7OhdfPAhZ2Wb53TNmSQI0nLlpvURc4pJuE7MrWKlMvWMwd6EqyQaf4RPQPera
-	 yd4+3OBz/pJwEe9uWowBQcO+lCEjkdyPEie9BNHK6RPPB83+o7DyX26Xsj4t5DSDk7
-	 VjP42yWJXnxjg==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Tarun Sahu <tarunsahu@google.com>
-Cc: Mike Rapoport <rppt@kernel.org>,  Pasha Tatashin
- <pasha.tatashin@soleen.com>,  Pratyush Yadav <pratyush@kernel.org>,
-  Andrew Morton <akpm@linux-foundation.org>,  Alexander Graf
- <graf@amazon.com>,  kexec@lists.infradead.org,  linux-mm@kvack.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/3] kho: add KHOSER_COPY_PTR to allow phys copy of
- serialized ptr
-In-Reply-To: <20260623105201.3724592-3-tarunsahu@google.com> (Tarun Sahu's
-	message of "Tue, 23 Jun 2026 10:52:00 +0000")
-References: <20260623105201.3724592-1-tarunsahu@google.com>
-	<20260623105201.3724592-3-tarunsahu@google.com>
-Date: Tue, 23 Jun 2026 14:26:12 +0200
-Message-ID: <2vxzy0g5moij.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
-MIME-Version: 1.0
-Content-Type: text/plain
+	Tue, 23 Jun 2026 12:48:10 +0000
+Received: by mail-ed1-x54a.google.com with SMTP id 4fb4d7f45d1cf-69564e5c7b2so4682277a12.2
+        for <kexec@lists.infradead.org>; Tue, 23 Jun 2026 05:48:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1782218886; x=1782823686; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=C0THPKzcpbI+KoIcav1Em77/NkteBjAW5LeD9D18IyY=;
+        b=OLbPuiwB+ietYkeXlLnSj8/wataWs5bIPUXYPzvsqwud/cmtbSbbP6UUUORx5o+6YF
+         bJIj1Rj6jYbNobywOeqYS0BphLSQAqNqYwpxJWBwVF3PgceNAc+N0rEyWnmgDzIvfj5p
+         btJ9HSjdyDAeA6BNi3Fj9lbmSaSv5w9HiCGKlPUuWBlfcfRIg/roX4YtvPAQD5A5z+sD
+         uhiuaemPQyn64DI33WsMB82UgynUqi16rDSsrxMyN2YAipydXCEdyukwyeTWsMhEVNII
+         tXkFM3sFP0gDjfRHNiBgDceB2g/d/bQAxG7Ugcg/uBjyo8nNGMAc2aAa2UCEL3SJ9Red
+         kj/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782218886; x=1782823686;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C0THPKzcpbI+KoIcav1Em77/NkteBjAW5LeD9D18IyY=;
+        b=Zf6F7n9tQ4zVS0s/TdPhkVpobDQc7Kbay/FsOpqtue4oMYi2dwPLcrK87o0At4P2+w
+         yuiTJpv3tOb2CMDB7dfQyUgO3vsU/MTqsAlb2uyvFUm40AfSQPdFfuFZTCuVBp+M2E6S
+         usu4bMbTy72qMrB313TsWO4m0bel1ZFzPEfubui7QLDDTtQYsxmUTRuFrMWbFvRyQGrI
+         G2xINN6EpdhskmuG7CSPWEpy6v2zuzib47O8y4Ply0nqzRJ9fzFpPX+iT5AhdtdNt+zB
+         2FvnQiTmLjzzmtnrFStV4uhTaiHx3SL42N77nYU/serMh6IwfzNDX9aMgY5FQG4DTVtT
+         E5Dg==
+X-Forwarded-Encrypted: i=1; AFNElJ/6SeVqug8JW4ZneQB6PlW6fEn8iHPwkAwpRu35zxpwj/1zwxSg48ZKVy/NXgICau5ajm3LuQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yy+T6Gg82Mu2JUKi5xbfLXXjf6BSGaKfK0v87g1cktf5LeSGrv+
+	PCywu7jfiNSbdpdM2rwe4AafFsmslcwPWPvJNm43vkLekPe2DXncxdD+z/Jqj7QldN/vTR5iG7K
+	Y/Q1HVaFumpBVIlbFRg==
+X-Received: from edqg18.prod.google.com ([2002:aa7:c592:0:b0:697:def8:bbbf])
+ (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6402:4022:b0:676:9c6d:7448 with SMTP id 4fb4d7f45d1cf-697dbae3105mr1388022a12.22.1782218885755;
+ Tue, 23 Jun 2026 05:48:05 -0700 (PDT)
+Date: Tue, 23 Jun 2026 12:48:05 +0000
+In-Reply-To: <CAEvNRgGharGxs9s_ow0Z4iiQ9PCzdghch-4Fk6UMjiPP9tX-5g@mail.gmail.com>
+Mime-Version: 1.0
+References: <cover.1780676742.git.tarunsahu@google.com> <20ae20f9d1a198b289444ebb4c824314cbba1bcf.1780676742.git.tarunsahu@google.com>
+ <CAEvNRgGharGxs9s_ow0Z4iiQ9PCzdghch-4Fk6UMjiPP9tX-5g@mail.gmail.com>
+Message-ID: <9huz4iito22i.fsf@tarunix.c.googlers.com>
+Subject: Re: [RFC PATCH v2 03/10] kvm: Prepare core VM structs and helpers for
+ LUO support
+From: tarunsahu@google.com
+To: Ackerley Tng <ackerleytng@google.com>, Jonathan Corbet <corbet@lwn.net>, vannapurve@google.com, 
+	fvdl@google.com, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, sagis@google.com, aneesh.kumar@kernel.org, 
+	skhawaja@google.com, vipinsh@google.com, Pratyush Yadav <pratyush@kernel.org>, 
+	david@redhat.com, dmatlack@google.com, mark.rutland@arm.com, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	seanjc@google.com, axelrasmussen@google.com
+Cc: linux-kselftest@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260623_054808_970202_0760021E 
+X-CRM114-Status: GOOD (  36.79  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,21 +96,276 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jun 23 2026, Tarun Sahu wrote:
 
-> Adding KHOSER_COPY_PTR to copy one serializeable pointer to
-> another. It basically allows copy of phys val of the
-> serializeable pointer.
+Hi,
+
+Thanks for reviewing the patch.
+
+
+Ackerley Tng <ackerleytng@google.com> writes:
+
+> Tarun Sahu <tarunsahu@google.com> writes:
 >
-> It ignores the typecheck if any of the argument is of void *
+>> Introduce core infrastructure to support VM preservation with LUO.
+>>
+>> First two changes are just refactoring, no functional change, third
+>> change introduces a new member in struct kvm.
+>> - Move ITOA_MAX_LEN to kvm_mm.h for reuse by upcoming kvm_luo code.
+>> - Add a public kvm_create_vm_file() helper wrapping kvm_create_vm()
+>>   and anon_inode_getfile() to provide a unified VM file creation API.
+>> - Track a weak reference to the backing file in struct kvm under
+>>   CONFIG_LIVEUPDATE_GUEST_MEMFD to enable reverse file resolution
+>>   without circular lifetime dependencies.
+>>
 >
-> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
+> Given the above, I think this should be separate patches.
 
-Reviewed-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+Okay.
 
-[...]
+>
+>> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
+>> ---
+>>  include/linux/kvm_host.h | 14 +++++++
+>>  virt/kvm/kvm_main.c      | 79 +++++++++++++++++++++++++++++-----------
+>>  virt/kvm/kvm_mm.h        |  3 ++
+>>  3 files changed, 75 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+>> index 4c14aee1fb06..9111a28637af 100644
+>> --- a/include/linux/kvm_host.h
+>> +++ b/include/linux/kvm_host.h
+>> @@ -874,6 +874,18 @@ struct kvm {
+>>  #ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
+>>  	/* Protected by slots_lock (for writes) and RCU (for reads) */
+>>  	struct xarray mem_attr_array;
+>> +#endif
+>> +#ifdef CONFIG_LIVEUPDATE_GUEST_MEMFD
+>> +	/*
+>> +	 * Weak reference to the VFS file backing this KVM instance. Stored
+>> +	 * without incrementing the file refcount to prevent a circular lifetime
+>> +	 * dependency (since file->private_data already pins this struct kvm).
+>> +	 * Used exclusively to resolve the file pointer back from struct kvm.
+>> +	 *
+>> +	 * Written/cleared via rcu_assign_pointer() and read locklessly under
+>> +	 * RCU (e.g. via get_file_active() to prevent ABA races).
+>> +	 */
+>> +	struct file *vm_file;
+>>  #endif
+>
+> We didn't really talk about this during the calls, but it seems weird to
+> preserve a vm_file with pretty much nothing other than the vm type. The
+> entire VM is re-created, which means it could potentially be a
+> completely different VM?
+>
+> In some sense it's more flexible since the guest_memfd can be restored
+> with some completely different VM, but it seems like it could introduce
+> other issues.
+>
+> I think other KVM folks would probably have more thoughts here.
 
--- 
-Regards,
-Pratyush Yadav
+IIUC,
+you are asking "Why preserve vm_fd with guest_memfd when we only
+preserve vm_type?"
+
+We discussed about this. Also explained here: (also copying it down)
+[RFC PATCH v2 04/10] kvm: kvm_luo: Allow kvm preservation with LUO
+https://lore.kernel.org/all/8730c0e11acbd0d645a8b7187cd5cd7de373380e.1780676742.git.tarunsahu@google.com/
+
+and
+https://lore.kernel.org/all/cover.1780667929.git.tarunsahu@google.com/
+(This cover letter was sent separately from the patches due to a problem
+in my automated script)
+
+vm_fd is needed for guest_memfd retrieval, because guest_memfd can
+not be retrieved without struct kvm and there is no other way to pass
+that. (We talked about alternative like LINK IOCTL or break the
+CREATE_GUEST_MEMFD IOCTL in two IOCTL: one just create GUEST_MEMFD
+and another attach it to the vm_file (struct kvm)). We discarded the
+alternative approach because it changes the guest_memfd design.
+
+This patch also set the infrastucture to preserve the vm_fd which
+will be extended later in future when we will introduce private support.
+where TDX related data (sPTE) might be preserved via struct kvm. Also,
+vCPUs state, IRQ routing table etc if needed can also be preserved.
+
+
+>> +	struct file *vm_file;
+
+If You are asking about, the diff above (why vm_file is there)
+There is no way to get vm_file from struct kvm which is needed
+in guest_memfd preservation during freeze call to preserve the token of
+vm_fd. This is used on retrieval time.
+
+
+I have sent V3 as well here:
+https://lore.kernel.org/all/20260622184851.2309827-1-tarunsahu@google.com/
+
+V3 includes the few minor fixes suggested by sashiko.
+we can continue reviewing on V2/V3. I will include all of the
+suggestions in V4.
+
+>
+>>  	char stats_id[KVM_STATS_NAME_SIZE];
+>>  };
+>> @@ -1074,7 +1086,9 @@ void kvm_get_kvm(struct kvm *kvm);
+>>  bool kvm_get_kvm_safe(struct kvm *kvm);
+>>  void kvm_put_kvm(struct kvm *kvm);
+>>  bool file_is_kvm(struct file *file);
+>> +struct file *kvm_create_vm_file(unsigned long type, const char *fdname);
+>>  void kvm_put_kvm_no_destroy(struct kvm *kvm);
+>> +void kvm_uevent_notify_vm_create(struct kvm *kvm);
+>>
+>>  static inline struct kvm_memslots *__kvm_memslots(struct kvm *kvm, int as_id)
+>>  {
+>> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+>> index 89489996fbc1..65f0c5fb353e 100644
+>> --- a/virt/kvm/kvm_main.c
+>> +++ b/virt/kvm/kvm_main.c
+>> @@ -67,9 +67,6 @@
+>>  #include <linux/kvm_dirty_ring.h>
+>>
+>>
+>> -/* Worst case buffer size needed for holding an integer. */
+>> -#define ITOA_MAX_LEN 12
+>> -
+>>  MODULE_AUTHOR("Qumranet");
+>>  MODULE_DESCRIPTION("Kernel-based Virtual Machine (KVM) Hypervisor");
+>>  MODULE_LICENSE("GPL");
+>> @@ -1349,6 +1346,19 @@ static int kvm_vm_release(struct inode *inode, struct file *filp)
+>>  {
+>>  	struct kvm *kvm = filp->private_data;
+>>
+>> +#ifdef CONFIG_LIVEUPDATE_GUEST_MEMFD
+>> +	/*
+>> +	 * Clear the weak reference of the vm file.
+>> +	 * In case vm file is closed by userspace, but kvm still has
+>> +	 * other users like vCPUs, clearing this pointer ensures
+>> +	 * that we don't have a dangling pointer to a closed file.
+>> +	 *
+>> +	 * Cleared via rcu_assign_pointer() to ensure proper memory visibility
+>> +	 * for concurrent lockless readers under RCU.
+>> +	 */
+>> +	rcu_assign_pointer(kvm->vm_file, NULL);
+>> +#endif
+>> +
+>>  	kvm_irqfd_release(kvm);
+>>
+>>  	kvm_put_kvm(kvm);
+>> @@ -5476,11 +5486,47 @@ bool file_is_kvm(struct file *file)
+>>  }
+>>  EXPORT_SYMBOL_FOR_KVM_INTERNAL(file_is_kvm);
+>>
+>> +struct file *kvm_create_vm_file(unsigned long type, const char *fdname)
+>> +{
+>> +	struct kvm *kvm = kvm_create_vm(type, fdname);
+>> +	struct file *file;
+>> +
+>> +	if (IS_ERR(kvm))
+>> +		return ERR_CAST(kvm);
+>> +
+>> +	file = anon_inode_getfile("kvm-vm", &kvm_vm_fops, kvm, O_RDWR);
+>> +	if (IS_ERR(file)) {
+>> +		kvm_put_kvm(kvm);
+>> +		return file;
+>> +	}
+>> +
+>> +#ifdef CONFIG_LIVEUPDATE_GUEST_MEMFD
+>> +	/*
+>> +	 * Weak reference to the file (without get_file()) to prevent a circular
+>> +	 * dependency. Safe because the file's release path clears this pointer
+>> +	 * and drops its reference to the VM.
+>> +	 *
+>> +	 * Written via rcu_assign_pointer() because the pointer can be read
+>> +	 * locklessly under RCU (e.g., in kvm_gmem_luo_preserve() via
+>> +	 * get_file_active() to prevent lockless ABA races).
+>> +	 */
+>> +	rcu_assign_pointer(kvm->vm_file, file);
+>> +#endif
+>> +
+>> +	/*
+>> +	 * Don't call kvm_put_kvm anymore at this point; file->f_op is
+>> +	 * already set, with ->release() being kvm_vm_release().  In error
+>> +	 * cases it will be called by the final fput(file) and will take
+>> +	 * care of doing kvm_put_kvm(kvm).
+>> +	 */
+>> +
+>> +	return file;
+>> +}
+>> +
+>>  static int kvm_dev_ioctl_create_vm(unsigned long type)
+>>  {
+>>  	char fdname[ITOA_MAX_LEN + 1];
+>>  	int r, fd;
+>> -	struct kvm *kvm;
+>>  	struct file *file;
+>>
+>>  	fd = get_unused_fd_flags(O_CLOEXEC);
+>> @@ -5489,31 +5535,17 @@ static int kvm_dev_ioctl_create_vm(unsigned long type)
+>>
+>>  	snprintf(fdname, sizeof(fdname), "%d", fd);
+>>
+>> -	kvm = kvm_create_vm(type, fdname);
+>> -	if (IS_ERR(kvm)) {
+>> -		r = PTR_ERR(kvm);
+>> -		goto put_fd;
+>> -	}
+>> -
+>> -	file = anon_inode_getfile("kvm-vm", &kvm_vm_fops, kvm, O_RDWR);
+>> +	file = kvm_create_vm_file(type, fdname);
+>>  	if (IS_ERR(file)) {
+>>  		r = PTR_ERR(file);
+>> -		goto put_kvm;
+>> +		goto put_fd;
+>>  	}
+>>
+>> -	/*
+>> -	 * Don't call kvm_put_kvm anymore at this point; file->f_op is
+>> -	 * already set, with ->release() being kvm_vm_release().  In error
+>> -	 * cases it will be called by the final fput(file) and will take
+>> -	 * care of doing kvm_put_kvm(kvm).
+>> -	 */
+>> -	kvm_uevent_notify_change(KVM_EVENT_CREATE_VM, kvm);
+>> +	kvm_uevent_notify_change(KVM_EVENT_CREATE_VM, file->private_data);
+>
+> Notifying with file->private_data threw me off... I would rather inline
+> the rcu_assign_pointer() in this function and have this line read
+> notify(..., kvm) like before.
+>
+>>
+>>  	fd_install(fd, file);
+>>  	return fd;
+>>
+>> -put_kvm:
+>> -	kvm_put_kvm(kvm);
+>>  put_fd:
+>>  	put_unused_fd(fd);
+>>  	return r;
+>> @@ -6341,6 +6373,11 @@ static void kvm_uevent_notify_change(unsigned int type, struct kvm *kvm)
+>>  	kfree(env);
+>>  }
+>>
+>> +void kvm_uevent_notify_vm_create(struct kvm *kvm)
+>> +{
+>> +	kvm_uevent_notify_change(KVM_EVENT_CREATE_VM, kvm);
+>> +}
+>> +
+>>  static void kvm_init_debug(void)
+>>  {
+>>  	const struct file_operations *fops;
+>> diff --git a/virt/kvm/kvm_mm.h b/virt/kvm/kvm_mm.h
+>> index 9fcc5d5b7f8d..7aa1d65c3d46 100644
+>> --- a/virt/kvm/kvm_mm.h
+>> +++ b/virt/kvm/kvm_mm.h
+>> @@ -3,6 +3,9 @@
+>>  #ifndef __KVM_MM_H__
+>>  #define __KVM_MM_H__ 1
+>>
+>> +/* Worst case buffer size needed for holding an integer as a string. */
+>> +#define ITOA_MAX_LEN 12
+>> +
+>>  /*
+>>   * Architectures can choose whether to use an rwlock or spinlock
+>>   * for the mmu_lock.  These macros, for use in common code
+>> --
+>> 2.54.0.1032.g2f8565e1d1-goog
 
