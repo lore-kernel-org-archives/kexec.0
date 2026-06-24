@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4209BCDB479
-	for <kexec@archiver.kernel.org>; Wed, 24 Jun 2026 07:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9855ACDB470
+	for <kexec@archiver.kernel.org>; Wed, 24 Jun 2026 07:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Subject:Cc:To:
 	From:Mime-Version:Date:References:In-Reply-To:Message-ID:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=02MLtmc3CshHHeA50kvhAPpMrYWWHmT4O24XG/PZOJY=; b=OSsxavyHWOb7gpXt0gSPY4d07o
-	TdVc0cp7T6uUf57m0O1yuSnP6pCrhdNEFWu8HTMuhAY/jTsGBuF/5NPV2qM9gzF2iLVf1OwK6viPg
-	/wrDAXyDXUmM4LwMFxNROJCGHu63koa6mIVnh3FHeClqhHmWeB7jqMpA1DO4I7vk5I/V60X/6hhgH
-	FIdHQJt8Ej2gkkXJC3CFZWhmGPLcvrQcwo4oppLnGIiW3t1r8Gmo9hgRMqYueEN1y7P8+cu/Rl/wz
-	ViOve6PQ1+iSqeE4jIgyFbNk6HDAaSFTUPaOo0WqGs5pr7RpNuxC9OjTm6Gjb42wCC1MSxXVv/D8C
-	FwrjaKuw==;
+	bh=zj5onQORcwTcXqGaMlslqUfVIKyafxiuDV0ciH4VDSI=; b=eFd7DCu17+rrtoj73eYuoe1QFY
+	yrd+ElNKEITDckcoPbFMw50Z5GfKLTt4W991sqvfi9S1SBb0O9f/gvl/T6g3BmEXi1UOM9PrHJPXB
+	zR41JwQeZqABM+2oOPtxofRSYYT8b/mdf/BGpn4Dnu6qXiRfcrf6WR0gL2YdIXGx5sJssJ++zpn6t
+	rwQiTl6isg+yrnv/CDjHPZ7yXBNlk3ZubLoIXsxvdhZxkfpeKH/FMNEpjHgjJ9mDPPghTLTsU7zrS
+	l5oOiJEhcsCHofC8NYtr4Z9evgp+5PNKcT9y7Nk1EuZyKnCAaJd9jDM3HTqch7mjg3tNnlUPHUMKf
+	8g3sJxCQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wcHwG-00000007J2P-14Ur;
-	Wed, 24 Jun 2026 07:22:24 +0000
+	id 1wcI1g-00000007JlL-3mzP;
+	Wed, 24 Jun 2026 07:28:00 +0000
 Received: from mxhk.zte.com.cn ([160.30.148.35])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wcHw9-00000007IxK-16n0
+	id 1wcI1d-00000007Jkf-3Lsa
 	for kexec@lists.infradead.org;
-	Wed, 24 Jun 2026 07:22:22 +0000
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	Wed, 24 Jun 2026 07:27:59 +0000
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4glYKf5Ts6z8XrrJ;
-	Wed, 24 Jun 2026 15:22:14 +0800 (CST)
-Received: from szxl2zmapp05.zte.com.cn ([10.1.32.37])
-	by mse-fl1.zte.com.cn with SMTP id 65O7M2sT002791;
-	Wed, 24 Jun 2026 15:22:02 +0800 (+08)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4glYSC1QgPz8Xs3G;
+	Wed, 24 Jun 2026 15:27:55 +0800 (CST)
+Received: from szxlzmapp03.zte.com.cn ([10.5.231.207])
+	by mse-fl2.zte.com.cn with SMTP id 65O7RnSe030321;
+	Wed, 24 Jun 2026 15:27:49 +0800 (+08)
 	(envelope-from luo.haiyang@zte.com.cn)
-Received: from mapi (szxlzmapp04[null])
+Received: from mapi (szxl2zmapp05[null])
 	by mapi (Zmail) with MAPI id mid18;
-	Wed, 24 Jun 2026 15:22:04 +0800 (CST)
-X-Zmail-TransId: 2b066a3b859cd7b-8e702
+	Wed, 24 Jun 2026 15:27:51 +0800 (CST)
+X-Zmail-TransId: 2b076a3b86f7a47-b35a7
 X-Mailer: Zmail v1.0
-Message-ID: <20260624152204575HdtpHmq2v0UmYxu78A5eL@zte.com.cn>
+Message-ID: <20260624152751953iS_sI5hDeu0guU09W8wZk@zte.com.cn>
 In-Reply-To: <20260624151934989G934gVJVvk0Mc95CogNWd@zte.com.cn>
 References: 20260624151934989G934gVJVvk0Mc95CogNWd@zte.com.cn
-Date: Wed, 24 Jun 2026 15:22:04 +0800 (CST)
+Date: Wed, 24 Jun 2026 15:27:51 +0800 (CST)
 Mime-Version: 1.0
 From: <luo.haiyang@zte.com.cn>
 To: <luo.haiyang@zte.com.cn>
 Cc: <kexec@lists.infradead.org>, <horms@kernel.org>, <zhang.run@zte.com.cn>,
         <cai.qu@zte.com.cn>
-Subject: =?UTF-8?B?wqBbUkVTRU5EIFBBVENIIDEvNF0gUklTQy1WOiBmaXggY3Jhc2hkdW1wIGxvYWQgbWVtb3J5IHJhbmdlcw==?=
+Subject: =?UTF-8?B?W1JFU0VORCBQQVRDSCAyLzRdIFJJU0NWOiBGaXggaW5jb3JyZWN0IHZpcnR1YWwgYWRkcmVzcyB0cmFuc2xhdGlvbiBpbgogY3Jhc2hkdW1wIGxvYWQ=?=
 Content-Type: text/plain;
 	charset="UTF-8"
-X-MAIL: mse-fl1.zte.com.cn 65O7M2sT002791
+X-MAIL: mse-fl2.zte.com.cn 65O7RnSe030321
 X-TLS: YES
 X-ENVELOPE-SENDER: luo.haiyang@zte.com.cn
-X-SOURCE-IP: 10.5.228.132 unknown Wed, 24 Jun 2026 15:22:14 +0800
+X-SOURCE-IP: 10.5.228.133 unknown Wed, 24 Jun 2026 15:27:55 +0800
 X-CLEAN: YES
 X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6A3B85A6.000/4glYKf5Ts6z8XrrJ
+X-Fangmail-MID-QID: 6A3B86FB.000/4glYSC1QgPz8Xs3G
 X-Bad-Reply: References and In-Reply-To but no 'Re:' in Subject.
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260624_002217_633922_652FDC52 
-X-CRM114-Status: GOOD (  19.46  )
+X-CRM114-CacheID: sfid-20260624_002758_171474_629B348B 
+X-CRM114-Status: GOOD (  14.88  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,250 +81,185 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Luo Haiyang <luo.haiyang@zte.com.cn>
 
-The kdump service reported the following error:
+The kexec shows the following crashdump log:
 
- kdump.sh[338]: readpage_elf: Attempt to read non-existent page at 0x17ee12000.
- kdump.sh[338]: readmem: type_addr: 0, addr:ffffffd6fee12b00, size:8
- kdump.sh[338]: validate_mem_section: Can't read mem_section array.
- kdump.sh[338]: readpage_elf: Attempt to read non-existent page at 0x17ee12000.
- kdump.sh[338]: readmem: type_addr: 0, addr:ffffffd6fee12b00, size:8
- kdump.sh[338]: get_mm_sparsemem: Can't get the address of mem_section.
- kdump.sh[338]: The kernel version is not supported.
- kdump.sh[338]: The makedumpfile operation may be incomplete.
+  Elf header: p_type = 1, p_offset = 0x80100000 p_paddr = 0x80100000 p_vaddr = 0xcff000 ...
+  Elf header: p_type = 1, p_offset = 0x100000000 p_paddr = 0x100000000 p_vaddr = 0x80bff000 ...
+  Elf header: p_type = 1, p_offset = 0x87ffff000 p_paddr = 0x87ffff000 p_vaddr = 0x800bfe000 ...
 
-crash_mem_ranges only includes available memory, not all system RAM.
-Inspired by the arm64 architecture, use system_mem_ranges in the
-load_elfcorehdr function.
+Obviously, phys_to_virt returns an incorrect virtual address (vaddr). On the RISC-V architecture,
+the linear address mapping is defined as:
+  va = pa + kernel_map.va_pa_offset (kernel_map.va_pa_offset = PAGE_OFFSET - phys_ram_base)
+Both PAGE_OFFSET and phys_ram_base can be read from /proc/kcore.
 
-Fixes: b3fd54b (RISC-V: Add support for riscv kexec/kdump on kexec-tools)
 Signed-off-by: Luo Haiyang <luo.haiyang@zte.com.cn>
 ---
- kexec/arch/riscv/crashdump-riscv.c | 167 ++++++++++++++++++-----------
- 1 file changed, 102 insertions(+), 65 deletions(-)
+ kexec/arch/riscv/Makefile          |  2 ++
+ kexec/arch/riscv/crashdump-riscv.c | 55 ++++++++++++++++++++++++------
+ util_lib/elf_info.c                | 41 +++++++++++++++++-----
+ util_lib/include/elf_info.h        |  1 +
+ 4 files changed, 80 insertions(+), 19 deletions(-)
 
+diff --git a/kexec/arch/riscv/Makefile b/kexec/arch/riscv/Makefile
+index 18a997b..e886770 100644
+--- a/kexec/arch/riscv/Makefile
++++ b/kexec/arch/riscv/Makefile
+@@ -14,6 +14,8 @@ riscv_ARCH_REUSE_INITRD =
+
+ riscv_CPPFLAGS += -I $(srcdir)/kexec/
+
++riscv_PHYS_TO_VIRT =
++
+ dist += $(riscv_KEXEC_SRCS)				\
+ 	kexec/arch/riscv/image-header.h			\
+ 	kexec/arch/riscv/include/arch/options.h		\
 diff --git a/kexec/arch/riscv/crashdump-riscv.c b/kexec/arch/riscv/crashdump-riscv.c
-index 336d7a7..e923a71 100644
+index e923a71..6875249 100644
 --- a/kexec/arch/riscv/crashdump-riscv.c
 +++ b/kexec/arch/riscv/crashdump-riscv.c
-@@ -6,6 +6,7 @@
- #include "crashdump.h"
- #include "kexec-elf.h"
- #include "mem_regions.h"
-+#include "iomem.h"
+@@ -1,5 +1,6 @@
+ #include <errno.h>
+ #include <elf.h>
++#include <elf_info.h>
+ #include <unistd.h>
 
- static struct crash_elf_info elf_info = {
- #if __riscv_xlen == 64
-@@ -18,6 +19,7 @@ static struct crash_elf_info elf_info = {
- };
-
- static struct memory_ranges crash_mem_ranges = {0};
-+static struct memory_ranges system_mem_ranges = {0};
+ #include "kexec.h"
+@@ -22,18 +23,45 @@ static struct memory_ranges crash_mem_ranges = {0};
+ static struct memory_ranges system_mem_ranges = {0};
  struct memory_range elfcorehdr_mem = {0};
 
- static unsigned long long get_page_offset(struct kexec_info *info)
-@@ -34,86 +36,114 @@ static unsigned long long get_page_offset(struct kexec_info *info)
- 	return vaddr_off;
- }
-
--int load_elfcorehdr(struct kexec_info *info)
-+/*
-+ * iomem_range_callback() - callback called for each iomem region
-+ * @data: not used
-+ * @nr: not used
-+ * @str: name of the memory region
-+ * @base: start address of the memory region
-+ * @length: size of the memory region
-+ *
-+ * This function is called once for each memory region found in /proc/iomem.
-+ * It locates system RAM and crashkernel reserved memory and places these to
-+ * variables, respectively, system_memory_rgns and crash_mem_ranges.
-+ */
-+static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
-+				char *str, unsigned long long base,
-+				unsigned long long length)
+-static unsigned long long get_page_offset(struct kexec_info *info)
++static unsigned long long phys_offset;
++
++static int get_page_offset(unsigned long long *page_offset)
  {
--	struct memory_range crashkern_range = {0};
--	struct memory_range *ranges = NULL;
--	unsigned long start = 0;
--	unsigned long end = 0;
--	unsigned long buf_size = 0;
--	unsigned long elfcorehdr_addr = 0;
--	void* buf = NULL;
--	int i = 0;
--	int ret = 0;
-+	if (strncmp(str, CRASH_KERNEL, strlen(CRASH_KERNEL)) == 0)
-+		return mem_regions_alloc_and_add(&crash_mem_ranges,
-+						base, length, RANGE_RAM);
-+	else if (strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)) == 0)
-+		return mem_regions_alloc_and_add(&system_mem_ranges,
-+						base, length, RANGE_RAM);
-+	else if (strncmp(str, KERNEL_CODE, strlen(KERNEL_CODE)) == 0)
-+		elf_info.kern_paddr_start = base;
-+	else if (strncmp(str, KERNEL_DATA, strlen(KERNEL_DATA)) == 0)
-+		elf_info.kern_size = base + length - elf_info.kern_paddr_start;
+-	unsigned long long vaddr_off = 0;
+-	unsigned long long page_size = sysconf(_SC_PAGESIZE);
+-	unsigned long long init_start = get_kernel_sym("_sinittext");
++	int fd, ret = 0;
 
--	ret = parse_iomem_single("Kernel code\n", &start, NULL);
--	if (ret) {
--		fprintf(stderr, "Cannot determine kernel physical base addr\n");
--		return -EINVAL;
--	}
--	elf_info.kern_paddr_start = start;
-+	return 0;
+-	/*
+-	 * Begining of init section is aligned to page size
+-	 */
+-	vaddr_off = init_start - page_size;
++	if ((fd = open("/proc/kcore", O_RDONLY)) < 0) {
++		fprintf(stderr, "Can't open (%s).\n", "/proc/kcore");
++		return EFAILED;
++	}
++
++	ret = read_page_offset_elf_kcore(fd, (long *)page_offset);
++	if (ret)
++		fprintf(stderr, "Can't get page_offset from /proc/kcore\n");
++
++	close(fd);
++	return ret;
 +}
 +
-+/*
-+ * crash_get_memory_ranges() - read system physical memory
-+ *
-+ * Function reads through system physical memory and stores found memory
-+ * regions in system_memory_ranges.
-+ * Regions are sorted in ascending order.
-+ *
-+ * Returns 0 in case of success and a negative value otherwise.
-+ */
-+static int crash_get_memory_ranges(void)
++static int get_phys_offset(unsigned long long *phys_offset)
 +{
-+	int i;
++	int fd, ret = 0;
 +
-+	if (!crash_mem_ranges.size)
-+		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
++	if ((fd = open("/proc/kcore", O_RDONLY)) < 0) {
++		fprintf(stderr, "Can't open (%s).\n", "/proc/kcore");
++		return EFAILED;
++	}
++
++	ret = read_phys_offset_elf_kcore(fd, (long *)phys_offset);
++	if (ret)
++		fprintf(stderr, "Can't get phys_offset from /proc/kcore\n");
 
--	ret = parse_iomem_single("Kernel bss\n", NULL, &end);
--	if (ret) {
--		fprintf(stderr, "Cannot determine kernel physical bss addr\n");
-+	if (!crash_mem_ranges.size)
- 		return -EINVAL;
+-	return vaddr_off;
++	close(fd);
++	return ret;
++}
 +
-+	dbgprint_mem_range("Reserved memory range",
-+			crash_mem_ranges.ranges, crash_mem_ranges.size);
-+
-+	for (i = 0; i < crash_mem_ranges.size; i++) {
-+		if (mem_regions_alloc_and_exclude(&system_mem_ranges,
-+					&crash_mem_ranges.ranges[i])) {
-+			fprintf(stderr, "Cannot allocate memory for ranges\n");
-+			return -ENOMEM;
-+		}
- 	}
--	elf_info.kern_paddr_start = start;
--	elf_info.kern_size = end - start;
++unsigned long phys_to_virt(struct crash_elf_info *elf_info, unsigned long long p)
++{
++	return elf_info->page_offset - phys_offset + p;
+ }
 
-+	/*
-+	 * Make sure that the memory regions are sorted.
-+	 */
-+	mem_regions_sort(&system_mem_ranges);
-+
-+	dbgprint_mem_range("Coredump memory ranges",
-+			   system_mem_ranges.ranges, system_mem_ranges.size);
-+
-+	/*
-+	 * For additional kernel code/data segment.
-+	 * kern_paddr_start/kern_size are determined in iomem_range_callback
-+	 */
- 	elf_info.kern_vaddr_start = get_kernel_sym("_text");
--	if (!elf_info.kern_vaddr_start) {
-+	if (!elf_info.kern_vaddr_start)
- 		elf_info.kern_vaddr_start = UINT64_MAX;
--	}
+ /*
+@@ -124,7 +152,14 @@ int load_elfcorehdr(struct kexec_info *info)
+ 	if (crash_get_memory_ranges())
+ 		return EFAILED;
 
 -	elf_info.page_offset = get_page_offset(info);
--	dbgprintf("page_offset:   %016llx\n", elf_info.page_offset);
-+	return 0;
-+}
-
--	ret = parse_iomem_single("Crash kernel\n", &start, &end);
--	if (ret) {
--		fprintf(stderr, "Cannot determine kernel physical bss addr\n");
--		return -EINVAL;
--	}
--	crashkern_range.start = start;
--	crashkern_range.end = end;
--	crashkern_range.type = RANGE_RESERVED;
--
--	ranges = info->memory_range;
--	for (i = 0; i < info->memory_ranges; i++) {
--		ret = mem_regions_alloc_and_add(&crash_mem_ranges,
--						ranges[i].start,
--						ranges[i].end - ranges[i].start + 1,
--						ranges[i].type);
--		if (ret ) {
--			fprintf(stderr, "Could not create crash_mem_ranges\n");
--			return ret;
--		}
--	}
-+int load_elfcorehdr(struct kexec_info *info)
-+{
-+	unsigned long buf_size = 0;
-+	unsigned long elfcorehdr_addr = 0;
-+	void* buf = NULL;
-
--	ret = mem_regions_alloc_and_exclude(&crash_mem_ranges,
--					    &crashkern_range);
--	if (ret) {
--		fprintf(stderr, "Could not exclude crashkern_range\n");
--		return ret;
--	}
-+	if (crash_get_memory_ranges())
++	if (get_phys_offset(&phys_offset))
 +		return EFAILED;
 +
-+	elf_info.page_offset = get_page_offset(info);
-+	dbgprintf("page_offset:   %016llx\n", elf_info.page_offset);
++	dbgprintf("phys_offset:   %016llx\n", phys_offset);
++
++	if (get_page_offset(&elf_info.page_offset))
++		return EFAILED;
++
+ 	dbgprintf("page_offset:   %016llx\n", elf_info.page_offset);
 
  #if __riscv_xlen == 64
--	crash_create_elf64_headers(info, &elf_info, crash_mem_ranges.ranges,
--				   crash_mem_ranges.size, &buf, &buf_size,
-+	crash_create_elf64_headers(info, &elf_info, system_mem_ranges.ranges,
-+				   system_mem_ranges.size, &buf, &buf_size,
- 				   ELF_CORE_HEADER_ALIGN);
+diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
+index 589bc1a..36eb895 100644
+--- a/util_lib/elf_info.c
++++ b/util_lib/elf_info.c
+@@ -1308,16 +1308,39 @@ int read_phys_offset_elf_kcore(int fd, long *phys_off)
 
- #else
--	crash_create_elf32_headers(info, &elf_info, crash_mem_ranges.ranges,
--				   crash_mem_ranges.size, &buf, &buf_size,
-+	crash_create_elf32_headers(info, &elf_info, system_mem_ranges.ranges,
-+				   system_mem_ranges.size, &buf, &buf_size,
- 				   ELF_CORE_HEADER_ALIGN);
- #endif
+ 	*phys_off = ULONG_MAX;
 
-
- 	elfcorehdr_addr = add_buffer_phys_virt(info, buf, buf_size,
--					       buf_size, 0,
--					       crashkern_range.start,
--					       crashkern_range.end,
--					       -1, 0);
-+					    buf_size, 0,
-+					    crash_mem_ranges.ranges[crash_mem_ranges.size - 1].start,
-+					    crash_mem_ranges.ranges[crash_mem_ranges.size - 1].end,
-+					    -1, 0);
-
- 	elfcorehdr_mem.start = elfcorehdr_addr;
- 	elfcorehdr_mem.end = elfcorehdr_addr + buf_size - 1;
-@@ -126,15 +156,22 @@ int load_elfcorehdr(struct kexec_info *info)
-
- int is_crashkernel_mem_reserved(void)
- {
--	uint64_t start = 0;
--	uint64_t end = 0;
-+	if (!crash_mem_ranges.size)
-+		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
-
--	return parse_iomem_single("Crash kernel\n", &start, &end) == 0 ?
--	       (start != end) : 0;
-+	return crash_mem_ranges.size;
- }
-
- int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
- {
--	return parse_iomem_single("Crash kernel\n", start, end);
--}
-+	if (!crash_mem_ranges.size)
-+		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
++	if (phys_offset != UINT64_MAX) {
++		*phys_off = phys_offset;
++		return 0;
++	}
 +
-+	if (!crash_mem_ranges.size)
-+		return -1;
++	/* If we have a valid 'PHYS_OFFSET' by now,
++	 * return it to the caller now.
++	 */
+ 	ret = read_elf(fd);
+-	if (!ret) {
+-		/* If we have a valid 'PHYS_OFFSET' by now,
+-		 * return it to the caller now.
+-		 */
+-		if (phys_offset != UINT64_MAX) {
+-			*phys_off = phys_offset;
+-			return ret;
+-		}
++	if (!ret && phys_offset != UINT64_MAX) {
++		*phys_off = phys_offset;
++		return 0;
++	}
 +
-+	*start = crash_mem_ranges.ranges[crash_mem_ranges.size - 1].start;
-+	*end = crash_mem_ranges.ranges[crash_mem_ranges.size - 1].end;
-
-+	return 0;
++	return -EFAULT;
 +}
++
++int read_page_offset_elf_kcore(int fd, long *page_off)
++{
++	int ret;
++
++	*page_off = ULONG_MAX;
++
++	if (page_offset != UINT64_MAX) {
++		*page_off = page_offset;
++		return 0;
++	}
++
++	ret = read_elf(fd);
++	if (!ret && page_offset != UINT64_MAX) {
++		*page_off = page_offset;
++		return 0;
+ 	}
+
+-	return 2;
++	return -EFAULT;
+ }
+diff --git a/util_lib/include/elf_info.h b/util_lib/include/elf_info.h
+index fdf4c3d..3ccc950 100644
+--- a/util_lib/include/elf_info.h
++++ b/util_lib/include/elf_info.h
+@@ -29,6 +29,7 @@ int get_pt_load(int idx,
+ 	unsigned long long *virt_start,
+ 	unsigned long long *virt_end);
+ int read_phys_offset_elf_kcore(int fd, long *phys_off);
++int read_page_offset_elf_kcore(int fd, long *page_off);
+ int read_elf(int fd);
+ void dump_dmesg(int fd, void (*handler)(char*, unsigned int));
+ extern void (*arch_scan_vmcoreinfo)(char *pos);
 -- 
 2.27.0
 
