@@ -4,162 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7E907CDE002
-	for <kexec@archiver.kernel.org>; Wed, 24 Jun 2026 13:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A2ED0CDB479
+	for <kexec@archiver.kernel.org>; Wed, 24 Jun 2026 13:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=d81CM1+AT4WllJ72uDv8AXVKFPVvGK8TiKbKmP7zRcI=; b=J+2pzFsMmqNJEeTNzuxvmwenEC
-	W/JlfeLwdsHE1NE6kTbew8DCC42Yjhvyim+KkoMqqdFKexhb7+6jbvnu/lcrJ6CStTKgpANwhLCTb
-	jykhEWWZ0/KyOCwD515OOugwFTtHjb4S8/yro1vPpaCmAbfiteHFycpVLq+fCsnIahHkpNmsotAq+
-	VCWIxuVLyOqP2P3QLUW4WIcBlXAELivrmIu0XRyNG/tYzWM3haPaMU/tdTKrkIBvI9IXzH/lpnGiz
-	kNG+FY7tY5rI+2HNb3RaVQitMZ+zCdWP3XG9I6oY9VM17eXZ2yDYsEW1fFZtd17AtgxJ9TK3/JP+f
-	T2PO2ynw==;
+	bh=oSmnVUDEowNS7nXYHo4vlbwaFGW/DKpjdODnzdWCEgM=; b=T/Ld7AulzNiiS1CeouQnX88lCn
+	9M9vMtU+178RpEpeF73Mxfcc9jI/+4L8gnbQqfR/GE6rvtVT6EvDjBPiVbzdPRmv66irecpOmlIKm
+	GHQkRa4O+n5g7Yp96Lv+vbBf2QX77/u8xoHyivR6CYUVQXaLDGuQxwRJUGDGvOJASMinKwgdRXj6V
+	plvd54zezWVQR5LNFE87AF3m36cNBCGfJ152pvcq5VD7NKvD0wRAyQ2MboOjsOxG8KVOdZM9JyloW
+	+ghUrhjBsD4xRG9N+SVdotfLFQcoAu3lYxROTpXv81UJQepctq5m3jDIXNeNPPI4A/mX2qOnQ5Sjr
+	ShQ3Iv4Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wcNaQ-00000007oeZ-0370;
-	Wed, 24 Jun 2026 13:24:14 +0000
-Received: from mail-centralusazlp170110009.outbound.protection.outlook.com ([2a01:111:f403:c111::9] helo=DM5PR21CU001.outbound.protection.outlook.com)
+	id 1wcNpp-00000007pxQ-05Ev;
+	Wed, 24 Jun 2026 13:40:09 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wcNaM-00000007oe5-0fvz
+	id 1wcNpn-00000007pxI-2EQI
 	for kexec@lists.infradead.org;
-	Wed, 24 Jun 2026 13:24:12 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tdaAv+ecVA6DZauEGCo9T7B1nQOcCSUU7hNraj6tRtvtEUHeUQj+rFIXvoWnfPqY2jhC6wTt7R5+xcBY+VelRctKrARIr4wFZbaANqvwzrGcUf8rtxtOhVqHYalcx7RfsOmd6Os93RNh+K5OUkebyCKH5NBEKXytYF2j5Rl+jRyvcQ+Gg7v73Tj8YrP+mR/51jOvdRVdZWEAYjMDLVFBpPhzlgphh9Ezf7NC47k8IaCF0Cb/w30LBjYjWpROP/SPaCTetRgg0ltq47Ri5yeOwV9IFjbZYyh7A9G7Qtv/+Nc4zu08kN5H6K8BBSZyZ3m2G2dF3Zq4uRjqZvsALTPMuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d81CM1+AT4WllJ72uDv8AXVKFPVvGK8TiKbKmP7zRcI=;
- b=sFfEVVxRwsOYnMcorSkPi3qRpCppWOTlauZ7YwzcPjJrepWy2banawSRiQaamujWLzH7Yovh7ENxhyducOetDdXtV1XFbL6iapW7G5HTFQCirdpvpTOYs0YHy+RcrflhBaARVWO1RdbVKvKoyb0fO3BmNMTIBGYfvpvol1u53nhVZ42cRILUOyxRtQ74yozN+rK428+aL8CCErpNEkNAh3+LLelktq5N4ng84SmLdBgXMssQz2zLSrS/mxXQQA3bLevLyLpOyjc+nB7gvgns33sblaC7Wq4xCrlSwG65uV7dd0XfLPQl5XraQD47voUHwmBSQWUTshtT8HLMy4gGog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d81CM1+AT4WllJ72uDv8AXVKFPVvGK8TiKbKmP7zRcI=;
- b=Dc94bJtDtzGF6zztoUX5l/0+u8PChmvdYrmw4RV69JMcqBPpaCuwM6m7FYCD96iE76/DFmIb1NLF2TM8ns09RKOhlAtoUYlKIt5NKISj2tBRmfTa33pXQr/2q01X23GhzczSPuaJVh7I8h1G2u/xxf1sPPYPTJNjJHQLYY2EQXs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by CH3PR12MB7570.namprd12.prod.outlook.com (2603:10b6:610:149::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.14; Wed, 24 Jun
- 2026 13:24:01 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::ce69:cfae:774d:a65c]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::ce69:cfae:774d:a65c%5]) with mapi id 15.21.0139.018; Wed, 24 Jun 2026
- 13:24:01 +0000
-Message-ID: <cf8467c7-b98f-44a5-9cf9-60b43b5da711@amd.com>
-Date: Wed, 24 Jun 2026 15:23:47 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/7] list: Add mutable iterator variants
-To: Kaitao Cheng <kaitao.cheng@linux.dev>,
- David Laight <david.laight.linux@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Tejun Heo <tj@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Paul Moore <paul@paul-moore.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Shakeel Butt <shakeel.butt@linux.dev>, David Howells <dhowells@redhat.com>,
- Simona Vetter <simona.vetter@ffwll.ch>, Randy Dunlap
- <rdunlap@infradead.org>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Philipp Stanner <phasta@kernel.org>, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
- linux-ntfs-dev@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
- io-uring@vger.kernel.org, audit@vger.kernel.org, bpf@vger.kernel.org,
- netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kexec@lists.infradead.org, live-patching@vger.kernel.org,
- linux-modules@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-pm@vger.kernel.org, rcu@vger.kernel.org, sched-ext@lists.linux.dev,
- linux-mm@kvack.org, virtualization@lists.linux.dev, damon@lists.linux.dev,
- llvm@lists.linux.dev, Kaitao Cheng <chengkaitao@kylinos.cn>
-References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
- <20260622040533.29824-2-kaitao.cheng@linux.dev>
- <20260622094242.64531b9a@pumpkin>
- <351a6b67-b394-4c58-aee2-88b6c8089ad5@linux.dev>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <351a6b67-b394-4c58-aee2-88b6c8089ad5@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BL1PR13CA0270.namprd13.prod.outlook.com
- (2603:10b6:208:2ba::35) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	Wed, 24 Jun 2026 13:40:07 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id D6A5D43C7E;
+	Wed, 24 Jun 2026 13:40:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EE201F000E9;
+	Wed, 24 Jun 2026 13:40:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782308406;
+	bh=oSmnVUDEowNS7nXYHo4vlbwaFGW/DKpjdODnzdWCEgM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=FJLyC/lXcGVoAgDPm/MD2U/3XWT73nrQxL90QOkHUYXK5sQEQHTDjeJD+Nl87FhMr
+	 f0KGAs6COTewuS2gTfRSFXBfuqpPtGxhBoWuAEkV23kxmgX2gCQI2yVJxj38/kg+8M
+	 jKhkeb2z4nbAiMyCnuzzZZuUpLv17TpqMQn2yv+4HgB/Seqywxhdq3iuk4Uve8Kpf3
+	 Msz7r39Av4nCwic8Fu95AC28lsndXWtzv1Y8Nt4RFzWD+0hPyRbgiMimoIQfURvbgI
+	 lnc8FZzgrVtFxC4lW8Z0hUcRB1uDtgDO0f5RtkgRqL7VmAa/H5sX116+HRrpFu8OH7
+	 XSRQFHl4sDmWw==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: nao.horiguchi@gmail.com,  linmiaohe@huawei.com,  david@kernel.org,
+  lance.yang@linux.dev,  akpm@linux-foundation.org,  baoquan.he@linux.dev,
+  rppt@kernel.org,  pratyush@kernel.org,  kexec@lists.infradead.org,
+  linux-mm@kvack.org,  rneu@meta.com,  riel@surriel.com,  caggio@meta.com,
+  kas@kernel.org
+Subject: Re: mm/hwpoison: persist poisoned PFN list across kexec via KHO [RFC]
+In-Reply-To: <ajut_LDQGYCShApx@gmail.com> (Breno Leitao's message of "Wed, 24
+	Jun 2026 03:39:38 -0700")
+References: <ajut_LDQGYCShApx@gmail.com>
+Date: Wed, 24 Jun 2026 15:40:03 +0200
+Message-ID: <2vxzse6ckqfg.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CH3PR12MB7570:EE_
-X-MS-Office365-Filtering-Correlation-Id: 715eed2d-514b-4810-2f08-08ded1f3da78
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|23010399003|1800799024|376014|7416014|6133799003|18002099003|22082099003|56012099006|4143699003|11063799006;
-X-Microsoft-Antispam-Message-Info: vjRMDzmTxaLO3rG//AE977uAg8zKrEwMP6cu1AOblab8SZ491Cs0rYGIPxYvAFRNxWSVQ1WdRjVkW8uINOWaaO1LcWyt/wIKFnqXxociABOHsobehPc8e61s3GnfEfviv/vYUJs1BYtORVJs0+rNk2XGq+ZYcvNpXg6oKMgBd60P6S9UAXXOjUalPunVJcruSBXhU+03Db/ZLAvwRMJ4LkyKp9X8urTD29nI1sVli23YRzfr6f7QlYt1NE8z2tjj+tTOuaopcIYaTyRREeh1LTyJGLjXPTHttj/0qGSJWH0dbU2PQ16weT2vE/oUJQOd55L87wLEkz7iKzhzNzwmoRCxnEYaTxhqUK/d7fhbS49r2+o+otSyW6oXmfcTSEh+A13SwWrC412pRamXap2Sq7vEAcnU53bRd7aSf1zOxgJJbd60qry1G7yF8/wahybuHwktLDMb87yqpcxhBNlskColY6z/ieQl9ZLrsRjxsFjJ4g1BGfi6PGkW4cNzSNGwUDfb3g0kKQ3RXayJ1mvTgK+cHwyZAOuPrNH+rmrGsOoC7gIXksGzl1YSqQT/guiSOvjYJs2VkcDleBwpXa21FkM2F/IXE9BjHNUkTuuA2CqTou5m5AUIIvTJkWTeEcpphCrCfaZcRkBjaZAv/XpqW1HguK/RVMJYVXXsSyz8H8k=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(376014)(7416014)(6133799003)(18002099003)(22082099003)(56012099006)(4143699003)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YWxibmFPMnl4Z04zVXpKQXBkcXNhV1dTQ1o4RW0vQ3czTkIvQVQ4KytXc2dV?=
- =?utf-8?B?QlIwYmFNbGQwSVNPbVd3MXlQMmJjZWJNTXA3Z0VRTjZSQnVNU1FmejFKNzh3?=
- =?utf-8?B?ejRvMkY3NHNNSjNSaThtY0xPaTcvNU9BeldYNGx4VW8xZXJmSzJmaWNDV0Z1?=
- =?utf-8?B?QVdzQzZuUTljZUF6UXIyZzd4OEVwRS9oT2pFdWVPNERlUjBrZjVsSUZ4M1Aw?=
- =?utf-8?B?VmR2bFl4aFVEd2dmV2Q2NHNUWVE5d3BVTXQvcVFqR0E3blVnUXJRVUhKdmN3?=
- =?utf-8?B?U251WFF0SlhUc3J0MjdwdXB5UmFFbDRSeGxSckpQSHZ1RXlkTUV4RXZvdkxa?=
- =?utf-8?B?U1ZZK2NIWlB2cFZDUHNxL2J1MVEzRnp0Z2k2SzFCemtvN3I2M0htRUVrcWlE?=
- =?utf-8?B?TjVpOGhaNFdnUFR4Zk5WWGpEU2NObC9WM3Z6eHFsbVRkS0NxZGpENi8yR3Qz?=
- =?utf-8?B?Tmp0cEpqMFcrbnRhQStMV2xWYk1qTHhOdlh4dGtHQWNIS1VEVFJ5UzZXeVEw?=
- =?utf-8?B?RUc4aUtQS3BmMnlPTXVpNVFDcXJNbDRiR3FuWmVVLytDUm5CdFI3dGltV0xO?=
- =?utf-8?B?T25rMFhVNXpCaGxlUjM4cEJUK0ozdXF2SEdhRG9MLzNHdVphcDNGVjh3M1hj?=
- =?utf-8?B?YWozS3Nma2dZMmx2VmdhMmxaTXRVbTByalA5YklaM1hwVk9KNXNyQk1xbnli?=
- =?utf-8?B?eVFxWkIwdTJBckZuZFVsaEllNnl1cFhNdGkzeEdaeVVRckM0V0d1czZxaFRi?=
- =?utf-8?B?MmxjdHV1SjNnQnJieTE4K0w1YmdCK0FQbFZsL3QvcTB3dityclIrdHp2dFZo?=
- =?utf-8?B?WTV5Q043cFNaVm5keXZISjFLZXJzRDZKd3Q3R0pIYzVMZ2tBcDBvaG5vU2ll?=
- =?utf-8?B?b1VCOUV5VnRyVll5Y3lOTmE3c1RNbzlkWUFwVWRtWXdxSllWK3ZjOS93TUVw?=
- =?utf-8?B?dnMyekZZSHF1bHU3Q3kxVzZwWkZsWk9ndjZHV21aYzdlMDV2Q0MvVEFTWHVu?=
- =?utf-8?B?WkN5Qm9LOTZ1am5nL2NaYktHS0thc0FVNEtDcStzMEcrRWY3MDIzdklSL2I0?=
- =?utf-8?B?ak4xck1qd001enVONE1HeHJMc0xMa2tYTjRQTm9vMGZpNlR5WFV4KzA3aUhy?=
- =?utf-8?B?MitMSHc3MnFaSjRaemlZWDFRaXVEc0xEeHY4YlpoeHdxa0xEcjJrajVQYkM5?=
- =?utf-8?B?Qi9ISWE2ODFNYWV1aWNWQ1NGOExiM3E5YzhJODRjcVhOR3YyMk9IbFlFMG10?=
- =?utf-8?B?czFvWVhOd1UzQU1WU05ZYW1odXBrdXpObXZtVkIwcklLa21XNG5wSmphWHJD?=
- =?utf-8?B?aGJOajZqSTVmb2gvdHc0WTQySjlHQ2VIRWY3SHZScW1YUlBoL3ErdDFmYUFO?=
- =?utf-8?B?cTl6WHNGaEtZTVNvVk1sV1NXblB6WG0zRlZnNUVPV3hnSEJYRG10a3RhaXA2?=
- =?utf-8?B?WU82ZjFqYWdGaXZ6TExybGVNWTk2QzJRTlk4SE9WVUJtV1FRVU1tbkZlTnp1?=
- =?utf-8?B?bFhTczlvYUttdEU3bEZwTnp3ZjN1MmxQQnk4MGlMYk9Ga3h0YkdDUFk0bWJN?=
- =?utf-8?B?cWVmR1dWdHVWV1IveHlnWnBla3grZGtqWW85ZkYyQnhWSEtzTlRYa1dhenlP?=
- =?utf-8?B?Y3FDaXJxSkJiUjdQNktaNUpDVFk3eGpUYWNnOWtramhxZ0RWc0daaW4rY3BX?=
- =?utf-8?B?cEtsdG81L1lRNCtiTEMvYTNHcVY4MmpuaFZvVTVySlVpVVlkcTNQajhGb08w?=
- =?utf-8?B?WGFBNERTSGxLc3cvakQzZjRwbzEvMUMvZ2o2SnFzM3RHY1k1YWlYck1KQjJp?=
- =?utf-8?B?alVWRDFVYXFkOVBLRlY4MkRGQSsvb2Y4SEZ2T2pkemZNU3FnVjJTR2NWU2M1?=
- =?utf-8?B?RjVpMjdCemZBWXErMndvbkJkaFk5ZnJRck4yYXU5V2FqVzJ2Y1pjQkhSTUEx?=
- =?utf-8?B?ZmdFZ3lrc2JjL1lpb1R2alpYNUFidDVCNXdFaXdyNk9yWjl1Z2p4Y0FqdEZB?=
- =?utf-8?B?T0JmTk9xK3MwRGxrL0tqZGFWK3BXZlUyNWlITzBzUHY4ZjYzNkw4MW5ZVVFv?=
- =?utf-8?B?NFhsR2tPaEFKY3EwRDJOYlVhOU1LUUtDMVRqeVNCZXdnY2lML2k2VU9tbzFI?=
- =?utf-8?B?WlZOOXBScmUyd3B6bEl2eURzOVB2VzRnLzFGQTZaS1VVd0ZaaVplWExGZ1pQ?=
- =?utf-8?B?U3RTNWlFaitwNVRqREs4c0RHMFlKVjMyeENKbzk4bjIvL2FkRDExcitRdXA4?=
- =?utf-8?B?Yys0Rm5zUmtIRkpVYzVKSEhHNmlsbFVvZHpWTHl3SUZkdkxWNndJUUpENkl6?=
- =?utf-8?Q?cSgurPjmbMLoRmPxTI?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 715eed2d-514b-4810-2f08-08ded1f3da78
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2026 13:24:00.9068
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QVhBEK/2F/j8PEv/furwKNhQwAwxU3hZSEqW50n8SOx5hinzeiYl4lrFCu6sDpFf
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7570
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260624_062410_274379_17696FFB 
-X-CRM114-Status: GOOD (  26.86  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -174,120 +72,171 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 6/24/26 15:14, Kaitao Cheng wrote:
-> 
-> 
-> 在 2026/6/22 16:42, David Laight 写道:
->> On Mon, 22 Jun 2026 12:05:31 +0800
->> Kaitao Cheng <kaitao.cheng@linux.dev> wrote:
->>
->>> From: Kaitao Cheng <chengkaitao@kylinos.cn>
->>>
->>> The list_for_each*_safe() helpers are used when the loop body may
->>> remove the current entry.  Their API exposes the temporary cursor at
->>> every call site, even though most users only need it for the iterator
->>> implementation and never reference it in the loop body.
->>>
->>> Add *_mutable() variants for list and hlist iteration.  The new helpers
->>> support both forms: callers may keep passing an explicit temporary cursor
->>> when they need to inspect or reset it, or omit it and let the helper use
->>> a unique internal cursor.
->>
->> I'm not really sure 'mutable' means anything either.
->> It is possible to make it valid for the loop body (or even other threads)
->> to delete arbitrary list items - but that needs significant extra overheads.
->>
->> It might be worth doing something that doesn't need the extra variable,
->> but there is little point doing all the churn just to rename things.
->>
->>>
->>> This makes call sites that only mutate the list through the current entry
->>> less noisy, while keeping the existing *_safe() helpers available for
->>> compatibility.
->>>
->>> Signed-off-by: Kaitao Cheng <chengkaitao@kylinos.cn>
->>> ---
->>>  include/linux/list.h | 269 +++++++++++++++++++++++++++++++++++++------
->>>  1 file changed, 231 insertions(+), 38 deletions(-)
->>>
->>> diff --git a/include/linux/list.h b/include/linux/list.h
->>> index 09d979976b3b..1081def7cea9 100644
->>> --- a/include/linux/list.h
->>> +++ b/include/linux/list.h
->>> @@ -7,6 +7,7 @@
->>>  #include <linux/stddef.h>
->>>  #include <linux/poison.h>
->>>  #include <linux/const.h>
->>> +#include <linux/args.h>
->>>  
->>>  #include <asm/barrier.h>
->>>  
->>> @@ -763,28 +764,72 @@ static inline void list_splice_tail_init(struct list_head *list,
->>>  #define list_for_each_prev(pos, head) \
->>>  	for (pos = (head)->prev; !list_is_head(pos, (head)); pos = pos->prev)
->>>  
->>> -/**
->>> - * list_for_each_safe - iterate over a list safe against removal of list entry
->>> - * @pos:	the &struct list_head to use as a loop cursor.
->>> - * @n:		another &struct list_head to use as temporary storage
->>> - * @head:	the head for your list.
->>> +/*
->>> + * list_for_each_safe is an old interface, use list_for_each_mutable instead.
->>>   */
->>>  #define list_for_each_safe(pos, n, head) \
->>>  	for (pos = (head)->next, n = pos->next; \
->>>  	     !list_is_head(pos, (head)); \
->>>  	     pos = n, n = pos->next)
->>>  
->>> +#define __list_for_each_mutable_internal(pos, tmp, head)		\
->>> +	for (typeof(pos) tmp = (pos = (head)->next)->next;		\
->>
->> Use auto
->>
->>> +	     !list_is_head(pos, (head));				\
->>> +	     pos = tmp, tmp = pos->next)
->>> +
->>> +#define __list_for_each_mutable1(pos, head)				\
->>> +	__list_for_each_mutable_internal(pos, __UNIQUE_ID(next), head)
->>> +
->>> +#define __list_for_each_mutable2(pos, next, head)			\
->>> +	list_for_each_safe(pos, next, head)
->>> +
->>>  /**
->>> - * list_for_each_prev_safe - iterate over a list backwards safe against removal of list entry
->>> + * list_for_each_mutable - iterate over a list safe against entry removal
->>>   * @pos:	the &struct list_head to use as a loop cursor.
->>> - * @n:		another &struct list_head to use as temporary storage
->>> - * @head:	the head for your list.
->>> + * @...:	either (head) or (next, head)
->>> + *
->>> + * next:	another &struct list_head to use as optional temporary storage.
->>> + *		The temporary cursor is internal unless explicitly supplied by
->>> + *		the caller.
->>> + * head:	the head for your list.
->>> + */
->>> +#define list_for_each_mutable(pos, ...)					\
->>> +	CONCATENATE(__list_for_each_mutable, COUNT_ARGS(__VA_ARGS__))	\
->>> +		(pos, __VA_ARGS__)
->>
->> The variable argument count logic really just slows down compilation.
->> Maybe there aren't enough copies of this code to make that significant.
->> But just because you can do it doesn't mean it is a gooD idea.
->> I'm also not sure it really adds anything to the readability.
->>
->> And, it you are going to make the middle argument optional there is
->> no need to change the macro name.
-> 
-> Christian König and Jani Nikula also disagree with the variadic-argument
-> implementation approach. If we abandon that method, it means we will
-> inevitably need to add some new macros. If mutable is not a good name,
-> suggestions for better alternatives would be welcome; coming up with a
-> suitable name is indeed rather tricky.
+On Wed, Jun 24 2026, Breno Leitao wrote:
 
-I don't think you need to add a new macro for the specific use case that people want to modify the next element of the iteration.
+> TL;DR: carry the hardware-poisoned page list across kexec using KHO, so the
+> next kernel doesn't hand out known-bad RAM.
+>
+> The problem
+> ===========
+>
+> When a page is hard-offlined due to an uncorrectable memory error (multi bit
+> ECC), memory_failure() sets PG_hwpoison, unmaps it, removes it from the buddy
+> allocator and accounts it in num_poisoned_pages / HardwareCorrupted. All of
+> that lives in the running kernel's data structures, not in the hardware.
+>
+> A kexec replaces the kernel image but not the physical DRAM. The next kernel
+> rebuilds mem_map[] from the firmware-provided memory map, sees the bad frame as
+> ordinary system RAM, and the buddy allocator hands it back out on the next
+> kernel. The known-bad cell is silently back in circulation, and the next
+> access faults again - potentially in a context that is harder to recover than
+> the original (e.g. a kernel allocation rather than a killable user page).
+>
+> This matters most where kexec is frequent and machines are long-lived: live
+> kernel update on large fleets. Poison knowledge accumulates over uptime and is
+> thrown away on every update.
 
-If I remember your numbers correctly that is a really corner case and keeping using the existing *_safe() macros for that sounds perfectly fine to me.
+I don't know much about hardware page poisoning. From what I understand
+of your description, it seems like the hardware fires off an event that
+the kernel receives, and then the kernel stores the state, and hardware
+"forgets" it. So what happens when something accesses the poisoned
+memory anyway? Do we get another hwpoison event?
 
+Also, what happens on cold reboot? If the HW does not remember bad
+pages, won't the kernel be in the same position? How does it know the
+bad pages on a cold boot?
+
+>
+> This is the case at Meta and in many hyperscalers.
+>
+>
+> Possible solutions
+> ==================
+>
+> 1. Do nothing (status quo). The next kernel hands out known-bad
+>    RAM, and hope for the best. 
+>
+> 2. e820 / EFI memory map (E820_TYPE_UNUSABLE). Tempting because the
+>    frame would simply never become RAM (no allocator race at all).
+>    But: it is x86-only (no arm64 equivalent in the same mechanism;
+>    this series is tested on arm64);
+>
+> 3. Firmware / platform page retirement (PPR, BMC page-offline, CXL
+>    device poison lists). This is the correct layer for *cross power
+>    cycle* persistence and is complementary to this work. But it is
+>    per-platform, out of OS control, not universally available, and
+>    cannot carry OS-discovered or software-simulated poison
+>    (MADV_HWPOISON, the injector). kexec can also happen long before
+>    firmware retirement takes effect.
+
+I don't know enough about these two to say whether they are a good idea
+or not. I'll let more competent people comment on that.
+
+>
+> 4. reserve_mem= / memmap= on the command line. Automatically sent reserved_mem=
+>    for the next kexec kernel cmdline.
+
+Does this scale at all? How many poisoned pages do you expect to see on
+a big machine with say a few terabytes of RAM? Won't the commandline end
+up being way too big?
+
+>
+> 5. A bespoke kexec segment / setup_data blob. This reinvents what
+>    KHO already provides - preserved memory plus an FDT handoff to
+>    the next kernel - which is the upstream-blessed generic mechanism
+>    for exactly this kind of state.
+
+Yeah, at that point you'd be better off using KHO directly. You won't
+have to muck about with architecture specific bits.
+
+>
+> This PoC
+> ========
+>
+>   * Makes hardware-poisoned pages survive a kexec, using KHO (Kexec
+>     HandOver) to carry the poison list between kernels.
+>
+>   * Producer: hooks num_poisoned_pages_inc()/_sub() - the single
+>     chokepoint for every poison/unpoison event - and records each
+>     poisoned PFN into a vmalloc array that KHO preserves across the
+>     kexec, described by a small versioned "hwpoison" subtree.
+
+More of an implementation detail, but with vmalloc array, what if you
+have too many poisoned pages?
+
+We have two alternative data structures in KHO: the radix tree [0] and
+KHO block [1]. I think the radix tree will be inefficient unless you
+have a _lot_ of poisoned pages, but KHO block is likely going to work a
+lot better because you don't have to define the buffer size up front.
+
+>
+>   * Consumer: early in the next boot (fs_initcall_sync, before the
+>     buddy allocator has handed anything out) it restores that array
+
+Why do you say so? Buddy is up and running after memblock_free_all(),
+which happens from mm_core_init(), and memblock goes away entirely in
+page_alloc_init_late(), which runs right after early initcalls but
+before any other levels. See kernel_init_freeable().
+
+Concrete example: hugetlb is initialized at subsys_initcall(), and
+allocates all its 2M hugepages from buddy.
+
+So I think you probably need to do this somewhere in
+page_alloc_init_late(), after all the deferred struct pages are
+initialized.
+
+>     and re-runs memory_failure() on each PFN, re-offlining the frame
+>     and rebuilding the full hwpoison state (PG_hwpoison, counters,
+>     HardwareCorrupted).
+>
+>   * The replay feeds back through the producer, so the list
+>     re-publishes itself and survives an arbitrary chain of kexecs.
+>
+>
+> Open questions
+> ==============
+>
+>   * Is there any alternative I am not seeing?
+>
+>   * Is a dedicated "hwpoison" subtree the right granularity, or
+>     should this live under a broader RAS/KHO umbrella?
+
+What's "RAS"?
+
+A dedicated subtree sounds the best to me, but I think an alternate
+option is to stick it into kexec-metadata. But I don't know what we'd
+gain from doing so.
+
+I _don't_ think it belongs in the base KHO ABI.
+
+>
+>   * Trusting the inherited list: should the next kernel bound the count /
+>     validate PFNs against its own memory map before replaying?
+
+Normally with KHO you assume the memory map does not change and the
+previous kernel is trustworthy. You can try to do basic validation of
+the memory map to ensure correctness, but I think in the end you just
+_have_ to trust the previous kernel.
+
+>
+> Limitations
+> ===========
+>
+>   * Poison events before KHO init (fs_initcall) cannot be published;
+>     academic in practice as MCEs do not fire that early.
+>
+>   * Per-page only. Cross-power-cycle retirement of a whole DIMM
+>     is not covered.
+>
+> I've got a PoC working, and it is available in here, in case you are interested
+> in the details I am playing with
+>
+>   https://github.com/leitao/linux/tree/b4/hwpoison
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/kho_radix_tree.h
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/kho_block.h
+
+-- 
 Regards,
-Christian.
+Pratyush Yadav
 
