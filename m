@@ -4,62 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A4379CDB479
-	for <kexec@archiver.kernel.org>; Wed, 24 Jun 2026 15:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E39A0CDE001
+	for <kexec@archiver.kernel.org>; Wed, 24 Jun 2026 15:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=3pkskQ2++eDyNw2xnVvM9ZHICcQFK/ShGMe6urYxz4Y=; b=tERa3GqfmmLQmJuOqYc0DGsrlZ
-	55CneNbB0TYLZBjVmTnQaVKnsEOJfIB9+esc0xSq/2kQz+4kQK0AkMjQUXR8Yrbb6OYbBQIrQmGgw
-	4kxI/NeE5iBcIajq3xGDTm1OqlmPxsoNqbru/M+beKNzUArS1SCmzM37XgKyal2PGUOevxxybGcKZ
-	ptIG2hz8uTYBD8gv0INXWQ9+KZu9J7kYgDnLAqXTIojYNzFUE4xsRR2ulKYTqy85HmFLzzqWbEkNJ
-	8Tk6rSXDV2XCbBuu+UyvrxzxrmEf2vEdHBKnLgNntsNY/3A4c09cmjojUo9wB0ncWctvC2cTy8EIV
-	5loDRSUA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=XLPUSysPsLS/lTKrhCAv+kKmeICUhhnEXQzcaQ5iT/8=; b=L3K5weVCt04xRprQGSUJ4CchxF
+	g7fqWsTHa9RS1eHV98+twf3llztvHMDEtUOdjepswJBt4ET/LHutusSGALWYk6BCaTYBpijaS9UKB
+	ZNESFHoH1NFmlYKq/EPQJvlE3ZKBGUC2vuPudNi2XjKhHPx1O/3uhi7b/8ZP9jTQ3YNwAw9a18f+H
+	t9O+B/itCJ8TB2q8r8EFdgDMsqhKATFkk+69VLkbGYbqghjEhT5cU9gbfI5zYcopbjfcv5EYM8AOG
+	rWbHaasjKTV8h/OPUt4ju1M3n1mSj2cmjFWMSMNmgM0aFVDGXVnW5mZr4LHJbYj0MUO5D7nvJNRhR
+	mZGFNXng==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wcPLg-00000007yuo-0guS;
-	Wed, 24 Jun 2026 15:17:08 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wcPPz-00000007zHc-2qUR;
+	Wed, 24 Jun 2026 15:21:35 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wcPLf-00000007yua-2ktB
+	id 1wcPPx-00000007zH4-3Ufa
 	for kexec@lists.infradead.org;
-	Wed, 24 Jun 2026 15:17:07 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id D189460018;
-	Wed, 24 Jun 2026 15:17:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43EF61F000E9;
-	Wed, 24 Jun 2026 15:17:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782314226;
-	bh=3pkskQ2++eDyNw2xnVvM9ZHICcQFK/ShGMe6urYxz4Y=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=AR11iw+ko1EXT45M5uLTzAPEvSIeSa2yGRu91808JZKaUqpY4V/hmPR/siLDNhkWM
-	 3ANzx8JIV652LAnnPJOdBJFp/okW2Ym4CyaG/H5AqxNFpS/k3yp4SEmMNK3D2PZByY
-	 xnPAVKULx20atCcrnF5n4OSOuwDCpZD90KSZgwd/2BzN0p1KF87CHHyHc2D6fn8InM
-	 19VbNQagtJ7FdIKq86FaXexq/l6msAVFf9R5++IN/U5bCcX/xf8Z/tbvqUmfZd60U9
-	 w9NaIGmLCzVoSriIHaWhPlF2nTWjePGJeQdjDhJxGy+KhT6e8tz/jWZpVEiTGG5ZSx
-	 FET55wtSnO7cQ==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Rik van Riel <riel@surriel.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Breno Leitao <leitao@debian.org>,
-  nao.horiguchi@gmail.com,  linmiaohe@huawei.com,  david@kernel.org,
-  lance.yang@linux.dev,  akpm@linux-foundation.org,  baoquan.he@linux.dev,
-  rppt@kernel.org,  kexec@lists.infradead.org,  linux-mm@kvack.org,
-  rneu@meta.com,  caggio@meta.com,  kas@kernel.org
+	Wed, 24 Jun 2026 15:21:35 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=XLPUSysPsLS/lTKrhCAv+kKmeICUhhnEXQzcaQ5iT/8=; b=HNCXnnkTcOqmURs4era2o+oyPQ
+	R95RjQgQp5Gd46soX4YTZnI5PbWMolzSfvvdQxwIRQBO71SbJtSF20kWYfSBJA4aaq0r4zZ4U0R88
+	RHrr1xF7FY5R57GV3Lt/E/wz6FA8wH5cTJltnIxJHFr6ppD3OGW+n9DAJZ0jMPWJ5qjyChrkjEzmO
+	a/sZ6e59LSjS6zFIMHob8/4mFgm2n5jsaq6nYH5Upamqj1H8mA+MEkcKTBX2fBiqsUXLPwGzfzvBb
+	4OqN27CfeKikgqU3rmspDNJI6ayK2dZRBc+O0jOGnCRrdZKt6h1sU+dxBukVj3FIuXj5TzhSB/UfT
+	4oiuOXZA==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wcPPl-002W2H-2I;
+	Wed, 24 Jun 2026 15:21:21 +0000
+Date: Wed, 24 Jun 2026 08:21:16 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Kiryl Shutsemau <kas@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, nao.horiguchi@gmail.com, 
+	linmiaohe@huawei.com, david@kernel.org, lance.yang@linux.dev, 
+	akpm@linux-foundation.org, baoquan.he@linux.dev, rppt@kernel.org, pratyush@kernel.org, 
+	kexec@lists.infradead.org, linux-mm@kvack.org, rneu@meta.com, riel@surriel.com, 
+	caggio@meta.com
 Subject: Re: mm/hwpoison: persist poisoned PFN list across kexec via KHO [RFC]
-In-Reply-To: <da460b26bef42152bf23d395f845503ad8eedc4d.camel@surriel.com> (Rik
-	van Riel's message of "Wed, 24 Jun 2026 10:44:20 -0400")
-References: <ajut_LDQGYCShApx@gmail.com> <2vxzse6ckqfg.fsf@kernel.org>
-	<da460b26bef42152bf23d395f845503ad8eedc4d.camel@surriel.com>
-Date: Wed, 24 Jun 2026 17:17:02 +0200
-Message-ID: <2vxzjyroklxt.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+Message-ID: <ajvzUg8KK9gtFTYe@gmail.com>
+References: <ajut_LDQGYCShApx@gmail.com>
+ <aju5_WjBtagTOSJw@thinkstation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aju5_WjBtagTOSJw@thinkstation>
+X-Debian-User: leitao
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260624_082133_874006_1CF49298 
+X-CRM114-Status: GOOD (  23.97  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,69 +77,78 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jun 24 2026, Rik van Riel wrote:
+Hello Kiryl, 
 
-> On Wed, 2026-06-24 at 15:40 +0200, Pratyush Yadav wrote:
->>=20
->> Also, what happens on cold reboot? If the HW does not remember bad
->> pages, won't the kernel be in the same position? How does it know the
->> bad pages on a cold boot?
->
-> Some modern server hardware will simply unmap known
-> bad pages from the physical page map, so they will
-> not be exposed to the OS after a cold reboot.
->
-> The hardware keeps a log of uncorrectable memory
-> errors somewhere in memory, for example in the SEL.
->
->>=20
->>=20
->> >=20
->> > This PoC
->> > =3D=3D=3D=3D=3D=3D=3D=3D
->> >=20
->> > =C2=A0 * Makes hardware-poisoned pages survive a kexec, using KHO (Kex=
-ec
->> > =C2=A0=C2=A0=C2=A0 HandOver) to carry the poison list between kernels.
->> >=20
->> > =C2=A0 * Producer: hooks num_poisoned_pages_inc()/_sub() - the single
->> > =C2=A0=C2=A0=C2=A0 chokepoint for every poison/unpoison event - and re=
-cords each
->> > =C2=A0=C2=A0=C2=A0 poisoned PFN into a vmalloc array that KHO preserve=
-s across the
->> > =C2=A0=C2=A0=C2=A0 kexec, described by a small versioned "hwpoison" su=
-btree.
->>=20
->> More of an implementation detail, but with vmalloc array, what if you
->> have too many poisoned pages?
->> >=20
->
-> If a very large amount of memory is broken, you
-> should probably just repair the hardware.
+First of all, thanks for the review and topics raised!
 
-"large" is relative. On a 2 TiB system, if you have 0.5% of pages
-poisoned (I have no idea if that number is realistic), you have 10 GiB
-of memory poisoned, or around 2.6 million pages. To store all their
-PFNs, you need around 20 MiB of memory.
+On Wed, Jun 24, 2026 at 01:04:19PM +0100, Kiryl Shutsemau wrote:
+> On Wed, Jun 24, 2026 at 03:39:38AM -0700, Breno Leitao wrote:
+> >   * Consumer: early in the next boot (fs_initcall_sync, before the
+> >     buddy allocator has handed anything out) it restores that array
+> >     and re-runs memory_failure() on each PFN, re-offlining the frame
+> >     and rebuilding the full hwpoison state (PG_hwpoison, counters,
+> >     HardwareCorrupted).
+> 
+> fs_initcall_sync is not before buddy hands anything out - buddy has been
+> live since memblock_free_all() in start_kernel(), and every initcall before
+> this one has allocated freely. So this is recovery, not prevention: you may
+> be running memory_failure() against a frame already in use, possibly by a
+> kernel allocation.
 
-While not too large, it isn't trivial either.
+Agreed - that wording was wrong. It is recovery, not prevention, and running
+memory_failure() against an already-allocated (possibly kernel) frame is the
+not ideal, but, still better than what we have today.
 
-I think static data structures like vmalloc are likely not the way to go
-here especially when we have better things like KHO block or the KHO
-radix tree.
+> Two windows are missed entirely:
+> 
+>   - memblock allocations between setup_arch() and memblock_free_all()
+>     (page tables, mem_map[], percpu) can land on the bad frame.
+> 
+>   - The kernel image itself: KASLR picks its location in the
+>     decompressor/stub, long before any initcall. The next kernel can end
+>     up running *on* the bad frame.
+> 
+> So I don't think this should be a memory_failure() replay. The frames need
+> to leave the next kernel's view at the memory-map level, before memblock
+> and KASLR.
 
-Between those two, what is more efficient largely depends on how many
-pages you'd typically see poisoned and what their locations tend to be.
-That I think we can dive deeper into when we take a closer look at the
-patches.
+Agreed, this is the ideal right approach.
 
->
-> Page poisoning is good for localized memory
-> failures, but not for failures that extend across
-> much of a memory chip.
+> > Possible solutions
+> > ==================
+> ...
+> > 
+> > 2. e820 / EFI memory map (E820_TYPE_UNUSABLE). Tempting because the
+> >    frame would simply never become RAM (no allocator race at all).
+> >    But: it is x86-only (no arm64 equivalent in the same mechanism;
+> >    this series is tested on arm64);
+> 
+> (+Ard. I might get some details around EFI wrong.)
+> 
+> This isn't accurate, and I think it's the right direction for EFI
+> platforms. EFI_UNUSABLE_MEMORY is honored on both arches today, no new
+> consumer code:
+> 
+>   - arm64: reserve_regions() marks non-usable memory nomap.
 
+Is it true for non-UEFI arm64 hosts?
 
---=20
-Regards,
-Pratyush Yadav
+>   - x86: do_add_efi_memmap() maps it to E820_TYPE_UNUSABLE.
+> 
+> And it closes the KASLR window for free, because the image is only placed in
+> EFI_CONVENTIONAL_MEMORY on both (x86 process_efi_entries(), arm64
+> randomalloc.c). So the bad frame is invisible to both the allocator and
+> KASLR, which is exactly what fs_initcall_sync can't give you.
+> 
+> There's also LINUX_EFI_MEMRESERVE (efi_mem_reserve_persistent()) -
+> cross-arch, reserved pre-buddy in efi_init() - and looks otherwise fine, but
+> it's parsed too late to keep KASLR off the frame.
+
+Thanks, I am wondering if we piggy-back on this EFI_UNUSABLE_MEMORY (or
+something similar), than we don't need to use KHO at all, basically just marked
+the page as EFI_UNUSABLE_MEMORY at poison time, and rely on kexec to avoid
+passing this page forward.
+
+Thanks for the discussion,
+--breno
 
