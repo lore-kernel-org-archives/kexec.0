@@ -4,60 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 74A3ACDB479
-	for <kexec@archiver.kernel.org>; Wed, 24 Jun 2026 13:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 99670CDB479
+	for <kexec@archiver.kernel.org>; Wed, 24 Jun 2026 14:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=kYlbsNCB5Y7k7wf7H2fvFo08C54gNtYTSRX/Cm+qbWM=; b=4244uny6uByxRpNprXwe3OQ9ru
-	ClwVyM9XD3HcchBogtAX6x/OCmDVpKyrVDMvQS+6OtIAvICYhZBe7K56kYwSDY0WcpLMq/sFCsy0x
-	j+sZyUUaov3tH9oCunsoqTDzDVwEEGAUO4naVwzn0RheeaaXNBhJCfHnWt1+VygLk3FTUqYwvHyKg
-	V63NGyXGU3GrnlTh4YyFfFyN1L4TshpxPkWCnPN0fr4F7mC0c3fyKqccy3tCqr1YVzgiARvRmxGp7
-	w+ySD21jdgMLBlN3zue3p8BLLeP7IkNPRcDi1NGJBN79IDuHDWPtZiT2uxQSCzGqOTwYT/Xs1CxVb
-	/BeP15aA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Per6MI6n5CBZ4jce2Yah0coKW3mXxHCaIKwWKmwmsgQ=; b=bvy4G92e2VnfCS5rLQW4xO32SJ
+	OZxR8w6d5sWKAT/b9Vtxip0XexNqhVIci8Qcd+9fxGwkHOpEKcWFpWmhg2VDe6NQfYM9vzILbGIVp
+	Sh1yH8Wo0Dip/HpURbtp/m0OH4jAI68XaDl0F6llHMAb8w9bv7wHTaymli4Grs9roClU0M2oCQSNE
+	zyAoadKK6S0/IOXDdrqamwi25bCCfsFJZF1reDeBQv5YTWJyU7LUOSSlpETPkUyYcLf1vkdanluez
+	cUgIPHz0OC3IhO6pgviY8lGLHPYgtdxF1Nf2IY0ifF+d+LCjPtCkxmP1CxbtaUlazNhrfsko/Bv58
+	e1ptdFig==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wcNvp-00000007qfh-0QIz;
-	Wed, 24 Jun 2026 13:46:21 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wcOVr-00000007uYQ-2PGw;
+	Wed, 24 Jun 2026 14:23:35 +0000
+Received: from mail-wr1-x42e.google.com ([2a00:1450:4864:20::42e])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wcNvn-00000007qet-0Lep
+	id 1wcOVl-00000007uXH-2A7h
 	for kexec@lists.infradead.org;
-	Wed, 24 Jun 2026 13:46:19 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 3C9EC60216;
-	Wed, 24 Jun 2026 13:46:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 620DE1F000E9;
-	Wed, 24 Jun 2026 13:46:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782308778;
-	bh=kYlbsNCB5Y7k7wf7H2fvFo08C54gNtYTSRX/Cm+qbWM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=mCcRCXHCV98flmEkeWGULIwa4FVuqjTSq4bqGMhm/vXUFQXnkNWbuNJNcBO2Yk9kC
-	 0p1sXX/+mkrw1YH/9PISPObfmwjI2m3/Qu3oqAQQ750KlKEg0eYoDwaO22NpiH4dgU
-	 GsdoZ+rf2iNqO3J8CKWNPn0yE7ba6Pw+FjxO9A2K3SeKp8NX1DHNXFa8ZYbKGYEyW/
-	 CYAqsZhSWSWNgvyWoyV/IDww4ErBNhVyREsECfBdDPT4qFoYyKNbZTOWJZxCqXe/EO
-	 W7Llaeb5g6Seg6K+ItPs3sZK+YKPgECOQacgbR38FmeRQ2jeXvqEmiLfQqLa7WqKXj
-	 NrKfq4C4OuiYw==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Kiryl Shutsemau <kas@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>,  Ard Biesheuvel <ardb@kernel.org>,
-  nao.horiguchi@gmail.com,  linmiaohe@huawei.com,  david@kernel.org,
-  lance.yang@linux.dev,  akpm@linux-foundation.org,  baoquan.he@linux.dev,
-  rppt@kernel.org,  pratyush@kernel.org,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  rneu@meta.com,  riel@surriel.com,  caggio@meta.com
-Subject: Re: mm/hwpoison: persist poisoned PFN list across kexec via KHO [RFC]
-In-Reply-To: <aju5_WjBtagTOSJw@thinkstation> (Kiryl Shutsemau's message of
-	"Wed, 24 Jun 2026 13:04:19 +0100")
-References: <ajut_LDQGYCShApx@gmail.com> <aju5_WjBtagTOSJw@thinkstation>
-Date: Wed, 24 Jun 2026 15:46:14 +0200
-Message-ID: <2vxzo6h0kq55.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Wed, 24 Jun 2026 14:23:30 +0000
+Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-46cdcec58c2so213783f8f.1
+        for <kexec@lists.infradead.org>; Wed, 24 Jun 2026 07:23:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782311007; x=1782915807; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Per6MI6n5CBZ4jce2Yah0coKW3mXxHCaIKwWKmwmsgQ=;
+        b=nP666snM/JbOVu3FDhdW1IjMsIYgHC04dMtbmQU9DDwpsB/7TnCTC0t7qCpUuDFw40
+         Xvl2JjB5oLQbkiB4B+3B37jIjZKXcQhKLEbj65FX6swmSnAoE+mupc6+INxFvgXMW6Tg
+         Ubgmpe6EvwKU3NqN8tXfOWulZSbNnqhldzErD+rxtBzGbNTlfgBHGVB6GumpWvSzs493
+         Gx2VQGdRm905IYqayl1UXWeOnBMcnJhWoyWM2xjXWd2pztGI2RY0St/SU9tb5tp9R/3H
+         589FzaBSij0RGFw3l7xy23GdPp9RoIccs4kBtYvW+V4MN4pX8A12jAcVqmtRawcb5g+f
+         i9EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782311007; x=1782915807;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Per6MI6n5CBZ4jce2Yah0coKW3mXxHCaIKwWKmwmsgQ=;
+        b=mvDvcT9cMGxG2VCWM9E1+JJE30+ikEEttInhwmStVpptazzscAiSxnNVF/L9yAEk/w
+         8ai48iQv5+ea3o8Zsqfm0b9p/dgO7BqdT8VmP0iirJdQa/0p8xX9xaADpvZIIwcUuIRB
+         2UQAIQVq8n2mnJLC6ar0TYprXvCGLkHQqUU+Ux1FBUB1CRGdeE3kQAmz/iOeuS4OV38g
+         nnouawTh4xEum8b97qTwqps+zKSNMcuzPtIfBIo2N5zeMlPsPWkmpoBMW0Vkm2FIw/DK
+         1sdkciZfKcKFvI7Qcx8ZVgpnQ6YxdzWDYBxqtxr50NAJZqH8msi5bJW2WUS1suUFLayk
+         +/sw==
+X-Forwarded-Encrypted: i=1; AHgh+RqBhQWNBh8aRa6Zc2Wy/1TpDa4PgRKKfHFq07zlyBWkb3ONimR/O4/+3oIf7UVqfVqhG7D7hw==@lists.infradead.org
+X-Gm-Message-State: AOJu0Ywbny19cnoMHXdkzYy9WNSi4PXDfagEdpdWovbYv0sAJ9FzSz3s
+	XbTEyXcmKSABoAV3dWOROgH1kseH5Fbl32cWxFvH8nxpcs4ZhncbwfN/
+X-Gm-Gg: AfdE7cnAx+KRTQhsU+ktkp06s1BEF+KayfGtClX35my//gNvRGsA3A1tA8KUgMXB+AJ
+	kNFvLoCRFO9Lg4T1puCPkKtqUqlVZY8jyKKmmw58Tkd4cTIYHkHCE1Wv0l//utsTs5nR1zaujZ8
+	qmBI04LUEjE+fLb3RTMdTqquQRvwICrrfWOYrbkNAnPBW/aE5QXxThXc+ZaHhycNS1Goes2Nksk
+	jFm2zJSrCtgfRF4WOykiaZ0gxmWHpIrbR0UHCw7slz+0gQhE0w6BmjDBJIC+pqiM93pKatK7doG
+	JbPMi6mmquJD8QB8DHHQY543PN07HU0/uwWvtjZ0/llXPPHRslfejIx3ev9yiw4p5++0X3dt5Vc
+	bQWrYpedSejGgpgRWSd5ZsE/kp3C7T/80TOjm+FmviKoC2cTxOeOztFUNPRxhxNWSB2GK+01jbI
+	mRMeIeD2nNi9EVfgtw1sR2RgIr0MmhWx646zURuejIO1SW87JT3A==
+X-Received: by 2002:a05:6000:471a:b0:460:2e53:a6f6 with SMTP id ffacd0b85a97d-46d04583b35mr1261972f8f.12.1782311006854;
+        Wed, 24 Jun 2026 07:23:26 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46c221d9405sm8183744f8f.22.2026.06.24.07.23.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2026 07:23:26 -0700 (PDT)
+Date: Wed, 24 Jun 2026 15:23:24 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>
+Cc: Kaitao Cheng <kaitao.cheng@linux.dev>, Andrew Morton
+ <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, Jens
+ Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Juri Lelli
+ <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, Paul
+ Moore <paul@paul-moore.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, "Paul E. McKenney"
+ <paulmck@kernel.org>, Shakeel Butt <shakeel.butt@linux.dev>, David Howells
+ <dhowells@redhat.com>, Simona Vetter <simona.vetter@ffwll.ch>, Randy Dunlap
+ <rdunlap@infradead.org>, Luca Ceresoli <luca.ceresoli@bootlin.com>, Philipp
+ Stanner <phasta@kernel.org>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+ linux-ntfs-dev@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
+ io-uring@vger.kernel.org, audit@vger.kernel.org, bpf@vger.kernel.org,
+ netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, live-patching@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-crypto@vger.kernel.org,
+ linux-pm@vger.kernel.org, rcu@vger.kernel.org, sched-ext@lists.linux.dev,
+ linux-mm@kvack.org, virtualization@lists.linux.dev, damon@lists.linux.dev,
+ llvm@lists.linux.dev, Kaitao Cheng <chengkaitao@kylinos.cn>
+Subject: Re: [PATCH v3 1/7] list: Add mutable iterator variants
+Message-ID: <20260624152324.3def88ce@pumpkin>
+In-Reply-To: <cf8467c7-b98f-44a5-9cf9-60b43b5da711@amd.com>
+References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
+	<20260622040533.29824-2-kaitao.cheng@linux.dev>
+	<20260622094242.64531b9a@pumpkin>
+	<351a6b67-b394-4c58-aee2-88b6c8089ad5@linux.dev>
+	<cf8467c7-b98f-44a5-9cf9-60b43b5da711@amd.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260624_072329_601310_D8F0ED65 
+X-CRM114-Status: GOOD (  42.43  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,46 +127,161 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jun 24 2026, Kiryl Shutsemau wrote:
+On Wed, 24 Jun 2026 15:23:47 +0200
+Christian K=C3=B6nig <christian.koenig@amd.com> wrote:
 
-> On Wed, Jun 24, 2026 at 03:39:38AM -0700, Breno Leitao wrote:
->>   * Consumer: early in the next boot (fs_initcall_sync, before the
->>     buddy allocator has handed anything out) it restores that array
->>     and re-runs memory_failure() on each PFN, re-offlining the frame
->>     and rebuilding the full hwpoison state (PG_hwpoison, counters,
->>     HardwareCorrupted).
->
-> fs_initcall_sync is not before buddy hands anything out - buddy has been
-> live since memblock_free_all() in start_kernel(), and every initcall before
-> this one has allocated freely. So this is recovery, not prevention: you may
-> be running memory_failure() against a frame already in use, possibly by a
-> kernel allocation.
->
-> Two windows are missed entirely:
->
->   - memblock allocations between setup_arch() and memblock_free_all()
->     (page tables, mem_map[], percpu) can land on the bad frame.
->
->   - The kernel image itself: KASLR picks its location in the
->     decompressor/stub, long before any initcall. The next kernel can end
->     up running *on* the bad frame.
+> On 6/24/26 15:14, Kaitao Cheng wrote:
+> >=20
+> >=20
+> > =E5=9C=A8 2026/6/22 16:42, David Laight =E5=86=99=E9=81=93: =20
+> >> On Mon, 22 Jun 2026 12:05:31 +0800
+> >> Kaitao Cheng <kaitao.cheng@linux.dev> wrote:
+> >> =20
+> >>> From: Kaitao Cheng <chengkaitao@kylinos.cn>
+> >>>
+> >>> The list_for_each*_safe() helpers are used when the loop body may
+> >>> remove the current entry.  Their API exposes the temporary cursor at
+> >>> every call site, even though most users only need it for the iterator
+> >>> implementation and never reference it in the loop body.
+> >>>
+> >>> Add *_mutable() variants for list and hlist iteration.  The new helpe=
+rs
+> >>> support both forms: callers may keep passing an explicit temporary cu=
+rsor
+> >>> when they need to inspect or reset it, or omit it and let the helper =
+use
+> >>> a unique internal cursor. =20
+> >>
+> >> I'm not really sure 'mutable' means anything either.
+> >> It is possible to make it valid for the loop body (or even other threa=
+ds)
+> >> to delete arbitrary list items - but that needs significant extra over=
+heads.
+> >>
+> >> It might be worth doing something that doesn't need the extra variable,
+> >> but there is little point doing all the churn just to rename things.
+> >> =20
+> >>>
+> >>> This makes call sites that only mutate the list through the current e=
+ntry
+> >>> less noisy, while keeping the existing *_safe() helpers available for
+> >>> compatibility.
+> >>>
+> >>> Signed-off-by: Kaitao Cheng <chengkaitao@kylinos.cn>
+> >>> ---
+> >>>  include/linux/list.h | 269 +++++++++++++++++++++++++++++++++++++----=
+--
+> >>>  1 file changed, 231 insertions(+), 38 deletions(-)
+> >>>
+> >>> diff --git a/include/linux/list.h b/include/linux/list.h
+> >>> index 09d979976b3b..1081def7cea9 100644
+> >>> --- a/include/linux/list.h
+> >>> +++ b/include/linux/list.h
+> >>> @@ -7,6 +7,7 @@
+> >>>  #include <linux/stddef.h>
+> >>>  #include <linux/poison.h>
+> >>>  #include <linux/const.h>
+> >>> +#include <linux/args.h>
+> >>> =20
+> >>>  #include <asm/barrier.h>
+> >>> =20
+> >>> @@ -763,28 +764,72 @@ static inline void list_splice_tail_init(struct=
+ list_head *list,
+> >>>  #define list_for_each_prev(pos, head) \
+> >>>  	for (pos =3D (head)->prev; !list_is_head(pos, (head)); pos =3D pos-=
+>prev)
+> >>> =20
+> >>> -/**
+> >>> - * list_for_each_safe - iterate over a list safe against removal of =
+list entry
+> >>> - * @pos:	the &struct list_head to use as a loop cursor.
+> >>> - * @n:		another &struct list_head to use as temporary storage
+> >>> - * @head:	the head for your list.
+> >>> +/*
+> >>> + * list_for_each_safe is an old interface, use list_for_each_mutable=
+ instead.
+> >>>   */
+> >>>  #define list_for_each_safe(pos, n, head) \
+> >>>  	for (pos =3D (head)->next, n =3D pos->next; \
+> >>>  	     !list_is_head(pos, (head)); \
+> >>>  	     pos =3D n, n =3D pos->next)
+> >>> =20
+> >>> +#define __list_for_each_mutable_internal(pos, tmp, head)		\
+> >>> +	for (typeof(pos) tmp =3D (pos =3D (head)->next)->next;		\ =20
+> >>
+> >> Use auto
+> >> =20
+> >>> +	     !list_is_head(pos, (head));				\
+> >>> +	     pos =3D tmp, tmp =3D pos->next)
+> >>> +
+> >>> +#define __list_for_each_mutable1(pos, head)				\
+> >>> +	__list_for_each_mutable_internal(pos, __UNIQUE_ID(next), head)
+> >>> +
+> >>> +#define __list_for_each_mutable2(pos, next, head)			\
+> >>> +	list_for_each_safe(pos, next, head)
+> >>> +
+> >>>  /**
+> >>> - * list_for_each_prev_safe - iterate over a list backwards safe agai=
+nst removal of list entry
+> >>> + * list_for_each_mutable - iterate over a list safe against entry re=
+moval
+> >>>   * @pos:	the &struct list_head to use as a loop cursor.
+> >>> - * @n:		another &struct list_head to use as temporary storage
+> >>> - * @head:	the head for your list.
+> >>> + * @...:	either (head) or (next, head)
+> >>> + *
+> >>> + * next:	another &struct list_head to use as optional temporary stor=
+age.
+> >>> + *		The temporary cursor is internal unless explicitly supplied by
+> >>> + *		the caller.
+> >>> + * head:	the head for your list.
+> >>> + */
+> >>> +#define list_for_each_mutable(pos, ...)					\
+> >>> +	CONCATENATE(__list_for_each_mutable, COUNT_ARGS(__VA_ARGS__))	\
+> >>> +		(pos, __VA_ARGS__) =20
+> >>
+> >> The variable argument count logic really just slows down compilation.
+> >> Maybe there aren't enough copies of this code to make that significant.
+> >> But just because you can do it doesn't mean it is a gooD idea.
+> >> I'm also not sure it really adds anything to the readability.
+> >>
+> >> And, it you are going to make the middle argument optional there is
+> >> no need to change the macro name. =20
+> >=20
+> > Christian K=C3=B6nig and Jani Nikula also disagree with the variadic-ar=
+gument
+> > implementation approach. If we abandon that method, it means we will
+> > inevitably need to add some new macros. If mutable is not a good name,
+> > suggestions for better alternatives would be welcome; coming up with a
+> > suitable name is indeed rather tricky. =20
+>=20
+> I don't think you need to add a new macro for the specific use case that =
+people want to modify the next element of the iteration.
+>=20
+> If I remember your numbers correctly that is a really corner case and kee=
+ping using the existing *_safe() macros for that sounds perfectly fine to m=
+e.
 
-With KHO, you have "scratch memory", a pre-reserved area of memory on
-cold boot. The kernel image is always in this area when KHO is used. I
-think it would be a fair idea to deny kexec if any of the pages in this
-scratch area are poisoned. Because at that point you can't reliably boot
-anyway.
+IIRC currently you have a choice of either:
+	define               Item that can't be deleted
+	list_for_each()	     The current item.
+	list_for_each_safe() The next item.
+There is also likely to be code that updates the variables to allow
+for other scenarios.
 
-Normally, all allocations between setup_arch() and memblock_free_all()
-_also_ happen from scratch memory, so this check would solve the first
-problem too... but I recently added patches [0] to change this. So I
-think we do need to identify the poisoned pages early in boot.
+Note that if increase a reference count and release a lock then list_for_ea=
+ch()
+is likely safer than list_for_each_safe() :-)
 
-[0] https://lore.kernel.org/kexec/20260605183501.3884950-16-pratyush@kernel.org/
+list.h has 9 variants of the 'safe' loop.
+The bloat of another 9 is getting excessive.
 
-[...]
+It has to be said that this is one of my least favourite type of list...
 
--- 
-Regards,
-Pratyush Yadav
+	David
+
+>=20
+> Regards,
+> Christian.
+
 
