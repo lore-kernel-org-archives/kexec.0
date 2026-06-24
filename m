@@ -4,85 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AA861CDB471
-	for <kexec@archiver.kernel.org>; Wed, 24 Jun 2026 12:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5DE82CDB481
+	for <kexec@archiver.kernel.org>; Wed, 24 Jun 2026 12:30:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bPkGECt5a+DPxd1vxVeft1Ofd1Mb2QRWXAtXqKgxgFY=; b=4aXzrhVaRfwqNcGVIrliJpbHI5
-	Rk1x2RhBXZ8umkAsOMbf6X0TIKQIPJdqK2W9Nrnhi2bA+rz1W4aCTNZ+wdOnVljej5ZvLk9C/G67/
-	0JKZ005Q6xEflu0ALDhgKS1IrLWTUQHGcKmLoDw67Y7EHnEoD2iNrl+ED9hAHkvAvsgBl8/WgtKql
-	Htkuvu8KNlhDn0WsVGJx6LLC2yTJ0lXN8NbyXavfwy1/fS7C1YZKOWPaOzPibl59NisfOpRKH+xXP
-	PURPfk7nlcGIyNot7ChxTOrws1dKHuf093suC7tB615lMPP5Os7Pb4KvJbzy7jktET7Szru2B90Wz
-	XMMyBcyQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=eNfuHxO86n8b93ev9jYNFJxXkathlRXlXpz1k/8S9nI=; b=kQD3J4wZyv0tlovRQrcEyuWfTc
+	Ohnmic5z3WCtuZ/79SfAd+hqnB+zX2+egmkKQJD0I0xI/VJz57FmQBJGXWn1bwi6zkapbg8V1PpiN
+	a2n98mKmpbjw6l0PEIyf6cmYhpKwpq8OiMyJ69fRJFkuSNUlQgN57rlB293Xch3Qselj/vO9jFZex
+	RC9VDcngrd06key9ZelXvISHzqhEI1V5AXCNzlDKTq73Z2Fg5Zkwzdb5gnLRZZDz8IDSQYygYTVpK
+	nen4SyXJuCcgX1O82UqwkNW89Z7QDiiR8Km41FQ6bbMmPH0CTaPtlX9Svm6OwCbAqYc2YXV2u2/DV
+	n+RRYaVg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wcMLG-00000007jGu-2frY;
-	Wed, 24 Jun 2026 12:04:30 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wcMkA-00000007krQ-3jIl;
+	Wed, 24 Jun 2026 12:30:14 +0000
+Received: from out-182.mta1.migadu.com ([95.215.58.182])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wcMLF-00000007jGU-0wca
+	id 1wcMk7-00000007kqH-46FV
 	for kexec@lists.infradead.org;
-	Wed, 24 Jun 2026 12:04:29 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 4DC66601FF;
-	Wed, 24 Jun 2026 12:04:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ABD41F00A3D;
-	Wed, 24 Jun 2026 12:04:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782302668;
-	bh=bPkGECt5a+DPxd1vxVeft1Ofd1Mb2QRWXAtXqKgxgFY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=gHXfCHHeLJJQ6PuTMJDedcKWduFNd1gEpDrfxC0cXvLr5RvXcWyZxrXoRoFE6lDe/
-	 V8PbBKhX2UwYqRfOdXUoEvJIE7gEKC9DZbULo8NEV5jonhC6sOJEYt1FpkLAIziamJ
-	 0MzEgrttDApoOUHyIkn8MwPlAg3nlzwsrudmeVI31yS1rBpRp7+X+5u/5T+z46XBQF
-	 DzCVrbdtlk/JfAzoBJin4OB4j3Oft7evDuvB1Mfazk2ginEgsC1s6Zm6l3buOCILVE
-	 WSyB8LMIZezRNmbwRyUKQw64dUUSRIQIDBK4r4hS2dFCi5FJoFOITjX1Lw2rsV34R+
-	 V9dTANI9rvzEg==
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfauth.phl.internal (Postfix) with ESMTP id B3F5BF4006F;
-	Wed, 24 Jun 2026 08:04:26 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Wed, 24 Jun 2026 08:04:26 -0400
-X-ME-Sender: <xms:ysc7arJrmQBKPZMF7NHZ9TlaUeRfC4PjdpOQS23Md4llYtcCmRRSIA>
-    <xme:ysc7avSmNCpscXkif3EuUFt60cx2HdrgoSg3x5RyeEQlgt_jllZ7Iu5JP0ivRffkH
-    ZaTLlwhchhcqT45vK4Eq-LNVZkKKrmAmi6c7Uw2gnS2M8Sdn8Db1YU>
-X-ME-Received: <xmr:ysc7ahisMMJgne3yhaqSpWOQ4ZNbxm8yl62DQeRPIf6o2pgVdcBWdavmetlbEQ>
-X-ME-Proxy-Cause: dmFkZTE5F6I5b5uZvzSVxfQlILFYzxEnUbVGpGC0tlOAO1di1xZRoPj+aBYF3ihPNsV6UP
-    AsQyKVi1xXuij4iiy8RU9hvvjU4ZhbyKXvWJNiNOEjkncWPlQrMyOpEMIbuMYzK1VCsIeX
-    9eZQ3E2AsHkRloI8yXz+F1Qm18yX0pJokr8wZNZRv/PI6WIL3IrOdufGjVwdL92BvG070D
-    HFdx6dkj+3BraPT3KjlB8VC957e/+oNNke/zhblgViiIKnDdvY0dmkJzjxY7OOZvLx871c
-    qFoUJQNXHRvl7JVKuYZUpy3de409D0t6W5U1PXw+Wpf8CkWAQazEzW9mKFajAZXDTDgXgF
-    ziYAfEMxaDqzsMOLfO8B0wK4U8VZ2Tgrf8Is76n9WT74HtuNp3l3YCfacvJhIAXn4exZCx
-    mjw74zDmL9XDUxGh8z/7i3ZuV3c0EClGRQ56kwetkYSrOQzQFDQD7fekLoEhJiCGmEPGzH
-    V6/hTquiL6rcojPoHWVT/bnoE+7It2Abm9QcozblpFEK0WKYbjBtcK3IjSlTy0u3dGzJ0N
-    KWq2j6kUxy0mYBSOYltFVhqVIgmq8sN88iUzdsF51Xo+kX6f5Fh9a66uqIDvqn3xOMjghg
-    WLAo8q6zCaLxyK9/P9dswjldKLuAoD0bxnW72YGG5Pt76IIPLaNfHQNmiIlA
-X-ME-Proxy: <xmx:ysc7aooVbHNUJ-MsiwdYS3f7dWmYn035OELV-x5GozNcOjpOgpUACA>
-    <xmx:ysc7agnWsCF1Ski3VuQJTTDgYhIbwTRfDOcBsNK6a0HHx06utPD8Jw>
-    <xmx:ysc7ankraQY02ZSpJR7-e22Rz8ZgnOvEM7gyNZOfEbGyVvGUerNpAw>
-    <xmx:ysc7atNe1BxOJlEwtiRCHC98iLie4dhu3n24xubz2GqtxvUnISMeZg>
-    <xmx:ysc7am7ztHGF47Y0CQURacKtkYtjBjuw4irPf_R8CrP39zqnqgHGIIhY>
-Feedback-ID: i10464835:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 24 Jun 2026 08:04:24 -0400 (EDT)
-Date: Wed, 24 Jun 2026 13:04:19 +0100
-From: Kiryl Shutsemau <kas@kernel.org>
-To: Breno Leitao <leitao@debian.org>, Ard Biesheuvel <ardb@kernel.org>
-Cc: nao.horiguchi@gmail.com, linmiaohe@huawei.com, david@kernel.org, 
-	lance.yang@linux.dev, akpm@linux-foundation.org, baoquan.he@linux.dev, rppt@kernel.org, 
-	pratyush@kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org, rneu@meta.com, 
-	riel@surriel.com, caggio@meta.com
-Subject: Re: mm/hwpoison: persist poisoned PFN list across kexec via KHO [RFC]
-Message-ID: <aju5_WjBtagTOSJw@thinkstation>
-References: <ajut_LDQGYCShApx@gmail.com>
+	Wed, 24 Jun 2026 12:30:13 +0000
+Message-ID: <f99b70cc-e11c-42a9-a986-d20b3f232a31@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782304195;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eNfuHxO86n8b93ev9jYNFJxXkathlRXlXpz1k/8S9nI=;
+	b=R0l5uaRBMcxiN2aXXeE7sJmbbWZ+nIwvYOIBg2hW4xeZNywWJj11l3PcvXG3Ip7YlbinqT
+	P/PQ6kfAvOv13VlW7fdMv2tpC85uXP91R5VJRz9HOOc6aZfnOL/SuWOVvCXI8elJq6bVmX
+	Hq88NW9qj4aWnLm21y4nDBq7fAgYa9M=
+Date: Wed, 24 Jun 2026 20:29:26 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ajut_LDQGYCShApx@gmail.com>
+Subject: Re: [PATCH v3 0/7] Prepare mutable list iterators to cache cursor
+ state
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Tejun Heo <tj@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Paul Moore <paul@paul-moore.com>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Shakeel Butt <shakeel.butt@linux.dev>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Howells <dhowells@redhat.com>, Simona Vetter <simona.vetter@ffwll.ch>,
+ Randy Dunlap <rdunlap@infradead.org>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Philipp Stanner <phasta@kernel.org>, linux-block@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>,
+ "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+ linux-ntfs-dev@lists.sourceforge.net,
+ Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
+ io-uring <io-uring@vger.kernel.org>, audit@vger.kernel.org,
+ bpf <bpf@vger.kernel.org>, Network Development <netdev@vger.kernel.org>,
+ dri-devel@lists.freedesktop.org,
+ "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+ kexec@lists.infradead.org, live-patching@vger.kernel.org,
+ linux-modules@vger.kernel.org,
+ Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+ Linux Power Management <linux-pm@vger.kernel.org>, rcu@vger.kernel.org,
+ sched-ext@lists.linux.dev, linux-mm <linux-mm@kvack.org>,
+ virtualization@lists.linux.dev, damon@lists.linux.dev,
+ clang-built-linux <llvm@lists.linux.dev>,
+ chengkaitao <chengkaitao@kylinos.cn>, Muchun Song <muchun.song@linux.dev>
+References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
+ <CAADnVQJmPWFT01b7DuLdtafv=8FyB84GYHNZ8zSTck+9Aw0JpA@mail.gmail.com>
+ <8c8f1849-86d3-4c69-be27-30bbdffdf616@linux.dev>
+ <ajkSftEbdGoiJXYs@ashevche-desk.local>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kaitao Cheng <kaitao.cheng@linux.dev>
+In-Reply-To: <ajkSftEbdGoiJXYs@ashevche-desk.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260624_053012_336532_07BF296C 
+X-CRM114-Status: GOOD (  21.38  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,59 +105,180 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jun 24, 2026 at 03:39:38AM -0700, Breno Leitao wrote:
->   * Consumer: early in the next boot (fs_initcall_sync, before the
->     buddy allocator has handed anything out) it restores that array
->     and re-runs memory_failure() on each PFN, re-offlining the frame
->     and rebuilding the full hwpoison state (PG_hwpoison, counters,
->     HardwareCorrupted).
 
-fs_initcall_sync is not before buddy hands anything out - buddy has been
-live since memblock_free_all() in start_kernel(), and every initcall before
-this one has allocated freely. So this is recovery, not prevention: you may
-be running memory_failure() against a frame already in use, possibly by a
-kernel allocation.
 
-Two windows are missed entirely:
-
-  - memblock allocations between setup_arch() and memblock_free_all()
-    (page tables, mem_map[], percpu) can land on the bad frame.
-
-  - The kernel image itself: KASLR picks its location in the
-    decompressor/stub, long before any initcall. The next kernel can end
-    up running *on* the bad frame.
-
-So I don't think this should be a memory_failure() replay. The frames need
-to leave the next kernel's view at the memory-map level, before memblock
-and KASLR.
-
-> Possible solutions
-> ==================
-...
+在 2026/6/22 18:46, Andy Shevchenko 写道:
+> On Mon, Jun 22, 2026 at 02:15:01PM +0800, Kaitao Cheng wrote:
+>> 在 2026/6/22 13:28, Alexei Starovoitov 写道:
+>>> On Sun, Jun 21, 2026 at 9:06 PM Kaitao Cheng <kaitao.cheng@linux.dev> wrote:
 > 
-> 2. e820 / EFI memory map (E820_TYPE_UNUSABLE). Tempting because the
->    frame would simply never become RAM (no allocator race at all).
->    But: it is x86-only (no arm64 equivalent in the same mechanism;
->    this series is tested on arm64);
+> ...
+> 
+>>>>  block/bfq-iosched.c                 |  17 +-
+>>>>  block/blk-cgroup.c                  |  12 +-
+>>>>  block/blk-flush.c                   |   4 +-
+>>>>  block/blk-iocost.c                  |  18 +-
+>>>>  block/blk-mq.c                      |   8 +-
+>>>>  block/blk-throttle.c                |   4 +-
+>>>>  block/kyber-iosched.c               |   4 +-
+>>>>  block/partitions/ldm.c              |   8 +-
+>>>>  block/sed-opal.c                    |   4 +-
+>>>>  include/linux/list.h                | 269 ++++++++++++++++++++++++----
+>>>>  include/linux/llist.h               |  81 +++++++--
+>>>>  init/initramfs.c                    |   5 +-
+>>>>  io_uring/cancel.c                   |   6 +-
+>>>>  io_uring/poll.c                     |   3 +-
+>>>>  io_uring/rw.c                       |   4 +-
+>>>>  io_uring/timeout.c                  |   8 +-
+>>>>  io_uring/uring_cmd.c                |   3 +-
+>>>>  kernel/audit_tree.c                 |   4 +-
+>>>>  kernel/audit_watch.c                |  16 +-
+>>>>  kernel/auditfilter.c                |   4 +-
+>>>>  kernel/auditsc.c                    |   4 +-
+>>>>  kernel/bpf/arena.c                  |  10 +-
+>>>>  kernel/bpf/arraymap.c               |   8 +-
+>>>>  kernel/bpf/bpf_local_storage.c      |   3 +-
+>>>>  kernel/bpf/bpf_lru_list.c           |  25 ++-
+>>>>  kernel/bpf/btf.c                    |  18 +-
+>>>>  kernel/bpf/cgroup.c                 |   7 +-
+>>>>  kernel/bpf/cpumap.c                 |   4 +-
+>>>>  kernel/bpf/devmap.c                 |  10 +-
+>>>>  kernel/bpf/helpers.c                |   8 +-
+>>>>  kernel/bpf/local_storage.c          |   4 +-
+>>>>  kernel/bpf/memalloc.c               |  16 +-
+>>>>  kernel/bpf/offload.c                |   8 +-
+>>>>  kernel/bpf/states.c                 |   4 +-
+>>>>  kernel/bpf/stream.c                 |   4 +-
+>>>>  kernel/bpf/verifier.c               |   6 +-
+>>>>  kernel/cgroup/cgroup-v1.c           |   4 +-
+>>>>  kernel/cgroup/cgroup.c              |  54 +++---
+>>>>  kernel/cgroup/dmem.c                |  12 +-
+>>>>  kernel/cgroup/rdma.c                |   8 +-
+>>>>  kernel/events/core.c                |  44 +++--
+>>>>  kernel/events/uprobes.c             |  12 +-
+>>>>  kernel/exit.c                       |   8 +-
+>>>>  kernel/fail_function.c              |   4 +-
+>>>>  kernel/gcov/clang.c                 |   4 +-
+>>>>  kernel/irq_work.c                   |   4 +-
+>>>>  kernel/kexec_core.c                 |   4 +-
+>>>>  kernel/kprobes.c                    |  16 +-
+>>>>  kernel/livepatch/core.c             |   4 +-
+>>>>  kernel/livepatch/core.h             |   4 +-
+>>>>  kernel/liveupdate/kho_block.c       |   4 +-
+>>>>  kernel/liveupdate/luo_flb.c         |   4 +-
+>>>>  kernel/locking/rwsem.c              |   2 +-
+>>>>  kernel/locking/test-ww_mutex.c      |   2 +-
+>>>>  kernel/module/main.c                |  11 +-
+>>>>  kernel/padata.c                     |   4 +-
+>>>>  kernel/power/snapshot.c             |   8 +-
+>>>>  kernel/power/wakelock.c             |   4 +-
+>>>>  kernel/printk/printk.c              |  11 +-
+>>>>  kernel/ptrace.c                     |   4 +-
+>>>>  kernel/rcu/rcutorture.c             |   3 +-
+>>>>  kernel/rcu/tasks.h                  |   9 +-
+>>>>  kernel/rcu/tree.c                   |   6 +-
+>>>>  kernel/resource.c                   |   4 +-
+>>>>  kernel/sched/core.c                 |   4 +-
+>>>>  kernel/sched/ext.c                  |  22 +--
+>>>>  kernel/sched/fair.c                 |  28 +--
+>>>>  kernel/sched/topology.c             |   4 +-
+>>>>  kernel/sched/wait.c                 |   4 +-
+>>>>  kernel/seccomp.c                    |   4 +-
+>>>>  kernel/signal.c                     |  11 +-
+>>>>  kernel/smp.c                        |   4 +-
+>>>>  kernel/taskstats.c                  |   8 +-
+>>>>  kernel/time/clockevents.c           |   6 +-
+>>>>  kernel/time/clocksource.c           |   4 +-
+>>>>  kernel/time/posix-cpu-timers.c      |   4 +-
+>>>>  kernel/time/posix-timers.c          |   3 +-
+>>>>  kernel/torture.c                    |   3 +-
+>>>>  kernel/trace/bpf_trace.c            |   4 +-
+>>>>  kernel/trace/ftrace.c               |  49 +++--
+>>>>  kernel/trace/ring_buffer.c          |  25 ++-
+>>>>  kernel/trace/trace.c                |  12 +-
+>>>>  kernel/trace/trace_dynevent.c       |   6 +-
+>>>>  kernel/trace/trace_dynevent.h       |   5 +-
+>>>>  kernel/trace/trace_events.c         |  35 ++--
+>>>>  kernel/trace/trace_events_filter.c  |   4 +-
+>>>>  kernel/trace/trace_events_hist.c    |   8 +-
+>>>>  kernel/trace/trace_events_trigger.c |  17 +-
+>>>>  kernel/trace/trace_events_user.c    |  16 +-
+>>>>  kernel/trace/trace_stat.c           |   4 +-
+>>>>  kernel/user-return-notifier.c       |   3 +-
+>>>>  kernel/workqueue.c                  |  16 +-
+>>>>  mm/backing-dev.c                    |   8 +-
+>>>>  mm/balloon.c                        |   8 +-
+>>>>  mm/cma.c                            |   4 +-
+>>>>  mm/compaction.c                     |   4 +-
+>>>>  mm/damon/core.c                     |   4 +-
+>>>>  mm/damon/sysfs-schemes.c            |   4 +-
+>>>>  mm/dmapool.c                        |   4 +-
+>>>>  mm/huge_memory.c                    |   8 +-
+>>>>  mm/hugetlb.c                        |  56 +++---
+>>>>  mm/hugetlb_vmemmap.c                |  16 +-
+>>>>  mm/khugepaged.c                     |  14 +-
+>>>>  mm/kmemleak.c                       |   7 +-
+>>>>  mm/ksm.c                            |  25 +--
+>>>>  mm/list_lru.c                       |   4 +-
+>>>>  mm/memcontrol-v1.c                  |   8 +-
+>>>>  mm/memory-failure.c                 |  12 +-
+>>>>  mm/memory-tiers.c                   |   4 +-
+>>>>  mm/migrate.c                        |  23 ++-
+>>>>  mm/mmu_notifier.c                   |   9 +-
+>>>>  mm/page_alloc.c                     |   8 +-
+>>>>  mm/page_reporting.c                 |   2 +-
+>>>>  mm/percpu.c                         |  11 +-
+>>>>  mm/pgtable-generic.c                |   4 +-
+>>>>  mm/rmap.c                           |  10 +-
+>>>>  mm/shmem.c                          |   9 +-
+>>>>  mm/slab_common.c                    |  14 +-
+>>>>  mm/slub.c                           |  33 ++--
+>>>>  mm/swapfile.c                       |   4 +-
+>>>>  mm/userfaultfd.c                    |  12 +-
+>>>>  mm/vmalloc.c                        |  24 +--
+>>>>  mm/vmscan.c                         |   7 +-
+>>>>  mm/zsmalloc.c                       |   4 +-
+>>>>  124 files changed, 875 insertions(+), 681 deletions(-)
+>>>
+>>> Not sure what you were thinking, but this diff stat
+>>> is not landable.
+>>
+>> [PATCH v3 1/7] and [PATCH v3 2/7] contain the main logic and can
+>> be merged directly. They are also compatible with the old API.
+>> [PATCH v3 3/7] through [PATCH v3 7/7] are just simple interface
+>> replacements and do not change any functional logic. They can be
+>> left unmerged for now; individual modules can pick them up later
+>> if needed.
+>>
+>> In v2, Andy Shevchenko mentioned: "If it's done by Linus himself
+>> during the day when he prepares -rc1, it's fine."
+> 
+> Yes, but you need to get his blessing first to go with this.
+> Have you communicated with him on this?
 
-(+Ard. I might get some details around EFI wrong.)
+Not yet, because the overall approach is still not mature. People
+have different opinions on the implementation details and on how
+to move this forward, so I think we should iterate through a few
+versions first before making a final decision.
 
-This isn't accurate, and I think it's the right direction for EFI
-platforms. EFI_UNUSABLE_MEMORY is honored on both arches today, no new
-consumer code:
+>> Even so, the
+>> changes in this patch series are indeed quite large and touch
+>> almost every subsystem. I have only converted part of them for
+>> now, so I wanted to send this out first and see what people think.
+> 
+> That's why it's better to provide a script to convert (e.g., coccinelle)
+> instead of tons of patches.
 
-  - arm64: reserve_regions() marks non-usable memory nomap.
-  - x86: do_add_efi_memmap() maps it to E820_TYPE_UNUSABLE.
+I tried writing conversion scripts with Coccinelle, but there were
+always cases that got missed. In contrast, I found that using AI
+for focused replacements was actually more efficient.
 
-And it closes the KASLR window for free, because the image is only placed in
-EFI_CONVENTIONAL_MEMORY on both (x86 process_efi_entries(), arm64
-randomalloc.c). So the bad frame is invisible to both the allocator and
-KASLR, which is exactly what fs_initcall_sync can't give you.
-
-There's also LINUX_EFI_MEMRESERVE (efi_mem_reserve_persistent()) -
-cross-arch, reserved pre-buddy in efi_init() - and looks otherwise fine, but
-it's parsed too late to keep KASLR off the frame.
-
+As David Hildenbrand mentioned, "If we decide we want this, I guess
+we should target per-subsystem conversions." I would like to provide
+the new interface first; adapting each subsystem on demand later may
+be easier to achieve.
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Thanks
+Kaitao Cheng
+
 
