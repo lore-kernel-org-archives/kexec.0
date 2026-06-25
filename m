@@ -4,106 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0E9B3CDE009
-	for <kexec@archiver.kernel.org>; Thu, 25 Jun 2026 11:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7F632CDE001
+	for <kexec@archiver.kernel.org>; Thu, 25 Jun 2026 14:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6edEIK5OpisM73gxjVPNfgaoSxhnFS60m23Q+2YLM+0=; b=Z77yzDEgymxy/sN3ZuCi4RiT2p
-	TjL4MexiLxwNM8nC3ixWpXN9gloWkKh2JNZB40OvTyhoEaf7zZe0KYN/VeLf4DzSSecmCvB5hqFrF
-	i3+uWoCApCuW6b02MpBpMBMcvLUtcxVFygLcX32RMaiW+cPfdN8vZoGXt9Md+atlk4jL1PM0wPFJI
-	3MWRViPIZvccqTLiw0ouqzFzvNJzvJc1qtWBzz5MkKzwuXlDTuKhjW5i5/hWH4KHnvrNrsURSExs5
-	d6y877faqFWk0ABvVIbr7S5CCylaf95aHm0U4QnatIZ8Sw0DtqdAhNgAcLiBnzjACI3oeDXsT5h8d
-	fmVPIyIQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=+wFD3Z4KVfOMxeGD6x7jzXk02QR7lT8SFbTHg6iLim4=; b=bY7o/J208dj3+33ceoPaR89VyH
+	sU1dDoPx7rwubfNUOcnOLfDtMwb0vvTbVtYFV8Bx8pfS2Ngr6AefMSoHu9z7BSesk7VDL8y1QiRmS
+	e/1pu4dIO2+d/0VjZpz4icMKRGWf9uYCMjIXBLOxX1/FCAdZksOM88daFhqDDzeZUm5StajDkAsMe
+	bHEB8zkZhivic/Lwjp7/4Iep5u/OcPPzp5P8K88sL78+/KXWudjq1JHzk/jsk7riY4s/KCG4nu1rf
+	RH7Bsx6gWkX2tYLDldydwAARQZFpRw3v/75LR/F0qFvcfPIpBnWxSrcBFtFIHZh0SAQgyC5G0wgQV
+	neVzqqLA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wchpL-000000093eV-45KJ;
-	Thu, 25 Jun 2026 11:00:59 +0000
-Received: from mgamail.intel.com ([198.175.65.15])
+	id 1wclAg-00000009LFo-28CI;
+	Thu, 25 Jun 2026 14:35:14 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wchpJ-000000093dW-0M3O
+	id 1wclAc-00000009LFi-14pp
 	for kexec@lists.infradead.org;
-	Thu, 25 Jun 2026 11:00:58 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782385257; x=1813921257;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=vUCknLxuUl+l9swTriiC6ceqP2YAiFjd4mW5kfnFb/U=;
-  b=iuETgneI+y3Xm3DvoBw7pKYuP3wIlgjZNBsLNK/IDFp86CVpFvfzNE4o
-   XT1C9XjFHqe1XQOPphH/r8rFnrxfn2Xe07HzXt23puiTAOJhmPgUlsRTC
-   yflebdbkmYx2KZMUEraP4OjFfVsTy2SZHr4bR1FaEbjtNxPMfsQ6NvlBa
-   LStllOOdu3ID67gah0gZ8tOTCTiyEsWGJaUFUuZoc/AjU0AXJeGkpRGNp
-   32xYuC06qFAYoN24XvMLxDYIyf9Qs55Qjg5Tlvr3+bU9+dhH1rZSQGPlF
-   BUWNXOLW4hknVOuKk+XdliizhZRnvOk5qnWQbwJ7IufpgR+zQWS3Xp/x5
-   Q==;
-X-CSE-ConnectionGUID: ZkJ5G+oNReS7ZPfecLuFSA==
-X-CSE-MsgGUID: iA3pSQI8Rte0GbWWPSNYNg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11827"; a="86838513"
-X-IronPort-AV: E=Sophos;i="6.24,224,1774335600"; 
-   d="scan'208";a="86838513"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2026 04:00:55 -0700
-X-CSE-ConnectionGUID: vmMDYz3IR0yKtgcbLjpOxw==
-X-CSE-MsgGUID: owF9N6AWRaOmSHlf6kHSKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,224,1774335600"; 
-   d="scan'208";a="254729051"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.126])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2026 04:00:42 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Kaitao Cheng <kaitao.cheng@linux.dev>, David Laight
- <david.laight.linux@gmail.com>, Christian =?utf-8?Q?K=C3=B6nig?=
- <christian.koenig@amd.com>, "David Hildenbrand (Arm)" <david@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand
- <david@kernel.org>, Jens Axboe <axboe@kernel.dk>, Tejun Heo
- <tj@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
- Brauner <brauner@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Juri Lelli
- <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
- Paul Moore <paul@paul-moore.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, "Paul E. McKenney"
- <paulmck@kernel.org>, Shakeel Butt <shakeel.butt@linux.dev>, David Howells
- <dhowells@redhat.com>, Simona Vetter <simona.vetter@ffwll.ch>, Randy
- Dunlap <rdunlap@infradead.org>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Philipp Stanner <phasta@kernel.org>, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
- linux-ntfs-dev@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
- io-uring@vger.kernel.org, audit@vger.kernel.org, bpf@vger.kernel.org,
- netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kexec@lists.infradead.org, live-patching@vger.kernel.org,
- linux-modules@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-pm@vger.kernel.org, rcu@vger.kernel.org, sched-ext@lists.linux.dev,
- linux-mm@kvack.org, virtualization@lists.linux.dev, damon@lists.linux.dev,
- llvm@lists.linux.dev, Kaitao Cheng <chengkaitao@kylinos.cn>, Muchun Song
- <muchun.song@linux.dev>
-Subject: Re: [PATCH v3 1/7] list: Add mutable iterator variants
-In-Reply-To: <0ed6b5c3-e955-46e2-9fc6-075a0dfd1c4f@linux.dev>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park,
- 6 krs Bertel Jungin Aukio 5, 02600 Espoo, Finland
-References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
- <20260622040533.29824-2-kaitao.cheng@linux.dev>
- <20260622094242.64531b9a@pumpkin>
- <351a6b67-b394-4c58-aee2-88b6c8089ad5@linux.dev>
- <cf8467c7-b98f-44a5-9cf9-60b43b5da711@amd.com>
- <20260624152324.3def88ce@pumpkin>
- <0ed6b5c3-e955-46e2-9fc6-075a0dfd1c4f@linux.dev>
-Date: Thu, 25 Jun 2026 14:00:39 +0300
-Message-ID: <734f66ca51485ee3ec9788c0eaaead681e00664b@intel.com>
+	Thu, 25 Jun 2026 14:35:10 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 5B9C3600AE;
+	Thu, 25 Jun 2026 14:35:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D2141F000E9;
+	Thu, 25 Jun 2026 14:35:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782398109;
+	bh=+wFD3Z4KVfOMxeGD6x7jzXk02QR7lT8SFbTHg6iLim4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=dSkFo9kQ3Duzy2coh3AZjrEanzktsml4PVsc7hhHjx1E46Ls/rB7T/4b1kY6c7yoj
+	 7ZBQBzD53BnNlicytToBhMtxxPK5TYaZOHCcR9e9eukQP/Dl7ANuvxGn5RKTEfhZMx
+	 z/GAedQVwFV/4/ehgROjCN1hEsZfs0/eizpu72Y2JVGQTVCpV2VHinDyHkqhO1xJMZ
+	 jMuWmvBwYPvZcTQYD5XaawdgS7FVaBuCNI3sjw/sQH2L83/GgM2RkSA0V0a/iCG5di
+	 HI6Ke0ZKefHf1ZVEL62tkz2IqQHRIUG7ZgLfOHlqotSCEBctcfI4bp4hOzCyBR9GUq
+	 6yy2gcnTDKf9A==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: David Matlack <dmatlack@google.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  kexec@lists.infradead.org,
+  linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-mm@kvack.org,  linux-pci@vger.kernel.org,  Adithya Jayachandran
+ <ajayachandra@nvidia.com>,  Alexander Graf <graf@amazon.com>,  Alex
+ Williamson <alex@shazbot.org>,  Bjorn Helgaas <bhelgaas@google.com>,
+  Chris Li <chrisl@kernel.org>,  David Rientjes <rientjes@google.com>,
+  Jacob Pan <jacob.pan@linux.microsoft.com>,  Jason Gunthorpe
+ <jgg@nvidia.com>,  Jonathan Corbet <corbet@lwn.net>,  Josh Hilke
+ <jrhilke@google.com>,  Leon Romanovsky <leonro@nvidia.com>,  Lukas Wunner
+ <lukas@wunner.de>,  Mike Rapoport <rppt@kernel.org>,  Parav Pandit
+ <parav@nvidia.com>,  Pranjal Shrivastava <praan@google.com>,  Pratyush
+ Yadav <pratyush@kernel.org>,  Saeed Mahameed <saeedm@nvidia.com>,
+  Samiullah Khawaja <skhawaja@google.com>,  Shuah Khan
+ <skhan@linuxfoundation.org>,  Vipin Sharma <vipinsh@google.com>,  William
+ Tu <witu@nvidia.com>,  Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v6 03/12] PCI: liveupdate: Track incoming preserved PCI
+ devices
+In-Reply-To: <ajBgj_aSuzMZG47e@google.com> (David Matlack's message of "Mon,
+	15 Jun 2026 20:29:03 +0000")
+References: <20260522202410.3104264-1-dmatlack@google.com>
+	<20260522202410.3104264-4-dmatlack@google.com>
+	<178144432039.1257322.9644414453415904478.b4-review@b4>
+	<ajBgj_aSuzMZG47e@google.com>
+Date: Thu, 25 Jun 2026 16:35:02 +0200
+Message-ID: <2vxzechulmcp.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260625_040057_190514_53F8B7A0 
-X-CRM114-Status: GOOD (  40.37  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -118,256 +86,81 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, 25 Jun 2026, Kaitao Cheng <kaitao.cheng@linux.dev> wrote:
-> =E5=9C=A8 2026/6/24 22:23, David Laight =E5=86=99=E9=81=93:
->> On Wed, 24 Jun 2026 15:23:47 +0200
->> Christian K=C3=B6nig <christian.koenig@amd.com> wrote:
->>> On 6/24/26 15:14, Kaitao Cheng wrote:
->>>> =E5=9C=A8 2026/6/22 16:42, David Laight =E5=86=99=E9=81=93:=20=20
->>>>> On Mon, 22 Jun 2026 12:05:31 +0800
->>>>> Kaitao Cheng <kaitao.cheng@linux.dev> wrote:
->>>>>=20=20
->>>>>> From: Kaitao Cheng <chengkaitao@kylinos.cn>
->>>>>>
->>>>>> The list_for_each*_safe() helpers are used when the loop body may
->>>>>> remove the current entry.  Their API exposes the temporary cursor at
->>>>>> every call site, even though most users only need it for the iterator
->>>>>> implementation and never reference it in the loop body.
->>>>>>
->>>>>> Add *_mutable() variants for list and hlist iteration.  The new help=
-ers
->>>>>> support both forms: callers may keep passing an explicit temporary c=
-ursor
->>>>>> when they need to inspect or reset it, or omit it and let the helper=
- use
->>>>>> a unique internal cursor.=20=20
->>>>>
->>>>> I'm not really sure 'mutable' means anything either.
->>>>> It is possible to make it valid for the loop body (or even other thre=
-ads)
->>>>> to delete arbitrary list items - but that needs significant extra ove=
-rheads.
->>>>>
->>>>> It might be worth doing something that doesn't need the extra variabl=
-e,
->>>>> but there is little point doing all the churn just to rename things.
->>>>>=20=20
->>>>>>
->>>>>> This makes call sites that only mutate the list through the current =
-entry
->>>>>> less noisy, while keeping the existing *_safe() helpers available for
->>>>>> compatibility.
->>>>>>
->>>>>> Signed-off-by: Kaitao Cheng <chengkaitao@kylinos.cn>
->>>>>> ---
->>>>>>  include/linux/list.h | 269 +++++++++++++++++++++++++++++++++++++---=
----
->>>>>>  1 file changed, 231 insertions(+), 38 deletions(-)
->>>>>>
->>>>>> diff --git a/include/linux/list.h b/include/linux/list.h
->>>>>> index 09d979976b3b..1081def7cea9 100644
->>>>>> --- a/include/linux/list.h
->>>>>> +++ b/include/linux/list.h
->>>>>> @@ -7,6 +7,7 @@
->>>>>>  #include <linux/stddef.h>
->>>>>>  #include <linux/poison.h>
->>>>>>  #include <linux/const.h>
->>>>>> +#include <linux/args.h>
->>>>>>=20=20
->>>>>>  #include <asm/barrier.h>
->>>>>>=20=20
->>>>>> @@ -763,28 +764,72 @@ static inline void list_splice_tail_init(struc=
-t list_head *list,
->>>>>>  #define list_for_each_prev(pos, head) \
->>>>>>  	for (pos =3D (head)->prev; !list_is_head(pos, (head)); pos =3D pos=
-->prev)
->>>>>>=20=20
->>>>>> -/**
->>>>>> - * list_for_each_safe - iterate over a list safe against removal of=
- list entry
->>>>>> - * @pos:	the &struct list_head to use as a loop cursor.
->>>>>> - * @n:		another &struct list_head to use as temporary storage
->>>>>> - * @head:	the head for your list.
->>>>>> +/*
->>>>>> + * list_for_each_safe is an old interface, use list_for_each_mutabl=
-e instead.
->>>>>>   */
->>>>>>  #define list_for_each_safe(pos, n, head) \
->>>>>>  	for (pos =3D (head)->next, n =3D pos->next; \
->>>>>>  	     !list_is_head(pos, (head)); \
->>>>>>  	     pos =3D n, n =3D pos->next)
->>>>>>=20=20
->>>>>> +#define __list_for_each_mutable_internal(pos, tmp, head)		\
->>>>>> +	for (typeof(pos) tmp =3D (pos =3D (head)->next)->next;		\=20=20
->>>>>
->>>>> Use auto
->>>>>=20=20
->>>>>> +	     !list_is_head(pos, (head));				\
->>>>>> +	     pos =3D tmp, tmp =3D pos->next)
->>>>>> +
->>>>>> +#define __list_for_each_mutable1(pos, head)				\
->>>>>> +	__list_for_each_mutable_internal(pos, __UNIQUE_ID(next), head)
->>>>>> +
->>>>>> +#define __list_for_each_mutable2(pos, next, head)			\
->>>>>> +	list_for_each_safe(pos, next, head)
->>>>>> +
->>>>>>  /**
->>>>>> - * list_for_each_prev_safe - iterate over a list backwards safe aga=
-inst removal of list entry
->>>>>> + * list_for_each_mutable - iterate over a list safe against entry r=
-emoval
->>>>>>   * @pos:	the &struct list_head to use as a loop cursor.
->>>>>> - * @n:		another &struct list_head to use as temporary storage
->>>>>> - * @head:	the head for your list.
->>>>>> + * @...:	either (head) or (next, head)
->>>>>> + *
->>>>>> + * next:	another &struct list_head to use as optional temporary sto=
-rage.
->>>>>> + *		The temporary cursor is internal unless explicitly supplied by
->>>>>> + *		the caller.
->>>>>> + * head:	the head for your list.
->>>>>> + */
->>>>>> +#define list_for_each_mutable(pos, ...)					\
->>>>>> +	CONCATENATE(__list_for_each_mutable, COUNT_ARGS(__VA_ARGS__))	\
->>>>>> +		(pos, __VA_ARGS__)=20=20
->>>>>
->>>>> The variable argument count logic really just slows down compilation.
->>>>> Maybe there aren't enough copies of this code to make that significan=
-t.
->>>>> But just because you can do it doesn't mean it is a gooD idea.
->>>>> I'm also not sure it really adds anything to the readability.
->>>>>
->>>>> And, it you are going to make the middle argument optional there is
->>>>> no need to change the macro name.=20=20
->>>>
->>>> Christian K=C3=B6nig and Jani Nikula also disagree with the variadic-a=
-rgument
->>>> implementation approach. If we abandon that method, it means we will
->>>> inevitably need to add some new macros. If mutable is not a good name,
->>>> suggestions for better alternatives would be welcome; coming up with a
->>>> suitable name is indeed rather tricky.=20=20
->>>
->>> I don't think you need to add a new macro for the specific use case tha=
-t people want to modify the next element of the iteration.
->>>
->>> If I remember your numbers correctly that is a really corner case and k=
-eeping using the existing *_safe() macros for that sounds perfectly fine to=
- me.
->>=20
->> IIRC currently you have a choice of either:
->> 	define               Item that can't be deleted
->> 	list_for_each()	     The current item.
->> 	list_for_each_safe() The next item.
->> There is also likely to be code that updates the variables to allow
->> for other scenarios.
->>=20
->> Note that if increase a reference count and release a lock then list_for=
-_each()
->> is likely safer than list_for_each_safe() :-)
->>=20
->> list.h has 9 variants of the 'safe' loop.
->> The bloat of another 9 is getting excessive.
->>=20
->> It has to be said that this is one of my least favourite type of list...
+Hi David,
+
+On Mon, Jun 15 2026, David Matlack wrote:
+
+> On 2026-06-14 01:38 PM, Pasha Tatashin wrote:
+>> On Fri, 22 May 2026 20:24:01 +0000, David Matlack <dmatlack@google.com> wrote:
+[...]
+>> > +	}
+>> > +
+>> > +	pci_info(dev, "Device was preserved by previous kernel across Live Update\n");
+>> > +	dev->liveupdate.incoming = dev_ser;
+>> > +
+>> > +	/*
+>> > +	 * Hold the ref on the incoming FLB until pci_liveupdate_finish() so
+>> > +	 * that dev->liveupdate.incoming does not get freed while it is in use.
+>> > +	 */
+>> 
+>> How would that work? If finish is not called FLB stays around until the 
+>> next reboot.
 >
-> Hi Christian K=C3=B6nig, David Laight, Jani Nikula, David Hildenbrand,
-> Andy Shevchenko, Alexei Starovoitov
->
-> For ease of discussion, I need to summarize the currently possible
-> approaches and briefly describe their respective pros and cons,
-> using the list_for_each_entry* interfaces as examples.
->
-> 1. Add list_for_each_entry_mutable, while keeping list_for_each_entry
-> and list_for_each_entry_safe unchanged. list_for_each_entry_mutable
-> would be used specifically for safe deletion scenarios that do not
-> need to expose the temporary cursor externally. The code can refer to
-> the v1 version.
->
-> Pros: Does not depend on immediate per-subsystem adaptation and can be
->       merged directly.
-> Cons: Requires adding a whole set of mutable interfaces, which makes the
->       code somewhat redundant.
+> True... I think if the PCI core trusts drivers to call
+> pci_liveupdate_finish() then we don't need to hold onto the incoming
+> reference here.
 
-Seems fine, and the original _safe naming is ambiguous anyway.
+That was my point when I was arguing against refcounts on outgoing FLBs.
+This is very easy to abuse, especially when we are talking about device
+drivers. And this refcounting mechanism makes the FLB no longer
+file-lifecycle-bound, since now it is entirely up to drivers to decide
+the lifecycle of this data.
 
-> 2. Directly optimize away the temporary cursor in list_for_each_entry_safe
-> and define it inside the loop instead, changing the interface from four
-> arguments to three.
->
-> Pros: Does not add redundant interfaces.
-> Cons: (1) Users need to manually update special cases that use the
->       traversal variable of list_for_each_entry_safe, the new
->       list_for_each_entry_safe would no longer apply there and would
->       need to be open-coded.
->       (2) Because the macro arguments changes, all list_for_each_entry_sa=
-fe
->       callers would need to be modified and merged together, making it
->       difficult to merge such a large amount of code at once.
+I have been thinking about this a bit more in the last couple days, and
+I wonder if we are doing this right. Here's an idea I have been thinking
+of.
 
-This won't fly because there are literally thousands of
-list_for_each_entry_safe() users.
+We should make live update a first class citizen in PCI. Instead of
+patching in liveupdate via the liveupdate.incoming field, and letting
+drivers figure out when to use it, we should separate out probe and
+retrieve paths entirely.
 
-> 3. Use a variadic macro approach to optimize list_for_each_entry_safe,
-> so that it supports both three and four arguments.
->
-> Pros: (1) Does not add redundant interfaces.
->       (2) Does not depend on immediate per-subsystem adaptation and can
->       be merged directly.
-> Cons: (1) Increases compile time.
->       (2) Makes the interface harder for users to use.
+Probe and retrieve are fundamentally different operations. While they
+may share some common initialization logic for the _software_ state, how
+they interface with the hardware is completely different. I think mixing
+the two will result in driver code being more spaghetti by having
+liveupdate checks sprayed out all over.
 
-Basically I'm against any variadic macro tricks where the optional
-argument is not the last argument. That's just way too surprising, and
-goes against common practice in just about all other languages.
+This series doesn't add support for any drivers, but looking at some of
+the code we have downstream, I see this problem. The liveupdate code is
+all over the place in the driver and it is very hard to wrap one's head
+around how the device is actually retrieved.
 
-> 4. Optimize list_for_each_entry by defining the temporary cursor internal=
-ly,
-> making it compatible with the functionality of list_for_each_entry_safe.
-> The code can refer to the v2 version.
->
-> Pros: (1) Does not add redundant interfaces.
->       (2) The number of externally visible arguments of list_for_each_ent=
-ry
->       remains unchanged, still three.
-> Cons: (1) list_for_each_entry and list_for_each_entry_safe would be merged
->       into one, and list_for_each_entry_safe would gradually be deprecate=
-d.
->       (2) Users need to manually update special cases that use the traver=
-sal
->       variable of list_for_each_entry, the new list_for_each_entry would =
-no
->       longer apply there and would need to be open-coded. There are 15 su=
-ch
->       cases in total.
+So I think PCI core should track preserved devices, and if the device is
+preserved, it should skip the probe and wait for retrieve. Retrieve does
+the full initialization of the device. This fits in with the LUO model
+as well. You can make retrieve a callback of struct pci_driver and do
+some wrappers to talk with LUO, so device drivers don't directly
+interface with LUO at all.
 
-This sounds good to me, though I take it there's some code size increase
-and/or performance penalty?
+We should do similar things on the shutdown path. Shutdown is a
+fundamentally different operation from freeze, and so we should separate
+them out as well.
 
-Maybe the 15 cases are questionable anyway?
+This solves the lifetime problem as well. When PCI core is initializing,
+it knows for sure that no retrievals are going to happen. That's because
+none of the drivers have registered yet. So it can safely access the FLB
+and initialize its state. After that, drivers can register themselves
+and start accepting retrieve() calls. Once the last driver goes away,
+the FLB is freed automatically.
 
-> 5. Use a variadic macro approach to optimize list_for_each_entry, so that
-> it supports both three and four arguments.
->
-> Pros: (1) Does not add redundant interfaces.
->       (2) Does not depend on immediate per-subsystem adaptation and can be
->       merged directly.
-> Cons: (1) Increases compile time.
->       (2) list_for_each_entry and list_for_each_entry_safe would be merged
->       into one, and list_for_each_entry_safe would gradually be deprecate=
-d.
+I am sorry for suggesting a big refactor at v6, but the early versions
+looked good to me at the time, and I only thought more deeply about this
+when trying to figure out how we can make the lifetimes cleaner.
 
-Please don't do the macro tricks.
+What do you think? Does this make sense?
 
-> 6. Make no changes, keep the current logic unchanged, and close the curre=
-nt
-> email discussion.
-
-I like hiding the temporary stuff when possible.
-
-
-BR,
-Jani.
-
---=20
-Jani Nikula, Intel
+-- 
+Regards,
+Pratyush Yadav
 
