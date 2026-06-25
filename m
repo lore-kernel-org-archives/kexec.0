@@ -4,91 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5431BCDB479
-	for <kexec@archiver.kernel.org>; Thu, 25 Jun 2026 03:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1F543CDE006
+	for <kexec@archiver.kernel.org>; Thu, 25 Jun 2026 05:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bg7TU7hDzDNv/08FHHH/On04xmb+0Xhy9JCW39bnqOs=; b=rBPnnpQgsJX3zgN2RnZZyj2jZI
-	w1Kv4C0ql38pLFEo9Uciz4oDuyUzm2aUe1Oe5OcQl5AVyefLzfFYfdzUvA/23Du3Q2TPUpqvTRYHz
-	8rFK7/NdqTjkWN4TpnG6CEa6YYnv/boqhKm2bHMJHonuA7kB/8yxTV8uax7MJJt98mTqcjsmVgccX
-	yNu4Fv6bBWDtUz3Tvy3HlzQYEXsTFldm7tHcnojF4aRL9lKZuLm4s/PFPR/t6rsXCJOhCIrZylsJ4
-	rw7xu0QnjuEZfRxy7E8+YoBSBAH02WH2MRR3um/qA1y54BbCYsMvKZ1rqpxj79Hsec8dz4R15VDwn
-	uyG910aQ==;
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=QWnSTOsJzyf0dbaV0aPM4Q+SeImZDpbu570V/Cu9nN0=; b=3/ahd8VsD137g2RxJPLrDQ1wT0
+	LlkT82h+zdYZ+vdiXelDTaEL51gzagirNifm7STp8tPKRkEmfynHCi4A2YWy2xGFpI4Ve1IjWDnVm
+	V5ZWbZ4iDUo3kBT+4HhV7jFJVMpdoZuGjUxoFfLLqtMdp4PdQZqzySFPlWZ6w1SMnq3JH8k4oVgDG
+	keg42eDg0dQA4lugZQBxhtj/o3D2GvAk3GKAsRUhHdx4KLtbSRdqwMcg2A4mMZTr5+hrmKSWGEJ2b
+	JrhhsGm8RpLOAPE7t2TfmBi/95HyZAXAKJa88MNOxi6Wct5RHCFPnywgFixK+OGxw+Ds7emqRdPUe
+	+RpSSRJg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wcaMB-00000008bEI-3Im3;
-	Thu, 25 Jun 2026 03:02:23 +0000
-Received: from out-171.mta0.migadu.com ([91.218.175.171])
+	id 1wccyX-00000008gIe-0ABU;
+	Thu, 25 Jun 2026 05:50:09 +0000
+Received: from mailgw.kylinos.cn ([124.126.103.232])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wcaM8-00000008bDg-17qs
+	id 1wccyS-00000008gH1-1iFb
 	for kexec@lists.infradead.org;
-	Thu, 25 Jun 2026 03:02:22 +0000
-Message-ID: <0ed6b5c3-e955-46e2-9fc6-075a0dfd1c4f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782356535;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bg7TU7hDzDNv/08FHHH/On04xmb+0Xhy9JCW39bnqOs=;
-	b=f3XfhSe6G7brFNVp6GZqjOXNU3vcFca4poUFfkwgVZymI1EYtq9zeoyJzoopay7HWx5JvC
-	E0YJXxuEv9p9ioc24zHIhHD7MfpA8W6eQqa3vo59Vdd3bvTmswHZxeWqPUReOxJ21Oxizv
-	nnsvKa6R3D4a+gLxizvgKiVabRJ3kcE=
-Date: Thu, 25 Jun 2026 11:01:21 +0800
+	Thu, 25 Jun 2026 05:50:07 +0000
+X-UUID: ae7cf162705911f1aa26b74ffac11d73-20260625
+X-CTIC-Tags: HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED, SN_EXISTED
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_GOOD, CIE_GOOD_SPF
+	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:4a1fc58d-7937-40a2-899c-edc312cdc844,IP:10,
+	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:5
+X-CID-INFO: VERSION:1.3.12,REQID:4a1fc58d-7937-40a2-899c-edc312cdc844,IP:10,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:5
+X-CID-META: VersionHash:e7bac3a,CLOUDID:f653971d38e0eb93971b013d818d392f,BulkI
+	D:260625134951C85J5I9S,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|102|127|
+	136|850|865|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,
+	Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BR
+	R:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: ae7cf162705911f1aa26b74ffac11d73-20260625
+X-User: duanchenghao@kylinos.cn
+Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1580749568; Thu, 25 Jun 2026 13:49:50 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz,
+	linux-fsdevel@vger.kernel.org,
+	pasha.tatashin@soleen.com,
+	linux-kernel@vger.kernel.org,
+	rppt@kernel.org,
+	pratyush@kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org
+Cc: jianghaoran@kylinos.cn,
+	duanchenghao@kylinos.cn
+Subject: [PATCH v1 0/2] luo support for preserving eventfd
+Date: Thu, 25 Jun 2026 13:49:44 +0800
+Message-Id: <20260625054946.73445-1-duanchenghao@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 1/7] list: Add mutable iterator variants
-To: David Laight <david.laight.linux@gmail.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- "David Hildenbrand (Arm)" <david@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Tejun Heo <tj@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Paul Moore <paul@paul-moore.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Shakeel Butt <shakeel.butt@linux.dev>, David Howells <dhowells@redhat.com>,
- Simona Vetter <simona.vetter@ffwll.ch>, Randy Dunlap
- <rdunlap@infradead.org>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Philipp Stanner <phasta@kernel.org>, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
- linux-ntfs-dev@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
- io-uring@vger.kernel.org, audit@vger.kernel.org, bpf@vger.kernel.org,
- netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kexec@lists.infradead.org, live-patching@vger.kernel.org,
- linux-modules@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-pm@vger.kernel.org, rcu@vger.kernel.org, sched-ext@lists.linux.dev,
- linux-mm@kvack.org, virtualization@lists.linux.dev, damon@lists.linux.dev,
- llvm@lists.linux.dev, Kaitao Cheng <chengkaitao@kylinos.cn>,
- Muchun Song <muchun.song@linux.dev>
-References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
- <20260622040533.29824-2-kaitao.cheng@linux.dev>
- <20260622094242.64531b9a@pumpkin>
- <351a6b67-b394-4c58-aee2-88b6c8089ad5@linux.dev>
- <cf8467c7-b98f-44a5-9cf9-60b43b5da711@amd.com>
- <20260624152324.3def88ce@pumpkin>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kaitao Cheng <kaitao.cheng@linux.dev>
-In-Reply-To: <20260624152324.3def88ce@pumpkin>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260624_200220_775671_1301D066 
-X-CRM114-Status: GOOD (  33.49  )
+X-CRM114-CacheID: sfid-20260624_225004_763509_E7D1BCAB 
+X-CRM114-Status: UNSURE (   7.70  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,208 +94,40 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-在 2026/6/24 22:23, David Laight 写道:
-> On Wed, 24 Jun 2026 15:23:47 +0200
-> Christian König <christian.koenig@amd.com> wrote:
->> On 6/24/26 15:14, Kaitao Cheng wrote:
->>> 在 2026/6/22 16:42, David Laight 写道:  
->>>> On Mon, 22 Jun 2026 12:05:31 +0800
->>>> Kaitao Cheng <kaitao.cheng@linux.dev> wrote:
->>>>  
->>>>> From: Kaitao Cheng <chengkaitao@kylinos.cn>
->>>>>
->>>>> The list_for_each*_safe() helpers are used when the loop body may
->>>>> remove the current entry.  Their API exposes the temporary cursor at
->>>>> every call site, even though most users only need it for the iterator
->>>>> implementation and never reference it in the loop body.
->>>>>
->>>>> Add *_mutable() variants for list and hlist iteration.  The new helpers
->>>>> support both forms: callers may keep passing an explicit temporary cursor
->>>>> when they need to inspect or reset it, or omit it and let the helper use
->>>>> a unique internal cursor.  
->>>>
->>>> I'm not really sure 'mutable' means anything either.
->>>> It is possible to make it valid for the loop body (or even other threads)
->>>> to delete arbitrary list items - but that needs significant extra overheads.
->>>>
->>>> It might be worth doing something that doesn't need the extra variable,
->>>> but there is little point doing all the churn just to rename things.
->>>>  
->>>>>
->>>>> This makes call sites that only mutate the list through the current entry
->>>>> less noisy, while keeping the existing *_safe() helpers available for
->>>>> compatibility.
->>>>>
->>>>> Signed-off-by: Kaitao Cheng <chengkaitao@kylinos.cn>
->>>>> ---
->>>>>  include/linux/list.h | 269 +++++++++++++++++++++++++++++++++++++------
->>>>>  1 file changed, 231 insertions(+), 38 deletions(-)
->>>>>
->>>>> diff --git a/include/linux/list.h b/include/linux/list.h
->>>>> index 09d979976b3b..1081def7cea9 100644
->>>>> --- a/include/linux/list.h
->>>>> +++ b/include/linux/list.h
->>>>> @@ -7,6 +7,7 @@
->>>>>  #include <linux/stddef.h>
->>>>>  #include <linux/poison.h>
->>>>>  #include <linux/const.h>
->>>>> +#include <linux/args.h>
->>>>>  
->>>>>  #include <asm/barrier.h>
->>>>>  
->>>>> @@ -763,28 +764,72 @@ static inline void list_splice_tail_init(struct list_head *list,
->>>>>  #define list_for_each_prev(pos, head) \
->>>>>  	for (pos = (head)->prev; !list_is_head(pos, (head)); pos = pos->prev)
->>>>>  
->>>>> -/**
->>>>> - * list_for_each_safe - iterate over a list safe against removal of list entry
->>>>> - * @pos:	the &struct list_head to use as a loop cursor.
->>>>> - * @n:		another &struct list_head to use as temporary storage
->>>>> - * @head:	the head for your list.
->>>>> +/*
->>>>> + * list_for_each_safe is an old interface, use list_for_each_mutable instead.
->>>>>   */
->>>>>  #define list_for_each_safe(pos, n, head) \
->>>>>  	for (pos = (head)->next, n = pos->next; \
->>>>>  	     !list_is_head(pos, (head)); \
->>>>>  	     pos = n, n = pos->next)
->>>>>  
->>>>> +#define __list_for_each_mutable_internal(pos, tmp, head)		\
->>>>> +	for (typeof(pos) tmp = (pos = (head)->next)->next;		\  
->>>>
->>>> Use auto
->>>>  
->>>>> +	     !list_is_head(pos, (head));				\
->>>>> +	     pos = tmp, tmp = pos->next)
->>>>> +
->>>>> +#define __list_for_each_mutable1(pos, head)				\
->>>>> +	__list_for_each_mutable_internal(pos, __UNIQUE_ID(next), head)
->>>>> +
->>>>> +#define __list_for_each_mutable2(pos, next, head)			\
->>>>> +	list_for_each_safe(pos, next, head)
->>>>> +
->>>>>  /**
->>>>> - * list_for_each_prev_safe - iterate over a list backwards safe against removal of list entry
->>>>> + * list_for_each_mutable - iterate over a list safe against entry removal
->>>>>   * @pos:	the &struct list_head to use as a loop cursor.
->>>>> - * @n:		another &struct list_head to use as temporary storage
->>>>> - * @head:	the head for your list.
->>>>> + * @...:	either (head) or (next, head)
->>>>> + *
->>>>> + * next:	another &struct list_head to use as optional temporary storage.
->>>>> + *		The temporary cursor is internal unless explicitly supplied by
->>>>> + *		the caller.
->>>>> + * head:	the head for your list.
->>>>> + */
->>>>> +#define list_for_each_mutable(pos, ...)					\
->>>>> +	CONCATENATE(__list_for_each_mutable, COUNT_ARGS(__VA_ARGS__))	\
->>>>> +		(pos, __VA_ARGS__)  
->>>>
->>>> The variable argument count logic really just slows down compilation.
->>>> Maybe there aren't enough copies of this code to make that significant.
->>>> But just because you can do it doesn't mean it is a gooD idea.
->>>> I'm also not sure it really adds anything to the readability.
->>>>
->>>> And, it you are going to make the middle argument optional there is
->>>> no need to change the macro name.  
->>>
->>> Christian König and Jani Nikula also disagree with the variadic-argument
->>> implementation approach. If we abandon that method, it means we will
->>> inevitably need to add some new macros. If mutable is not a good name,
->>> suggestions for better alternatives would be welcome; coming up with a
->>> suitable name is indeed rather tricky.  
->>
->> I don't think you need to add a new macro for the specific use case that people want to modify the next element of the iteration.
->>
->> If I remember your numbers correctly that is a really corner case and keeping using the existing *_safe() macros for that sounds perfectly fine to me.
-> 
-> IIRC currently you have a choice of either:
-> 	define               Item that can't be deleted
-> 	list_for_each()	     The current item.
-> 	list_for_each_safe() The next item.
-> There is also likely to be code that updates the variables to allow
-> for other scenarios.
-> 
-> Note that if increase a reference count and release a lock then list_for_each()
-> is likely safer than list_for_each_safe() :-)
-> 
-> list.h has 9 variants of the 'safe' loop.
-> The bloat of another 9 is getting excessive.
-> 
-> It has to be said that this is one of my least favourite type of list...
+It is my great honor to participate in the development of LiveUpdate.
+The current patch implements logic to preserve and retrieve eventfd
+states, which I developed by referencing memfd_luo while learning the
+LiveUpdate framework.
 
-Hi Christian König, David Laight, Jani Nikula, David Hildenbrand,
-Andy Shevchenko, Alexei Starovoitov
+eventfd serves as a critical notification mechanism between Guest and
+Host. During host kernel upgrades, we can preserve the corresponding
+eventfd states and restore them after the kernel update completes.
 
-For ease of discussion, I need to summarize the currently possible
-approaches and briefly describe their respective pros and cons,
-using the list_for_each_entry* interfaces as examples.
+Patch 0001 implements eventfd_luo, while Patch 0002 contains selftest code.
+Test procedures:
+    1. ./luo_test_eventfd --stage 1
+    2. kexec reboot
+    3. ./luo_test_eventfd --stage 2
 
-1. Add list_for_each_entry_mutable, while keeping list_for_each_entry
-and list_for_each_entry_safe unchanged. list_for_each_entry_mutable
-would be used specifically for safe deletion scenarios that do not
-need to expose the temporary cursor externally. The code can refer to
-the v1 version.
+Chenghao Duan (2):
+  eventfd: luo: luo support for preserving eventfd
+  selftests: liveupdate: Add selftest for eventfd LUO
 
-Pros: Does not depend on immediate per-subsystem adaptation and can be
-      merged directly.
-Cons: Requires adding a whole set of mutable interfaces, which makes the
-      code somewhat redundant.
-
-2. Directly optimize away the temporary cursor in list_for_each_entry_safe
-and define it inside the loop instead, changing the interface from four
-arguments to three.
-
-Pros: Does not add redundant interfaces.
-Cons: (1) Users need to manually update special cases that use the
-      traversal variable of list_for_each_entry_safe, the new
-      list_for_each_entry_safe would no longer apply there and would
-      need to be open-coded.
-      (2) Because the macro arguments changes, all list_for_each_entry_safe
-      callers would need to be modified and merged together, making it
-      difficult to merge such a large amount of code at once.
-
-3. Use a variadic macro approach to optimize list_for_each_entry_safe,
-so that it supports both three and four arguments.
-
-Pros: (1) Does not add redundant interfaces.
-      (2) Does not depend on immediate per-subsystem adaptation and can
-      be merged directly.
-Cons: (1) Increases compile time.
-      (2) Makes the interface harder for users to use.
-
-4. Optimize list_for_each_entry by defining the temporary cursor internally,
-making it compatible with the functionality of list_for_each_entry_safe.
-The code can refer to the v2 version.
-
-Pros: (1) Does not add redundant interfaces.
-      (2) The number of externally visible arguments of list_for_each_entry
-      remains unchanged, still three.
-Cons: (1) list_for_each_entry and list_for_each_entry_safe would be merged
-      into one, and list_for_each_entry_safe would gradually be deprecated.
-      (2) Users need to manually update special cases that use the traversal
-      variable of list_for_each_entry, the new list_for_each_entry would no
-      longer apply there and would need to be open-coded. There are 15 such
-      cases in total.
-
-5. Use a variadic macro approach to optimize list_for_each_entry, so that
-it supports both three and four arguments.
-
-Pros: (1) Does not add redundant interfaces.
-      (2) Does not depend on immediate per-subsystem adaptation and can be
-      merged directly.
-Cons: (1) Increases compile time.
-      (2) list_for_each_entry and list_for_each_entry_safe would be merged
-      into one, and list_for_each_entry_safe would gradually be deprecated.
-
-6. Make no changes, keep the current logic unchanged, and close the current
-email discussion.
-
-
-Which of the six solutions above do people prefer?
+ fs/Makefile                                   |   1 +
+ fs/eventfd.c                                  |  40 ++
+ fs/eventfd_luo.c                              | 250 ++++++++++++
+ include/linux/eventfd.h                       |   2 +
+ include/linux/kho/abi/eventfd.h               |  39 ++
+ kernel/liveupdate/Kconfig                     |  16 +
+ tools/testing/selftests/liveupdate/Makefile   |   1 +
+ tools/testing/selftests/liveupdate/config     |   2 +
+ .../selftests/liveupdate/luo_test_eventfd.c   | 376 ++++++++++++++++++
+ 9 files changed, 727 insertions(+)
+ create mode 100644 fs/eventfd_luo.c
+ create mode 100644 include/linux/kho/abi/eventfd.h
+ create mode 100644 tools/testing/selftests/liveupdate/luo_test_eventfd.c
 
 -- 
-Thanks
-Kaitao Cheng
+2.25.1
 
 
