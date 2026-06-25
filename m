@@ -4,83 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5092ACDE007
-	for <kexec@archiver.kernel.org>; Thu, 25 Jun 2026 05:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9CEFECDB47F
+	for <kexec@archiver.kernel.org>; Thu, 25 Jun 2026 09:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=KIIyohw3VHuxRrR94sTuX14xsknTZ8n/vvXUwLr+WYs=; b=J1aT6mstWZOcp3ebppg7TCs46O
-	I/9PKRdQ9+5+pI+cWG8spacOkYeiNIAUhTYQq4uY22HqtMJ2BpQVtOFLiB0EnKTNkZ2T7jxXH+HC1
-	2wCYuzZa7KId7LGUW2HVrlQqjIC1ruKZ20V4WHZ9QByxK+v+WXWG3pIsrWFjcAPwoFMWO/6CAof3H
-	Chn0Y4TF+lGQ1F+z6nIJTkX5bhEjTwWp29sOgxD6LIZKRciYrtQe+wcye3TLM2idX8ocJwJPVq58w
-	8qs7LBxG6ESmfFt10zJgYqjms6eS7iPo4aHLpmM49IGisLCo2rGuzj4YNFKoQ+xmylqtqxJ72dxYL
-	HBp8ZohA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=uWgZuaM7iYZt7359X1HxJyqC3nPtLZFOpucffsH2wXI=; b=lWCDJps8EjOQEClNRf+056svXV
+	1U0eDzUk2rehOvWNgtNxrmDRMja5KToZPIgxzX11y9UzDRRnyZvgpl43F0IvNSiNEtPpHPJWNvJmC
+	JGx/IvBQNbf1/4VfMQPjLtqsXTxP4tv7wZAMWlRz8sFTQVBbJmUHNv6eg90FbUdXn6HN8n0l+YQ5h
+	XuKZoO8oq7XECBmHf4mTvUfE/1Y7xwZuVv0R8kHaBHWiNeyrYkL0UVoFl7mAhcjgnB2jihzkqukQ+
+	PWx2QV72U4262cn3iOO4EVSAjJbqAK27ar4c3SMmGLMEwmBiKKw87yHe7uQPl2j2W5dXbxh7wZrPv
+	O7Z1XnGA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wccyZ-00000008gJY-19Hw;
-	Thu, 25 Jun 2026 05:50:11 +0000
-Received: from mailgw.kylinos.cn ([124.126.103.232])
+	id 1wcg2D-00000008sNE-2XH9;
+	Thu, 25 Jun 2026 09:06:09 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wccyT-00000008gH5-0Rm9
+	id 1wcg2C-00000008sN5-1RCS
 	for kexec@lists.infradead.org;
-	Thu, 25 Jun 2026 05:50:08 +0000
-X-UUID: aec745dc705911f1aa26b74ffac11d73-20260625
-X-CTIC-Tags: HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
-	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED, SN_EXISTED
-	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_GOOD, CIE_GOOD_SPF
-	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:ce9a07e3-e4e1-40da-9f47-c0e7e04ebddf,IP:10,
-	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-15
-X-CID-INFO: VERSION:1.3.12,REQID:ce9a07e3-e4e1-40da-9f47-c0e7e04ebddf,IP:10,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-15
-X-CID-META: VersionHash:e7bac3a,CLOUDID:bba3247d4b4b8c0298b9b0b043114bad,BulkI
-	D:260625134951ABU9FVJ8,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|81|82|10
-	2|127|136|850|865|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,File:nil,R
-	T:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DK
-	P:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: aec745dc705911f1aa26b74ffac11d73-20260625
-X-User: duanchenghao@kylinos.cn
-Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1039542748; Thu, 25 Jun 2026 13:49:51 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	linux-fsdevel@vger.kernel.org,
-	pasha.tatashin@soleen.com,
-	linux-kernel@vger.kernel.org,
-	rppt@kernel.org,
-	pratyush@kernel.org,
-	kexec@lists.infradead.org,
-	linux-mm@kvack.org
-Cc: jianghaoran@kylinos.cn,
-	duanchenghao@kylinos.cn
-Subject: [PATCH v1 1/2] eventfd: luo: luo support for preserving eventfd
-Date: Thu, 25 Jun 2026 13:49:45 +0800
-Message-Id: <20260625054946.73445-2-duanchenghao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20260625054946.73445-1-duanchenghao@kylinos.cn>
+	Thu, 25 Jun 2026 09:06:08 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id A7B664074E;
+	Thu, 25 Jun 2026 09:06:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71E7C1F000E9;
+	Thu, 25 Jun 2026 09:06:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782378367;
+	bh=uWgZuaM7iYZt7359X1HxJyqC3nPtLZFOpucffsH2wXI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=gGUZR+Pmd8hdHISAqIzcRl3hmfPpYxddIlJxAJNelBq2PMgqY2bGB1gn/o1J8/fqV
+	 59NTkSRahwRttvehSso/thYLDcRNzZ0lxVwSPidD/wrLyKMO3AoCHasO2KdSotcBeg
+	 jmABSXee0C9aVIauoK4MnrnMKMz9PIuUq6JCszf7kJ0/Bc139fnYjtJEPpaogDQ9xP
+	 akH1+4QL/VtY6QzrvheG2MDeI9AQogxcjv3pfxXgqfgywzhcCwqduFFXx+s4SuRwMZ
+	 eoFP3Q4bTx8lYp46TKZj1t/9c/LrMpAj71JxXAMsCFoE2Nn2HAo2sf3H8YUwGIRbIw
+	 /MUqeEuknHjeg==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Chenghao Duan <duanchenghao@kylinos.cn>
+Cc: viro@zeniv.linux.org.uk,  brauner@kernel.org,  jack@suse.cz,
+  linux-fsdevel@vger.kernel.org,  pasha.tatashin@soleen.com,
+  linux-kernel@vger.kernel.org,  rppt@kernel.org,  pratyush@kernel.org,
+  kexec@lists.infradead.org,  linux-mm@kvack.org,  jianghaoran@kylinos.cn
+Subject: Re: [PATCH v1 1/2] eventfd: luo: luo support for preserving eventfd
+In-Reply-To: <20260625054946.73445-2-duanchenghao@kylinos.cn> (Chenghao Duan's
+	message of "Thu, 25 Jun 2026 13:49:45 +0800")
 References: <20260625054946.73445-1-duanchenghao@kylinos.cn>
+	<20260625054946.73445-2-duanchenghao@kylinos.cn>
+Date: Thu, 25 Jun 2026 11:06:04 +0200
+Message-ID: <2vxzfr2bkn0j.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260624_225006_014570_B62135F6 
-X-CRM114-Status: GOOD (  33.90  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,456 +72,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This patch adds support for preserving eventfd file descriptors across
-kexec live updates using the Live Update Orchestrator (LUO) framework.
-Userspace applications using eventfd for event notification can now
-maintain their state across kernel updates.
+On Thu, Jun 25 2026, Chenghao Duan wrote:
 
-Preserved State:
-The following properties of the eventfd are preserved across kexec:
-- Counter Value: The current 64-bit counter value, including any pending
-  events that have been signaled but not yet consumed by readers.
-- File Flags: The creation flags (EFD_SEMAPHORE, EFD_CLOEXEC, EFD_NONBLOCK)
-  are preserved.
+> This patch adds support for preserving eventfd file descriptors across
+> kexec live updates using the Live Update Orchestrator (LUO) framework.
+> Userspace applications using eventfd for event notification can now
+> maintain their state across kernel updates.
+>
+> Preserved State:
+> The following properties of the eventfd are preserved across kexec:
+> - Counter Value: The current 64-bit counter value, including any pending
+>   events that have been signaled but not yet consumed by readers.
+> - File Flags: The creation flags (EFD_SEMAPHORE, EFD_CLOEXEC, EFD_NONBLOCK)
+>   are preserved.
+>
+> Non-Preserved State:
+> - File Descriptor Number: The eventfd will be assigned a new fd number
+>   in the target process after restore.
+> - Wait Queue State: Any processes blocked on read() operations will be
+>   woken up and need to re-establish their blocking state.
+> - All other internal state is reset to default.
+>
+> Changes:
+> - fs/eventfd.c: Add eventfd_luo_get_state() to safely read eventfd state
+>   (count and flags), and eventfd_create() helper function.
+> - fs/eventfd_luo.c: New file implementing LUO file operations:
+>   preserve, freeze, unpreserve, retrieve, and finish callbacks.
+> - include/linux/eventfd.h: Export new functions.
+> - include/linux/kho/abi/eventfd.h: Define the ABI contract with
+>   eventfd_luo_ser structure for serialization.
 
-Non-Preserved State:
-- File Descriptor Number: The eventfd will be assigned a new fd number
-  in the target process after restore.
-- Wait Queue State: Any processes blocked on read() operations will be
-  woken up and need to re-establish their blocking state.
-- All other internal state is reset to default.
+Why do you need to preserve this? Why don't you create a fresh one after
+kexec? You just preserve the counter, which looks pretty much useless.
+You can just as well open a new eventfd after kexec and set the counter
+value if you care about it.
 
-Changes:
-- fs/eventfd.c: Add eventfd_luo_get_state() to safely read eventfd state
-  (count and flags), and eventfd_create() helper function.
-- fs/eventfd_luo.c: New file implementing LUO file operations:
-  preserve, freeze, unpreserve, retrieve, and finish callbacks.
-- include/linux/eventfd.h: Export new functions.
-- include/linux/kho/abi/eventfd.h: Define the ABI contract with
-  eventfd_luo_ser structure for serialization.
+[...]
 
-Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
----
- fs/Makefile                     |   1 +
- fs/eventfd.c                    |  40 +++++
- fs/eventfd_luo.c                | 250 ++++++++++++++++++++++++++++++++
- include/linux/eventfd.h         |   2 +
- include/linux/kho/abi/eventfd.h |  39 +++++
- kernel/liveupdate/Kconfig       |  16 ++
- 6 files changed, 348 insertions(+)
- create mode 100644 fs/eventfd_luo.c
- create mode 100644 include/linux/kho/abi/eventfd.h
-
-diff --git a/fs/Makefile b/fs/Makefile
-index 89a8a9d207d1..36d568e6cfc7 100644
---- a/fs/Makefile
-+++ b/fs/Makefile
-@@ -27,6 +27,7 @@ obj-y				+= anon_inodes.o
- obj-$(CONFIG_SIGNALFD)		+= signalfd.o
- obj-$(CONFIG_TIMERFD)		+= timerfd.o
- obj-$(CONFIG_EVENTFD)		+= eventfd.o
-+obj-$(CONFIG_LIVEUPDATE_EVENTFD)+= eventfd_luo.o
- obj-$(CONFIG_AIO)               += aio.o
- obj-$(CONFIG_FS_DAX)		+= dax.o
- obj-$(CONFIG_FS_ENCRYPTION)	+= crypto/
-diff --git a/fs/eventfd.c b/fs/eventfd.c
-index 9d33a02757d5..9b76cf06135a 100644
---- a/fs/eventfd.c
-+++ b/fs/eventfd.c
-@@ -376,6 +376,40 @@ struct eventfd_ctx *eventfd_ctx_fileget(struct file *file)
- }
- EXPORT_SYMBOL_GPL(eventfd_ctx_fileget);
- 
-+/**
-+ * eventfd_luo_get_state - Get eventfd state (count and flags) for LUO
-+ * @file: Eventfd file
-+ * @count: Output parameter for count value
-+ * @flags: Output parameter for flags value
-+ *
-+ * This function is exported for use by LUO to safely read eventfd state.
-+ * Since struct eventfd_ctx is defined in this file, we can access its
-+ * members directly here. The function uses the wait queue lock to ensure
-+ * atomic access to count.
-+ *
-+ * Returns 0 on success, negative error code on failure.
-+ */
-+int eventfd_luo_get_state(struct file *file, __u64 *count, unsigned int *flags)
-+{
-+	struct eventfd_ctx *ctx;
-+	unsigned long irq_flags;
-+
-+	ctx = eventfd_ctx_fileget(file);
-+	if (IS_ERR(ctx))
-+		return PTR_ERR(ctx);
-+
-+	/* Read count with lock (flags don't need lock) */
-+	spin_lock_irqsave(&ctx->wqh.lock, irq_flags);
-+	*count = ctx->count;
-+	spin_unlock_irqrestore(&ctx->wqh.lock, irq_flags);
-+
-+	*flags = ctx->flags;
-+
-+	eventfd_ctx_put(ctx);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(eventfd_luo_get_state);
-+
- static int do_eventfd(unsigned int count, int flags)
- {
- 	struct eventfd_ctx *ctx __free(kfree) = NULL;
-@@ -411,6 +445,12 @@ static int do_eventfd(unsigned int count, int flags)
- 	return fd_publish(fdf);
- }
- 
-+int eventfd_create(__u64 count, unsigned int flags)
-+{
-+	return do_eventfd(count, flags);
-+}
-+EXPORT_SYMBOL_GPL(eventfd_create);
-+
- SYSCALL_DEFINE2(eventfd2, unsigned int, count, int, flags)
- {
- 	return do_eventfd(count, flags);
-diff --git a/fs/eventfd_luo.c b/fs/eventfd_luo.c
-new file mode 100644
-index 000000000000..781d90635c52
---- /dev/null
-+++ b/fs/eventfd_luo.c
-@@ -0,0 +1,250 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2026 KylinSoft Corporation.
-+ * Author: Chenghao Duan <duanchenghao@kylinos.cn>
-+ */
-+
-+/**
-+ * DOC: Eventfd Preservation via LUO
-+ *
-+ * Overview
-+ * ========
-+ *
-+ * Event file descriptors (eventfd) can be preserved over a kexec using the Live
-+ * Update Orchestrator (LUO) file preservation. This allows userspace applications
-+ * that use eventfd for event notification to maintain their state across kernel
-+ * updates.
-+ *
-+ * Eventfd is a simple notification mechanism that uses a 64-bit counter for
-+ * signaling events between userspace processes or between userspace and kernel.
-+ * The preservation ensures that pending events and configuration are not lost
-+ * during kexec.
-+ *
-+ * The preservation is not intended to be transparent. Only select properties of
-+ * the eventfd are preserved. All others are reset to default. The preserved
-+ * properties are described below.
-+ *
-+ * Preserved Properties
-+ * ====================
-+ *
-+ * The following properties of the eventfd are preserved across kexec:
-+ *
-+ * Counter Value
-+ *   The current 64-bit counter value is preserved. This includes any pending
-+ *   events that have been signaled but not yet consumed by readers.
-+ *
-+ * File Flags
-+ *   The creation flags (EFD_SEMAPHORE, EFD_CLOEXEC, EFD_NONBLOCK) are preserved.
-+ *   These control the behavior of read/write operations and file descriptor
-+ *   inheritance.
-+ *
-+ * Non-Preserved Properties
-+ * ========================
-+ *
-+ * All properties which are not preserved must be assumed to be reset to
-+ * default. This section describes some of those properties which may be more of
-+ * note.
-+ *
-+ * File Descriptor Number
-+ *   The file descriptor number itself is not preserved. After restore, the
-+ *   eventfd will be assigned a new file descriptor number in the target process.
-+ *
-+ * Wait Queue State
-+ *   Any processes currently blocked on read() operations will be woken up and
-+ *   need to re-establish their blocking state if desired.
-+ *
-+ * File Position
-+ *   Eventfd files don't have a traditional file position, but any internal
-+ *   state related to the file descriptor is reset.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/file.h>
-+#include <linux/io.h>
-+#include <linux/kexec_handover.h>
-+#include <linux/kho/abi/eventfd.h>
-+#include <linux/liveupdate.h>
-+#include <linux/module.h>
-+#include <linux/eventfd.h>
-+#include <linux/anon_inodes.h>
-+#include <linux/idr.h>
-+#include <linux/slab.h>
-+#include <linux/wait.h>
-+#include <linux/kref.h>
-+#include <linux/fdtable.h>
-+
-+static int eventfd_luo_preserve(struct liveupdate_file_op_args *args)
-+{
-+	struct eventfd_luo_ser *ser;
-+	u64 count;
-+	unsigned int flags;
-+	int err = 0;
-+
-+	/* Get eventfd state safely */
-+	err = eventfd_luo_get_state(args->file, &count, &flags);
-+	if (err) {
-+		pr_err("Failed to get eventfd state: %d\n", err);
-+		return err;
-+	}
-+
-+	ser = kho_alloc_preserve(sizeof(*ser));
-+	if (IS_ERR(ser)) {
-+		err = PTR_ERR(ser);
-+		pr_err("Failed to allocate preserve memory: %d\n", err);
-+		return err;
-+	}
-+
-+	/* Save eventfd state */
-+	ser->count = count;
-+	ser->flags = flags;
-+
-+	pr_debug("Preserved eventfd: count=%llu, flags=0x%x\n",
-+		ser->count, ser->flags);
-+
-+	/* Return physical address of serialization structure */
-+	args->serialized_data = virt_to_phys(ser);
-+
-+	return 0;
-+}
-+
-+static int eventfd_luo_freeze(struct liveupdate_file_op_args *args)
-+{
-+	struct eventfd_luo_ser *ser;
-+	u64 count;
-+	unsigned int flags;
-+	int err;
-+
-+	if (WARN_ON_ONCE(!args->serialized_data))
-+		return -EINVAL;
-+
-+	ser = phys_to_virt(args->serialized_data);
-+
-+	/* Get current state and update if changed */
-+	err = eventfd_luo_get_state(args->file, &count, &flags);
-+	if (err)
-+		return err;
-+
-+	if (ser->count != count) {
-+		pr_debug("WARNING: Count changed during preserve->freeze! old=%llu, new=%llu\n",
-+			 ser->count, count);
-+	}
-+
-+	ser->count = count;
-+
-+	return 0;
-+}
-+
-+static void eventfd_luo_unpreserve(struct liveupdate_file_op_args *args)
-+{
-+	struct eventfd_luo_ser *ser;
-+
-+	if (WARN_ON_ONCE(!args->serialized_data))
-+		return;
-+
-+	ser = phys_to_virt(args->serialized_data);
-+	kho_unpreserve_free(ser);
-+}
-+
-+static int eventfd_luo_retrieve(struct liveupdate_file_op_args *args)
-+{
-+	struct eventfd_luo_ser *ser;
-+	struct eventfd_ctx *ctx;
-+	struct file *file = NULL;
-+	int eventfd;
-+
-+	ser = phys_to_virt(args->serialized_data);
-+	if (!ser)
-+		return -EINVAL;
-+
-+	/* Create a new eventfd with the preserved count and flags */
-+	eventfd = eventfd_create(ser->count, ser->flags);
-+	if (eventfd < 0) {
-+		pr_err("Failed to create eventfd: %d\n", eventfd);
-+		return eventfd;
-+	}
-+
-+	file = fget(eventfd);
-+	if (!file) {
-+		pr_err("Failed to get file from fd\n");
-+		close_fd(eventfd);
-+		return -EBADF;
-+	}
-+
-+	close_fd(eventfd);
-+
-+	/* Verify the created file has correct internal state */
-+	ctx = eventfd_ctx_fileget(file);
-+	if (IS_ERR(ctx)) {
-+		pr_err("Failed to get context from file\n");
-+		fput(file);
-+		return PTR_ERR(ctx);
-+	}
-+
-+	eventfd_ctx_put(ctx);
-+
-+	args->file = file;
-+	return 0;
-+}
-+
-+static void eventfd_luo_finish(struct liveupdate_file_op_args *args)
-+{
-+	struct eventfd_luo_ser *ser;
-+
-+	if (args->retrieve_status)
-+		return;
-+
-+	if (!args->serialized_data)
-+		return;
-+
-+	ser = phys_to_virt(args->serialized_data);
-+	if (!ser)
-+		return;
-+
-+	kho_restore_free(ser);
-+}
-+
-+static bool eventfd_luo_can_preserve(struct liveupdate_file_handler *handler,
-+				     struct file *file)
-+{
-+	struct eventfd_ctx *ctx;
-+
-+	if (!file->f_op)
-+		return false;
-+
-+	/* Try to get eventfd context - this will fail if not an eventfd */
-+	ctx = eventfd_ctx_fileget(file);
-+	if (IS_ERR(ctx))
-+		return false;
-+
-+	eventfd_ctx_put(ctx);
-+	return true;
-+}
-+
-+static const struct liveupdate_file_ops eventfd_luo_file_ops = {
-+	.preserve = eventfd_luo_preserve,
-+	.unpreserve = eventfd_luo_unpreserve,
-+	.freeze = eventfd_luo_freeze,
-+	.retrieve = eventfd_luo_retrieve,
-+	.finish = eventfd_luo_finish,
-+	.can_preserve = eventfd_luo_can_preserve,
-+	.owner = THIS_MODULE,
-+};
-+
-+static struct liveupdate_file_handler eventfd_luo_handler = {
-+	.ops = &eventfd_luo_file_ops,
-+	.compatible = EVENTFD_LUO_FH_COMPATIBLE,
-+};
-+
-+static int __init eventfd_luo_init(void)
-+{
-+	int err = liveupdate_register_file_handler(&eventfd_luo_handler);
-+
-+	if (err && err != -EOPNOTSUPP) {
-+		pr_err("Could not register eventfd LUO handler: %pe\n",
-+		       ERR_PTR(err));
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+late_initcall(eventfd_luo_init);
-diff --git a/include/linux/eventfd.h b/include/linux/eventfd.h
-index e32bee4345fb..703e1a126c4d 100644
---- a/include/linux/eventfd.h
-+++ b/include/linux/eventfd.h
-@@ -35,6 +35,8 @@ void eventfd_ctx_put(struct eventfd_ctx *ctx);
- struct file *eventfd_fget(int fd);
- struct eventfd_ctx *eventfd_ctx_fdget(int fd);
- struct eventfd_ctx *eventfd_ctx_fileget(struct file *file);
-+int eventfd_luo_get_state(struct file *file, __u64 *count, unsigned int *flags);
-+int eventfd_create(__u64 count, unsigned int flags);
- void eventfd_signal_mask(struct eventfd_ctx *ctx, __poll_t mask);
- int eventfd_ctx_remove_wait_queue(struct eventfd_ctx *ctx, wait_queue_entry_t *wait,
- 				  __u64 *cnt);
-diff --git a/include/linux/kho/abi/eventfd.h b/include/linux/kho/abi/eventfd.h
-new file mode 100644
-index 000000000000..148beac6bcc7
---- /dev/null
-+++ b/include/linux/kho/abi/eventfd.h
-@@ -0,0 +1,39 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2026 KylinSoft Corporation.
-+ * Author: Chenghao Duan <duanchenghao@kylinos.cn>
-+ */
-+
-+#ifndef _LINUX_KHO_ABI_EVENTFD_H
-+#define _LINUX_KHO_ABI_EVENTFD_H
-+
-+#include <linux/types.h>
-+
-+/*
-+ * Eventfd Live Update ABI
-+ *
-+ * This header defines the ABI for preserving eventfd state across kexec.
-+ *
-+ * The state is serialized into a packed structure `struct eventfd_luo_ser`
-+ * which is handed over to the next kernel via the KHO mechanism.
-+ *
-+ */
-+
-+/**
-+ * struct eventfd_luo_ser - Serialized state of an eventfd
-+ * @count: The current counter value
-+ * @flags: File flags (EFD_SEMAPHORE, EFD_CLOEXEC, EFD_NONBLOCK)
-+ *
-+ * This structure contains the minimal state needed to restore an eventfd
-+ * after kexec. The count represents the current value of the event counter,
-+ * and flags represent the file creation flags.
-+ */
-+struct eventfd_luo_ser {
-+	__u64 count;
-+	unsigned int  flags;
-+} __packed;
-+
-+/* The compatibility string for eventfd file handler */
-+#define EVENTFD_LUO_FH_COMPATIBLE	"eventfd-v1"
-+
-+#endif /* _LINUX_KHO_ABI_EVENTFD_H */
-diff --git a/kernel/liveupdate/Kconfig b/kernel/liveupdate/Kconfig
-index c13af38ba23a..1361b5733f41 100644
---- a/kernel/liveupdate/Kconfig
-+++ b/kernel/liveupdate/Kconfig
-@@ -86,4 +86,20 @@ config LIVEUPDATE_MEMFD
- 
- 	  If unsure, say N.
- 
-+config LIVEUPDATE_EVENTFD
-+	bool "Eventfd Live Update Orchestrator support"
-+	depends on EVENTFD
-+	depends on LIVEUPDATE
-+	help
-+	  Enable Live Update Orchestrator support for eventfd file descriptors.
-+	  This allows eventfd files to be preserved and restored across kexec
-+	  operations, maintaining their counter values and flags.
-+
-+	  Eventfd files are commonly used for event notification between
-+	  userspace processes or between userspace and kernel. With this
-+	  option enabled, eventfd state can be handed over to a new kernel
-+	  during live update operations.
-+
-+	  If unsure, say N.
-+
- endmenu
 -- 
-2.25.1
-
+Regards,
+Pratyush Yadav
 
