@@ -4,68 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 70000CDE008
-	for <kexec@archiver.kernel.org>; Fri, 26 Jun 2026 08:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6DA7BCD4F26
+	for <kexec@archiver.kernel.org>; Fri, 26 Jun 2026 08:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=AoJVBmYqkYYc7bgnl/B8M++q57EqJtQnmodoViGs4lE=; b=uMai+xwXanTCebZMTP2c9H/7ZG
-	ZOd97HiW1wflDFc/41qsaU6XfWelhulp9cleymvDeRkbyrHfSH6fjmPYyoI0EpjPQmzoZUQKL//7t
-	LWiO7ei4mV/eW1huE4XciDFo64aCJvg3C8xeDgXZMqcYnlC3o+M5YouabSrNoYqOnC0dRyhJM501C
-	TMJzjiUR5EVhSnwIHF8bUG2w0hEscuJKHI3O1uU2UPICDmwnJcoWS0sEerc+k9ZdCC7FtP9WuwMmI
-	wVv09raCzA5W6C3vxLRJTPznyV++v3K86V38qqx2G91RjmhIMtuUk0x3LFLFMXg522mYed4tWQVRO
-	wiWIJUmw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=NDltzCJUDRmKYkrW1vbieyufI39hKX9sdD7dTyxWQpA=; b=Y9+YclwkNZIXf0o/i48WcowQAm
+	+o9p+E33JK1MGyboVjQGfv2NfCuPF6C1aB9Z6ZmC9BfMTYwKe0YCI+DxDbyN05F3bjdL3pdx+1dVL
+	puaAPLax6bg/OgOwzs/X6W8RH0q6w1gM32OyZvy24KjVSXa2kbFuGd9tazRKcvxm7X6PcsagiiQik
+	ATIjN8nb8S2ieNxWgiUCXnNPSIikU+BICcX/6NmveZk/WBIR5TRvljjd1gb2R1KTGv91MQcKh3/Gs
+	rmUiRuFpGHVbL8VYIMB/6SnyddM+2pe676dFMuI6VIQpoDPUQWewYWdknJKKhYEscOAkKr1CJuXdT
+	lDYu57Eg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wd1sc-0000000ArGC-0fAj;
-	Fri, 26 Jun 2026 08:25:42 +0000
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130])
+	id 1wd25k-0000000AsRP-2EsN;
+	Fri, 26 Jun 2026 08:39:16 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wd1sX-0000000ArDr-2gjA;
-	Fri, 26 Jun 2026 08:25:40 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1782462331; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=AoJVBmYqkYYc7bgnl/B8M++q57EqJtQnmodoViGs4lE=;
-	b=JYLDaGLyOzEYrj7eDD5UH4PdP9PIGtrz7c5LkgDWqYRV56GiICd8bmep63xellvfgm/23ekOBGGLLjOnY/VgZpvuz98/RAuhZ8y0495Z5pi7OAdZXvXXF+VVWSwT2y0jDRB72KP1yqCSdIdloBZ9tjb0IJPrV72zhzw15kxv/Y0=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R421e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=fengwei_yin@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0X5e6nOB_1782462325;
-Received: from U-V2QX163P-2032.local(mailfrom:fengwei_yin@linux.alibaba.com fp:SMTPD_---0X5e6nOB_1782462325 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 26 Jun 2026 16:25:27 +0800
-Date: Fri, 26 Jun 2026 16:25:24 +0800
-From: YinFengwei <fengwei_yin@linux.alibaba.com>
-To: Kiryl Shutsemau <kirill@shutemov.name>
-Cc: Marc Zyngier <maz@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Doug Anderson <dianders@chromium.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Puranjay Mohan <puranjay@kernel.org>,
-	Usama Arif <usama.arif@linux.dev>, Breno Leitao <leitao@debian.org>,
-	Julien Thierry <julien.thierry.kdev@gmail.com>,
-	Lecopzer Chen <lecopzer@gmail.com>,
-	Sumit Garg <sumit.garg@kernel.org>, kernel-team@meta.com,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/4] arm64: cross-CPU NMI via SDEI
-Message-ID: <aj43dFtbcZHvWBv5@U-V2QX163P-2032.local>
-References: <cover.1781709543.git.kas@kernel.org>
- <ajVLeseWOZn0XXY2@arm.com>
- <868q8asj1u.wl-maz@kernel.org>
- <ajk-Vge2qhaY-TwJ@thinkstation>
+	id 1wd25h-0000000AsQS-0heK
+	for kexec@lists.infradead.org;
+	Fri, 26 Jun 2026 08:39:15 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782463152;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NDltzCJUDRmKYkrW1vbieyufI39hKX9sdD7dTyxWQpA=;
+	b=ffNp93CZNuk9Zcv3BFNQL7rqnVJlJgcBIbHYXIZTwDvZsryivK3HZedKnCYXx+GbPuDvj/
+	hvVds8xxVxIlCRQJClSdGWXBvBiKYDEZPcbQpW5f614PZiec7BDn0qhJL5k/5bk/2ud0E6
+	M0Intj77ypF1i6tUNkiDuSFRvM26G2Y=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-364-SIdW7egOPmCLt8T1oGlZjw-1; Fri, 26 Jun 2026 04:39:10 -0400
+X-MC-Unique: SIdW7egOPmCLt8T1oGlZjw-1
+X-Mimecast-MFC-AGG-ID: SIdW7egOPmCLt8T1oGlZjw_1782463150
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-519899abab8so12926971cf.2
+        for <kexec@lists.infradead.org>; Fri, 26 Jun 2026 01:39:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782463150; x=1783067950;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=NDltzCJUDRmKYkrW1vbieyufI39hKX9sdD7dTyxWQpA=;
+        b=PEow7MoOsIaf2/akoILbRiFqxoTctaJC4XQPXp3e4vifbMoNW4Hrl+EhCsPypZ0BWf
+         Ga4CGdMDiUJO8rqhShkwdkjfSDwdt/HjXqriYQB9kkpWEU4Y9r8pJqQCSsdyKvyQFDmg
+         eGbXZtFUCeWQy9M+L+TWcdw7oIpeyW65asyP+NCe+axB5swaAfZDjEjvj2wXzfjkW+jQ
+         CHh1V75o/OH9bt7tHaQi48Tl+JzaxOqMImLEizq3VIAoM2ksM5CqWwqeR+ygFefIzA9B
+         KHVZBNE5+7pfCT17lS3sKRPQNu1G7mJ9MTSmQpP9AZWKdaSqDLGJZB6U+5IMPvY9BSCt
+         8hXA==
+X-Gm-Message-State: AOJu0YzX1iJ71YmjvLsPxADkD6j+yVGI9RLM2Mg3BSlTFwkQmCfBpRMP
+	OhIKL2UOaaNb5zTrh5maBwRz7I3n56vf0N0rhZOHkSQJYzGEsPUrv7K5qLqFhTmrBUWPsjN+K3f
+	65/zXqK+mw6nbmWoZ91MCVGD9KgFmyfoW1cEEKY2VG+98oWv3wG+r6gbjOmdgETYRcd5wH6cOQ3
+	4N0a5QuRKSL3lSFdt7Am7x4En/DPAVR/bYEjdu
+X-Gm-Gg: AfdE7cmD1zJ8OuwVK9B+a9Jzs1lU5ktim/DYsXHGeg1Hui+ulS80aczuqWuYDjcq2hL
+	W0hyOiDEkiLdYnXDJhC4ZCPV/VxrqftUK2xx0sFwRQ4ydh617OpYgi7fD4U+KLbybG5CSR7oCTk
+	5v4NyHJlcM2w79/3F5RUNsfen23Xp52Y5yGZ6xmSQv1cn+rXaM4DZvYhVf2J8MAFjWPxA=
+X-Received: by 2002:ac8:5d8f:0:b0:517:7e26:36a4 with SMTP id d75a77b69052e-51a727a6b4emr38094581cf.34.1782463149696;
+        Fri, 26 Jun 2026 01:39:09 -0700 (PDT)
+X-Received: by 2002:ac8:5d8f:0:b0:517:7e26:36a4 with SMTP id
+ d75a77b69052e-51a727a6b4emr38094311cf.34.1782463149181; Fri, 26 Jun 2026
+ 01:39:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ajk-Vge2qhaY-TwJ@thinkstation>
+References: <20260529032739.13264-2-ltao@redhat.com> <CAO7dBbW+LEy8SBGAKcrxEDzK5Xctw-r7ztgnXuURa9g0xntbtQ@mail.gmail.com>
+ <CAP_BRoQEM8Re1dT7JNQgO72o50GAnb2y7R1HWPd+E772GVYAJg@mail.gmail.com>
+In-Reply-To: <CAP_BRoQEM8Re1dT7JNQgO72o50GAnb2y7R1HWPd+E772GVYAJg@mail.gmail.com>
+From: Tao Liu <ltao@redhat.com>
+Date: Fri, 26 Jun 2026 20:38:32 +1200
+X-Gm-Features: AVVi8CcC6SRLbaRMcmDZcOqEvJBqXMu3cyxkiJ8WEEu_YPQEWrWyMZoL0N-5qwY
+Message-ID: <CAO7dBbW55P9eibE5o74s8Hn+fsZ5CeasyEtLMcpkCM=kVzF7zQ@mail.gmail.com>
+Subject: Re: [PATCH] riscv: Fix a NULL pointer reference in machine_kexec_prepare
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org, pjw@kernel.org, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, alex@ghiti.fr, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: mbI_9flNC2kCK_6PvHpnZN-JrRVys7AVVQWDCtdMXCw_1782463150
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260626_012538_595587_2B338B77 
-X-CRM114-Status: GOOD (  31.17  )
+X-CRM114-CacheID: sfid-20260626_013913_286738_2B8CC884 
+X-CRM114-Status: GOOD (  26.85  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,105 +104,90 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Kirill
-On Mon, Jun 22, 2026 at 02:56:16PM +0100, Kiryl Shutsemau wrote:
-> On Fri, Jun 19, 2026 at 03:26:21PM +0100, Marc Zyngier wrote:
-> > > Does your firmware set ICC_CTLR_EL1.PMHE? I'd be curious to see the
-> > > numbers if the DSB was omitted on the enable path.
+Hi Baoquan,
+
+Glad to see your message again!
+
+Thanks for the Ack and the suggestion for the comment, I will add it
+in the next version.
+
+In the meantime, I will check if similar issue exists on LoongArch as well.
+
+Thanks,
+Tao Liu
+
+On Fri, Jun 26, 2026 at 8:04=E2=80=AFPM Baoquan He <bhe@redhat.com> wrote:
+>
+> Add kexec ML to CC.
+>
+> On Fri, Jun 26, 2026 at 7:46=E2=80=AFAM Tao Liu <ltao@redhat.com> wrote:
 > >
-> > I certainly don't observe this sort of overhead on the HW I have
-> > access to, and would like to understand where this is coming from with
-> > actual profiling data.
-> 
-> Full disclosure: the ~66% figures come from internal testing about a year ago.
-> I no longer have the details of the machine it ran on and can't confirm whether
-> ICC_CTLR_EL1.PMHE was set there -- it may well have been. I shouldn't have
-> carried those numbers forward without being able to stand behind them, so
-> please disregard them.
-> 
-> Here are fresh numbers from NVIDIA Grace (Neoverse V2). Importantly, this
-> box reports:
-> 
->   GICv3: Pseudo-NMIs enabled using relaxed ICC_PMR_EL1 synchronisation
-> 
-> i.e. PMHE == 0, so the synchronising DSB on the unmask path is already
-> patched to a NOP (ARM64_HAS_GIC_PRIO_RELAXED_SYNC). What's left is the
-> floor cost of PMR-based masking itself plus the PMR save/restore on
-> exception entry/exit -- not the DSB. So this is the case Catalin asked
-> about (DSB omitted), and there is still a measurable cost.
-> 
-> A trivial single-threaded gettid() loop (1e6 calls, median of 5,
-> performance governor, ASLR off):
-> 
->   pseudo_nmi=0 (DAIF):       178.4 ns/call
->   pseudo_nmi=1 (PMR):        252.5 ns/call
->   delta:                     +74.1 ns/call  (~230-250 cycles)
->                              +41.5% wall time / 0.706 throughput
-I tested the u-bench.c on a Neoverse N2 based arm64 server. The result
-is as following:
-   pseudo_nmi=0 (DAIF):       96.3  ns/call
-   pseudo_nmi=1 (PMR):        169.8 ns/call
-   delta:                     +73.5 ns/call
+> > Kindly ping, any comments?
+> >
+> > Thanks,
+> > Tao Liu
+> >
+> > On Fri, May 29, 2026 at 3:35=E2=80=AFPM Tao Liu <ltao@redhat.com> wrote=
+:
+> > >
+> > > A NULL pointer reference issue is noticed in riscv's machine_kexec_pr=
+epare,
+> > > where image->segment[i].buf might be NULL and copied unchecked.
+> > >
+> > > The NULL buf comes from security/integrity/ima/ima_kexec.c:
+> > > ima_add_kexec_buffer(), where kbuf is added by kexec_add_buffer(),
+> > > but kbuf.buffer is NULL.
+> > >
+> > > Fix this by simply adding a check before copy.
+> > >
+> > > Signed-off-by: Tao Liu <ltao@redhat.com>
+> > > ---
+> > >  arch/riscv/kernel/machine_kexec.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/arch/riscv/kernel/machine_kexec.c b/arch/riscv/kernel/ma=
+chine_kexec.c
+> > > index 2306ce3e5f22..d81d576f9cb5 100644
+> > > --- a/arch/riscv/kernel/machine_kexec.c
+> > > +++ b/arch/riscv/kernel/machine_kexec.c
+> > > @@ -41,6 +41,9 @@ machine_kexec_prepare(struct kimage *image)
+> > >                 if (image->segment[i].memsz <=3D sizeof(fdt))
+> > >                         continue;
+> > >
+> > > +               if (image->segment[i].buf =3D=3D NULL)
+> > > +                       continue;
+> > > +
+>
+> This is a good fix, maybe we can add code comments to explain it as
+> below, just for reference.
+>
+>                /*
+>                 * Some segments (e.g. IMA) reserve space but have no buff=
+er
+>                 * loaded yet. Skip them as they cannot contain an FDT.
+>                 */
+> And is there any other place where the similar issue exists? e.g on Loong=
+Arch?
+>
+> Other than above concerns, this patch looks good to me:
+>
+> Acked-by: Baoquan He <bhe@redhat.com>
+>
+> > >                 if (image->file_mode)
+> > >                         memcpy(&fdt, image->segment[i].buf, sizeof(fd=
+t));
+> > >                 else if (copy_from_user(&fdt, image->segment[i].buf, =
+sizeof(fdt)))
+> > > --
+> > > 2.47.0
+> > >
+> >
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+> >
+>
 
-> 
->   --- u-bench.c ---
->   #include <unistd.h>
->   #include <sys/syscall.h>
->   #include <time.h>
->   #include <stdio.h>
->   int main(void) {
->           struct timespec a, b;
->           clock_gettime(CLOCK_MONOTONIC, &a);
->           for (long i = 0; i < 1000000; i++)
->                   syscall(SYS_gettid);
->           clock_gettime(CLOCK_MONOTONIC, &b);
->           printf("%f ns\n", (b.tv_sec-a.tv_sec)*1e9 + (b.tv_nsec-a.tv_nsec));
->           return 0;
->   }
-> 
-> will-it-scale agrees independently. sched_yield (ops/s, median of 5):
-> 
->                       1 task       72 tasks
->   pseudo_nmi=0      3,195,656    230,824,534
->   pseudo_nmi=1      2,253,753    163,914,837
->   ratio                0.705          0.710
-> 
-> The ratio is flat across the whole 1-to-72 sweep, so -- relevant to the
-> scalability question -- it's a constant per-syscall tax, not a contention
-> effect. The impact tracks syscall/exception density: page_fault1, a more
-> realistic workload, stays within ~5%.
-> 
-> > The direction of travel is to deprecate SDEI. I wouldn't add more stuff
-> > on top of this interface.
-> 
-> I understand FEAT_NMI is the long-term answer, and I'm not arguing against
-> deprecating SDEI. My concern is the gap in between. By our estimate it's
-> 10+ years before the last non-FEAT_NMI machine retires from the fleet --
-> for scale, we're still running Skylake today. So there's roughly a
-> decade where a large installed base has neither FEAT_NMI nor affordable
-> pseudo-NMI, and no way to reach a DAIF-masked CPU for an all-CPU
-> backtrace or to capture a wedged CPU in a crash dump. That's the
-> functional gap this series tries to cover.
-> 
-> Given the deprecation direction, I deliberately kept the SDEI footprint as
-> small as I could. The series adds no new firmware interface and no vendor
-> SMC -- it uses only the standard software-signalled event (event 0) via
-> SDEI_EVENT_SIGNAL, which is already present on these systems for
-> firmware-first RAS (APEI/GHES). And SDEI is only ever invoked in a "bad
-> state": to deliver a backtrace signal to a CPU that a normal IPI can't
-> reach, or to stop a CPU that ignored the stop IPIs. Nothing on any hot or
-> steady-state path touches it.
-> 
-> If even that minimal use is unacceptable on a deprecated interface, I'd
-> rather know now and redirect the effort -- but I'd appreciate a pointer to
-> what should cover this gap for existing silicon in the meantime.
-I couldn't agree more: We need a solution for existing system. And
-like to see this patchset merged. Thanks.
-
-Regards
-Yin, Fengwei
-> 
-> -- 
->   Kiryl Shutsemau / Kirill A. Shutemov
-> 
 
