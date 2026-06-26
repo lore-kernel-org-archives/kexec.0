@@ -4,63 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D6C69CD4F26
-	for <kexec@archiver.kernel.org>; Fri, 26 Jun 2026 11:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 707A2C43458
+	for <kexec@archiver.kernel.org>; Fri, 26 Jun 2026 17:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=9YpMyR+qlvlqRuVjps8vxBolsZnShA75KeyYR5QZWZI=; b=uqVor6IBtiRQXtHfgREcD6NvYb
-	NzKgwBYikAr/D5wz5DN3NRLsmr0sOtmCmnMkJ0n9CBf5+iTfPvoYtgmc1I+3nXdgsuKc8WY68sKIn
-	nvJnC1kN8CFvmNvNInKjmz3Tq2R4Tt6s8zGr2OUv2GLbHBGcH9ON0eKWJccaSedFo7sebF9FmnZ8g
-	IeQCe5W49kaOBhiohhQ4UbChafFC8Ss5xRXUVnhXc59AQBMjuNb+BiY/E1MGpc5yFfLE35KR+bLx+
-	BLe6ju+2BGVvmwxFmRXIhW5m8Q3dfLP9z4htaIxHki3/uvLEh3R758OjJMyYMx81TS5FR2xUAMjik
-	mPTIGvLA==;
+	bh=juJVPnk1nM/NXnz2d98pIoSDNwa75f898mQYNM3826k=; b=2YorW5GUfgoDZ2H1SsAcQNGM6F
+	DmQ7OxQM4WTa/ogY+8nB9ZmEUc89Ivlp8szFxQ1eUyBfFgfaqGxCV75NxFLy44KRM9AECchkNrWU4
+	wEyFbEb7metr3BbAV8Sjv+rWV1AM0ibGKy+aMxKsjAFUErg601b0XVg9ojZD3GXKp9lPi7EHAMDKh
+	GsDwgon2TkRdWU9Kxwx3cCuUJsfy0llMRCu15CRay3mB3DPdgSBo1rhKSw/QuufV7kcJgPiyKCfi/
+	WVYwIKtvFuoi5q56o7tIt2WOVyqsSGCuDzJMZbKs6DNjiB0gOW8iI401mP38DrUTNirXXCWv0VK+3
+	fhXhhNuA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wd5BL-0000000BGVu-47r2;
-	Fri, 26 Jun 2026 11:57:15 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
-	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wd5BL-0000000BGVn-074s
-	for kexec@lists.infradead.org;
-	Fri, 26 Jun 2026 11:57:15 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 59DFC40ABE;
-	Fri, 26 Jun 2026 11:57:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F51F1F000E9;
-	Fri, 26 Jun 2026 11:57:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782475034;
-	bh=9YpMyR+qlvlqRuVjps8vxBolsZnShA75KeyYR5QZWZI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=Bx1YAzWSid7owFWxMCfA0186eDDpPS6Bk1iUsg+5y5Ugl2P9liT+7/arQf95DTE4S
-	 HW+dq6UYThVhQ9NIFmWe8tFD2BlNMJWJaVVk+JZX4xuPvF8cmg5B3rOmTwW7ZTRg58
-	 T7RbELABusb6j+rLGCeH8mpsvLl5yXS00wxwbkJHNLbmweXgbRfVy8v7Owq6GAzcY7
-	 3kHxztfz8U+TqCWxUt9uQydBK4QYk3UwDBX+mf4JwlBYIElybqH1uEgseynnD70u92
-	 +7njhKUWT8E49vgLRmSWdFkjWBnLtyosTqxRf/6QkwYBJJTCqHZR9Pw/4v0hWtMQep
-	 lpa9skKfM/ccA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Samiullah Khawaja <skhawaja@google.com>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  Mike Rapoport
- <rppt@kernel.org>,  Pratyush Yadav <pratyush@kernel.org>,  Alexander Graf
- <graf@amazon.com>,  David Matlack <dmatlack@google.com>,
-  tarunsahu@google.com,  open list <linux-kernel@vger.kernel.org>,  "open
- list:KEXEC HANDOVER (KHO)" <kexec@lists.infradead.org>,  "open list:KEXEC
- HANDOVER (KHO)" <linux-mm@kvack.org>
-Subject: Re: [PATCH 1/1] liveupdate: luo_file: Add internal APIs for file
- preservation
-In-Reply-To: <20260613012521.835490-2-skhawaja@google.com> (Samiullah
-	Khawaja's message of "Sat, 13 Jun 2026 01:25:20 +0000")
-References: <20260613012521.835490-1-skhawaja@google.com>
-	<20260613012521.835490-2-skhawaja@google.com>
-Date: Fri, 26 Jun 2026 13:57:11 +0200
-Message-ID: <2vxzwlvljyzs.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	id 1wdA1S-0000000BgEV-1d8r;
+	Fri, 26 Jun 2026 17:07:22 +0000
+Received: from foss.arm.com ([217.140.110.172])
+	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wdA1N-0000000BgDz-1bir;
+	Fri, 26 Jun 2026 17:07:18 +0000
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 036DB1F60;
+	Fri, 26 Jun 2026 10:07:12 -0700 (PDT)
+Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 793AD3F632;
+	Fri, 26 Jun 2026 10:07:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1782493636; bh=ylfDgokWIdBatf69Bqo3iSYQXfGqiAjcEuPHy5u2PLE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JP49E4PS3c5WyTeeBtQ7DS3TS1dFSwX05hGVEdAiV/ydyNWiIoWTMyKGrntMHB5dI
+	 s0qam6HkCI7dSTGsU7vZFmYIBYwP04z5RiCm9QrZa0B1OI1eSswlpKSdhpyCb5TxIZ
+	 T0hMZ+udy2aE80t9jhGwoDxt47L+MGlZ1QCEtw6w=
+Date: Fri, 26 Jun 2026 18:07:10 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Kiryl Shutsemau <kirill@shutemov.name>
+Cc: Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>,
+	Doug Anderson <dianders@chromium.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>, Puranjay Mohan <puranjay@kernel.org>,
+	Usama Arif <usama.arif@linux.dev>, Breno Leitao <leitao@debian.org>,
+	Julien Thierry <julien.thierry.kdev@gmail.com>,
+	Lecopzer Chen <lecopzer@gmail.com>,
+	Sumit Garg <sumit.garg@kernel.org>, kernel-team@meta.com,
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	"Kiryl Shutsemau (Meta)" <kas@kernel.org>
+Subject: Re: [PATCH v4 0/4] arm64: cross-CPU NMI via SDEI
+Message-ID: <aj6xvvY4AA-fQG2X@arm.com>
+References: <cover.1781709543.git.kas@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1781709543.git.kas@kernel.org>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260626_100717_457398_5EC536F5 
+X-CRM114-Status: GOOD (  13.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,72 +79,21 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Sami,
+On Wed, Jun 17, 2026 at 08:20:01PM +0100, Kiryl Shutsemau wrote:
+>   - A CPU stopped by the SDEI rung is parked, not powered off via PSCI
+>     CPU_OFF. Reaching and dumping the wedged CPU -- the point of the
+>     series -- works, and it matches the shared stop path's own park
+>     fallback when CPU_OFF is unavailable. The consequence is that an SMP
+>     crash-capture kernel cannot re-online such a CPU (it stays "already
+>     on"); the capture kernel boots and runs on the remaining CPUs.
+>     Powering the stopped CPU off so a capture kernel can reclaim it
+>     requires completing the SDEI event and then CPU_OFF, which hit a
+>     firmware-specific issue still under investigation; it is left as a
+>     follow-up and does not affect the dump's contents.
 
-On Sat, Jun 13 2026, Samiullah Khawaja wrote:
-
-> From: Pasha Tatashin <pasha.tatashin@soleen.com>
->
-> Live update orchestrator file handlers depend on the preservation of
-> other files. To make sure that the dependency is preserved, the file
-> handlers needs to fetch the preservation token of the preserved
-> dependency. Similarly during restore, a file handler wants to fetch the
-> restored file of the dependency.
->
-> Add APIs that allows fetching token of dependency during preservation,
-> and fetching the restored file dependency during restore.
->
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> Signed-off-by: Samiullah Khawaja <skhawaja@google.com>
-
-We discussed this once already on a call, but I'll write my argument out
-here for everyone else to get a say as well.
-
-While it isn't obvious, this patch implicitly defines a part of the uAPI
-for live update. This patch says to VMMs (or other live update users)
-that "you can restore dependent files in any order". That is, VMMs
-don't have to restore the files in a topological sort order or
-dependencies, they can do so in any order and the kernel will manage the
-dependencies on its own.
-
-But on the preservation side, VMMs still do need to follow the
-topological order of dependencies. Because if they don't, the
-liveupdate_get_token_outgoing() call will fail and preservation can't
-proceed.
-
-In simple words, if file type A depends on file type B, VMMs always need
-to preserve B before A, because A's preservation will try to find B's
-token, and if B is not preserved that will fail. On the _restore_ side
-though, liveupdate_get_file_incoming() implicitly retrieves the file so
-the VMM can restore then in any order.
-
-I don't like this for a couple reasons. First, this makes the API
-asymmetric. If the VMM needs to manage dependency order during
-preservation anyway, why not do it on retrieve as well?
-
-Second, the API is easier to misuse. The VMM can restore A but not B,
-and then close the session. It will go on its merry way never knowing it
-did something wrong. For example, guest_memfd depends on its VM FD. With
-this patch, LUO will allow restoring guest_memfd without restoring the
-VM FD. This makes the guest_memfd practically useless. Yes, it is a bug
-in the VMM anyway, but if guest_memfd restore was denied, then it would
-be easier to catch.
-
-The kernel will keep itself safe in either case, but it will make the
-API harder to misuse. And you can always _relax_ the ordering
-requirement if there is a need in the future, but you can't go the other
-way round.
-
-So that's my question: do we enforce restore ordering? The code change
-should be relatively simple. You just need to fail if the file is not
-already restored in liveupdate_get_file_incoming().
-
-In either case, please at least add a piece in the documentation about
-this ordering. We should not leave it implicit.
-
-[...]
+Just to understand, your firmware cannot cope with a PSCI CPU_OFF from
+the SDEI handler? This is one of the required calls to be supported.
 
 -- 
-Regards,
-Pratyush Yadav
+Catalin
 
