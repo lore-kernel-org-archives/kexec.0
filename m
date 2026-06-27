@@ -4,110 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0F197C43211
-	for <kexec@archiver.kernel.org>; Sat, 27 Jun 2026 00:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 08DD7C43458
+	for <kexec@archiver.kernel.org>; Sat, 27 Jun 2026 22:28:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
-	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=R6fI86SlfzCXqZetzJ98HYtjazk1qqu/5Wh9zakbqJk=; b=SObcqLYXqBIv2sofsC6hrT0Lvq
-	61Jpxdr4l1e+7dfwxaHdYX3Y9cZ8L/+qTJ6gFrsaOHi1yB4fhrmuS/nJDoyDlES9KwMKFC9gbpwC8
-	c5zm3MRQb08ifzP1LMCalii6doVZGYEJgkfRBxRMDJ7ViXoiErBIP82hZindPf9DTb4dyd8ThF2zB
-	s3nWJH0R0L3z0tP+qvAap4uk/g5xMFWu8GA+xfJRXt9T9sNSOdDXY+W71Ncf24iEigOKq0kc6D12v
-	PaEio62qydiY1bHF3ehwaAfhpo7rJlIi3MpT7HBwWSxJrc4gtmpfRQnALhsFWcRkxp7Y6SSWlU8fa
-	C6k2BvbQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=1a/DgFcrrEHwkA8ET4o3flsjcsRtGN3BOYsiECe4Zmg=; b=OcKj5rTwUGsXi8bO+YCLexWBQI
+	oumEAK8fUj/WjL9NurixBeIpg1WNUgdgMw3tILNS54Djf6jfF8heeSerj0wVL+v6/k8DgAxB6AH2y
+	e0C9GTJiutS7RAv/RvNRp4o2w2ehSQCd2qaiaqcvk2zqnkWJs0RPY/tfgEAZcuO8pkAvhA83PDg2q
+	/VmqEJhS7Qlk5rSzl5gpmLEXK0Vey9BtNKI9cNXfvBv4aS12XmEbZNpfkR7MHCQRL7BxQ/wrXZp9/
+	6vWRKYBfHFKS+UKUKd6N7T4r3IycAIROgA8MFovqJNNmxJamwiAAFesMzP/znulsdodIESje8cdqa
+	09/DYfDg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wdHOS-0000000C2gE-2RH7;
-	Sat, 27 Jun 2026 00:59:36 +0000
-Received: from mail-qt1-x830.google.com ([2607:f8b0:4864:20::830])
+	id 1wdbW9-0000000CnPL-2HEM;
+	Sat, 27 Jun 2026 22:28:53 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wdHOP-0000000C2fv-4Avn
+	id 1wdbW1-0000000CnOj-0t3t
 	for kexec@lists.infradead.org;
-	Sat, 27 Jun 2026 00:59:35 +0000
-Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-519eedc30a3so14535901cf.1
-        for <kexec@lists.infradead.org>; Fri, 26 Jun 2026 17:59:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1782521973; x=1783126773; darn=lists.infradead.org;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R6fI86SlfzCXqZetzJ98HYtjazk1qqu/5Wh9zakbqJk=;
-        b=FiSwQznlgSoOVpbYEo/elq+YKXU2P6GoEddMOt4DFELZl8DaSIfAyythpazV7f7DAF
-         TSLMU30TETUDEecNztkoWJAzoF9WrBJEcJqGu4b3ESQCZMolRhmyTaAiiwrWX/774WVy
-         DsPLxQC5mHkMEENgkCqMTa+K1JPGJS/t61n8Gq+e6gq6XoWHLHAmrS2wTEtgrYWhc1WL
-         oxcAO2Q/hPCshWUVbMe6aiBpdY5EwV1yvpwoEvKW/7SNblpgT2ROJQBlfh5sG216sFTr
-         rW6CAk+dbmsIPwB+adrz+KKlgMJNcm43EllMh4pvQgbJ7jn2l8zYTDmLp6f6PZYV7TD2
-         6axA==
+	Sat, 27 Jun 2026 22:28:47 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782599322;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=1a/DgFcrrEHwkA8ET4o3flsjcsRtGN3BOYsiECe4Zmg=;
+	b=Uyc1hL8F8QzQhThlXqGBTz4ZBCHn0LfosvBrvuH/tnsniqdcCVUTi5/QVRHbT0xeyo1q9W
+	jef0HjMxvdCGyLubIle9to8Z6YSUVCDSjprRz7bWm7jJfBtnurgo/Wtzad5G0nlqc+4+T9
+	2c0NeCZrtaaT63QU6/ECczVekrB8s2Y=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-345-PhoqwLOcPMmv8nC7rS65cg-1; Sat, 27 Jun 2026 18:28:40 -0400
+X-MC-Unique: PhoqwLOcPMmv8nC7rS65cg-1
+X-Mimecast-MFC-AGG-ID: PhoqwLOcPMmv8nC7rS65cg_1782599319
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2c81db324caso14246695ad.0
+        for <kexec@lists.infradead.org>; Sat, 27 Jun 2026 15:28:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782521973; x=1783126773;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=R6fI86SlfzCXqZetzJ98HYtjazk1qqu/5Wh9zakbqJk=;
-        b=AkWrtiulz/Ekm4kahxx7WAnO9je2yf9u0oUn4/1mKsOuLEzst3Mrc1JOPrkHX5Yil7
-         +yq3FRgtKGWrD/cVTxErmG1PiFM80sbeyej6iqcO0edKywE0/IJ9VyyJZk7IBZ1BvNAF
-         3EwHDrHL+B3vhppBZU8fnzr+MvJ6Pc0B3Xi1xJrOSQyg1bqQXGMHNpwXa8zPCPQr/0dG
-         TMcDdFbOIwySVs4EpzZMS1XqOzdG91eHUMivQ6h/+ERNL9Lj9CDKOFB2x0JOLDZPpSG7
-         yXM3A1YNjQqS58n0q++2Aucbox/WG1s2DuRWLP/V9RHOaWfJFXSUoTNooUlAE+qfJR7P
-         Z0Tw==
-X-Forwarded-Encrypted: i=1; AFNElJ9HxdsCO+whczuhppOs5LXVkJs3dGM+Pquwi3EFQNFO3oct4ag+uLEnEQ7EV/BV34xKZH34fA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxukuUvLpQIqmygqxnCv1L2ET3VSXGdJl+QHSY11Vo6e/t03+I4
-	85NyW+ewZ7uTewFzEeeNlGGdvEqn6JhSU2YJ8TBabzDPCBtXuJ+owy//4U2sHiwNOS77KLhFubg
-	m48v2
-X-Gm-Gg: AfdE7cmlydVQKK/YOoFfy1tB5FFJgPj50g2sW9zdtCzn3v20qsrxvANKqMFwFJy9M8I
-	RTQy2uVHESBL5IcySmyPydP/ySgXdLJmbyCqih25s3dXAJjkRNKzbGnlLqBruIzsK1xVTcDnkPK
-	EOPam9YXN9sp64YykYsmN9fLBb/RWU44nbSRZ6iUqX+TbKTefgbcN7OFrN+1ieAdZs+ondGE3xG
-	eb/e6hpiI69Ci+S4JIK3ubHnOjJu71PhrbOPiPkunHUz+9gy8vrYP5T309A4MtXhe89aEUTBh+G
-	+xa0VYp/vbk6XTWgBTfeJ+GOQce3tckx5PKCgR40mX8En0Vx23MSdbS2XXqXzJmyRlWy9/4EzXv
-	VjzlxCict9tuynOxij064BY0mbqWBfk4kC8+JMRzfJMM1Z9ycgLqaaFZPp8IxvoAWO8/vBn4Ue/
-	xP9uo/+OSUrvJEYxvcDsn3PoC0m+KMWCT56voGEZTbk+JaiMusUg==
-X-Received: by 2002:a05:622a:652:b0:51a:8c97:938a with SMTP id d75a77b69052e-51a8c97961dmr30547341cf.65.1782521972789;
-        Fri, 26 Jun 2026 17:59:32 -0700 (PDT)
-Received: from [127.0.1.1] ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51a876c888bsm18434161cf.9.2026.06.26.17.59.31
+        d=1e100.net; s=20251104; t=1782599319; x=1783204119;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1a/DgFcrrEHwkA8ET4o3flsjcsRtGN3BOYsiECe4Zmg=;
+        b=EhCH6c3oUyR1k5895Ltz1xce7w9T1O+exmlvO3Zi/B7PMV6sYeHWBhEe+nscWmmeEU
+         q6xHoPVzbfZhNqw8W3q8vZ9SMnz/+nICxMhQtsuABHXPeubZ9+vDTRiU6qJ9CmaWLP46
+         3TUjbhM0AtlXqeFXjPwxN04vftUn15fxp+6isB44eU/lFa6FWJVht9upGQsktFKr0AUe
+         W4QNXg9i0JmQTP/ac1UleGo9tKeaslcafyoG1x1OgPd/m6buPVdaLf6RIF/XlpTzcoU6
+         amFidILjMqlWN3SR1xNlg+ZhWVRAKlDy4q4A53tO13kQWed88nLG+fmnb60IhMB3Cbim
+         YoPw==
+X-Forwarded-Encrypted: i=1; AHgh+RrUMKPF1KAPr1vzF8RNOUkltXlzKtdMbglXyog1LtWw3Ehvrrst4/ZXYVyBowE1qTdTx/tlIg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzOpSWhAZMFgCIPZbs3lQnvUk+nC6h6OZMWrv5h/SqH3xdSkchJ
+	VrheP8xNTT0Eqoyr7ySGh6gzLOs2LEwe0vZH8MA3eSZ4D9iMsWqfqpZin9+lE+7h8v7do0Ce0LS
+	kgTwXlpp+TizDevZMa/PHWyFZpg1KTorkVSXm4LUdCIkQUoMXrbXfN6oIcBQMvNBEJEzlUg==
+X-Gm-Gg: AfdE7ck6uIudzcc5kF+7SjG/I/SZ4qYAvYiAKHpwIBOlNqI3nkBZDdyxlF14Nxaw4+8
+	s0rh4F7KSmJw2EKHygkqu/nzkXu8VESNd3vqXKrhHHUqrS1jqP/rVp67KzLgg0QfG2s0SeMbuqA
+	l5RnoOqWJbiDNeCknUKfkTMKLc6w7PXlcTiJ+5QPjrQvtaic6YWl8kl3QoCYYc/PXCjk7ac5fzW
+	EiDa/P0rl45x1VIA6a/UmxikM1ruWv+jIYYv1NOEe3xaT6O27WIOyBKc/+jGN5qt1DzdTJPjl5+
+	4/v4SsWUSjrpWdPYKv4VXGppzwSYU3ULyqy2zHqZAp3GTZDzLi/KMQ+OR+4wznotFXY2TFjJ8vu
+	zb+EFEEytzG2HrHXohSlEk0sN2xGig1Kr4yoTgkW5sBogiZ4uV2R+
+X-Received: by 2002:a17:902:e886:b0:2c9:b96a:285b with SMTP id d9443c01a7336-2c9b96a2a3fmr22166415ad.33.1782599319080;
+        Sat, 27 Jun 2026 15:28:39 -0700 (PDT)
+X-Received: by 2002:a17:902:e886:b0:2c9:b96a:285b with SMTP id d9443c01a7336-2c9b96a2a3fmr22166275ad.33.1782599318583;
+        Sat, 27 Jun 2026 15:28:38 -0700 (PDT)
+Received: from localhost.localdomain (122-63-64-251.mobile.spark.co.nz. [122.63.64.251])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c9deed3733sm2423215ad.23.2026.06.27.15.28.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2026 17:59:31 -0700 (PDT)
+        Sat, 27 Jun 2026 15:28:37 -0700 (PDT)
+From: Tao Liu <ltao@redhat.com>
+To: pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr
+Cc: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	bhe@redhat.com,
+	Tao Liu <ltao@redhat.com>
+Subject: [PATCH v2] riscv: Fix a NULL pointer reference in machine_kexec_prepare
+Date: Sun, 28 Jun 2026 10:26:03 +1200
+Message-ID: <20260627222602.23594-2-ltao@redhat.com>
+X-Mailer: git-send-email 2.54.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v5 2/3] kho: add KHOSER_COPY_PTR to allow phys copy of
- serialized ptr
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Tarun Sahu <tarunsahu@google.com>
-Cc: Mike Rapoport <rppt@kernel.org>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, 
- Andrew Morton <akpm@linux-foundation.org>, Alexander Graf <graf@amazon.com>, 
- kexec@lists.infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260623105201.3724592-3-tarunsahu@google.com>
-References: <20260623105201.3724592-1-tarunsahu@google.com>
- <20260623105201.3724592-3-tarunsahu@google.com>
-Date: Sat, 27 Jun 2026 00:59:25 +0000
-Message-Id: <178252196519.136430.866206127737477576.b4-review@b4>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=418;
- i=pasha.tatashin@soleen.com; h=from:subject:message-id;
- bh=rwTVAsBBkl6m9nXDZzsnVlHfZlLxgx8r+wYRTya4rFU=;
- b=owEBbQKS/ZANAwAKAbt3KEzbc3reAcsmYgBqPyByUQB3ZtOZejeLpITOeBDenLDFWImk+jAt5
- d7Mnw5s74KJAjMEAAEKAB0WIQRBMaqT7LRvGvB/NmK7dyhM23N63gUCaj8gcgAKCRC7dyhM23N6
- 3kMzEACL+IpfP2QOYHoFVmDQ53QyykaWU1CyFZYqJxKRJOZqX+h6ti5kZr/QOGsJtRpcAKird5V
- nh6fuSEvCGiYyRbF5/zO9yMPaS2XLyiYQ6Bx5p6HCdE8RYtULu6ZXrqvy+frSw0ReetrKXJ8dfb
- 1lBTjI6fbJpCjZnlxkGAt2m4TCJNn7Fu1Ww3uWyYrDYKVivpIp7mYLHIirsP4RjqpB+gvZNoCW2
- GJgfDrBKZOgFC5tX/9N6NrEVOAa0ga938R30US8+5RzIeu7GRzgU2SoBeAe7CAj9oTiJccLA6Gv
- DSRaurlixLG2myHzw66H/6l+oBHfQNdoAoDjSMOePteal9PDcJunUlv738WvzAhi11hbzIVyT0V
- JkpzfGq8aCIAMOHJf5ltBNHmS2YBhBIHAsuUKEsr1q3pF0lNdkf1A1wsfBihZ5dshufhToECQvw
- yTyN3+4uqnT9C052gMo/uJZPTBu6BAm291roodzJqw4opXE4zcx0SPBsv7q10ovTYtonbUa1yST
- phuAdlHeoDZsc2Jwl+mmbMTvf6moMDck59E3jlvb0Uym+VNEEo/AZsIxO5k4bPRSQtA1gU+s8ri
- hrXSXwMlBZuKGqDRwOTygeb71UMdrmwG55Hy+gZp5MgfYUvyo/JH68xtWyQpkTYPejQ0vIAyotF
- /68hf0eXsNoWTXQ==
-X-Developer-Key: i=pasha.tatashin@soleen.com; a=openpgp;
- fpr=CAAAB722DD22A081F0D49F35633A6A993D43B569
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: Joh6Yu8CcjeKqcmbNhwpMb7js9hJWQOkNAqG4rgfQZI_1782599319
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260626_175934_069888_20DBF04D 
-X-CRM114-Status: UNSURE (   7.14  )
+X-CRM114-CacheID: sfid-20260627_152845_314974_E4C825DF 
+X-CRM114-Status: UNSURE (   9.18  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -123,18 +112,45 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, 23 Jun 2026 10:52:00 +0000, Tarun Sahu <tarunsahu@google.com> wrote:
-> Adding KHOSER_COPY_PTR to copy one serializeable pointer to
-> another. It basically allows copy of phys val of the
-> serializeable pointer.
-> 
-> It ignores the typecheck if any of the argument is of void *
-> 
-> 
-> [...]
+A NULL pointer reference issue is noticed in riscv's machine_kexec_prepare,
+where image->segment[i].buf might be NULL and copied unchecked.
 
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+The NULL buf comes from security/integrity/ima/ima_kexec.c:
+ima_add_kexec_buffer(), where kbuf is added by kexec_add_buffer(),
+but kbuf.buffer is NULL.
 
+Fix this by simply adding a check before copy.
+
+Acked-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Tao Liu <ltao@redhat.com>
+---
+
+v2 -> v1: add code comments as suggested by Baoquan.
+link to v1: https://lore.kernel.org/linux-riscv/20260529032739.13264-2-ltao@redhat.com/
+
+---
+ arch/riscv/kernel/machine_kexec.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/riscv/kernel/machine_kexec.c b/arch/riscv/kernel/machine_kexec.c
+index 2306ce3e5f22..afc68f6a4aa1 100644
+--- a/arch/riscv/kernel/machine_kexec.c
++++ b/arch/riscv/kernel/machine_kexec.c
+@@ -41,6 +41,13 @@ machine_kexec_prepare(struct kimage *image)
+ 		if (image->segment[i].memsz <= sizeof(fdt))
+ 			continue;
+ 
++		/*
++		 * Some segments (e.g. IMA) reserve space but have no buffer
++		 * loaded yet. Skip them as they cannot contain an FDT.
++		 */
++		if (image->segment[i].buf == NULL)
++			continue;
++
+ 		if (image->file_mode)
+ 			memcpy(&fdt, image->segment[i].buf, sizeof(fdt));
+ 		else if (copy_from_user(&fdt, image->segment[i].buf, sizeof(fdt)))
 -- 
-Pasha Tatashin <pasha.tatashin@soleen.com>
+2.54.0
+
 
