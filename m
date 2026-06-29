@@ -4,61 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id ED127C43458
-	for <kexec@archiver.kernel.org>; Mon, 29 Jun 2026 02:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0B876C43458
+	for <kexec@archiver.kernel.org>; Mon, 29 Jun 2026 07:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=24pcIPxMD0v6nE+cG+HmVJw2coOQJ/tv1WIShhEM0FM=; b=D3dfjT9OGMwC4u6HjaMELpVw53
-	//gcxdZPmHuP6yNHgx7dc0AkBU9jMQjdF9itsMtbUnGAOtlrFhwGjeu+dOHy4/nxquV2ckNRAKr4V
-	4zE/D41NjikduGtyKYRdnpMhOSO3TTyt8BLekVEYQkUAb/DQxCWrB7W/nAVhcKM870SADae4C9IIa
-	RFRMrUFLRKc72JtHb55sZDwD7Bjyxo5v4C1ozdItKG40aU880nFuSjWIco/RhRhL/gaNgtbUlCg6m
-	DqQu82Mn/LUFtt+2G06s+bWghab07Tsn3Q6AShjSRFVjjkNcoM8aR7ddI4yJQpDAyVAPQ4jVQWtW2
-	6DeOVQdw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
+	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=PkmUS+qbA9gCTt148jOaQOCsbv1HL6/U/eK4SzvD/TY=; b=Tox067YKM/gLVQeub1mkna78gF
+	i927LCU/8GC9E9qbPNw0g5eZ99JCP9HZzaXJ3B9McVf+h5ORaSxjRzd02V1vCgD+p+5287tjKFHtm
+	j5XvezBFPFZXOu1X1u0JNWetrObcmgwLd3wu0FylynlxIdfkxT/UTp3ixJZ3CvxBz8Olka4Ux+ks+
+	EhWB97N0Qk2O05r1s2Nva9O3Lf3JzYqBkRLyGBtopLjumgiV4VFVM+UL2X6cDMASzj0ngpvsIa90J
+	kFcDn4Ay+A7y2aK5pblE2+f2sH9mdgZH9h9LERpi/kkcPxCqSkcnDtHShrbE37Kzk0lYhmwJCTy9y
+	UuxBg8cA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1we1zx-0000000DatR-0emc;
-	Mon, 29 Jun 2026 02:45:25 +0000
-Received: from out-173.mta0.migadu.com ([91.218.175.173])
+	id 1we60R-0000000Dpk7-0eq7;
+	Mon, 29 Jun 2026 07:02:11 +0000
+Received: from mail-qt1-x82b.google.com ([2607:f8b0:4864:20::82b])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1we1zr-0000000DasX-2LvP
+	id 1we60P-0000000DpjG-0HIL
 	for kexec@lists.infradead.org;
-	Mon, 29 Jun 2026 02:45:21 +0000
-Date: Mon, 29 Jun 2026 10:44:54 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782701103;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=24pcIPxMD0v6nE+cG+HmVJw2coOQJ/tv1WIShhEM0FM=;
-	b=PPe5SU3h4MEEiLPUe/QzJU9PR0czyQkxI+pjm3N25zVWI5VhQns/QCg+HAn+ZT+h18mwqS
-	52NcGNqgtJ/o0T5PScjra6RZ5YJuZDse42+o2h6SByl9Ua8bD4l8DLWdEZN4NpaLeeD62M
-	dAZ9KM+CXxCQidcZHmdrwL1+qVnprbs=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Baoquan He <baoquan.he@linux.dev>
-To: Tao Liu <ltao@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, pjw@kernel.org,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: Fix a NULL pointer reference in
- machine_kexec_prepare
-Message-ID: <akHcJpVXP2tyi9XS@MiWiFi-R3L-srv>
-References: <20260529032739.13264-2-ltao@redhat.com>
- <CAO7dBbW+LEy8SBGAKcrxEDzK5Xctw-r7ztgnXuURa9g0xntbtQ@mail.gmail.com>
- <CAP_BRoQEM8Re1dT7JNQgO72o50GAnb2y7R1HWPd+E772GVYAJg@mail.gmail.com>
- <CAO7dBbW55P9eibE5o74s8Hn+fsZ5CeasyEtLMcpkCM=kVzF7zQ@mail.gmail.com>
- <CAO7dBbVfMtHDocudv2LgoJR1dNy8CufjB8SEz=BZ+hK6Ycu6Yw@mail.gmail.com>
+	Mon, 29 Jun 2026 07:02:10 +0000
+Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-51c06402402so1823891cf.0
+        for <kexec@lists.infradead.org>; Mon, 29 Jun 2026 00:02:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1782716527; x=1783321327; darn=lists.infradead.org;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PkmUS+qbA9gCTt148jOaQOCsbv1HL6/U/eK4SzvD/TY=;
+        b=Ys/qqsWEBk/h5rnFWOqZq9rTHD1i/rTthfE5PzdO9jmwD74RTn/nF/z1d8ZbdKEVkn
+         GJxGTYgtkWuAhuMVlp6/pXbM340keWUf3UzI66NNcI6Ot1EcfRIj7zyDD9LSznQmgI5o
+         4qoleP+Q+HYSFOqzbiU8Tkpr0Bgs6uhPQ1mTFD9ULOOubGFhKsNExwat+FnFZnrZAgcx
+         d4eZvykGjAfvHBDIksb4ormXiW6wAq/ZJRXDwNnFXFoxBs/VUsCsx/B6GvgygOUdT18o
+         t8cRoOgO97oIMtEPCN94VJ/L+4HNDNGpUGkJRBlW2h8YexFwVgaODzsj3J2go90eq1jo
+         cqcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782716527; x=1783321327;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PkmUS+qbA9gCTt148jOaQOCsbv1HL6/U/eK4SzvD/TY=;
+        b=gNAdL5fJg0vwyLZTD2WiUjiyoyexnc/YqWYwKZWRPY1JkA06RwiGy00YfLCkzkQtQ1
+         PPM3VBUTODjtss5LseireDCK5Jewu+JrBEJd7oToL+sisOjJ6KmtbsrpXjRx3q6umrIB
+         3O/ab2mqwWQc4PEBF7HPvB54GlM3qKjesSqizyvXv3YPoJUIpYu9QUu03Tx62WiRDR30
+         GD7moV/xIGcamh00r0LtpnQxA9mJ+cQUR1GkC63SBBt0KCcDWadj4og9YOcLYNVxTb1u
+         HnQIZ6JNZSJjkNsfS8PIikvIGh9Ur9jYJwGuX1Rl0651xVPtf+M/RVJ22ew+q5ZV1gOq
+         Z77g==
+X-Forwarded-Encrypted: i=1; AFNElJ/fqUt9yr0EXmfpYmBTjKca1c9xjbePKP53xZBHyHxKZonDJNECzuxU7rulbHDVUur5ek/4dg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxFH/szBJEAHx2fOTqj0gYQWjlRddM1ro/RtWNoZEHv4pYY+ZJZ
+	YXQpsIuw4M5wZz/ujKft9n0KAgk2TmH7X5HTHlrc64WEEfRh8qUI90ofy33K9FaJFEQ=
+X-Gm-Gg: AfdE7ckkJ+EC+1xaKYf6hWS4THluNzdNmjhBNmwd8rJW+XajbfALR1HiRpv4w6waZVs
+	BMoa41cYO0JZip/V8P/EGzVEUT92F4C666BK7HoHoM+kEWwDg9rzZGlr7+lTitD5YuM/fzx/+mH
+	nSA5QdWcA1qC2DqUT3nuL7JN3ZLDu7UGxpuWj5IEIFX/4eHnC80LZuLL8eH7mz/MYxsfUQL0FiE
+	MEQGvqpp0H7zITTnpwDYRklq61IRUOGviy95bmTihH0R6v0AQ29LJrRy7O6iIgu7J8F+fpwwRAs
+	6OdSevPv6EfgOFu0OAg7kjqm3y1oEpGPMpWmtDowAbVlBSOZlzvOPMhyDGZkMALE2Bt+njlBEAp
+	gzvV7HpjpTOfSpX/a8kc92hf158IS3+k8h5iWDd+DtzbgYXbJyBimCm88I/w1TsbvVp1cXP9Jr8
+	QfqQHcVxScTWpnC+8aP8ofiMILf7GNs/JGYD7PTnNphnxEOPfxWuSN4+FxsPKD
+X-Received: by 2002:a05:622a:608d:b0:516:ca56:a44d with SMTP id d75a77b69052e-51a5178907cmr318181201cf.6.1782716527051;
+        Mon, 29 Jun 2026 00:02:07 -0700 (PDT)
+Received: from [127.0.1.1] ([71.181.43.54])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8df82692bddsm300651096d6.43.2026.06.29.00.02.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2026 00:02:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAO7dBbVfMtHDocudv2LgoJR1dNy8CufjB8SEz=BZ+hK6Ycu6Yw@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v6 3/3] luo: Update serialized data to use KHOSER_PTR
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: Tarun Sahu <tarunsahu@google.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+ Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>, 
+ skhawaja@google.com, kexec@lists.infradead.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20260628001114.1869564-4-tarunsahu@google.com>
+References: <20260628001114.1869564-1-tarunsahu@google.com>
+ <20260628001114.1869564-4-tarunsahu@google.com>
+Date: Mon, 29 Jun 2026 07:01:59 +0000
+Message-Id: <178271651966.13502.2620034351625890943.b4-review@b4>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1514;
+ i=pasha.tatashin@soleen.com; h=from:subject:message-id;
+ bh=i8hMeTOD7PlXYKXCkQGIEVry2kHEdap7Vv1D92UaDwg=;
+ b=owEBbQKS/ZANAwAKAbt3KEzbc3reAcsmYgBqQhhtIYYuZBg6KJbH62WNctwI6mdsZePcCtfwN
+ 44MDknREhqJAjMEAAEKAB0WIQRBMaqT7LRvGvB/NmK7dyhM23N63gUCakIYbQAKCRC7dyhM23N6
+ 3h/YD/wNczubLTbms0pFp3A2EyjJjFEM/LlM1mQL5Mhx3WmXPxHlAJnaL72I+6yofWcwBajg5VC
+ ernzYQ9l4uKEJzGRufG4MYpNHUtkTOs3Tz2nl7q7sTrmmWxoWj6EIZKcbDEWMRCns1bD6Vwnt6m
+ a60hANaw9vrEwDmawr5obeIpzd0llmmSE2E3k3O90f8fY58rKkrqyEKeoW3Mi3gOJv9e5PzZGsQ
+ s8ilIjofewCeCXV3WT9wwl4TKhiNLel5hY0yIlSCQhJ9a9Z2/Mq/010UoEuu3LTs6IrV13bXZ0r
+ lDwx70HJVLinpsyqDu8duUaN9Hm8h/m5iRaaoR7zX6Dhxkjv3laM9PzwHNf+YPvslIA33JdnL+K
+ PP0WCurgePElqGDXZdMrbV1lNZgbAhXq1YD0/IrYIoNEqyZh/n4wJKlsA8G2kqUCdAmzqKUSuMf
+ zwO4ok5vooB1vI79jbSk57ltu8iWxuUcWdxcdyy+Kwp5qzR0B3smYZe/VOexN5lUmb9bIW03uyG
+ IQnFXE11wh4D7UDXUp83rP0xZetlhhueDiIY4+x2MIMtChuf2L6K3F6yri2SVXDZOQM7begNd1P
+ dqfg2xV4Oq2UD31U+CAGg7r/NzfOxnBDmcJhrU8QzCfxECfORWkuukH7bl+PlBtU20Mc5dliL7d
+ mMeCz6aR1v1fQNA==
+X-Developer-Key: i=pasha.tatashin@soleen.com; a=openpgp;
+ fpr=CAAAB722DD22A081F0D49F35633A6A993D43B569
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260628_194519_740277_CBC03565 
-X-CRM114-Status: GOOD (  17.49  )
+X-CRM114-CacheID: sfid-20260629_000209_142244_A1DF1C58 
+X-CRM114-Status: GOOD (  10.86  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,47 +121,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 06/28/26 at 10:38am, Tao Liu wrote:
-......
-> > >                /*
-> > >                 * Some segments (e.g. IMA) reserve space but have no buffer
-> > >                 * loaded yet. Skip them as they cannot contain an FDT.
-> > >                 */
-> > > And is there any other place where the similar issue exists? e.g on LoongArch?
-> 
-> I have tested in LoongArch, it doesn't have the similar issue. The
-> reason is, in arch/loongarch/kernel/machine_kexec.c:machine_kexec_prepare(),
-> the unchecked memcpy() only happens for none kexec file load, however
-> ima_add_kexec_buffer() requires kexec file load. So the condition
-> isn't met.
+On Sun, 28 Jun 2026 00:11:14 +0000, Tarun Sahu <tarunsahu@google.com> wrote:
+> diff --git a/include/linux/kho/abi/luo.h b/include/linux/kho/abi/luo.h
+> index 288076de6d4a..9e78625cfdc1 100644
+> --- a/include/linux/kho/abi/luo.h
+> +++ b/include/linux/kho/abi/luo.h
+> @@ -89,14 +90,14 @@ struct luo_ser {
+>  /**
+>   * struct luo_file_ser - Represents the serialized preserves files.
+>   * @compatible:  File handler compatible string.
+> - * @data:        Private data
+> + * @serialized_data:  The serialized KHO pointer for this file
 
-OK, that's good, thanks for the effort.
+I am concerned about layring violation here.
 
-> 
-> > >
-> > > Other than above concerns, this patch looks good to me:
-> > >
-> > > Acked-by: Baoquan He <bhe@redhat.com>
-> 
-> Thanks for your code review and suggestions!
-> 
-> Thanks,
-> Tao Liu
-> 
-> > >
-> > > > >                 if (image->file_mode)
-> > > > >                         memcpy(&fdt, image->segment[i].buf, sizeof(fdt));
-> > > > >                 else if (copy_from_user(&fdt, image->segment[i].buf, sizeof(fdt)))
-> > > > > --
-> > > > > 2.47.0
-> > > > >
-> > > >
-> > > >
-> > > > _______________________________________________
-> > > > linux-riscv mailing list
-> > > > linux-riscv@lists.infradead.org
-> > > > http://lists.infradead.org/mailman/listinfo/linux-riscv
-> > > >
-> > >
-> 
+LUO is designed as  a generic, opaque transport layer that promises to 
+preserve 64 bits of raw data. How those 64 bits are interpreted is 
+entirely up to individual clients.
+
+While some clients like memfd_luo will use those 64 bits as a physical 
+address pointing to KHO-preserved structures, other clients may store a 
+generic token, cookie, index, or non-pointer status. By
+changing u64 data to DECLARE_KHOSER_PTR(serialized_data, void *) in 
+struct luo_file_ser, we force KHO pointer semantics and layout 
+constraints on all generic LUO files.
+
+Clients that need KHO pointer serialization must cast that opaque 64-bit 
+value to/from a  KHOSER_PTR  within their own callbacks.
+
+Also, the field descriptions in  struct luo_file_ser  are no longer 
+aligned due to the length of the new variable name, I believe it will 
+cause warning when making docs.
+
+-- 
+Pasha Tatashin <pasha.tatashin@soleen.com>
 
