@@ -4,69 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 99FC5C43458
-	for <kexec@archiver.kernel.org>; Mon, 29 Jun 2026 15:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 52AF2C43458
+	for <kexec@archiver.kernel.org>; Mon, 29 Jun 2026 16:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=QadHf/c4nC9yt2VwHXLTFiroUss5lFXWZ9eyxJMcwGc=; b=KX/CGR96Vvobz3wORmeeEAaUKP
-	pfG7BPLrw9svmJ9IQejw/f64/ovgHW4W/ZnK4yWi2r79ZTkO58HpqFjEPrK+sB7cDViXl9p5Uy9+y
-	ywH8GJGVwUuf6sIJOlTvsRqdVMEI+kxjcyibvUL2fbvB0MTtCH9GEwWgN3HzEqyBl7V+Ce4sLGYGp
-	ysJq9SDgZHfVnvl2k6dgJC9mRXMDflT2dqrJ7WeZ2vt7R9OBwSeonc5cm5S538XyPENMM7AoF8cJ1
-	K06K+Se6xo+ZoVtSh/o0khklf6G10K84mc56jTugTXFXDrTJzpIG64IVtX1WyY/lpBuuCAKMpieYQ
-	T2aLL5sw==;
+	bh=CmkyM0gKnkXc7iOZ4KWexJ+DOScGYYrexahA8IDf0Eo=; b=zj5OhIN+sE3sYa5ceurf4MrFlI
+	Aq8FwBVoB47IdsdfJZYAnCYyp4b4sT0wWJkLiuujcZ1YsCQSs/LKgMgEnho6HLfVX+zV+SB5iznNo
+	oW6//fth2bc60pHaQccgFCNzEOABQs08lecBpavBiOXZrtEuDkY/UEV4LAVHeJ20CesoZW3BqDmGB
+	LIK8DhIn0s1GnW9FHVpj2AlO4YeM9Kp5MFkILdKCZ9pdWA/1nTfssEL52fRTKdzf/zbFCqSEVn/xn
+	mIMngTadWdQES5LjMK1Is1s1pKWluX233KEy3H/AjHjDZmfu6JoGikQzAC1BeamyQvdVMhw6BX0E4
+	sd4JVKwg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weEJZ-0000000F8S7-1Pt1;
-	Mon, 29 Jun 2026 15:54:29 +0000
-Received: from foss.arm.com ([217.140.110.172])
-	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weEJW-0000000F8RT-3Qgw;
-	Mon, 29 Jun 2026 15:54:28 +0000
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56B93339;
-	Mon, 29 Jun 2026 08:54:19 -0700 (PDT)
-Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E9C053F673;
-	Mon, 29 Jun 2026 08:54:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1782748463; bh=PEmFDKBgCksf81j7VvtfZ7vWMDUHtqYjKsy1c3eLLHc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q1Ds7g8LQm/f/sRY3aU8CRxFBcAhXW5+3DKKrIdJnaV+H333kFK30OtA740u8lsQq
-	 2IpCqmDqJNRRLqAChO9LN4I1enJxHu5S2gEbGoT7vbXJxNI84W4Tq+RT22YtWNWJXj
-	 F2D2POYOIFlmQpXS7/BHGFY3vpHzOTb0vAudG+hU=
-Date: Mon, 29 Jun 2026 16:54:18 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Kiryl Shutsemau <kirill@shutemov.name>
-Cc: Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>,
-	Doug Anderson <dianders@chromium.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Puranjay Mohan <puranjay@kernel.org>,
-	Usama Arif <usama.arif@linux.dev>, Breno Leitao <leitao@debian.org>,
-	Julien Thierry <julien.thierry.kdev@gmail.com>,
-	Lecopzer Chen <lecopzer@gmail.com>,
-	Sumit Garg <sumit.garg@kernel.org>, kernel-team@meta.com,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/4] arm64: cross-CPU NMI via SDEI
-Message-ID: <akKVKhOsv6EJVFv4@arm.com>
-References: <cover.1781709543.git.kas@kernel.org>
- <aj6xvvY4AA-fQG2X@arm.com>
- <aj7Pm5H0MN5WwhDK@thinkstation>
- <akJsQK2iG2oZ3vYE@thinkstation>
+	id 1weERg-0000000F9pv-0BWo;
+	Mon, 29 Jun 2026 16:02:52 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
+	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1weERd-0000000F9ny-14pz
+	for kexec@lists.infradead.org;
+	Mon, 29 Jun 2026 16:02:50 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Reply-To:Content-ID:Content-Description;
+	bh=CmkyM0gKnkXc7iOZ4KWexJ+DOScGYYrexahA8IDf0Eo=; b=emMkk9rTbhnNhghgE55MfwVz3a
+	r0n4XukSrz5gDKUzziYlr1RfQA2R2dAn7mnImS/buUGFiUCN4qn4QfbxvGrVO+o3jP2thPY66Eb6C
+	fvINpG7/9AURgL5pREtz09JyNaEEG+8roTTsviLeilkdUsiSrOxsNwLX6rrR+zwdoP5Wlw+zJ5Lwc
+	WcUte29QZmowNvkZ0ZS0LyY1bRmeSH/agZmXCqDm+ff9UyozEamDw3Zq+bkTi2meMF+CEJli5ZAQ+
+	+hYQi2OnG7ynaoJoLLawpinKqgXUhpSTo2ADampGAKV97aHrEfNe9qBg/F6rLoJgAVo6/J4uVz8/F
+	DLO7uaQA==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1weER2-006P44-1N;
+	Mon, 29 Jun 2026 16:02:12 +0000
+Date: Mon, 29 Jun 2026 09:02:06 -0700
+From: Breno Leitao <leitao@debian.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
+	Hanjun Guo <guohanjun@huawei.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Shuai Xue <xueshuai@linux.alibaba.com>, Len Brown <lenb@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <baoquan.he@linux.dev>, 
+	Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	riel@surriel.com, caggio@meta.com, kexec@lists.infradead.org, kernel-team@meta.com
+Subject: Re: [PATCH 0/2] vmcoreinfo: GHES: track fatal hardware errors
+Message-ID: <akKWJQNiX5MGJLl6@gmail.com>
+References: <20260617-hwerr-v1-0-ff131cd6203c@debian.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <akJsQK2iG2oZ3vYE@thinkstation>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260617-hwerr-v1-0-ff131cd6203c@debian.org>
+X-Debian-User: leitao
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260629_085427_043741_14D6010E 
-X-CRM114-Status: GOOD (  25.18  )
+X-CRM114-CacheID: sfid-20260629_090249_295886_DA0B0473 
+X-CRM114-Status: UNSURE (   7.44  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,48 +81,17 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jun 29, 2026 at 02:05:14PM +0100, Kiryl Shutsemau wrote:
-> On Fri, Jun 26, 2026 at 08:40:57PM +0100, Kiryl Shutsemau wrote:
-> > But I have not tried calling CPU_OFF directly, without completing the
-> > event. I assumed it is required. Will give it a try when I have time.
-> 
-> Tried it now, and it doesn't work either -- in a more interesting way.
-> 
-> Calling PSCI CPU_OFF directly from the SDEI handler (event left
-> uncompleted) reproducibly breaks the kdump capture kernel, and this
-> reproduces under QEMU's TF-A, not just on Grace -- so it isn't a Grace
-> firmware quirk.
+On Wed, Jun 17, 2026 at 06:32:46AM -0700, Breno Leitao wrote:
+> Hardware errors reported through APEI/GHES are recorded in the kernel's
+> hwerr_data array so that crash tooling can tell from the vmcore whether a
+> hardware error preceded a crash.
 
-I had a quick grep (with the help of claude) through the TF-A code and
-it doesn't seem to be compliant with the spec. It should subscribe to
-the PSCI CPU_OFF event and complete the SDEI but it doesn't. It seems to
-handle CPU_ON but that may not be sufficient. It only EIOs the SGI once
-the OS completed the event, which doesn't happen if you issue CPU_OFF.
+This Hardware error tracking "thing" is currently in an awkward
+location—it doesn't belong in RAS and has minimal connection to vmcore
+info.
 
-> The test: a CPU wedged with interrupts masked is stopped via the SDEI
-> rung; its handler calls __cpu_try_die() instead of parking. A/B in QEMU,
-> changing only that wedged CPU's handling (everything else identical):
-> 
->   - park it (current series):  capture kernel boots fully to a shell.
->   - CPU_OFF from the handler:  capture kernel hangs in early boot, around
->                                SDEI re-init, never reaches a shell.
-> 
-> Powering the PE off while its SDEI event is still active leaves EL3's
-> dispatch state dangling, and the capture kernel trips over it. Completing
-> the event first and then CPU_OFF -- what I tried originally -- silently
-> wedges EL3 on Grace instead.
-> 
-> So both routes off fail, and the CPU stays parked. The dump is complete
-> either way; only re-onlining the stopped CPU in an SMP capture kernel is
-> lost. It's a cheap QEMU repro now if anyone wants to dig into the EL3
-> side.
+Following Baoquan's earlier suggestion, I'll refactor this as a standalone
+driver, which should make the code organization clearer and more maintainable.
 
-Have you tried SDEI_EVENT_COMPLETE_AND_RESUME instead? Just COMPLETE
-won't return to the kernel. We have sdei_handler_abort() to complete the
-event and, hopefully, you can continue with the CPU_OFF. It's a work
-around the TF-A non-compliance but I think this is useful even if you
-don't issue the CPU_OFF (e.g. no CPU hotplug, just the park loop).
-
--- 
-Catalin
+https://lore.kernel.org/all/aYvi4Y_HNqk_u1-v@fedora/
 
