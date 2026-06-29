@@ -4,56 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4D401C5DF7F
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 30027C5DF79
 	for <kexec@archiver.kernel.org>; Sat, 15 Aug 2026 07:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Date:Cc:To:From:Subject:
-	References:In-Reply-To:Message-Id:MIME-Version:Content-Type:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=IjSWiRWMU9Ee27IawNNdMZlcd+pdKiRJTFL+L2RHmwk=; b=GRgwKsd7LwLMVE8hoZKLz5Pz6y
-	hGSx38DFhIlnjHtWRY2k1vVjhuAl62d711ZkW5atvMS3unaw1AGbgoDUjjbYsGpcxIExYOv/dNClO
-	d2f/DMEQFilu4uxTCyHhTV0CcsizTh0MLOqbFf4B94iOO44Bbxi6dibiOaw44+zpCel0m9UOuRcGg
-	X0jxuo4EAur6Uvec+9QBWgL8UobQwpE1KJLM1XAS8pmbjgmoxlikogxW1stF9bieXBzvrL64qavRt
-	P6KdynfS822xs0/PzgxLsK41rsLkprMCpQ5W28HHrj5imEi+ZKsryWeJ2e6qID9jdkhlw1SSXv/WQ
-	Hp4D2HZw==;
+	bh=IPyotJxeR5uGcVVLMoJjwubMmXyJTsZGJCp+yFer/oU=; b=WhwAEMId+j+s6O59REFH6VkIDa
+	Ksoglr8RANtcpEwF2zMVRSdNgKeRDOe2FyHbJoutkoZjgiZNGEwcJk/3HnH3hK4DmVwwytJrTwBlH
+	5aJYYuRkGF3+S5XERb2Jwrs5Iver92gbwaY17lFQBQPHa/ESchQGsPffvFaYBiDT9yJ9TBQEpX3Ji
+	5Q9Ft711SwIif/scdTYQvvPQT0/5koxGRopxXItEGeO0wK1IaG1Rj8hOY/C51X8xlvol0ssIZBdse
+	tRD5ujHUtnJBPaOcCM8YujtezpT/L8uMOLAm6EvThdjLKUPGkCTHPi1ktO+J3gk5q66D+qqemsF72
+	MTcYKjsA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wv95K-00000003cwu-3rKd;
-	Sat, 15 Aug 2026 07:45:42 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wv95L-00000003cxU-1ulB;
+	Sat, 15 Aug 2026 07:45:43 +0000
+Received: from canpmsgout04.his.huawei.com ([113.46.200.219])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wbX6s-00000004RFL-32bn
-	for kexec@lists.infradead.org;
-	Mon, 22 Jun 2026 05:22:14 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 6F92E444F1;
-	Mon, 22 Jun 2026 05:22:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 378331F00A3F;
-	Mon, 22 Jun 2026 05:22:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782105733;
-	bh=IjSWiRWMU9Ee27IawNNdMZlcd+pdKiRJTFL+L2RHmwk=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=VPoPKF9kD8SQIQF6VNPVqYW4nAuqARtP874wgBw9ktl1VwB0bHFPLCbcXYj7HUMxH
-	 Mj3NKz7moMW1j+SXZ5JmJDnOZXBZW5IRtgrf/R6VIt2WEKZCRvzJOEpijHbPfQq0b0
-	 nm0TeCZgQXRR4HX/TRhbDsnY+V7xNwuVA9DRk2Y55c/zCXC+PjQS50Jq+EMuggkTRd
-	 9oW5HaoUighBQ6x6uk8YcD6TgdtMpwCo25V+L/RnXeQZlOC/g45FDA5+g0tzRvIsbT
-	 YyCpmQk1Wl7rkCzOR5GCrA3tMSulv6dAwtezT3ajTjhRDdDcAq0rBDJrWSlu6Ht97u
-	 uxcDgxs29F2vw==
-Content-Type: multipart/mixed; boundary="===============3341382443539626176=="
+	id 1we8ar-0000000EEKp-2imm;
+	Mon, 29 Jun 2026 09:48:00 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=IPyotJxeR5uGcVVLMoJjwubMmXyJTsZGJCp+yFer/oU=;
+	b=ZvqXwk1LGLILo1sZWbW4Vwk7DohspdOETHMV+sQ5/kKKv3cidXYNYfIu10fUhh6jkU/DXHzWi
+	HUim2EaCJltc0yUZLhMVFyof+5gwRNiiqNjmI7iANvKL0RczTQISUyeGDF4p/4M7fm3xkHv24ie
+	VNh/G67tXRbC+w7DEbfgHxE=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4gph6m6H2bz1prKR;
+	Mon, 29 Jun 2026 17:38:40 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4C2B440537;
+	Mon, 29 Jun 2026 17:47:51 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
+ (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 29 Jun
+ 2026 17:47:48 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
+	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
+	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
+	<akpm@linux-foundation.org>, <baoquan.he@linux.dev>, <rppt@kernel.org>,
+	<pasha.tatashin@soleen.com>, <pratyush@kernel.org>, <ruirui.yang@linux.dev>,
+	<rdunlap@infradead.org>, <peterz@infradead.org>,
+	<feng.tang@linux.alibaba.com>, <dapeng1.mi@linux.intel.com>,
+	<elver@google.com>, <enelsonmoore@gmail.com>, <kuba@kernel.org>,
+	<ebiggers@kernel.org>, <lirongqing@baidu.com>, <leitao@debian.org>,
+	<kees@kernel.org>, <coxu@redhat.com>, <cfsworks@gmail.com>, <jbohac@suse.cz>,
+	<osandov@fb.com>, <ryan.roberts@arm.com>, <tangyouling@kylinos.cn>,
+	<sourabhjain@linux.ibm.com>, <ritesh.list@gmail.com>, <gaohan@iscas.ac.cn>,
+	<david@kernel.org>, <wangruikang@iscas.ac.cn>, <muchun.song@linux.dev>,
+	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <guoren@kernel.org>,
+	<namcao@linutronix.de>, <rick.p.edgecombe@intel.com>, <djbw@kernel.org>,
+	<liaoyuanhong@vivo.com>, <fuqiang.wang@easystack.cn>,
+	<vishal.l.verma@intel.com>, <chenjiahao16@huawei.com>, <x86@kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
+	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH v17 02/10] powerpc/crash: sort crash memory ranges before preparing elfcorehdr
+Date: Mon, 29 Jun 2026 17:47:38 +0800
+Message-ID: <20260629094746.191843-3-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260629094746.191843-1-ruanjinjie@huawei.com>
+References: <20260629094746.191843-1-ruanjinjie@huawei.com>
 MIME-Version: 1.0
-Message-Id: <a431d311fb11ec06b89a5986cbacf2ebe983bdaddc4a93076564d83799471cad@mail.kernel.org>
-In-Reply-To: <20260622042811.31684-1-kaitao.cheng@linux.dev>
-References: <20260622042811.31684-1-kaitao.cheng@linux.dev>
-Subject: Re: [PATCH v3 5/7] kernel: Use mutable list iterators
-From: bot+bpf-ci@kernel.org
-To: kaitao.cheng@linux.dev,paul@paul-moore.com,eparis@redhat.com,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,davem@davemloft.net,kuba@kernel.org,hawk@kernel.org,john.fastabend@gmail.com,tj@kernel.org,hannes@cmpxchg.org,mkoutny@suse.com,dev@lankhorst.se,mripard@kernel.org,natalie.vock@gmx.de,peterz@infradead.org,mingo@redhat.com,acme@kernel.org,namhyung@kernel.org,mhiramat@kernel.org,oleg@redhat.com,oberpar@linux.ibm.com,akpm@linux-foundation.org,baoquan.he@linux.dev,rppt@kernel.org,pasha.tatashin@soleen.com,pratyush@kernel.org,naveen@kernel.org,jpoimboe@kernel.org,jikos@kernel.org,mbenes@suse.cz,pmladek@suse.com,will@kernel.org,boqun@kernel.org,mcgrof@kernel.org,petr.pavlu@suse.com,da.gomez@kernel.org,samitolvanen@google.com,steffen.klassert@secunet.com,daniel.m.jordan@oracle.com,rafael@kernel.org,dave@stgolabs.net,paulmck@kernel.org,josh@joshtriplett.org,frederic@kernel.org,neeraj.upadhyay@kernel.org,joelagnelf@nvidia.com,urezki@gmail.com
- ,juri.lelli@redhat.com,vincent.guittot@linaro.org,kees@kernel.org,bsingharora@gmail.com,anna-maria@linutronix.de,tglx@kernel.org,jstultz@google.com,kpsingh@kernel.org,mattbobrowski@google.com,nathan@kernel.org,martin.lau@linux.dev,song@kernel.org,mark.rutland@arm.com,mathieu.desnoyers@efficios.com,dietmar.eggemann@arm.com,void@manifault.com,rostedt@goodmis.org
-Cc: audit@vger.kernel.org,linux-kernel@vger.kernel.org,bpf@vger.kernel.org,netdev@vger.kernel.org,cgroups@vger.kernel.org,dri-devel@lists.freedesktop.org,linux-perf-users@vger.kernel.org,linux-trace-kernel@vger.kernel.org,kexec@lists.infradead.org,live-patching@vger.kernel.org,linux-modules@vger.kernel.org,linux-crypto@vger.kernel.org,linux-pm@vger.kernel.org,rcu@vger.kernel.org,sched-ext@lists.linux.dev,llvm@lists.linux.dev,chengkaitao@kylinos.cn,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Mon, 22 Jun 2026 05:22:12 +0000 (UTC)
-X-Mailman-Approved-At: Sat, 15 Aug 2026 00:45:40 -0700
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.73]
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260629_024758_048385_2BC62093 
+X-CRM114-Status: GOOD (  25.60  )
+X-Mailman-Approved-At: Sat, 15 Aug 2026 00:45:39 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -68,61 +100,192 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
---===============3341382443539626176==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
 
-> diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
-> index c4dfbc293bae..9e076106bee7 100644
-> --- a/kernel/trace/trace_dynevent.c
-> +++ b/kernel/trace/trace_dynevent.c
+During a memory hot-remove event, the elfcorehdr is rebuilt to exclude
+the removed memory. While updating the crash memory ranges for this
+operation, the crash memory ranges array can become unsorted. This
+happens because remove_mem_range() may split a memory range into two
+parts and append the higher-address part as a separate range at the end
+of the array.
 
-[ ... ]
+So far, no issues have been observed due to the unsorted crash memory
+ranges. However, this could lead to problems once crash memory range
+removal is handled by generic code, as introduced in the upcoming
+patches in this series.
 
-> @@ -100,7 +100,7 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
->  		return -EINVAL;
->
->  	mutex_lock(&event_mutex);
-> -	for_each_dyn_event_safe(pos, n) {
-> +	for_each_dyn_event_safe(pos) {
->  		if (type && type != pos->ops)
->  			continue;
->  		if (!pos->ops->match(system, event,
+Currently, powerpc uses a platform-specific function,
+remove_mem_range(), to exclude hot-removed memory from the crash memory
+ranges. This function performs the same task as the generic
+crash_exclude_mem_range() in crash_core.c. The generic helper also
+ensures that the crash memory ranges remain sorted. So remove the
+redundant powerpc-specific implementation and instead call
+crash_exclude_mem_range_guarded() (which internally calls
+crash_exclude_mem_range()) to exclude the hot-removed memory ranges.
 
-Does this leave the variable n unused? Looking at the function
-declaration around line 74, it still has:
-
-	struct dyn_event *pos, *n;
-
-but after this change n is no longer passed to for_each_dyn_event_safe().
-The macro now hides the temporary cursor internally, so n appears to be
-dead code. This would trigger -Wunused-variable warnings and break builds
-with CONFIG_WERROR=y.
-
-For comparison, the sibling change at line 219 (dyn_events_release_all)
-correctly removed the *tmp variable from its declaration.
-
-> diff --git a/kernel/trace/trace_dynevent.h b/kernel/trace/trace_dynevent.h
-> index beee3f8d7544..a4dc0812284f 100644
-> --- a/kernel/trace/trace_dynevent.h
-> +++ b/kernel/trace/trace_dynevent.h
-> @@ -115,10 +115,9 @@ int dyn_event_create(const char *raw_command, struct dyn_event_operations *type)
->  /*
->   * for_each_dyn_event	-	iterate over the dyn_event list safely
->   * @pos:	the struct dyn_event * to use as a loop cursor
-> - * @n:		the struct dyn_event * to use as temporary storage
->   */
-> -#define for_each_dyn_event_safe(pos, n)	\
-> -	list_for_each_entry_safe(pos, n, &dyn_event_list, list)
-> +#define for_each_dyn_event_safe(pos)	\
-> +	list_for_each_entry_mutable(pos, &dyn_event_list, list)
-
-
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan he <bhe@redhat.com>
+Cc: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Baoquan He <bhe@redhat.com>
+Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+ arch/powerpc/include/asm/kexec_ranges.h |  4 +-
+ arch/powerpc/kexec/crash.c              |  5 +-
+ arch/powerpc/kexec/ranges.c             | 87 +------------------------
+ 3 files changed, 7 insertions(+), 89 deletions(-)
 
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/27930295027
---===============3341382443539626176==--
+diff --git a/arch/powerpc/include/asm/kexec_ranges.h b/arch/powerpc/include/asm/kexec_ranges.h
+index 14055896cbcb..ad95e3792d10 100644
+--- a/arch/powerpc/include/asm/kexec_ranges.h
++++ b/arch/powerpc/include/asm/kexec_ranges.h
+@@ -7,7 +7,9 @@
+ void sort_memory_ranges(struct crash_mem *mrngs, bool merge);
+ struct crash_mem *realloc_mem_ranges(struct crash_mem **mem_ranges);
+ int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size);
+-int remove_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size);
++int crash_exclude_mem_range_guarded(struct crash_mem **mem_ranges,
++				    unsigned long long mstart,
++				    unsigned long long mend);
+ int get_exclude_memory_ranges(struct crash_mem **mem_ranges);
+ int get_reserved_memory_ranges(struct crash_mem **mem_ranges);
+ int get_crash_memory_ranges(struct crash_mem **mem_ranges);
+diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
+index e6539f213b3d..2e88ec5c4356 100644
+--- a/arch/powerpc/kexec/crash.c
++++ b/arch/powerpc/kexec/crash.c
+@@ -493,7 +493,7 @@ static void update_crash_elfcorehdr(struct kimage *image, struct memory_notify *
+ 	struct crash_mem *cmem = NULL;
+ 	struct kexec_segment *ksegment;
+ 	void *ptr, *mem, *elfbuf = NULL;
+-	unsigned long elfsz, memsz, base_addr, size;
++	unsigned long elfsz, memsz, base_addr, size, end;
+ 
+ 	ksegment = &image->segment[image->elfcorehdr_index];
+ 	mem = (void *) ksegment->mem;
+@@ -512,7 +512,8 @@ static void update_crash_elfcorehdr(struct kimage *image, struct memory_notify *
+ 	if (image->hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY) {
+ 		base_addr = PFN_PHYS(mn->start_pfn);
+ 		size = mn->nr_pages * PAGE_SIZE;
+-		ret = remove_mem_range(&cmem, base_addr, size);
++		end = base_addr + size - 1;
++		ret = crash_exclude_mem_range_guarded(&cmem, base_addr, end);
+ 		if (ret) {
+ 			pr_err("Failed to remove hot-unplugged memory from crash memory ranges\n");
+ 			goto out;
+diff --git a/arch/powerpc/kexec/ranges.c b/arch/powerpc/kexec/ranges.c
+index 867135560e5c..6c58bcc3e130 100644
+--- a/arch/powerpc/kexec/ranges.c
++++ b/arch/powerpc/kexec/ranges.c
+@@ -553,7 +553,7 @@ int get_usable_memory_ranges(struct crash_mem **mem_ranges)
+ #endif /* CONFIG_KEXEC_FILE */
+ 
+ #ifdef CONFIG_CRASH_DUMP
+-static int crash_exclude_mem_range_guarded(struct crash_mem **mem_ranges,
++int crash_exclude_mem_range_guarded(struct crash_mem **mem_ranges,
+ 					   unsigned long long mstart,
+ 					   unsigned long long mend)
+ {
+@@ -641,89 +641,4 @@ int get_crash_memory_ranges(struct crash_mem **mem_ranges)
+ 		pr_err("Failed to setup crash memory ranges\n");
+ 	return ret;
+ }
+-
+-/**
+- * remove_mem_range - Removes the given memory range from the range list.
+- * @mem_ranges:    Range list to remove the memory range to.
+- * @base:          Base address of the range to remove.
+- * @size:          Size of the memory range to remove.
+- *
+- * (Re)allocates memory, if needed.
+- *
+- * Returns 0 on success, negative errno on error.
+- */
+-int remove_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
+-{
+-	u64 end;
+-	int ret = 0;
+-	unsigned int i;
+-	u64 mstart, mend;
+-	struct crash_mem *mem_rngs = *mem_ranges;
+-
+-	if (!size)
+-		return 0;
+-
+-	/*
+-	 * Memory range are stored as start and end address, use
+-	 * the same format to do remove operation.
+-	 */
+-	end = base + size - 1;
+-
+-	for (i = 0; i < mem_rngs->nr_ranges; i++) {
+-		mstart = mem_rngs->ranges[i].start;
+-		mend = mem_rngs->ranges[i].end;
+-
+-		/*
+-		 * Memory range to remove is not part of this range entry
+-		 * in the memory range list
+-		 */
+-		if (!(base >= mstart && end <= mend))
+-			continue;
+-
+-		/*
+-		 * Memory range to remove is equivalent to this entry in the
+-		 * memory range list. Remove the range entry from the list.
+-		 */
+-		if (base == mstart && end == mend) {
+-			for (; i < mem_rngs->nr_ranges - 1; i++) {
+-				mem_rngs->ranges[i].start = mem_rngs->ranges[i+1].start;
+-				mem_rngs->ranges[i].end = mem_rngs->ranges[i+1].end;
+-			}
+-			mem_rngs->nr_ranges--;
+-			goto out;
+-		}
+-		/*
+-		 * Start address of the memory range to remove and the
+-		 * current memory range entry in the list is same. Just
+-		 * move the start address of the current memory range
+-		 * entry in the list to end + 1.
+-		 */
+-		else if (base == mstart) {
+-			mem_rngs->ranges[i].start = end + 1;
+-			goto out;
+-		}
+-		/*
+-		 * End address of the memory range to remove and the
+-		 * current memory range entry in the list is same.
+-		 * Just move the end address of the current memory
+-		 * range entry in the list to base - 1.
+-		 */
+-		else if (end == mend)  {
+-			mem_rngs->ranges[i].end = base - 1;
+-			goto out;
+-		}
+-		/*
+-		 * Memory range to remove is not at the edge of current
+-		 * memory range entry. Split the current memory entry into
+-		 * two half.
+-		 */
+-		else {
+-			size = mem_rngs->ranges[i].end - end + 1;
+-			mem_rngs->ranges[i].end = base - 1;
+-			ret = add_mem_range(mem_ranges, end + 1, size);
+-		}
+-	}
+-out:
+-	return ret;
+-}
+ #endif /* CONFIG_CRASH_DUMP */
+-- 
+2.34.1
+
 
