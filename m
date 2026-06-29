@@ -4,185 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2E5CEC5DF6E
-	for <kexec@archiver.kernel.org>; Sat, 15 Aug 2026 07:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D1A43C5DF84
+	for <kexec@archiver.kernel.org>; Sat, 15 Aug 2026 07:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
-	References:From:To:Cc:Subject:Message-Id:Date:Content-Type:
-	Content-Transfer-Encoding:Reply-To:Content-ID:Content-Description:Resent-Date
-	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=eRjbsBRIUTAFpugKKLOjSbZ6YnFTaZPMTTSy9l9apTE=; b=4W9hXRsnibpbNTtSEncUIyegYB
-	jK1wKCEiYGyJjocR28UK6Okb2iheOXpXqT7y5s0QrXhkSWwA/i+daUHLXZfsVIhsjsTNmKhBohFtH
-	l3jkNWZe7dY7dUDYL73n/IIAEyo2bBby43WngOhvDOMjbBvkGOZ2t0obZpdaf3/NxLqOx+cNFkaFT
-	pQqL5NyPG3x7rroGOEL5S5TqX24EtSUq0OtL95eNDF0ADKzj9y8K+oUxarCmQmcLgGylT/R3dgptS
-	YXPp0MQQPgPtGPFTnBFK7md+JZs4F98hIKjfpFKRoJ9koMSuSw+UUvaAvbT9WirF0XBqq0jjcAS09
-	rndA+wGg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=2SGF5N2MQo78vGzqyV7/apPuXFO2rP32pwgUlpuOhCM=; b=3MR8Npok0AejCRogZEww1AR0EH
+	jiGBkX71sjrUR5AM9eCtLfy1e2w30bFJj6xVgvRuFwEmhRlfoI92joC5tYeJJd8YcvBvRZV/yVoug
+	gaYnRIjKK/SzyLoG4TVZPwL1FymXjh39b7K9cqV8HqHTGjalKQRYFr5s1yZCmRog7t9v8eUjC39jt
+	20K0ElqfQvKxRqZ99LHh/3wuiaweri1SIRaQ+XPYYE7kuLA5mvO8/kiR+2luS2SUEOSq65bgF9bUY
+	tMikcFwGIHbdVxBHaD9FUj6HL0OyjoTZAd7WR72cSRmVV7GaVLCg+BeVYSLb8bT88+i00RC6cg+xA
+	IS85n2Rg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wv95X-00000003dFe-3kyh;
-	Sat, 15 Aug 2026 07:45:55 +0000
-Received: from mail-westus3azlp170100009.outbound.protection.outlook.com ([2a01:111:f403:c107::9] helo=PH7PR06CU001.outbound.protection.outlook.com)
+	id 1wv95M-00000003cyx-1zoV;
+	Sat, 15 Aug 2026 07:45:44 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wqxAM-00000000LmL-0n49;
-	Mon, 03 Aug 2026 18:13:35 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WD6ZOUp+WnBpKUL/Z/T7kHJS3gdbMiHPaDWLnG+FW2Ughc5kivpbHAl9m7v4kZtUlwne3dtTcxUKM7WrJyBjIzNunVwJE8YCw5xf460FYDTOx6lI06pdu9THT47XqNLtDLCdzux8qTLf/nbRDsOOv/8gNbNU4E2T2QAuULs2fA5qQHbM4xHgZv2o0OOWsIgB9IrcShazm0DicLCB2r0EQKH4D6YFHM6X6V09ySI5OEc6n7D3GLeeZQVOXqxWW+VbyMV7HL3rN70ZTujV0k0q4aAXFKUkqMGPn1t6bGDJN5lRp550zxCce4yQxpsqpaiJjD8UiJnfV95Vbq8C+ISS6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eRjbsBRIUTAFpugKKLOjSbZ6YnFTaZPMTTSy9l9apTE=;
- b=axI4QwD0gDNm37sbZwPepJqFwCIiAQLsRb16JqMJC18kzIbTrEGCymZhb+s+VT3do6EhX/NunZoNzoqNMzdrVPiKGAHzZxXxgE3R9xuo+1Gti7a03F9fRjGK5P50Lt8AxaBXztxd5r9zFCY/UqUcakRm4oUcNJdIAnG/3xc01xoOvlR1WiMD7tpFinSy/n/j8hqvWefCeMnzCgHYzYcPJ8uU/jJoPnMGHd/+YZPkn0JJ2U3O95hflOwGfyepG+2jZsgsMfbSa132CavPOtTL6zLMDpd6I+fzR/hlKcTK94MwK5Xl/bUCYD9mr9kjrEYXGsa4Ph7cigPFSjEaaRhp/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eRjbsBRIUTAFpugKKLOjSbZ6YnFTaZPMTTSy9l9apTE=;
- b=gxRy5BNSr6u+YqAfadGamez0ES69ulGmVjdQ7wL80choytSsnxQAlwikJcKnY7d7Uw564V87JyMSSqEMqm6I3eyQ8hHwQgGFREoi4hLHlGzS9JCT9FEDSrgt5yoHWS9vKZEID6DWzvgO/uM68mWZ19n7kvMB+gzmij0pdwS5RPmRbSJIRi0JMJdUya8s9PYMz1a0gliFwwRvb7ymFruUVGm7IrQhIxbKxZt2k3pI13FRQ2A68aYiDbfeVVWpfh3Mmt76rm/50mIM4i03A/9AFOI/h98bANBM9Ic5xWGJvoXq7pwmi/JlRG0WcTtM7QctGHIP3ZNoYVG8sNcqXB0SMA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
- by PH7PR12MB6935.namprd12.prod.outlook.com (2603:10b6:510:1b9::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.18; Mon, 3 Aug
- 2026 18:13:18 +0000
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16%5]) with mapi id 15.21.0270.017; Mon, 3 Aug 2026
- 18:13:18 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 03 Aug 2026 14:13:13 -0400
-Message-Id: <DKFIGJBRSDB1.O204NIB7HZMR@nvidia.com>
-Subject: Re: [PATCH RFC 00/14] Remove PG_private by using
- page/folio->private checks instead
-Cc: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, "Minchan Kim"
- <minchan@kernel.org>, "Sergey Senozhatsky" <senozhatsky@chromium.org>,
- "Peter Zijlstra" <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>,
- "Arnaldo Carvalho de Melo" <acme@kernel.org>, "Namhyung Kim"
- <namhyung@kernel.org>, "Thomas Gleixner" <tglx@kernel.org>, "Borislav
- Petkov" <bp@alien8.de>, "Dave Hansen" <dave.hansen@linux.intel.com>,
- <x86@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>, "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>, "Jiri Olsa"
- <jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>, "Adrian Hunter"
- <adrian.hunter@intel.com>, "James Clark" <james.clark@linaro.org>, "H.
- Peter Anvin" <hpa@zytor.com>, <linux-perf-users@vger.kernel.org>, "Stefano
- Stabellini" <sstabellini@kernel.org>, "Oleksandr Tyshchenko"
- <oleksandr_tyshchenko@epam.com>, <xen-devel@lists.xenproject.org>, "Eric
- Biggers" <ebiggers@kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>,
- "Jaegeuk Kim" <jaegeuk@kernel.org>, <linux-fscrypt@vger.kernel.org>, "Oscar
- Salvador" <osalvador@suse.de>, "Chao Yu" <chao@kernel.org>,
- <linux-f2fs-devel@lists.sourceforge.net>, "Gao Xiang" <xiang@kernel.org>,
- "Jan Kara" <jack@suse.cz>, "Yue Hu" <zbestahu@gmail.com>, "Jeffle Xu"
- <jefflexu@linux.alibaba.com>, "Sandeep Dhavale" <dhavale@google.com>,
- "Hongbo Li" <hongbohbli@tencent.com>, "Chunhai Guo" <guochunhai@vivo.com>,
- <linux-erofs@lists.ozlabs.org>, <linux-fsdevel@vger.kernel.org>, "Steven
- Rostedt" <rostedt@goodmis.org>, "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "Matthew Brost"
- <matthew.brost@intel.com>, "Joshua Hahn" <joshua.hahnjy@gmail.com>, "Rakie
- Kim" <rakie.kim@sk.com>, "Byungchul Park" <byungchul@sk.com>, "Axel
- Rasmussen" <axelrasmussen@google.com>, "Yuanchu Xie" <yuanchu@google.com>,
- "Wei Xu" <weixugc@google.com>, <linux-trace-kernel@vger.kernel.org>, "Trond
- Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- <linux-nfs@vger.kernel.org>, "Song Liu" <song@kernel.org>, "Yu Kuai"
- <yukuai@fygo.io>, "Ilya Dryomov" <idryomov@gmail.com>, "Alex Markuze"
- <amarkuze@redhat.com>, "Viacheslav Dubeyko" <slava@dubeyko.com>, "Li Nan"
- <magiclinan@didiglobal.com>, "Xiao Ni" <xiao@kernel.org>,
- <linux-raid@vger.kernel.org>, <ceph-devel@vger.kernel.org>, "Richard
- Weinberger" <richard@nod.at>, "Zhihao Cheng" <chengzhihao1@huawei.com>,
- <linux-mtd@lists.infradead.org>, "Baoquan He" <baoquan.he@linux.dev>,
- "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Pratyush Yadav"
- <pratyush@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>, "Dave Young"
- <ruirui.yang@linux.dev>, "Shuah Khan" <skhan@linuxfoundation.org>,
- <kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>
-To: =?utf-8?q?J=C3=BCrgen_Gro=C3=9F?= <jgross@suse.com>, "David Hildenbrand"
- <david@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- "Andrew Morton" <akpm@linux-foundation.org>, "Muchun Song"
- <muchun.song@linux.dev>, "Lorenzo Stoakes" <ljs@kernel.org>, "Liam R.
- Howlett" <liam@infradead.org>, "Vlastimil Babka" <vbabka@kernel.org>, "Mike
- Rapoport" <rppt@kernel.org>, "Suren Baghdasaryan" <surenb@google.com>,
- "Michal Hocko" <mhocko@suse.com>, "Baolin Wang"
- <baolin.wang@linux.alibaba.com>, "Nico Pache" <nico.pache@linux.dev>, "Ryan
- Roberts" <ryan.roberts@arm.com>, "Dev Jain" <dev.jain@arm.com>, "Barry
- Song" <baohua@kernel.org>, "Lance Yang" <lance.yang@linux.dev>, "Usama
- Arif" <usama.arif@linux.dev>, "Gregory Price" <gourry@gourry.net>, "Ying
- Huang" <ying.huang@linux.alibaba.com>, "Alistair Popple"
- <apopple@nvidia.com>, "Johannes Weiner" <hannes@cmpxchg.org>, "Qi Zheng"
- <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Kairui
- Song" <kasong@tencent.com>
-From: "Zi Yan" <ziy@nvidia.com>
-X-Mailer: aerc 0.21.0
-References: <20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com>
- <5ca4d0e4-1747-45a7-a916-a7516bb1692b@suse.com>
-In-Reply-To: <5ca4d0e4-1747-45a7-a916-a7516bb1692b@suse.com>
-X-ClientProxiedBy: BN1PR13CA0008.namprd13.prod.outlook.com
- (2603:10b6:408:e2::13) To IA0PR12MB8374.namprd12.prod.outlook.com
- (2603:10b6:208:40e::7)
+	id 1weAAP-0000000ERAU-2Z3o
+	for kexec@lists.infradead.org;
+	Mon, 29 Jun 2026 11:28:45 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 3F71B43BC3
+	for <kexec@lists.infradead.org>; Mon, 29 Jun 2026 11:28:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 274BF1F00A3E
+	for <kexec@lists.infradead.org>; Mon, 29 Jun 2026 11:28:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782732525;
+	bh=2SGF5N2MQo78vGzqyV7/apPuXFO2rP32pwgUlpuOhCM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=Z+0/8IVNPNzLaX+cAHumKXyLIGetyMOrlba45W400NLvAFGsm1b4czPFceeKYdEUa
+	 g8HgTaWUDgmu+CZyz3EYnoBr6ox7+YRsFbnFoiNC8XayyFYh0MRYaWjMrn6l3LeZT8
+	 pKJ0WR8FO6dz/tYWm5ULT+k33cQLB7RhKgRnIXSyXT3zQ9EEmyaIaMeuCH8hyerZ4S
+	 g4rRsM3VRgwuReJJdH3T8aVxHhqwOStoWfx5LYMYR1pit6hvseU0QkJaex3qBeJIPn
+	 /SMntij8ibUAP9GYL5bpLF5RJkODA334aMwug2ZyKIGeZnOJRRtFLZstcI9XaBpo/b
+	 ih6xxN0jsRAtA==
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-46ed4f66256so2682577f8f.3
+        for <kexec@lists.infradead.org>; Mon, 29 Jun 2026 04:28:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Rq9QPWyK5cis+6+ARBD6LA8c9m8GzK0GuurAbDdOGSDcRd4K+XZjCRafpshhOSPN1GtA+xAvg==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yy6+y03RIl7Fq89dibgqr2ULmICivdj9bFQhqnUQUp59zM4Pm85
+	W9LWUTQQltWYqkCkhWOXsAQhtZ4DjaHaPvJfuYkmD01YeIdZgU26gh26u1zuKew82VqC8R2zuGZ
+	0YKOItI/w0bCBLBy/DSznrgPMQe+RRfs=
+X-Received: by 2002:a05:6000:2c03:b0:464:79f0:9162 with SMTP id
+ ffacd0b85a97d-474ff09dd29mr78407f8f.19.1782732523175; Mon, 29 Jun 2026
+ 04:28:43 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|PH7PR12MB6935:EE_
-X-MS-Office365-Filtering-Correlation-Id: 22480e3c-b594-45b3-2d38-08def18ae4af
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|23010399003|1800799024|7416014|376014|56012099006|10067099003|11063799006|4143699003|22082099003|18002099003|921020;
-X-Microsoft-Antispam-Message-Info: FGtzsi0Ff3pxghP3lc/P1ddrXZKj3w8+yJGJxor6kKDLvhXg+qE0BqULU2Yo4OHklIfrWOBiiWaCcUZnd8ysXvfpjMQVyqBTVvH/b0Q17IDGUvQ8gt4J4mT1pT8nL+gY1FWLJGaajKiB9bLXL2OjTnlzpUnhjYKRFUTTC7RGTKyqFnabJILfF0z8AU4m783vOuMWi1tH6BS67AbjJ4dVCwGPtnKldp5SDaCm2TxXxeP2ZK6wfMDiS18Gr47k19fmlmm0ZUGj0jp67G22umHBdhIuM/sszkroYKwIza/1o1owYO9aVUG8Kv5LLxa3I2WUu8Ak6QcEoCd3A2d3jHYGJW/+RNZgWm8LAjH1uSwDiuMBOFm3gYnB13ZB1YWOVqPwQNKUBqw2XePEUHqKE4fOH9Olf52EBU/o/jip+pXcqLAnmKr38c1u8C6/5d3be9P/UcA7qVZ6LQVHh1HhK+V2a0F4TWz2ERZK7VcaT0nO+9jiux83RgoLv9ibtvBSCrNZX0SkURZ0XZaQ0oYH8g5uGiBx9GzWnhS4/uZIqjBS3kSthtIogVRo5UtaDQmHcm2QBw0H8x81CRrgqFRLK1h46fKWbpTQB7QQyeITnN19I+9mhcOVt1PKHVji0hhO+J6TgRKcsFzS5/DlUr/Fqyiazhpd1b+TgYpo1iieuX06GMveH1pyl1ECk5P3tuqWv1WNYZcGmnoPQLT79hKI5uGaSg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(7416014)(376014)(56012099006)(10067099003)(11063799006)(4143699003)(22082099003)(18002099003)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TXNoMVUva1pWRkd1aHNpSk54cGxMMXZJTnFmUUFPbkhLbnlRdVFGRC9Ueks3?=
- =?utf-8?B?aUZnZGZMSDNWdS96ZWJFRUNiQzRtejhxdjRJKzRyaGxHUVcwMy82UDRMWUhm?=
- =?utf-8?B?Q1VCeGJNT1YrbjFDa3pMRFp3WE9VekNKMG5TbXBaejhIK05pbXZwcEVjZjdr?=
- =?utf-8?B?TlRyV2JuRFZ6QVlaSm9iRWlPUjBTN1ZsTkwrcVcvdURjSXFlcXVHdm5rYVBy?=
- =?utf-8?B?cTYxazVUcVFFR3NvZU5jQUdjUEhHWVoyQzFvUTRUZDZJdjhRL0hPQ0llVnoy?=
- =?utf-8?B?ZXRCMzBQbWNteVRPemNMQ3hyTDNzN3UxU3ZkM3h3Rk9BQ1N3TTl1Zzl3NzE5?=
- =?utf-8?B?SHNIcDZ2S0RVRzNjVENoUVdWZzVXUDJpNzRockZoZjhzT1ROWXhxQjJtc0Nj?=
- =?utf-8?B?QTRHTTh4a1E5eGJuMWpwLzY3cko0bSs2WUlTQklTekE1Tm9qRVA3dFRmbmRS?=
- =?utf-8?B?d1Z1eUtZNmJ6aWlJbDBGNVVOb0JNMXdqbEg5eVZlYmJyakxzenB6cEt1OVA5?=
- =?utf-8?B?SFVBYTllZkhOQXlwU3JZend2NjNLVGxVWmt6b3FlandDdHJrZ3R1Y3N4RVNt?=
- =?utf-8?B?MHdCTmpsNTc3b3lLYnkySXlhZDVaQVZZQmZFTElscUdhakFGd2xibS9NajVV?=
- =?utf-8?B?TmxCYzk2bmIwLzZXWnF6NFhsMUFHTUZMMGN0R25vaFllczhkVXFaSVdtZyt3?=
- =?utf-8?B?MlJ4NXA4VFVaWUw5c1FvMXg0UWdLUkxKUk8vMWlBeUJ1M2k2NjlFcGc2RDc3?=
- =?utf-8?B?aGk1em1DbnFlSUN4b3Z0S2p0UlQ2dEdhRXJaZ0FhLzVkN2MxQS9tekRKS1ZR?=
- =?utf-8?B?Vy9tRkpMWmdaZ3hUcGtDL2lPTHN5YUFpa1JJY0N1Q2RCWVUvSXlCRFJpOEEy?=
- =?utf-8?B?YVFkb1RHaVVCcm9oNU1wTmp0ZHZDazQ3QkRoTDRwR2gvT1gwUW1VUzd1MTR3?=
- =?utf-8?B?dHBzZXdWOTkrck81QXRjUDVHOFo2ZUUvazRpc0xYSDd3MUg3V1FGZjV6dVA2?=
- =?utf-8?B?VlhRUHRaOGJ5SnlTT1d6WUV2TG5VdHA2R296TW5KZ2pnWGtxbFpqSTZDeC9p?=
- =?utf-8?B?TDE4TFRzMkwrMmhrR2h6dTZwb3hXYkxTMkl0Z0dtRmE1RFNtZDZ3eHpGdDVG?=
- =?utf-8?B?N1Q1SWRvQlZEQzhlUHhzSFMvc3JkaVliZG5OZlZySGkrYXl2UVlJZENtR2NX?=
- =?utf-8?B?dUc1cWNRYjhidlNzN0VOTFBwYUpwMytFRmJQejc4MXUxNnNWaTA0MytrYm1W?=
- =?utf-8?B?U0NCM0gxSlNZd0tiTnJoeTIzZGlxYmdVajdqeTFOYVdKcEYxQXhqdU9aVVVK?=
- =?utf-8?B?NDM0U0xSaTdBT3NrTWpxdTFldTdJblVLbGFvanBSTW92cVhBYmhINnFlNDY2?=
- =?utf-8?B?WWRPSGIrVUh6Mm5sY1RBS2huYkwxZlJnMkNmQ3pFUitwYUg5K2drOGhMZEJH?=
- =?utf-8?B?VFpldlFLdzN3NXJYNDVWa0hSaGxiaHpQWjJlTFcwNTVxbG1uWXdlcm1HS3dj?=
- =?utf-8?B?RXhNdkRSTGNxdUVhSENVeHB4eGZZeWFRbnZFczdZbFNNMkl6b3pjT2tiK01u?=
- =?utf-8?B?TGtwQXlxN3lIWitmTUpiL3Vyckw5cHdHQTZwT3NrR0t5ZEYxRERQZVZqd0hX?=
- =?utf-8?B?MlFiUTFCNkJ1UTJPTTl5MEkrS1d3U2hTQnN0TExUdUxodVVvelJ2VFFDb1ZH?=
- =?utf-8?B?cEJ2YnhIZGtRSVVSZjRoWFU3V1o3NytYOW5COXJ2dVR2aUNQMmVoaHg4ZEFy?=
- =?utf-8?B?TDhGTXpYUEZTVUM3dHA4SzhKYjR0ZVVVbEROa3BrR3VHYmRVRlVHYS9yU0xl?=
- =?utf-8?B?dzc5bUlPWjM2R0Yvdm4rc0xLRnZZd3hYbnFDVG9BeEN6b2dqa3dQVDlHV3g1?=
- =?utf-8?B?dTBhWGpyVStjODlOYmJlUkJjVVM3WS8yaUtpaGhDN2M5UjhlR01qZGdVdmRZ?=
- =?utf-8?B?RHVuZHB2K2FFQ0tPSXFLdW10cVZsQ3ljSGNIbm9GaGlzb0lETi9WcmZ0ZHZC?=
- =?utf-8?B?cGJpQnpFUmpLc3UrRDNMVi9kaHloUUVhdjhTb2I5dUNWVFc3MlZkbmk0Z012?=
- =?utf-8?B?MmtxVUJOSnRBTElMVGNQeUJaOXhDbGNrSElrdFQ5VnAycDRrS1c5QVZ3VXF2?=
- =?utf-8?B?NGd2TXhnK25kNFhtdUwzU3RoWE1BaHpnNzYwVW9nek93dXJNaHhNMEo1QlFz?=
- =?utf-8?B?Q3haWDFpZkhkL0FXRlpsQzFLUzZiSHRYYTlvUWRXbmRVY0tpRDFORG9CaDBj?=
- =?utf-8?B?OE9CVlZrcFRhWDhTQlZ6c0Fnc3BRdmRZeHZQcWhDbFJaZlFrcUxFZTRtVVJl?=
- =?utf-8?Q?vOMDLuS+uZ6B+uZb7U?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22480e3c-b594-45b3-2d38-08def18ae4af
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2026 18:13:17.9727
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: P4jLnqIwTNmEW1LtTpM+2MhjKsFG8QpvIYdQ6DM5UZU3RRUlEMTS746tqky9GXuA
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6935
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260803_111334_227405_CEEA6D45 
-X-CRM114-Status: GOOD (  10.58  )
+References: <20260629094746.191843-1-ruanjinjie@huawei.com> <20260629094746.191843-7-ruanjinjie@huawei.com>
+In-Reply-To: <20260629094746.191843-7-ruanjinjie@huawei.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Mon, 29 Jun 2026 19:28:27 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTS5xMdFcuYBd2d+jvZTTSAJ_A6Eid0LqB-3WVAcT4NptA@mail.gmail.com>
+X-Gm-Features: AVVi8Cfb_YoOBZUDhpGGsfHfl7o1RJdl6tur8fEdDE_oRtNsU4-e7q_E2QvES68
+Message-ID: <CAJF2gTS5xMdFcuYBd2d+jvZTTSAJ_A6Eid0LqB-3WVAcT4NptA@mail.gmail.com>
+Subject: Re: [PATCH v17 06/10] riscv: kexec_file: Use crash_prepare_headers()
+ helper to simplify code
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: corbet@lwn.net, skhan@linuxfoundation.org, catalin.marinas@arm.com, 
+	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, 
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
+	chleroy@kernel.org, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, robh@kernel.org, 
+	saravanak@kernel.org, akpm@linux-foundation.org, baoquan.he@linux.dev, 
+	rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, 
+	ruirui.yang@linux.dev, rdunlap@infradead.org, peterz@infradead.org, 
+	feng.tang@linux.alibaba.com, dapeng1.mi@linux.intel.com, elver@google.com, 
+	enelsonmoore@gmail.com, kuba@kernel.org, ebiggers@kernel.org, 
+	lirongqing@baidu.com, leitao@debian.org, kees@kernel.org, coxu@redhat.com, 
+	cfsworks@gmail.com, jbohac@suse.cz, osandov@fb.com, ryan.roberts@arm.com, 
+	tangyouling@kylinos.cn, sourabhjain@linux.ibm.com, ritesh.list@gmail.com, 
+	gaohan@iscas.ac.cn, david@kernel.org, wangruikang@iscas.ac.cn, 
+	muchun.song@linux.dev, vishal.moola@gmail.com, junhui.liu@pigmoral.tech, 
+	namcao@linutronix.de, rick.p.edgecombe@intel.com, djbw@kernel.org, 
+	liaoyuanhong@vivo.com, fuqiang.wang@easystack.cn, vishal.l.verma@intel.com, 
+	chenjiahao16@huawei.com, x86@kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+	kexec@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Mailman-Approved-At: Sat, 15 Aug 2026 00:45:40 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -198,40 +102,132 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon Aug 3, 2026 at 5:07 AM EDT, J=C3=BCrgen Gro=C3=9F wrote:
-> On 01.08.26 04:13, Zi Yan wrote:
->> Hi all,
->>=20
->> This patchset removes PG_private to make space for upcoming PG_folio
->> (reserved as __PG_folio) for identifying pages from a folio (more detail=
-s
->> in Note below). Instead of checking PG_private, all code is changed to
->> check page/folio->private !=3D NULL instead.
+On Mon, Jun 29, 2026 at 5:48=E2=80=AFPM Jinjie Ruan <ruanjinjie@huawei.com>=
+ wrote:
 >
-> I'm a little bit worried that page/folio->private is in a union, so today
-> it could (in theory) be !=3D NULL while PG_private isn't set.
+> Use the newly introduced crash_prepare_headers() function to replace
+> the existing prepare_elf_headers(), allocate cmem and exclude crash kerne=
+l
+> memory in the crash core, which reduce code duplication.
 >
-> Is it really not possible to enter a path where PG_private is tested whil=
-e
-> page/folio->private !=3D NULL due to the union being used otherwise (PG_p=
-rivate
-> not set)?
+> Only the following two architecture functions need to be implemented:
+> - arch_get_system_nr_ranges(). Call get_nr_ram_ranges_callback()
+>   to pre-counts the max number of memory ranges.
+>
+> - arch_crash_populate_cmem(). Use prepare_elf64_ram_headers_callback()
+>   to collects the memory ranges and fills them into cmem.
+>
+> Cc: Paul Walmsley <pjw@kernel.org>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: Alexandre Ghiti <alex@ghiti.fr>
+> Cc: Guo Ren <guoren@kernel.org>
+> Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> Acked-by: Baoquan He <bhe@redhat.com>
+> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>  arch/riscv/kernel/machine_kexec_file.c | 47 +++++++-------------------
+>  1 file changed, 12 insertions(+), 35 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/m=
+achine_kexec_file.c
+> index fa2946aa9b8f..1dfb1d9eb691 100644
+> --- a/arch/riscv/kernel/machine_kexec_file.c
+> +++ b/arch/riscv/kernel/machine_kexec_file.c
+> @@ -45,6 +45,15 @@ static int get_nr_ram_ranges_callback(struct resource =
+*res, void *arg)
+>         return 0;
+>  }
+>
+> +unsigned int arch_get_system_nr_ranges(void)
+> +{
+> +       unsigned int nr_ranges =3D 2; /* For exclusion of crashkernel reg=
+ion */
+> +
+> +       walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback=
+);
+> +
+> +       return nr_ranges;
+> +}
+> +
+>  static int prepare_elf64_ram_headers_callback(struct resource *res, void=
+ *arg)
+>  {
+>         struct crash_mem *cmem =3D arg;
+> @@ -56,41 +65,9 @@ static int prepare_elf64_ram_headers_callback(struct r=
+esource *res, void *arg)
+>         return 0;
+>  }
+>
+> -static int prepare_elf_headers(void **addr, unsigned long *sz)
+I agree to make arch_crash_populate_cmem more generic, and leave
+arch_crash_populate_cmem & prepare_elf64_ram_headers_callback here as
+callbacks.
 
-Yes, it is possible. See: #5 in the exceptional users: erofs uses
-->private for reverse linked list and in-flight counters without setting
-PG_private. I get rid of the first one and converted the second one to
-use folio_attach/detach/get_private() to follow the general ->private
-use pattern..
+Reviewed-by: Guo Ren <guoren@kernel.org>
 
-For non file system folios, anon swapcache puts swap_entry_t in
-->private and hugetlb puts its flags in ->private. I added
-folio_test_fs_private() to exclude them, but this helper is planned to
-be used by core MM, since filesystem code should not encounter these
-two.
+> +int arch_crash_populate_cmem(struct crash_mem *cmem)
+>  {
+> -       struct crash_mem *cmem;
+> -       unsigned int nr_ranges;
+> -       int ret;
+> -
+> -       nr_ranges =3D 2; /* For exclusion of crashkernel region */
+> -       walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback=
+);
+> -
+> -       cmem =3D kmalloc_flex(*cmem, ranges, nr_ranges);
+> -       if (!cmem)
+> -               return -ENOMEM;
+> -
+> -       cmem->max_nr_ranges =3D nr_ranges;
+> -       cmem->nr_ranges =3D 0;
+> -       ret =3D walk_system_ram_res(0, -1, cmem, prepare_elf64_ram_header=
+s_callback);
+> -       if (ret)
+> -               goto out;
+> -
+> -       /* Exclude crashkernel region */
+> -       ret =3D crash_exclude_mem_range(cmem, crashk_res.start, crashk_re=
+s.end);
+> -       if (ret)
+> -               goto out;
+> -
+> -       if (crashk_low_res.end) {
+> -               ret =3D crash_exclude_mem_range(cmem, crashk_low_res.star=
+t, crashk_low_res.end);
+> -               if (ret)
+> -                       goto out;
+> -       }
+> -
+> -       ret =3D crash_prepare_elf64_headers(cmem, true, addr, sz);
+> -
+> -out:
+> -       kfree(cmem);
+> -       return ret;
+> +       return walk_system_ram_res(0, -1, cmem, prepare_elf64_ram_headers=
+_callback);
+>  }
+>
+>  static char *setup_kdump_cmdline(struct kimage *image, char *cmdline,
+> @@ -282,7 +259,7 @@ int load_extra_segments(struct kimage *image, unsigne=
+d long kernel_start,
+>         if (image->type =3D=3D KEXEC_TYPE_CRASH) {
+>                 void *headers;
+>                 unsigned long headers_sz;
+> -               ret =3D prepare_elf_headers(&headers, &headers_sz);
+> +               ret =3D crash_prepare_headers(true, &headers, &headers_sz=
+, NULL);
+>                 if (ret) {
+>                         pr_err("Preparing elf core header failed\n");
+>                         goto out;
+> --
+> 2.34.1
+>
 
 
 --=20
-Best Regards,
-Yan, Zi
-
+Best Regards
+ Guo Ren
 
