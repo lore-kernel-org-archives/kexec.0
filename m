@@ -4,81 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2AC06C43327
-	for <kexec@archiver.kernel.org>; Mon, 29 Jun 2026 10:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9365AC43458
+	for <kexec@archiver.kernel.org>; Mon, 29 Jun 2026 11:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ufpz38PZ89vEi6JfZ4d7JjNoyyhbY1Q4z8DW9fL/CXE=; b=vXBaDFRMKzODaALrVNklGopfNd
-	dyjNw5jVKtoJVi0MKTtjBDmnsP49pwZe2R018ZTS7HDvWmv9ov1RejZ9Gbz5rn45ZpbtayFR3t8kU
-	pEp+3A//z/0iy8NCWYbhovSKI5qOHXpkpdzg8qNBx8Imf5ppKs+A8J8n7nQ2pi03FW2bqfcjbqGAp
-	/9eBG34ov8FvP1laz0NYZ5u4Tmur4BqtzsdwFCIqYhCfQZzQOpdE34vji0HgIMnJ5/dcLZinF3YF7
-	srmOXTGSzHVuohOkm3kVwRP6juaEakfaPyZZKmSmAjDHUEI+Tv7fei41UoY4p0ShOQuO11MZ1tF1T
-	FSbMHE6w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=II6UFmS/kZBk86eBwc2++62peQEiQa8YkmG82Y63ygs=; b=O6kHiWO+zVJrwOjFSeRFPx2XEB
+	lU8WispUGiwOV7VEZw2ssKH9IMJL66K9LR5PDfCZVT3B4xtHvdLZ6ZS8/Ut2DsWLfE5LC/lKMy/Ci
+	niC3oBqQ0DCVK32lMKTqiMShll1pK4iM2ViixcIaCPq6QplZYGavFLKSpCK6B9mtErrvXlx8daDLH
+	1cMLOLF6Ko04kHhaQAXsgS64aZRibXg9sY8LfJMoBW4eCFOE3uAQ05rxmmCCv5F670oPL/lZyztSt
+	C4IoQ44v4OXDK6hftT+77VKoQxNN41ba5c8apR6fms8YvlnZUC8YmV2/DIJFHtLfDIZxWbs2Wq7nY
+	HEMj7NGQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1we8sw-0000000EItL-2UfH;
-	Mon, 29 Jun 2026 10:06:38 +0000
-Received: from mailgw.kylinos.cn ([124.126.103.232])
+	id 1we9vA-0000000EOcZ-2W2K;
+	Mon, 29 Jun 2026 11:13:00 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1we8st-0000000EIsV-1CL4
-	for kexec@lists.infradead.org;
-	Mon, 29 Jun 2026 10:06:37 +0000
-X-UUID: 2f2bceb473a211f1aa26b74ffac11d73-20260629
-X-CTIC-Tags: HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
-	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED
-	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD
-	CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU
-	AMN_GOOD, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:a4170e7c-60d6-477a-ab9a-3ae1869c716a,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:10
-X-CID-INFO: VERSION:1.3.12,REQID:a4170e7c-60d6-477a-ab9a-3ae1869c716a,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:10
-X-CID-META: VersionHash:e7bac3a,CLOUDID:2a7575b6c648292453f8b8c6b6c0db8b,BulkI
-	D:260625170616GCMKOUR7,BulkQuantity:1,Recheck:0,SF:17|19|64|66|78|80|81|82
-	|83|102|127|136|841|850|865|898,TC:nil,Content:0|15|50,EDM:-3,IP:-2,URL:0,
-	File:nil,RT:nil,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO
-	,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 2f2bceb473a211f1aa26b74ffac11d73-20260629
-X-User: duanchenghao@kylinos.cn
-Received: from localhost [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1146902853; Mon, 29 Jun 2026 18:06:23 +0800
-Date: Mon, 29 Jun 2026 18:06:21 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
-	linux-fsdevel@vger.kernel.org, pasha.tatashin@soleen.com,
-	linux-kernel@vger.kernel.org, rppt@kernel.org,
-	kexec@lists.infradead.org, linux-mm@kvack.org,
-	jianghaoran@kylinos.cn
-Subject: Re: [PATCH v1 1/2] eventfd: luo: luo support for preserving eventfd
-Message-ID: <20260629100621.GA215869@chenghao-pc>
-References: <20260625054946.73445-1-duanchenghao@kylinos.cn>
- <20260625054946.73445-2-duanchenghao@kylinos.cn>
- <2vxzfr2bkn0j.fsf@kernel.org>
+	id 1we9v9-0000000EOcP-2MSw;
+	Mon, 29 Jun 2026 11:12:59 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 98BA560008;
+	Mon, 29 Jun 2026 11:12:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A6531F000E9;
+	Mon, 29 Jun 2026 11:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782731578;
+	bh=II6UFmS/kZBk86eBwc2++62peQEiQa8YkmG82Y63ygs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=YK/8dN9y+lJGv9+y5AfOEXUWUafvy1CPBci2prcfSZcbGSx74/vxgjKXHzh0yAKAC
+	 IsglvZmbRrH0SJZP3vnZhOLO7RWJodTrVLSxrjAIKABiCyhsXkJYXISx2AWi06IOp+
+	 lX/xmQ7cD8V/jt2TwgiUDh4acL+V6RzIXPVjWL/cEyGQ4wvlytEGsoX1TyYwfcEomn
+	 gzRoy6aMtwF2Ll6fK65lAMkBPWCWUjX5Vr5Y2LWTIyXi80CVFk1XelkiBj+9pORW3d
+	 8ZCvAX8eStZA491T1hS5wuIwVZ2r1b/Oqc7cS1ox/xBR6ZLo/BILF6SRX/3SRCfuUs
+	 eMjJTWNR2oB3A==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: Tao Liu <ltao@redhat.com>,  kexec@lists.infradead.org,  pjw@kernel.org,
+	palmer@dabbelt.com,  aou@eecs.berkeley.edu,  alex@ghiti.fr,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>, linux-integrity@vger.kernel.org,
+	linux-riscv@lists.infradead.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: Fix a NULL pointer reference in
+ machine_kexec_prepare
+In-Reply-To: <CAP_BRoQEM8Re1dT7JNQgO72o50GAnb2y7R1HWPd+E772GVYAJg@mail.gmail.com>
+	(Baoquan He's message of "Fri, 26 Jun 2026 16:04:37 +0800")
+References: <20260529032739.13264-2-ltao@redhat.com>
+	<CAO7dBbW+LEy8SBGAKcrxEDzK5Xctw-r7ztgnXuURa9g0xntbtQ@mail.gmail.com>
+	<CAP_BRoQEM8Re1dT7JNQgO72o50GAnb2y7R1HWPd+E772GVYAJg@mail.gmail.com>
+Date: Mon, 29 Jun 2026 13:12:54 +0200
+Message-ID: <2vxzh5mlk3bd.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2vxzfr2bkn0j.fsf@kernel.org>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260629_030635_623419_2EF06AA8 
-X-CRM114-Status: GOOD (  21.95  )
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,73 +77,79 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jun 25, 2026 at 11:06:04AM +0200, Pratyush Yadav wrote:
-> On Thu, Jun 25 2026, Chenghao Duan wrote:
-> 
-> > This patch adds support for preserving eventfd file descriptors across
-> > kexec live updates using the Live Update Orchestrator (LUO) framework.
-> > Userspace applications using eventfd for event notification can now
-> > maintain their state across kernel updates.
-> >
-> > Preserved State:
-> > The following properties of the eventfd are preserved across kexec:
-> > - Counter Value: The current 64-bit counter value, including any pending
-> >   events that have been signaled but not yet consumed by readers.
-> > - File Flags: The creation flags (EFD_SEMAPHORE, EFD_CLOEXEC, EFD_NONBLOCK)
-> >   are preserved.
-> >
-> > Non-Preserved State:
-> > - File Descriptor Number: The eventfd will be assigned a new fd number
-> >   in the target process after restore.
-> > - Wait Queue State: Any processes blocked on read() operations will be
-> >   woken up and need to re-establish their blocking state.
-> > - All other internal state is reset to default.
-> >
-> > Changes:
-> > - fs/eventfd.c: Add eventfd_luo_get_state() to safely read eventfd state
-> >   (count and flags), and eventfd_create() helper function.
-> > - fs/eventfd_luo.c: New file implementing LUO file operations:
-> >   preserve, freeze, unpreserve, retrieve, and finish callbacks.
-> > - include/linux/eventfd.h: Export new functions.
-> > - include/linux/kho/abi/eventfd.h: Define the ABI contract with
-> >   eventfd_luo_ser structure for serialization.
-> 
-> Why do you need to preserve this? Why don't you create a fresh one after
-> kexec? You just preserve the counter, which looks pretty much useless.
-> You can just as well open a new eventfd after kexec and set the counter
-> value if you care about it.
++Cc IMA maintainers
 
-Thank you very much for your review and suggestions.
+On Fri, Jun 26 2026, Baoquan He wrote:
 
-My original plan was to integrate KVM with eventfd. Eventfd serves as a
-critical notification mechanism between guest and host, and it is widely
-adopted in various scenarios such as networking, file systems, and
-interrupt handling.
+> Add kexec ML to CC.
+>
+> On Fri, Jun 26, 2026 at 7:46=E2=80=AFAM Tao Liu <ltao@redhat.com> wrote:
+>>
+>> Kindly ping, any comments?
+>>
+>> Thanks,
+>> Tao Liu
+>>
+>> On Fri, May 29, 2026 at 3:35=E2=80=AFPM Tao Liu <ltao@redhat.com> wrote:
+>> >
+>> > A NULL pointer reference issue is noticed in riscv's machine_kexec_pre=
+pare,
+>> > where image->segment[i].buf might be NULL and copied unchecked.
+>> >
+>> > The NULL buf comes from security/integrity/ima/ima_kexec.c:
+>> > ima_add_kexec_buffer(), where kbuf is added by kexec_add_buffer(),
+>> > but kbuf.buffer is NULL.
+>> >
+>> > Fix this by simply adding a check before copy.
+>> >
+>> > Signed-off-by: Tao Liu <ltao@redhat.com>
+>> > ---
+>> >  arch/riscv/kernel/machine_kexec.c | 3 +++
+>> >  1 file changed, 3 insertions(+)
+>> >
+>> > diff --git a/arch/riscv/kernel/machine_kexec.c b/arch/riscv/kernel/mac=
+hine_kexec.c
+>> > index 2306ce3e5f22..d81d576f9cb5 100644
+>> > --- a/arch/riscv/kernel/machine_kexec.c
+>> > +++ b/arch/riscv/kernel/machine_kexec.c
+>> > @@ -41,6 +41,9 @@ machine_kexec_prepare(struct kimage *image)
+>> >                 if (image->segment[i].memsz <=3D sizeof(fdt))
+>> >                         continue;
+>> >
+>> > +               if (image->segment[i].buf =3D=3D NULL)
+>> > +                       continue;
+>> > +
+>
+> This is a good fix, maybe we can add code comments to explain it as
+> below, just for reference.
+>
+>                /*
+>                 * Some segments (e.g. IMA) reserve space but have no buff=
+er
+>                 * loaded yet. Skip them as they cannot contain an FDT.
+>                 */
+> And is there any other place where the similar issue exists? e.g on Loong=
+Arch?
+>
+> Other than above concerns, this patch looks good to me:
+>
+> Acked-by: Baoquan He <bhe@redhat.com>
 
-At present, however, I have only implemented the preserve and retrieve
-logic for eventfd, and the integration with KVM has not yet been
-completed.
+Yeah, the patch LGTM to me too.
 
-I have a question and would greatly appreciate your help with it.
-I have been closely following upstream developments for the liveupdate
-feature. As I understand it, liveupdate is primarily targeted at cloud
-virtual machine scenarios. The upstream community has completed the
-core framework for liveupdate and memfd, and ongoing discussions are
-focused on state preservation and restoration for VFIO and IOMMU.
+Acked-by: Pratyush Yadav <pratyush@kernel.org>
 
-I would like to clarify the following points regarding upstream’s
-overall roadmap for the liveupdate feature:
-1. What is the complete upstream plan for liveupdate?
-2. What will the final deliverables look like once fully implemented?
-3. Will any new kernel internal interfaces or dedicated userspace tools
-be introduced?
-4.  Does the upstream community maintain an official TODO list tracking
-outstanding work items for liveupdate?
+Although I think IMA can make this a bit easier to understand. First, in
+ima_add_kexec_buffer() it should set kbuf.buffer to NULL and kbuf.bufsz
+to 0 explicitly instead of using kexec_buffer and kexec_buffer_size
+which are initialized to NULL and 0, but never updated. Using the
+variables here adds an extra level of indirection.
 
-> 
-> [...]
-> 
-> -- 
-> Regards,
-> Pratyush Yadav
+Also, perhaps we should add a comment in ima_add_kexec_buffer() about
+how this all works, since where the IMA buffer lives and where it gets
+updated it fairly complicated and took me some time to piece together.
+
+--=20
+Regards,
+Pratyush Yadav
 
