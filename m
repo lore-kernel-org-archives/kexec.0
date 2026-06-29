@@ -4,65 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 97B0AC43458
-	for <kexec@archiver.kernel.org>; Mon, 29 Jun 2026 16:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3DFB5C43458
+	for <kexec@archiver.kernel.org>; Mon, 29 Jun 2026 16:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=fRYwLKFW5okacBeAUFEZkzLVQVNz/VPICpHOIwpSzVw=; b=eOe8ci4u91muOqtQE+OKNrVdYH
-	q6jJbhcXOM7Ei56oY9aQaDlIWJHST/3CvS6u3TeiTX2RG/mPqszELpDoJNRsXNjoaqCCQDuVdjCL2
-	UC0b8zhAJFQxwOg4at0ax7R6CMDOtTtVNQ+bt8T1SwyXEwNafN8g9gUY3shbVqqsf1DmJ2utSa/Hp
-	xZMFxZ2rLzH1NkXNnb4KGuzhD7v3HI+1KORtkqdfrauQbYqG+hnKC8mox8lUo0s4fXQD2XT7oNCCa
-	v4kErrwixvw7RmXDa2KTgT+4BcupMNq3ruFCZdAnxBva2nUFh7jOq7adymKEDdyTmx86RNA7nTmDo
-	LybKVnRg==;
+	bh=6d/g78nARanRf8gSDZnSYai0WcH3apHlQ9zVtHuPszY=; b=sRQ7t+anfDddmD7JeHstvBqwPK
+	YPOXoQw0FAHkpS/QK3SvCQHch+LGWG7+GFzq84ShLoUjEbpF3ki/c0uCzF8ZfVR2nc5uiukSvrIcy
+	p3/nrz0VaSF3n97Wa9haqW19pwDhjzntb2FAO2aUuFh9w1fXPnE4B1bIa4y8hNy5lp/lI0350yway
+	W/B0jCTqvqypXWQBXZLOuLUzi9adhLOMcg+njjlbW8Os1CGKNTFMZW07VPwomJsLIfrep1X3opJg9
+	UQjbOgmE0lrztNfAlleTn+85l/I7bNsIVrjw11cCvaaIGAVII0fAdxJUPHwnDOFI1Pl+st0AsJobm
+	gFsg37Kg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weFBV-0000000FFgb-2Z6I;
-	Mon, 29 Jun 2026 16:50:13 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1weFFB-0000000FG4B-1I6f;
+	Mon, 29 Jun 2026 16:54:01 +0000
+Received: from fout-a5-smtp.messagingengine.com ([103.168.172.148])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weFBV-0000000FFgO-19zc
-	for kexec@lists.infradead.org;
-	Mon, 29 Jun 2026 16:50:13 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 83F1742AFA;
-	Mon, 29 Jun 2026 16:50:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A99A81F000E9;
-	Mon, 29 Jun 2026 16:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782751812;
-	bh=fRYwLKFW5okacBeAUFEZkzLVQVNz/VPICpHOIwpSzVw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=fAQ/FQZPFJdL1E+lwZz7Y2DQxvXCBRugYvrLlkLg0WufX4gAXhlk36fd2fb4nwF+p
-	 bqhpD7BOox/hhIfOUYc1fQTXKz6HAbwZgZPdnHskBbL7EZ3c4c4zjrAPR4cqF6N/h8
-	 aAJMsEfERBSeXOMSQ2NJDZQXa52o4o6SnlAlpYgzCTaC23UYkzHByh0MxkNcC+IdMq
-	 5cveQdr4SVTQE9pEqDy1HxBJeuztseBtisogTicde16xe8uVcO/2oEBGyoY5sl0NGM
-	 4lnKcHyD4IKATGQOBGfrTnqbNniyI3jx0QI+cwMhApGCzJbgR1r02pgEjoJb/CFM/V
-	 d/vVxThFRTwFA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  Samiullah Khawaja
- <skhawaja@google.com>,  Mike Rapoport <rppt@kernel.org>,  Alexander Graf
- <graf@amazon.com>,  David Matlack <dmatlack@google.com>,
-  tarunsahu@google.com,  open list <linux-kernel@vger.kernel.org>,  "open
- list:KEXEC HANDOVER (KHO)" <kexec@lists.infradead.org>,  "open list:KEXEC
- HANDOVER (KHO)" <linux-mm@kvack.org>
-Subject: Re: [PATCH 1/1] liveupdate: luo_file: Add internal APIs for file
- preservation
-In-Reply-To: <2vxzse65k938.fsf@kernel.org> (Pratyush Yadav's message of "Mon,
-	29 Jun 2026 11:08:11 +0200")
-References: <20260613012521.835490-1-skhawaja@google.com>
-	<20260613012521.835490-2-skhawaja@google.com>
-	<2vxzwlvljyzs.fsf@kernel.org> <akIask9nPTEAhd76@plex>
-	<2vxzse65k938.fsf@kernel.org>
-Date: Mon, 29 Jun 2026 18:50:09 +0200
-Message-ID: <2vxz7bnhjnpa.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	id 1weFF8-0000000FG3V-2RUs;
+	Mon, 29 Jun 2026 16:54:00 +0000
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfout.phl.internal (Postfix) with ESMTP id 2B039EC006E;
+	Mon, 29 Jun 2026 12:53:57 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Mon, 29 Jun 2026 12:53:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1782752037; x=
+	1782838437; bh=6d/g78nARanRf8gSDZnSYai0WcH3apHlQ9zVtHuPszY=; b=N
+	ZGXNR6l5Q5v6NSr0q7LeE3fgkfIyMitsQCjVn7v8EvVru91478oo7MeDOSbQM26m
+	jXS7ZK8I0eDYmVea6vlN5n1uZ/0jhMJZWxwctEzmWRFX9JwQ+g5dYAiwmnABUeqO
+	iQQnaeVwxmFbXfcW303hDGplMiP925vknxX7jjhBw/aB6ZIPOdeLrKpiigBS+NH7
+	QKi59d5tw57ViTA7i/7lozw/kxWgNHfc5ViGHZqaL+KIxTxAptlsY2roq/A8WR+K
+	6RG0YPVeTHFlz+8apZFIB33tG9nAbyhib9xNDIePDD2ahIbtLVBqA+GjPd18FGRY
+	4coNxb4WD7seVtSuvUYEw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1782752037; x=1782838437; bh=6d/g78nARanRf8gSDZnSYai0WcH3apHlQ9z
+	VtHuPszY=; b=VcLy23F2+rXWsexJnDQ9eY3tf1dz+WSD4OsddeGafhV3XOXsvza
+	vPyvN+x/K6o9oIUQGmrnDOW+Y3eMWGF/O2/ieYNRNtL30o5MLRZ22/9G4paMnV7k
+	IUcNB2wf5gs7QpkFkR54877YrjuOdaooBd2M1Z/HVL8+bTCmi7pVKYCSJRMqU1Wz
+	9My4n07gFiuajN34yG0+jXFr9vACJlGYx6cM1Uj07adSwT8JQvRZ3BLb8vsTTSQx
+	fU6iyNJQyL0xTJzPAdJQ5IlYNrlL/R8k6aHNH2iFr/hXcUgmu6ELLqlVnH0Nadxw
+	uhhpKQgzIpoSPvrC7tk41ruayEwpqjuJdGA==
+X-ME-Sender: <xms:JKNCao6v9mqnJhXtz4YURts2z0BtLhuXfKTy6V2ZcbCR5Em7o5PogA>
+    <xme:JKNCatBVzvo5QVRA8h-7p9SEyeVvn75WtlwUTfrkLKPG_JQ2bXpo0rZeQ-DDZQox7
+    AhTB8DBJLrHI4Nap55Wwq14VEKHEQeQ4_8Kug7F7fX0zo20hoh7_fBI>
+X-ME-Received: <xmr:JKNCak7788qMfyw2E3E7cuuZer7kOXeqNxmCKuzhr8y0Pc9aFwfXh_dhndluEQ>
+X-ME-Proxy-Cause: dmFkZTEzzn6OgJCgoJErvGmXtkQgHIU8zND7m0wTMLGAHBlOG8NESTBmLsw97avQ8mqKmv
+    6Utolx1pAcqyJypNeKEtYm8JWl1pX9x1mCAwaKZrBoFF445lJbgx9KdFGtEPq+K29okb2/
+    GX2qOqaHUaxHPYGzgJ1ezEOlhOax32ciKt1bvZjbGyUAdl9/pp7SKN4tg2364f/kIciFBx
+    vhKBZzOA8AfVHiY8IYqGu/eTt2W4ocxoQcBSy9kono6UHQpJoHumvxlql/oZaZ2i6ChXzx
+    r7Q9YXOJnEIcwzDi6PHmtDTyBWgHTXI/qLdwYfMvCburY83E7VBnbeXga/IYsJsPFZk/Y9
+    tum8cSWFzNNeUvGxZrk1hq+viFDxGo+aNzQgla9mg7a/+P2RZ8KJETcTb/0oTKTrIvFqL8
+    G0tr9UfyC6EsqIwIIzYROWTUZca8Fsn0KRCX0yM0ewQdjBZxEUdczSxTYT0MOilPHSaiZP
+    zDAf/DV+WFpKAAq3/igyF3nd7b04DgMv35CwlN8+D0rJPnANvcHDbCH5K5oP4BLZVS24R3
+    wr6mAhbrpE+EO6a9mwyDr9uHGPBvjlDC+LsgbGwjtS6pZ11e7SduTP8dGHBXMINONAbuhV
+    fn0TODSdVkaKHjbJdYQVJSgrfx4zbXgXdv6o5gmfGO0U1UzoCBhnd8Nwg3Vg
+X-ME-Proxy: <xmx:JKNCahuTtPzanffSa5-Q7EnYsy7zkM7x0DZAYQeW_cs9nH7JvEJb3Q>
+    <xmx:JKNCaqwSzhbZCRVYt7XQrkJxxdXnWPa1PqbChw1bfgRytYEzMXPoDg>
+    <xmx:JKNCasZenza9aO6cScS7AOXemQEYw5HMbFNInoYT0UrIma8bXSW2hw>
+    <xmx:JKNCai3wuk3ev92TG89NwWF4zNSWSNZs7ylY3tOq937Du365jUgg4Q>
+    <xmx:JaNCatQuGJWUU7v2OjSZKkwvETUMsh4BM05qg36L5qZajk02KUKWPWTW>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 29 Jun 2026 12:53:56 -0400 (EDT)
+Date: Mon, 29 Jun 2026 17:53:55 +0100
+From: Kiryl Shutsemau <kirill@shutemov.name>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>, 
+	Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>, 
+	Doug Anderson <dianders@chromium.org>, Petr Mladek <pmladek@suse.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, 
+	Baoquan He <bhe@redhat.com>, Puranjay Mohan <puranjay@kernel.org>, 
+	Usama Arif <usama.arif@linux.dev>, Breno Leitao <leitao@debian.org>, 
+	Julien Thierry <julien.thierry.kdev@gmail.com>, Lecopzer Chen <lecopzer@gmail.com>, 
+	Sumit Garg <sumit.garg@kernel.org>, kernel-team@meta.com, kexec@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/4] arm64: cross-CPU NMI via SDEI
+Message-ID: <akKiV3CAKWLwHnsW@thinkstation>
+References: <cover.1781709543.git.kas@kernel.org>
+ <aj6xvvY4AA-fQG2X@arm.com>
+ <aj7Pm5H0MN5WwhDK@thinkstation>
+ <akJsQK2iG2oZ3vYE@thinkstation>
+ <akKVKhOsv6EJVFv4@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <akKVKhOsv6EJVFv4@arm.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260629_095358_925533_40EE9D78 
+X-CRM114-Status: GOOD (  15.47  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,104 +116,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jun 29 2026, Pratyush Yadav wrote:
+On Mon, Jun 29, 2026 at 04:54:18PM +0100, Catalin Marinas wrote:
+> Have you tried SDEI_EVENT_COMPLETE_AND_RESUME instead? Just COMPLETE
+> won't return to the kernel. We have sdei_handler_abort() to complete the
+> event and, hopefully, you can continue with the CPU_OFF. It's a work
+> around the TF-A non-compliance but I think this is useful even if you
+> don't issue the CPU_OFF (e.g. no CPU hotplug, just the park loop).
 
-> On Mon, Jun 29 2026, Pasha Tatashin wrote:
->
->> On 06-26 13:57, Pratyush Yadav wrote:
->>> Hi Sami,
->>> 
->>> On Sat, Jun 13 2026, Samiullah Khawaja wrote:
->>> 
->>> > From: Pasha Tatashin <pasha.tatashin@soleen.com>
->>> >
->>> > Live update orchestrator file handlers depend on the preservation of
->>> > other files. To make sure that the dependency is preserved, the file
->>> > handlers needs to fetch the preservation token of the preserved
->>> > dependency. Similarly during restore, a file handler wants to fetch the
->>> > restored file of the dependency.
->>> >
->>> > Add APIs that allows fetching token of dependency during preservation,
->>> > and fetching the restored file dependency during restore.
->>> >
->>> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
->>> > Signed-off-by: Samiullah Khawaja <skhawaja@google.com>
-[...]
->>
->> To achieve this, LUO provides the .can_finish() callback. So, LUO does
->> two-phase verification:
->>
->> 1. It iterates through all tracked files and invokes .can_finish().
->> 2. Only if *all* files return success does it proceed to invoke .finish().
->>
->> If a VMM restores a file (such as guest_memfd) but fails to restore its
->> dependency (such as the VM FD), or attempts to close the session 
->> prematurely, the .can_finish() check for that file will fail (returning 
->> -EBUSY), and the entire finish sequence will abort. This guarantees 
->> kernel-enforced correctness at the session boundary and without forcing 
->> the VMM to execute restores in a strict sequential order, which anway 
->> would not make  any sense from kernel side due to circular dependecies 
->> issue, where topological sort does not exist.
->>
->>> 
->>> But on the preservation side, VMMs still do need to follow the
->>> topological order of dependencies. Because if they don't, the
->>> liveupdate_get_token_outgoing() call will fail and preservation can't
->>> proceed.
->>
->> Actually, preservation can also be performed in an order-independent manner.
->> While a handler can call liveupdate_get_token_outgoing() during .preserve(),
->> it can also defer this query until the .freeze() callback. Because .freeze()
->> is invoked after all files in the session have completed their .preserve() phase,
->> all dependency tokens are guaranteed to be available, completely eliminating any
->> topological ordering requirements during the initial preservation calls. It is
->> up to individual file handler implementations to decide whether they wish to
->> enforce ordering at .preserve() time or defer it to .freeze().
->
-> That is the worst of both worlds. I get your point that LUO doesn't want
-> to enforce dependency ordering. My arguments against that are somewhat
-> subjective so I can live with this.
->
-> But then you can't let file handlers enforce it as they wish. The
-> dependency ordering is uAPI because it directly affects how VMMs
-> preserve files. If the VMM has to keep track of dependencies for some
-> file types and doesn't have to do so for others, that is a terrible and
-> inconsistent API.
->
-> Ideally, LUO should handle the dependencies on its own. preserve() can
-> give LUO a list of files the preserved file depends on, and LUO makes
-> sure all the dependencies are present in the session at freeze. We would
-> also need a way of getting the dependent files back from LUO on
-> retrieve(). That would make sure the dependencies are properly enforced
-> both on freeze and finish, and the enforcement isn't left up to the file
-> handlers.
->
-> Unfortunately all that sounds fairly complicated so I am not sure if we
-> want to do that just yet, although I would like to hear your thoughts on
-> this.
+Tried it. The result is the opposite of what I expected, and it argues
+against doing the complete at all under QEMU's TF-A.
 
-We had discussion about this in the live update bi-weekly today. The
-conclusion we arrived at is to keep the current functionality. That is,
-we don't enforce preservation dependency.
+Same A/B harness as before -- a CPU wedged with interrupts masked is
+stopped via the SDEI rung; I only vary how its handler ends. kdump
+capture kernel boot under QEMU:
 
-But that also means file handlers can't try to get their dependent file
-in their preserve() callback, since that would implicitly enforce
-ordering. They always _have_ to do it from their freeze() callback.
+  - park, event left uncompleted (current series):   boots to a shell
+  - sdei_handler_abort() then CPU_OFF:               hangs at SDEI re-init
+  - sdei_handler_abort() then park (no CPU_OFF):     hangs at SDEI re-init
+  - CPU_OFF, event left uncompleted:                 hangs at SDEI re-init
 
-Similarly, on retrieve side, file handlers enforce their dependent files
-are restored via the can_finish() callback only.
-
-So I think the next steps for this series is to clearly document this
-requirement for file handlers in the documentation for
-liveupdate_get_token_outgoing() and liveupdate_get_file_incoming().
-
-Also, I think you need some way of tracking if the file was explicitly
-restored by userspace, which is something file handlers would then need
-to call in their can_finish().
-
-[...]
+The third line is the surprising one: completing the event via
+sdei_handler_abort() and then just parking -- no CPU_OFF at all -- breaks
+the capture kernel too, at the same point as CPU_OFF does. The only
+variant that boots is the one that leaves the event uncompleted and
+parks. So here it's completing the event that the capture kernel trips
+over, not the dangling dispatch -- backwards from the non-compliance
+theory, where completing should be the safe thing and "useful even
+without CPU_OFF".
 
 -- 
-Regards,
-Pratyush Yadav
+  Kiryl Shutsemau / Kirill A. Shutemov
 
