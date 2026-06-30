@@ -4,107 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D4E56C43458
-	for <kexec@archiver.kernel.org>; Tue, 30 Jun 2026 22:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2FBF2C43458
+	for <kexec@archiver.kernel.org>; Tue, 30 Jun 2026 23:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=0ufRs7jbz+7zNErx/AfaA1flmtddekdRBnIktmT56h4=; b=vG4xRTfzTS/Kt+7beqfId3t56D
-	qNPokMKIZW6IJxX+Ko/1Ip4OAEz2DsbxfvTO4PYQfUTje1MnVQjyKa2HcxGk9Zw4xS5e/SR6NwKAX
-	+oAsmHSxctgFozV5t3Jt+P1odvkKpLLABasIEnuQ/Kl02flq6X00VG4UbnN44Tlyy4ZcW8S9TEiUe
-	RbqisxOkS6ZIhjf9fIcwBfie2mohkPJRGnBXR779Q3F1Eokq4VzfjckREtq3X/+9VKc5pbzzl5Ka7
-	g0f7iQ8nnER2QVhf0ME44kpcH2YfUGU16xrADmV1rYNk85hurljjy0MmdNlgIPdmF/iEH2EUYBXfR
-	Iugc1bbA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=eV8FxCsvcQQMn46BNl5VjX2wuC3TdKg658kA/dAWs8g=; b=VSsHCGLIq58P0sAOvEk3PyeoQw
+	FdhHRr0Qa6oIS29BY33RxMPbzsZDqfG3BOPnvBjuC4l4x8Ot/fAjaEhetCRnvNIAXsOllg3RrteQu
+	aNutbKvZytrbwPCgK0nh3DsrJNRs180/YX5AhRs0UC3KaPkF109nfkFTNPKfZhZ3Dk89FMe24zTb6
+	MEUk9eIdOV6v1yZq/prhbBiKDSXETzKQdMIMira4HvvuwoNoaqYkcuR5ctKuhW7h4MiYpRGqSUeA8
+	lHwnzo43TQUi4TnIyiLGSL+FUdRj5R7IYTiUG+BBk3OAfeago92MFeSlml0PccAH534BVSNy2My2r
+	V9AYXrYg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wehMs-00000000KqA-1FNM;
-	Tue, 30 Jun 2026 22:55:50 +0000
-Received: from mail-dl1-x122e.google.com ([2607:f8b0:4864:20::122e])
+	id 1wei1x-00000000Met-3yUv;
+	Tue, 30 Jun 2026 23:38:17 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wehMh-00000000KpZ-2koB
+	id 1wei1t-00000000MeV-2prn
 	for kexec@lists.infradead.org;
-	Tue, 30 Jun 2026 22:55:41 +0000
-Received: by mail-dl1-x122e.google.com with SMTP id a92af1059eb24-13b2b08a553so38596c88.0
-        for <kexec@lists.infradead.org>; Tue, 30 Jun 2026 15:55:39 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782860139; cv=none;
-        d=google.com; s=arc-20260327;
-        b=qaPWT+Jq8W2n0ig9H5NbzmnO9F+1trjB80ujbm518s8wRPXhpk6+uEVmozpC6vjGgt
-         02y747yzuL4Duw+XhIXeNbhblHEe4CduTZ3dExeEGOIU50kEtuoGV9c/hO1l73+ipU8C
-         f/0+8qTtulf4oz2YKTB3CYc+NeC2vIpYlm37AyAkwHXm9yugNHfjiO8S+TJPDFBJlc9Z
-         MlJMiQeNMQWj68jBDM5CDhLp91kiU1UKLkOlBAixMigHhDc4EqA6vPzGJu/fWijjxn2Q
-         6tWpdacRBJy4662it6PS5JRcL4zZvqomDWE/zixi7ERQDkzPNFClUWDZqv0Cw6nyDXrg
-         wbmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=0ufRs7jbz+7zNErx/AfaA1flmtddekdRBnIktmT56h4=;
-        fh=cRzzaDLJQaFLF2FoTb1WZ3MqG55yjTUekmGv+TftpuE=;
-        b=rcKZtZQ9ICPgQErrFl/ynIKXD4cgtuJqScVGF4nrxJ9y125vPPE27XPJUjX0UtCBZj
-         9nRnvj+nu6x+seBvGWXzBRm0Nf1SIhpp6GZCblLOV7jAPUxkLJohudxE+0uiGyVQNAVA
-         9WE8j7IB+f5N2bhYF0zsa8Lw9p6Jrz44u0a/Xk3WxNNhE2foCMnD2Zr31WAZ2bggcKOB
-         tbvKshwP4PVtsv7wBmJjn7gEZ2p+UEDy15CzB+8VynJLJh6LNCX9ROK1j06PLRLaeSHs
-         4DwUHfRhcvsQ0VYa7d3Iv52jV4s0lQayGHTmPQ2HxTyJnwzJn5tfr69dfK3PQS1lKTDw
-         WZtw==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782860139; x=1783464939; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0ufRs7jbz+7zNErx/AfaA1flmtddekdRBnIktmT56h4=;
-        b=qXWT8BMKRPJXc/yrJ7vfDcn3LoyL25GP3gJpZMoPFEA8GyqXe9LdLTmW3aZKIm6+6q
-         HA2Y70z+Qum/FyadUdAV43YZewEvbwFBSaE2NFyR3Y74RP8JQmgPlLdsjlMNCOLhALAw
-         i8f4bwY8qTWkdsyxGpKZhPDlydpPg6FMN1fmVmzs4WMoxwGXpwG3Nk9Zo+aykWb7LGXr
-         n+YeP9wvgwhU1LH7PzzE061Hxvo3cdCDuKJS80Ufd9sp5K/lOzsF7IV/yYXoy5kXyBbo
-         GDGfOHy6E159suQdmUC1jDWN7Tnl2tDpMxgweOQ4TQYss6fHMp8YXh7OWgMJPH5hblmm
-         V0MA==
+	Tue, 30 Jun 2026 23:38:15 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782862692;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eV8FxCsvcQQMn46BNl5VjX2wuC3TdKg658kA/dAWs8g=;
+	b=Cn+sbVEVPV5/MeUDYLfOfe5Wg9QMc8fv88qghlEbofXwqwS9NsXzfO0jmy8G+2AAxLxPrU
+	PZMqkRmtriZD5GFj03Tpdg0jfYwqS0BfoJkiEALEuXKhQDcncdb5Qsb/twStyeAI2Peo47
+	IzCn2s5Mz+NRYivoYH78QR3dzJdrlYw=
+Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com
+ [74.125.82.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-646-U81hkQtTOB2Za-UlG6y0xQ-1; Tue, 30 Jun 2026 19:38:08 -0400
+X-MC-Unique: U81hkQtTOB2Za-UlG6y0xQ-1
+X-Mimecast-MFC-AGG-ID: U81hkQtTOB2Za-UlG6y0xQ_1782862687
+Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-30eec544cc2so67277eec.1
+        for <kexec@lists.infradead.org>; Tue, 30 Jun 2026 16:38:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782860139; x=1783464939;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=0ufRs7jbz+7zNErx/AfaA1flmtddekdRBnIktmT56h4=;
-        b=PPBWM6oXX2jzErnosNaigi+6S7JlbvV7emoMP25bY1qTWqIDjespKfWdmklBVx0m6V
-         QpMNbfun0U9NVCthKU1BOJGLBs4qFZ2WyKgRCwPEsrdoR3NmGOc6EnZATVCxCt0Rj3Pf
-         unMgpkI0FtVIy6wtKlPKYApraTQonaYhba3axVdUGApAYgIWhBWs5pbTovSTDTel68KE
-         +R21LKG/KH8rIiSEeGYsOsWWH2XWrn1go1nWRynjO3TPXwtTeQFjOLvi3D3tgNTt5ue0
-         PNWdkTIvvL4qGj5l+X5pS0TZ8iCKiFnUFzmJbMuS8eEsZjFVXMfiSKBa/oUzKHIlpg8F
-         PGIw==
-X-Forwarded-Encrypted: i=1; AFNElJ9O3nIxsszh8wczepGB88QKvyYiWZp6nfUDMHo3Z4p9JxBabtuoNYaZnpdN0EfJnvUlG7D0Fg==@lists.infradead.org
-X-Gm-Message-State: AOJu0Ywbbj28PBWvi49dJGGe76C0mS7swmJFl755lkcd/Y5500wOcg7R
-	ts0Hn1J8Gun9aj/EwfovJutf9xR4G42MHt3HCFYs307IVb4rgIKXKUkzg4i9yjnAzKHzLgZORZc
-	a3HVXFU6UKdO/fdmVRr9MI1AEr2KMOxZvroEICEIP
-X-Gm-Gg: AfdE7clrjd63+EGwPg1dmETHur5xgeExw8QIFT5RXN4DLjBKOXBtMtCL7GiH70B2gLw
-	Hyd7Y2KoSE98hr6TWC4uInX1ltaUvvXR1TY6qBbvhHEPIsMdNyK4PpgiqPdXt+T3jVLoTm5QpER
-	X4/1z4lTXrNHq9htT+ZjWiTMc+WR2/BdNcdeiYnquqRxNrHa4l5RLMGYAjhXKOEbq9fxPeqN0cd
-	XiSSXPl35/mneymjoemkB1UkP22vmvJQnIyXLf+VqRQJyC2kWoERARvf2fXLP4APTnzvbGd
-X-Received: by 2002:a05:7022:60a:b0:139:ed5d:1b5a with SMTP id
- a92af1059eb24-13b2a1c0f41mr3645093c88.40.1782860138109; Tue, 30 Jun 2026
- 15:55:38 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1782862687; x=1783467487;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eV8FxCsvcQQMn46BNl5VjX2wuC3TdKg658kA/dAWs8g=;
+        b=jjv9tF6zeGx63R12kBg2mb7XFPEB0gFkdCqpXBDW3DnWWh1fmu6+bCYH72GiIDs4JC
+         k7HAMfLQRTyo8yBznPB2afgnFZTy4orR+VbYHPUMER5QMSrplH9b5VqFDvmK/lM5TLlL
+         7hiktIhsGhLdX2dbwlKHXk3ok+B2Sc2B6tXH4gMkgE7IZD04PC7bqwFVugxDvk9Xvid7
+         x6BC1noehWLKUi32UntkZ7cYwrySsQkMlMwKz9fXcMTNfpePdHLPnQuz/XhuteGMI5kG
+         pw/l8dtiogW59Vmbs+caAHr+MEIYVUzJDl4jpVigSRUJdtpax9DsaTmd3EI7HMPVaW8h
+         x4zQ==
+X-Forwarded-Encrypted: i=1; AHgh+RoF1CDw6HhYHF1t7VNrcYfpttUR/8txrfZ50wpVB5vOaImSId3i1oq5tRe7BkPtEEv5+t5IKQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0Ywb8gsTvRuuzpbKuezy9opv5Y9Rz52WXqa7BqekIZQyVLAmgxn4
+	yZ/LVL98oWfyx7ID327S4yLFEwI664bs3KVnTl66GYLZfR3fUDUmhhcC8hg1gWERsrjBBs5rd2e
+	Pgv1M7LauGtkurAFOsjv/Y9WqwzOi1oUshL/luBt1L0JZEqewTQw4Ffp5g2NoBL59PVnoZg==
+X-Gm-Gg: AfdE7cnDGTPJkIlgLxeuWJC2/+fSxGaFJyHhrJs6Ipw2U85NaF/m9boD4VI/nFt7Fwn
+	0telpYVQ/MlDUEPdQgmlyMOMdTu3KcjFi1YsKwNMP0MnW861dWr2XsphCzNRASDL58L37/zv8NN
+	NMS87vYHVNEYgjiX9A5o6ucR9ZYBbqMwIcCKflMocAsKtaoaIt0A7EuUCVB6gTP3GZjJY7e5xCC
+	yG8nay475a1MWGwBHcGBnFhwMF8WziLDDHxkizMUNx7S5uaI+WV1aiaOkWyrH7H2Cj33PsHEV8U
+	ROouiVAno77axuJi5BNR0YpkRiyXLyO6VP1F2j+S0BQCswV9mIXFbLV73t/jO2hk5oDaUP54rUg
+	IyJO9MbIilZPzSfzJIvOBbM3bIVKf1YWIn0PVhhDiPa3V+fzfVA==
+X-Received: by 2002:a05:7300:547:b0:30c:ab4f:46c7 with SMTP id 5a478bee46e88-30ef0a3bb58mr2418750eec.45.1782862687109;
+        Tue, 30 Jun 2026 16:38:07 -0700 (PDT)
+X-Received: by 2002:a05:7300:547:b0:30c:ab4f:46c7 with SMTP id 5a478bee46e88-30ef0a3bb58mr2418706eec.45.1782862686439;
+        Tue, 30 Jun 2026 16:38:06 -0700 (PDT)
+Received: from localhost.localdomain (122-63-73-73.mobile.spark.co.nz. [122.63.73.73])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30ee31cfcaesm12341209eec.20.2026.06.30.16.38.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2026 16:38:05 -0700 (PDT)
+Date: Wed, 1 Jul 2026 11:37:58 +1200
+From: Tao Liu <ltao@redhat.com>
+To: Desnes Nunes <desnesn@redhat.com>, kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+	stable@vger.kernel.org, baolu.lu@linux.intel.com,
+	dwmw2@infradead.org
+Subject: Re: [PATCH v2] iommu/vt-d: Fix UCTP context table slot when copying
+ root entries
+Message-ID: <akRTVinqeeZnVARD@localhost.localdomain>
+References: <20260629144837.3244851-1-desnesn@redhat.com>
 MIME-Version: 1.0
-References: <20260625054946.73445-1-duanchenghao@kylinos.cn>
- <20260625054946.73445-2-duanchenghao@kylinos.cn> <2vxzfr2bkn0j.fsf@kernel.org>
- <20260629100621.GA215869@chenghao-pc>
-In-Reply-To: <20260629100621.GA215869@chenghao-pc>
-From: David Matlack <dmatlack@google.com>
-Date: Tue, 30 Jun 2026 15:55:11 -0700
-X-Gm-Features: AVVi8CdC-YicerQYwyKKogj1zQs5YRNCTCvCtXWkU5DiVwwhFHMSMIyXZ1dV4nA
-Message-ID: <CALzav=c+RzWpJTrpsdwnHUT=EZCGv=FGtmDq9ipDE7jNuWNX0g@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] eventfd: luo: luo support for preserving eventfd
-To: Chenghao Duan <duanchenghao@kylinos.cn>
-Cc: Pratyush Yadav <pratyush@kernel.org>, viro@zeniv.linux.org.uk, brauner@kernel.org, 
-	jack@suse.cz, linux-fsdevel@vger.kernel.org, pasha.tatashin@soleen.com, 
-	linux-kernel@vger.kernel.org, rppt@kernel.org, kexec@lists.infradead.org, 
-	linux-mm@kvack.org, jianghaoran@kylinos.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20260629144837.3244851-1-desnesn@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: FocT7-n29SQSRxUn5i6iVVaFL2iUNMwvH0gmAM0iEYk_1782862687
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260630_155539_707427_8D0FA681 
-X-CRM114-Status: GOOD (  35.78  )
+X-CRM114-CacheID: sfid-20260630_163813_820565_25B6F253 
+X-CRM114-Status: GOOD (  27.46  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -119,99 +108,153 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jun 29, 2026 at 3:06=E2=80=AFAM Chenghao Duan <duanchenghao@kylinos=
-.cn> wrote:
->
-> On Thu, Jun 25, 2026 at 11:06:04AM +0200, Pratyush Yadav wrote:
-> > On Thu, Jun 25 2026, Chenghao Duan wrote:
-> >
-> > > This patch adds support for preserving eventfd file descriptors acros=
-s
-> > > kexec live updates using the Live Update Orchestrator (LUO) framework=
-.
-> > > Userspace applications using eventfd for event notification can now
-> > > maintain their state across kernel updates.
-> > >
-> > > Preserved State:
-> > > The following properties of the eventfd are preserved across kexec:
-> > > - Counter Value: The current 64-bit counter value, including any pend=
-ing
-> > >   events that have been signaled but not yet consumed by readers.
-> > > - File Flags: The creation flags (EFD_SEMAPHORE, EFD_CLOEXEC, EFD_NON=
-BLOCK)
-> > >   are preserved.
-> > >
-> > > Non-Preserved State:
-> > > - File Descriptor Number: The eventfd will be assigned a new fd numbe=
-r
-> > >   in the target process after restore.
-> > > - Wait Queue State: Any processes blocked on read() operations will b=
-e
-> > >   woken up and need to re-establish their blocking state.
-> > > - All other internal state is reset to default.
-> > >
-> > > Changes:
-> > > - fs/eventfd.c: Add eventfd_luo_get_state() to safely read eventfd st=
-ate
-> > >   (count and flags), and eventfd_create() helper function.
-> > > - fs/eventfd_luo.c: New file implementing LUO file operations:
-> > >   preserve, freeze, unpreserve, retrieve, and finish callbacks.
-> > > - include/linux/eventfd.h: Export new functions.
-> > > - include/linux/kho/abi/eventfd.h: Define the ABI contract with
-> > >   eventfd_luo_ser structure for serialization.
-> >
-> > Why do you need to preserve this? Why don't you create a fresh one afte=
-r
-> > kexec? You just preserve the counter, which looks pretty much useless.
-> > You can just as well open a new eventfd after kexec and set the counter
-> > value if you care about it.
->
-> Thank you very much for your review and suggestions.
->
-> My original plan was to integrate KVM with eventfd. Eventfd serves as a
-> critical notification mechanism between guest and host, and it is widely
-> adopted in various scenarios such as networking, file systems, and
-> interrupt handling.
->
-> At present, however, I have only implemented the preserve and retrieve
-> logic for eventfd, and the integration with KVM has not yet been
-> completed.
->
-> I have a question and would greatly appreciate your help with it.
-> I have been closely following upstream developments for the liveupdate
-> feature. As I understand it, liveupdate is primarily targeted at cloud
-> virtual machine scenarios. The upstream community has completed the
-> core framework for liveupdate and memfd, and ongoing discussions are
-> focused on state preservation and restoration for VFIO and IOMMU.
+CC to kexec ML.
 
-Yes that's correct, but that work is to solve some very specific
-problems for virtual machine scenarios:
-
- 1. memfd preservation allows preserving guest memory and userspace
-(e.g. VMM) state in-place across Live Update.
- 2. VFIO/IOMMU preservation allows PCIe devices assigned to virtual
-machines to keep running uninterrupted across Live Update.
-
-I think this series is missing a description of the problem solved by
-preserving eventfds. We don't want to preserve all types of fds just
-for the sake of it. That will bloat the ABI (which will make
-maintaining version compaitibility harder) without any gain.
-
+On Mon, Jun 29, 2026 at 11:48:37AM -0300, Desnes Nunes wrote:
+> When translation is already enabled at boot (e.g. kdump), the vt-d driver
+> copies context tables from the previous kernel's root table. In scalable
+> mode, buses that only populate the upper root half (UCTP, devfn >= 0x80)
+> should be written to ctxt_tbls[tbl_idx + 1] through copy_context_table().
+> However, the current copy path always uses tbl[tbl_idx + 0] in this situa-
+> tion. Since idx wraps to 0 at devfn 0x80 due to a zeroed LCTP, new_ce for
+> LCTP will be NULL and keep pos equals to 0. Thus, UCTP entries will be co-
+> pied into tbl[tbl_idx + 0] instead of tbl[tbl_idx + 1], and written after-
+> wards to root_entry[bus].lo instead of .hi in copy_translation_tables().
+> 
+> In short, devices on bus 0x80 with devfn >= 0x80 fail DMA with fault 0x39,
+> which will break drivers running in kernels with translation pre-enabled.
+> This fixes NO_PASID DMAR faults for UCTP-only buses such as:
+> 
+> DMAR: [DMA Read NO_PASID] Request device [80:14.0] fault addr 0xe81759000 [fault reason 0x39] SM: Present bit in Root Entry is clear
+> 
+> For instance, this fault yielded to locking issues between systemd and
+> xHCI, blocking a system's reboot after a vmcore was captured with kdump:
+> 
+> [   72.987601] systemd-udevd[246]: usb3: Worker [255] processing SEQNUM=2193 is taking a long time
+> [  132.237566] dracut-initqueue[277]: Timed out while waiting for udev queue to empty.
+> [  202.988014] systemd-udevd[246]: usb3: Worker [255] processing SEQNUM=2193 killed
+> [  202.998059] systemd-udevd[246]: usb3: Worker [255] terminated by signal 9 (KILL).
+> ...
+> [  206.288378] kdump[569]: saving vmcore complete
+> ...
+> [  206.821258] systemd-shutdown[1]: Rebooting.
+> [  246.858495] INFO: task kworker/0:1:11 blocked for more than 122 seconds.
+> [  246.865319]       Not tainted 7.0.0-clean #1
+> [  246.869663] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> [  246.877623] task:kworker/0:1     state:D stack:0     pid:11 tgid:11    ppid:2      task_flags:0x4208160 flags:0x00080000
+> [  246.888942] Workqueue: usb_hub_wq hub_event
+> [  246.893202] Call Trace:
+> [  246.895690]  <TASK>
+> [  246.897828]  __schedule+0x299/0x5c0
+> [  246.901378]  schedule+0x27/0x80
+> [  246.904572]  schedule_timeout+0xbd/0x100
+> [  246.908565]  __wait_for_common+0x97/0x1b0
+> [  246.912644]  ? __pfx_schedule_timeout+0x10/0x10
+> [  246.917252]  xhci_alloc_dev+0x9e/0x2b0
+> [  246.921068]  usb_alloc_dev+0x7a/0x3b0
+> [  246.924795]  hub_port_connect+0x285/0x960
+> [  246.928873]  hub_port_connect_change+0x94/0x290
+> [  246.933482]  port_event+0x4bb/0x840
+> [  246.937030]  hub_event+0x141/0x460
+> [  246.940489]  process_one_work+0x196/0x390
+> [  246.944569]  worker_thread+0x1af/0x320
+> [  246.948383]  ? __pfx_worker_thread+0x10/0x10
+> [  246.952724]  kthread+0xe3/0x120
+> [  246.955921]  ? __pfx_kthread+0x10/0x10
+> [  246.959736]  ret_from_fork+0x199/0x260
+> [  246.963550]  ? __pfx_kthread+0x10/0x10
+> [  246.967362]  ret_from_fork_asm+0x1a/0x30
+> [  246.971355]  </TASK>
+> [  369.738508] INFO: task systemd-shutdow:1 blocked for more than 122 seconds.
+> [  369.745593]       Not tainted 7.0.0-clean #1
+> [  369.749935] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> [  369.757897] task:systemd-shutdow state:D stack:0     pid:1 tgid:1   ppid:0      task_flags:0x400100 flags:0x00080000
+> [  369.769128] Call Trace:
+> [  369.771616]  <TASK>
+> [  369.773752]  __schedule+0x299/0x5c0
+> [  369.777299]  schedule+0x27/0x80
+> [  369.780493]  schedule_preempt_disabled+0x15/0x30
+> [  369.785188]  __mutex_lock.constprop.0+0x547/0xac0
+> [  369.789974]  device_shutdown+0xac/0x1b0
+> [  369.793877]  kernel_restart+0x3a/0x70
+> [  369.797603]  __do_sys_reboot+0x147/0x240
+> [  369.801595]  do_syscall_64+0x11b/0x6a0
+> [  369.805407]  ? handle_mm_fault+0x110/0x350
+> [  369.809574]  ? do_user_addr_fault+0x206/0x680
+> [  369.814006]  ? irqentry_exit+0x7a/0x4d0
+> [  369.817907]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [  369.823046] RIP: 0033:0x7fe2958da917
+> [  369.826684] RSP: 002b:00007ffc5c458618 EFLAGS: 00000206 ORIG_RAX: 00000000000000a9
+> [  369.834383] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fe2958da917
+> [  369.841639] RDX: 0000000001234567 RSI: 0000000028121969 RDI: 00000000fee1dead
+> [  369.848893] RBP: 00007ffc5c458790 R08: 0000000000000069 R09: 00000000ffffffff
+> [  369.856148] R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000000
+> [  369.863402] R13: 0000000000000000 R14: 00007ffc5c4588b8 R15: 0000000000000000
+> [  369.870659]  </TASK>
+> [  369.872888] INFO: task systemd-shutdow:1 is blocked on a mutex likely owned by task kworker/0:1:11.
 >
-> I would like to clarify the following points regarding upstream=E2=80=99s
-> overall roadmap for the liveupdate feature:
-> 1. What is the complete upstream plan for liveupdate?
-> 2. What will the final deliverables look like once fully implemented?
-> 3. Will any new kernel internal interfaces or dedicated userspace tools
-> be introduced?
-> 4.  Does the upstream community maintain an official TODO list tracking
-> outstanding work items for liveupdate?
 
-I don't think we have anything comprehensive but there is a ton of
-work to be done if you are looking to help.
+Thanks for attaching the kernel stack trace, which is similar to the one I have
+encountered recently. And I have applied & tested the patch, works good for me.
 
-A good first step would be to attend the bi-weekly Hypervisor Live
-Update meeting. See
-https://lore.kernel.org/kexec/aiWW6ZwwalqQmVcB@google.com/. The next
-one is on July 13th.
+Tested-by: Tao Liu <ltao@redhat.com> 
+ 
+> Fixes: 091d42e43d21 ("iommu/vt-d: Copy translation tables from old kernel")
+> Signed-off-by: Desnes Nunes <desnesn@redhat.com>
+> ---
+> V1 -> V2: Updated commit message and added xHCI stack trace as requested
+> 
+> v1: https://lore.kernel.org/linux-iommu/ajnlKDglN6wEBBrS@google.com/T/#t
+> 
+>  drivers/iommu/intel/iommu.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 4d0e65bc131d..737936f942a0 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -1443,7 +1443,7 @@ static int copy_context_table(struct intel_iommu *iommu,
+>  			      struct context_entry **tbl,
+>  			      int bus, bool ext)
+>  {
+> -	int tbl_idx, pos = 0, idx, devfn, ret = 0, did;
+> +	int tbl_idx, tbl_slot = 0, idx, devfn, ret = 0, did;
+>  	struct context_entry *new_ce = NULL, ce;
+>  	struct context_entry *old_ce = NULL;
+>  	struct root_entry re;
+> @@ -1459,10 +1459,9 @@ static int copy_context_table(struct intel_iommu *iommu,
+>  		if (idx == 0) {
+>  			/* First save what we may have and clean up */
+>  			if (new_ce) {
+> -				tbl[tbl_idx] = new_ce;
+> +				tbl[tbl_idx + tbl_slot] = new_ce;
+>  				__iommu_flush_cache(iommu, new_ce,
+>  						    VTD_PAGE_SIZE);
+> -				pos = 1;
+>  			}
+>  
+>  			if (old_ce)
+> @@ -1484,6 +1483,9 @@ static int copy_context_table(struct intel_iommu *iommu,
+>  				}
+>  			}
+>  
+> +			/* Track if saving UCTP or LCTP entries in scalable mode */
+> +			tbl_slot = ext && devfn >= 0x80 ? 1 : 0;
+> +
+>  			ret = -ENOMEM;
+>  			old_ce = memremap(old_ce_phys, PAGE_SIZE,
+>  					MEMREMAP_WB);
+> @@ -1512,7 +1514,7 @@ static int copy_context_table(struct intel_iommu *iommu,
+>  		new_ce[idx] = ce;
+>  	}
+>  
+> -	tbl[tbl_idx + pos] = new_ce;
+> +	tbl[tbl_idx + tbl_slot] = new_ce;
+>  
+>  	__iommu_flush_cache(iommu, new_ce, VTD_PAGE_SIZE);
+>  
+> -- 
+> 2.54.0
+> 
+
 
