@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2B910C43602
-	for <kexec@archiver.kernel.org>; Tue, 30 Jun 2026 11:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6A10FC43458
+	for <kexec@archiver.kernel.org>; Tue, 30 Jun 2026 11:12:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
 	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=pkBGpLmtsEEeRaJhMIRqkL1GKSIf2XGxguwcqieH/g4=; b=TX/ZJxrityBSZ5jiD+NwLNpeM9
-	7StF0TNpJLZopL9jwXnyzSZ6PCs9FkJPHXjDY8jKbwU+r3uNwBWCS52oUPtybtQFcVSTnyamqD9xR
-	TuAxM+5J83obYwbIaG/nyF0Gg2xCG63oN7lGKNT/CidHvDzBuVKejlE8RnpLwm4uGt5MIo581zRPk
-	Vbd1cQTdS5GzvAEZ5lACH3tWHrT1IXEYrMyVvosDFy1Dke/vX+0FLIyWiAUfq4SNMFAWjjAgrng2k
-	n7ejWnLzR6FGJg7Qd5ebxf1SfEmUi5QDONFelQZ386EkUGoWOxPHCfVuJyfURCXgVzQVzURR63UXk
-	sAbq3KJg==;
+	bh=kFi2ufhS9A7S0N/yneP1QPCfIlIbo7VUsBbxmuAgBec=; b=WCrRYEFVB9hX+isiDRsj42Aa3R
+	AlrODzn2EvfEhHn1YyIufCUZCBvF0eNsFvhtB+qNAhysO4CvU+orTn4QTtYFZ/voFVim5Fsm/J7hz
+	9v8sZwXPj3BM0h2JGeHdFTvQF+jZqNmaSkXLvtBvIkCz+118FXi1Z9f7T5fJ9NuBWUTbOhPiDzlHI
+	bHQdPRmu1/sTGuU4sMWRfwic6+hSfYLZ9GqCv+oxKH6fe1SYxoWTbgi7U1t8psv+e/gb8mfHMH5UB
+	zjtkK1rYGw427TwOd9Trp8iQlzLETs5Yc6cTVDKX7Bs66JHDaE8CdIiN4brxRMcYTSOJReWWUIb/7
+	u5tpsivw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weWIi-0000000Gn5v-1NnY;
-	Tue, 30 Jun 2026 11:06:48 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1weWON-0000000Go4s-1zc5;
+	Tue, 30 Jun 2026 11:12:39 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weWIg-0000000Gn5D-3bxe;
-	Tue, 30 Jun 2026 11:06:46 +0000
+	id 1weWOL-0000000Go4W-3Fkz;
+	Tue, 30 Jun 2026 11:12:37 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 4E8D1600C3;
-	Tue, 30 Jun 2026 11:06:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0C171F000E9;
-	Tue, 30 Jun 2026 11:06:41 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 3DE48409ED;
+	Tue, 30 Jun 2026 11:12:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D92961F000E9;
+	Tue, 30 Jun 2026 11:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782817606;
-	bh=pkBGpLmtsEEeRaJhMIRqkL1GKSIf2XGxguwcqieH/g4=;
+	s=k20260515; t=1782817957;
+	bh=kFi2ufhS9A7S0N/yneP1QPCfIlIbo7VUsBbxmuAgBec=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=ZQIEMpuUmQZkczHS1IWJqPDhkgBj56796odq3/JvTLVjcNHHc31D/nttFgIixltDD
-	 fvh/NWoOmlY1pRVfm4kSh17IeHaesxP4GLpUn/HExfYszLJWNcgrt7bQIPBs1VJ9ie
-	 E+X/tXsHlnOljHy/HM6tm2+dq7ONAjO6ZtbVU4IbwuQuU2RjR27PHLYoftDiigEuLR
-	 YlNl5z2+Y+CDger9PLjYw/Yd8Kbz124TcBuYx71ie/F4xSgfGU6bbg5zzSVPHwHufU
-	 /JR39e288Aj2Vg90vyf64D4pAv0ul+QBW9QTUOyCPHglNRMUMMKm0Ot02y5ILAMhI4
-	 hzNU9Pif1F/1w==
+	b=MGNhr8eNkW7digT0TFYt+epnd3BW/+YsO4q/eYHOhHz7227q1kCPu/CVHfYs/I4LI
+	 iImDvzD+CnJnH7CqEqW/XrPImbYT9ptiNpLpvLD4AdrvLUw3YiFDRAyK6eJiIaRT/L
+	 JhxLyvriaMRcYrkq0K/XDMQj9vGMNUQBiU+R8rNahF5oRZ1jxtDuY/aGxoQXEvrG5Q
+	 9hyHAz62Sxg/kpxyVDYrXXapZ8OBaDtqmEJB9A61lTHrO7FNkmY4uFhkJQZyvzel2l
+	 1MbHnImoQCt9VhcZlwlBYGj9EGHAnQ8aEgLQj6yfL92rZX/hhcgHNPJy1GrybDCrkG
+	 fk/CJPKbEXU5Q==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Wandun Chen <chenwandun1@gmail.com>
 Cc: chenhuacai@kernel.org,  kernel@xen0n.name,  pjw@kernel.org,
@@ -54,14 +54,14 @@ Cc: chenhuacai@kernel.org,  kernel@xen0n.name,  pjw@kernel.org,
   akpm@linux-foundation.org,  pasha.tatashin@soleen.com,
   pratyush@kernel.org,  ruirui.yang@linux.dev,  m.szyprowski@samsung.com,
   robin.murphy@arm.com
-Subject: Re: [PATCH v4 08/10] arm64: kdump: exclude non-dumpable reserved
+Subject: Re: [PATCH v4 09/10] riscv: kdump: exclude non-dumpable reserved
  memory regions from vmcore
-In-Reply-To: <20260630074715.4126796-9-chenwandun1@gmail.com> (Wandun Chen's
-	message of "Tue, 30 Jun 2026 15:47:12 +0800")
+In-Reply-To: <20260630074715.4126796-10-chenwandun1@gmail.com> (Wandun Chen's
+	message of "Tue, 30 Jun 2026 15:47:13 +0800")
 References: <20260630074715.4126796-1-chenwandun1@gmail.com>
-	<20260630074715.4126796-9-chenwandun1@gmail.com>
-Date: Tue, 30 Jun 2026 13:06:40 +0200
-Message-ID: <2vxzik70i8xr.fsf@kernel.org>
+	<20260630074715.4126796-10-chenwandun1@gmail.com>
+Date: Tue, 30 Jun 2026 13:12:31 +0200
+Message-ID: <2vxzechoi8o0.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -83,22 +83,65 @@ On Tue, Jun 30 2026, Wandun Chen wrote:
 
 > From: Wandun Chen <chenwandun@lixiang.com>
 >
-> Reserved memory regions are excluded from vmcore by default unless
-> marked dumpable. Honor the dumpable flag to filter out device firmware
-> regions (e.g., GPU, DSP, modem) reserved via device tree, since they
-> typically contain data not useful for kernel crash analysis and can
-> significantly increase vmcore size.
->
-> Use of_reserved_mem_kdump_exclude() to perform the exclusion, and
-> pre-size the crash_mem array via of_reserved_mem_kdump_nr_ranges().
+> Apply the same non-dumpable reserved memory filtering to RISC-V kdump
+> as was done for arm64. Use of_reserved_mem_kdump_exclude() to drop
+> flagged regions from the elfcorehdr PT_LOAD segments, and
+> of_reserved_mem_kdump_nr_ranges() to pre-size the crash_mem array.
 >
 > Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
-> Tested-by: Meijing Zhao <zhaomeijing@lixiang.com>
-> Acked-by: Will Deacon <will@kernel.org>
+> ---
+>  arch/riscv/kernel/machine_kexec_file.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
+> index 59d4bbc848a8..25359d583bc3 100644
+> --- a/arch/riscv/kernel/machine_kexec_file.c
+> +++ b/arch/riscv/kernel/machine_kexec_file.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/elf.h>
+>  #include <linux/slab.h>
+>  #include <linux/of.h>
+> +#include <linux/of_reserved_mem.h>
+>  #include <linux/libfdt.h>
+>  #include <linux/types.h>
+>  #include <linux/memblock.h>
+> @@ -64,6 +65,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+>  
+>  	nr_ranges = 1; /* For exclusion of crashkernel region */
+>  	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
+> +	nr_ranges += of_reserved_mem_kdump_nr_ranges();
+>  
+>  	cmem = kmalloc_flex(*cmem, ranges, nr_ranges);
+>  	if (!cmem)
+> @@ -77,6 +79,8 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+>  
+>  	/* Exclude crashkernel region */
+>  	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
+> +	if (!ret)
+> +		ret = of_reserved_mem_kdump_exclude(cmem);
+>  	if (!ret)
+>  		ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
+
+Nit: can you do the usual pattern of if (err) goto err; instead?
+
+So this would look like:
+
+	/* Exclude crashkernel region */
+	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
+	if (ret)
+		goto out;
+
+	ret = of_reserved_mem_kdump_exclude(cmem);
+	if (ret)
+		goto out;
+        
+	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
+out:
+	...
+
+With this,
 
 Acked-by: Pratyush Yadav <pratyush@kernel.org>
-
-[...]
 
 -- 
 Regards,
