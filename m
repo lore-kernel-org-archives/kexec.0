@@ -4,109 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0D0CEC43602
-	for <kexec@archiver.kernel.org>; Tue, 30 Jun 2026 07:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2CEBDC43458
+	for <kexec@archiver.kernel.org>; Tue, 30 Jun 2026 10:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=HcszoUDc7316A03Dx3QXGOd8FcU7DWvjuNUEWPnVcI4=; b=G4Cr2eZN9VmChDRnVPAJMuJrUU
-	UmtCVMNSs1w22k8ZG6rzlPvuK+FU6EB0uJQQ3jMb3IGr8Z9FVSiVTB3TDVjtrfcF8kt4YsUlvA4yI
-	woqIyJifKoWDaW2Av95fSqyflO0XdvGujchUanapDczRXS1YeG8TzSaWCCIqL5ORcE33k8nC/t0QE
-	hPJicc3y1Wg9Cj312uBNiHvBs5guFHD1fuPKiVy84+Rkq/yDjbJXmlQrb6OP3G031HGVkfGWWjWQ3
-	uYlKHg4RrHalgiyj5kfCD4MmNy8pc+l3RLJ9XfsbJ7Quuh6Gc7dwVnW9TaP5HwEWZoR40jT61IIub
-	Wt51fzhw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=oVUw9vhUL7Fvcx3AisEmEjCStBLzP+hVNKjmaqkQAyA=; b=ZhvuD5P/76YKS8tKPWcy9WkTn4
+	yAIdKY2g5fCKZKguPULoUzBzMorj2dvpumbByhY8jjzssJhaFor0aaSxDRgbZcF5cu8UZwPS+1NuH
+	bHS/iqgrMQ2Y4Aok+5KhgHKMsSBMzeWpkhohnrnth8hYJNebKMrY7JJGSa/88jWJF2mbBXzgb/gWI
+	OTC2lAkyKrc2VKP4pAeXt85ye7v0VzJJVhRC/QDB1H+pPskPTYDZLzyCG/SNQnviqrdvOTd2M3/uy
+	LbQD45Y5IziJdzoh7QObO8B71e19REUxxqbYOywAn5vDkJAjzEF0Gvs32Te1nNWB7kPDVCjOq/b9d
+	gecc30VQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weTDp-0000000GBT6-0aIP;
-	Tue, 30 Jun 2026 07:49:33 +0000
-Received: from mail-pl1-x644.google.com ([2607:f8b0:4864:20::644])
+	id 1weVKE-0000000GZVA-2zZN;
+	Tue, 30 Jun 2026 10:04:18 +0000
+Received: from fout-b1-smtp.messagingengine.com ([202.12.124.144])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weTDU-0000000GAwk-0f6q
-	for kexec@lists.infradead.org;
-	Tue, 30 Jun 2026 07:49:14 +0000
-Received: by mail-pl1-x644.google.com with SMTP id d9443c01a7336-2c82538b6c0so24615135ad.2
-        for <kexec@lists.infradead.org>; Tue, 30 Jun 2026 00:49:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782805751; x=1783410551; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HcszoUDc7316A03Dx3QXGOd8FcU7DWvjuNUEWPnVcI4=;
-        b=rPs549NUIaOK9IgZRYBxk54jGtXtcrUxfDczlc2YE+mbp8kn/nlC0iTiwYgKSYDuFP
-         83GJ/m8phl6S1MQt/PmdOUjV5/KIXIUrDMm96vrkjm8Q52D8iEIfK+iz22yemckToPXs
-         bQ5CBjv4yTz4VhpneP5J5vkPD68wYRAGEXqhH3Ly+q7LNhAiLDp3EypZLuxfhN0ydJhp
-         CVbypyP/rqzpENRLlG+y15Dr5IxrZojpBE2gP4IIGRtvuRWbxvXx8y/KFM9TMA0P1T57
-         nM7TsPHYWj+727QeYJdOgCum87J7vk2Q/q9/UIbElKvT/E6eSMuCRLPXD7GPHvvMB8K6
-         3K+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782805751; x=1783410551;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=HcszoUDc7316A03Dx3QXGOd8FcU7DWvjuNUEWPnVcI4=;
-        b=kpcZJ0cShDQ/NOhyyWyc8tGYjJqI+LrgywGizdSgnvlV2qU11V2EwH7FkP6fAOgzBK
-         zDww+fwhvfcv4d9m1Jyze8iAqPWy+sI8Ec5mEIc9hJ7t0ocHt3MydnWG8czDLXK+DzWI
-         edgydfKMxu//Tn5wtL2ClMvrXopMk/yMyz+qMUJXNpn/X5mFHB59ktkteQUbqDK4l1o1
-         JixMljGbAd4mKqkQZTfSDzH1nPa223yRLV4dSaOVp6gKvZBHw35AjhXKeG9Jml2/rQW1
-         c1JdW10s1p6Ibd1osDcr89sufw3AuLontTAGxkXmPHsQFcR/0vz6D819KZnNZZn64H6g
-         DX4w==
-X-Forwarded-Encrypted: i=1; AHgh+RoxWnAMBW2XPq6LeAVuVZPTJfaXWYVvAwvm+ldWIsX2P5MYbJJG4GzXJWoTyv5sP9KWQcUEcw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YysXIDTN80ciLgXh+iGwCsQ08LcU18lvZkN0R5NnXEaMTpOAPeW
-	FgGh2U5GmNNu5JvasCsedYCy9x2WmT2+5FpKjS/bAzHvUBqJlqPXBRfv
-X-Gm-Gg: AfdE7cmrudBqrpGhEqOoDeZPIoo+tzMy0JA9HFOoqxqGjbF4vU8c66XJvaxtEtWxJqv
-	u7RKRI86c5DPFVrTZcU8XhDQ2ZdGb9QPlInxNfELRioI5uNk+n/McOq9ofqZOe8i2agtY94p7+z
-	/pgM9XrfawEQPdAj+Ah9G0IGZ4eZT40Y+GfVQ1FReTnk6sJfvGHzPSarBZbHqzguDHOZJbdyQIc
-	JY8boobvL/xECfMQzWbAfrlQVDi3Uap6qs6AUNrVpDZDkVKXzto5iURDkO/jusYrZ7tje81ceUe
-	OXnmQwCnLd0GOxwGQDCzNN7Aq3lQ5KohiID9/9DcH9qVaa1UqX3v64LG07eEXRtxXICpq+En07R
-	DOuz7vUgkaeb+C7L6BzKXBUvs8SXwVMOtxDR+QjOF1Xcxh5b0aUmIpbCQNAdtfvNs3nTscFEyes
-	1GuUMsROaf2cSmygGDPNYlnwUd2A==
-X-Received: by 2002:a17:902:c94c:b0:2c0:cb0e:ac3a with SMTP id d9443c01a7336-2ca2e71832cmr21250665ad.23.1782805751208;
-        Tue, 30 Jun 2026 00:49:11 -0700 (PDT)
-Received: from intel.company.local ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ca382a2d3dsm7821045ad.55.2026.06.30.00.49.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2026 00:49:10 -0700 (PDT)
-From: Wandun Chen <chenwandun1@gmail.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	pjw@kernel.org,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	robh@kernel.org,
-	saravanak@kernel.org,
-	bhe@redhat.com,
-	rppt@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	kexec@lists.infradead.org,
-	iommu@lists.linux.dev,
-	zhaomeijing@lixiang.com
-Cc: catalin.marinas@arm.com,
-	will@kernel.org,
-	alex@ghiti.fr,
-	akpm@linux-foundation.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	ruirui.yang@linux.dev,
-	m.szyprowski@samsung.com,
-	robin.murphy@arm.com
-Subject: [PATCH v4 10/10] loongarch: kdump: exclude non-dumpable reserved memory regions from vmcore
-Date: Tue, 30 Jun 2026 15:47:14 +0800
-Message-ID: <20260630074715.4126796-11-chenwandun1@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260630074715.4126796-1-chenwandun1@gmail.com>
-References: <20260630074715.4126796-1-chenwandun1@gmail.com>
+	id 1weVKB-0000000GZUD-1RNA;
+	Tue, 30 Jun 2026 10:04:16 +0000
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 528611D000CB;
+	Tue, 30 Jun 2026 06:04:13 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Tue, 30 Jun 2026 06:04:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1782813853; x=
+	1782900253; bh=oVUw9vhUL7Fvcx3AisEmEjCStBLzP+hVNKjmaqkQAyA=; b=F
+	WQMoiv0yNwumAnMkue8/Q20wqahfVdvNnqma3yhrNpj0Bi03MzR1Fue9W1iDR6Nc
+	7Ucrub9al8m2mm1ZolsgHMWgJrwrf0DvClnOnJHEOf1msMd+9Q5X4PyxCbyNR6J7
+	KgAYMkDkkEaTdhHBKmAy6AOCI1W4T4xIHjGy++Lpbh/59W6h8Jc15maQfW2mVWTF
+	NMyNqDuI36dxuMadQlZfQui0XCoFqp1EEeej/sMtkiYE7yFssWdH5aEkVPciUcD1
+	yjuCt+YREJSn1aEERQQPgDys6tc0YFlMdf/tsinIH4J8nRt7oJC1fRim1lf+uidm
+	VCWrFJbGbmOPBGEI3BcpA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1782813853; x=1782900253; bh=oVUw9vhUL7Fvcx3AisEmEjCStBLzP+hVNKj
+	maqkQAyA=; b=F2uGrUDAaXvebm9XJem71/WkbC6gZLLos5w8D67Q1GKv8PSeN9i
+	pugANb8MUtlMVytwwvGsBAjqqOUO7RqPShTVwC5YG0/DuodYvWKm1FRYuuvllx0w
+	mILHvmScmOr+8Wsyikh5mAkXmfudawMxdcwdE+Rmth0A1JTT5NjpX+6zjT+EM4eq
+	y8RLf7Kvtk0tYxvswmF96r7a9PIhJ4vugbwRtVvqqGxoVG1YQqCLQcIzNt5klG7X
+	A0gezltnwWOV4lDMWV9XI4rxMfoLGYgji0NDzyglKP8yAvO2PB2/HL7QqgKLf4mA
+	c1Lw5c0xOPS4PsUdsrLVWpcPnwmyjqDsLoQ==
+X-ME-Sender: <xms:nJRDaiAO6SY2_ghv7PDCv782v2cZPz26bRGbVKIh0H32YE4CcqlYxg>
+    <xme:nJRDal5VrN3r-kZxMVIcXxKn6e-N6mgUwuQIAZbwHB0BOHXObJIINvkiLuc_FxBgD
+    uuj-3qIsVljVSSMhAZOlKM0kLbD1ywQKywzq76WVKAtnQNSd9ndxWo>
+X-ME-Received: <xmr:nJRDautL3XwbbyFZ0R0N1PwkKl3W1S6xGMWnIYZNEArs4pceQW882fLCeLoLoA>
+X-ME-Proxy-Cause: dmFkZTFb+slXNdfpNw3evIqxvm0VKKWM5i4RPbqqU/bUrJXY12hFy2QGKfm4tcdsZ5LloC
+    BhkYinNLPYF3N7CCm6biUOROSFolYAxCee+hkM3TY8cq/Zb+7oUn6BIbObhU7ZoWoDKRO7
+    nLSR0FZN/e2US/alBOpc9G6cdHHrj3W7k1v04n4NtqO2/qKjz7sMRu6HzLfi0JM0LBoZ2v
+    Ja+xw1LyaMqWx2ofXkUwbXSTYiZ3ThUo9Fvaa5vcCZZbgVlYbmL9A09k4EB69tYCrOiDRT
+    D6dGYzqYBVg04cGsc6g171o+RPZXnznv7q4qT8s8teFHAsQdCGmvbmkoD6BOZs7SCS+pny
+    Q17HOge1NWEAWit3wRgx3hS8dQ6AhWkuYk6hlOiu1XR7WwcMbfbHkSZij0IeFIs6x/5vD/
+    6u1Itt186Qy44sC3R6TI4OKrchROXxaBUt8DB1eZQsig4qHsNSnyUeIewV5ZdPpSl8S8C3
+    CGsukTLtyf3jlh+Kv4h6Td04JhOuV+If6XMrbc64zxyS8jE/7jwez9aPbkjumOGFD6ksqF
+    qyx9x1m3mpuVNgD0GH/oAA9TkEmyoac7KtDIK4LYOb2NkMMkkIncAcsYDOoNXq7bTnjdCB
+    +4+k15tjhgH4qs0a1cEkfYlAUgLB9vQbr9gjcRnWUmS8cDfOhQcteXwNf5tQ
+X-ME-Proxy: <xmx:nJRDajyj7_0vQj9sbaTOl9qUwM4ZAh9YUiE7nLasLFM0DRSjS4FbGg>
+    <xmx:nJRDahZMi-ytEdaC8Vja3MFf_PNyKHfUxXGb8wqfvlK1l1azoes5SQ>
+    <xmx:nJRDaj3bJOB2_W6nEFfqVwfX7AtcAmuiVC6xK4aeegk0IxZv4LSi7Q>
+    <xmx:nJRDani8fl9xv5Dobf0phX8-HYlijUp1m1M7a6-6HKJG9QdNr1Zi_g>
+    <xmx:nZRDavDqsQya5jA-wUVDQtO8zPyDZQUfLMU1yo3d1jxF5r8D20ggmNcX>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 30 Jun 2026 06:04:12 -0400 (EDT)
+Date: Tue, 30 Jun 2026 11:04:10 +0100
+From: Kiryl Shutsemau <kirill@shutemov.name>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>, 
+	Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>, 
+	Doug Anderson <dianders@chromium.org>, Petr Mladek <pmladek@suse.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, 
+	Baoquan He <bhe@redhat.com>, Puranjay Mohan <puranjay@kernel.org>, 
+	Usama Arif <usama.arif@linux.dev>, Breno Leitao <leitao@debian.org>, 
+	Julien Thierry <julien.thierry.kdev@gmail.com>, Lecopzer Chen <lecopzer@gmail.com>, 
+	Sumit Garg <sumit.garg@kernel.org>, kernel-team@meta.com, kexec@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/4] arm64: cross-CPU NMI via SDEI
+Message-ID: <akOT3yaYVM6BTm_4@thinkstation>
+References: <cover.1781709543.git.kas@kernel.org>
+ <aj6xvvY4AA-fQG2X@arm.com>
+ <aj7Pm5H0MN5WwhDK@thinkstation>
+ <akJsQK2iG2oZ3vYE@thinkstation>
+ <akKVKhOsv6EJVFv4@arm.com>
+ <akKiV3CAKWLwHnsW@thinkstation>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <akKiV3CAKWLwHnsW@thinkstation>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260630_004912_223824_557861E7 
-X-CRM114-Status: GOOD (  10.16  )
+X-CRM114-CacheID: sfid-20260630_030415_679043_DCCF949C 
+X-CRM114-Status: GOOD (  14.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,50 +117,20 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Wandun Chen <chenwandun@lixiang.com>
+On Mon, Jun 29, 2026 at 05:53:57PM +0100, Kiryl Shutsemau wrote:
+> On Mon, Jun 29, 2026 at 04:54:18PM +0100, Catalin Marinas wrote:
+> > Have you tried SDEI_EVENT_COMPLETE_AND_RESUME instead? Just COMPLETE
+> > won't return to the kernel. We have sdei_handler_abort() to complete the
+> > event and, hopefully, you can continue with the CPU_OFF. It's a work
+> > around the TF-A non-compliance but I think this is useful even if you
+> > don't issue the CPU_OFF (e.g. no CPU hotplug, just the park loop).
+> 
+> Tried it. The result is the opposite of what I expected, and it argues
+> against doing the complete at all under QEMU's TF-A.
 
-Apply the same non-dumpable reserved memory filtering to LoongArch
-kdump as was done for arm64. Use of_reserved_mem_kdump_exclude() to
-drop flagged regions from the elfcorehdr PT_LOAD segments, and
-of_reserved_mem_kdump_nr_ranges() to pre-size the crash_mem array.
+I have to walk back on this. My test setup was broken. I will be back to
+you with proper data.
 
-Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
----
- arch/loongarch/kernel/machine_kexec_file.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-index 5584b798ba46..4b918c3d4a28 100644
---- a/arch/loongarch/kernel/machine_kexec_file.c
-+++ b/arch/loongarch/kernel/machine_kexec_file.c
-@@ -14,6 +14,7 @@
- #include <linux/kernel.h>
- #include <linux/kexec.h>
- #include <linux/memblock.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/types.h>
-@@ -67,6 +68,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
- 	nr_ranges = 2; /* for exclusion of crashkernel region */
- 	for_each_mem_range(i, &start, &end)
- 		nr_ranges++;
-+	nr_ranges += of_reserved_mem_kdump_nr_ranges();
- 
- 	cmem = kmalloc_flex(*cmem, ranges, nr_ranges);
- 	if (!cmem)
-@@ -91,6 +93,10 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
- 			goto out;
- 	}
- 
-+	ret = of_reserved_mem_kdump_exclude(cmem);
-+	if (ret)
-+		goto out;
-+
- 	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
- 
- out:
 -- 
-2.43.0
-
+  Kiryl Shutsemau / Kirill A. Shutemov
 
