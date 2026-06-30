@@ -4,105 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2CEBDC43458
-	for <kexec@archiver.kernel.org>; Tue, 30 Jun 2026 10:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D2A86C43602
+	for <kexec@archiver.kernel.org>; Tue, 30 Jun 2026 10:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=oVUw9vhUL7Fvcx3AisEmEjCStBLzP+hVNKjmaqkQAyA=; b=ZhvuD5P/76YKS8tKPWcy9WkTn4
-	yAIdKY2g5fCKZKguPULoUzBzMorj2dvpumbByhY8jjzssJhaFor0aaSxDRgbZcF5cu8UZwPS+1NuH
-	bHS/iqgrMQ2Y4Aok+5KhgHKMsSBMzeWpkhohnrnth8hYJNebKMrY7JJGSa/88jWJF2mbBXzgb/gWI
-	OTC2lAkyKrc2VKP4pAeXt85ye7v0VzJJVhRC/QDB1H+pPskPTYDZLzyCG/SNQnviqrdvOTd2M3/uy
-	LbQD45Y5IziJdzoh7QObO8B71e19REUxxqbYOywAn5vDkJAjzEF0Gvs32Te1nNWB7kPDVCjOq/b9d
-	gecc30VQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Mg6vsp/jK24M0FEVqH+xkBLaeeIIgHOWsIxywI1KcqE=; b=ePrrENwkt3egWabiNOsLtZE7qi
+	tvtOBXZpez58VLQA+C+CRUMjjbA+0ADbMatMfII1KwW1hel7BpCNvV0hp5sOhuMh9FxB+uOKV2D88
+	Py+MZFDrR9CkAzWE1zTaKohVR8eAB0NSxLuAt346h8MxjQTdYZmw2dt9pwrwJeO77+ADrCA3v1G0q
+	T2wLBrbcQX2SPwjChfKas9tXswWMb0N9ceFsw2f/zqpaUtQk9jRqQg6q7+SreTKeEk+3/94n0kwmt
+	7kEpDrgfsY4TPSOEz8u4jRQmpyWtkZqTkcqvGXKAxv35vN6w81teMBz0LlWIUg/VwviT4wDpNcIL4
+	gla1mamQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weVKE-0000000GZVA-2zZN;
-	Tue, 30 Jun 2026 10:04:18 +0000
-Received: from fout-b1-smtp.messagingengine.com ([202.12.124.144])
+	id 1weW07-0000000GhtX-2ZCJ;
+	Tue, 30 Jun 2026 10:47:35 +0000
+Received: from out-177.mta0.migadu.com ([2001:41d0:1004:224b::b1])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weVKB-0000000GZUD-1RNA;
-	Tue, 30 Jun 2026 10:04:16 +0000
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 528611D000CB;
-	Tue, 30 Jun 2026 06:04:13 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Tue, 30 Jun 2026 06:04:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1782813853; x=
-	1782900253; bh=oVUw9vhUL7Fvcx3AisEmEjCStBLzP+hVNKjmaqkQAyA=; b=F
-	WQMoiv0yNwumAnMkue8/Q20wqahfVdvNnqma3yhrNpj0Bi03MzR1Fue9W1iDR6Nc
-	7Ucrub9al8m2mm1ZolsgHMWgJrwrf0DvClnOnJHEOf1msMd+9Q5X4PyxCbyNR6J7
-	KgAYMkDkkEaTdhHBKmAy6AOCI1W4T4xIHjGy++Lpbh/59W6h8Jc15maQfW2mVWTF
-	NMyNqDuI36dxuMadQlZfQui0XCoFqp1EEeej/sMtkiYE7yFssWdH5aEkVPciUcD1
-	yjuCt+YREJSn1aEERQQPgDys6tc0YFlMdf/tsinIH4J8nRt7oJC1fRim1lf+uidm
-	VCWrFJbGbmOPBGEI3BcpA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1782813853; x=1782900253; bh=oVUw9vhUL7Fvcx3AisEmEjCStBLzP+hVNKj
-	maqkQAyA=; b=F2uGrUDAaXvebm9XJem71/WkbC6gZLLos5w8D67Q1GKv8PSeN9i
-	pugANb8MUtlMVytwwvGsBAjqqOUO7RqPShTVwC5YG0/DuodYvWKm1FRYuuvllx0w
-	mILHvmScmOr+8Wsyikh5mAkXmfudawMxdcwdE+Rmth0A1JTT5NjpX+6zjT+EM4eq
-	y8RLf7Kvtk0tYxvswmF96r7a9PIhJ4vugbwRtVvqqGxoVG1YQqCLQcIzNt5klG7X
-	A0gezltnwWOV4lDMWV9XI4rxMfoLGYgji0NDzyglKP8yAvO2PB2/HL7QqgKLf4mA
-	c1Lw5c0xOPS4PsUdsrLVWpcPnwmyjqDsLoQ==
-X-ME-Sender: <xms:nJRDaiAO6SY2_ghv7PDCv782v2cZPz26bRGbVKIh0H32YE4CcqlYxg>
-    <xme:nJRDal5VrN3r-kZxMVIcXxKn6e-N6mgUwuQIAZbwHB0BOHXObJIINvkiLuc_FxBgD
-    uuj-3qIsVljVSSMhAZOlKM0kLbD1ywQKywzq76WVKAtnQNSd9ndxWo>
-X-ME-Received: <xmr:nJRDautL3XwbbyFZ0R0N1PwkKl3W1S6xGMWnIYZNEArs4pceQW882fLCeLoLoA>
-X-ME-Proxy-Cause: dmFkZTFb+slXNdfpNw3evIqxvm0VKKWM5i4RPbqqU/bUrJXY12hFy2QGKfm4tcdsZ5LloC
-    BhkYinNLPYF3N7CCm6biUOROSFolYAxCee+hkM3TY8cq/Zb+7oUn6BIbObhU7ZoWoDKRO7
-    nLSR0FZN/e2US/alBOpc9G6cdHHrj3W7k1v04n4NtqO2/qKjz7sMRu6HzLfi0JM0LBoZ2v
-    Ja+xw1LyaMqWx2ofXkUwbXSTYiZ3ThUo9Fvaa5vcCZZbgVlYbmL9A09k4EB69tYCrOiDRT
-    D6dGYzqYBVg04cGsc6g171o+RPZXnznv7q4qT8s8teFHAsQdCGmvbmkoD6BOZs7SCS+pny
-    Q17HOge1NWEAWit3wRgx3hS8dQ6AhWkuYk6hlOiu1XR7WwcMbfbHkSZij0IeFIs6x/5vD/
-    6u1Itt186Qy44sC3R6TI4OKrchROXxaBUt8DB1eZQsig4qHsNSnyUeIewV5ZdPpSl8S8C3
-    CGsukTLtyf3jlh+Kv4h6Td04JhOuV+If6XMrbc64zxyS8jE/7jwez9aPbkjumOGFD6ksqF
-    qyx9x1m3mpuVNgD0GH/oAA9TkEmyoac7KtDIK4LYOb2NkMMkkIncAcsYDOoNXq7bTnjdCB
-    +4+k15tjhgH4qs0a1cEkfYlAUgLB9vQbr9gjcRnWUmS8cDfOhQcteXwNf5tQ
-X-ME-Proxy: <xmx:nJRDajyj7_0vQj9sbaTOl9qUwM4ZAh9YUiE7nLasLFM0DRSjS4FbGg>
-    <xmx:nJRDahZMi-ytEdaC8Vja3MFf_PNyKHfUxXGb8wqfvlK1l1azoes5SQ>
-    <xmx:nJRDaj3bJOB2_W6nEFfqVwfX7AtcAmuiVC6xK4aeegk0IxZv4LSi7Q>
-    <xmx:nJRDani8fl9xv5Dobf0phX8-HYlijUp1m1M7a6-6HKJG9QdNr1Zi_g>
-    <xmx:nZRDavDqsQya5jA-wUVDQtO8zPyDZQUfLMU1yo3d1jxF5r8D20ggmNcX>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 30 Jun 2026 06:04:12 -0400 (EDT)
-Date: Tue, 30 Jun 2026 11:04:10 +0100
-From: Kiryl Shutsemau <kirill@shutemov.name>
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>, 
-	Doug Anderson <dianders@chromium.org>, Petr Mladek <pmladek@suse.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, 
-	Baoquan He <bhe@redhat.com>, Puranjay Mohan <puranjay@kernel.org>, 
-	Usama Arif <usama.arif@linux.dev>, Breno Leitao <leitao@debian.org>, 
-	Julien Thierry <julien.thierry.kdev@gmail.com>, Lecopzer Chen <lecopzer@gmail.com>, 
-	Sumit Garg <sumit.garg@kernel.org>, kernel-team@meta.com, kexec@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/4] arm64: cross-CPU NMI via SDEI
-Message-ID: <akOT3yaYVM6BTm_4@thinkstation>
-References: <cover.1781709543.git.kas@kernel.org>
- <aj6xvvY4AA-fQG2X@arm.com>
- <aj7Pm5H0MN5WwhDK@thinkstation>
- <akJsQK2iG2oZ3vYE@thinkstation>
- <akKVKhOsv6EJVFv4@arm.com>
- <akKiV3CAKWLwHnsW@thinkstation>
+	id 1weW04-0000000GhsP-3c8K
+	for kexec@lists.infradead.org;
+	Tue, 30 Jun 2026 10:47:34 +0000
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1782816440;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mg6vsp/jK24M0FEVqH+xkBLaeeIIgHOWsIxywI1KcqE=;
+	b=bntUOZi7IarhgzlK1BZ1WsLScyGM3Ae7GIpkJSQ0DNCM47DRQj0T0zeuRqkrFL8hWLf1Yc
+	6eamMcLRE3IL/ofX+gztk7Lkj9+HM/AKYSgtoqpLLSQ+TQ8Vo08WEKLhxaLmVXR48Ispxa
+	0ZC00rOhiTr53qqNw/6DwXeRSFCyDLs=
+From: Usama Arif <usama.arif@linux.dev>
+To: Kiryl Shutsemau <kirill@shutemov.name>
+Cc: Usama Arif <usama.arif@linux.dev>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Doug Anderson <dianders@chromium.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Breno Leitao <leitao@debian.org>,
+	Julien Thierry <julien.thierry.kdev@gmail.com>,
+	Lecopzer Chen <lecopzer@gmail.com>,
+	Sumit Garg <sumit.garg@kernel.org>,
+	kernel-team@meta.com,
+	kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	"Kiryl Shutsemau (Meta)" <kas@kernel.org>
+Subject: Re: [PATCH v5 1/4] firmware: arm_sdei: add sdei_is_present()
+Date: Tue, 30 Jun 2026 03:47:11 -0700
+Message-ID: <20260630104713.3847805-1-usama.arif@linux.dev>
+In-Reply-To: <dcf564152da8fc599cbfbe8b8d254fe837262ed3.1782744912.git.kas@kernel.org>
+References: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <akKiV3CAKWLwHnsW@thinkstation>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260630_030415_679043_DCCF949C 
-X-CRM114-Status: GOOD (  14.15  )
+X-CRM114-CacheID: sfid-20260630_034733_034643_8A529E01 
+X-CRM114-Status: GOOD (  19.27  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,20 +86,70 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jun 29, 2026 at 05:53:57PM +0100, Kiryl Shutsemau wrote:
-> On Mon, Jun 29, 2026 at 04:54:18PM +0100, Catalin Marinas wrote:
-> > Have you tried SDEI_EVENT_COMPLETE_AND_RESUME instead? Just COMPLETE
-> > won't return to the kernel. We have sdei_handler_abort() to complete the
-> > event and, hopefully, you can continue with the CPU_OFF. It's a work
-> > around the TF-A non-compliance but I think this is useful even if you
-> > don't issue the CPU_OFF (e.g. no CPU hotplug, just the park loop).
+On Mon, 29 Jun 2026 16:07:15 +0100 Kiryl Shutsemau <kirill@shutemov.name> wrote:
+
+> From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
 > 
-> Tried it. The result is the opposite of what I expected, and it argues
-> against doing the complete at all under QEMU's TF-A.
+> invoke_sdei_fn() returns -EIO when no SDEI conduit was probed, and the
+> core warns ("Failed to create event ...") on any registration that hits
+> that. An optional consumer that registers an event from an unconditional
+> initcall would therefore make every boot on a non-SDEI system emit that
+> warning for what is simply absent firmware.
+> 
+> Expose whether SDEI firmware is present so such a consumer can skip
+> registration -- and the warning -- when there is nothing to talk to.
+> 
+> Signed-off-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> ---
 
-I have to walk back on this. My test setup was broken. I will be back to
-you with proper data.
+Can this be merged in patch 3 where this function is actually used?
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+>  drivers/firmware/arm_sdei.c | 10 ++++++++++
+>  include/linux/arm_sdei.h    |  3 +++
+>  2 files changed, 13 insertions(+)
+> 
+> diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+> index f39ed7ba3a38..c161cf263547 100644
+> --- a/drivers/firmware/arm_sdei.c
+> +++ b/drivers/firmware/arm_sdei.c
+> @@ -339,6 +339,16 @@ static void _ipi_unmask_cpu(void *ignored)
+>  	sdei_unmask_local_cpu();
+>  }
+>  
+> +/*
+> + * Was SDEI firmware probed and is it usable?  Lets optional consumers skip
+> + * registering an event -- and the warning a failed registration emits -- on
+> + * systems with no SDEI.
+> + */
+> +bool sdei_is_present(void)
+> +{
+> +	return sdei_firmware_call;
+
+sdei_firmware_call is a function pointer. The above is correct, but
+can we make it sdei_firmware_call != NULL? I think that looks a lot better.
+
+> +}
+> +
+>  static void _ipi_private_reset(void *ignored)
+>  {
+>  	int err;
+> diff --git a/include/linux/arm_sdei.h b/include/linux/arm_sdei.h
+> index f652a5028b59..b07113eeeff7 100644
+> --- a/include/linux/arm_sdei.h
+> +++ b/include/linux/arm_sdei.h
+> @@ -37,6 +37,9 @@ int sdei_event_unregister(u32 event_num);
+>  int sdei_event_enable(u32 event_num);
+>  int sdei_event_disable(u32 event_num);
+>  
+> +/* Was SDEI firmware probed and usable? */
+> +bool sdei_is_present(void);
+> +
+>  /* GHES register/unregister helpers */
+>  int sdei_register_ghes(struct ghes *ghes, sdei_event_callback *normal_cb,
+>  		       sdei_event_callback *critical_cb);
+> -- 
+> 2.54.0
+> 
+> 
 
