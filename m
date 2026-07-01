@@ -4,94 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BE114C43458
-	for <kexec@archiver.kernel.org>; Wed,  1 Jul 2026 13:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F175DC43458
+	for <kexec@archiver.kernel.org>; Wed,  1 Jul 2026 15:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=f4StedMv6W0NNcpbdFnJ73YCv2u3etwmHcP6mSakeug=; b=Uz8H9aJtf3WRS6KBUYJa7JplkZ
-	bGxb/ddEAqRaLL1FzOrvN63FOAM/EAq1Gwfb1sYzEBO/K6RmsSosz779noHV7j+jRhalRF69VYbvj
-	aEcEzmG/6qDUEisG3Kmkh5O2E21v1+3ER7JsnPGbKGY5U/1XoQV4cpFNxuZL9tsK0d4XqVCQaRVVc
-	D/BjgqXQlgtCJsUutwAo96azeszfvS6EseNQc2WsMTTrC92R9qvfRiHi/8DjfkZyzRYfMhrT912PB
-	C4tecAPuZhfj6oMgMP/JWGcN8vIVa9VRLwlb26FJqv7raXzSMWk8ykd4Gi6boHSZGQyEVVlCbNxYM
-	JtNKEjSg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=28GFcGlf5S/Wg6fceTzSn/krnl8/+QQ2NhLnruhBKdI=; b=KQanHeJX9vvL4iZo4XC88wpuGe
+	h2z5Kwr8QPIkOckpvh5qWv4LFVh9RyrbJEtPQ2FifrIzbtXCRirSSxHt82yii4f+qqv2/r/11XFPe
+	PuK538op1oXni+gheLQhnCMIUbZcT0Ds5U+5u8sm6B4f0/HuynTYFZkMBOfjClKmb9rgk7xnM1AiB
+	VtBa+SXccoVwg2kyjgr88SV/VazfBDe6ZQZzWY796yBgKmwvYIMZOhixu0+Yw2mW9AMleVW4Zl/yN
+	ftYNlX2foU8268gVyiawE+BH2e92cDSYQ5xfsQky9sql1I57WtAglsO2HdSiC7LrDXQ2eXyI5HuG4
+	YfGS6/7g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wevNC-00000002Dht-0cxA;
-	Wed, 01 Jul 2026 13:53:06 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1wewfL-00000002NrU-1wzn;
+	Wed, 01 Jul 2026 15:15:55 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wevN9-00000002DhG-3Zur
+	id 1wewfJ-00000002NrC-2SDM
 	for kexec@lists.infradead.org;
-	Wed, 01 Jul 2026 13:53:05 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782913983;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f4StedMv6W0NNcpbdFnJ73YCv2u3etwmHcP6mSakeug=;
-	b=LOqz42B5Md1MlfeqYHo5OG3uwLrDmBEUW+k7mardT+yBovC78XAPq4f66+TG5/fyLoJoY2
-	G06iLw3rpsbin7PwD3OdVZbTYtZk4HYhYq2QPl9Rli7bVyJtTpYdEL5YSp5NyyjLLxUz7P
-	TWkkJ5JOaT6T5r9eswgVDSD8DgHE0ZQ=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-358-fM5ozdx0Meqzj73YSqZaAg-1; Wed,
- 01 Jul 2026 09:50:53 -0400
-X-MC-Unique: fM5ozdx0Meqzj73YSqZaAg-1
-X-Mimecast-MFC-AGG-ID: fM5ozdx0Meqzj73YSqZaAg_1782913851
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 600D4188E6D1;
-	Wed,  1 Jul 2026 13:50:50 +0000 (UTC)
-Received: from djeffery-thinkpadp1gen3.rmtusga.csb (unknown [10.22.81.69])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ABFA018007E7;
-	Wed,  1 Jul 2026 13:50:45 +0000 (UTC)
-From: David Jeffery <djeffery@redhat.com>
-To: driver-core@lists.linux.dev,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	Tarun Sahu <tarunsahu@google.com>,
-	Pasha Tatashin <tatashin@google.com>,
-	=?UTF-8?q?Micha=C5=82=20C=C5=82api=C5=84ski?= <mclapinski@google.com>,
-	Jordan Richards <jordanrichards@google.com>,
-	Ewan Milne <emilne@redhat.com>,
-	John Meneghini <jmeneghi@redhat.com>,
-	"Lombardi, Maurizio" <mlombard@redhat.com>,
-	Stuart Hayes <stuart.w.hayes@gmail.com>,
-	Laurence Oberman <loberman@redhat.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	John Garry <john.g.garry@oracle.com>,
-	kexec@lists.infradead.org,
-	David Jeffery <djeffery@redhat.com>,
+	Wed, 01 Jul 2026 15:15:53 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 0D430601DE;
+	Wed,  1 Jul 2026 15:15:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5A811F000E9;
+	Wed,  1 Jul 2026 15:15:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782918952;
+	bh=28GFcGlf5S/Wg6fceTzSn/krnl8/+QQ2NhLnruhBKdI=;
+	h=From:To:Cc:Subject:Date;
+	b=kzLh9YmFozSJwGrqR/2vdrlr2T7VPtgQDYQuCeMR/FRumugqwJhZk+iqtfugz9kWs
+	 F8hb4fjEh8oomodtJg0xSpLHMRmQPU3423QNkHplmjRnlzlhGmTsNUPsT3SvtnQ+ah
+	 4rztqX46tU1lO6ptR6DVRfVKOGWv7Vr0hfOEB4OmPSqRfYtwZ80474Pe+iY3d++8n5
+	 qP8MmfN5sAP2WhWqxVy/6o1Fzu1dPJWgRJBqh2OQefCLCsh3YOnlkIu/s0s7ajwKI4
+	 nKrIAp58cXHX9lq6iKinEfpQX+iqPbPyYOcs5jCoU3fPFlja2fz45ujT2m0wTsB/vD
+	 +5iHJ5VPqsvBA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4/5] PCI: Enable async shutdown support
-Date: Wed,  1 Jul 2026 09:50:14 -0400
-Message-ID: <20260701135015.81937-5-djeffery@redhat.com>
-In-Reply-To: <20260701135015.81937-1-djeffery@redhat.com>
-References: <20260701135015.81937-1-djeffery@redhat.com>
+	Mike Rapoport <rppt@kernel.org>,
+	Pratyush Yadav <pratyush@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	kexec@lists.infradead.org
+Subject: [PATCH] x86/setup: do not include kexec_handover.h from asm/setup.h
+Date: Wed,  1 Jul 2026 17:15:33 +0200
+Message-ID: <20260701151536.3068791-1-pratyush@kernel.org>
+X-Mailer: git-send-email 2.55.0.rc0.799.gd6f94ed593-goog
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: 54T-z_GaeS8B-SPk9H8fWDRHhmo8ZAQZvuhC8iwLjhc_1782913851
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260701_065303_970660_110D9125 
-X-CRM114-Status: GOOD (  11.63  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,40 +74,79 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Like its async suspend support, allow PCI device shutdown to be performed
-asynchronously to reduce shutdown time.
+From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-Signed-off-by: David Jeffery <djeffery@redhat.com>
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-Tested-by: Laurence Oberman <loberman@redhat.com>
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+x86 asm/setup.h includes linux/kexec_handover.h. This is because it is
+used by setup.c and kaslr.c. But this inclusion is problematic. The
+header is included in many places, so it results in the KHO header being
+propagated there. Also, the setup header is used by realmode code. If
+KHO header includes things like mm.h, it causes a big dump of
+compliation failures.
+
+Nothing in setup.h anything from KHO. Remove the header from setup.h,
+and directly include it in setup.c and kaslr.c, which do use things from
+KHO. It should also help reduce files recompiled when kexec_handover.h
+changes.
+
+Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- drivers/pci/probe.c | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index b63cd0c310bc..7cf3dabc885e 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1045,6 +1045,7 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+Notes:
+    Thomas/Ingo/Borislav/Dave, is it okay if we take this patch through the
+    live update tree? I have a patch series for KHO that depends on this,
+    but it is 20 odd patches and I don't want to spam the x86 list with
+    them. So I am sending this change out separately. It is an improvement
+    on its own anyway since it reduces recompilation on kexec_handover.h
+    changes.
+    
+    All the changed files see relatively low patch traffic so chances of
+    conflicts should minimal I think. And if there are any, I imagine they
+    will be relatively simple to resolve.
+
+ arch/x86/boot/compressed/kaslr.c | 2 ++
+ arch/x86/include/asm/setup.h     | 2 --
+ arch/x86/kernel/setup.c          | 1 +
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index 8e4bf5365ac6..db4afe1df738 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -32,6 +32,8 @@
+ #include <asm/setup.h>	/* For COMMAND_LINE_SIZE */
+ #undef _SETUP
  
- 	bus->bridge = get_device(&bridge->dev);
- 	device_enable_async_suspend(bus->bridge);
-+	dev_set_async_shutdown(bus->bridge);
- 	pci_set_bus_of_node(bus);
- 	pci_set_bus_msi_domain(bus);
- 	if (bridge->msi_domain && !dev_get_msi_domain(&bus->dev) &&
-@@ -2753,6 +2754,7 @@ void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
- 	pci_reassigndev_resource_alignment(dev);
++#include <linux/kexec_handover.h>
++
+ extern unsigned long get_cmd_line_ptr(void);
  
- 	pci_init_capabilities(dev);
-+	dev_set_async_shutdown(&dev->dev);
+ /* Simplified build-specific string for starting entropy. */
+diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
+index 914eb32581c7..895d09faaf83 100644
+--- a/arch/x86/include/asm/setup.h
++++ b/arch/x86/include/asm/setup.h
+@@ -69,8 +69,6 @@ extern void x86_ce4100_early_setup(void);
+ static inline void x86_ce4100_early_setup(void) { }
+ #endif
  
- 	/*
- 	 * Add the device to our list of discovered devices
+-#include <linux/kexec_handover.h>
+-
+ #ifndef _SETUP
+ 
+ #include <asm/espfix.h>
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 46882ce79c3a..5ebb521e136d 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -16,6 +16,7 @@
+ #include <linux/init_ohci1394_dma.h>
+ #include <linux/initrd.h>
+ #include <linux/iscsi_ibft.h>
++#include <linux/kexec_handover.h>
+ #include <linux/memblock.h>
+ #include <linux/panic_notifier.h>
+ #include <linux/pci.h>
 -- 
-2.54.0
+2.55.0.rc0.799.gd6f94ed593-goog
 
 
