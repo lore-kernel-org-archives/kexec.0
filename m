@@ -4,96 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2FBF2C43458
-	for <kexec@archiver.kernel.org>; Tue, 30 Jun 2026 23:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 50864C43458
+	for <kexec@archiver.kernel.org>; Wed,  1 Jul 2026 03:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:In-Reply-To:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=eV8FxCsvcQQMn46BNl5VjX2wuC3TdKg658kA/dAWs8g=; b=VSsHCGLIq58P0sAOvEk3PyeoQw
-	FdhHRr0Qa6oIS29BY33RxMPbzsZDqfG3BOPnvBjuC4l4x8Ot/fAjaEhetCRnvNIAXsOllg3RrteQu
-	aNutbKvZytrbwPCgK0nh3DsrJNRs180/YX5AhRs0UC3KaPkF109nfkFTNPKfZhZ3Dk89FMe24zTb6
-	MEUk9eIdOV6v1yZq/prhbBiKDSXETzKQdMIMira4HvvuwoNoaqYkcuR5ctKuhW7h4MiYpRGqSUeA8
-	lHwnzo43TQUi4TnIyiLGSL+FUdRj5R7IYTiUG+BBk3OAfeago92MFeSlml0PccAH534BVSNy2My2r
-	V9AYXrYg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=lCaMYc8eNrfsW+6kx9m1j6d4lfDzKZwvqiqCl5u41Vk=; b=SYZBYU8L9jU8XL4r3UVX/TGBh2
+	vsSnuMH5QbV7GHQpVj9KYtGDLelPeUOn/qu2E/nBOK/NMD7ME7fNMuzDwHJDlHdl9CeFpY8KhnOao
+	fms8+BD7q3MvqHYHtCwHgrAI/8ivxCvSjMziTfF7zyo+4VUyDnXGSkDysKdJgkEwI9kesM4v9OW4u
+	Y04N246bWTWt1ask6qFR1icgzhWcX3WlscMT7a/sKSzjmqIrYhL+Y7OItk8xoaPiphlmosSoZfFQM
+	skGagRcHUrKfPoaFit7pZV69jd+i6K1w0w3om2iCvksxynGeHr6PNO8UlDeuY3U+o53sudIziC8li
+	3okFPeuQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wei1x-00000000Met-3yUv;
-	Tue, 30 Jun 2026 23:38:17 +0000
+	id 1welFx-00000000YN3-0Jqx;
+	Wed, 01 Jul 2026 03:04:57 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wei1t-00000000MeV-2prn
+	id 1welFt-00000000YMP-0HbI
 	for kexec@lists.infradead.org;
-	Tue, 30 Jun 2026 23:38:15 +0000
+	Wed, 01 Jul 2026 03:04:54 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782862692;
+	s=mimecast20190719; t=1782875090;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eV8FxCsvcQQMn46BNl5VjX2wuC3TdKg658kA/dAWs8g=;
-	b=Cn+sbVEVPV5/MeUDYLfOfe5Wg9QMc8fv88qghlEbofXwqwS9NsXzfO0jmy8G+2AAxLxPrU
-	PZMqkRmtriZD5GFj03Tpdg0jfYwqS0BfoJkiEALEuXKhQDcncdb5Qsb/twStyeAI2Peo47
-	IzCn2s5Mz+NRYivoYH78QR3dzJdrlYw=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lCaMYc8eNrfsW+6kx9m1j6d4lfDzKZwvqiqCl5u41Vk=;
+	b=T65OBtDOnHpHS7K1lakYHig1pNcnfGjMlBirsSQAPmdjxTnLxsE784dFsquZlVcdz0uB8/
+	diMy4cAJV2RCqYIQ1OrLKK54tYhVRIbhJis4IRIhE1qr/rfeOYbEQikokrJWX6vB7Wg0rB
+	t0VdX9jrqQ1eVSq/TVZreAFA9VUFqc0=
 Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com
  [74.125.82.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-646-U81hkQtTOB2Za-UlG6y0xQ-1; Tue, 30 Jun 2026 19:38:08 -0400
-X-MC-Unique: U81hkQtTOB2Za-UlG6y0xQ-1
-X-Mimecast-MFC-AGG-ID: U81hkQtTOB2Za-UlG6y0xQ_1782862687
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-30eec544cc2so67277eec.1
-        for <kexec@lists.infradead.org>; Tue, 30 Jun 2026 16:38:08 -0700 (PDT)
+ us-mta-214-nrq9u973PEqofYMNGq2UXQ-1; Tue, 30 Jun 2026 23:04:48 -0400
+X-MC-Unique: nrq9u973PEqofYMNGq2UXQ-1
+X-Mimecast-MFC-AGG-ID: nrq9u973PEqofYMNGq2UXQ_1782875087
+Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-30cb5001ed8so345789eec.1
+        for <kexec@lists.infradead.org>; Tue, 30 Jun 2026 20:04:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782862687; x=1783467487;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eV8FxCsvcQQMn46BNl5VjX2wuC3TdKg658kA/dAWs8g=;
-        b=jjv9tF6zeGx63R12kBg2mb7XFPEB0gFkdCqpXBDW3DnWWh1fmu6+bCYH72GiIDs4JC
-         k7HAMfLQRTyo8yBznPB2afgnFZTy4orR+VbYHPUMER5QMSrplH9b5VqFDvmK/lM5TLlL
-         7hiktIhsGhLdX2dbwlKHXk3ok+B2Sc2B6tXH4gMkgE7IZD04PC7bqwFVugxDvk9Xvid7
-         x6BC1noehWLKUi32UntkZ7cYwrySsQkMlMwKz9fXcMTNfpePdHLPnQuz/XhuteGMI5kG
-         pw/l8dtiogW59Vmbs+caAHr+MEIYVUzJDl4jpVigSRUJdtpax9DsaTmd3EI7HMPVaW8h
-         x4zQ==
-X-Forwarded-Encrypted: i=1; AHgh+RoF1CDw6HhYHF1t7VNrcYfpttUR/8txrfZ50wpVB5vOaImSId3i1oq5tRe7BkPtEEv5+t5IKQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0Ywb8gsTvRuuzpbKuezy9opv5Y9Rz52WXqa7BqekIZQyVLAmgxn4
-	yZ/LVL98oWfyx7ID327S4yLFEwI664bs3KVnTl66GYLZfR3fUDUmhhcC8hg1gWERsrjBBs5rd2e
-	Pgv1M7LauGtkurAFOsjv/Y9WqwzOi1oUshL/luBt1L0JZEqewTQw4Ffp5g2NoBL59PVnoZg==
-X-Gm-Gg: AfdE7cnDGTPJkIlgLxeuWJC2/+fSxGaFJyHhrJs6Ipw2U85NaF/m9boD4VI/nFt7Fwn
-	0telpYVQ/MlDUEPdQgmlyMOMdTu3KcjFi1YsKwNMP0MnW861dWr2XsphCzNRASDL58L37/zv8NN
-	NMS87vYHVNEYgjiX9A5o6ucR9ZYBbqMwIcCKflMocAsKtaoaIt0A7EuUCVB6gTP3GZjJY7e5xCC
-	yG8nay475a1MWGwBHcGBnFhwMF8WziLDDHxkizMUNx7S5uaI+WV1aiaOkWyrH7H2Cj33PsHEV8U
-	ROouiVAno77axuJi5BNR0YpkRiyXLyO6VP1F2j+S0BQCswV9mIXFbLV73t/jO2hk5oDaUP54rUg
-	IyJO9MbIilZPzSfzJIvOBbM3bIVKf1YWIn0PVhhDiPa3V+fzfVA==
-X-Received: by 2002:a05:7300:547:b0:30c:ab4f:46c7 with SMTP id 5a478bee46e88-30ef0a3bb58mr2418750eec.45.1782862687109;
-        Tue, 30 Jun 2026 16:38:07 -0700 (PDT)
-X-Received: by 2002:a05:7300:547:b0:30c:ab4f:46c7 with SMTP id 5a478bee46e88-30ef0a3bb58mr2418706eec.45.1782862686439;
-        Tue, 30 Jun 2026 16:38:06 -0700 (PDT)
-Received: from localhost.localdomain (122-63-73-73.mobile.spark.co.nz. [122.63.73.73])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30ee31cfcaesm12341209eec.20.2026.06.30.16.38.01
+        d=1e100.net; s=20251104; t=1782875087; x=1783479887;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lCaMYc8eNrfsW+6kx9m1j6d4lfDzKZwvqiqCl5u41Vk=;
+        b=HU13CVCb8UYm5CmEnFKMKnWkfNSCuL++k8pFBNCO/yOcdED30AnoLepYeTwrtRtDhz
+         jKaHr8qN5ETbvFtpHOyccXwqQOZWpPk3+GX410hfBEnLPoLndmJdpqeNStNRNek87C74
+         zj/qpvxbfIUyCP4ETXUklFyhJ9Mn3iVug5JroEBFM2LPMglbAIY5vt7dS7L1f0TA8puK
+         UwFxGbHZrwIvvMfZ+j5R/h58NM9EiaElPFmwXB5hAQ0CIk/8CUGA/3iOAX1y69pJofU4
+         tzsPulrKnf4zrwKhps/Y8HB2sBbCnez7MQPWld77tEYM4DaGTLQWV+9nuC8j5OJN/rnq
+         GjAQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/7l/nBqNYlU5Ry0nKEdTNSCkr1+iDaY5DgZralRYVTNGL9P4QHYayY+xb7d/aJm1/maWeTew==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxkTfvTGWAIHKGmpICP8oP5y5Bn4iqStZYpQrMciC4vWilCq//v
+	xenoIVCyzPdub0noiU+N++JrNf38hY2rjtsrRfEt2PYgqzgPOhGwF9LUBkXjbYNrjsjHhptbzum
+	WvMzgYyhiXTE4fXPNLaBdJ1H9rm+KjKs0MwzSsBx+ymCNbrff7H2hmzk821/A9Q==
+X-Gm-Gg: AfdE7cleDQbvY8txVO2RewN0Sjl46YVOz1DRHi21Wi6/PDtztrS+02pONSnBvqA+F41
+	MSlQsyCMso9ravANL+THYSog2mDa3ZQAKvSvBoiGglrz2Kfxdh6X0jW9enA7IVt0X84YBtnJeJ8
+	FkDOTwHAUI4DG9GQsHCfqU7cJ8wzhP4FH16TJqSpK4ajvjl8v5VDMKmnElF1oKtFl2lflSimnnS
+	0CzoIIWg7w3E0qEHhQkO7bvkpI2VVIBSU2YeUwgbZZ6e8tGXfJ6GxK5FQZiCwmuNPPNTdfvhQjG
+	dMtae4civ+JeAOP9nJbojR57a9gQux1F/WaEQ5gaAopDiuVpdU0tG4QgUQynksCnO69kqHVS6uF
+	ZFea5UIFYtnZ23frtCn36tpsc3fKQLmnJr9uWNNd1WlX1LgEszz32AIU=
+X-Received: by 2002:a05:7022:23a3:b0:139:ed5a:eef3 with SMTP id a92af1059eb24-13b315a4cd0mr2248705c88.50.1782875087313;
+        Tue, 30 Jun 2026 20:04:47 -0700 (PDT)
+X-Received: by 2002:a05:7022:23a3:b0:139:ed5a:eef3 with SMTP id a92af1059eb24-13b315a4cd0mr2248677c88.50.1782875086647;
+        Tue, 30 Jun 2026 20:04:46 -0700 (PDT)
+Received: from localhost.localdomain.com (122-63-73-73.mobile.spark.co.nz. [122.63.73.73])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13b2abbba8dsm15858670c88.13.2026.06.30.20.04.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2026 16:38:05 -0700 (PDT)
-Date: Wed, 1 Jul 2026 11:37:58 +1200
+        Tue, 30 Jun 2026 20:04:46 -0700 (PDT)
 From: Tao Liu <ltao@redhat.com>
-To: Desnes Nunes <desnesn@redhat.com>, kexec@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
-	stable@vger.kernel.org, baolu.lu@linux.intel.com,
-	dwmw2@infradead.org
-Subject: Re: [PATCH v2] iommu/vt-d: Fix UCTP context table slot when copying
- root entries
-Message-ID: <akRTVinqeeZnVARD@localhost.localdomain>
-References: <20260629144837.3244851-1-desnesn@redhat.com>
+To: pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr
+Cc: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	bhe@redhat.com,
+	zohar@linux.ibm.com,
+	roberto.sassu@huawei.com,
+	dmitry.kasatkin@gmail.com,
+	eric.snowberg@oracle.com,
+	linux-integrity@vger.kernel.org,
+	pratyush@kernel.org,
+	Markus.Elfring@web.de,
+	kernel-janitors@vger.kernel.org,
+	Tao Liu <ltao@redhat.com>
+Subject: [PATCH v3] riscv: Fix a NULL pointer dereference in machine_kexec_prepare
+Date: Wed,  1 Jul 2026 14:57:33 +1200
+Message-ID: <20260701025732.66330-2-ltao@redhat.com>
+X-Mailer: git-send-email 2.54.0
 MIME-Version: 1.0
-In-Reply-To: <20260629144837.3244851-1-desnesn@redhat.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: FocT7-n29SQSRxUn5i6iVVaFL2iUNMwvH0gmAM0iEYk_1782862687
+X-Mimecast-MFC-PROC-ID: lOHQuer32pHKXML4TQiV8uPXLY6QYIXvqFUT8u53o7Y_1782875087
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260630_163813_820565_25B6F253 
-X-CRM114-Status: GOOD (  27.46  )
+X-CRM114-CacheID: sfid-20260630_200453_178973_D253EAE0 
+X-CRM114-Status: UNSURE (   9.65  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,153 +120,48 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-CC to kexec ML.
+A NULL pointer dereference issue is noticed in riscv's machine_kexec_prepare,
+where image->segment[i].buf might be NULL and copied unchecked.
 
-On Mon, Jun 29, 2026 at 11:48:37AM -0300, Desnes Nunes wrote:
-> When translation is already enabled at boot (e.g. kdump), the vt-d driver
-> copies context tables from the previous kernel's root table. In scalable
-> mode, buses that only populate the upper root half (UCTP, devfn >= 0x80)
-> should be written to ctxt_tbls[tbl_idx + 1] through copy_context_table().
-> However, the current copy path always uses tbl[tbl_idx + 0] in this situa-
-> tion. Since idx wraps to 0 at devfn 0x80 due to a zeroed LCTP, new_ce for
-> LCTP will be NULL and keep pos equals to 0. Thus, UCTP entries will be co-
-> pied into tbl[tbl_idx + 0] instead of tbl[tbl_idx + 1], and written after-
-> wards to root_entry[bus].lo instead of .hi in copy_translation_tables().
-> 
-> In short, devices on bus 0x80 with devfn >= 0x80 fail DMA with fault 0x39,
-> which will break drivers running in kernels with translation pre-enabled.
-> This fixes NO_PASID DMAR faults for UCTP-only buses such as:
-> 
-> DMAR: [DMA Read NO_PASID] Request device [80:14.0] fault addr 0xe81759000 [fault reason 0x39] SM: Present bit in Root Entry is clear
-> 
-> For instance, this fault yielded to locking issues between systemd and
-> xHCI, blocking a system's reboot after a vmcore was captured with kdump:
-> 
-> [   72.987601] systemd-udevd[246]: usb3: Worker [255] processing SEQNUM=2193 is taking a long time
-> [  132.237566] dracut-initqueue[277]: Timed out while waiting for udev queue to empty.
-> [  202.988014] systemd-udevd[246]: usb3: Worker [255] processing SEQNUM=2193 killed
-> [  202.998059] systemd-udevd[246]: usb3: Worker [255] terminated by signal 9 (KILL).
-> ...
-> [  206.288378] kdump[569]: saving vmcore complete
-> ...
-> [  206.821258] systemd-shutdown[1]: Rebooting.
-> [  246.858495] INFO: task kworker/0:1:11 blocked for more than 122 seconds.
-> [  246.865319]       Not tainted 7.0.0-clean #1
-> [  246.869663] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> [  246.877623] task:kworker/0:1     state:D stack:0     pid:11 tgid:11    ppid:2      task_flags:0x4208160 flags:0x00080000
-> [  246.888942] Workqueue: usb_hub_wq hub_event
-> [  246.893202] Call Trace:
-> [  246.895690]  <TASK>
-> [  246.897828]  __schedule+0x299/0x5c0
-> [  246.901378]  schedule+0x27/0x80
-> [  246.904572]  schedule_timeout+0xbd/0x100
-> [  246.908565]  __wait_for_common+0x97/0x1b0
-> [  246.912644]  ? __pfx_schedule_timeout+0x10/0x10
-> [  246.917252]  xhci_alloc_dev+0x9e/0x2b0
-> [  246.921068]  usb_alloc_dev+0x7a/0x3b0
-> [  246.924795]  hub_port_connect+0x285/0x960
-> [  246.928873]  hub_port_connect_change+0x94/0x290
-> [  246.933482]  port_event+0x4bb/0x840
-> [  246.937030]  hub_event+0x141/0x460
-> [  246.940489]  process_one_work+0x196/0x390
-> [  246.944569]  worker_thread+0x1af/0x320
-> [  246.948383]  ? __pfx_worker_thread+0x10/0x10
-> [  246.952724]  kthread+0xe3/0x120
-> [  246.955921]  ? __pfx_kthread+0x10/0x10
-> [  246.959736]  ret_from_fork+0x199/0x260
-> [  246.963550]  ? __pfx_kthread+0x10/0x10
-> [  246.967362]  ret_from_fork_asm+0x1a/0x30
-> [  246.971355]  </TASK>
-> [  369.738508] INFO: task systemd-shutdow:1 blocked for more than 122 seconds.
-> [  369.745593]       Not tainted 7.0.0-clean #1
-> [  369.749935] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> [  369.757897] task:systemd-shutdow state:D stack:0     pid:1 tgid:1   ppid:0      task_flags:0x400100 flags:0x00080000
-> [  369.769128] Call Trace:
-> [  369.771616]  <TASK>
-> [  369.773752]  __schedule+0x299/0x5c0
-> [  369.777299]  schedule+0x27/0x80
-> [  369.780493]  schedule_preempt_disabled+0x15/0x30
-> [  369.785188]  __mutex_lock.constprop.0+0x547/0xac0
-> [  369.789974]  device_shutdown+0xac/0x1b0
-> [  369.793877]  kernel_restart+0x3a/0x70
-> [  369.797603]  __do_sys_reboot+0x147/0x240
-> [  369.801595]  do_syscall_64+0x11b/0x6a0
-> [  369.805407]  ? handle_mm_fault+0x110/0x350
-> [  369.809574]  ? do_user_addr_fault+0x206/0x680
-> [  369.814006]  ? irqentry_exit+0x7a/0x4d0
-> [  369.817907]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [  369.823046] RIP: 0033:0x7fe2958da917
-> [  369.826684] RSP: 002b:00007ffc5c458618 EFLAGS: 00000206 ORIG_RAX: 00000000000000a9
-> [  369.834383] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fe2958da917
-> [  369.841639] RDX: 0000000001234567 RSI: 0000000028121969 RDI: 00000000fee1dead
-> [  369.848893] RBP: 00007ffc5c458790 R08: 0000000000000069 R09: 00000000ffffffff
-> [  369.856148] R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000000
-> [  369.863402] R13: 0000000000000000 R14: 00007ffc5c4588b8 R15: 0000000000000000
-> [  369.870659]  </TASK>
-> [  369.872888] INFO: task systemd-shutdow:1 is blocked on a mutex likely owned by task kworker/0:1:11.
->
+The NULL buf comes from security/integrity/ima/ima_kexec.c:
+ima_add_kexec_buffer(), where kbuf is added by kexec_add_buffer(),
+but kbuf.buffer is NULL.
 
-Thanks for attaching the kernel stack trace, which is similar to the one I have
-encountered recently. And I have applied & tested the patch, works good for me.
+Fix this by simply adding a check before copy.
 
-Tested-by: Tao Liu <ltao@redhat.com> 
+Fixes: b7fb4d78a6ad ("RISC-V: use memcpy for kexec_file mode")
+Acked-by: Baoquan He <bhe@redhat.com>
+Acked-by: Pratyush Yadav <pratyush@kernel.org>
+Signed-off-by: Tao Liu <ltao@redhat.com>
+---
+
+v3 -> v2: Add fixes tag; Replace "reference" to "dereference".
+link to v2: https://lore.kernel.org/linux-riscv/20260627222602.23594-2-ltao@redhat.com/
+link to v1: https://lore.kernel.org/linux-riscv/20260529032739.13264-2-ltao@redhat.com/
+
+---
+ arch/riscv/kernel/machine_kexec.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/riscv/kernel/machine_kexec.c b/arch/riscv/kernel/machine_kexec.c
+index 2306ce3e5f22..afc68f6a4aa1 100644
+--- a/arch/riscv/kernel/machine_kexec.c
++++ b/arch/riscv/kernel/machine_kexec.c
+@@ -41,6 +41,13 @@ machine_kexec_prepare(struct kimage *image)
+ 		if (image->segment[i].memsz <= sizeof(fdt))
+ 			continue;
  
-> Fixes: 091d42e43d21 ("iommu/vt-d: Copy translation tables from old kernel")
-> Signed-off-by: Desnes Nunes <desnesn@redhat.com>
-> ---
-> V1 -> V2: Updated commit message and added xHCI stack trace as requested
-> 
-> v1: https://lore.kernel.org/linux-iommu/ajnlKDglN6wEBBrS@google.com/T/#t
-> 
->  drivers/iommu/intel/iommu.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index 4d0e65bc131d..737936f942a0 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -1443,7 +1443,7 @@ static int copy_context_table(struct intel_iommu *iommu,
->  			      struct context_entry **tbl,
->  			      int bus, bool ext)
->  {
-> -	int tbl_idx, pos = 0, idx, devfn, ret = 0, did;
-> +	int tbl_idx, tbl_slot = 0, idx, devfn, ret = 0, did;
->  	struct context_entry *new_ce = NULL, ce;
->  	struct context_entry *old_ce = NULL;
->  	struct root_entry re;
-> @@ -1459,10 +1459,9 @@ static int copy_context_table(struct intel_iommu *iommu,
->  		if (idx == 0) {
->  			/* First save what we may have and clean up */
->  			if (new_ce) {
-> -				tbl[tbl_idx] = new_ce;
-> +				tbl[tbl_idx + tbl_slot] = new_ce;
->  				__iommu_flush_cache(iommu, new_ce,
->  						    VTD_PAGE_SIZE);
-> -				pos = 1;
->  			}
->  
->  			if (old_ce)
-> @@ -1484,6 +1483,9 @@ static int copy_context_table(struct intel_iommu *iommu,
->  				}
->  			}
->  
-> +			/* Track if saving UCTP or LCTP entries in scalable mode */
-> +			tbl_slot = ext && devfn >= 0x80 ? 1 : 0;
-> +
->  			ret = -ENOMEM;
->  			old_ce = memremap(old_ce_phys, PAGE_SIZE,
->  					MEMREMAP_WB);
-> @@ -1512,7 +1514,7 @@ static int copy_context_table(struct intel_iommu *iommu,
->  		new_ce[idx] = ce;
->  	}
->  
-> -	tbl[tbl_idx + pos] = new_ce;
-> +	tbl[tbl_idx + tbl_slot] = new_ce;
->  
->  	__iommu_flush_cache(iommu, new_ce, VTD_PAGE_SIZE);
->  
-> -- 
-> 2.54.0
-> 
++		/*
++		 * Some segments (e.g. IMA) reserve space but have no buffer
++		 * loaded yet. Skip them as they cannot contain an FDT.
++		 */
++		if (image->segment[i].buf == NULL)
++			continue;
++
+ 		if (image->file_mode)
+ 			memcpy(&fdt, image->segment[i].buf, sizeof(fdt));
+ 		else if (copy_from_user(&fdt, image->segment[i].buf, sizeof(fdt)))
+-- 
+2.54.0
 
 
