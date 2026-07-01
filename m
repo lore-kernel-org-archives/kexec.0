@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AB33BC43458
-	for <kexec@archiver.kernel.org>; Wed,  1 Jul 2026 13:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B83D7C43458
+	for <kexec@archiver.kernel.org>; Wed,  1 Jul 2026 13:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
-	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=fAeve0abFWQKmFbA38UTviwu1FD5ReocHzS/Zndesd8=; b=VpMhA9xZoqavVjDcpdnBwlH4of
-	tERf0lOxrG4Gc4RspTAGzJuXUdVsnpj0hONt7EsMgg6tRbY2pziP457KbHaSlxmV3AYsQxqz6/uFq
-	cgrXkf/mjFziGI/3voBTkuDO0mU/EVmrTDalKTE1INlBug9daApOZsIjDtuM/a0IjxjOMkkygtERs
-	qfioFokGKcdu3ng7ByfsbChGdXtmIC1KTOd8YaGlbTpTrwVaBzXUc9GS+pgTEVSD7nMx7KA8u3OWf
-	hnh5G36knsK6bkRyBE0oRu7itSdrWm4Poel68/VVEXHhZwOuLsTRZRMSZE1kDnbIu1l08KC1Ve1AZ
-	trN5u87A==;
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=0FSpVVDso32KQePcWS3Cq/14rZsUfEwQH2nRl5z2o2g=; b=SPDz8W4oa6KwBpCdT5vwsCQ71D
+	y1APNWzDNefy9Wue8W6ryF1VhwGUMPfqmrye8wnXb90R7fUDVIxGYGiTrgipuI4tfLqlGi9kDwZMV
+	Rw1xLRx41KfWboBKxWffbN6UXvRuiTGSdBMDl+lVvuQ4DpEHjSLLmQCh5qUPjz9aqopuKX15cf5J9
+	qqcLsPUOloQSxIhVlwSkQj2rbMC+ovFcRndQd7grkfhYWuTjMXhMvT9Bg1Szvd+gQOwyVZV1w2BI7
+	hs+h9KyEktzhxY5QH+lh0Jdy02R/6aJriByUTc4EjR96nv8jjUp106mlhy9VFincLiCKa16nsJXlU
+	IVcABWVg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wevMA-00000002DVZ-2lSC;
-	Wed, 01 Jul 2026 13:52:02 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1wevMF-00000002DXU-3NiQ;
+	Wed, 01 Jul 2026 13:52:07 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wevM7-00000002DUy-1QJQ
+	id 1wevMC-00000002DWC-2QOY
 	for kexec@lists.infradead.org;
-	Wed, 01 Jul 2026 13:52:00 +0000
+	Wed, 01 Jul 2026 13:52:06 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782913918;
+	s=mimecast20190719; t=1782913923;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=fAeve0abFWQKmFbA38UTviwu1FD5ReocHzS/Zndesd8=;
-	b=H0CO1SWMR14onBtxwmZdq5F5RLXq1a0cxW6xh6wW+wzqmZQmvUEwIUr3An3DAuJ0hfaRVI
-	MqGxAc1o7pH2d4zAVJdQlyjl7qoHHEhRn9ro6sVTTLQSNFAJvAnl2pHie768TUA6Oc2Ux5
-	sWfBWyvtjR1mREQr1lc0N7SiU+FzsPg=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0FSpVVDso32KQePcWS3Cq/14rZsUfEwQH2nRl5z2o2g=;
+	b=Gkes3zabu8bCSYYzIhbBi/DNh+c3ZKvtrVnTO4KMoZUVehRWagb0kRtnx9tM3sqfGh/h4U
+	ieo63QsZNfe6sWD6uxeuJUe6e7xkajZ3feMAYvO0IhLUmVhplfJkRMGrDUY3mlwwtUZuRE
+	3JgDlcPqwzxaguCb7a2T3bQYiKOkCaw=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-557-v-Dnipm5M5S3Dwi72n8B6w-1; Wed,
- 01 Jul 2026 09:50:33 -0400
-X-MC-Unique: v-Dnipm5M5S3Dwi72n8B6w-1
-X-Mimecast-MFC-AGG-ID: v-Dnipm5M5S3Dwi72n8B6w_1782913830
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-300-Mhlr-Z8tMI-QGJDZ5f7hNw-1; Wed,
+ 01 Jul 2026 09:50:37 -0400
+X-MC-Unique: Mhlr-Z8tMI-QGJDZ5f7hNw-1
+X-Mimecast-MFC-AGG-ID: Mhlr-Z8tMI-QGJDZ5f7hNw_1782913835
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 87A2418E6A56;
-	Wed,  1 Jul 2026 13:50:29 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 09CDB1933FBA;
+	Wed,  1 Jul 2026 13:50:35 +0000 (UTC)
 Received: from djeffery-thinkpadp1gen3.rmtusga.csb (unknown [10.22.81.69])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 455A518007D2;
-	Wed,  1 Jul 2026 13:50:23 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 01679180076D;
+	Wed,  1 Jul 2026 13:50:29 +0000 (UTC)
 From: David Jeffery <djeffery@redhat.com>
 To: driver-core@lists.linux.dev,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -74,19 +75,22 @@ Cc: linux-kernel@vger.kernel.org,
 	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	John Garry <john.g.garry@oracle.com>,
 	kexec@lists.infradead.org,
-	David Jeffery <djeffery@redhat.com>
-Subject: [PATCH v18 0/5] shut down devices asynchronously
-Date: Wed,  1 Jul 2026 09:50:10 -0400
-Message-ID: <20260701135015.81937-1-djeffery@redhat.com>
+	David Jeffery <djeffery@redhat.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>
+Subject: [PATCH 1/5] driver core: separate function to shutdown one device
+Date: Wed,  1 Jul 2026 09:50:11 -0400
+Message-ID: <20260701135015.81937-2-djeffery@redhat.com>
+In-Reply-To: <20260701135015.81937-1-djeffery@redhat.com>
+References: <20260701135015.81937-1-djeffery@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: muw5DXs-thjZHh-1NBrgbWW0DGJ4EYvwAR6P1bMUW5w_1782913830
+X-Mimecast-MFC-PROC-ID: gQWsIJF4E8QFJbYMfXTMP5Kgx6ZKM0uJomN0O618nvI_1782913835
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260701_065159_457209_61371A3F 
-X-CRM114-Status: GOOD (  25.73  )
+X-CRM114-CacheID: sfid-20260701_065204_699431_0E633FB4 
+X-CRM114-Status: GOOD (  17.85  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,160 +105,121 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-These patches are rebased against the driver-core tree's driver-core-next
-branch and should also apply against recent linux-next. Changes for v18 are
-contained in patch 3.
+Make a separate function for the part of device_shutdown() that does the
+shutown for a single device.  This is in preparation for making device
+shutdown asynchronous.
 
-This patchset allows the kernel to shutdown devices asynchronously and
-unrelated async devices to be shut down in parallel to each other.
+Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+Signed-off-by: David Jeffery <djeffery@redhat.com>
+Tested-by: Laurence Oberman <loberman@redhat.com>
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+---
+ drivers/base/core.c | 71 +++++++++++++++++++++++++--------------------
+ 1 file changed, 39 insertions(+), 32 deletions(-)
 
-Only devices which explicitly enable it are shut down asynchronously. The
-default is for a device to be shut down from the synchronous shutdown loop.
-
-This can dramatically reduce system shutdown/reboot time on systems that
-have multiple devices that take many seconds to shut down (like certain
-NVMe drives). On one system tested, the shutdown time went from 11 minutes
-without this patch to 55 seconds with the patch. And on another system from
-80 seconds to 11.
-
-And thank you to everyone who has spent some of their valuable time
-providing reviews, suggestions, criticisms, or tests on the various
-iterations of this patchset.
-
-Changes from V17:
-
-Fix mangled text in kernel parameter description
-Re-protect the list removal with the spinlock
-  * Hold a device reference to ensure the device cannot be freed before
-    attempting list removal
-
-Changes from V16:
-
-Drop spinlock before async subsystem call which uses GFP_KERNEL
-Handle that async shutdown can widen races between device shutdown and deletion
-  * __shutdown_one_device will immediately return if a device is dead
-  * Set shutdown device completion to complete when marking a device dead to
-      prevent waiting on a dead device
-  * Only late-access a parent pointer if device is in a non-dead state to
-      ensure the pointer is still valid
-
-Changes from V15:
-
-The async_shutdown bit field is converted to a device flags bit
-Convert all patches to use the flag bit accessor macros to set or check if
-  async shutdown should be used
-Added documentation on the kernel parameter to control use of async shutdown
-
-Changes from V14:
-
-Remove unneeded use of '!!' with boolean type
-
-Changes from V13:
-
-Remove duplicate flagging of async shutdown on scsi hosts/targets/devices
-
-Changes from V12:
-
-Only acquire a parent reference if acquiring the parent's lock
-device_enable_async_shutdown should return void
-Minor comment and description cleanups
-
-Changes from V11:
-
-  * Swap the order of the first two patches
-  * Rework conditional parent locking so that lock and unlock no longer use
-    separate conditional checks
-  * Remove an used variable
-  * Comment and description text cleanups
-
-Changes from V10:
-
-Reworked to more closely match the design used for async suspend
-  * No longer uses async subsystem cookies for synchronization
-  * Minimized changes to struct device
-  * Enable async shutdown for pci and scsi devices which support async suspend
-
-Changes from V9:
-
-Address resource and timing issues when spawning a unique async thread
-for every device during shutdown:
-  * Make the asynchronous threads able to shut down multiple devices,
-    instead of spawning a unique thread for every device.
-  * Modify core kernel async code with a custom wake function so it
-    doesn't wake up a thread waiting to synchronize on a cookie until
-    the cookie has reached the desired value, instead of waking up
-    every waiting thread to check the cookie every time an async thread
-    ends.
-
-Changes from V8:
-
-Deal with shutdown hangs resulting when a parent/supplier device is
-  later in the devices_kset list than its children/consumers:
-  * Ignore sync_state_only devlinks for shutdown dependencies
-  * Ignore shutdown_after for devices that don't want async shutdown
-  * Add a sanity check to revert to sync shutdown for any device that
-    would otherwise wait for a child/consumer shutdown that hasn't
-    already been scheduled
-
-Changes from V7:
-
-Do not expose driver async_shutdown_enable in sysfs.
-Wrapped a long line.
-
-Changes from V6:
-
-Removed a sysfs attribute that allowed the async device shutdown to be
-"on" (with driver opt-out), "safe" (driver opt-in), or "off"... what was
-previously "safe" is now the only behavior, so drivers now only need to
-have the option to enable or disable async shutdown.
-
-Changes from V5:
-
-Separated into multiple patches to make review easier.
-Reworked some code to make it more readable
-Made devices wait for consumers to shut down, not just children
-  (suggested by David Jeffery)
-
-Changes from V4:
-
-Change code to use cookies for synchronization rather than async domains
-Allow async shutdown to be disabled via sysfs, and allow driver opt-in or
-  opt-out of async shutdown (when not disabled), with ability to control
-  driver opt-in/opt-out via sysfs
-  
-Changes from V3:
-
-Bug fix (used "parent" not "dev->parent" in device_shutdown)
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 4d026682944f..74c693cd19cf 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -4865,12 +4865,48 @@ int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
+ 	return error;
+ }
  
-Changes from V2:
++static void shutdown_one_device(struct device *dev)
++{
++	struct device *parent = dev->parent;
++
++	/* hold lock to avoid race with probe/release */
++	if (parent)
++		device_lock(parent);
++	device_lock(dev);
++
++	/* Don't allow any more runtime suspends */
++	pm_runtime_get_noresume(dev);
++	pm_runtime_barrier(dev);
++
++	if (dev->class && dev->class->shutdown_pre) {
++		if (initcall_debug)
++			dev_info(dev, "shutdown_pre\n");
++		dev->class->shutdown_pre(dev);
++	}
++	if (dev->bus && dev->bus->shutdown) {
++		if (initcall_debug)
++			dev_info(dev, "shutdown\n");
++		dev->bus->shutdown(dev);
++	} else if (dev->driver && dev->driver->shutdown) {
++		if (initcall_debug)
++			dev_info(dev, "shutdown\n");
++		dev->driver->shutdown(dev);
++	}
++
++	device_unlock(dev);
++	if (parent)
++		device_unlock(parent);
++
++	put_device(parent);
++	put_device(dev);
++}
++
+ /**
+  * device_shutdown - call ->shutdown() on each device to shutdown.
+  */
+ void device_shutdown(void)
+ {
+-	struct device *dev, *parent;
++	struct device *dev;
  
-Removed recursive functions to schedule children to be shutdown before
-  parents, since existing device_shutdown loop will already do this
+ 	wait_for_device_probe();
+ 	device_block_probing();
+@@ -4892,7 +4928,7 @@ void device_shutdown(void)
+ 		 * prevent it from being freed because parent's
+ 		 * lock is to be held
+ 		 */
+-		parent = get_device(dev->parent);
++		get_device(dev->parent);
+ 		get_device(dev);
+ 		/*
+ 		 * Make sure the device is off the kset list, in the
+@@ -4901,36 +4937,7 @@ void device_shutdown(void)
+ 		list_del_init(&dev->kobj.entry);
+ 		spin_unlock(&devices_kset->list_lock);
  
-Changes from V1:
-
-Rewritten using kernel async code (suggested by Lukas Wunner)
-
-
-Stuart Hayes (2):
-  driver core: separate function to shutdown one device
-  driver core: do not always lock parent in shutdown
-
-David Jeffery (3):
-  driver core: async device shutdown infrastructure
-  PCI: Enable async shutdown support
-  scsi: Enable async shutdown support
-
- .../admin-guide/kernel-parameters.txt         |  10 +
- drivers/base/base.h                           |   2 +
- drivers/base/core.c                           | 221 +++++++++++++++---
- drivers/pci/probe.c                           |   2 +
- drivers/scsi/hosts.c                          |   2 +
- drivers/scsi/scsi_sysfs.c                     |   3 +
- include/linux/device.h                        |   2 +
- 7 files changed, 206 insertions(+), 36 deletions(-)
-
+-		/* hold lock to avoid race with probe/release */
+-		if (parent)
+-			device_lock(parent);
+-		device_lock(dev);
+-
+-		/* Don't allow any more runtime suspends */
+-		pm_runtime_get_noresume(dev);
+-		pm_runtime_barrier(dev);
+-
+-		if (dev->class && dev->class->shutdown_pre) {
+-			if (initcall_debug)
+-				dev_info(dev, "shutdown_pre\n");
+-			dev->class->shutdown_pre(dev);
+-		}
+-		if (dev->bus && dev->bus->shutdown) {
+-			if (initcall_debug)
+-				dev_info(dev, "shutdown\n");
+-			dev->bus->shutdown(dev);
+-		} else if (dev->driver && dev->driver->shutdown) {
+-			if (initcall_debug)
+-				dev_info(dev, "shutdown\n");
+-			dev->driver->shutdown(dev);
+-		}
+-
+-		device_unlock(dev);
+-		if (parent)
+-			device_unlock(parent);
+-
+-		put_device(dev);
+-		put_device(parent);
++		shutdown_one_device(dev);
+ 
+ 		spin_lock(&devices_kset->list_lock);
+ 	}
 -- 
-2.53.0
+2.54.0
 
 
