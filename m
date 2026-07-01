@@ -4,58 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 57FF4C43602
-	for <kexec@archiver.kernel.org>; Wed,  1 Jul 2026 16:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F1376C43458
+	for <kexec@archiver.kernel.org>; Wed,  1 Jul 2026 16:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=PIZMSvPfVuRMXmdu87cxJx7C/Mfl/bxr49IbGb1G0n4=; b=Uc5MlB1B2WFqpURuRjGBH2qngT
-	5wzWnX+9mfsDL6r0ZbxoN54J0UGrrTONlEnLENTA/dFW9cYyCUFxdRqrvS0LiCvXgc8mCsWsSxoJt
-	Y86R4zsUJ8/j/i89x1T52iyxNO+DY2ycivFhgCY2u2AhlA81cHkfeQ8U/q+qQ4j0eXvDnYZuUKZ7S
-	D/qpTZuhrYvoKeF+iq3dDntCQ0zuKdy6jVmq3ToWChbVuRGTeUJl6hCwDkRx/qzL3i2b6XhIgYj+1
-	+K5fx3KFca8nIRoBKLKyI9W1QD6yiKhlCKOXIR//0o6NA99PaAiwTi8Z4F7HWZKqhBDXIYmiZNoBr
-	ShNQMzuQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=D7Ux8SvwXgyrbJIRqj3C7tDh9Pxj7i8inIMKgMzpWiU=; b=kuRrnfvLwbGrojbKQySZbSn/8W
+	rN05yJnFwpvokzfpIhSqnk+Kl+a4CUnSYgRVbdenGpUZdlultAtFmPebIS/hMZfbLkU+HAG9L1A7o
+	T44oHDTeNrIxTS7Xc/xRo16OeXKTUgdJ5OPAGQo7+rWj0uScMbFfvIs03SZe/aKxqyWS7l64FBG2+
+	NPHGBhUw6qIrqiob+1bPY4pBSyABdvbrKYjq9oTy8N3BIbCrpWdC6u/WyeEWEjYFgycIAmL53brdC
+	CfsdI2EwIQF38dDp1U5CkdqVAtbwqqyPz/3P08JqLCjwuCpFHYjbur7UwJESOtm3Edcj7NyynHoCL
+	ne+MhnsQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wexNO-00000002T6u-0NQy;
-	Wed, 01 Jul 2026 16:01:26 +0000
-Received: from out-185.mta0.migadu.com ([91.218.175.185])
+	id 1weyG1-00000002dyl-1IoQ;
+	Wed, 01 Jul 2026 16:57:53 +0000
+Received: from mail.alien8.de ([2a01:4f9:3051:3f93::2])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wexNB-00000002Svr-0INo
+	id 1weyFx-00000002dqC-2Z1O
 	for kexec@lists.infradead.org;
-	Wed, 01 Jul 2026 16:01:23 +0000
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782921670;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PIZMSvPfVuRMXmdu87cxJx7C/Mfl/bxr49IbGb1G0n4=;
-	b=Orxi+YsW6oSOntVAqUt4fxrwVfb9eq1JJB94XFdGKdgVpdZqSe0iSqsTLFyvcH2HwGYa3n
-	nFH9a7z78UmXfqbIBKC+zDayoUKvEhVTvCQpn8CaF8jQZs/LT5EOTroF7tNXF/W+C3HTpQ
-	kjySXGCB85EcCdgw7pWrjWapPhDM0fk=
-From: George Guo <dongtai.guo@linux.dev>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: maobibo@loongson.cn,
-	loongarch@lists.linux.dev,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	George Guo <guodongtai@kylinos.cn>
-Subject: [PATCH v4 2/2] LoongArch: kexec: load the command line in its own segment
-Date: Wed,  1 Jul 2026 23:59:57 +0800
-Message-Id: <20260701155957.534779-3-dongtai.guo@linux.dev>
-In-Reply-To: <20260701155957.534779-1-dongtai.guo@linux.dev>
-References: <20260701155957.534779-1-dongtai.guo@linux.dev>
+	Wed, 01 Jul 2026 16:57:51 +0000
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6E7C040E00C0;
+	Wed,  1 Jul 2026 16:57:34 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id eZNWrhC4CrjC; Wed,  1 Jul 2026 16:57:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1782925048; bh=D7Ux8SvwXgyrbJIRqj3C7tDh9Pxj7i8inIMKgMzpWiU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xc1Nsy3vHp6PaNdjT+jQ70baAzX4p0TzIG/CZnSa4VJvncqiqcWp8r00M2QgYVYj1
+	 Hq+WWl7zy0kCyJ6ET9ynDbm5VBGFYZBbuYgEqWeUtCKtzcSjtc+XFomqX+4EvX6J7f
+	 eGEKuKXSpYqmcp5/B6tDriB7INwwiTDgTlvcj5oC7HO29LhN6KwhhZN857Hnu3ANsn
+	 3EZCFSgsT009K+Cd0akgIRBS2y1BbiBZabaIitPRlR7z0l1Xcs3LrbIc1kA7gXUGew
+	 VEO7PMQ7Y/ICPpKWQcmPPoOk+r0nbmWlolymnaiNIQxC0k09VsJWUi4xJblCr7/zDl
+	 3cCOipvEK7p0b9ajEE6czHcij8cI/TgXvxxVLRkWPfZaAUYVRT0v3DOqLHY84hOUIn
+	 pRP7A3bVIqg1bzfurbYh6tl2l7Ooov5xKq1565GYLV/lFTv0ok7J0ZvLoYifnLc8EK
+	 uF7DfYqHbh6q4m6yJpse5NSjExhBV1qa6XEEz1mg1JQcRMSZ9hrJeu4QRRrZjnMyJ0
+	 w4nqXOA/uLEiNuwUo3+r9DCsAb+P7ZCpA3o8RPMvBHRFZah2zwWwEy5G/M58Zc+4Em
+	 JoJX4xpoRceA5lj13t5Fpp7kkMSb4wBdpKhys5PayFjiyfP+SPmOwhNpZk7dhgV7D4
+	 ET6HPJNim2jox8ei73kXaqys=
+Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::1a])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6DF9C40E01B4;
+	Wed,  1 Jul 2026 16:57:17 +0000 (UTC)
+Date: Wed, 1 Jul 2026 09:57:14 -0700
+From: Borislav Petkov <bp@alien8.de>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, kexec@lists.infradead.org
+Subject: Re: [PATCH] x86/setup: do not include kexec_handover.h from
+ asm/setup.h
+Message-ID: <20260701165714.GAakVG6p191JTJ0nJS@fat_crate.local>
+References: <20260701151536.3068791-1-pratyush@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260701151536.3068791-1-pratyush@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260701_090113_761697_4AA7CF33 
-X-CRM114-Status: GOOD (  21.84  )
+X-CRM114-CacheID: sfid-20260701_095750_385565_F796F523 
+X-CRM114-Status: GOOD (  11.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,185 +90,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: George Guo <guodongtai@kylinos.cn>
+On Wed, Jul 01, 2026 at 05:15:33PM +0200, Pratyush Yadav wrote:
+> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+> 
+> x86 asm/setup.h includes linux/kexec_handover.h. This is because it is
+> used by setup.c and kaslr.c. But this inclusion is problematic. The
+> header is included in many places, so it results in the KHO header being
+> propagated there. Also, the setup header is used by realmode code. If
+> KHO header includes things like mm.h, it causes a big dump of
+> compliation failures.
 
-The kexec'd kernel receives its command line through register a1, which
-machine_kexec_prepare() pointed at the fixed address KEXEC_CMDLINE_ADDR
-(0x108000) in the reserved first 2MB.  That address overlaps the
-firmware-provided FDT.  QEMU places its machine FDT at physical 0x100000;
-dumping the FDT it generates makes the overlap concrete:
+This is exactly why we are trying hard to block people from using more linux/
+namespace headers in the decompressor code. Please split it and put only the
+bits that are needed by the decompressor into a header in
+arch/x86/include/asm/shared/ and use that in the decompressor.
 
-  $ qemu-system-loongarch64 -M virt -cpu la464 -m 1G -smp 2 \
-        -machine dumpdtb=qemu.dtb
-  $ fdtdump qemu.dtb
-    // totalsize:       0x100000 (1048576)
-    // off_dt_strings:  0xd04
-    // size_dt_strings: 0x179
+There are examples there.
 
-The FDT declares fdt_totalsize = 1MB, so it claims the entire
-[0x100000, 0x200000) upper half of the reserved region, even though its
-actual content ends at off_dt_strings + size_dt_strings = 0xe7d (~3.6KB).
-KEXEC_CMDLINE_ADDR (0x108000 = base + 32KB) therefore sits inside the FDT
-region and only survives because it lands in the trailing slack.  A larger
-FDT (more CPU or memory nodes) whose content grows past 32KB would be
-clobbered when the command line is written, reproducing the silent second
-boot that earlier motivated moving the relocation trampoline off 0x100000.
+Thx.
 
-The command line is passed by register, not at a hardcoded location, so it
-does not need a fixed address.  Load it into its own kexec segment instead:
-
- - In file mode, add modified_cmdline as a segment with kexec_add_buffer()
-   and store its destination (TO_CACHE(kbuf.mem)) in arch.cmdline_ptr.  The
-   buffer is now owned by the image and freed in post_load_cleanup(), which
-   also fixes a pre-existing leak of modified_cmdline.
-
- - In the legacy kexec_load() path, point arch.cmdline_ptr at the
-   destination of the user-supplied command line segment instead of copying
-   it to the fixed address.
-
-Drop KEXEC_CMDLINE_ADDR.  The kexec core places the segment clear of the
-firmware FDT, so the overlap is removed regardless of FDT size.
-
-Tested with tools/testing/selftests/kho/vmtest.sh on LoongArch (file mode,
-kexec_file_load): the second kernel comes up with the full command line
-("kexec_file console=ttyS0 earlycon kho=on panic=-1") and earlycon, and KHO
-restore succeeds.
-
-Signed-off-by: George Guo <guodongtai@kylinos.cn>
----
- arch/loongarch/include/asm/kexec.h         |  1 +
- arch/loongarch/kernel/machine_kexec.c      | 25 +++++++---------
- arch/loongarch/kernel/machine_kexec_file.c | 33 ++++++++++++++++++++--
- 3 files changed, 41 insertions(+), 18 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/kexec.h b/arch/loongarch/include/asm/kexec.h
-index 6be136e9f0a0..fa4e1798c6af 100644
---- a/arch/loongarch/include/asm/kexec.h
-+++ b/arch/loongarch/include/asm/kexec.h
-@@ -38,6 +38,7 @@ static inline void crash_setup_regs(struct pt_regs *newregs,
- struct kimage_arch {
- 	unsigned long efi_boot;
- 	unsigned long cmdline_ptr;
-+	void *cmdline_buf;	/* file mode: cmdline segment buffer, freed at cleanup */
- 	unsigned long systable_ptr;
- };
- 
-diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
-index 7ced6ca2dadb..e4d1cf5f0e12 100644
---- a/arch/loongarch/kernel/machine_kexec.c
-+++ b/arch/loongarch/kernel/machine_kexec.c
-@@ -21,8 +21,6 @@
- #include <asm/cacheflush.h>
- #include <asm/page.h>
- 
--#define KEXEC_CMDLINE_ADDR	TO_CACHE(0x108000UL)
--
- static unsigned long reboot_code_buffer;
- static cpumask_t cpus_in_crash = CPU_MASK_NONE;
- 
-@@ -41,29 +39,26 @@ int machine_kexec_prepare(struct kimage *kimage)
- {
- 	int i;
- 	char *bootloader = "kexec";
--	void *cmdline_ptr = (void *)KEXEC_CMDLINE_ADDR;
- 
- 	kimage->arch.efi_boot = fw_arg0;
- 	kimage->arch.systable_ptr = fw_arg2;
- 
--	if (kimage->file_mode == 1) {
--		/*
--		 * kimage->cmdline_buf will be released in kexec_file_load, so copy
--		 * to the KEXEC_CMDLINE_ADDR safe area.
--		 */
--		memcpy((void *)KEXEC_CMDLINE_ADDR, (void *)kimage->arch.cmdline_ptr,
--					strlen((char *)kimage->arch.cmdline_ptr) + 1);
--		kimage->arch.cmdline_ptr = (unsigned long)KEXEC_CMDLINE_ADDR;
--	} else {
-+	/*
-+	 * In file mode load_other_segments() already placed the command line in
-+	 * its own segment and stored its address in arch.cmdline_ptr.  For the
-+	 * legacy kexec_load() path the command line is supplied in a segment
-+	 * whose buffer starts with the bootloader name; point the second kernel
-+	 * at that segment's destination instead of copying it to a fixed
-+	 * address that can overlap the firmware FDT.
-+	 */
-+	if (kimage->file_mode != 1) {
- 		char head[8];
- 
--		/* Find the command line */
- 		for (i = 0; i < kimage->nr_segments; i++) {
- 			if (copy_from_user(head, kimage->segment[i].buf, strlen(bootloader)))
- 				continue;
- 			if (!strncmp(bootloader, head, strlen(bootloader))) {
--				if (!copy_from_user(cmdline_ptr, kimage->segment[i].buf, COMMAND_LINE_SIZE))
--					kimage->arch.cmdline_ptr = (unsigned long)cmdline_ptr;
-+				kimage->arch.cmdline_ptr = TO_CACHE(kimage->segment[i].mem);
- 				break;
- 			}
- 		}
-diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-index 5584b798ba46..2d6b994f358f 100644
---- a/arch/loongarch/kernel/machine_kexec_file.c
-+++ b/arch/loongarch/kernel/machine_kexec_file.c
-@@ -32,6 +32,9 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
- 	image->elf_headers = NULL;
- 	image->elf_headers_sz = 0;
- 
-+	kfree(image->arch.cmdline_buf);
-+	image->arch.cmdline_buf = NULL;
-+
- 	return kexec_image_post_load_cleanup_default(image);
- }
- 
-@@ -152,6 +155,8 @@ int load_other_segments(struct kimage *image,
- 	modified_cmdline = kzalloc(COMMAND_LINE_SIZE, GFP_KERNEL);
- 	if (!modified_cmdline)
- 		return -EINVAL;
-+	/* Owned by the image from here on; freed in post_load_cleanup(). */
-+	image->arch.cmdline_buf = modified_cmdline;
- 
- 	cmdline_add_loader(&cmdline_tmplen, modified_cmdline);
- 	/* Ensure it's null terminated */
-@@ -227,13 +232,35 @@ int load_other_segments(struct kimage *image,
- 	}
- 
- 	memcpy(modified_cmdline + cmdline_tmplen, cmdline, cmdline_len);
--	cmdline = modified_cmdline;
--	image->arch.cmdline_ptr = (unsigned long)cmdline;
-+
-+	/*
-+	 * Load the command line into its own segment instead of copying it to
-+	 * a fixed address in the reserved low memory, which can overlap the
-+	 * firmware-provided FDT (e.g. QEMU places a 1MB machine FDT at
-+	 * 0x100000).  The second kernel receives this segment's address in
-+	 * register a1; see machine_kexec().
-+	 */
-+	kbuf.buffer = modified_cmdline;
-+	kbuf.bufsz = COMMAND_LINE_SIZE;
-+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+	kbuf.memsz = COMMAND_LINE_SIZE;
-+	kbuf.buf_align = PAGE_SIZE;
-+	kbuf.buf_max = ULONG_MAX;
-+	kbuf.top_down = true;
-+
-+	ret = kexec_add_buffer(&kbuf);
-+	if (ret < 0)
-+		goto out_err;
-+
-+	image->arch.cmdline_ptr = TO_CACHE(kbuf.mem);
-+
-+	kexec_dprintk("Loaded command line at 0x%lx memsz=0x%x\n",
-+		      kbuf.mem, COMMAND_LINE_SIZE);
- 
- 	return 0;
- 
- out_err:
- 	image->nr_segments = orig_segments;
--	kfree(modified_cmdline);
-+	/* modified_cmdline (image->arch.cmdline_buf) is freed in cleanup. */
- 	return ret;
- }
 -- 
-2.25.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
 
