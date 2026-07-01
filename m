@@ -4,92 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 06A07C43458
-	for <kexec@archiver.kernel.org>; Wed,  1 Jul 2026 11:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 65FDEC43458
+	for <kexec@archiver.kernel.org>; Wed,  1 Jul 2026 12:06:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ieMgPSS1eIBfAPTWcoeMePMwN2vKLGAwkXUol+yS3JM=; b=c4t1rYEfg7SysdyjSCYcmPV9fL
-	vM5VZIHcWxSMjo4e4Dmj7dyPnwTmnOll90wzdIcyayKKQGkijKMXr7c4UFc+meNi18qZG1QHrc07l
-	dMHk0Hm19XW7xO2qarwaOzCzOmv0VzhgbFXxs5fNBweDMHfO+dvuYe6sjr7vKE2PPTqH+UbJy6eqk
-	5562q7b1MSjdjNTAXLohscmc++NnywcGJvUDs6WLxGGlgv51O7Vjm5swuYQv7GRxpcqG9gEV95hQa
-	e3Pf/OdiYwtrzhiOdYfbyvuhjp74KCzpgohfe3YjmdIh5HtTw8HN4fUt1YKi7g2nbeF70AebEL8HL
-	JrKTIefw==;
+	bh=Hne4NKxMdbJBFIiD0wCOi2iipHevw0mcVZRCTIIGryU=; b=zVCuMAU2xHRYMynuVkv0zyx6/x
+	BEIJO65JLQM8kjIwD8KxUuntqbhJRYzJixGyNlY/Rk4dYHFO7wdJE3jyqAGn5xzZq0MvE7tngV8vI
+	Q2ocXfBr7tjLxX6PbaWC45CNvh3felQVsMrfuLH0tQWlgk8yrtHR6xoSssq1kqNayJujk6T9VWqsl
+	AnjYGx6TsYRBE3/gnHCwkYY/MUJ6g5lKs3RbiOprOQ8rLtpvTHpmR3F7YcvDClDT4MbV9mlFw+VJw
+	xKGtBbnYNG+rYfEdk1dZOXJFijrbl8AMP62rauiHyK2Jw7z+HRyUEQW8SFFo3Pj7UUBuD+lOPgfxb
+	+v0R9gqA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weso5-00000001QSk-241B;
-	Wed, 01 Jul 2026 11:08:41 +0000
-Received: from out-170.mta0.migadu.com ([91.218.175.170])
+	id 1wetiN-00000001ktd-3eBZ;
+	Wed, 01 Jul 2026 12:06:51 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weso1-00000001QRM-2iqN
-	for kexec@lists.infradead.org;
-	Wed, 01 Jul 2026 11:08:39 +0000
-Message-ID: <0efcc0a9-a51d-4de8-8406-b8fa536a91b7@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782904099;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ieMgPSS1eIBfAPTWcoeMePMwN2vKLGAwkXUol+yS3JM=;
-	b=QRnvYhKi7ifn2CAOqwrrTALRRhFuKdBNRY4USBSzQESgxOH79yyPbWsw+wvjxJGm9pDQu3
-	75wHltVABewcdEultw97xVO9Srux+vxmHLrM1y3qkyY8Qi8RlcbW/19L2d+jmEkSOqKAw5
-	8d3ZpLHm3o4fEt3mWUbZ+Ie+mvfoBxk=
-Date: Wed, 1 Jul 2026 19:07:22 +0800
+	id 1wetiM-00000001krO-2oeZ;
+	Wed, 01 Jul 2026 12:06:50 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id D5BE26001D;
+	Wed,  1 Jul 2026 12:06:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A713F1F00A3E;
+	Wed,  1 Jul 2026 12:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782907609;
+	bh=Hne4NKxMdbJBFIiD0wCOi2iipHevw0mcVZRCTIIGryU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=LOWpQrRhH97A0fz5LUgzxyegEAGwXRsHMYb3vqySjqS9mxdabcfZ6VlENUAdS96Ud
+	 f7T0eRj3gJuhgXnXx9x+EGoOBhK1kRjaytar+2yi6TXjJbS6LJkNzrjs7cwdrkodEF
+	 n0XEF8l0UTwlAXaRhPhRiSgC1fR8EJ0B2ZfURlzSepWEU8Okyfa3gF7U+lAVb7Axjl
+	 dKy58x9a04WPcSeCb/qHszbUDg/WJTeaMcdVE8OaO0zh8Nm8t4ZSQIiWl+5Iu2fKWY
+	 SLv5HE3sCyI2ttG09B9QcM6JHgvwlXk/1QBxWHzEIZyiwDmKeSBj4CzodBHdri8oeV
+	 QjeXYEXSGlcxQ==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Tao Liu <ltao@redhat.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>,  pjw@kernel.org,
+  palmer@dabbelt.com,  aou@eecs.berkeley.edu,  alex@ghiti.fr,
+  linux-riscv@lists.infradead.org,  linux-kernel@vger.kernel.org,
+  kexec@lists.infradead.org,  bhe@redhat.com,  zohar@linux.ibm.com,
+  roberto.sassu@huawei.com,  dmitry.kasatkin@gmail.com,
+  eric.snowberg@oracle.com,  linux-integrity@vger.kernel.org,
+  pratyush@kernel.org,  Markus.Elfring@web.de,
+  kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v3] riscv: Fix a NULL pointer dereference in
+ machine_kexec_prepare
+In-Reply-To: <CAO7dBbVftLUhd2qrh7hmijTB3PEPfZAhykCGqEfrPoOcSrrj-w@mail.gmail.com>
+ (Tao
+	Liu's message of "Wed, 1 Jul 2026 16:58:09 +1200")
+References: <20260701025732.66330-2-ltao@redhat.com>
+	<akSOb1_1tcJvFyda@kernel.org>
+	<CAO7dBbVftLUhd2qrh7hmijTB3PEPfZAhykCGqEfrPoOcSrrj-w@mail.gmail.com>
+Date: Wed, 01 Jul 2026 14:06:45 +0200
+Message-ID: <2vxz33y2j4mi.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 1/7] list: Add mutable iterator variants
-To: Jani Nikula <jani.nikula@linux.intel.com>,
- David Laight <david.laight.linux@gmail.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "David Hildenbrand (Arm)" <david@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
- Tejun Heo <tj@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Paul Moore <paul@paul-moore.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Shakeel Butt <shakeel.butt@linux.dev>, David Howells <dhowells@redhat.com>,
- Simona Vetter <simona.vetter@ffwll.ch>, Randy Dunlap
- <rdunlap@infradead.org>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Philipp Stanner <phasta@kernel.org>, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
- linux-ntfs-dev@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
- io-uring@vger.kernel.org, audit@vger.kernel.org, bpf@vger.kernel.org,
- netdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kexec@lists.infradead.org, live-patching@vger.kernel.org,
- linux-modules@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-pm@vger.kernel.org, rcu@vger.kernel.org, sched-ext@lists.linux.dev,
- linux-mm@kvack.org, virtualization@lists.linux.dev, damon@lists.linux.dev,
- llvm@lists.linux.dev, Kaitao Cheng <chengkaitao@kylinos.cn>,
- Muchun Song <muchun.song@linux.dev>
-References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
- <20260622040533.29824-2-kaitao.cheng@linux.dev>
- <20260622094242.64531b9a@pumpkin>
- <351a6b67-b394-4c58-aee2-88b6c8089ad5@linux.dev>
- <cf8467c7-b98f-44a5-9cf9-60b43b5da711@amd.com>
- <20260624152324.3def88ce@pumpkin>
- <0ed6b5c3-e955-46e2-9fc6-075a0dfd1c4f@linux.dev>
- <734f66ca51485ee3ec9788c0eaaead681e00664b@intel.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kaitao Cheng <kaitao.cheng@linux.dev>
-In-Reply-To: <734f66ca51485ee3ec9788c0eaaead681e00664b@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260701_040837_890669_7A8A915A 
-X-CRM114-Status: GOOD (  41.74  )
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,236 +79,111 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-在 2026/6/25 19:00, Jani Nikula 写道:
-> On Thu, 25 Jun 2026, Kaitao Cheng <kaitao.cheng@linux.dev> wrote:
->> 在 2026/6/24 22:23, David Laight 写道:
->>> On Wed, 24 Jun 2026 15:23:47 +0200
->>> Christian König <christian.koenig@amd.com> wrote:
->>>> On 6/24/26 15:14, Kaitao Cheng wrote:
->>>>> 在 2026/6/22 16:42, David Laight 写道:  
->>>>>> On Mon, 22 Jun 2026 12:05:31 +0800
->>>>>> Kaitao Cheng <kaitao.cheng@linux.dev> wrote:
->>>>>>  
->>>>>>> From: Kaitao Cheng <chengkaitao@kylinos.cn>
->>>>>>>
->>>>>>> The list_for_each*_safe() helpers are used when the loop body may
->>>>>>> remove the current entry.  Their API exposes the temporary cursor at
->>>>>>> every call site, even though most users only need it for the iterator
->>>>>>> implementation and never reference it in the loop body.
->>>>>>>
->>>>>>> Add *_mutable() variants for list and hlist iteration.  The new helpers
->>>>>>> support both forms: callers may keep passing an explicit temporary cursor
->>>>>>> when they need to inspect or reset it, or omit it and let the helper use
->>>>>>> a unique internal cursor.  
->>>>>>
->>>>>> I'm not really sure 'mutable' means anything either.
->>>>>> It is possible to make it valid for the loop body (or even other threads)
->>>>>> to delete arbitrary list items - but that needs significant extra overheads.
->>>>>>
->>>>>> It might be worth doing something that doesn't need the extra variable,
->>>>>> but there is little point doing all the churn just to rename things.
->>>>>>  
->>>>>>>
->>>>>>> This makes call sites that only mutate the list through the current entry
->>>>>>> less noisy, while keeping the existing *_safe() helpers available for
->>>>>>> compatibility.
->>>>>>>
->>>>>>> Signed-off-by: Kaitao Cheng <chengkaitao@kylinos.cn>
->>>>>>> ---
->>>>>>>  include/linux/list.h | 269 +++++++++++++++++++++++++++++++++++++------
->>>>>>>  1 file changed, 231 insertions(+), 38 deletions(-)
->>>>>>>
->>>>>>> diff --git a/include/linux/list.h b/include/linux/list.h
->>>>>>> index 09d979976b3b..1081def7cea9 100644
->>>>>>> --- a/include/linux/list.h
->>>>>>> +++ b/include/linux/list.h
->>>>>>> @@ -7,6 +7,7 @@
->>>>>>>  #include <linux/stddef.h>
->>>>>>>  #include <linux/poison.h>
->>>>>>>  #include <linux/const.h>
->>>>>>> +#include <linux/args.h>
->>>>>>>  
->>>>>>>  #include <asm/barrier.h>
->>>>>>>  
->>>>>>> @@ -763,28 +764,72 @@ static inline void list_splice_tail_init(struct list_head *list,
->>>>>>>  #define list_for_each_prev(pos, head) \
->>>>>>>  	for (pos = (head)->prev; !list_is_head(pos, (head)); pos = pos->prev)
->>>>>>>  
->>>>>>> -/**
->>>>>>> - * list_for_each_safe - iterate over a list safe against removal of list entry
->>>>>>> - * @pos:	the &struct list_head to use as a loop cursor.
->>>>>>> - * @n:		another &struct list_head to use as temporary storage
->>>>>>> - * @head:	the head for your list.
->>>>>>> +/*
->>>>>>> + * list_for_each_safe is an old interface, use list_for_each_mutable instead.
->>>>>>>   */
->>>>>>>  #define list_for_each_safe(pos, n, head) \
->>>>>>>  	for (pos = (head)->next, n = pos->next; \
->>>>>>>  	     !list_is_head(pos, (head)); \
->>>>>>>  	     pos = n, n = pos->next)
->>>>>>>  
->>>>>>> +#define __list_for_each_mutable_internal(pos, tmp, head)		\
->>>>>>> +	for (typeof(pos) tmp = (pos = (head)->next)->next;		\  
->>>>>>
->>>>>> Use auto
->>>>>>  
->>>>>>> +	     !list_is_head(pos, (head));				\
->>>>>>> +	     pos = tmp, tmp = pos->next)
->>>>>>> +
->>>>>>> +#define __list_for_each_mutable1(pos, head)				\
->>>>>>> +	__list_for_each_mutable_internal(pos, __UNIQUE_ID(next), head)
->>>>>>> +
->>>>>>> +#define __list_for_each_mutable2(pos, next, head)			\
->>>>>>> +	list_for_each_safe(pos, next, head)
->>>>>>> +
->>>>>>>  /**
->>>>>>> - * list_for_each_prev_safe - iterate over a list backwards safe against removal of list entry
->>>>>>> + * list_for_each_mutable - iterate over a list safe against entry removal
->>>>>>>   * @pos:	the &struct list_head to use as a loop cursor.
->>>>>>> - * @n:		another &struct list_head to use as temporary storage
->>>>>>> - * @head:	the head for your list.
->>>>>>> + * @...:	either (head) or (next, head)
->>>>>>> + *
->>>>>>> + * next:	another &struct list_head to use as optional temporary storage.
->>>>>>> + *		The temporary cursor is internal unless explicitly supplied by
->>>>>>> + *		the caller.
->>>>>>> + * head:	the head for your list.
->>>>>>> + */
->>>>>>> +#define list_for_each_mutable(pos, ...)					\
->>>>>>> +	CONCATENATE(__list_for_each_mutable, COUNT_ARGS(__VA_ARGS__))	\
->>>>>>> +		(pos, __VA_ARGS__)  
->>>>>>
->>>>>> The variable argument count logic really just slows down compilation.
->>>>>> Maybe there aren't enough copies of this code to make that significant.
->>>>>> But just because you can do it doesn't mean it is a gooD idea.
->>>>>> I'm also not sure it really adds anything to the readability.
->>>>>>
->>>>>> And, it you are going to make the middle argument optional there is
->>>>>> no need to change the macro name.  
->>>>>
->>>>> Christian König and Jani Nikula also disagree with the variadic-argument
->>>>> implementation approach. If we abandon that method, it means we will
->>>>> inevitably need to add some new macros. If mutable is not a good name,
->>>>> suggestions for better alternatives would be welcome; coming up with a
->>>>> suitable name is indeed rather tricky.  
->>>>
->>>> I don't think you need to add a new macro for the specific use case that people want to modify the next element of the iteration.
->>>>
->>>> If I remember your numbers correctly that is a really corner case and keeping using the existing *_safe() macros for that sounds perfectly fine to me.
->>>
->>> IIRC currently you have a choice of either:
->>> 	define               Item that can't be deleted
->>> 	list_for_each()	     The current item.
->>> 	list_for_each_safe() The next item.
->>> There is also likely to be code that updates the variables to allow
->>> for other scenarios.
->>>
->>> Note that if increase a reference count and release a lock then list_for_each()
->>> is likely safer than list_for_each_safe() :-)
->>>
->>> list.h has 9 variants of the 'safe' loop.
->>> The bloat of another 9 is getting excessive.
->>>
->>> It has to be said that this is one of my least favourite type of list...
->>
->> Hi Christian König, David Laight, Jani Nikula, David Hildenbrand,
->> Andy Shevchenko, Alexei Starovoitov
->>
->> For ease of discussion, I need to summarize the currently possible
->> approaches and briefly describe their respective pros and cons,
->> using the list_for_each_entry* interfaces as examples.
->>
->> 1. Add list_for_each_entry_mutable, while keeping list_for_each_entry
->> and list_for_each_entry_safe unchanged. list_for_each_entry_mutable
->> would be used specifically for safe deletion scenarios that do not
->> need to expose the temporary cursor externally. The code can refer to
->> the v1 version.
->>
->> Pros: Does not depend on immediate per-subsystem adaptation and can be
->>       merged directly.
->> Cons: Requires adding a whole set of mutable interfaces, which makes the
->>       code somewhat redundant.
-> 
-> Seems fine, and the original _safe naming is ambiguous anyway.
-> 
->> 2. Directly optimize away the temporary cursor in list_for_each_entry_safe
->> and define it inside the loop instead, changing the interface from four
->> arguments to three.
->>
->> Pros: Does not add redundant interfaces.
->> Cons: (1) Users need to manually update special cases that use the
->>       traversal variable of list_for_each_entry_safe, the new
->>       list_for_each_entry_safe would no longer apply there and would
->>       need to be open-coded.
->>       (2) Because the macro arguments changes, all list_for_each_entry_safe
->>       callers would need to be modified and merged together, making it
->>       difficult to merge such a large amount of code at once.
-> 
-> This won't fly because there are literally thousands of
-> list_for_each_entry_safe() users.
-> 
->> 3. Use a variadic macro approach to optimize list_for_each_entry_safe,
->> so that it supports both three and four arguments.
->>
->> Pros: (1) Does not add redundant interfaces.
->>       (2) Does not depend on immediate per-subsystem adaptation and can
->>       be merged directly.
->> Cons: (1) Increases compile time.
->>       (2) Makes the interface harder for users to use.
-> 
-> Basically I'm against any variadic macro tricks where the optional
-> argument is not the last argument. That's just way too surprising, and
-> goes against common practice in just about all other languages.
-> 
->> 4. Optimize list_for_each_entry by defining the temporary cursor internally,
->> making it compatible with the functionality of list_for_each_entry_safe.
->> The code can refer to the v2 version.
->>
->> Pros: (1) Does not add redundant interfaces.
->>       (2) The number of externally visible arguments of list_for_each_entry
->>       remains unchanged, still three.
->> Cons: (1) list_for_each_entry and list_for_each_entry_safe would be merged
->>       into one, and list_for_each_entry_safe would gradually be deprecated.
->>       (2) Users need to manually update special cases that use the traversal
->>       variable of list_for_each_entry, the new list_for_each_entry would no
->>       longer apply there and would need to be open-coded. There are 15 such
->>       cases in total.
-> 
-> This sounds good to me, though I take it there's some code size increase
-> and/or performance penalty?
-> 
-> Maybe the 15 cases are questionable anyway?
-> 
->> 5. Use a variadic macro approach to optimize list_for_each_entry, so that
->> it supports both three and four arguments.
->>
->> Pros: (1) Does not add redundant interfaces.
->>       (2) Does not depend on immediate per-subsystem adaptation and can be
->>       merged directly.
->> Cons: (1) Increases compile time.
->>       (2) list_for_each_entry and list_for_each_entry_safe would be merged
->>       into one, and list_for_each_entry_safe would gradually be deprecated.
-> 
-> Please don't do the macro tricks.
-> 
->> 6. Make no changes, keep the current logic unchanged, and close the current
->> email discussion.
-> 
-> I like hiding the temporary stuff when possible.
-> 
-> BR,
-> Jani.
+On Wed, Jul 01 2026, Tao Liu wrote:
 
-Hi all,
-If there are no objections, I will make the changes using the first approach.
+> Hi Jarkko,
+>
+> On Wed, Jul 1, 2026 at 3:50=E2=80=AFPM Jarkko Sakkinen <jarkko@kernel.org=
+> wrote:
+>>
+>> On Wed, Jul 01, 2026 at 02:57:33PM +1200, Tao Liu wrote:
+>> > A NULL pointer dereference issue is noticed in riscv's machine_kexec_p=
+repare,
+>> > where image->segment[i].buf might be NULL and copied unchecked.
+>> >
+>> > The NULL buf comes from security/integrity/ima/ima_kexec.c:
+>> > ima_add_kexec_buffer(), where kbuf is added by kexec_add_buffer(),
+>> > but kbuf.buffer is NULL
+>>
+>> This should have a proper call sequence. Now the root cause is
+>> obfuscated.
+>
+> Sure, I will attach the stack trace in v4. Here is the one:
+>
+> [   62.867540] kexec_file(Image): Loaded kernel at 0x80200000
+> bufsz=3D0x34ed800 memsz=3D0x35d0000
+> [   62.879983] Unable to handle kernel access to user memory without
+> uaccess routines at virtual address 0000000000000000
+> [   62.880736] Current kexec pgtable: 4K pagesize, 57-bit VAs,
+> pgdp=3D0x00000001062eb000
+> [   62.881185] [0000000000000000] pgd=3D00000000413b4401,
+> p4d=3D000000004151bc01, pud=3D00000000415b7801, pmd=3D0000000040af5801,
+> pte=3D0000000000000000
+> [   62.881969] Oops [#1]
+> [   62.882077] Modules linked in:
+> [   62.882717] CPU: 1 UID: 0 PID: 894 Comm: kexec Not tainted 7.1.1 #4
+> PREEMPT(lazy)
+> [   62.883037] Hardware name: QEMU QEMU Virtual Machine, BIOS
+> edk2-20260508-2.fc44 05/08/2026
+> [   62.883365] epc : __memcpy+0xd4/0xf8
+> [   62.883685]  ra : machine_kexec_prepare+0x8a/0x298
+> [   62.883914] epc : ffffffff81393ee8 ra : ffffffff800366ca sp :
+> ff20000004a83d10
+> [   62.884214]  gp : ffffffff83258db8 tp : ff6000008573db80 t0 :
+> ffffffff80033640
+> [   62.884433]  t1 : 2152ffffffffffc0 t2 : 0000000003000000 s0 :
+> ff20000004a83d80
+> [   62.884710]  s1 : 0000000000000000 a0 : ff20000004a83d10 a1 :
+> 0000000000000000
+> [   62.884987]  a2 : 0000000000000028 a3 : 0000000000000028 a4 :
+> 0000000000000000
+> [   62.885208]  a5 : 0000000000000000 a6 : 0000000104e33fff a7 :
+> 0000000000000000
+> [   62.885486]  s2 : ff60000082a35800 s3 : 0000000000000000 s4 :
+> 0000000000000010
+> [   62.885774]  s5 : 0000000000000028 s6 : ff20000004a83d10 s7 :
+> 0000000000000005
+> [   62.886005]  s8 : 00000000000000c0 s9 : 000000000ac0d220 s10:
+> ffffffff835420e8
+> [   62.886218]  s11: 0000000000000000 t3 : ffffff800000007c t4 :
+> ff1c000002138d00
+> [   62.886515]  t5 : ffffffffffffffff t6 : ff20000004a83d10 ssp :
+> 0000000000000000
+> [   62.886860] status: 0000000200000120 badaddr: 0000000000000000
+> cause: 000000000000000d
+> [   62.887162] [<ffffffff81393ee8>] __memcpy+0xd4/0xf8
+> [   62.887388] [<ffffffff801b253a>] __do_sys_kexec_file_load+0x1b2/0x338
+> [   62.887612] [<ffffffff801b26e4>] __riscv_sys_kexec_file_load+0x24/0x40
+> [   62.887855] [<ffffffff81395ea4>] do_trap_ecall_u+0x1a4/0x5a8
+> [   62.888134] [<ffffffff813a9eec>] handle_exception+0x16c/0x178
+> [   62.888445] Code: 7613 07f6 ca05 86b3 00c5 e7b3 01f5 8fd5 8b8d eb89
+> (4198) 0591
+> [   62.889223] ---[ end trace 0000000000000000 ]---
+> Segmentation fault         kexec -l /boot/vmlinuz-7.1.1
+> --initrd=3D/boot/initramfs-7.1.1.img --reuse-cmdline
+>
+> (gdb) p image->segment[0]
+> $3 =3D {{buf =3D 0x0, kbuf =3D 0x0}, bufsz =3D 0, mem =3D 10737586176, me=
+msz =3D 4096}
+>
+> The buf =3D 0x0 and bufsz =3D 0 comes from ima_add_kexec_buffer(), thought
+> I'm not sure why it added a NULL segment, but it is no harm to add a
+> NULL checker here in case any other scenarios similar as IMA.
 
+From my reading of the IMA code, I think they do so because they don't
+want to add a buffer to the kimage just yet. This is because there can
+be IMA measurements between kexec load and kexec reboot. So they use
+kexec_add_buffer() to reserve the physical address space, then they vmap
+the destination pages in ima_kexec_post_load(), and then update the
+destination pages directly via a reboot notifier. So they do not have a
+buffer copied to the destination pages at the time of
+kexec_add_buffer().
 
-Hi David Laight,
-You previously expressed a different opinion. Do you have any further comments
-on the current proposed approach?
+Now all that is fairly convoluted and not very obvious, but I am not
+sure if there is a better way of doing this off the top of my head.
 
--- 
-Thanks
-Kaitao Cheng
+>
+>>
+>> >
+>> > Fix this by simply adding a check before copy.
+>> >
+>> > Fixes: b7fb4d78a6ad ("RISC-V: use memcpy for kexec_file mode")
+>> > Acked-by: Baoquan He <bhe@redhat.com>
+>> > Acked-by: Pratyush Yadav <pratyush@kernel.org>
+>> > Signed-off-by: Tao Liu <ltao@redhat.com>
+[...]
 
+--=20
+Regards,
+Pratyush Yadav
 
