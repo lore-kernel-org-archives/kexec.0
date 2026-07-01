@@ -4,151 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6CF8BC43458
-	for <kexec@archiver.kernel.org>; Wed,  1 Jul 2026 03:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6FAD5C43458
+	for <kexec@archiver.kernel.org>; Wed,  1 Jul 2026 03:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ErW+6EK3mXFurUZfepSXAdiyKBP4miK50Z6tfKbk75s=; b=SpPOl6GnwTPjrV8J6XNlBNe4O0
-	EiaNGo4oeTj+Kh9MTNIOxGOOLIX9PLqMH6jSY+cDjucEYBhzL/XCceNoCtzjJbSRwW62kpjJoceUk
-	o6QmzrvINA/16Z/JjVAFF3myygLu2L7PIkij+PpG20a47EBtnXnVuv7e7h5nM2fnzw6th2aYl9Qxq
-	OuBSzPY9vFyjOHco2CsKIxtgeewFvVfCu1muRbnVrqZL2vT2OYz71bNx5RewcPPAqdUKSIJxYOn9s
-	bVpzQtgQDRbvFvG9QT758q9nARpfrnQY1zcJ/KnXv1fP0mZcf+r6msLUijNhX9QWJLNSj4JXb0gyI
-	VoAbCHVw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=YoMJdx5zn+YGKPIJdZfuaw6N0IusaD8A3j1a7ig86wQ=; b=ZUS8joqVyLVRNfxglWKGFK2p1t
+	U4F/pAAZjtkKmpI3soVx2Ebl5CL0XzuoFQemfgWNgRJ/F0RYwmZdA0RWDPHfL9kAEmluimhfzGDzV
+	Nwmzk62a1SJSyDQqxS5tsfrOloXrNz5XLzAp1kIQp48LmIc7U593RuXa8Qq9ru555N9zrwkkqH8Vv
+	K5jGFbqR7VzAOLEVl4IqL07cbdIZTYSf3mQMy7acblMQ91MhfOuYFGXs/CznE8htvGedA6XLAlFuG
+	FJt3BDO/RNPd34nS38Yf4zFH0e+jtx6BKE2WQkkj8DhJw9qLZnKr0YgiTVQAizGQ5yY6yG3cHXzwt
+	Css4sr1g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weldX-00000000aCs-2eXO;
-	Wed, 01 Jul 2026 03:29:19 +0000
-Received: from mail-japanwestazolkn19012061.outbound.protection.outlook.com ([52.103.66.61] helo=OS8PR02CU002.outbound.protection.outlook.com)
+	id 1welei-00000000aMO-4464;
+	Wed, 01 Jul 2026 03:30:33 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weldS-00000000aCJ-0HEz;
-	Wed, 01 Jul 2026 03:29:15 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lEfonfu+SCAluExq2r9SnW0h/9uEh7tzHIYaPWI8yumjetdcQiL/TcIwq0nwpeN8azK2wUlovlp2nsT0aRYQ+iYFhRWiojypNROrd+p7svV63pEeJhrsdBP3HIW6AoG3YNyzp0KAYI4DH2MqU2+w8916xFjP9Ln8l/ITwn0BKaqzynSM7LSSdqbCcFxXjXKWDEgawfzP3BGuauuyctMnZJbmjbxQ79Y1HkqwMqgbYRQoIzFA2ceuu6RfEACM/ZN9XjH+I48GmQKzl0a7ytF8IBF/epB83skk3hYNgVBdQBI6L1U6iWqwYOJIwxWCbkcvB2ynjJzEdXH+Xa5yTicn1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ErW+6EK3mXFurUZfepSXAdiyKBP4miK50Z6tfKbk75s=;
- b=ckbsSvxF+Fm+uzADvC7syGOIJHEvVY6H9W3VmKje+BlyW6KHlJjitAnFyuw71Dg/CjF9HazGDYb94XBFClXAb5EhTboaSNs5O49LOchirv5Aj2cYTVYZ6S/LAiLOGzbWolkwEW3AZ3mj0NtEKpm/aaEFH8aus0CeFwwznOQgOdxLTDUAKcYrbIW9jqrzuCDvuHkguKzo3vAlI7v/YVi8yr/1qmugA7siHm0uafEsbcnPKFqlO/1qyKuyV2CASOYvwkRN3eL2nKOP/d4SdXm8mNdoa8VX8ugfN4+Y6dT3CPGZnmy6djjQ8f/kVQUEg04rIhdAv08OWiiunMOzbML04A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ErW+6EK3mXFurUZfepSXAdiyKBP4miK50Z6tfKbk75s=;
- b=fxtD7ffSXbzl66NtQvWk6kURXw0ZtLjko+1vvt9T3XdmLorteyB206hiuEXv4l7uEn2rgifjdpHDP1z8tL2padoD6u5FGxEEbiEqbCsxWco2Qo22wZRU2+HnZyDIYcTEo3GqGeHdmLtIzYZ03YC8q0WEcNiZeoaiZCCwt+DMXQ9rM77WwqJIbe75SlroIyzIZKTuyAUM9kw2f3jjkUHe6mjm2RQ3cJ1SMLX+EWf/BL8TmguvMVWk7ZdLxuigBAAJ1aEsFU++FMv8iXIJTEboi50XGgF5FZEUrZIM0Jxq4IzSkWy4LvIi+wHhW5w8CrfMJS29bRzbgCoDFMJLtMqTpw==
-Received: from SE3PR04MB8922.apcprd04.prod.outlook.com (2603:1096:101:2e9::7)
- by TYZPR04MB6279.apcprd04.prod.outlook.com (2603:1096:400:288::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.19; Wed, 1 Jul
- 2026 03:29:04 +0000
-Received: from SE3PR04MB8922.apcprd04.prod.outlook.com
- ([fe80::3450:f139:5238:8f58]) by SE3PR04MB8922.apcprd04.prod.outlook.com
- ([fe80::3450:f139:5238:8f58%5]) with mapi id 15.21.0181.008; Wed, 1 Jul 2026
- 03:29:04 +0000
-Message-ID: <SE3PR04MB8922E2267F05A514AD33F9D3F3F62@SE3PR04MB8922.apcprd04.prod.outlook.com>
-Date: Wed, 1 Jul 2026 11:28:55 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] riscv: Fix a NULL pointer dereference in
- machine_kexec_prepare
-To: Tao Liu <ltao@redhat.com>, pjw@kernel.org, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, alex@ghiti.fr
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, bhe@redhat.com, zohar@linux.ibm.com,
- roberto.sassu@huawei.com, dmitry.kasatkin@gmail.com,
- eric.snowberg@oracle.com, linux-integrity@vger.kernel.org,
- pratyush@kernel.org, Markus.Elfring@web.de, kernel-janitors@vger.kernel.org
-References: <20260701025732.66330-2-ltao@redhat.com>
-Content-Language: en-US
-From: "Nutty.Liu" <nutty.liu@hotmail.com>
-In-Reply-To: <20260701025732.66330-2-ltao@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TPYP295CA0059.TWNP295.PROD.OUTLOOK.COM
- (2603:1096:7d0:8::20) To SE3PR04MB8922.apcprd04.prod.outlook.com
- (2603:1096:101:2e9::7)
-X-Microsoft-Original-Message-ID: <f47ff8af-beee-48ea-ba49-95386526213e@hotmail.com>
+	id 1weled-00000000aLC-1gFf
+	for kexec@lists.infradead.org;
+	Wed, 01 Jul 2026 03:30:29 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782876626;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YoMJdx5zn+YGKPIJdZfuaw6N0IusaD8A3j1a7ig86wQ=;
+	b=Hr6h4hZC38QkoCQQ31vMEMKuwFQwzuWHRSMnaofauBpJhlcNwmnM4LycSbpPfysmdISteW
+	a4ngr7fjl08whH4LxwbeHsirGSYM1qfDprlCiQpMKH+WQspxvxZQD7ED19bMjDBhePz56u
+	xCn81YQrQkJXd5FwKt8r9j3VKP4n3cg=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-153-euHPjotLMBW6VbGCJVMdEg-1; Tue, 30 Jun 2026 23:30:24 -0400
+X-MC-Unique: euHPjotLMBW6VbGCJVMdEg-1
+X-Mimecast-MFC-AGG-ID: euHPjotLMBW6VbGCJVMdEg_1782876624
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-8e97889ac8aso2828396d6.3
+        for <kexec@lists.infradead.org>; Tue, 30 Jun 2026 20:30:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782876624; x=1783481424;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=YoMJdx5zn+YGKPIJdZfuaw6N0IusaD8A3j1a7ig86wQ=;
+        b=icksKRotf9iiwAMsH8eOxzeqo9fQV1V1XuZZhnTpKgUFFGyNyHrKUsOtULQdv3iOoo
+         BWG+8zDFIDDF44VJefBqD2kfM03Gjx8JSBeSCctC6JwqWoVOdf2FiPHO7xgC+tTYXpoi
+         MiQTWhXNG6652WbfiTeJDiimt34quE+lFJKieUR/qxFof7UVJtCBmJOVXa7sp3s9qYfx
+         xYNo6WNraCCzIEcuRu0hT2yPU4fVRWOPhiIs3HivGAXfdQdKp73xVfKy9ssJHvUh2YjE
+         8ZFaOJ/TRS0pFWgb+B8AVaGFiud3e/MPDqGiYS1xTxatMZPxaE3dNleRZaqRi2MfFHs5
+         P6Ag==
+X-Forwarded-Encrypted: i=1; AFNElJ/hntDkYcnNTEvSBQMKJ9D/SmTzNmmJ7W6DjF8yHU0q2VABdQF6sFQH/wL+hpYPs+iE+hpURg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzXapMEAc9jslZLHd+OD+9k6dwqqVoW9V33FriX70mNGxwna/ch
+	cEGC98nVLhF2O2i5SYCGF/f5iW2S3nbYVPZlnu+pSdFz0SZNPtH1kiGSm4KRAO8dcZWJvlmslPf
+	6PatS9+MfzVBsTeFCfX34PBq+aiJntz0BJ9OPia2c8YbWgzSBeNRC5fosG4lJQWhT6ssG3BPkX7
+	Pqbme73xqqtXknQrAsUv9PgAmSW6LDS/vFt1jk
+X-Gm-Gg: AfdE7clWlv1NLUdZ1GMx3VKquw4y9qQjyEvZiWuzdzecrqI7W9e6Kt8PNfH4Md65D3c
+	ebEcloJWu4+I/Oy18Z1YA+g63rhHwJqNueEfwUUmra7DDKPQYuAh4WtTRP4dNjvPaVhtFAvDG4T
+	9B3wFPBqEs1aKP+JSj0uxIXpP3z3Anl+nyiNJRg1cn1ATxsk+gRfZZocspmTNsTIGstw==
+X-Received: by 2002:a05:622a:1491:b0:51b:ec5a:ec0f with SMTP id d75a77b69052e-51c26a78b2cmr68701cf.27.1782876623907;
+        Tue, 30 Jun 2026 20:30:23 -0700 (PDT)
+X-Received: by 2002:a05:622a:1491:b0:51b:ec5a:ec0f with SMTP id
+ d75a77b69052e-51c26a78b2cmr68181cf.27.1782876623221; Tue, 30 Jun 2026
+ 20:30:23 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SE3PR04MB8922:EE_|TYZPR04MB6279:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5055ffdf-0315-445d-9a8c-08ded720e658
-X-Microsoft-Antispam: BCL:0;ARA:14566002|12121999013|19101099003|25010399006|15080799012|5072599009|4140399003|55001999006|6090799003|23021999003|8060799015|19110799012|4302099013|440099028|3412199025|10035399007|40105399003|52005399003|1602099012;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?bnVNMHdoclcwLzZzY3czOFZtL1ZqVHRFK1BYNnRFdU1GTzJCeTVZRkRSakdS?=
- =?utf-8?B?Q3M0L1hCTnFBQll5YWN6TGNsc1krV0l1Z1pib29lZ1lSQTdOOWdrU09ySTRF?=
- =?utf-8?B?MnpBZWZjUUFnSWVCZzViNWtkOG1OR2FFZkttTVdOcFY5VDlFNktvSXNUa3BM?=
- =?utf-8?B?V0V1UnJ6VHB1Nm56aHBzWWxyU2diTmtpMS83UDVpLzZLR0lMcDlkSzJQVWR5?=
- =?utf-8?B?QXBpVE9uVTdZcEEvOEZRMnRmcTBnOXhVN1pBWEdDUzVyN3FFUkZLZ29mVUY5?=
- =?utf-8?B?OWJydGV1Q0xZeUZWS3hoa2lKNFM0RjZRRVBPZnVtV3BZeXZtT1dINzdhYUNj?=
- =?utf-8?B?UGkzWjlRVnpXUEhNK1ZlMjFYNkVqdldtcUdJMlBINjFnTzk0aDVxRitlbGJT?=
- =?utf-8?B?NmFHZ3hUVm10Lzh5RllQTzB1NUhXNDdXa0J3WXNyVU1IWmZlMEovVElCZnMy?=
- =?utf-8?B?WDRDdXZhNEFXd3Bya0YyV2lpMjN6Uy9ialdsNzQwL3ljalFPdy9OMmtYclZ0?=
- =?utf-8?B?bG9VQlBobHp6ZGMrR25xYUFYcjNqZFJ2OHdEUHdXbnIxaFN2TmNkbjM2Z3Ux?=
- =?utf-8?B?cFZsVnRZSDhIRnI1VEgwZEluWWpsNWYxdWlNbU1uMnpuQm9PS1FSdklia1o1?=
- =?utf-8?B?RFd0NWIxTXJiUzg4eWtMQjZjU2Njdkg3TXJjTWRLNFlPMnFXRHg3ZHJKRW0r?=
- =?utf-8?B?OFlGblF2dkVOdW03MXJYVmRIcFZudTBsckxwN1JaaSswUUZSM1hNWDdCZXgy?=
- =?utf-8?B?V1E2dE14dURhV2tSelV2V3Y5SExiZ3JtcEFJTS9CVVJVRXc4REdXa0toY09B?=
- =?utf-8?B?NmovSit6NWpRdWU5MWNxZkprOUNlVG1BVXp1ZXQxUFBnam5GMkZPeHpYZVpV?=
- =?utf-8?B?K09EMElZMXQ4Y2N0NDRVZ3h2NDhQWkJoaVBMZDBiOTROeDJGZVNESHNxUFVp?=
- =?utf-8?B?dElDOUxPRjUvY0MvR1k0UnVTV2ZwTVhrZVRhK0ZxYlZUb3NYeG41NlNKMlNG?=
- =?utf-8?B?ckpxQzVkS2Y5YldXMllJNmNYb1p1Yjhrb1VQMlR4L2dPOVRtemJTV1FxcTFS?=
- =?utf-8?B?R0l5bnU4ZDM0OURNOVIzYllCWnJZNXVkbzZhaVZoR1MzRjZ2V2lrbVVtRERH?=
- =?utf-8?B?Z1VIUWt5dVhvOU94WVZ2Z2ZnMm80TVN3Tk85UGt1c3NiWlJYMnBzVTJoTjky?=
- =?utf-8?B?UC9tV0NhV1ZCbGR6YjJ0S2IxVDlHWjRyYlRDSzVHS1pGSm5xb3BXS0JLWUlX?=
- =?utf-8?B?WWRTdjR5dzViQkJsNjBVS1N0MG4yaUhRaGNZRHRONWtBTXdHb09lRDd1b1hB?=
- =?utf-8?B?NGlablpWaHhrSnVuT1BNVFQ5aEl3eDRSRXJ1YjBpNm1SWER4Q3JNWk5ZejVY?=
- =?utf-8?B?SlU5ZDZ3cEYxSjZlTEhFTmFta3dyWXhPT1gzOFFVMDc0aVcyWVRsakJFRXlp?=
- =?utf-8?B?THBWYmRPQUVEcVlxZWwybkV2STZsY2xWc0p1NGM0eHB3WkxlM3dsREtOMDN2?=
- =?utf-8?Q?w4DKGE3SF4+y9USupXMaVpHsxnU?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TXROaXRRYUppOTZna2xDR0dpTm0zRGk0aG8zaVIwekoyZCtnUW1md2lZNXZu?=
- =?utf-8?B?UTRNMWp4WGR0d3FYbUZiWENkZUpJeVhBaHUzVDRETW94MWo1U3RURUpmUDJz?=
- =?utf-8?B?Z0lhOGdqYk5jWXhBMEUyNi9IZXZwZFFlWlA3WHhlOEMvVVduY0dpSkFndUdZ?=
- =?utf-8?B?UjM2YjlZcVVhYld6dlJvMlppZGNBRVY5L3lPTWZaTS8rZFh0UU1JRVJ6VjFR?=
- =?utf-8?B?ZTZCSTV0OG9hVFZiMkI2T0tBK096UTdxbllJUjUwbTBLYlRvd3FGQUcyZUlS?=
- =?utf-8?B?R1hmdHdOcGhJRkRVeTMySjJuRVJaMUs2Ykw0a2dLdjFDbzViZUlRcGd1eDhM?=
- =?utf-8?B?RnpzckNJMXlDNVBWU0VoTUtrTTcyaXZySnE4aHNtWE5NZmsvbDVBY0JnVTFT?=
- =?utf-8?B?SEd4YTBwMUdYZ250K1BDT0VXbUJzZjZxRytabzZtRDlmeW96d0g5TVg2ZTRW?=
- =?utf-8?B?YmRzUnM3RUhtUkx2SU5jeGNoZ1ZFZGdYOG5WSXRsWnAxWUhyZk5neHFCVkJ6?=
- =?utf-8?B?ZUpJeFgya2VSL3Y3UXJYNkNJdmVGL09tWHBGbUdaRjZsM0RxRFpteXRzMXRG?=
- =?utf-8?B?c2FtSFo3RHMyTWVNL2F4RGJnbWpBUk00RERtZ0t3bVJkbVdObXF2S2Z5akl0?=
- =?utf-8?B?dzVUejRhY2RIa2RzYU44VHpHS0NndG1RMlZhVEMxVmJsVmVUZFRyVjlZYkJQ?=
- =?utf-8?B?UzBjREpEUUQ1QjNTeEJuYzlVMWhJMmFxTm5lYWNhclJMTDBoVGo4T2hpSlE0?=
- =?utf-8?B?UmxKY29rSjVxOWl4NFpWelY0eCszeEZJQnJNUGJQZTNGckYvbThDOFN1VFVD?=
- =?utf-8?B?UHQzRXlmSnJrR2hFL3lCTWw1ZmtuKzVMdnpGK25qRktNbi8rQzlnZlVkWGRi?=
- =?utf-8?B?MFk4amZhcE92akJPL2R3V1I2TWhRQlFPb1JQUXBzVlFsZVFHVnpPbGdUVUxG?=
- =?utf-8?B?cW1YWDlnenhZOGEzSUlLaXpHR215OEVmMno3UUgwRHhtL01iWWVtQkg1cHAw?=
- =?utf-8?B?cW5NV0xXbENESXBNbEJFcXY2eWRDeWd2Y3NBd3BXNHU3VUNWTzJjWTlJK1Iv?=
- =?utf-8?B?OXhxc3U1Y2VPNytoRS9yaGNxaUNFZ090WFhTZnp1VU8xa0laWGN3SEJYdzhZ?=
- =?utf-8?B?TzVaMzhuMXVXamhLcEp6NU9STk1LWDh6aG9hMGFsU1pUS3BWcDVzOG1IQmtJ?=
- =?utf-8?B?MThiNU1ONTU0SUVQeFJhNGRPeGgxMTZCSUdIUWNtbW0wVHRYeWdmbERDRFJN?=
- =?utf-8?B?SUFrWUd5aklUczJtSFBXL0VzUW9Qc0MrRlJIT2tMRG9lVmFUakp4MVpQSU9I?=
- =?utf-8?B?UDBSU0tGMUVhQ2g3UVJWem1NVm9wSFJpWHZ3dGZWNHNWNS90VUVyZWc5bUdH?=
- =?utf-8?B?a28zZ2ZtZ3lvWXFnQXlGZkpZeWRvVThmUkRUY25PM3JBRENWMmRWR3JBTzlQ?=
- =?utf-8?B?Y2g5bUNUa3UyV1oxYWtJQlora2czc1I3WXFReUpOMjhDWE5ZQUpDdndyZG1v?=
- =?utf-8?B?TUoyOFJ6Y3dtWE9obnJQNlFqV0k5UmNiRjBLZlVxRkxQZWpnK0RhRTZYTFpm?=
- =?utf-8?B?bzJDOXhKdlBXREg1MkxDc3R6YzBjOFR0a24xbEpmSFh5UUNjZnBSWmtFLzV3?=
- =?utf-8?B?ZjJtVkJtUnR5WDVzMDQrMi9iZFNaRGp5YlhURk1KSnkyakJtc3A0Z3ZOcjFK?=
- =?utf-8?B?Lzdla3RJNXA1bENQOFk1QkRVVmU3T3B1Rml0WUY2VG4zSEF3WEFaZEJxMVhm?=
- =?utf-8?B?KzZGVi90clE4b1NPaVM5M1F1OGZab0xLQzJKU0xHMTZkTjNMQ0VjRkgvWi91?=
- =?utf-8?B?NVo1ajFIYnNBVFVVSW1IZDVYd1pMaHR5YUtPL2ZMVy9sRnAyTFRDUzN2Y1JJ?=
- =?utf-8?Q?a5jklfsrcxPlF?=
-X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-c3e7a.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5055ffdf-0315-445d-9a8c-08ded720e658
-X-MS-Exchange-CrossTenant-AuthSource: SE3PR04MB8922.apcprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2026 03:29:04.2425
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR04MB6279
+References: <20260529032739.13264-2-ltao@redhat.com> <CAO7dBbW+LEy8SBGAKcrxEDzK5Xctw-r7ztgnXuURa9g0xntbtQ@mail.gmail.com>
+ <CAP_BRoQEM8Re1dT7JNQgO72o50GAnb2y7R1HWPd+E772GVYAJg@mail.gmail.com> <2vxzh5mlk3bd.fsf@kernel.org>
+In-Reply-To: <2vxzh5mlk3bd.fsf@kernel.org>
+From: Tao Liu <ltao@redhat.com>
+Date: Wed, 1 Jul 2026 15:29:44 +1200
+X-Gm-Features: AVVi8CdKF1AKTpYGlqKLlXqBd2QuDG30_C7t77l5Ewf9c6uDhUVIB40R85nEe14
+Message-ID: <CAO7dBbXzs2pMrVuJ3qUVT2KYNh9RysOOWy_HPTmCY3gYUh9LDQ@mail.gmail.com>
+Subject: Re: [PATCH] riscv: Fix a NULL pointer reference in machine_kexec_prepare
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, pjw@kernel.org, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, 
+	Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Snowberg <eric.snowberg@oracle.com>, 
+	linux-integrity@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: wIlznaWIvBzcNHgLgTp2k3Ib0mkgl7BLOsW5jLdiM8I_1782876624
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260630_202914_118125_0440A715 
-X-CRM114-Status: GOOD (  16.86  )
+X-CRM114-CacheID: sfid-20260630_203028_022693_BA2BF642 
+X-CRM114-Status: GOOD (  33.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -163,53 +108,113 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Hi Pratyush,
 
-On 7/1/2026 10:57 AM, Tao Liu wrote:
-> A NULL pointer dereference issue is noticed in riscv's machine_kexec_prepare,
-> where image->segment[i].buf might be NULL and copied unchecked.
+On Mon, Jun 29, 2026 at 11:13=E2=80=AFPM Pratyush Yadav <pratyush@kernel.or=
+g> wrote:
 >
-> The NULL buf comes from security/integrity/ima/ima_kexec.c:
-> ima_add_kexec_buffer(), where kbuf is added by kexec_add_buffer(),
-> but kbuf.buffer is NULL.
+> +Cc IMA maintainers
 >
-> Fix this by simply adding a check before copy.
+> On Fri, Jun 26 2026, Baoquan He wrote:
 >
-> Fixes: b7fb4d78a6ad ("RISC-V: use memcpy for kexec_file mode")
-> Acked-by: Baoquan He <bhe@redhat.com>
+> > Add kexec ML to CC.
+> >
+> > On Fri, Jun 26, 2026 at 7:46=E2=80=AFAM Tao Liu <ltao@redhat.com> wrote=
+:
+> >>
+> >> Kindly ping, any comments?
+> >>
+> >> Thanks,
+> >> Tao Liu
+> >>
+> >> On Fri, May 29, 2026 at 3:35=E2=80=AFPM Tao Liu <ltao@redhat.com> wrot=
+e:
+> >> >
+> >> > A NULL pointer reference issue is noticed in riscv's machine_kexec_p=
+repare,
+> >> > where image->segment[i].buf might be NULL and copied unchecked.
+> >> >
+> >> > The NULL buf comes from security/integrity/ima/ima_kexec.c:
+> >> > ima_add_kexec_buffer(), where kbuf is added by kexec_add_buffer(),
+> >> > but kbuf.buffer is NULL.
+> >> >
+> >> > Fix this by simply adding a check before copy.
+> >> >
+> >> > Signed-off-by: Tao Liu <ltao@redhat.com>
+> >> > ---
+> >> >  arch/riscv/kernel/machine_kexec.c | 3 +++
+> >> >  1 file changed, 3 insertions(+)
+> >> >
+> >> > diff --git a/arch/riscv/kernel/machine_kexec.c b/arch/riscv/kernel/m=
+achine_kexec.c
+> >> > index 2306ce3e5f22..d81d576f9cb5 100644
+> >> > --- a/arch/riscv/kernel/machine_kexec.c
+> >> > +++ b/arch/riscv/kernel/machine_kexec.c
+> >> > @@ -41,6 +41,9 @@ machine_kexec_prepare(struct kimage *image)
+> >> >                 if (image->segment[i].memsz <=3D sizeof(fdt))
+> >> >                         continue;
+> >> >
+> >> > +               if (image->segment[i].buf =3D=3D NULL)
+> >> > +                       continue;
+> >> > +
+> >
+> > This is a good fix, maybe we can add code comments to explain it as
+> > below, just for reference.
+> >
+> >                /*
+> >                 * Some segments (e.g. IMA) reserve space but have no bu=
+ffer
+> >                 * loaded yet. Skip them as they cannot contain an FDT.
+> >                 */
+> > And is there any other place where the similar issue exists? e.g on Loo=
+ngArch?
+> >
+> > Other than above concerns, this patch looks good to me:
+> >
+> > Acked-by: Baoquan He <bhe@redhat.com>
+>
+> Yeah, the patch LGTM to me too.
+>
 > Acked-by: Pratyush Yadav <pratyush@kernel.org>
-> Signed-off-by: Tao Liu <ltao@redhat.com>
-It would be better to add the log of the dereference calltrace.
-Otherwise,
-Reviewed-by: Nutty Liu <nutty.liu@hotmail.com>
+>
+> Although I think IMA can make this a bit easier to understand. First, in
+> ima_add_kexec_buffer() it should set kbuf.buffer to NULL and kbuf.bufsz
+> to 0 explicitly instead of using kexec_buffer and kexec_buffer_size
+> which are initialized to NULL and 0, but never updated. Using the
+> variables here adds an extra level of indirection.
+>
+> Also, perhaps we should add a comment in ima_add_kexec_buffer() about
+> how this all works, since where the IMA buffer lives and where it gets
+> updated it fairly complicated and took me some time to piece together.
+
+Thanks for your patch review and suggestions! I agree with your point
+on the IMA part, I was confused by the code too, e.g in
+ima_add_kexec_buffer():
+
+void *kexec_buffer =3D NULL;
+kbuf.buffer =3D kexec_buffer;
+ret =3D kexec_add_buffer(&kbuf);
+if (ret) {
+    pr_err("Error passing over kexec measurement buffer.\n");
+    vfree(kexec_buffer);
+    return;
+}
+
+Do we need to vfree(kexec_buffer)? When kexec_buffer is NULL and seems
+never get updated.
+
+I'm not familiar with IMA code, maybe there is a reason which I'm unaware o=
+f...
 
 Thanks,
-Nutty
-> ---
+Tao Liu
+
+
+
 >
-> v3 -> v2: Add fixes tag; Replace "reference" to "dereference".
-> link to v2: https://lore.kernel.org/linux-riscv/20260627222602.23594-2-ltao@redhat.com/
-> link to v1: https://lore.kernel.org/linux-riscv/20260529032739.13264-2-ltao@redhat.com/
+> --
+> Regards,
+> Pratyush Yadav
 >
-> ---
->   arch/riscv/kernel/machine_kexec.c | 7 +++++++
->   1 file changed, 7 insertions(+)
->
-> diff --git a/arch/riscv/kernel/machine_kexec.c b/arch/riscv/kernel/machine_kexec.c
-> index 2306ce3e5f22..afc68f6a4aa1 100644
-> --- a/arch/riscv/kernel/machine_kexec.c
-> +++ b/arch/riscv/kernel/machine_kexec.c
-> @@ -41,6 +41,13 @@ machine_kexec_prepare(struct kimage *image)
->   		if (image->segment[i].memsz <= sizeof(fdt))
->   			continue;
->   
-> +		/*
-> +		 * Some segments (e.g. IMA) reserve space but have no buffer
-> +		 * loaded yet. Skip them as they cannot contain an FDT.
-> +		 */
-> +		if (image->segment[i].buf == NULL)
-> +			continue;
-> +
->   		if (image->file_mode)
->   			memcpy(&fdt, image->segment[i].buf, sizeof(fdt));
->   		else if (copy_from_user(&fdt, image->segment[i].buf, sizeof(fdt)))
+
 
