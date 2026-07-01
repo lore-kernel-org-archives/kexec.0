@@ -4,78 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 667BCC43458
-	for <kexec@archiver.kernel.org>; Wed,  1 Jul 2026 06:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 65A0CC43458
+	for <kexec@archiver.kernel.org>; Wed,  1 Jul 2026 10:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:MIME-Version:Date:Message-Id:Subject:References:In-Reply-To:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Xy6Q8nTosbzVtz/e2WE19ikj/aI/XnvgQ7NJOmIDfOU=; b=hkcWi54E6odc222ImLaOM2rzky
-	pLxMZG+hjuQuy6g7F0cHucU2f68R46t4BTQoMUygR2OqMwWEhofJcVmbiE3LUOrAsYSZFxSM1cWDn
-	Ka7LviIjpyvZpI09Q+bL75i1ruCJX8ctVe2786NXtNXFXesZFT3uYT5aYGSbA5BggLNF8tWuOE9rT
-	uYfXCJABM+gB70Zk2sOqQCqhDON34vIy2KBKTXqyB2TszjdeGpGsRuxBs3rsPZL/vR3v8+ESVN53X
-	L6YHXjMybspWT+ti/Te8DL1lrDRzbHpV/1U82VR9oHEd61vZybBBGHp+Ic9Cuyq1PmiRc1VJ9ugid
-	1n6bhwgw==;
+	bh=8CCY7OYpqxpsp92eM772a+zVPwSSFAuN282U7gVioZw=; b=aa7jJnVzfp/l96NVik7LlAXQTO
+	zVO42zHZ6SiIQtrgHNI69DwRRIjmt35A8e6KGx3WMrmN3eSh0EWVh05sOFB3TdgLSAbLL4DXFf7aQ
+	JKBxQ4Ndmlpcs2/DTFwvlVXbNsZYblSuyufFoP8A3DnXnNNoh9F7FOT8dxiDpd28U3K2Ezq5LK8+m
+	F2j6uEJhOFIIcKcrd/EtOw6IvTYSrQtibNYcjGJp/KGU0Jkbg8mE3jnSt0BuQNlWqsTIOV3NtYY2e
+	ANKJ9yQwuJNA8d5FysrmpltnQW7d4Oy0Rb7KZjGgGdlA1ICta1+FBRQSByBeDcO9EJvlEF/Bu/nSG
+	hdt+GquQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weo1D-00000000lC4-3DP2;
-	Wed, 01 Jul 2026 06:01:55 +0000
-Received: from mout.web.de ([212.227.15.4])
+	id 1weroX-00000001H0s-2rxp;
+	Wed, 01 Jul 2026 10:05:05 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1weo1A-00000000lBQ-16D5;
-	Wed, 01 Jul 2026 06:01:54 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1782885645; x=1783490445; i=markus.elfring@web.de;
-	bh=Xy6Q8nTosbzVtz/e2WE19ikj/aI/XnvgQ7NJOmIDfOU=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=DjQyLh6kqzlQsS+ixe9+/5RSUrrgV+7vVIGEECTEVsC/J5fFowHOyjMr4xNcN5vE
-	 6bfyLnthv/Tmh4cNIzr6v+XxXkPxbzQEPNrKcvp2lJSdCp+/IoaemGlmqUpl+DjLI
-	 mgQuCquGhgI9ScSvJ5sp3CHaLlU6jBN7XL269EWDGA3r8Ive1CtALNRgG7Plni2vt
-	 ga1+X2HityIMwOWa9Ded7JnctnMZIyRrgT1ezGbb8syobqZZtFHUUH4OMWY5PFrgC
-	 P7A2B9z33UsNDBfEdocnGuFQlD1z4RReFWlgSQ5dOUSkIYp8+hO/i6QxXxDMCvbhG
-	 AHEW0oH0zfteuSaAzw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from client.hidden.invalid by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MYLmo-1wb0fv0Yza-00T5WP; Wed, 01
- Jul 2026 08:00:45 +0200
-Message-ID: <4b21e0d5-07d1-438b-a6ea-a2be596a3044@web.de>
-Date: Wed, 1 Jul 2026 08:00:14 +0200
+	id 1weroT-00000001H0c-3e6q
+	for kexec@lists.infradead.org;
+	Wed, 01 Jul 2026 10:05:01 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 2B28260138;
+	Wed,  1 Jul 2026 10:05:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CA8D1F000E9;
+	Wed,  1 Jul 2026 10:04:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782900300;
+	bh=8CCY7OYpqxpsp92eM772a+zVPwSSFAuN282U7gVioZw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=niplvckwsPi9dDsHvK3vnDW0tNxiBlv64bTr/vg+1rBF2pNsqptrN1yR2Vh+AKgnt
+	 IO8zLQLn1eoP2YBVXFJ/L3YNxgivsjRkI5cE0piCOzrdi/ooeyk0jne2yPGVnl7DyV
+	 OmBGh2sBwKbFRwzmV1FcIeVbI1VzPRmskLZaAqJaKAwYjbJQS6JCwCFMquPgBX8rCN
+	 XC2CRvoBMHnkTCzUcMPIN+WivvssaQ72ISDdU4rmUMTzdJPv5cVDV9mjYOcjK4uYYA
+	 vyte2en6U4PFRvT0gE/fu06OOAgIjz9WZakt6UhdcoElEovnxu1PVwh0rBvkiuYO/n
+	 jsIIWk7D4f62A==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Baoquan He <baoquan.he@linux.dev>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, Thomas Huth <thuth@redhat.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260619160654.75980-1-thuth@redhat.com>
+References: <20260619160654.75980-1-thuth@redhat.com>
+Subject: Re: [PATCH] kexec: Replace __ASSEMBLY__ with __ASSEMBLER__ in
+ header file
+Message-Id: <178290029504.1271197.2576579399755177150.b4-ty@b4>
+Date: Wed, 01 Jul 2026 13:04:55 +0300
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] riscv: Fix a NULL pointer dereference in
- machine_kexec_prepare
-To: Tao Liu <ltao@redhat.com>, linux-riscv@lists.infradead.org,
- kexec@lists.infradead.org, linux-integrity@vger.kernel.org,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>
-Cc: kernel-janitors@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Baoquan He <bhe@redhat.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
- Eric Snowberg <eric.snowberg@oracle.com>, Jarkko Sakkinen
- <jarkko@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>,
- Nutty Liu <nutty.liu@hotmail.com>, Pratyush Yadav <pratyush@kernel.org>,
- Roberto Sassu <roberto.sassu@huawei.com>
-References: <20260701025732.66330-2-ltao@redhat.com>
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20260701025732.66330-2-ltao@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:xbA5c1UHwIqj5RgD3GZl8yVj/SkfKs060P78SZpqof6yn2HulB2
- dWSH1UF2uNBy8wolOto6JKlPpEZMtSdz86DEbz4hIP57B8rXcYQlMJDStg5CFMFZzFtWbfB
- 71qFmCm7q/eo2XAQgp+9ZAKkoqequpiOIKUhBnnGw552Y8z92UCPaaNUHfhz44DYAVxOl5p
- GMNdArGbpEI8vXO4j/LoA==
-UI-OutboundReport: notjunk:1;M01:P0:GKIGm79yHUg=;LgABditdxeGX6Bc+BUoCZ6BdNCp 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 QgxYJBCH40W7p9ITUk=
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260630_230152_697058_74569164 
-X-CRM114-Status: UNSURE (   3.96  )
-X-CRM114-Notice: Please train this message.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.16-dev
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,24 +72,20 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-=E2=80=A6
-> Fix this by simply adding a check before copy.
+On Fri, 19 Jun 2026 18:06:54 +0200, Thomas Huth wrote:
+> kexec: Replace __ASSEMBLY__ with __ASSEMBLER__ in header file
 
-                                           a data copy attempt?
+Applied to kexec-misc branch of liveupdate/linux.git tree, thanks!
+
+[1/1] kexec: Replace __ASSEMBLY__ with __ASSEMBLER__ in header file
+      commit: 6a673b6c419a5b5bf7457f33b80a77f842057066
+
+tree: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux
+branch: kexec-misc
+
+--
+Sincerely yours,
+Mike.
 
 
-
-> Fixes: b7fb4d78a6ad ("RISC-V: use memcpy for kexec_file mode")
-
-See also once more:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/stable-kernel-rules.rst?h=3Dv7.2-rc1#n34
-
-
-Would a summary phrase like =E2=80=9CPrevent null pointer dereference in m=
-achine_kexec_prepare()=E2=80=9D
-be nicer?
-
-Regards,
-Markus
 
