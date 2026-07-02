@@ -4,82 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A32AFC43458
-	for <kexec@archiver.kernel.org>; Thu,  2 Jul 2026 06:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 82FE1C43458
+	for <kexec@archiver.kernel.org>; Thu,  2 Jul 2026 08:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=96Z1Y5OhhvyQQIN/hKvuFMOzqQCu4hfBdjv68ntYyTU=; b=uyVKu7DDZ8tNEHlL47CrTbD+6Q
-	/zbxnl28hihi9+/jRT21dN32qAFgPHK4ya2nLtUU4II/uEc/L6H3d1YyYgW7rAMbpsD41Wfj6G4ov
-	aYGmFUGV6s6nHYxFbwx4BGLYzrlbwY9w8hM8B3FE9yc/HxsIuuDWDdXzUm4Hkg2Xo3RucLy3gTz0u
-	an+miVvBfeJW4lPWY3YlmlCUluNAj8ainZNwe7CbNKxQH8igFJD23flT9wI4i308Txh9FMFE7e+2s
-	Z/2yK9jMzKx/jX9W7qO5dK5unAgOd67w4PzoZjJhsp6CJEc3WhTkqfJW8WZN7amokCp+AkyCQUY4m
-	tx5yj7xA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=KgyHHM8Y40fvkE3yY27+nSpCkiyJvZ3a18qauIHUKCQ=; b=o4HzYjBW7xFu67H00nZVCH6PVe
+	LeW+0vGKbevC8yyxrenuRolhMEq8aZdOd4JObupLTNOpJJ8XSkxXpAmai/xlDtlKrEs6Fvgzw8rK5
+	fbYLIq1r0NFRa1hNVfUF9nWW7tk5fBNO4+Vp9oEy6GIANVxYI9h63y0hfCNuqN32hg4+UBsIcFYS2
+	UUmcQS6c/weufxinv/yun5ufSoO0rrb+ZDfAv3GfmY948KIU15upuW4rh0qtq2lwJQq/LgQWpn/Xc
+	a4X3KVohqlHD05mzqhlTwl03yFZX4qiMSXIGNAIaTdFhj2EngBHzHzsGObUUMPC3jByhSkAexRCYg
+	1KFKkH1g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wfAV9-00000003cQc-3gGR;
-	Thu, 02 Jul 2026 06:02:19 +0000
-Received: from mailgw.kylinos.cn ([124.126.103.232])
+	id 1wfCi5-00000003r2l-0QAF;
+	Thu, 02 Jul 2026 08:23:49 +0000
+Received: from mgamail.intel.com ([198.175.65.14])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wfAV7-00000003cPy-0R8o
+	id 1wfCi2-00000003r1M-1Xny
 	for kexec@lists.infradead.org;
-	Thu, 02 Jul 2026 06:02:19 +0000
-X-UUID: 8d258c1875db11f1aa26b74ffac11d73-20260702
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:287a4c8e-ee83-4e0f-b6f7-06d0ac3634b1,IP:0,U
-	RL:0,TC:0,Content:6,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:6
-X-CID-META: VersionHash:e7bac3a,CLOUDID:3255ca91ae41ae51a66dd66f7df0cd73,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|136|850|865|898,TC:nil,C
-	ontent:4|15|50,EDM:-3,IP:nil,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil
-	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 8d258c1875db11f1aa26b74ffac11d73-20260702
-X-User: duanchenghao@kylinos.cn
-Received: from localhost [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <duanchenghao@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1658455910; Thu, 02 Jul 2026 14:02:05 +0800
-Date: Thu, 2 Jul 2026 14:02:02 +0800
-From: Chenghao Duan <duanchenghao@kylinos.cn>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Alexander Graf <graf@amazon.com>,
-	"Andersen, Tycho" <Tycho.Andersen@amd.com>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Baolu Lu <baolu.lu@linux.intel.com>,
-	David Hildenbrand <david@kernel.org>,
-	David Matlack <dmatlack@google.com>,
-	"Heyne, Maximillian" <mheyne@amazon.de>,
-	James Gowans <jgowans@amazon.com>, Jason Gunthorpe <jgg@nvidia.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Praveen Kumar <kpraveen.lkml@gmail.com>,
-	Vipin Sharma <vipinsh@google.com>,
-	Vishal Annapurve <vannapurve@google.com>,
-	"Woodhouse, David" <dwmw@amazon.co.uk>,
-	Luca Boccassi <luca.boccassi@gmail.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	Jork Loeser <jloeser@linux.microsoft.com>, linux-mm@kvack.org,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	jianghaoran@kylinos.cn, duanchenghao@kylinos.cn
-Subject: Re: [Hypervisor Live Update] Notes from June 1, 2026
-Message-ID: <20260702060202.GA78893@chenghao-pc>
-References: <aiWW6ZwwalqQmVcB@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aiWW6ZwwalqQmVcB@google.com>
+	Thu, 02 Jul 2026 08:23:47 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782980626; x=1814516626;
+  h=date:from:to:cc:subject:message-id;
+  bh=15ZB/Fcgn8ESbvkYPd3qSVhUsEtUjAI1fWg4y5KD0Tc=;
+  b=nla2nQa6ueMaulI3uVQqeIzljmvMLyC06U7hJdRKJSiQlwFX4OvTSAfB
+   8+0+3joVOJTAdcPDcU3yULwzmHDEO5F4HiNDPJiTOZP4v5Y0iDVJYSDDu
+   AYZAPgsmu3Wft1pueoNfx6msRozwvrDwxTHRMwaeh+4iDBVXT/VZyNzUH
+   oH33f1NH7uq3itmOb/Ric5MXKVePtzSs/as4yRK4nkl+X6KwUmRcBirMD
+   iqNkdw22NoMTFpOKqlDft6lOVr7GUjrlNyceq9vsPmbUyBOQA8+dfZmAm
+   5AYuPk6AU5M/RmzuyJvXsRMie+AE4jBtJ8ahB6SewP2fUodILSiYYOuf1
+   w==;
+X-CSE-ConnectionGUID: sFdd3ZDdRCKK2a9T4EHowA==
+X-CSE-MsgGUID: TTLYKB+ES1qHd/3IC87DSA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11834"; a="87642462"
+X-IronPort-AV: E=Sophos;i="6.25,143,1779174000"; 
+   d="scan'208";a="87642462"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2026 01:23:42 -0700
+X-CSE-ConnectionGUID: /l09wZO2Tgi1yhvnUBkesg==
+X-CSE-MsgGUID: y5c5SeSqQx2IJ9EAWWKCzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,143,1779174000"; 
+   d="scan'208";a="277122648"
+Received: from lkp-server02.sh.intel.com (HELO ea128546eb3d) ([10.239.97.151])
+  by fmviesa001.fm.intel.com with ESMTP; 02 Jul 2026 01:23:40 -0700
+Received: from kbuild by ea128546eb3d with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wfChu-00000000AWv-2AN3;
+	Thu, 02 Jul 2026 08:23:38 +0000
+Date: Thu, 02 Jul 2026 16:22:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
+Subject: [liveupdate:next] BUILD SUCCESS
+ af78cec42d1b0113993e427139f0ab2f34b047ee
+Message-ID: <202607021638.gd3iVT3L-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260701_230217_450992_3E1A2350 
-X-CRM114-Status: GOOD (  28.59  )
+X-CRM114-CacheID: sfid-20260702_012346_461664_14BE92F7 
+X-CRM114-Status: UNSURE (   4.09  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,136 +84,218 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, Jun 07, 2026 at 12:06:01PM -0400, Pasha Tatashin wrote:
-> Hi everybody,
-> 
-> Here are the notes from the Hypervisor Live Update call that happened on 
-> Monday, June 1. Thanks to everybody who was involved!
-> 
-> These notes are intended to bring people up to speed who could not 
-> attend the call as well as keep the conversation going in between 
-> meetings.
-> 
-> ----->o-----
-> LPC 2026 Call for Proposals
-> 
-> The Call for Proposals for the Live Update Microconference at LPC 2026 
-> is officially open. Please submit your topics and proposals before the 
-> deadline on July 24th.
-> 
-> https://lore.kernel.org/all/ahcc3Qyuy7Oy03Iq@plex
-> 
-> ----->o-----
-> KHO Xarray Implementation & Core Data Structures
-> 
-> Pratyush is collaborating with Mike on a KHO fallback allocation 
-> strategy for memblock. Alongside this, Pratyush is designing a 
-> serialized, sparse "KHO Xarray" data structure to lift current mapping 
-> restrictions across all three memfd types (shared, hugeTLB, and 
-> guest_memfd). By allowing runtime page faults and allocation tracking 
-> post-preservation, this avoids flat vmalloc array scalability 
-> limitations.
-> 
-> Potential wider use cases for the KHO Xarray were discussed:
-> - MSHV sparse bitmap tracking.
-> - IOMMU page table tracking (Samiullah will evaluate domain/device tree 
->   association fit).
-> - PCI/VFIO sparse tracking via Bus/Device/Function (BDF) key spaces.
-> 
-> Slab/Cache Preservation vs. Linked Blocks:
-> David Matlack noted that using an Xarray page per PCI device would be 
-> too expensive given their small struct sizes. Pratyush suggested 
-> preserving slab caches via dedicated kmem_cache flags to manage small, 
-> arbitrary allocations. As an immediate alternative, Pasha's ongoing LUO 
-> limits refactor series introduces a highly compact block-linked list 
-> structure optimized for runtime file/session tracking. David Matlack 
-> will review if this fits the PCI core tracking requirements.
-> 
-> ----->o-----
-> LUO Limit Removal & PCI Core Status
-> 
-> LUO Refactor: Pasha is updating the LUO series to address Pratyush's 
-> comments (primarily renaming iterator functions) and plans to send out 
-> v2 shortly. Given that LUO is not yet in fleet production, the group 
-> agreed to fast-track this into the upcoming merge window to align with 
-> systemd's fdstore integration.
-> 
-> PCI Core v6: David Matlack sent out v6 incorporating two critical fixes 
-> spotted by Sachiko regarding get/put semantics and double-retrieval 
-> failures. Review tags from the live update team are needed to help 
-> secure Bjorn's Ack once he returns from vacation next week.
-> 
-> ----->o-----
-> IOMMU Persistence & Process Memory
-> 
-> IOMMU v3: Samiullah is addressing recent review feedback on the IOMMU 
-> persistence series and intends to post v3 by the end of this week. The 
-> associated development roadmap document has received positive 
-> stakeholder attention.
-> 
-> CRIU & vm_splice: Maximilian's investigation into optimizing vm_splice 
-> for copy-less data preservation remains deferred but remains in the 
-> pipeline, with potential future collaboration with Google's tmpfs splice 
-> efforts.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git next
+branch HEAD: af78cec42d1b0113993e427139f0ab2f34b047ee  Merge branch 'crashkernel-cma' into kexec-next
 
-I’ve also been researching a combination solution integrating CRIU and
-KHO. My approach stores all image data dumped by CRIU into memfd, then
-persists those memfd objects via KHO/LUO.
+elapsed time: 739m
 
-I’ve reviewed the historical meeting notes and would like to clarify:
-does the CRIU solution discussed in the meetings aim to save the full
-set of a process’s metadata and data, or only the anonymous memory and
-shared memory allocated during the process runtime?
+configs tested: 198
+configs skipped: 2
 
-Chenghao
-> 
-> ----->o-----
-> guest_memfd Enlightenment & VMM Documentation
-> 
-> Tarun debriefed the community on his upstream presentation regarding the 
-> initial guest_memfd preservation patch series (currently covering fully 
-> shared mappings with page-sized folios).
-> 
-> Key design and architecture alignments include:
-> - VM File Association: guest_memfd requires an active 'struct kvm' 
->   context to be retrieved. VMMs must preserve the parent VM file 
->   alongside guest_memfd, using LUO tokens to re-link them on the 
->   incoming kernel path. This sets the stage for future private 
->   mapping/secure EPT table tracking.
-> - Relaxed Fault Logic: The group agreed to drop strict upfront pre-fault 
->   checks. Instead, standard runtime page-fault semantics will apply. If 
->   a guest page fault occurs post-preservation, it will bubble up via 
->   standard KVM_RUN ioctl exits to the VMM, which can safely pause vCPUs 
->   and retry the fault post-kexec.
-> - Centralized VMM Documentation: Pasha and David Matlack proposed 
->   creating a centralized guide under live_update/vmm detailing the 
->   overall live update flow, timing constraints, and subsystem 
->   requirements to assist external QEMU and VMM developers.
-> 
-> ----->o-----
-> Next meeting will be on Monday, June 15 at 8am PDT (UTC-7), everybody is
-> welcome: https://meet.google.com/rjn-dmzu-hgq
-> 
-> Note: I am going to be traveling on June 15th, David Matlack is going to
-> be hosting it.
-> 
-> Topics for the next meeting:
-> - Presentation of VFIO roadmap (Vipin and David Matlack)
-> - Status of KHO Xarray development and slab preservation feasibility
-> - Review of PCI core changes v7 and upstream merge coordination
-> - IOMMU persistence v3 review feedback
-> - Detailed review of guest_memfd v2 and VMM interaction documentation
-> - Review and coordination of LPC 2026 Microconference topic submissions
-> - later: KHO support for Confidential VMs including page table
->   preservation and pinning
-> - later: versioning support for luod to negotiate
-> - later: KHO enlightenment for ASI
-> - later: update on PCI preservation series and next steps
-> - later: testing methodology to allow downstream consumers to qualify
->   that live update works from one version to another
-> - later: reducing blackout window during live update, including deferred
->   struct page initialization
-> 
-> Please let me know if you'd like to propose additional topics for
-> discussion, thank you!
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-16.1.0
+alpha                            allyesconfig    gcc-16.1.0
+alpha                               defconfig    gcc-16.1.0
+arc                              allmodconfig    clang-23
+arc                               allnoconfig    gcc-16.1.0
+arc                              allyesconfig    clang-23
+arc                                 defconfig    gcc-16.1.0
+arc                   randconfig-001-20260702    gcc-8.5.0
+arc                   randconfig-002-20260702    gcc-8.5.0
+arm                               allnoconfig    gcc-16.1.0
+arm                              allyesconfig    clang-23
+arm                                 defconfig    gcc-16.1.0
+arm                   randconfig-001-20260702    gcc-8.5.0
+arm                   randconfig-002-20260702    gcc-8.5.0
+arm                   randconfig-003-20260702    gcc-8.5.0
+arm                   randconfig-004-20260702    gcc-8.5.0
+arm64                            allmodconfig    clang-23
+arm64                             allnoconfig    gcc-16.1.0
+arm64                               defconfig    gcc-16.1.0
+arm64                 randconfig-001-20260702    gcc-15.2.0
+arm64                 randconfig-002-20260702    gcc-15.2.0
+arm64                 randconfig-003-20260702    gcc-15.2.0
+arm64                 randconfig-004-20260702    gcc-15.2.0
+csky                             allmodconfig    gcc-16.1.0
+csky                              allnoconfig    gcc-16.1.0
+csky                                defconfig    gcc-16.1.0
+csky                  randconfig-001-20260702    gcc-15.2.0
+csky                  randconfig-002-20260702    gcc-15.2.0
+hexagon                          allmodconfig    gcc-16.1.0
+hexagon                           allnoconfig    gcc-16.1.0
+hexagon                             defconfig    gcc-16.1.0
+hexagon               randconfig-001-20260702    clang-23
+hexagon               randconfig-002-20260702    clang-23
+i386                             allmodconfig    clang-22
+i386                              allnoconfig    gcc-16.1.0
+i386                             allyesconfig    clang-22
+i386        buildonly-randconfig-001-20260702    clang-22
+i386        buildonly-randconfig-002-20260702    clang-22
+i386        buildonly-randconfig-003-20260702    clang-22
+i386        buildonly-randconfig-004-20260702    clang-22
+i386        buildonly-randconfig-005-20260702    clang-22
+i386        buildonly-randconfig-006-20260702    clang-22
+i386                                defconfig    gcc-16.1.0
+i386                  randconfig-001-20260702    gcc-14
+i386                  randconfig-002-20260702    gcc-14
+i386                  randconfig-003-20260702    gcc-14
+i386                  randconfig-004-20260702    gcc-14
+i386                  randconfig-005-20260702    gcc-14
+i386                  randconfig-006-20260702    gcc-14
+i386                  randconfig-007-20260702    gcc-14
+i386                  randconfig-011-20260702    clang-22
+i386                  randconfig-012-20260702    clang-22
+i386                  randconfig-013-20260702    clang-22
+i386                  randconfig-014-20260702    clang-22
+i386                  randconfig-015-20260702    clang-22
+i386                  randconfig-016-20260702    clang-22
+i386                  randconfig-017-20260702    clang-22
+loongarch                        allmodconfig    clang-23
+loongarch                         allnoconfig    gcc-16.1.0
+loongarch                           defconfig    clang-23
+loongarch                loongson32_defconfig    clang-18
+loongarch             randconfig-001-20260702    clang-23
+loongarch             randconfig-002-20260702    clang-23
+m68k                             allmodconfig    gcc-16.1.0
+m68k                              allnoconfig    gcc-16.1.0
+m68k                             allyesconfig    clang-23
+m68k                                defconfig    clang-23
+microblaze                        allnoconfig    gcc-16.1.0
+microblaze                       allyesconfig    gcc-16.1.0
+microblaze                          defconfig    clang-23
+mips                             allmodconfig    gcc-16.1.0
+mips                              allnoconfig    gcc-16.1.0
+mips                             allyesconfig    gcc-16.1.0
+mips                           ci20_defconfig    clang-23
+nios2                            allmodconfig    clang-20
+nios2                             allnoconfig    clang-23
+nios2                               defconfig    clang-23
+nios2                 randconfig-001-20260702    clang-23
+nios2                 randconfig-002-20260702    clang-23
+openrisc                         allmodconfig    clang-20
+openrisc                          allnoconfig    clang-23
+openrisc                            defconfig    gcc-16.1.0
+parisc                           allmodconfig    gcc-16.1.0
+parisc                            allnoconfig    clang-23
+parisc                           allyesconfig    clang-17
+parisc                              defconfig    gcc-16.1.0
+parisc                randconfig-001-20260702    clang-17
+parisc                randconfig-002-20260702    clang-17
+parisc64                            defconfig    clang-23
+powerpc                    adder875_defconfig    gcc-16.1.0
+powerpc                          allmodconfig    gcc-16.1.0
+powerpc                           allnoconfig    clang-23
+powerpc               randconfig-001-20260702    clang-17
+powerpc               randconfig-002-20260702    clang-17
+powerpc                         wii_defconfig    gcc-16.1.0
+powerpc64             randconfig-001-20260702    clang-17
+powerpc64             randconfig-002-20260702    clang-17
+riscv                            allmodconfig    clang-23
+riscv                             allnoconfig    clang-23
+riscv                            allyesconfig    clang-23
+riscv                               defconfig    gcc-16.1.0
+riscv                          randconfig-001    gcc-12.5.0
+riscv                 randconfig-001-20260702    gcc-12.5.0
+riscv                          randconfig-002    gcc-12.5.0
+riscv                 randconfig-002-20260702    gcc-12.5.0
+s390                             allmodconfig    clang-17
+s390                              allnoconfig    clang-23
+s390                             allyesconfig    gcc-16.1.0
+s390                                defconfig    gcc-16.1.0
+s390                           randconfig-001    gcc-12.5.0
+s390                  randconfig-001-20260702    gcc-12.5.0
+s390                           randconfig-002    gcc-12.5.0
+s390                  randconfig-002-20260702    gcc-12.5.0
+sh                               allmodconfig    gcc-16.1.0
+sh                                allnoconfig    clang-23
+sh                               allyesconfig    clang-17
+sh                                  defconfig    gcc-14
+sh                             randconfig-001    gcc-12.5.0
+sh                    randconfig-001-20260702    gcc-12.5.0
+sh                             randconfig-002    gcc-12.5.0
+sh                    randconfig-002-20260702    gcc-12.5.0
+sh                           se7619_defconfig    gcc-16.1.0
+sparc                             allnoconfig    clang-23
+sparc                               defconfig    gcc-16.1.0
+sparc                          randconfig-001    gcc-16.1.0
+sparc                 randconfig-001-20260702    gcc-16.1.0
+sparc                          randconfig-002    gcc-16.1.0
+sparc                 randconfig-002-20260702    gcc-16.1.0
+sparc64                          allmodconfig    clang-20
+sparc64                             defconfig    gcc-14
+sparc64                        randconfig-001    gcc-16.1.0
+sparc64               randconfig-001-20260702    gcc-16.1.0
+sparc64                        randconfig-002    gcc-16.1.0
+sparc64               randconfig-002-20260702    gcc-16.1.0
+um                               allmodconfig    clang-17
+um                                allnoconfig    clang-23
+um                               allyesconfig    gcc-16.1.0
+um                                  defconfig    gcc-14
+um                             i386_defconfig    gcc-14
+um                             randconfig-001    gcc-16.1.0
+um                    randconfig-001-20260702    gcc-16.1.0
+um                             randconfig-002    gcc-16.1.0
+um                    randconfig-002-20260702    gcc-16.1.0
+um                           x86_64_defconfig    gcc-14
+x86_64                           allmodconfig    clang-22
+x86_64                            allnoconfig    clang-23
+x86_64                           allyesconfig    clang-22
+x86_64               buildonly-randconfig-001    clang-22
+x86_64      buildonly-randconfig-001-20260702    clang-22
+x86_64               buildonly-randconfig-002    clang-22
+x86_64      buildonly-randconfig-002-20260702    clang-22
+x86_64               buildonly-randconfig-003    clang-22
+x86_64      buildonly-randconfig-003-20260702    clang-22
+x86_64               buildonly-randconfig-004    clang-22
+x86_64      buildonly-randconfig-004-20260702    clang-22
+x86_64               buildonly-randconfig-005    clang-22
+x86_64      buildonly-randconfig-005-20260702    clang-22
+x86_64               buildonly-randconfig-006    clang-22
+x86_64      buildonly-randconfig-006-20260702    clang-22
+x86_64                              defconfig    gcc-14
+x86_64                                  kexec    clang-22
+x86_64                         randconfig-001    clang-22
+x86_64                randconfig-001-20260702    clang-22
+x86_64                         randconfig-002    clang-22
+x86_64                randconfig-002-20260702    clang-22
+x86_64                         randconfig-003    clang-22
+x86_64                randconfig-003-20260702    clang-22
+x86_64                         randconfig-004    clang-22
+x86_64                randconfig-004-20260702    clang-22
+x86_64                         randconfig-005    clang-22
+x86_64                randconfig-005-20260702    clang-22
+x86_64                         randconfig-006    clang-22
+x86_64                randconfig-006-20260702    clang-22
+x86_64                randconfig-011-20260702    clang-22
+x86_64                randconfig-012-20260702    clang-22
+x86_64                randconfig-013-20260702    clang-22
+x86_64                randconfig-014-20260702    clang-22
+x86_64                randconfig-015-20260702    clang-22
+x86_64                randconfig-016-20260702    clang-22
+x86_64                randconfig-071-20260702    clang-22
+x86_64                randconfig-072-20260702    clang-22
+x86_64                randconfig-073-20260702    clang-22
+x86_64                randconfig-074-20260702    clang-22
+x86_64                randconfig-075-20260702    clang-22
+x86_64                randconfig-076-20260702    clang-22
+x86_64                               rhel-9.4    clang-22
+x86_64                           rhel-9.4-bpf    gcc-14
+x86_64                          rhel-9.4-func    clang-22
+x86_64                    rhel-9.4-kselftests    clang-22
+x86_64                         rhel-9.4-kunit    gcc-14
+x86_64                           rhel-9.4-ltp    gcc-14
+x86_64                          rhel-9.4-rust    clang-22
+xtensa                            allnoconfig    clang-23
+xtensa                           allyesconfig    clang-20
+xtensa                         randconfig-001    gcc-16.1.0
+xtensa                randconfig-001-20260702    gcc-16.1.0
+xtensa                         randconfig-002    gcc-16.1.0
+xtensa                randconfig-002-20260702    gcc-16.1.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
