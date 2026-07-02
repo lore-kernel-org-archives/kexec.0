@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 61653C43458
-	for <kexec@archiver.kernel.org>; Thu,  2 Jul 2026 17:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 14513C43602
+	for <kexec@archiver.kernel.org>; Thu,  2 Jul 2026 17:53:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=YRpX/gFLnZEEqF0UusNAsTB0VI4hO2m7E7PNpCTesP4=; b=TndtgNFNRhQqPUQK5PK4+mtVnN
-	qeICjCn85vvqQkhGxqOlWRB4dzWwff0mBhFrayrIpUEiu/ZU9DAcz3okNzAUB1wZRO9+isv88NPb2
-	WYakYwSgFaAcwQgM7VRkkhb2+w5pKaZCc3rJ5gflzhbU7+VMMo/sSrHTNc6/z2KTRjd6hUjiKLbft
-	pCwgj2l9QCjJ/KBL8X4ay7FNOa8hXXSjNBxEtVHJu+gTKsSaGLwzjuAq23M7GhM40ixjTaiZJOYAp
-	aYUhhyhNDH45/LBxKqjVWeNxipoLhHKoPZ063I1SeDFlS76NQ+5dePa2J1dEr5WrOe6e2CJYf6kX1
-	gMotZruA==;
+	bh=sSlTPPRGfH8uX0Q/+Vq9kwU7nczCfGQ8R9eS8+/KnEA=; b=yuBMhqSCXaFQrUBJz4QtWn7f+X
+	ykLDCR0ewG8v0RMQn4Hq0GJ3befPkDmhy4WUb08YLelfvnrVIUkYV2rAYXIvo8AczpBO+Vi02yDQI
+	LKnrYW7XDHthfNTqc8dfnRkV/xwH/kTiWI4gUSqwu0iruH+7OWpaxWOygRn+wOTDkFva7rqdHo4b7
+	K7XQmZ3IHlTZyzRhmgv5uY0VPYzOBFk12+nHoCk3eqk5EdTDvy7f9wt/Na/WoBgcOfGlkL9ammZTu
+	VKX8rmCIYOrpZpISd7Zt4P42x5jd9gsvl6tEtaJVP888WHC6UOCdDfy9RMksLT53mEH+EDijNbCAR
+	Tk3tTmCQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wfLbX-00000005BZq-2Woo;
-	Thu, 02 Jul 2026 17:53:39 +0000
-Received: from pdx-out-008.esa.us-west-2.outbound.mail-perimeter.amazon.com ([52.42.203.116])
+	id 1wfLba-00000005Bbn-2qDH;
+	Thu, 02 Jul 2026 17:53:42 +0000
+Received: from pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com ([52.35.192.45])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wfLbU-00000005BYy-26Na
+	id 1wfLbX-00000005BZj-2NHv
 	for kexec@lists.infradead.org;
-	Thu, 02 Jul 2026 17:53:38 +0000
+	Thu, 02 Jul 2026 17:53:40 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
-  t=1783014816; x=1814550816;
+  t=1783014819; x=1814550819;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=YRpX/gFLnZEEqF0UusNAsTB0VI4hO2m7E7PNpCTesP4=;
-  b=EYAVZfQJqkofcKZrsydxFQRmMWW1v46dDrmuNNp0BlRyo42JhD75tPz6
-   HRcN88tXuMBXDmUBPKv1HxitFFJ4R4Mpv/7oEX5HpQF5PWtWArP7ZPIZo
-   q4bwXmOYXXVlfl0N1/CCKYz+U8sTRkt1zc9n2k/+d9gxapR+GAuLbLXZ1
-   wxPEEo+JajDI0ZORH+STwDGZWDxUOUafMkU5b+5NOoh3/DdOtwrxmcYph
-   A7DWy46hmrBQlZn0zySswsOLnJQbD+J0ox/X0RLoH3DYw2QHeTv6RkD6e
-   O8IZafCYryZuEDBYYw3GZcl/41IgPKAq0aiCUJN8dzB94zc10VBcoJ59R
-   g==;
-X-CSE-ConnectionGUID: j4bOgIWfRyi74UZM0kS6RQ==
-X-CSE-MsgGUID: 2vZoHb/STCSR9QGYYJjDAw==
+  bh=sSlTPPRGfH8uX0Q/+Vq9kwU7nczCfGQ8R9eS8+/KnEA=;
+  b=X4H1W9U8KQMT3lbu9YxJFI9w8GC454oi/4lpiiRiHRHrOty8sIhNk5Pc
+   HKSLJDADNohRxp+JWWzs8rgaJGf+RbPr/jXi9UORnrvcaot21mbqn2svL
+   2VZ45jwPKbO57dZZI9p9Xd/5ozWWnRQm8aKb2HXoqEv3VKuwff4MKJLOT
+   io29gZBz3vJrkmJyAd1aOQ5T4MIfKIdN4tD1SJFKHbitSPodG6JIkqzCz
+   IzXT+xSILLBc6NVw8+Q8il6hrHyJwPiejXL6D0HxqabhHEr6vjHZElUsL
+   z5FXEd3StXor6rsX+yizH7mO7MULhYDe5oZJdGM+gMen+iUmUN61k63ha
+   Q==;
+X-CSE-ConnectionGUID: pOZNzN7bQxC5C5HyldoDbQ==
+X-CSE-MsgGUID: gb9pcWjVSPGNDOJgrRcVHw==
 X-IronPort-AV: E=Sophos;i="6.25,144,1779148800"; 
-   d="scan'208";a="22965770"
+   d="scan'208";a="22717676"
 Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
-  by internal-pdx-out-008.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2026 17:53:36 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [205.251.233.104:5839]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.13.18:2525] with esmtp (Farcaster)
- id f5b15eb2-309e-43c4-88e7-579e7a4f8061; Thu, 2 Jul 2026 17:53:35 +0000 (UTC)
-X-Farcaster-Flow-ID: f5b15eb2-309e-43c4-88e7-579e7a4f8061
+  by internal-pdx-out-011.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2026 17:53:33 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [205.251.233.178:13460]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.43.112:2525] with esmtp (Farcaster)
+ id fd164244-2329-49ff-88a8-fff81b2dba1f; Thu, 2 Jul 2026 17:53:33 +0000 (UTC)
+X-Farcaster-Flow-ID: fd164244-2329-49ff-88a8-fff81b2dba1f
 Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
- Thu, 2 Jul 2026 17:53:35 +0000
+ Thu, 2 Jul 2026 17:53:32 +0000
 Received: from dev-dsk-sakacpav-1a-480d1124.eu-west-1.amazon.com
  (172.19.96.155) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43; Thu, 2 Jul 2026
- 17:53:32 +0000
+ 17:53:30 +0000
 From: Pavol Sakac <sakacpav@amazon.de>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki"
 	<rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Tejun Heo
@@ -69,9 +69,9 @@ CC: <linux-kernel@vger.kernel.org>, <driver-core@lists.linux.dev>, "David
  Matlack" <dmatlack@google.com>, Samiullah Khawaja <skhawaja@google.com>,
 	Alexander Graf <graf@amazon.com>, <linux-mm@kvack.org>,
 	<kexec@lists.infradead.org>, <nh-open-source@amazon.com>
-Subject: [RFC PATCH 10/14] PCI/IOV: opt SR-IOV VFs into sysfs_lazy
-Date: Thu, 2 Jul 2026 19:51:10 +0200
-Message-ID: <20260702175114.24659-6-sakacpav@amazon.de>
+Subject: [RFC PATCH 09/14] iommu: lazy-populate iommu_group reserved_regions/type attrs
+Date: Thu, 2 Jul 2026 19:51:09 +0200
+Message-ID: <20260702175114.24659-5-sakacpav@amazon.de>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260702175114.24659-1-sakacpav@amazon.de>
 References: <20260702174033.32116-1-sakacpav@amazon.de>
@@ -83,8 +83,8 @@ X-ClientProxiedBy: EX19D036UWC002.ant.amazon.com (10.13.139.242) To
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260702_105337_354033_27EC7D35 
-X-CRM114-Status: GOOD (  15.06  )
+X-CRM114-CacheID: sfid-20260702_105339_667707_42D3772C 
+X-CRM114-Status: GOOD (  23.68  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,107 +99,234 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-First behaviour change in the lazy-sysfs series. Call
-device_set_sysfs_lazy() on every SR-IOV Virtual Function before
-pci_device_add() so the VF kobj directory is marked KERNFS_LAZY and
-attribute files materialise on first userspace access.
+iommu_group_alloc() eagerly creates two attribute files -
+reserved_regions and type - that are read only on the VFIO /
+iommufd ioctl path (VFIO_IOMMU_GET_INFO, iommufd type query).
+On systems with thousands of SR-IOV VFs each VF typically gets
+its own iommu_group, so deferring these two attrs eliminates two
+kernfs nodes per group at boot.
 
-Place the opt-in in pci_iov_scan_device() (immediately after
-pci_setup_device()), which is the single allocation/cleanup site
-for a VF struct (Shay Drory, commit 04d50d953ab4 ("PCI: Fix NULL
-dereference in SR-IOV VF creation error path")). Any -ENOMEM from
-device_set_sysfs_lazy() rolls back through that one site rather
-than leaking the VF struct, the physfn ref, and the bus ref.
+iommu_group_ktype is the first non-device_ktype consumer of the
+populate mechanism: wire iommu_group_populate_one /
+iommu_group_populate_all and call kernfs_set_lazy() on the
+group's kernfs node immediately after kobject_init_and_add().
+See the in-diff comment at the kernfs_set_lazy() site for the
+ordering rationale (must precede kobject_create_and_add("devices")
+to interact correctly with kernfs_inc_rev()).
 
-Add an early-return guard at the top of pci_create_sysfs_dev_files()
-so lazy VFs skip eager resource-file creation; the guard covers
-both pci_bus_add and the late pci_sysfs_init iterator.
-pci_remove_sysfs_dev_files() stays unguarded - its per-entry remove
-callbacks are idempotent.
+Both callbacks fast-path on iommu_group_sysfs_populated() so
+re-entry after the directory is fully populated is cheap and
+cannot fire sysfs_warn_dup().
 
-Marking VFs lazy defers the bulk of each VF's sysfs population to
-first access.  The cost avoided is per VF and scales with the number
-of VFs, so on hosts that create a large number of VFs it removes a
-correspondingly large amount of up-front kernfs node allocation at
-probe.  The nodes are deferred, not dropped: reading a VF's
-attributes materialises the same tree as before.  Quantified results
-are deferred to the cover letter.
+The name attribute is created on demand by iommu_group_set_name()
+on a separate API path and is not handled by these callbacks;
+groups without a set name return -ENOENT on lookup of name.
 
-No userspace ABI change: all files eventually materialize.
+No userspace ABI change.  A selftest for this deferral is added
+later in the series under tools/testing/selftests/sysfs-lazy/.
 
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: iommu@lists.linux.dev
+Cc: linux-kselftest@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
+Cc: linux-api@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Danilo Krummrich <dakr@kernel.org>
 Cc: driver-core@lists.linux.dev
-Cc: linux-api@vger.kernel.org
 Assisted-by: Claude:claude-opus-4.7
 Signed-off-by: Pavol Sakac <sakacpav@amazon.de>
 ---
- drivers/pci/iov.c       | 19 +++++++++++++------
- drivers/pci/pci-sysfs.c |  9 +++++++++
- 2 files changed, 22 insertions(+), 6 deletions(-)
+ drivers/iommu/iommu.c | 132 +++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 119 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index ec2fca8209593..5537c3df6f45b 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -328,14 +328,21 @@ static struct pci_dev *pci_iov_scan_device(struct pci_dev *dev, int id,
- 		pci_read_vf_config_common(virtfn);
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 61c12ba782066..7a8dd43f0a09a 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -21,6 +21,7 @@
+ #include <linux/iommufd.h>
+ #include <linux/idr.h>
+ #include <linux/err.h>
++#include <linux/kernfs.h>
+ #include <linux/pci.h>
+ #include <linux/pci-ats.h>
+ #include <linux/bitops.h>
+@@ -71,8 +72,22 @@ struct iommu_group {
+ 	struct list_head entry;
+ 	unsigned int owner_cnt;
+ 	void *owner;
++	/* Embedded lazy-sysfs state (every iommu_group is lazy). */
++	struct sysfs_lazy_state sysfs_lazy;
+ };
  
- 	rc = pci_setup_device(virtfn);
--	if (rc) {
--		pci_dev_put(dev);
--		pci_bus_put(virtfn->bus);
--		kfree(virtfn);
--		return ERR_PTR(rc);
--	}
-+	if (rc)
-+		goto err_free;
++static inline bool iommu_group_sysfs_populated(const struct iommu_group *group)
++{
++	return READ_ONCE(group->sysfs_lazy.populated);
++}
 +
-+	/* Single-site -ENOMEM rollback (kfree + pci_dev_put/pci_bus_put). */
-+	rc = device_set_sysfs_lazy(&virtfn->dev);
-+	if (rc)
-+		goto err_free;
- 
- 	return virtfn;
++static inline void
++iommu_group_sysfs_set_populated(struct iommu_group *group)
++{
++	lockdep_assert_held(&group->sysfs_lazy.lock);
++	WRITE_ONCE(group->sysfs_lazy.populated, true);
++}
 +
-+err_free:
-+	pci_dev_put(dev);
-+	pci_bus_put(virtfn->bus);
-+	kfree(virtfn);
-+	return ERR_PTR(rc);
+ struct group_device {
+ 	struct list_head list;
+ 	struct device *dev;
+@@ -1033,9 +1048,99 @@ static void iommu_group_release(struct kobject *kobj)
+ 	kfree(group);
  }
  
- int pci_iov_add_virtfn(struct pci_dev *dev, int id)
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 5a779ebaee326..8bf3837204693 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1777,6 +1777,9 @@ int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
- 	if (!sysfs_initialized)
- 		return -EACCES;
- 
-+	if (device_is_sysfs_lazy(&pdev->dev))
-+		return 0;	/* lazy: entries materialize on first access */
++/* Lazy iommu_group attrs (excludes "name", managed separately). */
++static const struct {
++	const char			*name;
++	struct iommu_group_attribute	*attr;
++} iommu_group_lazy_attrs[] = {
++	{ "reserved_regions", &iommu_group_attr_reserved_regions },
++	{ "type",             &iommu_group_attr_type },
++};
 +
- 	return device_sysfs_apply(&pdev->dev, pci_sysfs_entries,
- 				 DEV_SYSFS_ADD_ALL, NULL);
- }
-@@ -1790,6 +1793,12 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
- 	if (!sysfs_initialized)
- 		return;
++static int iommu_group_populate_one(struct kobject *kobj, const char *name)
++{
++	struct iommu_group *group = to_iommu_group(kobj);
++	size_t i;
++	int ret = -ENOENT;
++	bool name_present = false;
++
++	/* Fast path: directory fully populated; kernfs has authoritative state. */
++	if (iommu_group_sysfs_populated(group))
++		return -ENOENT;
++
++	mutex_lock(&group->sysfs_lazy.lock);
++	/* Re-check under the lock against a concurrent populate_all. */
++	if (iommu_group_sysfs_populated(group)) {
++		ret = -ENOENT;
++		goto out;
++	}
++
++	/* Materialise the whole table (2 entries); cheaper than per-name dispatch. */
++	for (i = 0; i < ARRAY_SIZE(iommu_group_lazy_attrs); i++) {
++		struct iommu_group_attribute *attr =
++			iommu_group_lazy_attrs[i].attr;
++		int rc;
++
++		if (sysfs_kn_exists(&group->kobj, attr->attr.name))
++			rc = 0;
++		else
++			rc = iommu_group_create_file(group, attr);
++
++		if (!strcmp(name, iommu_group_lazy_attrs[i].name)) {
++			name_present = true;
++			ret = rc;
++		} else if (rc) {
++			pr_warn("group %d: lazy-create %s failed: %d\n",
++				group->id,
++				iommu_group_lazy_attrs[i].name, rc);
++		}
++	}
++	iommu_group_sysfs_set_populated(group);
++
++out:
++	mutex_unlock(&group->sysfs_lazy.lock);
++	return name_present ? ret : -ENOENT;
++}
++
++static void iommu_group_populate_all(struct kobject *kobj)
++{
++	struct iommu_group *group = to_iommu_group(kobj);
++	size_t i;
++	int ret;
++
++	/* Fast path: directory already fully populated. */
++	if (iommu_group_sysfs_populated(group))
++		return;
++
++	mutex_lock(&group->sysfs_lazy.lock);
++	if (iommu_group_sysfs_populated(group))
++		goto out;
++
++	for (i = 0; i < ARRAY_SIZE(iommu_group_lazy_attrs); i++) {
++		struct iommu_group_attribute *attr =
++			iommu_group_lazy_attrs[i].attr;
++
++		/* Existence check absorbs the populate_one race. */
++		if (sysfs_kn_exists(&group->kobj, attr->attr.name))
++			continue;
++
++		ret = iommu_group_create_file(group, attr);
++		if (ret)
++			pr_warn("group %d: lazy-create %s failed: %d\n",
++				group->id,
++				iommu_group_lazy_attrs[i].name, ret);
++	}
++
++	iommu_group_sysfs_set_populated(group);
++out:
++	mutex_unlock(&group->sysfs_lazy.lock);
++}
++
+ static const struct kobj_type iommu_group_ktype = {
+ 	.sysfs_ops = &iommu_group_sysfs_ops,
+ 	.release = iommu_group_release,
++	.populate     = iommu_group_populate_one,
++	.populate_all = iommu_group_populate_all,
+ };
+ 
+ /**
+@@ -1060,6 +1165,7 @@ struct iommu_group *iommu_group_alloc(void)
+ 
+ 	group->kobj.kset = iommu_group_kset;
+ 	mutex_init(&group->mutex);
++	mutex_init(&group->sysfs_lazy.lock);
+ 	INIT_LIST_HEAD(&group->devices);
+ 	INIT_LIST_HEAD(&group->entry);
+ 	xa_init(&group->pasid_array);
+@@ -1078,6 +1184,19 @@ struct iommu_group *iommu_group_alloc(void)
+ 		return ERR_PTR(ret);
+ 	}
  
 +	/*
-+	 * No sysfs_lazy early-return here: populate_one/populate_all may
-+	 * have materialized resource files on first access, so the
-+	 * per-entry remove() callbacks must run unconditionally.  They
-+	 * are idempotent either way.
++	 * Defer reserved_regions and type - both are read only on
++	 * VFIO/iommufd ioctl paths, so let the populate callbacks
++	 * materialise them on demand.
++	 *
++	 * KERNFS_LAZY MUST be set before kobject_create_and_add("devices"),
++	 * which calls kernfs_inc_rev() on this kobject's directory and
++	 * would otherwise leave a stale negative dentry cached for a
++	 * missing reserved_regions/type child.  WARN_ON because
++	 * iommu_group_alloc() controls all group kobjects directly.
 +	 */
- 	device_sysfs_apply(&pdev->dev, pci_sysfs_entries,
- 			  DEV_SYSFS_REMOVE_ALL, NULL);
- }
++	WARN_ON(kernfs_set_lazy(group->kobj.sd));
++
+ 	group->devices_kobj = kobject_create_and_add("devices", &group->kobj);
+ 	if (!group->devices_kobj) {
+ 		kobject_put(&group->kobj); /* triggers .release & free */
+@@ -1091,19 +1210,6 @@ struct iommu_group *iommu_group_alloc(void)
+ 	 */
+ 	kobject_put(&group->kobj);
+ 
+-	ret = iommu_group_create_file(group,
+-				      &iommu_group_attr_reserved_regions);
+-	if (ret) {
+-		kobject_put(group->devices_kobj);
+-		return ERR_PTR(ret);
+-	}
+-
+-	ret = iommu_group_create_file(group, &iommu_group_attr_type);
+-	if (ret) {
+-		kobject_put(group->devices_kobj);
+-		return ERR_PTR(ret);
+-	}
+-
+ 	pr_debug("Allocated group %d\n", group->id);
+ 
+ 	return group;
 -- 
 2.47.3
 
