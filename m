@@ -4,91 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B00C6C43602
-	for <kexec@archiver.kernel.org>; Thu,  2 Jul 2026 12:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 54B82C43458
+	for <kexec@archiver.kernel.org>; Thu,  2 Jul 2026 13:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:CC:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=dr6pDPIoEXBJyj0cgysckbBsFXbHklcFa/gkCkiJtrQ=; b=YT/7ZU5/IdQ4O6Lznu+eXz+/Q5
-	LOFfty016TfmKplBg41TI+W7ln3bV5u91+jQgdIP0cKam/VxMGv3SxzcOgVb9ufiZU3GQ33DJcwdn
-	27D6lX/qQXA6qd7af9K2/B0xsD0WLvG0K1aC6rrZVudmDuTTUqCp/UPNrlfvrCLGlXK6J2K72yHbr
-	TMK3WTO5CLxL9mSs0TmhxwEBW5b2guJIE5HnAEMWktap2dPWIlfZnWLIh0Y2sQdlGoGZRDHFSdk1K
-	4lzihZz6kZcQOTh+GGu6nUe0GGUW1L8M2d/L74DD7pai/KB8ibfH7yN3yjeFnN/n5hbVjx6JGxBGq
-	ezumO8pA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=6NWmfe8Dq8JrZ1DQwcJzSv5BvctIaK/5J/1ExFQCV9M=; b=ADvWp9flO+q6lETMY8koB4ea1Q
+	FdxX6OpI6gDdYPi34U2MgpgMPphBvpFwyke+eF2LZyyLJBryB0wsKzt2T2xo5lRawz21J+A1GEmJo
+	gjmJOFYz/euRlSgeJlvgfb1BmE2UWrKr2tN1kNc+JC3/qIX2GcAtKT0wkwJV6TDcQPcfe6ZjKXSoc
+	mlySHgWyHsmYv///RsGq2aWZH6C7O3MFjHVrrMSOJIytHVkelEJowhnYKkFi/j1eIioT5H6D8nuDs
+	jN/ZBn+0DdYfk6teCHCgyivT2CxB/vXdALbkG89irKu2IMgTkHzIIVok0U2MnaE8aoF2RFplbI/qX
+	65jpoVXg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wfG62-00000004NiP-2mrZ;
-	Thu, 02 Jul 2026 12:00:46 +0000
-Received: from pdx-out-002.esa.us-west-2.outbound.mail-perimeter.amazon.com ([44.246.1.125])
+	id 1wfHv4-00000004Zvw-1std;
+	Thu, 02 Jul 2026 13:57:34 +0000
+Received: from fout-b1-smtp.messagingengine.com ([202.12.124.144])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wfG5s-00000004Nbp-1OdJ
-	for kexec@lists.infradead.org;
-	Thu, 02 Jul 2026 12:00:40 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
-  t=1782993636; x=1814529636;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=dr6pDPIoEXBJyj0cgysckbBsFXbHklcFa/gkCkiJtrQ=;
-  b=cUVzf2L0XiFdT5siW2yCgq/7LKNHJ3d9BA4KKeHOb41x4KvvSfXFcaUN
-   QPMuIrSVH0TgRGqK9YjEl+VUBv8O+d/6iWPYJtD7jHPu7rYiuUBvoB3mG
-   +sX60uksgzGxsbV8mpwC45ZJMf7WrGW5Qu/PiZdxVT8shrSom0Z/1rfLg
-   vmvtjDa6dCv2ikYjWdMQZ+WvNF1ZtwBvLECDFti2qY8YK4SV9hkeW8AJA
-   vHYQh4pNSESsd4DcOgscK6LaAe64QPtXqKUTPReVRJlA5cAxLT/2EhMw+
-   dI4H3zSbrLZltofeKVgR69fsLumT37Bp8a4EzN8mvZHorlrhj1R2vPOWG
-   Q==;
-X-CSE-ConnectionGUID: hVzg8JkAQOuoptdNe+QgXQ==
-X-CSE-MsgGUID: fZbrzqNPQyWspGn/wALeuw==
-X-IronPort-AV: E=Sophos;i="6.25,143,1779148800"; 
-   d="scan'208";a="22933002"
-Received: from ip-10-5-9-48.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.9.48])
-  by internal-pdx-out-002.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2026 12:00:30 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [205.251.233.105:5899]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.17.129:2525] with esmtp (Farcaster)
- id 4db0c9aa-4c0a-4d8a-bacf-95477444f279; Thu, 2 Jul 2026 12:00:30 +0000 (UTC)
-X-Farcaster-Flow-ID: 4db0c9aa-4c0a-4d8a-bacf-95477444f279
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
- Thu, 2 Jul 2026 12:00:30 +0000
-Received: from dev-dsk-mheyne-1b-8cc83676.eu-west-1.amazon.com (10.13.235.223)
- by EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
- Thu, 2 Jul 2026 12:00:26 +0000
-Date: Thu, 2 Jul 2026 12:00:16 +0000
-From: Maximilian Heyne <mheyne@amazon.de>
-To: Chenghao Duan <duanchenghao@kylinos.cn>
-CC: Pasha Tatashin <pasha.tatashin@soleen.com>, Alexander Graf
-	<graf@amazon.com>, "Andersen, Tycho" <Tycho.Andersen@amd.com>, Anthony Yznaga
-	<anthony.yznaga@oracle.com>, Baolu Lu <baolu.lu@linux.intel.com>, "David
- Hildenbrand" <david@kernel.org>, David Matlack <dmatlack@google.com>, "James
- Gowans" <jgowans@amazon.com>, Jason Gunthorpe <jgg@nvidia.com>, Mike Rapoport
-	<rppt@kernel.org>, Pankaj Gupta <pankaj.gupta.linux@gmail.com>, "Pratyush
- Yadav" <pratyush@kernel.org>, Praveen Kumar <kpraveen.lkml@gmail.com>, "Vipin
- Sharma" <vipinsh@google.com>, Vishal Annapurve <vannapurve@google.com>,
-	"Woodhouse, David" <dwmw@amazon.co.uk>, Luca Boccassi
-	<luca.boccassi@gmail.com>, Samiullah Khawaja <skhawaja@google.com>, "Jork
- Loeser" <jloeser@linux.microsoft.com>, <linux-mm@kvack.org>,
-	<kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<jianghaoran@kylinos.cn>
-Subject: Re: [Hypervisor Live Update] Notes from June 1, 2026
-Message-ID: <20260702-pay-effect-93be8ab0@mheyne-amazon>
-References: <aiWW6ZwwalqQmVcB@google.com>
- <20260702060202.GA78893@chenghao-pc>
+	id 1wfHv0-00000004Zv4-3uzV;
+	Thu, 02 Jul 2026 13:57:32 +0000
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.stl.internal (Postfix) with ESMTP id E164F1D000CF;
+	Thu,  2 Jul 2026 09:57:26 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Thu, 02 Jul 2026 09:57:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1783000646; x=
+	1783087046; bh=6NWmfe8Dq8JrZ1DQwcJzSv5BvctIaK/5J/1ExFQCV9M=; b=x
+	1pqw1n2RUrH8p9ce2f6m8cqwdOnFzMZjhtlookQDnZVzj9/yCKZvROg7nOyvElQb
+	/BBniiB8S0ZulcFEc15Op0r5VAzi/Hafa0Glraa1qszqdon+XOUHfLMjfvXuBe8R
+	ukEQb1CrGkZQKieEj8hQPljx/Gmff3ingVh9/37fw0uP5cfRZLhHK+iXJ8hfO+O6
+	BcTs7pGl9CqfRJYwWPV9vrVcocDpaNXuxPvNJ9F8Frrvc04hfmkRQjikndBs7DEM
+	f5V0VLgr9nxBhDO7sdwnQAx+gmw4GxzIRF3CT83IQ9jvVbyUhI2S7NyuHvS1arpp
+	dipOquNQsEjOh0Cr3IApg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1783000646; x=1783087046; bh=6NWmfe8Dq8JrZ1DQwcJzSv5BvctIaK/5J/1
+	ExFQCV9M=; b=AXKajFxTOEdTPvlMWtoC/EAQvzNml9bcFd71+Nt1qCW3uOHBLsJ
+	1BVFkJmRETUKSFd2ZMjBQkKpjLKfUClB0QaIN3pYZE8pC0wCAuGCGd0mqB8qF9jb
+	fXgyzZJHYEaIqqDyK+stxK7ep3Suj/Y45wW1NygZD7xfH1qQ8nQnmUpwzKW9ar7N
+	r+oNxlqRxIVewalvZan14obwJ999CWQAKzsy0u/UoOiktmKqieGYmk5zA+ufGhiX
+	RtBTw5fGNlH9gAUJfHl1xjI5K9SKImAUSKq1Nmmj2T39BJmZVPh6w9eoHTAEy3Hn
+	ukn6y61LcidboQA5/4BFLrVef5pWRmYRCzw==
+X-ME-Sender: <xms:RW5GaueEmDtXlZ9AoRmciw5NVL0CpngPFm9ZGTz3Z6XmnT0go3FEJQ>
+    <xme:RW5GarUicBEDb_RCbGhGRrgB2Lx_jVfNnhfiJ0qdrGtwL84p80-k01ELVy3TTj70k
+    MU5CB9CTIxmh-YXG2NWPRBwQQ7GTYVEzk_SOLBpxkcxxni3_DooDfY>
+X-ME-Received: <xmr:RW5Gas_2CUXNnm0uxkUKLiQSwckwLZjtlA005_Av6PH6uVWIVusL5o9-jVBY6Q>
+X-ME-Proxy-Cause: dmFkZTE4TWolB9uoCJVQSvHueLDkUcuW2os1IWqvEyWWpdqUcd4XiL+54kqQ61TrnEGAh6
+    0rlcn5ENk0MJJheNNyEAcxUjLBrOsv0K64/FUoONqzjX0YJjCtGpxHcO1VQ+nCMFQrhOTn
+    Dq6vLJNM3aJFHfxF5c+SFmY9C/SKkrjqIkvfe/EKvQTNcOXfqjbO6+3neM/zHXpUPGKvOL
+    Vaq9+dU5iSP5fKCS4iRI6DLyBCh38T8fe2Eka+C+aI/5uvFxa55erSYbWOAPQVaaurHonk
+    d3xdLEBq8WjP7sVJh4BTwGGAs3R88epaGZlwd3S9vxkmLa7aygDmv0rgKjp8/RVDAkjroV
+    djwEMJwnmYt+RO21T0WTejjDU263fqviOFscWdY6s+B8T2bfsUz/PgHGRw5841J6d/k/ZZ
+    TFEU5pC7ouXLtJIbmxAULG0t14id2aGgbDeDlbT+oDtBiMRc++o7qDVAmxILtQkzMPsnBG
+    n9UKrc0rBY5xhX5YWWxDM0UlXxk1c3hi+0tXChawd0mVjecV8RySI6M2yXbWcby9GFFPU9
+    qypj0S97WffxXus+lbltGOJRf58TuxeGMVtzV1Q6zJ7rI/iMIyfrQmzQU/XjPcAASLL5/R
+    sPd6JVuFSlh1ByC0gWBfmzyXaMIt15uD2o79v+taq3iHjS8JEp+bPZ2jaKiw
+X-ME-Proxy: <xmx:RW5GagiP8nC5e4sFIhf5FkJa9krmBTBFjLTl4HHOH-BxYQYIWY0AAw>
+    <xmx:RW5GapVEBQq2LsDLTubzwuYZe487n1V3V3uHFNKh-akUceZKWyHqQQ>
+    <xmx:RW5Gavv0wmyolvEz1pwEwjPmBLXm5Ps1B-Q-2olbOX4dSu63f-Q0GA>
+    <xmx:RW5Gar6CscIW8QO6cTilKZufPUk731Xro8Nu66m8nSGICo9tfWaTRA>
+    <xmx:Rm5Gal1xI0ow-_X7ewTJxvrou9riiqujrnfOijGrMPpDzM-KS944IQYg>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 2 Jul 2026 09:57:24 -0400 (EDT)
+Date: Thu, 2 Jul 2026 14:57:23 +0100
+From: Kiryl Shutsemau <kirill@shutemov.name>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>, 
+	Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>, 
+	Doug Anderson <dianders@chromium.org>, Petr Mladek <pmladek@suse.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, 
+	Baoquan He <bhe@redhat.com>, Puranjay Mohan <puranjay@kernel.org>, 
+	Usama Arif <usama.arif@linux.dev>, Breno Leitao <leitao@debian.org>, 
+	Julien Thierry <julien.thierry.kdev@gmail.com>, Lecopzer Chen <lecopzer@gmail.com>, 
+	Sumit Garg <sumit.garg@kernel.org>, kernel-team@meta.com, kexec@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/4] arm64: cross-CPU NMI via SDEI
+Message-ID: <akZq-CAdtgg3PbkC@thinkstation>
+References: <cover.1781709543.git.kas@kernel.org>
+ <aj6xvvY4AA-fQG2X@arm.com>
+ <aj7Pm5H0MN5WwhDK@thinkstation>
+ <akJsQK2iG2oZ3vYE@thinkstation>
+ <akKVKhOsv6EJVFv4@arm.com>
+ <akKiV3CAKWLwHnsW@thinkstation>
+ <akOT3yaYVM6BTm_4@thinkstation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260702060202.GA78893@chenghao-pc>
-X-Originating-IP: [10.13.235.223]
-X-ClientProxiedBy: EX19D036UWC002.ant.amazon.com (10.13.139.242) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
-Content-Transfer-Encoding: base64
+In-Reply-To: <akOT3yaYVM6BTm_4@thinkstation>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260702_050036_482996_1F482CB8 
-X-CRM114-Status: GOOD (  39.17  )
+X-CRM114-CacheID: sfid-20260702_065731_275220_D2824A3C 
+X-CRM114-Status: GOOD (  28.81  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,136 +118,85 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gVGh1LCBKdWwgMDIsIDIwMjYgYXQgMDI6MDI6MDJQTSArMDgwMCwgQ2hlbmdoYW8gRHVhbiB3
-cm90ZToKPiBPbiBTdW4sIEp1biAwNywgMjAyNiBhdCAxMjowNjowMVBNIC0wNDAwLCBQYXNoYSBU
-YXRhc2hpbiB3cm90ZToKPiA+IEhpIGV2ZXJ5Ym9keSwKPiA+IAo+ID4gSGVyZSBhcmUgdGhlIG5v
-dGVzIGZyb20gdGhlIEh5cGVydmlzb3IgTGl2ZSBVcGRhdGUgY2FsbCB0aGF0IGhhcHBlbmVkIG9u
-IAo+ID4gTW9uZGF5LCBKdW5lIDEuIFRoYW5rcyB0byBldmVyeWJvZHkgd2hvIHdhcyBpbnZvbHZl
-ZCEKPiA+IAo+ID4gVGhlc2Ugbm90ZXMgYXJlIGludGVuZGVkIHRvIGJyaW5nIHBlb3BsZSB1cCB0
-byBzcGVlZCB3aG8gY291bGQgbm90IAo+ID4gYXR0ZW5kIHRoZSBjYWxsIGFzIHdlbGwgYXMga2Vl
-cCB0aGUgY29udmVyc2F0aW9uIGdvaW5nIGluIGJldHdlZW4gCj4gPiBtZWV0aW5ncy4KPiA+IAo+
-ID4gLS0tLS0+by0tLS0tCj4gPiBMUEMgMjAyNiBDYWxsIGZvciBQcm9wb3NhbHMKPiA+IAo+ID4g
-VGhlIENhbGwgZm9yIFByb3Bvc2FscyBmb3IgdGhlIExpdmUgVXBkYXRlIE1pY3JvY29uZmVyZW5j
-ZSBhdCBMUEMgMjAyNiAKPiA+IGlzIG9mZmljaWFsbHkgb3Blbi4gUGxlYXNlIHN1Ym1pdCB5b3Vy
-IHRvcGljcyBhbmQgcHJvcG9zYWxzIGJlZm9yZSB0aGUgCj4gPiBkZWFkbGluZSBvbiBKdWx5IDI0
-dGguCj4gPiAKPiA+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC9haGNjM1F5dXk3T3kwM0lx
-QHBsZXgKPiA+IAo+ID4gLS0tLS0+by0tLS0tCj4gPiBLSE8gWGFycmF5IEltcGxlbWVudGF0aW9u
-ICYgQ29yZSBEYXRhIFN0cnVjdHVyZXMKPiA+IAo+ID4gUHJhdHl1c2ggaXMgY29sbGFib3JhdGlu
-ZyB3aXRoIE1pa2Ugb24gYSBLSE8gZmFsbGJhY2sgYWxsb2NhdGlvbiAKPiA+IHN0cmF0ZWd5IGZv
-ciBtZW1ibG9jay4gQWxvbmdzaWRlIHRoaXMsIFByYXR5dXNoIGlzIGRlc2lnbmluZyBhIAo+ID4g
-c2VyaWFsaXplZCwgc3BhcnNlICJLSE8gWGFycmF5IiBkYXRhIHN0cnVjdHVyZSB0byBsaWZ0IGN1
-cnJlbnQgbWFwcGluZyAKPiA+IHJlc3RyaWN0aW9ucyBhY3Jvc3MgYWxsIHRocmVlIG1lbWZkIHR5
-cGVzIChzaGFyZWQsIGh1Z2VUTEIsIGFuZCAKPiA+IGd1ZXN0X21lbWZkKS4gQnkgYWxsb3dpbmcg
-cnVudGltZSBwYWdlIGZhdWx0cyBhbmQgYWxsb2NhdGlvbiB0cmFja2luZyAKPiA+IHBvc3QtcHJl
-c2VydmF0aW9uLCB0aGlzIGF2b2lkcyBmbGF0IHZtYWxsb2MgYXJyYXkgc2NhbGFiaWxpdHkgCj4g
-PiBsaW1pdGF0aW9ucy4KPiA+IAo+ID4gUG90ZW50aWFsIHdpZGVyIHVzZSBjYXNlcyBmb3IgdGhl
-IEtITyBYYXJyYXkgd2VyZSBkaXNjdXNzZWQ6Cj4gPiAtIE1TSFYgc3BhcnNlIGJpdG1hcCB0cmFj
-a2luZy4KPiA+IC0gSU9NTVUgcGFnZSB0YWJsZSB0cmFja2luZyAoU2FtaXVsbGFoIHdpbGwgZXZh
-bHVhdGUgZG9tYWluL2RldmljZSB0cmVlIAo+ID4gICBhc3NvY2lhdGlvbiBmaXQpLgo+ID4gLSBQ
-Q0kvVkZJTyBzcGFyc2UgdHJhY2tpbmcgdmlhIEJ1cy9EZXZpY2UvRnVuY3Rpb24gKEJERikga2V5
-IHNwYWNlcy4KPiA+IAo+ID4gU2xhYi9DYWNoZSBQcmVzZXJ2YXRpb24gdnMuIExpbmtlZCBCbG9j
-a3M6Cj4gPiBEYXZpZCBNYXRsYWNrIG5vdGVkIHRoYXQgdXNpbmcgYW4gWGFycmF5IHBhZ2UgcGVy
-IFBDSSBkZXZpY2Ugd291bGQgYmUgCj4gPiB0b28gZXhwZW5zaXZlIGdpdmVuIHRoZWlyIHNtYWxs
-IHN0cnVjdCBzaXplcy4gUHJhdHl1c2ggc3VnZ2VzdGVkIAo+ID4gcHJlc2VydmluZyBzbGFiIGNh
-Y2hlcyB2aWEgZGVkaWNhdGVkIGttZW1fY2FjaGUgZmxhZ3MgdG8gbWFuYWdlIHNtYWxsLCAKPiA+
-IGFyYml0cmFyeSBhbGxvY2F0aW9ucy4gQXMgYW4gaW1tZWRpYXRlIGFsdGVybmF0aXZlLCBQYXNo
-YSdzIG9uZ29pbmcgTFVPIAo+ID4gbGltaXRzIHJlZmFjdG9yIHNlcmllcyBpbnRyb2R1Y2VzIGEg
-aGlnaGx5IGNvbXBhY3QgYmxvY2stbGlua2VkIGxpc3QgCj4gPiBzdHJ1Y3R1cmUgb3B0aW1pemVk
-IGZvciBydW50aW1lIGZpbGUvc2Vzc2lvbiB0cmFja2luZy4gRGF2aWQgTWF0bGFjayAKPiA+IHdp
-bGwgcmV2aWV3IGlmIHRoaXMgZml0cyB0aGUgUENJIGNvcmUgdHJhY2tpbmcgcmVxdWlyZW1lbnRz
-Lgo+ID4gCj4gPiAtLS0tLT5vLS0tLS0KPiA+IExVTyBMaW1pdCBSZW1vdmFsICYgUENJIENvcmUg
-U3RhdHVzCj4gPiAKPiA+IExVTyBSZWZhY3RvcjogUGFzaGEgaXMgdXBkYXRpbmcgdGhlIExVTyBz
-ZXJpZXMgdG8gYWRkcmVzcyBQcmF0eXVzaCdzIAo+ID4gY29tbWVudHMgKHByaW1hcmlseSByZW5h
-bWluZyBpdGVyYXRvciBmdW5jdGlvbnMpIGFuZCBwbGFucyB0byBzZW5kIG91dCAKPiA+IHYyIHNo
-b3J0bHkuIEdpdmVuIHRoYXQgTFVPIGlzIG5vdCB5ZXQgaW4gZmxlZXQgcHJvZHVjdGlvbiwgdGhl
-IGdyb3VwIAo+ID4gYWdyZWVkIHRvIGZhc3QtdHJhY2sgdGhpcyBpbnRvIHRoZSB1cGNvbWluZyBt
-ZXJnZSB3aW5kb3cgdG8gYWxpZ24gd2l0aCAKPiA+IHN5c3RlbWQncyBmZHN0b3JlIGludGVncmF0
-aW9uLgo+ID4gCj4gPiBQQ0kgQ29yZSB2NjogRGF2aWQgTWF0bGFjayBzZW50IG91dCB2NiBpbmNv
-cnBvcmF0aW5nIHR3byBjcml0aWNhbCBmaXhlcyAKPiA+IHNwb3R0ZWQgYnkgU2FjaGlrbyByZWdh
-cmRpbmcgZ2V0L3B1dCBzZW1hbnRpY3MgYW5kIGRvdWJsZS1yZXRyaWV2YWwgCj4gPiBmYWlsdXJl
-cy4gUmV2aWV3IHRhZ3MgZnJvbSB0aGUgbGl2ZSB1cGRhdGUgdGVhbSBhcmUgbmVlZGVkIHRvIGhl
-bHAgCj4gPiBzZWN1cmUgQmpvcm4ncyBBY2sgb25jZSBoZSByZXR1cm5zIGZyb20gdmFjYXRpb24g
-bmV4dCB3ZWVrLgo+ID4gCj4gPiAtLS0tLT5vLS0tLS0KPiA+IElPTU1VIFBlcnNpc3RlbmNlICYg
-UHJvY2VzcyBNZW1vcnkKPiA+IAo+ID4gSU9NTVUgdjM6IFNhbWl1bGxhaCBpcyBhZGRyZXNzaW5n
-IHJlY2VudCByZXZpZXcgZmVlZGJhY2sgb24gdGhlIElPTU1VIAo+ID4gcGVyc2lzdGVuY2Ugc2Vy
-aWVzIGFuZCBpbnRlbmRzIHRvIHBvc3QgdjMgYnkgdGhlIGVuZCBvZiB0aGlzIHdlZWsuIFRoZSAK
-PiA+IGFzc29jaWF0ZWQgZGV2ZWxvcG1lbnQgcm9hZG1hcCBkb2N1bWVudCBoYXMgcmVjZWl2ZWQg
-cG9zaXRpdmUgCj4gPiBzdGFrZWhvbGRlciBhdHRlbnRpb24uCj4gPiAKPiA+IENSSVUgJiB2bV9z
-cGxpY2U6IE1heGltaWxpYW4ncyBpbnZlc3RpZ2F0aW9uIGludG8gb3B0aW1pemluZyB2bV9zcGxp
-Y2UgCj4gPiBmb3IgY29weS1sZXNzIGRhdGEgcHJlc2VydmF0aW9uIHJlbWFpbnMgZGVmZXJyZWQg
-YnV0IHJlbWFpbnMgaW4gdGhlIAo+ID4gcGlwZWxpbmUsIHdpdGggcG90ZW50aWFsIGZ1dHVyZSBj
-b2xsYWJvcmF0aW9uIHdpdGggR29vZ2xlJ3MgdG1wZnMgc3BsaWNlIAo+ID4gZWZmb3J0cy4KPiAK
-PiBJ4oCZdmUgYWxzbyBiZWVuIHJlc2VhcmNoaW5nIGEgY29tYmluYXRpb24gc29sdXRpb24gaW50
-ZWdyYXRpbmcgQ1JJVSBhbmQKPiBLSE8uIE15IGFwcHJvYWNoIHN0b3JlcyBhbGwgaW1hZ2UgZGF0
-YSBkdW1wZWQgYnkgQ1JJVSBpbnRvIG1lbWZkLCB0aGVuCj4gcGVyc2lzdHMgdGhvc2UgbWVtZmQg
-b2JqZWN0cyB2aWEgS0hPL0xVTy4KCkkndmUgZXhwZXJpbWVudGVkIHdpdGggZXhhY3RseSB0aGUg
-c2FtZSBhcHByb2FjaCBwbHVzIGlmIGEgcHJvY2VzcwphbHJlYWR5IGhhcyBtZW1mZCdzLCBkb24n
-dCBkdW1wICh0byB5ZXQgYW5vdGhlciBtZW1mZCkgYnV0IHByZXNlcnZlIHRoaXMKbWVtZmQgZGly
-ZWN0bHkgdmlhIEtITy4KCj4gCj4gSeKAmXZlIHJldmlld2VkIHRoZSBoaXN0b3JpY2FsIG1lZXRp
-bmcgbm90ZXMgYW5kIHdvdWxkIGxpa2UgdG8gY2xhcmlmeToKPiBkb2VzIHRoZSBDUklVIHNvbHV0
-aW9uIGRpc2N1c3NlZCBpbiB0aGUgbWVldGluZ3MgYWltIHRvIHNhdmUgdGhlIGZ1bGwKPiBzZXQg
-b2YgYSBwcm9jZXNz4oCZcyBtZXRhZGF0YSBhbmQgZGF0YSwgb3Igb25seSB0aGUgYW5vbnltb3Vz
-IG1lbW9yeSBhbmQKPiBzaGFyZWQgbWVtb3J5IGFsbG9jYXRlZCBkdXJpbmcgdGhlIHByb2Nlc3Mg
-cnVudGltZT8KCkkndmUgYmVlbiB0aGUgb25seSBvbmUgYnJpbmdpbmcgdGhpcyB1cCBpbiB0aGUg
-bWVldGluZ3MgYW5kIG15IGlkZWEgaXMKdG8gZW5hYmxlIGEgcmVib290IHdpdGggbmVnaWdpYmxl
-IHByb2Nlc3MgZG93bnRpbWUuIFNvIHNhdmUgdGhlIHN0YXRlIG9mCmEgcHJvY2Vzcywga2V4ZWMg
-YW5kIHJlc3VtZSB0aGUgcHJvY2Vzcy4gQ3VycmVudGx5LCBwcmVzZXJ2YXRpb24gYW5kCnJlc3Rv
-cmF0aW9ucyBhcmUgcXVpdGUgc2xvdyB3aGVuIHByb2Nlc3NlcyBoYXZlIGEgbG90IG9mIGFub255
-bW91cwptZW1vcnkgYXMgdGhpcyBuZWVkcyB0byBiZSBtb3ZlZCB0byBhIHByZXNlcnZhYmxlIG1l
-bWZkIGZpcnN0LiBTbyB3aGF0CkknbSByZXNlYXJjaGluZyBpcyBob3cgSSBjYW4gY29udmVydCBh
-bm9ueW1vdXMgbWVtb3J5IGVmZmljaWVudGx5IGludG8Kc29tZXRoaW5nIHRoYXQgY2FuIGJlIHBy
-ZXNlcnZlZCAoY3VycmVudGx5IG1lbWZkKS4KCkFuZCB0byBhbnN3ZXIgeW91ciBxdWVzdGlvbiwg
-SSdkIHNheSBzYXZlIGRhdGEgYW5kIG1ldGFkYXRhIGluIG1lbWZkJ3MuCkFzIHRoZSBhbHRlcm5h
-dGl2ZSB3b3VsZCBiZSB0byBzYXZlIHRoZSBtZXRhZGF0YSBvbiBkaXNrIHdoaWNoIHdvdWxkIGJl
-CnNsb3cuCgo+IAo+IENoZW5naGFvCj4gPiAKPiA+IC0tLS0tPm8tLS0tLQo+ID4gZ3Vlc3RfbWVt
-ZmQgRW5saWdodGVubWVudCAmIFZNTSBEb2N1bWVudGF0aW9uCj4gPiAKPiA+IFRhcnVuIGRlYnJp
-ZWZlZCB0aGUgY29tbXVuaXR5IG9uIGhpcyB1cHN0cmVhbSBwcmVzZW50YXRpb24gcmVnYXJkaW5n
-IHRoZSAKPiA+IGluaXRpYWwgZ3Vlc3RfbWVtZmQgcHJlc2VydmF0aW9uIHBhdGNoIHNlcmllcyAo
-Y3VycmVudGx5IGNvdmVyaW5nIGZ1bGx5IAo+ID4gc2hhcmVkIG1hcHBpbmdzIHdpdGggcGFnZS1z
-aXplZCBmb2xpb3MpLgo+ID4gCj4gPiBLZXkgZGVzaWduIGFuZCBhcmNoaXRlY3R1cmUgYWxpZ25t
-ZW50cyBpbmNsdWRlOgo+ID4gLSBWTSBGaWxlIEFzc29jaWF0aW9uOiBndWVzdF9tZW1mZCByZXF1
-aXJlcyBhbiBhY3RpdmUgJ3N0cnVjdCBrdm0nIAo+ID4gICBjb250ZXh0IHRvIGJlIHJldHJpZXZl
-ZC4gVk1NcyBtdXN0IHByZXNlcnZlIHRoZSBwYXJlbnQgVk0gZmlsZSAKPiA+ICAgYWxvbmdzaWRl
-IGd1ZXN0X21lbWZkLCB1c2luZyBMVU8gdG9rZW5zIHRvIHJlLWxpbmsgdGhlbSBvbiB0aGUgCj4g
-PiAgIGluY29taW5nIGtlcm5lbCBwYXRoLiBUaGlzIHNldHMgdGhlIHN0YWdlIGZvciBmdXR1cmUg
-cHJpdmF0ZSAKPiA+ICAgbWFwcGluZy9zZWN1cmUgRVBUIHRhYmxlIHRyYWNraW5nLgo+ID4gLSBS
-ZWxheGVkIEZhdWx0IExvZ2ljOiBUaGUgZ3JvdXAgYWdyZWVkIHRvIGRyb3Agc3RyaWN0IHVwZnJv
-bnQgcHJlLWZhdWx0IAo+ID4gICBjaGVja3MuIEluc3RlYWQsIHN0YW5kYXJkIHJ1bnRpbWUgcGFn
-ZS1mYXVsdCBzZW1hbnRpY3Mgd2lsbCBhcHBseS4gSWYgCj4gPiAgIGEgZ3Vlc3QgcGFnZSBmYXVs
-dCBvY2N1cnMgcG9zdC1wcmVzZXJ2YXRpb24sIGl0IHdpbGwgYnViYmxlIHVwIHZpYSAKPiA+ICAg
-c3RhbmRhcmQgS1ZNX1JVTiBpb2N0bCBleGl0cyB0byB0aGUgVk1NLCB3aGljaCBjYW4gc2FmZWx5
-IHBhdXNlIHZDUFVzIAo+ID4gICBhbmQgcmV0cnkgdGhlIGZhdWx0IHBvc3Qta2V4ZWMuCj4gPiAt
-IENlbnRyYWxpemVkIFZNTSBEb2N1bWVudGF0aW9uOiBQYXNoYSBhbmQgRGF2aWQgTWF0bGFjayBw
-cm9wb3NlZCAKPiA+ICAgY3JlYXRpbmcgYSBjZW50cmFsaXplZCBndWlkZSB1bmRlciBsaXZlX3Vw
-ZGF0ZS92bW0gZGV0YWlsaW5nIHRoZSAKPiA+ICAgb3ZlcmFsbCBsaXZlIHVwZGF0ZSBmbG93LCB0
-aW1pbmcgY29uc3RyYWludHMsIGFuZCBzdWJzeXN0ZW0gCj4gPiAgIHJlcXVpcmVtZW50cyB0byBh
-c3Npc3QgZXh0ZXJuYWwgUUVNVSBhbmQgVk1NIGRldmVsb3BlcnMuCj4gPiAKPiA+IC0tLS0tPm8t
-LS0tLQo+ID4gTmV4dCBtZWV0aW5nIHdpbGwgYmUgb24gTW9uZGF5LCBKdW5lIDE1IGF0IDhhbSBQ
-RFQgKFVUQy03KSwgZXZlcnlib2R5IGlzCj4gPiB3ZWxjb21lOiBodHRwczovL21lZXQuZ29vZ2xl
-LmNvbS9yam4tZG16dS1oZ3EKPiA+IAo+ID4gTm90ZTogSSBhbSBnb2luZyB0byBiZSB0cmF2ZWxp
-bmcgb24gSnVuZSAxNXRoLCBEYXZpZCBNYXRsYWNrIGlzIGdvaW5nIHRvCj4gPiBiZSBob3N0aW5n
-IGl0Lgo+ID4gCj4gPiBUb3BpY3MgZm9yIHRoZSBuZXh0IG1lZXRpbmc6Cj4gPiAtIFByZXNlbnRh
-dGlvbiBvZiBWRklPIHJvYWRtYXAgKFZpcGluIGFuZCBEYXZpZCBNYXRsYWNrKQo+ID4gLSBTdGF0
-dXMgb2YgS0hPIFhhcnJheSBkZXZlbG9wbWVudCBhbmQgc2xhYiBwcmVzZXJ2YXRpb24gZmVhc2li
-aWxpdHkKPiA+IC0gUmV2aWV3IG9mIFBDSSBjb3JlIGNoYW5nZXMgdjcgYW5kIHVwc3RyZWFtIG1l
-cmdlIGNvb3JkaW5hdGlvbgo+ID4gLSBJT01NVSBwZXJzaXN0ZW5jZSB2MyByZXZpZXcgZmVlZGJh
-Y2sKPiA+IC0gRGV0YWlsZWQgcmV2aWV3IG9mIGd1ZXN0X21lbWZkIHYyIGFuZCBWTU0gaW50ZXJh
-Y3Rpb24gZG9jdW1lbnRhdGlvbgo+ID4gLSBSZXZpZXcgYW5kIGNvb3JkaW5hdGlvbiBvZiBMUEMg
-MjAyNiBNaWNyb2NvbmZlcmVuY2UgdG9waWMgc3VibWlzc2lvbnMKPiA+IC0gbGF0ZXI6IEtITyBz
-dXBwb3J0IGZvciBDb25maWRlbnRpYWwgVk1zIGluY2x1ZGluZyBwYWdlIHRhYmxlCj4gPiAgIHBy
-ZXNlcnZhdGlvbiBhbmQgcGlubmluZwo+ID4gLSBsYXRlcjogdmVyc2lvbmluZyBzdXBwb3J0IGZv
-ciBsdW9kIHRvIG5lZ290aWF0ZQo+ID4gLSBsYXRlcjogS0hPIGVubGlnaHRlbm1lbnQgZm9yIEFT
-SQo+ID4gLSBsYXRlcjogdXBkYXRlIG9uIFBDSSBwcmVzZXJ2YXRpb24gc2VyaWVzIGFuZCBuZXh0
-IHN0ZXBzCj4gPiAtIGxhdGVyOiB0ZXN0aW5nIG1ldGhvZG9sb2d5IHRvIGFsbG93IGRvd25zdHJl
-YW0gY29uc3VtZXJzIHRvIHF1YWxpZnkKPiA+ICAgdGhhdCBsaXZlIHVwZGF0ZSB3b3JrcyBmcm9t
-IG9uZSB2ZXJzaW9uIHRvIGFub3RoZXIKPiA+IC0gbGF0ZXI6IHJlZHVjaW5nIGJsYWNrb3V0IHdp
-bmRvdyBkdXJpbmcgbGl2ZSB1cGRhdGUsIGluY2x1ZGluZyBkZWZlcnJlZAo+ID4gICBzdHJ1Y3Qg
-cGFnZSBpbml0aWFsaXphdGlvbgo+ID4gCj4gPiBQbGVhc2UgbGV0IG1lIGtub3cgaWYgeW91J2Qg
-bGlrZSB0byBwcm9wb3NlIGFkZGl0aW9uYWwgdG9waWNzIGZvcgo+ID4gZGlzY3Vzc2lvbiwgdGhh
-bmsgeW91IQoKCgpBbWF6b24gV2ViIFNlcnZpY2VzIERldmVsb3BtZW50IENlbnRlciBHZXJtYW55
-IEdtYkgKVGFtYXJhLURhbnotU3RyLiAxMwoxMDI0MyBCZXJsaW4KR2VzY2hhZWZ0c2Z1ZWhydW5n
-OiBDaHJpc3RvZiBIZWxsbWlzLCBBbmRyZWFzIFN0aWVnZXIKRWluZ2V0cmFnZW4gYW0gQW10c2dl
-cmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIgSFJCIDI1Nzc2NCBCClNpdHo6IEJlcmxpbgpVc3Qt
-SUQ6IERFIDM2NSA1MzggNTk3Cg==
+On Tue, Jun 30, 2026 at 11:04:14AM +0100, Kiryl Shutsemau wrote:
+> On Mon, Jun 29, 2026 at 05:53:57PM +0100, Kiryl Shutsemau wrote:
+> > On Mon, Jun 29, 2026 at 04:54:18PM +0100, Catalin Marinas wrote:
+> > > Have you tried SDEI_EVENT_COMPLETE_AND_RESUME instead? Just COMPLETE
+> > > won't return to the kernel. We have sdei_handler_abort() to complete the
+> > > event and, hopefully, you can continue with the CPU_OFF. It's a work
+> > > around the TF-A non-compliance but I think this is useful even if you
+> > > don't issue the CPU_OFF (e.g. no CPU hotplug, just the park loop).
+> > 
+> > Tried it. The result is the opposite of what I expected, and it argues
+> > against doing the complete at all under QEMU's TF-A.
+> 
+> I have to walk back on this. My test setup was broken. I will be back to
+> you with proper data.
 
+Back with proper data. Short version: CPU_OFF from the SDEI stop does not
+work on Grace, whether or not the event is completed first, so the series
+stays with the park. Details below.
+
+What was broken before
+======================
+My QEMU kdump harness had three faults that together made CPU_OFF look
+like it broke the capture kernel:
+
+  - a race between the sysrq-c crash and the buddy detector -- the script
+    that wedges the CPU wasn't pinned off it, so which crash path ran (and
+    thus the outcome) was random;
+  - the capture kernel's console went quiet at the boot-console handover,
+    so "nothing after Bye!" was mostly lost output, not a hang (keep_bootcon
+    shows it booting on);
+  - the one genuine early stall was the capture kernel's CFI probe of the
+    secure NOR flash -- it reproduces with the whole series compiled out
+    (CONFIG_ARM_SDEI_NMI=n) and disappears with
+    initcall_blacklist=physmap_init, i.e. nothing to do with SDEI.
+
+With those fixed, QEMU/TF-A boots the capture kernel to userspace for both
+park and raw CPU_OFF, and CPU_OFF really powers the PE off. But QEMU can't
+decide the question that matters: its post-kexec hold-pen can't revive any
+CPU_OFF'd core (even a cleanly hotplug-offlined one), so re-onlining is
+undecidable there. Hence Grace.
+
+Grace (Neoverse V2, EL3 TF-A)
+=============================
+  - Series as posted (park): the SDEI rung stops the wedged CPU, its
+    context lands in the vmcore, the capture kernel boots. Works.
+    Bringing up secondary CPUs complains that it cannot get the CPU up,
+    but proceeds.
+  - raw CPU_OFF from the uncompleted SDEI event: the capture kernel boots
+    but hangs at "smp: Bringing up secondary CPUs ..." -- it cannot
+    re-online the CPU that was CPU_OFF'd. This is exactly the TF-A point
+    you raised: the SDEI dispatch is left dangling on CPU_OFF and the PE
+    won't come back cleanly.
+  - complete-then-CPU_OFF: same hang at secondary bring-up. Completing the
+    event first does not help.
+
+For that last one I did not use sdei_handler_abort(): it can't express
+"complete, then CPU_OFF" from the handler, because its COMPLETE_AND_RESUME
+lands on the "1: ret" trampoline, which resumes the *interrupted* (wedged)
+context -- so nothing after it runs. I used a COMPLETE_AND_RESUME whose
+resume PC is a PSCI CPU_OFF stub, so the event is genuinely completed and
+then the PE powers off. It still can't be re-onlined. (I suspect the
+"complete-then-CPU_OFF wedged EL3" I mentioned earlier was in fact the
+sdei_handler_abort() path resuming the wedged loop, i.e. never doing the
+CPU_OFF at all.)
+
+Conclusion
+==========
+CPU_OFF from the SDEI stop is unusable on current TF-A, with or without
+completing the event first -- a concrete real-HW consequence of the
+non-compliance you flagged (TF-A subscribes SDEI to PSCI CPU_ON and
+suspend-wakeup, but not CPU_OFF). So the series keeps the park: the dump
+is complete either way, and only re-onlining the SDEI-stopped CPU in an
+SMP capture kernel is lost -- the same fallback the shared stop path
+already takes when CPU_OFF is unavailable. Powering the PE off for reuse
+is a firmware follow-up (TF-A completing or tearing down the SDEI dispatch
+on PSCI CPU_OFF), not something the kernel can paper over.
+
+Please consider applying v5.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
