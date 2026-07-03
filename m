@@ -4,67 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0C345C43458
-	for <kexec@archiver.kernel.org>; Fri,  3 Jul 2026 14:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 74D5AC43458
+	for <kexec@archiver.kernel.org>; Fri,  3 Jul 2026 15:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=iszMYG8/GDwOkWSLEKylfXpVUW/SGclSH7eygKWPKWU=; b=x+6BSBUJGkkEVTOtrqiR1IWMJM
-	LyDWfpdh5bTXqqFR+x3tFVzCHdH8kMUMIsakOCefHHOHnniD6DY+G/cK8xzCl26uN/m7hnRN6FL+Y
-	1CxLojHSUQ9eW4u3ygjEhD7UnqksqnhJe5BwfoDk5XOmQvShaNDtzifmDfhQwO28B/ulMbBHs7S3L
-	rX873E6EUBvtd14XdJ3ibIbWs8Epx+pKQf/sG3OSrkUrRAk1ZCxUcKXgNt1/cKOkziF4WcCOcoz2S
-	df/E6TB9mPQjqS3gea1J2Vlzg14OFV0fJTcHNcY7G7J1GxFMtDweVOIPjLEZuz3ztQZLjo7XeErWv
-	IyJ9Xg+Q==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=H62G7zY/G7fEPGH1tQglCcEYZ+0YjI+oCCkcVMWIavI=; b=uXUvg5pFzJDVdkCvBGeLGacOdz
+	xSU3/fyTHkOeAl/bXDuik9kqI40/R81TBWOr5a3swAIWuUYI7vs4M41ah4tZAAuc1dPtyTxuV14zR
+	8fYGlHytDQxXShr6rM1kBSgz2CcM6ces2EidosFpBpzRBTc3dWm+x566vMwCv1vnHVwGd57a4WqAc
+	hhFS2hHFM2MAGbX/HRgJKDGXxB7K9xoFGfcjBQdX+EyzOWqJGj35NY5bd6QVVyacYTdj0C6UG1waS
+	om3SwijMbLMbP4xlnvuwep2SeCT7BhIdNHcP42GmFog8SJh96/ax61rqT2XHa/pXjUSGSIB/3LfGj
+	gt0gm4Ag==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wffMx-00000007LJa-2QIw;
-	Fri, 03 Jul 2026 14:59:55 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wffYN-00000007N2N-2N5m;
+	Fri, 03 Jul 2026 15:11:43 +0000
+Received: from mail.alien8.de ([2a01:4f9:3051:3f93::2])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wffMw-00000007LJL-1E7n;
-	Fri, 03 Jul 2026 14:59:54 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 63C6C60051;
-	Fri,  3 Jul 2026 14:59:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02D9A1F000E9;
-	Fri,  3 Jul 2026 14:59:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783090793;
-	bh=iszMYG8/GDwOkWSLEKylfXpVUW/SGclSH7eygKWPKWU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=A42/s2/bFtKZ/AeyCtaD8M9riPQcpeAsT9Vo43MfiHhG9F1WIggDSFAJtzJAhb3tw
-	 Kt4BoIupfmnqE+pDq0X3gliBgR0dXKNsjzgNQ0+tlHw7iS5oEdPvtcclnRGCGWN0/z
-	 PDCB0OGy/uIIJ2o5wLDopD4zn5t0Lj7vDyvcqDwaY9p1I2nfrgmFcPgBFOUr50Tjz2
-	 w4j6hBfSEoSmi+Wjcl+uDsONz/6TmdHORS4hA6hbG74zd/ckVMwUIrk8a8WjHdtw98
-	 s45DWSJPWyzYbiF8YGfAIrZcTHo2Rw6iEDbdtbQ8Y9YBFviXKver4LJunF9elKaCWc
-	 pa2Om15Jdy65g==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Tao Liu <ltao@redhat.com>,  linux-riscv@lists.infradead.org,
-  kexec@lists.infradead.org,  linux-integrity@vger.kernel.org,  Albert Ou
- <aou@eecs.berkeley.edu>,  Alexandre Ghiti <alex@ghiti.fr>,  Palmer Dabbelt
- <palmer@dabbelt.com>,  Paul Walmsley <pjw@kernel.org>,
-  kernel-janitors@vger.kernel.org,  LKML <linux-kernel@vger.kernel.org>,
-  Baoquan He <bhe@redhat.com>,  Dmitry Kasatkin
- <dmitry.kasatkin@gmail.com>,  Eric Snowberg <eric.snowberg@oracle.com>,
-  Jarkko Sakkinen <jarkko@kernel.org>,  Mimi Zohar <zohar@linux.ibm.com>,
-  Nutty Liu <nutty.liu@hotmail.com>,  Pratyush Yadav <pratyush@kernel.org>,
-  Roberto Sassu <roberto.sassu@huawei.com>
-Subject: Re: [PATCH v4] riscv: Prevent NULL pointer dereference in
- machine_kexec_prepare
-In-Reply-To: <5df82d42-89cd-4e39-95a9-a0f164c0ac58@web.de> (Markus Elfring's
-	message of "Fri, 3 Jul 2026 16:38:09 +0200")
-References: <20260703111530.91285-2-ltao@redhat.com>
-	<5df82d42-89cd-4e39-95a9-a0f164c0ac58@web.de>
-Date: Fri, 03 Jul 2026 16:59:48 +0200
-Message-ID: <2vxzqzlkf7a3.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	id 1wffYK-00000007N1K-1VZ7
+	for kexec@lists.infradead.org;
+	Fri, 03 Jul 2026 15:11:43 +0000
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6C56E40E01D8;
+	Fri,  3 Jul 2026 15:11:35 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id LGvNGMpdV1QX; Fri,  3 Jul 2026 15:11:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1783091485; bh=H62G7zY/G7fEPGH1tQglCcEYZ+0YjI+oCCkcVMWIavI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HP+5Ufqh6uVGlyJF32W1CkhFFK3l0dI8tiHdkZF+0QiNTGa2Xb303AT0/H+UuOAje
+	 /jTxnzi4cVz3GmPMGjTd4AME9r1w22ao/RlFRYdvrsLtsOTWB0YE2aCUusD3BovGHB
+	 AJCNIB1Pd76bQZl+EA5WOGTahmN60OxgTkDXWJORX9YMIPEhAJ7dRunhdvfa1LQIdJ
+	 yPp+emyuU6XxEfJs0rnAmhKqmkjwJx6ncpC8vwv0oZRMCLgbBGj2V3hKZ9C4Ipqf1c
+	 8KMKXH/FX0rKRD13DQDCWGbamVRQb6JnJTecNfgi7Mv8meFRQ3YNU24UpMvevb0rj5
+	 mogA5Nq3hX6TeX5rsPakguJZ7gvwQ+8gTe0yPzYokjYQ24OmXcTibN24/cgPVjHnf6
+	 Yf7UwGfrLxV6sDf7OAJC9gbImhujcQyTLvC6oYzc4AyVpt6CdtcU0RiRCgeGz64RYL
+	 wIOfR/ZgRNfCb7QXBC3viPXUF/Uq+MlI4P1ulZH9rlrnLqFtIKFtakWnsLgO5qkMbp
+	 0Q148uUQ8xE0gw1ml7yXJh3Y4ynVU3WsrVNPodyLf9dyuFWVWhg8VtbPnmDgC+TBny
+	 8jp8P8aMPpD0mlVvUy1KV0/Pz4nX5EtHMFIBg5+e1yN1z3QlKRd/ZuST0G4pgBYzOy
+	 7WTJyY5fVGUQmoO32dbm6Oj4=
+Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0313940E01CE;
+	Fri,  3 Jul 2026 15:11:14 +0000 (UTC)
+Date: Fri, 3 Jul 2026 08:11:11 -0700
+From: Borislav Petkov <bp@alien8.de>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	kexec@lists.infradead.org
+Subject: Re: [PATCH] x86/setup: do not include kexec_handover.h from
+ asm/setup.h
+Message-ID: <20260703151111.GAakfRD6J8a1-g-aua@fat_crate.local>
+References: <20260701151536.3068791-1-pratyush@kernel.org>
+ <20260701165714.GAakVG6p191JTJ0nJS@fat_crate.local>
+ <aka8f1RNJH-zI7Kl@kernel.org>
+ <20260703001128.GBakb-MO4o6AUffNAx@fat_crate.local>
+ <akdUX4vUEEJWrlGO@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+In-Reply-To: <akdUX4vUEEJWrlGO@kernel.org>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260703_081140_599490_01307D76 
+X-CRM114-Status: GOOD (  11.45  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,30 +95,40 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jul 03 2026, Markus Elfring wrote:
+On Fri, Jul 03, 2026 at 09:19:11AM +0300, Mike Rapoport wrote:
+> The size does not matter ;-P
 
->> A NULL pointer dereference issue is noticed in riscv's machine_kexec_pre=
-pare(),
->> where image->segment[i].buf might be NULL and copied unchecked.
-> =E2=80=A6
->
-> Would it be helpful to append parentheses to a function name also in the =
-summary phrase?
->
-> Why was such a hint not be taken into account from a previous suggestion?
+Yeah, that's what they all say :-P
 
-Oh come on, this is a really really minor nitpick. The fact that
-machine_kexec_prepare is a function is fairly obvious when reading the
-patch. In fact, the first sentence of the commit message uses the
-parentheses.
+> asm-generic would be my preference too if that's fine to include in
+> decompressor.
 
-So yes, it would have been nice to have them in the subject. But no,
-this is not at all worth anyone's time to fix. Certainly not at all
-worth a v5.
+Sure, the main idea is that if we add more linux/ namespace includes into the
+decompressor, they end up pulling in the world and more and then you end up in
+build and include hell. So we try to make sure only more or less
+self-contained headers are included.
 
-Please, let's not nitpick our contributors into giving up.
+And there's a bunch of build magic in scripts/Makefile.asm-headers and this
 
---=20
-Regards,
-Pratyush Yadav
+# Support for using generic headers in asm-generic
+asm-generic := -f $(srctree)/scripts/Makefile.asm-headers obj
+
+in the main Makefile which lets you do things like that apparently:
+
+$ git grep generic-y arch/x86/
+arch/x86/include/asm/Kbuild:13:generic-y += early_ioremap.h
+arch/x86/include/asm/Kbuild:14:generic-y += fprobe.h
+arch/x86/include/asm/Kbuild:15:generic-y += mcs_spinlock.h
+arch/x86/include/asm/Kbuild:16:generic-y += mmzone.h
+arch/x86/include/asm/Kbuild:17:generic-y += ring_buffer.h
+
+but you'd need to try it - I've only heard about it from the sidelines.
+
+:-)
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
