@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2BB14C43458
-	for <kexec@archiver.kernel.org>; Fri,  3 Jul 2026 06:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1056C43458
+	for <kexec@archiver.kernel.org>; Fri,  3 Jul 2026 06:19:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=t2GSIPSxJh8EZqC8ezwABY7VMBVdrUEd4MP2m61kMJg=; b=4wKZqOWm9bK7WNOafLEFqJVyft
-	N35N0iqvTr0/sQ6OzApa01FmN4T5yj2vvt1bo20bUsHKHREjlaqygAfgPPsTeSsCnG2prIfQMWpEn
-	7mt/AEwutWihJyjl/0b+6cqAKq8fonpyyfl78FKM31071x+rJcXrb4UK+1sCCRrANMMpv5x43Pgrb
-	soY2MyVKguLPGJNNS8etlmBry4yF9bxFaSn1HOobhj15Z5oEtoaPSZcmvR4CM16PAmNgR9r3UogCg
-	hJ70cTOUn8ehef+Tf8uZyP8v793xG+2HwHEyXPid4yzosVJl0b8LRfoNqn+JVYRDlPvAY1HrBxSV2
-	la44onNw==;
+	bh=ZwarcPKPTkjljrDo42N+w74VxiYFqGDfjaPe/w3i4JY=; b=P3ncsDv9TGfw6jKP/loepts1HV
+	mckVp+OLkNNSK3KINOCOD5UqhaTfw+c/YBV3+Pxyztdkm8x5QMlH/0Le4AOA+COBMCO1+L805KuRw
+	135p43wa89Nr8UVBi3h15KstnNtm5mZNfn+TphzkwTG4WTp8T4UlOfyy0G3If2rrQ4Yar+orQdwnV
+	9tbIeADZalTB6PvyS2F+ZHyXCBCjBa7SB4N1QYBGLmN/LLBT0C3OB8PBLoze+ANi/TylXjF1B+kkQ
+	Usqi8IOD7rYufAAgEsMfImUZynzWfW6VCfQid9fyW55eU4G+BZ3aincuoia/PoVHxH31jzLTjK2Ad
+	qwYjtLjg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wfWyC-000000067WV-1FKC;
-	Fri, 03 Jul 2026 06:01:48 +0000
-Received: from out30-113.freemail.mail.aliyun.com ([115.124.30.113])
+	id 1wfXFB-000000068ym-3Fey;
+	Fri, 03 Jul 2026 06:19:21 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wfWy8-000000067Vi-10lP;
-	Fri, 03 Jul 2026 06:01:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1783058498; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=t2GSIPSxJh8EZqC8ezwABY7VMBVdrUEd4MP2m61kMJg=;
-	b=tiDsjNnNqSvZ/CyTME4CuSBijI+klf9Z/2knJUndaJ2B37FCiCzSiiHkhjiZ0i6uABFr2kpPqKkj6npEsUzMOUFN29GCBxOAJVc9QCYyMyVG/n0TZoHC//kapqY3gm6UTWRM7Z/ZmKdWLFy4nvjNpDdA/QqDl415AmqCIIjHL8Q=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=fengwei_yin@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0X6I6p2n_1783058494;
-Received: from U-V2QX163P-2032.local(mailfrom:fengwei_yin@linux.alibaba.com fp:SMTPD_---0X6I6p2n_1783058494 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 03 Jul 2026 14:01:37 +0800
-Date: Fri, 3 Jul 2026 14:01:33 +0800
-From: YinFengwei <fengwei_yin@linux.alibaba.com>
-To: Kiryl Shutsemau <kirill@shutemov.name>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>,
-	Doug Anderson <dianders@chromium.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>, Puranjay Mohan <puranjay@kernel.org>,
-	Usama Arif <usama.arif@linux.dev>, Breno Leitao <leitao@debian.org>,
-	Julien Thierry <julien.thierry.kdev@gmail.com>,
-	Lecopzer Chen <lecopzer@gmail.com>,
-	Sumit Garg <sumit.garg@kernel.org>, kernel-team@meta.com,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	"Kiryl Shutsemau (Meta)" <kas@kernel.org>
-Subject: Re: [PATCH v5 0/4] arm64: cross-CPU NMI via SDEI
-Message-ID: <akdQPbs8ImQbhMuM@U-V2QX163P-2032.local>
-References: <cover.1782744912.git.kas@kernel.org>
+	id 1wfXFA-000000068yf-2uQQ
+	for kexec@lists.infradead.org;
+	Fri, 03 Jul 2026 06:19:21 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 9DDDF601FA;
+	Fri,  3 Jul 2026 06:19:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 826531F000E9;
+	Fri,  3 Jul 2026 06:19:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783059559;
+	bh=ZwarcPKPTkjljrDo42N+w74VxiYFqGDfjaPe/w3i4JY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=hspcQVPKCeLKZ/8DIJFTQdXNhZ0f5Ljo988vqBA0ZEquyjFCZPh+yFajd0Sw8+zdd
+	 2ipbSbntsGT5RI0QFuLKarJ0rrk5O+QNmTH6wMflatQVgJBL2wGrJVs2minZv62wIH
+	 E2G8RITiEuKbatMFvyjX8hHeAfTrvEZmYAzaybsN8A1oi7hph56LyolY9pojr9qjoF
+	 XiSme+LmTqYweoLbEH7IvgGGDYJuAULMrtw2Xax9z9jSdzmHdn4z/Nh+7IxBbwA4gH
+	 FVQxMsULsbxRMaqJJjNIMDpcSAwqWRnHH/mlxUCeRBjIwEN8ERQxQs3wfRz4/qy1v6
+	 qYC7bMC+oaMog==
+Date: Fri, 3 Jul 2026 09:19:11 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Pratyush Yadav <pratyush@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	kexec@lists.infradead.org
+Subject: Re: [PATCH] x86/setup: do not include kexec_handover.h from
+ asm/setup.h
+Message-ID: <akdUX4vUEEJWrlGO@kernel.org>
+References: <20260701151536.3068791-1-pratyush@kernel.org>
+ <20260701165714.GAakVG6p191JTJ0nJS@fat_crate.local>
+ <aka8f1RNJH-zI7Kl@kernel.org>
+ <20260703001128.GBakb-MO4o6AUffNAx@fat_crate.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1782744912.git.kas@kernel.org>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260702_230144_957338_F57B3D55 
-X-CRM114-Status: GOOD (  12.70  )
+In-Reply-To: <20260703001128.GBakb-MO4o6AUffNAx@fat_crate.local>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,41 +77,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Kirill,
+On Thu, Jul 02, 2026 at 05:11:28PM -0700, Borislav Petkov wrote:
+> On Thu, Jul 02, 2026 at 10:31:11PM +0300, Mike Rapoport wrote:
+> > The examples there are really x86 specific.
+> > KHO needs decompressor to recognise 'struct kho_scratch' that's defined in
+> > include/linux/kexec_handover.h
+> 
+> That struct is huuuge :-P
+> 
+> struct kho_scratch {
+>         phys_addr_t addr;
+>         phys_addr_t size;
+> };
+ 
+The size does not matter ;-P
 
-On Mon, Jun 29, 2026 at 04:07:14PM +0100, Kiryl Shutsemau wrote:
-> From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
+> > I see there's a duplicated 'struct efi_unaccepted_memory' for decompressor
+> > needs, should KHO do the same for 'struct kho_scratch'?
 > 
-> A class of debug/observability features needs to interrupt a CPU that has
-> its interrupts locally masked: the all-CPU backtrace behind sysrq-l /
-> RCU-stall / hung-task / hard-lockup dumps, and crash_smp_send_stop()
-> capturing a stuck CPU's state into the vmcore. On arm64 these need a
-> mechanism that reaches a CPU spinning with DAIF masked, which a normal IPI
-> cannot.
+> You could. But it would go out of sync perhaps.
 > 
-V> arm64 has two such mechanisms today:
+> You could also try a 
 > 
->   - GICv3 pseudo-NMI (interrupt priority masking). The cost lands on the
->     interrupt mask/unmask hot path: local_irq_enable() becomes an
->     ICC_PMR_EL1 write, and exception entry/exit save and restore the PMR,
->     paid on every CPU whether or not an NMI is ever delivered.
+> include/asm-generic/kho.h
 > 
->     Measured on Grace (Neoverse V2; ICC_CTLR_EL1.PMHE=0, so the PMR-sync
->     DSB is already patched to a NOP), pseudo_nmi=0 vs pseudo_nmi=1:
-> 
->         gettid() loop:              178 -> 253 ns/call  (+42%, ~74 ns)
->         will-it-scale sched_yield:  0.705x throughput, flat from 1 to 72 cores
->         will-it-scale page_fault1:  within ~5%
-> 
->     The ~74 ns is a fixed per-syscall entry/exit tax -- it reproduces at
->     +73.5 ns on Neoverse N2 -- so the hit tracks syscall/exception density
->     and is unacceptable on syscall-bound fleet workloads, which therefore
->     run with pseudo-NMI disabled.
-> 
-This patchset works perfectly on our Neoverse N2 ARM64 platform. So
- Tested-by: Yin Fengwei <fengwei_yin@linux.alibaba.com>
+> and put only really generic, basic gunk there and include it everywhere.
 
-Regards
-Yin, Fengwei
+asm-generic would be my preference too if that's fine to include in
+decompressor.
 
+-- 
+Sincerely yours,
+Mike.
 
