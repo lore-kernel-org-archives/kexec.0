@@ -4,110 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 546F7C43458
-	for <kexec@archiver.kernel.org>; Fri,  3 Jul 2026 11:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1D45FC43458
+	for <kexec@archiver.kernel.org>; Fri,  3 Jul 2026 11:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
-	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=dquujKaEWXj9SeOR2cw//kdvyk2bjQlGJyeh7Df3DyQ=; b=FcPN2F1TYrkRIQsncbxUVUX8PM
-	BxlQvl+O2W0ycxQnsFGg06sNFSUrIDLB2b1nzZkeMjbPiljcHxbs4JjoVKZ0/7Rqinb6T+M2yZeNd
-	hEr+Gj9xhUZ3A+Dz9WmLwR+3Zx5pyAA8MbUg8qse1bY5fWtwAxq17FnlbPGq37w3uEuSFjmnABPef
-	H/KgQGQLo/UctsK1Z35yJWFrSONBkAobCR11B/ALA+rYk3agjAoWohUtTAJORoSUdfTJlarNZ3g9l
-	jvomNRSvh6x8JwFUpMl5aaAa6GwCxHe52wMP3IKuhXtOZIRXliRdpLTn1juz8EMj4S72REUVImb4w
-	UkbIjcDw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=tQvjlOiW+cm83l6iL+N3Ll3Wujm0kHNaCoPYlrf/mUE=; b=ZTqdzKY161urTh/j9kLn6Rh2I2
+	dd4sVAB0A0rMalgdHf10sZ6gQgC0YIr5C9gywlee5VerpIc9RGTeASoIpt8PjX/iCEt+Ww9R4qS0M
+	0q/YumJYA6hTZ2SuV5JVtqrG934Tgz+w+PYNiKeQYNqkwdhOsmGsXz1ApiYls9SF//pMRVzYOkWYE
+	EUc3tEuqoWUvzlBDKRrZ8ZYGqsk0CdPhfXcdtaTBL4RYd9LkZ7awTequK2BJa+7OpCvItWUoFvzmV
+	ww5bx/u6jQ5usEwMgf6RRS16jQ/fNdSbkwUy7QsJxYowPeiDE1/sJb+yWsHjMPagA7HI6TZNriNVW
+	MmBx/AHg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wfc33-00000006nxa-07OK;
-	Fri, 03 Jul 2026 11:27:09 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1wfc39-00000006nze-0Q6r;
+	Fri, 03 Jul 2026 11:27:15 +0000
+Received: from mail-pg1-x52c.google.com ([2607:f8b0:4864:20::52c])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wfc30-00000006nwW-0gQB
+	id 1wfc36-00000006nyN-07Dy
 	for kexec@lists.infradead.org;
-	Fri, 03 Jul 2026 11:27:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783078025;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dquujKaEWXj9SeOR2cw//kdvyk2bjQlGJyeh7Df3DyQ=;
-	b=YxGGZfSV2DKPrapT33FL7MT65cRA82py+zbINV9LLkXXnVMMagmA+gp0rt99ODOb3/vlu3
-	tRkkK2mNB51gchoo15+7H7WSN74fO43/AkCMDzBjEkWU2VCvzk+5Y3vdfVm26+Ovw/loFM
-	pfIPfYK7URTXf31Z7uCBCVR9Pvk3qxk=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-590-PYBttxUHPOeM4-At6Vx5_Q-1; Fri, 03 Jul 2026 07:27:02 -0400
-X-MC-Unique: PYBttxUHPOeM4-At6Vx5_Q-1
-X-Mimecast-MFC-AGG-ID: PYBttxUHPOeM4-At6Vx5_Q_1783078021
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2c825562f8bso9448895ad.2
-        for <kexec@lists.infradead.org>; Fri, 03 Jul 2026 04:27:02 -0700 (PDT)
+	Fri, 03 Jul 2026 11:27:13 +0000
+Received: by mail-pg1-x52c.google.com with SMTP id 41be03b00d2f7-c99eaa1f020so482689a12.2
+        for <kexec@lists.infradead.org>; Fri, 03 Jul 2026 04:27:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783078030; x=1783682830; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=tQvjlOiW+cm83l6iL+N3Ll3Wujm0kHNaCoPYlrf/mUE=;
+        b=mdrJwnAMjBj1HZ7gdVk4t8PM8Fj6I2R0kmQn61y+jgU9cG4wUB0wzbKt0DzMdrb8mn
+         iaDVapCsGK6aF+Mo3jRBJ4weW/pwzltlMBVgse7hB2wLI7QdNe6DN4/u9C2sDWuEEni+
+         /gYuStUbCF+1bOXRGMlHxFqnrlokqse0XqbjlJKYeLEi3swjt6Xe9ymLJ16FBYeq2FAk
+         YpDcgmBk0FHQUM+NiAXGDU11W27gxjAkbw+L7yklzLEFFYqc0wYWUWtdoErC24oNHEhf
+         HgUnvsHx5Z0AaYFjKiRx2XLvCt74VfxNtVPK9C3tgZHiTkeVCET7K00Igoy6Vvgb1Byc
+         etNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783078021; x=1783682821;
+        d=1e100.net; s=20251104; t=1783078030; x=1783682830;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dquujKaEWXj9SeOR2cw//kdvyk2bjQlGJyeh7Df3DyQ=;
-        b=mrWURGhGWcw1d1TLyKx5usoJ6wiPCBs/rBscu+Ri7IMREnfz7p/PGOkPP1ObIyPSsE
-         0RLCgW9NZzz7cC9eqfMj2baHnMacnItHTVnatTP9/AtfOWmAnRvH6II9QWQctrSAw6Ls
-         vt2Nd16EOkf++Q2pR6/jRWxSMVo0x6vPGrj9Qfi3IY+cN7l1ss5Q4BQLSTdi3PISTDaO
-         9Wztm756+Qj7RaVeK93q2fOXSdxdmoObejRfCwRWUJizWDJc11LdONcZGVLcC2xuRZF3
-         Qx+ZKm4s+GVe0XrtIpbrPvEXnqp8FH3uPpgtaq3PVByMqGTjzHZM6b/NSADjasw3BPES
-         N0ew==
-X-Forwarded-Encrypted: i=1; AHgh+RrqmKJjgrB+H4CpAXZt0GosMmcjJU5Ry7dlEGrU2bcbF5kbjK3Qq8IuLDV6sjMFUjQ2XvPDCw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwQa51hohu7xtA2lP88gHB+fp+Lqnu2156CFzl0dvWwWCCE7KJy
-	W4bYJu5WSSuu2SdzMZE2ngHXLrSfm0tM8Tui7rBTCiPSxPgh8Sk6oal8rs1wpx42gOs8mkPX5+V
-	WDs/7utft+qXCcW5HyHAZfdpMtTplE26A/ZBer3gAIeZYu09ZayQZoLJSDZwrGg==
-X-Gm-Gg: AfdE7cmOoUMmd3Os/LRgl0Y49qpUf6bnHsMfdKVIKqzsmeSvC3MyTU6vKL1GPcdbLr5
-	V0VQEiFicpKDP59Amlnvf4xelFD9naQUeOJXkWiVyDkx+kiqpPEV6hU9rX/wPIIxQmN+Zb9gHbP
-	RimP1hU1QCzE72nuGdV/yAEBqBWp/i4PkISofFTw8UU1WRSxUmrtGljvQx06to5yhh0q3k3WyTR
-	xyNPkwZCt5TJUNyeZhFECSruFloKXLo1s4QiHC9S5pP4aXm8erDT68RkaQg1TVXZH8mBHyoiJXS
-	9j0BRdJuYlogyjh4ZHUfo3lipvOGaD7+7hlCUyg+B3Z/KiWFvDxx/qnFBcTHRSiMTi+BwWQz0aK
-	mDNUv9iDi639evWMt9+8pT7WwpiATELzrGWqULZTsXE/m3OAN/Q==
-X-Received: by 2002:a17:902:e54c:b0:2c9:adbb:5862 with SMTP id d9443c01a7336-2ca7e8b686fmr102173435ad.45.1783078021225;
-        Fri, 03 Jul 2026 04:27:01 -0700 (PDT)
-X-Received: by 2002:a17:902:e54c:b0:2c9:adbb:5862 with SMTP id d9443c01a7336-2ca7e8b686fmr102173215ad.45.1783078020656;
-        Fri, 03 Jul 2026 04:27:00 -0700 (PDT)
-Received: from localhost.localdomain (122-63-67-56.mobile.spark.co.nz. [122.63.67.56])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cad6f260acsm8227305ad.6.2026.07.03.04.26.52
+         :message-id:reply-to:content-type;
+        bh=tQvjlOiW+cm83l6iL+N3Ll3Wujm0kHNaCoPYlrf/mUE=;
+        b=Y/dXfsFzlYnOmCRpDOoH0iSTcYV2BZgAe3yiccBzYFtZJwBV2xp91mgLjWBcvWnh5c
+         aF4Sfw0UlZFi2A/1C2b+HBESCgPpEt2chZQ+n5Emz7CsB2jjnUknbsrJ85Y5YOWqCcR2
+         RhS98N1sR1kqko17bGkMi3WD1cwIJ9Fic3aWhQBMBb3r2lAfNN7vZxLBTyMKawwQUfeZ
+         QAyVIqIUDz2ZtXRLeaLPHG8c0AlYnhzyEmj5ZSA3xaZr/Bt+4Kacb6vOeA9BagUNaDcJ
+         nvUakGsK+nc7UZEtoYJMlJFKoH+F8O5WNPvAJEmlyB+is5v4vH6XY7SQzg/DSbtRAHjW
+         gjZA==
+X-Forwarded-Encrypted: i=1; AFNElJ+weyGmD9DBCpj/WOliZbxHAbcV4s/3Rq76AyeRl4gtXrQXLc3s1noxxf/zfcaGqv0UCwYmoA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyvnKXTTA25FBEeCoKB+qUqaUa5/anYQK0N7DRnmWu7cs7M9vSH
+	E7QsAStyEItGbY/2e2N+MD0VtWn2dx18BRklkQN0QO92eRTZFshgZsrQ
+X-Gm-Gg: AfdE7clKyv+gw+i+VHjRglaph/YJovYqd+qx+tYLbmzUxEu8htr1bARQ/UDu0hIlAhj
+	CEEfhmE4TrQvadqn2rhgcVSpRq5ZpGyS7LCRG/cmlSR9tR1lQjdeOH3zggwBeo7YW63xhw7VQ9O
+	QJ7YUevuEC5R3lb/qNtEWm4gUotioS0aaWvQ8WhKd3HQvwS/cXF3abRRMqCYSUse+dVgoppZKX6
+	E5Sssz5hkYsIizTRB0UKeZkrA8K7+axtBin7oh3mKYEZPnfEdV0aY7+5QtYIRdNJtiWrlokuQsr
+	pl4NkA/NOwe9S3KYY5SryyLlBayra9poCsdzpa9dhHKZLX87PJcxqaI6BPkjbygV0cf+/+r6NuI
+	MR9lGgk7KQ96ivShsSZJ1ec2px4j1sFj3OaUUzrwCQEycwUnQDUcDcxuWbIRJVhkDgF4aEy+sex
+	Yi0iamVYqtmUg=
+X-Received: by 2002:a05:6a21:9f07:b0:3bf:6c08:2847 with SMTP id adf61e73a8af0-3bff42f825bmr11648934637.54.1783078030485;
+        Fri, 03 Jul 2026 04:27:10 -0700 (PDT)
+Received: from ubuntu.. ([2405:201:8026:213e:185d:def2:c823:8e8c])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13b3c876ea9sm17263039c88.13.2026.07.03.04.27.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2026 04:27:00 -0700 (PDT)
-From: Tao Liu <ltao@redhat.com>
-To: pjw@kernel.org,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
+        Fri, 03 Jul 2026 04:27:09 -0700 (PDT)
+From: mdshahid03@gmail.com
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>
+Cc: Dave Young <ruirui.yang@linux.dev>,
 	kexec@lists.infradead.org,
-	bhe@redhat.com,
-	zohar@linux.ibm.com,
-	roberto.sassu@huawei.com,
-	dmitry.kasatkin@gmail.com,
-	eric.snowberg@oracle.com,
-	linux-integrity@vger.kernel.org,
-	pratyush@kernel.org,
-	Markus.Elfring@web.de,
-	kernel-janitors@vger.kernel.org,
-	jarkko@kernel.org,
-	Tao Liu <ltao@redhat.com>,
-	stable@vger.kernel.org,
-	Nutty Liu <nutty.liu@hotmail.com>
-Subject: [PATCH v4] riscv: Prevent NULL pointer dereference in machine_kexec_prepare
-Date: Fri,  3 Jul 2026 23:15:31 +1200
-Message-ID: <20260703111530.91285-2-ltao@redhat.com>
-X-Mailer: git-send-email 2.54.0
+	linux-kernel@vger.kernel.org,
+	Mohammad Shahid <mdshahid03@gmail.com>
+Subject: [PATCH] dm: crash dump: remove redundant NULL check before kvfree()
+Date: Fri,  3 Jul 2026 16:56:42 +0530
+Message-ID: <20260703112642.65498-1-mdshahid03@gmail.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: yA58sNtRdtmSis2Dk5qKyPemOWT1W_8sp11WLw7iCDc_1783078021
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260703_042706_269945_60A7155D 
-X-CRM114-Status: UNSURE (   8.95  )
+X-CRM114-CacheID: sfid-20260703_042712_068561_6F66FF98 
+X-CRM114-Status: UNSURE (   8.86  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -123,59 +102,33 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-A NULL pointer dereference issue is noticed in riscv's machine_kexec_prepare(),
-where image->segment[i].buf might be NULL and copied unchecked.
+From: Mohammad Shahid <mdshahid03@gmail.com>
 
-The NULL buf comes from ima_add_kexec_buffer(), where kbuf is added by
-kexec_add_buffer(), but kbuf.buffer is NULL, then it is copied without
-a check in machine_kexec_prepare().
+kvfree() safely handles NULL pointers, so the explicit NULL check
+before calling kvfree() is unnecessary.
 
-Relevant path:
+This issue was reported by ifnullfree.cocci.
 
-  kexec_file_load
-    -> kimage_file_alloc_init()
-       -> kimage_file_prepare_segments()
-          -> ima_add_kexec_buffer()
-             -> kexec_add_buffer()
-    -> machine_kexec_prepare()
-       -> memcpy()
-
-Address this by adding a check before the data copy attempt.
-
-Fixes: b7fb4d78a6ad ("RISC-V: use memcpy for kexec_file mode")
-Cc: stable@vger.kernel.org
-Closes: https://lore.kernel.org/kexec/CAO7dBbVftLUhd2qrh7hmijTB3PEPfZAhykCGqEfrPoOcSrrj-w@mail.gmail.com/
-Acked-by: Baoquan He <bhe@redhat.com>
-Acked-by: Pratyush Yadav <pratyush@kernel.org>
-Reviewed-by: Nutty Liu <nutty.liu@hotmail.com>
-Signed-off-by: Tao Liu <ltao@redhat.com>
+Signed-off-by: Mohammad Shahid <mdshahid03@gmail.com>
 ---
-v4 -> v3: 1) Remove code comment.
-          2) Replace (buf == NULL) to (!buf).
-          3) Reword commit message.
+ kernel/crash_dump_dm_crypt.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-link to v1: https://lore.kernel.org/linux-riscv/20260529032739.13264-2-ltao@redhat.com/
-link to v2: https://lore.kernel.org/linux-riscv/20260627222602.23594-2-ltao@redhat.com/
-link to v3: https://lore.kernel.org/linux-riscv/20260701025732.66330-2-ltao@redhat.com/
----
- arch/riscv/kernel/machine_kexec.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/riscv/kernel/machine_kexec.c b/arch/riscv/kernel/machine_kexec.c
-index 2306ce3e5f22..738df176ff6f 100644
---- a/arch/riscv/kernel/machine_kexec.c
-+++ b/arch/riscv/kernel/machine_kexec.c
-@@ -41,6 +41,9 @@ machine_kexec_prepare(struct kimage *image)
- 		if (image->segment[i].memsz <= sizeof(fdt))
- 			continue;
+diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+index cb875ddb6ba6..cf4d41fd4d5e 100644
+--- a/kernel/crash_dump_dm_crypt.c
++++ b/kernel/crash_dump_dm_crypt.c
+@@ -364,8 +364,7 @@ static int build_keys_header(void)
+ 	struct config_key *key;
+ 	int i, r;
  
-+		if (!image->segment[i].buf)
-+			continue;
-+
- 		if (image->file_mode)
- 			memcpy(&fdt, image->segment[i].buf, sizeof(fdt));
- 		else if (copy_from_user(&fdt, image->segment[i].buf, sizeof(fdt)))
+-	if (keys_header != NULL)
+-		kvfree(keys_header);
++	kvfree(keys_header);
+ 
+ 	keys_header = kzalloc(get_keys_header_size(key_count), GFP_KERNEL);
+ 	if (!keys_header)
 -- 
-2.54.0
+2.43.0
 
 
