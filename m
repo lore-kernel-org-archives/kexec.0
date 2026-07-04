@@ -4,97 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CEC79C43458
-	for <kexec@archiver.kernel.org>; Sat,  4 Jul 2026 00:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AF06CC43458
+	for <kexec@archiver.kernel.org>; Sat,  4 Jul 2026 11:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
+	Message-ID:Date:From:In-Reply-To:References:MIME-Version:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=t+/wZjP3VRbBrZYdXJhzA9JgmkyKgho4uGcN4xy9Q+s=; b=JYAcWKCQG2mBpKNt9D6paQ8H8W
-	757nHxPVehUkmg5ntXkLY97UVBcsTZ9fYtiqIlZOOD7gX9U41Sq5AhnwhzM4V3BzJ3ZsdjbTa2FpV
-	q3tQRaHrOrfb5UwMGaJQ9lHimd3y69X68xT1B49eHXCTGh2WD2Tjn5JmjS9wkje7iDIBkVipSDUUt
-	BVcu9ss+FojVNnqGMcA4VkiMqA3vwdWc1NHLd3xoK/i8NWc25HrmlzsanC4rYrH9gKUipa1+SsJ1/
-	DY1KCVl7YgH0Atejb1s6xxj8iEUODz0sZXvJkLNjKbXOFgAtWPMoDzO5AnhlkxqvcWJXrdKPgOB9K
-	eehUjaRA==;
+	bh=wA1liI19oI1AkBerychf4m2LDUMb0gUS762S3f5S9h0=; b=dG3PaFF0cw8nUuUCqPaV0dW1ll
+	PXlUdkQ+xk1WYeRi2DXpMozDOj0fblDsV9mSLfZt7Bqpk00O0DB4o0qH/0mBt9qTenupuuc/Z+U5q
+	NiWu81pbF8RNyFRCZcDRibO64vCgnY/T7XExXww/vd9ubfO0Qk/+jCWl6MI0YyR70JzvAZVO54vlg
+	XimdOBESog+S5QoedrTXTDvd2DdDNuncgZ9UjgVq2BFMO8x/DVJmh7sGWqlmSXTxzZj8phIHGHTUO
+	EaeLE43JG+IqazOiq4+9gqi9lcaaFCS6fKRselDkq+wvINFqKPBSM5Q3CNS8rgI8E5RM2bymHiqoF
+	t7hz9cGQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wfocA-00000008493-3YjP;
-	Sat, 04 Jul 2026 00:52:14 +0000
-Received: from mail-yx1-xb12a.google.com ([2607:f8b0:4864:20::b12a])
+	id 1wfyWm-00000008Nsh-0xlI;
+	Sat, 04 Jul 2026 11:27:20 +0000
+Received: from mail-yx1-xb129.google.com ([2607:f8b0:4864:20::b129])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wfoc5-0000000848C-0OE2
+	id 1wfyWj-00000008NsI-14ez
 	for kexec@lists.infradead.org;
-	Sat, 04 Jul 2026 00:52:13 +0000
-Received: by mail-yx1-xb12a.google.com with SMTP id 956f58d0204a3-66493875766so1456862d50.0
-        for <kexec@lists.infradead.org>; Fri, 03 Jul 2026 17:52:08 -0700 (PDT)
+	Sat, 04 Jul 2026 11:27:18 +0000
+Received: by mail-yx1-xb129.google.com with SMTP id 956f58d0204a3-664d4478a64so1813274d50.3
+        for <kexec@lists.infradead.org>; Sat, 04 Jul 2026 04:27:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783164435; cv=none;
+        d=google.com; s=arc-20260327;
+        b=GjDWX2O57cXcftoOPVTilOT2UCnq9JLayr639VtAF0ThH1h7wNNcyXVS1s/NuyvwG/
+         at8GpOJ3rN/gTQweFFlBFFdWl8ub/9wE3r6M74LOOIK4mnuT/EQ20KYpdOdtmwiZv8eO
+         kR2VGwDbwBMWxEDXOXWdprkdk3DeUw+g2ymiyReGbv0eJH6eVvEm9c7JTS3W8pQZImpx
+         6FSshV3yDNHW8G0VfDh+QjhqlULukpjtUgbcAoFnwt54ncfpb+inhF5ihdgF/z2U1MlR
+         RWlUhsc4kxUO4YQyoI80MFEJ1Ju0l82pUfPK/3n8/3Xg4fHjRjxu7oIcUwDMEHiejEcG
+         asbg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=wA1liI19oI1AkBerychf4m2LDUMb0gUS762S3f5S9h0=;
+        fh=pFyNGdug5aa+u9hJ1N0AT0guJmaCkG0gMVtqOyM1ywg=;
+        b=icwkj8Ifi/v7l33EEfNR/6STVwsQWaiQGA8oJi/NvreJodN+SynfWTQqPwQy3kmXcz
+         lAJJ+LjG7BmMTV3hnX1jVmKDjJs5kRKaScxK9uJJK0zwrNLniA17wV/WMT9ugopyKl3q
+         Z3PCf74KL0bSX6hER8nb4oUMKuOhwzkGPreL2eKW0S6gmUGs7CTiXSej+NpTH5dcxOWh
+         zySEi7lL567UbngostzY3225sZBZ2SRL3nLKq62APL0CQ2zMZ4uyNVh3imZS42aP+kYn
+         jQIlTTSDscCQBzVQp6+H7h27DyWj74z2SyTIhjeLzBUpuXWJt2j4mblWZkiSGitVOs+w
+         J3/Q==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1783126327; x=1783731127; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t+/wZjP3VRbBrZYdXJhzA9JgmkyKgho4uGcN4xy9Q+s=;
-        b=fU2/munT/63bQSfma9I4+Ezvgi81TtG8mKytnvKpYt2DYKrbD8xiRTBUqxGJTZOgHc
-         aVixJdfeLKgnO6wXc7SFXrvYZjWJ1QVzBFSDGm5IqES/zS//ZEXAUvMqdmq08zWkWrz2
-         Mv/sK2R7Lj0cV3SDWSxH8JQGXaI9UsmPzxueiqcIR7Zbze0WY8KozXeYafCuxajZ1qy1
-         lBmiJvJ8NgS8nwWC9A3tIL1vctymIMiQrOYKSj+ga7wSPWn+q7sswZfeNMuKMDs9lmoz
-         OFdj75NPDjzpX1wvs09aeOv6NgE3eYqi7PV/SkhXYwYm9YkAGgzd7aaqGECqsP23gjfa
-         S+CA==
+        d=gmail.com; s=20251104; t=1783164435; x=1783769235; darn=lists.infradead.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=wA1liI19oI1AkBerychf4m2LDUMb0gUS762S3f5S9h0=;
+        b=Moj328Q6f1Sd0cv4dXxmCSI4uxmNPb55jk2we+ov3B5AEJe0jwgvXLTDNE60Gnwm6b
+         R0fXfM2BBbv8COZEuCpd2dSa4qsWaoJjuhW1TMgKJxQQPHounfY5lGgbe/5tfQ5kOvGZ
+         TDX1kVsqQdNOHVpkSPGWK0O0HGvy1MIgL5x6nFVYmx8tDCChS3BtUzgriJtL7jOCs1Tc
+         FxdAWQwMpXZtgMepjyJwZyVHwQdm1zLSsq9qlxLCI8X8REquZfc1ubrA71/4kJmxcmAW
+         r/neeM4XXs3YbGdfBl5t5XEWatghtF38XV0QABTO0yfHtKg++sWcVf53kjXEX2fncvU3
+         1hdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783126327; x=1783731127;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t+/wZjP3VRbBrZYdXJhzA9JgmkyKgho4uGcN4xy9Q+s=;
-        b=UC3GVpS/lyLYBmV9EWb8Um5f37wUK3JG5OMJZLNwJsBhmTv2iPesVx2JmUPt4z3IvT
-         haX1EspYaP+LGgXHDteiTQg/Dd0fZbO1mbp+Fn0n2GS3xgm1ybbo8sxTepqNMhGERlLn
-         O4FMxTL/HEs7hE+SvFFJ+fEMj71FSBJlJlKTQATeLoQjnKYvWoIMJJrilVQ5ieATt2v6
-         /O6RF7n2JFYwI1mAqRHgZtDv7MF41igBe/hUR2E4rTJwKpVl9SE8T+jrQ9nLQ51dUyz4
-         Y17Jiw16OfrxHTEpW0teG/Sw0nrYJ6uKus291W2M4PXaWPT+8EeDdf0PPJbpFg1qi/Rt
-         mr+w==
-X-Forwarded-Encrypted: i=1; AHgh+RqvbCfYUkSTINUP/3oRmNdRce78aFaxwKIjokClpnQy0JhFx1e/54ctZbYziMvaEG4zWjcSkQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzuWnB1k+XvRBa9tOH6e95Q8ze2oITXdJJliTWygCxsMkZhCbeF
-	Ae7CQ3gJW7kppM/kkDemHVbXazO2er7ig0Rye25P017zljakHObxTtOeK6lXpnpAtWg=
-X-Gm-Gg: AfdE7cma1RNpIyuxz07b7d3egmrM3tbw11IK8P/9j5B4ovQm5HkhGKc7WcYFTxImBJg
-	ngQPtasCo0+PSJyNyEF2sAWW8C2/5mNb0PTfMKCJy3r2S1W2YhGufX+ew96ci3xNLYzi7zllEYc
-	sUI3oi2Yfdi7ZgbODSnx9j4n+lMqNBImMgq7TgqGvBhEI0mx5HyOGvPZFWNuHe0Xh9fF22QuYlu
-	kExu+mA9jMzW/3fag5IRhJlLc0vQH1AlxBqhcMENS3qu6rJBMmJ2NpG8wSGPCzoyVEnd94iEIgh
-	SAWO8E477FVLhMBpcv6KMxlHf0wjaXMgR1KqjGUH7MPv9WW3pqvyKG0MgIs0eFzuHGrkavQ/DL6
-	rwsbursf3j9pxzURE5LZMCO1K0llekv/C0g0JKeFgBbDtmRnJ87UATul8No0fg/1W0CZvrWktaL
-	LzfvDNhxX8VYtg3XwoX5o4FKbjrox9rw9N/jOlN/n2iiWPBc3JwJmwOnTkuI8sX7nTX0YqGU5dB
-	U0p7tkPdWQ7+3dFb93KrRg=
-X-Received: by 2002:a05:690e:4506:10b0:665:1e31:9164 with SMTP id 956f58d0204a3-66652eb898dmr968746d50.47.1783126327338;
-        Fri, 03 Jul 2026 17:52:07 -0700 (PDT)
-Received: from google.com (212.255.145.34.bc.googleusercontent.com. [34.145.255.212])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-6664083f9f6sm1511013d50.16.2026.07.03.17.52.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2026 17:52:06 -0700 (PDT)
-Date: Fri, 3 Jul 2026 20:52:05 -0400
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Alexander Graf <graf@amazon.com>, "Andersen, Tycho" <Tycho.Andersen@amd.com>, 
-	Anthony Yznaga <anthony.yznaga@oracle.com>, Baolu Lu <baolu.lu@linux.intel.com>, 
-	David Hildenbrand <david@kernel.org>, David Matlack <dmatlack@google.com>, 
-	"Heyne, Maximillian" <mheyne@amazon.de>, James Gowans <jgowans@amazon.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pankaj Gupta <pankaj.gupta.linux@gmail.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Praveen Kumar <kpraveen.lkml@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
-	Vishal Annapurve <vannapurve@google.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, 
-	Luca Boccassi <luca.boccassi@gmail.com>, Samiullah Khawaja <skhawaja@google.com>, 
-	Jork Loeser <jloeser@linux.microsoft.com>, Chenghao Duan <duanchenghao@kylinos.cn>, 
-	Zhu Yanjun <yanjun.zhu@linux.dev>
-Cc: linux-mm@kvack.org, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [Hypervisor Live Update] Notes from June 15 and June 29, 2026
-Message-ID: <akhY7Njh6LqzyWyz@google.com>
-References: <20260704004316.1109918-1-pasha.tatashin@soleen.com>
+        d=1e100.net; s=20251104; t=1783164435; x=1783769235;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=wA1liI19oI1AkBerychf4m2LDUMb0gUS762S3f5S9h0=;
+        b=q7DoQwFE5mUpl4RtunjHmlYorUI3Ip2Z59bc0qeosPrMVZufzrThZ8rgTso/i+zStk
+         CqyWB0g8R65MEegN5AGpMqNM0oPFclatgixe/puUAPKbpjlaraFAZ8VHEeFI6no+hk5Y
+         dW3NAcbcJs7Z97SoP1651SIh4LU3s2sQaK41fNj8BANz2bLQFxeTXBdDzviV2glCIjQb
+         uNw9Xo5QTLpOh0aJEWCFTBgwb6E6YqT5WgqNTM6PHlfjGGiqAJXqERIFjlK4EOknFLR5
+         ZOVOilvQbQTbERbTUao2iDmh7uh65iBXav2TYLl+9QuqORsvCl7akxLQjIwvYwP3cqUl
+         /aNg==
+X-Forwarded-Encrypted: i=1; AHgh+RruEfhJUta+AT4XO78yay0j5ZWVY6fV6/7B1xk5V2aDEPSWtI/0hDp/khzp8Dm2KFubNk1PBg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzVlewcl7Wu6jtRToEMN4kgbKKR03r2kyJaFsPi0P/qOgLfGpuM
+	t2IcPVG+ejsMXw4dXa63UwtLs9EN3TffCi+Wv3zb8UlYmLy4LZ4qbRGf8fzKcSISdLBo41OM2oX
+	CZB9U/OoQxCxFSJdLnfNtfI9l9iTkGU8=
+X-Gm-Gg: AfdE7clHL3xmVpXN8jHVpP4ZmQ4rF/bPiR5QWPhCraTlSu+6ZrERH/Tctp7+fSdb1kt
+	94ytRS3mB/2YwNqVKqMAZ7niaaGz0sMHdemgk7H45eMRq4NFjur/nelS19QyAeYg4PSDmX33TLF
+	G6bYj1bTrsYjqykbCGTzgGXpcOyyLpMU6i+KI1Y/4XSxfAvRME43ZlPy/7UWI6dztVoljAOY8Jc
+	OJ/A9XfQCJHtpvHOohG46JeXptNNckv9jdVzWIQujbz+c3dNYRbHs5DT+uZJwdbV7vzpOLm
+X-Received: by 2002:a05:690e:11c3:b0:651:c160:1c06 with SMTP id
+ 956f58d0204a3-66653067b6dmr2427087d50.58.1783164435060; Sat, 04 Jul 2026
+ 04:27:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260704004316.1109918-1-pasha.tatashin@soleen.com>
+References: <20260603135056.1397084-1-lgs201920130244@gmail.com> <aj0Ai72gTkrorkYI@Rk>
+In-Reply-To: <aj0Ai72gTkrorkYI@Rk>
+From: Guangshuo Li <lgs201920130244@gmail.com>
+Date: Sat, 4 Jul 2026 19:27:04 +0800
+X-Gm-Features: AVVi8CfLi6R3buAs7-cC_b0mbrjREceToWhY-HRrpCRsOapcuCMhET43E_XN5qs
+Message-ID: <CANUHTR-NvXL+JHpojdVquu9JRzWxf2WUer_yQo5w00CA1TiS-w@mail.gmail.com>
+Subject: Re: [PATCH] crash_dump: release keyring reference at the correct time
+To: Coiby Xu <coiby.xu@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <baoquan.he@linux.dev>, 
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <ruirui.yang@linux.dev>, kexec@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260703_175209_173106_E5B5160A 
-X-CRM114-Status: GOOD (  23.06  )
+X-CRM114-CacheID: sfid-20260704_042717_307040_17302420 
+X-CRM114-Status: GOOD (  26.01  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,102 +115,77 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Adding missing CCs to the mailing lists.
+Hi Coiby,
 
-On 07-03 20:43, Pasha Tatashin wrote:
-> Hi everybody,
-> 
-> Here are the combined notes from our last two Hypervisor Live Update
-> calls, held on June 15 and June 29. These notes are intended to bring
-> those who could not attend up to speed and to keep the momentum going
-> between meetings.
-> 
-> ----->o-----
-> LPC 2026 Call for Proposals
-> 
-> The Call for Proposals for the Live Update Microconference at LPC 2026
-> in Prague is open. Please make sure to submit your topics and abstracts
-> before the upcoming deadline on July 24th.
-> 
-> https://lore.kernel.org/all/ahcc3Qyuy7Oy03Iq@plex
-> 
-> ----->o-----
-> VFIO & PCIe Persistence Roadmap
-> 
-> * Roadmap Recap (June 15): Vipin Sharma outlined the five-milestone
->   roadmap for preserving PCIe endpoint functions (and upstream bridges)
->   across live updates without disrupting registers or ongoing DMA.
-> 
-> * Status Update (June 29): Vipin has addressed feedback on the v4
->   submission. Revision v5 is currently undergoing internal validation
->   and is on track for the mailing list before our next sync.
-> 
-> PCIe Core Updates
-> 
-> * v6/v7 Evolution: David Matlack is preparing the v7 PCI series. The
->   group aligned on deploying an FLB reference-counting model to maintain
->   symmetry for incoming/outgoing sessions across kexec.
-> 
-> * Pratyush Yadav suggested that drivers should explicitly isolate
->   structural "probe" routines from "retrieve" logic and separate
->   "shutdown" from "finish" callbacks. David is evaluating the
->   feasibility of deferring probes until the retrieve phase to improve
->   driver cleanliness.
-> 
-> * David is refactoring the PCI series to utilize KHO blocks.
-> 
-> IOMMU & Dependency Management
-> 
-> * v3 Status: Samiullah has posted v3 of the IOMMU persistence series,
->   addressing hot-plug handling and context entry preservation.
-> 
-> * Dependency Policy: The group agreed that the Live Update framework
->   will not enforce a hardcoded preservation sequence. Instead,
->   individual subsystem file handlers will verify dependency states
->   locally during their freeze/finish callbacks.
-> 
-> LUO, KHO
-> 
-> * Terminology Updates: "Scratch" memory is now designated as
->   "unpreserved memory" (memblock perspective). KHO "Scratch" is renamed
->   to "KHO boot memory".
-> 
-> * LUO Limits: Limits on the number of sessions and preserved files have
->   been removed and landed in upstream Linux.
-> 
-> Guest Memory (guest_memfd)
-> 
-> * Naming Conventions: Regarding the KVM file binding debate, the team is
->   moving away from the debugfs-based incremented value approach (due to
->   production compilation concerns). We are exploring using unique names
->   derived from user-space file-handler compatibility strings. Tarun will
->   escalate this to the KVM maintainers.
-> 
-> ----->o-----
-> Action Items & Next Steps
-> 
-> Pasha: Consult with Mike regarding KHO component splitting without
-> versioning support.
-> 
-> David M: Send next version of the FLB ref-count patch; refactor PCI
-> series to use KHO blocks; share recording link from June 29.
-> 
-> Pratyush: Implement rename of KHO scratch/boot mem.
-> 
-> Vipin: Submit VFIO v5.
-> 
-> Group: Review Guest Memory Preservation V3 series (Pasha/David).
-> 
-> ----->o-----
-> 
-> Next meeting will be on Monday, July 13 at 8am PDT (UTC-7), everybody is
-> welcome!
-> 
-> Join Here: https://meet.google.com/rjn-dmzu-hgq
-> 
-> Please let me know if you'd like to propose additional topics for
-> discussion, thank you!
-> 
+Thanks for the review and for sharing the testing result.
+
+On Thu, 25 Jun 2026 at 18:50, Coiby Xu <coiby.xu@gmail.com> wrote:
+>
+> Hi Guangshuo,
+>
+> Thanks for sending this patch! Your fix is more complete than my version
+> https://lore.kernel.org/kexec/20260501234342.2518281-2-coiby.xu@gmail.com/
+> So I plan to drop mine from the patch set. I only have some nitpicking
+> for this patch. Please check inline comments.
+>
+> On Wed, Jun 03, 2026 at 09:50:56PM +0800, Guangshuo Li wrote:
+> >restore_dm_crypt_keys_to_thread_keyring() gets a reference to the user
+> >keyring before restoring the saved dm-crypt keys.
+> >
+> >The same keyring reference is then passed to add_key_to_keyring() for each
+> >saved key, but add_key_to_keyring() drops that reference on every call.
+> >This is only balanced when exactly one key is restored. With multiple
+> >keys, the keyring reference is dropped too many times and may trigger a
+> >refcount underflow or use-after-free.
+>
+> My testing shows when there are more than five keys to be added, this
+> "refcount_t: underflow; use-after" error can occur. Maybe you can
+> include this info in your commit msg.
+>
+> >
+> >The early error paths after lookup_user_key() also return without dropping
+> >the keyring reference.
+> >
+> >Keep ownership of the keyring reference in
+> >restore_dm_crypt_keys_to_thread_keyring(), drop it once on all exit paths,
+> >and make add_key_to_keyring() only use the reference without consuming it.
+> >
+> >Fixes: 62f17d9df692 ("crash_dump: retrieve dm crypt keys in kdump kernel")
+> >Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
+> >---
+> > kernel/crash_dump_dm_crypt.c | 15 ++++++++++-----
+> > 1 file changed, 10 insertions(+), 5 deletions(-)
+> >
+> >diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+> >index a20d4097744a..641c290f1270 100644
+> >--- a/kernel/crash_dump_dm_crypt.c
+> >+++ b/kernel/crash_dump_dm_crypt.c
+> >@@ -80,7 +80,6 @@ static int add_key_to_keyring(struct dm_crypt_key *dm_key,
+> >               kexec_dprintk("Error when adding key");
+> >       }
+> >
+> >-      key_ref_put(keyring_ref);
+> >       return r;
+> > }
+> >
+> >@@ -104,6 +103,7 @@ static int restore_dm_crypt_keys_to_thread_keyring(void)
+> >       size_t keys_header_size;
+> >       key_ref_t keyring_ref;
+>
+> I think ordering local variables from longest line length to shortest line
+> length a.k.a Reverse Christmas Tree style is preferred i.e.
+>      int ret = 0;
+>      u64 addr;
+>
+>
+> --
 > Best regards,
-> Pasha
+> Coiby
+
+I have sent v2 with the commit message updated to mention the refcount
+underflow/use-after-free warning, and also fixed the local variable
+ordering as suggested.
+
+Thanks,
+Guangshuo
 
