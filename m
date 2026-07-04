@@ -4,80 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C49B0C43458
-	for <kexec@archiver.kernel.org>; Fri,  3 Jul 2026 17:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CEC79C43458
+	for <kexec@archiver.kernel.org>; Sat,  4 Jul 2026 00:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=B0pffB1QSJNfKenNayqb6HHqBKQaFztAnU/0phK3Zg8=; b=X5ADHZfpCfvVqTCWUkKHrznieP
-	HSat+++pvsdMnpYk+3hdZcPoZjATnmmF/DaRfxg6SvLIXUp+AeNcI+Vjeg4ZgJtZzz5J5H74VVWDZ
-	Ii1UzFnH10E3AzigQ4oBg6Bxan+5zY11x+7DXnYCgqNzA2WUadcPZx0UA4BmQGCVHcRzpHzGX9IkO
-	VSiCFOSVYeg47k7uHUw3hm3ZagoYYaUGDt7QV0P61jw2ImGR8wa//nUmveSwYOLS584eL0UZQR+2c
-	qr4WKjdO//vJTqo9h42Kgm8sXaZWjeQaUJn4sMHWtCoCpQgnt2D9xDE0V0UKubC5Nog+Nk22yIq+h
-	UaBBOdNA==;
+	bh=t+/wZjP3VRbBrZYdXJhzA9JgmkyKgho4uGcN4xy9Q+s=; b=JYAcWKCQG2mBpKNt9D6paQ8H8W
+	757nHxPVehUkmg5ntXkLY97UVBcsTZ9fYtiqIlZOOD7gX9U41Sq5AhnwhzM4V3BzJ3ZsdjbTa2FpV
+	q3tQRaHrOrfb5UwMGaJQ9lHimd3y69X68xT1B49eHXCTGh2WD2Tjn5JmjS9wkje7iDIBkVipSDUUt
+	BVcu9ss+FojVNnqGMcA4VkiMqA3vwdWc1NHLd3xoK/i8NWc25HrmlzsanC4rYrH9gKUipa1+SsJ1/
+	DY1KCVl7YgH0Atejb1s6xxj8iEUODz0sZXvJkLNjKbXOFgAtWPMoDzO5AnhlkxqvcWJXrdKPgOB9K
+	eehUjaRA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wfhqb-00000007cC2-1xHL;
-	Fri, 03 Jul 2026 17:38:41 +0000
-Received: from mail.alien8.de ([65.109.113.108])
+	id 1wfocA-00000008493-3YjP;
+	Sat, 04 Jul 2026 00:52:14 +0000
+Received: from mail-yx1-xb12a.google.com ([2607:f8b0:4864:20::b12a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wfhqY-00000007cBJ-3Ntv
+	id 1wfoc5-0000000848C-0OE2
 	for kexec@lists.infradead.org;
-	Fri, 03 Jul 2026 17:38:40 +0000
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1E58E40E022C;
-	Fri,  3 Jul 2026 17:38:35 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id IRKCZMeHY5ye; Fri,  3 Jul 2026 17:38:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1783100305; bh=B0pffB1QSJNfKenNayqb6HHqBKQaFztAnU/0phK3Zg8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LzCd6HrH80StngfmF2An7RwLfMOsHtiWZIJBybG4oxBedWa1rojsh7UecaE7aLQjD
-	 YBGF43MSC00MREu0BbYWT9Hzfwc7eeo8EUiO2K1SYY72uY3WPINIWXiPadpLz7jc/8
-	 oH8h16Vc0nEs7I8LVMQdyRYewNix7HeKJOKbhqPaHGWJumpf55090Pa2Q6JYXzJud8
-	 4y/Jcq9ggNRuFIqkmi5LOv/2BX3SC9gQLqCChpSiOJcHAAx5mYF80RESO7ZLAGGCw0
-	 3saxbpEHBntl899shr51OqWzArSQVUKB/wt4cea9TsJumg5boDRtqooS2wSrjYOKJq
-	 Iy/i8oFEoJsIkARbSV+4EfOW7sIhrGZuAJrLoLOApgRR0JVYmSnr0evjhVQLxj5rSu
-	 X0YJwoonGqnRIk4uFBDZ4F62TDQ6ZpEr9QgCTRMbXW/LcHQJcY5bL5MzkRUOqCncYh
-	 QY1Q/hi9xA3Cfo7cNde3989D0+K16ZJaEz4wxHE8ANE3XVVUMdEiKZQIDM8QP7Edl4
-	 580pndnuqJUmEUtZWq7vOhORxQKr07sHP8DsC60d955V9g6/w8o/PcJKJbi9MgvAyX
-	 YXj3/RxEKtnP0UHPjzb8qHMMlOHvzqWUT/3xVZLtqPSjQYGe0HgWF2mcAMBaGkR2oS
-	 yHhFB4jUxo0Xv8mOdcvheYX0=
-Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6000E40E016E;
-	Fri,  3 Jul 2026 17:38:14 +0000 (UTC)
-Date: Fri, 3 Jul 2026 10:38:10 -0700
-From: Borislav Petkov <bp@alien8.de>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, kexec@lists.infradead.org
-Subject: Re: [PATCH v2] x86/setup: do not include kexec_handover.h from
- asm/setup.h
-Message-ID: <20260703173810.GDakfzgqRx9e9kiUpF@fat_crate.local>
-References: <20260703143705.2525168-1-pratyush@kernel.org>
- <20260703153044.GCakfVpO_egX4B9y_1@fat_crate.local>
- <2vxzjyrcf3ei.fsf@kernel.org>
+	Sat, 04 Jul 2026 00:52:13 +0000
+Received: by mail-yx1-xb12a.google.com with SMTP id 956f58d0204a3-66493875766so1456862d50.0
+        for <kexec@lists.infradead.org>; Fri, 03 Jul 2026 17:52:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1783126327; x=1783731127; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=t+/wZjP3VRbBrZYdXJhzA9JgmkyKgho4uGcN4xy9Q+s=;
+        b=fU2/munT/63bQSfma9I4+Ezvgi81TtG8mKytnvKpYt2DYKrbD8xiRTBUqxGJTZOgHc
+         aVixJdfeLKgnO6wXc7SFXrvYZjWJ1QVzBFSDGm5IqES/zS//ZEXAUvMqdmq08zWkWrz2
+         Mv/sK2R7Lj0cV3SDWSxH8JQGXaI9UsmPzxueiqcIR7Zbze0WY8KozXeYafCuxajZ1qy1
+         lBmiJvJ8NgS8nwWC9A3tIL1vctymIMiQrOYKSj+ga7wSPWn+q7sswZfeNMuKMDs9lmoz
+         OFdj75NPDjzpX1wvs09aeOv6NgE3eYqi7PV/SkhXYwYm9YkAGgzd7aaqGECqsP23gjfa
+         S+CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783126327; x=1783731127;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t+/wZjP3VRbBrZYdXJhzA9JgmkyKgho4uGcN4xy9Q+s=;
+        b=UC3GVpS/lyLYBmV9EWb8Um5f37wUK3JG5OMJZLNwJsBhmTv2iPesVx2JmUPt4z3IvT
+         haX1EspYaP+LGgXHDteiTQg/Dd0fZbO1mbp+Fn0n2GS3xgm1ybbo8sxTepqNMhGERlLn
+         O4FMxTL/HEs7hE+SvFFJ+fEMj71FSBJlJlKTQATeLoQjnKYvWoIMJJrilVQ5ieATt2v6
+         /O6RF7n2JFYwI1mAqRHgZtDv7MF41igBe/hUR2E4rTJwKpVl9SE8T+jrQ9nLQ51dUyz4
+         Y17Jiw16OfrxHTEpW0teG/Sw0nrYJ6uKus291W2M4PXaWPT+8EeDdf0PPJbpFg1qi/Rt
+         mr+w==
+X-Forwarded-Encrypted: i=1; AHgh+RqvbCfYUkSTINUP/3oRmNdRce78aFaxwKIjokClpnQy0JhFx1e/54ctZbYziMvaEG4zWjcSkQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzuWnB1k+XvRBa9tOH6e95Q8ze2oITXdJJliTWygCxsMkZhCbeF
+	Ae7CQ3gJW7kppM/kkDemHVbXazO2er7ig0Rye25P017zljakHObxTtOeK6lXpnpAtWg=
+X-Gm-Gg: AfdE7cma1RNpIyuxz07b7d3egmrM3tbw11IK8P/9j5B4ovQm5HkhGKc7WcYFTxImBJg
+	ngQPtasCo0+PSJyNyEF2sAWW8C2/5mNb0PTfMKCJy3r2S1W2YhGufX+ew96ci3xNLYzi7zllEYc
+	sUI3oi2Yfdi7ZgbODSnx9j4n+lMqNBImMgq7TgqGvBhEI0mx5HyOGvPZFWNuHe0Xh9fF22QuYlu
+	kExu+mA9jMzW/3fag5IRhJlLc0vQH1AlxBqhcMENS3qu6rJBMmJ2NpG8wSGPCzoyVEnd94iEIgh
+	SAWO8E477FVLhMBpcv6KMxlHf0wjaXMgR1KqjGUH7MPv9WW3pqvyKG0MgIs0eFzuHGrkavQ/DL6
+	rwsbursf3j9pxzURE5LZMCO1K0llekv/C0g0JKeFgBbDtmRnJ87UATul8No0fg/1W0CZvrWktaL
+	LzfvDNhxX8VYtg3XwoX5o4FKbjrox9rw9N/jOlN/n2iiWPBc3JwJmwOnTkuI8sX7nTX0YqGU5dB
+	U0p7tkPdWQ7+3dFb93KrRg=
+X-Received: by 2002:a05:690e:4506:10b0:665:1e31:9164 with SMTP id 956f58d0204a3-66652eb898dmr968746d50.47.1783126327338;
+        Fri, 03 Jul 2026 17:52:07 -0700 (PDT)
+Received: from google.com (212.255.145.34.bc.googleusercontent.com. [34.145.255.212])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-6664083f9f6sm1511013d50.16.2026.07.03.17.52.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2026 17:52:06 -0700 (PDT)
+Date: Fri, 3 Jul 2026 20:52:05 -0400
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Alexander Graf <graf@amazon.com>, "Andersen, Tycho" <Tycho.Andersen@amd.com>, 
+	Anthony Yznaga <anthony.yznaga@oracle.com>, Baolu Lu <baolu.lu@linux.intel.com>, 
+	David Hildenbrand <david@kernel.org>, David Matlack <dmatlack@google.com>, 
+	"Heyne, Maximillian" <mheyne@amazon.de>, James Gowans <jgowans@amazon.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Mike Rapoport <rppt@kernel.org>, 
+	Pankaj Gupta <pankaj.gupta.linux@gmail.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Praveen Kumar <kpraveen.lkml@gmail.com>, Vipin Sharma <vipinsh@google.com>, 
+	Vishal Annapurve <vannapurve@google.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, 
+	Luca Boccassi <luca.boccassi@gmail.com>, Samiullah Khawaja <skhawaja@google.com>, 
+	Jork Loeser <jloeser@linux.microsoft.com>, Chenghao Duan <duanchenghao@kylinos.cn>, 
+	Zhu Yanjun <yanjun.zhu@linux.dev>
+Cc: linux-mm@kvack.org, kexec@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [Hypervisor Live Update] Notes from June 15 and June 29, 2026
+Message-ID: <akhY7Njh6LqzyWyz@google.com>
+References: <20260704004316.1109918-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2vxzjyrcf3ei.fsf@kernel.org>
+In-Reply-To: <20260704004316.1109918-1-pasha.tatashin@soleen.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260703_103839_006244_1030072B 
-X-CRM114-Status: GOOD (  21.26  )
+X-CRM114-CacheID: sfid-20260703_175209_173106_E5B5160A 
+X-CRM114-Status: GOOD (  23.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,72 +109,102 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jul 03, 2026 at 06:23:33PM +0200, Pratyush Yadav wrote:
-> On Fri, Jul 03 2026, Borislav Petkov wrote:
-> 
-> > On Fri, Jul 03, 2026 at 04:37:03PM +0200, Pratyush Yadav wrote:
-> >> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
-> >> 
-> >> x86 asm/setup.h includes linux/kexec_handover.h. This is because it is
-> >> used by setup.c and kaslr.c. But this inclusion is problematic. The
-> >> header is included in many places, so it results in the KHO header being
-> >> propagated there. Also, the setup header is used by realmode code. If
-> >> KHO header includes things like mm.h, it causes a big dump of
-> >> compliation failures.
-> >
-> >> Nothing in setup.h uses anything from KHO. Remove the header from
-> >> setup.h, and directly include it in setup.c. which does use things from
-> >> KHO. Since kaslr.c is a part of the decompressor, avoid including linux
-> >> headers there directly. Instead, split out struct kho_scratch, which is
-> >> the only thing the kaslr.c uses, and move it to
-> >> include/asm-generic/kexec_handover.h.
-> >> 
-> >> This change should also help reduce files recompiled when
-> >
-> >> kexec_handover.h changes.
-> >> 
-> >> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-> >> ---
-> >> 
-> >> Notes:
-> >>     Thomas/Ingo/Borislav/Dave, is it okay if we take this patch through the
-> >
-> > See my reply to Mike about using the generic-y infrastructure.
-> 
-> To double check I got your point correctly, is this what you mean?
-> 
-> diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-> index ac02aed8757b..22267a83e064 100644
-> --- a/arch/x86/boot/compressed/kaslr.c
-> +++ b/arch/x86/boot/compressed/kaslr.c
-> @@ -32,7 +32,7 @@
->  #include <asm/setup.h>	/* For COMMAND_LINE_SIZE */
->  #undef _SETUP
->  
-> -#include <asm-generic/kexec_handover.h>
-> +#include <asm/kexec_handover.h>
->  
->  extern unsigned long get_cmd_line_ptr(void);
->  
-> diff --git a/arch/x86/include/asm/Kbuild b/arch/x86/include/asm/Kbuild
-> index 078fd2c0d69d..47ef8cb482e3 100644
-> --- a/arch/x86/include/asm/Kbuild
-> +++ b/arch/x86/include/asm/Kbuild
-> @@ -15,3 +15,4 @@ generic-y += fprobe.h
->  generic-y += mcs_spinlock.h
->  generic-y += mmzone.h
->  generic-y += ring_buffer.h
-> +generic-y += kexec_handover.h
-> 
-> -- 
+Adding missing CCs to the mailing lists.
 
-Looks about right, AFAICT.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+On 07-03 20:43, Pasha Tatashin wrote:
+> Hi everybody,
+> 
+> Here are the combined notes from our last two Hypervisor Live Update
+> calls, held on June 15 and June 29. These notes are intended to bring
+> those who could not attend up to speed and to keep the momentum going
+> between meetings.
+> 
+> ----->o-----
+> LPC 2026 Call for Proposals
+> 
+> The Call for Proposals for the Live Update Microconference at LPC 2026
+> in Prague is open. Please make sure to submit your topics and abstracts
+> before the upcoming deadline on July 24th.
+> 
+> https://lore.kernel.org/all/ahcc3Qyuy7Oy03Iq@plex
+> 
+> ----->o-----
+> VFIO & PCIe Persistence Roadmap
+> 
+> * Roadmap Recap (June 15): Vipin Sharma outlined the five-milestone
+>   roadmap for preserving PCIe endpoint functions (and upstream bridges)
+>   across live updates without disrupting registers or ongoing DMA.
+> 
+> * Status Update (June 29): Vipin has addressed feedback on the v4
+>   submission. Revision v5 is currently undergoing internal validation
+>   and is on track for the mailing list before our next sync.
+> 
+> PCIe Core Updates
+> 
+> * v6/v7 Evolution: David Matlack is preparing the v7 PCI series. The
+>   group aligned on deploying an FLB reference-counting model to maintain
+>   symmetry for incoming/outgoing sessions across kexec.
+> 
+> * Pratyush Yadav suggested that drivers should explicitly isolate
+>   structural "probe" routines from "retrieve" logic and separate
+>   "shutdown" from "finish" callbacks. David is evaluating the
+>   feasibility of deferring probes until the retrieve phase to improve
+>   driver cleanliness.
+> 
+> * David is refactoring the PCI series to utilize KHO blocks.
+> 
+> IOMMU & Dependency Management
+> 
+> * v3 Status: Samiullah has posted v3 of the IOMMU persistence series,
+>   addressing hot-plug handling and context entry preservation.
+> 
+> * Dependency Policy: The group agreed that the Live Update framework
+>   will not enforce a hardcoded preservation sequence. Instead,
+>   individual subsystem file handlers will verify dependency states
+>   locally during their freeze/finish callbacks.
+> 
+> LUO, KHO
+> 
+> * Terminology Updates: "Scratch" memory is now designated as
+>   "unpreserved memory" (memblock perspective). KHO "Scratch" is renamed
+>   to "KHO boot memory".
+> 
+> * LUO Limits: Limits on the number of sessions and preserved files have
+>   been removed and landed in upstream Linux.
+> 
+> Guest Memory (guest_memfd)
+> 
+> * Naming Conventions: Regarding the KVM file binding debate, the team is
+>   moving away from the debugfs-based incremented value approach (due to
+>   production compilation concerns). We are exploring using unique names
+>   derived from user-space file-handler compatibility strings. Tarun will
+>   escalate this to the KVM maintainers.
+> 
+> ----->o-----
+> Action Items & Next Steps
+> 
+> Pasha: Consult with Mike regarding KHO component splitting without
+> versioning support.
+> 
+> David M: Send next version of the FLB ref-count patch; refactor PCI
+> series to use KHO blocks; share recording link from June 29.
+> 
+> Pratyush: Implement rename of KHO scratch/boot mem.
+> 
+> Vipin: Submit VFIO v5.
+> 
+> Group: Review Guest Memory Preservation V3 series (Pasha/David).
+> 
+> ----->o-----
+> 
+> Next meeting will be on Monday, July 13 at 8am PDT (UTC-7), everybody is
+> welcome!
+> 
+> Join Here: https://meet.google.com/rjn-dmzu-hgq
+> 
+> Please let me know if you'd like to propose additional topics for
+> discussion, thank you!
+> 
+> Best regards,
+> Pasha
 
