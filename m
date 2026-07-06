@@ -4,111 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1CFECC43458
-	for <kexec@archiver.kernel.org>; Sun,  5 Jul 2026 23:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C49A1C43458
+	for <kexec@archiver.kernel.org>; Mon,  6 Jul 2026 00:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
-	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=qWgX8hRK0wDWBZMkA2UqYafCnMgGjGfI+mUA5gi2rBg=; b=KYQXb+QUXPYrzHOnUrP3hO2s01
-	5Vuu0FFeOASN87/BSnfJ9i32Z/DC+jC7DwhibPLyJFx4drX5f/jodaswFGIG7MvmUxq4Or+vXuAQZ
-	BTcgdxGbGxAaZuCwvqotA3l7uFipCEoXycLN7pEAj8pjl69wDK/dpgkYehKTMczJaJN/+G09Jd/H/
-	NDlZTueWRV8lLeoIQUOCZvIMsWPCFhXxWbu0vxx4D28GfXiCGf6lcnrrsCVp5C6EIvQx8pa4NwKO8
-	6k/r0CpshIN5BtL1/DOUj1zHplKVZI9K9PyS5YLQOACA/ghyyrpMF0oOdx3oR9FvpmMHrxU15sMuV
-	1NH/QDNA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=gDia0DoYIpwPsuYDBJR9TVRq1ZkrfGuScKjEdDaH/ok=; b=EgzdrVG3VG9Aeq7qn1wPTi6AZG
+	80023ZALv8au776HFNyjNqNZlSX/MZwehVzf4bl9w00+OxS1dqmPr/oEX1IaaXjd6xMKaS/g6apRM
+	9nLqWa7mZ+WaqE11j9UmJ77pSEkyXlMzC0Undxz0SSC69peXTXnLxrvkXnnZWqEp7f83zTuev/PBt
+	xa9Ltq+pDVHwG9nsINPlVgQobPEuXG1G4/da7sSNbYYBMrVn6C5VNW3yw30XnUNf0lGLhjzvdhH8b
+	tXGaZK3hM4OnJcxLtq/6qYphPbpQSbbXYsmKH+aTihxMwJWY2eZrR/ShgT5OT5u6qNfL2u8O/74+L
+	qbW17V/g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wgWLG-0000000Aipp-1orU;
-	Sun, 05 Jul 2026 23:33:42 +0000
+	id 1wgWpF-0000000Apxa-3CZd;
+	Mon, 06 Jul 2026 00:04:41 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wgWL9-0000000AinR-1fEF
+	id 1wgWpC-0000000Apwp-38dy
 	for kexec@lists.infradead.org;
-	Sun, 05 Jul 2026 23:33:36 +0000
+	Mon, 06 Jul 2026 00:04:40 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783294412;
+	s=mimecast20190719; t=1783296277;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=qWgX8hRK0wDWBZMkA2UqYafCnMgGjGfI+mUA5gi2rBg=;
-	b=ImVUNVlGCIBjHySjxy1C9otLgR5lmbFiZ60Tx0zWpbWGx+HMPreoXm9Xe/LGoMLXBfMs95
-	0rZARYppcoF7/4DtobdCH9Y/j/NqIVnqi43I1qfev5B5oJzbnFYiw5CrJMEn1kVk3bp73l
-	MuLVvh1nwAvGkC2ujnSQODcxlBDwBsY=
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
- [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gDia0DoYIpwPsuYDBJR9TVRq1ZkrfGuScKjEdDaH/ok=;
+	b=gk4kq7QhAiuD9jB06rYEYsf7/sj7aOI+fGN/5W9qvIP3uePPQtGfXk7ag6nIpPKg641JTH
+	pQbLMbuLBtITdM+txx7zJYZKd1K5TGN2i893tgYLXCg7H8jgv13FmOMtlCXdGOR2BmZzli
+	/+sgrBiXopsAnzTCscc0IzznuGT9A9k=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-154-zleWzsPvMd6Cer19bgGvkA-1; Sun, 05 Jul 2026 19:33:30 -0400
-X-MC-Unique: zleWzsPvMd6Cer19bgGvkA-1
-X-Mimecast-MFC-AGG-ID: zleWzsPvMd6Cer19bgGvkA_1783294409
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2ca0481106cso25647475ad.0
-        for <kexec@lists.infradead.org>; Sun, 05 Jul 2026 16:33:30 -0700 (PDT)
+ us-mta-186-0eKacFpCP1SDdqzh4t8Qxg-1; Sun, 05 Jul 2026 20:04:36 -0400
+X-MC-Unique: 0eKacFpCP1SDdqzh4t8Qxg-1
+X-Mimecast-MFC-AGG-ID: 0eKacFpCP1SDdqzh4t8Qxg_1783296276
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-51a8c689b5fso24288611cf.0
+        for <kexec@lists.infradead.org>; Sun, 05 Jul 2026 17:04:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783294409; x=1783899209;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qWgX8hRK0wDWBZMkA2UqYafCnMgGjGfI+mUA5gi2rBg=;
-        b=Ko4kR764OLt9PI72sWaxOat9Nd1z+tfayY7sHcruheQcrvCIcEpYX53kQqNl/ZFLYN
-         ILGyyBS1TgMNnXzCp8IS+RlMXbhWW5a9jH+RuWrgqVEBCrrZoOIqt5vtog4XnZNOI9Em
-         2IXwN+6mFO9B/rDUIhezkmgosdOMHqWYC8eBPzT2zUxMjbaiTq6iH/H5ZBG28VcdVDrT
-         U9rrmvkCmEDUsm7y8xcVbhVO46bK4oHFsqXRxGSC9l7h36qiJCdh2GPqdGCr8wO/S5rV
-         wjWuZOd11qXTEUUXwvSgsUtWEyQmTzIhurxzo551uABzqm6PbVbYT6U6MWpN1lh/ysgG
-         5uaQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rof/nheCqkATs/Dyiveaz9f/bFlbHxGw1vvNul0ETuc6VlmV5r1He0tN1KAEUx2Y26hYFegUA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyfGuXfBufohmfb6YgFoanwxhik1M2G3YEOwxmVHrlhWZVcOBdf
-	w0ZQ7ogUAEnx71L3pQKXwst6MfY1mOgM44LO6QNZLrUsLKYI69+McIHzwss+wsPkGjWsw03IgVU
-	Bkk7X6DZd5+gUbeDecyHcJru7F7+DI6zLzJyFe0iwqTiv5VPt9X918lUZbm/pBg==
-X-Gm-Gg: AfdE7ckVN/vBIamhrv25AYLpm/TSXQjTkBEBcX4PEVhx2oP3iNjdFioUZ0H1tpcHTGR
-	qRk1JxvafxE+c9xpK5W7JqPzGbdkl0hMXLBYT2mm1+MOiP/P10GVqKjBfII66epeATjJxN0yyyy
-	xY1W725l1UCx4BJKn5inWrbwOa5leuwTPkMOAe6IfCq0xJiTJBnTL9k0oYuZd17AOtFM+uvjAAm
-	vSURdrgcvKEGCsr5DWm+qCWFvaKTmhT7CePB4sXrRI7aFgbqyU7U/ZyPnIjSmKLc8NZJv7TNCIe
-	Zw+1m8FucZgKaxwf3x5kRt7vr1ns6G04Sl+uM5MfiaRnaujcuJ5PRfTq+opblH0T1P9Bq26dJSE
-	KADMnaZk0u8SYJHtQR78kpCMkS1s0l74HSSzD7+trlnFfpMqqYv6nhTVLCQ==
-X-Received: by 2002:a17:902:fa84:b0:2ca:52ce:6f91 with SMTP id d9443c01a7336-2cbb9eb434bmr53329115ad.27.1783294409463;
-        Sun, 05 Jul 2026 16:33:29 -0700 (PDT)
-X-Received: by 2002:a17:902:fa84:b0:2ca:52ce:6f91 with SMTP id d9443c01a7336-2cbb9eb434bmr53328835ad.27.1783294409024;
-        Sun, 05 Jul 2026 16:33:29 -0700 (PDT)
-Received: from localhost.localdomain.com (122-63-66-137.mobile.spark.co.nz. [122.63.66.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cad789237bsm38168945ad.71.2026.07.05.16.33.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2026 16:33:28 -0700 (PDT)
-From: Tao Liu <ltao@redhat.com>
-To: pjw@kernel.org,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	bhe@redhat.com,
-	zohar@linux.ibm.com,
-	roberto.sassu@huawei.com,
-	dmitry.kasatkin@gmail.com,
-	eric.snowberg@oracle.com,
-	linux-integrity@vger.kernel.org,
-	pratyush@kernel.org,
-	Markus.Elfring@web.de,
-	kernel-janitors@vger.kernel.org,
-	jarkko@kernel.org,
-	Tao Liu <ltao@redhat.com>,
-	stable@vger.kernel.org,
-	Nutty Liu <nutty.liu@hotmail.com>
-Subject: [PATCH v5] riscv: Prevent NULL pointer dereference in machine_kexec_prepare()
-Date: Mon,  6 Jul 2026 11:27:07 +1200
-Message-ID: <20260705232706.30265-2-ltao@redhat.com>
-X-Mailer: git-send-email 2.54.0
+        d=1e100.net; s=20251104; t=1783296276; x=1783901076;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=gDia0DoYIpwPsuYDBJR9TVRq1ZkrfGuScKjEdDaH/ok=;
+        b=HUDGakLng4p/gQlpC0GcLsDY5vomBpe5FWJYV023/BMe0DssPNdmMKX0YkWm2yDIyu
+         K+EUlLOpKubtCXT3FlADqmryO7C1NonH9G9E7sNa1fbfSwfWM4x8R7KNh/Nqy285McRG
+         /ugYBlxgHyuzKybPU2aevC+hbHqPcKjP+I25Knct1QjzHpcEViphUEXOCEGK1aEB/qK9
+         gfYkUDNqnS82HtBDG4Jy01xsiJNcEW1wDHVmMJP3yWtka0vBwkSXpUv/qDRRsy+MWf65
+         tIBpu9ov8UMAIBDV6otyMPXVK5GZP+fFfZ2RmIPJ8ZiWuyeibKGe7Cwjzwz1zn4YP1wR
+         PHbg==
+X-Forwarded-Encrypted: i=1; AHgh+RqVbZo7OcnDV05UeykcZ5U07AY8I+z0WBMouNf+ohlNrVE7sVKj2Q9a/4rpIT9vdlA/7Q9imA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxrbZRizWdA9aeFwe/V7F0tGccdnVaOX29/MMQPQQpTvWbMDUKY
+	bLCv1oUVjd2U8Oq/qzxpfJvnxAhMMQ+ofOuTfhPmKVsjyhMca/YPQFZhfTX77JTrg5P74Gl2ijU
+	1IvXMWKvv2yji12v3JXboZoh7pBA1iQZuwhX8IAo19XE3GGVtxabXo4qfaL/pd1BScArJEoAG5b
+	QCqjn30ZWhWhtvjaMyU9EsVnDdBh3w3onhhuok
+X-Gm-Gg: AfdE7cmigTd/7MB2A4oaYcSX2UIqlA5G3UNm1JReSk+ArKpKYkbGaVtpCGWlbkBzgBU
+	QE+P+zNiIVb5NlZLuSFCgR2sb8FsxWF2Mg0igxL89Ab0D2KA9BJoW6gk4HguEI6pnkl2zn75BnM
+	OklDyY1UWbEzK9QIAsNN5UYPi8uUmmq90vyNJmRIu5oGvm87zOjLfpIdcz6Gokk89OrUc=
+X-Received: by 2002:a05:622a:16:b0:517:580c:bcd3 with SMTP id d75a77b69052e-51c4c20cba0mr122058191cf.19.1783296275814;
+        Sun, 05 Jul 2026 17:04:35 -0700 (PDT)
+X-Received: by 2002:a05:622a:16:b0:517:580c:bcd3 with SMTP id
+ d75a77b69052e-51c4c20cba0mr122056741cf.19.1783296273461; Sun, 05 Jul 2026
+ 17:04:33 -0700 (PDT)
 MIME-Version: 1.0
+References: <20260703111530.91285-2-ltao@redhat.com> <5df82d42-89cd-4e39-95a9-a0f164c0ac58@web.de>
+ <2vxzqzlkf7a3.fsf@kernel.org>
+In-Reply-To: <2vxzqzlkf7a3.fsf@kernel.org>
+From: Tao Liu <ltao@redhat.com>
+Date: Mon, 6 Jul 2026 12:03:57 +1200
+X-Gm-Features: AVVi8CcjKi4ma2Wic4NJ9zPTMxZKVqVzntIjTUPD2jSDdeylkQQJ6VcTIYGM5zI
+Message-ID: <CAO7dBbVmLi8gWcntM9tn2g=GWgAkYQB1P7_-J1Kf8wYrd0Ucww@mail.gmail.com>
+Subject: Re: [PATCH v4] riscv: Prevent NULL pointer dereference in machine_kexec_prepare
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Markus Elfring <Markus.Elfring@web.de>, linux-riscv@lists.infradead.org, 
+	kexec@lists.infradead.org, linux-integrity@vger.kernel.org, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>, kernel-janitors@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>, 
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Snowberg <eric.snowberg@oracle.com>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>, 
+	Nutty Liu <nutty.liu@hotmail.com>, Roberto Sassu <roberto.sassu@huawei.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: LfyCN5BCIVO1Qy4XwnI3j012Wz-Jy6yvjMKufQjgyKQ_1783294409
+X-Mimecast-MFC-PROC-ID: hwo9awCaxkLxcac8xO5ykqDlmANWU7eVIEDDc87bB8o_1783296276
 X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-content-type: text/plain; charset="US-ASCII"; x-default=true
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260705_163335_513896_9503F3F9 
-X-CRM114-Status: UNSURE (   8.79  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260705_170438_887638_27E7F8F7 
+X-CRM114-Status: GOOD (  17.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -123,58 +110,48 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-A NULL pointer dereference issue is noticed in riscv's machine_kexec_prepare(),
-where image->segment[i].buf might be NULL and copied unchecked.
+Hi Pratyush & Markus,
 
-The NULL buf comes from ima_add_kexec_buffer(), where kbuf is added by
-kexec_add_buffer(), but kbuf.buffer is NULL, then it is copied without
-a check in machine_kexec_prepare():
+On Sat, Jul 4, 2026 at 2:59=E2=80=AFAM Pratyush Yadav <pratyush@kernel.org>=
+ wrote:
+>
+> On Fri, Jul 03 2026, Markus Elfring wrote:
+>
+> >> A NULL pointer dereference issue is noticed in riscv's machine_kexec_p=
+repare(),
+> >> where image->segment[i].buf might be NULL and copied unchecked.
+> > =E2=80=A6
+> >
+> > Would it be helpful to append parentheses to a function name also in th=
+e summary phrase?
+> >
+> > Why was such a hint not be taken into account from a previous suggestio=
+n?
+>
+> Oh come on, this is a really really minor nitpick. The fact that
+> machine_kexec_prepare is a function is fairly obvious when reading the
+> patch. In fact, the first sentence of the commit message uses the
+> parentheses.
+>
+> So yes, it would have been nice to have them in the subject. But no,
+> this is not at all worth anyone's time to fix. Certainly not at all
+> worth a v5.
+>
+> Please, let's not nitpick our contributors into giving up.
+>
 
-  kexec_file_load
-    -> kimage_file_alloc_init()
-       -> kimage_file_prepare_segments()
-          -> ima_add_kexec_buffer()
-             -> kexec_add_buffer()
-    -> machine_kexec_prepare()
-       -> memcpy()
+Thanks for the review and for pointing out the issues in my patch.
 
-Address this by adding a check before the data copy attempt.
+I'm still new to kernel patch submission and clearly have a lot to
+learn. I appreciate all the feedback. Thanks again for your patience
+and guidance.
 
-Fixes: b7fb4d78a6ad ("RISC-V: use memcpy for kexec_file mode")
-Cc: stable@vger.kernel.org
-Closes: https://lore.kernel.org/kexec/CAO7dBbVftLUhd2qrh7hmijTB3PEPfZAhykCGqEfrPoOcSrrj-w@mail.gmail.com/
-Acked-by: Baoquan He <bhe@redhat.com>
-Acked-by: Pratyush Yadav <pratyush@kernel.org>
-Reviewed-by: Nutty Liu <nutty.liu@hotmail.com>
-Signed-off-by: Tao Liu <ltao@redhat.com>
----
+Thanks,
+Tao Liu
 
-v5 -> v4: 1) Add parentheses to function name in patch subject
-
-link to v1: https://lore.kernel.org/linux-riscv/20260529032739.13264-2-ltao@redhat.com/
-link to v2: https://lore.kernel.org/linux-riscv/20260627222602.23594-2-ltao@redhat.com/
-link to v3: https://lore.kernel.org/linux-riscv/20260701025732.66330-2-ltao@redhat.com/
-link to v4: https://lore.kernel.org/linux-riscv/20260703111530.91285-2-ltao@redhat.com/
-
----
- arch/riscv/kernel/machine_kexec.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/riscv/kernel/machine_kexec.c b/arch/riscv/kernel/machine_kexec.c
-index 2306ce3e5f22..738df176ff6f 100644
---- a/arch/riscv/kernel/machine_kexec.c
-+++ b/arch/riscv/kernel/machine_kexec.c
-@@ -41,6 +41,9 @@ machine_kexec_prepare(struct kimage *image)
- 		if (image->segment[i].memsz <= sizeof(fdt))
- 			continue;
- 
-+		if (!image->segment[i].buf)
-+			continue;
-+
- 		if (image->file_mode)
- 			memcpy(&fdt, image->segment[i].buf, sizeof(fdt));
- 		else if (copy_from_user(&fdt, image->segment[i].buf, sizeof(fdt)))
--- 
-2.54.0
+> --
+> Regards,
+> Pratyush Yadav
+>
 
 
