@@ -4,92 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 76DD4C43458
-	for <kexec@archiver.kernel.org>; Mon,  6 Jul 2026 03:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 93F3BC43602
+	for <kexec@archiver.kernel.org>; Mon,  6 Jul 2026 15:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:Date:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=/Og2FoiMIHkhzxa96aH1wPvklWvZPI3x9dY/s87h4T8=; b=ZeHPFYJx8+fbipOu9NKCpdnZk7
-	pWN0CimtlPY900iC/ew5p+5dhieoQK9FgQNDQos7l/n4VDAHq3u3ldQ9cAj2LycpxNVKBS9LehSja
-	fxhifqdfRiKGkd2EOFwb5re9K2ZCMszNtL8v3IXViUY2QW0M4OQ02tt5ZgEgHPCo0gsCl3+tF5loy
-	DrN20fjKOJu9sfBrEbg4XYiSozSeiin6UbxyU7Yca/haHechlejbpVJQ2+KMq4l1O93KZ440YdIPr
-	7jSkK4YnWKOMcPu67KVS/yQyIKk7zYvAZu0OSS74UuJW2cfo03fNMYjN+R+yuFBgqKwg0ocaOgDrE
-	2NEfHxGg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=YQ9Hvr15QYl19jYxj1XsZwlcckoCKeNx5qunpqWNxow=; b=OmOXawiPK5ORaoCi4Lp+yAtHFa
+	G0oR/CKFCc0pDEt6gAWF2ZJpSaXQ6dJ7pQtErH/cpQCR2mRfJaTtxWb49WJhVkA3vf47qqV8P8nFp
+	Y3Yf5XX+U/OX4NH5wEyI5kvZualdAp0t4y96FYwDmSErFePUZNGFKnBAMEL+Mwz7LSZxEv+NkVt8h
+	xQSaea/7TfRSwT3jm1eeON9KT3ojNfC/KNxWHqCMUkb6y/v81L0WyC9NykmwlG1RuqucJIbtH0Rah
+	aTLLB0Lc4LasXzItdQ4UOoOJHfXTbFuNwunq1JOis2N4KsMF5U+j+0i1x28M/JjgHU4T9lioQjG33
+	5PQF5PwA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wgZZ9-0000000BR7A-2CAs;
-	Mon, 06 Jul 2026 03:00:15 +0000
-Received: from mail-pj1-x1029.google.com ([2607:f8b0:4864:20::1029])
+	id 1wglOh-0000000Cv0j-108M;
+	Mon, 06 Jul 2026 15:38:15 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wgZZ6-0000000BR6a-0jug
+	id 1wglOX-0000000Curq-0Qdu
 	for kexec@lists.infradead.org;
-	Mon, 06 Jul 2026 03:00:13 +0000
-Received: by mail-pj1-x1029.google.com with SMTP id 98e67ed59e1d1-3847e8b0f3aso1001536a91.3
-        for <kexec@lists.infradead.org>; Sun, 05 Jul 2026 20:00:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783306810; x=1783911610; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=/Og2FoiMIHkhzxa96aH1wPvklWvZPI3x9dY/s87h4T8=;
-        b=keuqWbL1/0Rgt35ZImY7qkQevRHYPdcb8eqnUOIW4Fte9PLEwiS8HZvonSXTnfHzL+
-         7b7cHh7H/cWyOoi9WtaMi3I+bs/mB7A4ofiK6dLXmHFboamIN7g+cx9cdYl3z+D8fJvs
-         nvU0A04UpPqgsbfeGyD78ofc/1bhB+KCHii66466Nfzx6PToORueyyyL1MWmDdu6J7e5
-         spG+fuX5d7uV3t8craDeJkbtMyCob1SM88SNZH8Txxk6sYJ9rBY85jbxwPmGfEELYnSQ
-         2sp/VHU6uilqk/YShFQEyMBlQPoIC3nv3DenUI+iTiDnZXk8ATXBWcMp0gyJbXu6Qv/I
-         iPAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783306810; x=1783911610;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/Og2FoiMIHkhzxa96aH1wPvklWvZPI3x9dY/s87h4T8=;
-        b=q+Fffr9lG+Fzxchetznxzdq5xgiwnFb2fwIF705KIPGOThkBczVDQ1AtSL2ZZsRWde
-         Nh+ErquQ09hZP3y70qgrttySI9rWgIOhjTy9ptsc8aGzy4op0n2+TBZ+6F/edA1r+oit
-         B+5NlUL0PSiNtwKO4mP7CE7YE189K63/sS7RceWwi8piNadglMU0JTgQ+oFbvSjdH3m6
-         eSZvI3ftbaLb/vVbRxgMqMqXN4DVSR6uhP+Vux65UPH5VS13dVDObSzxo/qaKgIgiOR/
-         JccwUDy3HjoOmev0SDS+9a/oIZejlzfE9cAuRrE5mHCWBioX6flzNpxjDTn9tQG+ioew
-         yK7w==
-X-Forwarded-Encrypted: i=1; AHgh+Ro+4PH0kXebH/LixlPdLjAAXy5Y8QmQASlZRRfD5xxMRlR2dTHH8fgnJ+Oe6ZMKql0NDlyFIg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxuUbUZnI+rGmBfeMZFKor9iOs5hZrCYZgawyCcJQqjM66VI2Z9
-	dz8CIGAPe4cWk09s/hGHi2QOz4Nlvw+SjaYQR0YHH9gUxZRCpT9hnxu2
-X-Gm-Gg: AfdE7cmjDB0G78605D2PAkwvxW9YOJ/HfVwexhnVvZY4mx/vr/4szOWAjbov01ZUpxP
-	5/OMTyePyQGFMq8DDmFQ+ANd1qcjDTKIAGbKao2J9hCzy75Lyk5yHwX/LKc1WQFeMsTvcVCZVRY
-	TRjtJV/8ac0+3PxMPzuXg9qSw4AS6CyJ2CKVZ+ke1a58F+E5adnlBoruJTjxYuJGPwXTF/n5nfG
-	3S+AbPahMzYM5bEYNemqbnpL7jQnQHFztJOSbORYVLlvRQlN39GpcPpsrcGOUmJsgf8dsJ1rf10
-	j3RZObWMvK4JPs6+17qx5eUZd04ifhwfxpxYIXlpigdl+MhilC8B3Q/OP/tpO7c4kmY4ijQPDoe
-	JFeY+jjhga0Azi/u1kI8BLqjCmO0VNCj9jh8zPpzda64SCqus+zhuXSeVoay3s4pLNUJ0gFXdPx
-	pXjxdoAQ==
-X-Received: by 2002:a17:90b:2682:b0:381:21ea:9147 with SMTP id 98e67ed59e1d1-38281184e03mr9983981a91.13.1783306810305;
-        Sun, 05 Jul 2026 20:00:10 -0700 (PDT)
-Received: from localhost ([2a09:bac5:55f0:18c8::278:41])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-31151fff32fsm12857601eec.21.2026.07.05.20.00.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2026 20:00:09 -0700 (PDT)
-From: Coiby Xu <coiby.xu@gmail.com>
-X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
-Date: Mon, 6 Jul 2026 10:59:40 +0800
-To: Guangshuo Li <lgs201920130244@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Dave Young <ruirui.yang@linux.dev>, Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] crash_dump: release keyring reference at the correct
- time
-Message-ID: <aksWPOkN7IgZ6ffn@Rk>
-References: <20260704112509.3717884-1-lgs201920130244@gmail.com>
+	Mon, 06 Jul 2026 15:38:05 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id A5DB340944;
+	Mon,  6 Jul 2026 15:38:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A70121F000E9;
+	Mon,  6 Jul 2026 15:38:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783352284;
+	bh=YQ9Hvr15QYl19jYxj1XsZwlcckoCKeNx5qunpqWNxow=;
+	h=From:To:Cc:Subject:Date;
+	b=g3vcBRGSqUKuPD4I67beXNUHw1GYuxDim0yfH/UBLE/EAVBC7JrgR3tlezmCyWX86
+	 iAU6ta4/p9kpNNSAAwTT8QTqr40ZVdUJBkidqTloae8V4oWTkegRptfgyPs1jn3D5S
+	 BVmvkc2oaGNUqFtA2TI7kjwvV5tQ5setmDS98z9UON8P0+RnurRYVjiDEwpF5jtU8o
+	 503SdCYVr2fBvN+xxsKzZt1NexU7P4mSe3BTmPuoU0rD7q3gKXs7UAQyyn783ii1tB
+	 WnJ9hlnxaPIdFoHyMIUJExn49tAF6tLqwJbGl+yEOKE86bhnVP/b+0+bxaRPVMRHOX
+	 vxKXSddkevR8g==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pratyush Yadav <pratyush@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	kexec@lists.infradead.org
+Subject: [PATCH v3] x86/setup: do not include kexec_handover.h from asm/setup.h
+Date: Mon,  6 Jul 2026 17:37:49 +0200
+Message-ID: <20260706153751.1166003-1-pratyush@kernel.org>
+X-Mailer: git-send-email 2.55.0.rc2.803.g1fd1e6609c-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20260704112509.3717884-1-lgs201920130244@gmail.com>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260705_200012_221774_4B41509F 
-X-CRM114-Status: GOOD (  16.91  )
+Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,103 +74,155 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, Jul 04, 2026 at 07:25:09PM +0800, Guangshuo Li wrote:
->restore_dm_crypt_keys_to_thread_keyring() gets a reference to the user
->keyring before restoring the saved dm-crypt keys.
->
->The same keyring reference is then passed to add_key_to_keyring() for each
->saved key, but add_key_to_keyring() drops that reference on every call.
->This is only balanced when exactly one key is restored. With multiple
->keys, the keyring reference is dropped too many times and may trigger a
->refcount underflow or use-after-free.
->
->When more than five keys are restored, a refcount underflow/use-after-free
->warning can be triggered.
->
->The early error paths after lookup_user_key() also return without dropping
->the keyring reference.
->
->Keep ownership of the keyring reference in
->restore_dm_crypt_keys_to_thread_keyring(), drop it once on all exit paths,
->and make add_key_to_keyring() only use the reference without consuming it.
->
->Fixes: 62f17d9df692 ("crash_dump: retrieve dm crypt keys in kdump kernel")
->Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
->---
->v2:
->  - Mention the refcount underflow/use-after warning seen when restoring
->    more than five keys, as suggested by Coiby Xu.
->  - Order local variables in reverse Christmas tree style.
->
-> kernel/crash_dump_dm_crypt.c | 15 ++++++++++-----
-> 1 file changed, 10 insertions(+), 5 deletions(-)
->
->diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
->index cb875ddb6ba6..c685497cd470 100644
->--- a/kernel/crash_dump_dm_crypt.c
->+++ b/kernel/crash_dump_dm_crypt.c
->@@ -81,7 +81,6 @@ static int add_key_to_keyring(struct dm_crypt_key *dm_key,
-> 		kexec_dprintk("Error when adding key");
-> 	}
->
->-	key_ref_put(keyring_ref);
-> 	return r;
-> }
->
->@@ -104,6 +103,7 @@ static int restore_dm_crypt_keys_to_thread_keyring(void)
-> 	struct dm_crypt_key *key;
-> 	size_t keys_header_size;
-> 	key_ref_t keyring_ref;
->+	int ret = 0;
-> 	u64 addr;
->
-> 	/* find the target keyring (which must be writable) */
->@@ -118,7 +118,8 @@ static int restore_dm_crypt_keys_to_thread_keyring(void)
-> 	dm_crypt_keys_read((char *)&key_count, sizeof(key_count), &addr);
-> 	if (key_count > KEY_NUM_MAX) {
-> 		kexec_dprintk("Failed to read the number of dm-crypt keys\n");
->-		return -1;
->+		ret = -1;
->+		goto out;
-> 	}
->
-> 	kexec_dprintk("There are %u keys\n", key_count);
->@@ -126,8 +127,10 @@ static int restore_dm_crypt_keys_to_thread_keyring(void)
->
-> 	keys_header_size = get_keys_header_size(key_count);
-> 	keys_header = kzalloc(keys_header_size, GFP_KERNEL);
->-	if (!keys_header)
->-		return -ENOMEM;
->+	if (!keys_header) {
->+		ret = -ENOMEM;
->+		goto out;
->+	}
->
-> 	dm_crypt_keys_read((char *)keys_header, keys_header_size, &addr);
->
->@@ -137,7 +140,9 @@ static int restore_dm_crypt_keys_to_thread_keyring(void)
-> 		add_key_to_keyring(key, keyring_ref);
-> 	}
->
->-	return 0;
->+out:
->+	key_ref_put(keyring_ref);
->+	return ret;
-> }
->
-> static int read_key_from_user_keyring(struct dm_crypt_key *dm_key)
->-- 
->2.43.0
->
->
+From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-Hi Guangshuo,
+x86 asm/setup.h includes linux/kexec_handover.h. This is because it is
+used by setup.c and kaslr.c. But this inclusion is problematic. The
+header is included in many places, so it results in the KHO header being
+propagated there. Also, the setup header is used by realmode code. If
+KHO header includes things like mm.h, it causes a big dump of
+compilation failures.
 
-Thanks for addressing my feedback!
+Nothing in setup.h uses anything from KHO. Remove the header from
+setup.h, and directly include it in setup.c. which does use things from
+KHO. Since kaslr.c is a part of the decompressor, avoid including linux
+headers there directly. Instead, split out struct kho_scratch, which is
+the only thing the kaslr.c uses, and move it to
+include/asm-generic/kexec_handover.h.
 
-Reviewed-and-tested-by: Coiby Xu <Coiby.Xu@gmail.com>
+This should also help reduce files recompiled when kexec_handover.h
+changes.
 
+Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+---
+
+Notes:
+    Thomas/Ingo/Borislav/Dave, is it okay if we take this patch through the
+    live update tree? I have a patch series for KHO that depends on this,
+    but it is 20 odd patches and I don't want to spam the x86 list with
+    them. So I am sending this change out separately. It is an improvement
+    on its own anyway since it reduces recompilation on kexec_handover.h
+    changes.
+    
+    All the changed files see relatively low patch traffic so chances of
+    conflicts should minimal I think. And if there are any, I imagine they
+    will be relatively simple to resolve.
+    
+    Changes in v3:
+    - Fix changelog nitpicks.
+    - Add kexec_handover.h to generic-y and use asm/kexec_handover.h in
+      kaslr.c
+    
+    Changes in v2:
+    - Do not include linux/kexec_handover.h in kaslr.c. Instead, split out
+      struct kho_scratch, which is the only thing kaslr uses. Move it to its
+      own header in include/asm-generic/kexec_handover.h
+
+ MAINTAINERS                          |  1 +
+ arch/x86/boot/compressed/kaslr.c     |  2 ++
+ arch/x86/include/asm/Kbuild          |  1 +
+ arch/x86/include/asm/setup.h         |  2 --
+ arch/x86/kernel/setup.c              |  1 +
+ include/asm-generic/kexec_handover.h | 12 ++++++++++++
+ include/linux/kexec_handover.h       |  6 +-----
+ 7 files changed, 18 insertions(+), 7 deletions(-)
+ create mode 100644 include/asm-generic/kexec_handover.h
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 15011f5752a9..a3ed337e827d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14334,6 +14334,7 @@ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
+ F:	Documentation/admin-guide/mm/kho.rst
+ F:	Documentation/core-api/kho/*
++F:	include/asm-generic/kexec_handover.h
+ F:	include/linux/kexec_handover.h
+ F:	include/linux/kho/
+ F:	include/linux/kho_block.h
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index 8e4bf5365ac6..22267a83e064 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -32,6 +32,8 @@
+ #include <asm/setup.h>	/* For COMMAND_LINE_SIZE */
+ #undef _SETUP
+ 
++#include <asm/kexec_handover.h>
++
+ extern unsigned long get_cmd_line_ptr(void);
+ 
+ /* Simplified build-specific string for starting entropy. */
+diff --git a/arch/x86/include/asm/Kbuild b/arch/x86/include/asm/Kbuild
+index 078fd2c0d69d..47ef8cb482e3 100644
+--- a/arch/x86/include/asm/Kbuild
++++ b/arch/x86/include/asm/Kbuild
+@@ -15,3 +15,4 @@ generic-y += fprobe.h
+ generic-y += mcs_spinlock.h
+ generic-y += mmzone.h
+ generic-y += ring_buffer.h
++generic-y += kexec_handover.h
+diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
+index 914eb32581c7..895d09faaf83 100644
+--- a/arch/x86/include/asm/setup.h
++++ b/arch/x86/include/asm/setup.h
+@@ -69,8 +69,6 @@ extern void x86_ce4100_early_setup(void);
+ static inline void x86_ce4100_early_setup(void) { }
+ #endif
+ 
+-#include <linux/kexec_handover.h>
+-
+ #ifndef _SETUP
+ 
+ #include <asm/espfix.h>
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 46882ce79c3a..5ebb521e136d 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -16,6 +16,7 @@
+ #include <linux/init_ohci1394_dma.h>
+ #include <linux/initrd.h>
+ #include <linux/iscsi_ibft.h>
++#include <linux/kexec_handover.h>
+ #include <linux/memblock.h>
+ #include <linux/panic_notifier.h>
+ #include <linux/pci.h>
+diff --git a/include/asm-generic/kexec_handover.h b/include/asm-generic/kexec_handover.h
+new file mode 100644
+index 000000000000..50839fb5ee8e
+--- /dev/null
++++ b/include/asm-generic/kexec_handover.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ASM_GENERIC_KEXEC_HANDOVER_H
++#define __ASM_GENERIC_KEXEC_HANDOVER_H
++
++#include <linux/types.h>
++
++struct kho_scratch {
++	phys_addr_t addr;
++	phys_addr_t size;
++};
++
++#endif /* __ASM_GENERIC_KEXEC_HANDOVER_H */
+diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
+index 8968c56d2d73..48a9793c2b76 100644
+--- a/include/linux/kexec_handover.h
++++ b/include/linux/kexec_handover.h
+@@ -5,11 +5,7 @@
+ #include <linux/err.h>
+ #include <linux/errno.h>
+ #include <linux/types.h>
+-
+-struct kho_scratch {
+-	phys_addr_t addr;
+-	phys_addr_t size;
+-};
++#include <asm-generic/kexec_handover.h>
+ 
+ struct kho_vmalloc;
+ 
 -- 
-Best regards,
-Coiby
+2.55.0.rc2.803.g1fd1e6609c-goog
+
 
