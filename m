@@ -4,65 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A5143C43458
-	for <kexec@archiver.kernel.org>; Tue,  7 Jul 2026 06:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5DEDEC43458
+	for <kexec@archiver.kernel.org>; Tue,  7 Jul 2026 08:28:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yn/kZO4u9dWBVxPs71FKMvr7XU7SEACJ62k7H7NLLHk=; b=azZSGzLu1UEV9zSTz6O+Ns+Ffy
-	oirV+kWFeQf7uLKAPRBQ+hUmWQCOl6DQyzWjcdkvH1YnN6VFLCEf4IonH7Tbp6urGKNCaPGYQtIji
-	Ak+dAHz4UtkP0oAgJXQo26IpPnHm547XIhXtqWs2/cW0FvdyenaNoT2zF2W0qfvlcyrZ+rBhHdhGu
-	lABBfsCR9XmYTghPaWZ+RKOfuRhxyXrQ+/ZfZZ9J6tIam0XnEcHvPfYN/9Tkt7E5jhbYgsUghUHo/
-	XXD9OWmdE0aDBEogUROF485mUOH9doff1AmobhNwqEmELhpYtcGYstBGpCIpaHCX/VW+1vj5AV7YU
-	IvFk+vkw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
+	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=5pdPtIHiIQoepiex1h1rTZsPNlcpN7aFZWNjXMcloL4=; b=YCI8FNyx9S06247XhF3Cq7+RN9
+	DRt6uCGeYGVNrXqw2cEWjcbeU3vN5lBqobNDJa//TbXWdAlnYgkguAfesFjX0E8qtrv+CrEwT/OVj
+	PYGEedJIo4uNXWv4Xk8GAgaiIB0O3yBLL/svH+2GPRXvUBE3JpVB3QDe4Vgh2ct1bM6iaAZvT/xBw
+	JwdattO8n16JzN1uQj/3VbryDczom/waVb3ZECbKGwCzodNGZoeadkLAZqXfbiXeTAFuvPRXwFTlB
+	mpBJMpAFXU3/BDOULYUi273ECuijpXci4NGtlGu3UCFa97D+It4mi3rKeB0WGZnmgXa6Au0aoUTnz
+	DNGW7uww==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wgzC5-0000000ECVT-1cld;
-	Tue, 07 Jul 2026 06:22:09 +0000
+	id 1wh1AT-0000000ETft-3VzX;
+	Tue, 07 Jul 2026 08:28:37 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wgzC4-0000000ECVF-2PeM;
-	Tue, 07 Jul 2026 06:22:08 +0000
+	id 1wh1AS-0000000ETfB-0XGV
+	for kexec@lists.infradead.org;
+	Tue, 07 Jul 2026 08:28:36 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 8463861897;
-	Tue,  7 Jul 2026 06:22:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2E881F00A3A;
-	Tue,  7 Jul 2026 06:22:01 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 536EE618A8;
+	Tue,  7 Jul 2026 08:28:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF7681F000E9;
+	Tue,  7 Jul 2026 08:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783405327;
-	bh=yn/kZO4u9dWBVxPs71FKMvr7XU7SEACJ62k7H7NLLHk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=KX6oQElB50riJguELkN1/oM9JSIx8kufrjmms3fiXJNuW5KspQJmZPSt5txAZwfZ2
-	 qmwzwv32TZ5VQ3oVo86MzmGlBTLY0Bult2je9cYUNm2GumxPfXXh02U5/eP8vmHATh
-	 l0yk6hi+eNbFC6j4Z2RJlqcTzZ7DOp8Uj1YjkWzycPc4UWvkIAm4v5o6S6kgQnsXsC
-	 E5uOMqlHsQQayQziHVuprBAfwDQOqDDMnD6V8Q0bGxtuBz+B3iFjgb7Li8Vf9AlbpN
-	 RpGXmnITZ7hRagUJHFpM3AfnuqLKeiy/VdtNQMbB8VYinItP9T+2lm4M+HfkO2i1RE
-	 HQyPN68VjyoBw==
-Date: Tue, 7 Jul 2026 09:21:58 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Pnina Feder <pnina.feder@mobileye.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <baoquan.he@linux.dev>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Dave Young <ruirui.yang@linux.dev>,
-	Jonathan Corbet <corbet@lwn.net>, Alexandre Ghiti <alex@ghiti.fr>,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH 0/4] vmcore-tasks: export per-task metadata to vmcoreinfo
-Message-ID: <akybBoCAm-kJbfHL@kernel.org>
-References: <20260622211430.4008899-1-pnina.feder@mobileye.com>
+	s=k20260515; t=1783412915;
+	bh=5pdPtIHiIQoepiex1h1rTZsPNlcpN7aFZWNjXMcloL4=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date;
+	b=dwkWD4ywktM5Qi5tFg4O57t+Dqxw4Qv2nnHqcL/Cawk9UEuLb01dx0UgluOGAuLt/
+	 FHpw74frxj+GAztg/Ag+SEVil5vy3oHjeHOZwU2EdE6+CsBYPTOUGfQYQq+lCHZH0D
+	 NhASQTAx1yM0g9VFNCtwKNh8y4ZSGew5+5x9w12k2sduLQSOLVL1OsQoj9KDiqYu+c
+	 AAK/T8ov/hvuJqjzgCJF4cAWoPF4GZwiPVBCPkCwzp5B0u5CvbX+gOZaaaI0LewPpX
+	 e4ub4YpTE4g2aohbVzbCi9/Jfo/ZVHyz91kvaLlLttdJeJLdVJFbF3HMj1TAC0hLVU
+	 8mI5GPU4FYnKg==
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260622211430.4008899-1-pnina.feder@mobileye.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [RFC PATCH 0/4] kho: Support preserving unsplit high-order
+ pages
+From: Mike Rapoport <rppt@kernel.org>
+To: Pranjal Shrivastava <praan@google.com>
+Cc: Mike Rapoport <rppt@kernel.org>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
+ Samiullah Khawaja <skhawaja@google.com>, 
+ David Matlack <dmatlack@google.com>, kexec@lists.infradead.org, 
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260703020832.1731864-1-praan@google.com>
+References: <20260703020832.1731864-1-praan@google.com>
+Date: Tue, 07 Jul 2026 11:28:28 +0300
+Message-Id: <178341290876.3292146.16538284698967245356.b4-review@b4>
+X-Mailer: b4 0.16-dev
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,36 +74,74 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-(adding new Baoquan's email)
-
-Hi Pnina,
-On Tue, Jun 23, 2026 at 12:14:26AM +0300, Pnina Feder wrote:
-> This series extends vmcoreinfo with struct offsets and sizes needed by
-> the vmcore-tasks userspace tool to extract per-task state from a vmcore
-> dump without requiring kernel debug symbols (DWARF/BTF).
+> This series is required for the ongoing effort to preserve DMA allocations
+> across KHO [1]. It addresses a fundamental mismatch between the current KHO
+> restoration logic and adds support for high-order buddy allocations.
 > 
-> The vmcore-tasks tool reads /proc/vmcore (or a saved vmcore file) and
-> reconstructs, for each task:
->   - task name, pid, state, flags
->   - VMA list (start, end, flags, backing file)
->   - user register state (saved on the kernel stack at kernel entry)
->   - user-space backtrace with VMA/filename mapping
->   - kernel dmesg buffer
+> The Problem
+> ===========
+> The current KHO restore implementation treats all multi-page blocks as
+> split pages during restoration, i.e. kho_restore_pages() initializes
+> every 4KB page with a refcount of 1.
 > 
-> This provides a lightweight post-mortem crash analysis capability for
-> production environments where full debug info (DWARF/BTF) is not
-> available.
+> However, many kernel subsystems, most notably the DMA allocator (via
+> dma_alloc_coherent), frequently return high-order non-compound pages.
+> In this unsplit state, only the head page carries a refcount of 1,
+> while all tail pages have a reference count of 0.
 > 
-> The companion userspace tool is submitted to kexec-tools:
->   https://lore.kernel.org/all/20260622205550.1087163-1-pnina.feder@mobileye.com/
+> Consequently, when these contiguous but unsplit blocks are restored by
+> KHO in the new kernel, the forced refcount of 1 on tail pages causes some
+> trouble with the buddy allocator. Downstream of the eventual free path
+> the __free_pages_prepare() [2] ends up calling page_expected_state() [3]
+> when is_check_pages_enabled() returns true (only when CONFIG_DEBUG_VM or
+> debug_pagealloc=on).
+> 
+> This detects the non-zero refcounts on tail pages [4] and incorrectly
+> taints the kernel while leaking the pages in question.
+> 
+> Proposed Solution
+> =================
+> This series introduces a "Page Type" field to the KHO ABI to track the
+> refcount pattern of the preserved pages.
+> 
+> 1. KHO detects the physical state (CONTIG vs SPLIT) during preservation
+>    by peeking at the refcount of the second page in each buddy block.
+> 
+> 2. The type bit is preserved in the high bits of the KHO radix tree key
+>    (Bit 63) and stashed in page->private metadata during boot.
 
-Sorry for the delay, this fell between the cracks somehow.
+This brings a broader question - what is the best way to deal with page
+metadata. This particular case requires only a single bit and luckily we
+have a few spare high bits in the radix tree key. But what if going
+forward we'll need more than a few bits? Do we need a parallel data
+structure for the page metadata? Or something in kho_radix_leaf in
+addition to the bitmap?
 
-The kernel side looks fine overall, but to merge it there should be an agreement
-from the userspace side maintainers that vmcore-tasks is something they are
-wishing to accept.
+I'm not saying that a generic solution for page metadata must be a part
+of this series, but we definitely need to consider and better sooner
+than later.
+
+> 3. kho_restore_page() applies the correct refcount pattern based on the
+>    preserved metadata.
+> 
+> 4. A new helper, kho_split_preserved_pages(), is provided for subsystems
+>    that may need to split memory after it has already been preserved.
+> 
+> Considerations
+> ==============
+> 
+> 1. A primary goal of this approach is to prevent driver/subsystem code
+>    from peeking into MM internals. Drivers should not need to understand
+>    the distinction between head/tail pages or compound metadata. The KHO
+>    core handles this internally.
+> 
+> 2. To handle rare cases where a caller might wish to split a high-order
+>    block after preservation, we provide kho_split_preserved_pages().
+
+Do you have anything particular in mind?
 
 -- 
 Sincerely yours,
 Mike.
+
 
