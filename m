@@ -4,63 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0DB25C43458
-	for <kexec@archiver.kernel.org>; Tue,  7 Jul 2026 08:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E4E4C43602
+	for <kexec@archiver.kernel.org>; Tue,  7 Jul 2026 14:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
-	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zFGbMiPIQbORKlXAvmb1zQCk6r/kZuhJn/PPaYuiAsg=; b=LTTaotp+JHTtDoc5WVlc8osx78
-	hgr9X2TsyGzcr8JFBvERioIPEawcHDyYRmzrWjZwkOvnoPViw5H2iBh0NmTn/+ghbjNXFF6tJqQIP
-	FnA1hFcCXRkPYbqxHSDd7oyTE0HNTawnm2KXwO1gtpX66x9KUUUs9rnjeTeT0297f1q6WQNFzbscl
-	WWq1KKuFvn4WlvbZjIDoac3Co72l02ZiWdMPwj2JGg0NYockT5x26t13CUZzLKK2X4+LYs4UMMnXd
-	PXwpEpOJAV38/hPQ+I39RBekHqVkw23++twpa/wAhCqv6gvNQMgzR4mKjdBzv3LwK9aQkrwCNpKOR
-	RGd519vQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=qJU2XGVhSEv1ni06jwC+Qhuuf8bPMa73T2Ir76oTEp8=; b=oXRYHZ4FMerRS7WcaB14hj7ORN
+	p55abS4vc/BKCOFMZNrSUsofd05YlKVNb7drQ/fNFZ7Mw6SJRsKRWNqWVc1n/qKrAemj310oZ+hL+
+	rKTjO9KcHkv3JGEdqQOZxCN9fBTmUHEwEe6AM2+MXoFCCjS9SevyyC5rCFmfuonuOiMu+ORwHgF12
+	0jnK4tMTVyDeU1XS0p9OA/gt+vWOO2lRIt4M18CzJycKReh1JoQy62xjhzIynYwkNdIQuCpOHUKt5
+	jTw6ak16Yo00MWBbhvpOvwaWu5SoEoi0/7WtxV02Tn1+IfXRleI84Q+e6+2wa4mBRQKbMkw+aO/h4
+	A3ACUmGQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wh1Ae-0000000ETkd-0cRM;
-	Tue, 07 Jul 2026 08:28:48 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wh6YP-0000000F7i2-32wD;
+	Tue, 07 Jul 2026 14:13:41 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wh1Ad-0000000ETjz-0zKm
-	for kexec@lists.infradead.org;
-	Tue, 07 Jul 2026 08:28:47 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id ACD5A618AE;
-	Tue,  7 Jul 2026 08:28:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16C821F000E9;
-	Tue,  7 Jul 2026 08:28:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783412926;
-	bh=zFGbMiPIQbORKlXAvmb1zQCk6r/kZuhJn/PPaYuiAsg=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=ZPndqliwgmXu5kmh+bJz4fuHhudb3ocCu8zmLAbMuL9PVvQEPh6SQu/jJ6Qh4/LfM
-	 Lpq1L0SIRqwvbTEkVMa8DrKCTtdkpGXD+aLresfXY4/E2iZsSEXH05ccH5lTqF4X1k
-	 TwGGeDcxqfRYyaXMfROP55Ai6+4xE5cb9KGQWoxQ2KBIra44VvLd0nSBm+XFJ/u2ho
-	 I8tXZJZw1rHSnOj1MDJJEGkoGXTYGxV9+eHldyXUMT5nFDPQwiKO02IzTG7/cSmIWt
-	 +OH6P4J/L5rjqLxObllhoMUrqO2KxYegM8rFQC3o+1evYoG+bJCJZxAM1lQxgW/ojr
-	 4S85VUgSSvivA==
+	id 1wh6YM-0000000F7hX-37Up;
+	Tue, 07 Jul 2026 14:13:40 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=qJU2XGVhSEv1ni06jwC+Qhuuf8bPMa73T2Ir76oTEp8=; b=ejOqxuNTKTjLbZuwtqIPSsU3+7
+	eMbelaDQNg5wM4Z11J2mvOLa5s4Ehkv45pnuoVqtKJEX8kN+2BQ9Cn9Z7DQNxB+HrDS+j8JWooiZX
+	yukfQy/K+JYUeIIo5p+fg31buL+1pkkowHLQczas9gLPSe9bd81HZz+W1ap2qTxyMDFe8w5Jv1IR2
+	pmAPsIb7oDtrHYBJIc8XibSsgsWQtWPVYwVVXkhSSKb485djHRerHqvpxigdiiXGmTu55NuD9HQfv
+	Yh93JohoNOCZeopQYfGDlKU+tQduX64dMg7pIXlbecOtFec+LQMMTvFoGFrAIuUWhtDWrdGoAuuq3
+	DtO9C9NQ==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wh6Y8-002FAT-1W;
+	Tue, 07 Jul 2026 14:13:24 +0000
+Date: Tue, 7 Jul 2026 07:13:19 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, 
+	dyoung@redhat.com, tony.luck@intel.com, xueshuai@linux.alibaba.com, 
+	vgoyal@redhat.com, zhiquan1.li@intel.com, olja@meta.com, kernel-team@meta.com
+Subject: Re: [PATCH v2 1/2] vmcoreinfo: expose hardware error recovery
+ statistics via sysfs
+Message-ID: <ak0JSScR3EYgLEf9@gmail.com>
+References: <20260202-vmcoreinfo_sysfs-v2-0-8f3b5308b894@debian.org>
+ <20260202-vmcoreinfo_sysfs-v2-1-8f3b5308b894@debian.org>
+ <aYvi4Y_HNqk_u1-v@fedora>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [RFC PATCH 4/4] kho: Introduce kho_split_preserved_pages()
- helper
-From: Mike Rapoport <rppt@kernel.org>
-To: Pranjal Shrivastava <praan@google.com>
-Cc: Mike Rapoport <rppt@kernel.org>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
- Samiullah Khawaja <skhawaja@google.com>, 
- David Matlack <dmatlack@google.com>, kexec@lists.infradead.org, 
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260703020832.1731864-5-praan@google.com>
-References: <20260703020832.1731864-1-praan@google.com>
- <20260703020832.1731864-5-praan@google.com>
-Date: Tue, 07 Jul 2026 11:28:28 +0300
-Message-Id: <178341290877.3292146.993563652569119942.b4-review@b4>
-X-Mailer: b4 0.16-dev
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aYvi4Y_HNqk_u1-v@fedora>
+X-Debian-User: leitao
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260707_071338_790508_ABD5EF48 
+X-CRM114-Status: GOOD (  22.50  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,30 +77,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> A driver may need to split a high-order allocation that has already
-> been preserved. If the pages are split using split_page() manually,
+Hello Baoquan,
 
-Why?
-Are there particular examples?
-
-> the refcounts would change but KHO won't record the change in the
-> preserved page-type, resulting in a metadata mismatch during
-> restoration in the new kernel.
+On Wed, Feb 11, 2026 at 10:01:05AM +0800, Baoquan He wrote:
+> On 02/02/26 at 06:27am, Breno Leitao wrote:
+> > Add a sysfs directory at /sys/kernel/hwerr_recovery_stats/ to expose
+> > hardware error recovery statistics that are already tracked by the
+> > kernel. This allows userspace monitoring tools to track recovered
+> > hardware errors without requiring kernel crashes.
+> > 
+> > This is useful to track recoverable hardware errors in a time series,
+> > even if the host doesn't crash.
+> > 
+> > The sysfs directory contains one file per error subsystem:
+> > 
+> >   /sys/kernel/hwerr_recovery_stats/cpu     - CPU-related errors (MCE, ARM errors)
+> >   /sys/kernel/hwerr_recovery_stats/memory  - Memory-related errors
+> >   /sys/kernel/hwerr_recovery_stats/pci     - PCI/PCIe AER non-fatal errors
+> >   /sys/kernel/hwerr_recovery_stats/cxl     - CXL errors
+> >   /sys/kernel/hwerr_recovery_stats/others  - Other hardware errors
+> > 
+> > Each file contains a single integer representing the count of recovered
+> > errors for that subsystem.
+> > 
+> > These statistics provide visibility into the health of the system's
+> > hardware and can be used by system administrators to proactively detect
+> > failing components before they cause system crashes.
+> > 
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > ---
+> >  kernel/vmcore_info.c | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 55 insertions(+)
+> > 
+> > diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
+> > index e2784038bbed7..b7fcd21be7c59 100644
+> > --- a/kernel/vmcore_info.c
+> > +++ b/kernel/vmcore_info.c
 > 
-> Introduce kho_split_preserved_pages() to handle splitting of preserved
-> pages. The helper follows an unpreserve -> split -> re-preserve sequence,
-> while ensuring that the KHO radix tree is updated with the correct
-> KHO_PAGE_SPLIT type bits.
-> 
-> The helper returns 0 on success, or a negative error code if the
-> re-preservation fails. Callers must ensure the provided order matches
-> the original allocation and that the operation is serialized against
-> other preservation API calls.
+> Since we agreed hwerr_recovery_stats has nothing to do with vmcore, it
+> seems inappropriate to put its sysfs handling code in
+> kernel/vmcore_info.c. File kernel/vmcore_info.c is only used to build
+> vmcore info for later vmcore dumping. And hwerr_log_error_type() should
+> not be put in kernel/vmcore_info.c. either. I didn't check this
+> carefully before, sorry. Please reconsider if these can be handled better.
 
-Let's put this on hold until there are actual users.
+I've sent an RFC to move it to RAS code, which I think it belongs
+better. Does it make more sense?
 
--- 
-Sincerely yours,
-Mike.
+https://lore.kernel.org/all/20260707-hwerr-ras-v1-1-4aea4a79d085@debian.org/
 
+Thanks,
+--breno
 
