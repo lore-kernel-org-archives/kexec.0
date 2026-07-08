@@ -4,92 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 360D7C43458
-	for <kexec@archiver.kernel.org>; Wed,  8 Jul 2026 17:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 24228C43458
+	for <kexec@archiver.kernel.org>; Wed,  8 Jul 2026 17:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=NY8WDLERqRUUyPPjKLcGWnXs7jTmISXhATSCwU5JbWU=; b=ZsQcCgT0yJP6b2iId+vf8E57Ed
-	6ZN5B9X/4s+mIemQ2yM6AUwevUWWuH3WlqLV5tSLXzGONIE3Fh2JMmo5kl/hBcCkot1373fqDSUZ5
-	fwHIUPttppyCTi5aA1z5d6CNNHXxbiTWrCVuhcy9W7wgwGyz5vOt3YvmSN/0FWYt+DtGIuSoHgJp6
-	Hun/LzgTvMitKwJHg6WyFFywNfz1JJLI0BQWpfiUCR7gL8bTjFGqVJO1ZJaqfkp6kGZok35ahImic
-	gLeeMANmpVKiMgJE+DdvqJ9yNb1pMoBvUXm9ESnGq/+/+Ge9e+CHiXh+YWw17fM2RtWlLNyoXJOzA
-	YKIJJ3ww==;
+	bh=xmyFw2R0UQPIDfzvj9wMwsWmgYLjmqNhoTqDamPgvg8=; b=jWJ41LRAdhpmaI0MELr4MkusUU
+	Kg8qbYLYWpsXl2Sxno/sVSrot4eBNer5BpDJf+t8Z7RjDaiE9WvXmPr9kJvHNgIKTD3bxgXA4aRJA
+	RmJlK+C9tcZ6n2wKR+i1ihvtt61m6Tdh4FfzgIxk5CBAKFoDRYVSeN+hwVShC2WsoFy/9IIYm+7Qd
+	/2pkxwFhNmGHHJZGzoo2TOLmI8rHcO3Xaa35d1YJde1GaRc7pr5pnS+P918sZhHQMq0CQw6VhNL/v
+	aeUUt4V8MZXfQiGm7LbDHFZ3z/7DSAPVRS3rGvykZeaZWXMPfk7SihGhwyXnMR/GMX7Me/zcGfR22
+	EnzyiBDQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whWHt-000000007ym-3cxO;
-	Wed, 08 Jul 2026 17:42:21 +0000
-Received: from mail-pl1-x62d.google.com ([2607:f8b0:4864:20::62d])
+	id 1whWJz-0000000083s-0FO8;
+	Wed, 08 Jul 2026 17:44:31 +0000
+Received: from mail-pl1-x62b.google.com ([2607:f8b0:4864:20::62b])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whWHs-000000007yL-1QCd
+	id 1whWJx-0000000083M-1coh
 	for kexec@lists.infradead.org;
-	Wed, 08 Jul 2026 17:42:21 +0000
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-2cb59f6ba26so9255ad.0
-        for <kexec@lists.infradead.org>; Wed, 08 Jul 2026 10:42:20 -0700 (PDT)
+	Wed, 08 Jul 2026 17:44:30 +0000
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-2cb59f6ba26so9585ad.0
+        for <kexec@lists.infradead.org>; Wed, 08 Jul 2026 10:44:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1783532539; x=1784137339; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1783532669; x=1784137469; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=NY8WDLERqRUUyPPjKLcGWnXs7jTmISXhATSCwU5JbWU=;
-        b=p53rKvaRNC44Ha2satTl3wr4jN5j6cTmhsJA/r3nXUUT+8IH5MEzvswz27Tjq9toIH
-         J14qKBsZ5jvyIXoF7p/h3bZSwcWMDmfVCT5VvLeTCKFhOPPKvzKc658/Lr29Xy7wsTza
-         cJV817PvrfkDYGpABmrbyRpzlUAbNI04u0sLDgUeOcEjNlptQjFD7bC7mMUvWVVQRQPT
-         2kBLo4t7X2DLYKj0IBU5vr514HfODALvmDfj3ijp6/dq3fnd5GuwaDBYhn7bG6UXpZvN
-         ilauNNmOXxRZIaiDhcuOeEr5Kg8eXg4MpGErai7PKAd5BSNtMYpH4bYvl+SdCgBVVfx0
-         eT4g==
+        bh=xmyFw2R0UQPIDfzvj9wMwsWmgYLjmqNhoTqDamPgvg8=;
+        b=QwG+l6XzfoyJT/V9oKxzrl4998y8xPvyFrnJbweRUFfUeXBUKsQGB1iLLMeFwWdo9Z
+         tZFSAOOkqgUXkrBhwQ1VjAHKFLbYJQen0yYfOhwC+i034Vgb/IEC9ixPtQDwgqJfVAbs
+         BMqCrdiRzXBuk9KewK8kWswmjYB0z7N3YaqITBdPjRGY4HujC0rDtGNm6FxGH/7AwIIR
+         fjn+ikKeiC7hWA09eSVjhCm9M9La0H7kZBIHEMC0Xg5/qiXBAFy/ICKU/BcizzSK7kHm
+         5UC/uoxSdjblsT41LhO1ae9v81IVFmAIjBU5Ep9ygoNs+1w8gnjVqLd1qlLi0oOWWugr
+         oaPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783532539; x=1784137339;
+        d=1e100.net; s=20251104; t=1783532669; x=1784137469;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=NY8WDLERqRUUyPPjKLcGWnXs7jTmISXhATSCwU5JbWU=;
-        b=NS9IOPnusa1dZS6LJhhL46Fud5PdQKf3lylP9hj2kdqXZYvyqvaU6XbMMheIEeOHu2
-         ldYXeJ0MYrPwDMcR+rbeft7eKHxRf9CwmXocb2SZJ3MBHGifef1UBxExokhuFiPay5j0
-         Xp//J0VSdxVbBEbuptZVLtzrtDChhTaPGL61sE05Jdh3NwTmCzzQnDUscF+33980x0tS
-         jkZeswWJxZpX7PqsoVLA0tQLeWoJy1kK+N89v3yQwBFih0FI2ojHg9MU31rFQO8yA5oi
-         jHDqWx7oMy1FQFUnvjEBcmJ02/K7OH62feVpXc/q8BwarPDkltFAths74MEHVZcpknE2
-         eInw==
-X-Forwarded-Encrypted: i=1; AHgh+Rqo8+W/ozJus2AgSZg651ZOw9hMoyHSSM/omJgNebMf4+ZNTwi7aiOaHiNC+kCjUSkSwSxcOg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwNWOtGoP6Xju9/6gpS8b0CNnvKA3odltDsGQOL5UcAhRGkaZmM
-	2syXtNrJwnRos54klT1VSV+fhxDcqZag8Hzgk60VV5BvHm+3PO4fBOhzac38vKsopg==
-X-Gm-Gg: AfdE7cl26bOSfy75Lw4GFhywGxeDwSMFGp3WuCy4GBgAWINLOyS3tXgKsgjQba5VzqP
-	Z/+6wc6/U03havW5jptQGxE2VC8cWq63GEuskdqbzS8PbOw9wlFZmns/Yznwg4tRD7GZYfW6PH+
-	9JDg1oFqqL2fRAAtJ0IBMliWTBEC/E1LAmpO0p8CReg1tDHSnS4y0CbsQGtn5K7NKrEwnIdbt3R
-	iw3kQ+O5HRfCx1ckRNhk8m8SuV59UmNS9RBIOUPTljVYNeT4cC+ZsTm+orBSXDWRTlfOOFlTz9N
-	0J+MIsaON2rY4WCu9QlpsDZahNgwg4IDo77Ks6gQboWj/p/lWRsq8gd6lZ7kzdy+DXVnHtS1Los
-	g/sy312Mudtci+GV2ctr3+HoQF4pZpCGRek4AojQUAChv3XavVcb8VcQkXzdtJ/Bu16xfvbyXUo
-	wcpwEUYijqfro4/AsJjdZStkpofuyjVAxKit5BCuUbPUAN5BY=
-X-Received: by 2002:a17:902:e806:b0:2c6:a078:bfb7 with SMTP id d9443c01a7336-2ccff8dc9a5mr327665ad.7.1783532538783;
-        Wed, 08 Jul 2026 10:42:18 -0700 (PDT)
+        bh=xmyFw2R0UQPIDfzvj9wMwsWmgYLjmqNhoTqDamPgvg8=;
+        b=dzOSmlnlRCkx8SNaZoc0KhPiGtGcEsGVPSttTEQTYLu4uuTOT0KO4MXwNTfRkQP8f+
+         ST568peEVxpHTbFDO22mXyrdyFpYtGIuvMMb5BBNOcqTL/BVTiMQFYWVUpwJ7Aauyp5g
+         G7Qx4iExWTBjrY4RX9oaL4YIGDVA1Yd5J+fwTp2sL15Fd9VpijP3M2tKwfCBUAvR18Pt
+         ZWdfH6hFQfqhKPY9Jl7aULf0E61Kca8EyOUz9xOREXm+ONHeejzV+OaChCD/EKWO5H7B
+         3BSKGbYzcPIn99CKt71TC9YvwJUxg7qsdB9P6DFsupGed9KMjBCUQLmTm4Tv92w6LgQL
+         0q2g==
+X-Forwarded-Encrypted: i=1; AHgh+RqN2tfsSPDja17maenNWUHzYMsjPosubHFwNetEJ/4ndRTb6w4XPY9J5BdpyKfilfD7RkBIgg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwbfDDlyGFXNAoni9wOl4m8f7EPoE+SVD5NCrECEDb1Jog/DgNb
+	aDQnm5uvnWM3Yh2602y4V4LNZvN029gOYmAJUoru8H1QD7coVDG41gumX5P5Tvsp1A==
+X-Gm-Gg: AfdE7cmtg9JKmWSFHbg/ul5BBCCnKI4GHG7WthectzgFkdPoMpG10bIZA9X+wOVgvWc
+	6ZgbYJYnj91gPatRNbhixAU4HUGikbFSxfg6TKCJVLglEM/M4ROKadjUwm5sVS621KARpvuAcF+
+	48asqjyWOvPzkJPmSvcxXoejU/DratmNqszWUIW0qEjaS3EWVYiVkVnHdiazgWvEGVLQlmW+NHD
+	22XYwVQXrgzd10qQuhND9n1dyKe+PgYxES1ZNDSFJpLZSwog+DuFjxRddvCU/FnDZctJ+psdjet
+	/Qau+JNbMtclDcPweOO3Bw37N6g/QJIVMMXrBmIiyPB4dMl5QeSaib/nrgNtpC0yH/yCDxQynT9
+	hkEPHeRg/lTCiZC4l9d9IfqucC7ufDYY4/y0eInzyoRZbadCcy2ZfXeBe0ZyLwiihhERhoUWy1w
+	dxOmwha4gx/H4OgRAaWH9CDcvFJ/Mx+L6xvT5hX2ealXu7jts=
+X-Received: by 2002:a17:903:38d0:b0:2cc:7759:ffcf with SMTP id d9443c01a7336-2ccff916ae6mr403275ad.17.1783532668070;
+        Wed, 08 Jul 2026 10:44:28 -0700 (PDT)
 Received: from google.com (10.129.124.34.bc.googleusercontent.com. [34.124.129.10])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847f6b609acsm7268238b3a.1.2026.07.08.10.42.16
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ccc9bdb746sm30815595ad.7.2026.07.08.10.44.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2026 10:42:18 -0700 (PDT)
-Date: Wed, 8 Jul 2026 17:42:12 +0000
+        Wed, 08 Jul 2026 10:44:27 -0700 (PDT)
+Date: Wed, 8 Jul 2026 17:44:22 +0000
 From: Pranjal Shrivastava <praan@google.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
+To: Samiullah Khawaja <skhawaja@google.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
 	Alexander Graf <graf@amazon.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
 	David Matlack <dmatlack@google.com>, kexec@lists.infradead.org,
 	linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Subject: Re: [RFC PATCH 0/4] kho: Support preserving unsplit high-order pages
-Message-ID: <ak6L9G-x72n2kY7B@google.com>
+Message-ID: <ak6Mdp45x8TGNOPP@google.com>
 References: <20260703020832.1731864-1-praan@google.com>
- <178341290876.3292146.16538284698967245356.b4-review@b4>
+ <2vxz7bn5mv0n.fsf@kernel.org>
+ <ak57VeunO8qd4wEh@google.com>
+ <ak6DUC7NsIZ20RZD@google.com>
+ <ak6FJf8jUGudEw0c@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <178341290876.3292146.16538284698967245356.b4-review@b4>
+In-Reply-To: <ak6FJf8jUGudEw0c@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260708_104220_386378_6268FC14 
-X-CRM114-Status: GOOD (  32.00  )
+X-CRM114-CacheID: sfid-20260708_104429_435555_A701A3EB 
+X-CRM114-Status: GOOD (  30.98  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,91 +106,58 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jul 07, 2026 at 11:28:28AM +0300, Mike Rapoport wrote:
-> > This series is required for the ongoing effort to preserve DMA allocations
-> > across KHO [1]. It addresses a fundamental mismatch between the current KHO
-> > restoration logic and adds support for high-order buddy allocations.
+On Wed, Jul 08, 2026 at 05:14:40PM +0000, Samiullah Khawaja wrote:
+> On Wed, Jul 08, 2026 at 05:05:20PM +0000, Pranjal Shrivastava wrote:
+> > On Wed, Jul 08, 2026 at 04:36:46PM +0000, Samiullah Khawaja wrote:
+> > > On Wed, Jul 08, 2026 at 04:11:04PM +0200, Pratyush Yadav wrote:
+> > > > On Fri, Jul 03 2026, Pranjal Shrivastava wrote:
+> > > >
+> > > 
+> > > [snip]
+> > > > >
+> > > > > 3. kho_restore_page() applies the correct refcount pattern based on the
+> > > > >    preserved metadata.
+> > > >
+> > > > Why do you need to save the type of pages in KHO metadata? For example,
+> > > > for pages or folios, we don't store any type information and leave it to
+> > > > the caller choose the right API. So reserve-mem and kho vmalloc need
+> > > > pages, they can call kho_{preserve,restore}_pages(), and memfd needs
+> > > > folios so it can call kho_{preserve,restore}_folio(). The radix tree
+> > > > itself does not hold the information. The caller knows what its memory
+> > > > is supposed to be so it calls the right restore API.
+> > > >
+> > > > So why can't we add a kho_{preserve,restore}_page_multi() (pick a better
+> > > > name; we can argue about the naming later)? Then your driver knows it is
+> > > > restoring DMA buffers so it can call kho_restore_page_multi(), and KHO
+> > > > takes care of initializing the pages with the right refcounts.
+> > > >
+> > > > You won't have to muck about with the ABI in that case.
+> > > 
+> > > +1
+> > > 
+> > > I think this makes sense. The mm already relies on the allocator to
+> > > track the type of pages it has and expectes it to use free_pages or
+> > > put_page() or free_page(), so it is natural for KHO to rely on the
+> > > caller to call the right restore API.
+> > > 
+> > > Lets add kho_preserve/restore_page_contig|_order|_nonsplit and the dma
+> > > preservation can use the appropriate one during restore.
 > > 
-> > The Problem
-> > ===========
-> > The current KHO restore implementation treats all multi-page blocks as
-> > split pages during restoration, i.e. kho_restore_pages() initializes
-> > every 4KB page with a refcount of 1.
-> > 
-> > However, many kernel subsystems, most notably the DMA allocator (via
-> > dma_alloc_coherent), frequently return high-order non-compound pages.
-> > In this unsplit state, only the head page carries a refcount of 1,
-> > while all tail pages have a reference count of 0.
-> > 
-> > Consequently, when these contiguous but unsplit blocks are restored by
-> > KHO in the new kernel, the forced refcount of 1 on tail pages causes some
-> > trouble with the buddy allocator. Downstream of the eventual free path
-> > the __free_pages_prepare() [2] ends up calling page_expected_state() [3]
-> > when is_check_pages_enabled() returns true (only when CONFIG_DEBUG_VM or
-> > debug_pagealloc=on).
-> > 
-> > This detects the non-zero refcounts on tail pages [4] and incorrectly
-> > taints the kernel while leaking the pages in question.
-> > 
-> > Proposed Solution
-> > =================
-> > This series introduces a "Page Type" field to the KHO ABI to track the
-> > refcount pattern of the preserved pages.
-> > 
-> > 1. KHO detects the physical state (CONTIG vs SPLIT) during preservation
-> >    by peeking at the refcount of the second page in each buddy block.
-> > 
-> > 2. The type bit is preserved in the high bits of the KHO radix tree key
-> >    (Bit 63) and stashed in page->private metadata during boot.
+> > Ack. I like kho_restore_contig, I don't think we'll need a preserve for
+> > this though? Preserve doesn't seem to be preserving refcounts, I guess
+> > we could rely on kho_preserve_pages and the caller can use
+> > kho_restore_pages_contig() to set refcount correctly for unsplit pages?
 > 
-> This brings a broader question - what is the best way to deal with page
-> metadata. This particular case requires only a single bit and luckily we
-> have a few spare high bits in the radix tree key. But what if going
-> forward we'll need more than a few bits? Do we need a parallel data
-> structure for the page metadata? Or something in kho_radix_leaf in
-> addition to the bitmap?
-> 
-> I'm not saying that a generic solution for page metadata must be a part
-> of this series, but we definitely need to consider and better sooner
-> than later.
+> I think for consistency we can add both, even if preserve doesn't do
+> anything special internally.
 
-Ack. I agree that regarding page metadata, we are limited by the 
-available bits in the Radix key (and as discussed with Pratysh on the 
-other thread it increases the memory usage too). I guess we need more
-complex metadata in the future, a parallel data structure or expanding
-struct kho_radix_leaf to include a metadata array alongside the bitmap
-should be better in the long-ter I guess?
+Ack, alright.
 
+> > 
+> > Thanks
+> > Praan
 > 
-> > 3. kho_restore_page() applies the correct refcount pattern based on the
-> >    preserved metadata.
-> > 
-> > 4. A new helper, kho_split_preserved_pages(), is provided for subsystems
-> >    that may need to split memory after it has already been preserved.
-> > 
-> > Considerations
-> > ==============
-> > 
-> > 1. A primary goal of this approach is to prevent driver/subsystem code
-> >    from peeking into MM internals. Drivers should not need to understand
-> >    the distinction between head/tail pages or compound metadata. The KHO
-> >    core handles this internally.
-> > 
-> > 2. To handle rare cases where a caller might wish to split a high-order
-> >    block after preservation, we provide kho_split_preserved_pages().
-> 
-> Do you have anything particular in mind?
+> Sami
 
-Not really, I guess I was thinking of an edge case and attempted to
-handle it this way. We could very well write this in the kdoc that the
-caller who wants to do this must unpreserve first.
-
-> 
-> -- 
-> Sincerely yours,
-> Mike.
-> 
-
-Thanks,
 Praan
 
