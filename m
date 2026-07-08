@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E6F17C44507
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E50DCC44501
 	for <kexec@archiver.kernel.org>; Wed,  8 Jul 2026 23:49:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,63 +12,62 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=lkcC1WuBJfDnOUDpo4VCYaNuz/sum/AUORjsX5C4m/M=; b=QLbHmI+j0NM++qmb02mTl4hpyV
-	6yBYHEMz8MIF2xFfCvjLe9ab5lIV1Nf68fHeayajZZiULcwAfCchB85TcaOcN+B0Dmpr1kdH/Bakm
-	YVN1brFpiWW+TAsKCcCvye25/dXfOvpoq4HHbtj623j9EX7Ca7JrJWWFtU7WNd01S88akJ03lErMx
-	3kYdoLPr3KbFiHfxck7COEA6yylKxR+jbkyYavfT8UzAUS0irINL/1wkMgd2vUPrANX9Vlt9qBI2n
-	jFfkIbwnrbemSfEEGvz4d5tiMCxSEPy1QD7pWhcROA9mgRWtmnyRQqLimASz342ocrGO6Ro4nU+2x
-	Zqhpjmmg==;
+	bh=1JfihMOdYGKLErlZtxkO4c74/sv22I0BBbL2ChDUSts=; b=imsMabCqTPooPIeGO+2uBn4ly6
+	qq/nsLjqzTMueErQ4fr4KSPbnzga0MtPpLXxuWOTSTiSCrRl3CI8y19M2jv0Z8k6jSIZSCnHTZnnb
+	MXyiGcFqv9TH71rsAGcjMRuADNUVAY8fUl7WF3ElBLVgDr8shFbfCsetQy7SlV4SRR6F0Rufy/c+6
+	n3IXqD6uiAJiKqww0a/+Owr+vLqEEt8w2WWWHUtluZ1p4NnAopHoW0tV6OZvgePXbUSGKY2KqqCqR
+	H79DtpnOvEmrvT3bYb1IwU6OOMHJp5NmkKgsGMbEeYknNP5JqObFvh5pTdQ+1E2qvHS+TqNpU/EaP
+	BrFfxd1w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whc0j-00000000cy3-1IQN;
-	Wed, 08 Jul 2026 23:49:01 +0000
+	id 1whc0i-00000000cxM-0Ica;
+	Wed, 08 Jul 2026 23:49:00 +0000
 Received: from mail-pf1-x449.google.com ([2607:f8b0:4864:20::449])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whc0g-00000000cwI-39Hm
+	id 1whc0f-00000000cvn-2zsr
 	for kexec@lists.infradead.org;
-	Wed, 08 Jul 2026 23:49:00 +0000
-Received: by mail-pf1-x449.google.com with SMTP id d2e1a72fcca58-847ad67cc51so1461019b3a.3
-        for <kexec@lists.infradead.org>; Wed, 08 Jul 2026 16:48:58 -0700 (PDT)
+	Wed, 08 Jul 2026 23:48:58 +0000
+Received: by mail-pf1-x449.google.com with SMTP id d2e1a72fcca58-848544a8496so490058b3a.0
+        for <kexec@lists.infradead.org>; Wed, 08 Jul 2026 16:48:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1783554538; x=1784159338; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1783554536; x=1784159336; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=lkcC1WuBJfDnOUDpo4VCYaNuz/sum/AUORjsX5C4m/M=;
-        b=HyfFwoybJg5A6cvLiyuu5OWwwKO5hEX02ukZOlkJdSm2a2rfmjwyY/Orobt9Y+ESvk
-         LuqZKMC/kuDuiC7d1EL6Uui61bH+wJje/eQ/UElUNcC6QRL8eiKjHD8gjKFWJFt1besg
-         7t8iVpxmjR1JPqQqzJXXXF+lPoae3Cs7L3jIR3xiohQSxi7Z/IjJs79efSeKlFT99/FT
-         idQD/Y6OezJGlH8pQfrRZgfT0Mn6PbeTapJcqZFPyXjc4eX05M/wyEUGo4v7D1oc8QE+
-         LiUQon+irdq7PT9qtnrsVXFct9DNf/EhMEA34WOap+fsATT9+2IC16nWKC3raQe3WD6M
-         DjZQ==
+        bh=1JfihMOdYGKLErlZtxkO4c74/sv22I0BBbL2ChDUSts=;
+        b=HABUfhCgz9qXysdILH6pcobNq0q44OR8vc8As9ugwMFtD/MZeyPapc4TIwvhV+hCAR
+         Ucva61sbR8ch6yn+V52LmK9tNPYcjYzGRhrxLh/HaJo4S34jlrMIop09jbeYZoiNAyuu
+         0GdUuB7eJRgGZ3WJD8n4LfPvokDz2rJkYCWL6gI0Dd/83FioL4A6PgeQI3TygIs4oeah
+         qmJB+CCR3COI5k/ybGPWH0NRWahm1JxZC2ZXbFUh1ozEfGZkWHNB1NzxXl6Qk9ndDw9V
+         kGrGanwGh0tMlL/g2gcmYFft0JydZlw+E+jSmQr8nn61au6esYuFwqrfvHFqi+GVhkVr
+         KvUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783554538; x=1784159338;
+        d=1e100.net; s=20251104; t=1783554536; x=1784159336;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=lkcC1WuBJfDnOUDpo4VCYaNuz/sum/AUORjsX5C4m/M=;
-        b=byfUc78B8Qq+Daa3+sIQ0P/t1ZzGFoAshBuQ8TJOEGJgP0TEspVevsSF1AUu1exQEn
-         OxMDSs6IDT9gshfjfH7OfIPC2XKNQNQ7o12CYNw7F1nTi/brVYifahv6tcaJ4/YAPsHs
-         RbEs9KxHlvDORKYQ1Pt0iAaW7pdqTFCkCnYJLZO8hKvbYgmtePJKaEeVUkAfWbPm7Cob
-         3C03NC8JJn5zOLZS2SAmYYzcQd7b98prBADm+oNjjQ04nX9v+FN8gzKLMIi4sz0pnXXk
-         UaIRqCHcOspZSAZ+MQNKUqFSR9NTawEL8O73lTigkAZUBrYWNN0VOYFFuHnnDbpw58Ts
-         L4sQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqDkNQl4xYHZPgi+oiMn6kbAGihUbkyb4M9H8fwsxVSy59g6F6xrM5BbNzRgdFJVe/kNxpZEg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyR4ZVD/pUbAIBjTLJH9Q4gc5hSMzsgPtnjdmy1613HwUgt+yDr
-	NHZtzBauxbj4dj8wxX0J0SGIm3f+zARSY7RNZjt5GTViVXlVReGr+AcVODAhWRgWhSIY3VPIQQd
-	TUWnhspVCp7poww==
-X-Received: from pgbe38.prod.google.com ([2002:a63:5026:0:b0:c99:aff5:7092])
+        bh=1JfihMOdYGKLErlZtxkO4c74/sv22I0BBbL2ChDUSts=;
+        b=JCzUBWe0NThgwjy6C6fY2QRV6PnzWpyUNkg1AuHHrjbPSU8GUlBXB5esKL+fh9gu6U
+         OgjMSeJhI/yPrkC7aVg0+3Z/88PHaK7NGBQAJzKCtZMNwB6QTfwoX1IAEcbkaYraDCYT
+         yzK2/LPqGV0ot9UPqfP79IhANTjlQij9/KShUhx6JNpKYEnI9K9Gbio2AD8JcxHwT8dc
+         T5Wzh7nDCfoBbr05r+74OSzClyh5xazwIjbQPk0CborzHBdTPlbte4ivWdiL1xQlcV8s
+         O/h+9l0TnJR6ktHwoNZC/2rp1UwBa+XQCjxEKaqq7ltVIQMcO8VNrpArbSQPwjtsO702
+         QaUw==
+X-Forwarded-Encrypted: i=1; AHgh+RpUEKXpuWaHZvafkXMSXi9gThz1AG+Ndq31oN55T8BAiCZp2PDUuXv3/ZeqoLnGR977584VSA==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yzo5qv7UhBZP2igZS2mxF/k117rQbWviHHkOu3+DZNKFVUPx09t
+	dFdM4EzHF/sosdC0RZHhbJ0JcoQHc5MYubypEykmR0jNKiB2uRFPRpaKCpDqjIfQWxO6b9Y1plu
+	gjuvXH/O3JUhvNA==
+X-Received: from pgcc16.prod.google.com ([2002:a63:1c10:0:b0:c8b:2706:11a7])
  (user=skhawaja job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:e082:b0:3c0:9c19:659f with SMTP id adf61e73a8af0-3c0bd23427fmr5506792637.71.1783554537333;
- Wed, 08 Jul 2026 16:48:57 -0700 (PDT)
-Date: Wed,  8 Jul 2026 23:48:47 +0000
+ 2002:a05:6a00:1144:b0:845:ec31:26cd with SMTP id d2e1a72fcca58-84843436d38mr4585247b3a.46.1783554535737;
+ Wed, 08 Jul 2026 16:48:55 -0700 (PDT)
+Date: Wed,  8 Jul 2026 23:48:45 +0000
 In-Reply-To: <20260708234854.4044652-1-skhawaja@google.com>
 Mime-Version: 1.0
 References: <20260708234854.4044652-1-skhawaja@google.com>
 X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
-Message-ID: <20260708234854.4044652-4-skhawaja@google.com>
-Subject: [RFC PATCH v2 03/10] dma: contiguous: Add API to check if an
- allocation is from CMA
+Message-ID: <20260708234854.4044652-2-skhawaja@google.com>
+Subject: [RFC PATCH v2 01/10] dma: Add DMA allocation preservation KHO ABI
 From: Samiullah Khawaja <skhawaja@google.com>
 To: Marek Szyprowski <m.szyprowski@samsung.com>, Will Deacon <will@kernel.org>, 
 	Jason Gunthorpe <jgg@ziepe.ca>
@@ -80,8 +79,8 @@ Cc: Samiullah Khawaja <skhawaja@google.com>, Pasha Tatashin <pasha.tatashin@sole
 	Pranjal Shrivastava <praan@google.com>, Vipin Sharma <vipinsh@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260708_164858_791642_859FA538 
-X-CRM114-Status: GOOD (  12.20  )
+X-CRM114-CacheID: sfid-20260708_164857_753108_D6A66A51 
+X-CRM114-Status: GOOD (  14.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,74 +95,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add an API that uses cma_for_each() to check whether a DMA allocation is
-from a CMA region.
+The DMA allocations can be backed by a variety of allocators. Add KHO
+ABI for the preservation of contiguous allocations that are done through
+dma-direct.
 
 Signed-off-by: Samiullah Khawaja <skhawaja@google.com>
 ---
- include/linux/dma-map-ops.h |  6 ++++++
- kernel/dma/contiguous.c     | 24 ++++++++++++++++++++++++
- 2 files changed, 30 insertions(+)
+ include/linux/kho/abi/dma_alloc.h | 32 +++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 include/linux/kho/abi/dma_alloc.h
 
-diff --git a/include/linux/dma-map-ops.h b/include/linux/dma-map-ops.h
-index 9382785a2faa..9b91c839ceb5 100644
---- a/include/linux/dma-map-ops.h
-+++ b/include/linux/dma-map-ops.h
-@@ -106,6 +106,7 @@ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp);
- void dma_free_contiguous(struct device *dev, struct page *page, size_t size);
- 
- void dma_contiguous_early_fixup(phys_addr_t base, unsigned long size);
-+bool dma_is_from_cma(phys_addr_t phys, size_t size);
- #else /* CONFIG_DMA_CMA */
- static inline struct cma *dev_get_cma_area(struct device *dev)
- {
-@@ -145,6 +146,11 @@ static inline void dma_free_contiguous(struct device *dev, struct page *page,
- {
- 	__free_pages(page, get_order(size));
- }
+diff --git a/include/linux/kho/abi/dma_alloc.h b/include/linux/kho/abi/dma_alloc.h
+new file mode 100644
+index 000000000000..ae38cf1a1fc9
+--- /dev/null
++++ b/include/linux/kho/abi/dma_alloc.h
+@@ -0,0 +1,32 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_KHO_ABI_DMA_ALLOC_H
++#define _LINUX_KHO_ABI_DMA_ALLOC_H
 +
-+static inline bool dma_is_from_cma(phys_addr_t phys, size_t size)
-+{
-+	return false;
-+}
- #endif /* CONFIG_DMA_CMA*/
- 
- #ifdef CONFIG_DMA_DECLARE_COHERENT
-diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-index 03f52bd17120..0b1702bf39ca 100644
---- a/kernel/dma/contiguous.c
-+++ b/kernel/dma/contiguous.c
-@@ -130,6 +130,30 @@ struct cma *dev_get_cma_area(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(dev_get_cma_area);
- 
-+struct dma_cma_check_data {
-+	phys_addr_t start;
-+	phys_addr_t end;
-+};
++#include <linux/types.h>
 +
-+static int dma_cma_check_area(struct cma *cma, void *data)
-+{
-+	struct dma_cma_check_data *chk = data;
++/**
++ * DOC: DMA Alloc ABI
++ *
++ * This header defines the structures used to serialize the state of DMA
++ * allocations, done by device driver, across a Live Update.
++ *
++ * Only DMA allocations done through dma-direct that are contiguous and
++ * allocated using alloc_page are supported.
++ */
 +
-+	if (cma_intersects(cma, chk->start, chk->end))
-+		return 1;
-+	return 0;
-+}
++/**
++ * struct dma_alloc_ser - Serialized state of a single DMA allocation
++ * @page_phys: Physical address of the preserved pages
++ * @size: Size of the DMA allocation
++ * @attrs: DMA allocation attributes
++ * @force_decrypted: Whether the memory is force decrypted in previous kernel
++ */
++struct dma_alloc_ser {
++	u64 page_phys;
++	u64 size;
++	u64 attrs;
++	u8 force_decrypted;
++	u8 padding[7];
++} __packed;
 +
-+bool dma_is_from_cma(phys_addr_t phys, size_t size)
-+{
-+	struct dma_cma_check_data chk = {
-+		.start = phys,
-+		.end = phys + size - 1,
-+	};
-+
-+	return cma_for_each_area(dma_cma_check_area, &chk) != 0;
-+}
-+
- #ifdef CONFIG_DMA_NUMA_CMA
- 
- static struct cma *dma_contiguous_numa_area[MAX_NUMNODES];
++#endif /* _LINUX_KHO_ABI_DMA_ALLOC_H */
 -- 
 2.55.0.795.g602f6c329a-goog
 
