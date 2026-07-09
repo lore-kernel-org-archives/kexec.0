@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1249C44506
-	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 17:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE765C43458
+	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 17:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=baztC/MocpK7zrehS66GUYKmt0apE+GSow4ZuQAJzvU=; b=ZnuSUoJzVvpgzIWfqjUDOP4BOY
-	UiP7PDSf3fDJMCWFh4gINLwqTBb5M1P9JOfJS+xG+cUKDj60YMFV2wCwdgXj7Cs6xqXArS/bE8w0D
-	LbNTQN/KBRbEntRn9RPXb3N3kkIdSv4j+MGktV4W7Ct45ymUxAGnjikI8V2V0azA3QhOgCYAFjn6D
-	r6YVo+pErkAtccPjEmGottvoa4EQ2e6X5+vxWC73XIngaOc5Dnxpcz9eNhTzWvPc6GF198JnQ5F01
-	LdLHgTasezYNUIzju8rmWExh+R+eB7lBTw3W5HcE3F5fVB4jZqOm7VL55iPKV3MWUzOMNZ88cAlTe
-	3lHxdwCg==;
+	bh=PhShZLkxvoxdNMkU+N0mJHuW7JAtU37ty1oXYy39eoY=; b=Oysz6+0FzKKFPxKAWf7x9FzrKy
+	XXLwjJXAuiCjFz922aCw4roD4AZLr25HZCg3E8qS8TPeinUnnAFr3R02MLIzz3bMYqokbiqT07aNv
+	vc6h7r7/UxuaytJrhz6e07niV4/elXhhw/TDXrFt0Ha2hONvHUtZ6ze3sL+mldW8sY8X8IgG+5V6/
+	LbE1RcVP+Ctirf0I4abs0Bccq1w9weSsuokphG7iVmzrttMmUGrS1pplY8Kk08dVm1d7+3MMB+XHE
+	slMmbtk4CJwz+VyPD5DVwrl7HUyqP0KCN26RZDstbpA3ltFKCshPYs8vS26T60HwLIJYbqBOFcpwB
+	FRbLfPbQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whsiS-000000038VM-4BVq;
-	Thu, 09 Jul 2026 17:39:17 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1whsiW-000000038Y5-0Gg4;
+	Thu, 09 Jul 2026 17:39:20 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whsiS-000000038UI-01gx
+	id 1whsiV-000000038X5-0Nlw
 	for kexec@lists.infradead.org;
-	Thu, 09 Jul 2026 17:39:16 +0000
+	Thu, 09 Jul 2026 17:39:19 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id C025D43332;
+	by tor.source.kernel.org (Postfix) with ESMTP id 7B0CE61386;
+	Thu,  9 Jul 2026 17:39:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E9981F00A3D;
 	Thu,  9 Jul 2026 17:39:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E9D51F00A3A;
-	Thu,  9 Jul 2026 17:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783618755;
-	bh=baztC/MocpK7zrehS66GUYKmt0apE+GSow4ZuQAJzvU=;
+	s=k20260515; t=1783618758;
+	bh=PhShZLkxvoxdNMkU+N0mJHuW7JAtU37ty1oXYy39eoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=R5XkZKaHr3dvER62bYxDyyh8UKudrjBlIb2CCGmBJ8x0HHXiI45s2m6RehvfmVs2T
-	 BTr9Fy1Cz/Ev+cFJ0iRwp0pz0LLsa9DC70yBWcO5raZuLsm0TztkW2KUYJ2GrjyRS9
-	 dwFrJrNIkk3AXkg5BkgV4GT0+NBiPU+Fb5jmXSBOrDA0ejSx8QPGm6/lPO2wGmkf/1
-	 2hBDJgXLQmqLY0BpDitnxhkBYdFveqmhLRnnsH3b2fgVMkNP9nq2PMrjYmH4greVE+
-	 qhWqLJ+SUtVei9ilI+8xTj55Su1P+NSWH3iiTqrJTy6ayeGM+vY4d7SSlP05t556lm
-	 31oPChe3c+EUA==
+	b=E2a/hdMB8kTkWBiP5cqXzpmc+QoU2RgsGJiw25bIn2Susc+xZm41O4CIgz+Uvi/MS
+	 GuXyd86gN0LA29SB5zjUAqCn4fO76t8seYScy4cwtJ4/Yh1aj/a+1QtPEO7zdo/Fss
+	 WxqEn0Fmi8QddaJaTXaHtOwTwLXcK0S0q0q9r2EjH3Jv9M1rrnYVkZSbNYISmGTZGt
+	 fX4G0Ic2fCb64H7NZpBmy0HWc6yYldwTStnZqrKVXAouNkuSUdnS+tuKYPbs5HMk2H
+	 n4sLKf+na3aUtbXx63+H20qHyTFAFqq1TnCp2jk98ps3ZS9EG5yEakMeHAbvbZSUx/
+	 g7/S99P7BOJJA==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -56,9 +56,9 @@ To: Mike Rapoport <rppt@kernel.org>,
 Cc: kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 17/21] mm/mm_init: don't rely on memblock to get KHO scratch migratetype
-Date: Thu,  9 Jul 2026 19:38:06 +0200
-Message-ID: <20260709173821.429921-18-pratyush@kernel.org>
+Subject: [PATCH v3 18/21] kho: extend scratch
+Date: Thu,  9 Jul 2026 19:38:07 +0200
+Message-ID: <20260709173821.429921-19-pratyush@kernel.org>
 X-Mailer: git-send-email 2.55.0.141.g00534a21ce-goog
 In-Reply-To: <20260709173821.429921-1-pratyush@kernel.org>
 References: <20260709173821.429921-1-pratyush@kernel.org>
@@ -80,278 +80,341 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-Currently struct page init via memmap_init() or deferred_init_memmap()
-only queries the migrate type from KHO for each discrete memory range.
-That works currently since KHO scratch memory has a different memory
-type so it is always it its own region.
+Motivation
+==========
 
-An upcoming patch will add support for discovering blocks of memory with
-no preservations and it will mark it as MEMBLOCK_KHO_SCRATCH to allow
-allocations from them. This can lead to the bootmem KHO scratch areas to
-be merged into larger free ranges. This merging breaks the selection of
-migrate type.
+The scratch space is allocated by the first kernel in the KHO chain, and
+is reused by all subsequent kernels. The size of the space is either set
+via the commandline by the system administrator or by calculating the
+amount of memory used by the kernel and adding a multiplier. In either
+case, the scratch space is a heuristic and is liable to fill up and fail
+allocation if a kernel uses more memory than expected.
 
-Get rid of kho_scratch_migratetype(). Instead, let the struct page init
-logic set the migratetype to MIGRATE_MOVABLE for all pages, and then
-give KHO a chance to update the migrate type of its bootmem scratch
-areas to MIGRATE_CMA. Since scratch areas should be a few order of
-magnitues smaller than the total system memory, doing it this way is
-more efficient than searching the kho_scratch array for every pageblock.
+In addition, gigantic huge pages (usually 1 GiB) are allocated via
+memblock, and in a KHO boot that memory comes from the scratch space. In
+hypervisors it is common to dedicate a major part of the system's memory
+to gigantic hugepages for VM memory.
 
-Since kho_scratch_migratetype() no longer exists, drop the migratetype
-argument to memmap_init_zone_range() and deferred_init_pages().
+If this memory needs to come from scratch space, then scratch needs to
+be greater than the memory needed for huge pages, which is impractical.
+In addition, hugepages can be preserved memory. Allocating them from
+scratch violates the assumption that scratch contains no preserved
+memory.
+
+Methodology
+===========
+
+Discover areas that don't contain any preserved memory at boot by
+walking the preserved memory radix tree. Mark them as scratch to allow
+allocations from them. This makes KHO more resilient to memory pressure
+and allows supporting huge page preservation.
+
+Since the preserved memory radix tree mixes both physical address and
+order into a single key, and does not track table pages, it is difficult
+to identify free areas from it directly. Walk the tree and digest it
+down into another radix tree. The latter tracks blocks of
+KHO_EXT_SHIFT (1 GiB as of now) granularity. Then walk the digested tree
+and mark the areas between the present keys as scratch.
+
+Performance
+===========
+
+The discovery algorithm traverses the preserved memory radix tree
+exactly once. While it does use memory for the digested radix tree,
+since the blocks are split by 1 GiB, a single bitmap with 4k pages can
+track up to 32 TiB of memory. So there are likely to be very few radix
+tree pages used in this tracking. For systems with all physical memory
+below 32 TiB, this should result in a total of 6 pages being
+used (KHO_TREE_MAX_DEPTH == 6).
+
+An alternate way of achieving this would be to call kho_mem_retrieve()
+earlier in boot and mark all the KHO preservations as reserved. But that
+can blow up memblock.reserved with a bunch of 4K pages scattered
+everywhere, which will reduce performance of subsequent allocations.
+Since the free blocks are tracked in chunks of 1 GiB, this won't blow up
+memblock.memory as much.
+
+There is no inherent reason for using 1 GiB as the discovered block
+size. This can be changed later if needed. Currently, KHO is mainly
+targeted for server grade systems with hundreds of gigabytes to
+terabytes of memory. So 1 GiB is a reasonable granularity for those
+systems. For smaller systems this doesn't work as well, but we can
+arrive at a better heuristic when we have concrete use cases.
+
+Practical evaluation
+====================
+
+The testing is done on a x86_64 qemu VM running under KVM with 64G
+memory and 12 CPUs. The machine pre-allocates 50 1G pages.
+
+Since the performance scales with how busy the radix tree is, tests are
+done with 2 preservation patterns: first with two 1M memfds, second with
+two 1G memfds, both using 4k pages.
+
+Test case 1 - 1M memfd
+~~~~~~~~~~~~~~~~~~~~~~
+
+This test case has two memfds with 1M memory each in 4k pages, plus
+other preservations from LUO core and other KHO users.
+
+This is how the radix tree stats look like:
+
+    radix_nodes:       0x13
+    nr_preservations:  0x214
+    mem_preserved:     0x227000
+
+    per order preservations:
+      order  0:  0x20f
+      order  1:  0x4
+      order  4:  0x1
+
+and this is how long it takes to extend the scratch after KHO boot:
+
+    KHO: KHO extend time: 47 us
+    KHO: KHO extend total mem: 0xe6c17b000 (~57G)
+
+Test case 2 - 1G memfd
+~~~~~~~~~~~~~~~~~~~~~~
+
+This test case has two memfds with 1G memory each in 4k pages, plus
+other preservations from LUO core and other KHO users.
+
+This is how the radix tree stats look like:
+
+    radix_nodes:       0x28
+    nr_preservations:  0x80816
+    mem_preserved:     0x80829000
+
+    per order preservations:
+      order  0:  0x80811
+      order  1:  0x4
+      order  4:  0x1
+
+and this is how long it takes to extend the scratch after KHO boot:
+
+    KHO: KHO extend time: 22514 us
+    KHO: KHO extend total mem: 0xd3f200000 (~52G)
 
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- include/linux/kexec_handover.h     |  6 ++++
- include/linux/memblock.h           | 19 ------------
- kernel/liveupdate/kexec_handover.c | 27 +++++++++++++++++
- mm/memblock.c                      | 10 -------
- mm/mm_init.c                       | 47 +++++++++++++++++++-----------
- 5 files changed, 63 insertions(+), 46 deletions(-)
 
-diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
-index 18ba417f1ada..30a71710565a 100644
---- a/include/linux/kexec_handover.h
-+++ b/include/linux/kexec_handover.h
-@@ -39,6 +39,7 @@ void kho_populate(phys_addr_t fdt_phys, u64 fdt_len, phys_addr_t scratch_phys,
- 		  u64 scratch_len);
- 
- bool kho_scratch_overlap(phys_addr_t phys, size_t size);
-+void kho_init_scratch_migratetype(unsigned long start_pfn, unsigned long end_pfn);
- #else
- static inline bool kho_is_enabled(void)
- {
-@@ -122,6 +123,11 @@ static inline bool kho_scratch_overlap(phys_addr_t phys, size_t size)
- {
- 	return false;
- }
-+
-+static inline void kho_init_scratch_migratetype(unsigned long start_pfn,
-+						unsigned long end_pfn);
-+{
-+}
- #endif /* CONFIG_KEXEC_HANDOVER */
- 
- #endif /* LINUX_KEXEC_HANDOVER_H */
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 5afcd99aa8c1..f142c8a8cd5b 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -613,28 +613,9 @@ static inline void memtest_report_meminfo(struct seq_file *m) { }
- #ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
- void memblock_set_kho_scratch_only(void);
- void memblock_clear_kho_scratch_only(void);
--bool memblock_is_kho_scratch_memory(phys_addr_t addr);
--
--static inline enum migratetype kho_scratch_migratetype(unsigned long pfn,
--						       enum migratetype mt)
--{
--	if (memblock_is_kho_scratch_memory(PFN_PHYS(pfn)))
--		return MIGRATE_CMA;
--	return mt;
--}
- #else
- static inline void memblock_set_kho_scratch_only(void) { }
- static inline void memblock_clear_kho_scratch_only(void) { }
--static inline bool memblock_is_kho_scratch_memory(phys_addr_t addr)
--{
--	return false;
--}
--
--static inline enum migratetype kho_scratch_migratetype(unsigned long pfn,
--						       enum migratetype mt)
--{
--	return mt;
--}
- #endif
- 
- #endif /* _LINUX_MEMBLOCK_H */
+Notes:
+    As one might notice, the "scratch" terminology starts to break down
+    here. There is the original "scratch", which is passed down by the
+    previous kernel. It is marked MEMBLOCK_KHO_SCRATCH. There is also the
+    discovered "scratch", which also gets marked MEMBLOCK_KHO_SCRATCH, but
+    has nothing to do with the former.
+    
+    For limiting the scope of this series, I haven't done the rename here. I
+    can do it as a follow up series once this stabilizes and lands into
+    -next.
+    
+    I suggest the following scheme:
+    
+    - Rename "KHO scratch" to "KHO bootmem". Update the documentation and
+      all code to use this name. We have the kho_scratch kernel cmdline
+      parameter, which is harder to change, but perhaps we can rename it to
+      "kho_bootmem" and if someone complains we can add it back.
+    
+    - Rename MEMBLOCK_KHO_SCRATCH to MEMBLOCK_KHO_NOPRSRV. This describes
+      the property of the memory not its origin. Then KHO can mark its
+      "bootmem" as KHO_NOPRSRV because bootmem never has any preserved
+      memory. Later, kho_extend_scratch() (which is also due for a better
+      name) can also mark its discovered areas as KHO_NOPRSRV.
+
+ kernel/liveupdate/kexec_handover.c | 158 +++++++++++++++++++++++++----
+ 1 file changed, 141 insertions(+), 17 deletions(-)
+
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 6e8682469bd7..b400976851e7 100644
+index b400976851e7..2c4848874629 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -781,6 +781,33 @@ bool kho_scratch_overlap(phys_addr_t phys, size_t size)
- 	return false;
- }
+@@ -84,6 +84,23 @@ static struct kho_out kho_out = {
+ 	},
+ };
  
-+/*
-+ * Mark all KHO scratch pageblocks between start_pfn and end_pfn as
-+ * MIGRATE_CMA.
-+ */
-+void kho_init_scratch_migratetype(unsigned long start_pfn, unsigned long end_pfn)
++struct kho_in {
++	phys_addr_t fdt_phys;
++	phys_addr_t scratch_phys;
++	char previous_release[__NEW_UTS_LEN + 1];
++	u32 kexec_count;
++	struct kho_debugfs dbg;
++	struct kho_radix_tree radix_tree;
++};
++
++static struct kho_in kho_in = {
++};
++
++static const void *kho_get_fdt(void)
 +{
-+	for (unsigned int i = 0; i < kho_scratch_cnt; i++) {
-+		unsigned long scratch_start, scratch_end, pfn;
-+
-+		scratch_start = PHYS_PFN(kho_scratch[i].addr);
-+		scratch_end = PHYS_PFN(kho_scratch[i].addr + kho_scratch[i].size);
-+
-+		/* Target range doesn't overlap with scratch. */
-+		if (start_pfn >= scratch_end || end_pfn <= scratch_start)
-+			continue;
-+
-+		pfn = max_t(unsigned long, start_pfn, scratch_start);
-+		pfn = pageblock_start_pfn(pfn);
-+
-+		while (pfn < end_pfn && pfn < scratch_end) {
-+			init_pageblock_migratetype(pfn_to_page(pfn),
-+						   MIGRATE_CMA, false);
-+			pfn += pageblock_nr_pages;
-+		}
-+	}
++	return kho_in.fdt_phys ? phys_to_virt(kho_in.fdt_phys) : NULL;
 +}
 +
  /**
-  * kho_reserve_scratch - Reserve a contiguous chunk of memory for kexec
-  *
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 6349c48154f4..8b2e551435ae 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -2511,16 +2511,6 @@ __init void memblock_clear_kho_scratch_only(void)
- {
- 	kho_scratch_only = false;
+  * kho_encode_radix_key - Encodes a physical address and order into a radix key.
+  * @phys: The physical address of the page.
+@@ -895,6 +912,128 @@ static void __init kho_reserve_scratch(void)
+ 	kho_enable = false;
  }
+ 
++/*
++ * Look for free blocks of 1G. This is a heuristic chosen to work efficiently
++ * with large systems with hundreds of gigabytes of memory. It will work poorly
++ * on smaller systems. The algorithm itself doesn't depend on the actual value,
++ * so it can be changed to a different heuristic later if needed.
++ */
++#define KHO_EXT_BLKSIZE		SZ_1G
++#define KHO_EXT_SHIFT		const_ilog2(KHO_EXT_BLKSIZE)
++
++/* Called for the KHO preserved memory radix tree. */
++static int __init kho_ext_walk_leaf(unsigned long key, void *data)
++{
++	/* Radix tree tracking free blocks. */
++	struct kho_radix_tree *tree = data;
++	phys_addr_t start, end;
++	unsigned int order;
++	int err;
++
++	start = kho_decode_radix_key(key, &order);
++	end = start + (1UL << (order + PAGE_SHIFT));
++
++	while (start < end) {
++		err = kho_radix_add_key(tree, start >> KHO_EXT_SHIFT);
++		if (err)
++			return err;
++
++		start += (1UL << KHO_EXT_SHIFT);
++	}
++
++	return 0;
++}
++
++/* Called for the KHO preserved memory radix tree. */
++static int __init kho_ext_walk_node(phys_addr_t phys, void *data)
++{
++	/* Radix tree tracking free blocks. */
++	struct kho_radix_tree *tree = data;
++
++	return kho_radix_add_key(tree, phys >> KHO_EXT_SHIFT);
++}
++
++/* Called for the free block radix tree. */
++static int __init kho_ext_mark_scratch(unsigned long key, void *data)
++{
++	phys_addr_t *prev_end = data;
++	phys_addr_t start = key << KHO_EXT_SHIFT;
++	int err;
++
++	if (start > *prev_end) {
++		err = memblock_mark_kho_scratch(*prev_end, start - *prev_end);
++		if (err)
++			return err;
++	}
++
++	*prev_end = start + (1UL << KHO_EXT_SHIFT);
++	return 0;
++}
++
++/*
++ * kho_extend_scratch - Extend the scratch regions
++ *
++ * The KHO preserved memory radix tree mixes both physical address and order
++ * into a single key. This makes it hard to look for free ranges directly. This
++ * function first walks the radix tree and digests it down into another radix
++ * tree, whose keys identify blocks of KHO_EXT_SHIFT which contain preserved
++ * memory.
++ *
++ * Then it walks the digested radix tree and marks everything that doesn't have
++ * preserved memory as scratch.
++ *
++ * NOTE: This function allocates memory so it should be called when scratch has
++ * available space.
++ *
++ * NOTE: The pages of the KHO preserved memory radix tree tables are not marked
++ * as preserved in the preserved memory tree. But they are expected to remain
++ * untouched until the tree is fully parsed. So this function also considers
++ * them to be "preserved memory" and marks their blocks as busy.
++ *
++ * NOTE: efi_init()::reserve_regions() removes all regions except
++ * MEMBLOCK_KHO_SCRATCH. This function adds such regions but they are not KHO
++ * scratch memory, so they should not be removed. This function should always be
++ * called after reserve_regions().
++ */
++static void __init kho_extend_scratch(void)
++{
++	const struct kho_radix_walk_cb kho_cb = {
++		.leaf = kho_ext_walk_leaf,
++		.node = kho_ext_walk_node,
++	};
++	const struct kho_radix_walk_cb ext_cb = {
++		.leaf = kho_ext_mark_scratch,
++	};
++	struct kho_radix_tree radix;
++	phys_addr_t prev_end = 0;
++	int err = 0;
++
++	err = kho_radix_init_tree(&radix, NULL);
++	if (err)
++		goto print;
++
++	/* Walk the KHO radix tree to find busy blocks. */
++	err = kho_radix_walk_tree(&kho_in.radix_tree, &kho_cb, &radix);
++	if (err)
++		goto out;
++
++	/* Walk the blocks and mark everything between keys as scratch. */
++	err = kho_radix_walk_tree(&radix, &ext_cb, &prev_end);
++	if (err)
++		goto out;
++
++	/* Mark everything from last busy block to end of DRAM. */
++	if (prev_end < memblock_end_of_DRAM())
++		err = memblock_mark_kho_scratch(prev_end, memblock_end_of_DRAM() - prev_end);
++
++	/* fallthrough */
++out:
++	kho_radix_destroy_tree(&radix);
++print:
++	if (err)
++		pr_err("Failed to extend scratch: %pe\n", ERR_PTR(err));
++}
++
+ /**
+  * kho_add_subtree - record the physical address of a sub blob in KHO root tree.
+  * @name: name of the sub tree.
+@@ -1469,23 +1608,6 @@ void kho_restore_free(void *mem)
+ }
+ EXPORT_SYMBOL_GPL(kho_restore_free);
+ 
+-struct kho_in {
+-	phys_addr_t fdt_phys;
+-	phys_addr_t scratch_phys;
+-	char previous_release[__NEW_UTS_LEN + 1];
+-	u32 kexec_count;
+-	struct kho_debugfs dbg;
+-	struct kho_radix_tree radix_tree;
+-};
 -
--bool __init_memblock memblock_is_kho_scratch_memory(phys_addr_t addr)
+-static struct kho_in kho_in = {
+-};
+-
+-static const void *kho_get_fdt(void)
 -{
--	int i = memblock_search(&memblock.memory, addr);
--
--	if (i == -1)
--		return false;
--
--	return memblock_is_kho_scratch(&memblock.memory.regions[i]);
+-	return kho_in.fdt_phys ? phys_to_virt(kho_in.fdt_phys) : NULL;
 -}
- #endif
- 
- #ifdef CONFIG_KEXEC_HANDOVER
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index bd9dc1829005..1d2f302d8cd9 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -707,9 +707,10 @@ void __meminit __init_page_from_nid(unsigned long pfn, int nid)
- 	__init_single_page(pfn_to_page(pfn), pfn, zid, nid);
- 
- 	if (pageblock_aligned(pfn)) {
--		enum migratetype mt =
--			kho_scratch_migratetype(pfn, MIGRATE_MOVABLE);
--		init_pageblock_migratetype(pfn_to_page(pfn), mt, false);
-+		init_pageblock_migratetype(pfn_to_page(pfn), MIGRATE_MOVABLE,
-+					   false);
-+		/* Update the migrate type in case it is KHO scratch. */
-+		kho_init_scratch_migratetype(pfn, pfn + 1);
- 	}
- }
- 
-@@ -938,13 +939,22 @@ void __meminit memmap_init_range(unsigned long size, int nid, unsigned long zone
- 		}
- 		pfn++;
- 	}
-+
-+	/*
-+	 * Update the migrate type for any pageblocks that fall in a KHO scratch
-+	 * area. Do this here outside the loop because most pageblocks will not
-+	 * be KHO scratch, so only search once.
-+	 *
-+	 * Only pageblocks up to pfn are updated, deferred pageblocks will be
-+	 * updated later.
-+	 */
-+	kho_init_scratch_migratetype(start_pfn, pfn);
- }
- 
- static void __init memmap_init_zone_range(struct zone *zone,
- 					  unsigned long start_pfn,
- 					  unsigned long end_pfn,
--					  unsigned long *hole_pfn,
--					  enum migratetype mt)
-+					  unsigned long *hole_pfn)
- {
- 	unsigned long zone_start_pfn = zone->zone_start_pfn;
- 	unsigned long zone_end_pfn = zone_start_pfn + zone->spanned_pages;
-@@ -957,7 +967,8 @@ static void __init memmap_init_zone_range(struct zone *zone,
+-
+ /**
+  * is_kho_boot - check if current kernel was booted via KHO-enabled
+  * kexec
+@@ -1796,6 +1918,8 @@ void __init kho_memory_init_early(void)
+ 		kho_in.scratch_phys = 0;
  		return;
- 
- 	memmap_init_range(end_pfn - start_pfn, nid, zone_id, start_pfn,
--			  zone_end_pfn, MEMINIT_EARLY, NULL, mt, false);
-+			  zone_end_pfn, MEMINIT_EARLY, NULL, MIGRATE_MOVABLE,
-+			  false);
- 
- 	if (*hole_pfn < start_pfn)
- 		init_unavailable_range(*hole_pfn, start_pfn, zone_id, nid);
-@@ -973,8 +984,6 @@ static void __init memmap_init(void)
- 
- 	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
- 		struct pglist_data *node = NODE_DATA(nid);
--		enum migratetype mt =
--			kho_scratch_migratetype(start_pfn, MIGRATE_MOVABLE);
- 
- 		for (j = 0; j < MAX_NR_ZONES; j++) {
- 			struct zone *zone = node->node_zones + j;
-@@ -983,7 +992,7 @@ static void __init memmap_init(void)
- 				continue;
- 
- 			memmap_init_zone_range(zone, start_pfn, end_pfn,
--					       &hole_pfn, mt);
-+					       &hole_pfn);
- 			zone_id = j;
- 		}
  	}
-@@ -1973,7 +1982,7 @@ unsigned long __init node_map_pfn_alignment(void)
- 
- #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
- static void __init deferred_free_pages(unsigned long pfn,
--		unsigned long nr_pages, enum migratetype mt)
-+		unsigned long nr_pages)
- {
- 	struct page *page;
- 	unsigned long i;
-@@ -2012,8 +2021,7 @@ static inline void __init pgdat_init_report_one_done(void)
-  * Return number of pages initialized.
-  */
- static unsigned long __init deferred_init_pages(struct zone *zone,
--		unsigned long start_pfn, unsigned long end_pfn,
--		enum migratetype mt)
-+		unsigned long start_pfn, unsigned long end_pfn)
- {
- 	int nid = zone_to_nid(zone);
- 	unsigned long nr_pages = end_pfn - start_pfn, pfn = start_pfn;
-@@ -2027,7 +2035,14 @@ static unsigned long __init deferred_init_pages(struct zone *zone,
- 	pfn = pageblock_align(start_pfn);
- 	page = pfn_to_page(pfn);
- 	for (; pfn < end_pfn; pfn += pageblock_nr_pages, page += pageblock_nr_pages)
--		init_pageblock_migratetype(page, mt, false);
-+		init_pageblock_migratetype(page, MIGRATE_MOVABLE, false);
 +
-+	/*
-+	 * Update the migrate type for any pageblocks that fall in a KHO scratch
-+	 * area. Since most pageblocks will not be KHO scratch, do it outside
-+	 * the loop to only do the search once.
-+	 */
-+	kho_init_scratch_migratetype(start_pfn, end_pfn);
- 
- 	return nr_pages;
++	kho_extend_scratch();
  }
-@@ -2057,8 +2072,6 @@ deferred_init_memmap_chunk(unsigned long start_pfn, unsigned long end_pfn,
- 	for_each_free_mem_range(i, nid, 0, &start, &end, NULL) {
- 		unsigned long spfn = PFN_UP(start);
- 		unsigned long epfn = PFN_DOWN(end);
--		enum migratetype mt =
--			kho_scratch_migratetype(spfn, MIGRATE_MOVABLE);
  
- 		if (spfn >= end_pfn)
- 			break;
-@@ -2070,8 +2083,8 @@ deferred_init_memmap_chunk(unsigned long start_pfn, unsigned long end_pfn,
- 			unsigned long mo_pfn = ALIGN(spfn + 1, MAX_ORDER_NR_PAGES);
- 			unsigned long chunk_end = min(mo_pfn, epfn);
- 
--			nr_pages += deferred_init_pages(zone, spfn, chunk_end, mt);
--			deferred_free_pages(spfn, chunk_end - spfn, mt);
-+			nr_pages += deferred_init_pages(zone, spfn, chunk_end);
-+			deferred_free_pages(spfn, chunk_end - spfn);
- 
- 			spfn = chunk_end;
- 
+ void __init kho_memory_init(void)
 -- 
 2.55.0.141.g00534a21ce-goog
 
