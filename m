@@ -4,82 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DCB51C43458
-	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 07:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5848EC43458
+	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 09:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:To:References:Message-Id:
-	Content-Transfer-Encoding:Cc:Date:In-Reply-To:From:Subject:Mime-Version:
-	Content-Type:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Bz0ZIC6honVFONNe2kkGW+tQ+zqDAmMEe2v+OkKeqyU=; b=ltAGUZMM59kkIPQaQ7emCywiJK
-	hF5Cv4oVJ9IO7ptqmsDPR0lBY0MfuAlmJyim8+YSETv2udakIvgD1gXXbxVEiC1EHC4iLJ4YF81Lw
-	z03jW/dlOBStxDDCeKsRXtHNgEpgptK8EDC5uf6PgjvGcgK4xKIQVx204jvE4JLNCS5PmPg2BBCBQ
-	UZy9ZdmP9lrHWuMItT0HFO1EyDt5TPnaztJ7F/CKeFhsTMH/OQj3vFp7pBWuJXQU7xlKhhZAvqP99
-	R8EnJHx/zUwdZln7o8Du6tn55f0DbSsjgmTkENjs1OZcCtmPOfImLLIMob0QxsdeKIpiepHR2DWQB
-	k3f4yEEw==;
+	bh=gR+QAL/WiiMkgGZMsvP1Z/jsw3bpbKqGcBCjnBdyIlc=; b=49JNzrnZnBaRqcOfkuTf1D5c0z
+	QLBqyBT3+OhnRvZlRZxq9wAI1AI5Ot17i42TdwAPMq33dr8ERwOtYIazAP+v+NoYPGpfuLTllwkn4
+	h8fL5frTlho+PxlZJzlSuPg9N5FDa0JMsLD+OitEs6oCr9G0FDM0lVWg2KGgmwh6dv9LSoSJugV6r
+	WyukINM0pQdwAYfP2opB9PwP5zZ/Jp1MOIPREO0w630j0eAfn+l73kr9CeUt/RNI3zwJ7rCrjaZ4Q
+	LiduVHUGYWNlCLom6nnlL285Hk6U+D68DMWGmIAJV922vAAPTgdaz4dmegkKCkWOCgDre8lTbUZpo
+	XhEYZQFw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whjVd-00000001MHP-0hDI;
-	Thu, 09 Jul 2026 07:49:25 +0000
-Received: from out-180.mta0.migadu.com ([91.218.175.180])
+	id 1whkmo-00000001jkd-1Lja;
+	Thu, 09 Jul 2026 09:11:14 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whjVa-00000001MGZ-0O6y
+	id 1whkmn-00000001jjq-0Hm8
 	for kexec@lists.infradead.org;
-	Thu, 09 Jul 2026 07:49:24 +0000
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1783583347;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Bz0ZIC6honVFONNe2kkGW+tQ+zqDAmMEe2v+OkKeqyU=;
-	b=QxdDwnTRWm20VGliIkKhSn+dBliUnrpDgqk1fVsnpLGkywZOxT18NohgKhFG+VAe81Oqpb
-	vZaKdUdBDjHYwNPbzP5z3Pr0BIIxbex1rg7tb6d3ea96i0kT0gM7H/us5Hnt3JI8etR/pk
-	s6kFktWl8bcGGK9Saz4/zUix/SFzyk0=
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.600.51.1.1\))
-Subject: Re: [PATCH 0/3] mm: split a couple of headers from internal.h
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <ak9MO-FWjkgr22KL@kernel.org>
-Date: Thu, 9 Jul 2026 15:48:19 +0800
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>,
- Alexander Graf <graf@amazon.com>,
- Alexander Potapenko <glider@google.com>,
- Brendan Jackman <jackmanb@google.com>,
- Christoph Lameter <cl@gentwo.org>,
- Dennis Zhou <dennis@kernel.org>,
- Dmitry Vyukov <dvyukov@google.com>,
- Johannes Weiner <hannes@cmpxchg.org>,
- "Liam R. Howlett" <liam@infradead.org>,
- Lorenzo Stoakes <ljs@kernel.org>,
- Marco Elver <elver@google.com>,
- Michal Hocko <mhocko@suse.com>,
- Oscar Salvador <osalvador@suse.de>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>,
- Tejun Heo <tj@kernel.org>,
- Uladzislau Rezki <urezki@gmail.com>,
- Vlastimil Babka <vbabka@kernel.org>,
- Zi Yan <ziy@nvidia.com>,
- kasan-dev@googlegroups.com,
- kexec@lists.infradead.org,
- linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- linux-mm@kvack.org
+	Thu, 09 Jul 2026 09:11:13 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 254DC6136D
+	for <kexec@lists.infradead.org>; Thu,  9 Jul 2026 09:11:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCE8D1F00A3F
+	for <kexec@lists.infradead.org>; Thu,  9 Jul 2026 09:11:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783588271;
+	bh=gR+QAL/WiiMkgGZMsvP1Z/jsw3bpbKqGcBCjnBdyIlc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=UwJM8/C6hjL9FBuP7Mj04Euk4+hq4oUTE9BMMQ5Vrq494lvDcRkRnhpAsdKiBKtRW
+	 hpPl5qByPHb3iGFnn7haNR7bT51QrRJggMvbPOBLWF4CBPLndJ11Iwo0CES+31bJ4c
+	 szj3YBJ3MLDMxuP+859dgFbjPIE2BBbSxuaZ49sLyZvPCQODbjHg67mbX+wPwwgngm
+	 0XizsbG2TlimD1jL9Cs/lIhrAoJuc0ooZQPgMl+6REqPnZTNJ6JnEc4SXRKNqjQL1p
+	 f5NSbD1JZYqgX+AKMEu0m9Zb+Utzu/JL0gg+BtOIcaZr3PnhFT++3GRY3G9nk2RCSm
+	 fMLrWYN0qtL6A==
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-698acd36d67so3343291a12.0
+        for <kexec@lists.infradead.org>; Thu, 09 Jul 2026 02:11:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RqECLmoIIK0vaegV5+xtucRobKC6+USB4k+x+R3i7MGsplwFmgAZelhQGeWGY6kqJdNoeBr9g==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yzg474cLmtBJwNyDrxdFRaKghpwGvW5NMja9JKqWAPNlv2GFlwQ
+	VpFRaPkS8omk81vm8azLQTOV5d94KfNUIawwA+jqZQRlXOSULifTAVyCgJg1ZQWjzF66KGuy+3v
+	PrXuFAliccV6NwwKUVynrJOjf3kzSJXE=
+X-Received: by 2002:a05:6402:5d0:b0:698:3365:f950 with SMTP id
+ 4fb4d7f45d1cf-69ab449d9b1mr2517052a12.21.1783588270450; Thu, 09 Jul 2026
+ 02:11:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <20260701155957.534779-1-dongtai.guo@linux.dev>
+In-Reply-To: <20260701155957.534779-1-dongtai.guo@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Thu, 9 Jul 2026 17:11:34 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7S9_hPDFoCtzgfY9TeH_koN9NfKq9mo8y9BmLA5-7how@mail.gmail.com>
+X-Gm-Features: AUfX_mw-J_OdSnOhcx8hpiENv7LyWcgVB1B-LCMMPWcvWcr0SNfHbuBObPnbLUw
+Message-ID: <CAAhV-H7S9_hPDFoCtzgfY9TeH_koN9NfKq9mo8y9BmLA5-7how@mail.gmail.com>
+Subject: Re: [PATCH v4 0/2] LoongArch: kexec: avoid clobbering the QEMU FDT
+To: George Guo <dongtai.guo@linux.dev>
+Cc: maobibo@loongson.cn, loongarch@lists.linux.dev, kexec@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, George Guo <guodongtai@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <B53B1031-B655-4526-B1AC-952BE39D96D3@linux.dev>
-References: <20260709-internal-h-v1-0-956d5092782d@kernel.org>
- <ak9MO-FWjkgr22KL@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-X-Migadu-Flow: FLOW_OUT
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260709_004922_296804_E0C435A0 
-X-CRM114-Status: GOOD (  12.80  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,81 +79,117 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Hi, George,
 
-
-> On Jul 9, 2026, at 15:22, Mike Rapoport <rppt@kernel.org> wrote:
->=20
-> On Thu, Jul 09, 2026 at 09:41:46AM +0300, Mike Rapoport (Microsoft) =
+On Thu, Jul 2, 2026 at 12:00=E2=80=AFAM George Guo <dongtai.guo@linux.dev> =
 wrote:
->> mm/internal.h becomes more and more bloated.
->>=20
->> Split declarations related to mm_init, memblock, vmalloc and sparse =
-into
->> new headers.
->=20
-> Sashiko rightfully pointed to some issues, will send v2 later.
+>
+> This series fixes two ways the LoongArch kexec path can clobber the
+> firmware-provided FDT that QEMU places at physical 0x100000, which made t=
+he
+> second kernel boot silently (earlycon auto-detection reads a corrupted FD=
+T).
+>
+> Patch 1 moves the relocation trampoline off the hardcoded 0x100000 onto t=
+he
+> kexec core's control_code_page (as arm64/riscv do), so machine_kexec_prep=
+are()
+> no longer overwrites the FDT.
+>
+> Patch 2 removes the remaining fixed command-line address (KEXEC_CMDLINE_A=
+DDR,
+> 0x108000).  QEMU's machine FDT declares fdt_totalsize =3D 1MB and thus cl=
+aims the
+> whole [0x100000, 0x200000) upper half of the reserved 2MB, so 0x108000 li=
+ves
+> inside the FDT and only survives because the FDT's real content is small
+> (~3.6KB) and 0x108000 falls in the trailing slack.  The command line is p=
+assed
+> to the second kernel in register a1, not at a fixed address, so it is loa=
+ded
+> into its own kexec segment instead, removing the overlap regardless of FD=
+T
+> size.
+>
+> This addresses the two questions raised on the v3 trampoline patch [1]:
+>  - "how to avoid the cmdline overlapping FDT" -> patch 2.
+>  - "how to avoid the control page being corrupted by the new kernel" -> t=
+he
+>    trampoline is executed only by the current kernel and is dead once the=
+ new
+>    kernel starts, so being overwritten afterwards is harmless; the kexec =
+core
+Who told you the trampoline is dead code? All non-boot CPUs are
+running in the trampoline, you can use maxcpus=3D1 to go to the new
+kernel, and do something, and then hotplug the non-boot CPUs at any
+time.
 
-Hi Mike,
+The trampoline should live all the time for safety, ARM and RISC-V
+both have the trouble, especially when memory is small.
 
-I recall that this work was mentioned during the last review in my =
-series.
-However, I didn't have time to address it then because I was still =
-working
-on the HVO refactoring. I really appreciate you taking this on. Thanks =
-for
-your work.
+And I don't want to hear "If others can do something but LoongArch
+can't, then LoongArch has a drawback; if others can't do something but
+LoongArch can, then it is useless".
 
-I've reviewed Sashiko's comments as well, and it doesn't look like there =
-are
-any major issues. Therefore, feel free to add my ack for this whole =
-series
-in your v2 version with the proper fix.
-
-Acked-by: Muchun Song <muchun.song@linux.dev>
-
-Muchun,
-Thanks
-
->=20
->> ---
->> Mike Rapoport (Microsoft) (3):
->>      mm: split out mm_init and memblock declarations from internal.h
->>      mm: split out sparse declarations from internal.h
->>      mm: split out vmalloc declarations from internal.h
->>=20
->> MAINTAINERS                        |   3 +
->> kernel/liveupdate/kexec_handover.c |   3 +-
->> mm/cma.c                           |   1 +
->> mm/execmem.c                       |   1 +
->> mm/hugetlb.c                       |   1 +
->> mm/internal.h                      | 183 =
--------------------------------------
->> mm/kmsan/hooks.c                   |   1 +
->> mm/kmsan/shadow.c                  |   1 +
->> mm/memblock.c                      |   1 +
->> mm/memory_hotplug.c                |   1 +
->> mm/mm_init.c                       |   3 +
->> mm/mm_init.h                       | 120 ++++++++++++++++++++++++
->> mm/page_alloc.c                    |   1 +
->> mm/percpu-vm.c                     |   1 +
->> mm/sparse-vmemmap.c                |   2 +
->> mm/sparse.c                        |   2 +
->> mm/sparse.h                        |  63 +++++++++++++
->> mm/vmalloc.c                       |   1 +
->> mm/vmalloc.h                       |  46 ++++++++++
->> 19 files changed, 251 insertions(+), 184 deletions(-)
->> ---
->> base-commit: 820d5dfede0cd55dcbc89ce96fcfbb11b7c457ba
->> change-id: 20260707-internal-h-2efef660381d
->>=20
->> --
->> Sincerely yours,
->> Mike.
->>=20
->=20
-> --=20
-> Sincerely yours,
-> Mike.
+BTW,  you have never replied to my comments, all you have done is
+submit new versions again and again. Who told you to do things like
+this? You want to take your ill code again and again, or your employer
+counts the number of your E-mails in the mailist as the amount of your
+work?
 
 
+
+Huacai
+
+>    also keeps the control page outside every relocation destination, so i=
+t
+>    cannot be corrupted during relocation.  The command line is different =
+(it is
+>    read by the new kernel), which is why only the trampoline uses the cor=
+e page.
+>
+> Tested with tools/testing/selftests/kho/vmtest.sh on LoongArch (QEMU,
+> kexec_file_load): the second kernel boots with the full command line and
+> earlycon, and KHO restore succeeds.
+>
+> This series depends on [2] ("LoongArch: kexec: Fix address space mismatch=
+ in
+> command line lookup"), whose char head[] change patch 2 builds on.
+>
+> [1] https://lore.kernel.org/all/20260604114106.391502-1-dongtai.guo@linux=
+.dev/
+> [2] https://lore.kernel.org/all/20260701023747.56221-1-dongtai.guo@linux.=
+dev/
+>
+> Changes in v4:
+>  - Add patch 2: load the command line in its own kexec segment, dropping =
+the
+>    fixed KEXEC_CMDLINE_ADDR that overlaps the QEMU FDT (addresses the com=
+mand
+>    line concern from the v3 review).
+>  - Patch 1 (relocation trampoline): drop the KEXEC_CMDLINE_ADDR comment a=
+dded
+>    in v3 that claimed 0x108000 does not overlap the FDT (it does; patch 2
+>    removes the fixed address entirely).  No functional change otherwise.
+>
+> v3: https://lore.kernel.org/all/20260604114106.391502-1-dongtai.guo@linux=
+.dev/
+> v2: https://lore.kernel.org/all/20260601033820.38805-1-dongtai.guo@linux.=
+dev/
+> v1: https://lore.kernel.org/all/20260528135828.196953-1-dongtai.guo@linux=
+.dev/
+>
+> George Guo (2):
+>   LoongArch: kexec: use core control page for relocation trampoline to
+>     avoid QEMU FDT conflict
+>   LoongArch: kexec: load the command line in its own segment
+>
+>  arch/loongarch/include/asm/kexec.h         |  1 +
+>  arch/loongarch/kernel/machine_kexec.c      | 38 ++++++++++------------
+>  arch/loongarch/kernel/machine_kexec_file.c | 33 +++++++++++++++++--
+>  3 files changed, 49 insertions(+), 23 deletions(-)
+>
+> --
+> 2.25.1
+>
 
