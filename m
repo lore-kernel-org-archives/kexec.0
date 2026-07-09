@@ -4,58 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 159B4C43458
-	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 12:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 51C25C43458
+	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 12:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=egEQegkzVd6qWuiMRf57t7zF7MyRk5jNUn1HniJAO8k=; b=myA90Mh4dJjTPrda4KljJwPef6
-	OAHoHQGODiM3LYdY4iQLJneAc2r5YhNc2uQR33fXbbk5yZWZpdUBuR674nd1WFYS8XRhMNnyorGNG
-	Ylujatm7uPIXZ7/5CWhqNG4VVYv7PEVxjBZBg0q5qCRrcGvvyog66bTz4fPeU1MdSRuP3cLf/cgeP
-	dPHN4PlX/fNBRY2zu3R8MI+775NdisckEh1/9T3t+0RsWmPqIco1P66L4xSX8VsKdeONLX5UZYPj0
-	O++FaVPQ1K6KUXCK8xObj1waqpLC9iO+0gFHwkqfXiuDAzjyUOCsI210W6fZb3BUM4KLtoomEUBsr
-	dJZRNbGQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=dfPuN5XK89i90iKP7N1UEg6cXPRSfGHauPrCcp91Soo=; b=HBjL0Cz40sCLSxFFFpRb6G2L0z
+	lWGpeBpvk3jpMdlFEnUGucgK0qarKjRhPBeWVNAb86Dt2y0PrPUGjhpPj1hsVMBeLf+EpR1/1thGy
+	+WUd6C3shYwkrLMmTbpbtXyaC+owotqjsgL7CJZiIbYrtIDiCjT043DT20Eoy4k5bIfs2tI1ILclF
+	G7gcQEQzHBKln7meeE1zvf8mEIXIYKTyAMXWwj3b9qhkR1VdPt7QXIMxJejz1txYtip4DYo/lFRGG
+	yFHONb5kfepqqw5bdl1WBZ0QX4AqUjkrXRmSiykOXsSzb83KxSXVbFNnFYfTd2VwiNoB0inY0Pt+W
+	0FyNHuoA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whoBd-00000002Sg1-3Neo;
-	Thu, 09 Jul 2026 12:49:05 +0000
-Received: from out-179.mta0.migadu.com ([2001:41d0:1004:224b::b3])
+	id 1whoM2-00000002UC3-0o2z;
+	Thu, 09 Jul 2026 12:59:50 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whoBa-00000002SfF-320t
+	id 1whoM1-00000002UBk-1DQ7
 	for kexec@lists.infradead.org;
-	Thu, 09 Jul 2026 12:49:04 +0000
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1783601334;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=egEQegkzVd6qWuiMRf57t7zF7MyRk5jNUn1HniJAO8k=;
-	b=Iycg/KIVqDMfLX8Xy+tVV/5u6vC42kFOn0WbRUUEikqUEe+PnvXScKlmERZNC+QZDq/4l9
-	mJztvFMEpgk1ET9hT3h2VfL9kJwZhtygo99555KQ6Vyk05NJLziCH3xjbLtzs6Tk4c2jQx
-	0CqbzLokzg0DSOA7mnIWVA4lJ1+bCx4=
-From: George Guo <dongtai.guo@linux.dev>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: maobibo@loongson.cn,
-	loongarch@lists.linux.dev,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	George Guo <guodongtai@kylinos.cn>
-Subject: Re: [PATCH v4 0/2] LoongArch: kexec: avoid clobbering the QEMU FDT
-Date: Thu,  9 Jul 2026 20:48:30 +0800
-Message-ID: <20260709124830.15417-1-dongtai.guo@linux.dev>
-In-Reply-To: <CAAhV-H7S9_hPDFoCtzgfY9TeH_koN9NfKq9mo8y9BmLA5-7how@mail.gmail.com>
-References: <CAAhV-H7S9_hPDFoCtzgfY9TeH_koN9NfKq9mo8y9BmLA5-7how@mail.gmail.com>
+	Thu, 09 Jul 2026 12:59:49 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 0850043651;
+	Thu,  9 Jul 2026 12:59:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85B3F1F000E9;
+	Thu,  9 Jul 2026 12:59:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783601988;
+	bh=dfPuN5XK89i90iKP7N1UEg6cXPRSfGHauPrCcp91Soo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=J3lGK4Te1f4zzXGsuskTvVM2iBsyuSztXeOmCggDo36HjJ3cFV8/MZPAkLsLFQuzS
+	 lNVmeEbnta9/P5w6O6w9uM+11NdtyZUs9hA3OafhOr/Q4UHG5Xyq70hDx3FmpkjRla
+	 UHBbV04VVT4urrcAR4hxuiIPkP/cdxeSW3G65y+mOSwDdd9ogtDLl6pcH5//9D/KrN
+	 zlupO5ofc9MYYuFPrlnmkEaVq8YXf+uicS8JLzLuThh9pdRXv4cN+Hddu9XJIwCiF5
+	 4nMf33vBikptKw71xYxPVonYLUz/vsdC46ymFQu11EvLzSAapT1ixwKexH6HjjBnD6
+	 1DSahxeZccbnA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,  David Hildenbrand
+ <david@kernel.org>,  Alexander Graf <graf@amazon.com>,  Alexander
+ Potapenko <glider@google.com>,  Brendan Jackman <jackmanb@google.com>,
+  Christoph Lameter <cl@gentwo.org>,  Dennis Zhou <dennis@kernel.org>,
+  Dmitry Vyukov <dvyukov@google.com>,  Johannes Weiner
+ <hannes@cmpxchg.org>,  "Liam R. Howlett" <liam@infradead.org>,  Lorenzo
+ Stoakes <ljs@kernel.org>,  Marco Elver <elver@google.com>,  Michal Hocko
+ <mhocko@suse.com>,  Muchun Song <muchun.song@linux.dev>,  Oscar Salvador
+ <osalvador@suse.de>,  Pasha Tatashin <pasha.tatashin@soleen.com>,
+  Pratyush Yadav <pratyush@kernel.org>,  Suren Baghdasaryan
+ <surenb@google.com>,  Tejun Heo <tj@kernel.org>,  Uladzislau Rezki
+ <urezki@gmail.com>,  Vlastimil Babka <vbabka@kernel.org>,  Zi Yan
+ <ziy@nvidia.com>,  kasan-dev@googlegroups.com,  kexec@lists.infradead.org,
+  linux-cxl@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-mm@kvack.org
+Subject: Re: [PATCH v2 0/3] mm: split a couple of headers from internal.h
+In-Reply-To: <20260709-internal-h-v2-0-695631425968@kernel.org> (Mike
+	Rapoport's message of "Thu, 09 Jul 2026 13:00:02 +0300")
+References: <20260709-internal-h-v2-0-695631425968@kernel.org>
+Date: Thu, 09 Jul 2026 14:59:43 +0200
+Message-ID: <2vxzh5m8l3nk.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260709_054903_059740_C5962AFC 
-X-CRM114-Status: GOOD (  15.40  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,47 +82,18 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Huacai,
+On Thu, Jul 09 2026, Mike Rapoport (Microsoft) wrote:
 
-Thanks for the correction, and I am sorry for the way I handled this.
+> mm/internal.h becomes more and more bloated.
+>
+> Split declarations related to mm_init, memblock, vmalloc and sparse into
+> new headers.
 
-> Who told you the trampoline is dead code? All non-boot CPUs are
-> running in the trampoline, you can use maxcpus=1 to go to the new
-> kernel, and do something, and then hotplug the non-boot CPUs at any
-> time.
+Acked-by: Pratyush Yadav <pratyush@kernel.org>
 
-You are right, and I was wrong to call the trampoline dead once the new
-kernel starts.  The non-boot CPUs spin in kexec_smp_wait inside the
-trampoline buffer and only leave it when the new kernel brings them
-online, so with maxcpus=1 they stay there until a later CPU hotplug.
-The buffer has to stay valid the whole time.
+[...]
 
-That breaks my patch 1.  control_code_page is allocated by the kexec
-core and is not reserved in the new kernel, so the new kernel can reuse
-that page while the non-boot CPUs are still spinning in it, and small
-memory makes that more likely.  The fixed KEXEC_CONTROL_CODE at 0x100000
-avoided this because the first 2MB is memblock_reserve()d in both
-kernels; its only problem was that it overlaps QEMU's machine FDT at
-0x100000.  So my Q2 answer in the cover letter was also wrong, and "as
-arm64/riscv do" does not apply here.
-
-So the trampoline still needs to live in the cross-kexec reserved first
-2MB, just not on top of the FDT.  The FDT declares fdt_totalsize 1MB and
-covers [0x100000, 0x200000), so the room left is below 0x100000.
-
-Do you have a different fix in mind? I would like to agree on the
-direction with you before I send anything.
-
-> BTW,  you have never replied to my comments, all you have done is
-> submit new versions again and again.
-
-That is fair, and it was my mistake.  I should have replied to your
-review in the thread and discussed it before sending a new version,
-instead of putting my answers in a cover letter.  I will reply to
-comments first from now on.
-
-I will hold the series until we settle the trampoline approach.
-
-Thanks,
-George
+-- 
+Regards,
+Pratyush Yadav
 
