@@ -4,62 +4,116 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2FC70C44506
-	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 10:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9D2FFC43458
+	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 10:21:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=MPfLC5orl3FOJPqKVHrYgEfUBkfZk4Q5lRT44NLSQO0=; b=DrZC0ZrKlZ2XXiQ0rwP3+5s1D5
-	qJr+MiTDclSKU0R+W/6EyRh0Ew0hlg1zIoIav/Hfvm5A0E1vmLxTeDPSrri1oifg4lW/KdxPN6Tfc
-	1sO8ebXA3JdCS529N9eADCx5COVvaAXUkGdEe9cYtpKVKo22/tAGtIrzonnayuOI9TGqc4SeTFp4g
-	K0Czl5gwd+vR7tSo4oZ+Nj7FwpmWb8saL9LiIFxY4AdNCexVWVFCY9q4UxuSGdUO36JkUbXMNdjxw
-	n6HMwrr9pmMr0dHbDgKWxpoF04kjl1G7WQXUvpdALrNWp7XL9SVOde+HcXXUDCT7eaiGLSbukqYUh
-	sNZ+Z/Qw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=WdBwou6UoGXgB1ir3Lcp2nsy3ZSLNklF3fHXUXVCCQ8=; b=ItBsBq0cZytNtu50TP4Iun/45C
+	NSYKipvY5bS8Htx33dkN8iJXXn+OBw3ontRQQ3qLvFq8jEm68sL43dfNNao1Cb/ktBZE9REDZ719N
+	RzIdgFeo5hsneANFTGCNBR/j5jCS1XL1vcU8En2/2gsu4pILTMdFF1sD4K7ZpWAf0EHllOGr935+U
+	hiWLuopVukqhP1w/0ftfmezgu5lxJonXYiLgsh5nzhPOfTOUIi6IV1WH/SLMNw/+PucEDHVJl/9zA
+	mOCAtRRNLCKUfyjxOjiPZu97n7OgaS7rtpUEY1SoZKC6QN6rv8+YHDMAlEpTsE9BqWfnm8d3QCjMA
+	VQHYlp5g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whlrl-00000001vY7-1Ho4;
-	Thu, 09 Jul 2026 10:20:25 +0000
+	id 1whlsf-00000001vfC-1v53;
+	Thu, 09 Jul 2026 10:21:21 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whlrj-00000001vXj-11SI
+	id 1whlse-00000001vem-2Wgl
 	for kexec@lists.infradead.org;
-	Thu, 09 Jul 2026 10:20:23 +0000
+	Thu, 09 Jul 2026 10:21:20 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id A9D30404D5;
-	Thu,  9 Jul 2026 10:20:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB6601F000E9;
-	Thu,  9 Jul 2026 10:20:20 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 5BCE04167D;
+	Thu,  9 Jul 2026 10:21:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72D411F000E9;
+	Thu,  9 Jul 2026 10:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783592422;
-	bh=MPfLC5orl3FOJPqKVHrYgEfUBkfZk4Q5lRT44NLSQO0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=TkQYk0bInxmgbiOA9FOncoBSAGMtj+4O2aDKrMF3sQkk3lVKYVEYVWLhlNCjtHH/h
-	 0ac62rG5qNjPNGJwnjcTdsKTGqi4OpqLkl6A/iDY9RizgvLAYJPynjqSi5WCRYWTbi
-	 k70BVKmx6p/gDfx6KuujGDUVuXmBzvn7EIxkI0HLhz3I2PXQXBg+r8M54lv6YCtIoD
-	 FPdOhbaji0PqzQ4epn0oXwWIQ54ZVK4X56kVXJo91FnPlUMapy5N25Dv4joagEqqT6
-	 0WcjEKp65OaXqodIL9MCOihLA32LdiYInZWcs2wFVBM9VlerpcHJfpcNNAFWQWE3In
-	 krq8LtfPyD96w==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Tarun Sahu <tarunsahu@google.com>,  Pratyush Yadav
- <pratyush@kernel.org>,  Andrew Morton <akpm@linux-foundation.org>,
-  linux-mm@kvack.org,  Mike Rapoport <rppt@kernel.org>,  Alexander Graf
- <graf@amazon.com>,  skhawaja@google.com,  kexec@lists.infradead.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 3/3] luo: Update serialized data to use KHOSER_PTR
-In-Reply-To: <178271651966.13502.2620034351625890943.b4-review@b4> (Pasha
-	Tatashin's message of "Mon, 29 Jun 2026 07:01:59 +0000")
-References: <20260628001114.1869564-1-tarunsahu@google.com>
-	<20260628001114.1869564-4-tarunsahu@google.com>
-	<178271651966.13502.2620034351625890943.b4-review@b4>
-Date: Thu, 09 Jul 2026 12:20:19 +0200
-Message-ID: <2vxzldbklb18.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=k20260515; t=1783592480;
+	bh=WdBwou6UoGXgB1ir3Lcp2nsy3ZSLNklF3fHXUXVCCQ8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=K4ZgFZUyiFpb4XeaDDvdVo/FZUL7Aa1kY1P27AoweaquTl0F7WsR1Ox6pOhMbAi39
+	 1zirrV2zmwwY4nyhmX7eq4QwcPawoSPfiKSiPHWIKGih2IatZ6QwGKS2P9vQvQScH/
+	 Zcel/Mjsnhx6CNRAo97h8GT6sZLKtTSV7OATYhdSKWjtplrpI/ULy9ogNjodp1rXFr
+	 LX/xJKZyMUxWN9BzcGuHS6GcYbfLjFm+Ad4h13zfSI4Jopy+i+jEF8/W3lx6v/qRVh
+	 EgDC7La1B9C761sME3x57+uIsVeNeK98og68SDGwfbPFq1ki21HsSB1Hj537eSYcuB
+	 1YMLNz1/n83QQ==
+Message-ID: <67bbfc47-a8f1-4557-9a24-298bad4f3591@kernel.org>
+Date: Thu, 9 Jul 2026 12:21:12 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] mm: split a couple of headers from internal.h
+To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
+ "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Graf <graf@amazon.com>, Alexander Potapenko
+ <glider@google.com>, Brendan Jackman <jackmanb@google.com>,
+ Christoph Lameter <cl@gentwo.org>, Dennis Zhou <dennis@kernel.org>,
+ Dmitry Vyukov <dvyukov@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Marco Elver <elver@google.com>, Michal Hocko <mhocko@suse.com>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, Suren Baghdasaryan
+ <surenb@google.com>, Tejun Heo <tj@kernel.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Zi Yan <ziy@nvidia.com>,
+ kasan-dev@googlegroups.com, kexec@lists.infradead.org,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20260709-internal-h-v2-0-695631425968@kernel.org>
+ <0970fec0-5c18-41e1-b63d-029c7a8354ee@kernel.org>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <0970fec0-5c18-41e1-b63d-029c7a8354ee@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,58 +128,56 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Pasha,
+On 7/9/26 12:09, Vlastimil Babka (SUSE) wrote:
+> On 7/9/26 12:00, Mike Rapoport (Microsoft) wrote:
+>> mm/internal.h becomes more and more bloated.
+>>
+>> Split declarations related to mm_init, memblock, vmalloc and sparse into
+>> new headers.
+>>
+>> ---
+>> v2 changes:
+>> * fix fallouts of rebase fixups of checkpatch warnings
+>>
+>> v1: https://patch.msgid.link/20260709-internal-h-v1-0-956d5092782d@kernel.org
+>>
+>> ---
+>> Mike Rapoport (Microsoft) (3):
+>>       mm: split out mm_init and memblock declarations from internal.h
+>>       mm: split out sparse declarations from internal.h
+>>       mm: split out vmalloc declarations from internal.h
+>>
+>>  MAINTAINERS                        |   3 +
+>>  kernel/liveupdate/kexec_handover.c |   3 +-
+>>  mm/cma.c                           |   1 +
+>>  mm/execmem.c                       |   1 +
+>>  mm/hugetlb.c                       |   1 +
+>>  mm/internal.h                      | 183 -------------------------------------
+>>  mm/kmsan/hooks.c                   |   1 +
+>>  mm/kmsan/shadow.c                  |   1 +
+>>  mm/memblock.c                      |   1 +
+>>  mm/memory_hotplug.c                |   1 +
+>>  mm/mm_init.c                       |   3 +
+>>  mm/mm_init.h                       | 120 ++++++++++++++++++++++++
+>>  mm/page_alloc.c                    |   1 +
+>>  mm/percpu-vm.c                     |   1 +
+>>  mm/sparse-vmemmap.c                |   2 +
+>>  mm/sparse.c                        |   2 +
+>>  mm/sparse.h                        |  63 +++++++++++++
+>>  mm/vmalloc.c                       |   1 +
+>>  mm/vmalloc.h                       |  46 ++++++++++
+>>  19 files changed, 251 insertions(+), 184 deletions(-)
+> 
+> Sounds good
+> 
+> Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
 
-On Mon, Jun 29 2026, Pasha Tatashin wrote:
+Agreed
 
-> On Sun, 28 Jun 2026 00:11:14 +0000, Tarun Sahu <tarunsahu@google.com> wrote:
->> diff --git a/include/linux/kho/abi/luo.h b/include/linux/kho/abi/luo.h
->> index 288076de6d4a..9e78625cfdc1 100644
->> --- a/include/linux/kho/abi/luo.h
->> +++ b/include/linux/kho/abi/luo.h
->> @@ -89,14 +90,14 @@ struct luo_ser {
->>  /**
->>   * struct luo_file_ser - Represents the serialized preserves files.
->>   * @compatible:  File handler compatible string.
->> - * @data:        Private data
->> + * @serialized_data:  The serialized KHO pointer for this file
->
-> I am concerned about layring violation here.
->
-> LUO is designed as  a generic, opaque transport layer that promises to 
-> preserve 64 bits of raw data. How those 64 bits are interpreted is 
-> entirely up to individual clients.
->
-> While some clients like memfd_luo will use those 64 bits as a physical 
-> address pointing to KHO-preserved structures, other clients may store a 
-> generic token, cookie, index, or non-pointer status. By
-> changing u64 data to DECLARE_KHOSER_PTR(serialized_data, void *) in 
-> struct luo_file_ser, we force KHO pointer semantics and layout 
-> constraints on all generic LUO files.
-
-That makes sense theory, but in practice, no file handler is going to
-need only 8 bytes for its metadata. It is always going to need more, and
-to store more information, it needs to store a pointer to that
-information with the 64 bits it gets.
-
-Do you have any examples of something else one might store here?
-
-At least looking at the current file handlers merged and in flight,
-memfd, iommufd, vfio, pci, hugetlb, guest_memfd, all of them store a
-pointer here.
-
-And if everyone is only storing pointers in this field, might as well
-give them a bit of type safety.
-
->
-> Clients that need KHO pointer serialization must cast that opaque 64-bit 
-> value to/from a  KHOSER_PTR  within their own callbacks.
->
-> Also, the field descriptions in  struct luo_file_ser  are no longer 
-> aligned due to the length of the new variable name, I believe it will 
-> cause warning when making docs.
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
-Regards,
-Pratyush Yadav
+Cheers,
+
+David
 
