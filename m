@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 26173C43458
-	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 17:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 13445C44501
+	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 17:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=dZrYQiJ29bguTf5G1/05HWK+MxMmFmBLRrxhZmbaDdk=; b=QJYr2rlCDTvx/JoPhxrqdbNrGb
-	cc08GHgtBN/VFdeKYFjyD7mg28AJdk9kT/vvnVex9E2LyJYBEaTkESTkTlp1kwbUEddR/cIEvz2Zu
-	RnyprP2jMEkVZ2XEOpckHp8Iwap1vp6H4KcMlUgQGI9E8spLm7YWErmcg43RBp/XQhS7pMrufgzr/
-	hJ6FachgU9yE7/KPG0ptjQHcHXo7Qxvi7xCfVt1o++GyhlN5wxSI0UVHetJDUPikOJ0KJLLK/pm+b
-	mhO416tC2hGWOCoMlb2aUfdM3aJfC9atFatJea4Rwa494LB+CgpTTXYZC2ANwfqOB5NimW4xU9ygB
-	CexjE+HQ==;
+	bh=9LMYnoR5UOfAzKTRDA0X1BjzCjLF6Srn3sMzOnAMfpQ=; b=FHAeh3fCbKcgwrsXNQh4igyy90
+	hm9ip95e6CnKaSkeZX5eHTmenz9Wqot0m1gXsw2pxTexoZf9QCphP8IdHIVKlYY9U/WfsCpp6OMZ7
+	gfR1FlpUmel7vGmeFPeFx94upMlryXDlSLVCXPX2GSn6lBQ0LhgB8/GfrXSoCR3KZBUonV0I+joZj
+	XrRVNA3PA/Ap4wySoCutoKQDi4y/BVlARPR+vQB6yW/RIzBTDPH+KFG2UbRHPU2raGvZXJQzCJfzL
+	gLT3KOpYBIkNS3/Mr7x6fKPSO8SBQN9kwzhwLMRoeAYKWQGEbMu1TwdNJWnnQr4Lb8yySPg3IokNc
+	WuyL6+7g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whsi7-000000038Bn-0euh;
-	Thu, 09 Jul 2026 17:38:55 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1whsi9-000000038De-11AZ;
+	Thu, 09 Jul 2026 17:38:57 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whsi5-000000038AI-2XV1
+	id 1whsi7-000000038Ce-2vFm
 	for kexec@lists.infradead.org;
-	Thu, 09 Jul 2026 17:38:53 +0000
+	Thu, 09 Jul 2026 17:38:55 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 120166138B;
+	by sea.source.kernel.org (Postfix) with ESMTP id 6B29943987;
+	Thu,  9 Jul 2026 17:38:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2963F1F00A3F;
 	Thu,  9 Jul 2026 17:38:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 997851F00A3D;
-	Thu,  9 Jul 2026 17:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783618732;
-	bh=dZrYQiJ29bguTf5G1/05HWK+MxMmFmBLRrxhZmbaDdk=;
+	s=k20260515; t=1783618735;
+	bh=9LMYnoR5UOfAzKTRDA0X1BjzCjLF6Srn3sMzOnAMfpQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=N3qST223sfLQcdLUCumgNGqT1rNBeaftKWwMFJBNnkQ6p7LobmHP9UQf7gkut5Hwa
-	 frQGl78LM7YpDCKcYypaVEg18SV+03j5mSz/q5Ykmo69+kwVKwiUMnBFpnM/5lflL4
-	 eyqR00NFqyciItVQkCCbILPtv0KeM27+HBUrafLX8E7HD5CVKSQTnS3vaudkB3cYx1
-	 5Au8w6IjYanFpidYYx18d5ewnHKjPe+aPONYHHpGWTovQ1RglaZPwIRMbkytuiaGW8
-	 Y8uJknYsgRPfHYpeG6g2oyUkkmbRjI0e003G5vaOPijUv8Tx6+Mckx8p2GAY+PloKp
-	 A90q/HySNLLAA==
+	b=HEpny4QWGDc9Mg1urk7F8ysOTwHcJzus9AxyO2SB8stA0GPqaOSCwaZIDEUfPZd6i
+	 SwQ51Bu2ZlWUHeyh76PWAdQPDkiwJccrIpbBE+HP6fAcpnXz0hg1IzYDf2Rx3Dpzc1
+	 Aht2VtmjD6zFVZmd0+xq3JO1+EvKVuK21xBk2PmCyJN+Hs5v5WxeOHB97a7vjV5MmS
+	 d4qbIqyKgksbdRQv20PUj0TEp0B2+GvoBtuCXsdB0vDhbPDtPj36SbLQPx6e9WSkPR
+	 HVur+vqqb6yA3YKWEbBPg6EGV1G/+vs/oxgK+NnDhtM2y+BFCFpL0egMfIotm2rDgU
+	 aT1mFDVcS2zZA==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -56,9 +56,9 @@ To: Mike Rapoport <rppt@kernel.org>,
 Cc: kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 08/21] kho: add callback for table pages
-Date: Thu,  9 Jul 2026 19:37:57 +0200
-Message-ID: <20260709173821.429921-9-pratyush@kernel.org>
+Subject: [PATCH v3 09/21] kho: add data argument to radix walk callback
+Date: Thu,  9 Jul 2026 19:37:58 +0200
+Message-ID: <20260709173821.429921-10-pratyush@kernel.org>
 X-Mailer: git-send-email 2.55.0.141.g00534a21ce-goog
 In-Reply-To: <20260709173821.429921-1-pratyush@kernel.org>
 References: <20260709173821.429921-1-pratyush@kernel.org>
@@ -80,80 +80,154 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-The KHO memory preservation radix tree does not mark the table pages
-themselves as preserved. This is done to avoid a circular dependency
-where preserving a page can lead of allocating other preserved pages.
-This means any walker looking for free ranges of memory outside of
-scratch areas will ignore the table
+Add an opaque data pointer argument to kho_radix_walk_cb_t. This can be
+used by callers to pass extra information to the callback.
 
-Add a table callback that is invoked for each table page. The callback
-is given the physical address of the table page.
-
-This is useful for the upcoming mechanism that discovers blocks of
-memory with no preserved pages and lets them be used for boot memory.
-
-Another use case is for users of the radix tree other than KHO itself.
-The radix tree does not preserve its own pages due to the circular
-dependency described above. But external users of the radix tree would
-need to preserve and restore their pages for the radix tree to survive
-past early boot. They can use this callback to do so.
-
+Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- include/linux/kho_radix_tree.h     |  3 +++
- kernel/liveupdate/kexec_handover.c | 12 ++++++++++++
- 2 files changed, 15 insertions(+)
+ include/linux/kho_radix_tree.h     |  8 ++++----
+ kernel/liveupdate/kexec_handover.c | 24 +++++++++++++-----------
+ 2 files changed, 17 insertions(+), 15 deletions(-)
 
 diff --git a/include/linux/kho_radix_tree.h b/include/linux/kho_radix_tree.h
-index 426a9cc9bcde..ac7ba7e567e1 100644
+index ac7ba7e567e1..4138621e0e87 100644
 --- a/include/linux/kho_radix_tree.h
 +++ b/include/linux/kho_radix_tree.h
-@@ -37,12 +37,15 @@ struct kho_radix_tree {
- /**
-  * struct kho_radix_walk_cb - Callbacks for KHO radix tree walk.
-  * @leaf:      Called on each present key in the radix tree.
-+ * @node:      Called on each node of the radix tree itself. Receives the
-+ *             physical address of the page containing the node.
-  *
-  * For each callback, a return value of 0 continues the walk and a non-zero
+@@ -44,8 +44,8 @@ struct kho_radix_tree {
   * return value is directly returned to the caller.
   */
  struct kho_radix_walk_cb {
- 	int (*leaf)(unsigned long key);
-+	int (*node)(phys_addr_t phys);
+-	int (*leaf)(unsigned long key);
+-	int (*node)(phys_addr_t phys);
++	int (*leaf)(unsigned long key, void *data);
++	int (*node)(phys_addr_t phys, void *data);
  };
  
  #ifdef CONFIG_KEXEC_HANDOVER
+@@ -53,7 +53,7 @@ struct kho_radix_walk_cb {
+ int kho_radix_add_key(struct kho_radix_tree *tree, unsigned long key);
+ void kho_radix_del_key(struct kho_radix_tree *tree, unsigned long key);
+ int kho_radix_walk_tree(struct kho_radix_tree *tree,
+-			const struct kho_radix_walk_cb *cb);
++			const struct kho_radix_walk_cb *cb, void *data);
+ 
+ #else  /* #ifdef CONFIG_KEXEC_HANDOVER */
+ 
+@@ -66,7 +66,7 @@ static inline void kho_radix_del_key(struct kho_radix_tree *tree,
+ 				     unsigned long key) { }
+ 
+ static inline int kho_radix_walk_tree(struct kho_radix_tree *tree,
+-				      const struct kho_radix_walk_cb *cb)
++				      const struct kho_radix_walk_cb *cb, void *data)
+ {
+ 	return -EOPNOTSUPP;
+ }
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 9fb07c0ef18e..2044f35cf1de 100644
+index 2044f35cf1de..3dd26d5d3c09 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -288,6 +288,12 @@ static int kho_radix_walk_leaf(struct kho_radix_leaf *leaf, unsigned long key,
+@@ -282,14 +282,14 @@ void kho_radix_del_key(struct kho_radix_tree *tree, unsigned long key)
+ EXPORT_SYMBOL_GPL(kho_radix_del_key);
+ 
+ static int kho_radix_walk_leaf(struct kho_radix_leaf *leaf, unsigned long key,
+-			       const struct kho_radix_walk_cb *cb)
++			       const struct kho_radix_walk_cb *cb, void *data)
+ {
+ 	unsigned long *bitmap = (unsigned long *)leaf;
  	unsigned int i;
  	int err;
  
-+	if (cb->node) {
-+		err = cb->node(virt_to_phys(leaf));
-+		if (err)
-+			return err;
-+	}
-+
- 	if (!cb->leaf)
+ 	if (cb->node) {
+-		err = cb->node(virt_to_phys(leaf));
++		err = cb->node(virt_to_phys(leaf), data);
+ 		if (err)
+ 			return err;
+ 	}
+@@ -298,7 +298,7 @@ static int kho_radix_walk_leaf(struct kho_radix_leaf *leaf, unsigned long key,
  		return 0;
  
-@@ -310,6 +316,12 @@ static int __kho_radix_walk_tree(struct kho_radix_node *root,
- 	unsigned int shift;
+ 	for_each_set_bit(i, bitmap, PAGE_SIZE * BITS_PER_BYTE) {
+-		err = cb->leaf(key | i);
++		err = cb->leaf(key | i, data);
+ 		if (err)
+ 			return err;
+ 	}
+@@ -308,7 +308,7 @@ static int kho_radix_walk_leaf(struct kho_radix_leaf *leaf, unsigned long key,
+ 
+ static int __kho_radix_walk_tree(struct kho_radix_node *root,
+ 				 unsigned int level, unsigned long start,
+-				 const struct kho_radix_walk_cb *cb)
++				 const struct kho_radix_walk_cb *cb, void *data)
+ {
+ 	struct kho_radix_node *node;
+ 	struct kho_radix_leaf *leaf;
+@@ -317,7 +317,7 @@ static int __kho_radix_walk_tree(struct kho_radix_node *root,
  	int err;
  
-+	if (cb->node) {
-+		err = cb->node(virt_to_phys(root));
-+		if (err)
-+			return err;
-+	}
-+
- 	for (i = 0; i < PAGE_SIZE / sizeof(phys_addr_t); i++) {
- 		if (!root->table[i])
- 			continue;
+ 	if (cb->node) {
+-		err = cb->node(virt_to_phys(root));
++		err = cb->node(virt_to_phys(root), data);
+ 		if (err)
+ 			return err;
+ 	}
+@@ -338,10 +338,10 @@ static int __kho_radix_walk_tree(struct kho_radix_node *root,
+ 			 * node is pointing to the level 0 bitmap.
+ 			 */
+ 			leaf = (struct kho_radix_leaf *)node;
+-			err = kho_radix_walk_leaf(leaf, key, cb);
++			err = kho_radix_walk_leaf(leaf, key, cb, data);
+ 		} else {
+ 			err  = __kho_radix_walk_tree(node, level - 1,
+-						     key, cb);
++						     key, cb, data);
+ 		}
+ 
+ 		if (err)
+@@ -355,6 +355,7 @@ static int __kho_radix_walk_tree(struct kho_radix_node *root,
+  * kho_radix_walk_tree - Traverses the radix tree and calls a callback for each key.
+  * @tree: A pointer to the KHO radix tree to walk.
+  * @cb:   Set of callbacks to be invoked during the tree walk.
++ * @data: Opaque data pointer passed to each callback in @cb.
+  *
+  * This function walks the radix tree, searching from the top level down to the
+  * lowest level (level 0), invoking the appropriate callbacks.
+@@ -363,14 +364,15 @@ static int __kho_radix_walk_tree(struct kho_radix_node *root,
+  *         value from the callback that stopped the walk.
+  */
+ int kho_radix_walk_tree(struct kho_radix_tree *tree,
+-			const struct kho_radix_walk_cb *cb)
++			const struct kho_radix_walk_cb *cb, void *data)
+ {
+ 	if (WARN_ON_ONCE(!tree->root))
+ 		return -EINVAL;
+ 
+ 	guard(mutex)(&tree->lock);
+ 
+-	return __kho_radix_walk_tree(tree->root, KHO_TREE_MAX_DEPTH - 1, 0, cb);
++	return __kho_radix_walk_tree(tree->root, KHO_TREE_MAX_DEPTH - 1, 0, cb,
++				     data);
+ }
+ EXPORT_SYMBOL_GPL(kho_radix_walk_tree);
+ 
+@@ -501,7 +503,7 @@ static struct page *__init kho_get_preserved_page(phys_addr_t phys,
+ 	return pfn_to_page(pfn);
+ }
+ 
+-static int __init kho_preserved_memory_reserve(unsigned long key)
++static int __init kho_preserved_memory_reserve(unsigned long key, void *data)
+ {
+ 	union kho_page_info info;
+ 	struct page *page;
+@@ -1445,7 +1447,7 @@ static void __init kho_mem_retrieve(void)
+ 	kho_in.radix_tree.root = kho_get_mem_map(fdt);
+ 	mutex_init(&kho_in.radix_tree.lock);
+ 
+-	err = kho_radix_walk_tree(&kho_in.radix_tree, &cb);
++	err = kho_radix_walk_tree(&kho_in.radix_tree, &cb, NULL);
+ 	if (err) {
+ 		/*
+ 		 * Failed to initialize preserved memory. Clear FDT and radix
 -- 
 2.55.0.141.g00534a21ce-goog
 
