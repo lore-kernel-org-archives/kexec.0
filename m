@@ -4,68 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BBBDDC44506
-	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 15:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9B600C43458
+	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 16:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=4mg2V0R7ROggXXchkyKDCKlOYU1ruVph4CL/uITEWhg=; b=x77KKx+e5GvQKzxWUi59VNGvvH
-	SPCJatvNnf9bsAN/Kgkx0kCSDDIoPimMCkM1pipu84vVSVXQauXPraVmZAOB/M3CCentWu3vTFSPp
-	v6Bkhlvja/Njk9fCH03NqtenXX26Zy8dTHjSBtCGNpGPjSaj6zRlddEC9xumFIH5mB5X9t1T7DD02
-	KE5GTEE29xqHVP3ovZCChGSohSsEGWwmfWHmdppbqpz6QUR184zEVEgfEO8+m9Ecd/zl/fRu2YYd8
-	9FqGRyQOjId3pMZACPmbS+/CpbudGvAgzakTLI4Z1jn7cj+S5f2mkbZVMz6/5MxgbyuyYNIbfxZCE
-	B4xatWsQ==;
+	bh=jF3qVdoEbsJ3VzaNGIP2qIoT+ymr1N9tdwI2e6ZvOkg=; b=1zFU4MM3R9KYJhr6Gu55VwGcoS
+	QdcKpN8ajV91cFglvLaNxKqjNGJBSGYnIC22cL54bJXWty73HnyNGadh34oiYmDw1WCaAbHBY87qb
+	xypz7TAux/fEwmOqL/iQ25HbO0GldKrFT5qPRCVWaKKBHNb+WSQqlDMM2luD5IA1NK/O9PRqQnSeU
+	v0oOqjG+037IAp8jLN1QcHGmr/LNtlnLreRyti02LzR/RdV/L6e0QhxB91negsLaI/pOudZHIMfQq
+	8jB/YCs8tiAUiS9ssqsL90k7E+qOSlIaJAxzNwl//0m1S8/N30omAZZg/1WaACz0JzqRshNKQPlMx
+	VN9j4XnQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whqnZ-00000002wmm-1wMP;
-	Thu, 09 Jul 2026 15:36:25 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1whrQY-000000030qL-3ZVp;
+	Thu, 09 Jul 2026 16:16:42 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whqnX-00000002wmf-2DML
+	id 1whrQY-000000030pp-1KqV
 	for kexec@lists.infradead.org;
-	Thu, 09 Jul 2026 15:36:23 +0000
+	Thu, 09 Jul 2026 16:16:42 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id D652341823;
-	Thu,  9 Jul 2026 15:36:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29BA21F00A3A;
-	Thu,  9 Jul 2026 15:36:16 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 6AAA7600C3;
+	Thu,  9 Jul 2026 16:16:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED9951F00A3A;
+	Thu,  9 Jul 2026 16:16:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783611382;
-	bh=4mg2V0R7ROggXXchkyKDCKlOYU1ruVph4CL/uITEWhg=;
+	s=k20260515; t=1783613800;
+	bh=jF3qVdoEbsJ3VzaNGIP2qIoT+ymr1N9tdwI2e6ZvOkg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=c58V4tRtaxqpKPeZvomkSUxRufHz00GTZSdV7gdbR7tLG41wuZYPKtLskkkHtg/Wb
-	 8jNv8LPawi649eM8ho1JXfSx1BMDPxHrymwneL/GvGyWdhek3KsH7zFC5e1JjQWnou
-	 iOv4zpApjw7SbfT7AEw2JV7BD/tfMbe0uXK3kEa812I62T6vpYt5jUz7FpFtTe10CD
-	 4ECqE0tZFBdePa8c3CMUA9bDBbgK2axaR9q94iDgV5sxxlRY58ZdX0Hk+O48jzlZeo
-	 qTiDDqfpGfqIZ8KxE9OxS7usK9HxPv2ff2iR6va1vt9/CrJjbTxqFimlbYjuS1kNkk
-	 JQbXGDOnK1ftQ==
-Date: Thu, 9 Jul 2026 16:36:08 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Alexander Graf <graf@amazon.com>, Alexander Potapenko <glider@google.com>, 
-	Brendan Jackman <jackmanb@google.com>, Christoph Lameter <cl@gentwo.org>, 
-	Dennis Zhou <dennis@kernel.org>, Dmitry Vyukov <dvyukov@google.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Marco Elver <elver@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Tejun Heo <tj@kernel.org>, Uladzislau Rezki <urezki@gmail.com>, 
-	Zi Yan <ziy@nvidia.com>, kasan-dev@googlegroups.com, kexec@lists.infradead.org, 
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2 0/3] mm: split a couple of headers from internal.h
-Message-ID: <ak-5GEPVMrwT77uQ@lucifer>
-References: <20260709-internal-h-v2-0-695631425968@kernel.org>
- <0970fec0-5c18-41e1-b63d-029c7a8354ee@kernel.org>
- <67bbfc47-a8f1-4557-9a24-298bad4f3591@kernel.org>
+	b=cwqDa2IxeR0ZYP/wu5gKBeyTyRvlGwRx7Rk1MI3pBXOKgl4hJpHOtOwOPfwza3mhp
+	 cFRHLJdSMHDWrXbFplOpVLDBgVxJikMF+l/ENcjsgI+K3xCJuyQBYQ/t2GDborCExl
+	 I2qysaFBQzMSMpsAo1CB5BLpZhkPF9NEMfNt6FoppGe1i+8D5GLoMuEHn17SOMMJ2o
+	 YgnTJhtGtdSF88NJeMBYUfczAn8ONGhajyUYCT8edBCJmtyAh2aed8Y/eqhEpJpJLa
+	 XsrInqpL+URkrBV7+hvirOI3IuvbegQ6XVj2C9JkwSLWL2G5UTmDdJSSei5RUnJ7ca
+	 mC2vvZkI2l4QQ==
+Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 25189F40090;
+	Thu,  9 Jul 2026 12:16:39 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Thu, 09 Jul 2026 12:16:39 -0400
+X-ME-Sender: <xms:Z8lPajBCIhaWVHhyGYjzssIFraZFDoGwnPuxSHvVmU4wGZwluKq7HA>
+    <xme:Z8lPai7gjfyE-PIKjtZnujbcBMmfjMGGYuyJhKGkB887nLyeD_33j_7jV3uB0ZVhg
+    Voo0p0GecxMlXJI5I1sf9iPofgIzwOQWFQPZz_CkMeyijAsmwElBw>
+X-ME-Received: <xmr:Z8lPantGXJ1-f0isSU2_l_epa1OxE2M5tKEMCbvEDQOVSeQDGNuJTqJmw_yXkQ>
+X-ME-Proxy-Cause: dmFkZTGWKpMVRfOvlVssIt8V4+GvxgmrUAKUiXyQp/UngjyA1pSIcf5yG8LmtmhOSgjUSq
+    a6qFev133morqnN+20kiSDmMcxuiGTjw74LonpIDBKD/tealNzs7h4fe//+qO6X/LEdcTh
+    mQTChkxWkwC8iUstLPTvsDASJHxTKg1pJdqU388/AuVgOJhqerONrNAww4agu7IiipIZb1
+    xSc5/cFZlRPwEgdZJ30QZhO0+2XElCXPwoK37BcBCsm9TUnSCqjnO+ZRbYMoF6ldnaQTDX
+    XoB5k6HuHPNdtiP/PzhhnbVI4Qa0J0dCeopBse9ZparPe/OTvyFI6qCOgPhxSoAR2xsGFH
+    akp5KNVf1nvr/ekmWN9zNXJCy+GCMidjd4CpQz/DEeLQNCoiW+Y85tBIXOJ8gERNQILE3k
+    0P/aMv6zFBg3XFWjxRn7/NEL34re6KlmmooBI8B2a491iUKaAjZia0apSBz+Exl+2sDaYI
+    SFVIFBshyD53XxHTnHhj1xt6wUhMlDMghw0XYe5bNt5Nio7DBvI/uy0f6HKnXdRuG2LbIs
+    7RHcAH+NAc+oIG5ICT/Wu+B6hRx7YI5EHzyYnnngNESPlDcXPbgbMZevr+47APXx27IXp/
+    +S5zzWfhTZOZBPNe14PeSwXOmkKHi6qLuundoWzZgMp0n1+9Z7Z90IBCaaOw
+X-ME-Proxy: <xmx:Z8lPaoyy3cWTOeid9DgwhMvG79e4bLDJRNWPDlyuZQThm6QR7zkmrQ>
+    <xmx:Z8lPaiaxaWyZjfDZ7jD45QdTqGhNOrZJ4ChCDqxth-YxNykIYF4xLg>
+    <xmx:Z8lPag1DYivlkNh8v9y9ekC0xRIxfA-aAJUc1Kj1brz18wujVYiUyg>
+    <xmx:Z8lPagjQqKeI_jwmebcrJ-b5h9UtrF4fzUdGXh15suyGlQfYgB0kzw>
+    <xmx:Z8lPatriLphKSN_6mi0SwLDunm_XaHIqGlBnXzndAhwNfusecswPZe3f>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 9 Jul 2026 12:16:38 -0400 (EDT)
+Date: Thu, 9 Jul 2026 17:16:37 +0100
+From: Kiryl Shutsemau <kas@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>, 
+	Doug Anderson <dianders@chromium.org>, Petr Mladek <pmladek@suse.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, 
+	Baoquan He <bhe@redhat.com>, Puranjay Mohan <puranjay@kernel.org>, 
+	Usama Arif <usama.arif@linux.dev>, Breno Leitao <leitao@debian.org>, 
+	Julien Thierry <julien.thierry.kdev@gmail.com>, Lecopzer Chen <lecopzer@gmail.com>, 
+	Sumit Garg <sumit.garg@kernel.org>, kernel-team@meta.com, kexec@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/4] arm64: cross-CPU NMI via SDEI
+Message-ID: <ak_IRHwd02EjWMf8@thinkstation>
+References: <cover.1782744912.git.kas@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67bbfc47-a8f1-4557-9a24-298bad4f3591@kernel.org>
+In-Reply-To: <cover.1782744912.git.kas@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,72 +102,20 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jul 09, 2026 at 12:21:12PM +0200, David Hildenbrand (Arm) wrote:
-> On 7/9/26 12:09, Vlastimil Babka (SUSE) wrote:
-> > On 7/9/26 12:00, Mike Rapoport (Microsoft) wrote:
-> >> mm/internal.h becomes more and more bloated.
-> >>
-> >> Split declarations related to mm_init, memblock, vmalloc and sparse into
-> >> new headers.
-> >>
-> >> ---
-> >> v2 changes:
-> >> * fix fallouts of rebase fixups of checkpatch warnings
-> >>
-> >> v1: https://patch.msgid.link/20260709-internal-h-v1-0-956d5092782d@kernel.org
-> >>
-> >> ---
-> >> Mike Rapoport (Microsoft) (3):
-> >>       mm: split out mm_init and memblock declarations from internal.h
-> >>       mm: split out sparse declarations from internal.h
-> >>       mm: split out vmalloc declarations from internal.h
-> >>
-> >>  MAINTAINERS                        |   3 +
-> >>  kernel/liveupdate/kexec_handover.c |   3 +-
-> >>  mm/cma.c                           |   1 +
-> >>  mm/execmem.c                       |   1 +
-> >>  mm/hugetlb.c                       |   1 +
-> >>  mm/internal.h                      | 183 -------------------------------------
-> >>  mm/kmsan/hooks.c                   |   1 +
-> >>  mm/kmsan/shadow.c                  |   1 +
-> >>  mm/memblock.c                      |   1 +
-> >>  mm/memory_hotplug.c                |   1 +
-> >>  mm/mm_init.c                       |   3 +
-> >>  mm/mm_init.h                       | 120 ++++++++++++++++++++++++
-> >>  mm/page_alloc.c                    |   1 +
-> >>  mm/percpu-vm.c                     |   1 +
-> >>  mm/sparse-vmemmap.c                |   2 +
-> >>  mm/sparse.c                        |   2 +
-> >>  mm/sparse.h                        |  63 +++++++++++++
-> >>  mm/vmalloc.c                       |   1 +
-> >>  mm/vmalloc.h                       |  46 ++++++++++
+On Mon, Jun 29, 2026 at 04:07:14PM +0100, Kiryl Shutsemau wrote:
+> From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
+> 
+> A class of debug/observability features needs to interrupt a CPU that has
+> its interrupts locally masked: the all-CPU backtrace behind sysrq-l /
+> RCU-stall / hung-task / hard-lockup dumps, and crash_smp_send_stop()
+> capturing a stuck CPU's state into the vmcore. On arm64 these need a
+> mechanism that reaches a CPU spinning with DAIF masked, which a normal IPI
+> cannot.
 
-One thing to be wary of, and I mean I'm going to get a bunch of conflicts with
-my mega series, but anythign that uses vma's should use internal.h rather than
-vma.h directly (the mega series touches this).
+Gentle ping. Any feedback?
 
-But nothing you changed does use VMAs afaict so should be good.
+I'm looking forward to finding an upstreamable solution to the problem.
 
-
-> >>  19 files changed, 251 insertions(+), 184 deletions(-)
-> >
-> > Sounds good
-> >
-> > Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
->
-> Agreed
->
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
-
-Oh hey me too! <3
-
-Acked-by: Lorenzo Stoakes <ljs@kernel.org>
-
->
-> --
-> Cheers,
->
-> David
-
-Cheers, Lorenzo
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
