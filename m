@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 860D6C43458
-	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 17:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DE8B6C43458
+	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 17:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=dgB2xMhCheXYxaDaTXd3qxlc7A2ly9v83pGoMbOAmws=; b=EpTQigMnwq05GE2qjL74EHf4XN
-	V/lh0qi7I+T/9TfK8tIXlnUARTlUSBKryoBfEzwAPdFMz9cdN8k2wOEoHPPEj9zrV2VS1mJ7uliJC
-	ILDAdUQc8OIDnAECRMCHa7KcbK+R9slxf4CMTrnThjW7toQfsVovStdKoy9aQfoOtnTc5WEXaADkZ
-	KqmpIrLkbpy8PNOc/6FUtC2kk7AlW0CPOv/X9zh/b3Lbl+VTZtJJjOsPtU8+/VUhY+U7kU2Er46i9
-	/A/xF6wxhOBVmuMAaHh89lIuEr2q/FDZSCDIbhfv/ETn8HRcuxyiy6t7gJkckHuNec15+HHceNJkB
-	7tjHzckA==;
+	bh=s0TyfHDGp9MFMmZhGlGKvQfEHqtuRGyQhEAHo3riGeA=; b=swiAj0FTQR7dFcRB7zXRENVliG
+	titFIIUExAIL+6QrF5p9lEJFC+Hs2N6Yk0Reuo6Ak4JUKgJizWL50lX201twawYShNrNz6lAc8Oxt
+	ilQ0Fj01RFmXNBuuC275Y5/4SHFuAIPxJ86unut3RuiiZ1+f077sDOfD9YvtZOMv91qTn75k3h+V1
+	xzA5KhqPsYWwkY5qwmwMkw4JzBGEIaCIlUjzb8aeoevzUpckdWwf7yl7y85pyWuyhd0PYyoa4BQg4
+	MkcBxDqtgu6w0aanBfzjoAtSL09SdllGh8GsaQvFnlXKUUD5QqaZHaOqdIszZSjGstLp93zOnIZGf
+	6KcIcz3g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whsiO-000000038Ql-3P0I;
-	Thu, 09 Jul 2026 17:39:12 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1whsiQ-000000038T9-3hmb;
+	Thu, 09 Jul 2026 17:39:14 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whsiN-000000038PU-1iIv
+	id 1whsiP-000000038RF-1wXZ
 	for kexec@lists.infradead.org;
-	Thu, 09 Jul 2026 17:39:11 +0000
+	Thu, 09 Jul 2026 17:39:13 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id D6B8461836;
+	by sea.source.kernel.org (Postfix) with ESMTP id 3C033437F7;
+	Thu,  9 Jul 2026 17:39:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE1111F00A3E;
 	Thu,  9 Jul 2026 17:39:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A0CA1F00A3D;
-	Thu,  9 Jul 2026 17:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783618750;
-	bh=dgB2xMhCheXYxaDaTXd3qxlc7A2ly9v83pGoMbOAmws=;
+	s=k20260515; t=1783618753;
+	bh=s0TyfHDGp9MFMmZhGlGKvQfEHqtuRGyQhEAHo3riGeA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=RlW3SLa/7ACatTt0jZ2TGxgUhFDYqGkZzFlokYqAgVzHR7YUv5fO80oyI3obRxQma
-	 E+1avjG09445a841Dj7dNYSogNub6lOhJTHMC9mPHYPl65v550aLUdqn8h1m+SmXIX
-	 uMuaYw+QI7uJCIqBt/M9vGyfHzOhSlUgtsC3VbsWmXAcFrd4HIUWK3CpQ4RJrwh4xO
-	 EiFs2M0Spe454LDUALw3E2Gg4hPnKzlpyTBhpY6ipyr4vef5NlHbyveaO5bbT+RVP8
-	 MdWJe7FbzAc5dinNreJF58+0w+cIDnutUn3dCZD3OwlqrXaqVGoXXCmBDf5furhlgr
-	 OotBLs7sBSajQ==
+	b=NgYUfxJCriwCprEgHQEZJJpPIibQJGmufQxvjuMW7DlOy9/xHqorXKwDUOzWSnDya
+	 yiHQPp3Idtq5IrWbUxyb8URxr9iTPsMQerVZwgUMEDto+TQOnX/i98EsP803g0nbVV
+	 bi3yNedZnxPX/iMhIzJFa09S1WlQpNuS7CYWP5LNGVuMFDRrk7JWe8B82WUBvhcv7b
+	 osmv5mmUmxDjJ7+kBleFRTbACSv6vSo8Pn+eN6t0zvelZHH58zIaOUedzzIQwSQgcE
+	 UgQik0N+HAdHdFyF82VDCEmbhaLC/QdJVcxa6yHicokMfyFEcBVAYR6nakKABVtZSn
+	 1FWEwzCjzHq2A==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -56,9 +56,9 @@ To: Mike Rapoport <rppt@kernel.org>,
 Cc: kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 15/21] kho: initialize preserved memory map radix tree earlier
-Date: Thu,  9 Jul 2026 19:38:04 +0200
-Message-ID: <20260709173821.429921-16-pratyush@kernel.org>
+Subject: [PATCH v3 16/21] mm/mm_init: init deferred page migratetype in deferred_init_pages()
+Date: Thu,  9 Jul 2026 19:38:05 +0200
+Message-ID: <20260709173821.429921-17-pratyush@kernel.org>
 X-Mailer: git-send-email 2.55.0.141.g00534a21ce-goog
 In-Reply-To: <20260709173821.429921-1-pratyush@kernel.org>
 References: <20260709173821.429921-1-pratyush@kernel.org>
@@ -80,75 +80,86 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-Currently the preserved memory radix tree is initialized from
-kho_memory_init(), which happens relatively late in MM init. In a coming
-patch, the tree will be used from kho_memory_init_early(). Move the tree
-initialization there.
+The deferred pages are initialized in deferred_init_pages(), but their
+migratetype is initialized later when freeing them in
+deferred_free_pages(). Setting the migrate type is part of initializing
+the pages, so move it to deferred_init_pages().
 
-Simplify some of the code in kho_mem_retrieve() by getting rid of the
-err variable and jumping to err directly.
+This simplifies the logic in deferred_free_pages(), which now only does
+the freeing. For non-max-order-aligned pages, it also drops the
+if (pageblock_aligned) for each freed page, which in theory should be a
+tiny bit faster.
+
+Another motivation for this change is that in a coming patch, KHO will
+need to update the migrate type for its scratch pages. Moving all the
+pageblock init in one place makes that simpler.
 
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- kernel/liveupdate/kexec_handover.c | 30 +++++++++++++++++-------------
- 1 file changed, 17 insertions(+), 13 deletions(-)
+ mm/mm_init.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 2ddfc804cdf7..6e8682469bd7 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -1531,20 +1531,8 @@ static void __init kho_mem_retrieve(void)
- 	const struct kho_radix_walk_cb cb = {
- 		.leaf = kho_preserved_memory_reserve,
- 	};
--	const void *fdt = kho_get_fdt();
--	int err;
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 84d4b1c997bc..bd9dc1829005 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -1985,8 +1985,6 @@ static void __init deferred_free_pages(unsigned long pfn,
  
--	/*
--	 * kho_get_mem_map() should always succeed. If it fails, kho_populate()
--	 * catches that and never sets kho_in.scratch_phys, which stops memory
--	 * retrieval.
--	 */
--	err = kho_radix_init_tree(&kho_in.radix_tree, kho_get_mem_map(fdt));
--	if (err)
--		goto err;
--
--	err = kho_radix_walk_tree(&kho_in.radix_tree, &cb, NULL);
--	if (err)
-+	if (kho_radix_walk_tree(&kho_in.radix_tree, &cb, NULL))
- 		goto err;
- 
- 	return;
-@@ -1756,6 +1744,8 @@ fs_initcall(kho_init);
- 
- void __init kho_memory_init_early(void)
- {
-+	const void *fdt = kho_get_fdt();
-+
- 	if (!is_kho_boot())
+ 	/* Free a large naturally-aligned chunk if possible */
+ 	if (nr_pages == MAX_ORDER_NR_PAGES && IS_MAX_ORDER_ALIGNED(pfn)) {
+-		for (i = 0; i < nr_pages; i += pageblock_nr_pages)
+-			init_pageblock_migratetype(page + i, mt, false);
+ 		__free_pages_core(page, MAX_PAGE_ORDER, MEMINIT_EARLY);
  		return;
+ 	}
+@@ -1994,11 +1992,8 @@ static void __init deferred_free_pages(unsigned long pfn,
+ 	/* Accept chunks smaller than MAX_PAGE_ORDER upfront */
+ 	accept_memory(PFN_PHYS(pfn), nr_pages * PAGE_SIZE);
  
-@@ -1765,6 +1755,20 @@ void __init kho_memory_init_early(void)
- 	 * early.
- 	 */
- 	kho_scratch = phys_to_virt(kho_in.scratch_phys);
-+
-+	/*
-+	 * kho_get_mem_map() should always succeed. If it fails, kho_populate()
-+	 * catches that and never sets kho_in.fdt_phys.
-+	 */
-+	if (kho_radix_init_tree(&kho_in.radix_tree, kho_get_mem_map(fdt))) {
-+		/*
-+		 * Failed to initialize preserved memory radix tree. Clear FDT
-+		 * and scratch so KHO users don't treat it as a KHO boot.
-+		 */
-+		kho_in.fdt_phys = 0;
-+		kho_in.scratch_phys = 0;
-+		return;
-+	}
+-	for (i = 0; i < nr_pages; i++, page++, pfn++) {
+-		if (pageblock_aligned(pfn))
+-			init_pageblock_migratetype(page, mt, false);
++	for (i = 0; i < nr_pages; i++, page++, pfn++)
+ 		__free_pages_core(page, 0, MEMINIT_EARLY);
+-	}
  }
  
- void __init kho_memory_init(void)
+ /* Completion tracking for deferred_init_memmap() threads */
+@@ -2017,15 +2012,23 @@ static inline void __init pgdat_init_report_one_done(void)
+  * Return number of pages initialized.
+  */
+ static unsigned long __init deferred_init_pages(struct zone *zone,
+-		unsigned long pfn, unsigned long end_pfn)
++		unsigned long start_pfn, unsigned long end_pfn,
++		enum migratetype mt)
+ {
+ 	int nid = zone_to_nid(zone);
+-	unsigned long nr_pages = end_pfn - pfn;
++	unsigned long nr_pages = end_pfn - start_pfn, pfn = start_pfn;
+ 	int zid = zone_idx(zone);
+ 	struct page *page = pfn_to_page(pfn);
+ 
+ 	for (; pfn < end_pfn; pfn++, page++)
+ 		__init_single_page(page, pfn, zid, nid);
++
++	/* Now initialize migrate types for these pages. */
++	pfn = pageblock_align(start_pfn);
++	page = pfn_to_page(pfn);
++	for (; pfn < end_pfn; pfn += pageblock_nr_pages, page += pageblock_nr_pages)
++		init_pageblock_migratetype(page, mt, false);
++
+ 	return nr_pages;
+ }
+ 
+@@ -2067,7 +2070,7 @@ deferred_init_memmap_chunk(unsigned long start_pfn, unsigned long end_pfn,
+ 			unsigned long mo_pfn = ALIGN(spfn + 1, MAX_ORDER_NR_PAGES);
+ 			unsigned long chunk_end = min(mo_pfn, epfn);
+ 
+-			nr_pages += deferred_init_pages(zone, spfn, chunk_end);
++			nr_pages += deferred_init_pages(zone, spfn, chunk_end, mt);
+ 			deferred_free_pages(spfn, chunk_end - spfn, mt);
+ 
+ 			spfn = chunk_end;
 -- 
 2.55.0.141.g00534a21ce-goog
 
