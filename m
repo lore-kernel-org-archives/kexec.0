@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 57BA0C44506
-	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 17:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 860D6C43458
+	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 17:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=XRWHX7zMVtBNXHZRqDliEz73l607WKYgb2CCZt52nTM=; b=ObcInvo2Ype/8GwUjW30h97jYp
-	vbAGbXhrt89ZK5XjASIM9L3wcib4hn85rIS9atUKOwWK1nzQr9x2omSAzKWVoDvSW8q+KUPK1VStI
-	wuGY0r1COhFqyBFawMGpfdywqnl1fFAjSF3EcZgqEFm2TBUwdK4fz1kKGa0kDOKcJEp00/gY1n67D
-	Iv53UUD3Xnrq1qasV0Es9c+7mDjzgNZndLPswx/bBoCq+78wJcdviptOq9c+t75yoKfZM94dxEkeY
-	xLFmHx2NDbVkV0+Zyf1jSKTZ5j77P5XmrJ24VbqW5GtuwrurdNIOlgWYEvynPAjjQKfPiCH2sQypN
-	MqJDsAtA==;
+	bh=dgB2xMhCheXYxaDaTXd3qxlc7A2ly9v83pGoMbOAmws=; b=EpTQigMnwq05GE2qjL74EHf4XN
+	V/lh0qi7I+T/9TfK8tIXlnUARTlUSBKryoBfEzwAPdFMz9cdN8k2wOEoHPPEj9zrV2VS1mJ7uliJC
+	ILDAdUQc8OIDnAECRMCHa7KcbK+R9slxf4CMTrnThjW7toQfsVovStdKoy9aQfoOtnTc5WEXaADkZ
+	KqmpIrLkbpy8PNOc/6FUtC2kk7AlW0CPOv/X9zh/b3Lbl+VTZtJJjOsPtU8+/VUhY+U7kU2Er46i9
+	/A/xF6wxhOBVmuMAaHh89lIuEr2q/FDZSCDIbhfv/ETn8HRcuxyiy6t7gJkckHuNec15+HHceNJkB
+	7tjHzckA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whsiM-000000038P1-2xh2;
-	Thu, 09 Jul 2026 17:39:10 +0000
+	id 1whsiO-000000038Ql-3P0I;
+	Thu, 09 Jul 2026 17:39:12 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whsiK-000000038NB-3dfe
+	id 1whsiN-000000038PU-1iIv
 	for kexec@lists.infradead.org;
-	Thu, 09 Jul 2026 17:39:08 +0000
+	Thu, 09 Jul 2026 17:39:11 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 5272361836;
+	by tor.source.kernel.org (Postfix) with ESMTP id D6B8461836;
+	Thu,  9 Jul 2026 17:39:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A0CA1F00A3D;
 	Thu,  9 Jul 2026 17:39:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9E181F00A3A;
-	Thu,  9 Jul 2026 17:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783618748;
-	bh=XRWHX7zMVtBNXHZRqDliEz73l607WKYgb2CCZt52nTM=;
+	s=k20260515; t=1783618750;
+	bh=dgB2xMhCheXYxaDaTXd3qxlc7A2ly9v83pGoMbOAmws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=NP7n7JZ9Rsq1UO8wAMpyzD3u7hK4XgRdKJqYMf3NGmnjFDasuqjeoZBnMCWUoF6GB
-	 f1ci5JPw4rwRrGPTvwjC/dTnPw1s4Mh6ye2rrl9Y6YuMjGIL7NQGIQvtrkrEKz8gtK
-	 EK8kmQgMLm6sgLnfpRjJ5bME6hQrtCrg6ZCYyXX/l0T8PStyNZ9/w+FstjBK+NxU/W
-	 RuBck4m0VsEySc92EWwrojZeHbI+WgQGyRsbY5RGT66kNe4377F/QDerVTGDHXtDHb
-	 n1s1omuYv14J7fgIi4wf4bCdSiICgQEKHmpBB1xOIukRhMjCt4MzgFDKwM5UtpgfhO
-	 aqnx/ryim+bTg==
+	b=RlW3SLa/7ACatTt0jZ2TGxgUhFDYqGkZzFlokYqAgVzHR7YUv5fO80oyI3obRxQma
+	 E+1avjG09445a841Dj7dNYSogNub6lOhJTHMC9mPHYPl65v550aLUdqn8h1m+SmXIX
+	 uMuaYw+QI7uJCIqBt/M9vGyfHzOhSlUgtsC3VbsWmXAcFrd4HIUWK3CpQ4RJrwh4xO
+	 EiFs2M0Spe454LDUALw3E2Gg4hPnKzlpyTBhpY6ipyr4vef5NlHbyveaO5bbT+RVP8
+	 MdWJe7FbzAc5dinNreJF58+0w+cIDnutUn3dCZD3OwlqrXaqVGoXXCmBDf5furhlgr
+	 OotBLs7sBSajQ==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -56,9 +56,9 @@ To: Mike Rapoport <rppt@kernel.org>,
 Cc: kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 14/21] kho: initialize kho_scratch pointer earlier in boot
-Date: Thu,  9 Jul 2026 19:38:03 +0200
-Message-ID: <20260709173821.429921-15-pratyush@kernel.org>
+Subject: [PATCH v3 15/21] kho: initialize preserved memory map radix tree earlier
+Date: Thu,  9 Jul 2026 19:38:04 +0200
+Message-ID: <20260709173821.429921-16-pratyush@kernel.org>
 X-Mailer: git-send-email 2.55.0.141.g00534a21ce-goog
 In-Reply-To: <20260709173821.429921-1-pratyush@kernel.org>
 References: <20260709173821.429921-1-pratyush@kernel.org>
@@ -80,89 +80,75 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-In a future patch, mm init will use kho_scratch_overlap() for deciding
-the migrate type of pageblocks it initializes. The earliest user
-currently is free_area_init(). kho_scratch_overlap()
-relies on kho_scratch pointer being initialized. Introduce
-kho_memory_init_early() to do this.
+Currently the preserved memory radix tree is initialized from
+kho_memory_init(), which happens relatively late in MM init. In a coming
+patch, the tree will be used from kho_memory_init_early(). Move the tree
+initialization there.
 
-kho_populate() would normally be a good place to do this, but
-unfortunately, phys_to_virt() does not work at that point on ARM64. So
-we need yet another initialization function.
+Simplify some of the code in kho_mem_retrieve() by getting rid of the
+err variable and jumping to err directly.
 
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- include/linux/kexec_handover.h     |  3 +++
- kernel/liveupdate/kexec_handover.c | 15 +++++++++++++--
- mm/mm_init.c                       |  1 +
- 3 files changed, 17 insertions(+), 2 deletions(-)
+ kernel/liveupdate/kexec_handover.c | 30 +++++++++++++++++-------------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
-diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
-index 40cb95a80981..18ba417f1ada 100644
---- a/include/linux/kexec_handover.h
-+++ b/include/linux/kexec_handover.h
-@@ -33,6 +33,7 @@ void kho_remove_subtree(void *blob);
- int kho_retrieve_subtree(const char *name, phys_addr_t *phys, size_t *size);
- 
- void kho_memory_init(void);
-+void kho_memory_init_early(void);
- 
- void kho_populate(phys_addr_t fdt_phys, u64 fdt_len, phys_addr_t scratch_phys,
- 		  u64 scratch_len);
-@@ -110,6 +111,8 @@ static inline int kho_retrieve_subtree(const char *name, phys_addr_t *phys,
- 
- static inline void kho_memory_init(void) { }
- 
-+static inline void kho_memory_init_early(void) { }
-+
- static inline void kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
- 				phys_addr_t scratch_phys, u64 scratch_len)
- {
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index b3b97a6ff9c8..2ddfc804cdf7 100644
+index 2ddfc804cdf7..6e8682469bd7 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -1534,8 +1534,6 @@ static void __init kho_mem_retrieve(void)
- 	const void *fdt = kho_get_fdt();
- 	int err;
+@@ -1531,20 +1531,8 @@ static void __init kho_mem_retrieve(void)
+ 	const struct kho_radix_walk_cb cb = {
+ 		.leaf = kho_preserved_memory_reserve,
+ 	};
+-	const void *fdt = kho_get_fdt();
+-	int err;
  
--	kho_scratch = phys_to_virt(kho_in.scratch_phys);
+-	/*
+-	 * kho_get_mem_map() should always succeed. If it fails, kho_populate()
+-	 * catches that and never sets kho_in.scratch_phys, which stops memory
+-	 * retrieval.
+-	 */
+-	err = kho_radix_init_tree(&kho_in.radix_tree, kho_get_mem_map(fdt));
+-	if (err)
+-		goto err;
 -
- 	/*
- 	 * kho_get_mem_map() should always succeed. If it fails, kho_populate()
- 	 * catches that and never sets kho_in.scratch_phys, which stops memory
-@@ -1756,6 +1754,19 @@ static __init int kho_init(void)
- }
- fs_initcall(kho_init);
+-	err = kho_radix_walk_tree(&kho_in.radix_tree, &cb, NULL);
+-	if (err)
++	if (kho_radix_walk_tree(&kho_in.radix_tree, &cb, NULL))
+ 		goto err;
  
-+void __init kho_memory_init_early(void)
-+{
-+	if (!is_kho_boot())
-+		return;
+ 	return;
+@@ -1756,6 +1744,8 @@ fs_initcall(kho_init);
+ 
+ void __init kho_memory_init_early(void)
+ {
++	const void *fdt = kho_get_fdt();
++
+ 	if (!is_kho_boot())
+ 		return;
+ 
+@@ -1765,6 +1755,20 @@ void __init kho_memory_init_early(void)
+ 	 * early.
+ 	 */
+ 	kho_scratch = phys_to_virt(kho_in.scratch_phys);
 +
 +	/*
-+	 * kho_scratch_overlap() needs kho_scratch to be initialized. It
-+	 * is used by free_area_init() on KHO boots, so initialize it
-+	 * early.
++	 * kho_get_mem_map() should always succeed. If it fails, kho_populate()
++	 * catches that and never sets kho_in.fdt_phys.
 +	 */
-+	kho_scratch = phys_to_virt(kho_in.scratch_phys);
-+}
-+
++	if (kho_radix_init_tree(&kho_in.radix_tree, kho_get_mem_map(fdt))) {
++		/*
++		 * Failed to initialize preserved memory radix tree. Clear FDT
++		 * and scratch so KHO users don't treat it as a KHO boot.
++		 */
++		kho_in.fdt_phys = 0;
++		kho_in.scratch_phys = 0;
++		return;
++	}
+ }
+ 
  void __init kho_memory_init(void)
- {
- 	if (kho_in.scratch_phys)
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index 0f64909e8d20..84d4b1c997bc 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -2687,6 +2687,7 @@ void __init __weak mem_init(void)
- 
- void __init mm_core_init_early(void)
- {
-+	kho_memory_init_early();
- 	hugetlb_cma_reserve();
- 	hugetlb_bootmem_alloc();
- 
 -- 
 2.55.0.141.g00534a21ce-goog
 
