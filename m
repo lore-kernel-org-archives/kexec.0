@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 254F6C43458
-	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 17:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5CEB3C43458
+	for <kexec@archiver.kernel.org>; Thu,  9 Jul 2026 17:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=GIKLTijiKnBgrZXcLoBE8VlZLtn/daTEtdVuzKJ4kpE=; b=aZGk3xFfCda4BQKce715C0u0+d
-	2u/IUjVHGkd1XyFNi+u5Zf5WtAwoU8BcKPXfhOP05BduOhbMe51QBGPXzVBxEy/5+velUAnXIQNV+
-	wfet0pvbIfpo3F/SPcIxPyb9+fD3GYMqsIeb7ZY9/VaTnutqyL+IXaxZxRLovRABQ/D1nbG49l3fp
-	zR5qILYYQjBKTxUnQP+6/HqBE4oIIi6P5/tgxg8w+G/2rkaJrcMw+gIs18vJtvUwPbJv7KFz+ULr8
-	1bnK9MG7jHVUwbMm7YUOnO/dgY94+mrCzoI5XkC1i9PzCzRPfksrcSVy6a3I3+F4AgAdPczDLdNbh
-	1EqIxvHg==;
+	bh=Jo6vG8Fck92Ec2ICF08h9HWgylgcmuoyS4qHd/4tb4k=; b=U2Rl4LdJ8wRCQjX0rRjdfngB1q
+	uSEttkbgEKm0CJdWPj3iSpUdDnbUarHMK0FRVVOfK9y1nvnCBg0VbPrIs2HLQjQ0ftx0U97yI1aAG
+	qIa3yEwfKJeXePnNeUQ7Nu5pb3y5eHi36JboRHINOWgGe8K0OvcMH3SBHP/vV8w8gNXs/1kV2BE3F
+	5pe8/DkBBF2zp0ZC7J5yYNPA1P7G+ntmyYXHRCK0nKoiHbqqgzx8OEH5/QD36ymRBX1NCqWovHhVD
+	mxlxYuLKdSMPvSiu//joN2rmjyKevdk9Qq9zFPCI9z05nub1yDiG/HPrpVNSbEsO57VBjKK5uwc3N
+	bA7XvWcw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whsib-000000038do-1ZZQ;
-	Thu, 09 Jul 2026 17:39:25 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1whsid-000000038g0-1sje;
+	Thu, 09 Jul 2026 17:39:27 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1whsia-000000038c5-0X0O
+	id 1whsic-000000038eY-0jyK
 	for kexec@lists.infradead.org;
-	Thu, 09 Jul 2026 17:39:24 +0000
+	Thu, 09 Jul 2026 17:39:26 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 8F83561381;
+	by sea.source.kernel.org (Postfix) with ESMTP id E8FAE42E1B;
+	Thu,  9 Jul 2026 17:39:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A70881F00A3D;
 	Thu,  9 Jul 2026 17:39:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22EA91F00A3A;
-	Thu,  9 Jul 2026 17:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783618763;
-	bh=GIKLTijiKnBgrZXcLoBE8VlZLtn/daTEtdVuzKJ4kpE=;
+	s=k20260515; t=1783618765;
+	bh=Jo6vG8Fck92Ec2ICF08h9HWgylgcmuoyS4qHd/4tb4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=a+g1M1oDufFBFZydVBdmxrJjcJaTrBCkRDeT/XIBd08gpl1wEoGlOx3f13NjoUa+p
-	 wz1WAATyzMrRkjhi+H64P2b6Bzm83+JmjSoyqq1LWfsOI76/LkKfRC7DG69mlPIv8C
-	 tkjd7rX6MvY6qfRw2mP3UoERGmt27c201PhOHzc/tgA5jlTaH6HQQproNWA9K3dT23
-	 sWMjZ34E+MFNA4NmEVtItaSSytuQQNYhNbh63AB7+CWuLCogtgGuI+eO25fU1/s9bl
-	 dsjc4ZcnKzfO3y3E5gHiFsAhhspI8y9QvbfVeO6I1/SL/7jnP1yjS/dQnLYUszCTZy
-	 EpVxJLH7hSQpQ==
+	b=Uc5holxavp4JQIp7OghW6d0zZ/963AZ+EpsBk1yFU1Od1tM2H46v8cfDKe5Y/1b7a
+	 zPE+Jce/p0bDpwIpMAO+1TNlNXAM+3aOHUK6MvXSfJDwrqzKOh164kDbHktkLBbm+p
+	 uRIeolRBn7n6PqIoyLDfxFWUWoJw4SCHffrXva6IJV314NFnGKEQ9r7jnm3SReA++R
+	 He/+e8OXxBI5iiy5LFPHG5Rt4eb80rcmRcILB6xzCJY7T2/wZ7WVbVFLWFm8+btt2x
+	 UXyNXG6EoAwJXHWTKr1OZEuEIbAL9+HY410UK9qfnlU7sC++R2yFAwiv8cu+cuYR3E
+	 XQPAq4T1QQlAw==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -56,9 +56,9 @@ To: Mike Rapoport <rppt@kernel.org>,
 Cc: kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 20/21] memblock: add memblock_reserved_hugetlb_size()
-Date: Thu,  9 Jul 2026 19:38:09 +0200
-Message-ID: <20260709173821.429921-21-pratyush@kernel.org>
+Subject: [PATCH v3 21/21] kho: exclude hugetlb memory from scratch size calculation
+Date: Thu,  9 Jul 2026 19:38:10 +0200
+Message-ID: <20260709173821.429921-22-pratyush@kernel.org>
 X-Mailer: git-send-email 2.55.0.141.g00534a21ce-goog
 In-Reply-To: <20260709173821.429921-1-pratyush@kernel.org>
 References: <20260709173821.429921-1-pratyush@kernel.org>
@@ -80,62 +80,62 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-Similar to memblock_reserved_kern_size(), but calculates only the memory
-reserved for hugetlb pages. This is needed in an upcoming commit that
-subtracts hugetlb reservation size when computing the size of KHO
-scratch areas.
+HugeTLB pages can be preserved memory. So they are never allocated from
+scratch. Instead, they are allocated from the memory blocks with no
+preserved memory. These areas are detected at runtime on each boot.
+
+But since they are allocated via memblock, they show up as RSRV_KERN,
+and blow up the scratch size when scratch scale is in use.
+
+All hugetlb pages are marked RSRV_HUGETLB. Subtract their size from
+RSRV_KERN when calculating scratch sizes.
 
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- include/linux/memblock.h |  1 +
- mm/memblock.c            | 22 ++++++++++++++++++++++
- 2 files changed, 23 insertions(+)
+ kernel/liveupdate/kexec_handover.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 678fe466529a..d62db9e776cf 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -487,6 +487,7 @@ static inline __init_memblock bool memblock_bottom_up(void)
- phys_addr_t memblock_phys_mem_size(void);
- phys_addr_t memblock_reserved_size(void);
- phys_addr_t memblock_reserved_kern_size(phys_addr_t limit, int nid);
-+phys_addr_t memblock_reserved_hugetlb_size(phys_addr_t limit, int nid);
- unsigned long memblock_estimated_nr_free_pages(void);
- phys_addr_t memblock_start_of_DRAM(void);
- phys_addr_t memblock_end_of_DRAM(void);
-diff --git a/mm/memblock.c b/mm/memblock.c
-index ba6d887ea18e..c10dfb054806 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -1893,6 +1893,28 @@ phys_addr_t __init_memblock memblock_reserved_size(void)
- 	return memblock.reserved.total_size;
- }
- 
-+phys_addr_t __init_memblock memblock_reserved_hugetlb_size(phys_addr_t limit, int nid)
-+{
-+	struct memblock_region *r;
-+	phys_addr_t total = 0;
-+
-+	for_each_reserved_mem_region(r) {
-+		phys_addr_t size = r->size;
-+
-+		if (r->base > limit)
-+			break;
-+
-+		if (r->base + r->size > limit)
-+			size = limit - r->base;
-+
-+		if (nid == memblock_get_region_node(r) || !numa_valid_node(nid))
-+			if (r->flags & MEMBLOCK_RSRV_HUGETLB)
-+				total += size;
-+	}
-+
-+	return total;
-+}
-+
- phys_addr_t __init_memblock memblock_reserved_kern_size(phys_addr_t limit, int nid)
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 2c4848874629..9dc79b7103bd 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -742,19 +742,24 @@ early_param("kho_scratch", kho_parse_scratch_size);
+ static void __init scratch_size_update(void)
  {
- 	struct memblock_region *r;
+ 	/*
+-	 * If fixed sizes are not provided via command line, calculate them
+-	 * now.
++	 * If fixed sizes are not provided via command line, calculate them now.
++	 * Remove HugeTLB allocations from it because they never get allocated
++	 * from scratch.
+ 	 */
+ 	if (scratch_scale) {
+ 		phys_addr_t size;
+ 
+ 		size = memblock_reserved_kern_size(ARCH_LOW_ADDRESS_LIMIT,
+ 						   NUMA_NO_NODE);
++		size -= memblock_reserved_hugetlb_size(ARCH_LOW_ADDRESS_LIMIT,
++						       NUMA_NO_NODE);
+ 		size = size * scratch_scale / 100;
+ 		scratch_size_lowmem = size;
+ 
+ 		size = memblock_reserved_kern_size(MEMBLOCK_ALLOC_ANYWHERE,
+ 						   NUMA_NO_NODE);
++		size -= memblock_reserved_hugetlb_size(MEMBLOCK_ALLOC_ANYWHERE,
++						       NUMA_NO_NODE);
+ 		size = size * scratch_scale / 100 - scratch_size_lowmem;
+ 		scratch_size_global = size;
+ 	}
+@@ -774,6 +779,9 @@ static phys_addr_t __init scratch_size_node(int nid)
+ 	if (scratch_scale) {
+ 		size = memblock_reserved_kern_size(MEMBLOCK_ALLOC_ANYWHERE,
+ 						   nid);
++		/* Do not count HugeTLB pages. */
++		size -= memblock_reserved_hugetlb_size(MEMBLOCK_ALLOC_ANYWHERE,
++						       nid);
+ 		size = size * scratch_scale / 100;
+ 	} else {
+ 		size = scratch_size_pernode;
 -- 
 2.55.0.141.g00534a21ce-goog
 
