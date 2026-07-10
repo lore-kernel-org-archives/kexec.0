@@ -4,120 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6650EC43458
-	for <kexec@archiver.kernel.org>; Fri, 10 Jul 2026 12:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D5EE9C44506
+	for <kexec@archiver.kernel.org>; Fri, 10 Jul 2026 14:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=n6yMtU5a9xI+ekMnhRgl8xfMzS3v7/anO/PeMGwUz3g=; b=TevlmIIkaaaVAF3SodNBY5w8Sj
-	gzwCDc04Yp4J9esVRJeFhPc2F5nA5BPWUyHj9UVMqZmFQhzj85+AinTES4Zg35uUknQp7s02MeShP
-	/lMvOapF70/YjoivrlEKQFeaz85gG+0jlr8vPVE61+aGZ5h2rIKhvWb4RT6ch2APkwtDhipgk8kov
-	ZLoOms0WQsZbsunErtWxdTQkzAz/jiyFj+IWTwEjxJ9nzIHt+RO90vce8oGB9o8vbLoXq9qrH54QS
-	HzLo8QvM+x8qdzCs/QDm6jgA1y0vsSS4NmcsYHI1sVO8xxr3mKGh+wHdpc1Y9JW1obPC/efP0P+AN
-	NOczb/QQ==;
+	bh=ZHdWJB2BiyxmhREK7giZIXjhCTkA1O03lnMMdRJ9eRY=; b=v4s2J38J9WH7x0fvmAMtQ0pBbl
+	Tj1HvOGwXWNVNllwQj0jcVbUzt2Bds/S1ZmhRhavRhMdqu+cVZucp8waIFJx1HQEs8iw0klMdwRKG
+	D94JEHElTdbFLvkeHGczaXkVruOl/bGixi5ls1eqyjIWBhyroxDoEzqVhYXIet/EQDUmM/KWQbD3c
+	CF2X29PBnPwRm34UtlMovwRYIIyccc892JBLchcREcpqvpe2o7nULaYYr48BwWRA9Cd8Sot/2pqnj
+	G58FjZwftFigJZUhEYtz9Apc7RC3HmqL7+8nzheWQD3C6VdAn+2LA2ry0yC3b3IIWTQZUh+mkGvid
+	1xgU0s2A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wi9yB-00000004tFU-10ui;
-	Fri, 10 Jul 2026 12:04:39 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1wiByX-0000000540u-3jeb;
+	Fri, 10 Jul 2026 14:13:09 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wi9y9-00000004tFO-0zr2
-	for kexec@bombadil.infradead.org;
-	Fri, 10 Jul 2026 12:04:37 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:MIME-Version:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=n6yMtU5a9xI+ekMnhRgl8xfMzS3v7/anO/PeMGwUz3g=; b=LcDI2H8No1JprxidNJQBFO+GWZ
-	tK4qVUxsDXQhP3JPqSxCeSE663533k0DmIBlgqY2d2N6DTDTnqBNeUfZdKEcA88CJEVTRQk5lMUGd
-	I9j3pCnHVsahcetApC7foossBC+jOWtlito6mgNKZUn/8B60Hn/MJfrmfPFw07jlJxQZUBET4mBG6
-	sMGeXTeazP4MIqCn8qo9tqam3rOYkc0uvV0um7lbtAWcvk4Ezx1PyIk8krnk9fwXYUzwClGtlUEf7
-	1U/93RjLPbtQiI6oBfQ8XM5tvM5SjlCByu8u8UMl1XBZ2HeY+RAUIo+iCmJt4PQXzKJ6ZonWYdVCp
-	TRMqCc4A==;
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
-	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1wi9y6-00000009zLc-20CE
+	id 1wiByW-0000000540d-1ZB8
 	for kexec@lists.infradead.org;
-	Fri, 10 Jul 2026 12:04:36 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783685066;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n6yMtU5a9xI+ekMnhRgl8xfMzS3v7/anO/PeMGwUz3g=;
-	b=Poyp1AlJTMKDCp6EGovvoZreO0aB/RzUFUuLgPzL3lL3bgkgZtix7dYxHKPcXTASzpriKA
-	wTXaUcOP5JjduW73AWm+/XNr/WSjtcqoKPKJ2ajc4yS9BbEc3MneB1V53HM5i4w6++0Yix
-	398zd+QKtEIAPZTwi2l2Tti6qckdGNo=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783685073;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n6yMtU5a9xI+ekMnhRgl8xfMzS3v7/anO/PeMGwUz3g=;
-	b=gRkPXNiQcGsXNgvB8dh4/AFr05VAHgzx8HlWJpJwywWPah6nekGHNaNF+/NbBQsQGoEBMe
-	dLLa5Z7SIYAr9Lu46QRaAsuqrbyWzfUWegksXwa75SkDlUIeo98YKa5mAchKRfBekwUw6+
-	lAaL/uEQKosOIARhaqefT6k01NPfll4=
-Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com
- [209.85.167.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-402-cEeEn6x8OqCjqJ00xmaBQg-1; Fri, 10 Jul 2026 08:04:23 -0400
-X-MC-Unique: cEeEn6x8OqCjqJ00xmaBQg-1
-X-Mimecast-MFC-AGG-ID: cEeEn6x8OqCjqJ00xmaBQg_1783685063
-Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-495b8b30310so861148b6e.1
-        for <kexec@lists.infradead.org>; Fri, 10 Jul 2026 05:04:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783685063; x=1784289863;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=n6yMtU5a9xI+ekMnhRgl8xfMzS3v7/anO/PeMGwUz3g=;
-        b=jzYArAi7tNOxesnpemseRJK8eOptnS0KNKHWgC/zbZ9Ep54NGnqVG7cTHYER2ny2pj
-         N+JK5g4z4AI22B3H8buycwDRr8yhwg4Y0StsLUOAB2YUSBVfTL1308sEdwAYdKlhSivs
-         c9oVzF0Hz4CxWTmxp8X5HlC8ZpRlN2NLs7z7UWYsxPmlMmKxBe9kIxmyRZIf8MnuTfes
-         NnaATg3bWjXeCRw5XzjosdWENiJAOw5xe1XzmhnS76+uxja1Bt06s+1EymFmZV0kmP2i
-         NGl75txnMxDQau4wVTrYs129uTVaBTJp4v0gapVF/+81a/gA7p7yZ632K+06EHJV9kck
-         WEtg==
-X-Gm-Message-State: AOJu0YyzFQ5MR9FbFD4k18aYle1njW4oKWhwWor/xyav0sU3Zeh+bOvQ
-	G5UX01iug2G01kiAT7s+OAKg/8aUZYvHR6/Jat5E6Da986AtSk1gVaQ5xXzyv+YUvp94sdik+8M
-	X2qcwsHt8/yTVZ0xbb7kI3tArvMtscFyeDhZZJCaj/rJtlVkdWeHFsHF/2onWddN1EU09R8Erzp
-	nLdZ385XBahnvZqOWrvYLg3PVneGQaLEeGoTwb
-X-Gm-Gg: AfdE7cnNvSdpymnH54K6qhJwKcU1XCCPAZhpcAsn82pATZArFhtR37LeI3tDtbmthGk
-	IH2uFS1IV0pjRwNdd8aVl8w3q69BQuDBMlpEycod906+2uNF2ZErBgZNmUEF3FZpT1B1OdeeUN4
-	Z4QLpW6ERhfxmLU8aP4af7d/Fo1hmztGCLEKPjRVMxj5ibuxzPh3Kylyojd7MCCpyC0P+9i1fea
-	q+WWQgz1d086KbcPA41I8rO3Lw=
-X-Received: by 2002:a05:6808:4495:b0:495:d6b7:6004 with SMTP id 5614622812f47-4a2045e17aemr8153642b6e.26.1783685063069;
-        Fri, 10 Jul 2026 05:04:23 -0700 (PDT)
-X-Received: by 2002:a05:6808:4495:b0:495:d6b7:6004 with SMTP id
- 5614622812f47-4a2045e17aemr8153631b6e.26.1783685062691; Fri, 10 Jul 2026
- 05:04:22 -0700 (PDT)
+	Fri, 10 Jul 2026 14:13:08 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 6193A60051
+	for <kexec@lists.infradead.org>; Fri, 10 Jul 2026 14:13:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B39A1F00A3A
+	for <kexec@lists.infradead.org>; Fri, 10 Jul 2026 14:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783692787;
+	bh=ZHdWJB2BiyxmhREK7giZIXjhCTkA1O03lnMMdRJ9eRY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=YNva9iHvkOPHIkRRCqb1ovPNv6AtInyxJdmgqlUaz+6H91RohX7g5hbn0z6NKpQyQ
+	 WM1GQp7aaMaffEyzxb+9GIpa3ofTrGTCGkpFQNiHZYhFGnSHG8PyPXLxpUBDTWciXa
+	 3/GNAJJcsV7Iw5HlhOYQo977KTmIx6rYZHKsZVFzkhr0JCHdtMsocJYDsJ1VBc05sj
+	 NLOGC4uWV+YzfXiXRNHT/pjUOnlUUdoeazw9gIcOYvEZ/yIZJR0r+PK90hgeDckvHE
+	 gcmcBJLbHpzBrECpherUqayrzV1U9FS7pVQAdKDFFR50iR39bHKoEGLCY2khs3OuP6
+	 FuIeg8tBPDBWA==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-698acd36d67so1952599a12.0
+        for <kexec@lists.infradead.org>; Fri, 10 Jul 2026 07:13:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RqXgudQbSPx6HGGJM2p8lK5HS/R0XAFwX75+JcvDjvXVblw7U8D0/nDx6IWxiEJ3VbbiKlDuQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzSKRDfKJEwp1W2KwbGEDGuspPQ+ws9wHGgljfQar7ROPfBo7Tu
+	mSZenPPK7sa4f8jisb9t0Ojfuw7fbbC+G1YkaUeaycW235Xl5jDAqidKF/jS7RYJeUyVefB57gl
+	Beg74VdwlrQ4CMbHAjCirF59RwvL24wQ=
+X-Received: by 2002:a05:6402:194e:b0:698:bbe:9c8 with SMTP id
+ 4fb4d7f45d1cf-69ab4469aa3mr5016750a12.15.1783692785766; Fri, 10 Jul 2026
+ 07:13:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20260629144837.3244851-1-desnesn@redhat.com> <akRTVinqeeZnVARD@localhost.localdomain>
-In-Reply-To: <akRTVinqeeZnVARD@localhost.localdomain>
-From: Desnes Nunes <desnesn@redhat.com>
-Date: Fri, 10 Jul 2026 09:04:11 -0300
-X-Gm-Features: AUfX_mzVC853Yhxe5IzKb6IGxVPhPJKkZ0EBhVqEVYwZEn7zq3i4mNWDrdm-aj8
-Message-ID: <CACaw+exCLSLRUNU38uorD9r+fk4AjD-Oe+RZNzFXzjwE2q9rsQ@mail.gmail.com>
-Subject: Re: [PATCH v2] iommu/vt-d: Fix UCTP context table slot when copying
- root entries
-To: Tao Liu <ltao@redhat.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	iommu@lists.linux.dev, stable@vger.kernel.org, baolu.lu@linux.intel.com, 
-	dwmw2@infradead.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: STr9OK6RCaRe_CXxpDS9yVjou97n3tIVr7dBhxFuJ8U_1783685063
-X-Mimecast-Originator: redhat.com
+References: <CAAhV-H7S9_hPDFoCtzgfY9TeH_koN9NfKq9mo8y9BmLA5-7how@mail.gmail.com>
+ <20260709124830.15417-1-dongtai.guo@linux.dev>
+In-Reply-To: <20260709124830.15417-1-dongtai.guo@linux.dev>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Fri, 10 Jul 2026 22:12:54 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H48MWTkJuqOV3M1wFhZXL5U7Kp0Vegv74P4t6XEvOEpHA@mail.gmail.com>
+X-Gm-Features: AUfX_mwEQbfiRwKJSjmg9Z9gLLMMYvWBHmoip68TanGdrsXRUZEOoiUPd_-0Iac
+Message-ID: <CAAhV-H48MWTkJuqOV3M1wFhZXL5U7Kp0Vegv74P4t6XEvOEpHA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/2] LoongArch: kexec: avoid clobbering the QEMU FDT
+To: George Guo <dongtai.guo@linux.dev>
+Cc: maobibo@loongson.cn, loongarch@lists.linux.dev, kexec@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, George Guo <guodongtai@kylinos.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260710_130434_698512_61B027F1 
-X-CRM114-Status: UNSURE (   7.70  )
-X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -132,20 +80,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Greetings Tao,
-
-On Tue, Jun 30, 2026 at 8:38=E2=80=AFPM Tao Liu <ltao@redhat.com> wrote:
-> Thanks for attaching the kernel stack trace, which is similar to the one =
-I have
-> encountered recently. And I have applied & tested the patch, works good f=
-or me.
+On Thu, Jul 9, 2026 at 8:48=E2=80=AFPM George Guo <dongtai.guo@linux.dev> w=
+rote:
 >
-> Tested-by: Tao Liu <ltao@redhat.com>
+> Hi Huacai,
+>
+> Thanks for the correction, and I am sorry for the way I handled this.
+>
+> > Who told you the trampoline is dead code? All non-boot CPUs are
+> > running in the trampoline, you can use maxcpus=3D1 to go to the new
+> > kernel, and do something, and then hotplug the non-boot CPUs at any
+> > time.
+>
+> You are right, and I was wrong to call the trampoline dead once the new
+> kernel starts.  The non-boot CPUs spin in kexec_smp_wait inside the
+> trampoline buffer and only leave it when the new kernel brings them
+> online, so with maxcpus=3D1 they stay there until a later CPU hotplug.
+> The buffer has to stay valid the whole time.
+>
+> That breaks my patch 1.  control_code_page is allocated by the kexec
+> core and is not reserved in the new kernel, so the new kernel can reuse
+> that page while the non-boot CPUs are still spinning in it, and small
+> memory makes that more likely.  The fixed KEXEC_CONTROL_CODE at 0x100000
+> avoided this because the first 2MB is memblock_reserve()d in both
+> kernels; its only problem was that it overlaps QEMU's machine FDT at
+> 0x100000.  So my Q2 answer in the cover letter was also wrong, and "as
+> arm64/riscv do" does not apply here.
+>
+> So the trampoline still needs to live in the cross-kexec reserved first
+> 2MB, just not on top of the FDT.  The FDT declares fdt_totalsize 1MB and
+> covers [0x100000, 0x200000), so the room left is below 0x100000.
+>
+> Do you have a different fix in mind? I would like to agree on the
+> direction with you before I send anything.
+>
+> > BTW,  you have never replied to my comments, all you have done is
+> > submit new versions again and again.
+>
+> That is fair, and it was my mistake.  I should have replied to your
+> review in the thread and discussed it before sending a new version,
+> instead of putting my answers in a cover letter.  I will reply to
+> comments first from now on.
+>
+> I will hold the series until we settle the trampoline approach.
+I had proposed a reasonable solution as early as in v1.
 
-Thanks for testing it on another system and confirming the fix.
+Huacai
 
-Best regards,
-
-Desnes
-
+>
+> Thanks,
+> George
 
