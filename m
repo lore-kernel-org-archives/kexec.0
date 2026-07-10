@@ -4,62 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7159AC43458
-	for <kexec@archiver.kernel.org>; Fri, 10 Jul 2026 08:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 56CA6C43458
+	for <kexec@archiver.kernel.org>; Fri, 10 Jul 2026 09:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Date:Message-Id:Subject:References:In-Reply-To:Cc:
+	Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:
 	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=neUUMderc8pK3/GUtT7QKblcYRV+0mOiXacxP6rJpzQ=; b=qullUppSqAjCQ6miHlHhFObq6m
-	U2TmbnZMRnHR5sqHXuxCcHWCRknA1HB1Z5qoLFhb/10m/H7YvS3skO330Y3C8h13CkrZoNkps7l1q
-	mQGiT8zKIVV+NMpclvuwyL2bwKJTZNm3e8fs3kx9pNYBscjhG7gCGzszJc7BNUsk07AmOHAt+wYKF
-	2VU+dpBuFmabOK4RDJlTX5y48uxbhM9LAT9yL320CNX7O8m5+rFaDrjnEZNkBXHjDqUQ9gvpn4y8l
-	u/E5jONvBmc8W6xINWcCO0jci4NBweVwJuk7dFrkxHfV0fzh3kwBGR7u0TczjRJYJGeS3YGVHQWoc
-	PfyVhZLQ==;
+	bh=ghnk+dbD6A1tyBxAoJ0s58GH07hqyxQ8En0ljy8NSzs=; b=BQxCRInXz/Cv/aKT27Twez8vUl
+	wzAOLP/j3JmaQA+RJwethQCE6wkP5rXhVDOWov6VQ0i9H9iq2C/UNMzbW0ZNCGSMUxgMpRQeEJArR
+	2zdp9myc4MhEwHSuz9SjTdJwYrw8s1GE6y0uClPJpyr/MelgKe9P/gz5fogWCq8IWXHXUDT2LOLZ1
+	y4S/ogLIBRVnL6B5LRpy6Xne8DOYlDsBRPD43LRTc9A4l6qWGX0nrqB9RvMSjHHC5RWqrYbmFwpuQ
+	HSx4c0dWvosKxZasufrgGTvcqGFc68KWoJ5VoOrHPVfPAzCSK9QZEmPHbEqLUsRkm7zS6f8bVIebQ
+	q+O0M6Tw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wi6HO-00000004QJ8-1olL;
-	Fri, 10 Jul 2026 08:08:14 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wi7za-00000004e9z-2I5o;
+	Fri, 10 Jul 2026 09:57:58 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wi6HN-00000004QIr-3ziS
+	id 1wi7zZ-00000004e9r-2Lw8
 	for kexec@lists.infradead.org;
-	Fri, 10 Jul 2026 08:08:13 +0000
+	Fri, 10 Jul 2026 09:57:57 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 5D5CD43614;
-	Fri, 10 Jul 2026 08:08:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15DAE1F000E9;
-	Fri, 10 Jul 2026 08:08:10 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id B0A526136C;
+	Fri, 10 Jul 2026 09:57:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 243BB1F00AC4;
+	Fri, 10 Jul 2026 09:57:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783670893;
-	bh=neUUMderc8pK3/GUtT7QKblcYRV+0mOiXacxP6rJpzQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=EhTkA77ocVxsAwxNyvNg6nf7rP4PKUWF8V2L6ucOfkTTEsnQ2ehMAbqkm45XNNyam
-	 GCO8ZuLKZp7lQ18Xsn7iax43NCh7dzlRm5HdVzz6vV82TidJYJ1ALkn7yWZFqx1RFo
-	 41oGuo1zr1oa+sub9rVE199yzEDdfuAgvULv15L17btyB8PiILyNu8S8mcjUfxvI60
-	 R+6vEfbtrsmA6xQidW1Z+VbaS/CrDE8wbg7SbrY/piKRC1GDWGpEVp/MXhSDBaCX/S
-	 ZZZXs/TO3YWAhCRANnBkGViJE+JNoz+ETrW6i2+4qEbqX0d2pZcUfy9wnB0DYA8v5l
-	 MHDqsFoAUJCDQ==
-From: Mike Rapoport <rppt@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, Mike Rapoport <rppt@kernel.org>
-Cc: Jordan Richards <jordanrichards@google.com>, 
- Shuah Khan <shuah@kernel.org>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
- Willy Tarreau <w@1wt.eu>, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, kexec@lists.infradead.org
-In-Reply-To: <20260626-luo-vmtest-v0-v4-1-e7d3111cd5b3@kernel.org>
-References: <20260626-luo-vmtest-v0-v4-1-e7d3111cd5b3@kernel.org>
-Subject: Re: [PATCH v4] selftests/liveupdate: add end to end test
- infrastructure and scripts
-Message-Id: <178367088448.4074012.5903750066567618189.b4-ty@b4>
-Date: Fri, 10 Jul 2026 11:08:04 +0300
+	s=k20260515; t=1783677476;
+	bh=ghnk+dbD6A1tyBxAoJ0s58GH07hqyxQ8En0ljy8NSzs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=TGdSxBmCa3CX6xvbAEFyBmy54ptb092aSrGXAj0uHBoTNg0nhY6ta2T08zktnYTjy
+	 RmwCy/53WzEom34Uzl6wWZnDMaiRiTOQrpzZamOPTxzbcut6EYwnzYUJRpo49K97yz
+	 MvbMiEbs4MlqFZhrVE3VCZ9EsTKOC1FxkQ/EHiQGYUsw74pOoP/nQiqau3WK8TbG6O
+	 a8YbSJuX4NwbYzQrMOKIj/rvDWY6d07c2ZSaGStju0F9xL+fbGqhhaUFyDcmmv57li
+	 3bGqH1AAM4ddrbgCEcxvv+cRipBFYfEMlBOO2pl87lXttd3O7KEQSefABHBWi0FrVt
+	 G2gDSfddFwVRw==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: David Matlack <dmatlack@google.com>
+Cc: kexec@lists.infradead.org,  linux-kernel@vger.kernel.org,  Andrew Morton
+ <akpm@linux-foundation.org>,  Mike Rapoport <rppt@kernel.org>,  Pasha
+ Tatashin <pasha.tatashin@soleen.com>,  Pratyush Yadav
+ <pratyush@kernel.org>
+Subject: Re: [PATCH 0/2] liveupdate: Small FLB fixes
+In-Reply-To: <CALzav=diio783dFmPGYp9Uvov2HBWv_EQLoNjnM=qBWzwU5tCA@mail.gmail.com>
+	(David Matlack's message of "Thu, 9 Jul 2026 13:51:40 -0700")
+References: <20260528174140.1921129-1-dmatlack@google.com>
+	<CALzav=diio783dFmPGYp9Uvov2HBWv_EQLoNjnM=qBWzwU5tCA@mail.gmail.com>
+Date: Fri, 10 Jul 2026 11:57:53 +0200
+Message-ID: <2vxzcxwvkvz2.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.16-dev
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,20 +73,53 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, 26 Jun 2026 12:15:36 +0300, Mike Rapoport wrote:
-> selftests/liveupdate: add end to end test infrastructure and scripts
+On Thu, Jul 09 2026, David Matlack wrote:
 
-Applied to misc branch of liveupdate/linux.git tree, thanks!
+> On Thu, May 28, 2026 at 10:41=E2=80=AFAM David Matlack <dmatlack@google.c=
+om> wrote:
+>>
+>> This series has 2 small fixes to how FLBs are managed. First is to
+>> increase the outgoing FLB refcount during liveupdate_flb_get_outgoing()
+>> so it cannot be freed while the caller is using it, and to align with
+>> the semantics of liveupdate_flb_get_incoming(). The second is to prevent
+>> FLB retrieve() from being called multiple times if the first attempt
+>> fails.
+>>
+>> Both of these changes are needed for the correctness of the PCI core
+>> support for Live Update:
+>>
+>>   https://lore.kernel.org/linux-pci/20260522202410.3104264-1-dmatlack@go=
+ogle.com/
+>
+> I'm wondering if we still want this series. After discussions with
+> Pratyush and Sami (some on-list, some off-list) the v7 of the PCI
+> series (which I haven't sent yet) does not depend on these changes for
+> correctness.
+>
+> Patch 1: PCI core no longer calls get_outgoing() outside the scope of
+> file handler callbacks. So there is no need to increment the reference
+> count. We could still keep this to make get_outgoing behave the same
+> way as get_incoming for consisteny at the cost of some extra
+> complexity to manage outgoing FLB refcoutn.
 
-[1/1] selftests/liveupdate: add end to end test infrastructure and scripts
-      commit: 89dd1421c554515e0f562ec67d976e6309f2710b
+I'm neutral on this one. I'll leave it up to Pasha's preference.
 
-tree: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux
-branch: misc
+>
+> Patch 2: PCI core panics if retrieve fails (proceeding without the PCI
+> FLB can lead to memory corruption due to ongoing DMA). So the behavior
+> of LUO on retrieve() errors does not matter.
 
---
-Sincerely yours,
-Mike.
+This patch is useful for sure. Sure, PCI might panic, but other FLB
+users like HugeTLB won't. And this patch fixes a real problem for those
+cases.
 
+The patch applies cleanly on liveupdate/next. So Mike, would you mind
+applying patch 2/2 now? We can wait for Pasha to chime in for 1/2.
 
+>
+> Should we drop this series?
+
+--=20
+Regards,
+Pratyush Yadav
 
