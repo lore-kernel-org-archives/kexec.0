@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 87AADC44509
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4456EC43458
 	for <kexec@archiver.kernel.org>; Fri, 10 Jul 2026 21:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,63 +12,63 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=vyFHddSgtH+5JtZtRXs5kryYSNhZjQ+wgfA9vuynw+w=; b=hwNc447lpxjvepimUxAeSRPtFU
-	bfxFfYuZpS7SpW88BbzQiIZu1YDggNO6RmE46RajVEcxNhcaPgzomnAyUeUzupwCBazWvxgY5wbuw
-	oEN43ZdEcXSfZAVQCfQCXJoyUrqLLOL5dl6lXFgIsiw/EprXmtJ1640JNiLxSAK+dAAyWLm9CU6Bv
-	usJoX47vrsaKb7S8U1W1HALsoDBRjceBr4fscSqCSOI1HsdQhU4zVtN/1WoORGjnR+M3e3VMao7ZF
-	kDkXOvWAJjqS5hV0tZTquGj5C/OhXVBAvnTZyQjUUuwXp+TwDdNDjgdKjShRqZ0P0OXC5VVmbeBIl
-	nqaGWcfw==;
+	bh=/hPVaDoRJAueZjNQ0NAjSyINZ2msgaXxj6lZgcfKzVg=; b=yZuNWAGs3fGojWPhpEoK0gFGds
+	GyiqekhvoTJ7igo/qCJjoFueyHv7NMBeAJcBee2mivp8wzNd2+7LUNTKFtlx2JxCFRBaX9zsL/u/2
+	01UEZIC/Ms+Vzv55WVyLeXwrd9576HNyi2flLDlxkKcDhgDdGSMXITpkUr0cGJM7UD3QV1doHxL1j
+	FKEobA/4Rf4EhHTNi9QJNEJH03Hl5kL9hEJkcGM8fsYhf5mHsAtYWsBL2A6WDTIBc6XZh0cFfA7Xj
+	o1WMbQJH8uRQqQmIL1wcVRHjKXSaePoUycAGXOmG/haRCISsng/Zdqq5gEJUA3umPAQLMoFl2u5qa
+	AiiiK5kQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wiIjx-00000005pUc-33Ed;
+	id 1wiIjx-00000005pTy-2LYU;
 	Fri, 10 Jul 2026 21:26:33 +0000
 Received: from mail-pl1-x64a.google.com ([2607:f8b0:4864:20::64a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wiIjv-00000005pPG-0E31
+	id 1wiIjs-00000005pNN-2bq0
 	for kexec@lists.infradead.org;
-	Fri, 10 Jul 2026 21:26:32 +0000
-Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-2cacd6d37edso17719555ad.0
-        for <kexec@lists.infradead.org>; Fri, 10 Jul 2026 14:26:30 -0700 (PDT)
+	Fri, 10 Jul 2026 21:26:31 +0000
+Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-2cd01a14e81so17922305ad.1
+        for <kexec@lists.infradead.org>; Fri, 10 Jul 2026 14:26:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1783718790; x=1784323590; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1783718788; x=1784323588; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=vyFHddSgtH+5JtZtRXs5kryYSNhZjQ+wgfA9vuynw+w=;
-        b=uOX04dZ3aSSBzzQweFemVRwgkaKNbgsGZcxuuGP/OTlk1AvyGfrje0DyVBurNNKOuz
-         iSGD7hErmuX2giYUbewTddGM/2uykXfHBiIxzcCDPOBqefbyCxDA2QlMMUshqxc8AREK
-         619H2WjQurmyVDyNbfBGgLw3/WKrTa8e9W/8dp6NFQ9z80rr4KK1jPU01fphUD8knzoy
-         ihx99wfYPYIAAvoV3Ie1IJN6xWvmz2bDtRnIVUlc/WPMbzRCTcim0JR827yZcXHl6uN0
-         MjylVshuAvuY5VQ5N2uRkc1oerEFrQYyByAawM8MAuEkT6/OOITGWY2kTOkOQdOFK1gQ
-         AAeA==
+        bh=/hPVaDoRJAueZjNQ0NAjSyINZ2msgaXxj6lZgcfKzVg=;
+        b=j020FToq2De6G9rsGJCe2l5sLrqfbJHEi2b0jybzqRk4PksYyjCySHe+oNkXE6UiA8
+         iFAvhQe5n6xD1ncH2SMqItkJ9onQs+YcrnZfJNVVCGyW6sJrNp0Ex7MGcnRQZ5z9YH8A
+         ylaPkEmlTrKKL8sh6l2r3FJBFQBhMqeit2d7D+QVG9N68sfQdMkEhQe2sQ+ugGZFOKWw
+         vHm4GC0UVsuCs/uDG+iXHlev0adaUCBNX7jH9JijqlwmBmIPReeFBvZKAqGK8k7QWfUj
+         JAMdyBDYiUCOIDIAxy01ONlA/w9/3Mdf/MCX/ILx8Pjqb/ovw9a4PMfmxHeNE8MmI8so
+         fIxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783718790; x=1784323590;
+        d=1e100.net; s=20251104; t=1783718788; x=1784323588;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=vyFHddSgtH+5JtZtRXs5kryYSNhZjQ+wgfA9vuynw+w=;
-        b=I17aMBRoRUWBcEArD3D29Pnz/JwvvNU53nPiW9Ng1iKcv8AJk2r2WB/qq6ogmRMQcv
-         IpaUMZ/RMVExY1Z9mcsk2+gbcqg4aCf2e3EboawYdPbW9xsGTWzL5716z4ywSpzsbnly
-         eiJbdPcNt7j9HApWiZ+HqA64qyplNhFumiG8ptHVVhBDVtkfX2CJPOzfR+pMq+HILbpT
-         wIlP6v+WVJVuiaBnIgvG6AzS4RUy2oJH0tlGv7AWEKKp08lGGyTICfxikM4SgyhyBlSJ
-         21D3tyVKe6MzXcH4Npr1COjewXUekWHR/ttS63NsJT4LfSNODEf4l2WBavzcwK11kvni
-         dMUA==
-X-Gm-Message-State: AOJu0Yy7CNmWY5QfNA8Jk1hY81QjNSETCONWtPmVigNCxqCMqQBVbdQz
-	a4X+i9vKGBFe3OeRjPm9T88CIZV1iraFYC1DQquWmUtcP0BCthfvnr1lSOQmfaYnwhPQnsICH8J
-	A5KrGQrjvK+51AY9S1G2Z6PgnAu62fZRAZzVdplgt1EOFTeaE55VQsCwnhn9tAFxkCOV/mWayeR
-	OGKLvTFLgJBZvl/sBM4D0qfyUUfMzm03e9ZwDqrcpmanwkb3y8UnI=
-X-Received: from pldd21.prod.google.com ([2002:a17:902:c195:b0:2c8:4c1:883a])
+        bh=/hPVaDoRJAueZjNQ0NAjSyINZ2msgaXxj6lZgcfKzVg=;
+        b=L7qiRDHw8gt5nP0TCTguZV5Zuax15Dw7T37UPTL/LAYByxTdWY6T8B/afkK80wCOUH
+         /v3Qnzp1oQfzZOWPFI6I+2KJj4O+EoW6hW6nxsuSRruonlonbfmL3nEJb4FuAP9PSbGM
+         BzmfLRtKLDiovgL+qxJixoT9Cg7FVaiXBSu41euRtJy5I7miAYspt6Kkexs7FTaUHtha
+         YzPCLJvUW2KWtByJ5gkjxYYFI7YDlK6QZv2vSM/ePyiWMX76dF8kZa2jGBj1aBZ4js4k
+         /m8DWOZg8BFkzsJeXVG3rSGak7pztIQYlF28MAatz5GISIDTncmqgVvoBSEb0P8jtSOn
+         zK0g==
+X-Gm-Message-State: AOJu0YysTwiBjRzjd8BLKwHiUEdbUccdD6ZQn7ns5hz0yhsw63CevpJA
+	WqlD6mq8VBUNLrwJqO9KmHRCwDaox+OJN0dkUU9P32xc08G8bce1O25NcqZBoJhgB/3WIcA2/QS
+	nDh+9qed1RgFBDFoINoBZ9Vt8JQY/1rU0bIjnvBrmjcYEWLYoce3lDlJxg09SnZA1RXw/CWKxTz
+	k8x4tbAOQPpvf6rGy6++9FKrcL/5bnOeYxru6jQRcSvVz6LHB6qVY=
+X-Received: from plhu3.prod.google.com ([2002:a17:903:1243:b0:2cc:c59c:76ac])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:32ce:b0:2c9:fa31:84f9 with SMTP id d9443c01a7336-2ce9e9a6c80mr7580575ad.5.1783718789594;
- Fri, 10 Jul 2026 14:26:29 -0700 (PDT)
-Date: Fri, 10 Jul 2026 21:26:11 +0000
+ 2002:a17:902:e94e:b0:2ca:bf68:2a54 with SMTP id d9443c01a7336-2ce9f021408mr7596855ad.22.1783718787297;
+ Fri, 10 Jul 2026 14:26:27 -0700 (PDT)
+Date: Fri, 10 Jul 2026 21:26:08 +0000
 In-Reply-To: <20260710212616.1351130-1-dmatlack@google.com>
 Mime-Version: 1.0
 References: <20260710212616.1351130-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
-Message-ID: <20260710212616.1351130-9-dmatlack@google.com>
-Subject: [PATCH v7 08/12] PCI: liveupdate: Inherit ACS flags in incoming
- preserved devices
+Message-ID: <20260710212616.1351130-6-dmatlack@google.com>
+Subject: [PATCH v7 05/12] PCI: liveupdate: Keep bus numbers constant during
+ Live Update
 From: David Matlack <dmatlack@google.com>
 To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org
@@ -84,8 +84,8 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.
 	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260710_142631_102586_A07B0186 
-X-CRM114-Status: GOOD (  23.85  )
+X-CRM114-CacheID: sfid-20260710_142628_673708_B0BF1ACD 
+X-CRM114-Status: GOOD (  35.95  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,270 +100,301 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Inherit Access Control Services (ACS) flags on all incoming preserved
-devices (endpoints and upstream bridges) during a Live Update.
+During a Live Update, preserved devices must be allowed to continue
+performing memory transactions so the kernel cannot change the fabric
+topology, including bus numbers, since that would require disabling
+and flushing any memory transactions first.
 
-Inheriting ACS flags avoids changing routing rules while memory
-transactions are in flight from preserved devices. This is also strictly
-necessary to ensure that IOMMU group assignments do not change across
-a Live Update for preserved devices, as changing ACS configurations can
-split or merge IOMMU groups.
+To keep bus numbers constant, always inherit the secondary and
+subordinate bus numbers assigned to bridges during scanning, instead of
+assigning new ones, if any PCI devices are being preserved. Note that
+the kernel inherits bus numbers even on bridges without any downstream
+endpoints that were preserved. This avoids accidentally assigning a
+bridge a new window that overlaps with a preserved device that is
+downstream of a different bridge.
 
-Cache the inherited ACS controls established by the previous kernel in
-struct pci_dev so that ACS controls do not change after a reset
-(pci_restore_state() calls pci_enable_acs()).
+If a bridge is scanned with a broken topology or has no bus numbers
+set during a Live Update, refuse to assign it new bus numbers and refuse
+to enumerate devices below it until the Live Update is finished. This is
+a safety measure to prevent topology conflicts.
 
-To simplify ACS inheritance, reject preserving any devices that require
-quirks to enable ACS as those quirks would also have to take Live Update
-into account.
+Require that CONFIG_CARDBUS is not enabled to enable
+CONFIG_PCI_LIVEUPDATE since inheriting bus numbers on PCI-to-CardBus
+bridges requires additional work but is not a priority at the moment.
 
+Reviewed-by: Pranjal Shrivastava <praan@google.com>
+Reviewed-by: Samiullah Khawaja <skhawaja@google.com>
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- drivers/pci/liveupdate.c       | 68 ++++++++++++++++++++++++++++++++++
- drivers/pci/liveupdate.h       | 11 ++++++
- drivers/pci/pci.c              |  6 +++
- drivers/pci/pci.h              |  5 +++
- drivers/pci/quirks.c           |  7 ++++
- include/linux/pci_liveupdate.h |  6 +++
- 6 files changed, 103 insertions(+)
+ .../admin-guide/kernel-parameters.txt         |   6 +-
+ drivers/pci/Kconfig                           |   2 +-
+ drivers/pci/liveupdate.c                      | 102 ++++++++++++++++++
+ drivers/pci/liveupdate.h                      |  14 +++
+ drivers/pci/probe.c                           |  17 ++-
+ include/linux/pci_liveupdate.h                |   4 +
+ 6 files changed, 139 insertions(+), 6 deletions(-)
 
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 4f65b2a37521..ed9eef8de64c 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -5105,7 +5105,11 @@ Kernel parameters
+ 				explicitly which ones they are.
+ 		assign-busses	[X86] Always assign all PCI bus
+ 				numbers ourselves, overriding
+-				whatever the firmware may have done.
++				whatever the firmware may have done. Ignored
++				during a Live Update, where the kernel must
++				inherit the PCI topology (including bus numbers)
++				to avoid interrupting ongoing memory
++				transactions of preserved devices.
+ 		usepirqmask	[X86] Honor the possible IRQ mask stored
+ 				in the BIOS $PIR table. This is needed on
+ 				some systems with broken BIOSes, notably
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 8af20f558086..16fbd4212e0f 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -273,7 +273,7 @@ config VGA_ARB_MAX_GPUS
+ 
+ config PCI_LIVEUPDATE
+ 	bool "PCI Live Update Support"
+-	depends on PCI && LIVEUPDATE && 64BIT
++	depends on PCI && LIVEUPDATE && 64BIT && !CARDBUS
+ 	help
+ 	  Enable PCI core support for preserving PCI devices across Live
+ 	  Update. This, in combination with support in a device's driver,
 diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-index 7f7710cb1da0..a95bfe5eff77 100644
+index a067632e70d1..b2b950d71657 100644
 --- a/drivers/pci/liveupdate.c
 +++ b/drivers/pci/liveupdate.c
-@@ -71,6 +71,9 @@
-  *
-  *  * The device cannot be a Virtual Function (VF).
-  *
-+ *  * The device cannot require device-specific quirks to enable Access
-+ *    Control Services (ACS).
+@@ -86,6 +86,21 @@
+  * bound to the correct driver. i.e. The PCI core does not protect against a
+  * device getting preserved by driver A in the outgoing kernel and then getting
+  * bound to driver B in the incoming kernel. This may change in the future.
 + *
-  * Driver Binding
-  * ==============
-  *
-@@ -113,6 +116,18 @@
-  * This enables the PCI core and any drivers bound to the bridge to participate
-  * in the Live Update so that preserved endpoints can continue issuing memory
-  * transactions during the Live Update.
++ * BDF Stability
++ * =============
 + *
-+ * Handling Preserved Devices
-+ * ==========================
++ * The PCI core guarantees that preserved devices can be identified by the same
++ * bus, device, and function numbers for as long as they are preserved
++ * (including across kexec). To accomplish this, the PCI core always inherits
++ * the secondary and subordinate bus numbers assigned to bridges during scanning
++ * if any device is preserved. This is true even on architectures that always
++ * assign new bus numbers during scanning. The kernel assumes the previous
++ * kernel established a sane bus topology across kexec.
 + *
-+ * The PCI core treats preserved devices differently than non-preserved devices.
-+ * This section enumerates those differences.
-+ *
-+ *  * The PCI core inherits all ACS flags enabled on incoming preserved devices
-+ *    rather than assigning new ones. This ensures that TLPs are routed the same
-+ *    way after Live Update and ensures that IOMMU groups do not change. Note
-+ *    that a device will use its inherited ACS flags for the lifetime of its
-+ *    struct pci_dev (i.e. even after pci_liveupdate_finish()).
++ * If a misconfigured or unconfigured bridge is encountered during enumeration
++ * while there are preserved devices, its secondary and subordinate bus numbers
++ * will be cleared and devices below it will not be enumerated.
   */
  
  #define pr_fmt(fmt) "PCI: " KBUILD_BASENAME ": " fmt
-@@ -128,6 +143,7 @@
- #include <linux/slab.h>
- 
- #include "liveupdate.h"
-+#include "pci.h"
- 
- /**
-  * struct pci_liveupdate_global - Global state for PCI Live Update support
-@@ -374,6 +390,16 @@ static int __pci_liveupdate_preserve_device(struct pci_flb_outgoing *outgoing, s
- {
- 	struct pci_dev_ser *dev_ser;
- 
-+	/*
-+	 * Do not preserve devices that rely on device-specific ACS equivalents
-+	 * (for now) since that would complicate keeping ACS constant across
-+	 * Live Update.
-+	 */
-+	if (pci_need_dev_specific_enable_acs(dev)) {
-+		pci_warn(dev, "Refusing to preserve device that relies on ACS quirks\n");
-+		return -EINVAL;
-+	}
-+
- 	dev_ser = pci_get_empty_or_append(outgoing);
- 	if (IS_ERR(dev_ser))
- 		return PTR_ERR(dev_ser);
-@@ -655,6 +681,7 @@ void pci_liveupdate_setup_device(struct pci_dev *dev)
- 
- 	pci_info(dev, "Device was preserved by previous kernel across Live Update\n");
- 	dev->liveupdate.incoming = dev_ser;
-+	dev->liveupdate.was_preserved = true;
- 
- 	/*
- 	 * Hold the ref on the incoming FLB until pci_liveupdate_finish() so
-@@ -748,6 +775,47 @@ void pci_liveupdate_finish(struct pci_dev *dev)
+@@ -436,6 +451,93 @@ static void pci_liveupdate_flb_put_incoming(void)
+ 	liveupdate_flb_put_incoming(&pci_liveupdate_flb);
  }
- EXPORT_SYMBOL_GPL(pci_liveupdate_finish);
  
-+void pci_liveupdate_init_acs(struct pci_dev *dev)
++/**
++ * pci_liveupdate_scan_bridge_begin() - Determine if a bridge should inherit bus numbers
++ * @bus: The parent bus of the bridge.
++ * @dev: The PCI bridge device.
++ * @pass: The scan pass (0 for first pass, 1 for second pass).
++ *
++ * This function is called by the PCI core when it begins scanning a bridge.
++ * It determines whether the bridge should inherit the secondary and subordinate
++ * bus numbers assigned to it by the previous kernel. This is necessary to
++ * keep bus numbers constant for preserved devices downstream of the bridge.
++ *
++ * Return: True if bus numbers should be inherited, false otherwise.
++ */
++bool pci_liveupdate_scan_bridge_begin(struct pci_bus *bus, struct pci_dev *dev,
++				      int pass)
 +{
-+	guard(rwsem_read)(&pci_liveupdate.rwsem);
-+
-+	if (!dev->acs_cap || !dev->liveupdate.incoming)
-+		return;
-+
-+	pci_read_config_word(dev, dev->acs_cap + PCI_ACS_CTRL, &dev->liveupdate.acs_ctrl);
-+}
-+
-+int pci_liveupdate_enable_acs(struct pci_dev *dev)
-+{
-+	u16 acs_ctrl = dev->liveupdate.acs_ctrl;
-+	u16 acs_cap = dev->acs_cap;
++	struct pci_dev *parent = bus->self;
 +
 +	/*
-+	 * Use liveupdate.was_preserved instead of liveupdate.incoming since the
-+	 * device's ACS controls should not change even after the device is
-+	 * finished participating in the Live Update.
++	 * On the second pass, reuse the value that was set on the first pass
++	 * so that the passes are consistent with one another.
 +	 */
-+	if (!dev->liveupdate.was_preserved)
-+		return -EINVAL;
++	if (pass)
++		return dev->liveupdate.inherit_buses;
 +
 +	/*
-+	 * The previous kernel should not have preserved any devices that
-+	 * require device-specific quirks to enable ACS, but if such a device is
-+	 * detected (e.g. new device-specific ACS quirk in the current kernel),
-+	 * log a big warning and fall back to the normal enable ACS path.
++	 * If the parent bridge is being forced to inherit its bus numbers
++	 * during this scan then this bridge must as well, otherwise the PCI
++	 * core could expand this bridge's reservation beyond its parent (which
++	 * cannot expand).
 +	 */
-+	if (pci_need_dev_specific_enable_acs(dev)) {
-+		pci_warn(dev, "Device-specific quirk required to enable ACS!\n");
-+		WARN_ON_ONCE(true);
-+		return -EINVAL;
++	if (parent && parent->liveupdate.inherit_buses) {
++		dev->liveupdate.inherit_buses = true;
++		return true;
 +	}
 +
-+	if (acs_cap)
-+		pci_write_config_word(dev, acs_cap + PCI_ACS_CTRL, acs_ctrl);
++	/*
++	 * Otherwise, if there are any incoming preserved devices, force the
++	 * bus numbers to be inherited to avoid changing the bus numbers
++	 * assigned to those devices during enumeration.
++	 *
++	 * To keep things simple, inherit bus numbers on all bridges if any PCI
++	 * devices are incoming, to ensure that no bridge's reservation is
++	 * expanded to overlap with a preserved device downstream of a different
++	 * bridge.
++	 */
++	scoped_guard(rwsem_read, &pci_liveupdate.rwsem) {
++		struct pci_flb_incoming *incoming;
 +
-+	return 0;
++		incoming = pci_liveupdate_flb_get_incoming();
++		if (!incoming) {
++			dev->liveupdate.inherit_buses = false;
++			return false;
++		}
++
++		/*
++		 * It is safe to sample incoming->ser->nr_devices and then
++		 * drop the rwsem since nr_devices will only decrease. Thus the
++		 * only "race" is that the current scan will be overly
++		 * conservative and force bus inheritance.
++		 */
++		dev->liveupdate.inherit_buses = !!incoming->ser->nr_devices;
++		pci_liveupdate_flb_put_incoming();
++	}
++
++	return dev->liveupdate.inherit_buses;
 +}
 +
- /**
-  * pci_liveupdate_is_incoming() - Check if a device is incoming-preserved
-  * @dev: The PCI device to check
++/**
++ * pci_liveupdate_scan_bridge_end() - Finish scanning a PCI bridge
++ * @dev: The PCI bridge device.
++ * @pass: The scan pass (0 for first pass, 1 for second pass).
++ *
++ * This function is called by the PCI core when it finishes scanning a bridge.
++ * It clears the inheritance status after the second pass so it can be
++ * re-evaluated on future scans.
++ */
++void pci_liveupdate_scan_bridge_end(struct pci_dev *dev, int pass)
++{
++	/*
++	 * Clear inherit_buses after the second pass so it can be re-evaluated
++	 * on future scans.
++	 */
++	if (pass)
++		dev->liveupdate.inherit_buses = false;
++}
++
+ void pci_liveupdate_setup_device(struct pci_dev *dev)
+ {
+ 	struct pci_flb_incoming *incoming;
 diff --git a/drivers/pci/liveupdate.h b/drivers/pci/liveupdate.h
-index c763255a8de4..4e8a01bcb4bb 100644
+index eaaa3559fd77..c763255a8de4 100644
 --- a/drivers/pci/liveupdate.h
 +++ b/drivers/pci/liveupdate.h
-@@ -16,6 +16,8 @@ void pci_liveupdate_cleanup_device(struct pci_dev *dev);
- bool pci_liveupdate_scan_bridge_begin(struct pci_bus *bus, struct pci_dev *dev,
- 				      int pass);
- void pci_liveupdate_scan_bridge_end(struct pci_dev *dev, int pass);
-+void pci_liveupdate_init_acs(struct pci_dev *dev);
-+int pci_liveupdate_enable_acs(struct pci_dev *dev);
+@@ -13,6 +13,9 @@
+ #ifdef CONFIG_PCI_LIVEUPDATE
+ void pci_liveupdate_setup_device(struct pci_dev *dev);
+ void pci_liveupdate_cleanup_device(struct pci_dev *dev);
++bool pci_liveupdate_scan_bridge_begin(struct pci_bus *bus, struct pci_dev *dev,
++				      int pass);
++void pci_liveupdate_scan_bridge_end(struct pci_dev *dev, int pass);
  #else
  static inline void pci_liveupdate_setup_device(struct pci_dev *dev)
  {
-@@ -35,6 +37,15 @@ static inline bool pci_liveupdate_scan_bridge_begin(struct pci_bus *bus,
- static inline void pci_liveupdate_scan_bridge_end(struct pci_dev *dev, int pass)
+@@ -21,6 +24,17 @@ static inline void pci_liveupdate_setup_device(struct pci_dev *dev)
+ static inline void pci_liveupdate_cleanup_device(struct pci_dev *dev)
  {
  }
 +
-+static inline void pci_liveupdate_init_acs(struct pci_dev *dev)
++static inline bool pci_liveupdate_scan_bridge_begin(struct pci_bus *bus,
++						    struct pci_dev *dev,
++						    int pass)
 +{
++	return false;
 +}
 +
-+static inline int pci_liveupdate_enable_acs(struct pci_dev *dev)
++static inline void pci_liveupdate_scan_bridge_end(struct pci_dev *dev, int pass)
 +{
-+	return -EINVAL;
 +}
  #endif
  
  #endif /* DRIVERS_PCI_LIVEUPDATE_H */
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 77b17b13ee61..739ecaab2e76 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -34,6 +34,8 @@
- #include <linux/aer.h>
- #include <linux/bitfield.h>
- #include <linux/suspend.h>
-+
-+#include "liveupdate.h"
- #include "pci.h"
- 
- DEFINE_MUTEX(pci_slot_mutex);
-@@ -1008,6 +1010,9 @@ void pci_enable_acs(struct pci_dev *dev)
- 	bool enable_acs = false;
- 	int pos;
- 
-+	if (!pci_liveupdate_enable_acs(dev))
-+		return;
-+
- 	/* If an iommu is present we start with kernel default caps */
- 	if (pci_acs_enable) {
- 		if (pci_dev_specific_enable_acs(dev))
-@@ -3689,6 +3694,7 @@ void pci_acs_init(struct pci_dev *dev)
- 
- 	pci_read_config_word(dev, pos + PCI_ACS_CAP, &dev->acs_capabilities);
- 	pci_disable_broken_acs_cap(dev);
-+	pci_liveupdate_init_acs(dev);
- }
- 
- /**
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 4469e1a77f3c..988a18b3204a 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -1047,6 +1047,7 @@ void pci_acs_init(struct pci_dev *dev);
- void pci_enable_acs(struct pci_dev *dev);
- #ifdef CONFIG_PCI_QUIRKS
- int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags);
-+bool pci_need_dev_specific_enable_acs(struct pci_dev *dev);
- int pci_dev_specific_enable_acs(struct pci_dev *dev);
- int pci_dev_specific_disable_acs_redir(struct pci_dev *dev);
- void pci_disable_broken_acs_cap(struct pci_dev *pdev);
-@@ -1057,6 +1058,10 @@ static inline int pci_dev_specific_acs_enabled(struct pci_dev *dev,
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 5dc9d86e3597..165973bc92aa 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1397,6 +1397,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 				  int max, unsigned int available_buses,
+ 				  int pass)
  {
- 	return -ENOTTY;
- }
-+static inline bool pci_need_dev_specific_enable_acs(struct pci_dev *dev)
-+{
-+	return false;
-+}
- static inline int pci_dev_specific_enable_acs(struct pci_dev *dev)
- {
- 	return -ENOTTY;
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 7ac39ec2843e..99b819f38e49 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5473,6 +5473,13 @@ static const struct pci_dev_acs_ops *pci_dev_acs_ops_get(struct pci_dev *dev)
- 	return NULL;
- }
++	bool liveupdate, assign_new_buses = pcibios_assign_all_busses();
+ 	struct pci_bus *child;
+ 	u32 buses;
+ 	u16 bctl;
+@@ -1406,6 +1407,10 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 	u8 fixed_sec, fixed_sub;
+ 	int next_busnr;
  
-+bool pci_need_dev_specific_enable_acs(struct pci_dev *dev)
-+{
-+	const struct pci_dev_acs_ops *p = pci_dev_acs_ops_get(dev);
++	liveupdate = pci_liveupdate_scan_bridge_begin(bus, dev, pass);
++	if (liveupdate)
++		assign_new_buses = false;
 +
-+	return p && p->enable_acs;
-+}
+ 	/*
+ 	 * Make sure the bridge is powered on to be able to access config
+ 	 * space of devices below it.
+@@ -1449,8 +1454,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 		goto out;
+ 	}
+ 
+-	if ((secondary || subordinate) &&
+-	    !pcibios_assign_all_busses() && !broken) {
++	if ((secondary || subordinate) && !assign_new_buses && !broken) {
+ 		unsigned int cmax, buses;
+ 
+ 		/*
+@@ -1492,8 +1496,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 		 * do in the second pass.
+ 		 */
+ 		if (!pass) {
+-			if (pcibios_assign_all_busses() || broken)
+-
++			if (assign_new_buses || broken)
+ 				/*
+ 				 * Temporarily disable forwarding of the
+ 				 * configuration cycles on all bridges in
+@@ -1507,6 +1510,11 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 			goto out;
+ 		}
+ 
++		if (liveupdate) {
++			pci_err(dev, "Cannot reconfigure bridge during Live Update, skipping\n");
++			goto out;
++		}
 +
- int pci_dev_specific_enable_acs(struct pci_dev *dev)
- {
- 	const struct pci_dev_acs_ops *p = pci_dev_acs_ops_get(dev);
+ 		/* Clear errors */
+ 		pci_write_config_word(dev, PCI_STATUS, 0xffff);
+ 
+@@ -1567,6 +1575,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, bctl);
+ 
+ 	pm_runtime_put(&dev->dev);
++	pci_liveupdate_scan_bridge_end(dev, pass);
+ 
+ 	return max;
+ }
 diff --git a/include/linux/pci_liveupdate.h b/include/linux/pci_liveupdate.h
-index 2be98819e313..2446c6d237ca 100644
+index cfdc3d62ec02..2be98819e313 100644
 --- a/include/linux/pci_liveupdate.h
 +++ b/include/linux/pci_liveupdate.h
-@@ -17,14 +17,20 @@
+@@ -17,10 +17,14 @@
   * struct pci_liveupdate - PCI Live Update state for a struct pci_dev
   * @outgoing: State preserved for the next kernel.
   * @incoming: State preserved by the previous kernel.
-+ * @acs_ctrl: ACS features established by the previous kernel.
-  * @inherit_buses: True if the PCI core should inherit the secondary and
-  *                 subordinate bus numbers assigned to this device due to
-  *                 an ongoing Live Update.
-+ * @was_preserved: True if this struct pci_dev was preserved by the previous
-+ *                 kernel. Unlike @incoming, this field is not cleared after
-+ *                 the device is finished participating in Live Update.
++ * @inherit_buses: True if the PCI core should inherit the secondary and
++ *                 subordinate bus numbers assigned to this device due to
++ *                 an ongoing Live Update.
   */
  struct pci_liveupdate {
  	struct pci_dev_ser *outgoing;
  	struct pci_dev_ser *incoming;
-+	u16 acs_ctrl;
- 	bool inherit_buses;
-+	bool was_preserved;
++	bool inherit_buses;
  };
  
  struct pci_dev;
