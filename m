@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B3176C43458
-	for <kexec@archiver.kernel.org>; Fri, 10 Jul 2026 14:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 26979C43458
+	for <kexec@archiver.kernel.org>; Fri, 10 Jul 2026 14:19:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=wBlFK0541y0Zc/79OGH2Qmor8SYhSUoS64EeY6OiQnk=; b=qbaq0vkmFWXfiXD7TSqhcTTbF2
-	zPHc0TG9XT0P0LCF5WyR+mSR2F46L+gkqNYuuIn2a9XYVH8Ll3TvqDKdOYDUyL65+cULmSI++fauk
-	3iRBL5dKFfFyIzHNoT1uHtoYcEU5NZqYyHvzvSvssn07iQP6UicxBLN7rVzMSJ2/gBBDYgrYSZp7J
-	h0dJ4aIb+ZIffp0BTasG4QOOAluyy5N9YqIr2ejwL7KWeNOypz8d29vI+rfaEdcFKBp6C5ri17Irm
-	6zdjOhJ889wNb9ndpULDixSp1ljqucjU98zkiNvX3PeWDDWWocuGqU3XGOwcgpEPS9+GRjat9Cwvy
-	Z2awRlNQ==;
+	bh=YGhxiQ2wHg/fmfhidZ4pixyfl1k6upbKB+lX0ueY5go=; b=KhEovWx5rEP4U/UQFxnFDh7Gag
+	7IXRwWEVrpJHDpuUZYoyHkH2xkuqwiuC2lm9iPCkgyokCCHqRO7T3rd9ARXoWS2N4YMa+T+kU8YCy
+	KtkEaJTfu+HarrK6OD0TRUkV20jPE4xHSwPyHl9p6u4YK8mquxi21HFcpXEjKfbzddxBdtAz3Ao9l
+	Io+DW/5ZgaxXmTre/R/h2A4TdNiYYV77IB3x60P509N+A9rrS5G08s6yIHO8ZzFh9W5xtJP+a47cD
+	MAxZCe5yRAf50ULzZuZMrDnbW19WQzlxckaSTKbgDSt4X2FOFDdI2IEVtSFMaS/q8mtTR9TlvhDYd
+	oy6uRxbA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wiC1w-000000054Ca-1hHI;
-	Fri, 10 Jul 2026 14:16:40 +0000
+	id 1wiC4K-000000054Oi-3TQH;
+	Fri, 10 Jul 2026 14:19:08 +0000
 Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wiC1u-000000054CU-30sg
+	id 1wiC4J-000000054Ob-2Chm
 	for kexec@lists.infradead.org;
-	Fri, 10 Jul 2026 14:16:38 +0000
+	Fri, 10 Jul 2026 14:19:07 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 1124260051;
-	Fri, 10 Jul 2026 14:16:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C7B01F000E9;
-	Fri, 10 Jul 2026 14:16:37 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 9CB1C60051;
+	Fri, 10 Jul 2026 14:19:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF0A51F000E9;
+	Fri, 10 Jul 2026 14:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1783692997;
-	bh=wBlFK0541y0Zc/79OGH2Qmor8SYhSUoS64EeY6OiQnk=;
+	s=korg; t=1783693146;
+	bh=YGhxiQ2wHg/fmfhidZ4pixyfl1k6upbKB+lX0ueY5go=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Mp0sLUNWJUriS9GasCZYYGX9cDD2E6Htf1I4L5b2Z4r8o9oI+vFCeiwYxQo09so1z
-	 mMLhynXQApdClVn5iNc5Kxn1uAwMdzFja3z/Dar0ICAVsOdBNk+tW90D41MVHpQMzy
-	 3Pj05EsVxckLT+UrHNlXw7+G5YWMtWCTUC7I+SLo=
-Date: Fri, 10 Jul 2026 16:16:33 +0200
+	b=qFlaihadj2osXgYoq5pgN81gSLfdraUFeTRyznRcKUEMTtPKCZrr9NmUkUTDtejqN
+	 1W+OIAZkXybtMXrNqkqSVGJBlfSBX2JHHnZPWNVTGp4xhYQ/Tx7xjeY4yjRBed1+G7
+	 q7az5F8YauhjZC+poa5Z/WLIzhcF1cqXxyNDRTZE=
+Date: Fri, 10 Jul 2026 16:19:02 +0200
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: Pavol Sakac <sakacpav@amazon.de>
 Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
@@ -53,14 +53,16 @@ Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
 	Samiullah Khawaja <skhawaja@google.com>,
 	Alexander Graf <graf@amazon.com>, linux-mm@kvack.org,
 	kexec@lists.infradead.org, nh-open-source@amazon.com
-Subject: Re: [RFC PATCH 00/14] driver core: defer per-VF sysfs creation for
- fast SR-IOV bring-up
-Message-ID: <2026071004-strum-perkiness-5d9b@gregkh>
+Subject: Re: [RFC PATCH 09/14] iommu: lazy-populate iommu_group
+ reserved_regions/type attrs
+Message-ID: <2026071045-pushcart-duller-c3fa@gregkh>
 References: <20260702174033.32116-1-sakacpav@amazon.de>
+ <20260702175114.24659-1-sakacpav@amazon.de>
+ <20260702175114.24659-5-sakacpav@amazon.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260702174033.32116-1-sakacpav@amazon.de>
+In-Reply-To: <20260702175114.24659-5-sakacpav@amazon.de>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,132 +77,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jul 02, 2026 at 07:40:19PM +0200, Pavol Sakac wrote:
-> Virtualization hardware keeps increasing in CPU-core and VF density.
-> Kernel is trending towards preserving VFs using LUO across a kexec
-> which will put SR-IOV in live-update hotpath. VFs must be re-added to
-> the sysfs tree, along with its supporting devices (e.g. vfio,
-> iommu_groups). On production hardware a single VF can consume ~80 kernfs
-> nodes. With thousands of VFs on modern hardware, hundreds of thousands
-> of kernfs nodes need to be created, which can add 100ms+ to the boot
-> time and to guest downtime.
+On Thu, Jul 02, 2026 at 07:51:09PM +0200, Pavol Sakac wrote:
+> +	/*
+> +	 * Defer reserved_regions and type - both are read only on
+> +	 * VFIO/iommufd ioctl paths, so let the populate callbacks
+> +	 * materialise them on demand.
+> +	 *
+> +	 * KERNFS_LAZY MUST be set before kobject_create_and_add("devices"),
+> +	 * which calls kernfs_inc_rev() on this kobject's directory and
+> +	 * would otherwise leave a stale negative dentry cached for a
+> +	 * missing reserved_regions/type child.  WARN_ON because
+> +	 * iommu_group_alloc() controls all group kobjects directly.
+> +	 */
+> +	WARN_ON(kernfs_set_lazy(group->kobj.sd));
 
-Hundreds of thousands?  You have a hundred sysfs files per device?
+You just crashed the kernel, that's not nice :(
 
-> Proposed here is a PoC of deferred materialization of sysfs files until
-> first access to avoid cost of kernfs node creation in hot path. In the
-> reproducer below using a synthetic VF to isolate the sysfs overhead,
-> the per-device sysfs-creation time is reduced by ~74%. It exploits the
-> expected access pattern of hypervisors, where only a subset of device
-> files need to be accessed to attach a VF to a VM on the hot path.
+>  	group->devices_kobj = kobject_create_and_add("devices", &group->kobj);
+>  	if (!group->devices_kobj) {
+>  		kobject_put(&group->kobj); /* triggers .release & free */
+> @@ -1091,19 +1210,6 @@ struct iommu_group *iommu_group_alloc(void)
+>  	 */
+>  	kobject_put(&group->kobj);
+>  
+> -	ret = iommu_group_create_file(group,
+> -				      &iommu_group_attr_reserved_regions);
+> -	if (ret) {
+> -		kobject_put(group->devices_kobj);
+> -		return ERR_PTR(ret);
+> -	}
+> -
+> -	ret = iommu_group_create_file(group, &iommu_group_attr_type);
+> -	if (ret) {
+> -		kobject_put(group->devices_kobj);
+> -		return ERR_PTR(ret);
+> -	}
 
-Ick, that access pattern could change with other users, this feels very
-fragile.
-
-> To allow lazy init scheme, a minimal set of files and directories is
-> built per device: a device directory resolves directly to the device's
-> kobject and is used to materialize attributes at access time. The
-> access is trapped in kernfs at the dir-read or path-walk stage and
-> depending on the trigger, either the full directory or a single file is
-> materialized.
-> 
-> The changes are two logically distinct parts:
-> 
->   1. Refactor of hardcoded device_add / iommu_group sysfs attribute
->      creation to a table-driven form to allow walkability of all
->      attributes and single point of definition for attributes
->      regardless of lazy opt-in to avoid duplicate definitions and
->      associated maintainability issues with it.
-
-This is probably a good idea anyway.  Want to just send this as a series
-to start with, so we can take that?
-
->   2. Lazy-init infra to front-run access to device files at lookup/
->      readdir time to trigger materialization. Opt-in per device: PCI VFs
->      and VFIO devices opt in via device_set_sysfs_lazy(); iommu_group
->      opts in at the kobject level.
-
-This is going to get complex.  Where exactly is the bottleneck?  I'm
-guessing that systems with that many devices also have many hundreds of
-CPUs, right?  Are we hitting a single lock somewhere?  There have been
-changes in kernfs in the past to split up the locks to be more
-fine-grained, perhaps that needs to continue to solve this?
-
-> As a PoC, the code does not yet follow this logical structure in the
-> commit sequence and likely does not yet cover all corner cases.
-> 
-> Synthetic reproducer measurements
-> ---------------------------------
->   devices   per-dev time   total time       kernfs nodes (base -> lazy)
->   -------   ------------   --------------   ----------------------------
->      500    31.8->8.3 us    15.9-> 4.1 ms     36,417 ->  3,922  (72.8->7.8/dev)
->     1000    33.2->8.7 us    33.2-> 8.7 ms     73,427 ->  8,432  (73.4->8.4/dev)
->     2500    32.8->9.1 us    82.0->22.7 ms    184,421 -> 21,925  (73.8->8.8/dev)
->     5000    33.0->8.7 us   165.1->43.5 ms    369,401 -> 44,406  (73.9->8.9/dev)
-> 
-> The reproducer is synthetic: an in-kernel module registers N unbound
-> platform devices (60 attributes / 4 groups, ~74 kernfs nodes each; no
-> config space, BARs, or probe) in one timed burst that models SR-IOV
-> enablement. It runs as a two-kernel A/B from one vanilla 7.1-rc2 tree
-> (eager baseline vs patched, plus a patched/opt-in-OFF arm), 20 runs per
-> point. Measures only sysfs-creation slice.
-
-I sure hope sr-iov devices are NOT platform devices.  If so, please go
-fix that up first :)
-
-> Deferral removes ~74% of the sysfs-creation time and ~88% of the kernfs
-> nodes. At 5000 devices that is 121.6 ms removed (165.1 -> 43.5 ms) and
-> ~325,000 fewer kernfs nodes (369,401 -> 44,406). The table-driven rework
-> adds a +7..+11% eager-path time overhead to non-opted devices.
-
-You're just deferring this work to happen later, so when is that
-"later"?  And what about multi-threaded probing of the bus, doesn't that
-speed stuff up too?
-
-> Available as a docker image that orchestrates builds in qemu guest and
-> prints results as a table (x86_64 Linux host with /dev/kvm assumed):
-> 
->    docker run --device /dev/kvm ghcr.io/pavsa/linux-lazy-sysfs-vf-bench:7.1-rc2
-> 
-> Assumptions / Trade-offs
-> ------------------------
-> The saving depends on the access pattern of hypervisors, and on no
-> component walking the whole device tree on the hot path to avoid full
-> materialization. Both are expected to hold on optimized hypervisors.
-
-Hah, as if.  Many userspace tools, once a device is notified, walk the
-whole tree of it to read the attributes.  You are going to be fighting
-that problem constantly...
-
-> An actual production hypervisor was observed in local testing to
-> materialize an additional 5-10% of total nodes on average on the hot
-> path.
-> 
-> Overhead: +7..+11% eager-path time overhead applies to every non-opted
-> device going through device_add() as all struct devices traverse the
-> walker and can't be gated under a config option.
-> The lazy opt-in infra can be gated under config option to have zero
-> impact if disabled.
-
-Again, where exactly is the time being spent?  What lock is "hot"?
-
-> Final words
-> -----------
-> This is an RFC to first get feedback on the decisions taken at driver
-> core + kernfs level before engaging maintainers of other subsystems
-> if we want to pursue this further or pivot to something else.
-> 
-> The code is at a proof-of-concept quality written with AI assistance
-> with some known limitations with main target to gather potential
-> savings and initiate conversation.
-> 
-> Feedback appreciated for:
-> - table-driven attribute refactor targeting common device add path /
->   suggestions for more efficient/less invasive approach
-
-What's wrong with the normal way attributes are defined and allocated?
-They should all be tables today, and the driver core creating them when
-needed, no individual driver should ever be doing that on its own.
+Why isn't the driver core creating these properly on its own today?
+These calls should not have to be done.  Also, what's up with the "raw"
+kobject?  That's not ok, this is circumventing the driver core in a way
+that is not going to work out at all (as you are finding here...)
 
 thanks,
 
