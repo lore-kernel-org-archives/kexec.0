@@ -4,60 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0D0EDC43458
-	for <kexec@archiver.kernel.org>; Sun, 12 Jul 2026 12:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0BE5EC44501
+	for <kexec@archiver.kernel.org>; Mon, 13 Jul 2026 07:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:In-Reply-To:Subject:CC:To:From:Date:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:References:List-Owner;
-	bh=ZyUBwWtl42dThfa8ulAIiuiO/izeg++d6IRRmXHtIwA=; b=yoe93T3oJbXjVNCL4laSvBSo22
-	LdR5JVLVqZPnJhESGuxosM0OWpYZ+MNoPzaPUHSoNEQMIOVbJnJkSeFDJriTLAfsVgQ6u4ouSahEp
-	F3kfnrVapjRBtlfOwougY9MNk4RITTnlShyP7L7/sIrK3nonQsn0/it3WaTyGsHSNrsmpBBzRDU8L
-	thn4XtaE5oPF2KCQyu6Ml/mnvHXcXF+wjWk3LfdC9JEROAs59pZSnkip0+piRKz9hNoOi51nrfe+X
-	sGEkAeyEEY2kCRyVWy//HCc6VYQUs+Copmhx8zwxAYwDVdvve5eM9TorQQBassMiJof0qbfCoJQlD
-	DtqUCg7Q==;
+	Content-Type:MIME-Version:Date:Message-Id:Subject:References:In-Reply-To:To:
+	From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=U5wXgd3TCFVvCmRsbtbFEp0MU1fI5uN5hdvw80ROxQs=; b=FtCc9FGQ6JY+iKZVutnoOyBupb
+	mT6K31WxTChothqNrBYY5MzcmP6Mxky/6XCy5qD3W8YOYSNkIr1G6RNnwcRCceR5CidOICrisGQCp
+	yLeD1YVI5+6WuLke9KR9NdMJIb57oMtCnGGwzKQk5tKPvNyZfhMgKdX0XUFsnfmRhL+iu7290gMia
+	2FZBHxf4/I/0zrn6n0zVoyrJjguP30z5kZFe2wAForzRqJEAgrrvJiOfJw4/ffytkqO+sj9EGedm9
+	nUVxExUfxMrIHXxpA0h0UIopm1OwK8BQC+u3SNSTQpBIJaUGG98w5usw38YV9YX7Pq5+nlrvY2Kox
+	ksZM4IOw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wistp-00000007QrL-3QfF;
-	Sun, 12 Jul 2026 12:03:09 +0000
-Received: from latitanza.investici.org ([2a12:4180:dc1:929::42])
+	id 1wjAkX-00000008Kok-1o9t;
+	Mon, 13 Jul 2026 07:06:45 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wistm-00000007Qps-3idi
+	id 1wjAkU-00000008KoU-0Tbk
 	for kexec@lists.infradead.org;
-	Sun, 12 Jul 2026 12:03:08 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
-	s=stigmate; t=1783857773;
-	bh=ZyUBwWtl42dThfa8ulAIiuiO/izeg++d6IRRmXHtIwA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:From;
-	b=SjNuVb3G7BfHpMPUHidibEhu0a5BPxxItmx/qX6mqkIiyhBc4BiMP/U2uhfiNhKxg
-	 epemljzC59wPFvT1r/TCw22a4lDAUoKTRDLv8VXW/Qhvb/SyJ1rjJloTP498waCS8X
-	 4GDLR37hOY/Ot5QJQRILcLw5Xr1poX52PvhmWkd0=
-Received: from mx3.investici.org (unknown [127.0.0.1])
-	by latitanza.investici.org (Postfix) with ESMTP id 4gykj948pPzGpXq;
-	Sun, 12 Jul 2026 12:02:53 +0000 (UTC)
-Received: by mx3.investici.org (Postfix) id 4gykj91xsHzGpXJ;
-	Sun, 12 Jul 2026 12:02:53 +0000 (UTC)
-Date: Sun, 12 Jul 2026 13:02:52 +0100
-From: Bradley Morgan <include@grrlz.net>
-To: baoquan.he@linux.dev
-CC: akpm@linux-foundation.org, coxu@redhat.com, kexec@lists.infradead.org,
- lgs201920130244@gmail.com, linux-kernel@vger.kernel.org,
- pasha.tatashin@soleen.com, pratyush@kernel.org, rppt@kernel.org,
- ruirui.yang@linux.dev
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2=5D_crash=5Fdump=3A_release_k?=
- =?US-ASCII?Q?eyring_reference_at_the_correct_time?=
-In-Reply-To: <alOB02chtcQcG6lo@MiWiFi-R3L-srv>
-Message-ID: <60D4A5AC-8B51-42B9-A605-835D253B3CCD@grrlz.net>
+	Mon, 13 Jul 2026 07:06:42 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 8F09E600AA;
+	Mon, 13 Jul 2026 07:06:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33A6B1F000E9;
+	Mon, 13 Jul 2026 07:06:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783926401;
+	bh=U5wXgd3TCFVvCmRsbtbFEp0MU1fI5uN5hdvw80ROxQs=;
+	h=From:To:In-Reply-To:References:Subject:Date;
+	b=l8QMFcB0TkmGHnti/h9nkje9pCXe616ZCsmXIHYM9K4sVxJFKpdDxs0wBHvYU0xnc
+	 O7DPWoPkeATfVT6tBEyM8j8kdv+D7Eq3lbOSA9oOYB0j+MANkUjr2dp87aFROMWCn4
+	 hbocxQ6fPMvUx5so4XyF+ZPqIa6Rr67se4lWAHNTYxPfxxZaQ5In9JgSZhrnxsDPFR
+	 4eDClKBS+ZbrSTVuNBI19DDFrzMyXoNFXNam2nOpOKlqyLNVGkKiZO26r0FmAXrD2S
+	 Mx/933jq5pfqPFfheqw6tpYnITqOxsHtzYKcDiQvirdQklAex1mknQorqZ2KTC3Pdw
+	 jugdq1jzClPJA==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Baoquan He <baoquan.he@linux.dev>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>, 
+ Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Guangshuo Li <lgs201920130244@gmail.com>
+In-Reply-To: <20260704112509.3717884-1-lgs201920130244@gmail.com>
+References: <20260704112509.3717884-1-lgs201920130244@gmail.com>
+Subject: Re: [PATCH v2] crash_dump: release keyring reference at the
+ correct time
+Message-Id: <178392639372.255896.15219634537212682820.b4-ty@b4>
+Date: Mon, 13 Jul 2026 10:06:33 +0300
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260712_050307_363339_50A487A7 
-X-CRM114-Status: UNSURE (   2.38  )
-X-CRM114-Notice: Please train this message.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.16-dev
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,9 +73,20 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Nice! :)
+On Sat, 04 Jul 2026 19:25:09 +0800, Guangshuo Li wrote:
+> crash_dump: release keyring reference at the correct time
 
-Reviewed-by: Bradley Morgan <include@grrlz.net>
+Applied to kexec-fixes branch of liveupdate/linux.git tree, thanks!
 
-Thanks!
+[1/1] crash_dump: release keyring reference at the correct time
+      commit: ada2e5a44e99113e08ad9b7b71396c6c572204da
+
+tree: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux
+branch: kexec-fixes
+
+--
+Sincerely yours,
+Mike.
+
+
 
