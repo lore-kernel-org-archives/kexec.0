@@ -4,64 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 18217C43458
-	for <kexec@archiver.kernel.org>; Mon, 13 Jul 2026 13:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 458ABC43458
+	for <kexec@archiver.kernel.org>; Mon, 13 Jul 2026 16:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=1JZ+jUbgiNbISG81jCDR/cTHkAMPJnKZyn2UCpJwgV4=; b=KsclNl8z714rOWT8hURsAOXWIE
-	b10UIE7rKKKNepTE3x+enCaKD5yQwR8yyLN+V+llOn0D+DAzz+g+Emhie1EumKIQpd/P+Lkxd0Mvk
-	42fkCWqhiFZ4LHC22vatejrP1OBuSybyXi/Mk2A/Ir/vuvkah7+jNEtC4qqucsG3v6IK/e+mUYPAy
-	bhDQLcQwkmaC1qQujnjXnuwsy510X8/bu56ZnHqfo0YAdkLGUJCOVOR9uR48bqEjkhLgqyjN7oPYY
-	vSaUScTJbb8UE+rHeR7rAHBe6K5jnqPGooJ3DA2x+T0lSuJ+B+wsvbJZKxlA03u3Q7H840gFaRQa4
-	bJm6MXPQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=aCrBFhBH4b55ElTrOxI8l+7LTfo9SGbV+OTj6Ct9UmY=; b=UT+ak4ncLAOBII8ABTWeeWTZqS
+	m3wzPgw7VD2IoubbxTtTxS7prLy8SD4uop0FNICe5uNsF2DVLDWZq6ld+NwY6Lq6cgxhChO3Nki/B
+	mOBP56gIlke/yjt6rhGiixYr8pEGIgffTzgnVwEqNj4gaJJz9XP9K9TJiXvz7Z7xYhtlXHSp0NfxL
+	ac6AmVpUd3RJUNhVLz/DQBff7PcIAEBkqY1oKjcvExcPwvKu1jmWINrTM+MZ8ao3Vh7o55f1cd8h/
+	oimbuOTABCOS3Yan8gYCGSOQ6Hm71r/QTVmsSqorGSihMMx5Owyp499TNyRFBJV0HR8Q4SSijcHrs
+	u2ZdTxnA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjH64-00000009Saz-1Y1B;
-	Mon, 13 Jul 2026 13:53:24 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wjJrV-0000000A1Mk-1MGZ;
+	Mon, 13 Jul 2026 16:50:33 +0000
+Received: from mail-ed1-x52a.google.com ([2a00:1450:4864:20::52a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjH62-00000009Sal-3hsQ
+	id 1wjJrT-0000000A1M6-1CZS
 	for kexec@lists.infradead.org;
-	Mon, 13 Jul 2026 13:53:22 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id ECFD2600D8;
-	Mon, 13 Jul 2026 13:53:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 355461F000E9;
-	Mon, 13 Jul 2026 13:53:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783950801;
-	bh=1JZ+jUbgiNbISG81jCDR/cTHkAMPJnKZyn2UCpJwgV4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=MyCiIiJ4Z9PQMTe3vSTzQZjL3wKH3oq36AhbOGoKljo9Op8Y16arXocVLbzr5h8ss
-	 u/Mp9/VNgcEY1+mLXvifJSjxQ7PlWOTiqsQaWARzohogCB2BMxl52A4LcnmuRENFy9
-	 RnXgdT3fd7JOWjV0MPZI/0g4tCdPS3qaeQ3DuPdcRZIk2nqi6GS0f9GY5Ans2xY/1/
-	 lcD5BVKPLq5vMStTF5bcK9GDjT6+XJYclDUKo6FcZpHlNoBOf3+Bzu+gEV0k/08+PV
-	 KBDTWYDnUOJF2vfuHAczxsTQNf3Nf7UWXNhNLu7fu5RY+K+kdTNQRs8aUJUkVdzojM
-	 7DOEsnr+LAerA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: George Guo <dongtai.guo@linux.dev>
-Cc: Huacai Chen <chenhuacai@kernel.org>,  Mike Rapoport <rppt@kernel.org>,
-  Pasha Tatashin <pasha.tatashin@soleen.com>,  Pratyush Yadav
- <pratyush@kernel.org>,  Shuah Khan <shuah@kernel.org>,  George Guo
- <guodongtai@kylinos.cn>,  WANG Xuerui <kernel@xen0n.name>,  Alexander Graf
- <graf@amazon.com>,  loongarch@lists.linux.dev,
-  linux-kernel@vger.kernel.org,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  linux-kselftest@vger.kernel.org,  Kexin Liu
- <liukexin@kylinos.cn>
-Subject: Re: [PATCH v3 1/3] LoongArch: kexec: add KHO support for FDT-based
-In-Reply-To: <20260601093930.112758-1-dongtai.guo@linux.dev> (George Guo's
-	message of "Mon, 1 Jun 2026 17:39:28 +0800")
-References: <20260601092823.110362-1-dongtai.guo@linux.dev>
-	<20260601093930.112758-1-dongtai.guo@linux.dev>
-Date: Mon, 13 Jul 2026 15:53:17 +0200
-Message-ID: <2vxzjyqzj8s2.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Mon, 13 Jul 2026 16:50:32 +0000
+Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-698b78c05b0so7612a12.1
+        for <kexec@lists.infradead.org>; Mon, 13 Jul 2026 09:50:30 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783961429; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ixQIAa9ZH/dfCYf0HLF2GrYVLM/lLeqPt/+OAeEf8K+Ns+a6EDsd27GoPzJ7NM/M9r
+         q1fKerATmRasS+8U0t1iWNbdFU7GWeulEPd9/9yIF1CVSV+LJ0NBzVsb0RpXCjhSqmyH
+         93kHRz+aFdBkNfmKBiawPG8BlQed4LQTI76UHQGuZwBaYum98qAlwC/Pt00PxVEf1bNJ
+         WxunDY6Det+302/HRlBk0LIz/hFGxu6XgF0RCPhBJ3Uc0lWct2d3JyYqmY/20xYdZBTe
+         JGQ/95bmjEaJA/qjuni66Gy5r/iURYrsGtZzvXYpxhkJjebtY81bFlu4xUxzMTE0EcVG
+         cxJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=aCrBFhBH4b55ElTrOxI8l+7LTfo9SGbV+OTj6Ct9UmY=;
+        fh=8JG8Js3SXmHlLzqDDFyKRb5e5b8B5cUXPJg6t26VblQ=;
+        b=dpZTlAnBkBCAu2Z9lgxjtZKmFVXy2XG6JZ2W16ZIfFCRUSE5gxSTiaLBLP/hZxIRyX
+         fOmV4iz1T4rwpn/R+XyCYfTf2x94SgR9RGwhr9XTTlK34fB8ltnd3cyyJ783oxwkxWY5
+         r0bkscSX//0dFEEl/BQQfrH2qEoxN5FrKF4P5icJ/NFJiTz5iXQcKRiK9pH1l3/ijBoK
+         ZekXDSe/pCBilcVIWAxidB9wrnt2mvn6eRHpWd6juBAiug5vM2bA7Wjth5gjY7a8XNuw
+         zNfUkksNmCuBn+t0KwqZPzdrOcnWnSa3jdEQvsjngn/DEF5JmikwNGOjYUxCKkijBsgB
+         cHig==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1783961429; x=1784566229; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=aCrBFhBH4b55ElTrOxI8l+7LTfo9SGbV+OTj6Ct9UmY=;
+        b=pPVdO01tbbOTQPADS9rlkC3PtgfAp0giGB7pxcDD3dvA2UwrXrEAe+kmjOyC5qoJgz
+         FeuLVObcLr2YCecmDu1oVOEGT6R5MTxXqjL00USao+4Akhnb9X1j6cBZQn+WAjG35o9N
+         fj2fOsLIrZUA/hVWNkaGboVNbRMyUZ12qy8OB4m9xqnToWO9TqXBbCMEOiaxy0etWo/B
+         lxc8hWOH7o38Y1N8UWQfjzXp0qngYNKIFVSlHGLo1yHOj8cOSHYLngd1ZAQ97pqGOVxv
+         X3goZz0IUZPI5tFIkiIOtIjdQ2aOwaI6a14INT1a+4Q/1FAFx+Sm5Qi9BplHVjqJGyU7
+         wakw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783961429; x=1784566229;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=aCrBFhBH4b55ElTrOxI8l+7LTfo9SGbV+OTj6Ct9UmY=;
+        b=pQ0nT1NFSxHzsG/Vq3KpyTzaXdicX9IB4QMXvd5vLIpvZCEHNUs4NKGoVp2MB1hjZ/
+         oGUItcyTTzb8DtXVkEma/K+gYFhGTKE0iW1l/yPLXnHTWTIqXKy7+OYoeOEAQ6m6kzrT
+         sJDEAt2iYjTAT14QYz94O+dCjHYJ0Cu2rj4Ag0EQ0ycpfT/GJp+WaURFBZX8SpwTrEap
+         /nWdXNSuExfmx1uh9IotoNRgQU6vnIacVB6zK3LbQUFHHwDL+hp/qs3cj1d9ry1IOfc9
+         KBFNPF39xq4nb5TvgqHhfMGYCWSFbUCovl4QyhDWWdhKuRiP8C5fhiZsP2XlLBDXMOn2
+         Gy1w==
+X-Forwarded-Encrypted: i=1; AHgh+Rq8x+SSAzOpkC5IgejBw1goL5ccC6Pucf/02YPkfi0PmXAKZzEK/e+K45vrGmUKYx9zDqelyA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzTWZEMIFG8hZzV28HBbVxC7qUn2bxP+KoLaZBwwSC2c8tbMvG/
+	tAv8XkFths0R07GnsxI9yZXHYAeFk4vgtFJyiylJlYCLOoUWKkgL4qLjqj5Jd+I1Opyw/FJ5ClX
+	IEi6hSL8kq9pu9ENsMwrTv/sG5YOFHb6cQoaEnYkK
+X-Gm-Gg: AfdE7ckbEjO1kpAyXoo3CIDmvs3wQ4KHA8C/cbzKlFp2cfTFfz9gju5X7SOV1WI+oyv
+	aSsliPacysMPlidc+g5e+mdc7hPcO19Yo/cM7tK4tB0kSKDBwcl1Uk0iRYc+2NjxZs3qedIMZA0
+	gNm3bqKHuYqr3Et82sZi97cea2JCVv5LQOj9NRgM7evqe0KYRKVTChwFMVqVpMJe4sBtkYUPc0j
+	2aL1JgbMnPFOG9lo+mBs1kRXsEt6S0pKzTOLfw3jkDCMgkgy/3SF/pTnJyK8Sj/vX73LmS/5oe8
+	fY2xncv4yzGJ68znpe1lJuxbIGs=
+X-Received: by 2002:aa7:da44:0:b0:672:117e:55d4 with SMTP id
+ 4fb4d7f45d1cf-69cceedafffmr35162a12.0.1783961428842; Mon, 13 Jul 2026
+ 09:50:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20260612214512.464146-1-vipinsh@google.com> <ajLtfkuMP4DEGlqe@kernel.org>
+ <20260617190754.GC2704872.vipinsh@google.com>
+In-Reply-To: <20260617190754.GC2704872.vipinsh@google.com>
+From: Vipin Sharma <vipinsh@google.com>
+Date: Mon, 13 Jul 2026 09:49:51 -0700
+X-Gm-Features: AVVi8Cel2bn_2UuHYJ25Jh3NaRKUpct5Z2YiVdgR0SBKqnQpE3MSXtvH7sX7PyY
+Message-ID: <CAHVum0dL+p-j1EwQf69p87MU1s8Er9RsOaMMbprFnmNeEdS6-g@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] Make liveupdate selftests library
+To: Mike Rapoport <rppt@kernel.org>
+Cc: pasha.tatashin@soleen.com, pratyush@kernel.org, tarunsahu@google.com, 
+	skhawaja@google.com, shuah@kernel.org, dmatlack@google.com, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260713_095031_341227_5011122E 
+X-CRM114-Status: GOOD (  20.12  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,141 +120,40 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jun 01 2026, George Guo wrote:
-
-> From: George Guo <guodongtai@kylinos.cn>
+On Wed, Jun 17, 2026 at 12:08=E2=80=AFPM Vipin Sharma <vipinsh@google.com> =
+wrote:
 >
-> Enable Kexec Handover (KHO) on LoongArch64 for FDT-based systems.
+> On Wed, Jun 17, 2026 at 09:54:54PM +0300, Mike Rapoport wrote:
+> > Hi Vipin,
+> >
+> > On Fri, Jun 12, 2026 at 02:45:10PM -0700, Vipin Sharma wrote:
+> > > Hello,
+> > >
+> > > This is v3 series of refactoring liveupdate selftests as a library. I=
+t
+> > > exposes common liveupdate ioctls as a library which can be used by ot=
+her
+> > > selftests like VFIO and IOMMU.
+> >
+> > Let's revisit this after -rc1 is out.
+> > I don't think there would a need to change anything, it's just the matt=
+er
+> > of applying the patches to the right base :)
 >
-> - Kconfig: select ARCH_SUPPORTS_KEXEC_HANDOVER for CONFIG_64BIT
-> - kexec.h: add fdt/fdt_mem fields to kimage_arch to hold the KHO FDT
->   kexec segment virtual and physical addresses
-> - machine_kexec_file.c: add kho_load_fdt() which copies the running
->   kernel's FDT (initial_boot_params), appends linux,kho-fdt and
->   linux,kho-scratch properties to /chosen, and loads the result as a
->   kexec segment; called from load_other_segments().  Returns -EINVAL
->   when initial_boot_params is NULL (ACPI-only boot) since that path
->   requires separate handling.
-> - machine_kexec.c: before jumping to the new kernel, update the
->   DEVICE_TREE_GUID entry in the EFI config table to point to the KHO
->   FDT segment so the second kernel finds it via efi_fdt_pointer() and
->   early_init_dt_check_kho() calls kho_populate()
->
-> Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
-> Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
->  arch/loongarch/Kconfig                     |   3 +
->  arch/loongarch/include/asm/kexec.h         |   4 +
->  arch/loongarch/kernel/machine_kexec.c      |  27 +++++
->  arch/loongarch/kernel/machine_kexec_file.c | 118 +++++++++++++++++++++
->  4 files changed, 152 insertions(+)
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 606597da46b8..d494418545f5 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -684,6 +684,9 @@ config ARCH_SUPPORTS_KEXEC
->  config ARCH_SUPPORTS_KEXEC_FILE
->  	def_bool 64BIT
->  
-> +config ARCH_SUPPORTS_KEXEC_HANDOVER
-> +	def_bool 64BIT
-> +
->  config ARCH_SELECTS_KEXEC_FILE
->  	def_bool 64BIT
->  	depends on KEXEC_FILE
-> diff --git a/arch/loongarch/include/asm/kexec.h b/arch/loongarch/include/asm/kexec.h
-> index 209fa43222e1..adf54bfcdd49 100644
-> --- a/arch/loongarch/include/asm/kexec.h
-> +++ b/arch/loongarch/include/asm/kexec.h
-> @@ -39,6 +39,10 @@ struct kimage_arch {
->  	unsigned long efi_boot;
->  	unsigned long cmdline_ptr;
->  	unsigned long systable_ptr;
-> +#ifdef CONFIG_KEXEC_HANDOVER
-> +	void *fdt;		/* virtual address of KHO FDT segment buffer */
-> +	unsigned long fdt_mem;	/* physical address of KHO FDT segment */
-> +#endif
->  };
->  
->  #ifdef CONFIG_KEXEC_FILE
-> diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
-> index ad27fef098f1..98529c71d001 100644
-> --- a/arch/loongarch/kernel/machine_kexec.c
-> +++ b/arch/loongarch/kernel/machine_kexec.c
-> @@ -6,6 +6,7 @@
->   */
->  #include <linux/compiler.h>
->  #include <linux/cpu.h>
-> +#include <linux/efi.h>
->  #include <linux/kexec.h>
->  #include <linux/crash_dump.h>
->  #include <linux/delay.h>
-> @@ -289,6 +290,32 @@ void machine_kexec(struct kimage *image)
->  	pr_notice("We will call new kernel at 0x%lx\n", start_addr);
->  	pr_notice("Bye ...\n");
->  
-> +#ifdef CONFIG_KEXEC_HANDOVER
-> +	/*
-> +	 * Point the EFI FDTPTR config table entry at the modified FDT so the
-> +	 * second kernel picks up the linux,kho-fdt and linux,kho-scratch
-> +	 * properties via early_init_dt_check_kho().
-> +	 */
-> +	if (internal->fdt_mem) {
-> +		/*
-> +		 * FDT-based system: DEVICE_TREE_GUID already exists in the EFI
-> +		 * config table; just update its pointer to our KHO FDT.
-> +		 */
-> +		efi_system_table_t *st =
-> +			(efi_system_table_t *)TO_CACHE(systable_ptr);
-> +		efi_config_table_t *ct =
-> +			(efi_config_table_t *)TO_CACHE((unsigned long)st->tables);
-> +		unsigned long i;
-> +
-> +		for (i = 0; i < st->nr_tables; i++) {
-> +			if (!efi_guidcmp(ct[i].guid, DEVICE_TREE_GUID)) {
-> +				ct[i].table = (void *)internal->fdt_mem;
-> +				break;
-> +			}
-> +		}
-> +	}
-> +#endif
+> Sounds good, thank you!
+> >
+> > > Currently, there are no users of this change but it is being used in
+> > > VFIO and iommu liveupdate series.
+> >
 
-Honestly this and the ACPI stuff looks worse to me than what your
-previous version did. Now I am not an expert on EFI and architecture
-stuff, and know nothing about Loongarch, but to me this looks hacky and
-I am not sure if it is doing the right thing.
+(Resending below message because by mistake I sent it as HTML and it
+got rejected from the list)
 
-I think you should get some alignment with Loongarch maintainers on what
-the kexec boot protocol looks like. It looked odd to me, but if the
-Loongarch maintainers are fine with using the kernel cmdline for
-bootloader to pass data to the kernel, then I think we should go back to
-that.
+Hi Mike,
 
-Huacai, do you have any thoughts? For KHO we essentially need a way for
-the pre-kexec kernel to tell the post-kexec kernel about a blob of
-memory that has some information it can use. For x86, we do that via
-setup data. See arch/x86/include/uapi/asm/setup_data.h and struct
-kho_data for example. On arm64, we use the boot FDT's /chosen node. See
-kho_add_chosen() in drivers/of/kexec.c.
+Let me know if you are still planning to take it as is or if you would
+like me to rebase on the latest liveupdate repo.
 
-Ideally, all device tree platforms should use the FDT path. But
-Loongarch also has ACPI only and I don't know what a good idea for that
-is.
-
-So, do you have any suggestions on where to best place a pointer to this
-blob of data on Loongarch? v1 of this series put it in the kernel
-commandline, but I found that odd and asked if it can be done via DT
-instead. But to me, this code looks even more hacky.
-
-> +
->  	/* Make reboot code buffer available to the boot CPU. */
->  	flush_cache_all();
->  
-[...]
-
--- 
-Regards,
-Pratyush Yadav
+Thanks
+Vipin
 
