@@ -4,61 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0BE5EC44501
-	for <kexec@archiver.kernel.org>; Mon, 13 Jul 2026 07:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 50C5AC43458
+	for <kexec@archiver.kernel.org>; Mon, 13 Jul 2026 08:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Date:Message-Id:Subject:References:In-Reply-To:To:
-	From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=U5wXgd3TCFVvCmRsbtbFEp0MU1fI5uN5hdvw80ROxQs=; b=FtCc9FGQ6JY+iKZVutnoOyBupb
-	mT6K31WxTChothqNrBYY5MzcmP6Mxky/6XCy5qD3W8YOYSNkIr1G6RNnwcRCceR5CidOICrisGQCp
-	yLeD1YVI5+6WuLke9KR9NdMJIb57oMtCnGGwzKQk5tKPvNyZfhMgKdX0XUFsnfmRhL+iu7290gMia
-	2FZBHxf4/I/0zrn6n0zVoyrJjguP30z5kZFe2wAForzRqJEAgrrvJiOfJw4/ffytkqO+sj9EGedm9
-	nUVxExUfxMrIHXxpA0h0UIopm1OwK8BQC+u3SNSTQpBIJaUGG98w5usw38YV9YX7Pq5+nlrvY2Kox
-	ksZM4IOw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:Date:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=eswem+fgZ39sD2pjf/HcQMj2cdVo6XyD72F/asLblR8=; b=yXkJ3I3921X3xE5+H6eUAqbLpc
+	fl59yblr1BjIQxA8xiQbvfjlVZb3I77Se2XLqjiQ2j8BoR7l5Se8zhlN5FaKY7YPH+0K0WUZH5THS
+	7hPc+6OGRVnZwGQrBUqnzxnbQYU0bXg/d0jGJm58zDijnqS5LD+cNncDhZzqxsapnxE7CXmfel42J
+	/DAvRyXDgbWYfpH+//u3zcV+DFPGFmQ3MWOmTetof1BfAuKma1f3B4+gAvcia4PjlRRE0PqiqJj7K
+	8Wa1CfAxVWE6UCWeRbqbzHXf6iZSYsdjteHZ4Vm31cVe+SlCo4zS9yb22Nw0J+MCQxDrSGgFmTqrn
+	lRorKJUA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjAkX-00000008Kok-1o9t;
-	Mon, 13 Jul 2026 07:06:45 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wjCTX-00000008ecL-04WB;
+	Mon, 13 Jul 2026 08:57:19 +0000
+Received: from mail-lf1-x135.google.com ([2a00:1450:4864:20::135])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjAkU-00000008KoU-0Tbk
+	id 1wjCTU-00000008eb8-28VZ
 	for kexec@lists.infradead.org;
-	Mon, 13 Jul 2026 07:06:42 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 8F09E600AA;
-	Mon, 13 Jul 2026 07:06:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33A6B1F000E9;
-	Mon, 13 Jul 2026 07:06:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783926401;
-	bh=U5wXgd3TCFVvCmRsbtbFEp0MU1fI5uN5hdvw80ROxQs=;
-	h=From:To:In-Reply-To:References:Subject:Date;
-	b=l8QMFcB0TkmGHnti/h9nkje9pCXe616ZCsmXIHYM9K4sVxJFKpdDxs0wBHvYU0xnc
-	 O7DPWoPkeATfVT6tBEyM8j8kdv+D7Eq3lbOSA9oOYB0j+MANkUjr2dp87aFROMWCn4
-	 hbocxQ6fPMvUx5so4XyF+ZPqIa6Rr67se4lWAHNTYxPfxxZaQ5In9JgSZhrnxsDPFR
-	 4eDClKBS+ZbrSTVuNBI19DDFrzMyXoNFXNam2nOpOKlqyLNVGkKiZO26r0FmAXrD2S
-	 Mx/933jq5pfqPFfheqw6tpYnITqOxsHtzYKcDiQvirdQklAex1mknQorqZ2KTC3Pdw
-	 jugdq1jzClPJA==
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- Baoquan He <baoquan.he@linux.dev>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>, 
- Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Guangshuo Li <lgs201920130244@gmail.com>
-In-Reply-To: <20260704112509.3717884-1-lgs201920130244@gmail.com>
-References: <20260704112509.3717884-1-lgs201920130244@gmail.com>
-Subject: Re: [PATCH v2] crash_dump: release keyring reference at the
- correct time
-Message-Id: <178392639372.255896.15219634537212682820.b4-ty@b4>
-Date: Mon, 13 Jul 2026 10:06:33 +0300
+	Mon, 13 Jul 2026 08:57:17 +0000
+Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-5b015532f7bso3343047e87.0
+        for <kexec@lists.infradead.org>; Mon, 13 Jul 2026 01:57:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783933034; x=1784537834; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=eswem+fgZ39sD2pjf/HcQMj2cdVo6XyD72F/asLblR8=;
+        b=snqqgYf9dcwFAjP7E8oecsCnQj0pa43ZxIs2JVhw5uI3n6ArEJM5cUOx3mamMN9Uh0
+         cfIn/qFuZX065vCGrQ+bd6LXdncNkdgHhjNALoGyXsDs0YLGozeEyM34OIB6dQBd0lSO
+         Go/0h42qUYAWYfhsyx1rPx2cdLh/kOcunB+oqfDm8C7y3wro7920XsyZDAXGQ68vu7Q9
+         7N1TfvH3uiwjxo6q0z5Si5Gb1kIGjYnDEdxFCtlTRlDy2fhmQ+ndfphfSs9uJAsTMhus
+         y1baQwrvMAikr+8G3bMmlViYZxT0nJNTlryhHQvyDXhIG+F4Qoj7M6ZbY5YpazrcLIXH
+         x+Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783933034; x=1784537834;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=eswem+fgZ39sD2pjf/HcQMj2cdVo6XyD72F/asLblR8=;
+        b=AGNo1BOJc62hK5RlEq/Ikedw+RFnyxQPih9c+8dL+DpIggWDxN5WiGVX/UV9Jpw+Tc
+         zxF9+wUgblDZP2lROfV14nkS5Id1HuByV9DgBbzzSM0RRl82+P6n5IPH+zvKzxbw1nb2
+         2Ivx5bdNSh41iYvMUMsgrZiv7XYOFDTee7ujQCDp/XMfZW3kN8Xv1dz81Fz4bKE2nlFW
+         SIfwadyKIWECTMHdIMxMqiI7aQKXrClpLHyWVAnCyK+FCQoOF0GG/PeefpRv5nIUhER9
+         48YfiZOTE1HbFs8ElUpMSeXQVWejlqVYl4XicZW+2l2w4nu8PyqUE/1Njy6SBxXPhYtF
+         DDgw==
+X-Forwarded-Encrypted: i=1; AHgh+RrfUGRVy7njv409qpMOMg3SxRAfKBcKbyroBSIcgIn53wFA1gcxkkjBjuBC/uzqdDUxiIUZnQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzyoGq8wvROiUdec3ANsKfYXIvDmPSM9MlpB8dHxo2UpFuOnUzw
+	IMieaz1gamCjSBSKDoIC39n1G2NuMXvHkIeTkjGmyo+JnoqcJsp+mp50
+X-Gm-Gg: AfdE7clDvQXN9oeBAP8qGCDOOYy4uc76ka/bOfvAOXMuMOFq7mEVpbhlwrxRa8ynww5
+	EidwLU36dwfJ7WRmlzSc8iPcrHqZeLHIfibBS7tiy5fCvlmspK8ewwOEymO0Lgb5lY7UOoYYa5n
+	nGnnjERefZTFvzScIjVhG/qZMMfiDlut40vafFV2/9syr9iU4Nw6Qyg+1XGOvuDndAIZffZycKK
+	tdweovCgj5d/QO7L5Mmb081rR/jwBCU0uIUTHgFpVybfa5kamMsEEEAx5ZB/h5BUJweimVSxO1N
+	+J9Ni0sWK0bLxMgFyMtZDFz4iYE/6BC2z83bCAHui/Ho8W+10421q8e/H1Up2Ea+qUR1dSN/G7+
+	rMBevLLuOL0GAAOKm1MfsJkTF64yLcMEi7vBzSXnT36VBhmFp1GgfV4BcUU6xr7UuSivX/3yekg
+	I9GouMqItxpBusrQIF6QD6b0h/0ffoV7yjEMnqViJL
+X-Received: by 2002:a05:6512:32d6:b0:5ae:b136:acdc with SMTP id 2adb3069b0e04-5b0236a4a8amr2022533e87.35.1783933033504;
+        Mon, 13 Jul 2026 01:57:13 -0700 (PDT)
+Received: from pc636 (host-95-203-16-226.mobileonline.telia.com. [95.203.16.226])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5b01ca4a2e9sm2657309e87.1.2026.07.13.01.57.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2026 01:57:12 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Mon, 13 Jul 2026 10:57:09 +0200
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Alexander Graf <graf@amazon.com>,
+	Alexander Potapenko <glider@google.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Christoph Lameter <cl@gentwo.org>, Dennis Zhou <dennis@kernel.org>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Lorenzo Stoakes <ljs@kernel.org>, Marco Elver <elver@google.com>,
+	Michal Hocko <mhocko@suse.com>, Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>, Tejun Heo <tj@kernel.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vlastimil Babka <vbabka@kernel.org>, Zi Yan <ziy@nvidia.com>,
+	kasan-dev@googlegroups.com, kexec@lists.infradead.org,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH 0/3] mm: split a couple of headers from internal.h
+Message-ID: <alSoZTopsSYAXM2z@pc636>
+References: <20260709-internal-h-v1-0-956d5092782d@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.16-dev
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260709-internal-h-v1-0-956d5092782d@kernel.org>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260713_015716_571283_553F3443 
+X-CRM114-Status: UNSURE (   9.58  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,20 +119,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, 04 Jul 2026 19:25:09 +0800, Guangshuo Li wrote:
-> crash_dump: release keyring reference at the correct time
-
-Applied to kexec-fixes branch of liveupdate/linux.git tree, thanks!
-
-[1/1] crash_dump: release keyring reference at the correct time
-      commit: ada2e5a44e99113e08ad9b7b71396c6c572204da
-
-tree: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux
-branch: kexec-fixes
+On Thu, Jul 09, 2026 at 09:41:46AM +0300, Mike Rapoport (Microsoft) wrote:
+> mm/internal.h becomes more and more bloated.
+> 
+> Split declarations related to mm_init, memblock, vmalloc and sparse into
+> new headers.
+> 
+> ---
+> Mike Rapoport (Microsoft) (3):
+>       mm: split out mm_init and memblock declarations from internal.h
+>       mm: split out sparse declarations from internal.h
+>       mm: split out vmalloc declarations from internal.h
+> 
+>  MAINTAINERS                        |   3 +
+>  kernel/liveupdate/kexec_handover.c |   3 +-
+>  mm/cma.c                           |   1 +
+>  mm/execmem.c                       |   1 +
+>  mm/hugetlb.c                       |   1 +
+>  mm/internal.h                      | 183 -------------------------------------
+>  mm/kmsan/hooks.c                   |   1 +
+>  mm/kmsan/shadow.c                  |   1 +
+>  mm/memblock.c                      |   1 +
+>  mm/memory_hotplug.c                |   1 +
+>  mm/mm_init.c                       |   3 +
+>  mm/mm_init.h                       | 120 ++++++++++++++++++++++++
+>  mm/page_alloc.c                    |   1 +
+>  mm/percpu-vm.c                     |   1 +
+>  mm/sparse-vmemmap.c                |   2 +
+>  mm/sparse.c                        |   2 +
+>  mm/sparse.h                        |  63 +++++++++++++
+>  mm/vmalloc.c                       |   1 +
+>  mm/vmalloc.h                       |  46 ++++++++++
+>
+Thank you for splitting vmalloc. Later on we/i can move other things from
+main vmalloc.h into this local variant.
 
 --
-Sincerely yours,
-Mike.
-
-
+Uladzislau Rezki
 
