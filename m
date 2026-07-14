@@ -4,72 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AB223C43458
-	for <kexec@archiver.kernel.org>; Tue, 14 Jul 2026 12:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CFBEEC4450A
+	for <kexec@archiver.kernel.org>; Tue, 14 Jul 2026 15:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ObYWkLNfQi85p38uahLx6yranNyzKYkaSbUyvi+K6ZM=; b=k6+XzrNrR6xD9J9j9ylg6dZElL
-	/EizVjrQ7Ya2MM0ZbEpLJEg0EUWFhIbKSe8G1wrBPyDq6sCu+we7hy5eYj30j+QzoFzsBKdFdiHOx
-	BD/YyvYYPCYro2bOCxEqYvA7D8xafoIqt1WnUV9FgF6cTLSWeoKReICk7f7uPORdxQX8mquX2w13L
-	eEwb120klsjomyxtdJcapF4ucq8nmj69L+s9reZ2KgLSZaoRW0AqQ25n3+6DPcQp7g1h01FbLRcBh
-	AWHCBhx+yF8+gulpLTIr1FCiBBmFOnsUVhRsVqtMp0x98MksRfRfjJg8T9aZ2Xey/GbCLxXmfjvNM
-	FqleKLVQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=AdMdxqs5Z8x509tTZKpL2bKGAMA2jSi8MmCd4hShlVQ=; b=z0ukN3Rv9/xkHN/dFTxWmKSdJn
+	Xa4xUJYVcR7FneSAyDes5IwCWzNSWD2O52qhjG8Jqf+68UGOmpl/VqTq3n+HuenMUr1waioXCnQto
+	eavUKOCNXwodEphIlGeOqZ7QM/ReitNjEh79PPmiWOvl8/B9XbErKaj1Pk68HxvvDv2QFzYKzQ/IB
+	SJa9nav6jHj6g0ttYw5ry67aOnTsh1i38c25pKQs+cdzCkNYw3LELZ2InlbXJKGQlbX79KKv3FHRN
+	YcVcqlFcUeob/wpTJmz+MmsxYspniAPlEKM0qfpzRdAH8ja0ZgtFMbPECzHWfXKjc3BSLktuWtQNX
+	yvMAEFsg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjc4N-0000000BtKW-1Qzw;
-	Tue, 14 Jul 2026 12:17:03 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wjeqn-0000000CU2v-4BEZ;
+	Tue, 14 Jul 2026 15:15:14 +0000
+Received: from mail-pf1-x44a.google.com ([2607:f8b0:4864:20::44a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjc4L-0000000BtK5-3KMe
+	id 1wjeql-0000000CU1n-2QSj
 	for kexec@lists.infradead.org;
-	Tue, 14 Jul 2026 12:17:01 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 4BCC34034D
-	for <kexec@lists.infradead.org>; Tue, 14 Jul 2026 12:17:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F51E1F00A3D
-	for <kexec@lists.infradead.org>; Tue, 14 Jul 2026 12:17:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784031421;
-	bh=ObYWkLNfQi85p38uahLx6yranNyzKYkaSbUyvi+K6ZM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=daQnjhcicbJzzzDaAuFYC6b8ZcYAs9CAE+dZjOfq5dbSgkVQwiNPgO9MRAxwXqH3M
-	 frDdW60C9rIy4AQot91BiEaZCb0SCnuGD61TraVaNNcc5VsahjP/J8WpPGZthzFyE3
-	 wqHvAQmiLyFXK8cFDxO5QeMIdXDFc7fWF/UcVBYpg8XrvEZIMixtV9kxHwgSz4HZvR
-	 gJzt3e4715WhNhMLe2N7EbbM8orlnN7teYudfE692wxRhsI1aVImOeJaucjq2DZ2/t
-	 QC7jxAMJ+OrLhzuv9LF7i3GZ9sqF1S0C/Ie48KpNLLEiDr5Gb8IRo9oVZx9NVlnO7b
-	 zZFswpfh9K8pg==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-697bd21fdc2so1623814a12.1
-        for <kexec@lists.infradead.org>; Tue, 14 Jul 2026 05:17:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RphYiyIBTw+E8LNaAKmvdyJ6YD4j0AYcsp93y+BmAOh++q8J39TKKTXQnctXz9XDOphdyzCng==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzwU+s6IUJ+wqYxrIamWr4S0TslBbSGLk//4PBruk+ehEa0UHfL
-	7zOynS+54rAh0Bjn36XWHqHwMzWN65S12tmbXcp1AbXwyrlHaHEWVzZEWgYWHiin11X3AngZ2Sb
-	+ZSqpPEpGJjRrhdgvYFFp+I4vkjr/+44=
-X-Received: by 2002:a05:6402:5187:b0:698:5610:76e5 with SMTP id
- 4fb4d7f45d1cf-69c5ef85585mr5895270a12.6.1784031419744; Tue, 14 Jul 2026
- 05:16:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20260601092823.110362-1-dongtai.guo@linux.dev>
- <20260601093930.112758-1-dongtai.guo@linux.dev> <2vxzjyqzj8s2.fsf@kernel.org>
-In-Reply-To: <2vxzjyqzj8s2.fsf@kernel.org>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 14 Jul 2026 20:17:25 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5B6Mj2-AffkstJ4f8EEmvvPOGXoDy2QNudKD2kSz2XkA@mail.gmail.com>
-X-Gm-Features: AUfX_mxp11E4giDW39QHMMI9j_IZOTy-7xjXpv5wTuK8FeqnLx4XCv9zSCzZnnY
-Message-ID: <CAAhV-H5B6Mj2-AffkstJ4f8EEmvvPOGXoDy2QNudKD2kSz2XkA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] LoongArch: kexec: add KHO support for FDT-based
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: George Guo <dongtai.guo@linux.dev>, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Shuah Khan <shuah@kernel.org>, 
-	George Guo <guodongtai@kylinos.cn>, WANG Xuerui <kernel@xen0n.name>, 
-	Alexander Graf <graf@amazon.com>, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, Kexin Liu <liukexin@kylinos.cn>
+	Tue, 14 Jul 2026 15:15:13 +0000
+Received: by mail-pf1-x44a.google.com with SMTP id d2e1a72fcca58-848568a6f62so7766077b3a.0
+        for <kexec@lists.infradead.org>; Tue, 14 Jul 2026 08:15:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784042110; x=1784646910; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=AdMdxqs5Z8x509tTZKpL2bKGAMA2jSi8MmCd4hShlVQ=;
+        b=qEi1+IsCkQrJQpCBIOzXVej3AH6y2FLwb5uf6Jkl9rNdudPfOZjue+p8K20FStTTwR
+         gw4OZtaJtSVzavocmHhgZNp8LF7iSloxucN97Ehuzmcfqj+72tztMEFSZToqgINjt5R9
+         5LaOe+OWWu4hm9OyvPPd0OhHE7MUqKbiSQiHtMd3mss0xbQpV0OWIQyaR2uhAVU0aUUc
+         N8KrTsGAumGul+mgtLUZHU8FM9IQvXDRlZV9XsLbGflidkviyVy2BF8mljC83UB6+aVZ
+         Uk06vEG0yL5cytjiXq93vmTZHz/YcQ2GaF23nBqSuQkFrJ5YnEQLEyS2/TUXo2GgQzkm
+         gNSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784042110; x=1784646910;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=AdMdxqs5Z8x509tTZKpL2bKGAMA2jSi8MmCd4hShlVQ=;
+        b=TDp2k37SLZ7SQt1sKXwY11Mj4NGVOi5bx0miO4OlkSuq1UeIt3Ab+MK+5cz6LFyn3c
+         qONhYSuqGAvwVcRKkGaVK6ibuc0V8WaDOlN0UNbXQ325D9YHLnXcAcqFbqsd2ynPOQYu
+         uRyxSAUlFT2nrcC26Cu5Y+4RN4+CcykTM4pM0sgx0KNGEqrRv30Uo62aFytYfx2fV7WP
+         Og4rlIg+BlAmTwg7FEr+l6GAYHXBEQ5Xy2FwrHabi7ODgeMuO0aR437Ch21KJdoPn/vm
+         xubTtLQEYj/lxz8ci0x3RgkqOlldXirfm7T9N9Tcf5EwDFDSvqszBhflzn5I5biLCFQR
+         2Mnw==
+X-Gm-Message-State: AOJu0YxHvNv7VtE02Nay17I+EurxYtxhoxLv3U4zyyWS3vdogGJhWcLS
+	7a+4P/KL+Tzno0wKpV7/5aP6ojaHMa4qEsA+wJx3kuiN3JIazSunsrNiAspxE2w5pfnn0tJ/u8i
+	30KykXKVlZJeCUzMGaYRxltg8C8vpRFbfQhrIcITnGjETFAkFC0gEVEu4d589l5ejSRdEIeGz5R
+	cYxWi5uRRDBUTgC+AvEmPW68ht2fowj7hLmKe7kfB0EMQJ6w==
+X-Received: from pfbhh6.prod.google.com ([2002:a05:6a00:8686:b0:847:9199:e06])
+ (user=vipinsh job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:460e:b0:845:363e:12d9
+ with SMTP id d2e1a72fcca58-84a554f93damr3265089b3a.3.1784042109576; Tue, 14
+ Jul 2026 08:15:09 -0700 (PDT)
+Date: Tue, 14 Jul 2026 08:14:45 -0700
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
+Message-ID: <20260714151505.3466855-1-vipinsh@google.com>
+Subject: [PATCH v5 00/20] vfio/pci: Base Live Update support for VFIO
+From: Vipin Sharma <vipinsh@google.com>
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org
+Cc: ajayachandra@nvidia.com, alex@shazbot.org, amastro@fb.com, 
+	ankita@nvidia.com, apopple@nvidia.com, bhelgaas@google.com, chrisl@kernel.org, 
+	christian.koenig@amd.com, corbet@lwn.net, dmatlack@google.com, 
+	graf@amazon.com, jacob.pan@linux.microsoft.com, jgg@nvidia.com, jgg@ziepe.ca, 
+	jrhilke@google.com, julianr@linux.ibm.com, kees@kernel.org, 
+	kevin.tian@intel.com, leon@kernel.org, leonro@nvidia.com, lukas@wunner.de, 
+	mattev@meta.com, michal.winiarski@intel.com, parav@nvidia.com, 
+	pasha.tatashin@soleen.com, praan@google.com, pratyush@kernel.org, 
+	rananta@google.com, rientjes@google.com, rodrigo.vivi@intel.com, 
+	rppt@kernel.org, saeedm@nvidia.com, schnelle@linux.ibm.com, 
+	skhan@linuxfoundation.org, skhawaja@google.com, vipinsh@google.com, 
+	vivek.kasireddy@intel.com, witu@nvidia.com, yanjun.zhu@linux.dev, 
+	yi.l.liu@intel.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260714_081511_633759_8A38E561 
+X-CRM114-Status: GOOD (  16.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,167 +100,183 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi, Pratyush,
+Hello,
 
-On Mon, Jul 13, 2026 at 9:53=E2=80=AFPM Pratyush Yadav <pratyush@kernel.org=
-> wrote:
->
-> On Mon, Jun 01 2026, George Guo wrote:
->
-> > From: George Guo <guodongtai@kylinos.cn>
-> >
-> > Enable Kexec Handover (KHO) on LoongArch64 for FDT-based systems.
-> >
-> > - Kconfig: select ARCH_SUPPORTS_KEXEC_HANDOVER for CONFIG_64BIT
-> > - kexec.h: add fdt/fdt_mem fields to kimage_arch to hold the KHO FDT
-> >   kexec segment virtual and physical addresses
-> > - machine_kexec_file.c: add kho_load_fdt() which copies the running
-> >   kernel's FDT (initial_boot_params), appends linux,kho-fdt and
-> >   linux,kho-scratch properties to /chosen, and loads the result as a
-> >   kexec segment; called from load_other_segments().  Returns -EINVAL
-> >   when initial_boot_params is NULL (ACPI-only boot) since that path
-> >   requires separate handling.
-> > - machine_kexec.c: before jumping to the new kernel, update the
-> >   DEVICE_TREE_GUID entry in the EFI config table to point to the KHO
-> >   FDT segment so the second kernel finds it via efi_fdt_pointer() and
-> >   early_init_dt_check_kho() calls kho_populate()
-> >
-> > Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
-> > Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
-> > Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> > ---
-> >  arch/loongarch/Kconfig                     |   3 +
-> >  arch/loongarch/include/asm/kexec.h         |   4 +
-> >  arch/loongarch/kernel/machine_kexec.c      |  27 +++++
-> >  arch/loongarch/kernel/machine_kexec_file.c | 118 +++++++++++++++++++++
-> >  4 files changed, 152 insertions(+)
-> >
-> > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> > index 606597da46b8..d494418545f5 100644
-> > --- a/arch/loongarch/Kconfig
-> > +++ b/arch/loongarch/Kconfig
-> > @@ -684,6 +684,9 @@ config ARCH_SUPPORTS_KEXEC
-> >  config ARCH_SUPPORTS_KEXEC_FILE
-> >       def_bool 64BIT
-> >
-> > +config ARCH_SUPPORTS_KEXEC_HANDOVER
-> > +     def_bool 64BIT
-> > +
-> >  config ARCH_SELECTS_KEXEC_FILE
-> >       def_bool 64BIT
-> >       depends on KEXEC_FILE
-> > diff --git a/arch/loongarch/include/asm/kexec.h b/arch/loongarch/includ=
-e/asm/kexec.h
-> > index 209fa43222e1..adf54bfcdd49 100644
-> > --- a/arch/loongarch/include/asm/kexec.h
-> > +++ b/arch/loongarch/include/asm/kexec.h
-> > @@ -39,6 +39,10 @@ struct kimage_arch {
-> >       unsigned long efi_boot;
-> >       unsigned long cmdline_ptr;
-> >       unsigned long systable_ptr;
-> > +#ifdef CONFIG_KEXEC_HANDOVER
-> > +     void *fdt;              /* virtual address of KHO FDT segment buf=
-fer */
-> > +     unsigned long fdt_mem;  /* physical address of KHO FDT segment */
-> > +#endif
-> >  };
-> >
-> >  #ifdef CONFIG_KEXEC_FILE
-> > diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/ker=
-nel/machine_kexec.c
-> > index ad27fef098f1..98529c71d001 100644
-> > --- a/arch/loongarch/kernel/machine_kexec.c
-> > +++ b/arch/loongarch/kernel/machine_kexec.c
-> > @@ -6,6 +6,7 @@
-> >   */
-> >  #include <linux/compiler.h>
-> >  #include <linux/cpu.h>
-> > +#include <linux/efi.h>
-> >  #include <linux/kexec.h>
-> >  #include <linux/crash_dump.h>
-> >  #include <linux/delay.h>
-> > @@ -289,6 +290,32 @@ void machine_kexec(struct kimage *image)
-> >       pr_notice("We will call new kernel at 0x%lx\n", start_addr);
-> >       pr_notice("Bye ...\n");
-> >
-> > +#ifdef CONFIG_KEXEC_HANDOVER
-> > +     /*
-> > +      * Point the EFI FDTPTR config table entry at the modified FDT so=
- the
-> > +      * second kernel picks up the linux,kho-fdt and linux,kho-scratch
-> > +      * properties via early_init_dt_check_kho().
-> > +      */
-> > +     if (internal->fdt_mem) {
-> > +             /*
-> > +              * FDT-based system: DEVICE_TREE_GUID already exists in t=
-he EFI
-> > +              * config table; just update its pointer to our KHO FDT.
-> > +              */
-> > +             efi_system_table_t *st =3D
-> > +                     (efi_system_table_t *)TO_CACHE(systable_ptr);
-> > +             efi_config_table_t *ct =3D
-> > +                     (efi_config_table_t *)TO_CACHE((unsigned long)st-=
->tables);
-> > +             unsigned long i;
-> > +
-> > +             for (i =3D 0; i < st->nr_tables; i++) {
-> > +                     if (!efi_guidcmp(ct[i].guid, DEVICE_TREE_GUID)) {
-> > +                             ct[i].table =3D (void *)internal->fdt_mem=
-;
-> > +                             break;
-> > +                     }
-> > +             }
-> > +     }
-> > +#endif
->
-> Honestly this and the ACPI stuff looks worse to me than what your
-> previous version did. Now I am not an expert on EFI and architecture
-> stuff, and know nothing about Loongarch, but to me this looks hacky and
-> I am not sure if it is doing the right thing.
->
-> I think you should get some alignment with Loongarch maintainers on what
-> the kexec boot protocol looks like. It looked odd to me, but if the
-> Loongarch maintainers are fine with using the kernel cmdline for
-> bootloader to pass data to the kernel, then I think we should go back to
-> that.
->
-> Huacai, do you have any thoughts? For KHO we essentially need a way for
-> the pre-kexec kernel to tell the post-kexec kernel about a blob of
-> memory that has some information it can use. For x86, we do that via
-> setup data. See arch/x86/include/uapi/asm/setup_data.h and struct
-> kho_data for example. On arm64, we use the boot FDT's /chosen node. See
-> kho_add_chosen() in drivers/of/kexec.c.
->
-> Ideally, all device tree platforms should use the FDT path. But
-> Loongarch also has ACPI only and I don't know what a good idea for that
-> is.
->
-> So, do you have any suggestions on where to best place a pointer to this
-> blob of data on Loongarch? v1 of this series put it in the kernel
-> commandline, but I found that odd and asked if it can be done via DT
-> instead. But to me, this code looks even more hacky.
-I don't know which is the best way, but I can give some information.
+This series can be found on Github:
 
-ARM64 and RISC-V create a FDT to contain all needed boot information
-(EFI system table, command line, etc.) in efistub. In other words,
-both ACPI booting and FDT booting have an existing FDT to pass the
-blob.
+  https://github.com/shvipin/linux vfio/liveupdate/v5
 
-But LoongArch is different, the efistub doesn't create a FDT, instead
-it passes the EFI system table and command line to the core kernel
-directly.
+This series provides the base support to enable Live Update feature for
+VFIO PCI devices using the Live Update Orchestrator (LUO) and Kexec
+Handover (KHO).
+
+Overview
+--------
+
+This series makes the following changes to support VFIO Live Update:
+
+ - Puts VFIO Live Update support behind the CONFIG_VFIO_PCI_LIVEUPDATE
+   config option (which requires CONFIG_VFIO_DEVICE_CDEV).
+ - Preserves VFIO cdev device FDs across a kexec Live Update session via
+   LUO/KHO.
+ - Enforces that incoming preserved devices can only be retrieved via
+   LIVEUPDATE_SESSION_RETRIEVE_FD post-kexec (preventing legacy
+   group/cdev opens from accessing uninitialized state).
+ - Quiesces the device prior to kexec in freeze() by resetting hardware,
+   disabling bus mastering, and marking the device frozen to reject
+   post-freeze IO/MMIO.
+ - Includes VFIO selftests (uapi & kexec tests with continuous DMA
+   checks) and kernel documentation.
+
+VFIO PCI Live Update Roadmap
+----------------------------
+
+We are planning to add VFIO PCI Live Update support in phases. Since full
+support of this feature will come in phase, VFIO PCI Liveupdate is
+controlled by CONFIG_VFIO_PCI_LIVEUPDATE config option. 
+
+This series is phase 1 below:
+
+ 1. PCIe function (non-VF) preserved across Live Update without changing
+    BDF
+ 2. PCIe function (non-VF) preserved across Live Update without resetting
+ 3. PCIe function (non-VF) preserved across Live Update with continuous
+    DMA (noiommu)
+ 4. PCIe function (non-VF) preserved across Live Update with continuous
+    DMA (iommufd)
+ 5. PCIe VF preserved across Live Update with continuous DMA (iommufd)
+
+Dependencies
+------------
+
+This series has following dependencies as shown in the diagram
+
+    |---------------------------|
+    |         VFIO v5           |  <--- Sent in this series.
+    |---------------------------|
+    |  Liveupdate Selftests[1]  |
+    |---------------------------|
+    |        PCI v7 [2]         |
+    |---------------------------|
+
+[1] https://lore.kernel.org/all/20260511201155.1488670-1-vipinsh@google.com/
+    These selftests changes are needed by other selftests also (iommu,
+    kvm), so, I have sent them separately.
+
+[2] https://lore.kernel.org/linux-pci/20260710212616.1351130-1-dmatlack@google.com/
+    This is the PCI v7, which adds the live update support in PCI core.
+
+Github branch I have mentioned at the top has all of these dependencies.
+
+Testing
+-------
+
+Tested using VFIO Live Update selftests in both QEMU and bare-metal
+environment (Intel DSA PCIe device).
+
+  $ ./setup.sh 0000:00:04.0
+  $ ./vfio_pci_liveupdate_kexec_test --stage 1 0000:6a:01.0
+  $ kexec --reuse-cmdline -l -s /boot/vmlinuz
+  $ kexec -e
+  $ ./setup.sh 0000:00:04.0
+  $ ./vfio_pci_liveupdate_kexec_test --stage 2 0000:6a:01.0
+
+Kernel command line options used:
+  - liveupdate=on
+  - kho=on
+  - vfio_iommu_type1.allow_unsafe_interrupts=Y
+  - vfio_pci.enable_sriov=Y
+  - vfio_pci.disable_denylist=Y
+  - vfio.enable_unsafe_noiommu_mode=Y
 
 
-Huacai
+Changelog
+---------
 
->
-> > +
-> >       /* Make reboot code buffer available to the boot CPU. */
-> >       flush_cache_all();
-> >
-> [...]
->
-> --
-> Regards,
-> Pratyush Yadav
+v5:
+ - Addressed Sashiko feedback.
+ - Removed condition to disable CONFIG_VFIO_PCI_DMABUF.
+ - Expanded vfio_find_device() helper to safely discover a registered
+   vfio_device by matching criteria. Internal Sashiko instance found
+   data race.
+ - Updated selftests to latest changes in VFIO selftests.
+ - Rebased on top of PCI Live Update series v7.
+
+v4: https://lore.kernel.org/kvm/20260511234802.2280368-1-vipinsh@google.com/
+
+v3: https://lore.kernel.org/kvm/20260323235817.1960573-1-dmatlack@google.com/
+
+v2: https://lore.kernel.org/kvm/20260129212510.967611-1-dmatlack@google.com/
+
+v1: https://lore.kernel.org/kvm/20251126193608.2678510-1-dmatlack@google.com/
+
+rfc: https://lore.kernel.org/kvm/20251018000713.677779-1-vipinsh@google.com/
+
+
+David Matlack (7):
+  vfio: Enforce preserved devices are retrieved via
+    LIVEUPDATE_SESSION_RETRIEVE_FD
+  docs: liveupdate: Add documentation for VFIO PCI
+  vfio: selftests: Add vfio_pci_liveupdate_uapi_test
+  vfio: selftests: Add Makefile support for TEST_GEN_PROGS_EXTENDED
+  vfio: selftests: Expose iommu_modes to tests
+  vfio: selftests: Verify that opening VFIO device fails during Live
+    Update
+  vfio: selftests: Add continuous DMA to vfio_pci_liveupdate_kexec_test
+
+Vipin Sharma (13):
+  vfio/pci: Factor out the reset logic in VFIO PCI device close path
+  vfio: Export various helpers from VFIO
+  vfio/pci: Export vfio_pci_dma_buf_move for vfio-pci module
+  liveupdate: Export symbols needed by modules
+  vfio/pci: Register a file handler with Live Update Orchestrator
+  vfio/pci: Preserve vfio-pci device files across Live Update
+  vfio: Introduce vfio_find_device() helper
+  vfio: Refactor vfio_device_fops_cdev_open()
+  vfio: Add API to open cdev device for Live Update restore
+  vfio/pci: Retrieve preserved device files after Live Update
+  vfio: selftests: Build liveupdate library in VFIO selftests
+  vfio: selftests: Initialize vfio_pci_device using a VFIO cdev FD
+  vfio: selftests: Add vfio_pci_liveupdate_kexec_test
+
+ Documentation/core-api/liveupdate.rst         |   1 +
+ .../driver-api/vfio_pci_liveupdate.rst        |  23 ++
+ MAINTAINERS                                   |   2 +
+ drivers/vfio/device_cdev.c                    |  67 +++-
+ drivers/vfio/group.c                          |   9 +
+ drivers/vfio/pci/Kconfig                      |  12 +
+ drivers/vfio/pci/Makefile                     |   1 +
+ drivers/vfio/pci/vfio_pci.c                   |  13 +-
+ drivers/vfio/pci/vfio_pci_config.c            |   3 +
+ drivers/vfio/pci/vfio_pci_core.c              | 119 +++---
+ drivers/vfio/pci/vfio_pci_dmabuf.c            |   1 +
+ drivers/vfio/pci/vfio_pci_liveupdate.c        | 340 ++++++++++++++++++
+ drivers/vfio/pci/vfio_pci_priv.h              |  28 ++
+ drivers/vfio/vfio.h                           |  18 +
+ drivers/vfio/vfio_main.c                      |  67 +++-
+ include/linux/kho/abi/vfio_pci.h              |  43 +++
+ include/linux/vfio.h                          |  12 +
+ include/linux/vfio_pci_core.h                 |   3 +
+ kernel/liveupdate/luo_file.c                  |   2 +
+ tools/testing/selftests/vfio/Makefile         |  23 +-
+ .../vfio/lib/include/libvfio/iommu.h          |   2 +
+ .../lib/include/libvfio/vfio_pci_device.h     |   3 +
+ tools/testing/selftests/vfio/lib/iommu.c      |   4 +-
+ .../selftests/vfio/lib/vfio_pci_device.c      |  25 +-
+ .../vfio/vfio_pci_liveupdate_kexec_test.c     | 256 +++++++++++++
+ .../vfio/vfio_pci_liveupdate_uapi_test.c      |  97 +++++
+ 26 files changed, 1097 insertions(+), 77 deletions(-)
+ create mode 100644 Documentation/driver-api/vfio_pci_liveupdate.rst
+ create mode 100644 drivers/vfio/pci/vfio_pci_liveupdate.c
+ create mode 100644 include/linux/kho/abi/vfio_pci.h
+ create mode 100644 tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+ create mode 100644 tools/testing/selftests/vfio/vfio_pci_liveupdate_uapi_test.c
+
+
+base-commit: cbf37fff757e87376e80e11a8378393a8f25145f
+prerequisite-patch-id: 85705fb54d3065efe1d87ab4b69e828a9f3404e7
+prerequisite-patch-id: a33ae79b5fc0259bd013b430c18cc3d14a678599
+-- 
+2.55.0.795.g602f6c329a-goog
+
 
