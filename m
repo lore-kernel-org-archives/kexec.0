@@ -4,85 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5FEE7C4450E
-	for <kexec@archiver.kernel.org>; Tue, 14 Jul 2026 15:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DAEACC4450A
+	for <kexec@archiver.kernel.org>; Tue, 14 Jul 2026 15:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=w4NITAiOyX61WSGfTGRgV5OG/+gstw4nR1bSZsXufP8=; b=iBgOp8BmXAhWxNMGOO3Y1Tu0Zz
-	5U4Gfdb/uXlG1YuPovuuyNLyZx0+8bPspI+ttlgjWVv2hZXMMRY3bgkcNmajqU0KVqF3urObypciy
-	aVxq/Cq8uKiJBWnoFCV1MThl2cj1t9n5WAPPfQ8NyB0Um6N68HuPeR7A0b1yft8M0Bc99FtHSQb/Q
-	knF01coPj7lQyf/weEFBKe2pM0k26S7UwJ0SqSyDprNj5Wh/NaODlIN/bWBGpjgHLbq4R10AxtzmL
-	qOJCvjXVjb9d0wmpLlFhtFvU5rapH+i7UyiY9InEmvG8oTvQtl2qP3EIP7GRLFpKxE1tZX9F/cTbg
-	tkMpcppA==;
+	bh=tk/1w3UkNj58XSSYbOe8ncPxmDwQIUvhVdPzzBUFHPI=; b=yFvDYqmkBdU5twsi+KYQJiBJeB
+	1VPuh+M9DWsytrpufi5zC+gZnnVyXQpBWA6virfmC8tZItxFwU8ABot23OZd05DGD0JPmtPOotQ9N
+	fJwDwXFTU2IP19qByaLdAXSjKzeJ7mjrExkwLOO138mG6LqiB/n03E4oetFHJDnTO8cGt7RmQPPe/
+	+O+maHMhrbZXK0SoCni1SP5ozwMYqHCLTt5VuUy3TTZbu6/WnAogsbugO9ZV4zFgUzAyqD/vSUbUm
+	sdhggW8WJgvCdDEXYaqHSwdV/hOCEui/benI66LqJfLH461AUuvbcyRBO0ylStgpmQQQFEt8XBC0K
+	qIpjcGDA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjer9-0000000CUY4-20bi;
-	Tue, 14 Jul 2026 15:15:35 +0000
+	id 1wjerB-0000000CUcg-488H;
+	Tue, 14 Jul 2026 15:15:37 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjer7-0000000CUSL-0pho
+	id 1wjerA-0000000CUZk-2yht
 	for kexec@bombadil.infradead.org;
-	Tue, 14 Jul 2026 15:15:33 +0000
+	Tue, 14 Jul 2026 15:15:36 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Type:Cc:To:From:Subject:
 	Message-ID:References:Mime-Version:In-Reply-To:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=w4NITAiOyX61WSGfTGRgV5OG/+gstw4nR1bSZsXufP8=; b=SIKcJcrhVxMMV4ShFtL5jF+mzZ
-	A61hKaNgIdxrx+YLbzJrGR88AavQQ+g6uGsLWFgFWlK3503vwwIIOaNxp4ag7BZrb6JGsdEwlq50k
-	HcB8AYi8sYjFqzvJkgFZbyjWKK6RfHU/VbQvIB1h7RX3HidFD4bksGyDkjsuWpPS6ffRsXXN2Aj0B
-	jSUNNco9aX1LUeMFXSO7uuH2wc9cYIfW0TS8m0nXsAMJojnvbp5EFHd8dYlaPXVA0s0KJCVdphx3c
-	6WKWJyv7oBR6Ox+ltf2Q7TWFHvo+ODFBmagP29GUd+35DNfxNfKQ1X1WJ2VdrYncMWlPy1O0BuTCq
-	3GaCa4bg==;
-Received: from mail-pg1-x54a.google.com ([2607:f8b0:4864:20::54a])
+	bh=tk/1w3UkNj58XSSYbOe8ncPxmDwQIUvhVdPzzBUFHPI=; b=knZ5Y91pQ0dbZwHDx/+M53M3Su
+	i05g0lg/iD4+5YY2kLYqiG07aEUAnOv9i4c7FF+VEw4ndE7dtUUhXsBWy5IFTHLzLMnQIH3oooZ+p
+	ze2CDg6cp/UJwzBz5QPt+aLiYhxcwo9TyVwGRqPXteAmfa3XjdjfKiKuqbckMritBMjQzafQgkSYJ
+	GxMBCcU+rOyellnUIKTQZ468Pt/8FYUkB4UQW4thzRM0NeX2ouuBLUf/L4lF5XK9yFVbAtzzEi+Yb
+	PigCuL1vyqR0bDu2ptgWHbJuBF+cM/ia0wCtiuNXSklULwRXy5iaDs43PFU0n+VBabzDcyYF7tWgB
+	y0Ki9YnQ==;
+Received: from mail-pf1-x44a.google.com ([2607:f8b0:4864:20::44a])
 	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1wjer3-0000000Cd76-3imq
+	id 1wjer6-0000000Cd8E-3jFb
 	for kexec@lists.infradead.org;
-	Tue, 14 Jul 2026 15:15:31 +0000
-Received: by mail-pg1-x54a.google.com with SMTP id 41be03b00d2f7-c8952346bb9so3757466a12.2
-        for <kexec@lists.infradead.org>; Tue, 14 Jul 2026 08:15:28 -0700 (PDT)
+	Tue, 14 Jul 2026 15:15:35 +0000
+Received: by mail-pf1-x44a.google.com with SMTP id d2e1a72fcca58-8488ac68185so6844323b3a.2
+        for <kexec@lists.infradead.org>; Tue, 14 Jul 2026 08:15:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784042127; x=1784646927; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1784042130; x=1784646930; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=w4NITAiOyX61WSGfTGRgV5OG/+gstw4nR1bSZsXufP8=;
-        b=KSnjzdYDTvDFoDnqYPlfhYBkGt1OK1ssFu6ngmHHlSFr02L87McHQlakztmPiMVV1u
-         rkQgwHFaoYzhoiaYowhIM2wX21QE93LB6fIJ1bY7z4tsaPxryBEeI7KO2nOZSFDevv7U
-         96cn+JupBlvfg5ZHAhCbItY9vXWHSaL7WZyJp6HVYSy88ubAVjTGDhKEJwkgiiL0CBjH
-         fGnMqv7/rVBrxMYyS7LiH2UGaIDBQaOza4IRa69aND4tKN73WTgaUFNHrb+/HPmZ0cnq
-         J1gK5Uwt47mC0C18uKn/zv8dBGiQNdAwRCSrUQV8FHrLEXkC87l7D/QVHH1FQq6Z6K5w
-         Ie/Q==
+        bh=tk/1w3UkNj58XSSYbOe8ncPxmDwQIUvhVdPzzBUFHPI=;
+        b=IB4XYnUeSlWLqj9kH0jo6M4E4A0qeylBAIWVDrBYI2X97VkdCJNaZo6nUyeruueqwa
+         SG1dZVxS7uzF79018BqPa5ci+BJpkKM5SLmFK0/S2qMce/iGnE8PzZqnMnss8Aangxcj
+         lg8gFgIMnSHbPrejym6Cpmf/RUVYieVkfq8SHg6EzfI0Xs0yTdzkyU44ulKeJLnHBi7D
+         j/2iSPU/5ptBpl2Kqm+IV0ZvPBva6RGaXCiuIlSvnUsb+R3jHbBbXKO5wiWQJcN6SMZc
+         ZY/KyDlmlJEOe6yPndUqvQddEExPL5AsRCAiduttP2VjNj7TYOQ82PO7FKUvZoVeINaf
+         /bLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784042127; x=1784646927;
+        d=1e100.net; s=20251104; t=1784042130; x=1784646930;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=w4NITAiOyX61WSGfTGRgV5OG/+gstw4nR1bSZsXufP8=;
-        b=RMqKojnFr1spFkO+A7jUvavMYGM7h1Hki1N2JSOHHDyxZX8ty5w1cI4GF+GwOZngqg
-         /J+7GIe+MFkMzN2ATJYMHdro3RuJu0bfxOvg52lEwnDTVga39nTr3JEo1Oq8Ylisjuln
-         6P4bxC9aJ4Sz7CCiXwXf/MauOKT0Syqu+XScEd99W7cr/a6IR++lLDUv7zfEGinPEakQ
-         QXMKS4Xa0NG5JLXapl2XtUOtfP4YZzUDOdU2FP6HUkWQtottPq2n5PdDQL2JmfztwjZG
-         8gBIyyze8qPY/sIWEfKnaFY0iCs4kfMglCarPBBrUYzWwTXigQBOiwljCL9AN96yjrvv
-         gVeQ==
-X-Gm-Message-State: AOJu0Yy8xqqpiAHFK3BeWRQ2Fhq/NvMNd2zIWl6IEhFyJX7APSy3NII2
-	Aj6sevUet9pzkVVqmfJ20Z+3MPtPnHHdPOM3tjyBgw/kmq9xi1vUiaxABRUli1xOwY7lTspUXud
-	esUYLmfol0eMIRz2X3gUrfdrxEcqY0Fngpwn7whKXzLUVciH58rfpWEdbBQWVaug5WSYogrF7tT
-	erNTulVZzBsJEEfbu4CXSMgNGXyvpI5Ecr+D/WA4ChRibZ9A==
-X-Received: from plbkx14.prod.google.com ([2002:a17:902:f94e:b0:2cc:61be:8bbb])
- (user=vipinsh job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:db11:b0:2c9:d539:61e7
- with SMTP id d9443c01a7336-2ce9ead007bmr140240975ad.19.1784042126213; Tue, 14
- Jul 2026 08:15:26 -0700 (PDT)
-Date: Tue, 14 Jul 2026 08:15:01 -0700
+        bh=tk/1w3UkNj58XSSYbOe8ncPxmDwQIUvhVdPzzBUFHPI=;
+        b=DDUtJbtabF45kUrjZ5NIEcnaFzIDHL5ejtRt5OpU0YwY+V2r/Iz/nCZTpi55HOaEIG
+         49glJ5lzi8ubovuat5rdfYbC5AlbUaq2sAjDRx+9xJ0H15xDR543n7PH+bf/C8Impbbg
+         LQY4Dz3XIJOUHTLaaVfIIVmYu+4mAE3QCTB5EAvpvfoHafKOuG9Wo+tahivtanHNHkTc
+         7HWPvU4qCmj7P9r+EZ4pI4v+mSjfqdRc0wSprZLviZGHHIp37SdFRlsLcX54fHK6FcM4
+         Z6z+D+h5sLUztgZel3jadU7301VP21WQ83HA0W7H/biiG+Nek+k6hJRayZW9QTgv85zO
+         ymTg==
+X-Gm-Message-State: AOJu0YzYIGyg8jTyuW4Qyg821qhZLJDyeBsFPC8p51ZCaHjDjIN9VZwG
+	f4x+tXuzffpiRHf7UxPn5sdXgDKKXsLvQUqp9iMclGIULm7/xmHRS8ttrgEmOQEGqLbgNguhiy0
+	WeJf2DD6f0Rjf+MwRjjD4dOXkFOIQhFGKjufeEPp2bxuoYvfhFUKp/NZFP0ff7D7em5jh+/2w//
+	PpEyuDoWpA8gfnlrfm078C8oGQzEXP4MZ49zrPGesk4Dl8UQ==
+X-Received: from pfet14.prod.google.com ([2002:aa7:938e:0:b0:84a:1163:2ad0])
+ (user=vipinsh job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:c88:b0:847:83bd:6676
+ with SMTP id d2e1a72fcca58-8488963aa37mr12799379b3a.17.1784042129679; Tue, 14
+ Jul 2026 08:15:29 -0700 (PDT)
+Date: Tue, 14 Jul 2026 08:15:04 -0700
 In-Reply-To: <20260714151505.3466855-1-vipinsh@google.com>
 Mime-Version: 1.0
 References: <20260714151505.3466855-1-vipinsh@google.com>
 X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
-Message-ID: <20260714151505.3466855-17-vipinsh@google.com>
-Subject: [PATCH v5 16/20] vfio: selftests: Add Makefile support for TEST_GEN_PROGS_EXTENDED
+Message-ID: <20260714151505.3466855-20-vipinsh@google.com>
+Subject: [PATCH v5 19/20] vfio: selftests: Verify that opening VFIO device
+ fails during Live Update
 From: Vipin Sharma <vipinsh@google.com>
 To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
 	linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, 
@@ -102,9 +103,8 @@ Cc: ajayachandra@nvidia.com, alex@shazbot.org, amastro@fb.com,
 	yi.l.liu@intel.com
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260714_161529_962347_F5EE9AB7 
-X-CRM114-Status: UNSURE (   9.19  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20260714_161533_080743_D6FACC7D 
+X-CRM114-Status: GOOD (  11.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,48 +121,74 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: David Matlack <dmatlack@google.com>
 
-Add Makefile support for TEST_GEN_PROGS_EXTENDED targets. These tests
-are not run by default.
-
-TEST_GEN_PROGS_EXTENDED will be used for Live Update selftests in
-subsequent commits. These selftests must be run manually because they
-require the user/runner to perform additional actions, such as kexec,
-during the test.
+Verify that opening a VFIO device through its cdev file and via
+VFIO_GROUP_GET_DEVICE_FD both fail with -EBUSY if the device was
+preserved across a Live Update. When a device file is preserved across a
+Live Update, the file must be retrieved from /dev/liveupdate, not from
+VFIO directly.
 
 Signed-off-by: David Matlack <dmatlack@google.com>
 Signed-off-by: Vipin Sharma <vipinsh@google.com>
 ---
- tools/testing/selftests/vfio/Makefile | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ .../vfio/vfio_pci_liveupdate_kexec_test.c     | 38 +++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-diff --git a/tools/testing/selftests/vfio/Makefile b/tools/testing/selftests/vfio/Makefile
-index dc06fddcf855..591f1a52c310 100644
---- a/tools/testing/selftests/vfio/Makefile
-+++ b/tools/testing/selftests/vfio/Makefile
-@@ -36,16 +36,18 @@ LDLIBS += -luuid
- LIBS_O := $(LIBVFIO_O)
- LIBS_O += $(LIBLIVEUPDATE_O)
+diff --git a/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c b/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+index 15b3e3af91d1..ec3fe8f19502 100644
+--- a/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
++++ b/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+@@ -36,6 +36,42 @@ static void before_kexec(int luo_fd)
+ 	daemonize_and_wait();
+ }
  
--$(TEST_GEN_PROGS): $(OUTPUT)/%: $(OUTPUT)/%.o $(LIBS_O)
-+$(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED): $(OUTPUT)/%: $(OUTPUT)/%.o $(LIBS_O)
- 	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $< $(LIBS_O) $(LDLIBS) -o $@
- 
--TEST_GEN_PROGS_O = $(patsubst %, %.o, $(TEST_GEN_PROGS))
--$(TEST_GEN_PROGS_O): $(OUTPUT)/%.o: %.c
-+TESTS_O := $(patsubst %, %.o, $(TEST_GEN_PROGS))
-+TESTS_O += $(patsubst %, %.o, $(TEST_GEN_PROGS_EXTENDED))
++static void check_open_vfio_device_fails(void)
++{
++	const char *cdev_path = vfio_pci_get_cdev_path(device_bdf);
++	struct vfio_pci_device *device;
++	struct iommu *iommu;
++	int ret, i;
 +
-+$(TESTS_O): $(OUTPUT)/%.o: %.c
- 	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c $< -o $@
++	printf("Checking open(%s) fails\n", cdev_path);
++	ret = open(cdev_path, O_RDWR);
++	VFIO_ASSERT_EQ(ret, -1);
++	VFIO_ASSERT_EQ(errno, EBUSY);
++	free((void *)cdev_path);
++
++	for (i = 0; i < nr_iommu_modes; i++) {
++		if (!iommu_modes[i].container_path)
++			continue;
++
++		iommu = iommu_init(iommu_modes[i].name);
++
++		device = vfio_pci_device_alloc(device_bdf, iommu);
++		vfio_pci_group_setup(device, device_bdf);
++		vfio_container_set_iommu(device);
++
++		printf("Checking ioctl(group_fd, VFIO_GROUP_GET_DEVICE_FD, \"%s\") fails (%s)\n",
++		       device_bdf, iommu_modes[i].name);
++
++		ret = ioctl(device->group_fd, VFIO_GROUP_GET_DEVICE_FD, device->bdf);
++		VFIO_ASSERT_EQ(ret, -1);
++		VFIO_ASSERT_EQ(errno, EBUSY);
++
++		close(device->group_fd);
++		free(device);
++		iommu_cleanup(iommu);
++	}
++}
++
+ static void after_kexec(int luo_fd, int state_session_fd)
+ {
+ 	struct vfio_pci_device *device;
+@@ -44,6 +80,8 @@ static void after_kexec(int luo_fd, int state_session_fd)
+ 	int device_fd;
+ 	int stage;
  
--TEST_DEP_FILES = $(patsubst %.o, %.d, $(TEST_GEN_PROGS_O) $(LIBS_O))
-+TEST_DEP_FILES = $(patsubst %.o, %.d, $(TESTS_O) $(LIBS_O))
- -include $(TEST_DEP_FILES)
++	check_open_vfio_device_fails();
++
+ 	restore_and_read_stage(state_session_fd, STATE_TOKEN, &stage);
+ 	VFIO_ASSERT_EQ(stage, 2);
  
--EXTRA_CLEAN += $(TEST_GEN_PROGS_O) $(TEST_DEP_FILES)
-+EXTRA_CLEAN += $(TESTS_O) $(TEST_DEP_FILES)
- 
- endif
 -- 
 2.55.0.795.g602f6c329a-goog
 
