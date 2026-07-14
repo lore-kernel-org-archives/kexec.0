@@ -4,110 +4,175 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C99B9C44507
-	for <kexec@archiver.kernel.org>; Mon, 13 Jul 2026 23:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 08B3BC44507
+	for <kexec@archiver.kernel.org>; Tue, 14 Jul 2026 00:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:References:In-Reply-To:Message-ID:Date:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ivaQUJu/mRyfMnuwfBNsGTkWkGDvNgiNwDOd9icGQ3M=; b=2BXH26ecnEwy7qKJcdz3/MSUQ9
-	o3a83I+Kd5I8BuiXjz9OwSnLh3vjyB+yVnUgpU16zSFS213Rk+7M1b+jAFN6YUbgJE3nyqMeEmTTc
-	WyEPShemR/V/y7Y2VUEv8bCcaO13WVIOinb8qXz5m7mvUUQ+AVp4qDXogSLzr7cfiIEOKIsAWin6Y
-	xW+skm/4aB4N2tnQeU4/hmpDCuz4SF1XfMIDROnFAchwX4LH/DwMMGlfHMBJ6En2lPF+J332hKEUt
-	fNRTOJIUl4htNFHHivtjNmTQEEet1jhBEDeup6XLNkkrUO+xfTkjxbWuo7HenFM5RJ/Ex1K4RaYPr
-	OmYOwjdw==;
+	bh=GmgJ4s8pJp63IduQE/niDkHijhGgeyQH00140rItuH8=; b=zkntsrfarwh9xC2YmSgkOcxDAn
+	XOBuIpw+XM2EL4kCO6ADbUuG4+b1u08Z74hmTKd4tvWHLKrPvrmCeynXtXwzqBHef9NE13yBnERi/
+	sT7p1wyih3cYy6J/I6AAPcntwiH9LXoseyqQkN/jzLTpVumQVV8jVL++dZzCCLlrl8GOVMFgYxiy3
+	0bkMLPeEJ8+mdXlqNwAwIB7zuu9Y8ug8+mBtWtt8oM/hNGpPDumm3uT5egr0VyESQ6Ez6egxhzfal
+	BphPf2uk9YbCNGmTwqikG2WGz1+spoHpmjsGDinLIAMDPQJpDR6cDq57pEr7XNyD/SvGD/Co4nmBK
+	M4N8CZWA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjQQd-0000000AZWA-1fDI;
-	Mon, 13 Jul 2026 23:51:15 +0000
-Received: from mail-pl1-x630.google.com ([2607:f8b0:4864:20::630])
+	id 1wjRHi-0000000AcGS-0Yk8;
+	Tue, 14 Jul 2026 00:46:06 +0000
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjQQa-0000000AZVp-2etM
+	id 1wjRHc-0000000AcEO-2BkW
 	for kexec@lists.infradead.org;
-	Mon, 13 Jul 2026 23:51:14 +0000
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-2caced6038eso5394375ad.0
-        for <kexec@lists.infradead.org>; Mon, 13 Jul 2026 16:51:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783986672; cv=none;
-        d=google.com; s=arc-20260327;
-        b=ogwQJ3lrrJkdBXPkng9q9kobJ0Xw03nEDnCk1espCs8YkhahLJdFDzZtMY+0Jtg4gt
-         50fhIwYhWXSqr19ThQYv7VvB5OAMJu3zhHLVklqMwZuT0ig84UCMpM3K4MabtL28LSxU
-         W6C83zzfgEPwCbn1vs98MXNbv+kfxceeGtucIdS0+MKtCiCt490vdGY+Is/bHAZ0sctp
-         nVcjkRDUl9PH2sBPvq9Fsd2MEQWrytBVn5eWTk7gh+Zc9gIQfZkhq/70WxLv0R+3QmFU
-         m0FchRCjjjqUJUQBxr6oLuq9yPgg8ler6P2G5mZZn87/MYfZ0QLcI3Tb58f0r63bPlTi
-         ea6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=ivaQUJu/mRyfMnuwfBNsGTkWkGDvNgiNwDOd9icGQ3M=;
-        fh=SrK+iVpE53Exlcy/dyO4hYN5LmHPxgKUx+ESSA9iYZA=;
-        b=X1pm9C5YDDhUTuIuRfBzodWICWQI3DBnpFT/chCEojidWbrZ3BeKj/cr5OhxWY9Rs8
-         c1jq7eTQMIfpFpiYUpl9z/oAS4ETSvV6lxkAdrsz60AIO9OeHi2GdtLHwDGHYLtQKarH
-         +hMDOQ8Oypc0MpAIvr/831PmNkge/NdsTCZj2w/6+NZM4xLkYWhG8IllvA4tQsjyad9X
-         es/YCIMsjsjf0p3F6Jy+EodLBHyRgKiCXIe1CrsVh6Gju7FlAy3SLGwnezR+q3YaeTfp
-         oKoVm/41Dh9zbEn6quvjicwDmHKwyYdGI5JuJtde3oJzy3fpK7cSAX8GygNPrkJu47Mo
-         PgeQ==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	Tue, 14 Jul 2026 00:46:03 +0000
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66DLE7wA1347606;
+	Tue, 14 Jul 2026 00:45:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=GmgJ4s8pJp63IduQE/niDkHijhGgeyQH00140rItuH8=; b=
+	PIeyBI9xJKJ3ePY5AgzE8EYqmblK0FiDj4aTBYTihFQyQUbtO1NDKysTC3qD9uZT
+	oCq+F0hzpQkvZQbJP6U+QyvLJXPU3Vsab7RiUEAsRMIEfcbzQK4/lOjF6cS9j+Ux
+	Mx9nwcIMhmCPq3Oga7felku/8dmeFbBpg/8dXOVNdGlaeIhKuoY+nfIJtYOxZSQ2
+	AvVdybGkGDqlSlF/CIvsD5vbfTx63dRaxcjpFgcReoE03T++AQWA0eFhfG2Y/VwY
+	/LVBxb++GbM91l4yIY8/eMaHALqleHHE+fHEqJGOjz7W4I5JddahojRay4hsnj4n
+	ZDjutb6BWiP0UNguNMUYwQ==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4fbep33ar3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 14 Jul 2026 00:45:58 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.7/8.18.1.7) with ESMTP id 66E0NZRP015260;
+	Tue, 14 Jul 2026 00:45:58 GMT
+Received: from ch5pr02cu005.outbound.protection.outlook.com (mail-northcentralusazon11012008.outbound.protection.outlook.com [40.107.200.8])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4fbc9qk9j5-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 14 Jul 2026 00:45:58 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=zBKc9bFJ9vNpARHJYfNTp3FybOG+dBWEB9kIQcFILmAegj11XlPMQ9KTbU3UrHDdpAYgIbExvnSFll1QsV4aP4+wXkN760ZC89ZUGOTJ3cOZt7xr9yyOe7Q24GbsPK0RT/eBCAZ1cqFd/dXT3E4y/8/IyGTbg8OBRSYNS7ftT485NPQT6klfwnNSWz6NtrC5O8O35avmfz0hlZAa4qhu32xzB5Q6hyImeX2lngDDeaQ68ig3kp+niwfGYoxX1+7A6Rn0seGKek7enRkL7AhNFkXf/siAz2vGgjTSB75q+FGBprRxeBAB0QxSnU5JQ48my2Gto6v8FLeiYOf3r7QMiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GmgJ4s8pJp63IduQE/niDkHijhGgeyQH00140rItuH8=;
+ b=WsiS6B4owzJukJuvlRzVn0Wc2Czz8BOZCSCQwAs/wIMPgEENdRXZ5XNScGTbS3Bfmfm8E/Yh1kkem6EF2ZKI7qR9YtWcOLWac8Go+eo22aGtLjUo7s4m+7eI8AUSlMGln0VfGFcySfv7gbHtZIkURt2i1v5V+K1w1mLZDTv7h44f+10t81dXBVIiNL7HfvLfQz7qDm0pDg4am450Rd312kH87WlsIryVo0xgGw0Mi5rjCxol5s+hwEHVX09MfMj5kTPPCI5CU/xiOpzrIgbkf6HkvpUtq4XmEdION3vfcMdBaRT/lwA62ICvyFMY/TOMfrXt384eJ7o92tR5h8JgLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1783986672; x=1784591472; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=ivaQUJu/mRyfMnuwfBNsGTkWkGDvNgiNwDOd9icGQ3M=;
-        b=Lzcm3p9qm28MsCOd8Txwb9zaAVDxgQH4wyDGRle4kCwkdujZSgC6lVonkfu2Q7Yzm2
-         PTW1cWBh2YLe92HCrdv+gFPE4xxXgynK4gV7Ee4KUa/P7NBtAPNOJ8+heMJikWbImIXv
-         sO2kjw0KLdgl9n1aTwA3JPyAooGETCKNihw7KD6aLZAievotXYcAbuQuxaKnzU6LRBf9
-         C78OtKgz3Lxp+G5pBEZgbKaafiTSkGvwLmuuAPENpvSKqMWuChRMWJhd0JjGFU5EHuCk
-         2feiAAHErAAYPOQ+6LlsApPlEoy4R0fNAAbASf7jom/KTE8TXVWTkamxeZG6ihkvlBKS
-         KrZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783986672; x=1784591472;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ivaQUJu/mRyfMnuwfBNsGTkWkGDvNgiNwDOd9icGQ3M=;
-        b=kyEfcg+uBFbx/cWEFde2AX9+5o57VcPmcVUXETK7zxuGL28dg4WaeEI/3QnWw/1gCI
-         P6+U+SD3dMlBFcu2wypBtyd0n5AzLz+Y93pvrcaB7i6QLWvOGjkUAG1WjLjRinZRz7lg
-         uhb9bP2FDmgZs7U1W5nKvYQT/GcMLcXxnpS0KgoqoSbstlkkzYARiy5wOXzr/z5Ft/T9
-         ma7KzAA1WSiv/BCffcRXjNCFHCDxr6Dk4NIQRlKAS0pHwnIn1YB3Mwr21npzK/KVOOu9
-         jECgTJD0o9TAcf50PPI5Jin1kr3yh4BwQ9JY2i6zBnI2S90g5dk3vKyA97/l1n34f/hI
-         8Naw==
-X-Forwarded-Encrypted: i=1; AHgh+Rol9Tk85zbe2Bxb+FQtY5wzeK4uX0J1LfoorAKDXwJOqMQ63SFiTEJs3xvEQ0VaudxvTJ4Xig==@lists.infradead.org
-X-Gm-Message-State: AOJu0YydxduDKZ9F04fY8L8bBIw/UrXAwzowzp+vIMdGxCqDeomqnWW1
-	zeaViXpPokrI++Z0x/xZBaWLF+yoYfNqDfp/HulHiQjB3686sWsjL4FcIAGbR4ZwPJdhUyPcY71
-	CVmGT0yAEptpXCBEyvbdLTkPF/V5Wpjz1UzG7AK74
-X-Gm-Gg: AfdE7cn3U2qSNmXsMwWXJULPiZpajoHokt5/6iSPTm90eL+lDaDbrjBqnXGLutOalpP
-	PfXtAfw5q9d6lxuZ4xGXs9qTRVXQwbF53M5/cZ6THtscw8UzyAgvq7uXYG9jUJ828YI54MW4JQ+
-	0pf/nULENpr2ohrhYi3T+SSfwy8lvj4kyje2Ztn6FCcm1zC6oD3ZZJGHMvrUdpaNjkuaTC9hF5w
-	sUO19VVk6/lfCU0FHo6lOk1SZGFt7vrf4BcpVDVGmiyjbEPZkLboPelXvthdCUjUWRTkmFo
-X-Received: by 2002:a17:903:4b2b:b0:2cc:db7a:251 with SMTP id
- d9443c01a7336-2ce8285a73bmr140395465ad.2.1783986671057; Mon, 13 Jul 2026
- 16:51:11 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GmgJ4s8pJp63IduQE/niDkHijhGgeyQH00140rItuH8=;
+ b=Ht7ZzvKhedP7z5SVEVcBPVhI+6dGOLtuXI+i6imRoyexiw8aNPuG8zV5si3boUuOtVkyK9SWq4YlnZK7+JpnETqpGG8L3rHK3iLbqrtbqOMdKMVLw+bVVyYu/qnIp969INstBOgjZTb8RMHNeh1AZfDLFsNhu4qSwX8tcHMbS9o=
+Received: from LV3PR10MB7868.namprd10.prod.outlook.com (2603:10b6:408:1b4::9)
+ by PH3PPF3CEC6235B.namprd10.prod.outlook.com (2603:10b6:518:1::796) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.18; Tue, 14 Jul
+ 2026 00:45:54 +0000
+Received: from LV3PR10MB7868.namprd10.prod.outlook.com
+ ([fe80::9105:4421:4267:8fce]) by LV3PR10MB7868.namprd10.prod.outlook.com
+ ([fe80::9105:4421:4267:8fce%5]) with mapi id 15.21.0181.019; Tue, 14 Jul 2026
+ 00:45:54 +0000
+From: Stephen Brennan <stephen.s.brennan@oracle.com>
+To: yamazaki-msmt@nec.com, k-hagio-ab@nec.com, kexec@lists.infradead.org
+Cc: ltao@redhat.com, Stephen Brennan <stephen.s.brennan@oracle.com>
+Subject: [PATCH makedumpfile 1/9] Do not call extensions for tail pages
+Date: Mon, 13 Jul 2026 17:45:34 -0700
+Message-ID: <20260714004550.3698175-2-stephen.s.brennan@oracle.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260714004550.3698175-1-stephen.s.brennan@oracle.com>
+References: <20260714004550.3698175-1-stephen.s.brennan@oracle.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BY3PR05CA0044.namprd05.prod.outlook.com
+ (2603:10b6:a03:39b::19) To LV3PR10MB7868.namprd10.prod.outlook.com
+ (2603:10b6:408:1b4::9)
 MIME-Version: 1.0
-References: <20260702174033.32116-1-sakacpav@amazon.de> <2026071004-strum-perkiness-5d9b@gregkh>
-In-Reply-To: <2026071004-strum-perkiness-5d9b@gregkh>
-From: David Matlack <dmatlack@google.com>
-Date: Mon, 13 Jul 2026 16:50:44 -0700
-X-Gm-Features: AVVi8CcmTY0c0Vp441sR3RbEM49xvL1OMRcgoloehgq4aoKMDkzxTiu2LMLBmtw
-Message-ID: <CALzav=eCzxZ5980kazjSUDFn1d4Dz+cWbyZyg-MVMca9jntn4Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/14] driver core: defer per-VF sysfs creation for
- fast SR-IOV bring-up
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Pavol Sakac <sakacpav@amazon.de>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org, 
-	driver-core@lists.linux.dev, David Woodhouse <dwmw@amazon.co.uk>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pratyush Yadav <pratyush@kernel.org>, Samiullah Khawaja <skhawaja@google.com>, 
-	Alexander Graf <graf@amazon.com>, linux-mm@kvack.org, kexec@lists.infradead.org, 
-	nh-open-source@amazon.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR10MB7868:EE_|PH3PPF3CEC6235B:EE_
+X-MS-Office365-Filtering-Correlation-Id: b5c867ba-c05e-44d3-b5bd-08dee141429f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|23010399003|22082099003|18002099003|6133799003|56012099006;
+X-Microsoft-Antispam-Message-Info: HBrF6+HY46DUraOjKsN0Q1EJnDa7zFepiWqTR9jKzbDFWfweaui0LpZBnjtYsTlSY/EggVq8VrdOc71h8T12KS7j2wAOWdVryR0IUmRzCD259eQvhBAJgel8mJcKn1UJQuimQaOKeg+vksPNlac420wMW0U1nemgHHkGFa/yuRVi+nfzsa9/7VD/JZP4De/RAotGjYLSlCq/FwQUp3ib/u/6qQ3v9zVWobzon0oLrKQjQwxp1qmqQCrqjwlY/+2J2OUbUXtQNX3jt+KLZfYiRAcokbDS1bOtqcH8dPQiH9l4gcqQC8NKz+BZuNqHbprEhF+8z85cQ4Ta07l+3wwjjgriONCJfvnj1VoyTrOcCK3W85nZpPF4mh4+vBNFcHnKA44idXUxyoDxiEDcWFdN1GMUgsZ3dc6vVn8fj9JwGLsWueRTX1U/+vXtpGcVRg7P1fVko0GJTZn6s+SClTJBF9a9FEmcPz3vB9eih/vH94JqLR6IPzFgXYPX8LjDGgKp3S4S0/EuFCY1LUA12VF18Ah8vPaXZRFVgcpCni00Y9HP4280Pg+wG8lFUMVSOIghrbaBHPmsPg2wTLWdgQMV0cPk4BPuQjiQqaBJ0tEJbv1Xd2SyDvLsHhuEyT/6MbORyJiwYnzHwsonxAYuNh8ZsRd6G3hiDOaLeMui3H8vxb4=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR10MB7868.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(23010399003)(22082099003)(18002099003)(6133799003)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9UXqNM3+2uzvN1aPE+wPdYzUiGopcDAhs42HNnoCtSnsyGVAALMAU2qGukBP?=
+ =?us-ascii?Q?Zh+nmp88XJ5FdLsr9bQu8wCYdgSiJJZaiy8lcDIKwmFwwzXSS3A76iN1CdwT?=
+ =?us-ascii?Q?6ID4SUIOUv0V8KtU0JiMPeelUREmkzCpdScTOpUVuymt6JqcSdGCE/Nb1I07?=
+ =?us-ascii?Q?ZzFLLkac5N7bDb4Wb78yQ8VRMXwhvRg0rfAIFH/Xw3kNsWJw5vC+e+Gu1C0t?=
+ =?us-ascii?Q?Pl7xMmG2tu62kZF8sK2Ilk6pj16eOxWgOKO0DYCHudoNRYywiQwLBF1C29oJ?=
+ =?us-ascii?Q?z/gUJECjHkgsZHJXNeTXGyn+RsDMT+Xsu27kPOFhu+BV1DkEghyUTMxUo2Jr?=
+ =?us-ascii?Q?ExPKB4moAzwHx9OK6czlJkuwub5Fxl4e7aUj1ABNZ98juXEHeCEFnrswBNz2?=
+ =?us-ascii?Q?HOA/b3NcgXaPd2n31qhrTi9AT8Rb96h2jj6d9+WxdjDTWe+VBYhrlF8oE3aH?=
+ =?us-ascii?Q?o/bUeKJMow5IpFmaSL1XggnKmnasoM1e18AUxRh82mDAPRBcOUav2aMQmY2E?=
+ =?us-ascii?Q?8eDn7fJmeJNgjx0ySXXW0VQ0fcFpDTRd6SQzZHau4qotnyyzJalWkRrgWHb2?=
+ =?us-ascii?Q?qamPSsKx7pQnyG/7GGOhPaf+0AjBFNJPsNEvGGHOtQ8nTQncr7VNezK3gmHX?=
+ =?us-ascii?Q?8CMRiMA2NU2HQDWf2ScLxNSutksfx1x1j2T1wnrm4N5yds8wylVlCqmfSwxe?=
+ =?us-ascii?Q?G6m8iyf0NxbSqgezPNSVIz94NHQIJUaDpUR0k4fffosYDJ5BkRo5dMjmbwT9?=
+ =?us-ascii?Q?vIRISkPTNvaB0hMMN7Wgzyp9Sss4XSn7H4iGLW0Ttc5IpddGysU9v+2mhDHo?=
+ =?us-ascii?Q?EDvx8uIg3yImwtVs5OWHWM+5qEPbdEmop2Z9z4NtCsCTEeeSY4ZjLGiCXppA?=
+ =?us-ascii?Q?pPv5FEsUAyAWaaUQVOUOSAQ8NREinp4dv/Tee013hGGb+QkLLoNMzoKSD7Z+?=
+ =?us-ascii?Q?n3gaElbNYbR2IVdfUMvqX5t9SvQpiUz9xXiV9KCi523XGeAdoR+8RUUklyYC?=
+ =?us-ascii?Q?bIG8aSKoKjBWWCJSqOVLhNti3s8Q6JDcPve0tA+Fp1FQ7/OKhdiNkfjU9XST?=
+ =?us-ascii?Q?7veHHzYPkVUL4Me3kcJ22gYVB4Y3wLWpv/A5iUWXPfkPkuUgbbTxlE4/tQ5Z?=
+ =?us-ascii?Q?H3k4+hM4UpfKuYY5HlVBvdJHMGgOfWnZ59KoXG40i/lykr/jlUjtcSEq5JrB?=
+ =?us-ascii?Q?D3ZOK+rppqpTslEWvv/8m48YxcOIbds4st380+jc4+lcP93olgyx9+p2JEDk?=
+ =?us-ascii?Q?kWI4tvPq/hThg34iRjy8muXoAjoMm945y2dauHxW3P+RBSnvgIyu8F8m54Fn?=
+ =?us-ascii?Q?JUeC1c2/E5IF7QgmBPRFD9hGHB9ChdN4bkzt+UQiD6Pp87fGUzEWbRLygQSl?=
+ =?us-ascii?Q?FTCnx0digR5ebb7Iq7/yCDoPYTr2n8QShRlBsDuvWS08hm702a6mVN5OLmS3?=
+ =?us-ascii?Q?JajFg0G3wiEkqNwfbjR8l923hxJzIAbxMozKEk1/3iQGuP2gblDhn4Z+w/ss?=
+ =?us-ascii?Q?MAoL+FTK+BrzXa7ekJzRQDPPlalODqwPrpE0nvHm6a8UXhlpArswKpS13mk7?=
+ =?us-ascii?Q?oSTWfAyYny39RFVNTzz+BeFoQ1OlkyPH3prLBAtwTfOlSzOuI+Z89R4XPDfb?=
+ =?us-ascii?Q?NculuFMKKCzdiRlXO+xnFYEwy+VZx3vorRHJBnyJAMiICwMBsDo1sTs1K+Nj?=
+ =?us-ascii?Q?NRzWedJseUB4MRaUU5dZXHYw50vnJRs0Fl67+2dWKn9N2vzvYpmMXDBI2A7i?=
+ =?us-ascii?Q?ZkymFqtGlEnJymkD7o/TWnuvN3AzZa4=3D?=
+X-Exchange-RoutingPolicyChecked: Jo7E69hQdhcAVW4YhMzb5a4Wy9GYbWs4lmYUwJs5qLXefoEANemZ7JNi2t1U/hZWXn8nDdSt7UGpMuPTa4sCJlvqiPvP5P0F+5C7oZb2Yv4JYFTwO1QwwzJZ03KiVyetmVm0j83fCwrrbu5BzpdeRuZsDOXvav574O67QZjrhHlkWF3/Lfy1OyRbSfidZoTPpfpDFWnaaQYHsLKO8l57mm/QTn8jRkJMDETkWNKaJQxlcKYDgwG3SOU/2H3O8doEnJTy770vBh9UAPUTuJur3sObZmLqoX/obqZGFaM+5jQ4+P1FFU2Leh6X3ahIYlcwaD66zblMyanAUMPP42aaQw==
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: ewfNHHhjFgB+vhgzJCO35YkTuG1jr6BgLO8kFu2FyVCG7//AJ99xIRXYFWO+uS3abhqhWJAjwpq/dGo5mEmVFbZJxTfQGS4MWMfbqAYOPut4Mg1iKaO+Z25kV4TtXh0VOHNXaWskH3mQH8wgG7Py2KM/2iKea5K9egDeqUm3g7lrbQwoFg17FpyB9akZ3wIHwiMhdyRODBBaZbjW2JPEb7W9MKzLuVozFXF8SNp+Wr3is7q+TvQis/Je+1WaBwn1lAdd/ayEnUmMFMFVWTDAqXNP1O1zzxOUKHQQHsmFHyUVilEu2GCdWZGGLeHlpJkOrqnhDD8M2QoeSpBv/uXKH42WBVZ8IVFFU8fkZCKAKKkdmsSNpSX7Vif2XLLwP19GDUA3IrkkL4niaW799x0VNOmIXq6Vo4n2dPoeIsz4z5WPBE7nze8IZo7IHm9Cf/Z5yVUVZE82IMaVTppTHx6KdowMGlC244ocmctAxIqmZCMykbVuKbKNfOCeDuWSGiDmqT7N1TxlzjkVi+knvLfRAoGVJ3mvKR+QDFrb3fHC8f7zvwvkgZU+disJbQsirnMy552JfwoQ0B0Ugc4qW4izwUub5NPT/ilzHqCE+cVcpF8=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b5c867ba-c05e-44d3-b5bd-08dee141429f
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR10MB7868.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2026 00:45:54.1701
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dIzRNHpfrZCagPicWRsbrCSm8QnTBTiKT++33lswRjuVlAcWZEbzWIGlH27jCqesFu5PrbkyJxTIkv4w/Sku0csWEXqxGBoIAv7JDbczDwo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPF3CEC6235B
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-13_06,2026-07-10_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0
+ mlxlogscore=999 lowpriorityscore=0 malwarescore=0 phishscore=0 adultscore=0
+ spamscore=0 mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2606160000 definitions=main-2607140003
+X-Proofpoint-GUID: aqaAOMA-TjINUnzVNjaJyB3426_3QJtK
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzE0MDAwNCBTYWx0ZWRfX9nZlRbm2lhva
+ 5e1RiErk1SCpGJc/p9g1HJfS/bpsWajvn5s0NshyexrpHlwpGgyI35dSsSHgvfGtvqtgjual9hn
+ 92faJHWpaNCMsNe/50N1ACclZe2bSZ6RW/DssPtcqZPxrxhZMdf0
+X-Proofpoint-ORIG-GUID: aqaAOMA-TjINUnzVNjaJyB3426_3QJtK
+X-Authority-Analysis: v=2.4 cv=dYawG3Xe c=1 sm=1 tr=0 ts=6a5586c7 b=1 cx=c_pps
+ a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=RAioF0-LDSMA:10
+ a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22 a=jiCTI4zE5U7BLdzWsZGv:22
+ a=3I1J8UUJPc9JN9BFgKH3:22 a=yPCof4ZbAAAA:8 a=s8pL1Iw6ciFnC1iDk1EA:9
+ a=5yU3S35YU4bGjq-dph-N:22 a=Bho9c0fBagfJEIQBS7DQ:22 cc=ntf awl=host:13633
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE0MDAwNCBTYWx0ZWRfX/Y0L6Wg1RpqU
+ g/czSQs64xp/asFGS7AnPjJJF7r7EeBJ8Uaw5VKOh4EVplLEzivURcfbxAGc5cWCxTuoUxCHQWS
+ NLPiKD2vSP+zqg/BiGCdE73Hvb16caWpPSygd7dh06/nBGBwPaFNVZ4V5HqS0+KNEm0hYyvxljN
+ RYWGsrQ2xLs8IyWoLMjuG7vXd6DV653TWCU+SWcQwFnHifUfMElk//wrQvnuHh0MQ5sJH8oWdrC
+ eZPohLUqJgnRPt89RF9iNrjmp9NyTFXRyak2t8N67LsPyTMqb6BCcDjqQAs004l5xrXmXLdQcee
+ ynZQzj7fPfScMk8J1QJrf9KILyFhP1ffvjBAsKqANQM8pst7tSztelXFxS9AaRtxom49FwDq7GV
+ 9DjbIU+dDt+954b/yBadwPixlGwuBy8c9xG54fooSha7JPGM62eKjK45L5tdt/BTZnXbjZnWA+M
+ PfclL5PzjX3VYL35JDrQq5nZWflm0wD1tlkWkLqI=
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260713_165112_686988_B0C1F99F 
-X-CRM114-Status: GOOD (  47.79  )
+X-CRM114-CacheID: sfid-20260713_174600_934239_09B62BEA 
+X-CRM114-Status: GOOD (  21.88  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -122,163 +187,79 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jul 10, 2026 at 7:16=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Jul 02, 2026 at 07:40:19PM +0200, Pavol Sakac wrote:
-> > Virtualization hardware keeps increasing in CPU-core and VF density.
-> > Kernel is trending towards preserving VFs using LUO across a kexec
-> > which will put SR-IOV in live-update hotpath. VFs must be re-added to
-> > the sysfs tree, along with its supporting devices (e.g. vfio,
-> > iommu_groups). On production hardware a single VF can consume ~80 kernf=
-s
-> > nodes. With thousands of VFs on modern hardware, hundreds of thousands
-> > of kernfs nodes need to be created, which can add 100ms+ to the boot
-> > time and to guest downtime.
->
-> Hundreds of thousands?  You have a hundred sysfs files per device?
->
-> > Proposed here is a PoC of deferred materialization of sysfs files until
-> > first access to avoid cost of kernfs node creation in hot path. In the
-> > reproducer below using a synthetic VF to isolate the sysfs overhead,
-> > the per-device sysfs-creation time is reduced by ~74%. It exploits the
-> > expected access pattern of hypervisors, where only a subset of device
-> > files need to be accessed to attach a VF to a VM on the hot path.
->
-> Ick, that access pattern could change with other users, this feels very
-> fragile.
->
-> > To allow lazy init scheme, a minimal set of files and directories is
-> > built per device: a device directory resolves directly to the device's
-> > kobject and is used to materialize attributes at access time. The
-> > access is trapped in kernfs at the dir-read or path-walk stage and
-> > depending on the trigger, either the full directory or a single file is
-> > materialized.
-> >
-> > The changes are two logically distinct parts:
-> >
-> >   1. Refactor of hardcoded device_add / iommu_group sysfs attribute
-> >      creation to a table-driven form to allow walkability of all
-> >      attributes and single point of definition for attributes
-> >      regardless of lazy opt-in to avoid duplicate definitions and
-> >      associated maintainability issues with it.
->
-> This is probably a good idea anyway.  Want to just send this as a series
-> to start with, so we can take that?
->
-> >   2. Lazy-init infra to front-run access to device files at lookup/
-> >      readdir time to trigger materialization. Opt-in per device: PCI VF=
-s
-> >      and VFIO devices opt in via device_set_sysfs_lazy(); iommu_group
-> >      opts in at the kobject level.
->
-> This is going to get complex.  Where exactly is the bottleneck?  I'm
-> guessing that systems with that many devices also have many hundreds of
-> CPUs, right?  Are we hitting a single lock somewhere?  There have been
-> changes in kernfs in the past to split up the locks to be more
-> fine-grained, perhaps that needs to continue to solve this?
+Currently, extensions are called for every page, including compound
+tails. But as it is currently implemented, once a compound head is
+excluded, makedumpfile will create an exclusion for the entire compound
+page range. If an extension returns PG_INCLUDE for a tail page, the
+bitmap is not amended, so the tail page may still be excluded. Thus, the
+only time an extension's decision is respected is when it is processing
+the head page. Similarly, if an extension return PG_EXCLUDE on an
+included tail page, no exclusion will be created, since the
+compound_head check will skip ahead.
 
-+1 I also am wondering if the time can be eliminated entirely instead
-of deferred.
+We could fix this by overwriting the 2nd bitmap's bits for
+a tail page when extensions return PG_INCLUDE or PG_EXCLUDE, thus
+overriding the prior decision. However, that doesn't seem like the right
+approach.
 
-It would be nice to have a section of the cover letter that explains
-where the time is being spent and why lazy initialization was chosen
-over alternative approaches.
+Even if an extension cares to partially include a compound page, it's
+simpler to keep the decision making localized to the head page. This
+makes it easier to account the pages which are included/excluded, and
+ensures that we can persist any necessary state across cycles for cyclic
+processing. The downside is that we may need to implement more specific
+ways for the extension to include or exclude tail pages.
 
->
-> > As a PoC, the code does not yet follow this logical structure in the
-> > commit sequence and likely does not yet cover all corner cases.
-> >
-> > Synthetic reproducer measurements
-> > ---------------------------------
-> >   devices   per-dev time   total time       kernfs nodes (base -> lazy)
-> >   -------   ------------   --------------   ---------------------------=
+Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
+---
+ makedumpfile.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 46d9ac7..e882b84 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -6543,14 +6543,6 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+ 			pfn_read_end   = pfn + pfn_mm - 1;
+ 		}
+ 
+-		/*
+-		 * Include pages that specified by user via
+-		 * makedumpfile extensions
+-		 */
+-		filter_pg = run_extension_callback(pfn, pcache);
+-		if (filter_pg == PG_INCLUDE)
+-			continue;
 -
-> >      500    31.8->8.3 us    15.9-> 4.1 ms     36,417 ->  3,922  (72.8->=
-7.8/dev)
-> >     1000    33.2->8.7 us    33.2-> 8.7 ms     73,427 ->  8,432  (73.4->=
-8.4/dev)
-> >     2500    32.8->9.1 us    82.0->22.7 ms    184,421 -> 21,925  (73.8->=
-8.8/dev)
-> >     5000    33.0->8.7 us   165.1->43.5 ms    369,401 -> 44,406  (73.9->=
-8.9/dev)
-> >
-> > The reproducer is synthetic: an in-kernel module registers N unbound
-> > platform devices (60 attributes / 4 groups, ~74 kernfs nodes each; no
-> > config space, BARs, or probe) in one timed burst that models SR-IOV
-> > enablement. It runs as a two-kernel A/B from one vanilla 7.1-rc2 tree
-> > (eager baseline vs patched, plus a patched/opt-in-OFF arm), 20 runs per
-> > point. Measures only sysfs-creation slice.
->
-> I sure hope sr-iov devices are NOT platform devices.  If so, please go
-> fix that up first :)
->
-> > Deferral removes ~74% of the sysfs-creation time and ~88% of the kernfs
-> > nodes. At 5000 devices that is 121.6 ms removed (165.1 -> 43.5 ms) and
-> > ~325,000 fewer kernfs nodes (369,401 -> 44,406). The table-driven rewor=
-k
-> > adds a +7..+11% eager-path time overhead to non-opted devices.
->
-> You're just deferring this work to happen later, so when is that
-> "later"?  And what about multi-threaded probing of the bus, doesn't that
-> speed stuff up too?
->
-> > Available as a docker image that orchestrates builds in qemu guest and
-> > prints results as a table (x86_64 Linux host with /dev/kvm assumed):
-> >
-> >    docker run --device /dev/kvm ghcr.io/pavsa/linux-lazy-sysfs-vf-bench=
-:7.1-rc2
-> >
-> > Assumptions / Trade-offs
-> > ------------------------
-> > The saving depends on the access pattern of hypervisors, and on no
-> > component walking the whole device tree on the hot path to avoid full
-> > materialization. Both are expected to hold on optimized hypervisors.
->
-> Hah, as if.  Many userspace tools, once a device is notified, walk the
-> whole tree of it to read the attributes.  You are going to be fighting
-> that problem constantly...
+ 		flags   = ULONG(pcache + OFFSET(page.flags));
+ 		_count  = UINT(pcache + OFFSET(page._refcount));
+ 		mapping = ULONG(pcache + OFFSET(page.mapping));
+@@ -6637,14 +6629,22 @@ check_order:
+ 		 * Excludable compound tail pages must have already been excluded by
+ 		 * exclude_range(), don't need to check them here.
+ 		 */
+-		if (compound_head & 1) {
++		if (compound_head & 1)
+ 			continue;
+-		}
++
++		/*
++		 * Include pages that specified by user via
++		 * makedumpfile extensions
++		 */
++		filter_pg = run_extension_callback(pfn, pcache);
++		if (filter_pg == PG_INCLUDE)
++			continue;
++
+ 		/*
+ 		 * Exclude the free page managed by a buddy
+ 		 * Use buddy identification of free pages whether cyclic or not.
+ 		 */
+-		else if ((info->dump_level & DL_EXCLUDE_FREE)
++		if ((info->dump_level & DL_EXCLUDE_FREE)
+ 		    && info->page_is_buddy
+ 		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
+ 			if ((ARRAY_LENGTH(zone.free_area) != NOT_FOUND_STRUCTURE) &&
+-- 
+2.47.3
 
-This series could still benefit Live Update scenarios where the
-initial userspace stack is small and tightly controlled to resume VMs
-as quickly as possible after kexec-ing into the new kernel. It enables
-userspace to decide when to incur the cost of creating these files (or
-never create them).
-
-But I agree that eliminating the time entirely would be better.
-
->
-> > An actual production hypervisor was observed in local testing to
-> > materialize an additional 5-10% of total nodes on average on the hot
-> > path.
-> >
-> > Overhead: +7..+11% eager-path time overhead applies to every non-opted
-> > device going through device_add() as all struct devices traverse the
-> > walker and can't be gated under a config option.
-> > The lazy opt-in infra can be gated under config option to have zero
-> > impact if disabled.
->
-> Again, where exactly is the time being spent?  What lock is "hot"?
->
-> > Final words
-> > -----------
-> > This is an RFC to first get feedback on the decisions taken at driver
-> > core + kernfs level before engaging maintainers of other subsystems
-> > if we want to pursue this further or pivot to something else.
-> >
-> > The code is at a proof-of-concept quality written with AI assistance
-> > with some known limitations with main target to gather potential
-> > savings and initiate conversation.
-> >
-> > Feedback appreciated for:
-> > - table-driven attribute refactor targeting common device add path /
-> >   suggestions for more efficient/less invasive approach
->
-> What's wrong with the normal way attributes are defined and allocated?
-> They should all be tables today, and the driver core creating them when
-> needed, no individual driver should ever be doing that on its own.
->
-> thanks,
->
-> greg k-h
 
