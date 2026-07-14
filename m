@@ -4,71 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 28AC9C4450B
-	for <kexec@archiver.kernel.org>; Tue, 14 Jul 2026 15:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6D14BC4450D
+	for <kexec@archiver.kernel.org>; Tue, 14 Jul 2026 15:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=OET28Pw7Tm9U8SptXyUJqzCGyMYvQ/PVMzqx3Tt4yN8=; b=3ZhHxsHG9bH6wW1lTSMFBH2kxI
-	vji4VaGs1tsLs6Y5iwhnbb5TB47olPzHRWbwxv9BIoOs4mrOPajYti/lM/yVnJzJQRV/0CzSH3uTp
-	29Ew0+VZghTv10LEwcFyccACHMYpSFafmZgKQ9Lp9oLE0pDlqrCZRZ0Nx4+u7t444hLF0gUEecmlh
-	mVe7m/yCNf9FGXcuVqMGrHFaRwVD4FVJ7Py6ZzC7JEdpnPUVQ2SzSSUBUQ9p5Ge1diE3F/aDoe4Ii
-	OCVPrMliJAqxN/0QjhqJbnkzwni538MJF/blbWYetYj9vKXxcL7S7M4YvWiXSM4JBXDDhsUMzK8DQ
-	VqsLImXg==;
+	bh=S1UFdHONMaUW3i8xUAtShYLn0EA7imz4HjKdEgIKF0Q=; b=GEgRX/zZSCUOwrxRpOc4z8Xhqw
+	LW0w90ITSsCmBkcRXK9mKgfQDxdZyl0UpbDJG+/u9SgdVVxQNpT4Qa1GNwSLIVzACswQzz933vMxS
+	M1SwM4dv+syziqbvyh6+zJD10KHeoseZEziOTq/OT+DJ8relGAPnQBjP/QVze7t8KlWLBUyXJR7aU
+	0AZrlEXVdaQjsrxLF2HjcGIljL5Fg4WV8k/u8GjeAbMl6fDF/kGc3tS9HrhtGIY4AG82A0rlpjcRh
+	PdPw8sVtbheHrV4axtYgcg+LFvkB13mi9ixDvIja1Jw7Za+cgIbfRpVqtNzbkOS9GgJerL/zF5zF5
+	wfyi1tfA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjeqp-0000000CU3O-0PmW;
-	Tue, 14 Jul 2026 15:15:15 +0000
-Received: from mail-pl1-x649.google.com ([2607:f8b0:4864:20::649])
+	id 1wjeqs-0000000CU7j-2Tdx;
+	Tue, 14 Jul 2026 15:15:18 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjeqm-0000000CU1x-1yGf
+	id 1wjeqr-0000000CU5M-2WWb
+	for kexec@bombadil.infradead.org;
+	Tue, 14 Jul 2026 15:15:17 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Type:Cc:To:From:Subject:
+	Message-ID:References:Mime-Version:In-Reply-To:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=S1UFdHONMaUW3i8xUAtShYLn0EA7imz4HjKdEgIKF0Q=; b=Z90Qm3cC9t5OVedN7mrIRnfMns
+	qJ1eAfGpXzLaDFASe72HdNo778XwcKJqN6a/+VUhkWncB9SMkZP1ZyAeEvkzFnM8qn2S3X7qTdHGi
+	W8DKjb56sRdoQYFVSeekoWAlFMe1AhWQ+5yPTqvMeL1SuI9LyZqJDqCL5y3caeD8ohqzCibt3LTHN
+	N+W/ag3Gf8aDVkU1731JCT2xF4K8pq+WkSN/iSB9OdLRVZ5BdYZqUjO3BUXMQmmCJUID+ybtKsSYe
+	G9djP8pN57lUshuDUAd3o5/RwqNI+dQG9kb1nGqYJsdYudkaT33KdW+acPFiViO/7PnlDd+/C5Tvi
+	xVBre/Xg==;
+Received: from mail-pf1-x449.google.com ([2607:f8b0:4864:20::449])
+	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1wjeqo-0000000Cd25-34vj
 	for kexec@lists.infradead.org;
-	Tue, 14 Jul 2026 15:15:13 +0000
-Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-2cacd6d37edso63564995ad.0
-        for <kexec@lists.infradead.org>; Tue, 14 Jul 2026 08:15:11 -0700 (PDT)
+	Tue, 14 Jul 2026 15:15:16 +0000
+Received: by mail-pf1-x449.google.com with SMTP id d2e1a72fcca58-84a3514f912so4346645b3a.3
+        for <kexec@lists.infradead.org>; Tue, 14 Jul 2026 08:15:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784042111; x=1784646911; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1784042112; x=1784646912; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=OET28Pw7Tm9U8SptXyUJqzCGyMYvQ/PVMzqx3Tt4yN8=;
-        b=KsxyBldjlJu6wlxfUo6anRwj681EsWA3iS5Dpgf+uwXfNdnJoitistT1KKpQBkuzTN
-         OBkwvhG8JO2AlBGf/QQmnMEFYm+EeAfBJ3iuFIWGf5lwMlSQPZL4mmOyySWMRrpY+z2+
-         SRTcAjcGTJQQT2Ogo4QlkAWXfqwqnIQJDOxyUxfkEV+HDfAxrDlcZbJ1GpnWNey7EVwY
-         IKz648XePDU+QirfOi2DIQO2pMwDO/MP2UGODraQexKHNHcZ7y7krSY7ptDGfQlUIogv
-         hJhDR2woDGGpiyHr2+X53QXWjVl9jTG9bAsM9YSNDA+wMXvDaB/Gkm5VIdnbb0bQM22r
-         j3Tg==
+        bh=S1UFdHONMaUW3i8xUAtShYLn0EA7imz4HjKdEgIKF0Q=;
+        b=fk6iUIBfE/HneraIY1mB79V9WGwvwsVo7KPbx6fxohWWDUp8beWazmTqvJqEDCvPDD
+         lGGHUDmhZ5msHa3rPzD45lPmtizOn17qR/tixosEypSLIyVLnReEohe8H0QgbwgBO79V
+         /cNql052NV5UDKPLCOJUg6WqxLu6qoYQUj16VWlVmzA5QUUBwVudXRMGJ6BUiaaFMEU/
+         nXrmkm+Gcb/xigZ0F9mQHqwsRebKnXZVc5NLaHAnNzo4Xmn6brZz6YYRH1Y0m+Yl8iWA
+         zZf+tUN1q1jYKFXnX00n9QeYB9nie4EPqI49zcbRyRetiTqDVkxqglmnIZg6W6NQMUgF
+         KgnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784042111; x=1784646911;
+        d=1e100.net; s=20251104; t=1784042112; x=1784646912;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=OET28Pw7Tm9U8SptXyUJqzCGyMYvQ/PVMzqx3Tt4yN8=;
-        b=ffKM1yF5/5zYeeanVAM7fA95s+VmrdpQ7B2EYH9eOs6K0xaxqEGYifxf38PPfSakWt
-         EXq3bVNRvnwTc0eQ7kRv9LJ30s4Boz7AHkP0zBSPEVGLw9ieLin0Q3kGBK2kS+6B0Tt7
-         7wpBwRp4eK34suxkjtMH9RUSKoltQdydLGqUa7AqeC80J9dyaeTAeRFjA2+Jr9kdGmXa
-         jePrJ+NZKbpQvO7qKdI32X8HYEtwdtK9ocRTdf3myvE2IVE+GNq9pHNfqEbz9gjfr+6o
-         SS2FClT7hG2rucojSVrBQ6+BfqsSL0FqZBA+4l/hkU1ai3pt5B0TrCqCZLi0BPyOHjbc
-         i+Fg==
-X-Gm-Message-State: AOJu0YyudqyXoPSb1RZXhGPYL3mOU6KTsHmipMc0Gzj3lB5cz2BKt6y0
-	UUuIgBKYjB1hEJ/S8a8oPfTv26xoKZo9Cd5B3125wCxjcvUSL21UKnn65/yLBa/7FDS4NN+N4t2
-	GzIh5C4ULmDoqatLFmyFiJhzLknivVps1aHHu3ysh8o9Kq8HupoyIOMpv6pZ6CNe+NuCDWirFKP
-	dFPXYq26S6p5Uyg7mj3rvUp8KiGTiNEiKq4vji7KsAdfnQKg==
-X-Received: from pldu11.prod.google.com ([2002:a17:903:108b:b0:2c7:e06e:86f6])
- (user=vipinsh job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:b85:b0:2c9:ae0b:61e3
- with SMTP id d9443c01a7336-2ce9e9a6ed8mr116458815ad.2.1784042110624; Tue, 14
- Jul 2026 08:15:10 -0700 (PDT)
-Date: Tue, 14 Jul 2026 08:14:46 -0700
+        bh=S1UFdHONMaUW3i8xUAtShYLn0EA7imz4HjKdEgIKF0Q=;
+        b=pAmO4roAZn/cp55kIF97q1H0vZx0dUjjY5uVpbs1dl809y0DPmDuDb7Q9rHDj6IvZ4
+         rMHA0TJQJAQJQXrRDh8iSvIorNSzDyeCzdRIa7QjhLmXaqYxJKjS0TMnloskQTc3mnCr
+         nTJAglCTyhwuKU5PJOPh7kO7pFkcXiu2O2I7ShcD7WUBzRvXZ/Wml+BfzFlLS8gnDJ12
+         UCC9ICVEHYUXszmGyBTc8PN2uGJI/uYCmYiqQkZMsLWZt1hLCfh0Xsi0vO4vKmR3ujoI
+         X7jK5J3uxaDF0CSKMZVFQUFH6JPknOv3lY2jxAGq5/BNpMu7AWu7dLtClrWiDDY+DeS7
+         WFbg==
+X-Gm-Message-State: AOJu0Yz6lFN+EhgdTQo5TrzCo+PSWFPf6XDsmmz7tDOSoD49QibRqxW1
+	1WFa0QzDETnbGrycg+2qH0vmyoHeOS8/eULAx7PsC4iVFiP3IoITf7+jV8zHCTL17hDn82Ygsr7
+	N6HvW8S4tmlnhl/RWOVgl33F69T3MUxcTzXADg34eMNTiAiN79hg9FXOT2HliYU9qld3WAxdiVS
+	sMRcDMCFYe1Jqw9ZFJRU/6LYJK2hicSP9NkkEnoEhMmITUYg==
+X-Received: from pfbdi5.prod.google.com ([2002:a05:6a00:4805:b0:848:4690:d658])
+ (user=vipinsh job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2e93:b0:848:19f4:3b52
+ with SMTP id d2e1a72fcca58-84a516062d4mr3676620b3a.38.1784042111640; Tue, 14
+ Jul 2026 08:15:11 -0700 (PDT)
+Date: Tue, 14 Jul 2026 08:14:47 -0700
 In-Reply-To: <20260714151505.3466855-1-vipinsh@google.com>
 Mime-Version: 1.0
 References: <20260714151505.3466855-1-vipinsh@google.com>
 X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
-Message-ID: <20260714151505.3466855-2-vipinsh@google.com>
-Subject: [PATCH v5 01/20] vfio/pci: Factor out the reset logic in VFIO PCI
- device close path
+Message-ID: <20260714151505.3466855-3-vipinsh@google.com>
+Subject: [PATCH v5 02/20] vfio: Export various helpers from VFIO
 From: Vipin Sharma <vipinsh@google.com>
 To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
 	linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, 
@@ -88,8 +102,8 @@ Cc: ajayachandra@nvidia.com, alex@shazbot.org, amastro@fb.com,
 	yi.l.liu@intel.com
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260714_081512_519399_723153B7 
-X-CRM114-Status: GOOD (  18.53  )
+X-CRM114-CacheID: sfid-20260714_161514_954169_CC0F705D 
+X-CRM114-Status: GOOD (  14.34  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,149 +118,131 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-vfio_pci_core_disable() is a very long function doing multiple things
-like exiting runtime power management, setting device to D0 power,
-clearing bus master, clearing irqs, freeing eventfds, releasing device
-regions, unmapping PCI bars, and performing device/bus resets.
+The upcoming VFIO live update feature needs to access various helper
+functions for its logic which are not exported by default.
 
-The upcoming VFIO Liveupdate feature will also need to utilize same
-reset logic.
-
-Extract device reset code to a new helper function,
-vfio_pci_core_try_reset(), and update vfio_pci_core_disable() to use
-this new function.
+Export these functions and variable for other modules to use them.
+Remove static from their declaration and add them in
+include/linux/vfio.h and drivers/vfio/pci/vfio_pci_priv.h header files.
 
 No functional change intended.
 
-Co-developed-by: David Matlack <dmatlack@google.com>
-Signed-off-by: David Matlack <dmatlack@google.com>
 Signed-off-by: Vipin Sharma <vipinsh@google.com>
 ---
- drivers/vfio/pci/vfio_pci_core.c | 100 ++++++++++++++++---------------
- 1 file changed, 53 insertions(+), 47 deletions(-)
+ drivers/vfio/pci/vfio_pci.c      | 2 +-
+ drivers/vfio/pci/vfio_pci_core.c | 6 ++++--
+ drivers/vfio/pci/vfio_pci_priv.h | 5 +++++
+ drivers/vfio/vfio_main.c         | 3 ++-
+ include/linux/vfio.h             | 1 +
+ 5 files changed, 13 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 0c771064c0b8..1fb4b276afe7 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -125,7 +125,7 @@ static int vfio_pci_open_device(struct vfio_device *core_vdev)
+ 	return 0;
+ }
+ 
+-static const struct vfio_device_ops vfio_pci_ops = {
++const struct vfio_device_ops vfio_pci_ops = {
+ 	.name		= "vfio-pci",
+ 	.init		= vfio_pci_core_init_dev,
+ 	.release	= vfio_pci_core_release_dev,
 diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index a28f1e99362c..3c8b990ee92f 100644
+index 3c8b990ee92f..f31e59e5badb 100644
 --- a/drivers/vfio/pci/vfio_pci_core.c
 +++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -623,9 +623,60 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
+@@ -623,7 +623,7 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
  }
  EXPORT_SYMBOL_GPL(vfio_pci_core_enable);
  
--void vfio_pci_core_disable(struct vfio_pci_core_device *vdev)
-+static void vfio_pci_core_try_reset(struct vfio_pci_core_device *vdev)
+-static void vfio_pci_core_try_reset(struct vfio_pci_core_device *vdev)
++void vfio_pci_core_try_reset(struct vfio_pci_core_device *vdev)
  {
-+	struct pci_dev *pdev = vdev->pdev;
- 	struct pci_dev *bridge;
-+
-+	vdev->needs_reset = true;
-+
-+	/*
-+	 * If we have saved state, restore it.  If we can reset the device,
-+	 * even better.  Resetting with current state seems better than
-+	 * nothing, but saving and restoring current state without reset
-+	 * is just busy work.
-+	 */
-+	if (pci_load_and_free_saved_state(pdev, &vdev->pci_saved_state)) {
-+		pci_info(pdev, "%s: Couldn't reload saved state\n", __func__);
-+
-+		if (!vdev->reset_works)
-+			return;
-+
-+		pci_save_state(pdev);
-+	}
-+
-+	/*
-+	 * Disable INTx and MSI, presumably to avoid spurious interrupts
-+	 * during reset.  Stolen from pci_reset_function()
-+	 */
-+	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
-+
-+	/*
-+	 * Try to get the locks ourselves to prevent a deadlock. The
-+	 * success of this is dependent on being able to lock the device,
-+	 * which is not always possible.
-+	 * We can not use the "try" reset interface here, which will
-+	 * overwrite the previously restored configuration information.
-+	 */
-+	if (vdev->reset_works) {
-+		bridge = pci_upstream_bridge(pdev);
-+		if (bridge && !pci_dev_trylock(bridge))
-+			goto out_restore_state;
-+		if (pci_dev_trylock(pdev)) {
-+			if (!__pci_reset_function_locked(pdev))
-+				vdev->needs_reset = false;
-+			pci_dev_unlock(pdev);
-+		}
-+		if (bridge)
-+			pci_dev_unlock(bridge);
-+	}
-+
-+out_restore_state:
-+	pci_restore_state(pdev);
-+}
-+
-+void vfio_pci_core_disable(struct vfio_pci_core_device *vdev)
-+{
  	struct pci_dev *pdev = vdev->pdev;
- 	struct vfio_pci_dummy_resource *dummy_res, *tmp;
- 	struct vfio_pci_ioeventfd *ioeventfd, *ioeventfd_tmp;
-@@ -700,54 +751,9 @@ void vfio_pci_core_disable(struct vfio_pci_core_device *vdev)
- 		kfree(dummy_res);
- 	}
+ 	struct pci_dev *bridge;
+@@ -674,6 +674,7 @@ static void vfio_pci_core_try_reset(struct vfio_pci_core_device *vdev)
+ out_restore_state:
+ 	pci_restore_state(pdev);
+ }
++EXPORT_SYMBOL_GPL(vfio_pci_core_try_reset);
  
--	vdev->needs_reset = true;
--
- 	vfio_pci_zdev_close_device(vdev);
+ void vfio_pci_core_disable(struct vfio_pci_core_device *vdev)
+ {
+@@ -1657,7 +1658,7 @@ ssize_t vfio_pci_core_write(struct vfio_device *core_vdev, const char __user *bu
+ }
+ EXPORT_SYMBOL_GPL(vfio_pci_core_write);
  
--	/*
--	 * If we have saved state, restore it.  If we can reset the device,
--	 * even better.  Resetting with current state seems better than
--	 * nothing, but saving and restoring current state without reset
--	 * is just busy work.
--	 */
--	if (pci_load_and_free_saved_state(pdev, &vdev->pci_saved_state)) {
--		pci_info(pdev, "%s: Couldn't reload saved state\n", __func__);
--
--		if (!vdev->reset_works)
--			goto out;
--
--		pci_save_state(pdev);
--	}
--
--	/*
--	 * Disable INTx and MSI, presumably to avoid spurious interrupts
--	 * during reset.  Stolen from pci_reset_function()
--	 */
--	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
--
--	/*
--	 * Try to get the locks ourselves to prevent a deadlock. The
--	 * success of this is dependent on being able to lock the device,
--	 * which is not always possible.
--	 * We can not use the "try" reset interface here, which will
--	 * overwrite the previously restored configuration information.
--	 */
--	if (vdev->reset_works) {
--		bridge = pci_upstream_bridge(pdev);
--		if (bridge && !pci_dev_trylock(bridge))
--			goto out_restore_state;
--		if (pci_dev_trylock(pdev)) {
--			if (!__pci_reset_function_locked(pdev))
--				vdev->needs_reset = false;
--			pci_dev_unlock(pdev);
--		}
--		if (bridge)
--			pci_dev_unlock(bridge);
--	}
--
--out_restore_state:
--	pci_restore_state(pdev);
--out:
-+	vfio_pci_core_try_reset(vdev);
- 	pci_disable_device(pdev);
+-static void vfio_pci_zap_bars(struct vfio_pci_core_device *vdev)
++void vfio_pci_zap_bars(struct vfio_pci_core_device *vdev)
+ {
+ 	struct vfio_device *core_vdev = &vdev->vdev;
+ 	loff_t start = VFIO_PCI_INDEX_TO_OFFSET(VFIO_PCI_BAR0_REGION_INDEX);
+@@ -1666,6 +1667,7 @@ static void vfio_pci_zap_bars(struct vfio_pci_core_device *vdev)
  
- 	vfio_pci_dev_set_try_reset(vdev->vdev.dev_set);
+ 	unmap_mapping_range(core_vdev->inode->i_mapping, start, len, true);
+ }
++EXPORT_SYMBOL_GPL(vfio_pci_zap_bars);
+ 
+ void vfio_pci_zap_and_down_write_memory_lock(struct vfio_pci_core_device *vdev)
+ {
+diff --git a/drivers/vfio/pci/vfio_pci_priv.h b/drivers/vfio/pci/vfio_pci_priv.h
+index fca9d0dfac90..85bc1666cb0e 100644
+--- a/drivers/vfio/pci/vfio_pci_priv.h
++++ b/drivers/vfio/pci/vfio_pci_priv.h
+@@ -11,6 +11,8 @@
+ /* Cap maximum number of ioeventfds per device (arbitrary) */
+ #define VFIO_PCI_IOEVENTFD_MAX		1000
+ 
++extern const struct vfio_device_ops vfio_pci_ops;
++
+ struct vfio_pci_ioeventfd {
+ 	struct list_head	next;
+ 	struct vfio_pci_core_device	*vdev;
+@@ -73,6 +75,9 @@ u16 vfio_pci_memory_lock_and_enable(struct vfio_pci_core_device *vdev);
+ void vfio_pci_memory_unlock_and_restore(struct vfio_pci_core_device *vdev,
+ 					u16 cmd);
+ 
++void vfio_pci_zap_bars(struct vfio_pci_core_device *vdev);
++void vfio_pci_core_try_reset(struct vfio_pci_core_device *vdev);
++
+ #ifdef CONFIG_VFIO_PCI_IGD
+ bool vfio_pci_is_intel_display(struct pci_dev *pdev);
+ int vfio_pci_igd_init(struct vfio_pci_core_device *vdev);
+diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
+index 5e0422014523..2437af031169 100644
+--- a/drivers/vfio/vfio_main.c
++++ b/drivers/vfio/vfio_main.c
+@@ -1467,7 +1467,7 @@ const struct file_operations vfio_device_fops = {
+ #endif
+ };
+ 
+-static struct vfio_device *vfio_device_from_file(struct file *file)
++struct vfio_device *vfio_device_from_file(struct file *file)
+ {
+ 	struct vfio_device_file *df = file->private_data;
+ 
+@@ -1475,6 +1475,7 @@ static struct vfio_device *vfio_device_from_file(struct file *file)
+ 		return NULL;
+ 	return df->device;
+ }
++EXPORT_SYMBOL_GPL(vfio_device_from_file);
+ 
+ /**
+  * vfio_file_is_valid - True if the file is valid vfio file
+diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+index 31b826efba00..cf0d941d0410 100644
+--- a/include/linux/vfio.h
++++ b/include/linux/vfio.h
+@@ -378,6 +378,7 @@ static inline bool vfio_file_has_dev(struct file *file, struct vfio_device *devi
+ bool vfio_file_is_valid(struct file *file);
+ bool vfio_file_enforced_coherent(struct file *file);
+ void vfio_file_set_kvm(struct file *file, struct kvm *kvm);
++struct vfio_device *vfio_device_from_file(struct file *file);
+ 
+ #define VFIO_PIN_PAGES_MAX_ENTRIES	(PAGE_SIZE/sizeof(unsigned long))
+ 
 -- 
 2.55.0.795.g602f6c329a-goog
 
