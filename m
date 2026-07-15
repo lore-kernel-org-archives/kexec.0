@@ -4,64 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id ED100C44501
-	for <kexec@archiver.kernel.org>; Wed, 15 Jul 2026 09:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 53E5DC44508
+	for <kexec@archiver.kernel.org>; Wed, 15 Jul 2026 13:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
-	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=WscSEX0Y3uykFZFI6EZFIn7q3uRKkJxFfbJlwIRPIbQ=; b=UXLJsWFV3X9F2PZvbCSuh21O6z
-	ubGXED7V6YwkqRmw8IjV+5vRRZ5SCNbTxiRnQFq2zyg+apxVZE+J7GJvW02GP3hZQgum3KkssM4qb
-	XcCLFgFXKBRpbvLggtn+j9YdiwfxXIA92YJSRxeY+fxOaT/c7jnX4x/w/6KSQnqI1NQucX/ATWhw/
-	+bK5JF6wF/Ps0jZRgCkZWYtyeMxHwekQNSyjdhOnIaqY+eZR643HeElNn5XQ4LwwvCbG2bE/sMwqJ
-	VSBrmoBtT+Y6ZSo4eqgN2xz88aRZat42Wb9zdx+kGFq5juxiCEnapKNCITBDMj8mRESi6WQM65qI5
-	7+dqINMQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=nL9GPZ2szRYHsC9eAZvo3RDUzkznJI28ai3TQi5RPkA=; b=Du+scdhgj+Q1URysJY+lw77/Ll
+	sAUtp7gaUtRKn7+5Q2RDCP8N6W8vTEvla7kfNiHYnn6uwD31F54/Sni5qZVRaCe9mavoXR7fzpvev
+	zD7VRWW5Rp1UzswdSofAgayHiycELa8/VcEhCSwx4/jO4W+E/tyUb3sbfnoJpvLM4ZdCVvAc/CPIA
+	hgHWGW1GDZtbm0CxrhgX21rpS41HnDIBBS87KkUsL0T/Mj1CbgZ3sySZFe4TTPLK2SP3NQKCsxosv
+	j6pzWx52AY5q6NnDoDtdXZewdxlv5jTceWIcqFPG8wzw4ZXce6idEb6ZB9ow11rrzhlswcRQR+U5S
+	8oo5paIQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjw1n-0000000EKya-3XgD;
-	Wed, 15 Jul 2026 09:35:43 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wk00U-0000000EzkZ-2ESS;
+	Wed, 15 Jul 2026 13:50:38 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjw1n-0000000EKyG-1mpn
+	id 1wk00T-0000000EzkE-2W5b
 	for kexec@lists.infradead.org;
-	Wed, 15 Jul 2026 09:35:43 +0000
+	Wed, 15 Jul 2026 13:50:37 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 32FC540BA6;
-	Wed, 15 Jul 2026 09:35:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AADE1F00A3D;
-	Wed, 15 Jul 2026 09:35:40 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id D786B600BB;
+	Wed, 15 Jul 2026 13:50:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D58551F000E9;
+	Wed, 15 Jul 2026 13:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784108143;
-	bh=WscSEX0Y3uykFZFI6EZFIn7q3uRKkJxFfbJlwIRPIbQ=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=Gek07/9NqZkFtpiBTbCgphB2/KKCwHrtyxj9TA3e1+kYsHGUdIsTU+0C5C0RIt1Yx
-	 0k3OQem/kDf4OSl6lv/TxIaLTNOJaDB0SHkzvlktRcxF+wt82c4SEGLXADP2PHUjtm
-	 iAt5pJ49FpyYzCg/O0VUW7qfRjLFJzrih5jWvZpiEoTacRwnpLST2Gd56tmQG+xawg
-	 22KJ1xtfZuP8IS+nFqcJLnfFblIuLveubnqqADyDiIBYeywaXuf7oaaNVXoIObBkIu
-	 JjzAyyulcgIExfAncYMu3viVsTdESe1s6+QDxUN7aND4kVleSzhC5k4bya3Pl7HbCl
-	 Sm/0O2ry5goiw==
+	s=k20260515; t=1784123436;
+	bh=nL9GPZ2szRYHsC9eAZvo3RDUzkznJI28ai3TQi5RPkA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=A5ZT8/xr39wA6NS/MgYhY1USpGS6fGqQvdo3U4a3m/9JO/5+iL9gzH02SNIdeLTmW
+	 rNwqzp23GkKepp/SBawEDTyntIvDw1aWanz94WzyWXHmcRR51GnscSQhdzOW+Odwyi
+	 TmTX7eDOdS7Jk046PqBYT79qm8gJpdLrJITrZLfbaYmktX97uTs9NiKYPS1erHR18S
+	 HrpfM9vpQ/BxxtOxav+QEWsxN+Gi11Aerkw03P0D15mMxqlqL7Qzz3WjUu6jQsUE17
+	 sDiQ95Q8v7e1WSRvACN2DuBMwVcckk5WF4eh48083ZUZMgN5xXMuHW4SEdw+5pcw0A
+	 WbnkjLDKhTJLA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: David Matlack <dmatlack@google.com>
+Cc: kexec@lists.infradead.org,  linux-kernel@vger.kernel.org,
+  linux-kselftest@vger.kernel.org,  Jason Gunthorpe <jgg@nvidia.com>,  Mike
+ Rapoport <rppt@kernel.org>,  Pasha Tatashin <pasha.tatashin@soleen.com>,
+  Pratyush Yadav <pratyush@kernel.org>,  Samiullah Khawaja
+ <skhawaja@google.com>,  Shuah Khan <shuah@kernel.org>
+Subject: Re: [RFC PATCH] liveupdate: Allow multiple openers for /dev/liveupdate
+In-Reply-To: <20260714190356.190328-1-dmatlack@google.com> (David Matlack's
+	message of "Tue, 14 Jul 2026 19:03:56 +0000")
+References: <20260714190356.190328-1-dmatlack@google.com>
+Date: Wed, 15 Jul 2026 15:50:33 +0200
+Message-ID: <2vxzy0fcicpi.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v3 19/21] memblock: make HugeTLB bootmem allocation
- work with KHO
-From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Alexander Graf <graf@amazon.com>, Muchun Song <muchun.song@linux.dev>, 
- Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>, 
- Andrew Morton <akpm@linux-foundation.org>, Jason Miu <jasonmiu@google.com>, 
- Jork Loeser <jloeser@linux.microsoft.com>, kexec@lists.infradead.org, 
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260709173821.429921-20-pratyush@kernel.org>
-References: <20260709173821.429921-1-pratyush@kernel.org>
- <20260709173821.429921-20-pratyush@kernel.org>
-Date: Wed, 15 Jul 2026 12:35:19 +0300
-Message-Id: <178410811939.820181.7248948033992831535.b4-review@b4>
-X-Mailer: b4 0.16-dev
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,284 +72,93 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> Gigantic huge page allocation is somewhat broken currently when KHO is
-> used.
-> 
-> Firstly, they break KHO scratch size accounting. RSRV_KERN is used to
-> track how much memory is reserved for use by the kernel. Since
-> hugetlb::alloc_bootmem() calls the memblock_alloc*() APIs, the hugepages
-> allocated also get marked as RSRV_KERN.
-> 
-> Allocations marked RSRV_KERN are used by KHO to calculate how much
-> scratch space it should reserve to make sure the next kernel has enough
-> memory to boot when it is in scratch-only phase. Counting hugepages in
-> that blows up scratch size, and can lead to the scratch allocation
-> failing, making KHO unusable. This will show up when huge pages make up
-> more than 50% of the system, which is a fairly common use case.
-> 
-> Secondly, while not supported right now, huge pages are user memory and
-> can be preserved via KHO. The scratch spaces should not have any
-> preserved memory. Allocating hugepages from scratch (on a KHO boot) can
-> lead to them being un-preservable.
-> 
-> Introduce memblock_alloc_hugetlb(). This lets memblock tailor to the
-> needs of hugetb without exposing those details to the general allocation
-> routines.
-> 
-> First, it does not use mirrored memory for hugetlb. Mirrored memory is a
-> limited resource that is best saved for kernel data structures, not user
-> memory.
-> 
-> Second, if the free memory area found by memblock_find_in_range_node()
-> is a part of a KHO scratch area, the free area is not used. Allocation
-> is retried starting after the free area to ensure no hugepages come from
-> KHO scratch.
-> 
-> Third, it simplifies the argument list by baking in some hugetlb
-> assumptions like alignment and exact_nid. This also simplifies
-> allocation logic in alloc_bootmem().
-> 
-> Also introduce MEMBLOCK_RSRV_HUGETLB to mark reservations made for
-> HugeTLB. This will be used by KHO in future patches to correctly
-> calculate scratch sizes.
-> 
-> Refactor some of the preparation logic like kmemleak tracking and
-> accepting memory into a separate helper memblock_prep_allocation(), and
-> use it from both memblock_alloc_hugetlb() and the usual
-> memblock_alloc_range_nid().
-> 
-> Add a stub for kho_scratch_overlap to memblock tests to make sure it
-> compiles.
-> 
-> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+Hi David,
+
+On Tue, Jul 14 2026, David Matlack wrote:
+
+> Remove the single-opener restriction for /dev/liveupdate by removing the
+> atomic in_use tracking and the exclusive open check in luo_open() that
+> returned -EBUSY. Protect luo_session_deserialize() with a mutex guard so
+> that concurrent open attempts by multiple processes safely executes
+> deserialization only once. Update liveupdate selftest to verify that
+> multiple concurrent openers succeed.
 >
-> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> index f142c8a8cd5b7..678fe466529a2 100644
-> --- a/include/linux/memblock.h
-> +++ b/include/linux/memblock.h
-> @@ -51,6 +51,7 @@ extern unsigned long long max_possible_pfn;
->   * memory reservations yet, so we get scratch memory from the previous
->   * kernel that we know is good to use. It is the only memory that
->   * allocations may happen from in this phase.
-> + * @MEMBLOCK_RSRV_HUGETLB: memory is reserved for hugetlb pages
->   */
->  enum memblock_flags {
->  	MEMBLOCK_NONE		= 0x0,	/* No special request */
-> @@ -61,6 +62,7 @@ enum memblock_flags {
->  	MEMBLOCK_RSRV_NOINIT	= 0x10,	/* don't initialize struct pages */
->  	MEMBLOCK_RSRV_KERN	= 0x20,	/* memory reserved for kernel use */
->  	MEMBLOCK_KHO_SCRATCH	= 0x40,	/* scratch memory for kexec handover */
-> +	MEMBLOCK_RSRV_HUGETLB	= 0x80, /* memory reserved for hugetlb pages */
->  };
+> LUO does not inherently require a single opener. There is some
+> documentation about it simplifying state management, but the only thing
+> it actually protects is the session deserialization during first open,
+> which can be easily handled with a mutex.
+>
+> Relaxing the single-opener requirement avoids the kernel forcing a
+> design pattern on userspace that it itself does not require, e.g.
+> allowing multiple userspace processes to create and manage sessions.
+
+Agreed. When the kernel had a global state machine in the early versions
+of LUO, this might have been more relevant. With sessions, even if we
+later add a state machine, it likely will be per-session instead of
+being global. So I think letting userspace open /dev/liveupdate multiple
+times makes a lot of sense.
+
+Also, today's systemd only supports preserving individual files, and
+does not hand out sessions. To get sessions, userspace must open
+/dev/liveupdate and create a session. This opens up room for one bad
+process to block every other process from creating sessions. It also
+imposes a need for userspace to add a polling/retry logic for getting
+sessions and serializes their execution around this point.
+
+I don't see any architectural reasons for doing so from kernel's side.
+If userspace wants to only have one owner of /dev/liveupdate, they are
+free to do so by unlinking the device from devtmpfs after opening or
+restricting its permissions.
+
+So the idea has my vote :-)
+
+Acked-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+
+That said, a comment on the code below.
+
+>
+> Signed-off-by: David Matlack <dmatlack@google.com>
+> ---
+[...]
+> diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
+> index b79b2a488974..ca4d0639d39a 100644
+> --- a/kernel/liveupdate/luo_session.c
+> +++ b/kernel/liveupdate/luo_session.c
+> @@ -584,13 +584,17 @@ static int luo_session_deserialize_one(struct luo_session_header *sh,
 >  
->  /**
-> @@ -420,6 +422,7 @@ void *memblock_alloc_try_nid_raw(phys_addr_t size, phys_addr_t align,
->  void *memblock_alloc_try_nid(phys_addr_t size, phys_addr_t align,
->  			     phys_addr_t min_addr, phys_addr_t max_addr,
->  			     int nid);
-> +void *memblock_alloc_hugetlb(phys_addr_t size, int nid, bool exact_nid);
->  
->  static __always_inline void *memblock_alloc(phys_addr_t size, phys_addr_t align)
+>  int luo_session_deserialize(void)
 >  {
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 571212b80835e..ab4afc818e8cb 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -3033,29 +3033,21 @@ static __init void *alloc_bootmem(struct hstate *h, int nid, bool node_exact)
->  	if (hugetlb_early_cma(h))
->  		m = hugetlb_cma_alloc_bootmem(h, &listnode, node_exact);
->  	else {
-> -		if (node_exact)
-> -			m = memblock_alloc_exact_nid_raw(huge_page_size(h),
-> -				huge_page_size(h), 0,
-> -				MEMBLOCK_ALLOC_ACCESSIBLE, nid);
-> -		else {
-> -			m = memblock_alloc_try_nid_raw(huge_page_size(h),
-> -				huge_page_size(h), 0,
-> -				MEMBLOCK_ALLOC_ACCESSIBLE, nid);
-> +		m = memblock_alloc_hugetlb(huge_page_size(h), nid, node_exact);
-> +		if (m) {
-> +			m->flags = 0;
-> +			m->cma = NULL;
+> -	struct luo_session_header *sh = &luo_session_global.incoming;
+> +	static DEFINE_MUTEX(luo_session_deserialize_lock);
+>  	static bool is_deserialized;
+> +	static int saved_err;
 > +
->  			/*
->  			 * For pre-HVO to work correctly, pages need to be on
->  			 * the list for the node they were actually allocated
->  			 * from. That node may be different in the case of
-> -			 * fallback by memblock_alloc_try_nid_raw. So,
-> +			 * fallback by memblock_alloc_hugetlb_bootmem. So,
->  			 * extract the actual node first.
->  			 */
-> -			if (m)
-> +			if (!node_exact)
->  				listnode = early_pfn_to_nid(PHYS_PFN(__pa(m)));
->  		}
-> -
-> -		if (m) {
-> -			m->flags = 0;
-> -			m->cma = NULL;
-> -		}
->  	}
+> +	struct luo_session_header *sh = &luo_session_global.incoming;
+>  	struct luo_session_ser *ser;
+>  	struct kho_block_set_it it;
+> -	static int saved_err;
+>  	int err;
 >  
->  	if (m) {
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 8b2e551435ae9..ba6d887ea18eb 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -1506,6 +1506,32 @@ int __init_memblock memblock_set_node(phys_addr_t base, phys_addr_t size,
->  	return 0;
->  }
->  
-> +static void memblock_prep_allocation(phys_addr_t start, phys_addr_t size,
-> +				     bool leaktrace)
+> +	guard(mutex)(&luo_session_deserialize_lock);
 
-Let's call this kmemleak_trace
+Do we really need a new lock? Can we re-use sh->rwsem instead?
 
-> +{
-> +	/*
-> +	 * Skip kmemleak for those places like kasan_init() and
-> +	 * early_pgtable_alloc() due to high volume.
-> +	 */
-> +	if (leaktrace)
-> +		/*
-> +		 * Memblock allocated blocks are never reported as
-> +		 * leaks. This is because many of these blocks are
-> +		 * only referred via the physical address which is
-> +		 * not looked up by kmemleak.
-> +		 */
-> +		kmemleak_alloc_phys(start, size, 0);
-> +
-> +	/*
-> +	 * Some Virtual Machine platforms, such as Intel TDX or AMD SEV-SNP,
-> +	 * require memory to be accepted before it can be used by the
-> +	 * guest.
-> +	 *
-> +	 * Accept the memory of the allocated buffer.
-> +	 */
-> +	accept_memory(start, size);
-> +}
-> +
->  /**
->   * memblock_alloc_range_nid - allocate boot memory block
->   * @size: size of memory block to be allocated in bytes
-> @@ -1580,28 +1606,7 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
->  	return 0;
->  
->  done:
-> -	/*
-> -	 * Skip kmemleak for those places like kasan_init() and
-> -	 * early_pgtable_alloc() due to high volume.
-> -	 */
-> -	if (end != MEMBLOCK_ALLOC_NOLEAKTRACE)
-> -		/*
-> -		 * Memblock allocated blocks are never reported as
-> -		 * leaks. This is because many of these blocks are
-> -		 * only referred via the physical address which is
-> -		 * not looked up by kmemleak.
-> -		 */
-> -		kmemleak_alloc_phys(found, size, 0);
-> -
-> -	/*
-> -	 * Some Virtual Machine platforms, such as Intel TDX or AMD SEV-SNP,
-> -	 * require memory to be accepted before it can be used by the
-> -	 * guest.
-> -	 *
-> -	 * Accept the memory of the allocated buffer.
-> -	 */
-> -	accept_memory(found, size);
-> -
-> +	memblock_prep_allocation(found, size, end != MEMBLOCK_ALLOC_NOLEAKTRACE);
->  	return found;
->  }
->  
-> @@ -1756,6 +1761,69 @@ void * __init memblock_alloc_try_nid_raw(
->  				       false);
->  }
->  
-> +/**
-> + * memblock_alloc_hugetlb - allocate boot memory for HugeTLB pages
-> + * @size:      size of the memory to be allocated in bytes
-> + * @nid:       nid of the free memory to find, %NUMA_NO_NODE for any node
-> + * @exact_nid: only allocate from the specified nid. If %false, the specified
-> + *             nid is tried first, and then all nodes are tried as fallback.
-> + *
-> + * HugeTLB pages are always aligned by their size, so the alignment matches
-> + * @size. Since the memory is for userspace, mirrored memory is not used. The
-> + * memory is not zeroed. Does not panic if request cannot be satisfied.
-> + *
-> + * Return:
-> + * Virtual address of allocated memory block on success, %NULL on failure.
-> + */
-> +void * __init memblock_alloc_hugetlb(phys_addr_t size, int nid, bool exact_nid)
-> +{
-> +	enum memblock_flags flags = choose_memblock_flags();
-> +	phys_addr_t addr, start = 0, end = MEMBLOCK_ALLOC_ACCESSIBLE;
-> +
-> +	memblock_dbg("%s: %llu bytes, nid=%d, exact_nid=%d %pS\n", __func__,
-> +		     (u64)size, nid, exact_nid, (void *)_RET_IP_);
-> +
-> +	/* Don't waste mirrored memory on HugeTLB pages. */
-> +	flags &= ~MEMBLOCK_MIRROR;
-> +retry:
-> +	/* HugeTLB pages are always aligned by their size. */
-> +	addr = memblock_find_in_range_node(size, size, start, end, nid, flags);
-> +	if (addr)
-> +		goto found;
-> +
-> +	/* Try all nodes if allowed. */
-> +	if (numa_valid_node(nid) && !exact_nid) {
-> +		nid = NUMA_NO_NODE;
-> +		goto retry;
-> +	}
-> +
-> +	/* Found nothing... :-( */
-> +	return NULL;
-> +
-> +found:
-> +	/*
-> +	 * HugeTLB pages can be preserved with KHO and no preserved memory can
-> +	 * be in scratch. So retry if found address overlaps with scratch.
-> +	 *
-> +	 * Scratch areas are normally not very large, so this shouldn't take too
-> +	 * many retries.
-> +	 */
-> +	if (kho_scratch_overlap(addr, size)) {
-> +		if (memblock_bottom_up())
-> +			start = addr + size;
-> +		else
-> +			start = addr - size;
-> +
-> +		goto retry;
-> +	}
-> +
-> +	if (__memblock_reserve(addr, size, nid, MEMBLOCK_RSRV_KERN | MEMBLOCK_RSRV_HUGETLB))
-> +		return NULL;
-> +
-> +	memblock_prep_allocation(addr, size, true);
-> +	return phys_to_virt(addr);
-> +}
-> +
->  /**
->   * memblock_alloc_try_nid - allocate boot memory block
->   * @size: size of memory block to be allocated in bytes
-> diff --git a/tools/testing/memblock/internal.h b/tools/testing/memblock/internal.h
-> index b6b1d147fd750..e86bb9000b22f 100644
-> --- a/tools/testing/memblock/internal.h
-> +++ b/tools/testing/memblock/internal.h
-> @@ -66,4 +66,9 @@ static inline void init_deferred_page(unsigned long pfn, int nid)
->  
->  #define __SetPageReserved(p)	((void)(p))
->  
-> +static inline bool kho_scratch_overlap(phys_addr_t phys, size_t size)
-> +{
-> +	return false;
-> +}
-> +
+It can block session retrieve (but not file retrieve) for a short time
+though since luo_session_retrieve() also takes it. But the block will be
+short since only the first open of /dev/liveupdate does work. After that
+it just checks is_deserialized and returns. And session retrieval should
+not be very frequent anyway.
 
-This should be in the patch that exposes kho_scratch_overlap() to kexec_handover.h
+I don't have very strong opinion on this, but I reckon the less locks to
+keep track of the better.
+
+> +
+>  	/* If has been deserialized, always return the same error code */
+>  	if (is_deserialized)
+>  		return saved_err;
+[...]
 
 -- 
-Sincerely yours,
-Mike.
-
+Regards,
+Pratyush Yadav
 
