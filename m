@@ -4,59 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 562E9C44508
-	for <kexec@archiver.kernel.org>; Wed, 15 Jul 2026 06:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2F90AC44507
+	for <kexec@archiver.kernel.org>; Wed, 15 Jul 2026 09:35:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
 	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=XS3kbxCx44iZwLbc9BUE26Q+IAKNuquwzB8Yp7TaY1w=; b=yXNhmAXUo2Apd6Kz2mqcbhxwCw
-	XrCq0H6QOJaODCRS9DgUB/QCZcesW6ckUQEtfZewcHV37QCnF5gaZAM+9b7/B9Cy3Xl8Ht2zqhxPB
-	BzuGb0g1KtDRF7LyBdr9P1X+CQt4koFF66+vWnajosFcr1FTEbmuyH7cxS/BVUhWd8LdjgJpIHysO
-	t4MlD1gO1++/ujaI7gmpHEFfdrUakO0Mx5cmI3FNhLOhFWxjz9A5Z1Id2Sn+IuIq+RUEgzGHiStyP
-	0GcFri3nkuZ+GYudJ+6EFCVkrmdGWVVdfXBHPI2vH685GoaB7+47+8ccdmMvnI/TUKjYuaR8ytExc
-	eInFoW2A==;
+	bh=Fv3sqxipnUe86ke8aUv/45G3UAhWXtWb4CNGKP9uyU4=; b=YTCZBLzxuYRmWQn0RW7tohw2Po
+	ZSHQqhuqCb9K3mOnJY2LOv4JOW5caGglRqfC+EX3hnUPTUYZX6C8J1uBJHa5IT9qCRc1pozAyg/Le
+	inmxAasRcA76DA9dHwuMXd9Yt7K++VZ4UGF+wFfoy5ymoPa8la/lxN9wNAFIx8do3TNfY7G9L4Mlb
+	l/+c32kjJmHHgL9FDxi+8MHVAgCaOH8ylFezq40O3g5BhmveBv3JyiUka9Pq7/LuYUI6OCHeA3US+
+	ufA9x9zrxUZsqdt0MQYZbWT42Q5GkKVLLWyueEkFQhUl6siasUqioQHrR6gyjAkfFsZo6Q7kQmCzZ
+	bZVA11uQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjtKk-0000000DvmU-3AgR;
-	Wed, 15 Jul 2026 06:43:06 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wjw1c-0000000EKs7-213J;
+	Wed, 15 Jul 2026 09:35:32 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjtKi-0000000Dvm2-1pq7
+	id 1wjw1a-0000000EKrJ-24rY
 	for kexec@lists.infradead.org;
-	Wed, 15 Jul 2026 06:43:04 +0000
+	Wed, 15 Jul 2026 09:35:30 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 009E643E9B;
-	Wed, 15 Jul 2026 06:43:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B64E91F000E9;
-	Wed, 15 Jul 2026 06:43:01 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id E8D7F6001A;
+	Wed, 15 Jul 2026 09:35:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3BAE1F00A3A;
+	Wed, 15 Jul 2026 09:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784097783;
-	bh=XS3kbxCx44iZwLbc9BUE26Q+IAKNuquwzB8Yp7TaY1w=;
+	s=k20260515; t=1784108129;
+	bh=Fv3sqxipnUe86ke8aUv/45G3UAhWXtWb4CNGKP9uyU4=;
 	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=ARYV8KZdrzKV0yzTwW31iOu6eS7aj29k8+atE1dlCYs2UjOnt2wpUxT9B70J/JM/L
-	 ju6ipGpUrfyockp5N5H+24pkdOYwl0mOcXzFaOTjnKanOSILqAjeqGbSZSCFbWOyIL
-	 xNuN/II3wO5nVQ18lj7xDYA2FIVhFg5X9AR/JBNnptxCub2I53cEZDtaswDFoipzgW
-	 Rz0RS1cD8fqQktazA2DiIgZlxB01obs65hagz/YFYM4af5fvfgiGWro2TjKiQBgWxz
-	 maF/UARF5T2XXzG68d5bo3+mG+0b71fwBS1gQSDrnsMPtSLqgqwpO4AGjVUFBHiKw3
-	 qNjoP1mcRA1IQ==
+	b=T9i3rX1ySo9Yb4sjdIjBsYkAIP6x0udu4rX2yD3bhzLtZZl9SIC6DmBMnkZQpYb8p
+	 jv9KnVKARGG0ZbI/ofW4vrNrrGaeLSjlfN97Cgou2FeEKvPK9b0wRNZzXiTEBQJgYV
+	 l682C+3sLvaJkxi9/rA3zMSaekv/INsDL5rofgaXZYU0XTqnXxQNPgrmhr6rmllrq8
+	 w17HQnOCjF8rf3xry4h8XB805tfM19KQFc5+gMisv9rWYFSDMQecwjXK+bL2eo02ff
+	 UBaDCkZuAXMCvc43h4Peibbw60H58MjJ6CW5q8NU8uM+mtJ8TZt4J2bAr96809Ilg6
+	 uW6hJRHBC+Gaw==
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] kho: align kho_scratch to MAX_ORDER_NR_PAGES pages
+Subject: Re: [PATCH v3 04/21] kho: return virtual address of mem_map
 From: Mike Rapoport <rppt@kernel.org>
-To: Michal Clapinski <mclapinski@google.com>
+To: Pratyush Yadav <pratyush@kernel.org>
 Cc: Mike Rapoport <rppt@kernel.org>, 
  Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
- Evangelos Petrongonas <epetron@amazon.de>, kexec@lists.infradead.org, 
+ Alexander Graf <graf@amazon.com>, Muchun Song <muchun.song@linux.dev>, 
+ Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, Jason Miu <jasonmiu@google.com>, 
+ Jork Loeser <jloeser@linux.microsoft.com>, kexec@lists.infradead.org, 
  linux-mm@kvack.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260714205111.2497151-1-mclapinski@google.com>
-References: <20260714205111.2497151-1-mclapinski@google.com>
-Date: Wed, 15 Jul 2026 09:42:57 +0300
-Message-Id: <178409777790.255896.16691338963510282908.b4-review@b4>
+In-Reply-To: <20260709173821.429921-5-pratyush@kernel.org>
+References: <20260709173821.429921-1-pratyush@kernel.org>
+ <20260709173821.429921-5-pratyush@kernel.org>
+Date: Wed, 15 Jul 2026 12:35:19 +0300
+Message-Id: <178410811938.820181.15709073379301681705.b4-review@b4>
 X-Mailer: b4 0.16-dev
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -72,63 +75,13 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Michal,
+> kho: return virtual address of mem_map
 
-> I caught this crash:
-> BUG: unable to handle page fault for address: ff19164fffff8328
-> RIP: 0010:__free_one_page+0x1a1/0x6b0
-> Call Trace:
->  <TASK>
->  [<ffffffff913208bf>] free_one_page+0xaf/0x240
->  [<ffffffff93973288>] deferred_free_pages+0xa8/0xd0
->  [<ffffffff93971b4f>] deferred_init_memmap_chunk+0x10f/0x1b0
->  [<ffffffff9396e265>] padata_mt_helper+0x65/0xa0
->  [<ffffffff90fac402>] process_scheduled_works+0x202/0x410
->  [<ffffffff90fae739>] worker_thread+0x1f9/0x2d0
->  [<ffffffff90fb62fd>] kthread+0x27d/0x2f0
->  [<ffffffff90fae540>] ? __pfx_worker_thread+0x10/0x10
->  [<ffffffff90fb6080>] ? __pfx_kthread+0x10/0x10
->  [<ffffffff90efdc55>] ret_from_fork+0x145/0x280
->  [<ffffffff90fb6080>] ? __pfx_kthread+0x10/0x10
->  [<ffffffff90e2e46a>] ret_from_fork_asm+0x1a/0x30
->  </TASK>
-> 
-> deferred_init_memmap_chunk() works fine without KHO because free
-> regions will never be neighbors. However, with KHO, free memory
-> will be split into (free && scratch) and (free && !scratch).
-> KHO scratch is aligned to CMA_MIN_ALIGNMENT_BYTES (which on my setup
-> is equal to 1 << 9 pages) but buddy can look at the neighborhood of
-> MAX_ORDER_NR_PAGES pages (which is equal to 1 << 10 pages).
-> This sometimes crashes when one half of the neighborhood is being
-> initialized but the other part is yet to be initialized.
-> 
-> To fix this, let's just align KHO scratch to MAX_ORDER_NR_PAGES pages.
-> 
-> Fixes: c6073743d0c7 ("kho: make preserved pages compatible with deferred struct page init")
-> Signed-off-by: Michal Clapinski <mclapinski@google.com>
->
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> index 4834a809985ab..50928aaa33710 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -38,6 +38,16 @@
->  #include "../kexec_internal.h"
->  #include "kexec_handover_internal.h"
->  
-> +/*
-> + * This is the minimal alignment required by deferred struct page init.
-> + * deferred_init_memmap_chunk frees memory to the buddy allocator, which looks
-> + * at the neighboring pages (up to MAX_PAGE_ORDER) to merge them.
-> + * If KHO scratch is not aligned to that value, buddy can access uninitialized
-> + * struct pages, which can cause a crash.
-> + */
-> +#define SCRATCH_ALIGNMENT_BYTES (1 << (PAGE_SHIFT + MAX_PAGE_ORDER))
-> +static_assert(SCRATCH_ALIGNMENT_BYTES >= CMA_MIN_ALIGNMENT_BYTES);
+It's not really clear from where ...
 
-Maybe make it a variable and set it at runtime?
-We won't need to worry about different confugurations that override
-MAX_ORDER and potentail divergence of pageblock size from MAX_ORDER in
-the future.
+> Currently it is only used by kho_populate(), which doesn't care whether
+
+... and where it is used ;-)
 
 -- 
 Sincerely yours,
