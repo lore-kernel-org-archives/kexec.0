@@ -4,56 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A4591C44508
-	for <kexec@archiver.kernel.org>; Wed, 15 Jul 2026 06:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00344C44508
+	for <kexec@archiver.kernel.org>; Wed, 15 Jul 2026 06:16:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=TKzIL1IKcSprH3li6rPCtV4ZV6sHt4gRPtDKPLdnOAE=; b=U8E7Wds+KbW2LBGqeYp3WywH1c
-	jHsVkvBE+4CkOlkp9VZsQVtJZJQT2AEX7Vs1b3h3PCeiuQrgKsSAMdGuPEwESI6I088uXwvfLUgTt
-	9gwb3qvunJIK1RPXS1oIIHMu2rJ6j+V/kVvC/ioEIQ3omPYKuE2wWkMLJtdc+yMqVVmjSV76g9mH7
-	vf2k6+hY6S6jSmitIbVj0bCSMmVdA0B7+7eMGsC6lqnEJHES0xW9gWNVa+AHAwkbNdWTrosX+/7HV
-	M+COHYgtTZtWXyZwMx3b25rwvO5u4mY7J1fmcoYffR3Wyrj3ouDRSUUUc6fkuqcNUt5HKhFSxsFj9
-	lbynZ2Ag==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=1GVatgkJkgt1f7n14CxE5fSjwzfbGzAqCHxfBSSq8xw=; b=bYAPLIJiy/JJ893DySpkWLBVEy
+	XSzM+l5qBjnGAICHv0vAM8NMVWjMAELMflJ71+uDDYDmLObYAOZZk5aMjum1EuGVVP5jrE/OZE9w1
+	ROMsprgxViQg6ZwUifaHtCRPrEmVeVg7ERoXkkcg+lSg0hJOe8oE9qHsOSS5eh8InwZFNzji9MOPa
+	ArSSihE1EzgTKP7nPMNhlJbWZ+lj1+W80AearVwPGLcGPybr5+jVijLHktUwyki/zeB6iCamPGvzO
+	cCeU+OhPhOdwH05kgNZszB6uoyTj+bqQiNCcy+HOab7BRu1Ax4qly+sl570usjOm0LirZ8z9wp1W9
+	IvhfeaXg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjslO-0000000DqtM-1OqS;
-	Wed, 15 Jul 2026 06:06:34 +0000
-Received: from out-174.mta1.migadu.com ([95.215.58.174])
+	id 1wjsuZ-0000000Drgf-1XQ6;
+	Wed, 15 Jul 2026 06:16:03 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wjslL-0000000Dqrt-17DG
+	id 1wjsuX-0000000DrgJ-0Ytw
 	for kexec@lists.infradead.org;
-	Wed, 15 Jul 2026 06:06:33 +0000
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784095586;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TKzIL1IKcSprH3li6rPCtV4ZV6sHt4gRPtDKPLdnOAE=;
-	b=cIdpbV8mY7z2+UZYNs/Xp0DhYBq5oqMqpkrrv3j6I0CcgNkPkTpuxoN4HSnNvUkFXuvMkN
-	oDajg2jVdfl88c+QsMdjf+RpbNfuAKOJW/8KJgxLqeGk/hyp++5i98pAHkDEn6fNVeBc9A
-	metD/opCOM1uLbtCjzYh++Pr6x/muk4=
-From: Jackie Liu <liu.yun@linux.dev>
-To: pasha.tatashin@soleen.com
-Cc: rppt@kernel.org,
-	kexec@lists.infradead.org
-Subject: [PATCH 2/2] liveupdate: reject nonzero reserved value for SESSION_FINISH
-Date: Wed, 15 Jul 2026 14:06:13 +0800
-Message-ID: <20260715060613.19272-2-liu.yun@linux.dev>
-In-Reply-To: <20260715060613.19272-1-liu.yun@linux.dev>
-References: <20260715060613.19272-1-liu.yun@linux.dev>
+	Wed, 15 Jul 2026 06:16:01 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id D15EC40553;
+	Wed, 15 Jul 2026 06:16:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FE6C1F000E9;
+	Wed, 15 Jul 2026 06:15:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784096160;
+	bh=1GVatgkJkgt1f7n14CxE5fSjwzfbGzAqCHxfBSSq8xw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=E/r6OHEbwq4pdqs8b1RF+NnQK3qU4esSIWQ6dr6wAgOVVon4f2sVQgIfZUvPYQm6g
+	 8hHZSzTJrHAb3a4B8bZvYjyh7yIXXvf/Pk6hZmjTiUWj1OaRmd5uf1mF5uDtg0FDTU
+	 dbjahm8oevNsb8i5z1FdGWStz54H+cZWCwbSPtpGIrGB+qpkwRnKFYXpGr/lD0iguD
+	 zIRkHTRey0NWbmqwqQP2lIzjF3l8oVpW/HyfI5qP8ju/P/hw/AdX2I1XPC5mozS65F
+	 8mY+o8a0MXFRKfaUXDiOWufLShLVCcwwV+bn7/bdnlTCwa28hb+XFQ1jSFQUioLQWX
+	 1/NY4J/80Tf/A==
+Date: Wed, 15 Jul 2026 09:15:53 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Vipin Sharma <vipinsh@google.com>
+Cc: pasha.tatashin@soleen.com, pratyush@kernel.org, tarunsahu@google.com,
+	skhawaja@google.com, shuah@kernel.org, dmatlack@google.com,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] Make liveupdate selftests library
+Message-ID: <alclmQIb8D1td-sw@kernel.org>
+References: <20260612214512.464146-1-vipinsh@google.com>
+ <ajLtfkuMP4DEGlqe@kernel.org>
+ <20260617190754.GC2704872.vipinsh@google.com>
+ <CAHVum0dL+p-j1EwQf69p87MU1s8Er9RsOaMMbprFnmNeEdS6-g@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260714_230631_452676_36531D18 
-X-CRM114-Status: UNSURE (   9.44  )
-X-CRM114-Notice: Please train this message.
+In-Reply-To: <CAHVum0dL+p-j1EwQf69p87MU1s8Er9RsOaMMbprFnmNeEdS6-g@mail.gmail.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -68,42 +74,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Jackie Liu <liuyun01@kylinos.cn>
+Hi Vipin,
 
-The UAPI documents liveupdate_session_finish::reserved as requiring zero,
-but luo_session_finish() currently ignores it and finishes the session.
-Accepting nonzero values prevents the field from being safely repurposed
-by a future extension.
+On Mon, Jul 13, 2026 at 09:49:51AM -0700, Vipin Sharma wrote:
+> On Wed, Jun 17, 2026 at 12:08 PM Vipin Sharma <vipinsh@google.com> wrote:
+> > > On Fri, Jun 12, 2026 at 02:45:10PM -0700, Vipin Sharma wrote:
+> > > > Hello,
+> > > >
+> > > > This is v3 series of refactoring liveupdate selftests as a library. It
+> > > > exposes common liveupdate ioctls as a library which can be used by other
+> > > > selftests like VFIO and IOMMU.
+> > >
+> > > Let's revisit this after -rc1 is out.
+> > > I don't think there would a need to change anything, it's just the matter
+> > > of applying the patches to the right base :)
+> >
+> > Sounds good, thank you!
+> > >
+> > > > Currently, there are no users of this change but it is being used in
+> > > > VFIO and iommu liveupdate series.
+> > >
+> 
+> Hi Mike,
+> 
+> Let me know if you are still planning to take it as is or if you would
+> like me to rebase on the latest liveupdate repo.
 
-Reject nonzero reserved values before changing session state, matching
-LIVEUPDATE_SESSION_GET_NAME.
-
-Fixes: 16cec0d26521 ("liveupdate: luo_session: add ioctls for file preservation")
-Assisted-by: Codex:gpt-5.6-sol
-Signed-off-by: Jackie Liu <liuyun01@kylinos.cn>
----
- kernel/liveupdate/luo_session.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/liveupdate/luo_session.c b/kernel/liveupdate/luo_session.c
-index f38b5b18f3f8..15342c0783b5 100644
---- a/kernel/liveupdate/luo_session.c
-+++ b/kernel/liveupdate/luo_session.c
-@@ -316,7 +316,12 @@ static int luo_session_finish(struct luo_session *session,
- 			      struct luo_ucmd *ucmd)
- {
- 	struct liveupdate_session_finish *argp = ucmd->cmd;
--	int err = luo_session_finish_one(session);
-+	int err;
-+
-+	if (argp->reserved)
-+		return -EINVAL;
-+
-+	err = luo_session_finish_one(session);
+Rebasing on the latest liveupdate repo would be great, thanks!
  
- 	if (err)
- 		return err;
--- 
-2.54.0
+> Thanks
+> Vipin
 
+-- 
+Sincerely yours,
+Mike.
 
