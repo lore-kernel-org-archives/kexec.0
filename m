@@ -4,105 +4,128 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5E008C4450E
-	for <kexec@archiver.kernel.org>; Wed, 15 Jul 2026 16:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 84CF1C44501
+	for <kexec@archiver.kernel.org>; Wed, 15 Jul 2026 17:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=pERiy6dVlA901+DL6zvyyrnjEz4Li9eRjQ4QFKdKZJQ=; b=wbOOgXFTHONadvbDLDONgujNwM
-	S9e/awBwg8QR//EXIm00XeMnc5p1vTI9NNG7vofKhaSPtttuVKkf4f17ywJyd9mW6Rou7bajksFKy
-	TaWQIjT3pdAq+R094p3wTQLwfwRKWM303Wkt8w8WLuGvGsjJIFe0MkYb0bPN6y7vbo4nVDWtzhIm+
-	WtvvVotFXD8kIlhMTOpou+En9x9s644w7+KDIHzzlXpyqbgEgZUuFtZQQ04gXx20pW4gmktlNWc/B
-	BgcI48zRf1rpiFoO5scJhsnRZLP8F0d8ZUaC31Sz5ORKT6aduZuxmjzL4tdt1mXxeTWX5/4gdgphT
-	V5JodmAg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=RUXQKEXKIng1z7WXTrxaV3YVWri1MWJMbmJkWV3/fDw=; b=iuXWmNObT15vvn9fP4AHeRWdpP
+	Zr/oLgBd9NNU1rDm0Fer3U0fbzmgoftLE+INOCIiTQmZZEtd3aVg7ke4k6iAiGsssCgEfqkeYU/G7
+	a8zZSkVyJWH9QFpodxsadVPOvP8w+WVoeUwLYMjkENNMCj1mRT8wtJqnIzLlTtvIPT+qogVV2Va23
+	bVfPqrYGLHcds51ADyaFUDKluCfvN1NpK8LvADfR+kzT7EbT8Shu0cPmkR988QEyIfznWWlkoyOXN
+	BGLarrkA9YTRjPRWaJR04WLJR95cCm7xeVhOYQfjcIMt7ja3GT1+vY3skHl62WdXo1NGXAElzN4bd
+	vaUZjPmg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wk2Zh-0000000FTfA-0hUz;
-	Wed, 15 Jul 2026 16:35:09 +0000
-Received: from mail-ed1-x534.google.com ([2a00:1450:4864:20::534])
+	id 1wk3Ko-0000000FYej-2nfd;
+	Wed, 15 Jul 2026 17:23:50 +0000
+Received: from mail-eastus2azlp170110003.outbound.protection.outlook.com ([2a01:111:f403:c110::3] helo=BN8PR05CU002.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wk2Zf-0000000FTeA-0AAn
+	id 1wk3Kn-0000000FYe6-00hA
 	for kexec@lists.infradead.org;
-	Wed, 15 Jul 2026 16:35:08 +0000
-Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-698b78c05b0so12530a12.1
-        for <kexec@lists.infradead.org>; Wed, 15 Jul 2026 09:35:04 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1784133303; cv=none;
-        d=google.com; s=arc-20260327;
-        b=IEHB37QtHwFVYEaTTvRMPCPQTiLMVmJTTGQo/mZq/8VdAZeOVhi4kQJyw/P7F34oa5
-         1R1xMM94IxHxVEQk6vIuTLvHs464VYnjwoRxUbTv1qvzXzM3fWFdjFHclEuxS6/Fhb0D
-         GsfRfq+0eo7320wt7TnVjNjdZ6ZDAZjR3i8ZFB/SdhOEDUNDv8uC3UJ5AOvSsqMh12kr
-         YkEadFJAo6UnCscW02e7uMXFU1NjzSmM7SwED7h81P4d821bKogOGqQNWeU/ZPftkCoA
-         HKozHXtphsbP37eQu0XnzoOfm4k5vEpyYJM7IBKRHEjtyKtjiqCiaIXuApjR96T9UzDh
-         CNmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=pERiy6dVlA901+DL6zvyyrnjEz4Li9eRjQ4QFKdKZJQ=;
-        fh=NGhkHEnLL5jjPTg8o8RiPOtvICFf0zucuFi/nLUv6JI=;
-        b=P0y6HCRkLQljjc6VjUokXEpw9vzry1he8eHvDTHZU29ICi+B4i7sHFVihEcRRiC9r8
-         sy7+/ofJt8SdVFooEz+lqSHFbTrFj3qlxpSH/qy19T0oQ21ZOOrFbl2Pd5Ggr67sSpos
-         utEd1MYmOtbBuxN61irBUX3XdoQRV3NA3nL9kNsdVgC9QpeBBic28VqtQu7+dmnMVH/M
-         dNSeeGbPOTNI8UwKc4lgpeHikxJOm/oG0yj5wlI0SkuQSHXDtWM1dthZXHotXUvDk1zV
-         3mokx04imFmkAp4nF8oW9JqyaF2orrFEkoGWDAM61bO1NlQytz7j3Acz7laKqp0vqmm0
-         XsSg==;
-        darn=lists.infradead.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784133303; x=1784738103; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=pERiy6dVlA901+DL6zvyyrnjEz4Li9eRjQ4QFKdKZJQ=;
-        b=EhNsQfFytcs+l/gGpskJPsDSKcaNgNq0dTANvTlzqeea4WvKFzMqP6XKb2d6f8zJBz
-         L7TrDOQW0NLim9nHzOHYs9yR12OgOf/NJU7ZHD7HnqoU4dXee3t0DnxkDeXM924aRt7Y
-         4nvGnIuLqHP9CVBzSlEOQz9KCivEddgQxzFjbV0p8ZcmH9sPRook/CXnQHO84j0MaIVY
-         +CgTuI90jnklhl0JYjYemX0uvb6Z+loQx/sVZsVu+GchDL1johd69NblLUIHYp7Bqbd7
-         jv+nol494p8huPzh6VdiXNpMdD9ggVmZcaq3YPAC542y6da+URwTqwZrdhJmbhvM6wpB
-         +GTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784133303; x=1784738103;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=pERiy6dVlA901+DL6zvyyrnjEz4Li9eRjQ4QFKdKZJQ=;
-        b=eCn31/CM5pR6K5fzE39WaMV5l4BqCcuel3wODDtUhGhGLh76gyrQv8tfNEdJnnSAuk
-         Vh9J+Et315TMIqMoXgcZLRoTEF5ZlcVchpIkFLN3CJNuoABbvATikIc79XiR76sOWCNl
-         aaQrJLcvONEOC6zVWkRd9dA8dyXymPezz1vKpXKytWYzqqM25X8FNqDxWVQnGE20RJZ9
-         ekOqkl8xnQPAOQCTCdafUWC7PvOuNMzGO789X+FUSVBDNP385gZuT25MRgs+uLgPtVVS
-         StGusGHyNvDodivzDGHQMzjHUC/7kQiiqT2cgjdwSknDBSZb18hNUb/f8Nx6KNDbzlcW
-         X90g==
-X-Forwarded-Encrypted: i=1; AHgh+RroKP3euT2hSxUBmqD9ANabPnWxTzXF/GhmRfNjMw8YGrT463upULXio7dbpq/KYO5YLTYAPw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxljnXc6FvWYwKuhx7cN8129ooAJrarl9gxCa15ASPfPliUDS9L
-	cicJCx+n3XSMQHffvRLIK1r2L+h6qU/XD+AKGbOQkFpaCwdOh3hdu/KUe7JtbAFH3OJFIjdFaN+
-	UEZFcX5Y+l5EwVH0TbMsUjQcK4YsO+cAyTTYhccCM
-X-Gm-Gg: AfdE7clLx26h+aBKPHfefu0MDQnUD+ngcaVsR0bKHXgibMeigHO5LJTJLyg7k/p62Nk
-	Lz1l5tLyBhf+1ctnqMfOXxIBrU4TIiS2zi73FTVvrH7LlhN0sW7cSdnQ0OTXQx1Y6bempb9b2Ow
-	yEZpJqJzkqLrSX/ys304lss/ujNNodYbqNbszew2ptjIe3d/tVMPWCOhX6HUpazSsR/UexKi6+B
-	SZjpj8mQ8SRwYKzgmiOke3bsUBGtXOK1Wr5Pmz4ydEXUSBUrhYh8HxOj1GD+AiIVHinyhQ=
-X-Received: by 2002:a05:6402:3255:20b0:697:9254:a66b with SMTP id
- 4fb4d7f45d1cf-69ccf0a4e15mr209288a12.6.1784133302824; Wed, 15 Jul 2026
- 09:35:02 -0700 (PDT)
+	Wed, 15 Jul 2026 17:23:50 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VC+MYlfs88k3JSK/A/uKXqK6UuiaLVYBlY20fDz7En8Gu4rN37xi0iAF76EngS/YZAv7VB5CYhMLTuoNBwtayLdMm9OdXhWfk0VUbVID41qWyACO/Xt30lKW4+G1HnFt1hsZMwVXBPDLuLyFhP5qBM6UUCdyDhgMV5xbXsZIWxL+UvWTcXZkBUAo1w5MXocdrXL/3JHqTjQBKr9Pe4afE3AsUo3pjtOKrvF9Vaajg8YMzLNmhepO/81XTuEEgFZurwQFL3YN36akivJSx9KiMq1LRQ7need5fUXup6NQkAu9OGRyyA28RdALOZB+ZW5BFyp/KnTdX6WIKMa3jBxtkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RUXQKEXKIng1z7WXTrxaV3YVWri1MWJMbmJkWV3/fDw=;
+ b=oP25DO/xp/BDBx1+XpUomw++cQqpDAE8E3oRfrAeritTLDDTRMP4tlunwYKG779G9/VyNmpGK9YtM4tFvurN2EKpcvdd6QuXLkVNwglhB2wDz+1T8T3SvcmTnKjEx55ULdZn+nfKwHVIHJZKxmmTTjL5bwvsP7nGPRbGGvMcJRXTDxU6dnj4x17l/GZmZ9EH4E7VlfvxHGDdaJCtMrJAHIAtdoQJwtSrUt+wEKiBFpjWUI2UakcZk+2rwxeoYGB5ss92XPyE62i4XhWyru0akEQlk6oBK0ulNwyWqeiozNjvvqI9xz448Zxqz2t0bsRcU2UuNgOtF5Gv2bQN8c5krA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RUXQKEXKIng1z7WXTrxaV3YVWri1MWJMbmJkWV3/fDw=;
+ b=qspRtWCZ/PGU0T9c9MW3rXaY1p3jL+ftWbt43zYgCNPAmQn3ls+j8sI8xrAQB3/eGDDSNyFoEWYAxazzGYGVrTlSbcVd86ktET0Ptk9pDGjLSxzaTinrhVmYk+POweEV8gqPZyTyMCpYJr5cM9BjoJMMSzc2UVYWRmV8mPpx8Ibk9OLerLh/EZ8ArRU184krAs/1K0TBnutoWfJog2COfk4LQuErIt7N6OmMm+MRWQhqJqyKWy1LTlVjm2D8o1BIDFRUxp74RxCheYUnpDxtwNoEuh+dhfiEnXazuDlatat1Z1ZtdeSzzKaxG3TBCLt6pyxptTOP8n4QHAgVIgIURg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by CH3PR12MB8510.namprd12.prod.outlook.com (2603:10b6:610:15b::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.223.10; Wed, 15 Jul
+ 2026 17:23:38 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528%4]) with mapi id 15.21.0202.014; Wed, 15 Jul 2026
+ 17:23:38 +0000
+Date: Wed, 15 Jul 2026 14:23:36 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: David Matlack <dmatlack@google.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <shuah@kernel.org>
+Subject: Re: [RFC PATCH] liveupdate: Allow multiple openers for
+ /dev/liveupdate
+Message-ID: <20260715172336.GC3775915@nvidia.com>
+References: <20260714190356.190328-1-dmatlack@google.com>
+ <2vxzy0fcicpi.fsf@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2vxzy0fcicpi.fsf@kernel.org>
+X-ClientProxiedBy: BN9PR03CA0802.namprd03.prod.outlook.com
+ (2603:10b6:408:13f::27) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
 MIME-Version: 1.0
-References: <20260714205111.2497151-1-mclapinski@google.com> <178409777790.255896.16691338963510282908.b4-review@b4>
-In-Reply-To: <178409777790.255896.16691338963510282908.b4-review@b4>
-From: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
-Date: Wed, 15 Jul 2026 18:34:51 +0200
-X-Gm-Features: AUfX_mw4j5Tg0PUVoucFNnFxJRaEYRBEsBUaUuaX3fJCgHNZLpJrrA8egZ5It8g
-Message-ID: <CAAi7L5e13dwTOJYhYu2q0XNxRHjaZz=EatOpK9_8+jacyBzNzQ@mail.gmail.com>
-Subject: Re: [PATCH] kho: align kho_scratch to MAX_ORDER_NR_PAGES pages
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Alexander Graf <graf@amazon.com>, Evangelos Petrongonas <epetron@amazon.de>, kexec@lists.infradead.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|CH3PR12MB8510:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3a52149f-10ce-4e29-81c4-08dee295cea0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|23010399003|1800799024|376014|6133799003|4143699003|10067099003|11063799006|56012099006|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info: z4icP+C409IpaOQ7dkkvjcOU2pxfjUdyBHNhWxsYjO07E0xdoO6NohpMRj7rxoGqQt7Zzkm5aQY8bXTLxCLIk9QTWk3vCQXe5b4t6wvjjaeFbgWP3TAjO2ZTcr5kYSPYKqXP6iGqLJBqyAWyLOXOgoxsQOkeJXhM6Y0EgFfwkU6fVida43UhN46XITnNeqJgQgyrqCTPk9fDWEXJJHA+csLQx36JVVwyvYytec7Yt07U6agtTGpM8PyFPQwGk50ocolhp7keCs43HyGEBsj51p6DQFkwskikgWzR2wR2jToa5T1e5QebcO6Fv8uE3MQvWZ/RBQsvzXvs+yfhqAS5Aucy0iKZpGv3h9UR9D7qKIl+clHjZac9PgOqA2aDOpkKduCU654v0H8fRXLLVcQ6v+hNFXuC1U2idbzqf0jinztCZEC4N2EzcZb6ONKU3PsxRelcRFys6YgD8iIbqFRV44WOC6rsG3a6F7t/EsDWabVdPa0S2Qt4fglw+7p7QAre2agbz6Vl2u3t4jVjGWRaGssQqOVIgMFalm8qlUuSSH78wZHoAKOFYREzDJH2c3PCVjLcFolke5bOuKM6fznUrOlg7w02yjSLtn3m7+CGJXm2LiLxOv2QkdMMXZTl+nGzz4OPfVB+I0wPgSwgZf1yufiM15U/zgRekBprvW53zeA=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(376014)(6133799003)(4143699003)(10067099003)(11063799006)(56012099006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?GQJYovi4tWpvd+ZY5W9ialsJaGkYnA/8K5zmen/nH64ojAdEGxeMV8vWt1aY?=
+ =?us-ascii?Q?6uIlfbV0b/FSDPdzrwaccV16uz/XtedxQqyflVM+8eI/Kp3eBZaRSYvJ+ELW?=
+ =?us-ascii?Q?sIRl0K2ZXCy3xdMbb2BMeBIsWJDQLg6v++E+TDSnGT7b1pHXBeMeFR7ivhYY?=
+ =?us-ascii?Q?pMHd4cWAPLLwFcHEk82JNV2ToCFgOrsxh1e70YDLXKds57p4XvMMhXhOf7LM?=
+ =?us-ascii?Q?yAA+XOIWJZRzXoYpUATPcXRr8GMEYNcrApq3kKYVCuuQzNlC+Os+BD6lxRV6?=
+ =?us-ascii?Q?uP61JVmnG75opsp0RBkkWZPWIWV7DME6Zj+LbnGy3h40AflFIMb2ZtavTevX?=
+ =?us-ascii?Q?5j1P3z74ls2INEfkVRBa7cOhK/fFwJFKJEe7P07O1rY1Aot+u5f65zKrySx0?=
+ =?us-ascii?Q?dKkPXaDLbfOYsYMZzyj0i+DHoPNmYcFl3esmmW8jqEsBT3BGirMGbaLMkTEU?=
+ =?us-ascii?Q?vsBNk4PQiZJbQyi1K9rHbnGsBJWHHzBebhaPx+dapV2nOgJF+TXDxIl82kV3?=
+ =?us-ascii?Q?VKMnOpuS2BK1+MKJ4DK9Oh48PpRG/+v24l/drpBDoJCVQZ2oAv2wBjpsKU0H?=
+ =?us-ascii?Q?ogx/hNFzA6Qoc3DTBUAUeClyo8c7ws4eMwO4+lX/Td5TY3EbGYPdHRoc4ROr?=
+ =?us-ascii?Q?WtvDzi74d6Q7113sM9vRvUjG3snKthD7O01qcZnGp/fvOyOk6e54b6WzT9gS?=
+ =?us-ascii?Q?EyPm2U+Pf1KfeYZ2swOhoXa9MDu5UCLJZftUgUQNV3MXBI7dy2ywyy7b5Lnz?=
+ =?us-ascii?Q?M8qXiBaCk42wDSPV+pmWV9CFMfKZS0ufjaHVOlufL4CE1V3vJvGD2qt74YJk?=
+ =?us-ascii?Q?3creDwDP7g1g0BCpnIwCdbnXvcTZd6eH8H0G0QXFIIEeV9dF0iLQdP1HN85T?=
+ =?us-ascii?Q?3aqerwVaaYUvnHnPrIoJ1P2B5KLVQDIRaytLK5lNvNgEtAP3zlpek8A2ibSW?=
+ =?us-ascii?Q?tGa7TYlslNgfp91LV6fGj3PMglicfVN8M3LXzPj1nmp0xNQU7uzTg7WDC9jy?=
+ =?us-ascii?Q?VAdu1OODGwAZQc3wjXpqs03Yq8/iUviSgo6OhcM5s9HrPdKKXlHUEj1aO2za?=
+ =?us-ascii?Q?LQ4WG+qBzGd1DyZodvLJq8R7ywwVx3sb69onb9w04m2nvb1k1s6afTlCmlBK?=
+ =?us-ascii?Q?2H1AIK3c5/bb4gb4VAhbN0LRIiSzH36jYkmJNYKDSnBoMIk19+659KNHWuVk?=
+ =?us-ascii?Q?WtCcKBczRZGhc720VNNZpXVv1eJdEZkabbLQz8PczGhoOVl+YXutZ6feS6cM?=
+ =?us-ascii?Q?wkZbp90ePEPY+C94Yooc1HuifUmGl3qzEm21+7X5A57nB7wDpQnFvWdR+LkR?=
+ =?us-ascii?Q?mwpS31zu92xTbyGwFyyzCQIUkBDUGD/wuKkCOkFE3VcJyb0NgBJ0Pn5G/ff1?=
+ =?us-ascii?Q?Wsie88lzljhUGj97FGxE5DSXNlKZ6NPmTACLvTVKKGKz4Ii3AY4K6LkpWbQ7?=
+ =?us-ascii?Q?pm3X8ahbaZiza+yJAmwI+AzyZKAdaNa0y2sS4/b9mHmMVH8/nGokub321V2W?=
+ =?us-ascii?Q?J8ShNsj3Znb+ijVBNurDUhUkfjBrmAq8LbOGGHPhcQuX08G135VVQduBxRQY?=
+ =?us-ascii?Q?Vwdc7y5FJN7W0LnCryZWnO++jvMuvpSeZghWsuliYD4xrdwQdsDJ087+3x/c?=
+ =?us-ascii?Q?J0h80a9xO95vH84+bgefj1VrL9FNHXJTAnPeDYJn7CdPwMLNf4pb7CQX9O6U?=
+ =?us-ascii?Q?3M+Z3L0xdS37FpL7cMMvp7QuIbfeLKffzyN7eKbn6mkzkt+4?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a52149f-10ce-4e29-81c4-08dee295cea0
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2026 17:23:37.9641
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kgrAZfkVIZNjAE6i1HbTIo+zTjla6KoOrKfysNacBujFyD+WDKb4HoSyK1t1kXtP
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8510
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260715_093507_114576_21DF06CE 
-X-CRM114-Status: GOOD (  25.54  )
+X-CRM114-CacheID: sfid-20260715_102349_064545_B29523ED 
+X-CRM114-Status: GOOD (  21.34  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,77 +140,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jul 15, 2026 at 8:43=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
-te:
->
-> Hi Michal,
->
-> > I caught this crash:
-> > BUG: unable to handle page fault for address: ff19164fffff8328
-> > RIP: 0010:__free_one_page+0x1a1/0x6b0
-> > Call Trace:
-> >  <TASK>
-> >  [<ffffffff913208bf>] free_one_page+0xaf/0x240
-> >  [<ffffffff93973288>] deferred_free_pages+0xa8/0xd0
-> >  [<ffffffff93971b4f>] deferred_init_memmap_chunk+0x10f/0x1b0
-> >  [<ffffffff9396e265>] padata_mt_helper+0x65/0xa0
-> >  [<ffffffff90fac402>] process_scheduled_works+0x202/0x410
-> >  [<ffffffff90fae739>] worker_thread+0x1f9/0x2d0
-> >  [<ffffffff90fb62fd>] kthread+0x27d/0x2f0
-> >  [<ffffffff90fae540>] ? __pfx_worker_thread+0x10/0x10
-> >  [<ffffffff90fb6080>] ? __pfx_kthread+0x10/0x10
-> >  [<ffffffff90efdc55>] ret_from_fork+0x145/0x280
-> >  [<ffffffff90fb6080>] ? __pfx_kthread+0x10/0x10
-> >  [<ffffffff90e2e46a>] ret_from_fork_asm+0x1a/0x30
-> >  </TASK>
+On Wed, Jul 15, 2026 at 03:50:33PM +0200, Pratyush Yadav wrote:
+> Hi David,
+> 
+> On Tue, Jul 14 2026, David Matlack wrote:
+> 
+> > Remove the single-opener restriction for /dev/liveupdate by removing the
+> > atomic in_use tracking and the exclusive open check in luo_open() that
+> > returned -EBUSY. Protect luo_session_deserialize() with a mutex guard so
+> > that concurrent open attempts by multiple processes safely executes
+> > deserialization only once. Update liveupdate selftest to verify that
+> > multiple concurrent openers succeed.
 > >
-> > deferred_init_memmap_chunk() works fine without KHO because free
-> > regions will never be neighbors. However, with KHO, free memory
-> > will be split into (free && scratch) and (free && !scratch).
-> > KHO scratch is aligned to CMA_MIN_ALIGNMENT_BYTES (which on my setup
-> > is equal to 1 << 9 pages) but buddy can look at the neighborhood of
-> > MAX_ORDER_NR_PAGES pages (which is equal to 1 << 10 pages).
-> > This sometimes crashes when one half of the neighborhood is being
-> > initialized but the other part is yet to be initialized.
+> > LUO does not inherently require a single opener. There is some
+> > documentation about it simplifying state management, but the only thing
+> > it actually protects is the session deserialization during first open,
+> > which can be easily handled with a mutex.
 > >
-> > To fix this, let's just align KHO scratch to MAX_ORDER_NR_PAGES pages.
-> >
-> > Fixes: c6073743d0c7 ("kho: make preserved pages compatible with deferre=
-d struct page init")
-> > Signed-off-by: Michal Clapinski <mclapinski@google.com>
-> >
-> > diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kex=
-ec_handover.c
-> > index 4834a809985ab..50928aaa33710 100644
-> > --- a/kernel/liveupdate/kexec_handover.c
-> > +++ b/kernel/liveupdate/kexec_handover.c
-> > @@ -38,6 +38,16 @@
-> >  #include "../kexec_internal.h"
-> >  #include "kexec_handover_internal.h"
-> >
-> > +/*
-> > + * This is the minimal alignment required by deferred struct page init=
-.
-> > + * deferred_init_memmap_chunk frees memory to the buddy allocator, whi=
-ch looks
-> > + * at the neighboring pages (up to MAX_PAGE_ORDER) to merge them.
-> > + * If KHO scratch is not aligned to that value, buddy can access unini=
-tialized
-> > + * struct pages, which can cause a crash.
-> > + */
-> > +#define SCRATCH_ALIGNMENT_BYTES (1 << (PAGE_SHIFT + MAX_PAGE_ORDER))
-> > +static_assert(SCRATCH_ALIGNMENT_BYTES >=3D CMA_MIN_ALIGNMENT_BYTES);
->
-> Maybe make it a variable and set it at runtime?
-> We won't need to worry about different confugurations that override
-> MAX_ORDER and potentail divergence of pageblock size from MAX_ORDER in
-> the future.
+> > Relaxing the single-opener requirement avoids the kernel forcing a
+> > design pattern on userspace that it itself does not require, e.g.
+> > allowing multiple userspace processes to create and manage sessions.
+> 
+> Agreed. When the kernel had a global state machine in the early versions
+> of LUO, this might have been more relevant. With sessions, even if we
+> later add a state machine, it likely will be per-session instead of
+> being global. So I think letting userspace open /dev/liveupdate multiple
+> times makes a lot of sense.
+> 
+> Also, today's systemd only supports preserving individual files, and
+> does not hand out sessions. To get sessions, userspace must open
+> /dev/liveupdate and create a session. This opens up room for one bad
+> process to block every other process from creating sessions. It also
+> imposes a need for userspace to add a polling/retry logic for getting
+> sessions and serializes their execution around this point.
 
-Sorry, I don't track. What would I set it to at runtime?
-MAX_PAGE_ORDER must be >=3D PAGE_BLOCK_MAX_ORDER and I don't understand
-what's the problem if some configurations override MAX_PAGE_ORDER.
-They can't override it to be smaller than PAGE_BLOCK_MAX_ORDER.
+Shouldn't systemd open and own /dev/liveupdate? That was at least what
+I originally expected here, you'd talk to it and get a session FD
+through dbus.
 
-Are you saying that in the future PAGE_BLOCK_MAX_ORDER could be bigger
-than MAX_PAGE_ORDER?
+Moving to multi-opening /dev/liveupdate and removing visibility of
+what sessions are open from systemd is a different model
+
+Not saying this patch is wrong or anything, but that I don't really
+understand what kind of model you are going for now.
+
+Jason
 
