@@ -4,66 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 721B2C4451C
-	for <kexec@archiver.kernel.org>; Fri, 17 Jul 2026 17:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DEDDFC44515
+	for <kexec@archiver.kernel.org>; Fri, 17 Jul 2026 17:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=VLOFj+Zttxi4TR5N6+TKpaEIv9ZQFkLwJS4ViOE4a7A=; b=LWhiMXH2wMJsZXhjRiaKWNuOij
-	2ge+VI9rOIs8Q3YizsIguNUKqBjHUKW87IVc8q353Wr/o2zuxVHziExhp3ZU8VMdvoNn7q4S58fZk
-	J/VgBb6KQd5Tqvryy1AEwM3+M2RFT7AI1PJdgYiwZxBqfO/976b+7YQQMwXyYzvHAfOK7xRhu3Dc7
-	YLFfwtfvn7UJplMvCOWPvHMGwV6AJNNm5uLVaYw801ni6JwskqyrONCqFvUCrEEdvxKLiSCmgxaKj
-	un9Fx4IvcSBy5cemjCPk00byk4mnh5gHuUVSx4IOVGotqFw7qU7x+jVhwqsVY4wktQ1cyDqAZQlC1
-	3l6C5cbQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=vn+vPcBR7yKw800EHGrmkJfxwiILybxPqqHpaIR8qUU=; b=IONCkO3Qi/kjy3bX8jJSiNCDkr
+	uMSV+7x3n+MQsuKoA5HDmExcQlsIr73x4j1ynLJaOCXkCj+koIA4kTG/y9z8T+6XOSqtyrafgaMqU
+	mQbTbicgycDO3aguyRx0qTSka+j9SliHxzTqCRnkrukA4nqiBQqf3uvfqiimwd8o8Fe9pGrJxQJqx
+	c2OLhLk1uHRpnT3MdlJ9h6csz98qx984GN6PuDzs+is658mharOJuVfYl5qiLYVRwGy1bZf3YVHjz
+	3syIZsMwd0SFE/LarOMCtTAdf4tYUqbbVog05FBrq9y7qpgHY1lceZo2H+3poplbUfY0l+cKRKKxU
+	o/axtrog==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wkmIQ-00000002riH-1kob;
-	Fri, 17 Jul 2026 17:24:22 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wkmJv-00000002rud-35vi;
+	Fri, 17 Jul 2026 17:25:55 +0000
+Received: from mail-ed1-x52d.google.com ([2a00:1450:4864:20::52d])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wkmIP-00000002ri3-2Kqm
+	id 1wkmJt-00000002rtt-30yj
 	for kexec@lists.infradead.org;
-	Fri, 17 Jul 2026 17:24:21 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id EDA164017B;
-	Fri, 17 Jul 2026 17:24:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 228351F000E9;
-	Fri, 17 Jul 2026 17:24:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784309060;
-	bh=VLOFj+Zttxi4TR5N6+TKpaEIv9ZQFkLwJS4ViOE4a7A=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=jy/R/zznQ/fX0xD6WV6rybNCIhaBTX6iSm5Jg7JITRWv2ghzcR7ye18rRHhHHQGZD
-	 FFmElur4917rnuIAU2D6iaYmvyX6cE5urdaNNeEV49FXP9NEmV3HVWn+Uv/zu+xtBZ
-	 N+L0Gv9L/NGFgOYd8lr9bhRtD6YOq+E9G1T/FkJjrsJU10TmF96mfK4B/oGKfREAPe
-	 2ASq4UwxFzS1lSVsorMOdqcuvRzhnk5p6Y+tBclABITdqXQR/H9NigfoKwwTpG0Cs4
-	 4oBQLaDNwbtSyFBPuM9PdvCepSZ6GwzhdlAx2xWcKEupFWqwU1bxYepwGdSlWCj7kx
-	 f+W+62zvI9bNQ==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Samiullah Khawaja <skhawaja@google.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Pasha Tatashin
- <pasha.tatashin@soleen.com>,  Mike Rapoport <rppt@kernel.org>,  Alexander
- Graf <graf@amazon.com>,  David Matlack <dmatlack@google.com>,
-  tarunsahu@google.com,  open list <linux-kernel@vger.kernel.org>,  "open
- list:KEXEC HANDOVER (KHO)" <kexec@lists.infradead.org>,  "open list:KEXEC
- HANDOVER (KHO)" <linux-mm@kvack.org>
-Subject: Re: [PATCH 1/1] liveupdate: luo_file: Add internal APIs for file
- preservation
-In-Reply-To: <akvT1yBvIbvft1H_@google.com> (Samiullah Khawaja's message of
-	"Mon, 6 Jul 2026 19:59:57 +0000")
-References: <20260613012521.835490-1-skhawaja@google.com>
-	<20260613012521.835490-2-skhawaja@google.com>
-	<2vxzwlvljyzs.fsf@kernel.org> <akIask9nPTEAhd76@plex>
-	<2vxzse65k938.fsf@kernel.org> <2vxz7bnhjnpa.fsf@kernel.org>
-	<akvT1yBvIbvft1H_@google.com>
-Date: Fri, 17 Jul 2026 19:24:17 +0200
-Message-ID: <2vxz4ihxil6m.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Fri, 17 Jul 2026 17:25:54 +0000
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-69a19eb2e6dso16750a12.1
+        for <kexec@lists.infradead.org>; Fri, 17 Jul 2026 10:25:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784309150; cv=none;
+        d=google.com; s=arc-20260327;
+        b=jtw1oy1KVbpAKv7AX/7fj+/MT41ifsi0BW7A1QN1Mnr5OPmYEqkxFMOJA+ZnMAegT9
+         4ztx2iKpWLPzjUyTHATi82tM/zha3m6N6izUVvPodG60CG2N86k13KBfsK/P0JR0/a9V
+         BJ9hLI2G9kAsieK6fvBguCcEr+0nUjG2f9ODh4k24UBlpceBXuWYiYVlNdpkoAaKaFXo
+         1KJeWtIJYZ2uaUpnb7PSdrt3EeO3ww7dRU1LEVhc1wLag/4BpgsUW8yKfd4y6q6x5Ahp
+         2g8T+0/ihEryrwpxanknatGCMvR4nxrl149wv0xXAMj6VOsBKkozTRlbJadXpuwDKlcM
+         +4VQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=vn+vPcBR7yKw800EHGrmkJfxwiILybxPqqHpaIR8qUU=;
+        fh=SSWrCLGQ/8hUlnAi3tlPe3VdwCG2KebIap8ep0nXRZg=;
+        b=DuXx5p60o9CViooWpqLORfhoDe4T3GQwHxiWGBxMU9lttfKDNoGaKxdqQfW+zo+Ech
+         T0aAaHo0nft/fig31RN0rL3ecB1498/2xHrMGcCCvRu0+ShqatgxmPKQUPF2sDtjluPo
+         9dCgCXlm/y43WXscIlv91bPPV36KLIgViFB8JztNPYXQPbXJHxdT2J2TitFM6Zk+kYsG
+         R50jHkB58X0Cg19sNFDE148ojCYkN8LGiDmUeT0LmnM1NlRG9kYkuNilznCf5Bufzz3k
+         YfN7qPGifrrDGTN39sPEAlZmz8EHhDCha2egNVKlLvqLQs7YXI3YTDL5hPkqZ32NJf/u
+         hGDw==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784309150; x=1784913950; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=vn+vPcBR7yKw800EHGrmkJfxwiILybxPqqHpaIR8qUU=;
+        b=ku3OI7tvaRODdqbL0fDRRmjjnLT0L0adBIylz/cJkGA/6GkX2MoL0ScCE7qpoC3fX+
+         Cl8LAqM3NFINVBv5TuR4IEfxsevw+eF4ciU4Y5CINfb1CncckkMuJ1t3ZtEbQOzuaSjP
+         p5JGeqDaBHzofHFil9YSJYJYWPsr0TCcol5/ZAlPpL2yAGWfqRvrHXmeV244daqxeNLk
+         CDY6TxHfaQNQ2hU3vjT1j1drxLGQCIyYf2cnNw1biHY0mtU6dRdx2eCpCcJHdS03x2xi
+         iMvHEMzVn0fJuDtUS+7ZogktUR4HgDh74zQETxXZXzOpCsVFe4uaBaL9Uq5cVirfY85B
+         Ii1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784309150; x=1784913950;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=vn+vPcBR7yKw800EHGrmkJfxwiILybxPqqHpaIR8qUU=;
+        b=a9Nq34f2YySesCaKlhdP0yGdxQAnLjSvBbB5rZKOGAVSMuxKC8aegcpJioVG83+jyc
+         S+j6x8qJyZNdWzyFoihdimgYhy+LTHgPGUqST4A1ExsM3lu2XCiaLrBUneDRKgSYkJow
+         beqClhNwVr0O0JIszHLQa+Nb8u9LqoQ+YBBcux6cACuG3RW1x4jfoeBO03w0UOYCn6yy
+         PG85sQvIZ+4HH2RZzyYvaN5X/UehCeLlKtenMvja8/wM1chfvZ+IsxJOt39AOG2e1yC4
+         HBRacmxCv43rfsMMrqvoJvNBVBqF7lq4vlyfLr3mmHm82WUl2WMa0lehA/hFpvQpbnIm
+         mFnw==
+X-Forwarded-Encrypted: i=1; AHgh+RpFBCJOHe3RExFPHDUapXIN6yMhu7yo6eBPiR5bHyGY/nVeO0GOSKKRi3O+ZuchpHkwpn04cw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxCl9VFBIzGDdzL3vMx4M/OYx58CgAIR+n4Nge5AbRZ6PLPFgvG
+	wvem2Mur36uBp/m2b2gpS9ZFkrSyYoasUJuSocR4JwpwcwtfUV6ySjdaSc6fJR5p59YFbJUiB1X
+	keHm4luGJtHm5K8iBL07LCLUs5pl9NL9YaHzocint
+X-Gm-Gg: AfdE7cnKc2M5+JSwkMYhxSjywAVrWnHtxGcSm10xoEcUqMaRvrcTCRNq1fqOWlYYfk6
+	e+g0H8GMOdskhJrywBGlS0NieenVXRKtks/UClkxMZ5rGLqMwtIIUNLvFYKQUeKOlpW4abcKK4h
+	sDVx3rdYROoJqpfDUJLcJuxz7TM6crt+KYddYBE5PTuhnvyb1LHQcXTsmaUhavt4hFz2f7sMco8
+	o1dXSSC94ojaEXnIgAHnRT/9Y3GJBVXcKn9W8TZxjprTiAf92NCGU860UJa
+X-Received: by 2002:a05:6402:1244:b0:68a:e1ba:9cc0 with SMTP id
+ 4fb4d7f45d1cf-69e89ac9e37mr2887a12.8.1784309149795; Fri, 17 Jul 2026 10:25:49
+ -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20260717134028.2880508-1-mclapinski@google.com> <alpWWFo1gnxVnP7T@google.com>
+In-Reply-To: <alpWWFo1gnxVnP7T@google.com>
+From: =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>
+Date: Fri, 17 Jul 2026 19:25:38 +0200
+X-Gm-Features: AUfX_mwtqaEj54b9UO72Tsip-eG3KMthhMEZ491YyqaB1ESSnxwLuQFSVqeb19A
+Message-ID: <CAAi7L5f0huF0Gyo_uw-UM2zZdgeQtee1dNHW0pGMCW01HdsVZA@mail.gmail.com>
+Subject: Re: [PATCH v2] kho: align kho_scratch to MAX_ORDER_NR_PAGES pages
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, 
+	Alexander Graf <graf@amazon.com>, Evangelos Petrongonas <epetron@amazon.de>, kexec@lists.infradead.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260717_102553_829185_DFF68AEB 
+X-CRM114-Status: GOOD (  34.14  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,210 +117,162 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jul 06 2026, Samiullah Khawaja wrote:
-
-> Hi,
+On Fri, Jul 17, 2026 at 6:21=E2=80=AFPM Pasha Tatashin
+<pasha.tatashin@soleen.com> wrote:
 >
-> Sorry I was out of office, so couldn't contribute to this discussion
-> early.
+> On 07-17 15:40, Michal Clapinski wrote:
+> > While booting with KHO, the following crash was observed:
+> >
+> > BUG: unable to handle page fault for address: ff19164fffff8328
+> > RIP: 0010:__free_one_page+0x1a1/0x6b0
+> > Call Trace:
+> >  <TASK>
+> >  [<ffffffff913208bf>] free_one_page+0xaf/0x240
+> >  [<ffffffff93973288>] deferred_free_pages+0xa8/0xd0
+> >  [<ffffffff93971b4f>] deferred_init_memmap_chunk+0x10f/0x1b0
+> >  [<ffffffff9396e265>] padata_mt_helper+0x65/0xa0
+> >  [<ffffffff90fac402>] process_scheduled_works+0x202/0x410
+> >  [<ffffffff90fae739>] worker_thread+0x1f9/0x2d0
+> >  [<ffffffff90fb62fd>] kthread+0x27d/0x2f0
+> >  [<ffffffff90fae540>] ? __pfx_worker_thread+0x10/0x10
+> >  [<ffffffff90fb6080>] ? __pfx_kthread+0x10/0x10
+> >  [<ffffffff90efdc55>] ret_from_fork+0x145/0x280
+> >  [<ffffffff90fb6080>] ? __pfx_kthread+0x10/0x10
+> >  [<ffffffff90e2e46a>] ret_from_fork_asm+0x1a/0x30
+> >  </TASK>
+> >
+> > deferred_init_memmap_chunk() interleaves initialization of struct pages
+> > with freeing them. This works fine without KHO because free regions
+> > will never be neighbors. However, with KHO, free memory will be split
+> > into (free && scratch) and (free && !scratch), which can be neighbors.
+> >
+> > KHO scratch is aligned to CMA_MIN_ALIGNMENT_PAGES pages but buddy looks
+> > at the neighborhood of MAX_ORDER_NR_PAGES pages. These values are
+> > configurable but CMA_MIN_ALIGNMENT_PAGES is always less or equal to
+> > MAX_ORDER_NR_PAGES. In the crashing configuration they were set as
+> > follows:
+> > CMA_MIN_ALIGNMENT_PAGES =3D 1 << 9
+> > MAX_ORDER_NR_PAGES =3D 1 << 10
+> >
+> > So while freeing one chunk, buddy accessed uninitialized struct pages
+> > from another chunk, tried to merge the blocks and crashed.
+> >
+> > To fix this, let's just align KHO scratch to MAX_ORDER_NR_PAGES pages.
+> >
+> > Fixes: c6073743d0c7 ("kho: make preserved pages compatible with deferre=
+d struct page init")
+> > Signed-off-by: Michal Clapinski <mclapinski@google.com>
+> > ---
+> > Unfortunately, this is very hard to catch, so I don't have a good
+> > reproducer. But I run the code with the fix through extensive testing
+> > and it seems fine.
+> > I think I've never caught it before because enabling HUGETLB is what
+> > causes CMA_MIN_ALIGNMENT_PAGES to be 1 << 9, instead of 1 << 10.
+> >
+> > If this passes review, please cherry-pick it to 7.2 so we don't release
+> > a broken kernel.
 >
-> On Mon, Jun 29, 2026 at 06:50:09PM +0200, Pratyush Yadav wrote:
->>On Mon, Jun 29 2026, Pratyush Yadav wrote:
->>
->>> On Mon, Jun 29 2026, Pasha Tatashin wrote:
->>>
->>>> On 06-26 13:57, Pratyush Yadav wrote:
->>>>> Hi Sami,
->>>>>
->>>>> On Sat, Jun 13 2026, Samiullah Khawaja wrote:
->>>>>
->>>>> > From: Pasha Tatashin <pasha.tatashin@soleen.com>
->>>>> >
->>>>> > Live update orchestrator file handlers depend on the preservation of
->>>>> > other files. To make sure that the dependency is preserved, the file
->>>>> > handlers needs to fetch the preservation token of the preserved
->>>>> > dependency. Similarly during restore, a file handler wants to fetch the
->>>>> > restored file of the dependency.
->>>>> >
->>>>> > Add APIs that allows fetching token of dependency during preservation,
->>>>> > and fetching the restored file dependency during restore.
->>>>> >
->>>>> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
->>>>> > Signed-off-by: Samiullah Khawaja <skhawaja@google.com>
->>[...]
->>>>
->>>> To achieve this, LUO provides the .can_finish() callback. So, LUO does
->>>> two-phase verification:
->>>>
->>>> 1. It iterates through all tracked files and invokes .can_finish().
->>>> 2. Only if *all* files return success does it proceed to invoke .finish().
->>>>
->>>> If a VMM restores a file (such as guest_memfd) but fails to restore its
->>>> dependency (such as the VM FD), or attempts to close the session
->>>> prematurely, the .can_finish() check for that file will fail (returning
->>>> -EBUSY), and the entire finish sequence will abort. This guarantees
->>>> kernel-enforced correctness at the session boundary and without forcing
->>>> the VMM to execute restores in a strict sequential order, which anway
->>>> would not make  any sense from kernel side due to circular dependecies
->>>> issue, where topological sort does not exist.
->>>>
->>>>>
->>>>> But on the preservation side, VMMs still do need to follow the
->>>>> topological order of dependencies. Because if they don't, the
->>>>> liveupdate_get_token_outgoing() call will fail and preservation can't
->>>>> proceed.
->>>>
->>>> Actually, preservation can also be performed in an order-independent manner.
->>>> While a handler can call liveupdate_get_token_outgoing() during .preserve(),
->>>> it can also defer this query until the .freeze() callback. Because .freeze()
->>>> is invoked after all files in the session have completed their .preserve() phase,
->>>> all dependency tokens are guaranteed to be available, completely eliminating any
->>>> topological ordering requirements during the initial preservation calls. It is
->>>> up to individual file handler implementations to decide whether they wish to
->>>> enforce ordering at .preserve() time or defer it to .freeze().
->>>
->>> That is the worst of both worlds. I get your point that LUO doesn't want
->>> to enforce dependency ordering. My arguments against that are somewhat
->>> subjective so I can live with this.
+> A changelog would be super helful here.
+
+Sorry, forgot.
+
+Changelog:
+- functionally it's exactly the same
+- changed SCRATCH_ALIGNMENT_BYTES to be calculated using
+multiplication instead of binary shift
+- updated the commit msg as Mike asked
+- rebased on top of liveupdate/next
+
+> Pasha
 >
-> Pasha replied with some interesting points already, but I want to add
-> some clarification here.
->
-> During preservation, enforcing order gives the following functionality:
->
-> - The token of the dependency (can be retrieved during freeze as you
->   suggested).
-> - The dependency is preserved and that means it has bound with the LUO
->   session lifecycle. This guarantees that it is not going to go away
->   until the session is closed.
-> - Once preserved, the dependency is in some kind of "immutable" state.
->   This might not be required by all dependent FDs, but it is critical
->   for some.
->
-> These ordering requirements should be clearly documented by the
-> associated filehandler so the VMM knows how to do the preservation of a
-> specific FD properly. This is actually similar to the memfd seal rule
-> that iommufd preservation will enforce.
->>>
->>> But then you can't let file handlers enforce it as they wish. The
->>> dependency ordering is uAPI because it directly affects how VMMs
->>> preserve files. If the VMM has to keep track of dependencies for some
->>> file types and doesn't have to do so for others, that is a terrible and
->>> inconsistent API.
->
-> But as you have already pointed out that the VFIO/IOMMUFD circular
-> dependency is resolved, I am okay with enforcing dependency ordering
-> during restore as well. However, establishing an ordered
-> preserve/restore mandate in LUO at this point will force all future file
-> handlers into complicated and buggy design choices if they have circular
-> dependency or different lifecycle requirements.
-
-Not really. You can always _relax_ the ordering requirements if a need
-does come up. Because all the programs following the ordering will still
-continue to work. The other way round won't work though.
-
->>>
->>> Ideally, LUO should handle the dependencies on its own. preserve() can
->>> give LUO a list of files the preserved file depends on, and LUO makes
->>> sure all the dependencies are present in the session at freeze. We would
->
-> This again assumes the lifecycle of various FDs and that dependencies
-> can be resolved during freeze(). Some file handlers do want order of
-> preservation, and this scheme only guarantees preservation dependency
-> without order, introducing hacky dependency state management until
-> freeze().
->>> also need a way of getting the dependent files back from LUO on
->>> retrieve(). That would make sure the dependencies are properly enforced
->>> both on freeze and finish, and the enforcement isn't left up to the file
->>> handlers.
->>>
->>> Unfortunately all that sounds fairly complicated so I am not sure if we
->>> want to do that just yet, although I would like to hear your thoughts on
->>> this.
->>
->>We had discussion about this in the live update bi-weekly today. The
->>conclusion we arrived at is to keep the current functionality. That is,
->>we don't enforce preservation dependency.
->>
->>But that also means file handlers can't try to get their dependent file
->>in their preserve() callback, since that would implicitly enforce
->>ordering. They always _have_ to do it from their freeze() callback.
->
-> This has problems at multiple levels:
->
-> - This indirectly sets up a precedent in uAPI that the VMM is allowed to
->   preserve the FDs in any order and the file handler will be able to
->   handle this.
-> - This will be very tricky and will force filehandler to have
->   complicated/hacky state management to handle dependency. Specifically
->   I do need iommufd to be preserved before preserving the VFIO cdev that
->   has an iommufd dependency. Not sure, but I think this will also be
->   tricky when we start preservation of VFs and SRIOV PFs.
->
-> I don't think LUO should enforce an arbitrary rule like this unless we
-> have a strong reasoning behind it.
-
-It looks like you, me, and Pasha are saying slightly different things.
-We all first need to take a step back and lay out our proposals clearly.
-I'll write my points down, and I'll try to reproduce what I understood
-from discussions with you and Pasha.
-
-I think we should focus discussions around the below 3 high level topics,
-and we can figure out the implementation details later.
-
-1. Do dependent files need to be preserved before their main files?
-2. Do we apply the same rules to preserve() and retrieve()?
-3. Do the rules apply to all file handler or can file handlers choose
-   their rules?
-
-Here's my take for 1: Say A depends on B. I think it would be a good
-idea for LUO to enforce that B gets preserved before A. You already
-mentioned a few reasons for why. Similarly, LUO should also enforce that
-B gets restored before A. We can figure out where the actual enforcement
-happens, but that would be the principle of the LUO API.
-
-Pasha suggests the opposite. In my discussions, and this email thread,
-he doesn't want to enforce _any_ ordering. So you can preserve A and B
-at any time and you check at freeze() that everything is present. Now I
-see the value in this idea. It removes the need of tracking ordering
-from VMMs. But I think it is also somewhat dangerous, because what
-happens when freeze() fails? VMMs need to recover and restart the VMs or
-retry live update. I don't know if they would be able to do so. This
-path will likely be less tested.
-
-But still, I can live with that. At least for memfd, guest_memfd, etc.
-this shouldn't be very problematic. I am not sure about iommufd.
-
-So in conclusion, I would prefer to have ordering, but I can live with
-no ordering as well.
-
-For 2, I think we should apply the same rules on both sides. Mainly for
-consistency. The VMMs should follow the right order for preservation and
-restoration. Now again, I am fine with both enforcing the ordering or
-not enforcing it, but I really think the rules should be consistent
-across both sides.
-
-From my reading, I think Pasha does as well, but from talking with you,
-IIUC you think retrieve is a fundamentally different operation and it
-should not enforce any ordering.
-
-I do see your point but I still think there is value in keeping things
-symmetric. Unfortunately this is fairly subjective, so I don't have much
-better arguments.
-
-For 3, I _strongly_ think it should be a LUO wide policy. Leaving this
-up to file handlers will become messy over time because each would come
-up with its own rules and for VMMs there would be no consistency in how
-they should use LUO.
-
-I hope this helps focus our discussion to the major points. And again,
-we can figure out the implementation details as we go along, so I didn't
-reply to some of the points you raised in this email, to not distract
-too much.
-
-[...]
-
--- 
-Regards,
-Pratyush Yadav
+> > ---
+> >  kernel/liveupdate/kexec_handover.c | 22 ++++++++++++++++------
+> >  1 file changed, 16 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kex=
+ec_handover.c
+> > index 4834a809985a..175c08a6e41e 100644
+> > --- a/kernel/liveupdate/kexec_handover.c
+> > +++ b/kernel/liveupdate/kexec_handover.c
+> > @@ -38,6 +38,16 @@
+> >  #include "../kexec_internal.h"
+> >  #include "kexec_handover_internal.h"
+> >
+> > +/*
+> > + * This is the minimal alignment required by deferred struct page init=
+.
+> > + * deferred_init_memmap_chunk frees memory to the buddy allocator, whi=
+ch looks
+> > + * at the neighboring pages (up to MAX_PAGE_ORDER) to merge them.
+> > + * If KHO scratch is not aligned to that value, buddy can access unini=
+tialized
+> > + * struct pages, which can cause a crash.
+> > + */
+> > +#define SCRATCH_ALIGNMENT_BYTES (PAGE_SIZE * MAX_ORDER_NR_PAGES)
+> > +static_assert(SCRATCH_ALIGNMENT_BYTES >=3D CMA_MIN_ALIGNMENT_BYTES);
+> > +
+> >  /* The magic token for preserved pages */
+> >  #define KHO_PAGE_MAGIC 0x4b484f50U /* ASCII for 'KHOP' */
+> >
+> > @@ -640,8 +650,8 @@ static void __init scratch_size_update(void)
+> >        * Scratch areas are released as MIGRATE_CMA. Round them up to th=
+e right
+> >        * size.
+> >        */
+> > -     scratch_size_lowmem =3D round_up(scratch_size_lowmem, CMA_MIN_ALI=
+GNMENT_BYTES);
+> > -     scratch_size_global =3D round_up(scratch_size_global, CMA_MIN_ALI=
+GNMENT_BYTES);
+> > +     scratch_size_lowmem =3D round_up(scratch_size_lowmem, SCRATCH_ALI=
+GNMENT_BYTES);
+> > +     scratch_size_global =3D round_up(scratch_size_global, SCRATCH_ALI=
+GNMENT_BYTES);
+> >  }
+> >
+> >  static phys_addr_t __init scratch_size_node(int nid)
+> > @@ -656,7 +666,7 @@ static phys_addr_t __init scratch_size_node(int nid=
+)
+> >               size =3D scratch_size_pernode;
+> >       }
+> >
+> > -     return round_up(size, CMA_MIN_ALIGNMENT_BYTES);
+> > +     return round_up(size, SCRATCH_ALIGNMENT_BYTES);
+> >  }
+> >
+> >  /**
+> > @@ -692,7 +702,7 @@ static void __init kho_reserve_scratch(void)
+> >        * next kernel
+> >        */
+> >       size =3D scratch_size_lowmem;
+> > -     addr =3D memblock_phys_alloc_range(size, CMA_MIN_ALIGNMENT_BYTES,=
+ 0,
+> > +     addr =3D memblock_phys_alloc_range(size, SCRATCH_ALIGNMENT_BYTES,=
+ 0,
+> >                                        ARCH_LOW_ADDRESS_LIMIT);
+> >       if (!addr) {
+> >               pr_err("Failed to reserve lowmem scratch buffer\n");
+> > @@ -705,7 +715,7 @@ static void __init kho_reserve_scratch(void)
+> >
+> >       /* reserve large contiguous area for allocations without nid */
+> >       size =3D scratch_size_global;
+> > -     addr =3D memblock_phys_alloc(size, CMA_MIN_ALIGNMENT_BYTES);
+> > +     addr =3D memblock_phys_alloc(size, SCRATCH_ALIGNMENT_BYTES);
+> >       if (!addr) {
+> >               pr_err("Failed to reserve global scratch buffer\n");
+> >               goto err_free_scratch_areas;
+> > @@ -721,7 +731,7 @@ static void __init kho_reserve_scratch(void)
+> >        */
+> >       for_each_node_state(nid, N_MEMORY) {
+> >               size =3D scratch_size_node(nid);
+> > -             addr =3D memblock_alloc_range_nid(size, CMA_MIN_ALIGNMENT=
+_BYTES,
+> > +             addr =3D memblock_alloc_range_nid(size, SCRATCH_ALIGNMENT=
+_BYTES,
+> >                                               0, MEMBLOCK_ALLOC_ACCESSI=
+BLE,
+> >                                               nid, true);
+> >               if (!addr) {
+> > --
+> > 2.55.0.229.g6434b31f56-goog
+> >
 
