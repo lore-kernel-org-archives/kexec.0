@@ -4,77 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 39C3AC44516
-	for <kexec@archiver.kernel.org>; Fri, 17 Jul 2026 23:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D1BADC44515
+	for <kexec@archiver.kernel.org>; Fri, 17 Jul 2026 23:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
 	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=R+DUQOwOw2uIV4ajc2HeXFDWOg42tRR4f3JX3Z/V06A=; b=sADJeTurE1AiFrO9rAK6cLw8VD
-	2q9VD+apYw60Taevq/zoCdEZjgTOJJ0uCzmMIhRlD/+j0VdrqUzGARvKHyYovsOt0LopxsRD0TD5s
-	2OQu1k9BIm3ZVS882B8XTxbpf2iI6rPE22Czryxu1H9faz9SmhNYQQoWRNpMDLT60feViHz0dXbUJ
-	xPG1dr+0HiD0TtpHm/78/UqZjOnMNT96570I2yXKCU9dR9pQ/kWDnPc8dqRm5sWdut9nhu9tmxK9U
-	Q13Sk0D+pVuB5XW1vaTNuLkt7CRxF/nL6IxHQuqJF689vVWTxgF8eD2JMqq93/Nw4KPako/G9kraS
-	HZh3Se9A==;
+	bh=jOQMW/VMMZhI1OvT3xpmRY3tlZwPV7fJgB6bntOIi38=; b=ledROjEP6VYZEcQAAtRvyn8cGr
+	hi2dI2LTrMfxrj1fEMcdYSVDhl4OxoYEmQngoOldxNYko8kk4fxjk+qe+kNzcJ74A+YKqlMbhLsZx
+	CetKJxuacvq3I9YidFZK4/KgWgTcYsWhtyLkp7nKzSTGT1v0k/0UNe5tgN+vR17LQzQ5cki/jQ3Xd
+	LrQx6GJ71v60ZBeazv83+dF+Ei3H+H+FB+AnA0wQv7aV946UxH3l3qi9Rul7Ym/SYITIpa5Xpxca2
+	Y83seFJpmLYaT0+fUNCuyZgDnpDKSitP2GDt77MxQAtqTmN1Ehrf15ol0fuYHoAXKKp3q3n/boLR6
+	pSbGRBDw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wks2Y-00000003P9z-3iQQ;
-	Fri, 17 Jul 2026 23:32:22 +0000
-Received: from mail-qk1-x730.google.com ([2607:f8b0:4864:20::730])
+	id 1wks92-00000003PWA-228D;
+	Fri, 17 Jul 2026 23:39:04 +0000
+Received: from mail-qv1-xf31.google.com ([2607:f8b0:4864:20::f31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wks2W-00000003P9Z-04X8
+	id 1wks8z-00000003PVl-1iX8
 	for kexec@lists.infradead.org;
-	Fri, 17 Jul 2026 23:32:21 +0000
-Received: by mail-qk1-x730.google.com with SMTP id af79cd13be357-92e85499ffbso399108885a.0
-        for <kexec@lists.infradead.org>; Fri, 17 Jul 2026 16:32:19 -0700 (PDT)
+	Fri, 17 Jul 2026 23:39:02 +0000
+Received: by mail-qv1-xf31.google.com with SMTP id 6a1803df08f44-90004d2f7b7so107926706d6.1
+        for <kexec@lists.infradead.org>; Fri, 17 Jul 2026 16:39:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1784331139; x=1784935939; darn=lists.infradead.org;
+        d=soleen.com; s=google; t=1784331540; x=1784936340; darn=lists.infradead.org;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=R+DUQOwOw2uIV4ajc2HeXFDWOg42tRR4f3JX3Z/V06A=;
-        b=YhJAFG8mF5nH1V8+/JHLId8itMVnLsIhJ+ul5pmH/AxfqY7nayHvcGxHRk0DS+ChOB
-         3r+kyhaLAcwUGgDu41TiSVGIeOpkQ3RuqjPK8spcD49CU3h0kT0u9nwNT8MV0/2lMcxI
-         YEIUVM4cIRLj04VRbXNRVAxqD2uP6SqGrS1Ntwr9Lqn+rvsP7UWh1wbLn7YdS33TeXB+
-         5InieXQYSXgvqVzY3IBbw+1IMrjBJADq7Q6pGVDnLvylqIt9j7eWdwp1SUoNqAsnzk+L
-         zd6tL5yLDABjCRZA0Xj34YLVeguy82l2lie+FXRevXPlEED15AEbg5ZN7FJuZBeOEAqF
-         kluA==
+        bh=jOQMW/VMMZhI1OvT3xpmRY3tlZwPV7fJgB6bntOIi38=;
+        b=L8YoeuhPOMiv3CbTWNbq/+uCiLD8YRDYuoPJ704TBI3vMnYUJCUegHvTQbCpAdAan0
+         R80eH4ddUcKagvWmkmS81MDnD0O5527+m9bj8FeDhlbdLVpAZ6QyRr3vIx4GohdUsHGR
+         2VSeoLXNGZXK3Z3w2IW+v2qpYhNjBKnabK1K3NwVH10pHD+NOMzs7jq97bMCYsJonggr
+         T3PBots1ft808QGGwJgxyvpxZ4DpzW7iJmTNGx7MvAQ1fPhbUb89Fx/vPoZEwwKANC6N
+         HR4o69rbwGKkUp6XhJb0JGpSC9S0ktw5nnSTQp6FH4bpk4TOpWJQ0IU7KOoWI7aCQkBm
+         eBtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784331139; x=1784935939;
+        d=1e100.net; s=20251104; t=1784331540; x=1784936340;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=R+DUQOwOw2uIV4ajc2HeXFDWOg42tRR4f3JX3Z/V06A=;
-        b=d9m44QDSnYs0+6VLFp9U3+qz86wBkxJ9+QAUD7pTIh7V7//oWVeprJsBOVVTtv5J3R
-         IzRBQ7Hlvj2yloQtCSdFYJgzLMpwYVofrg0ULIODvC6J5eO8u0eL32a4KVGacz8DRGrH
-         ocem2d43U9c2PGdBNcnTYEFrGjzPsfxKjNDK+nDQ/MrY3cMIKscdIKr3ZWighTkV+Lwz
-         YM2LEI3mBhXjBeqfA1UaCWXShwCgY0Z+cz7PqzyVl5/UpQBFJoL1Nm7PpGHpwU89Rvzz
-         OV9bzsypceSVh9530RX7AKdxYcgw0CHA7D494g2TZYROVAh/u/d7Xp00Ccn3j8afNtjz
-         +Qvg==
-X-Gm-Message-State: AOJu0YyRjQyhche9rxQaAXoIsat7QuIT5/34ObxihK6gSl+6tGHBburj
-	dzPJwWksrTDfSdJ3Jty8KIq2W1GKCd3zTJRpeG6Mc4umPG77LdcAAJOwn9azyo/vCOTCY4cj9s5
-	5q/Fy
-X-Gm-Gg: AfdE7cmz9JSDB0OwiQhr7rYbnbRktWAtySNfYKvYwI+UyxUuCFZJylhkWtm2cTdfFow
-	owXJp1TzcJgS2/YrI3d3E8OcCV8dHcfkTJBaVmqvZtNwts5e3C7FXg7+OHdqGj1DKGTZ77NRId7
-	rh4A9DLwGJGcAs7I1TBHieR0xPuxHNESExtNv2JsAjttIO3VoxstDS4r+CgIA/6F4ISNmcSuKUd
-	Q6RC8PW5pQpgyNsd9R8Io1j9d8DhcFoSqHzY/Auqu3KAbomxUPKtN4Twdp/1QvIoHwgla/bZArL
-	4csxa5ioJQI+0OqOGw3xrwpI2aKgX51hXvWNj3C69OE2WRcrUAVCq36U+4F46wmBW98WEeJOQHx
-	VSWN6UxhzMSkpTTEG53TCf63fYILMWh40osyzVHMvxN/W4F5z+7fmtpifnUr1kdMPyTVXDvbAYK
-	dvOMUKSs1NvEBi7hxeZgL3dPjKtqSoXljmZstpsdc=
-X-Received: by 2002:a05:620a:472b:b0:92e:f3ca:2ecd with SMTP id af79cd13be357-930b41a0733mr524243585a.60.1784331138856;
-        Fri, 17 Jul 2026 16:32:18 -0700 (PDT)
+        bh=jOQMW/VMMZhI1OvT3xpmRY3tlZwPV7fJgB6bntOIi38=;
+        b=Tk9aSTuDUAFjKcJbobkf3JoCJMyc7Pc9zbHpPjFzZZ7LklPegcwSFzvjIodHBHKVFK
+         znIJig3K5hBkSMO7hC3KFzyKW+1OmFvEWRiDuFcwe4rtoYWxaWUW4h82UFrtuPSwPmBu
+         J8JvycpWIGYr/5nsk+MuNa7nZCsgtgCVRYqrxbk4eTk7VgF1B8yiCI0WtVw8Y37mh/M0
+         jATIgM/kxxS6VDOp1283DpyGQPbR54CKBx6pi6XNt+G4Z7iI8UfpWNscihCdZPjthLqq
+         Uhibb0KOClIAAouhnuom76yr3zClYXPfJS3OLoVLZhXHLei5xFsADwsRHtRivX2R/XEl
+         eHKA==
+X-Gm-Message-State: AOJu0YyzHEsotDXiC4hu7s4UjaV/Tn3t4z6HjhX0lyvq3Vt3FwjLXg/3
+	UXkFocHtd36Y8r8TUu731Hmg42cXc4H86hQbp1YMto7sw2Wrjz3g8GYlCcW49X81hQ01l5rzJy8
+	Dll0R
+X-Gm-Gg: AfdE7cnsX4pYGzqZAwcoPcvxg/nXrSZFyHOO8gMLdce4Xbyq/aU1cFs1E77SlRnte4/
+	1hLt0rXmTDFwJQexhfCeIQuD21HjgZc3o/0b8PEOfaSBtD2d6e0HWI34rnArl26G5oSDQGsg4bv
+	+lo5LwS9JOzTGcFTJPOZ+ylQnUfAY0oJr/zyluC32RZ0OgUX0aEg9FzWm2uH/pRL6WeypNY/bqR
+	A2AXUA4/VXiOn1BSbcpswdRwvvJAJ5SMonyjx1tHT8Sx9N4c7pBzUdWfSim3QniB2huENHxti3f
+	S5I5wBEil5bvPMTDukGWbTzKIX0ZOamq5+8fwTdt9mW73q2OFpA+aQJ+1FBP58DqMwqMBUHI/ZD
+	td0jJNbVyRB6iK7amEHonybnw2vmKEoFKMJilcAksV5u2R2AWqqHJkkTfzGN/+mSpLyxnfHq6++
+	LDcbTSJ8hmymXH2fs/VSUpHQCO6WYgJigmCc0vyXk=
+X-Received: by 2002:a05:6214:5d08:b0:8f2:df9c:3322 with SMTP id 6a1803df08f44-9077832dd0emr59277606d6.14.1784331540051;
+        Fri, 17 Jul 2026 16:39:00 -0700 (PDT)
 Received: from [127.0.1.1] ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-930b545e47bsm279957485a.35.2026.07.17.16.32.17
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-907786f79e1sm28353026d6.38.2026.07.17.16.38.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2026 16:32:18 -0700 (PDT)
+        Fri, 17 Jul 2026 16:38:59 -0700 (PDT)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v7 11/12] PCI: liveupdate: Do not disable bus mastering
- on preserved devices during kexec
+Subject: Re: [PATCH v7 12/12] Documentation: PCI: Add documentation for
+ Live Update
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: David Matlack <dmatlack@google.com>
 Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
@@ -93,32 +93,32 @@ Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
  Samiullah Khawaja <skhawaja@google.com>, 
  Shuah Khan <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>, 
  William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
-In-Reply-To: <20260710212616.1351130-12-dmatlack@google.com>
+In-Reply-To: <20260710212616.1351130-13-dmatlack@google.com>
 References: <20260710212616.1351130-1-dmatlack@google.com>
- <20260710212616.1351130-12-dmatlack@google.com>
-Date: Fri, 17 Jul 2026 23:32:15 +0000
-Message-Id: <178433113516.189683.9930130364443329744.b4-review@b4>
+ <20260710212616.1351130-13-dmatlack@google.com>
+Date: Fri, 17 Jul 2026 23:38:56 +0000
+Message-Id: <178433153669.189683.2878214157071313722.b4-review@b4>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=563;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=873;
  i=pasha.tatashin@soleen.com; h=from:subject:message-id;
- bh=s0LMm+OcoPpmqRB57FW8WPIACTHAgSpt/ofOePUvqwk=;
- b=owEBbQKS/ZANAwAKAbt3KEzbc3reAcsmYgBqWruB0abwGG0XPrEN8HQE9RCrgd8/buD859gp2
- KaKebSgf3WJAjMEAAEKAB0WIQRBMaqT7LRvGvB/NmK7dyhM23N63gUCalq7gQAKCRC7dyhM23N6
- 3mj7EAC6bErgn8QbHlK63bz1p0Z8+rEQtPpeKYfyZoG2uWv9cDi5gkXPAA2cyXTEg8FWk+3dxwk
- y6gytV5WrSayDd6GSc5dQIvNqT/DfySvbzgAES3hjQEYplR6GGXtAvSOJrQm3brDRl3OO/+Jyt/
- RWwegnDu0EtMTwd45jI8iO64zYNbU6iXPDmoo6XX85I5an+0rvaOq2+751osnajpvrUctCRX6co
- rct8df07a7hqEr30tX3CdeA6FpiPhXcSZdcc7Y/mdkIvSPqDsKQWLerNa66FSM/YWQRJyQz75aK
- eh1RdPuqTNnMgn57asyEoYg5pPIxn2wSy1R2+6bmZnsj7Bfhs8kivkdPulT2cq/+tDvb/i1R8cg
- JRhN3kONqgHydgwy6TrTDZQzDKLE1v70UqFkEmihAIJqaxEBEeMylAu3uuCt/3Xf/N8ePqlq4p4
- Zl1+UFEzR12poe688gj93wg/k5DYz12wvCyUaVd1ftxDmqLc5IbkfD19MjDTMA2VHhZ2dygKp+5
- jBzpCI2Ct6WYvMfudLSRjaT4vueHL50oW8vh8gE2xIOaoOwkDXSTmru1jcXLEpWZBDxDnjbHWx2
- A8HHgGX6czH1+b8pT3wyIyMQzrFYbow7ruhbDMctEsSZ9cOZE5vkRTllxa+Bfy5AWxoJFldiSFq
- vnDsQy6niCySu6A==
+ bh=vSoFj0hBTT5p/CFJP12khF+A/hWJ+rXJdU4yKcto9Gs=;
+ b=owEBbQKS/ZANAwAKAbt3KEzbc3reAcsmYgBqWr0SpjC+L15xuM1whuQrxtevTro4lUduG+wQx
+ gZjJKCgnxeJAjMEAAEKAB0WIQRBMaqT7LRvGvB/NmK7dyhM23N63gUCalq9EgAKCRC7dyhM23N6
+ 3hr1D/9oIctf3jZFaNFf/Pf9J2Q7CfddVWZ2nNZ2arIAM0OUwhaxiAs+LtuvHStvp4Lzy79OaPC
+ MNsK4RZArZ79NaLPOR9S5E6dP8SihdNKm23FpYWS8kmNKUvlpnvUn96H2Bo1thrOScdtHk8KXo2
+ 7hSeP/+8USMLy/ZHr2ShtiB+g1UAd176dG+ifwhSmAAgPmd16B83riVzBB/kFOwP0PXrnOHWCVg
+ NoyCSnhFa7Oj1iHgWlBLPNUv1deka5wHUy7CtHqHc73wIsD+RDeq2t9Dnauotw051GQYm18pWKa
+ Ro4mNfaV4/bgXOl+EindmOYLeL4vmRfgF/9ZiKkyjLjZcj7FGt7HsIhCwwbT/u2+A8OkOyGoZYi
+ r1Iwow+abKmLmqHeqRIFjne6kQTJb22jxEEb/ezTHqlg26zjd2K/Z1L1frMnEuyd/6lmTpda2my
+ KRnfdxmtZtL9QDtYOyUNtLuaOuwzNTTdod6HZcSVYGSUrQl+jbcegXb4vAnwsS3vURMyxjiGKME
+ rn/hi18xZaZXcMv99T6EuayIMn8QHlfKaxv/XQG2mzCxdePpLOJp5QQlK322veGWDifJAyrkoRP
+ XWQu7Llfgoiq2whZiWSbBSEkh55X60dfTNM06+VWWl86F4nrUoLaQGJti/70J124jfGNFISbW/A
+ zR5q4Zf8lKCRE6g==
 X-Developer-Key: i=pasha.tatashin@soleen.com; a=openpgp;
  fpr=CAAAB722DD22A081F0D49F35633A6A993D43B569
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260717_163220_072813_66B89220 
-X-CRM114-Status: UNSURE (   7.07  )
+X-CRM114-CacheID: sfid-20260717_163901_465943_CF3A5E6F 
+X-CRM114-Status: UNSURE (   9.56  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -134,18 +134,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, 10 Jul 2026 21:26:14 +0000, David Matlack <dmatlack@google.com> wrote:
-> Do not disable bus mastering on outgoing preserved devices during
-> pci_device_shutdown() for kexec.
-> 
-> Preserved devices must be allowed to perform memory transactions during
-> a Live Update to ensure continuous operation.  Clearing the bus
-> mastering bit would prevent these devices from issuing any memory
-> requests while the new kernel boots.
-> 
-> [...]
+On Fri, 10 Jul 2026 21:26:15 +0000, David Matlack <dmatlack@google.com> wrote:
+> diff --git a/Documentation/PCI/liveupdate.rst b/Documentation/PCI/liveupdate.rst
+> new file mode 100644
+> index 000000000000..eba55f8a92ae
+> --- /dev/null
+> +++ b/Documentation/PCI/liveupdate.rst
+> @@ -0,0 +1,29 @@
+> +.. SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +===========================
+> +PCI Support for Live Update
+> +===========================
+> +
+> +.. kernel-doc:: drivers/pci/liveupdate.c
+> +   :doc: PCI Live Update
+> +
+> +Driver API
+> +==========
+> +
+> +.. kernel-doc:: drivers/pci/liveupdate.c
+> +   :export:
 
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+I think you need:
+
++Internal API
++============
++
++.. kernel-doc:: drivers/pci/liveupdate.c
++   :internal:
++
+
+In order to include docs for structs such as pci_flb_outgoing, etc.
 
 -- 
 Pasha Tatashin <pasha.tatashin@soleen.com>
