@@ -4,77 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EEC7EC44520
-	for <kexec@archiver.kernel.org>; Fri, 17 Jul 2026 13:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F34CEC4451B
+	for <kexec@archiver.kernel.org>; Fri, 17 Jul 2026 14:03:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=qJ3lF392ZnaDQ7ksH9U+tbRYSBGb3EW5QpOiJ+U17/M=; b=rkw8woZDyXD4jU+19yzlXfueRt
-	e+DXUU41n7+r+3dsM65SwqmRdJU1d5jugU+GLGHXF2rgAydDSFMXu1Vg68SXykMTtbDL7O8+ix7JN
-	HsdGgbUAK9GoqYg5bjKD/H8TrR3tVOdIYbB8p/TDgELp1Lie35RSyiBhGKgDdbeXbJWcfR+TPlw/J
-	z0fh4hx7dnsPxyxpFplxkPe0K7CSrdyUkQNxDjcQU7ovTnZvXV2N7uEhmmYxw+pVW1/6TQrYCmi80
-	y1sclfzjJmDwI9gGlqbjV3QGSG9ZjVr1/j9fDeyoqqtmVlTxGy5k7VOm9PLllHQqohWQReDm6BhK+
-	pv9WpCzw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=xLHoBAC97Z8vKvZnpYvz5TMDtvC87jPH3QPXAp2zb00=; b=i/sQXBspGWJxYLhue1j8aAuFtW
+	uO5hk+3fRjFYGm6JbQxl2vHCfKJpHuLZuUXPrr+HMprG174fHx9gsBjwz77ZG+xH/G2c1GB1aa03x
+	sPf3HCA0XM2+nlZvQcRBvwu7sxZJilF3TruJ9/RvhWLRy9j2U+yphRzCBEQ3LoDnBtnhKwfQIR6Oc
+	egiIFd9PWkryhp0s9KTQdFTaouDHPZn7Sxnge+KHkvfky7DHyGbjIFYAerE388l3e75sTaWslF8so
+	aEzQYtYaqbmkP31q5MBsCZ7srllXvhk8f6Psj1bNdl2Ge43qiMO9GIgeQCUBKtChIyKkCbj+JQtHu
+	y88YLoSg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wkioM-00000002QK4-3K56;
-	Fri, 17 Jul 2026 13:41:06 +0000
-Received: from mail-wm1-x34a.google.com ([2a00:1450:4864:20::34a])
+	id 1wkjA6-00000002SGF-1wVF;
+	Fri, 17 Jul 2026 14:03:34 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wkins-00000002QIi-06Og
+	id 1wkjA4-00000002SEA-0x0M
 	for kexec@lists.infradead.org;
-	Fri, 17 Jul 2026 13:41:05 +0000
-Received: by mail-wm1-x34a.google.com with SMTP id 5b1f17b1804b1-495427ed72eso24370095e9.2
-        for <kexec@lists.infradead.org>; Fri, 17 Jul 2026 06:40:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784295633; x=1784900433; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=qJ3lF392ZnaDQ7ksH9U+tbRYSBGb3EW5QpOiJ+U17/M=;
-        b=rqDyEiJ/hkBwweMNkXNdKl20ahmMK/e+AfsjSh2T8txZGHKNU/ixs2Xn10ByBQ6cy3
-         HCeeOqQlPtX430+QOSwiK0a58IfCCWU/noz4oMSca56dWwrwt/9vUqsmZemQsuABEYM0
-         5QMXMk4bpBkoH07F2m6jWyILvVsygV95XbShuaR1WyABR8bxp/XneRcJ4o3lXeETk32D
-         OF4SROtxVRJeHe6Xq2FwJVlHDIxHVuNrhoRhdPv4FUazkRXgt0DwlIIDFY1cKkgtdw9a
-         6sTAQTJ3R106PbxP+2AqqfL0/17/EkajOg/+H1U1XVjRm7ZtcxLF0XSiTd/+KpZk+Gl8
-         clSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784295633; x=1784900433;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=qJ3lF392ZnaDQ7ksH9U+tbRYSBGb3EW5QpOiJ+U17/M=;
-        b=NXN1E8Ren9aeGIMYxAyIXzHgXt12uICJKYsuInlod2+5bwmicLMF9NDoK4+PuMU/D2
-         Zbt9kmxBvUhIrCLH0Rb+fdMQCRKbIJfK2Iqdvk0pHjnH64xKc7QegeLU6Czh0n4kkpEr
-         urcq+Kq/3yDZQlimfY99efi/PYZTqOqA0Y4xb9KuKXyf292j28IV7b1QlPilrBf9DKBu
-         7zJztWUZOYfh1VjOGPmz/EIAKepBDXr6m/zLk/7WRR+E7cvZzdb+jdAu/gnTZcNrGVW7
-         yDU/N4d2w/5iGfxac1hUJA2zzg8TKvZIBYrSlYIrs+WyUvA7ah08k9qCO8P88ZKU4Ze+
-         gJZQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqxXVdFIYCoHuUqaAK00Bua6KzeC6/C0w2Ob60B4BgiSy2fPUGDdnkkNgvbmVzdXimS66KZsw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YwuEkefOxDzu/SbYB7XsXUbOuhoiCZ9zvJtlpe/Gw40StZkra4h
-	JwlrDEgaCzGD2U7DZQkz1Ox27TdCYDCXA4PP1913/bIHBGmewEvSRX+nDlsEGrKRw7OSz2tK+dX
-	BVIGj7ZqUJcP61HMBaVizgQ==
-X-Received: from wrvx6.prod.google.com ([2002:a5d:54c6:0:b0:47f:4443:1db4])
- (user=mclapinski job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1382:b0:495:3f48:5df2 with SMTP id 5b1f17b1804b1-4954a40bcf6mr31154885e9.29.1784295632744;
- Fri, 17 Jul 2026 06:40:32 -0700 (PDT)
-Date: Fri, 17 Jul 2026 15:40:28 +0200
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.55.0.229.g6434b31f56-goog
-Message-ID: <20260717134028.2880508-1-mclapinski@google.com>
-Subject: [PATCH v2] kho: align kho_scratch to MAX_ORDER_NR_PAGES pages
-From: Michal Clapinski <mclapinski@google.com>
-To: Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
-	Evangelos Petrongonas <epetron@amazon.de>, kexec@lists.infradead.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Michal Clapinski <mclapinski@google.com>
-Content-Type: text/plain; charset="UTF-8"
+	Fri, 17 Jul 2026 14:03:33 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:In-Reply-To:References:
+	Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description;
+	bh=xLHoBAC97Z8vKvZnpYvz5TMDtvC87jPH3QPXAp2zb00=; b=CPkUm7bEgxpkSeb9CZM34STENE
+	FEXFrMiLbqKqbQABw1a/ozpsCYvZLgSLBRYdYqlFsBr09VW9cUWfFT7CFSi4kTttCFlXg5nwKHMmi
+	LRH9CYsQKiO0KxpvaguyUakbKFDOF8r2//psUz6RR6eqGnt6VqRf/mBewEuoVeDYgVfyZjn5opo/P
+	mDw0d45oUXZAxTxvTuTwzfA1pJ4IUwWUudi8z9bf2bCSb6xeROtf2ulEnAdRifKoD6uuL3p+T3CBQ
+	FbdJUWSQcHTcJ0tKqKuik74juD7Z3f0msS1gC2SDDLkDujpZDaq5ry1Y0nK4iNIlwZXnqGJNA46nm
+	F2v3ED1A==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wkjA2-004eC1-01;
+	Fri, 17 Jul 2026 14:03:30 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Fri, 17 Jul 2026 07:03:04 -0700
+Subject: [PATCH RFC 2/3] efi: record hardware-poisoned frames into the
+ poisoned-memory table
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260717-hwpoison-kho-v1-2-9c5eda551998@debian.org>
+References: <20260717-hwpoison-kho-v1-0-9c5eda551998@debian.org>
+In-Reply-To: <20260717-hwpoison-kho-v1-0-9c5eda551998@debian.org>
+To: kas@kernel.org, Ard Biesheuvel <ardb@kernel.org>, 
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+ Miaohe Lin <linmiaohe@huawei.com>, 
+ Naoya Horiguchi <nao.horiguchi@gmail.com>, 
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kexec@lists.infradead.org, rneu@meta.com, riel@surriel.com, caggio@meta.com, 
+ anilagrawal@meta.com, rmikey@meta.com, linux-mm@kvack.org, 
+ Breno Leitao <leitao@debian.org>, kernel-team@meta.com
+X-Mailer: b4 0.16-dev-d5d98
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6844; i=leitao@debian.org;
+ h=from:subject:message-id; bh=tVC3qjK2uT7R1b63jjn7gm8DEZPWnfi5O6+kdXwvQWg=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqWjYjmedAAxB69t9q8yvBYFMgnREjkexS1Y1MX
+ 25OxrVY+caJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCalo2IwAKCRA1o5Of/Hh3
+ bWtHD/0YD4LUadpZ5uQnSghE+/YmW4gy5OYa5OHvbl13MYqcn687RTaEOMpbzHKm/M5P5Va3cUn
+ nG/rFRDO3Y/Au62KDx9N2YWXclmNQfmIxebaae1EMqKFZIAHbJ2hdGzz/6J82RcaIQsLRrtu1xo
+ vnP4I6169hUvVfc2gdiFz9WGEje5ir+dRgp7EXX3yZd1O1/xZT3I1t/WB+j5xpiqrTvosPY7d+d
+ fqmlLxqVJKwWfQBrA3v6qB0fOxEEtEm6IFyp+31I+BGzqxdkaGc2Js9tet3JDTkV/Wa34aZcDle
+ jcRPGNFrlPOCBUf0goF1FcJZXAYIquG9O7GtG31dWMmJAj1hbF9MsI1mgQAUPer9ranqDDVGAvl
+ gKGnRdZSIvZXg9agpFSZDLQp9MpySovgkJBrHUQ1hiYCCHlpwuv8+/jBMuv55J6zjH5YHHLw14Y
+ zB0eTDfDpLDcuxRpo+fEmkcEOlxBoZeRBCpvIf3aM3YTub4lgk5vQ+XDiGyCCE9axS1dpegff3y
+ Zpooc5zGBLMen1xK6M95pkSb3sG8rfJ6aCKvuhsXDvKc/blrkfWZ8D7Ii9tVGQvQzgRKFc29U8u
+ Z+r+oUtqUlxeUojYMwHFB5lmhvbwGbyPth53OAxt9DJkS82665X3bx52qYvXSHtX/kYwWWxx7Ed
+ L290f6k1JcU8mGA==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260717_064036_115184_5D410B87 
-X-CRM114-Status: GOOD (  16.24  )
+X-CRM114-CacheID: sfid-20260717_070332_455003_C0A82A39 
+X-CRM114-Status: GOOD (  23.03  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,128 +97,219 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-While booting with KHO, the following crash was observed:
+num_poisoned_pages_inc() and num_poisoned_pages_sub() are the single choke
+point for every poison and unpoison event. Hook them so each hardware-poisoned
+frame is appended to the LINUX_EFI_POISONED_MEMORY table, and each unpoison
+tombstones its entry so a frame that is good again is not carried forward.
 
-BUG: unable to handle page fault for address: ff19164fffff8328
-RIP: 0010:__free_one_page+0x1a1/0x6b0
-Call Trace:
- <TASK>
- [<ffffffff913208bf>] free_one_page+0xaf/0x240
- [<ffffffff93973288>] deferred_free_pages+0xa8/0xd0
- [<ffffffff93971b4f>] deferred_init_memmap_chunk+0x10f/0x1b0
- [<ffffffff9396e265>] padata_mt_helper+0x65/0xa0
- [<ffffffff90fac402>] process_scheduled_works+0x202/0x410
- [<ffffffff90fae739>] worker_thread+0x1f9/0x2d0
- [<ffffffff90fb62fd>] kthread+0x27d/0x2f0
- [<ffffffff90fae540>] ? __pfx_worker_thread+0x10/0x10
- [<ffffffff90fb6080>] ? __pfx_kthread+0x10/0x10
- [<ffffffff90efdc55>] ret_from_fork+0x145/0x280
- [<ffffffff90fb6080>] ? __pfx_kthread+0x10/0x10
- [<ffffffff90e2e46a>] ret_from_fork_asm+0x1a/0x30
- </TASK>
+The append mirrors efi_mem_reserve_persistent(): claim a slot in an existing
+list entry, or allocate and link a new list page -- itself reserved via
+memreserve so it survives to the next kernel. memory_failure() has already
+taken the frame out of this kernel's allocator, so only the cross-kexec record
+happens here.
 
-deferred_init_memmap_chunk() interleaves initialization of struct pages
-with freeing them. This works fine without KHO because free regions
-will never be neighbors. However, with KHO, free memory will be split
-into (free && scratch) and (free && !scratch), which can be neighbors.
-
-KHO scratch is aligned to CMA_MIN_ALIGNMENT_PAGES pages but buddy looks
-at the neighborhood of MAX_ORDER_NR_PAGES pages. These values are
-configurable but CMA_MIN_ALIGNMENT_PAGES is always less or equal to
-MAX_ORDER_NR_PAGES. In the crashing configuration they were set as
-follows:
-CMA_MIN_ALIGNMENT_PAGES = 1 << 9
-MAX_ORDER_NR_PAGES = 1 << 10
-
-So while freeing one chunk, buddy accessed uninitialized struct pages
-from another chunk, tried to merge the blocks and crashed.
-
-To fix this, let's just align KHO scratch to MAX_ORDER_NR_PAGES pages.
-
-Fixes: c6073743d0c7 ("kho: make preserved pages compatible with deferred struct page init")
-Signed-off-by: Michal Clapinski <mclapinski@google.com>
+Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
-Unfortunately, this is very hard to catch, so I don't have a good
-reproducer. But I run the code with the fix through extensive testing
-and it seems fine.
-I think I've never caught it before because enabling HUGETLB is what
-causes CMA_MIN_ALIGNMENT_PAGES to be 1 << 9, instead of 1 << 10.
+ drivers/firmware/efi/Makefile |   1 +
+ drivers/firmware/efi/poison.c | 127 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/efi.h           |   8 +++
+ mm/memory-failure.c           |   6 +-
+ 4 files changed, 141 insertions(+), 1 deletion(-)
 
-If this passes review, please cherry-pick it to 7.2 so we don't release
-a broken kernel.
----
- kernel/liveupdate/kexec_handover.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 4834a809985a..175c08a6e41e 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -38,6 +38,16 @@
- #include "../kexec_internal.h"
- #include "kexec_handover_internal.h"
- 
+diff --git a/drivers/firmware/efi/Makefile b/drivers/firmware/efi/Makefile
+index 8efbcf699e4ff..05d0a490923e5 100644
+--- a/drivers/firmware/efi/Makefile
++++ b/drivers/firmware/efi/Makefile
+@@ -43,4 +43,5 @@ obj-$(CONFIG_EFI_EARLYCON)		+= earlycon.o
+ obj-$(CONFIG_UEFI_CPER_ARM)		+= cper-arm.o
+ obj-$(CONFIG_UEFI_CPER_X86)		+= cper-x86.o
+ obj-$(CONFIG_UNACCEPTED_MEMORY)		+= unaccepted_memory.o
++obj-$(CONFIG_EFI_POISONED_MEMORY)	+= poison.o
+ obj-$(CONFIG_TEE_STMM_EFI)		+= stmm/tee_stmm_efi.o
+diff --git a/drivers/firmware/efi/poison.c b/drivers/firmware/efi/poison.c
+new file mode 100644
+index 0000000000000..ed3b8cee21ba6
+--- /dev/null
++++ b/drivers/firmware/efi/poison.c
+@@ -0,0 +1,127 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * This is the minimal alignment required by deferred struct page init.
-+ * deferred_init_memmap_chunk frees memory to the buddy allocator, which looks
-+ * at the neighboring pages (up to MAX_PAGE_ORDER) to merge them.
-+ * If KHO scratch is not aligned to that value, buddy can access uninitialized
-+ * struct pages, which can cause a crash.
++ * Runtime handling for the LINUX_EFI_POISONED_MEMORY configuration table:
++ * record and clear poisoned frames so the next kexec kernel can keep them out
++ * of its allocator.
++ *
++ * Copyright (c) 2026 Meta Platforms, Inc. and affiliates.
++ * Copyright (c) 2026 Breno Leitao <leitao@debian.org>
 + */
-+#define SCRATCH_ALIGNMENT_BYTES (PAGE_SIZE * MAX_ORDER_NR_PAGES)
-+static_assert(SCRATCH_ALIGNMENT_BYTES >= CMA_MIN_ALIGNMENT_BYTES);
 +
- /* The magic token for preserved pages */
- #define KHO_PAGE_MAGIC 0x4b484f50U /* ASCII for 'KHOP' */
++#define pr_fmt(fmt) "efi: " fmt
++
++#include <linux/efi.h>
++#include <linux/io.h>
++#include <linux/mm.h>
++#include <linux/sizes.h>
++#include <linux/spinlock.h>
++
++static struct linux_efi_poisoned_memory *efi_poisoned_memory_root __ro_after_init;
++static DEFINE_SPINLOCK(efi_poisoned_memory_lock);
++
++static int __init efi_poisoned_memory_map_root(void)
++{
++	if (efi.poisoned_memory == EFI_INVALID_TABLE_ADDR)
++		return -ENODEV;
++
++	efi_poisoned_memory_root = memremap(efi.poisoned_memory,
++					    sizeof(*efi_poisoned_memory_root),
++					    MEMREMAP_WB);
++	if (WARN_ON_ONCE(!efi_poisoned_memory_root))
++		return -ENOMEM;
++	return 0;
++}
++
++static int __init efi_poisoned_memory_root_init(void)
++{
++	if (efi_poisoned_memory_root)
++		return 0;
++	if (efi_poisoned_memory_map_root())
++		efi_poisoned_memory_root = (void *)ULONG_MAX;
++	return 0;
++}
++early_initcall(efi_poisoned_memory_root_init);
++
++/*
++ * Record a hardware-poisoned frame so the next kernel can keep it out of its
++ * allocator. memory_failure() has already removed it from this kernel, so only
++ * the cross-kexec record is needed here.
++ */
++void efi_hwpoison_record_pfn(unsigned long pfn)
++{
++	phys_addr_t addr = PFN_PHYS(pfn);
++	struct linux_efi_poisoned_memory *pm;
++	unsigned long ppm;
++	int index;
++
++	if (!efi_poisoned_memory_root ||
++	    efi_poisoned_memory_root == (void *)ULONG_MAX)
++		return;
++
++	/* Try to claim a slot in an existing list entry. */
++	for (ppm = efi_poisoned_memory_root->next; ppm; ) {
++		pm = memremap(ppm, sizeof(*pm), MEMREMAP_WB);
++		if (!pm)
++			return;
++		index = atomic_fetch_add_unless(&pm->count, 1, pm->size);
++		if (index < pm->size) {
++			pm->entry[index].base = addr;
++			pm->entry[index].size = PAGE_SIZE;
++			memunmap(pm);
++			return;
++		}
++		ppm = pm->next;
++		memunmap(pm);
++	}
++
++	/*
++	 * No slot free - allocate a new list entry and link it in. The page
++	 * stays allocated for the rest of this boot, and the next kernel
++	 * reserves it while parsing the EFI configuration tables, so no
++	 * separate cross-kexec reservation is needed here.
++	 */
++	pm = (void *)__get_free_page(GFP_ATOMIC);
++	if (!pm)
++		return;
++
++	pm->size = EFI_POISONED_MEMORY_COUNT(SZ_4K);
++	atomic_set(&pm->count, 1);
++	pm->entry[0].base = addr;
++	pm->entry[0].size = PAGE_SIZE;
++
++	spin_lock(&efi_poisoned_memory_lock);
++	pm->next = efi_poisoned_memory_root->next;
++	efi_poisoned_memory_root->next = __pa(pm);
++	spin_unlock(&efi_poisoned_memory_lock);
++}
++
++/*
++ * A frame was unpoisoned (typically the hwpoison injector under test).
++ * Tombstone its entry so the next kernel does not reserve a now-good frame.
++ */
++void efi_hwpoison_unrecord_pfn(unsigned long pfn)
++{
++	phys_addr_t addr = PFN_PHYS(pfn);
++	struct linux_efi_poisoned_memory *pm;
++	unsigned long ppm;
++	int i;
++
++	if (!efi_poisoned_memory_root ||
++	    efi_poisoned_memory_root == (void *)ULONG_MAX)
++		return;
++
++	for (ppm = efi_poisoned_memory_root->next; ppm; ) {
++		pm = memremap(ppm, sizeof(*pm), MEMREMAP_WB);
++		if (!pm)
++			return;
++		for (i = 0; i < atomic_read(&pm->count); i++) {
++			if (pm->entry[i].base == addr) {
++				pm->entry[i].size = 0;
++				memunmap(pm);
++				return;
++			}
++		}
++		ppm = pm->next;
++		memunmap(pm);
++	}
++}
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 7787eb8d4e4c1..bd1b0934881fb 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1292,6 +1292,14 @@ struct linux_efi_poisoned_memory {
+ 	(((size) - sizeof(struct linux_efi_poisoned_memory)) \
+ 	/ sizeof_field(struct linux_efi_poisoned_memory, entry[0]))
  
-@@ -640,8 +650,8 @@ static void __init scratch_size_update(void)
- 	 * Scratch areas are released as MIGRATE_CMA. Round them up to the right
- 	 * size.
- 	 */
--	scratch_size_lowmem = round_up(scratch_size_lowmem, CMA_MIN_ALIGNMENT_BYTES);
--	scratch_size_global = round_up(scratch_size_global, CMA_MIN_ALIGNMENT_BYTES);
-+	scratch_size_lowmem = round_up(scratch_size_lowmem, SCRATCH_ALIGNMENT_BYTES);
-+	scratch_size_global = round_up(scratch_size_global, SCRATCH_ALIGNMENT_BYTES);
++#ifdef CONFIG_EFI_POISONED_MEMORY
++void efi_hwpoison_record_pfn(unsigned long pfn);
++void efi_hwpoison_unrecord_pfn(unsigned long pfn);
++#else
++static inline void efi_hwpoison_record_pfn(unsigned long pfn) { }
++static inline void efi_hwpoison_unrecord_pfn(unsigned long pfn) { }
++#endif
++
+ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size);
+ 
+ /*
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index aaf14608b30e2..03fa921ef1b7a 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -43,6 +43,7 @@
+ #include <linux/sched/signal.h>
+ #include <linux/sched/task.h>
+ #include <linux/dax.h>
++#include <linux/efi.h>
+ #include <linux/ksm.h>
+ #include <linux/rmap.h>
+ #include <linux/export.h>
+@@ -87,13 +88,16 @@ void num_poisoned_pages_inc(unsigned long pfn)
+ {
+ 	atomic_long_inc(&num_poisoned_pages);
+ 	memblk_nr_poison_inc(pfn);
++	efi_hwpoison_record_pfn(pfn);
  }
  
- static phys_addr_t __init scratch_size_node(int nid)
-@@ -656,7 +666,7 @@ static phys_addr_t __init scratch_size_node(int nid)
- 		size = scratch_size_pernode;
- 	}
- 
--	return round_up(size, CMA_MIN_ALIGNMENT_BYTES);
-+	return round_up(size, SCRATCH_ALIGNMENT_BYTES);
+ void num_poisoned_pages_sub(unsigned long pfn, long i)
+ {
+ 	atomic_long_sub(i, &num_poisoned_pages);
+-	if (pfn != -1UL)
++	if (pfn != -1UL) {
+ 		memblk_nr_poison_sub(pfn, i);
++		efi_hwpoison_unrecord_pfn(pfn);
++	}
  }
  
  /**
-@@ -692,7 +702,7 @@ static void __init kho_reserve_scratch(void)
- 	 * next kernel
- 	 */
- 	size = scratch_size_lowmem;
--	addr = memblock_phys_alloc_range(size, CMA_MIN_ALIGNMENT_BYTES, 0,
-+	addr = memblock_phys_alloc_range(size, SCRATCH_ALIGNMENT_BYTES, 0,
- 					 ARCH_LOW_ADDRESS_LIMIT);
- 	if (!addr) {
- 		pr_err("Failed to reserve lowmem scratch buffer\n");
-@@ -705,7 +715,7 @@ static void __init kho_reserve_scratch(void)
- 
- 	/* reserve large contiguous area for allocations without nid */
- 	size = scratch_size_global;
--	addr = memblock_phys_alloc(size, CMA_MIN_ALIGNMENT_BYTES);
-+	addr = memblock_phys_alloc(size, SCRATCH_ALIGNMENT_BYTES);
- 	if (!addr) {
- 		pr_err("Failed to reserve global scratch buffer\n");
- 		goto err_free_scratch_areas;
-@@ -721,7 +731,7 @@ static void __init kho_reserve_scratch(void)
- 	 */
- 	for_each_node_state(nid, N_MEMORY) {
- 		size = scratch_size_node(nid);
--		addr = memblock_alloc_range_nid(size, CMA_MIN_ALIGNMENT_BYTES,
-+		addr = memblock_alloc_range_nid(size, SCRATCH_ALIGNMENT_BYTES,
- 						0, MEMBLOCK_ALLOC_ACCESSIBLE,
- 						nid, true);
- 		if (!addr) {
+
 -- 
-2.55.0.229.g6434b31f56-goog
+2.53.0-Meta
 
 
