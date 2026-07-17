@@ -4,121 +4,142 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6A264C44515
-	for <kexec@archiver.kernel.org>; Fri, 17 Jul 2026 19:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E089EC44515
+	for <kexec@archiver.kernel.org>; Fri, 17 Jul 2026 19:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
-	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Jiuq4RrEPSqzc2CjSOsVE6XMKzyT/WebTRpubajhs2o=; b=ReM1hnrcc/ZElOxHuVmuYSaWu1
-	jxR/V71T93mY2JMD6zbudssmUJ7iHU9EJxXF5r5yyydZPytZktUcuCt5DpC+jV1OziHq+m50sJGLT
-	Cqbs+Fce2VIjVPxK8DFJ+hsffRS5Z5ewjGdGzgtxndTbgoWL8/y6MPWc6JiLDuECrlw8tFbjpP9tZ
-	iORDcim1nU6e/haLrsF1++UnVLkmjb+CB8Q5wwuWAUVMDbS28lysI7K8HcizssLDp5sGYJNODdTEm
-	CRlCcp0Ri9znOHA+VM6VvAHteuNdBVlPAs8NTCy8hzNZc0QGnQyRJsf8fQ7Yz4gzhb/p7a7EuBlEV
-	Tta54kDw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	Content-Type:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=6PA+TdzZlrljfX2n/J8l2NaTi3Sp0X11AKY0ezcf8PM=; b=gJO2t3wKV9UzjHQKN7Z7RVxCAS
+	hKrkf2usqlGicJybhTvISHSHvrheoAverVW1xZOggcLXOZwq1OcwrKfGgmt7wJ1jXBOkP20DmFoft
+	OPEToICHo3DubxeZJubziHy4REugKF5+Si1WUzsN77tpwjEaVqPQetzNwzM885ZYFlC0eRZnzl9op
+	EZZzoUgo3nZJAY6Hxvq0wS1MuJTFkYbJpnwwxcnaNLtR9yKTwYIwjAO9yPq1Oa1p9LaQPyGAtm/oV
+	GkckFj4TUa6bYx0bUGp3zgUlZGQ12odAwbXbzxhntLFna8GC9xb0GGQVnEJpnTcpKb71fmfXlwp1x
+	3L3t9bkQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wkoEw-000000038F8-1IP9;
-	Fri, 17 Jul 2026 19:28:54 +0000
-Received: from mail-qk1-x72e.google.com ([2607:f8b0:4864:20::72e])
+	id 1wkoH4-000000038Y0-3nJd;
+	Fri, 17 Jul 2026 19:31:06 +0000
+Received: from mail-westus3azon11010044.outbound.protection.outlook.com ([52.101.201.44] helo=PH7PR06CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wkoEt-000000038Ej-3Rac
+	id 1wkoH1-000000038XU-44E5
 	for kexec@lists.infradead.org;
-	Fri, 17 Jul 2026 19:28:52 +0000
-Received: by mail-qk1-x72e.google.com with SMTP id af79cd13be357-9305a2121a1so454711285a.2
-        for <kexec@lists.infradead.org>; Fri, 17 Jul 2026 12:28:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1784316530; x=1784921330; darn=lists.infradead.org;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=Jiuq4RrEPSqzc2CjSOsVE6XMKzyT/WebTRpubajhs2o=;
-        b=SREnG54KHOvfcxfMaStrTD/tnu+2G6XTlO9xgjqsAjMHKLeHMVVMPW+sxfOSvzETJf
-         L3VEpIwZyYPr9bQ+rFgTIp0YxQJ2Iqaomz2DaKDvulFbKpdwWnW9PR5/MH2u86b8NyLN
-         ZPoXdt59BoGIsbsrfalbry4ZcuYJnT9j/EDpzNZ0w0VAe/VrVKY9PsXW8Tqm7uzKfOoQ
-         cV9DKxAzNWsKPp/mNQoy5kiV3q3gp9mZ3PprVjCJxREYB1ZbvLCUdWWJqSQ635n9r3Qw
-         KLbwAKxRmf+UK0nZcfIQHsawjVgAxubEcDUTNnRYcqkiCYG85DZHWk6vybgqgCupikcl
-         9o/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784316530; x=1784921330;
-        h=message-id:date:references:in-reply-to:cc:to:from:subject
-         :content-transfer-encoding:content-type:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Jiuq4RrEPSqzc2CjSOsVE6XMKzyT/WebTRpubajhs2o=;
-        b=j4/LdKeOx8EpC1Z+NB4eXyuWrBZ4ujKsxNFfFVi6l2INiB7bPS5/LuICNCO/YpLxMn
-         jRYCaCs8O6AgitjviP382HAENUDcwTSXRKLtFXHxuf64LzLmnmzSc0t5SWfa9T4vsnOw
-         jnalYm1Z8msZLX1dVFNlt9FuAk1Lejhz7bxpozXskjo115uKeV22Yul+U+XKHGS8W36+
-         Q0q8nYWuiKRY1vJMDWNWXEhujyIYawAoJEuDtlkZOqvL71ufhQUqcF5nMTEu6xT1nfH6
-         YjXix3x1GJaNtD7/tIYBuJzNFB+pkRaEAspSDUHtQS7EvDmC6t3I3xW8H4u6RpMj22mM
-         cQYg==
-X-Gm-Message-State: AOJu0YxGCM9iLPRSHqFeSvoQK1WZRjJnbAxN9l1iIF+E9XIgAOGmtllD
-	1CQdEnpl0mEO/1O4oLtR2I7ambaBE4QlymxxZ55IiaMSNgXJpwC4vtX+oG+PSF/iK0Ye60BNXWB
-	6qzLB
-X-Gm-Gg: AfdE7cndj/IR18QOpMH87fPFtDuLswpxGVlEsgsDTU6BRYJL41S/QLdK5VaH1an5iAR
-	PTVG5adjIYh5yOI+9Z/FzeHduN+ob9WtYysZKBzF+2gAeEGEoRmX5TtvydGbkuoNTZXOsGkabxT
-	HKR22CRzOTCB+bPZH9B0tsmJZgalpjHRvcS0qzFrPN7y3C64f6PtllidZaeRuLK710t9wDXPjvD
-	pHVA9zGsfelcQfpDpLVm4MtBRBcaWQYPP7IpW45kdNLaiEH3F9wxDc8gOFOzgN9QpO0jhNVsRMk
-	UH4DUmqhYeIUm2Ch88ejVy+hE9AWDDpsHe3G/Iej9goDAltuv5yJJCLgqC3OZXPwudQT5YdK5Gv
-	ksrfuQQ6ZdCAWxKqQbPnTJyvoYhj5Q12FDxWo21+BDi1lo5C1mnZXHydgarhbdKn8yOPZPzgS5C
-	3cBObjF1wLfjjA2Gbd0Kmk3PM95VmnLT9gTA2dhgs=
-X-Received: by 2002:a05:620a:4014:b0:930:b7f3:6c6a with SMTP id af79cd13be357-930b7f36ef3mr332805385a.66.1784316530109;
-        Fri, 17 Jul 2026 12:28:50 -0700 (PDT)
-Received: from [127.0.1.1] ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-930b5304a99sm231909285a.20.2026.07.17.12.28.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2026 12:28:49 -0700 (PDT)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v7 01/12] PCI: liveupdate: Set up FLB handler for the
- PCI core
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, 
- Adithya Jayachandran <ajayachandra@nvidia.com>, 
- Alexander Graf <graf@amazon.com>, Alex Williamson <alex@shazbot.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
- David Rientjes <rientjes@google.com>, 
- Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>, 
- Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, 
- Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, 
- Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pranjal Shrivastava <praan@google.com>, 
- Pratyush Yadav <pratyush@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>, 
- Samiullah Khawaja <skhawaja@google.com>, 
- Shuah Khan <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>, 
- William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
-In-Reply-To: <20260710212616.1351130-2-dmatlack@google.com>
+	Fri, 17 Jul 2026 19:31:05 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=C6WIUEHooLVVv/uyisoWPzXRlcght4CTTjvVerg7nHkL3ObHyZBsC1Xncdy8vzbJSm8qn7AUw1HbLyaAcK32BHmJ46cRzmpVxd4RAwsWSrpe2khHcTVTUi5mu44KwyarafHHyvcasT9ryPBVTBtgznMQflWhlTO5elfzUVmf5RiXOwOKhk6AC8XtayCOJ8PQF5v3Uov70NHnEJ4vQN8ysu5Ct/dp3Gtbjl7TT3JTjtAFgRuKDRiiNu65eBj7IjnSLLhabFsqOwOznSY/vEuxFYcXzEudR4Y6+YE5cBzCW5j5Wm1PH1FkTgxom1SodWRmHcgfN5l72bdIR09+QN+yOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6PA+TdzZlrljfX2n/J8l2NaTi3Sp0X11AKY0ezcf8PM=;
+ b=rBRTeXpDml8UA5QngxD8tP8oS4wm6mOQc3kUA1ujf8f9KRfyWMwC80Z+D7tR9CdXixqY3At0EmHmE9kb22MW5pbUN1AHyGhPbXZS8+8WAtIZdhpnd3duumjAxnYZwIKppUhAQi2w/z85TwHoZVOYZLKA7h57DSaiCC65Gx2TNzNZPRQTXeFHvbvWBuPCbhL6KMeX33ldoufgs6WvM4WbKOnUmhvRXU8raDIk7490axju4xZrGuHY4fR0s+YNUEoFQjw9IOM5Rh+QYvB/up7KYaiFazPWAntkd26zRjGHCJ+jl9HU9i0dnwvJmovi0+BkI9/L3WLCYC1Ag2PvszLd7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6PA+TdzZlrljfX2n/J8l2NaTi3Sp0X11AKY0ezcf8PM=;
+ b=sl13eXxXjGmOEHCjsaVKTg5cbkDe0kI65hL7IITlQM0cBNU51sfM6uh/+vWTsdJTMs6twG92F1zgWNC2rZ4FHJuafmd4NYyywrix8YyFAbOeRfdyxXTAeOiBysq8iT66ARLzXoPbDDxAvYbYKJay1XzlKqNM5/q6mcXnwKb1a+V2436aOLGeqNOsHsi8Bi6vXicEpUfnXTYZwi/Afq1Oht99x+Hlaol3jH0sk1cvec/N/Qx8I/MVq7gVwlqtjnenGDvOvQbjeNh3TRtS1H7eLRLY3r12cWiKquxFv0mHZOHdb/7XSYfkVz2mPOTomyNwLx+2LGqh0WAGcvQw/dYArA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by SA1PR12MB8723.namprd12.prod.outlook.com (2603:10b6:806:385::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.223.13; Fri, 17 Jul
+ 2026 19:30:56 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528%4]) with mapi id 15.21.0202.014; Fri, 17 Jul 2026
+ 19:30:56 +0000
+Date: Fri, 17 Jul 2026 16:30:55 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: David Matlack <dmatlack@google.com>, kexec@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-pci@vger.kernel.org,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>,
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pranjal Shrivastava <praan@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v7 01/12] PCI: liveupdate: Set up FLB handler for the PCI
+ core
+Message-ID: <20260717193055.GD699082@nvidia.com>
 References: <20260710212616.1351130-1-dmatlack@google.com>
  <20260710212616.1351130-2-dmatlack@google.com>
-Date: Fri, 17 Jul 2026 19:28:44 +0000
-Message-Id: <178431652443.189683.17611165218179620081.b4-review@b4>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2399;
- i=pasha.tatashin@soleen.com; h=from:subject:message-id;
- bh=WaZbN29Yb7QirGLZ6z5SCIc8GS0Y/8CnVePacwfjgX4=;
- b=owEBbQKS/ZANAwAKAbt3KEzbc3reAcsmYgBqWoJwXimoKQnR5L+cGvO5hfmCHnc7/6Y+V/lnr
- /tiYHeaRyWJAjMEAAEKAB0WIQRBMaqT7LRvGvB/NmK7dyhM23N63gUCalqCcAAKCRC7dyhM23N6
- 3mp/D/9E7WlpCbODIzubvEP77KqJASqif+QIFU1RjVar0csfnfO/87C1moo0vCfIbC5Wp4vev5R
- Weg8hCZ2vLXDJz3lZXkA4+MsTgUcAAUyQQEjh6Qz8ByxS+sRPt3KLMkTEMLvpv/RizG0xuuOxQF
- 1MhV3yaBpkv3AqJR2aNw5bVIXcWGqdcGm4dwrzJQd1+mhwmw2ysi1ar4aCa91WcVxiPR5258FjR
- L6P9gv/F6g1QxuiohNcx/CYF+1WBiVYD5ElowzhhrrkWAlpbEyNU2WuMtDxB4Mk0UNqfL5d/HjP
- yvC16iyfwmfYtymywIPSxd+6EO5awcN1kN8GBHAgvqYdjGl/++zbvsYOhHeK0VSWNJ4r8ab03Yz
- saoGD2xsKkdhxtABu4cG0lWbRyKgCMc2jyvt4vYFCisgxPbIEVHpOE3ZdL5O9w0f6p9wglb0bd8
- o8lDkvrrVGsHSDlOgeiZel+Pah/XGVOb89wPQ5PnIhdyocdX/blr6+4xbeExmuVdcik4GWX3RC/
- OVRyYBeSlTJ+dIQxC/gyYJ6o7wcY28JEIbr/6z7yE0M2mJ7ZmuGjBoeX8sYSTxiFjR6Z0tfA9x/
- 0Br6X1vRHcwO1p/zpTdETR3bzl5yaXnL/fAKnCWt7OlQVnA6hyKsV7ro9T3/H8PswPl2AIfElFc
- 2EkAQsTiIeXe94g==
-X-Developer-Key: i=pasha.tatashin@soleen.com; a=openpgp;
- fpr=CAAAB722DD22A081F0D49F35633A6A993D43B569
+ <178431652443.189683.17611165218179620081.b4-review@b4>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <178431652443.189683.17611165218179620081.b4-review@b4>
+X-ClientProxiedBy: MN2PR05CA0051.namprd05.prod.outlook.com
+ (2603:10b6:208:236::20) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|SA1PR12MB8723:EE_
+X-MS-Office365-Filtering-Correlation-Id: 405a94b2-8d9a-4d67-2d28-08dee439ec6a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|7416014|376014|1800799024|366016|18002099003|22082099003|10067099003|4143699003|11063799006|56012099006;
+X-Microsoft-Antispam-Message-Info: D1BVNH8FiVHrz8lr4Mbhq1T0k6t953BUKzmhS3+ByV3kVrF8ntYuUypUzHlt2lg6e5yuhD7mD58gXm5dqaKwfqvU/AdTUQ23h0FltbtLMRwalA696HvvQhZD8kjxnKD/PBM58iHAClq2beI16NVem13x/Jv1duYHjPDeCLzriHRm2O488ZfCnvMG7o1LvasGBEQHXCMbFbXQckTHkiC3/lGegGZnmaVik7ubzbv1VD6CjPCR2XVRLb3/VaYmWHwWZCZn3Al5B/Y3KWSG17vGiEXYkLa4PakVNuqE8X+b1qSfoQepCkw8hW0Elo5bwpXFsfvWZGX0Vr9gTAAX4aMKcVe4mlaluPggjirctPzhfevLMDU81U/xhzlfLn0+dvKWCou03kkQGGCIztB2r9Tl0OkEpcNHVd0CZu1/E5A7U9JIkh9y4nVH0HxgxwbF/mjBrNLAhADKAiYwbwp8AqZy2Dkms6tfLXPjO7b+nIPFu8gN00LPL8YAxgQiPomCLUl0VK69v8SXiFd6MWTD8MvIvF5/s/drlCWbOPp71wyG/DH9tvgLp5Uv85MzmN5s0H+AgePE90VC4tPvu/+4UmFxTQ9xGQrTO6ZkkURI1Fezpkt/H3UDP5XIKIDcXn2fOGUtCysofn1L7fDQP/YAP8bdLzh0YubeFkR00xNKxa9CeLo=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(376014)(1800799024)(366016)(18002099003)(22082099003)(10067099003)(4143699003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ZDRXUVFn64Ray6jmEfddl9eBSh263WCGOk21bymcIYiJYMXfWLf6hXFo7RRg?=
+ =?us-ascii?Q?da09Uz3Uur4FFFeB03iLU3YRUQJXSVteV7ojzKK/U0DaxqoxTILc7iNdDqk9?=
+ =?us-ascii?Q?4V2NZ4Xdp1qb/kFvcF/i+9xnrTN0xIT1afg7lj4xxZcn+PD3q+9Pi1ULIgxW?=
+ =?us-ascii?Q?NyhpCx8eegH7IrsvJ5ZDn4Og+tUwNrzsFXn5j0+FSJCD6y7y1EXAMI/MbJmu?=
+ =?us-ascii?Q?XNbO6pBhARAbb9QqOgviCbyANznXKqbCGfFvjhwFtiHf7Iek6DORv4cVnsNF?=
+ =?us-ascii?Q?Zz3ez9mV4LAgpDMOyBgyRl06yquzYwj/JzcNIZsL0wKQwklGAbbF1tzdoZjl?=
+ =?us-ascii?Q?WqDEnEaNKCdc/sAF2eTLDrx1Pi3IcOl6wMPJbOUCuZurGukFL9qR108fMdSs?=
+ =?us-ascii?Q?PBdAr4754HFZDpYGDBh+tW2mrP349MmpaR865wYbDPhv6RRQ3Ow3Le7/nMiT?=
+ =?us-ascii?Q?6FckSxBMTxQKB2Rvu8yePiH1Fty8O+GSmNXR8G4Sr5m6zS9Wd/Y9qbhgh2S4?=
+ =?us-ascii?Q?eO81A4rd1SILKvZqLMTnWUrIC6AK3K2PeIBo5RW5j/MXoLgez2GICkmOnuyZ?=
+ =?us-ascii?Q?u2W8o8NoYyzemZj7V1BqMYhTyy/KpoK+aj2m9pF/9WuBwY+WsqcLxPXN6iMV?=
+ =?us-ascii?Q?gj1xGw3LRU+L8xWLdWdD3BoiNtqkp2H7J6HjuWTQ99J1SCUnwrrqoKFnBYpp?=
+ =?us-ascii?Q?eUppRjPQSdOBeF3zDhzSNtvEnvD8VKQULNqMo/fH398p5nJrwcqRrBXv/ktk?=
+ =?us-ascii?Q?fClEcRqUPOaNKidiVkNPUY0JjZmOlatswLSqheIFvqZICuAf6d98DHloYsIR?=
+ =?us-ascii?Q?Y9z3ZfOXSy4oo16Ac00EhdCsyvb1wmog2ZQEngQ3rlmXk/VRwKObRMP9EIsW?=
+ =?us-ascii?Q?txGWPY5D53yoAfMBMm5hUZZy2ivVMBApX3NhcnuSc7S1Sitp/nFo3806EilL?=
+ =?us-ascii?Q?nnYWWB9tVtDOdqJpxLmAuoHXbktTE0LG00kar6qhfdpnJCeWSq949E/X00Gu?=
+ =?us-ascii?Q?FOkTufDlN4xXAVx8J5KdJGVE2j23qYm7xPEjqVUnUXumX1Yh4uB7KXMuGwRR?=
+ =?us-ascii?Q?qFzkEJtrCQ+fTY6dccTxIFidzdsnqUXJGRM8SIucGthljk0w7Qs7eNjfQaV0?=
+ =?us-ascii?Q?BeNE+PO7SZy378G+/2hOTCUUsdsEbgcCvzQNrVh3AYKw9uxNaEbI5Upn3LKh?=
+ =?us-ascii?Q?R0YXTIJhTQKoSWKhQnbcpTRuYTGsl8RnUJf2FjwWI6zfXurY3NeUYp7iUqMw?=
+ =?us-ascii?Q?5Q7Kh2y/+RgRJ9AViz+s4LZuo+jeexf1FoQEwIILvmM18JrrfyNWzPJr02wT?=
+ =?us-ascii?Q?OHuAY6XLWrK4OIJTDaB0QJ5qYlCwJETI1Gx0rZfWvF9RNBfVlsI51flAiTx3?=
+ =?us-ascii?Q?1FRepmkfAeR8lU8+azX5UjGeqqFEpSEgAbCS3lLI3i2EEihoTlyC01kvQpM7?=
+ =?us-ascii?Q?Q9L98qN/5Z2P6gZ9aFjlC2vgorqZtlPUiZI5GkWWaydM84I7nqUr8WJgKy/g?=
+ =?us-ascii?Q?cwGoskFbU3M6igsH+HFl/z4gZHrftznADK+H2h+Sb2P/sSOB8vDrH01l7V6a?=
+ =?us-ascii?Q?Pua9ydqPjQy5OiXDtoCy7qNjy8/dXbHczdBjuQBQeyxggGSGLUY+RwzKHSc3?=
+ =?us-ascii?Q?CNNcxCLNAKk6+maj6Z/Np+I97BJnOLeafkWgryjVWV8wAJYQGIJ42VjlfBLM?=
+ =?us-ascii?Q?HcH1BsALlEz2NhXayXwNeFniSI89pPGYxDP3qACIU7xUEsi2?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 405a94b2-8d9a-4d67-2d28-08dee439ec6a
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2026 19:30:56.5693
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eD17RG3oDH95D7h6xbPxBh+AwJmKrfS0SjlHPZAEJIoI3ECZECOCeFxB9tPnaAAV
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8723
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260717_122851_910745_27201754 
-X-CRM114-Status: GOOD (  17.17  )
+X-CRM114-CacheID: sfid-20260717_123104_025666_9E7A7E17 
+X-CRM114-Status: GOOD (  11.97  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -133,82 +154,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, 10 Jul 2026 21:26:04 +0000, David Matlack <dmatlack@google.com> wrote:
-> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-> new file mode 100644
-> index 000000000000..899758883dd5
-> --- /dev/null
-> +++ b/drivers/pci/liveupdate.c
-> @@ -0,0 +1,155 @@
-> [ ... skip 50 lines ... ]
-> +#include <linux/slab.h>
-> +
-> +/**
-> + * struct pci_flb_outgoing - Outgoing PCI FLB object
-> + * @ser: Pointer to the preserved struct pci_ser.
-> + * @block_set: The KHO block set holding the outgoing devices.
+On Fri, Jul 17, 2026 at 07:28:44PM +0000, Pasha Tatashin wrote:
+> On Fri, 10 Jul 2026 21:26:04 +0000, David Matlack <dmatlack@google.com> wrote:
+> > diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+> > new file mode 100644
+> > index 000000000000..899758883dd5
+> > --- /dev/null
+> > +++ b/drivers/pci/liveupdate.c
+> > @@ -0,0 +1,155 @@
+> > [ ... skip 50 lines ... ]
+> > +#include <linux/slab.h>
+> > +
+> > +/**
+> > + * struct pci_flb_outgoing - Outgoing PCI FLB object
+> > + * @ser: Pointer to the preserved struct pci_ser.
+> > + * @block_set: The KHO block set holding the outgoing devices.
+> 
+> AFAIK, these should be aligned after column:
+> @ser:       Pointer to ...
+> @block_set: The KHO block ...
 
-AFAIK, these should be aligned after column:
-@ser:       Pointer to ...
-@block_set: The KHO block ...
+Gosh I hope not, I never do that. The horizontal alignment is such a
+PITA to maintain.
 
-> [ ... skip 26 lines ... ]
-> +	ser->devices = 0;
-> +
-> +	outgoing->ser = ser;
-> +	kho_block_set_init(&outgoing->block_set, sizeof(struct pci_dev_ser));
-> +
-> +	args->obj = outgoing;
-
-Nit:
-You could re-write the above:
-
-args->obj = no_free_ptr(outgoing);
-
-And declare outgoing like this:
-struct pci_flb_outgoing *outgoing __free(kfree) = kzalloc_obj(*outgoing);
-
-Also, remove kfree(outgoing) call.
-
->
-> diff --git a/include/linux/kho/abi/pci.h b/include/linux/kho/abi/pci.h
-> new file mode 100644
-> index 000000000000..de549016807a
-> --- /dev/null
-> +++ b/include/linux/kho/abi/pci.h
-> @@ -0,0 +1,58 @@
-> [ ... skip 30 lines ... ]
-> + * @domain: The device's PCI domain number (segment).
-> + * @bdf: The device's PCI bus, device, and function number.
-> + * @refcount: Reference count used by the PCI core to keep track of whether it
-> + *            is done using a device's struct pci_dev_ser. The value of the
-> + *            refcount is equal to 1 when the struct pci_dev_ser is in use, and
-> + *            0 otherwise.
-
-I believe descriptions must be aligned.
-
-> + */
-> +struct pci_dev_ser {
-> +	u32 domain;
-> +	u16 bdf;
-> +	u16 refcount;
-> +} __packed;
-> +
-> +/**
-> + * struct pci_ser - PCI Subsystem Live Update State
-> + *
-> + * This struct tracks state about all devices that are being preserved across
-> + * a Live Update for the next kernel.
-> + *
-> + * @nr_devices: The number of devices that were preserved.
-> + * @devices: Physical address of the first KHO block containing pci_dev_ser.
-
-I believe descriptions must be aligned.
-
-Nit: Please order the included headers alphabetically.
-
-Nit: Please order the included headers alphabetically.
-
--- 
-Pasha Tatashin <pasha.tatashin@soleen.com>
+Jason
 
