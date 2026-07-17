@@ -4,110 +4,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2B88FC44516
-	for <kexec@archiver.kernel.org>; Fri, 17 Jul 2026 22:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D3287C44515
+	for <kexec@archiver.kernel.org>; Fri, 17 Jul 2026 23:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
+	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=lzde1ha+q0b3f53Hnca6aQ3EBESk3P8v7XvgdM60Feg=; b=f4qa1UnSuwe4qK0Mg9JjoWt6wH
-	wBOSkzmxQHtmS4RAXFB3QKFetz4MfB/fzeGz8j0ugPHVgblx1hijbLhd5aAxkW2OJ1B8D66eF2GAL
-	WqUzVYxBXiFSNx1+4wE7OSSOYF0DLKZ1NHUFYhl61J01Rs3OK1Ys55elLjd7DTyw8TfwTEHE/NhCG
-	0bPj4Y+B4YVIp8n20TzhnEdr8R0rlVXV4+e45okgRKTdmgQMPgTpD/veJQSzZBqAPDeJusRJiUvuS
-	Pi1/NK7ruIW0BCm89L1Bh0/b1FrZl4JiSWk+Vz0Q2Ey8NQ0buteemfncOwv1PUD1WJPKsPVmKJP1b
-	lZhvIVsw==;
+	bh=1uFYFSRoCsiTT7zcdwujRzQUpLdsx92sk9iYHDH24xs=; b=izblnsXsN+KH46PQEDTnhoQgJV
+	zbWB21fwm4pHlChjsIc4MU3EV0E3V4F9To/4P9nunN/rt/jO9BCR/dTKgC9r2Sd+Au3w+mPP8+4ex
+	lFn3CW/UoLS1c/G60K6vGSSmVH2QXaSK3YKpWxo8lDHTFwPgK713RuvGIMUUgKEWOm+h7e5uNBZgC
+	/Tsao5/wWnf0WpS5ZHvx2HGXOnZUjuVLq+85YKR5NwZ2DpHdELdyRVBWNb0h+aCORDdsi4aO8wgOU
+	tF1Y7v9vbrwzuGmu34FAEeVBMTi/2MSXhnRp/mjLs4lDR/4gOxrFZcz/X2ll+hEXdt8pzLnS+nC3d
+	59GjOI4g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wkrCS-00000003Lwd-2hrc;
-	Fri, 17 Jul 2026 22:38:32 +0000
-Received: from fout-b8-smtp.messagingengine.com ([202.12.124.151])
+	id 1wks0A-00000003OwZ-09OL;
+	Fri, 17 Jul 2026 23:29:54 +0000
+Received: from mail-qv1-xf36.google.com ([2607:f8b0:4864:20::f36])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wkrCP-00000003Lvf-157b
+	id 1wks07-00000003Ow6-33Zn
 	for kexec@lists.infradead.org;
-	Fri, 17 Jul 2026 22:38:31 +0000
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 49F5F1D000D3;
-	Fri, 17 Jul 2026 18:38:25 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Fri, 17 Jul 2026 18:38:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1784327905;
-	 x=1784414305; bh=lzde1ha+q0b3f53Hnca6aQ3EBESk3P8v7XvgdM60Feg=; b=
-	Q6ij4R8I96GjEjcUD1qZKp+MktX/se/U67ruWFXVdRaCcuep0Hzsq0TptKEBdQ1k
-	BbaUQZRd3kGFDFShK3JAyN3CAJUZp05WQeRgrsX+oXSmhODXf+gmzFO4k73+T8IT
-	tvb++PH3ocHu7i8+drrSM9PqIL3/VN1hpPpn2GK6PX0YZMvjW2PleKtFfCpa9JZe
-	ZpNKYcI/9DNAFjMaGR5zfayIPxn4VeEap2uoS7UqtigbgKNKLQEevJ6oDpBn4H7d
-	W+91wm1iw1CnWBmsL3K03cMVPEtuErgCy6wNJ3yuTKZqeyBM8v5DZFRajTzN/Rr8
-	SVl/ZSWu4nmtD96mnaTE9Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1784327905; x=
-	1784414305; bh=lzde1ha+q0b3f53Hnca6aQ3EBESk3P8v7XvgdM60Feg=; b=k
-	3p91ygZHntREhMvwRvvg1Nd6p8Yy82IesJEqGKKmouz8AY0GCqunTdJNaAoK2Izd
-	gX27XhdWtrEcbyyF0b5ULRVNOb7NpiEF+HkGuCPh9a+vNP/Sml4kXsVaN6eGL/DZ
-	mDYTKzZvsESQnYGnpAkYDcJrenv4en0xKRqT1fLLK9Kq0zSyXztvFMzjviSKEnKn
-	f2v+DgameSBhsyR9gRn7L0cDQ4jt4kBnavidzvmYjwPmmXT4kOcEAQ1jLYEQyFkC
-	Ps5fKiVy7O4euSm2Cp3A0jsFzlbRLwx2NrHGGRxz3pX5knstd90i/L30mwsPfmrU
-	x0f/mfqvnulJfzMswgjzQ==
-X-ME-Sender: <xms:4K5aasDFJxf8OJ9HwrQvkbL3nz_k-D9y0ERPa60Chq_o1nrerKIHOw>
-    <xme:4K5aauqSodIH1QgfhPde-nISWSQrkHiq0g5aTcSniaa3Loa2yP-GiSAHAkVxM4OmS
-    QETNl2eUvDe8v5EXh_tXC3K4bgcN0IkAVlz2poE_In7Ox0V_S7rxf8>
-X-ME-Received: <xmr:4K5aatYnWC8LdcmOZrSzhCBQ4J7_G7UsMC1yNED7CRfNG5NR66QFF_xVA3s>
-X-ME-Proxy-Cause: dmFkZTGm3qs5+aEcYkfakpq+2uLa99h4ajh2qJDjfxZgK/kLOg+NCtE9Xvz+Bhj3dMCVeG
-    Iw9OAvLLQOBef102C9CcWY9KFqr31YULKXWz7tTVH/9L0r3O8EFnXB6mx22NULLeTdT4jR
-    7YyhGf/7/zlHCdn9qcNeEbW1dGitA6XPDqWKaKaSLfsRIHa47ZmRAwCu/HK0tLf9EzcH6J
-    mrXjVXzFge3aTWOYrJ8BV1WW+FlEXo356jBxCU/ddBc45zydnrQ/OFaKikfgE5MXr2hUSm
-    qivErpgstzhVNhWpsbEp/HjC3trwdQqnxIg3F3fBPXme/bWnJbnRbmJ1IoE7xjyGX8ciMn
-    NLkqwZEJY9vN1jLTYco6vz9m/oKknXVpe4cimgXmyi71Tz3zw90wQLPatMv0uythQlAFHI
-    siDsOq04rZ8KC7P/N5IKixERGDlXwr2nDee2QXJL16P5A97LDoe8ij/WvPHOdgqQErQBp7
-    2qh1L4FEcxl0oRjEIbc1cA5156yEJIg6jz/FUFOOeYSqKIqgBCiY/BjgF6d6eJhywXH2Wb
-    di7DE9KTauaQKU2jiAMqCMesbMe93WPD0RH+Ko6ZJH9eORiCm5lho/LYAMlGyQv8Vd8D7s
-    Dm3+bOx2kd0cxpUZNVlu21VpRgek0q9oT6X6hbADH6goWPsiBbg3eWlEy3qQ
-X-ME-Proxy: <xmx:4K5aanB5kD0EYGoIaM4DDZ0vTQFilDsP--MwNer7HMw1YyoSd9BfsQ>
-    <xmx:4K5aavcC-HAX6KVYAQS0nIgyIJxU4jrz27bJGCe6jG_NyrEAL-QqFQ>
-    <xmx:4K5aas8gfYkzLwYExzLPNBb72kPXQsB3BzGO0uaNxonp5Bj0P9CzEw>
-    <xmx:4K5aanEYB5o6L-2-emvdTEbuBXbU4hevweZU1IYJCUEHLrpOQro-0w>
-    <xmx:4a5aakPRm9ooV6NOF6i9FVYfpIf8SW4TZedXWnnZEgXY4Zo8wPg2K4hV>
-Feedback-ID: i03f14258:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 17 Jul 2026 18:38:22 -0400 (EDT)
-Date: Fri, 17 Jul 2026 16:38:20 -0600
-From: Alex Williamson <alex@shazbot.org>
-To: David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-pci@vger.kernel.org, Adithya Jayachandran <ajayachandra@nvidia.com>,
- Alexander Graf <graf@amazon.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Chris Li <chrisl@kernel.org>, David Rientjes <rientjes@google.com>, Jacob
- Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>,
- Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, Leon
- Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, Mike
- Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, Pasha Tatashin
- <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>,
- Pratyush Yadav <pratyush@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>,
- Samiullah Khawaja <skhawaja@google.com>, Shuah Khan
- <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>, William Tu
- <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>, alex@shazbot.org
-Subject: Re: [PATCH v7 03/12] PCI: liveupdate: Track incoming preserved PCI
- devices
-Message-ID: <20260717163820.6bc8c13b@shazbot.org>
-In-Reply-To: <20260710212616.1351130-4-dmatlack@google.com>
-References: <20260710212616.1351130-1-dmatlack@google.com>
-	<20260710212616.1351130-4-dmatlack@google.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	Fri, 17 Jul 2026 23:29:52 +0000
+Received: by mail-qv1-xf36.google.com with SMTP id 6a1803df08f44-8efcef23d21so82659286d6.2
+        for <kexec@lists.infradead.org>; Fri, 17 Jul 2026 16:29:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1784330990; x=1784935790; darn=lists.infradead.org;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:content-type:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=1uFYFSRoCsiTT7zcdwujRzQUpLdsx92sk9iYHDH24xs=;
+        b=cW6jjfitsbsA2KZIpuj9WWYr6J9jQuEMqrJbiwQxUR9kCr5aPzOOK2DzyfBqmogpMC
+         QVhUgsUruP0v2R0xAYZ5hcWprARJLzlcGf91INj5Mwel1fVjmOtoZnwdLIPyinpJELIZ
+         zs8F0bKZPaniNk2+funLCrMrPepPzEVrxnwcqoy51rzPzdRaGV+S+4D9qhMvlQkOhlRw
+         +b/XERK3tsAC94dVzEo93egqOAnHLT81haDsQURpaSFRNYjqLuYoxH0oGGchUdjXbE0J
+         ZCoBgZCxiv6T5MxLudMBKgwbK+Qo1xTc7H9WoyasSCg7+L8zCjLAAh+Knox9BK7LC9aD
+         HqEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784330990; x=1784935790;
+        h=message-id:date:references:in-reply-to:cc:to:from:subject
+         :content-transfer-encoding:content-type:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=1uFYFSRoCsiTT7zcdwujRzQUpLdsx92sk9iYHDH24xs=;
+        b=edmw51PwA8IzcVcTeXCO33JCCknXiUd+8EKSNiK4a5l4ewpAvqAEiLBS0px9Uu89xu
+         Ul6sPDJLQ6OLgEfYLuP01rr3Xk383RSbmodPeZWNJ6J1MjFoKPYUPe0o5hT7sweaXgYg
+         LIYmfhDl9eyLq7xuSYw96d0SIyLFd+FVkNtxWTi4yGcPOIy84b6iqHYwkGzFXx1l0zvZ
+         ghweKQdSSAvVjCeYQsREChEzygHPviB044BxDZk0LnQfR4D2M6ANctYGpq3wD8d9FKZH
+         EVvj6jusVmDY7E0/Ufn5oYzcS8hwZDGwW4JxMkMvUvHBns/yogbVibQc0oWZBOAg5hwl
+         VoiQ==
+X-Gm-Message-State: AOJu0YxYzRmM11kGw61pw8PUadQKD/kwrlGTXQ0wXXw96bsGWpAH6hes
+	6IqI38iPu0BESbQwlMaWZhwGfw7a6HLwkLTjAcO1EbBEOPM3Vwlkb4L9py0Yk8hSQGhQ2Y/FKEZ
+	6bXgE
+X-Gm-Gg: AfdE7cm5UokaFt7gbEjELMN1xqVlIq3TkkIrruOm1ztXRR2weVPlKFQn5EY+pkXqFhP
+	uSHoBvRFkvTjOwuzUK56sSmPjnQ/bTr53oWvxe8IJsWl/Cn74vTyQ49Hb1HcBM0OX5SkCAZanLL
+	T5/oyANqIh/EhwWz3P6N3xwSGcKc41wBzKh8Qt+29FYKIzZDW7J6V3ACIM1IXOg4KWLH6ntFZk4
+	+bj1yuPfPhaDuD0CzEZTRL9SG3KjwwykTLF2v0tPVo+W2FHFocELZJQC9cDb1inckL3BgzeWybB
+	N0tBrBoo30gjfDXKZAJXopr9Pf9f0+fajVGfYnn4gFSRVLI95id2szgJJxz638oA7ngGpdv9nja
+	K9ZmLHMQdajpoIKuY3XexyhQM3QP9N388UeEmgK8aED/E/6lKH126BtjwUCMCE0v99US+/8YnAt
+	lLqCuxlBGDD5n6YzwOgP425B31JqLSa7aN9yu7klxZasEzJ2MCQw==
+X-Received: by 2002:a05:6214:5c49:b0:8fb:81c5:7997 with SMTP id 6a1803df08f44-9077850e2c1mr54008216d6.31.1784330990189;
+        Fri, 17 Jul 2026 16:29:50 -0700 (PDT)
+Received: from [127.0.1.1] ([71.181.43.54])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-907787298b9sm28260406d6.48.2026.07.17.16.29.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2026 16:29:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v7 09/12] PCI: liveupdate: Inherit ARI Forwarding
+ Enable on preserved bridges
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: David Matlack <dmatlack@google.com>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, 
+ Adithya Jayachandran <ajayachandra@nvidia.com>, 
+ Alexander Graf <graf@amazon.com>, Alex Williamson <alex@shazbot.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
+ David Rientjes <rientjes@google.com>, 
+ Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, 
+ Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, 
+ Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pranjal Shrivastava <praan@google.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>, 
+ Samiullah Khawaja <skhawaja@google.com>, 
+ Shuah Khan <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>, 
+ William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
+In-Reply-To: <20260710212616.1351130-10-dmatlack@google.com>
+References: <20260710212616.1351130-1-dmatlack@google.com>
+ <20260710212616.1351130-10-dmatlack@google.com>
+Date: Fri, 17 Jul 2026 23:29:45 +0000
+Message-Id: <178433098576.189683.2364970585754668266.b4-review@b4>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=888;
+ i=pasha.tatashin@soleen.com; h=from:subject:message-id;
+ bh=6J2VFoOheObNIbZ6/cGmHoej1PdGKGdAP4cvYQKgG9k=;
+ b=owEBbQKS/ZANAwAKAbt3KEzbc3reAcsmYgBqWrrshWLAQfvPS4hCFjntJqjX0KdHUleGb+svS
+ eNoqDsCDGKJAjMEAAEKAB0WIQRBMaqT7LRvGvB/NmK7dyhM23N63gUCalq67AAKCRC7dyhM23N6
+ 3n6BD/93+EXV7xpXf2NVyjjavXthNzeAZsOjnEaI/9CTjGZpZezuLCaFWFkZbkDaJEae3J38p4g
+ juh65pYyMlwdowYBLYitqy4Ier6vbyyxoTsXaj3h/5m7FYus2rP1L70rvxqIWUKVDa7ae4mcHP8
+ jx4t1Y7WnDY7cDIIBbDBOVWz/TUe4B/nhCyh923/V+f3mvMwSMrkjpeg0snqGfcXX1/MgSHzSXx
+ JxlP4a0WAMxKCYZJErzZ2J4BDcRpMPVf0Wogx/PmJlJ44HAR0obpH/l7e/l8mlIfJyTBnC0BOcd
+ CRxdwB4gQwt8tYXq6ojekcZQGo5tkLGjVU/FRP9nzKbGUoIwwajPcQw2k9Wy0QrUHOHr0YepxNa
+ PDOxIex+hWFFkDdyz0K+A6aSa1S8Wbkc78gHQcx++rNOheuVA4I1tNb2mW0+CmOfdK2W+Xq7qzU
+ 8H4RB21Ijq3rJnHjvcfH9Y7rNyN0XbXdraIJKmVcg3iQiykYkN033FyDlHK3Xxs7+VkXpfehQU7
+ HVwPoEC6LyiXUZuPvqNPlP9IBcUFEKJtHRGZQvO84eyZvv0IyG2a4olE3gptNO3xeHXM5rLoij7
+ +UQOk3YJ0MWvmomRHmA6P0cgqW7ejMNyEJU2GfTch92NagNbGdNLnxWPd3YVdcov/hPE9GI6NTE
+ y4FR9mOBy865agA==
+X-Developer-Key: i=pasha.tatashin@soleen.com; a=openpgp;
+ fpr=CAAAB722DD22A081F0D49F35633A6A993D43B569
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260717_153829_788508_2C146C2E 
-X-CRM114-Status: GOOD (  18.85  )
+X-CRM114-CacheID: sfid-20260717_162951_785229_56F3F1C7 
+X-CRM114-Status: GOOD (  10.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -122,67 +133,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, 10 Jul 2026 21:26:06 +0000
-David Matlack <dmatlack@google.com> wrote:
-
-> @@ -298,6 +377,87 @@ void pci_liveupdate_unpreserve(struct pci_dev *dev)
+On Fri, 10 Jul 2026 21:26:12 +0000, David Matlack <dmatlack@google.com> wrote:
+> diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+> index a95bfe5eff77..74a11e520f0d 100644
+> --- a/drivers/pci/liveupdate.c
+> +++ b/drivers/pci/liveupdate.c
+> @@ -816,6 +820,20 @@ int pci_liveupdate_enable_acs(struct pci_dev *dev)
+>  	return 0;
 >  }
->  EXPORT_SYMBOL_GPL(pci_liveupdate_unpreserve);
 >  
-> +static struct pci_flb_incoming *pci_liveupdate_flb_get_incoming(void)
+> +int pci_liveupdate_configure_ari(struct pci_dev *dev)
 > +{
-> +	struct pci_flb_incoming *incoming = NULL;
-> +	int ret;
+> +	u16 val;
 > +
-> +	ret = liveupdate_flb_get_incoming(&pci_liveupdate_flb, (void **)&incoming);
+> +	guard(rwsem_read)(&pci_liveupdate.rwsem);
 > +
-> +	/* Live Update is not enabled. */
-> +	if (ret == -EOPNOTSUPP)
-> +		return NULL;
+> +	if (!dev->liveupdate.incoming)
+> +		return -EINVAL;
 > +
-> +	/* Live Update is enabled, but there is no incoming FLB data. */
-> +	if (ret == -ENODATA)
-> +		return NULL;
-> +
-> +	/*
-> +	 * Live Update is enabled and there is incoming FLB data, but none of it
-> +	 * matches pci_liveupdate_flb.compatible.
-> +	 *
-> +	 * This could mean that no PCI FLB data was passed by the previous
-> +	 * kernel, but it could also mean the previous kernel used a different
-> +	 * compatibility string (i.e. a different ABI).
-> +	 */
-> +	if (ret == -ENOENT) {
-> +		pr_info_once("No incoming FLB matched %s\n", pci_liveupdate_flb.compatible);
-> +		return NULL;
-> +	}
-> +
-> +	/*
-> +	 * There is incoming FLB data that matches pci_liveupdate_flb.compatible
-> +	 * but it cannot be retrieved.
-> +	 */
-> +	if (ret)
-> +		panic("Failed to retrieve incoming FLB data (%d)\n", ret);
-> +
-> +	return incoming;
-> +}
+> +	pcie_capability_read_word(dev, PCI_EXP_DEVCTL2, &val);
+> +	dev->ari_enabled = !!(val & PCI_EXP_DEVCTL2_ARI);
 
-I'm having trouble following the error escalation here.  What's
-fundamentally the difference between FLB data being provided and not
-compatible (subtle log message) versus FLB data being provided and
-compatible but we cannot access it (panic!)?
+unsigned int    ari_enabled:1;
 
-Don't both suggest devices are running but we can't get their FLB data
-to continue letting them run?
+Sashiko asks a valid question, what protects other bits in this word 
+during modication?  At a very list a comment is needed.
 
-The errno interpretation is also slightly different than the comment
-above liveupdate_flb_get_incoming():
-
- * Return: 0 on success, or a negative errno on failure. -ENODATA means no
- * incoming FLB data, -ENOENT means specific flb not found in the incoming
- * data, -ENODEV if the FLB's module is unloading, and -EOPNOTSUPP when
- * live update is disabled or not configured.
-
-Thanks,
-Alex
+-- 
+Pasha Tatashin <pasha.tatashin@soleen.com>
 
