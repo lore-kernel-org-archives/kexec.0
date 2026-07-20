@@ -4,56 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9833FC44527
-	for <kexec@archiver.kernel.org>; Mon, 20 Jul 2026 09:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0D7CAC44515
+	for <kexec@archiver.kernel.org>; Mon, 20 Jul 2026 12:43:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=1BZuFpFF3ZCJAw8J5cGf3oYTMZyR3mu4ZhcYlnqpe0Y=; b=Se8tLBnyGxw0enEk+ONnsugiqU
-	+KDg0nppjAiaJw16ZPc2ndMdbNheKqstE800dzzYKg6YsufcrhpispJ4W0hYRcRXpnWvW8ZlY4VCb
-	OmP/RqjKePHanZjZbJbFwo4xvey1C7bEUI8QUidxS2cENMOCMsH4PIWW9jhonA7k2sOJZE+Ld0dmR
-	w1a+eyzbFPEEcNnJq8NkZPFVeJTXxcLpytmsmCpbs72/5y8e+Cm9P2AONvLwCJc+ZsWdzU6QKE0Xm
-	WinZfUhqz1geHjaPZ3AIkvoDu69WCx+2IvmWGsSL5NlhQPI2j9auss56sdIknzR2grUVS9m1pOXP7
-	Ep7DI3bQ==;
+	bh=/iig1PBFdcY5HjlDuDU/ADsRJNO/Hx2Bt7lB9eeE+YM=; b=CMVWHP6JQkQe08Z+PlYBQ2rDzY
+	ZJFGXGqKKp5dSCIqvMzY/sCOpkn62FzOmR1+S4EbqPMWBgen+Kl26xkBfMZwohMbnMxhJGokFQgVc
+	qXr2MvyaOKZT7quXO9H6wyDk2BIWb7eh1EbZGUFOK29iBEoed+/8t4cch1Rj/ZpquNLROi+gwRpZv
+	Po5YAXyFj2QbJR4aC3m7JVgREb1sTZ8plz53EHnflByxCojuuqvKZ/wYT5d81safQwL3NOq0bdjdc
+	aZ3xu8Zdk5TR6MsHWYpLZimEQLB22TJn6smCbLAHUlO8wWx4Gtzw7YRDGfneTY0FENTQLM7E0bn6f
+	PJe+s4kA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wlkUg-00000006Log-1MDO;
-	Mon, 20 Jul 2026 09:41:02 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wlnL7-00000006isx-0klt;
+	Mon, 20 Jul 2026 12:43:21 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wlkUU-00000006Lic-2UTc
-	for kexec@lists.infradead.org;
-	Mon, 20 Jul 2026 09:40:51 +0000
+	id 1wlnL5-00000006isj-1lcj;
+	Mon, 20 Jul 2026 12:43:19 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id DAFDF60A81;
-	Mon, 20 Jul 2026 09:40:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC2781F00A3D;
-	Mon, 20 Jul 2026 09:40:48 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 2233F4304A;
+	Mon, 20 Jul 2026 12:43:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C02101F000E9;
+	Mon, 20 Jul 2026 12:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784540449;
-	bh=1BZuFpFF3ZCJAw8J5cGf3oYTMZyR3mu4ZhcYlnqpe0Y=;
+	s=k20260515; t=1784551399;
+	bh=/iig1PBFdcY5HjlDuDU/ADsRJNO/Hx2Bt7lB9eeE+YM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Hr9wTapxBs54VZOCknn5t84T+rkjQ1B5BP0ISVVwW5BKZXdrdkEKU6P9JIWPhkgTr
-	 gx+ZvpgPLbJQuf/tNEEjo+/EQ4BnPsj6YWcvOpEZ9T1B5otahyyc6IU12xs1WUumQO
-	 6hStTVmnU+V4ZEY5GsxH02AwXFa2BiGWD7fDj5sKb2HWJ1i/xZFRt+HlNvbLvyUWmm
-	 KPNyTdfwl2QszQDlwqXKQ6WsyIwNJ1DgZU/1Y1kWXgesyhV/5hqN1up9LKX01trYRz
-	 Zvq0/PNKxj+UWOwy9femOGrd8aqlpyUhvxUIW1jY5ffWWO/IAyFufs1Pqgm6vLme/l
-	 Q1To8kYYiF33g==
-Date: Mon, 20 Jul 2026 10:40:46 +0100
-From: Simon Horman <horms@kernel.org>
-To: Brian Mak <makb@juniper.net>
-Cc: kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>,
-	Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 0/3] kexec-tools: Add new KEXEC_FILE flags
-Message-ID: <20260720094046.GE1736709@horms.kernel.org>
-References: <20260612223945.1400554-1-makb@juniper.net>
+	b=C2KGFoH7pJ83K2lvgvwaBViS832LyhVDhzK+gYrDm//Wacyhb8iZjL6FL/5KoOAMm
+	 gykvbdJUUb8za46mKM+vvkIg75ktBdDRFMkeQ60bebVECAM8LDq551QWsi39nubm3M
+	 f0bijeVlQZ1l1URXOCz12bRAfczsKWTk2v4FkqSsevjPw5CK0fF9tLUvxrlQtJLm9e
+	 CQm61a93+a14hp896s1BJ5I03BijR+dPV0Y++8FEUmKQwsku4NPfG9tYKkPhoZCxzE
+	 sxkqhBBJeq0tGuVKZ09aiBZId7G9P9Tll+X4kkYj9Q06IJ98xwWPngvKWL8xQV0gAD
+	 ACWxcsOpSTR6w==
+Date: Mon, 20 Jul 2026 15:43:11 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Simon Horman <horms@kernel.org>
+Cc: Pnina Feder <pnina.feder@mobileye.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Dave Young <ruirui.yang@linux.dev>,
+	Jonathan Corbet <corbet@lwn.net>, Alexandre Ghiti <alex@ghiti.fr>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH 0/4] vmcore-tasks: export per-task metadata to vmcoreinfo
+Message-ID: <al4X300UObXawEIJ@kernel.org>
+References: <20260622211430.4008899-1-pnina.feder@mobileye.com>
+ <akybBoCAm-kJbfHL@kernel.org>
+ <20260720091927.GA1736709@horms.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260612223945.1400554-1-makb@juniper.net>
+In-Reply-To: <20260720091927.GA1736709@horms.kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -68,29 +80,60 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jun 12, 2026 at 03:39:42PM -0700, Brian Mak wrote:
-> Hi all,
-> 
-> I realized I forgot to raise a patch series for adding the new kexec_file flags.
-> Apologies for the delay on this.
-> 
-> This series adds support for the KEXEC_FILE_NO_CMA and KEXEC_FILE_FORCE_DTB
-> flags, which are used by the --no-cma and --force-dtb options respectively.
-> 
-> I also saw that there's no debug print for the flags passed to kexec_file_load,
-> so I added a print for that as well, which was useful for me to verify these
-> patches.
-> 
-> Please let me know if there's any questions or comments.
+Hi Simon,
 
-Thanks, and likewise sorry for the delay.
+On Mon, Jul 20, 2026 at 10:19:27AM +0100, Simon Horman wrote:
+> On Tue, Jul 07, 2026 at 09:21:58AM +0300, Mike Rapoport wrote:
+> > On Tue, Jun 23, 2026 at 12:14:26AM +0300, Pnina Feder wrote:
+> > > This series extends vmcoreinfo with struct offsets and sizes needed by
+> > > the vmcore-tasks userspace tool to extract per-task state from a vmcore
+> > > dump without requiring kernel debug symbols (DWARF/BTF).
+> > > 
+> > > The vmcore-tasks tool reads /proc/vmcore (or a saved vmcore file) and
+> > > reconstructs, for each task:
+> > >   - task name, pid, state, flags
+> > >   - VMA list (start, end, flags, backing file)
+> > >   - user register state (saved on the kernel stack at kernel entry)
+> > >   - user-space backtrace with VMA/filename mapping
+> > >   - kernel dmesg buffer
+> > > 
+> > > This provides a lightweight post-mortem crash analysis capability for
+> > > production environments where full debug info (DWARF/BTF) is not
+> > > available.
+> > > 
+> > > The companion userspace tool is submitted to kexec-tools:
+> > >   https://lore.kernel.org/all/20260622205550.1087163-1-pnina.feder@mobileye.com/
+> > 
+> > Sorry for the delay, this fell between the cracks somehow.
+> > 
+> > The kernel side looks fine overall, but to merge it there should be an
+> > agreement from the userspace side maintainers that vmcore-tasks is
+> > something they are wishing to accept.
+> 
+> Hi Mike, all,
+> 
+> Sorry for the extended delay.
+> 
+> I will send some minor feedback to the user-space tool patchset
+> but overall, yes, this is something I would be happy to accept.
+> 
+> I don't want to create a chicken-and-egg type problem here.
+> But it's probably worth mentioning that usually features
+> hit the kernel before the corresponding code is accepted
+> into kexec-tools.
 
-Applied as:
-- kexec: Add kexec_file_load debug print
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=29898e149feb
-- kexec: Add DTB carryover support on x86
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=d5a495bfbfc9
-- kexec: Add support for disabling usage of CMA
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=e4de788721cb
+Sorry if I wasn't clear. 
 
+I didn't mean that the feature should be merged into kexec-tools before
+merging the kernel bits. I just wanted to make sure there's no fundamental
+issue from kexec-tools perspective.
+
+> Let me know how you would like to proceed.
+
+I'm going to wait for Baoquan's review and once that's done I'll pick up
+the kernel bits.
+
+-- 
+Sincerely yours,
+Mike.
 
