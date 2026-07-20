@@ -4,80 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 29E37C4452E
-	for <kexec@archiver.kernel.org>; Mon, 20 Jul 2026 20:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5443DC44515
+	for <kexec@archiver.kernel.org>; Mon, 20 Jul 2026 21:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=D0u/ZsKaJ4sWO+EwXyup1tCC2bG9yJvlOEOLZr8wnIo=; b=axLFLYevY3yl+Ly7l/Mdl9usQV
-	ZpMIZ5ogeLAagNsaq/8Pp1iXFl3S9mdDw0jP5uFA/p+l0BgO8eMqdhYHLhhZWHr/Lioj4jXz5jEz+
-	g9kaJSRUiAhx4++A4lYTPpcZPSyI3o6TtTCQFMDK/Q8xr63TTIIqg9TpQsbB1X9tW4ZH58LLL5g2S
-	u8lvUfh47RSXX2cVDZFUh+WsbVsL3DqcUu3GWz4H83lOrdGVFjkiHoYmTcgotCG0L1FOul3+qQPrE
-	V7PABLeqmtuTqGuBiNI6e5SAWAnVf3bC3isCxLgYuWAH5g/fFXJK0gHt2JiwW/De2hvmQlWxYiMFH
-	cqFTIKWA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=9mE0sfVA6cta9/M5CvPkkpA0kKt/DbFANSsjRo5aapo=; b=oax/xDGls9aUvIA6t7ozFO7MYd
+	eGAP5UR4D7/zlrB3GWjRcnM0bdVsN6R1psbm16W8z7HMOrB4oFBYQelIwimxWQvL94ATUr6DdGrF9
+	z8gJAydPEg0/ZI7kPuqIadMaMLcCS51/HG9HxwV0LgYuoxuFoxmAaWPEffpAgCGchyln7fs1SW0o4
+	cXhm728miKqp4gkKOlK5BS+r5tE9DBGeboGRBGbrUnYbcarv3BQ5M5JQWbhhB+lLg4jBRoD8665cz
+	fic6pqe1PI6h4jjQS0h/Ny7Bnv5/qUa952fu7G47BxoF8YWfeEhPpcei4X7RmRj0gFgjKPmQkJGNE
+	yGyq/P+g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wluer-00000007sLR-1FfC;
-	Mon, 20 Jul 2026 20:32:13 +0000
-Received: from mail-pf1-x445.google.com ([2607:f8b0:4864:20::445])
+	id 1wlvxK-00000007zCM-3M8M;
+	Mon, 20 Jul 2026 21:55:22 +0000
+Received: from mail-pj1-x102b.google.com ([2607:f8b0:4864:20::102b])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wlueo-00000007sKI-0hEx
+	id 1wlvxH-00000007zBV-1yJU
 	for kexec@lists.infradead.org;
-	Mon, 20 Jul 2026 20:32:11 +0000
-Received: by mail-pf1-x445.google.com with SMTP id d2e1a72fcca58-84870e7f498so10999289b3a.3
-        for <kexec@lists.infradead.org>; Mon, 20 Jul 2026 13:32:08 -0700 (PDT)
+	Mon, 20 Jul 2026 21:55:21 +0000
+Received: by mail-pj1-x102b.google.com with SMTP id 98e67ed59e1d1-38175907a56so3237641a91.0
+        for <kexec@lists.infradead.org>; Mon, 20 Jul 2026 14:55:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784584518; cv=none;
+        d=google.com; s=arc-20260327;
+        b=DPsmYTgGs3NckSfyPO9q0sLt2dMJI8OGaFszEE0qCxRIas+zzrDWccnIxMqGg0+X+B
+         IcBpGDGegt7ya2rksIuZpvjp//7NBaA8AoLVVvT1fQc1gAAfOpIvMv8aGUBl4fDSuipA
+         XBqtlRU98SPSkeNiKyHkHnOr27mfOxuVjWs2ThQBrgXhaHBFTpVH6M96CtoVGIsR74ip
+         gFNdA2kgt9+ryo295+SYncJMrtwjdcuiRqT4rBaFDi6b1uPqUm9dUcTAZ1H+e4HT2VG+
+         BOqaH0Doid7Hpyfl73YHqea0xwnLrzQksxnj58tqkM2QNdNS0PS5KNv/1VbT7AW+Bqzb
+         ovQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=9mE0sfVA6cta9/M5CvPkkpA0kKt/DbFANSsjRo5aapo=;
+        fh=NmzZBCo2v6h/OOnChjJyHO5DmoEC8vLdB+rxb6oUc0I=;
+        b=BBkZ6PhqH15ZwdmJgx8QrenBjb1nyBHy28HxOjkvEv2gQTvkcVN8nSJKexXnX7FFxU
+         Xp+klmVqTVu/mkiX2dp+JTe7/3jWRg2zRrmRRB883C/7QYThp7qJpo4jPREC5fco8dyw
+         nD42LgmM5Aak4T2Bcvlyi1iFrDYJ5iUlA4f7qVT7ssxpoG8Yl7VvbwzAjjT20DNrIrPH
+         K8qmd4HGx4GqDDjPcCr4xcWXm1drjSFO3bD1ae4qh/MI8QHaWXC9LOV2eof6RkmoUCGS
+         AIgdC2L8nE8BhWqK1yD+my0MbZD8rAI1G7XjJuWvCztZHJs1CSk0wSERE9LBGOdk13JD
+         KWow==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784579528; x=1785184328; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=D0u/ZsKaJ4sWO+EwXyup1tCC2bG9yJvlOEOLZr8wnIo=;
-        b=MpTRj8Ijjfpfy4OnPi4303kS5+RWh4Nbhaczah3DYpjtyueufwOuJYlvSPuMGb5nFQ
-         kOSBf95BHaEF78t3COusLq//S9NxdpXapwqai5IthrP3ouoDVVmMJd6O5nI0qJdOHtXn
-         379BoIrlS93CTIX67+qi1lcDv4BpYeN6YBv7gau5r8RsDsjmn98Y1Qz6mHAkpvitdtJr
-         mayfGVRyVarX+0aZxGWLMVybfNacrOCwd/SZdoIlvGdI9K59+98SGk7beOWjhpEk+mDM
-         OdW/qSrQJsPtSt5cxgdoO48yQt52NTvxiRh1sUrC3oecP/fz8lrAlYTQNXCjAHK+QFom
-         33cA==
+        d=google.com; s=20251104; t=1784584518; x=1785189318; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=9mE0sfVA6cta9/M5CvPkkpA0kKt/DbFANSsjRo5aapo=;
+        b=qaZniUJFYSSwkqGswUxSzsBYdCL7MlSF78WLP2PkIM2xJWwVQV/eOA46/aIYGZBUrl
+         KOJAmVBMWW7SEHj0Nkn9N8u5VfN9MSxoSQxFqC+W3SApR9e8XqQKAi4OMGbdEvilkuKZ
+         R+UCv1/J71XZ8f1bX4+od3s9JTFGj4KAdxm+/vt9spVBkf6x0kIGpqV4aQ3u9IddVx8e
+         sZJLtEpJqr5SQQRoX7EonenwR5J8w5DJii13ZBPOJWVdlDiFexqS0a08hOm9Z3p5LtX7
+         iZe1GRSV+dQT+gq0/YzQE9ooPh04aklM8ZUypUIeM2yVCIV8B0VboCKS2LAkJv0NAf7N
+         +f+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784579528; x=1785184328;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=D0u/ZsKaJ4sWO+EwXyup1tCC2bG9yJvlOEOLZr8wnIo=;
-        b=B6CJvUVv6Of0SxojkR5mJuL1OOKU5FgVbkl+xUHcEc1oXurJb6uWdWyp+Q5OVPlrwA
-         S8ZjZmwYZ0lwd00GbRdVAqofc7cGnNmqu22LNOoTix5s+p+WYjb0auKbFbSNP0zYHcVb
-         WEQTfI5H63RhAhMBVyOHCv5CqKbzBA6bGaAkF8ZZZWyBKsVbuKKeTkIqnA1RANPbTtDt
-         B23Q/FxYiA1PNmSZQw6jP2+iVeKFEnjkGD3VnaUP0zfPW3N3xDsv4qbtT44ptok7psGK
-         XiQQ3Ta84o6mnUAgLNpK37OkM1g0w/gVBpJwN1rVZXa04e9a8NyzHZTgf7OhPWpzclWv
-         5Eww==
-X-Forwarded-Encrypted: i=1; AHgh+Rouw4EYQWDIF8ZwBZZlpCtOMletB+utaOVSz+gGqdKgH4uO+XZC16kVpDMpTizOpQPDX9s1Gg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzE8JDFDrQBeXwoQ39DjoS2oCK6Jgm8gXyx68cyG2PZXfD4V9st
-	GEqaO38o6HdqjfpZm0v2VZmZ1+LNo9EUK/II2Y2bsZ3p9wmafRXKZUyef8jkcrdCw5V22CN+V7J
-	cfSvZJ3JZSw==
-X-Received: from pfbjo7.prod.google.com ([2002:a05:6a00:9087:b0:845:b941:bc97])
- (user=vipinsh job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:8c2:b0:848:54e0:96c1
- with SMTP id d2e1a72fcca58-84c29590547mr16031465b3a.77.1784579527756; Mon, 20
- Jul 2026 13:32:07 -0700 (PDT)
-Date: Mon, 20 Jul 2026 13:32:02 -0700
-In-Reply-To: <20260720203202.1964557-1-vipinsh@google.com>
-Mime-Version: 1.0
-References: <20260720203202.1964557-1-vipinsh@google.com>
-X-Mailer: git-send-email 2.55.0.229.g6434b31f56-goog
-Message-ID: <20260720203202.1964557-3-vipinsh@google.com>
-Subject: [PATCH v4 2/2] selftests/liveupdate: Move luo_test_utils.* into a
- reusable library
-From: Vipin Sharma <vipinsh@google.com>
-To: pasha.tatashin@soleen.com, rppt@kernel.org, pratyush@kernel.org
-Cc: tarunsahu@google.com, skhawaja@google.com, shuah@kernel.org, 
-	dmatlack@google.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-kselftest@vger.kernel.org, Vipin Sharma <vipinsh@google.com>
+        d=1e100.net; s=20251104; t=1784584518; x=1785189318;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=9mE0sfVA6cta9/M5CvPkkpA0kKt/DbFANSsjRo5aapo=;
+        b=KchdkSHRejqLXBV8Ocr5ipHzZF5lcnc5+q2XdNlFDFfkWhxng4a/aT9tvspxdhS+Hj
+         BurJquE/RVW4FnB+B51xDt1L+6/Mo+dddYW1fi9bWxCGnHbY6kYU038psLZYEhXEMf1q
+         dWTsLvT12nfGNdFCfIHQsWCcIyfi3trLsjBD1+eVtxlc5xKkfQR91IB91sKeV+b4L95Y
+         hTNsU5K2j9G6q9GBdSjuIlim/Eo0M6x5foe/SsFisHW91J4rpr6wbD9pG5cXlrN7bcH2
+         O1ViX1TmtC9r/KNlzB06/N6ULeZBfu/A5kcIJvBeZFcXZXkwgDyFJFvOF9yBh29RJ9iB
+         tg4w==
+X-Gm-Message-State: AOJu0YzlRhJHdDN6mrgAk7IvIrmpD8hTpbHyh1cU7HVTKHMe6S6hFbvj
+	urQJAeP6SCUoYfD5y1fmh6BdUMSPKOJQ892ymb4LKUmoS9rGdN7J5wnft+5J9pJ8bu/7r3rYUJZ
+	+HGosrQy1lwSpkgT4cOkBcE+fBkS0ZpH6pELe0XzySzaqFwWb11Z5iI8Y
+X-Gm-Gg: AR+sD12cYX9o0MDmDzvkkXkKN8BIdAUfm8IhD/NvavOnXuoqDRObChryip3lBi3uhLq
+	zPHpA5EP4qs6eZEoJYnh7wiAacNLGLgR/8ffWjJmCed5rr94CTPEHVk5LOb/X3k6+sHXd7FmG/K
+	93txRPkMdAjg1O7/QCZNHHWVjcJ7XQayirE8c5XujK9gkhiYwMePRQ37ZpiPYoEkvCY+pos5sXF
+	242qWLYhOsO9enMr2zdK4ldq0GZpoQQNS2LilT4jfehvZtMZZOXSLEg4sJyJaVCAETWmHy6
+X-Received: by 2002:a17:90b:1d01:b0:380:8bb9:aba9 with SMTP id
+ 98e67ed59e1d1-38e3d13426cmr20701271a91.3.1784584518042; Mon, 20 Jul 2026
+ 14:55:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <20260710212616.1351130-1-dmatlack@google.com> <20260710212616.1351130-4-dmatlack@google.com>
+ <178432481253.189683.3297727348836286619.b4-review@b4>
+In-Reply-To: <178432481253.189683.3297727348836286619.b4-review@b4>
+From: David Matlack <dmatlack@google.com>
+Date: Mon, 20 Jul 2026 14:54:51 -0700
+X-Gm-Features: AUfX_mzVY7YuVDoFqhrPV6EULV5udJxArm79VLoT9W377bOVTdCDKuzAWRnUCOk
+Message-ID: <CALzav=e1Gcu-9TD7F--41cYqKBrStKOE4VqQ4K3PKdNuYnNmcQ@mail.gmail.com>
+Subject: Re: [PATCH v7 03/12] PCI: liveupdate: Track incoming preserved PCI devices
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
+	Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, 
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, 
+	Parav Pandit <parav@nvidia.com>, Pranjal Shrivastava <praan@google.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260720_133210_216907_BC8984ED 
-X-CRM114-Status: GOOD (  16.73  )
+X-CRM114-CacheID: sfid-20260720_145519_511355_565BF585 
+X-CRM114-Status: GOOD (  21.44  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,249 +125,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Move luo_test_utils.[ch] into a lib/ directory and make libliveupdate
-library. Pull the rules to build them out into a separate
-libliveupdate.mk script. This will enable these utilities to be
-also built by and used within other selftests (such as VFIO).
+On Fri, Jul 17, 2026 at 2:47=E2=80=AFPM Pasha Tatashin
+<pasha.tatashin@soleen.com> wrote:
+>
+> On Fri, 10 Jul 2026 21:26:06 +0000, David Matlack <dmatlack@google.com> w=
+rote:
+> > diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
+> > index 03075ce06ac9..df6a02240aa4 100644
+> > --- a/drivers/pci/liveupdate.c
+> > +++ b/drivers/pci/liveupdate.c
+> > @@ -298,6 +377,87 @@ void pci_liveupdate_unpreserve(struct pci_dev *dev=
+)
+> > [ ... skip 76 lines ... ]
+> > +     /*
+> > +      * Hold the ref on the incoming FLB until pci_liveupdate_finish()=
+ so
+> > +      * that dev->liveupdate.incoming cannot get freed while the PCI c=
+ore
+> > +      * has a pointer to it. It's better to leak the incoming FLB than=
+ do a
+> > +      * use-after-free if driver does not call pci_liveupdate_finish()=
+.
+> > +      */
+>
+> I am confused by this. Each preserved PCI device must have an associated
+> FD preserved with it via LUO. I.e., vfiofd would need to be preserved. If
+> the vfiofd was not reclaimed, and finish is not possible, that vfiofd
+> would still be owned by LUO, and therefore PCI FLB refcount would stay
+> positive.
+>
+> However, if finish is possible, and this is the last vfiofd that is
+> finished, FLB will be freed as soon as the reference count reaches zero,
+> which I would think is the expected behavior.
+>
+> What is the point of holding a reference here, instead of only for the
+> duration of FLB access, i.e. to make sure we are accessing a valid data?
 
-Update path in vmtest.sh as that one uses hardcoded path for util.
+The duration of the access is from here until pci_liveupdate_finish()
+because that it when the pointer (dev->liveupdate.incoming) is
+cleared. So that is why the PCI core holds the reference from here
+until pci_liveupdate_finish().
 
-No functional change intended.
-
-Co-developed-by: David Matlack <dmatlack@google.com>
-Signed-off-by: David Matlack <dmatlack@google.com>
-Acked-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-Signed-off-by: Vipin Sharma <vipinsh@google.com>
----
- tools/testing/selftests/liveupdate/.gitignore |  1 +
- tools/testing/selftests/liveupdate/Makefile   | 14 ++++---------
- .../include/libliveupdate.h}                  |  8 ++++----
- .../selftests/liveupdate/lib/libliveupdate.mk | 20 +++++++++++++++++++
- .../{luo_test_utils.c => lib/lu_utils.c}      |  2 +-
- .../testing/selftests/liveupdate/liveupdate.c |  2 +-
- .../selftests/liveupdate/luo_kexec_simple.c   |  2 +-
- .../selftests/liveupdate/luo_multi_session.c  |  2 +-
- .../selftests/liveupdate/luo_stress_files.c   |  3 ++-
- .../liveupdate/luo_stress_sessions.c          |  3 ++-
- tools/testing/selftests/liveupdate/vmtest.sh  |  4 ++--
- 11 files changed, 39 insertions(+), 22 deletions(-)
- rename tools/testing/selftests/liveupdate/{luo_test_utils.h => lib/include/libliveupdate.h} (89%)
- create mode 100644 tools/testing/selftests/liveupdate/lib/libliveupdate.mk
- rename tools/testing/selftests/liveupdate/{luo_test_utils.c => lib/lu_utils.c} (99%)
-
-diff --git a/tools/testing/selftests/liveupdate/.gitignore b/tools/testing/selftests/liveupdate/.gitignore
-index cb08ddb0dfee..47c670bf532b 100644
---- a/tools/testing/selftests/liveupdate/.gitignore
-+++ b/tools/testing/selftests/liveupdate/.gitignore
-@@ -3,6 +3,7 @@
- !/**/
- !*.c
- !*.h
-+!*.mk
- !*.sh
- !.gitignore
- !config
-diff --git a/tools/testing/selftests/liveupdate/Makefile b/tools/testing/selftests/liveupdate/Makefile
-index 30689d22cb02..634211c66652 100644
---- a/tools/testing/selftests/liveupdate/Makefile
-+++ b/tools/testing/selftests/liveupdate/Makefile
-@@ -1,7 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
--LIB_C += luo_test_utils.c
--
- TEST_GEN_PROGS += liveupdate
- 
- TEST_GEN_PROGS_EXTENDED += luo_kexec_simple
-@@ -12,25 +10,21 @@ TEST_GEN_PROGS_EXTENDED += luo_stress_files
- TEST_FILES += do_kexec.sh
- 
- include ../lib.mk
-+include lib/libliveupdate.mk
- 
- CFLAGS += $(KHDR_INCLUDES)
- CFLAGS += -Wall -O2 -Wno-unused-function
- CFLAGS += -MD
- 
--LIB_O := $(patsubst %.c, $(OUTPUT)/%.o, $(LIB_C))
- TEST_O := $(patsubst %, %.o, $(TEST_GEN_PROGS))
- TEST_O += $(patsubst %, %.o, $(TEST_GEN_PROGS_EXTENDED))
- 
--TEST_DEP_FILES := $(patsubst %.o, %.d, $(LIB_O))
-+TEST_DEP_FILES := $(patsubst %.o, %.d, $(LIBLIVEUPDATE_O))
- TEST_DEP_FILES += $(patsubst %.o, %.d, $(TEST_O))
- -include $(TEST_DEP_FILES)
- 
--$(LIB_O): $(OUTPUT)/%.o: %.c
--	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c $< -o $@
--
--$(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED): $(OUTPUT)/%: %.o $(LIB_O)
--	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH) $< $(LIB_O) $(LDLIBS) -o $@
-+$(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED): $(OUTPUT)/%: %.o $(LIBLIVEUPDATE_O)
-+	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH) $< $(LIBLIVEUPDATE_O) $(LDLIBS) -o $@
- 
--EXTRA_CLEAN += $(LIB_O)
- EXTRA_CLEAN += $(TEST_O)
- EXTRA_CLEAN += $(TEST_DEP_FILES)
-diff --git a/tools/testing/selftests/liveupdate/luo_test_utils.h b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
-similarity index 89%
-rename from tools/testing/selftests/liveupdate/luo_test_utils.h
-rename to tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
-index 49931ab90593..fa07fed08364 100644
---- a/tools/testing/selftests/liveupdate/luo_test_utils.h
-+++ b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
-@@ -7,13 +7,13 @@
-  * Utility functions for LUO kselftests.
-  */
- 
--#ifndef LUO_TEST_UTILS_H
--#define LUO_TEST_UTILS_H
-+#ifndef SELFTESTS_LIVEUPDATE_LIB_LIVEUPDATE_H
-+#define SELFTESTS_LIVEUPDATE_LIB_LIVEUPDATE_H
- 
- #include <errno.h>
- #include <string.h>
- #include <linux/liveupdate.h>
--#include "../kselftest.h"
-+#include "../../../kselftest.h"
- 
- #define LUO_DEVICE "/dev/liveupdate"
- 
-@@ -46,4 +46,4 @@ typedef void (*luo_test_stage2_fn)(int luo_fd, int state_session_fd);
- int luo_test(int argc, char *argv[], const char *state_session_name,
- 	     luo_test_stage1_fn stage1, luo_test_stage2_fn stage2);
- 
--#endif /* LUO_TEST_UTILS_H */
-+#endif /* SELFTESTS_LIVEUPDATE_LIB_LIVEUPDATE_H */
-diff --git a/tools/testing/selftests/liveupdate/lib/libliveupdate.mk b/tools/testing/selftests/liveupdate/lib/libliveupdate.mk
-new file mode 100644
-index 000000000000..634cd4c16c47
---- /dev/null
-+++ b/tools/testing/selftests/liveupdate/lib/libliveupdate.mk
-@@ -0,0 +1,20 @@
-+include $(top_srcdir)/scripts/subarch.include
-+ARCH ?= $(SUBARCH)
-+
-+LIBLIVEUPDATE_SRCDIR := $(selfdir)/liveupdate/lib
-+
-+LIBLIVEUPDATE_C := lu_utils.c
-+
-+LIBLIVEUPDATE_OUTPUT := $(OUTPUT)/libliveupdate
-+
-+LIBLIVEUPDATE_O := $(patsubst %.c, $(LIBLIVEUPDATE_OUTPUT)/%.o, $(LIBLIVEUPDATE_C))
-+
-+CFLAGS += -I$(LIBLIVEUPDATE_SRCDIR)/include
-+
-+$(LIBLIVEUPDATE_OUTPUT):
-+	$(Q)mkdir -p $@
-+
-+$(LIBLIVEUPDATE_O): $(LIBLIVEUPDATE_OUTPUT)/%.o : $(LIBLIVEUPDATE_SRCDIR)/%.c | $(LIBLIVEUPDATE_OUTPUT)
-+	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c $< -o $@
-+
-+EXTRA_CLEAN += $(LIBLIVEUPDATE_OUTPUT)
-diff --git a/tools/testing/selftests/liveupdate/luo_test_utils.c b/tools/testing/selftests/liveupdate/lib/lu_utils.c
-similarity index 99%
-rename from tools/testing/selftests/liveupdate/luo_test_utils.c
-rename to tools/testing/selftests/liveupdate/lib/lu_utils.c
-index 885712a65075..74d41115c281 100644
---- a/tools/testing/selftests/liveupdate/luo_test_utils.c
-+++ b/tools/testing/selftests/liveupdate/lib/lu_utils.c
-@@ -23,7 +23,7 @@
- #include <stdarg.h>
- #include <linux/unistd.h>
- 
--#include "luo_test_utils.h"
-+#include <libliveupdate.h>
- 
- int luo_open_device(void)
- {
-diff --git a/tools/testing/selftests/liveupdate/liveupdate.c b/tools/testing/selftests/liveupdate/liveupdate.c
-index 5c7ed2512710..2dedd5fc2534 100644
---- a/tools/testing/selftests/liveupdate/liveupdate.c
-+++ b/tools/testing/selftests/liveupdate/liveupdate.c
-@@ -24,9 +24,9 @@
- #include <sys/ioctl.h>
- #include <unistd.h>
- 
-+#include <libliveupdate.h>
- #include <linux/liveupdate.h>
- 
--#include "luo_test_utils.h"
- #include "../kselftest.h"
- #include "../kselftest_harness.h"
- 
-diff --git a/tools/testing/selftests/liveupdate/luo_kexec_simple.c b/tools/testing/selftests/liveupdate/luo_kexec_simple.c
-index d7ac1f3dc4cb..786ac93b9ae3 100644
---- a/tools/testing/selftests/liveupdate/luo_kexec_simple.c
-+++ b/tools/testing/selftests/liveupdate/luo_kexec_simple.c
-@@ -8,7 +8,7 @@
-  * across a single kexec reboot.
-  */
- 
--#include "luo_test_utils.h"
-+#include <libliveupdate.h>
- 
- #define TEST_SESSION_NAME "test-session"
- #define TEST_MEMFD_TOKEN 0x1A
-diff --git a/tools/testing/selftests/liveupdate/luo_multi_session.c b/tools/testing/selftests/liveupdate/luo_multi_session.c
-index 0ee2d795beef..aac24a5f5ce3 100644
---- a/tools/testing/selftests/liveupdate/luo_multi_session.c
-+++ b/tools/testing/selftests/liveupdate/luo_multi_session.c
-@@ -9,7 +9,7 @@
-  * files.
-  */
- 
--#include "luo_test_utils.h"
-+#include <libliveupdate.h>
- 
- #define SESSION_EMPTY_1 "multi-test-empty-1"
- #define SESSION_EMPTY_2 "multi-test-empty-2"
-diff --git a/tools/testing/selftests/liveupdate/luo_stress_files.c b/tools/testing/selftests/liveupdate/luo_stress_files.c
-index 0cdf9cd4bac7..a0d48490f4ed 100644
---- a/tools/testing/selftests/liveupdate/luo_stress_files.c
-+++ b/tools/testing/selftests/liveupdate/luo_stress_files.c
-@@ -10,7 +10,8 @@
- 
- #include <stdio.h>
- #include <unistd.h>
--#include "luo_test_utils.h"
-+
-+#include <libliveupdate.h>
- 
- #define NUM_FILES 500
- #define STATE_SESSION_NAME "kexec_many_files_state"
-diff --git a/tools/testing/selftests/liveupdate/luo_stress_sessions.c b/tools/testing/selftests/liveupdate/luo_stress_sessions.c
-index f201b1839d1d..278aebabe0e9 100644
---- a/tools/testing/selftests/liveupdate/luo_stress_sessions.c
-+++ b/tools/testing/selftests/liveupdate/luo_stress_sessions.c
-@@ -10,7 +10,8 @@
- 
- #include <stdio.h>
- #include <unistd.h>
--#include "luo_test_utils.h"
-+
-+#include <libliveupdate.h>
- 
- #define NUM_SESSIONS 2000
- #define STATE_SESSION_NAME "kexec_many_state"
-diff --git a/tools/testing/selftests/liveupdate/vmtest.sh b/tools/testing/selftests/liveupdate/vmtest.sh
-index b0000fae1461..64fd2ab55b76 100755
---- a/tools/testing/selftests/liveupdate/vmtest.sh
-+++ b/tools/testing/selftests/liveupdate/vmtest.sh
-@@ -131,9 +131,9 @@ function mkinitrd() {
- 	"$CROSS_COMPILE"gcc -static -O2 -nostdinc -nostdlib \
- 		-I "$headers_dir/include" \
- 		-I "$kernel_dir/tools/include/nolibc" \
--		-I "$test_dir" \
-+		-I "$test_dir/lib/include" \
- 		-o "$workspace_dir/test_binary" \
--		"$test_dir/$test_name.c" "$test_dir/luo_test_utils.c"
-+		"$test_dir/$test_name.c" "$test_dir/lib/lu_utils.c"
- 
- 	"$CROSS_COMPILE"gcc -s -static -Os -nostdinc -nostdlib		\
- 			-fno-asynchronous-unwind-tables -fno-ident	\
--- 
-2.55.0.229.g6434b31f56-goog
-
+We could avoid this by deleteing dev->liveupdate.incoming and,
+instead, fetching the incoming FLB and doing the xarray lookup every
+atime the PCI core needs to access the device's incoming ser struct,
+but that would be inefficient.
 
