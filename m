@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 27D2AC44515
-	for <kexec@archiver.kernel.org>; Mon, 20 Jul 2026 09:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 22CE4C4451B
+	for <kexec@archiver.kernel.org>; Mon, 20 Jul 2026 09:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=+vMw6oQSjwCJ5PIW/dE/nzx2Fukiu125+N1BT8qG1GI=; b=k/J2svw0p9MqDro+ncO8FwwHSP
-	MQYsFEnwpQAtiYJYqgKlsrO8eTAvGJrzzvCGStRPGRTQXc0yuqkwalcR/Dj/JBtleaScXrxo+cgCY
-	lGqah+b9uOcOYjDdE04IvuNN28qLma0WbbU7fW71L06JdfUYR+41++1QhtlcuZKe/mWVSZe//c65i
-	+eerK0pMPcFR1f4to7lEXzJCvh/dVHXzZfUAZt/HDXRtNOqSnY9TmY4QckKGXGvl66z5Zc4Q28dP7
-	Dk6oQhqSFOegmn+OODzk0vyzdmk2EMBOlw086f/RYALdwRDdZUFfF7WhqNMxj90XqLE6Ut77hNbDf
-	yJbgTDAw==;
+	bh=AnU7ciTdIjFA0g6aeFkEA3BJ1LdKH9Ggkt65tWv+LHA=; b=25L10Iuk5B5kWvdP2z+v6T8cJe
+	tHjSEzI+ui1QuI7EBw2wsAagaIyyzjlxafhFsAtDdJccqTNaIvG7yWMm4KRS4oAOf6yvDJStNs6Hf
+	WYMiZNdxwx4TLqmm+kqlh+h7tYz+CLHQ9wq9XmtRx/dR5PaYE7gfkmbLOqh7LZD3sSLA5leEbZeDg
+	IYJbPmhkeRUJ+MtDqZLY7YKklzXqX7M4QFxowO8Cg0AY0wjlGfeMO8EThBsxO/8mwSuVuEA7PkaBo
+	ypz8CC7FkONuCBoekDgMfWJGmaJOZk9HeaLipenMWMmXcVo1FiCrqhPbeOAIA4FFB53LvceqoP2pk
+	N0o7C9Aw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wlkF3-00000006IWd-0T4N;
-	Mon, 20 Jul 2026 09:24:53 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wlkL4-00000006KA9-3jTx;
+	Mon, 20 Jul 2026 09:31:06 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wlkF2-00000006IWF-0LDO
+	id 1wlkL3-00000006K9Z-1VrB
 	for kexec@lists.infradead.org;
-	Mon, 20 Jul 2026 09:24:52 +0000
+	Mon, 20 Jul 2026 09:31:05 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 3E93D60103;
-	Mon, 20 Jul 2026 09:24:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F9FF1F000E9;
-	Mon, 20 Jul 2026 09:24:50 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id E92B640767;
+	Mon, 20 Jul 2026 09:31:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E67A41F000E9;
+	Mon, 20 Jul 2026 09:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784539491;
-	bh=+vMw6oQSjwCJ5PIW/dE/nzx2Fukiu125+N1BT8qG1GI=;
+	s=k20260515; t=1784539864;
+	bh=AnU7ciTdIjFA0g6aeFkEA3BJ1LdKH9Ggkt65tWv+LHA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=au+ndke4RcxmDotkFio4JCXl9Z+jkRc0QcJmANfcBFzxNPh1RhJXb2nNVSEpRgtbo
-	 zdU2K6Ysq10IIti0fNYZx4FHhhWZCKaaCUlazaHSdkG4F265iZJT+cJMg8lSVbP/ga
-	 cRAqZ53ad30d23Vh7qZa8ezDfa9vBCwUxRvke7aan47J+HOFRFSSRBVG//4HK8qItn
-	 c0fkwCmQyvCy3VG+LZAGXUG5StCVg2ZgPZH1KToj8Yc5wYhj1VJVG0nC1F/51lOyWQ
-	 sCuPmCZsj2cKjqkAkomfi+gg0ylJaD4HJtqgxTz5yhe4E9YvkcCHGWVF0pRm1T4rr+
-	 Mw/G8YAFOA9BA==
-Date: Mon, 20 Jul 2026 10:24:48 +0100
+	b=fR6E/vqji2DLB1TVZEVFIiJAOnTRfrb7bMwZ8jsFzD1C3pvLBxUepnJBSAMtQ9p5J
+	 IHjllTcJyxL5O9BY9ai3W53eiQQySMrMcIfHM291Sizvl9o2hMTpmpBx21ELs5u2wT
+	 u98eopd8rSVsPZXEtALKIfvfJK6HrDde9RnNk13Iubif6DgizWaID3SO4DnQBb3c24
+	 HHsxDzaIn8qaeOMAhKyTuXFBmb8XAacQSlVPgwSuXoomU5KAjmhrMvyUkKmb9YpKYS
+	 pArZx0oW+SVrNtlCe9v+S0400fEiG/DMKG9S90dMlGxBRFerT9rMH6gIi0UwgX0FqX
+	 9RdzhnNzQQrhw==
+Date: Mon, 20 Jul 2026 10:31:01 +0100
 From: Simon Horman <horms@kernel.org>
-To: Pnina Feder <pnina.feder@mobileye.com>
-Cc: kexec@lists.infradead.org
-Subject: Re: [PATCH 02/10] util_lib: Add vmcoreinfo parser and memory reader
-Message-ID: <20260720092448.GC1736709@horms.kernel.org>
-References: <20260622205550.1087163-1-pnina.feder@mobileye.com>
- <20260622205550.1087163-3-pnina.feder@mobileye.com>
+To: luo.haiyang@zte.com.cn
+Cc: kexec@lists.infradead.org, zhang.run@zte.com.cn, cai.qu@zte.com.cn
+Subject: Re: [RESEND PATCH v4 0/4] =?utf-8?Q?kexec-?=
+ =?utf-8?Q?tool=EF=BC=9Abug?= fix for crashdump load on riscv
+Message-ID: <20260720093101.GD1736709@horms.kernel.org>
+References: <20260624151934989G934gVJVvk0Mc95CogNWd@zte.com.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260622205550.1087163-3-pnina.feder@mobileye.com>
+In-Reply-To: <20260624151934989G934gVJVvk0Mc95CogNWd@zte.com.cn>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -68,34 +68,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jun 22, 2026 at 11:54:40PM +0300, Pnina Feder wrote:
-> Add the foundational utility libraries for parsing vmcore files:
+On Wed, Jun 24, 2026 at 03:19:34PM +0800, luo.haiyang@zte.com.cn wrote:
+> From: Luo Haiyang <luo.haiyang@zte.com.cn>
 > 
-> - vmcore_info: Parser for vmcoreinfo note section. Supports SYMBOL(),
->   OFFSET(), SIZE(), NUMBER(), LENGTH() lookups via hash table.
->   Provides cached get_page_size()/get_page_shift() accessors.
->   Handles plain KEY=VALUE entries like PAGESIZE and OSRELEASE.
+> This patchset fixes kexec-tool related to crashdump load on riscv
 > 
-> - memory: Virtual-to-physical address translation dispatcher and
->   readmem() for reading from vmcore via kernel or user virtual
->   addresses, or physical addresses.Uses paddr_to_offset() from
->   elf_info for physical-to-file-offset mapping.
+> patch 1: crashload should use all system RAM but crash reserved memory.
+> patch 2: make the phys_to_virt function return the correct value.
+> patch 3: vmcore-dmesg accesses the address located in the bss segment,
+> use kernel image to creat kernel text elf header.
+> patch 4: due to the kernel image being additionally exported in /proc/iomem,
+> the kernel memory range is not correctly handled by to_be_excluded.
 > 
-> - vmcore_tasks_util: Shared macros, typedefs, and debug helpers
->   used by vmcore_info and memory (debug verbosity levels, type
->   accessors, __weak definition).
+> Changes from v3:
+> - sorry for the incorrect email format in the previous submission.
 > 
-> These files are placed in util_lib/ but are currently only built by
-> the vmcore_tasks Makefile. Integration into the main util_lib build
-> can be done later if other tools need them.
+> Changes from v2:
+> - use kernel image to creat kernel text elf header
+> - do not exclude kernel memory range
+> - https://lore.kernel.org/kexec/20260518145742805S2A5Zwk9KwoEtGDh4p3Pl@zte.com.cn/T/#md89827a089395745d3bd361889e4f3c490641732
 > 
-> Signed-off-by: Pnina Feder <pnina.feder@mobileye.com>
+> Changes from v1:
+> - Add patch 2 and patch 3 to fix other bug
+> - https://lore.kernel.org/kexec/20260513171150519t11GTC14QEEV4EgIurNHM@zte.com.cn/T/#u
 
-There are whitepsace errors when applying using git am.
-Likewise in patch 5/10, 8/10 and 9/10.
+Sorry for the extended delay.
 
-I'd appreciate it if you could address that along with
-the minor concerns I raised with patch 1/10.
-
-...
+Applied:
+- RISC-V: kernel image memory rang should not be excluded
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=8ec8f4156d10
+- RISC-V: use kernel image to creat kernel text elf header
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=e7cd74c17c82
+- RISCV: Fix incorrect virtual address translation in crashdump load
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=71a968623b94
+- RISC-V: fix crashdump load memory ranges
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=bbcce8a3d4ef
 
