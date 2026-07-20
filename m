@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 22CE4C4451B
-	for <kexec@archiver.kernel.org>; Mon, 20 Jul 2026 09:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9833FC44527
+	for <kexec@archiver.kernel.org>; Mon, 20 Jul 2026 09:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=AnU7ciTdIjFA0g6aeFkEA3BJ1LdKH9Ggkt65tWv+LHA=; b=25L10Iuk5B5kWvdP2z+v6T8cJe
-	tHjSEzI+ui1QuI7EBw2wsAagaIyyzjlxafhFsAtDdJccqTNaIvG7yWMm4KRS4oAOf6yvDJStNs6Hf
-	WYMiZNdxwx4TLqmm+kqlh+h7tYz+CLHQ9wq9XmtRx/dR5PaYE7gfkmbLOqh7LZD3sSLA5leEbZeDg
-	IYJbPmhkeRUJ+MtDqZLY7YKklzXqX7M4QFxowO8Cg0AY0wjlGfeMO8EThBsxO/8mwSuVuEA7PkaBo
-	ypz8CC7FkONuCBoekDgMfWJGmaJOZk9HeaLipenMWMmXcVo1FiCrqhPbeOAIA4FFB53LvceqoP2pk
-	N0o7C9Aw==;
+	bh=1BZuFpFF3ZCJAw8J5cGf3oYTMZyR3mu4ZhcYlnqpe0Y=; b=Se8tLBnyGxw0enEk+ONnsugiqU
+	+KDg0nppjAiaJw16ZPc2ndMdbNheKqstE800dzzYKg6YsufcrhpispJ4W0hYRcRXpnWvW8ZlY4VCb
+	OmP/RqjKePHanZjZbJbFwo4xvey1C7bEUI8QUidxS2cENMOCMsH4PIWW9jhonA7k2sOJZE+Ld0dmR
+	w1a+eyzbFPEEcNnJq8NkZPFVeJTXxcLpytmsmCpbs72/5y8e+Cm9P2AONvLwCJc+ZsWdzU6QKE0Xm
+	WinZfUhqz1geHjaPZ3AIkvoDu69WCx+2IvmWGsSL5NlhQPI2j9auss56sdIknzR2grUVS9m1pOXP7
+	Ep7DI3bQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wlkL4-00000006KA9-3jTx;
-	Mon, 20 Jul 2026 09:31:06 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wlkUg-00000006Log-1MDO;
+	Mon, 20 Jul 2026 09:41:02 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wlkL3-00000006K9Z-1VrB
+	id 1wlkUU-00000006Lic-2UTc
 	for kexec@lists.infradead.org;
-	Mon, 20 Jul 2026 09:31:05 +0000
+	Mon, 20 Jul 2026 09:40:51 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id E92B640767;
-	Mon, 20 Jul 2026 09:31:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E67A41F000E9;
-	Mon, 20 Jul 2026 09:31:03 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id DAFDF60A81;
+	Mon, 20 Jul 2026 09:40:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC2781F00A3D;
+	Mon, 20 Jul 2026 09:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784539864;
-	bh=AnU7ciTdIjFA0g6aeFkEA3BJ1LdKH9Ggkt65tWv+LHA=;
+	s=k20260515; t=1784540449;
+	bh=1BZuFpFF3ZCJAw8J5cGf3oYTMZyR3mu4ZhcYlnqpe0Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=fR6E/vqji2DLB1TVZEVFIiJAOnTRfrb7bMwZ8jsFzD1C3pvLBxUepnJBSAMtQ9p5J
-	 IHjllTcJyxL5O9BY9ai3W53eiQQySMrMcIfHM291Sizvl9o2hMTpmpBx21ELs5u2wT
-	 u98eopd8rSVsPZXEtALKIfvfJK6HrDde9RnNk13Iubif6DgizWaID3SO4DnQBb3c24
-	 HHsxDzaIn8qaeOMAhKyTuXFBmb8XAacQSlVPgwSuXoomU5KAjmhrMvyUkKmb9YpKYS
-	 pArZx0oW+SVrNtlCe9v+S0400fEiG/DMKG9S90dMlGxBRFerT9rMH6gIi0UwgX0FqX
-	 9RdzhnNzQQrhw==
-Date: Mon, 20 Jul 2026 10:31:01 +0100
+	b=Hr9wTapxBs54VZOCknn5t84T+rkjQ1B5BP0ISVVwW5BKZXdrdkEKU6P9JIWPhkgTr
+	 gx+ZvpgPLbJQuf/tNEEjo+/EQ4BnPsj6YWcvOpEZ9T1B5otahyyc6IU12xs1WUumQO
+	 6hStTVmnU+V4ZEY5GsxH02AwXFa2BiGWD7fDj5sKb2HWJ1i/xZFRt+HlNvbLvyUWmm
+	 KPNyTdfwl2QszQDlwqXKQ6WsyIwNJ1DgZU/1Y1kWXgesyhV/5hqN1up9LKX01trYRz
+	 Zvq0/PNKxj+UWOwy9femOGrd8aqlpyUhvxUIW1jY5ffWWO/IAyFufs1Pqgm6vLme/l
+	 Q1To8kYYiF33g==
+Date: Mon, 20 Jul 2026 10:40:46 +0100
 From: Simon Horman <horms@kernel.org>
-To: luo.haiyang@zte.com.cn
-Cc: kexec@lists.infradead.org, zhang.run@zte.com.cn, cai.qu@zte.com.cn
-Subject: Re: [RESEND PATCH v4 0/4] =?utf-8?Q?kexec-?=
- =?utf-8?Q?tool=EF=BC=9Abug?= fix for crashdump load on riscv
-Message-ID: <20260720093101.GD1736709@horms.kernel.org>
-References: <20260624151934989G934gVJVvk0Mc95CogNWd@zte.com.cn>
+To: Brian Mak <makb@juniper.net>
+Cc: kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>,
+	Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH 0/3] kexec-tools: Add new KEXEC_FILE flags
+Message-ID: <20260720094046.GE1736709@horms.kernel.org>
+References: <20260612223945.1400554-1-makb@juniper.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260624151934989G934gVJVvk0Mc95CogNWd@zte.com.cn>
+In-Reply-To: <20260612223945.1400554-1-makb@juniper.net>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -68,39 +68,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jun 24, 2026 at 03:19:34PM +0800, luo.haiyang@zte.com.cn wrote:
-> From: Luo Haiyang <luo.haiyang@zte.com.cn>
+On Fri, Jun 12, 2026 at 03:39:42PM -0700, Brian Mak wrote:
+> Hi all,
 > 
-> This patchset fixes kexec-tool related to crashdump load on riscv
+> I realized I forgot to raise a patch series for adding the new kexec_file flags.
+> Apologies for the delay on this.
 > 
-> patch 1: crashload should use all system RAM but crash reserved memory.
-> patch 2: make the phys_to_virt function return the correct value.
-> patch 3: vmcore-dmesg accesses the address located in the bss segment,
-> use kernel image to creat kernel text elf header.
-> patch 4: due to the kernel image being additionally exported in /proc/iomem,
-> the kernel memory range is not correctly handled by to_be_excluded.
+> This series adds support for the KEXEC_FILE_NO_CMA and KEXEC_FILE_FORCE_DTB
+> flags, which are used by the --no-cma and --force-dtb options respectively.
 > 
-> Changes from v3:
-> - sorry for the incorrect email format in the previous submission.
+> I also saw that there's no debug print for the flags passed to kexec_file_load,
+> so I added a print for that as well, which was useful for me to verify these
+> patches.
 > 
-> Changes from v2:
-> - use kernel image to creat kernel text elf header
-> - do not exclude kernel memory range
-> - https://lore.kernel.org/kexec/20260518145742805S2A5Zwk9KwoEtGDh4p3Pl@zte.com.cn/T/#md89827a089395745d3bd361889e4f3c490641732
-> 
-> Changes from v1:
-> - Add patch 2 and patch 3 to fix other bug
-> - https://lore.kernel.org/kexec/20260513171150519t11GTC14QEEV4EgIurNHM@zte.com.cn/T/#u
+> Please let me know if there's any questions or comments.
 
-Sorry for the extended delay.
+Thanks, and likewise sorry for the delay.
 
-Applied:
-- RISC-V: kernel image memory rang should not be excluded
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=8ec8f4156d10
-- RISC-V: use kernel image to creat kernel text elf header
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=e7cd74c17c82
-- RISCV: Fix incorrect virtual address translation in crashdump load
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=71a968623b94
-- RISC-V: fix crashdump load memory ranges
-  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=bbcce8a3d4ef
+Applied as:
+- kexec: Add kexec_file_load debug print
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=29898e149feb
+- kexec: Add DTB carryover support on x86
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=d5a495bfbfc9
+- kexec: Add support for disabling usage of CMA
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=e4de788721cb
+
 
