@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 676A7C44536
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 473BCC44533
 	for <kexec@archiver.kernel.org>; Tue, 21 Jul 2026 15:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
 	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:To:From:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=pbKDGyNNyhDV1H5PR4A8c50OlkFbCH78KDfnPB0VA6w=; b=UQWCwILjPc25hr
-	JemJQC+cogR3xMnamay0TE9jTTQJeVajim9RiyRznhXB2jThcPnHtxk+e4y7TyWsq3RFXofI0KfHG
-	43qQjyvTUUJGWVgYRbIudaWTBujwhGh2SpI1DwRShGlUhWtF6eVy4u3Uxz5LWMPVqfERmBJ8hV5yN
-	YIBqgNU8ztUmpaN+uoHPMnBOMM9/8140trD1WT2qp/MaIEEQvuL8nibOOiGBk5Gob+TaNRCPlGHoM
-	cS1fKwdrFmoqsgGGcDQk1WXB5u28cfuKKENdklRImGhVpDSVOy+9TsdbB6u9MB+dLvY0Em1lzht43
-	UD39r86DJkKckcop7fBA==;
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=AqVZhRNLNOhvukqy4uccnfnDMk+VUTfv9FzIh5myaVo=; b=xA66w2/0GaFgy5
+	16cBAyySO7dRXPm0Q58Ku6npSizYWL4UzIX/ZiZbTUOSVy6uHM6LfdcYwx6XWxncqp0fhUN7CA3Td
+	wGT1odHHIGBCbb7oDYkDupLKJ/0xuoZxapDnLv8hHLH+eWsXIqoNrMl2FVKAXInfDS/ymQ+LSV+yw
+	DFH12HUwbMDABhNLcjSBpckOVaERY8p8Bgc6d7pdz3zLusN191f+U+gbLIWypVIpZKD2nJJ/U4DCq
+	0KzjaweiLRXz5U5Lf93HXkHRx4VUW54ZXWHnuBOe9WqQwLCXNwPknSmln953UCjFL4DT5FWEEtNDh
+	LVuaaNVXLtRph9xarfjg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wmCAk-00000009lnW-1tBP;
+	id 1wmCAk-00000009lmx-1BAF;
 	Tue, 21 Jul 2026 15:14:18 +0000
 Received: from devianza.investici.org ([198.167.222.108])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wmCAd-00000009lhn-44IC
+	id 1wmCAd-00000009lha-44EG
 	for kexec@lists.infradead.org;
 	Tue, 21 Jul 2026 15:14:15 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
-	s=stigmate; t=1784646849;
-	bh=pbKDGyNNyhDV1H5PR4A8c50OlkFbCH78KDfnPB0VA6w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UFNLM+vumosCC9EyEK+PQKYA3EUr1upq2TWPePwN5KH/nfU+TDJjZKakbxvqim6Tr
-	 ogeSAoqUrtIBnKZCBVDsjE6iOIopbbttQjh89NqivAhDIAMBTS6UAuTYgvL6+vOncf
-	 TQZ7MZ6puX+XljlXxojFfCmlbxHpsua38BRpNvwY=
+	s=stigmate; t=1784646848;
+	bh=AqVZhRNLNOhvukqy4uccnfnDMk+VUTfv9FzIh5myaVo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bVf8mKCgOdCpS0U5u6MNxrXNcb5joU93Df3XYVZ8oP89W3oWPBLmAzgJ5H934aSJd
+	 zsQE/SxYK87w/92M6+swL4wq4dvLY6oFABGnh0VNejn3gxXAfC9PMuLe134Z8Euo6q
+	 AB6FxO11v5ymmwGg+2SNPTAoKdvvq64hMu9di6bw=
 Received: from mx2.investici.org (unknown [127.0.0.1])
-	by devianza.investici.org (Postfix) with ESMTP id 4h4LWj3LXyz6vNZ;
-	Tue, 21 Jul 2026 15:14:09 +0000 (UTC)
-Received: by mx2.investici.org (Postfix) id 4h4LWh4sK6z4vyJ;
+	by devianza.investici.org (Postfix) with ESMTP id 4h4LWh4Kl4z6vMZ;
 	Tue, 21 Jul 2026 15:14:08 +0000 (UTC)
+Received: by mx2.investici.org (Postfix) id 4h4LWg5G3Wz4vyJ;
+	Tue, 21 Jul 2026 15:14:07 +0000 (UTC)
 From: Bradley Morgan <include@grrlz.net>
 To: akpm@linux-foundation.org
-Subject: [PATCH v2 1/3] reboot: log the task that initiated the reboot
-Date: Tue, 21 Jul 2026 16:13:56 +0100
-Message-ID: <20260721151358.4185467-2-include@grrlz.net>
+Subject: [PATCH v2 0/3] reboot: log the task that initiated
+Date: Tue, 21 Jul 2026 16:13:55 +0100
+Message-ID: <20260721151358.4185467-1-include@grrlz.net>
 X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20260721151358.4185467-1-include@grrlz.net>
-References: <20260721151358.4185467-1-include@grrlz.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260721_081412_165595_FD4D41AD 
-X-CRM114-Status: GOOD (  14.66  )
+X-CRM114-CacheID: sfid-20260721_081412_160620_906A76C0 
+X-CRM114-Status: UNSURE (   9.46  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -67,99 +66,40 @@ Cc: pavel@kernel.org, tony.luck@intel.com, baoquan.he@linux.dev, rafael@kernel.o
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When a machine reboots or powers off, the kernel log records what
-happened but not who asked for it. The reboot syscall throws the
-caller identity away, and userspace does not reliably record it
-either: systemd only journals shutdowns that go through logind,
-anything calling reboot(2) directly (watchdog daemons, container
-agents, orchestration tooling) leaves no record at all, and the
-journal is being torn down while the machine goes away, so even the
-lines that should be written can be lost. The kernel is the only
-place that always sees the caller, and a kernel log line survives
-via pstore or a serial console when userspace logs do not.
-
-Log the comm and pid of the calling task in the reboot syscall, once
-the requested command is committed and can no longer fail, e.g:
+When a machine reboots, powers off, kexecs or hibernates, the kernel
+log records what happened but not who asked for it. This series logs
+the comm and pid of the initiating task once the transition is
+committed:
 
   reboot: initiated by systemd-shutdow[1]
   reboot: Restarting system
 
-The existing "Restarting system", "System halted" and "Power down"
-lines are left untouched, so anything parsing dmesg today keeps
-working. The two ctrl alt del toggle commands are excluded so init
-setting the mode does not add a line to dmesg on every boot.
+Patch 1 covers the restart, halt and power off commands of the
+reboot syscall. Patches 2 and 3 give kexec and the hibernation power
+down the same treatment at their own points of no return, as
+suggested in the v1 review [1]. The kexec and PM maintainers are on
+cc for their input on those two.
 
-Signed-off-by: Bradley Morgan <include@grrlz.net>
----
- include/linux/reboot.h |  1 +
- kernel/reboot.c        | 16 ++++++++++++++++
- 2 files changed, 17 insertions(+)
+v1 -> v2:
+- Reworded the justification in patch 1: dropped the fleet operator
+  claim and spelled out the concrete gap in userspace logging
+- New patch 2: log the initiator for kexec reboots
+- New patch 3: log the initiator for the hibernation power down
+- Added the kexec and PM maintainers and lists to cc
 
-diff --git a/include/linux/reboot.h b/include/linux/reboot.h
-index aa08c3bbbf59..3fb8d8533563 100644
---- a/include/linux/reboot.h
-+++ b/include/linux/reboot.h
-@@ -172,6 +172,7 @@ extern void kernel_restart(char *cmd);
- extern void kernel_halt(void);
- extern void kernel_power_off(void);
- extern bool kernel_can_power_off(void);
-+void reboot_log_initiator(void);
- 
- void ctrl_alt_del(void);
- 
-diff --git a/kernel/reboot.c b/kernel/reboot.c
-index bed6967bfa96..3f4534cd5b9c 100644
---- a/kernel/reboot.c
-+++ b/kernel/reboot.c
-@@ -717,6 +717,18 @@ EXPORT_SYMBOL_GPL(kernel_power_off);
- 
- DEFINE_MUTEX(system_transition_mutex);
- 
-+/*
-+ * Log the task that asked for the transition once the requested
-+ * command is committed and can no longer fail, e.g:
-+ *
-+ *   reboot: initiated by systemd-shutdow[1]
-+ *   reboot: Restarting system
-+ */
-+void reboot_log_initiator(void)
-+{
-+	pr_info("initiated by %s[%d]\n", current->comm, task_pid_nr(current));
-+}
-+
- /*
-  * Reboot system call: for obvious reasons only root may call it,
-  * and even root needs to set up some magic numbers in the registers
-@@ -764,6 +776,7 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
- 	mutex_lock(&system_transition_mutex);
- 	switch (cmd) {
- 	case LINUX_REBOOT_CMD_RESTART:
-+		reboot_log_initiator();
- 		kernel_restart(NULL);
- 		break;
- 
-@@ -776,10 +789,12 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
- 		break;
- 
- 	case LINUX_REBOOT_CMD_HALT:
-+		reboot_log_initiator();
- 		kernel_halt();
- 		do_exit(0);
- 
- 	case LINUX_REBOOT_CMD_POWER_OFF:
-+		reboot_log_initiator();
- 		kernel_power_off();
- 		do_exit(0);
- 		break;
-@@ -792,6 +807,7 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
- 		}
- 		buffer[sizeof(buffer) - 1] = '\0';
- 
-+		reboot_log_initiator();
- 		kernel_restart(buffer);
- 		break;
- 
+[1] https://lore.kernel.org/all/20260719160938.3692-1-include@grrlz.net/
+
+Bradley Morgan (3):
+  reboot: log the task that initiated the reboot
+  kexec: log the task that initiated the kexec reboot
+  PM: hibernate: log the task that initiated the power down
+
+ include/linux/reboot.h   |  1 +
+ kernel/kexec_core.c      |  1 +
+ kernel/power/hibernate.c |  2 ++
+ kernel/reboot.c          | 16 ++++++++++++++++
+ 4 files changed, 20 insertions(+)
+
 -- 
 2.50.1
-
 
