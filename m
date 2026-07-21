@@ -4,49 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CA76EC4451C
-	for <kexec@archiver.kernel.org>; Tue, 21 Jul 2026 11:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DC47AC44529
+	for <kexec@archiver.kernel.org>; Tue, 21 Jul 2026 12:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=OJ9YfaBFSXj+Hk6UH0eG4jUTBf/umVD52Blq68hhcTs=; b=M7HG0LoP8Gfz+6xjZk6Ku4nN6A
-	URktfQjVBQYppi28JNkf7mnJ2TxQrgioXCpXKEMrpGsHWx6JTvrArIB8uBEajlzk7gPSHVP1kxVPr
-	C+gKgEcer7aRp+BeuJT95dPV6xnTxyLaJ79I1E2hPYKrPOcttSIk/lj+UhZh/8f8Ck7F5HbBj4J4h
-	7tccVS3QoT+WXiVy0tKKJU+8RKtlSc7auO4TvGjvMsU/GguJWSlyvamb+4IAPsyGxU8nvJ4xVZlJ5
-	4aWwE+Zu2c44G/Xo0+4GAuLtPiKYnbkq8Ypj2Jx93WStZgyDiikRgozYxRGNzNowZupmJQbZ8gVsZ
-	ROeDsWPg==;
+	bh=A7dYAlxy/AmMUyH+MlvfhyBiS8Q0C6HxH/Mauukj/gQ=; b=iUnddMKQjrJoFZWDLdYKjJACP5
+	+A/hjAE5OqyQwaIAQGvIlqmjF8Jblza4Fy5Hr8kb4b1bskD9++pM/j5c2QhQORh9am5dFiIJpKew9
+	KeB08iPBwc3j7nwMl5ZcwREaJOLQo1uK1A80zfPYeAFqn4lUZSXBfizD6uaYeHLdmTqK2/0L4liB9
+	PNB0XOcL0weWj1/hlwRXbhhYgdMf1xiwlPTOGgiuLwaFQ+kc0yfgsYcut+Q4j2mDE6xvsg/PGQD7w
+	l367g6wF04lcjXI6OGn1w/9NHzuMX4/EDzH5ZAX40Lwd+Dwv41nPWovwa0qBT3kJ1dQln7qmIs8Ty
+	N9vve9zQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wm8Pq-00000009HzC-2Rbe;
-	Tue, 21 Jul 2026 11:13:38 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wm9Ep-00000009NR0-09rS;
+	Tue, 21 Jul 2026 12:06:19 +0000
+Received: from out-178.mta1.migadu.com ([95.215.58.178])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wm8Po-00000009Hyi-3LeJ;
-	Tue, 21 Jul 2026 11:13:36 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id EA5D96001A;
-	Tue, 21 Jul 2026 11:13:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 954BC1F000E9;
-	Tue, 21 Jul 2026 11:13:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784632415;
-	bh=OJ9YfaBFSXj+Hk6UH0eG4jUTBf/umVD52Blq68hhcTs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=HhpYzzM/oimKKYM+22iuflbObTtTZTtdDQiTiyxYtxAy56bVm2RUMe/378V24lMCy
-	 N9e8S8m+u3CgY8ts4zAtzzn/7vOUZMXBdf24qhCZv9/TwkwwqyROndhV2evLOQdqu8
-	 HBoTX5g3VolANyAmdxRBf+OKSdf8wzTD4gVePThB5rnLNMi21tyuQah/hjS+xzmi6O
-	 +V6KY+DG0MFNy6G9jhnjGbGb6gjRw/JJMT1JAVLM8HYueumFcgncpSyOhJzG/H7zL+
-	 pCiAXWPO74jZeBAiR5ITzdAOIhaTIq1nFewaleXIqgld/by6+2YLS8eesfYNZWbUK3
-	 W+mvBX/jSsBVg==
-Date: Tue, 21 Jul 2026 12:13:30 +0100
-From: Simon Horman <horms@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pnina Feder <pnina.feder@mobileye.com>,
+	id 1wm9Em-00000009NQ1-2uls
+	for kexec@lists.infradead.org;
+	Tue, 21 Jul 2026 12:06:18 +0000
+Date: Tue, 21 Jul 2026 20:05:49 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1784635564;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A7dYAlxy/AmMUyH+MlvfhyBiS8Q0C6HxH/Mauukj/gQ=;
+	b=eZwE3YxBH34e9tRiCPggwYdYaOw6NhkKu6BTNStYMe942ZxlIFt9cE8RPfN+rNf2WBfllB
+	dRtZZhVUmLMxoo5O5g9KDUWfGfoIsGLousnSIDCtVH38WaSJPywwXrv5D8cF+wN4+r7uBQ
+	iKjh+SXv0L25Chs5leSM8+RdGynHSSE=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Baoquan He <baoquan.he@linux.dev>
+To: Omar Sandoval <osandov@osandov.com>
+Cc: Mike Rapoport <rppt@kernel.org>, Pnina Feder <pnina.feder@mobileye.com>,
+	Simon Horman <horms@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <baoquan.he@linux.dev>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
 	Pratyush Yadav <pratyush@kernel.org>,
 	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
@@ -56,17 +53,24 @@ Cc: Pnina Feder <pnina.feder@mobileye.com>,
 	Jonathan Corbet <corbet@lwn.net>, Alexandre Ghiti <alex@ghiti.fr>,
 	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
 	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-doc@vger.kernel.org
+	linux-doc@vger.kernel.org, linux-debuggers@vger.kernel.org
 Subject: Re: [PATCH 0/4] vmcore-tasks: export per-task metadata to vmcoreinfo
-Message-ID: <20260721111330.GA1768252@horms.kernel.org>
+Message-ID: <al9gnbT5S0ALDieg@MiWiFi-R3L-srv>
 References: <20260622211430.4008899-1-pnina.feder@mobileye.com>
  <akybBoCAm-kJbfHL@kernel.org>
  <20260720091927.GA1736709@horms.kernel.org>
  <al4X300UObXawEIJ@kernel.org>
+ <al4yeHrkDHFoo6A0@MiWiFi-R3L-srv>
+ <al5cbYMD18UbKe-6@telecaster>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <al4X300UObXawEIJ@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <al5cbYMD18UbKe-6@telecaster>
+X-Migadu-Flow: FLOW_OUT
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260721_050617_013415_A045934B 
+X-CRM114-Status: GOOD (  43.58  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,63 +85,103 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jul 20, 2026 at 03:43:11PM +0300, Mike Rapoport wrote:
-> Hi Simon,
-> 
-> On Mon, Jul 20, 2026 at 10:19:27AM +0100, Simon Horman wrote:
-> > On Tue, Jul 07, 2026 at 09:21:58AM +0300, Mike Rapoport wrote:
-> > > On Tue, Jun 23, 2026 at 12:14:26AM +0300, Pnina Feder wrote:
-> > > > This series extends vmcoreinfo with struct offsets and sizes needed by
-> > > > the vmcore-tasks userspace tool to extract per-task state from a vmcore
-> > > > dump without requiring kernel debug symbols (DWARF/BTF).
-> > > > 
-> > > > The vmcore-tasks tool reads /proc/vmcore (or a saved vmcore file) and
-> > > > reconstructs, for each task:
-> > > >   - task name, pid, state, flags
-> > > >   - VMA list (start, end, flags, backing file)
-> > > >   - user register state (saved on the kernel stack at kernel entry)
-> > > >   - user-space backtrace with VMA/filename mapping
-> > > >   - kernel dmesg buffer
-> > > > 
-> > > > This provides a lightweight post-mortem crash analysis capability for
-> > > > production environments where full debug info (DWARF/BTF) is not
-> > > > available.
-> > > > 
-> > > > The companion userspace tool is submitted to kexec-tools:
-> > > >   https://lore.kernel.org/all/20260622205550.1087163-1-pnina.feder@mobileye.com/
+On 07/20/26 at 10:35am, Omar Sandoval wrote:
+> On Mon, Jul 20, 2026 at 10:40:43PM +0800, Baoquan He wrote:
+> > On 07/20/26 at 03:43pm, Mike Rapoport wrote:
+> > > Hi Simon,
 > > > 
-> > > Sorry for the delay, this fell between the cracks somehow.
+> > > On Mon, Jul 20, 2026 at 10:19:27AM +0100, Simon Horman wrote:
+> > > > On Tue, Jul 07, 2026 at 09:21:58AM +0300, Mike Rapoport wrote:
+> > > > > On Tue, Jun 23, 2026 at 12:14:26AM +0300, Pnina Feder wrote:
+> > > > > > This series extends vmcoreinfo with struct offsets and sizes needed by
+> > > > > > the vmcore-tasks userspace tool to extract per-task state from a vmcore
+> > > > > > dump without requiring kernel debug symbols (DWARF/BTF).
+> > > > > > 
+> > > > > > The vmcore-tasks tool reads /proc/vmcore (or a saved vmcore file) and
+> > > > > > reconstructs, for each task:
+> > > > > >   - task name, pid, state, flags
+> > > > > >   - VMA list (start, end, flags, backing file)
+> > > > > >   - user register state (saved on the kernel stack at kernel entry)
+> > > > > >   - user-space backtrace with VMA/filename mapping
+> > > > > >   - kernel dmesg buffer
+> > > > > > 
+> > > > > > This provides a lightweight post-mortem crash analysis capability for
+> > > > > > production environments where full debug info (DWARF/BTF) is not
+> > > > > > available.
+> > > > > > 
+> > > > > > The companion userspace tool is submitted to kexec-tools:
+> > > > > >   https://lore.kernel.org/all/20260622205550.1087163-1-pnina.feder@mobileye.com/
+> > > > > 
+> > > > > Sorry for the delay, this fell between the cracks somehow.
+> > > > > 
+> > > > > The kernel side looks fine overall, but to merge it there should be an
+> > > > > agreement from the userspace side maintainers that vmcore-tasks is
+> > > > > something they are wishing to accept.
+> > > > 
+> > > > Hi Mike, all,
+> > > > 
+> > > > Sorry for the extended delay.
+> > > > 
+> > > > I will send some minor feedback to the user-space tool patchset
+> > > > but overall, yes, this is something I would be happy to accept.
+> > > > 
+> > > > I don't want to create a chicken-and-egg type problem here.
+> > > > But it's probably worth mentioning that usually features
+> > > > hit the kernel before the corresponding code is accepted
+> > > > into kexec-tools.
 > > > 
-> > > The kernel side looks fine overall, but to merge it there should be an
-> > > agreement from the userspace side maintainers that vmcore-tasks is
-> > > something they are wishing to accept.
+> > > Sorry if I wasn't clear. 
+> > > 
+> > > I didn't mean that the feature should be merged into kexec-tools before
+> > > merging the kernel bits. I just wanted to make sure there's no fundamental
+> > > issue from kexec-tools perspective.
+> > > 
+> > > > Let me know how you would like to proceed.
+> > > 
+> > > I'm going to wait for Baoquan's review and once that's done I'll pick up
+> > > the kernel bits.
 > > 
-> > Hi Mike, all,
+> > Oh, sorry, I just noticed this series, but a quick look give me a hint
+> > of 'No, I don't like it.' We have had Crash utility, Drgn, now a new one
+> > comes up. I have some concerns to Pnina:
 > > 
-> > Sorry for the extended delay.
+> > 1. Exporting maple tree internals (maple_node, maple_range_64,
+> >    maple_arange_64, maple_metadata) as vmcoreinfo ABI is problematic.
+> >    These are private implementation details, not stable structures like
+> >    task_struct. Any refactoring of the maple tree will silently break
+> >    the userspace tool. 
 > > 
-> > I will send some minor feedback to the user-space tool patchset
-> > but overall, yes, this is something I would be happy to accept.
+> > 2. Without DWARF/BTF, the debugging scope is inherently limited — no
+> >    kernel stack backtrace, no symbol resolution, no variable access.
+> >    That's essentially "ps + /proc/PID/maps" from a vmcore. Have you
+> >    considered enabling CONFIG_DEBUG_INFO_BTF on your platforms instead?
+> >    BTF is compact (typically < 1 MB) and would give drgn full access
+> >    without needing vmlinux debug packages. That seems like a better
+> >    return-on-investment than maintaining ~40 new vmcoreinfo exports.
 > > 
-> > I don't want to create a chicken-and-egg type problem here.
-> > But it's probably worth mentioning that usually features
-> > hit the kernel before the corresponding code is accepted
-> > into kexec-tools.
+> > 3. Beyond the technical concerns, I wonder about adoption. vmcore-tasks
+> >    targets a fairly narrow use case — platforms without DWARF/BTF, where
+> >    you still have vmcore but can't ship vmlinux. Is Mobileye currently
+> >    the only consumer? Are you guys already using it widely and fully?
+> >    If this lands but doesn't see broader uptake, the ~40 exports risk
+> >    becoming dead weight in vmcoreinfo — nobody actively uses them, but
+> >    kernel changes still need to keep them consistent, or they silently
+> >    rot and give users wrong results. 
+> > 
+> > Regards,
+> > Baoquan
 > 
-> Sorry if I wasn't clear. 
+> (Adding linux-debuggers mailing list).
 > 
-> I didn't mean that the feature should be merged into kexec-tools before
-> merging the kernel bits. I just wanted to make sure there's no fundamental
-> issue from kexec-tools perspective.
-
-Thanks, it is clear :)
-
-> > Let me know how you would like to proceed.
+> I agree with all of Baoquan's points here, with a couple of notes:
 > 
-> I'm going to wait for Baoquan's review and once that's done I'll pick up
-> the kernel bits.
+> 1. drgn's BTF support is currently a work in progress, but it's shaping
+>    up well: https://github.com/osandov/drgn/pull/625.
+> 2. makedumpfile is also gaining BTF extension support:
+>    https://lore.kernel.org/all/20260617051834.95404-1-ltao@redhat.com/.
+>    It's lighter-weight than drgn while still being much more general
+>    than this series.
 
-I see that conversation is now active.
+Thanks for adding the information, very helpful.
 
-Thanks to all.
 
