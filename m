@@ -4,73 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DC47AC44529
-	for <kexec@archiver.kernel.org>; Tue, 21 Jul 2026 12:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C17F1C44529
+	for <kexec@archiver.kernel.org>; Tue, 21 Jul 2026 15:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=A7dYAlxy/AmMUyH+MlvfhyBiS8Q0C6HxH/Mauukj/gQ=; b=iUnddMKQjrJoFZWDLdYKjJACP5
-	+A/hjAE5OqyQwaIAQGvIlqmjF8Jblza4Fy5Hr8kb4b1bskD9++pM/j5c2QhQORh9am5dFiIJpKew9
-	KeB08iPBwc3j7nwMl5ZcwREaJOLQo1uK1A80zfPYeAFqn4lUZSXBfizD6uaYeHLdmTqK2/0L4liB9
-	PNB0XOcL0weWj1/hlwRXbhhYgdMf1xiwlPTOGgiuLwaFQ+kc0yfgsYcut+Q4j2mDE6xvsg/PGQD7w
-	l367g6wF04lcjXI6OGn1w/9NHzuMX4/EDzH5ZAX40Lwd+Dwv41nPWovwa0qBT3kJ1dQln7qmIs8Ty
-	N9vve9zQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:To:From:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=1TnWlVinJDeOhala/vbIeVYCGUm59YDKqzBVCOS9jWE=; b=HLsKgvRSsOy9ef
+	wkzTDnQchqHLwPGhFklkDhRdi9GgeRL8U+27TKXCEBtsg5rD9/VoyRKK7rR0xAqHSEJVzM9L9ukUi
+	QD5jPbzc5ePyE96GwhY77MuZOe1hfDNVYHpCtoVFEEThh/iOusT97XaQuHaMO8mxor3hybrtVRlZa
+	AzLrySqJdgziihXsPh1D81tA5XfKwhK0DHQHLHMi5uJelZ4lQEPsyQbuHBpTTc99iQpC/Zgv03ytF
+	oOgazt3hkv2iu8GSb3tL07ziHLUaNCo+NfV9JeoMUuw4b8B1lWO2mdEBFwtfdZlI4m5yhKNhsvzLY
+	GYzXFV6CXuY2pF9iVMKQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wm9Ep-00000009NR0-09rS;
-	Tue, 21 Jul 2026 12:06:19 +0000
-Received: from out-178.mta1.migadu.com ([95.215.58.178])
+	id 1wmCAh-00000009ll7-0Zmk;
+	Tue, 21 Jul 2026 15:14:15 +0000
+Received: from devianza.investici.org ([198.167.222.108])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wm9Em-00000009NQ1-2uls
+	id 1wmCAe-00000009lig-2uFB
 	for kexec@lists.infradead.org;
-	Tue, 21 Jul 2026 12:06:18 +0000
-Date: Tue, 21 Jul 2026 20:05:49 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784635564;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A7dYAlxy/AmMUyH+MlvfhyBiS8Q0C6HxH/Mauukj/gQ=;
-	b=eZwE3YxBH34e9tRiCPggwYdYaOw6NhkKu6BTNStYMe942ZxlIFt9cE8RPfN+rNf2WBfllB
-	dRtZZhVUmLMxoo5O5g9KDUWfGfoIsGLousnSIDCtVH38WaSJPywwXrv5D8cF+wN4+r7uBQ
-	iKjh+SXv0L25Chs5leSM8+RdGynHSSE=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Baoquan He <baoquan.he@linux.dev>
-To: Omar Sandoval <osandov@osandov.com>
-Cc: Mike Rapoport <rppt@kernel.org>, Pnina Feder <pnina.feder@mobileye.com>,
-	Simon Horman <horms@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Dave Young <ruirui.yang@linux.dev>,
-	Jonathan Corbet <corbet@lwn.net>, Alexandre Ghiti <alex@ghiti.fr>,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-debuggers@vger.kernel.org
-Subject: Re: [PATCH 0/4] vmcore-tasks: export per-task metadata to vmcoreinfo
-Message-ID: <al9gnbT5S0ALDieg@MiWiFi-R3L-srv>
-References: <20260622211430.4008899-1-pnina.feder@mobileye.com>
- <akybBoCAm-kJbfHL@kernel.org>
- <20260720091927.GA1736709@horms.kernel.org>
- <al4X300UObXawEIJ@kernel.org>
- <al4yeHrkDHFoo6A0@MiWiFi-R3L-srv>
- <al5cbYMD18UbKe-6@telecaster>
+	Tue, 21 Jul 2026 15:14:14 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
+	s=stigmate; t=1784646851;
+	bh=1TnWlVinJDeOhala/vbIeVYCGUm59YDKqzBVCOS9jWE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pwq7Ef46XWcW85AVc4Id1OZ84DWSL6smZgO4II9+fpMcNuh5e9mfet3Rxc1FYyyo9
+	 nQ5LiP3/dlxpRm8vw7jFcNgO+Hm6PpqRbEg+p5IlSMGdCiSKGrMturwHkp4a/lp2RM
+	 3HYstfKUxL1oomd0i0sVrmXpzBfnGcR5NMsRvMcc=
+Received: from mx2.investici.org (unknown [127.0.0.1])
+	by devianza.investici.org (Postfix) with ESMTP id 4h4LWl18Tbz6vP7;
+	Tue, 21 Jul 2026 15:14:11 +0000 (UTC)
+Received: by mx2.investici.org (Postfix) id 4h4LWk2rKwz4vyJ;
+	Tue, 21 Jul 2026 15:14:10 +0000 (UTC)
+From: Bradley Morgan <include@grrlz.net>
+To: akpm@linux-foundation.org
+Subject: [PATCH v2 3/3] PM: hibernate: log the task that initiated the power down
+Date: Tue, 21 Jul 2026 16:13:58 +0100
+Message-ID: <20260721151358.4185467-4-include@grrlz.net>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20260721151358.4185467-1-include@grrlz.net>
+References: <20260721151358.4185467-1-include@grrlz.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <al5cbYMD18UbKe-6@telecaster>
-X-Migadu-Flow: FLOW_OUT
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260721_050617_013415_A045934B 
-X-CRM114-Status: GOOD (  43.58  )
+X-CRM114-CacheID: sfid-20260721_081412_900118_E1C41EAE 
+X-CRM114-Status: GOOD (  13.61  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,106 +63,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: pavel@kernel.org, tony.luck@intel.com, baoquan.he@linux.dev, rafael@kernel.org, kees@kernel.org, linux-pm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rppt@kernel.org, Bradley Morgan <include@grrlz.net>, pasha.tatashin@soleen.com, pratyush@kernel.org, lenb@kernel.org
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 07/20/26 at 10:35am, Omar Sandoval wrote:
-> On Mon, Jul 20, 2026 at 10:40:43PM +0800, Baoquan He wrote:
-> > On 07/20/26 at 03:43pm, Mike Rapoport wrote:
-> > > Hi Simon,
-> > > 
-> > > On Mon, Jul 20, 2026 at 10:19:27AM +0100, Simon Horman wrote:
-> > > > On Tue, Jul 07, 2026 at 09:21:58AM +0300, Mike Rapoport wrote:
-> > > > > On Tue, Jun 23, 2026 at 12:14:26AM +0300, Pnina Feder wrote:
-> > > > > > This series extends vmcoreinfo with struct offsets and sizes needed by
-> > > > > > the vmcore-tasks userspace tool to extract per-task state from a vmcore
-> > > > > > dump without requiring kernel debug symbols (DWARF/BTF).
-> > > > > > 
-> > > > > > The vmcore-tasks tool reads /proc/vmcore (or a saved vmcore file) and
-> > > > > > reconstructs, for each task:
-> > > > > >   - task name, pid, state, flags
-> > > > > >   - VMA list (start, end, flags, backing file)
-> > > > > >   - user register state (saved on the kernel stack at kernel entry)
-> > > > > >   - user-space backtrace with VMA/filename mapping
-> > > > > >   - kernel dmesg buffer
-> > > > > > 
-> > > > > > This provides a lightweight post-mortem crash analysis capability for
-> > > > > > production environments where full debug info (DWARF/BTF) is not
-> > > > > > available.
-> > > > > > 
-> > > > > > The companion userspace tool is submitted to kexec-tools:
-> > > > > >   https://lore.kernel.org/all/20260622205550.1087163-1-pnina.feder@mobileye.com/
-> > > > > 
-> > > > > Sorry for the delay, this fell between the cracks somehow.
-> > > > > 
-> > > > > The kernel side looks fine overall, but to merge it there should be an
-> > > > > agreement from the userspace side maintainers that vmcore-tasks is
-> > > > > something they are wishing to accept.
-> > > > 
-> > > > Hi Mike, all,
-> > > > 
-> > > > Sorry for the extended delay.
-> > > > 
-> > > > I will send some minor feedback to the user-space tool patchset
-> > > > but overall, yes, this is something I would be happy to accept.
-> > > > 
-> > > > I don't want to create a chicken-and-egg type problem here.
-> > > > But it's probably worth mentioning that usually features
-> > > > hit the kernel before the corresponding code is accepted
-> > > > into kexec-tools.
-> > > 
-> > > Sorry if I wasn't clear. 
-> > > 
-> > > I didn't mean that the feature should be merged into kexec-tools before
-> > > merging the kernel bits. I just wanted to make sure there's no fundamental
-> > > issue from kexec-tools perspective.
-> > > 
-> > > > Let me know how you would like to proceed.
-> > > 
-> > > I'm going to wait for Baoquan's review and once that's done I'll pick up
-> > > the kernel bits.
-> > 
-> > Oh, sorry, I just noticed this series, but a quick look give me a hint
-> > of 'No, I don't like it.' We have had Crash utility, Drgn, now a new one
-> > comes up. I have some concerns to Pnina:
-> > 
-> > 1. Exporting maple tree internals (maple_node, maple_range_64,
-> >    maple_arange_64, maple_metadata) as vmcoreinfo ABI is problematic.
-> >    These are private implementation details, not stable structures like
-> >    task_struct. Any refactoring of the maple tree will silently break
-> >    the userspace tool. 
-> > 
-> > 2. Without DWARF/BTF, the debugging scope is inherently limited — no
-> >    kernel stack backtrace, no symbol resolution, no variable access.
-> >    That's essentially "ps + /proc/PID/maps" from a vmcore. Have you
-> >    considered enabling CONFIG_DEBUG_INFO_BTF on your platforms instead?
-> >    BTF is compact (typically < 1 MB) and would give drgn full access
-> >    without needing vmlinux debug packages. That seems like a better
-> >    return-on-investment than maintaining ~40 new vmcoreinfo exports.
-> > 
-> > 3. Beyond the technical concerns, I wonder about adoption. vmcore-tasks
-> >    targets a fairly narrow use case — platforms without DWARF/BTF, where
-> >    you still have vmcore but can't ship vmlinux. Is Mobileye currently
-> >    the only consumer? Are you guys already using it widely and fully?
-> >    If this lands but doesn't see broader uptake, the ~40 exports risk
-> >    becoming dead weight in vmcoreinfo — nobody actively uses them, but
-> >    kernel changes still need to keep them consistent, or they silently
-> >    rot and give users wrong results. 
-> > 
-> > Regards,
-> > Baoquan
-> 
-> (Adding linux-debuggers mailing list).
-> 
-> I agree with all of Baoquan's points here, with a couple of notes:
-> 
-> 1. drgn's BTF support is currently a work in progress, but it's shaping
->    up well: https://github.com/osandov/drgn/pull/625.
-> 2. makedumpfile is also gaining BTF extension support:
->    https://lore.kernel.org/all/20260617051834.95404-1-ltao@redhat.com/.
->    It's lighter-weight than drgn while still being much more general
->    than this series.
+Give the hibernation power down the same treatment as the reboot
+syscall commands. hibernate() runs in the context of the task that
+asked for it, whether through the reboot syscall or a write to
+/sys/power/disk, so when power_down() runs current is still the
+initiating task.
 
-Thanks for adding the information, very helpful.
+Log it once the image has been written and the machine is committed
+to going down:
+
+  reboot: initiated by systemd-sleep[812]
+  reboot: Power down
+
+The line comes from kernel/reboot.c so it keeps the "reboot:" prefix
+and sits right next to the final "Restarting system", "Power down"
+or "System halted" line, same as a plain reboot.
+
+The one exception is platform mode rolling back on a pending wakeup
+event after the line has been printed. The existing "Wakeup event
+detected during hibernation, rolling back." line follows immediately
+in that case, so the log stays real about what happened.
+
+Signed-off-by: Bradley Morgan <include@grrlz.net>
+---
+ kernel/power/hibernate.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+index d2479c69d71a..bec91bf6a63c 100644
+--- a/kernel/power/hibernate.c
++++ b/kernel/power/hibernate.c
+@@ -687,6 +687,8 @@ static void power_down(void)
+ 	}
+ #endif
+ 
++	reboot_log_initiator();
++
+ 	switch (hibernation_mode) {
+ 	case HIBERNATION_REBOOT:
+ 		kernel_restart(NULL);
+-- 
+2.50.1
 
 
