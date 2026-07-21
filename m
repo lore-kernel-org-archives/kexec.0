@@ -4,72 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 64094C4452B
-	for <kexec@archiver.kernel.org>; Tue, 21 Jul 2026 20:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9531DC4452B
+	for <kexec@archiver.kernel.org>; Tue, 21 Jul 2026 20:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
 	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=vbz1iYT6k9l+H6Z3FTtCF6cLZIfTcAcJKlDT5dYK2AI=; b=eYG/bpW+s9tmfmh7iuQPe08cfM
-	DyHiH6YK+3prWjbrtjWwXuBQn77hu960YUqIls9vDIJ9yG9yg2CFS3grnyjg6ickWUGeeNnrbff3O
-	vC6bDHf0vDoMYHNlAKBpDoMbWHIVZHHXLUZ3tPfgFB40pxehku3AQZC1NrPijYBLzbRwcHuDNo8gg
-	ynch6EL2iGb6b17rsh3GOhwqU+X0pCHDHiFr5lYmus26+s+zDASa37I/10jvj+n7CqbSdAwaKUwgv
-	8FFTeS//yh6WXIuip2xNUdqUzuo8bBENlaormXIAwDkpyz0KPBYgZLkAwW0VlJtXaqvbmYeJ+jggO
-	x9PqJvGQ==;
+	bh=bht7YFPW2nLJyME+XdIc/6Xfh+QtNInRSN0Il3SMOm4=; b=YwGAt8K9FhWvP8kxWpZMX6uYIb
+	zv3Lceo/828IK7Wptye2PX6CgQvIAkeiBCEjV+4rku/5Txwn3oSlXf0CJbC6LepK1MvidJa0+dJ3P
+	RgKiKfe3xO6mD+6k4Ysz2V+MAHUuuJdEz2o4YcenNe4PMpFKtlDUc75E/dtsKDyf0OQrIn/K/Itrs
+	Bs7H6WcfijZtMAwjOm4uCb1WO5gBz/VbQr5n7Q4CJ2hqQcIo12h4QPC6O/QRf4G10jmcWIivgGI4w
+	Px/eMWCY47Tug58CKVbpuufWIm37pi8uQ7n6G7t9kIa0U43n3SrVwx5EosV9/qOo+4XbPdxg5/v7B
+	cAm12F1Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wmH1r-0000000ANHm-19HS;
-	Tue, 21 Jul 2026 20:25:27 +0000
-Received: from mail-pl1-x634.google.com ([2607:f8b0:4864:20::634])
+	id 1wmH3J-0000000ANWh-34lW;
+	Tue, 21 Jul 2026 20:26:57 +0000
+Received: from mail-pl1-x631.google.com ([2607:f8b0:4864:20::631])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wmH1o-0000000ANHM-3NW0
+	id 1wmH3H-0000000ANVr-2qyU
 	for kexec@lists.infradead.org;
-	Tue, 21 Jul 2026 20:25:26 +0000
-Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-2caf228a910so93423695ad.2
-        for <kexec@lists.infradead.org>; Tue, 21 Jul 2026 13:25:23 -0700 (PDT)
+	Tue, 21 Jul 2026 20:26:56 +0000
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-2cace91f112so122343955ad.0
+        for <kexec@lists.infradead.org>; Tue, 21 Jul 2026 13:26:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784665523; x=1785270323; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1784665615; x=1785270415; darn=lists.infradead.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :content-type:mime-version:references:message-id:subject:cc:to:from
          :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=vbz1iYT6k9l+H6Z3FTtCF6cLZIfTcAcJKlDT5dYK2AI=;
-        b=A0R5UhfbMg6827JHJZj1w0D+E8Plf5CFLaEQGkPaJcvVr9MyFXEV60+gxxNHuIuEQD
-         dFhboQyU7BE8r9rbJJlHvprlYCyCSlKWQEmGiFCiYvFpxoO7Be/DHRBJDDHk1Erf7wvF
-         ACWQHQ7z1+VNg6d47clMobB9X5r5THfmsHMRqD7j9TXkeVlBsmBu7w2UWln851xu6o+u
-         JMdmlGEb2LMJMy8cEq5jCPCksHA73dyUlP8OyNt2yFU4aFbuaOYUhC7mBA7JdGWLqd7S
-         6esgr0C7chpROEL7zJJ3q9RozbsCQc7t+m4wyQjCy6Jh/hhU0BzbkDRQpWrXIbP6vD95
-         pqCA==
+        bh=bht7YFPW2nLJyME+XdIc/6Xfh+QtNInRSN0Il3SMOm4=;
+        b=E9P5xsu9whx1wgRir50jkGCXJ9tCYNz2OdfGIjnCVM33P9I+AKq7orWES4EwU5/ZCP
+         JOcBiAqo/jMSUS/XYdTBKUkpFssphbxv6dNkGhlZQEZzZLVycUgX5ELNivzLU108mqd2
+         i4azXB3QjQ4uku8hfMjiG76avpaeTXsiUNFX/krlp1qvBVcdCJW3psIxI6V8LMPyHjZ8
+         Mg+e7XELsOzbIbw6NSPOwy3K8OROpCe6r939EU7+IpKfFfkrcDzIEkK2NJa52PLEgDpx
+         EfC9JbKCQtU0bZ82kuldsXo1qsuWl/kekxCc5HuG6Rt+VM+lTaF8Ia/oYjz2YQ20LzGx
+         ELiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784665523; x=1785270323;
+        d=1e100.net; s=20251104; t=1784665615; x=1785270415;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :content-type:mime-version:references:message-id:subject:cc:to:from
          :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=vbz1iYT6k9l+H6Z3FTtCF6cLZIfTcAcJKlDT5dYK2AI=;
-        b=QI0Wm0nm7i4AIk7G81SbboMqB0qMLbvOH4NfB6KTr+33Pd3CxlPP5XPL+/Dt9QMNum
-         Odrh+pHCramE1KWOEC3jR/ku7Jqiy2/Og6iPKFh5RT/1cMqDMxunf37atERt2H/9m3Bi
-         YRb2uSofgSvFq1oUt4Hz/AGDHhds9FYMPryH80mIfHQjg61xJAK0OUX5YpphnSN7G//a
-         j3Fc6UOIdcx10vlsIOoMgrB9XbLeGB0A4B6NJ+o2etqT9mlKpWnqwY2N7mrA8W5CtyAU
-         mrpHWyposEcelmYKvgPoFvvZyui5OEafT1ev8JfxBNwGFZ96kcmVtfeaFMPH2kuYZ8Jz
-         8i4A==
-X-Gm-Message-State: AOJu0Ywe+63RYsh3kakml7Po2P6WxubZV02zIlvqH/oz9hWu4F9rwOj4
-	BpLksjseOGez3EiTeSKw+ieVJDzYEcOCzO2/oll71Y28uSXbTiETMhju3JehwXPI0Q==
-X-Gm-Gg: AR+sD134KSi22LbaZFWmm5hVkTbAWF8aVz3F82JB18cHeQCVRXGC2mJWuoq1E/F1Bhm
-	djQ7wvqdCKQ8w0Jf37/xmCxxaL3LAUSU9XFs7VnBaSY6Obk+DHExWCGZJaOcRmd7Ml1pyTo94/I
-	WZmbf7E/0qtacQdK9bg42o3dRpqVlG0Sx5XjXe+WLiGjzciSPat1vtKdZCPLz/Y9ueivqbMG7II
-	u0QklPdBa97jJ/5HhCA8cluYaPNf3L0uwncb/7ND28pIU7RTZWyhMbZBZ1OKPXIYgddNZRFcf2r
-	nqwe4DeulyFYK537zF/hQP7whMrJCw5TCqae4ZhJssXQTjcmzawyKHQ5WpqT86o3usapEmmyxcK
-	iehaRKc6sHrEVQ2jQu8Lg5S3IJY2TgYxtiYWK2Ve2Ew8R0r5CNdSZXtVQ46KqiNH5oBg/pFhVaV
-	bIM8tr980ghmJK7iq/FbgaB/k6nEZjtx8x86bUUKZ5
-X-Received: by 2002:a17:903:b08:b0:2c6:90ec:f601 with SMTP id d9443c01a7336-2cf34835859mr235453285ad.8.1784665522497;
-        Tue, 21 Jul 2026 13:25:22 -0700 (PDT)
+        bh=bht7YFPW2nLJyME+XdIc/6Xfh+QtNInRSN0Il3SMOm4=;
+        b=OfAxRGBJEG+easnPFK2XIGVjI8bx/2wHJxgECg7c6yZWk/4QGtC8cZyRxohqc10Y+D
+         419WjeWlxIIB8XyYVLF9EDmx+IPypDkqu/qO2jErT4sf3I7zS5PruqV4U5R6lr9hpq/X
+         IToi/la4aSGYpUpBQoNxfbbu1AuV2+BBF6/DuQaQIuZE9yMzNN1TaJFFzcjxh3RfQRac
+         cS+u0kdDZG0IEeN33RcRVLYt8AHxDC8SijqpHJGhrBl4xjT8qFQttGaGD4uYVMUNG567
+         lbUv98YoW44Ck3Mepx7+RC8sFhREc58Ii/q7gSUZMtuFRRMry63DAttvxHOwO/snj1nB
+         tjcQ==
+X-Gm-Message-State: AOJu0YyU0E2Utsj0l5XlI6+oRPb72eSnAT6qd0VwOjkoClESW2qV3ZLP
+	8+GXi0I7NDnzL8f/Gf0W5+c5ohxmx4WXU2ToIq1bTHxQfuTInUhclbo3u8LUWd8tcQ==
+X-Gm-Gg: AR+sD13BrZWbFsPig7tcNlyiZvBLFYqX/+VsdUdiHY2/4zwnvT8oqvjJATDMFSm+Uan
+	Oj4Ynxa71kDNfUyz9byWPEYw4b4xNaS8Z0G535m7gjGF0Vd3e0vRApD0hAoWpCehxOzm5E2aQl6
+	ZOc4j9BEndygfJuo6QLoX+wiV+rHE0piBCxfS1J80vlIRHm1PVqj6CgPSjBg3Etq3+XBSUQkvNn
+	QF8+ZbVi+i1rBPteCxW0xRje1oY7KueFOyM68n1mOKIahjtPT9HDfobofuioGQ1WtGppyuPzx4L
+	Ltyl8dtq6YrO2mcdFjLbhnIlNeM2I66JkankprH8c8HHAvDuFSp/veqFMUNplVQ9X7ZsRjAaSdr
+	E6qbSNbpSyucQOfwvdHobegSujFZVcetxdUHUrjPSArCyQPoZsPnp+0Z5v924sc46ybCbSPPTNp
+	yowriRA9j5JCOkiGsSuh0pCsrxQmxacfggqhW90gbd
+X-Received: by 2002:a17:903:4b43:b0:2c0:a555:80d6 with SMTP id d9443c01a7336-2cf3481d1b6mr200020005ad.2.1784665614286;
+        Tue, 21 Jul 2026 13:26:54 -0700 (PDT)
 Received: from google.com (79.217.168.34.bc.googleusercontent.com. [34.168.217.79])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cf8f3b7c9dsm2391865ad.83.2026.07.21.13.25.21
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cf8efde5cfsm2738235ad.31.2026.07.21.13.26.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2026 13:25:21 -0700 (PDT)
-Date: Tue, 21 Jul 2026 20:25:18 +0000
+        Tue, 21 Jul 2026 13:26:53 -0700 (PDT)
+Date: Tue, 21 Jul 2026 20:26:50 +0000
 From: David Matlack <dmatlack@google.com>
 To: Pasha Tatashin <pasha.tatashin@soleen.com>
 Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
@@ -92,24 +92,22 @@ Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
 	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v7 03/12] PCI: liveupdate: Track incoming preserved PCI
- devices
-Message-ID: <al_VrpvPE-RLCF5X@google.com>
+Subject: Re: [PATCH v7 09/12] PCI: liveupdate: Inherit ARI Forwarding Enable
+ on preserved bridges
+Message-ID: <al_WCh-G-H1kDU1h@google.com>
 References: <20260710212616.1351130-1-dmatlack@google.com>
- <20260710212616.1351130-4-dmatlack@google.com>
- <178432481253.189683.3297727348836286619.b4-review@b4>
- <CALzav=e1Gcu-9TD7F--41cYqKBrStKOE4VqQ4K3PKdNuYnNmcQ@mail.gmail.com>
- <178458744511.332171.13770778781241262180.b4-reply@b4>
- <CALzav=fjTOnyg2++GFFe5B17rHqNCWW=afjsD0A=EEjycPW7Sg@mail.gmail.com>
- <178465652971.412167.17838319728990505256.b4-reply@b4>
+ <20260710212616.1351130-10-dmatlack@google.com>
+ <178433098576.189683.2364970585754668266.b4-review@b4>
+ <CALzav=eZYfYYKAGEzk4TsGFLp1TPb2iFePNmqGsjX4jEZNJ9XA@mail.gmail.com>
+ <178465783370.437204.17382376546970842455.b4-reply@b4>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <178465652971.412167.17838319728990505256.b4-reply@b4>
+In-Reply-To: <178465783370.437204.17382376546970842455.b4-reply@b4>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260721_132524_852313_578B70BE 
-X-CRM114-Status: GOOD (  38.32  )
+X-CRM114-CacheID: sfid-20260721_132655_724548_1F7BF915 
+X-CRM114-Status: GOOD (  28.59  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -124,137 +122,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-07-21 05:55 PM, Pasha Tatashin wrote:
-> On 2026-07-20 16:07:47-07:00, David Matlack wrote:
-> > On Mon, Jul 20, 2026 at 3:44 PM Pasha Tatashin
+On 2026-07-21 06:17 PM, Pasha Tatashin wrote:
+> On 2026-07-20 16:19:00-07:00, David Matlack wrote:
+> > On Fri, Jul 17, 2026 at 4:29 PM Pasha Tatashin
 > > <pasha.tatashin@soleen.com> wrote:
 > > 
-> > > On 2026-07-20 14:54:51-07:00, David Matlack wrote:
+> > > On Fri, 10 Jul 2026 21:26:12 +0000, David Matlack <dmatlack@google.com> wrote:
 > > >
-> > > Thanks for the explanation. As I understand, the most straightforward
-> > > way to avoid holding the permanent reference is indeed to delete
-> > > dev->liveupdate.incoming entirely and perform an xarray lookup on every
-> > > access, like this:
+> > > unsigned int    ari_enabled:1;
 > > >
-> > > bool pci_liveupdate_is_incoming(struct pci_dev *dev)
-> > > {
-> > >         ...
-> > >         incoming = pci_liveupdate_flb_get_incoming();
-> > >         ...
-> > >         dev_ser = xa_load(&incoming->xa, key);
-> > >         ...
-> > >         pci_liveupdate_flb_put_incoming();
-> > >         return dev_ser && dev_ser->refcount > 0;
-> > > }
-> > >
-> > > However, as you note, this is inefficient because it affects every
-> > > single device and adds lookup overhead to every access (not sure about
-> > > the actual cost though, xarray access is pretty fast!).
-> > >
-> > > We can, however, still avoid tinkering with the lifecycle of the FLB,
-> > > and instead treat dev->liveupdate.incoming as a "hint" that we validate
-> > > on access with a fast, liveness check:
+> > > Sashiko asks a valid question, what protects other bits in this word
+> > > during modication?  At a very list a comment is needed.
 > > 
-> > Can you tell me more about your concern about FLB lifetime?
+> > This was my reply to Sashiko, not sure if you saw it:
 > > 
-> > The lifetime of the FLB will not be affected by this reference unless
-> > there is a bug in the driver where it fails to call
-> > pci_liveupdate_finish() during it's file handler finish callback.
-> 
-> From a design perspective, liveupdate_flb_get/put_incoming() is a 
-> logical read-lock/unlock pair on the FLB data. We use a refcount for 
-> optimization and sharing, but holding a get over a long asynchronous gap 
-> (from boot-time device setup to driver probe) is essentially holding an 
-> unbound lock.
-> 
-> Unbound locks make it difficult to trace refcount leaks or debug 
-> lifecycle issues.
-
-It's very standard for refcounts to be held for a long time, e.g. file
-refcounts and device refcounts. LUO FLBs themselves already have
-long-lived refcounts taken by each file that depends on themm, which
-aren't released until that file handler's finish callback runs. The PCI
-core is just doing the same thing.
-
-> 
+> > .  pci_liveupdate_configure_ari() is called from pci_configure_ari()
+> > .  which also sets dev->ari_enabled=1 and is pre-existing code.
+> > .
+> > .  If writing to dev->ari_enabled in this path is indeed unsafe then that
+> > .  is a pre-existing bug.
 > > 
-> > > 1. At Setup: In pci_liveupdate_setup_device(), we do the xarray lookup
-> > > once, cache the pointer in dev->liveupdate.incoming, and immediately
-> > > call pci_liveupdate_flb_put_incoming(). We do not hold a permanent
-> > > reference.
-> > >
-> > > 2. On Access: When an accessor runs, instead of doing a full xarray
-> > > lookup, it just validates the cached pointer's liveness by temporarily
-> > > securing the FLB:
-> > >
-> > > static struct pci_flb_incoming *pci_liveupdate_get_incoming(struct pci_dev *dev)
-> > > {
-> > >         struct pci_flb_incoming *incoming;
-> > >
-> > >         incoming = pci_liveupdate_flb_get_incoming();
-> > >         if (!incoming)
-> > >                 return NULL;
-> > >
-> > >         if (dev->liveupdate.incoming)
-> > >                 return incoming;
-> > >
-> > >         pci_liveupdate_flb_put_incoming();
-> > >         return NULL;
-> > > }
-> > >
-> > > * If get_incoming() returns NULL (the FLB has already finished/freed),
-> > >   the hint is invalid and the device is no longer incoming.
-> > 
-> > This avoids the xarray lookup but still requires taking the incoming
-> > FLB mutex twice (once for get and once for put) on every access. And
-> > if there's no incoming PCI FLB, the LUO will iterate over all incoming
-> > FLBs under the mutex to find it.
+> > I figured that a comment wouldn't be needed for continuing an
+> > established precedent (it's ok to write to ari_enabled during this
+> > path).
 > 
-> Can we do a fast-path check first?
+> Overall, I agree that if there is a bug it is pre-existing. But we 
+> should also take opportunities to improve existing code and make it 
+> safer. In my opinion, Sashiko raises a valid concern that is not 
+> obvious, since there is no comment explaining the access of non-atomic 
+> bitfields in the header before the struct pci_dev definition.
 > 
-> static struct pci_flb_incoming *pci_liveupdate_get_incoming(struct pci_dev *dev)
-> {
-> 	struct pci_flb_incoming *incoming;
+> In this path, it is safe because we run inside pci_device_add(), where 
+> dev is brand new and has not yet been added to the public devices list.
 > 
-> 	/* Fast-path to avoid unnecessary FLB querying */
-> 	if (!dev->liveupdate.incoming)
-> 		return NULL;
+> However, it would be great to:
 > 
-> 	incoming = pci_liveupdate_flb_get_incoming();
-> 	if (!incoming)
-> 		return NULL;
-> 
-> 	/* Check again, now that FLB is acquired */
-> 	if (dev->liveupdate.incoming)
-> 		return incoming;
-> 
-> 	pci_liveupdate_flb_put_incoming();
-> 	return NULL;
-> }
-> 
-> This seems to gives us the best of both worlds: robust refcount hygiene 
-> and a sane fast path.
-> 
-> What do you think?
+> 1. Review the access patterns to ensure there are no concurrent writers 
+>    on any other paths.
+> 2. Add a brief comment in this patch right before setting ari:
+> /* Safe to write without locking; device is not yet publicly visible */
 
-It still seems like an overall worse approach to me.
+Ack, will do this one in v8.
 
- * From a performance perspective, the PCI core would still have to
-   acquire the FLB mutex twice every time it needs to use the device's
-   serialized state (once to acquire a new reference and once to release
-   it).
-
- * From a locking perspective, the refcount doesn't actually protect
-   against the device itself going through finish. So we still need the
-   pci_liveupdate.rwsem.
-
- * From a hygiene perspective, each reference is held for less time yes,
-   but there will more places in the code that need to acquire and
-   release a refcount.  That is more room for bugs to leak a refcount.
-   So I'm not sure taking more small refcounts is an improvement.
-
-With the current approach there is just one refcount with a very clear
-lifetime (that aligns with the device file's refcount) and no extra LUO
-mutexes required to use the device's serialized state during device
-enumeration & setup.
+> 
+> or:
+> 
+> 3. Create a new separate patch that adds a comment before the struct 
+> pci_dev definition explaining the bitfield access pattern, and how 
+> concurrent writes are avoided.
 
