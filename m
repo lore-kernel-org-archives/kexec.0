@@ -4,59 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 98BE3C44529
-	for <kexec@archiver.kernel.org>; Tue, 21 Jul 2026 10:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CA76EC4451C
+	for <kexec@archiver.kernel.org>; Tue, 21 Jul 2026 11:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Date:Message-Id:Subject:References:In-Reply-To:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=G9KptbPfnIgk2bUb5Qj1IQpjzcDG7GjvoAGyCyRjQo8=; b=TPCUNTDn/MJ+boScOsFyyrbIlN
-	Je1AZWaXC5f6a+3Zvae55gbQAfeL63fZQ6iCPuvMQVc6oO7cWNeGiEmTQ5Zx++qAB+VVfok++wte6
-	qK8GQUrT7YQFUPKO0aCoBIsyIJd9+eMid5MMigpHiHfFE4zFcrUqOAooDgraKJpqSRvcbZlDhBp7y
-	YSZrq+i7nLWnO/JkZu0N6WuIMJmAFdnHNbYak2RHcieYY7l79XS8RRiYqn4krVtdpbv22G0txTQSR
-	lu/7y5pgou6xymt+Yx1xXEZnywIZrGP6H4gc8dqA7dOjckU6hQhWvm9XLhd6Y/wX24gTLakJsyq4S
-	PlQye8gw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=OJ9YfaBFSXj+Hk6UH0eG4jUTBf/umVD52Blq68hhcTs=; b=M7HG0LoP8Gfz+6xjZk6Ku4nN6A
+	URktfQjVBQYppi28JNkf7mnJ2TxQrgioXCpXKEMrpGsHWx6JTvrArIB8uBEajlzk7gPSHVP1kxVPr
+	C+gKgEcer7aRp+BeuJT95dPV6xnTxyLaJ79I1E2hPYKrPOcttSIk/lj+UhZh/8f8Ck7F5HbBj4J4h
+	7tccVS3QoT+WXiVy0tKKJU+8RKtlSc7auO4TvGjvMsU/GguJWSlyvamb+4IAPsyGxU8nvJ4xVZlJ5
+	4aWwE+Zu2c44G/Xo0+4GAuLtPiKYnbkq8Ypj2Jx93WStZgyDiikRgozYxRGNzNowZupmJQbZ8gVsZ
+	ROeDsWPg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wm7YA-000000095pB-3cwK;
-	Tue, 21 Jul 2026 10:18:10 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wm8Pq-00000009HzC-2Rbe;
+	Tue, 21 Jul 2026 11:13:38 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wm7Y9-000000095oW-3Yna
-	for kexec@lists.infradead.org;
-	Tue, 21 Jul 2026 10:18:09 +0000
+	id 1wm8Po-00000009Hyi-3LeJ;
+	Tue, 21 Jul 2026 11:13:36 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 2649760A95;
-	Tue, 21 Jul 2026 10:18:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80EBA1F00A3A;
-	Tue, 21 Jul 2026 10:18:06 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id EA5D96001A;
+	Tue, 21 Jul 2026 11:13:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 954BC1F000E9;
+	Tue, 21 Jul 2026 11:13:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784629088;
-	bh=G9KptbPfnIgk2bUb5Qj1IQpjzcDG7GjvoAGyCyRjQo8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=oY/8CdIMianL5NblgYWpWiFUahwsegpJQhFwXg6BtToG1IzacIHXoqtYGefB0IRfI
-	 49RD764ijYJMa7BUsqWpsuswZJOk1UxbEiyxLITx4l3MhOcBVeElMa6tzDM26/HA4J
-	 5gtGcGEY1KHkHCbCKLLHLztDhsmdJLEXvJqL4HE6WEIaKVlesh3gg6HQznjOWWameg
-	 D13kINwDITXDS28jEEAthAwYnAPxJFxEedBLUsCTN5lzapJSeXcEmqNbCV053UbGWT
-	 3HRA7sQDvhDIagbU1OcbQeBIl9FgSI7xl4AWk/xqoWHIyEdm25vBu/a8j8NbquORDD
-	 gUO8l1sU6Nztg==
-From: Mike Rapoport <rppt@kernel.org>
-To: pasha.tatashin@soleen.com, pratyush@kernel.org, 
- Vipin Sharma <vipinsh@google.com>
-Cc: tarunsahu@google.com, skhawaja@google.com, shuah@kernel.org, 
- dmatlack@google.com, linux-kernel@vger.kernel.org, 
- kexec@lists.infradead.org, linux-kselftest@vger.kernel.org
-In-Reply-To: <20260720203202.1964557-1-vipinsh@google.com>
-References: <20260720203202.1964557-1-vipinsh@google.com>
-Subject: Re: [PATCH v4 0/2] Make liveupdate selftests library
-Message-Id: <178462907906.500652.4199471528336671016.b4-ty@b4>
-Date: Tue, 21 Jul 2026 13:17:59 +0300
+	s=k20260515; t=1784632415;
+	bh=OJ9YfaBFSXj+Hk6UH0eG4jUTBf/umVD52Blq68hhcTs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=HhpYzzM/oimKKYM+22iuflbObTtTZTtdDQiTiyxYtxAy56bVm2RUMe/378V24lMCy
+	 N9e8S8m+u3CgY8ts4zAtzzn/7vOUZMXBdf24qhCZv9/TwkwwqyROndhV2evLOQdqu8
+	 HBoTX5g3VolANyAmdxRBf+OKSdf8wzTD4gVePThB5rnLNMi21tyuQah/hjS+xzmi6O
+	 +V6KY+DG0MFNy6G9jhnjGbGb6gjRw/JJMT1JAVLM8HYueumFcgncpSyOhJzG/H7zL+
+	 pCiAXWPO74jZeBAiR5ITzdAOIhaTIq1nFewaleXIqgld/by6+2YLS8eesfYNZWbUK3
+	 W+mvBX/jSsBVg==
+Date: Tue, 21 Jul 2026 12:13:30 +0100
+From: Simon Horman <horms@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pnina Feder <pnina.feder@mobileye.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Dave Young <ruirui.yang@linux.dev>,
+	Jonathan Corbet <corbet@lwn.net>, Alexandre Ghiti <alex@ghiti.fr>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH 0/4] vmcore-tasks: export per-task metadata to vmcoreinfo
+Message-ID: <20260721111330.GA1768252@horms.kernel.org>
+References: <20260622211430.4008899-1-pnina.feder@mobileye.com>
+ <akybBoCAm-kJbfHL@kernel.org>
+ <20260720091927.GA1736709@horms.kernel.org>
+ <al4X300UObXawEIJ@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.16-dev
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <al4X300UObXawEIJ@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -71,30 +81,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, 20 Jul 2026 13:32:00 -0700, Vipin Sharma wrote:
-> Make liveupdate selftests library
+On Mon, Jul 20, 2026 at 03:43:11PM +0300, Mike Rapoport wrote:
+> Hi Simon,
 > 
-> Hello,
+> On Mon, Jul 20, 2026 at 10:19:27AM +0100, Simon Horman wrote:
+> > On Tue, Jul 07, 2026 at 09:21:58AM +0300, Mike Rapoport wrote:
+> > > On Tue, Jun 23, 2026 at 12:14:26AM +0300, Pnina Feder wrote:
+> > > > This series extends vmcoreinfo with struct offsets and sizes needed by
+> > > > the vmcore-tasks userspace tool to extract per-task state from a vmcore
+> > > > dump without requiring kernel debug symbols (DWARF/BTF).
+> > > > 
+> > > > The vmcore-tasks tool reads /proc/vmcore (or a saved vmcore file) and
+> > > > reconstructs, for each task:
+> > > >   - task name, pid, state, flags
+> > > >   - VMA list (start, end, flags, backing file)
+> > > >   - user register state (saved on the kernel stack at kernel entry)
+> > > >   - user-space backtrace with VMA/filename mapping
+> > > >   - kernel dmesg buffer
+> > > > 
+> > > > This provides a lightweight post-mortem crash analysis capability for
+> > > > production environments where full debug info (DWARF/BTF) is not
+> > > > available.
+> > > > 
+> > > > The companion userspace tool is submitted to kexec-tools:
+> > > >   https://lore.kernel.org/all/20260622205550.1087163-1-pnina.feder@mobileye.com/
+> > > 
+> > > Sorry for the delay, this fell between the cracks somehow.
+> > > 
+> > > The kernel side looks fine overall, but to merge it there should be an
+> > > agreement from the userspace side maintainers that vmcore-tasks is
+> > > something they are wishing to accept.
+> > 
+> > Hi Mike, all,
+> > 
+> > Sorry for the extended delay.
+> > 
+> > I will send some minor feedback to the user-space tool patchset
+> > but overall, yes, this is something I would be happy to accept.
+> > 
+> > I don't want to create a chicken-and-egg type problem here.
+> > But it's probably worth mentioning that usually features
+> > hit the kernel before the corresponding code is accepted
+> > into kexec-tools.
 > 
-> This is v4 series of refactoring liveupdate selftests as a library. It
-> exposes common liveupdate ioctls as a library which can be used by other
-> selftests like VFIO and IOMMU.
+> Sorry if I wasn't clear. 
 > 
-> [...]
+> I didn't mean that the feature should be merged into kexec-tools before
+> merging the kernel bits. I just wanted to make sure there's no fundamental
+> issue from kexec-tools perspective.
 
-Applied to selftests-lib branch of liveupdate/linux.git tree, thanks!
+Thanks, it is clear :)
 
-[1/2] selftests/liveupdate: Use luo_test_utils.c for liveupdate ioctl APIs
-      commit: c5555d4777e3bb80b1b4b25bd678085e22a02d08
-[2/2] selftests/liveupdate: Move luo_test_utils.* into a reusable library
-      commit: a19aa15b814d0b824b4af8718568e69397fc2e95
+> > Let me know how you would like to proceed.
+> 
+> I'm going to wait for Baoquan's review and once that's done I'll pick up
+> the kernel bits.
 
-tree: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux
-branch: selftests-lib
+I see that conversation is now active.
 
---
-Sincerely yours,
-Mike.
-
-
+Thanks to all.
 
