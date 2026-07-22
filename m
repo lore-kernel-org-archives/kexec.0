@@ -4,88 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 10D42C44539
-	for <kexec@archiver.kernel.org>; Wed, 22 Jul 2026 13:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 10517C4453C
+	for <kexec@archiver.kernel.org>; Wed, 22 Jul 2026 15:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=EeoRfimiiY9Q3irn9keuGCYbXE0eQn79Xjd7POvlsJo=; b=XhHZETwSCjvGbJaRi6Db+eKv/3
-	dtaw9slNwEk6M0oxFzKbSgj5xwunrBQdmSWuCJ41TOERchlcsi6E81Yy940B229uAQQKSUgPzNpyd
-	e1CmL/svHaMTn2L8SLVxnZwD3D0ZfH1KhJI2/RIfB2xavXvfNwc7v7NMPA1hQYqVA+SUPcZaR/EKm
-	+jYYv4hVEaD2b6yGcviB6A0IbwBKIvhPzwMyukOe/VtJZz3echI0iDNC4HCgbwXJ8cpDHCJY+gAOs
-	cuMkC7vqtnRQO5wIdF8WCbpXC5cVykBMMasda764uN2BfOMjpXZIQHt/ulk9wGoYE4jVuZop72O8y
-	mFjaR31A==;
+	bh=uuu1Tu0mavyGTKCTNlz/UMSHBAzx4FGHXBKIVOkO5m8=; b=AA5fXGJRmsLefm52aYrIqKtQB6
+	ArLEGAn+HLWKd/K9VFE0nKFBGjszBqir7gAbvvNziOW4Gk5e2itm4BDCkAQoN4FmareBWlNEz61zM
+	STDdgkB+PxpMkpL8Bbby16q4oPNQ4Ph1RkY60Rr3GFQYYU+OYbs2qtIHiF9lh1CyMdtIGZ80XNWiI
+	fUPvKVVqqYChB38utLo3F3ciy9lceUFmideBU2/QfeM3LXhWi5qwF4tpupesr4j50Ge4DNsjwHW7Q
+	e3rjk3LpYK34X4TcC5YL/rYJcGRKPVG1PGZK+Pq9zACH2ZQOEr96UoEv56KavmlUVEwRJSuRttBB+
+	HyK5vBzQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wmXL5-0000000BwsE-1OQj;
-	Wed, 22 Jul 2026 13:50:23 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wmZIu-0000000CH1A-0lJa;
+	Wed, 22 Jul 2026 15:56:16 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wmXL4-0000000Bws2-1a8l
+	id 1wmZIs-0000000CH0u-2EBu
 	for kexec@lists.infradead.org;
-	Wed, 22 Jul 2026 13:50:22 +0000
+	Wed, 22 Jul 2026 15:56:14 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id C0885600AF;
-	Wed, 22 Jul 2026 13:50:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E746D1F000E9;
-	Wed, 22 Jul 2026 13:50:20 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 36AA443941;
+	Wed, 22 Jul 2026 15:56:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D547F1F000E9;
+	Wed, 22 Jul 2026 15:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784728221;
-	bh=EeoRfimiiY9Q3irn9keuGCYbXE0eQn79Xjd7POvlsJo=;
+	s=k20260515; t=1784735774;
+	bh=uuu1Tu0mavyGTKCTNlz/UMSHBAzx4FGHXBKIVOkO5m8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=T/r8FyatYSzoUoPZRC74rXA7bBAIRxpONYRHXdf5Mi9dhy8o8M3tl3WV99KKPwGMM
-	 IH9UFgzJb9bIEhpaVALb7TbbknHaBSdPxIOD3d19VqZpowS4XZAyxgCrlw7siDmfVQ
-	 FNZ/sAhxfRwrZczlvoQSBwaXyQmgyRMiJCYM61R0X/ZS3G8Th1dLH+ptYJSP1K2Jp5
-	 roZK41OtTIwZGPW5WSJytAcGaD187QNdEOWl38XZ87MrCAkQlmqQhzZQJlMrRiJwFo
-	 c6zBuLhlrT7TpaZrYl11bPxgbR9tuYnO524xJFLJyz+6bdjCxSanzCRDHzClATsZYg
-	 M4A4Il8iCaJ9g==
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 2C847F4006F;
-	Wed, 22 Jul 2026 09:50:20 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Wed, 22 Jul 2026 09:50:20 -0400
-X-ME-Sender: <xms:nMpgaiPexXFulMtpWAyLEaEws_-rBvDj0PQ7nmNGPHCBgS-KBKDNBQ>
-    <xme:nMpgajSrEPao7G6bTDU0XWoDvVCmO7WBXv3GdxFWtvv8dfUK4lvbHOf-uIWKE4G0-
-    svdqhEJJHWxEfQ0MpHekm9lNeDeTIgySWQ32Rc-vCU2JDiA_bKRUI8>
-X-ME-Received: <xmr:nMpgan_6rMcwyWKWVzJq8xp5IEMCamoJNxGsOhK9UYawu_-PKD2zTaLOKfnwuA>
-X-ME-Proxy-Cause: dmFkZTEcLBRCwuXySOYV7H6x7DkJIvrYO9Ery/tQi+sq7I57KFQUF1qdJr6zrlSqcvF9Ph
-    deAkADIfMnJyfKCJ80SNnkezEOqscALfqlkpBZTUnQSZZojV5gyx0oOKDQ0eri80MNuuIr
-    9gObeR+HUgmEj6Cla+MYcNTg61VpyDq7ILZJ/gN3wdt4zxWIg555StQsNfcRCIc+pu1iVB
-    t3awqXZ6ybgYd/ROnC7Vy91+fg1Jo2IRoZUm9rhFFIGANGcUB02mSARfiA+BSLCJLBi1AW
-    nlHlvxx/+fNSry5BX93yUaiaCtAggG4UtjCXDlcJLSNCvDXHqZhnM/P/q2SuH0l+gyjUtm
-    BzaKLVGOEjqwfH6K6BnJRff/8fHaDSj0YoXDewKOs2KDXip6nXwim7proZPQ9XFv2/NSAI
-    IEQptmkwx9KLubsenYj8MUM5ucfDyR5ctDxbCXlcEbr/zfX9uljpbFZonG3zlcAgEFtgVf
-    nVw6w977M5lPgjrBjAwkT2YRp5l3WFRrvREt87A0++ayBq5h4EtGfKR4nNTB30NSTHwxoY
-    YeC/aMQACKWpu6iOqk5bjUvsgv9CvZRZFaZFvKqM1BHmmMU8E1l3IP1x6QhejwkHRwBM4b
-    tp/ous0bXtJIqShDCMBjz8XITbuGcABDhJXHj8K8DwVkydmOEytoWiAQYCpg
-X-ME-Proxy: <xmx:nMpgavrX9fWw6b6Zb5y_znY8GnfRFScZx4f7Uw4ayNe5cQ3hQH7amQ>
-    <xmx:nMpgaoGuwB2bl2huD-XpJ3TFcPX9GomeQDNDaHojGSovRPu-l4v5Wg>
-    <xmx:nMpgau3ijbR3EzLaS4uCt5blXvK8FClevkg5H-p0CteeeXjFLc0Wxw>
-    <xmx:nMpgauOiOx20T1ZNOfSc24IAUGCBRPEUjXmBnYDAwaro0bOwMzOdKQ>
-    <xmx:nMpganU0caj9CT79AvPOSmVsSSJs4n3N9fjnBeSXi_ossJ05Ij7IRKWr>
-Feedback-ID: i10464835:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 22 Jul 2026 09:50:19 -0400 (EDT)
-Date: Wed, 22 Jul 2026 14:50:18 +0100
-From: Kiryl Shutsemau <kas@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
-	rneu@meta.com, riel@surriel.com, caggio@meta.com, anilagrawal@meta.com, 
-	rmikey@meta.com, linux-mm@kvack.org, kernel-team@meta.com
-Subject: Re: [PATCH RFC 0/3] efi: mm/memory-failure: keep hardware-poisoned
- pages out of the next kexec
-Message-ID: <amDHmNWfQ8eid9jH@thinkstation>
-References: <20260717-hwpoison-kho-v1-0-9c5eda551998@debian.org>
+	b=luqgxHZgCLrxH35q8K0hoG5fURY3wUyTXsoWg0QnmpHM71Q4GfoEZnLFZ7E43AtXW
+	 R2csB6RpmM2d4Ky3zgHFJdkvuXaPl8zBu2PYmh5dA5DWe3lVLe8X13dG7V2JPIgUjI
+	 dCvvi8VdDxSA+cR943rwpFJT6PLWwnU7WTs6TEl9/r0J7RI2hA6T4cZywp+Oz77ijd
+	 6oX7iQyTXPEffMEIHWUpX/eNRbCJyRi757LlQJ0IgviZhqW6deQYHK61SS0xhOwwpp
+	 yDaypsknrwAz6NFmfQgRJgy6QQ9c7/q5RdiZH4Ea/ir9U307CP3EvbEkHDX6xHJm6h
+	 hZFLlsjKjNFYA==
+Date: Wed, 22 Jul 2026 18:56:07 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: kexec@lists.infradead.org
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	David Matlack <dmatlack@google.com>,
+	Alexander Graf <graf@amazon.com>,
+	Steven Rostedt <rostedt@goodmis.org>, kvm@vger.kernel.org,
+	linux-mm@kvack.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [ANNOUNCE/CFP] LPC 2026 Live Update Microconference
+Message-ID: <amDoFzbQVdxjgqzH@kernel.org>
+References: <ahcc3Qyuy7Oy03Iq@plex>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260717-hwpoison-kho-v1-0-9c5eda551998@debian.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ahcc3Qyuy7Oy03Iq@plex>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,94 +73,72 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jul 17, 2026 at 07:03:02AM -0700, Breno Leitao wrote:
-> Problem:
-> ========
-> 
-> When a page is hard-offlined due to an uncorrectable memory error (multi
-> bit ECC), memory_failure() sets PG_hwpoison, unmaps it, removes it from
-> the buddy allocator. This information is not carried to the next kernel
-> that is kexeced. The new kernel kexecs and trip over that bad memory
-> bank _again_.
-> 
-> Why now:
-> ========
-> 
-> Several industry trends make this increasingly important:
-> 
->     1) DRAM is getting more expensive
->     2) soldered / on-package memory (LPDDR, HBM) is becoming more common, so a
->        failing part can no longer simply be swapped;
->     3) memory is kept in service far longer (at Meta, DRAM lifetime is being
->        drastically extended).
->     4) It is more and more common to kexec instead of full reboot
->     5) Increase of memory per system with CXL
-> 
-> Proposed Solution:
-> ==================
-> 
-> Carry the poisoned frames to the next kernel in a new EFI configuration
-> table, LINUX_EFI_POISONED_MEMORY, modeled on the existing
-> LINUX_EFI_MEMRESERVE table.
-> 
-> EFI configuration tables already survive kexec: firmware hands the EFI
-> system table to every kernel in the chain, so a table installed once is
-> seen by all successors without a new handover channel.
-> 
-> The mechanism is architecture independent, so x86 and arm64 use the same
-> code.
-> 
-> The EFI stub installs an empty table while EFI boot service is up. A
-> configuration table can only be created there; the running kernel can only
-> append to it.
-> 
-> Each hard-offlined frame is appended; an unpoison "removes" its entry
-> so a frame that is good again is not carried forward.
-> 
-> The next kernel walks the inherited table early in
-> efi_config_parse_tables(), before memblock and the buddy allocator are
-> up, and memblock_reserve()s every recorded frame. The bad RAM is never
-> handed out.
+Hi,
 
-The allocator is only half of the problem. kexec segment placement
-doesn't know about any of this: kexec_file picks destinations from
-System RAM resources (memblock on arm64), and poisoned frames are only
-ever removed from buddy. So the next kernel image, initrd or purgatory
-can be placed on top of a poisoned frame -- the relocation memcpy then
-consumes the poison and the machine checks during the very kexec this
-series is supposed to protect. Same for the table's own list pages:
-overwrite one at placement time and the next kernel parses garbage.
+This is a reminder that the CFP for Live Update microconference at Linux
+Plumbers Conference is still open and even extended until August 7th.
 
-Hooking num_poisoned_pages_inc() also means soft-offlined pages are
-recorded. Those are functional pages, offlined predictively. Turning
-them into permanent losses for every kernel down the kexec chain does
-not seem right. I would record hard failures only.
-
-On the data structure: I am not an expert on DRAM failure modes, so I
-went reading. The field studies [1] say roughly a quarter of DRAM
-faults are multi-bit structures (row/column/bank), and the address
-interleaving means one such fault shows up to the OS as many separate
-4K pages. A row fault lands in a window of tens of KB to about a MB; a
-column fault is one bad line per row, strided across the bank's entire
-footprint -- potentially thousands of pages scattered over gigabytes,
-reported one MCE at a time as they get touched. DDR5 on-die ECC hides
-most single-bit faults from the host, so the visible mix shifts toward
-these multi-bit modes over time.
-
-If that is accurate, per-4K entries have no natural bound, and every
-entry becomes a separate scattered memblock_reserve() in every future
-boot.
-
-I would consider a bitmap with one bit per 2M instead, modeled on
-struct efi_unaccepted_memory: the stub sizes it from the EFI memory map
-at cold boot, the running kernel sets a bit on hard offline, clears it
-on unpoison, and the next kernel reserves set units. It is one
-fixed-size allocation, so the whole grow-and-link machinery and the
-chain-parsing trust problem go away, and a row fault collapses into one
-or two bits.
-
-[1] https://arxiv.org/abs/2408.15302
+On Wed, May 27, 2026 at 05:05:23PM +0000, Pasha Tatashin wrote:
+> Hi,
+> 
+> The Call for Proposals is now open for the Live Update Microconference 
+> [1], taking place at the Linux Plumbers Conference this October 5-7 in 
+> Prague [2].
+> 
+> As infrastructure scales, minimizing workload disruption during host 
+> updates has become a critical operational requirement. This 
+> microconference focuses on the evolving engineering challenges behind 
+> seamless software handovers, state preservation, and warm reboots that 
+> bypass traditional hardware reset cycles.
+> 
+> We are seeking technical presentations, and problem statements spanning 
+> the entire stack—including kexec optimizations, hypervisor integration, 
+> user-space checkpoint/restore, firmware coordination, and device state 
+> handovers.
+> 
+> ---
+> A few focus areas we hope to cover during this year's sessions include:
+> ---
+>  * Orphaned Virtual Machine for zer-downtime upgrades.
+>  * Live Update Orchestrator (LUO) enhancements and architecture
+>  * Kexec HandOver (KHO) framework advancements
+>  * Kexec reboot latencies to minimize guest/workload downtime
+>  * Preserving guest states across live updates (guest_memfd, hugetlb)
+>  * In-flight DMA, IOMMU tracking, and preservation
+>  * VFIO device state preservation and live update migration mechanics
+>  * PCI/PCIe device handovers, reset avoidance, and state restoration
+>  * Live Update in Confidential Computing (TDX/SEV-SNP)
+>  * Building robust testing, fuzzing, and validation frameworks for 
+>    upgrade paths
+> 
+> ---
+> Submission Details & Deadlines:
+> ---
+>  * CFP Portal: https://lpc.events/event/20/abstracts/
+>  * Track Selection: "Live Update MC"
+>  * Deadline: July 24th, 2026
+> 
+> Session Format Reminder:
+> LPC sessions are highly interactive working groups, not static lecture 
+> slots. Proposals should be designed to introduce a concrete technical 
+> challenge quickly and leave substantial time open for real-time debate, 
+> consensus-building, and problem-solving with the room. Keep slides 
+> focused on architecture and open issues rather than heavy text blocks.
+> 
+> We hope to see you in Prague to help push the live update ecosystem 
+> forward.
+> 
+> (Note: LPC attendance caps fill up exceptionally fast. We strongly 
+> advise booking your passes early, as track organizers cannot always 
+> guarantee speaker registration overrides once the event sells out.)
+> 
+> [1] https://lpc.events/event/20/contributions/2321/
+> [2] https://lpc.events/
+> 
+> Best regards,
+> Pasha
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Sincerely yours,
+Mike.
 
