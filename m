@@ -4,61 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 10517C4453C
-	for <kexec@archiver.kernel.org>; Wed, 22 Jul 2026 15:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3A989C531BC
+	for <kexec@archiver.kernel.org>; Wed, 22 Jul 2026 16:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=uuu1Tu0mavyGTKCTNlz/UMSHBAzx4FGHXBKIVOkO5m8=; b=AA5fXGJRmsLefm52aYrIqKtQB6
-	ArLEGAn+HLWKd/K9VFE0nKFBGjszBqir7gAbvvNziOW4Gk5e2itm4BDCkAQoN4FmareBWlNEz61zM
-	STDdgkB+PxpMkpL8Bbby16q4oPNQ4Ph1RkY60Rr3GFQYYU+OYbs2qtIHiF9lh1CyMdtIGZ80XNWiI
-	fUPvKVVqqYChB38utLo3F3ciy9lceUFmideBU2/QfeM3LXhWi5qwF4tpupesr4j50Ge4DNsjwHW7Q
-	e3rjk3LpYK34X4TcC5YL/rYJcGRKPVG1PGZK+Pq9zACH2ZQOEr96UoEv56KavmlUVEwRJSuRttBB+
-	HyK5vBzQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=IcI5qs7jN/uu8ChWZU0RS5LTqt9hibuExW779DaX+1k=; b=JTgE0HEo+zGzjhgqV7b+XFmNW/
+	vOsA9NvtAWG4DkC2gO7XsYQjroKvnixqKdvP2Fy1S+d2aiHZeo/qxCqb5HgWnVSCxyfnwP00/jFvZ
+	k4H2M3+hb4DfPW7f/vJgYylZBtrWlCfDZraw+M710doF5CdqCtVCUM9GHw5Z6lfk+f5fJTz+pLw49
+	hov74Dxq2WzAOEpCAhlo1t+kKTKVroSm/Z5uFkO5cfhM+PtPcSVSmpc0xZFL4HTIq3FCj6GI9qC28
+	jxZzttaHYsschQCuYqQq1BN8tj0mARysbMbxQV7vyZzrijZYkwm+8onrHcUymnU574GpWq8vsUAjz
+	XVRdRSlQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wmZIu-0000000CH1A-0lJa;
-	Wed, 22 Jul 2026 15:56:16 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wmZXO-0000000CIAb-1yIV;
+	Wed, 22 Jul 2026 16:11:14 +0000
+Received: from mail-lf1-x131.google.com ([2a00:1450:4864:20::131])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wmZIs-0000000CH0u-2EBu
+	id 1wmZXL-0000000CI8k-397N
 	for kexec@lists.infradead.org;
-	Wed, 22 Jul 2026 15:56:14 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 36AA443941;
-	Wed, 22 Jul 2026 15:56:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D547F1F000E9;
-	Wed, 22 Jul 2026 15:56:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784735774;
-	bh=uuu1Tu0mavyGTKCTNlz/UMSHBAzx4FGHXBKIVOkO5m8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=luqgxHZgCLrxH35q8K0hoG5fURY3wUyTXsoWg0QnmpHM71Q4GfoEZnLFZ7E43AtXW
-	 R2csB6RpmM2d4Ky3zgHFJdkvuXaPl8zBu2PYmh5dA5DWe3lVLe8X13dG7V2JPIgUjI
-	 dCvvi8VdDxSA+cR943rwpFJT6PLWwnU7WTs6TEl9/r0J7RI2hA6T4cZywp+Oz77ijd
-	 6oX7iQyTXPEffMEIHWUpX/eNRbCJyRi757LlQJ0IgviZhqW6deQYHK61SS0xhOwwpp
-	 yDaypsknrwAz6NFmfQgRJgy6QQ9c7/q5RdiZH4Ea/ir9U307CP3EvbEkHDX6xHJm6h
-	 hZFLlsjKjNFYA==
-Date: Wed, 22 Jul 2026 18:56:07 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: kexec@lists.infradead.org
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	David Matlack <dmatlack@google.com>,
-	Alexander Graf <graf@amazon.com>,
-	Steven Rostedt <rostedt@goodmis.org>, kvm@vger.kernel.org,
-	linux-mm@kvack.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [ANNOUNCE/CFP] LPC 2026 Live Update Microconference
-Message-ID: <amDoFzbQVdxjgqzH@kernel.org>
-References: <ahcc3Qyuy7Oy03Iq@plex>
+	Wed, 22 Jul 2026 16:11:13 +0000
+Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-5b14d1f9315so11384502e87.2
+        for <kexec@lists.infradead.org>; Wed, 22 Jul 2026 09:11:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784736669; cv=none;
+        d=google.com; s=arc-20260327;
+        b=r4KgmZmHMAOepE9SKiomqWfFmWUGFGUc/w072b+s8ycUe5FO9vKmiYslLLHpMKgk/a
+         h5zGd0B8jFZlacNaH7tjVI+ALpVGYhsNjxVhae47bLhUrzSAmYtNfSY3GS30gLI2WrmQ
+         oFU+HjmUSgXnr2FlVQ79Q0JPlMxJrTf5cmYDkukTjrpSlag8FlrDOWP0DT8dypWBhyWv
+         vyne2D5uEsLw0HTsXdLMwowRSe3yMoTgDjznldpT9gTfMBMMsxPYMnYzTETON9+7nLjv
+         PpvjEDWuOrQ8Aed2YiCEixpS2rohpnNAS7sCsZKFGT23qBJKeLowc8M+15tNZ/vyawCX
+         0Ajw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=IcI5qs7jN/uu8ChWZU0RS5LTqt9hibuExW779DaX+1k=;
+        fh=QB3M2dJjDl6AcEKrqFZWRg9plhwoMIP5UfQvadI9R0o=;
+        b=XamTQ7rjAjzzNd6gr6qtwf5lXnqfhvWXTll+LXr5253zIsPEhtXj84Y5sE0Ms3+580
+         OM/3EmAwUMHp3xp0xwESB5ElzW/xL0bTYL8/8+9iAhkowFAjMBohY2xh4dGja72rJ0N+
+         3jB+a3Av9icFfiqzhk4vl3TYRBBFjlGKR1Y3WFcKDhkyY8jtGwGeh/HrAK1nJ5PUEUML
+         ve/v5xwL0huqRliXPK23Isl31EgrdJRwzFFV24NMXM3qNdoZpJtzOurRRemlLLp1AAs1
+         2/xxiWgB7p3mAbA8PyKshr6Q1+eE/LTQRchxiZGbrAcbopohNQQQfs8lSglp5HHVSdaB
+         d3pQ==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784736669; x=1785341469; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=IcI5qs7jN/uu8ChWZU0RS5LTqt9hibuExW779DaX+1k=;
+        b=FilVyfMm1js10wtClmCKJ06oakJDJXrMQplEVEI9qPOo5JG3VYXwpjvl9lg89uIN/V
+         MMm1yjdqpUHhnXzp7p1xiDXFufG/2uefG40OTjkzx6Qpi43FLy7dpGW4oKKQuhyxqYkp
+         af8XEddYRjUfG5JeQtoEwoOHHdHiRpUHdD7AZ34trc3VLHyDHY6IcD0CwUJs2CG0wymB
+         +5VGeNeHus6dmrjAuhcWIm0DSTdNtY9qTDg4SacwHS+rM5ZSmeiQfn2nepDwGIdbsqn+
+         yTMYHJLMrkwZpXPJMNE2utBzpj7wh71FUdrBELzE1XiPZwhyk2+tul6LUnGtY+6Dt5WH
+         OOVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784736669; x=1785341469;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=IcI5qs7jN/uu8ChWZU0RS5LTqt9hibuExW779DaX+1k=;
+        b=DAFoA1Vp75bve1xiMTMF+X8hUinnwSCMM5IoTwE19cFb7slSwb7qrPeM9W+81FxAI1
+         JwNnlariI5hrfNxZNOofW7NE9Ma+m6rQKMqre64g/RFCjn7xmdtOWZNVRjEoDoBoaWTV
+         Qj1vePhurf/DokGyoqgUZNVsk5XMIxk1XMoMc+7MkfKuNRWK4e2npaQkxnKZ64pePy1e
+         6dCsbFjVptwSndhFkNl1QUuIcYKsLR+E3fGZhMJHGKfRJ//EjdCFvgp7dIOXu8pTJAN0
+         3ZaYpJeCRiAdyraeRrMXhlbxpYRQGlyqzsJ6WdQYCggITFqF/cc7sz58TYbKGE94/cSx
+         dpZw==
+X-Gm-Message-State: AOJu0YxI030eMp4PnnKXQgyuGni6ENx35U+UkPLj/PcH4BykwtFzJ9lJ
+	LDm2uzzCl5NAASwNaKQjP4KIwsUJZtBZp/6FKq0ILjPHJ9cn03Zj3qCfNJvyvy/iBWTy8LM4cmn
+	/FHSjjVLVDUcYjp7b2jrcVLm3QaJ9r5akflRC0xAg
+X-Gm-Gg: AR+sD12WrhrpjAvPJ+Df28oS0VBu6R9IKaCxN8emdoxxw1g5/0C48k16VQShs69gdCD
+	BRtxafXDUfP9aJx0HwJFA14Se+Aqggqk3mnfbIIJ0Fk0ZXLPMBnLILRb8QQvzLxw5SRa7hB1njl
+	NEPv7gz4diO0A6bfmqCqFrBrxZGuTS32i3NkcLVH+jQF/KmeTjjKEVAhJtJAt7DAxPXJThQ7knD
+	RMZUqONV2vHqiHTmVgaBofUh32lSw2kdBLwnmu8Ydy2uHINK7S3KPhtxVTgK1NH53fw7my7echW
+	1zAS5rJy+UNCVdkj
+X-Received: by 2002:a05:6512:124f:b0:5b0:1ace:3bca with SMTP id
+ 2adb3069b0e04-5b28fac59dcmr5709185e87.65.1784736669024; Wed, 22 Jul 2026
+ 09:11:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ahcc3Qyuy7Oy03Iq@plex>
+References: <20260710212616.1351130-1-dmatlack@google.com> <20260710212616.1351130-4-dmatlack@google.com>
+ <20260717163820.6bc8c13b@shazbot.org> <CALzav=eQ-0rbxh6Eekbt4zUoNGNZc_THmSCvVWVwE3om1BPtdw@mail.gmail.com>
+In-Reply-To: <CALzav=eQ-0rbxh6Eekbt4zUoNGNZc_THmSCvVWVwE3om1BPtdw@mail.gmail.com>
+From: David Matlack <dmatlack@google.com>
+Date: Wed, 22 Jul 2026 09:10:35 -0700
+X-Gm-Features: AUfX_myAcr2geqnXYh1xnj0XUmNEe2bz-zIOTwyIeRO5MtevXktrjd32lAucA7Y
+Message-ID: <CALzav=ej05tZbVJUqZC4BOSCtZ=EkQ8GsckqLN61qKbyMHWfKg@mail.gmail.com>
+Subject: Re: [PATCH v7 03/12] PCI: liveupdate: Track incoming preserved PCI devices
+To: Alex Williamson <alex@shazbot.org>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, 
+	Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Rientjes <rientjes@google.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, 
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, 
+	Parav Pandit <parav@nvidia.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pranjal Shrivastava <praan@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Samiullah Khawaja <skhawaja@google.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Vipin Sharma <vipinsh@google.com>, 
+	William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260722_091111_999743_56B53428 
+X-CRM114-Status: GOOD (  36.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,72 +127,111 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
+On Mon, Jul 20, 2026 at 3:00=E2=80=AFPM David Matlack <dmatlack@google.com>=
+ wrote:
+>
+> On Fri, Jul 17, 2026 at 3:38=E2=80=AFPM Alex Williamson <alex@shazbot.org=
+> wrote:
+> >
+> > On Fri, 10 Jul 2026 21:26:06 +0000
+> > David Matlack <dmatlack@google.com> wrote:
+> >
+> > > @@ -298,6 +377,87 @@ void pci_liveupdate_unpreserve(struct pci_dev *d=
+ev)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(pci_liveupdate_unpreserve);
+> > >
+> > > +static struct pci_flb_incoming *pci_liveupdate_flb_get_incoming(void=
+)
+> > > +{
+> > > +     struct pci_flb_incoming *incoming =3D NULL;
+> > > +     int ret;
+> > > +
+> > > +     ret =3D liveupdate_flb_get_incoming(&pci_liveupdate_flb, (void =
+**)&incoming);
+> > > +
+> > > +     /* Live Update is not enabled. */
+> > > +     if (ret =3D=3D -EOPNOTSUPP)
+> > > +             return NULL;
+> > > +
+> > > +     /* Live Update is enabled, but there is no incoming FLB data. *=
+/
+> > > +     if (ret =3D=3D -ENODATA)
+> > > +             return NULL;
+> > > +
+> > > +     /*
+> > > +      * Live Update is enabled and there is incoming FLB data, but n=
+one of it
+> > > +      * matches pci_liveupdate_flb.compatible.
+> > > +      *
+> > > +      * This could mean that no PCI FLB data was passed by the previ=
+ous
+> > > +      * kernel, but it could also mean the previous kernel used a di=
+fferent
+> > > +      * compatibility string (i.e. a different ABI).
+> > > +      */
+> > > +     if (ret =3D=3D -ENOENT) {
+> > > +             pr_info_once("No incoming FLB matched %s\n", pci_liveup=
+date_flb.compatible);
+> > > +             return NULL;
+> > > +     }
+> > > +
+> > > +     /*
+> > > +      * There is incoming FLB data that matches pci_liveupdate_flb.c=
+ompatible
+> > > +      * but it cannot be retrieved.
+> > > +      */
+> > > +     if (ret)
+> > > +             panic("Failed to retrieve incoming FLB data (%d)\n", re=
+t);
+> > > +
+> > > +     return incoming;
+> > > +}
+> >
+> > I'm having trouble following the error escalation here.  What's
+> > fundamentally the difference between FLB data being provided and not
+> > compatible (subtle log message) versus FLB data being provided and
+> > compatible but we cannot access it (panic!)?
+>
+> There is no fundamental difference IMO and I think we should handle
+> them the same way (panic). The problem is the PCI core cannot actually
+> distinguish between "PCI FLB provided and not compatible" (should
+> panic) and "no PCI FLB provided" (should log). I would like to propose
+> changes to LUO so that the FLB handlers can detect the former
+> situation but that requires some non-trivial work that I didn't want
+> to block on.
+>
+> For now, I guess you could say it is up to the user to not perform
+> Live Update between incompatible versions. I can update the
+> documentation.
 
-This is a reminder that the CFP for Live Update microconference at Linux
-Plumbers Conference is still open and even extended until August 7th.
+An alternative approach would be to make the PCI compatibility string
+just "pci" and then put the version number as the first field in
+struct pci_ser. That would ensure the PCI core can always fetch its
+FLB data and panic on a version mismatch. I think first-class handling
+in LUO would be better, but that is a larger problem to solve; it also
+needs to be solved for file handlers.
 
-On Wed, May 27, 2026 at 05:05:23PM +0000, Pasha Tatashin wrote:
-> Hi,
-> 
-> The Call for Proposals is now open for the Live Update Microconference 
-> [1], taking place at the Linux Plumbers Conference this October 5-7 in 
-> Prague [2].
-> 
-> As infrastructure scales, minimizing workload disruption during host 
-> updates has become a critical operational requirement. This 
-> microconference focuses on the evolving engineering challenges behind 
-> seamless software handovers, state preservation, and warm reboots that 
-> bypass traditional hardware reset cycles.
-> 
-> We are seeking technical presentations, and problem statements spanning 
-> the entire stack—including kexec optimizations, hypervisor integration, 
-> user-space checkpoint/restore, firmware coordination, and device state 
-> handovers.
-> 
-> ---
-> A few focus areas we hope to cover during this year's sessions include:
-> ---
->  * Orphaned Virtual Machine for zer-downtime upgrades.
->  * Live Update Orchestrator (LUO) enhancements and architecture
->  * Kexec HandOver (KHO) framework advancements
->  * Kexec reboot latencies to minimize guest/workload downtime
->  * Preserving guest states across live updates (guest_memfd, hugetlb)
->  * In-flight DMA, IOMMU tracking, and preservation
->  * VFIO device state preservation and live update migration mechanics
->  * PCI/PCIe device handovers, reset avoidance, and state restoration
->  * Live Update in Confidential Computing (TDX/SEV-SNP)
->  * Building robust testing, fuzzing, and validation frameworks for 
->    upgrade paths
-> 
-> ---
-> Submission Details & Deadlines:
-> ---
->  * CFP Portal: https://lpc.events/event/20/abstracts/
->  * Track Selection: "Live Update MC"
->  * Deadline: July 24th, 2026
-> 
-> Session Format Reminder:
-> LPC sessions are highly interactive working groups, not static lecture 
-> slots. Proposals should be designed to introduce a concrete technical 
-> challenge quickly and leave substantial time open for real-time debate, 
-> consensus-building, and problem-solving with the room. Keep slides 
-> focused on architecture and open issues rather than heavy text blocks.
-> 
-> We hope to see you in Prague to help push the live update ecosystem 
-> forward.
-> 
-> (Note: LPC attendance caps fill up exceptionally fast. We strongly 
-> advise booking your passes early, as track organizers cannot always 
-> guarantee speaker registration overrides once the event sells out.)
-> 
-> [1] https://lpc.events/event/20/contributions/2321/
-> [2] https://lpc.events/
-> 
-> Best regards,
-> Pasha
+Pasha and Sami, what do you think?
 
--- 
-Sincerely yours,
-Mike.
+> >
+> > Don't both suggest devices are running but we can't get their FLB data
+> > to continue letting them run?
+> >
+> > The errno interpretation is also slightly different than the comment
+> > above liveupdate_flb_get_incoming():
+> >
+> >  * Return: 0 on success, or a negative errno on failure. -ENODATA means=
+ no
+> >  * incoming FLB data, -ENOENT means specific flb not found in the incom=
+ing
+> >  * data, -ENODEV if the FLB's module is unloading, and -EOPNOTSUPP when
+> >  * live update is disabled or not configured.
+>
+> I think the only disagreement is the lack of specific -ENODEV
+> handling. Is that what you are referring to?
+>
+> >
+> > Thanks,
+> > Alex
 
