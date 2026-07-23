@@ -4,82 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 03A62C531D0
-	for <kexec@archiver.kernel.org>; Thu, 23 Jul 2026 20:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 83EACC531D0
+	for <kexec@archiver.kernel.org>; Thu, 23 Jul 2026 20:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=jKy1+xh3t540cHOpDayVgEdD7bHubSTIw9MAGeaiEnQ=; b=oaHFBUb0COyHUvD2Ft6ZWMEJSI
-	IVDzplCyHKoPn64FuLDhhuVtIvIY/WXt2smgJ6uS4SZtgxgwWGAFfWZDJk48tOtl2GfhdOjciBZmW
-	B4bjh6ShZkkLkZwbkxDWxm7lc5lJFffdeltTNhIkTnCWjfpm656JvU5ttCX1H150yL2gD5R1YVgGR
-	yH7IJ6TA9X57ImsaATshib6Nj9J7wiDmQ9sbMQyLoKnnys2rXjLqJRu2EVqNQMxP0Z7Am0VjP+726
-	VhzgCyXfj6dt/EL9gXcUNlm1/M+2SYyjCD8r/Z+VpxIo5zT+JBjrDayaTxKr+6YPqhJApf65nm0EU
-	09Z5Pm8A==;
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=4Z8MgAmeNYWGY3DpjlolA+dV2ZqjTSZSJZ8lZiZVt5k=; b=yEi0xEkgyHV4bwlBlY/lU3Y51h
+	jtwdvphE8YgTLBN68XlM9WUpeDK3UbTvWFo0FVeDhX0RuHKHeNZgIJFL6UbjzVE+gNQ7KVlG8NLmS
+	uN6e0AC4B1Pau3bBlJ05YoucEGpPc51k4OL9T6BhEhszcd6JaOt4A8JQ4y+A8AWj6dlFTBNBymL14
+	RA5HLp+5H/e+2d50aFPpu5dEmgb/6/9AmgMgP6eIE8o/m1/VZjZX79PRYycoYypo1H2XYTtUNOfXX
+	OM/Q+3pNJI3TyE10a1ocf5keadI/O9OXbP0zb29nvcriuVWHFvH5qAm0nvdX2tSj3mkjT5BJ9v1we
+	Mrxz+LVw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wn02v-0000000F2e5-0QWj;
-	Thu, 23 Jul 2026 20:29:33 +0000
-Received: from mail-pl1-x647.google.com ([2607:f8b0:4864:20::647])
+	id 1wn0FA-0000000F3O6-0VTb;
+	Thu, 23 Jul 2026 20:42:12 +0000
+Received: from mail-pj1-x1046.google.com ([2607:f8b0:4864:20::1046])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wn02r-0000000F2cy-2Typ
+	id 1wn0F7-0000000F3Nf-3RC7
 	for kexec@lists.infradead.org;
-	Thu, 23 Jul 2026 20:29:30 +0000
-Received: by mail-pl1-x647.google.com with SMTP id d9443c01a7336-2ce7dff6253so8349345ad.1
-        for <kexec@lists.infradead.org>; Thu, 23 Jul 2026 13:29:28 -0700 (PDT)
+	Thu, 23 Jul 2026 20:42:11 +0000
+Received: by mail-pj1-x1046.google.com with SMTP id 98e67ed59e1d1-38e22137fb3so1611373a91.0
+        for <kexec@lists.infradead.org>; Thu, 23 Jul 2026 13:42:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784838567; x=1785443367; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=jKy1+xh3t540cHOpDayVgEdD7bHubSTIw9MAGeaiEnQ=;
-        b=PMqXozfF6S23au1NbDpBgAo6nzBq5VlT3h+txh+03BWkC7vsY4NamKGQUMWXkbX8Dp
-         BZYEWPvSk3CUutwMx0ZVLp8xjjg62FU65gISCJrtkwMUKoQA78ERt1DpUFN7BTDIAo1r
-         MlfPcAtdk8VPlicFpPZhVKnRzrkvmzNh2x3HaOwCciLQm0SjEMlqkfb6PR0LvlhAKJUw
-         yG5WeXy1aUycTKhsxbbyjzEfi7y0c1BlUrh//7YqHHKwuVUm4oJNWSbD8BeDZL/InIaP
-         oy/fXcbFGEGoWfuYLJffVFFoqWQKdEaTX7k9eW58wF0OQccXUB/jrsyQYguc0W4nfZUq
-         dxlA==
+        d=google.com; s=20251104; t=1784839328; x=1785444128; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=4Z8MgAmeNYWGY3DpjlolA+dV2ZqjTSZSJZ8lZiZVt5k=;
+        b=sZdwgl26hVhmpPv2O34NLhhUIHikDVwrBtV//aPk36AMaqCI6Nkqb/v2HAZ+TJEYPg
+         s67NqPHeBwqq4d4eh8yEmZpUJpuACxw/W2vXLLC9BecmK/Mor9ep6YIG+422uXVklVyE
+         az1shU/rQSMKaJbn1provSs9sM311P+b5Xj1vpakVV6YQmttzTvAurvEbGfBTsbeZuXl
+         QqiqnvAPOZeyq4osHfbkrDg7VokmM/M+ft+WIbaHEFMQXHo5m52Ngyz/4oklx9pXGKby
+         ZMAU++0jYaTjtoFjgkFlEHKonDcEEAwWcSvWz+Dk1KVwyqY/4yKQEEiRY0u6Ih6KNC6E
+         PQkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784838567; x=1785443367;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=jKy1+xh3t540cHOpDayVgEdD7bHubSTIw9MAGeaiEnQ=;
-        b=j4T2Nd8UK5ttsGhPLqY2wiNDonsq4NLULYeSHuuc0wRqw3PlAQY/C7qR7W6PwNEkfA
-         xXRkjpaVuLi51QyUSxxlRnw7DHPmPtrRNFHIHfrudSeANejxh8uQBGag7XX/bkZJIrr/
-         P+DB3Zg790JlYEktyccmNUMP91Gwjw2647lsc7NxQbbdBeWaVqJai22OSClwCSnT1KXB
-         t3cExjXy8xTxr84mHOiHfGmo+QLPONsn7x13yjbX5SjIojaJDS1xLxdkflESwRtBErq4
-         MLNwvNY/6C/BgwVNCJ4Vmh/cNMAB72IsXlE1AUWdpx9bCyY6n8jjIzMnRgf5YDEhdqx9
-         eKzA==
-X-Forwarded-Encrypted: i=1; AHgh+RrLy6S6lzCeAB+qQ2vokMUpIB1y0R44EgOHdqwsXlFquB3y+c7ZmP4Pkb9K28gETbQqlYy1Mw==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yzv3Bck4mq+eY+5fwPq0MldSOQ7UtV6IY5kh9r40zbl+xsh0xLT
-	8fKEXO9VbnElL+SOPbom9vqtCEX2vPpNJg+01cY8AeU88r5txvY1CpqePjdK5iQ6qdOGzhRuSeI
-	onhpTEMk+KxOxjA==
-X-Received: from plbka16.prod.google.com ([2002:a17:903:3350:b0:2cb:ea2b:5286])
- (user=skhawaja job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:e84f:b0:2ca:c847:8e41 with SMTP id d9443c01a7336-2cfa94b7aadmr48476855ad.11.1784838567356;
- Thu, 23 Jul 2026 13:29:27 -0700 (PDT)
-Date: Thu, 23 Jul 2026 20:29:12 +0000
-In-Reply-To: <20260723202912.1467112-1-skhawaja@google.com>
+        d=1e100.net; s=20251104; t=1784839328; x=1785444128;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=4Z8MgAmeNYWGY3DpjlolA+dV2ZqjTSZSJZ8lZiZVt5k=;
+        b=iV3cltGYd22YfcLdTjujZmLa43iOzxgp/UwEY6BaDPqbaNcvfQhh98vXgJiKnKwkMf
+         LVjoiIWE1MSxSXaFL3V2fLF5TuTOrlUsy7UkrgeYkMCrC1kgtGLj+GAZHpkvssz/7rt+
+         pguGWOSymorsbyLt/JORI5w+fzA91oIU5nFH+aePmPrYP4Q6wKqOboLwSzxGOoTBkWbb
+         gAjAsegeBFi0JnpZtQjsewIo/ioA3uyE2q6EtKSOwnM3uR7i9KXx2aX6jqIbqEv5xhm3
+         XAFMpisq9Ca/mZyHtUH2wBydlytAzminYtCza6+7a7AdEh/9TxjIf3VA6+1ybR/Q8R3M
+         n0Fg==
+X-Forwarded-Encrypted: i=1; AHgh+RpH5LEbDT8T4/ruHPlKAYnzWaJXXvaKIKYT2KEDZe02GF6DwG36jiF1MyrEUD68ueGV5nWt1Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzuQqTJNMF+5eUmJvGMWucgUzas7Ecab2XluGkAVGT8rJwGn72C
+	+4Warl7ryx+UdnmRzjfWYAjicA4CK6yIlRNDe8IyrOczFtOx78+HIua105ySeGSW/zcg3jboyV3
+	EEA==
+X-Received: from pjbcz6.prod.google.com ([2002:a17:90a:d446:b0:385:fa6c:f60e])
+ (user=praan job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:dfd0:b0:37f:9ce3:ca97
+ with SMTP id 98e67ed59e1d1-38ec6617ea4mr4536874a91.32.1784839328071; Thu, 23
+ Jul 2026 13:42:08 -0700 (PDT)
+Date: Thu, 23 Jul 2026 20:42:00 +0000
 Mime-Version: 1.0
-References: <20260723202912.1467112-1-skhawaja@google.com>
 X-Mailer: git-send-email 2.55.0.229.g6434b31f56-goog
-Message-ID: <20260723202912.1467112-2-skhawaja@google.com>
-Subject: [PATCH v2 1/1] liveupdate: luo_file: Add internal APIs for file preservation
-From: Samiullah Khawaja <skhawaja@google.com>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>, Mike Rapoport <rppt@kernel.org>, 
-	Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>
-Cc: Pranjal Shrivastava <praan@google.com>, Samiullah Khawaja <skhawaja@google.com>, 
-	David Matlack <dmatlack@google.com>, tarunsahu@google.com, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"open list:KEXEC HANDOVER (KHO)" <kexec@lists.infradead.org>, 
-	"open list:KEXEC HANDOVER (KHO)" <linux-mm@kvack.org>
+Message-ID: <20260723204203.2997395-1-praan@google.com>
+Subject: [PATCH v3 0/2] kho: support preserving high-order non-compound pages
+From: Pranjal Shrivastava <praan@google.com>
+To: Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pratyush Yadav <pratyush@kernel.org>
+Cc: Alexander Graf <graf@amazon.com>, Samiullah Khawaja <skhawaja@google.com>, 
+	David Matlack <dmatlack@google.com>, kexec@lists.infradead.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Pranjal Shrivastava <praan@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260723_132929_653840_6B1CAB44 
-X-CRM114-Status: GOOD (  23.71  )
+X-CRM114-CacheID: sfid-20260723_134209_884853_54462C77 
+X-CRM114-Status: GOOD (  11.43  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,233 +89,81 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Introduction
+============
+This series is required for the ongoing effort to preserve DMA allocations
+across KHO [1]. It addresses a fundamental mismatch between the current KHO
+restoration logic and the physical reality of high-order buddy allocations.
 
-Live update orchestrator file handlers depend on the preservation of
-other files. To make sure that the dependency is preserved, the file
-handlers needs to fetch the preservation token of the preserved
-dependency. Similarly during restore, a file handler wants to fetch the
-restored file of the dependency.
+The Problem
+===========
+The current KHO restore implementation treats all multi-page blocks as
+split pages during restoration. Specifically, kho_restore_pages()
+initializes every 4KB sub-page with a refcount of 1.
 
-Add APIs that allows fetching token of dependency during preservation,
-and fetching the restored file dependency during restore.
+However, many kernel subsystems, most notably the DMA allocator (via
+dma_alloc_coherent), frequently return high-order non-compound pages.
+In this state, only the head page carries a refcount of 1, while
+all tail pages have a refcount of 0.
 
-Reviewed-by: Pranjal Shrivastava <praan@google.com>
-Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-Signed-off-by: Samiullah Khawaja <skhawaja@google.com>
----
- include/linux/liveupdate.h       | 22 ++++++++++
- kernel/liveupdate/luo_file.c     | 69 ++++++++++++++++++++++++++++++++
- kernel/liveupdate/luo_internal.h | 17 ++++++++
- 3 files changed, 108 insertions(+)
+Consequently, when these contiguous blocks are restored by KHO in
+the new kernel, the forced reference count of 1 on tail pages causes some 
+trouble with the buddy allocator. Downstream of the eventual free path,
+__free_pages_prepare() [2] ends up calling page_expected_state() [3]
+when is_check_pages_enabled() returns true (triggered when CONFIG_DEBUG_VM
+is enabled or debug_pagealloc=on).
 
-diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
-index 63ea5417de84..6051abc0612c 100644
---- a/include/linux/liveupdate.h
-+++ b/include/linux/liveupdate.h
-@@ -25,6 +25,7 @@ struct file;
- /**
-  * struct liveupdate_file_op_args - Arguments for file operation callbacks.
-  * @handler:          The file handler being called.
-+ * @session:          The session this file belongs to.
-  * @retrieve_status:  The retrieve status for the 'can_finish / finish'
-  *                    operation. A value of 0 means the retrieve has not been
-  *                    attempted, a positive value means the retrieve was
-@@ -45,6 +46,7 @@ struct file;
-  */
- struct liveupdate_file_op_args {
- 	struct liveupdate_file_handler *handler;
-+	struct liveupdate_session *session;
- 	int retrieve_status;
- 	struct file *file;
- 	u64 serialized_data;
-@@ -247,6 +249,14 @@ void liveupdate_flb_put_incoming(struct liveupdate_flb *flb);
- int liveupdate_flb_get_outgoing(struct liveupdate_flb *flb, void **objp);
- void liveupdate_flb_put_outgoing(struct liveupdate_flb *flb);
- 
-+/* kernel can internally retrieve files */
-+int liveupdate_get_file_incoming(struct liveupdate_session *s, u64 token,
-+				 struct file **filep);
-+
-+/* Get a token for an outgoing file, or -ENOENT if file is not preserved */
-+int liveupdate_get_token_outgoing(struct liveupdate_session *s,
-+				  struct file *file, u64 *tokenp);
-+
- #else /* CONFIG_LIVEUPDATE */
- 
- static inline bool liveupdate_enabled(void)
-@@ -299,5 +309,17 @@ static inline void liveupdate_flb_put_outgoing(struct liveupdate_flb *flb)
- {
- }
- 
-+static inline int liveupdate_get_file_incoming(struct liveupdate_session *s,
-+					       u64 token, struct file **filep)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static inline int liveupdate_get_token_outgoing(struct liveupdate_session *s,
-+						struct file *file, u64 *tokenp)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
- #endif /* CONFIG_LIVEUPDATE */
- #endif /* _LINUX_LIVEUPDATE_H */
-diff --git a/kernel/liveupdate/luo_file.c b/kernel/liveupdate/luo_file.c
-index 72f8bb90b66c..542707e8d8c1 100644
---- a/kernel/liveupdate/luo_file.c
-+++ b/kernel/liveupdate/luo_file.c
-@@ -293,6 +293,7 @@ int luo_preserve_file(struct luo_file_set *file_set, u64 token, int fd)
- 	mutex_init(&luo_file->mutex);
- 
- 	args.handler = fh;
-+	args.session = luo_session_from_file_set(file_set);
- 	args.file = file;
- 	err = fh->ops->preserve(&args);
- 	if (err)
-@@ -350,6 +351,7 @@ void luo_file_unpreserve_files(struct luo_file_set *file_set)
- 					   struct luo_file, list);
- 
- 		args.handler = luo_file->fh;
-+		args.session = luo_session_from_file_set(file_set);
- 		args.file = luo_file->file;
- 		args.serialized_data = luo_file->serialized_data;
- 		args.private_data = luo_file->private_data;
-@@ -383,6 +385,7 @@ static int luo_file_freeze_one(struct luo_file_set *file_set,
- 		struct liveupdate_file_op_args args = {0};
- 
- 		args.handler = luo_file->fh;
-+		args.session = luo_session_from_file_set(file_set);
- 		args.file = luo_file->file;
- 		args.serialized_data = luo_file->serialized_data;
- 		args.private_data = luo_file->private_data;
-@@ -404,6 +407,7 @@ static void luo_file_unfreeze_one(struct luo_file_set *file_set,
- 		struct liveupdate_file_op_args args = {0};
- 
- 		args.handler = luo_file->fh;
-+		args.session = luo_session_from_file_set(file_set);
- 		args.file = luo_file->file;
- 		args.serialized_data = luo_file->serialized_data;
- 		args.private_data = luo_file->private_data;
-@@ -596,6 +600,7 @@ int luo_retrieve_file(struct luo_file_set *file_set, u64 token,
- 	}
- 
- 	args.handler = luo_file->fh;
-+	args.session = luo_session_from_file_set(file_set);
- 	args.serialized_data = luo_file->serialized_data;
- 	err = luo_file->fh->ops->retrieve(&args);
- 	if (err) {
-@@ -629,6 +634,7 @@ static int luo_file_can_finish_one(struct luo_file_set *file_set,
- 		struct liveupdate_file_op_args args = {0};
- 
- 		args.handler = luo_file->fh;
-+		args.session = luo_session_from_file_set(file_set);
- 		args.file = luo_file->file;
- 		args.serialized_data = luo_file->serialized_data;
- 		args.retrieve_status = luo_file->retrieve_status;
-@@ -646,6 +652,7 @@ static void luo_file_finish_one(struct luo_file_set *file_set,
- 	guard(mutex)(&luo_file->mutex);
- 
- 	args.handler = luo_file->fh;
-+	args.session = luo_session_from_file_set(file_set);
- 	args.file = luo_file->file;
- 	args.serialized_data = luo_file->serialized_data;
- 	args.retrieve_status = luo_file->retrieve_status;
-@@ -935,3 +942,65 @@ void liveupdate_unregister_file_handler(struct liveupdate_file_handler *fh)
- 	luo_flb_unregister_all(fh);
- 	list_del(&ACCESS_PRIVATE(fh, list));
- }
-+
-+/**
-+ * liveupdate_get_token_outgoing - Get the token for a preserved file.
-+ * @s:      The outgoing liveupdate session.
-+ * @file:   The file object to search for.
-+ * @tokenp: Output parameter for the found token.
-+ *
-+ * Searches the list of preserved files in an outgoing session for a matching
-+ * file object. If found, the corresponding user-provided token is returned.
-+ *
-+ * This function is intended for in-kernel callers that need to correlate a
-+ * file with its liveupdate token.
-+ *
-+ * Context: It must be called with session mutex acquired.
-+ * Return: 0 on success, -ENOENT if the file is not preserved in this session.
-+ */
-+int liveupdate_get_token_outgoing(struct liveupdate_session *s,
-+				  struct file *file, u64 *tokenp)
-+{
-+	struct luo_file_set *file_set = luo_file_set_from_session_locked(s);
-+	struct luo_file *luo_file;
-+	int err = -ENOENT;
-+
-+	list_for_each_entry(luo_file, &file_set->files_list, list) {
-+		if (luo_file->file == file) {
-+			if (tokenp)
-+				*tokenp = luo_file->token;
-+			err = 0;
-+			break;
-+		}
-+	}
-+
-+	return err;
-+}
-+EXPORT_SYMBOL_GPL(liveupdate_get_token_outgoing);
-+
-+/**
-+ * liveupdate_get_file_incoming - Retrieves a preserved file for in-kernel use.
-+ * @s:      The incoming liveupdate session (restored from the previous kernel).
-+ * @token:  The unique token identifying the file to retrieve.
-+ * @filep:  On success, this will be populated with a pointer to the retrieved
-+ *          'struct file'.
-+ *
-+ * Provides a kernel-internal API for other subsystems to retrieve their
-+ * preserved files after a live update. This function is a simple wrapper
-+ * around luo_retrieve_file(), allowing callers to find a file by its token.
-+ *
-+ * The caller receives a new reference to the file and must call fput() when it
-+ * is no longer needed. The file's lifetime is managed by LUO and any userspace
-+ * file descriptors.
-+ *
-+ * Context: It must be called with session mutex acquired of a restored session.
-+ * Return: 0 on success. Returns -ENOENT if no file with the matching token is
-+ *         found, or any other negative errno on failure.
-+ */
-+int liveupdate_get_file_incoming(struct liveupdate_session *s, u64 token,
-+				 struct file **filep)
-+{
-+	return luo_retrieve_file(luo_file_set_from_session_locked(s),
-+				 token, filep);
-+}
-+EXPORT_SYMBOL_GPL(liveupdate_get_file_incoming);
-diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_internal.h
-index 64879ffe7378..dac6644bfb18 100644
---- a/kernel/liveupdate/luo_internal.h
-+++ b/kernel/liveupdate/luo_internal.h
-@@ -77,6 +77,23 @@ struct luo_session {
- 
- extern struct rw_semaphore luo_register_rwlock;
- 
-+static inline struct liveupdate_session *luo_session_from_file_set(struct luo_file_set *file_set)
-+{
-+	struct luo_session *session;
-+
-+	session = container_of(file_set, struct luo_session, file_set);
-+
-+	return (struct liveupdate_session *)session;
-+}
-+
-+static inline struct luo_file_set *luo_file_set_from_session_locked(struct liveupdate_session *s)
-+{
-+	struct luo_session *session = (struct luo_session *)s;
-+
-+	lockdep_assert_held(&session->mutex);
-+	return &session->file_set;
-+}
-+
- int luo_session_create(const char *name, struct file **filep);
- int luo_session_retrieve(const char *name, struct file **filep);
- void __init luo_session_setup_outgoing(u64 *sessions_pa);
+This detects the unexpected non-zero reference counts on tail pages [4] and
+incorrectly taints the kernel while leaking the physical pages in question.
+
+Proposed Solution
+=================
+Following feedback on the v1 RFC, this series moves away from auto type 
+detection and instead introduces explicit preserve / restore APIs for 
+high-order pages.
+
+Callers now explicitly preserve these high-order blocks as a single unit by using
+kho_preserve_page() and kho_restore_page(). These functions apply a refcount
+of 1 to the head page while leaving tail pages at 0.
+
+The existing APIs (kho_preserve_pages / kho_restore_pages) remain as is 
+for ranges of independent 4KB pages, continuing to use the split refcount.
+
+The internal initialization logic is refactored to provide a helper:
+kho_init_high_order_page(), which is shared between folios and high-order page 
+restore APIs. We also consolidate the common metadata validation and state
+clearing into __kho_restore_page() to avoid duplication.
+
+[v3]
+ - Renamed "unsplit" terminology to "high-order".
+ - Consolidated the common restoration code (magic checks, private 
+   clearing etc.) into the internal __kho_restore_page() helper.
+
+[v2]
+ - https://lore.kernel.org/all/20260713204935.3069000-1-praan@google.com/
+ - Dropped automatic type detection via higher bits in Radix key.
+ - Introduced explicit kho_preserve_page and kho_restore_page helpers.
+ - Refactored internal init logic to share code between folios & high-order pages.
+
+[v1] https://lore.kernel.org/all/20260703020832.1731864-1-praan@google.com/
+
+Thanks,
+Praan
+
+[1] https://lore.kernel.org/all/20260708234854.4044652-1-skhawaja@google.com/
+[2] https://elixir.bootlin.com/linux/v7.1.1/source/mm/page_alloc.c#L1370
+[3] https://elixir.bootlin.com/linux/v7.1.1/source/mm/page_alloc.c#L1027
+[4] https://elixir.bootlin.com/linux/v7.1.1/source/mm/page_alloc.c#L1034
+
+
+Pranjal Shrivastava (2):
+  kho: Introduce a helper to init high order pages
+  kho: Introduce preserve/restore APIs for high-order pages
+
+ include/linux/kexec_handover.h     |  10 +++
+ kernel/liveupdate/kexec_handover.c | 130 ++++++++++++++++++++++++-----
+ 2 files changed, 117 insertions(+), 23 deletions(-)
+
 -- 
 2.55.0.229.g6434b31f56-goog
 
