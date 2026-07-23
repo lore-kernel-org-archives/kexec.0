@@ -4,72 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 011D8C531CC
-	for <kexec@archiver.kernel.org>; Thu, 23 Jul 2026 22:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9C879C531D0
+	for <kexec@archiver.kernel.org>; Thu, 23 Jul 2026 22:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=G0SzsDUN/BFXoWvc6OI68QQ0aGQFC3X7Tv8gtb7Mzg8=; b=YeD3CasdyLZCaZgedlj6uMk9bI
-	LADoTxOHg30XNAQmiu5HKFnSjoFg6kbaxywSm/ByYl+UolrVIu7hZwjHcjxX+662REbiMTjyJYWZl
-	nBYisq5ihP8M4Z8Rg8qWNbwa68TRj+dWxVa0wFwym7oUeIz9pn4+fErHo9yUc5IWqWeOuwBMQzvky
-	kkvSls8HFOy3vm4NdK4BtI8fGW+6nNTKdMfRvFpLgT3vabU30BiC6XjJUL2PObhUiKbG5xN+MmC4e
-	IuHUVznotehJlDrzdr2hNVB6jbwIKZA3BDMKiY3zha4mrpCfkVSkR+BwUsLfFvc5AcSJkmSZJSGGL
-	b7/Ke+qg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+	List-Owner; bh=jt33XZg6IakrXoUrAEnJIibUYgZUlDskKhuW4fOU1xM=; b=y9O+FwUTrpPY5d
+	EjPP1e8WLNf/eEs8Y1IO5+R16u1v6fHRKaugOhm6CUdAyme2eWf67VSENO/I9GfuY6m8bfit4HTxY
+	tUHyjszv4zoshSg+KscIGZpWoICnH/jxWWaI1W7T/+O/NQVojciw/bhy8pFLsvFFC9PuLC6R3BfCN
+	ExyjzbTVl09RMHNCOsqiwetK8pMgf7VzQkLJLMnlWfNk40PAEMaz2u5jMAHohsUd29qPCwZhKxO/h
+	t8cNq+68gSzZ5+TE8RK6L8nOV+HV/I0PJuIEMrEo+X1998T9GCAZ6//LhwuTUy/gfK/X1XM+uQd4i
+	SZPWPkE7Rwn+4YFfT1BQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wn1l6-0000000FC5C-2vrF;
-	Thu, 23 Jul 2026 22:19:16 +0000
-Received: from out-181.mta0.migadu.com ([2001:41d0:1004:224b::b5])
+	id 1wn1mv-0000000FCHT-48x9;
+	Thu, 23 Jul 2026 22:21:09 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wn1l2-0000000FC4f-3uVx
+	id 1wn1mu-0000000FCHB-2g7q
 	for kexec@lists.infradead.org;
-	Thu, 23 Jul 2026 22:19:15 +0000
-Message-ID: <cebd1045-5dd7-4f35-8750-9c39790ceae9@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784845145;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G0SzsDUN/BFXoWvc6OI68QQ0aGQFC3X7Tv8gtb7Mzg8=;
-	b=o1hEm5gqbSFXjNQ4yIfcWqVF8F2VgF7agEYdG4EH8wmp+G1vDgDZuukjZsNrRRZEMTLDn8
-	e2RghIzHx5oniMfYsrV4kpaicQc52zsfUQFC/Lj9EgU93DFRi4xAAwgenWevULM+oLxJIs
-	Z9M3QnjiLFjyIalbt7oDxrbrLyVCbiY=
-Date: Thu, 23 Jul 2026 15:18:55 -0700
+	Thu, 23 Jul 2026 22:21:08 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 0A50043C2D;
+	Thu, 23 Jul 2026 22:21:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8CD81F000E9;
+	Thu, 23 Jul 2026 22:21:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784845267;
+	bh=jt33XZg6IakrXoUrAEnJIibUYgZUlDskKhuW4fOU1xM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To;
+	b=I6oI+1WvIphSqo2SuYZlr+Z760iGzSCqCOqo1O52QXp0AQt4DpnWOjisJa4Dl9+HO
+	 JERVpACfEtCncGeO3ANxpi2GaBQ94g9U/b+m2LChVg+v8C7Jj96R4FEHQemOqnV1df
+	 gF8XJ3qDVMf4/f1lRpAYBfHrtjAtaYNxjerhzzJQ9O35DZ+nmDJ7bEIxwhEUUJN7Ye
+	 Tt6/NS51u9fLd+CCzUdwtSjR+JsoOWluKNMUvl38CPvbY5NrDPcKPsKklnoXAfp0Hc
+	 LJ8hgorhXMMGA5x79fdAR7IgtS9Ri1F8IjDr++NQof3NE313yZRqh3C/6dYKWCte5P
+	 +i2kBcAGvHzwA==
+Date: Thu, 23 Jul 2026 17:21:06 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: David Matlack <dmatlack@google.com>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
+	Josh Hilke <jrhilke@google.com>,
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pranjal Shrivastava <praan@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v7 01/12] PCI: liveupdate: Set up FLB handler for the PCI
+ core
+Message-ID: <20260723222106.GA867236@bhelgaas>
 MIME-Version: 1.0
-Subject: Re: [PATCH v5 00/20] vfio/pci: Base Live Update support for VFIO
-To: Vipin Sharma <vipinsh@google.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, ajayachandra@nvidia.com, alex@shazbot.org,
- amastro@fb.com, ankita@nvidia.com, apopple@nvidia.com, bhelgaas@google.com,
- chrisl@kernel.org, christian.koenig@amd.com, corbet@lwn.net,
- dmatlack@google.com, graf@amazon.com, jacob.pan@linux.microsoft.com,
- jgg@nvidia.com, jgg@ziepe.ca, jrhilke@google.com, julianr@linux.ibm.com,
- kees@kernel.org, kevin.tian@intel.com, leon@kernel.org, leonro@nvidia.com,
- lukas@wunner.de, mattev@meta.com, michal.winiarski@intel.com,
- parav@nvidia.com, pasha.tatashin@soleen.com, praan@google.com,
- pratyush@kernel.org, rananta@google.com, rientjes@google.com,
- rodrigo.vivi@intel.com, rppt@kernel.org, saeedm@nvidia.com,
- schnelle@linux.ibm.com, skhan@linuxfoundation.org, skhawaja@google.com,
- vivek.kasireddy@intel.com, witu@nvidia.com, yi.l.liu@intel.com
-References: <20260714151505.3466855-1-vipinsh@google.com>
- <2c03ac97-60a6-4352-a942-27dcebae8d22@linux.dev>
- <8fd94fad-e457-4839-9e41-ae257a138bee@linux.dev>
- <20260720163452.GC1191959.vipinsh@google.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Yanjun.Zhu" <yanjun.zhu@linux.dev>
-In-Reply-To: <20260720163452.GC1191959.vipinsh@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260723_151913_615668_E24BFA49 
-X-CRM114-Status: GOOD (  26.63  )
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260710212616.1351130-2-dmatlack@google.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,80 +87,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Fri, Jul 10, 2026 at 09:26:04PM +0000, David Matlack wrote:
+> Set up a File-Lifecycle-Bound (FLB) handler for the PCI core to enable
+> it to participate in the preservation of PCI devices across Live Update.
+> Essentially, this commit enables the PCI core to allocate a struct
+> (struct pci_ser) and preserve it across a Live Update whenever at least
+> one device is preserved.
+> ...
 
-On 7/20/26 10:08 AM, Vipin Sharma wrote:
-> On Thu, Jul 16, 2026 at 06:22:07PM -0700, Yanjun.Zhu wrote:
->> On 7/16/26 4:24 PM, Yanjun.Zhu wrote:
->>>
->>> On 7/14/26 8:14 AM, Vipin Sharma wrote:
->>>> Testing
->>>> -------
->>>>
->>>> Tested using VFIO Live Update selftests in both QEMU and bare-metal
->>>> environment (Intel DSA PCIe device).
->>> I want to make tests VFIO Live Update selftests in QEMU. But how to
->>> select a PCIe device?
->>>
->>> what device do the PCI ID 0000:00:04.0 and 0000:6a:01.0 mean in the
->>> following testcase?
-> Sorry, this was my copy-paste mistake when combining things from both
-> qemu and baremetal. You only need one device not two separate ones.
->
-> For testing using QEMU, you can use QEMU PCI test device.
->
->    -device pci-testdev
->
-> In VM, use `lspci` command to find the BDF of the PCI device. It will show
-> output like:
->
->    00:04.0 Unclassified device [00ff]: Red Hat, Inc. QEMU PCI Test Device
->
-> Then prefix the domain (generally, 0000) to the BDF and use the testing
-> commands.
->
-> `0000:6a:01.0` was the BDF of the Intel DSA device on my host. I
-> incorrectly mixed two devices during my copy-paste.
->
-> Limitation of qemu pci-testdev is that it does not have the DMA
-> capability. I used physical host with Intel DSA to verify that the
-> device performing DMA during live update gets reset.
->
->> In my qemu,
->>
->> 00:04.0 System peripheral: InnoTek Systemberatung GmbH VirtualBox Guest
->> Service
->>      Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr-
->> Stepping- SERR- FastB2B- DisINTx-
->>      Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort-
->> <MAbort- >SERR- <PERR- INTx-
->>      Interrupt: pin A routed to IRQ 20
->>      Region 0: I/O ports at d040 [size=32]
->>      Region 1: Memory at f0400000 (32-bit, non-prefetchable) [size=4M]
->>      Region 2: Memory at f0800000 (32-bit, prefetchable) [size=16K]
->>      Kernel driver in use: vboxguest
->>      Kernel modules: vboxguest
->>
->> I am wondering if the above pci device can work well with this patch set or
->> not.
-> I think you should be able to test Live Update with any PCI device which
-> can be attached vfio-pci driver.
->
-> `vfio_pci_liveupdate_kexec_test` will initiate DMA if the VFIO selftest
-> framework has the driver for the passed device (Intel DSA) otherwise it
-> will just skip over the DMA flow and do the remaining things.
+> +#define pr_fmt(fmt) "PCI: " KBUILD_BASENAME ": " fmt
 
-Thanks a lot. I'll run some tests with QEMU's `pci-testdev`.
+Is KBUILD_BASENAME buying us something important here?  Just from
+code-reading perspective, it's more work because without some digging
+I don't know what it will end up looking like in a dmesg log.
 
-If I understand correctly, when using `pci-testdev`, only the DMA test 
-case is expected not to work, while all the other test cases should work 
-correctly.
+> +static void pci_flb_unpreserve(struct liveupdate_flb_op_args *args)
+> +{
+> +	struct pci_flb_outgoing *outgoing = args->obj;
+> +
+> +	WARN_ON(outgoing->ser->nr_devices);
+> +	kho_block_set_destroy(&outgoing->block_set);
+> +	kho_unpreserve_free(outgoing->ser);
+> +	kfree(outgoing);
+> +	pr_debug("Unpreserved struct pci_ser\n");
 
-Yanjun.Zhu
+If this pr_debug() is useful, maybe it should include an address and
+there should be a corresponding pr_debug() on the preserve side so we
+could find things in a crashdump?
 
->
-> Let me know if you still face some issue in running Live Update, I will
-> be happy to provide more details.
->
-> Thanks
-> Vipin
+> +int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh)
+> +{
+> +	pr_debug("Registering file handler \"%s\"\n", fh->compatible);
+
+Is fh->compatible enough to identify a driver?
 
