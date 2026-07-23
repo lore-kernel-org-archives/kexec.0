@@ -4,74 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5894EC531CB
-	for <kexec@archiver.kernel.org>; Thu, 23 Jul 2026 13:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9F33EC531CA
+	for <kexec@archiver.kernel.org>; Thu, 23 Jul 2026 13:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
-	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
-	:Subject:To:From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=XBRyczQwUicQtBBF1Rfna0wwogsOMJkyennASZbUqG0=; b=jqWQohd0wY0vifE8sniwebm7E4
-	JzKgnmA0cm/0+iwSAi8LG6WS677uBcVIqsJPfGxM/6OTQN4vwsOzQuuguM6PpHlXH9Vj9AKgbPULn
-	FGuXr/qasOK/vKLFlEhSABZEHAS1V2oWrm9MCnCxNvMS8a7amgC8/+d3K+cZzjnRhDbDCs16zQvLC
-	pDVq5Hxeyc+yZYHJk6hftErdmpvmE4hkC4pO5HtrYhJ0K5xsUszbRIolzJ7BJqZ0jNrWGxzkk2+Zi
-	vxyAdAjzfEga7to/Xzj6I2dselSV3ThknaRPzmr9XP8G/41Z93my2hF6oevajSloOjYYU7JUOddxf
-	KerlnRBQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Cc:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	Content-Transfer-Encoding:Content-Type:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=aALsA0YY5Ot4NzQhwQFxVVmbQar0Kr1kjmLCam6UNMk=; b=kOKDLadkac8dQC
+	z9ccKzbEVfl32ytziAoEhshUmSHKzZCatKPdKq1uls4lajA6+9Lupjzi+HWiSkJemWdiDb3z/rVvN
+	BZ1cTdLEWCNrGw9+PD3Yw1snOC5vYmGUdbgS/4tg6YunfyPXinJlwNmie2vAOwGM3cxGSHudx3GAJ
+	UP/zUb1fNjrXVTVRo0wifs4Yif/Bdra2+HEOb1MrSO8sWQxTNH/AQMaAOlwUzHXknDZ8Yr7X5jvBC
+	y7ufZ0WMfbexaYoI2aTUGMYwR+jvfZYdwSPLrsnXViPOpLze7tphK/pJCoTc3UfHgM29rYJqfZP35
+	Lz78BTpkBslxypWcQHsw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wmtEZ-0000000EL09-3q48;
-	Thu, 23 Jul 2026 13:13:07 +0000
-Received: from canpmsgout03.his.huawei.com ([113.46.200.218])
+	id 1wmtu6-0000000EQGX-0W7n;
+	Thu, 23 Jul 2026 13:56:02 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wmtEK-0000000EKm1-0bF1;
-	Thu, 23 Jul 2026 13:12:55 +0000
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=XBRyczQwUicQtBBF1Rfna0wwogsOMJkyennASZbUqG0=;
-	b=xrXL96KMqhACloc5kZ0eU2CaXFKslQqforMcwbaswUh74FG5EwH0b3dSRzgaZd34mKBmBongL
-	mBF3AnK/w4jpfBEJwjtyu2ylTcTT9snI7+G3oZot7nUJoLyF5FW8OrsIL1K/i9X8eeNqE1TXLnJ
-	3AWjsUMYGnE+d+EzlGzbFqA=
-Received: from mail.maildlp.com (unknown [172.19.162.197])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4h5WXB1VM1zpStj;
-	Thu, 23 Jul 2026 21:03:38 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2F4014057D;
-	Thu, 23 Jul 2026 21:12:45 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
- (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 23 Jul
- 2026 21:12:43 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <maddy@linux.ibm.com>,
-	<mpe@ellerman.id.au>, <npiggin@gmail.com>, <chleroy@kernel.org>,
-	<akpm@linux-foundation.org>, <baoquan.he@linux.dev>, <rppt@kernel.org>,
-	<pasha.tatashin@soleen.com>, <pratyush@kernel.org>, <thuth@redhat.com>,
-	<ruanjinjie@huawei.com>, <vladimir.murzin@arm.com>, <mark.rutland@arm.com>,
-	<ardb@kernel.org>, <james.morse@arm.com>, <leitao@debian.org>,
-	<yeoreum.yun@arm.com>, <robh@kernel.org>, <kees@kernel.org>,
-	<coxu@redhat.com>, <sourabhjain@linux.ibm.com>, <ritesh.list@gmail.com>,
-	<adityag@linux.ibm.com>, <hbathini@linux.ibm.com>, <makb@juniper.net>,
-	<piliu@redhat.com>, <graf@amazon.com>, <liaoyuanhong@vivo.com>,
-	<jbouron@amazon.com>, <bauerman@linux.ibm.com>, <bgwin@google.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, <kexec@lists.infradead.org>
-Subject: [PATCH 5/8] arm64: kexec_file: Fix CMA page leaks in segment placement retry loops
-Date: Thu, 23 Jul 2026 21:12:39 +0800
-Message-ID: <20260723131242.1537633-6-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260723131242.1537633-1-ruanjinjie@huawei.com>
-References: <20260723131242.1537633-1-ruanjinjie@huawei.com>
+	id 1wmtu5-0000000EQGJ-2dRg
+	for kexec@lists.infradead.org;
+	Thu, 23 Jul 2026 13:56:01 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id CD31160A67
+	for <kexec@lists.infradead.org>; Thu, 23 Jul 2026 13:56:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 844231F00A3E
+	for <kexec@lists.infradead.org>; Thu, 23 Jul 2026 13:56:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784814960;
+	bh=aALsA0YY5Ot4NzQhwQFxVVmbQar0Kr1kjmLCam6UNMk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=JoQaCnc+JmbstYFswKpbEoInsfUAshEx4CQ8Ixhy+xLT1PR6IdbL2ceMDZUOgdhsS
+	 p0H723fV6EME4hbIEDtTR+FdmFf1PN0IOpzq5K2V0tWLzZWtBzk7cbUJmEc/JekYyW
+	 YwCP3Zoku72hCaywASTK8x7ZxGO2iaqfbu24zGr40l7PyzgAOyvHhbHhSNABfgW25s
+	 vPFhyFcKtv33XBfmwSha64Hwj2L1Fe1h/YGxyHsMIIMfvNVUZ+Nfjx47wA44iEwoAT
+	 916rubPbkw4C7gMoQfulfV5AjvSUKmTVcbUASqf7JGzn8abWFuGCCBkzXERHB1mL+k
+	 vJuegkkKr11Yg==
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-39c95395230so5900281fa.2
+        for <kexec@lists.infradead.org>; Thu, 23 Jul 2026 06:56:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RqCwm6Njdhfn00gfSI6gAdVlTBcWlJm0zaz+hEm6E6sCrzSCMJsjWeZkn4AfscdyCFV7YHpTw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxpErRDMy/gsuNCJYmYo3dmzWw9MU+1anCkyUqLm7VGk6n6oDaA
+	guTQftRCdph1eF8v/WDq7SUFlu+ShHoSDmCdNUAkJsZmj8kNxLWZogsA19xhXu0EJdRhVyME7ab
+	wvYU/c9f8ubgMtytxjfXNEg6fUhtfavI=
+X-Received: by 2002:ac2:4a63:0:b0:5b1:544e:7185 with SMTP id
+ 2adb3069b0e04-5b2b2f69af0mr440591e87.40.1784814953859; Thu, 23 Jul 2026
+ 06:55:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- dggpemf500011.china.huawei.com (7.185.36.131)
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260723_061252_582730_26733400 
-X-CRM114-Status: GOOD (  14.10  )
+References: <20260721151358.4185467-1-include@grrlz.net> <20260721151358.4185467-4-include@grrlz.net>
+In-Reply-To: <20260721151358.4185467-4-include@grrlz.net>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Thu, 23 Jul 2026 15:55:41 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jN0QQordGJ+7EyO42Zwidok0j+TKZLCmRhU8CFeRHMuQ@mail.gmail.com>
+X-Gm-Features: AUfX_mwCg289hNS-KFsrYlKg2oWCq6ULhHGvX5kQyWMMHp_Ki2xNQC1fRxuwLAU
+Message-ID: <CAJZ5v0jN0QQordGJ+7EyO42Zwidok0j+TKZLCmRhU8CFeRHMuQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] PM: hibernate: log the task that initiated the
+ power down
+To: Bradley Morgan <include@grrlz.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,75 +75,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: pavel@kernel.org, tony.luck@intel.com, baoquan.he@linux.dev, rafael@kernel.org, kees@kernel.org, linux-pm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rppt@kernel.org, akpm@linux-foundation.org, lenb@kernel.org, pratyush@kernel.org, pasha.tatashin@soleen.com
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Sashiko AI code review pointed out, during kexec image placement retry
-loops in image_load(), the loader attempts to find a suitable memory
-hole for the kernel and its associated segments (initrd, dtb, etc.).
-When a placement attempt fails midway, it restores `image->nr_segments` to
-its initial state to purge failed segments.
+On Tue, Jul 21, 2026 at 5:14=E2=80=AFPM Bradley Morgan <include@grrlz.net> =
+wrote:
+>
+> Give the hibernation power down the same treatment as the reboot
+> syscall commands.
 
-However, this truncation causes a memory leak. Any CMA pages allocated
-via kexec_add_buffer() during the failed attempt are tracked  in
-the `image->segment_cma` array. Because the subsequent cleanup
-kimage_free_cma() cleanup only iterates up to the truncated `nr_segments`
-boundary, these allocated CMA pages outside the new boundary permanently
-leaked.
+Why?
 
-Fix this by using kexec_free_segment_cma() to explicitly release the
-associated CMA buffers in the failure paths before `image->nr_segments`
-is reduced.
+> hibernate() runs in the context of the task that
+> asked for it, whether through the reboot syscall or a write to
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: Kees Cook <kees@kernel.org>
-Cc: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Coiby Xu <coxu@redhat.com>
-Cc: Alexander Graf <graf@amazon.com>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: stable@vger.kernel.org
-Fixes: 07d24902977e4 ("kexec: enable CMA based contiguous allocation")
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- arch/arm64/kernel/kexec_image.c        | 1 +
- arch/arm64/kernel/machine_kexec_file.c | 5 ++++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+It doesn't use the reboot syscall.
 
-diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-index b70f4df15a1a..ffcb7f9075e6 100644
---- a/arch/arm64/kernel/kexec_image.c
-+++ b/arch/arm64/kernel/kexec_image.c
-@@ -107,6 +107,7 @@ static void *image_load(struct kimage *image,
- 		 * We couldn't find space for the other segments; erase the
- 		 * kernel segment and try the next available hole.
- 		 */
-+		kexec_free_segment_cma(image, kernel_segment_number);
- 		image->nr_segments -= 1;
- 		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
- 		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 854d872dfd0f..e48f29167b38 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -179,7 +179,10 @@ int load_other_segments(struct kimage *image,
- 	return 0;
- 
- out_err:
--	image->nr_segments = orig_segments;
-+	while (image->nr_segments > orig_segments) {
-+		kexec_free_segment_cma(image, image->nr_segments - 1);
-+		image->nr_segments--;
-+	}
- 	kvfree(dtb);
- 	return ret;
- }
--- 
-2.34.1
+> /sys/power/disk, so when power_down() runs current is still the
+> initiating task.
+>
+> Log it once the image has been written and the machine is committed
+> to going down:
+>
+>   reboot: initiated by systemd-sleep[812]
+>   reboot: Power down
+>
+> The line comes from kernel/reboot.c so it keeps the "reboot:" prefix
+> and sits right next to the final "Restarting system", "Power down"
+> or "System halted" line, same as a plain reboot.
+>
+> The one exception is platform mode rolling back on a pending wakeup
+> event after the line has been printed. The existing "Wakeup event
+> detected during hibernation, rolling back." line follows immediately
+> in that case, so the log stays real about what happened.
 
+(a) Why is this information in the log useful?
+(b) Do you realize that it only appears in the log when hibernation
+fails or it may appear on a serial console or similar?
+
+> Signed-off-by: Bradley Morgan <include@grrlz.net>
+> ---
+>  kernel/power/hibernate.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+> index d2479c69d71a..bec91bf6a63c 100644
+> --- a/kernel/power/hibernate.c
+> +++ b/kernel/power/hibernate.c
+> @@ -687,6 +687,8 @@ static void power_down(void)
+>         }
+>  #endif
+>
+> +       reboot_log_initiator();
+> +
+>         switch (hibernation_mode) {
+>         case HIBERNATION_REBOOT:
+>                 kernel_restart(NULL);
+> --
 
