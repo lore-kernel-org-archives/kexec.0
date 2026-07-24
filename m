@@ -4,64 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4A5CCC531C9
-	for <kexec@archiver.kernel.org>; Fri, 24 Jul 2026 16:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 215DEC531F9
+	for <kexec@archiver.kernel.org>; Fri, 24 Jul 2026 20:33:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=uNcmPxfRJQMtu5X0pj3wcAJCBsBKUUg7nsN4VhDio8k=; b=BBwsh+Uaju0O3GhRqZu0O4PcHG
-	8spzuEhsqNtlp2p6J+WO3JCoZjG6AOFonHRJ7imlgC2lLrzse+t+5smFDKNH54SR9Sim+FPj9jQIG
-	soid474N98P1YRyGfdQfIo9tZAubPr+hGuekh/kfLepP5LeywYNNuwxXvNnFgBITfXnbafe1cX1HA
-	+f3gcoJfZUnlVYaVYzUUcbbjFBj8tUSzP/1sqY5li3Thrdg0XoTuVqs9f8SVn08mMW1Pm7bkWJ6Bb
-	e9MV5/WRH7avt6kHJVCjk/mY9rOdgIAGyU18ensa61sZAh3mFH8+Ohbfdt1/JHkZOkR7+e0GYRC4s
-	44RFdS3A==;
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+	List-Owner; bh=ZKQYivscj2/YLitJTr85nVGb3DcdncClDyomNie32W0=; b=kZKXM0b/fg6GWS
+	NZqWV1XmpMcEUX4YR6glYkOWfZbjxl2NF348zgwHOZZpZe/qGsHF+/Di4Wp1qF4u3PV4/+D4I6T3t
+	PGl+PE5KZhaXdXAitdniqLVypqQACzZalfC+7rHXFuTrthTDUG3PFHlX5SJblgge0YYrbj/MdimSQ
+	F7IL+a0MlXV9F6Cemq8L6vS+lUUaHkTuDAKyHWfiSbzErguNlFYtF71EgUNOiAEcfIXdOYwkQsbB8
+	/BanuOs+3GBXWU18qqDzyKBNeS5E+fumc+Iym6X6KFIVfmpMNOgQXBm4jJDfiUtRmN4lM18Z+MokY
+	V4IkDhJhrPFUji/heMLg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wnJA1-0000000GtAn-1H1P;
-	Fri, 24 Jul 2026 16:54:09 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wnMZm-0000000HDvm-2iVR;
+	Fri, 24 Jul 2026 20:32:58 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wnJA0-0000000GtAY-0gf8
+	id 1wnMZi-0000000HDvf-0cXH
 	for kexec@lists.infradead.org;
-	Fri, 24 Jul 2026 16:54:08 +0000
+	Fri, 24 Jul 2026 20:32:54 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 7D536600AD;
-	Fri, 24 Jul 2026 16:54:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B3291F000E9;
-	Fri, 24 Jul 2026 16:54:04 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 2CA6144011;
+	Fri, 24 Jul 2026 20:32:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3F0D1F000E9;
+	Fri, 24 Jul 2026 20:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784912047;
-	bh=uNcmPxfRJQMtu5X0pj3wcAJCBsBKUUg7nsN4VhDio8k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=Yxe39jIvTCcqCfDHGXA9bJRbgJwrAzkgmnmNq/txHjKzKdJSjcqFSGp338WI2WcOh
-	 JNM+sR68lVt7AEID/otkdwv/7fK5enEazDCwQqgMvQu0QeqMQiZJtcvoR2/st3Edco
-	 78otWKQOtrReQtPWBgwpIcXClrZcLDljk/tj+K87zZ5NRnnmfEvPQ5LIQfYHrQ7ROo
-	 64pkPRyj6JlTsIhc3wZ5VF8fEXVcGLPfmOf2OcVEfIq3mwYE8/xQG5k6oQg7dKcN5G
-	 xDc1jiT20zPWL7YRk2QWS7ZDVheuKx9TJek4/5v7B/sZHnsigg74iCzNYEJ6ypoETW
-	 gCPLpM5dpaxlw==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Pasha Tatashin
- <pasha.tatashin@soleen.com>,  Alexander Graf <graf@amazon.com>,  Muchun
- Song <muchun.song@linux.dev>,  Oscar Salvador <osalvador@suse.de>,  David
- Hildenbrand <david@kernel.org>,  Andrew Morton
- <akpm@linux-foundation.org>,  Jason Miu <jasonmiu@google.com>,  Jork
- Loeser <jloeser@linux.microsoft.com>,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 18/21] kho: extend scratch
-In-Reply-To: <178410811939.820181.9175877917181976639.b4-review@b4> (Mike
-	Rapoport's message of "Wed, 15 Jul 2026 12:35:19 +0300")
-References: <20260709173821.429921-1-pratyush@kernel.org>
-	<20260709173821.429921-19-pratyush@kernel.org>
-	<178410811939.820181.9175877917181976639.b4-review@b4>
-Date: Fri, 24 Jul 2026 18:54:03 +0200
-Message-ID: <2vxzjyqkgwgk.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=k20260515; t=1784925170;
+	bh=ZKQYivscj2/YLitJTr85nVGb3DcdncClDyomNie32W0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To;
+	b=lMBvjMyc2ADRRvgYO7Si5PcjiSQSr5it1WztjtKdT5vjbWClOEsrOrjW3ofWdtYfH
+	 qY32i4tEpHCBD4Mk6wgQcyrclEAtjJ/PyKX8hekEPUjzN7bYF0Qp+wSJyfEzum6Y8s
+	 ch9DH0xsWI6UY9vX2KspJTFw23p+foJLZIkGbpDv3Uq9ozpqJK5St52wuLIjzmuwm/
+	 tmQQi51M4YEeH6IPo+uSf6l7FgqA18Z3vFp/BGwvx1MVr29TJfAep47O8oSuX1TpYj
+	 Y9IJC6d6F9PLPw/2QMcqnW3IXzspoFpC5TEl2RxCXyb06cQvqhFLLRoRaMiWRf+fzn
+	 H85M2Nv5O2FJg==
+Date: Fri, 24 Jul 2026 15:32:49 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: David Matlack <dmatlack@google.com>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
+	Alexander Graf <graf@amazon.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Jason Gunthorpe <jgg@nvidia.com>, Jonathan Corbet <corbet@lwn.net>,
+	Josh Hilke <jrhilke@google.com>,
+	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>,
+	Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pranjal Shrivastava <praan@google.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
+	Yi Liu <yi.l.liu@intel.com>
+Subject: Re: [PATCH v7 02/12] PCI: liveupdate: Track outgoing preserved PCI
+ devices
+Message-ID: <20260724203249.GA1033821@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260710212616.1351130-3-dmatlack@google.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,196 +87,18 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jul 15 2026, Mike Rapoport wrote:
+On Fri, Jul 10, 2026 at 09:26:05PM +0000, David Matlack wrote:
+> Add APIs to allow drivers to notify the PCI core of which devices are
+> being preserved across a Live Update for the next kernel, i.e.
+> "outgoing" devices.
+> ...
 
->> Motivation
->> ==========
->> 
->> The scratch space is allocated by the first kernel in the KHO chain, and
->> is reused by all subsequent kernels. The size of the space is either set
->> via the commandline by the system administrator or by calculating the
->> amount of memory used by the kernel and adding a multiplier. In either
->> case, the scratch space is a heuristic and is liable to fill up and fail
->> allocation if a kernel uses more memory than expected.
->> 
->> In addition, gigantic huge pages (usually 1 GiB) are allocated via
->> memblock, and in a KHO boot that memory comes from the scratch space. In
->> hypervisors it is common to dedicate a major part of the system's memory
->> to gigantic hugepages for VM memory.
->> 
->> If this memory needs to come from scratch space, then scratch needs to
->> be greater than the memory needed for huge pages, which is impractical.
->> In addition, hugepages can be preserved memory. Allocating them from
->> scratch violates the assumption that scratch contains no preserved
->> memory.
->> 
->> Methodology
->> ===========
->> 
->> Discover areas that don't contain any preserved memory at boot by
->> walking the preserved memory radix tree. Mark them as scratch to allow
->> allocations from them. This makes KHO more resilient to memory pressure
->> and allows supporting huge page preservation.
->> 
->> Since the preserved memory radix tree mixes both physical address and
->> order into a single key, and does not track table pages, it is difficult
->> to identify free areas from it directly. Walk the tree and digest it
->> down into another radix tree. The latter tracks blocks of
->> KHO_EXT_SHIFT (1 GiB as of now) granularity. Then walk the digested tree
->> and mark the areas between the present keys as scratch.
->> 
->> Performance
->> ===========
->> 
->> The discovery algorithm traverses the preserved memory radix tree
->> exactly once. While it does use memory for the digested radix tree,
->> since the blocks are split by 1 GiB, a single bitmap with 4k pages can
->> track up to 32 TiB of memory. So there are likely to be very few radix
->> tree pages used in this tracking. For systems with all physical memory
->> below 32 TiB, this should result in a total of 6 pages being
->> used (KHO_TREE_MAX_DEPTH == 6).
->> 
->> An alternate way of achieving this would be to call kho_mem_retrieve()
->> earlier in boot and mark all the KHO preservations as reserved. But that
->> can blow up memblock.reserved with a bunch of 4K pages scattered
->> everywhere, which will reduce performance of subsequent allocations.
->> Since the free blocks are tracked in chunks of 1 GiB, this won't blow up
->> memblock.memory as much.
->> 
->> There is no inherent reason for using 1 GiB as the discovered block
->> size. This can be changed later if needed. Currently, KHO is mainly
->> targeted for server grade systems with hundreds of gigabytes to
->> terabytes of memory. So 1 GiB is a reasonable granularity for those
->> systems. For smaller systems this doesn't work as well, but we can
->> arrive at a better heuristic when we have concrete use cases.
->> 
->> Practical evaluation
->> ====================
->> 
->> The testing is done on a x86_64 qemu VM running under KVM with 64G
->> memory and 12 CPUs. The machine pre-allocates 50 1G pages.
->> 
->> Since the performance scales with how busy the radix tree is, tests are
->> done with 2 preservation patterns: first with two 1M memfds, second with
->> two 1G memfds, both using 4k pages.
->> 
->> Test case 1 - 1M memfd
->> ~~~~~~~~~~~~~~~~~~~~~~
->> 
->> This test case has two memfds with 1M memory each in 4k pages, plus
->> other preservations from LUO core and other KHO users.
->> 
->> This is how the radix tree stats look like:
->> 
->>     radix_nodes:       0x13
->>     nr_preservations:  0x214
->>     mem_preserved:     0x227000
->> 
->>     per order preservations:
->>       order  0:  0x20f
->>       order  1:  0x4
->>       order  4:  0x1
->> 
->> and this is how long it takes to extend the scratch after KHO boot:
->> 
->>     KHO: KHO extend time: 47 us
->>     KHO: KHO extend total mem: 0xe6c17b000 (~57G)
->> 
->> Test case 2 - 1G memfd
->> ~~~~~~~~~~~~~~~~~~~~~~
->> 
->> This test case has two memfds with 1G memory each in 4k pages, plus
->> other preservations from LUO core and other KHO users.
->> 
->> This is how the radix tree stats look like:
->> 
->>     radix_nodes:       0x28
->>     nr_preservations:  0x80816
->>     mem_preserved:     0x80829000
->> 
->>     per order preservations:
->>       order  0:  0x80811
->>       order  1:  0x4
->>       order  4:  0x1
->> 
->> and this is how long it takes to extend the scratch after KHO boot:
->> 
->>     KHO: KHO extend time: 22514 us
->>     KHO: KHO extend total mem: 0xd3f200000 (~52G)
->> 
->> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
->>
->> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
->> index b400976851e76..2c48488746290 100644
->> --- a/kernel/liveupdate/kexec_handover.c
->> +++ b/kernel/liveupdate/kexec_handover.c
->> @@ -84,6 +84,23 @@ static struct kho_out kho_out = {
->>  	},
->>  };
->>  
->> +struct kho_in {
->> +	phys_addr_t fdt_phys;
->> +	phys_addr_t scratch_phys;
->> +	char previous_release[__NEW_UTS_LEN + 1];
->> +	u32 kexec_count;
->> +	struct kho_debugfs dbg;
->> +	struct kho_radix_tree radix_tree;
->> +};
->> +
->> +static struct kho_in kho_in = {
->> +};
->> +
->> +static const void *kho_get_fdt(void)
->> +{
->> +	return kho_in.fdt_phys ? phys_to_virt(kho_in.fdt_phys) : NULL;
->> +}
->> +
->>  /**
->>   * kho_encode_radix_key - Encodes a physical address and order into a radix key.
->>   * @phys: The physical address of the page.
->> @@ -895,6 +912,128 @@ static void __init kho_reserve_scratch(void)
->>  	kho_enable = false;
->>  }
->>  
->> +/*
->> + * Look for free blocks of 1G. This is a heuristic chosen to work efficiently
->> + * with large systems with hundreds of gigabytes of memory. It will work poorly
->> + * on smaller systems. The algorithm itself doesn't depend on the actual value,
->> + * so it can be changed to a different heuristic later if needed.
->> + */
->> +#define KHO_EXT_BLKSIZE		SZ_1G
->> +#define KHO_EXT_SHIFT		const_ilog2(KHO_EXT_BLKSIZE)
->
-> Nit: EXT_ what? ;-)
->
->> +
->> +/* Called for the KHO preserved memory radix tree. */
->> +static int __init kho_ext_walk_leaf(unsigned long key, void *data)
->
-> I have to say this function still confuses me :)
+> +++ b/include/linux/pci_liveupdate.h
 
-Honestly, I think this whole tree walking API makes things really hard
-to reason about. I think we should replace it with something like
-kho_radix_for_each(). It would improve code readability a lot.
+> +#include <linux/kho/abi/pci.h>
+>  #include <linux/liveupdate.h>
+>  #include <linux/types.h>
+> +#include <linux/spinlock_types.h>
 
-I plan to do it at some point, but not as a part of this series.
-
->
->> +{
->> +	/* Radix tree tracking free blocks. */
->> +	struct kho_radix_tree *tree = data;
->> +	phys_addr_t start, end;
->> +	unsigned int order;
->> +	int err;
->> +
->> +	start = kho_decode_radix_key(key, &order);
->
-> I would add a comment here, that the key is from the memory tracker and
-> it is decoded to an address.
-
-ACK, will add.
-
--- 
-Regards,
-Pratyush Yadav
+Alpha order unless there's a special rule about spinlock_types.h.
 
