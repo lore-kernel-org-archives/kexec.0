@@ -4,92 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00B36C531C9
-	for <kexec@archiver.kernel.org>; Fri, 24 Jul 2026 16:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2D0D1C531C9
+	for <kexec@archiver.kernel.org>; Fri, 24 Jul 2026 16:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=FftrUEk4ZkE1WXNTNenEBP8mAR3bbgckW3kBU/PXrbc=; b=jPjGkLQfEC6gHzTspe8mGRv76F
-	AjJAVG4IGsk+dc3sO9aOf96LCd8j7Fm+YDb7KnKUMmq6tMtNDA9yl3/sGGkhx7oFEr+I4ESeCLNmT
-	F+XoQ3YZv56mx0gri5DOsKpjIsbMp/KDjeab8oR8K7SrxkQZIJP0Gton/XMfJKMPmIpKj6pMUhTn/
-	DYpzx2rjYPzwTxy0YP6Sc6hnSaE4TCTkXiKRHVbGZTllbiOvA7Ulduz8YMIJ/R9L1z7lvYd/O3eSs
-	onwQnTyyqeODfHMYF9tm7Q3SLAuQ3ypnp+fndCbuGdJC5l4mlvmpzDjU3yKoa0L2prW1dw8PGBS+1
-	qGmoe3ZA==;
+	bh=8ngNj00jBqy/OPE2x8gfNCz+K4mGYeO4wn+LIqAYX40=; b=LVbMz4LE2HBi8O5rJ49LlEyHEp
+	5NlQuylly6wqFILt+sN+mYv6UOL3IID5GW+A+KPLU2ZlqA+OOYdqhUcNzSTnTF4bZlPbn0v56MDcx
+	4QJWa1dv31yaIQ7DLJGXYNTq3fpNYlUzF2W9AQCvM44xtj9DwH2KgSRWbbf7V7adS3YZq94Rvxdp+
+	5mYMq7omkP+o9oHlS/iUH1jZMaNWih1Esi0LQiOQnuXEU8Ty/ivkKj1DxT1K/YWHhywRDAtZGFoQK
+	Rck1M4XF9KE9YVw8qJq0CZgTy3QuFCiEbvrFFxEgn4osd36jWz8qialrMxlanftDCQleiT5bpbYGX
+	60T51aXQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wnJ2I-0000000Gs7L-2Ycu;
-	Fri, 24 Jul 2026 16:46:10 +0000
-Received: from mail-qv1-xf2b.google.com ([2607:f8b0:4864:20::f2b])
+	id 1wnJ80-0000000Gswz-3smQ;
+	Fri, 24 Jul 2026 16:52:04 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wnJ2G-0000000Gs6n-1ech
+	id 1wnJ80-0000000Gswq-0HeY
 	for kexec@lists.infradead.org;
-	Fri, 24 Jul 2026 16:46:09 +0000
-Received: by mail-qv1-xf2b.google.com with SMTP id 6a1803df08f44-8f0e5e36912so5512166d6.2
-        for <kexec@lists.infradead.org>; Fri, 24 Jul 2026 09:46:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1784911567; x=1785516367; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=FftrUEk4ZkE1WXNTNenEBP8mAR3bbgckW3kBU/PXrbc=;
-        b=iGbWDhKReIrLpBRLSfA7isJ2sCGYgbVFC8GzT5ewkEVCA0DXTxHhpodPp5QuSZZ6Ps
-         5Zd296sas9rTYJgk8Ws/GAa/zL4aWQ2tguw4mH3DPoJgXavJoSkikXxiPbBJreQtwghj
-         52wSDPBwtyEDrtR8I7PRLSNQAFYw8f8LC0xio+wx8/ynpzvrWiqybwmjQLiGg9meB8y6
-         LzQTwEsSGTkCekVhWzeuaLx2KwTKOLusPtO9p+NAzv3GJ1JpJcBDnQfvYH/+cd/ClcQL
-         oHCTZQ6qETJxYekp+HVO3ia0/2VYm6pflD0cgZlfqod9bjCYPwvHOtnR38+psg0MYtYr
-         d3/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784911567; x=1785516367;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=FftrUEk4ZkE1WXNTNenEBP8mAR3bbgckW3kBU/PXrbc=;
-        b=Q0AXHcdjZ7w6htH0a3UUw45g5LPziVA4EqDPJKN25X/ANQ9At6UQP/ZnWfCe7l79bS
-         QGbm9Olk4rfBpmI5SnsMGrSuSNT5d87dVaKZlngY++lsk4EbDr1OLczQvE0QG6bU7i7W
-         Z29kG0IxY/RurbDMOIwjrM99QgeVCcn/6GcrAiojjMv+qQE0sPYc8+zecsTjZW0VUDx9
-         tuq9B9mJ3lCpzIi/oiMjO6QyDpQAvWLtuYN13GUIcfnwVleJU6loICLtRpMnCWJ0+5pt
-         7nAH1zO9c7DWS2tR27ikP4/uhqZ5VUhAr+3D9H4cYVK3vM+HVK/ZFzuvO4AKH0Et26GF
-         G3bQ==
-X-Forwarded-Encrypted: i=1; AHgh+RpbhxFmh/1GYJUst7mCGFqFpeBRXaaO7a7fyVdSR6jjmKukilRGkiB37POC2/0sMruYusZvng==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yw0YiCyQdhJYi6242b6cJtFhkKqiWmx0VfoKYTyBZ22ODqA9Fjb
-	92ElonFOl3g2EiEEOU+EqpVyady3HK8bcLEW2+mFujdLnx4Rt1r+I5S29qj0+tCEXPk=
-X-Gm-Gg: AR+sD11fgI6P6AEsgow29VfxaSH68xxD/CYvam5eAOZiMbbYtamMToD8k4M4EGl6xzN
-	Wn54gGmO4u49pBf+7Dhu3fFsIYmU8qz6Db1k4470bmoT7auBWG/9bBM6fCzAbmgyyr+fByL6BKL
-	oQGNEjU6zDiblWqkB0br5AYoTr0hehdar29ccZAoe0Gw2Xssk1KeBCRJGx6toqOps0WAXsyqLHr
-	QVsZa0dYXS3CE9WpHo/SfehomtJ1TyhAhExnAYMhql5RvueUNfSNpSQuSNwYogYz2JGPRMe9guB
-	gcXxtHMG+t6tqAwUacK8Z1RK/2WNJ0h54AQvNwqzlet/6+CRoy4CeMkJH+5KVM668LCRJscQgWj
-	UWvptUduwirCzzPjZ3lLhOipf3GSQ7OftYnwGazF3xPsvkSiq7XTkMlSitfI1DSEH1o1i/eFmI+
-	29+kZjbD1g9JzJis18itrtXd6nQK3Mblf+oqZUBF0Z
-X-Received: by 2002:a05:6214:f0c:b0:8cc:de2:3b5d with SMTP id 6a1803df08f44-907ca5734acmr98718436d6.16.1784911566647;
-        Fri, 24 Jul 2026 09:46:06 -0700 (PDT)
-Received: from plex ([71.181.43.54])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-907e851ec5esm1986286d6.10.2026.07.24.09.46.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2026 09:46:05 -0700 (PDT)
-Date: Fri, 24 Jul 2026 16:46:04 +0000
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Tarun Sahu <tarunsahu@google.com>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>, skhawaja@google.com, 
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 3/3] luo: Update serialized data to use KHOSER_PTR
-Message-ID: <amOWTew3JpsY4QcB@plex>
-References: <20260628001114.1869564-1-tarunsahu@google.com>
- <20260628001114.1869564-4-tarunsahu@google.com>
- <178271651966.13502.2620034351625890943.b4-review@b4>
- <2vxzldbklb18.fsf@kernel.org>
+	Fri, 24 Jul 2026 16:52:04 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 275D3600AD;
+	Fri, 24 Jul 2026 16:52:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3F5B1F000E9;
+	Fri, 24 Jul 2026 16:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784911922;
+	bh=8ngNj00jBqy/OPE2x8gfNCz+K4mGYeO4wn+LIqAYX40=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=BnN5DFd3+HUO0URnrf7glzg2MxJZ4hQc/rAx0VF1TTyw4cWJf4M+zPfDRm0K6rgLP
+	 D7ZXKfEo0rwOlqwS2eEjwp1k1PE8liEVNI88xmhFIqyM0f7k5Z1SEleH9wmDmEKC4E
+	 NQGU35qrnod7x9vxPDibBlFsl/t8WFgAb/GlB8cWE7l9UnUc2hWo/5miGU1M2PO1O1
+	 E/8+wsMAocXb1giQzlW8vq1CR7ycV3LNp8J2cX28vduXhjbD3i8GIemLb7hidgS4JP
+	 yncPIynrFhezOSH6SSAu2kQm7KE+/aB0MbG9O04kCOVlr6jM51HADEev3/hIoVajQT
+	 IUXF5ZA0g1l7A==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Pasha Tatashin
+ <pasha.tatashin@soleen.com>,  Alexander Graf <graf@amazon.com>,  Muchun
+ Song <muchun.song@linux.dev>,  Oscar Salvador <osalvador@suse.de>,  David
+ Hildenbrand <david@kernel.org>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Jason Miu <jasonmiu@google.com>,  Jork
+ Loeser <jloeser@linux.microsoft.com>,  kexec@lists.infradead.org,
+  linux-mm@kvack.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 19/21] memblock: make HugeTLB bootmem allocation work
+ with KHO
+In-Reply-To: <178410811939.820181.7248948033992831535.b4-review@b4> (Mike
+	Rapoport's message of "Wed, 15 Jul 2026 12:35:19 +0300")
+References: <20260709173821.429921-1-pratyush@kernel.org>
+	<20260709173821.429921-20-pratyush@kernel.org>
+	<178410811939.820181.7248948033992831535.b4-review@b4>
+Date: Fri, 24 Jul 2026 18:51:59 +0200
+Message-ID: <2vxzo6fwgwk0.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2vxzldbklb18.fsf@kernel.org>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260724_094608_452696_8483AE65 
-X-CRM114-Status: GOOD (  25.78  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,68 +77,113 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 07-09 12:20, Pratyush Yadav wrote:
-> Hi Pasha,
-> 
-> On Mon, Jun 29 2026, Pasha Tatashin wrote:
-> 
-> > On Sun, 28 Jun 2026 00:11:14 +0000, Tarun Sahu <tarunsahu@google.com> wrote:
-> >> diff --git a/include/linux/kho/abi/luo.h b/include/linux/kho/abi/luo.h
-> >> index 288076de6d4a..9e78625cfdc1 100644
-> >> --- a/include/linux/kho/abi/luo.h
-> >> +++ b/include/linux/kho/abi/luo.h
-> >> @@ -89,14 +90,14 @@ struct luo_ser {
-> >>  /**
-> >>   * struct luo_file_ser - Represents the serialized preserves files.
-> >>   * @compatible:  File handler compatible string.
-> >> - * @data:        Private data
-> >> + * @serialized_data:  The serialized KHO pointer for this file
-> >
-> > I am concerned about layring violation here.
-> >
-> > LUO is designed as  a generic, opaque transport layer that promises to 
-> > preserve 64 bits of raw data. How those 64 bits are interpreted is 
-> > entirely up to individual clients.
-> >
-> > While some clients like memfd_luo will use those 64 bits as a physical 
-> > address pointing to KHO-preserved structures, other clients may store a 
-> > generic token, cookie, index, or non-pointer status. By
-> > changing u64 data to DECLARE_KHOSER_PTR(serialized_data, void *) in 
-> > struct luo_file_ser, we force KHO pointer semantics and layout 
-> > constraints on all generic LUO files.
-> 
-> That makes sense theory, but in practice, no file handler is going to
-> need only 8 bytes for its metadata. It is always going to need more, and
-> to store more information, it needs to store a pointer to that
-> information with the 64 bits it gets.
-> 
-> Do you have any examples of something else one might store here?
-> 
-> At least looking at the current file handlers merged and in flight,
-> memfd, iommufd, vfio, pci, hugetlb, guest_memfd, all of them store a
-> pointer here.
+On Wed, Jul 15 2026, Mike Rapoport wrote:
 
-Right, and all of those types are private to file-handlers, not to LUO, 
-so my question is:
+>> Gigantic huge page allocation is somewhat broken currently when KHO is
+>> used.
+>> 
+>> Firstly, they break KHO scratch size accounting. RSRV_KERN is used to
+>> track how much memory is reserved for use by the kernel. Since
+>> hugetlb::alloc_bootmem() calls the memblock_alloc*() APIs, the hugepages
+>> allocated also get marked as RSRV_KERN.
+>> 
+>> Allocations marked RSRV_KERN are used by KHO to calculate how much
+>> scratch space it should reserve to make sure the next kernel has enough
+>> memory to boot when it is in scratch-only phase. Counting hugepages in
+>> that blows up scratch size, and can lead to the scratch allocation
+>> failing, making KHO unusable. This will show up when huge pages make up
+>> more than 50% of the system, which is a fairly common use case.
+>> 
+>> Secondly, while not supported right now, huge pages are user memory and
+>> can be preserved via KHO. The scratch spaces should not have any
+>> preserved memory. Allocating hugepages from scratch (on a KHO boot) can
+>> lead to them being un-preservable.
+>> 
+>> Introduce memblock_alloc_hugetlb(). This lets memblock tailor to the
+>> needs of hugetb without exposing those details to the general allocation
+>> routines.
+>> 
+>> First, it does not use mirrored memory for hugetlb. Mirrored memory is a
+>> limited resource that is best saved for kernel data structures, not user
+>> memory.
+>> 
+>> Second, if the free memory area found by memblock_find_in_range_node()
+>> is a part of a KHO scratch area, the free area is not used. Allocation
+>> is retried starting after the free area to ensure no hugepages come from
+>> KHO scratch.
+>> 
+>> Third, it simplifies the argument list by baking in some hugetlb
+>> assumptions like alignment and exact_nid. This also simplifies
+>> allocation logic in alloc_bootmem().
+>> 
+>> Also introduce MEMBLOCK_RSRV_HUGETLB to mark reservations made for
+>> HugeTLB. This will be used by KHO in future patches to correctly
+>> calculate scratch sizes.
+>> 
+>> Refactor some of the preparation logic like kmemleak tracking and
+>> accepting memory into a separate helper memblock_prep_allocation(), and
+>> use it from both memblock_alloc_hugetlb() and the usual
+>> memblock_alloc_range_nid().
+>> 
+>> Add a stub for kho_scratch_overlap to memblock tests to make sure it
+>> compiles.
+>> 
+>> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+[...]
+>> diff --git a/mm/memblock.c b/mm/memblock.c
+>> index 8b2e551435ae9..ba6d887ea18eb 100644
+>> --- a/mm/memblock.c
+>> +++ b/mm/memblock.c
+>> @@ -1506,6 +1506,32 @@ int __init_memblock memblock_set_node(phys_addr_t base, phys_addr_t size,
+>>  	return 0;
+>>  }
+>>  
+>> +static void memblock_prep_allocation(phys_addr_t start, phys_addr_t size,
+>> +				     bool leaktrace)
+>
+> Let's call this kmemleak_trace
 
-> 
-> And if everyone is only storing pointers in this field, might as well
-> give them a bit of type safety.
+ACK.
 
-How khoser helps void * type?
+>
+>> +{
+>> +	/*
+>> +	 * Skip kmemleak for those places like kasan_init() and
+>> +	 * early_pgtable_alloc() due to high volume.
+>> +	 */
+>> +	if (leaktrace)
+>> +		/*
+>> +		 * Memblock allocated blocks are never reported as
+>> +		 * leaks. This is because many of these blocks are
+>> +		 * only referred via the physical address which is
+>> +		 * not looked up by kmemleak.
+>> +		 */
+>> +		kmemleak_alloc_phys(start, size, 0);
+[...]
+>> diff --git a/tools/testing/memblock/internal.h b/tools/testing/memblock/internal.h
+>> index b6b1d147fd750..e86bb9000b22f 100644
+>> --- a/tools/testing/memblock/internal.h
+>> +++ b/tools/testing/memblock/internal.h
+>> @@ -66,4 +66,9 @@ static inline void init_deferred_page(unsigned long pfn, int nid)
+>>  
+>>  #define __SetPageReserved(p)	((void)(p))
+>>  
+>> +static inline bool kho_scratch_overlap(phys_addr_t phys, size_t size)
+>> +{
+>> +	return false;
+>> +}
+>> +
+>
+> This should be in the patch that exposes kho_scratch_overlap() to kexec_handover.h
 
-Pasha
+Hm, sure, why not. I added it here because _this patch_ uses
+kho_scratch_overlap() for the first time on memblock.c, and with that
+breaks build of the memblock tests. So I recokned it makes sense to have
+it in the place that broke it.
 
-> 
-> >
-> > Clients that need KHO pointer serialization must cast that opaque 64-bit 
-> > value to/from a  KHOSER_PTR  within their own callbacks.
-> >
-> > Also, the field descriptions in  struct luo_file_ser  are no longer 
-> > aligned due to the length of the new variable name, I believe it will 
-> > cause warning when making docs.
-> 
-> -- 
-> Regards,
-> Pratyush Yadav
+But I don't mind, I can move it to the other patch as well.
+
+-- 
+Regards,
+Pratyush Yadav
 
