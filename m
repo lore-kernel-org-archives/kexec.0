@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 71B3EC53219
-	for <kexec@archiver.kernel.org>; Sat, 25 Jul 2026 17:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E9AA9C531D0
+	for <kexec@archiver.kernel.org>; Sat, 25 Jul 2026 17:21:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=PmT/6roT1kwL/qDIR/q2nRmsuARqI7eTSUoDfPCwI3o=; b=Bfm4QXuB8F7EyneC247KP1u04A
-	ULPdKQL1H5f1JnGCDdAUpqNytGHqJeoKkrw6ixLMtIwYfkgdX5m4ADXNIp9s/+JdX7d4+aDQO/jjQ
-	9ekqWf+WTubKepilry3gajzw94IrP0tm1Z9oZ18426STnS69U+QyoqY1KOFJNdol/QBAr87yQCOiA
-	b643oycdkhFa0seJlZVauQ5balOFQZO45hQmWxtruFK4w2AXNW2oKJE6ijgNewq1MSdFz9dcwXFl5
-	HHJ5gXLcEv5rNgoFZlL7DMnnRwaZ/I1Czf5wsDi6zLaIaGuWiy5nEG/yT6GnZmvmIS6ViodiCQg7a
-	Gz3Fsxnw==;
+	bh=LaqxU7t1DcIW99g2BQNqgYEXNYFD/Bj+yDLgBdqM5CY=; b=H3MFVZdYqa4+k7RkWBO521qnB4
+	ta/V8OFwpKBZ4DbMhPph8V+bZY/N9FysQgpZNolp7lz/i4vdfi2+C0tvda1OuHZ1gtcGAM3Uk57jp
+	xE0xkSh7liY2aYpKc3M7z1sXyfNeEa8eof85ivUUyWUTH7bYHhHkuDpnpPEOG/kYlih0U4pTLPseH
+	HzHuQFWfTajE/d2jAFG465idBDir2794chkieVHEQ4JDjuajMjyOCXTgQJY2L967yKvtC8po+tpL1
+	65O5NxuJdTRc0w+kQjmazl4pMsfPLFo6vV2x06Yz1UPjn1NcocxTILfXsmOwEEee0HgpFOQGWkNkk
+	F9QffGCA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wng4O-00000000aFK-37o9;
-	Sat, 25 Jul 2026 17:21:52 +0000
+	id 1wng4Q-00000000aGz-3ZcR;
+	Sat, 25 Jul 2026 17:21:54 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wng4N-00000000aEb-2BQv
+	id 1wng4P-00000000aGI-3dn4
 	for kexec@lists.infradead.org;
-	Sat, 25 Jul 2026 17:21:51 +0000
+	Sat, 25 Jul 2026 17:21:53 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 02EAB44E9D;
+	by sea.source.kernel.org (Postfix) with ESMTP id 89FD045081;
+	Sat, 25 Jul 2026 17:21:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45DA21F00A3A;
 	Sat, 25 Jul 2026 17:21:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2E091F00A3D;
-	Sat, 25 Jul 2026 17:21:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785000110;
-	bh=PmT/6roT1kwL/qDIR/q2nRmsuARqI7eTSUoDfPCwI3o=;
+	s=k20260515; t=1785000113;
+	bh=LaqxU7t1DcIW99g2BQNqgYEXNYFD/Bj+yDLgBdqM5CY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=WtfXeI51Twzy/ijI0jUUiqEZozeRV7tA5iCxHFkqBzN7dAoX5hy75KdvdyRMVLjMp
-	 1tRmTt5JQkE4yd0B1hRfXtu7G3ELBPiEYK++pg+J2jS2svYFm0iRkQIvsZb/Bclr2F
-	 uWwWzWHhyK5rLg/6Ig/i42xxkk9npaBi21xhjhJtWQ/hR+bgLymnvaf6UitdSuo9f2
-	 Av++jXhQ9pJpmNfZYF5PPiSuVihELl/neHf89YO8bl5jBShIXgXiKy1Z29FJlV9j62
-	 RTUAuGkS98sdJhEXVOoSfoqoCYoYrUs7ocwd3ht0mwxn/y7ofHb91yqPcAG6t8ybqP
-	 sWK+PwfRDzTIw==
+	b=MjMUbw9GW4yPvRDPEp13GAHT6cac7lGwMMM5W1Prw23zFqz1ePacNrbjCsxyXg3Dz
+	 J4cO7mEwUJK24lTPeK7h7a1pN8fVezOhTdbT0IUWFYQ1rbolV8QYm4nCyty9Hh3Pei
+	 jVfvUm3uVO6JDAtuEWrgh7HRg3Jd6j2gyhQxxGY+dAwPkM214GVLLfQm1/Wg0MM9RJ
+	 5nIqc/vl3aqzb82VK8Nk+KfSyEub3nSm9CD8upxUaOKCk+l7C5qjHMkzpNIWyVR9R5
+	 0R3lguAjqo/j6iOtwNognXTLC65lcBzPQ+XM33qsHv2KjqYbmGtqHDDakSVyh7yS9p
+	 AqTbYrHsUxVbw==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -56,9 +56,9 @@ To: Mike Rapoport <rppt@kernel.org>,
 Cc: kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 02/21] kho: make radix max key width more obvious
-Date: Sat, 25 Jul 2026 19:21:02 +0200
-Message-ID: <20260725172133.4018491-3-pratyush@kernel.org>
+Subject: [PATCH v4 03/21] kho: disallow wide keys in radix tree
+Date: Sat, 25 Jul 2026 19:21:03 +0200
+Message-ID: <20260725172133.4018491-4-pratyush@kernel.org>
 X-Mailer: git-send-email 2.55.0.229.g6434b31f56-goog
 In-Reply-To: <20260725172133.4018491-1-pratyush@kernel.org>
 References: <20260725172133.4018491-1-pratyush@kernel.org>
@@ -80,104 +80,62 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-The KHO radix tree constants are somewhat hard to understand. The tree
-depth essentially comes from the max key width. The max key width comes
-from the need to store a 52-bit PFN plus one more bit for the order.
+The KHO radix tree was designed to track preserved pages. So it does not
+provide the capability to track any 64-bit key. Instead, it limits the
+key width to how much it needs for tracking PFNs and their orders.
+Limiting the width reduces the number of levels in the tree.
 
-All this is very obscure with the corrent code. The PFN width is defined
-as KHO_ORDER_0_LOG2, which makes very little sense to a new reader not
-already familiar with what the value means. Then the fact that an extra
-bit is needed is hidden in the KHO_TREE_MAX_DEPTH calculation.
+KHO is not expected to be the only user of the radix tree. With the API
+generalized to allow other users, now it is possible to add any key to
+the tree.
 
-Simplify this by removing KHO_ORDER_0_LOG2 and replace it with
-KHO_RADIX_KEY_WIDTH. Update the comment to explain why this value is
-used. This moves the +1 from KHO_TREE_MAX_DEPTH to KHO_RADIX_KEY_WIDTH,
-making things clearer.
-
-Update kho_{encode,decode}_radix_key() to not use KHO_ORDER_0_LOG2.
-Instead, refactor the code and comments to make it clearer how the
-encoding and decoding is done.
-
-In kho_encode_radix_key(), add a new variable for the shift for physical
-address. Use that in calculating where the order bit goes and in
-calculating the shifted PFN. Update comments to make this clearer.
-
-In kho_radix_decode_key(), turn order_bit to 0-indexed to simplify the
-eventual calculation for order. Touch up comments to make the
-computation clearer.
+Check the key width at kho_radix_add_key(), and error out if it exceeds
+what the tree can handle. Do this instead of increasing the tree depth
+since right now there are no users that need to use wider keys, so this
+avoids memory overhead and ABI breakage.
 
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- include/linux/kho/abi/kexec_handover.h |  9 +++------
- kernel/liveupdate/kexec_handover.c     | 19 +++++++++++--------
- 2 files changed, 14 insertions(+), 14 deletions(-)
+ kernel/liveupdate/kexec_handover.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/include/linux/kho/abi/kexec_handover.h b/include/linux/kho/abi/kexec_handover.h
-index 5e2eb8519bda..2f4fb9c63942 100644
---- a/include/linux/kho/abi/kexec_handover.h
-+++ b/include/linux/kho/abi/kexec_handover.h
-@@ -257,11 +257,8 @@ struct kho_vmalloc {
-  * memory. These constants govern the indexing, sizing, and depth of the tree.
-  */
- enum kho_radix_consts {
--	/*
--	 * The bit position of the order bit (and also the length of the
--	 * shifted physical address) for an order-0 page.
--	 */
--	KHO_ORDER_0_LOG2 = 64 - PAGE_SHIFT,
-+	/* Need to store the PFN, plus one bit for order. */
-+	KHO_RADIX_KEY_WIDTH = 64 - PAGE_SHIFT + 1,
- 
- 	/* Size of the table in kho_radix_node, in log2 */
- 	KHO_TABLE_SIZE_LOG2 = const_ilog2(PAGE_SIZE / sizeof(phys_addr_t)),
-@@ -274,7 +271,7 @@ enum kho_radix_consts {
- 	 * and 1 bitmap level.
- 	 */
- 	KHO_TREE_MAX_DEPTH =
--		DIV_ROUND_UP(KHO_ORDER_0_LOG2 - KHO_BITMAP_SIZE_LOG2 + 1,
-+		DIV_ROUND_UP(KHO_RADIX_KEY_WIDTH - KHO_BITMAP_SIZE_LOG2,
- 			     KHO_TABLE_SIZE_LOG2) + 1,
- };
- 
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 7349cc82f6dc..ea24f23ce292 100644
+index ea24f23ce292..e7451743b87e 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -97,10 +97,12 @@ static struct kho_out kho_out = {
+@@ -156,6 +156,11 @@ static unsigned long kho_radix_get_table_index(unsigned long key,
+  * intermediate nodes do not exist along the path, they are allocated and added
+  * to the tree.
+  *
++ * NOTE: Currently only keys of width up to %KHO_RADIX_KEY_WIDTH are supported.
++ * This limit only exists because current users of the radix tree don't use more
++ * than that. Changing the maximum width requires changing the tree depth, which
++ * needs bumping the ABI version.
++ *
+  * Return: 0 on success, or a negative error code on failure.
   */
- static unsigned long kho_encode_radix_key(phys_addr_t phys, unsigned int order)
- {
--	/* Order bits part */
--	unsigned long h = 1UL << (KHO_ORDER_0_LOG2 - order);
--	/* Shifted physical address part */
--	unsigned long l = phys >> (PAGE_SHIFT + order);
-+	/* The physical address is encoded by shifting the PFN by its order. */
-+	unsigned long shift = PAGE_SHIFT + order;
-+	/* Order bit goes right before the shifted PFN. */
-+	unsigned long h = 1UL << (64 - shift);
-+	/* Shifted PFN. */
-+	unsigned long l = phys >> shift;
+ int kho_radix_add_key(struct kho_radix_tree *tree, unsigned long key)
+@@ -172,6 +177,9 @@ int kho_radix_add_key(struct kho_radix_tree *tree, unsigned long key)
+ 	if (WARN_ON_ONCE(!tree->root))
+ 		return -EINVAL;
  
- 	return h | l;
- }
-@@ -118,12 +120,13 @@ static unsigned long kho_encode_radix_key(phys_addr_t phys, unsigned int order)
-  */
- static phys_addr_t kho_decode_radix_key(unsigned long key, unsigned int *order)
- {
--	unsigned int order_bit = fls64(key);
-+	/* fls64() indexes starting from 1. */
-+	unsigned int order_bit = fls64(key) - 1;
- 	phys_addr_t phys;
++	if (unlikely(fls64(key) > KHO_RADIX_KEY_WIDTH))
++		return -ERANGE;
++
+ 	might_sleep();
  
--	/* order_bit is numbered starting at 1 from fls64 */
--	*order = KHO_ORDER_0_LOG2 - order_bit + 1;
--	/* The order is discarded by the shift */
-+	/* order bit goes right before the shifted PFN. */
-+	*order = 64 - (PAGE_SHIFT + order_bit);
-+	/* The order bit is discarded by the shift */
- 	phys = key << (PAGE_SHIFT + *order);
+ 	guard(mutex)(&tree->lock);
+@@ -244,6 +252,10 @@ void kho_radix_del_key(struct kho_radix_tree *tree, unsigned long key)
+ 	if (WARN_ON_ONCE(!tree->root))
+ 		return;
  
- 	return phys;
++	/* Keys wider than KHO_RADIX_KEY_WIDTH are not allowed to be added. */
++	if (unlikely(fls64(key) > KHO_RADIX_KEY_WIDTH))
++		return;
++
+ 	might_sleep();
+ 
+ 	guard(mutex)(&tree->lock);
 -- 
 2.55.0.229.g6434b31f56-goog
 
