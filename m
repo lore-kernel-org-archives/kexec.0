@@ -4,65 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C4EFEC531D0
-	for <kexec@archiver.kernel.org>; Sat, 25 Jul 2026 17:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3F373C531F9
+	for <kexec@archiver.kernel.org>; Sat, 25 Jul 2026 21:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=wZ0f3zzDp/LQ46aQcmeTItf+xyrvDOtmTEeK5N5Eqi4=; b=zoyQQLsLv68GxW+tbjiOr7Mz0+
-	94GLvWgiAecvbkHZgiDatxWdbYgzKbtwAvoLjQdJQACIysjQzW4Iwc6ICcEHBD8V65UgHCUDW8o2/
-	vOfTbz6OvBUrRV/iibFkZ+7gPRq3dGXE5HtnxBb2KD/MYdyqGfDROAH28MlkZMbu2UhUzKbzFCXEA
-	PiC8Hdq18vdsBMtg9wIeBP1NEKrxT63MArkPxM5v+jqNERgGBTFAXKRT25K4cbGI021qsp/rLHu1h
-	RkZHCr5jc/481R53Uw+PcheDNiw3ibSt9bp48zOkZ8bWcAnfdpmZBrFofW5vT1d4Vjnqa0R4VFd5n
-	dPtW5ABg==;
+	bh=RSa+weKwTyM0tp9L5Vf4KtyDgEuS9BC6cM9EMAxoRr8=; b=pqRJBxOt2qek94Tu8oUQCqpfSm
+	MJQm9vMeaUKAz7PVm6+tUJYePLd+8Jst9GXNSGcCMqh7tTiXDPZAlhGuZFmYT6QucjJUOnQKmv5U9
+	mgTiqWJ1hgO3CqJjSv/NcOGE19y6w5o2wK92wnpxR5ndszsWdmFGWtaT6JGMn91TtDv8PQ7wzy4cT
+	HMES3LCTmSgefiBhdaAztUccyosXFvEPB7sHgBu0f1sVTxKAEUSGiPB6f+14Zfdo+1FR1nGvSPsDr
+	8H6fR4wczNESL3Tb48vtOIltYc5/oWxYEiesrcwoVuWp/YpHbwH5vQisp0V/Rhk56Cu+3Ha/iAa/G
+	B8lYTyJg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wng5A-00000000ayk-45u0;
-	Sat, 25 Jul 2026 17:22:40 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wnjZJ-00000000iIv-0U5Z;
+	Sat, 25 Jul 2026 21:06:01 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wng59-00000000axB-3udP
+	id 1wnjZH-00000000iIV-0oZ0
 	for kexec@lists.infradead.org;
-	Sat, 25 Jul 2026 17:22:39 +0000
+	Sat, 25 Jul 2026 21:05:59 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id AEEB643D66;
-	Sat, 25 Jul 2026 17:22:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69A821F000E9;
-	Sat, 25 Jul 2026 17:22:37 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id A024660A97;
+	Sat, 25 Jul 2026 21:05:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A395F1F00A3A;
+	Sat, 25 Jul 2026 21:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785000159;
-	bh=wZ0f3zzDp/LQ46aQcmeTItf+xyrvDOtmTEeK5N5Eqi4=;
+	s=k20260515; t=1785013558;
+	bh=RSa+weKwTyM0tp9L5Vf4KtyDgEuS9BC6cM9EMAxoRr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=RTVZKU93XLuef/FPziOCK1SLynmjuq2VnSb6EOKmXdOrLeUGAruKnssIkEH9FR3gW
-	 9gJ03CDqbnSr5tRJ9BhIJ49Mpr3+5HlGcO1dbMeKpQ0zRcvRCG9Fwhj+qkOmpCeuJU
-	 CX3hyEH2p+20pFyrbX14XFRufgs3ALEvDeFbobVfPrV0gPyxHIjR/STDFMZWX54P9b
-	 Cvh8dQuS8FwF3O4hDeFAIn11cA3PhHeq6LGCdi5wl1huGzgVHsQHuy7KtBS7uqgMBZ
-	 6rY5wSyhj84wU3YLWAT1wfYkTynvLt7id0gwyxSkzsGdOaHpUxnbwvkclI1Oqb5rq6
-	 ZQd4sqATNdMCQ==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Alexander Graf <graf@amazon.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
+	b=AhWkmOY/Nt9hXs0PlFDC/LdXs3RyB/46uNC3kLVqCNpDb2QuE175EsdNmAHSSfBtg
+	 XcVtmxd/7eyenYWRqZac3QyWpgaT07s0i9i+tvpC8UkVIu4BgKp433wV95gIRGJLpM
+	 YjgLVHk2FxsFR1zTC2WGcomHmhfqbqDbDm6VuZK3UTH3nfiMrgv8HxUcP30V7/sdQZ
+	 pWeNalEdqSEybche3/DHuKeTZ59gqvf7xyIB31mhCnU0OKQ2E48Rl8Ue5xVK8STMR7
+	 1UvetkXS9bfvzTVKUckrGaJ4C8eekChSPPZTVXvz6JHLcquiWj7iYughAE/NCbZdM/
+	 T9x/oOfMw20jQ==
+From: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>,
 	David Hildenbrand <david@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jason Miu <jasonmiu@google.com>,
-	Jork Loeser <jloeser@linux.microsoft.com>
-Cc: kexec@lists.infradead.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Tejun Heo <tj@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	"Liam R . Howlett" <liam@infradead.org>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	Michal Hocko <mhocko@suse.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Dave Young <ruirui.yang@linux.dev>,
 	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 21/21] kho: exclude hugetlb memory from scratch size calculation
-Date: Sat, 25 Jul 2026 19:21:21 +0200
-Message-ID: <20260725172133.4018491-22-pratyush@kernel.org>
-X-Mailer: git-send-email 2.55.0.229.g6434b31f56-goog
-In-Reply-To: <20260725172133.4018491-1-pratyush@kernel.org>
-References: <20260725172133.4018491-1-pratyush@kernel.org>
+	linux-pci@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	kexec@lists.infradead.org,
+	driver-core@lists.linux.dev
+Subject: [PATCH v2 1/3] mm: Add unmap_mapping_file() helper
+Date: Sat, 25 Jul 2026 21:05:47 +0000
+Message-ID: <20260725210549.3716546-2-kwilczynski@kernel.org>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260725210549.3716546-1-kwilczynski@kernel.org>
+References: <20260725210549.3716546-1-kwilczynski@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -78,65 +92,117 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+Currently, unmap_mapping_pages() and unmap_mapping_range() unmap a
+page offset window of an address_space, and code that removes a file,
+such as kernfs_drain_open_files(), relies on them to unmap the pages
+of a file that is going away.
 
-HugeTLB pages can be preserved memory. So they are never allocated from
-scratch. Instead, they are allocated from the memory blocks with no
-preserved memory. These areas are detected at runtime on each boot.
+Files with f_mapping swapped to a shared address space at open time,
+such as PCI resource files using iomem_get_mapping(), have their VMAs
+attached to the shared mapping instead of the file's own inode mapping,
+so unmapping the inode's address space cannot reach them, and they stay
+live after the file is removed.  These VMAs can only be selected by the
+struct file they were created through, which is recorded in
+vma->vm_file.
 
-But since they are allocated via memblock, they show up as RSRV_KERN,
-and blow up the scratch size when scratch scale is in use.
+Thus, add unmap_mapping_file(), which walks the VMA interval tree of the
+file's f_mapping under i_mmap_lock_read() and unmaps the pages of the
+VMAs selected by should_zap_file_vma(), using the same per-VMA zap as
+unmap_mapping_pages().  When f_mapping is the file's own inode mapping,
+every VMA is zapped, as unmap_mapping_range() does today.  When f_mapping
+was swapped, only the VMAs with vm_file set to that file are zapped, so
+callers do not need to tell the two apart.
 
-All hugetlb pages are marked RSRV_HUGETLB. Subtract their size from
-RSRV_KERN when calculating scratch sizes.
+HugeTLB VMAs are skipped with a WARN_ON_ONCE(), as zapping those takes
+i_mmap_rwsem for write in hugetlb_zap_begin() and would deadlock against
+the read lock held over the walk.
 
-Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 ---
- kernel/liveupdate/kexec_handover.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ include/linux/mm.h |  2 ++
+ mm/memory.c        | 48 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 50 insertions(+)
 
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 4c0756993b1f..1ccd7b7c59a1 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -742,19 +742,24 @@ early_param("kho_scratch", kho_parse_scratch_size);
- static void __init scratch_size_update(void)
- {
- 	/*
--	 * If fixed sizes are not provided via command line, calculate them
--	 * now.
-+	 * If fixed sizes are not provided via command line, calculate them now.
-+	 * Remove HugeTLB allocations from it because they never get allocated
-+	 * from scratch.
- 	 */
- 	if (scratch_scale) {
- 		phys_addr_t size;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 485df9c2dbdd..e882a03eaddd 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -3183,6 +3183,7 @@ extern int fixup_user_fault(struct mm_struct *mm,
+ 			    bool *unlocked);
+ void unmap_mapping_pages(struct address_space *mapping,
+ 		pgoff_t start, pgoff_t nr, bool even_cows);
++void unmap_mapping_file(struct file *file);
+ void unmap_mapping_range(struct address_space *mapping,
+ 		loff_t const holebegin, loff_t const holelen, int even_cows);
+ #else
+@@ -3203,6 +3204,7 @@ static inline int fixup_user_fault(struct mm_struct *mm, unsigned long address,
+ }
+ static inline void unmap_mapping_pages(struct address_space *mapping,
+ 		pgoff_t start, pgoff_t nr, bool even_cows) { }
++static inline void unmap_mapping_file(struct file *file) { }
+ static inline void unmap_mapping_range(struct address_space *mapping,
+ 		loff_t const holebegin, loff_t const holelen, int even_cows) { }
+ #endif
+diff --git a/mm/memory.c b/mm/memory.c
+index ff338c2abe92..4a09d7b6aa6b 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4423,6 +4423,54 @@ void unmap_mapping_pages(struct address_space *mapping, pgoff_t start,
+ }
+ EXPORT_SYMBOL_GPL(unmap_mapping_pages);
  
- 		size = memblock_reserved_kern_size(ARCH_LOW_ADDRESS_LIMIT,
- 						   NUMA_NO_NODE);
-+		size -= memblock_reserved_hugetlb_size(ARCH_LOW_ADDRESS_LIMIT,
-+						       NUMA_NO_NODE);
- 		size = size * scratch_scale / 100;
- 		scratch_size_lowmem = size;
- 
- 		size = memblock_reserved_kern_size(MEMBLOCK_ALLOC_ANYWHERE,
- 						   NUMA_NO_NODE);
-+		size -= memblock_reserved_hugetlb_size(MEMBLOCK_ALLOC_ANYWHERE,
-+						       NUMA_NO_NODE);
- 		size = size * scratch_scale / 100 - scratch_size_lowmem;
- 		scratch_size_global = size;
- 	}
-@@ -774,6 +779,9 @@ static phys_addr_t __init scratch_size_node(int nid)
- 	if (scratch_scale) {
- 		size = memblock_reserved_kern_size(MEMBLOCK_ALLOC_ANYWHERE,
- 						   nid);
-+		/* Do not count HugeTLB pages. */
-+		size -= memblock_reserved_hugetlb_size(MEMBLOCK_ALLOC_ANYWHERE,
-+						       nid);
- 		size = size * scratch_scale / 100;
- 	} else {
- 		size = scratch_size_pernode;
++static inline bool should_zap_file_vma(struct file *file,
++				       struct vm_area_struct *vma)
++{
++	/* On the file's own inode mapping, zap every VMA */
++	if (file->f_mapping == file_inode(file)->i_mapping)
++		return true;
++
++	/* A swapped mapping also holds VMAs of unrelated files, zap only ours */
++	return vma->vm_file == file;
++}
++
++/**
++ * unmap_mapping_file() - Unmap folios from all mmaps of a file.
++ * @file: The file to unmap.
++ *
++ * Unmap the folios of @file from every process that has them mapped.
++ *
++ * If f_mapping is the file's own inode mapping, they are unmapped
++ * from every VMA on that mapping, as unmap_mapping_range() would do.
++ *
++ * However, if f_mapping was swapped to a different address space at
++ * open time, only the VMAs with vm_file set to @file are considered,
++ * since that address space also holds mappings of unrelated files.
++ *
++ * Must not be used on HugeTLB files.  HugeTLB VMAs are skipped with
++ * a warning.
++ */
++void unmap_mapping_file(struct file *file)
++{
++	struct address_space *mapping = file->f_mapping;
++	struct vm_area_struct *vma;
++
++	i_mmap_lock_read(mapping);
++	if (unlikely(mapping_mapped(mapping))) {
++		vma_interval_tree_foreach(vma, &mapping->i_mmap, 0, ULONG_MAX) {
++			cond_resched();
++
++			if (!should_zap_file_vma(file, vma))
++				continue;
++			/* Zapping HugeTLB VMAs needs i_mmap_rwsem held for write */
++			if (WARN_ON_ONCE(is_vm_hugetlb_page(vma)))
++				continue;
++			zap_vma(vma);
++		}
++	}
++	i_mmap_unlock_read(mapping);
++}
++
+ /**
+  * unmap_mapping_range - unmap the portion of all mmaps in the specified
+  * address_space corresponding to the specified byte range in the underlying
 -- 
-2.55.0.229.g6434b31f56-goog
+2.55.0
 
 
