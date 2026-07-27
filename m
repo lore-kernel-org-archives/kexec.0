@@ -4,92 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9E78DC531C9
-	for <kexec@archiver.kernel.org>; Sun, 26 Jul 2026 18:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1CD78C53209
+	for <kexec@archiver.kernel.org>; Mon, 27 Jul 2026 00:41:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=bajTzRfqbEOMEZh0AynaaPxjycs9nvGrQz4Q0pmWNeM=; b=iXVkrIfiwAb7TZUBna2DXljqpl
-	OOIy1ZEGIC1EuL5foggC7aN4sVy5KhCJ/PXmH8uxW4QYRQ0Kp5g8152gQsPyQkyiyf37YEeEPMdj4
-	Fq06J8PajfsyceyJ7LYn2QXqpVK74TtKuD5OptuSST95118YbFbVoy9n9ddDT2RNRwTbik6KpSg3a
-	AHbu9rgqUbEFYjxtVdYrUdsdH9pEa8BoOQrTQKOiIPakpaBKGKGZPisdCUw3CyaMVIcHdwtV129hp
-	VHXLVMxIYePVLdveu2ehXnFMiRav28u565OdWy4o6Z7va3O+UZhrZgwTkFo4ZUcUIXJIsthGu0Znt
-	HHj8e8pA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=rj5ZR/j8gEE2Zz++PWd2qbirX2cZs2l8PGm6xJNCOE4=; b=p3xgFdTGA/3apSq/XbYxBWWH4X
+	YGhYC+nkQA4DdMqWI7KYahDztHyj0sUQee9s0z8Ve19H5+470Syr9paApsomk9VIjLbpn6BadSsnb
+	51BBQsGZ8tW/O2MayEr7EonkC5aujeOSwLL6KZMDMYMRmiat6o1JTlCDyK1SnR7kTDZOmJb/09jjP
+	gPauM+Go2xTbLouu4RmN4FJe6wZ1ExDiPSKTls7XG8PMYvL1z2zhj0t5oprbizg7coiT3jOLzbHXZ
+	Pq7cIdUQZyVGOTj+3QILu8IREHi7YYCghILtoyBwDiaKNvsl7k1uhb7qpv4Xw6mTbdskZ5SBM3gGA
+	fHjSyqRg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wo3h8-00000001Uwx-2fvj;
-	Sun, 26 Jul 2026 18:35:26 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wo9PO-00000001kRv-32z7;
+	Mon, 27 Jul 2026 00:41:30 +0000
+Received: from out-180.mta0.migadu.com ([91.218.175.180])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wo3h7-00000001Uwo-2PrN;
-	Sun, 26 Jul 2026 18:35:25 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 84FEB60A6F;
-	Sun, 26 Jul 2026 18:35:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 675F21F00A3A;
-	Sun, 26 Jul 2026 18:35:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785090924;
-	bh=bajTzRfqbEOMEZh0AynaaPxjycs9nvGrQz4Q0pmWNeM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=fce73Hj5N+/AzPrSShZX+VlGeVnIjeqGBQFx/3d4zgTqVdX+KL6PdAV9JBO/LKN7V
-	 HReUjnZVtZ9JQXutwLewQ1zx3iUlv8TwPz/u3p6Az9Rp+NuJnudiAcd+kRjnhv/X2J
-	 t5xxpGmgEqqQHKYsFCCSwMoAztyeUlDskUyad5obMVRhbLht1tSJ7Wc3jUS6UEpNLF
-	 SFCnMSgufbby15MVAhEqeRKEAjDB7Ipv7BuUEotN7+Yp5ET15PKPpNPpqi93ToD4qo
-	 jGM+bOzTvWFYpe8/DZw3bUN7HEgpj/0qkfiUBpQJ3odDQbT5yW1A5YT49kCLQRc6c6
-	 LBd5i2UTCn3GA==
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 8399EF40084;
-	Sun, 26 Jul 2026 14:35:22 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Sun, 26 Jul 2026 14:35:22 -0400
-X-ME-Sender: <xms:alNmauwlsCe0_RYCAM-Aw23KOu13fgJkWnWjQ6YiY6741eGcvri1iA>
-    <xme:alNmatYvxphwZeqnfmPCHo5UvnOf_1H3HNBwz1b347VPY_Jv08o-Scv1TRDxoxg3M
-    ayr8OuOOeJr-ZvwJ4sQDGqxK6uHep00vqiG95Ax6xSxfPfocQtwVKI>
-X-ME-Received: <xmr:alNmatwz5eyJ1qzQsW5hif-xKaVqxnF3CaNnKZZrP1TmmRNJGUwgIY1FH7WOrg>
-X-ME-Proxy-Cause: dmFkZTG0EtMps4K7/E77adivV7MLv/F4vqy+iYJ5InaxdmJRYEik2jKa1rYpVtZnOdebxQ
-    SXIlXAaWVJgfp/tPj5wNe+YwQOIRA3SDq5+iadpdhUxiJeZkK1C10QzRW8JfZTm/EBDpn6
-    UzNjVNWszpBmZh5SYPfxQ5md0w+Fi3DlaEz/huniQkb2iwl68tpEyJA5P13SXw7JaiLRWi
-    PeT8lZqONfwPBGo5WIadhRrwtW7gI89J2/nzKwuuRcEPfcF3MvqoI/MUwr/ZAgNK7mjvbh
-    0NlA4cJsxkg61OZocgbbAbaiKgCsHS5spNdylzzhuk2DGr1uYmtMN2D1XDI7GrXHpxUMlS
-    vz8sF1e8okDfSs/+xdJ1dPmNPyhO/PQW+FNkBr6cu/TuYQcEQfi3ORC39LTnUC4KmZnFb1
-    wkew+Aj1Ycs2wtSnCBA77qOOD2btaMWnjyJoRKaqyUTLWAL5NKVkSl/sKVP/dlm27qznsU
-    gK0b4ykKUzA5uG+nm/uYG3LgJOq6wdlTEMUqBnJpagMKsH/sUlS/Ltsr/XkLuG7E+CNwgt
-    YbKZnRDr+EQ+1xoKOup25xkv8ndAnZaAwCL2YxVOu0ZxTFvmA4gOKaBg4vLQHJcSMM0pLr
-    ZKNPf425Z2RgkFFA9n36/4cnclroQALPVUm6qkzQ8jMpqOgFWrI/EtvoqOUg
-X-ME-Proxy: <xmx:alNmapE7IXDpJ59sCfR_DCkz2i74J8chbvs9hdAbqVeK_64Ev1zPTg>
-    <xmx:alNmaurQM3zGgLvmYoVJCECIs23xucuT2TeJn_rJlX_5mXayu8yTug>
-    <xmx:alNmaiwTBfE0O1llOvWvcisrsTeED7Uvzge9vfFw1Gqi7jbrLdfgww>
-    <xmx:alNmaptjJM3bVHNpxLrHCHB2GhKkvGnbLF2ubKTRxV6E4DyeZVZ5KQ>
-    <xmx:alNman5AeBdwDeXwYf1LMDLoCufw0EBFjXpBKAY-AOZc8cnTOUlrSaa9>
-Feedback-ID: i10464835:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 26 Jul 2026 14:35:21 -0400 (EDT)
-Date: Sun, 26 Jul 2026 19:35:20 +0100
-From: Kiryl Shutsemau <kas@kernel.org>
-To: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, 
-	James Morse <james.morse@arm.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Marc Zyngier <maz@kernel.org>, Doug Anderson <dianders@chromium.org>, 
-	Petr Mladek <pmladek@suse.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
-	Puranjay Mohan <puranjay@kernel.org>, Usama Arif <usama.arif@linux.dev>, 
-	Breno Leitao <leitao@debian.org>, Julien Thierry <julien.thierry.kdev@gmail.com>, 
-	Lecopzer Chen <lecopzer@gmail.com>, Sumit Garg <sumit.garg@kernel.org>, kernel-team@meta.com, 
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/4] arm64: cross-CPU NMI via SDEI
-Message-ID: <amZRtS2Lu1epc0S4@thinkstation>
-References: <cover.1782744912.git.kas@kernel.org>
- <ak_IRHwd02EjWMf8@thinkstation>
- <amYR5VWHWC1WdFXc@willie-the-truck>
+	id 1wo9PF-00000001kRP-0gSW
+	for kexec@lists.infradead.org;
+	Mon, 27 Jul 2026 00:41:26 +0000
+Message-ID: <c3440ed3-0fc2-44e5-a05a-922344eb34d1@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1785112875;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rj5ZR/j8gEE2Zz++PWd2qbirX2cZs2l8PGm6xJNCOE4=;
+	b=KRlyVlYp6pYFsYFATRhclKvDqnjexSHonIihZ6tDf/jclGw9yBI7LDiDqDB6H9CGK5Dm3B
+	seaLfFNRROnf0/I7jkQTkIWOdIsxfFIvg7/CzmzUPkMbpHzCb4UseN4LJcTYAwNLf97N3c
+	K2CXArCY6yj1KdwVOp0kqWDJzF83tw0=
+Date: Sun, 26 Jul 2026 17:40:54 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <amYR5VWHWC1WdFXc@willie-the-truck>
+Subject: Re: [PATCH v5 17/20] vfio: selftests: Add
+ vfio_pci_liveupdate_kexec_test
+To: Vipin Sharma <vipinsh@google.com>, kexec@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvm@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Cc: ajayachandra@nvidia.com, alex@shazbot.org, amastro@fb.com,
+ ankita@nvidia.com, apopple@nvidia.com, bhelgaas@google.com,
+ chrisl@kernel.org, christian.koenig@amd.com, corbet@lwn.net,
+ dmatlack@google.com, graf@amazon.com, jacob.pan@linux.microsoft.com,
+ jgg@nvidia.com, jgg@ziepe.ca, jrhilke@google.com, julianr@linux.ibm.com,
+ kees@kernel.org, kevin.tian@intel.com, leon@kernel.org, leonro@nvidia.com,
+ lukas@wunner.de, mattev@meta.com, michal.winiarski@intel.com,
+ parav@nvidia.com, pasha.tatashin@soleen.com, praan@google.com,
+ pratyush@kernel.org, rananta@google.com, rientjes@google.com,
+ rodrigo.vivi@intel.com, rppt@kernel.org, saeedm@nvidia.com,
+ schnelle@linux.ibm.com, skhan@linuxfoundation.org, skhawaja@google.com,
+ vivek.kasireddy@intel.com, witu@nvidia.com, yi.l.liu@intel.com
+References: <20260714151505.3466855-1-vipinsh@google.com>
+ <20260714151505.3466855-18-vipinsh@google.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20260714151505.3466855-18-vipinsh@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260726_174123_704763_2D05D3EC 
+X-CRM114-Status: GOOD (  28.78  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,52 +82,220 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, Jul 26, 2026 at 02:55:49PM +0100, Will Deacon wrote:
-> On Thu, Jul 09, 2026 at 05:16:37PM +0100, Kiryl Shutsemau wrote:
-> > On Mon, Jun 29, 2026 at 04:07:14PM +0100, Kiryl Shutsemau wrote:
-> > > From: "Kiryl Shutsemau (Meta)" <kas@kernel.org>
-> > > 
-> > > A class of debug/observability features needs to interrupt a CPU that has
-> > > its interrupts locally masked: the all-CPU backtrace behind sysrq-l /
-> > > RCU-stall / hung-task / hard-lockup dumps, and crash_smp_send_stop()
-> > > capturing a stuck CPU's state into the vmcore. On arm64 these need a
-> > > mechanism that reaches a CPU spinning with DAIF masked, which a normal IPI
-> > > cannot.
-> > 
-> > Gentle ping. Any feedback?
-> > 
-> > I'm looking forward to finding an upstreamable solution to the problem.
-> 
-> This is all pretty small, self-contained and it's useful to you, so I'm
-> inclined to merge it.
 
-Thanks!
+在 2026/7/14 8:15, Vipin Sharma 写道:
+> Add a selftest to exercise preserving a vfio-pci device across a Live
+> Update. For now the test is extremely simple and just verifies that the
+> device file can be preserved and retrieved. In the future this test will
+> be extended to verify more parts about device preservation as they are
+> implemented.
+>
+> This test is added to TEST_GEN_PROGS_EXTENDED since it must be run
+> manually along with a kexec.
+>
+> To run this test manually:
+>
+>   $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
+>   $ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test --stage 1 0000:00:04.0
+# ls /dev
+autofs           disk       iommu         mem     rtc0      tty10 tty21  
+tty32  tty43  tty54  tty8    ttyS18  ttyS29   uinput  vcs6   vcsu4      
+   virtio-ports
+block            dma_heap   kmsg          mqueue  sg0       tty11 tty22  
+tty33  tty44  tty55  tty9    ttyS19  ttyS3    urandom vcsa   vcsu5      
+   vport2p1
+bsg              dri        kvm           net     shm       tty12 tty23  
+tty34  tty45  tty56  ttyS0   ttyS2   ttyS30   usbmon0 vcsa1  vcsu6      
+   vsock
+btrfs-control    fd         liveupdate    null    snapshot  tty13 tty24  
+tty35  tty46  tty57  ttyS1   ttyS20  ttyS31   usbmon1 vcsa2  vda        
+   watchdog
+bus              full       log           nvram   snd       tty14 tty25  
+tty36  tty47  tty58  ttyS10  ttyS21  ttyS4    usbmon2 vcsa3  vda1        
+  watchdog0
+cdrom            fuse       loop-control  port    sr0       tty15 tty26  
+tty37  tty48  tty59  ttyS11  ttyS22  ttyS5    userfaultfd vcsa4  vda2    
+      zero
+char             hidraw0    lp0           ppp     stderr    tty16 tty27  
+tty38  tty49  tty6   ttyS12  ttyS23  ttyS6    vcs vcsa5  vda3         zram0
+console          hpet       lp1           ptmx    stdin     tty17 tty28  
+tty39  tty5   tty60  ttyS13  ttyS24  ttyS7    vcs1  vcsa6  vfio
+core             hugepages  lp2           pts     stdout    tty18 tty29  
+tty4   tty50  tty61  ttyS14  ttyS25  ttyS8    vcs2  vcsu   vga_arbiter
+cpu              hwrng      lp3           random  tty       tty19 tty3  
+  tty40  tty51  tty62  ttyS15  ttyS26  ttyS9    vcs3  vcsu1  vhci
+cpu_dma_latency  i2c-0      mapper        rfkill  tty0      tty2  tty30  
+tty41  tty52  tty63  ttyS16  ttyS27  udmabuf  vcs4  vcsu2  vhost-net
+cuse             input      mcelog        rtc     tty1      tty20 tty31  
+tty42  tty53  tty7   ttyS17  ttyS28  uhid     vcs5  vcsu3  vhost-vsock
 
-> However, the one vague concern I have is about the direction of SDEI in
-> the future. AFAIK, the TF-A implementation is known to have issues, it's
-> not supported at all by R-FA and I worry that the spec is going to fall
-> behind the architecture, particularly as FEAT_NMI becomes available.
-> 
-> So it would be good to understand what we're signing up to maintain here.
-> Kiryl, do you see an (eventual) migration over to FEAT_NMI, giving us a
-> path to deprecating SDEI altogether, or do you think the two will live
-> alongside each other for the forseeable future?
 
-Realistically, the foreseeable future.
+# tools/testing/selftests/vfio/scripts/setup.sh 0000:00:08.0
 
-FEAT_NMI is the endgame and a machine that has it needs none of this,
-but non-FEAT_NMI parts stay in fleets for many years, so I can't
-honestly give you a date for dropping SDEI.
++ echo "vfio-pci" > /sys/bus/pci/devices/0000:00:08.0/driver_override
++ echo "0000:00:08.0" > /sys/bus/pci/drivers/vfio-pci/bind
+tools/testing/selftests/vfio/scripts/lib.sh: line 9: echo: write error: 
+Invalid argument    <--- the error is here.
 
-While this change is pretty self-contained, I understand that SDEI infra
-maintenance can be a burden.
 
-Is there anything on the wider SDEI infrastructure that would lower the
-maintenance burden or keep it more out of your way -- consolidation,
-tighter isolation, docs, help carrying it? If there's work there that
-makes SDEI more palatable to keep while non-FEAT_NMI parts are in
-service, I'm glad to take it on.
+# lspci -vvv -s 0000:00:08.0
+
+00:08.0 Unclassified device [00ff]: Red Hat, Inc. QEMU PCI Test Device
+         Subsystem: Red Hat, Inc. QEMU Virtual Machine
+         Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- 
+ParErr- Stepping- SERR+ FastB2B- DisINTx-
+         Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+         Region 0: Memory at fea1f000 (32-bit, non-prefetchable) [size=4K]
+         Region 1: I/O ports at c000 [size=256]
+
+Hi, Vipin
+
+I worked with QEMU PCI Test Device. But the following error occur.
+
+"tools/testing/selftests/vfio/scripts/lib.sh: line 9: echo: write error: 
+Invalid argument"
+
+Is this a known problem?
+
+Thanks
+
+Yanjun.Zhu
+
+>
+>   $ kexec ...   # NOTE: Exact method will be distro-dependent
+>
+>   $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
+>   $ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test --stage 2 0000:00:04.0
+>
+> The second call to setup.sh is necessary because preserved devices are
+> not bound to a driver after Live Update. Such devices must be manually
+> bound by userspace after Live Update via driver_override.
+>
+> This test is considered passing if all commands exit with 0.
+>
+> Co-developed-by: David Matlack <dmatlack@google.com>
+> Signed-off-by: David Matlack <dmatlack@google.com>
+> Signed-off-by: Vipin Sharma <vipinsh@google.com>
+> ---
+>   tools/testing/selftests/vfio/Makefile         |  4 +
+>   .../vfio/vfio_pci_liveupdate_kexec_test.c     | 89 +++++++++++++++++++
+>   2 files changed, 93 insertions(+)
+>   create mode 100644 tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+>
+> diff --git a/tools/testing/selftests/vfio/Makefile b/tools/testing/selftests/vfio/Makefile
+> index 591f1a52c310..a2f0a459e1f4 100644
+> --- a/tools/testing/selftests/vfio/Makefile
+> +++ b/tools/testing/selftests/vfio/Makefile
+> @@ -15,6 +15,10 @@ TEST_GEN_PROGS += vfio_pci_driver_test
+>   TEST_GEN_PROGS += vfio_pci_sriov_uapi_test
+>   TEST_GEN_PROGS += vfio_pci_liveupdate_uapi_test
+>   
+> +# This test must be run manually since it requires the user/automation to
+> +# perform a kexec during the test.
+> +TEST_GEN_PROGS_EXTENDED += vfio_pci_liveupdate_kexec_test
+> +
+>   TEST_FILES += scripts/cleanup.sh
+>   TEST_FILES += scripts/lib.sh
+>   TEST_FILES += scripts/run.sh
+> diff --git a/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c b/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+> new file mode 100644
+> index 000000000000..15b3e3af91d1
+> --- /dev/null
+> +++ b/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+> @@ -0,0 +1,89 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +
+> +#include <libliveupdate.h>
+> +#include <libvfio.h>
+> +
+> +static const char *device_bdf;
+> +
+> +static char state_session[LIVEUPDATE_SESSION_NAME_LENGTH];
+> +static char device_session[LIVEUPDATE_SESSION_NAME_LENGTH];
+> +
+> +enum {
+> +	STATE_TOKEN,
+> +	DEVICE_TOKEN,
+> +};
+> +
+> +static void before_kexec(int luo_fd)
+> +{
+> +	struct vfio_pci_device *device;
+> +	struct iommu *iommu;
+> +	int session_fd;
+> +	int ret;
+> +
+> +	iommu = iommu_init("iommufd");
+> +	device = vfio_pci_device_init(device_bdf, iommu);
+> +
+> +	create_state_file(luo_fd, state_session, STATE_TOKEN, /*next_stage=*/2);
+> +
+> +	session_fd = luo_create_session(luo_fd, device_session);
+> +	VFIO_ASSERT_GE(session_fd, 0);
+> +
+> +	printf("Preserving device in session\n");
+> +	ret = luo_session_preserve_fd(session_fd, device->fd, DEVICE_TOKEN);
+> +	VFIO_ASSERT_EQ(ret, 0);
+> +
+> +	close(luo_fd);
+> +	daemonize_and_wait();
+> +}
+> +
+> +static void after_kexec(int luo_fd, int state_session_fd)
+> +{
+> +	struct vfio_pci_device *device;
+> +	struct iommu *iommu;
+> +	int session_fd;
+> +	int device_fd;
+> +	int stage;
+> +
+> +	restore_and_read_stage(state_session_fd, STATE_TOKEN, &stage);
+> +	VFIO_ASSERT_EQ(stage, 2);
+> +
+> +	session_fd = luo_retrieve_session(luo_fd, device_session);
+> +	VFIO_ASSERT_GE(session_fd, 0);
+> +
+> +	printf("Finishing the session before retrieving the device (should fail)\n");
+> +	VFIO_ASSERT_NE(luo_session_finish(session_fd), 0);
+> +
+> +	printf("Retrieving the device FD from LUO\n");
+> +	device_fd = luo_session_retrieve_fd(session_fd, DEVICE_TOKEN);
+> +	VFIO_ASSERT_GE(device_fd, 0);
+> +
+> +	printf("Finishing the session before binding to iommufd (should fail)\n");
+> +	VFIO_ASSERT_NE(luo_session_finish(session_fd), 0);
+> +
+> +	printf("Binding the device to an iommufd and setting it up\n");
+> +	iommu = iommu_init("iommufd");
+> +
+> +	/*
+> +	 * This will invoke various ioctls on device_fd such as
+> +	 * VFIO_DEVICE_GET_INFO. So this is a decent sanity test
+> +	 * that LUO actually handed us back a valid VFIO device
+> +	 * file and not something else.
+> +	 */
+> +	device = __vfio_pci_device_init(device_bdf, iommu, device_fd);
+> +
+> +	printf("Finishing the session\n");
+> +	VFIO_ASSERT_EQ(luo_session_finish(session_fd), 0);
+> +
+> +	vfio_pci_device_cleanup(device);
+> +	iommu_cleanup(iommu);
+> +}
+> +
+> +int main(int argc, char *argv[])
+> +{
+> +	device_bdf = vfio_selftests_get_bdf(&argc, argv);
+> +
+> +	sprintf(device_session, "device-%s", device_bdf);
+> +	sprintf(state_session, "state-%s", device_bdf);
+> +
+> +	return luo_test(argc, argv, state_session, before_kexec, after_kexec);
+> +}
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Best Regards,
+Yanjun.Zhu
+
 
