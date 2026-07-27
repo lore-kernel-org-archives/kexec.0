@@ -4,78 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B1853C53209
-	for <kexec@archiver.kernel.org>; Mon, 27 Jul 2026 17:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D1F1EC53219
+	for <kexec@archiver.kernel.org>; Mon, 27 Jul 2026 19:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=HkPvk2eUGVnaH519Z4bYiGg7FI/KZRoqTARHHR55Fmw=; b=ukseQZr1h3vLH2IAvOYpWSWsGJ
-	r0qA6l5ildQkotqyLebN4z5mUqSXLMD4DkdDcJCGHJ/qEL0y70cV1/cuA/wpPcpCr0ypxKZbk3td+
-	+MLNIzN4dG8Et0egarzCtDyA34Gg1QCIUP9pXYDx7xGZo6WLNLoSQ9ZklkVg7pnc8ACjMUU/niC72
-	gHKTEX+khJnqNysCArCior+8uNA6I5OpotH6TBTE/yVtYBNLeYEVl+rWhsz/9darFernX8ZTNuq+l
-	OZxrMEaanu9ykp+xpr5Qo3qOJRg0TUr5wHIJFW1QFARKoTcbXlWnbtZjj5u5qLdit7ifPZO2dV8m8
-	RdaZW2HQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:List-Owner;
+	bh=sKZJ5OViBbK3ZJT1F6pApbVMnloDUEEXkiEo8E43BZo=; b=aBq6OX3W7XK/R/0TLTxZkZ3DWr
+	GNc8N0UPq5rTIESxY3nOJ08+fBsfRx1rVcQPGwh2RfZvUxu9I4LyP07yH30DMuDneF7rjsme8uquR
+	YrrkQvMxV0ch2GFRvQcNbUEtlbFfmZ0yT5pItqGFwKtIk2WA6bLeQwGc8Q0d6tCAjLIQItWMXB9tn
+	E2iZHjLGxkez6BUKATkgf277zIY0B6PavwW1GBzPuRzEW/bIPnVpCvxDLOpZrzOVNGTqpoHxrJbL+
+	UUPuCUpXhHVoC5mJUYNLmLtSHaejZsDi4Y1M6GPAClvazyzQp7OJwO8TWE+1CR0lwf9LNtwivv1ee
+	OkQdzuCA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1woPVh-00000003aeG-1OtO;
-	Mon, 27 Jul 2026 17:53:05 +0000
-Received: from mail-pf1-x431.google.com ([2607:f8b0:4864:20::431])
+	id 1woQye-00000003lEx-2TIg;
+	Mon, 27 Jul 2026 19:27:04 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1woPVf-00000003adW-1MgE
+	id 1woQyd-00000003lEq-1ixl
 	for kexec@lists.infradead.org;
-	Mon, 27 Jul 2026 17:53:04 +0000
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-84a2c90e383so148328b3a.0
-        for <kexec@lists.infradead.org>; Mon, 27 Jul 2026 10:53:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785174782; x=1785779582; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=HkPvk2eUGVnaH519Z4bYiGg7FI/KZRoqTARHHR55Fmw=;
-        b=Zhn+6+u+bN3crsasg0BnCAw01pC7paoessX0E6ot8FQadTmj2ir4QeuA/AslroJOWV
-         kpmYjDk5rqADXAN1zcamhbOQyXl/QYdkhZdotRHGY6c5+on5Ftgplq+8Z0k0xv2PWcdO
-         wK7vU7CseM3HY+fPchzCckJf9/S35FGsr65gGjwNgYv849Ty1+lg4odMIhbPFAi2lSBC
-         IJNNvB7tjhxZKiM+Lrdj8m13Z+xZqmtW8+flA5cMe/Zxkx3rFFVZzrTXXnvrsenv88UV
-         cg4TDZP5rvKRiTSo9qwdBTvgWjbKws562spNoYuohFJCZ8vyLjqqfVyyMf9qK7QIJoGM
-         zSvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785174782; x=1785779582;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=HkPvk2eUGVnaH519Z4bYiGg7FI/KZRoqTARHHR55Fmw=;
-        b=h2JWO4sGKUwKnbLe8fpKjzH3rtNgaWrcNHrFhyDCOxYIrSpHaDFTK1SgJoV6O/zgkT
-         eauJKacuH8NMGmrlnI92LJdrITfoa2qCx2hrRwDRFa64AJM+B7ZO5vTIinFx4tMkE1kZ
-         yRdi7zY06dgAIesj6n2pY8gi7lpI/zrsl7rHultj30ypIoI6M7RNswNM4Z4J0me3fM9D
-         WO/VVlFLGRjQ2wDUNmaAV750zDCzsvhIT0F9Pd7EZ9HTDBgA2+DsVP33VYQSqO2p4R32
-         FeVbIYJ2I0n813KEQTFHbmnRE7rxcNlsrANOGkDoP1CzXECgh+fE9kRgFZLmBcEwrmyv
-         3Izg==
-X-Gm-Message-State: AOJu0YyknTlyG/ZvV79KxUkVuVS+9zTynNxNLqvikXCrSA6IR/my9JDN
-	mOkFZ7p4xImuVKkCnRu+F5Bi783HjVLy+YuBjb2FFRDBQISdg6ralo4Ck/sqWy+RWnlnTxPVKbt
-	LxuN4gA==
-X-Gm-Gg: AR+sD13ogKuUDwUT1XZyzGMQ5rFScoJrUJ3QUrhYwtD8X8T3gAkRMdE6Lk7IOkQH+YZ
-	MskZ0oTwrONisuPKZwiGZjUJnADf2I3GzVtr4SsUsd0B4M4blyAxQYVnINSUmrRI1l259+iN7q1
-	ZEt2BWlFVUVTQ5nMNqWycj22DC0lHCzzOBGcP1VrDd+DEPvdWGrxA1R4WgubwTHh+pxmY/+xffa
-	vePIJrSr/wRnJtH6vVqNUGL85+aUTWJLfJiOVWeTpL+3l6MEUyJ6YgZGxOUbqz7xP4YtAoJOIj4
-	5UkL0GJJo64uH481cXLFtrMNWSDCJZFWTaqGCwHl81ObvCBLblyWVq13E16Q5UwddthnTQwbbL0
-	5qf6oU5XREnDM23j/dXhUtq+U1cw8hAGifYWsNB4lwsT5EiUJD807mjEDfMnY5pv3Fx7NolmE+b
-	epCBvIgrnYM/u52z4OwF8+iOXTKdI2SrFpGFOvlxQm
-X-Received: by 2002:a05:6a00:aa06:b0:84a:65fd:950a with SMTP id d2e1a72fcca58-84e8d3ab7b9mr351943b3a.29.1785174781958;
-        Mon, 27 Jul 2026 10:53:01 -0700 (PDT)
-Received: from google.com (56.149.168.34.bc.googleusercontent.com. [34.168.149.56])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84e532590bdsm3400120b3a.3.2026.07.27.10.53.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2026 10:53:01 -0700 (PDT)
-Date: Mon, 27 Jul 2026 17:52:57 +0000
-From: David Matlack <dmatlack@google.com>
-To: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	Mon, 27 Jul 2026 19:27:03 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 2B69A40164;
+	Mon, 27 Jul 2026 19:27:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D36551F000E9;
+	Mon, 27 Jul 2026 19:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785180423;
+	bh=sKZJ5OViBbK3ZJT1F6pApbVMnloDUEEXkiEo8E43BZo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To;
+	b=IzYilg/M8OJawVypIyI6yqeauwbZiYHFTE/2k3KHuRHUxMx0FStRiRDIYwLSXuz+j
+	 05E1VSdnB8lEC6Dizt4VUGoyC5z/mveyiibWsgRdAlvKKIkj48/ah7F6UT2aCwtI+P
+	 M7K/wl4ZU3s2ty47OdvEC9FdpqZZooqnD/YPe5dYLEcIqXgPRe9z+IRv0OGOjxpiCI
+	 Jkkv2KqNrNrHHFyKWrUSu4jKNcR9MN7OKjAKqyH6336kbZXEsU0FdJisLbzQ98yFFp
+	 BOxeFggnvJIK1ABfQTx2tpoMDd3ziP5gU/FGGW5Hjp9V/egQQBr6nc61xzYH0DhpGX
+	 yRf6bic++oydw==
+Date: Mon, 27 Jul 2026 14:27:01 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: David Matlack <dmatlack@google.com>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-pci@vger.kernel.org
-Cc: Adithya Jayachandran <ajayachandra@nvidia.com>,
+	linux-pci@vger.kernel.org,
+	Adithya Jayachandran <ajayachandra@nvidia.com>,
 	Alexander Graf <graf@amazon.com>,
 	Alex Williamson <alex@shazbot.org>,
 	Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>,
@@ -93,17 +66,14 @@ Cc: Adithya Jayachandran <ajayachandra@nvidia.com>,
 	Shuah Khan <skhan@linuxfoundation.org>,
 	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>,
 	Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v7 00/12] PCI: liveupdate: PCI core support for Live
- Update
-Message-ID: <amea-VLTnrO_WxnW@google.com>
-References: <20260710212616.1351130-1-dmatlack@google.com>
+Subject: Re: [PATCH v7 01/12] PCI: liveupdate: Set up FLB handler for the PCI
+ core
+Message-ID: <20260727192701.GA1250952@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260710212616.1351130-1-dmatlack@google.com>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260727_105303_368505_3CE89676 
-X-CRM114-Status: GOOD (  20.04  )
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALzav=cRhFW+zNX6xCnhjJXXDHgyhOxuoX26FG2Ve8+wMccypg@mail.gmail.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -118,89 +88,53 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2026-07-10 09:26 PM, David Matlack wrote:
-> This series can be found on GitHub:
+On Mon, Jul 27, 2026 at 10:40:52AM -0700, David Matlack wrote:
+> On Thu, Jul 23, 2026 at 3:21 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Fri, Jul 10, 2026 at 09:26:04PM +0000, David Matlack wrote:
+> > > Set up a File-Lifecycle-Bound (FLB) handler for the PCI core to enable
+> > > it to participate in the preservation of PCI devices across Live Update.
+> > > Essentially, this commit enables the PCI core to allocate a struct
+> > > (struct pci_ser) and preserve it across a Live Update whenever at least
+> > > one device is preserved.
+> > > ...
+> >
+> > > +#define pr_fmt(fmt) "PCI: " KBUILD_BASENAME ": " fmt
+> >
+> > Is KBUILD_BASENAME buying us something important here?  Just from
+> > code-reading perspective, it's more work because without some digging
+> > I don't know what it will end up looking like in a dmesg log.
+> >
+> > > +static void pci_flb_unpreserve(struct liveupdate_flb_op_args *args)
+> > > +{
+> > > +     struct pci_flb_outgoing *outgoing = args->obj;
+> > > +
+> > > +     WARN_ON(outgoing->ser->nr_devices);
+> > > +     kho_block_set_destroy(&outgoing->block_set);
+> > > +     kho_unpreserve_free(outgoing->ser);
+> > > +     kfree(outgoing);
+> > > +     pr_debug("Unpreserved struct pci_ser\n");
+> >
+> > If this pr_debug() is useful, maybe it should include an address and
+> > there should be a corresponding pr_debug() on the preserve side so we
+> > could find things in a crashdump?
+> >
+> > > +int pci_liveupdate_register_flb(struct liveupdate_file_handler *fh)
+> > > +{
+> > > +     pr_debug("Registering file handler \"%s\"\n", fh->compatible);
+> >
+> > Is fh->compatible enough to identify a driver?
 > 
->   https://github.com/dmatlack/linux/tree/liveupdate/pci/base/v7
+> Not necessarily. VFIO could theoretically have one file handler that
+> handles all the vfio-pci variant drivers. But I suspect we'll end up
+> with 1 fh per driver in practice.
 > 
-> This series introduces initial support in the PCI core for Live Update,
-> enabling drivers to preserve PCI devices across a kexec-based kernel
-> update without interrupting the device. This functionality is critical
-> for minimizing downtime in environments where PCI devices (e.g., those
-> assigned to VMs via VFIO) must continue operating or maintain state
-> across a host kernel upgrade.
-> 
-> Specifically, this series allows preserved PCI devices to perform
-> uninterrupted memory transactions (DMA) to/from system memory across a
-> Live Update. These devices can be behind a bridge but must not be VFs.
-> Support for P2P and VF preservation will be addressed in future series.
+> Are you thinking about how we can ensure devices are bound to
+> compatible drivers after Live Update?
 
-> David Matlack (12):
->   PCI: liveupdate: Set up FLB handler for the PCI core
->   PCI: liveupdate: Track outgoing preserved PCI devices
->   PCI: liveupdate: Track incoming preserved PCI devices
->   PCI: liveupdate: Document driver binding responsibilities
->   PCI: liveupdate: Keep bus numbers constant during Live Update
->   PCI: liveupdate: Auto-preserve upstream bridges across Live Update
->   PCI: Refactor matching logic for pci_dev_acs_ops
->   PCI: liveupdate: Inherit ACS flags in incoming preserved devices
->   PCI: liveupdate: Inherit ARI Forwarding Enable on preserved bridges
->   PCI: liveupdate: Freeze preservation status during shutdown
->   PCI: liveupdate: Do not disable bus mastering on preserved devices
->     during kexec
->   Documentation: PCI: Add documentation for Live Update
-> 
->  Documentation/PCI/index.rst                   |   1 +
->  Documentation/PCI/liveupdate.rst              |  29 +
->  .../admin-guide/kernel-parameters.txt         |   6 +-
->  Documentation/core-api/liveupdate.rst         |   5 +
->  MAINTAINERS                                   |  15 +
->  drivers/pci/Kconfig                           |  15 +
->  drivers/pci/Makefile                          |   1 +
->  drivers/pci/liveupdate.c                      | 910 ++++++++++++++++++
->  drivers/pci/liveupdate.h                      |  68 ++
->  drivers/pci/pci-driver.c                      |   9 +-
->  drivers/pci/pci.c                             |  14 +-
->  drivers/pci/pci.h                             |   5 +
->  drivers/pci/probe.c                           |  22 +-
->  drivers/pci/quirks.c                          |  58 +-
->  include/linux/kho/abi/pci.h                   |  59 ++
->  include/linux/pci.h                           |   4 +
->  include/linux/pci_liveupdate.h                |  77 ++
->  17 files changed, 1260 insertions(+), 38 deletions(-)
->  create mode 100644 Documentation/PCI/liveupdate.rst
->  create mode 100644 drivers/pci/liveupdate.c
->  create mode 100644 drivers/pci/liveupdate.h
->  create mode 100644 include/linux/kho/abi/pci.h
->  create mode 100644 include/linux/pci_liveupdate.h
-
-Bjorn,
-
-Do you have a preference of whether to merge this series through
-liveupdate.git or pci.git once it's ready? (Mike Rapoport asked if we
-could make a decision on the merge plan.)
-
-I am leaning toward liveupdate.git:
-
- 1. There are some LUO core changes around how FLBs are refcounted in
-    the next branch of liveupdate.git that this series depends on.
-
- 2. We had previously agreed that the files covered by the PCI LIVE
-    UPDATE maintainer entry would be merged through the liveupdate.git
-    tree (which is the majority of this series), so this would be
-    following that process.
-
-    PCI LIVE UPDATE
-    ...
-    T:     git git://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
-    F:     Documentation/PCI/liveupdate.rst
-    F:     drivers/pci/liveupdate.c
-    F:     drivers/pci/liveupdate.h
-    F:     include/linux/kho/abi/pci.h
-    F:     include/linux/pci_liveupdate.h
-
-But if you prefer landing the initial series in pci.git I think we can
-expose a stable branch in liveupdate.git to handle (1).
-
-What would be your preference?
+No, I don't understand enough to worry about things like that.  I'm
+just wondering if there's enough info in the message to be useful,
+since fh->compatible is the only text that's variable.  Same reason I
+asked about the "Unpreserved struct pci_ser" message above.  E.g., if
+a user reports these messages, will we need more information to debug
+it, or is the message itself enough?
 
