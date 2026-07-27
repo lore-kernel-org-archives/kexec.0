@@ -4,117 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2D217C531D0
-	for <kexec@archiver.kernel.org>; Mon, 27 Jul 2026 16:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 66D30C531D0
+	for <kexec@archiver.kernel.org>; Mon, 27 Jul 2026 16:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=NwZp8vrcS5zNu4NMBMc7+FtncQiyjKLq2JUaAvCeOIM=; b=0/aVOOPNwLhec5YIbV1Jfo+Qxu
-	cvJXvcbsQkA8AlaeedePpt2ygB6rMkR2cwo+JBmWMLkMeQMCNPRpS+lvJJ74ufOn4LIsDBInMIumd
-	qZgsUY10SNvxSPNdfmxG4mWUhtNSbbgtAE3kBNZfU+KSx/75pdgIzlQbGZpbnwzvvjX9uaD5dgWl3
-	EnfoQcYhkQaSMaTexfF0JP/G8wJ8SAByiqYJyyYI7yp21EI0u5jMDIj280bcWEdslFCMo46bFhvVB
-	UcZGpbhg8IObQqyt44HIJ5OGRQq0AeklXmT425kG+nkHt/h0o88yxeHEO3XfXqfh3EoY8AbQPEjCz
-	xZSay01w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=enqkElDNV1Owv+2SV4yKkaNsZTjOn0C9Zf4KBCNwvYc=; b=Xplwpq6a9HP5wgQnFVeKmwyiVv
+	7o4apnwUoO/PNRTNBbnqWPw3zfUP7pTQAhUq1J/zcISMEOvv/0Xt9ygZd6Cwdy8ePCIu8DBUyTkBd
+	urxR7OwMwpHlD4P8KGv0i8tB/Lb4Re+wai8ri77U8Q7nN6cb/QfAlCBvtrIo0NwmgcIWAY2sCMKlg
+	6GUIkTomcrGv9h3SGJlFztGeqZkihLr8NIZu85OmNr9mSTFA1VeGcKkwN5VUvC/P+cJhlUKiw2Yog
+	McIGY2cKFThW2XEc4+pVPaLsxVJ4AGM5L7OSic8SU0lsDOw+zFJfa09P8w5yso05FjoOzUeJeVTAD
+	CXbbKIfA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1woOKt-00000003OWp-2AY2;
-	Mon, 27 Jul 2026 16:37:51 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1woOOw-00000003QTo-1OdL;
+	Mon, 27 Jul 2026 16:42:02 +0000
+Received: from mgamail.intel.com ([198.175.65.14])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1woOJa-00000003NsL-2QIa
+	id 1woOOu-00000003QT7-0DsG
 	for kexec@lists.infradead.org;
-	Mon, 27 Jul 2026 16:36:31 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id D52AC60008;
-	Mon, 27 Jul 2026 16:36:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFC261F00A3E;
-	Mon, 27 Jul 2026 16:36:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785170188;
-	bh=NwZp8vrcS5zNu4NMBMc7+FtncQiyjKLq2JUaAvCeOIM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=DHC5di3D1bGlMzcG7F1Nm23rfd1M/xEorCZ2zg2aJ4kfE3Ia7aVAOoCnNfdnUCb7u
-	 xvwTiIyUUZMVxSba/az3+UtCgzeobMK2K7uUXfMy+Fe5hcQ2pWc7ZdVLkHoR2yG5dr
-	 QmlOUpofMIT5FjH1AIflWD/OKts1pPW03Q58+kqfANSl6mi8WsYfNjhTk59EMDBkvD
-	 +A7BkHY1tQUPXQOU5XBIHE34ro+EVSnjYsSebzp4lUxOkDyhdHMm3ZUzOIMDbfMHw5
-	 Pox+sEHGUSM1J/dSayDMcF7wZTwhgGGS6E5ymM+SFqBfPru1/PKFg3nrka9Er++OoM
-	 dcORIFdnznoYA==
-Message-ID: <06ead85a-59ef-4c1b-8bb6-8eee5c6a00bd@kernel.org>
-Date: Mon, 27 Jul 2026 18:36:19 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] mm: Add unmap_mapping_file() helper
-To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
- Manivannan Sadhasivam <mani@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- "Liam R . Howlett" <liam@infradead.org>, Baoquan He <baoquan.he@linux.dev>,
- Pratyush Yadav <pratyush@kernel.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Jaroslav Kysela
- <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Lorenzo Stoakes <ljs@kernel.org>, Michal Hocko <mhocko@suse.com>,
- Mike Rapoport <rppt@kernel.org>, Simona Vetter <simona.vetter@ffwll.ch>,
- Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@kernel.org>,
- Dave Young <ruirui.yang@linux.dev>, linux-mm@kvack.org,
- linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
- kexec@lists.infradead.org, driver-core@lists.linux.dev
-References: <20260725210549.3716546-1-kwilczynski@kernel.org>
- <20260725210549.3716546-2-kwilczynski@kernel.org>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260725210549.3716546-2-kwilczynski@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+	Mon, 27 Jul 2026 16:42:01 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1785170520; x=1816706520;
+  h=date:from:to:cc:subject:message-id;
+  bh=Mke9m7n85+397ly1wLspu3MCwHw8Qy01/xmIFR+pyM0=;
+  b=db4VyaiNkVYCOgb5xWei3gSiQDOlY7HkTPON0u3VuG1Rv0rH2WZGF9Bb
+   m8Y+0O96b1c5x+rCcYf5fVkq4BYSyx9ckUTFod1O4PGnITPtjieGJ/kWd
+   MESgBMB8xtPfWVb7mzI7A/7DtkG8t0nnuo9FI9QFiSCySH29gkGAvq3Gc
+   BoevzYe8DEXq62HngJMWQXJn9DHGPmHP7YLEmG6eHa1xJuk8O4SX4LsG6
+   euPeJGrnF8CjXJYT19If4PrOdK8YeE6bjXZzdf8MXwpsAgUQM8BHsh/+0
+   JJi9YAl76QE+gtyunbnpADSl6qtWa2xUt9jCohY3vSuIEt1Dl9QmTVWDl
+   Q==;
+X-CSE-ConnectionGUID: wJ3R3KypQfyuLM8VooqArA==
+X-CSE-MsgGUID: wEqdGfSlSrWyi+bBGAaDAg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11858"; a="89634798"
+X-IronPort-AV: E=Sophos;i="6.25,188,1779174000"; 
+   d="scan'208";a="89634798"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2026 09:41:59 -0700
+X-CSE-ConnectionGUID: 0gcw+IT2QsOxFTqB16LiEA==
+X-CSE-MsgGUID: tN2ITlvkReOiYwfaAgkKcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,188,1779174000"; 
+   d="scan'208";a="261428388"
+Received: from lkp-server02.sh.intel.com (HELO ea128546eb3d) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 27 Jul 2026 09:41:57 -0700
+Received: from kbuild by ea128546eb3d with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1woOOo-00000000dJw-2UIT;
+	Mon, 27 Jul 2026 16:41:54 +0000
+Date: Tue, 28 Jul 2026 00:41:46 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
+Subject: [liveupdate:selftests-lib] BUILD SUCCESS
+ ccf287a39bd1288f534cf531f6bd4e57dbc716b7
+Message-ID: <202607280022.xpe1rDZm-lkp@intel.com>
+User-Agent: s-nail v14.9.25
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260727_094200_127464_28703F5C 
+X-CRM114-Status: UNSURE (   4.19  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -129,118 +84,117 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 7/25/26 23:05, Krzysztof Wilczyński wrote:
-> Currently, unmap_mapping_pages() and unmap_mapping_range() unmap a
-> page offset window of an address_space, and code that removes a file,
-> such as kernfs_drain_open_files(), relies on them to unmap the pages
-> of a file that is going away.
-> 
-> Files with f_mapping swapped to a shared address space at open time,
-> such as PCI resource files using iomem_get_mapping(), have their VMAs
-> attached to the shared mapping instead of the file's own inode mapping,
-> so unmapping the inode's address space cannot reach them, and they stay
-> live after the file is removed.  These VMAs can only be selected by the
-> struct file they were created through, which is recorded in
-> vma->vm_file.
-> 
-> Thus, add unmap_mapping_file(), which walks the VMA interval tree of the
-> file's f_mapping under i_mmap_lock_read() and unmaps the pages of the
-> VMAs selected by should_zap_file_vma(), using the same per-VMA zap as
-> unmap_mapping_pages().  When f_mapping is the file's own inode mapping,
-> every VMA is zapped, as unmap_mapping_range() does today.  When f_mapping
-> was swapped, only the VMAs with vm_file set to that file are zapped, so
-> callers do not need to tell the two apart.
-> 
-> HugeTLB VMAs are skipped with a WARN_ON_ONCE(), as zapping those takes
-> i_mmap_rwsem for write in hugetlb_zap_begin() and would deadlock against
-> the read lock held over the walk.
-> 
-> Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-> ---
->  include/linux/mm.h |  2 ++
->  mm/memory.c        | 48 ++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 50 insertions(+)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 485df9c2dbdd..e882a03eaddd 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -3183,6 +3183,7 @@ extern int fixup_user_fault(struct mm_struct *mm,
->  			    bool *unlocked);
->  void unmap_mapping_pages(struct address_space *mapping,
->  		pgoff_t start, pgoff_t nr, bool even_cows);
-> +void unmap_mapping_file(struct file *file);
->  void unmap_mapping_range(struct address_space *mapping,
->  		loff_t const holebegin, loff_t const holelen, int even_cows);
->  #else
-> @@ -3203,6 +3204,7 @@ static inline int fixup_user_fault(struct mm_struct *mm, unsigned long address,
->  }
->  static inline void unmap_mapping_pages(struct address_space *mapping,
->  		pgoff_t start, pgoff_t nr, bool even_cows) { }
-> +static inline void unmap_mapping_file(struct file *file) { }
->  static inline void unmap_mapping_range(struct address_space *mapping,
->  		loff_t const holebegin, loff_t const holelen, int even_cows) { }
->  #endif
-> diff --git a/mm/memory.c b/mm/memory.c
-> index ff338c2abe92..4a09d7b6aa6b 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -4423,6 +4423,54 @@ void unmap_mapping_pages(struct address_space *mapping, pgoff_t start,
->  }
->  EXPORT_SYMBOL_GPL(unmap_mapping_pages);
->  
-> +static inline bool should_zap_file_vma(struct file *file,
-> +				       struct vm_area_struct *vma)
-> +{
-> +	/* On the file's own inode mapping, zap every VMA */
-> +	if (file->f_mapping == file_inode(file)->i_mapping)
-> +		return true;
-> +
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git selftests-lib
+branch HEAD: ccf287a39bd1288f534cf531f6bd4e57dbc716b7  Merge patch series "Make liveupdate selftests library"
 
-I assume Sashiko complain applies only when this function would be reuse in
-other context.
+elapsed time: 896m
 
-But I wonder if that check is even required, shouldn't below check cover this
-already? I'd expect that "vma->vm_file == file" must always hold.
+configs tested: 97
+configs skipped: 0
 
-> +	/* A swapped mapping also holds VMAs of unrelated files, zap only ours */
-> +	return vma->vm_file == file;
-> +}
-> +
-> +/**
-> + * unmap_mapping_file() - Unmap folios from all mmaps of a file.
-> + * @file: The file to unmap.
-> + *
-> + * Unmap the folios of @file from every process that has them mapped.
-> + *
-> + * If f_mapping is the file's own inode mapping, they are unmapped
-> + * from every VMA on that mapping, as unmap_mapping_range() would do.
-> + *
-> + * However, if f_mapping was swapped to a different address space at
-> + * open time, only the VMAs with vm_file set to @file are considered,
-> + * since that address space also holds mappings of unrelated files.
-> + *
-> + * Must not be used on HugeTLB files.  HugeTLB VMAs are skipped with
-> + * a warning.
-> + */
-> +void unmap_mapping_file(struct file *file)
-> +{
-> +	struct address_space *mapping = file->f_mapping;
-> +	struct vm_area_struct *vma;
-> +
-> +	i_mmap_lock_read(mapping);
-> +	if (unlikely(mapping_mapped(mapping))) {
-> +		vma_interval_tree_foreach(vma, &mapping->i_mmap, 0, ULONG_MAX) {
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Can we just use mapping_rmap_tree_foreach() here, similar to
-unmap_mapping_range_tree() ?
+tested configs:
+alpha                            allnoconfig    gcc-16.1.0
+alpha                           allyesconfig    gcc-16.1.0
+alpha                              defconfig    gcc-16.1.0
+arc                             allmodconfig    gcc-16.1.0
+arc                             allyesconfig    gcc-16.1.0
+arc                  randconfig-001-20260727    gcc-8.5.0
+arc                  randconfig-002-20260727    gcc-8.5.0
+arm                  randconfig-001-20260727    gcc-8.5.0
+arm                  randconfig-002-20260727    gcc-8.5.0
+arm                  randconfig-003-20260727    gcc-8.5.0
+arm                  randconfig-004-20260727    clang-20
+arm64                randconfig-001-20260727    gcc-9.5.0
+arm64                randconfig-002-20260727    gcc-8.5.0
+arm64                randconfig-003-20260727    gcc-8.5.0
+arm64                randconfig-004-20260727    gcc-15.2.0
+csky                            allmodconfig    gcc-16.1.0
+csky                 randconfig-001-20260727    gcc-11.5.0
+csky                 randconfig-002-20260727    gcc-9.5.0
+hexagon              randconfig-001-20260727    clang-22
+hexagon              randconfig-002-20260727    clang-24
+i386                            allmodconfig    gcc-14
+i386       buildonly-randconfig-001-20260727    gcc-14
+i386       buildonly-randconfig-002-20260727    gcc-14
+i386       buildonly-randconfig-003-20260727    gcc-14
+i386       buildonly-randconfig-004-20260727    clang-22
+i386       buildonly-randconfig-005-20260727    clang-22
+i386       buildonly-randconfig-006-20260727    gcc-14
+i386                 randconfig-001-20260727    clang-22
+i386                 randconfig-002-20260727    gcc-14
+i386                 randconfig-003-20260727    clang-22
+i386                 randconfig-004-20260727    gcc-14
+i386                 randconfig-005-20260727    gcc-12
+i386                 randconfig-006-20260727    clang-22
+i386                 randconfig-007-20260727    clang-22
+i386                 randconfig-011-20260727    clang-22
+i386                 randconfig-012-20260727    clang-22
+i386                 randconfig-013-20260727    clang-22
+i386                 randconfig-014-20260727    clang-22
+i386                 randconfig-015-20260727    clang-22
+i386                 randconfig-016-20260727    gcc-14
+i386                 randconfig-017-20260727    gcc-13
+loongarch                          defconfig    clang-24
+loongarch            randconfig-001-20260727    gcc-16.1.0
+loongarch            randconfig-002-20260727    gcc-15.2.0
+nios2                           alldefconfig    gcc-11.5.0
+nios2                           allmodconfig    gcc-11.5.0
+nios2                            allnoconfig    gcc-11.5.0
+nios2                randconfig-001-20260727    gcc-8.5.0
+nios2                randconfig-002-20260727    gcc-11.5.0
+parisc                          allmodconfig    gcc-16.1.0
+parisc                          allyesconfig    gcc-16.1.0
+parisc                             defconfig    gcc-16.1.0
+parisc               randconfig-001-20260727    gcc-12.5.0
+parisc               randconfig-002-20260727    gcc-8.5.0
+powerpc              randconfig-001-20260727    gcc-11.5.0
+powerpc              randconfig-002-20260727    gcc-8.5.0
+powerpc64            randconfig-001-20260727    gcc-8.5.0
+powerpc64            randconfig-002-20260727    clang-18
+riscv                randconfig-001-20260727    gcc-9.5.0
+riscv                randconfig-002-20260727    gcc-11.5.0
+s390                 randconfig-001-20260727    clang-24
+s390                 randconfig-002-20260727    gcc-8.5.0
+sh                                 defconfig    gcc-16.1.0
+sh                   randconfig-001-20260727    gcc-15.2.0
+sh                   randconfig-002-20260727    gcc-16.1.0
+sparc                randconfig-001-20260727    gcc-16.1.0
+sparc                randconfig-002-20260727    gcc-8.5.0
+sparc64              randconfig-001-20260727    gcc-10.5.0
+sparc64              randconfig-002-20260727    gcc-12.5.0
+um                   randconfig-001-20260727    gcc-14
+um                   randconfig-002-20260727    clang-21
+x86_64     buildonly-randconfig-001-20260727    gcc-14
+x86_64     buildonly-randconfig-002-20260727    gcc-14
+x86_64     buildonly-randconfig-003-20260727    clang-22
+x86_64     buildonly-randconfig-004-20260727    clang-22
+x86_64     buildonly-randconfig-005-20260727    gcc-14
+x86_64     buildonly-randconfig-006-20260727    gcc-14
+x86_64               randconfig-001-20260727    gcc-13
+x86_64               randconfig-002-20260727    clang-22
+x86_64               randconfig-003-20260727    gcc-14
+x86_64               randconfig-004-20260727    clang-22
+x86_64               randconfig-005-20260727    clang-22
+x86_64               randconfig-006-20260727    clang-22
+x86_64               randconfig-011-20260727    gcc-14
+x86_64               randconfig-012-20260727    gcc-14
+x86_64               randconfig-013-20260727    clang-22
+x86_64               randconfig-014-20260727    clang-22
+x86_64               randconfig-015-20260727    gcc-14
+x86_64               randconfig-016-20260727    clang-22
+x86_64               randconfig-071-20260727    gcc-12
+x86_64               randconfig-072-20260727    gcc-14
+x86_64               randconfig-073-20260727    gcc-14
+x86_64               randconfig-074-20260727    clang-22
+x86_64               randconfig-075-20260727    gcc-12
+x86_64               randconfig-076-20260727    gcc-14
+xtensa               randconfig-001-20260727    gcc-14.3.0
+xtensa               randconfig-002-20260727    gcc-8.5.0
 
-> +			cond_resched();
-
-Why that? unmap_mapping_range() doesn't seem to require one so far.
-
--- 
-Cheers,
-
-David
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
