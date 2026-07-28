@@ -4,64 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 279C0C54F4D
-	for <kexec@archiver.kernel.org>; Tue, 28 Jul 2026 14:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7A3C1C54F54
+	for <kexec@archiver.kernel.org>; Tue, 28 Jul 2026 16:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZDkk7PDtexhsBzVT9GWHhsxn7eilb1XwsTmiTnabsNY=; b=pK3ZkUzBvU59vusTnkQ5aaJ6Vf
-	RWUed6qPwBWBcJpapRdn8t4Jg9djTickF5HrOtkQjOK8hkDq9qTGezc4MLjH6e/MIBR8dz1prG6fM
-	2mNQM2qdD5u7Hjh8Ba0y+OewysfkWoTsW/wDpcJpXqVBYmoQUnFydqofXnJNN+UkZdm00GpETLY2w
-	Ygbj/qvqKwM3oEutNb6yC7LklNReFIBFovQLutwNGaXAgt89NHLVft8EppHf42KOoHTnVPVd/nXU2
-	S/EDrROG6bkdGfbPJipc7fv7PXOtz7o1YNyJn7ExXv6m4gkoQrOqmadZ01OGVdmIwiBX7xEv9OAp/
-	ew8pww5g==;
+	bh=1d8NjVYJJn+wjjiK3UWZkRgmZ9sB7Xz8XibGwlAR4TU=; b=EUP4ZznMofxO+kVlQF8F0raSa3
+	eNqjdt6Qvxo14T2HhoYZJ6tsZ4Pd3Z2MmITqDczV5KhZAxfdf5fAwWVlUuIoyYQAfQoo8in+8mW/F
+	3giLuN89nvfAVbuDqzWqY8NeigbVUMGk2w4R34ZZ1lYKdW6LLTUfW5YDIfvpSqCYZzIE2470UqgjR
+	XTQML0Wrf13ZK3KU8vtRWu/4Zlc29rMqGwjtNeXqnSHP5SkKak6PSb98Nsr5fhojLHC+QNUfM/11M
+	/3ePo2Uwgz3blpmlfl1sbU0VxyICcAvBO8/cxJPB12XMtWkeK8aFfSGwyMda8F70ZWhRvNbFlY1jv
+	+mPp6m7Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1woiw0-00000005WTx-0xg3;
-	Tue, 28 Jul 2026 14:37:32 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wokLD-00000005mev-1XQL;
+	Tue, 28 Jul 2026 16:07:39 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1woivz-00000005WTe-0olp
+	id 1wokLC-00000005men-1amN
 	for kexec@lists.infradead.org;
-	Tue, 28 Jul 2026 14:37:31 +0000
+	Tue, 28 Jul 2026 16:07:38 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 9C95E4034E;
-	Tue, 28 Jul 2026 14:37:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CAA61F000E9;
-	Tue, 28 Jul 2026 14:37:28 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 07B2143C7B;
+	Tue, 28 Jul 2026 16:07:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAA8D1F000E9;
+	Tue, 28 Jul 2026 16:07:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785249450;
-	bh=ZDkk7PDtexhsBzVT9GWHhsxn7eilb1XwsTmiTnabsNY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=nc26FOHPHYa9+8isLzyk0zxQfzaTb0OA2pPhKpbyYczQVTRy6FuWreWujR95MzVdg
-	 8V5iMwIzJWE8pVxklYHkEBbw9SMYalKGI8aWBEmO/813/x/QKcOZVsf4OKFcMviYu6
-	 F7BHRI2q+YBxtJsLz7B6DfQqqYINP84nYofCR1Y4mPeRUb4MatyytBNFpT8K28Ishv
-	 OFcq8cMmk5AHLuJag0dHBnurSCJ0ACBEYb6XJACN3TB2nSwVJvVvabEMSgOPe4dU0n
-	 HZsS3IgfHeKSx4blTi7u63QzixOnTAxG9B2N2TNrRS67Fu/3ZIsLCN8hszAm3my6x4
-	 2QFGKWdOJKihQ==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Pasha Tatashin
- <pasha.tatashin@soleen.com>,  Alexander Graf <graf@amazon.com>,  Muchun
- Song <muchun.song@linux.dev>,  Oscar Salvador <osalvador@suse.de>,  David
- Hildenbrand <david@kernel.org>,  Andrew Morton
- <akpm@linux-foundation.org>,  Jason Miu <jasonmiu@google.com>,  Jork
- Loeser <jloeser@linux.microsoft.com>,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  linux-kernel@vger.kernel.org
+	s=k20260515; t=1785254857;
+	bh=1d8NjVYJJn+wjjiK3UWZkRgmZ9sB7Xz8XibGwlAR4TU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=do9Qf31f+8z39RaavaLnmBkTzfJzmuRlrk8+c6DfkV589EUCL9anWdb2KW+CMNtWO
+	 nrtuVp3Rl2+Ob8SWcEcEgDQDmBmreziaWFdrI6Yya8u6sJo92w2Sj2eF6lkknMnbx5
+	 GswKhL3Abrgsq6uXH23uuN3kfiyB2ZAqwbRqDM15Tnm2MV06pRD43C/kEUuTbiNpZ5
+	 eFujT+vDCoUOvMALJ+z87C7KGHWB/GVtPB7tOshxTpI2jwQtcUuhT1mpVkEPKrdSYm
+	 Ssw8TFKkcDDJ/UEBU1loEG+wuv0jrBPxS0Kxb0zv5waA+ONOdsvZbCu6gb2ZomxRa3
+	 OW3+Vdr61M8/w==
+Date: Tue, 28 Jul 2026 19:07:30 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Alexander Graf <graf@amazon.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jason Miu <jasonmiu@google.com>,
+	Jork Loeser <jloeser@linux.microsoft.com>,
+	kexec@lists.infradead.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v4 00/21] kho: make boot time huge page allocation work
  nicely with KHO
-In-Reply-To: <amiwLSEi8cczamP1@kernel.org> (Mike Rapoport's message of "Tue,
-	28 Jul 2026 16:35:41 +0300")
+Message-ID: <amjTwoWWQBvFvz8N@kernel.org>
 References: <20260725172133.4018491-1-pratyush@kernel.org>
-	<amiwLSEi8cczamP1@kernel.org>
-Date: Tue, 28 Jul 2026 16:37:26 +0200
-Message-ID: <2vxzecgn89jt.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+ <amiwLSEi8cczamP1@kernel.org>
+ <2vxzecgn89jt.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2vxzecgn89jt.fsf@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,75 +79,33 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jul 28 2026, Mike Rapoport wrote:
+On Tue, Jul 28, 2026 at 04:37:26PM +0200, Pratyush Yadav wrote:
+> On Tue, Jul 28 2026, Mike Rapoport wrote:
+> >
+> > Please take a look at Sashiko comments, we might need v5 if it has valid
+> > (not pre-existing) points.
+> 
+> I took a quick look and the only valid points I can see are the ones on
+> patch 19/21 "memblock: make HugeTLB bootmem allocation work with KHO".
+> 
+> All others are pre-existing problems.
+> 
+> Is it okay if I send a single follow up patch to fix 19/21? Or would you
+> prefer a full respin?
 
-> On Sat, Jul 25, 2026 at 07:21:00PM +0200, Pratyush Yadav wrote:
->> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
->> 
->> Hi,
->> 
->> Gigantic huge page allocation is somewhat broken currently with KHO.
->> 
->> First, they break scratch size accounting. Since they are allocated
->> using the memblock alloc APIs, they count towards RSRV_KERN, and this
->> scratch size when using scratch_scale. This means if huge pages take a
->> large enough chunk of system memory scratch size will blow up and fail
->> to allocate.
->> 
->> Second, scratch can not contain preserved memory, and if hugepages are
->> allocated from scratch, they will fail to be preserved with the upcoming
->> hugetlb preservation series [0].
->> 
->> Fix this by introducing the concept of extended scratch areas. They are
->> areas that the kernel discovers on boot by walking the radix tree and
->> finding free memory ranges. See patch 10 for more details.
->> 
->> Muchun Song (1):
->>   mm/mm_init: simplify deferred_free_pages() migratetype init
->> 
->> Pratyush Yadav (Google) (20):
->>   kho: generalize radix tree APIs
->>   kho: make radix max key width more obvious
->>   kho: disallow wide keys in radix tree
->>   kho: return virtual address of mem_map from kho_get_mem_map()
->>   kho: store incoming radix tree in kho_in
->>   kho: move all memory retrieval logic to kho_mem_retrieve()
->>   kho: add a struct for radix callbacks
->>   kho: add callback for table pages
->>   kho: add data argument to radix walk callback
->>   kho: allow early-boot usage of the KHO radix tree
->>   kho: allow destroying KHO radix tree
->>   kho: add kho_radix_init_tree()
->>   kho: expose kho_scratch_overlap() to kexec_handover.h
->>   kho: initialize kho_scratch pointer earlier in boot
->>   kho: initialize preserved memory map radix tree earlier
->>   mm/mm_init: don't rely on memblock to get KHO scratch migratetype
->>   kho: extend scratch
->>   memblock: make HugeTLB bootmem allocation work with KHO
->>   memblock: add memblock_reserved_hugetlb_size()
->>   kho: exclude hugetlb memory from scratch size calculation
->
-> I added it to the liveupdate tree.
+I prefer a full respin please :)
+ 
+> Also, general thing, but I should go and fix all the pre-existing
+> problems too at some point. I sent a fix for a really simple one
+> already, but Sashiko has found other problems too...
 
-Thanks!
-
->
-> Please take a look at Sashiko comments, we might need v5 if it has valid
-> (not pre-existing) points.
-
-I took a quick look and the only valid points I can see are the ones on
-patch 19/21 "memblock: make HugeTLB bootmem allocation work with KHO".
-
-All others are pre-existing problems.
-
-Is it okay if I send a single follow up patch to fix 19/21? Or would you
-prefer a full respin?
-
-Also, general thing, but I should go and fix all the pre-existing
-problems too at some point. I sent a fix for a really simple one
-already, but Sashiko has found other problems too...
+Yeah, that's true for any subsystem nowadays.
+ 
+> -- 
+> Regards,
+> Pratyush Yadav
 
 -- 
-Regards,
-Pratyush Yadav
+Sincerely yours,
+Mike.
 
