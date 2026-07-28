@@ -4,100 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 76B75C54F4C
-	for <kexec@archiver.kernel.org>; Tue, 28 Jul 2026 05:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AFB5CC53219
+	for <kexec@archiver.kernel.org>; Tue, 28 Jul 2026 06:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=NSd0Snni0h0/tE0vaFb4D1at9rHpTmqJbpcAV8DTvqQ=; b=fAobfr4cqWUK+H+ubvI9PBfq+E
-	w/ahk65NQu6EEi5Bntod+Vz9ud1MBSkogdjhTiWWCbJQXUKZEYQ8WUm/TbeEq9PD0frsbt5nfEOvz
-	v5LIWoYq7vThArkOLcvzQiS6Lm8K/SK113WsU1v6HU9/G+txl3yOS69qLDY8BtxZ8YMZ8wOI8TZLe
-	QyhMdLTAmQe/fk/pTB5Er1od/OhBZP9dzxkRWYXdZkkGjhZ/CCCrRPGaIxnu5PoNX60V88fbx+T88
-	FAv7WnZxTqSerLjuFCvL58HsxeArwO3eCe0N4b7fftE9ajrOmdi91xgePN4WEK/XqPU878rKY4gmj
-	u3VJ6+Vw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=G9PHCPemx3I5IiaOZkfCpXgJjCP/3isLoWalQDvmgro=; b=d1jwEsnCTGxEkHeGDXyqiXhKm0
+	2MxkYBs26ZNFBpQL1FGz8Il6LUSPGhzOI25Tckx9JFooOIxQbUYXh1kvKm8Rlkh61GN9JqIWpUIl2
+	l6U3BV5p34oy5DiEUQshbuKB2XDt4lEq3/0B6k2vzRvGb3NexwvlY0npQ/dcN8yDwFZprzAeBxmYt
+	1QiZwhbyA8aC5X6a3nQzCJRayIjliYHSAJDLWtJP5uNV97QcPFNfn6/rXWjki3fsUhAuORcge5uKp
+	0oz4JXyM72hmQbnJ2a3CldQ+VbnlpNEkIOllFQaZxPlVwZxgazgusL2pb6/lVaCupgZMImUK4jEgO
+	gSL6O2mw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1woaT4-00000004Tjz-1Jux;
-	Tue, 28 Jul 2026 05:35:06 +0000
-Received: from mail-pl1-x634.google.com ([2607:f8b0:4864:20::634])
+	id 1wobZU-00000004YwX-0vmn;
+	Tue, 28 Jul 2026 06:45:48 +0000
+Received: from mail-pj2-x01.google.com ([2607:f8b0:4864:39::1])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1woaT1-00000004TjP-2iVd
+	id 1wobZS-00000004Yv6-0Tsk
 	for kexec@lists.infradead.org;
-	Tue, 28 Jul 2026 05:35:04 +0000
-Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-2cacef7d299so49525ad.1
-        for <kexec@lists.infradead.org>; Mon, 27 Jul 2026 22:35:02 -0700 (PDT)
+	Tue, 28 Jul 2026 06:45:47 +0000
+Received: by mail-pj2-x01.google.com with SMTP id d9443c01a7336-2ce7ac92dfcso31822465ad.1
+        for <kexec@lists.infradead.org>; Mon, 27 Jul 2026 23:45:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785216902; x=1785821702; darn=lists.infradead.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=NSd0Snni0h0/tE0vaFb4D1at9rHpTmqJbpcAV8DTvqQ=;
-        b=n5tkeYFFHXzUNz8sUIZPMuejpPO3GJwkzLxCbcXs1KGq/jrFyxTjISMNBEFA3iIHkZ
-         hcWO+F3qM3IAeSdF/29KD25R2QLuylSKnF4hMaLtLKnJrTgMHQ1zVBaJJ26MGE7dI1/x
-         UbvtMoJFXqpolpqbxH546I9DRnm97/ZzZ96Q7OPJDZMZvD9c0RowjIciMZUlP5vGt6un
-         /F21y68FUK7adgWG9hHt3HxWXPpWQIrKa5jn3SiVTiJGKwYuQmVP7zBCcQ3Fd4npYWQG
-         apMxXwpMjE0+bF32/KSwCC55L2bweQ9zYjyrULDVY/1ixka3z9EXA/vp1vJg8APxS3zc
-         N3Zg==
+        d=gmail.com; s=20251104; t=1785221145; x=1785825945; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=G9PHCPemx3I5IiaOZkfCpXgJjCP/3isLoWalQDvmgro=;
+        b=am+nuyhWGZQGDZUpub8mb0r92Upz2N0J7ZuxaYTm+jIIYULepZ49dzcDaa42V2KzOS
+         76LP7TK5Nk4zuoScKMyxrO2mtH1w/a00vJZT53rh6xGk/HDUvuISqGcRHs0CtJaTSgac
+         oNfMbPpJftzSGaZES45iYAX3QAcO3A5R2oHAiPQlAOqvdOUjfUnb0uAAbmg9AdVr7Zqi
+         9l6z8gK8QXNBUx56U4v73Ban/tlB6udxHhyP6/NwSMJREDuq4nJQIu6fPBWh8Fvnzxu3
+         Q3CZxuEN/dxegi05TFhoMkb139W2lBinS4GfztOsgjLrb4WCGoDe8Am7xXBOtQZEZ+3b
+         ifYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785216902; x=1785821702;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=NSd0Snni0h0/tE0vaFb4D1at9rHpTmqJbpcAV8DTvqQ=;
-        b=W5GUdDiK5oRfb0WIxncCWQZi42uMvgFvehoQW5WAWsAP4Jx+DHito6T4nr/k14WfeF
-         YnQHiStri3eWjJVDjUS/Lmn3eWUJoOTvYyu7V9CjJ5l0qsVUYbxnewt3mmCZW4Q1fU2e
-         +a8MIv9jy5XKFcPGuPUNZYe4pcDy/IXAtoL9HiRW+rEQJlVmZ5IpU5cuSvgPWwwaOJYG
-         u8P444VGb5PaWoEB29xlnmOoJKEn3EHVvpJfZArkEGWKVLwCjpXgN9K3zK+1w/Wc/hJA
-         B9GrF4N3G2H/hc14EzsH3/uJ9ojPHI0J1qz6zuyQdb5K89FiMLzQMPhf+rfLuyY0mbF8
-         I+0w==
-X-Gm-Message-State: AOJu0Yz/Uk/h5RGjfY7SFodTMR8jdGvd1IsW75x6cM4Ftkl3SgE3Aswe
-	vTgGJ+YdNINRzXa3hAlDssQWjsAvZXxUNfEuQUeqI3Pf3WTDTEM+XQf3ajNXBufFgA==
-X-Gm-Gg: AR+sD11hFIKradVypL54RBahcJrGINAeZV8z1q8vqzZV1IrHlFbYlk8RytkqgVWDt6m
-	ae0SHAWAQbfpSTgHC3GqjD/qqj/hES736SpAr7Tq40D7o1FpTxlrnZpW2FnTKNOrK5a0escCEVX
-	STmsrl0HSR5dP2ycVv46O/T+5n13Pm+zXODdFKwUNlbrRg7d9YpWytzi3L/IVepZdugt/oyYhZO
-	ju9UoOUQQi7CfYLgVH++aqTo6ZF9OoVBUe4Az9XD/NP/5YRpTZ54n5S2Qe1rO+cD0dgTr1XsENg
-	XKoU5taIRdT8bMVBUETdmjMiDyRSe0zcG1V6NluIpSxDsABBkPEoR5sRBmWCQqO6fGa6M1EAi82
-	8u/k4Xj1LkmMCo4qlSgdndAR+ekYRyH9CwlDyumLknzjYTyf+c+qbuLpz6kewNRHPzeKKV8qAqf
-	WjEfleJ/SXOibEvaWaIijPgrYd6+QJ7FrD0HLVNneXjbpMGFBnjg==
-X-Received: by 2002:a17:902:f1d3:b0:2c7:9e6a:1a8d with SMTP id d9443c01a7336-2cfdb75acb4mr15516765ad.12.1785216900834;
-        Mon, 27 Jul 2026 22:35:00 -0700 (PDT)
-Received: from google.com (176.13.105.34.bc.googleusercontent.com. [34.105.13.176])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-38f08ae3079sm3822540a91.3.2026.07.27.22.34.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2026 22:34:59 -0700 (PDT)
-Date: Mon, 27 Jul 2026 22:34:54 -0700
-From: Vipin Sharma <vipinsh@google.com>
-To: Zhu Yanjun <yanjun.zhu@linux.dev>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, ajayachandra@nvidia.com, alex@shazbot.org, amastro@fb.com, 
-	ankita@nvidia.com, apopple@nvidia.com, bhelgaas@google.com, chrisl@kernel.org, 
-	christian.koenig@amd.com, corbet@lwn.net, dmatlack@google.com, graf@amazon.com, 
-	jacob.pan@linux.microsoft.com, jgg@nvidia.com, jgg@ziepe.ca, jrhilke@google.com, 
-	julianr@linux.ibm.com, kees@kernel.org, kevin.tian@intel.com, leon@kernel.org, 
-	leonro@nvidia.com, lukas@wunner.de, mattev@meta.com, michal.winiarski@intel.com, 
-	parav@nvidia.com, pasha.tatashin@soleen.com, praan@google.com, pratyush@kernel.org, 
-	rananta@google.com, rientjes@google.com, rodrigo.vivi@intel.com, rppt@kernel.org, 
-	saeedm@nvidia.com, schnelle@linux.ibm.com, skhan@linuxfoundation.org, 
-	skhawaja@google.com, vivek.kasireddy@intel.com, witu@nvidia.com, yi.l.liu@intel.com
-Subject: Re: [PATCH v5 17/20] vfio: selftests: Add
- vfio_pci_liveupdate_kexec_test
-Message-ID: <20260728052011.GA736369.vipinsh@google.com>
-References: <20260714151505.3466855-1-vipinsh@google.com>
- <20260714151505.3466855-18-vipinsh@google.com>
- <c3440ed3-0fc2-44e5-a05a-922344eb34d1@linux.dev>
+        d=1e100.net; s=20251104; t=1785221145; x=1785825945;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=G9PHCPemx3I5IiaOZkfCpXgJjCP/3isLoWalQDvmgro=;
+        b=HlgXz9InMD2QZPsvUuPGDp8MpdHwTBZ4ANNzUCJVHCC+se/hJFqf5LO3GehkzERSKD
+         jPfUhz1BidkBKg+GQV9W7b5WdxkRmNbUBc3SLUCDgxySbasx34w/SagUFLHUox67TMKC
+         +PNSbcHteUNjIcuBv+6r1asbQvpp9BF8CIdVfuClKxbH67HxEGFfT34/EpzNvE41LiGi
+         kpZNvchvesNtadvRrIDRUevmAVHj4H7mfblFqjAiX0kRr6hgJHBbs68FLaDMC+wOBKwz
+         +SEnfqpO2RS8AWUchFei7eXHfrsQmweMurXQpgLFjCrMkr12xV+sxuguFfE7m0rek6ay
+         WdFg==
+X-Forwarded-Encrypted: i=1; AHgh+Rq1xUqckVPFL5C/xad6iJs1ux+PGRe0gMPHiOePy6u6jn6eQUeN2GiB6sFO7P/o2ZTZVR3tLA==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yzih4T5xLWKo6abPskLWixhokCYOGEs32v1oGki9l338C9cuVn+
+	aEnjpiUPBVOxWnhR4gC0FLxXUnO6X73uKv+rYmMuup5eBB6KjlMJmy/s
+X-Gm-Gg: AR+sD10Ckbo88OyoZyUvIqYX+NQWVs/8acqZ/8AtJ+ARVin4yR4jfQk699nd9NP2V3F
+	b3qgnQwy+jrsay6e8T7tN5AyJz8hS2juco9S+UYv20xIiYhOn+6CA9D8y20psndsDli5WWWnDPl
+	OBk0K5n0cc9d3MxvJ5e/PTKrIW9NmMofb2DBUOU8L1XmsY6fEyHPJIie4EsuRB0omTe1lQrLSe7
+	6V/FcnQLU2FzB8PHFFqcMWi6QZVk1H6Jdda28D6MieTSS0rAlSGvq8xBIM1G5lGcZSd4jvXe3wI
+	BT9cRDUwbmuWRRlfvq+uv3u+vYf+O0axxdlF1ANs2CJRnnRw9k5T+qqNeHywcWdCbATiWcwswQH
+	rogMMgy5VoaxxZ0Je/T66hpe2FsQOzrkjOdiZxiFVokj0kcKeLkuhr1cPoafxwjuzAdqUWYVtXM
+	UIiaRHny9qDw==
+X-Received: by 2002:a17:903:b90:b0:2ca:d9b3:715e with SMTP id d9443c01a7336-2d015c9b773mr13766995ad.9.1785221144689;
+        Mon, 27 Jul 2026 23:45:44 -0700 (PDT)
+Received: from [10.125.112.20] ([210.184.73.204])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cfde5e1e26sm46147345ad.22.2026.07.27.23.45.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jul 2026 23:45:43 -0700 (PDT)
+Message-ID: <14ae96c1-707c-4999-bc9d-65ec74fbeff2@gmail.com>
+Date: Tue, 28 Jul 2026 14:45:32 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c3440ed3-0fc2-44e5-a05a-922344eb34d1@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 00/10] kdump: reduce vmcore size and capture time
+To: Rob Herring <robh@kernel.org>, m.szyprowski@samsung.com
+Cc: chenhuacai@kernel.org, kernel@xen0n.name, pjw@kernel.org,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, saravanak@kernel.org,
+ bhe@redhat.com, rppt@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+ kexec@lists.infradead.org, iommu@lists.linux.dev, zhaomeijing@lixiang.com,
+ catalin.marinas@arm.com, will@kernel.org, alex@ghiti.fr,
+ akpm@linux-foundation.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
+ ruirui.yang@linux.dev, robin.murphy@arm.com
+References: <20260630074715.4126796-1-chenwandun1@gmail.com>
+ <20260723234126.GA3253409-robh@kernel.org>
+Content-Language: en-US
+From: Wandun <chenwandun1@gmail.com>
+In-Reply-To: <20260723234126.GA3253409-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260727_223503_700113_D82FBA0B 
-X-CRM114-Status: GOOD (  21.32  )
+X-CRM114-CacheID: sfid-20260727_234546_163816_8E088B7A 
+X-CRM114-Status: GOOD (  21.88  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,104 +110,67 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, Jul 26, 2026 at 05:40:54PM -0700, Zhu Yanjun wrote:
-> 
-> 在 2026/7/14 8:15, Vipin Sharma 写道:
-> > Add a selftest to exercise preserving a vfio-pci device across a Live
-> > Update. For now the test is extremely simple and just verifies that the
-> > device file can be preserved and retrieved. In the future this test will
-> > be extended to verify more parts about device preservation as they are
-> > implemented.
-> > 
-> > This test is added to TEST_GEN_PROGS_EXTENDED since it must be run
-> > manually along with a kexec.
-> > 
-> > To run this test manually:
-> > 
-> >   $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
-> >   $ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test --stage 1 0000:00:04.0
-> # ls /dev
-> autofs           disk       iommu         mem     rtc0      tty10 tty21 
-> tty32  tty43  tty54  tty8    ttyS18  ttyS29   uinput  vcs6   vcsu4       
-> virtio-ports
-> block            dma_heap   kmsg          mqueue  sg0       tty11 tty22 
-> tty33  tty44  tty55  tty9    ttyS19  ttyS3    urandom vcsa   vcsu5       
-> vport2p1
-> bsg              dri        kvm           net     shm       tty12 tty23 
-> tty34  tty45  tty56  ttyS0   ttyS2   ttyS30   usbmon0 vcsa1  vcsu6       
-> vsock
-> btrfs-control    fd         liveupdate    null    snapshot  tty13 tty24 
-> tty35  tty46  tty57  ttyS1   ttyS20  ttyS31   usbmon1 vcsa2  vda         
-> watchdog
-> bus              full       log           nvram   snd       tty14 tty25 
-> tty36  tty47  tty58  ttyS10  ttyS21  ttyS4    usbmon2 vcsa3  vda1       
->  watchdog0
-> cdrom            fuse       loop-control  port    sr0       tty15 tty26 
-> tty37  tty48  tty59  ttyS11  ttyS22  ttyS5    userfaultfd vcsa4  vda2       
->  zero
-> char             hidraw0    lp0           ppp     stderr    tty16 tty27 
-> tty38  tty49  tty6   ttyS12  ttyS23  ttyS6    vcs vcsa5  vda3         zram0
-> console          hpet       lp1           ptmx    stdin     tty17 tty28 
-> tty39  tty5   tty60  ttyS13  ttyS24  ttyS7    vcs1  vcsa6  vfio
-> core             hugepages  lp2           pts     stdout    tty18 tty29 
-> tty4   tty50  tty61  ttyS14  ttyS25  ttyS8    vcs2  vcsu   vga_arbiter
-> cpu              hwrng      lp3           random  tty       tty19 tty3 
->  tty40  tty51  tty62  ttyS15  ttyS26  ttyS9    vcs3  vcsu1  vhci
-> cpu_dma_latency  i2c-0      mapper        rfkill  tty0      tty2  tty30 
-> tty41  tty52  tty63  ttyS16  ttyS27  udmabuf  vcs4  vcsu2  vhost-net
-> cuse             input      mcelog        rtc     tty1      tty20 tty31 
-> tty42  tty53  tty7   ttyS17  ttyS28  uhid     vcs5  vcsu3  vhost-vsock
-> 
-> 
-> # tools/testing/selftests/vfio/scripts/setup.sh 0000:00:08.0
-> 
-> + echo "vfio-pci" > /sys/bus/pci/devices/0000:00:08.0/driver_override
-> + echo "0000:00:08.0" > /sys/bus/pci/drivers/vfio-pci/bind
-> tools/testing/selftests/vfio/scripts/lib.sh: line 9: echo: write error:
-> Invalid argument    <--- the error is here.
-> 
-> 
-> # lspci -vvv -s 0000:00:08.0
-> 
-> 00:08.0 Unclassified device [00ff]: Red Hat, Inc. QEMU PCI Test Device
->         Subsystem: Red Hat, Inc. QEMU Virtual Machine
->         Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr-
-> Stepping- SERR+ FastB2B- DisINTx-
->         Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
-> <TAbort- <MAbort- >SERR- <PERR- INTx-
->         Region 0: Memory at fea1f000 (32-bit, non-prefetchable) [size=4K]
->         Region 1: I/O ports at c000 [size=256]
-> 
-> Hi, Vipin
-> 
-> I worked with QEMU PCI Test Device. But the following error occur.
-> 
-> "tools/testing/selftests/vfio/scripts/lib.sh: line 9: echo: write error:
-> Invalid argument"
-> 
-> Is this a known problem?
-> 
 
-Can you please check if you have passed iommu device in your QEMU
-command? This is what I pass to my QEMU command
 
- -device intel-iommu,intremap=on,caching-mode=on,device-iotlb=on
+On 7/24/26 07:41, Rob Herring wrote:
+> On Tue, Jun 30, 2026 at 03:47:04PM +0800, Wandun Chen wrote:
+>> From: Wandun Chen <chenwandun@lixiang.com>
+>>
+>> On SoCs that carve out large firmware-owned reserved memory (GPU
+>> firmware, DSP, modem, camera ISP, NPU, ...), kdump currently dumps
+>> those carveouts as part of system RAM even though their contents are
+>> firmware state that is not useful for kernel crash analysis.
+> 
+> What about reserved regions on ACPI based systems?
 
-Also, add the following to your guest kernel commandline
+ACPI based systems already filter out these reserved regions from vmcore.
+In the EFI memory map, firmware carveouts are reported with the type
+EFI_RESERVED_TYPE. This type of memory gets the nomap flag set in
+memblock.memory (is_usable_memory() returns false in reserve_regions()
+and mark these regions with nomap flag), during prepare_elf_headers(),
+for_each_mem_range() filters out these nomap regions. Therefore, the
+memory reserved on ACPI based systems will not be dumped into the vmcore.
+> 
+>> This series introduces an opt-in 'dumpable' flag [1] on struct
+>> reserved_mem and uses it to filter the elfcorehdr PT_LOAD ranges on
+>> DT-based architectures (arm64, riscv, loongarch). By default reserved
+>> regions are treated as non-dumpable; CMA regions are explicitly opted
+>> in because their pages are returned to the buddy allocator and may
+>> carry key crash-analysis data.
+> 
+> I never like seeing the same change being made to each architecture. 
+> That's generally a sign of restructuring needed. loongarch and arm64 
+> prepare_elf_headers() look about the same. riscv version uses 
+> walk_system_ram_res() for some reason. 
+> 
+> Perhaps the dumpable flag belongs in memblock instead? Then at least we 
+> wouldn't need more DT APIs exposed to the arch code, and the code stays 
+> independent of the firmware API.
 
- intel_iommu=on
+Agreed on both points. Adding the flag to memblock can indeed eliminate
+the duplicated code in prepare_elf_headers, and avoid expose APIs to the
+arch code.
 
-This should fix the issue you are seeing.
+I will add a dumpability marker to memblock for future extensibility
+and to avoid duplicating the same code across different architectures.
 
-Alternatively, you can also enable noiommu mode in VFIO by executing:
+I'm inclined to add a nodump flag, similar to nomap, by default all memory
+is dumpable, and only the small fraction of memory that carries this flag
+would be excluded from the vmcore, What do you think about this approach?
 
-  echo Y > /sys/module/vfio/parameters/enable_unsafe_noiommu_mode 
+walk_system_ram_res() in riscv could be reworked into the same form as in
+the arm64/loongarch architectures, will do in next version.
 
-This should allow device to be bound to VFIO.
+> 
+> I'd really like Marek's review on the reserved memory code changes.
 
-If none of the above approach works can you please share your QEMU
-command and your guest VM /proc/cmdline.
+Marek, could you take a look when you have a chance about the reserved
+memory code changes, I'm happy to respin and address any feedback.
 
-Thanks
-Vipin
+> 
+> Rob
+
+Best regards,
+Wandun
+
 
