@@ -4,95 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BA8D2C53219
-	for <kexec@archiver.kernel.org>; Tue, 28 Jul 2026 12:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8CE42C53219
+	for <kexec@archiver.kernel.org>; Tue, 28 Jul 2026 13:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=oKJtXROx3fu4lTSaimhGhm2MQBtEFEroGU9PzY9IvkY=; b=L2Ga2/B60Tsrgp7YexG0SYX43/
-	DyjYE7Be/8KtT4Uo9TuEdfDDpYy1GmldqqxRNeRjh5C1GWv0bT7r6fPC8o6voq3wqtF/Xt+71CP1T
-	AJoYNE8OGRfsVCNQ0uvq5WL2+XqwYRhI43FKiqbmXrisx6fwDc5EMg1SVr8Zsvruq4zdV4RBu1SNe
-	hIXU4ALnAPAWpw3UJD4Brvxx/sDWclL9U0P5ZnHDjyuvlci1JNZ59EenBAWDQ9uIf2DPmEld3iARp
-	1IQtrg8a1DrreqUCKHyADHabIGB/NORUHxrEWYT6TuFdWh0k6krAwW4qbXvhctXai3zXl20ORvDVv
-	jyjbpfVA==;
+	bh=F7E60EEGx3HhYQLCew9dec70QQpFr1JD3ItgZk/3IBg=; b=1sRBMBU2M2uImdq7Trh2N3xmQL
+	64kL3PQopunZho4zdELZoJ9qMAI5oGYiaFbv0naZcLDwM/ThYKX2DunT2OKlGQmiB8iBLJqw5dccp
+	Pl3tGHvG8T5ag5VDOg6zXAlKBIWtGUtPTv/R7enICNAlZsVOinjN+5X+HNBsNhOaO/SUciaFNFpQY
+	1fy9zzNSqxQQlqAYwEFpj3uU5X7GfdEnLJcgsjCoJV2U8SDuUYsPrRfKUhQAGzu5QKixABQKYjO5R
+	AmYzWJhrXsN60Gfxhy9awtXO4h9QVZHuCbmj9DSABEYQZVsWtahcSsmfrE1CeLUpdBOVlgjUbRlPV
+	nLzAMKqg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wogl4-00000005DWw-1Nl2;
-	Tue, 28 Jul 2026 12:18:06 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wohyI-00000005Ma2-16lp;
+	Tue, 28 Jul 2026 13:35:50 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wogl2-00000005DW7-1a1S
+	id 1wohyH-00000005MZe-3iqF
 	for kexec@lists.infradead.org;
-	Tue, 28 Jul 2026 12:18:04 +0000
+	Tue, 28 Jul 2026 13:35:49 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 01F5D43CF1;
-	Tue, 28 Jul 2026 12:18:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A24C1F00A3D;
-	Tue, 28 Jul 2026 12:18:02 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 4579540DE8;
+	Tue, 28 Jul 2026 13:35:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F6F61F000E9;
+	Tue, 28 Jul 2026 13:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785241082;
-	bh=oKJtXROx3fu4lTSaimhGhm2MQBtEFEroGU9PzY9IvkY=;
+	s=k20260515; t=1785245749;
+	bh=F7E60EEGx3HhYQLCew9dec70QQpFr1JD3ItgZk/3IBg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=fPFTresp55rinYb2SQTzm53LiKWqICzRPjr6COkBGaVoYzGpWll9D7htcrmVSqUjz
-	 zdJLjUncSOwK4O28nm3ZqrbqihTBAqxU/C2HpzZ57juOCHQ90HCA5uQSXJiLuYvBOG
-	 7lLZVXc20ocZKQHVcq9Pv041QmxWZLaQgUpiJQMpfXSkWncNomV/In3cYqZk/8zdgZ
-	 0MOp5budlZ8FR/wXUVjiEhDo29rGwU2+Sfn8qlERSWSuWia7mSPxm360JjC3iPxjpK
-	 V7Lrl4z5USbz6dgc/dBltmnkLb9/5Omk8RBWMJm2FhPQzLlLFwriU7QIQycRW8obcc
-	 9KTwtVPb8X0lg==
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 65659F40067;
-	Tue, 28 Jul 2026 08:18:01 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Tue, 28 Jul 2026 08:18:01 -0400
-X-ME-Sender: <xms:-Z1oau8VeVoxtSWkmOuLEk7JFloulL56gZC6PZaTUCTRbnFaqi2d9g>
-    <xme:-Z1oah0Tu5wi2xp8DzNWFIV-HVRStgZAb3s51p8IZNv82uQlmaBtTgM_kOd6QuFsl
-    kIHJCu-_OPSZjAcWEqRs4nbD1xlnZPyrMbwy7gBjH8gQPH8RCGHWwk>
-X-ME-Received: <xmr:-Z1oahfDz7f7U8T2i8_mGr-ih8r9sHGpT0hp90xfBytuCOxFIUq1BVAWu9ckBQ>
-X-ME-Proxy-Cause: dmFkZTFFd/nsSnqpSmQvzVxqvwzHWaSzKqPBbSvvQe7BvijMIlW7Pibm8W9snxtWuenbkt
-    fXmF38BS7EzslH6KJfUsM5EsKiDwKkfK9LX560qLV+E5CypcBmXp8ZhqGdXBiy9AK/Nk5a
-    Km53mPal4MiglBzFuJJBeZacqbq4M1BVvYzp/KlJpSmrUFiYxDquDLb+pDoL1jpVOzFdzG
-    Tt4GOD0485OJnG3Vzi1H4fIFGkBR6l6HZ7FwXT4qfe0bJfxtd00jNBr9CdZK1omiTiaY38
-    KLpK78XWtlutDCsD8njPO6jGlTCbvlBoEqNaumlpluVdJmDs2O1Fs0xsHwZbwS+kdDKCMn
-    N5DClSzaNkylNrXDuQnVOhGRc0kBudga5SiQpTzo2r1j6qrkdlPmRwa5U1koT7ynO+Q5ie
-    WMyBWi3SS5QeiGYSp2HqSJhkVFdZpVeOKagI4OpM12pEbfJSrdGH33wT3nN1xJnPv/tt+M
-    2AbLgDGtX4g0gSQZc6mLuctzPmR2Mz5LiWwMxMYUOIm1T9cxyOVXvug5ARK9y2Pu+HqRbV
-    D7O3+T7XCn7wFSVFCpffYMGuXPxKyDUFmaD28jnb6qzqXy+7DvUtIGQJiRaC9/tJ+G5UsK
-    C5gIK0cBZmVHnGKxl1z7XuiQXpJ/3hvHfLiQP6+d2VjE/693ZZhOz4odp8wg
-X-ME-Proxy: <xmx:-Z1oarA5E8cVDsr48hLcfRa7-_nr8ZzsEx6g9b_VAywPNVZHPANJBw>
-    <xmx:-Z1oah3eIBLyfn3i1rEuDsaQUJ-hmYthgcnvrHnRNTnAAvlUSpKc2Q>
-    <xmx:-Z1oauOD0yWuD9YR2GBL3BibXzra6dM_Z3oz3yuehlFB2ra97vd6jg>
-    <xmx:-Z1oaobLAl2kAEO4g9UU-Yz4t9SRiYOzKddP7QpreacmALAnVog8TQ>
-    <xmx:-Z1oao2hK8GsSxB9Lg-hSbRe8sDblDyZXzQrporYUh3vZC5d8zJA5sgQ>
-Feedback-ID: i10464835:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 28 Jul 2026 08:18:00 -0400 (EDT)
-Date: Tue, 28 Jul 2026 13:17:59 +0100
-From: Kiryl Shutsemau <kas@kernel.org>
-To: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, 
-	James Morse <james.morse@arm.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Marc Zyngier <maz@kernel.org>, Doug Anderson <dianders@chromium.org>, 
-	Petr Mladek <pmladek@suse.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, 
-	Puranjay Mohan <puranjay@kernel.org>, Usama Arif <usama.arif@linux.dev>, 
-	Breno Leitao <leitao@debian.org>, Julien Thierry <julien.thierry.kdev@gmail.com>, 
-	Lecopzer Chen <lecopzer@gmail.com>, Sumit Garg <sumit.garg@kernel.org>, kernel-team@meta.com, 
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	b=hJ6ZyGrXFohV282rb4DcBTZtLaXEm4DG4EzBSaAk21cm4cHuYoe24V2bP2A3XjLTX
+	 7/D8dj15R5W/TNZgNi8iJNfMD6iu4ysPmFfd67MHL87sKSj/quy+1zpDftRPgID1md
+	 W1Dg46CjtdpalY9SmavmC1shWHb2XACiP+0fjTLovQV4x9EzRnu4pwlZkM0prax1iI
+	 IYZfhTDMOXUzqcjDzb79D/1mBLqK9/xMKVSgLT4zm79An4+G6SLphQoJHGp/ayHn7Y
+	 NHm/DiPdusfbad3D4k8lq9K3yZREeduP64s/aoQP0iA/h7DLaYue/b4dvGjVmFeSuv
+	 erXV/LxzbgXtA==
+Date: Tue, 28 Jul 2026 16:35:41 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Alexander Graf <graf@amazon.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jason Miu <jasonmiu@google.com>,
+	Jork Loeser <jloeser@linux.microsoft.com>,
+	kexec@lists.infradead.org, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/4] arm64: cross-CPU NMI via SDEI
-Message-ID: <amiayYZA2kBSTzFB@thinkstation>
-References: <cover.1782744912.git.kas@kernel.org>
- <ak_IRHwd02EjWMf8@thinkstation>
- <amYR5VWHWC1WdFXc@willie-the-truck>
- <amZRtS2Lu1epc0S4@thinkstation>
- <amiDoZdszC1pB6Z2@willie-the-truck>
+Subject: Re: [PATCH v4 00/21] kho: make boot time huge page allocation work
+ nicely with KHO
+Message-ID: <amiwLSEi8cczamP1@kernel.org>
+References: <20260725172133.4018491-1-pratyush@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <amiDoZdszC1pB6Z2@willie-the-truck>
+In-Reply-To: <20260725172133.4018491-1-pratyush@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,46 +77,58 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jul 28, 2026 at 11:25:37AM +0100, Will Deacon wrote:
-> > FEAT_NMI is the endgame and a machine that has it needs none of this,
-> > but non-FEAT_NMI parts stay in fleets for many years, so I can't
-> > honestly give you a date for dropping SDEI.
+On Sat, Jul 25, 2026 at 07:21:00PM +0200, Pratyush Yadav wrote:
+> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 > 
-> That's fair, I was really just trying to understand the direction. It
-> sounds like you will *eventually* move to FEAT_NMI, even if it's many
-> years away.
-
-Right, that's the plan.
-
-> > While this change is pretty self-contained, I understand that SDEI infra
-> > maintenance can be a burden.
-> > 
-> > Is there anything on the wider SDEI infrastructure that would lower the
-> > maintenance burden or keep it more out of your way -- consolidation,
-> > tighter isolation, docs, help carrying it? If there's work there that
-> > makes SDEI more palatable to keep while non-FEAT_NMI parts are in
-> > service, I'm glad to take it on.
+> Hi,
 > 
-> I'm somewhat trying to predict the future here, but I wouldn't be
-> shocked if some whizz-bang new architecture feature interacted badly
-> with SDEI, either due to outdated specs or because of a fundamental
-> incompatability. In this case, I would like the option of being able to
-> make new hardware support mutually exclusive with SDEI rather than try
-> to hack around the mess. It sounds like that would be ok for you?
+> Gigantic huge page allocation is somewhat broken currently with KHO.
+> 
+> First, they break scratch size accounting. Since they are allocated
+> using the memblock alloc APIs, they count towards RSRV_KERN, and this
+> scratch size when using scratch_scale. This means if huge pages take a
+> large enough chunk of system memory scratch size will blow up and fail
+> to allocate.
+> 
+> Second, scratch can not contain preserved memory, and if hugepages are
+> allocated from scratch, they will fail to be preserved with the upcoming
+> hugetlb preservation series [0].
+> 
+> Fix this by introducing the concept of extended scratch areas. They are
+> areas that the kernel discovers on boot by walking the radix tree and
+> finding free memory ranges. See patch 10 for more details.
+> 
+> Muchun Song (1):
+>   mm/mm_init: simplify deferred_free_pages() migratetype init
+> 
+> Pratyush Yadav (Google) (20):
+>   kho: generalize radix tree APIs
+>   kho: make radix max key width more obvious
+>   kho: disallow wide keys in radix tree
+>   kho: return virtual address of mem_map from kho_get_mem_map()
+>   kho: store incoming radix tree in kho_in
+>   kho: move all memory retrieval logic to kho_mem_retrieve()
+>   kho: add a struct for radix callbacks
+>   kho: add callback for table pages
+>   kho: add data argument to radix walk callback
+>   kho: allow early-boot usage of the KHO radix tree
+>   kho: allow destroying KHO radix tree
+>   kho: add kho_radix_init_tree()
+>   kho: expose kho_scratch_overlap() to kexec_handover.h
+>   kho: initialize kho_scratch pointer earlier in boot
+>   kho: initialize preserved memory map radix tree earlier
+>   mm/mm_init: don't rely on memblock to get KHO scratch migratetype
+>   kho: extend scratch
+>   memblock: make HugeTLB bootmem allocation work with KHO
+>   memblock: add memblock_reserved_hugetlb_size()
+>   kho: exclude hugetlb memory from scratch size calculation
 
-Yes, that's fine by me.
+I added it to the liveupdate tree.
 
-I'd prefer that exclusivity at boot rather than compile time, so we can
-keep a single kernel binary across the fleet. The delivery side
-already works this way -- the arch selects one cross-CPU-NMI provider, so
-it's a boot-time decision already.
-
-The piece that isn't boot-time yet is the hardlockup detector that drives
-all this. perf and buddy are mutually exclusive at compile time. We want
-to use perf watchdog for FEAT_NMI while SDEI needs buddy.
-
-But it is solvable.
+Please take a look at Sashiko comments, we might need v5 if it has valid
+(not pre-existing) points.
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Sincerely yours,
+Mike.
 
