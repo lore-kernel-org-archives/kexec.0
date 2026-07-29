@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1E125C54F55
-	for <kexec@archiver.kernel.org>; Wed, 29 Jul 2026 14:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CD294C53219
+	for <kexec@archiver.kernel.org>; Wed, 29 Jul 2026 14:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=I+Xn6VUZ6Kfhz9bczNUgILfyECyV5wQxLhcebZe0lTI=; b=ZmkmF8SH+pJmrYDTY1gnJSVFil
-	GKBvsWjRzlDY94Imoy7Odxecc/hN8bfpz54ECHNbuHLLnffu7cWfQXuVdYTHoyRbBl4Tgj7nfCBgE
-	alVBCJNeqZSSlFK8PjU3kn6+C+2xQJ8knbRPVSkMglk3QhnMS8isDKrhkYt/pL7X9v501gkARrxfP
-	A3hsNoN54HTx9cro8dnhk/PeuEpECTD7gruItfVwt0vCAbhcTM3Yv+QSfBw3uetswvZCKwT7OZp5o
-	f8XSuAy9302UTFbcGHzkEbrAvNQa/fLH9oDO5ua0nbJx7hUBCdtnJWbMzlgYUI2NjHyrbfUpa0UBh
-	IB/7FAvA==;
+	bh=ghdDFZPLf2rtp958iY2Vuuv2OEyj36gLpSUuWrXiyDE=; b=TZ5Cjjdn3Z0/FSKPWJKZXXD3Qm
+	cKJ7vcCXFVuyjdUp24nYycbkvW6f1UDh3XMoZNehu1ylE6NEcLKCABRq+DAzTxxGRCmhPNjgqYiev
+	gzLzIesV1X6kjM2J8Fj8mQbyzUXu5jIHs+p0NVessovwLkH9HOWqIwvRtpVqxkANc+TGZ0eJnYHpO
+	6IeMYiMy+VEGEXfiIKxgJ4iZUZl9Y0qrYqCBnV8wiBTJird7J5SWhwyvwA+StUk9nZop4DsRQPalN
+	vTjUmJ+sU3MtwPuZm8QMQdWKTEPoYhCm6/gsol05mOvNSPOEr+7AH+4X8KR4iKSF5T414YWJL2Us/
+	Zh6HUKAg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wp5iS-00000008JQR-3pWo;
-	Wed, 29 Jul 2026 14:57:04 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wp5iW-00000008JU9-4BVl;
+	Wed, 29 Jul 2026 14:57:09 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wp5iS-00000008JPf-13mt
+	id 1wp5iV-00000008JS1-1M9l
 	for kexec@lists.infradead.org;
-	Wed, 29 Jul 2026 14:57:04 +0000
+	Wed, 29 Jul 2026 14:57:07 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 06FCF403F9;
+	by tor.source.kernel.org (Postfix) with ESMTP id BE4AF600BB;
+	Wed, 29 Jul 2026 14:57:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B2CA1F00A3A;
 	Wed, 29 Jul 2026 14:57:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 914191F00A3D;
-	Wed, 29 Jul 2026 14:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785337023;
-	bh=I+Xn6VUZ6Kfhz9bczNUgILfyECyV5wQxLhcebZe0lTI=;
+	s=k20260515; t=1785337026;
+	bh=ghdDFZPLf2rtp958iY2Vuuv2OEyj36gLpSUuWrXiyDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=MhapCwHxv0nH0JF6WE9AvGsKtFs+Ve7AZ8iiXOz1JqMBlRKafTdn6sI9FtGuADKY2
-	 uoDVXNdZGMzHnQPkUFtMKNZA8KVV7vaKEgwIEgeYgqmuSCN/1gHe0EgopuBveuciYY
-	 Ucz8JYAeRsaYrXlVMreGY+VqgWnMTbWLjxzKf57I8vV/eiFCk7v0iL+ebPm830lSHz
-	 LfRZjUaVsj3rm3/4v/PvuTlNATW/PWc8QpBu1+5XWHWJ+2IrmHBubbAt50g7T+rzjI
-	 Gh0BieGHO3VyOqgHUl+gTFrv0yJw0I9W+LXFmsbDgYbPtTx4LJVTuMzC1B6/ove/0i
-	 lWkWItaSe5bOg==
+	b=fuXJ1yNmvGKFR748t9f6fpDhb0cQYf/pXwGUGFDpz8vbslke3Xgxcmo+K/K9qvNfM
+	 LTHzvHdHyu6mKMG3QCsDz3LtTKIIRp+b50ShMgkIb6Qxr+o4BOCBBBD2a+ZKoJTf/p
+	 1/fgbwbEWZX/a2QTh43zywoItnIyf6lE91TiQ2Cs3gd7yL5Ef5ZkMYiH294imE0bQD
+	 YfMEefrOERUIvj77eNTLIWTur1fSRuWagZcaZzezh6SQT2TlmSUS9U6nEFqR+NlWIe
+	 Fv9hWovvgS+/YykHjuTIlnRmPZMlZhB537O54AD0ijMUDA3GiZqlTFVIl2UMRKxckU
+	 M/y43Z6qW85Zg==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -55,11 +55,10 @@ To: Mike Rapoport <rppt@kernel.org>,
 	Jork Loeser <jloeser@linux.microsoft.com>
 Cc: kexec@lists.infradead.org,
 	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH v5 16/22] mm/mm_init: simplify deferred_free_pages() migratetype init
-Date: Wed, 29 Jul 2026 16:56:01 +0200
-Message-ID: <20260729145610.2827231-17-pratyush@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 17/22] mm/mm_init: don't rely on memblock to get KHO scratch migratetype
+Date: Wed, 29 Jul 2026 16:56:02 +0200
+Message-ID: <20260729145610.2827231-18-pratyush@kernel.org>
 X-Mailer: git-send-email 2.55.0.508.g3f0d502094-goog
 In-Reply-To: <20260729145610.2827231-1-pratyush@kernel.org>
 References: <20260729145610.2827231-1-pratyush@kernel.org>
@@ -79,92 +78,235 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Muchun Song <songmuchun@bytedance.com>
+From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-deferred_free_pages() open-codes two loops to initialize the pageblock
-migratetype for a range of pages.
+Currently struct page init via memmap_init() or deferred_init_memmap()
+only queries the migrate type from KHO for each discrete memory range.
+That works currently since KHO scratch memory has a different memory
+type so it is always it its own region.
 
-Replace them with pageblock_migratetype_init_range() to remove the
-duplication and make the code clearer (Note that deferred_free_pages() may
-be called from atomic context).
+An upcoming patch will add support for discovering blocks of memory with
+no preservations and it will mark it as MEMBLOCK_KHO_SCRATCH to allow
+allocations from them. This can lead to the bootmem KHO scratch areas to
+be merged into larger free ranges. This merging breaks the selection of
+migrate type.
 
-Link: https://lore.kernel.org/20260612035903.2468601-6-songmuchun@bytedance.com
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Acked-by: Oscar Salvador <osalvador@suse.de>
+Get rid of memblock_is_kho_scratch_memory(). Instead, use
+kho_scratch_overlap() to decide the migrate type of the PFN. Since
+kho_scratch_migratetype() only uses KHO functions, move it to
+kexec_handover.h.
+
+Instead of calling kho_scratch_migratetype() once for each free range,
+call it once for each pageblock. Update
+pageblock_migratetype_init_range() and memmap_init_range() to do so.
+
+Since the migrate type is now evaluated for each pageblock and not each
+free range, drop the migratetype arguments to deferred_free_pages() and
+memmap_init_zone_range() and use MIGRATE_MOVABLE directly.
+
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
+ include/linux/kexec_handover.h | 15 +++++++++++++++
+ include/linux/memblock.h       | 19 -------------------
+ mm/memblock.c                  | 10 ----------
+ mm/mm_init.c                   | 27 +++++++++++++--------------
+ 4 files changed, 28 insertions(+), 43 deletions(-)
 
-Notes:
-    This patch is taken from Muchun's series [0]. The patch as of today is
-    in mm-unstable.
-    
-    [0] https://lore.kernel.org/linux-mm/20260612035903.2468601-6-songmuchun@bytedance.com/
-
- mm/mm_init.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
-
+diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
+index 18ba417f1ada..c83ec4a15fe7 100644
+--- a/include/linux/kexec_handover.h
++++ b/include/linux/kexec_handover.h
+@@ -5,6 +5,7 @@
+ #include <linux/err.h>
+ #include <linux/errno.h>
+ #include <linux/types.h>
++#include <linux/mmzone.h>
+ #include <asm-generic/kexec_handover.h>
+ 
+ struct kho_vmalloc;
+@@ -39,6 +40,14 @@ void kho_populate(phys_addr_t fdt_phys, u64 fdt_len, phys_addr_t scratch_phys,
+ 		  u64 scratch_len);
+ 
+ bool kho_scratch_overlap(phys_addr_t phys, size_t size);
++
++static inline enum migratetype kho_scratch_migratetype(unsigned long pfn,
++						       enum migratetype mt)
++{
++	if (kho_scratch_overlap(PFN_PHYS(pfn), pageblock_nr_pages << PAGE_SHIFT))
++		return MIGRATE_CMA;
++	return mt;
++}
+ #else
+ static inline bool kho_is_enabled(void)
+ {
+@@ -122,6 +131,12 @@ static inline bool kho_scratch_overlap(phys_addr_t phys, size_t size)
+ {
+ 	return false;
+ }
++
++static inline enum migratetype kho_scratch_migratetype(unsigned long pfn,
++						       enum migratetype mt)
++{
++	return mt;
++}
+ #endif /* CONFIG_KEXEC_HANDOVER */
+ 
+ #endif /* LINUX_KEXEC_HANDOVER_H */
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 5afcd99aa8c1..f142c8a8cd5b 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -613,28 +613,9 @@ static inline void memtest_report_meminfo(struct seq_file *m) { }
+ #ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
+ void memblock_set_kho_scratch_only(void);
+ void memblock_clear_kho_scratch_only(void);
+-bool memblock_is_kho_scratch_memory(phys_addr_t addr);
+-
+-static inline enum migratetype kho_scratch_migratetype(unsigned long pfn,
+-						       enum migratetype mt)
+-{
+-	if (memblock_is_kho_scratch_memory(PFN_PHYS(pfn)))
+-		return MIGRATE_CMA;
+-	return mt;
+-}
+ #else
+ static inline void memblock_set_kho_scratch_only(void) { }
+ static inline void memblock_clear_kho_scratch_only(void) { }
+-static inline bool memblock_is_kho_scratch_memory(phys_addr_t addr)
+-{
+-	return false;
+-}
+-
+-static inline enum migratetype kho_scratch_migratetype(unsigned long pfn,
+-						       enum migratetype mt)
+-{
+-	return mt;
+-}
+ #endif
+ 
+ #endif /* _LINUX_MEMBLOCK_H */
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 6349c48154f4..8b2e551435ae 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -2511,16 +2511,6 @@ __init void memblock_clear_kho_scratch_only(void)
+ {
+ 	kho_scratch_only = false;
+ }
+-
+-bool __init_memblock memblock_is_kho_scratch_memory(phys_addr_t addr)
+-{
+-	int i = memblock_search(&memblock.memory, addr);
+-
+-	if (i == -1)
+-		return false;
+-
+-	return memblock_is_kho_scratch(&memblock.memory.regions[i]);
+-}
+ #endif
+ 
+ #ifdef CONFIG_KEXEC_HANDOVER
 diff --git a/mm/mm_init.c b/mm/mm_init.c
-index 84d4b1c997bc..30355effe1f2 100644
+index 30355effe1f2..dc20d6814e48 100644
 --- a/mm/mm_init.c
 +++ b/mm/mm_init.c
-@@ -674,15 +674,15 @@ static inline void fixup_hashdist(void)
- static inline void fixup_hashdist(void) {}
- #endif /* CONFIG_NUMA */
- 
--#ifdef CONFIG_ZONE_DEVICE
-+#if defined(CONFIG_ZONE_DEVICE) || defined(CONFIG_DEFERRED_STRUCT_PAGE_INIT)
- static __meminit void pageblock_migratetype_init_range(unsigned long pfn,
--		unsigned long nr_pages, int migratetype)
-+		unsigned long nr_pages, int migratetype, bool atomic)
- {
+@@ -681,7 +681,9 @@ static __meminit void pageblock_migratetype_init_range(unsigned long pfn,
  	const unsigned long end = pfn + nr_pages;
  
  	for (pfn = pageblock_align(pfn); pfn < end; pfn += pageblock_nr_pages) {
- 		init_pageblock_migratetype(pfn_to_page(pfn), migratetype, false);
--		if (IS_ALIGNED(pfn, PAGES_PER_SECTION))
-+		if (!atomic && IS_ALIGNED(pfn, PAGES_PER_SECTION))
+-		init_pageblock_migratetype(pfn_to_page(pfn), migratetype, false);
++		enum migratetype mt = kho_scratch_migratetype(pfn, migratetype);
++
++		init_pageblock_migratetype(pfn_to_page(pfn), mt, false);
+ 		if (!atomic && IS_ALIGNED(pfn, PAGES_PER_SECTION))
  			cond_resched();
  	}
- }
-@@ -1142,7 +1142,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
- 				     compound_nr_pages(pfn, altmap, pgmap));
+@@ -932,8 +934,9 @@ void __meminit memmap_init_range(unsigned long size, int nid, unsigned long zone
+ 		 * over the place during system boot.
+ 		 */
+ 		if (pageblock_aligned(pfn)) {
+-			init_pageblock_migratetype(page, migratetype,
+-					isolate_pageblock);
++			enum migratetype mt = kho_scratch_migratetype(pfn, migratetype);
++
++			init_pageblock_migratetype(page, mt, isolate_pageblock);
+ 			cond_resched();
+ 		}
+ 		pfn++;
+@@ -943,8 +946,7 @@ void __meminit memmap_init_range(unsigned long size, int nid, unsigned long zone
+ static void __init memmap_init_zone_range(struct zone *zone,
+ 					  unsigned long start_pfn,
+ 					  unsigned long end_pfn,
+-					  unsigned long *hole_pfn,
+-					  enum migratetype mt)
++					  unsigned long *hole_pfn)
+ {
+ 	unsigned long zone_start_pfn = zone->zone_start_pfn;
+ 	unsigned long zone_end_pfn = zone_start_pfn + zone->spanned_pages;
+@@ -957,7 +959,8 @@ static void __init memmap_init_zone_range(struct zone *zone,
+ 		return;
+ 
+ 	memmap_init_range(end_pfn - start_pfn, nid, zone_id, start_pfn,
+-			  zone_end_pfn, MEMINIT_EARLY, NULL, mt, false);
++			  zone_end_pfn, MEMINIT_EARLY, NULL, MIGRATE_MOVABLE,
++			  false);
+ 
+ 	if (*hole_pfn < start_pfn)
+ 		init_unavailable_range(*hole_pfn, start_pfn, zone_id, nid);
+@@ -973,8 +976,6 @@ static void __init memmap_init(void)
+ 
+ 	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
+ 		struct pglist_data *node = NODE_DATA(nid);
+-		enum migratetype mt =
+-			kho_scratch_migratetype(start_pfn, MIGRATE_MOVABLE);
+ 
+ 		for (j = 0; j < MAX_NR_ZONES; j++) {
+ 			struct zone *zone = node->node_zones + j;
+@@ -983,7 +984,7 @@ static void __init memmap_init(void)
+ 				continue;
+ 
+ 			memmap_init_zone_range(zone, start_pfn, end_pfn,
+-					       &hole_pfn, mt);
++					       &hole_pfn);
+ 			zone_id = j;
+ 		}
  	}
+@@ -1973,7 +1974,7 @@ unsigned long __init node_map_pfn_alignment(void)
  
--	pageblock_migratetype_init_range(start_pfn, nr_pages, MIGRATE_MOVABLE);
-+	pageblock_migratetype_init_range(start_pfn, nr_pages, MIGRATE_MOVABLE, false);
- 
- 	pr_debug("%s initialised %lu pages in %ums\n", __func__,
- 		nr_pages, jiffies_to_msecs(jiffies - start));
-@@ -1981,12 +1981,12 @@ static void __init deferred_free_pages(unsigned long pfn,
+ #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+ static void __init deferred_free_pages(unsigned long pfn,
+-		unsigned long nr_pages, enum migratetype mt)
++		unsigned long nr_pages)
+ {
+ 	struct page *page;
+ 	unsigned long i;
+@@ -1981,7 +1982,7 @@ static void __init deferred_free_pages(unsigned long pfn,
  	if (!nr_pages)
  		return;
  
-+	pageblock_migratetype_init_range(pfn, nr_pages, mt, true);
-+
+-	pageblock_migratetype_init_range(pfn, nr_pages, mt, true);
++	pageblock_migratetype_init_range(pfn, nr_pages, MIGRATE_MOVABLE, true);
+ 
  	page = pfn_to_page(pfn);
  
- 	/* Free a large naturally-aligned chunk if possible */
- 	if (nr_pages == MAX_ORDER_NR_PAGES && IS_MAX_ORDER_ALIGNED(pfn)) {
--		for (i = 0; i < nr_pages; i += pageblock_nr_pages)
--			init_pageblock_migratetype(page + i, mt, false);
- 		__free_pages_core(page, MAX_PAGE_ORDER, MEMINIT_EARLY);
- 		return;
- 	}
-@@ -1994,11 +1994,8 @@ static void __init deferred_free_pages(unsigned long pfn,
- 	/* Accept chunks smaller than MAX_PAGE_ORDER upfront */
- 	accept_memory(PFN_PHYS(pfn), nr_pages * PAGE_SIZE);
+@@ -2051,8 +2052,6 @@ deferred_init_memmap_chunk(unsigned long start_pfn, unsigned long end_pfn,
+ 	for_each_free_mem_range(i, nid, 0, &start, &end, NULL) {
+ 		unsigned long spfn = PFN_UP(start);
+ 		unsigned long epfn = PFN_DOWN(end);
+-		enum migratetype mt =
+-			kho_scratch_migratetype(spfn, MIGRATE_MOVABLE);
  
--	for (i = 0; i < nr_pages; i++, page++, pfn++) {
--		if (pageblock_aligned(pfn))
--			init_pageblock_migratetype(page, mt, false);
--		__free_pages_core(page, 0, MEMINIT_EARLY);
--	}
-+	for (i = 0; i < nr_pages; i++)
-+		__free_pages_core(page + i, 0, MEMINIT_EARLY);
- }
+ 		if (spfn >= end_pfn)
+ 			break;
+@@ -2065,7 +2064,7 @@ deferred_init_memmap_chunk(unsigned long start_pfn, unsigned long end_pfn,
+ 			unsigned long chunk_end = min(mo_pfn, epfn);
  
- /* Completion tracking for deferred_init_memmap() threads */
+ 			nr_pages += deferred_init_pages(zone, spfn, chunk_end);
+-			deferred_free_pages(spfn, chunk_end - spfn, mt);
++			deferred_free_pages(spfn, chunk_end - spfn);
+ 
+ 			spfn = chunk_end;
+ 
 -- 
 2.55.0.508.g3f0d502094-goog
 
