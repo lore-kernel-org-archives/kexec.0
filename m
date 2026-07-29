@@ -4,88 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1465BC54F51
-	for <kexec@archiver.kernel.org>; Tue, 28 Jul 2026 22:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BA2D8C54F54
+	for <kexec@archiver.kernel.org>; Wed, 29 Jul 2026 03:12:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=kK9fmvYx94bqGyeMgzsYcbMKuj2faWTY3fQuvgNhZiw=; b=nkqeL/VymeEyNb/phYC6be8uBL
-	Z8Pro2ngAQ7haaiFPqioE0aWlGcpIAAP2nqpDUDQbU47ayWgFuYR/NKQ0L5Ue9oPEoOP/3Ae08yHl
-	J3fv5/F8PmKjlzFYlhI4ZyOhfJNVALUlGWY9i6wYcLZSYQyjWc6tdxMAOVAY1Vop3q4+JGWaDuPdl
-	6utUQ0iGLQZ+s3rM7WHaC7VJe1QPu1SPCmCQ6TA6VHWZyNrf8Gw4PD4tT7yQ1R6H+pSg06dKn/9Op
-	4sH+I1VjOuyi/2jopfZxo5NyZr4ko0YomMJkkHmJbAQMHdKTPZsD5adPo+8gMwBEYeNxtKmjb5E5F
-	jRHPlOgw==;
+	bh=igqtNYMEL8oKIpnu2DrMNvEYzwwJSEovzlP+FnYUOCA=; b=C2cNtMja/Fa+cBIq6pCrZb2IEF
+	C0DMgIbXNseNrE9FhVpkgvIIQuReuoBWUHn9XQgNI/BHPemx+wMB631Ln4eSbKgVGwAi2Mvc1tdog
+	LRZpFiO6xjqjKu0wWzkafZYvTzMtSNouGn286Amo2qP9RKd1Cuso+5Lt9xPlbWFepWwwyumkRNdER
+	nYvXeQSddjxAhj7UgdG3XEPAP6cTOr3yMazRuJcSEvA9JcNlgXaIEHxeJUUOmgfun+6B1WZsGmeil
+	Xd2sB0IdqsK5SxG/DPFkvH9lzKNs9TovHYBfk/ehchnZ1xTxGbrShpr+3J+I2lAZr7PL4WPEYPFsl
+	IyGZb/PA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1woq0V-00000006O41-1Cjh;
-	Tue, 28 Jul 2026 22:10:39 +0000
-Received: from mail-pg1-x547.google.com ([2607:f8b0:4864:20::547])
+	id 1wouii-00000006jbi-1IXw;
+	Wed, 29 Jul 2026 03:12:36 +0000
+Received: from canpmsgout04.his.huawei.com ([113.46.200.219])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1woq0N-00000006NuN-44zm
-	for kexec@lists.infradead.org;
-	Tue, 28 Jul 2026 22:10:34 +0000
-Received: by mail-pg1-x547.google.com with SMTP id 41be03b00d2f7-caf5fa127d4so408111a12.0
-        for <kexec@lists.infradead.org>; Tue, 28 Jul 2026 15:10:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785276630; x=1785881430; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=kK9fmvYx94bqGyeMgzsYcbMKuj2faWTY3fQuvgNhZiw=;
-        b=KyN3xpOaTUSn4fDnw4ORcA4wq9uRryW6RZYEGTRPZA0kzP6fHDYV0v9KWDXccXNsCE
-         tj8MfrGF9F/YFPT3H6SAcCHLDeafM9V+ICxac+kOg6L4TGRckRqrtVbwLMNC3GH9EEly
-         MsRmVXFZjxoL6+/b4j+69OJpDcaJLVLJA3d4v82AexNTJEy35zF910qEkdhYs2LS2E2r
-         QzMrBzhZPBdvg3H5aXAg78zwcYfS1UkOSjy7Re3oHVp888FsAzIuiDZgfyQWs4i/nzpI
-         oKoj6KGUgvm4yVqjjtl7pzi4TQGg+PC16zAH1PbQvylNyvaB2Sb9h4nS3Ix5JOHXRZ58
-         LvwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785276630; x=1785881430;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=kK9fmvYx94bqGyeMgzsYcbMKuj2faWTY3fQuvgNhZiw=;
-        b=XfAw2lcwN5aIMwt73h8j8rjBzpzHmAQD4ahWM4gDawpNJ04Q0Cd75Dn9Bmc4Aw41Uv
-         ProUC2XF+7QpFOBDdrKbVjjZczZgB9xTMS0/Dq0bEipE7ylWXUp2aNAAac1AQFhCCDOt
-         imVXuaH2QkFu+bGwDANmkzzAXJImiBF9XikjqjEbzMFxnHjbjmQy+veoHBj7NVSg4qtr
-         RlC/r/Cz32ZYD5wQ0wMWjGgqBowhwhAPcohez1FzGDRQOowUQZ8hLjHdYF9InHoeEooB
-         n09ASz43pTLdxhb5dXC1t+hBcnchgrurVObyM7QvnSk9blXqN7GNx0j6n6o1lBe9lwrw
-         viCw==
-X-Gm-Message-State: AOJu0YxUEK70y4TQ7Sv3vkZlw5Fstx27sTCZkfhx/yFlsBpMriFBzyph
-	E2HaxIVr+3+mWjYXjeHU3EBjm9FWgGDMWq4YQvgMgw1OTgCnBzj1Buv2m+DOS17JJMMuF6u9c4U
-	JWKJXZ0JeFdiLFcMLLPbMBQrlJl6oLzVQ9eyBzeqD16RDMRR4kEfhJx1k5f6N2KIr1Q66jFUH/B
-	WJOjEuM7DNQBg6ZC8yThKWHP/HTm2/YJH79drDyz+UciKrcEfYXBs=
-X-Received: from pfik11.prod.google.com ([2002:aa7:820b:0:b0:84e:40d2:2e74])
- (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:39a9:b0:845:3914:f039 with SMTP id d2e1a72fcca58-84e93203c18mr4669411b3a.26.1785276630227;
- Tue, 28 Jul 2026 15:10:30 -0700 (PDT)
-Date: Tue, 28 Jul 2026 22:10:05 +0000
-In-Reply-To: <20260728221007.2098560-1-dmatlack@google.com>
-Mime-Version: 1.0
-References: <20260728221007.2098560-1-dmatlack@google.com>
-X-Mailer: git-send-email 2.55.0.487.gaf234c4eb3-goog
-Message-ID: <20260728221007.2098560-12-dmatlack@google.com>
-Subject: [PATCH v8 11/12] PCI: liveupdate: Do not disable bus mastering on
- preserved devices during kexec
-From: David Matlack <dmatlack@google.com>
-To: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org
-Cc: Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
-	Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>, Chris Li <chrisl@kernel.org>, 
-	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
-	Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, Leon Romanovsky <leonro@nvidia.com>, 
-	Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, Parav Pandit <parav@nvidia.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pranjal Shrivastava <praan@google.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+	id 1wouie-00000006jZY-1NWT;
+	Wed, 29 Jul 2026 03:12:34 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=igqtNYMEL8oKIpnu2DrMNvEYzwwJSEovzlP+FnYUOCA=;
+	b=CtxVcq19s4/+nlwp4cUNXfDx1nZiyIWFU4uWCub+//6KtP7pZWS9arcnPlF2LC/ogoKXyeVeP
+	TCuE1W141iovkLTXAPEBXvujBx6CaVYA0od9WENgqjGwUbcGu+QPm1w6sqo05U8KePvOSjI314O
+	40wUQWbWiVj05nmSEjphxXc=
+Received: from mail.maildlp.com (unknown [172.19.162.223])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4h8xwF5fB4z1prPv;
+	Wed, 29 Jul 2026 11:02:53 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id ADBB040561;
+	Wed, 29 Jul 2026 11:12:22 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
+ (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 29 Jul
+ 2026 11:12:21 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <akpm@linux-foundation.org>,
+	<baoquan.he@linux.dev>, <rppt@kernel.org>, <pasha.tatashin@soleen.com>,
+	<pratyush@kernel.org>, <thuth@redhat.com>, <mark.rutland@arm.com>,
+	<jic23@kernel.org>, <james.morse@arm.com>, <ardb@kernel.org>,
+	<leitao@debian.org>, <yeoreum.yun@arm.com>, <sourabhjain@linux.ibm.com>,
+	<robh@kernel.org>, <kees@kernel.org>, <coxu@redhat.com>, <makb@juniper.net>,
+	<piliu@redhat.com>, <graf@amazon.com>, <ebiggers@kernel.org>,
+	<jbouron@amazon.com>, <bgwin@google.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<kexec@lists.infradead.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH v2 2/5] arm64: kexec_file: Fix CMA page leaks in segment placement retry loops
+Date: Wed, 29 Jul 2026 11:12:32 +0800
+Message-ID: <20260729031235.2840255-3-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260729031235.2840255-1-ruanjinjie@huawei.com>
+References: <20260729031235.2840255-1-ruanjinjie@huawei.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.73]
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260728_151032_032875_90F955BD 
-X-CRM114-Status: GOOD (  17.30  )
+X-CRM114-CacheID: sfid-20260728_201232_805435_47221B29 
+X-CRM114-Status: GOOD (  13.12  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,105 +84,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Do not disable bus mastering on outgoing preserved devices during
-pci_device_shutdown() for kexec.
+During kexec image placement retry loops, any midway failure causes
+the loader to truncate `image->nr_segments` back to its initial state
+to purge the failed segments.
 
-Preserved devices must be allowed to perform memory transactions during
-a Live Update to ensure continuous operation.  Clearing the bus
-mastering bit would prevent these devices from issuing any memory
-requests while the new kernel boots.
+However, this truncation introduces a memory leak. The CMA pages
+allocated via kexec_add_buffer() during the failed attempt are tracked
+in the `image->segment_cma` array. Because the subsequent cleanup paths
+only iterate up to the truncated `nr_segments` boundary, these allocated
+CMA pages outside the new boundary are permanently leaked.
 
-Because bridges upstream of preserved endpoint devices are also
-automatically preserved, this change also avoids clearing bus mastering
-on them. This is critical because clearing bus mastering on an upstream
-bridge prevents the bridge from forwarding memory requests upstream (i.e.
-it would prevent the endpoint device from accessing system RAM and doing
-peer-to-peer transactions with devices not downstream of the bridge).
+Fix this by explicitly releasing the associated CMA buffers in
+the failure paths before `image->nr_segments` is reduced.
 
-Reviewed-by: Pranjal Shrivastava <praan@google.com>
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-Signed-off-by: David Matlack <dmatlack@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Breno Leitao <leitao@debian.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 07d24902977e4 ("kexec: enable CMA based contiguous allocation")
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- drivers/pci/liveupdate.c | 11 +++++++++++
- drivers/pci/liveupdate.h |  6 ++++++
- drivers/pci/pci-driver.c |  7 +++++--
- 3 files changed, 22 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/kexec_image.c        | 1 +
+ arch/arm64/kernel/machine_kexec_file.c | 5 ++++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/liveupdate.c b/drivers/pci/liveupdate.c
-index 65bcecb1b64e..32b73ebf71f7 100644
---- a/drivers/pci/liveupdate.c
-+++ b/drivers/pci/liveupdate.c
-@@ -132,6 +132,10 @@
-  *  * The PCI core adopts ARI Forwarding Enable on all bridges with downstream
-  *    preserved devices to ensure that all preserved devices on the bridge's
-  *    secondary bus are addressable after the Live Update.
-+ *
-+ *  * The PCI core does not disable bus mastering on outgoing preserved devices
-+ *    during kexec. This allows preserved devices to issue memory transactions
-+ *    throughout the Live Update.
-  */
- 
- #define pr_fmt(fmt) "PCI: liveupdate: " fmt
-@@ -879,6 +883,13 @@ int pci_liveupdate_adopt_ari(struct pci_dev *dev)
+diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
+index b70f4df15a1a..ffcb7f9075e6 100644
+--- a/arch/arm64/kernel/kexec_image.c
++++ b/arch/arm64/kernel/kexec_image.c
+@@ -107,6 +107,7 @@ static void *image_load(struct kimage *image,
+ 		 * We couldn't find space for the other segments; erase the
+ 		 * kernel segment and try the next available hole.
+ 		 */
++		kexec_free_segment_cma(image, kernel_segment_number);
+ 		image->nr_segments -= 1;
+ 		kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
+ 		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index 854d872dfd0f..e48f29167b38 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -179,7 +179,10 @@ int load_other_segments(struct kimage *image,
  	return 0;
- }
  
-+bool pci_liveupdate_is_outgoing(struct pci_dev *dev)
-+{
-+	guard(rwsem_read)(&pci_liveupdate.rwsem);
-+	pci_WARN_ONCE(dev, !dev->liveupdate.frozen, "Preservation status is unstable!\n");
-+	return dev->liveupdate.outgoing;
-+}
-+
- /**
-  * pci_liveupdate_is_incoming() - Check if a device is incoming-preserved
-  * @dev: The PCI device to check
-diff --git a/drivers/pci/liveupdate.h b/drivers/pci/liveupdate.h
-index 49d07fd02132..9c31fb60207d 100644
---- a/drivers/pci/liveupdate.h
-+++ b/drivers/pci/liveupdate.h
-@@ -20,6 +20,7 @@ void pci_liveupdate_scan_bridge_end(struct pci_dev *dev);
- void pci_liveupdate_cache_adopted_acs_controls(struct pci_dev *dev);
- int pci_liveupdate_enable_adopted_acs_controls(struct pci_dev *dev);
- int pci_liveupdate_adopt_ari(struct pci_dev *dev);
-+bool pci_liveupdate_is_outgoing(struct pci_dev *dev);
- #else
- static inline void pci_liveupdate_setup_device(struct pci_dev *dev)
- {
-@@ -55,6 +56,11 @@ static inline int pci_liveupdate_adopt_ari(struct pci_dev *dev)
- {
- 	return -EINVAL;
+ out_err:
+-	image->nr_segments = orig_segments;
++	while (image->nr_segments > orig_segments) {
++		kexec_free_segment_cma(image, image->nr_segments - 1);
++		image->nr_segments--;
++	}
+ 	kvfree(dtb);
+ 	return ret;
  }
-+
-+static inline bool pci_liveupdate_is_outgoing(struct pci_dev *dev)
-+{
-+	return false;
-+}
- #endif
- 
- #endif /* DRIVERS_PCI_LIVEUPDATE_H */
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 51616e4327d3..47cb3dcaa927 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -546,11 +546,14 @@ static void pci_device_shutdown(struct device *dev)
- 	/*
- 	 * If this is a kexec reboot, turn off Bus Master bit on the
- 	 * device to tell it to not continue to do DMA. Don't touch
--	 * devices in D3cold or unknown states.
-+	 * devices being preserved for Live Update or in D3cold or
-+	 * unknown states.
-+	 *
- 	 * If it is not a kexec reboot, firmware will hit the PCI
- 	 * devices with big hammer and stop their DMA any way.
- 	 */
--	if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
-+	if (kexec_in_progress && !pci_liveupdate_is_outgoing(pci_dev) &&
-+	    pci_dev->current_state <= PCI_D3hot)
- 		pci_clear_master(pci_dev);
- }
- 
 -- 
-2.55.0.487.gaf234c4eb3-goog
+2.34.1
 
 
