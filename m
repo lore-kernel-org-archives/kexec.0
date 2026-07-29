@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 94C5EC53219
-	for <kexec@archiver.kernel.org>; Wed, 29 Jul 2026 14:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 27A17C54F55
+	for <kexec@archiver.kernel.org>; Wed, 29 Jul 2026 14:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mmQtxiJQKd7IWjs9bi2BB93ctJ9Pw3cwj1Whq5yGN/M=; b=uDJSXeXT+Wff2HRLngPHhcBOBX
-	QmK4JfGvp8A2MmNBcx+sBpEPV9znwwgRzCVege9FuFR7wFKBYpIv3wiMLAjJaXUQEemAkYu31dBwE
-	yv+donxLdXaV/Xz494dkHN4M9pZmXZWRWZHS7ih7yqYKvBxfvfwkOi01w2b5wTQuCXQtrzD9i8GZ+
-	T9pvTRpg9pSdSNS6g2UrzkE5BN+/7b3RtCUl+FboPEZphCmBtchwgEBC97TLWkQZGn5aDg1mj85FZ
-	xYurIQqhzVP5yYztijF4dYAi/BorjwtJ0Jbxoia+/0fKNNDXvPMVinQuzYlIwDRaj7km+nExAM/pY
-	vblOKvvg==;
+	bh=URUZhhyk9GJSCPvpDkxOhTJZJrRdQj3QnZX2BRofioY=; b=iIaLovk3JUwUbYz5K6InwmGbss
+	YpKJOuIA5BOpur/nAewRaZbiLAU2zKV+MzMaEMRlEBBLD6ZQCeXrbAfjVC70QLf5cFEH9mDfo6a6r
+	xajgw9+oIc0MzfuxumWihWxJ9RE18zTq4iVnH8ql/IsSaXeZBPArJdG1cgT3Xeud0uvR/kxr3S2aB
+	E3mPzHsS+hu5JAs2UI3pBJhwmIbik3zSAeV69axtJky4+NlUunz3aW+DzskS+O1i5u656cUAMUx5h
+	Cyb+1vvi48vnWP+psViD7H+0nQTepZGUeidWa1Tu0Qj0Y1ReD+w99/U68Fs+m9MJpHQeN7aw1JewS
+	SPaLRS5w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wp5hw-00000008Iya-2Djn;
-	Wed, 29 Jul 2026 14:56:32 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wp5hy-00000008J09-2a45;
+	Wed, 29 Jul 2026 14:56:34 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wp5hv-00000008Ixg-12z6
+	id 1wp5hx-00000008IzC-2ahC
 	for kexec@lists.infradead.org;
-	Wed, 29 Jul 2026 14:56:31 +0000
+	Wed, 29 Jul 2026 14:56:33 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id B14E0600C3;
+	by sea.source.kernel.org (Postfix) with ESMTP id 175B243FAD;
+	Wed, 29 Jul 2026 14:56:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5E821F00A3A;
 	Wed, 29 Jul 2026 14:56:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AF521F00A3D;
-	Wed, 29 Jul 2026 14:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785336990;
-	bh=mmQtxiJQKd7IWjs9bi2BB93ctJ9Pw3cwj1Whq5yGN/M=;
+	s=k20260515; t=1785336993;
+	bh=URUZhhyk9GJSCPvpDkxOhTJZJrRdQj3QnZX2BRofioY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=DUvShgphV0HpF8KYUua/9LLKbfqc0fbegRrwSjbUVn8A+OnM+potPJQzEPd0AYvZE
-	 MNFpBkNbD+DI6mtpj7p1nPmcXc5CID91D0KNIUGpZfxZF3bMpr50ncdpBsSu5QcyE8
-	 xpDyqp+/2twCyV2kWaafcU9i108LC9rfGMSswE+Cq4YQ7eMGE9Si1+X9HQ7/96M1sG
-	 KpNpLeG/bLIP8LvGFJDg3tQY4UOM/2Tg5AKwlSWxumQ6m1OzUSa9EWN65ImCPHhE3r
-	 vy4TFapDE2nVXoLvxD5YGsLEK+5mpfUZl3wi4XsYdwKBtIy9rPYzP27yjbh+xqGkua
-	 6xmdlIDXwNy1g==
+	b=VDX7Guv/RSc9zTFHdXr/EBRF1MFHptXJSjdg5B0zd/T2N/+vIibUpoOWl+1LCiPBg
+	 i3NOrFuyCkDBCnuZuSuaNeNdVpqTUs+cMCf40jway8yW/VNXrfeXKSKRklHLnWwETN
+	 n01K906XSS2hQ9o4B5mkr6yeA51LtH/FEOUo/RDH93Crasm0pjeVCdybz9+lMWv+3Q
+	 IhQioV/AgZWNI6aza5IDxxMDTXcdag0+jiIYIlWiuN7Wj0lzYuvrmtqkszK3+m05Pz
+	 kBhqTMXrzZdCL26S64rFf5R5rOFkBCejRvIrddhGTwHMuzvImr2Acsgv2u3Hc3Kq0A
+	 fxg6H6umLDy2w==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -56,9 +56,9 @@ To: Mike Rapoport <rppt@kernel.org>,
 Cc: kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 03/22] kho: disallow wide keys in radix tree
-Date: Wed, 29 Jul 2026 16:55:48 +0200
-Message-ID: <20260729145610.2827231-4-pratyush@kernel.org>
+Subject: [PATCH v5 04/22] kho: return virtual address of mem_map from kho_get_mem_map()
+Date: Wed, 29 Jul 2026 16:55:49 +0200
+Message-ID: <20260729145610.2827231-5-pratyush@kernel.org>
 X-Mailer: git-send-email 2.55.0.508.g3f0d502094-goog
 In-Reply-To: <20260729145610.2827231-1-pratyush@kernel.org>
 References: <20260729145610.2827231-1-pratyush@kernel.org>
@@ -80,62 +80,85 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-The KHO radix tree was designed to track preserved pages. So it does not
-provide the capability to track any 64-bit key. Instead, it limits the
-key width to how much it needs for tracking PFNs and their orders.
-Limiting the width reduces the number of levels in the tree.
+Currently the preserved memory map address is returned by
+kho_get_mem_map_phys(). It is only used by kho_populate().
+kho_populate() doesn't use the actual value. It only cares that the
+address exists and is valid.
 
-KHO is not expected to be the only user of the radix tree. With the API
-generalized to allow other users, now it is possible to add any key to
-the tree.
+In coming patches, more callers will be added, all of which will need
+the virtual address of the preserved memory map. Since kho_populate()
+doesn't care about the actual value and only cares about validity, it
+can also use the virtual address returned by kho_get_mem_map(). It only
+needs to make sure the returned value is not NULL.
 
-Check the key width at kho_radix_add_key(), and error out if it exceeds
-what the tree can handle. Do this instead of increasing the tree depth
-since right now there are no users that need to use wider keys, so this
-avoids memory overhead and ABI breakage.
+Rename kho_get_mem_map_phys() to kho_get_mem_map() and return the
+virtual address of the preserved memory map.
 
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- kernel/liveupdate/kexec_handover.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ kernel/liveupdate/kexec_handover.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index ea24f23ce292..e7451743b87e 100644
+index e7451743b87e..5c35c11c273b 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -156,6 +156,11 @@ static unsigned long kho_radix_get_table_index(unsigned long key,
-  * intermediate nodes do not exist along the path, they are allocated and added
-  * to the tree.
-  *
-+ * NOTE: Currently only keys of width up to %KHO_RADIX_KEY_WIDTH are supported.
-+ * This limit only exists because current users of the radix tree don't use more
-+ * than that. Changing the maximum width requires changing the tree depth, which
-+ * needs bumping the ABI version.
-+ *
-  * Return: 0 on success, or a negative error code on failure.
-  */
- int kho_radix_add_key(struct kho_radix_tree *tree, unsigned long key)
-@@ -172,6 +177,9 @@ int kho_radix_add_key(struct kho_radix_tree *tree, unsigned long key)
- 	if (WARN_ON_ONCE(!tree->root))
- 		return -EINVAL;
+@@ -512,19 +512,24 @@ static int __init kho_preserved_memory_reserve(unsigned long key)
+ 	return 0;
+ }
  
-+	if (unlikely(fls64(key) > KHO_RADIX_KEY_WIDTH))
-+		return -ERANGE;
+-/* Returns physical address of the preserved memory map from FDT */
+-static phys_addr_t __init kho_get_mem_map_phys(const void *fdt)
++/* Returns virtual address of the preserved memory map from FDT */
++static __init void *kho_get_mem_map(const void *fdt)
+ {
+ 	const void *mem_ptr;
++	phys_addr_t mem_map_phys;
+ 	int len;
+ 
+ 	mem_ptr = fdt_getprop(fdt, 0, KHO_FDT_MEMORY_MAP_PROP_NAME, &len);
+ 	if (!mem_ptr || len != sizeof(u64)) {
+ 		pr_err("failed to get preserved memory map\n");
+-		return 0;
++		return NULL;
+ 	}
+ 
+-	return get_unaligned((const u64 *)mem_ptr);
++	mem_map_phys = get_unaligned((const u64 *)mem_ptr);
++	if (!mem_map_phys)
++		return NULL;
 +
- 	might_sleep();
++	return phys_to_virt(mem_map_phys);
+ }
  
- 	guard(mutex)(&tree->lock);
-@@ -244,6 +252,10 @@ void kho_radix_del_key(struct kho_radix_tree *tree, unsigned long key)
- 	if (WARN_ON_ONCE(!tree->root))
- 		return;
+ /*
+@@ -1647,9 +1652,8 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ {
+ 	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
+ 	struct kho_scratch *scratch = NULL;
+-	phys_addr_t mem_map_phys;
+-	void *fdt = NULL;
+ 	bool populated = false;
++	void *fdt = NULL;
+ 	int err;
  
-+	/* Keys wider than KHO_RADIX_KEY_WIDTH are not allowed to be added. */
-+	if (unlikely(fls64(key) > KHO_RADIX_KEY_WIDTH))
-+		return;
-+
- 	might_sleep();
+ 	/* Validate the input FDT */
+@@ -1671,8 +1675,13 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 		goto unmap_fdt;
+ 	}
  
- 	guard(mutex)(&tree->lock);
+-	mem_map_phys = kho_get_mem_map_phys(fdt);
+-	if (!mem_map_phys)
++	/*
++	 * At this point phys_to_virt() doesn't work properly and so
++	 * kho_get_mem_map() can return a pre-KASLR virtual address. But here we
++	 * only want to make sure the mem_map is valid so the actual value
++	 * doesn't matter as long as it isn't NULL.
++	 */
++	if (!kho_get_mem_map(fdt))
+ 		goto unmap_fdt;
+ 
+ 	scratch = early_memremap(scratch_phys, scratch_len);
 -- 
 2.55.0.508.g3f0d502094-goog
 
