@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C9E4DC54F55
-	for <kexec@archiver.kernel.org>; Wed, 29 Jul 2026 14:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DAC80C53219
+	for <kexec@archiver.kernel.org>; Wed, 29 Jul 2026 14:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=sTy/SpRQxcylZAnkn90gwM+/FxNJUgUwYPXcYuU5Nao=; b=IoJBZaGpOALbqlO7wD41kYXXr2
-	3H5emD7l4+HIesicoiJKDx0io306UwrXmzOmCLkknMCTpNWGbCfLeHE3OPrPWN6KVyMEN+RA7Qkk8
-	oZx2yMIdCY4LgnDpqGN14KMcUIyhhXKX9WxfTcESsxlaH8JbQHGnb1gv/QeIMEjYIfBItTbn4z0AH
-	G1TUgzJ17AAOaD4GdDJWzePkfMCw5pOtWyQJqhBhZwbDguZzxwNA7S03FCx+NGUi9rxBG4+OmUmFd
-	XfvasbN57U431OpZIekpxvuBMcPBPTm23Jqq6wAs29o93SnE7DyL5IO53Typqqe5EA8y2oXaoLwSD
-	Z6rKuo1Q==;
+	bh=0oSBVDvJVhrS8ulDeZlNQQxyRW9eRLFb9CyP3FfzZyU=; b=rI4+JMWwiB+3gSh1KESG2pap80
+	VSoNj/LQgeado99aLfNyr4EFLyUiuRrs0SECcGxXSTq6Ehlodn3FI+gYgUumILiN6hW5/hl5IlJrR
+	ZIiB2xYMNsY6mqk52FEpC9+sxTVhocRk9mP59rTwPWfSB9NHSoquyoiwJ3RQBUilCg2x4GgI2HIvU
+	0vYV3RY9knrAm1MrVVfOvemE/xiDkfrig8KsokPYlDop0IzFwY68nzl2tuZTtOor617UhbxXHV/Rt
+	MZgNUP571iAhfRM9wYGsvr+utNhnM1r2IjdyOmnyPKFtjmfiMkcTJD2dsTqO79Cn81IsyFVWMKDUj
+	19yEGBKg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wp5i1-00000008J27-2srq;
-	Wed, 29 Jul 2026 14:56:37 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wp5i3-00000008J3Y-3A2w;
+	Wed, 29 Jul 2026 14:56:39 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wp5i0-00000008J0x-1hC5
+	id 1wp5i2-00000008J2T-1xW8
 	for kexec@lists.infradead.org;
-	Wed, 29 Jul 2026 14:56:36 +0000
+	Wed, 29 Jul 2026 14:56:38 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id D3256600B1;
+	by sea.source.kernel.org (Postfix) with ESMTP id 39136434C6;
+	Wed, 29 Jul 2026 14:56:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E81211F00A3A;
 	Wed, 29 Jul 2026 14:56:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D60F1F000E9;
-	Wed, 29 Jul 2026 14:56:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785336995;
-	bh=sTy/SpRQxcylZAnkn90gwM+/FxNJUgUwYPXcYuU5Nao=;
+	s=k20260515; t=1785336998;
+	bh=0oSBVDvJVhrS8ulDeZlNQQxyRW9eRLFb9CyP3FfzZyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ii4IyRWamnD4g01J74AwqlKxIWkrynFmn2QcQrVimnYszo5BagrZ+L7mELuEY9Czd
-	 irDaDWViQz/i/SJE6duuT+9iqZvBovpVPSjxhr4D7nM33E8sRrTjpD3hPkOHJNAwmI
-	 E7PcaU6r37Vy8OeBfQc/8K/UyoSl4JXa6oymUsCPdgD7ZP+jtX2IaX/hWoOl8f11m/
-	 O25E6yCG3N4cLRKc5LiqCASvm4OeBDIJkIkAXERC7J5NJw3UF1sCC1vtI1Ew5tqAKo
-	 7jwx+GyTQDC2snYdndIkRMoMBi+wXAUbrs+jL8p7m7gTuNnN9lW66oqpAL07a/sVRo
-	 1ofFWUSw+x9CA==
+	b=eZiJysUwogklnynCVt8wR3BtC2dUOduHvdoCdY/cT5ZxzeTR7BuquI//AGnwADH7E
+	 J8xoxKzIIS59SVEZEM8D3h2XruK+PFkxeGkBv8o9ktM8teqWncAMoWjMdB32pUbTWk
+	 1wSkDW4wqYWxlb+ASQsM67wDaUK3FWNcj8mmS7XYc2xmUpEGQrTD0vcaD4r1jj3NAj
+	 f8Pz+Y2QrQujD0BQiiKeUTdzPbqG7Y/DU8+d+mBFU3c8qFFNVA4zmWPTJa7GOz4R42
+	 YRV8lDVodKYhSctsXEd1VVDFl3q46+bFqCjZxP3OkUT7a0w+AKgSkT2r/sHtSdB5yS
+	 U7yyXXY+hlJmQ==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -56,9 +56,9 @@ To: Mike Rapoport <rppt@kernel.org>,
 Cc: kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 05/22] kho: store incoming radix tree in kho_in
-Date: Wed, 29 Jul 2026 16:55:50 +0200
-Message-ID: <20260729145610.2827231-6-pratyush@kernel.org>
+Subject: [PATCH v5 06/22] kho: move all memory retrieval logic to kho_mem_retrieve()
+Date: Wed, 29 Jul 2026 16:55:51 +0200
+Message-ID: <20260729145610.2827231-7-pratyush@kernel.org>
 X-Mailer: git-send-email 2.55.0.508.g3f0d502094-goog
 In-Reply-To: <20260729145610.2827231-1-pratyush@kernel.org>
 References: <20260729145610.2827231-1-pratyush@kernel.org>
@@ -80,73 +80,76 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-This allows other functions to also use the radix tree. While at it,
-also use kho_get_mem_map_phys() instead of duplicating the code to get
-the radix tree root from the FDT.
+The memory retrieval logic is spread out across kho_mem_retrieve() and
+kho_memory_init(). The incoming scratch area is initialized at
+kho_memory_init(), and the error handling is done there too.
+
+Consolidate all this logic into kho_mem_retrieve() to make the code
+cleaner.
 
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- kernel/liveupdate/kexec_handover.c | 32 ++++++++++++------------------
- 1 file changed, 13 insertions(+), 19 deletions(-)
+ kernel/liveupdate/kexec_handover.c | 31 ++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 5c35c11c273b..b53ae68ca087 100644
+index b53ae68ca087..e3408e1844dc 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -1337,6 +1337,7 @@ struct kho_in {
- 	char previous_release[__NEW_UTS_LEN + 1];
- 	u32 kexec_count;
- 	struct kho_debugfs dbg;
-+	struct kho_radix_tree radix_tree;
- };
+@@ -1415,8 +1415,13 @@ int kho_retrieve_subtree(const char *name, phys_addr_t *phys, size_t *size)
+ }
+ EXPORT_SYMBOL_GPL(kho_retrieve_subtree);
  
- static struct kho_in kho_in = {
-@@ -1416,24 +1417,15 @@ EXPORT_SYMBOL_GPL(kho_retrieve_subtree);
- 
- static int __init kho_mem_retrieve(const void *fdt)
+-static int __init kho_mem_retrieve(const void *fdt)
++static void __init kho_mem_retrieve(void)
  {
--	struct kho_radix_tree tree;
--	const phys_addr_t *mem;
--	int len;
--
--	/* Retrieve the KHO radix tree from passed-in FDT. */
--	mem = fdt_getprop(fdt, 0, KHO_FDT_MEMORY_MAP_PROP_NAME, &len);
--
--	if (!mem || len != sizeof(*mem)) {
--		pr_err("failed to get preserved KHO memory tree\n");
--		return -ENOENT;
--	}
--
--	if (!*mem)
--		return -EINVAL;
--
--	tree.root = phys_to_virt(*mem);
--	mutex_init(&tree.lock);
--	return kho_radix_walk_tree(&tree, kho_preserved_memory_reserve);
-+	/*
-+	 * kho_get_mem_map() should always succeed. If it fails, kho_populate()
-+	 * catches that and never sets kho_in.scratch_phys, which stops memory
-+	 * retrieval.
-+	 */
-+	kho_in.radix_tree.root = kho_get_mem_map(fdt);
-+	mutex_init(&kho_in.radix_tree.lock);
-+	return kho_radix_walk_tree(&kho_in.radix_tree,
-+				   kho_preserved_memory_reserve);
++	const void *fdt = kho_get_fdt();
++	int err;
++
++	kho_scratch = phys_to_virt(kho_in.scratch_phys);
++
+ 	/*
+ 	 * kho_get_mem_map() should always succeed. If it fails, kho_populate()
+ 	 * catches that and never sets kho_in.scratch_phys, which stops memory
+@@ -1424,8 +1429,16 @@ static int __init kho_mem_retrieve(const void *fdt)
+ 	 */
+ 	kho_in.radix_tree.root = kho_get_mem_map(fdt);
+ 	mutex_init(&kho_in.radix_tree.lock);
+-	return kho_radix_walk_tree(&kho_in.radix_tree,
+-				   kho_preserved_memory_reserve);
++
++	err = kho_radix_walk_tree(&kho_in.radix_tree, kho_preserved_memory_reserve);
++	if (err) {
++		/*
++		 * Failed to initialize preserved memory. Clear FDT and radix
++		 * so KHO users don't treat it as a KHO boot.
++		 */
++		kho_in.fdt_phys = 0;
++		kho_in.radix_tree.root = NULL;
++	}
  }
  
  static __init int kho_out_fdt_setup(void)
-@@ -1640,8 +1632,10 @@ void __init kho_memory_init(void)
- 	if (kho_in.scratch_phys) {
- 		kho_scratch = phys_to_virt(kho_in.scratch_phys);
+@@ -1629,16 +1642,10 @@ fs_initcall(kho_init);
  
--		if (kho_mem_retrieve(kho_get_fdt()))
-+		if (kho_mem_retrieve(kho_get_fdt())) {
- 			kho_in.fdt_phys = 0;
-+			kho_in.radix_tree.root = NULL;
-+		}
- 	} else {
+ void __init kho_memory_init(void)
+ {
+-	if (kho_in.scratch_phys) {
+-		kho_scratch = phys_to_virt(kho_in.scratch_phys);
+-
+-		if (kho_mem_retrieve(kho_get_fdt())) {
+-			kho_in.fdt_phys = 0;
+-			kho_in.radix_tree.root = NULL;
+-		}
+-	} else {
++	if (kho_in.scratch_phys)
++		kho_mem_retrieve();
++	else
  		kho_reserve_scratch();
- 	}
+-	}
+ }
+ 
+ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
 -- 
 2.55.0.508.g3f0d502094-goog
 
