@@ -4,102 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 555B7C5516D
-	for <kexec@archiver.kernel.org>; Thu, 30 Jul 2026 18:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0258FC5516D
+	for <kexec@archiver.kernel.org>; Thu, 30 Jul 2026 18:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
 	Message-ID:Date:MIME-Version:References:In-Reply-To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=jeT5JD84OLDwdMghWHFJO3a32W5zB/0PvPjAX4B/43g=; b=x32cKp7w5ugjlHN3p8XkcgeFVV
-	FoUmG9XjZ6yGuCaSfVLwnw7DIuFfkRs00d4k5tGEkU14oWGHE6LRmY1IaRS/iYalq/qJuH53QOheM
-	zybtWRiEwvE9rixbDfkrNkQMIBY6Jip6/eCu89Ftsch6kE6/qwpw0a1MaNWArQXLGl+LeIzaJI5de
-	PvHSLGY65jx/exKU0f3rLeRVfkUPAxI3WSBIXHfvhRJn4BIhU1mxQfdhGHj+MF3VZA+oTgTKrAd3k
-	bRKw/4UFVv50IKA04NY6B9Bc1bZdihm1zaY1YeV19XdU+J1qibxPmDZWhUeJLV+m8Iburj/N+ce88
-	U/aJoVUQ==;
+	bh=BcSk1/y4fhEYP1oDWtEyRtQmE44YyXI71BVE0scYBk4=; b=psfWzkDsnxOdwsCkQs8PVnu8Cl
+	p9GeDLq6Lkqj9U8AO3BKRuCHzB4GAo52eMbx2OwT/5dKWeMs+Ql2Y3dPjI3T/Ue1pPFIMZbIV4jiZ
+	Fv5DZhnBVTIFwwJu/5H5AbZE/1ZYheYERjt9RGr7Sbz5vuJnBjk7fUXmuOE8kodXmXHjru3i2z1L1
+	uwLphOIOVHPxqlY3CpTdVIVigFThEcF1yD8qVSBVcaeBmvUC1XrmkXhPt1x4iRIyZlV5aNE+W1cD+
+	vbazDsXC9F4vj73by9f2OLOoyyceu+mQZFtnNrh4WySPU8B/oi4UR7ozRmBRlYskTCL6RqviCV1jF
+	MW5YDPnw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wpVIf-0000000B99b-16FD;
-	Thu, 30 Jul 2026 18:16:09 +0000
-Received: from mail-pg1-x535.google.com ([2607:f8b0:4864:20::535])
+	id 1wpVLF-0000000B9M6-2eLQ;
+	Thu, 30 Jul 2026 18:18:49 +0000
+Received: from mail-pj1-x1031.google.com ([2607:f8b0:4864:20::1031])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wpVIc-0000000B98m-14Q7
+	id 1wpVLD-0000000B9Lj-2fIe
 	for kexec@lists.infradead.org;
-	Thu, 30 Jul 2026 18:16:07 +0000
-Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-ca7c1176317so95410a12.1
-        for <kexec@lists.infradead.org>; Thu, 30 Jul 2026 11:16:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1785435365; cv=none;
+	Thu, 30 Jul 2026 18:18:49 +0000
+Received: by mail-pj1-x1031.google.com with SMTP id 98e67ed59e1d1-38dcbade417so186239a91.1
+        for <kexec@lists.infradead.org>; Thu, 30 Jul 2026 11:18:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785435527; cv=none;
         d=google.com; s=arc-20260327;
-        b=CrVp9kav5qk9eIqfPBVwK773/sqFPp83m5NusbJ4GAfdtKrmwf2wrUTwpe87e2LFMM
-         Rj1KrP2NXn5Q2ztKfaSbsA8fLj3o/cV/aZHjgrREebU369WAJ69/sp7IsjQGvWCVnD0Q
-         OAdcmxGvlnZsXp9Ddqx1JAu+Xy1jzlo/kFzK5WFWB7NY0A4eL3J8NGPwoKLH6uEuHFPu
-         0gp2zDUKHdSTgcTfPjY0+le7Go4NKe8eQ3zRRCNlWlHHLLpIHOKuIbpBCb0Sb44X8qM2
-         o2CIIBW/bymYgANyYZ0/FBXIS1eU6oP5WC76e/NfylRSSOfwBLJF93bJQyJJ5oapRENY
-         ryvg==
+        b=SSlXDP1ehcvuyDjzueCfjpbB/v7p1nsHKjHyhE34ol4Fjr7rQanwPmJXFSJQg6TttT
+         9uUB+011ge/AaHCFGaBodZ+gdE6w8PE/QPGYqpRSK3pTDLL+dBkTM5qbqVtWYZ8zvtA9
+         3rjDLlMvCnzHnqwBEAppY3fuqln9npqVmgSMPMstFNn85Oof11ouaFCRRB3ncY1+7KmB
+         2kuOUVNaVovJsrzFkkmI84/JJiQZMhED81ZL9uL7WWSqA07FNHbIKw+YC+8HsO64wSmX
+         oCEBTfwAocAFgrYfIxKG/cO11NwHrKYZttUVjj3tdoI6QJdw+aLPtsWIMHXMLJYoSGOj
+         PLJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
          :from:dkim-signature;
-        bh=jeT5JD84OLDwdMghWHFJO3a32W5zB/0PvPjAX4B/43g=;
-        fh=3D79vS+IJiyM9CTr2LOR3dmkN8W2ukNwNinPUUYgOJA=;
-        b=TOXQXGapEg/E56Mmb2r4CF23ovMd9xL+VFysiZ2KsxEyUTkRvF8WIpMIeABh/KaEhl
-         sjO0XYghQ/6En9y5Womnbshdor3m0IpLzwOniUoFL+cp+p9BNFHZ95O6th09fciFZbGG
-         NLFSo/eUPxrm60TLrWwvzHsyZzIyo5yCTKHyJ7h6q4VbX5VwxfdmV6FTgrCGrqXQnE5q
-         rwUCFBagSD6nZTqj3qCKkubjk+tUZPtgMhK86EYytVu28Pu7O7YiENZnzA/FAq0DuZuI
-         J6QoQIN6a/LjL9jFlBG2h8topn8dECmIpQapUxLfn0bLGG9blsYUT2NtSfhNdqL4YyfG
-         /fGw==;
+        bh=BcSk1/y4fhEYP1oDWtEyRtQmE44YyXI71BVE0scYBk4=;
+        fh=fpv0yt0kyjiaZoVU4HMIpVgGDYckdv0FWP+RhM0ATUE=;
+        b=LUtj48imBFPVYfGWe3Q2TA+1Au5eBkiK6V5U+0dpTYoL2UF8H3komc00eo6FGrszAG
+         Prg3Ee716RO06FqbZIspx63tXT3GeSiXQy6dBXib87hpaFx4OQHaM6sQX4vBfz57miab
+         nbqtT0LJhKPTv5wc+qTgzvIAhTXkkZCePGns4FI4F0c6jTHtVrRdlHzN7lU2sNwF0bSh
+         AoKwBUUgY3B7EuJZzbJLudyZDLJl//12sSAq/AUAk2iSxPLL2w0TtpmzUsy5K/AqkUSL
+         KRw1tpZdIKljxU2UQ4l/caidQjb+kvYoVvngPiwjOSxq6AkMwlsThELWSOPzVCmIRg3t
+         NXQg==;
         darn=lists.infradead.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785435365; x=1786040165; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1785435527; x=1786040327; darn=lists.infradead.org;
         h=content-type:cc:to:subject:message-id:date:mime-version:references
          :in-reply-to:from:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=jeT5JD84OLDwdMghWHFJO3a32W5zB/0PvPjAX4B/43g=;
-        b=j5Qx1S8WTd3Tf1eelT3v/f5MGxpkdudyb7SaK7ZPGeKEi0LtSj/VxsOvFkvdCE4A2V
-         5i3RnxacEAiGtP4/8gFePmoyLcCNwbSpIlQ8fx3u8gXGTDEFWU4BhRTeL+MEFTpLJRGR
-         /Cr9PyCCQ7TNqKW/mlh3k/hSJ0HwjWuznxDlcBgcTs+k2Vnyv3YWT/rVSEXg8BEndTNO
-         hNdGQckQ61R7Re3EhifcEisZEXtJhlXuDN7v0g1eeznt/98rqaQ9Q44AzckTG3MpZ5J5
-         ksRAWqDwRRCrFiEKmkmGcJOJJa0VecpALCIWvwxIeBcar5NicGUjnHrocS6XGRLw0f5m
-         rQOQ==
+        bh=BcSk1/y4fhEYP1oDWtEyRtQmE44YyXI71BVE0scYBk4=;
+        b=PM3mSYbT8XRRB91qL6ACpJ4VGAaSQ/UafTCfUBt4qGGSZ6POEVLUh0WlELc1+fYTOb
+         zTn9whZd0UMZz7QXiMzigCi23n5iSiLBVuaqrIjV2Pg4qn2ww0KpWut6Mwh6IW0cOVlg
+         xHew3URCI3ZtEx9hrG9om9cApaNK+9vCIJj+gQoBGg/9M6QlcqAs6ltag6kFLT0Cam44
+         0yyPiw8BApO1O39UY4UeB8Fve9I/eiCzMZdFG9607juXEKqeNCbGc7ttYavK8ot8Q+4y
+         jm1BT5rXZ0zyOprig8+qQYRkjwkXm3C6TYMrPMRsX+DuGznmtuwjeLtQYIFsW20csO5v
+         Gi6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785435365; x=1786040165;
+        d=1e100.net; s=20251104; t=1785435527; x=1786040327;
         h=content-type:cc:to:subject:message-id:date:mime-version:references
          :in-reply-to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=jeT5JD84OLDwdMghWHFJO3a32W5zB/0PvPjAX4B/43g=;
-        b=JkTltmDCHxEhlD7mv6tQRvQJ178tC+PLARn6/DTuNx01izuxIF+2c1UWt0bkVYZ4y5
-         I0XJ7peYml8QP35rk9Z7EW2YL2ucMV9w2fBWYoyNnTfwb7VgzmW1WfjES29VYAPKcvjw
-         i8VEjvuWIiXHdMZteCefGUIdpVrBp4wG3ggW0YPBSTPHPMFN0f3Pdbvtkfb8ImP0rmKI
-         dfPFStUHfDBAUAaKBGKScP7VqwbgQV4fZY7an6MXzGoza+Lo68uV6+gvE3RnhmXsAgSl
-         bHtOJSindbjyv7CNPn1Xq8D8Y4RrSNaXIFul39eroZFsLRDAcZjEHOJ3GOSHegzXXQAh
-         yw7Q==
-X-Forwarded-Encrypted: i=1; AHgh+Rp4cib4TZxxXCsFZ3IubnuwS8UM+IiqPx3gmTDKOqcHXXm3g6Qp5TMM9qi8fw1R9ZU0K7viAQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxZHmIKc29xUDGw8Y6U5LUje3E3u9P8KJ5KAi6nmFHlCSmY7YEw
-	c8dptbHLc5G7J/8tSuEcpGANB/vtPXW3PtU28rhAiWNjBoF0qWLkUAOVoHruTbZITRmswhpKRwR
-	ROGnL464wk8I273ntRpo32B28OD8t46SckB86n9dL
-X-Gm-Gg: AR+sD10OHCvXvow+7GEiJYqs2x4ufVBZ+6JwsnZz+LGFFlF9NK1J3DZu+VuAbDq1mh3
-	99/Ifh8/yLmn41yQYTajbvHFHXcUIZdDlnvOwKEP+FAI/REMduvbO331ZH3HJFg5U2kTs7szJLp
-	rPckjIA6Hib8lWVHqMLB3FBW3BfDJpVBeK+DRC/yuBh0BDjsBMkAaYb9vFIvTs9Lk9+lhAX8AtY
-	cullqmdZT8ckniQ801FmO0eaZ1Ko6Sez1UR+b4jH/nGRCMEqgUcjvKJ1stTFHeR5J7iWzFemCIR
-	MA7O59jHEkMi/H13HZ4oPslhkXL9DKoEOBu2XFDPN47ALWR1EjxCCQLzTiZATSd46phAjKD6j/E
-	Poonos+aJoBaIYwiSHTUdeqdcAL2gnHPPZQ==
-X-Received: by 2002:a05:6a21:699:b0:3c3:a948:e2dc with SMTP id
- adf61e73a8af0-3c900759828mr3817647637.27.1785435364789; Thu, 30 Jul 2026
- 11:16:04 -0700 (PDT)
+        bh=BcSk1/y4fhEYP1oDWtEyRtQmE44YyXI71BVE0scYBk4=;
+        b=MBznDwMX38U3lWU87SrDi0TZCH59x2ddLt+zdL9F0+zGHm98ZIuDogMz98umpBWTuK
+         Z39GspZZHA1kckkcDP3PQH8RPFJusyI7sfjqwbUy5C0p26c9wfEF+sLL/qIZODT4iT5r
+         dwufZpuRe+Y1QAcMOpawxFpwJhMcWU+cNTO3Ovru1aY6M7ILADxCMf4VVN1FPR7mcnQo
+         L6d+4W92uPULfiZLBqf3bSe518VUQMqhhbkz69m5BC+OK1KoJzd5PHI8mDDGJjZA39tb
+         QIOufe13YinwrcDppgjaP1eQMMSDj0ieatPpe7ZHPBATc+K/0vArr4ZWxQRz8mIP2HjI
+         LOZA==
+X-Forwarded-Encrypted: i=1; AHgh+Roh9X+44SBh+ImGJtriqOuemJzB3maoQc1SNryZ/E6B8odKUaCMXqMgIavdeyHj23Xx5srAeQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwTZGLly9/K+hpEtxYLeLExPS23ZG66HQO6W+NOPCsLXqXdIjre
+	+9XlHasQ1u485AzlhWP8ljifrOHjUlXO8nvj8aTaj8apePKJLziqLxXTYUf6c/oAVWGJJ82Rt3m
+	3yO78L0oYr2AexEl05K0Nt4EDM8A1SbDHXUbPa9dU
+X-Gm-Gg: AR+sD11vw52pZUEfWYbbd41kZxRwzzZJTPIicsDqTebJjAP5vnbz5lhN4Div8Hvb0em
+	cos+RrFyA3KAEK8O+e6Hv58rJiEBLeujiaEjJvJv4ppgmaQntmQUtWj7mEjKqAz7TbjE6u28cCY
+	Wsxf0o+blAbkfsA3cAeqW9YPf+UsJbtwllFa0LuNkm1LpitLBjxVPrgA5KhACQeX/VicoYGGlvb
+	xjY4oF6T2U1XAHUblTX+HiZYnQqbU/AZ3Z4la4Orcl6UtcKODB4zcrl/iUHQTMInCUYhIO06L0W
+	zjxk4jw6m7OmFuAwunEOn+OzwjD+SocP8I8kyVqhWFiR6o9BDl0eXo3X1czC11xpY9LXl3UTb6Z
+	irtUDQen5xvq73/LGJUxb66FeHbPU1Bt+vA==
+X-Received: by 2002:a17:90a:d007:b0:37c:6130:7a5b with SMTP id
+ 98e67ed59e1d1-38fa7dcb036mr912482a91.8.1785435525974; Thu, 30 Jul 2026
+ 11:18:45 -0700 (PDT)
 Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 30 Jul 2026 11:16:03 -0700
+ HTTPREST; Thu, 30 Jul 2026 11:18:45 -0700
 Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 30 Jul 2026 11:16:03 -0700
+ HTTPREST; Thu, 30 Jul 2026 11:18:44 -0700
 From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <20260728121138.1103610-9-tarunsahu@google.com>
-References: <20260728121138.1103610-1-tarunsahu@google.com> <20260728121138.1103610-9-tarunsahu@google.com>
+In-Reply-To: <20260728121138.1103610-12-tarunsahu@google.com>
+References: <20260728121138.1103610-1-tarunsahu@google.com> <20260728121138.1103610-12-tarunsahu@google.com>
 MIME-Version: 1.0
-Date: Thu, 30 Jul 2026 11:16:03 -0700
-X-Gm-Features: AUfX_mwuYQlBmJdhbZSf7MRgmwyNG_KfxbR45Duou2tcQqjIodL3cnnQ31aoSzA
-Message-ID: <CAEvNRgGJ0s5Vu8xRvfPmA39p2Bmkr-U7JFFkshM9Dyk9j+t-YA@mail.gmail.com>
-Subject: Re: [PATCH v4 08/11] KVM: guest_memfd: Add support for preservation
- via LUO
+Date: Thu, 30 Jul 2026 11:18:44 -0700
+X-Gm-Features: AUfX_mzurojFzFl7kQ4jInKyqzMda986c-EWBvJn_4YyREdNQpyHfl__fqR3AfU
+Message-ID: <CAEvNRgEbS06snhyHznPSqxnUrdudVEKUuOpPwnU+AJATWFBRBA@mail.gmail.com>
+Subject: Re: [PATCH v4 11/11] KVM: selftests: Add guest_memfd_preservation_test
 To: Tarun Sahu <tarunsahu@google.com>, fuad.tabba@linux.dev, 
 	Andrew Morton <akpm@linux-foundation.org>, seanjc@google.com, dmatlack@google.com, 
 	Shuah Khan <skhan@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, david@redhat.com, 
@@ -114,8 +113,8 @@ Cc: linux-kselftest@vger.kernel.org, andre.przywara@arm.com,
 	kexec@lists.infradead.org, suzuki.poulose@arm.com
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260730_111606_718915_16C23118 
-X-CRM114-Status: GOOD (  13.55  )
+X-CRM114-CacheID: sfid-20260730_111847_684159_2AC2A8A5 
+X-CRM114-Status: GOOD (  13.03  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -132,58 +131,47 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 Tarun Sahu <tarunsahu@google.com> writes:
 
+> Add guest_memfd_preservation_test to verify that KVM VM state and guest
+> memory backed by guest_memfd are preserved across a kexec reboot via Live
+> Update Orchestrator (LUO).
+>
+> This test includes multiple tests
+> - (A) Test to preserve non-guest_memfd, non-memfd which must fail (/dev/null)
+> - (B) Test to preserve guest_memfd with no INIT_SHARED flag which must fail
+> - (C) Test to allocate the guest_memfd memory after preservation because
+>   preservation makes the guest_memfd frozen. Which must fail as well.
+> - (D) Test to verify guest_memfd with INIT_SHARED flag preservation across
+>   kexec: Below is the details of stages in this test.
+>
+
+I think we should split this into multiple patches, where each patch
+introduces 1 test.
+
 >
 > [...snip...]
 >
-> +static bool kvm_gmem_luo_can_preserve(struct liveupdate_file_handler *handler, struct file *file)
-> +{
-> +	struct inode *inode = file_inode(file);
-> +	struct gmem_file *gmem_file;
-> +	struct kvm *kvm;
-> +
-> +	if (inode->i_sb->s_magic != GUEST_MEMFD_MAGIC)
-> +		return false;
-> +
-> +	gmem_file = file->private_data;
-> +	if (!gmem_file)
-> +		return false;
-> +
-> +	/*
-> +	 * Only Fully-shared guest_memfd preservation is supported
-> +	 */
-> +	if (!(GMEM_I(inode)->flags & GUEST_MEMFD_FLAG_INIT_SHARED))
-> +		return false;
-> +
+> +++ b/tools/testing/selftests/kvm/guest_memfd_preservation_test.c
+> @@ -0,0 +1,357 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2026, Google LLC.
+> + *
+> + * Author: Tarun Sahu <tarunsahu@google.com>
+> + *
+> + * Test for VM and guest_memfd preservation across kexec (Live Update) via LUO.
+> + *
+> + * NOTE: This is a MANUAL test and is excluded from automated CI/testing
+> + * frameworks because Stage 1 daemonizes into the background to pin resources
+> + * and requires a human operator to manually trigger kexec before Stage 2
+> + * is executed. Running Stage 1 automatically would leak the background daemon
+> + * and cause CI runners to falsely interpret it as a passed test.
+> + *
 
-The above check can probably be removed. I think the core thing about
-this series is "we can preserve any memory that doesn't have any
-encryption state that goes along with it", and so the check for
-kvm_arch_has_private_mem() below would be sufficient to gate that.
+Usually there aren't many printfs in tests, but since this is a MANUAL
+test, maybe that's ok?
 
-> +	/*
-> +	 * It makes sure that no memory can be converted to private
-> +	 * even if it was initially fully shared (in-place conversions are
-> +	 * prevented).
-> +	 */
-> +	kvm = gmem_file->kvm;
-> +	if (kvm_arch_has_private_mem(kvm))
-> +		return false;
-> +
+Would like to know what Sean thinks of this, and printfs in general.
 
-For now, has_private_mem == has some encryption state that we can't
-preserve yet.
-
-This also gates off KVM_X86_SW_PROTECTED_VM, but I guess that is
-intended, since when work is done for preserving encryption state, we
-can then test using KVM_X86_SW_PROTECTED_VM, and only then, remove this
-check?
-
-> +	if (mapping_large_folio_support(inode->i_mapping))
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
 >
 > [...snip...]
 >
