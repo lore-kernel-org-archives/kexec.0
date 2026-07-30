@@ -4,63 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 67882C55162
-	for <kexec@archiver.kernel.org>; Thu, 30 Jul 2026 08:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C6352C54FDF
+	for <kexec@archiver.kernel.org>; Thu, 30 Jul 2026 08:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
-	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=sRIfx4TLYAlH3SnTech17HhGQG575fDtx9lFhxWcvsI=; b=zu+77+/2lgX95GpjX1lVBLbofz
-	LWTskFLEiSMMpgn2oit822rEPhDFtoIuO3RfNVItfmyd1gMoykt91gfnuCQrv2Y4v+Chhc5S+ZLHS
-	Vhuv317KR4g3MQbH9cKSwMKGKiSG4UmLKfDb1O5/kDf2T0JZhyF5+M7xHbLsia+BauU+/P/m+2z6Y
-	R7ZgUkZ4m+cvG1M4s49o85Z/PwUC2rtq707bBPSgXpdRL4h9FjvJb8LCyZdw5k32GA8fYTSJfSNrV
-	FJpYPi0OREFH7vW6Gg+v3XMzsRiElf3CSm7d4HYaugeBiQeqxgoFf9aL4XnnvT1bZ90KUi1P3MaYw
-	u5HEl1Ig==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=55G67AD+bUlnQtHL1MJavniTLpGKt7vPc4y+cPkS8Qo=; b=0IH9JbSDzj+39opbGp/rwOTKhQ
+	kYbTp6hMVwppgD2w3BpAv2svFhciZZHmwFR/OlNsGDpeuh8FaAzRa7ZxH0cSg0yrR/n02AFXbRien
+	SpMnehW/DnfrR/9xX3a8ZeXmzirafxPGNVLWZWoLLMOcLB+NzEM3EgxDSH8q7C+99mZdtwQbgOWnj
+	0bBVB8yxceUhIn1aHWEne+GsdaFv7MMpsPa/LZjAw0sypvE6GxznHaGiL5PZCykcnCuwhX+x/8hIg
+	xWgQakpkN5+/99PR24sgn61oGfQDaZXbOp6sgP2D07bQglMV3qHzgMTXD8ISQCmxzQ9x7lqSo/wz/
+	7P8qpgIA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wpMGe-00000009tQ1-45Vk;
-	Thu, 30 Jul 2026 08:37:28 +0000
+	id 1wpMJe-00000009ttg-26XU;
+	Thu, 30 Jul 2026 08:40:34 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wpMGd-00000009tP7-3Rlf
+	id 1wpMJc-00000009ttH-3vAf
 	for kexec@lists.infradead.org;
-	Thu, 30 Jul 2026 08:37:27 +0000
+	Thu, 30 Jul 2026 08:40:32 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 467A7600AB;
-	Thu, 30 Jul 2026 08:37:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11E261F000E9;
-	Thu, 30 Jul 2026 08:37:23 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 193C5600BC;
+	Thu, 30 Jul 2026 08:40:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 499731F000E9;
+	Thu, 30 Jul 2026 08:40:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785400647;
-	bh=sRIfx4TLYAlH3SnTech17HhGQG575fDtx9lFhxWcvsI=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=D9fSv0/LZSgIAShREquHiHX7Tx0CMoIBR485y3u10lT5SwyeT94zW9pgp758qvX2a
-	 ZyngkQgu8D4pH/ruXOpdNGIceARJBuWPDQsgnOCULA8qiMX+kdsuIAQbqM633A/4ur
-	 pzcjS+tcc4RXal+FkUBAME+iGlC3XJn8f0kKNKMxxlLKpfedUBlxV4KCUJduzra6tP
-	 3PuKxZBTYYVugIMDa0nWHEMCk0Kp+Nj+vNJ+Wz3cL0VrupySYGl7BMd0d6WCc2R9AW
-	 Epmbvf7XWhIqkQTRdB4f56/0Q+88wFyPnhIs0CQdh4ZKhr7ip3Sq/QGWvFD+ux7s7w
-	 DKd+wAwYTCB0g==
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v5 18/22] kho: extend scratch
+	s=k20260515; t=1785400831;
+	bh=55G67AD+bUlnQtHL1MJavniTLpGKt7vPc4y+cPkS8Qo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Am3w9iBbksLZSYkGW+BC2SXWaPrsXS+3w0PfbAUiFLEio7Ojf0Mp6S5i+8TfgZJQ7
+	 P0oEDWw3vSLdXYio4+t/tv5rqP3m3i6YA0+nbhUwJCvoZ2Aag+k6zPehyBKcXT7ir5
+	 l7Egai/6QWPr4er0MIKnLmzK/p7t/cVDFc5YJWjzgGfGK6Tpuzmfkyug6zxOkJatZ6
+	 nyjomqeZ/UizlLOFCXdwnG+WkTF7Wn8jaz4YvGRtw2fU+vEEjVRZ97lQiQn8+BcND8
+	 W1BuAwvX2mVAHr5hud0roY3B9Tm1f2aipjudB63eKi0xt+KNbdCbNwjboFOq/scBOu
+	 rkkhhxo0776pA==
+Date: Thu, 30 Jul 2026 11:40:23 +0300
 From: Mike Rapoport <rppt@kernel.org>
 To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Alexander Graf <graf@amazon.com>, Muchun Song <muchun.song@linux.dev>, 
- Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>, 
- Andrew Morton <akpm@linux-foundation.org>, Jason Miu <jasonmiu@google.com>, 
- Jork Loeser <jloeser@linux.microsoft.com>, kexec@lists.infradead.org, 
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260729145610.2827231-19-pratyush@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Alexander Graf <graf@amazon.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jason Miu <jasonmiu@google.com>,
+	Jork Loeser <jloeser@linux.microsoft.com>,
+	kexec@lists.infradead.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 01/22] kho: generalize radix tree APIs
+Message-ID: <amsN9_4LTNFBxaFE@kernel.org>
 References: <20260729145610.2827231-1-pratyush@kernel.org>
- <20260729145610.2827231-19-pratyush@kernel.org>
-Date: Thu, 30 Jul 2026 11:37:14 +0300
-Message-Id: <178540063445.2151126.14089645580528118019.b4-review@b4>
-X-Mailer: b4 0.16-dev
+ <20260729145610.2827231-2-pratyush@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260729145610.2827231-2-pratyush@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,32 +77,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> +static void __init kho_extend_scratch(void)
-> +{
-> +	const struct kho_radix_walk_cb kho_cb = {
-> +		.leaf = kho_ext_walk_leaf,
-> +		.node = kho_ext_walk_node,
-> +	};
-> +	const struct kho_radix_walk_cb ext_cb = {
-> +		.leaf = kho_ext_mark_scratch,
-> +	};
-> +	struct kho_radix_tree radix;
-> +	phys_addr_t prev_end = 0;
-> +	int err = 0;
-> +
-> +	err = kho_radix_init_tree(&radix, NULL);
-> +	if (err)
-> +		goto print;
-> +
-> +	/* Walk the KHO radix tree to find busy blocks. */
-> +	err = kho_radix_walk_tree(&kho_in.radix_tree, &kho_cb, &radix);
+On Wed, Jul 29, 2026 at 04:55:46PM +0200, Pratyush Yadav wrote:
+> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
+> 
+> Generalize the APIs by taking the key directly and doing the encoding at
+> the callers. Rename the functions to kho_radix_add_key() and
+> kho_radix_del_key(). In practice, this removes a line each from the
+> functions and moves the encoding function call to the callers.
+> Similarly, update kho_radix_tree_walk_callback_t to take the key
+> directly.
+>
+> diff --git a/include/linux/kho_radix_tree.h b/include/linux/kho_radix_tree.h
+> index 84e918b96e53..f368f3b9f923 100644
+> --- a/include/linux/kho_radix_tree.h
+> +++ b/include/linux/kho_radix_tree.h
+> @@ -34,30 +34,24 @@ struct kho_radix_tree {
+>  	struct mutex lock; /* protects the tree's structure and root pointer */
+>  };
 
-sashiko: Will this trigger a lockdep recursive locking warning?
+sashiko: This isn't a bug, but did you miss updating the kerneldoc for
+struct kho_radix_tree?
 
-I think it will.
+And indeed "DOC: Kexec Handover Radix Tree" talks about addresses and
+orders.
 
 -- 
 Sincerely yours,
 Mike.
-
 
