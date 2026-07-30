@@ -4,70 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 41EB4C54FDF
-	for <kexec@archiver.kernel.org>; Thu, 30 Jul 2026 08:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 67882C55162
+	for <kexec@archiver.kernel.org>; Thu, 30 Jul 2026 08:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=VXQZIQoVKxftmgxSpsfIIxOpHqOtOFC0MrEElaZfb68=; b=10FZ7tPeYNrvqFp9K9reoTK8Fm
-	TowuRqW6fQyhJCDROf8+cIXscS5yDtj4wyVpFwTnmZcfje7TVeh375Bh9zvsAPBNeg7FZIyHLvIV3
-	OU38k229qmKlsXAwaLViPBQknzHJ/xMuIh1EVZnB4thRsUpeZjtRhADDplPE3yZHCiJA0X1vRmY1D
-	FbtUIhdtIZdtdThzSJ4GxHdeGGHuWVT6guDic+d+zYJ4pQpEeWoRaiPYbPqS5xSwW0PzyuwEeXvXV
-	odgvlwRhu8t75Lwc3j3p+od8UrD1G21vU7m/DPua1mpfpNrlzjSqcqHRY8Lp4++A8z4ag/7wMGAM+
-	rDqHRmPw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
+	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=sRIfx4TLYAlH3SnTech17HhGQG575fDtx9lFhxWcvsI=; b=zu+77+/2lgX95GpjX1lVBLbofz
+	LWTskFLEiSMMpgn2oit822rEPhDFtoIuO3RfNVItfmyd1gMoykt91gfnuCQrv2Y4v+Chhc5S+ZLHS
+	Vhuv317KR4g3MQbH9cKSwMKGKiSG4UmLKfDb1O5/kDf2T0JZhyF5+M7xHbLsia+BauU+/P/m+2z6Y
+	R7ZgUkZ4m+cvG1M4s49o85Z/PwUC2rtq707bBPSgXpdRL4h9FjvJb8LCyZdw5k32GA8fYTSJfSNrV
+	FJpYPi0OREFH7vW6Gg+v3XMzsRiElf3CSm7d4HYaugeBiQeqxgoFf9aL4XnnvT1bZ90KUi1P3MaYw
+	u5HEl1Ig==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wpM3z-00000009qoe-2OMV;
-	Thu, 30 Jul 2026 08:24:23 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wpMGe-00000009tQ1-45Vk;
+	Thu, 30 Jul 2026 08:37:28 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wpM3y-00000009qoM-346l
+	id 1wpMGd-00000009tP7-3Rlf
 	for kexec@lists.infradead.org;
-	Thu, 30 Jul 2026 08:24:22 +0000
+	Thu, 30 Jul 2026 08:37:27 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 6C48B40862;
-	Thu, 30 Jul 2026 08:24:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EDFE1F000E9;
-	Thu, 30 Jul 2026 08:24:16 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 467A7600AB;
+	Thu, 30 Jul 2026 08:37:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11E261F000E9;
+	Thu, 30 Jul 2026 08:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785399861;
-	bh=VXQZIQoVKxftmgxSpsfIIxOpHqOtOFC0MrEElaZfb68=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ChBSdYm3VX7ZR8sCoLMTJcd3DQNuh7j0CXjLFvbLn+a+u1rJQcv051pGJ3Gh7onak
-	 EjI4HcBfmFntcRanNhQ7fX1sACnhGJlyFu7xRwX8y13yNrOrxknwpaS7HbyRjgDZCR
-	 EuIX5Czn+o72EjyfAMLyCKqWXb8M6Tn17jc7Lk2j7QaObnD42gQxrLhW+tl4HnaZNK
-	 6v7pTRi0VcQDJFd1/QJDvwH7CdFCl8nCBLqt7cuow2NyHpCW/yWFM1i+MVQTBZBxrv
-	 EgWn5f/ieaBn+l6gNk0KXMinAIZqPDl/bhZHxtyME403gUTL3pBcp5S9lWsO64aazr
-	 DXS5f/gwAp32w==
-Date: Thu, 30 Jul 2026 09:24:00 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Tejun Heo <tj@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Bjorn Helgaas <helgaas@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, "Liam R . Howlett" <liam@infradead.org>, 
-	Baoquan He <baoquan.he@linux.dev>, Pratyush Yadav <pratyush@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Michal Hocko <mhocko@suse.com>, Mike Rapoport <rppt@kernel.org>, 
-	Simona Vetter <simona.vetter@ffwll.ch>, Suren Baghdasaryan <surenb@google.com>, 
-	Vlastimil Babka <vbabka@kernel.org>, Dave Young <ruirui.yang@linux.dev>, linux-mm@kvack.org, 
-	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, kexec@lists.infradead.org, 
-	driver-core@lists.linux.dev
-Subject: Re: [PATCH v2 0/3] mm,kernfs,proc: Unmap mmaps of removed files via
- file->f_mapping
-Message-ID: <amsJ_T3qTJ-TJcwk@lucifer>
-References: <20260725210549.3716546-1-kwilczynski@kernel.org>
- <20260725143737.daa698b50289257fbaa9c6f1@linux-foundation.org>
- <20260726001049.GA2219014@rocinante>
+	s=k20260515; t=1785400647;
+	bh=sRIfx4TLYAlH3SnTech17HhGQG575fDtx9lFhxWcvsI=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date;
+	b=D9fSv0/LZSgIAShREquHiHX7Tx0CMoIBR485y3u10lT5SwyeT94zW9pgp758qvX2a
+	 ZyngkQgu8D4pH/ruXOpdNGIceARJBuWPDQsgnOCULA8qiMX+kdsuIAQbqM633A/4ur
+	 pzcjS+tcc4RXal+FkUBAME+iGlC3XJn8f0kKNKMxxlLKpfedUBlxV4KCUJduzra6tP
+	 3PuKxZBTYYVugIMDa0nWHEMCk0Kp+Nj+vNJ+Wz3cL0VrupySYGl7BMd0d6WCc2R9AW
+	 Epmbvf7XWhIqkQTRdB4f56/0Q+88wFyPnhIs0CQdh4ZKhr7ip3Sq/QGWvFD+ux7s7w
+	 DKd+wAwYTCB0g==
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260726001049.GA2219014@rocinante>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v5 18/22] kho: extend scratch
+From: Mike Rapoport <rppt@kernel.org>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Alexander Graf <graf@amazon.com>, Muchun Song <muchun.song@linux.dev>, 
+ Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, Jason Miu <jasonmiu@google.com>, 
+ Jork Loeser <jloeser@linux.microsoft.com>, kexec@lists.infradead.org, 
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260729145610.2827231-19-pratyush@kernel.org>
+References: <20260729145610.2827231-1-pratyush@kernel.org>
+ <20260729145610.2827231-19-pratyush@kernel.org>
+Date: Thu, 30 Jul 2026 11:37:14 +0300
+Message-Id: <178540063445.2151126.14089645580528118019.b4-review@b4>
+X-Mailer: b4 0.16-dev
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,101 +75,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, Jul 26, 2026 at 10:22:52AM +0900, Krzysztof Wilczyński wrote:
-> Hello,
->
-> > > The PCI resource files in sysfs and the /proc/bus/pci device files swap
-> > > their f_mapping to the shared iomem address space at open time, so that
-> > > revoke_iomem() can unmap userspace mappings when a driver claims a
-> > > region, see commit 636b21b50152 ("PCI: Revoke mappings like devmem").
-> > >
-> > > Their VMAs are therefore attached to the shared address space, which
-> > > neither removal path reaches: kernfs_drain_open_files() unmaps the
-> > > sysfs inode's own mapping, which contains none of them, and
-> > > proc_entry_rundown() does not unmap anything at all.
-> > >
-> > > As a result, userspace mappings of PCI BARs survive device removal,
-> > > and also survive a BAR resize on the sysfs side, keeping stale PTEs
-> > > into physical address space that the kernel may have reassigned since.
-> > > A mapping made before the device is removed still returns the previous
-> > > register value after the device has been released, through both
-> > > interfaces.
-> >
-> > Thanks.  Can we please have full description of the userspace-visible
-> > effects of this?
->
-> Definitely.  From the PCI side, to put this into perspective:
->
-> Without this series, a process that maps a BAR keeps a fully working
-> mapping after the device is removed or its VFs torn down.  The same
-> applies when a BAR is resized, as the resize removes and recreates the
-> resource groups.  Nothing faults, so the process cannot tell the device
-> has gone.  A read returns the register contents as they were, because
-> removal clears Bus Master but leaves Memory Space Enable set, so the
-> device still decodes its BARs, and, as these attributes are writable,
-> a write is still accepted and reaches it.  Those addresses are released
-> on removal and can be assigned to another device, which a BAR resize
-> does explicitly, and the mapping then reaches whatever occupies them.
->
-> On the sysfs side this most likely has been a regression as the
-> kernfs_drain_open_files() unmapped these mappings correctly until
-> commit 636b21b50152 ("PCI: Revoke mappings like devmem") swapped
-> f_mapping to the shared iomem address space, after which the drain
-> walked an interval tree the VMAs were no longer on.  The procfs side
-> never unmapped anything, so there the behaviour is new.
->
-> A read here returns another device's register contents, and as read to
-> clear registers are common, it can also acknowledge an interrupt or clear
-> an error the owning driver has not seen.  A write can be worse, as an
-> offset that was a control register on the old device may be a doorbell,
-> a reset bit or a DMA descriptor address on the new one.
->
-> With this series the mapping is torn down as part of the removal, and
-> the next access raises SIGBUS, so userspace gets an error instead of
-> silently reading stale or unrelated registers.  Both interfaces behave
-> the same way afterwards.
->
-> Tested on 7.2-rc1 with and without the series applied.  In each case
-> the file is mmap'd, the device is removed while the mapping is held,
-> and the mapping is then accessed:
->
->   - sysfs resource read after removal:
->        before: returns 0x18140241, the value read before the removal
->        after:  SIGBUS
->
->    - sysfs resource written after removal:
->        before: the write is accepted and reads back 0x00000000
->        after:  SIGBUS on the write
->
->    - sysfs resource mmap, fd closed, then read after removal:
->        before: returns 0x18140241
->        after:  SIGBUS
->
->    - sysfs resource mmap, moved with mremap and split with munmap, then forked, both read after removal:
->        before: parent and child both return 0x18140241
->        after:  SIGBUS in both
->
->    - two sysfs resources of different devices mmap, one device removed, both read:
->        before: neither is unmapped, both return their values
->        after:  the removed device raises SIGBUS, the other still returns 0x48140240
->
->    - /proc/bus/pci used to mmap resource, read after removal:
->        before: returns 0x18140241
->        after:  SIGBUS
->
-> I hope this helps!
->
-> > AI review might have found a few things:
-> > 	https://sashiko.dev/#/patchset/20260725210549.3716546-1-kwilczynski@kernel.org
->
-> I have seen the reviews.  Will reply to each.
->
-> Thank you!
->
-> 	Krzysztof
+> +static void __init kho_extend_scratch(void)
+> +{
+> +	const struct kho_radix_walk_cb kho_cb = {
+> +		.leaf = kho_ext_walk_leaf,
+> +		.node = kho_ext_walk_node,
+> +	};
+> +	const struct kho_radix_walk_cb ext_cb = {
+> +		.leaf = kho_ext_mark_scratch,
+> +	};
+> +	struct kho_radix_tree radix;
+> +	phys_addr_t prev_end = 0;
+> +	int err = 0;
+> +
+> +	err = kho_radix_init_tree(&radix, NULL);
+> +	if (err)
+> +		goto print;
+> +
+> +	/* Walk the KHO radix tree to find busy blocks. */
+> +	err = kho_radix_walk_tree(&kho_in.radix_tree, &kho_cb, &radix);
 
-Thanks for the details, be good to put this concisely in the cover
-letter/relevant commit messages on respin.
+sashiko: Will this trigger a lockdep recursive locking warning?
 
-Cheers, Lorenzo
+I think it will.
+
+-- 
+Sincerely yours,
+Mike.
+
 
