@@ -4,66 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5A4BEC54FDF
-	for <kexec@archiver.kernel.org>; Thu, 30 Jul 2026 07:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BAF3DC55164
+	for <kexec@archiver.kernel.org>; Thu, 30 Jul 2026 07:26:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Os9dgFvLa7OaBZRPPv98Vo5UROeltiAo6YFGnDGfHRI=; b=IQZztGgOgwXsm6S1PadukQ47eZ
-	6LGoXbhr4VGLATBeVdhSUjjK/7R4ia+c3QeGcT7xdvf9P4k+8x7e3KQc/EIWl8SLByU8bANZRoO27
-	fmvbvcxPOEuDWCk6tNo7op2mFkrGcfFF/e6ZdN3IrFoJSaVrTDq5Nj4g9zLtInJZb+2sKYWmgR3JN
-	wz8tHEspMepAhbJwKErlp1PwlsDSKG/rjDrqEgeOYYABL0nbiZbqx5nLXAOcxBIyp0nONfVxeW4MC
-	4gzeRC9UwsJ/8YpalMgLhmnvhMltrezuNuqz7uVusNN+lv4ecmu/dRRsavGatjeR+KpTRR4eyGUGn
-	ExyYpVOQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
+	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Q8ZEcwCwLQetxV1WFtJMYHvZdqoS2LqCfUtFy76iNIQ=; b=Q1TxqFb4cXUELecj4WtOJxtUy7
+	/W349xyIrctWGtTui14nozGL+buN+rURNgPQ71hZ9kgtVriBkhLDEN/La3gsQYgdDTgNKTgCwl7Dk
+	tcza6g8oQWwC/RVcfFCfS+1xhMxOxhUR1Y05Rd3WdHgmjf5UusYIYAnorEZhiO3HpT5YwRx7Ntvbn
+	4w+tkx6yPXLghp34emYKMiFRIWbb8Mh0mgW2hHTJk2yJp1ex4jBF23ESWR/CAZT61+68v5MvFlSxU
+	H7lXDqDCvm7PTn2D7hqlQ7sTTRz+Abn2xzACgi8CDy7VqH4OBa8/WfmhOn/jMt78G/O2lLa9ly4j1
+	7BvStQrw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wpL7U-00000009jYf-1uMo;
-	Thu, 30 Jul 2026 07:23:56 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wpLAI-00000009jvR-2WjR;
+	Thu, 30 Jul 2026 07:26:50 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wpL7Q-00000009jYP-2QED
+	id 1wpLAH-00000009jv4-2ilu
 	for kexec@lists.infradead.org;
-	Thu, 30 Jul 2026 07:23:52 +0000
+	Thu, 30 Jul 2026 07:26:49 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 07524400AE;
-	Thu, 30 Jul 2026 07:23:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 133881F000E9;
-	Thu, 30 Jul 2026 07:23:47 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id B151F600AA;
+	Thu, 30 Jul 2026 07:26:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 098F51F00A3A;
+	Thu, 30 Jul 2026 07:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785396231;
-	bh=Os9dgFvLa7OaBZRPPv98Vo5UROeltiAo6YFGnDGfHRI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jHj6GHG+B6LgtjHEN9lD3r0pHdLDN+4kYoIS1VogXbaHwhDQ+DRNw19Wtm3HcxLVv
-	 iAF5ezxDHjmMOOm4WuZQypQ/XfMT4Pw6Y4ybYPZwHN6f4GDG6DIfbgwpOp3GAZyVT9
-	 OfRTqZ51g49gULmex43tFprNxYVrVBkKDfFVow2rJa8asavexLSTKdQoT7CSUiF93T
-	 YtdwNIe8jQPzVp+WdhrhWq0DPLI8WOshgBVxTWWl1Kud5DYndfXSqA4kvyJEzwTyE5
-	 2MAxFIhxHhTM02fFqUhgN+JXPlGtks6I/DHxvDiBX09F2bKGjgiH9dDlqzT9bghJhg
-	 L8lfRYaJWm2jQ==
-Date: Thu, 30 Jul 2026 10:23:44 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Alexander Graf <graf@amazon.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jason Miu <jasonmiu@google.com>,
-	Jork Loeser <jloeser@linux.microsoft.com>,
-	kexec@lists.infradead.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 17/22] mm/mm_init: don't rely on memblock to get KHO
- scratch migratetype
-Message-ID: <amr8ADvAiJE3ZYKF@kernel.org>
-References: <20260729145610.2827231-1-pratyush@kernel.org>
- <20260729145610.2827231-18-pratyush@kernel.org>
+	s=k20260515; t=1785396408;
+	bh=Q8ZEcwCwLQetxV1WFtJMYHvZdqoS2LqCfUtFy76iNIQ=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date;
+	b=RxfkodDJSo/HC0OF23G424dtbX5R0k/p/rIVXMGavtHl3+W7XKRuYoP6HD++eIW/E
+	 Cd5LgJuI5/SmIbyn+zS+zhKdDtEw5puQbim/Z0grP4kIqj94kWP0NdmVWdfbByZEhb
+	 +1RKyVeqOn02xB+tqh4Rpw/q84dmC7v5VLh5gSzr1fo9ZXD8aruKXhgo9T65K/n2MD
+	 wr9/CaA82x9z0bQbI51bJe4HZG2u5U6ZFIr5KQK/Mokas7qcjVHU80tOP/8DZDdm5B
+	 HTldpABea/BuPoj+0C1DqtvVXsOKBdD67TN0S7P9rXDIaonqncHi7QCfaD2wZL99ED
+	 sezDkWd4N6prw==
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260729145610.2827231-18-pratyush@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v3 2/2] kho: Introduce preserve/restore APIs for
+ high-order pages
+From: Mike Rapoport <rppt@kernel.org>
+To: Pranjal Shrivastava <praan@google.com>
+Cc: Mike Rapoport <rppt@kernel.org>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
+ Samiullah Khawaja <skhawaja@google.com>, 
+ David Matlack <dmatlack@google.com>, kexec@lists.infradead.org, 
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260723204203.2997395-3-praan@google.com>
+References: <20260723204203.2997395-1-praan@google.com>
+ <20260723204203.2997395-3-praan@google.com>
+Date: Thu, 30 Jul 2026 10:26:41 +0300
+Message-Id: <178539640188.2151126.10266644348178621151.b4-review@b4>
+X-Mailer: b4 0.16-dev
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,58 +75,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jul 29, 2026 at 04:56:02PM +0200, Pratyush Yadav wrote:
-> From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
-> 
-> Currently struct page init via memmap_init() or deferred_init_memmap()
-> only queries the migrate type from KHO for each discrete memory range.
-> That works currently since KHO scratch memory has a different memory
-> type so it is always it its own region.
-> 
-> An upcoming patch will add support for discovering blocks of memory with
-> no preservations and it will mark it as MEMBLOCK_KHO_SCRATCH to allow
-> allocations from them. This can lead to the bootmem KHO scratch areas to
-> be merged into larger free ranges. This merging breaks the selection of
-> migrate type.
-> 
-> Get rid of memblock_is_kho_scratch_memory(). Instead, use
-> kho_scratch_overlap() to decide the migrate type of the PFN. Since
-> kho_scratch_migratetype() only uses KHO functions, move it to
-> kexec_handover.h.
-> 
-> Instead of calling kho_scratch_migratetype() once for each free range,
-> call it once for each pageblock. Update
-> pageblock_migratetype_init_range() and memmap_init_range() to do so.
-> 
-> Since the migrate type is now evaluated for each pageblock and not each
-> free range, drop the migratetype arguments to deferred_free_pages() and
-> memmap_init_zone_range() and use MIGRATE_MOVABLE directly.
-> 
-> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-> ---
->  include/linux/kexec_handover.h | 15 +++++++++++++++
->  include/linux/memblock.h       | 19 -------------------
->  mm/memblock.c                  | 10 ----------
->  mm/mm_init.c                   | 27 +++++++++++++--------------
->  4 files changed, 28 insertions(+), 43 deletions(-)
-> 
-> diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
-> index 18ba417f1ada..c83ec4a15fe7 100644
-> --- a/include/linux/kexec_handover.h
-> +++ b/include/linux/kexec_handover.h
-> @@ -5,6 +5,7 @@
->  #include <linux/err.h>
->  #include <linux/errno.h>
->  #include <linux/types.h>
-> +#include <linux/mmzone.h>
+Hi Pranjal,
 
-Should have been mm.h, kbuild bot is unhappy otherwise :)
+> The current KHO page preservation APIs (e.g. kho_preserve_pages) assume
+> that multi-page blocks are split into independent 4KB pages during
+> restoration. This is incompatible with high-order non-compound pages,
+> such as DMA buffers, which must be restored with tail pages having a
+> zero reference count.
+> 
+> Introduce explicit preserve and restore APIs for high-order pages,
+> which preserve and restore a high-order page block as a single unit,
+> applying a refcount of 1 to the head page while leaving tail pages at 0.
+> Rename the existing internal helper to __kho_restore_page() and
+> consolidate the common restoration code into it.
+> 
+> Signed-off-by: Pranjal Shrivastava <praan@google.com>
+>
+> @@ -457,10 +482,14 @@ struct page *kho_restore_pages(phys_addr_t phys, unsigned long nr_pages)
+>  	while (pfn < end_pfn) {
+>  		const unsigned int order =
+>  			min(count_trailing_zeros(pfn), ilog2(end_pfn - pfn));
+> -		struct page *page = kho_restore_page(PFN_PHYS(pfn), false);
+> +		unsigned int info_order;
+> +		struct page *page = __kho_restore_page(PFN_PHYS(pfn), &info_order);
+>  
+>  		if (!page)
+>  			return NULL;
+> +
+> +		kho_init_pages(page, 1UL << info_order);
+> +		adjust_managed_page_count(page, 1UL << info_order);
 
-https://lore.kernel.org/all/202607301001.ARjK0D4v-lkp@intel.com
+Seeing 
 
-I can fix it while applying.
++		adjust_managed_page_count(page, 1UL << info_order);
+
+for the third time hinted that something is off ;-)
 
 -- 
 Sincerely yours,
 Mike.
+
 
