@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 99084C54FCD
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DA3C6C55174
 	for <kexec@archiver.kernel.org>; Sat,  1 Aug 2026 08:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,36 +12,36 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ylwjoGycr5DOOXcbvTs4+kccx6KiZv9FJ+G3COdHNzQ=; b=f2PKDy/x4FJKkho3YbBiWfD298
-	aw27OOMeSb3foQD7kkik55giRqp3iBOD7gKhLO+hbnsmHSK+Uvjeg0OGlIU1LuQVq2dK3E0e3dXEW
-	sDiROBFnTgcT266OjymaOvxMIkY7pJXx6f3icJaCqalzm7w6be2YwNp3GsiGscj9M2WoHZkWQzgXH
-	oMgbRc5ClJimrmBH2TgK6tAYRguwGIdSdaZr0FrMN7olplf008ckcaWHCPadbA2g9e0jRWsE2AP1H
-	/VNIFQ4Z0S3S9qG8vbYJkg7dYNRrQFqoIYejIXDaYT2tNlFj0kCWpIzeJDqi8tskrY0VkFg3o8Z8R
-	gaJPWXGg==;
+	bh=JrkBED7KT85yC/ETBmppqUy4I2mZbe+o6Vny+4DxgfI=; b=MJeUHlzo4CB4PWXtZ+IdHzwUzO
+	lcULDFFkDnmaU1Q1krJpsR2El6mTMT/gBQ3w8j+GqKkH49E4LtrlUtxXjP49rvVROHyNp/AiuSdd5
+	+rngYH0/ZvzvCv2u9YUQxSGgXZ1KWZToS4zpIco+l/NcVHRkaQrj7WyJAwqRRbB77nAG3OAqHNlvC
+	ueM4flNu+5yiPDUrNTIMLsEIad94cY37My8gC6OtKJXVqo8zsntzoBgigzN+QyzOoliUd1VjBFylK
+	4XNHk/IMrXHhCBR7ezgXU0XeYH6TbzUatnU30lThM39X6VbihmYsje4Nym2wfsxo/tP6YYdBUOIOb
+	xcKTYPiA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wq5P8-0000000E4fo-3UJ7;
+	id 1wq5P8-0000000E4g4-3t4x;
 	Sat, 01 Aug 2026 08:49:14 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wq5P6-0000000E4eH-4AFc
+	id 1wq5P7-0000000E4eF-0Xpq
 	for kexec@lists.infradead.org;
 	Sat, 01 Aug 2026 08:49:13 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id EA0BE45273;
-	Sat,  1 Aug 2026 08:49:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE8891F00ADE;
-	Sat,  1 Aug 2026 08:48:59 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 9051B600D8;
+	Sat,  1 Aug 2026 08:49:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FA141F00ADF;
+	Sat,  1 Aug 2026 08:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785574142;
-	bh=ylwjoGycr5DOOXcbvTs4+kccx6KiZv9FJ+G3COdHNzQ=;
+	s=k20260515; t=1785574152;
+	bh=JrkBED7KT85yC/ETBmppqUy4I2mZbe+o6Vny+4DxgfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=AQ6SlBYFF0/S4H0nu6bTyPYJXJYPsBiRrSgqLt/DIn8TnDT/Z3VanXDvsrwCqgAFl
-	 OSwvaok0Ge6ip+CQlXKNSf/fabsPtDQVUVWQiQhZayxVaeaekjUk6i6WPs0USyt2Em
-	 cr52JYw7EsMbMWZfkmycb1HRU49SdALeosTOlvJ6fKFHzFkRo/ImCveewKI+MKYF2W
-	 V1++B5+NF9aqIQ8WXZyiH78UhUFctWDIe6Kw3VVQi5JDsY2UHCGtZRwM1W9nNq2ziP
-	 M+H1i/lCyhZIIt8ijzfZ+mslL7GXh94k5XgTjKQudUu4W6AvmOJ4gzUn4hBwL45rkP
-	 EXdwjEMx+sj1Q==
+	b=fH7Q9Co90aLn4pZHLfAZHKWfqeqMxQkiyoH0OPMw0VHVNMpmMphb886dRHxBjKgyk
+	 hgCD4TLiEdm/3FbUPTjPzskFtd81SO3AmO5HJEPLc09YD5I7EmU1BvxrUfXG6xluy4
+	 d5KTBFzhuXUaKHTUqv94YyJTI9s++Vn6u1v55WZyuMnRZLGvWzNn0o/EVBDGPicrhE
+	 FZNmgaehyZ3MDXkbnqxoHPUenEKjq384GWwLMNXI+QYkAfbQ0rSEY/7vlTg6+7V9aM
+	 xmv3NYt8uCvxni9qfkiA0qJ2J4SL5uMrQ0OlnN7wRzedD7AjxrJCXBY3R8gOuEgE2g
+	 U+X35ATmQq3Dg==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -56,9 +56,9 @@ To: Mike Rapoport <rppt@kernel.org>,
 Cc: kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 04/22] kho: return virtual address of mem_map from kho_get_mem_map()
-Date: Sat,  1 Aug 2026 10:48:13 +0200
-Message-ID: <20260801084833.1897543-5-pratyush@kernel.org>
+Subject: [PATCH v6 08/22] kho: add callback for table pages
+Date: Sat,  1 Aug 2026 10:48:17 +0200
+Message-ID: <20260801084833.1897543-9-pratyush@kernel.org>
 X-Mailer: git-send-email 2.55.0.571.g244d577d93-goog
 In-Reply-To: <20260801084833.1897543-1-pratyush@kernel.org>
 References: <20260801084833.1897543-1-pratyush@kernel.org>
@@ -80,85 +80,80 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-Currently the preserved memory map address is returned by
-kho_get_mem_map_phys(). It is only used by kho_populate().
-kho_populate() doesn't use the actual value. It only cares that the
-address exists and is valid.
+The KHO memory preservation radix tree does not mark the table pages
+themselves as preserved. This is done to avoid a circular dependency
+where preserving a page can lead of allocating other preserved pages.
+This means any walker looking for free ranges of memory outside of
+scratch areas will ignore the table
 
-In coming patches, more callers will be added, all of which will need
-the virtual address of the preserved memory map. Since kho_populate()
-doesn't care about the actual value and only cares about validity, it
-can also use the virtual address returned by kho_get_mem_map(). It only
-needs to make sure the returned value is not NULL.
+Add a table callback that is invoked for each table page. The callback
+is given the physical address of the table page.
 
-Rename kho_get_mem_map_phys() to kho_get_mem_map() and return the
-virtual address of the preserved memory map.
+This is useful for the upcoming mechanism that discovers blocks of
+memory with no preserved pages and lets them be used for boot memory.
+
+Another use case is for users of the radix tree other than KHO itself.
+The radix tree does not preserve its own pages due to the circular
+dependency described above. But external users of the radix tree would
+need to preserve and restore their pages for the radix tree to survive
+past early boot. They can use this callback to do so.
 
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- kernel/liveupdate/kexec_handover.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+ include/linux/kho_radix_tree.h     |  3 +++
+ kernel/liveupdate/kexec_handover.c | 12 ++++++++++++
+ 2 files changed, 15 insertions(+)
 
+diff --git a/include/linux/kho_radix_tree.h b/include/linux/kho_radix_tree.h
+index 486e193d58f4..902bbeddcbb7 100644
+--- a/include/linux/kho_radix_tree.h
++++ b/include/linux/kho_radix_tree.h
+@@ -41,12 +41,15 @@ struct kho_radix_tree {
+ /**
+  * struct kho_radix_walk_cb - Callbacks for KHO radix tree walk.
+  * @leaf:      Called on each present key in the radix tree.
++ * @node:      Called on each node of the radix tree itself. Receives the
++ *             physical address of the page containing the node.
+  *
+  * For each callback, a return value of 0 continues the walk and a non-zero
+  * return value is directly returned to the caller.
+  */
+ struct kho_radix_walk_cb {
+ 	int (*leaf)(unsigned long key);
++	int (*node)(phys_addr_t phys);
+ };
+ 
+ #ifdef CONFIG_KEXEC_HANDOVER
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index e7451743b87e..5c35c11c273b 100644
+index 9fb07c0ef18e..2044f35cf1de 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -512,19 +512,24 @@ static int __init kho_preserved_memory_reserve(unsigned long key)
- 	return 0;
- }
- 
--/* Returns physical address of the preserved memory map from FDT */
--static phys_addr_t __init kho_get_mem_map_phys(const void *fdt)
-+/* Returns virtual address of the preserved memory map from FDT */
-+static __init void *kho_get_mem_map(const void *fdt)
- {
- 	const void *mem_ptr;
-+	phys_addr_t mem_map_phys;
- 	int len;
- 
- 	mem_ptr = fdt_getprop(fdt, 0, KHO_FDT_MEMORY_MAP_PROP_NAME, &len);
- 	if (!mem_ptr || len != sizeof(u64)) {
- 		pr_err("failed to get preserved memory map\n");
--		return 0;
-+		return NULL;
- 	}
- 
--	return get_unaligned((const u64 *)mem_ptr);
-+	mem_map_phys = get_unaligned((const u64 *)mem_ptr);
-+	if (!mem_map_phys)
-+		return NULL;
-+
-+	return phys_to_virt(mem_map_phys);
- }
- 
- /*
-@@ -1647,9 +1652,8 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
- {
- 	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
- 	struct kho_scratch *scratch = NULL;
--	phys_addr_t mem_map_phys;
--	void *fdt = NULL;
- 	bool populated = false;
-+	void *fdt = NULL;
+@@ -288,6 +288,12 @@ static int kho_radix_walk_leaf(struct kho_radix_leaf *leaf, unsigned long key,
+ 	unsigned int i;
  	int err;
  
- 	/* Validate the input FDT */
-@@ -1671,8 +1675,13 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
- 		goto unmap_fdt;
- 	}
++	if (cb->node) {
++		err = cb->node(virt_to_phys(leaf));
++		if (err)
++			return err;
++	}
++
+ 	if (!cb->leaf)
+ 		return 0;
  
--	mem_map_phys = kho_get_mem_map_phys(fdt);
--	if (!mem_map_phys)
-+	/*
-+	 * At this point phys_to_virt() doesn't work properly and so
-+	 * kho_get_mem_map() can return a pre-KASLR virtual address. But here we
-+	 * only want to make sure the mem_map is valid so the actual value
-+	 * doesn't matter as long as it isn't NULL.
-+	 */
-+	if (!kho_get_mem_map(fdt))
- 		goto unmap_fdt;
+@@ -310,6 +316,12 @@ static int __kho_radix_walk_tree(struct kho_radix_node *root,
+ 	unsigned int shift;
+ 	int err;
  
- 	scratch = early_memremap(scratch_phys, scratch_len);
++	if (cb->node) {
++		err = cb->node(virt_to_phys(root));
++		if (err)
++			return err;
++	}
++
+ 	for (i = 0; i < PAGE_SIZE / sizeof(phys_addr_t); i++) {
+ 		if (!root->table[i])
+ 			continue;
 -- 
 2.55.0.571.g244d577d93-goog
 
