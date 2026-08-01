@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 71429C55174
-	for <kexec@archiver.kernel.org>; Sat,  1 Aug 2026 08:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8F6A9C5516F
+	for <kexec@archiver.kernel.org>; Sat,  1 Aug 2026 08:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=c/vB3WD/7Dj176UGptU16rqTkNJk3eC17XvdFm9X+ws=; b=zmToB0jXNi2Q4bqeOxqr/Inj6F
-	2ak0Rb8ezca/uvj0OjNpeN5nbDffrQY5rmZG9CCwKbLFsMtudaAAb0UJuKvYMyZiwqh8Mvz1p6hkC
-	gLNO9vaJathJVl2zwDaIJECvUBixoFJtlAuilZMXm8/7pfhTtfztxwVr87aSprhARMS9AlywMgayX
-	r5AsN9Agdk51mGqHwKWGxJ+PEXxkln09tlLC/4Z/e9yt7z6qBvwsTvwVarmSg/HWYTxMedO7kxVJY
-	nzjQypiv278E45/r8Bmd69zfJdBdvo3w8q3DCuOmiKt2edwZhCv8N2XSbXESAWvsARmaJgIuoM/uY
-	haLWO+pw==;
+	bh=YUYh1XVpyuFv2NFQq7Z2LsqK+jIMTcX5fIOqnoQbuC8=; b=JZxPfh3AXEfiWr1ekmqGYfKYfo
+	Q9QKWvBMSMNPh4wS5DvnD0kOtYVg+ppkBxtQM0PbPOfyEHWM3ygZ4MBfnm2XDZJtUeB+rblPjjS3W
+	PL0OXlrUmGA7sjA6KwRQuRE7oEpGIOCSX7yBaOn8NKmLujIzL4AOaGUpd4+lFXOdeFuebA8uukPkG
+	m5Vn/eRXsIEU2lFaxnGhsO4J4+ubL3GA+oO2WhLxbZOV3odIA8cf3AL7PDsYOHwT3IB5gmziq5DrA
+	hMSF3h0XFeDJX5mbKcsI35KMk2cfbIEP1iVGXcxtRZRVtx5TfEOl6oXJV+YXuHQYiho4fvj4oTvUT
+	ywtaafkg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wq5Pb-0000000E56U-2RNw;
-	Sat, 01 Aug 2026 08:49:43 +0000
+	id 1wq5Pd-0000000E59e-37jn;
+	Sat, 01 Aug 2026 08:49:45 +0000
 Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wq5PZ-0000000E535-1Uw9
+	id 1wq5Pc-0000000E56d-0C9h
 	for kexec@lists.infradead.org;
-	Sat, 01 Aug 2026 08:49:41 +0000
+	Sat, 01 Aug 2026 08:49:44 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id C8B9760AAC;
+	by tor.source.kernel.org (Postfix) with ESMTP id 5C49460AA8;
+	Sat,  1 Aug 2026 08:49:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFB061F00ADF;
 	Sat,  1 Aug 2026 08:49:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5867C1F00ACF;
-	Sat,  1 Aug 2026 08:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785574180;
-	bh=c/vB3WD/7Dj176UGptU16rqTkNJk3eC17XvdFm9X+ws=;
+	s=k20260515; t=1785574183;
+	bh=YUYh1XVpyuFv2NFQq7Z2LsqK+jIMTcX5fIOqnoQbuC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Kt4e7q6DHaIsNzhM8Hw4l1ztlRsErtKU4viX9Gl/BNomAKQpvGAAA9c1FE0iHWYQj
-	 nrVNtyiE5aY63+cESIDyPXCrFy7e2q74mPOoylQJMu4gGxMWF2kr5NzUI1BDn65pn8
-	 jbJOTl9xHM5zcJvjqZIvC21TOnnJt1G/0IO99ACEjJ+VrShTKRZM/9QzwPoCWcTdtE
-	 r3qs7ag92TaD5qxD6N3WLvhQAz0SVdJ9h/4nHr6Gsk5rhGUP/XMf8/RRA1RpcYXbNI
-	 7rWXFthAp+VPTyzkn1FdzeneJP4Id5dqbZvQqvFml7AyqYtfzeZLWVcG4OH0AfBGby
-	 rgUfQXBanMW9w==
+	b=TGFdElrDZRvZJHHIjb74yh/6eWwEy5x4BQY3qOm2Jwzwu6gSPzFQLgI0GiE6rPFXb
+	 msa6bP9YDVR/YrKFXvonNmZYWs7yzYffgAiMjo13NMqCujGAdMZPCvW4EiBvGJaZMa
+	 OIt8zIqXaYklrBWWjKHl+YQSVQ70biwLGMDazixBo24ouj9uMy5lXUhiePK1Ecl5fC
+	 fXIcTXDfRoUxNvbOaws8+cmkra8hnakdQgPPiPOaoJt5j9AYbWStP7E3WyHUzRHmDX
+	 myGWTOAq3p4t0FSuPEpqwG8XtaSXgmLc2v6EpSFaYJ39ls4QHFnjeUUBjHHJF6F58w
+	 JUu3qNY7qLcpw==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -56,9 +56,9 @@ To: Mike Rapoport <rppt@kernel.org>,
 Cc: kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 19/22] memblock: always include KHO headers
-Date: Sat,  1 Aug 2026 10:48:28 +0200
-Message-ID: <20260801084833.1897543-20-pratyush@kernel.org>
+Subject: [PATCH v6 20/22] memblock: make HugeTLB bootmem allocation work with KHO
+Date: Sat,  1 Aug 2026 10:48:29 +0200
+Message-ID: <20260801084833.1897543-21-pratyush@kernel.org>
 X-Mailer: git-send-email 2.55.0.571.g244d577d93-goog
 In-Reply-To: <20260801084833.1897543-1-pratyush@kernel.org>
 References: <20260801084833.1897543-1-pratyush@kernel.org>
@@ -80,90 +80,273 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-In a coming commit, memblock will start using kho_scratch_overlap()
-without a compile guard. The compile guard for the function is in
-kexec_handover.h and provides a stub when CONFIG_KEXEC_HANDOVER is
-disabled.
+Gigantic huge page allocation is somewhat broken currently when KHO is
+used.
 
-Since in memblock the call will exist unconditionally, always include
-the KHO headers.
+Firstly, they break KHO scratch size accounting. RSRV_KERN is used to
+track how much memory is reserved for use by the kernel. Since
+hugetlb::alloc_bootmem() calls the memblock_alloc*() APIs, the hugepages
+allocated also get marked as RSRV_KERN.
 
-Including these headers unconditionally breaks memblock test
-compilation. Add stubs to fix that.
+Allocations marked RSRV_KERN are used by KHO to calculate how much
+scratch space it should reserve to make sure the next kernel has enough
+memory to boot when it is in scratch-only phase. Counting hugepages in
+that blows up scratch size, and can lead to the scratch allocation
+failing, making KHO unusable. This will show up when huge pages make up
+more than 50% of the system, which is a fairly common use case.
+
+Secondly, while not supported right now, huge pages are user memory and
+can be preserved via KHO. The scratch spaces should not have any
+preserved memory. Allocating hugepages from scratch (on a KHO boot) can
+lead to them being un-preservable.
+
+Introduce memblock_alloc_hugetlb(). This lets memblock tailor to the
+needs of hugetb without exposing those details to the general allocation
+routines.
+
+First, it does not use mirrored memory for hugetlb. Mirrored memory is a
+limited resource that is best saved for kernel data structures, not user
+memory.
+
+Second, if the free memory area found by memblock_find_in_range_node()
+is a part of a KHO scratch area, the free area is not used. Allocation
+is retried starting after the free area to ensure no hugepages come from
+KHO scratch.
+
+Third, it simplifies the argument list by baking in some hugetlb
+assumptions like alignment and exact_nid. This also simplifies
+allocation logic in alloc_bootmem().
+
+Also introduce MEMBLOCK_RSRV_HUGETLB to mark reservations made for
+HugeTLB. This will be used by KHO in future patches to correctly
+calculate scratch sizes.
+
+Refactor some of the preparation logic like kmemleak tracking and
+accepting memory into a separate helper memblock_prep_allocation(), and
+use it from both memblock_alloc_hugetlb() and the usual
+memblock_alloc_range_nid().
 
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- mm/memblock.c                                   |  2 --
- tools/testing/memblock/linux/kexec_handover.h   |  9 +++++++++
- tools/testing/memblock/linux/kho/abi/memblock.h | 10 ++++++++++
- tools/testing/memblock/linux/libfdt.h           |  9 +++++++++
- 4 files changed, 28 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/memblock/linux/kexec_handover.h
- create mode 100644 tools/testing/memblock/linux/kho/abi/memblock.h
- create mode 100644 tools/testing/memblock/linux/libfdt.h
+ include/linux/memblock.h |   3 +
+ mm/hugetlb.c             |  22 +++----
+ mm/memblock.c            | 120 ++++++++++++++++++++++++++++++++-------
+ 3 files changed, 108 insertions(+), 37 deletions(-)
 
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index f142c8a8cd5b..678fe466529a 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -51,6 +51,7 @@ extern unsigned long long max_possible_pfn;
+  * memory reservations yet, so we get scratch memory from the previous
+  * kernel that we know is good to use. It is the only memory that
+  * allocations may happen from in this phase.
++ * @MEMBLOCK_RSRV_HUGETLB: memory is reserved for hugetlb pages
+  */
+ enum memblock_flags {
+ 	MEMBLOCK_NONE		= 0x0,	/* No special request */
+@@ -61,6 +62,7 @@ enum memblock_flags {
+ 	MEMBLOCK_RSRV_NOINIT	= 0x10,	/* don't initialize struct pages */
+ 	MEMBLOCK_RSRV_KERN	= 0x20,	/* memory reserved for kernel use */
+ 	MEMBLOCK_KHO_SCRATCH	= 0x40,	/* scratch memory for kexec handover */
++	MEMBLOCK_RSRV_HUGETLB	= 0x80, /* memory reserved for hugetlb pages */
+ };
+ 
+ /**
+@@ -420,6 +422,7 @@ void *memblock_alloc_try_nid_raw(phys_addr_t size, phys_addr_t align,
+ void *memblock_alloc_try_nid(phys_addr_t size, phys_addr_t align,
+ 			     phys_addr_t min_addr, phys_addr_t max_addr,
+ 			     int nid);
++void *memblock_alloc_hugetlb(phys_addr_t size, int nid, bool exact_nid);
+ 
+ static __always_inline void *memblock_alloc(phys_addr_t size, phys_addr_t align)
+ {
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 571212b80835..ab4afc818e8c 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3033,29 +3033,21 @@ static __init void *alloc_bootmem(struct hstate *h, int nid, bool node_exact)
+ 	if (hugetlb_early_cma(h))
+ 		m = hugetlb_cma_alloc_bootmem(h, &listnode, node_exact);
+ 	else {
+-		if (node_exact)
+-			m = memblock_alloc_exact_nid_raw(huge_page_size(h),
+-				huge_page_size(h), 0,
+-				MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+-		else {
+-			m = memblock_alloc_try_nid_raw(huge_page_size(h),
+-				huge_page_size(h), 0,
+-				MEMBLOCK_ALLOC_ACCESSIBLE, nid);
++		m = memblock_alloc_hugetlb(huge_page_size(h), nid, node_exact);
++		if (m) {
++			m->flags = 0;
++			m->cma = NULL;
++
+ 			/*
+ 			 * For pre-HVO to work correctly, pages need to be on
+ 			 * the list for the node they were actually allocated
+ 			 * from. That node may be different in the case of
+-			 * fallback by memblock_alloc_try_nid_raw. So,
++			 * fallback by memblock_alloc_hugetlb_bootmem. So,
+ 			 * extract the actual node first.
+ 			 */
+-			if (m)
++			if (!node_exact)
+ 				listnode = early_pfn_to_nid(PHYS_PFN(__pa(m)));
+ 		}
+-
+-		if (m) {
+-			m->flags = 0;
+-			m->cma = NULL;
+-		}
+ 	}
+ 
+ 	if (m) {
 diff --git a/mm/memblock.c b/mm/memblock.c
-index 8b2e551435ae..ea735bcd4dd1 100644
+index ea735bcd4dd1..77c6540e7528 100644
 --- a/mm/memblock.c
 +++ b/mm/memblock.c
-@@ -19,11 +19,9 @@
- #include <linux/mutex.h>
- #include <linux/string_helpers.h>
+@@ -1504,6 +1504,32 @@ int __init_memblock memblock_set_node(phys_addr_t base, phys_addr_t size,
+ 	return 0;
+ }
  
--#ifdef CONFIG_KEXEC_HANDOVER
- #include <linux/libfdt.h>
- #include <linux/kexec_handover.h>
- #include <linux/kho/abi/memblock.h>
--#endif /* CONFIG_KEXEC_HANDOVER */
++static void memblock_prep_allocation(phys_addr_t start, phys_addr_t size,
++				     bool kmemleak_trace)
++{
++	/*
++	 * Skip kmemleak for those places like kasan_init() and
++	 * early_pgtable_alloc() due to high volume.
++	 */
++	if (kmemleak_trace)
++		/*
++		 * Memblock allocated blocks are never reported as
++		 * leaks. This is because many of these blocks are
++		 * only referred via the physical address which is
++		 * not looked up by kmemleak.
++		 */
++		kmemleak_alloc_phys(start, size, 0);
++
++	/*
++	 * Some Virtual Machine platforms, such as Intel TDX or AMD SEV-SNP,
++	 * require memory to be accepted before it can be used by the
++	 * guest.
++	 *
++	 * Accept the memory of the allocated buffer.
++	 */
++	accept_memory(start, size);
++}
++
+ /**
+  * memblock_alloc_range_nid - allocate boot memory block
+  * @size: size of memory block to be allocated in bytes
+@@ -1578,28 +1604,7 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+ 	return 0;
  
- #include <asm/sections.h>
- #include <linux/io.h>
-diff --git a/tools/testing/memblock/linux/kexec_handover.h b/tools/testing/memblock/linux/kexec_handover.h
-new file mode 100644
-index 000000000000..bdfd9445b1fd
---- /dev/null
-+++ b/tools/testing/memblock/linux/kexec_handover.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef LINUX_KEXEC_HANDOVER_H
-+#define LINUX_KEXEC_HANDOVER_H
-+
-+/*
-+ * Header stub to avoid test build breakage; we don't need to actually implement
-+ * any KHO functions as they are not used in the tests.
+ done:
+-	/*
+-	 * Skip kmemleak for those places like kasan_init() and
+-	 * early_pgtable_alloc() due to high volume.
+-	 */
+-	if (end != MEMBLOCK_ALLOC_NOLEAKTRACE)
+-		/*
+-		 * Memblock allocated blocks are never reported as
+-		 * leaks. This is because many of these blocks are
+-		 * only referred via the physical address which is
+-		 * not looked up by kmemleak.
+-		 */
+-		kmemleak_alloc_phys(found, size, 0);
+-
+-	/*
+-	 * Some Virtual Machine platforms, such as Intel TDX or AMD SEV-SNP,
+-	 * require memory to be accepted before it can be used by the
+-	 * guest.
+-	 *
+-	 * Accept the memory of the allocated buffer.
+-	 */
+-	accept_memory(found, size);
+-
++	memblock_prep_allocation(found, size, end != MEMBLOCK_ALLOC_NOLEAKTRACE);
+ 	return found;
+ }
+ 
+@@ -1754,6 +1759,77 @@ void * __init memblock_alloc_try_nid_raw(
+ 				       false);
+ }
+ 
++/**
++ * memblock_alloc_hugetlb - allocate boot memory for HugeTLB pages
++ * @size:      size of the memory to be allocated in bytes
++ * @nid:       nid of the free memory to find, %NUMA_NO_NODE for any node
++ * @exact_nid: only allocate from the specified nid. If %false, the specified
++ *             nid is tried first, and then all nodes are tried as fallback.
++ *
++ * HugeTLB pages are always aligned by their size, so the alignment matches
++ * @size. Since the memory is for userspace, mirrored memory is not used. The
++ * memory is not zeroed. Does not panic if request cannot be satisfied.
++ *
++ * Return:
++ * Virtual address of allocated memory block on success, %NULL on failure.
 + */
-+#endif /* LINUX_KEXEC_HANDOVER_H */
-diff --git a/tools/testing/memblock/linux/kho/abi/memblock.h b/tools/testing/memblock/linux/kho/abi/memblock.h
-new file mode 100644
-index 000000000000..71cf6982a2b9
---- /dev/null
-+++ b/tools/testing/memblock/linux/kho/abi/memblock.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++void * __init memblock_alloc_hugetlb(phys_addr_t size, int nid, bool exact_nid)
++{
++	enum memblock_flags flags = choose_memblock_flags();
++	phys_addr_t addr, start = 0, end = MEMBLOCK_ALLOC_ACCESSIBLE;
 +
-+#ifndef _LINUX_KHO_ABI_MEMBLOCK_H
-+#define _LINUX_KHO_ABI_MEMBLOCK_H
++	memblock_dbg("%s: %llu bytes, nid=%d, exact_nid=%d %pS\n", __func__,
++		     (u64)size, nid, exact_nid, (void *)_RET_IP_);
 +
-+/*
-+ * Header stub to avoid test build breakage; we don't need to actually define
-+ * any ABI as they are not used in the tests.
-+ */
-+#endif /* _LINUX_KHO_ABI_MEMBLOCK_H */
-diff --git a/tools/testing/memblock/linux/libfdt.h b/tools/testing/memblock/linux/libfdt.h
-new file mode 100644
-index 000000000000..6137b788fe8d
---- /dev/null
-+++ b/tools/testing/memblock/linux/libfdt.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _INCLUDE_LIBFDT_H_
-+#define _INCLUDE_LIBFDT_H_
++	/* Don't waste mirrored memory on HugeTLB pages. */
++	flags &= ~MEMBLOCK_MIRROR;
++retry:
++	/* HugeTLB pages are always aligned by their size. */
++	addr = memblock_find_in_range_node(size, size, start, end, nid, flags);
++	if (addr)
++		goto found;
 +
-+/*
-+ * Header stub to avoid test build breakage; we don't need to actually implement
-+ * any FDT functions as they are not used in the tests.
-+ */
-+#endif /* _INCLUDE_LIBFDT_H_ */
++	/* Try all nodes if allowed. */
++	if (numa_valid_node(nid) && !exact_nid) {
++		nid = NUMA_NO_NODE;
++		/*
++		 * If a previous candidate overlapped with KHO scratch, it would
++		 * update start or end. Now that the search is opening to all
++		 * nodes, reset them.
++		 */
++		start = 0;
++		end = MEMBLOCK_ALLOC_ACCESSIBLE;
++
++		goto retry;
++	}
++
++	/* Found nothing... :-( */
++	return NULL;
++
++found:
++	/*
++	 * HugeTLB pages can be preserved with KHO and no preserved memory can
++	 * be in scratch. So retry if found address overlaps with scratch.
++	 *
++	 * Scratch areas are normally not very large, so this shouldn't take too
++	 * many retries.
++	 */
++	if (kho_scratch_overlap(addr, size)) {
++		if (memblock_bottom_up())
++			start = addr + size;
++		else
++			end = addr;
++
++		goto retry;
++	}
++
++	if (__memblock_reserve(addr, size, nid, MEMBLOCK_RSRV_KERN | MEMBLOCK_RSRV_HUGETLB))
++		return NULL;
++
++	memblock_prep_allocation(addr, size, true);
++	return phys_to_virt(addr);
++}
++
+ /**
+  * memblock_alloc_try_nid - allocate boot memory block
+  * @size: size of memory block to be allocated in bytes
 -- 
 2.55.0.571.g244d577d93-goog
 
