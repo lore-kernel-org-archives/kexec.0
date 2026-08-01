@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E6110C55178
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C86ABC55175
 	for <kexec@archiver.kernel.org>; Sat,  1 Aug 2026 08:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,36 +12,36 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=YThpLVa0pAUWP2z3tc3d9zSsIfw3Qsor7X/X4Bi8OXs=; b=UZShDMe8fiabB/iZ/79ixXKLFq
-	fjw4YcEG5/phqGEJOQ4Nww7QYbDYehD2ce5gxNa1CfuIcIMCsWq95FM7wpLG0NSzCB9RHs76kQaSq
-	ORZ1hRmnVxEaZKPSHEmIFkTiHaI2Q4GoVy/Dp7cJLxLMzgtSvU6Tx1ABGoTurQOzr8hip4BfwVkeW
-	Sf4nAJs+7aI0rUqARtCU38rcyPj9azWS3f0LnF1AaGnwhQOFTv9XjuhvjgLYn8WyuT7rXbgSQnfC0
-	b39kxjgiE9w93BFaFkwzuMdhmxW7i1YY0jkVDFy9RYpoMogP3adR8AVLv2FMqzSo20swcbgaZISOj
-	rj86XgJg==;
+	bh=alL8/OJYh1Qv7+s2wIqZ7R14I5+RKoy6q+9hcJES2KA=; b=Ms6nbZFPXCkuQjw0x8BqisfF0f
+	bjgCAHRKiAuooHQDWT0vqUmwunaWPvQlieoQ1ebXcMcbFiQzo5LnQ6ZkyXRErYyFEQa3aJB2x0I08
+	L8+rjv+GiT032nxpecI7Qv64zoIDKiAr8N4bIEaOgEUQkYw7Zm01v4VAkL42vtlQw/LpaBFv+GmoH
+	VQ21N5JAFlwtOg9yubV9shKtQIYbfx6McRVB3lTefCtNfQmOiRyadWfY9PzConOeQ5bjAOwMqwy2w
+	4aqsESp5IuoQckeIvFdJ5dE5wgximgrBwGx4SyTBsMsI9z+aYMEiCbeTe9YINxevNh+JU3qYsHNa6
+	qDjJSfWQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wq5PR-0000000E4v6-3bFr;
+	id 1wq5PR-0000000E4ut-36xz;
 	Sat, 01 Aug 2026 08:49:33 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wq5PR-0000000E4uP-0zBz
+	id 1wq5PP-0000000E4sC-022D
 	for kexec@lists.infradead.org;
-	Sat, 01 Aug 2026 08:49:33 +0000
+	Sat, 01 Aug 2026 08:49:31 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id A4F9D452A6;
-	Sat,  1 Aug 2026 08:49:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 543CD1F00ADB;
-	Sat,  1 Aug 2026 08:49:20 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 70F3160AA6;
+	Sat,  1 Aug 2026 08:49:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0133D1F00ADB;
+	Sat,  1 Aug 2026 08:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785574162;
-	bh=YThpLVa0pAUWP2z3tc3d9zSsIfw3Qsor7X/X4Bi8OXs=;
+	s=k20260515; t=1785574170;
+	bh=alL8/OJYh1Qv7+s2wIqZ7R14I5+RKoy6q+9hcJES2KA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=fBVAEnZ2RRAtY4Ovg2SUzbCx5Naohcmkeiixgyi2qjs2u97GdJBTnBqCB4OrCLxRC
-	 4HggcfmpOi0iieeh3Ia0Ef7Qb/c9KYBX8TR8aiweFJMFRdIfA3HMKOeoR2LVIZdoAa
-	 EsjtdVtjkVswMA9gP+dW0mdnlLmb2d4CBIdZUi1V2Fb/pBGEGsut4jVVFOgPKBAxXt
-	 26H/+vcL9Gc/Gf3MN6gQ00MwdKz3vVskgQz2JTeZzJxt/AsW4+vGIo8eZqyVfUyUOF
-	 3+LqGh3jLbZMySkeBVX8WFnkpcpzi1P0iTIXvNde6VtYdiy4YbHdATIJ4sQU3e0ERY
-	 FDCJfQLpFUQdg==
+	b=MDndfPJCluyQBfI6tqVfi2Xf1XL4IwWu256xR2HN691lUocXmV+qzhHSWDle1BXrx
+	 cKQu5OVKY2Mxzca45UzvuDFqs87Ancqrve8v+bxirdAWfb7MVGVJIIXJ0owzctpHS3
+	 tlHlT+TCgZ+J7HysUziBuXNmxuE8rRaCyHDHBT4XsVAZO4ECMG9cxg6qBvLKYb2P4x
+	 xxDpt8c+7CfZEO/v0Fp9EIYbuZ3qiAnO3lVOORQnJYL7/ed2/MgQ2lwVwGz3s0zzcM
+	 f8Uu6H/Zoaskptc7WTVLmlh6T3lYJOpFzS+Bj6AxDBF1s6uysUkBlQqs34zid0gCG7
+	 EaoARKZOolU5Q==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -56,9 +56,9 @@ To: Mike Rapoport <rppt@kernel.org>,
 Cc: kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 12/22] kho: add kho_radix_init_tree()
-Date: Sat,  1 Aug 2026 10:48:21 +0200
-Message-ID: <20260801084833.1897543-13-pratyush@kernel.org>
+Subject: [PATCH v6 15/22] kho: initialize preserved memory map radix tree earlier
+Date: Sat,  1 Aug 2026 10:48:24 +0200
+Message-ID: <20260801084833.1897543-16-pratyush@kernel.org>
 X-Mailer: git-send-email 2.55.0.571.g244d577d93-goog
 In-Reply-To: <20260801084833.1897543-1-pratyush@kernel.org>
 References: <20260801084833.1897543-1-pratyush@kernel.org>
@@ -80,143 +80,75 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-Move the initialization logic of the radix tree into
-kho_radix_init_tree() instead of having users open-code it. Makes the
-boundaries cleaner and reduces code duplication when a new user of the
-radix tree will be added in a future commit.
+Currently the preserved memory radix tree is initialized from
+kho_memory_init(), which happens relatively late in MM init. In a coming
+patch, the tree will be used from kho_memory_init_early(). Move the tree
+initialization there.
+
+Simplify some of the code in kho_mem_retrieve() by getting rid of the
+err variable and jumping to err directly.
 
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- include/linux/kho_radix_tree.h     |  7 ++++
- kernel/liveupdate/kexec_handover.c | 62 +++++++++++++++++++++---------
- 2 files changed, 51 insertions(+), 18 deletions(-)
+ kernel/liveupdate/kexec_handover.c | 30 +++++++++++++++++-------------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
-diff --git a/include/linux/kho_radix_tree.h b/include/linux/kho_radix_tree.h
-index b7532aff35d8..fcd69639721b 100644
---- a/include/linux/kho_radix_tree.h
-+++ b/include/linux/kho_radix_tree.h
-@@ -58,6 +58,7 @@ int kho_radix_add_key(struct kho_radix_tree *tree, unsigned long key);
- void kho_radix_del_key(struct kho_radix_tree *tree, unsigned long key);
- int kho_radix_walk_tree(struct kho_radix_tree *tree,
- 			const struct kho_radix_walk_cb *cb, void *data);
-+int kho_radix_init_tree(struct kho_radix_tree *tree, struct kho_radix_node *root);
- void kho_radix_destroy_tree(struct kho_radix_tree *tree);
- 
- #else  /* #ifdef CONFIG_KEXEC_HANDOVER */
-@@ -76,6 +77,12 @@ static inline int kho_radix_walk_tree(struct kho_radix_tree *tree,
- 	return -EOPNOTSUPP;
- }
- 
-+static inline int kho_radix_init_tree(struct kho_radix_tree *tree,
-+				      struct kho_radix_node *root)
-+{
-+	return 0;
-+}
-+
- static inline void kho_radix_destroy_tree(struct kho_radix_tree *tree) { }
- 
- #endif /* #ifdef CONFIG_KEXEC_HANDOVER */
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 105dc0f3e691..04bfcbf9cc55 100644
+index 2ddfc804cdf7..6e8682469bd7 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -320,6 +320,30 @@ static void __kho_radix_destroy_tree(struct kho_radix_node *root,
- 	kho_radix_free_node(root);
- }
+@@ -1531,20 +1531,8 @@ static void __init kho_mem_retrieve(void)
+ 	const struct kho_radix_walk_cb cb = {
+ 		.leaf = kho_preserved_memory_reserve,
+ 	};
+-	const void *fdt = kho_get_fdt();
+-	int err;
  
-+/**
-+ * kho_radix_init_tree - initialize the radix tree.
-+ * @tree:   the tree to initialize.
-+ * @root:   root table of the radix tree.
-+ *
-+ * Initialize the radix tree with the given root node. If root is %NULL, an
-+ * empty root table is allocated. If root is not %NULL, it is the caller's
-+ * responsibility to make sure the root is valid and in the correct format.
-+ *
-+ * Return: 0 on success, -errno on failure.
-+ */
-+int kho_radix_init_tree(struct kho_radix_tree *tree, struct kho_radix_node *root)
-+{
-+	if (!root)
-+		root = kho_radix_alloc_node();
-+	if (!root)
-+		return -ENOMEM;
+-	/*
+-	 * kho_get_mem_map() should always succeed. If it fails, kho_populate()
+-	 * catches that and never sets kho_in.scratch_phys, which stops memory
+-	 * retrieval.
+-	 */
+-	err = kho_radix_init_tree(&kho_in.radix_tree, kho_get_mem_map(fdt));
+-	if (err)
+-		goto err;
+-
+-	err = kho_radix_walk_tree(&kho_in.radix_tree, &cb, NULL);
+-	if (err)
++	if (kho_radix_walk_tree(&kho_in.radix_tree, &cb, NULL))
+ 		goto err;
+ 
+ 	return;
+@@ -1756,6 +1744,8 @@ fs_initcall(kho_init);
+ 
+ void __init kho_memory_init_early(void)
+ {
++	const void *fdt = kho_get_fdt();
 +
-+	tree->root = root;
-+	mutex_init(&tree->lock);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(kho_radix_init_tree);
-+
- /**
-  * kho_radix_destroy_tree - Destroy the radix tree
-  * @tree: The radix tree to destroy
-@@ -1499,18 +1523,23 @@ static void __init kho_mem_retrieve(void)
- 	 * catches that and never sets kho_in.scratch_phys, which stops memory
- 	 * retrieval.
+ 	if (!is_kho_boot())
+ 		return;
+ 
+@@ -1765,6 +1755,20 @@ void __init kho_memory_init_early(void)
+ 	 * early.
  	 */
--	kho_in.radix_tree.root = kho_get_mem_map(fdt);
--	mutex_init(&kho_in.radix_tree.lock);
-+	err = kho_radix_init_tree(&kho_in.radix_tree, kho_get_mem_map(fdt));
-+	if (err)
-+		goto err;
- 
- 	err = kho_radix_walk_tree(&kho_in.radix_tree, &cb, NULL);
--	if (err) {
--		/*
--		 * Failed to initialize preserved memory. Clear FDT and radix
--		 * so KHO users don't treat it as a KHO boot.
--		 */
--		kho_in.fdt_phys = 0;
--		kho_in.radix_tree.root = NULL;
--	}
-+	if (err)
-+		goto err;
+ 	kho_scratch = phys_to_virt(kho_in.scratch_phys);
 +
-+	return;
-+
-+err:
 +	/*
-+	 * Failed to initialize preserved memory. Clear FDT and radix so KHO
-+	 * users don't treat it as a KHO boot.
++	 * kho_get_mem_map() should always succeed. If it fails, kho_populate()
++	 * catches that and never sets kho_in.fdt_phys.
 +	 */
-+	kho_in.fdt_phys = 0;
-+	kho_in.radix_tree.root = NULL;
++	if (kho_radix_init_tree(&kho_in.radix_tree, kho_get_mem_map(fdt))) {
++		/*
++		 * Failed to initialize preserved memory radix tree. Clear FDT
++		 * and scratch so KHO users don't treat it as a KHO boot.
++		 */
++		kho_in.fdt_phys = 0;
++		kho_in.scratch_phys = 0;
++		return;
++	}
  }
  
- static __init int kho_out_fdt_setup(void)
-@@ -1636,16 +1665,14 @@ static __init int kho_init(void)
- 	if (!kho_enable)
- 		return 0;
- 
--	tree->root = kzalloc(PAGE_SIZE, GFP_KERNEL);
--	if (!tree->root) {
--		err = -ENOMEM;
-+	err = kho_radix_init_tree(tree, NULL);
-+	if (err)
- 		goto err_free_scratch;
--	}
- 
- 	kho_out.fdt = kho_alloc_preserve(PAGE_SIZE);
- 	if (IS_ERR(kho_out.fdt)) {
- 		err = PTR_ERR(kho_out.fdt);
--		goto err_free_kho_radix_tree_root;
-+		goto err_free_kho_radix_tree;
- 	}
- 
- 	err = kho_debugfs_init();
-@@ -1696,9 +1723,8 @@ static __init int kho_init(void)
- 
- err_free_fdt:
- 	kho_unpreserve_free(kho_out.fdt);
--err_free_kho_radix_tree_root:
--	kfree(tree->root);
--	tree->root = NULL;
-+err_free_kho_radix_tree:
-+	kho_radix_destroy_tree(tree);
- err_free_scratch:
- 	kho_out.fdt = NULL;
- 	for (int i = 0; i < kho_scratch_cnt; i++) {
+ void __init kho_memory_init(void)
 -- 
 2.55.0.571.g244d577d93-goog
 
