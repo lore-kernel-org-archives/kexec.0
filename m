@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6CF77C54FCD
-	for <kexec@archiver.kernel.org>; Sat,  1 Aug 2026 08:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E6110C55178
+	for <kexec@archiver.kernel.org>; Sat,  1 Aug 2026 08:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=qIP40ogFtBiVnUCuMm5h3Xm4LIuYWOirEQzH1R83Mew=; b=KcXQQkw6u7PJNsbezCz1AZvCHq
-	eMBgL2FZZKK79lElnMEMAUm4YADJOUV37iZJnNs6GuPy+Qx6TYOF2dZuS+OMczYGxofoBpw/NPU5J
-	fwQOCyijKhLxjevt5IIxlZDSZgSkUxQ5vcQaIA0MP9vY8+y7kyLnX3GQZPmIDjkDSW4qjaRxkzJqn
-	1ak/xpuI2Pc59cfb5xg/ixnuDHUPtOiA3b0/AiV6ATEUc7Nxg9AzoAxb8nVu/A4WpaTDO7I7Nywyf
-	jFatIvp0qhQQ6by8SKscMQU+0OGopIn04KL6JUeKIf12xmr/7d1ZvyknYi46QSIsA67TtQeQWybVL
-	0eMehlxg==;
+	bh=YThpLVa0pAUWP2z3tc3d9zSsIfw3Qsor7X/X4Bi8OXs=; b=UZShDMe8fiabB/iZ/79ixXKLFq
+	fjw4YcEG5/phqGEJOQ4Nww7QYbDYehD2ce5gxNa1CfuIcIMCsWq95FM7wpLG0NSzCB9RHs76kQaSq
+	ORZ1hRmnVxEaZKPSHEmIFkTiHaI2Q4GoVy/Dp7cJLxLMzgtSvU6Tx1ABGoTurQOzr8hip4BfwVkeW
+	Sf4nAJs+7aI0rUqARtCU38rcyPj9azWS3f0LnF1AaGnwhQOFTv9XjuhvjgLYn8WyuT7rXbgSQnfC0
+	b39kxjgiE9w93BFaFkwzuMdhmxW7i1YY0jkVDFy9RYpoMogP3adR8AVLv2FMqzSo20swcbgaZISOj
+	rj86XgJg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wq5PP-0000000E4tS-2do0;
-	Sat, 01 Aug 2026 08:49:31 +0000
+	id 1wq5PR-0000000E4v6-3bFr;
+	Sat, 01 Aug 2026 08:49:33 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wq5PO-0000000E4sA-2V49
+	id 1wq5PR-0000000E4uP-0zBz
 	for kexec@lists.infradead.org;
-	Sat, 01 Aug 2026 08:49:30 +0000
+	Sat, 01 Aug 2026 08:49:33 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 1AEE44529C;
+	by sea.source.kernel.org (Postfix) with ESMTP id A4F9D452A6;
+	Sat,  1 Aug 2026 08:49:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 543CD1F00ADB;
 	Sat,  1 Aug 2026 08:49:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C09471F00ADF;
-	Sat,  1 Aug 2026 08:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785574159;
-	bh=qIP40ogFtBiVnUCuMm5h3Xm4LIuYWOirEQzH1R83Mew=;
+	s=k20260515; t=1785574162;
+	bh=YThpLVa0pAUWP2z3tc3d9zSsIfw3Qsor7X/X4Bi8OXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=JYbcsQdpPGh+2huXVDCcRwMp6Fu5lh3biUI41fTfLPX2V8yV5zvYxlXgf6NjueZzE
-	 9T+5zCunRSXGJDmk2z+B61OjrHJ01KT4FZnQwShCshfMRs8wkOXIPPkqjkBcu4Gqsu
-	 1WvyQ3G6Ds36kjcZIpzXUmgHVLFRT0e+P7h1EULlUA6aiTwhnmTlgQndsT8O5VVZlU
-	 Q6ttTzKP2s5TJfyZTdY91EkOJD/o2SRm/KPqo7dh9WXDEtAEcsdgMKIi7qGPHkv2YY
-	 g08jdCwyfxv7e4FhaKKWyfFpnlBCV2UwlaRDuOc0n+lEztHZ6KmPY5V/HfxIPeHOjn
-	 l78TX1nEtlHNw==
+	b=fBVAEnZ2RRAtY4Ovg2SUzbCx5Naohcmkeiixgyi2qjs2u97GdJBTnBqCB4OrCLxRC
+	 4HggcfmpOi0iieeh3Ia0Ef7Qb/c9KYBX8TR8aiweFJMFRdIfA3HMKOeoR2LVIZdoAa
+	 EsjtdVtjkVswMA9gP+dW0mdnlLmb2d4CBIdZUi1V2Fb/pBGEGsut4jVVFOgPKBAxXt
+	 26H/+vcL9Gc/Gf3MN6gQ00MwdKz3vVskgQz2JTeZzJxt/AsW4+vGIo8eZqyVfUyUOF
+	 3+LqGh3jLbZMySkeBVX8WFnkpcpzi1P0iTIXvNde6VtYdiy4YbHdATIJ4sQU3e0ERY
+	 FDCJfQLpFUQdg==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -56,9 +56,9 @@ To: Mike Rapoport <rppt@kernel.org>,
 Cc: kexec@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 11/22] kho: allow destroying KHO radix tree
-Date: Sat,  1 Aug 2026 10:48:20 +0200
-Message-ID: <20260801084833.1897543-12-pratyush@kernel.org>
+Subject: [PATCH v6 12/22] kho: add kho_radix_init_tree()
+Date: Sat,  1 Aug 2026 10:48:21 +0200
+Message-ID: <20260801084833.1897543-13-pratyush@kernel.org>
 X-Mailer: git-send-email 2.55.0.571.g244d577d93-goog
 In-Reply-To: <20260801084833.1897543-1-pratyush@kernel.org>
 References: <20260801084833.1897543-1-pratyush@kernel.org>
@@ -80,87 +80,143 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-Add kho_radix_destroy_tree() which allows destroying the radix tree and
-freeing all its pages.
+Move the initialization logic of the radix tree into
+kho_radix_init_tree() instead of having users open-code it. Makes the
+boundaries cleaner and reduces code duplication when a new user of the
+radix tree will be added in a future commit.
 
-This is will be used by the upcoming scratch extension mechanism. It
-creates a radix tree to track free blocks and then frees them after
-telling memblock about them.
-
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
 ---
- include/linux/kho_radix_tree.h     |  3 +++
- kernel/liveupdate/kexec_handover.c | 35 ++++++++++++++++++++++++++++++
- 2 files changed, 38 insertions(+)
+ include/linux/kho_radix_tree.h     |  7 ++++
+ kernel/liveupdate/kexec_handover.c | 62 +++++++++++++++++++++---------
+ 2 files changed, 51 insertions(+), 18 deletions(-)
 
 diff --git a/include/linux/kho_radix_tree.h b/include/linux/kho_radix_tree.h
-index 60c1246a9101..b7532aff35d8 100644
+index b7532aff35d8..fcd69639721b 100644
 --- a/include/linux/kho_radix_tree.h
 +++ b/include/linux/kho_radix_tree.h
 @@ -58,6 +58,7 @@ int kho_radix_add_key(struct kho_radix_tree *tree, unsigned long key);
  void kho_radix_del_key(struct kho_radix_tree *tree, unsigned long key);
  int kho_radix_walk_tree(struct kho_radix_tree *tree,
  			const struct kho_radix_walk_cb *cb, void *data);
-+void kho_radix_destroy_tree(struct kho_radix_tree *tree);
++int kho_radix_init_tree(struct kho_radix_tree *tree, struct kho_radix_node *root);
+ void kho_radix_destroy_tree(struct kho_radix_tree *tree);
  
  #else  /* #ifdef CONFIG_KEXEC_HANDOVER */
- 
-@@ -75,6 +76,8 @@ static inline int kho_radix_walk_tree(struct kho_radix_tree *tree,
+@@ -76,6 +77,12 @@ static inline int kho_radix_walk_tree(struct kho_radix_tree *tree,
  	return -EOPNOTSUPP;
  }
  
-+static inline void kho_radix_destroy_tree(struct kho_radix_tree *tree) { }
++static inline int kho_radix_init_tree(struct kho_radix_tree *tree,
++				      struct kho_radix_node *root)
++{
++	return 0;
++}
 +
- #endif /* #ifdef CONFIG_KEXEC_HANDOVER */
+ static inline void kho_radix_destroy_tree(struct kho_radix_tree *tree) { }
  
- #endif	/* _LINUX_KHO_RADIX_TREE_H */
+ #endif /* #ifdef CONFIG_KEXEC_HANDOVER */
 diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index a5800b960cf6..105dc0f3e691 100644
+index 105dc0f3e691..04bfcbf9cc55 100644
 --- a/kernel/liveupdate/kexec_handover.c
 +++ b/kernel/liveupdate/kexec_handover.c
-@@ -301,6 +301,41 @@ void kho_radix_del_key(struct kho_radix_tree *tree, unsigned long key)
+@@ -320,6 +320,30 @@ static void __kho_radix_destroy_tree(struct kho_radix_node *root,
+ 	kho_radix_free_node(root);
  }
- EXPORT_SYMBOL_GPL(kho_radix_del_key);
  
-+static void __kho_radix_destroy_tree(struct kho_radix_node *root,
-+				     unsigned int level)
-+{
-+	unsigned long i;
-+
-+	if (level == 0) {
-+		kho_radix_free_node(root);
-+		return;
-+	}
-+
-+	for (i = 0; i < PAGE_SIZE / sizeof(phys_addr_t); i++) {
-+		if (root->table[i])
-+			__kho_radix_destroy_tree(phys_to_virt(root->table[i]),
-+						 level - 1);
-+	}
-+
-+	kho_radix_free_node(root);
-+}
-+
 +/**
-+ * kho_radix_destroy_tree - Destroy the radix tree
-+ * @tree: The radix tree to destroy
++ * kho_radix_init_tree - initialize the radix tree.
++ * @tree:   the tree to initialize.
++ * @root:   root table of the radix tree.
 + *
-+ * Walk @tree and free all its nodes.
++ * Initialize the radix tree with the given root node. If root is %NULL, an
++ * empty root table is allocated. If root is not %NULL, it is the caller's
++ * responsibility to make sure the root is valid and in the correct format.
++ *
++ * Return: 0 on success, -errno on failure.
 + */
-+void kho_radix_destroy_tree(struct kho_radix_tree *tree)
++int kho_radix_init_tree(struct kho_radix_tree *tree, struct kho_radix_node *root)
 +{
-+	if (!tree->root)
-+		return;
++	if (!root)
++		root = kho_radix_alloc_node();
++	if (!root)
++		return -ENOMEM;
 +
-+	__kho_radix_destroy_tree(tree->root, KHO_TREE_MAX_DEPTH - 1);
-+	tree->root = NULL;
++	tree->root = root;
++	mutex_init(&tree->lock);
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(kho_radix_destroy_tree);
++EXPORT_SYMBOL_GPL(kho_radix_init_tree);
 +
- static int kho_radix_walk_leaf(struct kho_radix_leaf *leaf, unsigned long key,
- 			       const struct kho_radix_walk_cb *cb, void *data)
- {
+ /**
+  * kho_radix_destroy_tree - Destroy the radix tree
+  * @tree: The radix tree to destroy
+@@ -1499,18 +1523,23 @@ static void __init kho_mem_retrieve(void)
+ 	 * catches that and never sets kho_in.scratch_phys, which stops memory
+ 	 * retrieval.
+ 	 */
+-	kho_in.radix_tree.root = kho_get_mem_map(fdt);
+-	mutex_init(&kho_in.radix_tree.lock);
++	err = kho_radix_init_tree(&kho_in.radix_tree, kho_get_mem_map(fdt));
++	if (err)
++		goto err;
+ 
+ 	err = kho_radix_walk_tree(&kho_in.radix_tree, &cb, NULL);
+-	if (err) {
+-		/*
+-		 * Failed to initialize preserved memory. Clear FDT and radix
+-		 * so KHO users don't treat it as a KHO boot.
+-		 */
+-		kho_in.fdt_phys = 0;
+-		kho_in.radix_tree.root = NULL;
+-	}
++	if (err)
++		goto err;
++
++	return;
++
++err:
++	/*
++	 * Failed to initialize preserved memory. Clear FDT and radix so KHO
++	 * users don't treat it as a KHO boot.
++	 */
++	kho_in.fdt_phys = 0;
++	kho_in.radix_tree.root = NULL;
+ }
+ 
+ static __init int kho_out_fdt_setup(void)
+@@ -1636,16 +1665,14 @@ static __init int kho_init(void)
+ 	if (!kho_enable)
+ 		return 0;
+ 
+-	tree->root = kzalloc(PAGE_SIZE, GFP_KERNEL);
+-	if (!tree->root) {
+-		err = -ENOMEM;
++	err = kho_radix_init_tree(tree, NULL);
++	if (err)
+ 		goto err_free_scratch;
+-	}
+ 
+ 	kho_out.fdt = kho_alloc_preserve(PAGE_SIZE);
+ 	if (IS_ERR(kho_out.fdt)) {
+ 		err = PTR_ERR(kho_out.fdt);
+-		goto err_free_kho_radix_tree_root;
++		goto err_free_kho_radix_tree;
+ 	}
+ 
+ 	err = kho_debugfs_init();
+@@ -1696,9 +1723,8 @@ static __init int kho_init(void)
+ 
+ err_free_fdt:
+ 	kho_unpreserve_free(kho_out.fdt);
+-err_free_kho_radix_tree_root:
+-	kfree(tree->root);
+-	tree->root = NULL;
++err_free_kho_radix_tree:
++	kho_radix_destroy_tree(tree);
+ err_free_scratch:
+ 	kho_out.fdt = NULL;
+ 	for (int i = 0; i < kho_scratch_cnt; i++) {
 -- 
 2.55.0.571.g244d577d93-goog
 
