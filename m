@@ -4,81 +4,155 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E00EFC55178
-	for <kexec@archiver.kernel.org>; Fri, 31 Jul 2026 21:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DC184C55171
+	for <kexec@archiver.kernel.org>; Sat,  1 Aug 2026 02:17:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:From:Subject:Message-ID:References:Mime-Version:
-	In-Reply-To:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Cc:To:
+	In-Reply-To:References:Message-Id:Content-Transfer-Encoding:Content-Type:
+	Subject:Date:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=pFbpBG3BWtAJOPPgNm/eX/59dGOWD3hR8l2ysdNLveY=; b=FQfTCHenJobuArQQclxsObHmP2
-	x5EtO3thduiiYjM3ZQDvhzXxXnXoX43ckoO7+yl85odHN9aMIW7lERaGovsW4cFvy1xFlgRe8CuYt
-	m+bpkhhNFn+1bFWt/6f61Dp3hwp/W2nTmtRFpAAWVdhqRiwZzWEipR09aQt/GouRYSFEK1AneCOL8
-	oysX4gMfIhMqPBA9FUm57s6tMQMMMzwkadA0Lh1mqwGP1u65zT4IGSugmpdojBrnHbYhey4H2bkzd
-	Q3K7mJnp0J+ADT9qlLsL9iGepvYpHex9ZM5RnMIBsVcUsTvaPnP6eiuiAmMbaBoNwUqJXAwlVeuk7
-	EnGpqA9w==;
+	bh=OB4Z6HAhO90wSrzqBCueeDHnctlgsxAOSQ2ZuZDGWmw=; b=aJbzeRS/Bdy39Fwsw3Qtftuqu7
+	Oqq0/PBJBwX6KU413dOBk5ZeGmBITdZGBwmgK7QHuc7fzJkgnD+rZ0N22DBqrQfUxMZbmTvqmFD+B
+	9fZ0PyvlTYhFVDQt4rG/b++rBI1XdzI9QCcXL3l/ljbltADj+7U1pA9QsrMjybPQtRVdKpA2YXvO5
+	iOdw5YvvXySCF+p5IcmT3Ec3ajj0n9AknD7EKEbugwp9jgHYWB4ZHRZg/jcYfnIn3zKnK1v22Yol3
+	NPa5/SssmLalsjEBDH7j6QtBeVj/HQutNDqpw74gmZXdAsfwIId/KQudmXCcD07fSbUkEZ8eiZaol
+	xuSdLvCA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wpvAV-0000000Ddtq-32EQ;
-	Fri, 31 Jul 2026 21:53:27 +0000
-Received: from mail-pg1-x548.google.com ([2607:f8b0:4864:20::548])
+	id 1wpzI6-0000000DpOA-3Cwb;
+	Sat, 01 Aug 2026 02:17:34 +0000
+Received: from mail-southcentralusazon11012067.outbound.protection.outlook.com ([40.93.195.67] helo=SN4PR2101CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wpvAR-0000000DdrC-349N
+	id 1wpzI3-0000000DpMD-1G3u
 	for kexec@lists.infradead.org;
-	Fri, 31 Jul 2026 21:53:25 +0000
-Received: by mail-pg1-x548.google.com with SMTP id 41be03b00d2f7-cb835525b13so1686698a12.1
-        for <kexec@lists.infradead.org>; Fri, 31 Jul 2026 14:53:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785534802; x=1786139602; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:cc:to:from:subject
-         :message-id:references:mime-version:in-reply-to:date:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=pFbpBG3BWtAJOPPgNm/eX/59dGOWD3hR8l2ysdNLveY=;
-        b=d4LHxtLdofA3dxQsFELD8WWOw859kFwQc/vthgSbYbpcZaZHjpQuPxoSbm6xgGPr45
-         3qViF9Ri9C9D5rkWcfBZbfwDvWmHpqLc02JGnWMa19sK/59KcpbD9g9dyFIY9/LIy53u
-         A6/tyAuzZ7RCwPJTuxdYrEOqnuPjl8oIA3DLFySLCYELi4bLvIMowc6a4fqA4Gft/Qz0
-         T22woJPKPOYo49hmlVzST+OBxoZyJXF7wMZyWro9W2H8W9MObiltVOHMWO073/Qv3Jlo
-         MXc3eTN9gaSOytiGKC4g3baYGGK1WnPNSAbkLJzAq5ujfKL6ie/LfVZY6Z+u+2cdqaBq
-         tkVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785534802; x=1786139602;
-        h=content-transfer-encoding:content-type:cc:to:from:subject
-         :message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=pFbpBG3BWtAJOPPgNm/eX/59dGOWD3hR8l2ysdNLveY=;
-        b=bBS6cofh7KJ75c8y2MPdHf0YJGPfGbFPYpTvRrQ+AC0DUBV2CFTZc1+xsdbqqNfZMd
-         z45/RhYZJwf2/UTGfF8rGADtFrNABTr42tf44dkQksHZp7QFswp6JSBYODKFLW1MmQkz
-         3stoIidNfKXhF7XHlQuMAsIcCfZvhR7CW7PRMRw7LIx8huI70KYaZO4ySGINhn1kGJBF
-         ny/drQTHDS0nkubUV1YnwykgOSciwMIdxy70MrlOrLY9kIhhA0ZldASeTXP0fl3xQ0Px
-         0NK/GId7KDIWhLkDlPG/4zQf2o5h7GDMAwV6SpEL7Zcmf9/4McAhj+Tv2J612bV2MwoS
-         yBuQ==
-X-Forwarded-Encrypted: i=1; AHgh+RrWBZQp/J60UQ/9ugnofgyRohWvcvcp0VgKour0fCFwSFOlddd6heUDejf27DSD8Z8zfKFxjA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yz3bKCAOE/lflQ4T/LATY8iW6zPf0cwLW0BddN8miL5kPz/MpHy
-	10sxFl3cqQA0mYiJKbyGlFGy7U3inZkVTqCbGpPcjLPKtX3dZpTTajUQu4gGunONEVe7z754UHf
-	rjgj/HDBumbe7cAKs6mL50Q==
-X-Received: from dycjx24.prod.google.com ([2002:a05:7300:fd18:b0:311:1ea1:d67])
- (user=loganodell job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:e082:b0:3b3:bf95:f7e3 with SMTP id adf61e73a8af0-3c92a89cb5dmr1207283637.43.1785534802213;
- Fri, 31 Jul 2026 14:53:22 -0700 (PDT)
-Date: Fri, 31 Jul 2026 14:52:22 -0700
-In-Reply-To: <20260731215224.831696-1-loganodell@google.com>
-Mime-Version: 1.0
-References: <20260731215224.831696-1-loganodell@google.com>
-X-Mailer: git-send-email 2.55.0.508.g3f0d502094-goog
-Message-ID: <20260731215224.831696-3-loganodell@google.com>
-Subject: [RFC PATCH 2/4] kho: Add support for multiple versions in subtrees
-From: Logan Odell <loganodell@google.com>
-To: graf@amazon.com, rppt@kernel.org, pasha.tatashin@soleen.com
-Cc: pratyush@kernel.org, akpm@linux-foundation.org, kexec@lists.infradead.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Logan Odell <loganodell@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	Sat, 01 Aug 2026 02:17:33 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XEXHn9OTclHnFLa0twxkAcXCaOWap+vQmvIuPgBMvTlMBQ55KCm2B9L4JShnGOPi1HHaThMo3iOQJ3HFe2FPziEiOlISoSMteq4O9usSzcsep83J87Yo8Rzkf5bQYwGoKOp3v+y+fN1UuvMieU+02SfIWojn/CcoH6Fq7IlVUgjEKspHW6uA9hB0YupL6uySnt3YmunGOA04bXUO7r3F5CKO3dYuqzU64Gkr+yRBbs0ooj92dzdr14hO+QqtnV/yh5R4ExCafFdf3kdfbvvKKsyKQwmDgADej7wYUXrF4DFm/YAjLN/RLzSITUxiCRQwQS/BP8GBM96OepoEFawBZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OB4Z6HAhO90wSrzqBCueeDHnctlgsxAOSQ2ZuZDGWmw=;
+ b=mXbp6n7hPwqzEt1kp53pYLmyE7dBXKMjXLGWaewGRfYRovyyFWLu7g4zrgWtv7Uay9UqKbPtfmsdWUgosBg8YMKBmFiNNV1G67SIyi3sa1rlD/kM7etGohWyoy4ZnFFX5lkyJYGCa7pctEBdIF/5iuUiz35b32hY3YQa8LLhfo17WGhrg7cYPKi6uqUyb+rT6pBqMZlW6+iacWE0xmZR60+JdeYo7IOBwxn82wWlro9vnB0Gy5pFTC5ifRxrTBzGLBd33plPZBBpBCXxZj7/LkxQFlTTOcrIlCtgC/hpfzQIzdFj7bnykqIQWyoSqZO7WBPtrNTMexJxSXZeG17KMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OB4Z6HAhO90wSrzqBCueeDHnctlgsxAOSQ2ZuZDGWmw=;
+ b=nFODE/+t7haKzw4Xq5lAl1t3Z2a5CtIBoUVG+hKpiErSYjBQLpcYwjzoOo/pEmTBiV9HJ4WXJqIQ0f1b+FLPXcKaqMHRpqOiNislWW5yl8dWA9XntqWYek2vzxQGhTniIF1dMKxudNdWtsXfkRvgPStZdJnwiJTa3iPKGdKc9WwfqTLqzfu9LcitZHdRtBatKQgWOwfTPewOxlM3NBgyCJ7eQpnDAePprCUHgcA3qW78NGcBDehD3O8KDVOjw+Ttv/vlZ8SMMnb1rsQqxtdZAMt6HLARDwc2dHOP6tDvS/4BeNxKyvSdw+363JJfgPB6tw4h4qjpAm3Cgo0EMLM0lQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
+ by CHAPR12MB999250.namprd12.prod.outlook.com (2603:10b6:610:300::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.16; Sat, 1 Aug
+ 2026 02:17:20 +0000
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16%5]) with mapi id 15.21.0270.015; Sat, 1 Aug 2026
+ 02:17:20 +0000
+From: Zi Yan <ziy@nvidia.com>
+Date: Fri, 31 Jul 2026 22:13:37 -0400
+Subject: [PATCH RFC 14/14] mm/page-flags: remove PG_private
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260731-remove-pg_private-v1-14-142c97ba3562@nvidia.com>
+References: <20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com>
+In-Reply-To: <20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com>
+To: David Hildenbrand <david@kernel.org>, 
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+ Michal Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, 
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+ Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
+ Gregory Price <gourry@gourry.net>, 
+ Ying Huang <ying.huang@linux.alibaba.com>, 
+ Alistair Popple <apopple@nvidia.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+ Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+ Kairui Song <kasong@tencent.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ Zi Yan <ziy@nvidia.com>, Baoquan He <baoquan.he@linux.dev>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+ Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Dave Young <ruirui.yang@linux.dev>, 
+ Shuah Khan <skhan@linuxfoundation.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+X-Mailer: b4 0.14.3
+X-ClientProxiedBy: YQBPR0101CA0189.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:f::32) To IA0PR12MB8374.namprd12.prod.outlook.com
+ (2603:10b6:208:40e::7)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|CHAPR12MB999250:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1246d7d6-8757-413c-3889-08deef73040e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|23010399003|921020|6133799003|5023799004|56012099006|11063799006|10067099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: YtgmYyd9j5YwgCrUn++onox1AGnpP1h6mxVq5hpgG47VCp2c3+zu5ju1GggoIOHPuuP85qCDpY/kEAnkwZDKeGwf9BFmov6SoCD2MsaBKPLlLe285aqKKjpz966FY/AUn3FF3e+wZ/1/e8Jz9znAE9jDB8zYzuGA3H0zQ0L86LkiuBHulnvUmziZITwwB0pOvgPpTWs7qgLmUrevDnjPlR9vFiS1Ri2H7eqZ/Jn8a3kKRc9T/8EkiO3og41Gmd5TQopM38AHhmWa3IkNVoixNMOmlAx+6SnRSTnOIpUYXT0V7HJ6yKo3yv4QpKLnvCrW24CsyMTCmULyxAbupDt11PH0T0OkEjA2HC/5yk9sGQNduHmVd1yQz23u+BVCYfFho+7Pmacdqlw8JxkjIKnHB2DTxKA9Z8OZds7bSEpMcQh0/2xjOLRfzKuWYlOxjveQpfSMyKXkmsPuSH3KjTmYGY53KnIekI2P7iw51m7xqk8UIdISosxod4q4Sy7efsiED54PadzHDOdhOKUmbZ5mSq4SII3KT9g69YDLtJO4N4/X1dGo+c5vVrR3+9NhvDqiI54yAQOv9HnDz94Vlag7LOxQuQUhs72bpB6fwFGYTuLvkEUlmF3j9z8EhgfkiJ9k+VwJ9dq0tfsxmQminF7CIi8Thx5HADy7/kKfda5XaNwXEWdYMElcRMNgVxYEMc7zKAIx3Tr3Nau3Ix2+eD9ZMg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(23010399003)(921020)(6133799003)(5023799004)(56012099006)(11063799006)(10067099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NE5iN2VIa3RaSzRacVpGS1E3VGtWTjZKWkcrWHVjVTRiSmhtYTNMQW5hRnJ0?=
+ =?utf-8?B?NFdMYlF4WWo4M25jbWhzYjdKR012aG1vTk9idkxjME9vUXEyTnBldkVPQkRw?=
+ =?utf-8?B?cHpRenBrYmRNREljK25kSnRLUy9ZM0k2UmZQVzV2dzdVTzF4YWNDZHFPRVMx?=
+ =?utf-8?B?QUJCNllucm0rZWd0Q3dOUjMvMm9IM0h2ZmhOeFJJWlAvWU94K25lcUZRUTE5?=
+ =?utf-8?B?U3VkdHE0WTJxZjdRbkd4dzFpTmVFSG9WVzVMbVRzektSZlhTNlN6b1FjS0Vo?=
+ =?utf-8?B?ODRwbm5tRHFUb3FCSmdQSldDTnM1cXppMC9JVkJ4YnJpWmxiY0VmdjZYbmJt?=
+ =?utf-8?B?dUlIT3l1dXdYcm0vWFpyRHNickQxSTA2SVRIcEpYTitOWHRDU2s3QlJhVjFa?=
+ =?utf-8?B?Y3FORGpHdS9Jc0VjVjB0OW1PUFQxZkR1VldzaVQ1RVA5NTFtcGdOWGhnSEJz?=
+ =?utf-8?B?K0R3bEhPV2h4eURMdjRjS1ZQSGdmdkVEdFozRDZOVXhzb2x2SkpyY1RYQjVG?=
+ =?utf-8?B?SU9hOWcwS2J2aFVqeCtET3lPdjV3azBkS2p2Y0V0aXNpNkdsKzVHWVNnWnpD?=
+ =?utf-8?B?dGNTMlNETFdlWkVjRTdvc2VHdkxMU25qcUZwOXVBbFNPcjVqc2Zlb3FzU00y?=
+ =?utf-8?B?WTlUNHIwN2k0b2ZQOGRwZXRqR3JzT0ZxZUlvdDA3WFN0ZXpFVVg2cVhQc1Nt?=
+ =?utf-8?B?blFlUmp3T0hmN1NVc3d2eFlWTS9zRndHcitiVDhUMHJZNk5iWXZQWC9GalZ1?=
+ =?utf-8?B?TnpiaElKTnZzUGI3YmZLdHpFaG4wVDNpb3Foc1VZRDBFK28vTFpzaWVYZXNC?=
+ =?utf-8?B?ZWFZeEd2WnNWMDljeVJvRTEvYW9lOFB0Y2kxcjFWTTYxa3NCNDJVOXZDR2RP?=
+ =?utf-8?B?bTllSVNKRVFOMkloTnFIL1RwUHFtUU9QSjEvNnlBbFQvLzBJZXVFR1AxQ2xk?=
+ =?utf-8?B?NURiUTZMTElnTDBGaUo1UDByQ29sZnphRlZQSngzQy9nUmNCMlFNTGVvcXNv?=
+ =?utf-8?B?aENEcytJbHFZQzlyRnZJUGFTRHhoenhtOEoxMDY3QWxOY09GYytydGVhWkdR?=
+ =?utf-8?B?eUg3VUR1UVhiVTFtOFM2bUE5Y2Y2VjNoNUZ6ZDB5RVlQZTJGZDFEZ0ZGaGxR?=
+ =?utf-8?B?YzdXTWtHdDVxQ3ZIbWZvUlhlZjFzb21hekV4U0ljZ2phNml5U3VPVElocTRJ?=
+ =?utf-8?B?SDgvYktQb0JEeEgxS0ZQV01IQ0hXb3J4dVBubkVBQkw4WUNGeE5wRWpNbGNJ?=
+ =?utf-8?B?UkYzZyt0RDFFQnFHdERsSDhVZjVWNnFZV1NMdHZ4cGVxeTFYY1FZU3ZqRGNT?=
+ =?utf-8?B?Ly96bzJFU0tqbDZ5M0FtMkpwWUlPR2U4M0lqUmZPbUsrODI1YUZ0SVVIWEVk?=
+ =?utf-8?B?VG0xUmhyNEd2WlRqbmVjaitCdCtkSThyMjFxckpMYUcvM0E4akN2eHpXaVlu?=
+ =?utf-8?B?ckdkK1dZSDdDUTcvaVF3ekRNbkZhU3Z6T1lHbHV5alFObzBGUWlNR3QyWW1Q?=
+ =?utf-8?B?SFJsVFdoWUNFc1V2dmViWkV1Ky9hTlR3dWhCcVFwQVI5RG9TRzNaUWpYcXVp?=
+ =?utf-8?B?cGVia3lyQmo0NlpnWTlYYXFDWnFwVkpwUU1TSmtKbVZQdWl1Nks3WjV5TkNE?=
+ =?utf-8?B?YklnZnRWVFY2UlN3VnFGSzRoN0NMaUZqdkJFV1g5TEIxM1NNQUhlM1BJMWxp?=
+ =?utf-8?B?Q0Q3UDNtcHUxdElGL0t0WFFmY0RGWFFQU0RaS1ZCa3hHSC8wKzYwZWUrMGZV?=
+ =?utf-8?B?V1VqQlBtV0JsNXJ5eXV6S2NEdkFMalp5bmR5MC95RTQwQlR3Z1dDa1l3UjFq?=
+ =?utf-8?B?YWg2Q04rdUFneGdlV1dESVpEOGNFdzNmc0ZUNHpKWTIzTk5jdmRnVGVSbUdm?=
+ =?utf-8?B?VVdzODBOUDBlNFZjSnFqZk43QWw1R3BTN0VsTWtNWGJ1QzRTWlBtMi9Ud0dE?=
+ =?utf-8?B?dk05eHF1QmNpVDhCYWI0U2Y5ZHl5NFhGTHVrRGdsMUlhM3RUdjBDcTlxcC9z?=
+ =?utf-8?B?bjZFVEJvQnBxei8vM3I4TUJJRFBPYURyVENNS3lPY2U2Slc2bXpOKzZiOW9r?=
+ =?utf-8?B?cUtzUGZwYnExWk1JcXZJMjRHZ3JzQ1M3dzRuSkRrU3BtY2RZS0RNK1ZtVDBT?=
+ =?utf-8?B?V0JJWUQweGdkc2pDWHM0UWJqempMOHZBcHczdGpGUjNrd1Z0U3ZLSlIxWXJO?=
+ =?utf-8?B?VEdaTUVLaitNOS9iQklmTDZmaUt1M2ozS01qVUdWQmxCdzRIRkJuZVdMcW5E?=
+ =?utf-8?B?cHRheFlWSm1LSnIxcjJFdlJaMW1ybWs2M21UMlJIcmFoNjNKYlVFdkFCRWh3?=
+ =?utf-8?Q?cc4n9jaAEktgJX9rMA?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1246d7d6-8757-413c-3889-08deef73040e
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Aug 2026 02:17:20.2222
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 91bkUmO6i4hIhaG8Qu5OmEn3y9IvCfuSTeJ6WjzB+wsg2Uw7eG38b12oK7hss0fg
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CHAPR12MB999250
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260731_145323_804828_70DBBED5 
-X-CRM114-Status: GOOD (  23.04  )
+X-CRM114-CacheID: sfid-20260731_191731_406461_22232414 
+X-CRM114-Status: GOOD (  18.88  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,414 +167,164 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add explicit version support to KHO by creating subnodes with
-the version number. The first caller to kho_add_subtree_version will
-create the parent node and versioned subnode. Subsequent calls with a
-different version will add more subnodes with the version as the name.
-Remove is updated to handle cleanup when the final version is removed.
+folio->private != NULL indicates a folio carries private data, replacing
+PG_private. All PG_private users are converted. Remove PG_private and
+reserve the space as __PG_folio for future use.
 
-Example Tree:
+Also update files in Documentation. hugetlbfs_reserv.rst is outdated and
+left unchanged. It should be rewritten.
 
-       / (Root Node)
-       =E2=94=9C=E2=94=80=E2=94=80 compatible =3D "kho-v1"
-       =E2=94=9C=E2=94=80=E2=94=80 preserved-memory-map =3D <0xphys_map>
-       =E2=94=9C=E2=94=80=E2=94=80 some_legacy_node (Legacy Node)
-       =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 preserved-data =3D <0xphys_l=
-egacy>
-       =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 blob-size =3D <0xsize_legacy=
->
-       =E2=94=94=E2=94=80=E2=94=80 LUO (Versioned Parent Node)
-           =E2=94=9C=E2=94=80=E2=94=80 1 (Version 1 Node)
-           =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 preserved-data =3D <0xph=
-ys_luo_v1>
-           =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 blob-size =3D <0xsize_lu=
-o_v1>
-           =E2=94=94=E2=94=80=E2=94=80 2 (Version 2 Node)
-               =E2=94=9C=E2=94=80=E2=94=80 preserved-data =3D <0xphys_luo_v=
-2>
-               =E2=94=94=E2=94=80=E2=94=80 blob-size =3D <0xsize_luo_v2>
-
-Signed-off-by: Logan Odell <loganodell@google.com>
+Assisted-by: Claude:claude-opus-4-8
+Assisted-by: Codex:gpt-5
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+To: Baoquan He <baoquan.he@linux.dev>
+To: Mike Rapoport <rppt@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: Pratyush Yadav <pratyush@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: Jan Kara <jack@suse.cz>
+To: David Hildenbrand <david@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Dave Young <ruirui.yang@linux.dev>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Lorenzo Stoakes <ljs@kernel.org>
+Cc: "Liam R. Howlett" <liam@infradead.org>
+Cc: Vlastimil Babka <vbabka@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: kexec@lists.infradead.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-trace-kernel@vger.kernel.org
 ---
- include/linux/kexec_handover.h         |  14 ++
- include/linux/kho/abi/kexec_handover.h |  16 ++
- kernel/liveupdate/kexec_handover.c     | 215 ++++++++++++++++++++++++-
- 3 files changed, 237 insertions(+), 8 deletions(-)
+ Documentation/admin-guide/kdump/vmcoreinfo.rst |  2 +-
+ Documentation/filesystems/vfs.rst              |  6 +++---
+ include/linux/page-flags.h                     | 19 ++-----------------
+ include/trace/events/mmflags.h                 |  2 +-
+ kernel/vmcore_info.c                           |  1 -
+ 5 files changed, 7 insertions(+), 23 deletions(-)
 
-diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.=
-h
-index ac4129d1d741..1d47ab76b02b 100644
---- a/include/linux/kexec_handover.h
-+++ b/include/linux/kexec_handover.h
-@@ -33,8 +33,11 @@ struct folio *kho_restore_folio(phys_addr_t phys);
- struct page *kho_restore_pages(phys_addr_t phys, unsigned long nr_pages);
- void *kho_restore_vmalloc(const struct kho_vmalloc *preservation);
- int kho_add_subtree(const char *name, void *fdt);
-+int kho_add_subtree_version(const char *name, int version, void *fdt);
- void kho_remove_subtree(void *fdt);
-+void kho_remove_subtree_version(const char *name, int version, void *fdt);
- int kho_retrieve_subtree(const char *name, phys_addr_t *phys);
-+int kho_retrieve_subtree_version(const char *name, int version, phys_addr_=
-t *phys);
-=20
- void kho_memory_init(void);
-=20
-@@ -102,13 +105,24 @@ static inline int kho_add_subtree(const char *name, v=
-oid *fdt)
- 	return -EOPNOTSUPP;
- }
-=20
-+static inline int kho_add_subtree_version(const char *name, int version, v=
-oid *fdt)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
- static inline void kho_remove_subtree(void *fdt) { }
-+static inline void kho_remove_subtree_version(const char *name, int versio=
-n, void *fdt) { }
-=20
- static inline int kho_retrieve_subtree(const char *name, phys_addr_t *phys=
-)
- {
- 	return -EOPNOTSUPP;
- }
-=20
-+static inline int kho_retrieve_subtree_version(const char *name, int versi=
-on, phys_addr_t *phys)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
- static inline void kho_memory_init(void) { }
-=20
- static inline void kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
-diff --git a/include/linux/kho/abi/kexec_handover.h b/include/linux/kho/abi=
-/kexec_handover.h
-index 2201a0d2c159..55acb73b1d27 100644
---- a/include/linux/kho/abi/kexec_handover.h
-+++ b/include/linux/kho/abi/kexec_handover.h
-@@ -73,6 +73,22 @@
+diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+index 7663c610fe901..5f1df6d080508 100644
+--- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
++++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+@@ -325,7 +325,7 @@ NR_FREE_PAGES
+ On linux-2.6.21 or later, the number of free pages is in
+ vm_stat[NR_FREE_PAGES]. Used to get the number of free pages.
+ 
+-PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_hwpoison|PG_head_mask
++PG_lru|PG_swapcache|PG_swapbacked|PG_hwpoison|PG_head_mask
+ --------------------------------------------------------------------------
+ 
+ Page attributes. These flags are used to filter various unnecessary for
+diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
+index e7677423a20f7..5cc07f82fe371 100644
+--- a/Documentation/filesystems/vfs.rst
++++ b/Documentation/filesystems/vfs.rst
+@@ -649,8 +649,8 @@ Writeback.
+ 
+ The first can be used independently to the others.  The VM can try to
+ release clean pages in order to reuse them.  To do this it can call
+-->release_folio on clean folios with the private
+-flag set.  Clean pages without PagePrivate and with no external references
++->release_folio on clean folios with folio->private set. Clean pages
++without folio->private set and with no external references
+ will be released without notice being given to the address_space.
+ 
+ To achieve this functionality, pages need to be placed on an LRU with
+@@ -674,7 +674,7 @@ filemap_fdatawait_range, to wait for all writeback to complete.
+ 
+ An address_space handler may attach extra information to a page,
+ typically using the 'private' field in the 'struct page'.  If such
+-information is attached, the PG_Private flag should be set.  This will
++information is attached, non-NULL 'private' field will
+ cause various VM routines to make extra calls into the address_space
+ handler to deal with that data.
+ 
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 0e3628ea080c4..eb2961ed61018 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -44,10 +44,6 @@
+  * Consequently, PG_reserved for a page mapped into user space can indicate
+  * the zero page, the vDSO, MMIO pages or device memory.
   *
-  *       Physical address pointing to a subnode FDT blob that is also
-  *       being preserved.
-+ *
-+ *   Versioned Subnodes (<subnode-name-N>):
-+ *     Alternatively, a subnode can group multiple versions of the same
-+ *     data. In this case, the subnode <subnode-name-N> does not contain
-+ *     an 'fdt' property directly. Instead, it contains child nodes named
-+ *     after the version number (e.g., '1', '2'), which in turn contain
-+ *     the 'fdt' property.
-+ *
-+ *     <subnode-name-N> {
-+ *         <version-1> {
-+ *             fdt =3D <0x...>;
-+ *         };
-+ *         <version-2> {
-+ *             fdt =3D <0x...>;
-+ *         };
-+ *     };
+- * The PG_private bitflag is set on pagecache pages if they contain filesystem
+- * specific data (which is normally at page->private). It can be used by
+- * private allocations for its own usage.
+- *
+  * During initiation of disk I/O, PG_locked is set. This bit is set before I/O
+  * and cleared when writeback _starts_ or when read _completes_. PG_writeback
+  * is set before writeback starts and cleared when it finishes.
+@@ -105,7 +101,7 @@ enum pageflags {
+ 	PG_owner_2,		/* Owner use. If pagecache, fs may use */
+ 	PG_arch_1,
+ 	PG_reserved,
+-	PG_private,		/* If pagecache, has fs-private data */
++	__PG_folio,		/* Do not use: reserved for folio identification */
+ 	PG_private_2,		/* If pagecache, has fs aux data */
+ 	PG_reclaim,		/* To be reclaimed asap */
+ 	PG_swapbacked,		/* Page is backed by RAM/swap */
+@@ -576,7 +572,7 @@ FOLIO_FLAG(swapbacked, FOLIO_HEAD_PAGE)
+ /*
+  * Private page markings that may be used by the filesystem that owns the page
+  * for its own purposes.
+- * - PG_private and PG_private_2 cause release_folio() and co to be invoked
++ * - folio->private and PG_private_2 cause release_folio() and co to be invoked
   */
-=20
- /* The compatible string for the KHO FDT root node. */
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_h=
-andover.c
-index 29a05cec2625..6dc7c328a6e2 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -20,6 +20,7 @@
- #include <linux/list.h>
- #include <linux/memblock.h>
- #include <linux/page-isolation.h>
-+#include <linux/slab.h>
- #include <linux/unaligned.h>
- #include <linux/vmalloc.h>
-=20
-@@ -722,15 +723,31 @@ static void __init kho_reserve_scratch(void)
- 	kho_enable =3D false;
+ 
+ static __always_inline bool folio_test_private(const struct folio *folio)
+@@ -584,17 +580,6 @@ static __always_inline bool folio_test_private(const struct folio *folio)
+ 	return folio->private;
  }
-=20
-+static int fdt_err_to_errno(int fdt_err)
-+{
-+	switch (fdt_err) {
-+	case 0:
-+		return 0;
-+	case -FDT_ERR_NOSPACE:
-+		return -ENOSPC;
-+	case -FDT_ERR_EXISTS:
-+		return -EEXIST;
-+	case -FDT_ERR_NOTFOUND:
-+		return -ENOENT;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
- static int kho_add_subtree_node(const char *name, void *root_fdt, void *fd=
-t, int off)
- {
- 	int err;
--	phys_addr_t phys =3D virt_to_phys(fdt);
-+	u64 phys =3D virt_to_phys(fdt);
-=20
- 	err =3D fdt_setprop(root_fdt, off, KHO_FDT_SUB_TREE_PROP_NAME,
- 			  &phys, sizeof(phys));
- 	if (err)
--		return err;
-+		return fdt_err_to_errno(err);
-=20
- 	WARN_ON_ONCE(kho_debugfs_fdt_add(&kho_out.dbg, name, fdt, false));
-=20
-@@ -762,12 +779,11 @@ int kho_add_subtree(const char *name, void *fdt)
-=20
- 	fdt_err =3D fdt_open_into(root_fdt, root_fdt, PAGE_SIZE);
- 	if (fdt_err < 0)
--		return err;
-+		return fdt_err_to_errno(fdt_err);
-=20
- 	off =3D fdt_add_subnode(root_fdt, 0, name);
- 	if (off < 0) {
--		if (off =3D=3D -FDT_ERR_EXISTS)
--			err =3D -EEXIST;
-+		err =3D fdt_err_to_errno(off);
- 		goto out_pack;
- 	}
-=20
-@@ -780,6 +796,93 @@ int kho_add_subtree(const char *name, void *fdt)
- }
- EXPORT_SYMBOL_GPL(kho_add_subtree);
-=20
-+/**
-+ * kho_add_subtree_version - record physical address of a sub FDT in KHO r=
-oot tree with version.
-+ * @name: name of the sub tree group.
-+ * @version: version of the sub tree.
-+ * @fdt: the sub tree blob.
-+ *
-+ * Finds or creates a child node named @name in KHO root FDT, and then
-+ * creates a child node named @version under @name, and records
-+ * the physical address of @fdt there.
-+ *
-+ * A debugfs blob entry is also created at
-+ * ``/sys/kernel/debug/kho/out/sub_fdts/@name-@version`` when kernel is co=
-nfigured with
-+ * CONFIG_KEXEC_HANDOVER_DEBUGFS
-+ *
-+ * Return: 0 on success, error code on failure
-+ */
-+int kho_add_subtree_version(const char *name, int version, void *fdt)
-+{
-+	void *root_fdt =3D kho_out.fdt;
-+	int err =3D -ENOMEM;
-+	int off, sub_off, fdt_err;
-+	char version_str[12];
-+	char *dbg_name =3D NULL;
-+	bool created_parent =3D false;
-+
-+	mutex_lock(&kho_out.lock);
-+
-+	fdt_err =3D fdt_open_into(root_fdt, root_fdt, PAGE_SIZE);
-+	if (fdt_err < 0) {
-+		err =3D fdt_err_to_errno(fdt_err);
-+		goto out;
-+	}
-+
-+	off =3D fdt_subnode_offset(root_fdt, 0, name);
-+	if (off =3D=3D -FDT_ERR_NOTFOUND) {
-+		off =3D fdt_add_subnode(root_fdt, 0, name);
-+		if (off < 0) {
-+			err =3D fdt_err_to_errno(off);
-+			goto out_pack;
-+		}
-+		created_parent =3D true;
-+	} else if (off < 0) {
-+		err =3D fdt_err_to_errno(off);
-+		goto out_pack;
-+	}
-+
-+	snprintf(version_str, sizeof(version_str), "%d", version);
-+	sub_off =3D fdt_add_subnode(root_fdt, off, version_str);
-+	if (sub_off < 0) {
-+		err =3D fdt_err_to_errno(sub_off);
-+		goto err_del_parent;
-+	}
-+
-+	dbg_name =3D kasprintf(GFP_KERNEL, "%s-%s", name, version_str);
-+	if (!dbg_name) {
-+		err =3D -ENOMEM;
-+		goto err_del_subnode;
-+	}
-+
-+	err =3D kho_add_subtree_node(dbg_name, root_fdt, fdt, sub_off);
-+	if (err)
-+		goto err_free_dbg_name;
-+
-+	kfree(dbg_name);
-+
-+out_pack:
-+	fdt_pack(root_fdt);
-+out:
-+	mutex_unlock(&kho_out.lock);
-+	return err;
-+
-+err_free_dbg_name:
-+	kfree(dbg_name);
-+err_del_subnode:
-+	if (created_parent)
-+		fdt_del_node(root_fdt, off);
-+	else
-+		fdt_del_node(root_fdt, sub_off);
-+	goto out_pack;
-+
-+err_del_parent:
-+	if (created_parent)
-+		fdt_del_node(root_fdt, off);
-+	goto out_pack;
-+}
-+EXPORT_SYMBOL_GPL(kho_add_subtree_version);
-+
- void kho_remove_subtree(void *fdt)
- {
- 	phys_addr_t target_phys =3D virt_to_phys(fdt);
-@@ -799,10 +902,10 @@ void kho_remove_subtree(void *fdt)
- 		int len;
-=20
- 		val =3D fdt_getprop(root_fdt, off, KHO_FDT_SUB_TREE_PROP_NAME, &len);
--		if (!val || len !=3D sizeof(phys_addr_t))
-+		if (!val || len !=3D sizeof(*val))
- 			continue;
-=20
--		if ((phys_addr_t)*val =3D=3D target_phys) {
-+		if ((phys_addr_t)get_unaligned(val) =3D=3D target_phys) {
- 			fdt_del_node(root_fdt, off);
- 			kho_debugfs_fdt_remove(&kho_out.dbg, fdt);
- 			break;
-@@ -813,6 +916,59 @@ void kho_remove_subtree(void *fdt)
- }
- EXPORT_SYMBOL_GPL(kho_remove_subtree);
-=20
-+/**
-+ * kho_remove_subtree_version - remove a versioned sub FDT from KHO root t=
-ree.
-+ * @name: name of the sub tree group.
-+ * @version: version of the sub tree.
-+ * @fdt: the sub tree blob to remove.
-+ *
-+ * Removes the @version subnode under @name node and its associated debugf=
-s entry.
-+ * If @name node becomes empty, it is also removed.
-+ */
-+void kho_remove_subtree_version(const char *name, int version, void *fdt)
-+{
-+	phys_addr_t target_phys =3D virt_to_phys(fdt);
-+	void *root_fdt =3D kho_out.fdt;
-+	int off, sub_off;
-+	int err;
-+	char version_str[12];
-+
-+	mutex_lock(&kho_out.lock);
-+
-+	err =3D fdt_open_into(root_fdt, root_fdt, PAGE_SIZE);
-+	if (err < 0)
-+		goto out;
-+
-+	off =3D fdt_subnode_offset(root_fdt, 0, name);
-+	if (off < 0)
-+		goto out_pack;
-+
-+	snprintf(version_str, sizeof(version_str), "%d", version);
-+	sub_off =3D fdt_subnode_offset(root_fdt, off, version_str);
-+	if (sub_off < 0)
-+		goto out_pack;
-+
-+	{
-+		const u64 *val;
-+		int len;
-+
-+		val =3D fdt_getprop(root_fdt, sub_off, KHO_FDT_SUB_TREE_PROP_NAME, &len)=
-;
-+		if (val && len =3D=3D sizeof(*val) && (phys_addr_t)get_unaligned(val) =
-=3D=3D target_phys) {
-+			fdt_del_node(root_fdt, sub_off);
-+			kho_debugfs_fdt_remove(&kho_out.dbg, fdt);
-+
-+			if (fdt_first_subnode(root_fdt, off) =3D=3D -FDT_ERR_NOTFOUND)
-+				fdt_del_node(root_fdt, off);
-+		}
-+	}
-+
-+out_pack:
-+	fdt_pack(root_fdt);
-+out:
-+	mutex_unlock(&kho_out.lock);
-+}
-+EXPORT_SYMBOL_GPL(kho_remove_subtree_version);
-+
- /**
-  * kho_preserve_folio - preserve a folio across kexec.
-  * @folio: folio to preserve.
-@@ -1336,12 +1492,55 @@ int kho_retrieve_subtree(const char *name, phys_add=
-r_t *phys)
- 	if (!val || len !=3D sizeof(*val))
- 		return -EINVAL;
-=20
--	*phys =3D (phys_addr_t)*val;
-+	*phys =3D (phys_addr_t)get_unaligned(val);
-=20
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(kho_retrieve_subtree);
-=20
-+/**
-+ * kho_retrieve_subtree_version - retrieve a preserved versioned sub FDT.
-+ * @name: the name of the sub FDT group passed to kho_add_subtree_version(=
-).
-+ * @version: the version of the sub FDT.
-+ * @phys: if found, the physical address of the sub FDT is stored in @phys=
-.
-+ *
-+ * Retrieve a preserved sub FDT named @version under @name and store its
-+ * physical address in @phys.
-+ *
-+ * Return: 0 on success, error code on failure
-+ */
-+int kho_retrieve_subtree_version(const char *name, int version, phys_addr_=
-t *phys)
-+{
-+	const void *fdt =3D kho_get_fdt();
-+	const u64 *val;
-+	int offset, sub_offset, len;
-+	char version_str[12];
-+
-+	if (!fdt)
-+		return -ENOENT;
-+
-+	if (!phys)
-+		return -EINVAL;
-+
-+	offset =3D fdt_subnode_offset(fdt, 0, name);
-+	if (offset < 0)
-+		return -ENOENT;
-+
-+	snprintf(version_str, sizeof(version_str), "%d", version);
-+	sub_offset =3D fdt_subnode_offset(fdt, offset, version_str);
-+	if (sub_offset < 0)
-+		return -ENOENT;
-+
-+	val =3D fdt_getprop(fdt, sub_offset, KHO_FDT_SUB_TREE_PROP_NAME, &len);
-+	if (!val || len !=3D sizeof(*val))
-+		return -EINVAL;
-+
-+	*phys =3D (phys_addr_t)get_unaligned(val);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(kho_retrieve_subtree_version);
-+
- static __init int kho_out_fdt_setup(void)
- {
- 	void *root =3D kho_out.fdt;
---=20
-2.55.0.508.g3f0d502094-goog
+ 
+-static __always_inline int PagePrivate(const struct page *page)
+-{
+-	return !!page_private(page);
+-}
+-
+-/* no-ops during transition */
+-static __always_inline void folio_set_private(struct folio *folio) { }
+-static __always_inline void folio_clear_private(struct folio *folio) { }
+-static __always_inline void SetPagePrivate(struct page *page) { }
+-static __always_inline void ClearPagePrivate(struct page *page) { }
+-
+ FOLIO_FLAG(private_2, FOLIO_HEAD_PAGE)
+ 
+ /* owner_2 can be set on tail pages for anon memory */
+diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
+index 935893e5ea53b..caf090cd6f85e 100644
+--- a/include/trace/events/mmflags.h
++++ b/include/trace/events/mmflags.h
+@@ -144,7 +144,7 @@ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
+ 	DEF_PAGEFLAG_NAME(owner_2),					\
+ 	DEF_PAGEFLAG_NAME(arch_1),					\
+ 	DEF_PAGEFLAG_NAME(reserved),					\
+-	DEF_PAGEFLAG_NAME(private),					\
++	{ 1UL << __PG_folio, "folio" },					\
+ 	DEF_PAGEFLAG_NAME(private_2),					\
+ 	DEF_PAGEFLAG_NAME(writeback),					\
+ 	DEF_PAGEFLAG_NAME(head),					\
+diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
+index 8614430ca212a..5a417f8a922ab 100644
+--- a/kernel/vmcore_info.c
++++ b/kernel/vmcore_info.c
+@@ -216,7 +216,6 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
+ 	VMCOREINFO_NUMBER(NR_FREE_PAGES);
+ 	VMCOREINFO_NUMBER(PG_lru);
+-	VMCOREINFO_NUMBER(PG_private);
+ 	VMCOREINFO_NUMBER(PG_swapcache);
+ 	VMCOREINFO_NUMBER(PG_swapbacked);
+ #define PAGE_SLAB_MAPCOUNT_VALUE	(PGTY_slab << 24)
+
+-- 
+2.53.0
 
 
