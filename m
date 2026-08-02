@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 17699C55171
-	for <kexec@archiver.kernel.org>; Sun,  2 Aug 2026 11:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3DA63C55171
+	for <kexec@archiver.kernel.org>; Sun,  2 Aug 2026 11:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=FqGL/ivu0kPMFEoqQ4nvJHR3lkRTVyHnKZqNJ5UqfJw=; b=pbxu7Z3p5zB+gsksCPal3EgY3U
-	Fe9ICJSNPmFxXXZNvHGHRUIuNc5Uqvn19KSkEBw4cNWiVR8CMHneVFvSD7GODHLfdnEsY+7Op/kHq
-	pIBUyC+mPg9HxV8qFVYgvK6G+KENGQk8LhVGTQElBJ9t9ys8NrKyojcEsp65g0yB0i46amt0PPvrd
-	cbAca2kdNxv2zp4EwWSrAo1LYWP1JwWxJEsXJNoNClgEtWDQdgCQT/uc5Ez7x37QGDFzaqdNkXdzz
-	u8MbVP8eomJb9PKDF1zTCy/LPdYO/DS/t016Z+w+npiK6VFqzNjXmGIZFVhP7pYtxz+Zli/xkOrgG
-	gK8Gzmsg==;
+	bh=STGiSUapaesQF2K76oCI6wHZd9Cr8woUwKiuHNgdKL4=; b=T+HtjCXauectZoVE3SPtbI+/31
+	8yrGdqZHL+LT1fnoMV7dlEUp2/LG5AayT/g/o8Ki7Yjn2OftiHj5wYpNMVGCAyeBG3K94uly0Ll3C
+	Ox/tIyGcpvM8uio3G59arB5XEHdE1Soh55QVQnVWQ870Lxe+SexCVk5rES/enQbMXLL9ZDm2NJSRG
+	mkTacajtWBEuiI2Z4OTade1xCGis+yxe/oJDktyOvGUtnqj4uIhoiWzBP7kT1vnTJnpSP0ZaFBtgR
+	VDXrhyj+VTAVEP323f58smJUAdSDgHkasRBocUJEPo3GyuGRIV5l+G+0mexAUOCTCLLqmYPzR9X+q
+	D7RaQ94w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wqUK0-0000000FZLw-2cwj;
-	Sun, 02 Aug 2026 11:25:36 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wqUN0-0000000FZZ4-0Skb;
+	Sun, 02 Aug 2026 11:28:42 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wqUJy-0000000FZLq-29ux
+	id 1wqUMz-0000000FZYy-0eSu
 	for kexec@lists.infradead.org;
-	Sun, 02 Aug 2026 11:25:34 +0000
+	Sun, 02 Aug 2026 11:28:41 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 34A3C6057A;
-	Sun,  2 Aug 2026 11:25:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 717591F000E9;
-	Sun,  2 Aug 2026 11:25:28 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 0FDF76057A;
+	Sun,  2 Aug 2026 11:28:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 723901F000E9;
+	Sun,  2 Aug 2026 11:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785669931;
-	bh=FqGL/ivu0kPMFEoqQ4nvJHR3lkRTVyHnKZqNJ5UqfJw=;
+	s=k20260515; t=1785670119;
+	bh=STGiSUapaesQF2K76oCI6wHZd9Cr8woUwKiuHNgdKL4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=UdHSFmIUrefEUW2F0hPEyBcCVPw1XXJjlW1RaBg2UmleH4ra6hVKzCgK7xN9wMApt
-	 Frrt61qEC8uAoiqw1WzSBukPaU+7+rX3Z4vptgMqVqwjoFuobTxOUVYUNoomCa38Y0
-	 7KjQxky2138aS9nFyLfzMGMON4v5xuwTLhAiDf6pjTthfDHLEfH4jHvY8OczLq7KZj
-	 rOfvi22ec3G/rQBqONbDbmQ3zn5zH8cssC/EE+dx391nsoMSTAQSHakhkT6fNprPhW
-	 wuoEQEGWOzSGMWvd2/w0VB16SKN5y+4/fbMqYFoWKaKqie9+8UVVBa/L1idd+nxz7u
-	 3w1Zmr7xOgS8A==
-Date: Sun, 2 Aug 2026 14:25:24 +0300
+	b=bgj/n6JEEEDbd7ZONPgf9sWUyp2q0zCHD5DGDiLPtDCCeXXxHHnQ0MgseRuVbjK2R
+	 wzUCfFQzRGWTiFuz/t9GTBfimgH4W30WZsfZh3nEYJ1o/tpHnHYujn4C6NExNR6oYu
+	 POXvBVfY0egTeSd5rpRgbA+ldG/i4ioUZ2xRgSS4PmqQUCo8bat9fcxXjLfmBkgZFq
+	 voXPsmDhnlt0HQGunKulmHWDB7Ickfb3LoUWTQUSdZFNh7BmCpG/a85jZc8NCcNnkq
+	 A+4mNpmTgxQ8tKgyCX81yFWteNYHiTPRxSk1YPVfOx47bvbXCO/rv4HflO+AJ9CKSF
+	 g0RblB7MwS/IQ==
+Date: Sun, 2 Aug 2026 14:28:31 +0300
 From: Mike Rapoport <rppt@kernel.org>
 To: Pratyush Yadav <pratyush@kernel.org>
 Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
@@ -55,15 +55,14 @@ Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
 	Jork Loeser <jloeser@linux.microsoft.com>,
 	kexec@lists.infradead.org, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 04/22] kho: return virtual address of mem_map from
- kho_get_mem_map()
-Message-ID: <am8pJCeLv0cOMzpf@kernel.org>
+Subject: Re: [PATCH v6 00/22] kho: make boot time huge page allocation work
+ nicely with KHO
+Message-ID: <am8p31hKToQ3WfMT@kernel.org>
 References: <20260801084833.1897543-1-pratyush@kernel.org>
- <20260801084833.1897543-5-pratyush@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260801084833.1897543-5-pratyush@kernel.org>
+In-Reply-To: <20260801084833.1897543-1-pratyush@kernel.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,110 +77,48 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, Aug 01, 2026 at 10:48:13AM +0200, Pratyush Yadav wrote:
+On Sat, Aug 01, 2026 at 10:48:09AM +0200, Pratyush Yadav wrote:
 > From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 > 
-> Currently the preserved memory map address is returned by
-> kho_get_mem_map_phys(). It is only used by kho_populate().
-> kho_populate() doesn't use the actual value. It only cares that the
-> address exists and is valid.
+> Hi,
 > 
-> In coming patches, more callers will be added, all of which will need
-> the virtual address of the preserved memory map. Since kho_populate()
-> doesn't care about the actual value and only cares about validity, it
-> can also use the virtual address returned by kho_get_mem_map(). It only
-> needs to make sure the returned value is not NULL.
+> Gigantic huge page allocation is somewhat broken currently with KHO.
 > 
-> Rename kho_get_mem_map_phys() to kho_get_mem_map() and return the
-> virtual address of the preserved memory map.
+> Fix this by introducing the concept of extended scratch areas. They are
+> areas that the kernel discovers on boot by walking the radix tree and
+> finding free memory ranges. See patch 10 for more details.
 > 
-> Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
-> ---
->  kernel/liveupdate/kexec_handover.c | 25 +++++++++++++++++--------
->  1 file changed, 17 insertions(+), 8 deletions(-)
+> Muchun Song (1):
+>   mm/mm_init: simplify deferred_free_pages() migratetype init
 > 
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> index e7451743b87e..5c35c11c273b 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -512,19 +512,24 @@ static int __init kho_preserved_memory_reserve(unsigned long key)
->  	return 0;
->  }
->  
-> -/* Returns physical address of the preserved memory map from FDT */
-> -static phys_addr_t __init kho_get_mem_map_phys(const void *fdt)
-> +/* Returns virtual address of the preserved memory map from FDT */
-> +static __init void *kho_get_mem_map(const void *fdt)
->  {
->  	const void *mem_ptr;
-> +	phys_addr_t mem_map_phys;
->  	int len;
->  
->  	mem_ptr = fdt_getprop(fdt, 0, KHO_FDT_MEMORY_MAP_PROP_NAME, &len);
->  	if (!mem_ptr || len != sizeof(u64)) {
->  		pr_err("failed to get preserved memory map\n");
-> -		return 0;
-> +		return NULL;
->  	}
->  
-> -	return get_unaligned((const u64 *)mem_ptr);
-> +	mem_map_phys = get_unaligned((const u64 *)mem_ptr);
-> +	if (!mem_map_phys)
-> +		return NULL;
-> +
-> +	return phys_to_virt(mem_map_phys);
+> Pratyush Yadav (Google) (21):
+>   kho: generalize radix tree APIs
+>   kho: make radix max key width more obvious
+>   kho: disallow wide keys in radix tree
+>   kho: return virtual address of mem_map from kho_get_mem_map()
+>   kho: store incoming radix tree in kho_in
+>   kho: move all memory retrieval logic to kho_mem_retrieve()
+>   kho: add a struct for radix callbacks
+>   kho: add callback for table pages
+>   kho: add data argument to radix walk callback
+>   kho: allow early-boot usage of the KHO radix tree
+>   kho: allow destroying KHO radix tree
+>   kho: add kho_radix_init_tree()
+>   kho: expose kho_scratch_overlap() to kexec_handover.h
+>   kho: initialize kho_scratch pointer earlier in boot
+>   kho: initialize preserved memory map radix tree earlier
+>   mm/mm_init: don't rely on memblock to get KHO scratch migratetype
+>   kho: extend scratch
+>   memblock: always include KHO headers
+>   memblock: make HugeTLB bootmem allocation work with KHO
+>   memblock: add memblock_reserved_hugetlb_size()
+>   kho: exclude hugetlb memory from scratch size calculation
 
-This time sashiko found a real issue with this on arm64:
+This is applied now to kho-scratch branch in the liveupdate repo:
 
-  Will calling phys_to_virt() unconditionally here cause a panic on ARM64
-  during early boot?
+https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git/log/?h=kho-scratch
 
-  When booting with KHO properties, early_init_dt_scan() calls kho_populate()
-  which then calls kho_get_mem_map(). Since this happens before
-  arm64_memblock_init() sets up memstart_addr, the internal phys_to_virt()
-  implementation evaluates PHYS_OFFSET with an uninitialized memstart_addr.
-  This fails the VM_BUG_ON(memstart_addr & 1) assertion when CONFIG_DEBUG_VM
-  is enabled.
-
-I fixed this up by keeping kho_get_mem_map_phys() and adding a thin
-kho_get_mem_map() that returns the virtual address.
-
-This caused some rebase conflicts afterwards, please check I didn't mess up
-anything :)
-
->  }
->  
->  /*
-> @@ -1647,9 +1652,8 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
->  {
->  	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
->  	struct kho_scratch *scratch = NULL;
-> -	phys_addr_t mem_map_phys;
-> -	void *fdt = NULL;
->  	bool populated = false;
-> +	void *fdt = NULL;
->  	int err;
->  
->  	/* Validate the input FDT */
-> @@ -1671,8 +1675,13 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
->  		goto unmap_fdt;
->  	}
->  
-> -	mem_map_phys = kho_get_mem_map_phys(fdt);
-> -	if (!mem_map_phys)
-> +	/*
-> +	 * At this point phys_to_virt() doesn't work properly and so
-> +	 * kho_get_mem_map() can return a pre-KASLR virtual address. But here we
-> +	 * only want to make sure the mem_map is valid so the actual value
-> +	 * doesn't matter as long as it isn't NULL.
-> +	 */
-> +	if (!kho_get_mem_map(fdt))
->  		goto unmap_fdt;
->  
->  	scratch = early_memremap(scratch_phys, scratch_len);
-> -- 
-> 2.55.0.571.g244d577d93-goog
-> 
+On top of mm-stable-6d098029de09 branch in Andrew's mm.git.
 
 -- 
 Sincerely yours,
