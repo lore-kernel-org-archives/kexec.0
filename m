@@ -4,173 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1BBB7C55182
-	for <kexec@archiver.kernel.org>; Mon,  3 Aug 2026 16:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C9C55C55182
+	for <kexec@archiver.kernel.org>; Mon,  3 Aug 2026 16:57:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=jCugCLcf/pbk/KQnecLdtukPMM/sn/fYAcMx6pZzOOc=; b=dZjRx0+HzBP4ryzDlLMisDjian
-	OPBSVyW1RxGIUFTecB1PZlO1WlPymY07VeTiOzibQSHT+y7M4KyKy82D90bD+0icFGSjrkl/PIzJO
-	Vp1pMx6LU514e0Uw5Hq5m7861LLUJl8e6RoA4xcaFX2OMbHmTZ8pO2EUOxqkVmeLoG8pQdVVILLe7
-	o2VnebxWTKm/hbfC5Clet0+30kxo0BN4npFU3Zw6Nagp+LcFZyXLpp7LrqZyxzzZfh90oNgICe+6c
-	eOV0u72Rr5S4cQdn1cK6DUb1sqMCIhILaYwOM7okcKMclzMQCLVXKHsjO8Opt/rAZ9TbazYWMUi/A
-	ysWQEdsg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=EH7ZlxvzJ0GIxNI9j221BgzRdD8oQfBbe9Ksf/ZFGOc=; b=mIsAoLq+gJ8+Huv8rnKXBhl/Nl
+	rensTf7eAVMErFTKaQEX5jojo/tgYKVNtou1uqMhULrf7a5fhXbhgq3fbxmvdWUEowXL+F6QcH13V
+	4NJd6LtMBp86yYL8iaqVJAYvB/NTkl0VEA3yyIHtDP7KI0hGN8dIvyw1W7dbk0ZC3A3EWkCKY5dy8
+	s6vorirkJVY7/9ummvCOoZdOyXo9r5qvN6A92hsabTydst2AlZGjb3GvJ/g+QzpRrDZYFlJCxgqp0
+	2CbTPUr7bXfIbv9fXDF7UJJgsWsFwKAFbxyidNt6iWqXo6IX6CL3XLHbLDa22hTKvWcWtrl1pMNMw
+	3dQpseAQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wqvIc-000000003N3-1Usi;
-	Mon, 03 Aug 2026 16:13:58 +0000
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
+	id 1wqvyc-00000000AM1-2TKw;
+	Mon, 03 Aug 2026 16:57:22 +0000
+Received: from mail-qt1-x829.google.com ([2607:f8b0:4864:20::829])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wqvIY-000000003Kv-3BLy
+	id 1wqvyZ-00000000AKA-2R61
 	for kexec@lists.infradead.org;
-	Mon, 03 Aug 2026 16:13:56 +0000
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 673C7VCb3789243;
-	Mon, 3 Aug 2026 16:13:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=jCugCLcf/pbk/KQnec
-	LdtukPMM/sn/fYAcMx6pZzOOc=; b=pARpOI7BnG5tatMYAwAZFbGjmxtJ6w4VRw
-	DDm+kqiMeEAqwc7j0JLMYoEDs2PG8nzg9iSOR3osVFUHByQW4LjE4l4rUyB3Txc/
-	ohF8Yc0jMdJQMIRD36CdDMDHmBlB9EWlKwHwzUqTKkIQcGp1303z8dXR4M3iNezG
-	konp3FbzvpRm/QHs4oBCO+CFD3jv8ah3KPokQW9gkjvJ583JjZBly08/uhaq52Gj
-	p/hqwfcE6AL0E5GMF1qWk8uXFymE+F+pbrHPHH3LwXSsv+nItTBYeOPZDE3duDhH
-	6nxnhZ+IQIKPRUrpES3VsXXjDGOL0pYJcB0lKS7PwFnjiURgRM+g==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4fs8ugc2k6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 03 Aug 2026 16:13:52 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.7/8.18.1.7) with ESMTP id 673G5eTh028260;
-	Mon, 3 Aug 2026 16:13:51 GMT
-Received: from sn4pr2101cu001.outbound.protection.outlook.com (mail-southcentralusazon11012036.outbound.protection.outlook.com [40.93.195.36])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4fs78s3dyy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 03 Aug 2026 16:13:51 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BiwJY+hYZdEIIS0j9jMaerfo0ZsRoJKYgEKUP8xjy3bKrGo4ZCIPTC9RDtscRFCACz8p9Q8RRAa/y9JhpOsEfkib2lUkFE2kU3p5ThgAUB6Rg0FYmArIgoOj+Ze3UNm8hUnhE/ZSu4vK1pubdpslh+YRoF1eccC5djj5Al9fUWR2CbokjdJw7ugOabwFldDTMHU21gMVRfxIU4SZ9ObUMhdEgkXI+o1tJunUBVXjZDnKAl4pM4lS7NcxQbyBG5gRjMH+zfaMB7EjQU5aL9lDNl19cTncANhvU2n5IYcumJz967Lk6fdRnwevoAtpRyTYwnLsZFLHc7EfI7BSt0j9Tg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jCugCLcf/pbk/KQnecLdtukPMM/sn/fYAcMx6pZzOOc=;
- b=ZiLoyciUV7xY8a0a1kMbJP+1xPdmAWUtwXzvK9TMqosRrU74RI/oETGSFjdJk3uiVW0/WJRvtRmQb3T9WjvhfyJY7inM57f3havwATNDD5y1w/Nb/6GBa/vxHC3qtXY+55PExGtBeuoPsMsbkpI+M1uFh4EruXejqcdE2izc5av13dHX5Hy1uOM4xO+CkwUc7xifhNNxIdIgWkpxap0gl5o6yaiuh85pJzpoTCBT9NdWcGdB9x4xfqlNVCyzF7hJ3se4Ziw83bX59xn2FC4ZQBiKnuoO1dbYnVxAtureoMNVZa0HhslfWkGREaxBkY+rUUhOUeq2FiymmlLeSFletg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	Mon, 03 Aug 2026 16:57:22 +0000
+Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-52b6543169fso10285231cf.2
+        for <kexec@lists.infradead.org>; Mon, 03 Aug 2026 09:57:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jCugCLcf/pbk/KQnecLdtukPMM/sn/fYAcMx6pZzOOc=;
- b=Yh2ePdMUe/LcQT7wVqp4ZOGxdSmgse2V+HdA207DPfFnbv6rF3tLCDtjXUxk8pXilxinWNhuzWnTikR4fHLPq5k432op8GFE4WT3nr2b17Y0XrqL6Zf7uom12GbSO81bhwWz9nzPcb2mAg29HBcznYukm4FuOOnIKE8JbvKSwCw=
-Received: from LV3PR10MB7868.namprd10.prod.outlook.com (2603:10b6:408:1b4::9)
- by MN2PR10MB4189.namprd10.prod.outlook.com (2603:10b6:208:1de::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.18; Mon, 3 Aug
- 2026 16:13:48 +0000
-Received: from LV3PR10MB7868.namprd10.prod.outlook.com
- ([fe80::9105:4421:4267:8fce]) by LV3PR10MB7868.namprd10.prod.outlook.com
- ([fe80::9105:4421:4267:8fce%5]) with mapi id 15.21.0270.016; Mon, 3 Aug 2026
- 16:13:48 +0000
-From: Stephen Brennan <stephen.s.brennan@oracle.com>
-To: yamazaki-msmt@nec.com, k-hagio-ab@nec.com, kexec@lists.infradead.org
-Cc: ltao@redhat.com
-Subject: Re: [PATCH makedumpfile 0/9] Improvements to makedumpfile
- extensions, plus userspace stack tracing extension
-In-Reply-To: <20260714004550.3698175-1-stephen.s.brennan@oracle.com>
-References: <20260714004550.3698175-1-stephen.s.brennan@oracle.com>
-Date: Mon, 03 Aug 2026 08:55:45 -0700
-Message-ID: <8733wv42ri.fsf@oracle.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0246.namprd03.prod.outlook.com
- (2603:10b6:a03:3a0::11) To LV3PR10MB7868.namprd10.prod.outlook.com
- (2603:10b6:408:1b4::9)
+        d=gmail.com; s=20251104; t=1785776237; x=1786381037; darn=lists.infradead.org;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=EH7ZlxvzJ0GIxNI9j221BgzRdD8oQfBbe9Ksf/ZFGOc=;
+        b=LSnSh4aKHaCzSVWdvHPuiFjhodZhgAjAV/sLVHWt7T9EOtMHH6/s2VaLOnmaGSdYVN
+         UdYA6WiEBJVF2VRMHdgA8nRuf+uEC0ISF/43Gb/sCkQvat6MPlWfmJHem1H6/Scixk0N
+         pkeOSWtWwu/l2MgDvzJdbSnQqMpKMMb/TOmwHvMrsA7MlmEv2IoD0lrL9vNKbybJfB+4
+         L5lm62mynElCOsSzQ8nCnaUyyxH3tyJ2FsQoTxPmwpxkMBPS9v29XPJhM/wBOcyS/mfg
+         z4imILWuczQgH3pt3vnzhxZNCYMya8O83Kq/1Ikx45xV5Pq0Yy69Ec8V2o+bu5821ihl
+         9W7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785776237; x=1786381037;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=EH7ZlxvzJ0GIxNI9j221BgzRdD8oQfBbe9Ksf/ZFGOc=;
+        b=lmauPxyEHaVRSKzwdfQZWevTEAGOBovHxUkkmRNXbxpCNLhEGuPDDwb7VOKLh9lI4B
+         HaMs5EqNj2AffDl2tfg8yWmAHjKsdAqgkZ3avlkv6YH0NlljeI/Dn/c9Pp0j57OmspPu
+         dDBfHDgOBzD9d5CoM2hc7mzhw0X+PujaNzn1bvFnngvtAzB6i4ZDJF+VKgVD8BfP3br1
+         w1FPkSH585KnqmtjUYLXA1d1exUvKneVuLzzJ8BbPKdbNuXnm1D7wzJpGipGctDNYaBT
+         BXXcOuMIM/Oq1Pn7IB08KnaX2UlWKRXOP/MbFWSJCKckAU8nPfhPe0/EKV0fgw+BbZqo
+         lBYg==
+X-Gm-Message-State: AOJu0Yxxl+weRFWPMSHvWxHiHvv6QiT27xMSrp4WCAOq1eRyXbF0XmJw
+	p/lTEe2xcXqi1tTHgv223sSInEa3GBOAHTplkwLdmEWbrw++SrFSSsrr
+X-Gm-Gg: AR+sD13qGn7MUMi1qcg5HaJ8zgDHVLO2IcjrGcJV9AzbWSbBa6ZePH07Kaw+pnoih/C
+	g2Qo88yQJRr9OEA6qaGzoGDcxG0g0NcSLZUfqiJLYxHDhm2xRpNPBOQidIwU5tuUdVYCiSOK/cL
+	3qVWKwIl/WmstRcQeX4MzafvCA/Nx3HWIRx6MbvgM0uIs8/AYOr+kt+i7kgNjJ+ieWoUHClniEo
+	LRbKGSxtG3+G49T0457lTAyqXlBpdBvmQIQ/soYEHfviMARMOoktfGS0KRu2zZufE1z5scfLwz/
+	ceKLAsLvhfhYC6v+JCJG4lSkvRqJGRa8LGQuIH5vDLD0BhSQ+kIHi0jk7/9qM8NuUx6dsX7zPll
+	98u0fT6qVJjypHcuKAvAcAn2EL7CXBZPJjWfjjFLaI8XE23AwWEFUmI3ErsgLQnZ+jIhbry0wVW
+	uOSpJOVl20ztEa8VLJKQCn7hvIrwu7Z3xQRo1/zY6+kHv4GBKIjRjTLwn80t5D/NVEfx8DMmWhm
+	9GZkCFqborXwOcWzCd+URffYGBAitwzK97QFd1zKO/k
+X-Received: by 2002:ac8:5c96:0:b0:51c:1d18:2fe9 with SMTP id d75a77b69052e-52b5666f9abmr235460901cf.5.1785776237158;
+        Mon, 03 Aug 2026 09:57:17 -0700 (PDT)
+Received: from cw-fl20tjcw03-l.tailb3cd1a.ts.net ([2600:4040:9121:7700:7156:9aae:648c:5cb4])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-52b4ebeb909sm64232071cf.29.2026.08.03.09.57.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2026 09:57:16 -0700 (PDT)
+From: Serapheim Dimitropoulos <serapheimd@gmail.com>
+Date: Mon, 03 Aug 2026 12:57:04 -0400
+Subject: [PATCH kexec-tools v2] util_lib/elf_info: stream lockless printk
+ ring records
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR10MB7868:EE_|MN2PR10MB4189:EE_
-X-MS-Office365-Filtering-Correlation-Id: f218d718-f2e3-4570-ccce-08def17a3369
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|376014|1800799024|366016|6133799003|10067099003|56012099006|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info: 54xMT3UM9Mm8RJedsXvaSAklG82099FZ8o0znAG9tUyaxGo/Evg3BM+/cVkI8gvKJwR/Vu0n6fpzr6mFLk/Agf29Y01xK8r1RABq0UI0K9QnL/cgvj/Au0JSvJytRDzCT1l9kDErr3hZLFIVfOReWly7SoAUfsYrC33+TF6W9o7ue3FuVchpVt9c2aCGNg0xP4wFJMsbvZZqwwMdB+x5/U1Wxf4tIZivT1mzzYCjz6wVSPTFzjQRwyvjZGXWmjPy9/oueHp6nxcs4qA78cRBchp+pZw0QvIBsqDCIQIfgdh8qRn5bl9XGcCLRLl+HtM/EHur3KwtjXPxsoK6JJp78VwS6tQxIc91sfPxuxB2syckVQjd25DR/nPQjvC6K1JXKK9+xhVUkzSzKrABES2WqZdRgQ1Us/oLMWjV+k7E78E0HA/7JBXWmXE+518+e9O5wrXrYh71zZfFHKl07VbGVIjEDn+L3FgXJSMhtxpZlxkksmmf1DCted0HYzQcJqNa3gkIJ7B97vUd58IAO+vpdGpDfklr3r09bpnFiDzRYlm3IY+ObCA2shafZ2DLH+vlVvxxQ8ZeNJICLi4TIyxui7k/hvuR4HcuECjvzzLbweZzT+LKXOe5uSyDG3HbGkGY8D91iMu6Hy9vhP5v50fi98dSw+XHzUfOITtxl7+6SC0=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR10MB7868.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(1800799024)(366016)(6133799003)(10067099003)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Jo5miGlXlunUfjAJCwQvAaxC+MTo4hnBoRZEgtdBzXDrHFPJWZUcRyiztHOZ?=
- =?us-ascii?Q?0mxuLtb6FfPiAJGWk6n3rmtTxKi2cGgD+5wKp40GRZaYylXLZILEq1LfgH9H?=
- =?us-ascii?Q?OPyNI4NNfplZFX+/Kl8nPLDusEvYLw2ZxPNs8DaQ8/OeKmdO/eT2tL0FXOkl?=
- =?us-ascii?Q?9jdW2694JX7WQYio7QlaGZSUlMhpIp2aZidZktuwnCKfFHlj/6GF8oAdsUuR?=
- =?us-ascii?Q?ZHyINVvVH+uqJtMsgRBb8nnlg7GlN4kYQ1F3O6v0qPOoXmM4lAF6chuTv/S/?=
- =?us-ascii?Q?XCmlvmhtTOFcWsgjc6UbZXVyC/LIxU4SQW/EG2MkLo3HlSiE+Nwqc7CkzxNu?=
- =?us-ascii?Q?cmZtRCIMDT33zzez2nre5kEIXt8nCb8aHi/kJcDYU+UMPduHa2qogj3PRjMz?=
- =?us-ascii?Q?PH5dnPUTKroF6CYVEsRdjRvYOLpIloOFpACV6yAYHLc+01FlZP86laKFNDzo?=
- =?us-ascii?Q?WQHcnWp0LzUxzf4ZWtRQnsDBAKK/QnIyWmCjSJVX4BSg6KvUCJZrTOSQCQZM?=
- =?us-ascii?Q?BpSSut7gilVXYECAclP/bKqwMbCxr5mNdf3D4m2NOIfvd5OKSylhXQnsVvbb?=
- =?us-ascii?Q?/EPP2eqnz9TZEM/E3FhnIRMusof+2dy2FRJ6vG3upYoA9RrG5prtIpFDCJFw?=
- =?us-ascii?Q?BvV3CRQI8nQ0Mhu+MFuntBiKeDuO803jsL6LFmDnhOQxJOJmcIB2AcciTzPX?=
- =?us-ascii?Q?wYVWA2WP5TVenMvHpEyFgaMFXSV6SX8JdT+sg9HnvXYOg9K+uqJCyE/zdZY7?=
- =?us-ascii?Q?DMRF0i7rwFo9OqOe7No+fzJhJy4wF0yRQIsJ5ur9P7hVi0a3gDCdpDpAx3gq?=
- =?us-ascii?Q?yREuAfyRd6H5Mh0Aot0QfAIt79/84K+j+I+BJ3E2DbWYZWCPS9z+lqNV4A7B?=
- =?us-ascii?Q?S+vN0ViaPAe4ujwGKkYWgoFe3iBMBpxbX7yBC5zgURJbRRaj4xJr06mJbDXz?=
- =?us-ascii?Q?AGKsEVIm7iqUohYkhQR52R8oMzoiYEFbZk1ALN3xubtcp+Ahk8HOduTsdPwA?=
- =?us-ascii?Q?WOOLBh9GUey4ZKg9LIxQ46C83iCNxamgTEk+7d2ShDRi/ipJVFxHaMagqvnR?=
- =?us-ascii?Q?mzv6Q5trfT6Th98vte4zcrB95L8JOahkuMsujFfGQveY/ON+1sboi/wwvuNM?=
- =?us-ascii?Q?L1FTQdshRrT1lqkgBrkHsX6nclJBvZO6UpRXC7rbp3ei9JGyTrPBkzsI2rPo?=
- =?us-ascii?Q?vTTC5QbEct38NVTI0CS++5GRbKB0qcSCAGXmXY5gaRGLGZzwSknqdBKkOUlM?=
- =?us-ascii?Q?cL6UmSo9m7BsyATufTatGHsj/LTSFeDodgxHUVpBM62uVTLji8UyjhXFoqcu?=
- =?us-ascii?Q?2995AEHDIiYIcFqFB8Ws2B9U3pdd5uehxgG/lZr9AljhOBgSrFzcighIdupy?=
- =?us-ascii?Q?26/EFWC/xvGL7KXdFBaQ3Ow8qSvGmFTslNHprsT2DBazdMUQ6QfNmyuQM1D7?=
- =?us-ascii?Q?4YTOfEWKfxb9KHvEGuf9p2Cf63xCtPFf8Ve+ZWFY2ouXUf7vPOGPPaqC5paW?=
- =?us-ascii?Q?9JXcffvg3UMafN4UPHOZDx2PibQw6bNytv+URopm3cmV3DtSQGZal4scE7hc?=
- =?us-ascii?Q?QXvNmNzvV75noycB7C4dg06gcihGMKAHbI6H2E6qehmvuvOXwCWM+0YhaSZr?=
- =?us-ascii?Q?lz2XDgITb4AZ3QvgAp+Rvt69ztEN4rnh0T2Ofew/nSEZg6LlHc1outTAWjSe?=
- =?us-ascii?Q?lpE7sHNyQaAionfkfVSZG8z49xBdsHWNdaJxshcIClyfdCGBVaWCvsMfS5bD?=
- =?us-ascii?Q?SOzDErIa0TAh26LtKZmBheZ8WdhoR4Y=3D?=
-X-Exchange-RoutingPolicyChecked: DBEAbKwl0giqns5tR0ZyXSbBuFTcS0SLLeSZuwXY8fFtQKgFZEF7zEfQuOyeP7tyQf7RfA4qXQv61/fP7SZclh7E+yEAEUpHATVm4JssaCcVAjXlm90BEptUNKaQb0XDGdhlVrRIUjv47LoRSI9C+I/xPtx2/8kuHNVX31x2/A/fGVcTtEKZzqDi+Tv7gajhX1ZduPO0pt/GgIGibTiPxeUV/rfL4MKGGDbhwYJ0Gw+Pmv0bqbwh6CloQpR10/3dFfw59so2pBHLzCPjtvFo09f00slBrWrf3tejLW7h94N8VJYnn273S9G3wcaQbQGQLx53jmvuQ5aC8i+/PQ2XwA==
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 41EbCo5CWQzSHn+XlP0BZ08DISn4TmQgoHtJMz2vWAv1E3fvL0iJQIhtoAmLhQGm6kjVbrDqzes/BqYcY/+oiZsPrGpjo92sbXc8907qNCdpW8C3EfaDDSxhEmPnT88PXkFhn31XV3iCT9mtkPgnyTpB952NaHjdB9NE+SbuJMHtIkZfO129F379o4btNK53GFnyf3URK/dgpgebHhMcYhCXFak3v0U4CMM19F9Zb6PuTqCMb2gHlJ/FUQjdSwXN0K7+qKdiEGbFnWoIz693kQLnaaNJAQ6CTJkwc8z0EYES3gItmdXbNCidPWe0bx5ZrHxvMibAqZMigG6nBNw2M0+oQCMWS5YGJIv5WqYTTfztz8BNwm/YsyzLcee0j7QyQVZEd38hZ9YpbxMBu3jfCdxo0RtZzUX7Y4+lBfV/XvNQUROJxy0fB3eFLj3GsRD8xVzCXw+3j1ihT+0EISYGxc3r2CONxF5IvuIz9xrTPKe3sWZYzmelUYX/9f6bsfBH5Na7k/IIm3fxTZDs+Z0mkp0u3/kKCikybCw/s+BQCiUJTpEMAn4q1ROmBnfan8Kw9AYnFn2RbZYVkZ36cRYk2uRhr9VKNTClDhQqXVuXTn8=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f218d718-f2e3-4570-ccce-08def17a3369
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR10MB7868.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2026 16:13:48.6859
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: R++iuFx+Mvr3UjtBVBdfCbtkVwZc4Fsblm+ksoBJiUK8pYUOmp8hVSHg+Rv830SOLXhyhhP/7FpmqMeuRdVJgajVzycGK9XEm5fLs5dXktw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4189
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-03_03,2026-08-03_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0
- spamscore=0 bulkscore=0 lowpriorityscore=0 suspectscore=0 mlxlogscore=999
- mlxscore=0 phishscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2606160000 definitions=main-2608030144
-X-Proofpoint-ORIG-GUID: 9bJb74Rj1og-KO5T2vkCtyq0XNsKATSq
-X-Authority-Analysis: v=2.4 cv=XqnK/1F9 c=1 sm=1 tr=0 ts=6a70be40 b=1 cx=c_pps
- a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=Sv0fKeRqtYgA:10
- a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22 a=jiCTI4zE5U7BLdzWsZGv:22
- a=BqU2WV_vvsyTyxaotp0D:22 a=yPCof4ZbAAAA:8 a=ZLSXSzSCM89tNEpOOigA:9
- a=5yU3S35YU4bGjq-dph-N:22 a=Bho9c0fBagfJEIQBS7DQ:22 cc=ntf awl=host:12101
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODAzMDE0NSBTYWx0ZWRfX0DZGxW9Kk1Td
- pCBKdaJ1J2GItiFaladcJfkJiu2SvKqmJik8GW43PInHxqwjB8pYJhdo3il94+2xy1gUi+U5tG7
- 69Ovz9anVRh9mJEl9q3A+Y7mK61j+kL4tTkcWYOs3WRC4g6Z0DKL
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODAzMDE0NSBTYWx0ZWRfX0OvEnwn8z9Uq
- q2RFm1EuFUz+iIuu/iBXyBf+PEfnSyU+gRwXKlddUX51vUCiKsDZ4r5ZS+U3vUQFY8pOZuL3KJn
- G/Ld5dXXjTLnkWOGPdATEnsFAGDUz2Zj0WtPljjBkPP+YWsbYz2CejCMBTORlSnFjtdmh+WP+sQ
- m/9lcFfbcvT+LysDjm5LDQleXSS4VcFUfvidLtx8yrGq9+taMTbf/1BhUUtDanAwJJFSaCroVSy
- EFhlfTG//Tw3I72+Z/CAuY4w6d9Lx+GhyFa4Z5t45pI7/gy49JhA7xUcBpQ868y+ncNlqK+i9Dd
- 4eUNNmyudOxvZ/DxiUBc3OyOD2AvsnHLIcL0POiXQhkp0WD+4WdXmBTaj54yP0ucKBaH3Zu8FJ0
- dZ7hWra+rcNpaOJSORVie7g0ILILLnc0C1XlKzKBkXz3AkLS1ElUV1OaFMg5iFiwg//TBN24f3c
- VUf3ku7d0RyyWkDzSYzniTb0oZqG8taCgIY1TJ90=
-X-Proofpoint-GUID: 9bJb74Rj1og-KO5T2vkCtyq0XNsKATSq
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260803-vmcore-dmesg-stream-upstream-v2-1-cb7f7449bc1b@coreweave.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/32NTQ7CIBCFr9LM2jGUSFtceQ/jAmHaEqU0gNik6
+ d1F48KVu/fyfr4VIgVLEY7VCoGyjdZPxfBdBXpU00BoTfHAGW9YyzvMTvtAaBzFAWMKpBw+5q9
+ ojWqkkJ3spYByMQfq7fK5P8ONFtKYvL9HuJSwD95hGsvwlyD/E3KNNSrGrsKIQ+Gw07v8JJVpr
+ 72DbXsBL596rNMAAAA=
+X-Change-ID: 20260728-vmcore-dmesg-stream-upstream-7da695989f95
+To: kexec@lists.infradead.org
+Cc: Simon Horman <horms@kernel.org>, 
+ John Ogness <john.ogness@linutronix.de>, Petr Mladek <pmladek@suse.com>, 
+ Philipp Rudo <prudo@redhat.com>, Baoquan He <bhe@redhat.com>, 
+ Serapheim Dimitropoulos <sdimitropoulos@coreweave.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1785776236; l=20886;
+ i=sdimitropoulos@coreweave.com; s=20260302; h=from:subject:message-id;
+ bh=B9uNRtBDnmmUACtrfnDg2GHKxBLVQcmVSNXsuDo7d0I=;
+ b=/YwmzL8Z9W3dy1rSVc162OtkWZ1aM3BJoQe4zEzF2da9GIHok0gSb/l0MgEqBahUPPGiG7tKV
+ SF9Ghr9GG+QAMNFBMG6kO4BF0fD19mdhP7BxGOjQk/swAnoVOzp5/ln
+X-Developer-Key: i=sdimitropoulos@coreweave.com; a=ed25519;
+ pk=Qysvg7jaTIU0posaYFtqa5SKJlFwqzil4X0U1p1zo/g=
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260803_091355_783849_085FC53A 
-X-CRM114-Status: GOOD (  30.58  )
+X-CRM114-CacheID: sfid-20260803_095719_722637_A33065BD 
+X-CRM114-Status: GOOD (  22.62  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -185,101 +112,613 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello all,
+From: Serapheim Dimitropoulos <sdimitropoulos@coreweave.com>
 
-Just a gentle ping on this series.
+We came across this while testing kdump on an arm64 system with a 64 MiB
+printk text ring and an 850 MiB capture kernel. vmcore-dmesg was run from
+the capture kernel before makedumpfile, but it was killed with SIGKILL
+before it could produce any output.
 
-Thanks,
-Stephen
+The lockless ringbuffer reader copies the complete descriptor, info, and
+text rings before it starts processing records. For the above setup
+these copies raised peak RSS to about 345 MiB. This is a significant
+part of the memory available to the capture kernel, and most of the
+copied data is only visited once.
 
-Stephen Brennan <stephen.s.brennan@oracle.com> writes:
-> Hello all,
->
-> Building on Tao Liu's excellent work for makedumpfile extensions, I'd like to
-> share some incremental improvements to the extension system, as well as my own
-> two extensions which enable userspace stack tracing. There are three topics
-> related to the core makedumpfile extension system which are addressed here:
->
-> 1. Tail pages handling. As patch 1 explains, extensions currently get called for
-> tail pages, but their decisions are not respected. I believe the best approach
-> is to only call extensions for the head page, but allow extensions to return a
-> decision related to just a subset of the pages. To this end, patch 7 adds
-> PG_INCLUDE_HEAD to include just the head page (leaving the rest up to the
-> default policy), and patch 9 shows the elfheader extension which uses that
-> functionality.
->
-> 2. Counting pages included by extensions. This is done by patch 4. It alters the
-> logic because it's really helpful to know whether a page would have been
-> included by makedumpfile's dump-level filtering anyway, so we only count the
-> additional pages.
->
-> 3. Sharing makedumpfile's logic and knowledge about page metadata. Currently,
-> extensions just get a "pcache" pointer, which means they must redo whatever
-> logic makedumpfile has already done, in order to get information like
-> compound_order. Patches 3, 5, and 6 factor out the page metadata into a new
-> struct pginfo, which gets passed to extensions, and it also makes more of the
-> helpers like "isSlab()" usable with this pointer.
->
-> With those improvements, the final two patches (8 & 9) implement a pair of
-> extensions that are useful for including a minimal amount of information which
-> can be used to do stack traces of the userspace processes in a vmcore. The
-> "userstack" extension includes the stack memory itself for each thread, and the
-> "elfheader" extension includes the first page of mapped ELF files, so that ELF
-> build IDs can be identified from the vmcore.
->
-> My testing so far:
-> - Live testing (/proc/kcore) x86_64 on Oracle UEK 8 (6.12.x based)
-> - Refiltering on vmcores generated from UEK8, 7 (5.15.x based), 6 (5.4.x based)
-> - Using the resulting filtered vmcores with drgn's contrib/pstack.py to generate
->   userspace stack traces.
->
-> I still have significantly more testing to do and then share out:
-> - Testing in kexec environment
-> - Testing with upstream kernels, also verifying in a Fedora userspace
-> - Sharing runtime and size comparisons with different workloads
->
-> Despite the limited testing, I wanted to share these patches as they are,
-> because I think the improvements for the core extensions framework are useful
-> already, and don't require as much verification.
->
-> For the extensions themselves, I would like to consider merging them as well, if
-> there is interest. I think it would be useful for makedumpfile to contain shared
-> extensions, including those for the GPU buffers which Tao Liu was working on, as
-> well as the userspace stack tracing ones which I'm sharing.
->
-> Thanks,
-> Stephen
->
-> Stephen Brennan (9):
->   Do not call extensions for tail pages
->   Honor CFLAGS in extension/Makefile
->   Share page information with extension callbacks
->   Introduce a stat for pages retained by extension
->   Move page checks into makedumpfile.h
->   Simplify arguments for page checks
->   Add PG_INCLUDE_HEAD extension return status
->   Add userstack extension
->   Add elfheader extension
->
->  extension.c             |  10 +-
->  extension.h             |  10 +-
->  extensions/Makefile     |   8 +-
->  extensions/elfheader.c  |  93 ++++++++++++
->  extensions/userstack.c  | 325 ++++++++++++++++++++++++++++++++++++++++
->  extensions/vma_mtree.c  | 140 +++++++++++++++++
->  extensions/vma_mtree.h  |   7 +
->  extensions/vma_rbtree.c |  56 +++++++
->  extensions/vma_rbtree.h |  12 ++
->  makedumpfile.c          | 188 +++++++++--------------
->  makedumpfile.h          |  78 +++++++++-
->  11 files changed, 798 insertions(+), 129 deletions(-)
->  create mode 100644 extensions/elfheader.c
->  create mode 100644 extensions/userstack.c
->  create mode 100644 extensions/vma_mtree.c
->  create mode 100644 extensions/vma_mtree.h
->  create mode 100644 extensions/vma_rbtree.c
->  create mode 100644 extensions/vma_rbtree.h
->
-> -- 
-> 2.47.3
+Read each active record directly from the dump instead. Keep only one
+descriptor, info record, and text record in memory, and use exact reads
+for each of them. Validate the ring geometry and address arithmetic, and
+bound the tail-to-head traversal to the descriptor ring size.
+
+The old and new readers produced byte-identical output for committed and
+finalized records, missed and empty records, wrapped text, non-printable
+bytes, and descriptor ID wraparound. Malformed fixtures covered invalid
+shifts, arithmetic overflow, short reads, and invalid head/tail spans.
+
+On a synthetic 64 MiB text ring, peak RSS dropped from 345116 KiB to
+1052 KiB. A dense 100000-record fixture produced the same output in
+0.23 seconds while reducing peak RSS from 345112 KiB to 1080 KiB.
+
+Fixes: 4149df9005f2 ("printk: add support for lockless ringbuffer")
+Signed-off-by: Serapheim Dimitropoulos <sdimitropoulos@coreweave.com>
+---
+Changes in v2:
+- Drop the read-through caches and use exact per-record reads, as suggested
+  by John.
+- Keep the existing best-effort behavior for the undocumented /proc/kcore
+  input instead of adding a separate live-input policy.
+- Re-run the synthetic fixture tests, make distcheck, the 17-architecture
+  build matrix, the arm64 64 MiB-ring crash test, and 200 direct and
+  symlinked /proc/kcore smoke-test reads using the built arm64 package.
+- Link to v1: https://lore.kernel.org/r/20260729-vmcore-dmesg-stream-upstream-v1-1-a00b5d5489f0@coreweave.com
+---
+ util_lib/elf_info.c | 436 ++++++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 320 insertions(+), 116 deletions(-)
+
+diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
+index 36eb895..19e4dfa 100644
+--- a/util_lib/elf_info.c
++++ b/util_lib/elf_info.c
+@@ -954,21 +954,133 @@ static void dump_dmesg_structured(int fd, void (*handler)(char*, unsigned int))
+ 		handler(out_buf, len);
+ }
+ 
++#define PRB_MAX_STRUCT_SIZE	(64 * 1024)
++#define PRB_BAD_DATA_EXIT	66
++
++struct prb_region {
++	const char	*name;
++	uint64_t	file_offset;
++	uint64_t	size;
++};
++
+ /* convenience struct for passing many values to helper functions */
+ struct prb_map {
+-	char		*prb;
++	uint64_t	desc_ring_count;
++	struct prb_region desc_region;
++	char		*desc;
+ 
+-	char		*desc_ring;
+-	unsigned long	desc_ring_count;
+-	char		*descs;
++	struct prb_region info_region;
++	char		*info;
+ 
+-	char		*infos;
+-
+-	char		*text_data_ring;
+-	unsigned long	text_data_ring_size;
+-	char		*text_data;
++	uint64_t	text_data_ring_size;
++	struct prb_region text_region;
++	char		*text;
+ };
+ 
++static bool add_overflow_u64(uint64_t a, uint64_t b, uint64_t *sum)
++{
++	if (a > UINT64_MAX - b)
++		return true;
++	*sum = a + b;
++	return false;
++}
++
++static bool mul_overflow_u64(uint64_t a, uint64_t b, uint64_t *product)
++{
++	if (a && b > UINT64_MAX / a)
++		return true;
++	*product = a * b;
++	return false;
++}
++
++static void validate_prb_field(const char *name, uint64_t struct_size,
++			       uint64_t offset, uint64_t field_size)
++{
++	if (offset > struct_size || field_size > struct_size - offset) {
++		fprintf(stderr,
++			"Invalid %s offset or size in VMCOREINFO\n", name);
++		exit(PRB_BAD_DATA_EXIT);
++	}
++}
++
++static void validate_prb_nested_field(const char *name, uint64_t struct_size,
++				      uint64_t outer_offset,
++				      uint64_t inner_offset,
++				      uint64_t field_size)
++{
++	uint64_t offset;
++
++	if (add_overflow_u64(outer_offset, inner_offset, &offset)) {
++		fprintf(stderr,
++			"Invalid %s offset or size in VMCOREINFO\n", name);
++		exit(PRB_BAD_DATA_EXIT);
++	}
++	validate_prb_field(name, struct_size, offset, field_size);
++}
++
++static void read_exact(int fd, void *buf, size_t size, uint64_t offset,
++		       const char *name)
++{
++	size_t done = 0;
++
++	if (offset > INT64_MAX || size > INT64_MAX - offset) {
++		fprintf(stderr, "Invalid file range for %s\n", name);
++		exit(PRB_BAD_DATA_EXIT);
++	}
++
++	while (done < size) {
++		ssize_t ret;
++
++		ret = pread(fd, (char *)buf + done, size - done,
++			    (off_t)(offset + done));
++		if (ret < 0 && errno == EINTR)
++			continue;
++		if (ret < 0) {
++			fprintf(stderr, "Failed to read %s: %s\n",
++				name, strerror(errno));
++			exit(65);
++		}
++		if (!ret) {
++			fprintf(stderr, "Short read while reading %s\n", name);
++			exit(65);
++		}
++		done += ret;
++	}
++}
++
++static void prb_region_init(struct prb_region *region, const char *name,
++			    uint64_t file_offset, uint64_t size)
++{
++	uint64_t end;
++
++	if (!size || file_offset > INT64_MAX ||
++	    add_overflow_u64(file_offset, size, &end) ||
++	    end > INT64_MAX) {
++		fprintf(stderr, "Invalid %s ring range\n", name);
++		exit(PRB_BAD_DATA_EXIT);
++	}
++
++	region->name = name;
++	region->file_offset = file_offset;
++	region->size = size;
++}
++
++static void prb_region_read(int fd, struct prb_region *region,
++			    uint64_t offset, void *buf, size_t size)
++{
++	uint64_t file_offset;
++
++	if (offset > region->size || size > region->size - offset) {
++		fprintf(stderr, "Invalid read outside %s ring\n", region->name);
++		exit(PRB_BAD_DATA_EXIT);
++	}
++	if (add_overflow_u64(region->file_offset, offset, &file_offset)) {
++		fprintf(stderr, "Invalid %s read offset\n", region->name);
++		exit(PRB_BAD_DATA_EXIT);
++	}
++	read_exact(fd, buf, size, file_offset, region->name);
++}
++
+ /*
+  * desc_state and DESC_* definitions taken from kernel source:
+  *
+@@ -995,7 +1107,7 @@ enum desc_state {
+ 
+ #define DESC32_SV_BITS		(sizeof(uint32_t) * 8)
+ #define DESC32_FLAGS_SHIFT	(DESC32_SV_BITS - 2)
+-#define DESC32_FLAGS_MASK	(3UL << DESC32_FLAGS_SHIFT)
++#define DESC32_FLAGS_MASK	(3U << DESC32_FLAGS_SHIFT)
+ #define DESC32_STATE(sv)	(3UL & (sv >> DESC32_FLAGS_SHIFT))
+ #define DESC32_ID_MASK		(~DESC32_FLAGS_MASK)
+ #define DESC32_ID(sv)		((sv) & DESC32_ID_MASK)
+@@ -1009,8 +1121,7 @@ enum desc_state {
+  */
+ 
+ /* Query the state of a descriptor. */
+-static enum desc_state get_desc_state(unsigned long id,
+-				      uint64_t state_val)
++static enum desc_state get_desc_state(uint64_t id, uint64_t state_val)
+ {
+ 	if (id != DESC_ID(state_val))
+ 		return desc_miss;
+@@ -1018,8 +1129,7 @@ static enum desc_state get_desc_state(unsigned long id,
+ 	return DESC_STATE(state_val);
+ }
+ 
+-static enum desc_state get_desc32_state(unsigned long id,
+-					uint64_t state_val)
++static enum desc_state get_desc32_state(uint64_t id, uint64_t state_val)
+ {
+ 	if (id != DESC32_ID(state_val))
+ 		return desc_miss;
+@@ -1027,7 +1137,7 @@ static enum desc_state get_desc32_state(unsigned long id,
+ 	return DESC32_STATE(state_val);
+ }
+ 
+-static bool record_committed(unsigned long id, uint64_t state_var)
++static bool record_committed(uint64_t id, uint64_t state_var)
+ {
+ 	enum desc_state state;
+ 
+@@ -1061,7 +1171,7 @@ static uint64_t sizeof_ulong(void)
+ 	return (machine_pointer_bits() >> 3);
+ }
+ 
+-static void dump_record(struct prb_map *m, unsigned long id,
++static void dump_record(int fd, struct prb_map *m, uint64_t id,
+ 			void (*handler)(char*, unsigned int))
+ {
+ #define OUT_BUF_SIZE	4096
+@@ -1074,57 +1184,75 @@ static void dump_record(struct prb_map *m, unsigned long id,
+ 	uint64_t ts_nsec;
+ 	uint64_t begin;
+ 	uint64_t next;
+-	char *info;
+-	char *text;
+-	char *desc;
+-	int i;
+-
+-	desc = m->descs + ((id % m->desc_ring_count) * prb_desc_sz);
+-	info = m->infos + ((id % m->desc_ring_count) * printk_info_sz);
++	uint64_t desc_offset;
++	uint64_t info_offset;
++	uint64_t slot;
++	size_t i;
++
++	slot = id % m->desc_ring_count;
++	if (mul_overflow_u64(slot, prb_desc_sz, &desc_offset) ||
++	    mul_overflow_u64(slot, printk_info_sz, &info_offset)) {
++		fprintf(stderr, "Invalid printk ring record offset\n");
++		exit(PRB_BAD_DATA_EXIT);
++	}
++	prb_region_read(fd, &m->desc_region, desc_offset, m->desc,
++			prb_desc_sz);
+ 
+ 	/* skip non-committed record */
+-	state_var = get_ulong(desc + prb_desc_state_var_offset +
+-					atomic_long_t_counter_offset);
++	state_var = get_ulong(m->desc + prb_desc_state_var_offset +
++						atomic_long_t_counter_offset);
+ 	if (!record_committed(id, state_var))
+ 		return;
+ 
+-	begin = get_ulong(desc + prb_desc_text_blk_lpos_offset +
++	prb_region_read(fd, &m->info_region, info_offset, m->info,
++			printk_info_sz);
++
++	begin = get_ulong(m->desc + prb_desc_text_blk_lpos_offset +
+ 			  prb_data_blk_lpos_begin_offset) %
+ 		m->text_data_ring_size;
+-	next = get_ulong(desc + prb_desc_text_blk_lpos_offset +
++	next = get_ulong(m->desc + prb_desc_text_blk_lpos_offset +
+ 			 prb_data_blk_lpos_next_offset) %
+ 	       m->text_data_ring_size;
+ 
+-	ts_nsec = struct_val_u64(info, printk_info_ts_nsec_offset);
+-	imaxdiv_sec = imaxdiv(ts_nsec, 1000000000);
+-	imaxdiv_usec = imaxdiv(imaxdiv_sec.rem, 1000);
+-
+-	offset += sprintf(out_buf + offset, "[%5llu.%06llu] ",
+-		(long long unsigned int)imaxdiv_sec.quot,
+-		(long long unsigned int)imaxdiv_usec.quot);
+-
+ 	/* skip data-less text blocks */
+-	if (begin == next)
+-		goto out;
++	if (begin == next) {
++		len = 0;
++	} else {
++		len = struct_val_u16(m->info, printk_info_text_len_offset);
+ 
+-	len = struct_val_u16(info, printk_info_text_len_offset);
++		/* handle wrapping data block */
++		if (begin > next)
++			begin = 0;
+ 
+-	/* handle wrapping data block */
+-	if (begin > next)
+-		begin = 0;
++		/* skip over descriptor ID */
++		if (begin > UINT64_MAX - sizeof_ulong()) {
++			fprintf(stderr, "Invalid printk text block position\n");
++			exit(PRB_BAD_DATA_EXIT);
++		}
++		begin += sizeof_ulong();
++		if (begin > next) {
++			fprintf(stderr, "Invalid printk text block range\n");
++			exit(PRB_BAD_DATA_EXIT);
++		}
+ 
+-	/* skip over descriptor ID */
+-	begin += sizeof_ulong();
++		/* handle truncated messages */
++		if (next - begin < len)
++			len = next - begin;
+ 
+-	/* handle truncated messages */
+-	if (next - begin < len)
+-		len = next - begin;
++		prb_region_read(fd, &m->text_region, begin, m->text, len);
++	}
+ 
+-	text = m->text_data + begin;
++	ts_nsec = struct_val_u64(m->info, printk_info_ts_nsec_offset);
++	imaxdiv_sec = imaxdiv(ts_nsec, 1000000000);
++	imaxdiv_usec = imaxdiv(imaxdiv_sec.rem, 1000);
++
++	offset += sprintf(out_buf + offset, "[%5llu.%06llu] ",
++		(unsigned long long)imaxdiv_sec.quot,
++		(unsigned long long)imaxdiv_usec.quot);
+ 
+ 	/* escape non-printable characters */
+ 	for (i = 0; i < len; i++) {
+-		unsigned char c = text[i];
++		unsigned char c = m->text[i];
+ 
+ 		if (!isprint(c) && !isspace(c))
+ 			offset += sprintf(out_buf + offset, "\\x%02x", c);
+@@ -1137,7 +1265,6 @@ static void dump_record(struct prb_map *m, unsigned long id,
+ 			offset = 0;
+ 		}
+ 	}
+-out:
+ 	out_buf[offset++] = '\n';
+ 
+ 	if (offset && handler)
+@@ -1150,102 +1277,179 @@ out:
+ static void dump_dmesg_lockless(int fd, void (*handler)(char*, unsigned int))
+ {
+ 	struct prb_map m;
++	char *prb;
++	char *desc_ring;
++	char *text_data_ring;
++	uint64_t desc_region_size;
++	uint64_t info_region_size;
++	uint64_t id_mask;
++	uint64_t record_count;
+ 	uint64_t head_id;
+ 	uint64_t tail_id;
+ 	uint64_t kaddr;
+ 	uint64_t id;
+-	int ret;
++	uint64_t count_bits;
++	uint64_t size_bits;
++	uint64_t word_size;
+ 
+ 	/* setup printk_ringbuffer */
++	memset(&m, 0, sizeof(m));
+ 	kaddr = read_file_pointer(fd, vaddr_to_offset(prb_vaddr));
+-	m.prb = calloc(1, printk_ringbuffer_sz);
+-	if (!m.prb) {
++	if (!kaddr || !printk_ringbuffer_sz ||
++	    printk_ringbuffer_sz > PRB_MAX_STRUCT_SIZE ||
++	    !prb_desc_sz || prb_desc_sz > PRB_MAX_STRUCT_SIZE ||
++	    !printk_info_sz || printk_info_sz > PRB_MAX_STRUCT_SIZE) {
++		fprintf(stderr, "Invalid printk ring metadata\n");
++		exit(PRB_BAD_DATA_EXIT);
++	}
++	prb = calloc(1, printk_ringbuffer_sz);
++	if (!prb) {
+ 		fprintf(stderr, "Failed to malloc %zu bytes for prb: %s\n",
+ 			printk_ringbuffer_sz, strerror(errno));
+ 		exit(64);
+ 	}
+-	ret = pread(fd, m.prb, printk_ringbuffer_sz, vaddr_to_offset(kaddr));
+-	if (ret != printk_ringbuffer_sz) {
+-		fprintf(stderr, "Failed to read prb of size %zu bytes: %s\n",
+-			printk_ringbuffer_sz, strerror(errno));
+-		exit(65);
+-	}
++	read_exact(fd, prb, printk_ringbuffer_sz, vaddr_to_offset(kaddr),
++		   "printk ringbuffer");
++
++	word_size = sizeof_ulong();
++	validate_prb_field("printk_ringbuffer.desc_ring",
++			   printk_ringbuffer_sz,
++			   printk_ringbuffer_desc_ring_offset, 1);
++	validate_prb_field("prb_desc_ring.count_bits",
++			   printk_ringbuffer_sz -
++			   printk_ringbuffer_desc_ring_offset,
++			   prb_desc_ring_count_bits_offset, sizeof(uint32_t));
++	validate_prb_field("prb_desc_ring.descs",
++			   printk_ringbuffer_sz -
++			   printk_ringbuffer_desc_ring_offset,
++			   prb_desc_ring_descs_offset, word_size);
++	validate_prb_field("prb_desc_ring.infos",
++			   printk_ringbuffer_sz -
++			   printk_ringbuffer_desc_ring_offset,
++			   prb_desc_ring_infos_offset, word_size);
++	validate_prb_nested_field("prb_desc_ring.head_id",
++				  printk_ringbuffer_sz -
++				  printk_ringbuffer_desc_ring_offset,
++				  prb_desc_ring_head_id_offset,
++				  atomic_long_t_counter_offset, word_size);
++	validate_prb_nested_field("prb_desc_ring.tail_id",
++				  printk_ringbuffer_sz -
++				  printk_ringbuffer_desc_ring_offset,
++				  prb_desc_ring_tail_id_offset,
++				  atomic_long_t_counter_offset, word_size);
++	validate_prb_field("printk_ringbuffer.text_data_ring",
++			   printk_ringbuffer_sz,
++			   printk_ringbuffer_text_data_ring_offset, 1);
++	validate_prb_field("prb_data_ring.size_bits",
++			   printk_ringbuffer_sz -
++			   printk_ringbuffer_text_data_ring_offset,
++			   prb_data_ring_size_bits_offset, sizeof(uint32_t));
++	validate_prb_field("prb_data_ring.data",
++			   printk_ringbuffer_sz -
++			   printk_ringbuffer_text_data_ring_offset,
++			   prb_data_ring_data_offset, word_size);
++	validate_prb_nested_field("prb_desc.state_var", prb_desc_sz,
++				  prb_desc_state_var_offset,
++				  atomic_long_t_counter_offset, word_size);
++	validate_prb_nested_field("prb_desc.text_blk_lpos.begin", prb_desc_sz,
++				  prb_desc_text_blk_lpos_offset,
++				  prb_data_blk_lpos_begin_offset, word_size);
++	validate_prb_nested_field("prb_desc.text_blk_lpos.next", prb_desc_sz,
++				  prb_desc_text_blk_lpos_offset,
++				  prb_data_blk_lpos_next_offset, word_size);
++	validate_prb_field("printk_info.ts_nsec", printk_info_sz,
++			   printk_info_ts_nsec_offset, sizeof(uint64_t));
++	validate_prb_field("printk_info.text_len", printk_info_sz,
++			   printk_info_text_len_offset, sizeof(uint16_t));
+ 
+ 	/* setup descriptor ring */
+-	m.desc_ring = m.prb + printk_ringbuffer_desc_ring_offset;
+-	m.desc_ring_count = 1 << struct_val_u32(m.desc_ring,
+-					prb_desc_ring_count_bits_offset);
+-	kaddr = get_ulong(m.desc_ring + prb_desc_ring_descs_offset);
+-	m.descs = calloc(1, prb_desc_sz * m.desc_ring_count);
+-	if (!m.descs) {
+-		fprintf(stderr, "Failed to malloc %lu bytes for descs: %s\n",
+-			prb_desc_sz * m.desc_ring_count, strerror(errno));
+-		exit(64);
++	desc_ring = prb + printk_ringbuffer_desc_ring_offset;
++	count_bits = struct_val_u32(desc_ring,
++				    prb_desc_ring_count_bits_offset);
++	if (count_bits >= machine_pointer_bits() - 2) {
++		fprintf(stderr, "Invalid printk descriptor count bits: %llu\n",
++			(unsigned long long)count_bits);
++		exit(PRB_BAD_DATA_EXIT);
+ 	}
+-	ret = pread(fd, m.descs, prb_desc_sz * m.desc_ring_count,
+-		    vaddr_to_offset(kaddr));
+-	if (ret != prb_desc_sz * m.desc_ring_count) {
+-		fprintf(stderr,
+-			"Failed to read descs of size %lu bytes: %s\n",
+-			prb_desc_sz * m.desc_ring_count, strerror(errno));
+-		exit(65);
++	m.desc_ring_count = 1ULL << count_bits;
++	if (mul_overflow_u64(prb_desc_sz, m.desc_ring_count,
++			     &desc_region_size) ||
++	    mul_overflow_u64(printk_info_sz, m.desc_ring_count,
++			     &info_region_size)) {
++		fprintf(stderr, "Invalid printk descriptor ring size\n");
++		exit(PRB_BAD_DATA_EXIT);
++	}
++	kaddr = get_ulong(desc_ring + prb_desc_ring_descs_offset);
++	if (!kaddr) {
++		fprintf(stderr, "Invalid printk descriptor ring address\n");
++		exit(PRB_BAD_DATA_EXIT);
+ 	}
++	prb_region_init(&m.desc_region, "printk descriptors",
++			vaddr_to_offset(kaddr), desc_region_size);
+ 
+ 	/* setup info ring */
+-	kaddr = get_ulong(m.prb + prb_desc_ring_infos_offset);
+-	m.infos = calloc(1, printk_info_sz * m.desc_ring_count);
+-	if (!m.infos) {
+-		fprintf(stderr, "Failed to malloc %lu bytes for infos: %s\n",
+-			printk_info_sz * m.desc_ring_count, strerror(errno));
+-		exit(64);
+-	}
+-	ret = pread(fd, m.infos, printk_info_sz * m.desc_ring_count,
+-		    vaddr_to_offset(kaddr));
+-	if (ret != printk_info_sz * m.desc_ring_count) {
+-		fprintf(stderr,
+-			"Failed to read infos of size %lu bytes: %s\n",
+-			printk_info_sz * m.desc_ring_count, strerror(errno));
+-		exit(65);
++	kaddr = get_ulong(desc_ring + prb_desc_ring_infos_offset);
++	if (!kaddr) {
++		fprintf(stderr, "Invalid printk info ring address\n");
++		exit(PRB_BAD_DATA_EXIT);
+ 	}
++	prb_region_init(&m.info_region, "printk infos",
++			vaddr_to_offset(kaddr), info_region_size);
+ 
+ 	/* setup text data ring */
+-	m.text_data_ring = m.prb + printk_ringbuffer_text_data_ring_offset;
+-	m.text_data_ring_size = 1 << struct_val_u32(m.text_data_ring,
+-					prb_data_ring_size_bits_offset);
+-	kaddr = get_ulong(m.text_data_ring + prb_data_ring_data_offset);
+-	m.text_data = calloc(1, m.text_data_ring_size);
+-	if (!m.text_data) {
+-		fprintf(stderr,
+-			"Failed to malloc %lu bytes for text_data: %s\n",
+-			m.text_data_ring_size, strerror(errno));
+-		exit(64);
++	text_data_ring = prb + printk_ringbuffer_text_data_ring_offset;
++	size_bits = struct_val_u32(text_data_ring,
++				   prb_data_ring_size_bits_offset);
++	if (size_bits >= machine_pointer_bits()) {
++		fprintf(stderr, "Invalid printk text data size bits: %llu\n",
++			(unsigned long long)size_bits);
++		exit(PRB_BAD_DATA_EXIT);
+ 	}
+-	ret = pread(fd, m.text_data, m.text_data_ring_size,
+-		    vaddr_to_offset(kaddr));
+-	if (ret != m.text_data_ring_size) {
+-		fprintf(stderr,
+-			"Failed to read text_data of size %lu bytes: %s\n",
+-			m.text_data_ring_size, strerror(errno));
+-		exit(65);
++	m.text_data_ring_size = 1ULL << size_bits;
++	kaddr = get_ulong(text_data_ring + prb_data_ring_data_offset);
++	if (!kaddr) {
++		fprintf(stderr, "Invalid printk text data ring address\n");
++		exit(PRB_BAD_DATA_EXIT);
++	}
++	prb_region_init(&m.text_region, "printk text data",
++			vaddr_to_offset(kaddr), m.text_data_ring_size);
++
++	m.desc = malloc(prb_desc_sz);
++	m.info = malloc(printk_info_sz);
++	m.text = malloc(UINT16_MAX);
++	if (!m.desc || !m.info || !m.text) {
++		fprintf(stderr, "Failed to allocate printk record buffers: %s\n",
++			strerror(errno));
++		exit(64);
+ 	}
+ 
+ 	/* ready to go */
+ 
+-	tail_id = get_ulong(m.desc_ring + prb_desc_ring_tail_id_offset +
++	tail_id = get_ulong(desc_ring + prb_desc_ring_tail_id_offset +
+ 						atomic_long_t_counter_offset);
+-	head_id = get_ulong(m.desc_ring + prb_desc_ring_head_id_offset +
++	head_id = get_ulong(desc_ring + prb_desc_ring_head_id_offset +
+ 						atomic_long_t_counter_offset);
++	free(prb);
++	id_mask = machine_pointer_bits() == 32 ? DESC32_ID_MASK : DESC_ID_MASK;
++	if ((tail_id & ~id_mask) || (head_id & ~id_mask)) {
++		fprintf(stderr, "Invalid printk descriptor head or tail ID\n");
++		exit(PRB_BAD_DATA_EXIT);
++	}
+ 
+-	for (id = tail_id; id != head_id; id = id_inc(id))
+-		dump_record(&m, id, handler);
+-
+-	/* dump head record */
+-	dump_record(&m, id, handler);
++	for (id = tail_id, record_count = 0; ; id = id_inc(id)) {
++		if (record_count++ >= m.desc_ring_count) {
++			fprintf(stderr,
++				"Printk descriptor head/tail span exceeds ring size\n");
++			exit(PRB_BAD_DATA_EXIT);
++		}
++		dump_record(fd, &m, id, handler);
++		if (id == head_id)
++			break;
++	}
+ 
+-	free(m.text_data);
+-	free(m.infos);
+-	free(m.descs);
+-	free(m.prb);
++	free(m.text);
++	free(m.info);
++	free(m.desc);
+ }
+ 
+ void dump_dmesg(int fd, void (*handler)(char*, unsigned int))
+
+---
+base-commit: 29898e149feb5c615b3ab6313260d58315bf1d8d
+change-id: 20260728-vmcore-dmesg-stream-upstream-7da695989f95
+
+Best regards,
+-- 
+Serapheim Dimitropoulos <sdimitropoulos@coreweave.com>
+
 
