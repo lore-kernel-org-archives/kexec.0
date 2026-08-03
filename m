@@ -4,88 +4,186 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D19F0C5DF83
-	for <kexec@archiver.kernel.org>; Sat, 15 Aug 2026 07:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2E5CEC5DF6E
+	for <kexec@archiver.kernel.org>; Sat, 15 Aug 2026 07:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=u/3+3WmAyBCxJj1hXY/2UJ7mv0ILXHI87iQztv7VJmk=; b=S7iusBppuDotGW5mlq0KNdqHM+
-	0nXyquY9trs8sV9qPovtj7ntX7mqsXxZ1uR47aSsK7+yizT/1JjgLszEGyjvhqc55YY/GR+hJqjNY
-	3Kuk/rOLfxcMW+PyBP21t8igx62Nul1c6rcRJwDf2ZWfrI9sUevGdzsTRioCtqyYazK0zGe206nfV
-	hZ6BATkGUUwfJrxsKJLyZzBm32DbZJf2xLUpYuLCW2sdnW+4EqklJiTWLKxRUTtZQfXk5JKOTzBOz
-	kM+JVeTZ2qM4Efm0VWMOgT3KSamNt7NKjumilDpPg3Id9z8ZgHatVzkdGteyztdG+zHZIvwjWl8dS
-	cMLCw4xQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	References:From:To:Cc:Subject:Message-Id:Date:Content-Type:
+	Content-Transfer-Encoding:Reply-To:Content-ID:Content-Description:Resent-Date
+	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=eRjbsBRIUTAFpugKKLOjSbZ6YnFTaZPMTTSy9l9apTE=; b=4W9hXRsnibpbNTtSEncUIyegYB
+	jK1wKCEiYGyJjocR28UK6Okb2iheOXpXqT7y5s0QrXhkSWwA/i+daUHLXZfsVIhsjsTNmKhBohFtH
+	l3jkNWZe7dY7dUDYL73n/IIAEyo2bBby43WngOhvDOMjbBvkGOZ2t0obZpdaf3/NxLqOx+cNFkaFT
+	pQqL5NyPG3x7rroGOEL5S5TqX24EtSUq0OtL95eNDF0ADKzj9y8K+oUxarCmQmcLgGylT/R3dgptS
+	YXPp0MQQPgPtGPFTnBFK7md+JZs4F98hIKjfpFKRoJ9koMSuSw+UUvaAvbT9WirF0XBqq0jjcAS09
+	rndA+wGg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wv95M-00000003cyg-1K5I;
-	Sat, 15 Aug 2026 07:45:44 +0000
-Received: from canpmsgout07.his.huawei.com ([113.46.200.222])
+	id 1wv95X-00000003dFe-3kyh;
+	Sat, 15 Aug 2026 07:45:55 +0000
+Received: from mail-westus3azlp170100009.outbound.protection.outlook.com ([2a01:111:f403:c107::9] helo=PH7PR06CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1we8bD-0000000EEd4-2f9a;
-	Mon, 29 Jun 2026 09:48:21 +0000
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=u/3+3WmAyBCxJj1hXY/2UJ7mv0ILXHI87iQztv7VJmk=;
-	b=c+1ykNIKEcttl9rsWOhf3KGhszIQPHyR7u28Cchxm0JpfPnJDFUdBFhKmPBJnjP8o/WQW+I8z
-	5O1ONH0OfVfIe+WtV4VQJvjyVHAxaw6YwWydZ4ZlYHyqID1vcv1YjRJ9qJPSiT15yQEliXf/Iwz
-	irw6wy7sb89jLE6PXhHTxWI=
-Received: from mail.maildlp.com (unknown [172.19.162.92])
-	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4gph796cZMzLlYd;
-	Mon, 29 Jun 2026 17:39:01 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5D7184058A;
-	Mon, 29 Jun 2026 17:48:10 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
- (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 29 Jun
- 2026 17:48:07 +0800
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-To: <corbet@lwn.net>, <skhan@linuxfoundation.org>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <chenhuacai@kernel.org>, <kernel@xen0n.name>,
-	<maddy@linux.ibm.com>, <mpe@ellerman.id.au>, <npiggin@gmail.com>,
-	<chleroy@kernel.org>, <pjw@kernel.org>, <palmer@dabbelt.com>,
-	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <robh@kernel.org>, <saravanak@kernel.org>,
-	<akpm@linux-foundation.org>, <baoquan.he@linux.dev>, <rppt@kernel.org>,
-	<pasha.tatashin@soleen.com>, <pratyush@kernel.org>, <ruirui.yang@linux.dev>,
-	<rdunlap@infradead.org>, <peterz@infradead.org>,
-	<feng.tang@linux.alibaba.com>, <dapeng1.mi@linux.intel.com>,
-	<elver@google.com>, <enelsonmoore@gmail.com>, <kuba@kernel.org>,
-	<ebiggers@kernel.org>, <lirongqing@baidu.com>, <leitao@debian.org>,
-	<kees@kernel.org>, <coxu@redhat.com>, <cfsworks@gmail.com>, <jbohac@suse.cz>,
-	<osandov@fb.com>, <ryan.roberts@arm.com>, <tangyouling@kylinos.cn>,
-	<sourabhjain@linux.ibm.com>, <ritesh.list@gmail.com>, <gaohan@iscas.ac.cn>,
-	<david@kernel.org>, <wangruikang@iscas.ac.cn>, <muchun.song@linux.dev>,
-	<vishal.moola@gmail.com>, <junhui.liu@pigmoral.tech>, <guoren@kernel.org>,
-	<namcao@linutronix.de>, <rick.p.edgecombe@intel.com>, <djbw@kernel.org>,
-	<liaoyuanhong@vivo.com>, <fuqiang.wang@easystack.cn>,
-	<vishal.l.verma@intel.com>, <chenjiahao16@huawei.com>, <x86@kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <kexec@lists.infradead.org>
-CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v17 09/10] arm64: kexec_file: Add support for crashkernel CMA reservation
-Date: Mon, 29 Jun 2026 17:47:45 +0800
-Message-ID: <20260629094746.191843-10-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260629094746.191843-1-ruanjinjie@huawei.com>
-References: <20260629094746.191843-1-ruanjinjie@huawei.com>
+	id 1wqxAM-00000000LmL-0n49;
+	Mon, 03 Aug 2026 18:13:35 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WD6ZOUp+WnBpKUL/Z/T7kHJS3gdbMiHPaDWLnG+FW2Ughc5kivpbHAl9m7v4kZtUlwne3dtTcxUKM7WrJyBjIzNunVwJE8YCw5xf460FYDTOx6lI06pdu9THT47XqNLtDLCdzux8qTLf/nbRDsOOv/8gNbNU4E2T2QAuULs2fA5qQHbM4xHgZv2o0OOWsIgB9IrcShazm0DicLCB2r0EQKH4D6YFHM6X6V09ySI5OEc6n7D3GLeeZQVOXqxWW+VbyMV7HL3rN70ZTujV0k0q4aAXFKUkqMGPn1t6bGDJN5lRp550zxCce4yQxpsqpaiJjD8UiJnfV95Vbq8C+ISS6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eRjbsBRIUTAFpugKKLOjSbZ6YnFTaZPMTTSy9l9apTE=;
+ b=axI4QwD0gDNm37sbZwPepJqFwCIiAQLsRb16JqMJC18kzIbTrEGCymZhb+s+VT3do6EhX/NunZoNzoqNMzdrVPiKGAHzZxXxgE3R9xuo+1Gti7a03F9fRjGK5P50Lt8AxaBXztxd5r9zFCY/UqUcakRm4oUcNJdIAnG/3xc01xoOvlR1WiMD7tpFinSy/n/j8hqvWefCeMnzCgHYzYcPJ8uU/jJoPnMGHd/+YZPkn0JJ2U3O95hflOwGfyepG+2jZsgsMfbSa132CavPOtTL6zLMDpd6I+fzR/hlKcTK94MwK5Xl/bUCYD9mr9kjrEYXGsa4Ph7cigPFSjEaaRhp/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eRjbsBRIUTAFpugKKLOjSbZ6YnFTaZPMTTSy9l9apTE=;
+ b=gxRy5BNSr6u+YqAfadGamez0ES69ulGmVjdQ7wL80choytSsnxQAlwikJcKnY7d7Uw564V87JyMSSqEMqm6I3eyQ8hHwQgGFREoi4hLHlGzS9JCT9FEDSrgt5yoHWS9vKZEID6DWzvgO/uM68mWZ19n7kvMB+gzmij0pdwS5RPmRbSJIRi0JMJdUya8s9PYMz1a0gliFwwRvb7ymFruUVGm7IrQhIxbKxZt2k3pI13FRQ2A68aYiDbfeVVWpfh3Mmt76rm/50mIM4i03A/9AFOI/h98bANBM9Ic5xWGJvoXq7pwmi/JlRG0WcTtM7QctGHIP3ZNoYVG8sNcqXB0SMA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
+ by PH7PR12MB6935.namprd12.prod.outlook.com (2603:10b6:510:1b9::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.18; Mon, 3 Aug
+ 2026 18:13:18 +0000
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16%5]) with mapi id 15.21.0270.017; Mon, 3 Aug 2026
+ 18:13:18 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 03 Aug 2026 14:13:13 -0400
+Message-Id: <DKFIGJBRSDB1.O204NIB7HZMR@nvidia.com>
+Subject: Re: [PATCH RFC 00/14] Remove PG_private by using
+ page/folio->private checks instead
+Cc: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, "Minchan Kim"
+ <minchan@kernel.org>, "Sergey Senozhatsky" <senozhatsky@chromium.org>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>,
+ "Arnaldo Carvalho de Melo" <acme@kernel.org>, "Namhyung Kim"
+ <namhyung@kernel.org>, "Thomas Gleixner" <tglx@kernel.org>, "Borislav
+ Petkov" <bp@alien8.de>, "Dave Hansen" <dave.hansen@linux.intel.com>,
+ <x86@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>, "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>, "Jiri Olsa"
+ <jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>, "Adrian Hunter"
+ <adrian.hunter@intel.com>, "James Clark" <james.clark@linaro.org>, "H.
+ Peter Anvin" <hpa@zytor.com>, <linux-perf-users@vger.kernel.org>, "Stefano
+ Stabellini" <sstabellini@kernel.org>, "Oleksandr Tyshchenko"
+ <oleksandr_tyshchenko@epam.com>, <xen-devel@lists.xenproject.org>, "Eric
+ Biggers" <ebiggers@kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>,
+ "Jaegeuk Kim" <jaegeuk@kernel.org>, <linux-fscrypt@vger.kernel.org>, "Oscar
+ Salvador" <osalvador@suse.de>, "Chao Yu" <chao@kernel.org>,
+ <linux-f2fs-devel@lists.sourceforge.net>, "Gao Xiang" <xiang@kernel.org>,
+ "Jan Kara" <jack@suse.cz>, "Yue Hu" <zbestahu@gmail.com>, "Jeffle Xu"
+ <jefflexu@linux.alibaba.com>, "Sandeep Dhavale" <dhavale@google.com>,
+ "Hongbo Li" <hongbohbli@tencent.com>, "Chunhai Guo" <guochunhai@vivo.com>,
+ <linux-erofs@lists.ozlabs.org>, <linux-fsdevel@vger.kernel.org>, "Steven
+ Rostedt" <rostedt@goodmis.org>, "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "Matthew Brost"
+ <matthew.brost@intel.com>, "Joshua Hahn" <joshua.hahnjy@gmail.com>, "Rakie
+ Kim" <rakie.kim@sk.com>, "Byungchul Park" <byungchul@sk.com>, "Axel
+ Rasmussen" <axelrasmussen@google.com>, "Yuanchu Xie" <yuanchu@google.com>,
+ "Wei Xu" <weixugc@google.com>, <linux-trace-kernel@vger.kernel.org>, "Trond
+ Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ <linux-nfs@vger.kernel.org>, "Song Liu" <song@kernel.org>, "Yu Kuai"
+ <yukuai@fygo.io>, "Ilya Dryomov" <idryomov@gmail.com>, "Alex Markuze"
+ <amarkuze@redhat.com>, "Viacheslav Dubeyko" <slava@dubeyko.com>, "Li Nan"
+ <magiclinan@didiglobal.com>, "Xiao Ni" <xiao@kernel.org>,
+ <linux-raid@vger.kernel.org>, <ceph-devel@vger.kernel.org>, "Richard
+ Weinberger" <richard@nod.at>, "Zhihao Cheng" <chengzhihao1@huawei.com>,
+ <linux-mtd@lists.infradead.org>, "Baoquan He" <baoquan.he@linux.dev>,
+ "Pasha Tatashin" <pasha.tatashin@soleen.com>, "Pratyush Yadav"
+ <pratyush@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>, "Dave Young"
+ <ruirui.yang@linux.dev>, "Shuah Khan" <skhan@linuxfoundation.org>,
+ <kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>
+To: =?utf-8?q?J=C3=BCrgen_Gro=C3=9F?= <jgross@suse.com>, "David Hildenbrand"
+ <david@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>, "Muchun Song"
+ <muchun.song@linux.dev>, "Lorenzo Stoakes" <ljs@kernel.org>, "Liam R.
+ Howlett" <liam@infradead.org>, "Vlastimil Babka" <vbabka@kernel.org>, "Mike
+ Rapoport" <rppt@kernel.org>, "Suren Baghdasaryan" <surenb@google.com>,
+ "Michal Hocko" <mhocko@suse.com>, "Baolin Wang"
+ <baolin.wang@linux.alibaba.com>, "Nico Pache" <nico.pache@linux.dev>, "Ryan
+ Roberts" <ryan.roberts@arm.com>, "Dev Jain" <dev.jain@arm.com>, "Barry
+ Song" <baohua@kernel.org>, "Lance Yang" <lance.yang@linux.dev>, "Usama
+ Arif" <usama.arif@linux.dev>, "Gregory Price" <gourry@gourry.net>, "Ying
+ Huang" <ying.huang@linux.alibaba.com>, "Alistair Popple"
+ <apopple@nvidia.com>, "Johannes Weiner" <hannes@cmpxchg.org>, "Qi Zheng"
+ <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Kairui
+ Song" <kasong@tencent.com>
+From: "Zi Yan" <ziy@nvidia.com>
+X-Mailer: aerc 0.21.0
+References: <20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com>
+ <5ca4d0e4-1747-45a7-a916-a7516bb1692b@suse.com>
+In-Reply-To: <5ca4d0e4-1747-45a7-a916-a7516bb1692b@suse.com>
+X-ClientProxiedBy: BN1PR13CA0008.namprd13.prod.outlook.com
+ (2603:10b6:408:e2::13) To IA0PR12MB8374.namprd12.prod.outlook.com
+ (2603:10b6:208:40e::7)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|PH7PR12MB6935:EE_
+X-MS-Office365-Filtering-Correlation-Id: 22480e3c-b594-45b3-2d38-08def18ae4af
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|23010399003|1800799024|7416014|376014|56012099006|10067099003|11063799006|4143699003|22082099003|18002099003|921020;
+X-Microsoft-Antispam-Message-Info: FGtzsi0Ff3pxghP3lc/P1ddrXZKj3w8+yJGJxor6kKDLvhXg+qE0BqULU2Yo4OHklIfrWOBiiWaCcUZnd8ysXvfpjMQVyqBTVvH/b0Q17IDGUvQ8gt4J4mT1pT8nL+gY1FWLJGaajKiB9bLXL2OjTnlzpUnhjYKRFUTTC7RGTKyqFnabJILfF0z8AU4m783vOuMWi1tH6BS67AbjJ4dVCwGPtnKldp5SDaCm2TxXxeP2ZK6wfMDiS18Gr47k19fmlmm0ZUGj0jp67G22umHBdhIuM/sszkroYKwIza/1o1owYO9aVUG8Kv5LLxa3I2WUu8Ak6QcEoCd3A2d3jHYGJW/+RNZgWm8LAjH1uSwDiuMBOFm3gYnB13ZB1YWOVqPwQNKUBqw2XePEUHqKE4fOH9Olf52EBU/o/jip+pXcqLAnmKr38c1u8C6/5d3be9P/UcA7qVZ6LQVHh1HhK+V2a0F4TWz2ERZK7VcaT0nO+9jiux83RgoLv9ibtvBSCrNZX0SkURZ0XZaQ0oYH8g5uGiBx9GzWnhS4/uZIqjBS3kSthtIogVRo5UtaDQmHcm2QBw0H8x81CRrgqFRLK1h46fKWbpTQB7QQyeITnN19I+9mhcOVt1PKHVji0hhO+J6TgRKcsFzS5/DlUr/Fqyiazhpd1b+TgYpo1iieuX06GMveH1pyl1ECk5P3tuqWv1WNYZcGmnoPQLT79hKI5uGaSg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(7416014)(376014)(56012099006)(10067099003)(11063799006)(4143699003)(22082099003)(18002099003)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TXNoMVUva1pWRkd1aHNpSk54cGxMMXZJTnFmUUFPbkhLbnlRdVFGRC9Ueks3?=
+ =?utf-8?B?aUZnZGZMSDNWdS96ZWJFRUNiQzRtejhxdjRJKzRyaGxHUVcwMy82UDRMWUhm?=
+ =?utf-8?B?Q1VCeGJNT1YrbjFDa3pMRFp3WE9VekNKMG5TbXBaejhIK05pbXZwcEVjZjdr?=
+ =?utf-8?B?TlRyV2JuRFZ6QVlaSm9iRWlPUjBTN1ZsTkwrcVcvdURjSXFlcXVHdm5rYVBy?=
+ =?utf-8?B?cTYxazVUcVFFR3NvZU5jQUdjUEhHWVoyQzFvUTRUZDZJdjhRL0hPQ0llVnoy?=
+ =?utf-8?B?ZXRCMzBQbWNteVRPemNMQ3hyTDNzN3UxU3ZkM3h3Rk9BQ1N3TTl1Zzl3NzE5?=
+ =?utf-8?B?SHNIcDZ2S0RVRzNjVENoUVdWZzVXUDJpNzRockZoZjhzT1ROWXhxQjJtc0Nj?=
+ =?utf-8?B?QTRHTTh4a1E5eGJuMWpwLzY3cko0bSs2WUlTQklTekE1Tm9qRVA3dFRmbmRS?=
+ =?utf-8?B?d1Z1eUtZNmJ6aWlJbDBGNVVOb0JNMXdqbEg5eVZlYmJyakxzenB6cEt1OVA5?=
+ =?utf-8?B?SFVBYTllZkhOQXlwU3JZend2NjNLVGxVWmt6b3FlandDdHJrZ3R1Y3N4RVNt?=
+ =?utf-8?B?MHdCTmpsNTc3b3lLYnkySXlhZDVaQVZZQmZFTElscUdhakFGd2xibS9NajVV?=
+ =?utf-8?B?TmxCYzk2bmIwLzZXWnF6NFhsMUFHTUZMMGN0R25vaFllczhkVXFaSVdtZyt3?=
+ =?utf-8?B?MlJ4NXA4VFVaWUw5c1FvMXg0UWdLUkxKUk8vMWlBeUJ1M2k2NjlFcGc2RDc3?=
+ =?utf-8?B?aGk1em1DbnFlSUN4b3Z0S2p0UlQ2dEdhRXJaZ0FhLzVkN2MxQS9tekRKS1ZR?=
+ =?utf-8?B?Vy9tRkpMWmdaZ3hUcGtDL2lPTHN5YUFpa1JJY0N1Q2RCWVUvSXlCRFJpOEEy?=
+ =?utf-8?B?YVFkb1RHaVVCcm9oNU1wTmp0ZHZDazQ3QkRoTDRwR2gvT1gwUW1VUzd1MTR3?=
+ =?utf-8?B?dHBzZXdWOTkrck81QXRjUDVHOFo2ZUUvazRpc0xYSDd3MUg3V1FGZjV6dVA2?=
+ =?utf-8?B?VlhRUHRaOGJ5SnlTT1d6WUV2TG5VdHA2R296TW5KZ2pnWGtxbFpqSTZDeC9p?=
+ =?utf-8?B?TDE4TFRzMkwrMmhrR2h6dTZwb3hXYkxTMkl0Z0dtRmE1RFNtZDZ3eHpGdDVG?=
+ =?utf-8?B?N1Q1SWRvQlZEQzhlUHhzSFMvc3JkaVliZG5OZlZySGkrYXl2UVlJZENtR2NX?=
+ =?utf-8?B?dUc1cWNRYjhidlNzN0VOTFBwYUpwMytFRmJQejc4MXUxNnNWaTA0MytrYm1W?=
+ =?utf-8?B?U0NCM0gxSlNZd0tiTnJoeTIzZGlxYmdVajdqeTFOYVdKcEYxQXhqdU9aVVVK?=
+ =?utf-8?B?NDM0U0xSaTdBT3NrTWpxdTFldTdJblVLbGFvanBSTW92cVhBYmhINnFlNDY2?=
+ =?utf-8?B?WWRPSGIrVUh6Mm5sY1RBS2huYkwxZlJnMkNmQ3pFUitwYUg5K2drOGhMZEJH?=
+ =?utf-8?B?VFpldlFLdzN3NXJYNDVWa0hSaGxiaHpQWjJlTFcwNTVxbG1uWXdlcm1HS3dj?=
+ =?utf-8?B?RXhNdkRSTGNxdUVhSENVeHB4eGZZeWFRbnZFczdZbFNNMkl6b3pjT2tiK01u?=
+ =?utf-8?B?TGtwQXlxN3lIWitmTUpiL3Vyckw5cHdHQTZwT3NrR0t5ZEYxRERQZVZqd0hX?=
+ =?utf-8?B?MlFiUTFCNkJ1UTJPTTl5MEkrS1d3U2hTQnN0TExUdUxodVVvelJ2VFFDb1ZH?=
+ =?utf-8?B?cEJ2YnhIZGtRSVVSZjRoWFU3V1o3NytYOW5COXJ2dVR2aUNQMmVoaHg4ZEFy?=
+ =?utf-8?B?TDhGTXpYUEZTVUM3dHA4SzhKYjR0ZVVVbEROa3BrR3VHYmRVRlVHYS9yU0xl?=
+ =?utf-8?B?dzc5bUlPWjM2R0Yvdm4rc0xLRnZZd3hYbnFDVG9BeEN6b2dqa3dQVDlHV3g1?=
+ =?utf-8?B?dTBhWGpyVStjODlOYmJlUkJjVVM3WS8yaUtpaGhDN2M5UjhlR01qZGdVdmRZ?=
+ =?utf-8?B?RHVuZHB2K2FFQ0tPSXFLdW10cVZsQ3ljSGNIbm9GaGlzb0lETi9WcmZ0ZHZC?=
+ =?utf-8?B?cGJpQnpFUmpLc3UrRDNMVi9kaHloUUVhdjhTb2I5dUNWVFc3MlZkbmk0Z012?=
+ =?utf-8?B?MmtxVUJOSnRBTElMVGNQeUJaOXhDbGNrSElrdFQ5VnAycDRrS1c5QVZ3VXF2?=
+ =?utf-8?B?NGd2TXhnK25kNFhtdUwzU3RoWE1BaHpnNzYwVW9nek93dXJNaHhNMEo1QlFz?=
+ =?utf-8?B?Q3haWDFpZkhkL0FXRlpsQzFLUzZiSHRYYTlvUWRXbmRVY0tpRDFORG9CaDBj?=
+ =?utf-8?B?OE9CVlZrcFRhWDhTQlZ6c0Fnc3BRdmRZeHZQcWhDbFJaZlFrcUxFZTRtVVJl?=
+ =?utf-8?Q?vOMDLuS+uZ6B+uZb7U?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22480e3c-b594-45b3-2d38-08def18ae4af
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2026 18:13:17.9727
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: P4jLnqIwTNmEW1LtTpM+2MhjKsFG8QpvIYdQ6DM5UZU3RRUlEMTS746tqky9GXuA
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6935
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260629_024820_092863_FE82A2F8 
-X-CRM114-Status: GOOD (  21.23  )
-X-Mailman-Approved-At: Sat, 15 Aug 2026 00:45:39 -0700
+X-CRM114-CacheID: sfid-20260803_111334_227405_CEEA6D45 
+X-CRM114-Status: GOOD (  10.58  )
+X-Mailman-Approved-At: Sat, 15 Aug 2026 00:45:40 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,172 +198,40 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Commit 35c18f2933c5 ("Add a new optional ",cma" suffix to the
-crashkernel= command line option") and commit ab475510e042 ("kdump:
-implement reserve_crashkernel_cma") added CMA support for kdump
-crashkernel reservation.
+On Mon Aug 3, 2026 at 5:07 AM EDT, J=C3=BCrgen Gro=C3=9F wrote:
+> On 01.08.26 04:13, Zi Yan wrote:
+>> Hi all,
+>>=20
+>> This patchset removes PG_private to make space for upcoming PG_folio
+>> (reserved as __PG_folio) for identifying pages from a folio (more detail=
+s
+>> in Note below). Instead of checking PG_private, all code is changed to
+>> check page/folio->private !=3D NULL instead.
+>
+> I'm a little bit worried that page/folio->private is in a union, so today
+> it could (in theory) be !=3D NULL while PG_private isn't set.
+>
+> Is it really not possible to enter a path where PG_private is tested whil=
+e
+> page/folio->private !=3D NULL due to the union being used otherwise (PG_p=
+rivate
+> not set)?
 
-Crash kernel memory reservation wastes production resources if too
-large, risks kdump failure if too small, and faces allocation difficulties
-on fragmented systems due to contiguous block constraints. The new
-CMA-based crashkernel reservation scheme splits the "large fixed
-reservation" into a "small fixed region + large CMA dynamic region": the
-CMA memory is available to userspace during normal operation to avoid
-waste, and is reclaimed for kdump upon crash—saving memory while
-improving reliability.
+Yes, it is possible. See: #5 in the exceptional users: erofs uses
+->private for reverse linked list and in-flight counters without setting
+PG_private. I get rid of the first one and converted the second one to
+use folio_attach/detach/get_private() to follow the general ->private
+use pattern..
 
-So extend crashkernel CMA reservation support to arm64. The following
-changes are made to enable CMA reservation:
+For non file system folios, anon swapcache puts swap_entry_t in
+->private and hugetlb puts its flags in ->private. I added
+folio_test_fs_private() to exclude them, but this helper is planned to
+be used by core MM, since filesystem code should not encounter these
+two.
 
-- Parse and obtain the CMA reservation size along with other crashkernel
-  parameters.
-- Call reserve_crashkernel_cma() to allocate the CMA region for kdump.
-- Include the CMA-reserved ranges for kdump kernel to use.
-- Exclude the CMA-reserved ranges from the crash kernel memory to
-  prevent them from being exported through /proc/vmcore, which is already
-  done in the crash core.
 
-Update kernel-parameters.txt to document CMA support for crashkernel on
-arm64 architecture.
-
-Tested-by: Breno Leitao <leitao@debian.org>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
-Acked-by: Baoquan He <bhe@redhat.com>
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
-v7:
-- Correct the inclusion of CMA-reserved ranges for kdump
-  kernel in of/kexec.
-v3:
-- Add Acked-by.
-v2:
-- Free cmem in prepare_elf_headers()
-- Add the mtivation.
----
- Documentation/admin-guide/kernel-parameters.txt | 2 +-
- arch/arm64/kernel/machine_kexec_file.c          | 2 +-
- arch/arm64/mm/init.c                            | 5 +++--
- drivers/of/fdt.c                                | 9 +++++----
- drivers/of/kexec.c                              | 9 +++++++++
- include/linux/crash_reserve.h                   | 4 +++-
- 6 files changed, 22 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index b5493a7f8f22..6774223c53b0 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1089,7 +1089,7 @@ Kernel parameters
- 			It will be ignored when crashkernel=X,high is not used
- 			or memory reserved is below 4G.
- 	crashkernel=size[KMG],cma
--			[KNL, X86, ppc] Reserve additional crash kernel memory from
-+			[KNL, X86, ARM64, PPC] Reserve additional crash kernel memory from
- 			CMA. This reservation is usable by the first system's
- 			userspace memory and kernel movable allocations (memory
- 			balloon, zswap). Pages allocated from this memory range
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index b019b31df48c..854d872dfd0f 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -42,7 +42,7 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
- #ifdef CONFIG_CRASH_DUMP
- unsigned int arch_get_system_nr_ranges(void)
- {
--	unsigned int nr_ranges = 2; /* for exclusion of crashkernel region */
-+	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* for exclusion of crashkernel region */
- 	phys_addr_t start, end;
- 	u64 i;
- 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 97987f850a33..227f58522dad 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -96,8 +96,8 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit;
- 
- static void __init arch_reserve_crashkernel(void)
- {
-+	unsigned long long crash_base, crash_size, cma_size = 0;
- 	unsigned long long low_size = 0;
--	unsigned long long crash_base, crash_size;
- 	bool high = false;
- 	int ret;
- 
-@@ -106,11 +106,12 @@ static void __init arch_reserve_crashkernel(void)
- 
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
- 				&crash_size, &crash_base,
--				&low_size, NULL, &high);
-+				&low_size, &cma_size, &high);
- 	if (ret)
- 		return;
- 
- 	reserve_crashkernel_generic(crash_size, crash_base, low_size, high);
-+	reserve_crashkernel_cma(cma_size);
- }
- 
- static phys_addr_t __init max_zone_phys(phys_addr_t zone_limit)
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 26f66046cc32..a64afc3ded3d 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -878,11 +878,12 @@ static unsigned long chosen_node_offset = -FDT_ERR_NOTFOUND;
- /*
-  * The main usage of linux,usable-memory-range is for crash dump kernel.
-  * Originally, the number of usable-memory regions is one. Now there may
-- * be two regions, low region and high region.
-- * To make compatibility with existing user-space and older kdump, the low
-- * region is always the last range of linux,usable-memory-range if exist.
-+ * be 2 + CRASHK_CMA_RANGES_MAX regions, low region, high region and cma
-+ * regions. To make compatibility with existing user-space and older kdump,
-+ * the high and low region are always the first two ranges of
-+ * linux,usable-memory-range if exist.
-  */
--#define MAX_USABLE_RANGES		2
-+#define MAX_USABLE_RANGES		(2 + CRASHK_CMA_RANGES_MAX)
- 
- /**
-  * early_init_dt_check_for_usable_mem_range - Decode usable memory range
-diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
-index b6837e299e7f..029903b986cb 100644
---- a/drivers/of/kexec.c
-+++ b/drivers/of/kexec.c
-@@ -458,6 +458,15 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
- 			if (ret)
- 				goto out;
- 		}
-+
-+		for (int i = 0; i < crashk_cma_cnt; i++) {
-+			ret = fdt_appendprop_addrrange(fdt, 0, chosen_node,
-+					"linux,usable-memory-range",
-+					crashk_cma_ranges[i].start,
-+					crashk_cma_ranges[i].end - crashk_cma_ranges[i].start + 1);
-+			if (ret)
-+				goto out;
-+		}
- #endif
- 	}
- 
-diff --git a/include/linux/crash_reserve.h b/include/linux/crash_reserve.h
-index f0dc03d94ca2..30864d90d7f5 100644
---- a/include/linux/crash_reserve.h
-+++ b/include/linux/crash_reserve.h
-@@ -14,9 +14,11 @@
- extern struct resource crashk_res;
- extern struct resource crashk_low_res;
- extern struct range crashk_cma_ranges[];
-+
-+#define CRASHK_CMA_RANGES_MAX 4
- #if defined(CONFIG_CMA) && defined(CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION)
- #define CRASHKERNEL_CMA
--#define CRASHKERNEL_CMA_RANGES_MAX 4
-+#define CRASHKERNEL_CMA_RANGES_MAX (CRASHK_CMA_RANGES_MAX)
- extern int crashk_cma_cnt;
- #else
- #define crashk_cma_cnt 0
--- 
-2.34.1
+--=20
+Best Regards,
+Yan, Zi
 
 
