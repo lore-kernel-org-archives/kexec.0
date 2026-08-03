@@ -4,76 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 29CE6C55171
-	for <kexec@archiver.kernel.org>; Sun,  2 Aug 2026 12:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6B4ADC5516F
+	for <kexec@archiver.kernel.org>; Mon,  3 Aug 2026 04:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ERI1gHu1ms36w+mxgUEFv8xH+Yv4k3d6pfZyWzwl/B0=; b=46Uus2CMxYdjke70cRu/+acgTQ
-	U638M2GTTHQA1oZWaIVPGJtq9u2e4b43DukLUanX9cMLeRJ9HEm6a6+YeVe5axdu0BBVSzFIJXLMz
-	jxIpA0S5TYesubzt3NHQTRWfGq7Dw5sZcAHfIZWNSyxlbEqGk8hxTMa8CGFHnoBR+NNGYBPj3xvq5
-	GWZ3lxJnrCSnm0UuSVumR81eV+lfOJpZ0hVgVcqmHIGtq17G3R7+3ckknIRcLAfEj+sUOnnQqZLja
-	XAWZLb1l6/GLtIEuaRUTTtf89Mla3P96sZ0cTor/ZZApKEDdarikAF3Wwdc6O6CJ5uTETOebwn3gB
-	K46YNmyA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=K+UrZnGDfn1KDrLfPMoTYVav6fUDeRki+TtlsiEKOFI=; b=1ZkzT/T90jtZSuKHUIevUFCRo6
+	Erl3hKkaYHJ5nQ54KoBNpNAqNEQDc1QJm7iLCukDTStsOZ5zb0SUq8F2LjFrke/BLoqaqcodzRO6b
+	PJEGK1zCR9Z3MDHxDWmB08fr64Ucu2sxiftv9RvELq1RRamRX+yPkrZEL6TIoa/3CIBFxfXQkerlU
+	5Z4FXRijxSVmMVk01qK8bI/H0LNOBm/T6m+sE6x9I9aejnnMSRt3Ln5OwuY8H/R6Mw1fHCm3IP+Mk
+	Vf0qmL0r5nefR/UKex8+MmyQoi6w7CkWrKI/smtDN1FyN2cR3kplu8xtykDsPCoMB+KN0sNPhl/cn
+	wGnH8rWw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wqV3n-0000000FbbU-3dg8;
-	Sun, 02 Aug 2026 12:12:55 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wqk9W-0000000GIxI-2E3i;
+	Mon, 03 Aug 2026 04:19:50 +0000
+Received: from mgamail.intel.com ([192.198.163.17])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wqV3m-0000000Fbam-3Arg;
-	Sun, 02 Aug 2026 12:12:54 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id DD75760A79;
-	Sun,  2 Aug 2026 12:12:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CB231F00A3A;
-	Sun,  2 Aug 2026 12:12:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785672773;
-	bh=ERI1gHu1ms36w+mxgUEFv8xH+Yv4k3d6pfZyWzwl/B0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=moL1kbL1EjVC+4aV1tYljS+vat4yBxBOLPZWMHIOGvwb9X11ezTHTNry1462MjzMX
-	 u1qtB+oB1TRXkLQ3jJnRh21xZ2GsmM5Qjah2jG5qVhXCUsm3ZcRVRAYBed4xdbTyIq
-	 Wz5ejFLh5ONo0jaacrWEQE/NZIrbqAsavRlAg4i1aP5s9bsVRb0f6Fs3icy5d8hsUK
-	 9J5/GmSKTgvwNClS4lbdUS7fMcKgYEVr/n0KeXgTKKQ9aGGH/kFn6hDCT0ZATplh7o
-	 pB4RtQhvE9sA/7jOsKnHiBO17ic/xEt6WzVvsPoOxeK2OTIMtl+oEqbMwXYUXi6pH9
-	 qxQm5QwThfQxQ==
-From: Will Deacon <will@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	James Morse <james.morse@arm.com>,
-	Kiryl Shutsemau <kirill@shutemov.name>
-Cc: kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Doug Anderson <dianders@chromium.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Usama Arif <usama.arif@linux.dev>,
-	Breno Leitao <leitao@debian.org>,
-	Julien Thierry <julien.thierry.kdev@gmail.com>,
-	Lecopzer Chen <lecopzer@gmail.com>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	kernel-team@meta.com,
-	kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	"Kiryl Shutsemau (Meta)" <kas@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Baoquan He <baoquan.he@linux.dev>
-Subject: Re: [PATCH v5 0/4] arm64: cross-CPU NMI via SDEI
-Date: Sun,  2 Aug 2026 13:12:23 +0100
-Message-ID: <178566246667.4129492.14709532740498428415.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1782744912.git.kas@kernel.org>
-References: <cover.1782744912.git.kas@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	id 1wqk9S-0000000GIwt-2cCR
+	for kexec@lists.infradead.org;
+	Mon, 03 Aug 2026 04:19:47 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1785730786; x=1817266786;
+  h=date:from:to:cc:subject:message-id;
+  bh=Ko/Az60qQQfPuQWv/Ihsh4ne2i2ClNeswp+odg/JZuc=;
+  b=XW97vUziZhJTb6lc2yCwwKkAwvfDPy5NNZtmvDplQqCpTCzftoOzqPH1
+   n5J63MNhu9cwkGpo3CXeL7uduIFpZgvMf4ODyi1fcR5DfaTwdGTe3ODgD
+   dqPoGSIdYDgEQATKGybiOoAuyZFzpuNTsRzELIE85EiyFrrlXgesAkQAv
+   sXIT89Hi7/2uW1i4UUKCF7kK2CAmNXVo8E8T6bwhXYVBhVqxTrjfd48HB
+   kbG1dvif3KjpDFPMZqy6SgVJEo2BdJP41aUphoHfLS9hvP9Pih29aDrWp
+   1GUnoOmk+WMh/bp/t9NXpNjiuyiE1pElKrawvy/t9pLrRohP+wbyQUt7G
+   g==;
+X-CSE-ConnectionGUID: RkoURkFWQJ2XFcLkcXQ68A==
+X-CSE-MsgGUID: brHwsZl9SBi6WDNu3v9cCQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11863"; a="86135924"
+X-IronPort-AV: E=Sophos;i="6.25,201,1779174000"; 
+   d="scan'208";a="86135924"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2026 21:19:46 -0700
+X-CSE-ConnectionGUID: B8XMJn0TR7uNQ5AHS1LzTg==
+X-CSE-MsgGUID: IEPL0eiNRCCfpK6HdrcoNA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,201,1779174000"; 
+   d="scan'208";a="259869049"
+Received: from lkp-server01.sh.intel.com (HELO 6eda058d650d) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 02 Aug 2026 21:19:45 -0700
+Received: from kbuild by 6eda058d650d with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wqk9O-0000000063P-0qwl;
+	Mon, 03 Aug 2026 04:19:42 +0000
+Date: Mon, 03 Aug 2026 12:19:16 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
+Subject: [liveupdate:kho-scratch] BUILD SUCCESS
+ 6106b1bc175dc91cc2f584bc4149411809580bc9
+Message-ID: <202608031204.cCHHM7CA-lkp@intel.com>
+User-Agent: s-nail v14.9.25
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260802_211946_678351_15AF6373 
+X-CRM114-Status: UNSURE (   4.20  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,32 +84,120 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, 29 Jun 2026 16:07:14 +0100, Kiryl Shutsemau wrote:
-> A class of debug/observability features needs to interrupt a CPU that has
-> its interrupts locally masked: the all-CPU backtrace behind sysrq-l /
-> RCU-stall / hung-task / hard-lockup dumps, and crash_smp_send_stop()
-> capturing a stuck CPU's state into the vmcore. On arm64 these need a
-> mechanism that reaches a CPU spinning with DAIF masked, which a normal IPI
-> cannot.
-> 
-> [...]
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git kho-scratch
+branch HEAD: 6106b1bc175dc91cc2f584bc4149411809580bc9  Merge patch series "kho: make boot time huge page allocation work nicely with KHO"
 
-Applied to arm64 (for-next/sdei), thanks!
+elapsed time: 748m
 
-[1/4] firmware: arm_sdei: add sdei_is_present()
-      https://git.kernel.org/arm64/c/5686f2bed02d
-[2/4] firmware: arm_sdei: add SDEI_EVENT_SIGNAL support
-      https://git.kernel.org/arm64/c/9141eda9eec7
-[3/4] drivers/firmware: add SDEI cross-CPU NMI service for arm64
-      https://git.kernel.org/arm64/c/0c2c56598cc1
-[4/4] arm64: escalate smp_send_stop() to an SDEI NMI as a last resort
-      https://git.kernel.org/arm64/c/d639f7626292
+configs tested: 100
+configs skipped: 0
 
-Cheers,
--- 
-Will
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+tested configs:
+alpha                            allnoconfig    gcc-16.1.0
+alpha                           allyesconfig    gcc-16.1.0
+alpha                              defconfig    gcc-16.1.0
+arc                             allmodconfig    gcc-16.1.0
+arc                             allyesconfig    gcc-16.1.0
+arc                  randconfig-001-20260803    gcc-8.5.0
+arc                  randconfig-002-20260803    gcc-8.5.0
+arm                            mxs_defconfig    clang-17
+arm                  randconfig-001-20260803    gcc-8.5.0
+arm                  randconfig-002-20260803    gcc-8.5.0
+arm                  randconfig-003-20260803    gcc-8.5.0
+arm                  randconfig-004-20260803    gcc-8.5.0
+arm64                randconfig-001-20260803    gcc-12.5.0
+arm64                randconfig-002-20260803    gcc-12.5.0
+arm64                randconfig-003-20260803    gcc-12.5.0
+arm64                randconfig-004-20260803    gcc-12.5.0
+csky                            allmodconfig    gcc-16.1.0
+csky                 randconfig-001-20260803    gcc-12.5.0
+csky                 randconfig-002-20260803    gcc-12.5.0
+hexagon              randconfig-001-20260803    clang-18
+hexagon              randconfig-002-20260803    clang-18
+i386                            allmodconfig    gcc-14
+i386       buildonly-randconfig-001-20260803    clang-22
+i386       buildonly-randconfig-002-20260803    clang-22
+i386       buildonly-randconfig-003-20260803    clang-22
+i386       buildonly-randconfig-004-20260803    clang-22
+i386       buildonly-randconfig-005-20260803    clang-22
+i386       buildonly-randconfig-006-20260803    clang-22
+i386                 randconfig-001-20260803    gcc-13
+i386                 randconfig-002-20260803    gcc-13
+i386                 randconfig-003-20260803    gcc-13
+i386                 randconfig-004-20260803    gcc-13
+i386                 randconfig-005-20260803    gcc-13
+i386                 randconfig-006-20260803    gcc-13
+i386                 randconfig-007-20260803    gcc-13
+i386                 randconfig-011-20260803    clang-22
+i386                 randconfig-012-20260803    clang-22
+i386                 randconfig-013-20260803    clang-22
+i386                 randconfig-014-20260803    clang-22
+i386                 randconfig-015-20260803    clang-22
+i386                 randconfig-016-20260803    clang-22
+i386                 randconfig-017-20260803    clang-22
+loongarch                          defconfig    clang-24
+loongarch            randconfig-001-20260803    clang-18
+loongarch            randconfig-002-20260803    clang-18
+mips                          ci20_defconfig    clang-24
+nios2                           allmodconfig    gcc-11.5.0
+nios2                            allnoconfig    gcc-11.5.0
+nios2                randconfig-001-20260803    clang-18
+nios2                randconfig-002-20260803    clang-18
+parisc                          allmodconfig    gcc-16.1.0
+parisc                          allyesconfig    gcc-16.1.0
+parisc                             defconfig    gcc-16.1.0
+parisc               randconfig-001-20260803    gcc-15.2.0
+parisc               randconfig-002-20260803    gcc-15.2.0
+powerpc              randconfig-001-20260803    gcc-15.2.0
+powerpc              randconfig-002-20260803    gcc-15.2.0
+powerpc64            randconfig-001-20260803    gcc-15.2.0
+powerpc64            randconfig-002-20260803    gcc-15.2.0
+riscv                randconfig-001-20260803    gcc-8.5.0
+riscv                randconfig-002-20260803    gcc-8.5.0
+s390                 randconfig-001-20260803    gcc-8.5.0
+s390                 randconfig-002-20260803    gcc-8.5.0
+sh                                 defconfig    gcc-16.1.0
+sh                   randconfig-001-20260803    gcc-8.5.0
+sh                   randconfig-002-20260803    gcc-8.5.0
+sparc                randconfig-001-20260803    gcc-16.1.0
+sparc                randconfig-002-20260803    gcc-16.1.0
+sparc64              randconfig-001-20260803    gcc-16.1.0
+sparc64              randconfig-002-20260803    gcc-16.1.0
+um                   randconfig-001-20260803    gcc-16.1.0
+um                   randconfig-002-20260803    gcc-16.1.0
+x86_64     buildonly-randconfig-001-20260803    clang-22
+x86_64     buildonly-randconfig-002-20260803    clang-22
+x86_64     buildonly-randconfig-003-20260803    clang-22
+x86_64     buildonly-randconfig-004-20260803    clang-22
+x86_64     buildonly-randconfig-005-20260803    clang-22
+x86_64     buildonly-randconfig-006-20260803    clang-22
+x86_64                                 kexec    clang-22
+x86_64               randconfig-001-20260803    gcc-14
+x86_64               randconfig-002-20260803    gcc-14
+x86_64               randconfig-003-20260803    gcc-14
+x86_64               randconfig-004-20260803    gcc-14
+x86_64               randconfig-005-20260803    gcc-14
+x86_64               randconfig-006-20260803    gcc-14
+x86_64               randconfig-011-20260803    gcc-14
+x86_64               randconfig-012-20260803    gcc-14
+x86_64               randconfig-013-20260803    gcc-14
+x86_64               randconfig-014-20260803    gcc-14
+x86_64               randconfig-015-20260803    gcc-14
+x86_64               randconfig-016-20260803    gcc-14
+x86_64               randconfig-071-20260803    clang-22
+x86_64               randconfig-072-20260803    clang-22
+x86_64               randconfig-073-20260803    clang-22
+x86_64               randconfig-074-20260803    clang-22
+x86_64               randconfig-075-20260803    clang-22
+x86_64               randconfig-076-20260803    clang-22
+x86_64                          rhel-9.4-bpf    gcc-14
+xtensa               randconfig-001-20260803    gcc-16.1.0
+xtensa               randconfig-002-20260803    gcc-16.1.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
