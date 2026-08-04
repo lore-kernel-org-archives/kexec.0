@@ -4,91 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E3762C5518F
-	for <kexec@archiver.kernel.org>; Tue,  4 Aug 2026 14:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DABBAC55822
+	for <kexec@archiver.kernel.org>; Tue,  4 Aug 2026 22:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xMHP+hPMOaHZx9jDNO0xYD9pWUWMBLkbRPM0u4QDrOo=; b=IOdL6GhjwILjh3YQCunM0WzXw7
-	cnJT+6NdDuVXTocGrs67SJ0Ir32SQ7hl6fsy5OtNrX3yyRCFk+HGruUPn01757W2z12alkK0A5OOs
-	r9kxOyUhcsGh0ej7fPlbZegXCA8kcFmaKcuxReJ5ZhooqGSEZiCcSvR6RemtKz5ygwgXHB8uWXV+I
-	FDEpLssJMk4fXXwBCx3APGKM3DBQWJin7/oX82BQAExNih7fAZEFBfuka9bVM6ufGFCu7bJ3oK/5U
-	NpCxGrD5MKUargTMk9V4a4dH8govZAutYfT/PIAno+gS9vNppW8hQlOuxl6xoqtdYi+gZ15/3MPiQ
-	WnRx6CcA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=tKXkCcRMGWTSPIx2M+vUMflHbZbJ8UbKojm3V5koHzo=; b=jq19nH2KSmXnuVKyKloiCNV7bu
+	ISi95yEGVGQz5xtLEocoAP+fhh/s2i68E8Yo1uZCG/HFknpOO+bK1XokiCN++EDsVVjuv+u00XVr8
+	rX11VFw19r0vGv+h2r1pPRxjMtpWOYPzqQfuu8X9unfLg+ajPry+vI4uphPXFJxGrGV6MQpP2jDx1
+	0tx3P5Lyf83BbKBH6V3sVukKGI1p3K5LxXzeFiTXbSj13JGqtEDEOZ8sFnXc/CtM2MEA951c56IbT
+	twLYrCUfViQTZWctYDHAeJOznUJk/oBpNKJeapu9Pmg7KGbDLkK0urmdNOD4/XEjE8p5gMyzfwCxd
+	q0hJwOew==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wrGGH-000000025vZ-1wGB;
-	Tue, 04 Aug 2026 14:36:57 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wrNUg-00000002rbS-1qNk;
+	Tue, 04 Aug 2026 22:20:18 +0000
+Received: from out-187.mta1.migadu.com ([95.215.58.187])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wrGGF-000000025v5-3KCp
+	id 1wrNUc-00000002rb0-1PZd
 	for kexec@lists.infradead.org;
-	Tue, 04 Aug 2026 14:36:55 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 306B343C39;
-	Tue,  4 Aug 2026 14:36:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD0281F000E9;
-	Tue,  4 Aug 2026 14:36:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785854215;
-	bh=xMHP+hPMOaHZx9jDNO0xYD9pWUWMBLkbRPM0u4QDrOo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=HbEtkvAZf70uDRm57s8S2Js++GGFN/fljdOhoJptzMF2N88EfAEJdmrEAOiM6HJA2
-	 Uml3dId9f0WYqJxejCZCNArT9SawT2uP5jBSBBTLxELnu+vfc0GrsQQToYXnzZw7ay
-	 R2cCwVxzqM2fT6TWYAaKqN1WqujNXbIzjc4hw/eC6rhhFCv/KfYrxFLih6Jrc63Rhu
-	 H65iFpahgeGYB5ENvkbVjTZG7Kplz40leJ2pXOnMBN5hi05peml/UnMWFScX1c0N16
-	 swAnz9kYXUJDHs4BvIs96i8yud/gEHZr+fA+ZQz8W3xvRfOJnYVR7bTf9PNnG88X3G
-	 +61ZdFvaiiEig==
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 53B4D198005C;
-	Tue,  4 Aug 2026 10:36:49 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Tue, 04 Aug 2026 10:36:52 -0400
-X-ME-Sender: <xms:APlxaugx6RXIfl3v3aDSMW0ncJwAyy3pLzAUtRUokhDAKNBC9I0DUA>
-    <xme:APlxas611YFY_Rg92zXDB25utn_Hk_llj8ms3tot78f4y0wufCTpw9u_bbq2Niada
-    5EMkb3Y4odp-bn6EYhByDMUkenXkjP5sbjiR6vl59XbLUoDJFlD-5M>
-X-ME-Received: <xmr:APlxavLwEjMZQ1IBwnbCXr56XcJFbnqC8Ny4SeDk02wyxNn2EMCHUBaylk4>
-X-ME-Proxy-Cause: dmFkZTFhdGzLG39r1fMJddaw2USXwwshGe2dXEdkL6WJwsFjOH3SdHoN64VD7l/z+M8aMA
-    4AjIBR2yzva7tfrgZigRLsg6cD+RB1DPGvEMnmO9G+1lDkX/EXVbxIdZbn0UeqbFiuJ4/r
-    gyVQZ01CzYF618dykSnjz8ppv0caM8t0SMTDncdEUQUmHYImfVsKz0hQwHW9gNiycWqLRV
-    WSMaLbFxWRx3XFZF6qtVLvbGv3Oc5bfAz52rJ02W1a4rDBLkqzpI2xBOcimCjvxGSGUbcD
-    UZSi+TEdX0ZKm7T9C+gTHS5O3QVH+kRCBSzxorCQsCu4xyiAEjBf85LNlNHXsYIcHP/bZT
-    y9ElmDOfTPofTD3biREhXmS/3/YA1l3kKXL1JPXMZqPsHnKV4lwAdHbFieVsTTMB0WxxeJ
-    gpE/ZDETEt7gEpR5pgZ+kSaPTFT46I2/SseRBTCPJ7d/ph1n2wKmLua1xwtqMBq7tnuwt1
-    WcDN6VDPdB6cNQEVwElYTlLy5vNHbmTDx9RnoQ51rjkfOwE4hp+CwfANrClC+nFGJduohN
-    Fyg90+BlIbFbygBlp6B+xRaV9RF2hU2o3YGvd4tvlGm1ykhw/YtveSA6NqtYkRTJGcT0jT
-    inYKiVKVyK3heu/y3I7hbiuDUNur6cNpm8WMjUmMhQdIntVB8GtsD3OBSypg
-X-ME-Proxy: <xmx:APlxaohgtFkYNZB9P24X4TXe7X6JSD0n1NWpWO2ZZT5U4Yh9EdK9Hg>
-    <xmx:APlxakJMCwFzE8uZYpmby2AO8jgsRCpHQ8i7uYWtSC0wvSuHQlMKug>
-    <xmx:APlxathVa0Uz2XeVL-tZHO5hN4St8GJP6Ulo_DCfEUXq3Lsm8sONpA>
-    <xmx:APlxat0bFoBmPsiivHmT90C9inEDleeJSM8BvHwH_6bYCeoBz7ni9w>
-    <xmx:APlxakaZC_dsoWXGBa_Y9EFyxE6ERYBXKMOW85tXaPkkSpUeVfWJgZpH>
-Feedback-ID: i10464835:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 4 Aug 2026 10:36:48 -0400 (EDT)
-Date: Tue, 4 Aug 2026 15:36:47 +0100
-From: Kiryl Shutsemau <kas@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, rmikey@meta.com, riel@surriel.com, 
-	kernel-team@meta.com
-Subject: Re: [PATCH v3] kexec: keep the next kernel off hardware-poisoned
- pages
-Message-ID: <anH1JdVtiM9VoXMH@thinkstation>
-References: <20260803-kexec_posioned-v3-1-83aa6ede0351@debian.org>
+	Tue, 04 Aug 2026 22:20:17 +0000
+Message-ID: <0556e2fc-3be5-4023-a9a4-8482fa8c88b2@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1785882008;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tKXkCcRMGWTSPIx2M+vUMflHbZbJ8UbKojm3V5koHzo=;
+	b=lTXbSSZvUL4SJfXOdF++4CEyApWmTqxUjaeN3mxQ5u2ImrIEJbHG0FEnJvV/uRJtJqfwL8
+	mwnnvc7kyeVO+Fc7xM4qFj50XL1gBgWop+y6QXPTKGtqB13iyT9UTjAt1jKvF/BsIuPuEI
+	u0ci3Zm3/p+4lDVk2TCJM5RXUmBPSGQ=
+Date: Tue, 4 Aug 2026 15:19:34 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260803-kexec_posioned-v3-1-83aa6ede0351@debian.org>
+Subject: Re: [PATCH v5 17/20] vfio: selftests: Add
+ vfio_pci_liveupdate_kexec_test
+To: Vipin Sharma <vipinsh@google.com>, kexec@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvm@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ Zhu Yanjun <yanjun.zhu@linux.dev>
+Cc: ajayachandra@nvidia.com, alex@shazbot.org, amastro@fb.com,
+ ankita@nvidia.com, apopple@nvidia.com, bhelgaas@google.com,
+ chrisl@kernel.org, christian.koenig@amd.com, corbet@lwn.net,
+ dmatlack@google.com, graf@amazon.com, jacob.pan@linux.microsoft.com,
+ jgg@nvidia.com, jgg@ziepe.ca, jrhilke@google.com, julianr@linux.ibm.com,
+ kees@kernel.org, kevin.tian@intel.com, leon@kernel.org, leonro@nvidia.com,
+ lukas@wunner.de, mattev@meta.com, michal.winiarski@intel.com,
+ parav@nvidia.com, pasha.tatashin@soleen.com, praan@google.com,
+ pratyush@kernel.org, rananta@google.com, rientjes@google.com,
+ rodrigo.vivi@intel.com, rppt@kernel.org, saeedm@nvidia.com,
+ schnelle@linux.ibm.com, skhan@linuxfoundation.org, skhawaja@google.com,
+ vivek.kasireddy@intel.com, witu@nvidia.com, yi.l.liu@intel.com
+References: <20260714151505.3466855-1-vipinsh@google.com>
+ <20260714151505.3466855-18-vipinsh@google.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Yanjun.Zhu" <yanjun.zhu@linux.dev>
+In-Reply-To: <20260714151505.3466855-18-vipinsh@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260804_152014_527297_47BB7630 
+X-CRM114-Status: GOOD (  30.66  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,79 +84,210 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Aug 03, 2026 at 05:41:10AM -0700, Breno Leitao wrote:
-> @@ -504,6 +505,15 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
->  			continue;
->  		}
->  
-> +		poison = range_last_hwpoison(temp_start, kbuf->memsz);
-> +		if (poison != PHYS_ADDR_MAX) {
-> +			/* we hit a poisoned page */
-> +			if (poison < kbuf->memsz)
-> +				return 0;
-> +			temp_start = poison - kbuf->memsz;
-> +			continue;
-> +		}
+
+On 7/14/26 8:15 AM, Vipin Sharma wrote:
+> Add a selftest to exercise preserving a vfio-pci device across a Live
+> Update. For now the test is extremely simple and just verifies that the
+> device file can be preserved and retrieved. In the future this test will
+> be extended to verify more parts about device preservation as they are
+> implemented.
+>
+> This test is added to TEST_GEN_PROGS_EXTENDED since it must be run
+> manually along with a kexec.
+>
+> To run this test manually:
+>
+>   $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
+>   $ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test --stage 1 0000:00:04.0
+>
+>   $ kexec ...   # NOTE: Exact method will be distro-dependent
+>
+>   $ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
+>   $ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test --stage 2 0000:00:04.0
+Hi, Vipin
+
+Thanks a lot for your help. I followed your suggestion, vfio-pci setup can
+work.
+
+The followings are the test result. In the step 3, after kexec, there are
+some fails. I am not sure if these are known problem or not.
+
+1. Before kexec command
+
++ modprobe -v vfio-pci
++ tools/testing/selftests/vfio/scripts/setup.sh 0000:00:04.0
++ echo "vfio-pci" > /sys/bus/pci/devices/0000:00:04.0/driver_override
++ echo "0000:00:04.0" > /sys/bus/pci/drivers/vfio-pci/bind
++ tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test --stage 1
+0000:00:04.0
+Preserving device in session
+Preserving memfd of size 0x40100000 in session
+# [STAGE 1] Forking persistent child to hold sessions...
+# [STAGE 1] Child PID: 1236. Resources are pinned.
+# [STAGE 1] You may now perform kexec reboot.
++ set +x
+
+2. Run kexec command
+
+3. After kexec command
+
++ echo "vfio-pci" > /sys/bus/pci/devices/0000:00:04.0/driver_override
++ echo "0000:00:04.0" > /sys/bus/pci/drivers/vfio-pci/bind
+Checking open(/dev/vfio/devices/vfio0) fails  <--- I can confirm that the
+/dev/vfio/devices/vfio0 exists. But open this failed.
+Checking ioctl(group_fd, VFIO_GROUP_GET_DEVICE_FD, "0000:00:04.0") fails
+(vfio_type1_iommu)      <--- fails
+Checking ioctl(group_fd, VFIO_GROUP_GET_DEVICE_FD, "0000:00:04.0") fails
+(vfio_type1v2_iommu).  <--- fails
+Checking ioctl(group_fd, VFIO_GROUP_GET_DEVICE_FD, "0000:00:04.0") fails
+(iommufd_compat_type1)  <--- fails
+Checking ioctl(group_fd, VFIO_GROUP_GET_DEVICE_FD, "0000:00:04.0") fails
+(iommufd_compat_type1v2). <--- fails
+Retrieving memfd from LUO
+Finishing the session before retrieving the device (should fail)
+Retrieving the device FD from LUO
+Finishing the session before binding to iommufd (should fail)
+Binding the device to an iommufd and setting it up
+Finishing the session
+
+# lspci -vvv -s 0000:00:04.0
+00:04.0 Unclassified device [00ff]: Red Hat, Inc. QEMU PCI Test Device
+     Subsystem: Red Hat, Inc. QEMU Virtual Machine
+     Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr-
+Stepping- SERR- FastB2B- DisINTx+
+     Status: Cap- 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort-
+<MAbort- >SERR- <PERR- INTx-
+     IOMMU group: 16
+     Region 0: Memory at fea23000 (32-bit, non-prefetchable) [size=4K]
+     Region 1: I/O ports at c000 [size=256]
+     Kernel driver in use: vfio-pci
+
+Zhu Yanjun
+
+>
+> The second call to setup.sh is necessary because preserved devices are
+> not bound to a driver after Live Update. Such devices must be manually
+> bound by userspace after Live Update via driver_override.
+>
+> This test is considered passing if all commands exit with 0.
+>
+> Co-developed-by: David Matlack <dmatlack@google.com>
+> Signed-off-by: David Matlack <dmatlack@google.com>
+> Signed-off-by: Vipin Sharma <vipinsh@google.com>
+> ---
+>   tools/testing/selftests/vfio/Makefile         |  4 +
+>   .../vfio/vfio_pci_liveupdate_kexec_test.c     | 89 +++++++++++++++++++
+>   2 files changed, 93 insertions(+)
+>   create mode 100644 tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+>
+> diff --git a/tools/testing/selftests/vfio/Makefile b/tools/testing/selftests/vfio/Makefile
+> index 591f1a52c310..a2f0a459e1f4 100644
+> --- a/tools/testing/selftests/vfio/Makefile
+> +++ b/tools/testing/selftests/vfio/Makefile
+> @@ -15,6 +15,10 @@ TEST_GEN_PROGS += vfio_pci_driver_test
+>   TEST_GEN_PROGS += vfio_pci_sriov_uapi_test
+>   TEST_GEN_PROGS += vfio_pci_liveupdate_uapi_test
+>   
+> +# This test must be run manually since it requires the user/automation to
+> +# perform a kexec during the test.
+> +TEST_GEN_PROGS_EXTENDED += vfio_pci_liveupdate_kexec_test
 > +
-
-Hm. Don't we want range_first_hwpoison() for top-down walk? Otherwise
-the end of range would land on poison.
-
->  		/* We found a suitable memory range */
->  		break;
->  	} while (1);
-
-...
-
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index a8b03e2920ba8..ef0e989c25d93 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -96,6 +96,31 @@ void num_poisoned_pages_sub(unsigned long pfn, long i)
->  		memblk_nr_poison_sub(pfn, i);
->  }
->  
-> +/*
-> + * Return the address of the last hardware-poisoned online page in
-> + * [start, start + size), or PHYS_ADDR_MAX if the range is clean.
-> + */
-> +phys_addr_t range_last_hwpoison(phys_addr_t start, unsigned long size)
+>   TEST_FILES += scripts/cleanup.sh
+>   TEST_FILES += scripts/lib.sh
+>   TEST_FILES += scripts/run.sh
+> diff --git a/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c b/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+> new file mode 100644
+> index 000000000000..15b3e3af91d1
+> --- /dev/null
+> +++ b/tools/testing/selftests/vfio/vfio_pci_liveupdate_kexec_test.c
+> @@ -0,0 +1,89 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +
+> +#include <libliveupdate.h>
+> +#include <libvfio.h>
+> +
+> +static const char *device_bdf;
+> +
+> +static char state_session[LIVEUPDATE_SESSION_NAME_LENGTH];
+> +static char device_session[LIVEUPDATE_SESSION_NAME_LENGTH];
+> +
+> +enum {
+> +	STATE_TOKEN,
+> +	DEVICE_TOKEN,
+> +};
+> +
+> +static void before_kexec(int luo_fd)
 > +{
-> +	phys_addr_t poison = PHYS_ADDR_MAX;
-> +	unsigned long pfn, end_pfn;
+> +	struct vfio_pci_device *device;
+> +	struct iommu *iommu;
+> +	int session_fd;
+> +	int ret;
 > +
-> +	if (!size || !atomic_long_read(&num_poisoned_pages))
-> +		return poison;
+> +	iommu = iommu_init("iommufd");
+> +	device = vfio_pci_device_init(device_bdf, iommu);
 > +
-> +	end_pfn = PHYS_PFN(start + size - 1);
-> +	for (pfn = PHYS_PFN(start); pfn <= end_pfn; pfn++) {
-> +		struct page *page = pfn_to_online_page(pfn);
+> +	create_state_file(luo_fd, state_session, STATE_TOKEN, /*next_stage=*/2);
 > +
-> +		if (page && PageHWPoison(page))
-> +			poison = PFN_PHYS(pfn);
-
-Oh... I think it will not work for hugetlb pages. It will give
-false-negative.
-
-We cannot just set the bit hugetlb pages as we don't always have memory
-for tail page -- look at HugeTLB Vmemmap Optimization (HVO). Hugetlb
-uses a trick to encode poison page. See code that uses _hugetlb_hwpoison
-in struct folio.
-
-I think we need special-case hugetlb here. (One more reminder why I hate
-HugeTLB).
-
+> +	session_fd = luo_create_session(luo_fd, device_session);
+> +	VFIO_ASSERT_GE(session_fd, 0);
 > +
-> +		cond_resched();
-> +	}
+> +	printf("Preserving device in session\n");
+> +	ret = luo_session_preserve_fd(session_fd, device->fd, DEVICE_TOKEN);
+> +	VFIO_ASSERT_EQ(ret, 0);
 > +
-> +	return poison;
+> +	close(luo_fd);
+> +	daemonize_and_wait();
 > +}
 > +
->  /**
->   * MF_ATTR_RO - Create sysfs entry for each memory failure statistics.
->   * @_name: name of the file in the per NUMA sysfs directory.
-> 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+> +static void after_kexec(int luo_fd, int state_session_fd)
+> +{
+> +	struct vfio_pci_device *device;
+> +	struct iommu *iommu;
+> +	int session_fd;
+> +	int device_fd;
+> +	int stage;
+> +
+> +	restore_and_read_stage(state_session_fd, STATE_TOKEN, &stage);
+> +	VFIO_ASSERT_EQ(stage, 2);
+> +
+> +	session_fd = luo_retrieve_session(luo_fd, device_session);
+> +	VFIO_ASSERT_GE(session_fd, 0);
+> +
+> +	printf("Finishing the session before retrieving the device (should fail)\n");
+> +	VFIO_ASSERT_NE(luo_session_finish(session_fd), 0);
+> +
+> +	printf("Retrieving the device FD from LUO\n");
+> +	device_fd = luo_session_retrieve_fd(session_fd, DEVICE_TOKEN);
+> +	VFIO_ASSERT_GE(device_fd, 0);
+> +
+> +	printf("Finishing the session before binding to iommufd (should fail)\n");
+> +	VFIO_ASSERT_NE(luo_session_finish(session_fd), 0);
+> +
+> +	printf("Binding the device to an iommufd and setting it up\n");
+> +	iommu = iommu_init("iommufd");
+> +
+> +	/*
+> +	 * This will invoke various ioctls on device_fd such as
+> +	 * VFIO_DEVICE_GET_INFO. So this is a decent sanity test
+> +	 * that LUO actually handed us back a valid VFIO device
+> +	 * file and not something else.
+> +	 */
+> +	device = __vfio_pci_device_init(device_bdf, iommu, device_fd);
+> +
+> +	printf("Finishing the session\n");
+> +	VFIO_ASSERT_EQ(luo_session_finish(session_fd), 0);
+> +
+> +	vfio_pci_device_cleanup(device);
+> +	iommu_cleanup(iommu);
+> +}
+> +
+> +int main(int argc, char *argv[])
+> +{
+> +	device_bdf = vfio_selftests_get_bdf(&argc, argv);
+> +
+> +	sprintf(device_session, "device-%s", device_bdf);
+> +	sprintf(state_session, "state-%s", device_bdf);
+> +
+> +	return luo_test(argc, argv, state_session, before_kexec, after_kexec);
+> +}
 
