@@ -4,92 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 318D7C55184
-	for <kexec@archiver.kernel.org>; Tue,  4 Aug 2026 04:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E3762C5518F
+	for <kexec@archiver.kernel.org>; Tue,  4 Aug 2026 14:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=P2hWmXEYKLdR1l/opMy7YgCtg3M2pMsrmlq69E10bs0=; b=XbeFz2y9sOUgvNGkRMihYmKr0i
-	ItMPtCHelGiqRGE4w4W69Nvqew8mK+9JQrQ5TwWpYJ4nPx9aQ9OjlUDxFeN46ve2KHOq3wYqMdBCB
-	lASlKv0YhWVt7MTyUAzRUET+ZZ414JafW5GPKAFfKvpKloAIgvJgb9mQS9SEbi0PSNWTroPHLAZ28
-	Z6L2IXJhTvPYF3h108r6Cf//bVRPWJ5kBCPNC6C3zLYH7MrHKgXWVys770IgPJdvrw43XI3FvE0SR
-	U8GhLsSJrqfyTppPT2ODY5S0JN/GrB8omdZi3BlVvdb5jYX8IbGCirzo1Av7jO2NvMqwTKQQrnCWq
-	QKPS4W/A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=xMHP+hPMOaHZx9jDNO0xYD9pWUWMBLkbRPM0u4QDrOo=; b=IOdL6GhjwILjh3YQCunM0WzXw7
+	cnJT+6NdDuVXTocGrs67SJ0Ir32SQ7hl6fsy5OtNrX3yyRCFk+HGruUPn01757W2z12alkK0A5OOs
+	r9kxOyUhcsGh0ej7fPlbZegXCA8kcFmaKcuxReJ5ZhooqGSEZiCcSvR6RemtKz5ygwgXHB8uWXV+I
+	FDEpLssJMk4fXXwBCx3APGKM3DBQWJin7/oX82BQAExNih7fAZEFBfuka9bVM6ufGFCu7bJ3oK/5U
+	NpCxGrD5MKUargTMk9V4a4dH8govZAutYfT/PIAno+gS9vNppW8hQlOuxl6xoqtdYi+gZ15/3MPiQ
+	WnRx6CcA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wr70X-0000000104l-49V8;
-	Tue, 04 Aug 2026 04:44:05 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1wrGGH-000000025vZ-1wGB;
+	Tue, 04 Aug 2026 14:36:57 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wr70S-0000000104I-1Yiu
+	id 1wrGGF-000000025v5-3KCp
 	for kexec@lists.infradead.org;
-	Tue, 04 Aug 2026 04:44:01 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1785818638;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P2hWmXEYKLdR1l/opMy7YgCtg3M2pMsrmlq69E10bs0=;
-	b=LmUf8gw55op+VTY8hWX9DIygRiwTOPs2ccAR/hKLQXISwwCvHm7BHZjiD6KhxzNeC/ksDZ
-	qkEqIq9rC3i/tbBxfTgGEenDBvYP/C/bJt+qOoIlHrAiYWQ0Pqsy6/DI/2GgXDp6uAywEj
-	vM7Yh7J8oK87P14nAq1ZqGEWlKLqJAc=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-189-_SC0T7ZVPACTSpxhkVrB9w-1; Tue, 04 Aug 2026 00:43:51 -0400
-X-MC-Unique: _SC0T7ZVPACTSpxhkVrB9w-1
-X-Mimecast-MFC-AGG-ID: _SC0T7ZVPACTSpxhkVrB9w_1785818631
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-51c21c01cf3so74699121cf.2
-        for <kexec@lists.infradead.org>; Mon, 03 Aug 2026 21:43:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785818631; x=1786423431;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=P2hWmXEYKLdR1l/opMy7YgCtg3M2pMsrmlq69E10bs0=;
-        b=M/SEYeedti6xqTNKyi6ITvM9ILbR1IXriq1S1/MzphjAq7DdlbDjzINGoBzE3Qi+H4
-         Gju/KZZKaqOzU5Vk1EVKU9vw3x7F2OQdMm9bp4Efn295a9R8+3p2M0i3teNxftvGWrRT
-         0cGOkSdO6eqzf606jMAyIrbUrdxeB+OJb65FbybhPE0x4ar/DeawdbCTl0A0c/GyMk84
-         o+Grjl6OPHpgt0SxjEw8KcSZI6x+8FONAHvTG2Mh8m29T33QclEfV7DoYxqQviArg0Df
-         RUtza9xFLK6kruijwpwVoXR9cqqJF0xx0XJWmx4WxWHak3iwU67D7odnk4PD8BX+z/Ej
-         /HQA==
-X-Forwarded-Encrypted: i=1; AHgh+RrBbTmRdl+ywaZYsk/VqdHzfm65MvVZgTm974YtR4g6VAA7vz+AOwfyY1rhvyArj6SjYoyGrg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzT6ngFtlLY/kUJNFFt1Hg/JSmPJYQizGQ3LHvs7PqFOfdBErAw
-	3YoR71X92Z0ziSa5VhwVpsfKPVoGMqhgKVJAyCMTeyU6KC2If4rCWUrkBuk+EoBOzvBaYLuYaQA
-	S2JUy8LQj6boP1XnCmyJlSdtvG3HOkmJy1nmbqz3Zhxc3s3i6q53J6m3+bpyVimpzkPyQ4whh+W
-	NMUiZikdDeyw3OnbCzXz8f3xQUu2OlUbtfKOCt
-X-Gm-Gg: AR+sD122XLhK53O85TwwHvx6fyp8k3SV4kxCe3IOTTZQT3lZddloVdZuoi/ZhYA3GTZ
-	Z7VWi4gYUDzJ1grht0GIUAaLRjcYuuJ/bj/Mridm7EUYQ+0vAtU54xhb3Qwrs1uN7mFKuWBtKpq
-	/+HSs4qRanbcuCNMrFOwIz/TF965mCaQIzPJQxl+W0jSVul1pQuvaXbQNp
-X-Received: by 2002:a05:622a:53c4:b0:519:5680:1b5 with SMTP id d75a77b69052e-52b5674be9cmr282673681cf.21.1785818630680;
-        Mon, 03 Aug 2026 21:43:50 -0700 (PDT)
-X-Received: by 2002:a05:622a:53c4:b0:519:5680:1b5 with SMTP id
- d75a77b69052e-52b5674be9cmr282673331cf.21.1785818630128; Mon, 03 Aug 2026
- 21:43:50 -0700 (PDT)
+	Tue, 04 Aug 2026 14:36:55 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 306B343C39;
+	Tue,  4 Aug 2026 14:36:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD0281F000E9;
+	Tue,  4 Aug 2026 14:36:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785854215;
+	bh=xMHP+hPMOaHZx9jDNO0xYD9pWUWMBLkbRPM0u4QDrOo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=HbEtkvAZf70uDRm57s8S2Js++GGFN/fljdOhoJptzMF2N88EfAEJdmrEAOiM6HJA2
+	 Uml3dId9f0WYqJxejCZCNArT9SawT2uP5jBSBBTLxELnu+vfc0GrsQQToYXnzZw7ay
+	 R2cCwVxzqM2fT6TWYAaKqN1WqujNXbIzjc4hw/eC6rhhFCv/KfYrxFLih6Jrc63Rhu
+	 H65iFpahgeGYB5ENvkbVjTZG7Kplz40leJ2pXOnMBN5hi05peml/UnMWFScX1c0N16
+	 swAnz9kYXUJDHs4BvIs96i8yud/gEHZr+fA+ZQz8W3xvRfOJnYVR7bTf9PNnG88X3G
+	 +61ZdFvaiiEig==
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfauth.ams.internal (Postfix) with ESMTP id 53B4D198005C;
+	Tue,  4 Aug 2026 10:36:49 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Tue, 04 Aug 2026 10:36:52 -0400
+X-ME-Sender: <xms:APlxaugx6RXIfl3v3aDSMW0ncJwAyy3pLzAUtRUokhDAKNBC9I0DUA>
+    <xme:APlxas611YFY_Rg92zXDB25utn_Hk_llj8ms3tot78f4y0wufCTpw9u_bbq2Niada
+    5EMkb3Y4odp-bn6EYhByDMUkenXkjP5sbjiR6vl59XbLUoDJFlD-5M>
+X-ME-Received: <xmr:APlxavLwEjMZQ1IBwnbCXr56XcJFbnqC8Ny4SeDk02wyxNn2EMCHUBaylk4>
+X-ME-Proxy-Cause: dmFkZTFhdGzLG39r1fMJddaw2USXwwshGe2dXEdkL6WJwsFjOH3SdHoN64VD7l/z+M8aMA
+    4AjIBR2yzva7tfrgZigRLsg6cD+RB1DPGvEMnmO9G+1lDkX/EXVbxIdZbn0UeqbFiuJ4/r
+    gyVQZ01CzYF618dykSnjz8ppv0caM8t0SMTDncdEUQUmHYImfVsKz0hQwHW9gNiycWqLRV
+    WSMaLbFxWRx3XFZF6qtVLvbGv3Oc5bfAz52rJ02W1a4rDBLkqzpI2xBOcimCjvxGSGUbcD
+    UZSi+TEdX0ZKm7T9C+gTHS5O3QVH+kRCBSzxorCQsCu4xyiAEjBf85LNlNHXsYIcHP/bZT
+    y9ElmDOfTPofTD3biREhXmS/3/YA1l3kKXL1JPXMZqPsHnKV4lwAdHbFieVsTTMB0WxxeJ
+    gpE/ZDETEt7gEpR5pgZ+kSaPTFT46I2/SseRBTCPJ7d/ph1n2wKmLua1xwtqMBq7tnuwt1
+    WcDN6VDPdB6cNQEVwElYTlLy5vNHbmTDx9RnoQ51rjkfOwE4hp+CwfANrClC+nFGJduohN
+    Fyg90+BlIbFbygBlp6B+xRaV9RF2hU2o3YGvd4tvlGm1ykhw/YtveSA6NqtYkRTJGcT0jT
+    inYKiVKVyK3heu/y3I7hbiuDUNur6cNpm8WMjUmMhQdIntVB8GtsD3OBSypg
+X-ME-Proxy: <xmx:APlxaohgtFkYNZB9P24X4TXe7X6JSD0n1NWpWO2ZZT5U4Yh9EdK9Hg>
+    <xmx:APlxakJMCwFzE8uZYpmby2AO8jgsRCpHQ8i7uYWtSC0wvSuHQlMKug>
+    <xmx:APlxathVa0Uz2XeVL-tZHO5hN4St8GJP6Ulo_DCfEUXq3Lsm8sONpA>
+    <xmx:APlxat0bFoBmPsiivHmT90C9inEDleeJSM8BvHwH_6bYCeoBz7ni9w>
+    <xmx:APlxakaZC_dsoWXGBa_Y9EFyxE6ERYBXKMOW85tXaPkkSpUeVfWJgZpH>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 4 Aug 2026 10:36:48 -0400 (EDT)
+Date: Tue, 4 Aug 2026 15:36:47 +0100
+From: Kiryl Shutsemau <kas@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Baoquan He <baoquan.he@linux.dev>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, rmikey@meta.com, riel@surriel.com, 
+	kernel-team@meta.com
+Subject: Re: [PATCH v3] kexec: keep the next kernel off hardware-poisoned
+ pages
+Message-ID: <anH1JdVtiM9VoXMH@thinkstation>
+References: <20260803-kexec_posioned-v3-1-83aa6ede0351@debian.org>
 MIME-Version: 1.0
-References: <20260714004550.3698175-1-stephen.s.brennan@oracle.com> <8733wv42ri.fsf@oracle.com>
-In-Reply-To: <8733wv42ri.fsf@oracle.com>
-From: Tao Liu <ltao@redhat.com>
-Date: Tue, 4 Aug 2026 16:43:13 +1200
-X-Gm-Features: AUfX_mzc-E9tMPpbU8El2PdAkXfMmXe1V4rg8mIV5ILNXJ0Othe5mU025YmMzbI
-Message-ID: <CAO7dBbW_EvAHJ3AoZEVXeNon=N-RtVpyy5bHwgs1k7zyh00c6g@mail.gmail.com>
-Subject: Re: [PATCH makedumpfile 0/9] Improvements to makedumpfile extensions,
- plus userspace stack tracing extension
-To: Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc: yamazaki-msmt@nec.com, k-hagio-ab@nec.com, kexec@lists.infradead.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: JuF_X_58Y8G-1pu3tK-gf7D_1coJnkVunoZSOi2qgTg_1785818631
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260803_214400_487599_02B4D648 
-X-CRM114-Status: GOOD (  35.78  )
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260803-kexec_posioned-v3-1-83aa6ede0351@debian.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,144 +103,79 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Stephen,
+On Mon, Aug 03, 2026 at 05:41:10AM -0700, Breno Leitao wrote:
+> @@ -504,6 +505,15 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
+>  			continue;
+>  		}
+>  
+> +		poison = range_last_hwpoison(temp_start, kbuf->memsz);
+> +		if (poison != PHYS_ADDR_MAX) {
+> +			/* we hit a poisoned page */
+> +			if (poison < kbuf->memsz)
+> +				return 0;
+> +			temp_start = poison - kbuf->memsz;
+> +			continue;
+> +		}
+> +
 
-On Tue, Aug 4, 2026 at 4:14=E2=80=AFAM Stephen Brennan
-<stephen.s.brennan@oracle.com> wrote:
->
-> Hello all,
->
-> Just a gentle ping on this series.
+Hm. Don't we want range_first_hwpoison() for top-down walk? Otherwise
+the end of range would land on poison.
 
-Sorry I was busy recently due to some internal team issues. Anyway I
-will review the patchset, it's on my queue.
+>  		/* We found a suitable memory range */
+>  		break;
+>  	} while (1);
 
-Thanks,
-Tao Liu
+...
 
->
-> Thanks,
-> Stephen
->
-> Stephen Brennan <stephen.s.brennan@oracle.com> writes:
-> > Hello all,
-> >
-> > Building on Tao Liu's excellent work for makedumpfile extensions, I'd l=
-ike to
-> > share some incremental improvements to the extension system, as well as=
- my own
-> > two extensions which enable userspace stack tracing. There are three to=
-pics
-> > related to the core makedumpfile extension system which are addressed h=
-ere:
-> >
-> > 1. Tail pages handling. As patch 1 explains, extensions currently get c=
-alled for
-> > tail pages, but their decisions are not respected. I believe the best a=
-pproach
-> > is to only call extensions for the head page, but allow extensions to r=
-eturn a
-> > decision related to just a subset of the pages. To this end, patch 7 ad=
-ds
-> > PG_INCLUDE_HEAD to include just the head page (leaving the rest up to t=
-he
-> > default policy), and patch 9 shows the elfheader extension which uses t=
-hat
-> > functionality.
-> >
-> > 2. Counting pages included by extensions. This is done by patch 4. It a=
-lters the
-> > logic because it's really helpful to know whether a page would have bee=
-n
-> > included by makedumpfile's dump-level filtering anyway, so we only coun=
-t the
-> > additional pages.
-> >
-> > 3. Sharing makedumpfile's logic and knowledge about page metadata. Curr=
-ently,
-> > extensions just get a "pcache" pointer, which means they must redo what=
-ever
-> > logic makedumpfile has already done, in order to get information like
-> > compound_order. Patches 3, 5, and 6 factor out the page metadata into a=
- new
-> > struct pginfo, which gets passed to extensions, and it also makes more =
-of the
-> > helpers like "isSlab()" usable with this pointer.
-> >
-> > With those improvements, the final two patches (8 & 9) implement a pair=
- of
-> > extensions that are useful for including a minimal amount of informatio=
-n which
-> > can be used to do stack traces of the userspace processes in a vmcore. =
-The
-> > "userstack" extension includes the stack memory itself for each thread,=
- and the
-> > "elfheader" extension includes the first page of mapped ELF files, so t=
-hat ELF
-> > build IDs can be identified from the vmcore.
-> >
-> > My testing so far:
-> > - Live testing (/proc/kcore) x86_64 on Oracle UEK 8 (6.12.x based)
-> > - Refiltering on vmcores generated from UEK8, 7 (5.15.x based), 6 (5.4.=
-x based)
-> > - Using the resulting filtered vmcores with drgn's contrib/pstack.py to=
- generate
-> >   userspace stack traces.
-> >
-> > I still have significantly more testing to do and then share out:
-> > - Testing in kexec environment
-> > - Testing with upstream kernels, also verifying in a Fedora userspace
-> > - Sharing runtime and size comparisons with different workloads
-> >
-> > Despite the limited testing, I wanted to share these patches as they ar=
-e,
-> > because I think the improvements for the core extensions framework are =
-useful
-> > already, and don't require as much verification.
-> >
-> > For the extensions themselves, I would like to consider merging them as=
- well, if
-> > there is interest. I think it would be useful for makedumpfile to conta=
-in shared
-> > extensions, including those for the GPU buffers which Tao Liu was worki=
-ng on, as
-> > well as the userspace stack tracing ones which I'm sharing.
-> >
-> > Thanks,
-> > Stephen
-> >
-> > Stephen Brennan (9):
-> >   Do not call extensions for tail pages
-> >   Honor CFLAGS in extension/Makefile
-> >   Share page information with extension callbacks
-> >   Introduce a stat for pages retained by extension
-> >   Move page checks into makedumpfile.h
-> >   Simplify arguments for page checks
-> >   Add PG_INCLUDE_HEAD extension return status
-> >   Add userstack extension
-> >   Add elfheader extension
-> >
-> >  extension.c             |  10 +-
-> >  extension.h             |  10 +-
-> >  extensions/Makefile     |   8 +-
-> >  extensions/elfheader.c  |  93 ++++++++++++
-> >  extensions/userstack.c  | 325 ++++++++++++++++++++++++++++++++++++++++
-> >  extensions/vma_mtree.c  | 140 +++++++++++++++++
-> >  extensions/vma_mtree.h  |   7 +
-> >  extensions/vma_rbtree.c |  56 +++++++
-> >  extensions/vma_rbtree.h |  12 ++
-> >  makedumpfile.c          | 188 +++++++++--------------
-> >  makedumpfile.h          |  78 +++++++++-
-> >  11 files changed, 798 insertions(+), 129 deletions(-)
-> >  create mode 100644 extensions/elfheader.c
-> >  create mode 100644 extensions/userstack.c
-> >  create mode 100644 extensions/vma_mtree.c
-> >  create mode 100644 extensions/vma_mtree.h
-> >  create mode 100644 extensions/vma_rbtree.c
-> >  create mode 100644 extensions/vma_rbtree.h
-> >
-> > --
-> > 2.47.3
->
+> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> index a8b03e2920ba8..ef0e989c25d93 100644
+> --- a/mm/memory-failure.c
+> +++ b/mm/memory-failure.c
+> @@ -96,6 +96,31 @@ void num_poisoned_pages_sub(unsigned long pfn, long i)
+>  		memblk_nr_poison_sub(pfn, i);
+>  }
+>  
+> +/*
+> + * Return the address of the last hardware-poisoned online page in
+> + * [start, start + size), or PHYS_ADDR_MAX if the range is clean.
+> + */
+> +phys_addr_t range_last_hwpoison(phys_addr_t start, unsigned long size)
+> +{
+> +	phys_addr_t poison = PHYS_ADDR_MAX;
+> +	unsigned long pfn, end_pfn;
+> +
+> +	if (!size || !atomic_long_read(&num_poisoned_pages))
+> +		return poison;
+> +
+> +	end_pfn = PHYS_PFN(start + size - 1);
+> +	for (pfn = PHYS_PFN(start); pfn <= end_pfn; pfn++) {
+> +		struct page *page = pfn_to_online_page(pfn);
+> +
+> +		if (page && PageHWPoison(page))
+> +			poison = PFN_PHYS(pfn);
 
+Oh... I think it will not work for hugetlb pages. It will give
+false-negative.
+
+We cannot just set the bit hugetlb pages as we don't always have memory
+for tail page -- look at HugeTLB Vmemmap Optimization (HVO). Hugetlb
+uses a trick to encode poison page. See code that uses _hugetlb_hwpoison
+in struct folio.
+
+I think we need special-case hugetlb here. (One more reminder why I hate
+HugeTLB).
+
+> +
+> +		cond_resched();
+> +	}
+> +
+> +	return poison;
+> +}
+> +
+>  /**
+>   * MF_ATTR_RO - Create sysfs entry for each memory failure statistics.
+>   * @_name: name of the file in the per NUMA sysfs directory.
+> 
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
