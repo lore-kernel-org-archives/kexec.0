@@ -4,100 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 50203C55174
-	for <kexec@archiver.kernel.org>; Wed,  5 Aug 2026 06:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 776FBC55822
+	for <kexec@archiver.kernel.org>; Wed,  5 Aug 2026 07:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=VSMqYBzIGEd+bEQZKAp6F83EI/D8TARVrS07DYO5Xqo=; b=UnQkSqmMrqMeUGtXI0cil6bSJI
-	sjJrEUEM+ga278cE+28mfvgMXV7QQuakoV5RcjYkYK+yc7V3VsYpvXyLyYQKblDGh9pNuENho431O
-	wzFgGFYceb+vHEWYm3RlCO5vKr+tAjkcoMuocuCgwyf4TDE3WFBbC9ypMRdpv5vuNtgiZqmoeMUFe
-	Qj8i50NAIYsqzLrMOA+DToxHu53ix5xS7E0xh1/zAlBBtAwzVIPIFfX7LaDj15wvN+j6Nf998piaO
-	Lj0HO5W2EwTamCIhQXtJDAcY6Ko8yaRO1MahzhcUh/OObxdrn4fduuN1I6+M/CqgWL0DWOKO5VdTX
-	2nEmFG3A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=oBW6kUUwToLlQPeXRBH0mQIGjGXfNTHkKHLX5zY30+c=; b=i5ga4Hz5khGU4EojsFQduCOOlr
+	03RqtBN8PQc2Pxa7MyfcF4+2ql1IWCX5vyqxt+q35GLKusQaX6kVBHUw69reroPI5Gb9wzIdZyCVl
+	9WdRFa2E1aUfq8hiGe8GX4aE3p7up2n0Z6/JkYowu1V/HSdn9Nj8wPMqZ0VBQ1PWboY5gbw5z5rbG
+	9iY5M++1GI2BKZiWFvnJlG23Fm7aVc5ed0rEJzTRPd0n47ejUcGwdHfTgAefYOWpoTpEQi45TPPIA
+	RTw6vcT/hVpOY3J+S3WldYyvU6s9/c0xGrJ1iFB5+PaWmKdX1GVez05jI7DKrXPEdqHWnw1FPe7nr
+	hk7KH9Aw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wrUkP-00000003HSB-3tVg;
-	Wed, 05 Aug 2026 06:05:01 +0000
-Received: from mail-pl1-x62a.google.com ([2607:f8b0:4864:20::62a])
+	id 1wrVkV-00000003NGa-2Tjx;
+	Wed, 05 Aug 2026 07:09:11 +0000
+Received: from mail-pl1-x632.google.com ([2607:f8b0:4864:20::632])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wrUkN-00000003HRO-36Gf
+	id 1wrVkR-00000003NFy-2Obr
 	for kexec@lists.infradead.org;
-	Wed, 05 Aug 2026 06:05:01 +0000
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-2cacef7d299so54455ad.1
-        for <kexec@lists.infradead.org>; Tue, 04 Aug 2026 23:04:59 -0700 (PDT)
+	Wed, 05 Aug 2026 07:09:10 +0000
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-2cab973140bso8932825ad.3
+        for <kexec@lists.infradead.org>; Wed, 05 Aug 2026 00:09:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785909899; x=1786514699; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=VSMqYBzIGEd+bEQZKAp6F83EI/D8TARVrS07DYO5Xqo=;
-        b=JIdyvvbKCWDKdlzug3BJbTZXxCebR31/bs1Tx9EkERAdnpoKjL2UTCnf/jzAHHygD2
-         Qqq5QEI7CvG58Ya8zPBlW6oGQrgto3iLopqWI2CWRP1ApSG3+frra45+vZrX5X46yL+m
-         a8lVzIXSfnmSg+/b3UbbgilzlWUjkMzLad+gGQo1ScsRJefqiW5FZ9+/QYU43ACWMzoA
-         ac2rx1iDBo4Ra2pXurk5q/XryJGoanGoVCZUg2f/om9X7JkmTHJr2cNA9FfqZkIG5l+h
-         Xe2mV7Kwdtj5E26ItB9mYDlMcVxSuX8jTV3UNT9no+NdIayvUAKJxoJn2rOY7SS3SBNn
-         Kt1w==
+        d=gmail.com; s=20251104; t=1785913746; x=1786518546; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=oBW6kUUwToLlQPeXRBH0mQIGjGXfNTHkKHLX5zY30+c=;
+        b=cCGYFZ1diDgvMxX+Zr/6SeirXbPM/Saatmd/rj1arkPqpOVwRq1SUUqCYZba/KA2gW
+         RaxRJT9LOk5Fd78Now8FsCAUNhIq5RBKwJwc/tQWuYQiPk6QvxWOEYDVRTOkqYEV9ckm
+         oBJPmyKvoJUNTdSM6qpIF2He3UO0NkpSVfK5gabSbqByUx9N15IP0O0ZC+lTfUJDFyBb
+         buKFVDq9KdMYukA63zNIP5VMHl6tJiKwXs1khb1QN8C2CXcmDekFtrg/nnGD83C0EsWD
+         72J5iDy4/Rvvxt3GZdomnH/MnVix1odY8+woQOrzRrLP2e3EWF3ui+2eN4w1gqIRer4t
+         3XPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785909899; x=1786514699;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=VSMqYBzIGEd+bEQZKAp6F83EI/D8TARVrS07DYO5Xqo=;
-        b=lFTNIP9r2c9cy0DNeSIHZRGmCjzc7N78bWWo/I9VzOxEAwg6JYUmJ+lv/nKU5jcrvf
-         t1y6ugEMpDTls4Y9rIMfjYSILU/Gp70frPPYj5YtlVLdWCgfkOCtApilMmg4OEoP2vVw
-         fcIzdS74K507llT8zCXMwx3U9CdBPAKQWjNLa3U1Kvxpj00DvoymRLc9LOKW5raTSVSh
-         oSoFxx5x0qVixBa2HVma/BySNOuzlEPtM1eVEBc88rR386GwfVaKU8wOBddsgTTxP9Zq
-         wwy/JomFKP8yLrEfX7qQMQSiTFEcB0SmMAH6ANlg30gm6Jh/qcPLpXVDrKrpa5EEXMzV
-         SQTg==
-X-Forwarded-Encrypted: i=1; AHgh+RoqzmZhQPPXiYiDPivbEBeuy+a70YS3ZcWV+0KP0vNJLy6RGfW8giuUe2pdpGGX7gbFlUafnA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyY6wzNl+MiX3+xjXqiccjhmHwiGLSh1ggfV+TPoqrfOhOMqVmu
-	/zryoW/dDLmSawhGQZLE3kt3hg174FOJJBfgGYA4wXOzwM030zjol/HaSGS6uCpMNA==
-X-Gm-Gg: AR+sD10jrKnZJsCrAhUs66WRimhYI6EHxsQqb8nwON7Y6JQmEoMZkYYjiSGsLeq1Wuq
-	gULm/sMXMXLNIiGBtfoPievTmgX52W+wJk3P6L2YwuxAlNac+aqvcYli+pD+gDBU5349lvtpmVp
-	JLOSMfAtHe+6ZmwidxqPv5tLxFUMtvqhTTVC+0dTmoPX3jBhH8fYno6q1HhSocdDzSa2ppKq8DC
-	JcwvEliGqxqCX9fKKLAwf70OB3Xtva2fW9NS6vj9F+wCpaTR5QZJF17oGPLvPYkRhQjPseFwKIs
-	4Htsba1+WN1Us2eNWvw22OTnr0K6f3xL/AL4PfjHSa9CIFRVHFGj6XS67VOQ6ifpMkGvO4gOhfo
-	TOBEbBYxgG62L4ZObZHK9kGBi/WlWJRsz8R9rzrHiRmi6bM3/8FK+f7SvkmGQzhk+uVCuvvO5zj
-	tvddSQT8lsuzKeJblb1krsWlTWy3prv9bvzKboy2kwAvrwW0QdaCWTHp5hGxjdNl5j5jnypQAZy
-	A9HwUPG8OJqtq1RoDPYjA1r6Q==
-X-Received: by 2002:a17:902:da89:b0:2ca:6bf:5bac with SMTP id d9443c01a7336-2d0cae8f44amr8339885ad.8.1785909897932;
-        Tue, 04 Aug 2026 23:04:57 -0700 (PDT)
-Received: from google.com (176.13.105.34.bc.googleusercontent.com. [34.105.13.176])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cbe707cab37sm740464a12.7.2026.08.04.23.04.56
+        d=1e100.net; s=20251104; t=1785913746; x=1786518546;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=oBW6kUUwToLlQPeXRBH0mQIGjGXfNTHkKHLX5zY30+c=;
+        b=To6UndCoy/AnAHIaJT8y2ROQcXaHVl3p4vss2GCrT5RETKlmeYnJoxXwd1wldLoZsg
+         cI9xXg5qyapPevXjfZvBatTM/YYXJtRi6M+TddoaTI6jyPbRF82yDXyS2JKob4t7/qvP
+         Sps01gOruVzgjQ+2y4MHkGPEOYufwW8EZhwQpp6rrolKTgGmkvuRZufZJRvN5i0+T3EW
+         OV7gVBkGK2OIzafCALeBPGvEEko3gTXAlgnGbpa9wpsb2C38GgirIumAQpArmxYswVr5
+         CWHWYBC24J3wHnTbBYB+KStKDh17sLuq4sxzpMHKcZuXv0/BEbfXHJgEUo/1C/B0Mqyi
+         IaHg==
+X-Forwarded-Encrypted: i=1; AHgh+Rp5m4DIRDG0zQ3JVHh3+aRSpwp1R5JEfH1bCce7k4JXw5A5cpY8JL1zmh0IimOXXbNaagPHxg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxTh9gBnDBQutcAFSHIOMy3+flA1Df+cyKUoNt5HhjDSLf9+JT1
+	qjozBLiSmxSXWW5sZIZ48FwH0CpUD+i4BBtE+ZZbnReLwkyG82cAYVMO
+X-Gm-Gg: AR+sD13k56jU8mopPDIE6jyPAcLUo3QejX1mwO6we2bxFIEOWQefVZ+uHStMFnF20HX
+	LfiBBrtitMJR6BqyuQD+B23n8jsqIz8zjvfZuqier3xPnr539CuBiWMZpBgE0wIOr7gZA/KeIy7
+	BGiiOxW4aijfI5hPEfkd6emAn+shR5ZBGJCAx5Jh3jWuWTAv9cGF5qYcYezOMU6s6U5Yr2+lOLY
+	09q8nmeZ/S2oyReSvnB0zcGI7PTzrBu6vMB3Lt5Du6mkLG7QpYHJt7vsCv+vioCgekRiRz4xuTc
+	RIrLDSfaOkmjl8ajlaVL4ahcJSpv3k7Rd97LL/gDYgTXDVy8V89j0fXOzhHHrsou1y+WaZrECnp
+	kbu3FETTgW+7C3Qr5Q2Dqh8e1TIPO3VTFVbwNaa+ZSe0fisH2Bzhg8M7lpsrQE9I4Heax5PxF0r
+	puagHajtvfEYYPtsKMrjfQdiBy2rz0pwK7pox56pkeiHJsdLdbyZ5UzEwJH/hFY7brf3PfGLTLK
+	DoPu7IZH7OdsVh2qWk+3VJu7qCf50jnOZWUWWkK3RtWMEji8mr9d1Jz/pz+HdmJHzqvBZEpSDaN
+	xfFk88KhTBCX9X2lUzZg1Cf5PqnLubDrDflRzm8i74M2eOrEs2Ri
+X-Received: by 2002:a17:90b:4d91:b0:38d:dfd1:7a8 with SMTP id 98e67ed59e1d1-3903c559592mr3739247a91.2.1785913746261;
+        Wed, 05 Aug 2026 00:09:06 -0700 (PDT)
+Received: from spider.bream-herring.ts.net ([103.252.203.158])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3903f64f0a9sm1017961a91.4.2026.08.05.00.09.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2026 23:04:57 -0700 (PDT)
-Date: Tue, 4 Aug 2026 23:04:53 -0700
-From: Vipin Sharma <vipinsh@google.com>
-To: alex@shazbot.org, rppt@kernel.org, pasha.tatashin@soleen.com, 
-	pratyush@kernel.org
-Cc: ajayachandra@nvidia.com, amastro@fb.com, ankita@nvidia.com, 
-	apopple@nvidia.com, bhelgaas@google.com, chrisl@kernel.org, christian.koenig@amd.com, 
-	corbet@lwn.net, dmatlack@google.com, graf@amazon.com, 
-	jacob.pan@linux.microsoft.com, jgg@nvidia.com, jgg@ziepe.ca, jrhilke@google.com, 
-	julianr@linux.ibm.com, kees@kernel.org, kevin.tian@intel.com, leon@kernel.org, 
-	leonro@nvidia.com, lukas@wunner.de, mattev@meta.com, michal.winiarski@intel.com, 
-	parav@nvidia.com, praan@google.com, rananta@google.com, rientjes@google.com, 
-	rodrigo.vivi@intel.com, saeedm@nvidia.com, schnelle@linux.ibm.com, 
-	skhan@linuxfoundation.org, skhawaja@google.com, vivek.kasireddy@intel.com, witu@nvidia.com, 
-	yanjun.zhu@linux.dev, yi.l.liu@intel.com, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v5 00/20] vfio/pci: Base Live Update support for VFIO
-Message-ID: <20260805060336.GB806762.vipinsh@google.com>
-References: <20260714151505.3466855-1-vipinsh@google.com>
- <20260723215749.GC260824.vipinsh@google.com>
+        Wed, 05 Aug 2026 00:09:05 -0700 (PDT)
+From: Matthias Goergens <matthias.goergens@gmail.com>
+To: rafael@kernel.org,
+	linux-pm@vger.kernel.org
+Cc: pavel@kernel.org,
+	tglx@kernel.org,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	yu.c.chen@intel.com,
+	jlee@suse.com,
+	baoquan.he@linux.dev,
+	dyoung@redhat.com,
+	io@r-ricci.it,
+	scardracs@disroot.org,
+	moravec@ukf.sk,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Matthias Goergens <matthias.goergens@gmail.com>
+Subject: [PATCH] x86/hibernate: Ignore page-zero RAM in E820 checksum
+Date: Wed,  5 Aug 2026 15:09:00 +0800
+Message-ID: <20260805070900.3390978-1-matthias.goergens@gmail.com>
+X-Mailer: git-send-email 2.55.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260723215749.GC260824.vipinsh@google.com>
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260804_230459_815517_353D3991 
-X-CRM114-Status: GOOD (  15.31  )
+X-CRM114-CacheID: sfid-20260805_000907_653510_D15F07B3 
+X-CRM114-Status: GOOD (  14.96  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,42 +113,124 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jul 23, 2026 at 03:58:45PM -0700, Vipin Sharma wrote:
-> On Tue, Jul 14, 2026 at 08:14:45AM -0700, Vipin Sharma wrote:
-> > Hello,
-> > 
-> > This series can be found on Github:
-> > 
-> >   https://github.com/shvipin/linux vfio/liveupdate/v5
-> > 
-> > This series provides the base support to enable Live Update feature for
-> > VFIO PCI devices using the Live Update Orchestrator (LUO) and Kexec
-> > Handover (KHO).
-> > 
-> 
-> Hi Alex, Pasha, Mike, and Pratyush,
-> 
-> I'd like to discuss which maintainer tree should take the VFIO Live
-> Update series.
-> 
-> For context on related efforts:
-> 
->   - PCI Live Update is targeting the Live Update tree (maintained by
->     Pasha, Mike, and Pratyush, with David Matlack maintaining the
->     PCI-specific code).
->     https://lore.kernel.org/linux-pci/20260710212616.1351130-2-dmatlack@google.com/
-> 
->   - IOMMU Live Update is planned to go through the IOMMU tree.
->     https://lore.kernel.org/linux-iommu/20260614233728.2212104-3-skhawaja@google.com/
-> 
-> Given these different approaches, what is your preference for routing
-> the VFIO Live Update code?
-> 
+The legacy kexec_load path reconstructs the E820 map exported through
+sysfs.  kexec-tools leaves the first 1 KiB unavailable for the real-mode
+transition, so a kernel entered through kexec_load can see conventional
+RAM starting at 0x400.  A subsequent firmware boot reports the same RAM
+range starting at zero.
 
-Hi Alex,
+The hibernation E820 checksum compares those byte representations and
+rejects the image, even though the maps agree from page one onwards.  The
+reproducer observed this exact transition:
 
-Gentle ping. 
+  firmware:     RAM [0-0x9fbff]
+  kexec_load:   gap [0-0x3ff], RAM [0x400-0x9fbff]
+  firmware:     RAM [0-0x9fbff]
 
-Thanks
-Vipin
+Common x86 setup already converts conventional RAM in page zero to
+reserved memory in trim_bios_range() before registering hibernation
+nosave regions.  Page zero therefore cannot occur in the image.
+
+Canonicalise only the conventional-RAM portion below PAGE_SIZE before
+calculating the checksum.  Preserve RESERVED, ACPI, NVS, UNUSABLE, PMEM
+and all other E820 types so that changes to exceptional mappings remain
+detectable.  Maps without conventional RAM intersecting page zero retain
+the previous checksum byte stream.
+
+This is deliberately narrower than the June proposal to checksum only RAM
+and its opt-in relaxed_memmap successor.  Rafael noted that ignoring non-RAM
+changes could hide moved ACPI or UEFI regions still used by the resumed
+kernel.  This patch preserves every non-RAM entry and ignores only RAM within
+page zero, which common setup already reserves and excludes from the image.
+
+Changing the checksum semantics means an image made by an unpatched
+kernel can fail to resume under a patched kernel, or vice versa, when its
+raw map contains page-zero RAM.  Such cross-version attempts remain
+fail-closed; normal same-kernel hibernation is unaffected.
+
+With the reproduced raw-map difference retained, both the direct-boot
+control and legacy kexec_load hibernation/resume tests passed.  The test
+kernel also completed a clean full bzImage build.
+
+Fixes: 62a03defeabd ("PM / hibernate: Verify the consistent of e820 memory map by md5 digest")
+Reported-by: Roberto Ricci <io@r-ricci.it>
+Signed-off-by: Matthias Goergens <matthias.goergens@gmail.com>
+Link: https://lore.kernel.org/all/Z-hYWc9LtBU1Yhtg@desktop0a/
+Link: https://lists.openwall.net/linux-kernel/2025/04/04/1372
+Link: https://lore.kernel.org/all/CAJZ5v0jmOj0WBtMTvbnaD+2b0bTFowA=JWrqRzaaCYpHpai1Nw@mail.gmail.com/
+Link: https://lore.kernel.org/all/20260623165724.10753-1-scardracs@disroot.org/
+---
+ arch/x86/power/hibernate.c | 47 ++++++++++++++++++++++++++++++++++----
+ 1 file changed, 43 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/power/hibernate.c b/arch/x86/power/hibernate.c
+index a2294c1649f65..ec53c970c92e6 100644
+--- a/arch/x86/power/hibernate.c
++++ b/arch/x86/power/hibernate.c
+@@ -63,6 +63,25 @@ struct restore_data_record {
+ 	unsigned long e820_checksum;
+ };
+ 
++static bool trim_e820_page_zero_ram(struct e820_entry *entry)
++{
++	u64 lowmem_size;
++
++	/*
++	 * Page zero is BIOS-owned and registered as nosave.  Boot loaders may
++	 * therefore omit part of its conventional RAM entry without changing
++	 * any memory available to the image.  Preserve all other E820 types.
++	 */
++	if (entry->type != E820_TYPE_RAM || entry->addr >= PAGE_SIZE)
++		return true;
++
++	lowmem_size = min_t(u64, entry->size, PAGE_SIZE - entry->addr);
++	entry->addr += lowmem_size;
++	entry->size -= lowmem_size;
++
++	return entry->size;
++}
++
+ /**
+  * compute_e820_crc32 - calculate crc32 of a given e820 table
+  *
+@@ -70,12 +89,32 @@ struct restore_data_record {
+  *
+  * Return: the resulting checksum
+  */
+-static inline u32 compute_e820_crc32(struct e820_table *table)
++static u32 compute_e820_crc32(struct e820_table *table)
+ {
+-	int size = offsetof(struct e820_table, entries) +
+-		sizeof(struct e820_entry) * table->nr_entries;
++	struct e820_entry entry;
++	u32 crc = ~0;
++	u32 nr_entries = 0;
++	u32 i;
++
++	for (i = 0; i < table->nr_entries; i++) {
++		entry = table->entries[i];
++		if (trim_e820_page_zero_ram(&entry))
++			nr_entries++;
++	}
++
++	crc = crc32_le(crc, (unsigned char const *)&nr_entries,
++		       sizeof(nr_entries));
++
++	for (i = 0; i < table->nr_entries; i++) {
++		entry = table->entries[i];
++		if (!trim_e820_page_zero_ram(&entry))
++			continue;
++
++		crc = crc32_le(crc, (unsigned char const *)&entry,
++			       sizeof(entry));
++	}
+ 
+-	return ~crc32_le(~0, (unsigned char const *)table, size);
++	return ~crc;
+ }
+ 
+ #ifdef CONFIG_X86_64
+-- 
+2.55.0
+
 
