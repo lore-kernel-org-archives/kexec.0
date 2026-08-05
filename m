@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 63BC3C55174
-	for <kexec@archiver.kernel.org>; Wed,  5 Aug 2026 12:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 861EFC55174
+	for <kexec@archiver.kernel.org>; Wed,  5 Aug 2026 12:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
 	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=DmoMMq8RuTbMVcWcc4qQNUhYH0FF7JUuwrU7Xrd90cM=; b=KTNv1kIL84XlsKbrsPEBqtVsDS
-	qMetGIlhOhELX4JR8wSgybvlxjhCE1Pi69N5UGmGV1ieEdcIYFPZKr3JPvwNVQKKc+I3TpFvvH7Zs
-	axs+EZ1o6IbhAAZyF+mvtuZmfP5RzYEexN43OPAx5vn6Laue5Neq84dPLwm9DWmxq6sj9n6PJ6P9G
-	4f5WbjEG5dR89F4QUfMfr6uWFdIN70QUHeoJLIaRlanJbvQOunsZsZ2vibYRe/0W/z1o1ifElK1iq
-	zZ3vzxA/bpkSldNouUQ8jodzmDUREXOGTBLh15i76+deATES1QsBD1jE7QCxnryDr3cmncYWA20pw
-	D1OEB5yQ==;
+	bh=EOaqGgE1QBleQJXxsV0ixW4fTooIGCrLyRY0clgpEM0=; b=KU8UMFDE67XmSExgIxa7P0ZXzQ
+	9qiL8T2gsVNTiEgyFe8tlhg3AYa7t/fD1Vd8xCmL48rqLthsfW5wemOpbFbQkJwjMaZhd+Xilp/yE
+	EPbZUlwXqlcfHmQ5LkIUu4KNcP/9AL22t0eNnM1J4zLw34ymuBaSUSRVl3VOnOGljFo3w8cPfZzH6
+	V1OWWYCyyMtLvr606GdiMNV4xAAymjc3ZYl+KIPGP4h0osPkofg5XY4m13y92EV6viMXYi0pddiBB
+	jzDdy1wCBTkaYsEAyQUiU4/2Ac6qq+X3J6QJcfBFK8/ZSZNEAoCSlfBchRIhdvkFIH+x7Sf6WAD3r
+	Qx/ykUQQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wraI3-00000003r1v-2x2d;
-	Wed, 05 Aug 2026 12:00:07 +0000
-Received: from mgamail.intel.com ([198.175.65.17])
+	id 1wraK0-00000003rHa-0ygQ;
+	Wed, 05 Aug 2026 12:02:08 +0000
+Received: from mgamail.intel.com ([198.175.65.19])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wraI0-00000003r1Y-3s5E
+	id 1wraJx-00000003rGt-3u5R
 	for kexec@lists.infradead.org;
-	Wed, 05 Aug 2026 12:00:06 +0000
+	Wed, 05 Aug 2026 12:02:07 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785931205; x=1817467205;
+  t=1785931326; x=1817467326;
   h=date:from:to:cc:subject:message-id;
-  bh=+Dnj/IdWjRNsthXUVccoqqJrLlrXVuiuDYrfqgZe8Cw=;
-  b=Jfru0NQZRQyVhYbCeNKlFZmmF6++7TCF8N/hoZLLU8RxgfQVdGDGj76c
-   8wHV9JblOZheOU9JJOmBIniBzQ7vLAFES7kxQ476LS9oRH6Ca+hGqESpP
-   mDBcMOcLh1umXflcgSMrr4ItB6pf25ESRZTqLgHH8sOg9v7vB1+9WZLN0
-   nDO02VJQDDAF/5JWiRdHVtSb09W5QJ5uMX+t66nUHb8hU8qbSXVOwiirQ
-   FkbIeO3bzVh4tAYKhGbYbdDD4M5SZMOdEllg1PfbcQ+tcYkUkgTfL0b/K
-   yE3/6Ocylc6vdZO4SpLQdpRFc4k2A7TK94lsydo3ZwJ9vgwFw+6ivHSIH
+  bh=xsOwDaRzapff4WVQyziDOn8ToKPjt1POJO824ajWYcw=;
+  b=do9BEI8t7bzfLUQgBl7vz7KGWRpq689sLYAjl/rE9n9OFy0ENsgdbu6c
+   H0KSXJXofiE+ryPuy14bEHiVlLz3O6UaZs7HvrMhujf03B5Hq41+UYrpM
+   TlMOFZrX1JyRz2e8i04LwXY5sw0ArDDEzQu9hsMb5Es3XPy8jrzG8S0+X
+   ImSExIS3uH4aVloM4N4JSp7gBbQ3oiZsCkV9LPq5/hizJyZze/xSaoC3b
+   JhIRJQm3EhEGl8Po823YJZau/7IyvixjzqyPvnM356JLXaICalqXYn7/D
+   IQxrNf0NsWOFSkAylin+dLHNgmDxQSLh//PCppxthI9b7Gq5V2QoqEYYJ
    g==;
-X-CSE-ConnectionGUID: RSB3IkSVSKWUYc9o2poNCQ==
-X-CSE-MsgGUID: 9jzGCQWvTNuYUtCHW2PemA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11865"; a="86512491"
+X-CSE-ConnectionGUID: Bk0A+A3JSSCtu2B7gpjaSg==
+X-CSE-MsgGUID: SeO/oljeQaOk4yZWzV4BtQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11865"; a="86441649"
 X-IronPort-AV: E=Sophos;i="6.25,206,1779174000"; 
-   d="scan'208";a="86512491"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2026 05:00:05 -0700
-X-CSE-ConnectionGUID: sOtJL3xZSF6RJVkjffTNlw==
-X-CSE-MsgGUID: 1+jiuY/BSYSsscvzcblUHA==
+   d="scan'208";a="86441649"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2026 05:02:06 -0700
+X-CSE-ConnectionGUID: +1ZcVf0OSMe9UpepXLEEAg==
+X-CSE-MsgGUID: k6xY1pA6Sn6bAk3AmoNBCQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,206,1779174000"; 
-   d="scan'208";a="261854357"
+   d="scan'208";a="300013480"
 Received: from lkp-server01.sh.intel.com (HELO 6eda058d650d) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 05 Aug 2026 05:00:03 -0700
+  by orviesa001.jf.intel.com with ESMTP; 05 Aug 2026 05:02:04 -0700
 Received: from kbuild by 6eda058d650d with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1wraHw-00000000CLb-1ml1;
-	Wed, 05 Aug 2026 12:00:00 +0000
-Date: Wed, 05 Aug 2026 19:59:48 +0800
+	id 1wraJt-00000000CM7-2Kpa;
+	Wed, 05 Aug 2026 12:02:01 +0000
+Date: Wed, 05 Aug 2026 20:01:04 +0800
 From: kernel test robot <lkp@intel.com>
 To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
  Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
-Subject: [liveupdate:kho-scratch] BUILD SUCCESS
- bc0f793c5c41601b273a2ca64c768adca1d447f5
-Message-ID: <202608051935.xEksv4tC-lkp@intel.com>
+Subject: [liveupdate:next] BUILD SUCCESS
+ 352ebb57013a08679788bc18c7f9af90903db256
+Message-ID: <202608052051.4yvGJnIv-lkp@intel.com>
 User-Agent: s-nail v14.9.25
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260805_050005_054885_EEF9E6F8 
-X-CRM114-Status: UNSURE (   4.15  )
+X-CRM114-CacheID: sfid-20260805_050206_036029_519BF230 
+X-CRM114-Status: UNSURE (   3.83  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -84,13 +84,13 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git kho-scratch
-branch HEAD: bc0f793c5c41601b273a2ca64c768adca1d447f5  Merge patch series "kho: make boot time huge page allocation work nicely with KHO"
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git next
+branch HEAD: 352ebb57013a08679788bc18c7f9af90903db256  Merge branch 'luo-internal-api' into next
 
-elapsed time: 1530m
+elapsed time: 1531m
 
-configs tested: 191
-configs skipped: 1
+configs tested: 192
+configs skipped: 2
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -105,6 +105,7 @@ arc                  randconfig-001-20260804    gcc-8.5.0
 arc                  randconfig-001-20260805    gcc-12.5.0
 arc                  randconfig-002-20260804    gcc-8.5.0
 arc                  randconfig-002-20260805    gcc-12.5.0
+arm                       multi_v7_defconfig    gcc-16.1.0
 arm                  randconfig-001-20260804    gcc-8.5.0
 arm                  randconfig-001-20260805    gcc-12.5.0
 arm                  randconfig-002-20260804    gcc-8.5.0
