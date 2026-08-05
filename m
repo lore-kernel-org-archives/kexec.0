@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E4CCC55ABA
-	for <kexec@archiver.kernel.org>; Wed,  5 Aug 2026 11:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 63BC3C55174
+	for <kexec@archiver.kernel.org>; Wed,  5 Aug 2026 12:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Subject:Cc:To:
 	From:Date:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=mpu9QU2Ll61p4KXpmqTdmsabQGU48NQ/FcGPxkrR1d4=; b=VTrQpFpLHKZ8mrn+2WgbPPdHmU
-	uN1GrI/WqT+IMrapvA0qfmkOqMIjLryH6fttNukFaOpYjB6yj98BKuzN1OUEYs7/ncIGiXalosSzT
-	a/WOQQFAkHw6+Vm29mpV3BnODikKbwvYzB6E+G71vDP2d5yXX0Kimka3jqoOFI9Bdf9KvSkN77CvU
-	99zVQCMgDFAL/wFB4mXyvB3WeVMqlAwkt/uFaNepaSyPNJQTOgAGZJ87dSezc3S6Mi26q8Ya4pAvP
-	2dNLP4Ot3Oy/Kxuga5EKH4nnUQix2rJwHt7AkDRpFEVpZw1dPIIy9gh6hIUmBLgoOQWXHhvZyusSO
-	cTEoEarA==;
+	bh=DmoMMq8RuTbMVcWcc4qQNUhYH0FF7JUuwrU7Xrd90cM=; b=KTNv1kIL84XlsKbrsPEBqtVsDS
+	qMetGIlhOhELX4JR8wSgybvlxjhCE1Pi69N5UGmGV1ieEdcIYFPZKr3JPvwNVQKKc+I3TpFvvH7Zs
+	axs+EZ1o6IbhAAZyF+mvtuZmfP5RzYEexN43OPAx5vn6Laue5Neq84dPLwm9DWmxq6sj9n6PJ6P9G
+	4f5WbjEG5dR89F4QUfMfr6uWFdIN70QUHeoJLIaRlanJbvQOunsZsZ2vibYRe/0W/z1o1ifElK1iq
+	zZ3vzxA/bpkSldNouUQ8jodzmDUREXOGTBLh15i76+deATES1QsBD1jE7QCxnryDr3cmncYWA20pw
+	D1OEB5yQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wraG6-00000003qMe-13xx;
-	Wed, 05 Aug 2026 11:58:06 +0000
-Received: from mgamail.intel.com ([198.175.65.11])
+	id 1wraI3-00000003r1v-2x2d;
+	Wed, 05 Aug 2026 12:00:07 +0000
+Received: from mgamail.intel.com ([198.175.65.17])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wraG3-00000003qKH-2iMp
+	id 1wraI0-00000003r1Y-3s5E
 	for kexec@lists.infradead.org;
-	Wed, 05 Aug 2026 11:58:04 +0000
+	Wed, 05 Aug 2026 12:00:06 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785931084; x=1817467084;
+  t=1785931205; x=1817467205;
   h=date:from:to:cc:subject:message-id;
-  bh=HaGb8+teKOc8NgR8BmmPKt6+MKFMBKgd/WZZ57XCTcY=;
-  b=exdKUkFrvUzimkuiFT6yU7k455JSUUJ6LVb21ZDfypmtDg16xi4R+38i
-   YZ0JR/gVfjr+V6rSZt+YAfbVmvexR0PKNNRY43OEod+3lOPIOiebCsg/R
-   vYZcTlqyXxIE11ifUArLixwaiE4LEs7DPtowK16bkd9s0Ygp0s9auTFB/
-   ppK1FI+hUYco2sAi6KeYyhwgt41TB2xtph1ckxozyzakdb1sVd7uTXNUK
-   RBKfuD167fxwJgCznlZlGJaSJc9QL0If8l470U9hu0IwRKezTGdxagc1F
-   KME7Gjd1H2gPx8or4S4rMYlPAMwXC0m1mFHT0/7u8+tCHeDKQM8N9lIjg
-   w==;
-X-CSE-ConnectionGUID: h9OI1CYmScaxyE4+ND47kA==
-X-CSE-MsgGUID: 5a0ajac3TQmeTquezEbZRA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11865"; a="96855712"
+  bh=+Dnj/IdWjRNsthXUVccoqqJrLlrXVuiuDYrfqgZe8Cw=;
+  b=Jfru0NQZRQyVhYbCeNKlFZmmF6++7TCF8N/hoZLLU8RxgfQVdGDGj76c
+   8wHV9JblOZheOU9JJOmBIniBzQ7vLAFES7kxQ476LS9oRH6Ca+hGqESpP
+   mDBcMOcLh1umXflcgSMrr4ItB6pf25ESRZTqLgHH8sOg9v7vB1+9WZLN0
+   nDO02VJQDDAF/5JWiRdHVtSb09W5QJ5uMX+t66nUHb8hU8qbSXVOwiirQ
+   FkbIeO3bzVh4tAYKhGbYbdDD4M5SZMOdEllg1PfbcQ+tcYkUkgTfL0b/K
+   yE3/6Ocylc6vdZO4SpLQdpRFc4k2A7TK94lsydo3ZwJ9vgwFw+6ivHSIH
+   g==;
+X-CSE-ConnectionGUID: RSB3IkSVSKWUYc9o2poNCQ==
+X-CSE-MsgGUID: 9jzGCQWvTNuYUtCHW2PemA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11865"; a="86512491"
 X-IronPort-AV: E=Sophos;i="6.25,206,1779174000"; 
-   d="scan'208";a="96855712"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2026 04:58:03 -0700
-X-CSE-ConnectionGUID: XMVozn+rRUGMtltZYW3Itw==
-X-CSE-MsgGUID: ZaDfCrInQIWstSYkDX7DWQ==
+   d="scan'208";a="86512491"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2026 05:00:05 -0700
+X-CSE-ConnectionGUID: sOtJL3xZSF6RJVkjffTNlw==
+X-CSE-MsgGUID: 1+jiuY/BSYSsscvzcblUHA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,206,1779174000"; 
-   d="scan'208";a="266913115"
+   d="scan'208";a="261854357"
 Received: from lkp-server01.sh.intel.com (HELO 6eda058d650d) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 05 Aug 2026 04:58:00 -0700
+  by orviesa007.jf.intel.com with ESMTP; 05 Aug 2026 05:00:03 -0700
 Received: from kbuild by 6eda058d650d with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1wraFy-00000000CKt-1yXy;
-	Wed, 05 Aug 2026 11:57:58 +0000
-Date: Wed, 05 Aug 2026 19:57:44 +0800
+	id 1wraHw-00000000CLb-1ml1;
+	Wed, 05 Aug 2026 12:00:00 +0000
+Date: Wed, 05 Aug 2026 19:59:48 +0800
 From: kernel test robot <lkp@intel.com>
 To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
  Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org
-Subject: [liveupdate:kexec-next] BUILD SUCCESS
- 9d50f7c5ad5b4b031c9b85f9a43c626d8268ab51
-Message-ID: <202608051931.Br4YKNA9-lkp@intel.com>
+Subject: [liveupdate:kho-scratch] BUILD SUCCESS
+ bc0f793c5c41601b273a2ca64c768adca1d447f5
+Message-ID: <202608051935.xEksv4tC-lkp@intel.com>
 User-Agent: s-nail v14.9.25
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260805_045803_746860_283ADA1E 
-X-CRM114-Status: UNSURE (   3.83  )
+X-CRM114-CacheID: sfid-20260805_050005_054885_EEF9E6F8 
+X-CRM114-Status: UNSURE (   4.15  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -84,13 +84,13 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git kexec-next
-branch HEAD: 9d50f7c5ad5b4b031c9b85f9a43c626d8268ab51  Merge branch 'crashkernel-cma' into kexec-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git kho-scratch
+branch HEAD: bc0f793c5c41601b273a2ca64c768adca1d447f5  Merge patch series "kho: make boot time huge page allocation work nicely with KHO"
 
-elapsed time: 1528m
+elapsed time: 1530m
 
-configs tested: 197
-configs skipped: 2
+configs tested: 191
+configs skipped: 1
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -101,12 +101,10 @@ alpha                           allyesconfig    gcc-16.1.0
 alpha                              defconfig    gcc-16.1.0
 arc                             allmodconfig    gcc-16.1.0
 arc                             allyesconfig    gcc-16.1.0
-arc                           randconfig-001    gcc-12.5.0
 arc                  randconfig-001-20260804    gcc-8.5.0
 arc                  randconfig-001-20260805    gcc-12.5.0
 arc                  randconfig-002-20260804    gcc-8.5.0
 arc                  randconfig-002-20260805    gcc-12.5.0
-arm                       multi_v7_defconfig    gcc-16.1.0
 arm                  randconfig-001-20260804    gcc-8.5.0
 arm                  randconfig-001-20260805    gcc-12.5.0
 arm                  randconfig-002-20260804    gcc-8.5.0
@@ -115,7 +113,6 @@ arm                  randconfig-003-20260804    gcc-8.5.0
 arm                  randconfig-003-20260805    gcc-12.5.0
 arm                  randconfig-004-20260804    gcc-8.5.0
 arm                  randconfig-004-20260805    gcc-12.5.0
-arm64                         randconfig-001    gcc-10.5.0
 arm64                         randconfig-001    gcc-11.5.0
 arm64                randconfig-001-20260804    gcc-11.5.0
 arm64                randconfig-001-20260805    gcc-10.5.0
@@ -130,7 +127,6 @@ csky                 randconfig-001-20260804    gcc-11.5.0
 csky                 randconfig-001-20260805    gcc-10.5.0
 csky                 randconfig-002-20260804    gcc-11.5.0
 csky                 randconfig-002-20260805    gcc-10.5.0
-hexagon                       randconfig-001    clang-18
 hexagon              randconfig-001-20260804    gcc-16.1.0
 hexagon              randconfig-001-20260805    clang-18
 hexagon              randconfig-002-20260804    gcc-16.1.0
@@ -195,7 +191,6 @@ parisc                          allmodconfig    gcc-16.1.0
 parisc                          allyesconfig    gcc-16.1.0
 parisc                             defconfig    gcc-16.1.0
 parisc                        randconfig-001    gcc-8.5.0
-parisc                        randconfig-001    gcc-9.5.0
 parisc               randconfig-001-20260804    gcc-8.5.0
 parisc               randconfig-001-20260805    gcc-9.5.0
 parisc               randconfig-002-20260804    gcc-8.5.0
@@ -222,7 +217,6 @@ sh                   randconfig-001-20260804    clang-21
 sh                   randconfig-001-20260805    gcc-8.5.0
 sh                   randconfig-002-20260804    clang-21
 sh                   randconfig-002-20260805    gcc-8.5.0
-sh                          se7705_defconfig    gcc-16.1.0
 sh                            shx3_defconfig    gcc-16.1.0
 sparc                randconfig-001-20260804    gcc-16.1.0
 sparc                randconfig-001-20260805    gcc-11.5.0
