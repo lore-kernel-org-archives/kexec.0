@@ -4,87 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 98965C56208
-	for <kexec@archiver.kernel.org>; Thu,  6 Aug 2026 09:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 97651C5620A
+	for <kexec@archiver.kernel.org>; Thu,  6 Aug 2026 09:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=qD4VW4BZeNXzCi3gbNaQKdLxxRurNtLyN+adWk+/0t8=; b=pjln6VVj8EUOD0BAXRaBGBkrr/
-	dzH0KcysC1mr3kVkzw+l4kMZFjchrTaV//KpDWkaH2FSrgfgYZZuB0UtPfEVvfCmm7XaPltiwrUY9
-	gHWfAp3NhhSSe7A+lnjQwGy7B+wXKka/LtTOz2a3xjYYQCHmlDCsMG0RsQRXs8qBSxlDvV8h5PDwk
-	ixdPNG6tr0NSxPjQmYv1pihGan5mKD1nkNPxtwbS4pJz5n3j/GIKohnhP3sq5oJ0fJb7WtSMbkqvX
-	zHxoLzAdVNRkQbsSuye27Wx0WKOP+DmutQkWtMwAjz2dY2Q10bbXFYBabQ2Z6HbfuLda0oibqpAio
-	/JfSbpLA==;
+	bh=6uyTtFjVVo4Ow+xxdf9JzDuHeX18HS+OnizMa+EN8GU=; b=hhV6GhkeZRT2GfaHz72DL/Nl3E
+	f6smtEr553dpKGG1XodPf8McxtoFE9+vfToPOiTYcm8r88/yVjRFWGlhlM2XlG6M2mhvyFE2qIK75
+	BW4iweFz0tiPJCUZ/ZdDharbFN/oO4i1oxHTDZTGGBal4adrVq6b/aqoToIOrThkGg8VWclXVdOpF
+	UwOqdVZqHSGGBbDeMZ9KJWeu0zrBF/o6VYKV2D6qRO5ulAY8psG8IzB8s4vnbK+OUzbFlkfCMlT7G
+	92Os79j44WWFDtg0MliyN90/W3KDm4AZ0e8drwnrp2USa2N6qGMzeKT2GPZ+Kxo0LQkxqXTRvWIW1
+	CBbiPvbw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wruXD-00000005QsF-2P2d;
-	Thu, 06 Aug 2026 09:37:07 +0000
+	id 1wruXK-00000005R0s-37dx;
+	Thu, 06 Aug 2026 09:37:14 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wruXB-00000005QqB-38hJ
+	id 1wruXJ-00000005Qz1-1XxY
 	for kexec@bombadil.infradead.org;
-	Thu, 06 Aug 2026 09:37:05 +0000
+	Thu, 06 Aug 2026 09:37:13 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
 	:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
 	Content-Type:Content-ID:Content-Description;
-	bh=qD4VW4BZeNXzCi3gbNaQKdLxxRurNtLyN+adWk+/0t8=; b=JXLxM5gqPBYsrSIefU0hzV+ved
-	jEr/7ks4xICNIL+scWoMsPocZboJe7Akg07iYqxtV96ds02ISvRpexkRnbNJe5Z+g6Svi4A1h/KBa
-	V/aUHTBiSItLT0VVqQIqyHPN9/76T6YE54SP7E31H6J1uOcyfoX/zBGPDjyoG4/ALOUC+MCs+yxrz
-	9jkX6sBBz2sUA/UM9rQVK2mQdb5kWhzECqcbjnZ0HZrrNG6RhlrHn+N9dpRwQQYYgwgLNlb9Tkea2
-	jCDs6XoXK3W85Mt7egt71sFi6g0rvk4ePsQoCJZHPpb/W60wJMaEFwoNbsFIjtoNbTY7sEYlQ5qDu
-	7mi8OxXQ==;
-Received: from mail-pj2-x04.google.com ([2607:f8b0:4864:39::4])
+	bh=6uyTtFjVVo4Ow+xxdf9JzDuHeX18HS+OnizMa+EN8GU=; b=mvRZ56VgpeI4/bXiwEW4Fffroo
+	GRa2hVSVTIpnKJtm4GxkN4SJtypM8/zgntiyLTEjxxUy2czsh9Hp5FTSexFxCVTOq99F8Zq2Gguxf
+	sTkvNuq2sJL9Gr2mnX+nuORVjWboQW2kLNj+ja+BWZurQ0Rue1G/XNwLpX56JwhicoAhIi5mF3oN8
+	piNc4OTwr+Ev/mCqzDtu0//xo+SsZ+2uSeu2RcEfQdL4AfLHx81/Hjax3ECAO5w1hsqAH6kvYUSvV
+	/8IXwQ9+yG/4Te32/GT/k+gFiNOesxA+qIPPm0EB3MD1n7QXFonlwmoRvMlIIiPr5zQl8w7ziHjOG
+	WgstNWSQ==;
+Received: from mail-pz2-x00.google.com ([2607:f8b0:4864:3b::])
 	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1wruX6-0000000BNXG-3Hic
+	id 1wruXG-0000000BNZQ-2STn
 	for kexec@lists.infradead.org;
-	Thu, 06 Aug 2026 09:37:04 +0000
-Received: by mail-pj2-x04.google.com with SMTP id d9443c01a7336-2cabe9335f1so10843745ad.0
-        for <kexec@lists.infradead.org>; Thu, 06 Aug 2026 02:36:59 -0700 (PDT)
+	Thu, 06 Aug 2026 09:37:12 +0000
+Received: by mail-pz2-x00.google.com with SMTP id 41be03b00d2f7-cb01d87597cso89616a12.1
+        for <kexec@lists.infradead.org>; Thu, 06 Aug 2026 02:37:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786009018; x=1786613818; darn=lists.infradead.org;
+        d=gmail.com; s=20251104; t=1786009029; x=1786613829; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=qD4VW4BZeNXzCi3gbNaQKdLxxRurNtLyN+adWk+/0t8=;
-        b=O54xxo+l8FLuoL8qdDPS3wXMses2/ZDQfxqvWbnFBiX2b7zkKty7vbpplVbeAbuxKV
-         TmgQUj91fkTeo4R2h2arJ9MI1OyuMfRLVzWvc8/7xrpz5HQu6qrDIkrFuzfvUBWyPqAA
-         kpBPBFVgU6VENvnDQVeXkzFY8Cl54N7AdsQ9snIhvHQDsfCD2VUAWFcNY9J7dB+aQ/HO
-         JEObwT1vKOA+nATuqd2c7CN/QCVNiLJvN4C9+P8DlgReIJYUZ0Qg2vVuZwB+K8QZ2ddN
-         atZNWQSyhnaAzXToHVRHypb07BB9NIpfITQ0a/M/9MQvTldFTpDigsklu7V9Aje90Z7b
-         PCjA==
+        bh=6uyTtFjVVo4Ow+xxdf9JzDuHeX18HS+OnizMa+EN8GU=;
+        b=N73AwJSYHD6sg4hLqt69ovjH+PSEa6WRvURkdaDMbq+HjCIFZ76HggtErorca8XzxM
+         WQEDmqqYYTCNTmYP9iFC/D5DpwWs43e8CwC0PrAvkKGp3GndgUaC07AjP20K0SvhBBxz
+         vG58+l49sAUOd7Z6CY4WBCeDuWE5PqP+FJJ/81SoIWlXKTnL7q92KcIXowFVjmeXuoDz
+         Dr5qOD01SSDpZrnMfyvhPndSxW2itu+UwvGGcFZUoo221CIoBTKVZ0iKXqofu3QCN1Np
+         r30BU6Bxi/S1YlpTKCWrHtEZWWchKGkAycg7jeMJvfeOIWzkg/3IcLLiNQ8DWkAH1CmS
+         fCZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786009018; x=1786613818;
+        d=1e100.net; s=20251104; t=1786009029; x=1786613829;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=qD4VW4BZeNXzCi3gbNaQKdLxxRurNtLyN+adWk+/0t8=;
-        b=q7AQ200TMHHBoN8rZFBpoNArK4trcREMBuopSM9oHD2pWm3gptd815Rahifjltfh6A
-         UlTeb6Nk0blPyFUwishJoSR2kM20APXz494gi0kNYaiMG5n0Yamc0bJJS5Txqqsx5xXs
-         OarGvqHIX/laOW0BRmmWJC98b7ePLk3e04YrH/5FIrBHxq6o+xga2Ccdyje8rVRdgCYO
-         /u8ehy9EpC0U8Q6cocZyUjYA0/MmpIzz8QPI/BnYR7YtxoWV+hOMUsVWT9pNA4OnBGtu
-         6GqnYpUrXGrJKr0SCYAPkc84MUv6qcWs/CQ+lRfMcDP1KH4CF8QWW/SfBFEnRvnbDJ+5
-         FWRA==
-X-Forwarded-Encrypted: i=1; AHgh+RpT+rgtvDfDjhZa6IUpuaFW42V4UmQqXAzBjyE+vfqoaeRCAZM6vsnyn5kCMiYrRI9wSO1Kkg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzYXo1rEkFi85uDfPCdNexfiFDWoXF8hU2oxskVkyjFf34cFQOx
-	wgMg6lSI0q3fE6Pcej/PZcdl/MfaiM42IJ6g8lfTtww7iVvJJpyrGJUs
-X-Gm-Gg: AR+sD12JPUZkkP/iYv3iA0xVRKt+dDDfWCb0WYnv/QfROoKLc6am4AN+FUPRr6jvo7p
-	lNS03q7TBbGIYj2QkBTHFEXZzIyRmNhWmL977nw1J/iGGuhRi/wkxgIqjJB2NtV6MUkUKs7if3T
-	e6G90S62XiiIzFh0e8ZW5u2MBUJ8biIA5p67OK+dBBgYa/7HzXiKW9fzNjXOEaPrd2ql5UcL7Iy
-	Zk2JexPJ/6dq5Mg6SjbsgpPvGAU93AZKR1vxFbABgYutoilEqC11vxGybNkwnI1KeubZhbMSmRN
-	L4gpzjHcEkELlYYvzNONbPbpkwqvH61ncQvbuxqwaJ+C6HyzAjMk0gRGF+KFNc3Y1PeAb/tmn8M
-	xW/J5H5Hyew/GEX/+pyQp70Mr64h4yCTkikjKkoqSW2k2bfwLrnLYzep7sTSdZrc4nuygMF4NeD
-	XKszV2gCbdBjhA6bGZ9nbCw9HrZWZNPxsm/QfAQbrFZKhbrqqFJqTPqKvDPmBnGYtZbby7TyQcK
-	g==
-X-Received: by 2002:a05:6a00:2d81:b0:848:6c9c:4074 with SMTP id d2e1a72fcca58-84f2dff6cd5mr14050456b3a.1.1786009018224;
-        Thu, 06 Aug 2026 02:36:58 -0700 (PDT)
+        bh=6uyTtFjVVo4Ow+xxdf9JzDuHeX18HS+OnizMa+EN8GU=;
+        b=ljLJ1IytVeK3xNrxaYhxVn2FUBB9y3BMtTtsl7cG2fcQCtPYsC3vgXF7srUorrBz0V
+         W78xGrQWKcSmJBjO5cCZ32eh1Dn2bn0nGrFgQ8MR0zg1apCeKEIhMNtLiyVsuNY5nnCQ
+         9+pIemw0WdnbzTya7Tdsy4VQ6nwPiYSdTcKV/gYKHW00Ogl/+pnFJuUa1nQo4bYbTvDV
+         QkNJza8bN9MLcdc88AP42vyt+sSMnwlHnUss3dqmkSvpwKCMaHLOtURHnKyogeDABfba
+         4sV6aEI4jr4uwdgBpRKyODPFWpJecMDd17HDmhMzK9fXPOzSZ4cOwFxQrO/fNxaiO9aH
+         NI+g==
+X-Forwarded-Encrypted: i=1; AHgh+RonkRfYpuhldHyVlYB9qte+pRxc3zg8JN0LKMcWGNZlXAdVVMPvcAfVXsa7yLsjHuwGXJNniw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxmnTM9BNzysWHpY0Ddfq5RlomVU/aSB0XSY1yIW47F+726W53B
+	jsVdTZTxl6oYRI7eJ39EfsPK40ke5ugIP4ObWc/Hy5IF5KvqEOyRp/sz
+X-Gm-Gg: AR+sD13BCOlpodUPc5W7x6cyg0Q3WZIcMVfoJQIaAKSiE31qFkny5SV8edXRpXsVqgy
+	RedFbiZ4jKwYh2KqhBJVs7zkei3oz3QEDeRWQP6Ox/1B/QH+JvF9Q4OU4fJrO7smiyJv7zkivbc
+	dt3NNXnR/x3EQo3xrOiHojyfur5uXXH2DJZHpSPQ2Xd1KIo1JdABPVXwQAhIk2ZinAXthtOE7ia
+	3v817Q6XU4Zr3zuBFEMneFXP9v1mpVSmyP8cuTCOItyy9jmu6vLojOu3HMIUX/yk7ol5Zxaxi+7
+	gkJh5A9A0xR/9T0bobEENqLH0YpiQwOTRNSSswnbo9yHUZKbuKDbKtPgMVf7kVAdwNLszoicXbK
+	rYk4hcbDMAki2ZulU3dmU79WYWK4EE3DCRYNIMN3sBJ24oiBNBg7kHP1wdD/bNzDSWlwHH+eXd/
+	o0X8omvm0405/NW3riHZ2p6atxU+/04jJ2ihBs2KN2fhX8lYyCzlnAc6W9z/T4ZIv6fgrQSiOnS
+	Q==
+X-Received: by 2002:a05:6a00:464f:b0:846:5d1f:56d4 with SMTP id d2e1a72fcca58-84f47dd0b44mr3119262b3a.14.1786009028817;
+        Thu, 06 Aug 2026 02:37:08 -0700 (PDT)
 Received: from intel.company.local ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84f453b0aeasm1043878b3a.13.2026.08.06.02.36.47
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84f453b0aeasm1043878b3a.13.2026.08.06.02.36.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2026 02:36:57 -0700 (PDT)
+        Thu, 06 Aug 2026 02:37:08 -0700 (PDT)
 From: Wandun Chen <chenwandun1@gmail.com>
 To: catalin.marinas@arm.com,
 	will@kernel.org,
@@ -112,17 +112,18 @@ Cc: kernel@xen0n.name,
 	akpm@linux-foundation.org,
 	ruirui.yang@linux.dev,
 	robin.murphy@arm.com
-Subject: [PATCH v5 7/8] crash_core: replace for_each_mem_range() with for_each_mem_region()
-Date: Thu,  6 Aug 2026 17:35:18 +0800
-Message-ID: <20260806093519.2907771-8-chenwandun1@gmail.com>
+Subject: [PATCH v5 8/8] crash_core: skip MEMBLOCK_NODUMP regions when building vmcore ELF header
+Date: Thu,  6 Aug 2026 17:35:19 +0800
+Message-ID: <20260806093519.2907771-9-chenwandun1@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260806093519.2907771-1-chenwandun1@gmail.com>
 References: <20260806093519.2907771-1-chenwandun1@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260806_103700_971173_EC280760 
-X-CRM114-Status: GOOD (  11.99  )
+X-CRM114-CacheID: sfid-20260806_103710_748753_46CF2C46 
+X-CRM114-Status: UNSURE (   9.59  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -139,71 +140,34 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Wandun Chen <chenwandun@lixiang.com>
 
-for_each_mem_range() skips MEMBLOCK_NOMAP regions implicitly. Switch the
-weak defaults to for_each_mem_region(), which exposes struct
-memblock_region and per-region flags, and filter NOMAP regions explicitly
-via the new crash_should_skip_region() helper. This prepares for a
-subsequent patch to extend the skip filter.
-
-No functional change.
+Reserve regions (for GPU, DSP, ...) carry no data useful for crash
+analysis. Exclude MEMBLOCK_NODUMP regions from the vmcore ELF header to
+reduce vmcore size and capture time. crash_should_skip_region() now also
+returns true for MEMBLOCK_NODUMP.
 
 Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
 Tested-by: Meijing Zhao <zhaomeijing@lixiang.com>
 ---
- kernel/crash_core.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+ kernel/crash_core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 77285ae3ce60..fb78b7814f18 100644
+index fb78b7814f18..8cc9d666bc54 100644
 --- a/kernel/crash_core.c
 +++ b/kernel/crash_core.c
-@@ -269,6 +269,12 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+@@ -269,10 +269,10 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
  	return 0;
  }
  
-+/* Exclude NOMAP regions from the vmcore. */
-+static bool crash_should_skip_region(struct memblock_region *reg)
-+{
-+	return memblock_is_nomap(reg);
-+}
-+
+-/* Exclude NOMAP regions from the vmcore. */
++/* Exclude NOMAP and NODUMP regions from the vmcore. */
+ static bool crash_should_skip_region(struct memblock_region *reg)
+ {
+-	return memblock_is_nomap(reg);
++	return memblock_is_nomap(reg) || memblock_is_nodump(reg);
+ }
+ 
  static struct crash_mem *alloc_cmem(unsigned int nr_ranges)
- {
- 	struct crash_mem *cmem;
-@@ -284,22 +290,25 @@ static struct crash_mem *alloc_cmem(unsigned int nr_ranges)
- unsigned int __weak arch_get_system_nr_ranges(void)
- {
- 	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* crashk_res + crashk_low_res, +CMA splits */
--	phys_addr_t start, end;
--	u64 i;
-+	struct memblock_region *reg;
- 
--	for_each_mem_range(i, &start, &end)
-+	for_each_mem_region(reg) {
-+		if (crash_should_skip_region(reg))
-+			continue;
- 		nr_ranges++;
-+	}
- 	return nr_ranges;
- }
- 
- int __weak arch_crash_populate_cmem(struct crash_mem *cmem)
- {
--	phys_addr_t start, end;
--	u64 i;
-+	struct memblock_region *reg;
- 
--	for_each_mem_range(i, &start, &end) {
--		cmem->ranges[cmem->nr_ranges].start = start;
--		cmem->ranges[cmem->nr_ranges].end = end - 1;
-+	for_each_mem_region(reg) {
-+		if (crash_should_skip_region(reg))
-+			continue;
-+		cmem->ranges[cmem->nr_ranges].start = reg->base;
-+		cmem->ranges[cmem->nr_ranges].end = reg->base + reg->size - 1;
- 		cmem->nr_ranges++;
- 	}
- 	return 0;
 -- 
 2.43.0
 
