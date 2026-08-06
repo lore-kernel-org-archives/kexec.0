@@ -4,72 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4B037C55ABF
-	for <kexec@archiver.kernel.org>; Thu,  6 Aug 2026 09:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 98965C56208
+	for <kexec@archiver.kernel.org>; Thu,  6 Aug 2026 09:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=wVDvUsuVz4fOLoguLRCQrGgJgNWPqJ2TDc/OI8CtAH0=; b=bAKJIsn6mgQ9GdfEZNvSND3/Mm
-	r0xYiFyqAUFsUASgRODw2OhDAKkKgomM3VQpJZCXHZuQa6G00SzDUnix9QTFp5frMZD3SoEVkkQcV
-	JQdrR96CmL07Jv0dsdVvgisTqawa9WEObElPNQBjqySYTLC5VG/VWWCtH6XpISo2cEbnSjM0hNQtF
-	eOUVYpuj1cXNzn4sqoLAMKNSBP6E1JUSQ3jp62K5CEGbFJfdzRbOrSX7JyUt8kPUREEi38l+Ijr/L
-	eF4JO1VGbXWzKE25bWkZpvDk8ONWVV5wZuwi846Q26LylKHg0nyi5tVyb1f4EDtxd/xuFmsBI5cZq
-	5mE30eKg==;
+	bh=qD4VW4BZeNXzCi3gbNaQKdLxxRurNtLyN+adWk+/0t8=; b=pjln6VVj8EUOD0BAXRaBGBkrr/
+	dzH0KcysC1mr3kVkzw+l4kMZFjchrTaV//KpDWkaH2FSrgfgYZZuB0UtPfEVvfCmm7XaPltiwrUY9
+	gHWfAp3NhhSSe7A+lnjQwGy7B+wXKka/LtTOz2a3xjYYQCHmlDCsMG0RsQRXs8qBSxlDvV8h5PDwk
+	ixdPNG6tr0NSxPjQmYv1pihGan5mKD1nkNPxtwbS4pJz5n3j/GIKohnhP3sq5oJ0fJb7WtSMbkqvX
+	zHxoLzAdVNRkQbsSuye27Wx0WKOP+DmutQkWtMwAjz2dY2Q10bbXFYBabQ2Z6HbfuLda0oibqpAio
+	/JfSbpLA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wruWv-00000005QX9-2Abk;
-	Thu, 06 Aug 2026 09:36:49 +0000
-Received: from mail-pz2-x01.google.com ([2607:f8b0:4864:3b::1])
+	id 1wruXD-00000005QsF-2P2d;
+	Thu, 06 Aug 2026 09:37:07 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wruWt-00000005QTi-1sLg
+	id 1wruXB-00000005QqB-38hJ
+	for kexec@bombadil.infradead.org;
+	Thu, 06 Aug 2026 09:37:05 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
+	:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description;
+	bh=qD4VW4BZeNXzCi3gbNaQKdLxxRurNtLyN+adWk+/0t8=; b=JXLxM5gqPBYsrSIefU0hzV+ved
+	jEr/7ks4xICNIL+scWoMsPocZboJe7Akg07iYqxtV96ds02ISvRpexkRnbNJe5Z+g6Svi4A1h/KBa
+	V/aUHTBiSItLT0VVqQIqyHPN9/76T6YE54SP7E31H6J1uOcyfoX/zBGPDjyoG4/ALOUC+MCs+yxrz
+	9jkX6sBBz2sUA/UM9rQVK2mQdb5kWhzECqcbjnZ0HZrrNG6RhlrHn+N9dpRwQQYYgwgLNlb9Tkea2
+	jCDs6XoXK3W85Mt7egt71sFi6g0rvk4ePsQoCJZHPpb/W60wJMaEFwoNbsFIjtoNbTY7sEYlQ5qDu
+	7mi8OxXQ==;
+Received: from mail-pj2-x04.google.com ([2607:f8b0:4864:39::4])
+	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1wruX6-0000000BNXG-3Hic
 	for kexec@lists.infradead.org;
-	Thu, 06 Aug 2026 09:36:48 +0000
-Received: by mail-pz2-x01.google.com with SMTP id 41be03b00d2f7-ca7a25cd87dso1606683a12.1
-        for <kexec@lists.infradead.org>; Thu, 06 Aug 2026 02:36:47 -0700 (PDT)
+	Thu, 06 Aug 2026 09:37:04 +0000
+Received: by mail-pj2-x04.google.com with SMTP id d9443c01a7336-2cabe9335f1so10843745ad.0
+        for <kexec@lists.infradead.org>; Thu, 06 Aug 2026 02:36:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786009007; x=1786613807; darn=lists.infradead.org;
+        d=gmail.com; s=20251104; t=1786009018; x=1786613818; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=wVDvUsuVz4fOLoguLRCQrGgJgNWPqJ2TDc/OI8CtAH0=;
-        b=KoNAacabbNcRNUzy1f+Osm31MpdCeAa3d9cTrMY81AHpnPl1y6BuW56IAXQNWvFLjj
-         xB9ZqKWin7oiurDYHuDAeuP0SiCJJfu8HwxDRmRNXRVolYoB2pLufPTMyU+m9hyqj/jZ
-         71jZC1+wGZLENM6sqPAXKoueVmUFwr5t+4DDYx3jHyoWevawkJ9slxmYVEpGEWyC47tE
-         ZodDLkU3h4Hl4qaXSKN97WcpCWwdGL/briUOGMNygb2g5O75FV6xYJB7p7uMVIdUZfu7
-         VMktK6i1Knd46ISewbuasS37HTUh/gqyKuSaMvt8Z8DJDSEI9MNqIxlR34xUiesM+gU2
-         gDnw==
+        bh=qD4VW4BZeNXzCi3gbNaQKdLxxRurNtLyN+adWk+/0t8=;
+        b=O54xxo+l8FLuoL8qdDPS3wXMses2/ZDQfxqvWbnFBiX2b7zkKty7vbpplVbeAbuxKV
+         TmgQUj91fkTeo4R2h2arJ9MI1OyuMfRLVzWvc8/7xrpz5HQu6qrDIkrFuzfvUBWyPqAA
+         kpBPBFVgU6VENvnDQVeXkzFY8Cl54N7AdsQ9snIhvHQDsfCD2VUAWFcNY9J7dB+aQ/HO
+         JEObwT1vKOA+nATuqd2c7CN/QCVNiLJvN4C9+P8DlgReIJYUZ0Qg2vVuZwB+K8QZ2ddN
+         atZNWQSyhnaAzXToHVRHypb07BB9NIpfITQ0a/M/9MQvTldFTpDigsklu7V9Aje90Z7b
+         PCjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786009007; x=1786613807;
+        d=1e100.net; s=20251104; t=1786009018; x=1786613818;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=wVDvUsuVz4fOLoguLRCQrGgJgNWPqJ2TDc/OI8CtAH0=;
-        b=LB60BPG8Fcks7Xni94Ksr2hlvAVv5kuJ52HpnTExYwqH+erTQu29oow8RxkLpfnIgO
-         pZedCju0jH1/gjU6baWtT/TYLwGzYuTWbO+JevBcqG5SyPat+TBB7nTxfVqzAMgFytCw
-         WfcnsiXn9oMqYIV5y8OflFH7ohnG4ZSTXMfMCRqPzwMnOFnXswldMA/8tUGrbNO/Y92w
-         hbOZsT2+JVouZhzspBqQzIlEKeXRovfiljV03+S974z2tHhBZwLOHRkzbtqHYuTGk47m
-         rfYaAdEISrK3zFi47LXKSm9ioRJGukfw7FOTyy2LwN6cIJ206Wa1o33jA1In5p8hFKAL
-         9Vtg==
-X-Forwarded-Encrypted: i=1; AHgh+RrUtwoAvwvuWErHsqD9fJpcx85zZiKEqhlsh1ZEwQhVzCcDHZi+HFJqrMMy8q6WsK1D8aJoPg==@lists.infradead.org
-X-Gm-Message-State: AOJu0YzRvXrfKPRIn8LeftkI+c8pzgn0AWjYtKMP/swzvESQR+00O8/1
-	5Yv/rATqSeKcD/ZRWpR2fyG18vF4k6ueOyRMW6s79kLGwmL5H2hG2+sz
-X-Gm-Gg: AR+sD110S9BR80gyiKVYnPAJDzFoJMcTv+gwqx9cAJeWXnhIZ+dwhKHU9rmKtAQpWwN
-	CR9JN3b+r14cosCbimSMtXXdi8zzHtKUhJwKCyEHdr/wjkSkciZkoEmsOPgwzTC9uCZVqITTPEX
-	TWNnijjLCWcClmwRW+GvJ8yRkD5qOjGRilz/WKRQRTDaRjU0NvCnOpotXhTusovTTBZ5eKxUQju
-	tk0vBk9i5q+CuOWzQEkGJz0HZG0c2jH/RlTPSWhm3Wt0L5CByY8lwU/ACkcsA9eGzelxrIKbD3Q
-	udeqybaHKoKCOyW6hdLgEIXezT14IZvTWYcGTCrsAJ6mOLXIyCJl/A1hrELZi90qPYwfNhX4W9n
-	01qwjcJS0A+WrVvDhQav8+3rdaPqiOkJ6YsBR06Y7CQhgHvr+qY5oexN+myn82yQdm/qGXhQ7KY
-	ChB3XeOAqymGkDqpJtYTlpCE3uhhWwwzTNXsKNXrhHzmprt/+XdfekcejhuryTwie2Zk+VoO2Uu
-	LNc0dZLm0rV
-X-Received: by 2002:a05:6a00:3687:b0:848:467d:293b with SMTP id d2e1a72fcca58-84f2dfb4e5bmr16809060b3a.11.1786009006714;
-        Thu, 06 Aug 2026 02:36:46 -0700 (PDT)
+        bh=qD4VW4BZeNXzCi3gbNaQKdLxxRurNtLyN+adWk+/0t8=;
+        b=q7AQ200TMHHBoN8rZFBpoNArK4trcREMBuopSM9oHD2pWm3gptd815Rahifjltfh6A
+         UlTeb6Nk0blPyFUwishJoSR2kM20APXz494gi0kNYaiMG5n0Yamc0bJJS5Txqqsx5xXs
+         OarGvqHIX/laOW0BRmmWJC98b7ePLk3e04YrH/5FIrBHxq6o+xga2Ccdyje8rVRdgCYO
+         /u8ehy9EpC0U8Q6cocZyUjYA0/MmpIzz8QPI/BnYR7YtxoWV+hOMUsVWT9pNA4OnBGtu
+         6GqnYpUrXGrJKr0SCYAPkc84MUv6qcWs/CQ+lRfMcDP1KH4CF8QWW/SfBFEnRvnbDJ+5
+         FWRA==
+X-Forwarded-Encrypted: i=1; AHgh+RpT+rgtvDfDjhZa6IUpuaFW42V4UmQqXAzBjyE+vfqoaeRCAZM6vsnyn5kCMiYrRI9wSO1Kkg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzYXo1rEkFi85uDfPCdNexfiFDWoXF8hU2oxskVkyjFf34cFQOx
+	wgMg6lSI0q3fE6Pcej/PZcdl/MfaiM42IJ6g8lfTtww7iVvJJpyrGJUs
+X-Gm-Gg: AR+sD12JPUZkkP/iYv3iA0xVRKt+dDDfWCb0WYnv/QfROoKLc6am4AN+FUPRr6jvo7p
+	lNS03q7TBbGIYj2QkBTHFEXZzIyRmNhWmL977nw1J/iGGuhRi/wkxgIqjJB2NtV6MUkUKs7if3T
+	e6G90S62XiiIzFh0e8ZW5u2MBUJ8biIA5p67OK+dBBgYa/7HzXiKW9fzNjXOEaPrd2ql5UcL7Iy
+	Zk2JexPJ/6dq5Mg6SjbsgpPvGAU93AZKR1vxFbABgYutoilEqC11vxGybNkwnI1KeubZhbMSmRN
+	L4gpzjHcEkELlYYvzNONbPbpkwqvH61ncQvbuxqwaJ+C6HyzAjMk0gRGF+KFNc3Y1PeAb/tmn8M
+	xW/J5H5Hyew/GEX/+pyQp70Mr64h4yCTkikjKkoqSW2k2bfwLrnLYzep7sTSdZrc4nuygMF4NeD
+	XKszV2gCbdBjhA6bGZ9nbCw9HrZWZNPxsm/QfAQbrFZKhbrqqFJqTPqKvDPmBnGYtZbby7TyQcK
+	g==
+X-Received: by 2002:a05:6a00:2d81:b0:848:6c9c:4074 with SMTP id d2e1a72fcca58-84f2dff6cd5mr14050456b3a.1.1786009018224;
+        Thu, 06 Aug 2026 02:36:58 -0700 (PDT)
 Received: from intel.company.local ([210.184.73.204])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84f453b0aeasm1043878b3a.13.2026.08.06.02.36.36
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84f453b0aeasm1043878b3a.13.2026.08.06.02.36.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2026 02:36:46 -0700 (PDT)
+        Thu, 06 Aug 2026 02:36:57 -0700 (PDT)
 From: Wandun Chen <chenwandun1@gmail.com>
 To: catalin.marinas@arm.com,
 	will@kernel.org,
@@ -97,17 +112,17 @@ Cc: kernel@xen0n.name,
 	akpm@linux-foundation.org,
 	ruirui.yang@linux.dev,
 	robin.murphy@arm.com
-Subject: [PATCH v5 6/8] crash_core: fold duplicated memblock arch hooks into the weak default
-Date: Thu,  6 Aug 2026 17:35:17 +0800
-Message-ID: <20260806093519.2907771-7-chenwandun1@gmail.com>
+Subject: [PATCH v5 7/8] crash_core: replace for_each_mem_range() with for_each_mem_region()
+Date: Thu,  6 Aug 2026 17:35:18 +0800
+Message-ID: <20260806093519.2907771-8-chenwandun1@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260806093519.2907771-1-chenwandun1@gmail.com>
 References: <20260806093519.2907771-1-chenwandun1@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260806_023647_514586_F18E914B 
-X-CRM114-Status: GOOD (  15.96  )
+X-CRM114-CacheID: sfid-20260806_103700_971173_EC280760 
+X-CRM114-Status: GOOD (  11.99  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -124,190 +139,71 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Wandun Chen <chenwandun@lixiang.com>
 
-The weak defaults are only consumed by crash_prepare_headers(), which is
-called only by arm64, riscv, loongarch (via the weak default) and x86
-(via its own non-weak override).
-
-arm64, loongarch and riscv open-code the same memblock walk in
-arch_get_system_nr_ranges() and arch_crash_populate_cmem(). Move it into
-the __weak defaults in kernel/crash_core.c and delete the arch copies.
+for_each_mem_range() skips MEMBLOCK_NOMAP regions implicitly. Switch the
+weak defaults to for_each_mem_region(), which exposes struct
+memblock_region and per-region flags, and filter NOMAP regions explicitly
+via the new crash_should_skip_region() helper. This prepares for a
+subsequent patch to extend the skip filter.
 
 No functional change.
 
 Signed-off-by: Wandun Chen <chenwandun@lixiang.com>
 Tested-by: Meijing Zhao <zhaomeijing@lixiang.com>
 ---
- arch/arm64/kernel/machine_kexec_file.c     | 29 ----------------------
- arch/loongarch/kernel/machine_kexec_file.c | 27 --------------------
- arch/riscv/kernel/machine_kexec_file.c     | 26 -------------------
- kernel/crash_core.c                        | 25 +++++++++++++++++--
- 4 files changed, 23 insertions(+), 84 deletions(-)
+ kernel/crash_core.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 854d872dfd0f..34d944d3f22f 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -14,7 +14,6 @@
- #include <linux/kernel.h>
- #include <linux/kexec.h>
- #include <linux/libfdt.h>
--#include <linux/memblock.h>
- #include <linux/of.h>
- #include <linux/of_fdt.h>
- #include <linux/slab.h>
-@@ -39,34 +38,6 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
- 	return kexec_image_post_load_cleanup_default(image);
- }
- 
--#ifdef CONFIG_CRASH_DUMP
--unsigned int arch_get_system_nr_ranges(void)
--{
--	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* for exclusion of crashkernel region */
--	phys_addr_t start, end;
--	u64 i;
--
--	for_each_mem_range(i, &start, &end)
--		nr_ranges++;
--
--	return nr_ranges;
--}
--
--int arch_crash_populate_cmem(struct crash_mem *cmem)
--{
--	phys_addr_t start, end;
--	u64 i;
--
--	for_each_mem_range(i, &start, &end) {
--		cmem->ranges[cmem->nr_ranges].start = start;
--		cmem->ranges[cmem->nr_ranges].end = end - 1;
--		cmem->nr_ranges++;
--	}
--
--	return 0;
--}
--#endif
--
- /*
-  * Tries to add the initrd and DTB to the image. If it is not possible to find
-  * valid locations, this function will undo changes to the image and return non
-diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
-index 5412aa9f3568..481b8f906a56 100644
---- a/arch/loongarch/kernel/machine_kexec_file.c
-+++ b/arch/loongarch/kernel/machine_kexec_file.c
-@@ -13,7 +13,6 @@
- #include <linux/ioport.h>
- #include <linux/kernel.h>
- #include <linux/kexec.h>
--#include <linux/memblock.h>
- #include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/types.h>
-@@ -56,32 +55,6 @@ static void cmdline_add_initrd(struct kimage *image, unsigned long *cmdline_tmpl
- }
- 
- #ifdef CONFIG_CRASH_DUMP
--unsigned int arch_get_system_nr_ranges(void)
--{
--	int nr_ranges = 2; /* for exclusion of crashkernel region */
--	phys_addr_t start, end;
--	uint64_t i;
--
--	for_each_mem_range(i, &start, &end)
--		nr_ranges++;
--
--	return nr_ranges;
--}
--
--int arch_crash_populate_cmem(struct crash_mem *cmem)
--{
--	phys_addr_t start, end;
--	uint64_t i;
--
--	for_each_mem_range(i, &start, &end) {
--		cmem->ranges[cmem->nr_ranges].start = start;
--		cmem->ranges[cmem->nr_ranges].end = end - 1;
--		cmem->nr_ranges++;
--	}
--
--	return 0;
--}
--
- /*
-  * Add the "mem=size@start" command line parameter to command line, indicating the
-  * memory region the new kernel can use to boot into.
-diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
-index 808e872f4063..fdc6695e8588 100644
---- a/arch/riscv/kernel/machine_kexec_file.c
-+++ b/arch/riscv/kernel/machine_kexec_file.c
-@@ -37,32 +37,6 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
- }
- 
- #ifdef CONFIG_CRASH_DUMP
--unsigned int arch_get_system_nr_ranges(void)
--{
--	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* For exclusion of crashkernel region */
--	u64 i;
--	phys_addr_t start, end;
--
--	for_each_mem_range(i, &start, &end)
--		nr_ranges++;
--
--	return nr_ranges;
--}
--
--int arch_crash_populate_cmem(struct crash_mem *cmem)
--{
--	u64 i;
--	phys_addr_t start, end;
--
--	for_each_mem_range(i, &start, &end) {
--		cmem->ranges[cmem->nr_ranges].start = start;
--		cmem->ranges[cmem->nr_ranges].end = end - 1;
--		cmem->nr_ranges++;
--	}
--
--	return 0;
--}
--
- static char *setup_kdump_cmdline(struct kimage *image, char *cmdline,
- 				 unsigned long cmdline_len)
- {
 diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 2b36aa9fade0..77285ae3ce60 100644
+index 77285ae3ce60..fb78b7814f18 100644
 --- a/kernel/crash_core.c
 +++ b/kernel/crash_core.c
-@@ -281,8 +281,29 @@ static struct crash_mem *alloc_cmem(unsigned int nr_ranges)
- 	return cmem;
+@@ -269,6 +269,12 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+ 	return 0;
  }
  
--unsigned int __weak arch_get_system_nr_ranges(void) { return 0; }
--int __weak arch_crash_populate_cmem(struct crash_mem *cmem) { return -1; }
-+unsigned int __weak arch_get_system_nr_ranges(void)
++/* Exclude NOMAP regions from the vmcore. */
++static bool crash_should_skip_region(struct memblock_region *reg)
 +{
-+	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* crashk_res + crashk_low_res, +CMA splits */
-+	phys_addr_t start, end;
-+	u64 i;
-+
-+	for_each_mem_range(i, &start, &end)
-+		nr_ranges++;
-+	return nr_ranges;
++	return memblock_is_nomap(reg);
 +}
 +
-+int __weak arch_crash_populate_cmem(struct crash_mem *cmem)
-+{
-+	phys_addr_t start, end;
-+	u64 i;
-+
-+	for_each_mem_range(i, &start, &end) {
-+		cmem->ranges[cmem->nr_ranges].start = start;
-+		cmem->ranges[cmem->nr_ranges].end = end - 1;
-+		cmem->nr_ranges++;
-+	}
-+	return 0;
-+}
- int __weak arch_crash_exclude_ranges(struct crash_mem *cmem) { return 0; }
+ static struct crash_mem *alloc_cmem(unsigned int nr_ranges)
+ {
+ 	struct crash_mem *cmem;
+@@ -284,22 +290,25 @@ static struct crash_mem *alloc_cmem(unsigned int nr_ranges)
+ unsigned int __weak arch_get_system_nr_ranges(void)
+ {
+ 	unsigned int nr_ranges = 2 + crashk_cma_cnt; /* crashk_res + crashk_low_res, +CMA splits */
+-	phys_addr_t start, end;
+-	u64 i;
++	struct memblock_region *reg;
  
- int __weak arch_crash_exclude_mem_range(struct crash_mem **mem,
+-	for_each_mem_range(i, &start, &end)
++	for_each_mem_region(reg) {
++		if (crash_should_skip_region(reg))
++			continue;
+ 		nr_ranges++;
++	}
+ 	return nr_ranges;
+ }
+ 
+ int __weak arch_crash_populate_cmem(struct crash_mem *cmem)
+ {
+-	phys_addr_t start, end;
+-	u64 i;
++	struct memblock_region *reg;
+ 
+-	for_each_mem_range(i, &start, &end) {
+-		cmem->ranges[cmem->nr_ranges].start = start;
+-		cmem->ranges[cmem->nr_ranges].end = end - 1;
++	for_each_mem_region(reg) {
++		if (crash_should_skip_region(reg))
++			continue;
++		cmem->ranges[cmem->nr_ranges].start = reg->base;
++		cmem->ranges[cmem->nr_ranges].end = reg->base + reg->size - 1;
+ 		cmem->nr_ranges++;
+ 	}
+ 	return 0;
 -- 
 2.43.0
 
