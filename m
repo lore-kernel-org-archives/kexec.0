@@ -4,118 +4,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4FC3DC5AC80
-	for <kexec@archiver.kernel.org>; Sun,  9 Aug 2026 11:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7A8A4C5AC80
+	for <kexec@archiver.kernel.org>; Sun,  9 Aug 2026 12:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=YGps4MOcSrgLaFu/fkgq+RUAkbvSHqTgXNmvCcr5foI=; b=PwLskDW/z4g+zefr2Vb8uAdhPT
-	vnr1n846w4aE3l0rK9APMrdJHbl6Z4K8LwBH+EKdBi3Vo2RpJghIJcIH62FMmD4hQ39Bllf8nkIJ6
-	GbTMU2YQFy5ydEAD+54ajViTHel3tbW3zjU8MTH3aNoFeu/G01yfnMmkEhWl0FUqbgjmCtkyxfF5l
-	DJmfUXvz4hL/GVgPKL20T97SKlV0s8+5M5yvd9U6hzUs5J88X+4+UQqlvCh9JRQKIAD1i5UP/+Hc2
-	uUB0rYVcVFd+znIo4reMJuVSVLioJOWbE1usXUHmQMNkOzgyDw0CcuT+tvi3zw9rPSltB0H1kJ4eN
-	uBddBgVA==;
+	bh=bJaECWMwKaqQGmj4CUVj/gBEB+llb940AK7lUTtTdrw=; b=IhG0jllcn2l47LkiRvTh+YuiYR
+	xJVG9nni97JfuoklAAVLnPqfvTTvS0duyeNpKz7uVu4JmfKjzlxkKkc8r7fN+GThj6bDepeQNFQil
+	F+rx9cTKDZ60xujb3+4JB+zdROWiqFJn0TcJFY68jgrn2hUGjzIp3WidU56g8HgczZ+kz/2+gqT4A
+	PgT3bDV707ijvDPscMyqYLzAZ2dwQxGQGF2efyAlv4tsCrhUTTBErsOqi52QmPI7/Q5pjPuKyJlmf
+	ojdMQ1J0e67RR15r088RzazDvpv1x6hqHiyc218dvEPFCXeBr04+YIMceCvIEz+yB2KTySbKl6e0O
+	8u7uT/cQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wt29X-0000000AGT1-0iqv;
-	Sun, 09 Aug 2026 11:57:19 +0000
+	id 1wt2J2-0000000AGkb-0Ogr;
+	Sun, 09 Aug 2026 12:07:08 +0000
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wt29U-0000000AGSd-2ZXJ
+	id 1wt2Iz-0000000AGkA-0FCD
 	for kexec@lists.infradead.org;
-	Sun, 09 Aug 2026 11:57:17 +0000
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 679937lT2477197;
-	Sun, 9 Aug 2026 11:57:09 GMT
+	Sun, 09 Aug 2026 12:07:06 +0000
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 679C3UGo2791719;
+	Sun, 9 Aug 2026 12:06:59 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=YGps4M
-	OcSrgLaFu/fkgq+RUAkbvSHqTgXNmvCcr5foI=; b=nTB3dV5we5LL+RtR3OCpzw
-	jIxtpvKYm3NHOu3MtsT4TXMSkeQZYKrEjIKCCwJ+YmPF1egIw1EhyYC8XUEvESjw
-	/OX7LfdrplN2V7iPY8L3LbvpT6yBITCxOJpf1wM+8rNWcaCbQD8NN1aHVMgz5nLX
-	wiFtdiuid2FIUPkJxxI1TEFt+5fj0GNync7biJ/dBBP8nYaKevRAwjoV2p8Bzbv6
-	j0boGBQGcW42Q68viNUEkWsqtS+K4sWPMqZXQeGt2SkMi61y6uw0Oj2Qyj6rdA2m
-	zRBJY0W1sAjfiU9I8AULm5TOyn8PolUHaDnRWmROpwMzJk90O3Kt2liLyLKgtSXQ
+	:message-id:mime-version:references:subject:to; s=pp1; bh=bJaECW
+	MwKaqQGmj4CUVj/gBEB+llb940AK7lUTtTdrw=; b=PvZHGvYsL9tMWaQs5u5a1g
+	m3Z/lftQLzZAPDUqmL5G7bqRY84iR/zyV7DCjBhOWm2a2YHrIBcl+b+WrSv90Ubf
+	wkVBuOb2bC0DmE+9aTkuOl5rnxdMVgjmIOstge4CI9CjUSP/toLCdlS3zWz2VIXK
+	C375v1hDcrWXeTJpbolW6Z6nSAU/So6tigwlVM/CN4TF7/MvE7YofYTMtrG7j6FO
+	e3nh2YKE31/SADc+mfywE39Vw2LB+F7EJ9ePq7xlWgs4ePcQFW/8Ct59vhA4mqYA
+	7zXo0hjfNYBDyKEcjVoRUxxgEKzz/9qGjZINgFWX3ztsg0OmN34A3cPgjvONnlOQ
 	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fwvp2ktx3-1
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fwvkckupw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 09 Aug 2026 11:57:08 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 679BuKeO027937;
-	Sun, 9 Aug 2026 11:57:08 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fxf5vsajy-1
+	Sun, 09 Aug 2026 12:06:58 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 679BuK15017356;
+	Sun, 9 Aug 2026 12:06:58 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fxfsjh8rg-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 09 Aug 2026 11:57:08 +0000 (GMT)
+	Sun, 09 Aug 2026 12:06:57 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 679Bv6ow24314512
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 679C6tHt52298148
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 9 Aug 2026 11:57:06 GMT
+	Sun, 9 Aug 2026 12:06:55 GMT
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 19ECB20040;
-	Sun,  9 Aug 2026 11:57:06 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id B20AC20040;
+	Sun,  9 Aug 2026 12:06:55 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2208720043;
-	Sun,  9 Aug 2026 11:57:03 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id B172920043;
+	Sun,  9 Aug 2026 12:06:51 +0000 (GMT)
 Received: from [9.39.25.10] (unknown [9.39.25.10])
 	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun,  9 Aug 2026 11:57:02 +0000 (GMT)
-Message-ID: <91f569f4-c370-49f1-8656-245f35793199@linux.ibm.com>
-Date: Sun, 9 Aug 2026 17:26:54 +0530
+	Sun,  9 Aug 2026 12:06:51 +0000 (GMT)
+Message-ID: <8d857834-e014-44d9-a112-d7fc8482d7c3@linux.ibm.com>
+Date: Sun, 9 Aug 2026 17:36:50 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 03/10] crash_dump: Disallow writing to dm-crypt
- configfs during kexec_file_load syscall
+Subject: Re: [PATCH v3 09/10] crash_dump: Disallow
+ configfs/crash_dm_crypt_key/reuse if crash hotplug supported
 To: Coiby Xu <coiby.xu@gmail.com>
 Cc: kexec@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>,
         Baoquan He <baoquan.he@linux.dev>, Dave Young <ruirui.yang@linux.dev>,
         Pratyush Yadav <pratyush@kernel.org>, Mike Rapoport <rppt@kernel.org>,
-        Pasha Tatashin <pasha.tatashin@soleen.com>, Coiby Xu <coxu@redhat.com>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Jonathan Corbet
+ <corbet@lwn.net>,
+        Shuah Khan <skhan@linuxfoundation.org>, Coiby Xu <coxu@redhat.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
 References: <20260729033654.311541-1-coiby.xu@gmail.com>
- <20260729033654.311541-4-coiby.xu@gmail.com>
- <3010bbe1-844f-4513-9941-f4e92e581769@linux.ibm.com> <anQVIaMHXEx8hvep@Rk>
+ <20260729033654.311541-10-coiby.xu@gmail.com>
+ <96a78b35-94f7-4b63-97d3-d0841681e2b4@linux.ibm.com> <anQb8aIXKXYzKqAR@Rk>
 Content-Language: en-US
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <anQVIaMHXEx8hvep@Rk>
+In-Reply-To: <anQb8aIXKXYzKqAR@Rk>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=AMtp2X5w c=1 sm=1 tr=0 ts=6a786b15 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+X-Proofpoint-GUID: q6bRn73shGETkb5fBqxQ5dCYvWbCCtQN
+X-Authority-Analysis: v=2.4 cv=J86aKgnS c=1 sm=1 tr=0 ts=6a786d63 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
  a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8
- a=pGLkceISAAAA:8 a=zrT50iyv3olL9t5bMM8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: x9-rDdUqDJlV8rtRGkQdzsEpCjBBLY20
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA5MDEwMiBTYWx0ZWRfX/jAzcV/xcWFD
- KBPbJo2IJY5cu5COOJ1RxUQL7kCHnZHUY6shV4cR8bFAwBMrAis8eO/c4a9j5YdvclF6wGVoIFV
- 5OKI+yeB4j/4n8YnKOntVKrQLbXaNHSWRN3fYrY6pNTh2JnNOBWKxzJi7V9X/zgNeZSs/X8P/9Z
- wtI/W4SLJlF4UbeEXWFmXLRIiB/jMCTtLTlp46uAWYSgU1KI6Gsds9Dr0larJJQrZ1Ak57RSomW
- KHVzweJHZBI5y/a2ZG65kSvK9G6Qs4lSq0Z3tIaGvmfZ8LombmqcunG3kU3+uIhmSFkT1P5ChjE
- 0tp1ad+lVlc90pGzK5agbT8TfRlTOKlQO4+eBVP+M+vdD2ne+B6wbfMUzhVxJEgzLQES0nOMLAX
- uHHdWdRBM2RiekRMry79sqVCyMGWCTVZ8n7+N7w5FtnJccPLyM4z2IszmcfIKC0VyOIHqI2WLwW
- lpebYon+6K1WygTTsaw==
-X-Proofpoint-ORIG-GUID: lkcyhgmkE8tJw3pcVRjqftByT8wz0ifo
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODA5MDEwMiBTYWx0ZWRfX/H9fjLg4A/2v
- +3WeDuc1FN0SpuBmdBig9TRt0g4Bn1HprRW+l1ood+BnaDQHz5KCyEScPvllsMguLa7O6YOw+Fm
- QW+6c9o7gHBTCAT44Er/Xsoze5uaFdI=
+ a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=pGLkceISAAAA:8
+ a=LR3r36F7dvAgtJ1CGU4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: fj3Gc1WIBsqEztY8W6aHxb-0ky4TK-QY
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA5MDEwNiBTYWx0ZWRfX6KKqnTURf9Ma
+ xtr6/1B5eZQDsVCErYe+u9DLv+UEqSpHuvWNfyoholkj380Cuh+eL5ND6IzISq932yw9mTvpMLR
+ Mbaxd/gYXvoELn8hrmyzmuCapunI7xQnn45siSso82CsVfDcx0sitRqwiPL2vjNK5n44/ItaUpC
+ qzYoqCtQUOTFBgPdROYuGGtMGHRfoTTj5C1dRVz0ewBc5KV7VRhwqW4QFZVH7/Vs2f+W/mjH7+A
+ pcBHG7VwE/3ned+zTlTfCoKZX4UGqwddnC1jCyet6BTGe+gMUszkbsxtdd2cBuD+QRl2OoORaYK
+ TZ/CATa2/pc1/6MjI6zwkNuER26bXQww2Wpi9tO6/ToUP9drFI/ui0bMv6Yf8z5K0RqzqrEvG9o
+ NXiI8X5UQmocWJyRpC7r1s6jTYMznr+9erTiegUY549YCFgBiQev4/OeKFTSP8sABb4gZ3tNwvD
+ Kzp60fW52pKFFKeSprA==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODA5MDEwNiBTYWx0ZWRfX1SuGQdtcOqsw
+ a4xNeEOikXyB0xy9LK/eNAoAbRZRMp8X/i9mmjwMdUU2kOINE34t1HUz9bf+yNM+cNihlKDAM7L
+ 3DkyFSVoe1lOsiDy9OFpTPFp6gQg268=
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-09_03,2026-08-07_01,2025-10-01_01
+ definitions=2026-08-09_04,2026-08-07_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
- priorityscore=1501 impostorscore=0 phishscore=0 spamscore=0 bulkscore=0
- malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2608090102
+ clxscore=1015 priorityscore=1501 suspectscore=0 malwarescore=0 adultscore=0
+ phishscore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608090106
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260809_045716_804625_5DBC330C 
-X-CRM114-Status: GOOD (  37.25  )
+X-CRM114-CacheID: sfid-20260809_050705_220751_ECCD8230 
+X-CRM114-Status: GOOD (  23.27  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -130,180 +133,111 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello Coiby,
 
-On 06/08/26 10:50, Coiby Xu wrote:
-> On Wed, Aug 05, 2026 at 04:00:51PM +0530, Sourabh Jain wrote:
+
+On 06/08/26 11:03, Coiby Xu wrote:
+> On Wed, Aug 05, 2026 at 05:39:28PM +0530, Sourabh Jain wrote:
 >>
 >>
 >> On 29/07/26 09:06, Coiby Xu wrote:
->>> If writing to the configfs group happens concurrently during
->>> kexec_file_load syscall, it may lead to the following issues,
->>>   - buffer overflow if dm-crypt keys are added after allocation
->>>   - stale total_keys if dm-crypt keys are removed during iteration
->>>   - keys_header will not be freed if config/crash_dm_crypt_key/reuse is
->>>     set true
+>>> If crash hotplug is supported, dm-crypt keys saved to reserved memory
+>>> will be taken care of automatically. Thus it doesn't make sense to use
+>>> configfs/crash_dm_crypt_key/reuse. Reserving image->dm_crypt_keys_addr
+>>> is also unnecessary. Currently x86_64 and ppc64le have implemented
+>>> crash hotplug feature.
 >>>
->>> So hold config_keys_subsys.su_mutex for the entire sequence during the
->>> kexec_file_load syscall to ensure a consistent snapshot.
+>>> Also update the doc accordingly. Note two doc issues are fixed as well.
 >>>
->>> Fixes: 479e58549b0f ("crash_dump: store dm crypt keys in kdump 
->>> reserved memory")
->>> Suggested-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>>> Fixes: 9ebfa8dcaea7 ("crash_dump: reuse saved dm crypt keys for 
+>>> CPU/memory hot-plugging")
 >>> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
 >>> ---
->>>  kernel/crash_dump_dm_crypt.c | 23 +++++++++++++++++++++--
->>>  1 file changed, 21 insertions(+), 2 deletions(-)
+>>>  Documentation/admin-guide/kdump/kdump.rst | 16 ++++++++++------
+>>>  kernel/crash_dump_dm_crypt.c              | 23 ++++++++++++++++++++---
+>>>  2 files changed, 30 insertions(+), 9 deletions(-)
 >>>
+>>> diff --git a/Documentation/admin-guide/kdump/kdump.rst 
+>>> b/Documentation/admin-guide/kdump/kdump.rst
+>>> index 7587caadbae1..0bf2eb100a05 100644
+>>> --- a/Documentation/admin-guide/kdump/kdump.rst
+>>> +++ b/Documentation/admin-guide/kdump/kdump.rst
+>>> @@ -577,9 +577,10 @@ with /sys/kernel/config/crash_dm_crypt_keys for 
+>>> setup,
+>>>  1. Tell the first kernel what logon keys are needed to unlock the 
+>>> disk volumes,
+>>>      # Add key #1
+>>> -    mkdir 
+>>> /sys/kernel/config/crash_dm_crypt_keys/7d26b7b4-e342-4d2d-b660-7426b0996720
+>>> +    VOL1_UUID=7d26b7b4-e342-4d2d-b660-7426b0996720
+>>> +    mkdir /sys/kernel/config/crash_dm_crypt_keys/$VOL1_UUID
+>>>      # Add key #1's description
+>>> -    echo cryptsetup:7d26b7b4-e342-4d2d-b660-7426b0996720 > 
+>>> /sys/kernel/config/crash_dm_crypt_keys/description
+>>> +    echo cryptsetup:$VOL1_UUID > 
+>>> /sys/kernel/config/crash_dm_crypt_keys/$VOL1_UUID/description
+>>>      # how many keys do we have now?
+>>>      cat /sys/kernel/config/crash_dm_crypt_keys/count
+>>> @@ -591,15 +592,18 @@ with /sys/kernel/config/crash_dm_crypt_keys 
+>>> for setup,
+>>>      cat /sys/kernel/config/crash_dm_crypt_keys/count
+>>>      2
+>>> -    # To support CPU/memory hot-plugging, reuse keys already saved 
+>>> to reserved
+>>> -    # memory
+>>> -    echo true > /sys/kernel/config/crash_dm_crypt_key/reuse
+>>> -
+>>>  2. Load the dump-capture kernel
+>>>  3. After the dump-capture kerne get booted, restore the keys to 
+>>> user keyring
+>>>     echo yes > /sys/kernel/crash_dm_crypt_keys/restore
+>>> +For CPU/memory hot-plugging, you can reuse keys already saved to 
+>>> reserved
+>>> +memory before reloading the kdump image,
+>>> +    echo true > /sys/kernel/config/crash_dm_crypt_keys/reuse
+>>> +
+>>> +Note if crash hotplug is supported, this API is totally unnecessary 
+>>> thus will
+>>> +be disabled automatically.
+>>> +
+>>>  Contact
+>>>  =======
 >>> diff --git a/kernel/crash_dump_dm_crypt.c 
 >>> b/kernel/crash_dump_dm_crypt.c
->>> index 4335b6cb1fc4..d2e66c6fe6f3 100644
+>>> index b5b78656cf06..46d6b31c3ca4 100644
 >>> --- a/kernel/crash_dump_dm_crypt.c
 >>> +++ b/kernel/crash_dump_dm_crypt.c
->>> @@ -293,6 +293,7 @@ static ssize_t config_keys_reuse_show(struct 
+>>> @@ -310,6 +310,15 @@ static ssize_t config_keys_reuse_show(struct 
 >>> config_item *item, char *page)
->>>  static ssize_t config_keys_reuse_store(struct config_item *item,
->>>                         const char *page, size_t count)
->>>  {
->>> +    struct mutex *lock;
->>>      bool val;
->>>      int r;
->>> @@ -302,8 +303,12 @@ static ssize_t config_keys_reuse_store(struct 
->>> config_item *item,
->>>          return -EINVAL;
->>>      }
->>> +    lock = &to_config_group(item)->cg_subsys->su_mutex;
->>> +    mutex_lock(lock);
+>>>      return sysfs_emit(page, "%d\n", is_dm_key_reused);
+>>>  }
+>>> +static bool crash_hotplug_support(struct kimage *image)
+>>> +{
+>>> +#ifdef CONFIG_CRASH_HOTPLUG
+>>> +    return image->hotplug_support;
 >>
->> Is this lock only protecting against races between key reuse and 
->> kexec_file_load(),
+>> I don't think it is good idea to access kexec_crash_image properties 
+>> without
+>> holding the kexec lock.
 >
-> The lock here is to protect against races between key reuse and
-> kexec_file_load.
->
->> or does it also handle the case where a new key is added during key 
->> reuse or
->> kexec_file_load() is running?
->
-> For the cases where a key is added/deleted, configfs will automatically
-> take care of them because it will acquire mutex lock automatically.
+> Thanks for raising the concern! Let's discuss this issue in [PATCH v3 
+> 03/10].
 >
 >>
->> If it is only intended to protect key reuse versus kexec_file_load(), 
->> why can't we use
->> the kexec lock instead?
->>
->> The reason I'm asking is that, in upcoming patches, the key reuse 
->> path accesses
->> kexec_crash_image properties and the crash reserved region directly. 
->> Doing so
->> without taking the kexec lock (using kexec_trylock()) could lead to 
->> race conditions.
+>> Also, would it make sense to move this API somewhere else?
 >
-> After comparing the kexec lock approach with the configfs mutex lock
-> approach, I think the latter is a simpler solution because
-> 1. the kexec lock is non-blocking and we have to repeatedly try until the
->    lock get acquired. So it means user space has to make changes as
->    well.
->
-> 2. configfs already acquires the mutex lock automatically for
->    creating/deleting configfs items. So if we use configfs mutex lock,
->    it means one less place to use the lock.
->
-> In config_keys_reuse_store, kexec_crash_image will be checked before
-> accessing its properties and the crash reserved region. Can you
-> elaborate on what the race conditions are? Will acquiring the lock
-> before accessing kexec_crash_image properties and the crash reserved
-> region help protect against these races?
->
-> In theory, the kexec lock can be a more robust approach. But considering
-> only root can write to the crash dm-crypt keys configfs and load kdump
-> image, I'm not sure it's necessary to adopt a bit more complex solution.
+> Can you help me understand why to move this API? Is it because using
+> ifdef in .c file is discouraged?
 
-The reuse function accesses the kexec crash image properties and crashkernel
-memory without taking the kexec lock. This could lead to race conditions or
-other problems.
-
-Since we need to take the kexec lock anyway, my suggestion is: can we 
-use the
-kexec lock instead of cg_subsys->su_mutex if the purpose of the mutex is 
-only
-to synchronize reuse with kexec_file_load?
-
-As we know, kexec_file_load already runs under the kexec lock. So using the
-same lock should provide the required synchronization.
+This API is used to verify crash hotplug support, which is not directly 
+related to crash_dm_crypt_keys.
+It also seems to be generally useful.
 
 - Sourabh Jain
 
-
->
 >
 >>
 >> - Sourabh Jain
->>> +
->>> +    r = -EINVAL;
->>>      if (kstrtobool(page, &val) || !val)
->>> -        return -EINVAL;
->>> +        goto unlock;
->>
->> The jump above skips setting count, causing the function to return 
->> count instead of -EINVAL.
->> Is this really intended?
->
-> Thanks for catching this issue! In the end of the function, r instead of
-> count should be returned.
->
->>
->>>      if (is_dm_key_reused) {
->>>          pr_info("Already got dm-crypt keys, please continue with 
->>> kexec_file_load syscall\n");
->>> @@ -311,11 +316,15 @@ static ssize_t config_keys_reuse_store(struct 
->>> config_item *item,
->>>          r = get_keys_from_kdump_reserved_memory();
->>>          if (r) {
->>>              pr_warn("Failed to get dm-crypt keys from reserved 
->>> memory\n");
->>> -            return r;
->>> +            goto unlock;
->>>          }
->>>          is_dm_key_reused = true;
->>>      }
->>> +    r = count;
->>> +
->>> +unlock:
->>> +    mutex_unlock(lock);
->>>      return count;
->>>  }
->>> @@ -421,6 +430,8 @@ static int build_keys_header(void)
->>>      return 0;
->>>  }
->>> +static bool mutex_acquired;
->>> +
->>>  int crash_load_dm_crypt_keys(struct kimage *image)
->>>  {
->>>      struct kexec_buf kbuf = {
->>> @@ -432,6 +443,9 @@ int crash_load_dm_crypt_keys(struct kimage *image)
->>>      };
->>>      int r = 0;
->>> +    mutex_lock(&config_keys_subsys.su_mutex);
->>> +    mutex_acquired = true;
->>> +
->>>      if (key_count <= 0) {
->>>          kexec_dprintk("No dm-crypt keys\n");
->>>          return 0;
->>> @@ -481,6 +495,11 @@ void 
->>> kexec_file_post_load_cleanup_dm_crypt(struct kimage *image)
->>>          kfree_sensitive(keys_header);
->>>          keys_header = NULL;
->>>      }
->>> +
->>> +    if (mutex_acquired) {
->>> +        mutex_unlock(&config_keys_subsys.su_mutex);
->>> +        mutex_acquired = false;
->>> +    }
->>>  }
->>>  static int __init configfs_dmcrypt_keys_init(void)
->>
+> [...]
 >
 
 
