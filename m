@@ -4,70 +4,118 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 29164C5AC80
-	for <kexec@archiver.kernel.org>; Sun,  9 Aug 2026 04:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4FC3DC5AC80
+	for <kexec@archiver.kernel.org>; Sun,  9 Aug 2026 11:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=j3nl1oGlrcfuCJuGBdIMdIDErS4NCVUDQGrDn8WbrKY=; b=gfIo6FEQImbiidtPDGy9Ql3KG5
-	cTt7d/0h8Oe/GIeT9kpqGbU81g+4JpBOr0L+ceKIbsmdj+Tmc5LCiQRyZ94gBcJFSgyahQLvh+cn3
-	5KvixeN0rTO8RflW5/kLfwPV/uDd20h4eCfI4PY36gIJPeMiNgNrrJgXQrMPHs6VD0v7RIGIoOHj7
-	uqUyndn/PFFoHZuJjgWw3I6CcIduKA8D0A5+fD4M1/xQDP09JGsabECSL0VaND30CaBOQagnHD6OK
-	4IMiVPxhWd7DaFXjjp4w+fX/BohYwk9sfmBcnjZmKaOuKkXoitmvKx65Hla6q1a19P4InfyyfXPa9
-	qScEhMzg==;
+	bh=YGps4MOcSrgLaFu/fkgq+RUAkbvSHqTgXNmvCcr5foI=; b=PwLskDW/z4g+zefr2Vb8uAdhPT
+	vnr1n846w4aE3l0rK9APMrdJHbl6Z4K8LwBH+EKdBi3Vo2RpJghIJcIH62FMmD4hQ39Bllf8nkIJ6
+	GbTMU2YQFy5ydEAD+54ajViTHel3tbW3zjU8MTH3aNoFeu/G01yfnMmkEhWl0FUqbgjmCtkyxfF5l
+	DJmfUXvz4hL/GVgPKL20T97SKlV0s8+5M5yvd9U6hzUs5J88X+4+UQqlvCh9JRQKIAD1i5UP/+Hc2
+	uUB0rYVcVFd+znIo4reMJuVSVLioJOWbE1usXUHmQMNkOzgyDw0CcuT+tvi3zw9rPSltB0H1kJ4eN
+	uBddBgVA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wsuzL-00000009zNQ-1gZk;
-	Sun, 09 Aug 2026 04:18:19 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wt29X-0000000AGT1-0iqv;
+	Sun, 09 Aug 2026 11:57:19 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wsuzJ-00000009zN0-33r1
+	id 1wt29U-0000000AGSd-2ZXJ
 	for kexec@lists.infradead.org;
-	Sun, 09 Aug 2026 04:18:17 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 20FB343B3A
-	for <kexec@lists.infradead.org>; Sun,  9 Aug 2026 04:18:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 051521F00AC4
-	for <kexec@lists.infradead.org>; Sun,  9 Aug 2026 04:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786249096;
-	bh=j3nl1oGlrcfuCJuGBdIMdIDErS4NCVUDQGrDn8WbrKY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=BWqR2OoKgA28BeVh3Tm2EUcOjEZnC39w2oYDR+RumJ0+Zfy9UrFNzlUMMWe6DTogV
-	 Wf+sIzEfuyhbUINfv+0VurPDdJG51M2uZWhkBBvaqJ8kwgtV1U7fjfd5HytQtxk++J
-	 gBB0qGmAr3XMfYyfSES3OSr3PgNSmBkhzFArQlrCuaLeKQrjm8/7N6n6/dywaNFU8m
-	 OFgCa6oc6mUFIs4oRxh/1pEyFqxwCZk10TWBqIurV8I0ZHQb1XBwxoYXgQ+skJjr+G
-	 EVcz/4EdA5ZZ0Qwqiw49wfVW+xBjgZuUyjgTeaIUnvn5XGib+ONyHzpMT7C6m7LY1j
-	 cftS7HORAGe4A==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6a1b51723a9so1237163a12.1
-        for <kexec@lists.infradead.org>; Sat, 08 Aug 2026 21:18:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+Ron9PGzdA9J6/zQv97p9DZPn/2mzSJi6V0gCF7xkFQQqkgOe1XnLP2fqIBTuqG8DKnRbG+ClA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxZ9hs3xF19g4fSoVrNevdTQeBMaO3McWi/dnxIEGm+ZZecS+f9
-	N0kdkMshTcv8gG7PTQ15ADx1VN7xABucrStsiBwkOdgVYWWsW+M92NuxcyJwSc4blNYzKQR/tl7
-	30e48AGfNimGRaxjU5OWP5sFbitAMDyM=
-X-Received: by 2002:a05:6402:5d0:b0:6a1:245e:525a with SMTP id
- 4fb4d7f45d1cf-6a14f26eb8emr17244030a12.19.1786249094682; Sat, 08 Aug 2026
- 21:18:14 -0700 (PDT)
+	Sun, 09 Aug 2026 11:57:17 +0000
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 679937lT2477197;
+	Sun, 9 Aug 2026 11:57:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=YGps4M
+	OcSrgLaFu/fkgq+RUAkbvSHqTgXNmvCcr5foI=; b=nTB3dV5we5LL+RtR3OCpzw
+	jIxtpvKYm3NHOu3MtsT4TXMSkeQZYKrEjIKCCwJ+YmPF1egIw1EhyYC8XUEvESjw
+	/OX7LfdrplN2V7iPY8L3LbvpT6yBITCxOJpf1wM+8rNWcaCbQD8NN1aHVMgz5nLX
+	wiFtdiuid2FIUPkJxxI1TEFt+5fj0GNync7biJ/dBBP8nYaKevRAwjoV2p8Bzbv6
+	j0boGBQGcW42Q68viNUEkWsqtS+K4sWPMqZXQeGt2SkMi61y6uw0Oj2Qyj6rdA2m
+	zRBJY0W1sAjfiU9I8AULm5TOyn8PolUHaDnRWmROpwMzJk90O3Kt2liLyLKgtSXQ
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fwvp2ktx3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 09 Aug 2026 11:57:08 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 679BuKeO027937;
+	Sun, 9 Aug 2026 11:57:08 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fxf5vsajy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 09 Aug 2026 11:57:08 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 679Bv6ow24314512
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 9 Aug 2026 11:57:06 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 19ECB20040;
+	Sun,  9 Aug 2026 11:57:06 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2208720043;
+	Sun,  9 Aug 2026 11:57:03 +0000 (GMT)
+Received: from [9.39.25.10] (unknown [9.39.25.10])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sun,  9 Aug 2026 11:57:02 +0000 (GMT)
+Message-ID: <91f569f4-c370-49f1-8656-245f35793199@linux.ibm.com>
+Date: Sun, 9 Aug 2026 17:26:54 +0530
 MIME-Version: 1.0
-References: <20260807103714.33074-1-dongtai.guo@linux.dev> <20260807103714.33074-2-dongtai.guo@linux.dev>
-In-Reply-To: <20260807103714.33074-2-dongtai.guo@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 9 Aug 2026 12:18:04 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4xxPXVRNXP42CBtMdVXbBZ4E6A997jZmw7HpEUSFAj9g@mail.gmail.com>
-X-Gm-Features: AUfX_mzdXzAu0LbrcSZLHxk0mDTfusrkGeDoTo4UC_Q7T6b0NAW8AH8IYMcYy6c
-Message-ID: <CAAhV-H4xxPXVRNXP42CBtMdVXbBZ4E6A997jZmw7HpEUSFAj9g@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] efi: add a KHO configuration table GUID
-To: George Guo <dongtai.guo@linux.dev>
-Cc: rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org, 
-	shuah@kernel.org, ardb@kernel.org, guodongtai@kylinos.cn, kernel@xen0n.name, 
-	graf@amazon.com, loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org, linux-efi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 03/10] crash_dump: Disallow writing to dm-crypt
+ configfs during kexec_file_load syscall
+To: Coiby Xu <coiby.xu@gmail.com>
+Cc: kexec@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <baoquan.he@linux.dev>, Dave Young <ruirui.yang@linux.dev>,
+        Pratyush Yadav <pratyush@kernel.org>, Mike Rapoport <rppt@kernel.org>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>, Coiby Xu <coxu@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20260729033654.311541-1-coiby.xu@gmail.com>
+ <20260729033654.311541-4-coiby.xu@gmail.com>
+ <3010bbe1-844f-4513-9941-f4e92e581769@linux.ibm.com> <anQVIaMHXEx8hvep@Rk>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <anQVIaMHXEx8hvep@Rk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=AMtp2X5w c=1 sm=1 tr=0 ts=6a786b15 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8
+ a=pGLkceISAAAA:8 a=zrT50iyv3olL9t5bMM8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: x9-rDdUqDJlV8rtRGkQdzsEpCjBBLY20
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA5MDEwMiBTYWx0ZWRfX/jAzcV/xcWFD
+ KBPbJo2IJY5cu5COOJ1RxUQL7kCHnZHUY6shV4cR8bFAwBMrAis8eO/c4a9j5YdvclF6wGVoIFV
+ 5OKI+yeB4j/4n8YnKOntVKrQLbXaNHSWRN3fYrY6pNTh2JnNOBWKxzJi7V9X/zgNeZSs/X8P/9Z
+ wtI/W4SLJlF4UbeEXWFmXLRIiB/jMCTtLTlp46uAWYSgU1KI6Gsds9Dr0larJJQrZ1Ak57RSomW
+ KHVzweJHZBI5y/a2ZG65kSvK9G6Qs4lSq0Z3tIaGvmfZ8LombmqcunG3kU3+uIhmSFkT1P5ChjE
+ 0tp1ad+lVlc90pGzK5agbT8TfRlTOKlQO4+eBVP+M+vdD2ne+B6wbfMUzhVxJEgzLQES0nOMLAX
+ uHHdWdRBM2RiekRMry79sqVCyMGWCTVZ8n7+N7w5FtnJccPLyM4z2IszmcfIKC0VyOIHqI2WLwW
+ lpebYon+6K1WygTTsaw==
+X-Proofpoint-ORIG-GUID: lkcyhgmkE8tJw3pcVRjqftByT8wz0ifo
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODA5MDEwMiBTYWx0ZWRfX/H9fjLg4A/2v
+ +3WeDuc1FN0SpuBmdBig9TRt0g4Bn1HprRW+l1ood+BnaDQHz5KCyEScPvllsMguLa7O6YOw+Fm
+ QW+6c9o7gHBTCAT44Er/Xsoze5uaFdI=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-09_03,2026-08-07_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 phishscore=0 spamscore=0 bulkscore=0
+ malwarescore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2608090102
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260809_045716_804625_5DBC330C 
+X-CRM114-Status: GOOD (  37.25  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,108 +130,180 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi, George,
+Hello Coiby,
 
-On Fri, Aug 7, 2026 at 6:38=E2=80=AFPM George Guo <dongtai.guo@linux.dev> w=
-rote:
+On 06/08/26 10:50, Coiby Xu wrote:
+> On Wed, Aug 05, 2026 at 04:00:51PM +0530, Sourabh Jain wrote:
+>>
+>>
+>> On 29/07/26 09:06, Coiby Xu wrote:
+>>> If writing to the configfs group happens concurrently during
+>>> kexec_file_load syscall, it may lead to the following issues,
+>>>   - buffer overflow if dm-crypt keys are added after allocation
+>>>   - stale total_keys if dm-crypt keys are removed during iteration
+>>>   - keys_header will not be freed if config/crash_dm_crypt_key/reuse is
+>>>     set true
+>>>
+>>> So hold config_keys_subsys.su_mutex for the entire sequence during the
+>>> kexec_file_load syscall to ensure a consistent snapshot.
+>>>
+>>> Fixes: 479e58549b0f ("crash_dump: store dm crypt keys in kdump 
+>>> reserved memory")
+>>> Suggested-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>>> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+>>> ---
+>>>  kernel/crash_dump_dm_crypt.c | 23 +++++++++++++++++++++--
+>>>  1 file changed, 21 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/kernel/crash_dump_dm_crypt.c 
+>>> b/kernel/crash_dump_dm_crypt.c
+>>> index 4335b6cb1fc4..d2e66c6fe6f3 100644
+>>> --- a/kernel/crash_dump_dm_crypt.c
+>>> +++ b/kernel/crash_dump_dm_crypt.c
+>>> @@ -293,6 +293,7 @@ static ssize_t config_keys_reuse_show(struct 
+>>> config_item *item, char *page)
+>>>  static ssize_t config_keys_reuse_store(struct config_item *item,
+>>>                         const char *page, size_t count)
+>>>  {
+>>> +    struct mutex *lock;
+>>>      bool val;
+>>>      int r;
+>>> @@ -302,8 +303,12 @@ static ssize_t config_keys_reuse_store(struct 
+>>> config_item *item,
+>>>          return -EINVAL;
+>>>      }
+>>> +    lock = &to_config_group(item)->cg_subsys->su_mutex;
+>>> +    mutex_lock(lock);
+>>
+>> Is this lock only protecting against races between key reuse and 
+>> kexec_file_load(),
 >
-> From: George Guo <guodongtai@kylinos.cn>
+> The lock here is to protect against races between key reuse and
+> kexec_file_load.
 >
-> Kexec Handover (KHO) passes the address of its state FDT and of its
-> scratch area from the current kernel to the next one.  On architectures
-> that boot with a device tree, the current kernel writes the
-> linux,kho-fdt and linux,kho-scratch properties into /chosen, and the next
-> kernel reads them back in early_init_dt_check_kho().
+>> or does it also handle the case where a new key is added during key 
+>> reuse or
+>> kexec_file_load() is running?
 >
-> Architectures that boot through EFI without a device tree have no such
-> channel.  LoongArch is one of them: its efistub passes the EFI system
-> table and the command line to the core kernel directly and never creates
-> an FDT.  x86 has the same problem and carries the state out of band
-> instead, in a struct kho_data in the setup_data chain of its boot
-> protocol.
+> For the cases where a key is added/deleted, configfs will automatically
+> take care of them because it will acquire mutex lock automatically.
 >
-> Add an out-of-band channel for EFI: a LINUX_EFI_KHO_TABLE_GUID
-> configuration table entry, under a randomly generated GUID, pointing at a
-> struct linux_efi_kho_data.  The
-> current kernel loads the structure and an extended configuration table as
-> kexec segments, then switches the EFI system table to the new table
-> before jumping.  The next kernel finds the entry by GUID and calls
-> kho_populate().
+>>
+>> If it is only intended to protect key reuse versus kexec_file_load(), 
+>> why can't we use
+>> the kexec lock instead?
+>>
+>> The reason I'm asking is that, in upcoming patches, the key reuse 
+>> path accesses
+>> kexec_crash_image properties and the crash reserved region directly. 
+>> Doing so
+>> without taking the kexec lock (using kexec_trylock()) could lead to 
+>> race conditions.
 >
-> The structure carries no version field.  An incompatible change to the
-> layout must use a new GUID, which is the usual rule for EFI configuration
-> tables.  The handover payload itself is versioned separately, by the
-> compatible string of the KHO state FDT that kho_populate() checks.
+> After comparing the kexec lock approach with the configfs mutex lock
+> approach, I think the latter is a simpler solution because
+> 1. the kexec lock is non-blocking and we have to repeatedly try until the
+>    lock get acquired. So it means user space has to make changes as
+>    well.
 >
-> This patch adds the definitions only.  LoongArch is the first user; any
-> other EFI architecture without a boot FDT can use the same channel.
+> 2. configfs already acquires the mutex lock automatically for
+>    creating/deleting configfs items. So if we use configfs mutex lock,
+>    it means one less place to use the lock.
 >
-> Signed-off-by: George Guo <guodongtai@kylinos.cn>
-> ---
->  include/linux/efi.h | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+> In config_keys_reuse_store, kexec_crash_image will be checked before
+> accessing its properties and the crash reserved region. Can you
+> elaborate on what the race conditions are? Will acquiring the lock
+> before accessing kexec_crash_image properties and the crash reserved
+> region help protect against these races?
 >
-> diff --git a/include/linux/efi.h b/include/linux/efi.h
-> index ccbc35479684..789ab9e4312a 100644
-> --- a/include/linux/efi.h
-> +++ b/include/linux/efi.h
-> @@ -422,6 +422,7 @@ void efi_native_runtime_setup(void);
->  #define LINUX_EFI_COCO_SECRET_AREA_GUID                EFI_GUID(0xadf956=
-ad, 0xe98c, 0x484c,  0xae, 0x11, 0xb5, 0x1c, 0x7d, 0x33, 0x64, 0x47)
->  #define LINUX_EFI_BOOT_MEMMAP_GUID             EFI_GUID(0x800f683f, 0xd0=
-8b, 0x423a,  0xa2, 0x93, 0x96, 0x5c, 0x3c, 0x6f, 0xe2, 0xb4)
->  #define LINUX_EFI_UNACCEPTED_MEM_TABLE_GUID    EFI_GUID(0xd5d1de3c, 0x10=
-5c, 0x44f9,  0x9e, 0xa9, 0xbc, 0xef, 0x98, 0x12, 0x00, 0x31)
-> +#define LINUX_EFI_KHO_TABLE_GUID               EFI_GUID(0xc941b6c7, 0x7b=
-3f, 0x4af6,  0x9e, 0x50, 0xfc, 0xb3, 0xa8, 0x86, 0x8a, 0x17)
-I don't know whether it is allowed to define a new TABLE ID while
-doesn't touch the UEFI SPEC.
+> In theory, the kexec lock can be a more robust approach. But considering
+> only root can write to the crash dm-crypt keys configfs and load kdump
+> image, I'm not sure it's necessary to adopt a bit more complex solution.
 
-Huacai
+The reuse function accesses the kexec crash image properties and crashkernel
+memory without taking the kexec lock. This could lead to race conditions or
+other problems.
+
+Since we need to take the kexec lock anyway, my suggestion is: can we 
+use the
+kexec lock instead of cg_subsys->su_mutex if the purpose of the mutex is 
+only
+to synchronize reuse with kexec_file_load?
+
+As we know, kexec_file_load already runs under the kexec lock. So using the
+same lock should provide the required synchronization.
+
+- Sourabh Jain
+
 
 >
->  #define RISCV_EFI_BOOT_PROTOCOL_GUID           EFI_GUID(0xccd15fec, 0x6f=
-73, 0x4eec,  0x83, 0x95, 0x3e, 0x69, 0xe4, 0xb9, 0x40, 0xbf)
 >
-> @@ -1271,6 +1272,29 @@ struct linux_efi_memreserve {
+>>
+>> - Sourabh Jain
+>>> +
+>>> +    r = -EINVAL;
+>>>      if (kstrtobool(page, &val) || !val)
+>>> -        return -EINVAL;
+>>> +        goto unlock;
+>>
+>> The jump above skips setting count, causing the function to return 
+>> count instead of -EINVAL.
+>> Is this really intended?
 >
->  void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size);
+> Thanks for catching this issue! In the end of the function, r instead of
+> count should be returned.
 >
-> +/*
-> + * The LINUX_EFI_KHO_TABLE_GUID config table points to this structure.  =
-It
-> + * carries the kexec handover (KHO) state from the current kernel to the=
- next
-> + * one: the addresses of the KHO state FDT and of the scratch area.
-> + *
-> + * This is the handover channel for architectures that boot through EFI =
-without
-> + * a device tree, where the /chosen linux,kho-fdt and linux,kho-scratch
-> + * properties read by early_init_dt_check_kho() are not available.  The =
-current
-> + * kernel loads the structure and an extended configuration table as kex=
-ec
-> + * segments; the next kernel finds it by GUID and calls kho_populate().
-> + *
-> + * The layout is an ABI between the two kernels and is fixed.  It carrie=
-s no
-> + * version field: an incompatible change must use a new GUID, and the ha=
-ndover
-> + * payload itself is versioned separately by the compatible string of th=
-e KHO
-> + * state FDT, which kho_populate() checks.
-> + */
-> +struct linux_efi_kho_data {
-> +       u64 fdt_addr;
-> +       u64 fdt_size;
-> +       u64 scratch_addr;
-> +       u64 scratch_size;
-> +} __packed;
-> +
->  /*
->   * The LINUX_EFI_MOK_VARIABLE_TABLE_GUID config table can be provided
->   * to the kernel by an EFI boot loader. The table contains a packed
-> --
-> 2.53.0
+>>
+>>>      if (is_dm_key_reused) {
+>>>          pr_info("Already got dm-crypt keys, please continue with 
+>>> kexec_file_load syscall\n");
+>>> @@ -311,11 +316,15 @@ static ssize_t config_keys_reuse_store(struct 
+>>> config_item *item,
+>>>          r = get_keys_from_kdump_reserved_memory();
+>>>          if (r) {
+>>>              pr_warn("Failed to get dm-crypt keys from reserved 
+>>> memory\n");
+>>> -            return r;
+>>> +            goto unlock;
+>>>          }
+>>>          is_dm_key_reused = true;
+>>>      }
+>>> +    r = count;
+>>> +
+>>> +unlock:
+>>> +    mutex_unlock(lock);
+>>>      return count;
+>>>  }
+>>> @@ -421,6 +430,8 @@ static int build_keys_header(void)
+>>>      return 0;
+>>>  }
+>>> +static bool mutex_acquired;
+>>> +
+>>>  int crash_load_dm_crypt_keys(struct kimage *image)
+>>>  {
+>>>      struct kexec_buf kbuf = {
+>>> @@ -432,6 +443,9 @@ int crash_load_dm_crypt_keys(struct kimage *image)
+>>>      };
+>>>      int r = 0;
+>>> +    mutex_lock(&config_keys_subsys.su_mutex);
+>>> +    mutex_acquired = true;
+>>> +
+>>>      if (key_count <= 0) {
+>>>          kexec_dprintk("No dm-crypt keys\n");
+>>>          return 0;
+>>> @@ -481,6 +495,11 @@ void 
+>>> kexec_file_post_load_cleanup_dm_crypt(struct kimage *image)
+>>>          kfree_sensitive(keys_header);
+>>>          keys_header = NULL;
+>>>      }
+>>> +
+>>> +    if (mutex_acquired) {
+>>> +        mutex_unlock(&config_keys_subsys.su_mutex);
+>>> +        mutex_acquired = false;
+>>> +    }
+>>>  }
+>>>  static int __init configfs_dmcrypt_keys_init(void)
+>>
 >
+
 
