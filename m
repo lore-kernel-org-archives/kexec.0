@@ -4,69 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 57277C5B56A
-	for <kexec@archiver.kernel.org>; Mon, 10 Aug 2026 16:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3D4B4C5AD7B
+	for <kexec@archiver.kernel.org>; Mon, 10 Aug 2026 17:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Rk9UOpZ43Bg6UIPw6bOq+CDpdVOO/s9lEMnFfYVyJoA=; b=0EPORvwrgOIeTYOFrbVlA4z0l/
-	3IJtoZrGFijv3+POqsK+l6VlA9/h6OfhnIdzWaNhm2rU1fw9ICKuMQXYa/73bZJyoPhKEfh3XEMFd
-	o/0Lz2vh3gUnbJIa6bXGWHzaTVSjkQFn5TGOAC5LufjiVgreNiXqvUqnxQ2cCdqHH40LE8vw77emX
-	Z+I33MQvIXxtcNV2hdS1oybpGNNLM2EFyiD1/vrbQtKvSghBMdP05Jcr9BPK1ZpTqVgg9gGDfQeiA
-	ee5kqliROCTy4gIhOD0lZgLYnhqPT+fIz46evgkMYeEtObAMDnTphQ2laGpFOGE5yypqrBVoE//M9
-	0J97tE+A==;
+	bh=cCkjfXypJR2v+/AHSNaCI4DX4ZfH0QJoQz2XhQgPjXU=; b=nFqCo6OAXw22NO36garaPZKjHx
+	mh2g2TRfQ2iCjRek9VPwkqozIsaSxn8QF2B/pf2pYaLXZ4Y2PwofpeC1ABVRfkeX0Xtnqff5puPMo
+	PzzDipUMsDM0uAQLp2KEM1EcbzNUU0Foew3mLCZThblkScxe0trs2ledzVZlXFX8/WKzr10XxWQUV
+	WX2jI5T3isEOxBnqEFTAFmEOO2oaC2jKu3FcR3NXEe+VBF91wtadXxeSDfK6q6ISHM3TPVj0Ew1BM
+	Fvp9lFgHGQvzLFEM7ANfrTJvnhvIJE/i3FwcS4753uj9U2KHrmjU2AyiN5VnU9qS9/fkClHIJ76G4
+	8YsZUBcg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtSvm-0000000CP1d-2YTS;
-	Mon, 10 Aug 2026 16:32:54 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wtTwV-0000000CXco-20Sk;
+	Mon, 10 Aug 2026 17:37:43 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtSvl-0000000CP1H-3jjQ
+	id 1wtTwT-0000000CXcO-2uGu
 	for kexec@lists.infradead.org;
-	Mon, 10 Aug 2026 16:32:54 +0000
+	Mon, 10 Aug 2026 17:37:41 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 488DC60052;
-	Mon, 10 Aug 2026 16:32:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 991251F000E9;
-	Mon, 10 Aug 2026 16:32:45 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 0AC16419AC;
+	Mon, 10 Aug 2026 17:37:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DCF11F000E9;
+	Mon, 10 Aug 2026 17:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786379572;
-	bh=Rk9UOpZ43Bg6UIPw6bOq+CDpdVOO/s9lEMnFfYVyJoA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=AhuyDLlYFJT9hF3iINS6yz/+oWRveYHiCtkc4o/LaMcyij/2v5EDHCKGrJc6xN0Du
-	 Cvz/6AcB0JJWVbIWJLX3OkLynEUIoy7bPRy34dGl68az1bKkOsB/sdVJ/qOC9EfP89
-	 qeXgERuQj3dD22+1DnCRqrnxP5Tjfvr0HDGKBJzb8ABUsxVt9BvASxV9EN8IOsSFuJ
-	 S4aTqDUne214774iXtfFp18qzbjRP5f26WfPYwbM9VJMTtPk1K7dE7cSi5k7aPAWA9
-	 aOeo3pn/eGyr9s90N0kawTXpJ2Cp6dO+oCkCrrzMjcnd8iVCUrjyf/enoSYO6ztuAf
-	 IfKvDMvY2tL7A==
-Date: Mon, 10 Aug 2026 19:32:41 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Baoquan He <baoquan.he@linux.dev>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	rmikey@meta.com, riel@surriel.com, kernel-team@meta.com,
-	Kiryl Shutsemau <kas@kernel.org>
-Subject: Re: [PATCH v5] kexec: keep the next kernel off hardware-poisoned
- pages
-Message-ID: <ann9Kcesyb4T9Z8b@kernel.org>
-References: <20260810-kexec_posioned-v5-1-95e1b5e2e656@debian.org>
+	s=k20260515; t=1786383460;
+	bh=cCkjfXypJR2v+/AHSNaCI4DX4ZfH0QJoQz2XhQgPjXU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=O9zHXe+aARtSwL33CnDRJn0/woco1aLTR1Z2ZIE4QuWj35vrgiuJJdBGrLFraulje
+	 Pj0zjNswaahLPJ8+fcpuSwf1M7QXI+6WN1T/AULK0vSdpkRFHOJ6q94FFTW//sAs2g
+	 KqgGx3OiiQACXiIIWuRqW1g1m5zIplFu1l3shpgA0BfF85h303+OJicPsB6Uch9i5d
+	 W0rdsZf0K8N+CzKUixzQ55JBeoZde4YUOL7zlG+Oh0BbWSFvJqVM7j68dBxuXPZi5V
+	 RlPLho30bUzMWJU0F30JghzGH91ALkZkSmbg/2d380nZnV/b9sA9uJx1PEvpS5n7P7
+	 bqfmsi1LgKrrQ==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: George Guo <dongtai.guo@linux.dev>
+Cc: chenhuacai@kernel.org,  rppt@kernel.org,  pasha.tatashin@soleen.com,
+  pratyush@kernel.org,  shuah@kernel.org,  ardb@kernel.org,
+  guodongtai@kylinos.cn,  kernel@xen0n.name,  graf@amazon.com,
+  loongarch@lists.linux.dev,  linux-kernel@vger.kernel.org,
+  kexec@lists.infradead.org,  linux-mm@kvack.org,
+  linux-kselftest@vger.kernel.org,  linux-efi@vger.kernel.org,  Kexin Liu
+ <liukexin@kylinos.cn>
+Subject: Re: [PATCH v4 2/4] LoongArch: kexec: add KHO support
+In-Reply-To: <20260807103714.33074-3-dongtai.guo@linux.dev> (George Guo's
+	message of "Fri, 7 Aug 2026 18:37:12 +0800")
+References: <20260807103714.33074-1-dongtai.guo@linux.dev>
+	<20260807103714.33074-3-dongtai.guo@linux.dev>
+Date: Mon, 10 Aug 2026 19:37:36 +0200
+Message-ID: <2vxzo6f96fmn.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260810-kexec_posioned-v5-1-95e1b5e2e656@debian.org>
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,187 +75,202 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Breno,
+On Fri, Aug 07 2026, George Guo wrote:
 
-On Mon, Aug 10, 2026 at 06:32:04AM -0700, Breno Leitao wrote:
-> Memory failures (such as unrecoverable ECCs errors) are getting more and
-> more common. The kernel knows how to handle it while running, marking it
-> as poisoned (and SIGBUS user tasks).
-> 
-> Poisoned memory is removed from the buddy allocator, but, not from
-> other places. A current problem is that kexec will load new kernel
-> on top of a bad/poisoned memory, which is undesirable.
-> 
-> If the next kernel's image, initrd or purgatory lands on poisoned frame,
-> the relocation copy writes to the bad memory and the machine checks
-
-What does the machine check here? ;-)
-
-> during the kexec.
-> 
-> Skip hardware-poisoned frames when placing segments: check them in the
-> kexec_file hole finder so it lays the next kernel down on good memory,
-> and reject a poisoned destination in sanity_check_segment_list() for
-> the kexec_load path, which cannot relocate.
-> 
-> The two hole finders walk in opposite directions, so each asks for the
-> end of the poison it has to clear: the top-down walk for the first
-> poisoned page in the window, the bottom-up walk for the last. A poisoned
-> hugetlb folio counts in full, as hugetlb keeps the flag on the folio and
-> the poisoned subpages on its raw hwpoison list.
-
-I had hard time parsing these two paragraphs. Can you please add more human
-touch to them?
- 
-> Suggested-by: Kiryl Shutsemau <kas@kernel.org>
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+> From: George Guo <guodongtai@kylinos.cn>
 >
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index dc770b9a6d053..7ee8c9f078f6b 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -212,6 +212,16 @@ int sanity_check_segment_list(struct kimage *image)
->  	}
->  #endif
->  
-> +	/*
-> +	 * Reject destinations that land on hardware-poisoned memory: the
-> +	 * relocation copy would machine-check on the bad frame.
-
-Would cause machine-check exception?
-
-> +	 */
-> +	for (i = 0; i < nr_segments; i++) {
-> +		if (range_first_hwpoison(image->segment[i].mem,
-> +					 image->segment[i].memsz) != PHYS_ADDR_MAX)
-> +			return -EHWPOISON;
-> +	}
-> +
->  	/*
->  	 * The destination addresses are searched from system RAM rather than
->  	 * being allocated from the buddy allocator, so they are not guaranteed
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 59fb9d71e9d86..9ba6cc01af929 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -475,6 +475,7 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
->  {
->  	struct kimage *image = kbuf->image;
->  	unsigned long temp_start, temp_end;
-> +	phys_addr_t poison;
->  
->  	temp_end = min(end, kbuf->buf_max);
->  	temp_start = temp_end - kbuf->memsz + 1;
-> @@ -504,6 +505,15 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
->  			continue;
->  		}
->  
-> +		poison = range_first_hwpoison(temp_start, kbuf->memsz);
-> +		if (poison != PHYS_ADDR_MAX) {
-> +			/* we hit a poisoned page */
-> +			if (poison < kbuf->memsz)
-> +				return 0;
-
-Won't we break out on the next iteration boundaries check? I.e.
-
-		if (temp_start < start || temp_start < kbuf->buf_min)
-			return 0;
-
-> +			temp_start = poison - kbuf->memsz;
-> +			continue;
-> +		}
-> +
->  		/* We found a suitable memory range */
->  		break;
->  	} while (1);
-> @@ -520,6 +530,7 @@ static int locate_mem_hole_bottom_up(unsigned long start, unsigned long end,
->  {
->  	struct kimage *image = kbuf->image;
->  	unsigned long temp_start, temp_end;
-> +	phys_addr_t poison;
->  
->  	temp_start = max(start, kbuf->buf_min);
->  
-> @@ -546,6 +557,13 @@ static int locate_mem_hole_bottom_up(unsigned long start, unsigned long end,
->  			continue;
->  		}
->  
-> +		poison = range_last_hwpoison(temp_start, kbuf->memsz);
-> +		if (poison != PHYS_ADDR_MAX) {
-> +			/* we hit a poisoned page */
-> +			temp_start = poison + PAGE_SIZE;
-> +			continue;
-> +		}
-> +
->  		/* We found a suitable memory range */
->  		break;
->  	} while (1);
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index a8b03e2920ba8..f3875680e7955 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -96,6 +96,47 @@ void num_poisoned_pages_sub(unsigned long pfn, long i)
->  		memblk_nr_poison_sub(pfn, i);
+> Enable Kexec Handover (KHO) on LoongArch64.
+>
+> LoongArch has no boot FDT: the efistub passes the EFI system table and
+> the command line to the core kernel directly, so the arm64 /chosen path
+> (append linux,kho-fdt / linux,kho-scratch and let
+> early_init_dt_check_kho() read them) does not apply.  Follow the x86
+> model instead, which has no boot FDT either: carry the KHO pointer out of
+> band and call kho_populate() directly.  The channel is the EFI
+> configuration table entry added by the previous patch.
+>
+> - Kconfig: ARCH_SUPPORTS_KEXEC_HANDOVER is def_bool 64BIT.
+> - machine_kexec_file.c: kho_load_data() builds a small handover blob
+>   (struct linux_efi_kho_data) holding the KHO state FDT and scratch
+>   addresses, and a new EFI configuration table with a
+>   LINUX_EFI_KHO_TABLE_GUID entry pointing to it; both are loaded as kexec
+>   segments.
+> - machine_kexec.c: before jumping to the next kernel, switch the EFI
+>   system table to the extended configuration table.
+> - setup.c: kho_populate_from_efi() scans the configuration table for
+>   LINUX_EFI_KHO_TABLE_GUID and calls kho_populate() from setup_arch(),
+>   after efi_init() and before memblock_init().
+>
+> Handover is set up by the kexec_file_load() syscall only.  kho_load_data()
+> runs from load_other_segments(), which the older kexec_load() syscall does
+> not reach.  This matches x86, where KHO lives in the bzImage64 loader.
+>
+> Tested on a LoongArch machine booting through ACPI/UEFI.  After the kexec,
+> the second kernel reports
+>
+>   KHO: found kexec handover data.
+>
+> and the two-stage test passes: luo_kexec_simple --stage 1, kexec into the
+> second kernel, then luo_kexec_simple --stage 2.
+>
+> Co-developed-by: Kexin Liu <liukexin@kylinos.cn>
+> Signed-off-by: Kexin Liu <liukexin@kylinos.cn>
+> Signed-off-by: George Guo <guodongtai@kylinos.cn>
+[...]
+> @@ -55,6 +64,121 @@ static void cmdline_add_initrd(struct kimage *image, unsigned long *cmdline_tmpl
+>  	*cmdline_tmplen += initrd_strlen;
 >  }
 >  
+> +#ifdef CONFIG_KEXEC_HANDOVER
 > +/*
-> + * Return the first or the last hardware-poisoned online page in [start,
-> + * start + size), or PHYS_ADDR_MAX if the range is clean.
+> + * Hand the KHO state to the next kernel through a dedicated EFI configuration
+> + * table entry.
+> + *
+> + * LoongArch has no boot FDT: the efistub passes the EFI system table and the
+> + * command line to the core kernel directly.  So instead of the arm64 /chosen
+> + * FDT path, build a small handover blob (struct linux_efi_kho_data) holding the
+> + * KHO state FDT and scratch addresses, register it in the EFI configuration
+> + * table under LINUX_EFI_KHO_TABLE_GUID, and let the next kernel read it and
+> + * call kho_populate() directly.
+> + *
+> + * Both the blob and the extended configuration table are loaded as kexec
+> + * segments; machine_kexec() switches st->tables to the new table before jumping.
+> + *
+> + * image->kho.fdt and image->kho.scratch are filled in by kho_fill_kimage()
+> + * before the arch loader runs, so they are valid here.
 > + */
-> +static phys_addr_t range_hwpoison(phys_addr_t start, unsigned long size,
-> +				  bool first)
+> +static int kho_load_data(struct kimage *image)
 > +{
-> +	phys_addr_t poison = PHYS_ADDR_MAX;
-> +	unsigned long pfn, end_pfn;
+> +	struct linux_efi_kho_data *kho;
+> +	efi_system_table_t *st;
+> +	efi_config_table_t *ct, *new_ct;
+> +	size_t old_sz, new_sz;
+> +	struct kexec_buf kbuf = {
+> +		.image		= image,
+> +		.buf_min	= 0,
+> +		.buf_max	= ULONG_MAX,
+> +		.top_down	= true,
+> +	};
+> +	int ret;
 > +
-> +	if (!size || !atomic_long_read(&num_poisoned_pages))
-> +		return poison;
+> +	if (!image->kho.fdt || !image->kho.scratch)
+> +		return 0;
 > +
-> +	end_pfn = PHYS_PFN(start + size - 1);
-> +	for (pfn = PHYS_PFN(start); pfn <= end_pfn; pfn++) {
-> +		struct page *page = pfn_to_online_page(pfn);
-> +
-> +		cond_resched();
-
-cond_resched() for every pfn is too much, isn't it?
-
-> +
-> +		if (!page || !is_page_hwpoison(page))
-> +			continue;
-> +
-> +		if (first)
-> +			return PFN_PHYS(pfn);
-> +
-> +		poison = PFN_PHYS(pfn);
+> +	if (!fw_arg2) {
+> +		pr_err("KHO requires an EFI boot, no EFI system table found\n");
+> +		return -EINVAL;
 > +	}
 > +
-> +	return poison;
-> +}
+> +	/* Build the handover blob and load it as a kexec segment. */
+> +	kho = kzalloc(sizeof(*kho), GFP_KERNEL);
+> +	if (!kho)
+> +		return -ENOMEM;
 > +
-> +phys_addr_t range_first_hwpoison(phys_addr_t start, unsigned long size)
-> +{
-> +	return range_hwpoison(start, size, true);
-> +}
+> +	kho->fdt_addr     = image->kho.fdt;
+> +	kho->fdt_size     = PAGE_SIZE;
+> +	kho->scratch_addr = image->kho.scratch->mem;
+> +	kho->scratch_size = image->kho.scratch->memsz;
 > +
-> +phys_addr_t range_last_hwpoison(phys_addr_t start, unsigned long size)
-> +{
-> +	return range_hwpoison(start, size, false);
-> +}
+> +	kbuf.buffer	= kho;
+> +	kbuf.bufsz	= sizeof(*kho);
+> +	kbuf.memsz	= sizeof(*kho);
+> +	kbuf.buf_align	= sizeof(u64);
+> +	kbuf.mem	= KEXEC_BUF_MEM_UNKNOWN;
 > +
->  /**
->   * MF_ATTR_RO - Create sysfs entry for each memory failure statistics.
->   * @_name: name of the file in the per NUMA sysfs directory.
-> 
-> ---
-> base-commit: c5e32e86ca02b003f86e095d379b38148999293d
-> change-id: 20260727-kexec_posioned-72bb0a4143a0
-> 
-> Best regards,
-> --  
-> Breno Leitao <leitao@debian.org>
-> 
+> +	ret = kexec_add_buffer(&kbuf);
+> +	if (ret) {
+> +		kfree(kho);
+> +		return ret;
+> +	}
+> +	image->arch.kho_data	 = kho;
+> +	image->arch.kho_data_mem = kbuf.mem;
+> +
+> +	kexec_dprintk("Loaded KHO handover blob at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+> +		      image->arch.kho_data_mem, kbuf.bufsz, kbuf.memsz);
+> +	kexec_dprintk("KHO fdt at 0x%llx, scratch at 0x%llx size 0x%llx\n",
+> +		      kho->fdt_addr, kho->scratch_addr, kho->scratch_size);
+> +
+> +	/*
+> +	 * Build a new EFI configuration table with a LINUX_EFI_KHO_TABLE_GUID
+> +	 * entry appended, pointing at the handover blob, and load it as a kexec
+> +	 * segment.  machine_kexec() updates st->tables / st->nr_tables to point
+> +	 * to it before jumping.
+> +	 *
+> +	 * fw_arg2 is the EFI system table physical address passed by the
+> +	 * firmware/bootloader.  Use it directly because image->arch.systable_ptr
+> +	 * is set later in machine_kexec_prepare(), which runs after this.
+> +	 */
+
+This looks wrong. I don't think you should be modifying the EFI
+configuration table in this way. You also should have this in
+architecture-agnostic code.
+
+I'm not an EFI expert, but I took a look at how the other Linux-specific
+tables work. I picked LINUX_EFI_MEMRESERVE_TABLE_GUID as my example. The
+table is allocated and installed from the EFI stub (see
+install_memreserve_table()). Then efi_memreserve_map_root() maps the
+table and it is used by efi_mem_reserve_persistent().
+
+You should do something similar. Allocate and install the table from the
+stub, and then just update it on kexec. This would also let other
+architectures use this GUID without having to reinvent this again.
+
+> +	st = (efi_system_table_t *)TO_CACHE(fw_arg2);
+> +	ct = (efi_config_table_t *)TO_CACHE((unsigned long)st->tables);
+> +	old_sz = st->nr_tables * sizeof(efi_config_table_t);
+> +	new_sz = old_sz + sizeof(efi_config_table_t);
+> +
+> +	new_ct = kvmalloc(new_sz, GFP_KERNEL);
+> +	if (!new_ct)
+> +		return -ENOMEM;
+> +
+> +	memcpy(new_ct, ct, old_sz);
+> +	new_ct[st->nr_tables].guid  = LINUX_EFI_KHO_TABLE_GUID;
+> +	new_ct[st->nr_tables].table = (void *)image->arch.kho_data_mem;
+> +
+> +	kbuf.buffer	= new_ct;
+> +	kbuf.bufsz	= new_sz;
+> +	kbuf.memsz	= new_sz;
+> +	kbuf.buf_align	= sizeof(void *);
+> +	kbuf.mem	= KEXEC_BUF_MEM_UNKNOWN;
+> +
+> +	ret = kexec_add_buffer(&kbuf);
+> +	if (ret) {
+> +		kvfree(new_ct);
+> +		return ret;
+> +	}
+> +	image->arch.efi_tables	   = new_ct;
+> +	image->arch.efi_tables_mem = kbuf.mem;
+> +	image->arch.efi_tables_cnt = st->nr_tables + 1;
+> +
+> +	kexec_dprintk("Loaded EFI config table at 0x%lx bufsz=0x%lx memsz=0x%lx nr_tables=%lu\n",
+> +		      image->arch.efi_tables_mem, kbuf.bufsz, kbuf.memsz,
+> +		      image->arch.efi_tables_cnt);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+>  #ifdef CONFIG_CRASH_DUMP
+>  
+>  static int prepare_elf_headers(void **addr, unsigned long *sz)
+> @@ -220,6 +344,13 @@ int load_other_segments(struct kimage *image,
+>  		cmdline_add_initrd(image, &cmdline_tmplen, modified_cmdline, initrd_load_addr);
+>  	}
+>  
+> +#ifdef CONFIG_KEXEC_HANDOVER
+> +	/* Load the KHO handover blob and the extended EFI configuration table */
+> +	ret = kho_load_data(image);
+> +	if (ret)
+> +		goto out_err;
+> +#endif
+> +
+>  	if (cmdline_len + cmdline_tmplen > COMMAND_LINE_SIZE) {
+>  		pr_err("Appending command line exceeds COMMAND_LINE_SIZE\n");
+>  		ret = -EINVAL;
+[...]
 
 -- 
-Sincerely yours,
-Mike.
+Regards,
+Pratyush Yadav
 
