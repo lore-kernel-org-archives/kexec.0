@@ -4,69 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 260C1C5B570
-	for <kexec@archiver.kernel.org>; Mon, 10 Aug 2026 23:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E7164C5B569
+	for <kexec@archiver.kernel.org>; Mon, 10 Aug 2026 23:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=/9OrpqxZWhRM/HFUiR8JGN523y//wB+NGc5onZ0jOJQ=; b=waLYGIFIBAG3QiOss3IngWnt3L
-	0bocdEXZlR70oG8qd6E0Jn3HmLG8eqJdrSLX76FV1+QtUU2j6owcjJzy/uDMhnBl3e5TdMniPtq8y
-	eeQ77Eb8jZyQA4p8yJ0icuTFmGgEOE7N/2KrOip2RyyMyEV2ZexU61L0Ymelxc27lxRe8rvrdSYts
-	yYbyI7FxLOYSHbE3CO4JhTqicXWvPZdlXbUdsObJenMqoY35wg0ONc/1k/fI/LaXDZ3XX5H/8+nfK
-	ROdvxpitnjAujcYB+a7bjkZjv1l4h8tkcBYB4+vBJ1614S7qysEOnX4slxfVcnnOm+ihPtSPqaMfI
-	wgvHMz3g==;
+	bh=FpMqKDZdeqkAxP+HMbo4Vf8RyrsMvHYCAM3HPa8Xz3s=; b=dOhKcFeroa9+9WrUq4FFZxz0ip
+	cA16Au7qU0VPbQfTrFHKZ49yas6sGZbT0uLSyKy5KnyxCw+6T9eKkaDwhFg+maClBkwA2SZ/OmI3p
+	YObM3CT58v5R4KTM6Ukm9m9No/LX+w/HVM3TLkXPpsDrQkVyhyo70FbokbiyfNKxqpgLyJfmXrJrR
+	Jl6IgeBZULBUHEIiBaI/kb9ajY7oCBhJJaiMbKs4Mvr0eo+z/7WgAJNONPMiTRux64wOiXVoRgwz9
+	QgKfIenM8PBX3JsTrHmwJnWacshOtTaZUgOQu1D9IelDK4LOwQJtPkfU6jBTOy7sHGj14IGAm8tMj
+	GNK5XE2w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtZ3c-0000000D0VK-3ngb;
-	Mon, 10 Aug 2026 23:05:24 +0000
-Received: from mail-pf1-x447.google.com ([2607:f8b0:4864:20::447])
+	id 1wtZKv-0000000D1tT-1vYV;
+	Mon, 10 Aug 2026 23:23:17 +0000
+Received: from mail-pl1-x648.google.com ([2607:f8b0:4864:20::648])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtZ3b-0000000D0TL-1dBQ
+	id 1wtZKt-0000000D1t7-0Uvv
 	for kexec@lists.infradead.org;
-	Mon, 10 Aug 2026 23:05:24 +0000
-Received: by mail-pf1-x447.google.com with SMTP id d2e1a72fcca58-8486c3411c8so3423876b3a.2
-        for <kexec@lists.infradead.org>; Mon, 10 Aug 2026 16:05:22 -0700 (PDT)
+	Mon, 10 Aug 2026 23:23:16 +0000
+Received: by mail-pl1-x648.google.com with SMTP id d9443c01a7336-2ce7dfd33ffso3261185ad.0
+        for <kexec@lists.infradead.org>; Mon, 10 Aug 2026 16:23:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786403122; x=1787007922; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1786404193; x=1787008993; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=/9OrpqxZWhRM/HFUiR8JGN523y//wB+NGc5onZ0jOJQ=;
-        b=irg09hW6muiIH4nErAz8dW9CWbUYAOV8SeS8MJhuIt13ZRQQ1sV6csTlV2YkMWm+Vi
-         CA264CjLstJIIYYxAReZAiDLpd2w6liegdCaLLMAoHmutoy9vt7T7GEwN3aVQZ3bmd20
-         Z48Pjhru5H0jEj8aYv/Lxc3MOV7DsWI7ozFTcYDIpmmq6EIlXaWPFRcyZjBNhI/f+zSu
-         uIC11USGYumup01QNcW8XFNwZ6ZNH9464lfwq2/SR9W7AWOtKGELzKwCp3kRMfxU/c61
-         I/fkHn2Yny8fNEK25KWGJ0sxYcObswooLxXjL0GWyh06ABzRdl+U/dk7C5Fn2Ds9q+J3
-         /gmg==
+        bh=FpMqKDZdeqkAxP+HMbo4Vf8RyrsMvHYCAM3HPa8Xz3s=;
+        b=rrfya708+zc3qIONKNwJKcBmHlqxyd4Ri9nQidlY5LJaoaTRk2u55BvcQhIWLdcvO9
+         5NM4aGRwJDJe4FuheEG3PQw0ZInwvl+W9O6T6OLA4cy0N3EwpXYkrvTh1DuGzOcr9/P4
+         0Qg8e0QM3y9n+UOMC/VQLO5bwpEeMbFzDqJLT1HufN1p/OPMzp9tgu0xmy5tOukcI97S
+         64mlNsZn0CDnkZ6Oyar83K9ghYYEEa/cdGGgJeg+6daZA+6HKnu6Xq+VGvQbtNsYCw2W
+         ubdN5hxONWOk/KZiqwd48OPAasjCIRgDAj93fzIzleMVfphc6LUhvQWgAwWspqmHs3MG
+         iIBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786403122; x=1787007922;
+        d=1e100.net; s=20251104; t=1786404193; x=1787008993;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=/9OrpqxZWhRM/HFUiR8JGN523y//wB+NGc5onZ0jOJQ=;
-        b=HaY+1hbMgEqptgSyct19uTBSOn5DuWgAFdFpi5OMNVxKW7JQqjxxzyjb0DoS/ZWAfa
-         Yd2mD2rv9Zb95tiXa/u7XVMsvFnpxZpGpIkWReCxonzHZ2oq6Rn74TjX3IO7zacsMrO3
-         ZdGBOg8T3mvU9Uhw4l7vv5wHv6OpxEpNaIzLNAVH9AF17sjRAh8n2ZgrdUVj+Q1oBcT6
-         7f/yZqd0P194XJwnA2ZqNZEsTsrrIDC4+eYhhfFGht8LCHmsiPjekuHdFuRPVzKwxKTe
-         zXvlDkp9hEAaeIGjQdKPQpk42yNWYdlyHcXwA+fAlxtXEDijjSkhf01C9fGMUTKzNQ1o
-         bzew==
-X-Forwarded-Encrypted: i=1; AHgh+RpmICwv9h08sMDo+7wFIr12MM59gurZYBP9tlRuYQmA40xVFAr5yetwIHKdhqlKwMvjwvIaNw==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxKV+YWtaqi8Pz2PcJTNX2iCA3BUaAWUGTyW/X7l/E9IyI0nrD2
-	44TvwYIBp02T3X0jekRXvOuE89apVCNRC7tixxGhoWj+XNVd6CGhx8U4VoDspotbwwVpJbsHO1K
-	yn92XfQ==
-X-Received: from pfnv2.prod.google.com ([2002:aa7:8502:0:b0:847:7765:a4c3])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:420c:b0:848:2f2c:b2c8
- with SMTP id d2e1a72fcca58-84f9c95f809mr5850968b3a.24.1786403121703; Mon, 10
- Aug 2026 16:05:21 -0700 (PDT)
-Date: Mon, 10 Aug 2026 16:05:21 -0700
-In-Reply-To: <20260728121138.1103610-3-tarunsahu@google.com>
+        bh=FpMqKDZdeqkAxP+HMbo4Vf8RyrsMvHYCAM3HPa8Xz3s=;
+        b=mvvpCE4yhN4OVdhdgc+6bCg/2Ra6FdlMubLrhVpuWwU59x5ZLR+BQu9MesVArHCl6r
+         j2VMid6LzpVvj5pKKrkGhOnk7UiYQJVoEkrbLzF98ZjwqtWC5ArrkaEUyb+8Hy6V1a/n
+         wzdHsFQ1UbVWgpL34Vm7DT2KrOlsFK9/gZ5uiU/ulyCcovrGTTMVDt6lGaaoIpthhyNO
+         2/Xf4KFS5vyczif0EUM0Ng8Mwm7lJWPTYzYl0uZ2W2YOr6QjJqV1ofzaJg8nrLSL5dgo
+         CJtUMQZZJN6eezhJT+MJqbl/xfAtITUKBWgAoSyqqMO2yWHpg5kgMy4tNglum3iUvL7a
+         /xhA==
+X-Forwarded-Encrypted: i=1; AHgh+RqQplKHrm42QcLLxSuRFyxPlrLy6gU54FXYYBJxwpEE0MjQU7lu+F/98/vxOdhN+Zbb2LrKsA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyGxFWhe5V/XWNzxCqc90HfEHDrVrN4o8TpvwiTVeYBGvxHwjCb
+	ipbEtuTd9I0vm846Fs02I0ypvRubvT7RwG8KSqWgix4i+lEXuDgtpHN+zGWCrqyIM5OUerpwitn
+	9jHkW+w==
+X-Received: from plkb4.prod.google.com ([2002:a17:903:fa4:b0:2c0:a516:2c2])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:fdad:b0:2bf:9760:b94d
+ with SMTP id d9443c01a7336-2d0ca7fd072mr611571635ad.15.1786404192685; Mon, 10
+ Aug 2026 16:23:12 -0700 (PDT)
+Date: Mon, 10 Aug 2026 16:23:12 -0700
+In-Reply-To: <20260728121138.1103610-5-tarunsahu@google.com>
 Mime-Version: 1.0
-References: <20260728121138.1103610-1-tarunsahu@google.com> <20260728121138.1103610-3-tarunsahu@google.com>
-Message-ID: <anpZMemVz5yC_WLo@google.com>
-Subject: Re: [PATCH v4 02/11] KVM: Introduce kvm_create_vm_file() helper
+References: <20260728121138.1103610-1-tarunsahu@google.com> <20260728121138.1103610-5-tarunsahu@google.com>
+Message-ID: <anpdYD1UaO0ffQgi@google.com>
+Subject: Re: [PATCH v4 04/11] KVM: Track weak reference to vm_file in struct kvm
 From: Sean Christopherson <seanjc@google.com>
 To: Tarun Sahu <tarunsahu@google.com>
 Cc: ackerleytng@google.com, fuad.tabba@linux.dev, 
@@ -83,8 +83,8 @@ Cc: ackerleytng@google.com, fuad.tabba@linux.dev,
 	suzuki.poulose@arm.com
 Content-Type: text/plain; charset="us-ascii"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260810_160523_433577_CECDD76C 
-X-CRM114-Status: UNSURE (   8.92  )
+X-CRM114-CacheID: sfid-20260810_162315_184605_A134B303 
+X-CRM114-Status: UNSURE (   8.67  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -101,15 +101,16 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On Tue, Jul 28, 2026, Tarun Sahu wrote:
-> - Move ITOA_MAX_LEN to kvm_mm.h for reuse by upcoming kvm_luo code.
-> - Introduce kvm_create_vm_file() to wrap kvm_create_vm() and
->   anon_inode_getfile(), providing a unified VM file creation API.
+> - Add a weak reference 'vm_file' in struct kvm under
 
-As Ackerley pointed out, changelogs that are literally a list pretty much always
-needs to be split.
+"vm_file" is effectively already claimed by vm_area_struct.vm_file.  *If* we go
+this route, I would very strongly prefer to take a dependency on "vfio: Use
+file-based reference counting for KVM"[*].  I'll poke that thread, we really
+should land that one particular patch long before the s390-is-arm64 insanity.
 
-These also need to explain *why*.  "providing a unified VM file creation API"
-isn't sufficient justification.  In general, all of these changelogs need to
-provide more of the "why"; I can figure out what the patches are doing easily
-enough, but in my speed read of the series, it's hard to figure out the "why".
+Empashish on "if" because this all feels backwards.  It's not at all clear to
+me why liveupdate goes directly to guest_memfd, but then requires a token associated
+with the VM.
+
+https://lore.kernel.org/all/20260731130902.654679-2-seiden@linux.ibm.com
 
