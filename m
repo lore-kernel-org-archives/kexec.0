@@ -4,70 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B5021C5B56C
-	for <kexec@archiver.kernel.org>; Mon, 10 Aug 2026 13:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 55D40C5B56A
+	for <kexec@archiver.kernel.org>; Mon, 10 Aug 2026 13:20:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=XU+Yh6jvhHTQ2a/3HxdMnwUDwPqj59NubIS9TFTIlO4=; b=RGohSXIWsDC34pYKyuJhBRoevi
-	YWRkubn5dj8GsVr4aje/h2KnDIgGV8MPrBRIMYsb+LFsbswh2PST/eMgk/Dpwo9wC1LuIIcC8T18k
-	18lAUWpB2NT62M3fq/8WlZ8KyqSmTqav/cQJA3WInCij+iIuesX6oh4VkMMQnYyXNTwbKao8qvJTe
-	qkIUyFdUGgNPYFbThjPk9hhbKbQWbCya7MdPdh8A5RfZBqInaYz+mRfkE3ffHLquMsbhY4XRaCh7K
-	a+DOgaf45ukyy0i6y21FjXT6oTu8PRpOIGkLHV3A8aKHHfrvyaE5Crfz3kd5i4HNedK3n0T7POvB9
-	xV73pLBA==;
+	bh=aoXL2lcVuXDTzwRL1s4LiTCXpMnjYT/r+wP/urETSuU=; b=JgGmfTkU72GBWkzsUwyjWLXjEO
+	NSagTWH39geyzX9OozFpXr4KEOsfn0Yp6F1OXcYyJbiF/DQlJwO26C4ElymhWXC/ETA/MFF7rToNe
+	wYwGvrHI06XxEVETQGW61DKrhHKAf/H2rVkbzAqXVDbP/wtTwERaugZ8XfrHLJWDbxbEQa9XUuGKN
+	zGiMSaMf3xvn4QagaaxLlHShA07pLMzG+RveJdM/WZI819O23LAtoY0Gt8/Thas6w9L51Ynh8Q5Oz
+	PLwiJUoOkEb+AGDc0tU7bZqRURThqd7MuxAlVtB/W5tLOJ6/H5YNmm7E+e2321ZUCDbOpyLUHxOp/
+	HWFPMP9Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtPrH-0000000Bszt-3TDX;
-	Mon, 10 Aug 2026 13:16:03 +0000
-Received: from mail-ej1-x645.google.com ([2a00:1450:4864:20::645])
+	id 1wtPvk-0000000BtUT-1yJS;
+	Mon, 10 Aug 2026 13:20:40 +0000
+Received: from mail-ej1-x647.google.com ([2a00:1450:4864:20::647])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtPrE-0000000BszG-39Xu
+	id 1wtPvi-0000000BtU7-2TGm
 	for kexec@lists.infradead.org;
-	Mon, 10 Aug 2026 13:16:01 +0000
-Received: by mail-ej1-x645.google.com with SMTP id a640c23a62f3a-c1f74261f67so172260766b.2
-        for <kexec@lists.infradead.org>; Mon, 10 Aug 2026 06:15:59 -0700 (PDT)
+	Mon, 10 Aug 2026 13:20:39 +0000
+Received: by mail-ej1-x647.google.com with SMTP id a640c23a62f3a-c20262b5e10so210660166b.1
+        for <kexec@lists.infradead.org>; Mon, 10 Aug 2026 06:20:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786367758; x=1786972558; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1786368036; x=1786972836; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=XU+Yh6jvhHTQ2a/3HxdMnwUDwPqj59NubIS9TFTIlO4=;
-        b=D+ZEF9liBw/PoV6JIbBM91Y5hg27XcKvS3yRvq0fHne4h64C4/cgiB/rYXBd4nZSOv
-         8PyhTTKl3FeucxmvGG/thZqb3v//LckwDXMMYymo78/+1wkDwXZdPUq54Jln17r3Bf4D
-         wQxamKhDfSJtizv82edNkWOz81Z3w/CL9cxQG6Pb+EZjSq1zJ0ouGAHm/QZU4ZxmhcO3
-         nH5+SJPNhEzJ6iVwit0viHekxDrw8IwfwL71+cGbPu534CfIrZ+mNuYYbEOojL2NQGoR
-         kjJpFXfVSwkYxuFTRA4ts2gTXkx+l6w5avCl3LEzIv3ePXUPp0wfqKL8b6LtlD8VwuSO
-         XbGw==
+        bh=aoXL2lcVuXDTzwRL1s4LiTCXpMnjYT/r+wP/urETSuU=;
+        b=iLN6DytHxJRNJ3uVD6cJKuBfIBC4/+lelJf99LEZZYrGMk1SW2OudCT65d4elULFOK
+         NswTvi3bYiwOr+2Wn97xrHV0tGo1ecRHy6/fNITAQ7OBSixkmNwaCCsKo2QCxztJASzD
+         klW/N3Yuz5M573ESoFfcCi9ozm5h9gX2ASDaJqrVwqJg/8EyZLtCeCe6ZAAB0Wq0BOIN
+         3DynIjg/0CxcHV5COyvGqQl/mJNWdd+S/6PQfqHkC2oUsHLz+6zBH9q+ePl9UVODsZLd
+         k1LvGTfMZDv1K9ey80dnfTzDB0g+elXCL+jvw8z+UnElIbHiBgm/rUF3rj4g7fhEbBQh
+         W5pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786367758; x=1786972558;
+        d=1e100.net; s=20251104; t=1786368036; x=1786972836;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=XU+Yh6jvhHTQ2a/3HxdMnwUDwPqj59NubIS9TFTIlO4=;
-        b=WqHisLAl3cUL+y6WYMNDq3dhJZncQZbEEExYWgYBv/qZcqYB9djRBbxKWLpOcRrV0o
-         SlyRXoyLLnceI2cWpeKS8Wjoa8FI6Pp9fAUKYW6TQOWOd0xrXXg9dXAdjGLQTlu9TpMy
-         i1po06mMUTWluoQxnKSYuA7CpxMiynx0MaFVguQHz80R/3pzZvCStdfNCVZPkhWFPqfY
-         IeXuHvfG7zOPuZV5nKF5ylrSoGAVf7oNgMAZkDrJ9rIFibKLbIojkJpLsqzzBsPAJzMj
-         mTojPmIo3NP/3uiK+zzMbtSsiUY4Y9YTI2qXLVPGdGEWXpn4ShGygVFjAXLjmJubhK/j
-         9e5A==
-X-Forwarded-Encrypted: i=1; AHgh+RoExp/YZeYB8JG11PayGPLrhy9tE+xALQYr8HUKedipSL8NxLzDDnHsUmE51hlH2bDBMEptog==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yxuyb3rpjXFdZcnNxWlOLscNoOp2ror6EV8r0Ofoh/tKgyM6nqC
-	ejjUpeMnRYyG4IYxcscKFkMTVyS2d6i+bpffR8zO0IVbB/8QWzcZPUD5a8Msv66w2mcPBHNxEV8
-	Dj5jzMhn+aCBgtTtUFg==
-X-Received: from ejcww4.prod.google.com ([2002:a17:907:a904:b0:c19:52d4:dc8f])
+        bh=aoXL2lcVuXDTzwRL1s4LiTCXpMnjYT/r+wP/urETSuU=;
+        b=YDzG1moboUuaO42J2aohK9JNsYpq7VcGrtlHSePhoIQoT0VccDcHL/Yzz3aWetAEFd
+         fJC01kUgpcUHTmWC9veVe6HZ+uX611tD36ResNg2iObXcUgIVdhyQzxYujZQJtSibT4I
+         N4ovDCSdVVRIU6kaanVWRT1/Jom8kx/ZL6OyZreXH4MNSqdCFf4hxhAjgFWzlgeevbAw
+         7u+/fbVXyO/0abdb0hRnZazdORx3wax04ipvf5ghEsy+QMPP6ob1OQo8KwcDq6ANDqf2
+         mlTGPZXU7x8cKzcIi5jsUe8CC0IlwWuXoL9A8YJQlONui5ebcvxf7ZiSuqEFN7OJDvzM
+         gjwA==
+X-Forwarded-Encrypted: i=1; AHgh+RrTl1zouxanTf3yepN2VMQnRQSQRMSh1q7gHWiGQBsMtz1c9tej70P0T/N5mqtteiGFVX1D6Q==@lists.infradead.org
+X-Gm-Message-State: AOJu0YytNOuy+StFd/BRFoBsdK9XT9gu77zxyhZ10PrQKE+xiBUQ9Wc8
+	MPQFdlTxHWi/UKBSAkXPdpumtKia/2Zwx7mH1izuFZtPScWONMLBe4sIalNL1c5ZmutpJbVTmiP
+	B2qezsrvGNWUJ4Vu80A==
+X-Received: from ejczw12-n2.prod.google.com ([2002:a17:907:e00c:20b0:c19:71f5:ee20])
  (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:906:7955:b0:c1f:5f64:1912 with SMTP id a640c23a62f3a-c20c68b9233mr86192466b.7.1786367757496;
- Mon, 10 Aug 2026 06:15:57 -0700 (PDT)
-Date: Mon, 10 Aug 2026 13:15:56 +0000
-In-Reply-To: <CAEvNRgHvBTKaG4G5J=sMFGYepEnOFaeCBtjkzN6xmGtZ+o6XxA@mail.gmail.com>
+ 2002:a17:907:ea8b:b0:c16:126b:98b4 with SMTP id a640c23a62f3a-c2039c03283mr2125010166b.3.1786368035983;
+ Mon, 10 Aug 2026 06:20:35 -0700 (PDT)
+Date: Mon, 10 Aug 2026 13:20:34 +0000
+In-Reply-To: <CAEvNRgGJ0s5Vu8xRvfPmA39p2Bmkr-U7JFFkshM9Dyk9j+t-YA@mail.gmail.com>
 Mime-Version: 1.0
 References: <20260728121138.1103610-1-tarunsahu@google.com>
- <20260728121138.1103610-8-tarunsahu@google.com> <CAEvNRgHvBTKaG4G5J=sMFGYepEnOFaeCBtjkzN6xmGtZ+o6XxA@mail.gmail.com>
-Message-ID: <9huz4ih286b7.fsf@tarunix.c.googlers.com>
-Subject: Re: [PATCH v4 07/11] KVM: guest_memfd: Add support for freezing mappings
+ <20260728121138.1103610-9-tarunsahu@google.com> <CAEvNRgGJ0s5Vu8xRvfPmA39p2Bmkr-U7JFFkshM9Dyk9j+t-YA@mail.gmail.com>
+Message-ID: <9huz1pc6863h.fsf@tarunix.c.googlers.com>
+Subject: Re: [PATCH v4 08/11] KVM: guest_memfd: Add support for preservation
+ via LUO
 From: tarunsahu@google.com
 To: Ackerley Tng <ackerleytng@google.com>, fuad.tabba@linux.dev, 
 	Andrew Morton <akpm@linux-foundation.org>, seanjc@google.com, dmatlack@google.com, 
@@ -83,8 +84,8 @@ Cc: linux-kselftest@vger.kernel.org, andre.przywara@arm.com,
 	kexec@lists.infradead.org, suzuki.poulose@arm.com
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260810_061600_805919_2C91814A 
-X-CRM114-Status: GOOD (  11.57  )
+X-CRM114-CacheID: sfid-20260810_062038_663978_DBF30B03 
+X-CRM114-Status: GOOD (  19.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,39 +104,68 @@ Ackerley Tng <ackerleytng@google.com> writes:
 
 > Tarun Sahu <tarunsahu@google.com> writes:
 >
->> Introduce kvm_gmem_freeze() to freeze a guest_memfd inode's mapping,
->> which prevents fallocate() operations and new page fault allocations
->> during preservation.
 >>
->> Use a global SRCU (`kvm_gmem_freeze_srcu`) to synchronize freeze state
->> checkers without incurring per-fault locking overhead or risking per-CPU
->> memory exhaustion (as per-CPU structure not counted in cgroup) from
->> per-inode SRCU structures by faulty/compromised VMM.
+>> [...snip...]
 >>
+>> +static bool kvm_gmem_luo_can_preserve(struct liveupdate_file_handler *handler, struct file *file)
+>> +{
+>> +	struct inode *inode = file_inode(file);
+>> +	struct gmem_file *gmem_file;
+>> +	struct kvm *kvm;
+>> +
+>> +	if (inode->i_sb->s_magic != GUEST_MEMFD_MAGIC)
+>> +		return false;
+>> +
+>> +	gmem_file = file->private_data;
+>> +	if (!gmem_file)
+>> +		return false;
+>> +
+>> +	/*
+>> +	 * Only Fully-shared guest_memfd preservation is supported
+>> +	 */
+>> +	if (!(GMEM_I(inode)->flags & GUEST_MEMFD_FLAG_INIT_SHARED))
+>> +		return false;
+>> +
 >
-> I wonder if everything to do with freezing should be gated behind
-> CONFIG_LIVEUPDATE_GUEST_MEMFD. What do people think?
+> The above check can probably be removed. I think the core thing about
+> this series is "we can preserve any memory that doesn't have any
+> encryption state that goes along with it", and so the check for
+> kvm_arch_has_private_mem() below would be sufficient to gate that.
 
-Right now, Only liveupdate is the usecase. There was a discussion
-around the future usecase when IOMMU FD can use few pages from
-guest_memfd and will have to prevent punch_hole operation. But
-that will also avoid new faults. So freezing is not the solution here.
 
-A SEAL type solution like in memfd can be explored later. But this
-is very far in future so Plenty of time to discuss more ideas.
-
-On gating the freeze across CONFIG_LIVEUPDATE_GUEST_MEMFD sounds good
- Idea. As in future, there is a plan to remove the freeze at all from
-the preservation path. Before LIVEUPDATE, there was no usecase and in
-future, that usecase will also be gone. So gating it against the config
-makes sense.
-
-Would love to know what do people think?
-
-~Tarun
+Sounds Good. Will remove it in next version. I will rephrase the
+Line: "Support only fully shared guest_memfd" => "Support only
+guest_memfd that does not support private pages and also can not be
+converted to private"
 
 >
->> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
+>> +	/*
+>> +	 * It makes sure that no memory can be converted to private
+>> +	 * even if it was initially fully shared (in-place conversions are
+>> +	 * prevented).
+>> +	 */
+>> +	kvm = gmem_file->kvm;
+>> +	if (kvm_arch_has_private_mem(kvm))
+>> +		return false;
+>> +
+>
+> For now, has_private_mem == has some encryption state that we can't
+> preserve yet.
+>
+> This also gates off KVM_X86_SW_PROTECTED_VM, but I guess that is
+> intended, since when work is done for preserving encryption state, we
+> can then test using KVM_X86_SW_PROTECTED_VM, and only then, remove this
+> check?
+
+Yes, It will be enabled when private memory preservation will be supported.
+
+>
+>> +	if (mapping_large_folio_support(inode->i_mapping))
+>> +		return false;
+>> +
+>> +	return true;
+>> +}
+>> +
 >>
 >> [...snip...]
 >>
