@@ -4,61 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C95BEC5AE49
-	for <kexec@archiver.kernel.org>; Mon, 10 Aug 2026 14:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D5C41C5AD55
+	for <kexec@archiver.kernel.org>; Mon, 10 Aug 2026 15:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=jU+XJZ0jzxykpOWo/z5wRNaLKZRKb5vErJqQ4ypS7Q4=; b=OgWN58mlQdJPlByqw1Nkt/NH03
-	gxYGUxirbEVoOIYevu/H2Wknbw/l6KV7P/z1XKJkyK1fPGwt1wrytO0N4SsXzX1BwEFnXyXDsbv9Z
-	SCCXLZvwQvbZ2zAcusGfN2RJpkj7BKQsfN0s8yStUzJ8upm+55tPQRPmtQD0q9CiFjvz+wY1+Aa6u
-	V/70RzVrlk2tNsHcHdpPA+UhiUpJokwSF0Cm3L6/6dugKtL5NAOXhHXeFVCN8L+UzmbueJB9h30aY
-	qYHG9UC95jpqFcSFakmwlc+hBbC9Jq4Ou8FCLy/hak0HmJBnSJQnQjvFVOtoWYhL7+imxid9woyHH
-	twcVgLaw==;
+	bh=eJHxMoAsHSsVZqOYcaAsiYvNb67TlWtmkhnQradvAgU=; b=DT9DHny8ASNuQFVHTQDHfhWkNW
+	wcO76Kvss2saDyro0HuemMTtF8eXxm9clEpGdf/TLz693SFrqcSVGyWP8lo9YZVIi4Hjx/qB8nfw2
+	cGGPuhmsC10eAeaTJ1MAShea5fBg7I9el4Le4kA5oP4GuXHqdvXuxqDinG9GKGYjNUqGcZ054Vrwc
+	+ti+zERG3dwemYw2PDkCvu6R0APpI/Q0VkFYqaqlHXp+mOGv4cJjFzn3QQQUFhDpq3i5eIBjSZ9mr
+	WsMp61fh0fFQQ7ry+n4nV5FoCfF1LC845FfVNaV4AeFR70uBChlRF/rws0t+VIbQt7FSDxhOGqKaT
+	rVL0UnuA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtRTc-0000000C8DI-33Rd;
-	Mon, 10 Aug 2026 14:59:44 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wtRwt-0000000CGl7-0FW5;
+	Mon, 10 Aug 2026 15:29:59 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtRTb-0000000C8Cx-3cf9
+	id 1wtRws-0000000CGl0-38UM
 	for kexec@lists.infradead.org;
-	Mon, 10 Aug 2026 14:59:43 +0000
+	Mon, 10 Aug 2026 15:29:58 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 89FE1401CD;
-	Mon, 10 Aug 2026 14:59:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06B161F000E9;
-	Mon, 10 Aug 2026 14:59:41 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with UTF8SMTP id CFAE8600C8;
+	Mon, 10 Aug 2026 15:29:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 0627F1F000E9;
+	Mon, 10 Aug 2026 15:29:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786373983;
-	bh=jU+XJZ0jzxykpOWo/z5wRNaLKZRKb5vErJqQ4ypS7Q4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=Q/ZyVb0aaIdzOuRTPaEONZ0hIH/63NdJi2ChPaqaUIBrPT/NxiG+VTIZybGqy96uc
-	 /OKwpdNokPXJmApuJ97BKYJ/SR4vnb25oz44dUeVjBr5kAEh9E3IIq7sFA0ZxFSDgP
-	 +Kn1jzRE9EJRGMRBrfvEXmwqxnbi1SBO81B9P2s1D00M3v8Nk3Vru4n1CGH/YqYuYJ
-	 0PSkmhOHFaOvjmC6bMGd9NIws18Y2IFERa5gw/BRYiwWhg9dpqTfEDFDgvnefSbBBa
-	 Vemihh6feqsDYbvifzM6d12Erne1DIMwIr4aj3XWqdOjE0IUkpliYk2WTzquXQIGxZ
-	 Ol0bweetIAKwQ==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: tarunsahu@google.com
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  Mike Rapoport
- <rppt@kernel.org>,  Pratyush Yadav <pratyush@kernel.org>,
-  skhawaja@google.com,  ackerleytng@google.com,  seanjc@google.com,
-  kexec@lists.infradead.org
-Subject: Re: Qns: LUO: Should luo_core throw warning for preserved resource
- under unregistered handlers
-In-Reply-To: <9huzecg6ta6h.fsf@tarunix.c.googlers.com> (tarunsahu@google.com's
-	message of "Mon, 10 Aug 2026 12:46:46 +0000")
-References: <9huzh5l2taav.fsf@tarunix.c.googlers.com>
-	<9huzecg6ta6h.fsf@tarunix.c.googlers.com>
-Date: Mon, 10 Aug 2026 16:59:40 +0200
-Message-ID: <2vxzzeyu58df.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=k20260515; t=1786375797;
+	bh=eJHxMoAsHSsVZqOYcaAsiYvNb67TlWtmkhnQradvAgU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=QVQTE9Sx+ZOo2ET1ufSAOSNyChsbD8cKAdhf/0TXwWaeQt+616jOgS0ZYgtLxkSt4
+	 PCypRg32Ftwi6LvwaukyEqGNG0GjUwIf1XlNG/jIX2aS8XYRX/h80qaHjyPSz8QB/n
+	 0rNZcXY5vDjqnnwjZFpRbqvyTufeeQX5MZNJLyt9k80DXwlbBrL8dz6g8FhzH4NVhy
+	 2D7A9Rk66q+8tC5aQc2kfo4qJd9nsWYT7fxE1Ih3/rDAGwUzmQkXDtZeib3DIppQyY
+	 fr4odB4h0oW7q7pODzB20eeYAc/EpwbEq+4UEaNQ4JLS1LFAwPkU/O29imjhqx/IEE
+	 GYkzTvZfgSpYQ==
+Date: Mon, 10 Aug 2026 18:29:54 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Jan Sebastian =?iso-8859-1?Q?G=F6tte?= <linux@jaseg.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Dave Young <ruirui.yang@linux.dev>,
+	David Howells <dhowells@redhat.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>, Coiby Xu <coxu@redhat.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, keyrings@vger.kernel.org,
+	linux-mm@kvack.org, linux-security-module@vger.kernel.org,
+	linux-integrity@vger.kernel.org
+Subject: Re: [PATCH 2/4] kexec: add CRASH_ZEROIZE to wipe secrets before kdump
+Message-ID: <annuciDaFKSHYObm@kernel.org>
+References: <20260731154608.153258-1-linux@jaseg.de>
+ <20260731154608.153258-3-linux@jaseg.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260731154608.153258-3-linux@jaseg.de>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,67 +84,119 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Aug 10 2026, tarunsahu@google.com wrote:
+On Fri, Jul 31, 2026 at 05:46:06PM +0200, Jan Sebastian Götte wrote:
+> When kdump is used to capture system memory after a panic(), any secret
+> keys currently in RAM end up in the dump. Add an opt-in atomic notifier
+> chain, crash_zeroize_notifier_list, invoked late into __crash_kexec().
+> Subsystems holding secrets can register a callback to scrub them.
+> 
+> Callbacks are run after machine_crash_shutdown() has already stopped the
+> other CPUs and disabled preemption. Callbacks must not wait on locks,
+> which will never be released.
+> 
+> This is a best-effort, defence-in-depth measure, not a guarantee.
+> Secrets in flight on the stack, in registers, in DMA buffers, or in
+> other places in memory are out of scope.
+> 
+> Signed-off-by: Jan Sebastian Götte <linux@jaseg.de>
+> ---
+>  include/linux/crash_core.h |  5 +++++
+>  kernel/Kconfig.kexec       |  8 ++++++++
+>  kernel/crash_core.c        | 18 ++++++++++++++++++
+>  3 files changed, 31 insertions(+)
 
-> + kexec list.
->
-> Tarun Sahu <tarunsahu@google.com> writes:
->
->> Hi,
->>
->> I have a question. If a luo_handler is registered as part of the module
->> And In new kernel, the module isn't loaded so the handler will also not
->> be registered. And the resources/files preserved in older kernel will be
->> leaked after luo_finish in new kernel. Right now, Luo core does not
->> throw any warning. Should it throw a warning or prevent finish and let
->> the user re-attempt the finish with force if they want.
->>
->> Guest_memfd preservation is such an example. It gets registered during
->> kvm module load.
+Not a request but for me 'crash_wipe' would be more intuitive than
+'crash_zeroize'.
 
-I went and took a look at the code. When you first open /dev/liveupdate
-luo_session_deserialize() is called. It calls deserializes each session.
-As part of that deserialization, for each session luo_file_deserialize()
-walks the list of preserved files and calls luo_file_deserialize_one()
-to try and find a handler for that file.
+What do you think?
 
-If no handler is found, it prints an error and returns -ENOENT.
-Eventually that error bubbles up to luo_session_deserialize() and causes
-the open of /dev/liveupdate to fail. It also saves the error code and
-all future opens fail too.
+> 
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index bc087124cd78..5c7207c0bba1 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -5,6 +5,7 @@
+>  #include <linux/linkage.h>
+>  #include <linux/elfcore.h>
+>  #include <linux/elf.h>
+> +#include <linux/notifier.h>
+>  
+>  struct kimage;
+>  
+> @@ -34,6 +35,10 @@ static inline void arch_kexec_protect_crashkres(void) { }
+>  static inline void arch_kexec_unprotect_crashkres(void) { }
+>  #endif
+>  
+> +#ifdef CONFIG_CRASH_ZEROIZE
+> +extern struct atomic_notifier_head crash_zeroize_notifier_list;
+> +#endif
+> +
+>  #ifndef arch_crash_handle_hotplug_event
+>  static inline void arch_crash_handle_hotplug_event(struct kimage *image, void *arg) { }
+>  #endif
+> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+> index 15632358bcf7..92ab0a69c8ec 100644
+> --- a/kernel/Kconfig.kexec
+> +++ b/kernel/Kconfig.kexec
+> @@ -179,4 +179,12 @@ config CRASH_MAX_MEMORY_RANGES
+>  	  the computation behind the value provided through the
+>  	  /sys/kernel/crash_elfcorehdr_size attribute.
+>  
+> +config CRASH_ZEROIZE
+> +	bool "Zeroize secrets on panic"
+> +	depends on CRASH_DUMP
+> +	help
+> +	  Wipe secrets (e.g. kernel keyring and memfd_secret pages) on crash or panic.
+> +
+> +	  If unsure, say N.
+> +
+>  endmenu
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 2b36aa9fade0..d3a7763e2759 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/objtool.h>
+>  #include <linux/delay.h>
+>  #include <linux/panic.h>
+> +#include <linux/timekeeping.h>
+>  
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+> @@ -33,6 +34,22 @@
+>  /* Per cpu memory for storing cpu states in case of system crash. */
+>  note_buf_t __percpu *crash_notes;
+>  
+> +#ifdef CONFIG_CRASH_ZEROIZE
+> +ATOMIC_NOTIFIER_HEAD(crash_zeroize_notifier_list);
+> +EXPORT_SYMBOL_GPL(crash_zeroize_notifier_list);
+> +
+> +static void crash_zeroize(void)
+> +{
+> +	ktime_t zeroize_start = ktime_get();
+> +
+> +	pr_info("Wiping sensitive secrets...\n");
+> +	atomic_notifier_call_chain(&crash_zeroize_notifier_list, 0, NULL);
+> +	pr_info("Done in %lld us\n", ktime_us_delta(ktime_get(), zeroize_start));
+> +}
+> +#else
+> +static inline void crash_zeroize(void) { }
+> +#endif /* CONFIG_CRASH_ZEROIZE */
+> +
+>  /* time to wait for possible DMA to finish before starting the kdump kernel
+>   * when a CMA reservation is used
+>   */
+> @@ -142,6 +159,7 @@ void __noclone __crash_kexec(struct pt_regs *regs)
+>  			crash_save_vmcoreinfo();
+>  			machine_crash_shutdown(&fixed_regs);
+>  			crash_cma_clear_pending_dma();
+> +			crash_zeroize();
+>  			machine_kexec(kexec_crash_image);
+>  		}
+>  		kexec_unlock();
+> -- 
+> 2.53.0
+> 
 
-So in this case, the end result will be that _all_ files will be leaked
-and /dev/liveupdate will fail to open. You never even get to finish. The
-system daemon will probably have to trigger a cold reboot, treating all
-VMs as dead.
-
-The kernel at least keeps itself safe here and won't crash or anything
-like that. It prints an error too. And I think it isn't unreasonable to
-expect userspace to load all modules needed by live update before
-opening /dev/liveupdate. So I don't think the current state is all too
-bad.
-
-That said, perhaps we can improve this behaviour. For one, if one module
-is missing and that module is only used by one session, that will still
-DoS all other sessions. I guess we can move the call to
-luo_session_deserialize_one() to luo_session_retrieve()? This way, you
-only block the retrieval of sessions with missing handlers. All others
-work fine. Perhaps we can also make the error on missing handler
-retry-able. If we see a missing handler on session retrieve, we let
-userspace retry, giving it a chance to load all its modules.
-
-I don't know how useful the retrying will be in practice, but the
-deserialize on retrieve can be fairly useful I think.
-
->>
->> I remember there was similar discussion raised by Samiullah for
->> resources not retrieved but their handler was registered.
-
-For this one I think LUO should automatically retrieve the files and
-then finish them. I don't think there is any point in leaking those when
-we know how to clean up.
-
--- 
-Regards,
-Pratyush Yadav
+BR, Jarkko
 
