@@ -4,91 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DDBBEC5B56A
-	for <kexec@archiver.kernel.org>; Mon, 10 Aug 2026 14:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C95BEC5AE49
+	for <kexec@archiver.kernel.org>; Mon, 10 Aug 2026 14:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=G8qxlsQGfocAVe55+yk0uJ2BiMt4CEd3bRCiLyYXCik=; b=CCFhGXoyLSss2eRcEHgyBMRA1m
-	lheuV419G4mgk52c5DMewoizeTu5uqRoqnCtuHMbp20yVKy1WY765pu2gTuA+bOzY7GOIZukNMaKi
-	LyuqyOCqnzX8VB95VqCqFJNi10t5ddoyo6vkjzUGK6a4xYioJ9hmn7oPpTTxhDSzLsgCNJGTbhqx3
-	5QRRhq1ahOHSjQ309jk+5USJZTz1RbL3Yrr7joPqcNnxoZ6mOdhwRRPcvSoIo34VQXOtRZ3vzY3oT
-	oZ0ZGKB0kNsguXonSPcROKL2cvk5deU90+5o7ttsta3cA9dAFMB4f2dv3PuUgmraBsAg3sLV+iBym
-	abZUWXlg==;
+	bh=jU+XJZ0jzxykpOWo/z5wRNaLKZRKb5vErJqQ4ypS7Q4=; b=OgWN58mlQdJPlByqw1Nkt/NH03
+	gxYGUxirbEVoOIYevu/H2Wknbw/l6KV7P/z1XKJkyK1fPGwt1wrytO0N4SsXzX1BwEFnXyXDsbv9Z
+	SCCXLZvwQvbZ2zAcusGfN2RJpkj7BKQsfN0s8yStUzJ8upm+55tPQRPmtQD0q9CiFjvz+wY1+Aa6u
+	V/70RzVrlk2tNsHcHdpPA+UhiUpJokwSF0Cm3L6/6dugKtL5NAOXhHXeFVCN8L+UzmbueJB9h30aY
+	qYHG9UC95jpqFcSFakmwlc+hBbC9Jq4Ou8FCLy/hak0HmJBnSJQnQjvFVOtoWYhL7+imxid9woyHH
+	twcVgLaw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtRTE-0000000C874-2KYa;
-	Mon, 10 Aug 2026 14:59:20 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wtRTc-0000000C8DI-33Rd;
+	Mon, 10 Aug 2026 14:59:44 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtRTD-0000000C86e-1i4n
+	id 1wtRTb-0000000C8Cx-3cf9
 	for kexec@lists.infradead.org;
-	Mon, 10 Aug 2026 14:59:19 +0000
+	Mon, 10 Aug 2026 14:59:43 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id E91E5408D4;
-	Mon, 10 Aug 2026 14:59:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 813AD1F00A3D;
-	Mon, 10 Aug 2026 14:59:17 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 89FE1401CD;
+	Mon, 10 Aug 2026 14:59:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06B161F000E9;
+	Mon, 10 Aug 2026 14:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786373958;
-	bh=G8qxlsQGfocAVe55+yk0uJ2BiMt4CEd3bRCiLyYXCik=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ed1az6VBryFOclUxePVQXHfbm8EkIKq0m531FGOOi35ufllzQL/hX7jG+ggcsnPNw
-	 odnCpPptXhxfAUXYiDM4bJFRdmPtWX11Mx8NacoRw8aXN8wdedn0ckdcGF2KtBmKTp
-	 rHNDR/ragt/P4AYm7YyNELZpN+Rp5s0uzsCPTTIAu66x52FeueOZr4vFSqIA6F4liV
-	 JM5B9JhtCf88sJ8xHqB6Bxy5Bydi4NvKwbXcl1RY3NkPXzHemZ/2VIWN9YkBntSF0K
-	 UvjXhV6zx9S5wL983zDyho3eMrwObwWVV2f96xXQ4GLfK5DXYcgAGVDqQg1uunv+Pr
-	 HMjsJxhIympJQ==
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfauth.ams.internal (Postfix) with ESMTP id EC9F9198003A;
-	Mon, 10 Aug 2026 10:59:12 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Mon, 10 Aug 2026 10:59:16 -0400
-X-ME-Sender: <xms:QOd5atYziGy39K7iVg7BCTVaua7d8AREYBaHEMok9aa5uxmrqWnNGQ>
-    <xme:QOd5ameZrEHNIyi6C31akh0OVg0TlBVRKJdXOtUYtKogdk2FPR7ivo1wiH23rWkgp
-    XmrT1wrss15EKFhAMnGxxxDTSk7H0RKYHd5aZcvLcbCjNluv8h7q1aD>
-X-ME-Received: <xmr:QOd5auHgGD5dXs669OKKu1Qgx6Q7b-GiPslvqPmRUw2g8EH4SwWfXQZ69nQ>
-X-ME-Proxy-Cause: dmFkZTGLf/eoBsdkF5Bcv4i7XrYQoeSrK3kmL+XPu4kKdoH/000048y7ntGF27Bp8G86zJ
-    61kFC93E0uHN1m8C0YxhAmgbvmZVRocMALRmYBeYMPOD1xgiHiinUgvyLh7d2AZ3Q5s93r
-    URRyzhEjgZoCXP1+mEzRrrpgm2DtGIp1ZL6f0s1WZK8X5TYxrP+S3AkjBJcT0aQ3IgR0Td
-    v/a4rW/kNt1q5C5wgy8OTpNWoHkcat9Qw++32800rNwaVCTlroIiVyydmZ+ZpUQ5KpFVZM
-    KYCDYortVruTL+CpAbfIFB8R5NjDJ6U0KzbTk0B8VAgarQtGQqfjLQ8kqllbd+yTpVdseo
-    KvpPzjwxGlsZW60IR2yM418qTAMpqFhNEg/tuy0Dn+XmEbRVMP6/+ZB3GuFfVvW++PbibM
-    JOUkAnt18GAyHFmdEHjN2lMD6Frxz+kRwWuXhvFxrl9CqKYyCR4ca7LWvx9FVxRKr7IHgW
-    vIPE90fcOUe6BQregpLdSkGMmHGRgUjR88QTSHZDZFw20ggV8Fmfh+K1iLvH6K5M06z5ZI
-    Z/fHFkQMgVLtogPE8JyJS6geTi+w3zxwFP5YePeB3O/9wKpEyWWs8uIUIICrvEBMy8q2vC
-    rMM/uDBA7WXR73QDimpl3mnzuLIexgWC5n96u/rOTsu0LryWZR++4rBxDdqw
-X-ME-Proxy: <xmx:QOd5agla4-MDqvktXTsAEWhrqY_VgPi_52oV5X1zd5ipPgLWqrh-WQ>
-    <xmx:QOd5alPJD7RWjEuZFR7z_kfin96XP3adnltkq_i3s4vklayBbMZj9g>
-    <xmx:QOd5arFMQT--skaKz3KhiejvoDye-RZ4a_8JReHVFimEOD58Y1kDFw>
-    <xmx:QOd5ahs_Ie_63ACJvelrLQRHe6L2f-seRoNTPaxxI40dSRZknG82JA>
-    <xmx:QOd5amSf4FW-maIeeMu6GEMZR4IKIGHhWcKc06xqfJdYxvrqknRkq0lg>
-Feedback-ID: i10464835:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 10 Aug 2026 10:59:10 -0400 (EDT)
-Date: Mon, 10 Aug 2026 15:59:00 +0100
-From: Kiryl Shutsemau <kas@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, rmikey@meta.com, riel@surriel.com, 
-	kernel-team@meta.com
-Subject: Re: [PATCH v5] kexec: keep the next kernel off hardware-poisoned
- pages
-Message-ID: <annnExUim_y99PrO@thinkstation>
-References: <20260810-kexec_posioned-v5-1-95e1b5e2e656@debian.org>
+	s=k20260515; t=1786373983;
+	bh=jU+XJZ0jzxykpOWo/z5wRNaLKZRKb5vErJqQ4ypS7Q4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=Q/ZyVb0aaIdzOuRTPaEONZ0hIH/63NdJi2ChPaqaUIBrPT/NxiG+VTIZybGqy96uc
+	 /OKwpdNokPXJmApuJ97BKYJ/SR4vnb25oz44dUeVjBr5kAEh9E3IIq7sFA0ZxFSDgP
+	 +Kn1jzRE9EJRGMRBrfvEXmwqxnbi1SBO81B9P2s1D00M3v8Nk3Vru4n1CGH/YqYuYJ
+	 0PSkmhOHFaOvjmC6bMGd9NIws18Y2IFERa5gw/BRYiwWhg9dpqTfEDFDgvnefSbBBa
+	 Vemihh6feqsDYbvifzM6d12Erne1DIMwIr4aj3XWqdOjE0IUkpliYk2WTzquXQIGxZ
+	 Ol0bweetIAKwQ==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: tarunsahu@google.com
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,  Mike Rapoport
+ <rppt@kernel.org>,  Pratyush Yadav <pratyush@kernel.org>,
+  skhawaja@google.com,  ackerleytng@google.com,  seanjc@google.com,
+  kexec@lists.infradead.org
+Subject: Re: Qns: LUO: Should luo_core throw warning for preserved resource
+ under unregistered handlers
+In-Reply-To: <9huzecg6ta6h.fsf@tarunix.c.googlers.com> (tarunsahu@google.com's
+	message of "Mon, 10 Aug 2026 12:46:46 +0000")
+References: <9huzh5l2taav.fsf@tarunix.c.googlers.com>
+	<9huzecg6ta6h.fsf@tarunix.c.googlers.com>
+Date: Mon, 10 Aug 2026 16:59:40 +0200
+Message-ID: <2vxzzeyu58df.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260810-kexec_posioned-v5-1-95e1b5e2e656@debian.org>
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,35 +73,67 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Aug 10, 2026 at 06:32:04AM -0700, Breno Leitao wrote:
-> Memory failures (such as unrecoverable ECCs errors) are getting more and
-> more common. The kernel knows how to handle it while running, marking it
-> as poisoned (and SIGBUS user tasks).
-> 
-> Poisoned memory is removed from the buddy allocator, but, not from
-> other places. A current problem is that kexec will load new kernel
-> on top of a bad/poisoned memory, which is undesirable.
-> 
-> If the next kernel's image, initrd or purgatory lands on poisoned frame,
-> the relocation copy writes to the bad memory and the machine checks
-> during the kexec.
-> 
-> Skip hardware-poisoned frames when placing segments: check them in the
-> kexec_file hole finder so it lays the next kernel down on good memory,
-> and reject a poisoned destination in sanity_check_segment_list() for
-> the kexec_load path, which cannot relocate.
-> 
-> The two hole finders walk in opposite directions, so each asks for the
-> end of the poison it has to clear: the top-down walk for the first
-> poisoned page in the window, the bottom-up walk for the last. A poisoned
-> hugetlb folio counts in full, as hugetlb keeps the flag on the folio and
-> the poisoned subpages on its raw hwpoison list.
-> 
-> Suggested-by: Kiryl Shutsemau <kas@kernel.org>
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+On Mon, Aug 10 2026, tarunsahu@google.com wrote:
 
-Reviewed-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
+> + kexec list.
+>
+> Tarun Sahu <tarunsahu@google.com> writes:
+>
+>> Hi,
+>>
+>> I have a question. If a luo_handler is registered as part of the module
+>> And In new kernel, the module isn't loaded so the handler will also not
+>> be registered. And the resources/files preserved in older kernel will be
+>> leaked after luo_finish in new kernel. Right now, Luo core does not
+>> throw any warning. Should it throw a warning or prevent finish and let
+>> the user re-attempt the finish with force if they want.
+>>
+>> Guest_memfd preservation is such an example. It gets registered during
+>> kvm module load.
+
+I went and took a look at the code. When you first open /dev/liveupdate
+luo_session_deserialize() is called. It calls deserializes each session.
+As part of that deserialization, for each session luo_file_deserialize()
+walks the list of preserved files and calls luo_file_deserialize_one()
+to try and find a handler for that file.
+
+If no handler is found, it prints an error and returns -ENOENT.
+Eventually that error bubbles up to luo_session_deserialize() and causes
+the open of /dev/liveupdate to fail. It also saves the error code and
+all future opens fail too.
+
+So in this case, the end result will be that _all_ files will be leaked
+and /dev/liveupdate will fail to open. You never even get to finish. The
+system daemon will probably have to trigger a cold reboot, treating all
+VMs as dead.
+
+The kernel at least keeps itself safe here and won't crash or anything
+like that. It prints an error too. And I think it isn't unreasonable to
+expect userspace to load all modules needed by live update before
+opening /dev/liveupdate. So I don't think the current state is all too
+bad.
+
+That said, perhaps we can improve this behaviour. For one, if one module
+is missing and that module is only used by one session, that will still
+DoS all other sessions. I guess we can move the call to
+luo_session_deserialize_one() to luo_session_retrieve()? This way, you
+only block the retrieval of sessions with missing handlers. All others
+work fine. Perhaps we can also make the error on missing handler
+retry-able. If we see a missing handler on session retrieve, we let
+userspace retry, giving it a chance to load all its modules.
+
+I don't know how useful the retrying will be in practice, but the
+deserialize on retrieve can be fairly useful I think.
+
+>>
+>> I remember there was similar discussion raised by Samiullah for
+>> resources not retrieved but their handler was registered.
+
+For this one I think LUO should automatically retrieve the files and
+then finish them. I don't think there is any point in leaking those when
+we know how to clean up.
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Regards,
+Pratyush Yadav
 
