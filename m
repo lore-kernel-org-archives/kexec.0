@@ -4,86 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 99111C5CFDB
-	for <kexec@archiver.kernel.org>; Tue, 11 Aug 2026 17:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D3FB1C5B56A
+	for <kexec@archiver.kernel.org>; Tue, 11 Aug 2026 17:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
 	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
 	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=J+WO8Wd8uVuaOAqPz02lOuhC1hujQODpzz8Mj2pgUKU=; b=CKqxzHfQsqSd+vfbOp/uKg2rjp
-	YufauJnvVSFMtI5E6xj50M3ouBBqX67VKZmFhSb7vEYrgNu+H1vSRJR7PvPDFofurE6/pydifcVJ1
-	9yNEjjN2HxanTPl5GjZMu1N8KOh7gOEDX9Hj4ZA+x93/LlvHk9G//0gn8WlOPyDmlnLJl33csNK7G
-	1bf3gj+hLbPteLM4Dt4z52x6IypcvnZm5DxElTPXa/CVERFYqDXrvA6DVv+OpIhZvzf+9y4fLlSo1
-	aF4lK2G6akJotXhjTu6KBIKZJ8tpAMzRaV7fJS8R7dmvY+2LyjqVYWcb4paSY2MGsd2U85zNxvVp0
-	twtKn4qQ==;
+	bh=qSx5jstEMxGImoS/91W19MHOeSaIonN8JmHYqcRdoo0=; b=mMJvc0qe8wwx3eEBAeZwW3eUt2
+	JeZMHN1L2DjowBtxk12lNurpra/A2iBXfkWUYdpRYKDzo9uUZooSEIr5BB+bXVzXGZMP286riUcOG
+	NR7VtKxhtl7VdiYVAGDqcgZIccm0Mn282NZcd+vpZQqDC/dUe4fQg0uG2r8SEk0hvhIO1/b4HLtMM
+	2uU5iDO8DaXJ5d4G3GMFXjijb7wjmOLi7kWPMrjzEfZa2K9wVZ5l0xW/FqcUB2otdYtCkrQ7c6lq5
+	+Vx6vDyK/CrQRfd5Qkgb7IO+Bd9h9M3TkFFH0mLvUWOFNivJPtDyX6rGwFX7qgWoQ6uQllHY5FQjw
+	Uc4/VEWg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtqfY-0000000EhcX-2VnD;
-	Tue, 11 Aug 2026 17:53:44 +0000
+	id 1wtqfh-0000000Ehh2-3xfF;
+	Tue, 11 Aug 2026 17:53:53 +0000
 Received: from flow-b7-smtp.messagingengine.com ([202.12.124.142])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtqfV-0000000EhbI-3iNF;
-	Tue, 11 Aug 2026 17:53:43 +0000
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailflow.stl.internal (Postfix) with ESMTP id A52E71300394;
-	Tue, 11 Aug 2026 13:53:39 -0400 (EDT)
+	id 1wtqfe-0000000EhfX-3wQ8;
+	Tue, 11 Aug 2026 17:53:53 +0000
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailflow.stl.internal (Postfix) with ESMTP id BF9781300395;
+	Tue, 11 Aug 2026 13:53:48 -0400 (EDT)
 Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Tue, 11 Aug 2026 13:53:41 -0400
+  by phl-compute-01.internal (MEProxy); Tue, 11 Aug 2026 13:53:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jaseg.de; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1786470819;
-	 x=1786478019; bh=J+WO8Wd8uVuaOAqPz02lOuhC1hujQODpzz8Mj2pgUKU=; b=
-	BOkDF4Rz9/gooVjq3RpQHo3JgqyWe2UvkdyKkquJvQvwFmzg6JKoOyLQdtfEo9os
-	mQPrjjoZ8lPFt6CGUqgCaJL+KYD79POq7sSJkXuoAF2eXi1fvAA85T4Ytwt5ur/Q
-	nx+jUlDfH4eyDYxijQfeU7PLX023FwP9I1sIH97UyPDrGaSgF4aquxz32lGhkUgt
-	VPPGFo6LQAwm4b5XHSLQz91GJaXZDpSzOuxSp+H+TfvoKfrvN4LXASTCzHd6zyeS
-	EnDHlJha5SzE+CxhuQmFzFgWrs6c+eUJ8hr/mOBW15qfn+mIXzBlbV0RD4Rgtgzg
-	1zeoXrPUD16fpAI8XoHcOw==
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1786470828;
+	 x=1786478028; bh=qSx5jstEMxGImoS/91W19MHOeSaIonN8JmHYqcRdoo0=; b=
+	Z8bwl0XjcJPZQLjW9pXCAUF5EWldkGiE9BEEdn2IuAMsXkmfOq3/dvpxmwnP2ZlY
+	8URUSWG/4y0tCxepJplqISoEiYwfVYK/s8vhmV3uUUrGk7zFTdPqMNIWZs+LJLOA
+	DyCqajFHL7DmdzdzkamxO9z9Wob/c73E7WLPk597ZlIvHS6jmRJcdG7aHu8F2dTW
+	imnXcLgJEGG44MAZQwOinFHlEgCrj6F0218t2fYyyxdt+sm7vHVsMLaS2sM+KzUd
+	IucUdBz7PmGhmm4mCSpIW5y7I3249h8Bo0TbSyj3VAlroAAslctclu3lTZEFlZsZ
+	2cMCxiZZ3x+umDldQ8whqg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1786470819; x=
-	1786478019; bh=J+WO8Wd8uVuaOAqPz02lOuhC1hujQODpzz8Mj2pgUKU=; b=N
-	4iS5iTGKooqdrvcsJTYS61BR/GSIT45Oo6QqU8ZU7sU0mXhtwYj7MB3Jt/Dx0ROe
-	WWCQLGzlOjc/ospWcxf6DRzXygSS7RJUve2IQJZUBh795lT0a4nr7wM+C75qpRZY
-	pAnHy1c3fGCJV8cdgknI5GL/qnynMG3dZKY3ktFPOILbcp96/cEcLmK1HqjrMdtZ
-	bVd1bKcDGJtqBekmzpDH8Kt/eUgT9wx7T1mZRCUw7rWoiHNEWiJRkv45NdCb7Ivo
-	8FBBpiS2U0nx5YufR55NmpXxHPL9ZGwYjt8vxD9aiX5ieIIFJl3fZp4EQaqD0WLU
-	zCDK0gxpQBPdBrFDcum2g==
-X-ME-Sender: <xms:omF7atYgKN-M4dSkgg2g107EOxf85SPIjPISOjO_-uyMGQ95gPTpoA>
-    <xme:omF7ambU4drf8-qImr2vGKCYoOERMgvkEowW8H90c7JuQF9F7gakJh1u5fwVAdbP7
-    vDb1ixUPNaU5b-Ye5w36rwhqVHs94AfSJUdLQnfXqqZhFz5p1vy>
-X-ME-Received: <xmr:omF7akP-ZfsgjJJ6pKgoUOCz0fWLB_ynbFeIAX7VEbiHq9JdofK_GrkuHP6QU0WhMjccqqKM_rY0m3u7Tezlymg>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1786470828; x=
+	1786478028; bh=qSx5jstEMxGImoS/91W19MHOeSaIonN8JmHYqcRdoo0=; b=a
+	YONY/pbby/jHIFWGCQYz+RGUa9FvXes2QTVlDwZtO0+s6y3GL7Z5zvn5OrsxGQO2
+	2CjUf18XoqUu7baCU6uNkr1s/KP55lhhgN6I1S5KKzcgSKi4I4ccbwwOkbop0hph
+	KrXZtXVQHK9BAjpJipdmlDKNbWmElQYO0/vPrhkYdaQ8FlfJg+CjWrk3WneBjwRg
+	pc+DdLurAGOzcoGOyySJWcadJMh5G3tKOlt3JRBZP/Nm7V58QJLsdxkMviUfgKSz
+	faob06Ye2Y6SZRYVO2pKJpjllwmXmNruMWGdOQU6jJuwND0RWOAx2Wp0dtqCg2ma
+	mGm/TdYa22Upi948CkHlA==
+X-ME-Sender: <xms:q2F7ag6rcMW7PiXU5aVJpGDMjV4y94oKSR98ceGllN2DVEqdO41whA>
+    <xme:q2F7aodWtq_UGq3M8P8T9aqgN8mqQTBDNAGndFFqhUm_HvSXiChe26yhBuoJs-LWV
+    FKzg3Q3CUg4vLxtFs9M4rLni7eZdMo12wZBq520sgFNd2w0dQP_KQ>
+X-ME-Received: <xmr:q2F7asO212iSnFyguVFX2i8LKazuh-gy3sRI-dv5M7tTiMrce552n4EusAmZ-Cefm6zvuGdbae04IA7lsGMs-mk>
 X-ME-Proxy-Cause: dmFkZTFP5tmiXRyqpvhao8uWnDWsuVG58E3QcpY8nNF+TN3d4+2z3XaWQJ1+2uEKcUq9Jg
     +xH/KDfBOi31TfxVE5vy2aZ5W5Eono+bvv7mBiiNvVW/C9tjIvrxCLzv7Tz6GJOSvAG1cd
     t11+FzpQNbill+yp1ZC7JKPVzEaxQ4CH2HewKTU1gYEn0mNFldMXWgoBvZ/c5OhwLZogLW
     sZeOMCUfQY9vOvCjGHA0ivpYn+5HBy3sK6RswFREIaUm9jlhbU7pV5ZXGDLpJAMlUAJ/Lo
-    y1vjaaTNNEiBF07QqH8YbZg0fsVTsE2lSAku2XiqZRlB3GAWdGnDFC/NxQNHJZjZwh0bYp
-    2D+LN2F74Yl3YoQ3TYGxnERSWoIxBO0+Rj9TdO4erTRPzAa6AXV7HsZRupEU6wVR1PLnZ/
-    qD+OrnCT6HXewM+ux4wHGxmKexKv0hHPnfmxW9hJCXJtO2BNPDGZ1Lle6+NhqPYEPMPKNb
-    X8R7eH/IiY0blGg6UPTOthFqGg5f8FXU1DJLEWoGZiH7qMjHDYZC3g35sbvFkqkMCq4alf
-    ePCRDURBuId8UuInZQ/cP018GY4SJfHKmWBqr+4fdNBUm01zIs5NrvTiIC/1gDOpHLjt7/
-    vRSUj7PMIURe49UfkaLBCD/7OYrpKZ/VT/L3AAfTp/3bPR88OP01AB0LJ4dA
-X-ME-Proxy: <xmx:omF7amk6I74XTH719pm20D4Jw17uGY_WXvpXv-1zgcz3k1-tH8Xd4A>
-    <xmx:omF7atbL7SGYJ6IhF5VsbqvIWP_50F2wK5RmksIElcj26ZbK3C0bTA>
-    <xmx:omF7arFeKkTYWFWjXsQqbKd3VyVMr7Rw9bhdMGFsIQC0tlshQplL5g>
-    <xmx:omF7aqIlFWIsTx-lbQsA0nCLMWVfVIX0FyTdhx7F9Q2DSOhpoNacaQ>
-    <xmx:o2F7areimsI17MhYeg6_qPD8pxiIA70rILVQJMKSbjrob-vXhArnNqyj>
+    y1vjaaTNNEiBF07QqH8YbZg0fsVTsE2lSAku2XiqZRlB3GAWdGnDFC/NxQNHJZjZwh0bh8
+    kqbkKWELcjtAChbH2Wzn4QOL41OlbQEqlswqKr3P1+VpFR+XsiNX3rUaf5vdKXSnolPw5Q
+    /Ll/uLB1cldMhqyZbAiZQTCYwXiJkO7FdRZ/9Gqe2gvfTrCfAfdNHgTLVZMsAD+fn76T3x
+    gFGfQHvbVS8RM9muaXsf/hhgBhDP9KsibwWWSg2C80hHXEUnxirzCVePR8OTs9vajPnbRl
+    X6LpwU+UjkzYg6auPW6XF1a5W10elYx6W0MaLbP3aPYktTrXr0mX/LqhjI0xOv8F8rUXJl
+    m+CCx3AZq3TzeBvltaEQBfoUWTY6LYm9OAxOqDrHYgNL3v9VOvbb9AA+vdHQ
+X-ME-Proxy: <xmx:q2F7atztMqppu2lCJw-ae59-79OYTIhf_9RyZUK_28A5frxI4jADzw>
+    <xmx:q2F7ao60tNlXmCbxPM9_Vtf4u2b_FNL1_oEvj80sP9fbOVH7gyrr4A>
+    <xmx:q2F7apcLuELBIZJX3JNKD7FIGWcg6-VMv9HSb2EfWQYrubi0zhIlPw>
+    <xmx:q2F7at7pehO2MMvoObvrQcmAnnV-vM28a5gSPy_0kgEBunY_22OfOw>
+    <xmx:rGF7ajAHefbo5jnothnc_kPjagUMcTa_3pOxoBH00iCr7EwKCl7HBwFz>
 Feedback-ID: i60a14417:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 11 Aug 2026 13:53:31 -0400 (EDT)
+ 11 Aug 2026 13:53:41 -0400 (EDT)
 From: =?utf-8?q?Jan_Sebastian_G=C3=B6tte?= <linux@jaseg.de>
-Date: Tue, 11 Aug 2026 19:52:53 +0200
-Subject: [PATCH v2 04/13] mm/secretmem: wipe secret pages before kdump
+Date: Tue, 11 Aug 2026 19:52:54 +0200
+Subject: [PATCH v2 05/13] security/keys: wipe key payloads before kdump
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260811-crash-zeroize-rework-v2-4-9561d13c2340@jaseg.de>
+Message-Id: <20260811-crash-zeroize-rework-v2-5-9561d13c2340@jaseg.de>
 References: <20260811-crash-zeroize-rework-v2-0-9561d13c2340@jaseg.de>
 In-Reply-To: <20260811-crash-zeroize-rework-v2-0-9561d13c2340@jaseg.de>
 To: Andrew Morton <akpm@linux-foundation.org>,
@@ -126,8 +126,8 @@ Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
  =?utf-8?q?Jan_Sebastian_G=C3=B6tte?= <linux@jaseg.de>
 X-Mailer: b4 0.15.2
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260811_105342_011771_E7455463 
-X-CRM114-Status: GOOD (  19.84  )
+X-CRM114-CacheID: sfid-20260811_105351_025643_07BFB1C1 
+X-CRM114-Status: GOOD (  23.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -142,110 +142,130 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Register a CRASH_WIPE_SECRETS notifier that wipes secretmem folios. As a
-result, when CONFIG_CRASH_WIPE_SECRETS is set, secretmem areas will be
-cleared before the kdump kernel is kexec'ed.
+When CONFIG_CRASH_WIPE_SECRETS is set, try to erase key payloads on
+panic before jumping to the kdump kernel.
 
-The notifier runs after the other CPUs have been stopped, so the page
-cache cannot be mutated concurrently and the xarray may be walked
-without taking the i_pages lock. This is a best effort, defense in depth
-measure. s_inode_list_lock is taken with trylock only. If a CPU was
-stopped mid-modification the list may be inconsistent, and this late
-into the panic path, there's nothing we can do about it.
+CRASH_WIPE_SECRETS notifiers run during panic() with other CPUs stopped
+and preemption disabled. In this state, we can't rely on free()'ing
+being safe, so we define a new `wipe` key op.
 
 Signed-off-by: Jan Sebastian Götte <linux@jaseg.de>
 ---
- mm/secretmem.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+ Documentation/security/keys/core.rst | 13 +++++++++++
+ include/linux/key-type.h             |  9 ++++++++
+ security/keys/key.c                  | 43 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 65 insertions(+)
 
-diff --git a/mm/secretmem.c b/mm/secretmem.c
-index d29865075b6e..db00b7d06080 100644
---- a/mm/secretmem.c
-+++ b/mm/secretmem.c
-@@ -13,9 +13,11 @@
- #include <linux/bitops.h>
- #include <linux/printk.h>
- #include <linux/pagemap.h>
-+#include <linux/notifier.h>
- #include <linux/syscalls.h>
- #include <linux/pseudo_fs.h>
- #include <linux/secretmem.h>
+diff --git a/Documentation/security/keys/core.rst b/Documentation/security/keys/core.rst
+index 326b8a973828..35cb00a87c46 100644
+--- a/Documentation/security/keys/core.rst
++++ b/Documentation/security/keys/core.rst
+@@ -1596,6 +1596,19 @@ The structure has a number of fields, some of which are mandatory:
+      It is not safe to sleep in this method; the caller may hold spinlocks.
+ 
+ 
++  *  ``void (*wipe)(struct key *key);``
++
++     This method is optional. It is called from the panic path when
++     CONFIG_CRASH_WIPE_SECRETS is enabled, to erase the key material from
++     memory before the kdump kernel is started, so that it does not end up in
++     the crash dump. Unlike destroy(), it must only clear the payload, not
++     free it.
++
++     This method is called with all other CPUs stopped and preemption
++     disabled, and only for positively instantiated keys. It must not sleep,
++     allocate, free or take locks, as they will never be released.
++
++
+   *  ``void (*describe)(const struct key *key, struct seq_file *p);``
+ 
+      This method is optional. It is called during /proc/keys reading to
+diff --git a/include/linux/key-type.h b/include/linux/key-type.h
+index bb97bd3e5af4..21e07db0c5f2 100644
+--- a/include/linux/key-type.h
++++ b/include/linux/key-type.h
+@@ -122,6 +122,15 @@ struct key_type {
+ 	/* clear the data from a key (optional) */
+ 	void (*destroy)(struct key *key);
+ 
++	/* wipe the key material without free'ing (optional)
++	 * - used from CONFIG_CRASH_WIPE_SECRETS during panic to keep keys out
++	 *   of crash dumps
++	 * - called from the panic path with other CPUs stopped and preemption
++	 *   disabled
++	 * - must not sleep, allocate, free or take locks
++	 */
++	void (*wipe)(struct key *key);
++
+ 	/* describe a key */
+ 	void (*describe)(const struct key *key, struct seq_file *p);
+ 
+diff --git a/security/keys/key.c b/security/keys/key.c
+index b34a64d81d47..213e6f1d5d83 100644
+--- a/security/keys/key.c
++++ b/security/keys/key.c
+@@ -12,6 +12,7 @@
+ #include <linux/slab.h>
+ #include <linux/security.h>
+ #include <linux/workqueue.h>
 +#include <linux/crash_core.h>
- #include <linux/set_memory.h>
- #include <linux/sched/signal.h>
- 
-@@ -187,6 +189,54 @@ static const struct inode_operations secretmem_iops = {
- 
- static struct vfsmount *secretmem_mnt;
+ #include <linux/random.h>
+ #include <linux/err.h>
+ #include "internal.h"
+@@ -1268,6 +1269,47 @@ void unregister_key_type(struct key_type *ktype)
+ }
+ EXPORT_SYMBOL(unregister_key_type);
  
 +/* Called far into vpanic from crash_core.c with other CPUs stopped and
 + * preemption disabled
 + */
-+static int secretmem_crash_wipe(struct notifier_block *nb, unsigned long action,
++static int key_crash_wipe(struct notifier_block *nb, unsigned long action,
 +		void *data)
 +{
-+	struct super_block *sb;
-+	struct inode *inode;
++	struct rb_node *node;
 +
-+	if (!secretmem_mnt)
-+		return NOTIFY_DONE;
-+	sb = secretmem_mnt->mnt_sb;
-+
-+	/* If the list was modified in the exact moment we panic'ed, it might be
-+	 * in an inconsistent state that would be unsafe to iterate. If we can't
-+	 * get the lock, too bad, that's all we can do here.
++	/* If we can't acquire the lock, the rbtree might be in an inconsistent
++	 * state. That's all we can do then, as there's no point to waiting
++	 * at this stage.
 +	 */
-+	if (!spin_trylock(&sb->s_inode_list_lock)) {
-+		pr_crit("crash_wipe_secrets: can't acquire secretmem superblock lock.\n"
-+			 "crash_wipe_secrets: skipping zeroizing secretmem.\n");
++	if (!spin_trylock(&key_serial_lock)) {
++		pr_crit("crash_wipe_secrets: can't acquire key_serial_lock. skipping keyrings.\n");
 +		return NOTIFY_DONE;
 +	}
 +
-+	list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
-+		XA_STATE(xas, &inode->i_mapping->i_pages, 0);
-+		struct folio *folio;
++	for (node = rb_first(&key_serial_tree); node; node = rb_next(node)) {
++		struct key *key = rb_entry(node, struct key, serial_node);
 +
-+		/* no need for locks if we're burning down the house :) */
-+		xas_for_each(&xas, folio, ULONG_MAX) {
-+			if (xas_retry(&xas, folio) || xa_is_value(folio))
-+				continue;
++		/* Negatively instantiated keys have key->state < 0 and never
++		 * had a payload attached, so only wipe positive ones.
++		 */
++		if (key->type == &key_type_keyring || !key_is_positive(key))
++			continue;
 +
-+			/* secretmem_fault() already split the linear map */
-+			set_direct_map_default_nosplit(folio_page(folio, 0));
-+			folio_zero_segment(folio, 0, folio_size(folio));
-+			crash_wipe_cache_range(folio_address(folio),
-+					       folio_size(folio));
-+		}
++		/* We have a dedicated wipe callback for this since free'ing
++		 * isn't safe at this point
++		 */
++		if (key->type->wipe)
++			key->type->wipe(key);
 +	}
-+	spin_unlock(&sb->s_inode_list_lock);
++	spin_unlock(&key_serial_lock);
 +	/* off to kexec()! */
 +	return NOTIFY_DONE;
 +}
 +
-+static struct notifier_block secretmem_wipe_nb = {
-+	.notifier_call = secretmem_crash_wipe
++static struct notifier_block key_crash_wipe_nb = {
++	.notifier_call = key_crash_wipe
 +};
 +
- static struct file *secretmem_file_create(unsigned long flags)
- {
- 	struct file *file;
-@@ -212,6 +262,8 @@ static struct file *secretmem_file_create(unsigned long flags)
- 	inode->i_mode |= S_IFREG;
- 	inode->i_size = 0;
+ /*
+  * Initialise the key management state.
+  */
+@@ -1290,4 +1332,5 @@ void __init key_init(void)
  
-+	inode_sb_list_add(inode);
-+
- 	atomic_inc(&secretmem_users);
- 
- 	return file;
-@@ -263,6 +315,7 @@ static int __init secretmem_init(void)
- 	if (IS_ERR(secretmem_mnt))
- 		return PTR_ERR(secretmem_mnt);
- 
-+	crash_wipe_secrets_register(&secretmem_wipe_nb);
- 	return 0;
+ 	rb_insert_color(&root_key_user.node,
+ 			&key_user_tree);
++	crash_wipe_secrets_register(&key_crash_wipe_nb);
  }
- fs_initcall(secretmem_init);
 
 -- 
 2.53.0
