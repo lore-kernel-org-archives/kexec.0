@@ -4,110 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 22B85C5B56A
-	for <kexec@archiver.kernel.org>; Tue, 11 Aug 2026 14:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8576BC5CFE7
+	for <kexec@archiver.kernel.org>; Tue, 11 Aug 2026 15:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Jp0fqZFHF7mI1CqwrilSaNxFrVnfx5CxGflz/18MAoI=; b=r2leRfx2s5eyUlP/lDaLmyhTfE
-	FrS4abNY1JOyt4HVqipgxbhDZKteM+f9aL+uiFwK6EjuzTuTs6Fz4ibYD/1HsFZ+KwDvHcdqGIb7a
-	va6ndjhZcgpqmBUJg07VNsX5ybhYPKWedkO/8onsLl1uowMOldZXchR4absx7vDmV002c+PlVBMZf
-	0LJoai0TjGOZAc2GjDYtZw4jWuCWbw3qnuo2PP/rTnjM4u38hkrXZ6bJhvFoQ8Fv8wo1ZOnlx7VQ1
-	HEFYI27AouDWBQl1RXRaI2vfsGNQHBHrdCIcinPwHM0eJtutFF0Bv4VEaCzagGmOuPWm+rruCQGUM
-	AoveV4nw==;
+	bh=+R7JMANSoPU0Lo7IzhksLdgglky5VdSN1BAdqtQvJK0=; b=HIgW6tFTiEghnGXOnAFC5wE6an
+	ywH5ALlMfW2oOpbZ+8afTgoryBbOu/ppDkuLR+wztacN2euubOraBHypyTlCQvuDQw1HLjGjKSJOO
+	b8g4+0jwy2/+Cg96cPtXJxYbbWJwg/ej89lQGBk+aSDRF1sU0SoUeEvPHts7YBN/ondN9IJ1mZ4md
+	7yi6R7/EsBrUX450T7oN/l0/iqBN3eV4AW4a8AlHPJquCztZ8k5nmPSalQoaMEgHqPkxlJn3hH9Rk
+	UqYLRELisdaOafwC4Mfno9azob4hZlpw2maAQk6d1A91QQYZAkJ7rQOiAnp32tFZeCpVy+/Xi4NpK
+	MHLXO4jQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtnwW-0000000EGXu-2JjQ;
-	Tue, 11 Aug 2026 14:59:04 +0000
-Received: from flow-b6-smtp.messagingengine.com ([202.12.124.141])
+	id 1wto3L-0000000EHLM-0nS3;
+	Tue, 11 Aug 2026 15:06:07 +0000
+Received: from fhigh-b4-smtp.messagingengine.com ([202.12.124.155])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtnwL-0000000EGW7-13RN
+	id 1wto3J-0000000EHJg-0KCX
 	for kexec@lists.infradead.org;
-	Tue, 11 Aug 2026 14:59:02 +0000
+	Tue, 11 Aug 2026 15:06:06 +0000
 Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailflow.stl.internal (Postfix) with ESMTP id A40251300303;
-	Tue, 11 Aug 2026 10:58:47 -0400 (EDT)
+	by mailfhigh.stl.internal (Postfix) with ESMTP id B24857A0181;
+	Tue, 11 Aug 2026 11:06:01 -0400 (EDT)
 Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Tue, 11 Aug 2026 10:58:48 -0400
+  by phl-compute-01.internal (MEProxy); Tue, 11 Aug 2026 11:06:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jaseg.de; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1786460327;
-	 x=1786467527; bh=Jp0fqZFHF7mI1CqwrilSaNxFrVnfx5CxGflz/18MAoI=; b=
-	RB8KNNN2uLPqYwPDPFFP1WLG/46050Id03CcYX5EuhJ0Og9/pHhIoU21hAm4eZSD
-	qz5TMzt6KCMD4rEZIfjYO7yoLR6qxAgFQkTfNO3l4cJ1JhJEHft36jConhPMLxjh
-	oiTzjlngYctfnfkrQ1CTNjhrK2/BbckG0EUv4Ix18/eaqgmfp7MVyH9PWplZlcLd
-	WJt6/PxJDGZ0ACOMU/CzcczcrXkEJ5//oq5oigdbA+HjC/AZbEECfNcfmf2ulXc+
-	YyeITKbD59t+Z+79sJ0JPBE4oHNkHc9Q7x43Zt69R7B/OTQy5UOnwO0mj/+u58fV
-	+RbKX69psMu+YL2564+dWw==
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1786460761;
+	 x=1786547161; bh=+R7JMANSoPU0Lo7IzhksLdgglky5VdSN1BAdqtQvJK0=; b=
+	DUWOYSVsIpLVmKjF/IUlILPEMxDBvO4sFISJOuzQouSq7xBMC3EiHDoCsXZeGn/w
+	euv5pKnuG2TpICvHrI6NQRv3gcJ+Q22zvvhmOZhwa0+FjvQDvHfo3G3ohHOOby1K
+	VkqvZ26a3FC/AhHvg2icA/n61RglIhgkUmH/zEoT90/zc1v2ySLBzYx2k8I3S2VH
+	bEVmP2LIr1LTq4wugyZHXcKeCL+2qnuvQMdvVCOmx42/+cgPNt1boalq6lPlc2iV
+	eC2J+VGuUJzk8CdXEN+dOp+2kZFgx60YEHXLKdIsbGnooQPAHJEfe8NOrrfzCiPH
+	3hCcmpUnfzpgrzqVo7XozA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1786460327; x=
-	1786467527; bh=Jp0fqZFHF7mI1CqwrilSaNxFrVnfx5CxGflz/18MAoI=; b=b
-	zQTPJWaztfd5VsPiL8k/4fVV2EhfctfLSEykgNH+bCG2zpjDLchcSiFUoxNrIxI/
-	DM/SA160y3vhtB44WmDu1ZCks+ttamqcrsuS+JrajTeh2xHn867U7HvnD+m6+V7e
-	FsMl8Tdr9kWvgxYFVs3+1nJ5jp2WxMGKRu9LcjoZPvoBzDtZScbDsehdf3ejYVcz
-	/xZuuaxYGc+0IwiIv42d83t1EuRjALHZt5kHAOPRd6hhnqyi92qKaesRZ3eewWZt
-	SpKOYbfFw3hraVoHXCohXOC71cbhSXOztVmD6u8XkjIJy1/fuT1MuqnoeE+ARHKg
-	O3Rrd5pCMiNJPQaSsq4xA==
-X-ME-Sender: <xms:pjh7agnW2sbwu5eoERfEMBE-zpmtsQrp1Omlk6l1RhPODd_QgxWQ8w>
-    <xme:pjh7ar9mZ77LYHw7W7agqhE2aKbq486ENGy9ba-L2Xj8VYzHU4aoT9B8-WTEOWzX4
-    Mp6c4WIpGDqylWYl1f_t27_iqlpRswIUBa1lQNO57YAL4zWK7yd>
-X-ME-Received: <xmr:pjh7aqeltHoxApSSZceXQsVS_pN3mPGIB6IGTd0s6mvxafnnGt7ogtO6rrf3HJUypxZ7e48iuQxUNa22MrRemxM>
-X-ME-Proxy-Cause: dmFkZTEZzbQm8+MDadCcsfJIzUGhB297v8VJIjT5vjgHKW/Zy5NM7EP2B2afP7kXMI53Pi
-    iMI0tkUZvFWWrvqRH/dnVoYK6W24oOJhenYKYhI5KO8Vx0oQHnpX2BCKf9Q6x7r1s+eUda
-    qmBRp1DiByHgPICjaGVN0CeKyGl+imPlPIlFbGGt+r63vZTd+ceybvhTgBxHDfYC4j2HO6
-    e2a73mnRuf9+fKjrvSWXh5b6K39H9mLcpSDP87bw4E9usEp5rE6R5L4CjPIF4057U/EdCT
-    x/hnPYXUYRRJfF5FKi3p3YQQUSjG3LMuOm2yMOEqWH2+kvJyI94puOzYBkqL0qWxY1tsCu
-    XuY/A4RbsLJ23UA1GTKWV87gFg1aDRlwH+b5xZpNz6cgw63Fki/lU1EEoWliJMHd8cpjgL
-    6F7/iTtLRsz9MxFbw+NtkGT3bogoTABKQ+QM7gAdveEJyq10Ncd4TP2sXyzTFx40bp6GLf
-    r2LKMNM1cvvfgU5v1JZzOM2IrTawvNjM3ZoaVtQ2mug9pdaX3O1zJgKgnBAsAWDheayKNE
-    omfItp08clFcYViM4HjddhvNILTXLTb0lzDAyudfYzjpsT7o+MW5Z7ENFsJ3BZBY7uEV4w
-    AxB2UAexilrYje+mEv186TdsruwEC6BTFXDG9+V4poscOK9owRxMxaqCVC3g
-X-ME-Proxy: <xmx:pjh7al4tD6fMWdbRFemuNdQsTrYh2ofZP1k9vtGP06xgSwZc45mHpw>
-    <xmx:pjh7au913xd5IzW3OT0m_37nTpXV-1ZHMD-UkjPGwO2FnFCHxp0gXg>
-    <xmx:pjh7anzm3EGKn3fjDC041YQSZUs7weSvqHbAAguTeSIF8GLzrN_V7A>
-    <xmx:pjh7atHn3Yj2xJCweAynTJuxrtdF0234e-Buy76u0341hVnT2WhiEg>
-    <xmx:pzh7aneerQTuAXvQa5r2czyHrRm3rAecw4HwFoxCUCV0vCQYp7mAtUdB>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1786460761; x=
+	1786547161; bh=+R7JMANSoPU0Lo7IzhksLdgglky5VdSN1BAdqtQvJK0=; b=j
+	lpZQapPqhsyo0fVD++SnG85AILHWB5Wd8YIPSfiqcJfVeFxqq7XQcRhiXz7fv/3s
+	Ugqsydv6dIWLt54KeHQ1cAp5F867ooOZcK292nMX50drIQgCRqN8g9l340a3xDRa
+	UlKpPROVSWfZWHPWtFzUPlX9JnE7bMicUEG04ipR6EWChf2pbMQVFVclBqZL9n5p
+	eyGNe/E3xabtplwUebsD0mxeeLkj2gS42vduVd3JLG6sqr6EH8x5/saufriwrnZM
+	zCxLxSS1WjbSFXLPXWO+gyb6WyajYCLn5Q5vpSoL30zoepi5vz26LhfFU/AYS64T
+	3MSNNF/jq/RNBWkL8eaKw==
+X-ME-Sender: <xms:WTp7ahuVXkaO_fLso6p8gNYsCct6uUXbXX_JdV6NujKqUIHCWNdMlw>
+    <xme:WTp7agc2IqgE61_WDHIPY4ZGxjBXWDJYc4SXs-fvyfOJJGkzj2-R4-rhK4lmBBDjL
+    HKMpzAIslESfSf25FCILDWmIDHc3Q8xXCEGqWy0S3iAg_OOOjUxjQ>
+X-ME-Received: <xmr:WTp7avmzT8cHgBdGUokViJIN5F0Rf9OJZ0HGQyZhk33Ey3bhAtwtiR2Q6318GxU-ylG4wbC0H-52-eQ--6qqaTU>
+X-ME-Proxy-Cause: dmFkZTFaFhDTW9a+ci9/L6pvJA9qM5lpDLTqExtHVIRCEVDj2T2FGJP5tMn7RDwcMrn7qk
+    nmtfjcoqgLBPcIFpZn3Dt/xrL4D3cnW3PvgGo+7f0FWlFXXUEMwiL50koRLeu7RvcjqJ0N
+    yo9W+3LtgZmY1nd/bnrZ9RCoW1aOMJS/T+Gs/KEmr40y7tZoy0Qv6NM8Zuv0sTcKfD7rPi
+    Tr0nLbR98w0As1ewCc32EOlrGy01CCfK2wfwvYgs74GhRytlkG+aPsOso4uvvcKn4gT/Xl
+    wIvuEF9sWzRmG5BmTVw8x+fJIDI+xi3WR9f/sIGAM6JyS7cQlL2Tck2SfguzjWcLfVmWQb
+    ECKcPDpnZOwc8n6BTMokL9nkMFaCqpfwl2dPlinwXUmp80krxIn9VK34Dt4sEjmCOPVzZI
+    /f2XWTsXyHT3ZOiI+5Yye2d6HT/9Nl2bBEQExnM8wmuziPZd+NSSBaHyIXxHuY6ryUWOop
+    Sez65xfX9kpda0ez8yvQLjywGwcixMSBDTbWQyVDKGDIlY6Rxdu51dxq7j8qynea8it8k1
+    tNKwCIsK8KyyLgqUNiqQddNPJumWI9JYRzjLoww0Hj5dVIxjR1+avD2vmt619qEHP0qzMI
+    6FWY3wbYpI+TeJyJtq+7d0XcZSEsrzqdxpEDqRtJiyDLmMcRbyJ+5bZX4PrQ
+X-ME-Proxy: <xmx:WTp7arBnnxJkbgy1HxUpCWZni3V4ul13WTUeBYV9tOCNIZGXbdcBdQ>
+    <xmx:WTp7ahMIwuQPghocYLT9MgVbDQS_WZneiQXxeRq6tNBu1Fvpg9l13g>
+    <xmx:WTp7aiMI2wdw5OU9e8Sg1ytfJ6spwnAe57F5thebQO2Gng88IAmcFA>
+    <xmx:WTp7apksJPOZUjU-C3Ozy3iDVi1OcT1ORMZHxXwvkQUHetKX4UJ1wQ>
+    <xmx:WTp7ahcaGsU5R_6NpuyLx3az9b4EJH2MvGNbLPQC7hiSjNsfZbXS15c->
 Feedback-ID: i60a14417:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 11 Aug 2026 10:58:43 -0400 (EDT)
-Message-ID: <018e58ef-c20b-4859-9dfa-bec1b4360a37@jaseg.de>
-Date: Tue, 11 Aug 2026 16:58:41 +0200
+ 11 Aug 2026 11:05:59 -0400 (EDT)
+Message-ID: <adcafa9f-2365-484b-b31e-19006833efaa@jaseg.de>
+Date: Tue, 11 Aug 2026 17:05:58 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] security/keys: zeroize key payloads before kdump
-To: Jarkko Sakkinen <jarkko@kernel.org>, David Howells <dhowells@redhat.com>
-Cc: =?UTF-8?Q?Jan_Sebastian_G=C3=B6tte?= <linux@jaseg.de>,
- Andrew Morton <akpm@linux-foundation.org>, Baoquan He
- <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>,
- Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
- "Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>,
- James Bottomley <James.Bottomley@hansenpartnership.com>,
- Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>,
- Coiby Xu <coxu@redhat.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
- keyrings@vger.kernel.org, linux-mm@kvack.org,
+Subject: Re: [PATCH 3/4] mm/secretmem: zeroize secret pages before kdump
+To: "David Hildenbrand (Arm)" <david@kernel.org>,
+ =?UTF-8?Q?Jan_Sebastian_G=C3=B6tte?= <linux@jaseg.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, keyrings@vger.kernel.org, linux-mm@kvack.org,
  linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org
-References: <20260731154608.153258-5-linux@jaseg.de>
- <20260731154608.153258-1-linux@jaseg.de>
- <2259835.1785538211@warthog.procyon.org.uk> <annuus46w5SXmlsA@kernel.org>
+References: <20260731162739.158320-1-linux@jaseg.de>
+ <20260731162739.158320-4-linux@jaseg.de>
+ <70c578dc-769f-465f-a146-4a4695f747c1@kernel.org>
 Content-Language: en-US
 From: =?UTF-8?Q?Jan_Sebastian_G=C3=B6tte?= <contact@jaseg.de>
-In-Reply-To: <annuus46w5SXmlsA@kernel.org>
+In-Reply-To: <70c578dc-769f-465f-a146-4a4695f747c1@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260811_075854_125749_01427EEA 
-X-CRM114-Status: UNSURE (   8.77  )
+X-CRM114-CacheID: sfid-20260811_080605_157887_5892B05C 
+X-CRM114-Status: UNSURE (   7.86  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -123,18 +114,21 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 8/10/26 17:31, Jarkko Sakkinen wrote:
-> On Fri, Jul 31, 2026 at 11:50:11PM +0100, David Howells wrote:
->> I've no particular objection to this, though I'd prefer the name 'wipe' to
->> 'zeroize'.
+On 8/11/26 16:53, David Hildenbrand (Arm) wrote:
+> On 7/31/26 18:27, Jan Sebastian Götte wrote:
+>> Register a CRASH_ZEROIZE notifier that wipes secretmem folios. As a
+>> result, when CONFIG_CRASH_ZEROIZE is set, secretmem areas will be
+>> cleared before the kdump kernel is kexec'ed.
 > 
-> LOL, I responded exactly same before reading your response :-)
-> 
-> So yeah, +1 to this.
+> Are you actually using secretmem in your use case? I heard some rumors that
+> secretmem isn't used all that much in practice :)
 
-Thank y'all on the naming feedback. I agree that's clearer and I'll post 
-a v2 of this soon, and I'll rename it to CONFIG_CRASH_WIPE_SECRETS. I've 
-had my head stuck too deep in government standards where they call this 
-"zeroization" :)
-
+I'm aware nobody is really using secretmem. I decided to build this on 
+top of secretmem because it's an existing API that actually kind of fits 
+the use case. While I could have added a new API just for this (marking 
+userspace memory as wipe-on-crash), making it part of secretmem instead 
+gives some additional defense-in-depth protection for both users who 
+only need wiping, and for users who only want secretmem's additional 
+protection against kernel memory read primitives so I think everyone 
+wins here.
 
