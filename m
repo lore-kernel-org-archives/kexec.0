@@ -4,70 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AD2EAC5CFC1
-	for <kexec@archiver.kernel.org>; Tue, 11 Aug 2026 11:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 40039C5CFC1
+	for <kexec@archiver.kernel.org>; Tue, 11 Aug 2026 11:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=+5L98aL3Gaq0Oa3J1h7rtYhrwqEXKEC4NPIDmDwKQQE=; b=fUxfwwbU02QTS1MeZmQ3nPU4iB
-	Q8yclSxQmu8Rw0rOXRD/QTe3VyyS6xQE0Nz7lp855kaIbpxfPAgVvGGf5eq2lCETVZQxRAstHqVmb
-	eApmJy3j49Uig/vhTEO15ueKurLbK2PwoU247YNoHTr2dYsXqpeQQ0mPsNV/6kKxa94wR3lhy6HVe
-	yar9z8p13I5+9d9cvsXc8RodKnFo3V7/AYCd0odVem9Z1iXnynNCms2wbepg8funGZzaUEOB1vF2G
-	qwax6kFYxfVo3TjkL630b2mq8rxDKSBNJEccXr376U4fUyA0Kx6kX7WGn1lNwqg54Jpwhd0Brg2m5
-	1bSBlRQQ==;
+	bh=4h7/hkwvCsY0fI00T2PR/Y4OZG0mhUElOQ2zn4pF7HM=; b=NUl7MhW+vhFUoRoRcmNnzxCaPX
+	plW3OGQ0XoOJi9e9lMLtuIXzFr0bYFqS4rHd208NlTyhCm2wCDiq2/G9vlcNUa8s11BnIdANtxtve
+	MiCu6Ts7QqmLkvigkteVJTl64fHovg7cwgUoX9PWI+NCQCKV3HC20fvT/e8oQ1/dOGWXxCT0sXXTg
+	k21BiRx/QBmgB27pE77QM9YbvrgQWRm48WKlRY4o+hK73oS37qBHD6sAQcTjZRraI3CDrsYoGBHfS
+	BRNgcGyBh5512FrKJmdy9aA/lJLTpMnm95Z4LpIj9HK+NjQ9R2s6XFn57kok+AkVeJ9xSkbx8FocF
+	zHy0ad/g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtkUp-0000000DuyX-187e;
-	Tue, 11 Aug 2026 11:18:15 +0000
-Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
+	id 1wtki0-0000000Dw5N-1g9L;
+	Tue, 11 Aug 2026 11:31:52 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtkUm-0000000DuxU-2BB7
+	id 1wtkhz-0000000Dw5H-34t8
 	for kexec@lists.infradead.org;
-	Tue, 11 Aug 2026 11:18:13 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=+5L98aL3Gaq0Oa3J1h7rtYhrwqEXKEC4NPIDmDwKQQE=; b=m8UBuuRTXedkiO3V4fRfUD2kbt
-	a/SkK1GFzjp95gHT40ScUNlBcaU814L3AdjJBTbHWkC5gWRRJ2if6KKMEZ8AVvkn5ZT/aGxkWkYf9
-	xZG+IqWKsp4MwIqnczBmPDyt/nEiFhJn/JnypNDfJzgtZb8nPJY4XjtmvNgejzOYgqqxaTyZb6SjW
-	hji09+ZiQiXSl12vNVnbcHzpU3c/qn65pOo1MFFZ92Z44WWrj6RehLL4/kTBWxkuKsCuy7RCJ0ixU
-	b/qcVZvS7oYlFbATBAcJo1AGnoGpsubsaSlT9CKyqACjT5uAZab5EooNN97kq/Bresb6pTXTbGnDD
-	/TubT9iw==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wtkUN-003Wad-2h;
-	Tue, 11 Aug 2026 11:17:48 +0000
-Date: Tue, 11 Aug 2026 04:17:41 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pratyush Yadav <pratyush@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, rmikey@meta.com, riel@surriel.com, kernel-team@meta.com, 
-	Kiryl Shutsemau <kas@kernel.org>
-Subject: Re: [PATCH v5] kexec: keep the next kernel off hardware-poisoned
- pages
-Message-ID: <anr59P1ZCAuHxv6x@gmail.com>
-References: <20260810-kexec_posioned-v5-1-95e1b5e2e656@debian.org>
- <ann9Kcesyb4T9Z8b@kernel.org>
+	Tue, 11 Aug 2026 11:31:51 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id C38CD600AD;
+	Tue, 11 Aug 2026 11:31:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16A141F000E9;
+	Tue, 11 Aug 2026 11:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786447910;
+	bh=4h7/hkwvCsY0fI00T2PR/Y4OZG0mhUElOQ2zn4pF7HM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=om8xJIfjsRUCvKibHk4AB92a86v/0sm2xMl+BtSmgoyg7QzhmHmd3v9z3YvwkioCW
+	 9u/nZK6wJXKOBRJSadI/b5pqpyXdCXcN7dsJ9BaeaAZz90F1BIBA4twS1gV3wuBHJO
+	 mJtZngYdB7FxDju+zrnYNhjNPFjwE8vD9dfqPU/3VUsDjvBzcsgX4U7GyWO21QietQ
+	 +uDGaQz1ywUPS27qK7TYb35Ab1PJEijr+OqHQQPgoG/BBG0vdmmBqVwPLY/LGZtoQR
+	 7NrPUAPpNv5bhHusvIMbXZwA2gJ2vJg4PJ/zmo8j6qYfhy4KZUMw6mp3S6iqu2krU4
+	 1EuINsbUcsIhg==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Tarun Sahu <tarunsahu@google.com>,  ackerleytng@google.com,
+  fuad.tabba@linux.dev,  Andrew Morton <akpm@linux-foundation.org>,
+  dmatlack@google.com,  Shuah Khan <skhan@linuxfoundation.org>,  Jonathan
+ Corbet <corbet@lwn.net>,  david@redhat.com,  Pasha Tatashin
+ <pasha.tatashin@soleen.com>,  Pratyush Yadav <pratyush@kernel.org>,
+  sagis@google.com,  Paolo Bonzini <pbonzini@redhat.com>,  Mike Rapoport
+ <rppt@kernel.org>,  Alexander Graf <graf@amazon.com>,
+  linux-kselftest@vger.kernel.org,  andre.przywara@arm.com,
+  michael.roth@amd.com,  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
+  will@kernel.org,  vannapurve@google.com,  maz@kernel.org,
+  fvdl@google.com,  kvm@vger.kernel.org,  oliver.upton@linux.dev,
+  kvmarm@lists.linux.dev,  alexandru.elisei@arm.com,  skhawaja@google.com,
+  aneesh.kumar@kernel.org,  linux-doc@vger.kernel.org,  David Hildenbrand
+ <david@kernel.org>,  yan.y.zhao@intel.com,  kexec@lists.infradead.org,
+  suzuki.poulose@arm.com
+Subject: Re: [PATCH v4 05/11] KVM: LUO: Support VM preservation across live
+ updates
+In-Reply-To: <anphyjFv3FhF61iB@google.com> (Sean Christopherson's message of
+	"Mon, 10 Aug 2026 16:42:02 -0700")
+References: <20260728121138.1103610-1-tarunsahu@google.com>
+	<20260728121138.1103610-6-tarunsahu@google.com>
+	<anphyjFv3FhF61iB@google.com>
+Date: Tue, 11 Aug 2026 13:31:43 +0200
+Message-ID: <2vxzpkzo51wg.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ann9Kcesyb4T9Z8b@kernel.org>
-X-Debian-User: leitao
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260811_041812_559402_713F0C8E 
-X-CRM114-Status: GOOD (  33.73  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,118 +85,117 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Aug 10, 2026 at 07:32:41PM +0300, Mike Rapoport wrote:
-> Hi Breno,
-> 
-> On Mon, Aug 10, 2026 at 06:32:04AM -0700, Breno Leitao wrote:
-> > Memory failures (such as unrecoverable ECCs errors) are getting more and
-> > more common. The kernel knows how to handle it while running, marking it
-> > as poisoned (and SIGBUS user tasks).
-> > 
-> > Poisoned memory is removed from the buddy allocator, but, not from
-> > other places. A current problem is that kexec will load new kernel
-> > on top of a bad/poisoned memory, which is undesirable.
-> > 
-> > If the next kernel's image, initrd or purgatory lands on poisoned frame,
-> > the relocation copy writes to the bad memory and the machine checks
-> 
-> What does the machine check here? ;-)
+On Mon, Aug 10 2026, Sean Christopherson wrote:
 
-Not sure I got your question right. Did you mean:
+> On Tue, Jul 28, 2026, Tarun Sahu wrote:
+>> Register a Live Update Orchestrator (LUO) file handler for KVM VM files
+>> to serialize and deserialize VM state across kexec live updates.
+>> 
+>> Currently, Only VM type (e.g. arch.vm_type on x86) is preserved as part
+>> of VM preservation.
+>
+> Why?
+>
+>> On retrieval, kvm_luo_retrieve() recreates the KVM VM file via
+>> kvm_create_vm_file() and use an atomically incremented ID for the internal
+>> fdname, as the final fdname assigned by userspace is not yet known during
+>> retrieval. As this fdname is only used in debugfs infra, This will not break
+>> any UAPI.
+>> 
+>> This infrastructure establishes the foundation for preserving guest_memfd
+>> instances across live updates, and can be expanded in the future to
+>> preserve additional VM state.
+>
+> Uh, why guest_memfd?  As much as I want to push guest_memfd adoption, it seems
+> guest_memfd should be the _last_ thing we support, not the first.  As evidenced
+> by the last two decades, it's very doable to have KVM VMs without guest_memfd,
+> but it's rather hard to have VMs without vCPUs.
 
-1) that there is no machine check exception when *writing* to poisoned
-   memory, or
+You _can_ preserve vCPUs today using KVM_{GET,SET}_REGS, they just won't
+run in the background during the reboot. This series can save you from
+dumping VM memory to disk if it is backed by guest_memfd.
 
-2) just that "the machine checks" is a lousy way to write it?
+>
+>> Also updates MAINTAINERS to include virt/kvm/kvm_luo.c and
+>> include/linux/kho/abi/kvm.h.
+>> 
+>> Signed-off-by: Tarun Sahu <tarunsahu@google.com>
+>> ---
+>>  MAINTAINERS                 |  11 ++
+>>  include/linux/kho/abi/kvm.h |  39 ++++++++
+>>  virt/kvm/Makefile.kvm       |   1 +
+>>  virt/kvm/kvm_luo.c          | 195 ++++++++++++++++++++++++++++++++++++
+>>  virt/kvm/kvm_main.c         |   8 ++
+>>  virt/kvm/kvm_mm.h           |   8 ++
+>>  6 files changed, 262 insertions(+)
+>>  create mode 100644 include/linux/kho/abi/kvm.h
+>>  create mode 100644 virt/kvm/kvm_luo.c
+>> 
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index a3ed337e827d..0283f0fd6ef4 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -14539,6 +14539,17 @@ S:	Maintained
+>>  F:	Documentation/devicetree/bindings/leds/backlight/kinetic,ktz8866.yaml
+>>  F:	drivers/video/backlight/ktz8866.c
+>>  
+>> +KVM LIVE UPDATE
+>> +M:	Pasha Tatashin <pasha.tatashin@soleen.com>
+>> +M:	Mike Rapoport <rppt@kernel.org>
+>> +M:	Pratyush Yadav <pratyush@kernel.org>
+>> +R:	Tarun Sahu <tarunsahu@google.com>
+>> +L:	kexec@lists.infradead.org
+>> +L:	kvm@vger.kernel.org
+>> +S:	Maintained
+>> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
+>
+> NAK on taking changes through a different tree.  This is KVM code, period.
+>
+> In general, I'm skeptical of the dedicated MAINTAINERS entry.  It's extremely
+> difficult to tell since this series is little more than a skeleton (either that
+> or liveupdate is way simpler that I was expecting), but I suspect that maintaining
 
-For 1) I think you are right, and I had not thought it through. The MCE
-(or a recurrent multi-bit ECC) would come from consuming the error, so
-a load or an instruction fetch, and a store may well pass silently and
-leave the poison sitting there.
+It's a bit of both. This series of course doesn't support everything
+that guest_memfd can. At the same time, I also keep being (pleasantly)
+surprised at preservation being relatively simple. For example, the code
+to preserve a shmem file (via memfd) is roughly 600 lines, a big chunk
+of which is comments. The code of course has some limitations, but it is
+good enough for use in production.
 
-The read back is what gets us, though. 
+> liveupdate for KVM (or for any subsystem) will require more subsystem-specific
+> knowledge than liveupdate knowledge.
+>
+> E.g. the LUO APIs seem pretty straightforward; I assume the bulk of the complexity
+> is going to be in knowing what to save/restore, and how, which is much more about
+> KVM than it is about liveupdate.
 
-So the sentence should hang on the read, not on the copy. Would
-something like makes more sense?
+I think it is fine if you want to take these changes through the KVM
+tree, but I would like live update maintainers to be listed as reviewers
+at least.
 
-        If the next kernel's image, initrd or purgatory lands on a
-        poisoned frame, the relocation copy puts them on memory that is
-        known bad.
+For one, we care about ABI breakages and versioning. The serialized
+state is a part of live update ABI and changes to it should be ACKed by
+us. For another, how the file handlers interact with their dependencies
+can affect the behaviour that VMMs observe. Those changes should also
+pass by some live update eyes.
 
-	The error is consumed on the first read back, whether
-        that is purgatory checksumming the segments or the new kernel
-        running from them, and that is what we want to avoid.
+So I think we should have a separate entry for KVM LIVE UPDATE that
+lists the live update maintainers (or perhaps only kexec@) as a
+reviewer. The patches can still flow through KVM tree but we'd get a
+chance to ACK/NACK them.
 
-> > Skip hardware-poisoned frames when placing segments: check them in the
-> > kexec_file hole finder so it lays the next kernel down on good memory,
-> > and reject a poisoned destination in sanity_check_segment_list() for
-> > the kexec_load path, which cannot relocate.
-> > 
-> > The two hole finders walk in opposite directions, so each asks for the
-> > end of the poison it has to clear: the top-down walk for the first
-> > poisoned page in the window, the bottom-up walk for the last. A poisoned
-> > hugetlb folio counts in full, as hugetlb keeps the flag on the folio and
-> > the poisoned subpages on its raw hwpoison list.
-> 
-> I had hard time parsing these two paragraphs. Can you please add more human
-> touch to them?
+Of course this all can evolve later as we see fit but I think this is a
+good starting point.
 
-Sure, but that would cost more. :-) 
+>
+>> +F:	virt/kvm/kvm_luo.c
+>> +
+>>  KVM PARAVIRT (KVM/paravirt)
+>>  M:	Paolo Bonzini <pbonzini@redhat.com>
+>>  R:	Vitaly Kuznetsov <vkuznets@redhat.com>
+[...]
 
-What about something like:
-
-	Skip hardware-poisoned frames that were detected by machine
-	failure subssytem earlier when placing kexec segments.
-
-	To do so, add a helper that reports the first or the last poisoned page
-	in a range: memory is walked top-down by locate_mem_hole_top_down() and
-	bottom-up by locate_mem_hole_bottom_up(), so each direction needs a
-	different answer to jump clear of the poison.
-
-	kexec_load() gets its destinations from userspace and cannot move them,
-	so there sanity_check_segment_list() just rejects
-	a a segument/memory block that happens to have a posioned page.
-
-	is_page_hwpoison() also covers hugetlb, where the flag sits on the folio
-	and the bad subpages on its raw hwpoison list, so a poisoned hugetlb
-	folio is skipped as a whole.
-
-> > +		poison = range_first_hwpoison(temp_start, kbuf->memsz);
-> > +		if (poison != PHYS_ADDR_MAX) {
-> > +			/* we hit a poisoned page */
-> > +			if (poison < kbuf->memsz)
-> > +				return 0;
-> 
-> Won't we break out on the next iteration boundaries check? I.e.
-> 
-> 		if (temp_start < start || temp_start < kbuf->buf_min)
-> 			return 0;
-
-Kind-of.  Sashiko keeps raising this underflow in the function, on every
-revision since v2.
-
-It dismisses it on this hunk because of the check, but reports it as
-a real one on the two "temp_start = temp_start - PAGE_SIZE" paths above,
-which do the same subtraction with nothing guarding them. 
-
-Happy to remove it from here and send that as a separate patch.
-
-> > +	for (pfn = PHYS_PFN(start); pfn <= end_pfn; pfn++) {
-> > +
-> > +		cond_resched();
-> 
-> cond_resched() for every pfn is too much, isn't it?
-
-It is what the other pfn walkers do: the kpageflags read loop in
-fs/proc/page.c and read_page_owner() in mm/page_owner.c both call it
-once per pfn. 
-
-But I honestly don't have a strong opinion here, though, happy to batch
-it if you prefer. Would this one look better?:
-
-	if (!(pfn % MAX_ORDER_NR_PAGES))
-		cond_resched();
-
-Thanks for the review,
---breno
+-- 
+Regards,
+Pratyush Yadav
 
