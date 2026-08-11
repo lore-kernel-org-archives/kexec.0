@@ -4,93 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AACA8C5B572
-	for <kexec@archiver.kernel.org>; Tue, 11 Aug 2026 18:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2AD57C5B56A
+	for <kexec@archiver.kernel.org>; Tue, 11 Aug 2026 19:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=82HGZsPxUpcnk6FVJkVR/8JEXad9K6uAipsabFS3WKc=; b=Ax807zph81WzfaeazwFtTMN56J
-	KQnfSkYyt8o0dcj8c8FD3ufTJiHkqGa6JAfqSezetA5kMKSpvOBh6+eDAiN8LVW3903+6qEcHiK0g
-	h7UCxOK1l39BStGeRSKdOXVr09idMwaxGusIOwRDmBAbdZxjjL5kY65oswd3Av3fffcSr8iLwuiVJ
-	YyHl7C/w9bANer/CQLerY4g69G9urighmjBZIiNBQa2bom0UWkcCLusTwwlws92QDVa4qsPZuBU8C
-	ty7tXq784VXNcdvH80VB9qQxHmOJBRcc1Wc5mguA52wYQuQYnyZUnC2Zhiyg+RcN/isG3xH99N2dD
-	z2Ss6cUg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=+uiiP5F3lsr2NVoL/RaZc+Y6YQhERqKSQ2XX6+ZpE3I=; b=ED/FCtXLWzZvC9QrR+4/VhCAjY
+	jYO8hmOdxg41w7WMBSm6BhW5IB/zIfrifvKRsE83OfP3rL2GW1OC0YXHzJcjlb+iFKdsE/0gGe2bv
+	OLqkhAOv5lqXOS/hnIS6E1m2x7GGfOEXW6Ep272jxKoGSu6Ks3++WoQ87XtVPx0SNwyWMr2IduHCa
+	Utxni+Dp+AjZ0k/XVvwoLdlJXp8h6TuqJIgvx+GDsZ8U+c3Dopr3gElXwx2w1uc9/WoOVFOHc0aK+
+	CjuCR2DBy8RiNGecD2Y48aOuo9Onkdf5v6KWsFo5+mmbjwDQ5vELfjkjZgReKAQ3tH6sRNWMg3bYe
+	kEEdDAGw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtr5H-0000000Ek9P-0MRm;
-	Tue, 11 Aug 2026 18:20:19 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wts0L-0000000Ep9L-0JyM;
+	Tue, 11 Aug 2026 19:19:17 +0000
+Received: from mail-ed1-x545.google.com ([2a00:1450:4864:20::545])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtr5F-0000000Ek8R-0Rg3;
-	Tue, 11 Aug 2026 18:20:17 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 8195943C21;
-	Tue, 11 Aug 2026 18:20:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BFD51F000E9;
-	Tue, 11 Aug 2026 18:20:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786472416;
-	bh=82HGZsPxUpcnk6FVJkVR/8JEXad9K6uAipsabFS3WKc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=LUR7edvfMpZPiPQqCKTxT7C3PKhPuFxcyN3AHk76XXbKOfB1CBf4sTCfdKV5Ptp4R
-	 B0Rr4m/ibr0q7uguVB5xMvUrzpA8/e+L2+D9mySRGX5Sq0cqu+VYzXeRVwQrmn8234
-	 LLnbTRtpZli/PRucZ123m1vW61I1Ec7S9rn6NHL66Uz8AgA+u1osyHEAldC8tMp/bB
-	 3BQBwPF2oCqK3n/Lk1m+IdZa16AC9fzGUZA/cJejpmaPF4+nICKJrHugBAWx1OXFHB
-	 1g92/VYVXhZEus1ZDlSComjJTk6nmL6YLxSHx6h3SPp+ggcFhbtYmnXS3XfL7840n/
-	 mAUvBvG/OpnMw==
-Date: Tue, 11 Aug 2026 18:20:12 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Jan Sebastian =?iso-8859-1?Q?G=F6tte?= <linux@jaseg.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Dave Young <ruirui.yang@linux.dev>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, David Howells <dhowells@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Lukas Wunner <lukas@wunner.de>, Ignat Korchagin <ignat@linux.win>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
-	Mikulas Patocka <mpatocka@redhat.com>,
-	Benjamin Marzinski <bmarzins@redhat.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org, keyrings@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-security-module@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-nvme@lists.infradead.org,
-	linux-nfs@vger.kernel.org, linux-integrity@vger.kernel.org,
-	linux-afs@lists.infradead.org, netdev@vger.kernel.org,
-	linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	dm-devel@lists.linux.dev
-Subject: Re: [PATCH v2 00/13] CRASH_WIPE_SECRETS: Wipe secrets before kdump
- (was: CRASH_ZEROIZE)
-Message-ID: <20260811182012.GB2895176@google.com>
-References: <20260811-crash-zeroize-rework-v2-0-9561d13c2340@jaseg.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260811-crash-zeroize-rework-v2-0-9561d13c2340@jaseg.de>
+	id 1wts0I-0000000Ep8X-1TEj
+	for kexec@lists.infradead.org;
+	Tue, 11 Aug 2026 19:19:15 +0000
+Received: by mail-ed1-x545.google.com with SMTP id 4fb4d7f45d1cf-698a99b6140so145406a12.1
+        for <kexec@lists.infradead.org>; Tue, 11 Aug 2026 12:19:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786475952; x=1787080752; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=+uiiP5F3lsr2NVoL/RaZc+Y6YQhERqKSQ2XX6+ZpE3I=;
+        b=Zif3tXPSG+H548JePD2EBzknfBKPPATMTClivWUNk2cju1ebs+f/aI4ysOihWTL0Xy
+         FXoB+VBAoW5gPMT6D5lThobfC0wnFa8UKggXIY810VPpefLF4MRKbpHcHkysqt+WPHvT
+         9K7ysT+++s8w1GxIv8Qy9aywsB4+DgtNkktnKLShkwsK3E73pls7SYwASmHvL5COqC/6
+         jJzQEsmx9wMPTz3qnKD0sO64XxP9MiCUYu+UUZVkmk4kiAzaed7kRVIMUUgWjqCC+w7M
+         Q+sikMS7ijsEtC6GxofJmgOOyqi/2xrORmOPUINAab5iQJOf6DSrupv3wufIQm7kh35O
+         NnFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786475952; x=1787080752;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=+uiiP5F3lsr2NVoL/RaZc+Y6YQhERqKSQ2XX6+ZpE3I=;
+        b=TYc+0UDWP2U27hMBS/SGNBODQHUBepDLwZC7w2R7Rrnzq/uaC3iDE1tNnDvmgURKJz
+         55AkkZgWxGepXIFHJ58XLRksnReTpVG3BPMmbSS6wMXsGfVyofZMIHq9QvwttWPAhRsL
+         KD2B23gqjAkNPqcwlqlnZnrjC7bFbvBr/vxXdVpGxSB7Fze81/5VBGoGxQgDz2/yl/kA
+         Cvh22wkNClhUimCRizYh7YwCn20wVHqng7JSTFRS7g+fUoG4mq7pTgcdvOHaacbam62C
+         2EqyuN4m64cMmvQkl9OeLbL4sZhwyMD60uExeQSVprwdEawSbNouqyd6qLjImuANwHSS
+         rI/Q==
+X-Forwarded-Encrypted: i=1; AHgh+Rr4hNifPgpLnyYc6fn3o9R3ZzyGxihQJk8KfCHaFvkYbCjrvXGTXNBJSKvGdvvZxoUkBBGTxg==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yz2+pPr5/k/p9KsCChm/SoW6JaMvJ5YKuREKrHTyol3eL2Nmkv1
+	c/4zjdsU6oZfwFDi9cBeOJHL6AcxD/D4eQSOrHlRF9HWWWYem+bUhVeNgUyK+DCb/kD1w+SC/qX
+	7XRZ3nRXZU4b/OIv87w==
+X-Received: from edt14.prod.google.com ([2002:a05:6402:454e:b0:6a0:4d21:a35e])
+ (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6402:458e:b0:6a0:c763:89e5 with SMTP id 4fb4d7f45d1cf-6a36c890c5dmr1312878a12.19.1786475951534;
+ Tue, 11 Aug 2026 12:19:11 -0700 (PDT)
+Date: Tue, 11 Aug 2026 19:19:11 +0000
+Mime-Version: 1.0
+Message-ID: <9huzldaczcr4.fsf@tarunix.c.googlers.com>
+Subject: QNS: ARM64: Cache coherency while doing Kexec for KHO
+From: tarunsahu@google.com
+To: Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, will@kernel.org, changyuanl@google.com, 
+	Alexander Graf <graf@amazon.com>, mark.rutland@arm.com, jgg@nvidia.com
+Cc: linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260811_121914_392151_34CEEEB2 
+X-CRM114-Status: UNSURE (   6.17  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,69 +88,26 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Aug 11, 2026 at 07:52:49PM +0200, Jan Sebastian Götte wrote:
-> I'm using linux on an embedded target in a Hardware Security Module-like
-> application. One requirement is that I want the system to be able to
-> quickly erase its memory when it detects physical tampering. I'm
-> approaching that by using kdump to load into a small payload that
-> instead of dumping RAM, erases RAM from start to end. However, writing
-> all of RAM, especially on an embedded target, is rather slow. For this
-> reason, I propose the mechanism in this patch series:
-> 
-> Add CONFIG_CRASH_ZEROIZE (default off), which when enabled makes various
-> subsystems handling secret data do a quick, targeted wipe of these
-> secrets before kdump. This behavior might also be interesting in cases
-> where you run a normal kdump kernel but you still want to keep things
-> like fde crypto keys out of these dumps.
-> 
-> CONFIG_CRASH_ZEROIZE is a best effort, defense in depth solution. There
-> are circumstances, such as when a panic is triggered after memory
-> corruption, or when a panic interrupts some operation that mutates data
-> structures under locks, when the kernel cannot safely wipe some memory
-> areas. The handlers proposed in this series will just print a warning
-> and skip the affected areas in this case.
-> 
-> This series introduces handlers for the major locations I found where
-> having this sort of thing makes sense. Notable omissions right now are
-> the Ceph and CIFS subsystems. I have WIP patches for these, but since I
-> can't easily test them right now, I omitted them from this patch set for
-> now. Currently included locations are:
-> 
-> * various key types in security/keys
-> * rxrpc
-> * fscrypt
-> * dm-crypt
-> * crypto tfm instances
-> * secretmem (which I'm going to start using in my application)
-> 
-> I've verified this patch series on an ARM64 target using the helper code
-> at https://codeberg.org/yasec/crash-wipe-test . This code stuffs the
-> affected kernel subsystems with keys and secret data, then crashes the
-> system, takes a RAM dump and verifies the dump is clean of secrets. Note
-> that the helper code is partially LLM-generated, so read with care. It
-> passes a positive control test with the config option disabled.
-> 
-> The patch series applies on top of linux-next but should work on 7.0.0,
-> too. I've tested the patches on a Arduino uno Q (Qualcomm QRB2210,
-> ARM64) embedded target.
 
-Can we not?  It's already hard enough to zeroize keys and data at the
-normal end of their lifetime in the kernel: that's something that is
-always a struggle, with fix patches regularly going by for many years
-and many subsystems never fixed at all.  If we can barely even do that,
-we aren't going to be able to correctly and completely implement and
-maintain separate zeroization code for every kernel subsystem that runs
-only on kernel panics and has special constraints, like not being able
-to take locks.
+Hi,
 
-This is never going to be done either, with the scope always wanting to
-grow to include other keys and data.  You may think this series covers
-"almost everything" but it's actually not even close.
+I have a question regarding cache maintenance for Kernel Handover (KHO)
+preserved memory across kexec reboots on arm64.
 
-Could you perhaps narrow the scope to one or two things that actually
-are useful and can reasonably be supported for the application?  For
-example, secretmem seems to be the only thing you mentioned that you're
-actually planning to use.
+During kexec, all other CPUs gets hot-unplugged where they flush all
+of their caches so there will be no issues with any KHO data preserved
+having caches on these CPUs.
 
-- Eric
+But CPU0 still has not been flushed its D-cache (Is this correct?) and
+it will only do flushing for specific area by kexec_segment_flush().
+
+So for KHO preserved memory, if its caches still marked dirty on CPU0
+they will not be flushed?
+
+Is my understanding correct? or AM I missing something?
+Also if this true, This will be a problem?
+
+PS: Pardon my less knowledge on ARM64 cache coherency.
+
+~Tarun
 
