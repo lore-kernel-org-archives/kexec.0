@@ -4,88 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 331ABC5B56A
-	for <kexec@archiver.kernel.org>; Tue, 11 Aug 2026 14:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9B8BEC5B56A
+	for <kexec@archiver.kernel.org>; Tue, 11 Aug 2026 14:52:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
+	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:Cc:To:From
+	:Subject:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=rVhz6t6uiOZc1DDgF6HOTd7wvK1RF7/iSTLQV7TuFds=; b=YN8TwCwnTVg7uBjT8lRy2Je572
-	VPf4QUHXFBIXMfWk/DD+4WCT7gw9DidD/0X/Q3eKFzu/mcVhKnDJvTK05EQuck/LEJcHUzenE8kml
-	54ZuvSC8z6gqMCGPToz/BWbcE/nz+Y++n3OyyiQ2uXMMq58yS5YAW9gnAA0jo8jvm+sllAhi+/jA3
-	MhOYaC8BaQ+x0CQCToIu4DAayg4U6ntsLw7cv1gwKkXPkDSt+QaNrG47sMndVsLhQ8sNZKuTMcxpN
-	VATI1O9YYv3DeCqrJI6j2yK+k1j4RiO7mK2ffQ3ODO4Relwj3+1IekGg1ieS/AJF+BsMR4nGjCrqA
-	hhDXvxgA==;
+	bh=xDhehgrrAOSRIdcwgmYMsgv1I5rPT085cxMqoCOwSbU=; b=mqrVZ2+mme78sILi+2YN0s8DYS
+	chWWoSE+UL/HSISVFXenS4hSAG58D7ITztmivZE38bK0opGK+MVLyC5Q3s+rbmd8RboLa/I9uC3L/
+	bsR51ehsgv0SiS5KDgZKGTcXWtkYaexwsMU67rrdzZ8dhBDos+bjNJwIzXhdNrGgEGAEXJ058pyn9
+	0KfSCmln+04lwdj+G4FJ3TJywzoaV92RO08Bx0ONE5OgmQ5H0IO3Wqm1MdZMs4rwR8iILJKP337U+
+	n/S0CuPuP/IwMbsWmQuxJKjH97ltjGFxudf5jZ1Ixm/1BbKgpGVm9pZlkZRPaTvIFm+VeVUM8ixsf
+	sESv8DfQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtnmS-0000000EFWb-3TQ5;
-	Tue, 11 Aug 2026 14:48:40 +0000
-Received: from mail-pl1-x648.google.com ([2607:f8b0:4864:20::648])
+	id 1wtnpx-0000000EFnp-1yI3;
+	Tue, 11 Aug 2026 14:52:17 +0000
+Received: from shelob.surriel.com ([96.67.55.147])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtnmP-0000000EFW9-3TlW
+	id 1wtnpv-0000000EFme-1KNy
 	for kexec@lists.infradead.org;
-	Tue, 11 Aug 2026 14:48:38 +0000
-Received: by mail-pl1-x648.google.com with SMTP id d9443c01a7336-2cca5e0a0c9so68020465ad.1
-        for <kexec@lists.infradead.org>; Tue, 11 Aug 2026 07:48:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786459715; x=1787064515; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=rVhz6t6uiOZc1DDgF6HOTd7wvK1RF7/iSTLQV7TuFds=;
-        b=Z/XuOHevzk4HXG+AzKug16yKsRDLqu3ISH+l/kJK9D3XIeP6jCLlkoRupO0mKokMIJ
-         GOuA+rGmocIa0ypUrMADShq4b5/1/acYnrgCDv0FIZZAJ2JxzNIyT0OOmg+PXvS+UZZu
-         rBKsLtmMIV5Ey78HOx/2udBJWQlYfPttHqfi5VaqGQP8DAH9PF8ULpicYbCDq/MLJcoZ
-         5dvW2mo1S966gQSDbNfT0grHTqwwX9/lnB/taKCJu6jLeGRHDn11prq3+KF7T537BB0M
-         SvJRlugldKtCb45lZjcP4GUi6krUA2P6EegOfwGI+mAQXR9lwY6yeghR1CqTCEdVc46h
-         9lTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786459715; x=1787064515;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=rVhz6t6uiOZc1DDgF6HOTd7wvK1RF7/iSTLQV7TuFds=;
-        b=KU/chhJnathSSYZv8yxBSDrq375pzXwO6G/HjzaRU98BZmlEHLZA0klO0/DrnE9mI4
-         ptFqx5u7vQJBDTuBOEYRDVUekGoiEJ0ZT0MPQddKX5FEjdZUW9tDqz70G1VZ8ae+COQO
-         DNxJ3bn82PTxoCDV12gX3dahx23JJCDBMUVNz+20oWqTuteG9mdZON5lHF9I6iyP/X0G
-         Pd+E7BKkViWJWHZs9VNhMN6a3WYLJ9/7UNKURGThHukXgut6THdgPjToeqTuQUVmuFhQ
-         81neDGQoJoGypzaB49uK3OP04crj+ZPselFmwzbtDnHKeUM0Oem2UKGQfyFAXIQu45qV
-         SS/Q==
-X-Forwarded-Encrypted: i=1; AHgh+RqQ9p/hFv8QLn3d499YlKCNky/zD4q8EoxTPOQYzU9JyJY4Ra3C/KY4gDXa5D9VXjLSBgq7lw==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yz5n47J1xPMJinItkdQWWmF6xKZabj/wPcuAztcR+v75/g/TUOA
-	1+Y4x4Z5Fmcjx5uG/XflnPmn5FG/J2hkaa79i8LAn0FVHEHL7FbqIXVD79839XwiWv27m9wgU2l
-	fJn0lHA==
-X-Received: from plbje14.prod.google.com ([2002:a17:903:264e:b0:2ca:eea9:9845])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d488:b0:2d1:1a18:4d0a
- with SMTP id d9443c01a7336-2d3177a2163mr42800725ad.9.1786459715153; Tue, 11
- Aug 2026 07:48:35 -0700 (PDT)
-Date: Tue, 11 Aug 2026 07:48:34 -0700
-In-Reply-To: <9huzqzk4zt3n.fsf@tarunix.c.googlers.com>
-Mime-Version: 1.0
-References: <20260728121138.1103610-1-tarunsahu@google.com>
- <20260728121138.1103610-2-tarunsahu@google.com> <anpXjM_lg_UTpl0q@google.com> <9huzqzk4zt3n.fsf@tarunix.c.googlers.com>
-Message-ID: <ans2Qvo0453cc_DD@google.com>
-Subject: Re: [PATCH v4 01/11] liveupdate: Add LIVEUPDATE_GUEST_MEMFD config option
-From: Sean Christopherson <seanjc@google.com>
-To: tarunsahu@google.com
-Cc: ackerleytng@google.com, fuad.tabba@linux.dev, 
-	Andrew Morton <akpm@linux-foundation.org>, dmatlack@google.com, 
-	Shuah Khan <skhan@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, david@redhat.com, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, sagis@google.com, 
-	Paolo Bonzini <pbonzini@redhat.com>, Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>, 
-	linux-kselftest@vger.kernel.org, andre.przywara@arm.com, michael.roth@amd.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, will@kernel.org, 
-	vannapurve@google.com, maz@kernel.org, fvdl@google.com, kvm@vger.kernel.org, 
-	oliver.upton@linux.dev, kvmarm@lists.linux.dev, alexandru.elisei@arm.com, 
-	skhawaja@google.com, aneesh.kumar@kernel.org, linux-doc@vger.kernel.org, 
-	David Hildenbrand <david@kernel.org>, yan.y.zhao@intel.com, kexec@lists.infradead.org, 
-	suzuki.poulose@arm.com
-Content-Type: text/plain; charset="us-ascii"
+	Tue, 11 Aug 2026 14:52:16 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
+	; s=mail; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=xDhehgrrAOSRIdcwgmYMsgv1I5rPT085cxMqoCOwSbU=; b=V8GSuDwqveAqI2bqQieqG7EtHg
+	eEEnasEdiZliXbP7agGL3h0BTexorRppTEp1vvgcYKNWcQPKxAE+aj6r2kqxu5qt/dCIkReEDkGfk
+	Mv39k2CrHgvirJviGuUmpI0rl5In8PV6s/MzvXA6w407ZEF8rImshyHYqTLstwADLO15oulaVOYpa
+	k/2Al6fKhV2KN5Y9uc3ST9gqZoUbA7TVvF12pppLqhZxWWIgV8niqXkX3KZ33dryOP8retFs8ljAi
+	lD12KJ6b9+T+lsWTYBB9iUdCmdJ1ZXHmnk8KqQEI7u/mrZLS3tcxSF9fzosVw2ITsHnrk/QfPc4Es
+	IfcuYK0Q==;
+Received: from [96.67.55.146]
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@surriel.com>)
+	id 1wtnp0-000000001Gy-1SI4;
+	Tue, 11 Aug 2026 10:51:18 -0400
+Message-ID: <b04cad808d5dc2a799c363b43a18e9cab18005f5.camel@surriel.com>
+Subject: Re: [PATCH v5] kexec: keep the next kernel off hardware-poisoned
+ pages
+From: Rik van Riel <riel@surriel.com>
+To: Kiryl Shutsemau <kas@kernel.org>, Mike Rapoport <rppt@kernel.org>
+Cc: Breno Leitao <leitao@debian.org>, Andrew Morton
+ <akpm@linux-foundation.org>,  David Hildenbrand	 <david@kernel.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett"	 <liam@infradead.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Suren Baghdasaryan	
+ <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Baoquan He	
+ <baoquan.he@linux.dev>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
+ Naoya Horiguchi	 <nao.horiguchi@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, 	kexec@lists.infradead.org, rmikey@meta.com,
+ kernel-team@meta.com
+Date: Tue, 11 Aug 2026 10:51:18 -0400
+In-Reply-To: <ansuaOyItxGTBlTl@thinkstation>
+References: <20260810-kexec_posioned-v5-1-95e1b5e2e656@debian.org>
+	 <ann9Kcesyb4T9Z8b@kernel.org> <anr59P1ZCAuHxv6x@gmail.com>
+	 <anskyrEVUlnTVEgF@kernel.org> <ansuaOyItxGTBlTl@thinkstation>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44) 
+MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260811_074837_869761_E1213759 
-X-CRM114-Status: GOOD (  18.49  )
+X-CRM114-CacheID: sfid-20260811_075215_357550_1C9C0ED3 
+X-CRM114-Status: GOOD (  12.07  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,47 +110,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Aug 11, 2026, tarunsahu@google.com wrote:
-> Sean Christopherson <seanjc@google.com> writes:
-> 
-> > On Tue, Jul 28, 2026, Tarun Sahu wrote:
-> >> Introduce the LIVEUPDATE_GUEST_MEMFD Kconfig option. This option
-> >> enables live update support for KVM guest_memfd files, enabling
-> >> guest_memfd-backed memory preservation across kernel upgrades.
-> >> 
-> >> Currently this support only guest_memfd files that are full-shared
-> >> (INIT_SHARED and no support for private_mem).
-> >
-> > Why?  Specifically, why do we need/want a separate Kconfig for guest_memfd
-> > liveupdate versus KVM liveupdate?  I can _maybe_ see a KVM-wide Kconfig, but
-> > even that seems like a stretch given that (AFAIK) hypervisors are the one and
-> > only use-case for liveupdate.
-> 
-> LIVEUPDATE is used in many subsystem. It is possible to enable
-> liveupdate and kvm without enabling KVM_GUEST_MEMFD. So GUEST_MEMFD
-> preservation must depend on CONFIG_LIVEUPDATE and KVM_GUEST_MEMFD both.
-> LIVEUPDATE_GUEST_MEMFD Kconfig is wrapper on both of them. It need not
-> to be visible in menu, So I can make it hidden. WDYT?
-> 
-> Also, KVM VM_FILE preservation and GUEST_MEMFD preservation both depends
-> on LIVEUPDATE_GUEST_MEMFD in this patch series. [PATCH 05/11]*
-> Which is wrong. So I will update KVM VM_FILE preservation to depend only
-> on CONFIG_LIVEUPDATE.
+On Tue, 2026-08-11 at 15:21 +0100, Kiryl Shutsemau wrote:
+> On Tue, Aug 11, 2026 at 04:34:02PM +0300, Mike Rapoport wrote:
+> > On Tue, Aug 11, 2026 at 04:17:41AM -0700, Breno Leitao wrote:
+> > > > >=20
+> > > But I honestly don't have a strong opinion here, though, happy to
+> > > batch
+> > > it if you prefer. Would this one look better?:
+> > >=20
+> > > 	if (!(pfn % MAX_ORDER_NR_PAGES))
+> > > 		cond_resched();
+> >=20
+> > Can't say I know the magic number here, but I think it's better to
+> > batch.
+>=20
+> Hm. I thought cond_resched() deal with this internally, no?
+>=20
+> We call it in pretty tight loops, like clear_contig_highpages() or
+> copy_folio_from_user().
+>=20
+> I think adding external batching might be a bad move.
+>=20
+cond_resched() should be really cheap, indeed.
 
-Or just handle it all in the makefile?  E.g.
+It gets compiled out completely with PREEMPT_LAZY
+or PREEMPT_FULL.
 
-diff --git virt/kvm/Makefile.kvm virt/kvm/Makefile.kvm
-index d047d4cf58c9..e6f098498795 100644
---- virt/kvm/Makefile.kvm
-+++ virt/kvm/Makefile.kvm
-@@ -13,3 +13,8 @@ kvm-$(CONFIG_HAVE_KVM_IRQ_ROUTING) += $(KVM)/irqchip.o
- kvm-$(CONFIG_HAVE_KVM_DIRTY_RING) += $(KVM)/dirty_ring.o
- kvm-$(CONFIG_HAVE_KVM_PFNCACHE) += $(KVM)/pfncache.o
- kvm-$(CONFIG_KVM_GUEST_MEMFD) += $(KVM)/guest_memfd.o
-+
-+ifdef CONFIG_LIVEUPDATE
-+kvm-y += $(KVM)/kvm_luo.o
-+kvm-$(CONFIG_KVM_GUEST_MEMFD) += $(KVM)/guest_memfd_luo.o
-+endif
-
+--=20
+All Rights Reversed.
 
