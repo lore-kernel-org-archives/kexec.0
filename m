@@ -4,164 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E7766C5AC67
-	for <kexec@archiver.kernel.org>; Tue, 11 Aug 2026 20:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 40749C5B56A
+	for <kexec@archiver.kernel.org>; Tue, 11 Aug 2026 20:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=JFLe6tkLYuEC2gnEl/GsgjOSVqwPRw7abghLXfye9/g=; b=IIvtt24IIGjCyjYL2SsUJXOLAA
-	SJSOjdX7ZFxiHjQeORS+dNwH13SHeKGdM7QWm9wUAluZcJEnHCTUzx3gCh9lVPIPDeUO88iyPmjDc
-	gZ4sx1VKpYloTCxuRgVorYcnEHWVl+HDUg2mRgb61Tzh/zrxSjDBjwLY5Bq/3kc2E9kJJ53iomyuK
-	8bzVPOytcEg5P5lNlX31f7wghBiPgeX1Utl9o/8+ZD0dtm7qAMpbO0DfK0aA/SM2LxzzjQ67cVRw7
-	6+rZMhjBdoz8nWcv9TTBe0V10Q0Tfbhxqc9DbaGsBhT2AMv/VZ1PYdjYPWC04Eq/QoAmd9ExZRdVy
-	vf+TKmGw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=tmqgrBJxUvss5ev2qg4hR/y+Shhz4DNLrdh9R3vpGbM=; b=VqzT4edBnDL36abr6t1P/LgjYG
+	WhFHWHkSfvPobsyClDLn5nozbX6Mi7shU8AT7jRduCQG/LlstAHUZO2ckOj+NmneZWFt/YueS/kkn
+	ZomkEEKQZfHrl6+yghzZbYoQjqfhbcMcB2nmLFhTHRM1CD9aHYahUmMD9SiAhLUZndWxPQSAm4pkT
+	bjlCbvbWp6e4SSl128wB7SHM3Hn0FSAyzRHWzboya7g9OWH+s4Ox/4wlnvaXpOX7ASWtPoPbj++2z
+	OktnxXLlSe+VwYw7AvdwrV9CCn7Qm7iJ6+0uJO7vQXe5xk4tV17DWKZsufagt+cXQ2sQXMPW/H1CB
+	NjO7OsXg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtsvm-0000000EuYU-2VOJ;
-	Tue, 11 Aug 2026 20:18:38 +0000
-Received: from mail-wr1-x432.google.com ([2a00:1450:4864:20::432])
+	id 1wttJV-0000000Ewaj-1F6A;
+	Tue, 11 Aug 2026 20:43:09 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtsvh-0000000EuWb-3Tbg
-	for kexec@lists.infradead.org;
-	Tue, 11 Aug 2026 20:18:35 +0000
-Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-47db714766aso891502f8f.0
-        for <kexec@lists.infradead.org>; Tue, 11 Aug 2026 13:18:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786479511; x=1787084311; darn=lists.infradead.org;
-        h=content-transfer-encoding:content-type:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=JFLe6tkLYuEC2gnEl/GsgjOSVqwPRw7abghLXfye9/g=;
-        b=r+0ET2fe4b8ac3qQp8GrDwnwtdL3/gQKq2Etd+/kCTpk0f+998uB/t0E8CPAxJOR2h
-         +G5sN167mbQiTBXYnO3XW99XOiXwf1pThFV+JtEDbgAE1AnTm6h3kQLSSGHYIeIiH3m5
-         VP0ObJ213Pb9u3OC3KKcMh/xX6LQAbYBefHw2IQxpddnnMlO7MepSb1ypEUgRmEVntPm
-         EAfMrEpt8X+Hx5TrVzpCvr0B/ES9gam6baMQqsUr15+UslsCy+JqgjOMNgqhhLR2jmcB
-         8ZsyGRquu6e0ffBgYU+sh19Sf37OymxihwaI1PDGcG/OncOI5AsGMYc8yKVrD7dZc1YB
-         iz5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786479511; x=1787084311;
-        h=content-transfer-encoding:content-type:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=JFLe6tkLYuEC2gnEl/GsgjOSVqwPRw7abghLXfye9/g=;
-        b=FhwDt4bcX1Uc801eQSYRPO5EGb9bbUSwN9JaV/u4xN3jfo0lNfHKOTiZbSu+KrUPuh
-         jQ/81974wvHr/fYHVaZ/XWIaVh8sbzjX7zZdwDPqqalAgJOzaxPFDwTpK8ZjGX/PV+ho
-         6jcNyUCU1AzvatALLv0odhvOwtcWGSOlOqX/KcwKfwZXCfk9KwThfr6RqGVJx7MHFQkS
-         Epk66BqIKHRPkEmrJdjG3zUBVZCjbhFnDKJfM1IjXVOaArAs0RdWYILYWiQDkrvi40h3
-         vgtwHjKDIbMNoEli1fsbpjwjYx5qfmSncQRPDMWBUa3pF9XfCUquFYycGijGQqCmQhsn
-         2aPQ==
-X-Gm-Message-State: AOJu0Yz9OLFcDrZj4GWePqWOJo2OFINXbWpKQra5DWsQJBQYItmP9Pz1
-	5Wt8iCe7oTXb+goLAPkZ9fpG1tqNKSrU7PKXRJSuih6OTMJEeDS8G3e6
-X-Gm-Gg: AR+sD10kF2J7DrP/oo+WMTOcKrbqt++VsMBOWaIMzoGrDyDfHonG9AQz1810IJVwSZ9
-	Xum921noZK4yJNkb9JHNmjNs0QtRSEfxCzIs+pbsJSHxanfA6rKphVtKSnfP2wGPV/dKhu4ZXyM
-	Xlf5/NYBsvROme2k4ACzD+2CpxmWTotk3yEM3lvj0TIyIXkf/csEZvKRsHBmoK6yNbHjfdnTQ+b
-	8jyK9iWuWyAPNo9elTeKofMrGWaP680L04G6yPgjEw+Q8eKOV3SpgDCE/t3jKFNOLN9chBP+em8
-	hrNSezrZ2r0Z44+4tMOmSjkbGAfDnOKv/JtbuUdCe3yHZ3nE76qNPmL/WUJdw35ZrGxTArwkrCT
-	qPKnftx1HtP1y8KBQ1C7mLhjviMybgUhYTy2Q8QI63zlK30nw2QJBMc6CL/Nl4h/0vCqVo35Mme
-	7Pqq4Rkk7ZK6wjVxIjo4ueqe2WGe6/ptfs04PJzhvmpNigc7Da0FkQXXPdcFrxzacfxznoXRXs8
-	FZVGNrHQx8nbA==
-X-Received: by 2002:a05:6000:430d:b0:47f:e7f9:5251 with SMTP id ffacd0b85a97d-4814ffe28b1mr3367485f8f.3.1786479511163;
-        Tue, 11 Aug 2026 13:18:31 -0700 (PDT)
-Received: from [192.168.2.14] (85-70-151-113.rcd.o2.cz. [85.70.151.113])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48150bf5c5fsm976683f8f.3.2026.08.11.13.18.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Aug 2026 13:18:30 -0700 (PDT)
-Message-ID: <8654c2d4-8d9d-43f5-9256-adf2915209e9@gmail.com>
-Date: Tue, 11 Aug 2026 22:18:27 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 13/13] dm crypt: wipe key material before kdump
-To: =?UTF-8?Q?Jan_Sebastian_G=C3=B6tte?= <linux@jaseg.de>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- keyrings@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org,
- linux-integrity@vger.kernel.org, linux-afs@lists.infradead.org,
- netdev@vger.kernel.org, linux-fscrypt@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, dm-devel@lists.linux.dev,
- Andrew Morton <akpm@linux-foundation.org>, Baoquan He
- <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- David Howells <dhowells@redhat.com>, Jarkko Sakkinen <jarkko@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
- "Serge E. Hallyn" <serge@hallyn.com>, Lukas Wunner <lukas@wunner.de>,
- Ignat Korchagin <ignat@linux.win>, Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>, Keith Busch <kbusch@kernel.org>,
- Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
- Sagi Grimberg <sagi@grimberg.me>, Trond Myklebust <trondmy@kernel.org>,
- Anna Schumaker <anna@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>,
- James Bottomley <James.Bottomley@HansenPartnership.com>,
- Marc Dionne <marc.dionne@auristor.com>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Eric Biggers <ebiggers@kernel.org>,
- "Theodore Y. Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
- Mikulas Patocka <mpatocka@redhat.com>,
- Benjamin Marzinski <bmarzins@redhat.com>
+	id 1wttJU-0000000EwZy-1Ezb;
+	Tue, 11 Aug 2026 20:43:08 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id F1D11600AE;
+	Tue, 11 Aug 2026 20:43:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 049C71F000E9;
+	Tue, 11 Aug 2026 20:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786480986;
+	bh=tmqgrBJxUvss5ev2qg4hR/y+Shhz4DNLrdh9R3vpGbM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=YXLgdApMQVjB8O5UsuRCftLgsXmP3cSJYvwGgrqZ6b+hB2edLW/uSBh3oj2DAKDLB
+	 6IioToKp+fdIkMueq1I/JRHsiwugXBDmJ97vp4UxyiCAtTlbgjkSl4kj3fA2aKAij5
+	 Qgg6Hbg7EYU+2aNCB4H6ya401I1ujfkQIF2fhblv0bLnVJ432LahjN1sFPCZeRdz14
+	 Cw5oUW8a78hswG6XALU3IdgCkVcHjig6EUfeU9hkjUA2GGFHo2hnqTAj7OaCds1AU4
+	 UNwXanpKaMexoPY5I1l0K/a0V8GThMm0LE5dEKAkZ0GBpRhjDX5FR/2e1tnXNyczMQ
+	 ftS06T2V5gAHQ==
+Date: Tue, 11 Aug 2026 13:41:01 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Jan Sebastian =?iso-8859-1?Q?G=F6tte?= <contact@jaseg.de>
+Cc: Jan Sebastian =?iso-8859-1?Q?G=F6tte?= <linux@jaseg.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Dave Young <ruirui.yang@linux.dev>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, David Howells <dhowells@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Lukas Wunner <lukas@wunner.de>, Ignat Korchagin <ignat@linux.win>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>,
+	Benjamin Marzinski <bmarzins@redhat.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mm@kvack.org, keyrings@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-nvme@lists.infradead.org,
+	linux-nfs@vger.kernel.org, linux-integrity@vger.kernel.org,
+	linux-afs@lists.infradead.org, netdev@vger.kernel.org,
+	linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	dm-devel@lists.linux.dev
+Subject: Re: [PATCH v2 00/13] CRASH_WIPE_SECRETS: Wipe secrets before kdump
+ (was: CRASH_ZEROIZE)
+Message-ID: <20260811204101.GA1905@sol>
 References: <20260811-crash-zeroize-rework-v2-0-9561d13c2340@jaseg.de>
- <20260811-crash-zeroize-rework-v2-13-9561d13c2340@jaseg.de>
-Content-Language: en-US
-From: Milan Broz <gmazyland@gmail.com>
-Autocrypt: addr=gmazyland@gmail.com; keydata=
- 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
-In-Reply-To: <20260811-crash-zeroize-rework-v2-13-9561d13c2340@jaseg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <20260811182012.GB2895176@google.com>
+ <d242ab53-a39e-421d-ac39-4bee49be6ac0@jaseg.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260811_131833_901773_34BA6C63 
-X-CRM114-Status: GOOD (  18.67  )
+In-Reply-To: <d242ab53-a39e-421d-ac39-4bee49be6ac0@jaseg.de>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -176,43 +108,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 8/11/26 7:53 PM, Jan Sebastian GÃ¶tte wrote:
-> Wipe volume key/iv copies kept by dm-crypt with
-> CONFIG_CRASH_WIPE_SECRETS. The backend tfms are already handled
-> separately.
+On Tue, Aug 11, 2026 at 09:38:20PM +0200, Jan Sebastian G�tte wrote:
+> > Could you perhaps narrow the scope to one or two things that actually
+> > are useful and can reasonably be supported for the application?  For
+> > example, secretmem seems to be the only thing you mentioned that you're
+> > actually planning to use.
 > 
-> Add a list tracking struct crypt_config instances when
-> CONFIG_CRASH_WIPE_SECRETS is set. Structs are tracked here to avoid
-> having to enumerate them through some roundabout way before kdump, when
-> we can't safely take locks anymore.
+> I'm open to whittling down the scope of this series. In my use case I need
+> at least secretmem as well as dm-crypt, which then pulls in the crypto tfm
+> stuff. Personally, I could live without the other bits, I just thought
+> they'd be easy enough to include.
 
-Well, dm-crypt has crypt_wipe_key(), which can be called through a device-mapper message.
-It also sets keys to zero in the crypto API.
+Please do reduce the scope.
 
-Why do we need yet another way to wipe keys here, reimplementing everything twice?
+Note that even if dm-crypt is in scope, "crypto: api - wipe tfm contexts
+before kdump" is neither required nor sufficient.  For one, dm-crypt has
+its own copy of the key.  The wiping should be done by the kernel
+feature(s) that need it, as they know what actually needs to be wiped,
+and they can do so without the bottleneck of a new global list.
 
-I can imagine an emergency wrapper callback that will suspend dm-crypt and call existing code.
-
-> Use custom wipe handlers even for things like ivs that have existing
-> wipe functions elsewhere because we need to use crash_wipe_memzero
-> instead of memzero_explicit. The crash_wipe helper memzero_explicit's
-> the target buffers and flushes data caches. On ARM64, missing that cache
-> flush could lead to the zeros not being written to DRAM before the kdump
-> code turns off the data caches moments later.
-
-Please no. It looks to me like you are trying to fix this on the wrong layer.
-This way everyone will need their own memzero...
-
-Dunno, but I really do not like dm-crypt becoming completely bloated with code
-that has nothing to do with the original purpose of this driver.
-
-Milan
-
-
-> 
-> Signed-off-by: Jan Sebastian Götte <linux@jaseg.de>
-> ---
->   drivers/md/dm-crypt.c | 151 ++++++++++++++++++++++++++++++++++++++++++++------
->   1 file changed, 134 insertions(+), 17 deletions(-)
-> 
+- Eric
 
