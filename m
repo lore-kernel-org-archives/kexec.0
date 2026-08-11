@@ -4,95 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6CB69C5B56A
-	for <kexec@archiver.kernel.org>; Tue, 11 Aug 2026 16:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E6DA3C5CFCF
+	for <kexec@archiver.kernel.org>; Tue, 11 Aug 2026 16:26:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xrrHTlApXY4U6JlaL8nMvnN7qO+xyOd6Xm+nS8KTJxI=; b=OuP7CkkA4jjB79UKj62mDqnCXj
-	aEQbudR9jjBfvcwO4CH+v5kHPn0nJqJ/GUv/7h4oANN7JC2Nddu1MktSVoVAIeuyN5yyHDb9oBOyZ
-	xf4NJA7C0KbNpg6QCIOGLNIMrJHjOkaNC3lzEU0EJaX3q7D5vbkzFkh42NPO/Ol9W8NJvykIy3/rI
-	cC6LWQbhOq5a6GQxjAHQLtV812SuonXUuVl6Xp088sWzxie1d5rfQMN3PlR9PbUB8ebvjYPd2EalL
-	CDtEJc05Bwk4ycDuHC6LgTmF7B2Xy8/Ic4ZLW+U/qCNfkMzYHO4/s8+hHm5Ozy/hjNmFsWkcXObRs
-	L+aoE7EQ==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=OGvQP4rTfDtqzEoXAJvcK2bQDBmijHAZnmypqO/G+ig=; b=OxvNLZjamWb5XddflI84B184F/
+	dcalmfoPHV4h8ApYXPq682hkzrilZQdBgk1KmXq5rq472mR3P6lb4IX1UJJgu0KwUUlar8SED+2lo
+	TpG0rugG5djcvBPz2GpikUziTgTpBtruxuzJkBBcENcrZFCfCZCbVeyiQK/n3xmMPeMX98Qm+L1+F
+	EkfH0HRCbmJo8itAlluAr+wMiU9QK80LCUW4N4n3LI32LhBFFCB+PUp2qaYQJTiWtWQapHK3tX79J
+	4rT8Hmtp67z/MYNQatkwV/ONKeoA454pYNGBV050idIztfc0MzX9EiveY93t1BzVCH2ddja3oAvCt
+	jcYCh6gA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtpC4-0000000ETYN-1WEL;
-	Tue, 11 Aug 2026 16:19:12 +0000
-Received: from mail-qt1-x82d.google.com ([2607:f8b0:4864:20::82d])
+	id 1wtpJZ-0000000EUer-1xxH;
+	Tue, 11 Aug 2026 16:26:57 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtpC0-0000000ETWx-3iM9
+	id 1wtpJY-0000000EUeX-1Idi
 	for kexec@lists.infradead.org;
-	Tue, 11 Aug 2026 16:19:10 +0000
-Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-52d37b65926so737611cf.2
-        for <kexec@lists.infradead.org>; Tue, 11 Aug 2026 09:19:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786465147; x=1787069947; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=xrrHTlApXY4U6JlaL8nMvnN7qO+xyOd6Xm+nS8KTJxI=;
-        b=MYkHk+EHe+pa9kSQMLGqGohlTVLHtZpudX6I/yi1lvBWAwINanZVQDTsqIKSUDbkpA
-         kqgJauX4sITjutOkkG1aOB1lE2hFrKkgrbQZ+CxWCdEfwafSsv/t+BMsuyp0JxNiOGK+
-         bkMsmpHuufhhUeiHOfe2UVRCkI518+KaD5Qj/htISANi3knFsPCjD+wt7tgukKngptFZ
-         3F77Kh7M6ONlfsvpp10t+LSqE+BxrN0Uwt1QiQ4/FnPX3gngi6dh35e10/4lPUD7zImh
-         AZ6zw3i+D9TPnWyAm6ivf4M8tm1JQHv7iaEjdUiNsMNbyQrgzH28jWuVTjNiTtKdmzCj
-         WBEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786465147; x=1787069947;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=xrrHTlApXY4U6JlaL8nMvnN7qO+xyOd6Xm+nS8KTJxI=;
-        b=hPhlzxt76zNcirmx6rC385vpEIlRI9jN3M7rFsJV4khf7kClnhXnSdp2pEMHoI83C2
-         kNsAFh9DzHFkYcdRViaYMbDb2XwjTQm3kiK+wY3TVpx+AZ70d5nOmBtj6z/jdCyZRgWH
-         WcLjEW9yDRBctMHS/pFVfMqK60qO1TBeVWobZRvPFoc8aOO+ExEM8KfiVjYCR81ju2xs
-         wNkfbkAGSSpcHzZQd+D+/TcdoURiiMHCR6SX/DKwzgVSBRKfPzrz4QfZBZuVH9F/B/T9
-         BlhcvUDz5Dk58hThCk2/5jKxKBycgdcP0tvuKkbQALVfV+Jfn1w2qrQrxgiz3UQUzIsM
-         QCyQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rrz7l37r0uybvFK5LB4C239dtmiCNT2XMCUt5aXR5439+MWzpG6y7rl2Ei9qh6gh32zTNIF+A==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxnO3uC6zf5C/O6TNJJ2fwb0Zl/mQJd74bxaRjG/c6YIoZCqFyq
-	GTq4FzYxZiLftJ7Kzld2AJeuRYUAlx6vgNNpJ5c0GDRXIjQE42wd87fv
-X-Gm-Gg: AR+sD10BJ3lIc7KRdONeqO8MZ0iU6Ax7SC4MTPjhgjmDbeXwMA4AjbouKSatD/5xpPa
-	wRPsOzjzl8nRlH970tG9E7yOX1uQL3TgzulA+aY1aZ/wvcegDWs5SZal6HH2MbkINJnaVP4WYBt
-	fV8Va0LhrgdrB2jxmnw/lVtmumyd1BSkoASp159ai2H021/5AlBrnwPovTmkUpXbZiuI+ZRw16L
-	a3M3mtebdEVoNIniIi/SBx4i6D0HEIeFd7MoEFoICm8LPDlU2/N3XbsjnJWT64mHT10AsX1h40D
-	uy8LlaHv3MBXKJnznw63On0JGaWN6+xd6uWV9+hVMcIbaQmlBQsvPi2wrW5gcqa3Dlwn2qRlP7k
-	Rx54SEVRdJXkUEwEre3ipcukviNEasKAHK5ZF6LWipq0sySsbERJArrlEp7+4C4FYDpOQcx/EsZ
-	Kqv5g6YSwjpaNPvH9oFzRBKoydf5lFKTDdsz++lsVUlZCEr6tMy4IM0ed4W1OkaR6CpCRQFw7+F
-	SiKgSSt5Mbl16nTrFiHY79kwifi5Xba421xkFsruCnaxeM/XZFL
-X-Received: by 2002:a05:622a:4185:b0:527:9603:8123 with SMTP id d75a77b69052e-52d600ad28emr17978671cf.2.1786465147363;
-        Tue, 11 Aug 2026 09:19:07 -0700 (PDT)
-Received: from CW-D0XG2Q16P7-L.mynetworksettings.com ([2600:4041:5d54:8900:9c8d:ddb9:b1a2:735f])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90a6c3bf12fsm2323716d6.38.2026.08.11.09.19.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2026 09:19:07 -0700 (PDT)
-From: Maxi Saparov <maxi.saparov@gmail.com>
-To: Mike Rapoport <rppt@kernel.org>,
+	Tue, 11 Aug 2026 16:26:56 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id E09DA41B39;
+	Tue, 11 Aug 2026 16:26:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A986B1F000E9;
+	Tue, 11 Aug 2026 16:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786465615;
+	bh=OGvQP4rTfDtqzEoXAJvcK2bQDBmijHAZnmypqO/G+ig=;
+	h=From:To:Cc:Subject:Date;
+	b=Kc0kfLnPcphAgE8pEpNIHiPSnSgqFFYu15OAJQ7689fKkqv0uf1xN82X5BlruxAb1
+	 +QVheRnjiKkms31uMeLjbXRXjCDUv1b9wMj7Jc4/37XsdoPzk0PpeWcKnzFsCskDad
+	 3M5L/b1LIofah7chZsD+zQsUXHu1kuet+PjZNkK9Me6xjUHa2eJdBQqflG1+XMsM3j
+	 XE5e/yHWpgYWKrwLBhPnIIRraVzU2xdL8C8PKw9C6Ij+qaXpn2jUUQZJeIczgziF9s
+	 ElLR4CbM64NIqFwOnGyZ/9M+nVw8Iv9jKkhYqH0wffo9OJu96GCbogJE95ESCBYFOT
+	 vJQeGUOX5+yVA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
 	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>
-Cc: Alexander Graf <graf@amazon.com>,
-	Evangelos Petrongonas <epetron@amazon.de>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Alexander Graf <graf@amazon.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Baoquan He <baoquan.he@linux.dev>
+Cc: x86@kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	kexec@lists.infradead.org,
 	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	sdimitropoulos@coreweave.com,
-	Maxi Saparov <masaparov@coreweave.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] kho: do not reserve scratch memory in the kdump kernel
-Date: Tue, 11 Aug 2026 12:18:57 -0400
-Message-ID: <20260811161857.3096-1-maxi.saparov@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260803193938.8778-1-maxi.saparov@gmail.com>
-References: <20260803193938.8778-1-maxi.saparov@gmail.com>
+	linux-efi@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Subject: [PATCH 0/4] kho: rename "scratch" to "bootmem"
+Date: Tue, 11 Aug 2026 18:26:36 +0200
+Message-ID: <20260811162642.3504565-1-pratyush@kernel.org>
+X-Mailer: git-send-email 2.55.0.679.g6767b8d81c-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260811_091908_977850_03451773 
-X-CRM114-Status: GOOD (  14.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,68 +95,66 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Maxi Saparov <masaparov@coreweave.com>
+From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-If a kernel with CONFIG_KEXEC_HANDOVER_ENABLE_DEFAULT=y (or kho=on)
-does not receive a handover FDT, it reserves KHO scratch memory in
-kho_reserve_scratch().
+The term "KHO scratch" is vague and overloaded. It does not accurately
+describe what the memory is for. This was discussed previously at [0].
+The conclusion was to rename "KHO scratch" to "KHO bootmem", since this
+is memory passed by the previous kernel for early boot allocations.
 
-The kdump kernel always takes this path. Since commit a6715d7ec472
-("kho: skip KHO for crash kernel"), the kernel does not add KHO
-metadata to the crash kimage. As a result, the kdump kernel never
-receives a handover FDT and always reserves scratch memory.
+In addition, memblock does not care about the provenance of the memory.
+It cares more about how it should use it. Use MEMBLOCK_KHO_NOPRSRV,
+instead of MEMBLOCK_KHO_SCRATCH, to describe this memory to memblock.
 
-The kdump kernel boots in the small crashkernel= memory reservation.
-On our x86 hosts, the kernel and initramfs make approximately 176 MB
-of early reservations. The scratch areas then use approximately
-650 MB more of the crashkernel memory. When a large early allocation
-fails, the kdump kernel panics:
+This series does the renames. It also gets rid of a redundant Kconfig.
 
-  bio: can't create integrity buf pool
+While the diffstat is big and scary, most of the changes are mechanical.
+The most interesting functional change is in patch 4.
 
-A kdump kernel has nothing to hand over: its only task is to dump the
-memory of the old kernel and reboot. Fix is to disable KHO at the top of
-kho_memory_init() so that the kdump kernel does not reserve scratch
-memory.
+This series touches a lot of files across a lot of trees. But since all
+of that is purely KHO-related code, I would like to collect ACKs from
+the maintainers and take it via the liveupdate tree.
 
-Fixes: 3dc92c311498 ("kexec: add Kexec HandOver (KHO) generation helpers")
-Cc: stable@vger.kernel.org
-Signed-off-by: Maxi Saparov <masaparov@coreweave.com>
----
-v2: Move the kdump check to the top of kho_memory_init() as an early return.
-v1: https://lore.kernel.org/all/20260803193938.8778-1-maxi.saparov@gmail.com/
+Ideally we should queue it in liveupdate/next early in the v7.4 cycle
+since it will cause a lot of conflicts with other patches throughout the
+KHO tree.
 
- kernel/liveupdate/kexec_handover.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+[0] https://lore.kernel.org/kexec/agHGOxSnP_VraH1M@kernel.org/T/#u
 
-diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-index 6fad9152387a..97729dec6359 100644
---- a/kernel/liveupdate/kexec_handover.c
-+++ b/kernel/liveupdate/kexec_handover.c
-@@ -12,6 +12,7 @@
- 
- #include <linux/cleanup.h>
- #include <linux/cma.h>
-+#include <linux/crash_dump.h>
- #include <linux/kmemleak.h>
- #include <linux/count_zeros.h>
- #include <linux/kasan.h>
-@@ -1631,6 +1632,12 @@ fs_initcall(kho_init);
- 
- void __init kho_memory_init(void)
- {
-+	if (is_kdump_kernel()) {
-+		kho_enable = false;
-+		pr_info("disabled in the kdump kernel\n");
-+		return;
-+	}
-+
- 	if (kho_in.scratch_phys) {
- 		kho_scratch = phys_to_virt(kho_in.scratch_phys);
- 
+Pratyush Yadav (Google) (4):
+  memblock: get rid of CONFIG_MEMBLOCK_KHO_SCRATCH
+  memblock: rename KHO_SCRATCH to KHO_NOPRSRV
+  kho: rename KHO scratch to KHO bootmem
+  kho: rename kho_scratch= commandline parameter to kho_bootmem=
 
-base-commit: 3a0b8fa2eb36afc88b62a95f33f0c77c71fa5ded
+ .../admin-guide/kernel-parameters.txt         |  15 +-
+ Documentation/admin-guide/mm/kho.rst          |  18 +-
+ Documentation/core-api/kho/index.rst          |  36 +-
+ arch/x86/boot/compressed/kaslr.c              |  12 +-
+ arch/x86/include/uapi/asm/setup_data.h        |   4 +-
+ arch/x86/kernel/e820.c                        |   2 +-
+ arch/x86/kernel/kexec-bzimage64.c             |   6 +-
+ arch/x86/kernel/setup.c                       |   2 +-
+ arch/x86/realmode/init.c                      |   2 +-
+ drivers/firmware/efi/efi-init.c               |   6 +-
+ drivers/of/kexec.c                            |  16 +-
+ include/asm-generic/kexec_handover.h          |   2 +-
+ include/linux/kexec.h                         |   2 +-
+ include/linux/kexec_handover.h                |  16 +-
+ include/linux/memblock.h                      |  30 +-
+ kernel/liveupdate/Kconfig                     |   1 -
+ kernel/liveupdate/kexec_handover.c            | 340 +++++++++---------
+ kernel/liveupdate/kexec_handover_debugfs.c    |  24 +-
+ kernel/liveupdate/kexec_handover_internal.h   |   4 +-
+ mm/Kconfig                                    |   4 -
+ mm/memblock.c                                 |  56 +--
+ mm/mm_init.c                                  |   6 +-
+ tools/testing/memblock/internal.h             |   2 +-
+ 23 files changed, 302 insertions(+), 304 deletions(-)
+
+
+base-commit: 352ebb57013a08679788bc18c7f9af90903db256
 -- 
-2.55.0
+2.55.0.679.g6767b8d81c-goog
 
 
