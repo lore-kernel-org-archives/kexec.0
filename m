@@ -4,88 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BEE43C5DF82
-	for <kexec@archiver.kernel.org>; Sat, 15 Aug 2026 07:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C6808C5DF74
+	for <kexec@archiver.kernel.org>; Sat, 15 Aug 2026 07:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=aQGAvFDg/4HjX7OHbuopGghl+52twC+QoPd2tO4M2G4=; b=xoXFqICny1TOTWkNcLD9C3CLrl
-	4i1RNvFvl+IDAnQpxtGThtkx+kaLVZtW91i52hxaVGOg09uCHNFQSP/05thS9tJk2wPn4gksmqa7P
-	4BawORiJVJL6/SUap9zSjSstZT9WjL7zyx+OP7mJ8JKHldQHVfviTN5tkpEexsNnrCzq8gZSD1PHB
-	GVeNpGJq5i5/cZ/UdkMuELY9GnCnv1uEu40T063GTJIxajBLF/iEv521V1UwoUx5bgSIxfYLAUqVc
-	8RJ/FVvFx5PSEhrlXp7jMq7QCOomODb1mw4yTVgJ3/Vq70rPSapGUnGEyH31vCPvmzW2ACJHewFGJ
-	2irkKX1w==;
+	bh=5rHWiKFwpkHZWnf3oJsyWXwHkCpb2VhI6ZUDyK6lHGI=; b=Xz7Alfkv6okvW8jzf4Hl8T379F
+	C3pzDjLRmWV+1GbgZMeJH9k2yinFLFTZ7p52JhfqyNQpIRuWvIrJbz6j0l7h27Q36WkHNppwuKDtM
+	KKC33cS4bIs88ebKQHl/aNaWPRnprXpEumSacjQPXT8GJ+Wic04RDFO9SYV0XqOMsGVjKZupSmqS9
+	7Azszf6LmLZzFnjesmDpvkmbUZEVYnXPzxS98sa4kLW/NbUIcOMDjL72GR/dQeYJI28ekFTe+8+JK
+	0u8qwqtg15LrXq7wSDPDhtKlorEi5KRfh5GAY9sll5Ruy35FpdNWZO5EpKv1yA4fY0B2t0on2e1Xs
+	wdBiZGHg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wv95Q-00000003d36-2OwK;
-	Sat, 15 Aug 2026 07:45:48 +0000
-Received: from pdx-out-004.esa.us-west-2.outbound.mail-perimeter.amazon.com ([44.246.77.92])
+	id 1wv95Y-00000003dGP-1MVH;
+	Sat, 15 Aug 2026 07:45:56 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wfLde-00000005Bqh-453U
+	id 1wtpJo-0000000EUlk-3dCg
 	for kexec@lists.infradead.org;
-	Thu, 02 Jul 2026 17:55:54 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
-  t=1783014950; x=1814550950;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=aQGAvFDg/4HjX7OHbuopGghl+52twC+QoPd2tO4M2G4=;
-  b=c0C874Y3rl4XvWexEQ2Mv/Da+qEqGZPD2qCo3F+CCI3HGLxYvNszWs10
-   F2MHp9JvO+HnefYxZrVD0+7lz8YbOYbYY2QLwXWv85oy/cgzMD6f4SOaJ
-   htcTKg+kszNeVfX1FGUhn70b4MgeVixVzNix3mfZ06+qsnWPMSwhfDZIu
-   74GCMNDrZS9T5XN/8AUz0mMQgSTIKlP0jIXKfske8f3/8lMrt3vaFzd8E
-   DSqRuCBQ9zstCfWZ3PZTWpf6NcbtHJCsXQKeYif1qkSzGc1I4Cc5SkPiK
-   +NyorkVgFasBXOJxhAS+tKX6OTSYwsR3Ad5HQQfCGyI95n7p/Tc56F3f+
-   g==;
-X-CSE-ConnectionGUID: b3RVlrqvRsm6ovqvnOrlwA==
-X-CSE-MsgGUID: l1ZUerMfR3CBfKuizuWp2g==
-X-IronPort-AV: E=Sophos;i="6.25,144,1779148800"; 
-   d="scan'208";a="22939996"
-Received: from ip-10-5-12-219.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.12.219])
-  by internal-pdx-out-004.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2026 17:55:50 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [205.251.233.53:26660]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.1.125:2525] with esmtp (Farcaster)
- id b47d5271-f973-4d5f-8488-6ad365b7d51e; Thu, 2 Jul 2026 17:55:49 +0000 (UTC)
-X-Farcaster-Flow-ID: b47d5271-f973-4d5f-8488-6ad365b7d51e
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
- Thu, 2 Jul 2026 17:55:49 +0000
-Received: from dev-dsk-sakacpav-1a-480d1124.eu-west-1.amazon.com
- (172.19.96.155) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43; Thu, 2 Jul 2026
- 17:55:46 +0000
-From: Pavol Sakac <sakacpav@amazon.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Tejun Heo
-	<tj@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <driver-core@lists.linux.dev>, "David
- Woodhouse" <dwmw@amazon.co.uk>, Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Mike Rapoport <rppt@kernel.org>, Pratyush Yadav <pratyush@kernel.org>, "David
- Matlack" <dmatlack@google.com>, Samiullah Khawaja <skhawaja@google.com>,
-	Alexander Graf <graf@amazon.com>, <linux-mm@kvack.org>,
-	<kexec@lists.infradead.org>, <nh-open-source@amazon.com>
-Subject: [RFC PATCH 14/14] selftests: sysfs-lazy: add tests for lazy sysfs initialization
-Date: Thu, 2 Jul 2026 19:51:14 +0200
-Message-ID: <20260702175114.24659-10-sakacpav@amazon.de>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260702175114.24659-1-sakacpav@amazon.de>
-References: <20260702174033.32116-1-sakacpav@amazon.de>
- <20260702175114.24659-1-sakacpav@amazon.de>
+	Tue, 11 Aug 2026 16:27:12 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 850DF43EE5;
+	Tue, 11 Aug 2026 16:27:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3101A1F00A3A;
+	Tue, 11 Aug 2026 16:27:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786465632;
+	bh=5rHWiKFwpkHZWnf3oJsyWXwHkCpb2VhI6ZUDyK6lHGI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=FJP8d9RoV0TJc9jq1wKXFmzoJcrAifzGTK8ys0tvGrGQq9aV4jEEmr1HcZoDVL9kS
+	 +k9DayXI5mK71lCJL4NyjT6QpgxZpG10FgOTwETOrT9Nc4FfVkwY1STTwNKX+bIPU6
+	 68B1+jV01fKQBdIIQjcSNwMKOHVP9wxNBp+9MWBO2mT8QPS60cWLHfb4RqWHM7fLTP
+	 2da0+rAwm3gKzCkMxGvezqa1357bdrve3OKzcKCjDO4YIChHGX3pAANI4PfQI53klK
+	 q1x9Ba+TQkafbOxR4/nX+MwZcoW1wPYS3zpasIw4oB59rWNLGBdofN6bo+VzYS3x/g
+	 z1aTFzpuL0tag==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Alexander Graf <graf@amazon.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Baoquan He <baoquan.he@linux.dev>
+Cc: x86@kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-efi@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Subject: [PATCH 3/4] kho: rename KHO scratch to KHO bootmem
+Date: Tue, 11 Aug 2026 18:26:39 +0200
+Message-ID: <20260811162642.3504565-4-pratyush@kernel.org>
+X-Mailer: git-send-email 2.55.0.679.g6767b8d81c-goog
+In-Reply-To: <20260811162642.3504565-1-pratyush@kernel.org>
+References: <20260811162642.3504565-1-pratyush@kernel.org>
 MIME-Version: 1.0
-X-Originating-IP: [172.19.96.155]
-X-ClientProxiedBy: EX19D035UWA002.ant.amazon.com (10.13.139.60) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260702_105551_158266_3D0FD632 
-X-CRM114-Status: GOOD (  28.68  )
-X-Mailman-Approved-At: Sat, 15 Aug 2026 00:45:39 -0700
+Content-Transfer-Encoding: 8bit
+X-Mailman-Approved-At: Sat, 15 Aug 2026 00:45:40 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,1981 +98,1290 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add a kselftest suite exercising the lazy sysfs path end to end:
+From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
 
-  - test_mod/sysfs_lazy_test_mod.c: a minimal platform driver that
-    registers a device opted into sysfs_lazy (attributes, groups, a
-    named symlink and a binary attribute).  An eager_twin module
-    parameter registers an identical non-lazy device so tests can
-    compare lazy against eager.
+The term "KHO scratch" is vague and overloaded.
 
-  - sysfs-lazy.c: userspace tests (kselftest_harness) covering
-    partial realize then module unload, leak-free full populate and
-    unload, driver unbind/rebind, transient populate-error
-    propagation to open(2) with no negative dentry cached, lazy
-    readdir(3) order matching the eager tree, and full lazy/eager
-    tree equivalence.
+For one, it does not accurately describe what the memory is for. From
+KHO's perspective, it is memory passed by the previous kernel that is
+guaranteed to have no allocations and hence it is safe to allocate from.
 
-  - iommu_groups.c: stat()s the lazily-populated iommu_group 'type'
-    and 'reserved_regions' attributes; skips cleanly where IOMMU
-    groups are absent.
+For another, the term is overloaded. KHO also knows to discover other
+ranges of memory that don't have any preservations and are safe to
+allocate from. This is done by kho_extend_scratch(). These areas, while
+called "scratch", are completely different from the chunk of memory
+passed by the previous kernel for early boot allocations.
 
-  - pci_resource.c: concurrently drives populate-one and
-    populate-all on a live PCI device and fails on any WARN/BUG/
-    KASAN/Oops splat in the race window, asserting resource0 stays
-    openable; the userspace companion to the in-kernel idempotency
-    KUnit case.  Skips cleanly without a suitable device or
-    privileges.
+Rename "KHO scratch" to "KHO boot memory", or "KHO bootmem" in short.
+Update all function names, variable names, comments, and documentation
+to use this.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rafael J. Wysocki <rafael@kernel.org>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org
-Cc: linux-api@vger.kernel.org
-Cc: Danilo Krummrich <dakr@kernel.org>
-Cc: driver-core@lists.linux.dev
-Assisted-by: Claude:claude-opus-4.7
-Signed-off-by: Pavol Sakac <sakacpav@amazon.de>
+Call the discovered areas "noprsrv", matching what memblock would see
+them as. Rename kho_extend_scratch() to reflect this.
+
+This patch largely has no functional changes. The only functional
+changes are renames of debugfs files from "scratch_phys" and
+"scratch_len" to "bootmem_phys" and "bootmem_len" respectively.
+
+Signed-off-by: Pratyush Yadav (Google) <pratyush@kernel.org>
+
 ---
- tools/testing/selftests/Makefile              |   1 +
- tools/testing/selftests/sysfs-lazy/.gitignore |   3 +
- tools/testing/selftests/sysfs-lazy/Makefile   |  24 +
- tools/testing/selftests/sysfs-lazy/README.rst |  52 ++
- tools/testing/selftests/sysfs-lazy/config     |   6 +
- .../selftests/sysfs-lazy/iommu_groups.c       | 162 ++++
- .../selftests/sysfs-lazy/kmsg_cursor.h        | 167 ++++
- .../selftests/sysfs-lazy/pci_resource.c       | 284 +++++++
- tools/testing/selftests/sysfs-lazy/settings   |   1 +
- .../testing/selftests/sysfs-lazy/sysfs-lazy.c | 777 ++++++++++++++++++
- .../selftests/sysfs-lazy/test_mod/Makefile    |  28 +
- .../sysfs-lazy/test_mod/sysfs_lazy_test_mod.c | 319 +++++++
- 12 files changed, 1824 insertions(+)
- create mode 100644 tools/testing/selftests/sysfs-lazy/.gitignore
- create mode 100644 tools/testing/selftests/sysfs-lazy/Makefile
- create mode 100644 tools/testing/selftests/sysfs-lazy/README.rst
- create mode 100644 tools/testing/selftests/sysfs-lazy/config
- create mode 100644 tools/testing/selftests/sysfs-lazy/iommu_groups.c
- create mode 100644 tools/testing/selftests/sysfs-lazy/kmsg_cursor.h
- create mode 100644 tools/testing/selftests/sysfs-lazy/pci_resource.c
- create mode 100644 tools/testing/selftests/sysfs-lazy/settings
- create mode 100644 tools/testing/selftests/sysfs-lazy/sysfs-lazy.c
- create mode 100644 tools/testing/selftests/sysfs-lazy/test_mod/Makefile
- create mode 100644 tools/testing/selftests/sysfs-lazy/test_mod/sysfs_lazy_test_mod.c
 
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index 6e59b8f63e416..f2ab852b9c2cc 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -116,6 +116,7 @@ TARGETS += static_keys
- TARGETS += sync
- TARGETS += syscall_user_dispatch
- TARGETS += sysctl
-+TARGETS += sysfs-lazy
- TARGETS += tc-testing
- TARGETS += tdx
- TARGETS += thermal/intel/power_floor
-diff --git a/tools/testing/selftests/sysfs-lazy/.gitignore b/tools/testing/selftests/sysfs-lazy/.gitignore
-new file mode 100644
-index 0000000000000..b2af0d124131b
---- /dev/null
-+++ b/tools/testing/selftests/sysfs-lazy/.gitignore
-@@ -0,0 +1,3 @@
-+sysfs-lazy
-+iommu_groups
-+pci_resource
-diff --git a/tools/testing/selftests/sysfs-lazy/Makefile b/tools/testing/selftests/sysfs-lazy/Makefile
-new file mode 100644
-index 0000000000000..5e5f06cc3deb6
---- /dev/null
-+++ b/tools/testing/selftests/sysfs-lazy/Makefile
-@@ -0,0 +1,24 @@
-+# SPDX-License-Identifier: GPL-2.0
-+CFLAGS += -Wall $(KHDR_INCLUDES)
-+LDLIBS += -lpthread
+Note that while all the documentation and internal naming around the
+kho_scratch= parameter have changed, the parameter name stays the same.
+This is to avoid functional changes (outside debugfs) in this big
+commit. The name will be changed in the next patch.
+---
+ .../admin-guide/kernel-parameters.txt         |  13 +-
+ Documentation/admin-guide/mm/kho.rst          |  16 +-
+ Documentation/core-api/kho/index.rst          |  36 +-
+ arch/x86/boot/compressed/kaslr.c              |  12 +-
+ arch/x86/include/uapi/asm/setup_data.h        |   4 +-
+ arch/x86/kernel/kexec-bzimage64.c             |   6 +-
+ arch/x86/kernel/setup.c                       |   2 +-
+ drivers/firmware/efi/efi-init.c               |   4 +-
+ drivers/of/kexec.c                            |  16 +-
+ include/asm-generic/kexec_handover.h          |   2 +-
+ include/linux/kexec.h                         |   2 +-
+ include/linux/kexec_handover.h                |  16 +-
+ kernel/liveupdate/kexec_handover.c            | 328 +++++++++---------
+ kernel/liveupdate/kexec_handover_debugfs.c    |  24 +-
+ kernel/liveupdate/kexec_handover_internal.h   |   4 +-
+ mm/memblock.c                                 |   8 +-
+ mm/mm_init.c                                  |   6 +-
+ tools/testing/memblock/internal.h             |   2 +-
+ 18 files changed, 252 insertions(+), 249 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index b5493a7f8f22..e2212f058812 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2991,9 +2991,10 @@ Kernel parameters
+ 
+ 	kho_scratch=	[KEXEC,EARLY]
+ 			Format: ll[KMG],mm[KMG],nn[KMG] | nn%
+-			Defines the size of the KHO scratch region. The KHO
+-			scratch regions are physically contiguous memory
+-			ranges that can only be used for non-kernel
 +
-+TEST_GEN_PROGS := sysfs-lazy iommu_groups pci_resource
-+TEST_FILES := settings
-+
-+KDIR ?= $(if $(O),$(O),$(realpath ../../../..))
-+ifneq (,$(wildcard $(KDIR)/Module.symvers))
-+TEST_GEN_MODS_DIR := test_mod
-+else
-+SYSFS_LAZY_MOD_WARNING = "missing Module.symvers, please have the kernel built first"
-+endif
-+
-+include ../lib.mk
-+
-+ifneq ($(SYSFS_LAZY_MOD_WARNING),)
-+all: warn_missing_test_mod
-+
-+warn_missing_test_mod:
-+	@echo ; \
-+	echo "Warning: $(SYSFS_LAZY_MOD_WARNING). sysfs_lazy_test_mod will not be built." ; \
-+	echo
-+endif
-diff --git a/tools/testing/selftests/sysfs-lazy/README.rst b/tools/testing/selftests/sysfs-lazy/README.rst
-new file mode 100644
-index 0000000000000..63c5571428f48
---- /dev/null
-+++ b/tools/testing/selftests/sysfs-lazy/README.rst
-@@ -0,0 +1,52 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==========================
-+sysfs-lazy kselftest suite
-+==========================
-+
-+Integration tests for the per-file lazy sysfs initialization mechanism.
-+Per-call populate behaviour (visibility, mode, groups,
-+idempotency, atomicity) is validated in-kernel by the KUnit suite at
-+``drivers/base/test/device_sysfs_apply_test.c``
-+(``CONFIG_DEVICE_SYSFS_APPLY_KUNIT_TEST``); this suite covers only
-+invariants that require userspace (module load/unload, driver-core
-+rebind) or a live IOMMU topology.
-+
-+Prerequisites
-+=============
-+
-+- Kernel built with ``CONFIG_SYSFS=y``, ``CONFIG_DEBUG_FS=y``,
-+  ``CONFIG_MODULES=y``.
-+- The ``sysfs_lazy_test_mod`` module built and available for
-+  ``modprobe`` (for the ``sysfs-lazy`` binary).
-+- An IOMMU-enabled kernel with at least one group under
-+  ``/sys/kernel/iommu_groups/`` (for the ``iommu_groups`` binary;
-+  test SKIPs gracefully otherwise).
-+
-+Running
-+=======
-+
-+Build and run::
-+
-+    make -C tools/testing/selftests TARGETS=sysfs-lazy run_tests
-+
-+Test binaries
-+=============
-+
-+``sysfs-lazy``
-+  Module-backed integration tests.  Loads/unloads
-+  ``sysfs_lazy_test_mod`` automatically.  Test cases:
-+
-+  1. **teardown_partial** - partial populate + module unload leaves no
-+     leaks.
-+  2. **no_leaks_on_unload** - kmemleak scan after full populate + unload.
-+  3. **bind_unbind_cycle** - driver rebind after lazy populate preserves
-+     materialized attrs.
-+
-+``iommu_groups``
-+  Smoke test for ``iommu: lazy-populate iommu_group
-+  reserved_regions/type attrs``.  Walks
-+  ``/sys/kernel/iommu_groups/<N>/`` and stat()s the deferred ``type``
-+  and ``reserved_regions`` attributes to verify lazy materialization.
-+  Also exercises ``readdir`` (``ls``) to drive the all-path materializer.
-+  SKIPs cleanly when IOMMU is disabled or no groups are present.
-diff --git a/tools/testing/selftests/sysfs-lazy/config b/tools/testing/selftests/sysfs-lazy/config
-new file mode 100644
-index 0000000000000..2152f1bf2a903
---- /dev/null
-+++ b/tools/testing/selftests/sysfs-lazy/config
-@@ -0,0 +1,6 @@
-+CONFIG_SYSFS=y
-+CONFIG_DEBUG_FS=y
-+CONFIG_MODULES=y
-+CONFIG_PROVE_LOCKING=y
-+CONFIG_KCSAN=y
-+CONFIG_KASAN=y
-diff --git a/tools/testing/selftests/sysfs-lazy/iommu_groups.c b/tools/testing/selftests/sysfs-lazy/iommu_groups.c
-new file mode 100644
-index 0000000000000..3b0be6beea484
---- /dev/null
-+++ b/tools/testing/selftests/sysfs-lazy/iommu_groups.c
-@@ -0,0 +1,162 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * iommu_groups - lazy-populate smoke test for iommu_group sysfs attrs
++			Defines the size of the KHO boot memory region. The
++			KHO boot memory regions are physically contiguous
++			memory ranges that can only be used for non-kernel
+ 			allocations. That way, even when memory is heavily
+ 			fragmented with handed over memory, the kexeced
+ 			kernel will always have enough contiguous ranges to
+@@ -3002,10 +3003,10 @@ Kernel parameters
+ 			It is possible to specify the exact amount of
+ 			memory in the form of "ll[KMG],mm[KMG],nn[KMG]"
+ 			where the first parameter defines the size of a low
+-			memory scratch area, the second parameter defines
+-			the size of a global scratch area and the third
++			memory bootmem area, the second parameter defines
++			the size of a global bootmem area and the third
+ 			parameter defines the size of additional per-node
+-			scratch areas.  The form "nn%" defines scale factor
++			bootmem areas.  The form "nn%" defines scale factor
+ 			(in percents) of memory that was used during boot.
+ 
+ 	kmac=		[MIPS] Korina ethernet MAC address.
+diff --git a/Documentation/admin-guide/mm/kho.rst b/Documentation/admin-guide/mm/kho.rst
+index 2c26e560bd78..4fae09096038 100644
+--- a/Documentation/admin-guide/mm/kho.rst
++++ b/Documentation/admin-guide/mm/kho.rst
+@@ -21,9 +21,9 @@ kexec.
+ 
+ To use KHO, please boot the kernel with the ``kho=on`` command line
+ parameter. You may use ``kho_scratch`` parameter to define size of the
+-scratch regions. For example ``kho_scratch=16M,512M,256M`` will reserve a
+-16 MiB low memory scratch area, a 512 MiB global scratch region, and 256 MiB
+-per NUMA node scratch regions on boot.
++boot memory regions. For example ``kho_scratch=16M,512M,256M`` will reserve a
++16 MiB low memory bootmem area, a 512 MiB global bootmem region, and 256 MiB
++per NUMA node bootmem regions on boot.
+ 
+ Perform a KHO kexec
+ ===================
+@@ -96,15 +96,15 @@ stabilized.
+     current KHO state in this file. Kexec user space tooling can use this
+     as input file for the KHO payload image.
+ 
+-``/sys/kernel/debug/kho/out/scratch_len``
+-    Lengths of KHO scratch regions, which are physically contiguous
++``/sys/kernel/debug/kho/out/bootmem_len``
++    Lengths of KHO bootmem regions, which are physically contiguous
+     memory regions that will always stay available for future kexec
+     allocations. Kexec user space tools can use this file to determine
+     where it should place its payload images.
+ 
+-``/sys/kernel/debug/kho/out/scratch_phys``
+-    Physical locations of KHO scratch regions. Kexec user space tools
+-    can use this file in conjunction to scratch_phys to determine where
++``/sys/kernel/debug/kho/out/bootmem_phys``
++    Physical locations of KHO bootmem regions. Kexec user space tools
++    can use this file in conjunction to bootmem_phys to determine where
+     it should place its payload images.
+ 
+ ``/sys/kernel/debug/kho/out/sub_fdts/``
+diff --git a/Documentation/core-api/kho/index.rst b/Documentation/core-api/kho/index.rst
+index 320914a42178..e78a2bbe2be1 100644
+--- a/Documentation/core-api/kho/index.rst
++++ b/Documentation/core-api/kho/index.rst
+@@ -13,8 +13,8 @@ Kexec HandOver (KHO) is a mechanism that allows Linux to preserve memory
+ regions, which could contain serialized system states, across kexec.
+ 
+ KHO uses :ref:`flattened device tree (FDT) <kho_fdt>` to pass information about
+-the preserved state from pre-exec kernel to post-kexec kernel and :ref:`scratch
+-memory regions <kho_scratch>` to ensure integrity of the preserved memory.
++the preserved state from pre-exec kernel to post-kexec kernel and :ref:`boot
++memory regions <kho_bootmem>` to ensure integrity of the preserved memory.
+ 
+ .. _kho_fdt:
+ 
+@@ -40,31 +40,31 @@ and post-kexec kernels. This ABI is defined by header files in
+ 
+    abi.rst
+ 
+-.. _kho_scratch:
++.. _kho_bootmem:
+ 
+-Scratch Regions
+-===============
++Boot Memory Regions
++===================
+ 
+ To boot into kexec, we need to have a physically contiguous memory range that
+ contains no handed over memory. Kexec then places the target kernel and initrd
+ into that region. The new kernel exclusively uses this region for memory
+ allocations before during boot up to the initialization of the page allocator.
+ 
+-We guarantee that we always have such regions through the scratch regions: On
+-first boot KHO allocates several physically contiguous memory regions. Since
++We guarantee that we always have such regions through the boot memory regions:
++On first boot KHO allocates several physically contiguous memory regions. Since
+ after kexec these regions will be used by early memory allocations, there is a
+-scratch region per NUMA node plus a scratch region to satisfy allocations
+-requests that do not require particular NUMA node assignment.
+-By default, size of the scratch region is calculated based on amount of memory
+-allocated during boot. The ``kho_scratch`` kernel command line option may be
+-used to explicitly define size of the scratch regions.
+-The scratch regions are declared as CMA when page allocator is initialized so
+-that their memory can be used during system lifetime. CMA gives us the
+-guarantee that no handover pages land in that region, because handover pages
+-must be at a static physical memory location and CMA enforces that only
+-movable pages can be located inside.
++boot memory region per NUMA node plus a boot memory region to satisfy
++allocations requests that do not require particular NUMA node assignment. By
++default, size of the boot memory region is calculated based on amount of memory
++allocated during boot. The ``kho_bootmem`` kernel command line option may be
++used to explicitly define size of the boot memory regions. The boot memory
++regions are declared as CMA when page allocator is initialized so that their
++memory can be used during system lifetime. CMA gives us the guarantee that no
++handover pages land in that region, because handover pages must be at a static
++physical memory location and CMA enforces that only movable pages can be located
++inside.
+ 
+-After KHO kexec, we ignore the ``kho_scratch`` kernel command line option and
++After KHO kexec, we ignore the ``kho_bootmem`` kernel command line option and
+ instead reuse the exact same region that was originally allocated. This allows
+ us to recursively execute any amount of KHO kexecs. Because we used this region
+ for boot memory allocations and as target memory for kexec blobs, some parts
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index 22267a83e064..290153818d0f 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -764,12 +764,12 @@ static void process_e820_entries(unsigned long minimum,
+ }
+ 
+ /*
+- * If KHO is active, only process its scratch areas to ensure we are not
++ * If KHO is active, only process its bootmem areas to ensure we are not
+  * stepping onto preserved memory.
+  */
+ static bool process_kho_entries(unsigned long minimum, unsigned long image_size)
+ {
+-	struct kho_scratch *kho_scratch;
++	struct kho_bootmem *kho_bootmem;
+ 	struct setup_data *ptr;
+ 	struct kho_data *kho;
+ 	int i, nr_areas = 0;
+@@ -781,8 +781,8 @@ static bool process_kho_entries(unsigned long minimum, unsigned long image_size)
+ 	while (ptr) {
+ 		if (ptr->type == SETUP_KEXEC_KHO) {
+ 			kho = (struct kho_data *)(unsigned long)ptr->data;
+-			kho_scratch = (void *)(unsigned long)kho->scratch_addr;
+-			nr_areas = kho->scratch_size / sizeof(*kho_scratch);
++			kho_bootmem = (void *)(unsigned long)kho->bootmem_addr;
++			nr_areas = kho->bootmem_size / sizeof(*kho_bootmem);
+ 			break;
+ 		}
+ 
+@@ -793,7 +793,7 @@ static bool process_kho_entries(unsigned long minimum, unsigned long image_size)
+ 		return false;
+ 
+ 	for (i = 0; i < nr_areas; i++) {
+-		struct kho_scratch *area = &kho_scratch[i];
++		struct kho_bootmem *area = &kho_bootmem[i];
+ 		struct mem_vector region = {
+ 			.start = area->addr,
+ 			.size = area->size,
+@@ -822,7 +822,7 @@ static unsigned long find_random_phys_addr(unsigned long minimum,
+ 	}
+ 
+ 	/*
+-	 * During kexec handover only process KHO scratch areas that are known
++	 * During kexec handover only process KHO bootmem areas that are known
+ 	 * not to contain any data that must be preserved.
+ 	 */
+ 	if (!process_kho_entries(minimum, image_size) &&
+diff --git a/arch/x86/include/uapi/asm/setup_data.h b/arch/x86/include/uapi/asm/setup_data.h
+index 2671c4e1b3a0..61090db5065c 100644
+--- a/arch/x86/include/uapi/asm/setup_data.h
++++ b/arch/x86/include/uapi/asm/setup_data.h
+@@ -85,8 +85,8 @@ struct ima_setup_data {
+ struct kho_data {
+ 	__u64 fdt_addr;
+ 	__u64 fdt_size;
+-	__u64 scratch_addr;
+-	__u64 scratch_size;
++	__u64 bootmem_addr;
++	__u64 bootmem_size;
+ } __attribute__((packed));
+ 
+ #endif /* __ASSEMBLER__ */
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 7e980ea49d8d..3aa77006adab 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -285,14 +285,14 @@ static void setup_kho(const struct kimage *image, struct boot_params *params,
+ 	sd->len = sizeof(struct kho_data);
+ 
+ 	/* Only add if we have all KHO images in place */
+-	if (!image->kho.fdt || !image->kho.scratch)
++	if (!image->kho.fdt || !image->kho.bootmem)
+ 		return;
+ 
+ 	/* Add setup data */
+ 	kho->fdt_addr = image->kho.fdt;
+ 	kho->fdt_size = PAGE_SIZE;
+-	kho->scratch_addr = image->kho.scratch->mem;
+-	kho->scratch_size = image->kho.scratch->bufsz;
++	kho->bootmem_addr = image->kho.bootmem->mem;
++	kho->bootmem_size = image->kho.bootmem->bufsz;
+ 	sd->next = params->hdr.setup_data;
+ 	params->hdr.setup_data = params_load_addr + setup_data_offset;
+ }
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 5ebb521e136d..d1618c4cf7fb 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -472,7 +472,7 @@ static void __init add_kho(u64 phys_addr, u32 data_len)
+ 		return;
+ 	}
+ 
+-	kho_populate(kho->fdt_addr, kho->fdt_size, kho->scratch_addr, kho->scratch_size);
++	kho_populate(kho->fdt_addr, kho->fdt_size, kho->bootmem_addr, kho->bootmem_size);
+ 
+ 	early_memunmap(kho, size);
+ }
+diff --git a/drivers/firmware/efi/efi-init.c b/drivers/firmware/efi/efi-init.c
+index a2edaf3766eb..9f09b0d2daa0 100644
+--- a/drivers/firmware/efi/efi-init.c
++++ b/drivers/firmware/efi/efi-init.c
+@@ -165,10 +165,10 @@ static __init void reserve_regions(void)
+ 		pr_info("Processing EFI memory map:\n");
+ 
+ 	/*
+-	 * Discard memblocks discovered so far except for KHO scratch
++	 * Discard memblocks discovered so far except for KHO bootmem
+ 	 * regions. Most memblocks at this point originate from memory nodes
+ 	 * in the DT and UEFI uses its own memory map instead. However, if
+-	 * KHO is enabled, scratch regions, which are good known memory
++	 * KHO is enabled, bootmem regions, which are good known memory
+ 	 * must be preserved.
+ 	 */
+ 	memblock_dump_all();
+diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
+index b6837e299e7f..1970d0bdb671 100644
+--- a/drivers/of/kexec.c
++++ b/drivers/of/kexec.c
+@@ -261,23 +261,23 @@ static int kho_add_chosen(const struct kimage *image, void *fdt, int chosen_node
+ #ifdef CONFIG_KEXEC_HANDOVER
+ 	phys_addr_t fdt_mem = 0;
+ 	phys_addr_t fdt_len = 0;
+-	phys_addr_t scratch_mem = 0;
+-	phys_addr_t scratch_len = 0;
++	phys_addr_t bootmem_arr = 0;
++	phys_addr_t bootmem_len = 0;
+ 
+ 	ret = fdt_delprop(fdt, chosen_node, "linux,kho-fdt");
+ 	if (ret && ret != -FDT_ERR_NOTFOUND)
+ 		return ret;
+-	ret = fdt_delprop(fdt, chosen_node, "linux,kho-scratch");
++	ret = fdt_delprop(fdt, chosen_node, "linux,kho-bootmem");
+ 	if (ret && ret != -FDT_ERR_NOTFOUND)
+ 		return ret;
+ 
+-	if (!image->kho.fdt || !image->kho.scratch)
++	if (!image->kho.fdt || !image->kho.bootmem)
+ 		return 0;
+ 
+ 	fdt_mem = image->kho.fdt;
+ 	fdt_len = PAGE_SIZE;
+-	scratch_mem = image->kho.scratch->mem;
+-	scratch_len = image->kho.scratch->bufsz;
++	bootmem_arr = image->kho.bootmem->mem;
++	bootmem_len = image->kho.bootmem->bufsz;
+ 
+ 	pr_debug("Adding kho metadata to DT");
+ 
+@@ -285,8 +285,8 @@ static int kho_add_chosen(const struct kimage *image, void *fdt, int chosen_node
+ 				       fdt_mem, fdt_len);
+ 	if (ret)
+ 		return ret;
+-	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-scratch",
+-				       scratch_mem, scratch_len);
++	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-bootmem",
++				       bootmem_arr, bootmem_len);
+ 
+ #endif /* CONFIG_KEXEC_HANDOVER */
+ 	return ret;
+diff --git a/include/asm-generic/kexec_handover.h b/include/asm-generic/kexec_handover.h
+index 50839fb5ee8e..cf73d9b34c3c 100644
+--- a/include/asm-generic/kexec_handover.h
++++ b/include/asm-generic/kexec_handover.h
+@@ -4,7 +4,7 @@
+ 
+ #include <linux/types.h>
+ 
+-struct kho_scratch {
++struct kho_bootmem {
+ 	phys_addr_t addr;
+ 	phys_addr_t size;
+ };
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 8a22bc9b8c6c..20a874e19dfa 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -418,7 +418,7 @@ struct kimage {
+ #endif
+ 
+ 	struct {
+-		struct kexec_segment *scratch;
++		struct kexec_segment *bootmem;
+ 		phys_addr_t fdt;
+ 	} kho;
+ 
+diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
+index 46de86dc343e..ef2b188c8ed0 100644
+--- a/include/linux/kexec_handover.h
++++ b/include/linux/kexec_handover.h
+@@ -36,15 +36,15 @@ int kho_retrieve_subtree(const char *name, phys_addr_t *phys, size_t *size);
+ void kho_memory_init(void);
+ void kho_memory_init_early(void);
+ 
+-void kho_populate(phys_addr_t fdt_phys, u64 fdt_len, phys_addr_t scratch_phys,
+-		  u64 scratch_len);
++void kho_populate(phys_addr_t fdt_phys, u64 fdt_len, phys_addr_t bootmem_phys,
++		  u64 bootmem_len);
+ 
+-bool kho_scratch_overlap(phys_addr_t phys, size_t size);
++bool kho_bootmem_overlap(phys_addr_t phys, size_t size);
+ 
+-static inline enum migratetype kho_scratch_migratetype(unsigned long pfn,
++static inline enum migratetype kho_bootmem_migratetype(unsigned long pfn,
+ 						       enum migratetype mt)
+ {
+-	if (kho_scratch_overlap(PFN_PHYS(pfn), pageblock_nr_pages << PAGE_SHIFT))
++	if (kho_bootmem_overlap(PFN_PHYS(pfn), pageblock_nr_pages << PAGE_SHIFT))
+ 		return MIGRATE_CMA;
+ 	return mt;
+ }
+@@ -123,16 +123,16 @@ static inline void kho_memory_init(void) { }
+ static inline void kho_memory_init_early(void) { }
+ 
+ static inline void kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+-				phys_addr_t scratch_phys, u64 scratch_len)
++				phys_addr_t bootmem_phys, u64 bootmem_len)
+ {
+ }
+ 
+-static inline bool kho_scratch_overlap(phys_addr_t phys, size_t size)
++static inline bool kho_bootmem_overlap(phys_addr_t phys, size_t size)
+ {
+ 	return false;
+ }
+ 
+-static inline enum migratetype kho_scratch_migratetype(unsigned long pfn,
++static inline enum migratetype kho_bootmem_migratetype(unsigned long pfn,
+ 						       enum migratetype mt)
+ {
+ 	return mt;
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 13db1534c746..3bfdbe86aaf9 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -41,12 +41,12 @@
+ /*
+  * This is the minimal alignment required by deferred struct page init.
+  * deferred_init_memmap_chunk frees memory to the buddy allocator, which looks
+- * at the neighboring pages (up to MAX_PAGE_ORDER) to merge them.
+- * If KHO scratch is not aligned to that value, buddy can access uninitialized
+- * struct pages, which can cause a crash.
++ * at the neighboring pages (up to MAX_PAGE_ORDER) to merge them. If KHO bootmem
++ * is not aligned to that value, buddy can access uninitialized struct pages,
++ * which can cause a crash.
+  */
+-#define SCRATCH_ALIGNMENT_BYTES (PAGE_SIZE * MAX_ORDER_NR_PAGES)
+-static_assert(SCRATCH_ALIGNMENT_BYTES >= CMA_MIN_ALIGNMENT_BYTES);
++#define BOOTMEM_ALIGNMENT_BYTES (PAGE_SIZE * MAX_ORDER_NR_PAGES)
++static_assert(BOOTMEM_ALIGNMENT_BYTES >= CMA_MIN_ALIGNMENT_BYTES);
+ 
+ /* The magic token for preserved pages */
+ #define KHO_PAGE_MAGIC 0x4b484f50U /* ASCII for 'KHOP' */
+@@ -96,7 +96,7 @@ static struct kho_out kho_out = {
+ 
+ struct kho_in {
+ 	phys_addr_t fdt_phys;
+-	phys_addr_t scratch_phys;
++	phys_addr_t bootmem_phys;
+ 	char previous_release[__NEW_UTS_LEN + 1];
+ 	u32 kexec_count;
+ 	struct kho_debugfs dbg;
+@@ -656,34 +656,34 @@ static void __init *kho_get_mem_map(const void *fdt)
+ 
+ /*
+  * With KHO enabled, memory can become fragmented because KHO regions may
+- * be anywhere in physical address space. The scratch regions give us a
++ * be anywhere in physical address space. The bootmem regions give us a
+  * safe zones that we will never see KHO allocations from. This is where we
+- * can later safely load our new kexec images into and then use the scratch
++ * can later safely load our new kexec images into and then use the bootmem
+  * area for early allocations that happen before page allocator is
+  * initialized.
+  */
+-struct kho_scratch *kho_scratch;
+-unsigned int kho_scratch_cnt;
++struct kho_bootmem *kho_bootmem;
++unsigned int kho_bootmem_cnt;
+ 
+ /*
+- * The scratch areas are scaled by default as percent of memory allocated from
++ * The bootmem areas are scaled by default as percent of memory allocated from
+  * memblock. A user can override the scale with command line parameter:
+  *
+  * kho_scratch=N%
+  *
+  * It is also possible to explicitly define size for a lowmem, a global and
+- * per-node scratch areas:
++ * per-node bootmem areas:
+  *
+  * kho_scratch=l[KMG],n[KMG],m[KMG]
+  *
+  * The explicit size definition takes precedence over scale definition.
+  */
+-static unsigned int scratch_scale __initdata = 200;
+-static phys_addr_t scratch_size_global __initdata;
+-static phys_addr_t scratch_size_pernode __initdata;
+-static phys_addr_t scratch_size_lowmem __initdata;
++static unsigned int bootmem_scale __initdata = 200;
++static phys_addr_t bootmem_size_global __initdata;
++static phys_addr_t bootmem_size_pernode __initdata;
++static phys_addr_t bootmem_size_lowmem __initdata;
+ 
+-static int __init kho_parse_scratch_size(char *p)
++static int __init kho_parse_bootmem_size(char *p)
+ {
+ 	size_t len;
+ 	unsigned long sizes[3];
+@@ -707,9 +707,9 @@ static int __init kho_parse_scratch_size(char *p)
+ 			return -EINVAL;
+ 
+ 		memcpy(s_scale, p, len - 1);
+-		ret = kstrtouint(s_scale, 10, &scratch_scale);
++		ret = kstrtouint(s_scale, 10, &bootmem_scale);
+ 		if (!ret)
+-			pr_notice("scratch scale is %d%%\n", scratch_scale);
++			pr_notice("bootmem scale is %d%%\n", bootmem_scale);
+ 		return ret;
+ 	}
+ 
+@@ -737,81 +737,81 @@ static int __init kho_parse_scratch_size(char *p)
+ 	if (*p)
+ 		return -EINVAL;
+ 
+-	scratch_size_lowmem = sizes[0];
+-	scratch_size_global = sizes[1];
+-	scratch_size_pernode = sizes[2];
+-	scratch_scale = 0;
++	bootmem_size_lowmem = sizes[0];
++	bootmem_size_global = sizes[1];
++	bootmem_size_pernode = sizes[2];
++	bootmem_scale = 0;
+ 
+-	pr_notice("scratch areas: lowmem: %lluMiB global: %lluMiB pernode: %lldMiB\n",
+-		  (u64)(scratch_size_lowmem >> 20),
+-		  (u64)(scratch_size_global >> 20),
+-		  (u64)(scratch_size_pernode >> 20));
++	pr_notice("bootmem areas: lowmem: %lluMiB global: %lluMiB pernode: %lldMiB\n",
++		  (u64)(bootmem_size_lowmem >> 20),
++		  (u64)(bootmem_size_global >> 20),
++		  (u64)(bootmem_size_pernode >> 20));
+ 
+ 	return 0;
+ }
+-early_param("kho_scratch", kho_parse_scratch_size);
++early_param("kho_scratch", kho_parse_bootmem_size);
+ 
+-static void __init scratch_size_update(void)
++static void __init bootmem_size_update(void)
+ {
+ 	/*
+ 	 * If fixed sizes are not provided via command line, calculate them now.
+ 	 * Remove HugeTLB allocations from it because they never get allocated
+-	 * from scratch.
++	 * from bootmem.
+ 	 */
+-	if (scratch_scale) {
++	if (bootmem_scale) {
+ 		phys_addr_t size;
+ 
+ 		size = memblock_reserved_kern_size(ARCH_LOW_ADDRESS_LIMIT,
+ 						   NUMA_NO_NODE);
+ 		size -= memblock_reserved_hugetlb_size(ARCH_LOW_ADDRESS_LIMIT,
+ 						       NUMA_NO_NODE);
+-		size = size * scratch_scale / 100;
+-		scratch_size_lowmem = size;
++		size = size * bootmem_scale / 100;
++		bootmem_size_lowmem = size;
+ 
+ 		size = memblock_reserved_kern_size(MEMBLOCK_ALLOC_ANYWHERE,
+ 						   NUMA_NO_NODE);
+ 		size -= memblock_reserved_hugetlb_size(MEMBLOCK_ALLOC_ANYWHERE,
+ 						       NUMA_NO_NODE);
+-		size = size * scratch_scale / 100 - scratch_size_lowmem;
+-		scratch_size_global = size;
++		size = size * bootmem_scale / 100 - bootmem_size_lowmem;
++		bootmem_size_global = size;
+ 	}
+ 
+ 	/*
+-	 * Scratch areas are released as MIGRATE_CMA. Round them up to the right
++	 * bootmem areas are released as MIGRATE_CMA. Round them up to the right
+ 	 * size.
+ 	 */
+-	scratch_size_lowmem = round_up(scratch_size_lowmem, SCRATCH_ALIGNMENT_BYTES);
+-	scratch_size_global = round_up(scratch_size_global, SCRATCH_ALIGNMENT_BYTES);
++	bootmem_size_lowmem = round_up(bootmem_size_lowmem, BOOTMEM_ALIGNMENT_BYTES);
++	bootmem_size_global = round_up(bootmem_size_global, BOOTMEM_ALIGNMENT_BYTES);
+ }
+ 
+-static phys_addr_t __init scratch_size_node(int nid)
++static phys_addr_t __init bootmem_size_node(int nid)
+ {
+ 	phys_addr_t size;
+ 
+-	if (scratch_scale) {
++	if (bootmem_scale) {
+ 		size = memblock_reserved_kern_size(MEMBLOCK_ALLOC_ANYWHERE,
+ 						   nid);
+ 		/* Do not count HugeTLB pages. */
+ 		size -= memblock_reserved_hugetlb_size(MEMBLOCK_ALLOC_ANYWHERE,
+ 						       nid);
+-		size = size * scratch_scale / 100;
++		size = size * bootmem_scale / 100;
+ 	} else {
+-		size = scratch_size_pernode;
++		size = bootmem_size_pernode;
+ 	}
+ 
+-	return round_up(size, SCRATCH_ALIGNMENT_BYTES);
++	return round_up(size, BOOTMEM_ALIGNMENT_BYTES);
+ }
+ 
+-bool kho_scratch_overlap(phys_addr_t phys, size_t size)
++bool kho_bootmem_overlap(phys_addr_t phys, size_t size)
+ {
+-	phys_addr_t scratch_start, scratch_end;
++	phys_addr_t bootmem_start, bootmem_end;
+ 	unsigned int i;
+ 
+-	for (i = 0; i < kho_scratch_cnt; i++) {
+-		scratch_start = kho_scratch[i].addr;
+-		scratch_end = kho_scratch[i].addr + kho_scratch[i].size;
++	for (i = 0; i < kho_bootmem_cnt; i++) {
++		bootmem_start = kho_bootmem[i].addr;
++		bootmem_end = kho_bootmem[i].addr + kho_bootmem[i].size;
+ 
+-		if (phys < scratch_end && (phys + size) > scratch_start)
++		if (phys < bootmem_end && (phys + size) > bootmem_start)
+ 			return true;
+ 	}
+ 
+@@ -819,7 +819,7 @@ bool kho_scratch_overlap(phys_addr_t phys, size_t size)
+ }
+ 
+ /**
+- * kho_reserve_scratch - Reserve a contiguous chunk of memory for kexec
++ * kho_reserve_bootmem - Reserve a contiguous chunk of memory for kexec
+  *
+  * With KHO we can preserve arbitrary pages in the system. To ensure we still
+  * have a large contiguous region of memory when we search the physical address
+@@ -827,7 +827,7 @@ bool kho_scratch_overlap(phys_addr_t phys, size_t size)
+  * active. This CMA region will only be used for movable pages which are not a
+  * problem for us during KHO because we can just move them somewhere else.
+  */
+-static void __init kho_reserve_scratch(void)
++static void __init kho_reserve_bootmem(void)
+ {
+ 	phys_addr_t addr, size;
+ 	int nid, i = 0;
+@@ -835,73 +835,73 @@ static void __init kho_reserve_scratch(void)
+ 	if (!kho_enable)
+ 		return;
+ 
+-	scratch_size_update();
++	bootmem_size_update();
+ 
+ 	/* FIXME: deal with node hot-plug/remove */
+-	kho_scratch_cnt = nodes_weight(node_states[N_MEMORY]) + 2;
+-	size = kho_scratch_cnt * sizeof(*kho_scratch);
+-	kho_scratch = memblock_alloc(size, PAGE_SIZE);
+-	if (!kho_scratch) {
+-		pr_err("Failed to reserve scratch array\n");
++	kho_bootmem_cnt = nodes_weight(node_states[N_MEMORY]) + 2;
++	size = kho_bootmem_cnt * sizeof(*kho_bootmem);
++	kho_bootmem = memblock_alloc(size, PAGE_SIZE);
++	if (!kho_bootmem) {
++		pr_err("Failed to reserve bootmem array\n");
+ 		goto err_disable_kho;
+ 	}
+ 
+ 	/*
+-	 * reserve scratch area in low memory for lowmem allocations in the
++	 * reserve bootmem area in low memory for lowmem allocations in the
+ 	 * next kernel
+ 	 */
+-	size = scratch_size_lowmem;
+-	addr = memblock_phys_alloc_range(size, SCRATCH_ALIGNMENT_BYTES, 0,
++	size = bootmem_size_lowmem;
++	addr = memblock_phys_alloc_range(size, BOOTMEM_ALIGNMENT_BYTES, 0,
+ 					 ARCH_LOW_ADDRESS_LIMIT);
+ 	if (!addr) {
+-		pr_err("Failed to reserve lowmem scratch buffer\n");
+-		goto err_free_scratch_desc;
++		pr_err("Failed to reserve lowmem bootmem\n");
++		goto err_free_bootmem_desc;
+ 	}
+ 
+-	kho_scratch[i].addr = addr;
+-	kho_scratch[i].size = size;
++	kho_bootmem[i].addr = addr;
++	kho_bootmem[i].size = size;
+ 	i++;
+ 
+ 	/* reserve large contiguous area for allocations without nid */
+-	size = scratch_size_global;
+-	addr = memblock_phys_alloc(size, SCRATCH_ALIGNMENT_BYTES);
++	size = bootmem_size_global;
++	addr = memblock_phys_alloc(size, BOOTMEM_ALIGNMENT_BYTES);
+ 	if (!addr) {
+-		pr_err("Failed to reserve global scratch buffer\n");
+-		goto err_free_scratch_areas;
++		pr_err("Failed to reserve global bootmem\n");
++		goto err_free_bootmem_areas;
+ 	}
+ 
+-	kho_scratch[i].addr = addr;
+-	kho_scratch[i].size = size;
++	kho_bootmem[i].addr = addr;
++	kho_bootmem[i].size = size;
+ 	i++;
+ 
+ 	/*
+ 	 * Loop over nodes that have both memory and are online. Skip
+-	 * memoryless nodes, as we can not allocate scratch areas there.
++	 * memoryless nodes, as we can not allocate bootmem areas there.
+ 	 */
+ 	for_each_node_state(nid, N_MEMORY) {
+-		size = scratch_size_node(nid);
+-		addr = memblock_alloc_range_nid(size, SCRATCH_ALIGNMENT_BYTES,
++		size = bootmem_size_node(nid);
++		addr = memblock_alloc_range_nid(size, BOOTMEM_ALIGNMENT_BYTES,
+ 						0, MEMBLOCK_ALLOC_ACCESSIBLE,
+ 						nid, true);
+ 		if (!addr) {
+-			pr_err("Failed to reserve nid %d scratch buffer\n", nid);
+-			goto err_free_scratch_areas;
++			pr_err("Failed to reserve nid %d bootmem\n", nid);
++			goto err_free_bootmem_areas;
+ 		}
+ 
+-		kho_scratch[i].addr = addr;
+-		kho_scratch[i].size = size;
++		kho_bootmem[i].addr = addr;
++		kho_bootmem[i].size = size;
+ 		i++;
+ 	}
+ 
+ 	return;
+ 
+-err_free_scratch_areas:
++err_free_bootmem_areas:
+ 	for (i--; i >= 0; i--)
+-		memblock_phys_free(kho_scratch[i].addr, kho_scratch[i].size);
+-err_free_scratch_desc:
+-	memblock_free(kho_scratch, kho_scratch_cnt * sizeof(*kho_scratch));
++		memblock_phys_free(kho_bootmem[i].addr, kho_bootmem[i].size);
++err_free_bootmem_desc:
++	memblock_free(kho_bootmem, kho_bootmem_cnt * sizeof(*kho_bootmem));
+ err_disable_kho:
+-	pr_warn("Failed to reserve scratch area, disabling kexec handover\n");
++	pr_warn("Failed to reserve bootmem, disabling kexec handover\n");
+ 	kho_enable = false;
+ }
+ 
+@@ -911,11 +911,11 @@ static void __init kho_reserve_scratch(void)
+  * on smaller systems. The algorithm itself doesn't depend on the actual value,
+  * so it can be changed to a different heuristic later if needed.
+  */
+-#define KHO_SCRATCH_EXT_BLKSIZE		SZ_1G
+-#define KHO_SCRATCH_EXT_BLKSHIFT	const_ilog2(KHO_SCRATCH_EXT_BLKSIZE)
++#define KHO_DISCOVER_BLKSIZE		SZ_1G
++#define KHO_DISCOVER_BLKSHIFT	const_ilog2(KHO_DISCOVER_BLKSIZE)
+ 
+ /* Called for the KHO preserved memory radix tree. */
+-static int __init kho_ext_walk_leaf(unsigned long key, void *data)
++static int __init kho_discover_walk_leaf(unsigned long key, void *data)
+ {
+ 	struct kho_radix_tree *busy_blocks = data;
+ 	phys_addr_t start, end;
+@@ -930,29 +930,29 @@ static int __init kho_ext_walk_leaf(unsigned long key, void *data)
+ 	end = start + (1UL << (order + PAGE_SHIFT));
+ 
+ 	while (start < end) {
+-		err = kho_radix_add_key(busy_blocks, start >> KHO_SCRATCH_EXT_BLKSHIFT);
++		err = kho_radix_add_key(busy_blocks, start >> KHO_DISCOVER_BLKSHIFT);
+ 		if (err)
+ 			return err;
+ 
+-		start += (1UL << KHO_SCRATCH_EXT_BLKSHIFT);
++		start += (1UL << KHO_DISCOVER_BLKSHIFT);
+ 	}
+ 
+ 	return 0;
+ }
+ 
+ /* Called for the KHO preserved memory radix tree. */
+-static int __init kho_ext_walk_node(phys_addr_t phys, void *data)
++static int __init kho_discover_walk_node(phys_addr_t phys, void *data)
+ {
+ 	struct kho_radix_tree *busy_blocks = data;
+ 
+-	return kho_radix_add_key(busy_blocks, phys >> KHO_SCRATCH_EXT_BLKSHIFT);
++	return kho_radix_add_key(busy_blocks, phys >> KHO_DISCOVER_BLKSHIFT);
+ }
+ 
+ /* Called for the busy block radix tree. */
+-static int __init kho_ext_mark_scratch(unsigned long key, void *data)
++static int __init kho_discover_mark_noprsrv(unsigned long key, void *data)
+ {
+ 	phys_addr_t *prev_end = data;
+-	phys_addr_t start = key << KHO_SCRATCH_EXT_BLKSHIFT;
++	phys_addr_t start = key << KHO_DISCOVER_BLKSHIFT;
+ 	int err;
+ 
+ 	if (start > *prev_end) {
+@@ -961,23 +961,26 @@ static int __init kho_ext_mark_scratch(unsigned long key, void *data)
+ 			return err;
+ 	}
+ 
+-	*prev_end = start + (1UL << KHO_SCRATCH_EXT_BLKSHIFT);
++	*prev_end = start + (1UL << KHO_DISCOVER_BLKSHIFT);
+ 	return 0;
+ }
+ 
+ /*
+- * kho_extend_scratch - Extend the scratch regions
++ * kho_discover_noprsrv - Discover memory with no preservations
 + *
-+ * Complements the integration tests in sysfs-lazy.c and the in-kernel
-+ * KUnit suite drivers/base/test/device_sysfs_apply_test.c by exercising
-+ * the lazy-populate opt-in added for the kernel commit
-+ *   iommu: lazy-populate iommu_group reserved_regions/type attrs
-+ *
-+ * Walks /sys/kernel/iommu_groups/<N>/ and verifies that the two
-+ * always-present attributes (reserved_regions, type) are accessible
-+ * via both per-file stat() and group-level readdir().  On a system
-+ * running the lazy-populate kernel, these attributes are materialized
-+ * on first access; on a non-lazy kernel they already exist eagerly.
-+ * Either way, this test passes when the kernel exposes a
-+ * syntactically-complete iommu_group hierarchy.
-+ *
-+ * Uses kselftest harness.  Skips gracefully if:
-+ *   - /sys/kernel/iommu_groups/ does not exist (IOMMU disabled); or
-+ *   - no groups are present on the host.
-+ *
-+ * Does not require root.
-+ */
-+
-+#include <dirent.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <limits.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <unistd.h>
-+
-+#include "../kselftest_harness.h"
-+
-+#define IOMMU_GROUPS_ROOT "/sys/kernel/iommu_groups"
-+
-+/*
-+ * find_first_group: return heap-allocated path to the first
-+ * numerically-named entry under IOMMU_GROUPS_ROOT, or NULL if none.
-+ * Caller frees.
-+ */
-+static char *find_first_group(void)
-+{
-+	DIR *d = opendir(IOMMU_GROUPS_ROOT);
-+	struct dirent *de;
-+	char *path = NULL;
-+
-+	if (!d)
-+		return NULL;
-+
-+	while ((de = readdir(d))) {
-+		char *endp;
-+		unsigned long id;
-+
-+		if (de->d_name[0] == '.')
-+			continue;
-+
-+		id = strtoul(de->d_name, &endp, 10);
-+		if (*endp != '\0')
-+			continue;
-+		(void)id;
-+
-+		path = malloc(PATH_MAX);
-+		if (!path)
-+			break;
-+		snprintf(path, PATH_MAX, "%s/%s", IOMMU_GROUPS_ROOT,
-+			 de->d_name);
-+		break;
-+	}
-+
-+	closedir(d);
-+	return path;
-+}
-+
-+TEST(iommu_groups_root_exists_or_skip)
-+{
-+	struct stat st;
-+
-+	if (stat(IOMMU_GROUPS_ROOT, &st) < 0) {
-+		SKIP(return,
-+		     "/sys/kernel/iommu_groups/ absent (IOMMU not enabled)");
-+	}
-+	ASSERT_TRUE(S_ISDIR(st.st_mode));
-+}
-+
-+TEST(first_group_reserved_regions_and_type)
-+{
-+	char path[PATH_MAX];
-+	char *group;
-+	struct stat st;
-+	int fd;
-+	char buf[64];
-+	ssize_t n;
-+
-+	group = find_first_group();
-+	if (!group)
-+		SKIP(return, "no iommu_groups present on this host");
-+
-+	/*
-+	 * Step 1: stat() on the group's "type" attribute must succeed.
-+	 * On a lazy-populate kernel, this is the first access and
-+	 * triggers populate_one(name="type").  On a non-lazy kernel,
-+	 * the attribute was created eagerly at group allocation time.
-+	 */
-+	snprintf(path, sizeof(path), "%s/type", group);
-+	ASSERT_EQ(stat(path, &st), 0) {
-+		TH_LOG("stat(%s) failed: %s", path, strerror(errno));
-+	}
-+	ASSERT_TRUE(S_ISREG(st.st_mode));
-+
-+	/* Step 2: read the "type" attribute.  Expect a non-empty short
-+	 * string (e.g. "DMA", "identity", ...).
-+	 */
-+	fd = open(path, O_RDONLY);
-+	ASSERT_GE(fd, 0);
-+	n = read(fd, buf, sizeof(buf) - 1);
-+	close(fd);
-+	ASSERT_GT(n, 0);
-+	buf[n] = '\0';
-+	TH_LOG("iommu_group type: %s", buf);
-+
-+	/*
-+	 * Step 3: stat() on "reserved_regions" must also succeed.  On
-+	 * a lazy-populate kernel, this is potentially a second
-+	 * populate_one() call.  The file may be empty (many groups
-+	 * have no reserved regions) but must exist.
-+	 */
-+	snprintf(path, sizeof(path), "%s/reserved_regions", group);
-+	ASSERT_EQ(stat(path, &st), 0) {
-+		TH_LOG("stat(%s) failed: %s", path, strerror(errno));
-+	}
-+	ASSERT_TRUE(S_ISREG(st.st_mode));
-+
-+	/*
-+	 * Step 4: readdir() the group directory.  On a lazy-populate
-+	 * kernel this triggers populate_all() which must materialize
-+	 * both attributes (if they were not materialized by step 1/3
-+	 * already).  Verify both names appear.
-+	 */
-+	DIR *d;
-+	struct dirent *de;
-+	int saw_type = 0, saw_rr = 0;
-+
-+	d = opendir(group);
-+	ASSERT_NE(d, NULL);
-+	while ((de = readdir(d))) {
-+		if (!strcmp(de->d_name, "type"))
-+			saw_type = 1;
-+		else if (!strcmp(de->d_name, "reserved_regions"))
-+			saw_rr = 1;
-+	}
-+	closedir(d);
-+	ASSERT_TRUE(saw_type);
-+	ASSERT_TRUE(saw_rr);
-+
-+	free(group);
-+}
-+
-+TEST_HARNESS_MAIN
-diff --git a/tools/testing/selftests/sysfs-lazy/kmsg_cursor.h b/tools/testing/selftests/sysfs-lazy/kmsg_cursor.h
-new file mode 100644
-index 0000000000000..d85c1315cbf3d
---- /dev/null
-+++ b/tools/testing/selftests/sysfs-lazy/kmsg_cursor.h
-@@ -0,0 +1,167 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * kmsg_cursor.h - capture WARN/BUG kernel-log lines emitted within a
-+ * bounded test window.
-+ *
-+ * Selftest builds catch userspace-visible regressions but miss the
-+ * silent kernel-side ones - a WARN_ON splat, a UAF KASAN report, a
-+ * RCU stall - that only show up in dmesg. The cursor provides a
-+ * minimal wrapper around /dev/kmsg with two operations a TEST_F
-+ * needs: snapshot at test start, extract WARN/BUG lines emitted
-+ * since the snapshot.
-+ *
-+ * /dev/kmsg semantics (fs/printk/printk.c::devkmsg_*):
-+ *   - open(/dev/kmsg, O_RDONLY) initially positions at the first
-+ *     record retained in the printk buffer;
-+ *   - lseek(fd, 0, SEEK_END) advances past the current end so
-+ *     subsequent read()s see only newly-appended records;
-+ *   - O_NONBLOCK makes read() return -EAGAIN at EOF rather than
-+ *     blocking for the next record.
-+ *
-+ * Each record is one read() call; the textual line begins after the
-+ * first ',' delimiters in the metadata prefix
-+ * "<prio>,<seq>,<ts>,<flag>;<text>\n".
-+ *
-+ * Requires CAP_SYS_ADMIN (or CAP_SYSLOG with kernel.dmesg_restrict
-+ * relaxed). Selftests run as root in the kselftest harness so this
-+ * is satisfied; kmsg_cursor_snapshot() returns -EPERM if not, and
-+ * callers may SKIP the WARN/BUG assertion in that case.
-+ */
-+#ifndef SYSFS_LAZY_KMSG_CURSOR_H
-+#define SYSFS_LAZY_KMSG_CURSOR_H
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <stdbool.h>
-+#include <stddef.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <unistd.h>
-+
-+#define KMSG_CURSOR_BUF_SZ	8192	/* one /dev/kmsg record max */
-+
-+struct kmsg_cursor {
-+	int fd;
-+};
-+
-+/*
-+ * kmsg_cursor_snapshot - open /dev/kmsg and seek past the current
-+ * end so subsequent extract() returns only records appended after
-+ * this call. Returns 0 on success, -errno on failure (e.g. -EPERM
-+ * if the caller lacks CAP_SYS_ADMIN/CAP_SYSLOG, -ENOENT if /dev/kmsg
-+ * is absent in this filesystem image).
-+ */
-+static inline int kmsg_cursor_snapshot(struct kmsg_cursor *c)
-+{
-+	c->fd = open("/dev/kmsg", O_RDONLY | O_NONBLOCK);
-+	if (c->fd < 0)
-+		return -errno;
-+	if (lseek(c->fd, 0, SEEK_END) == (off_t)-1) {
-+		int err = -errno;
-+
-+		close(c->fd);
-+		c->fd = -1;
-+		return err;
-+	}
-+	return 0;
-+}
-+
-+/*
-+ * kmsg_cursor_extract_warnings - drain records appended since
-+ * kmsg_cursor_snapshot() and return a heap-allocated newline-joined
-+ * string of those whose textual body contains "WARNING:", "BUG:",
-+ * "KASAN:", "UBSAN:", or "Oops:" (case-sensitive - these are the
-+ * established splat prefixes from kernel/panic.c::__warn() and
-+ * lib/ubsan.c). Returns NULL when no matches were found OR when
-+ * extraction was not possible (no kmsg fd). Callers must free()
-+ * the returned string.
-+ *
-+ * Reads are non-blocking: on -EAGAIN the loop terminates. -EPIPE
-+ * (records overrun before we drained them) is treated as "no
-+ * matches"; the harness will not synthesise a false-positive WARN
-+ * on its own log saturation.
-+ */
-+static inline char *kmsg_cursor_extract_warnings(struct kmsg_cursor *c)
-+{
-+	char rec[KMSG_CURSOR_BUF_SZ];
-+	char *out = NULL;
-+	size_t out_len = 0, out_cap = 0;
-+	ssize_t n;
-+
-+	if (!c || c->fd < 0)
-+		return NULL;
-+
-+	for (;;) {
-+		n = read(c->fd, rec, sizeof(rec) - 1);
-+		if (n < 0) {
-+			if (errno == EPIPE) {
-+				/* Overrun - skip and keep draining. */
-+				continue;
-+			}
-+			if (errno == EAGAIN || errno == EWOULDBLOCK)
-+				break;
-+			/* Other errors: stop, return what we have. */
-+			break;
-+		}
-+		if (n == 0)
-+			break;
-+		rec[n] = '\0';
-+
-+		/* Split the metadata prefix off at the first ';'. */
-+		char *body = strchr(rec, ';');
-+
-+		if (!body)
-+			continue;
-+		body++;
-+
-+		/* Trim a trailing newline so concatenation stays tidy. */
-+		size_t blen = strlen(body);
-+
-+		while (blen && (body[blen - 1] == '\n' ||
-+				body[blen - 1] == '\r'))
-+			body[--blen] = '\0';
-+
-+		if (!strstr(body, "WARNING:") &&
-+		    !strstr(body, "BUG:") &&
-+		    !strstr(body, "KASAN:") &&
-+		    !strstr(body, "UBSAN:") &&
-+		    !strstr(body, "Oops:"))
-+			continue;
-+
-+		/* Append "<body>\n" to the output buffer. */
-+		size_t need = out_len + blen + 2; /* '\n' + NUL */
-+
-+		if (need > out_cap) {
-+			size_t new_cap = out_cap ? out_cap * 2 : 1024;
-+			char *p;
-+
-+			while (new_cap < need)
-+				new_cap *= 2;
-+			p = realloc(out, new_cap);
-+			if (!p)
-+				break;
-+			out = p;
-+			out_cap = new_cap;
-+		}
-+		memcpy(out + out_len, body, blen);
-+		out_len += blen;
-+		out[out_len++] = '\n';
-+		out[out_len] = '\0';
-+	}
-+
-+	return out;
-+}
-+
-+static inline void kmsg_cursor_close(struct kmsg_cursor *c)
-+{
-+	if (c && c->fd >= 0) {
-+		close(c->fd);
-+		c->fd = -1;
-+	}
-+}
-+
-+#endif /* SYSFS_LAZY_KMSG_CURSOR_H */
-diff --git a/tools/testing/selftests/sysfs-lazy/pci_resource.c b/tools/testing/selftests/sysfs-lazy/pci_resource.c
-new file mode 100644
-index 0000000000000..b54bcd40c7949
---- /dev/null
-+++ b/tools/testing/selftests/sysfs-lazy/pci_resource.c
-@@ -0,0 +1,284 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * pci_resource - live-race idempotency stress test for lazy PCI
-+ * resource sysfs files.
-+ *
-+ * Exercises the populate_one() vs populate_all() concurrency contract
-+ * for pci_create_resource_files() after migration to the
-+ * device_sysfs_entry walker.  Two threads attack the same PCI device
-+ * directory for a bounded wall-clock window:
-+ *
-+ *   A: open(<dev>/resource0) + close, looped - drives
-+ *      populate_one("resource0") through kernfs_iop_lookup() and the
-+ *      device's ->populate hook.
-+ *   B: opendir(<dev>) + readdir + closedir, looped - drives
-+ *      populate_all() through the kernfs ->iterate dispatcher and the
-+ *      device's ->populate_all hook.
-+ *
-+ * The fixed pre-walker pci_create_resource_files() created a single
-+ * kernfs entry per BAR and assumed the post-create state was its own;
-+ * called twice (e.g. once for resource0 by populate_one, once for the
-+ * full set by populate_all racing immediately after), the second call
-+ * would attempt to re-create the already-created entry and trip
-+ * sysfs_warn_dup() / kernfs_link_sibling()'s "cannot create duplicate
-+ * filename" WARN.
-+ *
-+ * The walker post-fix shape has the wildcard PCI resource row absorb
-+ * the populate-already-done case (idempotent) under the per-device
-+ * lock + populated-latch protocol added with the lazy
-+ * series.  This selftest is the userspace boundary observable: race
-+ * the two paths, then drain /dev/kmsg via kmsg_cursor and assert no
-+ * WARN/BUG splat fired in the window.  The companion KUnit test
-+ * walk_wildcard_row_idempotent() covers the in-kernel single-thread
-+ * sequencing of the same contract; this one covers the multi-thread
-+ * race that the production bug actually expressed under.
-+ *
-+ * Skips when:
-+ *   - /sys/bus/pci/devices/ is empty (e.g. virtio-only builds);
-+ *   - no PCI device has a resource0 attribute (BAR0 absent);
-+ *   - /dev/kmsg is unreadable (lack of CAP_SYS_ADMIN/CAP_SYSLOG -
-+ *     selftests usually run as root, but harness execution outside
-+ *     a kselftest runner may not).
-+ */
-+#define _GNU_SOURCE
-+#include <dirent.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <limits.h>
-+#include <pthread.h>
-+#include <stdatomic.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <time.h>
-+#include <unistd.h>
-+
-+#include "../kselftest_harness.h"
-+#include "kmsg_cursor.h"
-+
-+#define PCI_DEVICES_ROOT	"/sys/bus/pci/devices"
-+#define RACE_DURATION_MS	100
-+
-+/*
-+ * find_pci_dev_with_resource0 - return heap-allocated absolute path
-+ * to the first PCI device under PCI_DEVICES_ROOT whose "resource0"
-+ * attribute is openable for read by the calling process, or NULL if
-+ * none.  Caller frees.
-+ *
-+ * On a lazy-populate kernel, the open(2) probe below performs a
-+ * populate_one("resource0") on the candidate device - which is the
-+ * very contract this test races concurrently elsewhere.  This single
-+ * up-front lookup is benign: there is no second writer at this point
-+ * in the program, and the created attr stays present for the race
-+ * window that follows.
-+ *
-+ * The probe uses open() rather than access(F_OK) so that a process
-+ * without read permission on PCI resource files (selftests usually
-+ * run as root, but ad-hoc invocations may not) skips gracefully via
-+ * the caller's NULL-path SKIP rather than failing the post-race
-+ * readability check.
-+ */
-+static char *find_pci_dev_with_resource0(void)
-+{
-+	DIR *d = opendir(PCI_DEVICES_ROOT);
-+	struct dirent *de;
-+	char *path = NULL;
-+
-+	if (!d)
-+		return NULL;
-+
-+	while ((de = readdir(d))) {
-+		char probe[PATH_MAX];
-+		int fd;
-+
-+		if (de->d_name[0] == '.')
-+			continue;
-+
-+		snprintf(probe, sizeof(probe), "%s/%s/resource0",
-+			 PCI_DEVICES_ROOT, de->d_name);
-+		fd = open(probe, O_RDONLY);
-+		if (fd < 0)
-+			continue;
-+		close(fd);
-+
-+		path = malloc(PATH_MAX);
-+		if (!path)
-+			break;
-+		snprintf(path, PATH_MAX, "%s/%s",
-+			 PCI_DEVICES_ROOT, de->d_name);
-+		break;
-+	}
-+
-+	closedir(d);
-+	return path;
-+}
-+
-+struct race_ctx {
-+	char			dev_dir[PATH_MAX];
-+	char			res0_path[PATH_MAX];
-+	atomic_int		stop;
-+	atomic_long		iters_open;
-+	atomic_long		iters_readdir;
-+};
-+
-+static void *thread_open_close(void *arg)
-+{
-+	struct race_ctx *ctx = arg;
-+
-+	while (!atomic_load_explicit(&ctx->stop, memory_order_acquire)) {
-+		int fd = open(ctx->res0_path, O_RDONLY);
-+
-+		if (fd >= 0)
-+			close(fd);
-+		atomic_fetch_add(&ctx->iters_open, 1);
-+	}
-+	return NULL;
-+}
-+
-+static void *thread_readdir(void *arg)
-+{
-+	struct race_ctx *ctx = arg;
-+
-+	while (!atomic_load_explicit(&ctx->stop, memory_order_acquire)) {
-+		DIR *d = opendir(ctx->dev_dir);
-+
-+		if (d) {
-+			struct dirent *de;
-+
-+			while ((de = readdir(d)))
-+				;
-+			closedir(d);
-+		}
-+		atomic_fetch_add(&ctx->iters_readdir, 1);
-+	}
-+	return NULL;
-+}
-+
-+static long elapsed_ms(const struct timespec *start)
-+{
-+	struct timespec now;
-+
-+	clock_gettime(CLOCK_MONOTONIC, &now);
-+	return (now.tv_sec - start->tv_sec) * 1000 +
-+	       (now.tv_nsec - start->tv_nsec) / 1000000;
-+}
-+
-+/*
-+ * pci_resource_concurrent_open_readdir: stress the populate_one vs
-+ * populate_all live-race for ~RACE_DURATION_MS milliseconds on the
-+ * first PCI device that exposes resource0.  Capture /dev/kmsg
-+ * WARN/BUG splats with kmsg_cursor; assert none fired during the
-+ * race window.  resource0 must remain openable post-race.
-+ */
-+TEST(pci_resource_concurrent_open_readdir)
-+{
-+	struct race_ctx ctx = { 0 };
-+	char *dev_path;
-+	pthread_t t_open, t_dir;
-+	bool t_open_started = false, t_dir_started = false;
-+	struct kmsg_cursor kc;
-+	char *warns;
-+	int kc_ret, ret, fd;
-+	struct timespec start;
-+	long ms;
-+
-+	dev_path = find_pci_dev_with_resource0();
-+	if (!dev_path)
-+		SKIP(return,
-+		     "no PCI device with readable resource0 found under "
-+		     PCI_DEVICES_ROOT
-+		     " (no PCI bus, no BAR0, or insufficient privileges)");
-+
-+	strncpy(ctx.dev_dir, dev_path, sizeof(ctx.dev_dir) - 1);
-+	snprintf(ctx.res0_path, sizeof(ctx.res0_path), "%s/resource0",
-+		 dev_path);
-+	atomic_init(&ctx.stop, 0);
-+	atomic_init(&ctx.iters_open, 0);
-+	atomic_init(&ctx.iters_readdir, 0);
-+
-+	kc_ret = kmsg_cursor_snapshot(&kc);
-+	if (kc_ret) {
-+		free(dev_path);
-+		SKIP(return,
-+		     "kmsg cursor unavailable (%s); cannot detect WARN/dup splat",
-+		     strerror(-kc_ret));
-+	}
-+
-+	ret = pthread_create(&t_open, NULL, thread_open_close, &ctx);
-+	ASSERT_EQ(0, ret) {
-+		kmsg_cursor_close(&kc);
-+		free(dev_path);
-+		TH_LOG("pthread_create(open_close) failed: %s",
-+		       strerror(ret));
-+	}
-+	t_open_started = true;
-+
-+	ret = pthread_create(&t_dir, NULL, thread_readdir, &ctx);
-+	if (ret) {
-+		atomic_store(&ctx.stop, 1);
-+		pthread_join(t_open, NULL);
-+		kmsg_cursor_close(&kc);
-+		free(dev_path);
-+		ASSERT_EQ(0, ret) {
-+			TH_LOG("pthread_create(readdir) failed: %s",
-+			       strerror(ret));
-+		}
-+	}
-+	t_dir_started = true;
-+
-+	clock_gettime(CLOCK_MONOTONIC, &start);
-+	do {
-+		struct timespec ts = { 0, 5 * 1000 * 1000 }; /* 5 ms */
-+
-+		nanosleep(&ts, NULL);
-+		ms = elapsed_ms(&start);
-+	} while (ms < RACE_DURATION_MS);
-+
-+	atomic_store(&ctx.stop, 1);
-+	if (t_open_started)
-+		pthread_join(t_open, NULL);
-+	if (t_dir_started)
-+		pthread_join(t_dir, NULL);
-+
-+	/*
-+	 * Drain WARN/BUG splats accumulated during the race window.
-+	 * The signature of the bug under test is:
-+	 *   "sysfs: cannot create duplicate filename '/devices/.../resource0'"
-+	 * inside a "WARNING:" splat, but any WARN/BUG/KASAN/UBSAN/Oops
-+	 * fault during the window is also a regression of the
-+	 * lock + populated-latch protocol or its callees and
-+	 * fails the test.
-+	 */
-+	warns = kmsg_cursor_extract_warnings(&kc);
-+	EXPECT_EQ(NULL, warns) {
-+		TH_LOG("kernel WARN/BUG during pci_resource race on %s:\n%s",
-+		       dev_path, warns);
-+	}
-+	free(warns);
-+	kmsg_cursor_close(&kc);
-+
-+	/* resource0 must still be openable post-race. */
-+	fd = open(ctx.res0_path, O_RDONLY);
-+	EXPECT_GE(fd, 0) {
-+		TH_LOG("open(%s) failed post-race: %s",
-+		       ctx.res0_path, strerror(errno));
-+	}
-+	if (fd >= 0)
-+		close(fd);
-+
-+	/* Sanity: both threads got CPU time. */
-+	EXPECT_GT(atomic_load(&ctx.iters_open), 0);
-+	EXPECT_GT(atomic_load(&ctx.iters_readdir), 0);
-+	TH_LOG("race ran %ldms: open_close=%ld readdir=%ld on %s",
-+	       ms,
-+	       atomic_load(&ctx.iters_open),
-+	       atomic_load(&ctx.iters_readdir),
-+	       dev_path);
-+
-+	free(dev_path);
-+}
-+
-+TEST_HARNESS_MAIN
-diff --git a/tools/testing/selftests/sysfs-lazy/settings b/tools/testing/selftests/sysfs-lazy/settings
-new file mode 100644
-index 0000000000000..6091b45d226ba
---- /dev/null
-+++ b/tools/testing/selftests/sysfs-lazy/settings
-@@ -0,0 +1 @@
-+timeout=120
-diff --git a/tools/testing/selftests/sysfs-lazy/sysfs-lazy.c b/tools/testing/selftests/sysfs-lazy/sysfs-lazy.c
-new file mode 100644
-index 0000000000000..6599a589366b3
---- /dev/null
-+++ b/tools/testing/selftests/sysfs-lazy/sysfs-lazy.c
-@@ -0,0 +1,777 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * sysfs-lazy.c - kselftest for sysfs lazy initialization
-+ *
-+ * Integration-level coverage of the per-file lazy sysfs populate
-+ * mechanism by loading the sysfs_lazy_test_mod module and exercising
-+ * teardown, leak, and bind/unbind invariants that can only be
-+ * observed from userspace (module load/unload + driver-core rebind).
-+ * The per-call populate behaviour (visibility, mode, groups,
-+ * idempotency, atomicity) is validated in-kernel by the
-+ * KUnit suite drivers/base/test/device_sysfs_apply_test.c; duplicating
-+ * those invariants here would just add maintenance overhead.
-+ *
-+ * Requires: sysfs_lazy_test_mod.ko loaded (or loadable).
-+ */
-+#define _GNU_SOURCE
-+#include <dirent.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <limits.h>
-+#include <stdbool.h>
-+#include <stdint.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/stat.h>
-+#include <sys/syscall.h>
-+#include <sys/types.h>
-+#include <unistd.h>
-+
-+#include "../kselftest_harness.h"
-+#include "kmsg_cursor.h"
-+
-+/*
-+ * getdents64(2) is exposed by glibc on most distros but not all
-+ * (notably some musl builds and older glibc). Selftests build against
-+ * KHDR_INCLUDES which gives us the syscall number; wrap it directly to
-+ * avoid a libc-version dependency. The struct definition matches
-+ * include/uapi/linux/dirent.h::linux_dirent64.
-+ */
-+struct sysfs_lazy_linux_dirent64 {
-+	uint64_t	d_ino;
-+	int64_t		d_off;
-+	unsigned short	d_reclen;
-+	unsigned char	d_type;
-+	char		d_name[];
-+};
-+
-+static inline ssize_t sysfs_lazy_getdents64(int fd, void *buf, size_t len)
-+{
-+	return syscall(SYS_getdents64, fd, buf, len);
-+}
-+
-+#define MOD_NAME		"sysfs_lazy_test_mod"
-+#define DEV_NAME		"sysfs_lazy_test"
-+#define EAGER_NAME		"sysfs_lazy_test_eager"
-+#define DEV_DIR			"/sys/devices/platform/" DEV_NAME
-+#define EAGER_DIR		"/sys/devices/platform/" EAGER_NAME
-+#define DRV_DIR			"/sys/bus/platform/drivers/" DEV_NAME
-+
-+/* ---- helpers ----------------------------------------------------------- */
-+
-+static bool file_exists(const char *dir, const char *name)
-+{
-+	char path[PATH_MAX];
-+	struct stat st;
-+
-+	snprintf(path, sizeof(path), "%s/%s", dir, name);
-+	return stat(path, &st) == 0;
-+}
-+
-+static int read_file_str(const char *dir, const char *name,
-+			 char *buf, size_t len)
-+{
-+	char path[PATH_MAX];
-+	int fd, n;
-+
-+	snprintf(path, sizeof(path), "%s/%s", dir, name);
-+	fd = open(path, O_RDONLY);
-+	if (fd < 0)
-+		return -errno;
-+	n = read(fd, buf, len - 1);
-+	close(fd);
-+	if (n < 0)
-+		return -errno;
-+	buf[n] = '\0';
-+	return 0;
-+}
-+
-+static int write_file_str(const char *path, const char *val)
-+{
-+	int fd, ret;
-+
-+	fd = open(path, O_WRONLY);
-+	if (fd < 0)
-+		return -errno;
-+	ret = write(fd, val, strlen(val));
-+	close(fd);
-+	return ret < 0 ? -errno : 0;
-+}
-+
-+static int count_dir_entries(const char *path)
-+{
-+	struct dirent *de;
-+	DIR *d;
-+	int n = 0;
-+
-+	d = opendir(path);
-+	if (!d)
-+		return -errno;
-+	while ((de = readdir(d)) != NULL) {
-+		if (!strcmp(de->d_name, ".") || !strcmp(de->d_name, ".."))
-+			continue;
-+		n++;
-+	}
-+	closedir(d);
-+	return n;
-+}
-+
-+static int load_module(void)
-+{
-+	return system("modprobe " MOD_NAME);
-+}
-+
-+static int load_module_with_twin(void)
-+{
-+	return system("modprobe " MOD_NAME " eager_twin=1");
-+}
-+
-+/*
-+ * load_module_with_inject - load test_mod with inject_errno=@val so
-+ * dev->type->populate(dev, "inject_target") returns @val unchanged.
-+ * The lookup path then forwards that errno to userspace open(2)
-+ * without caching a negative dentry.
-+ */
-+static int load_module_with_inject(int val)
-+{
-+	char cmd[128];
-+
-+	snprintf(cmd, sizeof(cmd),
-+		 "modprobe " MOD_NAME " inject_errno=%d", val);
-+	return system(cmd);
-+}
-+
-+static int unload_module(void)
-+{
-+	return system("rmmod " MOD_NAME " 2>/dev/null");
-+}
-+
-+/* ---- fixture ----------------------------------------------------------- */
-+
-+FIXTURE(sysfs_lazy) {
-+	int dummy;
-+};
-+
-+FIXTURE_SETUP(sysfs_lazy)
-+{
-+	unload_module();
-+	ASSERT_EQ(0, load_module());
-+	/* Give udev a moment */
-+	usleep(100000);
-+}
-+
-+FIXTURE_TEARDOWN(sysfs_lazy)
-+{
-+	unload_module();
-+}
-+
-+/* ---- test 1: teardown_partial ------------------------------------------ */
-+
-+/*
-+ * Realize a subset of attrs, then unload the module and confirm the
-+ * partial state tears down cleanly (no leaks, no crashes, device dir
-+ * gone).  Integration-only: requires module unload.
-+ *
-+ * kmsg cursor: snapshot at start, drain WARN/BUG splats at end.
-+ * Test fails if any kernel-side warning fires during the window.
-+ */
-+TEST_F(sysfs_lazy, teardown_partial)
-+{
-+	struct kmsg_cursor kc;
-+	char *warns;
-+	int kc_ret;
-+	char buf[64];
-+
-+	kc_ret = kmsg_cursor_snapshot(&kc);
-+
-+	/* Realize only a few attrs */
-+	ASSERT_EQ(0, read_file_str(DEV_DIR, "basic0", buf, sizeof(buf)));
-+	ASSERT_EQ(0, read_file_str(DEV_DIR, "extra0", buf, sizeof(buf)));
-+
-+	/* Unload module - should not leak or crash */
-+	ASSERT_EQ(0, unload_module());
-+
-+	/* Device dir should be gone */
-+	EXPECT_FALSE(file_exists("/sys/devices/platform", DEV_NAME));
-+
-+	/* No WARN/BUG splats in the captured kmsg window. */
-+	if (kc_ret == 0) {
-+		warns = kmsg_cursor_extract_warnings(&kc);
-+		EXPECT_EQ(NULL, warns) {
-+			TH_LOG("kernel WARN/BUG during teardown_partial:\n%s",
-+			       warns);
-+		}
-+		free(warns);
-+		kmsg_cursor_close(&kc);
-+	} else {
-+		TH_LOG("kmsg cursor unavailable (%s); skipping splat check",
-+		       strerror(-kc_ret));
-+	}
-+
-+	/* Reload for teardown fixture */
-+	ASSERT_EQ(0, load_module());
-+	usleep(100000);
-+}
-+
-+/* ---- test 2: no_leaks_on_unload ---------------------------------------- */
-+
-+/*
-+ * Realize everything, then unload with kmemleak scanning to catch any
-+ * lazy-populate allocation that escapes teardown.  Integration-only:
-+ * requires kmemleak and module unload.
-+ *
-+ * kmsg cursor: snapshot at start, drain WARN/BUG splats at end. The
-+ * kmemleak read below is best-effort; a kmemleak hit is reported as
-+ * the buffer mismatch, while any other WARN/BUG (e.g. lockdep, KASAN
-+ * use-after-free in the unload path) surfaces via the cursor.
-+ */
-+TEST_F(sysfs_lazy, no_leaks_on_unload)
-+{
-+	struct kmsg_cursor kc;
-+	char *warns;
-+	int kc_ret;
-+
-+	kc_ret = kmsg_cursor_snapshot(&kc);
-+
-+	/* Realize all attrs */
-+	count_dir_entries(DEV_DIR);
-+
-+	/* Unload */
-+	ASSERT_EQ(0, unload_module());
-+
-+	/* Trigger kmemleak scan if available */
-+	write_file_str("/sys/kernel/debug/kmemleak", "scan");
-+
-+	/* Check kmemleak (best-effort - may not be enabled) */
-+	char buf[256];
-+	int ret;
-+
-+	ret = read_file_str("/sys/kernel/debug", "kmemleak",
-+			    buf, sizeof(buf));
-+	if (ret == 0)
-+		EXPECT_STREQ("", buf);
-+
-+	/* Device dir must be gone */
-+	EXPECT_FALSE(file_exists("/sys/devices/platform", DEV_NAME));
-+
-+	/* No WARN/BUG splats in the captured kmsg window. */
-+	if (kc_ret == 0) {
-+		warns = kmsg_cursor_extract_warnings(&kc);
-+		EXPECT_EQ(NULL, warns) {
-+			TH_LOG("kernel WARN/BUG during no_leaks_on_unload:\n%s",
-+			       warns);
-+		}
-+		free(warns);
-+		kmsg_cursor_close(&kc);
-+	} else {
-+		TH_LOG("kmsg cursor unavailable (%s); skipping splat check",
-+		       strerror(-kc_ret));
-+	}
-+
-+	/* Reload for teardown fixture */
-+	ASSERT_EQ(0, load_module());
-+	usleep(100000);
-+}
-+
-+/* ---- test 3: bind_unbind_cycle ----------------------------------------- */
-+
-+/*
-+ * Realize one attr, unbind the driver, rebind, and confirm the
-+ * created attr is still reachable.  Integration-only: requires
-+ * driver-core bind/unbind plumbing.
-+ *
-+ * kmsg cursor: snapshot at start, drain WARN/BUG splats at end. The
-+ * unbind/rebind path is the most likely site for a lockdep splat or
-+ * a refcount imbalance, so the splat check is high-value here.
-+ */
-+TEST_F(sysfs_lazy, bind_unbind_cycle)
-+{
-+	struct kmsg_cursor kc;
-+	char *warns;
-+	int kc_ret;
-+	char buf[64];
-+
-+	kc_ret = kmsg_cursor_snapshot(&kc);
-+
-+	/* Realize some attrs */
-+	ASSERT_EQ(0, read_file_str(DEV_DIR, "basic0", buf, sizeof(buf)));
-+	EXPECT_STREQ("42\n", buf);
-+
-+	/* Unbind driver */
-+	ASSERT_EQ(0, write_file_str(DRV_DIR "/unbind", DEV_NAME));
-+	usleep(50000);
-+
-+	/* Verify driver symlink gone */
-+	EXPECT_FALSE(file_exists(DEV_DIR, "driver"));
-+
-+	/* Rebind */
-+	ASSERT_EQ(0, write_file_str(DRV_DIR "/bind", DEV_NAME));
-+	usleep(50000);
-+
-+	/* Verify driver symlink restored */
-+	EXPECT_TRUE(file_exists(DEV_DIR, "driver"));
-+
-+	/* Previously-created attrs still accessible */
-+	ASSERT_EQ(0, read_file_str(DEV_DIR, "basic0", buf, sizeof(buf)));
-+	EXPECT_STREQ("42\n", buf);
-+
-+	/* No WARN/BUG splats in the captured kmsg window. */
-+	if (kc_ret == 0) {
-+		warns = kmsg_cursor_extract_warnings(&kc);
-+		EXPECT_EQ(NULL, warns) {
-+			TH_LOG("kernel WARN/BUG during bind_unbind_cycle:\n%s",
-+			       warns);
-+		}
-+		free(warns);
-+		kmsg_cursor_close(&kc);
-+	} else {
-+		TH_LOG("kmsg cursor unavailable (%s); skipping splat check",
-+		       strerror(-kc_ret));
-+	}
-+}
-+
-+/* ---- test 4: transient_populate_error_propagates ----------------------- */
-+
-+/*
-+ * The transient-populate-error contract documented in
-+ * Documentation/driver-api/sysfs-lazy.rst guarantees that an errno
-+ * returned by a driver's populate hook propagates verbatim through
-+ * the kernfs lookup path to userspace open(2), and that the lookup
-+ * does NOT cache a negative dentry (so a subsequent attempt - once
-+ * the underlying condition has cleared - succeeds). The companion
-+ * KUnit case walk_enomem_propagates() covers the walker boundary;
-+ * this case extends coverage to the userspace open(2) boundary.
-+ *
-+ * Mechanism: the test_mod's dev->type->populate(dev, "inject_target")
-+ * returns inject_errno when negative. inject_target is intentionally
-+ * absent from dev->groups, so the standard create_dev_own_groups()
-+ * row of driver_core_sysfs_entries[] returns -ENOENT and the
-+ * dispatch falls through to the type hook.
-+ *
-+ * Step 1: load with inject_errno=-ENOMEM, open inject_target, expect
-+ *         open(2) == -1 with errno == ENOMEM.
-+ * Step 2: reload without injection, open inject_target, expect
-+ *         open(2) >= 0 (success).
-+ *
-+ * Cannot share the FIXTURE_SETUP load because that call uses the
-+ * default modprobe arguments. Reload explicitly.
-+ */
-+TEST_F(sysfs_lazy, transient_populate_error_propagates)
-+{
-+	int fd;
-+
-+	/* Step 1: reload with -ENOMEM injection. */
-+	ASSERT_EQ(0, unload_module());
-+	ASSERT_EQ(0, load_module_with_inject(-ENOMEM));
-+	usleep(100000);
-+
-+	errno = 0;
-+	fd = open(DEV_DIR "/inject_target", O_RDONLY);
-+	EXPECT_EQ(-1, fd);
-+	EXPECT_EQ(ENOMEM, errno);
-+	if (fd >= 0)
-+		close(fd);
-+
-+	/* Step 2: reload without injection; the same open must succeed. */
-+	ASSERT_EQ(0, unload_module());
-+	ASSERT_EQ(0, load_module());
-+	usleep(100000);
-+
-+	errno = 0;
-+	fd = open(DEV_DIR "/inject_target", O_RDONLY);
-+	EXPECT_GE(fd, 0) {
-+		TH_LOG("open(inject_target) failed after clearing injection: %s",
-+		       strerror(errno));
-+	}
-+	if (fd >= 0)
-+		close(fd);
-+}
-+
-+/* ---- test 5: readdir_order_abi_guard ----------------------------------- */
-+
-+/*
-+ * Readdir-time ABI guard. Confirms that the lazy populate_all path
-+ * surfaces the same set of top-level entries as the eager device_add
-+ * path would, by reading the device directory via getdents64(2)
-+ * directly (no opendir(3)/readdir(3) layer that some libcs sort
-+ * post-hoc, no qsort).
-+ *
-+ * Order pinning note: kernfs orders sibling entries by name hash in
-+ * an rb-tree (fs/kernfs/dir.c::kernfs_link_sibling /
-+ * kernfs_dir_pos), NOT by insertion order. The on-disk readdir order
-+ * is therefore deterministic but a function of the entry names'
-+ * hashes, not of driver_core_sysfs_entries[] table order. Pinning a
-+ * literal hash-ordered list would brittle-couple the test to the
-+ * kernfs hash function. Instead this guard pins the SET of expected
-+ * names: every name produced by the test_mod's groups plus the
-+ * stable driver-core / platform-bus contributions must appear, and
-+ * the diagnostic logs the actual on-disk order so a regression that
-+ * reorders entries (e.g. a kernfs hash change) shows up in the
-+ * artifact.
-+ *
-+ * Skipped names (noise out of scope for this guard):
-+ *   - ".", ".." - directory pseudo-entries
-+ *   - "driver" - symlink whose presence depends on bind state
-+ *   - "subsystem" - bus symlink, presence depends on bus state
-+ *   - "numa_node" - platform_bus_type dev_groups attr hidden when
-+ *     dev_to_node() == NUMA_NO_NODE (host-config dependent)
-+ *   - "uevent" - present universally; not asserted here because
-+ *     it's covered by the eager_lazy_tree_match invariant test
-+ */
-+TEST_F(sysfs_lazy, readdir_order_abi_guard)
-+{
-+	/*
-+	 * Required names: every entry the test_mod's group tables MUST
-+	 * produce. These are an upstream-stable contract: changing any
-+	 * of these implies a deliberate change to the test fixture and
-+	 * this list together.
-+	 */
-+	static const char * const required_names[] = {
-+		/* lazy_test_basic_group */
-+		"basic0", "basic1",
-+		/* lazy_test_extra_group */
-+		"extra0", "extra1",
-+		/* lazy_test_link_group (named subdir) */
-+		"link",
-+		/* lazy_test_bin_group */
-+		"bin0", "bin1",
-+		/* driver-core stable rows */
-+		"power",
-+		"uevent",
-+	};
-+	static const char * const skip_names[] = {
-+		".", "..",
-+		"driver", "subsystem",
-+		"numa_node",
-+		/*
-+		 * driver_override comes from bus_add_device() via
-+		 * device_add_group(driver_override_dev_group) when
-+		 * dev->bus->driver_override is true. Platform bus sets
-+		 * it; skip rather than require so the test stays
-+		 * portable to buses that don't.
-+		 */
-+		"driver_override",
-+		/*
-+		 * modalias is a platform_bus_type dev_groups attribute.
-+		 * Required by the platform-bus contract but skipped
-+		 * here because we don't pin bus-specific names - the
-+		 * test_mod-contributed names are the load-bearing
-+		 * surface for this guard.
-+		 */
-+		"modalias",
-+	};
-+	char buf[8192];
-+	bool seen_required[ARRAY_SIZE(required_names)] = { false };
-+	int dir_fd, i;
-+	ssize_t nread;
-+	size_t total_seen = 0;
-+	char order_log[1024];
-+	size_t order_log_len = 0;
-+
-+	/*
-+	 * Trigger populate_all on the lazy device's top-level dir.
-+	 * The opendir(3)+readdir(3) loop performs the readdir(2) that
-+	 * drives the kernfs populate_all() callback; we intentionally
-+	 * use opendir for *triggering* and getdents64 for *reading*
-+	 * to avoid any libc sort.
-+	 */
-+	count_dir_entries(DEV_DIR);
-+
-+	dir_fd = open(DEV_DIR, O_RDONLY | O_DIRECTORY);
-+	ASSERT_GE(dir_fd, 0) {
-+		TH_LOG("open(%s, O_DIRECTORY) failed: %s",
-+		       DEV_DIR, strerror(errno));
-+	}
-+
-+	for (;;) {
-+		struct sysfs_lazy_linux_dirent64 *de;
-+		off_t off;
-+
-+		nread = sysfs_lazy_getdents64(dir_fd, buf, sizeof(buf));
-+		ASSERT_GE(nread, 0) {
-+			TH_LOG("getdents64(%s) failed: %s",
-+			       DEV_DIR, strerror(errno));
-+		}
-+		if (nread == 0)
-+			break;
-+
-+		for (off = 0; off < nread; ) {
-+			const char *name;
-+			bool skip = false;
-+
-+			de = (struct sysfs_lazy_linux_dirent64 *)(buf + off);
-+			name = de->d_name;
-+			off += de->d_reclen;
-+
-+			for (i = 0; i < (int)ARRAY_SIZE(skip_names); i++) {
-+				if (!strcmp(name, skip_names[i])) {
-+					skip = true;
-+					break;
-+				}
-+			}
-+			if (skip)
-+				continue;
-+
-+			total_seen++;
-+
-+			/* Append to diagnostic order log. */
-+			if (order_log_len + strlen(name) + 2 <
-+			    sizeof(order_log)) {
-+				if (order_log_len)
-+					order_log[order_log_len++] = ' ';
-+				memcpy(order_log + order_log_len, name,
-+				       strlen(name));
-+				order_log_len += strlen(name);
-+				order_log[order_log_len] = '\0';
-+			}
-+
-+			for (i = 0; i < (int)ARRAY_SIZE(required_names);
-+			     i++) {
-+				if (!strcmp(name, required_names[i])) {
-+					seen_required[i] = true;
-+					break;
-+				}
-+			}
-+		}
-+	}
-+	close(dir_fd);
-+
-+	TH_LOG("getdents64 raw order (post-skip, %zu entries): %s",
-+	       total_seen, order_log);
-+
-+	/* Every required name must have been seen. */
-+	for (i = 0; i < (int)ARRAY_SIZE(required_names); i++) {
-+		EXPECT_TRUE(seen_required[i]) {
-+			TH_LOG("required entry '%s' missing from %s",
-+			       required_names[i], DEV_DIR);
-+		}
-+	}
-+}
-+
-+/* ---- test 6: eager_lazy_equivalence ------------------------------------ */
-+
-+/*
-+ * The core contract: after populate_all (triggered by readdir), a lazy
-+ * device's sysfs tree must be equivalent to an eager device's tree.
-+ * "Equivalent" = same entry names, same entry types (file/dir/link),
-+ * same permissions.  We compare both trees recursively, skipping
-+ * entries known to differ by identity (driver symlink target contains
-+ * the device name, power/ runtime_status may differ by timing).
-+ */
-+
-+#define MAX_ENTRIES	128
-+
-+struct sysfs_entry {
-+	char name[256];
-+	char subpath[512]; /* relative path from device root */
-+	unsigned char d_type;
-+	mode_t mode;
-+};
-+
-+static int cmp_entry(const void *a, const void *b)
-+{
-+	return strcmp(((const struct sysfs_entry *)a)->subpath,
-+		     ((const struct sysfs_entry *)b)->subpath);
-+}
-+
-+/*
-+ * Recursively collect all entries under @base into @entries[].
-+ * @prefix is the relative path from the device root (empty for top level).
-+ * Returns number of entries collected, or negative on error.
-+ */
-+static int collect_tree(const char *base, const char *prefix,
-+			struct sysfs_entry *entries, int max, int idx)
-+{
-+	char path[PATH_MAX];
-+	struct dirent *de;
-+	struct stat st;
-+	DIR *d;
-+
-+	snprintf(path, sizeof(path), "%s/%s", base, prefix);
-+	d = opendir(path);
-+	if (!d)
-+		return -errno;
-+
-+	while ((de = readdir(d)) != NULL) {
-+		if (!strcmp(de->d_name, ".") || !strcmp(de->d_name, ".."))
-+			continue;
-+		if (idx >= max)
-+			break;
-+
-+		snprintf(entries[idx].name, sizeof(entries[idx].name),
-+			 "%s", de->d_name);
-+		if (prefix[0])
-+			snprintf(entries[idx].subpath,
-+				 sizeof(entries[idx].subpath),
-+				 "%s/%s", prefix, de->d_name);
-+		else
-+			snprintf(entries[idx].subpath,
-+				 sizeof(entries[idx].subpath),
-+				 "%s", de->d_name);
-+
-+		entries[idx].d_type = de->d_type;
-+
-+		snprintf(path, sizeof(path), "%s/%s",
-+			 base, entries[idx].subpath);
-+		if (lstat(path, &st) == 0)
-+			entries[idx].mode = st.st_mode;
-+
-+		idx++;
-+
-+		/* Recurse into subdirectories */
-+		if (de->d_type == DT_DIR) {
-+			char sub[512];
-+
-+			if (prefix[0])
-+				snprintf(sub, sizeof(sub), "%s/%s",
-+					 prefix, de->d_name);
-+			else
-+				snprintf(sub, sizeof(sub), "%s", de->d_name);
-+			idx = collect_tree(base, sub, entries, max, idx);
-+			if (idx < 0) {
-+				closedir(d);
-+				return idx;
-+			}
-+		}
-+	}
-+	closedir(d);
-+	return idx;
-+}
-+
-+/* Skip entries that legitimately differ between the two devices */
-+static bool skip_entry(const char *subpath)
-+{
-+	/* The 'driver' symlink target differs (points to different driver) */
-+	if (!strcmp(subpath, "driver"))
-+		return true;
-+	/* power/runtime_status is timing-dependent */
-+	if (!strcmp(subpath, "power/runtime_status"))
-+		return true;
-+	/*
-+	 * inject_target is a fault-injection knob materialised by
-+	 * sysfs_lazy_test_type_populate{,_all}() and is intentionally
-+	 * lazy-only - the eager twin's attribute tables don't expose
-+	 * it, so a comparison would always show it as a lazy-only
-+	 * extra. The transient_populate_error_propagates test exercises
-+	 * it directly; eager_lazy_tree_match has no business asserting
-+	 * its presence equivalence.
-+	 */
-+	if (!strcmp(subpath, "inject_target"))
-+		return true;
-+	return false;
-+}
-+
-+FIXTURE(sysfs_lazy_equiv) {
-+	int dummy;
-+};
-+
-+FIXTURE_SETUP(sysfs_lazy_equiv)
-+{
-+	unload_module();
-+	ASSERT_EQ(0, load_module_with_twin());
-+	usleep(100000);
-+}
-+
-+FIXTURE_TEARDOWN(sysfs_lazy_equiv)
-+{
-+	unload_module();
-+}
-+
-+TEST_F(sysfs_lazy_equiv, eager_lazy_tree_match)
-+{
-+	struct sysfs_entry *lazy_entries, *eager_entries;
-+	int lazy_count, eager_count;
-+	int i, j, mismatches = 0;
-+
-+	lazy_entries = calloc(MAX_ENTRIES, sizeof(*lazy_entries));
-+	eager_entries = calloc(MAX_ENTRIES, sizeof(*eager_entries));
-+	ASSERT_NE(NULL, lazy_entries);
-+	ASSERT_NE(NULL, eager_entries);
-+
-+	/*
-+	 * Trigger populate_all on the lazy device via readdir.
-+	 * The eager device already has all entries from device_add().
-+	 */
-+	count_dir_entries(DEV_DIR);
-+
-+	/* Collect both trees */
-+	lazy_count = collect_tree(DEV_DIR, "", lazy_entries, MAX_ENTRIES, 0);
-+	ASSERT_GT(lazy_count, 0);
-+
-+	eager_count = collect_tree(EAGER_DIR, "", eager_entries,
-+				   MAX_ENTRIES, 0);
-+	ASSERT_GT(eager_count, 0);
-+
-+	/* Sort both by subpath for comparison */
-+	qsort(lazy_entries, lazy_count, sizeof(*lazy_entries), cmp_entry);
-+	qsort(eager_entries, eager_count, sizeof(*eager_entries), cmp_entry);
-+
-+	/* Compare: every eager entry must exist in lazy with same type/mode */
-+	for (i = 0; i < eager_count; i++) {
-+		if (skip_entry(eager_entries[i].subpath))
-+			continue;
-+
-+		bool found = false;
-+
-+		for (j = 0; j < lazy_count; j++) {
-+			if (!strcmp(eager_entries[i].subpath,
-+				   lazy_entries[j].subpath)) {
-+				found = true;
-+
-+				if (eager_entries[i].d_type !=
-+				    lazy_entries[j].d_type) {
-+					TH_LOG("type mismatch: %s (eager=%d lazy=%d)",
-+					       eager_entries[i].subpath,
-+					       eager_entries[i].d_type,
-+					       lazy_entries[j].d_type);
-+					mismatches++;
-+				}
-+				if ((eager_entries[i].mode & 07777) !=
-+				    (lazy_entries[j].mode & 07777)) {
-+					TH_LOG("mode mismatch: %s (eager=%04o lazy=%04o)",
-+					       eager_entries[i].subpath,
-+					       eager_entries[i].mode & 07777,
-+					       lazy_entries[j].mode & 07777);
-+					mismatches++;
-+				}
-+				break;
-+			}
-+		}
-+		if (!found) {
-+			TH_LOG("eager entry '%s' missing from lazy tree",
-+			       eager_entries[i].subpath);
-+			mismatches++;
-+		}
-+	}
-+
-+	/* Check reverse: lazy entries not in eager (should be none) */
-+	for (j = 0; j < lazy_count; j++) {
-+		if (skip_entry(lazy_entries[j].subpath))
-+			continue;
-+
-+		bool found = false;
-+
-+		for (i = 0; i < eager_count; i++) {
-+			if (!strcmp(lazy_entries[j].subpath,
-+				   eager_entries[i].subpath)) {
-+				found = true;
-+				break;
-+			}
-+		}
-+		if (!found) {
-+			TH_LOG("lazy entry '%s' not in eager tree (extra)",
-+			       lazy_entries[j].subpath);
-+			mismatches++;
-+		}
-+	}
-+
-+	EXPECT_EQ(0, mismatches);
-+	TH_LOG("compared %d eager entries vs %d lazy entries",
-+	       eager_count, lazy_count);
-+
-+	free(lazy_entries);
-+	free(eager_entries);
-+}
-+
-+TEST_HARNESS_MAIN
-diff --git a/tools/testing/selftests/sysfs-lazy/test_mod/Makefile b/tools/testing/selftests/sysfs-lazy/test_mod/Makefile
-new file mode 100644
-index 0000000000000..f7f9bbc896531
---- /dev/null
-+++ b/tools/testing/selftests/sysfs-lazy/test_mod/Makefile
-@@ -0,0 +1,28 @@
-+# SPDX-License-Identifier: GPL-2.0
-+SYSFS_LAZY_TEST_MOD_DIR := $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
-+KDIR ?= $(if $(O),$(O),$(abspath $(SYSFS_LAZY_TEST_MOD_DIR)/../../../../..))
-+
-+ifeq ($(V),1)
-+Q =
-+else
-+Q = @
-+endif
-+
-+obj-m += sysfs_lazy_test_mod.o
-+
-+# -rR forces no built-in rules/variables: avoids GNU Make's Modula-2 implicit
-+# rule (%.o: %.mod) firing on kbuild's $(obj)/%.mod pseudo-targets when the
-+# parent kselftest harness chain did not propagate MAKEFLAGS=-rR.
-+#
-+# KBUILD_EXTMOD= is set in addition to M= because the kernel Makefile's
-+# sub_make_done re-exec changes the origin of M= from "command line" to
-+# "environment", and the kernel Makefile only honours M= if its origin is
-+# "command line".  Without KBUILD_EXTMOD, kbuild silently falls back to a
-+# full in-tree modules build instead of building the external test module.
-+all:
-+	+$(Q)$(MAKE) -rR -C $(KDIR) M=$(SYSFS_LAZY_TEST_MOD_DIR) \
-+		KBUILD_EXTMOD=$(SYSFS_LAZY_TEST_MOD_DIR) modules
-+
-+clean:
-+	+$(Q)$(MAKE) -rR -C $(KDIR) M=$(SYSFS_LAZY_TEST_MOD_DIR) \
-+		KBUILD_EXTMOD=$(SYSFS_LAZY_TEST_MOD_DIR) clean
-diff --git a/tools/testing/selftests/sysfs-lazy/test_mod/sysfs_lazy_test_mod.c b/tools/testing/selftests/sysfs-lazy/test_mod/sysfs_lazy_test_mod.c
-new file mode 100644
-index 0000000000000..7a44e220c640f
---- /dev/null
-+++ b/tools/testing/selftests/sysfs-lazy/test_mod/sysfs_lazy_test_mod.c
-@@ -0,0 +1,319 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * sysfs_lazy_test_mod - test module for sysfs lazy initialization
-+ *
-+ * Registers a lazy platform device (opted in via
-+ * device_set_sysfs_lazy()) with 8 attributes across four groups
-+ * (basic, extra, named "link", bin) so the userspace selftest can
-+ * exercise the integration-level invariants (teardown, leak,
-+ * bind/unbind) over realistic attribute shapes.
-+ *
-+ * When loaded with eager_twin=1, a second identical device is
-+ * registered without the lazy opt-in (eager).  The selftest uses
-+ * this to assert that lazy populate produces a sysfs tree
-+ * equivalent to eager create.
-+ *
-+ * Per-call populate behaviour (visibility, mode, groups,
-+ * idempotency, atomicity) is validated by the in-kernel KUnit suite
-+ * drivers/base/test/device_sysfs_apply_test.c.  The selftest no longer
-+ * wraps device_ktype to observe populate invocations; that avoids
-+ * exporting a driver-core internal type purely for test observability.
-+ */
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#define MOD_NAME	"sysfs_lazy_test"
-+#define EAGER_NAME	"sysfs_lazy_test_eager"
-+
-+static bool eager_twin;
-+module_param(eager_twin, bool, 0444);
-+MODULE_PARM_DESC(eager_twin, "Also register an eager (non-lazy) twin device");
-+
-+/*
-+ * Fault-injection knob for the selftest harness: when negative,
-+ * dev->type->populate(dev, "inject_target") returns this value
-+ * unchanged. The kernfs lookup path forwards a non-(-ENOENT) error
-+ * to userspace as the open(2) errno without caching a negative
-+ * dentry (see kernfs_iop_lookup() in fs/kernfs/dir.c), exercising
-+ * the transient-populate-error contract documented in
-+ * Documentation/driver-api/sysfs-lazy.rst end-to-end.
-+ *
-+ * The companion in-kernel KUnit case walk_enomem_propagates() in
-+ * drivers/base/test/device_sysfs_apply_test.c covers the same
-+ * contract at the walker boundary; this knob extends coverage to
-+ * the userspace open(2) boundary.
-+ *
-+ * 0 disables injection; "inject_target" then materialises as a
-+ * normal sysfs file via dev_attr_inject_target on first lookup.
-+ */
-+static int inject_errno;
-+module_param(inject_errno, int, 0644);
-+MODULE_PARM_DESC(inject_errno,
-+	"On lazy populate of 'inject_target', return this errno (e.g. -12 = -ENOMEM, -5 = -EIO). 0 disables injection.");
-+
-+static struct platform_device *test_pdev;
-+static struct platform_device *eager_pdev;
-+
-+/* --- sysfs show helper -------------------------------------------------- */
-+
-+static ssize_t test_attr_show(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "42\n");
-+}
-+
-+/* --- basic group (2 attrs) ---------------------------------------------- */
-+
-+static DEVICE_ATTR(basic0, 0444, test_attr_show, NULL);
-+static DEVICE_ATTR(basic1, 0444, test_attr_show, NULL);
-+
-+static struct attribute *lazy_test_basic_attrs[] = {
-+	&dev_attr_basic0.attr, &dev_attr_basic1.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group lazy_test_basic_group = {
-+	.attrs = lazy_test_basic_attrs,
-+};
-+
-+/* --- extra group (2 attrs) ---------------------------------------------- */
-+
-+static DEVICE_ATTR(extra0, 0444, test_attr_show, NULL);
-+static DEVICE_ATTR(extra1, 0444, test_attr_show, NULL);
-+
-+static struct attribute *lazy_test_extra_attrs[] = {
-+	&dev_attr_extra0.attr, &dev_attr_extra1.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group lazy_test_extra_group = {
-+	.attrs = lazy_test_extra_attrs,
-+};
-+
-+/* --- named subdir group "link" (2 attrs) -------------------------------- */
-+
-+static DEVICE_ATTR(link0, 0444, test_attr_show, NULL);
-+static DEVICE_ATTR(link1, 0444, test_attr_show, NULL);
-+
-+static struct attribute *lazy_test_link_attrs[] = {
-+	&dev_attr_link0.attr, &dev_attr_link1.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group lazy_test_link_group = {
-+	.name	= "link",
-+	.attrs	= lazy_test_link_attrs,
-+};
-+
-+/* --- binary group (2 bin_attrs) ----------------------------------------- */
-+
-+static ssize_t lazy_bin_read(struct file *f, struct kobject *kobj,
-+			     const struct bin_attribute *attr, char *buf,
-+			     loff_t off, size_t count)
-+{
-+	static const char data[] = "binary\n";
-+	size_t len = sizeof(data) - 1;
-+
-+	if (off >= len)
-+		return 0;
-+	if (off + count > len)
-+		count = len - off;
-+	memcpy(buf, data + off, count);
-+	return count;
-+}
-+
-+static const struct bin_attribute bin_attr_bin0 =
-+	__BIN_ATTR(bin0, 0444, lazy_bin_read, NULL, 7);
-+static const struct bin_attribute bin_attr_bin1 =
-+	__BIN_ATTR(bin1, 0444, lazy_bin_read, NULL, 7);
-+
-+static const struct bin_attribute *const lazy_test_bin_attrs[] = {
-+	&bin_attr_bin0, &bin_attr_bin1,
-+	NULL,
-+};
-+
-+static const struct attribute_group lazy_test_bin_group = {
-+	.bin_attrs = lazy_test_bin_attrs,
-+};
-+
-+/* --- device groups array ------------------------------------------------ */
-+
-+static const struct attribute_group *lazy_test_groups[] = {
-+	&lazy_test_basic_group,
-+	&lazy_test_extra_group,
-+	&lazy_test_link_group,
-+	&lazy_test_bin_group,
-+	NULL,
-+};
-+
-+/* --- fault-injection target (NOT in dev->groups) ------------------------ */
-+
-+/*
-+ * "inject_target" lives outside dev->groups so the standard
-+ * create_dev_own_groups() row of driver_core_sysfs_entries[]
-+ * cannot match it. The walker therefore returns -ENOENT for this
-+ * name and the dispatch falls through to dev->type->populate (see
-+ * device_ktype_populate_one() in drivers/base/core.c). That gives
-+ * the test a clean injection point at the type->populate boundary
-+ * without perturbing the standard group machinery.
-+ */
-+static DEVICE_ATTR(inject_target, 0444, test_attr_show, NULL);
-+
-+static int sysfs_lazy_test_type_populate(struct device *dev, const char *name)
-+{
-+	if (strcmp(name, "inject_target") != 0)
-+		return -ENOENT;
-+	if (inject_errno < 0)
-+		return inject_errno;
-+	return sysfs_create_file(&dev->kobj, &dev_attr_inject_target.attr);
-+}
-+
-+static void sysfs_lazy_test_type_populate_all(struct device *dev)
-+{
-+	/*
-+	 * On readdir-driven populate_all, materialise inject_target
-+	 * unconditionally when injection is disabled. On injection
-+	 * the attribute remains absent so a subsequent lookup still
-+	 * exercises the populate-one error path; this matches how a
-+	 * real driver whose populate fails would surface as a missing
-+	 * entry in readdir output.
-+	 */
-+	if (inject_errno < 0)
-+		return;
-+	/*
-+	 * Best-effort populate_all: the walker contract discards
-+	 * per-row return values on ADD_ALL, and any -EEXIST from a
-+	 * concurrent populate_one is harmless here.  Capture the
-+	 * return value so GCC's warn_unused_result is satisfied
-+	 * (a (void) cast does not silence that attribute).
-+	 */
-+	if (sysfs_create_file(&dev->kobj, &dev_attr_inject_target.attr))
-+		/* Tolerated: best-effort path; populate_one will retry. */
-+		;
-+}
-+
-+static const struct device_type sysfs_lazy_test_type = {
-+	.name		= "sysfs_lazy_test_type",
-+	.populate	= sysfs_lazy_test_type_populate,
-+	.populate_all	= sysfs_lazy_test_type_populate_all,
-+};
-+
-+/* --- platform driver ---------------------------------------------------- */
-+
-+static int lazy_test_probe(struct platform_device *pdev)
-+{
-+	/* sysfs_lazy is set before platform_device_add in init, NOT here */
-+	return 0;
-+}
-+
-+static void lazy_test_remove(struct platform_device *pdev)
-+{
-+}
-+
-+static struct platform_driver lazy_test_driver = {
-+	.probe		= lazy_test_probe,
-+	.remove		= lazy_test_remove,
-+	.driver		= {
-+		.name = MOD_NAME,
-+	},
-+};
-+
-+static struct platform_driver eager_test_driver = {
-+	.probe		= lazy_test_probe,
-+	.remove		= lazy_test_remove,
-+	.driver		= {
-+		.name = EAGER_NAME,
-+	},
-+};
-+
-+/* --- init / exit -------------------------------------------------------- */
-+
-+static int __init sysfs_lazy_test_init(void)
-+{
-+	int ret;
-+
-+	ret = platform_driver_register(&lazy_test_driver);
-+	if (ret)
-+		return ret;
-+
-+	test_pdev = platform_device_alloc(MOD_NAME, PLATFORM_DEVID_NONE);
-+	if (!test_pdev) {
-+		ret = -ENOMEM;
-+		goto err_drv;
-+	}
-+
-+	test_pdev->dev.groups = lazy_test_groups;
-+	/*
-+	 * Set ->type before device_set_sysfs_lazy() so the type's
-+	 * populate / populate_all hooks (sysfs_lazy_test_type) are
-+	 * visible to the very first kernfs lookup that races the
-+	 * platform_device_add() bring-up.
-+	 */
-+	test_pdev->dev.type = &sysfs_lazy_test_type;
-+	ret = device_set_sysfs_lazy(&test_pdev->dev);  /* ONLY here */
-+	if (ret)
-+		goto err_pdev;
-+
-+	ret = platform_device_add(test_pdev);
-+	if (ret)
-+		goto err_pdev;
-+
-+	if (eager_twin) {
-+		ret = platform_driver_register(&eager_test_driver);
-+		if (ret)
-+			goto err_lazy_dev;
-+
-+		eager_pdev = platform_device_alloc(EAGER_NAME,
-+						   PLATFORM_DEVID_NONE);
-+		if (!eager_pdev) {
-+			ret = -ENOMEM;
-+			goto err_eager_drv;
-+		}
-+
-+		eager_pdev->dev.groups = lazy_test_groups;
-+		/* sysfs_lazy defaults to NULL - eager device */
-+
-+		ret = platform_device_add(eager_pdev);
-+		if (ret)
-+			goto err_eager_pdev;
-+	}
-+
-+	pr_info("loaded: /sys/devices/platform/%s (sysfs_lazy=%d)%s\n",
-+		MOD_NAME, device_is_sysfs_lazy(&test_pdev->dev),
-+		eager_twin ? " + eager twin" : "");
-+	return 0;
-+
-+err_eager_pdev:
-+	platform_device_put(eager_pdev);
-+	eager_pdev = NULL;
-+err_eager_drv:
-+	platform_driver_unregister(&eager_test_driver);
-+err_lazy_dev:
-+	platform_device_unregister(test_pdev);
-+	goto err_drv;
-+err_pdev:
-+	platform_device_put(test_pdev);
-+err_drv:
-+	platform_driver_unregister(&lazy_test_driver);
-+	return ret;
-+}
-+
-+static void __exit sysfs_lazy_test_exit(void)
-+{
-+	if (eager_pdev) {
-+		platform_device_unregister(eager_pdev);
-+		platform_driver_unregister(&eager_test_driver);
-+	}
-+	platform_device_unregister(test_pdev);
-+	platform_driver_unregister(&lazy_test_driver);
-+	pr_info("unloaded\n");
-+}
-+
-+module_init(sysfs_lazy_test_init);
-+module_exit(sysfs_lazy_test_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("Test module for sysfs lazy initialization");
-+MODULE_AUTHOR("Kernel selftest");
++ * Discovers memory ranges with no preserved memory and marks it as NOPRSRV.
++ * This lets memblock allocate memory from areas outside KHO bootmem.
+  *
+  * The KHO preserved memory radix tree mixes both physical address and order
+  * into a single key. This makes it hard to look for free ranges directly. This
+  * function first walks the radix tree and digests it down into another radix
+- * tree, whose keys identify blocks of size KHO_SCRATCH_EXT_BLKSIZE which
+- * contain preserved memory.
++ * tree, whose keys identify blocks of size KHO_DISCOVER_BLKSIZE which contain
++ * preserved memory.
+  *
+  * Then it walks the digested radix tree and marks everything that doesn't have
+- * preserved memory as scratch.
++ * preserved memory as NOPRSRV.
+  *
+- * NOTE: This function allocates memory so it should be called when scratch has
++ * NOTE: This function allocates memory so it should be called when bootmem has
+  * available space.
+  *
+  * NOTE: The pages of the KHO preserved memory radix tree tables are not marked
+@@ -986,18 +989,18 @@ static int __init kho_ext_mark_scratch(unsigned long key, void *data)
+  * them to be "preserved memory" and marks their blocks as busy.
+  *
+  * NOTE: efi_init()::reserve_regions() removes all regions except
+- * MEMBLOCK_KHO_SCRATCH. This function adds such regions but they are not KHO
+- * scratch memory, so they should not be removed. This function should always be
++ * MEMBLOCK_KHO_NOPRSRV. This function adds such regions but they are not KHO
++ * boot memory, so they should not be removed. This function should always be
+  * called after reserve_regions().
+  */
+-static void __init kho_extend_scratch(void)
++static void __init kho_discover_noprsrv(void)
+ {
+ 	const struct kho_radix_walk_cb kho_cb = {
+-		.leaf = kho_ext_walk_leaf,
+-		.node = kho_ext_walk_node,
++		.leaf = kho_discover_walk_leaf,
++		.node = kho_discover_walk_node,
+ 	};
+ 	const struct kho_radix_walk_cb ext_cb = {
+-		.leaf = kho_ext_mark_scratch,
++		.leaf = kho_discover_mark_noprsrv,
+ 	};
+ 	static struct lock_class_key busy_radix_class;
+ 	struct kho_radix_tree busy_blocks;
+@@ -1022,7 +1025,7 @@ static void __init kho_extend_scratch(void)
+ 	if (err)
+ 		goto out;
+ 
+-	/* Walk the busy blocks and mark everything between keys as scratch. */
++	/* Walk the busy blocks and mark everything between keys as noprsrv. */
+ 	err = kho_radix_walk_tree(&busy_blocks, &ext_cb, &prev_end);
+ 	if (err)
+ 		goto out;
+@@ -1036,7 +1039,7 @@ static void __init kho_extend_scratch(void)
+ 	kho_radix_destroy_tree(&busy_blocks);
+ print:
+ 	if (err)
+-		pr_err("Failed to extend scratch: %pe\n", ERR_PTR(err));
++		pr_err("Failed to discover extra allocatable memory: %pe\n", ERR_PTR(err));
+ }
+ 
+ /**
+@@ -1150,7 +1153,7 @@ int kho_preserve_folio(struct folio *folio)
+ 	const unsigned int order = folio_order(folio);
+ 
+ 	if (IS_ENABLED(CONFIG_KEXEC_HANDOVER_DEBUG) &&
+-	    WARN_ON(kho_scratch_overlap(pfn << PAGE_SHIFT, PAGE_SIZE << order)))
++	    WARN_ON(kho_bootmem_overlap(pfn << PAGE_SHIFT, PAGE_SIZE << order)))
+ 		return -EINVAL;
+ 
+ 	return kho_radix_add_key(tree, kho_encode_radix_key(PFN_PHYS(pfn),
+@@ -1228,7 +1231,7 @@ int kho_preserve_pages(struct page *page, unsigned long nr_pages)
+ 	int err = 0;
+ 
+ 	if (IS_ENABLED(CONFIG_KEXEC_HANDOVER_DEBUG) &&
+-	    WARN_ON(kho_scratch_overlap(start_pfn << PAGE_SHIFT,
++	    WARN_ON(kho_bootmem_overlap(start_pfn << PAGE_SHIFT,
+ 					nr_pages << PAGE_SHIFT))) {
+ 		return -EINVAL;
+ 	}
+@@ -1825,7 +1828,7 @@ static __init int kho_init(void)
+ 
+ 	err = kho_radix_init_tree(tree, NULL);
+ 	if (err)
+-		goto err_free_scratch;
++		goto err_free_bootmem;
+ 
+ 	kho_out.fdt = kho_alloc_preserve(PAGE_SIZE);
+ 	if (IS_ERR(kho_out.fdt)) {
+@@ -1854,9 +1857,9 @@ static __init int kho_init(void)
+ 		return 0;
+ 	}
+ 
+-	for (int i = 0; i < kho_scratch_cnt; i++) {
+-		unsigned long base_pfn = PHYS_PFN(kho_scratch[i].addr);
+-		unsigned long count = kho_scratch[i].size >> PAGE_SHIFT;
++	for (int i = 0; i < kho_bootmem_cnt; i++) {
++		unsigned long base_pfn = PHYS_PFN(kho_bootmem[i].addr);
++		unsigned long count = kho_bootmem[i].size >> PAGE_SHIFT;
+ 		unsigned long pfn;
+ 
+ 		/*
+@@ -1864,10 +1867,10 @@ static __init int kho_init(void)
+ 		 * corresponding PRESENT bit in the kernel page table.
+ 		 * Subsequent kmemleak scans of these pages cause the
+ 		 * non-PRESENT page faults.
+-		 * Mark scratch areas with kmemleak_ignore_phys() to exclude
++		 * Mark bootmem areas with kmemleak_ignore_phys() to exclude
+ 		 * them from kmemleak scanning.
+ 		 */
+-		kmemleak_ignore_phys(kho_scratch[i].addr);
++		kmemleak_ignore_phys(kho_bootmem[i].addr);
+ 		for (pfn = base_pfn; pfn < base_pfn + count;
+ 		     pfn += pageblock_nr_pages)
+ 			init_cma_reserved_pageblock(pfn_to_page(pfn));
+@@ -1883,11 +1886,11 @@ static __init int kho_init(void)
+ 	kho_unpreserve_free(kho_out.fdt);
+ err_free_kho_radix_tree:
+ 	kho_radix_destroy_tree(tree);
+-err_free_scratch:
++err_free_bootmem:
+ 	kho_out.fdt = NULL;
+-	for (int i = 0; i < kho_scratch_cnt; i++) {
+-		void *start = __va(kho_scratch[i].addr);
+-		void *end = start + kho_scratch[i].size;
++	for (int i = 0; i < kho_bootmem_cnt; i++) {
++		void *start = __va(kho_bootmem[i].addr);
++		void *end = start + kho_bootmem[i].size;
+ 
+ 		free_reserved_area(start, end, -1, "");
+ 	}
+@@ -1906,7 +1909,7 @@ void __init kho_memory_init_early(void)
+ 
+ 	/*
+ 	 * kho_get_mem_map() should always succeed. If it fails, kho_populate()
+-	 * catches that and never sets kho_in.scratch_phys, which stops memory
++	 * catches that and never sets kho_in.bootmem_phys, which stops memory
+ 	 * retrieval.
+ 	 */
+ 	mem_map = kho_get_mem_map(fdt);
+@@ -1914,41 +1917,40 @@ void __init kho_memory_init_early(void)
+ 		goto err;
+ 
+ 	/*
+-	 * kho_scratch_overlap() needs kho_scratch to be initialized. It
+-	 * is used by free_area_init() on KHO boots, so initialize it
+-	 * early.
++	 * kho_bootmem_overlap() needs kho_bootmem to be initialized. It is used
++	 * by free_area_init() on KHO boots, so initialize it early.
+ 	 */
+-	kho_scratch = phys_to_virt(kho_in.scratch_phys);
++	kho_bootmem = phys_to_virt(kho_in.bootmem_phys);
+ 
+ 	if (kho_radix_init_tree(&kho_in.radix_tree, mem_map))
+ 		goto err;
+ 
+-	kho_extend_scratch();
++	kho_discover_noprsrv();
+ 
+ 	return;
+ 
+ err:
+ 	/*
+ 	 * Failed to initialize preserved memory radix tree. Clear FDT
+-	 * and scratch so KHO users don't treat it as a KHO boot.
++	 * and bootmem so KHO users don't treat it as a KHO boot.
+ 	 */
+ 	kho_in.fdt_phys = 0;
+-	kho_in.scratch_phys = 0;
++	kho_in.bootmem_phys = 0;
+ }
+ 
+ void __init kho_memory_init(void)
+ {
+-	if (kho_in.scratch_phys)
++	if (kho_in.bootmem_phys)
+ 		kho_mem_retrieve();
+ 	else
+-		kho_reserve_scratch();
++		kho_reserve_bootmem();
+ }
+ 
+ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+-			 phys_addr_t scratch_phys, u64 scratch_len)
++			 phys_addr_t bootmem_phys, u64 bootmem_len)
+ {
+-	unsigned int scratch_cnt = scratch_len / sizeof(*kho_scratch);
+-	struct kho_scratch *scratch = NULL;
++	unsigned int bootmem_cnt = bootmem_len / sizeof(*kho_bootmem);
++	struct kho_bootmem *bootmem = NULL;
+ 	phys_addr_t mem_map_phys;
+ 	void *fdt = NULL;
+ 	bool populated = false;
+@@ -1977,36 +1979,36 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 	if (!mem_map_phys)
+ 		goto unmap_fdt;
+ 
+-	scratch = early_memremap(scratch_phys, scratch_len);
+-	if (!scratch) {
+-		pr_warn("setup: failed to memremap scratch (phys=0x%llx, len=%lld)\n",
+-			scratch_phys, scratch_len);
++	bootmem = early_memremap(bootmem_phys, bootmem_len);
++	if (!bootmem) {
++		pr_warn("setup: failed to memremap bootmem (phys=0x%llx, len=%lld)\n",
++			bootmem_phys, bootmem_len);
+ 		goto unmap_fdt;
+ 	}
+ 
+ 	/*
+-	 * We pass a safe contiguous blocks of memory to use for early boot
+-	 * purporses from the previous kernel so that we can resize the
+-	 * memblock array as needed.
++	 * We pass a safe contiguous blocks of memory with no preservations to
++	 * use for early boot purporses from the previous kernel so that we can
++	 * resize the memblock array as needed.
+ 	 */
+-	for (int i = 0; i < scratch_cnt; i++) {
+-		struct kho_scratch *area = &scratch[i];
++	for (int i = 0; i < bootmem_cnt; i++) {
++		struct kho_bootmem *area = &bootmem[i];
+ 		u64 size = area->size;
+ 
+ 		memblock_add(area->addr, size);
+ 		err = memblock_mark_kho_noprsrv(area->addr, size);
+ 		if (err) {
+-			pr_warn("failed to mark the scratch region 0x%pa+0x%pa: %pe",
++			pr_warn("failed to mark the bootmem region 0x%pa+0x%pa: %pe",
+ 				&area->addr, &size, ERR_PTR(err));
+-			goto unmap_scratch;
++			goto unmap_bootmem;
+ 		}
+-		pr_debug("Marked 0x%pa+0x%pa as scratch", &area->addr, &size);
++		pr_debug("Marked 0x%pa+0x%pa as bootmem", &area->addr, &size);
+ 	}
+ 
+-	memblock_reserve(scratch_phys, scratch_len);
++	memblock_reserve(bootmem_phys, bootmem_len);
+ 
+ 	/*
+-	 * Now that we have a viable region of scratch memory, let's tell
++	 * Now that we have a viable region of boot memory, let's tell
+ 	 * the memblocks allocator to only use that for any allocations.
+ 	 * That way we ensure that nothing scribbles over in use data while
+ 	 * we initialize the page tables which we will need to ingest all
+@@ -2015,14 +2017,14 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 	memblock_set_kho_noprsrv_only();
+ 
+ 	kho_in.fdt_phys = fdt_phys;
+-	kho_in.scratch_phys = scratch_phys;
+-	kho_scratch_cnt = scratch_cnt;
++	kho_in.bootmem_phys = bootmem_phys;
++	kho_bootmem_cnt = bootmem_cnt;
+ 
+ 	populated = true;
+ 	pr_info("found kexec handover data.\n");
+ 
+-unmap_scratch:
+-	early_memunmap(scratch, scratch_len);
++unmap_bootmem:
++	early_memunmap(bootmem, bootmem_len);
+ unmap_fdt:
+ 	early_memunmap(fdt, fdt_len);
+ report:
+@@ -2034,47 +2036,47 @@ void __init kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 
+ int kho_fill_kimage(struct kimage *image)
+ {
+-	ssize_t scratch_size;
++	ssize_t bootmem_size;
+ 	int err = 0;
+-	struct kexec_buf scratch;
++	struct kexec_buf bootmem;
+ 
+ 	if (!kho_enable || image->type == KEXEC_TYPE_CRASH)
+ 		return 0;
+ 
+ 	image->kho.fdt = virt_to_phys(kho_out.fdt);
+ 
+-	scratch_size = sizeof(*kho_scratch) * kho_scratch_cnt;
+-	scratch = (struct kexec_buf){
++	bootmem_size = sizeof(*kho_bootmem) * kho_bootmem_cnt;
++	bootmem = (struct kexec_buf){
+ 		.image = image,
+-		.buffer = kho_scratch,
+-		.bufsz = scratch_size,
++		.buffer = kho_bootmem,
++		.bufsz = bootmem_size,
+ 		.mem = KEXEC_BUF_MEM_UNKNOWN,
+-		.memsz = scratch_size,
++		.memsz = bootmem_size,
+ 		.buf_align = SZ_64K, /* Makes it easier to map */
+ 		.buf_max = ULONG_MAX,
+ 		.top_down = true,
+ 	};
+-	err = kexec_add_buffer(&scratch);
++	err = kexec_add_buffer(&bootmem);
+ 	if (err)
+ 		return err;
+-	image->kho.scratch = &image->segment[image->nr_segments - 1];
++	image->kho.bootmem = &image->segment[image->nr_segments - 1];
+ 
+ 	return 0;
+ }
+ 
+-static int kho_walk_scratch(struct kexec_buf *kbuf,
++static int kho_walk_bootmem(struct kexec_buf *kbuf,
+ 			    int (*func)(struct resource *, void *))
+ {
+ 	int ret = 0;
+ 	int i;
+ 
+-	for (i = 0; i < kho_scratch_cnt; i++) {
++	for (i = 0; i < kho_bootmem_cnt; i++) {
+ 		struct resource res = {
+-			.start = kho_scratch[i].addr,
+-			.end = kho_scratch[i].addr + kho_scratch[i].size - 1,
++			.start = kho_bootmem[i].addr,
++			.end = kho_bootmem[i].addr + kho_bootmem[i].size - 1,
+ 		};
+ 
+-		/* Try to fit the kimage into our KHO scratch region */
++		/* Try to fit the kimage into our KHO bootmem region */
+ 		ret = func(&res, kbuf);
+ 		if (ret)
+ 			break;
+@@ -2091,7 +2093,7 @@ int kho_locate_mem_hole(struct kexec_buf *kbuf,
+ 	if (!kho_enable || kbuf->image->type == KEXEC_TYPE_CRASH)
+ 		return 1;
+ 
+-	ret = kho_walk_scratch(kbuf, func);
++	ret = kho_walk_bootmem(kbuf, func);
+ 
+ 	return ret == 1 ? 0 : -EADDRNOTAVAIL;
+ }
+diff --git a/kernel/liveupdate/kexec_handover_debugfs.c b/kernel/liveupdate/kexec_handover_debugfs.c
+index 257ee8a52be6..7d74477da0b7 100644
+--- a/kernel/liveupdate/kexec_handover_debugfs.c
++++ b/kernel/liveupdate/kexec_handover_debugfs.c
+@@ -77,23 +77,23 @@ void kho_debugfs_blob_remove(struct kho_debugfs *dbg, void *blob)
+ 	}
+ }
+ 
+-static int scratch_phys_show(struct seq_file *m, void *v)
++static int bootmem_phys_show(struct seq_file *m, void *v)
+ {
+-	for (int i = 0; i < kho_scratch_cnt; i++)
+-		seq_printf(m, "0x%llx\n", kho_scratch[i].addr);
++	for (int i = 0; i < kho_bootmem_cnt; i++)
++		seq_printf(m, "0x%llx\n", kho_bootmem[i].addr);
+ 
+ 	return 0;
+ }
+-DEFINE_SHOW_ATTRIBUTE(scratch_phys);
++DEFINE_SHOW_ATTRIBUTE(bootmem_phys);
+ 
+-static int scratch_len_show(struct seq_file *m, void *v)
++static int bootmem_len_show(struct seq_file *m, void *v)
+ {
+-	for (int i = 0; i < kho_scratch_cnt; i++)
+-		seq_printf(m, "0x%llx\n", kho_scratch[i].size);
++	for (int i = 0; i < kho_bootmem_cnt; i++)
++		seq_printf(m, "0x%llx\n", kho_bootmem[i].size);
+ 
+ 	return 0;
+ }
+-DEFINE_SHOW_ATTRIBUTE(scratch_len);
++DEFINE_SHOW_ATTRIBUTE(bootmem_len);
+ 
+ __init void kho_in_debugfs_init(struct kho_debugfs *dbg, const void *fdt)
+ {
+@@ -186,13 +186,13 @@ __init int kho_out_debugfs_init(struct kho_debugfs *dbg)
+ 	if (IS_ERR(sub_fdt_dir))
+ 		goto err_rmdir;
+ 
+-	f = debugfs_create_file("scratch_phys", 0400, dir, NULL,
+-				&scratch_phys_fops);
++	f = debugfs_create_file("bootmem_phys", 0400, dir, NULL,
++				&bootmem_phys_fops);
+ 	if (IS_ERR(f))
+ 		goto err_rmdir;
+ 
+-	f = debugfs_create_file("scratch_len", 0400, dir, NULL,
+-				&scratch_len_fops);
++	f = debugfs_create_file("bootmem_len", 0400, dir, NULL,
++				&bootmem_len_fops);
+ 	if (IS_ERR(f))
+ 		goto err_rmdir;
+ 
+diff --git a/kernel/liveupdate/kexec_handover_internal.h b/kernel/liveupdate/kexec_handover_internal.h
+index 805d2a76c388..e9685e1ef6d7 100644
+--- a/kernel/liveupdate/kexec_handover_internal.h
++++ b/kernel/liveupdate/kexec_handover_internal.h
+@@ -19,8 +19,8 @@ struct kho_debugfs {
+ struct kho_debugfs {};
+ #endif
+ 
+-extern struct kho_scratch *kho_scratch;
+-extern unsigned int kho_scratch_cnt;
++extern struct kho_bootmem *kho_bootmem;
++extern unsigned int kho_bootmem_cnt;
+ 
+ #ifdef CONFIG_KEXEC_HANDOVER_DEBUGFS
+ int kho_debugfs_init(void);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index f7e42e813de1..0351913ce79b 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -1793,7 +1793,7 @@ void * __init memblock_alloc_hugetlb(phys_addr_t size, int nid, bool exact_nid)
+ 	if (numa_valid_node(nid) && !exact_nid) {
+ 		nid = NUMA_NO_NODE;
+ 		/*
+-		 * If a previous candidate overlapped with KHO scratch, it would
++		 * If a previous candidate overlapped with KHO bootmem, it would
+ 		 * update start or end. Now that the search is opening to all
+ 		 * nodes, reset them.
+ 		 */
+@@ -1809,12 +1809,12 @@ void * __init memblock_alloc_hugetlb(phys_addr_t size, int nid, bool exact_nid)
+ found:
+ 	/*
+ 	 * HugeTLB pages can be preserved with KHO and no preserved memory can
+-	 * be in scratch. So retry if found address overlaps with scratch.
++	 * be in bootmem. So retry if found address overlaps with bootmem.
+ 	 *
+-	 * Scratch areas are normally not very large, so this shouldn't take too
++	 * Bootmem areas are normally not very large, so this shouldn't take too
+ 	 * many retries.
+ 	 */
+-	if (kho_scratch_overlap(addr, size)) {
++	if (kho_bootmem_overlap(addr, size)) {
+ 		if (memblock_bottom_up())
+ 			start = addr + size;
+ 		else
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 78d63789a969..d03156be0e10 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -681,7 +681,7 @@ static __meminit void pageblock_migratetype_init_range(unsigned long pfn,
+ 	const unsigned long end = pfn + nr_pages;
+ 
+ 	for (pfn = pageblock_align(pfn); pfn < end; pfn += pageblock_nr_pages) {
+-		enum migratetype mt = kho_scratch_migratetype(pfn, migratetype);
++		enum migratetype mt = kho_bootmem_migratetype(pfn, migratetype);
+ 
+ 		init_pageblock_migratetype(pfn_to_page(pfn), mt, false);
+ 		if (!atomic && IS_ALIGNED(pfn, PAGES_PER_SECTION))
+@@ -764,7 +764,7 @@ static void __meminit __init_deferred_page(unsigned long pfn, int nid)
+ 
+ 	if (pageblock_aligned(pfn)) {
+ 		enum migratetype mt =
+-			kho_scratch_migratetype(pfn, MIGRATE_MOVABLE);
++			kho_bootmem_migratetype(pfn, MIGRATE_MOVABLE);
+ 		init_pageblock_migratetype(pfn_to_page(pfn), mt, false);
+ 	}
+ }
+@@ -924,7 +924,7 @@ void __meminit memmap_init_range(unsigned long size, int nid, unsigned long zone
+ 		 * over the place during system boot.
+ 		 */
+ 		if (pageblock_aligned(pfn)) {
+-			enum migratetype mt = kho_scratch_migratetype(pfn, migratetype);
++			enum migratetype mt = kho_bootmem_migratetype(pfn, migratetype);
+ 
+ 			init_pageblock_migratetype(page, mt, isolate_pageblock);
+ 			cond_resched();
+diff --git a/tools/testing/memblock/internal.h b/tools/testing/memblock/internal.h
+index e86bb9000b22..46c5a156fce4 100644
+--- a/tools/testing/memblock/internal.h
++++ b/tools/testing/memblock/internal.h
+@@ -66,7 +66,7 @@ static inline void init_deferred_page(unsigned long pfn, int nid)
+ 
+ #define __SetPageReserved(p)	((void)(p))
+ 
+-static inline bool kho_scratch_overlap(phys_addr_t phys, size_t size)
++static inline bool kho_bootmem_overlap(phys_addr_t phys, size_t size)
+ {
+ 	return false;
+ }
 -- 
-2.47.3
-
-
-
-
-Amazon Web Services Development Center Germany GmbH
-Tamara-Danz-Str. 13
-10243 Berlin
-Geschaeftsfuehrung: Christof Hellmis, Andreas Stieger
-Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
-Sitz: Berlin
-Ust-ID: DE 365 538 597
+2.55.0.679.g6767b8d81c-goog
 
 
