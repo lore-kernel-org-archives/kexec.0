@@ -4,72 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 98584C5CFCF
-	for <kexec@archiver.kernel.org>; Tue, 11 Aug 2026 10:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 43E75C5AC67
+	for <kexec@archiver.kernel.org>; Tue, 11 Aug 2026 10:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=uSgyWUQUOXkT3ixZAZs04DUNanjZeEZwO2+Fu0C0pOU=; b=Zg9OOw9Dm2zehxqjllwHamWCe8
-	L92ya7spW+HPOz6VhW8Fil7Y0IlSG0LQIxBkYE58r4Tun3NyMM6a+gGTNOmPcSeabyuuekNnMyelN
-	ZU+iiF6JkizWd6MXR9ZADOPnYbVznueCXrMsguIRukkfUBp6qPwX9Lc+W2MqWXSFlT1hgwzpnuUqi
-	THcRtjytTnkalP6laWJcBkhCE5yzqW+Am34t+LDwCMEf16wGXDuhw7cnutKbrduweBalyj3ufFHAN
-	PVlZBptwtjmbDxAyq9VHQXodHNc5Vu3me02S+XQhXV5nlG6UCBHIep5C7kOQy66uvvcCSDJBzKZCU
-	jypzsKrg==;
+	bh=1kXXh8PYIfsaZmMaidvXBBrRKRtqDnrYuD5GOCyydIk=; b=vPr59B4AGOVqVAFGVWW3Z6TroT
+	EO8hEXMzkV9zXtXBi9C6DjIof7mWZaiZFikJCslNo0Y4A6XuxGzXAsdQm5ujPKML/4QNkfxrK4CzJ
+	zoEUt2RQpfRxN+hW6ViLyoc/3DiHBXZztW+0Efa6hpw8Gjn/9S/afdKNdKpWjLu7fCMvbCYgz4NHK
+	V6bShT+TpENJbjd02tSzyYGsj6Y1q7QQ0vLFWSNDmasFTG+mgV2wBDM6HM8Ikz94eY+QVQqu8UD9s
+	Wb4ZPQeV19ldw3//WFyG1l6H54hHtsPJ0xVDbubLWnBebmpbWg4ZsIQga2xBsmItSlvqbkho/QjRj
+	I4f6gT0Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtjN8-0000000DoN0-1ymi;
-	Tue, 11 Aug 2026 10:06:14 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wtjhQ-0000000Dqq8-2mlL;
+	Tue, 11 Aug 2026 10:27:12 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtjN2-0000000DoMi-1dMT
+	id 1wtjhQ-0000000Dqpm-00gk
 	for kexec@lists.infradead.org;
-	Tue, 11 Aug 2026 10:06:08 +0000
+	Tue, 11 Aug 2026 10:27:12 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 0C904412E1;
-	Tue, 11 Aug 2026 10:06:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A4701F000E9;
-	Tue, 11 Aug 2026 10:06:02 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 76DEF40BEB;
+	Tue, 11 Aug 2026 10:27:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C69E1F000E9;
+	Tue, 11 Aug 2026 10:27:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786442767;
-	bh=uSgyWUQUOXkT3ixZAZs04DUNanjZeEZwO2+Fu0C0pOU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=IeDAQ/7Ish/yX0U8VJXoYoq4pKb7kydnqDGq/pZDcnkkADYcmeOfiyjd/6K4fk7IH
-	 cD1VmCa377mV5C7Cj0vQzAc2AaiKI0TEGHX+U9dsQGnFq+puC2A9vz85sQwUiPpob+
-	 br1klWfTZVFVWBlODjbrY3ZmJgoyU5EMYoE8/kHeBCejB6ke4jvIlEH5OBQMIZa5Pl
-	 dwv9cup14TcREBxrxzhzwHaGzpYe3kbMzp1upF8cguLIWjEwooCTtLccIjuF7PRNOh
-	 pQysWZPHJp3QJ/A7Uqv3HkfY9Gk5toww7/fsEf60j8QNVj4sYYJTNbMd7S/jJfTE8V
-	 QXq9+WdeSKFUw==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: Tarun Sahu <tarunsahu@google.com>,  fuad.tabba@linux.dev,  Andrew Morton
- <akpm@linux-foundation.org>,  seanjc@google.com,  dmatlack@google.com,
-  Shuah Khan <skhan@linuxfoundation.org>,  Jonathan Corbet
- <corbet@lwn.net>,  david@redhat.com,  Pasha Tatashin
- <pasha.tatashin@soleen.com>,  Pratyush Yadav <pratyush@kernel.org>,
-  sagis@google.com,  Paolo Bonzini <pbonzini@redhat.com>,  Mike Rapoport
- <rppt@kernel.org>,  Alexander Graf <graf@amazon.com>,
-  linux-kselftest@vger.kernel.org,  andre.przywara@arm.com,
-  michael.roth@amd.com,  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
-  will@kernel.org,  vannapurve@google.com,  maz@kernel.org,
-  fvdl@google.com,  kvm@vger.kernel.org,  oliver.upton@linux.dev,
-  kvmarm@lists.linux.dev,  alexandru.elisei@arm.com,  skhawaja@google.com,
-  aneesh.kumar@kernel.org,  linux-doc@vger.kernel.org,  David Hildenbrand
- <david@kernel.org>,  yan.y.zhao@intel.com,  kexec@lists.infradead.org,
-  suzuki.poulose@arm.com
-Subject: Re: [PATCH v4 11/11] KVM: selftests: Add guest_memfd_preservation_test
-In-Reply-To: <CAEvNRgEbS06snhyHznPSqxnUrdudVEKUuOpPwnU+AJATWFBRBA@mail.gmail.com>
-	(Ackerley Tng's message of "Thu, 30 Jul 2026 11:18:44 -0700")
-References: <20260728121138.1103610-1-tarunsahu@google.com>
-	<20260728121138.1103610-12-tarunsahu@google.com>
-	<CAEvNRgEbS06snhyHznPSqxnUrdudVEKUuOpPwnU+AJATWFBRBA@mail.gmail.com>
-Date: Tue, 11 Aug 2026 12:06:00 +0200
-Message-ID: <2vxzy0ed3rav.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=k20260515; t=1786444031;
+	bh=1kXXh8PYIfsaZmMaidvXBBrRKRtqDnrYuD5GOCyydIk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=oaG9JOuX/0vcBfIckuFTx0W15YPUcXCkJnkcQjMIbr0AOcvnRtL0pLoDIAript9S5
+	 fvsQp8kNlISsYrcm5UCUZ4SUOLxshJUgfj26E8vKd2lAx74cQDzRVPevMviHGIMdVv
+	 EgJjlP6Wz0Ayg7/ts/UeqsCKHQESAC+awlHAHhcpRnWTStKseu8NMxYTkE8R/VTz4v
+	 GakfJG9VtthV8QjjqYYAeOBe2uBY3IDnsjz/PmL1jmZkHj3Kr9VTBdMU6Qay7ioC2Q
+	 G9+2+aCFeO8ej69JItG0DCUlPp/k2q9njH+oEzPqW42l3pEdl6LV6pkscYGwajURgk
+	 JocxcWXRiS5GQ==
+Date: Tue, 11 Aug 2026 13:27:04 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Pranjal Shrivastava <praan@google.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Alexander Graf <graf@amazon.com>,
+	Samiullah Khawaja <skhawaja@google.com>,
+	David Matlack <dmatlack@google.com>, kexec@lists.infradead.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/2] kho: support preserving high-order non-compound
+ pages
+Message-ID: <anr4-F-e5_vHEar8@kernel.org>
+References: <20260803113944.3694290-1-praan@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260803113944.3694290-1-praan@google.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,58 +73,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jul 30 2026, Ackerley Tng wrote:
+Hi Pranjal,
 
-> Tarun Sahu <tarunsahu@google.com> writes:
->
->> Add guest_memfd_preservation_test to verify that KVM VM state and guest
->> memory backed by guest_memfd are preserved across a kexec reboot via Live
->> Update Orchestrator (LUO).
->>
->> This test includes multiple tests
->> - (A) Test to preserve non-guest_memfd, non-memfd which must fail (/dev/null)
->> - (B) Test to preserve guest_memfd with no INIT_SHARED flag which must fail
->> - (C) Test to allocate the guest_memfd memory after preservation because
->>   preservation makes the guest_memfd frozen. Which must fail as well.
->> - (D) Test to verify guest_memfd with INIT_SHARED flag preservation across
->>   kexec: Below is the details of stages in this test.
-[...]
->> +++ b/tools/testing/selftests/kvm/guest_memfd_preservation_test.c
->> @@ -0,0 +1,357 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) 2026, Google LLC.
->> + *
->> + * Author: Tarun Sahu <tarunsahu@google.com>
->> + *
->> + * Test for VM and guest_memfd preservation across kexec (Live Update) via LUO.
->> + *
->> + * NOTE: This is a MANUAL test and is excluded from automated CI/testing
->> + * frameworks because Stage 1 daemonizes into the background to pin resources
->> + * and requires a human operator to manually trigger kexec before Stage 2
->> + * is executed. Running Stage 1 automatically would leak the background daemon
->> + * and cause CI runners to falsely interpret it as a passed test.
->> + *
+On Mon, Aug 03, 2026 at 11:39:41AM +0000, Pranjal Shrivastava wrote:
+> Introduction
+> ============
+> This series is required for the ongoing effort to preserve DMA allocations
+> across KHO [1]. It addresses a fundamental mismatch between the current KHO
+> restoration logic and the physical reality of high-order buddy allocations.
 
-I think this is fine as a first step but we really should automate
-these.
+I skimmed through the patches, they look fine to me before the in-depth
+review :)
 
-We have some infrastructure to automate other live update tests across
-both stages already by launching a VM under qemu and making the test
-process as the init task. See tools/testing/selftests/kho/vmtest.sh. For
-KVM tests you'd need the runner to be able to run nested VMs.
+But we are really close to the merge window, so we'll anyway need to
+reiterate after v7.3-rc1.
+ 
+> The Problem
+> ===========
+> The current KHO restore implementation treats all multi-page blocks as
+> split pages during restoration. Specifically, kho_restore_pages()
+> initializes every 4KB sub-page with a refcount of 1.
+> 
+> However, many kernel subsystems, most notably the DMA allocator (via
+> dma_alloc_coherent), frequently return high-order non-compound pages.
+> In this state, only the head page carries a refcount of 1, while
+> all tail pages have a refcount of 0.
 
-The script right now is pretty bare bones, but I really think we should
-spend time improving it to the point where we can automate all our tests
-using it.
+This hints that these patches could be a part of the DMA preservation
+series, unless you expect other users of the new API.
 
->
-> Usually there aren't many printfs in tests, but since this is a MANUAL
-> test, maybe that's ok?
->
-> Would like to know what Sean thinks of this, and printfs in general.
+Generally, we don't merge new APIs without the users and if DMA
+preservation is the only user, it's better to fold these two patches there.
 
 -- 
-Regards,
-Pratyush Yadav
+Sincerely yours,
+Mike.
 
