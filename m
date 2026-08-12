@@ -4,63 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 04E0AC5CFDB
-	for <kexec@archiver.kernel.org>; Wed, 12 Aug 2026 11:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E650EC5AD5A
+	for <kexec@archiver.kernel.org>; Wed, 12 Aug 2026 11:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=lnwlG71sjI06zsq7yj3kdlhgqiN/yez8QEYIr9vq9zU=; b=c+fwvvYKmTmuRQ07XCEo7ijwvc
-	DofplkvDLMuH2qsMXctwPHnRrritHsxZSIV0d6W2Dab6qmUfUVGc+6cdDmZYWFGut3/OqjzvSSGpG
-	CagGvp15gVZQzaWgtRPcER3eedVoWKMSwWBTxI4gEIlF8ejBcr+ZqoKCXvS8lCI/F3t/apserGemW
-	mf26SxL24kxxwxz5yeETZGMGXVJIS8KWEcH18JHmT//K7kAsV423oygQBxgK3dHwSFmmO1T9Zd/Ef
-	7E5iVXR4s+P6qbvCT9R4l6cUGUasbd6H1F44wGrC2wriQ4hWVf4EFNkC4utfHqfl5jqs/7J+eEl/J
-	UHzkcPwA==;
+	bh=wfAKwb7BHAfKwks4BwOH8LurhNbOUrjBmbZm8v/M8ho=; b=YuughaOZjgIxMwqsT2nX5bGAU6
+	rmf1Psw5lRcU4hRG42WdMH60Fycd3++z0VhUx4gRY4EVaZ+57AATxar23QTSieezpKia8FeaaMiLn
+	y4wII7N7Jwi0I8jox/C+wBkxyc+3QTk22VJNSVJk9nxpx8HgKExyA3j4mKDUZC1V+z+RSJJncT29N
+	zGhyeVmGtfkxVgCAwKKpdjeDqbDTF00crsYKR/tWjVX5MAFRVD1ogbnORakI7vuhBLh0NzYqlKFhs
+	tqGT2s70xfBRlLErwZOXScJxFdit2dl4xFJfzINuoMjNDzEnnxx89gnsL3dnVrLEKBnu9EOgshYVc
+	kV8DlhNQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wu6qu-0000000G0oC-3xzz;
-	Wed, 12 Aug 2026 11:10:32 +0000
-Received: from sea.source.kernel.org ([172.234.252.31])
+	id 1wu6sr-0000000G13m-2oMp;
+	Wed, 12 Aug 2026 11:12:33 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wu6qq-0000000G0nX-0nDZ
+	id 1wu6sp-0000000G112-0S0E
 	for kexec@lists.infradead.org;
-	Wed, 12 Aug 2026 11:10:30 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 389C542A9D;
-	Wed, 12 Aug 2026 11:10:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D8941F000E9;
-	Wed, 12 Aug 2026 11:10:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786533027;
-	bh=lnwlG71sjI06zsq7yj3kdlhgqiN/yez8QEYIr9vq9zU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=WYd2zt8tfz9f3l7W2MEvjC9PgjvttrZRZQVu40gKcm//Lc2oh3g67LBMStlLwpfhS
-	 xMQicXNXtVelpILEAADkxgCYL9BvY84p7BepdW1igypoiA/RTrx9ZoHqQzeH9LzhNX
-	 fFGCwLPk5SyGU+QOnoKQ5AJxqETgroS26+gZ9FeDb2c9/tgO0+uDSA3AuIbv0SG8Lr
-	 lJESY+GMBNpPY8804d2TiZWZe3JjdQSimESxZtndotoBUjylLoQO3lxy2eco2WxcLF
-	 n+yRKhPGPH/SONjna1QhUFRHOduSa5v7P3vbI4WsU1U9gscXN1ALeSmiWs6bN71fcL
-	 ssDCkH9AWO2ew==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Pranjal Shrivastava <praan@google.com>
-Cc: Mike Rapoport <rppt@kernel.org>,  Pasha Tatashin
- <pasha.tatashin@soleen.com>,  Pratyush Yadav <pratyush@kernel.org>,
-  Alexander Graf <graf@amazon.com>,  Samiullah Khawaja
- <skhawaja@google.com>,  David Matlack <dmatlack@google.com>,
-  kexec@lists.infradead.org,  linux-mm@kvack.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] kho: Introduce preserve/restore APIs for
- high-order pages
-In-Reply-To: <20260803113944.3694290-3-praan@google.com> (Pranjal
-	Shrivastava's message of "Mon, 3 Aug 2026 11:39:43 +0000")
-References: <20260803113944.3694290-1-praan@google.com>
-	<20260803113944.3694290-3-praan@google.com>
-Date: Wed, 12 Aug 2026 13:10:23 +0200
-Message-ID: <2vxzmrur3880.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Wed, 12 Aug 2026 11:12:32 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=wfAKwb7BHAfKwks4BwOH8LurhNbOUrjBmbZm8v/M8ho=; b=o2/oPsgT8gcfdJPToPnecYrXEY
+	JESoF7pDhaqGxbh9ocFyX3YVUH/FjZuDIMgtE8vfuQEIj70ltqRFqBjiIcDWdegYRMCqRYVdVuYl4
+	UlDTVngR5rQP97DrXqNPuQdNunlIJa7ZDeNlVB1FfnQN0PJGV8e4tpypn9hUMpwmHpR29xidDMEJU
+	WTHogF/NFBajrCoiytFW3YQfECpHTAfXHEtxyWh/8rSTzrSR4SZwXkojbSAsw9bQ1t3J1TBRcjy5Q
+	AoStvSzvaSIfQD2VqXmQbfl9y9x77/1080CcswJUXIj1gsFMVybP5PXZA11/KnbSgKk4nP7jAVCKo
+	5VEGAkAg==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wu6sK-004Ifd-32;
+	Wed, 12 Aug 2026 11:12:01 +0000
+Date: Wed, 12 Aug 2026 04:11:54 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Mike Rapoport <rppt@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Baoquan He <baoquan.he@linux.dev>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	kexec@lists.infradead.org, rmikey@meta.com, riel@surriel.com, kernel-team@meta.com, 
+	Kiryl Shutsemau <kas@kernel.org>
+Subject: Re: [PATCH v5] kexec: keep the next kernel off hardware-poisoned
+ pages
+Message-ID: <anxUnuML9UTepBTu@gmail.com>
+References: <20260810-kexec_posioned-v5-1-95e1b5e2e656@debian.org>
+ <ann9Kcesyb4T9Z8b@kernel.org>
+ <anr59P1ZCAuHxv6x@gmail.com>
+ <2vxzldac51om.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2vxzldac51om.fsf@kernel.org>
+X-Debian-User: leitao
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260812_041231_176257_2EDB7E86 
+X-CRM114-Status: GOOD (  23.96  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,39 +84,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Aug 03 2026, Pranjal Shrivastava wrote:
+On Tue, Aug 11, 2026 at 01:36:25PM +0200, Pratyush Yadav wrote:
+> On Tue, Aug 11 2026, Breno Leitao wrote:
+> 
+> > On Mon, Aug 10, 2026 at 07:32:41PM +0300, Mike Rapoport wrote:
+> >> Hi Breno,
+> >> 
+> >> On Mon, Aug 10, 2026 at 06:32:04AM -0700, Breno Leitao wrote:
+> [...]
+> >> > +	for (pfn = PHYS_PFN(start); pfn <= end_pfn; pfn++) {
+> >> > +
+> >> > +		cond_resched();
+> >> 
+> >> cond_resched() for every pfn is too much, isn't it?
+> >
+> > It is what the other pfn walkers do: the kpageflags read loop in
+> > fs/proc/page.c and read_page_owner() in mm/page_owner.c both call it
+> > once per pfn. 
+> >
+> > But I honestly don't have a strong opinion here, though, happy to batch
+> > it if you prefer. Would this one look better?:
+> >
+> > 	if (!(pfn % MAX_ORDER_NR_PAGES))
+> > 		cond_resched();
+> >
+> 
+> Now that we are looking at this, Sashiko also complains about a race
+> with memory hotunplug.
+> 
+>     Can the page pointer become invalid here due to concurrent memory hotplug?
+> 
+>     The loop retrieves the struct page pointer using pfn_to_online_page() and
+>     then yields the CPU with cond_resched(). Since this iteration runs without
+>     holding get_online_mems(), could a concurrent memory hot-unplug event offline
+>     and remove the memory section while the thread is sleeping?
+> 
+>     If the vmemmap backing the struct page is freed and its page tables torn
+>     down, dereferencing the pointer in is_page_hwpoison(page) upon waking
+>     could cause a use-after-free regression.
+> 
+> Kind of makes sense at first glance but I didn't go and look. Perhaps it
+> is better to do the cond_resched() at the end of the loop?
 
-> The current KHO page preservation APIs (e.g. kho_preserve_pages) assume
-> that multi-page blocks are split into independent 4KB pages during
-> restoration. This is incompatible with high-order non-compound pages,
-> such as DMA buffers, which must be restored with tail pages having a
-> zero reference count.
->
-> Introduce explicit preserve and restore APIs for high-order pages,
-> which preserve and restore a high-order page block as a single unit,
-> applying a refcount of 1 to the head page while leaving tail pages at 0.
-> Rename the existing internal helper to __kho_restore_page() and
-> consolidate the common restoration code into it.
->
-> Signed-off-by: Pranjal Shrivastava <praan@google.com>
+Agree. I was calling cond_resched() earlier because I wanted to call it
+before the "continue", but it is rather unusal. Let me move it at the
+end of the loop.
 
-The code here looks very convoluted TBH. I think it will be simpler to
-make kho_restore_page() only return non-compound pages. That is, it
-returns 0 or higher order non-compound page.
-
-Then kho_restore_pages() can call kho_restore_page() and then do
-split_page() on the page it got to turn it into 0-order pages.
-kho_restore_folio() can call kho_restore_page() and then do
-prep_compound_page() on the page it got.
-
-And then you expose kho_restore_page() to be used by DMA APIs to get
-non-compound high order pages directly.
-
-How does that sound?
-
-[...]
-
--- 
-Regards,
-Pratyush Yadav
+Thanks for the review,
+--breno
 
