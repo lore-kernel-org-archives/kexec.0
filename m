@@ -4,95 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 77101C5B56A
-	for <kexec@archiver.kernel.org>; Wed, 12 Aug 2026 12:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 45B6AC5DF60
+	for <kexec@archiver.kernel.org>; Wed, 12 Aug 2026 13:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=4DlA54u08QSleIzxXC03qMaWaKXGBXVOD3RnOmcy+1U=; b=a2jD00uu1Dms69dQF5C4SVTHf2
-	VCgloJP7cuaKBpynSmLBYTmZiH+a8rUYyhZawxAgpJNX/fanLciNTddg8Ge0rWKwb5wrgcymiRacf
-	K6r03j/wMU8ERpVf3R7ayKHik5J3r41dH9m8J6hyvtclw6EyRTb214cMva5iUgHqYAbjmIS6TNJ3l
-	C9uq5dlf1oO+keWDio9i3TTF43FRhgS483whYEsydnt3gDLeAnwHy6Vdmse75zhJ7fg4LpUbI/GNK
-	eybvU34GBzP+OcBLfy/1cIigrqkvvJJ5gW5a+YQ0/aFMqJGlkXkwPx7v7smRYbQyf2y99/U1PgiBA
-	vo18VigA==;
+	bh=2D2UytTyVCCTSaKgj888w4OMsi/TDP+60oG0TxSPgjk=; b=bh+jWgBYULwRaryHmn8Ua7r2+k
+	tLzbCNWzEPyda2cQfFf9UQW34ILesYg5xp2Irnm2OyUMJsZo/YdO69jYaUtSC0DqbDzBZ6Ha3PhAE
+	ExzXrW6BOw2gQ9yAmNoL/60Hf2yJK54TewVGqyRxDKdrvR5jAXR4HIf1ou0fW0YktnxI5W/8KPd/i
+	5p+ArENqafX+yFjCSUsksQKd5ysawd9OqD7J8/TpSb5Mdl/pGQZE6DZL8+SikT0692P7eDHHAGD0a
+	3mHuKHrnMcvZ2h/g2xCQghgKRa4y+rfHPGo9rZsFyRwk7b8Zl3jJeT73y+BofhgtcVNBme3rHzjbz
+	x/8jQRCQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wu8OM-0000000GDg9-060e;
-	Wed, 12 Aug 2026 12:49:10 +0000
-Received: from mail-pl1-x634.google.com ([2607:f8b0:4864:20::634])
+	id 1wu9H5-0000000GJpF-1003;
+	Wed, 12 Aug 2026 13:45:43 +0000
+Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wu8OJ-0000000GDf6-21gl
+	id 1wu9H3-0000000GJom-31tw
 	for kexec@lists.infradead.org;
-	Wed, 12 Aug 2026 12:49:08 +0000
-Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-2cab97c86bdso93945ad.1
-        for <kexec@lists.infradead.org>; Wed, 12 Aug 2026 05:49:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786538947; x=1787143747; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=4DlA54u08QSleIzxXC03qMaWaKXGBXVOD3RnOmcy+1U=;
-        b=n9dZzsf+afMDptENtkjjEpjp3Ecapz474rk8NQQRvShhrmRNLgg59sPTUsg21YQTWM
-         hU3Blhd5hLB+pn0Bw/FZGbFy+VHy8KpCpvDolZ1yYNVkVkfolCqIEnH0pnZTruhevbfr
-         xOzkUOUiel/khrCQdviLvtrDW+nvQZGmK/mEEkEw6T0gCecljuBwh44nXTM+sfZJrtlj
-         We0LFNex5pml1xaJsYcw/50dxCM/Tr9Q7c7ZdxlIDSxS2cLzJcUO7wLXVBzbgYpWAFjF
-         WOkB579L/AyAlgLs1qCLSOvj72z8bjbSuCc8D7ovSBG09u+w616besyvv1lO0D+BrQ3p
-         b6qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786538947; x=1787143747;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=4DlA54u08QSleIzxXC03qMaWaKXGBXVOD3RnOmcy+1U=;
-        b=W1BZAXUbu7cYhHDRS0n7s+1kDQGyruSxqWzXiVVnig48IYvSU7D2gRHt7YMWw/t5Ne
-         hxkLEM8HtK0FvZaMq4AOyHQixzAsXrZZXlovWCrx48LXXQs/Aa6UoAxiV3QqgPUUn9x0
-         XeJ+xJcI17t5LxZrJ80V3juFZH0qpTsPjqL42XmSM5bwK6OHY28sc9E1YLK0W8dMPRR6
-         OUgca8TBANkWMhyhau7KqgKTEBxNwfbYT8XS9adtoujzoENEPgec/ES0vw7She30tCUH
-         YUXh0Fb1j7/j8j/rl5/KF9nOdXSP5lZvdEr+lLJJ+U9DR0ZxByAllaRdDz5jyOBHpUFZ
-         creg==
-X-Forwarded-Encrypted: i=1; AHgh+Rp3z8/tnmr+EcxhIJbIym6/InJWuPGG6dCgJ8a+pZhHE7h/kvwCiJe15z7F9hAVA8X2a4lwuQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YyitLFyWsND6G5jcbV9Yx5sbX4kO9Ro2fUnEzxp3jzHkh6yXR4f
-	h6xt/qD+Cm8bCGlti+GaPBaO9Oi/7NvxYM29CeLu1jCfQjwHmhqR2gRRTGWgVjWw7g==
-X-Gm-Gg: AR+sD135yvGRmII2VFYTVEx5n4aK3lR15HLOONHMNft1UyGOk89GDQ2cwQkhgShy88a
-	UWgiEf4Rchuus6ddgV+XhzJ6+G4wrC98lCIDiSFlTwz0elUUxi1hzzsOQ/xT+X9hyEJftMcpOxW
-	zamunmrYARl9WQ3A2mgXDle7QRD9PXNis6J+AHXjQSxsXk8ZlCWnQY2btEnzRx9v9HVsnC0woQc
-	mlE0+tzr4HflU0xjqTbkttZJGrdZN3xocOTExmd9ekUbTHzIJwLBgFwKFQ10AV0q3rnaRaF+rHg
-	3gHM3g59GaHUGdzCJUXK1f37R1d7F3r8trBbtWpDV1svPhHZwK9xTDXwqYMcykWT3CQ25jE8TX2
-	1LTAASpDS+bbPw6YTl/z2xNfkAbxm9h4g5kfP4ylJuyhCPyum1mSkyejscJRaINQqu6kCY7mMMe
-	X0aBTkn8n67Q7S5ISvq5eHyZlPyDfCZSAsNynTAb1yaGk+q6Z5DhyQmPgBa+b/rZS2ZwhPBjh5m
-	zOtlh39//C7e7D6h3pR1eY=
-X-Received: by 2002:a17:903:19e6:b0:2ca:e0db:3cc with SMTP id d9443c01a7336-2d34ab72f8amr1230025ad.11.1786538946152;
-        Wed, 12 Aug 2026 05:49:06 -0700 (PDT)
-Received: from google.com (21.168.124.34.bc.googleusercontent.com. [34.124.168.21])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d35115103asm5901835ad.28.2026.08.12.05.49.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2026 05:49:05 -0700 (PDT)
-Date: Wed, 12 Aug 2026 12:49:00 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Alexander Graf <graf@amazon.com>,
-	Samiullah Khawaja <skhawaja@google.com>,
-	David Matlack <dmatlack@google.com>, kexec@lists.infradead.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/2] kho: support preserving high-order non-compound
- pages
-Message-ID: <anxrvA3z3NUkWvnE@google.com>
-References: <20260803113944.3694290-1-praan@google.com>
- <anr4-F-e5_vHEar8@kernel.org>
- <2vxzv79f39za.fsf@kernel.org>
+	Wed, 12 Aug 2026 13:45:41 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 8F04A60A92;
+	Wed, 12 Aug 2026 13:45:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD88A1F000E9;
+	Wed, 12 Aug 2026 13:45:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786542340;
+	bh=2D2UytTyVCCTSaKgj888w4OMsi/TDP+60oG0TxSPgjk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=LpJEWQYDUauNRIazj3NboFIQsYaibbSbmybL0dWgwYglieJ7fo+1PRVn6tKMTC4YC
+	 ICBXKfukOcSlb0pehHMISA5A5FHghk/9aQujs1dn5GSC7C7yz6v8MuSz56k8KuRVpu
+	 ds0OkgiHG549Zr3jwkrWxwr5izFu8E+ueexMQ7dNkKaM3dWCdGPouNDTKchvi8vitt
+	 aWNTY0v2KYMHUGtpCGpzqaO5kIOrG0s9sAQD4wwZA/U3tSN85Qzb+5l4iKBgAH6btw
+	 lBcwrGDiExL5oX69DuBZPs3Lr7DkA41Bn6bpJBgQw3RHdrvl9bRk/uV2a5X23I9r/z
+	 nS0M4nA93r+LQ==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Tarun Sahu
+ <tarunsahu@google.com>,  ackerleytng@google.com,  fuad.tabba@linux.dev,
+  Andrew Morton <akpm@linux-foundation.org>,  dmatlack@google.com,  Shuah
+ Khan <skhan@linuxfoundation.org>,  Jonathan Corbet <corbet@lwn.net>,
+  david@redhat.com,  Pasha Tatashin <pasha.tatashin@soleen.com>,
+  sagis@google.com,  Paolo Bonzini <pbonzini@redhat.com>,  Mike Rapoport
+ <rppt@kernel.org>,  Alexander Graf <graf@amazon.com>,
+  linux-kselftest@vger.kernel.org,  andre.przywara@arm.com,
+  michael.roth@amd.com,  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
+  will@kernel.org,  vannapurve@google.com,  maz@kernel.org,
+  fvdl@google.com,  kvm@vger.kernel.org,  oliver.upton@linux.dev,
+  kvmarm@lists.linux.dev,  alexandru.elisei@arm.com,  skhawaja@google.com,
+  aneesh.kumar@kernel.org,  linux-doc@vger.kernel.org,  David Hildenbrand
+ <david@kernel.org>,  yan.y.zhao@intel.com,  kexec@lists.infradead.org,
+  suzuki.poulose@arm.com
+Subject: Re: [PATCH v4 05/11] KVM: LUO: Support VM preservation across live
+ updates
+In-Reply-To: <anssOQFNZ2LfihbU@google.com> (Sean Christopherson's message of
+	"Tue, 11 Aug 2026 07:05:45 -0700")
+References: <20260728121138.1103610-1-tarunsahu@google.com>
+	<20260728121138.1103610-6-tarunsahu@google.com>
+	<anphyjFv3FhF61iB@google.com> <2vxzpkzo51wg.fsf@kernel.org>
+	<anssOQFNZ2LfihbU@google.com>
+Date: Wed, 12 Aug 2026 15:45:33 +0200
+Message-ID: <2vxzik5f311e.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2vxzv79f39za.fsf@kernel.org>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260812_054907_522561_23895FB5 
-X-CRM114-Status: GOOD (  23.29  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,49 +86,217 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Aug 12, 2026 at 12:32:25PM +0200, Pratyush Yadav wrote:
-> On Tue, Aug 11 2026, Mike Rapoport wrote:
-> 
-> > Hi Pranjal,
-> >
-> > On Mon, Aug 03, 2026 at 11:39:41AM +0000, Pranjal Shrivastava wrote:
-> >> Introduction
-> >> ============
-> >> This series is required for the ongoing effort to preserve DMA allocations
-> >> across KHO [1]. It addresses a fundamental mismatch between the current KHO
-> >> restoration logic and the physical reality of high-order buddy allocations.
-> >
-> > I skimmed through the patches, they look fine to me before the in-depth
-> > review :)
-> >
-> > But we are really close to the merge window, so we'll anyway need to
-> > reiterate after v7.3-rc1.
-> >  
-> >> The Problem
-> >> ===========
-> >> The current KHO restore implementation treats all multi-page blocks as
-> >> split pages during restoration. Specifically, kho_restore_pages()
-> >> initializes every 4KB sub-page with a refcount of 1.
-> >> 
-> >> However, many kernel subsystems, most notably the DMA allocator (via
-> >> dma_alloc_coherent), frequently return high-order non-compound pages.
-> >> In this state, only the head page carries a refcount of 1, while
-> >> all tail pages have a refcount of 0.
-> >
-> > This hints that these patches could be a part of the DMA preservation
-> > series, unless you expect other users of the new API.
-> >
-> > Generally, we don't merge new APIs without the users and if DMA
-> > preservation is the only user, it's better to fold these two patches there.
-> 
-> Makes sense I think. We can review the patches here, but then they can
-> go in with the DMA series.
-> 
+On Tue, Aug 11 2026, Sean Christopherson wrote:
 
-So.. IIUC, I'll post a v5 here as a standalone series till we get
-consensus, and finally the reviewed patches can be folded with the DMA
-series?
+> On Tue, Aug 11, 2026, Pratyush Yadav wrote:
+>> On Mon, Aug 10 2026, Sean Christopherson wrote:
+>> 
+>> > On Tue, Jul 28, 2026, Tarun Sahu wrote:
+>> >> Register a Live Update Orchestrator (LUO) file handler for KVM VM files
+>> >> to serialize and deserialize VM state across kexec live updates.
+>> >> 
+>> >> Currently, Only VM type (e.g. arch.vm_type on x86) is preserved as part
+>> >> of VM preservation.
+>> >
+>> > Why?
+>> >
+>> >> On retrieval, kvm_luo_retrieve() recreates the KVM VM file via
+>> >> kvm_create_vm_file() and use an atomically incremented ID for the internal
+>> >> fdname, as the final fdname assigned by userspace is not yet known during
+>> >> retrieval. As this fdname is only used in debugfs infra, This will not break
+>> >> any UAPI.
+>> >> 
+>> >> This infrastructure establishes the foundation for preserving guest_memfd
+>> >> instances across live updates, and can be expanded in the future to
+>> >> preserve additional VM state.
+>> >
+>> > Uh, why guest_memfd?  As much as I want to push guest_memfd adoption, it seems
+>> > guest_memfd should be the _last_ thing we support, not the first.  As evidenced
+>> > by the last two decades, it's very doable to have KVM VMs without guest_memfd,
+>> > but it's rather hard to have VMs without vCPUs.
+>> 
+>> You _can_ preserve vCPUs today using KVM_{GET,SET}_REGS, they just won't
+>> run in the background during the reboot.
+>
+> What about x86 CoCo VMs?  Which are quite literally _the_ reason guest_memfd was
+> created in the first place.  
 
-Thanks,
-Praan
+I don't know much about the history but I thought these days guest_memfd
+is used for more than just encrypted memory. I have seen talk of it
+being used for non-confidential VMs. For example these patches [0][1][2].
+
+The CoCo parts can follow, but IIUC guest_memfd is being used to back
+guest memory on non-CoCo VMs too.
+
+[0] https://lore.kernel.org/all/20250430165655.605595-1-tabba@google.com/
+[1] https://lore.kernel.org/all/20260728-shivank-gmem-migrate-v2-0-269ac1f84e2b@amd.com/
+[2] https://lore.kernel.org/all/20250828093902.2719-1-roypat@amazon.co.uk/
+
+>
+>> This series can save you from dumping VM memory to disk if it is backed by
+>> guest_memfd.
+>
+> Or to word it another way, one _can_ save guest_memfd, it's just slower.  My
+
+Sure. But making things faster is the entire point of live update.
+
+Guest memory is one piece of that puzzle. Devices are another, and
+that's why there is a lot of work going on with VFIO, PCI, and IOMMU
+preservation. vCPUs are also a piece, but I think those will be the
+hardest to live update.
+
+> point is that this series needs to provide a _lot_ more information about the
+> bigger KVM picture.  For those of us that are on the very fringes of live update,
+> it's practically impossible to review because, to us, it seems very arbitrary.
+
+That's valid criticism. This series should do a better job of laying out
+the high level plan and where things fit.
+
+>
+> The part that's especially confusing is the saving of the VM type.  That comes
+> straight from userspace, so it's super bizarre to automatically save/restore that,
+> but nothing else.
+>
+>> >> +KVM LIVE UPDATE
+>> >> +M:	Pasha Tatashin <pasha.tatashin@soleen.com>
+>> >> +M:	Mike Rapoport <rppt@kernel.org>
+>> >> +M:	Pratyush Yadav <pratyush@kernel.org>
+>> >> +R:	Tarun Sahu <tarunsahu@google.com>
+>> >> +L:	kexec@lists.infradead.org
+>> >> +L:	kvm@vger.kernel.org
+>> >> +S:	Maintained
+>> >> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git
+>> >
+>> > NAK on taking changes through a different tree.  This is KVM code, period.
+>> >
+>> > In general, I'm skeptical of the dedicated MAINTAINERS entry.  It's extremely
+>> > difficult to tell since this series is little more than a skeleton (either that
+>> > or liveupdate is way simpler that I was expecting), but I suspect that maintaining
+>
+> ...
+>
+>> > E.g. the LUO APIs seem pretty straightforward; I assume the bulk of the complexity
+>> > is going to be in knowing what to save/restore, and how, which is much more about
+>> > KVM than it is about liveupdate.
+>> 
+>> I think it is fine if you want to take these changes through the KVM
+>> tree, but I would like live update maintainers to be listed as reviewers
+>> at least.
+>
+> Why not simply add a file pattern match to the LIVE UPDATE entry?
+>
+> diff --git MAINTAINERS MAINTAINERS
+> index 8014b9f8253e..2eb57b22c37f 100644
+> --- MAINTAINERS
+> +++ MAINTAINERS
+> @@ -15052,8 +15052,8 @@ F:      include/linux/liveupdate.h
+>  F:     include/uapi/linux/liveupdate.h
+>  F:     kernel/liveupdate/
+>  F:     lib/tests/liveupdate.c
+> -F:     mm/memfd_luo.c
+>  F:     tools/testing/selftests/liveupdate/
+> +N:     [^a-z]luo
+>  
+>  LLC (802.2)
+>  L:     netdev@vger.kernel.org
+
+This would list us as maintainers of kvm_luo.c and the tree as
+liveupdate.git, both of which is something you're saying you _don't_
+want.
+
+>
+>> At the same time, I also keep being (pleasantly)
+>> surprised at preservation being relatively simple. For example, the code
+>> to preserve a shmem file (via memfd) is roughly 600 lines, a big chunk
+>> of which is comments. The code of course has some limitations, but it is
+>> good enough for use in production.
+>> 
+>> For one, we care about ABI breakages and versioning. 
+>
+> Which is amusing to me because that implies KVM does not, and I would hazard to
+
+No, it doesn't. What I'm saying is I care about changes to the _live
+update ABI_. Just like you probably care about changes to KVM ABI but
+not so much about BPF for example.
+
+> guess that KVM has the biggest ABI surface of any subsystem in the kernel by a
+> country mile (though I'm probably wildly underestimating the effective ABI surface
+> of filesystems).
+>
+>> The serialized state is a part of live update ABI and changes to it should be
+>> ACKed by us. 
+>
+> Meh, "Don't break userspace" is a universal rule in the kernel, I genuinely don't
+> see why liveupdate needs special treatment.
+
+Ironically enough, you miss my point. I'm not talking about userspace
+ABI. We all know not to break that. I am talking about live update
+_serialization ABI_. See the stuff under include/linux/kho/abi. This
+series also adds things there.
+
+This is ABI between kernels. It needs to be stable-ish so you can move
+from one kernel version to another. At the same time, unlike userspace
+ABI, it can change. Today we don't have any rules and let you change
+things freely as long as you do a version bump. But at a later point,
+the plan is to add some stability requirements to the ABI so you can
+actually upgrade the kernel across major versions.
+
+So at least for ABI changes, there should be an explicit ACK from the
+live update group. For code changes, I'd be flexible if you'd prefer
+that. More on it below.
+
+>
+>> For another, how the file handlers interact with their dependencies can
+>> affect the behaviour that VMMs observe. Those changes should also pass by
+>> some live update eyes.
+>
+> Perhaps in the short term, but IMO, that's not a winning strategy in the long
+> term.  From my perspective, that like saying the PAGE CACHE maintainers should
+> review every usage of the filemap APIs, because how the APIs are used impacts
+> the page cache and affects userspace-visible behavior.  There are myriad analogies
+> like that throughout the kernel.
+
+I've heard kernel maintainers complain many times about people or
+companies throwing code over the wall and not staying around to deal
+with the mess it might make.
+
+I'd like to avoid that with live update and help you maintain this. As
+you've said, you are not as familiar with live update, and perhaps you
+might not even be as interested in it. So why not let the people who are
+help review the code?
+
+Ultimately it is your subsystem so it is your call. And as I've said
+before, if you want to take it through the KVM tree and have a veto I
+think that is perfectly fine.
+
+As an alternate example, with memfd_luo, the MM folks are rarely
+involved and the maintenance and review is done largely by me because I
+wrote that code. Mainly because the contents in memfd_luo.c are all live
+update related and don't matter much to core MM or memfd. I have heard
+similar desire for the HugeTLB live update work I am doing.
+
+We can figure out what works best for KVM.
+
+>
+> Yes, liveupdate is new and shiny, but IMO for it to be successful and maintainable,
+> it needs to be treated like any other core infrastructure in the kernel, not a
+> special snowflake whose details are known only by a handful of people.  Because
+> I think it's likely liveupdate goes one of two ways: either liveupdate becomes a
+> very niche thing that is used sparingly throughout the kernel, or it becomes a
+> broadly used feature that is supported by many filesystems and subsystems.
+>
+> If liveupdate is relegated to niche status, then it probably isn't going to see
+> a significant amount of ongoing development, at which point the folks working on
+> liveupdate will naturally migrate to other projects, and maintenance will largely
+> be left to subsystem maintainers.
+>
+> If liveupdate is broadly used, then having a single group of people maintain
+> every subsystem's usage won't scale, and maintenance will again largely fall on
+> the shoulder of subsystem maintainers.  Which is totally fine and working as
+> intended, because that's exactly what subystem maintainers are signing up for
+> by merging support for liveupdate.
+
+-- 
+Regards,
+Pratyush Yadav
 
