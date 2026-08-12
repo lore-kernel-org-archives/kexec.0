@@ -4,89 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C4485C5AD5A
-	for <kexec@archiver.kernel.org>; Wed, 12 Aug 2026 11:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A6C61C5CFEB
+	for <kexec@archiver.kernel.org>; Wed, 12 Aug 2026 11:37:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
-	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
-	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=eEO9P1mvess5y0n0KUnCYAeP/+IifPhRXEhfxRdjhi4=; b=3MGXnpMXMG/x2peBJKbtZi+Ny8
-	d9j1xzi3I2HRvxldt7t7SZ+pj206MW8Bnxr4SXKWBzD+UoEA79iHPBjYlLmjxIueJyyl9Gx2bvb3k
-	FZEO6VNaxc/UOAZQiTfI+vYkDVaE3V5FUbjL4UCy2cMCqaZql6lt6IOnkhz1fuAyamHjPmwIajApT
-	9Dv+DU3WwguPKFFGMC0sinlmJIsWC4MD2wjFJvKSgrjrqTnXZfL2f+oWP78Bzn3yNBjMFCxtS5/MW
-	x3Le8caIzSQtImnHrK/AI5MFn5b4uKqq/UyL2AJ6ZiHRCKIr7KXPQu0VJV9eW9H4Dji/hk8jo1Y2l
-	Au+/ettA==;
+	bh=zt5aG8T70pAVsz38Vf/LQqt7yVTDjwmbD2OUxXE/YKw=; b=WEdXXqQNo+10uwh0LZ15sUsAxI
+	hbVIaV8qsasK6XRV0er+o4lACVpWkcHVcKuaZsMIphZGc7XpIdM2l2D4Cgh3OYHavEnKhGNmjBRvD
+	p0Bww5Vo/wfUKnYNtYdfEVksp8wT2JukW071zs8mZTr5JxEshY63HD3gs5OZ7/2cHAxYziOocQHZA
+	58t+mFUb59FeB5JMGTMNONTGT20E/j/ZNnRVmgvJxd6pA8/Wh1twlPvoc/C+dWoiLMbj8LeQQRVtW
+	wK7xVZ6s1HvdyuAMXNVaBTOF1WKuRVMI9+itPnRCXQZZMree+bJZHAkkHtIbkWhrtEHE4l/PaCPfq
+	AZkK/RoQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wu7CA-0000000G5mY-2QuY;
-	Wed, 12 Aug 2026 11:32:30 +0000
-Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
+	id 1wu7Ge-0000000G76Y-299e;
+	Wed, 12 Aug 2026 11:37:08 +0000
+Received: from devianza.investici.org ([2c0f:f930:0:4::108])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wu7C7-0000000G5ji-3Uk9
+	id 1wu7Ga-0000000G75p-0t7D
 	for kexec@lists.infradead.org;
-	Wed, 12 Aug 2026 11:32:29 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:In-Reply-To:References:
-	Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
-	From:Reply-To:Content-ID:Content-Description;
-	bh=eEO9P1mvess5y0n0KUnCYAeP/+IifPhRXEhfxRdjhi4=; b=lMBLiFDXe7xrvPugP2EHgSR/nH
-	L6WHW8wD4ND+1rUNkQxYbTMBSHt1nDX8MJINlBdl1vpnF4+Trm6iXThbx/JbiNs51St77PFsP5b1P
-	qFxuqyste7/BkihRa9OGHUaMM5LtxY9z0DIeeeXiBG0e673pZr4woHJYRrFP0uawOhd1V4Euojm9+
-	znpnH9BeGXEtJLzX8BS9zUAwbro6R/SImQ6IGvRZPZ0w9VOpfq+/aUxFKNjLmm5T7KCAOGW4TyzbU
-	w1m2yF2+H7oLYG0P9JN0vOA2dROstVc2+phcoYg65fULWiTk5EBkChKE3BevZm+w3p7ujzUfnWS8W
-	v2Vgw5Yg==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wu7Bt-004JJP-1k;
-	Wed, 12 Aug 2026 11:32:13 +0000
-From: Breno Leitao <leitao@debian.org>
-Date: Wed, 12 Aug 2026 04:31:52 -0700
-Subject: [PATCH v6 2/2] kexec: keep the next kernel off hardware-poisoned
- pages
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260812-kexec_posioned-v6-2-e477887086f0@debian.org>
-References: <20260812-kexec_posioned-v6-0-e477887086f0@debian.org>
-In-Reply-To: <20260812-kexec_posioned-v6-0-e477887086f0@debian.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
- Michal Hocko <mhocko@suse.com>, Baoquan He <baoquan.he@linux.dev>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Wed, 12 Aug 2026 11:37:06 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
+	s=stigmate; t=1786534620;
+	bh=zt5aG8T70pAVsz38Vf/LQqt7yVTDjwmbD2OUxXE/YKw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=jmUgl7iLgfoUTZ1W8XhpUyUvliTn62FHeVsiCG0Z/UIJ61ojEssIleUCeHJiV0KQU
+	 4oryrUMBdJkrk/FWrelE64YPMAu7FQKIr+CYhS2RtF7SRQ6xUrQ+6QcLU+j6mlA8X+
+	 Do8TfjkyyO/aXIfS606LkNQrwlIw0nbvgzmTmueQ=
+Received: from mx2.investici.org (unknown [127.0.0.1])
+	by devianza.investici.org (Postfix) with ESMTP id 4hKmg01XsJz6vGx;
+	Wed, 12 Aug 2026 11:37:00 +0000 (UTC)
+Received: by mx2.investici.org (Postfix) id 4hKmfz5Q9xz4y6W;
+	Wed, 12 Aug 2026 11:36:59 +0000 (UTC)
+Date: Wed, 12 Aug 2026 12:36:59 +0100
+From: Bradley Morgan <include@grrlz.net>
+To: Breno Leitao <leitao@debian.org>, Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Baoquan He <baoquan.he@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
  Naoya Horiguchi <nao.horiguchi@gmail.com>
-Cc: Breno Leitao <leitao@debian.org>, linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, kexec@lists.infradead.org, rmikey@meta.com, 
- riel@surriel.com, kernel-team@meta.com, Kiryl Shutsemau <kas@kernel.org>, 
- "Kiryl Shutsemau (Meta)" <kas@kernel.org>, 
- Bradley Morgan <include@grrlz.net>
-X-Mailer: b4 0.16-dev-f8e9d
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6504; i=leitao@debian.org;
- h=from:subject:message-id; bh=DngnSfPX8XBe6I/yjyE8XagV4YyZPUZlPnCTWnEo5k4=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqfFmsufCoDT5cFM1bcdNKZCitkrQyQY/M2Zqyk
- xSH76lNFveJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCanxZrAAKCRA1o5Of/Hh3
- bdGFD/92nUsa8eZs63kMuOvyNiWyDpQeZzq//w2XgiP+7o6YoTuBSKV85sb0nS3tF+MRwuRswiK
- kb+9r1A32Qkkg1UGU2wnVMKiGJ9+wUejnaLVVYCpsT6oiPRC8Ew5vrbPmFemzhRD4HoiERfXqoy
- i2tF1+0PEsrL4bCpZNgpmYbgZXB5ZMJnGjymNBohy2bwbVCvusbh48Gi599QMoI+QU+/tHo/rdA
- UFMzRqfLcdMeEpV90Vyln3FTcsfm7ten97cC0jCQrzrBtbXHc1jHELYcSuDEs1nkTaFZe8AQGSs
- keyopJCpKyX8dO415r7FmadedOtaaoCC/5HsjBV8Zb1CcP+dKD8FDirBfa7G3F1dPz/oiUZfhLv
- hthfFOhT4/qi1XVIaPFURSqibxmfqUMGNQbcDBT36O0nQr6KlIr5hoF1LNOSeRnluQRjRmCMsbA
- Wje6t8igbkRm/I9JN1sPhOP5EiDZmNlvzqb6gVE1vuQH/9c+k+ga3+vo2CvrVhqRhONgLd9MzdB
- pn4DDzlqht+TGzDyX9bMuZmC6dwDEdvjno0gx041/whLGeoNS3VuxK53s1KA7u2PFfx5M/IoPzS
- XYdiG1bTrs80KIKtacvHg/Rb1SxCSDLzs1VpzLqzhWgDuIPqY2AHmh4Dl5I+EEAVSPZvyq+7q72
- r5jTQEUCzjaONKQ==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
-X-Debian-User: leitao
+CC: linux-mm@kvack.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ rmikey@meta.com, riel@surriel.com, kernel-team@meta.com,
+ Kiryl Shutsemau <kas@kernel.org>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v6_0/2=5D_kexec=3A_keep_the_ne?=
+ =?US-ASCII?Q?xt_kernel_off_hardware-poisoned_pages?=
+In-Reply-To: <20260812-kexec_posioned-v6-0-e477887086f0@debian.org>
+References: <20260812-kexec_posioned-v6-0-e477887086f0@debian.org>
+Message-ID: <6D17A62B-3124-492F-9593-63F857DD475F@grrlz.net>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260812_043228_210568_ED5FF736 
-X-CRM114-Status: GOOD (  22.57  )
+X-CRM114-CacheID: sfid-20260812_043704_668945_DA9DDD4C 
+X-CRM114-Status: GOOD (  16.39  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,200 +78,103 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Memory failures (such as unrecoverable ECCs errors) are getting more and
-more common. The kernel knows how to handle it while running, marking it
-as poisoned (and SIGBUS user tasks).
+On 12 August 2026 12:31:50 BST, Breno Leitao <leitao@debian.org> wrote:
+>Memory failures are common enough on large fleets that kexec regularly
+>lands the next kernel on a frame the memory failure subsystem has already
+>marked bad. Patch 2 teaches the segment placement to avoid those frames.
+>
+>Patch 1 is a prerequisite. locate_mem_hole_top_down() walks candidates
+>downwards without ever checking that the subtraction stays above zero, so
+>the walk can wrap and report success with a destination outside of RAM.
+>Patch 2 adds one more downward step to that loop, so the bug is fixed
+>first and both patches rely on the same bail-out.
+>
+>Signed-off-by: Breno Leitao <leitao@debian.org>
+>---
+>Changes in v6:
+>- Split the pre-existing top-down underflow out into its own patch, and
+>  drop the "if (poison < kbuf->memsz)" guard from the hwpoison hunk now
+>  that the loop bail-out covers it. (Mike Rapoport, Sashiko)
+>- Reword the changelog: the MCE comes from reading the poison back, not
+>  from the relocation copy writing it, and the placement paragraphs read
+>  better split up. (Mike Rapoport)
+>- Move cond_resched() after the struct page dereference, so the scan does
+>  not yield between pfn_to_online_page() and is_page_hwpoison().
+>  (Pratyush Yadav, Sashiko)
+>- Keep cond_resched() per pfn rather than batching it. (Kiryl Shutsemau,
+>  Rik van Riel)
+>- Link to v5: https://patch.msgid.link/20260810-kexec_posioned-v5-1-95e1b5e2e656@debian.org
 
-Poisoned memory is removed from the buddy allocator, but, not from
-other places. A current problem is that kexec will load new kernel
-on top of a bad/poisoned memory, which is undesirable.
+This is a two patch series with one patch, why?
 
-If the next kernel's image, initrd or purgatory lands on a poisoned
-frame, the relocation copy puts it on memory that is known bad. The
-error happens on the first read from a bad page, and that is what we
-want to avoid.
 
-Skip hardware-poisoned frames that were detected by the memory failure
-subsystem earlier when placing kexec segments.
+>
+>Changes in v5:
+>- Return -EHWPOISON instead of -EADDRNOTAVAIL
+>- Leverage is_page_hwpoison() instead of per-page check
+>- Link to v4: https://patch.msgid.link/20260807-kexec_posioned-v4-1-70d57f14625d@debian.org
+>
+>Changes in v4:
+>- Anchor the top-down hole finder on the first poisoned page in the
+>  window and the bottom-up one on the last, so each jumps clear of the
+>  poison in one step. New range_first_hwpoison(). (Kiryl Shutsemau)
+>- Count a poisoned hugetlb folio in full: the flag lives on the folio,
+>  not on the subpages, so the per-pfn scan missed poisoned tail pages.
+>  (Kiryl Shutsemau)
+>- Link to v3: https://patch.msgid.link/20260803-kexec_posioned-v3-1-83aa6ede0351@debian.org
+>
+>Changes in v3:
+>- Return the address of the last poisoned page in the range, or
+>  PHYS_ADDR_MAX when it is clean, instead of a bool plus an output
+>  parameter. Renamed to range_last_hwpoison(). (Pratyush Yadav)
+>- Add cond_resched() to the scan loop, as a segment can span half of
+>  memory. (Sashiko)
+>- Link to v2: https://patch.msgid.link/20260730-kexec_posioned-v2-1-f92d18551f64@debian.org
+>
+>Changes in v2:
+>- Change from pfn_to_page() to pfn_to_online_page(). (Miaohe Lin)
+>- Return the poisoned address once we find a hit, to avoid the O(n^2)
+>  rescan. (Sashiko)
+>- Link to v1: https://patch.msgid.link/20260728-kexec_posioned-v1-1-160c81d180fe@debian.org
+>
+>To: Andrew Morton <akpm@linux-foundation.org>
+>To: David Hildenbrand <david@kernel.org>
+>To: Lorenzo Stoakes <ljs@kernel.org>
+>To: "Liam R. Howlett" <liam@infradead.org>
+>To: Vlastimil Babka <vbabka@kernel.org>
+>To: Mike Rapoport <rppt@kernel.org>
+>To: Suren Baghdasaryan <surenb@google.com>
+>To: Michal Hocko <mhocko@suse.com>
+>To: Baoquan He <baoquan.he@linux.dev>
+>To: Pasha Tatashin <pasha.tatashin@soleen.com>
+>To: Pratyush Yadav <pratyush@kernel.org>
+>To: Miaohe Lin <linmiaohe@huawei.com>
+>To: Naoya Horiguchi <nao.horiguchi@gmail.com>
+>Cc: linux-mm@kvack.org
+>Cc: linux-kernel@vger.kernel.org
+>Cc: kexec@lists.infradead.org
+>Cc: rmikey@meta.com
+>Cc: riel@surriel.com
+>
+>---
+>Breno Leitao (2):
+>      kexec_file: stop the top-down search before it underflows
+>      kexec: keep the next kernel off hardware-poisoned pages
+>
+> include/linux/mm.h  | 14 ++++++++++++++
+> kernel/kexec_core.c | 10 ++++++++++
+> kernel/kexec_file.c | 20 +++++++++++++++++++-
+> mm/memory-failure.c | 40 ++++++++++++++++++++++++++++++++++++++++
+> 4 files changed, 83 insertions(+), 1 deletion(-)
+>---
+>base-commit: c5e32e86ca02b003f86e095d379b38148999293d
+>change-id: 20260727-kexec_posioned-72bb0a4143a0
+>
+>Best regards,
+>--  
+>Breno Leitao <leitao@debian.org>
+>
+>
 
-To do so, add a helper that reports the first or the last poisoned page
-in a range: memory is walked top-down by locate_mem_hole_top_down() and
-bottom-up by locate_mem_hole_bottom_up(), so each direction needs a
-different answer to stay clear of the poison.
-
-kexec_load() gets its destinations from userspace and cannot move them,
-so there sanity_check_segment_list() just rejects a segment that happens
-to have a poisoned page.
-
-is_page_hwpoison() also covers hugetlb, so a poisoned hugetlb folio is
-skipped as a whole.
-
-Suggested-by: Kiryl Shutsemau <kas@kernel.org>
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Reviewed-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
-Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
-Reviewed-by: Bradley Morgan <include@grrlz.net>
----
- include/linux/mm.h  | 14 ++++++++++++++
- kernel/kexec_core.c | 10 ++++++++++
- kernel/kexec_file.c | 16 ++++++++++++++++
- mm/memory-failure.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 80 insertions(+)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 7fabe6c66b4b7..41b923901b193 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -5192,6 +5192,8 @@ extern const struct attribute_group memory_failure_attr_group;
- extern void memory_failure_queue(unsigned long pfn, int flags);
- void num_poisoned_pages_inc(unsigned long pfn);
- void num_poisoned_pages_sub(unsigned long pfn, long i);
-+phys_addr_t range_first_hwpoison(phys_addr_t start, unsigned long size);
-+phys_addr_t range_last_hwpoison(phys_addr_t start, unsigned long size);
- #else
- static inline void memory_failure_queue(unsigned long pfn, int flags)
- {
-@@ -5204,6 +5206,18 @@ static inline void num_poisoned_pages_inc(unsigned long pfn)
- static inline void num_poisoned_pages_sub(unsigned long pfn, long i)
- {
- }
-+
-+static inline phys_addr_t range_first_hwpoison(phys_addr_t start,
-+					       unsigned long size)
-+{
-+	return PHYS_ADDR_MAX;
-+}
-+
-+static inline phys_addr_t range_last_hwpoison(phys_addr_t start,
-+					      unsigned long size)
-+{
-+	return PHYS_ADDR_MAX;
-+}
- #endif
- 
- #if defined(CONFIG_MEMORY_FAILURE) && defined(CONFIG_MEMORY_HOTPLUG)
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index dc770b9a6d053..7ee8c9f078f6b 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -212,6 +212,16 @@ int sanity_check_segment_list(struct kimage *image)
- 	}
- #endif
- 
-+	/*
-+	 * Reject destinations that land on hardware-poisoned memory: the
-+	 * relocation copy would machine-check on the bad frame.
-+	 */
-+	for (i = 0; i < nr_segments; i++) {
-+		if (range_first_hwpoison(image->segment[i].mem,
-+					 image->segment[i].memsz) != PHYS_ADDR_MAX)
-+			return -EHWPOISON;
-+	}
-+
- 	/*
- 	 * The destination addresses are searched from system RAM rather than
- 	 * being allocated from the buddy allocator, so they are not guaranteed
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 01a64d98fbcd7..8b0fc8a5d3c36 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -475,6 +475,7 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
- {
- 	struct kimage *image = kbuf->image;
- 	unsigned long temp_start, temp_end;
-+	phys_addr_t poison;
- 
- 	temp_end = min(end, kbuf->buf_max);
- 	temp_start = temp_end - kbuf->memsz + 1;
-@@ -506,6 +507,13 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
- 			continue;
- 		}
- 
-+		poison = range_first_hwpoison(temp_start, kbuf->memsz);
-+		if (poison != PHYS_ADDR_MAX) {
-+			/* we hit a poisoned page */
-+			temp_start = poison - kbuf->memsz;
-+			continue;
-+		}
-+
- 		/* We found a suitable memory range */
- 		break;
- 	} while (1);
-@@ -522,6 +530,7 @@ static int locate_mem_hole_bottom_up(unsigned long start, unsigned long end,
- {
- 	struct kimage *image = kbuf->image;
- 	unsigned long temp_start, temp_end;
-+	phys_addr_t poison;
- 
- 	temp_start = max(start, kbuf->buf_min);
- 
-@@ -548,6 +557,13 @@ static int locate_mem_hole_bottom_up(unsigned long start, unsigned long end,
- 			continue;
- 		}
- 
-+		poison = range_last_hwpoison(temp_start, kbuf->memsz);
-+		if (poison != PHYS_ADDR_MAX) {
-+			/* we hit a poisoned page */
-+			temp_start = poison + PAGE_SIZE;
-+			continue;
-+		}
-+
- 		/* We found a suitable memory range */
- 		break;
- 	} while (1);
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index a8b03e2920ba8..a2ca8df501cae 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -96,6 +96,46 @@ void num_poisoned_pages_sub(unsigned long pfn, long i)
- 		memblk_nr_poison_sub(pfn, i);
- }
- 
-+/*
-+ * Return the first or the last hardware-poisoned online page in [start,
-+ * start + size), or PHYS_ADDR_MAX if the range is clean.
-+ */
-+static phys_addr_t range_hwpoison(phys_addr_t start, unsigned long size,
-+				  bool first)
-+{
-+	phys_addr_t poison = PHYS_ADDR_MAX;
-+	unsigned long pfn, end_pfn;
-+
-+	if (!size || !atomic_long_read(&num_poisoned_pages))
-+		return poison;
-+
-+	end_pfn = PHYS_PFN(start + size - 1);
-+	for (pfn = PHYS_PFN(start); pfn <= end_pfn; pfn++) {
-+		struct page *page = pfn_to_online_page(pfn);
-+
-+		if (page && is_page_hwpoison(page)) {
-+			if (first)
-+				return PFN_PHYS(pfn);
-+
-+			poison = PFN_PHYS(pfn);
-+		}
-+
-+		cond_resched();
-+	}
-+
-+	return poison;
-+}
-+
-+phys_addr_t range_first_hwpoison(phys_addr_t start, unsigned long size)
-+{
-+	return range_hwpoison(start, size, true);
-+}
-+
-+phys_addr_t range_last_hwpoison(phys_addr_t start, unsigned long size)
-+{
-+	return range_hwpoison(start, size, false);
-+}
-+
- /**
-  * MF_ATTR_RO - Create sysfs entry for each memory failure statistics.
-  * @_name: name of the file in the per NUMA sysfs directory.
-
--- 
-2.53.0-Meta
-
+Thanks!
 
