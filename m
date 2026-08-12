@@ -4,144 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 56DDBC5B572
-	for <kexec@archiver.kernel.org>; Wed, 12 Aug 2026 01:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AB1B7C5AD5A
+	for <kexec@archiver.kernel.org>; Wed, 12 Aug 2026 04:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=5ZnySaT2FfJ/7vBL9+D6eS88nBXNmMkaS+8SDyov7gg=; b=kS1Qx9a3jPXreHBxUWp0x9Ub0L
-	Ib6Vr81dWAvH293y49OE6svwQIPp8nvjNgXSjJW6UuYO2LKfrbw8hsX6FC2VPVDh2Xwq0lgDB6khJ
-	NSNMJm4FuGXNvj7BIBTIbqEsDJqOoMxTzofe2XAVhCgAABmtB1WyfqO4LTxRg3/wPdlN0/yCzhjC7
-	u8tiUSzT1Dtu5mlqME0stDJ/tDzufKiEMaO+XFYcL/B33LxVIDmRNuId3nSQ4UwxBX/ubMXU1Mdki
-	9S02RVIJaz0Zx4VEsafOtApE/k6X299XzF8mAgxOb5Tek88BXrNZX7rnh79qTcJBcbVYHvc6dlq/c
-	7pAGqt+A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=dHlHu1L1uq0AbU95kGBx2915Dz9LzbC3+YKEWdtzBVQ=; b=vxcn/AboRlTkwzOLAJm0nMD3yM
+	8wNCwDOBiy8TvwctS08PpxCGhFvB3HbywFxak3FhEymrT8TiHlveCm6NZqY1G3r60cqrqEL5f0rOD
+	7Ryes848BahmR5f8sdCtyQXiUHA8de/n4GCYGGlIKJvtUhPg4FY0qmLn8bKmdJTfMTzabvhOlIn0M
+	8Mjh80IWPDHnYTW+IvbvPEB9ifKjViJDJz15MsJjZzwqz+GVvQk4t8Hksr0iovtOdYpEMzqhKtyTY
+	BBvLgxlTXKrzHDa2nBRb1OL6tY+f1YyxPuT4Ex5od5SflXehEEFai19XX91holUxoTGm/y1up2nM/
+	OfFm3QNw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtxpN-0000000FCyl-1sFe;
-	Wed, 12 Aug 2026 01:32:21 +0000
-Received: from mail-japaneastazlp170100000.outbound.protection.outlook.com ([2a01:111:f403:c405::] helo=TY3P286CU002.outbound.protection.outlook.com)
+	id 1wu0An-0000000FNmD-30OA;
+	Wed, 12 Aug 2026 04:02:37 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wtxpE-0000000FCxt-1TkI
+	id 1wu0Ak-0000000FNlq-07wo
 	for kexec@lists.infradead.org;
-	Wed, 12 Aug 2026 01:32:18 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ujYSQOVeSHhcJV3l1IKldGcH9P8Ddz7tFcqJFsr+0b52UO0gIPZIeqJXbPpIsjdtxSVY/KBB0FN+vZJIYs8u+oSh8k8L6OcnmLTvV3wSR8338HrKrGc+K8SQW2bEUejUuFlwnOHV0XY5Z3lpvqVvwTcn6igw9nW4YEmxtnTwvQzDIJgmy70GKrru5UhhfamfrXc7P4mXDfgfOVv30TrCe2cZR77Vk5bmw1RsdJJZ3dqvYSgIxZ2eIxMq13tradQRmFgqc29ddHKgruiNYWrwHEk3uqjDC27ofms6Ard7n1/rGyCNFCJ0OUghKY7VQJcQ3X/xqXxdxBcrGacppVnWkg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5ZnySaT2FfJ/7vBL9+D6eS88nBXNmMkaS+8SDyov7gg=;
- b=UlUfhYabFDOrBT8vF5h1ZemGdercZoBYxFKx8YBCAmyAJBj7hXufk7O7Mug/u88dTDX2aE4MqP365RzUvCLbuDhLOituPlXLHXOADx7WxEvcrmSvtqVhzREFq6RiFWDpu6lFunFM6lIdv0yZ5Q79GJZS5kzZjbAun/c7TIy6G8BGCKkrlGSFB80O6V3YbkD/8V2O2Q/IRCaNVwPNK/4hz33Khgr19tfNAOylhJ3LorFTqf04ACgxrqmyPkbSldd4KeCU9Tqvz3FMiTUBZwDJ9HSTImx/F3av5R/EXBZWADm76sRJV3p8ZXuAOylNfqFo2UhLAQ9RxllYBcj1uDiIkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
- header.d=nec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5ZnySaT2FfJ/7vBL9+D6eS88nBXNmMkaS+8SDyov7gg=;
- b=VwlvEtTmXow5zdJd2emDGbsHj14dMaFXGtNdMSNWwd504euKpwsoyiOhuMg63icx/C7tRTeNJUbfn3+xydZIQXswclch978STIbr5b1Srf72N09iUc5RiTIZew3hjzLVtaYKJL7lEpwmtsXMd6sIxDHrBCT/OOdjQrpf/O6YjB/CPLn7Nd7msnzvE9N6jKQBKh4cUlJEan7LI2ZQOC8aSkwdI+evb7OGd4UZLGfYbi5MvDeIeonaBU/ljFJUy9SPyhDCt9YWrTY3cxcMuEUMgcCdEA+qrHL1lr2518gL04RDOVfJcNgFFJxs7HwTeEQjkwGPHbm0k9lfDT1SrE5Jdw==
-Received: from TY4PR01MB13462.jpnprd01.prod.outlook.com
- (2603:1096:405:1d7::13) by OS7PR01MB14883.jpnprd01.prod.outlook.com
- (2603:1096:604:39c::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.11; Wed, 12 Aug
- 2026 01:32:00 +0000
-Received: from TY4PR01MB13462.jpnprd01.prod.outlook.com
- ([fe80::8dd0:19c7:2047:1820]) by TY4PR01MB13462.jpnprd01.prod.outlook.com
- ([fe80::8dd0:19c7:2047:1820%6]) with mapi id 15.21.0315.012; Wed, 12 Aug 2026
- 01:31:59 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
-	<k-hagio-ab@nec.com>
-To: Tao Liu <ltao@redhat.com>
-CC: Stephen Brennan <stephen.s.brennan@oracle.com>,
-	=?utf-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0juOAgOecn+WFiSk=?=
-	<yamazaki-msmt@nec.com>, "kexec@lists.infradead.org"
-	<kexec@lists.infradead.org>
-Subject: Re: [PATCH makedumpfile 0/9] Improvements to makedumpfile extensions,
- plus userspace stack tracing extension
-Thread-Topic: [PATCH makedumpfile 0/9] Improvements to makedumpfile
- extensions, plus userspace stack tracing extension
-Thread-Index: AQHdEyorXwwQdBKvLk6+FbOcta264LaR+EQAgABmUoCAAOFbAIAAeusAgATPMoCAAURYAA==
-Date: Wed, 12 Aug 2026 01:31:59 +0000
-Message-ID: <404ed232-6c8e-4112-b13c-6338156476d3@nec.com>
-References: <20260714004550.3698175-1-stephen.s.brennan@oracle.com>
- <7af7b171-88c0-4eb6-a18e-8e64fb4a71c0@nec.com>
- <CAO7dBbX---qP-Bqjza=z2HM4Nxn5+KtB-51WF4mvv++p666JYQ@mail.gmail.com>
- <87tsp539pr.fsf@oracle.com> <38980e2a-d303-42c0-81bd-ae25b52b94a8@nec.com>
- <CAO7dBbUcv5_OW8CJfzGB56U=PO3kbGkX7gz9-E4JEFFU+eVCMA@mail.gmail.com>
-In-Reply-To: <CAO7dBbUcv5_OW8CJfzGB56U=PO3kbGkX7gz9-E4JEFFU+eVCMA@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nec.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY4PR01MB13462:EE_|OS7PR01MB14883:EE_
-x-ms-office365-filtering-correlation-id: d9e68db2-24c0-4b0f-132f-08def8118136
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|18002099003|22082099003|11063799006|4143699003|56012099006|3023799007|38070700021|13003099007|6133799003|10067099003;
-x-microsoft-antispam-message-info: LPjIa1FiYfWXgVRHCEQHPAuAhAzsZ8mpS9O/m/qjzqm2ugOvlJmwfTlKZU7v7w+BqkV9Ezvpfyp6vHhSDF0ZBv0kNT9qYr3qY6KPXNzxBHlPNGpjPNWMEHnCyDFfo3RsQNpGHbgdIpktwfkTXlHCrQa3taMUe3MadMDH34R0vD+mEzWGKghDicEitc0t0IU3E/CcW/z7WGYQPRCuM2J1OztaKRmgBNpeXgG3zmGShLrFX3un1o4Y2/fiJfA9ZGmPO6nZwIzTBAMNaDs+stLjga8LJJYkCVUzRUEOSfxxII6MLJTJS4UK2iKIZkgSaIv4kI4u2QeA/RlPTxuzuMcGLYflb+K+0epTDzlse+1D2pRbUgYuomilDErWo8zTaHtCSKyFw3QTo7a9+GUXHDqGqovb2iQ7HWq8Hx7ZQsON+qWaVhHGMPHoeDztYHlwoqcSIrwVQWct10YJMF+xUlGpl+Wk8x05lEg1q91Myje35vY56xgotsMjoc5XvO4nICQepS4J2qWLzr2xjc10aVCLdytctHyUnVg/6msmerFbjqu5qXP+R2yeFdsl8fPwaAaMOuC24gG9cGwF07OF9ae943gPokaibC726k0VSPSK1+s2ikuTnB0ZvXeP4bouhC+80jXqILJNeh1dnB4OVaMCcKFBOJUPBelc9S5QnIzt8nRnrYaRcmZ729olr/JI4YF/dOYLUQE1m2TbLs4YA1M8y+Jhjkhb/3lDBa5LYFoPJ18=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY4PR01MB13462.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(18002099003)(22082099003)(11063799006)(4143699003)(56012099006)(3023799007)(38070700021)(13003099007)(6133799003)(10067099003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?R2pOTUNLejR0U2psK2REckJzMy9zdk9QS2VtcGdHZlNxNzF6TlpiVDNuNlhX?=
- =?utf-8?B?b3VyRXJGck1QYXpJUEUxSVdFdDVsWVN5bXRwMTFNKzBlM2R1d2JkdCt6MGFH?=
- =?utf-8?B?V1BOdlplaHRHQmNGYXR5d1VZUlNvUFdYUExTR2RVekJNNzExRkMrNCtLaktQ?=
- =?utf-8?B?VVRUK0NrN3FqekMxR01DaCs4Vms5eEoxM2NIUHE2ZEgyT1pMaEZoNmJuOWxZ?=
- =?utf-8?B?ZHZ2eHhuV0xlSWQzNFpibnpLb1BWc1JzOHNPRmlYbU1vNE5wazQ2enY2bVJi?=
- =?utf-8?B?eElQQlNvSlpETUluRjIvamwwWXFOd2lQYVZHcWcyTlEycEdYdkpxT2xVNHhK?=
- =?utf-8?B?QkJ0RkcrYUc3TlFrL21wSWZra0ZhWDhwS3BYcUd3VFZubGxpZXJPTGllVzZu?=
- =?utf-8?B?R0I4ZVFqdWZUNnhZRTAyNEt2eUs1OEErbC95T3FRRjlzb3U5Qy9Cd2xqU3Rs?=
- =?utf-8?B?RytXZjNSU1lqZVI3NUhTeFJWeDduQ2wreHBscEdYbU1xRmtCamo4dEtpcWZv?=
- =?utf-8?B?UC9hNlBaVEtYTThFWXlXRVFNQ0RvUnNFMHBZeVVKakdBeDZ6TEFvVEhYZUZQ?=
- =?utf-8?B?YkJxN3BzeEU5WnFTYXFIbUIwOWdnTGRyZ2t2bi9PWTVaZHRiYWdKYkRSWFhx?=
- =?utf-8?B?M3R2UEl6V29VOTNBY3JCZ1VFVUVLTHkxUTJGUUpGS0hFc09mSkQzeWM5eDh0?=
- =?utf-8?B?QzhmTE8xYmtYOHBscmVyNzM0bUp5TEpHWWhsTDA5Y0pycDh3VjdSWnZZOGVr?=
- =?utf-8?B?TGVETS9uL1pKRjl2bFpKUGJieFFPVjlLNVZsN1oxWHpxWVJwQ1AvNlNrenBR?=
- =?utf-8?B?ZkFDLzBscnI5aVFlaU55bHF3Vm1tRzFwR29Famcxd2tpdHFNQmU2Vmg4U3pG?=
- =?utf-8?B?dlNuTStLVU9xTXNTMFhmKzd0ZHIzNFhJODA0YjJlQkpQSkZJVU5nT2VjaTAy?=
- =?utf-8?B?Y3p5VmxkcGlidnBOSUFWUGtrT3ZMY2YvY0xWK3d5WVFqSnZJOFVVZ0ErbGxz?=
- =?utf-8?B?Y0o4cERLSGxYVGFrNnBHaHFycjBUQk9BMmVBSlUxU3k3WDZUZHIyUVE0clVS?=
- =?utf-8?B?a0NCS2FnQWNDUEVzL1liYitvZGd5aTB0ZmlMR0V4bStnNVZJR0dRMXFqVmZy?=
- =?utf-8?B?M0NuajFHZWEvUHJETmczTHZNRkZORmRkNU56cjN0UHl5QStTWlRZSnkvR1pm?=
- =?utf-8?B?amk1NjFvdklCZGVEamc3dkVhMzVPU3o0UnBJbkdpejdPdTBXaldwY04vVEJa?=
- =?utf-8?B?OHZsZ0lpS0h6MHI1TUhocFMyOG94dTNha3huSXJFQjZuUDFBQVU1eW80NDhC?=
- =?utf-8?B?RHRlZWIrWWt0VDhCUE1oTHFwZ0ZtUFVzNTRZMHY0bHZIaTFMMzJBSFlYUFBG?=
- =?utf-8?B?SVdPWnJDRmdvSE5kUzNQZ0hBekUrL0F1NmZWcDJqVnFCUXQyOHljaVVqUFhu?=
- =?utf-8?B?ZU12ZHY5bkpQd0w4VU4rcC9JbGsvWmd1ZHNBdGJBNnh4b2RlWWx4L0tnVjNW?=
- =?utf-8?B?V21pL1ZMUzBUQVRZaFlYc2V3V3FvS2VVR1FtMkhicG9YNTFIdStwVWpKb3l6?=
- =?utf-8?B?a0JNV3g0YTN4clZpZStHVTREQ2oyUFFCUHcwL1VPYy85ekkxbHZ1Y0FPSTVK?=
- =?utf-8?B?d0tNOUpOdUMvdXRpUHZGOFMvU2JaNDJZb3VuVWRDbExBVFBlVWxwQ0xDZmdM?=
- =?utf-8?B?RGl0OFRRTlV5bkd3MUJYcC91b3FyZDhpSkRXdndMRFVheHBFWC92d0w2aWNX?=
- =?utf-8?B?amx6ZkR0V3JLUHA0MTVZZ25jOFREVDI4aS9JYXFpTjhzVkhTTWdhNDBVQVNm?=
- =?utf-8?B?Szl3LzcrMDI2ZWRXS3g5ZkJsQnVOdmxxUngvY1hnUzVOckJFOU1rQ0dnUzVy?=
- =?utf-8?B?Qmova2ZhczRnRmdDd0E0elNLTWtyR250VnlUTWc2NnRmVjBLcHRPTmErN2VM?=
- =?utf-8?B?MVhwSk90YXRselpRa29VOFV5aG9ZUm85N2gvK0Jia3ljTXVEZjJGdnFJLytS?=
- =?utf-8?B?VGF6S2tnR3c2TFZFK09qTTI1Q1AwekRncWRuZkU3UW96MjFONmsxSEhkV2dB?=
- =?utf-8?B?TW5KcCtubzQ0Q3JxL3RkQVhwZDN0QzR3Uzg1WmUzTGJnL0ppMkYrV0JBdWw1?=
- =?utf-8?B?Z1UzMFlOOFVlb2JFcGhUbCs4eHNYTGNxZzBZT0MvWjl6S1NNYkdHMVpnTmhH?=
- =?utf-8?B?Skg2NURHMmdaYksxK2dHVGczdzR1VSthUWFaS0xETHpaKzV2c3pHVUY0M0Y3?=
- =?utf-8?B?WjNjbEZsNGY5aTJla3d1dWxIdlNwNW1EV2Q1VnNFK29QZS9EVDJkTE1yRzNw?=
- =?utf-8?B?ME0vNDNwMUtsZXNQNEtFSWhFT1pUOG1xOEJkT0RSYUNBazZHQmJ4UT09?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <875848B97C24E64694E04B029EBEE1A6@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	Wed, 12 Aug 2026 04:02:35 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1786507352;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dHlHu1L1uq0AbU95kGBx2915Dz9LzbC3+YKEWdtzBVQ=;
+	b=ae2/nHfUf0W6wj7MS5pNiWdqV0MVLSgXfG+M/r7cVxdXHHYyEWZ7K9iHL3XeBE3b1JjCjK
+	aHvoR+/ADoqwGiWlaCa7yvTdURByzGGOUmQ2vaxtCpjq/l7K3pjTiQFNUNtp1L7ZfFGv6P
+	f8BUwOL5cEH6jB5VOFJUXbUxJtxpL4U=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-647-_DJuboX8OguFe3SOvnEpjw-1; Wed, 12 Aug 2026 00:02:27 -0400
+X-MC-Unique: _DJuboX8OguFe3SOvnEpjw-1
+X-Mimecast-MFC-AGG-ID: _DJuboX8OguFe3SOvnEpjw_1786507347
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-52d33c89a29so3512631cf.1
+        for <kexec@lists.infradead.org>; Tue, 11 Aug 2026 21:02:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786507347; x=1787112147;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=dHlHu1L1uq0AbU95kGBx2915Dz9LzbC3+YKEWdtzBVQ=;
+        b=g/EjKYPrJId8+8fkTUNu1w0GFfF9C6g9RTCdG8T+phxfTYFkuS681bsGTIC2t2lcQI
+         Z8N6q2MlPCWscpPah+QKmwfDEKpJ1jKJqVpLV1j9/Jt87pCFge9NdNRyK7ZhYCtoUpyp
+         72weyENljiO0mNJHHn73Hd86xCnjnPf7ToyLXulxmrmf3LhICcxZaDI6/mw+peCCVGQE
+         EHl5o3wV6XguotnaXY58Qf6vrO7d4E+a2rfq302Be/XoWG/reOI2arT0VZudqeC6r9jq
+         yuMMcctHVKBFPRiqgcmsj79LofhDZv//8j0Be3T8expm66Kwh+Ds4mV5ZI3IS/9AvUoJ
+         /3bw==
+X-Forwarded-Encrypted: i=1; AHgh+Ro/CyYNCx0AoK9tzEnh72LBlI76sexlkyy+JZWhloL4vfOOQiyuIYd5yvoRPboNC5V7+/p2oA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YyyWAJ1xqmxS5e+1ZlnxzyK+OEHWd5CTsuva34HkfYVyMUJ54iO
+	xEgZdGLKW8Qy1NTqhRBLBo5CRYPlSPLdXQVyE8xixr66sn4fNYzMCHHAYZ1A13pz/XuTroIbVTL
+	SLOU5IGKw9+ZuDyITkr3uoh8n31S4JuMIYJ4bm4WgDdnnfV/4W50Vh7O9x9xt+WBZWS7A49Wnjt
+	BbII9c09xzIYQIVXIVlwSd/65yc0lXQS0Y8TniCkHHUu/rUHY=
+X-Gm-Gg: AR+sD13h1X18OXJSw8T2LKm9upJT3swPqg0TlR+Js2l1jYS1jy4b6pRKkUHNs0ocpjN
+	EaLDN19JU/nVEeghkv1o8waTOTu77/f47sSOvJYFzedT1ei9XFfQSPAWwKOH8vAXAkYbX7OZltc
+	dJWI4O9g3cpCcrUJjfhjKXPROInemHjEt5mayJ/VvVniBFO7mI0C5cVIA=
+X-Received: by 2002:a05:622a:1791:b0:50d:9e8d:9837 with SMTP id d75a77b69052e-52d646fc340mr15896011cf.11.1786507347166;
+        Tue, 11 Aug 2026 21:02:27 -0700 (PDT)
+X-Received: by 2002:a05:622a:1791:b0:50d:9e8d:9837 with SMTP id
+ d75a77b69052e-52d646fc340mr15895681cf.11.1786507346659; Tue, 11 Aug 2026
+ 21:02:26 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nec.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY4PR01MB13462.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9e68db2-24c0-4b0f-132f-08def8118136
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2026 01:31:59.8910
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ePJ/7r8YkLLNj8RCp2WdiYzRI3uSlvlBjWBwcpmieS4/N/rtfyEecwqOkfsBAzjxIpqrFh7TfQR7IIPq2ES2nw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7PR01MB14883
+References: <20260714004550.3698175-1-stephen.s.brennan@oracle.com> <20260714004550.3698175-4-stephen.s.brennan@oracle.com>
+In-Reply-To: <20260714004550.3698175-4-stephen.s.brennan@oracle.com>
+From: Tao Liu <ltao@redhat.com>
+Date: Wed, 12 Aug 2026 16:01:50 +1200
+X-Gm-Features: AUfX_mzrfqgpjHmz_fx3n9gVVo3O2-e5TR6gTXtYPRHnFVMkt1O_NjfPr4Ta5M4
+Message-ID: <CAO7dBbU6tfVHLO6LW5ZQXbApqychfo=hAtXd8pD+Z7MXFF7fgg@mail.gmail.com>
+Subject: Re: [PATCH makedumpfile 3/9] Share page information with extension callbacks
+To: Stephen Brennan <stephen.s.brennan@oracle.com>
+Cc: yamazaki-msmt@nec.com, k-hagio-ab@nec.com, kexec@lists.infradead.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 5nzHPNHrY51N_rldN_F4Xw2LImG7_fWffkhksA3Q8Fw_1786507347
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260811_183212_782623_17D7EA6A 
-X-CRM114-Status: GOOD (  24.42  )
+X-CRM114-CacheID: sfid-20260811_210234_243176_C001E803 
+X-CRM114-Status: GOOD (  35.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -156,68 +103,408 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-SGkgVGFvLA0KDQpPbiAyMDI2LzA4LzExIDE1OjExLCBUYW8gTGl1IHdyb3RlOg0KDQo+Pj4+PiBh
-bmQgVGFvLCBwbGVhc2UgY2hlY2sgaWYgeW91ciBleHRlbnNpb24gY2FuIGJlIHJlYmFzZWQgb24g
-dGhpcw0KPj4+Pj4gcGF0Y2hzZXQuICBhbmQgYWxzbyBpZiB5b3UgYWdyZWUgdGhlIGV4dGVuc2lv
-biBsaXN0LCBwbGVhc2UgcHJvdmlkZQ0KPj4+Pj4gdGhlIGluZm9ybWF0aW9uLg0KPiANCj4gSSBo
-YXZlIGNoZWNrZWQgbXkgZXh0ZW5zaW9uIHRvIHJlYmFzZSBvbiB0aGlzIHBhdGNoc2V0LiBUaGUg
-cmVzdWx0IGlzOg0KPiANCj4gMSkgUmViYXNlIGZhaWxzLCBidXQgb25seSBkdWUgdG8gY29uZmxp
-Y3RzIHdpdGhpbiBleHRlbnNpb25zL01ha2VmaWxlLg0KPiBUaGVzZSBhcmUgc21hbGwgaXNzdWVz
-IHdoaWNoIHdvdWxkIGJlIHZlcnkgZWFzeSB0byBmaXguDQo+IDIpIE9uY2UgMSBpcyBmaXhlZCwg
-YWZ0ZXIgY29tcGlsZSwgbXkgZXh0ZW5zaW9uIGNhbiB3b3JrIGFzIGV4cGVjdGVkLg0KPiBIb3dl
-dmVyIHRoaXMgaXMgYSBjb2luY2lkZW5jZS4gIEJlY2F1c2UgbXkgZXh0ZW5zaW9uIHRha2VzIGNh
-bGxiYWNrDQo+IGFzOg0KPiANCj4gaW50IGV4dGVuc2lvbl9jYWxsYmFjayh1bnNpZ25lZCBsb25n
-IHBmbiwgY29uc3Qgdm9pZCAqcGNhY2hlKQ0KPiB7DQo+ICAgICAgICAgIHN0cnVjdCBmdF9wYWdl
-X2luZm8gKmN1ciA9IE5VTEw7DQo+ICAgICAgICAgIHJldHVybiBmaWx0ZXJfcGFnZShwZm4sICZj
-dXIpOw0KPiB9DQo+IA0KPiBCdXQgdGhpcyBwYXRjaHNldCBjaGFuZ2VkIHRoZSBjYWxsYmFjayBp
-bnRvOg0KPiBydW5fZXh0ZW5zaW9uX2NhbGxiYWNrKHVuc2lnbmVkIGxvbmcgcGZuLCBjb25zdCB2
-b2lkICpwY2FjaGUsIGNvbnN0DQo+IHN0cnVjdCBwZ2luZm8gKmkpDQo+IA0KPiBNeSBleHRlbnNp
-b24gd29ya3MgYmVjYXVzZSBpdCBvbmx5IHRha2VzIHBmbiBhcyBwYXJhbWV0ZXIsIGFuZCB0aGUN
-Cj4gaGFuZGxlX2Nic1tpXS0+Y2IoKSBkb2Vzbid0IGNoZWNrIGZ1bmN0aW9uIHBhcmFtZXRlcnMu
-IEhvd2V2ZXIsIEkNCj4gZG9uJ3QgdGhpbmsgaXQgaXMgYSBtYWpvciBpc3N1ZSwgb25jZSB0aGUg
-bW9kaWZpY2F0aW9uIG9uIGV4dGVuc2lvbi5jDQo+IG1lcmdlZCB1cHN0cmVhbSwgSSBjYW4gYWRq
-dXN0IHRoZSBmdW5jdGlvbiBzaWduYXR1cmUgb2YgbWluZQ0KPiBhY2NvcmRpbmdseS4NCg0KVGhh
-bmsgeW91IGZvciBjaGVja2luZy4gIE15IG1haW4gY29uY2VybiB3YXMgdGhlIGNoYW5nZSBpbiBi
-ZWhhdmlvciwgDQpwYXJ0aWN1bGFybHkgd2l0aCBjb21wb3VuZCBwYWdlcy4gIElmIHlvdXIgZXh0
-ZW5zaW9uIHdvcmtzIHdlbGwgYWZ0ZXIgDQpzb21lIGFkanVzdG1lbnRzLCB0aGF0J3MgZ29vZCB0
-byBoZWFyLiAgSSB3aWxsIG1lcmdlIHRoZSBwYXRjaCBzZXQgbGF0ZXIuDQoNCj4gDQo+Pj4+DQo+
-Pj4+IFN1cmUsIEkgd2lsbCBjaGVjayBmb3IgdGhlIHJlYmFzZS4gSW4gdGhlIG1lYW50aW1lLCB3
-aWxsIHRoZQ0KPj4+PiBleHRlbnNpb25zIHRvIGJlIG1haW50YWluZWQgaW4gb25lIHJlcG8gKGUu
-Zy4gbWFrZWR1bXBmaWxlIGV4dGVuc2lvbnMNCj4+Pj4gcmVwbywgc28gZXZlcnlvbmUgY2FuIFBS
-IHRvIGl0KSwgb3IgdGhleSBhcmUgbWFpbnRhaW5lZCBpbiBlYWNoIG9mDQo+Pj4+IGluZGl2aWR1
-YWwgcmVwb3MsIGFuZCBsaW5rIHRoZW0gdW5kZXINCj4+Pj4gaHR0cHM6Ly9naXRodWIuY29tL21h
-a2VkdW1wZmlsZS9tYWtlZHVtcGZpbGUvd2lraSNleHRlbnNpb25zPw0KPj4+DQo+Pj4gSSBhbSBv
-cGVuIHRvIGVpdGhlci4gSSB3b3VsZCBiZSB3aWxsaW5nIHRvIGNvLW1haW50YWluIGFuIGV4dGVu
-c2lvbnMNCj4+PiByZXBvc2l0b3J5IHdpdGggVGFvLCBmb3IgZXhhbXBsZSBhdCBnaXRodWIuY29t
-L21ha2VkdW1wZmlsZS9leHRlbnNpb25zLA0KPj4+IHNvIHRoYXQgdGhlcmUgaXMgYSBjb21tb24g
-cGxhY2UgdG8gY29udHJpYnV0ZS4gVGhhdCBpcywgaWYgdGhpcw0KPj4+IGFycmFuZ2VtZW50IHdv
-dWxkIHdvcmsgZm9yIGFsbD8NCj4+Pg0KPj4+IElmIHdlIGRpZCBjcmVhdGUgYSBjb21tb24gcmVw
-b3NpdG9yeSwgSSB0aGluayB3ZSdkIHdhbnQgdG8gc2V0IHVwIHNvbWUNCj4+PiBleHBlY3RhdGlv
-bnMgb24gdGhlIHF1YWxpdHkgJiBtYWludGVuYW5jZS4gRUcsIHNvbWUgbWF5IGJlIG1hcmtlZCBh
-cw0KPj4+ICJtYWludGFpbmVkIiB3aXRoIGEgbWFpbnRhaW5lciBhbmQgYSBzY29wZSBvZiBtYWlu
-dGVuYW5jZSAoc3VwcG9ydGVkDQo+Pj4ga2VybmVsIHZlcnNpb25zLCBzdXBwb3J0ZWQgYXJjaGl0
-ZWN0dXJlcywgZXRjKSwgYW5kIG90aGVycyBhcw0KPj4+ICJ1bm1haW50YWluZWQiLCB3aGVyZSB3
-ZSBqdXN0IG1ha2Ugc3VyZSB0aGF0IHRoZXkgYnVpbGQgJiBydW4gd2l0aA0KPj4+IG1ha2VkdW1w
-ZmlsZSwgYnV0IGRvbid0IHZhbGlkYXRlIHRoZWlyIGJlaGF2aW9yIG9uIHNwZWNpZmljIGtlcm5l
-bHMgb3INCj4+PiBhcmNoaXRlY3R1cmVzLg0KPj4+DQo+Pj4gT24gdGhlIG90aGVyIGhhbmQsIGlm
-IGl0J3MgcHJlZmVyYWJsZSB0byBzdGF5IHNlcGFyYXRlLCB0aGVuIEknbSBoYXBweQ0KPj4+IHRv
-IGZpbmQgYW5vdGhlciBwbGFjZSB0byBtYWludGFpbiB0aGUgdXNlcnN0YWNrICYgZWxmaGVhZGVy
-IGV4dGVuc2lvbnMuDQo+Pg0KPj4gSSB3YXMgdGhpbmtpbmcgb2Ygc2VwYXJhdGUgcmVwb3NpdG9y
-aWVzLiAgQSBzaW5nbGUgcmVwb3NpdG9yeSB3b3VsZCBiZQ0KPj4gZmluZSwgYnV0IGZvciBub3cg
-SSBoYXZlIG5vIHBsYW5zIHRvIGNyZWF0ZSBvbmUgd2l0aGluIHRoZSBtYWtlZHVtcGZpbGUNCj4+
-IG9yZ2FuaXphdGlvbi4NCj4+DQo+PiAoTG9va2luZyBiYWNrIGF0IGNyYXNoIGV4dGVuc2lvbnMs
-IHNvbWUgYmVjb21lIG9ic29sZXRlIHF1aWNrbHkgb3INCj4+IGhhdmUgdmVyeSBzcGVjaWZpYyBm
-dW5jdGlvbmFsaXR5LCBtYWtpbmcgaXQgZGlmZmljdWx0IGZvciBhbnlvbmUNCj4+IG90aGVyIHRo
-YW4gdGhlIG9yaWdpbmFsIGF1dGhvciB0byBtYWludGFpbi4gIEZvciB0aGlzIHJlYXNvbiwgSSB0
-aGluaw0KPj4gaXQgaXMgYmVzdCBmb3IgdGhlIGF1dGhvcnMgdGhlbXNlbHZlcyB0byBtYW5hZ2Ug
-dGhlbS4pDQo+IA0KPiBVbmRlcnN0b29kLCBleHRlbnNpb25zIGFyZSBkZXNpZ25lZCB0byBhZGRy
-ZXNzIG9uZSBzcGVjaWZpYyBpc3N1ZSwgYW5kDQo+IGlzIGVhc3kgdG8gZ2V0IG91dGRhdGVkIHdo
-ZW4gbWFrZWR1bXBmaWxlL2NyYXNoIHV0aWxpdHkga2VlcGluZw0KPiBmb2xsb3dpbmcgdXAgdGhl
-IGxhdGVzdCBrZXJuZWwsIGJ1dCBleHRlbnNpb25zIGFyZSBvZnRlbiBsZWZ0IGJlaGluZA0KPiBk
-dWUgdG8gbG93IHVzYWdlLiBMZXQncyBnbyB3aXRoIG1haW50YWlubGluZyB0aGUgZXh0ZW5zaW9u
-cyBieSBlYWNoDQo+IGF1dGhvcnMgc2VwZXJhdGVseSBhbmQgbGluayB0aGVtIGludG8NCj4gaHR0
-cHM6Ly9naXRodWIuY29tL21ha2VkdW1wZmlsZS9tYWtlZHVtcGZpbGUvd2lraSNleHRlbnNpb25z
-DQoNClRoYW5rIHlvdSBmb3IgeW91ciB1bmRlcnN0YW5kaW5nLiAgZm9yIG5vdywgcGxlYXNlIGxl
-dCBtZSBrbm93IHRoZSANCmluZm9ybWF0aW9uIG9mIHlvdXIgZXh0ZW5zaW9uIG9uY2UgaXQncyBy
-ZWFkeS4NCg0KVGhhbmtzLA0KS2F6dQ==
+Hi Stephen,
+
+On Tue, Jul 14, 2026 at 12:46=E2=80=AFPM Stephen Brennan
+<stephen.s.brennan@oracle.com> wrote:
+>
+> In __exclude_unnecessary_pages(), we extract several fields related
+> to the page. Some of these, like compound_order and compound_dtor, have
+> logic specific to the kernel version.
+>
+> Extensions can, of course, determine these values for themselves, but
+> it's extra work, and duplicates logic that may need to be updated
+> frequently with new kernel versions. What's more, if we put all the
+> values together in a single structure, helpers like isSlab() and others
+> can be implemented in terms of that structure and shared with the
+> extensions in order to further simplify their implementation.
+>
+> With that in mind, group the per-page variables into a structure and
+> share them with extension callbacks. This breaks the extension API,
+> but since a release hasn't yet happened, it seems reasonable to do so.
+>
+> Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
+> ---
+>  extension.c    |  8 ++---
+>  extension.h    |  3 +-
+>  makedumpfile.c | 83 +++++++++++++++++++++++++-------------------------
+>  makedumpfile.h | 16 ++++++++++
+>  4 files changed, 64 insertions(+), 46 deletions(-)
+>
+> diff --git a/extension.c b/extension.c
+> index 5188c1f..9b29f0c 100644
+> --- a/extension.c
+> +++ b/extension.c
+> @@ -10,7 +10,7 @@
+>  #include "kallsyms.h"
+>  #include "btf_info.h"
+>
+> -typedef int (*callback_fn)(unsigned long, const void *);
+> +typedef int (*callback_fn)(unsigned long, const void *, const struct pgi=
+nfo *);
+>
+The function signature of callbacks are changed, it will be better to
+update them in extensions/sample.c as well:
+
+int extension_callback(unsigned long pfn, const void *pcache)
+{
+return PG_UNDECID;
+}
+
+Since it will serve as a reference for future extension authors.
+
+Thaks,
+Tao Liu
+
+>  struct extension_handle_cb {
+>         void *handle;
+> @@ -306,14 +306,14 @@ fail:
+>   * 1) Include the page if anyone says PG_INCLUDE, and
+>   * 2) Exclude the page if no one says PG_INCLUDE, but one or more say PG=
+_EXCLUDE.
+>   */
+> -int run_extension_callback(unsigned long pfn, const void *pcache)
+> +int run_extension_callback(unsigned long pfn, const void *pcache, const =
+struct pginfo *inf)
+>  {
+>         int result;
+>         int ret =3D PG_UNDECID;
+>
+>         for (int i =3D 0; i < handle_cbs_len; i++) {
+>                 if (handle_cbs[i]->cb) {
+> -                       result =3D handle_cbs[i]->cb(pfn, pcache);
+> +                       result =3D handle_cbs[i]->cb(pfn, pcache, inf);
+>                         if (result =3D=3D PG_INCLUDE) {
+>                                 ret =3D result;
+>                                 goto out;
+> @@ -341,7 +341,7 @@ bool add_extension_opts(char *opt)
+>         return false;
+>  }
+>
+> -int run_extension_callback(unsigned long pfn, const void *pcache)
+> +int run_extension_callback(unsigned long pfn, const void *pcache, const =
+struct pginfo *i)
+>  {
+>         return PG_UNDECID;
+>  }
+> diff --git a/extension.h b/extension.h
+> index ba8d32a..22af9a6 100644
+> --- a/extension.h
+> +++ b/extension.h
+> @@ -2,12 +2,13 @@
+>  #define _EXTENSION_H
+>  #include <stdbool.h>
+>
+> +struct pginfo;
+>  enum {
+>         PG_INCLUDE,     // Exntesion will keep the page
+>         PG_EXCLUDE,     // Exntesion will discard the page
+>         PG_UNDECID,     // Exntesion makes no decision
+>  };
+> -int run_extension_callback(unsigned long pfn, const void *pcache);
+> +int run_extension_callback(unsigned long pfn, const void *pcache, const =
+struct pginfo *i);
+>  void init_extensions(void);
+>  void cleanup_extensions(void);
+>  bool add_extension_opts(char *opt);
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index e882b84..a4c9bbf 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -6466,12 +6466,13 @@ __exclude_unnecessary_pages(unsigned long mem_map=
+,
+>         mdf_pfn_t pfn_read_start, pfn_read_end;
+>         unsigned char *page_cache;
+>         unsigned char *pcache;
+> -       unsigned int _count, _mapcount =3D 0, compound_order =3D 0;
+> +       struct pginfo i;
+>         unsigned int order_offset, dtor_offset;
+> -       unsigned long flags, mapping, private =3D 0;
+> -       unsigned long compound_dtor, compound_head =3D 0;
+>         int filter_pg;
+>
+> +       i._mapcount =3D i.compound_order =3D 0;
+> +       i.private =3D i.compound_dtor =3D i.compound_head =3D 0;
+> +
+>         /*
+>          * If a multi-page exclusion is pending, do it first
+>          */
+> @@ -6543,21 +6544,21 @@ __exclude_unnecessary_pages(unsigned long mem_map=
+,
+>                         pfn_read_end   =3D pfn + pfn_mm - 1;
+>                 }
+>
+> -               flags   =3D ULONG(pcache + OFFSET(page.flags));
+> -               _count  =3D UINT(pcache + OFFSET(page._refcount));
+> -               mapping =3D ULONG(pcache + OFFSET(page.mapping));
+> +               i.flags   =3D ULONG(pcache + OFFSET(page.flags));
+> +               i._count  =3D UINT(pcache + OFFSET(page._refcount));
+> +               i.mapping =3D ULONG(pcache + OFFSET(page.mapping));
+>
+>                 if (OFFSET(page._mapcount) !=3D NOT_FOUND_STRUCTURE)
+> -                       _mapcount =3D UINT(pcache + OFFSET(page._mapcount=
+));
+> +                       i._mapcount =3D UINT(pcache + OFFSET(page._mapcou=
+nt));
+>
+> -               compound_order =3D 0;
+> -               compound_dtor =3D 0;
+> +               i.compound_order =3D 0;
+> +               i.compound_dtor =3D 0;
+>                 /*
+>                  * The last pfn of the mem_map cache must not be compound=
+ head
+>                  * page since all compound pages are aligned to its page =
+order
+>                  * and PGMM_CACHED is a power of 2.
+>                  */
+> -               if ((index_pg < PGMM_CACHED - 1) && isCompoundHead(flags)=
+) {
+> +               if ((index_pg < PGMM_CACHED - 1) && isCompoundHead(i.flag=
+s)) {
+>                         unsigned char *addr =3D pcache + SIZE(page);
+>
+>                         /*
+> @@ -6567,10 +6568,10 @@ __exclude_unnecessary_pages(unsigned long mem_map=
+,
+>                         if (NUMBER(PAGE_HUGETLB_MAPCOUNT_VALUE) !=3D NOT_=
+FOUND_NUMBER) {
+>                                 unsigned long _flags_1 =3D ULONG(addr + O=
+FFSET(page.flags));
+>
+> -                               compound_order =3D _flags_1 & 0xff;
+> +                               i.compound_order =3D _flags_1 & 0xff;
+>
+> -                               if (_mapcount =3D=3D (int)NUMBER(PAGE_HUG=
+ETLB_MAPCOUNT_VALUE))
+> -                                       compound_dtor =3D IS_HUGETLB;
+> +                               if (i._mapcount =3D=3D (int)NUMBER(PAGE_H=
+UGETLB_MAPCOUNT_VALUE))
+> +                                       i.compound_dtor =3D IS_HUGETLB;
+>
+>                                 goto check_order;
+>                         }
+> @@ -6582,19 +6583,19 @@ __exclude_unnecessary_pages(unsigned long mem_map=
+,
+>                         if (NUMBER(PG_hugetlb) !=3D NOT_FOUND_NUMBER) {
+>                                 unsigned long _flags_1 =3D ULONG(addr + O=
+FFSET(page.flags));
+>
+> -                               compound_order =3D _flags_1 & 0xff;
+> +                               i.compound_order =3D _flags_1 & 0xff;
+>
+>                                 if (_flags_1 & (1UL << NUMBER(PG_hugetlb)=
+))
+> -                                       compound_dtor =3D IS_HUGETLB;
+> +                                       i.compound_dtor =3D IS_HUGETLB;
+>
+>                                 goto check_order;
+>                         }
+>
+>                         if (order_offset) {
+>                                 if (info->kernel_version >=3D KERNEL_VERS=
+ION(4, 16, 0))
+> -                                       compound_order =3D UCHAR(addr + o=
+rder_offset);
+> +                                       i.compound_order =3D UCHAR(addr +=
+ order_offset);
+>                                 else
+> -                                       compound_order =3D USHORT(addr + =
+order_offset);
+> +                                       i.compound_order =3D USHORT(addr =
++ order_offset);
+>                         }
+>
+>                         if (dtor_offset) {
+> @@ -6603,40 +6604,40 @@ __exclude_unnecessary_pages(unsigned long mem_map=
+,
+>                                  * to the ID of it since linux-4.4.
+>                                  */
+>                                 if (info->kernel_version >=3D KERNEL_VERS=
+ION(4, 16, 0))
+> -                                       compound_dtor =3D UCHAR(addr + dt=
+or_offset);
+> +                                       i.compound_dtor =3D UCHAR(addr + =
+dtor_offset);
+>                                 else if (info->kernel_version >=3D KERNEL=
+_VERSION(4, 4, 0))
+> -                                       compound_dtor =3D USHORT(addr + d=
+tor_offset);
+> +                                       i.compound_dtor =3D USHORT(addr +=
+ dtor_offset);
+>                                 else
+> -                                       compound_dtor =3D ULONG(addr + dt=
+or_offset);
+> +                                       i.compound_dtor =3D ULONG(addr + =
+dtor_offset);
+>                         }
+>  check_order:
+> -                       if ((compound_order >=3D sizeof(unsigned long) * =
+8)
+> -                           || ((pfn & ((1UL << compound_order) - 1)) !=
+=3D 0)) {
+> +                       if ((i.compound_order >=3D sizeof(unsigned long) =
+* 8)
+> +                           || ((pfn & ((1UL << i.compound_order) - 1)) !=
+=3D 0)) {
+>                                 /* Invalid order */
+> -                               compound_order =3D 0;
+> +                               i.compound_order =3D 0;
+>                         }
+>                 }
+>                 if (OFFSET(page.compound_head) !=3D NOT_FOUND_STRUCTURE)
+> -                       compound_head =3D ULONG(pcache + OFFSET(page.comp=
+ound_head));
+> +                       i.compound_head =3D ULONG(pcache + OFFSET(page.co=
+mpound_head));
+>
+>                 if (OFFSET(page.private) !=3D NOT_FOUND_STRUCTURE)
+> -                       private =3D ULONG(pcache + OFFSET(page.private));
+> +                       i.private =3D ULONG(pcache + OFFSET(page.private)=
+);
+>
+> -               nr_pages =3D 1 << compound_order;
+> +               nr_pages =3D 1 << i.compound_order;
+>                 pfn_counter =3D NULL;
+>
+>                 /*
+>                  * Excludable compound tail pages must have already been =
+excluded by
+>                  * exclude_range(), don't need to check them here.
+>                  */
+> -               if (compound_head & 1)
+> +               if (i.compound_head & 1)
+>                         continue;
+>
+>                 /*
+>                  * Include pages that specified by user via
+>                  * makedumpfile extensions
+>                  */
+> -               filter_pg =3D run_extension_callback(pfn, pcache);
+> +               filter_pg =3D run_extension_callback(pfn, pcache, &i);
+>                 if (filter_pg =3D=3D PG_INCLUDE)
+>                         continue;
+>
+> @@ -6646,14 +6647,14 @@ check_order:
+>                  */
+>                 if ((info->dump_level & DL_EXCLUDE_FREE)
+>                     && info->page_is_buddy
+> -                   && info->page_is_buddy(flags, _mapcount, private, _co=
+unt)) {
+> +                   && info->page_is_buddy(i.flags, i._mapcount, i.privat=
+e, i._count)) {
+>                         if ((ARRAY_LENGTH(zone.free_area) !=3D NOT_FOUND_=
+STRUCTURE) &&
+> -                           (private >=3D ARRAY_LENGTH(zone.free_area))) =
+{
+> +                           (i.private >=3D ARRAY_LENGTH(zone.free_area))=
+) {
+>                                 MSG("WARNING: Invalid free page order: pf=
+n=3D%llx, order=3D%lu, max order=3D%lu\n",
+> -                                   pfn, private, ARRAY_LENGTH(zone.free_=
+area) - 1);
+> +                                   pfn, i.private, ARRAY_LENGTH(zone.fre=
+e_area) - 1);
+>                                 continue;
+>                         }
+> -                       nr_pages =3D 1 << private;
+> +                       nr_pages =3D 1 << i.private;
+>                         pfn_counter =3D &pfn_free;
+>                 }
+>                 /*
+> @@ -6663,7 +6664,7 @@ check_order:
+>                  * accepted immediately without being on the list.
+>                  */
+>                 else if ((info->dump_level & DL_EXCLUDE_FREE)
+> -                       && isUnaccepted(_mapcount)) {
+> +                       && isUnaccepted(i._mapcount)) {
+>                         nr_pages =3D 1 << (ARRAY_LENGTH(zone.free_area) -=
+ 1);
+>                         pfn_counter =3D &pfn_free;
+>                 }
+> @@ -6671,17 +6672,17 @@ check_order:
+>                  * Exclude the non-private cache page.
+>                  */
+>                 else if ((info->dump_level & DL_EXCLUDE_CACHE)
+> -                   && is_cache_page(flags)
+> -                   && !isPrivate(flags) && !isAnon(mapping, flags, _mapc=
+ount)) {
+> +                   && is_cache_page(i.flags)
+> +                   && !isPrivate(i.flags) && !isAnon(i.mapping, i.flags,=
+ i._mapcount)) {
+>                         pfn_counter =3D &pfn_cache;
+>                 }
+>                 /*
+>                  * Exclude the cache page whether private or non-private.
+>                  */
+>                 else if ((info->dump_level & DL_EXCLUDE_CACHE_PRI)
+> -                   && is_cache_page(flags)
+> -                   && !isAnon(mapping, flags, _mapcount)) {
+> -                       if (isPrivate(flags))
+> +                   && is_cache_page(i.flags)
+> +                   && !isAnon(i.mapping, i.flags, i._mapcount)) {
+> +                       if (isPrivate(i.flags))
+>                                 pfn_counter =3D &pfn_cache_private;
+>                         else
+>                                 pfn_counter =3D &pfn_cache;
+> @@ -6692,19 +6693,19 @@ check_order:
+>                  *  - hugetlbfs pages
+>                  */
+>                 else if ((info->dump_level & DL_EXCLUDE_USER_DATA)
+> -                        && (isAnon(mapping, flags, _mapcount) || isHuget=
+lb(compound_dtor))) {
+> +                        && (isAnon(i.mapping, i.flags, i._mapcount) || i=
+sHugetlb(i.compound_dtor))) {
+>                         pfn_counter =3D &pfn_user;
+>                 }
+>                 /*
+>                  * Exclude the hwpoison page.
+>                  */
+> -               else if (isHWPOISON(flags)) {
+> +               else if (isHWPOISON(i.flags)) {
+>                         pfn_counter =3D &pfn_hwpoison;
+>                 }
+>                 /*
+>                  * Exclude pages that are logically offline.
+>                  */
+> -               else if (isOffline(flags, _mapcount)) {
+> +               else if (isOffline(i.flags, i._mapcount)) {
+>                         pfn_counter =3D &pfn_offline;
+>                 }
+>                 /*
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index 4f707c7..87f973d 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -1507,6 +1507,22 @@ struct ppc64_vmemmap {
+>         unsigned long           virt;
+>  };
+>
+> +/* Per-page information determined during page filtering which may be us=
+eful
+> + * to extensions making their decisions */
+> +struct pginfo {
+> +       unsigned long flags;
+> +       unsigned long mapping;
+> +       /* Present whenever OFFSET(page.private) !=3D NOT_FOUND_STRUCTURE=
+ */
+> +       unsigned long private;
+> +       unsigned long compound_dtor;
+> +       /* Present whenever OFFSET(page.compound_head) !=3D NOT_FOUND_STR=
+UCTURE */
+> +       unsigned long compound_head;
+> +       unsigned int _count;
+> +       /* Present whenever OFFSET(page._mapcount) !=3D NOT_FOUND_STRUCTU=
+RE */
+> +       unsigned int _mapcount;
+> +       unsigned int compound_order;
+> +};
+> +
+>  struct DumpInfo {
+>         int32_t         kernel_version;      /* version of first kernel*/
+>         struct timeval  timestamp;
+> --
+> 2.47.3
+>
+
 
