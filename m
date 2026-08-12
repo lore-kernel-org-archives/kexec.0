@@ -4,97 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0CB3DC5AD5A
-	for <kexec@archiver.kernel.org>; Wed, 12 Aug 2026 05:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2EE61C5B567
+	for <kexec@archiver.kernel.org>; Wed, 12 Aug 2026 06:44:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=pUzFaE5fpKhF087fjDfGwoqJGbt36ufyWWHRoVPGzYs=; b=U2Q2PFE4lTc9S+A/O6jlnxJi+n
-	gYvWxYAvQ8Z+V7GVcrHo/V1T6N0j0XKKM/lNEFqfT6JYrli5HDVuL8QGUFjt32v9HChZ5Y0whPd1d
-	HJz4WrzNbyLAyWVVFnH+tCIhhVaEPQ2t6cPmxjmV5XGgoOOjkbXR/9vskDNHbJGJwNZgF2B54QGne
-	Y9ivN3fhxPCnwSHneh0/CNbVTqKIGG9QisF9xyXvQ2RZPSkFGHusbse3vGfrGmmrjzcZghBfsfKOu
-	yv5O6CY3B+PZC19v8PN2KyjznTN7D5h60ZT1uXDupY90ucbjYeZDg09CB1E1ncq6BW0fpZz85itl0
-	7V/VpB8w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Eh6eLhQmtQhniW+fbZTdsAuMJIxtRsDQYFqV7o5anTE=; b=ZMH+ZRRylUwWxdWeej/USgFPvi
+	0LbRpctby6uUA9pxC+qhmAOaC3pcGEozzX5rAKl3RxleCFububRehXjAI/Ko0X0naOFB9EQNG56q5
+	tHXyAbo34tqIQUAtg8alFiLK5eyRJI870ZGNKvK8yQ8hKJ3Dius03724djddGcy8eQG0tTd5xFRZd
+	Rakb928Nt1aDq3PVlXybFfe22UvR0f7H2Ad2/3hZVGc1+G2kj6dVsxG4ovaLIFOydwr3Oj2GYoEsF
+	z+ZyvPiyyPZqblRu5hlF/yVVer7b8z9Dhf0QQF630dznuy1WSy7gTBhxKFwh8IpyDEZAgZhT3MbJU
+	XMwyWXDg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wu1Bx-0000000FQ92-3QPz;
-	Wed, 12 Aug 2026 05:07:53 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1wu2hn-0000000FX0Y-3Vcd;
+	Wed, 12 Aug 2026 06:44:51 +0000
+Received: from mailgw.kylinos.cn ([124.126.103.232])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wu1Bu-0000000FQ8g-3GSm
+	id 1wu2hk-0000000FWzq-4484
 	for kexec@lists.infradead.org;
-	Wed, 12 Aug 2026 05:07:52 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1786511269;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pUzFaE5fpKhF087fjDfGwoqJGbt36ufyWWHRoVPGzYs=;
-	b=HD+1sutzXx2VQivKxe/+HaCBHeWHFBdJ68C40mQJYGDFJKOn44Qwcbjb/Xe2PRDnl8VcJB
-	+WrONiWyByKBd2krcHiXjLKBsJEOwnrgD8lcuEyt1vPxf/UG6QHw/5y8wdTIgCn95dSahd
-	z5J7ouhJ3VvJF2EOmfm+9BY79zfeBKk=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-213-mbvpsX2KPcmVyOL309-vfA-1; Wed, 12 Aug 2026 01:07:42 -0400
-X-MC-Unique: mbvpsX2KPcmVyOL309-vfA-1
-X-Mimecast-MFC-AGG-ID: mbvpsX2KPcmVyOL309-vfA_1786511262
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-934956beec8so124147485a.0
-        for <kexec@lists.infradead.org>; Tue, 11 Aug 2026 22:07:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786511262; x=1787116062;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=pUzFaE5fpKhF087fjDfGwoqJGbt36ufyWWHRoVPGzYs=;
-        b=CcWN9oPmA7JznXa4mR1TIUB9nxEsW3dDNZ9n2+eVZ7w0/Usd8mEfmtbwSNrhGJH+Yr
-         sjy7kBstTe4JFVv8/AoaMiUScZysLusUt7Bj2JQk9UHEFd2eJ5WZuvdVxRQ0jPJRZaZx
-         voAygY5vKndAR0b1F30IfgQd9iDOvhZBYMmR+I2icBv16zTJou8NdohAFQrMrKkby6I7
-         sdVkclFpH6a2b11IMFbRKB7bmomOo5FVmsgq70rHRmAbwcLMU5H9jid3cszrExf8KZFt
-         BgyLDsYKZZHd7f+EgKXzR/rKCGwpfuCbI/xCinubdHi9K1fnh5tufjUo4ALXWjBx6JM8
-         3jZQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqH4h+ppABREFJ9Spe309qz5Yqo08NTGjU/QXRcR+CrtmVIg4ap6cou2vqZNb1eBCGZUpv3FA==@lists.infradead.org
-X-Gm-Message-State: AOJu0Yw5TrciJCWJRyYqnhwr6nzR+YT6UmRIXhzfHQDC1vt8tsaVmYqt
-	cFWw1cv+Y7GKCxvOMBDqQyEJY4Al9DpSmwMJNo33PFMQ0wQsK7l2ucWNC9OB9nJMr1zFgFFzqtP
-	dpIN043JLdkj5DMHqiXMBRJZI881x6OMptKbXSetbEknxnQ3o8p4JLWDANB49o8Z/ftaZtDEh7m
-	QPtJrO/GP5R05QasBY1zyAHnVrdp84YC5rU0nB
-X-Gm-Gg: AR+sD12zCYGv2e9Jk5aL61eAfRxTDfrDRqo4iC67zXuTfGekxVj5yPRNHtKhV+f1pFC
-	6OCgYJOO0XLagbv310xZ6Y+BlqCHoBIuxuUo9PxnDXj//UmIZDIYCV/iJgK+SKugKrWU+XCgd1c
-	j9XwgXo5mvdeC37xhsWqQHdjJqvFoLqp315pSMgFiHVFXWlFlc1jUp40o=
-X-Received: by 2002:a05:620a:a202:b0:936:af32:fd7c with SMTP id af79cd13be357-936b3a3216fmr184793285a.9.1786511261871;
-        Tue, 11 Aug 2026 22:07:41 -0700 (PDT)
-X-Received: by 2002:a05:620a:a202:b0:936:af32:fd7c with SMTP id
- af79cd13be357-936b3a3216fmr184790885a.9.1786511261453; Tue, 11 Aug 2026
- 22:07:41 -0700 (PDT)
+	Wed, 12 Aug 2026 06:44:50 +0000
+X-UUID: 456bcc9e961911f1aa26b74ffac11d73-20260812
+X-CTIC-Tags: HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_MISS, HR_CTT_TXT
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_PRE_RE, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NAME, IP_UNTRUSTED, SRC_UNTRUSTED, IP_UNFAMILIAR, SRC_UNFAMILIAR
+	DN_TRUSTED, SRC_TRUSTED, SA_TRUSTED, SA_EXISTED, SN_EXISTED
+	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF
+	CIE_UNKNOWN, GTI_FG_BS, GTI_C_CI, GTI_FG_IT, GTI_RG_INFO
+	GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:37e11bf3-1a9c-4db9-9fdc-35547f909246,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:10
+X-CID-INFO: VERSION:1.3.12,REQID:37e11bf3-1a9c-4db9-9fdc-35547f909246,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:10
+X-CID-META: VersionHash:e7bac3a,CLOUDID:cefc1da37ade92827dbe03e95d4a7c84,BulkI
+	D:2608121444354N6M416F,BulkQuantity:0,Recheck:0,SF:10|64|66|78|80|81|82|83
+	|102|127|136|841|850|865|898,TC:nil,Content:0|15|50,EDM:-3|-100,IP:-2,URL:
+	99|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 456bcc9e961911f1aa26b74ffac11d73-20260812
+X-User: duanchenghao@kylinos.cn
+Received: from localhost [(106.37.134.166)] by mailgw.kylinos.cn
+	(envelope-from <duanchenghao@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1229026213; Wed, 12 Aug 2026 14:44:30 +0800
+Date: Wed, 12 Aug 2026 14:44:28 +0800
+From: Chenghao Duan <duanchenghao@kylinos.cn>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: pasha.tatashin@soleen.com, rppt@kernel.org, graf@amazon.com,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kexec@lists.infradead.org, jianghaoran@kylinos.cn
+Subject: Re: [PATCH v1 2/2] kho: unwind restored pages on kho_restore_vmalloc
+ error
+Message-ID: <20260812064428.GA144642@chenghao-pc>
+References: <20260807075128.542806-1-duanchenghao@kylinos.cn>
+ <20260807075128.542806-3-duanchenghao@kylinos.cn>
+ <2vxzcxvo518j.fsf@kernel.org>
 MIME-Version: 1.0
-References: <20260714004550.3698175-1-stephen.s.brennan@oracle.com>
- <7af7b171-88c0-4eb6-a18e-8e64fb4a71c0@nec.com> <CAO7dBbX---qP-Bqjza=z2HM4Nxn5+KtB-51WF4mvv++p666JYQ@mail.gmail.com>
- <87tsp539pr.fsf@oracle.com> <38980e2a-d303-42c0-81bd-ae25b52b94a8@nec.com>
- <CAO7dBbUcv5_OW8CJfzGB56U=PO3kbGkX7gz9-E4JEFFU+eVCMA@mail.gmail.com> <404ed232-6c8e-4112-b13c-6338156476d3@nec.com>
-In-Reply-To: <404ed232-6c8e-4112-b13c-6338156476d3@nec.com>
-From: Tao Liu <ltao@redhat.com>
-Date: Wed, 12 Aug 2026 17:07:05 +1200
-X-Gm-Features: AUfX_mz6AkQM-f7RMOdJPWClgiMJiy55wrs4Vhov3Ba5KZ3RXwU6-ru8ocpdpDo
-Message-ID: <CAO7dBbUGwSfq3VGJjYJVFSmJYAem90J3-FgVyoMWYBY9eHvx8g@mail.gmail.com>
-Subject: Re: [PATCH makedumpfile 0/9] Improvements to makedumpfile extensions,
- plus userspace stack tracing extension
-To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
-Cc: Stephen Brennan <stephen.s.brennan@oracle.com>, 
-	=?UTF-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0jiDnnJ/lhYkp?= <yamazaki-msmt@nec.com>, 
-	"kexec@lists.infradead.org" <kexec@lists.infradead.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: i1Bvqlep_LBE3O6_M0U-nmjiACIPumOoPaIAc9MzIS8_1786511262
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2vxzcxvo518j.fsf@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260811_220750_901774_C3887A83 
-X-CRM114-Status: GOOD (  33.81  )
+X-CRM114-CacheID: sfid-20260811_234449_339946_6D5622EC 
+X-CRM114-Status: GOOD (  31.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,107 +92,130 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Kazu,
+On Tue, Aug 11, 2026 at 01:46:04PM +0200, Pratyush Yadav wrote:
+> On Fri, Aug 07 2026, Chenghao Duan wrote:
+> 
+> > In kho_restore_vmalloc(), when kho_restore_pages() succeeds, the
+> > recovered pages are handed to the buddy allocator (via
+> > adjust_managed_page_count()). If any later step (e.g.
+> > __get_vm_area_node() or vmap_pages_range()) fails, the original error
+> > path only called kvfree(pages), leaking those folio pages.
+> >
+> > Fix by tracking how many folio groups have been restored with
+> > restored_idx. On any failure, use err_unwind_restored to walk
+> > restored_idx backwards and return each folio group to the buddy via
+> > __free_pages() before freeing the pages array.
+> >
+> > Signed-off-by: Chenghao Duan <duanchenghao@kylinos.cn>
+> > ---
+> >  kernel/liveupdate/kexec_handover.c | 23 +++++++++++++++++------
+> >  1 file changed, 17 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+> > index ba03ff5baa9e..ed35405f59ab 100644
+> > --- a/kernel/liveupdate/kexec_handover.c
+> > +++ b/kernel/liveupdate/kexec_handover.c
+> > @@ -1161,6 +1161,7 @@ void *kho_restore_vmalloc(const struct kho_vmalloc *preservation)
+> >  	struct vm_struct *area;
+> >  	struct page **pages;
+> >  	unsigned int idx = 0;
+> > +	unsigned int restored_idx = 0;
+> >  	int err;
+> >  
+> >  	vm_flags = kho_flags_to_vmalloc(preservation->flags);
+> > @@ -1183,11 +1184,11 @@ void *kho_restore_vmalloc(const struct kho_vmalloc *preservation)
+> >  			phys_addr_t phys = chunk->phys[i];
+> >  
+> >  			if (idx + contig_pages > total_pages)
+> > -				goto err_free_pages_array;
+> > +				goto err_unwind_restored;
+> >  
+> >  			page = kho_restore_pages(phys, contig_pages);
+> >  			if (!page)
+> > -				goto err_free_pages_array;
+> > +				goto err_unwind_restored;
+> >  
+> >  			for (int j = 0; j < contig_pages; j++)
+> >  				pages[idx++] = page + j;
+> > @@ -1195,13 +1196,14 @@ void *kho_restore_vmalloc(const struct kho_vmalloc *preservation)
+> >  
+> >  		page = kho_restore_pages(virt_to_phys(chunk), 1);
+> >  		if (!page)
+> > -			goto err_free_pages_array;
+> > +			goto err_unwind_restored;
+> > +		restored_idx = idx;
+> >  		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
+> >  		__free_page(page);
+> >  	}
+> >  
+> >  	if (idx != total_pages)
+> > -		goto err_free_pages_array;
+> > +		goto err_unwind_restored;
+> >  
+> >  	area = __get_vm_area_node(total_pages * PAGE_SIZE, align, shift,
+> >  				  vm_flags | VM_UNINITIALIZED,
+> > @@ -1209,7 +1211,7 @@ void *kho_restore_vmalloc(const struct kho_vmalloc *preservation)
+> >  				  NUMA_NO_NODE, GFP_KERNEL,
+> >  				  __builtin_return_address(0));
+> >  	if (!area)
+> > -		goto err_free_pages_array;
+> > +		goto err_unwind_restored;
+> >  
+> >  	addr = (unsigned long)area->addr;
+> >  	size = get_vm_area_size(area);
+> > @@ -1231,7 +1233,16 @@ void *kho_restore_vmalloc(const struct kho_vmalloc *preservation)
+> >  
+> >  err_free_vm_area:
+> >  	free_vm_area(area);
+> > -err_free_pages_array:
+> > +err_unwind_restored:
+> > +	/*
+> > +	 * Pages already restored via kho_restore_pages() have been given to
+> > +	 * the buddy allocator (via adjust_managed_page_count()). Return them
+> > +	 * to the buddy so that failure leaves the system in a clean state.
+> > +	 */
+> > +	while (restored_idx > 0) {
+> > +		restored_idx -= contig_pages;
+> > +		__free_pages(pages[restored_idx], order);
+> > +	}
+> 
+> This looks wrong. These are 0-order pages. You can't free them at order.
 
-On Wed, Aug 12, 2026 at 1:32=E2=80=AFPM HAGIO KAZUHITO(=E8=90=A9=E5=B0=BE=
-=E3=80=80=E4=B8=80=E4=BB=81)
-<k-hagio-ab@nec.com> wrote:
->
-> Hi Tao,
->
-> On 2026/08/11 15:11, Tao Liu wrote:
->
-> >>>>> and Tao, please check if your extension can be rebased on this
-> >>>>> patchset.  and also if you agree the extension list, please provide
-> >>>>> the information.
-> >
-> > I have checked my extension to rebase on this patchset. The result is:
-> >
-> > 1) Rebase fails, but only due to conflicts within extensions/Makefile.
-> > These are small issues which would be very easy to fix.
-> > 2) Once 1 is fixed, after compile, my extension can work as expected.
-> > However this is a coincidence.  Because my extension takes callback
-> > as:
-> >
-> > int extension_callback(unsigned long pfn, const void *pcache)
-> > {
-> >          struct ft_page_info *cur =3D NULL;
-> >          return filter_page(pfn, &cur);
-> > }
-> >
-> > But this patchset changed the callback into:
-> > run_extension_callback(unsigned long pfn, const void *pcache, const
-> > struct pginfo *i)
-> >
-> > My extension works because it only takes pfn as parameter, and the
-> > handle_cbs[i]->cb() doesn't check function parameters. However, I
-> > don't think it is a major issue, once the modification on extension.c
-> > merged upstream, I can adjust the function signature of mine
-> > accordingly.
->
-> Thank you for checking.  My main concern was the change in behavior,
-> particularly with compound pages.  If your extension works well after
-> some adjustments, that's good to hear.  I will merge the patch set later.
->
-OK, sounds good!
+Thanks for your review. I've looked into the preserve code. The order
+defaults to 0. When CONFIG_HAVE_ARCH_HUGE_VMALLOC is enabled and huge
+vmalloc allocation occurs (vm_flags & VM_ALLOW_HUGE_VMAP), order can be
+greater than 0.
 
-> >
-> >>>>
-> >>>> Sure, I will check for the rebase. In the meantime, will the
-> >>>> extensions to be maintained in one repo (e.g. makedumpfile extension=
-s
-> >>>> repo, so everyone can PR to it), or they are maintained in each of
-> >>>> individual repos, and link them under
-> >>>> https://github.com/makedumpfile/makedumpfile/wiki#extensions?
-> >>>
-> >>> I am open to either. I would be willing to co-maintain an extensions
-> >>> repository with Tao, for example at github.com/makedumpfile/extension=
-s,
-> >>> so that there is a common place to contribute. That is, if this
-> >>> arrangement would work for all?
-> >>>
-> >>> If we did create a common repository, I think we'd want to set up som=
-e
-> >>> expectations on the quality & maintenance. EG, some may be marked as
-> >>> "maintained" with a maintainer and a scope of maintenance (supported
-> >>> kernel versions, supported architectures, etc), and others as
-> >>> "unmaintained", where we just make sure that they build & run with
-> >>> makedumpfile, but don't validate their behavior on specific kernels o=
-r
-> >>> architectures.
-> >>>
-> >>> On the other hand, if it's preferable to stay separate, then I'm happ=
-y
-> >>> to find another place to maintain the userstack & elfheader extension=
-s.
-> >>
-> >> I was thinking of separate repositories.  A single repository would be
-> >> fine, but for now I have no plans to create one within the makedumpfil=
-e
-> >> organization.
-> >>
-> >> (Looking back at crash extensions, some become obsolete quickly or
-> >> have very specific functionality, making it difficult for anyone
-> >> other than the original author to maintain.  For this reason, I think
-> >> it is best for the authors themselves to manage them.)
-> >
-> > Understood, extensions are designed to address one specific issue, and
-> > is easy to get outdated when makedumpfile/crash utility keeping
-> > following up the latest kernel, but extensions are often left behind
-> > due to low usage. Let's go with maintainling the extensions by each
-> > authors seperately and link them into
-> > https://github.com/makedumpfile/makedumpfile/wiki#extensions
->
-> Thank you for your understanding.  for now, please let me know the
-> information of your extension once it's ready.
+> 
+> I sent a patch to do exactly this a while ago [0]. At the time it was
+> rejected with the below argument.
+> 
+>     Hm, I am not sure if KHO should be responsible for freeing the
+>     restored pages. We don't know the content of those pages, and what
+>     they are used for. They could be used by a hypervisor or a device.
+>     Therefore, it may be better to keep them leaked, and let the caller
+>     decide what to do next: i.e., boot into a maintenance mode, crash the
+>     kernel, or allow the leak until the next reboot.
 
-Please check my extension link:
-https://github.com/liutgnu/mkdf-extension-amdgpu-mm-filtering
+Could you advise if there is an existing solution to handle this scenario
+in the current logic? As things stand, taking the error path results in
+leakage of buddy pages.
 
-Thanks,
-Tao Liu
->
-> Thanks,
-> Kazu
+Regards,
+Chenghao Duan
 
+> 
+> Although thinking about this again, why would any device or hypervisor
+> use vmalloc buffers? They should only be used for metadata. So perhaps
+> we take another look at my patch? Pasha, what do you think?
+> 
+> [0] https://lore.kernel.org/all/20251118181811.47336-1-pratyush@kernel.org/
+> 
+> >  	kvfree(pages);
+> >  	return NULL;
+> >  }
+> 
+> -- 
+> Regards,
+> Pratyush Yadav
 
