@@ -4,66 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A6C61C5CFEB
-	for <kexec@archiver.kernel.org>; Wed, 12 Aug 2026 11:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6A9C1C5B572
+	for <kexec@archiver.kernel.org>; Wed, 12 Aug 2026 12:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zt5aG8T70pAVsz38Vf/LQqt7yVTDjwmbD2OUxXE/YKw=; b=WEdXXqQNo+10uwh0LZ15sUsAxI
-	hbVIaV8qsasK6XRV0er+o4lACVpWkcHVcKuaZsMIphZGc7XpIdM2l2D4Cgh3OYHavEnKhGNmjBRvD
-	p0Bww5Vo/wfUKnYNtYdfEVksp8wT2JukW071zs8mZTr5JxEshY63HD3gs5OZ7/2cHAxYziOocQHZA
-	58t+mFUb59FeB5JMGTMNONTGT20E/j/ZNnRVmgvJxd6pA8/Wh1twlPvoc/C+dWoiLMbj8LeQQRVtW
-	wK7xVZ6s1HvdyuAMXNVaBTOF1WKuRVMI9+itPnRCXQZZMree+bJZHAkkHtIbkWhrtEHE4l/PaCPfq
-	AZkK/RoQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Ei39ELWB+Kc2pXETi/HNp7tTiIPtqt1tiDtMwuQJ9N8=; b=esp1qkX8aBFbLjcvBCsH5v15bP
+	4x++okIBOqVV356LzbEq8/WcmoyQTYGoImLlXvja0qFyhCzUdiAA/YPgBbt0QF5Cel81bMnQXO/jR
+	51fQWKM18Gvhu+bPBadJpCPZlIuEL1HExDfXV4GWhDrzbydOvSSVvsXxfq5qq5KM5i6hzZvxHpDVi
+	6UTEJ83XqQOc33yA6jyYUNup5/H8rX19vgQ8/9WHsiN7TPZeXudq8OEzw7p3J5JrrTN81SXXmpIWt
+	htiAzRov9Roliv4UNKArE+xGzKNaQiNGY9Yu3oLFnXJPktsRlnFYbry3r0sG/V/pNbb6ff++CXWFR
+	K9q/yrdQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wu7Ge-0000000G76Y-299e;
-	Wed, 12 Aug 2026 11:37:08 +0000
-Received: from devianza.investici.org ([2c0f:f930:0:4::108])
+	id 1wu7kp-0000000G9g4-0Phj;
+	Wed, 12 Aug 2026 12:08:19 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wu7Ga-0000000G75p-0t7D
+	id 1wu7km-0000000G9fW-1aMB
 	for kexec@lists.infradead.org;
-	Wed, 12 Aug 2026 11:37:06 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
-	s=stigmate; t=1786534620;
-	bh=zt5aG8T70pAVsz38Vf/LQqt7yVTDjwmbD2OUxXE/YKw=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=jmUgl7iLgfoUTZ1W8XhpUyUvliTn62FHeVsiCG0Z/UIJ61ojEssIleUCeHJiV0KQU
-	 4oryrUMBdJkrk/FWrelE64YPMAu7FQKIr+CYhS2RtF7SRQ6xUrQ+6QcLU+j6mlA8X+
-	 Do8TfjkyyO/aXIfS606LkNQrwlIw0nbvgzmTmueQ=
-Received: from mx2.investici.org (unknown [127.0.0.1])
-	by devianza.investici.org (Postfix) with ESMTP id 4hKmg01XsJz6vGx;
-	Wed, 12 Aug 2026 11:37:00 +0000 (UTC)
-Received: by mx2.investici.org (Postfix) id 4hKmfz5Q9xz4y6W;
-	Wed, 12 Aug 2026 11:36:59 +0000 (UTC)
-Date: Wed, 12 Aug 2026 12:36:59 +0100
-From: Bradley Morgan <include@grrlz.net>
-To: Breno Leitao <leitao@debian.org>, Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Baoquan He <baoquan.he@linux.dev>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>
-CC: linux-mm@kvack.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
- rmikey@meta.com, riel@surriel.com, kernel-team@meta.com,
- Kiryl Shutsemau <kas@kernel.org>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v6_0/2=5D_kexec=3A_keep_the_ne?=
- =?US-ASCII?Q?xt_kernel_off_hardware-poisoned_pages?=
-In-Reply-To: <20260812-kexec_posioned-v6-0-e477887086f0@debian.org>
+	Wed, 12 Aug 2026 12:08:17 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Ei39ELWB+Kc2pXETi/HNp7tTiIPtqt1tiDtMwuQJ9N8=; b=jssfigmqnFP6RQjRsa95nGCxas
+	STpZHA+b1aSnASOsdnq+4BF0SqVKtQekWaRPFD57vLFUqII0Bl9pp6l/xzit4V8StWxg7O+ojX3un
+	SOWW/6/y2tNR714G1y/SuI0RPQ+sgzS93C3F0zUARseVO7wGYlI7sgkCIZ3qFHxCZ2kvLjw/4EWOC
+	U9C1Mvy6R94Y1RRNGqKkCgJFN28nx7P06iuLC6JNzqalrL2eVO89EG/P/uyqIL06pVcGQtxt8QF7l
+	DNEh5a8yUNyKOEnrh9zUQotJX7fup0S8DmFrM1/nQlowms9MWj79qR2YWZm+7odN2wttgQdKnsUw7
+	vuS/sD2Q==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wu7kR-004KSI-0L;
+	Wed, 12 Aug 2026 12:07:56 +0000
+Date: Wed, 12 Aug 2026 05:07:49 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Bradley Morgan <include@grrlz.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Baoquan He <baoquan.he@linux.dev>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, rmikey@meta.com, riel@surriel.com, 
+	kernel-team@meta.com, Kiryl Shutsemau <kas@kernel.org>
+Subject: Re: [PATCH v6 0/2] kexec: keep the next kernel off hardware-poisoned
+ pages
+Message-ID: <anxhWTKwMvkVHBPs@gmail.com>
 References: <20260812-kexec_posioned-v6-0-e477887086f0@debian.org>
-Message-ID: <6D17A62B-3124-492F-9593-63F857DD475F@grrlz.net>
+ <6D17A62B-3124-492F-9593-63F857DD475F@grrlz.net>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6D17A62B-3124-492F-9593-63F857DD475F@grrlz.net>
+X-Debian-User: leitao
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260812_043704_668945_DA9DDD4C 
-X-CRM114-Status: GOOD (  16.39  )
+X-CRM114-CacheID: sfid-20260812_050816_459316_EB4FA99D 
+X-CRM114-Status: UNSURE (   9.96  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,103 +83,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12 August 2026 12:31:50 BST, Breno Leitao <leitao@debian.org> wrote:
->Memory failures are common enough on large fleets that kexec regularly
->lands the next kernel on a frame the memory failure subsystem has already
->marked bad. Patch 2 teaches the segment placement to avoid those frames.
->
->Patch 1 is a prerequisite. locate_mem_hole_top_down() walks candidates
->downwards without ever checking that the subtraction stays above zero, so
->the walk can wrap and report success with a destination outside of RAM.
->Patch 2 adds one more downward step to that loop, so the bug is fixed
->first and both patches rely on the same bail-out.
->
->Signed-off-by: Breno Leitao <leitao@debian.org>
->---
->Changes in v6:
->- Split the pre-existing top-down underflow out into its own patch, and
->  drop the "if (poison < kbuf->memsz)" guard from the hwpoison hunk now
->  that the loop bail-out covers it. (Mike Rapoport, Sashiko)
->- Reword the changelog: the MCE comes from reading the poison back, not
->  from the relocation copy writing it, and the placement paragraphs read
->  better split up. (Mike Rapoport)
->- Move cond_resched() after the struct page dereference, so the scan does
->  not yield between pfn_to_online_page() and is_page_hwpoison().
->  (Pratyush Yadav, Sashiko)
->- Keep cond_resched() per pfn rather than batching it. (Kiryl Shutsemau,
->  Rik van Riel)
->- Link to v5: https://patch.msgid.link/20260810-kexec_posioned-v5-1-95e1b5e2e656@debian.org
+Hello Bradley,
 
-This is a two patch series with one patch, why?
+On Wed, Aug 12, 2026 at 12:36:59PM +0100, Bradley Morgan wrote:
+> On 12 August 2026 12:31:50 BST, Breno Leitao <leitao@debian.org> wrote:
+> >Changes in v6:
+> >- Split the pre-existing top-down underflow out into its own patch, and
+> >  drop the "if (poison < kbuf->memsz)" guard from the hwpoison hunk now
+> >  that the loop bail-out covers it. (Mike Rapoport, Sashiko)
 
+<snip>
 
->
->Changes in v5:
->- Return -EHWPOISON instead of -EADDRNOTAVAIL
->- Leverage is_page_hwpoison() instead of per-page check
->- Link to v4: https://patch.msgid.link/20260807-kexec_posioned-v4-1-70d57f14625d@debian.org
->
->Changes in v4:
->- Anchor the top-down hole finder on the first poisoned page in the
->  window and the bottom-up one on the last, so each jumps clear of the
->  poison in one step. New range_first_hwpoison(). (Kiryl Shutsemau)
->- Count a poisoned hugetlb folio in full: the flag lives on the folio,
->  not on the subpages, so the per-pfn scan missed poisoned tail pages.
->  (Kiryl Shutsemau)
->- Link to v3: https://patch.msgid.link/20260803-kexec_posioned-v3-1-83aa6ede0351@debian.org
->
->Changes in v3:
->- Return the address of the last poisoned page in the range, or
->  PHYS_ADDR_MAX when it is clean, instead of a bool plus an output
->  parameter. Renamed to range_last_hwpoison(). (Pratyush Yadav)
->- Add cond_resched() to the scan loop, as a segment can span half of
->  memory. (Sashiko)
->- Link to v2: https://patch.msgid.link/20260730-kexec_posioned-v2-1-f92d18551f64@debian.org
->
->Changes in v2:
->- Change from pfn_to_page() to pfn_to_online_page(). (Miaohe Lin)
->- Return the poisoned address once we find a hit, to avoid the O(n^2)
->  rescan. (Sashiko)
->- Link to v1: https://patch.msgid.link/20260728-kexec_posioned-v1-1-160c81d180fe@debian.org
->
->To: Andrew Morton <akpm@linux-foundation.org>
->To: David Hildenbrand <david@kernel.org>
->To: Lorenzo Stoakes <ljs@kernel.org>
->To: "Liam R. Howlett" <liam@infradead.org>
->To: Vlastimil Babka <vbabka@kernel.org>
->To: Mike Rapoport <rppt@kernel.org>
->To: Suren Baghdasaryan <surenb@google.com>
->To: Michal Hocko <mhocko@suse.com>
->To: Baoquan He <baoquan.he@linux.dev>
->To: Pasha Tatashin <pasha.tatashin@soleen.com>
->To: Pratyush Yadav <pratyush@kernel.org>
->To: Miaohe Lin <linmiaohe@huawei.com>
->To: Naoya Horiguchi <nao.horiguchi@gmail.com>
->Cc: linux-mm@kvack.org
->Cc: linux-kernel@vger.kernel.org
->Cc: kexec@lists.infradead.org
->Cc: rmikey@meta.com
->Cc: riel@surriel.com
->
->---
->Breno Leitao (2):
->      kexec_file: stop the top-down search before it underflows
->      kexec: keep the next kernel off hardware-poisoned pages
->
-> include/linux/mm.h  | 14 ++++++++++++++
-> kernel/kexec_core.c | 10 ++++++++++
-> kernel/kexec_file.c | 20 +++++++++++++++++++-
-> mm/memory-failure.c | 40 ++++++++++++++++++++++++++++++++++++++++
-> 4 files changed, 83 insertions(+), 1 deletion(-)
->---
->base-commit: c5e32e86ca02b003f86e095d379b38148999293d
->change-id: 20260727-kexec_posioned-72bb0a4143a0
->
->Best regards,
->--  
->Breno Leitao <leitao@debian.org>
->
->
+> >- Link to v5: https://patch.msgid.link/20260810-kexec_posioned-v5-1-95e1b5e2e656@debian.org
+> 
+> This is a two patch series with one patch, why?
 
-Thanks!
+This is a patch series with _two_ patches, isn't it?
+
+	[PATCH v6 1/2] kexec_file: stop the top-down search before it underflows
+	[PATCH v6 2/2] kexec: keep the next kernel off hardware-poisoned pages
+
+If you asking why it was split, we decided to split the fix into
+a separate patch, and keep the "feature" in separate patch. The
+discussion happened in
+
+https://lore.kernel.org/all/anskyrEVUlnTVEgF@kernel.org/
 
