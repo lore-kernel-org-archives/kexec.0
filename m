@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C9AC9C5AD5A
-	for <kexec@archiver.kernel.org>; Wed, 12 Aug 2026 10:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 04E0AC5CFDB
+	for <kexec@archiver.kernel.org>; Wed, 12 Aug 2026 11:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
 	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=gcj6Nn0OFnz4GVFzatZ7HMT0a0oMws6ttw7Nr/ddbvA=; b=ua8kzLeFw0yTWTzkOyCb9R7tXb
-	GeWPURp8bPj7Y3JMFAc2f+frFaNGevKRWVORXR58aPtqwM446Dl0BIYf66c+mPPqj0aaD0SIReNSK
-	bYqoETJie5SOpm0PyW62DTSQ6+y8naSIX9NUqwHN1jy1Tl53iaZKi6sZAREw9fLyzN2DcjblxYft0
-	vCsDhfVxGDBgqtD2qu22svf3QEorV2q2zs4fxAJm00L1hgnMtMiQD1c1vr12rNFINJceRe4nCvVci
-	JkljMIaJiztLUKyUimqMPDzA318PYeWXrveODqub0y5++3FDoJZs+apEaxZWWm4roGR5ZsFH+M5AH
-	r+v5Xy5w==;
+	bh=lnwlG71sjI06zsq7yj3kdlhgqiN/yez8QEYIr9vq9zU=; b=c+fwvvYKmTmuRQ07XCEo7ijwvc
+	DofplkvDLMuH2qsMXctwPHnRrritHsxZSIV0d6W2Dab6qmUfUVGc+6cdDmZYWFGut3/OqjzvSSGpG
+	CagGvp15gVZQzaWgtRPcER3eedVoWKMSwWBTxI4gEIlF8ejBcr+ZqoKCXvS8lCI/F3t/apserGemW
+	mf26SxL24kxxwxz5yeETZGMGXVJIS8KWEcH18JHmT//K7kAsV423oygQBxgK3dHwSFmmO1T9Zd/Ef
+	7E5iVXR4s+P6qbvCT9R4l6cUGUasbd6H1F44wGrC2wriQ4hWVf4EFNkC4utfHqfl5jqs/7J+eEl/J
+	UHzkcPwA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wu6bj-0000000FyQF-2XyH;
-	Wed, 12 Aug 2026 10:54:51 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wu6qu-0000000G0oC-3xzz;
+	Wed, 12 Aug 2026 11:10:32 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wu6bh-0000000FyPn-2ovX
+	id 1wu6qq-0000000G0nX-0nDZ
 	for kexec@lists.infradead.org;
-	Wed, 12 Aug 2026 10:54:49 +0000
+	Wed, 12 Aug 2026 11:10:30 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 222DF600E2;
-	Wed, 12 Aug 2026 10:54:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DF661F000E9;
-	Wed, 12 Aug 2026 10:54:46 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 389C542A9D;
+	Wed, 12 Aug 2026 11:10:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D8941F000E9;
+	Wed, 12 Aug 2026 11:10:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786532088;
-	bh=gcj6Nn0OFnz4GVFzatZ7HMT0a0oMws6ttw7Nr/ddbvA=;
+	s=k20260515; t=1786533027;
+	bh=lnwlG71sjI06zsq7yj3kdlhgqiN/yez8QEYIr9vq9zU=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=e4Kol6PvyyOtzPhPagi2RlBVhqqAA7P1Cs2LzWOU5K1eCStNaPc4a99nRCN1UdI6M
-	 vVZzjgAnLWr9tk7FkTojT23M+CeDDUgNibnxOMEvO/aH/86z7TvLYW1sJmAFChKosU
-	 jOb4iwX4pOZjt0f4Sk/0O9kKwQ5P0C3SKbEgXXQ1cuPk+BJrDgvIMJiZZD1MltiHN7
-	 p8Sw1hpDwgA0fBhzysexJXQoMAwQxwdXSngbgu/YZtBpNHSvr7VumdzRLyG7LUhRnd
-	 xhP939zAnPaZvj+3SVQDPxWI33MKbkpvx8+Zpl75fN9mjfoa89wePPk5BNR9FlrEPp
-	 +1+GaVfGdRPyA==
+	b=WYd2zt8tfz9f3l7W2MEvjC9PgjvttrZRZQVu40gKcm//Lc2oh3g67LBMStlLwpfhS
+	 xMQicXNXtVelpILEAADkxgCYL9BvY84p7BepdW1igypoiA/RTrx9ZoHqQzeH9LzhNX
+	 fFGCwLPk5SyGU+QOnoKQ5AJxqETgroS26+gZ9FeDb2c9/tgO0+uDSA3AuIbv0SG8Lr
+	 lJESY+GMBNpPY8804d2TiZWZe3JjdQSimESxZtndotoBUjylLoQO3lxy2eco2WxcLF
+	 n+yRKhPGPH/SONjna1QhUFRHOduSa5v7P3vbI4WsU1U9gscXN1ALeSmiWs6bN71fcL
+	 ssDCkH9AWO2ew==
 From: Pratyush Yadav <pratyush@kernel.org>
 To: Pranjal Shrivastava <praan@google.com>
 Cc: Mike Rapoport <rppt@kernel.org>,  Pasha Tatashin
@@ -50,13 +50,14 @@ Cc: Mike Rapoport <rppt@kernel.org>,  Pasha Tatashin
  <skhawaja@google.com>,  David Matlack <dmatlack@google.com>,
   kexec@lists.infradead.org,  linux-mm@kvack.org,
   linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] kho: Introduce a helper to init high order pages
-In-Reply-To: <20260803113944.3694290-2-praan@google.com> (Pranjal
-	Shrivastava's message of "Mon, 3 Aug 2026 11:39:42 +0000")
+Subject: Re: [PATCH v4 2/2] kho: Introduce preserve/restore APIs for
+ high-order pages
+In-Reply-To: <20260803113944.3694290-3-praan@google.com> (Pranjal
+	Shrivastava's message of "Mon, 3 Aug 2026 11:39:43 +0000")
 References: <20260803113944.3694290-1-praan@google.com>
-	<20260803113944.3694290-2-praan@google.com>
-Date: Wed, 12 Aug 2026 12:54:45 +0200
-Message-ID: <2vxzqzk338y2.fsf@kernel.org>
+	<20260803113944.3694290-3-praan@google.com>
+Date: Wed, 12 Aug 2026 13:10:23 +0200
+Message-ID: <2vxzmrur3880.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -76,81 +77,35 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On Mon, Aug 03 2026, Pranjal Shrivastava wrote:
 
-> The current KHO restoration logic assumes all multi-page blocks are
-> split into independent 4KB pages. Break out a helper to prepare for
-> supporting high-order non-compound pages.
+> The current KHO page preservation APIs (e.g. kho_preserve_pages) assume
+> that multi-page blocks are split into independent 4KB pages during
+> restoration. This is incompatible with high-order non-compound pages,
+> such as DMA buffers, which must be restored with tail pages having a
+> zero reference count.
 >
-> Extract kho_init_high_order_page() to handle the refcount pattern
-> where only the head page is refcounted. Use the helper for folio
-> restoration that requires a similar refcount logic.
+> Introduce explicit preserve and restore APIs for high-order pages,
+> which preserve and restore a high-order page block as a single unit,
+> applying a refcount of 1 to the head page while leaving tail pages at 0.
+> Rename the existing internal helper to __kho_restore_page() and
+> consolidate the common restoration code into it.
 >
-> Reviewed-by: Samiullah Khawaja <skhawaja@google.com>
 > Signed-off-by: Pranjal Shrivastava <praan@google.com>
-> ---
->  kernel/liveupdate/kexec_handover.c | 29 +++++++++++++++++++----------
->  1 file changed, 19 insertions(+), 10 deletions(-)
->
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> index 4834a809985a..e836efd98795 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -357,6 +357,24 @@ int kho_radix_walk_tree(struct kho_radix_tree *tree,
->  }
->  EXPORT_SYMBOL_GPL(kho_radix_walk_tree);
->  
-> +/* For physically contiguous pages. */
-> +static void kho_init_high_order_page(struct page *page, unsigned int order)
-> +{
-> +	unsigned long nr_pages = (1UL << order);
-> +
-> +	/* Head page gets refcount of 1. */
-> +	set_page_count(page, 1);
-> +	/* Clear head page's codetag to avoid accounting mismatch. */
-> +	clear_page_tag_ref(page);
-> +
-> +	/* For high-order blocks, tail pages get a page count of zero. */
-> +	for (unsigned long i = 1; i < nr_pages; i++) {
-> +		set_page_count(page + i, 0);
-> +		/* Clear each page's codetag to avoid accounting mismatch. */
-> +		clear_page_tag_ref(page + i);
-> +	}
 
-That's sneaky...
+The code here looks very convoluted TBH. I think it will be simpler to
+make kho_restore_page() only return non-compound pages. That is, it
+returns 0 or higher order non-compound page.
 
-The patch _almost_ looks like pure code movement, but then adds this
-little change. I'm not saying this is intentionally sneaky or anything
-of the sort, but these kind of things are easy to miss during code
-movement and should get a patch of their own or at least be called out
-in the commit message.
+Then kho_restore_pages() can call kho_restore_page() and then do
+split_page() on the page it got to turn it into 0-order pages.
+kho_restore_folio() can call kho_restore_page() and then do
+prep_compound_page() on the page it got.
 
-I don't know how page tags work, but IIRC when the change was originally
-added by Ran, he said that we don't need to clear the tag for tail
-pages. That held true for folios, does it not hold true for non-compound
-high-order pages?
+And then you expose kho_restore_page() to be used by DMA APIs to get
+non-compound high order pages directly.
 
-> +}
-> +
->  /* For physically contiguous 0-order pages. */
->  static void kho_init_pages(struct page *page, unsigned long nr_pages)
->  {
-> @@ -369,16 +387,7 @@ static void kho_init_pages(struct page *page, unsigned long nr_pages)
->  
->  static void kho_init_folio(struct page *page, unsigned int order)
->  {
-> -	unsigned long nr_pages = (1 << order);
-> -
-> -	/* Head page gets refcount of 1. */
-> -	set_page_count(page, 1);
-> -	/* Clear head page's codetag to avoid accounting mismatch. */
-> -	clear_page_tag_ref(page);
-> -
-> -	/* For higher order folios, tail pages get a page count of zero. */
-> -	for (unsigned long i = 1; i < nr_pages; i++)
-> -		set_page_count(page + i, 0);
-> +	kho_init_high_order_page(page, order);
->  
->  	if (order > 0)
->  		prep_compound_page(page, order);
+How does that sound?
+
+[...]
 
 -- 
 Regards,
