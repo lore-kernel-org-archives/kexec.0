@@ -4,70 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00052C5DF67
-	for <kexec@archiver.kernel.org>; Thu, 13 Aug 2026 16:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 07EB9C5CFCF
+	for <kexec@archiver.kernel.org>; Thu, 13 Aug 2026 16:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=WCiQ2PIGfe2qaMn38Q/OEHxu2Z2ztzJDsBcYH2TPtp8=; b=N7VGJqQBm+6I8Y2g8+KK6mI5LV
-	eyIR7vntYwtqBUgMHa2JW+I8GKWWovhgFu7RGwyN3cQI+qIuZB7cioSX/IRdvIREgiNOhNU1+ZByO
-	5FSx2Y0iHvnhGQ3+O9oDAhqwLihiofp/K73OFpZ+HEA9griVy5p1jOakzWf8XUzFhme5KZ6lGLQq/
-	3yU1JzWRYbO45Nv7h0YTqEHXaExvTQ4u1iVJbttXZoDTV9Y+C3C0ECLBhUyHCCUOgCAC5nsHzb60V
-	N1Uz6HQqa7C09+ZeXAE4cwj5OSfraFfOEYN5u63qMuCIWHMtMbQVPIdqn46Fz/bE7er/WrvtX0JtO
-	bW0dyxvw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=hz4biOvRgNuFda4LA0X5Y+ky3s3LWtizWjSf/l2wN/4=; b=gQbEQ87qei6NHuJH/JG4BS4qMV
+	9jlkm+QtWve3XYVtWYYRm4kYZBTZs7KuT6lyh5FLV0CdnMbCg2HuuwJSMhp8HBuxXtJKmicjYCjcy
+	uWDRT7cS45w5ZTnrlDS1UHjbOtEZ005ptjDQzZvByg06/51RfXi8g/eHrVl6l1xi+kbWCAeUsuWas
+	yKnE2lq6V7DlYym2r+c4uizmrn8qXQOP+eVBGef7R6aQ5z+/a3Behn1aA/xQn7Dh55AV++uJNPNtY
+	j1EUklHFc3o4b5q1b+zwC1J46bG7hqC8mJ9jtxszUfVoA80fntmDiEgWu7GyAS7hDG0L4uN/GqbAx
+	nkxqBirQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wuXts-000000016SD-3i9g;
-	Thu, 13 Aug 2026 16:03:24 +0000
-Received: from out-91.mta1.migadu.com ([2001:41d0:203:375::5b] helo=mta1.migadu.com)
-	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wuXtp-000000016RT-3T3f
-	for kexec@lists.infradead.org;
-	Thu, 13 Aug 2026 16:03:23 +0000
-X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=TfiVg463NFynci603WWT4ZTChHOhrPxJeP6Z8Zrf2Es=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1786636998; v=1; x=1787241798;
- b=byX9NwPRkbxM1XhzsTNegiKtHm0dUVHF8oqKNC4vOuM6GteEP6xfak+TUS+0m+AYpqTrBJS3
- nce5+FJ55Y6tCCUKmiF7c3QkfDs/lLOMzYfCLKXeHwIRoeB1PbXeXWgQyUm81ELXPmGB8hJ+awl
- hmoUeEwcfSk9WLLOzuI2dI/c=
-X-Envelope-To: kexec@lists.infradead.org
-Received: from localhost (223.70.159.239)
-	by smtp.migadu.com with ESMTPS id 86f3e37813a2a36a;
-	Thu, 13 Aug 2026 16:03:14 +0000
-X-Migadu-Flow: FLOW_OUT
-From: George Guo <dongtai.guo@linux.dev>
-To: chenhuacai@kernel.org
-Cc: rppt@kernel.org,
-	pasha.tatashin@soleen.com,
-	pratyush@kernel.org,
-	shuah@kernel.org,
-	ardb@kernel.org,
-	guodongtai@kylinos.cn,
-	kernel@xen0n.name,
-	graf@amazon.com,
-	liukexin@kylinos.cn,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-efi@vger.kernel.org
-Subject: Re: [PATCH v4 4/4] selftests/kho: add LoongArch vmtest support
-Date: Fri, 14 Aug 2026 00:03:07 +0800
-Message-ID: <20260813160307.15130-1-dongtai.guo@linux.dev>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <CAAhV-H7+1bv6ULPO1+SZ5R=XFxNTh+54rqnYQUAW26kF83kiMg@mail.gmail.com>
-References: <CAAhV-H7+1bv6ULPO1+SZ5R=XFxNTh+54rqnYQUAW26kF83kiMg@mail.gmail.com>
+	id 1wuXwC-000000016o0-2S63;
+	Thu, 13 Aug 2026 16:05:48 +0000
+Received: from foss.arm.com ([217.140.110.172])
+	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wuXwA-000000016mE-0ogI;
+	Thu, 13 Aug 2026 16:05:47 +0000
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 539FC1576;
+	Thu, 13 Aug 2026 09:05:40 -0700 (PDT)
+Received: from arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 815B43F66F;
+	Thu, 13 Aug 2026 09:05:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1786637144; bh=GdOVLavtixtz+bwc773F7iXmbQhbVm7TNS88fVv9av4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NvzpgAY1Qf9f/5pkj2ip0dskQnm1FKdRNqgDA2KzDQwfoIxhbdoZ2807TR5WYZ1IT
+	 9ms3QyyBXSoensTxvyvQMH8eGt5xKglWWxw74Ab4YnC9jgNv2p1XDtMn/4aFB0Wfeg
+	 gLO3nGrAGuMfrvC9hd/oTCG3w5V710ykuOrhfJUA=
+Date: Thu, 13 Aug 2026 17:05:37 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: will@kernel.org, akpm@linux-foundation.org, baoquan.he@linux.dev,
+	rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
+	thuth@redhat.com, mark.rutland@arm.com, jic23@kernel.org,
+	james.morse@arm.com, ardb@kernel.org, leitao@debian.org,
+	yeoreum.yun@arm.com, sourabhjain@linux.ibm.com, robh@kernel.org,
+	kees@kernel.org, coxu@redhat.com, makb@juniper.net,
+	piliu@redhat.com, graf@amazon.com, ebiggers@kernel.org,
+	jbouron@amazon.com, bgwin@google.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org
+Subject: Re: [PATCH v2 5/5] arm64: crash: Add crash hotplug support
+Message-ID: <an3rUZ7rd1mQH0Gz@arm.com>
+References: <20260729031235.2840255-1-ruanjinjie@huawei.com>
+ <20260729031235.2840255-6-ruanjinjie@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260729031235.2840255-6-ruanjinjie@huawei.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260813_090322_009810_25011A83 
-X-CRM114-Status: GOOD (  13.29  )
+X-CRM114-CacheID: sfid-20260813_090546_336874_EA19EFB2 
+X-CRM114-Status: GOOD (  19.08  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,60 +76,90 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Huacai,
+Hi Jinjie,
 
-On Sun, 9 Aug 2026 at 12:16, Huacai Chen <chenhuacai@kernel.org> wrote:
-> You never answer me why in your test you should disable i8042 from V1
-> until V4. In normal use we use a single kernel for both host and guest.
+On Wed, Jul 29, 2026 at 11:12:35AM +0800, Jinjie Ruan wrote:
+> +/**
+> + * update_crash_elfcorehdr() - Recreate the elfcorehdr and replace it with old
+> + *			       elfcorehdr in the kexec segment array.
+> + * @image: the active struct kimage
+> + */
+> +static void update_crash_elfcorehdr(struct kimage *image)
+> +{
+> +	void *elfbuf = NULL, *old_elfcorehdr;
+> +	unsigned long mem, memsz;
+> +	unsigned long elfsz = 0;
+> +
+> +	/*
+> +	 * Create the new elfcorehdr reflecting the changes to CPU and/or
+> +	 * memory resources.
+> +	 */
+> +	if (crash_prepare_headers(true, &elfbuf, &elfsz, NULL)) {
+> +		pr_err("unable to create new elfcorehdr");
+> +		goto out;
+> +	}
+> +
+> +	/*
+> +	 * Obtain address and size of the elfcorehdr segment, and
+> +	 * check it against the new elfcorehdr buffer.
+> +	 */
+> +	mem = image->segment[image->elfcorehdr_index].mem;
+> +	memsz = image->segment[image->elfcorehdr_index].memsz;
+> +	if (elfsz > memsz) {
+> +		pr_err("update elfcorehdr elfsz %lu > memsz %lu",
+> +			elfsz, memsz);
+> +		goto out;
+> +	}
+> +
+> +	/*
+> +	 * Copy new elfcorehdr over the old elfcorehdr at destination.
+> +	 */
+> +	old_elfcorehdr = phys_to_virt(mem);
+> +
+> +	/*
+> +	 * Temporarily invalidate the crash image while the
+> +	 * elfcorehdr is updated.
+> +	 */
+> +	xchg(&kexec_crash_image, NULL);
+> +	memcpy(old_elfcorehdr, elfbuf, elfsz);
+> +	dcache_clean_inval_poc((unsigned long)old_elfcorehdr,
+> +			       (unsigned long)(old_elfcorehdr + elfsz));
+> +	xchg(&kexec_crash_image, image);
+> +	pr_debug("updated elfcorehdr\n");
+> +
+> +out:
+> +	vfree(elfbuf);
+> +}
+> +
+> +/**
+> + * arch_crash_handle_hotplug_event() - Handle hotplug elfcorehdr changes
+> + * @image: a pointer to kexec_crash_image
+> + * @arg: struct memory_notify handler for memory hotplug case and
+> + *       NULL for CPU hotplug case.
+> + *
+> + * Update the kdump image based on the type of hotplug event:
+> + * - CPU add and remove: No action is needed.
+> + * - Memory add/remove: Update the elfcorehdr to reflect the current memory layout.
+> + *
+> + * Prepare the new elfcorehdr and replace the existing elfcorehdr.
+> + */
+> +void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
+> +{
+> +	if (image->hp_action == KEXEC_CRASH_HP_ADD_CPU ||
+> +	    image->hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
+> +		return;
+> +
+> +	update_crash_elfcorehdr(image);
+> +}
 
-I owe you an apology: I did not actually understand your question. I
-thought the commit message had already explained the reason (the
-i8042_flush() panic), so I treated it as answered and never addressed
-what you were really asking. Let me answer it directly now.
+Looking at powerpc, they pass the arg down to update_crash_elfcorehdr()
+to handle the memory hot-unplug case. It looks like the notifier is
+called before the memblock_remove(), so the update above will still
+count the memory being removed.
 
-You are right that this is not just a selftest detail. i8042 is built on
-every LoongArch kernel: arch/loongarch/Kconfig selects
-ARCH_MIGHT_HAVE_PC_SERIO, and KEYBOARD_ATKBD and MOUSE_PS2 (both default
-y) select SERIO_I8042 under it. So your "single kernel for host and
-guest" point is correct -- a normal defconfig kernel has i8042 built in.
+There are a few Sashiko comments as well, though some might be about
+existing issues (it would be nice to have them fixed ;)).
 
-On the QEMU virtual machine there is no i8042, so PNP finds nothing and
-i8042_pnp_init() falls back to probing the i8042 status and data
-registers (I8042_STATUS_REG, I8042_DATA_REG) directly. On LoongArch those
-registers are memory-mapped, and on the virtual machine they are not backed
-by any device, so i8042_flush() takes a page fault and the kernel panics
-before userspace. A normal LoongArch defconfig kernel booted as a QEMU
-guest hits the same panic -- the "# CONFIG_SERIO_I8042 is not set" in
-loongarch.conf is only a workaround to let the KHO selftest boot, not a
-fix.
-
-The real fix is separate from the KHO series: make i8042 bail out on
-LoongArch when ACPI/PNP does not describe a controller, so the direct-port
-fallback never runs. I have prepared that as a standalone patch -- the
-relevant hunk is below -- and will send the full patch separately. The
-selftest workaround can be dropped once it lands.
-
-diff --git a/drivers/input/serio/i8042-acpipnpio.h b/drivers/input/serio/i8042-acpipnpio.h
---- a/drivers/input/serio/i8042-acpipnpio.h
-+++ b/drivers/input/serio/i8042-acpipnpio.h
-@@ -1633,8 +1633,14 @@ static int __init i8042_pnp_init(void)
- #else
-		pr_info("PNP: No PS/2 controller found.\n");
- #if defined(__loongarch__)
--		if (acpi_disabled == 0)
--			return -ENODEV;
-+		/*
-+		 * LoongArch legacy I/O ports are memory-mapped and are not
-+		 * safely probeable when no controller is present: a direct
-+		 * probe faults on the QEMU virtual machine and on any FDT-based
-+		 * boot.  Do not fall back to probing them directly; if ACPI/PNP
-+		 * did not describe a controller, assume there is none.
-+		 */
-+		return -ENODEV;
- #else
-                if (x86_platform.legacy.i8042 !=
-                                X86_LEGACY_I8042_EXPECTED_PRESENT)
-
-Thanks,
-George
+-- 
+Catalin
 
