@@ -4,70 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1A4FEC5CFCF
-	for <kexec@archiver.kernel.org>; Fri, 14 Aug 2026 02:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1B56C5CFC1
+	for <kexec@archiver.kernel.org>; Fri, 14 Aug 2026 07:53:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mwpdohk4jKRRCU0fhMPoWPUNHIzxG8Q/HSRqbYJfoE8=; b=jyh2TUnbuW1BZM1BC98lkRf+mk
-	4+9SP9ebHDeqJ2eB4tvbn+fF+tuQa4/ykshlJ+2jMyg62Yzta8XEQahYYNZbwSMel2snTsTfX3M1d
-	IWrnJuZtFpGaRoBJCn1flL1tVfv69w8d6Kk/yXMG3NGIs14uvThIHw+Qb8HHV9TRA2mdPPA6q8Obo
-	ViONuCTh/cpjyndsjFVJ5yVx0Oxf+AooIY71oavuPehWpyKrmRLhMV5Rnw6Car5kknN48oCeXmWGS
-	eHsY3p0oeC3fZ5I63PrnkaxYA/Xx4Nh3UK20vaLBrNXcRWR8lCTTtmxUa+YvRlr+LhCB3mJiqpCCk
-	bPMuLonQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:content-type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=sVy5eupMj6U8yhxVl4udhSYO6Z3nBvNgoXNhq373xRY=; b=p0bRu5aCxBIly5e3hsDUSaZG8C
+	yRjM8HH2lZ6IB3Veb11fHH5rNJgcUFeiU0h/K4juJkMDWqt0sUxxeY6EDuxhj1e89xy69JR1Bf2IV
+	DB6KBFeU0YdjcBcqv7z5BcstV3exx4cb4tGzPL3F6k9lqJt8rrSkjcQyUyTJUm5l5F8OaVGK9TouB
+	bJfaRmKt0GcKkBvFybXc/U1wAqxmrzs+7yM/bfeJ/j+cWYQ0gZxKIfsrUbk1s05Sp/8eIyoBxlmCn
+	y9Rt/vKijeKjSP7+s0OZEB4Uwuiqzof7Hlgt+IDJAxqQ1FFaWKrKPBIpyxGEw2lHto93C5WcgkqRy
+	ZjXWcNKA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wuhJH-00000001pnZ-0Juk;
-	Fri, 14 Aug 2026 02:06:15 +0000
-Received: from canpmsgout07.his.huawei.com ([113.46.200.222])
+	id 1wumjl-00000002DwT-079G;
+	Fri, 14 Aug 2026 07:53:57 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wuhJD-00000001pnE-2qF8
+	id 1wumjh-00000002Dvl-3D3d
 	for kexec@lists.infradead.org;
-	Fri, 14 Aug 2026 02:06:14 +0000
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=mwpdohk4jKRRCU0fhMPoWPUNHIzxG8Q/HSRqbYJfoE8=;
-	b=fOjuEgzbIZltTeohJRJQJskoEbJ8xtigAjIMjnoFV8DQpac8gSjm1cZVexKXQZ6LPqnJ0fKUl
-	n8ql50vUgzSgL87hPLW3tECfoV/CVDIByuEeu8YVPc84adNYhRVOPqL7+rVeqw9H1NSqX3+Qprh
-	kzn6aG3EDLMG/03o8qhSHYg=
-Received: from mail.maildlp.com (unknown [172.19.163.127])
-	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4hLlg20pPLzLlTg;
-	Fri, 14 Aug 2026 09:55:26 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 135E1402AB;
-	Fri, 14 Aug 2026 10:06:04 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 14 Aug 2026 10:06:00 +0800
-Message-ID: <56cd995e-d5d2-4779-9dd5-f85948876205@huawei.com>
-Date: Fri, 14 Aug 2026 10:05:59 +0800
+	Fri, 14 Aug 2026 07:53:55 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1786694031;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=sVy5eupMj6U8yhxVl4udhSYO6Z3nBvNgoXNhq373xRY=;
+	b=AXH32+F7H0/JEIs/mVNXBN5VSkwrBrfUyjDkA9MNHVNUFzgvyMGurhjaRjtn/9uWtV9RGI
+	V1vK0sP3a8R7GpPZX+QUHSDIFGkPM1ryb+QQ1hHDxT0xkWVJjzi9WftdqOfJEnKQFnyVcr
+	djiBwdyGxtDumTdLPG86c8h8EU45dnM=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-582-cjyrn2fhNMGgkHW9-Ezalg-1; Fri, 14 Aug 2026 03:53:44 -0400
+X-MC-Unique: cjyrn2fhNMGgkHW9-Ezalg-1
+X-Mimecast-MFC-AGG-ID: cjyrn2fhNMGgkHW9-Ezalg_1786694024
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-38f5ac7416eso852230a91.3
+        for <kexec@lists.infradead.org>; Fri, 14 Aug 2026 00:53:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786694023; x=1787298823;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=sVy5eupMj6U8yhxVl4udhSYO6Z3nBvNgoXNhq373xRY=;
+        b=CZ497sPZhsvOm5vLPsBgNZoQUWUvSIOK/QBQ9maUEU9q9Cdb6iHrdvmTZzBN/Qd2K7
+         RWjs9sVNA7jnjus3AyZLhpQHoO51QIUtXCi1yW9o0gg38M/7jSon6Q6aMejfM4v5Ypsf
+         w+LekL5K1Fii7Cx0jmEe/2DbqOyFUAJObC/fK/zJH6npREzzv4YJE5vPhDsWrdJ4C0YT
+         SzzJUKr9dTfF5m1OBnaY+kKoUGdqyrfQLYEvKqJxt63XlX/d42bdsSasBbfrp9t56wHu
+         t2+lm8tgrjgj2GPVOWsSwB0SL7EtNEAESw+/DmekE3Q9Oqd+8yrsCSQXklvlh5ke87gy
+         l1HQ==
+X-Gm-Message-State: AOJu0Yzh0t9FYiflneE9GtDThy8WRh8LNFr8ObX2kLrvooJQ4OKCr0ib
+	YAcfzSUqyA0+NQ8Kkfr5UMVuhKF8VTqMJxGyt4lx/3FjcE1fYOO4U13iJjHTr9UXL+z1WaQeUIM
+	/3V9mGXJyihNHxtt8XFuCZlx7dhnCNykRDyp4zs69iqbFQRQHSY/aW4ArGxSSkhelpiabQ61Kg7
+	YXMVit3TS8kaF9L0aJV4thP3hX2dqnUV9EIFLYYr3I9VgNgA==
+X-Gm-Gg: AR+sD10VzDqSMRnlkWiDDYBFm5XRAQ+kHeSt9Xh75SSRQENvAoXRP0UPI8tdPqcCvE5
+	jWN/et1zRHgLVFhIX3Txui5lNp2Nfifva9TY1X/70lrCCxd0lytA+nk/M9PgvIwwJGKHsvNPR03
+	LEWQT8AH8KOw4Pmy0T3vURN86SIi6vXP6F0HSu1w/migkJFXikYJE/Z4nOhXlU+VMzTcAquHSR3
+	s2loALvWkUPbKpQ/anK8OchTi00PLppMD00Mfle1ISkI19J4cDYXdzYnDzfNGgZP2tVek0bxDLu
+	vJwt8w5S/WDNGHB1Yz/JS60p5EtEo+OH1AqhBomOPYAneMFNobVMOhF5zeuMMqcImNIUj8jDz5N
+	iD3PGFuWs75HBpSLgTl2UUMhKV1RGPBW/
+X-Received: by 2002:a17:90a:ec87:b0:38e:485c:ebd3 with SMTP id 98e67ed59e1d1-3933ba79ea4mr4218111a91.15.1786694023394;
+        Fri, 14 Aug 2026 00:53:43 -0700 (PDT)
+X-Received: by 2002:a17:90a:ec87:b0:38e:485c:ebd3 with SMTP id 98e67ed59e1d1-3933ba79ea4mr4218005a91.15.1786694022288;
+        Fri, 14 Aug 2026 00:53:42 -0700 (PDT)
+Received: from mpilaniy-mac.redhat.corp ([122.171.16.134])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3933b626d4esm880975a91.2.2026.08.14.00.53.39
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 14 Aug 2026 00:53:41 -0700 (PDT)
+From: Mukesh Pilaniya <mpilaniy@redhat.com>
+To: kexec@lists.infradead.org,
+	Philipp Rudo <prudo@redhat.com>,
+	Tao Liu <ltao@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Cc: Mukesh pilaniya <mpilaniy@redhat.com>
+Subject: [PATCH] kexec: fix kexec_file_load fallback error handling
+Date: Fri, 14 Aug 2026 13:23:29 +0530
+Message-ID: <20260814075329.30203-1-mpilaniy@redhat.com>
+X-Mailer: git-send-email 2.50.1
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] x86/crash: reserve elfcorehdr for CONFIG_NR_CPUS, not
- CONFIG_NR_CPUS_DEFAULT
-To: "Ionut Nechita (Wind River)" <ionut.nechita@windriver.com>,
-	<x86@kernel.org>, <kexec@lists.infradead.org>
-CC: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <bhe@redhat.com>,
-	<hbathini@linux.ibm.com>, <eric.devolder@oracle.com>,
-	<akpm@linux-foundation.org>, <linux-kernel@vger.kernel.org>
-References: <20260812170433.533845-1-ionut.nechita@windriver.com>
- <20260812170433.533845-2-ionut.nechita@windriver.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20260812170433.533845-2-ionut.nechita@windriver.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 88--gyvj0NiIggjxkpBuMKb0AKvOBcyCVeP65-HgTCc_1786694024
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.109.254]
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+content-type: text/plain; charset="US-ASCII"; x-default=true
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260813_190612_378770_B3C97A5A 
-X-CRM114-Status: GOOD (  22.01  )
+X-CRM114-CacheID: sfid-20260814_005353_892619_EB2FC0D9 
+X-CRM114-Status: GOOD (  20.86  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,100 +107,166 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+With the default -a (--kexec-syscall-auto) option, kexec-tools first
+tries kexec_file_load() and falls back to kexec_load() when the syscall
+is not implemented (ENOSYS) or the kernel does not have a loader for the
+image format (ENOEXEC/ENOTSUP).  With -s (--kexec-file-syscall),
+kexec-tools uses only kexec_file_load() and does not fall back.
+Falling back on EINVAL hides the real error, because EINVAL means
+something went wrong during loading.
 
+Remove EINVAL from the fallback path.  Print the actual errno for
+ENOEXEC/ENOTSUP before falling back and track it so the final message
+distinguishes a missing syscall from other failures.
 
-在 2026/8/13 1:04, Ionut Nechita (Wind River) 写道:
-> From: Ionut Nechita <ionut.nechita@windriver.com>
-> 
-> kexec_file_load(2) fails with -EINVAL when loading a crash kernel on a
-> machine whose number of possible CPUs exceeds CONFIG_NR_CPUS_DEFAULT,
-> even though the classic kexec_load(2) path succeeds on the same machine.
-> 
-> With CONFIG_CRASH_HOTPLUG=y the elfcorehdr segment is over-allocated so
-> it can be updated in place on CPU/memory hotplug. crash_load_segments()
+Several kexec_file_load() image probe functions incorrectly return
+-EINVAL rather than -ENOEXEC when encountering an unrecognized image
+format. This kernel patch fixes the issue:
+https://lore.kernel.org/all/20260813-mpilaniy-v1-1-777d4d0e30f7@redhat.com/
 
-Right
+Signed-off-by: Mukesh Pilaniya <mpilaniy@redhat.com>
+Reviewed-by: Tao Liu <ltao@redhat.com>
+Reviewed-by: Philipp Rudo <prudo@redhat.com>
 
-> and arch_crash_get_elfcorehdr_size() compute that reservation from
-> CONFIG_NR_CPUS_DEFAULT:
-> 
-> 	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
-> 		pnum = 2 + CONFIG_NR_CPUS_DEFAULT + CONFIG_CRASH_MAX_MEMORY_RANGES;
-> 	else
-> 		pnum += 2 + CONFIG_NR_CPUS_DEFAULT;
-> 
-> However the actual header produced by crash_prepare_elf64_headers()
-> contains one PT_NOTE per *possible* CPU, i.e. num_possible_cpus(), which
-> is bounded by CONFIG_NR_CPUS, not by CONFIG_NR_CPUS_DEFAULT.  On configs
-> that raise CONFIG_NR_CPUS above the arch default while leaving
-> CONFIG_NR_CPUS_DEFAULT untouched (e.g. CONFIG_NR_CPUS=256,
-> CONFIG_NR_CPUS_DEFAULT=64 on x86_64 without MAXSMP), a system with more
-> than ~CONFIG_NR_CPUS_DEFAULT possible CPUs builds a header whose bufsz
-> exceeds the reserved, page-aligned memsz.  sanity_check_segment_list()
-> then rejects the image:
-> 
-> 	if (image->segment[i].bufsz > image->segment[i].memsz)
-> 		return -EINVAL;
-> 
-> kexec_load(2) is unaffected because user space builds the elfcorehdr
-> without the hotplug over-allocation.
-> 
-> Observed on a single-socket Xeon 6776P (144 possible CPUs) running a
-> PREEMPT_RT kernel with:
-> 
-> 	# CONFIG_MAXSMP is not set
-> 	CONFIG_NR_CPUS_RANGE_BEGIN=2
-> 	CONFIG_NR_CPUS_RANGE_END=512
-> 	CONFIG_NR_CPUS_DEFAULT=64
-> 	CONFIG_NR_CPUS=256
-> 
-> kexec -p -s fails with "kexec_file_load failed: Invalid argument".
-> Reducing the possible CPU count below the page-rounding threshold
-> (e.g. 72 via firmware) makes it succeed, confirming the reservation is
-> the limiting factor.
-> 
-> Reserve the elfcorehdr for CONFIG_NR_CPUS, the compile-time upper bound
-> of num_possible_cpus(), so the reservation always covers the header that
-> is actually generated.
-> 
-> Fixes: a72bbec70da2 ("crash: hotplug support for kexec_load()")
-> Signed-off-by: Ionut Nechita <ionut.nechita@windriver.com>
-> ---
->  arch/x86/kernel/crash.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index e681ec9cf1dc8..e6f23933a6df2 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -369,9 +369,9 @@ int crash_load_segments(struct kimage *image)
->  	 * maximum CPUs and maximum memory ranges.
->  	 */
->  	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
-> -		pnum = 2 + CONFIG_NR_CPUS_DEFAULT + CONFIG_CRASH_MAX_MEMORY_RANGES;
-> +		pnum = 2 + CONFIG_NR_CPUS + CONFIG_CRASH_MAX_MEMORY_RANGES;
->  	else
-> -		pnum += 2 + CONFIG_NR_CPUS_DEFAULT;
-> +		pnum += 2 + CONFIG_NR_CPUS;
+---
+kernel patch:
+https://lore.kernel.org/all/20260813-mpilaniy-v1-1-777d4d0e30f7@redhat.com/
+---
+ kexec/kexec.c | 63 ++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 45 insertions(+), 18 deletions(-)
 
->  
->  	if (pnum < (unsigned long)PN_XNUM) {
->  		kbuf.memsz = pnum * sizeof(Elf64_Phdr);
-> @@ -430,7 +430,7 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
->  	unsigned int sz;
->  
->  	/* kernel_map, VMCOREINFO and maximum CPUs */
-> -	sz = 2 + CONFIG_NR_CPUS_DEFAULT;
-> +	sz = 2 + CONFIG_NR_CPUS;
-
-Could we just use num_possible_cpus()?
-
-Either way, I think it's okay.
-
-Reviewed-by: Jinjie Ruan <ruanjinjie@huawei.com>
-
->  	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
->  		sz += CONFIG_CRASH_MAX_MEMORY_RANGES;
->  	sz *= sizeof(Elf64_Phdr);
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 4a49ad4..0726996 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -68,6 +68,8 @@ int do_hotplug = 0;
+ static unsigned long kexec_flags = 0;
+ /* Flags for kexec file (fd) based syscall */
+ static unsigned long kexec_file_flags = 0;
++/* errno from kexec_file_load when it returned EFALLBACK */
++static int kexec_file_load_errno;
+ /* initrd detected in probe phase */
+ int implicit_initrd_fd = -1;
+ int kexec_debug = 0;
+@@ -869,12 +871,16 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
+ 				    info.nr_segments, info.segment,
+ 				    info.kexec_flags);
+ 	if (result != 0) {
+-		/* The load failed, print some debugging information */
+-		fprintf(stderr, "kexec_load failed: %s\n", 
+-			strerror(errno));
+-		fprintf(stderr, "entry       = %p flags = 0x%lx\n", 
+-			info.entry, info.kexec_flags);
+-		print_segments(stderr, &info);
++		if (errno == ENOSYS) {
++			fprintf(stderr,
++				"syscall kexec_load is not available on this system.\n");
++		} else {
++			fprintf(stderr, "kexec_load failed: %s\n",
++				strerror(errno));
++			fprintf(stderr, "entry       = %p flags = 0x%lx\n",
++				info.entry, info.kexec_flags);
++			print_segments(stderr, &info);
++		}
+ 	}
+ 	return result;
+ }
+@@ -883,12 +889,15 @@ static int kexec_file_unload(unsigned long kexec_file_flags)
+ {
+ 	int ret = 0;
+ 
+-	if (!is_kexec_file_load_implemented())
++	if (!is_kexec_file_load_implemented()) {
++		kexec_file_load_errno = ENOSYS;
+ 		return EFALLBACK;
++	}
+ 
+ 	ret = kexec_file_load(-1, -1, 0, NULL, kexec_file_flags);
+ 	if (ret != 0) {
+ 		if (errno == ENOSYS) {
++			kexec_file_load_errno = ENOSYS;
+ 			ret = EFALLBACK;
+ 		} else {
+ 			/*
+@@ -919,9 +928,12 @@ static int k_unload (unsigned long kexec_flags)
+ 	else
+ 		result = kexec_load(NULL, 0, NULL, kexec_flags);
+ 	if (result != 0) {
+-		/* The unload failed, print some debugging information */
+-		fprintf(stderr, "kexec unload failed: %s\n",
+-			strerror(errno));
++		if (errno == ENOSYS)
++			fprintf(stderr,
++				"syscall kexec_load is not available on this system.\n");
++		else
++			fprintf(stderr, "kexec unload failed: %s\n",
++				strerror(errno));
+ 	}
+ 	return result;
+ }
+@@ -1336,8 +1348,10 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
+ 	info.kernel_fd = -1;
+ 	info.initrd_fd = -1;
+ 
+-	if (!is_kexec_file_load_implemented())
++	if (!is_kexec_file_load_implemented()) {
++		kexec_file_load_errno = ENOSYS;
+ 		return EFALLBACK;
++	}
+ 
+ 	if (argc - fileind <= 0) {
+ 		fprintf(stderr, "No kernel specified\n");
+@@ -1441,13 +1455,14 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
+ 
+ 			/* Not implemented. */
+ 		case ENOSYS:
++			kexec_file_load_errno = ENOSYS;
++			ret = EFALLBACK;
++			break;
++
+ 			/*
+-			 * Parsing image or other options failed
+-			 * The image may be invalid or image
+-			 * type may not supported by kernel so
+-			 * retry parsing in kexec-tools.
++			 * The kernel does not have a loader for this
++			 * image format, retry parsing in kexec-tools.
+ 			 */
+-		case EINVAL:
+ 		case ENOEXEC:
+ 			/*
+ 			 * ENOTSUP can be unsupported image
+@@ -1455,6 +1470,9 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
+ 			 * wrapper type, duh.
+ 			 */
+ 		case ENOTSUP:
++			kexec_file_load_errno = errno;
++			fprintf(stderr, "kexec_file_load failed: %s\n",
++				strerror(errno));
+ 			ret = EFALLBACK;
+ 			break;
+ 		}
+@@ -1823,8 +1841,17 @@ int main(int argc, char *argv[])
+ 	if ((result == 0) && do_load_jump_back_helper) {
+ 		result = my_load_jump_back_helper(kexec_flags, entry);
+ 	}
+-	if (result == EFALLBACK)
+-		fputs("syscall kexec_file_load not available.\n", stderr);
++	/*
++	 * When fallback to kexec_load was attempted, my_load()
++	 * already reported the kexec_load error and overwrote
++	 * result with its own return value, so this condition
++	 * is only true when no fallback was attempted and
++	 * kexec_file_load does not exist.
++	 */
++	if (result == EFALLBACK && kexec_file_load_errno == ENOSYS) {
++		fputs("syscall kexec_file_load is not available on this system.\n",
++		      stderr);
++	}
+ 
+ 	fflush(stdout);
+ 	fflush(stderr);
+-- 
+2.50.1 (Apple Git-155)
 
 
