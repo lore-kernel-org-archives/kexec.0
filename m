@@ -4,75 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A78FAC5AD5A
-	for <kexec@archiver.kernel.org>; Sat, 15 Aug 2026 10:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id ED45AC5CFC1
+	for <kexec@archiver.kernel.org>; Sat, 15 Aug 2026 11:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=EHN97m9JW2ZgHxLPFLcOKL8ZOHela7pDZzqoNJfQP5E=; b=TBy0+r53v9GUC94jCIfnY10JrC
-	9EVr4Wl8rYey0WU0g+cgTE/KvbdEVnbFiqy32R31stxRgzGa4W4FajbU7vXzvhKOOOMPoD3A8mOlv
-	cwk2IHfCLdLB999lER2l0axorQNOr7bl48QDGaquqG5lPuBjsVu2nkzIVCDy4JNV+aoXkl2yekmfZ
-	MKXex/BxZFBwfbYx/dAp7NIFDP2L2xLNn2qht7Gopu5QcWzPoQLoglzuDIzVSuSeQXMWnjilKOEPl
-	GqGXm+m0lnqvlzezncdH6nO8QpV3UWtfTyrR0H98AbGIx92DxMZGoa21L7SVO8Dpqq6uDmkAZHkJH
-	ZR+STDBg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=2xCf7NNzqXlGxdkctmUtmNccZAJf+QJ9HiKn7Wp1+x0=; b=mzSB1cBQE2cO7tSPbGPqjpR8zK
+	m8hfoftOZKtzIz8VbposeJXJ31FWiSNIJvqTt9y9BrCbTV/d7wSM2pA6bnW2+RzcB60I0tMUaDimA
+	qW+4U8oVXXbK0pWfvIQAeayYG1ewvTKDAPC6Yx/QvEy251SIQjn/nKe/BndOQ6j/TzlpJl8/KNY2d
+	fkNQl5cDNQZTMbscXcopjquz8q7RHYVJ5HxfDEUmnVOAkZFoM4W0xhRMkuLTA916rvB2dxr+fTeyW
+	M0A3hDD6PixGLI3m0w1RwUehjocW0SkI9D244nApuSouQ/ceKpZUXPNppmiA7LL1cL9ZYtKwRorOO
+	3ZF/5xDQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wvBry-00000003l2H-2GqX;
-	Sat, 15 Aug 2026 10:44:06 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wvCpp-00000003nEn-0Gom;
+	Sat, 15 Aug 2026 11:45:57 +0000
+Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wvBrw-00000003l21-48P2
+	id 1wvCpl-00000003nEP-24If
 	for kexec@lists.infradead.org;
-	Sat, 15 Aug 2026 10:44:05 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id E903F60008;
-	Sat, 15 Aug 2026 10:44:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30D271F000E9;
-	Sat, 15 Aug 2026 10:43:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786790643;
-	bh=EHN97m9JW2ZgHxLPFLcOKL8ZOHela7pDZzqoNJfQP5E=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=kr/Tf5ckh5K3hOdAtZRNaMYJfcRPbGlwjMHHlS0bf7W+6jLe5uTUgjrP9S+5f/IC/
-	 Ka/suzsag9pVo5MAFE5sUh0OdSOq15rVwKacT8p8g/2vLXGvNF6wyqDL/oQEHFwKNE
-	 uW0VRb45EN4jcoJ7gWykJKxHTXlr/mPQcjZ/7sibTUOtZlTPD7FkwaCSvI56oP4lze
-	 WYAMKxEpRdAEdaOxik7UE4xE+40VQZc/EdlggdhzMRACQMooZmNlts0xGE/K0+tEkl
-	 Xm1O4rjqoZBEa8az6uvNKeelMuWGoGXGMg4E4Z8cRr209WzF2prepZEjHbJND/nln1
-	 63kwlbLLevOoQ==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Tarun Sahu
- <tarunsahu@google.com>,  ackerleytng@google.com,  fuad.tabba@linux.dev,
-  Andrew Morton <akpm@linux-foundation.org>,  dmatlack@google.com,  Shuah
- Khan <skhan@linuxfoundation.org>,  Jonathan Corbet <corbet@lwn.net>,
-  david@redhat.com,  Pasha Tatashin <pasha.tatashin@soleen.com>,
-  sagis@google.com,  Paolo Bonzini <pbonzini@redhat.com>,  Mike Rapoport
- <rppt@kernel.org>,  Alexander Graf <graf@amazon.com>,
-  linux-kselftest@vger.kernel.org,  andre.przywara@arm.com,
-  michael.roth@amd.com,  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
-  will@kernel.org,  vannapurve@google.com,  maz@kernel.org,
-  fvdl@google.com,  kvm@vger.kernel.org,  oliver.upton@linux.dev,
-  kvmarm@lists.linux.dev,  alexandru.elisei@arm.com,  skhawaja@google.com,
-  aneesh.kumar@kernel.org,  linux-doc@vger.kernel.org,  David Hildenbrand
- <david@kernel.org>,  yan.y.zhao@intel.com,  kexec@lists.infradead.org,
-  suzuki.poulose@arm.com
-Subject: Re: [PATCH v4 05/11] KVM: LUO: Support VM preservation across live
- updates
-In-Reply-To: <anyObKiZIhfok5mk@google.com> (Sean Christopherson's message of
-	"Wed, 12 Aug 2026 08:17:00 -0700")
-References: <20260728121138.1103610-1-tarunsahu@google.com>
-	<20260728121138.1103610-6-tarunsahu@google.com>
-	<anphyjFv3FhF61iB@google.com> <2vxzpkzo51wg.fsf@kernel.org>
-	<anssOQFNZ2LfihbU@google.com> <2vxzik5f311e.fsf@kernel.org>
-	<anyObKiZIhfok5mk@google.com>
-Date: Sat, 15 Aug 2026 12:43:56 +0200
-Message-ID: <2vxzqzjz1x5f.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Sat, 15 Aug 2026 11:45:55 +0000
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 5F1443F1C0
+	for <kexec@lists.infradead.org>; Sat, 15 Aug 2026 11:45:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20251003; t=1786794350;
+	bh=2xCf7NNzqXlGxdkctmUtmNccZAJf+QJ9HiKn7Wp1+x0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version;
+	b=mdUhpf7yF9cAAHHeDm2FN9mKgIq84AMcfLQoHSqNsOx+wg4FQxsbAtKlh+CrmTdEh
+	 qSbRjOn/iqtn0RLn8oG6YpaoRCneLU41OyYyIgLIEU6BJM4OdmZvbsth9FJVtidovR
+	 2GzVfYYmZNVFJjmLYstUGHZSfnQ/ePXSWp0iThhpwywHYa/M8NQLvSyeNLam8yUpng
+	 L4IcIhnInDAVSSNX4UtaLCB/fdtHFZlBWYfMnaqWCamT6ynkyiwmR7HBMzVtdtzV9r
+	 3ssBvF3ln+3WX1YzhJ2zSH8iJTf/Hxao2mcmYR12jx8/VS3QLjjdLbqZbk2Xle/iqa
+	 KDL76LCZosMWWeVb/Vrwkz7nZ2zU9N5+9l49V1+2FNlObndDAMMklRqMZz5HlcPw/7
+	 ttCgnXONUuPe7rrZ8WdnRt1cyq/4J4L0wmUvPJOlu2lmZ+D+fOvM4oIOyjmSv43lNw
+	 6fdFrJFKrl6CuOS10gP4pPWgNw4pNXP8JXLI3EaE6we0oOaazUiJEaOfPgnfC6hQP7
+	 W61adUopjmn5QasAp5YXevykxE7ScS6dozI1f7HhVaQin8fJ4D5kcYk/GHWAXVBMWR
+	 l7tvgrnWuI14sZ4gtfmwkMi5MJp+PmaiAXR7GD+mtrQByf1ER7qZZL2RzDu/eRMl7U
+	 34YQ4LtQdyuAV7lXAVMjHqaE=
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-47fd4ee0ac0so1460761f8f.2
+        for <kexec@lists.infradead.org>; Sat, 15 Aug 2026 04:45:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786794350; x=1787399150;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=2xCf7NNzqXlGxdkctmUtmNccZAJf+QJ9HiKn7Wp1+x0=;
+        b=WEo/nYy/b+P2Uk5u4nRDPftQoq2xNItznfa2TPmw3FSJG/glI6dGVcLYEpUvh+A26w
+         SgwGfMtXtjFSYed63YuwsvO0ZFwcTpireRn9QYdu8NzpHds+WcFMhYfKTcXVlAitdNZa
+         Ej0XTHmuN827dDdESifMXytLeGwFZ7WmNxALL/Af6Li2vwqRPVxgrR4cO7DEjGkyk3TL
+         inOEJLBW99OsTkugcCAIPUmaKERH3PJrDubtY9LFcxx8ESTAYQTeyk4HSu29z0mptEWY
+         9UZhUVrGCZuKBqIxgUku8QJZqmFXx3Rrq753GtM3X01ScJc/3k+GWtiSVGQYiqUqpAJo
+         HY+g==
+X-Forwarded-Encrypted: i=1; AHgh+RqrEme4aAvcaRZya36qpTJ0G4lf9M/jYifsadP9VkDNOFTQ5kP7qe2EbPF3Sth7Chw6XpnFNQ==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxblwYHQwn0Xhihj71X9XtXG6Y2visIcvP6rJ1m4dgnefP3kX3T
+	Qdo1lWK6+TYiOzmeIEJ5EViBWbquA8w5ReDawuVdhZTHmlVwKDgLnLr82yX0vuiw5VkLoyD7wrT
+	Kj510RsKf0zveCjH8etLkaBo2kRt7w73eCkdB98iVND9fEAiF5E5Phsk5YfK9uXm1qX1ru1I52Z
+	fVzw==
+X-Gm-Gg: AR+sD10BIP/8kav82W3gSATyUwAeqxBP1JlQcdJ85hOd5qGPrGpro6ZyRzWAbAXTKHJ
+	8xmWEhVRsK8im7/OcGe+iFD3WR8HOtnxjxXiUpSnUK9hmafnfIzXkJy7DP1k2CnUh1N5VX7PDxV
+	MYcv/rmRz0ihMac1hRtDG15nT8vueTsD4Cr0ydY8W+uo8gws5iJUSihW5j34D9742+Caf/g3oP8
+	HA+twGZwiVWIhIGACOzEs/1a3C5dnpoNW5ftPqvvWrapTYga5WQXzG7fsSlV7wP/B20NPl1PZeq
+	0AYBWRcuwux5RBh74XvJe4lSMmvQ5wfj1GFlZwgircj6ZF35cDE6R9FIAuEVm0sHRbPyJzthLC9
+	05tbwbjnxKQDJmKNNXrlTXb/yJSWb3SrrKOAh04AOO3sfTFNvvyP58Lb2YtWeiS7e5AdSYLnaF4
+	/CLqtEqIfxJjsBkQFfnT+uDnUDA1mdegs=
+X-Received: by 2002:a05:6000:3105:b0:481:60fc:edd0 with SMTP id ffacd0b85a97d-48160fcf090mr16008101f8f.8.1786794349911;
+        Sat, 15 Aug 2026 04:45:49 -0700 (PDT)
+X-Received: by 2002:a05:6000:3105:b0:481:60fc:edd0 with SMTP id ffacd0b85a97d-48160fcf090mr16008041f8f.8.1786794349117;
+        Sat, 15 Aug 2026 04:45:49 -0700 (PDT)
+Received: from t-14.home (2a01cb000883230031a3fd8213e7cff4.ipv6.abo.wanadoo.fr. [2a01:cb00:883:2300:31a3:fd82:13e7:cff4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4815f2b13c3sm13090884f8f.19.2026.08.15.04.45.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Aug 2026 04:45:48 -0700 (PDT)
+From: Fabrice Derepas <fabrice.derepas@canonical.com>
+To: Ignat Korchagin <ignat@linux.win>
+Cc: Fabrice Derepas <fabrice.derepas@canonical.com>,
+	David Howells <dhowells@redhat.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] crypto: asymmetric_keys - bound PE section ranges in pefile_parse_binary
+Date: Sat, 15 Aug 2026 13:45:30 +0200
+Message-ID: <20260815114533.2171445-1-fabrice.derepas@canonical.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <CAOs+rJW1QymCXkr8-mU4kwMFvznnC98CXVvZMRjqpXwjJutdtA@mail.gmail.com>
+References: <CAOs+rJW1QymCXkr8-mU4kwMFvznnC98CXVvZMRjqpXwjJutdtA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260815_044554_005124_5819F869 
+X-CRM114-Status: GOOD (  22.24  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,228 +119,81 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Aug 12 2026, Sean Christopherson wrote:
-
-> On Wed, Aug 12, 2026, Pratyush Yadav wrote:
->> On Tue, Aug 11 2026, Sean Christopherson wrote:
-[...]
-> But that's all beside the point.  What I'm saying is that SNP and TDX *must* use
-> guest_memfd, whereas guest_memfd is optional for all other VM types.  And so adding
-> LUO support for guest_memfd without even sketching out a plan for CoCo VMs feels
-> backwards.
+On Fri, Aug 14, 2026 at 11:29 PM Ignat Korchagin <ignat@linux.win> wrote:
+> > Tested under KASAN (CONFIG_KASAN_GENERIC, x86-64) with a KUnit case that
+> > calls verify_pefile_signature() on real images: a signed-then-tampered
 >
-> I'm not necessarily opposed to gradual guest_memfd support, but there needs to be
-> a clear plan of how all of this is going to fit together.  It doesn't need to be
-> perfect, and I'm sure we'll make mistakes along the way, but I want to at least
-> try not to paint ourselves into a corner, especially with respect to the ABI.
+> Same as your other patch - any reason not to include this KUnit case?
 
-Right. I think landing shared guest_memfd is the first step. It is
-simple enough and doesn't need to preserve the more complicated
-architecture specific things like secure EPT, etc. The CoCo support
-can build on top of this.
+The reason I am not including my tests is that I use real signed EFI
+binaries (a valid one and a tampered one), ~88 KB each via xxd -i, which is
+a lot of binary to carry in-tree. For upstream I'll write a self-contained
+case that constructs a minimal PE in the test itself and asserts that
+pefile_parse_binary() rejects an out-of-range section, so there are no
+embedded blobs. I'll send it as a second patch in a v3 series, so the fix
+is not gated on the test.
 
-There is work underway already for an RFC of TDX live update, but Tarun
-knows the details better than me so I'll let him fill in the details for
-the next version of this series.
-
+> > +       for (loop = 0; loop < ctx->n_sections; loop++)
 >
->> >> > E.g. the LUO APIs seem pretty straightforward; I assume the bulk of the complexity
->> >> > is going to be in knowing what to save/restore, and how, which is much more about
->> >> > KVM than it is about liveupdate.
->> >> 
->> >> I think it is fine if you want to take these changes through the KVM
->> >> tree, but I would like live update maintainers to be listed as reviewers
->> >> at least.
->> >
->> > Why not simply add a file pattern match to the LIVE UPDATE entry?
->> >
->> > diff --git MAINTAINERS MAINTAINERS
->> > index 8014b9f8253e..2eb57b22c37f 100644
->> > --- MAINTAINERS
->> > +++ MAINTAINERS
->> > @@ -15052,8 +15052,8 @@ F:      include/linux/liveupdate.h
->> >  F:     include/uapi/linux/liveupdate.h
->> >  F:     kernel/liveupdate/
->> >  F:     lib/tests/liveupdate.c
->> > -F:     mm/memfd_luo.c
->> >  F:     tools/testing/selftests/liveupdate/
->> > +N:     [^a-z]luo
->> >  
->> >  LLC (802.2)
->> >  L:     netdev@vger.kernel.org
->> 
->> This would list us as maintainers of kvm_luo.c and the tree as liveupdate.git, 
->
-> It would list both "LIVE UPDATE" and "KERNEL VIRTUAL MACHINE (KVM)", as KVM would
-> still cover the files via "F:	virt/kvm/*".  And my read of MAINTAINERS is that
-> N: and K: entries are "secondary" if the files/scope is covered by an F: entry.
->
-> E.g. arch/x86/kvm/vmx/tdx.c is covered by "KERNEL VIRTUAL MACHINE FOR X86 (KVM/x86)"
-> via "F:	arch/x86/kvm/*/", and also by "X86 TRUST DOMAIN EXTENSIONS (TDX)" via
-> "N:	tdx" (or maybe "K:	\b(tdx)"?  I haven't bothered to check which one
-> triggers).  And while I don't think there was ever any formal discussion, AFAIK
-> everyone reads the situation as KVM still being the primary maintainer/tree for
-> that code.
->
->> both of which is something you're saying you _don't_ want.
->
-> No, what I don't want is a dedicated "KVM LIVE UPDATE" entry, because I think most
-> people would read "F:     virt/kvm/kvm_luo.c" and "F:     virt/kvm/guest_memfd_luo.c"
-> as being more precise than KVM's "F:   virt/kvm/*" and thus would read things as
-> "KVM LIVE UPDATE" being the primary maintainer.
->
-> In other words, I'm more than ok with LUO being looped in on KVM LUO changes and
-> having the authority to object to problematic changes, but I'm not ok with LUO
-> taking primary ownership of KVM code.
+> Looking at the code again: seems ctx->n_sections is user-controlled.
+> What happens if it is 0?
 
-Sure, that sounds good to me.
+For this loop, nothing: n_sections is unsigned, so "loop < 0" is false on
+the first test and the body never runs -- no chkaddr() call and no
+ctx->secs[] dereference. So the patch itself adds no hazard for
+n_sections == 0.
 
->
-> I realize there's more than a bit of nuance in my interpretation of N: and K:,
-> but again my experience with TDX is that so long as the maintainers are aligned
-> on expectations, it's a non-issue in practice.
+But you have pointed at a real pre-existing problem one step further on.
+n_sections == 0 is not rejected anywhere -- pefile_parse_binary() only
+bounds it from above, against header_size -- and pefile_digest_pe_contents()
+then does:
 
-Yep, as long as we agree among ourselves I don't think the red tape
-around which entry has higher priority matters much.
+	canon = kcalloc(ctx->n_sections, sizeof(unsigned), GFP_KERNEL);
+	if (!canon)
+		return -ENOMEM;
+	...
+	canon[0] = 0;
 
->
->> >> At the same time, I also keep being (pleasantly)
->> >> surprised at preservation being relatively simple. For example, the code
->> >> to preserve a shmem file (via memfd) is roughly 600 lines, a big chunk
->> >> of which is comments. The code of course has some limitations, but it is
->> >> good enough for use in production.
->> >> 
->> >> For one, we care about ABI breakages and versioning. 
->> >
->> > Which is amusing to me because that implies KVM does not, and I would hazard to
->> 
->> No, it doesn't. What I'm saying is I care about changes to the _live
->> update ABI_. Just like you probably care about changes to KVM ABI but
->> not so much about BPF for example.
->> 
->> > guess that KVM has the biggest ABI surface of any subsystem in the kernel by a
->> > country mile (though I'm probably wildly underestimating the effective ABI surface
->> > of filesystems).
->> >
->> >> The serialized state is a part of live update ABI and changes to it should be
->> >> ACKed by us. 
->> >
->> > Meh, "Don't break userspace" is a universal rule in the kernel, I genuinely don't
->> > see why liveupdate needs special treatment.
->> 
->> Ironically enough, you miss my point. I'm not talking about userspace
->> ABI. We all know not to break that. I am talking about live update
->> _serialization ABI_. See the stuff under include/linux/kho/abi. This
->> series also adds things there.
->
-> No, I understand exactly what ABI you're talking about.
->
->> This is ABI between kernels. It needs to be stable-ish so you can move
->> from one kernel version to another. At the same time, unlike userspace
->> ABI, it can change.
->
-> Uh, yeah, so KVM has been managing such immutable ABI for practically its entire
-> existence.  KVM's save/restore uAPI has exactly what you're describing: serialization
-> ABI that needs to be backwards and forwards compatible between different kernels
-> in order to support both upgrade and rollback scenarios via live migration.
+kcalloc(0, ...) returns ZERO_SIZE_PTR, which is non-NULL, so the !canon
+check passes and the unconditional "canon[0] = 0" writes through
+ZERO_SIZE_PTR. Because the digest runs only after verify_pkcs7_signature()
+succeeds, this has the same reachability as the read this patch fixes: a
+validly signed image with n_sections tampered to 0 (the PKCS#7 is
+unaffected) reaches it via kexec_file_load().
 
-I think there is a slight difference between KVM's save/resture uAPI and
-live update's ABI. With KVM's uAPI, you need to maintain strict
-backwards compatibility because userspace reads what you output. So if
-you change the layout, userspace will interpret it wrong and might
-break.
+I confirmed it under KASAN. With a trusted key embedded, a signed image
+whose NumberOfSections I set to 0 (leaving the certificate table untouched,
+so verify_pkcs7_signature() still returns 0) faults in the digest step,
+while the untampered image verifies:
 
-With live update, the ABI never gets to userspace. It is used to talk
-between kernels directly. So if you do break that, your userspace keeps
-working fine, you just might not be able to live update to the
-incompatible kernel.
+  control (trusted, 7 sections): verify_pefile_signature() = 0
+  BUG: kernel NULL pointer dereference, address: 0000000000000010
+  #PF: supervisor write access in kernel mode
+  Oops: 0002 [#1] SMP KASAN NOPTI
+  RIP: 0010:verify_pefile_signature+0x5c3   (pefile_digest_pe_contents inlined)
 
-So with live update, we don't need to keep backwards compatibility in
-the ABI forever. Of course, it is good to minimize changes, but we have
-more freedom to change it.
+Address 0x10 is ZERO_SIZE_PTR and error_code 0x2 is a write -- the
+canon[0] = 0 store -- so it is a write fault, reachable the same way as the
+out-of-bounds read this patch already addresses.
 
-The current idea is we change the ABI whenever needed. This is because
-live update is still in development so we are likely to see a lot more
-changes before we settle down into something that mostly works. At some
-point, we want to start being more strict between incompatible ABI
-changes. The current idea is that we would like to keep backwards
-compatibility across LTS kernels. But none of that is set in stone yet.
+Since we are now centralising section-table sanity in pefile_parse_binary(),
+the natural fix is to reject n_sections == 0 there as well, e.g. by folding
+it into the existing bound:
 
-That's why I would like to have an explicit ACK from the live update
-group for ABI changes. I would like to enforce these compatibility
-windows.
+	if (ctx->n_sections == 0 ||
+	    ctx->n_sections > (ctx->header_size - cursor) / sizeof(*sec))
+		return -ELIBBAD;
 
->
-> KVM also has immutable ABI between itself and guest kernels, including implicit
-> "ABI" in the form of not changing guest-visible behavior.
->
->> Today we don't have any rules and let you change things freely as long as you
->> do a version bump. But at a later point, the plan is to add some stability
->> requirements to the ABI so you can actually upgrade the kernel across major
->> versions.
->> 
->> So at least for ABI changes, there should be an explicit ACK from the
->> live update group.
->
-> I don't entirely agree.  I get where you're coming from, and I 100% agree that
-> the more eyeballs on changes that may affect ABI, the better.
->
-> Where I have problems with the above is that it doesn't account for the nuances
-> of save/restore across different kernels.  The literal format of the serialized
-> data is the most obvious form of ABI, but it's absolutely possible to change ABI
-> without changing the data format.
->
-> E.g. say there's a flags field in some serialization structure, and flags X and Y
-> are mutually exclusive in current kernels.  If a future kernel relaxes that
-> restriction for whatever reason, then the effective ABI has been broken because
-> state created and saved on new kernels can't be restored on old kernels.  And
-> this is not a theoretical concern, KVM has run afoul of this a few times (though
-> thankfully very rarely).
+A PE with zero sections is malformed (a signed kernel/EFI image always has
+at least one), so rejecting it at parse is safe and closes the
+ZERO_SIZE_PTR write too. I will include that in v3 and cover it in the KUnit
+case.
 
-That's a bug, and should be fixed.
+Do you prefer it folded into this patch, or kept as a separate fix for the
+canon[0] write? Either way I will respin as v3 with the KUnit case once you
+let me know.
 
-I am talking here about intentional ABI changes. As I mentioned above we
-_can_ change the ABI, we just need to be careful about it.
+Thanks for the careful review, Ignat.
 
->
-> I don't think it's reasonable to expect LUO maintainers to gain enough expertise
-> in each subsystem to be able to ensure changes are forwards and backwards
-> compatible.  The only way I see LUO being successful in the long term is to get
-> subsystem maintainers/contributors to understand *and buy-in* to the LUO model
-> and rules, so that each subsystem can largely be self-sustatining.  I.e. setting
-> yourselves up as literal gatekeepers will help prevent blatant breakage, but it's
-> less likely to help guard against more subtle breakage, and in my experience,
-> subtle breakage is by far harder to detect and more painful to deal with.
-
-Outside of enforcing the ABI compatibility windows, I think this makes
-sense.
-
-In principle at least, though from my experience the maintainer appetite
-to care about live update varies. The feeling I've got from MM for
-example is more along the lines of "you break it, you buy it". Which is
-also a valid model IMO. The person who wrote the live update code for a
-subsystem is well equipped to understand these nuances.
-
->
-> Somewhat of a side topic: in my experience, using monotonically increasing version
-> numbers is a horrible way to enumerate features/content.  So for me, allowing
-> KVM's LUO ABI to change with a verson bump is probably a non-starter.  I.e.
-> whatever gets merged needs to be more future-proof than "we'll deal with it later".
-
-As I wrote above, the compatibility model for live update allows
-breaking ABI with version bumps. Userspace keeps working fine, it only
-restricts the set of kernels that you can go to. So the "we'll deal with
-it later" is not as harmful because our choices here are not permanent.
-
-Also, there is work underway to allow transitions between versions [0].
-
-But still, I am not opposed to a more flexible guest_memfd ABI. I think
-we can reserve some space for feature flags to let us add things in the
-future.
-
-[0] https://lore.kernel.org/kexec/20260731215224.831696-1-loganodell@google.com/
-
--- 
-Regards,
-Pratyush Yadav
+Fabrice
 
