@@ -4,88 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C9C0DC5CFC1
-	for <kexec@archiver.kernel.org>; Fri, 14 Aug 2026 22:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B6583C5AD5A
+	for <kexec@archiver.kernel.org>; Sat, 15 Aug 2026 03:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
 	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=waG0BdNRrEs0bEN8xb/gjEyGJq6U6CRZNm5O6yGz0BQ=; b=z/Fi/EjDrPur38VQOh6FbLfOD5
-	EFWShZJoS4K08US7YKNned0ru7CLq2uA+iPcCBE4W8QjZvTmB2svEsbVnd4zWQWKdp8hjVjp3dbZe
-	+SQexr7facWXs2kvLEiE1juvFzqKyeQkH//rUauRo5iEM2VWNutYn+7PNDpQrjip4y8cf2ioEbvSI
-	9aij4v7IfbDBr2l3uY9hTYfvrOaS0t04HC8OsUM5gMyJJsDBsbt4ycynV5BfQuUPKsrDmUZleLUkH
-	9QaIayvIlRkZvyOved+K5U/V5B3g3lV7OgXSDV4j7JxUEQ0VcjNWFzZRGJyNgaO80XSfdH2ROTmlj
-	dndU2SEA==;
+	bh=luVYJYWQOB0XY/tTpneISfB+TB1fZM2KMGuLqcIZEDI=; b=ee7on9YV6Et6shOth7QBg9f8eu
+	OJ4QX/f0MzC6C+DH0ISPSYZos7J+aD120V/5kiozVKDPKJmF86cyrWlVLdE+H71iciB+weFocJbpF
+	QLbjel7Di5izVeEO20BjJ1Mkyw2cu4UEHPPW9Sl+BKzoLilgDeFofbWyhyBhmUWHm0Al2c/WXrpgh
+	nFyVa+F4OD1TaviBI5KNrTHtbkH+1j4bwo9NW/zlYWDufI5awxaIifwHMlcsPzL1cRcOWm1OsE6ht
+	FU+BPs26iWodVCJHjmKHPaTrdYhtP9ZImX4/RhXUn2smsz5WuY66aFnS3fpDP+M4T26sXTMRQj62K
+	ZnwAATqA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wv0PS-00000003GqF-2A2v;
-	Fri, 14 Aug 2026 22:29:54 +0000
-Received: from mail-ej1-f43.google.com ([209.85.218.43])
+	id 1wv5Dw-00000003SJY-0n4k;
+	Sat, 15 Aug 2026 03:38:20 +0000
+Received: from mail-qt1-x82d.google.com ([2607:f8b0:4864:20::82d])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wv0PP-00000003Gpq-47qI
+	id 1wv5Dt-00000003SJA-4BIz
 	for kexec@lists.infradead.org;
-	Fri, 14 Aug 2026 22:29:53 +0000
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-c197e7e4e94so275416166b.2
-        for <kexec@lists.infradead.org>; Fri, 14 Aug 2026 15:29:51 -0700 (PDT)
+	Sat, 15 Aug 2026 03:38:19 +0000
+Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-51c15a5b265so408671cf.0
+        for <kexec@lists.infradead.org>; Fri, 14 Aug 2026 20:38:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786765095; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ltJ0CxmLDNBmSuIop0GtSZU8AFi79EWogeEXSAUFSYKzNEFH9qpbjltMVg28mBqmFn
+         GXYTG1hcIpUQhnBgyQgSmymO9fvOgfWRAdwXcbfobD8THQaK90Fh6YD3dbgEGWM+NAYJ
+         yaoiBY5hvh7NpMsF0OuXvMToUubFsvgs4CzRI8JUjFNDH0UVqz50cE8OQZ/ZM7fXC+lI
+         lfKiTUeCRWEe6PcddrXer/Xrg2vzbe9v/sA1Oplkb81kbm2KxJmHb6EkjPFnw7mxP/Kc
+         4lWJPUWq4enOJm8YpK1Wx7eibZq3qpWDcNRYSE018DQcJTcOX6auM5zWAkQRagZy8IXX
+         trkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=luVYJYWQOB0XY/tTpneISfB+TB1fZM2KMGuLqcIZEDI=;
+        fh=NSpVdpWZ8W53TMZxGAwql6/tF7XUUNmH5ZU8vxp5syQ=;
+        b=E0PHfEN4SZOz0Dei1PlOq3+3Ac1au9k0wpxN8S5CXEx52/j6Qd4NDapmzE0oeITXi/
+         TfftCd+Ox8bzqtGdZEOaCYc5G6HMU0GsK0jAMiu5/rxE2Hb2lz55B3AxKkUK/2DWyRSU
+         DBT4ApuMii/GdeYWCMmXs/vdKWsedQMqP2BFo9WmlDdMvMFgKlI2qtnmx6BL/DQWtFJR
+         wsKLhWJX4gs5NoJGv0mi4k4ws6yRlDQMBI8eRFq9Phc+0nG9gmarG4oAeFQ1ZFqfQOGp
+         ga2g8h5LBaOWXpw3/gCJYpsfgJ6lB8ByiFZm62Yzx8B1Or/l5lrBCQ5yWraEqiX0kha4
+         UJwQ==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786765095; x=1787369895; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=luVYJYWQOB0XY/tTpneISfB+TB1fZM2KMGuLqcIZEDI=;
+        b=lBK1PRQtB2ly1EpQgtVyCbD/ogZrgkDAcMnH/SHLsmVVtdAczTOoiOQ56mch2ro8k2
+         xRQ4HZH3eebYCMnmfBvkSHpcUAARZkHxkJF/BNWsjaqcaXYHAp75M7HwRe97pt3wMtw7
+         ILncc2MredWgH4x4D5Ex1x3l6+cgQLA9qX1W4jlrjmFfht7gMWBRVs1tEUo9et5LcXzP
+         LEQ58Q02K+u9Id22ehM0NqQa1v6G8d/+rw6tFKhkUHrIhBPrPGAZQXRPAxvWdDkRiBWe
+         eBo0UcD/0xW4SuWeHqtMEKWYKXRHiabqWOrAGUQKu88mCpE9RKVqOdOMqkAHoA0G/ev+
+         dyxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786746590; x=1787351390;
+        d=1e100.net; s=20251104; t=1786765095; x=1787369895;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=waG0BdNRrEs0bEN8xb/gjEyGJq6U6CRZNm5O6yGz0BQ=;
-        b=krvpdM3W+HZp5BS7GhqnTRZssi1Ge4W9/q+fSIFxvPAtb5TftfqfKv+canIS0NnmdC
-         DhLbwVA4RdzIjCPBAnF1ztuCgGAzF++1JsRKyVpxJTDIm9CZltf9SCQ4Yd25hvHbqjIt
-         1rP78UySH6ERhB3W0+JZEMks9tzmBpHldjX1KbKBHLFaZOWN2YMcBVaypGHi7wqgiYFK
-         1djcXqgBBq+bnrt5P/uEA+01lFbBpVPtXvlyo7kqF801rkXUELGtex7V+WcZW559cPzQ
-         0zH/XR4Egtctx7WZ2Bsv5rPvExckOpvOnJ29rD4fa53jJHwHeRK6/1N1JfQpBa5Dv6aI
-         avSQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqcFkzeWpKTy9BvVOBRWbUq/Tn0SgVhZE8rrOel1FLFxssInLj2+ITudBl5x/KQHf/o1sHpZA==@lists.infradead.org
-X-Gm-Message-State: AOJu0YxQ6djQwSE2P7zonQ61HHNr8owna5Ehu0SzW1TpaVm4he4KxlD2
-	KnUXhNycx77AuCUOpldU7VWrCQkyfIleHFj8+qhCGVnrmOY8G1ZCq4Vu1P4VBWiqdak=
-X-Gm-Gg: AR+sD132hXSy3pzfj8hTYC/VPAZ2d+TiAj0pt6DHyAe5QsyaDBFgS0xkvmAAQWH1JVH
-	HhygEuirnD4YNOIF4EdDBtz5j0cw+K9a4h4u0lNCXryXbqCfsDe+rnRDok+MRwcUyGwxYJwxOLX
-	z5ugaEdH+MTmuLqUo9B8yJU+r5dDZQyeqw0mzdSFN2f4S2pmaILoTyv1SP8pcMrOCCOQ4EsgXmt
-	G9lmmug5VbUNXHNb4VHCavFdarThXIEw0MMfMVhGiUoV4mz5ZT3JS/bKBGZJLxNqzoN476QeYi0
-	u/yPPdlh+/ICM/tqhckX97/mhTzzfWDE/dOdCbOE0Cnq4mUCwos0K13yYK3yAZ3e7l1x8PIgHgz
-	ftVWOZqfoGf+0LRlvblTWzM3crV2EVeiQ0HZktwIyLCGdOg9CwQjE4mMMRWyTVU3kf+0AcPyp6/
-	Y1GmvacAcsxXkBTNfi547HCwKIxEq0nPqzgxkrJxDOlZ/fMHm4ve572Vqn3FPTTwX16Rcv9UwD4
-	yx4cSSbNalpLb8+5ZI=
-X-Received: by 2002:a17:907:ea8c:b0:c20:7557:d986 with SMTP id a640c23a62f3a-c212a16486emr422890366b.13.1786746589719;
-        Fri, 14 Aug 2026 15:29:49 -0700 (PDT)
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a38c9ea8b6sm1287577a12.11.2026.08.14.15.29.46
-        for <kexec@lists.infradead.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Aug 2026 15:29:46 -0700 (PDT)
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-c15e592da74so213314966b.1
-        for <kexec@lists.infradead.org>; Fri, 14 Aug 2026 15:29:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RrlbmYQHtzlzeF5XDD0332OAfI6dIE5T1wj6iKvlwEOZAd1LIr1X5hcdsTHsn1qAPHBbtU2iw==@lists.infradead.org
-X-Received: by 2002:a17:907:d1b:b0:c20:3402:bd35 with SMTP id
- a640c23a62f3a-c212a15b29bmr481986966b.12.1786746585644; Fri, 14 Aug 2026
- 15:29:45 -0700 (PDT)
+        bh=luVYJYWQOB0XY/tTpneISfB+TB1fZM2KMGuLqcIZEDI=;
+        b=bqUCGH4JW38JInglgDDxQSIHAFsRZ08x0Qe8RYaQJ4Q6kfRG52lj7ZfkRe7wof9fiv
+         4+d0lxdtlyatok4doApTF4YDeKoOBa4i32pdG387/xTnQX2TGPVDRzRJA32jqeJBNHjp
+         qNxgNnYZOguq3+AiuMvLsNsEc7kq5usT+035VkFJVHeblz82j71ztgfgheUVjABBKpjC
+         FPhZiM50ZLTqd3CjHi6wcZzCEfcztKj6HUauB3PwD92RApNTL2MVzfLTkJhxtJm8GZeG
+         xnGxmpY9E6ec1IB+ehTlFRuxU2Og7OeeiFMYYp63YgBAVcfC1gVcan5+u0c4e/N2S+E9
+         onkQ==
+X-Forwarded-Encrypted: i=1; AHgh+RoAVwZ3ljJrd3OqnefM0N4NtZUl43FRuPU5Lq5zyiFVJf184dQIQfCG3W4Vn8xQp+BfSI2ZRg==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yz3fuWdG8FDnRN1BOy8J9N7C++Hf8nkupAta+aYk5vQ0knSEP9z
+	buJYXkHykLY03a/Opez2wfu/R5E4C0NeybcdmoPMqG+CyhdtXSCeTnCMO93kFoCQPZ75hHm38Gw
+	r/q5RVCrdvhbkI28EMPck3kJtNi7feUqSrXLksuEI
+X-Gm-Gg: AR+sD13TzfINUscBf8M0F96gCjlOSLwRsR+yONskOwyuzM8DiFynbiElxHhI6NuOb/i
+	/SngwKGEHtgjEm/sVMubnvvjyRIAuDPdkASfnqPmGFuN4IySkApAefZX2renlWMDJ0PlbEHgj6l
+	Dl/Qv2ZijK+KZ7dGJX5EE0PXgVdytqBX/xyhyLTswKLqS+iieTvjljje29pNRO5kMZsaaZPcZP6
+	Q/3f8wOZEsc1OxBjY34Dpse4fFhmY0qtr05moENQbMCgx0oCgKDXwqawfE7PiG01UTV/oPK7tfR
+	a0WCaTat1XEaUWsDgly6rw1J+lD2vhNRm9GzEBUij7Q=
+X-Received: by 2002:a05:622a:578e:b0:50f:af60:3496 with SMTP id
+ d75a77b69052e-52d86192a1emr30633361cf.1.1786765094873; Fri, 14 Aug 2026
+ 20:38:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAOs+rJXZ++7_o4L6LuT567FjdYsa=6NEki3qcFSRX+ehJxpoVg@mail.gmail.com>
- <20260814220631.1101496-1-fabrice.derepas@canonical.com>
-In-Reply-To: <20260814220631.1101496-1-fabrice.derepas@canonical.com>
-From: Ignat Korchagin <ignat@linux.win>
-Date: Fri, 14 Aug 2026 23:29:33 +0100
-X-Gmail-Original-Message-ID: <CAOs+rJW1QymCXkr8-mU4kwMFvznnC98CXVvZMRjqpXwjJutdtA@mail.gmail.com>
-X-Gm-Features: AcwNN1Xw9h6GNj0ibMyw5rWypoAatSz6xjvorf8gf94rjiZOoVeFiOOzG0DX_sA
-Message-ID: <CAOs+rJW1QymCXkr8-mU4kwMFvznnC98CXVvZMRjqpXwjJutdtA@mail.gmail.com>
-Subject: Re: [PATCH v2] crypto: asymmetric_keys - bound PE section ranges in pefile_parse_binary
-To: Fabrice Derepas <fabrice.derepas@canonical.com>
-Cc: David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
-	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20260803113944.3694290-1-praan@google.com> <20260803113944.3694290-2-praan@google.com>
+ <2vxzqzk338y2.fsf@kernel.org> <an2skkjrNXBTFagK@kernel.org>
+In-Reply-To: <an2skkjrNXBTFagK@kernel.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Fri, 14 Aug 2026 20:38:03 -0700
+X-Gm-Features: AcwNN1XrGQyskIqu-lIjMZBTlBvDbp-7AMsoC0-TI6TqDyvNpYGgAf_q-RSalo8
+Message-ID: <CAJuCfpF-A1DeRmg1i7rNyTaFT3_0H+Rqsy6yQRUct4Z79xGtHw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] kho: Introduce a helper to init high order pages
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>, Pranjal Shrivastava <praan@google.com>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Alexander Graf <graf@amazon.com>, 
+	Samiullah Khawaja <skhawaja@google.com>, David Matlack <dmatlack@google.com>, kexec@lists.infradead.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260814_152952_052091_D4C5EE23 
-X-CRM114-Status: GOOD (  30.71  )
+X-CRM114-CacheID: sfid-20260814_203818_082601_66FECEEE 
+X-CRM114-Status: GOOD (  29.34  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,127 +120,112 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Aug 14, 2026 at 11:06=E2=80=AFPM Fabrice Derepas
-<fabrice.derepas@canonical.com> wrote:
+On Thu, Aug 13, 2026 at 4:38=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
+te:
 >
-> pefile_digest_pe_contents() hashes each PE section with
->
->         crypto_shash_update(desc, pebuf + ctx->secs[i].data_addr,
->                             ctx->secs[i].raw_data_size);
->
-> where both data_addr and raw_data_size come straight from the untrusted P=
-E
-> section table. pefile_parse_binary() bounds the section table's location
-> but not the sections' data ranges, and nothing else on the path checks
-> them. A section with data_addr and/or raw_data_size pointing outside the
-> image therefore reads past the pelen-byte buffer (CWE-125); a large
-> raw_data_size makes it read far past the end and fault.
->
-> Commit f7dd32c5179d ("crypto: asymmetric_keys - fix OOB read in
-> pefile_digest_pe_contents") recently fixed a sibling underflow in this sa=
-me
-> function (the hashed_bytes + certs_size trailer computation); the
-> per-section read was left unchecked.
->
-> The digest loop runs only after verify_pkcs7_signature() succeeds, so it
-> requires a validly signed image -- but not an attacker signing key. The
-> PKCS#7 signature covers the SpcIndirectDataContent (a self-contained dige=
-st
-> in the certificate table), not the live section bytes, so tampering
-> data_addr in a publicly available signed image leaves the signature valid
-> at that step while the out-of-bounds read fires when the digest is
-> recomputed. It is thus reachable by a local CAP_SYS_BOOT user via
-> kexec_file_load() with a tampered signed image; the access is an
-> out-of-bounds read only, but a large raw_data_size faults, which is a
-> denial of service when panic_on_oops is set.
->
-> Validate each section's data range against the image when the section
-> table is parsed, reusing the existing chkaddr() bounds macro. A malformed
-> range is rejected with -ELIBBAD at parse time -- before signature
-> verification and before any hashing -- so a bad image is never digested.
->
-> Fixes: af316fc442ef ("pefile: Digest the PE binary and compare to the PKC=
-S#7 data")
-> Assisted-by: copilot-cli:claude-opus-4-6 frama-c
-> Signed-off-by: Fabrice Derepas <fabrice.derepas@canonical.com>
-> ---
-> v2:
->   - move the check into pefile_parse_binary() and reuse chkaddr(), per
->     Ignat Korchagin's review [1], so a malformed image is rejected at par=
-se
->     time -- before signature verification and before hashing. v1 put the
->     check in the pefile_digest_pe_contents() section loop.
->   - because chkaddr() runs on every section, v2 also validates zero-size
->     (raw_data_size =3D=3D 0) sections, which v1 and the shipping digest l=
-oop
->     skip. This only rejects a zero-size section whose data_addr points pa=
-st
->     the image -- malformed input that real PEs never produce (.bss uses
->     PointerToRawData =3D 0, which passes) -- and matches the "don't start=
- on
->     malformed data" intent.
->
-> [1] https://lore.kernel.org/all/CAOs+rJXZ++7_o4L6LuT567FjdYsa=3D6NEki3qcF=
-SRX+ehJxpoVg@mail.gmail.com/
->
-> Tested under KASAN (CONFIG_KASAN_GENERIC, x86-64) with a KUnit case that
-> calls verify_pefile_signature() on real images: a signed-then-tampered
+> (added Suren)
 
-Same as your other patch - any reason not to include this KUnit case?
+Thanks!
 
-> image (a section's data_addr set to pelen) is now rejected with -ELIBBAD =
-in
-> pefile_parse_binary(), before verify_pkcs7_signature() and with no KASAN
-> splat, while an untampered signed image passes parse and reaches the
-> signature check (-ENOKEY, as the test key is not trusted in this build).
-> v1's KASAN repro -- a crafted context taken straight into the digest loop=
- --
-> showed the slab-out-of-bounds this prevents.
 >
->  crypto/asymmetric_keys/verify_pefile.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/crypto/asymmetric_keys/verify_pefile.c b/crypto/asymmetric_k=
-eys/verify_pefile.c
-> index cec99db14..c447597f7 100644
-> --- a/crypto/asymmetric_keys/verify_pefile.c
-> +++ b/crypto/asymmetric_keys/verify_pefile.c
-> @@ -30,6 +30,7 @@ static int pefile_parse_binary(const void *pebuf, unsig=
-ned int pelen,
->         const struct data_dirent *dde;
->         const struct section_header *sec;
->         size_t cursor, datalen =3D pelen;
-> +       unsigned int loop;
->
->         kenter("");
->
-> @@ -112,6 +113,14 @@ static int pefile_parse_binary(const void *pebuf, un=
-signed int pelen,
->                 return -ELIBBAD;
->         ctx->secs =3D pebuf + cursor;
->
-> +       /* pefile_digest_pe_contents() hashes each section's raw data usi=
-ng
-> +        * these fields directly; reject a section whose data range falls
-> +        * outside the image so hashing never reads past the buffer.
-> +        */
-> +       for (loop =3D 0; loop < ctx->n_sections; loop++)
+> On Wed, Aug 12, 2026 at 12:54:45PM +0200, Pratyush Yadav wrote:
+> > On Mon, Aug 03 2026, Pranjal Shrivastava wrote:
+> >
+> > > The current KHO restoration logic assumes all multi-page blocks are
+> > > split into independent 4KB pages. Break out a helper to prepare for
+> > > supporting high-order non-compound pages.
+> > >
+> > > Extract kho_init_high_order_page() to handle the refcount pattern
+> > > where only the head page is refcounted. Use the helper for folio
+> > > restoration that requires a similar refcount logic.
+> > >
+> > > Reviewed-by: Samiullah Khawaja <skhawaja@google.com>
+> > > Signed-off-by: Pranjal Shrivastava <praan@google.com>
+> > > ---
+> > >  kernel/liveupdate/kexec_handover.c | 29 +++++++++++++++++++---------=
+-
+> > >  1 file changed, 19 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/k=
+exec_handover.c
+> > > index 4834a809985a..e836efd98795 100644
+> > > --- a/kernel/liveupdate/kexec_handover.c
+> > > +++ b/kernel/liveupdate/kexec_handover.c
+> > > @@ -357,6 +357,24 @@ int kho_radix_walk_tree(struct kho_radix_tree *t=
+ree,
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(kho_radix_walk_tree);
+> > >
+> > > +/* For physically contiguous pages. */
+> > > +static void kho_init_high_order_page(struct page *page, unsigned int=
+ order)
+> > > +{
+> > > +   unsigned long nr_pages =3D (1UL << order);
+> > > +
+> > > +   /* Head page gets refcount of 1. */
+> > > +   set_page_count(page, 1);
+> > > +   /* Clear head page's codetag to avoid accounting mismatch. */
+> > > +   clear_page_tag_ref(page);
+> > > +
+> > > +   /* For high-order blocks, tail pages get a page count of zero. */
+> > > +   for (unsigned long i =3D 1; i < nr_pages; i++) {
+> > > +           set_page_count(page + i, 0);
+> > > +           /* Clear each page's codetag to avoid accounting mismatch=
+. */
+> > > +           clear_page_tag_ref(page + i);
+> > > +   }
+> >
+> > That's sneaky...
+> >
+> > The patch _almost_ looks like pure code movement, but then adds this
+> > little change. I'm not saying this is intentionally sneaky or anything
+> > of the sort, but these kind of things are easy to miss during code
+> > movement and should get a patch of their own or at least be called out
+> > in the commit message.
+> >
+> > I don't know how page tags work, but IIRC when the change was originall=
+y
+> > added by Ran, he said that we don't need to clear the tag for tail
+> > pages. That held true for folios, does it not hold true for non-compoun=
+d
+> > high-order pages?
 
-Looking at the code again: seems ctx->n_sections is user-controlled.
-What happens if it is 0?
+Yeah, only the head page is tagged with number of pages of (1 <<
+order), so the rest of the pages don't have tags to be cleared.
 
-> +               chkaddr(0, ctx->secs[loop].data_addr,
-> +                       ctx->secs[loop].raw_data_size);
-> +
->         return 0;
->  }
+> >
+> > > +}
+> > > +
+> > >  /* For physically contiguous 0-order pages. */
+> > >  static void kho_init_pages(struct page *page, unsigned long nr_pages=
+)
+> > >  {
+> > > @@ -369,16 +387,7 @@ static void kho_init_pages(struct page *page, un=
+signed long nr_pages)
+> > >
+> > >  static void kho_init_folio(struct page *page, unsigned int order)
+> > >  {
+> > > -   unsigned long nr_pages =3D (1 << order);
+> > > -
+> > > -   /* Head page gets refcount of 1. */
+> > > -   set_page_count(page, 1);
+> > > -   /* Clear head page's codetag to avoid accounting mismatch. */
+> > > -   clear_page_tag_ref(page);
+> > > -
+> > > -   /* For higher order folios, tail pages get a page count of zero. =
+*/
+> > > -   for (unsigned long i =3D 1; i < nr_pages; i++)
+> > > -           set_page_count(page + i, 0);
+> > > +   kho_init_high_order_page(page, order);
+> > >
+> > >     if (order > 0)
+> > >             prep_compound_page(page, order);
+> >
+> > --
+> > Regards,
+> > Pratyush Yadav
 >
->
-> base-commit: d58772d8520c7ef247c4b95c9bd76d3a25da9ff5
 > --
-> 2.53.0
->
->
-
-Ignat
+> Sincerely yours,
+> Mike.
 
