@@ -4,72 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AFED1C5DF7A
-	for <kexec@archiver.kernel.org>; Mon, 17 Aug 2026 10:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 433ABC5DF74
+	for <kexec@archiver.kernel.org>; Mon, 17 Aug 2026 14:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zvCm+OYu+HXm7z1snfmD5E2E44f/n02MTod4Pvfjj44=; b=HxQqyR26sj8Uc4aIALa7ZtS4Ql
-	QHXgcLbpRI8i3u21JA9q5E47APSLQXhqO2Tnj9zEcMOrFm8PZ1pSHQMyA5HwcCjty/rhuZetRuqfM
-	LaeOSQPIvVlLP+MjY+8iZTJ/da9inmhAhV4fql5sbmCa2BPesbMCOVRL+sloA5vTx6QTytpSK9jHF
-	DecYBR5V6gOpifdjoBrah8DUA66lYE59eqDG6QtGvNPlf4JzX/jBnG3AJbOhAO+fWQQ91JpZAE8I7
-	ZoastUDG8a79K9aTio2dzgpScimIaM9u2qfUu+cRhe+lpjjomKM3izSYdQMGIkHTAaFGVrIEcJM/S
-	ZFSF1EQg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=xbnAp7y/AgCt9+7CBSjoILDuat4y2Kbyd9OVnJGDiZs=; b=OqkUXuReZuV9efVfOhkKwLpXfI
+	ctkq+FXjRn7UfUbcGU0j9sy9i/qX3RcPoRNFrooD+h9kBXivrnJ+EBSytzM/L9NMJSidGhncxJus0
+	7HUsX212JO5w9PGXWFZ9pwMCmM4d3c3PpvpwWv/N2nm4NDSgxmYIYhUlk9+615xp1QsMYON+N9Ibz
+	rm2yQbIxcjIcBgVx41xS35VIUd/McBvFTvBaoLTUJqpoNryE2O3zpBi19hLUkMfK0P/SvV7wiO7lL
+	pH4AK0Kr6H4XtQQOK49GsuvDzNO3fYX390mUU0r3KrjTG0wAVjy4YQivXSqhU1Rm0sff9CPAq5oG+
+	fM1AwMrg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wvuqj-00000005xNI-2lWX;
-	Mon, 17 Aug 2026 10:45:49 +0000
-Received: from canpmsgout02.his.huawei.com ([113.46.200.217])
+	id 1wvyT1-00000006KGE-37hn;
+	Mon, 17 Aug 2026 14:37:35 +0000
+Received: from mail-pl1-x646.google.com ([2607:f8b0:4864:20::646])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wvuqf-00000005xMZ-1y2j;
-	Mon, 17 Aug 2026 10:45:47 +0000
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=zvCm+OYu+HXm7z1snfmD5E2E44f/n02MTod4Pvfjj44=;
-	b=BMVVaj1TlTcvAO97yhiftu6cLaZm1WU583Ib9pBTHVzdqZyUhA0lYazOeZxhhDxb2qvD7vCVQ
-	FzFrvcY0iU/2/lv/BMEdCkUqEhEF3hPQw/wIcsO1DO51XouQIxSPJ8yJrmpLCUFIcKlxBG6DMMB
-	yp9zBBwo1ZikZVrb5doRDS0=
-Received: from mail.maildlp.com (unknown [172.19.162.144])
-	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4hNq3Z6cxqzcb0T;
-	Mon, 17 Aug 2026 18:35:22 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 61E8D40538;
-	Mon, 17 Aug 2026 18:45:39 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 17 Aug 2026 18:45:37 +0800
-Message-ID: <df1317a2-68f1-4eb8-9fea-952349f672cb@huawei.com>
-Date: Mon, 17 Aug 2026 18:45:36 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] arm64: crash: Add crash hotplug support
-To: Catalin Marinas <catalin.marinas@arm.com>
-CC: <will@kernel.org>, <akpm@linux-foundation.org>, <baoquan.he@linux.dev>,
-	<rppt@kernel.org>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
-	<thuth@redhat.com>, <mark.rutland@arm.com>, <jic23@kernel.org>,
-	<james.morse@arm.com>, <ardb@kernel.org>, <leitao@debian.org>,
-	<yeoreum.yun@arm.com>, <sourabhjain@linux.ibm.com>, <robh@kernel.org>,
-	<kees@kernel.org>, <coxu@redhat.com>, <makb@juniper.net>, <piliu@redhat.com>,
-	<graf@amazon.com>, <ebiggers@kernel.org>, <jbouron@amazon.com>,
-	<bgwin@google.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>
-References: <20260729031235.2840255-1-ruanjinjie@huawei.com>
- <20260729031235.2840255-6-ruanjinjie@huawei.com> <an3rUZ7rd1mQH0Gz@arm.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <an3rUZ7rd1mQH0Gz@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.109.254]
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+	id 1wvySy-00000006KEb-2sAZ
+	for kexec@lists.infradead.org;
+	Mon, 17 Aug 2026 14:37:33 +0000
+Received: by mail-pl1-x646.google.com with SMTP id d9443c01a7336-2cfc52ddc55so55348325ad.3
+        for <kexec@lists.infradead.org>; Mon, 17 Aug 2026 07:37:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786977451; x=1787582251; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=xbnAp7y/AgCt9+7CBSjoILDuat4y2Kbyd9OVnJGDiZs=;
+        b=jSascIImu0k2VsG5KzPClvKs2a/e7V/Rsg+s7e1POJ/6BaEA10t06QKi0bJi3QY1IE
+         AHzC2XLtZtF/1YJJFSIDp4KxiIrbPMj5VMEd4JnWgfrRVgMG2azMhjiP1Sb04+wE7cei
+         /V8i8+8XdWnMkRYlVgMuhtTNftP2vOqrds3WOolPqDosP0mdblHpfqPrewGgZR3Bqyf3
+         ILkYlTBA7LfLyjar2cmPAzQ9Hn1JPc5G3wo64eHF1zutyOZrCPa4+4HAVmiFn68Gf2V9
+         c000tRkWhoPC+RE8zD5Q+ke3luxNnKW9wpu0lKAFj9/mphxivTa79ZLpkuNsVun4WVmd
+         7/zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786977451; x=1787582251;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=xbnAp7y/AgCt9+7CBSjoILDuat4y2Kbyd9OVnJGDiZs=;
+        b=KvWOIpoFgECn0s0T80JBFbNXnO2QcR5Z17EruKRNld46Umtp4HobXZMtqyTZ+DMFgJ
+         TtTluFIwyk+Z5Ym4qcHyVOUpl5GLOyS+AoO4O1QhtGq762ioMHlA574Uf4c2z/a/c9DJ
+         8x02kOc6E/Zt5CxctytFVc0WTZxwSoO8L2uMm310YdzgWik6XVRPR8y3y+e4s+OVzyxU
+         U0yy+QCOP+WliWIydYtL8XmW6gJqttB2W4KFgUam2m/NF670zCQ5PWlUezob6rt6swYL
+         rloySNRYPZyyRf4Lehu0OVEU7FkItt4VjA4JCLIJ0z4tEzgG7UlI483TnFksLzmJHjcp
+         huvQ==
+X-Forwarded-Encrypted: i=1; AHgh+RpmrCwALtsHCMHT34fGJdtV2NGGWvBY1dingmydEEWNVkCA229LU5r8TJLzzcPOrwFb95ojIg==@lists.infradead.org
+X-Gm-Message-State: AOJu0YzEBP1CYWvUsbGp8KQCqDFEppW8CEkA3ysoVmD9Bsvwjai2FmC3
+	82hwFenvonQrUPayz9/rC6HvfB5/1e4s1RJ5qQLDwjFJlAOKnZWUxCT0yaxmwxC7rYIlzAqjPOi
+	GXJ9DWA==
+X-Received: from plbmo3.prod.google.com ([2002:a17:903:a83:b0:2c7:702a:36a4])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:b0b:b0:2cf:9347:f445
+ with SMTP id d9443c01a7336-2d3b0c7ae46mr283430775ad.10.1786977451095; Mon, 17
+ Aug 2026 07:37:31 -0700 (PDT)
+Date: Mon, 17 Aug 2026 07:37:30 -0700
+In-Reply-To: <2vxzqzjz1x5f.fsf@kernel.org>
+Mime-Version: 1.0
+References: <20260728121138.1103610-1-tarunsahu@google.com>
+ <20260728121138.1103610-6-tarunsahu@google.com> <anphyjFv3FhF61iB@google.com>
+ <2vxzpkzo51wg.fsf@kernel.org> <anssOQFNZ2LfihbU@google.com>
+ <2vxzik5f311e.fsf@kernel.org> <anyObKiZIhfok5mk@google.com> <2vxzqzjz1x5f.fsf@kernel.org>
+Message-ID: <aoMcqp0gr06YXAPU@google.com>
+Subject: Re: [PATCH v4 05/11] KVM: LUO: Support VM preservation across live updates
+From: Sean Christopherson <seanjc@google.com>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Tarun Sahu <tarunsahu@google.com>, ackerleytng@google.com, fuad.tabba@linux.dev, 
+	Andrew Morton <akpm@linux-foundation.org>, dmatlack@google.com, 
+	Shuah Khan <skhan@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, david@redhat.com, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, sagis@google.com, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	linux-kselftest@vger.kernel.org, andre.przywara@arm.com, michael.roth@amd.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, will@kernel.org, 
+	vannapurve@google.com, maz@kernel.org, fvdl@google.com, kvm@vger.kernel.org, 
+	oliver.upton@linux.dev, kvmarm@lists.linux.dev, alexandru.elisei@arm.com, 
+	skhawaja@google.com, aneesh.kumar@kernel.org, linux-doc@vger.kernel.org, 
+	David Hildenbrand <david@kernel.org>, yan.y.zhao@intel.com, kexec@lists.infradead.org, 
+	suzuki.poulose@arm.com
+Content-Type: text/plain; charset="us-ascii"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260817_034546_234635_4A7A3315 
-X-CRM114-Status: GOOD (  19.33  )
+X-CRM114-CacheID: sfid-20260817_073732_727453_74F3075B 
+X-CRM114-Status: GOOD (  23.30  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,106 +102,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-
-在 2026/8/14 0:05, Catalin Marinas 写道:
-> Hi Jinjie,
+On Sat, Aug 15, 2026, Pratyush Yadav wrote:
+> On Wed, Aug 12 2026, Sean Christopherson wrote:
+> > On Wed, Aug 12, 2026, Pratyush Yadav wrote:
+> >> This is ABI between kernels. It needs to be stable-ish so you can move
+> >> from one kernel version to another. At the same time, unlike userspace
+> >> ABI, it can change.
+> >
+> > Uh, yeah, so KVM has been managing such immutable ABI for practically its entire
+> > existence.  KVM's save/restore uAPI has exactly what you're describing: serialization
+> > ABI that needs to be backwards and forwards compatible between different kernels
+> > in order to support both upgrade and rollback scenarios via live migration.
 > 
-> On Wed, Jul 29, 2026 at 11:12:35AM +0800, Jinjie Ruan wrote:
->> +/**
->> + * update_crash_elfcorehdr() - Recreate the elfcorehdr and replace it with old
->> + *			       elfcorehdr in the kexec segment array.
->> + * @image: the active struct kimage
->> + */
->> +static void update_crash_elfcorehdr(struct kimage *image)
->> +{
->> +	void *elfbuf = NULL, *old_elfcorehdr;
->> +	unsigned long mem, memsz;
->> +	unsigned long elfsz = 0;
->> +
->> +	/*
->> +	 * Create the new elfcorehdr reflecting the changes to CPU and/or
->> +	 * memory resources.
->> +	 */
->> +	if (crash_prepare_headers(true, &elfbuf, &elfsz, NULL)) {
->> +		pr_err("unable to create new elfcorehdr");
->> +		goto out;
->> +	}
->> +
->> +	/*
->> +	 * Obtain address and size of the elfcorehdr segment, and
->> +	 * check it against the new elfcorehdr buffer.
->> +	 */
->> +	mem = image->segment[image->elfcorehdr_index].mem;
->> +	memsz = image->segment[image->elfcorehdr_index].memsz;
->> +	if (elfsz > memsz) {
->> +		pr_err("update elfcorehdr elfsz %lu > memsz %lu",
->> +			elfsz, memsz);
->> +		goto out;
->> +	}
->> +
->> +	/*
->> +	 * Copy new elfcorehdr over the old elfcorehdr at destination.
->> +	 */
->> +	old_elfcorehdr = phys_to_virt(mem);
->> +
->> +	/*
->> +	 * Temporarily invalidate the crash image while the
->> +	 * elfcorehdr is updated.
->> +	 */
->> +	xchg(&kexec_crash_image, NULL);
->> +	memcpy(old_elfcorehdr, elfbuf, elfsz);
->> +	dcache_clean_inval_poc((unsigned long)old_elfcorehdr,
->> +			       (unsigned long)(old_elfcorehdr + elfsz));
->> +	xchg(&kexec_crash_image, image);
->> +	pr_debug("updated elfcorehdr\n");
->> +
->> +out:
->> +	vfree(elfbuf);
->> +}
->> +
->> +/**
->> + * arch_crash_handle_hotplug_event() - Handle hotplug elfcorehdr changes
->> + * @image: a pointer to kexec_crash_image
->> + * @arg: struct memory_notify handler for memory hotplug case and
->> + *       NULL for CPU hotplug case.
->> + *
->> + * Update the kdump image based on the type of hotplug event:
->> + * - CPU add and remove: No action is needed.
->> + * - Memory add/remove: Update the elfcorehdr to reflect the current memory layout.
->> + *
->> + * Prepare the new elfcorehdr and replace the existing elfcorehdr.
->> + */
->> +void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
->> +{
->> +	if (image->hp_action == KEXEC_CRASH_HP_ADD_CPU ||
->> +	    image->hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
->> +		return;
->> +
->> +	update_crash_elfcorehdr(image);
->> +}
+> I think there is a slight difference between KVM's save/resture uAPI and
+> live update's ABI. With KVM's uAPI, you need to maintain strict
+> backwards compatibility because userspace reads what you output. So if
+> you change the layout, userspace will interpret it wrong and might
+> break.
 > 
-> Looking at powerpc, they pass the arg down to update_crash_elfcorehdr()
-> to handle the memory hot-unplug case. It looks like the notifier is
-> called before the memblock_remove(), so the update above will still
-> count the memory being removed.
-
-Hi Catalin,
-
-After delving into the code flow, I believe you are correct.
-
-We need to manually remove the hot-unplug memory here, just like in the
-PowerPC case. Will update the code sooner.
-
+> With live update, the ABI never gets to userspace. It is used to talk
+> between kernels directly. So if you do break that, your userspace keeps
+> working fine, you just might not be able to live update to the
+> incompatible kernel.
 > 
-> There are a few Sashiko comments as well, though some might be about
-> existing issues (it would be nice to have them fixed ;)).
+> So with live update, we don't need to keep backwards compatibility in
+> the ABI forever. Of course, it is good to minimize changes, but we have
+> more freedom to change it.
 
-Thank you! I will take a close look and try to fix them later.
+Ah.  So this is the heart of the disconnect.  I very strongly disagree with the
+statement that live update doesn't need to support backwards compatibility.  I
+can totally believe that the folks working on live update are ok breaking backwards
+compatibility because their use cases are "fine" with such breakage.  And I can
+also believe live update as an upstream kernel feature being developed by those
+same folks is also ok with breaking backwards compatibility.
 
-Best regards,
-Jinjie
+But with my upstream KVM maintainer hat on, I am not ok with that.  I did not agree
+to support a world where KVM is allowed to break backwards compatibility, so long
+as it's done "carefully" or whatever.  If y'all want to deal with the resulting
+complexity, that's fine by me, but you'll be doing it without KVM.
 
-> 
+I totally understand that exploratory work and initial development is best done
+in private and/or in a small working groups.  But decisions that will significantly
+impact multiple subsystems need to be made *with* those subystems.  I mean,
+obviously it's possible to make a decision in a small group and then "publish"
+the result later, but then as is happening here, the community and subsystem
+maintainers like me may refuse to play ball if they disagree.
 
+To be very clear, for any KVM live update support that doesn't guarantee backwards
+compatibility (allowing that bugs happen), a very firm:
+
+NAK
 
