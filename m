@@ -4,58 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0763FC5B572
-	for <kexec@archiver.kernel.org>; Mon, 17 Aug 2026 05:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 52A19C5CFC1
+	for <kexec@archiver.kernel.org>; Mon, 17 Aug 2026 07:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=49GLJIYRy4vZ3cG5rYKQJNFQilEnE70SWvjy9to5mKY=; b=mSfsoJO0QJDj+UJFSbklnwXb+0
-	GTWCqxPc8GNKGla+pAJyXSRpvcqpXQpvzkG2Mn4T1/45BSnYENBirFk997IhNo/qtOfXI8DKkRXAO
-	4miBFcHhrrxyiMM8lPHL2S5OEKmdBHrPjXm6ePa4EbPSMsd2zxXHrW1kJ5iATfUGIafvRq5Dry7dc
-	2jYB/BR2xunj6KS6LBTjJPB1qxfuNxevdMnRWtAn+/myDeP4zt6KqB46o7mV9TzMfA7jS1a+FMJyq
-	KTaFFP4W2VLrrG67BvqSl5ZNHOQAWEDXa9HuaNcshIylCAzW2PfwZuZHkEojSccoNzuIt9tgWhEbq
-	ge5n/rCA==;
+	bh=EH4tDs/d5HwbhZaxavUhyBAHCbild7wYmuQeNMNmXvE=; b=qLz1ZsNf1FF8cqXZrkcopwSqwX
+	gPEx6tlppxW2KETvYA+75BnG0YGInELmtYvFRRdVvtj0g7nrCwCp+xYTkwMfKf94WefmasAXbtS/J
+	4Td1aNb2u8Ltpby8FbBprkG1oozvYosMX9wTWgQJ8zL9YLwZdXvRjeDAJiQ2ITDDlXDEs5F2R00tj
+	22zLxja4Cw4VAe2TPwo32ES1CpWNDD0DWlI5X7Gm7r8lTmxvqBy+h+jQp3RE4bxMUVad/huvv23WA
+	GNAAjEFBjUu8Q9sIsJR8f6+urtEhRTq/CfPVZtgvtwHBcasv1aJmOgVLLKA/SdANLSylUf5l5PVKJ
+	Brj8V1LA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wvqG7-00000005Ruw-1cI2;
-	Mon, 17 Aug 2026 05:51:43 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wvrw2-00000005Zng-1Az7;
+	Mon, 17 Aug 2026 07:39:06 +0000
+Received: from out-117.mta0.migadu.com ([2001:41d0:1004:224b::75] helo=mta0.migadu.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wvqG6-00000005Ruq-31oo
+	id 1wvrvy-00000005Zl0-2kmV
 	for kexec@lists.infradead.org;
-	Mon, 17 Aug 2026 05:51:42 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id C47F943990;
-	Mon, 17 Aug 2026 05:51:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF9EC1F000E9;
-	Mon, 17 Aug 2026 05:51:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786945901;
-	bh=49GLJIYRy4vZ3cG5rYKQJNFQilEnE70SWvjy9to5mKY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=E2gKdWFh05E+WTUIOy6fVlmJoZ3AvzL3kKF6IpS67NmfM0FfdNGCl0v01yMKbnGC5
-	 gdYwLQP5f3+qFGLh37gfG4MPQtnrkZ/Ly5TzzUuhdbxJEpKQzEOewIjVencSyP5sWg
-	 qePR8aIdDUEXfbYtP2RFGB7IRpDpKJR3GnykUJ5p1yZFfcoxDTNJNy80cVP7Zr10ZY
-	 o6S9F93N96hliFB9V0GwS0CS0qP5agd9pNj/qum8Hcal7Syo8NGbz0OdNbKfOqpKWA
-	 zjROHDvoZF+n5TBVvlruFBx7pLDYILQsS0OoalotCdVlBLjku764siAifLFJzQ/S6M
-	 X8q/9FNobYH5A==
-Date: Mon, 17 Aug 2026 08:51:34 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Kiarash Azarnia <kiarash.azarnia@gmail.com>
-Cc: pasha.tatashin@soleen.com, pratyush@kernel.org, graf@amazon.com,
-	kexec@lists.infradead.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] kho: fix signed shift UB in
- kho_preserved_memory_reserve()
-Message-ID: <aoKhZqkTNUJGpOEf@kernel.org>
-References: <20260816090038.3117276-1-kiarash.azarnia@gmail.com>
+	Mon, 17 Aug 2026 07:39:04 +0000
+X-Envelope-To: kexec@lists.infradead.org
+DKIM-Signature: a=rsa-sha256; bh=4YGgPm1wRAd8vr5pINF7lmz4ylld4f9QdvgoaXgstqU=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1786952337; v=1; x=1787557137;
+ b=fAvcBpgWs9Qhdx7zHtKnZUXvfc/e05DuB4q15Xv1X+jwe+C46Lm3EPm4tKh4HbiLhY0WPHZz
+ fCRoZh0TZ8AIvHNOq9yFFoW01YnLM0RpKwrFqMBgf9Q4bAB8p76tY9E9jjwbc/H6patvuooZwSY
+ X96L28T3cpxqUz2paePTR0c0=
+X-Envelope-To: kexec@lists.infradead.org
+Received: from localhost (3.112.29.171)
+	by mta12.migadu.com with ESMTPS id 17e9312474d067d5;
+	Mon, 17 Aug 2026 07:38:57 +0000
+X-Migadu-Flow: FLOW_OUT
+Date: Mon, 17 Aug 2026 15:38:53 +0800
+From: Baoquan He <baoquan.he@linux.dev>
+To: Lukas Wunner <lukas@wunner.de>,
+	Jan Sebastian =?iso-8859-1?Q?G=F6tte?= <contact@jaseg.de>
+Cc: Jan Sebastian =?iso-8859-1?Q?G=F6tte?= <linux@jaseg.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Dave Young <ruirui.yang@linux.dev>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, David Howells <dhowells@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Ignat Korchagin <ignat@linux.win>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, Eric Biggers <ebiggers@kernel.org>,
+	"Theodore Y. Ts'o" <tytso@mit.edu>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>,
+	Benjamin Marzinski <bmarzins@redhat.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mm@kvack.org, keyrings@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-nvme@lists.infradead.org,
+	linux-nfs@vger.kernel.org, linux-integrity@vger.kernel.org,
+	linux-afs@lists.infradead.org, netdev@vger.kernel.org,
+	linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	dm-devel@lists.linux.dev
+Subject: Re: [PATCH v2 01/13] kexec: add CRASH_WIPE_SECRETS to wipe secrets
+ before kdump
+Message-ID: <aoK6jXA-tF9qfKOZ@MiWiFi-R3L-srv>
+References: <20260811-crash-zeroize-rework-v2-0-9561d13c2340@jaseg.de>
+ <20260811-crash-zeroize-rework-v2-1-9561d13c2340@jaseg.de>
+ <anw9ILJiO5xIjP4f@MiWiFi-R3L-srv>
+ <9765f7ea-36bb-4c7b-a19b-7facec97b762@jaseg.de>
+ <aoGpcczo5GkBsPwt@wunner.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20260816090038.3117276-1-kiarash.azarnia@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aoGpcczo5GkBsPwt@wunner.de>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260817_003902_833708_8F899D0F 
+X-CRM114-Status: GOOD (  17.17  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,61 +114,26 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, Aug 16, 2026 at 12:30:37PM +0330, Kiarash Azarnia wrote:
-> kho_preserved_memory_reserve() computes the size of a preserved
-> reservation as:
-> 
-> 	sz = 1 << (order + PAGE_SHIFT);
-> 
-> `1` is a signed int, so the shift is signed-int arithmetic. For order
-> 19 (a 2 GiB region) it produces 1 << 31, which is unrepresentable in
-> int and is undefined behavior; in practice it yields 0x80000000,
-> sign-extended on the assignment to the u64 sz. For order >= 20 the
-> shift count exceeds the width of int, which is also undefined. The
-> return value of memblock_reserve() is ignored and memblock_cap_size()
-> clamps the bogus size, so the kernel silently reserves the wrong
-> amount of memory for the preserved region.
-> 
-> kho_alloc_preserve() caps order at MAX_PAGE_ORDER and cannot reach
-> order 19, but a boot-time reserve_mem= region of at least 2 GiB drives
-> kho_preserve_pages() to compute order 19, and kho_preserve_pages() is
-> EXPORT_SYMBOL_GPL(), so the path is reachable.
+On 08/16/26 at 02:13pm, Lukas Wunner wrote:
+> On Wed, Aug 12, 2026 at 12:08:39PM +0200, Jan Sebastian Götte wrote:
+> > I can imagine one alternative way to approach this, tell me what you think:
+> > Instead of registering wipe handlers that memzero places on panic, I could
+> > put an optional registry of (addr, len) descriptors into crashkernel memory
+> > that the original kernel populates with the PAs of buffers to clear ahead of
+> > time. Then the kdump kernel could do the actual memzero. This would remove
+> > all code from the actual kdump path here. The registry could be made
+> > per-core to avoid locks.
 
-This looks like LLM generated, please make sure to add Assisted-by tag next
-time.
- 
-> Cast the shift operand to u64 so the arithmetic is done in 64 bits:
-> 
-> 	sz = (u64)1 << (order + PAGE_SHIFT);
-> 
-> Fixes: 3f2ad90060f6 ("kho: adopt radix tree for preserved memory tracking")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Kiarash Azarnia <kiarash.azarnia@gmail.com>
-> ---
->  kernel/liveupdate/kexec_handover.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
-> index 175c08a6e41e..c79f48bd64ac 100644
-> --- a/kernel/liveupdate/kexec_handover.c
-> +++ b/kernel/liveupdate/kexec_handover.c
-> @@ -501,7 +501,7 @@ static int __init kho_preserved_memory_reserve(phys_addr_t phys,
->  	struct page *page;
->  	u64 sz;
->  
-> -	sz = 1 << (order + PAGE_SHIFT);
-> +	sz = (u64)1 << (order + PAGE_SHIFT);
->  	page = kho_get_preserved_page(phys, order);
+Since there are a lot of security expert in CC, I am wondering what's
+the risk if we wipe secrets during dumping. System is located in
+user's place, and vmcore is dumped and collected in user's place. If we
+filter out secrets memory when we dumping, what could be leaked out?
 
-This is already fixed:
-https://patch.msgid.link/20260727150240.889555-1-pratyush@kernel.org
-  
->  	/* Reserve the memory preserved in KHO in memblock */
-> -- 
-> 2.53.0
 > 
-
--- 
-Sincerely yours,
-Mike.
+> Or create a dedicated mempool from which all sensitive data is allocated,
+> then call mempool_free_bulk() on kexec to poison everything in that pool?
+> 
+> Thanks,
+> 
+> Lukas
 
