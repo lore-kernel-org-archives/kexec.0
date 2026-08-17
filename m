@@ -4,96 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D83B2C5B572
-	for <kexec@archiver.kernel.org>; Sun, 16 Aug 2026 12:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1F1ACC5B572
+	for <kexec@archiver.kernel.org>; Mon, 17 Aug 2026 01:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Cn0zUN/hrMLQAPmuNzHmIPISGC8g6oolk9qIb89TBIU=; b=Zk/zm1mSSAYDWga+ntxH638SXb
-	1mAgYcok4jYYrfZIfYF23VqnaZf6yiv/T3kAP8wX3TTDxK/A4ZrIYKB92SLmzV9GaBsIC5Z7o/stt
-	fhwVx5a3MrhrLsX/xZeM15fFI3gS+BMykUWNcOWSYGtUy/XAiDJ2APsgr3oINjH/x5zLmJDHK6XMC
-	lJq4daKOLwCsuROILkPlUxyjKKerXAj/ewhA4wr5apDfvHH0xchVTcLnlILidaBPyG3g1Knk5dkMJ
-	1lnYBg0eTlxuynf4fmfawDVWtKLYSA3KLp4HMTQH1W6YJvB1Xg51eb1WTaIo55ukzERtBY0E3EMxZ
-	qcbe1vmQ==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=cPSAjWPvInHMSsU35Wf6vZRvbHjZJV0hLdpnJC/a9SM=; b=jukkAOry/70YawSU4ofAplPO++
+	zeXlxAsJ7iV1u+tcOcqNyy1B4KiYZ+387Ab7rbzGlUxccS6kLtuu0gQyk9Md8E4O9aXMNJ+eHD9mN
+	NZyUYbxB2icghkwRBdowKcKa+frZKwgI6EmDfXEcK6eB/esPzKCOiQr/2Znm/94nkXY0Wuzxg/eUA
+	7sQi5xAQbx2wL2+47ulvoHshw/xXZuVoeJmjeb262CMEYDEMwYB1g6+Lx0+k46iq1INVAzkFp+Q+P
+	MOBXDWAPGYR62kw3PzcawX4FJpn0+cmxjGsD9UdSk6nEhbgDTQzYCz9B9IUMglPC4Y63EHS6dpVYQ
+	tRDLqNFw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wvZss-00000004kMw-1q3T;
-	Sun, 16 Aug 2026 12:22:38 +0000
-Received: from mailout1.hostsharing.net ([2a01:37:1000::53df:5fcc:0])
+	id 1wvm0S-00000005FhM-2esa;
+	Mon, 17 Aug 2026 01:19:16 +0000
+Received: from canpmsgout05.his.huawei.com ([113.46.200.220])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wvZsp-00000004kMM-1D3S;
-	Sun, 16 Aug 2026 12:22:37 +0000
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by mailout1.hostsharing.net (Postfix) with ESMTPS id 83A3F3BC;
-	Sun, 16 Aug 2026 14:13:37 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 61BAE629CE27; Sun, 16 Aug 2026 14:13:37 +0200 (CEST)
-Date: Sun, 16 Aug 2026 14:13:37 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Jan Sebastian =?iso-8859-1?Q?G=F6tte?= <contact@jaseg.de>
-Cc: Baoquan He <baoquan.he@linux.dev>,
-	Jan Sebastian =?iso-8859-1?Q?G=F6tte?= <linux@jaseg.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Dave Young <ruirui.yang@linux.dev>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, David Howells <dhowells@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Ignat Korchagin <ignat@linux.win>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, Eric Biggers <ebiggers@kernel.org>,
-	"Theodore Y. Ts'o" <tytso@mit.edu>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
-	Mikulas Patocka <mpatocka@redhat.com>,
-	Benjamin Marzinski <bmarzins@redhat.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org, keyrings@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-security-module@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-nvme@lists.infradead.org,
-	linux-nfs@vger.kernel.org, linux-integrity@vger.kernel.org,
-	linux-afs@lists.infradead.org, netdev@vger.kernel.org,
-	linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	dm-devel@lists.linux.dev
-Subject: Re: [PATCH v2 01/13] kexec: add CRASH_WIPE_SECRETS to wipe secrets
- before kdump
-Message-ID: <aoGpcczo5GkBsPwt@wunner.de>
-References: <20260811-crash-zeroize-rework-v2-0-9561d13c2340@jaseg.de>
- <20260811-crash-zeroize-rework-v2-1-9561d13c2340@jaseg.de>
- <anw9ILJiO5xIjP4f@MiWiFi-R3L-srv>
- <9765f7ea-36bb-4c7b-a19b-7facec97b762@jaseg.de>
+	id 1wvm0L-00000005Fh1-3eM0
+	for kexec@lists.infradead.org;
+	Mon, 17 Aug 2026 01:19:12 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=cPSAjWPvInHMSsU35Wf6vZRvbHjZJV0hLdpnJC/a9SM=;
+	b=cyNQYIZyRY8Iv6108t9N82UnvTcM+5btoDXylFQ5JzcQnd/36WMsgx1gwXjka8pK8hbLafClv
+	n0LOKR1pCRm1rwc8iX/k7hqaDiDameNQMe5l7+nSTBcPPfQ6xYcYDYamiLjdmr87JsvPVhm7Rxa
+	A6vnnv0sFlZsP6oMWIc6uxw=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4hNZTg05lQz12LHf;
+	Mon, 17 Aug 2026 09:08:39 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7542840538;
+	Mon, 17 Aug 2026 09:19:01 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 17 Aug 2026 09:19:00 +0800
+Message-ID: <e51a0df8-7519-480d-84a6-22cf96e6d06e@huawei.com>
+Date: Mon, 17 Aug 2026 09:18:59 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] x86/crash: reserve elfcorehdr for CONFIG_NR_CPUS, not
+ CONFIG_NR_CPUS_DEFAULT
+To: "Ionut Nechita (Wind River)" <ionut.nechita@windriver.com>,
+	<x86@kernel.org>, <kexec@lists.infradead.org>
+CC: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <bhe@redhat.com>,
+	<hbathini@linux.ibm.com>, <eric.devolder@oracle.com>,
+	<akpm@linux-foundation.org>, <linux-kernel@vger.kernel.org>
+References: <20260812170433.533845-1-ionut.nechita@windriver.com>
+ <20260812170433.533845-2-ionut.nechita@windriver.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <20260812170433.533845-2-ionut.nechita@windriver.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9765f7ea-36bb-4c7b-a19b-7facec97b762@jaseg.de>
+X-Originating-IP: [10.67.109.254]
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260816_052235_500105_9765C755 
-X-CRM114-Status: GOOD (  14.44  )
+X-CRM114-CacheID: sfid-20260816_181910_598511_1CC0A629 
+X-CRM114-Status: GOOD (  25.47  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,19 +82,108 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Aug 12, 2026 at 12:08:39PM +0200, Jan Sebastian G�tte wrote:
-> I can imagine one alternative way to approach this, tell me what you think:
-> Instead of registering wipe handlers that memzero places on panic, I could
-> put an optional registry of (addr, len) descriptors into crashkernel memory
-> that the original kernel populates with the PAs of buffers to clear ahead of
-> time. Then the kdump kernel could do the actual memzero. This would remove
-> all code from the actual kdump path here. The registry could be made
-> per-core to avoid locks.
 
-Or create a dedicated mempool from which all sensitive data is allocated,
-then call mempool_free_bulk() on kexec to poison everything in that pool?
 
-Thanks,
+在 2026/8/13 1:04, Ionut Nechita (Wind River) 写道:
+> From: Ionut Nechita <ionut.nechita@windriver.com>
+> 
+> kexec_file_load(2) fails with -EINVAL when loading a crash kernel on a
+> machine whose number of possible CPUs exceeds CONFIG_NR_CPUS_DEFAULT,
+> even though the classic kexec_load(2) path succeeds on the same machine.
+> 
+> With CONFIG_CRASH_HOTPLUG=y the elfcorehdr segment is over-allocated so
+> it can be updated in place on CPU/memory hotplug. crash_load_segments()
+> and arch_crash_get_elfcorehdr_size() compute that reservation from
+> CONFIG_NR_CPUS_DEFAULT:
+> 
+> 	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
+> 		pnum = 2 + CONFIG_NR_CPUS_DEFAULT + CONFIG_CRASH_MAX_MEMORY_RANGES;
+> 	else
+> 		pnum += 2 + CONFIG_NR_CPUS_DEFAULT;
+> 
+> However the actual header produced by crash_prepare_elf64_headers()
+> contains one PT_NOTE per *possible* CPU, i.e. num_possible_cpus(), which
+> is bounded by CONFIG_NR_CPUS, not by CONFIG_NR_CPUS_DEFAULT.  On configs
+> that raise CONFIG_NR_CPUS above the arch default while leaving
+> CONFIG_NR_CPUS_DEFAULT untouched (e.g. CONFIG_NR_CPUS=256,
+> CONFIG_NR_CPUS_DEFAULT=64 on x86_64 without MAXSMP), a system with more
+> than ~CONFIG_NR_CPUS_DEFAULT possible CPUs builds a header whose bufsz
+> exceeds the reserved, page-aligned memsz.  sanity_check_segment_list()
+> then rejects the image:
+> 
+> 	if (image->segment[i].bufsz > image->segment[i].memsz)
+> 		return -EINVAL;
+> 
+> kexec_load(2) is unaffected because user space builds the elfcorehdr
+> without the hotplug over-allocation.
+> 
+> Observed on a single-socket Xeon 6776P (144 possible CPUs) running a
+> PREEMPT_RT kernel with:
+> 
+> 	# CONFIG_MAXSMP is not set
+> 	CONFIG_NR_CPUS_RANGE_BEGIN=2
+> 	CONFIG_NR_CPUS_RANGE_END=512
+> 	CONFIG_NR_CPUS_DEFAULT=64
+> 	CONFIG_NR_CPUS=256
+> 
+> kexec -p -s fails with "kexec_file_load failed: Invalid argument".
+> Reducing the possible CPU count below the page-rounding threshold
+> (e.g. 72 via firmware) makes it succeed, confirming the reservation is
+> the limiting factor.
+> 
+> Reserve the elfcorehdr for CONFIG_NR_CPUS, the compile-time upper bound
+> of num_possible_cpus(), so the reservation always covers the header that
+> is actually generated.
+> 
+> Fixes: a72bbec70da2 ("crash: hotplug support for kexec_load()")
+> Signed-off-by: Ionut Nechita <ionut.nechita@windriver.com>
+> ---
+>  arch/x86/kernel/crash.c | 6 +++---
 
-Lukas
+We should also update the comment in crash_handle_hotplug_event() to
+avoid misleading people.
+
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 4f21fc3b108b..b046c1682aad 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -565,7 +565,7 @@ int crash_check_hotplug_support(void)
+  * new list of CPUs and memory. To make changes to the elfcorehdr, it
+  * should be large enough to permit a growing number of CPU and Memory
+  * resources. One can estimate the elfcorehdr memory size based on
+- * NR_CPUS_DEFAULT and CRASH_MAX_MEMORY_RANGES. The elfcorehdr is
++ * NR_CPUS and CRASH_MAX_MEMORY_RANGES. The elfcorehdr is
+  * excluded from SHA verification by default if the architecture
+  * supports crash hotplug.
+  */
+
+
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index e681ec9cf1dc8..e6f23933a6df2 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -369,9 +369,9 @@ int crash_load_segments(struct kimage *image)
+>  	 * maximum CPUs and maximum memory ranges.
+>  	 */
+>  	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
+> -		pnum = 2 + CONFIG_NR_CPUS_DEFAULT + CONFIG_CRASH_MAX_MEMORY_RANGES;
+> +		pnum = 2 + CONFIG_NR_CPUS + CONFIG_CRASH_MAX_MEMORY_RANGES;
+>  	else
+> -		pnum += 2 + CONFIG_NR_CPUS_DEFAULT;
+> +		pnum += 2 + CONFIG_NR_CPUS;
+>  
+>  	if (pnum < (unsigned long)PN_XNUM) {
+>  		kbuf.memsz = pnum * sizeof(Elf64_Phdr);
+> @@ -430,7 +430,7 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
+>  	unsigned int sz;
+>  
+>  	/* kernel_map, VMCOREINFO and maximum CPUs */
+> -	sz = 2 + CONFIG_NR_CPUS_DEFAULT;
+> +	sz = 2 + CONFIG_NR_CPUS;
+>  	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
+>  		sz += CONFIG_CRASH_MAX_MEMORY_RANGES;
+>  	sz *= sizeof(Elf64_Phdr);
+
 
