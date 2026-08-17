@@ -4,103 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DEF9BC5CFC1
-	for <kexec@archiver.kernel.org>; Mon, 17 Aug 2026 08:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AFED1C5DF7A
+	for <kexec@archiver.kernel.org>; Mon, 17 Aug 2026 10:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=9NtS90fRAe355xukfFtCNj/3OysLrTWOHdxxnVUAgf0=; b=jGyxVVeNqhBSngQm0Qh6UWAASo
-	tG3M0mqCzHCrx80IfYa0MHkIAOtr0ReRx67Vgrr+y5qOGRunfTND4/Jdrc7wc1uD/91X97Pd9M14i
-	eZUHeNgkTnbJ+9tyHhYiil0StFXieKgYvy8FFL7bwJe5bxzihNQqDmMbxfk54GWhahiA089w1y2jU
-	ssbb9c5Q6fMTbWX2gX7VjGSvcEFldzqeM+HN0aQiblgwkfxsaCwYTKh0/YlSxEonham3wh7OnIMFF
-	Vr3maQEgsoQFZkb3FYf+ALOytATVqD2/RtGBeBvNCdPZAFeoYR5iWAExB625Lkx9Xb2dCtxPphVcJ
-	IIfLrXgg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=zvCm+OYu+HXm7z1snfmD5E2E44f/n02MTod4Pvfjj44=; b=HxQqyR26sj8Uc4aIALa7ZtS4Ql
+	QHXgcLbpRI8i3u21JA9q5E47APSLQXhqO2Tnj9zEcMOrFm8PZ1pSHQMyA5HwcCjty/rhuZetRuqfM
+	LaeOSQPIvVlLP+MjY+8iZTJ/da9inmhAhV4fql5sbmCa2BPesbMCOVRL+sloA5vTx6QTytpSK9jHF
+	DecYBR5V6gOpifdjoBrah8DUA66lYE59eqDG6QtGvNPlf4JzX/jBnG3AJbOhAO+fWQQ91JpZAE8I7
+	ZoastUDG8a79K9aTio2dzgpScimIaM9u2qfUu+cRhe+lpjjomKM3izSYdQMGIkHTAaFGVrIEcJM/S
+	ZFSF1EQg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wvsex-00000005gH9-3MaZ;
-	Mon, 17 Aug 2026 08:25:31 +0000
-Received: from out-176.mta0.migadu.com ([2001:41d0:1004:224b::b0] helo=mta0.migadu.com)
+	id 1wvuqj-00000005xNI-2lWX;
+	Mon, 17 Aug 2026 10:45:49 +0000
+Received: from canpmsgout02.his.huawei.com ([113.46.200.217])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wvsev-00000005gF8-3xzf
-	for kexec@lists.infradead.org;
-	Mon, 17 Aug 2026 08:25:31 +0000
-X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=eYNadUi07A8AhvVYvTwlB5KEurgeLlJSPKo7wDdWLLE=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1786955128; v=1; x=1787559928;
- b=LOyqKIP8U/DmD1VoXOueW2cNHTUY3/mO+breI1tQhH1n/PEE4g8zlyymbMmdIYFnFcrv6RvC
- pVvzJcfFBnQDqpvY1sCEcQN/mBN9OQtSc2BU1Xz7W+DoGA3BCDQYWKOezSiLUw8E1W5e2I7LTZe
- wbwmY96SzDjJiffKJm3Ai8SM=
-X-Envelope-To: kexec@lists.infradead.org
-Received: from localhost (3.112.29.171)
-	by mta10.migadu.com with ESMTPS id 5d0fb72b720b7f63;
-	Mon, 17 Aug 2026 08:25:17 +0000
-X-Migadu-Flow: FLOW_OUT
-Date: Mon, 17 Aug 2026 16:25:14 +0800
-From: Baoquan He <baoquan.he@linux.dev>
-To: Lukas Wunner <lukas@wunner.de>,
-	Jan Sebastian =?iso-8859-1?Q?G=F6tte?= <contact@jaseg.de>
-Cc: Jan Sebastian =?iso-8859-1?Q?G=F6tte?= <linux@jaseg.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Dave Young <ruirui.yang@linux.dev>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, David Howells <dhowells@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Ignat Korchagin <ignat@linux.win>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, Eric Biggers <ebiggers@kernel.org>,
-	"Theodore Y. Ts'o" <tytso@mit.edu>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
-	Mikulas Patocka <mpatocka@redhat.com>,
-	Benjamin Marzinski <bmarzins@redhat.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mm@kvack.org, keyrings@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-security-module@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-nvme@lists.infradead.org,
-	linux-nfs@vger.kernel.org, linux-integrity@vger.kernel.org,
-	linux-afs@lists.infradead.org, netdev@vger.kernel.org,
-	linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	dm-devel@lists.linux.dev
-Subject: Re: [PATCH v2 01/13] kexec: add CRASH_WIPE_SECRETS to wipe secrets
- before kdump
-Message-ID: <aoLFai0gzzH2bGgy@MiWiFi-R3L-srv>
-References: <20260811-crash-zeroize-rework-v2-0-9561d13c2340@jaseg.de>
- <20260811-crash-zeroize-rework-v2-1-9561d13c2340@jaseg.de>
- <anw9ILJiO5xIjP4f@MiWiFi-R3L-srv>
- <9765f7ea-36bb-4c7b-a19b-7facec97b762@jaseg.de>
- <aoGpcczo5GkBsPwt@wunner.de>
- <aoK6jXA-tF9qfKOZ@MiWiFi-R3L-srv>
+	id 1wvuqf-00000005xMZ-1y2j;
+	Mon, 17 Aug 2026 10:45:47 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=zvCm+OYu+HXm7z1snfmD5E2E44f/n02MTod4Pvfjj44=;
+	b=BMVVaj1TlTcvAO97yhiftu6cLaZm1WU583Ib9pBTHVzdqZyUhA0lYazOeZxhhDxb2qvD7vCVQ
+	FzFrvcY0iU/2/lv/BMEdCkUqEhEF3hPQw/wIcsO1DO51XouQIxSPJ8yJrmpLCUFIcKlxBG6DMMB
+	yp9zBBwo1ZikZVrb5doRDS0=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4hNq3Z6cxqzcb0T;
+	Mon, 17 Aug 2026 18:35:22 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 61E8D40538;
+	Mon, 17 Aug 2026 18:45:39 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 17 Aug 2026 18:45:37 +0800
+Message-ID: <df1317a2-68f1-4eb8-9fea-952349f672cb@huawei.com>
+Date: Mon, 17 Aug 2026 18:45:36 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] arm64: crash: Add crash hotplug support
+To: Catalin Marinas <catalin.marinas@arm.com>
+CC: <will@kernel.org>, <akpm@linux-foundation.org>, <baoquan.he@linux.dev>,
+	<rppt@kernel.org>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
+	<thuth@redhat.com>, <mark.rutland@arm.com>, <jic23@kernel.org>,
+	<james.morse@arm.com>, <ardb@kernel.org>, <leitao@debian.org>,
+	<yeoreum.yun@arm.com>, <sourabhjain@linux.ibm.com>, <robh@kernel.org>,
+	<kees@kernel.org>, <coxu@redhat.com>, <makb@juniper.net>, <piliu@redhat.com>,
+	<graf@amazon.com>, <ebiggers@kernel.org>, <jbouron@amazon.com>,
+	<bgwin@google.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>
+References: <20260729031235.2840255-1-ruanjinjie@huawei.com>
+ <20260729031235.2840255-6-ruanjinjie@huawei.com> <an3rUZ7rd1mQH0Gz@arm.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <an3rUZ7rd1mQH0Gz@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aoK6jXA-tF9qfKOZ@MiWiFi-R3L-srv>
+X-Originating-IP: [10.67.109.254]
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260817_012530_120519_BE7A0461 
-X-CRM114-Status: GOOD (  25.84  )
+X-CRM114-CacheID: sfid-20260817_034546_234635_4A7A3315 
+X-CRM114-Status: GOOD (  19.33  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -115,67 +84,106 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/17/26 at 03:38pm, Baoquan He wrote:
-> On 08/16/26 at 02:13pm, Lukas Wunner wrote:
-> > On Wed, Aug 12, 2026 at 12:08:39PM +0200, Jan Sebastian Götte wrote:
-> > > I can imagine one alternative way to approach this, tell me what you think:
-> > > Instead of registering wipe handlers that memzero places on panic, I could
-> > > put an optional registry of (addr, len) descriptors into crashkernel memory
-> > > that the original kernel populates with the PAs of buffers to clear ahead of
-> > > time. Then the kdump kernel could do the actual memzero. This would remove
-> > > all code from the actual kdump path here. The registry could be made
-> > > per-core to avoid locks.
 
-If this has to be done in kernel, your (addr, len) registry idea is a
-better direction, and we can make it a bit more general.
 
-Instead of a secrets-only wipe registry, consider a small "crash memory
-region" table with an action per entry:
+在 2026/8/14 0:05, Catalin Marinas 写道:
+> Hi Jinjie,
+> 
+> On Wed, Jul 29, 2026 at 11:12:35AM +0800, Jinjie Ruan wrote:
+>> +/**
+>> + * update_crash_elfcorehdr() - Recreate the elfcorehdr and replace it with old
+>> + *			       elfcorehdr in the kexec segment array.
+>> + * @image: the active struct kimage
+>> + */
+>> +static void update_crash_elfcorehdr(struct kimage *image)
+>> +{
+>> +	void *elfbuf = NULL, *old_elfcorehdr;
+>> +	unsigned long mem, memsz;
+>> +	unsigned long elfsz = 0;
+>> +
+>> +	/*
+>> +	 * Create the new elfcorehdr reflecting the changes to CPU and/or
+>> +	 * memory resources.
+>> +	 */
+>> +	if (crash_prepare_headers(true, &elfbuf, &elfsz, NULL)) {
+>> +		pr_err("unable to create new elfcorehdr");
+>> +		goto out;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Obtain address and size of the elfcorehdr segment, and
+>> +	 * check it against the new elfcorehdr buffer.
+>> +	 */
+>> +	mem = image->segment[image->elfcorehdr_index].mem;
+>> +	memsz = image->segment[image->elfcorehdr_index].memsz;
+>> +	if (elfsz > memsz) {
+>> +		pr_err("update elfcorehdr elfsz %lu > memsz %lu",
+>> +			elfsz, memsz);
+>> +		goto out;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Copy new elfcorehdr over the old elfcorehdr at destination.
+>> +	 */
+>> +	old_elfcorehdr = phys_to_virt(mem);
+>> +
+>> +	/*
+>> +	 * Temporarily invalidate the crash image while the
+>> +	 * elfcorehdr is updated.
+>> +	 */
+>> +	xchg(&kexec_crash_image, NULL);
+>> +	memcpy(old_elfcorehdr, elfbuf, elfsz);
+>> +	dcache_clean_inval_poc((unsigned long)old_elfcorehdr,
+>> +			       (unsigned long)(old_elfcorehdr + elfsz));
+>> +	xchg(&kexec_crash_image, image);
+>> +	pr_debug("updated elfcorehdr\n");
+>> +
+>> +out:
+>> +	vfree(elfbuf);
+>> +}
+>> +
+>> +/**
+>> + * arch_crash_handle_hotplug_event() - Handle hotplug elfcorehdr changes
+>> + * @image: a pointer to kexec_crash_image
+>> + * @arg: struct memory_notify handler for memory hotplug case and
+>> + *       NULL for CPU hotplug case.
+>> + *
+>> + * Update the kdump image based on the type of hotplug event:
+>> + * - CPU add and remove: No action is needed.
+>> + * - Memory add/remove: Update the elfcorehdr to reflect the current memory layout.
+>> + *
+>> + * Prepare the new elfcorehdr and replace the existing elfcorehdr.
+>> + */
+>> +void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
+>> +{
+>> +	if (image->hp_action == KEXEC_CRASH_HP_ADD_CPU ||
+>> +	    image->hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
+>> +		return;
+>> +
+>> +	update_crash_elfcorehdr(image);
+>> +}
+> 
+> Looking at powerpc, they pass the arg down to update_crash_elfcorehdr()
+> to handle the memory hot-unplug case. It looks like the notifier is
+> called before the memblock_remove(), so the update above will still
+> count the memory being removed.
 
-enum crash_region_action {
-    CRASH_REG_WIPE,   /* memzero, then dump normally (leave zeros) */
-    CRASH_REG_SKIP,   /* do not include in the vmcore at all */
-};
+Hi Catalin,
 
-struct crash_region {
-    phys_addr_t addr;
-    size_t      len;
-    enum crash_region_action action;
-};
+After delving into the code flow, I believe you are correct.
 
-void crash_reg_add(phys_addr_t addr, size_t len,
-                   enum crash_region_action action);
-void crash_reg_del(phys_addr_t addr, size_t len);
-
-Two actions because the use cases differ:
-
-- WIPE is what you need: zero the secret, 
-- SKIP covers things people do not want in the dump at all
-   — Registering as SKIP reduce dump size. I have been considering how
-     to shrink vmcore size on some big system with huge memory, the
-     vmcore size usually is several or tens of GB.
-
-If this is OK to you, you can start a regiestry table
-infrastructure with wiping secrets, we can add SKIP later and plus some
-driver used memory.
-
-I am not sure if it's satisfactory, but you can give it a shot to show
-what it looks like.
-
-Thanks
-Baoquan
+We need to manually remove the hot-unplug memory here, just like in the
+PowerPC case. Will update the code sooner.
 
 > 
-> Since there are a lot of security expert in CC, I am wondering what's
-> the risk if we wipe secrets during dumping. System is located in
-> user's place, and vmcore is dumped and collected in user's place. If we
-> filter out secrets memory when we dumping, what could be leaked out?
+> There are a few Sashiko comments as well, though some might be about
+> existing issues (it would be nice to have them fixed ;)).
+
+Thank you! I will take a close look and try to fix them later.
+
+Best regards,
+Jinjie
+
 > 
-> > 
-> > Or create a dedicated mempool from which all sensitive data is allocated,
-> > then call mempool_free_bulk() on kexec to poison everything in that pool?
-> > 
-> > Thanks,
-> > 
-> > Lukas
+
 
