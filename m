@@ -4,70 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B8E3EC5DF81
-	for <kexec@archiver.kernel.org>; Tue, 18 Aug 2026 16:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3321BC5DF86
+	for <kexec@archiver.kernel.org>; Tue, 18 Aug 2026 16:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=/eyzaZNjJLEyd0fKbeRAuoUQBuqF6sdPIInoyVaJmj0=; b=d5vtZ887bjvwcSUTBt514YRpAA
-	6SbnTn9yA1c8c2BfmKtXIf6H/zoMOa9rEho0FZF1I1DF5z21ED2phQTPkR7mvYwQFcmBhnEMxNcsV
-	RaeeiC0+muW1Kvp3urEjmj6BD+2Sj6WmxllEU4jli/8nseXHTPu7m02JPYAHxBKEgFPOTWMobFz9L
-	+SEr5T72DVe6RAAYrenlWg9gngMTm1pRosWkOPikmb24GKfd4a+2Vas56FWeLVH6R8beDnWt0kfFa
-	uO0nBREu/t18PJQD3hDMPaXntk9Gso2FhBFhGDrB16LIk5jshZeG0HhQNGYqlxHqf8j/n8MhE/RKx
-	HY5Q1+gA==;
+	bh=NYCxMBx4BOPF4yBl5aKpfQIqd2cMC8x5BNz4F0URw58=; b=EfZ/3+wgncBH7wspQcpYj3Ttqn
+	XrPRZq0/04+7Orl5wna8C7GvZChDCLGQT2dTL87A0l2DczEKZJLrOF/i2x3+SIECqwUhyx03FmfEa
+	Vsuyr+4isMUTzJRkim+oEB/L4tV8K1Q1CQasBdgx/OLZPytzhwx1NsAE4KkXmX/+0pKf3V9uOT4ZD
+	pQQmqpAxvPCnc8+ErifAyZ5zfCSGKa91UiWSWkuFhWKAA3qgm9XN1ssEnrf6pfDJQdGoaOMLIxwob
+	GV3jWJ39yp1Bg++ztuxGijyfN0xeLxBXOGty5bnnXUrsL50tY8V+jcmVp1UvhRgdH9SdsMFMn1FdK
+	sKDvkIFg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wwMhG-00000008Lef-3Ul0;
-	Tue, 18 Aug 2026 16:29:54 +0000
-Received: from mail-ed1-x545.google.com ([2a00:1450:4864:20::545])
+	id 1wwMkg-00000008MJj-3yAx;
+	Tue, 18 Aug 2026 16:33:26 +0000
+Received: from mail-ej1-x647.google.com ([2a00:1450:4864:20::647])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wwMhE-00000008LeG-1l5r
+	id 1wwMke-00000008MIY-3nap
 	for kexec@lists.infradead.org;
-	Tue, 18 Aug 2026 16:29:53 +0000
-Received: by mail-ed1-x545.google.com with SMTP id 4fb4d7f45d1cf-6a3f8cbd9feso21680a12.2
-        for <kexec@lists.infradead.org>; Tue, 18 Aug 2026 09:29:51 -0700 (PDT)
+	Tue, 18 Aug 2026 16:33:26 +0000
+Received: by mail-ej1-x647.google.com with SMTP id a640c23a62f3a-c1c25c44d15so77765366b.1
+        for <kexec@lists.infradead.org>; Tue, 18 Aug 2026 09:33:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787070590; x=1787675390; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1787070802; x=1787675602; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=/eyzaZNjJLEyd0fKbeRAuoUQBuqF6sdPIInoyVaJmj0=;
-        b=TBMbl0atR8lzs8TXidgg/h07KILqkY9bEUrLAqrcp7dxD5EpF6lkRL9arTNMj1QL8u
-         E9ufaRZUq9qnTDmbf4NPc7nOY/FW3N45gpe+0k1/I/N/FW8R6D8Vh7UNwYwY0uB/Rv8k
-         wpSTcpkqI4hpXpi3KrMG3CQOCMxPbP2+SCrnB6Tn3coF+CcPi9H7EeZQ9FYEONbxwZzH
-         UmZgRE0hC85ByFUEi7ZIN+XYAtc8s0BrnneGisbNPWsq6ddcHQWOkHMSjYf4gLOZc2On
-         q8TMCPNfhWnUwQUj7HroFhNtdePItZ7+EYSHFSWo84J3u2pdQqMJ1rLYI/hIVDSkEahq
-         yS6Q==
+        bh=NYCxMBx4BOPF4yBl5aKpfQIqd2cMC8x5BNz4F0URw58=;
+        b=fGkdyljMh4MqudWVWk3GaNena3RiQ8mTivDulO2doqH8VB4Tw+dtJxbD0VmvPfxiY/
+         Qc9XeI5IXfVtCxpTm7UxP/bzaBQBASg8Uw/Dx7hEBU+9vN8JBB556WHuHF7+pMhQOO6t
+         k+vj1d2zEIZJm99BK7YTRUzyetZbFGywyQhHaNAEDnmFmcxdAx/ZPcY2D+P9R1fRKO6I
+         lwsB9aHdyS6HicgUpIIEjMsqXTXOntf5y+k2betCq0019dMqN816k7cR724zXJIbDhbd
+         bDj7qL6VJOxFb0ftG3Mc7Ru7NF3CsrR9iuiQK4QyQvnODSgkwr3SP5VVwjsggQOs8VpV
+         VX7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787070590; x=1787675390;
+        d=1e100.net; s=20251104; t=1787070802; x=1787675602;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=/eyzaZNjJLEyd0fKbeRAuoUQBuqF6sdPIInoyVaJmj0=;
-        b=UdWcKC8J9sSPuV4RhFuG/WvBIlWfiIkEZwpK+krvoI9Oh8C8pYvJZohw/ykjaHVUSR
-         fQgutbMnxHONDefa3tKRmX4sVJoDSpugjBYrBbXxDEsANKyC/fMRDNMeo5XCAExifqmh
-         NAM0LGioF/Hge9hTUMsNnXEoa56LJ5buYhJNQtfwCVVlch/LuWHIv3XjEIXEMtOKsdaq
-         F/GnsMPNcyjcWKP3rvOISwvNO1odS9us/CNkIvbmXKlkSblXk5ixW/scP5JTQqQNcjx7
-         75j/pR7J+Y5hR2vuAneNobBmw4UvTo6JlUYcN3DJtF23PolJdLQ8OnKmqFjB4mYsY71Q
-         TjPw==
-X-Forwarded-Encrypted: i=1; AHgh+RpKfRTcb592sIWjTmFTPx4u6amY/J1nX7pEMnAcwAvHwHZYTYL4diJ57V/0kvQdeKR/QX4JlQ==@lists.infradead.org
-X-Gm-Message-State: AOJu0YymlxwQvOTRVpE6Ix4JxBo4n6AwbylC6AF575BYHixTAxyzO5x8
-	r5rYZd24oLGrxcbgKLpu5dLj4qeCebJMwJmSsrBj/pjjUCJ9OJxC07EfCNMzNSEDISwRzJOBvt8
-	oZpjpNAatNS3jjKt//Q==
-X-Received: from edts26.prod.google.com ([2002:aa7:cb1a:0:b0:6a1:f410:2ec5])
+        bh=NYCxMBx4BOPF4yBl5aKpfQIqd2cMC8x5BNz4F0URw58=;
+        b=jTYIqa9lx242R2gbLoXt3DsF9gfsjxrsvvkK7ne4xwnx0oCLPEfliDA7krUKHwKduv
+         iOBM6tyNat4LgIa1fiXm6eGlAWQer4og84A2d74ruIF+ZYa7GX3boyN/vRNY3CutHeSx
+         OZYxVihxsd7eIz7KajrtHrXMCt1RkjZ1n515gLkf0Koq3Wxr5q3qxkL89iZZjBWHKQ8s
+         kql3t5fPTYtRoGaBpjSDQqg5dW2eWOvAwuXz4h3cUN1ht1ZaNyz9UpEQL1yUoZqn/TTc
+         5IvsksVfj6yC+F24UOuRp+UvZ1OxvgRTAFVSm3vcxb/4Tq9Q8AzCFQNSdHKKyExIsy7k
+         4OXg==
+X-Forwarded-Encrypted: i=1; AHgh+RobV1US7sZVz5JcfFURgQhWRjn0Nzsnf7ZURofyzkqxFI8kgwGtODBCZp2aW+05l8MceKq+fw==@lists.infradead.org
+X-Gm-Message-State: AOJu0YxmkX8HcaRtQtuRkfVmT8wyfXdXDffQ4AEmewSEqc4c6k1aTTG1
+	0IM/rnk7rSMQ0GbWcOTlT6lR0YwMK7GoMTNUh9FnW2FAV4+kQkCBcIUbUStOq9SWgm/zOcy+Ez0
+	i0vn0I59yKo1B758v2A==
+X-Received: from edea16.prod.google.com ([2002:a05:6402:a190:b0:697:8356:d9d6])
  (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:e85:b0:6a3:edb6:2228 with SMTP id 4fb4d7f45d1cf-6a3edb6285cmr3681617a12.17.1787070589499;
- Tue, 18 Aug 2026 09:29:49 -0700 (PDT)
-Date: Tue, 18 Aug 2026 16:29:48 +0000
-In-Reply-To: <anpdYD1UaO0ffQgi@google.com>
+ 2002:a05:6938:a091:10b0:c15:a487:3482 with SMTP id a640c23a62f3a-c2188a9df89mr438613166b.21.1787070802257;
+ Tue, 18 Aug 2026 09:33:22 -0700 (PDT)
+Date: Tue, 18 Aug 2026 16:33:21 +0000
+In-Reply-To: <anpieno-RyRl54fp@google.com>
 Mime-Version: 1.0
 References: <20260728121138.1103610-1-tarunsahu@google.com>
- <20260728121138.1103610-5-tarunsahu@google.com> <anpdYD1UaO0ffQgi@google.com>
-Message-ID: <9huzik57v1c3.fsf@tarunix.c.googlers.com>
-Subject: Re: [PATCH v4 04/11] KVM: Track weak reference to vm_file in struct kvm
+ <20260728121138.1103610-8-tarunsahu@google.com> <anpieno-RyRl54fp@google.com>
+Message-ID: <9huzfr0bv166.fsf@tarunix.c.googlers.com>
+Subject: Re: [PATCH v4 07/11] KVM: guest_memfd: Add support for freezing mappings
 From: tarunsahu@google.com
 To: Sean Christopherson <seanjc@google.com>
 Cc: ackerleytng@google.com, fuad.tabba@linux.dev, 
@@ -84,8 +84,8 @@ Cc: ackerleytng@google.com, fuad.tabba@linux.dev,
 	suzuki.poulose@arm.com
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260818_092952_475495_46765931 
-X-CRM114-Status: GOOD (  14.50  )
+X-CRM114-CacheID: sfid-20260818_093324_964936_5664CFAE 
+X-CRM114-Status: GOOD (  12.05  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,39 +103,36 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 Sean Christopherson <seanjc@google.com> writes:
 
 > On Tue, Jul 28, 2026, Tarun Sahu wrote:
->> - Add a weak reference 'vm_file' in struct kvm under
+>> +/**
+>> + * kvm_gmem_freeze - Freeze or unfreeze a guest_memfd inode mapping.
+>> + * @inode: The guest_memfd inode.
+>> + * @freeze: True to freeze, false to unfreeze.
+>> + *
+>> + * This API is used strictly during the live update / preservation transition
+>> + * window to prevent host userspace and guest-side faults from making any
+>> + * mapping modifications (such as fallocate or page fault allocation)
+>> + * to the guest_memfd page cache.
+>> + *
+>> + * Synchronization Strategy (Sleepable RCU):
+>> + * To avoid high-contention VFS locks (like inode_lock or
+>> + * filemap_invalidate_lock) on the vCPU page fault hot paths, this subsystem
+>> + * implements a lightweight, system-wide Sleepable RCU (SRCU) mechanism
+>> + * (`kvm_gmem_freeze_srcu`):
+>> + *
+>> + * Global vs. Per-Inode SRCU
+>> + * ======================
+>> + * A single system-wide global static `srcu_struct` is used instead of a
+>> + * per-inode SRCU structure to completely prevent unprivileged users from
+>> + * exhausting the host's per-CPU memory allocator. 
 >
-> "vm_file" is effectively already claimed by vm_area_struct.vm_file.  *If* we go
-> this route, I would very strongly prefer to take a dependency on "vfio: Use
-> file-based reference counting for KVM"[*].  I'll poke that thread, we really
-> should land that one particular patch long before the s390-is-arm64
-> insanity.
+> This argument doesn't hold up given that each kvm structure has two SRCU structs.
 
-[*] Seem interesting way to solve this. So we will also have vm_file
-directly in guest_memfd instead of struct kvm and refcounting on vm_file
-instead struct kvm?
+Ohh okay. I was very skeptic that per-cpu structure are not counted in
+cgroups and liveupdate is once in a while usecase So avoided making it
+per-cpu. But otherwise I am fine with going with per-cpu. Will take care
+of it in next revision.
 
-struct gmem_file {
--	struct kvm *kvm;
-+	struct file *vm_file;
-	struct xarray bindings;
-	struct list_head entry;
-};
+Thanks
+~Tarun
 
->
-> Empashish on "if" because this all feels backwards.
-
-> It's not at all clear to
-> me why liveupdate goes directly to guest_memfd, but then requires a token associated
-> with the VM.
-
-guest_memfd can be recreated without having the struct kvm, Which there
-is no way to pass it on retrieval path. So the function
-kvm_gmem_luo_retrieve() gets this VM token, find the vm_file (hence
-struct kvm) associated with the preserved guest_memfd. Now it create a
-fresh guest_memfd by calling kvm_gmem_create(..., kvm). And populate
-preserved flags and folios to this guest_memfd.
-
->
-> https://lore.kernel.org/all/20260731130902.654679-2-seiden@linux.ibm.com
 
