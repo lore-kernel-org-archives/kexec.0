@@ -4,100 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1E777C5DF7D
-	for <kexec@archiver.kernel.org>; Tue, 18 Aug 2026 14:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0C8D3C5DF7E
+	for <kexec@archiver.kernel.org>; Tue, 18 Aug 2026 15:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=eWnjlV7uPwe+4gWKLK9EeUBWXA1Tt40aub4O3Hlvu3M=; b=gsdOjdi3VjWYzyA6E74+ImjntX
-	Mq6CX7ZV5ZV84s9B14dBaYlF8NSNmP1o+q3jSnWGWDA4K4KWq56Qsad0vd5rkj8mlUIzqLyXFPIfa
-	1VBEyFGefAk8ua8NaxUhDbvEFTyej9f6hACndbFATjFkuABoFcU9SDFHZ+jgIdkUonXWKoe79jWi7
-	Qg9Am8IypFiXcGj1RStrwt+SjQK+BF736M62fF/3Gg9q5xw2PeJRPdr+sNPJ8zmCQ9USb5rE/e2zY
-	1BFNs2VCryUmq+ra5H4ZmNfEEuEAkIdMvzSUiDuspwI1vmaOjW0vhszDNDLGgj0xZsLtFpW4rv8SJ
-	q9xew1dg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=MCqv9FjqzX9J6sE+mm4dR8DQFjLQZx0WW3HAG/YPlNE=; b=wqAH0KnTg0rf5fjqBUywiby3Z5
+	hRg1Zg3AVoYlxX1Gqwpnhcsba7RKuhdl3UETje3ex1jiHYWxPgIzjllgT4AoyBO4QIwZj9OyrewcI
+	NmTM7sDp9f5+1NzdpBJpsq3hlHsUhJXBdQH4EBeKrQyWQzvaNg+gmGrQo1vbwQVT/Mx23rTVXuwpf
+	cgfYrhlUOK+3v68cr2Dmjwq7amEnrhpsrAjrO61BZpgw3z1aWxzQrKSGDVo7zF5hdfsZFm14NyAYb
+	4xKT7iV+oaOz2me8jbq2OVmaEcmV52KJnTiD2/Q5BkHOr2q3AQlXJv/QlSYiRB8I/Uoq9BUBlJogw
+	Y6u8S4mg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wwKpA-00000008Anr-03cy;
-	Tue, 18 Aug 2026 14:29:56 +0000
-Received: from mail-qt1-x82e.google.com ([2607:f8b0:4864:20::82e])
+	id 1wwLkM-00000008GUG-1hns;
+	Tue, 18 Aug 2026 15:29:02 +0000
+Received: from mail-ed1-x545.google.com ([2a00:1450:4864:20::545])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wwKp6-00000008Ame-1svq
+	id 1wwLkJ-00000008GTi-2blj
 	for kexec@lists.infradead.org;
-	Tue, 18 Aug 2026 14:29:54 +0000
-Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-52cd38ddcdfso22490541cf.3
-        for <kexec@lists.infradead.org>; Tue, 18 Aug 2026 07:29:51 -0700 (PDT)
+	Tue, 18 Aug 2026 15:29:01 +0000
+Received: by mail-ed1-x545.google.com with SMTP id 4fb4d7f45d1cf-6a125f5b317so4989548a12.1
+        for <kexec@lists.infradead.org>; Tue, 18 Aug 2026 08:28:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787063390; x=1787668190; darn=lists.infradead.org;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=eWnjlV7uPwe+4gWKLK9EeUBWXA1Tt40aub4O3Hlvu3M=;
-        b=Z2wfxjZyF2cmkWwuz9qAmc/ZZhE92/ewJirpx2xprghRxdTwnx8Og+9H4ZOnUms9gt
-         i5159v29lccArBeD7ywCfeYGWqWfmG4S2RWuu56UCeeyue4xbeL0vsuuQJ/h1PHsmzAT
-         aabfwzyQhuSNWvh0kYKRz8HfysW99aQ+FfOwR8i/tJEfoD0MHNT/CH4LAXNOImc88+sf
-         Cd2lwAJeG7YUEC6V16jA7tarZm2Vklpf48aN/QuI0L73uiSPfH3E1y9ZsgS16Nf4TdTe
-         O19cTV2zJ2mL7N602wFjGC7f44498f1y6Co/M5raspL+/tBPJckYIi/MPZVwg6ZW6lta
-         Ss7Q==
+        d=google.com; s=20251104; t=1787066936; x=1787671736; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=MCqv9FjqzX9J6sE+mm4dR8DQFjLQZx0WW3HAG/YPlNE=;
+        b=XP1kEUyPKnnGAZcMZovAvBpo6zqlSUo6RYomiayaPpSGCgXoK42ykJBc+2QPA/7Ffd
+         8hch8NQosN4s4O4pQUCivmXOcrpaa+Gt8082c/TKK41hWS4eNwGBLorlf/AuKLGzrczy
+         AsMOEqAmWWwi6RAI+/yD2PtlE98lBvF65WO3AhCUsFwhng4dP/B3OpHqhUg1QINNLYoK
+         7p/9628NWj9t7tqj3n5fkkzC6DbHqL/W8u//bFdDvmU9/kUtECarhmL847v3BoQhKQoG
+         A3MwdG67ZeF22lAGLsmTjNTJIyjWIRzdiBipcUiDqhIX4/lc5KC2YvUU6aZQpvFgfAWC
+         91Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787063390; x=1787668190;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=eWnjlV7uPwe+4gWKLK9EeUBWXA1Tt40aub4O3Hlvu3M=;
-        b=LsmI2IRAiFX5zxbiS64gr0KBB+/DYjPwKoOmQvNZJ8uz65RHxmvTfqG9Q85B2Pkt53
-         jdo39rjhS98Pt6nxFn6ZHVs3u1JF/chEL0K7Z2EHQkd1bF1Z1lPI7cgOoSmKH5uw0lGm
-         MqWJWqBZRRYNN6TUc4LCCXeysTVdvE2v8TfgMXZGZU9Jh032rFhQw97IpQ5bA4bKCh7p
-         Vt7et2w9aCsNbSLmm5abdHSIJ32VNwJ+tDnXAveLbHfd06bBFydlSO9JILmO2lMw/zQI
-         qWv4MUV+MAbicQ9G7uuysaEG5MrGyjqMZZdBaT5iHbzoqEDMW65NIk8lL6M6jbGVgMjR
-         M0sA==
-X-Gm-Message-State: AOJu0Yx5HfY5mqnifqTbXxRxABXs2NZdZuFhjwlnTq8CL2isYcv0rOqG
-	zQARk7NyUMkyHYdORTO1uoQFeS3qqV9ADgm65LJuOFloFfj2pFaj5UeZ
-X-Gm-Gg: AR+sD12RTky8/Dep0KEkSKfN/c+ei+WpzlObSxZly9cEkLVqk1bFAQRCEaWWDnB6uDt
-	fRhPZl/fdJBu5zX2OIso1kv5xgjJojzFNAvzAE49FuVDyp5URym/gM+TYRPitaZjJ3nIRBZ7DHl
-	n3UrZ6zJZUrfPGm1eoCurut3lMU0NJcBIM8umEuTj0KmtHY5eOXZw+3+9Q4Kp9r/urAreaI2xh1
-	7TgkoIBVmHKbMqaD9atqRdzJhxM2PMcH35J07Ne2JSLW2vK9YJen1Tiy2OAHOqU/2k6C6COpfEd
-	j9FxeaEdfcm+pUAAbzp+MHD78BaLI2mjtyX+/DxBtBcamYuH3HHHrfpWOXNwGB8x9mOq7nOEQ7d
-	ibQUHN7RDyiAw3pLMJ6GXTxhcMBxVnf537dx1LcM3a1iqag5/FYHgpIF+lZ/hkQNRXvZS7qIXU0
-	r8Xe9vyW2D712540CDMefBL6sDOOTqfz/i4BPxGrODHucgBHVQX8lMSm3FvjvskCy6NOWwbdBXn
-	c+gAnz+Dp7zH/cypkJENZw722/eYbCk12KKxI3khOm8pbP/gI2W2N4=
-X-Received: by 2002:ac8:588c:0:b0:51c:22c5:daee with SMTP id d75a77b69052e-52dbd6f3d55mr85177801cf.29.1787063390074;
-        Tue, 18 Aug 2026 07:29:50 -0700 (PDT)
-Received: from cw-fl20tjcw03-l.tailb3cd1a.ts.net ([2600:4040:9121:7700:1cd5:215e:ad6c:6a3])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-52db610b491sm40138761cf.8.2026.08.18.07.29.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2026 07:29:49 -0700 (PDT)
-From: Serapheim Dimitropoulos <serapheimd@gmail.com>
-Date: Tue, 18 Aug 2026 10:29:39 -0400
-Subject: [PATCH kexec-tools v3] util_lib/elf_info: stream lockless printk
- ring records
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260818-vmcore-dmesg-stream-upstream-v3-1-d721a5482f24@coreweave.com>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/32NTQ6CMBCFr0Jm7ZhSLVBW3sO4qO0AjZaSFisJ4
- e5W48KVu/fyfr4VIgVLEdpihUDJRuvHbA67AvSgxp7QmuyBM16xmjeYnPaB0DiKPcY5kHL4mL6
- iNqqSQjaykwLyxRSos8vn/gw3Wkjj7P09wiWHXfAO5yEPfwnyPyGVWKJi7CqMOGYOO73LT1KJ9
- to72LYXl7fVe9MAAAA=
-X-Change-ID: 20260728-vmcore-dmesg-stream-upstream-7da695989f95
-To: kexec@lists.infradead.org
-Cc: Simon Horman <horms@kernel.org>, 
- John Ogness <john.ogness@linutronix.de>, Petr Mladek <pmladek@suse.com>, 
- Philipp Rudo <prudo@redhat.com>, Baoquan He <bhe@redhat.com>, 
- Serapheim Dimitropoulos <sdimitropoulos@coreweave.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1787063389; l=8027;
- i=sdimitropoulos@coreweave.com; s=20260302; h=from:subject:message-id;
- bh=hijgKW6X2v2d3SNPlNjO1MGGReiFBIVbFQJgWYObBd0=;
- b=Mft83oKPZeAc2h/ARUnObhOurxUqmDAEa22F7tAmudmlDR7DiWGWYXrOhGH+tm8sKDQFyXz9/
- Cqt7TH4u/ERD1+t//9FAZNEAmLYBsKhKUyLnzAfin/bF7R+VIb5zsiz
-X-Developer-Key: i=sdimitropoulos@coreweave.com; a=ed25519;
- pk=Qysvg7jaTIU0posaYFtqa5SKJlFwqzil4X0U1p1zo/g=
+        d=1e100.net; s=20251104; t=1787066936; x=1787671736;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=MCqv9FjqzX9J6sE+mm4dR8DQFjLQZx0WW3HAG/YPlNE=;
+        b=sC/g58WOZg38R24zA89t++1vN2fFc2ELD6nWuJoy93HUKriZ7nKXBveNMLCkyIko5b
+         JAw1ygF8An4LXMbZB365nQe3G/hddrus7/Vf16CEiTy8Bua1ruVUlpWDcGIpHsI0gwgP
+         s1/SmF6dDmas2/r45DqGWDwPCLKp8Dr0PmKaokjzwNXE/0PBLXg7PZqqR3/A7nrHWhV6
+         NV7OClKxGhyCboua1K+tGnzPEktLUSUe3SV0F5UZoaOvYtgMo469RhS9nCIdeGQkWvvN
+         Q6ZI00d7JEDUWuzpq+zbD9h1yOSP2rxGwDAQAZB7wE4OHYrgcVRzKYUZgNzHllh+NPDW
+         1d7w==
+X-Forwarded-Encrypted: i=1; AHgh+RpkArfbAGsL6g84SOIpvdVxeMKE0Comjhy3ZXKsX5wAE6oRK5wHjAHeiD2Lpt6l7ozs8JdonA==@lists.infradead.org
+X-Gm-Message-State: AOJu0YwZZapk/o+ReL4daGfAYsMaT5xUBWDtl6j2TuzgdfW/51KRn3dc
+	g2XFrfQfXvTBkunuhhpTbuhTG4K9LvXWPbroHPp0gVtUeDUH9JRqnrbGLeAEQPx65+KA4wcmC4j
+	QhTAYhvp+9J7Z4xyqdA==
+X-Received: from edru23.prod.google.com ([2002:aa7:d557:0:b0:6a1:f3cf:4285])
+ (user=tarunsahu job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6402:c1d6:b0:6a3:9e00:8ed2 with SMTP id 4fb4d7f45d1cf-6a39e008fb0mr9583691a12.16.1787066936333;
+ Tue, 18 Aug 2026 08:28:56 -0700 (PDT)
+Date: Tue, 18 Aug 2026 15:28:55 +0000
+In-Reply-To: <2vxzqzjz1x5f.fsf@kernel.org>
+Mime-Version: 1.0
+References: <20260728121138.1103610-1-tarunsahu@google.com>
+ <20260728121138.1103610-6-tarunsahu@google.com> <anphyjFv3FhF61iB@google.com>
+ <2vxzpkzo51wg.fsf@kernel.org> <anssOQFNZ2LfihbU@google.com>
+ <2vxzik5f311e.fsf@kernel.org> <anyObKiZIhfok5mk@google.com> <2vxzqzjz1x5f.fsf@kernel.org>
+Message-ID: <9huzv797v45k.fsf@tarunix.c.googlers.com>
+Subject: Re: [PATCH v4 05/11] KVM: LUO: Support VM preservation across live updates
+From: tarunsahu@google.com
+To: Pratyush Yadav <pratyush@kernel.org>, Sean Christopherson <seanjc@google.com>, loganodell@google.com
+Cc: Pratyush Yadav <pratyush@kernel.org>, ackerleytng@google.com, fuad.tabba@linux.dev, 
+	Andrew Morton <akpm@linux-foundation.org>, dmatlack@google.com, 
+	Shuah Khan <skhan@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, david@redhat.com, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, sagis@google.com, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	linux-kselftest@vger.kernel.org, andre.przywara@arm.com, michael.roth@amd.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, will@kernel.org, 
+	vannapurve@google.com, maz@kernel.org, fvdl@google.com, kvm@vger.kernel.org, 
+	oliver.upton@linux.dev, kvmarm@lists.linux.dev, alexandru.elisei@arm.com, 
+	skhawaja@google.com, aneesh.kumar@kernel.org, linux-doc@vger.kernel.org, 
+	David Hildenbrand <david@kernel.org>, yan.y.zhao@intel.com, kexec@lists.infradead.org, 
+	suzuki.poulose@arm.com
+Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260818_072952_524059_134F9AF3 
-X-CRM114-Status: GOOD (  16.79  )
+X-CRM114-CacheID: sfid-20260818_082859_843237_201903E0 
+X-CRM114-Status: GOOD (  63.63  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,229 +102,358 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Serapheim Dimitropoulos <sdimitropoulos@coreweave.com>
+Pratyush Yadav <pratyush@kernel.org> writes:
 
-We came across this while testing kdump on an arm64 system with a 64 MiB
-printk text ring and an 850 MiB capture kernel. vmcore-dmesg was run from
-the capture kernel before makedumpfile, but it was killed with SIGKILL
-before it could produce any output.
+> On Wed, Aug 12 2026, Sean Christopherson wrote:
+>
+>> On Wed, Aug 12, 2026, Pratyush Yadav wrote:
+>>> On Tue, Aug 11 2026, Sean Christopherson wrote:
+> [...]
+>> But that's all beside the point.  What I'm saying is that SNP and TDX *must* use
+>> guest_memfd, whereas guest_memfd is optional for all other VM types.  And so adding
+>> LUO support for guest_memfd without even sketching out a plan for CoCo VMs feels
+>> backwards.
+>>
+>> I'm not necessarily opposed to gradual guest_memfd support, but there needs to be
+>> a clear plan of how all of this is going to fit together.  It doesn't need to be
+>> perfect, and I'm sure we'll make mistakes along the way, but I want to at least
+>> try not to paint ourselves into a corner, especially with respect to the ABI.
+>
+> Right. I think landing shared guest_memfd is the first step. It is
+> simple enough and doesn't need to preserve the more complicated
+> architecture specific things like secure EPT, etc. The CoCo support
+> can build on top of this.
+>
+> There is work underway already for an RFC of TDX live update, but Tarun
+> knows the details better than me so I'll let him fill in the details for
+> the next version of this series.
 
-The lockless ringbuffer reader copies the complete descriptor, info, and
-text rings before it starts processing records. For the above setup these
-copies raised peak RSS to about 345 MiB. This is a significant part of the
-memory available to the capture kernel, and most of the copied data is only
-visited once.
+Right, I am keeping things minimal for this version just addressing the
+non-cocovm guest_memfd to be preserved. On top of it, We will buidl
+support for the cocoVM preservation. And Sagi (sagis@google.com) is
+already working on it.
 
-Keep the ring file offsets and read each active record directly instead.
-Allocate space for one descriptor, one info record, and one text record.
-Leave the existing ring geometry parsing, types, traversal, and
-record-state handling unchanged.
+Why not implement both in the same series:
+1. This series focus on finalizing the design, How guest_memfd will be
+preserved, So Any user (Not now) but in future will use guest_memfd in
+non cocoVM case, This alone feature will be used.
 
-The old and new readers produced byte-identical output for committed and
-finalized records, missed and empty records, wrapped text, non-printable
-bytes, descriptor ID wraparound, and a dense 100000-record fixture.
+2. guest_memfd cocoVM preservation support will be built on top of
+in-place conversion series and I preferred not to complicate two topics
+in single series, Instead to develop gradually.
 
-For the dense fixture with a 64 MiB text ring, peak RSS dropped from
-345276 KiB to 1276 KiB. Runtime increased from 1.98 to 2.09 seconds due to
-the per-record reads.
+I agree to your answer for have Borader Roadmap. I tried to answer in
+Cover-letter. Which I am re-stating it here:
 
-Fixes: 4149df9005f2 ("printk: add support for lockless ringbuffer")
-Signed-off-by: Serapheim Dimitropoulos <sdimitropoulos@coreweave.com>
----
-Changes in v3:
-- Keep the patch focused on changing where ring data is read.
-- Remove the new validation and overflow-checking framework, and retain the
-  existing types, ring geometry parsing, arithmetic, traversal, and
-  record-state handling.
-- Use direct pread() calls and the same error handling style as the existing
-  reader.
-- Re-run make distcheck, byte-for-byte small and dense fixture comparisons,
-  peak RSS measurements, and ASan/UBSan tests of the printk-ring path.
-- Link to v2: https://lore.kernel.org/r/20260803-vmcore-dmesg-stream-upstream-v2-1-cb7f7449bc1b@coreweave.com
----
- util_lib/elf_info.c | 94 ++++++++++++++++++++++++++++-------------------------
- 1 file changed, 49 insertions(+), 45 deletions(-)
+This series support guest_memfd preservation for non-COCOVM only. cocoVM
+Support will be built on top of that. Which includes the following
+stages.
+non cocoVM guest_memfd preservation -> TDX preservation -> in-place
+convertable private guest_memfd preservation -> in-place convertable
+private guest_memfd preservation backed by hugetlb.
 
-diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
-index 36eb895..d6e5ffc 100644
---- a/util_lib/elf_info.c
-+++ b/util_lib/elf_info.c
-@@ -960,12 +960,15 @@ struct prb_map {
- 
- 	char		*desc_ring;
- 	unsigned long	desc_ring_count;
--	char		*descs;
-+	uint64_t	desc_offset;
-+	char		*desc;
- 
--	char		*infos;
-+	uint64_t	info_offset;
-+	char		*info;
- 
- 	char		*text_data_ring;
- 	unsigned long	text_data_ring_size;
-+	uint64_t	text_data_offset;
- 	char		*text_data;
- };
- 
-@@ -1061,7 +1064,7 @@ static uint64_t sizeof_ulong(void)
- 	return (machine_pointer_bits() >> 3);
- }
- 
--static void dump_record(struct prb_map *m, unsigned long id,
-+static void dump_record(int fd, struct prb_map *m, unsigned long id,
- 			void (*handler)(char*, unsigned int))
- {
- #define OUT_BUF_SIZE	4096
-@@ -1078,9 +1081,16 @@ static void dump_record(struct prb_map *m, unsigned long id,
- 	char *text;
- 	char *desc;
- 	int i;
-+	int ret;
- 
--	desc = m->descs + ((id % m->desc_ring_count) * prb_desc_sz);
--	info = m->infos + ((id % m->desc_ring_count) * printk_info_sz);
-+	ret = pread(fd, m->desc, prb_desc_sz, m->desc_offset +
-+		    ((id % m->desc_ring_count) * prb_desc_sz));
-+	if (ret != prb_desc_sz) {
-+		fprintf(stderr, "Failed to read desc of size %zu bytes: %s\n",
-+			prb_desc_sz, strerror(errno));
-+		exit(65);
-+	}
-+	desc = m->desc;
- 
- 	/* skip non-committed record */
- 	state_var = get_ulong(desc + prb_desc_state_var_offset +
-@@ -1088,6 +1098,15 @@ static void dump_record(struct prb_map *m, unsigned long id,
- 	if (!record_committed(id, state_var))
- 		return;
- 
-+	ret = pread(fd, m->info, printk_info_sz, m->info_offset +
-+		    ((id % m->desc_ring_count) * printk_info_sz));
-+	if (ret != printk_info_sz) {
-+		fprintf(stderr, "Failed to read info of size %zu bytes: %s\n",
-+			printk_info_sz, strerror(errno));
-+		exit(65);
-+	}
-+	info = m->info;
-+
- 	begin = get_ulong(desc + prb_desc_text_blk_lpos_offset +
- 			  prb_data_blk_lpos_begin_offset) %
- 		m->text_data_ring_size;
-@@ -1120,7 +1139,13 @@ static void dump_record(struct prb_map *m, unsigned long id,
- 	if (next - begin < len)
- 		len = next - begin;
- 
--	text = m->text_data + begin;
-+	ret = pread(fd, m->text_data, len, m->text_data_offset + begin);
-+	if (ret != len) {
-+		fprintf(stderr, "Failed to read text of size %hu bytes: %s\n",
-+			len, strerror(errno));
-+		exit(65);
-+	}
-+	text = m->text_data;
- 
- 	/* escape non-printable characters */
- 	for (i = 0; i < len; i++) {
-@@ -1176,58 +1201,37 @@ static void dump_dmesg_lockless(int fd, void (*handler)(char*, unsigned int))
- 	m.desc_ring_count = 1 << struct_val_u32(m.desc_ring,
- 					prb_desc_ring_count_bits_offset);
- 	kaddr = get_ulong(m.desc_ring + prb_desc_ring_descs_offset);
--	m.descs = calloc(1, prb_desc_sz * m.desc_ring_count);
--	if (!m.descs) {
--		fprintf(stderr, "Failed to malloc %lu bytes for descs: %s\n",
--			prb_desc_sz * m.desc_ring_count, strerror(errno));
-+	m.desc_offset = vaddr_to_offset(kaddr);
-+	m.desc = calloc(1, prb_desc_sz);
-+	if (!m.desc) {
-+		fprintf(stderr, "Failed to malloc %zu bytes for desc: %s\n",
-+			prb_desc_sz, strerror(errno));
- 		exit(64);
- 	}
--	ret = pread(fd, m.descs, prb_desc_sz * m.desc_ring_count,
--		    vaddr_to_offset(kaddr));
--	if (ret != prb_desc_sz * m.desc_ring_count) {
--		fprintf(stderr,
--			"Failed to read descs of size %lu bytes: %s\n",
--			prb_desc_sz * m.desc_ring_count, strerror(errno));
--		exit(65);
--	}
- 
- 	/* setup info ring */
- 	kaddr = get_ulong(m.prb + prb_desc_ring_infos_offset);
--	m.infos = calloc(1, printk_info_sz * m.desc_ring_count);
--	if (!m.infos) {
--		fprintf(stderr, "Failed to malloc %lu bytes for infos: %s\n",
--			printk_info_sz * m.desc_ring_count, strerror(errno));
-+	m.info_offset = vaddr_to_offset(kaddr);
-+	m.info = calloc(1, printk_info_sz);
-+	if (!m.info) {
-+		fprintf(stderr, "Failed to malloc %zu bytes for info: %s\n",
-+			printk_info_sz, strerror(errno));
- 		exit(64);
- 	}
--	ret = pread(fd, m.infos, printk_info_sz * m.desc_ring_count,
--		    vaddr_to_offset(kaddr));
--	if (ret != printk_info_sz * m.desc_ring_count) {
--		fprintf(stderr,
--			"Failed to read infos of size %lu bytes: %s\n",
--			printk_info_sz * m.desc_ring_count, strerror(errno));
--		exit(65);
--	}
- 
- 	/* setup text data ring */
- 	m.text_data_ring = m.prb + printk_ringbuffer_text_data_ring_offset;
- 	m.text_data_ring_size = 1 << struct_val_u32(m.text_data_ring,
- 					prb_data_ring_size_bits_offset);
- 	kaddr = get_ulong(m.text_data_ring + prb_data_ring_data_offset);
--	m.text_data = calloc(1, m.text_data_ring_size);
-+	m.text_data_offset = vaddr_to_offset(kaddr);
-+	m.text_data = calloc(1, UINT16_MAX);
- 	if (!m.text_data) {
- 		fprintf(stderr,
--			"Failed to malloc %lu bytes for text_data: %s\n",
--			m.text_data_ring_size, strerror(errno));
-+			"Failed to malloc %u bytes for text_data: %s\n",
-+			UINT16_MAX, strerror(errno));
- 		exit(64);
- 	}
--	ret = pread(fd, m.text_data, m.text_data_ring_size,
--		    vaddr_to_offset(kaddr));
--	if (ret != m.text_data_ring_size) {
--		fprintf(stderr,
--			"Failed to read text_data of size %lu bytes: %s\n",
--			m.text_data_ring_size, strerror(errno));
--		exit(65);
--	}
- 
- 	/* ready to go */
- 
-@@ -1237,14 +1241,14 @@ static void dump_dmesg_lockless(int fd, void (*handler)(char*, unsigned int))
- 						atomic_long_t_counter_offset);
- 
- 	for (id = tail_id; id != head_id; id = id_inc(id))
--		dump_record(&m, id, handler);
-+		dump_record(fd, &m, id, handler);
- 
- 	/* dump head record */
--	dump_record(&m, id, handler);
-+	dump_record(fd, &m, id, handler);
- 
- 	free(m.text_data);
--	free(m.infos);
--	free(m.descs);
-+	free(m.info);
-+	free(m.desc);
- 	free(m.prb);
- }
- 
+End Goal is to support guest_memfd preservation on cocoVM backed by
+hugetlb.
 
----
-base-commit: 29898e149feb5c615b3ab6313260d58315bf1d8d
-change-id: 20260728-vmcore-dmesg-stream-upstream-7da695989f95
+The question remains:
+Why we are preserving KVM and only vm_type there.
 
-Best regards,
--- 
-Serapheim Dimitropoulos <sdimitropoulos@coreweave.com>
+I will try to answer this on the thread of VM preservation to not loose
+the context.
 
+>
+>>
+>>> >> > E.g. the LUO APIs seem pretty straightforward; I assume the bulk of the complexity
+>>> >> > is going to be in knowing what to save/restore, and how, which is much more about
+>>> >> > KVM than it is about liveupdate.
+>>> >> 
+>>> >> I think it is fine if you want to take these changes through the KVM
+>>> >> tree, but I would like live update maintainers to be listed as reviewers
+>>> >> at least.
+>>> >
+>>> > Why not simply add a file pattern match to the LIVE UPDATE entry?
+>>> >
+>>> > diff --git MAINTAINERS MAINTAINERS
+>>> > index 8014b9f8253e..2eb57b22c37f 100644
+>>> > --- MAINTAINERS
+>>> > +++ MAINTAINERS
+>>> > @@ -15052,8 +15052,8 @@ F:      include/linux/liveupdate.h
+>>> >  F:     include/uapi/linux/liveupdate.h
+>>> >  F:     kernel/liveupdate/
+>>> >  F:     lib/tests/liveupdate.c
+>>> > -F:     mm/memfd_luo.c
+>>> >  F:     tools/testing/selftests/liveupdate/
+>>> > +N:     [^a-z]luo
+>>> >  
+>>> >  LLC (802.2)
+>>> >  L:     netdev@vger.kernel.org
+>>> 
+>>> This would list us as maintainers of kvm_luo.c and the tree as liveupdate.git, 
+>>
+>> It would list both "LIVE UPDATE" and "KERNEL VIRTUAL MACHINE (KVM)", as KVM would
+>> still cover the files via "F:	virt/kvm/*".  And my read of MAINTAINERS is that
+>> N: and K: entries are "secondary" if the files/scope is covered by an F: entry.
+>>
+>> E.g. arch/x86/kvm/vmx/tdx.c is covered by "KERNEL VIRTUAL MACHINE FOR X86 (KVM/x86)"
+>> via "F:	arch/x86/kvm/*/", and also by "X86 TRUST DOMAIN EXTENSIONS (TDX)" via
+>> "N:	tdx" (or maybe "K:	\b(tdx)"?  I haven't bothered to check which one
+>> triggers).  And while I don't think there was ever any formal discussion, AFAIK
+>> everyone reads the situation as KVM still being the primary maintainer/tree for
+>> that code.
+>>
+>>> both of which is something you're saying you _don't_ want.
+>>
+>> No, what I don't want is a dedicated "KVM LIVE UPDATE" entry, because I think most
+>> people would read "F:     virt/kvm/kvm_luo.c" and "F:     virt/kvm/guest_memfd_luo.c"
+>> as being more precise than KVM's "F:   virt/kvm/*" and thus would read things as
+>> "KVM LIVE UPDATE" being the primary maintainer.
+>>
+>> In other words, I'm more than ok with LUO being looped in on KVM LUO changes and
+>> having the authority to object to problematic changes, but I'm not ok with LUO
+>> taking primary ownership of KVM code.
+>
+> Sure, that sounds good to me.
+>
+>>
+>> I realize there's more than a bit of nuance in my interpretation of N: and K:,
+>> but again my experience with TDX is that so long as the maintainers are aligned
+>> on expectations, it's a non-issue in practice.
+>
+> Yep, as long as we agree among ourselves I don't think the red tape
+> around which entry has higher priority matters much.
+
+Agree!
+>
+>>
+>>> >> At the same time, I also keep being (pleasantly)
+>>> >> surprised at preservation being relatively simple. For example, the code
+>>> >> to preserve a shmem file (via memfd) is roughly 600 lines, a big chunk
+>>> >> of which is comments. The code of course has some limitations, but it is
+>>> >> good enough for use in production.
+>>> >> 
+>>> >> For one, we care about ABI breakages and versioning. 
+>>> >
+>>> > Which is amusing to me because that implies KVM does not, and I would hazard to
+>>> 
+>>> No, it doesn't. What I'm saying is I care about changes to the _live
+>>> update ABI_. Just like you probably care about changes to KVM ABI but
+>>> not so much about BPF for example.
+>>> 
+>>> > guess that KVM has the biggest ABI surface of any subsystem in the kernel by a
+>>> > country mile (though I'm probably wildly underestimating the effective ABI surface
+>>> > of filesystems).
+>>> >
+>>> >> The serialized state is a part of live update ABI and changes to it should be
+>>> >> ACKed by us. 
+>>> >
+>>> > Meh, "Don't break userspace" is a universal rule in the kernel, I genuinely don't
+>>> > see why liveupdate needs special treatment.
+>>> 
+>>> Ironically enough, you miss my point. I'm not talking about userspace
+>>> ABI. We all know not to break that. I am talking about live update
+>>> _serialization ABI_. See the stuff under include/linux/kho/abi. This
+>>> series also adds things there.
+>>
+>> No, I understand exactly what ABI you're talking about.
+>>
+>>> This is ABI between kernels. It needs to be stable-ish so you can move
+>>> from one kernel version to another. At the same time, unlike userspace
+>>> ABI, it can change.
+>>
+>> Uh, yeah, so KVM has been managing such immutable ABI for practically its entire
+>> existence.  KVM's save/restore uAPI has exactly what you're describing: serialization
+>> ABI that needs to be backwards and forwards compatible between different kernels
+>> in order to support both upgrade and rollback scenarios via live migration.
+>
+> I think there is a slight difference between KVM's save/resture uAPI and
+> live update's ABI. With KVM's uAPI, you need to maintain strict
+> backwards compatibility because userspace reads what you output. So if
+> you change the layout, userspace will interpret it wrong and might
+> break.
+>
+> With live update, the ABI never gets to userspace. It is used to talk
+> between kernels directly. So if you do break that, your userspace keeps
+> working fine, you just might not be able to live update to the
+> incompatible kernel.
+>
+> So with live update, we don't need to keep backwards compatibility in
+> the ABI forever. Of course, it is good to minimize changes, but we have
+> more freedom to change it.
+>
+> The current idea is we change the ABI whenever needed. This is because
+> live update is still in development so we are likely to see a lot more
+> changes before we settle down into something that mostly works. At some
+> point, we want to start being more strict between incompatible ABI
+> changes. The current idea is that we would like to keep backwards
+> compatibility across LTS kernels. But none of that is set in stone yet.
+>
+
+True, I also understand Sean's Concern. I will try to explain why
+bacward compatibility with padding does not solve the problem here.
+
+Kernel V1                        -> Kernel V2
+guest_memfd_luo ABI v1           -> guest_memfd_luo ABI v2
+
+(No Userspace involvement here: userspace only determine if the upcoming
+kernel V2 can support the V1 preserved files, if return true: liveupdate()
+elif: no_liveupdate())
+
+When Kernel V1, preserve the data, it has preserved based on ABI v1.
+then serializes it to make it transferable to next kernel via fdt.
+
+Now Kernel V2 boots up, and it needs to deserialize the data and restore
+the file which was preserved before. But this kernel V2 expect guest_memfd
+preservation ABI V2. These ABI V2 might be because of multiple reasons,
+for e.g.
+1. A new feature in guest_memfd_luo (preserving more flags, or the
+private/shared state of folios etc)
+
+2. A new feature in guest_memfd itself, guest_memfd kernel APIs
+(guest_memfd_create(..., new_args) or a new init call for guest_memfd after
+guest_memfd_create(), or an older field/flog is dropped). So new kernel
+should be able to retrieve old guest_memfd and populate in new
+guest_memfd for backward compatibility.
+
+Now, What will happen to these new fields or arguments that are needed,
+Kernel V2->guest_memfd_luo V2 will take care of setting them to default.
+
+Is setting them to default acceptable? Not always? So that is where the
+negotiation comes in picture:  Kernel V2 should know if it can support
+retrieving kernel V1 or otherwise userspace must not transition to V2 using
+liveupdate if V2 does not have compatibility with V1.
+
+Now to support this backward compatibility, the retrieval APIs and
+deserialization APIs in V2 kernel should be able to provide the
+deserialization/retrieval for V1 preserved data.
+
+Kernel V1 -> serialize data ---kexec ----> kernel V2 -> deserialization -> retrieve
+
+Now deserialization/retrival is aware of V1/V2 comptatibility then it
+can set the new fields, parse the preserved data of V1 into V2 (or
+directly give it to guest_memfd APIs with setting any new expected
+fields to default.)
+
+Now having a padding fields in kernel guest_memfd_luo ABIs does not help
+here. As support for deserialization and parsing from V1-> V2 in kernel
+V2 will determine if kernel V2 is backward compatible with V1. which can
+also take care of setting the extra needed fields in V2 to default
+value or remove the unwanted flags/fields not needed in kernel V2.
+
+
+Now Questions is, if there isa  need for rollback to previous kernel
+(V2 -> V1)?
+
+There are two options,
+1. kernel V2 is aware that it is going to get kexec to V1. then
+serialization function on preservation will serialize the
+data in guest_memfd_luo ABIs V1 compatible format.
+
+2. kernel V1 guest_memfd_luo ABIs had the padding in their ABIs
+structures which even if kernel V2 will set those field, will be ignored
+by kernel V1. This will not require saperate
+deserialization/preservation mechanism for guest_memfd_luo V1 in kernel
+V2. This will not work in every case, As there might be different
+parsers are in guest_memfd_luo V2 and V1. then serialized data preserved
+by guest_memfd_luo V2 can not be parsed by guest_memfd_luo V1 after kexec.
+
+So,
+
+Kernel V2 _must have_ to support backward compatibility with kernel V1:
+1. guest_memfd_luo V1 context aware deserialization/retrieval mechanism
+2. guest_memfd_luo V1 context aware serialization/preservation mechanism
+
+Kernel V1/V2 may have:
+1. padding (hard to determine, can have heuristically) to ease the job
+of deserialization/retrieval/serialization/preservation apis. But does
+not solve backward compatibility alone.
+
+
+Once we will keep updating the host, There will be a point when we are at
+V15 but we dont want V1 backward compatiblity anymore, So we drop the
+deserialization/retrieval/serialization/preservation for V1 from V15.
+
+Would love to hear your thoughts?
+
+Looping Logan (loganodell@google.com) for his insights on this as well.
+
+~Tarun
+
+
+> That's why I would like to have an explicit ACK from the live update
+> group for ABI changes. I would like to enforce these compatibility
+> windows.
+>
+>>
+>> KVM also has immutable ABI between itself and guest kernels, including implicit
+>> "ABI" in the form of not changing guest-visible behavior.
+>>
+>>> Today we don't have any rules and let you change things freely as long as you
+>>> do a version bump. But at a later point, the plan is to add some stability
+>>> requirements to the ABI so you can actually upgrade the kernel across major
+>>> versions.
+>>> 
+>>> So at least for ABI changes, there should be an explicit ACK from the
+>>> live update group.
+>>
+>> I don't entirely agree.  I get where you're coming from, and I 100% agree that
+>> the more eyeballs on changes that may affect ABI, the better.
+>>
+>> Where I have problems with the above is that it doesn't account for the nuances
+>> of save/restore across different kernels.  The literal format of the serialized
+>> data is the most obvious form of ABI, but it's absolutely possible to change ABI
+>> without changing the data format.
+>>
+>> E.g. say there's a flags field in some serialization structure, and flags X and Y
+>> are mutually exclusive in current kernels.  If a future kernel relaxes that
+>> restriction for whatever reason, then the effective ABI has been broken because
+>> state created and saved on new kernels can't be restored on old kernels.  And
+>> this is not a theoretical concern, KVM has run afoul of this a few times (though
+>> thankfully very rarely).
+>
+> That's a bug, and should be fixed.
+>
+> I am talking here about intentional ABI changes. As I mentioned above we
+> _can_ change the ABI, we just need to be careful about it.
+>
+>>
+>> I don't think it's reasonable to expect LUO maintainers to gain enough expertise
+>> in each subsystem to be able to ensure changes are forwards and backwards
+>> compatible.  The only way I see LUO being successful in the long term is to get
+>> subsystem maintainers/contributors to understand *and buy-in* to the LUO model
+>> and rules, so that each subsystem can largely be self-sustatining.  I.e. setting
+>> yourselves up as literal gatekeepers will help prevent blatant breakage, but it's
+>> less likely to help guard against more subtle breakage, and in my experience,
+>> subtle breakage is by far harder to detect and more painful to deal with.
+>
+> Outside of enforcing the ABI compatibility windows, I think this makes
+> sense.
+>
+> In principle at least, though from my experience the maintainer appetite
+> to care about live update varies. The feeling I've got from MM for
+> example is more along the lines of "you break it, you buy it". Which is
+> also a valid model IMO. The person who wrote the live update code for a
+> subsystem is well equipped to understand these nuances.
+>
+>>
+>> Somewhat of a side topic: in my experience, using monotonically increasing version
+>> numbers is a horrible way to enumerate features/content.  So for me, allowing
+>> KVM's LUO ABI to change with a verson bump is probably a non-starter.  I.e.
+>> whatever gets merged needs to be more future-proof than "we'll deal with it later".
+>
+> As I wrote above, the compatibility model for live update allows
+> breaking ABI with version bumps. Userspace keeps working fine, it only
+> restricts the set of kernels that you can go to. So the "we'll deal with
+> it later" is not as harmful because our choices here are not permanent.
+>
+> Also, there is work underway to allow transitions between versions [0].
+>
+> But still, I am not opposed to a more flexible guest_memfd ABI. I think
+> we can reserve some space for feature flags to let us add things in the
+> future.
+>
+> [0] https://lore.kernel.org/kexec/20260731215224.831696-1-loganodell@google.com/
+>
+> -- 
+> Regards,
+> Pratyush Yadav
 
