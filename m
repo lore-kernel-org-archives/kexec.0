@@ -4,74 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DFBF8C5DF7E
-	for <kexec@archiver.kernel.org>; Tue, 18 Aug 2026 10:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7B83EC5DF7E
+	for <kexec@archiver.kernel.org>; Tue, 18 Aug 2026 12:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
-	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Koz3r/AfThNLRrBgrtFERGCjlw/bQbRflD0M4YMQKNo=; b=mbB7xQSrYRRTdb/ShLMWgeBBZ3
-	7+BAZbBno0mJd4rzQ7yhAczKK79MxK0s5v7w/xQrPS9/xwCY0XHai0N/PtXgjc+3tR59F4j3Bcwy0
-	apbNuffRfWo4yGPeqSaOQiHyzZwgolWHD49YV4UZfluc+cS9yx5fCu5GwDCy37+jMRGIheN0P3zcx
-	1vZpdW5MPmZGmS0g8n5KVjMCBR15+5uI6I0qYWdbpK2P/Dr+JwQxzpUGS5Ns0oHbGKwjSDAt0X5mt
-	Jv/ZdCOfP6ZiI6oUP1s6958gY4GjVU5g/+JNOv2+5VTACyyS9j8H//lCyxnCjVq0pgUumEBO4qIZl
-	8sUvcTMg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:CC:To:
+	Subject:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=YJN1XNbV1kVG2NQ3eF3Cz0aSxHqvy1o4DerQ17ykIz0=; b=DjvPNTlrkYrbdZC1/KbJua4iYt
+	Hzz58pVbp4FiYnxABC491UUAlHMw+VAukhpjTqay6/el8LwQgKh+2xKe1Pw6gkOJxO5a2NT3lH3G+
+	RlDoydkKCmX7S70uo2kkxz1Fh6zxY0HEe/0eMo1eWR42PPjYSyhqvp8f1T/+2S6vMHTmzeDDvFYTb
+	tKJBJAjjU3c/zyb6I3JFpxpNK5ydBsD7ojnfRYA+yZCJWXSFUgovha8eRBpQX8o/pe7nuDDi0zvr1
+	te3XXf5dgAv2xLgu6ijvZMXtPi0rTuuxWMv+f3U0y6/DjFYlCU2pr+UOPwPxEwAsLMjd8P2iGpyZN
+	5dzPaEAA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wwHX7-00000007nYb-3Q0V;
-	Tue, 18 Aug 2026 10:59:05 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wwIjq-00000007uYe-3IPY;
+	Tue, 18 Aug 2026 12:16:18 +0000
+Received: from canpmsgout06.his.huawei.com ([113.46.200.221])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wwHX6-00000007nY9-0XP8
+	id 1wwIjm-00000007uY2-1rQ8
 	for kexec@lists.infradead.org;
-	Tue, 18 Aug 2026 10:59:04 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 34D09601E0;
-	Tue, 18 Aug 2026 10:59:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F3811F000E9;
-	Tue, 18 Aug 2026 10:58:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787050742;
-	bh=Koz3r/AfThNLRrBgrtFERGCjlw/bQbRflD0M4YMQKNo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=ihoilFApSOAE34vYAawnEXEPs2f7u8XzfhkPsgG2g14u5Q5sWxPAMOf71YALTPv8v
-	 fZyOdM6N19EY1DCuJzEcAgnNo9BvWctVjcxlxlZit/W1UkRoq7AnILj/k5I3fXHckj
-	 grBgpSIdu0Uxj74rIVP2vJjPjRmaX/GeuFFr/SaBlUOHJG0teMz5FRbtdoS1mfTTJB
-	 rv0RjYc0NXjBPQIsE0OKcZEy6Z5T+gJWmnkPZfyepE74gvHw2bKL7FMJuDxlOVEaTm
-	 mjg1MlR4odsf+vaZlanjE2Ww8L2FXJYF7SZMeEpBWtRQBMi5LcfJ29f2343Zn26qLX
-	 CFZBDHwCrHJwA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Gregory Price <gourry@gourry.net>,  Pratyush Yadav
- <pratyush@kernel.org>,  Jonathan Corbet <corbet@lwn.net>,  Shuah Khan
- <skhan@linuxfoundation.org>,  Mike Rapoport <rppt@kernel.org>,  Pasha
- Tatashin <pasha.tatashin@soleen.com>,  Alexander Graf <graf@amazon.com>,
-  Andrew Morton <akpm@linux-foundation.org>,  David Hildenbrand
- <david@kernel.org>,  Lorenzo Stoakes <ljs@kernel.org>,  "Liam R. Howlett"
- <liam@infradead.org>,  Vlastimil Babka <vbabka@kernel.org>,  Suren
- Baghdasaryan <surenb@google.com>,  Michal Hocko <mhocko@suse.com>,  Thomas
- Gleixner <tglx@kernel.org>,  Ingo Molnar <mingo@redhat.com>,  Borislav
- Petkov <bp@alien8.de>,  Dave Hansen <dave.hansen@linux.intel.com>,  "H.
- Peter Anvin" <hpa@zytor.com>,  Ard Biesheuvel <ardb@kernel.org>,  Ilias
- Apalodimas <ilias.apalodimas@linaro.org>,  Saravana Kannan
- <saravanak@kernel.org>,  Arnd Bergmann <arnd@arndb.de>,  Baoquan He
- <baoquan.he@linux.dev>,  x86@kernel.org,  linux-doc@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  kexec@lists.infradead.org,
-  linux-mm@kvack.org,  linux-efi@vger.kernel.org,
-  devicetree@vger.kernel.org,  linux-arch@vger.kernel.org
-Subject: Re: [PATCH 0/4] kho: rename "scratch" to "bootmem"
-In-Reply-To: <20260817145231.GA579285-robh@kernel.org> (Rob Herring's message
-	of "Mon, 17 Aug 2026 09:52:31 -0500")
-References: <20260811162642.3504565-1-pratyush@kernel.org>
-	<aoMdJ7hpr1GonLz8@gourry-fedora-PF4VCD3F>
-	<20260817145231.GA579285-robh@kernel.org>
-Date: Tue, 18 Aug 2026 12:58:55 +0200
-Message-ID: <2vxz4igr1yq8.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	Tue, 18 Aug 2026 12:16:17 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=YJN1XNbV1kVG2NQ3eF3Cz0aSxHqvy1o4DerQ17ykIz0=;
+	b=CtkBOOzdgvQOOkYQfbKQ9+0f6okaXLJPPYPMqpbF8rpax8HOWbesMuK28GuLhRD77zlNyyGCc
+	b1Rvju6IUfwQKh/prrn2V54H+ShXHIpbM34dNJzEFASE4P+GnwduddcihO2hS+GFEcb+eDFnQkh
+	xK3Kz/K/Mlck3bzypEjgXFU=
+Received: from mail.maildlp.com (unknown [172.19.162.197])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4hPT0x3MLnzRhQt;
+	Tue, 18 Aug 2026 20:05:21 +0800 (CST)
+Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6B8D14057D;
+	Tue, 18 Aug 2026 20:16:00 +0800 (CST)
+Received: from kwepemq500010.china.huawei.com (7.202.194.235) by
+ dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 18 Aug 2026 20:16:00 +0800
+Received: from [10.173.124.160] (10.173.124.160) by
+ kwepemq500010.china.huawei.com (7.202.194.235) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 18 Aug 2026 20:15:58 +0800
+Subject: Re: [PATCH v6 2/2] kexec: keep the next kernel off hardware-poisoned
+ pages
+To: Breno Leitao <leitao@debian.org>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<kexec@lists.infradead.org>, <rmikey@meta.com>, <riel@surriel.com>,
+	<kernel-team@meta.com>, Kiryl Shutsemau <kas@kernel.org>, Bradley Morgan
+	<include@grrlz.net>, Andrew Morton <akpm@linux-foundation.org>, "David
+ Hildenbrand" <david@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, "Liam R.
+ Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, "Mike
+ Rapoport" <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, "Michal
+ Hocko" <mhocko@suse.com>, Baoquan He <baoquan.he@linux.dev>, Pasha Tatashin
+	<pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, "Naoya
+ Horiguchi" <nao.horiguchi@gmail.com>
+References: <20260812-kexec_posioned-v6-0-e477887086f0@debian.org>
+ <20260812-kexec_posioned-v6-2-e477887086f0@debian.org>
+From: Miaohe Lin <linmiaohe@huawei.com>
+Message-ID: <f794a7b8-ea8b-ef21-5bf7-de36f3210837@huawei.com>
+Date: Tue, 18 Aug 2026 20:15:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20260812-kexec_posioned-v6-2-e477887086f0@debian.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.124.160]
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemq500010.china.huawei.com (7.202.194.235)
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260818_051615_283027_BFFD345E 
+X-CRM114-Status: GOOD (  18.38  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,93 +93,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Aug 17 2026, Rob Herring wrote:
+On 2026/8/12 19:31, Breno Leitao wrote:
+> Memory failures (such as unrecoverable ECCs errors) are getting more and
+> more common. The kernel knows how to handle it while running, marking it
+> as poisoned (and SIGBUS user tasks).
+> 
+> Poisoned memory is removed from the buddy allocator, but, not from
+> other places. A current problem is that kexec will load new kernel
+> on top of a bad/poisoned memory, which is undesirable.
+> 
+> If the next kernel's image, initrd or purgatory lands on a poisoned
+> frame, the relocation copy puts it on memory that is known bad. The
+> error happens on the first read from a bad page, and that is what we
+> want to avoid.
+> 
+> Skip hardware-poisoned frames that were detected by the memory failure
+> subsystem earlier when placing kexec segments.
+> 
+> To do so, add a helper that reports the first or the last poisoned page
+> in a range: memory is walked top-down by locate_mem_hole_top_down() and
+> bottom-up by locate_mem_hole_bottom_up(), so each direction needs a
+> different answer to stay clear of the poison.
+> 
+> kexec_load() gets its destinations from userspace and cannot move them,
+> so there sanity_check_segment_list() just rejects a segment that happens
+> to have a poisoned page.
+> 
+> is_page_hwpoison() also covers hugetlb, so a poisoned hugetlb folio is
+> skipped as a whole.
+> 
+> Suggested-by: Kiryl Shutsemau <kas@kernel.org>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> Reviewed-by: Kiryl Shutsemau (Meta) <kas@kernel.org>
+> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+> Reviewed-by: Bradley Morgan <include@grrlz.net>
 
-> On Mon, Aug 17, 2026 at 10:42:00AM -0400, Gregory Price wrote:
->> On Tue, Aug 11, 2026 at 06:26:36PM +0200, Pratyush Yadav wrote:
->> > From: "Pratyush Yadav (Google)" <pratyush@kernel.org>
->> > 
->> > The term "KHO scratch" is vague and overloaded. It does not accurately
->> > describe what the memory is for. This was discussed previously at [0].
->> > The conclusion was to rename "KHO scratch" to "KHO bootmem", since this
->> > is memory passed by the previous kernel for early boot allocations.
->> > 
->> 
->> This seems like a lot of churn to just rename some stuff, especially for
->> a term "scratch" which is very much understood to mean "temporary
->> working memory region" in common computing parlance.
+Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
 
-Gregory,
-
-Maybe. The people who work with the code on a daily basis (me, Mike,
-Pasha) think the rename is worthwhile because it helps us grok the code
-better.
-
-I think patch 1 and 2 should go in for sure. They make a noticeable
-improvement to memblock's code. Without that, memblock might have some
-memory marked as MEMBLOCK_KHO_SCRATCH that is part of "scratch" we got
-from KHO, and then some other memory also marked as MEMBLOCK_KHO_SCRATCH
-that we discovered at boot. Then later, the "scratch from KHO" needs to
-be initialized in a different way from "scratch discovered at boot". The
-rename to NOPRSRV makes it way more clear what the properties of the
-memory are and how memblock should use it.
-
-For patch 3, I am honestly surprised at how large it ended up being. But
-I am in principle opposed to the idea that we should not do any
-housekeeping because it might cause "churn". So I think if the end
-result is better then churn shouldn't stop us.
-
-Of course patch 3 has a lot of potential for bikeshedding so we can
-argue all day on what is better.
-
->> 
->> The boot param name change would also cause breakage for existing
->> systems that update and depend on the scratch parameter.
->> 
->> Is there a non-verbiage reason to justify these changes?  Living with
->> "scratch" seems better than potentially breaking folks.
-
-I renamed the commandline option because similar things have been done
-in the past for other options too.
-
-See commit c5bfece2d612 ("nohz: Switch from "extended nohz" to "full
-nohz" based naming") for example. It renamed "nohz_extended" to
-"nohz_full" because it is "a bit opaque and vague".
-
-Or commit 9406415f46f6 ("sched/debug: Rename the sched_debug parameter
-to sched_verbose"). Or a94e88cdd805 ("ACPICA: Tables: Avoid SSDT
-installation with acpi_gbl_disable_ssdt_table_load."). Or 632ff6170647
-("x86/microcode: Add microcode= cmdline parsing"). There are a handful
-more.
-
-So I think there is a bit of history of command line options being
-renamed to names the developers think are better.
-
-Also, I would imagine very few people are using kho_scratch= blindly.
-Since kho=on already does a pretty good job of automatically selecting
-the sizes, most people should not be using this option at all. Manual
-sizing of scratch areas is tricky and should only be done very carefully
-by observing each system's characteristics. And the numbers should be
-re-calibrated on each kernel upgrade since a new kernel might use more
-(or less) memory at boot. So really, I think the change is a lot less
-disruptive than you think.
-
-That said, I am not opposed to keeping backwards compatibility if
-someone _does_ complain.
-
-> I don't think these are the first breaking changes. And if the changes 
-
-Rob,
-
-What do you mean? None of the KHO's commandline options have changed
-before. And KHO has no uAPI to break in the first place.
-
-> are fine, then that means more breaking changes are fine, too. So why is 
-> this upstream at all until the design is settled?
->
-> Rob
-
--- 
-Regards,
-Pratyush Yadav
+Thanks.
+.
 
