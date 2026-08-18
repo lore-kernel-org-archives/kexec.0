@@ -4,60 +4,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1BD51C5DF74
-	for <kexec@archiver.kernel.org>; Mon, 17 Aug 2026 23:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 316B7C5DF70
+	for <kexec@archiver.kernel.org>; Tue, 18 Aug 2026 09:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:In-Reply-To:Subject:CC:To:From:Date:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:References:List-Owner;
-	bh=SZh2ivKKSQMz4Tw4pj6gSgvCgz+xLewwqu5aJ6u3/8U=; b=3mcSOgx8uoT2pTRjjPKb6p+Ddc
-	4zTIAE/OSk8+aunszJnDsIjKuuVn21Kq3ZaD5Noczwt1vs4pxVUT6HaJvz2MSnDi21JyatLqOznfx
-	F2uPNc4fkdWwihicWlAWyO0k0pWo80uLO+DTItOmfWFvcq6VsVo4Gx1CHFaePv5fRLFrb7HMgSgr7
-	RjGH7KEF7ww5dl7jOBoqbPnkax9T+ua0qZiuzlZPntgJbmlPmQtIrAufJ9iXFP2mEX74XMZmbEL07
-	iAva85vxSej3ZQ0In5eO6FuBHjF+sdgIjpa324dBVQwrZYcfBmL6HcEwWmqzrkJZRPcQX5BZ1DDUl
-	I0kZohuA==;
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=ZX1CnQZZsg94K1w9ifnkc6/NmgcRySaktgXNfBgb7AQ=; b=01gJdxb5LFv2IFzrdN2MxVahxl
+	vjgae/RCyT/1vJ9k6i5TiL1vavnxeQtJvf0arzq7nKQz60Xy1Fk9/yBSNudj03OlECpB4EFnp6Yvb
+	4CpOtA5MT2SievtcVgOAubnQtXhU/HqaFmmO/fRUmgBEBepE8MPX187GNPoAwMDG0PSOJd0+n5ZH4
+	4paOdkvj1iUiqOa0CADz5vmBfrAXGQgWkixQK9xGy9AxgBwLcUe6rTPjwnYylg4NfMfin4H9Xxo9/
+	vsR6qcQH91BDW6RUhC2/WIg9HFxzOzlXUsLWw9QIjVgt/QlK4xvMPyXSVwG7hQb7CajwTI/d1IPMN
+	28MZn/3Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1ww6Z5-00000006y2I-2fb8;
-	Mon, 17 Aug 2026 23:16:23 +0000
-Received: from devianza.investici.org ([198.167.222.108])
+	id 1wwFjS-00000007Z4h-10WT;
+	Tue, 18 Aug 2026 09:03:42 +0000
+Received: from flow-a8-smtp.messagingengine.com ([103.168.172.143])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1ww6Z2-00000006y1T-3UpZ
-	for kexec@lists.infradead.org;
-	Mon, 17 Aug 2026 23:16:22 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
-	s=stigmate; t=1787008576;
-	bh=SZh2ivKKSQMz4Tw4pj6gSgvCgz+xLewwqu5aJ6u3/8U=;
-	h=Date:From:To:CC:Subject:In-Reply-To:From;
-	b=tLBa7SRkSl1VcfdFFnQeFD8Y7j6DI5NJ2v5swv1uI9QQ+BDpc1dMBwrvhJTd58HuX
-	 /0FtPAsLhAcCsjGalJH+K/qiIbcbM2S06wXf1ZsJoqv1PkhiwPyxFkABDAUClwXFA2
-	 R4BQgMKip+IVdMA+Y9xwhtk2zSFge8R3GQ8R5SKU=
-Received: from mx2.investici.org (unknown [127.0.0.1])
-	by devianza.investici.org (Postfix) with ESMTP id 4hP7xX4hpxz6vNG;
-	Mon, 17 Aug 2026 23:16:16 +0000 (UTC)
-Received: by mx2.investici.org (Postfix) id 4hP7xX1FHGz4y6W;
-	Mon, 17 Aug 2026 23:16:16 +0000 (UTC)
-Date: Tue, 18 Aug 2026 00:16:18 +0100
-From: Bradley Morgan <include@grrlz.net>
-To: ruanjinjie@huawei.com
-CC: akpm@linux-foundation.org, bhe@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, eric.devolder@oracle.com,
- hbathini@linux.ibm.com, hpa@zytor.com, ionut.nechita@windriver.com,
- kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com,
- tglx@linutronix.de, x86@kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_1/1=5D_x86/crash=3A_reserve_elfcorehdr_?=
- =?US-ASCII?Q?for_CONFIG=5FNR=5FCPUS=2C_not_CONFIG=5FNR=5FCPUS=5FDEFAULT?=
-In-Reply-To: <e51a0df8-7519-480d-84a6-22cf96e6d06e@huawei.com>
-Message-ID: <DBEE296F-28C0-40BF-B4D1-68D6E5831CFC@grrlz.net>
+	id 1wwFjL-00000007Z3m-0wUa;
+	Tue, 18 Aug 2026 09:03:36 +0000
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailflow.phl.internal (Postfix) with ESMTP id 5C82F1380244;
+	Tue, 18 Aug 2026 05:03:31 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Tue, 18 Aug 2026 05:03:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jaseg.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1787043811;
+	 x=1787051011; bh=ZX1CnQZZsg94K1w9ifnkc6/NmgcRySaktgXNfBgb7AQ=; b=
+	WPZZoKGM/D3I5ywu6hWxeUzIxxVJ8JaogWauiMKsZIA9L+2KD8F1opSZimhHAVKL
+	5a0sb6E7AE1N+ZTNYCeJQBZ+m2FEM4CV7GMsqbHBUWfOHXeEjAaQ1OAiBbBbW59J
+	b1PhzIsGrQ2x+2Dni2rvrHfHUrqMx08mPCwM/2bfa9SldiuOZjcpcWOlGE1HpOcd
+	G0YIdXoV0HVGd4L+mxlNmNNDIhof5BifyFVcHuhiep66N7ofIvUZTm6prDYrlyWK
+	zAEmkzqJ+outKDKC0CHUxyq53gCJ6k58wqWemTPbG92+4A3wfTcxtWmA675wMRHC
+	QYOZU0KDnVhgr69AP0V0Bg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1787043811; x=
+	1787051011; bh=ZX1CnQZZsg94K1w9ifnkc6/NmgcRySaktgXNfBgb7AQ=; b=N
+	YaRi+TSIddvpqgRTVgxa6VkeBfERJbKBvbyZhIzfXNJys/mMTEU1csXrJL5DGzbN
+	PCKZKgL431iiunzQQDBvFuzWW69BqYCSsFA5vAr0RhpoL1B1z9aPTFCNw7/QA19A
+	saZ0S0t62u9ilibZlZt1i/7WvU/qVXs+q65oY7JWrtfuouhLYcwOK4sxpw9so70V
+	0/BgQw+DhldDFVQAVyvQgDYSDnmVHgBz/o60QfvZIbIrNu09JczWI0nsBqGFZNEN
+	5UPYGIzCosYhlot0IWvFxAqjKXNQIIe5Nc3jckxMBZ736pOuOvMzIar47qPI4WKI
+	FVKhOCCNDBW0c2jXhd1ZA==
+X-ME-Sender: <xms:4B-EauM8Y-WoFhcHV7CDKlTqAXtB-K4KRmaH8Ji1IGVdeubq9ketyQ>
+    <xme:4B-Ealztkx_kES_mWsN78pZXU9JB54Mew-argE8U363HXR6ZZcMDZrZ1r7KLZayGA
+    VUMOnw_bfE8_HFBnwIY6yzIzSIEfLRM4kpRnIw3jK-F75RiMw1zRw>
+X-ME-Received: <xmr:4B-Ear2lM4JA7KsBrcTQX5tTYYYgKvP9cy4R-UIHarqqQ6wJIAuSBmfYB-cMSSdOV5yu6OXNk-afOhj4igKm>
+X-ME-Proxy-Cause: dmFkZTFpA2CAQ9HsB/cHX0jgjtdDSxrlNaH1N5XdMBpyCH9Ywi6Hdh5ucTA96FWQa4HkQJ
+    FvEd7sRFuzES1QTCCXc72OlhgrTRDpI/mv/2h44E6mQB5bIPt7uKTuP2q0GgZRoIvFIf7T
+    TMZ3/nzGVeOohp8c3ZE54qSC9/YJNe9f6CUcVKmuTPT1A2+XUIsIivDdrhAHumwFv6AQfa
+    NNzoFOD5IVmP3t/+TNxvkur2XMEg96QOc5X07R9jGlcw1D3FBObbnwVn6TapmMDjTj8mel
+    XF3EW9HqD7I9ZDaJuBDS4ARPRSLFsySvU1MjYl98Znh+hLcqka5PZ2lKMDy4GytU3qjXHP
+    98DJem6QpOGqfB3BYBGJDTFsCAtPWcw71a1t0bx+yVXLzQg/zX2eANVIW+Pof9QleQxvN9
+    P/N2zoRmGcsxnzVAX9yilz5Hf18JYw9RDeTkD0e4hVVYoyZ9d7hMxsqFj8qpAc09VhOuqd
+    r9AoF++WkVV8iSPyIp43mJ0TdeQR0JQhCzxLX9LtVsEaNESQdPbIT8kPTvzqYUZ7lqGq/k
+    PEaZa2BEeR2Eln3RH9rkvTn6MqyAurRLUbA+ihdv70Bc4xu6lg5mm9xC/+Pb5HPANA2dOd
+    Ytxl5ozIB8gbREK41rFGTIGGQ9URIpBxDMvfEg9AUeTxj19lPYQvx6jTJGSQ
+X-ME-Proxy: <xmx:4B-EasH0JHdfdUJp3cw75hmN4JbAktp9qP7MbFjC7JV7n6UctIxhEg>
+    <xmx:4B-EagKH8JC384TlH3cR7ulRAHL02wkXnaDo1V9ztrqMfX9MoWhZwg>
+    <xmx:4B-EarwND5OYC8e2x_4D5dXRVAx5TKWwG_rdZqfJdmokI7UUzMRH2Q>
+    <xmx:4B-Eai1Yt3SDtzatr_bnVyQU5MFRORQZ930EDB5uwIJ17WKuX-K8FQ>
+    <xmx:4x-EahEHf5VCv1VRvxU22t6K4tWi1wKnPfuGOHSqlSCXyfMxLQLJcyjV>
+Feedback-ID: i60a14417:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 18 Aug 2026 05:03:21 -0400 (EDT)
+Message-ID: <9071e03b-a633-43e4-ac77-3b05291c1f66@jaseg.de>
+Date: Tue, 18 Aug 2026 11:03:19 +0200
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/13] kexec: add CRASH_WIPE_SECRETS to wipe secrets
+ before kdump
+To: Baoquan He <baoquan.he@linux.dev>, Lukas Wunner <lukas@wunner.de>
+Cc: =?UTF-8?Q?Jan_Sebastian_G=C3=B6tte?= <linux@jaseg.de>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Mike Rapoport <rppt@kernel.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ David Howells <dhowells@redhat.com>, Jarkko Sakkinen <jarkko@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>, Ignat Korchagin <ignat@linux.win>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>, Keith Busch <kbusch@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Trond Myklebust <trondmy@kernel.org>,
+ Anna Schumaker <anna@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>,
+ James Bottomley <James.Bottomley@hansenpartnership.com>,
+ Marc Dionne <marc.dionne@auristor.com>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Eric Biggers <ebiggers@kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>,
+ Jaegeuk Kim <jaegeuk@kernel.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
+ Mikulas Patocka <mpatocka@redhat.com>,
+ Benjamin Marzinski <bmarzins@redhat.com>, kexec@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mm@kvack.org, keyrings@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-security-module@vger.kernel.org, linux-crypto@vger.kernel.org,
+ linux-nvme@lists.infradead.org, linux-nfs@vger.kernel.org,
+ linux-integrity@vger.kernel.org, linux-afs@lists.infradead.org,
+ netdev@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, dm-devel@lists.linux.dev
+References: <20260811-crash-zeroize-rework-v2-0-9561d13c2340@jaseg.de>
+ <20260811-crash-zeroize-rework-v2-1-9561d13c2340@jaseg.de>
+ <anw9ILJiO5xIjP4f@MiWiFi-R3L-srv>
+ <9765f7ea-36bb-4c7b-a19b-7facec97b762@jaseg.de> <aoGpcczo5GkBsPwt@wunner.de>
+ <aoK6jXA-tF9qfKOZ@MiWiFi-R3L-srv> <aoLFai0gzzH2bGgy@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: =?UTF-8?Q?Jan_Sebastian_G=C3=B6tte?= <contact@jaseg.de>
+In-Reply-To: <aoLFai0gzzH2bGgy@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260817_161621_325308_B08740C4 
-X-CRM114-Status: GOOD (  21.15  )
+X-CRM114-CacheID: sfid-20260818_020335_614380_2B2B4593 
+X-CRM114-Status: GOOD (  23.58  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,128 +144,57 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 17 August 2026 02:18:59 BST, Jinjie Ruan <ruanjinjie@huawei.com> wrote:
->
->
->在 2026/8/13 1:04, Ionut Nechita (Wind River) 写道:
->> From: Ionut Nechita <ionut.nechita@windriver.com>
->> 
->> kexec_file_load(2) fails with -EINVAL when loading a crash kernel on a
->> machine whose number of possible CPUs exceeds CONFIG_NR_CPUS_DEFAULT,
->> even though the classic kexec_load(2) path succeeds on the same machine.
->> 
->> With CONFIG_CRASH_HOTPLUG=y the elfcorehdr segment is over-allocated so
->> it can be updated in place on CPU/memory hotplug. crash_load_segments()
->> and arch_crash_get_elfcorehdr_size() compute that reservation from
->> CONFIG_NR_CPUS_DEFAULT:
->> 
->> 	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
->> 		pnum = 2 + CONFIG_NR_CPUS_DEFAULT + CONFIG_CRASH_MAX_MEMORY_RANGES;
->> 	else
->> 		pnum += 2 + CONFIG_NR_CPUS_DEFAULT;
->> 
->> However the actual header produced by crash_prepare_elf64_headers()
->> contains one PT_NOTE per *possible* CPU, i.e. num_possible_cpus(), which
->> is bounded by CONFIG_NR_CPUS, not by CONFIG_NR_CPUS_DEFAULT.  On configs
->> that raise CONFIG_NR_CPUS above the arch default while leaving
->> CONFIG_NR_CPUS_DEFAULT untouched (e.g. CONFIG_NR_CPUS=256,
->> CONFIG_NR_CPUS_DEFAULT=64 on x86_64 without MAXSMP), a system with more
->> than ~CONFIG_NR_CPUS_DEFAULT possible CPUs builds a header whose bufsz
->> exceeds the reserved, page-aligned memsz.  sanity_check_segment_list()
->> then rejects the image:
->> 
->> 	if (image->segment[i].bufsz > image->segment[i].memsz)
->> 		return -EINVAL;
->> 
->> kexec_load(2) is unaffected because user space builds the elfcorehdr
->> without the hotplug over-allocation.
->> 
->> Observed on a single-socket Xeon 6776P (144 possible CPUs) running a
->> PREEMPT_RT kernel with:
->> 
->> 	# CONFIG_MAXSMP is not set
->> 	CONFIG_NR_CPUS_RANGE_BEGIN=2
->> 	CONFIG_NR_CPUS_RANGE_END=512
->> 	CONFIG_NR_CPUS_DEFAULT=64
->> 	CONFIG_NR_CPUS=256
->> 
->> kexec -p -s fails with "kexec_file_load failed: Invalid argument".
->> Reducing the possible CPU count below the page-rounding threshold
->> (e.g. 72 via firmware) makes it succeed, confirming the reservation is
->> the limiting factor.
->> 
->> Reserve the elfcorehdr for CONFIG_NR_CPUS, the compile-time upper bound
->> of num_possible_cpus(), so the reservation always covers the header that
->> is actually generated.
->> 
->> Fixes: a72bbec70da2 ("crash: hotplug support for kexec_load()")
->> Signed-off-by: Ionut Nechita <ionut.nechita@windriver.com>
->> ---
->>  arch/x86/kernel/crash.c | 6 +++---
->
->We should also update the comment in crash_handle_hotplug_event() to
->avoid misleading people.
->
->diff --git a/kernel/crash_core.c b/kernel/crash_core.c
->index 4f21fc3b108b..b046c1682aad 100644
->--- a/kernel/crash_core.c
->+++ b/kernel/crash_core.c
->@@ -565,7 +565,7 @@ int crash_check_hotplug_support(void)
->  * new list of CPUs and memory. To make changes to the elfcorehdr, it
->  * should be large enough to permit a growing number of CPU and Memory
->  * resources. One can estimate the elfcorehdr memory size based on
->- * NR_CPUS_DEFAULT and CRASH_MAX_MEMORY_RANGES. The elfcorehdr is
->+ * NR_CPUS and CRASH_MAX_MEMORY_RANGES. The elfcorehdr is
+On 8/17/26 10:25, Baoquan He wrote:
+> On 08/17/26 at 03:38pm, Baoquan He wrote:
+>> On 08/16/26 at 02:13pm, Lukas Wunner wrote:
+>>> On Wed, Aug 12, 2026 at 12:08:39PM +0200, Jan Sebastian Götte wrote:
+>>>> I can imagine one alternative way to approach this, tell me what you think:
+>>>> Instead of registering wipe handlers that memzero places on panic, I could
+>>>> put an optional registry of (addr, len) descriptors into crashkernel memory
+>>>> that the original kernel populates with the PAs of buffers to clear ahead of
+>>>> time. Then the kdump kernel could do the actual memzero. This would remove
+>>>> all code from the actual kdump path here. The registry could be made
+>>>> per-core to avoid locks.
+> 
+> If this has to be done in kernel, your (addr, len) registry idea is a
+> better direction, and we can make it a bit more general.
+> 
+> Instead of a secrets-only wipe registry, consider a small "crash memory
+> region" table with an action per entry:
+> 
+> enum crash_region_action {
+>      CRASH_REG_WIPE,   /* memzero, then dump normally (leave zeros) */
+>      CRASH_REG_SKIP,   /* do not include in the vmcore at all */
+> };
+> 
+> struct crash_region {
+>      phys_addr_t addr;
+>      size_t      len;
+>      enum crash_region_action action;
+> };
+> 
+> void crash_reg_add(phys_addr_t addr, size_t len,
+>                     enum crash_region_action action);
+> void crash_reg_del(phys_addr_t addr, size_t len);
+> 
+> Two actions because the use cases differ:
+> 
+> - WIPE is what you need: zero the secret,
+> - SKIP covers things people do not want in the dump at all
+>     — Registering as SKIP reduce dump size. I have been considering how
+>       to shrink vmcore size on some big system with huge memory, the
+>       vmcore size usually is several or tens of GB.
+> 
+> If this is OK to you, you can start a regiestry table
+> infrastructure with wiping secrets, we can add SKIP later and plus some
+> driver used memory.
+> 
+> I am not sure if it's satisfactory, but you can give it a shot to show
+> what it looks like.
+I think that's a good idea. I'll post a patch adding that registry this 
+or next week.
 
-One more spot carries the same stale name though:
+Thanks,
+Jan
 
-kernel/Kconfig.kexec: "This value is combined with NR_CPUS_DEFAULT
-and multiplied by sizeof(Elf64_Phdr) to determine the final
-elfcorehdr memory buffer/segment size."
-
-The CRASH_MAX_MEMORY_RANGES help text needs the same
-s/NR_CPUS_DEFAULT/NR_CPUS/, either here or in Ionut's v2.
-
-
-
-Reviewed-by: Bradley Morgan <include@grrlz.net>
-
-
->  * excluded from SHA verification by default if the architecture
->  * supports crash hotplug.
->  */
->
->
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->> 
->> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
->> index e681ec9cf1dc8..e6f23933a6df2 100644
->> --- a/arch/x86/kernel/crash.c
->> +++ b/arch/x86/kernel/crash.c
->> @@ -369,9 +369,9 @@ int crash_load_segments(struct kimage *image)
->>  	 * maximum CPUs and maximum memory ranges.
->>  	 */
->>  	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
->> -		pnum = 2 + CONFIG_NR_CPUS_DEFAULT + CONFIG_CRASH_MAX_MEMORY_RANGES;
->> +		pnum = 2 + CONFIG_NR_CPUS + CONFIG_CRASH_MAX_MEMORY_RANGES;
->>  	else
->> -		pnum += 2 + CONFIG_NR_CPUS_DEFAULT;
->> +		pnum += 2 + CONFIG_NR_CPUS;
->>  
->>  	if (pnum < (unsigned long)PN_XNUM) {
->>  		kbuf.memsz = pnum * sizeof(Elf64_Phdr);
->> @@ -430,7 +430,7 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
->>  	unsigned int sz;
->>  
->>  	/* kernel_map, VMCOREINFO and maximum CPUs */
->> -	sz = 2 + CONFIG_NR_CPUS_DEFAULT;
->> +	sz = 2 + CONFIG_NR_CPUS;
->>  	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
->>  		sz += CONFIG_CRASH_MAX_MEMORY_RANGES;
->>  	sz *= sizeof(Elf64_Phdr);
->
->
->
-
-Thanks!
 
