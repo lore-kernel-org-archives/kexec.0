@@ -4,105 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7BB0CC5DF7D
-	for <kexec@archiver.kernel.org>; Tue, 18 Aug 2026 15:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1FDCFC5DF81
+	for <kexec@archiver.kernel.org>; Tue, 18 Aug 2026 16:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=WQBn3BIQOaY/VHXTTbZH8FXBsPqjOyIn3NchcNrz7Sc=; b=KHrdwFZeGtE+BbPIXP/VRkJdVb
-	fPNN44/bO8HUbNW1FykBnZI0ZqGdnAzunzWp3LN6TG0cR5lGoY37xzOS9q4CQ4Lx/oF4fGMbIrkdU
-	58SPy/6NhHrgUqMhdTtsY2uvgvpC+T6jYeGhhzvpfmLGXGjMYx5txhKl9KEuZIEdqGL6VRzb7FeNz
-	ScYnkxFjNsob5KHKBdCgMvwDsf2jiaVn8Tyq50uXJIQfqnqDrzioC8S//BrU78DN5WVpjjq+MAzQg
-	UJbI8MyG0/SEJiZGMOX7EnfDdV1LswO8p3tluc62pEBBySuqlkzthNwpeDh7JQtUzHic8XU1kFxI0
-	fneD/rGA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=hTu8rIIeaYeWexH+JKqzOvDmozZVoZIeVfoU7C4RXZA=; b=41WkcLXaPDSz4ll1lpJ8Nk2n3y
+	ckZW4uJv6IByZqfMiNLwaLb1IsxslH/eh6diwPa5nRpOC3sPBATIuM07kdRvK8BU9NRQmUDpkNyZ6
+	TC3B/qmnwo9775rT9sSVbiqyvo0LvTSwNJBiZ7zJ3vc7kGwv42XmAnwSC95HAv8Ou4XR+xWWXPhLW
+	A0Y5tXbQUOT9r44Kn7ECvN435yORRHUrrrZiFxvVGZ5T/3+JmQx8HP693K99dJ1geJX+D8KuQ16jF
+	csNj447Z8mKiJZV7cwWMxhGQBBR0o4EKNu4UX9ZKQtJsuoYDhjDpsdTTLAIrbjXDqBBN8SPwVpFcH
+	gA9qbURQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wwLul-00000008HiX-0etJ;
-	Tue, 18 Aug 2026 15:39:47 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1wwMH4-00000008JXu-2ksO;
+	Tue, 18 Aug 2026 16:02:50 +0000
+Received: from mail-pg1-x546.google.com ([2607:f8b0:4864:20::546])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wwLui-00000008HiD-2v5M
+	id 1wwMGa-00000008JWY-049c
 	for kexec@lists.infradead.org;
-	Tue, 18 Aug 2026 15:39:46 +0000
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67IE3SSO504686
-	for <kexec@lists.infradead.org>; Tue, 18 Aug 2026 15:39:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=WQBn3BIQOaY/VHXTTbZH8FXBsPqjOyIn3NchcNrz7
-	Sc=; b=R/ETRd9SxLVJ0tWiFcQYa1VVI/TLtz/fUnK6v5j/hEOnhsf69a2CkVtq2
-	oxTebflWw/0A/TP70kXP/Luzi5H3dl5EB6QsAGww4r8dbXA/1qfIg5cUF8vQQI3e
-	bzDokN7DD3mKZe1xEDxPZSGSFxpJHuZweGQj+hQifDLpoZ9vYRCeP8+HBknPeWzu
-	EcIptw966QDpA5PYjipkEm3Ky4AWFPWm+lyjQnlNxpr2yXwKmbSN0lg5w78OJqSk
-	RpCSWQmSQJEXSMW252V6SY9wAuu2A2P4hH+/8RZWi989pZePqhB19IxlB0qYN6xk
-	RAm8vmOZqWr819wjgZAyx/fWTidcA==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4g2fu4s78p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <kexec@lists.infradead.org>; Tue, 18 Aug 2026 15:39:42 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67IFQJ0W030905
-	for <kexec@lists.infradead.org>; Tue, 18 Aug 2026 15:39:42 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4g32eq4477-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <kexec@lists.infradead.org>; Tue, 18 Aug 2026 15:39:41 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67IFdYc351970374
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 18 Aug 2026 15:39:35 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4D4EE20049;
-	Tue, 18 Aug 2026 15:39:34 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 329BF20040;
-	Tue, 18 Aug 2026 15:39:34 +0000 (GMT)
-Received: from b315lp23.lnxne.boe (unknown [9.87.84.240])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 18 Aug 2026 15:39:34 +0000 (GMT)
-From: Joseph Cathcart <josephc@linux.ibm.com>
-To: kexec@lists.infradead.org
-Cc: eoin.mcnamara@ibm.com, iii@de.ibm.com,
-        Joseph Cathcart <josephc@linux.ibm.com>
-Subject: [PATCH v1] kexec-tools/s390: add --reuseinitrd support
-Date: Tue, 18 Aug 2026 17:39:25 +0200
-Message-ID: <20260818153925.6203-1-josephc@linux.ibm.com>
-X-Mailer: git-send-email 2.55.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: bklpV7N0b-ktQbOdQvfr5qAW_yf5-pvn
-X-Authority-Analysis: v=2.4 cv=NLLlPU6g c=1 sm=1 tr=0 ts=6a847cbe cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
- a=DXaZhtDyEZ7YwAlEE54A:9
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODE4MDExNCBTYWx0ZWRfX2Jh4gPLg0hlc
- t1xqM1FVKYcNOPOohvtUFJCHYOoDNwFSRAbmiNUpojH16o84iT8BnYnIq8gkhi7dt4Tq0Xw80Be
- skCkEsDY/8DIU4nCZtUzhaTSAL8FDN8=
-X-Proofpoint-ORIG-GUID: bklpV7N0b-ktQbOdQvfr5qAW_yf5-pvn
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODE4MDExNCBTYWx0ZWRfX6eX43CDXiRij
- 8KvWSOONIi4QnjjkTtsJVbZXWeJOnNnIPMTWsl83gaV5VL4qSPOM4n/DEyXbw/LEaP+NYZHZ+Sj
- TGlOjQYVlu3DKpXEd/8VPpmURWQXcVJqDf/Q2f7v+3l7e1MHx13fGiDKumA7rK95SYetlZoj1lc
- 5mMtueMqkKh9eJh1OhfAE54IKc6eU8/M9JByqbMmNslmrnzh6C7p7cRRPn6XQA5oKj+8UpZ/nPE
- rWlOLgIPPrGmjdMFK5Zd2Jj3o3sCCFfIwb+IkshqlLqwgHuQ1KzbQ1AQ7JSsCNAaChgUU+4T/fu
- N0uWshc0bx4ZF5l92rbWgdBzzxGQBVOvpGds+uflyTJR9r5EX+slbO0pvKTt+L+ViASa17F6aDI
- t4SY//tQsAgcoms4s5ajGgYcUIsAY4G9887IQQUvL9zLGsPDw4l904Xs3ntCjFpS5EClLjoQcoM
- xyrfBk8TkChme06nIzA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-18_02,2026-08-18_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 spamscore=0 lowpriorityscore=0 phishscore=0 impostorscore=0
- malwarescore=0 suspectscore=0 clxscore=1011 adultscore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608180114
+	Tue, 18 Aug 2026 16:02:49 +0000
+Received: by mail-pg1-x546.google.com with SMTP id 41be03b00d2f7-cbedfa3898aso4762449a12.3
+        for <kexec@lists.infradead.org>; Tue, 18 Aug 2026 09:02:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1787068938; x=1787673738; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=hTu8rIIeaYeWexH+JKqzOvDmozZVoZIeVfoU7C4RXZA=;
+        b=GYbAytQtHoFYiRZfg/YgNNgVWx7DycktoYr2NlhzfBeI4GuPxwCh/AMBFF0ZHTtJHU
+         wVUZJWeghX2PEWE5ZktZpp1YFSFyufcqbUfFn5rxrwgfWO6+/gWUVPMbtzQVjdD4Biev
+         wwdEgWoHhJnNg8cUOeOMcrxRADK5P4M2it7q6Xe7ibYeMtvIx54oQSoqXxEIllDtQTKO
+         L5A1TysXa4TWpyZglk/lXiNaANCMW7QhFcDjNrr71Ebd8orDdaF6mIYsBsdufBKNGH7M
+         f5oDbkectzORkCo6mLE4MSceNAvsf+I/rLC2x7sQySC9y/NM5qMHMrvbtni3zb2zFHE8
+         MFRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787068938; x=1787673738;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=hTu8rIIeaYeWexH+JKqzOvDmozZVoZIeVfoU7C4RXZA=;
+        b=gyHzae14gNhIDllqOknN1qC+Nvo98kZINWv6zjOze0Mz/GiRa9+j4Pj64V6nMPK7wg
+         a0UJ/X3yzx9W/O6aGOrKPKNoUIKPmr+Oy35vAruc9mmt5d24iUp3NdTQyfzmwQDrMSsP
+         BiNP0apaGs0YqLPo6MXPtWxN4f1JenVF4JJp9Qz5tN3HTSijJeQtaT8Hde7wmLkb4Icc
+         8fYsZSC8BFsWWnK2tzPDTAZsvUqwccsiqlERp+Tq5Jx0C15ooCqDwwJh9SuPAzG6HsyK
+         81gvtZ+/6O8yNNtxVYA3BT7y4KxfxpKcris0lOo13IdZosUhtYBhyu5tnZ0fwJrNtmZU
+         I8yw==
+X-Forwarded-Encrypted: i=1; AHgh+RoMsmd8ih+nwyWW1hi8ynyxiW5jojupc+EJD4TwB9YQJHl4iZH9Hfo8tBtIyJ+04o9yD3dReg==@lists.infradead.org
+X-Gm-Message-State: AOJu0Yx7IuidNkZvmmy99rj7Nn5/9MJnfhLdcx3YceRrRI77mMpNpGfx
+	EjsHS2GmR9Sxz79QXJSMW7fIDj8wyYUkrq7rvpJ6o/g9QZuDUqn8T9xtSR0eTPCxBkWeSphKPpK
+	pUfLAxQ==
+X-Received: from pgvc22.prod.google.com ([2002:a65:6196:0:b0:cbf:d9a:2fcf])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:7f99:b0:3c3:9df0:2d66
+ with SMTP id adf61e73a8af0-3cc719fe453mr37508125637.6.1787068937949; Tue, 18
+ Aug 2026 09:02:17 -0700 (PDT)
+Date: Tue, 18 Aug 2026 09:02:17 -0700
+In-Reply-To: <2vxzy0e3zgqz.fsf@kernel.org>
+Mime-Version: 1.0
+References: <20260728121138.1103610-1-tarunsahu@google.com>
+ <20260728121138.1103610-6-tarunsahu@google.com> <anphyjFv3FhF61iB@google.com>
+ <2vxzpkzo51wg.fsf@kernel.org> <anssOQFNZ2LfihbU@google.com>
+ <2vxzik5f311e.fsf@kernel.org> <anyObKiZIhfok5mk@google.com>
+ <2vxzqzjz1x5f.fsf@kernel.org> <aoMcqp0gr06YXAPU@google.com> <2vxzy0e3zgqz.fsf@kernel.org>
+Message-ID: <aoSCCTTBn9D5hqzk@google.com>
+Subject: Re: [PATCH v4 05/11] KVM: LUO: Support VM preservation across live updates
+From: Sean Christopherson <seanjc@google.com>
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Tarun Sahu <tarunsahu@google.com>, ackerleytng@google.com, fuad.tabba@linux.dev, 
+	Andrew Morton <akpm@linux-foundation.org>, dmatlack@google.com, 
+	Shuah Khan <skhan@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, david@redhat.com, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, sagis@google.com, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mike Rapoport <rppt@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	linux-kselftest@vger.kernel.org, andre.przywara@arm.com, michael.roth@amd.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, will@kernel.org, 
+	vannapurve@google.com, maz@kernel.org, fvdl@google.com, kvm@vger.kernel.org, 
+	oliver.upton@linux.dev, kvmarm@lists.linux.dev, alexandru.elisei@arm.com, 
+	skhawaja@google.com, aneesh.kumar@kernel.org, linux-doc@vger.kernel.org, 
+	David Hildenbrand <david@kernel.org>, yan.y.zhao@intel.com, kexec@lists.infradead.org, 
+	suzuki.poulose@arm.com
+Content-Type: text/plain; charset="us-ascii"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260818_083944_739922_126694CB 
-X-CRM114-Status: GOOD (  20.31  )
+X-CRM114-CacheID: sfid-20260818_090220_064801_36B04508 
+X-CRM114-Status: GOOD (  38.39  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,143 +103,86 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Currently, the --reuseinitrd param is not supported on s390. This
-prevents testing kexec in environments such as virtme-ng, which by
-default does not store the initrd on disk.
+On Tue, Aug 18, 2026, Pratyush Yadav wrote:
+> Hi Sean,
+> 
+> On Mon, Aug 17 2026, Sean Christopherson wrote:
+> 
+> > On Sat, Aug 15, 2026, Pratyush Yadav wrote:
+> >> On Wed, Aug 12 2026, Sean Christopherson wrote:
+> >> > On Wed, Aug 12, 2026, Pratyush Yadav wrote:
+> >> So with live update, we don't need to keep backwards compatibility in
+> >> the ABI forever. Of course, it is good to minimize changes, but we have
+> >> more freedom to change it.
+> >
+> > Ah.  So this is the heart of the disconnect.  I very strongly disagree with the
+> > statement that live update doesn't need to support backwards compatibility.  I
+> > can totally believe that the folks working on live update are ok breaking backwards
+> > compatibility because their use cases are "fine" with such breakage.  And I can
+> > also believe live update as an upstream kernel feature being developed by those
+> > same folks is also ok with breaking backwards compatibility.
+> >
+> > But with my upstream KVM maintainer hat on, I am not ok with that.  I did not agree
+> > to support a world where KVM is allowed to break backwards compatibility, so long
+> > as it's done "carefully" or whatever.  If y'all want to deal with the resulting
+> > complexity, that's fine by me, but you'll be doing it without KVM.
+> 
+> Let's step back a bit. I don't think backwards compatibility in the
+> _ABI_ is all that important in live update's context. What is important
+> is that our users are able to live update from kernel version X to Y.
+> The line format the kernel uses to describe its state is an
+> implementation detail. Our users never see it.
 
-When --reuseinitrd is specified, add retained initrd memory range to
-memory_range[] and fill new kernel parmarea directly with retained
-initrd base and size, rather than memory range of a new ramdisk.
+The rule is thou shalt not break userspace.  Whether or not the breakage is the
+result of an explicit ABI change is irrelevant.
 
-Add die() cases for trying to use --reuseinitrd flag in addition to
---ramdisk or --initrd, and for using --kexec-file-syscall instead of
---kexec-syscall while trying to use --reuseinitrd.
+> The high level idea is that when you need to make a change to the ABI so
+> the kernel can better describe the objects/resources/files it is
+> passing, you create a new version of the ABI and allow transitions from
+> older versions.
+> 
+> Say you make some changes and need an ABI version v5. You don't get rid
+> of v4. You keep it around. LUO core will facilitate picking the right
+> version for the next kernel. So it will be possible to seamlessly
+> upgrade your kernel that speaks v4 to a new kernel that speaks v4 and
+> v5. Now this kernel can start speaking v5 if its successor speaks v5
+> too. And so on for going to v6 and v7, etc.
+> 
+> After a "reasonable" time given for upgrades, you deprecate v4. v4 has
+> been around long enough and our users have had a chance to go to kernels
+> speaking newer versions. That's when you remove the code for v4 from the
+> kernel.
+> 
+> We can argue what "reasonable" means, but the core idea stays. 
+> 
+> It will still be possible to go back to v4 or earlier, but you'd need an
+> extra stop along the way. And of course, vendors can keep a wider
+> support matrix downstream if they see the need for it.
+> 
+> Does this idea of "backwards compatibility" sound acceptable to you, at
+> least at a high level?
 
-Signed-off-by: Joseph Cathcart <josephc@linux.ibm.com>
----
+No.
 
-Depends on: https://lore.kernel.org/linux-s390/20260818153559.5700-1-josephc@linux.ibm.com/T/#u
+It's probably fine for Google and other large companies that tightly control their
+kernels and use cases, and have the resources to juggle the resulting complexity,
+e.g. have kernel engineers on staff to track feature and dependencies, coordinate
+and plan kernel upgrades, etc.
 
- kexec/arch/s390/Makefile      |  2 ++
- kexec/arch/s390/kexec-image.c | 11 ++++++++++-
- kexec/arch/s390/kexec-s390.c  | 17 +++++++++++++++--
- kexec/arch/s390/kexec-s390.h  |  2 ++
- 4 files changed, 29 insertions(+), 3 deletions(-)
+It's not acceptable for upstream, where downstream consumers often run a distro
+kernel, have much more varied use cases, and don't always have a horde of kernel
+engineers on staff to help them thread the needle you describe above.  And if
+supporting live update as a general feature for all users of the kernel isn't
+being factored into design considerations, then that needs to change, otherwise
+this is all dead in the water.
 
-diff --git a/kexec/arch/s390/Makefile b/kexec/arch/s390/Makefile
-index fab3e68..17f9dc8 100644
---- a/kexec/arch/s390/Makefile
-+++ b/kexec/arch/s390/Makefile
-@@ -6,6 +6,8 @@ s390_KEXEC_SRCS += kexec/arch/s390/kexec-image.c
- s390_KEXEC_SRCS += kexec/arch/s390/kexec-elf-rel-s390.c
- s390_KEXEC_SRCS += kexec/arch/s390/crashdump-s390.c
- 
-+s390_ARCH_REUSE_INITRD =
-+
- dist += kexec/arch/s390/Makefile $(s390_KEXEC_SRCS)			\
- 	kexec/arch/s390/kexec-s390.h					\
- 	kexec/arch/s390/include/arch/options.h
-diff --git a/kexec/arch/s390/kexec-image.c b/kexec/arch/s390/kexec-image.c
-index 69aaf96..1a59a32 100644
---- a/kexec/arch/s390/kexec-image.c
-+++ b/kexec/arch/s390/kexec-image.c
-@@ -78,6 +78,9 @@ int image_s390_load_file(int argc, char **argv, struct kexec_info *info)
- 		}
- 	}
- 
-+	if (reuse_initrd)
-+		die("--reuseinitrd not supported with --kexec-file-syscall. Please use --kexec-syscall\n");
-+
- 	if (ramdisk) {
- 		info->initrd_fd = open(ramdisk, O_RDONLY);
- 		if (info->initrd_fd == -1) {
-@@ -104,7 +107,7 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
- 	char *rd_buffer;
- 	const char *ramdisk;
- 	off_t ramdisk_len;
--	unsigned int ramdisk_origin;
-+	unsigned long long ramdisk_origin;
- 	int opt, ret = -1;
- 
- 	if (info->file_mode)
-@@ -137,6 +140,9 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
- 		}
- 	}
- 
-+	if (ramdisk && reuse_initrd)
-+		die("Can't specify --ramdisk or --initrd with --reuseinitrd\n");
-+
- 	if (info->kexec_flags & KEXEC_ON_CRASH) {
- 		if (parse_iomem_single("Crash kernel\n", &crash_base,
- 				       &crash_end))
-@@ -165,6 +171,9 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
- 		ramdisk_origin = _ALIGN_UP(ramdisk_origin, 0x100000);
- 		add_segment_check(info, rd_buffer, ramdisk_len,
- 				  ramdisk_origin, ramdisk_len);
-+	} else if (reuse_initrd) {
-+		ramdisk_origin = retained_initrd_base;
-+		ramdisk_len = retained_initrd_size;
- 	}
- 	if (info->kexec_flags & KEXEC_ON_CRASH) {
- 		if (load_crashdump_segments(info, crash_base, crash_end))
-diff --git a/kexec/arch/s390/kexec-s390.c b/kexec/arch/s390/kexec-s390.c
-index 86c9fb8..4e77fc4 100644
---- a/kexec/arch/s390/kexec-s390.c
-+++ b/kexec/arch/s390/kexec-s390.c
-@@ -25,6 +25,13 @@
- #include <arch/options.h>
- 
- static struct memory_range memory_range[MAX_MEMORY_RANGES];
-+unsigned long long retained_initrd_base, retained_initrd_size;
-+unsigned int reuse_initrd = 0;
-+
-+void arch_reuse_initrd(void)
-+{
-+	reuse_initrd = 1;
-+}
- 
- /*
-  * Read string from file
-@@ -151,6 +158,7 @@ int get_memory_ranges_s390(struct memory_range memory_range[], int *ranges,
- {
- 	char crash_kernel[] = "Crash kernel\n";
- 	char sys_ram[] = "System RAM\n";
-+	char kernel_initrd[] = "initrd\n";
- 	const char *iomem = proc_iomem();
- 	FILE *fp;
- 	char line[80];
-@@ -174,11 +182,16 @@ int get_memory_ranges_s390(struct memory_range memory_range[], int *ranges,
- 		sscanf(line,"%llx-%llx : %n", &start, &end, &cons);
- 		str = line+cons;
- 		if ((memcmp(str, sys_ram, strlen(sys_ram)) == 0) ||
--		    ((memcmp(str, crash_kernel, strlen(crash_kernel)) == 0) &&
--		     with_crashk)) {
-+			((memcmp(str, kernel_initrd, strlen(kernel_initrd)) == 0) && reuse_initrd) ||
-+			((memcmp(str, crash_kernel, strlen(crash_kernel)) == 0) && with_crashk)) {
- 			memory_range[current_range].start = start;
- 			memory_range[current_range].end = end;
- 			memory_range[current_range].type = RANGE_RAM;
-+			if (memcmp(str, kernel_initrd, strlen(kernel_initrd)) == 0) {
-+				retained_initrd_base = start;
-+				retained_initrd_size = end - start + 1;
-+			}
-+
- 			current_range++;
- 		}
- 		else {
-diff --git a/kexec/arch/s390/kexec-s390.h b/kexec/arch/s390/kexec-s390.h
-index 6a99518..a990739 100644
---- a/kexec/arch/s390/kexec-s390.h
-+++ b/kexec/arch/s390/kexec-s390.h
-@@ -34,5 +34,7 @@ extern int load_crashdump_segments(struct kexec_info *info,
- extern int get_memory_ranges_s390(struct memory_range range[], int *ranges,
- 				  int with_crashk);
- extern int command_line_add(struct kexec_info *info, const char *str);
-+extern unsigned long long retained_initrd_base, retained_initrd_size;
-+extern unsigned int reuse_initrd;
- 
- #endif /* KEXEC_S390_H */
--- 
-2.55.0
-
+I also don't see the point.  Maintaining a rigid save/restore ABI is annoying,
+but it's not _hard_ (or at least, not _that_ hard), especially if there's a set
+of well-documented best known practices that subsystems can follow, e.g. so that
+individual subsystems don't need to learn painful lessons first-hand.  I genuinely
+believe that maintaining the version hell you describe above would be more costly
+in the long run than simply committing to full backwards compatibility within a
+given subsystem.  I can imagine that enumerating what subsystems' information is
+in the payload will require a different scheme, but for a given subsystem, I don't
+see any reason to aim for anything less than full backwards compatibility.
 
