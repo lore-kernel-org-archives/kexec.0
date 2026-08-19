@@ -4,96 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9C5F3C5DF87
-	for <kexec@archiver.kernel.org>; Wed, 19 Aug 2026 10:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 32DDDC5DF87
+	for <kexec@archiver.kernel.org>; Wed, 19 Aug 2026 10:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
 	Subject:Cc:To:Date:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ftunS58cBiMcbygydM2prujXSBPcF6lUAvIxlRiSWpU=; b=s1ATBG61yrHzp5mzsa4JyD6zc3
-	qZmaO/iPaSUxZyeBuPSPqS/nuOjI1Q4TlA6m9gTp4Za0BKkBzYE+oyy1wH1LcaCA44kvFgIYwOhBh
-	VGLdcPN+LnheP9fhKinPqUxk8ukMKK1t1+u2sIa5COHMOlKTG6v3eL/KMNNz9atFoJidRaOn2Du4a
-	+bn+BGZdFfljxw8Kf0yM5AcA+NDq6BO5Kr9oFr8Mr+cRu+avI6I/rYvHyoU0xcSgRakHEAbM+xbuz
-	8xUPGJJHV3fgiujQpHSCoLd3VLW8hQJSKCdmz4PeLRiejF5difaVNqEbY6SzcZKF5vEGl3S0u0MZF
-	ukoL98bA==;
+	bh=nYw354gvkQJ8jmQ1k/6yhNWm33Mvtpn0ssaQx3WcD2A=; b=gHoRomdYDswJ3B+PttSanHLnrF
+	rw/yT1xWORboUkFXCjddN6SKgBQkSJsa64DU8zKxgmNeKi70Io0uQ21qmD2YwRocny8v5NVE0uoLP
+	obq1xVq/RxRu27TmU6WOpbmSCwfTqQX9KzLoiulJ8UvOh2E5B6y3gHv5owY54wX1rhTaHmCtw9D9e
+	pPyTJPsLbDf6FcF8aeuW6eSzAB1CugssrrVuY0yJ9IppQ5QJmzPNA0LQNLuxMj/G4mUQNRNS+GKK6
+	nciX6dggXd0PQ0ki+JxGsjKMNbxvJKBSQrqyXoOQadwDHb3IrZDfzQQ5b2snqUW/s+pfjNQn8HoKI
+	D/F6qZgA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wwdHL-00000009UPU-0g9B;
-	Wed, 19 Aug 2026 10:12:15 +0000
-Received: from mail-pj1-x102f.google.com ([2607:f8b0:4864:20::102f])
+	id 1wwdHQ-00000009USZ-2hMd;
+	Wed, 19 Aug 2026 10:12:20 +0000
+Received: from mail-pj1-x1036.google.com ([2607:f8b0:4864:20::1036])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wwdHI-00000009UOi-422n
+	id 1wwdHM-00000009UPx-3ov3
 	for kexec@lists.infradead.org;
-	Wed, 19 Aug 2026 10:12:14 +0000
-Received: by mail-pj1-x102f.google.com with SMTP id 98e67ed59e1d1-382ef647e20so920371a91.1
-        for <kexec@lists.infradead.org>; Wed, 19 Aug 2026 03:12:12 -0700 (PDT)
+	Wed, 19 Aug 2026 10:12:18 +0000
+Received: by mail-pj1-x1036.google.com with SMTP id 98e67ed59e1d1-38dd55ad76cso837532a91.1
+        for <kexec@lists.infradead.org>; Wed, 19 Aug 2026 03:12:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787134331; x=1787739131; darn=lists.infradead.org;
+        d=gmail.com; s=20251104; t=1787134336; x=1787739136; darn=lists.infradead.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :content-type:mime-version:references:message-id:subject:cc:to:date
          :from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ftunS58cBiMcbygydM2prujXSBPcF6lUAvIxlRiSWpU=;
-        b=FhZvgBOTH+Cilpk9s4Q+a7y1a+SkAwjTEg170LauiC3H8FuOVQ3r2NEJhqCIwNjKG8
-         isyEnOSWaUsqJhRk4JZQ/uVho4ChtMfP8XcJMgQpW6PK4thWiE2GNCWGdYcD34SfbRNn
-         Gwi6nbGa5ON75C2WWere3C2/5I1CaCir2/1PsOyTp18BEr94xKfqofd8N28IFmIJQk+V
-         f+/IZkwpuzmck9Mqh8Zmp6vJeD3aaTxR5rWj8bn3tSqgTpcrw7ubyPmvaDrBq8DuUF7J
-         NVAVHarDV6BZTM/92mcPk5cfXlrTkpS6M+sLdfRQxX3jxo32RbnNW3WHonSsUpCWdW+E
-         HXLQ==
+        bh=nYw354gvkQJ8jmQ1k/6yhNWm33Mvtpn0ssaQx3WcD2A=;
+        b=tIsg5lRIw4+M1te8p5hjjzr5pP/vl7heTsAswKe0QNdWBMVOS3Ji+OcjilK10mDwya
+         KW43jz5vIYbAW8xJjowKWNnZdYu/Wej7twX8u+xredMgEln+O90qiXzAtKC2/lGMMLUN
+         XxFx1qYu7fogWlgiY4Dvqvk6nyRSOwKsd6xullZYj5H0RpOfi56FgNGo/nAaDdeG2B/M
+         Yemh+k+xochu5V6AF9a/GY4XN2BgPpBCNJqNjBx6VSPLwTRuuFxO5H7xz0YLAa78vM8n
+         SnIkBNUV4DYYXOP69zQJVRdQb9oIhof4ycDUe3UQGk2nLHxweNtCb87FMY1CVnZwOsIA
+         UGpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787134331; x=1787739131;
+        d=1e100.net; s=20251104; t=1787134336; x=1787739136;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :content-type:mime-version:references:message-id:subject:cc:to:date
          :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=ftunS58cBiMcbygydM2prujXSBPcF6lUAvIxlRiSWpU=;
-        b=H46TaSAQnCMCssG5tfKGul2LqdCix9umm7l844M5sTcdKfxRAOoOpWRi6iCZD4LkZ9
-         YR8u2+XBvLkOlvsX/21XExepeEhgHGnmUNLyeRaHntf/R76Oz+jgFPBMSfs8j9ygmN2H
-         1Pi0CEor6mo2UwJPFUsEKb0lNINc6uxJR9/86kh2PgtXviN69QJIJU746SBNifjjGWpa
-         VEUoWm0CbyxKj3hY60nytY9fi2wrQh1g9L0xA0L7lbECxlcnUpCpGpqi9R0lHPgaHUgH
-         UvgIppQHOdsXvfVUgpE57QY4/IjopR9PNGitX8kqM0ym3wGlqS5wRak2BeWFfFpYsqKn
-         W4cw==
-X-Gm-Message-State: AFuF++mMVbsUJDjSmvhpKL8zmCduFyWw9gG2A1CEJA8QZ6HZxk3KNJOJ
-	PF3jGganV7T6HA0V8il6xo8nC+EALoEOkzjWXwuqlznCl2SOtG5pYnS6
-X-Gm-Gg: AR+sD107SrxUWDniPlF+0n/jbecVpwgSTgF0ekNGX8NBP00wnPMHofkT2BD7uKnOpzb
-	Ybp5vqWPWN+tq9y8KmhIb4KJiTa5tZDW9AwnFQyf6Yiv05U0UJyp42X0f71G9A722dImOEpCqzM
-	OuIwkq6W7UlpRNUN3kx5KSGKN7TZwQcbz+tVgYKlLje4gso3XHr/XFD0Dbv2NNLRu3cwilseSKX
-	4JQO0hw/4vkcHYRPWWo2mt8tioo56KTFV9H7AAW+rKkgIoh97AZCUCVidW3A7ibkjvsjFo27ixd
-	E7ZVPRG5+Nuwt5iQDpEoXyidE/pAFmdxBmZCb/b/GdLWOwCEba4eDOAQr5hVQAEtb7910o1sZ3C
-	ISGi2qm3xZMd9Kd8gIOa/vlfMBEAiFIPW5PP51VSt6q5Y5sdGF832kSJqa0UOtTaEKOSqUJW8GG
-	9MPm1y+QNrcIabL7tFEupLfGdnsWToRpvlKsVwvR8vG1tVVDmaakBc6StN2qovDtfoK0YZROA=
-X-Received: by 2002:a17:90a:ec88:b0:38e:5964:97a8 with SMTP id 98e67ed59e1d1-3958128686dmr6708038a91.16.1787134331282;
-        Wed, 19 Aug 2026 03:12:11 -0700 (PDT)
+        bh=nYw354gvkQJ8jmQ1k/6yhNWm33Mvtpn0ssaQx3WcD2A=;
+        b=GxJ9biCxJMIvqdabGyWdtkaUvdmsQZmoE3uns9/tPa8ie3I7E2Nn698vzmSrRTW4ph
+         dliQu0dxZKrB6RV427Q8xGiKabFJnPtdY/zU+TxDAFvSA7yy+RHGDVooXdaQgKietTFL
+         +d2ODI0nylNEKlvd+gM3gQu/4eJVw4AYC/LpNPZhHQEe4ritDd1t7JTo7v9JLf6+SGPE
+         SdBupPQCAi/eASDnwES7ckdZo6+hcdyeVEDtSGwSOarslGOdqpwJR2cq654VkqjHRnmW
+         FUE2+l0Ih+jZAMZSoG7ZN2pJTjtgOD5yyWUfH7ALlaYKsx82LI7O2wtqtIebo0035+Cs
+         c+hw==
+X-Gm-Message-State: AFuF++kk0Mywb4w5eS+fQCYht08T5OKlX6sifuyD+vqMQsqowKHZWrsB
+	J42xo7VmmAxswfgWmdKMNyJJH+aJGvYekSkeosqb7weNEMSjy/Fg/Jqh
+X-Gm-Gg: AR+sD107j4gL48tNIgHPUu1S0lT+rXjJp6dI8KmK45fuw1Pj5fCIV6402QTb75NKxLA
+	e4YT7Ksc2UCIXBFQMks0Exxqy6WKd9S5pRsty1Bq3rhMAv1hmKVkx4DRVm+anw+hLvVqTC1lWjj
+	2n0Nas4bVfs4eyswNJ7EurZsR8hyqAAOHZs2QpuoBxnjZ78ml0Q9ySFe6us5Id96bj26OOHx63L
+	UNEdcL5acUCgDofaSxWu852nr6nzYuVR4y2LpZ+BrvtkwjyJIrOLDmzkL/lc6EKVYIGMkbbtMr+
+	iWpBNWQP6od+s4R7fD9VYNfVzD6i8GRRycLL1f4pXgrOw6IdiszRPzCVnVoYZZSolbrf4TmHCIs
+	zewjkbX2DEloxNa8QISRacHrEHF5PPhgWcxl46YOzpU37Wf/uArn5A9LX1X00Xwv4w6LNtteUJM
+	FqQAhwTnE4gkr8kc5V5XM7WYo3ziFUKuHRI5X/jm0NHZMDL+JTJ1tc3F72tSMJ
+X-Received: by 2002:a17:90b:5630:b0:38e:42f5:d096 with SMTP id 98e67ed59e1d1-3957f68f7bdmr869671a91.0.1787134335601;
+        Wed, 19 Aug 2026 03:12:15 -0700 (PDT)
 Received: from localhost ([2400:ac40:62f:3ae5:75e6:e4f4:4401:4289])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3957fc00b22sm742530a91.3.2026.08.19.03.12.10
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3957f96ca41sm2089556a91.4.2026.08.19.03.12.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2026 03:12:10 -0700 (PDT)
+        Wed, 19 Aug 2026 03:12:15 -0700 (PDT)
 From: Coiby Xu <coiby.xu@gmail.com>
 X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
-Date: Wed, 19 Aug 2026 18:08:21 +0800
+Date: Wed, 19 Aug 2026 18:09:52 +0800
 To: Sourabh Jain <sourabhjain@linux.ibm.com>
 Cc: kexec@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>, 
 	Baoquan He <baoquan.he@linux.dev>, Dave Young <ruirui.yang@linux.dev>, 
 	Pratyush Yadav <pratyush@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Coiby Xu <coxu@redhat.com>, 
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 03/10] crash_dump: Disallow writing to dm-crypt
- configfs during kexec_file_load syscall
-Message-ID: <aoV-TEyU7vLPVQMW@Rk>
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Coiby Xu <coxu@redhat.com>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 09/10] crash_dump: Disallow
+ configfs/crash_dm_crypt_key/reuse if crash hotplug supported
+Message-ID: <aoV8HkBNGRclxMPl@Rk>
 References: <20260729033654.311541-1-coiby.xu@gmail.com>
- <20260729033654.311541-4-coiby.xu@gmail.com>
- <3010bbe1-844f-4513-9941-f4e92e581769@linux.ibm.com>
- <anQVIaMHXEx8hvep@Rk>
- <91f569f4-c370-49f1-8656-245f35793199@linux.ibm.com>
+ <20260729033654.311541-10-coiby.xu@gmail.com>
+ <96a78b35-94f7-4b63-97d3-d0841681e2b4@linux.ibm.com>
+ <anQb8aIXKXYzKqAR@Rk>
+ <8d857834-e014-44d9-a112-d7fc8482d7c3@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <91f569f4-c370-49f1-8656-245f35793199@linux.ibm.com>
+In-Reply-To: <8d857834-e014-44d9-a112-d7fc8482d7c3@linux.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260819_031213_008068_823DE388 
-X-CRM114-Status: GOOD (  22.09  )
+X-CRM114-CacheID: sfid-20260819_031217_733729_197384CE 
+X-CRM114-Status: GOOD (  18.94  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,119 +109,114 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, Aug 09, 2026 at 05:26:54PM +0530, Sourabh Jain wrote:
->Hello Coiby,
+On Sun, Aug 09, 2026 at 05:36:50PM +0530, Sourabh Jain wrote:
 >
->On 06/08/26 10:50, Coiby Xu wrote:
->>On Wed, Aug 05, 2026 at 04:00:51PM +0530, Sourabh Jain wrote:
+>
+>On 06/08/26 11:03, Coiby Xu wrote:
+>>On Wed, Aug 05, 2026 at 05:39:28PM +0530, Sourabh Jain wrote:
 >>>
 >>>
 >>>On 29/07/26 09:06, Coiby Xu wrote:
->>>>If writing to the configfs group happens concurrently during
->>>>kexec_file_load syscall, it may lead to the following issues,
->>>>  - buffer overflow if dm-crypt keys are added after allocation
->>>>  - stale total_keys if dm-crypt keys are removed during iteration
->>>>  - keys_header will not be freed if config/crash_dm_crypt_key/reuse is
->>>>    set true
+>>>>If crash hotplug is supported, dm-crypt keys saved to reserved memory
+>>>>will be taken care of automatically. Thus it doesn't make sense to use
+>>>>configfs/crash_dm_crypt_key/reuse. Reserving image->dm_crypt_keys_addr
+>>>>is also unnecessary. Currently x86_64 and ppc64le have implemented
+>>>>crash hotplug feature.
 >>>>
->>>>So hold config_keys_subsys.su_mutex for the entire sequence during the
->>>>kexec_file_load syscall to ensure a consistent snapshot.
+>>>>Also update the doc accordingly. Note two doc issues are fixed as well.
 >>>>
->>>>Fixes: 479e58549b0f ("crash_dump: store dm crypt keys in kdump 
->>>>reserved memory")
->>>>Suggested-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>>>>Fixes: 9ebfa8dcaea7 ("crash_dump: reuse saved dm crypt keys for 
+>>>>CPU/memory hot-plugging")
 >>>>Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
 >>>>---
->>>> kernel/crash_dump_dm_crypt.c | 23 +++++++++++++++++++++--
->>>> 1 file changed, 21 insertions(+), 2 deletions(-)
+>>>> Documentation/admin-guide/kdump/kdump.rst | 16 ++++++++++------
+>>>> kernel/crash_dump_dm_crypt.c              | 23 ++++++++++++++++++++---
+>>>> 2 files changed, 30 insertions(+), 9 deletions(-)
 >>>>
+>>>>diff --git a/Documentation/admin-guide/kdump/kdump.rst 
+>>>>b/Documentation/admin-guide/kdump/kdump.rst
+>>>>index 7587caadbae1..0bf2eb100a05 100644
+>>>>--- a/Documentation/admin-guide/kdump/kdump.rst
+>>>>+++ b/Documentation/admin-guide/kdump/kdump.rst
+>>>>@@ -577,9 +577,10 @@ with /sys/kernel/config/crash_dm_crypt_keys 
+>>>>for setup,
+>>>> 1. Tell the first kernel what logon keys are needed to unlock 
+>>>>the disk volumes,
+>>>>     # Add key #1
+>>>>-    mkdir /sys/kernel/config/crash_dm_crypt_keys/7d26b7b4-e342-4d2d-b660-7426b0996720
+>>>>+    VOL1_UUID=7d26b7b4-e342-4d2d-b660-7426b0996720
+>>>>+    mkdir /sys/kernel/config/crash_dm_crypt_keys/$VOL1_UUID
+>>>>     # Add key #1's description
+>>>>-    echo cryptsetup:7d26b7b4-e342-4d2d-b660-7426b0996720 > 
+>>>>/sys/kernel/config/crash_dm_crypt_keys/description
+>>>>+    echo cryptsetup:$VOL1_UUID > 
+>>>>/sys/kernel/config/crash_dm_crypt_keys/$VOL1_UUID/description
+>>>>     # how many keys do we have now?
+>>>>     cat /sys/kernel/config/crash_dm_crypt_keys/count
+>>>>@@ -591,15 +592,18 @@ with 
+>>>>/sys/kernel/config/crash_dm_crypt_keys for setup,
+>>>>     cat /sys/kernel/config/crash_dm_crypt_keys/count
+>>>>     2
+>>>>-    # To support CPU/memory hot-plugging, reuse keys already 
+>>>>saved to reserved
+>>>>-    # memory
+>>>>-    echo true > /sys/kernel/config/crash_dm_crypt_key/reuse
+>>>>-
+>>>> 2. Load the dump-capture kernel
+>>>> 3. After the dump-capture kerne get booted, restore the keys to 
+>>>>user keyring
+>>>>    echo yes > /sys/kernel/crash_dm_crypt_keys/restore
+>>>>+For CPU/memory hot-plugging, you can reuse keys already saved 
+>>>>to reserved
+>>>>+memory before reloading the kdump image,
+>>>>+    echo true > /sys/kernel/config/crash_dm_crypt_keys/reuse
+>>>>+
+>>>>+Note if crash hotplug is supported, this API is totally 
+>>>>unnecessary thus will
+>>>>+be disabled automatically.
+>>>>+
+>>>> Contact
+>>>> =======
 >>>>diff --git a/kernel/crash_dump_dm_crypt.c 
 >>>>b/kernel/crash_dump_dm_crypt.c
->>>>index 4335b6cb1fc4..d2e66c6fe6f3 100644
+>>>>index b5b78656cf06..46d6b31c3ca4 100644
 >>>>--- a/kernel/crash_dump_dm_crypt.c
 >>>>+++ b/kernel/crash_dump_dm_crypt.c
->>>>@@ -293,6 +293,7 @@ static ssize_t config_keys_reuse_show(struct 
->>>>config_item *item, char *page)
->>>> static ssize_t config_keys_reuse_store(struct config_item *item,
->>>>                        const char *page, size_t count)
->>>> {
->>>>+    struct mutex *lock;
->>>>     bool val;
->>>>     int r;
->>>>@@ -302,8 +303,12 @@ static ssize_t 
->>>>config_keys_reuse_store(struct config_item *item,
->>>>         return -EINVAL;
->>>>     }
->>>>+    lock = &to_config_group(item)->cg_subsys->su_mutex;
->>>>+    mutex_lock(lock);
+>>>>@@ -310,6 +310,15 @@ static ssize_t 
+>>>>config_keys_reuse_show(struct config_item *item, char *page)
+>>>>     return sysfs_emit(page, "%d\n", is_dm_key_reused);
+>>>> }
+>>>>+static bool crash_hotplug_support(struct kimage *image)
+>>>>+{
+>>>>+#ifdef CONFIG_CRASH_HOTPLUG
+>>>>+    return image->hotplug_support;
 >>>
->>>Is this lock only protecting against races between key reuse and 
->>>kexec_file_load(),
+>>>I don't think it is good idea to access kexec_crash_image 
+>>>properties without
+>>>holding the kexec lock.
 >>
->>The lock here is to protect against races between key reuse and
->>kexec_file_load.
->>
->>>or does it also handle the case where a new key is added during 
->>>key reuse or
->>>kexec_file_load() is running?
->>
->>For the cases where a key is added/deleted, configfs will automatically
->>take care of them because it will acquire mutex lock automatically.
+>>Thanks for raising the concern! Let's discuss this issue in [PATCH 
+>>v3 03/10].
 >>
 >>>
->>>If it is only intended to protect key reuse versus 
->>>kexec_file_load(), why can't we use
->>>the kexec lock instead?
->>>
->>>The reason I'm asking is that, in upcoming patches, the key reuse 
->>>path accesses
->>>kexec_crash_image properties and the crash reserved region 
->>>directly. Doing so
->>>without taking the kexec lock (using kexec_trylock()) could lead 
->>>to race conditions.
+>>>Also, would it make sense to move this API somewhere else?
 >>
->>After comparing the kexec lock approach with the configfs mutex lock
->>approach, I think the latter is a simpler solution because
->>1. the kexec lock is non-blocking and we have to repeatedly try until the
->>   lock get acquired. So it means user space has to make changes as
->>   well.
->>
->>2. configfs already acquires the mutex lock automatically for
->>   creating/deleting configfs items. So if we use configfs mutex lock,
->>   it means one less place to use the lock.
->>
->>In config_keys_reuse_store, kexec_crash_image will be checked before
->>accessing its properties and the crash reserved region. Can you
->>elaborate on what the race conditions are? Will acquiring the lock
->>before accessing kexec_crash_image properties and the crash reserved
->>region help protect against these races?
->>
->>In theory, the kexec lock can be a more robust approach. But considering
->>only root can write to the crash dm-crypt keys configfs and load kdump
->>image, I'm not sure it's necessary to adopt a bit more complex solution.
+>>Can you help me understand why to move this API? Is it because using
+>>ifdef in .c file is discouraged?
 >
->The reuse function accesses the kexec crash image properties and crashkernel
->memory without taking the kexec lock. This could lead to race conditions or
->other problems.
->
->Since we need to take the kexec lock anyway, my suggestion is: can we 
->use the
->kexec lock instead of cg_subsys->su_mutex if the purpose of the mutex 
->is only
->to synchronize reuse with kexec_file_load?
->
->As we know, kexec_file_load already runs under the kexec lock. So using the
->same lock should provide the required synchronization.
+>This API is used to verify crash hotplug support, which is not 
+>directly related to crash_dm_crypt_keys.
+>It also seems to be generally useful.
 >
 >- Sourabh Jain
 
-After 1) digging into the git history to learn more about what problems may
-happen without ensuring serial access to the kexec crash image
-properties and 2) noticing kexec-tools won't retry when kexec_file_load
-syscall failed with -EBUSY due to kexec lock acquisition failure which
-implies it's very unlikely to fail to get the kexec lock, I'm convinced
-it's better to switch to kexec lock for the reuse function. Thanks for
-the suggestion!
+Thanks for the clarification! After trying to make use of existing
+crash_check_hotplug_support API in kernel/crash_core.c, I realize there
+is no need to explicitly disallow configfs/crash_dm_crypt_key/reuse.
+Because image->dm_crypt_keys_addr will be set to 0 when crash hotplug is
+supported. Thus in fact the reuse API has already been implicitly
+disallowed. So I will drop the unnecessary crash_hotplug_support
+function in next version.
 
 -- 
 Best regards,
