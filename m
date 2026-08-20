@@ -4,72 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8DBB7C5DF85
-	for <kexec@archiver.kernel.org>; Thu, 20 Aug 2026 06:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B413FC5DF81
+	for <kexec@archiver.kernel.org>; Thu, 20 Aug 2026 10:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=PENPtk/etW4kWB3HZkvkr6lSKI29AakIAu1GkDMjdFw=; b=0IodDmwJgCt5jDTFtLJ5cA+i7v
-	9CJqsw+g+7XT5Dzi3HxNimzWylcJJkkuu7vfqvHTBjZ3WsNFR9upgyRwDYoqI6gg2ipn4Nc+dex4b
-	Tw2HCvu7QG+SvOvzq/xtxbyAIiaXozmifAW/EpZ4HNS1G6HkPhHlnzl8BmNTG7Mvq363hU5qIsnC6
-	3B4zQQWI2mrsK2/or1k68qRWYHqOVFVwM+Ede/DeYwn4vgPD2n+hr6KhrRzIVQ3v+gnYadTT78g1Y
-	5nM9PBs+FyM9INT4PM1a6nfbdFfxPfM7IeUr7jkh+Xm1yxa19em/f64Mnh+P+henb25BI/pYp1Toa
-	SKPsgBBg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=snXhRyGevhtycw7FxA5P22eZrLmJV0jq2QbCRG46z94=; b=hmPiwT4dRGTmFqUovchETE+O2z
+	5HhyIGJG07gYtV12TkUUvp1MtG7SjM0jyHnvNlQAHrpJTlvXqfF2jvuh9iPhiSgh2CV7eMSMFQDFr
+	FN7NMgDabWoMhkWHPkZ0vzsCQDu7ESR+xG/10XdipezN3Ag003Lp2mo4tMz8DOz9GvBO82bPedA74
+	YatKGUPXcxzapoLcoaPcvzwYHiIulO1MqpUHh5FkRyUpacx/yIy3xit7D3yvl6C9pqGsssbWQ/wIb
+	WvUQNQbK9pPxiNcZvzxGo4J2p0ioorAzg3V6JaKsdwu5qcq2wli/sv9U4VMLmb1FeSsisfrRb+hBw
+	idJmEinQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wwwLq-0000000AxER-2JNc;
-	Thu, 20 Aug 2026 06:34:10 +0000
-Received: from tor.source.kernel.org ([172.105.4.254])
+	id 1wwzmj-0000000BL1n-2QpC;
+	Thu, 20 Aug 2026 10:14:09 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wwwLp-0000000AxEB-1Nya
+	id 1wwzme-0000000BL1P-2i0T
 	for kexec@lists.infradead.org;
-	Thu, 20 Aug 2026 06:34:09 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id C2C1C60AA9;
-	Thu, 20 Aug 2026 06:34:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA9B91F000E9;
-	Thu, 20 Aug 2026 06:34:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787207648;
-	bh=PENPtk/etW4kWB3HZkvkr6lSKI29AakIAu1GkDMjdFw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ebF9ekYrq4pFO8UvvsUouw/6fE9Fsy6YYnnQgly9lXag3wmXe2O2LUKWPnid2d5u5
-	 xoUCUiE0Nrpo3JreFr3Syjku1a7cUxzCBA51BXeomQ8LaCQn+C6YG4kpXSJt1GtsAH
-	 My/UFQ2eW1ZQU3qsffJf6WIgR/Khn9xodUEjafPD2GIEsZzPkmlff44gxuMYI4sJdz
-	 EBc4Vh9flLcx883zbmN0bcOeM7fkuA/1D6Ti40wSJyCks9BsMs9YE7veLfrBS6/rxc
-	 2v2cYXv/TNHMJjk/y8tFDRk2M9pL1iAvbhsC3frEwJPHH1EBl0kaSqlmjIqbfAeyGz
-	 or5FSHtZaE6PQ==
-Date: Thu, 20 Aug 2026 09:33:58 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Bradley Morgan <include@grrlz.net>
-Cc: Breno Leitao <leitao@debian.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Baoquan He <baoquan.he@linux.dev>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	rmikey@meta.com, riel@surriel.com, kernel-team@meta.com,
-	Kiryl Shutsemau <kas@kernel.org>
-Subject: Re: [PATCH v6 0/2] kexec: keep the next kernel off hardware-poisoned
- pages
-Message-ID: <aoaf1qNNbv40Mqmr@kernel.org>
-References: <20260812-kexec_posioned-v6-0-e477887086f0@debian.org>
- <aoV5EfBtlWcyf51E@kernel.org>
- <6CB4696E-03E3-42A0-9E3B-6BD1E143D5ED@grrlz.net>
+	Thu, 20 Aug 2026 10:14:05 +0000
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67K90SNg472557;
+	Thu, 20 Aug 2026 10:14:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=snXhRyGevhtycw7FxA5P22eZrLmJV0jq2QbCRG46z
+	94=; b=Msx0UYhmsk0y2O11rDnk1r46NOUyE7LNKeodPbZc4fyvk23guOJcvwf3+
+	FubeujK7UXEPIpPUrukiXewL18AGjkuOgkqQK9D0cqkjYjQdRQW3FUGoj28k68zm
+	CztdDfpZDUA3GRtnSltXLKtsI071q7NrXGz4wt1M58zP9tjY6XgnoEJ3opvLjp5L
+	8QBbMyjJdadThibzwmXuho+kCmah5XxZelatH6i1Veg2rDIcUNNoV5GAZifLHNo1
+	KfhRto6+cA2dKiT0gVlU+GOZ7x17wdPoFdrkyrgMlX03DElgLqjCYYXGzbF7PV4W
+	BlPUg88lEmLfaqpCXdEPs4B8qx6Tw==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4g4yu0hk06-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Aug 2026 10:14:03 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67KABIgT017917;
+	Thu, 20 Aug 2026 10:14:02 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4g34ngnpdj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Aug 2026 10:14:02 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67KADupo30867966
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 20 Aug 2026 10:13:56 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2B4112004E;
+	Thu, 20 Aug 2026 10:13:56 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0880B2004D;
+	Thu, 20 Aug 2026 10:13:56 +0000 (GMT)
+Received: from b315lp23.lnxne.boe (unknown [9.87.84.240])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 20 Aug 2026 10:13:55 +0000 (GMT)
+From: Joseph Cathcart <josephc@linux.ibm.com>
+To: linux-s390@vger.kernel.org, kexec@lists.infradead.org
+Cc: eoin.mcnamara@ibm.com, iii@de.ibm.com,
+        Joseph Cathcart <josephc@linux.ibm.com>
+Subject: [PATCH v2] kexec-tools/s390: add --reuseinitrd support
+Date: Thu, 20 Aug 2026 12:13:50 +0200
+Message-ID: <20260820101350.4413-1-josephc@linux.ibm.com>
+X-Mailer: git-send-email 2.55.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6CB4696E-03E3-42A0-9E3B-6BD1E143D5ED@grrlz.net>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=MthiLWae c=1 sm=1 tr=0 ts=6a86d36b cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=G9HDwhCky0EsxXTtCDsA:9
+X-Proofpoint-ORIG-GUID: 2eRslKVqPphDN6aNAetcuRIAEXOjpOYx
+X-Proofpoint-GUID: 2eRslKVqPphDN6aNAetcuRIAEXOjpOYx
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODIwMDA3MyBTYWx0ZWRfXzxRoQ0WXUXsz
+ M8uiDzEURrkEouzSi8jWQ+p+5oX/5pv4E0mTCmvextEdty0FRJJbRmKz8G3UANO1SGakl4//hZi
+ Ea+8L1PRcqDZ3+N0eX4rHXi0B24pIZY=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODIwMDA3MyBTYWx0ZWRfX6e4xZyQ2Pfsr
+ ryKBE6be4x+6YS4gGBQKfsggNxLsyfT2GITYtL7+kukw5QDfny/48c0y4E+0ks1ak1qnsYS6PYG
+ cQCWxVsLV473gNcTsOjcUjlQ9X4I63oN2hA27z1lETg22Us6QzKVazPrG3gPslfQ9PmvCCqY5fG
+ LSnAw7xMwwvb1XXjI/oXNAIHlVVfaK+UEBW5hlJnaNLs1OU2jhy6c7iVxxX3+GERx9zj5THc3TK
+ +Ccn9DIXz7Tc4k6P8oaBv9qVOhmcKsWybX9r9n2yJZiPkAlVXjEyc1AcI71TOCU38MaXJlQQH8A
+ wqf1kNFQ7WhJijCvqk/1pQcPSbOW1/QNUdvEIe/0y6XPqNu+E3d3OuQSD+rrI0a+l8yWAl3fzRH
+ zIdKHntBvhyYSYoX5QDm+RVg14YG416cFuOfVErwXZsyHT+XpkVP2rGppPZqEu/XiTPPOl0Wt76
+ gIQK/KQmGpU79hhxeUg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-19_06,2026-08-19_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 impostorscore=0 bulkscore=0 phishscore=0 clxscore=1015
+ spamscore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608200073
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260820_031404_691996_168611F2 
+X-CRM114-Status: GOOD (  19.61  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,122 +116,127 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Aug 19, 2026 at 03:23:04PM +0100, Bradley Morgan wrote:
-> On 19 August 2026 10:36:17 BST, Mike Rapoport <rppt@kernel.org> wrote:
-> >On Wed, Aug 12, 2026 at 04:31:50AM -0700, Breno Leitao wrote:
-> >> Memory failures are common enough on large fleets that kexec regularly
-> >> lands the next kernel on a frame the memory failure subsystem has
-> >already
-> >> marked bad. Patch 2 teaches the segment placement to avoid those frames.
-> >> 
-> >> Patch 1 is a prerequisite. locate_mem_hole_top_down() walks candidates
-> >> downwards without ever checking that the subtraction stays above zero,
-> >so
-> >> the walk can wrap and report success with a destination outside of RAM.
-> >> Patch 2 adds one more downward step to that loop, so the bug is fixed
-> >> first and both patches rely on the same bail-out.
-> >
-> >I queued this for v7.4, the patches will appear in the liveupdate tree
-> >after the merge window.
-> > 
-> 
-> Ah, so it'll appear in a maintainers tree after MW?
+Currently, the --reuseinitrd param is not supported on s390. This
+prevents testing kexec in environments such as virtme-ng, which by
+default does not store the initrd on disk.
 
-Yes
+When --reuseinitrd is specified, fetch retained initrd memory range
+from /proc/iomem and fill new kernel parmarea directly with retained
+initrd base and size, rather than memory range of a new ramdisk.
+
+Add die() cases for when user uses --reuseinitrd:
+        - in addition to --ramdisk or --initrd
+        - while booting a crash kernel.
+        - with kexec-file-load syscall (default syscall)
+        - and no initrd entry is found in /proc/iomem
+
+Signed-off-by: Joseph Cathcart <josephc@linux.ibm.com>
+---
+ kexec/arch/s390/Makefile      |  2 ++
+ kexec/arch/s390/kexec-image.c | 15 ++++++++++++++-
+ kexec/arch/s390/kexec-s390.c  | 14 ++++++++++++++
+ kexec/arch/s390/kexec-s390.h  |  2 ++
+ 4 files changed, 32 insertions(+), 1 deletion(-)
+
+diff --git a/kexec/arch/s390/Makefile b/kexec/arch/s390/Makefile
+index fab3e68..17f9dc8 100644
+--- a/kexec/arch/s390/Makefile
++++ b/kexec/arch/s390/Makefile
+@@ -6,6 +6,8 @@ s390_KEXEC_SRCS += kexec/arch/s390/kexec-image.c
+ s390_KEXEC_SRCS += kexec/arch/s390/kexec-elf-rel-s390.c
+ s390_KEXEC_SRCS += kexec/arch/s390/crashdump-s390.c
  
-> >> Signed-off-by: Breno Leitao <leitao@debian.org>
-> >> ---
-> >> Changes in v6:
-> >> - Split the pre-existing top-down underflow out into its own patch, and
-> >>   drop the "if (poison < kbuf->memsz)" guard from the hwpoison hunk now
-> >>   that the loop bail-out covers it. (Mike Rapoport, Sashiko)
-> >> - Reword the changelog: the MCE comes from reading the poison back, not
-> >>   from the relocation copy writing it, and the placement paragraphs read
-> >>   better split up. (Mike Rapoport)
-> >> - Move cond_resched() after the struct page dereference, so the scan
-> >does
-> >>   not yield between pfn_to_online_page() and is_page_hwpoison().
-> >>   (Pratyush Yadav, Sashiko)
-> >> - Keep cond_resched() per pfn rather than batching it. (Kiryl Shutsemau,
-> >>   Rik van Riel)
-> >> - Link to v5:
-> >https://patch.msgid.link/20260810-kexec_posioned-v5-1-95e1b5e2e656@debian.org
-> >> 
-> >> Changes in v5:
-> >> - Return -EHWPOISON instead of -EADDRNOTAVAIL
-> >> - Leverage is_page_hwpoison() instead of per-page check
-> >> - Link to v4:
-> >https://patch.msgid.link/20260807-kexec_posioned-v4-1-70d57f14625d@debian.org
-> >> 
-> >> Changes in v4:
-> >> - Anchor the top-down hole finder on the first poisoned page in the
-> >>   window and the bottom-up one on the last, so each jumps clear of the
-> >>   poison in one step. New range_first_hwpoison(). (Kiryl Shutsemau)
-> >> - Count a poisoned hugetlb folio in full: the flag lives on the folio,
-> >>   not on the subpages, so the per-pfn scan missed poisoned tail pages.
-> >>   (Kiryl Shutsemau)
-> >> - Link to v3:
-> >https://patch.msgid.link/20260803-kexec_posioned-v3-1-83aa6ede0351@debian.org
-> >> 
-> >> Changes in v3:
-> >> - Return the address of the last poisoned page in the range, or
-> >>   PHYS_ADDR_MAX when it is clean, instead of a bool plus an output
-> >>   parameter. Renamed to range_last_hwpoison(). (Pratyush Yadav)
-> >> - Add cond_resched() to the scan loop, as a segment can span half of
-> >>   memory. (Sashiko)
-> >> - Link to v2:
-> >https://patch.msgid.link/20260730-kexec_posioned-v2-1-f92d18551f64@debian.org
-> >> 
-> >> Changes in v2:
-> >> - Change from pfn_to_page() to pfn_to_online_page(). (Miaohe Lin)
-> >> - Return the poisoned address once we find a hit, to avoid the O(n^2)
-> >>   rescan. (Sashiko)
-> >> - Link to v1:
-> >https://patch.msgid.link/20260728-kexec_posioned-v1-1-160c81d180fe@debian.org
-> >> 
-> >> To: Andrew Morton <akpm@linux-foundation.org>
-> >> To: David Hildenbrand <david@kernel.org>
-> >> To: Lorenzo Stoakes <ljs@kernel.org>
-> >> To: "Liam R. Howlett" <liam@infradead.org>
-> >> To: Vlastimil Babka <vbabka@kernel.org>
-> >> To: Mike Rapoport <rppt@kernel.org>
-> >> To: Suren Baghdasaryan <surenb@google.com>
-> >> To: Michal Hocko <mhocko@suse.com>
-> >> To: Baoquan He <baoquan.he@linux.dev>
-> >> To: Pasha Tatashin <pasha.tatashin@soleen.com>
-> >> To: Pratyush Yadav <pratyush@kernel.org>
-> >> To: Miaohe Lin <linmiaohe@huawei.com>
-> >> To: Naoya Horiguchi <nao.horiguchi@gmail.com>
-> >> Cc: linux-mm@kvack.org
-> >> Cc: linux-kernel@vger.kernel.org
-> >> Cc: kexec@lists.infradead.org
-> >> Cc: rmikey@meta.com
-> >> Cc: riel@surriel.com
-> >> 
-> >> ---
-> >> Breno Leitao (2):
-> >>       kexec_file: stop the top-down search before it underflows
-> >>       kexec: keep the next kernel off hardware-poisoned pages
-> >> 
-> >>  include/linux/mm.h  | 14 ++++++++++++++
-> >>  kernel/kexec_core.c | 10 ++++++++++
-> >>  kernel/kexec_file.c | 20 +++++++++++++++++++-
-> >>  mm/memory-failure.c | 40 ++++++++++++++++++++++++++++++++++++++++
-> >>  4 files changed, 83 insertions(+), 1 deletion(-)
-> >> ---
-> >> base-commit: c5e32e86ca02b003f86e095d379b38148999293d
-> >> change-id: 20260727-kexec_posioned-72bb0a4143a0
-> >> 
-> >> Best regards,
-> >> --  
-> >> Breno Leitao <leitao@debian.org>
-> >> 
-> >
-> >
-> 
-> Thanks!
-
++s390_ARCH_REUSE_INITRD =
++
+ dist += kexec/arch/s390/Makefile $(s390_KEXEC_SRCS)			\
+ 	kexec/arch/s390/kexec-s390.h					\
+ 	kexec/arch/s390/include/arch/options.h
+diff --git a/kexec/arch/s390/kexec-image.c b/kexec/arch/s390/kexec-image.c
+index 69aaf96..a9e5442 100644
+--- a/kexec/arch/s390/kexec-image.c
++++ b/kexec/arch/s390/kexec-image.c
+@@ -78,6 +78,10 @@ int image_s390_load_file(int argc, char **argv, struct kexec_info *info)
+ 		}
+ 	}
+ 
++	if (reuse_initrd)
++		die("--reuseinitrd not supported with --kexec-file-syscall. "
++			"Please use --kexec-syscall\n");
++
+ 	if (ramdisk) {
+ 		info->initrd_fd = open(ramdisk, O_RDONLY);
+ 		if (info->initrd_fd == -1) {
+@@ -104,7 +108,7 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
+ 	char *rd_buffer;
+ 	const char *ramdisk;
+ 	off_t ramdisk_len;
+-	unsigned int ramdisk_origin;
++	unsigned long long ramdisk_origin;
+ 	int opt, ret = -1;
+ 
+ 	if (info->file_mode)
+@@ -137,6 +141,12 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
+ 		}
+ 	}
+ 
++	if (ramdisk && reuse_initrd)
++		die("Can't specify --ramdisk or --initrd with --reuseinitrd\n");
++
++	if (reuse_initrd && (info->kexec_flags & KEXEC_ON_CRASH))
++		die("Can't specify --reuseinitrd while booting a crash kernel\n");
++
+ 	if (info->kexec_flags & KEXEC_ON_CRASH) {
+ 		if (parse_iomem_single("Crash kernel\n", &crash_base,
+ 				       &crash_end))
+@@ -165,6 +175,9 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
+ 		ramdisk_origin = _ALIGN_UP(ramdisk_origin, 0x100000);
+ 		add_segment_check(info, rd_buffer, ramdisk_len,
+ 				  ramdisk_origin, ramdisk_len);
++	} else if (reuse_initrd) {
++		ramdisk_origin = retained_initrd_base;
++		ramdisk_len = (off_t)retained_initrd_size;
+ 	}
+ 	if (info->kexec_flags & KEXEC_ON_CRASH) {
+ 		if (load_crashdump_segments(info, crash_base, crash_end))
+diff --git a/kexec/arch/s390/kexec-s390.c b/kexec/arch/s390/kexec-s390.c
+index 86c9fb8..fd0d87e 100644
+--- a/kexec/arch/s390/kexec-s390.c
++++ b/kexec/arch/s390/kexec-s390.c
+@@ -25,6 +25,20 @@
+ #include <arch/options.h>
+ 
+ static struct memory_range memory_range[MAX_MEMORY_RANGES];
++unsigned long long retained_initrd_base, retained_initrd_size;
++unsigned char reuse_initrd;
++
++void arch_reuse_initrd(void)
++{
++	uint64_t start, end;
++
++	if (parse_iomem_single("initrd\n", &start, &end))
++		die("Couldn't find initrd entry in /proc/iomem\n");
++
++	retained_initrd_base = (unsigned long long)start;
++	retained_initrd_size = (unsigned long long)end - retained_initrd_base + 1;
++	reuse_initrd = 1;
++}
+ 
+ /*
+  * Read string from file
+diff --git a/kexec/arch/s390/kexec-s390.h b/kexec/arch/s390/kexec-s390.h
+index 6a99518..7e85976 100644
+--- a/kexec/arch/s390/kexec-s390.h
++++ b/kexec/arch/s390/kexec-s390.h
+@@ -34,5 +34,7 @@ extern int load_crashdump_segments(struct kexec_info *info,
+ extern int get_memory_ranges_s390(struct memory_range range[], int *ranges,
+ 				  int with_crashk);
+ extern int command_line_add(struct kexec_info *info, const char *str);
++extern unsigned long long retained_initrd_base, retained_initrd_size;
++extern unsigned char reuse_initrd;
+ 
+ #endif /* KEXEC_S390_H */
 -- 
-Sincerely yours,
-Mike.
+2.55.0
+
+base commit: 29898e149feb5c615b3ab6313260d58315bf1d8d
 
