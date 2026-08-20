@@ -4,195 +4,173 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E5900C5DF86
-	for <kexec@archiver.kernel.org>; Thu, 20 Aug 2026 19:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 64992C5DF8C
+	for <kexec@archiver.kernel.org>; Thu, 20 Aug 2026 23:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:Message-ID:Date:References:In-Reply-To
-	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=5h4I+0HaZa+6MlBmtBwk7JuDL79d6rc0QqQc9T0zVzg=; b=z6NdHGawMsBh+cxMsITZkDCZpV
-	FRd+qDw12tDubsScl4c25DaQYXkziDNpvNuI1bm6GqF2gc0ZdYSeVBjpIqz3Xa0bfW8KQ5xMdEi1J
-	Vtmh3YPFSlUXIBv6h8FJekJda0DZeLW6LHVBzf/yhxn8kzCGng27DCivdFG108InOUm0IYVC8qfUM
-	UXDhfS1LNw8nF160Vw4dauwhxeIs/P/H/UdBsBqzs9VzD3GTbWI0jAvnV6TbNB/H3pwMRyrZELqjE
-	4jm45ercVca7AStrEAYmdapDurFzip3/jCcSm2uv+sMl+GqbDLo8i7qFLkJMJVd/Api4D8H0hc1cs
-	XAc+OBOw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Message-ID:Date:Subject:Cc:To:From:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=9ewm/Zj1+McwWJwnWbHQRYKguxrcpYLE6rYhL8/QkGo=; b=iPHMWcowswtUvfqWaVeoYwQrcd
+	zRuS//7Zg6bDcVMd/VgOZuQnwyTH5CVlZbhoozLV839C8vXWRBwnbv6YXjiAfe2kFh3iIxJ8vDo66
+	a0YL2jksbynHsJ4bzecSEaoUX6POVZ2jtM41dmEy494ihqjCCbN8r5hcG8Bss15c/RzcW3EXYW5E0
+	mwcolggSOoKM12Lcdwsbv2SC6z7aC3b9bsU6s9WjTJf0B75KRhwY523ye4we4AEjN+5njhlQFz7n0
+	A4jM4WFLWUQn8a5bsWKLrcfeE0+0h6AGmVKEpw98sMdfSqG2xGnkBtw0K8Jwy4uObLRFOOVxEkRjz
+	AwLIulkg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wx8Y6-0000000C7ry-08yL;
-	Thu, 20 Aug 2026 19:35:38 +0000
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
+	id 1wxCEK-0000000CLA1-1zuN;
+	Thu, 20 Aug 2026 23:31:28 +0000
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wx8Y1-0000000C7qX-2H5g
+	id 1wxCEG-0000000CL98-48mD
 	for kexec@lists.infradead.org;
-	Thu, 20 Aug 2026 19:35:36 +0000
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67KDSFXx4119654;
-	Thu, 20 Aug 2026 19:35:32 GMT
+	Thu, 20 Aug 2026 23:31:27 +0000
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67KDOgwu009454;
+	Thu, 20 Aug 2026 23:31:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=5h4I+0HaZa+6MlBmtBwk7JuDL79d6rc0QqQc9T0zVzg=; b=
-	ro+y32By/gwmXgHdWTYJwyeWD8ZP+RtcNQkspIVRF0Rqp3fmJq3xsyUU0xFqALYo
-	oTpgy3yAVMzg54oV8FgT3AVqEq/uTXaduFVYJ/iXUaBImFvS8y0AK9TNFj+GcY98
-	KfP5DzAHF+Y4gA3WM+Ur4PvFvfMcqWjyPTpnFaywQkOp/VUquSku4DSgjHpI7D24
-	C1nMlVfN+WK96r7fZzL0ue26N2tVq6nJeCC+7t+CLwFbIfCbiwhIVu3JDTqGYBSg
-	d6OxdxB2iZEjaxv4o1FPHzQHAnnyi/IJHCKk8nIRal6nACGMR/UUR5YoI4FJx66r
-	hUFxQAPW7OAoK7np5PW1sA==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4g4yd9ky5u-1
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=corp-2025-04-25; bh=9ewm/Zj1+McwWJwn
+	WbHQRYKguxrcpYLE6rYhL8/QkGo=; b=cv4FKahAGwi9NiSyjBJZzujHGix4DBqt
+	ZgzLDadYTT+BRlPTtCgcSuIpkRiYGshD+mPTF6Zscyk4PRDnTWkRhfHwsYedwGYl
+	xyTO4RGZ7JPLV+tzEVqgnXiE2sVXzgO3QyjiQkq79FgWaXE5I6NPRmNNBKsr8UNK
+	aQyxtjiblNyWoMnBoPj36iLABSablzFYssjFjYsDj0n7H2q1y0ObJ9Kj2h+TCp09
+	KkJ2zlMW2ROJp4aXcQrU0fe/pcpThL4c5xaJDgm2cPnxooNWy8DOrkap0axqZ4Gq
+	qIZNnaKIGYZH+nbr/5kgkflpbX27+Ja1koD6fg67cVaG9XqWN7+p5Q==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4g4yd9v8rv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 20 Aug 2026 19:35:31 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.7/8.18.1.7) with ESMTP id 67KJZDOR018042;
-	Thu, 20 Aug 2026 19:35:31 GMT
-Received: from cy7pr03cu001.outbound.protection.outlook.com (mail-westcentralusazon11010022.outbound.protection.outlook.com [40.93.198.22])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4g2ejfw4yb-1
+	Thu, 20 Aug 2026 23:31:22 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.7/8.18.1.7) with ESMTP id 67KNKdmL007722;
+	Thu, 20 Aug 2026 23:31:22 GMT
+Received: from byapr05cu005.outbound.protection.outlook.com (mail-westusazon11010036.outbound.protection.outlook.com [52.101.85.36])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4g32htt6xu-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 20 Aug 2026 19:35:30 +0000 (GMT)
+	Thu, 20 Aug 2026 23:31:22 +0000 (GMT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=W9lcl4/l+5i4EBhY/2gwLbuxH8DCPHVLF1ZDbDCPJSOBLAEgqRuUnhOWVtYRJqLLX53L9v5jMzSP0Ia/lTZAibM2KOOfDd0PcqBDrilvMSWkn3pM1jAb/gq+brHRuh6K1EXPBxQOgrYe+pYIz/4UucBE4fnGonL8N/hIgwyYxPx+zRYAXFg3hw+s1J+6o7gh3bKnR3oJhSHD3pdrkw6p+qRGSphayaPtqXAHi8OLl8IdfYxMh4hKA9sm9QgDA+Zkingk2vvYtGZ8YzcjJk3KfJpVNIQjZ0js9IEG1TRubYnpapbbBPCxOq+zmhywyyV/BAqClwC5B1PzDYbhHU0dWA==
+ b=LLc4YsxnvOgatgwttiOYtYc+2yUMaLetq1TopoTjMztTwmz+Z29Ye/ZJNUBGMl2XOB7NBQOdb5F88H9fkkboHtoTBroqYsUbZYFqtKo7VtvPZDF7R7H+A7sU7BryMi0MsnnAsuh+y/ql1VVvzdEzn1RhcJc5GK7pxavnC33HrO7MaFakjcX38pUQX/NLWZRtWUjQCS5nAzqfSqinty6mvCHLRQl1A9WeLdof+2KoK87r3+t1pQTN3OD33xQqBN/l7fkBPZORzh/X5zJjrYLktcu1RLlKe3Sy+6KbyzcnXMc9yQsVNevYgTQdcgqQLPcJYFT8szLYxsr+DK5yiBc2Xg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5h4I+0HaZa+6MlBmtBwk7JuDL79d6rc0QqQc9T0zVzg=;
- b=gC+DEy/mOA6JN8gjwxUHC7t5UntOVsxOGkOmaY6VrfF+XUet3Kqpysy+xTzOKsCy+maD+H9q5cJJ6kVdCTMndIqD3lStbNnWM9FZFXUctnZqJs4+3iNqWBnDync3io6sxoI7oembKuaPSMiio8qPsnw7e7UdyeCmMXDGpw4ZINI+vv//kZ4Fp8JGj8LjpWcDKTk053Mn+TReGfAFIuRPd5gQoHgq/j+TaCXGqnmCW2QJ9JQpEOU72rmN2n6r/FA9EF6mEbi3Ugn51FtcEP0HDQJzWbyFlhPpMcePJi0Z8TjtYrIIS91Llux7bkIbWRXhCcGmpDhQwDsgs4rBkQ/NCQ==
+ bh=9ewm/Zj1+McwWJwnWbHQRYKguxrcpYLE6rYhL8/QkGo=;
+ b=RQBrZg0xHIx+owPsBEC8dn5F/f+tHNYjHqpHH1Ev5zTiVRdJi/FkvNinWkQWdnVgajXN2qTjXUpwXsgsFcAC8I81YnGNIRdGjYLHOfSjYJ65PepBs8u9J6F4T58NWAXBZHSozxdiTW7J3IOJVeTmQiuhDvCC9qAWDY1r/wdEMWsVxKGaLy/EwICwxI1+y7Yc18f9Ra1Prr1i0LLCmmROhyrcp/jdMv5MJvSMh+d51QGSFnDpzNYC0ziQE/YMXiiPmPd8Vei6ifMeWUJhkifKQKELaWSXhYKDtCNaimwPlszwDFUfWTHefhDkeI0HYx2lh0Z+j9VZzV72I6ZBH91sVg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5h4I+0HaZa+6MlBmtBwk7JuDL79d6rc0QqQc9T0zVzg=;
- b=C5kRqvR0vcRW+XDtFYsc3Ukv0c3kdYNp5v4PjA7jMIrvW0/8UouDh2mkEZfsJWiAATN950NXqdd060PaS9hGnhWHp2xg0Bj/2L6dNSuAncCKda6TR6lG7ckMgj2zDUt9544KDqvznRC97Rv37ERa8GtLTdXU4ckyJgAzJBAJ2eM=
+ bh=9ewm/Zj1+McwWJwnWbHQRYKguxrcpYLE6rYhL8/QkGo=;
+ b=lGcQupcdgBA68R49+FrIERc1DprxZNcZFLPIMA+bOqqbpoiseHZU+4siYyRbHjls+lDQxDe6aCBSZOPhbSHCHkVI9K7jvXuuLDfn8LyUExFVbdVHD2kvrKN3rT1k7iyiZOdHYsMjqsIxquwaZdmm0w365Z61L4YSzv27uNbFJM0=
 Received: from LV3PR10MB7868.namprd10.prod.outlook.com (2603:10b6:408:1b4::9)
- by DS7PR10MB5054.namprd10.prod.outlook.com (2603:10b6:5:38e::11) with
+ by DM3PPFEABD4EF1B.namprd10.prod.outlook.com (2603:10b6:f:fc00::c53) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.10; Thu, 20 Aug
- 2026 19:35:22 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.9; Thu, 20 Aug
+ 2026 23:31:18 +0000
 Received: from LV3PR10MB7868.namprd10.prod.outlook.com
  ([fe80::9105:4421:4267:8fce]) by LV3PR10MB7868.namprd10.prod.outlook.com
  ([fe80::9105:4421:4267:8fce%5]) with mapi id 15.21.0339.008; Thu, 20 Aug 2026
- 19:35:22 +0000
+ 23:31:18 +0000
 From: Stephen Brennan <stephen.s.brennan@oracle.com>
-To: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
- <k-hagio-ab@nec.com>,
-        Tao Liu <ltao@redhat.com>
-Cc: =?utf-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0juOAgOecn+WFiSk=?=
- <yamazaki-msmt@nec.com>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Subject: Re: [PATCH makedumpfile 4/9] Introduce a stat for pages retained by
- extension
-In-Reply-To: <9fa6d880-ab7f-4c41-a17b-97cae5019de6@nec.com>
-References: <20260714004550.3698175-1-stephen.s.brennan@oracle.com>
- <20260714004550.3698175-5-stephen.s.brennan@oracle.com>
- <an0opyG2YuUD-Gez@localhost.localdomain>
- <429278f7-c1ad-4192-a9e3-9d765aa1fddf@nec.com>
- <CAO7dBbU1AmQS6nh8OLGnB=tDw62NNsOEwodYc1_RQhP7qjteYw@mail.gmail.com>
- <87bjb0cydb.fsf@oracle.com> <9fa6d880-ab7f-4c41-a17b-97cae5019de6@nec.com>
-Date: Thu, 20 Aug 2026 12:35:21 -0700
-Message-ID: <87y0e0bn5y.fsf@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: PH7P220CA0140.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:327::17) To LV3PR10MB7868.namprd10.prod.outlook.com
+To: k-hagio-ab@nec.com, kexec@lists.infradead.org
+Cc: stephen.s.brennan@oracle.com, ltao@redhat.com
+Subject: [PATCH makedumpfile v2 0/9] Improvements to makedumpfile extensions, plus userspace stack tracing extension
+Date: Thu, 20 Aug 2026 16:31:05 -0700
+Message-ID: <20260820233116.3105747-1-stephen.s.brennan@oracle.com>
+X-Mailer: git-send-email 2.52.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: PH8P220CA0036.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:348::16) To LV3PR10MB7868.namprd10.prod.outlook.com
  (2603:10b6:408:1b4::9)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR10MB7868:EE_|DS7PR10MB5054:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5514e7b3-050c-44b5-28c1-08defef22d19
+X-MS-TrafficTypeDiagnostic: LV3PR10MB7868:EE_|DM3PPFEABD4EF1B:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6fa00084-72a4-41ca-c4bf-08deff132276
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|23010399003|22082099003|18002099003|56012099006|4143699003|6133799003|10067099003|5023799004;
-X-Microsoft-Antispam-Message-Info: tLqyi/68watqV3jaThJ7z8mH/zvYhZ8NJxwwmwLgnr1L1aUEKIbizQysOkaZ3Ijh8Nw0eBJCcnqR06F0zEM6KLmS/IQ4pRgy2m+ObqFWt8Qmu0wcKMxKYQvsWQxz12+OO1Mby6a8bMCsE2zUN7nYzaYbFG7RLcYwXHWGUo0VIEFRiWE0Wvb0CndrC/ApxbWAflNffajlmTqQ0gCp1ffi+nxULAm1S0WyqLwO6fvtdI2/KH6kMAY7V68MAoq+uDapf9pGTh3zP1onH5YCfBh72HTRYw6Qr1aqpLDaToI8N9/5YvQuqxY/Cerd7R8+Lzp1d+dbfXrqQQ3Sc2tsUotC7DcTAYIbqFBHGe7kERxFCMOPvGox9HPkeBv7bJWSCqSIvVk3PVOGkRx/nRHmJi5/FmuUK/SdAVPIRhu/30/kfhbBbdVTeQ9rooJ/g/nPQBFJUoqzyLbl+7NikRFj2wgCoJJMx3Qx59Lh7JZvVsP64qSaEI8iyyV2ivOepoHTtVzdpiuOKAfZajF9M6RnDwkdpIdaL6bKjhmNL5PzrEu+aj16lYqr/VeihJwZdUKRhzbcHHWsPs8zE8uyrnYkAF+XuTImE3WL2tGtYUCBvAPgNFp1kO4Wi8ysUa86Agpqtwa5L/DHqmnOelJLe5CGDgUpBKg/55AEagxFzY0HTQXeY1I=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR10MB7868.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(23010399003)(22082099003)(18002099003)(56012099006)(4143699003)(6133799003)(10067099003)(5023799004);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|23010399003|6133799003|56012099006|10067099003|18002099003;
+X-Microsoft-Antispam-Message-Info: DNVJBC2QRf95CgI371TRmTZs7pYYFTWttvsp/p+BwS4aR0NLtOSzLA6i7EJ2EdavfJVJYU4wq7Hrf9R8Q4UeFOf+Qkie8GmuFGmGGKvLDewzcZI3Bm66nwNJG1TA1KlC0p0RebbL5yJq8j9lTFNLk/eIXLTsnYx3dpxpjtgf26gEGEJ3Lv5htoj1xQv2IE8FIyEXC02hXcJwJerZHOcztGSLRnvNDHR+Xtl0SBT7ulb/XYzYmvVC7ZcJNWmWP/oWDHqM7GZCcoouunPaos9wXT6CuE3k52qToNmpE4QxX0eoIgWYNiQnhIfsCOia4A1Q0nfQ+5RenRo5aUw+nKwI2TNx8BU9+3Jj8J4syJ7hqsSTn8mVw8K5IeFG6RrqJRV6bcuI3CMfjJZ3MBpxjM03ZmIuV9oTgrlygzF6pe7Q3Iz+M3GY6yG4TH8lBVpBjvTqSJ2uK78qFrfXXE962k2qKgb9A59aqjRV4j0y9E2eS8O6EYp/EqOhyw5l2nv0fKpAxKXEQ363uw/7O36N2IveJweRipkswvJuwRaVTafKxP2ufDWdfJEzx8D5+BksW4FJzJdd02W+wVcrzsUC68eBDVIHN/MxhHIeVHRZXSo3CKJOj+VJvZYcf+/9YNshnXHdc7QabEDqpUJbdIhpEXyGxK2UBC1piFLVk9qTA/pBQSo=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR10MB7868.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(23010399003)(6133799003)(56012099006)(10067099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?S0JHdmlHUmx3YXIzOFZhWVZhR2tGdk1XTkVseFVudFlLaDR0VlZUVHlKaVMz?=
- =?utf-8?B?WVhjY0Nsd3FwQlV4aSsyYUcxa2R2OEFFSFVET1VsZm04b2lJWmhyUkZwQjlz?=
- =?utf-8?B?ampPNGJnT28xWVpOMktQZlZsYmpRU1FqcWQ5eVJ4YUZEelhmeFJlQ2RUT28v?=
- =?utf-8?B?N1gzcnA1RW5oaUJNV2tBZXJGMXNYZUpBV29KaExFYjF3RVYyajRUUzZ5UXVS?=
- =?utf-8?B?M3Z5NXhBWU4rK24xTUlEQ1pNVnYrdy9pVzRMMGdjTXltRjVVOHFnT2hRNXNu?=
- =?utf-8?B?VlZTckVOT1BrMjlXTmhvMGJaOXJ4OHFGK3dUZ29TdTJKeHFCb3IxOU5rclRM?=
- =?utf-8?B?ZkFHbnBLUExuUHBkMFpweTlTbTZnb2hjZ3hjY29Yek5DM0ZOaWpRbGV5bkJz?=
- =?utf-8?B?aG85L0VET2E0RUYyYlFWTzF6bkhSbGVuT3N5VmhqelRTZDJtS3pwMUNHWGNG?=
- =?utf-8?B?VndqMmlDc1Z3eEkyamRpSW5sNlNUZHBFVGVnd0gyM2FkZXdMOWtDN3NUajNv?=
- =?utf-8?B?NVE1WFZtOEFaYTZjcEdKTWdubmJEZXlkdHgwRjVZOEVmVUc0cG1sN0RMZm5h?=
- =?utf-8?B?OFlGeWQ3ZHl1bTZsVUU5OUFKaGRFcVF1dTQ3blRaNWZ5d01yME9UWExLSFhu?=
- =?utf-8?B?NmZ5TlBxUVdjakIxTmxURGNjWnhxQXhveGt5OHBzTG5IWnVMck0vM1Q0M2VX?=
- =?utf-8?B?bE9FMFdLZ0k4ZHdoelVnczE4ckJjTkw3NXBGeXB1bDdOSFlWVWF4Q2FlMzhV?=
- =?utf-8?B?QnpBV0ViaFpYVnloSlordE9DOHkvc3B0YmI5N3BLbG9sQTFINW1ZelJIN2Ez?=
- =?utf-8?B?d3lLUWc2T1EyL0ViUEQ5eUlKWnFBYlZBekZwekRKRFZCSkR0L3lERmFtbDYx?=
- =?utf-8?B?ekovekxPZ2JvSmRETldjK0xHelh4ZklFR21tVHZkbWx4Z01ES3g1dWpWckpz?=
- =?utf-8?B?QlJyOUkxeE9yWnhEU29CaFVHRE9TbFZBckY5Nlo2RDZwcFpkaCs1QzZoTVYy?=
- =?utf-8?B?Rk90WG10MUlaeG4wZFh0MlJCUHVLS0hxUmJIOXpYa1U1UktaL0k3cU9McndX?=
- =?utf-8?B?NVEwSGhsTXpLMDNSbWp6Q3hlR0pGdTBvc28wTVVXeHA2cUphbDluZTJaQldj?=
- =?utf-8?B?a2hoWTBOUTNTTjlJY0FLZVYyL1M4VzdsRTdHbWpBeWpkT1hkTzVCMFZrRmJP?=
- =?utf-8?B?R2Njc1piVXFMOUdaZFpJY3FPVEhndlBCZUVKM25oMXdEUnh5UFJzUVBtOXpk?=
- =?utf-8?B?NzRyVUxkNUJBMDlGbUxRVXRmYkZpbklFRGNnT3laRFZTSnE2UGpta0dhYnBC?=
- =?utf-8?B?ZVlYbXJodDBpRUQycnhHR0JndkFVbnlvcXJPUjRVZW1Id05iZ0xiZkJOYzVZ?=
- =?utf-8?B?TyttY1lNVnZyZFB4ckJxemZ6T2RMNWEyQVNQYnVsMlJjTlh0YjQzRnhEUm5H?=
- =?utf-8?B?YXBGVWswakNNZ0tEQUZhamJFNmI0UWJLU1o2U1A5TlY0TGZRbkoxWmg1c2xT?=
- =?utf-8?B?MytoZWYvYnZ1Wmo0ZnBqeEJBL1NIWWlGY1RBOFN1VU9vRU5ZcnZHRnVrSXEv?=
- =?utf-8?B?Vjh0dTJRcnorTmdsdmZybjF2RnlFUGNpWHJlb3ZuOVhQTG1rYXJDWWVHcTM2?=
- =?utf-8?B?NllwTGRUOTJEUjZwQmRDall1QWlXTVNod2lISGlwR3d5Mi9WQnpTK0p5MWFz?=
- =?utf-8?B?cWtaU01GWG9SRVNjRkdNTThuWlFkeUtQY2VBS0RJeEdSMGlLSkhUZGhJbkxp?=
- =?utf-8?B?WllsdkxsSXVrU21lUThFM095TFFFbTRESC9iRytDOVhtbGVKVVFnUEFlYjZK?=
- =?utf-8?B?QXpmRDdRV1loRk9qOXJYQnY4U1RpNVdUcTV5ZmlIbmh4TWVvWmIycFpDQ2ow?=
- =?utf-8?B?T3d5akJacTFLOVBDSVFjWHQ1a0VZUERXdzRSeW0wQmZSbjV4bFhtQStBOUhu?=
- =?utf-8?B?OUlkeU5sMml5cmJKb3hBZGJiNHZmR1lzcks2cVV3Tm9TN1RKd1R0R2F0SElu?=
- =?utf-8?B?MFRjQVBUVE11ZG9JdWRxTVFIL0xSSjE0bEFjMkx0dHFtTXA0eEVzQjZzUmp3?=
- =?utf-8?B?NGVmU2ZwUDkyaTNoWmpoRzZsZFdEQ0N4UnoxRXJyOWVyNk9pdWJZZUVrd0JN?=
- =?utf-8?B?Nzg5RGhxc2I4a1RtVm5NeG5nQjY5My9tQS80Q0gwNy9kU1lEREJCNG02WGJO?=
- =?utf-8?B?bmhuczBLbW5tVk56czNIbEdpVDRWeFlHSnNsYXgyVlNGNTI1Q3FpeFRndVcx?=
- =?utf-8?B?c3I2Q1Njd2RURUQ1M2JUUWZVVTRRcTh2NkhiR1o5NU10dXk2NkczRUtqZEJx?=
- =?utf-8?B?azBJSDZPK3J6eVlBc1FzRlJ0RUZHejRmL2EyeDdyVEJ1R2pUQ1Z3c2dXRVYw?=
- =?utf-8?Q?vI3wVG37rchaxO9s=3D?=
-X-Exchange-RoutingPolicyChecked: TL5nsgmWpQ6yD3Wu+aYWoPAlPqe2i8F0omR6kePj3f2YFsS+kaSO7OnADlWJwpfO23wM2R3wH+SmYEikNmmZbBbdJnXYO4waI9moKOUgvZGZObE2sxJannAKYiI7bzj0H+aQ7UPiGQhQq/MfZ07MdXc+smqDl5wXE+sRPu5zonFCxbtupK07Sn+LNL2CRHtRwcvDdo+WcOJqaYK8L3FdAkXuVR6PhQxWmFVo6uxLpYnfwFCSbw7aK3v0XjvpbPWE+B56WoBFZvZMltpGL7q/oX2QzvlLyStPfs42cbulH3XRKxgczSNk81UbFqtxtrlB/WNebEX4dkM2c7j4JFZZ2g==
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?bfLkO03pvmjbn/6qKL5MjCEI/j6AZ07HbRDFYJDWhTChvawzkR8DT7U2ggW4?=
+ =?us-ascii?Q?X9x7pXQZiSHV/9ys55+yOJo408hm7YZnbdutkfojI8KVTIpODUBdSEegBNi3?=
+ =?us-ascii?Q?KjzkM34vNgriMPmI90Owmmng+U16vdWO0+RlOHzr3X5p4faTBguvlS5s2h9j?=
+ =?us-ascii?Q?uNpXrtkMTstEqX0llErRFrYCqBIF2/vQCDBOGPQt6K2J+ZwbHCbsYS1ZbH/9?=
+ =?us-ascii?Q?cXdGtn65n+1q/xfaWEGjQzt0EO64GET6lmLw55y0GNQThxZb2f4Q79V7FJIM?=
+ =?us-ascii?Q?1jtNMIl5iPxfzewcqUqUpwU8W5HTflgJ4vRtBtqN00Xxx/d3iIMdCFQaEolT?=
+ =?us-ascii?Q?7H7Hdt3mCKZTMaXNEwO6O0XSE5Mvi04iOn5vzBKbexjO/6rC7eUJaFSn8T8s?=
+ =?us-ascii?Q?0ey13g96ZXlF3WesZBfi2khF+tkpq0dUp2qHGHeR/FAidWrksyy/Z9nSV0Tk?=
+ =?us-ascii?Q?ATGSWS1NJmJgHqbZXoXSGhks1g1r8OkE646Xv+BxcGnhIiD16jj7jz6U4zS1?=
+ =?us-ascii?Q?yvXPHcZy2O/MTvZftmG5X0VZfIuRgKKPAPNmVoLqGQtlwZVhw2ZirRXvoXru?=
+ =?us-ascii?Q?kw0ptNq6FDMOvYQeBtbWpdRzygSBIqk5bU6JQ+VQztUvuzMJuAhHEiDDpfp0?=
+ =?us-ascii?Q?LGM6nlk3UIampqGFo0y47xQslnuC6ui/excAG7us+mhIbbXb1hP3JmlEK8XJ?=
+ =?us-ascii?Q?3ef5oiwd/xgNb3mYq4LXHUUmgwep5dh3JL67fXRA0qiL9jHa7m7WxsSrkCpp?=
+ =?us-ascii?Q?5s7es27A+vjoBHtnPCwpRJw85FaYstTEQied2MIJ1MchVbURmwPe6uN3qNwH?=
+ =?us-ascii?Q?6tVW2b2Q3l3f3uqY2FqCrzTUONqJMMAppC0n1Fih0LiyaaV9i5O/PNsEYlkN?=
+ =?us-ascii?Q?IqQWMhkwsUb0K/qMrm0F3iz3HOcCUIvMUgBrObniLFW23olrVUyNe9uyhPj0?=
+ =?us-ascii?Q?mqNz04oDy/xz1j4Y1TUTGFRHBKePLjjV+WSupVVVX6Tvape9O/aWzOFm+z1Z?=
+ =?us-ascii?Q?Iki+DG3zQ2gzA2mGvCxkOS941xpMQp83YXxcIMaCMNSRYkaCuooBONkZSox2?=
+ =?us-ascii?Q?3/EjfyzZ8FpfYNG06rDgBVpGpK9zbvnxBMU2npFiN3uMfgIK1v1JcOZv7Aib?=
+ =?us-ascii?Q?ksAX4tew56F52vS5h7bj34Q8eEH2Hwb0VROU86Sn/Z8hCIcKSk98Ji7mR30A?=
+ =?us-ascii?Q?Zkb6EbUv1x7IcgXaP0RCnS+623D1uukWc3OZJ6rxO/TW21PMa6X7E0/Csfaf?=
+ =?us-ascii?Q?hStUYH9GedAcJbdPPuElE7x++rIr2jBESeNt2KVaDh8mzMR9kS+J96y8QT/t?=
+ =?us-ascii?Q?v5ZHxS5nVBfLfkv27itihqypufZDSHsqriF/Bq3KXHTQ+cc9H27RBVAQryIF?=
+ =?us-ascii?Q?WkPrAF1CGMEO+tz/qgywilVBFDAlTLEIqC3L8Y3uGfGC0C/AiN12zxVfLJaL?=
+ =?us-ascii?Q?LGLrrH6Bxz36I87rAaELGla7vZ1Swx5uX5PunxDn2/JnumJaw/cVFx7fS1wu?=
+ =?us-ascii?Q?3OjW1mMT7hNIJDfA9060M/7xY+7tklxDTyMDLgjEmB2eZUz6X3oOcE4JdOgh?=
+ =?us-ascii?Q?X1OxO2C9a+LivEyYYoFGCy/IHVkVt8w0cvdW5BfQQ8jaIF41mRPRDyD35vUP?=
+ =?us-ascii?Q?C5y/LRnzly+pXjDlHHJFG+VXESH9PZN40wynqDugjZflg7QmuP3eFCtQdty2?=
+ =?us-ascii?Q?DGukvEymjAHlR589tq2YriYeIB/s8s+X3DrBniL31pcQzN3G1hPqnxwoiNZ1?=
+ =?us-ascii?Q?Yli4YfrL/aq2k+rSOZCS8vjCgOjzbm4=3D?=
+X-Exchange-RoutingPolicyChecked: NpvTvZjEzQ70ZCDI3eLIup1WEi6H5FUVj+8Ik9/g5WCPQocea6hrFr6KP75mrYuMrYA4wFGetPwTl1uVNODjOkXyRc7C0v8ItMK8iRtET/0cLsRwdqfyimrvhwB60BGP6AxhajC9u6Dj/NcwRhdi+2SrO46djXYGNPnbPYZHej3X4tXsHKVWmEUlJzR+x0/ak6a2DQ3xYjASzZh/K3b0+8v1c2xdsHKdk1slAKGDnZDTBXgZFyf2LP21spAfrL9RXRR44juWw4B67Me/I+HbjApVCiHJ037UPfvO3t8rlf7qIZ7rRA4DHSrJtZpROSIV/fTJVs6DDKHskDxV13Enyg==
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: Hpm7VYBBayMJz8maHJgknTeFXaHFkouPaiGBrf4+g5CTx7A/BsGnyvdIDkHkEZitO9JExyxBnE8TBl9USosWT6G8ouzzOpDE3qu2nUjkmjQ4X4vO1jf88OoH0M2YDSaHdjgtVHJNDi1h2NaPC+4dOVmTYlhS7LDXCIiuTNYX4W0XJP+vbfn/+xG5rW28BtrLuS0iqBeAdroDvrNCOBVMqpi5+Mp8d5bSnsGS2CZESD3ePCXnIsyqLo6zebaQFU6mpiEyn7dtQoLuPVv5UasC3qEx6BqQCF/n8n1LJrSwLNZwF7j6ZIrjIdAsP7+fljGb5Hwv/g6J6OLVMgSyQajX3PSv1N3USIpt72/XtqLGI9kE9xpcBxmAMh9tOtZsoOisvd9rQylkGXe+ClXvm9bXssOAeSOFwfhl8C/Jab8KvVkTSLkvtG8BgOkVf9Y6di9M47gZKh3L85qzPG169t3CM0HSD4LEt6YGvkmyD1A7w3sD1xOVd+hqhu+r4Ar3+EW3rUSNn0iHF+x9o2ThWcmbSsbyLCw6kEncpmzV938P6vR99HrVRtSGzTj0pKnLT5CuwjaVfoGvkdP9KRPhnNbw8SojIToTaxz3SGD+V1tJ4ak=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: svyFzlSTBPjKbnk4Q+9ZmkpVd6MKrZV7ofcGwrOOmV+XzqevYAVrI2xuyqgNcHByLyvOe4N1xTlljUAdGjfot7MKqa72YE8YNjscUDXhuXbjCk9E4TbzKJzOvM8e8TCfWJ9aMeNzCzAJoLNxjA8PBlIO8alon9quGbvVTl6V6+VXzop4KqKUmJG7LeI+HFzd0+1nKTOWBGrbhMuLsdOCLIzIFadA/upU45NkjpmqS7KXJa2Yia7QlFncfhqhzJUq0kiLpFmw+e41x07cxNKCpTP1xd/kG3xUH+FyGf5hRqZIQYML+eFB6itWGy90Ejmw0+mYTGNqNAxBFI2RJqNuajkRVUKppGHwO9Ba+ODQhFl2dpmMt07oC0t8AssPVztdj4pHbDB3aHr1D6FQMoIwuOB2GP66KwqGU73P4A50HuSbWtkWiVuMUL9Y/cB6DVJe099bf7Tx0YdXZtlc8i6aUaYYyxfY7IfW+5bmjno3Dud/Z21mADOIaMWbU/qIHvi0c3k/zJijpW2h1xmFxOkTESJ2A7X+1Ynh9e8/V+q3r+RBcCpVq7IT8tiC7G5/2SsiLPP5qB7UxgyyPsQfP8nHVe+eZyNgqk6IJl7UmcE67+Q=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5514e7b3-050c-44b5-28c1-08defef22d19
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6fa00084-72a4-41ca-c4bf-08deff132276
 X-MS-Exchange-CrossTenant-AuthSource: LV3PR10MB7868.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2026 19:35:22.7464
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2026 23:31:18.2220
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gi79wDdyF8CEmLW3xFo1EXeBsEM0dQnVVji2Kt4Ba4YzINoQNlwAtprcoQN3SVI6cj/L+Nv52B5s9tbm1RsabWC0I8dhfGKE+8wO1eRSYuY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5054
+X-MS-Exchange-CrossTenant-UserPrincipalName: +5qWvYLmpJvw1YzGnkVS43/8cbjEKWp88RIn+EJmghGho6AYlKgAjMCGdEnr71/hEVhrp/DDdofIXacfh3c3w+216xfnnO0+XmjWvWF+bc8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPFEABD4EF1B
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-20_01,2026-08-20_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0
- lowpriorityscore=0 mlxscore=0 spamscore=0 suspectscore=0 bulkscore=0
- adultscore=0 malwarescore=0 mlxlogscore=999 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.19.0-2606160000 definitions=main-2608200147
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODIwMDE0NyBTYWx0ZWRfXxDMdFtHyzgNa
- qUrGSlqc5j7eTi3PDs4e0BjLcSgVm53jBxXrbfjAVxIbkH3tXOLGyBu/HlR5VUyc7FmGMpKd9iu
- a8ZbjXqd6oblBkFVFAEhR+sChDnad6MHM2OEdstpEJs0AcQDMcA4YvNf6scUj8kEFfWupd8XMja
- ves+v6pf2dHElZFY6RCod3v0vNyxMMaWg4th98BnoD2Q5Q53TcrjHEynalcbq8ekYuR6JUD9maC
- NkNUh9D2Tixe5UmlR+MnXn+EbqGgLoqW8ffkW9yFmGfxJle7M6OgV5vlxSIqQEO/SUKvJqefcO9
- 37ruMJrgRnFYrGbuLRLxPDJfx1j9kioI2Yo4FUBZ6NZcczjjW9kVnDfqoJ5UST4LK5UmTGBoeMk
- JcIeEpgsrgZS5QYEBE3VLVhWcijba4wwNva1sYAYWv9FXXGi9wA1M1AlYi6f0L32P9s8EVR3dN7
- nSb7nt97l5g0zhdMR2w==
-X-Authority-Analysis: v=2.4 cv=a7wAM0SF c=1 sm=1 tr=0 ts=6a875703 cx=c_pps
- a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17
+ definitions=2026-08-20_03,2026-08-20_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0 mlxscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2606160000 definitions=main-2608200174
+X-Authority-Analysis: v=2.4 cv=VNvtWdPX c=1 sm=1 tr=0 ts=6a878e4b b=1 cx=c_pps
+ a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17
  a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=Sv0fKeRqtYgA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=jiCTI4zE5U7BLdzWsZGv:22 a=7Gl3-_t3PgB9XO-mQDs3:22 a=NEAV23lmAAAA:8
- a=nrACCIEEAAAA:8 a=20KFwNOVAAAA:8 a=yPCof4ZbAAAA:8 a=OPyYS1hDZ3uFKbiVrXMA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: Cb3gMpmoYqcXOYHpehw4G9aQhD9aOhSK
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODIwMDE0NyBTYWx0ZWRfXwlKdW3Greyfr
- 8BKVFZXLmY+kZnFp81HCxSerJB8H9q/1lai7J19FAoIzcDzW0Gk0ZwaESxGrxjyHHsp52GkYVki
- UkGOuyG14Qk/ClLGQIifwV0wFa1tmOPth5Soj1+ZMF940Axh6xeh
-X-Proofpoint-ORIG-GUID: Cb3gMpmoYqcXOYHpehw4G9aQhD9aOhSK
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=Sv0fKeRqtYgA:10
+ a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22 a=jiCTI4zE5U7BLdzWsZGv:22
+ a=3I1J8UUJPc9JN9BFgKH3:22 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8
+ a=C7mT_x_fQXqJ4l1vu10A:9 a=5yU3S35YU4bGjq-dph-N:22 a=Bho9c0fBagfJEIQBS7DQ:22
+ cc=ntf awl=host:12102
+X-Proofpoint-ORIG-GUID: CsOPjGDuKEXcVtfoaqnkHmL6UkuxDFDX
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODIwMDE3NCBTYWx0ZWRfX1fbWnqlUcCA+
+ ZPicoMUg6o2B+C56e6xMx+sCTHf5xF3/e0OKq3g9ZwuSPrfNQHsItU+WnHCRW34W+pGiRCIb3N9
+ KHtXf6D56M7b8XZOaSM7Gc4L07JmDCC2E0qcFSOhcc5HyCYUbfH8oKTMVkQFTUpEK4UYTZMl5DP
+ 4aJ5edTSHdi4Z9o5s1gusV7Vta+yPEaoeknvd3MNdMpM5Tyo5MgOwue04yK31ypwg9I/AJZvrMZ
+ +f2dF7FKbN9QpyVm8+KZ1PBLzH+SPzBh7LGdQdgwdkVfgwIrjzjKsYehV+XvmO4yOvc//XKKIs9
+ ofzIbd2fu7qhbiYbyCiYzV7vlDRDyz9xpZz8KHPlkD+4lL989nXx2+rASDAd7mIiV2LFQcWVw1k
+ XB2uduE9N208Pl0rUJzGrxnr47lGBa5NqS2ae/nLzwvL8oly0f8iKzWxiyPqTtltorEF2iaGdZx
+ nBZe0xqUlAmrLRnvQ64xSDO9XwXju5CMpz7OFoNU=
+X-Proofpoint-GUID: CsOPjGDuKEXcVtfoaqnkHmL6UkuxDFDX
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODIwMDE3NCBTYWx0ZWRfX02daRPJ3VQKm
+ qptOEna23T+0o6ftTzrDHH5j7Ay9soTzljc7ZjlqVu4bFQXu1HNCfa7Qwnd56bKgJvFvdlHvWv0
+ 2Eyhax5pxqnikRaPnwgShEopRXzNr03VlFsp0frLyw7dhledP427
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260820_123534_007764_7FF93BF5 
-X-CRM114-Status: GOOD (  13.93  )
+X-CRM114-CacheID: sfid-20260820_163125_445756_917C1C0C 
+X-CRM114-Status: GOOD (  21.36  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -207,384 +185,94 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-HAGIO KAZUHITO(=E8=90=A9=E5=B0=BE=E3=80=80=E4=B8=80=E4=BB=81)	<k-hagio-ab@n=
-ec.com> writes:
-> On 2026/08/18 4:58, Stephen Brennan wrote:
->> Hello Tao, Kazu,
->>=20
->> I apologize for not responding on this patch's review sooner.
->> Thank you both for reviewing carefully.
->>=20
->> Tao Liu <ltao@redhat.com> writes:
->>> Hi Kazu,
->>>
->>> On Thu, Aug 13, 2026 at 4:54=E2=80=AFPM HAGIO KAZUHITO(=E8=90=A9=E5=B0=
-=BE=E3=80=80=E4=B8=80=E4=BB=81)
->>> <k-hagio-ab@nec.com> wrote:
->>>>
->>>> On 2026/08/13 11:15, Tao Liu wrote:
->>>>> Hi Stephen,
->>>>>
->>>>> On Mon, Jul 13, 2026 at 05:45:37PM -0700, Stephen Brennan wrote:
->>>>>> Extensions can mark pages to be excluded, but those pages may alread=
-y be
->>>>>> excluded due to the dump level. We have a statistic to count pages
->>>>>> excluded by extensions. It counts only pages which were excluded bec=
-ause
->>>>>> no other criteria excluded them.
->>>>>>
->>>>>> Extensions can mark pages to be retained, but there is no statistic =
-to
->>>>>> count them. Adding a counter to the code as-is would not give us the
->>>>>> value that we care about. Just as above, pages marked for inclusion =
-may
->>>>>> have been included anyway due to the dump-level configuration. The m=
-ost
->>>>>> useful statistic is the one that tells us how many pages were includ=
-ed
->>>>>> by the extension, which would not have been included otherwise.
->>>>>>
->>>>>> Introduce a statistic that counts this amount.  To do so, we have to
->>>>>> skip the short-circuit evaluation when PG_INCLUDE is returned. This
->>>>>> seems like a worthwhile trade-off, since the dump-level checks are a=
-ll
->>>>>> reasonably efficient.
->>>>>>
->>>>>> Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
->>>>>> ---
->>>>>>    makedumpfile.c | 13 +++++++++++--
->>>>>>    1 file changed, 11 insertions(+), 2 deletions(-)
->>>>>>
->>>>>> diff --git a/makedumpfile.c b/makedumpfile.c
->>>>>> index a4c9bbf..cf6a38f 100644
->>>>>> --- a/makedumpfile.c
->>>>>> +++ b/makedumpfile.c
->>>>>> @@ -106,6 +106,7 @@ mdf_pfn_t pfn_elf_excluded;
->>>>>>    mdf_pfn_t pfn_extension;
->>>>>>
->>>>>>    mdf_pfn_t num_dumped;
->>>>>> +mdf_pfn_t num_extension_retained;
->>>>>>
->>>>>>    int retcd =3D FAILED;        /* return code */
->>>>>>
->>>>>> @@ -6638,8 +6639,6 @@ check_order:
->>>>>>                * makedumpfile extensions
->>>>>>                */
->>>>>>               filter_pg =3D run_extension_callback(pfn, pcache, &i);
->>>>>> -            if (filter_pg =3D=3D PG_INCLUDE)
->>>>>> -                    continue;
->>>>>>
->>>>>>               /*
->>>>>>                * Exclude the free page managed by a buddy
->>>>>> @@ -6722,6 +6721,13 @@ check_order:
->>>>>>               else
->>>>>>                       continue;
->>>>>>
->>>>>> +            if (filter_pg =3D=3D PG_INCLUDE) {
->>>>>> +                    /* Account pages which would have been excluded=
-, but were
->>>>>> +                     * retained by an extension. */
->>>>>> +                    num_extension_retained +=3D nr_pages;
->>>>>> +                    continue;
->>>>>
->>>>> Maybe I'm wrong, from the code we are trying to retain nr_pages, don'=
-t
->>>>> we need to do
->>>>>                        pfn +=3D nr_pages
->>>>> to update the pfn of the next for-loop?
->>>>
->>>> Thank you for your review, Tao.
->>>>
->>>> The current code below does not use nr_pages to skip tail pages to be
->>>> retained, so I think this patch's code matches this.
->>>>
->>>>                   /*
->>>>                    * Unexcludable page
->>>>                    */
->>>>                   else
->>>>                           continue;
->>>>
->>> After rethinking, I guess both ways work:
->>>
->>> 1)
->>> if (filter_pg =3D=3D PG_INCLUDE) {
->>>    num_extension_retained +=3D nr_pages;
->>>    continue;
->>> }
->>> Then in the next for-loop, all the tail pages(for-loop nr_pages times)
->>> will hit continue:
->>> if (i.compound_head & 1)
->>>    continue;
->>> so all pages are kept within vmcore.
->>>
->>> 2)
->>> if (filter_pg =3D=3D PG_INCLUDE) {
->>>    num_extension_retained +=3D nr_pages;
->>>    pfn +=3D nr_pages
->>>    continue;
->>> }
->>> Then in the next for-loop, all tail pages are skiped(only for-loop 1 ti=
-me).
->>>
->>> The effect is the same, all the nr_pages are hit by continue, so all ke=
-pt.
->>=20
->> Yes, as you noted in (1) the current design is that we detect compound
->> tail pages near the beginning of the loop, so we don't need to adjust
->> pfn. (For option (2), both mem_map and pfn must be adjusted, and they
->> must be incremented by (nr_pages - 1), not nr_pages. We must be really
->> careful when skipping the loop forward or else we corrupt the vmcore,
->> which is why I relied on option (1) in this patch.)
->>=20
->>>> (Retained tail pages will be skipped at compound_head check.  If we
->>>> change this behavior, a separate patch would be preferable.)
->>>>
->>>> But on the other hand, if we set nr_pages to 1 when PG_EXCLUDE,
->>>> extensions cannot exclude tail pages?
->>>>
->>>>                   else if (filter_pg =3D=3D PG_EXCLUDE) {
->>>>                           nr_pages =3D 1;
->>>>                           pfn_counter =3D &pfn_extension;
->>=20
->> Hi Kazu,
->>=20
->> Yes, I agree this is a problem. if PG_EXCLUDE sets nr_pages =3D 1, then
->> extensions cannot exclude tail pages.
->>=20
->> We could drop this "nr_pages =3D 1" line here. But I think this could be
->> more completely fixed by Tao's approach below.
->>=20
->>> In fact, I didn't consider the case of compond pages when implementing
->>> makedumpfile extension. My original thought was, makedumpfile pass
->>> information of page one-by-one to extensions, allowing the extension
->>> to decide whether to keep or discard it. Thus the filtering logic for
->>> makedumpfile would be much simpler.
->>>
->>> Extension however, check page type(compound page or normal page) by
->>> itself. E.g. if it want to exclude a compond page:
->>>
->>> makedumpfile:
->>>
->>> for (pfn;;pfn++) {
->>>    run_extension_callback(pfn, pcache, &i);
->>>    ...
->>> }
->>>
->>> extension_call_back:
->>> if ((check_page_type(pfn, pcache, page_info)) =3D=3D compond_page) {
->>>      record_compond_range(pfn, pfn + nr_pages);
->>> }
->>> if (pfn within compond_range) {
->>>    return PG_EXCLUDE;
->>> }
->>>
->>> In this way, I guess we even don't need to introduce PG_INCLUDE_HEAD
->>> to makedumpfile, because it will be the same as PG_INCLUDE.
->>=20
->> Yes, I thought this was your intention. But the current code (prior to
->> this series) doesn't respect tail page decisions, as described in the
->> Patch 1 body. The current code makes decisions by compound page, not by
->> individual PFN.
->>=20
->> It is possible to handle each PFN in the way you suggest. It makes the
->> extension API simpler and more flexible, but it makes
->> __exclude_unnecessary_pages() more complex:
->>=20
->> 1. We need a special case in the middle of the loop to handle
->>     excluded/included compound tails. In this special case, we need
->>     special bookkeeping to ensure we decrement the correct PFN counter
->>     for PG_INCLUDE pages which were previously excluded.
->>=20
->> 2. Pending multi-page exclusions at the beginning of a cycle must still
->>     be performed, but the loop must still process them to ensure that
->>     extensions have an opportunity to re-include them.
->>=20
->> 3. When extensions return PG_INCLUDE on a head page, yet makedumpfile
->>     would exclude the compound page, we need a special case to ensure
->>     that we exclude all the tail pages.
->>=20
->> When I originally decided to implement it the way shown in this PR
->> (calling extensions only for the compound head), I thought that doing it
->> your way would be too complex. Today I tried to implement it and found
->> that it's not too bad. Here's a version of this patch series which calls
->> extensions for each PFN:
->>=20
->> https://github.com/makedumpfile/makedumpfile/compare/master...brenns10:m=
-akedumpfile:userstack_alternative_api?expand=3D1
->>=20
->> In particular, this commit is the one that matters:
->>=20
->> https://github.com/makedumpfile/makedumpfile/commit/a6695155a58ff5a3078e=
-38deeaf768adbc7cbdbf
->>=20
->> The nice thing about this is that, with "struct pginfo", extensions can
->> now very easily test whether a page is a compound_head or not, without
->> relying on re-implementing makedumpfile's version-specific logic. So
->> this very nicely allows extensions to implement any exclusion they want:
->> they can either repeat their decision for each compound tail, or they
->> can do something more complex.
->>=20
->> If Kazu is willing to accept this modest complexity for
->> __exclude_unnecessary_pages(), then I think it's worth it for the added
->> flexibility, and I would be happy to send that instead as v2 of this
->> series.
->
-> hmm, personally I was thinking that it would be better to process compoun=
-d
-> pages as compound page also for extensions, because that's the current
-> makedumpfile process model and simple, like
->
->    PG_EXCLUDE -> exclude a (compound) page
->    PG_INCLUDE -> include a (compound) page
->    PG_INCLUDE_HEAD -> include only a head page
->
-> But looking at your (Stephen and Tao) extensions, apparently there are
-> cases where more flexibility is required for size efficiency or accuracy
-> in excluding/including pages.  So I understood that we have to accept a
-> certain complexity.
+Hello all,
 
-For my own extensions: PG_INCLUDE_HEAD is enough. I do not actually have
-an extension that would require processing individual tail pages.
+This is v2 of my series of improvements for makedumpfile extensions.
+v1 can be found here: https://lore.kernel.org/kexec/20260714004550.3698175-1-stephen.s.brennan@oracle.com/
 
-Tao: do you have any extension that would require anything more
-granular?
+There have only been a few changes from v1:
+- Updated extension/sample.c to use the new API in patch 3.
+- Reordered and reworded the extension retained pages statistic per Tao's
+  suggestion, so that it is more clear.
+- Included a more complete commit message in patch 7.
+- In patch 1, removed the "nr_pages = 1" when extensions return PG_EXCLUDE.
+- Significantly reworded patch 1's commit message to explain the different cases
+  and the alternative approach.
 
-If nobody has a requirement for extensions processing individual tail
-pages, then I think I have changed my mind: I now believe we should only
-call extensions for tail pages, as this current series does.
+Notable improvements in the "userstack.c" extension are:
+- Leverage "detect_cycle.h" API to apply Brent's algorithm for cycle detection
+  in linked list iteration, to avoid infinite loops while iterating tasks &
+  threads on corrupt vmcores.
+- Set a limit to the number of retained anon_vma entries, to avoid hitting OOM
+  issues in case of a huge vmcore or a bug in the extension.
 
-Calling extensions for the tail pages may have a manageable cost in code
-complexity. However, it also has a runtime cost. For large memory
-systems which dedicate most of their memory to huge pages, makedumpfile
-can skip over the tail pages, processing memory more efficiently.
-With extensions, we would need to process each tail page in order to
-allow extensions to handle them, so we cannot skip them in the loop. The
-performance difference is definitely noticeable. I did a quick test on
-my branch, without any extensions enabled. The test system has about 950
-GiB (of 1 TiB) of memory dedicated to free 2M HugeTLB huge pages.
+As discussed on v1, the final two patches containing the extensions are not to
+be merged. I will publish them in a Github repository as soon as I can get it
+arranged with my employer. They are more for demonstration of the API and
+continued sharing until the repository is available.
 
-  With this patch series (processing just compound heads).
-  (Similar results were found on the master branch).
-  No extensions enabled!
-  (core_collector makedumpfile -l --message-level 7 -d 31)
-  [   13.017064] kdump[1146]: saving vmcore
-  [   62.684150] kdump[1151]: saving vmcore complete
-  -> 49.66 second kdump operation
-  [   13.124066] kdump[1150]: saving vmcore
-  [   59.001598] kdump[1155]: saving vmcore complete
-  -> 45.88 second kdump operation
+The major discussion on v1 was on patch 4, dealing with how extensions are
+called, between:
 
-  With the alternative approach (processing each sub-page)
-  No extensions enabled!
-  (core_collector makedumpfile -l --message-level 7 -d 31)
-  [   12.888089] kdump[1148]: saving vmcore
-  [   68.508773] kdump[1153]: saving vmcore complete
-  -> 55.62 second kdump operation
-  [   12.755063] kdump[1144]: saving vmcore
-  [   65.606558] kdump[1149]: saving vmcore complete
-  -> 52.85 second kdump operation
+(a) Extensions are called for all base pages, and their decisions may conflict
+with the head page decision.
+(b) Extensions are not called for tail pages, and the head page decision is used
+instead.
 
-Looks like anywhere from 6-20% slowdown, dumping similar amounts of data
-to a local filesystem with snappy compression. It is not huge, but it is
-noticeable. Large memory systems really don't need anything further
-slowing them down, and I know a lot of deployments care about the
-benefit of huge pages for shrinking vmcores and reducing makedumpfile's
-runtime (among other benefits, of course).
+As I explained in my last reply, I believe that (b) is still the best way. It is
+less complex than (a). It is also more efficient, because makedumpfile today
+skips processing many excluded tail pages, which adds up for large systems with
+many huge pages. We do not have any extension which requires any policy more
+complex than PG_INCLUDE_HEAD.
 
-We could try to skip ahead whenever extensions are not loaded, but that
-would mean that (1) the code must be even more complex, and (2) we would
-still lose performance for extensions that don't want to handle tail
-pages differently.
+- elfheader requires PG_INCLUDE_HEAD
+- userstack only uses PG_INCLUDE. I could imagine potentially wanting to include
+  just the sub-pages of compound pages that are actually used by the stack. But
+  it hasn't been necessary so far.
+- amdgpu buffers may be compound pages but if they are, then the entire page
+  would be excluded.
 
-So given we haven't actually got a real use-case for anything other than
-PG_INCLUDE_HEAD, let's stick to calling extensions for just the head
-page. If we need another return status or another way for extensions to
-return more specific decisions, we can handle that in the future.
+I do have an implementation of (a) as I showed in the thread. If I'm wrong here,
+I can always fall back to that.
 
-I'll send the updated series with this approach and fixes from the code
-review.
-
-Thanks,
+Thank you,
 Stephen
 
-> For now, I don't think of another way, please proceed with it.
->
-> Thanks,
-> Kazu
->
->>=20
->>> Thanks,
->>> Tao Liu
->>>
->>>>
->>>> Thanks,
->>>> Kazu
->>>>
->>>>>
->>>>>> +            }
->>>>>> +
->>>>>>               /*
->>>>>>                * Execute exclusion
->>>>>>                */
->>>>>> @@ -8265,6 +8271,7 @@ write_elf_pages_cyclic(struct cache_data *cd_h=
-eader, struct cache_data *cd_page)
->>>>>>       if (info->flag_cyclic) {
->>>>>>               pfn_zero =3D pfn_cache =3D pfn_cache_private =3D 0;
->>>>>>               pfn_user =3D pfn_free =3D pfn_hwpoison =3D pfn_offline=
- =3D pfn_extension =3D 0;
->>>>>> +            num_extension_retained =3D 0;
->>>>>>               pfn_memhole =3D info->max_mapnr;
->>>>>>       }
->>>>>>
->>>>>> @@ -9610,6 +9617,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cac=
-he_data *cd_header, struct cache_d
->>>>>>                */
->>>>>>               pfn_zero =3D pfn_cache =3D pfn_cache_private =3D 0;
->>>>>>               pfn_user =3D pfn_free =3D pfn_hwpoison =3D pfn_offline=
- =3D pfn_extension =3D 0;
->>>>>> +            num_extension_retained =3D 0;
->>>>>>               pfn_memhole =3D info->max_mapnr;
->>>>>>
->>>>>>               /*
->>>>>> @@ -10575,6 +10583,7 @@ print_report(void)
->>>>>>       REPORT_MSG("    Hwpoison pages          : 0x%016llx\n", pfn_hw=
-poison);
->>>>>>       REPORT_MSG("    Offline pages           : 0x%016llx\n", pfn_of=
-fline);
->>>>>>       REPORT_MSG("    Extension filter pages  : 0x%016llx\n", pfn_ex=
-tension);
->>>>>> +    REPORT_MSG("  Retained by extension     : 0x%016llx\n", num_ext=
-ension_retained);
->>>>>>       REPORT_MSG("  Remaining pages  : 0x%016llx\n",
->>>>>>           pfn_original - pfn_excluded);
->>>>>>
->>>>> I suggest to reorder the "print_report" as follows:
->>>>>
->>>>> Original pages  :
->>>>>     Excluded pages   :
->>>>>       Pages filled with zero  :
->>>>>       Non-private cache pages :
->>>>>       Private cache pages     :
->>>>>       User process data pages :
->>>>>       Free pages              :
->>>>>       Hwpoison pages          :
->>>>>       Offline pages           :
->>>>>       Extension filter pages  :
->>>>>     Remaining pages  :
->>>>>       Extension retain pages  :
->>>>>
->>>>> IMHO, this is clearer to represent "Original pages" =3D=3D "Excluded =
-pages" + "Remaining pages";
->>>>> and "Extension retained pages" is a subset of "Remaining pages".
->>=20
->> I agree, thank you for that. I will change the order of the lines in v2.
->>=20
->> Thank you,
->> Stephen
->>=20
->>>>> Thanks,
->>>>> Tao Liu
->>>>>> --
->>>>>> 2.47.3
->>>>>>
+
+Stephen Brennan (9):
+  Do not call extensions for tail pages
+  Honor CFLAGS in extension/Makefile
+  Share page information with extension callbacks
+  Introduce a stat for pages retained by extension
+  Move page checks into makedumpfile.h
+  Simplify arguments for page checks
+  Add PG_INCLUDE_HEAD extension return status
+  Add userstack extension
+  Add elfheader extension
+
+ extension.c             |  10 +-
+ extension.h             |  10 +-
+ extensions/Makefile     |   8 +-
+ extensions/elfheader.c  |  93 +++++++++++
+ extensions/list.h       | 106 ++++++++++++
+ extensions/sample.c     |   2 +-
+ extensions/userstack.c  | 351 ++++++++++++++++++++++++++++++++++++++++
+ extensions/vma_mtree.c  | 140 ++++++++++++++++
+ extensions/vma_mtree.h  |   7 +
+ extensions/vma_rbtree.c |  56 +++++++
+ extensions/vma_rbtree.h |  12 ++
+ makedumpfile.c          | 189 +++++++++-------------
+ makedumpfile.h          |  78 ++++++++-
+ 13 files changed, 931 insertions(+), 131 deletions(-)
+ create mode 100644 extensions/elfheader.c
+ create mode 100644 extensions/list.h
+ create mode 100644 extensions/userstack.c
+ create mode 100644 extensions/vma_mtree.c
+ create mode 100644 extensions/vma_mtree.h
+ create mode 100644 extensions/vma_rbtree.c
+ create mode 100644 extensions/vma_rbtree.h
+
+-- 
+2.52.0
+
 
