@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 38D61C5DF7D
-	for <kexec@archiver.kernel.org>; Fri, 21 Aug 2026 10:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8713CC5DF7D
+	for <kexec@archiver.kernel.org>; Fri, 21 Aug 2026 10:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=l1/PRbvxVpG/kkBXP4vtSgYcjOL7TzzVy0fwt7dmyOQ=; b=MArkOdmjEfnr+oSKArY7TSBADG
-	Y6hKptt8oOHI38+B1aoTxWLSUJcPuGyYk19BRMtr2W8b4eiRXbICawa+0k/wE6iIV0jKGk6PEtsyt
-	cC+fcU7dbvK7jbAaKQgYuyUSGPnedzchIzIG5TIKyKKeoOZXgqPuTIa5zYVJ7lGyTlc6Z5yrKRMO8
-	blHyg8DYmplrPnj/w6nFdgSRHu4aJOYrrVqQ2NhSc7RxZONfkKMI8Bv87L2S9BxsDmRAjKxflZ3sX
-	G51RIL/cx2NUuVXIHmRe9QzEFks+CHcF3QB8OBe1MCxdBglLHXkZ5FTP8qGBrj98hSKfgXN8cGoHo
-	d+k9JkhQ==;
+	bh=6i/yP0REzn9lxzfgjUg8E32OU9DLi22+hqLzFLTzx0E=; b=uRL704Ulg5qKOsctMXwP3dE0gX
+	IZieLW+d24MYKZmUQy13rJjP8B19WWoHZPrw+13TbjxY2YdpVTB/f/qIclURwJzQhbwkfzBmDCQDY
+	LKnFlqBaztFP1X+ivKl9b5B8VCYP4UqCKiy7IO1g9vqxBVTRNblRTlk0uwo0H2UAUNkLFbPcP6cG7
+	tatkgqK3artIyMbP6kZG2v4420qGQ+2OUCM5NC7LeG0ALJ6te+2IdI81PhXaU8HzxLXmR/Ca/lbSt
+	QPYhwF1Ho5FS9PGr5jjTeCnYmPPr6fyHeulVPHCVlvkbDSR2zUMViwkzpA+s3S4sa+cxyYERlv2tu
+	3Xhagg8g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxMvj-0000000D8BR-0ohL;
-	Fri, 21 Aug 2026 10:56:59 +0000
+	id 1wxMvk-0000000D8C3-19nA;
+	Fri, 21 Aug 2026 10:57:00 +0000
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxMvg-0000000D89z-2xZy
+	id 1wxMvh-0000000D8AS-2na0
 	for kexec@lists.infradead.org;
-	Fri, 21 Aug 2026 10:56:57 +0000
+	Fri, 21 Aug 2026 10:56:58 +0000
 Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67L9VhKd997642;
-	Fri, 21 Aug 2026 10:56:38 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67L9WMWK999043;
+	Fri, 21 Aug 2026 10:56:44 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=l1/PRbvxVpG/kkBXP
-	4vtSgYcjOL7TzzVy0fwt7dmyOQ=; b=ojZgsgsRtdqg+fedWMahJ0t2H0LHafr4e
-	iOV07ivbrXrpalFf2m+JJhfQ8H7JAJqUzaiyVV3eRFBAp0t/UKhUGRS4BbsMDmJL
-	QU+1j5ACOiFC4EUtHibPsJrjq/1HVt48g6wILx2CY7iOF8WTA3iADH+NKSFZzB6t
-	vzo8BPhNdccnCSeaH/OTrpqj5CduefXLFz+QH9TRQa+C/mrqV4CTVTLzBadfDB6Q
-	7Ok57R/HqEMpRw5K30rWnfFDrRu47b+pLrF7ARw8BtiOSYF9WnZ6BTjJYfwaDxKn
-	aYZRfftar3WeBeuym5P8KqTTuvZepZ/DMYvX6rnRWiSIGFp1O5i3Q==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4g4yu4grby-1
+	:mime-version:references:subject:to; s=pp1; bh=6i/yP0REzn9lxzfgj
+	Ug8E32OU9DLi22+hqLzFLTzx0E=; b=MZwxm+mmKXVrro0yW8sAs8T4RtNTa645z
+	kjJjwnqs6NN3y7C6lPafolpkhNxJ19fvtLg7GR03xnyF8QPmAftkMAehZsiCiVlx
+	dHm6L+OaEg1b2BPWIvPzFLi7QG/ewhw7NzEG5b5srwt2MPvUZyUD7NlpkqOQpkEA
+	ydJRgty8MFuRS25zehiuNtDjuef5MdUbkBECoLekOiyYv44ZNf6+9mOadKrJjZGo
+	eyJ929FUvvw+3YChf6fHlwCYycP3WDqDL7IVnb0iUg7DW6BmpJS+lZoBvrLd1p9m
+	aFwUVFdqv2nPFOHegMHAEpZVI8T1PExafDFTlZDdutRJlb/DvqxvQ==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4g4yu4grcj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Aug 2026 10:56:38 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67LAuKai031771;
-	Fri, 21 Aug 2026 10:56:37 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4g354yuvsw-1
+	Fri, 21 Aug 2026 10:56:43 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67LAuI2e016376;
+	Fri, 21 Aug 2026 10:56:42 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4g32twm80j-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Aug 2026 10:56:37 +0000 (GMT)
+	Fri, 21 Aug 2026 10:56:42 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67LAuXhm45941134
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67LAucC041746876
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 21 Aug 2026 10:56:33 GMT
+	Fri, 21 Aug 2026 10:56:38 GMT
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5B11320040;
-	Fri, 21 Aug 2026 10:56:33 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 8E0EB2004D;
+	Fri, 21 Aug 2026 10:56:38 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 28E7320043;
-	Fri, 21 Aug 2026 10:56:29 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 5F1BC20040;
+	Fri, 21 Aug 2026 10:56:34 +0000 (GMT)
 Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.bl1-in.ibm.com (unknown [9.123.14.142])
 	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 21 Aug 2026 10:56:28 +0000 (GMT)
+	Fri, 21 Aug 2026 10:56:34 +0000 (GMT)
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
 To: linuxppc-dev@lists.ozlabs.org
 Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
@@ -81,9 +81,9 @@ Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
         Shivang Upadhyay <shivangu@linux.ibm.com>,
         Shrikanth Hegde <sshegde@linux.ibm.com>, kexec@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 2/3] powerpc: add support for Kexec HandOver (KHO)
-Date: Fri, 21 Aug 2026 16:26:08 +0530
-Message-ID: <20260821105609.983622-3-sourabhjain@linux.ibm.com>
+Subject: [RFC PATCH 3/3] powerpc/kho: exclude THP and HUGETLB_PAGE
+Date: Fri, 21 Aug 2026 16:26:09 +0530
+Message-ID: <20260821105609.983622-4-sourabhjain@linux.ibm.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260821105609.983622-1-sourabhjain@linux.ibm.com>
 References: <20260821105609.983622-1-sourabhjain@linux.ibm.com>
@@ -91,26 +91,26 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODIxMDA3OCBTYWx0ZWRfX1UZr3WVhLsII
- JgnHjVTBxRl2wS8au7AtRSNqJXUORIK8rLppkrlMuy7Cm8p7oq/4Lj76QHf6CGZ7lzxI3B+WyaH
- 5k21FvVzudy7seYK1gDbJShe2HrKfOc=
-X-Proofpoint-GUID: Qp-Uhemg2TMjj5ye8J16H-uB8zn6cFY6
-X-Proofpoint-ORIG-GUID: hy-RthS8sA4u59zqfeUxOXLwlj2jhkPE
-X-Authority-Analysis: v=2.4 cv=RPmD2Yi+ c=1 sm=1 tr=0 ts=6a882ee6 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODIxMDA3OCBTYWx0ZWRfXxkbwyTThBDwg
+ NELZnbNGcBIRpd43ywTbq7bJoKupsXLuf24EJdwZ7bSWUnLbl0XqUQEpeWNAr+ylQ5gBjbkzhSk
+ KQXOVafoaF6lOSve1zqO7wXyO34+CWs=
+X-Proofpoint-GUID: 65iMWXvBDsxap-MDVq5bzcbcYcilH6Y0
+X-Proofpoint-ORIG-GUID: kgXdKGWl4OgHoqZlAvytwn-D23Jv81Up
+X-Authority-Analysis: v=2.4 cv=RPmD2Yi+ c=1 sm=1 tr=0 ts=6a882eeb cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
  a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8 a=vggBfdFIAAAA:8 a=Z4Rwk6OoAAAA:8
  a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=7ipKWUHlAAAA:8 a=JfrnYn6hAAAA:8
- a=yLEcGKxZXAQCiR2e-PUA:9 a=HkZW87K1Qel5hWWM3VKY:22 a=gpc5p9EgBqZVLdJeV_V1:22
+ a=T6IRowXMNMGVb2OzyiIA:9 a=HkZW87K1Qel5hWWM3VKY:22 a=gpc5p9EgBqZVLdJeV_V1:22
  a=1CNFftbPRP8L7MoqJWF3:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODIxMDA3OCBTYWx0ZWRfX+TtWI84NRmif
- vB3gdjbGTyMy9OtnmOtD5SX4/3uOqijROhN23ygPWDAblfdYNt4HI+A7xnqMjDMJqRxMA2JOQLb
- ncG5dkFj4Pmf1nbC4iLeHubRnkWH7m+C/DBNzHDjmsG53UFpnLP7TOqDxVJQKUWseoSSt1Ugk81
- CTb0vA5N5q058RMRnZHPJbf7A/1c69S9haMpPIHRrwy21JaabU0c+NK6KQvttEXstTCVcdrh2bN
- Gz52+GZqnk5pWphHP85J4p68ry1FEcgTpNfwt/Xy8NCKxu04jQ38Uaw47O4WZQD17c58NA7oae/
- xB2oVsGkm4PMJYHLEV8U+SzkDpb80JgQMwPUaSpuzoTByc96N5R0imK9YgSd7yrpwgH1j8/CR72
- wEKFrywDAzONni5IeI+wzFL6YZpcJK/yrKquVjgb7phfxM82ddR6FHm2JAmVYkQ0CQJNkXixj5b
- vo0OdKVIdb5P/gOthTA==
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODIxMDA3OCBTYWx0ZWRfX7Ej3/twDiIg8
+ xeqJ5OqfWnZMEeU/3ebf2BDeSNvYv4dyKtNbiUNMcLo1niBn1GYmmpbN30vqecweFOa7jZk2J4d
+ fOskWSGhm1hpwUVYkL0Uhz9nWHsMsADvtEk0+YxfHTSax4VUjdR99nt2Sg0UGIAr2+odm5j7Xi3
+ r9Eo2hU8KChIFqVKE0WpZD6ljRX5E4Hw7hy/c4/c8LjDwEeZt+fvEaKaMWHN2h45MVh6QiJUvja
+ wywQBCbdFTgqCeWW6J8R4fPa7VHMTSxF96iVPqWcUD5TlQQNjcwzkHEBOQtR7zo8fQAXICx+U1T
+ O0kY9Ola9kJ++SLZdYbiAcPAJGZEN4zySdUUS9leNc57MN4Jzp+wVYXTVbTAjsLrwKRDcm9y9RX
+ xyoSKClhhQ4KfMD7K838Pw43+izBzqnxG8S7MP0qgcn/P4nzcdpb3FyfN52YLg36VLB9Co2yrYA
+ c3iHGF/Bt7SYUsutV6g==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-08-21_03,2026-08-21_01,2025-10-01_01
@@ -120,8 +120,8 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608210078
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260821_035656_861199_E171B0A8 
-X-CRM114-Status: GOOD (  25.32  )
+X-CRM114-CacheID: sfid-20260821_035657_821603_E5D1C601 
+X-CRM114-Status: GOOD (  16.07  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -136,64 +136,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add the architecture bits needed to enable CONFIG_KEXEC_HANDOVER on
-powerpc.
+Enabling CONFIG_KEXEC_HANDOVER together with CONFIG_TRANSPARENT_HUGEPAGE
+or CONFIG_HUGETLB_PAGE on powerpc fails to build:
 
-Set ARCH_SUPPORTS_KEXEC_HANDOVER for PPC64, following the existing
-pattern used by ARCH_SUPPORTS_KEXEC and ARCH_SUPPORTS_KEXEC_FILE.
+    kernel/liveupdate/kexec_handover.c:49:39: error: expression in static assertion is not constant
+       49 | static_assert(SCRATCH_ALIGNMENT_BYTES >= CMA_MIN_ALIGNMENT_BYTES);
+    ./include/linux/build_bug.h:80:56: note: in definition of macro '__static_assert'
+       80 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+          |                                                        ^~~~
+    kernel/liveupdate/kexec_handover.c:49:1: note: in expansion of macro 'static_assert'
+       49 | static_assert(SCRATCH_ALIGNMENT_BYTES >= CMA_MIN_ALIGNMENT_BYTES);
 
-On the boot path, parse the "linux,kho-fdt" and "linux,kho-scratch"
-properties from /chosen and pass them to kho_populate(). This lets a
-kernel booted via KHO kexec recover the FDT and scratch region left
-behind by the previous kernel. The call is placed early in
-setup_arch(), before unflatten_device_tree().
+CMA_MIN_ALIGNMENT_BYTES is derived from pageblock_order, which on
+powerpc is not a compile-time constant when THP or HUGETLB_PAGE is
+enabled -- powerpc can determine huge page size at runtime in that
+configuration, so pageblock_order becomes a variable rather than a
+constant expression. KHO's static_assert() on
+SCRATCH_ALIGNMENT_BYTES >= CMA_MIN_ALIGNMENT_BYTES then fails to
+compile, since it requires both sides to be constant expressions.
 
-Open issues:
-============
-
-This patch also adds "depends on !CRASH_DUMP" to
-ARCH_SUPPORTS_KEXEC_HANDOVER. This is needed because of an ordering
-conflict between crashkernel reservation and KHO scratch reservation
-on powerpc.
-
-Crashkernel memory is reserved very early in boot, from arch-specific
-code: head.S -> early_setup() -> early_init_devtree() ->
-arch_reserve_crashkernel() / fadump_reserve_mem(). KHO's scratch
-region is reserved later, from generic code: start_kernel() ->
-mm_core_init() -> kho_memory_init(). So on powerpc, crashkernel
-memory is always reserved first.
-
-This ordering causes a real failure. In the common case, crashkernel
-reservation on powerpc starts at a 512M offset (the exact offset can
-vary, but 512M is typical). So with crashkernel=3G, the reservation
-occupies memory from 512M up to 3.5G -- roughly 75% of the entire low
-4G area.
-
-Since crashkernel reservation always happens first, that 3G is
-already committed by the time kho_memory_init() runs. It then tries
-to reserve a low scratch region sized at 200% of whatever is already
-reserved below 4G. With ~75% of that 4G area already taken by
-crashkernel memory, 200% of that easily exceeds the remaining space
--- and since the low scratch region is itself capped at 4G, there's
-no room left to fit it. The reservation fails.
-
-To work around this and get KHO working on powerpc, this patch:
-
-1. Makes KHO usable on powerpc only when CRASH_DUMP is disabled.
-2. Calls kho_populate() from setup_arch(), so it runs before
-   kho_memory_init() reserves the scratch region.
-
-The real fix would be to reserve the KHO scratch region before
-crashkernel memory instead of after. But scratch reservation happens
-in generic code (kho_memory_init(), called from mm_core_init()), so
-this isn't something powerpc can address on its own -- it needs
-discussion on how to influence the ordering between generic scratch
-reservation and arch-specific crashkernel reservation. This patch
-doesn't attempt that; it's meant as a starting point for that
-discussion.
-
-Together with patch 3, this gets CONFIG_TEST_KEXEC_HANDOVER passing
-on powerpc.
+Until CMA_MIN_ALIGNMENT_BYTES (or KHO's use of it) is made to handle
+the non-constant pageblock_order case on powerpc, exclude
+TRANSPARENT_HUGEPAGE and HUGETLB_PAGE from ARCH_SUPPORTS_KEXEC_HANDOVER
+so the two can't be enabled together and hit this build failure.
 
 Cc: Aditya Gupta <adityag@linux.ibm.com>
 Cc: Alexander Graf <graf@amazon.com>
@@ -215,84 +180,21 @@ Cc: kexec@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 ---
- arch/powerpc/Kconfig               |  5 +++++
- arch/powerpc/kernel/setup-common.c | 33 ++++++++++++++++++++++++++++++
- 2 files changed, 38 insertions(+)
+ arch/powerpc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 2580e27e4328..61350d3e7a19 100644
+index 61350d3e7a19..f68b9fc883ba 100644
 --- a/arch/powerpc/Kconfig
 +++ b/arch/powerpc/Kconfig
-@@ -716,6 +716,11 @@ config ARCH_SELECTS_CRASH_DUMP
- 	depends on CRASH_DUMP
- 	select RELOCATABLE if PPC64 || 44x || PPC_85xx
- 
-+config ARCH_SUPPORTS_KEXEC_HANDOVER
-+	def_bool y
-+	depends on PPC64
-+	depends on !CRASH_DUMP
-+
- config ARCH_SUPPORTS_CRASH_HOTPLUG
+@@ -720,6 +720,7 @@ config ARCH_SUPPORTS_KEXEC_HANDOVER
  	def_bool y
  	depends on PPC64
-diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
-index 4afaba19b586..1fee743abdf2 100644
---- a/arch/powerpc/kernel/setup-common.c
-+++ b/arch/powerpc/kernel/setup-common.c
-@@ -35,6 +35,8 @@
- #include <linux/of_irq.h>
- #include <linux/hugetlb.h>
- #include <linux/pgtable.h>
-+#include <linux/libfdt.h>
-+#include <linux/kexec_handover.h>
- #include <asm/io.h>
- #include <asm/paca.h>
- #include <asm/processor.h>
-@@ -910,6 +912,33 @@ static void __init smp_setup_pacas(void)
- }
- #endif
+ 	depends on !CRASH_DUMP
++	depends on !TRANSPARENT_HUGEPAGE && !HUGETLB_PAGE
  
-+#ifdef CONFIG_PPC64
-+static void __init init_kho(const void *fdt)
-+{
-+	unsigned long node;
-+	u64 fdt_start, fdt_size, scratch_start, scratch_size;
-+
-+	if (!IS_ENABLED(CONFIG_KEXEC_HANDOVER))
-+		return;
-+
-+	/* Find and verify the /chosen node, same as early_init_dt_scan_chosen() does */
-+	node = fdt_path_offset(fdt, "/chosen");
-+	if ((long)node < 0)
-+		node = fdt_path_offset(fdt, "/chosen@0");
-+	if ((long)node < 0)
-+		return;
-+
-+	if (!of_flat_dt_get_addr_size(node, "linux,kho-fdt",
-+				      &fdt_start, &fdt_size))
-+		return;
-+	if (!of_flat_dt_get_addr_size(node, "linux,kho-scratch",
-+				      &scratch_start, &scratch_size))
-+		return;
-+
-+	kho_populate(fdt_start, fdt_size, scratch_start, scratch_size);
-+}
-+#endif
-+
- /*
-  * Called into from start_kernel this initializes memblock, which is used
-  * to manage page allocation until mem_init is called.
-@@ -923,6 +952,10 @@ void __init setup_arch(char **cmdline_p)
- 	/* Set a half-reasonable default so udelay does something sensible */
- 	loops_per_jiffy = 500000000 / HZ;
- 
-+#ifdef CONFIG_PPC64
-+	init_kho(initial_boot_params);
-+#endif
-+
- 	/* Unflatten the device-tree passed by prom_init or kexec */
- 	unflatten_device_tree();
- 
+ config ARCH_SUPPORTS_CRASH_HOTPLUG
+ 	def_bool y
 -- 
 2.55.0
 
