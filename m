@@ -4,112 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 88A29C5DF87
-	for <kexec@archiver.kernel.org>; Fri, 21 Aug 2026 13:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E78E8C5DF89
+	for <kexec@archiver.kernel.org>; Fri, 21 Aug 2026 13:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yT6AXtl3rcDOrA8CHC13zOchRPUX94+zGeSqbRBwczI=; b=LSw55+6rA24+0q45pUU3ouIbv4
-	9TbZ5mc8dEuu7Q7jvPNUKCg5Kkq4NCEI2ud7oxdexgn4pPg0Gi0+eHHtLL1B6dkSX6JAKY4AabC3d
-	FZTk0bwriOAiWAH+YeZYMHB/1leSd0AbRq5LwrwShhWeSNZ13qndysN4+Gc7THxDDKq/lEINHVUJ7
-	5vTwM9M4NMrdaFobHAFBmvTzhuALyUjyXGCCSSEvhHxlDrdHh3/xK38Zp8c3W22QKp0tcr9DE24e4
-	ZQ+O6642NvYFp0GonzLH2Cn+0qjNIAQeKrfZ+a7mS2rBPDwX86Ih0imEnxkyrepPeEjRkvJvn3fbc
-	OsvFsqog==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=QZVuBsFPO7y/+P0oUWt1MocdFg1Mb540trEFoGS+/XI=; b=W0RDBhNq2Z8L3430Fb7n4vN+hf
+	aAzSjdv/mBRR7xE011i7oyQsJpUjp2XXF989fwqZBtakv3NwCYclicTtMkleKBLR4onrScd3yQ+6p
+	ZXsHg73NIw9wKnFGygrlfl/gALDgmfVI45YevEXlM79Abj9oT1ps6vaDY2cyxOUO3leUMiVO5Cykz
+	ufzwYAHLM+C6ZTwjKXgfuYczsPuiuXpcJuAaiupinU21vtf9PZOL8KXWyCPz2Jp4Dw7ZLEtE6gX6F
+	Xzu1j0UH/QTwonfMAt5jwN57yMlUDxGYCZt163kk6I/YW/vpKTgZxtu15XY61uu+VlpJ2byMe745r
+	miK2iU4Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxPD5-0000000DOJq-0mOX;
-	Fri, 21 Aug 2026 13:23:03 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1wxPWa-0000000DRuK-2eSO;
+	Fri, 21 Aug 2026 13:43:12 +0000
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxPD1-0000000DOHw-0n2D
+	id 1wxPWZ-0000000DRuA-3cEY
 	for kexec@lists.infradead.org;
-	Fri, 21 Aug 2026 13:23:01 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1787318578;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yT6AXtl3rcDOrA8CHC13zOchRPUX94+zGeSqbRBwczI=;
-	b=A7ZxBiPXU8b7JfZ/+WzXxFWkjq59SjpR50h/kErr8a5fxRlr52r4VpF50EKQBL4wxfEOKK
-	zIspyYGCMdJvfNVkGHH9KqNcKmDTLnElI5KKxvs9o0IImTY8lnd79ccj5kF7L3w5T26YVf
-	xlJAL7xQO4seb5Q7FTW6X24bGUaiplg=
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
- [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-597-HcrUr7hkOlWhAI7zjd8Prw-1; Fri, 21 Aug 2026 09:22:55 -0400
-X-MC-Unique: HcrUr7hkOlWhAI7zjd8Prw-1
-X-Mimecast-MFC-AGG-ID: HcrUr7hkOlWhAI7zjd8Prw_1787318574
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-84870e7f498so989533b3a.3
-        for <kexec@lists.infradead.org>; Fri, 21 Aug 2026 06:22:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787318574; x=1787923374;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=yT6AXtl3rcDOrA8CHC13zOchRPUX94+zGeSqbRBwczI=;
-        b=VA8IJOjOkRpnhPwhyFeFP5UAlYzsTt5S73n1fQO0Zgl+v2BAsGjxd12PZ8eemrksjg
-         zbjqYfmc8YUD9o1FmdlIW8f4bMYRRswN4Ojvfwya6FQOraWdKmN+Q2WzELwvF0fNxwMu
-         a0YPkdcE+YKo/HP+/c8t4TfpITLET+9uyYK14ySOWQm8J8lWYTsd37gZ3d1M58HfSoCP
-         X+wkQ/HnGmcLWMT2XvKGMZMA1NiF2Tx/mMStCM76SEAAM7c161sNXacM04A6bmUGiphm
-         dXVvIxaLi9C6LR/P/DoUdGck8z3vou07iMuYiKfmagGm4vodDxFeMDqJUghptNw9F4aN
-         SEBg==
-X-Forwarded-Encrypted: i=1; AHgh+RpAl4w8ESDY5nM20IoHKbvVl4jr/+sdhBheZGiS/HKC6MWLyE+bf64rdHGNZpInoMs8Q7ttGQ==@lists.infradead.org
-X-Gm-Message-State: AFuF++mULHa0t7JlPm274nBNNCTdDyxwj/W1uvb1PUjthYZ8rMR6ybpb
-	mB+e/U46/eWT6abRG1puwLglpCefeMpkAV8odJb80H4ElrmynirK6+eUBC77ig0u/nCrU81WlcP
-	aXbkrrIAfWdlPG+WsTPR3+8l+GIyHfrAdDhUzd6HeLw+lxPSiXzToHvibwdo/9g==
-X-Gm-Gg: AR+sD126ZgYy9PK+HVd8ygndZdkIlQYIRSCtnrB4LERyB02xFzoJavdMwd1yWjCqJn5
-	2Y7icqDWJl4ldVG/fI2yhzXbDa3QdMiZhpoB02uHQM/B+KweYa0IPEZUkE2GxyVQyhl1pAuRGMB
-	6Fn7YGGOcSf9YYZYKGstk+wuDJ0OstxaePvKQb5cHjLxdCfGUJVBoytojCny2dIk3Z9ca4875t6
-	V63z9sNMLhqk6gUIF00bDo+PZuMCaOBRlUoL5QKp8v0kF4dAxnKXNh2JLSfPifMgF/GdDrVNDtq
-	q0ptABmo0Dm69ajpul9wFfg//jgPt0jpErVFV5zmi3bveU4NBBYRSOHdGHyopFQxtc8gfD2o79E
-	Ai0sdclYXwGhnojE+nA==
-X-Received: by 2002:a05:6a00:1c86:b0:846:de21:3da4 with SMTP id d2e1a72fcca58-851f9cc6dfemr11345719b3a.3.1787318574005;
-        Fri, 21 Aug 2026 06:22:54 -0700 (PDT)
-X-Received: by 2002:a05:6a00:1c86:b0:846:de21:3da4 with SMTP id d2e1a72fcca58-851f9cc6dfemr11345592b3a.3.1787318573542;
-        Fri, 21 Aug 2026 06:22:53 -0700 (PDT)
-Received: from [192.168.1.3] ([122.171.22.116])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-851d3389a37sm2905604b3a.15.2026.08.21.06.22.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2026 06:22:53 -0700 (PDT)
-Message-ID: <62cb1c7d-aa17-4d6d-b780-97cc40b7ff91@redhat.com>
-Date: Fri, 21 Aug 2026 18:52:44 +0530
+	Fri, 21 Aug 2026 13:43:11 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 34EE441B4D;
+	Fri, 21 Aug 2026 13:43:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8E1B1F00A3A;
+	Fri, 21 Aug 2026 13:43:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787319791;
+	bh=QZVuBsFPO7y/+P0oUWt1MocdFg1Mb540trEFoGS+/XI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=Sqfou5ckAPcZDBKBlY5L6E32jhVWknn+BnkCBXSzAHC7pfl9T3qdvget9Zkc+r6W7
+	 NpjLzhmEdGkPzoP6YkEDGZj6TgnB/x880a3qegXWBJNqoR++tXsgs/b8o2l4cRPEnX
+	 3tNFRlhTDjZsd6m/DepQ44NryZkeOlVBijE4gBgmqx85Z1hWgeFmONtrKsSWm5AdLo
+	 mlkIuqxVEuLtN1t8qiRcyXmdm5KWgBkPBQtUtFOfwqzl4VdKeEQ8V408M2WPxi2b5E
+	 A0squiaZSky8+YbGL0adr/sq8XFJjmk9Q7C1Zpk7ZcIJCc0HV2x3hpXDQjBzlwW7DP
+	 RTIBuEBMJN+Ew==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Tarun Sahu
+ <tarunsahu@google.com>,  ackerleytng@google.com,  fuad.tabba@linux.dev,
+  Andrew Morton <akpm@linux-foundation.org>,  dmatlack@google.com,  Shuah
+ Khan <skhan@linuxfoundation.org>,  Jonathan Corbet <corbet@lwn.net>,
+  david@redhat.com,  Pasha Tatashin <pasha.tatashin@soleen.com>,
+  sagis@google.com,  Paolo Bonzini <pbonzini@redhat.com>,  Mike Rapoport
+ <rppt@kernel.org>,  Alexander Graf <graf@amazon.com>,
+  linux-kselftest@vger.kernel.org,  andre.przywara@arm.com,
+  michael.roth@amd.com,  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
+  will@kernel.org,  vannapurve@google.com,  maz@kernel.org,
+  fvdl@google.com,  kvm@vger.kernel.org,  oliver.upton@linux.dev,
+  kvmarm@lists.linux.dev,  alexandru.elisei@arm.com,  skhawaja@google.com,
+  aneesh.kumar@kernel.org,  linux-doc@vger.kernel.org,  David Hildenbrand
+ <david@kernel.org>,  yan.y.zhao@intel.com,  kexec@lists.infradead.org,
+  suzuki.poulose@arm.com
+Subject: Re: [PATCH v4 05/11] KVM: LUO: Support VM preservation across live
+ updates
+In-Reply-To: <aoSCCTTBn9D5hqzk@google.com> (Sean Christopherson's message of
+	"Tue, 18 Aug 2026 09:02:17 -0700")
+References: <20260728121138.1103610-1-tarunsahu@google.com>
+	<20260728121138.1103610-6-tarunsahu@google.com>
+	<anphyjFv3FhF61iB@google.com> <2vxzpkzo51wg.fsf@kernel.org>
+	<anssOQFNZ2LfihbU@google.com> <2vxzik5f311e.fsf@kernel.org>
+	<anyObKiZIhfok5mk@google.com> <2vxzqzjz1x5f.fsf@kernel.org>
+	<aoMcqp0gr06YXAPU@google.com> <2vxzy0e3zgqz.fsf@kernel.org>
+	<aoSCCTTBn9D5hqzk@google.com>
+Date: Fri, 21 Aug 2026 15:43:04 +0200
+Message-ID: <2vxzy0dzy4gn.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] kexec: fix error propagation in
- kexec_image_probe_default()
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>, Philipp Rudo <prudo@redhat.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Andrew Morton <akpm@linux-foundation.org>,
- Baoquan He <baoquan.he@linux.dev>, Pasha Tatashin
- <pasha.tatashin@soleen.com>, Tao Liu <ltao@redhat.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- kexec@lists.infradead.org
-References: <20260819-mpilaniy-v2-0-95e929ede0e5@redhat.com>
- <20260819-mpilaniy-v2-2-95e929ede0e5@redhat.com>
- <20260820142114.0a36ac78@rotkaeppchen> <2vxzik54zmpp.fsf@kernel.org>
- <713ab0a0-235d-47cf-a0c2-73249fbc8f74@redhat.com>
- <aogHeKQ8UnudNAMu@kernel.org>
-From: Mukesh Pilaniya <mpilaniy@redhat.com>
-In-Reply-To: <aogHeKQ8UnudNAMu@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: eGBKfJrC6wMq9LY4d8wU73QslAJ-IFFt8WewmamOBLc_1787318574
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260821_062259_378602_A0C6414C 
-X-CRM114-Status: GOOD (  16.43  )
+Content-Type: text/plain
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -124,56 +89,147 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Mike, thanks for review.
+Hi Sean,
 
-On 21/08/26 1:38 pm, Mike Rapoport wrote:
-> On Fri, Aug 21, 2026 at 12:48:15PM +0530, Mukesh Pilaniya wrote:
->> Hi Philipp,
->>
->> On 20/08/26 11:41 pm, Pratyush Yadav wrote:
->>> On Thu, Aug 20 2026, Philipp Rudo wrote:
->>>
->>>> Hi Mukesh,
->>>> Hi Pratyush,
->>>>
->>>> having this patch makes sense. Personally I'd go with having a
->>>> switch-case rather than individual if-blocks. E.g.
->>>>
->>>> 	switch (ret) {
->>>> 		case 0:
->>>> 			image->fops = *fops;
->>>> 			return 0;
->>>> 		case -ENOEXEC:
->>>> 			continue;
->>>> 		default:
->>>> 			return ret;
->>>> 	}
->>>>
->>>> IMHO that is better readable and easier to extend in case other error
->>>> codes need special handling as well. But that is only my personal
->>>> opinion.
->>>
->>> Well, IMO both look roughly the same so I unless Mukesh prefers your
->>> version more, we can keep it as-is.
->>>
->> Thanks for the review. I agree the switch-case reads nicely, but since
->> the current version is functionally equivalent and already
->> reviewed, I'll keep it as-is to avoid re-spinning for a style change.
->> Happy to switch if you or Pratyush feel strongly about it.
-> 
-> I'd like to request another style change :)
-> 
-> In newer code we often use 'err' rather than 'ret', so it's more obvious
-> what this variable about.
-> 
-> I don't feel strong about if or switch, but if you go with if, please don't
-> compare to 0, use !err.
+On Tue, Aug 18 2026, Sean Christopherson wrote:
+
+> On Tue, Aug 18, 2026, Pratyush Yadav wrote:
+>> Hi Sean,
+>> 
+>> On Mon, Aug 17 2026, Sean Christopherson wrote:
+>> 
+>> > On Sat, Aug 15, 2026, Pratyush Yadav wrote:
+>> >> On Wed, Aug 12 2026, Sean Christopherson wrote:
+>> >> > On Wed, Aug 12, 2026, Pratyush Yadav wrote:
+>> >> So with live update, we don't need to keep backwards compatibility in
+>> >> the ABI forever. Of course, it is good to minimize changes, but we have
+>> >> more freedom to change it.
+>> >
+>> > Ah.  So this is the heart of the disconnect.  I very strongly disagree with the
+>> > statement that live update doesn't need to support backwards compatibility.  I
+>> > can totally believe that the folks working on live update are ok breaking backwards
+>> > compatibility because their use cases are "fine" with such breakage.  And I can
+>> > also believe live update as an upstream kernel feature being developed by those
+>> > same folks is also ok with breaking backwards compatibility.
+>> >
+>> > But with my upstream KVM maintainer hat on, I am not ok with that.  I did not agree
+>> > to support a world where KVM is allowed to break backwards compatibility, so long
+>> > as it's done "carefully" or whatever.  If y'all want to deal with the resulting
+>> > complexity, that's fine by me, but you'll be doing it without KVM.
+>> 
+>> Let's step back a bit. I don't think backwards compatibility in the
+>> _ABI_ is all that important in live update's context. What is important
+>> is that our users are able to live update from kernel version X to Y.
+>> The line format the kernel uses to describe its state is an
+>> implementation detail. Our users never see it.
 >
+> The rule is thou shalt not break userspace.  Whether or not the breakage is the
+> result of an explicit ABI change is irrelevant.
+>
+>> The high level idea is that when you need to make a change to the ABI so
+>> the kernel can better describe the objects/resources/files it is
+>> passing, you create a new version of the ABI and allow transitions from
+>> older versions.
+>> 
+>> Say you make some changes and need an ABI version v5. You don't get rid
+>> of v4. You keep it around. LUO core will facilitate picking the right
+>> version for the next kernel. So it will be possible to seamlessly
+>> upgrade your kernel that speaks v4 to a new kernel that speaks v4 and
+>> v5. Now this kernel can start speaking v5 if its successor speaks v5
+>> too. And so on for going to v6 and v7, etc.
+>> 
+>> After a "reasonable" time given for upgrades, you deprecate v4. v4 has
+>> been around long enough and our users have had a chance to go to kernels
+>> speaking newer versions. That's when you remove the code for v4 from the
+>> kernel.
+>> 
+>> We can argue what "reasonable" means, but the core idea stays. 
+>> 
+>> It will still be possible to go back to v4 or earlier, but you'd need an
+>> extra stop along the way. And of course, vendors can keep a wider
+>> support matrix downstream if they see the need for it.
+>> 
+>> Does this idea of "backwards compatibility" sound acceptable to you, at
+>> least at a high level?
+>
+> No.
+>
+> It's probably fine for Google and other large companies that tightly control their
+> kernels and use cases, and have the resources to juggle the resulting complexity,
+> e.g. have kernel engineers on staff to track feature and dependencies, coordinate
+> and plan kernel upgrades, etc.
+>
+> It's not acceptable for upstream, where downstream consumers often run a distro
+> kernel, have much more varied use cases, and don't always have a horde of kernel
+> engineers on staff to help them thread the needle you describe above.  And if
+> supporting live update as a general feature for all users of the kernel isn't
+> being factored into design considerations, then that needs to change, otherwise
+> this is all dead in the water.
+>
+> I also don't see the point.  Maintaining a rigid save/restore ABI is annoying,
+> but it's not _hard_ (or at least, not _that_ hard), especially if there's a set
+> of well-documented best known practices that subsystems can follow, e.g. so that
+> individual subsystems don't need to learn painful lessons first-hand.  I genuinely
+> believe that maintaining the version hell you describe above would be more costly
+> in the long run than simply committing to full backwards compatibility within a
+> given subsystem.  I can imagine that enumerating what subsystems' information is
+> in the payload will require a different scheme, but for a given subsystem, I don't
+> see any reason to aim for anything less than full backwards compatibility.
 
-Makes sense, will rename ret to err and use !err in v3.
+Let's say for argument's sake that we commit for a fully stable
+backwards compatible ABI. Even then, you have to deal with multiple ABI
+versions.
+
+Live update's ABI is more complex compared to KVM's save/restore ABI.
+For the KVM save/restore uAPI, you are largely describing architectural
+state like CPU registers, etc. These things don't evolve as fast and
+more or less stay the same.
+
+Live update needs to describe the state of kernel objects. These are
+more complex and evolve faster.
+
+For example, say you merge guest_memfd preservation today. Some time
+later, someone comes up with a more efficient data structure to track
+the folios in the file. You _have_ to make a backwards-incompatible ABI
+change to use this data structure.
+
+Or say you add a new memory backend (like the HugeTLB patches in
+flight). That likely will need a different ABI to describe the state of
+the guest_memfd.
+
+So you will end up with multiple ABI versions that aren't always
+backwards compatible.
+
+If you refuse that idea too, then KVM live update will be dead in the
+water for a different reason. It will be damn near useless because it
+can't keep up with an evolving subsystem.
+
+Now once you get multiple ABI versions and you can seamlessly go from
+old to new one, say you have a version that was superseded 5 years ago.
+It would be completely reasonable to say that this version is old enough
+and no one should be going from a 5 year old kernel to a modern one. So
+you deprecate this ABI. Deprecating old unused uAPIs is not
+unprecedented.
+
+I think we are better off formalizing this deprecation period from the
+get go.
+
+A somewhat tangential example is BPF kfuncs. My BPF program that works
+in kernel X might not work in kernel Y because the kfunc has changed or
+been removed.
+
+The argument they make in kfuncs.rst is that kfuncs "provide a kernel
+<-> kernel API, and thus are not bound by any of the strict stability
+restrictions associated with kernel <-> user UAPIs". For LUO as well,
+this is a kernel -> kernel API. Users can also still do a regular kexec
+or reboot. They just won't get the performance optimization of LUO.
+
+Regardless of if you agree with the last bit about deprecating old
+versions, ABIs evolving with the subsystem is a ground reality of live
+update and it would be foolish to think we can do with only
+backwards-compatible ABI changes forever.
 
 -- 
 Regards,
-Mukesh Pilaniya
-
+Pratyush Yadav
 
