@@ -4,89 +4,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 42E01C5DF7D
-	for <kexec@archiver.kernel.org>; Fri, 21 Aug 2026 12:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 88A29C5DF87
+	for <kexec@archiver.kernel.org>; Fri, 21 Aug 2026 13:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=CTo43XzM9NUgOXbGuwfipf+ydqi6G4CBeuCh3lZD0Nk=; b=zAk4rWFGCsfiyhbnMguYUKhlSB
-	CGdIiOZCQ1hAM9ImK/Xd3mG65a61lAFsRM23g9qnS9D8peeFMLB5GjijxquNE21Ixn31FTFSpRWIV
-	3FWozkGTU45vF0vuLL3pzydqMq2uAd/4qK6xR7c0f+77GYaJW3ytMd39bFg0k4OC4AHxh6stik+HV
-	bClMEhxupMB4a6QwdYTq+hEufoHE7YL0tL0ZYHzlOzkDDx8WbdMvs1rsghdQErYUDq1yHrXH0O+pL
-	KZbIOxHK9ea+kAKhONRxUSOadxjeoOnA1y6Pgdk7nXd/fJuLx7nvzptfAV+3+LNoPAiAY2Qw+RZoo
-	VXTwWeUg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=yT6AXtl3rcDOrA8CHC13zOchRPUX94+zGeSqbRBwczI=; b=LSw55+6rA24+0q45pUU3ouIbv4
+	9TbZ5mc8dEuu7Q7jvPNUKCg5Kkq4NCEI2ud7oxdexgn4pPg0Gi0+eHHtLL1B6dkSX6JAKY4AabC3d
+	FZTk0bwriOAiWAH+YeZYMHB/1leSd0AbRq5LwrwShhWeSNZ13qndysN4+Gc7THxDDKq/lEINHVUJ7
+	5vTwM9M4NMrdaFobHAFBmvTzhuALyUjyXGCCSSEvhHxlDrdHh3/xK38Zp8c3W22QKp0tcr9DE24e4
+	ZQ+O6642NvYFp0GonzLH2Cn+0qjNIAQeKrfZ+a7mS2rBPDwX86Ih0imEnxkyrepPeEjRkvJvn3fbc
+	OsvFsqog==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxO8L-0000000DHjv-3L3D;
-	Fri, 21 Aug 2026 12:14:05 +0000
-Received: from tor.source.kernel.org ([2600:3c04:e001:324:0:1991:8:25])
+	id 1wxPD5-0000000DOJq-0mOX;
+	Fri, 21 Aug 2026 13:23:03 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxO8K-0000000DHjh-015m
+	id 1wxPD1-0000000DOHw-0n2D
 	for kexec@lists.infradead.org;
-	Fri, 21 Aug 2026 12:14:04 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by tor.source.kernel.org (Postfix) with ESMTP id 0E50860A78;
-	Fri, 21 Aug 2026 12:14:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFC531F00A3D;
-	Fri, 21 Aug 2026 12:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787314441;
-	bh=CTo43XzM9NUgOXbGuwfipf+ydqi6G4CBeuCh3lZD0Nk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=F9xZm3D5H0/Uv5L4hcfihUo3fdiP6Hvgp0pL/WqUhjpGaOHM2CVV/0ptIq4eKlwfK
-	 FsPGqXS/E+8QkznG0QEk3zwevPO6GmOxy1mZlVl91/S4q7FhQAQfbYxyyAGfWzpB5n
-	 OCUpZ77tYtrAeWk/VAqHntzrrgAsg0nQF+R5T9RyLubhklm2BaIwHcpc13hTm7oG7s
-	 2e+nAR1EluuhNQzeHyeg6+CzJp31+v3WbFpm9LZh/hmCajLWCfVkwO/q/fiSz2bs8T
-	 aREXF6K+WifJQlwID5ssZx18r4UwGI2/7pBkL+tj3EQuicn5+G47E7sP/7Axyyyw5g
-	 wwY/BZMJZsBwQ==
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 70C74198003A;
-	Fri, 21 Aug 2026 08:13:57 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Fri, 21 Aug 2026 08:13:59 -0400
-X-ME-Sender: <xms:BEGIavtIAoKVV-dIUxyA4hb9b8Po-Uu5F4VgIusSrZ-ftBHmlY5jng>
-    <xme:BEGIat7ayKzrTI1y15oHrgt9rZjGhVRwJ88mUjdy-2utV-KQfaBZHfbpZRKTOsW5J
-    v8M3wmS-gpiooODj0JS8q1hSF7qAOVENRKFg2zDZ0BE_mquNa5yS7e0>
-X-ME-Received: <xmr:BEGIaitgIW0wcqLrWhbKFvZzMMlLP3dDs7o6QqHmbf7_EVtuQx_kzbO0wZ8>
-X-ME-Proxy-Cause: dmFkZTE9He33vT2aJi4Pjqa5rACtwZDlVpfI4pvolegsHlra2/oFh2wdyqtRnKCr7ywq+M
-    g7eAQmzQdACCzrovzxZQjZLPJDG2xAorZP57RC0xH50KqrbUdypzNxr9qdXRN4bTf2+ipG
-    8BG+yoJanZ/ks4GQusJQpsrHrqlZ3pkbjRdRuXzpOg+mRn7rz7S4lVv1eYWakrw99Kah4/
-    iht0P1kYzC2LkK1mqvZMgZ/fsSwfWQ0upMFvWwktgZqJ8iC+7BRE55Digr9Ry7WRH9JFi8
-    Kb8wR85a0slyGHElPl+sDK29U529kPWpZH9uxTUMneVTVAYtIdFqt6xqapZTpJeobCnjZA
-    AqhU/FAlDd2ydVSCS0xp0Kdh2Si9jol+Uncq7lTx+VsGBLBu+IKT539uBKtN3GnehctHc7
-    PTE77HXSbIUf1+t/VygZXTi6eWofINEX/PrxK5Q5yrLsnEup2U33Y9sEl0T9yP61BGppub
-    7ZyzSoH+MLna6iFwrY8dl1VC41tjkoWcU1GuEVkP3F0nTIl2rcNksi99bVv9leCNaHtMsI
-    3dcMTXQ7Hlvai1j4eDWW+W8HeLhNHOFJqNIzkL8bA2xvH1EE5/bDmVwuUqT/BokDhXDCG7
-    QzPrrMqNBqe3DbycJbEiKK3Rk3nE1WZz0CV1j0ijiJnEAO5aRQTAHZJnD9Qg
-X-ME-Proxy: <xmx:BEGIav0shc_srJcckxhEcn5oDMYwQ_YVNN8Y9Pwq-DETg5Yif7W_tg>
-    <xmx:BEGIav_NHwxVYGOq7rLRpIKJRpCtPiEYVsIEHb8iVFOJ21eGKAgsiw>
-    <xmx:BEGIalABELee1iEoH2WNi7ANrrvQWoPgk9ckhUDbzIpxiLmT6cXcsA>
-    <xmx:BEGIalDYjzJR1SxX6hy-1IWiby1sZppN-4yzHtO09zhnV0C29Rqblw>
-    <xmx:BUGIalJZZtHDigw0yvLmfJd05hNqkKQNt9tE914dP_xZoOBxAW9zpEUg>
-Feedback-ID: i10464835:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 21 Aug 2026 08:13:56 -0400 (EDT)
-Date: Fri, 21 Aug 2026 13:13:55 +0100
-From: Kiryl Shutsemau <kas@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	rmikey@meta.com, riel@surriel.com, kexec@lists.infradead.org, 
-	kernel-team@meta.com
-Subject: Re: [PATCH v2 6/6] efi: respect the poisoned pages coming from
- previous kernel
-Message-ID: <aog_uH5fTsJzXjjx@thinkstation>
-References: <20260821-hwpoison-kho-v2-0-5743791e48e6@debian.org>
- <20260821-hwpoison-kho-v2-6-5743791e48e6@debian.org>
+	Fri, 21 Aug 2026 13:23:01 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1787318578;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yT6AXtl3rcDOrA8CHC13zOchRPUX94+zGeSqbRBwczI=;
+	b=A7ZxBiPXU8b7JfZ/+WzXxFWkjq59SjpR50h/kErr8a5fxRlr52r4VpF50EKQBL4wxfEOKK
+	zIspyYGCMdJvfNVkGHH9KqNcKmDTLnElI5KKxvs9o0IImTY8lnd79ccj5kF7L3w5T26YVf
+	xlJAL7xQO4seb5Q7FTW6X24bGUaiplg=
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
+ [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-597-HcrUr7hkOlWhAI7zjd8Prw-1; Fri, 21 Aug 2026 09:22:55 -0400
+X-MC-Unique: HcrUr7hkOlWhAI7zjd8Prw-1
+X-Mimecast-MFC-AGG-ID: HcrUr7hkOlWhAI7zjd8Prw_1787318574
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-84870e7f498so989533b3a.3
+        for <kexec@lists.infradead.org>; Fri, 21 Aug 2026 06:22:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787318574; x=1787923374;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=yT6AXtl3rcDOrA8CHC13zOchRPUX94+zGeSqbRBwczI=;
+        b=VA8IJOjOkRpnhPwhyFeFP5UAlYzsTt5S73n1fQO0Zgl+v2BAsGjxd12PZ8eemrksjg
+         zbjqYfmc8YUD9o1FmdlIW8f4bMYRRswN4Ojvfwya6FQOraWdKmN+Q2WzELwvF0fNxwMu
+         a0YPkdcE+YKo/HP+/c8t4TfpITLET+9uyYK14ySOWQm8J8lWYTsd37gZ3d1M58HfSoCP
+         X+wkQ/HnGmcLWMT2XvKGMZMA1NiF2Tx/mMStCM76SEAAM7c161sNXacM04A6bmUGiphm
+         dXVvIxaLi9C6LR/P/DoUdGck8z3vou07iMuYiKfmagGm4vodDxFeMDqJUghptNw9F4aN
+         SEBg==
+X-Forwarded-Encrypted: i=1; AHgh+RpAl4w8ESDY5nM20IoHKbvVl4jr/+sdhBheZGiS/HKC6MWLyE+bf64rdHGNZpInoMs8Q7ttGQ==@lists.infradead.org
+X-Gm-Message-State: AFuF++mULHa0t7JlPm274nBNNCTdDyxwj/W1uvb1PUjthYZ8rMR6ybpb
+	mB+e/U46/eWT6abRG1puwLglpCefeMpkAV8odJb80H4ElrmynirK6+eUBC77ig0u/nCrU81WlcP
+	aXbkrrIAfWdlPG+WsTPR3+8l+GIyHfrAdDhUzd6HeLw+lxPSiXzToHvibwdo/9g==
+X-Gm-Gg: AR+sD126ZgYy9PK+HVd8ygndZdkIlQYIRSCtnrB4LERyB02xFzoJavdMwd1yWjCqJn5
+	2Y7icqDWJl4ldVG/fI2yhzXbDa3QdMiZhpoB02uHQM/B+KweYa0IPEZUkE2GxyVQyhl1pAuRGMB
+	6Fn7YGGOcSf9YYZYKGstk+wuDJ0OstxaePvKQb5cHjLxdCfGUJVBoytojCny2dIk3Z9ca4875t6
+	V63z9sNMLhqk6gUIF00bDo+PZuMCaOBRlUoL5QKp8v0kF4dAxnKXNh2JLSfPifMgF/GdDrVNDtq
+	q0ptABmo0Dm69ajpul9wFfg//jgPt0jpErVFV5zmi3bveU4NBBYRSOHdGHyopFQxtc8gfD2o79E
+	Ai0sdclYXwGhnojE+nA==
+X-Received: by 2002:a05:6a00:1c86:b0:846:de21:3da4 with SMTP id d2e1a72fcca58-851f9cc6dfemr11345719b3a.3.1787318574005;
+        Fri, 21 Aug 2026 06:22:54 -0700 (PDT)
+X-Received: by 2002:a05:6a00:1c86:b0:846:de21:3da4 with SMTP id d2e1a72fcca58-851f9cc6dfemr11345592b3a.3.1787318573542;
+        Fri, 21 Aug 2026 06:22:53 -0700 (PDT)
+Received: from [192.168.1.3] ([122.171.22.116])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-851d3389a37sm2905604b3a.15.2026.08.21.06.22.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2026 06:22:53 -0700 (PDT)
+Message-ID: <62cb1c7d-aa17-4d6d-b780-97cc40b7ff91@redhat.com>
+Date: Fri, 21 Aug 2026 18:52:44 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260821-hwpoison-kho-v2-6-5743791e48e6@debian.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] kexec: fix error propagation in
+ kexec_image_probe_default()
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>, Philipp Rudo <prudo@redhat.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Andrew Morton <akpm@linux-foundation.org>,
+ Baoquan He <baoquan.he@linux.dev>, Pasha Tatashin
+ <pasha.tatashin@soleen.com>, Tao Liu <ltao@redhat.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ kexec@lists.infradead.org
+References: <20260819-mpilaniy-v2-0-95e929ede0e5@redhat.com>
+ <20260819-mpilaniy-v2-2-95e929ede0e5@redhat.com>
+ <20260820142114.0a36ac78@rotkaeppchen> <2vxzik54zmpp.fsf@kernel.org>
+ <713ab0a0-235d-47cf-a0c2-73249fbc8f74@redhat.com>
+ <aogHeKQ8UnudNAMu@kernel.org>
+From: Mukesh Pilaniya <mpilaniy@redhat.com>
+In-Reply-To: <aogHeKQ8UnudNAMu@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: eGBKfJrC6wMq9LY4d8wU73QslAJ-IFFt8WewmamOBLc_1787318574
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260821_062259_378602_A0C6414C 
+X-CRM114-Status: GOOD (  16.43  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,22 +124,56 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Aug 21, 2026 at 03:06:06AM -0700, Breno Leitao wrote:
-> +	/* Reserve the table itself so it survives a further kexec. */
-> +	memblock_reserve(PAGE_ALIGN_DOWN(ppm),
-> +			 PAGE_ALIGN(ppm + sizeof(*pm) + bitmap_size) -
-> +			 PAGE_ALIGN_DOWN(ppm));
+Hi Mike, thanks for review.
 
-Hm. I don't think it is enough.
+On 21/08/26 1:38 pm, Mike Rapoport wrote:
+> On Fri, Aug 21, 2026 at 12:48:15PM +0530, Mukesh Pilaniya wrote:
+>> Hi Philipp,
+>>
+>> On 20/08/26 11:41 pm, Pratyush Yadav wrote:
+>>> On Thu, Aug 20 2026, Philipp Rudo wrote:
+>>>
+>>>> Hi Mukesh,
+>>>> Hi Pratyush,
+>>>>
+>>>> having this patch makes sense. Personally I'd go with having a
+>>>> switch-case rather than individual if-blocks. E.g.
+>>>>
+>>>> 	switch (ret) {
+>>>> 		case 0:
+>>>> 			image->fops = *fops;
+>>>> 			return 0;
+>>>> 		case -ENOEXEC:
+>>>> 			continue;
+>>>> 		default:
+>>>> 			return ret;
+>>>> 	}
+>>>>
+>>>> IMHO that is better readable and easier to extend in case other error
+>>>> codes need special handling as well. But that is only my personal
+>>>> opinion.
+>>>
+>>> Well, IMO both look roughly the same so I unless Mukesh prefers your
+>>> version more, we can keep it as-is.
+>>>
+>> Thanks for the review. I agree the switch-case reads nicely, but since
+>> the current version is functionally equivalent and already
+>> reviewed, I'll keep it as-is to avoid re-spinning for a style change.
+>> Happy to switch if you or Pratyush feel strongly about it.
+> 
+> I'd like to request another style change :)
+> 
+> In newer code we often use 'err' rather than 'ret', so it's more obvious
+> what this variable about.
+> 
+> I don't feel strong about if or switch, but if you go with if, please don't
+> compare to 0, use !err.
+>
 
-On x86, kernel doesn't keep memblock around after boot (see
-CONFIG_ARCH_KEEP_MEMBLOCK). Reserving in memblock exclude the memory
-from page allocator. But kexec can place the image there.
-
-For !CONFIG_ARCH_KEEP_MEMBLOCK, kexec uses walk_system_ram_res() that
-looks into iomem_resource. And memblock does nothing to exclude the
-memory from iomem_resource.
+Makes sense, will rename ret to err and use !err in v3.
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Regards,
+Mukesh Pilaniya
+
 
