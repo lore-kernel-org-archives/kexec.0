@@ -4,88 +4,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 43449C5DF87
-	for <kexec@archiver.kernel.org>; Fri, 21 Aug 2026 10:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A9FB7C5DF87
+	for <kexec@archiver.kernel.org>; Fri, 21 Aug 2026 10:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=APGED5YlpOpMPxOSsAuKA6X7ShEtj4fbflQDOHFgkgs=; b=OCAi6B4ujWBhEEXmCS3K/cuvlK
-	zIFcy5Lzs8ta0HiyOYQioJriI9S2932Jsv7S/QyLQ6n0U/1G/vIVgnHj2m8JP37uAq9HrU/NVEHmK
-	fsJmzoznv5E0q6FcFwjyD1HAig6uwDwBSHG718yNez379qJLOujkLYw/TBS/D28CPO6wwAGnvvOqf
-	KZaoM+sBJFIeragmftJXIQXJrrfrySq4r7FT0bQVvX7t4PqYKO5jyGl/YHKaiatia0VEUyKnkuSp7
-	4mEOqi/grZ57RdW9loiSISelOGS556RKIk57LdjObarGnFqr+Rl38Wm8fsujG/F72ncBewfPH7dt0
-	KvwdS5kg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=+KX/VoY5l/G0eQl4bRPeD017/GY55Wa/Aa/vg9SmAFg=; b=m4V96Jn79Q32oTOxEhO6Dy719i
+	qcPBGgAzdJINlGlp3f0FRSg9zn7oi5I8Y8r3sulAZ3TH9pzJWrAfP9NmAwi/kvME8rmjn0mih+ORM
+	QvfHD4+E1cFHNxdwCT0zUywmrOt5IKIhCwHJ3knFCrw2vdrSMMowNvoI+Ep7F5VYEFqUey8G61kYe
+	nBG9Gp6KjGqGPwcPLnXniAGPtlAPdiUJC+thaSJkMOWK/3LwMh2OQ6w+/2+UBeSK9Wl/DUAvvdo2d
+	3WOjZgwGo/YdoO1vEcuuVwhYCiiWEHDjTgDO0spIrnLiU/NoEwZZuIVe5tT+5PgwNPsoi3cK8S4q/
+	zjgRjhLA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxMVS-0000000D5tB-3J0r;
-	Fri, 21 Aug 2026 10:29:50 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wxMva-0000000D881-03WO;
+	Fri, 21 Aug 2026 10:56:50 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxMVL-0000000D5sz-3VCW
+	id 1wxMvX-0000000D87R-24od
 	for kexec@lists.infradead.org;
-	Fri, 21 Aug 2026 10:29:43 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 78A55406B3;
-	Fri, 21 Aug 2026 10:29:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90AF31F00A3D;
-	Fri, 21 Aug 2026 10:29:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787308183;
-	bh=APGED5YlpOpMPxOSsAuKA6X7ShEtj4fbflQDOHFgkgs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ixUI3kRsD8NoUTtmkjyJfa4wlDS1R4IthffH+JxKoU6cmU1lGAaG4clXL287xuHh1
-	 FzXDa/qYuq72kJG0jgYnXPTUntW8HTxORTjZ9zMtzU2H76m9/ZwKxWBR8g7VqYAuva
-	 kgQFavADAJwi0NRufxA8l8j/zT3OVVcMAxgx1gl2+e85rIVJR64+x6g9/HBkUVYvVx
-	 kCH7LrYn2BlvwyddOASSf0J2KMGbkAaRPTHlkFbYif7VFRWytKOhy+T2rQDtkoB01E
-	 Od3baF8witTx31YqfSZSFnCFr4BovvmI0G+CDmqrfhlwEDpZqh6I3Ig2QOF85lHa94
-	 BNRaFCMkdKWqg==
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 2926B1980052;
-	Fri, 21 Aug 2026 06:29:39 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Fri, 21 Aug 2026 06:29:41 -0400
-X-ME-Sender: <xms:kiiIarVzSmx1y-aArkHdOBg6_uN2EF6kmHm7eYV3kLj8d1ZetYmTnQ>
-    <xme:kiiIarad1L4afhIQcR9TpUON9bZV2_aFZEy-RJGSw_E5CZfR8pB7srH9uie3fSiuB
-    dePAuvZWbvXhhgkEl6OfcEL-YeY89S6pgIr0B7jnImbXdTXQ6RL2xCu>
-X-ME-Received: <xmr:kiiIaixDRegUN-DZiVZpoNH_w4V-cSHrk9NAzrk7u6EdWuZo3aVYGcDscRg>
-X-ME-Proxy-Cause: dmFkZTGP4bL3rkkhiaU+LYYEJklVw3I4bCV0bLo9Xe/rEgNWD79Kg2qnSiGX6a0LzPvrT3
-    wfkn1QSVsDXoCCou0Ai4CQZtSMXEfYR7TcfJrEs2qA5nuREzR/25/SXv5FHUVnpahHF5rZ
-    sKtXsan+W3eHdPeJRne/qiXwfCfCb10WRvmLB30Ci3uaIEVL5D3olIiiOSnObxq8C6IPWE
-    CaoBiOtHyQu+B9nz7YFtvwuilTaX0/jGLK4wKrha13aK2nLIfCvV4FGU476zMpcM2zcLB4
-    bT9trOvY0ulRdAD+iw9eIBoGr0FK47s7WRgK6yQyBMu7G61oTI+YvMopiv4VSl18lOJ5Z3
-    PFVi+866/3m3g5aFzO7xOv7m6vuXzMUw4Lv+jO9gfxTn5uM0B+j96kCvw/jt8I+huXrLkU
-    wKkJaFlospdKLrCQDk16EZ8+PTysacY1zlTDsV2ACyFg8I0wjizXHCfA4iRjksBttHwcTY
-    wvEmk9ehfcuSKoQI7pMdYMnnya1y9zVIko1YRNEGK1ERHWn8XNmEmOW7aegRM9a2hLgBF2
-    fUrsAB+TJNQlwN/Ob1VoLupB9GoBMoq4ahvuVHXxmmOnPY+KATnU/KnrCbrHVXlRRWx6En
-    75CalTn5X3AfHuDh0QqtF9FFmIT9W6QxvSkRgXvqsKl4lNvEtZYrfgg/K2hA
-X-ME-Proxy: <xmx:kiiIagJ6K1_IhTU6mwLPUNctDqMy9YCXitJsDYeigc3ethIccfkWKg>
-    <xmx:kiiIapfwVryqGlX_G8FBQ-G81dMyuek2WOwFvDgVQNTkC2pFWFIxZw>
-    <xmx:kiiIaouDMVQjpMMhVDXhzsvSFoiQl94RJjkg-M1USLW9qB4i-AysmA>
-    <xmx:kiiIanFDd2c0gVRX9E4XBv2diwz95NhoIw-LxCwp5NSInmTPRSGErw>
-    <xmx:kiiIaifnfAIs5050IA3B1i7QlIb-FxA2CFT7Ar6PadIGJ8yF-mjmyIVy>
-Feedback-ID: i10464835:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 21 Aug 2026 06:29:38 -0400 (EDT)
-Date: Fri, 21 Aug 2026 11:29:36 +0100
-From: Kiryl Shutsemau <kas@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	rmikey@meta.com, riel@surriel.com, kexec@lists.infradead.org, 
-	kernel-team@meta.com
-Subject: Re: [PATCH v2 0/6] efi: mm/memory-failure: keep hardware-poisoned
- pages out of the next kexec
-Message-ID: <aognoSPb8vbkR3U8@thinkstation>
-References: <20260821-hwpoison-kho-v2-0-5743791e48e6@debian.org>
+	Fri, 21 Aug 2026 10:56:48 +0000
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67L9VThY1056972;
+	Fri, 21 Aug 2026 10:56:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=+KX/VoY5l/G0eQl4b
+	RPeD017/GY55Wa/Aa/vg9SmAFg=; b=Up4V5POwjeaYlwNYbO8I4xVjPdQZPmgv9
+	SVWe2nVnQw5A63wLwaV3JrRfUVevkklhzbMzeW6O5Ol2Lh5HVwit4bGUCwMn+pVi
+	uMUmnQxYArhm2y0XU5EpaEXUQdpwaT7giyhSP1xiCqvj8yClTrmoUFTDB1YXXmYg
+	6XAOpDTeMdidSrKrPCZ9fWrk+r/XqGAajAxgVJiNCTSI7txbMVfwVeWOAbqiCbNv
+	HLGdkhY608Pb35Bw/R8dIIiUGQSMg7nHKLB/HF7BzsEoxfworcbgV/fRiqeXBpd2
+	0OlTJ6DLTRNU1j61kT8HRdtcEcIxOfy8Bb2st5ULCoJP5RnNtRXbQ==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4g4yu1rtcn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Aug 2026 10:56:32 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67LAuOiC031837;
+	Fri, 21 Aug 2026 10:56:31 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4g354yuvsg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Aug 2026 10:56:31 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67LAuS2n51315092
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Aug 2026 10:56:28 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0B3CA20040;
+	Fri, 21 Aug 2026 10:56:28 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8B18E20043;
+	Fri, 21 Aug 2026 10:56:23 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.bl1-in.ibm.com (unknown [9.123.14.142])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 21 Aug 2026 10:56:23 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Aditya Gupta <adityag@linux.ibm.com>, Alexander Graf <graf@amazon.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <baoquan.he@linux.dev>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, Mike Rapoport <rppt@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Pratyush Yadav <pratyush@kernel.org>,
+        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+        Shivang Upadhyay <shivangu@linux.ibm.com>,
+        Shrikanth Hegde <sshegde@linux.ibm.com>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 1/3] kernel/liveupdate: make KEXEC_HANDOVER depend on KEXEC_FILE instead of selecting it
+Date: Fri, 21 Aug 2026 16:26:07 +0530
+Message-ID: <20260821105609.983622-2-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260821105609.983622-1-sourabhjain@linux.ibm.com>
+References: <20260821105609.983622-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260821-hwpoison-kho-v2-0-5743791e48e6@debian.org>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=LsCiDHdc c=1 sm=1 tr=0 ts=6a882ee1 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=vggBfdFIAAAA:8 a=Z4Rwk6OoAAAA:8
+ a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=7ipKWUHlAAAA:8 a=JfrnYn6hAAAA:8
+ a=5OYvgd8MYfw_dG5BkvsA:9 a=HkZW87K1Qel5hWWM3VKY:22 a=gpc5p9EgBqZVLdJeV_V1:22
+ a=1CNFftbPRP8L7MoqJWF3:22
+X-Proofpoint-GUID: o_KV_bRHIEGLMkQUap5i1_BlkNENhfwD
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODIxMDA3OCBTYWx0ZWRfX8C6Quuj8XWiU
+ 4pbtE6tO/Hgb+FxqSQkmEmtdttSaRBTEpB+FnhHKtk8VEzSkr3+jE8pubWMgBBHrzn9u3Payfqp
+ 8bg9tORBK8L7mLKbQnot6jO7JJvNUBE=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODIxMDA3OCBTYWx0ZWRfX1W9BB/IIRIvx
+ b+5BFb9eH4JzySwUadzpeKr7Qe+qchyiRYCr4a3maQb3xp9YxFS46p36epYIyZX7Jmz0pPV/fdY
+ wPHjJ8d2VFTKSaBsi+EjLF1kwYW7BjOFtgL7FhSTVOt7hP1d6gVYeE+f2yrttIlls3l5MKVBT+z
+ eEzgVvlRpRrheI6Eqb910sghw+8V8f0yvAzz/d7SUYKPYQ1DVfd5o5wTJo7cnyrU5RXQH6+Fft9
+ oDbPL9yql2fh0iFds1GK+HdxpZ0aPCw1OKXcPycN4m8ZFdibF01UfJhIFngKyHbDkw07QNJTbhP
+ i3ifpE5y8nyFhA6c1pDvXJPdPlPqeH464HwRB93fW51ilmQ8GYmWn8onwkNKW1V+1J5oEj5FvTy
+ vcLAQUh9fIHUv1eZ7CuLNKDv7F9DtbpsaCergSmzu/on5WHLh+PnUr0tHqdPy6qJXTwpYkUjNOa
+ 9BHqWqnPmJh+utOvURw==
+X-Proofpoint-ORIG-GUID: oEWcB5d1hCVRSp223fOiL4UW7kSjJyqC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-21_03,2026-08-21_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 spamscore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ adultscore=0 suspectscore=0 impostorscore=0 clxscore=1011 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608210078
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260821_035647_542850_0D7D830E 
+X-CRM114-Status: GOOD (  16.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,21 +136,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Aug 21, 2026 at 03:06:00AM -0700, Breno Leitao wrote:
-> The allocation is capped at 1MB, which covers 16TB at 2MB per bit. Past
-> that the stub doubles the unit rather than growing the table, so the
-> table stays bounded on any machine.
+An upcoming patch makes ARCH_SUPPORTS_KEXEC_HANDOVER depend on
+CRASH_DUMP on powerpc:
 
-For unaccepted memory I didn't capped it. On x86, architectural maximum
-is 4PB which would cost 256MB in the bitmap. It should be okay for the
-scale.
+    config ARCH_SUPPORTS_KEXEC_HANDOVER
+    	def_bool y
+    	depends on PPC64
+    	depends on !CRASH_DUMP
 
-> Memory hot-added after boot is not covered either: the bitmap spans the
-> RAM the EFI memory map describes, and a frame outside it is silently not
-> recorded.
+That triggers a recursive dependency error:
 
-We might update it if/when it gets solved for unaccepted memory.
+    error: recursive dependency detected!
+    	symbol KEXEC_HANDOVER depends on ARCH_SUPPORTS_KEXEC_HANDOVER
+    	symbol ARCH_SUPPORTS_KEXEC_HANDOVER depends on CRASH_DUMP
+    	symbol CRASH_DUMP depends on KEXEC_CORE
+    	symbol KEXEC_CORE is selected by KEXEC_FILE
+    	symbol KEXEC_FILE is selected by KEXEC_HANDOVER
 
+KEXEC_HANDOVER and KEXEC_CORE end up depending on each other when
+ARCH_SUPPORTS_KEXEC_HANDOVER depends on CRASH_DUMP. This creates a
+recursive Kconfig dependency.
+
+Change KEXEC_FILE from select to depends on to break this cycle.
+This means KEXEC_FILE must be enabled explicitly instead of being
+enabled automatically by KEXEC_HANDOVER.
+
+Keep this change until the powerpc-specific KHO and CRASH_DUMP
+dependency is resolved.
+
+Cc: Aditya Gupta <adityag@linux.ibm.com>
+Cc: Alexander Graf <graf@amazon.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan He <baoquan.he@linux.dev>
+Cc: Christophe Leroy (CS GROUP) <chleroy@kernel.org>
+Cc: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>
+Cc: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+Cc: Shivang Upadhyay <shivangu@linux.ibm.com>
+Cc: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
+ kernel/liveupdate/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/liveupdate/Kconfig b/kernel/liveupdate/Kconfig
+index c13af38ba23a..22e317dc1e1a 100644
+--- a/kernel/liveupdate/Kconfig
++++ b/kernel/liveupdate/Kconfig
+@@ -6,7 +6,7 @@ config KEXEC_HANDOVER
+ 	bool "kexec handover"
+ 	depends on ARCH_SUPPORTS_KEXEC_HANDOVER && ARCH_SUPPORTS_KEXEC_FILE
+ 	select MEMBLOCK_KHO_SCRATCH
+-	select KEXEC_FILE
++	depends on KEXEC_FILE
+ 	select LIBFDT
+ 	select CMA
+ 	help
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.55.0
+
 
