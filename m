@@ -4,108 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AB401C5DF96
-	for <kexec@archiver.kernel.org>; Fri, 21 Aug 2026 13:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id ADB79C5DF7D
+	for <kexec@archiver.kernel.org>; Fri, 21 Aug 2026 14:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:In-Reply-To:References:Message-Id:MIME-Version:Subject:
-	Date:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZNohwqjvouRlAnKm9iB5tZeW1CKNRcmkGAU02I+Ttyg=; b=TjuVWGXKGmKkmRv0EmxXECi0CW
-	pLP8w9okw0SpevE0WYWujVXW+nfPXqUBwz4LZn6GL+X8kVyun8z8eL77wJFkDXWWt+WBIbMdCZiYT
-	EM67Uce9WkpI2hI+XYfs/veTcwCejjF/cwXIi7hvBwUGiHCd6LKWGIBXMqLmGzYeS22pglmDryaU6
-	8b4wu4ingamoePKtEK/X4EHeFgzNtIJfiGVvwQExa8kSNpwvWw0nQwjkU6TTyBSDV4ej7EwFi+vCp
-	noGJiQvv7GBqpt2BevWbdz7jeNDMEaxK+lGY5bsQvd03dXPfVSwcmTBDsxX6TmjxkKjFdFyRRU8/n
-	ZIfuPw3w==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=F32vh1cW82UZDB5HN9KvxKsrYdAwaYCJf4XRNKjoE0k=; b=zucllyKkiNEiZbr9m8Dd4RbA7S
+	ElYuqGdTI0G85HJJxXg++bEG135YRav0+oGFBF9NmQ04vzNUI7+CY8t/HgMQUkXkJgAghCKZ2V1me
+	yJN+bOp2LNnpMq2G37qqQhkrrg8KPBTDKztpzDiIEIq49AzRvfOJtCpT25qzm9bBqvV7E+7wiraEn
+	yVOSDszyzceHMhmpQX4czilR1/XhnAzoKVOGiGz76oCw25XyGMRYN8dGu3nJm4X/vp1/aWExXzkad
+	3y3SeVkPSxF/X0XL5BfgxpYZZElSName1jhEp582eSTuUowAWUQI5239fja8ygmEOPNFfK85Oz/x1
+	Xhlq+zxA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxPdo-0000000DSf9-31Tf;
-	Fri, 21 Aug 2026 13:50:40 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1wxPqV-0000000DUac-122x;
+	Fri, 21 Aug 2026 14:03:47 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxPdg-0000000DSa0-38Fc
+	id 1wxPqU-0000000DUaE-3omF
+	for kexec@bombadil.infradead.org;
+	Fri, 21 Aug 2026 14:03:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=F32vh1cW82UZDB5HN9KvxKsrYdAwaYCJf4XRNKjoE0k=; b=qSukYxU6LrMBzobGllFwbFeSe+
+	z/T0q81Aj4tBwPrz3qKy5Mt71ynn/ZpKoKtd9eOTfHKK039/wgpc3Rip3jZa8opPAQyg8Ahh7Or76
+	fTqd1M2HNkxiro6tg4jDvLlB12M9VLoTf25D3gBPN/INgvujU3lm/VdpudZ6sWh4UzEIE+V0pZb9f
+	Oj7SXOtLNHpItClBv1ZkbleDunX4jjSRkzYUm49zW6+R3KOzuuDYG0y5U5gnZdFaGBvHk9EkbSpXx
+	E/hKMlprSUHfY19j1q0VTbmbsUPnXVxhU3l15YLqD/RDC0uKuRpCHjz6X+ajGrd7nM6VHyrKwnlPf
+	9NOUpZ/A==;
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
+	by desiato.infradead.org with esmtps (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1wxPqP-00000003oip-2UgJ
 	for kexec@lists.infradead.org;
-	Fri, 21 Aug 2026 13:50:34 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1787320231;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZNohwqjvouRlAnKm9iB5tZeW1CKNRcmkGAU02I+Ttyg=;
-	b=MLeOSWhH0OofD2ygWGpJemnG6FtEsOXI3bm8VALVT55cgbF7joqsgfr8PUILjDfY3gDi5l
-	WHok52I67u9WSFVY6UXBqC0OMuCaw8djQECtm/6ur5gbLo74pzp0BrWqB6dXRLP+gUg/2n
-	KSVSzay1/l8l9nsVeWFp0RiMhe4bExM=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-626-vg4u7IULOq-AxIyc3FO9Vw-1; Fri, 21 Aug 2026 09:50:29 -0400
-X-MC-Unique: vg4u7IULOq-AxIyc3FO9Vw-1
-X-Mimecast-MFC-AGG-ID: vg4u7IULOq-AxIyc3FO9Vw_1787320229
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-38e2f61c09dso1376494a91.2
-        for <kexec@lists.infradead.org>; Fri, 21 Aug 2026 06:50:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787320229; x=1787925029;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ZNohwqjvouRlAnKm9iB5tZeW1CKNRcmkGAU02I+Ttyg=;
-        b=lLROGubOUqkbnMPPSpH6XyT+bToDE7zP5wuqLJodq+plbWqG6oIlyekOoLrkX7dSrx
-         MRRGS/OKYrXp75FY8obqvRzGJJ9ZAbx9zEyAlH418Rklryuurb/BUkBB10OHsfDn7LR6
-         FcuRJtuRuJGv4Dg/mqCD7s50iy0PohAlwfDP+CIpMgzpgFj8A2CB7TuQmGxqKDlvqVSP
-         lTtbwH18doYnHtfpwkNtDX15+rAWHGSZvUDqY/qXZ+tiweVmD8H/QIIbBBqWsjwRc+rx
-         hXqEogfL7K2QSrHXS8tS0OWRL2I48U/dGFwREC53b9P5u4ng20rmUM7dngRyRLf/d4mn
-         s2cw==
-X-Forwarded-Encrypted: i=1; AHgh+RqjzS7KGmgplZSTXrfeQfPMRtCJNMYeP91ljDePjpTbPAvgaRlrQRyCFdaShibvK1mks0V5vA==@lists.infradead.org
-X-Gm-Message-State: AFuF++lbQhe8LbYwDPhptyx1/VgdtteBLN4aiTUrBnadvEOWBI1+CO8N
-	zwUMVX3NpFC7wKKhsFCCBtY1hHFBHI5rOZ/u117b9J/bgrTUeJm0LuWW00nZX2rFUxXlVT3Q9si
-	2Ll25YakdVuBINTOndU7UwgRUDZxNi/HDLfm0fwqPCBlUEYXcGuB2f2MdYC8JHg==
-X-Gm-Gg: AR+sD12WmkLxPAgat2rgfeQieb9yC0khZyIorEHYrUM9wfsokBzgdK2vUBPfuXAPjQ6
-	swyQvKbInXNp+4tWP8JAXpGldqNBrKu8LVQjHvnq23J0KETS6sSPiKyraThJjfS3wUvoOGhyRwS
-	lUvlThCU84CDqxT4OO1CDQ0fBEhTbpoSYrvSSSRv5xGTBudJ18HZ3E/WsN85pZbLdoD3w0cZVWe
-	ersbtiAsdRANFKV3NKZpx5HAIsdXKed1pf/jT2e/UHSRXSmzeqch9DwaoGmbn49jUVcVk3gSGbQ
-	lVOCdDrRnNdV7/mAYKKTJQ/VvptN1Xu6/L6OWXxeAuFrEQ6UEYMC2TklOO2ZaZKhbXNE8+iWAhB
-	2vICO5WSqK6khPNuAJDgOQZoWeMjSSSAu
-X-Received: by 2002:a17:90b:55cc:b0:37c:6910:5758 with SMTP id 98e67ed59e1d1-395c334042emr13744003a91.1.1787320228653;
-        Fri, 21 Aug 2026 06:50:28 -0700 (PDT)
-X-Received: by 2002:a17:90b:55cc:b0:37c:6910:5758 with SMTP id 98e67ed59e1d1-395c334042emr13743913a91.1.1787320228164;
-        Fri, 21 Aug 2026 06:50:28 -0700 (PDT)
-Received: from mpilaniy-mac.redhat.corp ([122.171.22.116])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-395c4c194d2sm3300502a91.15.2026.08.21.06.50.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2026 06:50:27 -0700 (PDT)
-From: Mukesh Pilaniya <mpilaniy@redhat.com>
-Date: Fri, 21 Aug 2026 19:19:58 +0530
-Subject: [PATCH v3 2/2] kexec: fix error propagation in
- kexec_image_probe_default()
+	Fri, 21 Aug 2026 14:03:45 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=F32vh1cW82UZDB5HN9KvxKsrYdAwaYCJf4XRNKjoE0k=; b=v4t1fRjU+hHjijXSBFO1sRJvkK
+	oNEaUfynGiwy3mvwySfb6wmBhB535/V1dlFfhVZQH8XmuvHnIUL5t+RcaPLZEoL5wMwqO0PLjpsq8
+	O64R4Wy6JTsXXT1plbPyI9oHzfxLd0TJ16c6SQ1cNDojZa69mcnQSzY5G9RKDGp8ndWWVDOFo+s2z
+	PiQseMLGdmzrhXrgmU1Ft01i7UR08O/6c5NOyNklVfbEQsBDKyx3Ganv8AHFbOLZvD3LdUrp8QjCM
+	cU6q9MJot6cWTCwGZHATXDkxh7/TrZxB+8Z4g0LP2TQKQdCCr5NCiH6p6QjMPvMurGwGnExILcNXJ
+	v2j39dYg==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wxPpv-00BOEL-2E;
+	Fri, 21 Aug 2026 14:03:12 +0000
+Date: Fri, 21 Aug 2026 07:03:06 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Kiryl Shutsemau <kas@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	rmikey@meta.com, riel@surriel.com, kexec@lists.infradead.org, 
+	kernel-team@meta.com
+Subject: Re: [PATCH v2 6/6] efi: respect the poisoned pages coming from
+ previous kernel
+Message-ID: <aohIF6MmjiQpbz5j@gmail.com>
+References: <20260821-hwpoison-kho-v2-0-5743791e48e6@debian.org>
+ <20260821-hwpoison-kho-v2-6-5743791e48e6@debian.org>
+ <aog_uH5fTsJzXjjx@thinkstation>
 MIME-Version: 1.0
-Message-Id: <20260821-mpilaniy-v3-2-76b355399d2e@redhat.com>
-References: <20260821-mpilaniy-v3-0-76b355399d2e@redhat.com>
-In-Reply-To: <20260821-mpilaniy-v3-0-76b355399d2e@redhat.com>
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
- Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, 
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, Tao Liu <ltao@redhat.com>, 
- Philipp Rudo <prudo@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
- kexec@lists.infradead.org, Mukesh Pilaniya <mpilaniy@redhat.com>
-X-Mailer: b4 0.15.2
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 3IlhaARI01Gw10Xv1yGrO7_uHNW40y1fKE__ExZQ8Vo_1787320229
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aog_uH5fTsJzXjjx@thinkstation>
+X-Debian-User: leitao
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260821_065032_853407_4F4876EF 
-X-CRM114-Status: GOOD (  12.77  )
+X-CRM114-CacheID: sfid-20260821_150343_108950_86B3C4C0 
+X-CRM114-Status: GOOD (  14.34  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -120,54 +95,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-kexec_image_probe_default() overwrites ret with each loader's probe
-return value and returns whatever the last loader returned when no
-probe matches.  The error code reaching userspace depends on whichever
-loader happens to be last in kexec_file_loaders[].
+On Fri, Aug 21, 2026 at 01:13:55PM +0100, Kiryl Shutsemau wrote:
+> On Fri, Aug 21, 2026 at 03:06:06AM -0700, Breno Leitao wrote:
+> > +	/* Reserve the table itself so it survives a further kexec. */
+> > +	memblock_reserve(PAGE_ALIGN_DOWN(ppm),
+> > +			 PAGE_ALIGN(ppm + sizeof(*pm) + bitmap_size) -
+> > +			 PAGE_ALIGN_DOWN(ppm));
+> 
+> Hm. I don't think it is enough.
+> 
+> On x86, kernel doesn't keep memblock around after boot (see
+> CONFIG_ARCH_KEEP_MEMBLOCK). Reserving in memblock exclude the memory
+> from page allocator. But kexec can place the image there.
 
-Only continue to the next loader when a probe returns -ENOEXEC.
-Propagate any other error such as -ENOMEM immediately. Return -ENOEXEC
-only when all loaders have been tried and none matched.
+You mean the third kexec?
 
-Suggested-by: Pratyush Yadav <pratyush@kernel.org>
-Signed-off-by: Mukesh Pilaniya <mpilaniy@redhat.com>
-Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
-Reviewed-by: Philipp Rudo <prudo@redhat.com>
----
- kernel/kexec_file.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+1) Kernel A hits an ECC error and marks page X poisoned.
+2) Kernel A kexecs into kernel B, which won't use that page since
+   it's in EFI_POISONED_PAGE and memblock-reserved.
+3) Kernel B kexecs into kernel C, which doesn't respect
+   EFI_POISONED_PAGE.
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 59fb9d71e9d8..c11a815e2235 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -68,17 +68,19 @@ int kexec_image_probe_default(struct kimage *image, void *buf,
- 			      unsigned long buf_len)
- {
- 	const struct kexec_file_ops * const *fops;
--	int ret = -ENOEXEC;
- 
- 	for (fops = &kexec_file_loaders[0]; *fops && (*fops)->probe; ++fops) {
--		ret = (*fops)->probe(buf, buf_len);
--		if (!ret) {
-+		int err = (*fops)->probe(buf, buf_len);
-+
-+		if (!err) {
- 			image->fops = *fops;
--			return ret;
-+			return 0;
- 		}
-+		if (err != -ENOEXEC)
-+			return err;
- 	}
- 
--	return ret;
-+	return -ENOEXEC;
- }
- 
- static void *kexec_image_load_default(struct kimage *image)
+Is this the scenario you mean?
 
--- 
-Git-155)
+If so, the config table, once installed, persists forever, right?
 
+So kernel C will see the poisoned pages, but could still step into
+one during the kexec itself?
+
+> For !CONFIG_ARCH_KEEP_MEMBLOCK, kexec uses walk_system_ram_res() that
+> looks into iomem_resource. And memblock does nothing to exclude the
+> memory from iomem_resource.
+
+Maybe we need something similar to "efi: mm/memory-failure: keep
+hardware-poisoned pages out of the next kexec"[1], but checking
+EFI_POISONED_PAGE instead?
+
+Link: https://lore.kernel.org/all/20260812-kexec_posioned-v6-0-e477887086f0@debian.org/ [1]
+
+Thanks for the review,
+--breno
 
