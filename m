@@ -4,109 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 02872C5DF89
-	for <kexec@archiver.kernel.org>; Fri, 21 Aug 2026 14:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F336C5DF93
+	for <kexec@archiver.kernel.org>; Fri, 21 Aug 2026 14:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=d5z1Xu44las/mDWEQ2T0kdUfLaS63+SXiGlCJ/8yslI=; b=QHbg1utkqEoBcY2XiHmyWIRuU1
-	bPs5AcsAVHRmBNognCMIQbyuYJd4a3nedU5prAwMwImmX6xv9Nu5hLJCermEubrW/Ap7woKgPs6Zo
-	b2ASeiY8lHpUZJgyvMsR1zHopqErcI9qQYdzCxsjEpvsMNvqIbKes9S4NTP1UKwHxg+zgi5ZgTD+F
-	TqeH+7DMyee73ayRcUbbn//PC3vP7jyu4aSNkkTqFP1FJ51TZm1IFtwHiFuMjIG/u+g4AAy2sFwyU
-	kKkYl+QNqCZMdfJIlPVT8S68K2Gz93V/z1TNyVbjUKQYOVWUxFxCW/3iIY9LpVMC5FJJtWsuZbLrz
-	WXKL6xYw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=gjevPVNDI3BMq67YKVjzwksfTaXW8pJVyyPC7ES6lEo=; b=x1pEeVKs92k0Eb8M9KkUpQ7qrG
+	y/JCUwV2JjZcpGR8WMODYQa4xvAdNZCNU87bYgWfaW4TihNxuc2V5KWh/5tTORLzsVpLAjqWfb1SH
+	eebi0unUuElcNWb6Et3MdK/cdL2aEjRh306povhlHEN8+CQLWM3ZaYdPXVtbqi3fcF/Qpu4sBRUTZ
+	H7+DQnBSbrQLchQZb4qBQsXDgJQ9OLwH/O3IwVYk9Jeziwd89BiGYSsdVtSgBjGFxWXi9GGzDA0bs
+	aT4fooIEQZyJBL2WvTDnrrSla6qlqpq3pAqVDYKvq+9zmAVMW0f3z8WNYQXc58aOo5YLzMJMDimKR
+	WuZ56Zfw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxQEc-0000000DYT4-2kzY;
-	Fri, 21 Aug 2026 14:28:42 +0000
+	id 1wxQcm-0000000Db1m-3puu;
+	Fri, 21 Aug 2026 14:53:40 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxQEb-0000000DYSx-0kvR
+	id 1wxQcl-0000000Db1c-1p03
 	for kexec@lists.infradead.org;
-	Fri, 21 Aug 2026 14:28:41 +0000
+	Fri, 21 Aug 2026 14:53:39 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 8280941ABE;
-	Fri, 21 Aug 2026 14:28:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABEA31F000E9;
-	Fri, 21 Aug 2026 14:28:37 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id D5E9F43F01;
+	Fri, 21 Aug 2026 14:53:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF4501F000E9;
+	Fri, 21 Aug 2026 14:53:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787322520;
-	bh=d5z1Xu44las/mDWEQ2T0kdUfLaS63+SXiGlCJ/8yslI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Mr2/hBrMzoTPSYtphivjAOk+c376Vhf1pdY/u4HkJUIejQD3832wDBOi8Uh04AO4f
-	 FUEomt4r+BafWW5sy9NLQXGOGUaRUmZEIeRXz1/FonNBwrOpQ12dArbcJwvgvwg5KB
-	 RrpmYzUHE6p8gvQpfI8Cw1NcCmob0MYGTeNgtDevUc/pgpDl3VbBul3rldQDV9hOpL
-	 7D3VdLVMaf+uVk5Y2QqYI7XW64dwP0C2hdOTYoppVO2au58/cPxr9atazx8//IBbnb
-	 U8ioRwHSBSqX1lzD3XH+nQkr8KCPnAZLHdq1kPbSzX0kHYu8Lq9Yx1Ub3OGpWzfGIh
-	 6eb/gonUzFE6Q==
-Message-ID: <75708479-ae55-4297-888d-fe0b609ee26b@kernel.org>
-Date: Fri, 21 Aug 2026 16:28:35 +0200
+	s=k20260515; t=1787324018;
+	bh=gjevPVNDI3BMq67YKVjzwksfTaXW8pJVyyPC7ES6lEo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=PEqLsZh8icemV6iCXLH8M1lwsuZIi3ppcJsoYkHbdgbhu48kCp/fzBVJmA+oO0f10
+	 A3T8kuGkGfXWM3lFtPhlABSA/ZLi5QI1UlAez8YchNUOWf6MIbU+Sq4O/RMx+ddJzd
+	 zX6mfViDwm9H4ky1grMR/7zMfO1HJVHZDI3kQdGakxl87mqdNfF2T069ytU4DpBR1R
+	 uUfOlu07HhdXWSEZcB7TpoBFiRx5U3OuBGcOl/m1t38yanYpaMdnHgb6oRM9K+QoCP
+	 Eur4/KYp8ziJXcXNbn3YRLL+yg8AgCvW4WKrQs5/fx9CGAIg6Vr6CfnI0j0QFnUrbm
+	 1CtXL9ud/p8iw==
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfauth.ams.internal (Postfix) with ESMTP id 686B8198003A;
+	Fri, 21 Aug 2026 10:53:34 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Fri, 21 Aug 2026 10:53:36 -0400
+X-ME-Sender: <xms:bWaIahUo1Hb5TY7rwvXWZqiIQCsFm7HQZRTqnTRCmeUTDs2vDO3M7g>
+    <xme:bWaIavA0jrACtIJfZNvxMZnB6LY5W3K6xw9sI5Oyjio_OXkiu-Rald-HEwNdcbwFs
+    EFnhJ08yslj1tzcI-YdxlzsNHQDfk7etgZCI4hvkpXcYkXmd4O0sY1J>
+X-ME-Received: <xmr:bWaIatXlrPt1A9pRHHG3TomUuLeZgaxqix4gL1TQUGJ1yocmnUjHoi5KShA>
+X-ME-Proxy-Cause: dmFkZTEbg+VVSOlsbnGiy6K3W4JLvpYCkMXlScxQEGLLdOvOtuyrQIKV5vXx+5KSTZnied
+    1BL05bKU0wpXElyHPT96soPhyznOA9yhQkJWdpXI71jCNZvHn/c8VAuX2g4/alGQJvz1qd
+    B6T1tx9pKoO/3Xnvauupxnqq2zICVzTk4UBlHScruUUmAP9mnk/qzNvZQc+jf4jpBBOpED
+    xE+2fgXCydrOnnCVlfS603l+zfBqCrVei/CtHb7spiwvo3P4OCFzG/j5TiRRMOyLcK4pgg
+    ZSlRN9jwxfCyD9ZxG09NOzC4Ou0Dq8l4ppVyOBSA9VAPYEjjLuSug642uKL0/SMdJGusT8
+    FyQeFVv5+gCq6v82m5C+dc3R+HvKciPH93C1bDuVeIW4IkUVggKfOTqwr4KKZy3emCTP+n
+    DBukM1AbkGCTiOllFIoIrYoui9xfTNkWipsxWRgRoasgv7YwnRXH5aQZquW9snqERvi/Xs
+    R0upe+kYPe/qNbREEIgpWHKovwhkbXElaYqKpMSBzNUq1tliCfVcEBRiTFlkTSmPwDqgrW
+    ibYpBtd+fq2PrhOJ9Bklg/CSpV2hTOVcWUlpUl15BIC4Ze+TqxA907+2A7dBb9OARMk/T8
+    nYgNX66kQKWXnHcaCI9pVHv1DteFjCk363spGtTWHEjy145SOc0yJlhjjcWg
+X-ME-Proxy: <xmx:bWaIal_Su38VzUHm5aZb5ee-a0Xap4tAuQbnDctK1GAi4ze5g8Uy-Q>
+    <xmx:bWaIarlEUp7XaB1sCVXjYocrfIRLRmUk01Zsvst5zTvva0SwLs4H5Q>
+    <xmx:bWaIaoKqrww3YI_6W-VqhpR6EMrBfw132AL-VJxCcnDhIAw2aruieA>
+    <xmx:bWaIaprOpW83gjEzL46Meqyz_1QQ8ZhkWmKqehA-02uQYv0Zk58lew>
+    <xmx:bWaIatSyPscqY50xMTnar5di4kwbi2endQokP4zfKYafYoSxjsRuGgoR>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 21 Aug 2026 10:53:33 -0400 (EDT)
+Date: Fri, 21 Aug 2026 15:53:32 +0100
+From: Kiryl Shutsemau <kas@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	rmikey@meta.com, riel@surriel.com, kexec@lists.infradead.org, 
+	kernel-team@meta.com
+Subject: Re: [PATCH v2 6/6] efi: respect the poisoned pages coming from
+ previous kernel
+Message-ID: <aohldTtzE2GJ76md@thinkstation>
+References: <20260821-hwpoison-kho-v2-0-5743791e48e6@debian.org>
+ <20260821-hwpoison-kho-v2-6-5743791e48e6@debian.org>
+ <aog_uH5fTsJzXjjx@thinkstation>
+ <aohIF6MmjiQpbz5j@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] mm/secretmem: zeroize secret pages before kdump
-To: =?UTF-8?Q?Jan_Sebastian_G=C3=B6tte?= <contact@jaseg.de>,
- =?UTF-8?Q?Jan_Sebastian_G=C3=B6tte?= <linux@jaseg.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, keyrings@vger.kernel.org, linux-mm@kvack.org,
- linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org
-References: <20260731162739.158320-1-linux@jaseg.de>
- <20260731162739.158320-4-linux@jaseg.de>
- <70c578dc-769f-465f-a146-4a4695f747c1@kernel.org>
- <adcafa9f-2365-484b-b31e-19006833efaa@jaseg.de>
- <8bb53d9a-8870-410c-9a41-f8b536ef0780@kernel.org>
- <69d508db-93c1-4dac-afe3-3e3fdfb5271f@jaseg.de>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <69d508db-93c1-4dac-afe3-3e3fdfb5271f@jaseg.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aohIF6MmjiQpbz5j@gmail.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,29 +103,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 8/11/26 17:18, Jan Sebastian Götte wrote:
-> On 8/11/26 17:14, David Hildenbrand (Arm) wrote:
->> On 8/11/26 17:05, Jan Sebastian Götte wrote:
->>>
->>> I'm aware nobody is really using secretmem. I decided to build this on top of
->>> secretmem because it's an existing API that actually kind of fits the use case.
->>> While I could have added a new API just for this (marking userspace memory as
->>> wipe-on-crash), making it part of secretmem instead gives some additional
->>> defense-in-depth protection for both users who only need wiping, and for users
->>> who only want secretmem's additional protection against kernel memory read
->>> primitives so I think everyone wins here.
->>
->> What I was thinking when I looked at patch #3+#4: 50% of the users you add are
->> irrelevant in practice.
->>
->> Or are you saying that you are going to start using secretmem for your use case?
+On Fri, Aug 21, 2026 at 07:03:06AM -0700, Breno Leitao wrote:
+> On Fri, Aug 21, 2026 at 01:13:55PM +0100, Kiryl Shutsemau wrote:
+> > On Fri, Aug 21, 2026 at 03:06:06AM -0700, Breno Leitao wrote:
+> > > +	/* Reserve the table itself so it survives a further kexec. */
+> > > +	memblock_reserve(PAGE_ALIGN_DOWN(ppm),
+> > > +			 PAGE_ALIGN(ppm + sizeof(*pm) + bitmap_size) -
+> > > +			 PAGE_ALIGN_DOWN(ppm));
+> > 
+> > Hm. I don't think it is enough.
+> > 
+> > On x86, kernel doesn't keep memblock around after boot (see
+> > CONFIG_ARCH_KEEP_MEMBLOCK). Reserving in memblock exclude the memory
+> > from page allocator. But kexec can place the image there.
 > 
-> I'm in fact going to start using secretmem.
+> You mean the third kexec?
+> 
+> 1) Kernel A hits an ECC error and marks page X poisoned.
+> 2) Kernel A kexecs into kernel B, which won't use that page since
+>    it's in EFI_POISONED_PAGE and memblock-reserved.
+> 3) Kernel B kexecs into kernel C, which doesn't respect
+>    EFI_POISONED_PAGE.
+> 
+> Is this the scenario you mean?
 
-Okay, thanks for clarifying!
+No. I think nothing prevents kernel B from putting kernel C image into
+the reserved space in !CONFIG_ARCH_KEEP_MEMBLOCK case.
+
+Kernel B excludes poisoned memory from buddy allocator, but kexec
+doesn't care about this when look for placement for the next image.
 
 -- 
-Cheers,
-
-David
+  Kiryl Shutsemau / Kirill A. Shutemov
 
