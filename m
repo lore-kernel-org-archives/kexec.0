@@ -4,87 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 31394C5DF8E
-	for <kexec@archiver.kernel.org>; Fri, 21 Aug 2026 08:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9AFABC5DF87
+	for <kexec@archiver.kernel.org>; Fri, 21 Aug 2026 10:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References
+	:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yECaM6gMbXnP91uZ4srjkL1nmloCLEH+XRj0dZ8xS3g=; b=bWFhVzEWdGlhGbA3mtEQ4E+7Zt
-	B/6xtZckURbzTvkax7LdwE6qTHvr8OKJuksuf04Fo/NmOVVSwtshpbZFZ0r9QEAYT1eSlXMuWQvPA
-	8RUOVksxTIBRAMYVTTIC9Y8FMa8a6C4LmbeqTrk5rpbfKtcptvpkYXJkKbgxRKXKnHpkn3PO1ssqD
-	A+9MnJoe5mcIIzaKBaXDBOsc4sM1iwqkzjM2tV8/3S9vhtOczMIGdD+bHs8NIXaA5M9OwbrxDifuy
-	9L84rgT8E0B6CFhHxihDB5i42IqH8049ub+KUngQal+8eGQVjeYZREHaK1cdQvL5NgGcMrKxJ95VO
-	aFgg3+UA==;
+	bh=GijpPHV/MlnALkvostyEz/qvgq+mkhNTyT2lnEH+3cc=; b=PllrArY7Xkx4Q9ydUarj3y/f7e
+	/UB3LDtRLYLCuvrtu33jsaZy6eAr5BNS7Lr+ZMO1KX41c8ITP80BzTRJPjjYoav8u3dO3Z6LvfNWG
+	D8xEGE1EKrhnoe//x4jIDYaqr4OnJC8f4XZ9l2i/EodzKuUtVqqYSdKbJtvxGxcpGMFTGAia8CZTx
+	ZdQaI3MOQdPI+t5Rk8nCdVFqJ1YPBuoafiMPTMcuyZGiACW4/G2Z7yIu5N2bowmQX/tTOwXgblmhO
+	LcppYZVjUSN4b+PQAxDGHerzj2OYFFYYQtsLqF7s/Klqg+7m+D0XqK0B6iAI8qY/BJgQ5uiggMMgL
+	lzmRaB2w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxKnz-0000000Cocp-08Jp;
-	Fri, 21 Aug 2026 08:40:51 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1wxM90-0000000D1Me-0Ppj;
+	Fri, 21 Aug 2026 10:06:38 +0000
+Received: from stravinsky.debian.org ([2001:41b8:202:deb::311:108])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxKnw-0000000CocN-0TNK
+	id 1wxM8y-0000000D1Jr-0Ha3
 	for kexec@lists.infradead.org;
-	Fri, 21 Aug 2026 08:40:49 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1787301647;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yECaM6gMbXnP91uZ4srjkL1nmloCLEH+XRj0dZ8xS3g=;
-	b=begLe5RiI/1hOkXHiQ2yHkzQLpIzcS/KiN5RFC3NF9chjrP0bmpEe6UxD1m9r9HgwWND2K
-	FtLYNAqdAwQUpQWgAFKaD8MVO4EKL4rVnQ1YD7Fw1S7Ju1yUpklPwH1nohO+n85XFRIquD
-	+5xscC/XAiYF73wECMiM2dfuBOd6+00=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-465-a42FUQFdMxyrU_1m2nTEew-1; Fri,
- 21 Aug 2026 04:40:43 -0400
-X-MC-Unique: a42FUQFdMxyrU_1m2nTEew-1
-X-Mimecast-MFC-AGG-ID: a42FUQFdMxyrU_1m2nTEew_1787301640
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 402D219560AE;
-	Fri, 21 Aug 2026 08:40:39 +0000 (UTC)
-Received: from rotkaeppchen (headnet03.pony-001.prod.iad2.dc.redhat.com [10.2.32.114])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 93497180034C;
-	Fri, 21 Aug 2026 08:40:32 +0000 (UTC)
-Date: Fri, 21 Aug 2026 10:40:26 +0200
-From: Philipp Rudo <prudo@redhat.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Mukesh Pilaniya <mpilaniy@redhat.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti
- <alex@ghiti.fr>, Andrew Morton <akpm@linux-foundation.org>, Baoquan He
- <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>, Pasha Tatashin
- <pasha.tatashin@soleen.com>, Tao Liu <ltao@redhat.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- kexec@lists.infradead.org
-Subject: Re: [PATCH v2 2/2] kexec: fix error propagation in
- kexec_image_probe_default()
-Message-ID: <20260821104026.07b7a31d@rotkaeppchen>
-In-Reply-To: <2vxzik54zmpp.fsf@kernel.org>
-References: <20260819-mpilaniy-v2-0-95e929ede0e5@redhat.com>
-	<20260819-mpilaniy-v2-2-95e929ede0e5@redhat.com>
-	<20260820142114.0a36ac78@rotkaeppchen>
-	<2vxzik54zmpp.fsf@kernel.org>
-Organization: Red Hat inc.
+	Fri, 21 Aug 2026 10:06:37 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:In-Reply-To:References:
+	Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Reply-To:Content-ID:Content-Description;
+	bh=GijpPHV/MlnALkvostyEz/qvgq+mkhNTyT2lnEH+3cc=; b=iGManAEdaf1RslOR2kQtj60Uau
+	2cPekOu/rvVOIMx+a/RdULWoQqOizOXh9q2ResBctGch27Ylb26QCtMYYfgmdE0XpZOAsBFzMamnL
+	6BFmHMrcpmbyp1X293U+Dzi56na2S7mreb8TCnLeDRv7lIvfYUztITa+wd8S28EnULOIjsdp6zCz2
+	ygwkTFKI7KZ1LE+ByVAiwUyKRgo+NDY87YkDiTYcgxtzTT7FUH1OThNQG2yKJFvJORcEbRjnbmn6T
+	jH/d5KqWpDiJzP6Q6SQwrbQbOOIDievRHSFNWQHnRifdGuRIe3jS17kLLO4AF8VTd6MJ3x+TDNTWS
+	DjHeOyLw==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wxM8u-00BGBG-16;
+	Fri, 21 Aug 2026 10:06:32 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Fri, 21 Aug 2026 03:06:02 -0700
+Subject: [PATCH v2 2/6] efi: add the LINUX_EFI_POISONED_MEMORY
+ configuration table
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: YMvf_ns0DrnF4dYHUwUS_RT-XtSnRLM1BD0HpD_1uEk_1787301640
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20260821-hwpoison-kho-v2-2-5743791e48e6@debian.org>
+References: <20260821-hwpoison-kho-v2-0-5743791e48e6@debian.org>
+In-Reply-To: <20260821-hwpoison-kho-v2-0-5743791e48e6@debian.org>
+To: Ard Biesheuvel <ardb@kernel.org>, 
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+ Miaohe Lin <linmiaohe@huawei.com>, 
+ Naoya Horiguchi <nao.horiguchi@gmail.com>, 
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-mm@kvack.org, rmikey@meta.com, kas@kernel.org, riel@surriel.com, 
+ kexec@lists.infradead.org, Breno Leitao <leitao@debian.org>, 
+ kernel-team@meta.com
+X-Mailer: b4 0.16-dev-f8e9d
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4479; i=leitao@debian.org;
+ h=from:subject:message-id; bh=Z/vnT9K1G8JkfMrXbm/2Q9zXt1siFCixL2PK45FYBZE=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqiCMaQOgra0AgIH7Fhhk615ZgT/EKbr1P24x+f
+ vcF/X/ROlaJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaogjGgAKCRA1o5Of/Hh3
+ bbwQD/9xKGVGX5YWvlXXOMyaxbNwxB6OkudoXxGeuMi480JxdrtEbNG9MKwYTTv+hBls5nFsxOs
+ PCOU1GsJSwPEqeByAAOJUv9WCo/izqKh7nERh7ft/ZdZSwd8SroxpkL/5ZQ8U8HRRq7D6leBHUp
+ eK7J1vgRdboT7WVSt4sU8iG9psRa35T4D++40LNwoH9WrlHsw94+tRils2g6fS2DmaRBbitQGDG
+ 0BVBo1RFRhYRxH8Fmjcb6Ll633456uZzbvD5KmUrH1bJRfvJeLHBn7cu345txlsZHRwWj4640bS
+ R47Ayqj5pV/UCuBoUskVSeud8qf2bIr0Q3KWKxc92biz9d4tBTZOZ4O4JvX+r0OQ8qCu1q1bpe7
+ GAf9iuKPhgjSHvozRIKj0k+qvmdowhOOt9gYieCf4WvuYp396iJ6xIOUptwyRURhZg1Ys7w5Yyj
+ TPIwogIuh8fVqZQO6LaBQMcxVGvpkZSaOzw2kMwDFMRV2YXibFj9jUlZzTaGJBkso/dIe5AijRh
+ yciexX3E9NOeG/eY9g3FHxM0vcg4JvyTaNdkxw/GR6S9LvTgDVlolK4TUmkFrbv/JmgJRkntw08
+ 2lznEos9GOe4K1+6lmLvcIlLKXZaGAmxi4tCyMoLhzdbwpne9cjplDV+9h0qLABHoxqIvOvpXu7
+ 5eFmHY2Z6fn+Eaw==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260821_014048_229224_3C616FE8 
-X-CRM114-Status: GOOD (  33.34  )
+X-CRM114-CacheID: sfid-20260821_030636_116507_5352D5A0 
+X-CRM114-Status: GOOD (  14.28  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,110 +97,116 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Pratyush,
+Hardware-poisoned page frames are tracked only in the running kernel's
+data structures, so a kexec loses them and the next kernel doesn't have
+this information, thus, tripping into them again.
 
-On Thu, 20 Aug 2026 20:11:14 +0200
-Pratyush Yadav <pratyush@kernel.org> wrote:
+Add an EFI configuration table to carry that information across kexec.
 
-> On Thu, Aug 20 2026, Philipp Rudo wrote:
-> 
-> > Hi Mukesh,
-> > Hi Pratyush,
-> >
-> > having this patch makes sense. Personally I'd go with having a
-> > switch-case rather than individual if-blocks. E.g.
-> >
-> > 	switch (ret) {
-> > 		case 0:
-> > 			image->fops = *fops;
-> > 			return 0;
-> > 		case -ENOEXEC:
-> > 			continue;
-> > 		default:
-> > 			return ret;
-> > 	}
-> >
-> > IMHO that is better readable and easier to extend in case other error
-> > codes need special handling as well. But that is only my personal
-> > opinion.  
-> 
-> Well, IMO both look roughly the same so I unless Mukesh prefers your
-> version more, we can keep it as-is.
+It is a bitmap with one bit per EFI_POISON_UNIT_SIZE (2MiB) of physical
+memory, modeled on the LINUX_EFI_UNACCEPTED_MEMORY table, and it rides
+the EFI system table to every kernel in the chain.
 
-that's why I've marked it as a personal preference. I don't expect
-Mukesh to switch to it. Still I thought it is worth mentioning just to
-give an other perspective.
+Suggested-by: Kiryl Shutsemau <kas@kernel.org>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ drivers/firmware/efi/Kconfig | 10 ++++++++++
+ drivers/firmware/efi/efi.c   |  6 ++++++
+ include/linux/efi.h          | 13 +++++++++++++
+ 3 files changed, 29 insertions(+)
 
-> >
-> > Independent on which implementation you use.
-> >
-> > Reviewed-by: Philipp Rudo <prudo@redhat.com>  
-> 
-> Thanks for reviewing!
-> 
-> One tiny suggestion. Can you please reply in-line the next time around?
-> It is a bit easier reading this response below the code that it refers
-> to.
+diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
+index 29e0729299f5b..69c0dc02bc112 100644
+--- a/drivers/firmware/efi/Kconfig
++++ b/drivers/firmware/efi/Kconfig
+@@ -263,6 +263,16 @@ config EFI_COCO_SECRET
+ 	  virt/coco/efi_secret module to access the secrets, which in turn
+ 	  allows userspace programs to access the injected secrets.
+ 
++config EFI_POISONED_MEMORY
++	bool "Carry hardware-poisoned pages across kexec"
++	depends on EFI_STUB && MEMORY_FAILURE && 64BIT
++	help
++	  Record page frames that are hardware-poisoned while this kernel runs
++	  into an EFI configuration table, and honor that table early on the
++	  next kernel so a kexec does not hand known-bad RAM back out.
++
++	  If unsure, say N.
++
+ config OVMF_DEBUG_LOG
+ 	bool "Expose OVMF firmware debug log via sysfs"
+ 	depends on EFI
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 0327a39d31fa5..111e60479211a 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -55,6 +55,9 @@ struct efi __read_mostly efi = {
+ #ifdef CONFIG_UNACCEPTED_MEMORY
+ 	.unaccepted		= EFI_INVALID_TABLE_ADDR,
+ #endif
++#ifdef CONFIG_EFI_POISONED_MEMORY
++	.poisoned_memory	= EFI_INVALID_TABLE_ADDR,
++#endif
+ };
+ EXPORT_SYMBOL(efi);
+ 
+@@ -646,6 +649,9 @@ static const efi_config_table_type_t common_tables[] __initconst = {
+ #ifdef CONFIG_UNACCEPTED_MEMORY
+ 	{LINUX_EFI_UNACCEPTED_MEM_TABLE_GUID,	&efi.unaccepted,	"Unaccepted"	},
+ #endif
++#ifdef CONFIG_EFI_POISONED_MEMORY
++	{LINUX_EFI_POISONED_MEMORY_TABLE_GUID,	&efi.poisoned_memory,	"POISON"	},
++#endif
+ #ifdef CONFIG_EFI_GENERIC_STUB
+ 	{LINUX_EFI_PRIMARY_DISPLAY_TABLE_GUID,	&primary_display_table			},
+ #endif
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index b3c83516593d1..ce0980a5bb81b 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -23,6 +23,7 @@
+ #include <linux/pstore.h>
+ #include <linux/range.h>
+ #include <linux/reboot.h>
++#include <linux/sizes.h>
+ #include <linux/uuid.h>
+ 
+ #include <asm/page.h>
+@@ -422,6 +423,7 @@ void efi_native_runtime_setup(void);
+ #define LINUX_EFI_COCO_SECRET_AREA_GUID		EFI_GUID(0xadf956ad, 0xe98c, 0x484c,  0xae, 0x11, 0xb5, 0x1c, 0x7d, 0x33, 0x64, 0x47)
+ #define LINUX_EFI_BOOT_MEMMAP_GUID		EFI_GUID(0x800f683f, 0xd08b, 0x423a,  0xa2, 0x93, 0x96, 0x5c, 0x3c, 0x6f, 0xe2, 0xb4)
+ #define LINUX_EFI_UNACCEPTED_MEM_TABLE_GUID	EFI_GUID(0xd5d1de3c, 0x105c, 0x44f9,  0x9e, 0xa9, 0xbc, 0xef, 0x98, 0x12, 0x00, 0x31)
++#define LINUX_EFI_POISONED_MEMORY_TABLE_GUID	EFI_GUID(0x78a5bf07, 0x7d2a, 0x2889,  0x16, 0x31, 0x63, 0xd4, 0x56, 0xf2, 0x83, 0x50)
+ 
+ #define RISCV_EFI_BOOT_PROTOCOL_GUID		EFI_GUID(0xccd15fec, 0x6f73, 0x4eec,  0x83, 0x95, 0x3e, 0x69, 0xe4, 0xb9, 0x40, 0xbf)
+ 
+@@ -650,6 +652,7 @@ extern struct efi {
+ 	unsigned long			mokvar_table;		/* MOK variable config table */
+ 	unsigned long			coco_secret;		/* Confidential computing secret table */
+ 	unsigned long			unaccepted;		/* Unaccepted memory table */
++	unsigned long			poisoned_memory;	/* Hardware-poisoned memory table */
+ 
+ 	efi_get_time_t			*get_time;
+ 	efi_set_time_t			*set_time;
+@@ -1271,6 +1274,16 @@ struct linux_efi_memreserve {
+ #define EFI_MEMRESERVE_COUNT(size) (((size) - sizeof(struct linux_efi_memreserve)) \
+ 	/ sizeof_field(struct linux_efi_memreserve, entry[0]))
+ 
++struct linux_efi_poisoned_memory {
++	u32		version;
++	u32		unit_size;	/* bytes of phys space per bitmap bit */
++	u64		phys_base;	/* phys address covered by bit 0 */
++	u64		size;		/* bitmap size in bytes */
++	unsigned long	bitmap[];
++};
++
++#define EFI_POISON_UNIT_SIZE	SZ_2M
++
+ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size);
+ 
+ /*
 
-Agree, especially with larger, more complex patches. In this case
-however, I thought that the patch is so small that it wouldn't make
-much of a difference.
-Anyway, I'll reply in-line next time in such cases as well.
-
-Thanks for your review!
-Philipp
-
-> >
-> >
-> > On Wed, 19 Aug 2026 23:17:23 +0530
-> > Mukesh Pilaniya <mpilaniy@redhat.com> wrote:
-> >  
-> >> kexec_image_probe_default() overwrites ret with each loader's probe
-> >> return value and returns whatever the last loader returned when no
-> >> probe matches.  The error code reaching userspace depends on whichever
-> >> loader happens to be last in kexec_file_loaders[].
-> >> 
-> >> Only continue to the next loader when a probe returns -ENOEXEC.
-> >> Propagate any other error such as -ENOMEM immediately. Return -ENOEXEC
-> >> only when all loaders have been tried and none matched.
-> >> 
-> >> Suggested-by: Pratyush Yadav <pratyush@kernel.org>
-> >> Signed-off-by: Mukesh Pilaniya <mpilaniy@redhat.com>
-> >> ---
-> >>  kernel/kexec_file.c | 12 +++++++-----
-> >>  1 file changed, 7 insertions(+), 5 deletions(-)
-> >> 
-> >> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> >> index 59fb9d71e9d8..b3060e984ef3 100644
-> >> --- a/kernel/kexec_file.c
-> >> +++ b/kernel/kexec_file.c
-> >> @@ -68,17 +68,19 @@ int kexec_image_probe_default(struct kimage *image, void *buf,
-> >>  			      unsigned long buf_len)
-> >>  {
-> >>  	const struct kexec_file_ops * const *fops;
-> >> -	int ret = -ENOEXEC;
-> >>  
-> >>  	for (fops = &kexec_file_loaders[0]; *fops && (*fops)->probe; ++fops) {
-> >> -		ret = (*fops)->probe(buf, buf_len);
-> >> -		if (!ret) {
-> >> +		int ret = (*fops)->probe(buf, buf_len);
-> >> +
-> >> +		if (ret == 0) {
-> >>  			image->fops = *fops;
-> >> -			return ret;
-> >> +			return 0;
-> >>  		}
-> >> +		if (ret != -ENOEXEC)
-> >> +			return ret;
-> >>  	}
-> >>  
-> >> -	return ret;
-> >> +	return -ENOEXEC;
-> >>  }
-> >>  
-> >>  static void *kexec_image_load_default(struct kimage *image)
-> >>   
-> >  
-> 
+-- 
+2.53.0-Meta
 
 
