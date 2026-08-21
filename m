@@ -4,84 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D970AC5DF89
-	for <kexec@archiver.kernel.org>; Fri, 21 Aug 2026 13:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AB401C5DF96
+	for <kexec@archiver.kernel.org>; Fri, 21 Aug 2026 13:50:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:Cc:To:In-Reply-To:References:Message-Id:MIME-Version:Subject:
 	Date:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=BpYJaQfkL/fXy91zs4mgPaYnWE9uvAuTxt0XGGUcMwU=; b=2Dh35QYp5PJwknfVypircfRifE
-	VTqfWKqwQFa+iQBviqC0tkva1SSVYs/j6g5QcrXf8fGS4iZUmUQ5riiLvEoUTqbwC3KxRDnp3xume
-	lNp7DT0tabNjVslVgpm1+jj9t72CpqEmLDDwJlcDFWerBNKpdY4fSXP2pZgCL04fyUWzggDdiJ+mA
-	TNv4tawpH0MHRqCIkHlUCi7Ii71zD0EbbmCNPU0XSiLwUmAQZZJHdMQXN7Zydt2GQKvwJWVi0vSM6
-	ri9b3TORQc6/LXLtY7WEPFCZJN9TxeTuFLq+aImdv/5ohX0sOmafJwMzJBQ3/3zlZBqOJRydCQZuE
-	dIFUKajg==;
+	bh=ZNohwqjvouRlAnKm9iB5tZeW1CKNRcmkGAU02I+Ttyg=; b=TjuVWGXKGmKkmRv0EmxXECi0CW
+	pLP8w9okw0SpevE0WYWujVXW+nfPXqUBwz4LZn6GL+X8kVyun8z8eL77wJFkDXWWt+WBIbMdCZiYT
+	EM67Uce9WkpI2hI+XYfs/veTcwCejjF/cwXIi7hvBwUGiHCd6LKWGIBXMqLmGzYeS22pglmDryaU6
+	8b4wu4ingamoePKtEK/X4EHeFgzNtIJfiGVvwQExa8kSNpwvWw0nQwjkU6TTyBSDV4ej7EwFi+vCp
+	noGJiQvv7GBqpt2BevWbdz7jeNDMEaxK+lGY5bsQvd03dXPfVSwcmTBDsxX6TmjxkKjFdFyRRU8/n
+	ZIfuPw3w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxPdd-0000000DSXt-3obV;
-	Fri, 21 Aug 2026 13:50:29 +0000
+	id 1wxPdo-0000000DSf9-31Tf;
+	Fri, 21 Aug 2026 13:50:40 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxPda-0000000DSVX-0HKe
+	id 1wxPdg-0000000DSa0-38Fc
 	for kexec@lists.infradead.org;
-	Fri, 21 Aug 2026 13:50:27 +0000
+	Fri, 21 Aug 2026 13:50:34 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1787320225;
+	s=mimecast20190719; t=1787320231;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BpYJaQfkL/fXy91zs4mgPaYnWE9uvAuTxt0XGGUcMwU=;
-	b=MngjC+i93mmh00AleOIZ4YaPNVtNJnjIYAWVJnJrcoxca3n73+sDM8+prwtqyvZrX3oWj4
-	THuN0MYflQBDTVbdMfpHIY5k2uWCmewol06l1ruPDptmJx706LxyXjt8nVF9oS27ll/Ncn
-	biSMWHUbMlRx+EefCcgNvb427f20MXU=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=ZNohwqjvouRlAnKm9iB5tZeW1CKNRcmkGAU02I+Ttyg=;
+	b=MLeOSWhH0OofD2ygWGpJemnG6FtEsOXI3bm8VALVT55cgbF7joqsgfr8PUILjDfY3gDi5l
+	WHok52I67u9WSFVY6UXBqC0OMuCaw8djQECtm/6ur5gbLo74pzp0BrWqB6dXRLP+gUg/2n
+	KSVSzay1/l8l9nsVeWFp0RiMhe4bExM=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-284-2Zp4ZUYKMkaw08sBwIWV0w-1; Fri, 21 Aug 2026 09:50:22 -0400
-X-MC-Unique: 2Zp4ZUYKMkaw08sBwIWV0w-1
-X-Mimecast-MFC-AGG-ID: 2Zp4ZUYKMkaw08sBwIWV0w_1787320222
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-38e25e4b41cso1156849a91.0
-        for <kexec@lists.infradead.org>; Fri, 21 Aug 2026 06:50:22 -0700 (PDT)
+ us-mta-626-vg4u7IULOq-AxIyc3FO9Vw-1; Fri, 21 Aug 2026 09:50:29 -0400
+X-MC-Unique: vg4u7IULOq-AxIyc3FO9Vw-1
+X-Mimecast-MFC-AGG-ID: vg4u7IULOq-AxIyc3FO9Vw_1787320229
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-38e2f61c09dso1376494a91.2
+        for <kexec@lists.infradead.org>; Fri, 21 Aug 2026 06:50:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787320221; x=1787925021;
+        d=1e100.net; s=20251104; t=1787320229; x=1787925029;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=BpYJaQfkL/fXy91zs4mgPaYnWE9uvAuTxt0XGGUcMwU=;
-        b=FD5z34MUGbpLJs5RdSLAq7FQ14O93NCEh89IPz7e8/OG1vldNOcVCbMk8cNUfO6vCX
-         PilTfbgPu7TFCqnaVeidYzDiSSXz5aXqT5LA65qDPJxLRVMamAqiVmaAgy7jb4qp4NkX
-         JXwHtn3vMAdQF4+vFGl5ZjmK+caHo7XqzhTYy7CunnTBvjlTIkI8KfvTOi/hV1EohT3F
-         0jUGXrheNFzgRSrgOk+5BVIB38bQ12FsLKtieHMK3xwrgRPMoTgg8XjcXJ5x6kwuAlLc
-         Re/PO1D8K8/NRsT90GEff2uqzh9SCoFnkCp23a3B2J3DOyPykaAV3AAy3dYG/H7G2dEm
-         YrhA==
-X-Forwarded-Encrypted: i=1; AHgh+RrXZQbP5dxxxLmHPms0DApYqao3T33wQ1R2KWBOofoQLQ4USpsCTg6FCCq2A4RqI7fk0Oa6Ig==@lists.infradead.org
-X-Gm-Message-State: AFuF++k97yU6AREbRVy0M9tfsrSqPqlJ9YZrOec3DGmfCUrrvHmacQ7r
-	/CJgxFPuuvmJFcqmDUTmJPZ01xSmDPAX9BYov554ZNJPbTyJaFn9FQpoP+tKY58E6LKKeSLFfIi
-	BJs8NxRVxpk3w3uLGfTUMwlZIBGYUvS2MeqAf0PthhBhN/W/BC2QXtLGGAl+hAQ==
-X-Gm-Gg: AR+sD11z4yWlcO3u+nXk1Vjwq0blznI0W3kAueDqaFXKJjZLvONgRZc8uVRHCrHX1Nk
-	ZMgFHkcmlHHmEG2OcYm4832t94u7euZEZ4bRcaL8KdLuNIN0McSDBZiyAx8hdB8skuqZ7mS8XA+
-	c8nxpQPpbDF4gceqH/md595+1QS4vzt1LiibcS3lg9eIS4TLYHYGbnt5UA1NAY3g4sR4YMQwKMx
-	9hg0FpUkz/mpFoABpQxoLifmKCxJaYkVQbGlp5BuneNxfehkDk4P1aBlQob5QJ0l33QlTQNo33g
-	lXmILCGuy1EHgnaJE87jjZoW//yyeQyBKYEUf1DgK6T00kQymtrSckMs9ZDMHlL4+kWP49W8I59
-	RWrLN5njMAs62VL3yl6Qi77uTRZWC4FW+
-X-Received: by 2002:a17:90b:384d:b0:393:19a3:4e5 with SMTP id 98e67ed59e1d1-395c386a056mr10527502a91.16.1787320221487;
-        Fri, 21 Aug 2026 06:50:21 -0700 (PDT)
-X-Received: by 2002:a17:90b:384d:b0:393:19a3:4e5 with SMTP id 98e67ed59e1d1-395c386a056mr10527444a91.16.1787320220942;
-        Fri, 21 Aug 2026 06:50:20 -0700 (PDT)
+        bh=ZNohwqjvouRlAnKm9iB5tZeW1CKNRcmkGAU02I+Ttyg=;
+        b=lLROGubOUqkbnMPPSpH6XyT+bToDE7zP5wuqLJodq+plbWqG6oIlyekOoLrkX7dSrx
+         MRRGS/OKYrXp75FY8obqvRzGJJ9ZAbx9zEyAlH418Rklryuurb/BUkBB10OHsfDn7LR6
+         FcuRJtuRuJGv4Dg/mqCD7s50iy0PohAlwfDP+CIpMgzpgFj8A2CB7TuQmGxqKDlvqVSP
+         lTtbwH18doYnHtfpwkNtDX15+rAWHGSZvUDqY/qXZ+tiweVmD8H/QIIbBBqWsjwRc+rx
+         hXqEogfL7K2QSrHXS8tS0OWRL2I48U/dGFwREC53b9P5u4ng20rmUM7dngRyRLf/d4mn
+         s2cw==
+X-Forwarded-Encrypted: i=1; AHgh+RqjzS7KGmgplZSTXrfeQfPMRtCJNMYeP91ljDePjpTbPAvgaRlrQRyCFdaShibvK1mks0V5vA==@lists.infradead.org
+X-Gm-Message-State: AFuF++lbQhe8LbYwDPhptyx1/VgdtteBLN4aiTUrBnadvEOWBI1+CO8N
+	zwUMVX3NpFC7wKKhsFCCBtY1hHFBHI5rOZ/u117b9J/bgrTUeJm0LuWW00nZX2rFUxXlVT3Q9si
+	2Ll25YakdVuBINTOndU7UwgRUDZxNi/HDLfm0fwqPCBlUEYXcGuB2f2MdYC8JHg==
+X-Gm-Gg: AR+sD12WmkLxPAgat2rgfeQieb9yC0khZyIorEHYrUM9wfsokBzgdK2vUBPfuXAPjQ6
+	swyQvKbInXNp+4tWP8JAXpGldqNBrKu8LVQjHvnq23J0KETS6sSPiKyraThJjfS3wUvoOGhyRwS
+	lUvlThCU84CDqxT4OO1CDQ0fBEhTbpoSYrvSSSRv5xGTBudJ18HZ3E/WsN85pZbLdoD3w0cZVWe
+	ersbtiAsdRANFKV3NKZpx5HAIsdXKed1pf/jT2e/UHSRXSmzeqch9DwaoGmbn49jUVcVk3gSGbQ
+	lVOCdDrRnNdV7/mAYKKTJQ/VvptN1Xu6/L6OWXxeAuFrEQ6UEYMC2TklOO2ZaZKhbXNE8+iWAhB
+	2vICO5WSqK6khPNuAJDgOQZoWeMjSSSAu
+X-Received: by 2002:a17:90b:55cc:b0:37c:6910:5758 with SMTP id 98e67ed59e1d1-395c334042emr13744003a91.1.1787320228653;
+        Fri, 21 Aug 2026 06:50:28 -0700 (PDT)
+X-Received: by 2002:a17:90b:55cc:b0:37c:6910:5758 with SMTP id 98e67ed59e1d1-395c334042emr13743913a91.1.1787320228164;
+        Fri, 21 Aug 2026 06:50:28 -0700 (PDT)
 Received: from mpilaniy-mac.redhat.corp ([122.171.22.116])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-395c4c194d2sm3300502a91.15.2026.08.21.06.50.13
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-395c4c194d2sm3300502a91.15.2026.08.21.06.50.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2026 06:50:20 -0700 (PDT)
+        Fri, 21 Aug 2026 06:50:27 -0700 (PDT)
 From: Mukesh Pilaniya <mpilaniy@redhat.com>
-Date: Fri, 21 Aug 2026 19:19:57 +0530
-Subject: [PATCH v3 1/2] kexec: return -ENOEXEC from image probe functions
- on mismatch
+Date: Fri, 21 Aug 2026 19:19:58 +0530
+Subject: [PATCH v3 2/2] kexec: fix error propagation in
+ kexec_image_probe_default()
 MIME-Version: 1.0
-Message-Id: <20260821-mpilaniy-v3-1-76b355399d2e@redhat.com>
+Message-Id: <20260821-mpilaniy-v3-2-76b355399d2e@redhat.com>
 References: <20260821-mpilaniy-v3-0-76b355399d2e@redhat.com>
 In-Reply-To: <20260821-mpilaniy-v3-0-76b355399d2e@redhat.com>
 To: Catalin Marinas <catalin.marinas@arm.com>, 
@@ -96,17 +96,16 @@ To: Catalin Marinas <catalin.marinas@arm.com>,
  Philipp Rudo <prudo@redhat.com>
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
  loongarch@lists.linux.dev, linux-riscv@lists.infradead.org, 
- kexec@lists.infradead.org, Mukesh Pilaniya <mpilaniy@redhat.com>, 
- Bradley Morgan <include@grrlz.net>
+ kexec@lists.infradead.org, Mukesh Pilaniya <mpilaniy@redhat.com>
 X-Mailer: b4 0.15.2
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: -z70Ah67zI1AL4BG9X98lh307UZPkFofAhizvk_ySWA_1787320222
+X-Mimecast-MFC-PROC-ID: 3IlhaARI01Gw10Xv1yGrO7_uHNW40y1fKE__ExZQ8Vo_1787320229
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260821_065026_198674_7E61B5CC 
-X-CRM114-Status: GOOD (  13.56  )
+X-CRM114-CacheID: sfid-20260821_065032_853407_4F4876EF 
+X-CRM114-Status: GOOD (  12.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,112 +120,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Several kexec_file_load() image probe functions return -EINVAL when
-they do not recognize the image format.  A probe function that rejects
-an image should return -ENOEXEC to indicate that the image is not a
-recognized executable format.  -EINVAL implies a problem with the
-syscall parameters, not with image recognition.
+kexec_image_probe_default() overwrites ret with each loader's probe
+return value and returns whatever the last loader returned when no
+probe matches.  The error code reaching userspace depends on whichever
+loader happens to be last in kexec_file_loaders[].
 
-kexec_image_probe_default() iterates through registered loaders and
-returns the last probe's error code to the caller.  That error
-propagates as the kexec_file_load() return value to userspace.
-Returning -EINVAL from a probe when no loader matches is semantically
-incorrect and misleads userspace about the nature of the failure.
+Only continue to the next loader when a probe returns -ENOEXEC.
+Propagate any other error such as -ENOMEM immediately. Return -ENOEXEC
+only when all loaders have been tried and none matched.
 
-Return -ENOEXEC from all probe functions and their helpers when the
-image format is not recognized.
-
+Suggested-by: Pratyush Yadav <pratyush@kernel.org>
 Signed-off-by: Mukesh Pilaniya <mpilaniy@redhat.com>
-Reviewed-by: Philipp Rudo <prudo@redhat.com>
 Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
-Reviewed-by: Bradley Morgan <include@grrlz.net>
+Reviewed-by: Philipp Rudo <prudo@redhat.com>
 ---
- arch/arm64/kernel/kexec_image.c   | 4 ++--
- arch/loongarch/kernel/kexec_efi.c | 4 ++--
- arch/riscv/kernel/kexec_image.c   | 4 ++--
- kernel/kexec_elf.c                | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ kernel/kexec_file.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-index b70f4df15a1a..101259874d44 100644
---- a/arch/arm64/kernel/kexec_image.c
-+++ b/arch/arm64/kernel/kexec_image.c
-@@ -25,10 +25,10 @@ static int image_probe(const char *kernel_buf, unsigned long kernel_len)
- 		(const struct arm64_image_header *)(kernel_buf);
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 59fb9d71e9d8..c11a815e2235 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -68,17 +68,19 @@ int kexec_image_probe_default(struct kimage *image, void *buf,
+ 			      unsigned long buf_len)
+ {
+ 	const struct kexec_file_ops * const *fops;
+-	int ret = -ENOEXEC;
  
- 	if (!h || (kernel_len < sizeof(*h)))
--		return -EINVAL;
-+		return -ENOEXEC;
+ 	for (fops = &kexec_file_loaders[0]; *fops && (*fops)->probe; ++fops) {
+-		ret = (*fops)->probe(buf, buf_len);
+-		if (!ret) {
++		int err = (*fops)->probe(buf, buf_len);
++
++		if (!err) {
+ 			image->fops = *fops;
+-			return ret;
++			return 0;
+ 		}
++		if (err != -ENOEXEC)
++			return err;
+ 	}
  
- 	if (memcmp(&h->magic, ARM64_IMAGE_MAGIC, sizeof(h->magic)))
--		return -EINVAL;
-+		return -ENOEXEC;
- 
- 	return 0;
+-	return ret;
++	return -ENOEXEC;
  }
-diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
-index 5ee78ebb1546..28a1d0420ba3 100644
---- a/arch/loongarch/kernel/kexec_efi.c
-+++ b/arch/loongarch/kernel/kexec_efi.c
-@@ -24,12 +24,12 @@ static int efi_kexec_probe(const char *kernel_buf, unsigned long kernel_len)
  
- 	if (!h || (kernel_len < sizeof(*h))) {
- 		kexec_dprintk("No LoongArch image header.\n");
--		return -EINVAL;
-+		return -ENOEXEC;
- 	}
- 
- 	if (!loongarch_header_check_dos_sig(h)) {
- 		kexec_dprintk("No LoongArch PE image header.\n");
--		return -EINVAL;
-+		return -ENOEXEC;
- 	}
- 
- 	return 0;
-diff --git a/arch/riscv/kernel/kexec_image.c b/arch/riscv/kernel/kexec_image.c
-index 51dc89259f16..963a25f5b55b 100644
---- a/arch/riscv/kernel/kexec_image.c
-+++ b/arch/riscv/kernel/kexec_image.c
-@@ -20,7 +20,7 @@ static int image_probe(const char *kernel_buf, unsigned long kernel_len)
- 	const struct riscv_image_header *h = (const struct riscv_image_header *)kernel_buf;
- 
- 	if (!h || kernel_len < sizeof(*h))
--		return -EINVAL;
-+		return -ENOEXEC;
- 
- 	/* According to Documentation/arch/riscv/boot-image-header.rst,
- 	 * use "magic2" field to check when version >= 0.2.
-@@ -28,7 +28,7 @@ static int image_probe(const char *kernel_buf, unsigned long kernel_len)
- 
- 	if (h->version >= RISCV_HEADER_VERSION &&
- 	    memcmp(&h->magic2, RISCV_IMAGE_MAGIC2, sizeof(h->magic2)))
--		return -EINVAL;
-+		return -ENOEXEC;
- 
- 	return 0;
- }
-diff --git a/kernel/kexec_elf.c b/kernel/kexec_elf.c
-index 3a5c25b2adc9..89a444a00693 100644
---- a/kernel/kexec_elf.c
-+++ b/kernel/kexec_elf.c
-@@ -172,7 +172,7 @@ static int elf_read_ehdr(const char *buf, size_t len, struct elfhdr *ehdr)
- 
- 	default:
- 		pr_debug("Unknown ELF class.\n");
--		return -EINVAL;
-+		return -ENOEXEC;
- 	}
- 
- 	return elf_is_ehdr_sane(ehdr, len) ? 0 : -ENOEXEC;
-@@ -236,7 +236,7 @@ static int elf_read_phdr(const char *buf, size_t len,
- 
- 	default:
- 		pr_debug("Unknown ELF class.\n");
--		return -EINVAL;
-+		return -ENOEXEC;
- 	}
- 
- 	return elf_is_phdr_sane(phdr, len) ? 0 : -ENOEXEC;
+ static void *kexec_image_load_default(struct kimage *image)
 
 -- 
 Git-155)
