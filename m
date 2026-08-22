@@ -4,56 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 97B7AC5DF7D
-	for <kexec@archiver.kernel.org>; Fri, 21 Aug 2026 19:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A9157C5DF8C
+	for <kexec@archiver.kernel.org>; Sat, 22 Aug 2026 06:43:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:In-Reply-To:Subject:CC:To:From:Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From:
 	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:References:List-Owner;
-	bh=jIZvfTBmv7kxMWgBP10qlLdQUm/oMhrYSlhXAeuBuJA=; b=2jmoCFpUuNVQrOgAwktOadO4ik
-	aPZj78BsP+zAV+Zmqzkc6PulZGkCHSdhSBLlbOw8LIYRwFC2Bwy2l32iCVBmRgTE5kLWIgYpGMyGT
-	IOHb2PlhRtZeUEq6akLwsRkaT2zsw5Ho0AHlkDstW59xY/hqKBg9gKYqdwQmPgszrPctsGo6OTgW/
-	v6LeoLBkn5KVrGaw5hojXGRX+gQL9YUmr//BJFVWybGo7ikQJXLLuq1qX4pEar3dXm3dUtZBO5ZHR
-	m+A3uaepMxvE3IFI4OD8c96/QTg5peMKzAfadfQKIEI01zb/1TQxArMCZxBP9g1ttpULffU+9zQij
-	rKfCREug==;
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=6eacw4YePywUKJOL7QhFxdGGTcFFbEXg3nV8IglWfIA=; b=2a7cNKtJubDxPitPf9k8DhPCMR
+	GV83IFtvFtVMXvyC4FDEE3K8d2IkJ0w9V+RQG7MR7RAuMPtouXbKj5RN81CtTpUPR87YjuIY4OuRd
+	pYgYniRlUEqVDV9b8e7hdFM6adSFDcAOZ2h/IDFofp4bA/4AMiLUz44k74Fdz3sr3fn0eMcE+OSSK
+	i1DNc/vLOgKt+oNjaKzrRztTX27I01CquN088ulm9a1hFWSQacI0Fc2O7uKMIkC47up9x3v6kYPoH
+	1y6p/Y1KYC67sE+YPvTrAnU6CNCQguiC9NLbaKGMCeZueIedjledoqzRdPA8ft3WIByb/NWpCEMKH
+	elHhnNbw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxUhB-0000000E0HQ-1yxP;
-	Fri, 21 Aug 2026 19:14:29 +0000
-Received: from confino.investici.org ([93.190.126.19])
+	id 1wxfS5-0000000EKGG-3jKN;
+	Sat, 22 Aug 2026 06:43:37 +0000
+Received: from [113.46.200.220] (helo=canpmsgout05.his.huawei.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wxUh7-0000000E0H2-41x0
+	id 1wxfS2-0000000EKFJ-38qf
 	for kexec@lists.infradead.org;
-	Fri, 21 Aug 2026 19:14:28 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grrlz.net;
-	s=stigmate; t=1787339658;
-	bh=jIZvfTBmv7kxMWgBP10qlLdQUm/oMhrYSlhXAeuBuJA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:From;
-	b=fyKEVOqi6yLCS1BxB2jI8bWqLvVoHyqXOfyiRwCDwHKtlcWs6dFVY7wynuuD/GNY+
-	 w8bMcdWQJ+KqAN6MCVTtW0s1c8G6HD/SX9gt6pKxxx7zrdS02NSn0nC3TaIciNzbsX
-	 gtFvRUWuD8lZOw5OnIKTZjO/tJnsoBV4GbRk1M3M=
-Received: from mx1.investici.org (unknown [127.0.0.1])
-	by confino.investici.org (Postfix) with ESMTP id 4hRVNV4F5kz110G;
-	Fri, 21 Aug 2026 19:14:18 +0000 (UTC)
-Received: by mx1.investici.org (Postfix) id 4hRVNV1Ng5z10yw;
-	Fri, 21 Aug 2026 19:14:18 +0000 (UTC)
-Date: Fri, 21 Aug 2026 20:14:18 +0100
-From: Bradley Morgan <include@grrlz.net>
-To: mpilaniy@redhat.com
-CC: horms@kernel.org, kexec@lists.infradead.org, ltao@redhat.com,
- prudo@redhat.com
-Subject: Re: [PATCH] kexec: fix kexec_file_load fallback error handling
-In-Reply-To: <20260814075329.30203-1-mpilaniy@redhat.com>
-Message-ID: <AD2F7A1F-3D15-424E-9F3A-6E8D2A937E6F@grrlz.net>
+	Sat, 22 Aug 2026 06:43:36 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=6eacw4YePywUKJOL7QhFxdGGTcFFbEXg3nV8IglWfIA=;
+	b=hYIe8WPmsGe8PIEm71LjWkodGMOUa9oyyhcsN2syDBuzunzkpnpzzS1RQ5wtKAkMAvHjIn5hZ
+	aq0RtlP42KEZaIT8VKHjTtKGiKiIodz/0p/Ih/T3zfKozgcP3YQTkmnmtmpVcmcBdOhFZGjl+Tj
+	ToKFI5d/w5hz/K+yKW1qgFI=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4hRnRG1LPmz12LDV;
+	Sat, 22 Aug 2026 14:32:42 +0800 (CST)
+Received: from kwepemo200009.china.huawei.com (unknown [7.202.195.26])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9EDD140561;
+	Sat, 22 Aug 2026 14:43:01 +0800 (CST)
+Received: from huawei.com (10.50.159.234) by kwepemo200009.china.huawei.com
+ (7.202.195.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Sat, 22 Aug
+ 2026 14:43:00 +0800
+From: LongWei27 <longwei27@huawei.com>
+To: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, Pasha
+ Tatashin <pasha.tatashin@soleen.com>
+CC: Pratyush Yadav <pratyush@kernel.org>, <kexec@lists.infradead.org>,
+	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<hewenliang4@huawei.com>, Long Wei <longwei27@huawei.com>
+Subject: [PATCH] kho: Convert error handling to immediate return pattern
+Date: Sat, 22 Aug 2026 14:41:27 +0800
+Message-ID: <20260822064127.498411-1-longwei27@huawei.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.50.159.234]
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemo200009.china.huawei.com (7.202.195.26)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260821_121426_475018_51A728BE 
-X-CRM114-Status: GOOD (  10.14  )
+X-CRM114-CacheID: sfid-20260821_234335_325393_CE85F3AF 
+X-CRM114-Status: UNSURE (   8.16  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -68,44 +78,65 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 14 August 2026 08:53:29 BST, Mukesh Pilaniya <mpilaniy@redhat.com>
-wrote:
->With the default -a (--kexec-syscall-auto) option, kexec-tools first
->tries kexec_file_load() and falls back to kexec_load() when the syscall
->is not implemented (ENOSYS) or the kernel does not have a loader for the
->image format (ENOEXEC/ENOTSUP). [...] Falling back on EINVAL hides the
->real error, because EINVAL means something went wrong during loading.
->
->Remove EINVAL from the fallback path.
+From: Long Wei <longwei27@huawei.com>
 
-Hiding the real error behind a fallback is exactly what makes this one
-hurt to debug, so good direction.
+Replace the chained error accumulation (err |= func()) with immediate
+per-step error checking and early return in kho_out_fdt_setup().
 
->Several kexec_file_load() image probe functions incorrectly return
->-EINVAL rather than -ENOEXEC when encountering an unrecognized image
->format. This kernel patch fixes the issue:
->https://lore.kernel.org/all/20260813-mpilaniy-v1-1-777d4d0e30f7@redhat.com/
+Signed-off-by: Long Wei <longwei27@huawei.com>
+---
+ kernel/liveupdate/kexec_handover.c | 32 +++++++++++++++++++++---------
+ 1 file changed, 23 insertions(+), 9 deletions(-)
 
-That one is still being reworked, Pratyush just LGTM'd the
-probe_default change a couple days ago and the fix isn't in any tree
-yet. And until it is, the arm64 probe and the riscv image probe still
-return -EINVAL, and that last errno is what kexec_image_probe_default()
-leaks to userspace (I checked the loader lists in the tree). So if this
-lands on tools before the kernel fix lands, an image that used to
-silently fall back to kexec_load() on those arches now just fails with
-EINVAL.
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 175c08a6e..93443ad84 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -1438,20 +1438,34 @@ static __init int kho_out_fdt_setup(void)
+ 	int err;
+ 
+ 	err = fdt_create(root, PAGE_SIZE);
+-	err |= fdt_finish_reservemap(root);
+-	err |= fdt_begin_node(root, "");
+-	err |= fdt_property_string(root, "compatible", KHO_FDT_COMPATIBLE);
++	if (err)
++		return err;
++	err = fdt_finish_reservemap(root);
++	if (err)
++		return err;
++	err = fdt_begin_node(root, "");
++	if (err)
++		return err;
++	err = fdt_property_string(root, "compatible", KHO_FDT_COMPATIBLE);
++	if (err)
++		return err;
+ 
+ 	preserved_mem_tree_pa = virt_to_phys(tree->root);
+ 
+-	err |= fdt_property(root, KHO_FDT_MEMORY_MAP_PROP_NAME,
+-			    &preserved_mem_tree_pa,
+-			    sizeof(preserved_mem_tree_pa));
++	err = fdt_property(root, KHO_FDT_MEMORY_MAP_PROP_NAME,
++			   &preserved_mem_tree_pa,
++			   sizeof(preserved_mem_tree_pa));
++	if (err)
++		return err;
+ 
+-	err |= fdt_end_node(root);
+-	err |= fdt_finish(root);
++	err = fdt_end_node(root);
++	if (err)
++		return err;
++	err = fdt_finish(root);
++	if (err)
++		return err;
+ 
+-	return err;
++	return 0;
+ }
+ 
+ static void __init kho_in_kexec_metadata(void)
+-- 
+2.43.0
 
-Is the plan to hold this one until the kernel side is in? Because right
-now it looks like it can race ahead of its dependency.
-
->Print the actual errno for ENOEXEC/ENOTSUP before falling back
-
-Good, that is the part that makes the s390 command line case visible.
-
-The my_load/k_unload ENOSYS message hunks are unrelated cosmetics, fine
-but could be their own patch if you feel like splitting.
-
-Its a good patch, I just want the ordering question answered first.
-
-Thanks!
 
