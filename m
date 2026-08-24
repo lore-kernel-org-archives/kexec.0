@@ -4,62 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C3658C5DF9D
-	for <kexec@archiver.kernel.org>; Sun, 23 Aug 2026 16:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5C69BC5DF97
+	for <kexec@archiver.kernel.org>; Mon, 24 Aug 2026 02:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:Date:Message-Id:
-	References:In-Reply-To:From:Subject:Reply-To:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
+	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
+	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=QsDNIrgg21IWpYyBuhXQ4f5JQxGbAnh20UiPJbJBuDY=; b=bgTC9iOTrMlxYJR4+BqgPhHEUB
-	ogSPPgWX4Y4DzeNanvCB/TwZjrI8tvUdLUo8xep5c7a33sgzM81eTWi2NNOqBY4KTSFw3HVQ38Vxa
-	E4ULBDvlOwicKAANOp4/d5gKO17T7p5Uoa9QMe2TBIfJMagHv1tMuobPNoWWVeVPNyBgi7MTLEMwa
-	jYWioQKSCO30iw5Pz/nwOkdRZAgwe83pFvvOp+HlOhc42E6b0AIoLrfaEXmBz+yQAbi6vhLSNYqHD
-	1KpuzWfxP58Hi9HGWxMISR4pts5iu8VHln2PGmbfA601ZoUFGLDMflEEj55LUuhYt1Gsev+SXEbqw
-	HIxwu96A==;
+	bh=pNZbPImN1HBVjw42D9IBO0B2LYorjmfZ4vM9pHSZXPA=; b=swsyZMnz4DE+2RQ7YpKlH9C+iI
+	ugaBDYpYVf2MlH44ehsUhwfyGmL00CdR2rnoLgPK1RcnvCqLEz+oAD+Eh2X+rUUQK+3Xnhn9cxzaL
+	0oyjdhqICANivdb0jPvb6GGoDOzLC+59lA5FbTdlYSpj8Vxy7Ogsl9V11vq5GA2mNMdbCkC45/kwD
+	oj5l+svtcOQYog9eWpx9B9EwwbSpoVrPGaRSSw+JKyjGHeobN2zLvfCzuVydqG0izukfQdlX3a/LN
+	JG4uBPi24Ik0P5XJ/UpkTy+tWeReCPNDk7V4T7wb42RB1h/UbJ7cHyDNfLp8+MEZmH3OdsO1UoG0r
+	4V0i1YEA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wyB66-0000000FU3j-3Zo0;
-	Sun, 23 Aug 2026 16:31:02 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1wyKi3-0000000FpfR-4BFh;
+	Mon, 24 Aug 2026 02:46:51 +0000
+Received: from canpmsgout03.his.huawei.com ([113.46.200.218])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wyB65-0000000FU3d-48Rt
+	id 1wyKi0-0000000FpeQ-1RFx
 	for kexec@lists.infradead.org;
-	Sun, 23 Aug 2026 16:31:02 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 8B8C040196;
-	Sun, 23 Aug 2026 16:31:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6718B1F01564;
-	Sun, 23 Aug 2026 16:31:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787502660;
-	bh=QsDNIrgg21IWpYyBuhXQ4f5JQxGbAnh20UiPJbJBuDY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc;
-	b=SRAAjVlEN20R3dSf6E/eCUZXkegG51hHZaAIDYRP+kHVVQeoqCcQHCS1ZXDbPpyPZ
-	 30HAdphU0Is0lnMIc8gU6EaJD2dpcf9vhYUt8omKgSCWXj6cknV+ddERVghXDey014
-	 SlBCGC+/BEtDSmLFr/Py9jQnsCvQm7IqSUeon4L5Vt2hg67FIImehuyA2PlVS/aKUJ
-	 MUnwW4T00IsNhUJr57UpyhZVXlkWJTSJSPcTaMfSKWNnwEPYCXRwUv+dgJqz/OhIry
-	 j0c3Lflh2bV1JryZyE59eKR9juJjzsKsCj45XB6kji/p+eqwrNDVFNrbn3Clrl8Gex
-	 L0T/2y/ZjFduA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id D156D380AA78;
-	Sun, 23 Aug 2026 16:30:09 +0000 (UTC)
-Subject: Re: [GIT PULL] liveupdate: updates for 7.3-rc1, part 2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20260823133634.3570153-1-rppt@kernel.org>
-References: <20260823133634.3570153-1-rppt@kernel.org>
-X-PR-Tracked-List-Id: <linux-mm.kvack.org>
-X-PR-Tracked-Message-Id: <20260823133634.3570153-1-rppt@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git tags/liveupdate-v7.3-rc1-20260823
-X-PR-Tracked-Commit-Id: bc0f793c5c41601b273a2ca64c768adca1d447f5
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 91959a31a3990073b55b506af044eda09c359fb4
-Message-Id: <178750260860.2078512.2539370660916433944.pr-tracker-bot@kernel.org>
-Date: Sun, 23 Aug 2026 16:30:08 +0000
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Alexander Graf <graf@amazon.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+	Mon, 24 Aug 2026 02:46:50 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=pNZbPImN1HBVjw42D9IBO0B2LYorjmfZ4vM9pHSZXPA=;
+	b=I2RdeO+iwb22nkG/IYlzNCm9HdhqW7GckDNeGGN/3EmcJ2TiP1syF4ThvRRNCX2uBpDHdCrdQ
+	pRAiQ1xQ4S1Way6fXAwqUobXUv+IydhgMSqP8gaq3gVoEZbAap9p9+qYTpplARZNSyq6JrG6c5A
+	9sIP94/YG/HyLTu3suFMpFk=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4hSw4f2rkYzpSvB;
+	Mon, 24 Aug 2026 10:35:30 +0800 (CST)
+Received: from kwepemo200009.china.huawei.com (unknown [7.202.195.26])
+	by mail.maildlp.com (Postfix) with ESMTPS id B608B40538;
+	Mon, 24 Aug 2026 10:46:34 +0800 (CST)
+Received: from huawei.com (10.50.159.234) by kwepemo200009.china.huawei.com
+ (7.202.195.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Mon, 24 Aug
+ 2026 10:46:33 +0800
+From: LongWei27 <longwei27@huawei.com>
+To: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, Pasha
+ Tatashin <pasha.tatashin@soleen.com>
+CC: Pratyush Yadav <pratyush@kernel.org>, <kexec@lists.infradead.org>,
+	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<hewenliang4@huawei.com>, Long Wei <longwei27@huawei.com>
+Subject: [PATCH V2] kho: Convert error handling to immediate return pattern
+Date: Mon, 24 Aug 2026 10:44:48 +0800
+Message-ID: <20260824024448.550552-1-longwei27@huawei.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <00c96a62-f783-497c-a7ac-1de495e4af06@huawei.com>
+References: <00c96a62-f783-497c-a7ac-1de495e4af06@huawei.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.50.159.234]
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemo200009.china.huawei.com (7.202.195.26)
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260823_194648_867802_45CE0243 
+X-CRM114-Status: GOOD (  10.63  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,16 +79,76 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The pull request you sent on Sun, 23 Aug 2026 16:36:32 +0300:
+From: Long Wei <longwei27@huawei.com>
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/liveupdate/linux.git tags/liveupdate-v7.3-rc1-20260823
+Replace the chained error accumulation (err |= func()) with immediate
+per-step error checking and early return in kho_out_fdt_setup().
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/91959a31a3990073b55b506af044eda09c359fb4
+Two problems with the current approach:
+1. It continues executing FDT operations even after a failure, which
+   is pointless and potentially unsafe on an invalid FDT context.
+2. Bitwise OR of multiple negative error codes produces a result that
+   may not represent any actual error, making debugging misleading.
 
-Thank you!
+Early return fails fast and preserves the original error code for
+accurate diagnosis.
 
+No functional change intended.
+
+Signed-off-by: Long Wei <longwei27@huawei.com>
+---
+ kernel/liveupdate/kexec_handover.c | 32 +++++++++++++++++++++---------
+ 1 file changed, 23 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 175c08a6e..93443ad84 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -1438,20 +1438,34 @@ static __init int kho_out_fdt_setup(void)
+ 	int err;
+ 
+ 	err = fdt_create(root, PAGE_SIZE);
+-	err |= fdt_finish_reservemap(root);
+-	err |= fdt_begin_node(root, "");
+-	err |= fdt_property_string(root, "compatible", KHO_FDT_COMPATIBLE);
++	if (err)
++		return err;
++	err = fdt_finish_reservemap(root);
++	if (err)
++		return err;
++	err = fdt_begin_node(root, "");
++	if (err)
++		return err;
++	err = fdt_property_string(root, "compatible", KHO_FDT_COMPATIBLE);
++	if (err)
++		return err;
+ 
+ 	preserved_mem_tree_pa = virt_to_phys(tree->root);
+ 
+-	err |= fdt_property(root, KHO_FDT_MEMORY_MAP_PROP_NAME,
+-			    &preserved_mem_tree_pa,
+-			    sizeof(preserved_mem_tree_pa));
++	err = fdt_property(root, KHO_FDT_MEMORY_MAP_PROP_NAME,
++			   &preserved_mem_tree_pa,
++			   sizeof(preserved_mem_tree_pa));
++	if (err)
++		return err;
+ 
+-	err |= fdt_end_node(root);
+-	err |= fdt_finish(root);
++	err = fdt_end_node(root);
++	if (err)
++		return err;
++	err = fdt_finish(root);
++	if (err)
++		return err;
+ 
+-	return err;
++	return 0;
+ }
+ 
+ static void __init kho_in_kexec_metadata(void)
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.43.0
+
 
