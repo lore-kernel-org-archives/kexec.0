@@ -4,99 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5CE2CC5DF9C
-	for <kexec@archiver.kernel.org>; Mon, 24 Aug 2026 20:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DB659C5DF81
+	for <kexec@archiver.kernel.org>; Mon, 24 Aug 2026 20:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Lbrx60MJW7m62aJUfR88Sv9pb7keNNeDEwmAMWLXqMY=; b=Ps5cClEGSkM6YkBkeQrWryWcvx
-	ObDeqLduGIhbruazyepwm8EzhFHyCNqsjCJif8vtrDYmjD3pKDZ7yBqN0P4PxRHMvNawjMP2iuNwK
-	+30Sl/jPInD1Ay0Q+rOCuEvD+hO5fuXvQLDG7qW5XhVMFKV3fmFDzujFbgROJKFZehoZSON0LJq8Z
-	XJKU23Xeq6cMHcp3UTDqrJNAK1X6bK3SVrnyTDq8PIK5AyGeXW2X8i150CV1Qhg6oPEkX2C4m7TTM
-	swkyWEUjiYs02BKsRW8yu+jDd6k4DjzKRRklm6ItX3tFmT0DY1jlIDkPc+ha3yNySGkiAtUlROIIn
-	2qsmV02Q==;
+	bh=dDQCrhRKJv1CgmBzHk5DV2Zi2hk1jJel0LnyJEuda+g=; b=3ChKWyjhHT3SrL0JciPhmJjmSM
+	tcozSVac3uQptJ9iLoASbqxYgbKvApT1ceb7AXG1A0TNnhEMT46Af5Gwn5MHthzxy0QrJo2cb9mVp
+	K/Iu09sSncNv+h2iVWVvLobEYA5vLWhiClR2cy2g3xD9hm8xvaitwuXnFXS1Ci2VsIHWX3Ce3O8oG
+	P5Wt9U9SYydjQNsfv4BTYfF8QWuL98dFyi+ZtRmLzj6qL0RFHG9XfaWv3+GcAYalbGmh+kKlEmhCJ
+	d+XI/5v3DjtIKsIEfmEPk6dgIJ8hi5BRk7PVRoaq9zliUr3g5t/L+LWsRfuXSvBVkf9ZMf5p6ojLS
+	/uW6ENHw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wyb4M-0000000HLeM-0O40;
-	Mon, 24 Aug 2026 20:14:58 +0000
-Received: from mail-pl1-x62d.google.com ([2607:f8b0:4864:20::62d])
+	id 1wyb93-0000000HM57-2sM4;
+	Mon, 24 Aug 2026 20:19:49 +0000
+Received: from mail-qt1-x82b.google.com ([2607:f8b0:4864:20::82b])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wyb4I-0000000HLdt-1PDU
+	id 1wyb8z-0000000HM4X-1fwo
 	for kexec@lists.infradead.org;
-	Mon, 24 Aug 2026 20:14:55 +0000
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-2d3b445a84fso4685ad.1
-        for <kexec@lists.infradead.org>; Mon, 24 Aug 2026 13:14:54 -0700 (PDT)
+	Mon, 24 Aug 2026 20:19:46 +0000
+Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-51c2cce930cso40610771cf.0
+        for <kexec@lists.infradead.org>; Mon, 24 Aug 2026 13:19:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787602493; x=1788207293; darn=lists.infradead.org;
+        d=gmail.com; s=20251104; t=1787602783; x=1788207583; darn=lists.infradead.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=Lbrx60MJW7m62aJUfR88Sv9pb7keNNeDEwmAMWLXqMY=;
-        b=O7suQfafwfQMhkAUEmrhMJxAP3T9tOLXGjpVujsCrLhc0wK9AQUctM2vtGk+BnVzfN
-         1K3JZAi/+Bsc5ev7pTC8q5oXOvRU4f+5p+7wdZtBT1LE/hsTaGgPePi3OLHru+GxHFA6
-         A3WIKnKOc7W0ZY1M57f7tcqJF6L5GiYxbMoE9ch2isg2AmUxDrsWO6FFjE2ZraW12p7g
-         HKklTbufaZMFQiisS37UirBvxgRbPBeqWOlp8D1z3fHvIwKjq4AuATsdC2s0uWI51szm
-         XT8n2zqlqXk+enDJgzZD9d01p8ZUbxqvzxqEARsuQm8GkChhgR4KP/stp0piYOMZ1JoT
-         jFrQ==
+        bh=dDQCrhRKJv1CgmBzHk5DV2Zi2hk1jJel0LnyJEuda+g=;
+        b=YQLzj5Z6wvQVe7gXw0Qr2xy0gK9X1xtE/81N0ffO2NEENpfezHJM279YN2oT6OwfYa
+         R5InJofy+BJ2AbCOpRU1es3kRCdEACwbmk7/xruOP/1dy1oYJMD4+7fgaddl10DmJPkG
+         CLeuER6kgWLUl5f2Jc3kwbtT/hzj74BnWOyHGI19az+6rouPU3QuTldpu8aM0MwjbYMP
+         CAu3ckN0Lki5VGG6UY3VX5xdB8sneMzSZjNVM4zCLhiex3plbJIaT5Tb+9+JGFqeOkTB
+         tbq8gSLLEQJdoxx6pgtZKjBD962C79RrTpKc7sEXxBuHvheGtkBKekmiMc9DLot6AQXy
+         W82g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787602493; x=1788207293;
+        d=1e100.net; s=20251104; t=1787602783; x=1788207583;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Lbrx60MJW7m62aJUfR88Sv9pb7keNNeDEwmAMWLXqMY=;
-        b=Wh3hp0HdmD0K7VmTs8T2IAKh4ppL89chAA+iVbZ9lgn/n2pE9oixBLaV0L4VvQhusS
-         XQnp9hRU/aELRCVYwkOEiIl2BKnsbd97Bg09D+Voy93krUv1naoT372/jji0WpPJnhLE
-         ElpREWiCdUImiImerLaYWEOFdeH3dKPagOnZmzbJt40iCwCn+cDDNh2s2ZDRadh1WYgd
-         K9R6jY52kAAqs1bGufy0uz7qMNKY9EYflnaCfUWfOHL5wUkQw3M+DHOso7mmMFT8JY1D
-         MDeLVFUP5a9jX2TOz34v6mU7g9SWlTQxS2k2MkpwLj1AeqPqREHDiisC8jvuDibxGugP
-         rUow==
-X-Gm-Message-State: AFuF++mObGtFhR8ESjOgP9xlb2GJ/GtrU/53JJX/iLB1VNhPaboq71qN
-	jRjTZSAYCsjRUbWUsEfob9TYMOUnvP9IFRcBY9ePn/G60Crhjzm1ui4lLeyYLSs7HA==
-X-Gm-Gg: AR+sD11sRbb//eNVszq2bYE3Tyj3kMtgJZ9nBb4vqDPT3R2AsorFjDvhJyhJPsajE2r
-	DrSMPJ9+eulTlvdg+Jhr+Vq6azORE4fUg6czKC9qGyMJ9LrZvJ7ziFq4XfCCcuP2KzuWT8txzXg
-	A4geSGWt3LKYA3L3yEy6/aCG1ykfYzvUo8FbU+mgGi3kJb7rWt9ucnu6Ie/3zHMhSu2pQZZY+Al
-	AHmlu30nrCJ43vOsiycKqG2A+t5ra2xEnttvr772kJKsthGDrrhuHWD9pGdyQMTwxvwtxkGeBV+
-	mRvb6gM6dHhwk0Xox/WmMg/iJmXpFKoIZYGV/p/6RlQE1CAMBBPU81yLTf64NlGU5pfgs49MsUm
-	ssb9xMHSdkoeT98IPQpvQEIkmv60oeKxnZnKGwfTFfvunrnAJxiyjSiLa/VdLcmw+rkFO+qRZwT
-	fLE8R/8qS8KKvX2b06kc5di33H9ziCXkdr3HSTlN0N4tOO6OR4Vsb2699huGSptFMi7bVyNV/Nx
-	J2YxwuZME3IOHLPaUuRTRy0IPtkaUIE+EyHPPdSRbz1IF9ter6BLHDi2UE=
-X-Received: by 2002:a17:902:f142:b0:2c0:defb:557e with SMTP id d9443c01a7336-2d6e07f52b9mr751815ad.1.1787602492814;
-        Mon, 24 Aug 2026 13:14:52 -0700 (PDT)
-Received: from google.com (210.87.127.34.bc.googleusercontent.com. [34.127.87.210])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39645b49e76sm811208a91.6.2026.08.24.13.14.52
+        bh=dDQCrhRKJv1CgmBzHk5DV2Zi2hk1jJel0LnyJEuda+g=;
+        b=Y3+6SRfEoV24QMfF/SFCZkl9gqQF/0keDXOlweFZQs8G+UrEIlJnG4+mhsUz2FOZqt
+         aYJmfLELjZbeHVnZoD1g+jUyPdilEb3qXDPGXerBDD/5J2jkihGi0nlY1FL2YFWRJYzM
+         bw6vCBf+KUqODcTOsft29N33TE55m4iwWa2iuQ/fSWanR+FWKSYQjAtvmX+sfWSmQ/Bw
+         goKUG9xgw/zeZGDo+ZXYldslXQFzdFQJY3EFzcsho2CSNnqwGEosPcwgSBCAo73sF52w
+         31laWCPgW8NC/54GjU8pA6pBaMAfZZ9m5OA3byT1EEEgZLewLJ+8IFaBck3e2h/haUEq
+         99lw==
+X-Forwarded-Encrypted: i=1; AHgh+RoHtlzP2qIYNvzwUm7zHEk1pclGRMoOJufOokr8SuoLV1dIYSCTk3HvTPBpaZQgPy5zK3iEQw==@lists.infradead.org
+X-Gm-Message-State: AFuF++muitkXuAkApKeutLvv1SrOfXjGPBoPRn5qN8b87R+XPKKYRheY
+	41p/g7cHaqBYXn0MtJzAw1e8otgtMnMnXQ9XlSe2nDoCXapJp74/819O
+X-Gm-Gg: AR+sD11cfG96eSJS8FWhgpeXQjLspsDvkMiDMn5SJLd4RVASNE5Vhzp13MT+P6q9S/M
+	i7YI6J61y6Az52rp61H8CrGVJ/5VpO5IOGr6I5TJXSriq0qTJeh7kxfLkGqZ/QQV/kMPRp+J3Ux
+	ikh1+dzQIK00hEfQxIBG7UzFhWkGaGcnT0iFg2eZ4wckXtGtCQNVRreP4FosWJDJaiv5XOJjYI3
+	7RXfll/tBlYpryYOmo9oVnjCDCQeVAsojtsZdZjCZM0PWZVN3vNTaQyRQV9CjH7+hsoyykmSbMo
+	er8Xu349SFnxRlVke8VxSiHpxo2NB73C3+Cy1Duwm3nVgkqVctKm7hCNEdYOPVeZtvHO66GG2vf
+	9XPf1xQUXcn2WRQPbUbRVhBxg4tKvV6c4rMKwQC1iCHpkneyf2sImE29arUOX5tvfihTn4Y1/tT
+	tXZSy6Wps+OcCr9YW/Jqd8sgwL7We/HjF6VRvTDTusQXUm9rW1oUvjIvKVxnRL/T2arO5e//O/f
+	k0BkdbknPdbiwTLO570Q/4=
+X-Received: by 2002:a05:622a:1f97:b0:51b:fd82:22dd with SMTP id d75a77b69052e-52e2f092d74mr19871991cf.15.1787602783060;
+        Mon, 24 Aug 2026 13:19:43 -0700 (PDT)
+Received: from CW-D0XG2Q16P7-L ([2600:4041:5d54:8900:65b6:6c48:5883:571b])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90c939332c0sm69720456d6.28.2026.08.24.13.19.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2026 13:14:52 -0700 (PDT)
-Date: Mon, 24 Aug 2026 20:14:49 +0000
-From: Samiullah Khawaja <skhawaja@google.com>
-To: David Matlack <dmatlack@google.com>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, 
-	Adithya Jayachandran <ajayachandra@nvidia.com>, Alexander Graf <graf@amazon.com>, 
-	Alex Williamson <alex@shazbot.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Chris Li <chrisl@kernel.org>, David Rientjes <rientjes@google.com>, 
-	Jacob Pan <jacob.pan@linux.microsoft.com>, Jason Gunthorpe <jgg@nvidia.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Josh Hilke <jrhilke@google.com>, 
-	Leon Romanovsky <leonro@nvidia.com>, Lukas Wunner <lukas@wunner.de>, Mike Rapoport <rppt@kernel.org>, 
-	Parav Pandit <parav@nvidia.com>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Pranjal Shrivastava <praan@google.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Saeed Mahameed <saeedm@nvidia.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Vipin Sharma <vipinsh@google.com>, William Tu <witu@nvidia.com>, Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v8 02/12] PCI: liveupdate: Track outgoing preserved PCI
- devices
-Message-ID: <aoymLetUiJPsqrfI@google.com>
-References: <20260728221007.2098560-1-dmatlack@google.com>
- <20260728221007.2098560-3-dmatlack@google.com>
+        Mon, 24 Aug 2026 13:19:42 -0700 (PDT)
+Date: Mon, 24 Aug 2026 16:19:34 -0400
+From: Maxi Saparov <maxi.saparov@gmail.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Alexander Graf <graf@amazon.com>, 
+	Evangelos Petrongonas <epetron@amazon.de>, kexec@lists.infradead.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, sdimitropoulos@coreweave.com, 
+	Maxi Saparov <masaparov@coreweave.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v2] kho: do not reserve scratch memory in the kdump kernel
+Message-ID: <aoylgHzZKP8av1pN@CW-D0XG2Q16P7-L>
+References: <20260803193938.8778-1-maxi.saparov@gmail.com>
+ <20260811161857.3096-1-maxi.saparov@gmail.com>
+ <aoF8zPXiKpjt2Nsv@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260728221007.2098560-3-dmatlack@google.com>
+In-Reply-To: <aoF8zPXiKpjt2Nsv@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260824_131454_376151_88F7B2F7 
-X-CRM114-Status: GOOD (  12.28  )
+X-CRM114-CacheID: sfid-20260824_131945_442974_2FEF3ED2 
+X-CRM114-Status: UNSURE (   7.60  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,37 +106,15 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jul 28, 2026 at 10:09:56PM +0000, David Matlack wrote:
->Add APIs to allow drivers to notify the PCI core of which devices are
->being preserved across a Live Update for the next kernel, i.e.
->"outgoing" devices.
->
->Drivers must notify the PCI core when devices are preserved so that the
->PCI core can update its FLB data (struct pci_ser) and track the list of
->outgoing devices. pci_liveupdate_preserve() notifies the PCI core that a
->device must be preserved across Live Update. pci_liveupdate_unpreserve()
->reverses this (cancels the preservation of the device).
->
->This tracking ensures the PCI core is fully aware of which devices may
->need special handling during shutdown and kexec, and so the list of
->preserved devices can be handed off to the next kernel.
->
->For now, the API only supports preserving non-VF devices on a root bus
->(not behind an PCI-to-PCI bridges).
->
->Reviewed-by: Pranjal Shrivastava <praan@google.com>
->Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
->Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
->Signed-off-by: David Matlack <dmatlack@google.com>
->---
-> drivers/pci/liveupdate.c       | 210 +++++++++++++++++++++++++++++++++
-> drivers/pci/liveupdate.h       |  21 ++++
-> drivers/pci/probe.c            |   2 +
-> include/linux/pci.h            |   3 +
-> include/linux/pci_liveupdate.h |  21 ++++
-> 5 files changed, 257 insertions(+)
-> create mode 100644 drivers/pci/liveupdate.h
->
+Hi,
 
-Reviewed-by: Samiullah Khawaja <skhawaja@google.com>
+On Sun, Aug 16, 2026 at 12:03:08PM -0500, Mike Rapoport wrote:
+> Hi,
+> 
+> Please don't send vN+1 as a reply to vN next time.
+> 
+
+Ack, sorry about that! Thank you for the review.
+
+Maxi
 
