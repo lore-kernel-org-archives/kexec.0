@@ -4,95 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 158BCC5DF9B
-	for <kexec@archiver.kernel.org>; Mon, 24 Aug 2026 15:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 61277C5DF81
+	for <kexec@archiver.kernel.org>; Mon, 24 Aug 2026 15:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=KhObASzU+IfR0vAcTNmjdJh1v1AW8fzRga8XEXTHVUA=; b=g5gGnSpG5MM6jSsyLgzATS1M1/
-	uhm11IgdC10MGjdVR5UgnDonKjYZD12YeNMG3sMkYPqAn/CWqTWT+GNYcr2lbCgf6JAs1PIPwhTA0
-	LnRbafOUymlALDYqnXxK+LwsFSn/HbSLFxdQqihUJNi53aNnCyqf8Lcw4pLkiC244l5FenSt4ALpt
-	8GP5hw67vjwD59p2/W8JCQHurOeKwCprm/umA7knUenZWJDFfDQsn+I/pvYHo9+U4nhvKzz4/wqGy
-	ctmxZP8dBGArFioSRSMm0O4ljpLA1hSyrQEC8jCmrXK/FqJWEB7H+kFKWl81tXMB8YQbME/KQ4uPo
-	VXnamXHg==;
+	bh=hWqZ6E/rpLHflNJIRN+si29gzxrcJ8/c9XXZU6wdsnA=; b=mAhkzPk0hDP6B6aJcpsgcV+/yd
+	nEMvEK3bICG0/ZTmIyi22d15Md77Ygg+ZibI7L1WJv49BnFPb7y7Xo6V6ACQqN/wWd/+NAXHdIyJ2
+	k7xBTMKfuEQCe6ZsonXuEhX3oCVmnYzU3oiQ11ug8FBCRng/QTbbYR1dWAwH/d6/pRlTCGyxjHC15
+	Ghm/44frtHEvjy0iVCx6TSxWLJ6TmF/wwwzsxNwPTT6eAGUtNDV5q/VqC7buhvU5ZxxLs+SLErmiK
+	EThWm8EKxeg7M7gwosm6E0MSTv6aQz5NWKGvya/Gq6HLkwYCmx1EG+0VhS/bzIm2e0xHtwxslbT+n
+	mvMd7aBA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wyWSY-0000000Gtxy-2D3Q;
-	Mon, 24 Aug 2026 15:19:38 +0000
+	id 1wyWa0-0000000GvMd-1OTS;
+	Mon, 24 Aug 2026 15:27:20 +0000
 Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wyWSY-0000000Gtx1-0P2h
-	for kexec@lists.infradead.org;
-	Mon, 24 Aug 2026 15:19:38 +0000
+	id 1wyWZx-0000000GvLV-1vOa;
+	Mon, 24 Aug 2026 15:27:18 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 801D543653;
-	Mon, 24 Aug 2026 15:19:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99AAD1F00A3A;
-	Mon, 24 Aug 2026 15:19:36 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id D0F3C40708;
+	Mon, 24 Aug 2026 15:27:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00BFB1F000E9;
+	Mon, 24 Aug 2026 15:27:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787584777;
-	bh=KhObASzU+IfR0vAcTNmjdJh1v1AW8fzRga8XEXTHVUA=;
+	s=k20260515; t=1787585236;
+	bh=hWqZ6E/rpLHflNJIRN+si29gzxrcJ8/c9XXZU6wdsnA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=LC36phpszc3Om6N/zbMxn3qMAaW69FAFVObEdERNIgzHvNnwi6kqgufIEU7/UIWsY
-	 krth0vZ8KBkoVR2jhi20myZTjDkhMfwj0bh8fKkFO6Cq9jtg6P6nCbqcFUV5jB7MMH
-	 Atx4872f1nd1YEddLkLsnZfeA38+HMzpmURbmib3a6OO3LnOhDaSE6pNJTv9+0hTPy
-	 Bjrgk9LvrsETUGXLygWv5zpQuxjCVbMH3s6RiwLjTKFOe+Ay7EtwFS2q3XS1NpfRKm
-	 8Z0HQsSlyzqvXZSW1e+1oD5IZQqNP9BmPLOW+iaXG9B3F2Jb6iX1rSTgDIYMg+P6Xp
-	 8/2udBbC4RLrw==
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 2CABF1980064;
-	Mon, 24 Aug 2026 11:19:33 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Mon, 24 Aug 2026 11:19:35 -0400
-X-ME-Sender: <xms:BGGMatyGyn3hvJEAL0fFVjsBYh6gFUw65lsJrw_6381KetY-a1qxIg>
-    <xme:BGGMalHPhb2XHbU2FL6zGJT2A6yE8C808HEMrw-XsTFRzBkkDK8YaH-6SScXzeiTF
-    cj3wzC4PcJqjEIF5c2m5qGUfrfw6Yyhf-ybFPELzuLx8ScJvRHuino9>
-X-ME-Received: <xmr:BGGMaiukLLHf90eQribcfkvQllhnvFKo9aofwwJhz8uPgwNUtUoji80uTlc>
-X-ME-Proxy-Cause: dmFkZTGmehEwlTpaGnlMoJpjXQ7nDLGKNpzYXa2GqgT7N6wq+ruWxFOqugBXByk4sBfObp
-    8DXKoBbmhM2FrtuaF9WZfWUm/XSEbXQJrXuwkZA4vndDzrBzxGCewc1r+D79yU3xB5jMSa
-    B+LVxfNdjqdsuQZAIZKPCnVgEizP998OPUYROmwf7705WA1lsJP0FTniXw+j+FTLaPgO0N
-    pd/+oAYahWf/yETAcvBK1S8P36SGEYc0d+vgfJCIyGHc08xJ91rRcqKCNPSEZn0qz0TbQ4
-    K8qMxtX4Mw5iXxoWJmcxU6EWREGiIjkBV6LuhbNuw0VpdhCn2mkDjHa2YQj/22JhnN6oEm
-    4gxVYethYAkikekOYpmmy2wE+3KgV9l0KZncUeQMPVLxTPopcHk7B/t0+PqwsnOycNBrd8
-    vq6icxUXHj7Jja6KFHTxcBoUZDXTm8d53gqsszOR2pEv5+etleh6hqokwfs/29Ugy955AD
-    ofBgQAbcPGVZP95X6cOumcWEZoV4/S7+8hr5oxlRtC2g5pwOGUXxs6/iwmqb4/tH9V25nL
-    73WPOd3sIE52G6iY59hh2iDy+8Xk/ff8vm/m/EawJVtYutWKH2BHuPh7Vw9D8veAMwYHqW
-    IEoiv74acRu1a4kH5h9pzMzAk3ntTtdu3nf9xvRv3t3no9eU5wynopTneZKw
-X-ME-Proxy: <xmx:BGGMapXg6FcpXm7Cm04GaXfUrtCknQ9pxDcfaUReND3l7ZNV_Ah3sA>
-    <xmx:BGGMai6vp9i2vWDcbOdl3gqXrclWdmYwbf4bGbwOm_kT_osDA1thtA>
-    <xmx:BGGMatZTApO_0kD9vDLGKSJP-KmLtAz0lFDL5oYGcOjIy26EW-hXaA>
-    <xmx:BGGMamBVp9A3SqBBtHKv3fZdBI1PIl_5cHBIM1ar4qVw-wYmajWJfA>
-    <xmx:BGGMaupDZcb_xUq5ERgNzieAYNoVrTFRpliEkJTvATSIEQPawMJm24EX>
-Feedback-ID: i10464835:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 24 Aug 2026 11:19:32 -0400 (EDT)
-Date: Mon, 24 Aug 2026 16:19:31 +0100
-From: Kiryl Shutsemau <kas@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	rmikey@meta.com, riel@surriel.com, kexec@lists.infradead.org, 
-	kernel-team@meta.com
-Subject: Re: [PATCH v2 6/6] efi: respect the poisoned pages coming from
- previous kernel
-Message-ID: <aoxgwbsdy0H1OSBm@thinkstation>
-References: <20260821-hwpoison-kho-v2-0-5743791e48e6@debian.org>
- <20260821-hwpoison-kho-v2-6-5743791e48e6@debian.org>
- <aog_uH5fTsJzXjjx@thinkstation>
- <aohIF6MmjiQpbz5j@gmail.com>
- <aohldTtzE2GJ76md@thinkstation>
- <aoh-3XJw82O8SmsA@gmail.com>
- <aowcYuXEeqdfHmn6@thinkstation>
- <aow_bfUQWZWh7Kxb@gmail.com>
+	b=gy+J1A/kIndBp1Kh3XXNb3phBhcrivN6jLnEuqv15VGWu8qbHER4jx1CzzwtNm4rV
+	 go4PHDbRk+M2eFHzHPgAsxNVtW7yjHmQaOZ/DviZNSnKlDDVFoZHZDO7tMcmdLt0lO
+	 6bvAWbE+IC1lRSs1nI9aGKzUU4OIlC12e8FMnZZ0EOfGKjZTwvQUl+Wp+/uKwcU8Xh
+	 2jEu2uDHuefqj8kqdUpktxFWlNxfdvsMq38Vk7xxXNlSNo4hImNWmzaOmXcQS4RDUj
+	 kUpZUgvhvsS2I0FmGTnY+1i+1Cxu20YEoeK13Ck2kB5bJZG9S+NFb3snlKbeSNu/dt
+	 nNVvGL7nwc2Iw==
+Date: Mon, 24 Aug 2026 16:27:14 +0100
+From: Simon Horman <horms@kernel.org>
+To: Rui Qi <qirui.001@bytedance.com>
+Cc: kexec@lists.infradead.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 0/2] kexec-tools: Fix split crash kernel reservations
+Message-ID: <20260824152714.GA102316@horms.kernel.org>
+References: <20260818123504.12022-4-qirui.001@bytedance.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aow_bfUQWZWh7Kxb@gmail.com>
+In-Reply-To: <20260818123504.12022-4-qirui.001@bytedance.com>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,12 +66,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Aug 24, 2026 at 06:03:05AM -0700, Breno Leitao wrote:
-> Yea, this seems better in fact. Let me know if that matches what you
-> had in mind.
+On Tue, Aug 18, 2026 at 08:35:05PM +0800, Rui Qi wrote:
+> Hi,
+> 
+> This series fixes two kexec-tools issues seen with split crash kernel
+> reservations.
+> 
+> The first patch makes --print-ckr-size prefer
+> /sys/kernel/kexec_crash_size. This restores the option's original
+> user-visible contract: report the same crash kernel reserved size and
+> unit as the kernel sysfs attribute when that attribute is available.
+> The existing arch load-range based calculation is kept as a fallback for
+> older kernels.
+> 
+> The second patch fixes the RISC-V kexec_load crash path. RISC-V records
+> all Crash kernel ranges from /proc/iomem, but it currently writes only
+> the selected load range to linux,usable-memory-range. On systems with
+> high/low crash kernel reservations, that prevents the crash kernel from
+> seeing the low reservation after boot.
+> 
+> Keep placing the crash image segments in the selected load range, but
+> pass all crash kernel ranges to the crash kernel through
+> linux,usable-memory-range. This follows the split-reservation handoff
+> model already used by arm64 kexec-tools, where
+> linux,usable-memory-range = <BASE1 SIZE1 BASE2 SIZE2> advertises both
+> high and low crash kernel ranges to the crash dump kernel.
+> 
+> Tested on riscv64 with:
+> 
+>   /proc/iomem:
+>     f7e00000-ffdfffff       : Crash kernel  (128 MiB low)
+>     1f88c00000-1ff6bfffff   : Crash kernel  (1760 MiB high)
+> 
+>   /sys/kernel/kexec_crash_size:
+>     1979711488
+> 
+> With the patched kexec binary:
+> 
+>   kexec --print-ckr-size
+>     1979711488
+> 
+>   kexec -c -p ... followed by a panic completed kdump successfully.
+>   The crash kernel reported both ranges as System RAM in /proc/iomem:
+> 
+>     f7e00000-ffdfffff       : System RAM
+>     1f88c00000-1ff6bfffff   : System RAM
+> 
+> The vmcore was saved successfully.
+> 
+> Rui Qi (2):
+>   kexec: Print crash kernel reserved size from sysfs
+>   RISC-V: Pass all crash kernel ranges to crash kernel
 
-Yes!
+Thanks, applied.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+- RISC-V: Pass all crash kernel ranges to crash kernel
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=6b8b27fbe5cc
+- kexec: Print crash kernel reserved size from sysfs
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=97061549e25f
+
 
