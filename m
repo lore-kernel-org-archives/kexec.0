@@ -4,111 +4,169 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8841CC5DF94
-	for <kexec@archiver.kernel.org>; Tue, 25 Aug 2026 05:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 21DF3C61DB6
+	for <kexec@archiver.kernel.org>; Tue, 25 Aug 2026 07:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:References:In-Reply-To:Message-ID:Date:Subject:Cc:
+	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=K9OwnSzTLO9oC5dFpcmND+TzPw2bMH6k9WMlDpSF/Bk=; b=Z/LCCHt+akSLrz86Y2mYgE9+9I
-	h0bVHoj73oI5zxils8oi8C8CWyJyBInzsCxwHtDb7ha4v2uMoppnBrNJNDlSa8bhPxYUMuDRBCDR0
-	gmmEuZWi2mDsBASugWVyd+cYjTypBn3lKLtf9xFFM5Wl0Tw9RRVAZShaLiWqlEQPQ4yN7SdwQ+Mg+
-	yj1+7MrpKPI1n69os1SRWe65cuLbhaZgKJl5mbngj0b+JynAd4uevLC10tQ4ZcqDYHV7IOaxrMEU1
-	YJ7HL+JLYD+ID2dZ1j9T/hhNA/LxRJlZqjdu5DiuMpSGnELXNWdiuBbZQJ8z91NkeiM0eleJ4dIiB
-	Q4HbivdA==;
+	bh=IK2tVEXdHC/8PzQA3cP9GhjuJ6Gq5QhfcIartwEmDVs=; b=aV/meXoWc7TAIBM5nSOWNdKJGI
+	vaTQ+/s558+lo8F2cKamTMNxTR7YrTe4QlqrQ7ktaNiz4wwAvX38YY4qn2ykqOZuBqqVf/VsIrLH4
+	0NdhXR08RfzCDv0laxvcD111/c/Uy9WkZgfZZMjlVQD1HzUS5LSTfkVmpP4XMuAjBfVJLcyiXhqQF
+	iCr7G63YC9pohepHRi+7GqfjIWPpebTStVn4LodNcELug4GoypmlqMRNdhn/tw6Dbqm7ibX+/jw6e
+	FM4QxB7w/o0eq1vkdOcHxpcuJKELapFc2ofYoL7smfYkQiz2B1fhSDiLtPVN0NkvlBTMQhFFMV8dP
+	y28u4yQg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wyjU6-00000000AEc-0nCQ;
-	Tue, 25 Aug 2026 05:14:06 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1wylwx-00000000Jxt-0IZJ;
+	Tue, 25 Aug 2026 07:52:03 +0000
+Received: from mx0a-0064b401.pphosted.com ([205.220.166.238])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wyjU2-00000000ADQ-2Zyh
+	id 1wylwq-00000000Jwq-2A1x
 	for kexec@lists.infradead.org;
-	Tue, 25 Aug 2026 05:14:04 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1787634841;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K9OwnSzTLO9oC5dFpcmND+TzPw2bMH6k9WMlDpSF/Bk=;
-	b=D/DfWQ1ojVexHfaX+44I0hDGOLd5IdoSKLR71/TQzVpNJ8h1Hw/d5nbwBSlx3hg1EvMDJE
-	rb6fBJf7zpO/MAUbD2HNMRXA+ZMbvJPJNWUTF+vXqSBF+6fowabNf+Dxfx0fe9ToxpCTvy
-	jTXI7uM4Qe1jCkWdBxDvdTzm17yJab0=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-516-WfIycLUYM3ukSVeqbwIUSg-1; Tue, 25 Aug 2026 01:13:59 -0400
-X-MC-Unique: WfIycLUYM3ukSVeqbwIUSg-1
-X-Mimecast-MFC-AGG-ID: WfIycLUYM3ukSVeqbwIUSg_1787634838
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-38e5a616d07so5577902a91.2
-        for <kexec@lists.infradead.org>; Mon, 24 Aug 2026 22:13:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787634838; x=1788239638;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=K9OwnSzTLO9oC5dFpcmND+TzPw2bMH6k9WMlDpSF/Bk=;
-        b=lpba57lE4q9Nzcs+K9/Oy0WwNClp1SXCT02hBJDOuZbK+cS0kYqXN37OMVwSQx7Cok
-         dKG0A88ZLrduMTIL97TivpInhhsYHS6LbBF72zsXkZEj0qvpAz9g05+RCPolZigLF5wt
-         QbxrEKatO44w+wFI4C5T89muQWBimkWrP9TzHJBzLOOLREn3TYAiQBcvhFRbVTTbZJ4a
-         Zov8NOTaUvLy1InJjJvKDPQ85NklwxybBA2tNyKaJN/tKZZHF3ctexJ7mssgEtzRW/lm
-         CBLyfHlpoMrhMHu+u2W5SwzMtIcxn5McVbX+V00MF3cP32a8hUpq3jO5gsQBNAnkjPXQ
-         baKw==
-X-Forwarded-Encrypted: i=1; AHgh+Rq/sCaH59r8bLpC4Xj6rw0VtI2oL+oCmBjn2S4v/z+nC8RhD8cJOWdHRz66OSpddOWsw/kXVQ==@lists.infradead.org
-X-Gm-Message-State: AFuF++lzpn0pCEPW+qT5ZOx9a/SpXTwcrOcsn1O+FbpTL9EKGshO4+cM
-	GqvYp2DPXsRyOJ1Ca+vjzEqpVF6Itc1w5qau1tn9NuUXVnABM0CJQMIUraRqihVBzRh2q5yvLu6
-	jklgdAp12ZN8ViBCXuRDls0xJh+R/ZxjkTP72l/MqrTSPD6pxyD4ydLQzbXOwNFa+JsEuhQ==
-X-Gm-Gg: AR+sD123ecQ+o4H/lUZESLFNK++saLoZlY6ns1+D20PC7N69Tyv/HV9FjxwRKInA4nd
-	OK4edzJYc93t/mB3OMVGCKE2NBI+VzDpjLMRZcqZDmIllJ37iiEj+baIsAFqSQjOyJuqj89O1k9
-	61uCxUNjxtBwyyDR5hhogGRNQybPgAqyBkn90aMN/t5FZz0s6Smq0ZDlo56kvrBsCmF2iKx8iEy
-	3QZ2Lkey2YmxZwizRMwGdilTDDppbdkk9AVYiUEqY1a3ploH9imcbVal1SHwEEY02YAQPYW8WpI
-	VdUY0GC+hisrQSbENd5eM8wfraSGbknq0S+CcDKZpeKUW6B+WCag/RjmAcG2a9itt/nCmjdPRBE
-	LgaBXRRXEYO4RKnyeCQ==
-X-Received: by 2002:a17:90b:184f:b0:395:5f43:4ec4 with SMTP id 98e67ed59e1d1-3964603084fmr8668913a91.0.1787634837957;
-        Mon, 24 Aug 2026 22:13:57 -0700 (PDT)
-X-Received: by 2002:a17:90b:184f:b0:395:5f43:4ec4 with SMTP id 98e67ed59e1d1-3964603084fmr8668825a91.0.1787634837463;
-        Mon, 24 Aug 2026 22:13:57 -0700 (PDT)
-Received: from [192.168.1.2] ([122.171.16.109])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39645da08desm2156603a91.17.2026.08.24.22.13.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Aug 2026 22:13:56 -0700 (PDT)
-Message-ID: <06a45c67-2642-4efa-994a-ee50cd40a697@redhat.com>
-Date: Tue, 25 Aug 2026 10:43:48 +0530
+	Tue, 25 Aug 2026 07:52:01 +0000
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67P4GUqo639027;
+	Tue, 25 Aug 2026 00:51:12 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=cc:content-transfer-encoding:content-type:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to; s=
+	PPS06212021; bh=IK2tVEXdHC/8PzQA3cP9GhjuJ6Gq5QhfcIartwEmDVs=; b=
+	CviR6DuhGDD3dZDzjFJ2LQMANSSAOAf/TZKzRhOzMmryKAH4t2EM/2r1bOlbuA6e
+	Q0c4egqg8nwhOGhe+2KuolqDuHl3GS6UzVu//aUNHUMhAaw+29MBElZBV0wDeBMu
+	i+asoUXhStLSH7YQvDZc84UJkxigKDHZ1G5XfoVXlUfNwz6icPQQk3SMimhoE/wN
+	CziG1PGWRm/hGeSEnRsFoe5PpOD5R2CkaB8059U+Y+eSjLLmgZteGE2rkik7HpuL
+	Vpwhti5KD1y8Dth6gPmFRulCfHRt5TMRW9cL18NUlEej02bhsmkYgbCefmOMbx7K
+	gfoo3y99YmFRTv+13TjB8g==
+Received: from co1pr03cu002.outbound.protection.outlook.com (mail-westus2azon11020133.outbound.protection.outlook.com [52.101.46.133])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4g7b9gky6k-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Tue, 25 Aug 2026 00:51:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DUCj1XVRTyOOWc7tnaHr+3/nYSb9AdVdccjVsD852SXTru4g7Sw6RqZUd7yKzsPQMnbnxBgE5PqkhruIpOTSl0Jl3seHwXXSDOXPuJ/WoOZrtyLhNvDxsZycqy6H3/PFBZQ7+2PmBY9eL2m8xD0zO+VAKlZss4SdScKuVrfN4JhFOlZPzPndCkXOnAdQ5kPutI9uPOAT4ZiQ4vykDdV/kThf0RvyQdRqcJvxnsuFk6WZ4QYCC7G1FWm8NRdW1mUlVbzZkOsNFgjLHYEsMQqm0aBddr9Zr1wtdVvfU2hdXEIg2xqk2UAHAIjCb8SsKPfgXmpQArAK3WNe+9enX1Ogdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IK2tVEXdHC/8PzQA3cP9GhjuJ6Gq5QhfcIartwEmDVs=;
+ b=m+/QeqnLuYzpErZqND9ETiGH8oSp6IlK/W0/+wgBRVgWaJ8HAPPyK7PAdSdtlHX4IyZPHPtBiefY7Ibx0b1xPdFRvB0iVjMoqH1q6exdHuNomT4pG381BDcCoUdnlb6zIMcvU66y5fv3yjK9UKkYHt+WIGSVkACwItkYIF7zLJaL2yDzFsBXLJ32FHVN7CBofA6hiKn9ghtYTue65h3om8Nq8tQ4puqJXQ2yNTskE/REEM/tcKI9EsYyEJ5yTqB6Tzf7HcF+ETw3IcpGGAhpurXd+c0AXiGdiqPfL821xKJ5VvE6kyY2qTGc7uT44vyLmMuaiIcxUCydR6WMnDn7Eg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from SJ2PR11MB7546.namprd11.prod.outlook.com (2603:10b6:a03:4cc::8)
+ by CH3PR11MB8441.namprd11.prod.outlook.com (2603:10b6:610:1bc::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.12; Tue, 25 Aug
+ 2026 07:51:09 +0000
+Received: from SJ2PR11MB7546.namprd11.prod.outlook.com
+ ([fe80::ca9b:dcf:8881:bced]) by SJ2PR11MB7546.namprd11.prod.outlook.com
+ ([fe80::ca9b:dcf:8881:bced%3]) with mapi id 15.21.0339.012; Tue, 25 Aug 2026
+ 07:51:09 +0000
+From: "Ionut Nechita (Wind River)" <ionut.nechita@windriver.com>
+To: x86@kernel.org, kexec@lists.infradead.org
+Cc: tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, akpm@linux-foundation.org,
+        baoquan.he@linux.dev, rppt@kernel.org, pasha.tatashin@soleen.com,
+        pratyush@kernel.org, ruirui.yang@linux.dev, eric.devolder@oracle.com,
+        hbathini@linux.ibm.com, sourabhjain@linux.ibm.com,
+        ruanjinjie@huawei.com, include@grrlz.net, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] crash: update stale NR_CPUS_DEFAULT references in elfcorehdr sizing docs
+Date: Tue, 25 Aug 2026 10:50:43 +0300
+Message-ID: <20260825075043.42041-3-ionut.nechita@windriver.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260825075043.42041-1-ionut.nechita@windriver.com>
+References: <20260825075043.42041-1-ionut.nechita@windriver.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ZR2P278CA0014.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:50::20) To SJ2PR11MB7546.namprd11.prod.outlook.com
+ (2603:10b6:a03:4cc::8)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] kexec: return -ENOEXEC from image probe functions
- on mismatch
-To: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
- Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Andrew Morton <akpm@linux-foundation.org>,
- Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, Tao Liu <ltao@redhat.com>,
- Philipp Rudo <prudo@redhat.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-riscv@lists.infradead.org, kexec@lists.infradead.org,
- Bradley Morgan <include@grrlz.net>
-References: <20260821-mpilaniy-v3-0-76b355399d2e@redhat.com>
- <20260821-mpilaniy-v3-1-76b355399d2e@redhat.com>
- <aoxQFxuzZ1AHmM8d@willie-the-truck>
-From: Mukesh Pilaniya <mpilaniy@redhat.com>
-In-Reply-To: <aoxQFxuzZ1AHmM8d@willie-the-truck>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: R2RdsZG2wllMH81gRE6Ntad_1vMVDCxC63l_6KBNbF0_1787634838
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7546:EE_|CH3PR11MB8441:EE_
+X-MS-Office365-Filtering-Correlation-Id: f1549a68-34d4-46eb-37ee-08df027da07a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|52116014|376014|10070799003|23010399003|1800799024|366016|10067099003|56012099006|11063799006|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: pf2OgSToDKRVpfOoZ9tDvp2r9BhGuLnk8xF948DRc3AlJNikCIxTXYtlF2b5cDmglehLdtxcsuRjMGKjoQU4Im2q+8/IJ6mrjy+2MDkGjP5XE0rfPofYBY/5WI0JLLuFUpq/7eRZo4XyZ91Gs6uCktRAsdCD8z3r/cju/CfWf7j53LE7+2HfT+4sOwDR0pD8mx69IxryWpxFmpiZW5u/s5xh1Ya57wZ5XXGOolfx2unKINjRCQ9ETkupMjcjSZ4pGDnl54E4oVgBcXeDNSsDy2H3wMGsApwH5qEFPV6zSlimq6MYrh3O4o0tlPmvRZmW7sz+xnd7uqnHkJG3dJ/hG3Rpjd/WbHdVOdZLFOD8dKuhDPzKZPveVxoEVQz2iCIxpuqd8Y+bVfcoCu9LrxNqQvDx1vbWO3jaxPk/zeuaQMHxFQGsZWXwBZmfYH+DAy2LLYrIZ0/6UYHxCqBR+kmmpWcUG+2Iyu1fd8KrTrv1vQfzjyi/h+QlJh6ecx16Gl+PwRK2SDfDEN0wIYeY297X8c0cB2MRVMeBmGLbAH0qNMBladS0vhrm3GqUQ0NKN+m4LvYwJMiMfh1VmjyP3IeReQU3cGvvbdTUwOyh2s3RrbBBdiHehvEJGDhjpdWkrjdepr+bKp4aaCVsUa63s2cg4D159gPlaibHeM9iF10q2yQ=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7546.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(376014)(10070799003)(23010399003)(1800799024)(366016)(10067099003)(56012099006)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?N6nPWdbz+T1f1wJiC07PpbiD5NWf8NkpUfnqxHOBDmnlM2NUv4el0VZz5Pe8?=
+ =?us-ascii?Q?QxJBaCv58/2Rt49uZTbVl/1WM6bFDItycKEizu8H4fkx3oSeWjE3KYfVhDuA?=
+ =?us-ascii?Q?l9ONKHpNk54k0qAXKy+8+AzN55fLqEw1GUvhVKE8cyH/TytrGLhpYRXfmdbx?=
+ =?us-ascii?Q?Jmr7BZIK8DIZoenbEI+Yb0uwwBffFp5Pf8EhfJiz+i1opUSFLVtcyscQy9ZZ?=
+ =?us-ascii?Q?TOY6u5uKOnSLmPOzp8sDWY3bzGfr4LkbLABVgqgLpoKCtuitOHvNAJkU3AOI?=
+ =?us-ascii?Q?s0yMVJ4iM+pql1TMXK6TcwF+RCw2a78Do96YU9gkUj+Qy+d+Jk08j3WY1nKG?=
+ =?us-ascii?Q?N0PVxvQqpvZP8P37fOh2gxjGOxY7sB7s9o1nyiDGRhiBWXzYmv2A1gx8HmK1?=
+ =?us-ascii?Q?exiTnE5CEXg8dDIgLck//BMce+u9e0z8701xVfDWVcEAU/s0jGbKa6O1+92V?=
+ =?us-ascii?Q?gIk2tUqLoZwD8/WrvTkmvc7I79rRVlbiKCUrOKZaHLC2j64epHtvYYriEAlq?=
+ =?us-ascii?Q?kmMe/Llu/T7aMvoRrVtQLk1NoD250A3Pcm8ciNra037Jf1RBPu1lbz/ZEXeQ?=
+ =?us-ascii?Q?iOawWDyXnFMdNZbdtS1gamRrg2HOZ9SXswkZyAKvufgPneN9P8VwM/1BFdD0?=
+ =?us-ascii?Q?aUwZWHiAkZUEAN0vSQlqeexDRgi30WnYkx5aJSnJcXJUnlxiMqfvU2uXAQj5?=
+ =?us-ascii?Q?CXdtZTnbTpRPa5PRS8QOPyEXQTI15cK7WAB/J9W/7vbpT2hyeyxHBOZkOOk6?=
+ =?us-ascii?Q?7bH7dyeds2PP+MSUc5sbyq+1kV3Szonsw2HhPeS6PPqv5P3nZGCkfmj035lV?=
+ =?us-ascii?Q?3U7Iupc7sn0khTPLhpZ6K4tvDIYtUMWFdVlvSrjruIjPGGlU3/vZ8590j0vN?=
+ =?us-ascii?Q?EWQERgvByB0aK4YmhmAWtv+37IYGPbYdsi61B4UuCZsjNROujHZ5pgD57Di3?=
+ =?us-ascii?Q?LnGhJokLtly3ee09gTj2q+CRSpdtDoxRNdr28ePLsb3c9n1n4BLOZxf10x+e?=
+ =?us-ascii?Q?FF9T2/6iUsAhHKXHm5n02G6y/MFgWKpWUlCNHVMe0QgAkU2AUuTj9S3DpqyG?=
+ =?us-ascii?Q?WoKNtJjhWbXYCmpQ3yeLgcbGqvc+cp4A13B2zfQ0xYioi0RaI3qEwVCs8suS?=
+ =?us-ascii?Q?ZK3MBr1+uUWi+oh81r9LS/0xNmBWT8FBOq1yDKYP3BZdBZ3rzSxRURNnSI4N?=
+ =?us-ascii?Q?hbK/Ujlz+058STEtrv9UcEeatuDGj4u1vS+KBZDQd+B4PvfX16ijc8SKV7Om?=
+ =?us-ascii?Q?pKfHKUO++5oeDLnkCKU7CgwxRc/cIVYjkKNPZcalDdJASVPtFul34zVG722j?=
+ =?us-ascii?Q?QZlZhPFeTbsZa2SH7CkT5uPq2eBEAsw+GtANJ1HGbt3j0k3f/KpnjM71zc7z?=
+ =?us-ascii?Q?fKxs7RXOcFwpoEoPOORUt1iyfXdR4DqDTrPWYWP9OTQ3eZM3ZJcQStWKnf6I?=
+ =?us-ascii?Q?qto3oEPhZj7o+tgH3PlnDXfvNFYdxPa7ScURmgSI2WJpBUSyuns1iNTPvB7H?=
+ =?us-ascii?Q?yB6bsvRA4f21odXAvPXBWAyhzBfMoPl5Tp27znHyJo+NXHiNWybOT3WiTCO+?=
+ =?us-ascii?Q?iZtUQDqsdEnf/9LofoYYURMLZ20J4lssK9BdS9RZnly95s73jIsLZTyw7ltc?=
+ =?us-ascii?Q?SxGF5Mtp5qB4hxxwo+y7w0dEdRyZjLRSt7JOy6oWoQ7uEvSNdF+WezQN5cSy?=
+ =?us-ascii?Q?ihyRExyFaqB86bPRkkjyJlGexITYXzaYpBjDcLnfWQvlni43ZUIaWDHkHcK7?=
+ =?us-ascii?Q?lsQ0PxvgusMZJCkfHD5Ukf42lFVDcbbq3yw1IcZpHVvxfwFNCpB/nDEaPTat?=
+X-MS-Exchange-AntiSpam-MessageData-1: IZJ20uh63KnSpQnywI2fab3iYKbVTujXI9s=
+X-Exchange-RoutingPolicyChecked: 1EAmqVqez/nTDfhW056zdOdSeL5G7ze5Bj/nJlxS46PfBGl2jTIIhmNIy552oBD7jXZgAg23d1Zkd3NGDm1fHlSq4f9xjDd7maMJM+hl6Rn9uEVLpgSTNLZD/BdjnBYrJBzwBxZ5S72Zv2a0acXq+IZi+bMGfwHik4vHBqvVLTjpYr9xqfiSq5B90x6lhx5sMgJ6kq4WgI4O8JaLB5HpvTt8SDJOnfIbNLwSdmeMs0H6wL9SYQSZhC0z5xX3zMd+O29Hz8KXTwP6awOt6b8QbMSPk99t28qNv7APYbjhOim55F/1XlTYcN3/dmJAUEhMO6ImcIX3Sdqe8CZSDAAfEA==
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f1549a68-34d4-46eb-37ee-08df027da07a
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7546.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2026 07:51:09.8149
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DKHXFDqWIXkg2Lk/rpJkHNbawtGmXGGOnPzf44yvOcTs8zxnR1Jt/EO52iZzwASZXrgHeXkRPFH3L1I6HGBJ9m25g6qGmvkLvatQgvjHV60=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8441
+X-Proofpoint-ORIG-GUID: 0BKN_MnZcKr9dPrcYp1sWpbfz2vtFd0b
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODI1MDA2NSBTYWx0ZWRfX7tkbwdX2JySv
+ mD4Rduwrejch4Xy8/NUXU+FOF6TOUfNBehR6LL2pNMDbLz3l5cINlYrmzYAXMRU/xh4/6CHkXSD
+ r9g7eWnpFRQF4H3jd853HtxriUQKyc5g8EOsj0pKfQhIUi5kofWAyYhtDGN4KHXvTM5zNxQ2EVg
+ hUh/+nNs9fTijpLDBl1/E9CKpkrqH8mQglT0tBp0jibvmzGL8OS8w1pweeI/Ih+zpg3Gw7m2r/l
+ nHv4Jb9CKZhXknjaYMzYpiJmbC96hfiypJdSTYu5TRKSJrUCN+y0fYsN6qRyy/9cZTCrUiuzlCu
+ nhossI50u52othb4A8achdCiWNwfOnGgc5lf3DzobTX8wkAREtBei5cIlZ2t9UcoNf4DMZmOWCU
+ VsSrkJZcnrDa9JHzS/COf+Jhd0JALBEp9BlqFXkfkBhVXhwbp8K00Ev/2/NTMUfXyWHZ+TZOH0B
+ yztDMynGqp5n0v57DDA==
+X-Authority-Analysis: v=2.4 cv=LtaiDHdc c=1 sm=1 tr=0 ts=6a8d4970 cx=c_pps
+ a=/64aUU06laRl6xO2iYKDkw==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
+ a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
+ a=xqWC_Br6kY4A:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=bi6dqmuHe4P4UrxVR6um:22 a=iKiJcTA2PjBS6x5JeXcw:22 a=t7CeM3EgAAAA:8
+ a=i0EeH86SAAAA:8 a=jcFIXsoQAAAA:8 a=AyFJ6eo5uNYZnhLCzmoA:9
+ a=FdTzh2GWekK77mhwV6Dw:22 a=M1-Q_cRM6PFdmZSamPpU:22
+X-Proofpoint-GUID: 0BKN_MnZcKr9dPrcYp1sWpbfz2vtFd0b
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODI1MDA2NSBTYWx0ZWRfX3N5oOw3ogwCM
+ dkv3lhVagAa93yoIG1qCzKls9VpSvJZX5Yhhk5eDW3hsXwEYC+L09nnULmk2NcMBdIYeI5rt6Ny
+ xvfWH+5rjmavpofC1nwJqCcl6Bs5YwaS2SnmVheCLO0MkhW1ZFGf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-25_01,2026-08-24_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
+ priorityscore=1501 impostorscore=0 adultscore=0 spamscore=0 suspectscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2608250065
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260824_221402_742274_E16E2655 
-X-CRM114-Status: GOOD (  16.52  )
+X-CRM114-CacheID: sfid-20260825_005156_604191_08852D5A 
+X-CRM114-Status: GOOD (  15.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -123,50 +181,53 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Will,
+From: Ionut Nechita <ionut.nechita@windriver.com>
 
-On 24/08/26 7:37 pm, Will Deacon wrote:
-> On Fri, Aug 21, 2026 at 07:19:57PM +0530, Mukesh Pilaniya wrote:
->> Several kexec_file_load() image probe functions return -EINVAL when
->> they do not recognize the image format.  A probe function that rejects
->> an image should return -ENOEXEC to indicate that the image is not a
->> recognized executable format.  -EINVAL implies a problem with the
->> syscall parameters, not with image recognition.
->>
->> kexec_image_probe_default() iterates through registered loaders and
->> returns the last probe's error code to the caller.  That error
->> propagates as the kexec_file_load() return value to userspace.
->> Returning -EINVAL from a probe when no loader matches is semantically
->> incorrect and misleads userspace about the nature of the failure.
->>
->> Return -ENOEXEC from all probe functions and their helpers when the
->> image format is not recognized.
->>
->> Signed-off-by: Mukesh Pilaniya <mpilaniy@redhat.com>
->> Reviewed-by: Philipp Rudo <prudo@redhat.com>
->> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
->> Reviewed-by: Bradley Morgan <include@grrlz.net>
->> ---
->>  arch/arm64/kernel/kexec_image.c   | 4 ++--
->>  arch/loongarch/kernel/kexec_efi.c | 4 ++--
->>  arch/riscv/kernel/kexec_image.c   | 4 ++--
->>  kernel/kexec_elf.c                | 4 ++--
->>  4 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> Hmm, so after this patch, are there actually any implementations of .probe()
-> that return anything other than 0 or -ENOEXEC? I couldn't spot any after
-> a quick look.
-> 
-> Willkexec_elf_probe() can return -ENOMEM if memory allocation (kzalloc())
-fails inside elf_read_phdrs(). This behavior was previously discussed in
-the first patch of this series [1].
+The elfcorehdr over-allocation for crash hotplug is now computed from
+CONFIG_NR_CPUS rather than CONFIG_NR_CPUS_DEFAULT, but two pieces of
+documentation still name the old symbol: the comment above
+crash_handle_hotplug_event() and the CRASH_MAX_MEMORY_RANGES help text.
 
-[1]
-https://lore.kernel.org/all/0d7acb43-2eb4-44ec-9bfb-b89440afc605@redhat.com/#t
+Update both so they describe what the code actually does and do not
+mislead people sizing CRASH_MAX_MEMORY_RANGES.
 
+Documentation only, no functional change.
 
+Suggested-by: Jinjie Ruan <ruanjinjie@huawei.com>
+Suggested-by: Bradley Morgan <include@grrlz.net>
+Signed-off-by: Ionut Nechita <ionut.nechita@windriver.com>
+---
+ kernel/Kconfig.kexec | 2 +-
+ kernel/crash_core.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+index 15632358bcf7..a97ed9605602 100644
+--- a/kernel/Kconfig.kexec
++++ b/kernel/Kconfig.kexec
+@@ -167,7 +167,7 @@ config CRASH_MAX_MEMORY_RANGES
+ 	  memory regions that the elfcorehdr buffer/segment can accommodate.
+ 	  These regions are obtained via walk_system_ram_res(); eg. the
+ 	  'System RAM' entries in /proc/iomem.
+-	  This value is combined with NR_CPUS_DEFAULT and multiplied by
++	  This value is combined with NR_CPUS and multiplied by
+ 	  sizeof(Elf64_Phdr) to determine the final elfcorehdr memory buffer/
+ 	  segment size.
+ 	  The value 8192, for example, covers a (sparsely populated) 1TiB system
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 2b36aa9fade0..d0bd2d0cf899 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -648,7 +648,7 @@ int crash_check_hotplug_support(void)
+  * new list of CPUs and memory. To make changes to the elfcorehdr, it
+  * should be large enough to permit a growing number of CPU and Memory
+  * resources. One can estimate the elfcorehdr memory size based on
+- * NR_CPUS_DEFAULT and CRASH_MAX_MEMORY_RANGES. The elfcorehdr is
++ * NR_CPUS and CRASH_MAX_MEMORY_RANGES. The elfcorehdr is
+  * excluded from SHA verification by default if the architecture
+  * supports crash hotplug.
+  */
 -- 
-Regards,
-Mukesh Pilaniya
+2.55.0
 
 
