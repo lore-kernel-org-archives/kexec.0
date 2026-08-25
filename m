@@ -4,92 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3AD2AC5DF9C
-	for <kexec@archiver.kernel.org>; Mon, 24 Aug 2026 23:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8841CC5DF94
+	for <kexec@archiver.kernel.org>; Tue, 25 Aug 2026 05:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=qTeOTUFHiW1u4M+V9TEbXHSkqLH28/RZ5ap3kTNQUFE=; b=a88ZQ8z5mNP5pGYpBrIT9wox9K
-	pTCObTWA31bDIWBu4B5u0q1jz7hJi+v5rinahXfoZPDx1WevaMnIMq0XbF0yTwbcWoyJtzy1GsIGE
-	I76tdB3W8esPn7L/PJZKfko/tsh1GrwrZu1r+Ci4szwiqOdtJApoRQ69CRDrU2ndk4swTbR+fDia+
-	LmUAHFxJtzrH81y2DcXFEnh2L3ntT/ctQgYh0EJgLTqAb+F8HiOpjBduw3H0rRsVcjfKLzAk9++of
-	uekqIpHys1ehcarauZ3DLVZ+0XTKfTLoC3GZreUf27lqdqUVaGueDV/9vF5cAHSzAt6Kef9qwzOHo
-	b2mA+vDw==;
+	bh=K9OwnSzTLO9oC5dFpcmND+TzPw2bMH6k9WMlDpSF/Bk=; b=Z/LCCHt+akSLrz86Y2mYgE9+9I
+	h0bVHoj73oI5zxils8oi8C8CWyJyBInzsCxwHtDb7ha4v2uMoppnBrNJNDlSa8bhPxYUMuDRBCDR0
+	gmmEuZWi2mDsBASugWVyd+cYjTypBn3lKLtf9xFFM5Wl0Tw9RRVAZShaLiWqlEQPQ4yN7SdwQ+Mg+
+	yj1+7MrpKPI1n69os1SRWe65cuLbhaZgKJl5mbngj0b+JynAd4uevLC10tQ4ZcqDYHV7IOaxrMEU1
+	YJ7HL+JLYD+ID2dZ1j9T/hhNA/LxRJlZqjdu5DiuMpSGnELXNWdiuBbZQJ8z91NkeiM0eleJ4dIiB
+	Q4HbivdA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wydm8-0000000HTyC-37JQ;
-	Mon, 24 Aug 2026 23:08:20 +0000
+	id 1wyjU6-00000000AEc-0nCQ;
+	Tue, 25 Aug 2026 05:14:06 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wydm5-0000000HTxf-25OG
+	id 1wyjU2-00000000ADQ-2Zyh
 	for kexec@lists.infradead.org;
-	Mon, 24 Aug 2026 23:08:19 +0000
+	Tue, 25 Aug 2026 05:14:04 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1787612893;
+	s=mimecast20190719; t=1787634841;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qTeOTUFHiW1u4M+V9TEbXHSkqLH28/RZ5ap3kTNQUFE=;
-	b=XMVg0oP79VHxOY9VSbNjIb5C5u7eJHH76vTg4p/Bo0BAwWS25vGLguxkzgCN5cDk4Ub3/1
-	KGURKaQ/GIi9jRNeEsJeTqiqgceiizcracw27YsdiuTwnBlOfLJYYQbhvVDyc/TUnM1GvH
-	5nYxAESkRWV9y2e0cD+NyLmcKEEhFMY=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=K9OwnSzTLO9oC5dFpcmND+TzPw2bMH6k9WMlDpSF/Bk=;
+	b=D/DfWQ1ojVexHfaX+44I0hDGOLd5IdoSKLR71/TQzVpNJ8h1Hw/d5nbwBSlx3hg1EvMDJE
+	rb6fBJf7zpO/MAUbD2HNMRXA+ZMbvJPJNWUTF+vXqSBF+6fowabNf+Dxfx0fe9ToxpCTvy
+	jTXI7uM4Qe1jCkWdBxDvdTzm17yJab0=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-74-MLwI7GSwNyybA5aWsFDDOQ-1; Mon, 24 Aug 2026 19:08:09 -0400
-X-MC-Unique: MLwI7GSwNyybA5aWsFDDOQ-1
-X-Mimecast-MFC-AGG-ID: MLwI7GSwNyybA5aWsFDDOQ_1787612889
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-51c1a9764f0so43617181cf.1
-        for <kexec@lists.infradead.org>; Mon, 24 Aug 2026 16:08:09 -0700 (PDT)
+ us-mta-516-WfIycLUYM3ukSVeqbwIUSg-1; Tue, 25 Aug 2026 01:13:59 -0400
+X-MC-Unique: WfIycLUYM3ukSVeqbwIUSg-1
+X-Mimecast-MFC-AGG-ID: WfIycLUYM3ukSVeqbwIUSg_1787634838
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-38e5a616d07so5577902a91.2
+        for <kexec@lists.infradead.org>; Mon, 24 Aug 2026 22:13:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787612889; x=1788217689;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=qTeOTUFHiW1u4M+V9TEbXHSkqLH28/RZ5ap3kTNQUFE=;
-        b=BiY7KTeBm9NCo5URsgbwGKf6THvV/8AmvOOJJzDGsn9E72upsjtWkcMfgBXnbv/LM+
-         JJzSVnH0niTHlOWi+uyEySEq0a+IRWqFSlik1Zz8PfpxyyCecQMmPgCyNFvu4tFThPzI
-         6h9ABOEMFgYRZmkH6KVjfue7+FD8tjy+gk8Wso3Vdltec7JLLaX0j8tWcG4rZL4oHC3a
-         HBrrpnYP21qlcmpjHvBGoftpZSc3aakBffB8YmumnsrhuNMAO2ypPRDxVdgVCb32tCv0
-         ArEDIXuJ+lwbhWmU6rnw3BFKZ/FRiqepMa3rVNcQHUOdG6wAKdkp9W2pZNbbcvGrQQdY
-         ediA==
-X-Forwarded-Encrypted: i=1; AHgh+RqFhowKtPLI0gghxJ8Lr6vVykbIai0iC41cqx+kea0qJcnExn3Kg5GKuAXUnX7mW5VnwtIMeA==@lists.infradead.org
-X-Gm-Message-State: AFuF++kbhWb3Za6PMvqcvOIDsensH05fxMlY6OQM35fffdKruQizQM5/
-	OG24Hw+lRc1O8vZEv7lHZ40Sth6sej7oxFfnOSGzpCRNlJVNBEmf3sQzkOhW7L7mMfCIkzNkXh3
-	pdzfKZBvqzVLyHYeJNl/vKQ6KBld1VAm+SAGqZL5tXsRJGUxPzNiPSqTHVT/yXUD5kfQa3OXVvC
-	7SfeX0y6bYW6jezFa3GSQjLUuEAWOaokSFfFVdxZpctafVLy0=
-X-Gm-Gg: AR+sD12dpEYpSR2gkRv7YHdOQCB97ENX0x/sUhobOVJ6Du8H5IgvcmAFSHN5pQtnJ3P
-	dQjKcq+favP9A8lwz3mcO+1+tBF9g5jbgCdFDkjlds/1ngOe4g3rccbwuyOXDwQGOeBLc7P1WEr
-	iPh6u2y9cm5GW11qK95G1i2qtuIa80DjyIH4onCE4VSrGPup/jcEsJKw==
-X-Received: by 2002:ac8:5a86:0:b0:51b:fcb4:7576 with SMTP id d75a77b69052e-52e2f08851bmr30064111cf.15.1787612889157;
-        Mon, 24 Aug 2026 16:08:09 -0700 (PDT)
-X-Received: by 2002:ac8:5a86:0:b0:51b:fcb4:7576 with SMTP id
- d75a77b69052e-52e2f08851bmr30063431cf.15.1787612888765; Mon, 24 Aug 2026
- 16:08:08 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1787634838; x=1788239638;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=K9OwnSzTLO9oC5dFpcmND+TzPw2bMH6k9WMlDpSF/Bk=;
+        b=lpba57lE4q9Nzcs+K9/Oy0WwNClp1SXCT02hBJDOuZbK+cS0kYqXN37OMVwSQx7Cok
+         dKG0A88ZLrduMTIL97TivpInhhsYHS6LbBF72zsXkZEj0qvpAz9g05+RCPolZigLF5wt
+         QbxrEKatO44w+wFI4C5T89muQWBimkWrP9TzHJBzLOOLREn3TYAiQBcvhFRbVTTbZJ4a
+         Zov8NOTaUvLy1InJjJvKDPQ85NklwxybBA2tNyKaJN/tKZZHF3ctexJ7mssgEtzRW/lm
+         CBLyfHlpoMrhMHu+u2W5SwzMtIcxn5McVbX+V00MF3cP32a8hUpq3jO5gsQBNAnkjPXQ
+         baKw==
+X-Forwarded-Encrypted: i=1; AHgh+Rq/sCaH59r8bLpC4Xj6rw0VtI2oL+oCmBjn2S4v/z+nC8RhD8cJOWdHRz66OSpddOWsw/kXVQ==@lists.infradead.org
+X-Gm-Message-State: AFuF++lzpn0pCEPW+qT5ZOx9a/SpXTwcrOcsn1O+FbpTL9EKGshO4+cM
+	GqvYp2DPXsRyOJ1Ca+vjzEqpVF6Itc1w5qau1tn9NuUXVnABM0CJQMIUraRqihVBzRh2q5yvLu6
+	jklgdAp12ZN8ViBCXuRDls0xJh+R/ZxjkTP72l/MqrTSPD6pxyD4ydLQzbXOwNFa+JsEuhQ==
+X-Gm-Gg: AR+sD123ecQ+o4H/lUZESLFNK++saLoZlY6ns1+D20PC7N69Tyv/HV9FjxwRKInA4nd
+	OK4edzJYc93t/mB3OMVGCKE2NBI+VzDpjLMRZcqZDmIllJ37iiEj+baIsAFqSQjOyJuqj89O1k9
+	61uCxUNjxtBwyyDR5hhogGRNQybPgAqyBkn90aMN/t5FZz0s6Smq0ZDlo56kvrBsCmF2iKx8iEy
+	3QZ2Lkey2YmxZwizRMwGdilTDDppbdkk9AVYiUEqY1a3ploH9imcbVal1SHwEEY02YAQPYW8WpI
+	VdUY0GC+hisrQSbENd5eM8wfraSGbknq0S+CcDKZpeKUW6B+WCag/RjmAcG2a9itt/nCmjdPRBE
+	LgaBXRRXEYO4RKnyeCQ==
+X-Received: by 2002:a17:90b:184f:b0:395:5f43:4ec4 with SMTP id 98e67ed59e1d1-3964603084fmr8668913a91.0.1787634837957;
+        Mon, 24 Aug 2026 22:13:57 -0700 (PDT)
+X-Received: by 2002:a17:90b:184f:b0:395:5f43:4ec4 with SMTP id 98e67ed59e1d1-3964603084fmr8668825a91.0.1787634837463;
+        Mon, 24 Aug 2026 22:13:57 -0700 (PDT)
+Received: from [192.168.1.2] ([122.171.16.109])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39645da08desm2156603a91.17.2026.08.24.22.13.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2026 22:13:56 -0700 (PDT)
+Message-ID: <06a45c67-2642-4efa-994a-ee50cd40a697@redhat.com>
+Date: Tue, 25 Aug 2026 10:43:48 +0530
 MIME-Version: 1.0
-References: <20260820233116.3105747-1-stephen.s.brennan@oracle.com>
-In-Reply-To: <20260820233116.3105747-1-stephen.s.brennan@oracle.com>
-From: Tao Liu <ltao@redhat.com>
-Date: Tue, 25 Aug 2026 11:07:31 +1200
-X-Gm-Features: AcwNN1ViML52hQQMVFbFMM1tUzQlmlZITc-Gz3XnQQsdRQGP9mgbMfhmNCiCiL8
-Message-ID: <CAO7dBbXZ5VP=ProMR+mxJzh5RLJk8-eZE2rpo6rspVuLr4yqVw@mail.gmail.com>
-Subject: Re: [PATCH makedumpfile v2 0/9] Improvements to makedumpfile
- extensions, plus userspace stack tracing extension
-To: Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc: k-hagio-ab@nec.com, kexec@lists.infradead.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] kexec: return -ENOEXEC from image probe functions
+ on mismatch
+To: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Andrew Morton <akpm@linux-foundation.org>,
+ Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, Tao Liu <ltao@redhat.com>,
+ Philipp Rudo <prudo@redhat.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, kexec@lists.infradead.org,
+ Bradley Morgan <include@grrlz.net>
+References: <20260821-mpilaniy-v3-0-76b355399d2e@redhat.com>
+ <20260821-mpilaniy-v3-1-76b355399d2e@redhat.com>
+ <aoxQFxuzZ1AHmM8d@willie-the-truck>
+From: Mukesh Pilaniya <mpilaniy@redhat.com>
+In-Reply-To: <aoxQFxuzZ1AHmM8d@willie-the-truck>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: zhhF-Qihbl3my6dvur-xFBZOZrnR_LzLbKCFgvgJRuQ_1787612889
+X-Mimecast-MFC-PROC-ID: R2RdsZG2wllMH81gRE6Ntad_1vMVDCxC63l_6KBNbF0_1787634838
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260824_160817_635783_AAEFD0E2 
-X-CRM114-Status: GOOD (  31.65  )
+X-CRM114-CacheID: sfid-20260824_221402_742274_E16E2655 
+X-CRM114-Status: GOOD (  16.52  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,128 +123,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Stephen,
+Hi Will,
 
-I have tested the patchset upon my filtering extension, working good!
-And I agree with your current PG_INCLUDE_HEAD design, let's go with
-this.
+On 24/08/26 7:37 pm, Will Deacon wrote:
+> On Fri, Aug 21, 2026 at 07:19:57PM +0530, Mukesh Pilaniya wrote:
+>> Several kexec_file_load() image probe functions return -EINVAL when
+>> they do not recognize the image format.  A probe function that rejects
+>> an image should return -ENOEXEC to indicate that the image is not a
+>> recognized executable format.  -EINVAL implies a problem with the
+>> syscall parameters, not with image recognition.
+>>
+>> kexec_image_probe_default() iterates through registered loaders and
+>> returns the last probe's error code to the caller.  That error
+>> propagates as the kexec_file_load() return value to userspace.
+>> Returning -EINVAL from a probe when no loader matches is semantically
+>> incorrect and misleads userspace about the nature of the failure.
+>>
+>> Return -ENOEXEC from all probe functions and their helpers when the
+>> image format is not recognized.
+>>
+>> Signed-off-by: Mukesh Pilaniya <mpilaniy@redhat.com>
+>> Reviewed-by: Philipp Rudo <prudo@redhat.com>
+>> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+>> Reviewed-by: Bradley Morgan <include@grrlz.net>
+>> ---
+>>  arch/arm64/kernel/kexec_image.c   | 4 ++--
+>>  arch/loongarch/kernel/kexec_efi.c | 4 ++--
+>>  arch/riscv/kernel/kexec_image.c   | 4 ++--
+>>  kernel/kexec_elf.c                | 4 ++--
+>>  4 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> Hmm, so after this patch, are there actually any implementations of .probe()
+> that return anything other than 0 or -ENOEXEC? I couldn't spot any after
+> a quick look.
+> 
+> Willkexec_elf_probe() can return -ENOMEM if memory allocation (kzalloc())
+fails inside elf_read_phdrs(). This behavior was previously discussed in
+the first patch of this series [1].
 
-Reviewed-by: Tao Liu <ltao@redhat.com>
+[1]
+https://lore.kernel.org/all/0d7acb43-2eb4-44ec-9bfb-b89440afc605@redhat.com/#t
 
-Thanks,
-Tao Liu
 
-On Fri, Aug 21, 2026 at 11:31=E2=80=AFAM Stephen Brennan
-<stephen.s.brennan@oracle.com> wrote:
->
-> Hello all,
->
-> This is v2 of my series of improvements for makedumpfile extensions.
-> v1 can be found here: https://lore.kernel.org/kexec/20260714004550.369817=
-5-1-stephen.s.brennan@oracle.com/
->
-> There have only been a few changes from v1:
-> - Updated extension/sample.c to use the new API in patch 3.
-> - Reordered and reworded the extension retained pages statistic per Tao's
->   suggestion, so that it is more clear.
-> - Included a more complete commit message in patch 7.
-> - In patch 1, removed the "nr_pages =3D 1" when extensions return PG_EXCL=
-UDE.
-> - Significantly reworded patch 1's commit message to explain the differen=
-t cases
->   and the alternative approach.
->
-> Notable improvements in the "userstack.c" extension are:
-> - Leverage "detect_cycle.h" API to apply Brent's algorithm for cycle dete=
-ction
->   in linked list iteration, to avoid infinite loops while iterating tasks=
- &
->   threads on corrupt vmcores.
-> - Set a limit to the number of retained anon_vma entries, to avoid hittin=
-g OOM
->   issues in case of a huge vmcore or a bug in the extension.
->
-> As discussed on v1, the final two patches containing the extensions are n=
-ot to
-> be merged. I will publish them in a Github repository as soon as I can ge=
-t it
-> arranged with my employer. They are more for demonstration of the API and
-> continued sharing until the repository is available.
->
-> The major discussion on v1 was on patch 4, dealing with how extensions ar=
-e
-> called, between:
->
-> (a) Extensions are called for all base pages, and their decisions may con=
-flict
-> with the head page decision.
-> (b) Extensions are not called for tail pages, and the head page decision =
-is used
-> instead.
->
-> As I explained in my last reply, I believe that (b) is still the best way=
-. It is
-> less complex than (a). It is also more efficient, because makedumpfile to=
-day
-> skips processing many excluded tail pages, which adds up for large system=
-s with
-> many huge pages. We do not have any extension which requires any policy m=
-ore
-> complex than PG_INCLUDE_HEAD.
->
-> - elfheader requires PG_INCLUDE_HEAD
-> - userstack only uses PG_INCLUDE. I could imagine potentially wanting to =
-include
->   just the sub-pages of compound pages that are actually used by the stac=
-k. But
->   it hasn't been necessary so far.
-> - amdgpu buffers may be compound pages but if they are, then the entire p=
-age
->   would be excluded.
->
-> I do have an implementation of (a) as I showed in the thread. If I'm wron=
-g here,
-> I can always fall back to that.
->
-> Thank you,
-> Stephen
->
->
-> Stephen Brennan (9):
->   Do not call extensions for tail pages
->   Honor CFLAGS in extension/Makefile
->   Share page information with extension callbacks
->   Introduce a stat for pages retained by extension
->   Move page checks into makedumpfile.h
->   Simplify arguments for page checks
->   Add PG_INCLUDE_HEAD extension return status
->   Add userstack extension
->   Add elfheader extension
->
->  extension.c             |  10 +-
->  extension.h             |  10 +-
->  extensions/Makefile     |   8 +-
->  extensions/elfheader.c  |  93 +++++++++++
->  extensions/list.h       | 106 ++++++++++++
->  extensions/sample.c     |   2 +-
->  extensions/userstack.c  | 351 ++++++++++++++++++++++++++++++++++++++++
->  extensions/vma_mtree.c  | 140 ++++++++++++++++
->  extensions/vma_mtree.h  |   7 +
->  extensions/vma_rbtree.c |  56 +++++++
->  extensions/vma_rbtree.h |  12 ++
->  makedumpfile.c          | 189 +++++++++-------------
->  makedumpfile.h          |  78 ++++++++-
->  13 files changed, 931 insertions(+), 131 deletions(-)
->  create mode 100644 extensions/elfheader.c
->  create mode 100644 extensions/list.h
->  create mode 100644 extensions/userstack.c
->  create mode 100644 extensions/vma_mtree.c
->  create mode 100644 extensions/vma_mtree.h
->  create mode 100644 extensions/vma_rbtree.c
->  create mode 100644 extensions/vma_rbtree.h
->
-> --
-> 2.52.0
->
+-- 
+Regards,
+Mukesh Pilaniya
 
 
