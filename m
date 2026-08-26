@@ -4,126 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7E0D1C61DBD
-	for <kexec@archiver.kernel.org>; Wed, 26 Aug 2026 13:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B849AC5DF97
+	for <kexec@archiver.kernel.org>; Wed, 26 Aug 2026 15:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=aUuqCM/H7yKu0Fh92W3wPrQA2+UWJ+cdE2KxrWfpoHw=; b=mKbdElRI/u04mHIs9qvvhw1oo2
-	EsvU8KgqdMAzqhkFLtAuEeOfrxB4zk1clrKc37NQIf123lY+v6q8xgVQFF8who06R2w2h+CfJX9Zl
-	K7xuCk00qPF5tTVfumRmx0v8vcIGO7/CqrCkvk3wUiLtClozo2A5gPS/kpekF7Y7c9RqWDX6NEaGP
-	P6WzaxVCF1coaEJ1H1GY5mBdMJb5wYdkmllpcp+8XOGNCi/u+cOe6vuvBcN69FLKleWKudLLiDCh1
-	08FlXma5EHGpuDdRv7lsD2pwhOmvq/6VySFWPxoKEE2GFhk9KCmNx3oQVK+kxnItO0WyvcxRQvrfi
-	vXk5n6/Q==;
+	bh=4W3DLTZd9rSFQPqEL+RVc7IFyecD07CUDj7e4Cb4R2Q=; b=Eua3q32nM9yjzrP9ngfKO0Nq5C
+	mNcveIjgai/E7sXVSLfeYA9aI8YAzl2Z++rvITykjvHsFFzIeBAKjY7iujDnvSxu2ir2szZhTPgrQ
+	s1zbIgQ8QnvwfasmFZaJm8wdq8+J9IvYror/wPFCbxTncBtUsHUUHpn5eWM5LL1FU9W7dlORYWmlc
+	6AQJbdeGx9UtOL7VQ/OsHgVjXcmJHu+cnsO5QQYcEqbb0NiW8Qp8kJs+tlDlBQHCt4OursP3ppLaK
+	Ng+dWiz/vJFy+69R62a7vJL0lFKfdEPOWV1N+7rN1sAWE7It+1LYXWIa2JjLwAraKnFZw+lHyS5cu
+	mx4/D0sA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wzDlm-00000002WAT-11UN;
-	Wed, 26 Aug 2026 13:34:22 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1wzFuK-00000002h73-1wfr;
+	Wed, 26 Aug 2026 15:51:20 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wzDli-00000002W9w-2eRQ
+	id 1wzFuF-00000002h5c-25VX
 	for kexec@lists.infradead.org;
-	Wed, 26 Aug 2026 13:34:20 +0000
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67QCVvMR3977499;
-	Wed, 26 Aug 2026 13:34:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=aUuqCM
-	/H7yKu0Fh92W3wPrQA2+UWJ+cdE2KxrWfpoHw=; b=KVNT6rCbbBFKRQtGn+RoAy
-	2opEgVMX5/jNCfvukNr3ZM1G7wAKQ72iA63QqDTEONct4ZEP8cz86APhcwsC+o/W
-	uevVa2Ojp4qjNGglaIpxGkRVvF91K21rvXe1hHe5XYochd1VmkNdifipda5O/YlR
-	Eg4n0lv6jgu/kNmWoN7GC258DKSsmkrmYnvI99GtWTzNlN1sXPO0wRJZprSmzyNy
-	7Ehw7+Dnkzy2laMRwIvBoqBG9u3WpFoq4dV9UdXuVZegbNVFLcjZMzf1EuvaQmNt
-	5YzfVpnViSSAV5kegCXaObih/ILJuKjMmky4YpchY6DKZT6f3ZByGs+5QYnSLYyw
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4g73946x7h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Aug 2026 13:34:03 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67QDQKH6027453;
-	Wed, 26 Aug 2026 13:34:02 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4g7qkha3kk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Aug 2026 13:34:02 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67QDXwo845809932
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Aug 2026 13:33:58 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 21A9620043;
-	Wed, 26 Aug 2026 13:33:58 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6352B20040;
-	Wed, 26 Aug 2026 13:33:54 +0000 (GMT)
-Received: from [9.123.14.142] (unknown [9.123.14.142])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 26 Aug 2026 13:33:54 +0000 (GMT)
-Message-ID: <008fe00e-fd52-4010-86ca-f0ab80a65a46@linux.ibm.com>
-Date: Wed, 26 Aug 2026 19:03:53 +0530
+	Wed, 26 Aug 2026 15:51:18 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1787759474;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4W3DLTZd9rSFQPqEL+RVc7IFyecD07CUDj7e4Cb4R2Q=;
+	b=ee9UIb8XO1dW5K57SBDY0GyRGQziMsa9gt499jcBA4kpQhzPVK7ByFaDlg6+KlJmKDvQ2A
+	db/QpH2WxN7dftyCcpuvuHlrxjN7XYACaa6PTAvVp2MgKkVqBVil8b2GZI/UQnC3s2R5SZ
+	s2BzGBb3wY7ySfM+ksPYoJUk3iTFCJk=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-665-i9ZLz1xlM42kyTMNNgsf4g-1; Wed, 26 Aug 2026 11:51:12 -0400
+X-MC-Unique: i9ZLz1xlM42kyTMNNgsf4g-1
+X-Mimecast-MFC-AGG-ID: i9ZLz1xlM42kyTMNNgsf4g_1787759471
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2ce8a76df2dso22400685ad.2
+        for <kexec@lists.infradead.org>; Wed, 26 Aug 2026 08:51:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787759471; x=1788364271;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=4W3DLTZd9rSFQPqEL+RVc7IFyecD07CUDj7e4Cb4R2Q=;
+        b=X3AhE0CrFeaYEk1tiJyOTLEphqsSE6DeKOLg3ZRTpLlIgFKp+6Rb7dxGgz38qhLI1x
+         PijiCXLk7g707v0FCSow/jK/kaJDwwrF3g7DiqI/BsuHAFrzmXP2QL1SYwDlBfcPbug7
+         RBoYqz32rxRWqHKlDr3lKyNLylUGo8dWZLl9Jw8TgzUPET55DxFFC4lomjpMP+TwteIJ
+         BYOiO51pN/r7oGAGnmg75lc6IPDoIvGaLcD+LT3s3rAcwCQITxdruYVn8HRXOKG2MczG
+         fCzm1wzbzoFZru2osxI81w9j6T4zS3RJyLj4Bdr8A6cRrejN5LZPZb82LCEoPJhX5NX5
+         +2Iw==
+X-Forwarded-Encrypted: i=1; AHgh+RpiUcFZVJz0EpgPomMrBu6vnb6wIhOJsIWVQJuenuuketng5ZumJ1vCP5tJK2hZ6LEAC69khA==@lists.infradead.org
+X-Gm-Message-State: AFuF++kJha9kh1PgCLpn11qGHmflinT+ilNGfFfNX/yXfCMAZmHRzcyB
+	QdO8NqU/YfRykUhTDj8qitQFvvSywue0/YuRa/SBYWNOtnLhlEuxej2qtfZ7Zxvj3cwVyAuUMgc
+	gthd6Cl7Oic15Udbg7Gd6uxmg8sYwfPRk54xDlxImJJio7abgaOiGE6OcD1C+aWB4+wxl+g==
+X-Gm-Gg: AR+sD11O+PurcezPkrEP6G/zw2/kGWE1EXmCvIk+NXmmAR6KJ0T43wrCXFdzKhy9ooY
+	UmWezKqdHWHCsKBHwJ4wN/41FqEypUyMFeiZr7VeEdb9p5asFra0ePptaa/DB9wVtYMtQoYgZb2
+	GjHvMSIFBt6WYhjZYBqee4SHppPPhLTH5jojWFXK8FVliVD0E0S4cVoFDqXg7nxQg8ETgPLVjyj
+	Nz3C2BiEloUX1dT1d3BuOg1xZIn7XvAJgZJezI5F6qtzTd6Na40IZ4lwQ+bF77vKWQwXNNgjYn8
+	ONxiMTHfWx6o1xPBBOXypbZApGfEyAEcfD67+cVtEVSBozM3s8xsspfQSTCZDHh13M8JgOM3am1
+	sEAIKY+NASWH2/XpU
+X-Received: by 2002:a17:902:fc4d:b0:2c6:9f66:d573 with SMTP id d9443c01a7336-2d7079ffd98mr155457385ad.2.1787759470985;
+        Wed, 26 Aug 2026 08:51:10 -0700 (PDT)
+X-Received: by 2002:a17:902:fc4d:b0:2c6:9f66:d573 with SMTP id d9443c01a7336-2d7079ffd98mr155456345ad.2.1787759470546;
+        Wed, 26 Aug 2026 08:51:10 -0700 (PDT)
+Received: from [192.168.1.2] ([122.171.16.35])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d704bf8978sm9118965ad.57.2026.08.26.08.51.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Aug 2026 08:51:09 -0700 (PDT)
+Message-ID: <ac453410-67c6-47b4-ae79-fa682780fe49@redhat.com>
+Date: Wed, 26 Aug 2026 21:21:00 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/3] powerpc: add support for Kexec HandOver (KHO)
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org, Aditya Gupta <adityag@linux.ibm.com>,
-        Alexander Graf <graf@amazon.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <baoquan.he@linux.dev>,
-        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>, Mike Rapoport <rppt@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Pasha Tatashin <pasha.tatashin@soleen.com>,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        Shivang Upadhyay <shivangu@linux.ibm.com>,
-        Shrikanth Hegde <sshegde@linux.ibm.com>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20260821105609.983622-1-sourabhjain@linux.ibm.com>
- <20260821105609.983622-3-sourabhjain@linux.ibm.com>
- <2vxza4qfznyo.fsf@kernel.org>
+Subject: Re: [PATCH v3 1/2] kexec: return -ENOEXEC from image probe functions
+ on mismatch
+To: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Andrew Morton <akpm@linux-foundation.org>,
+ Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, Tao Liu <ltao@redhat.com>,
+ Philipp Rudo <prudo@redhat.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, kexec@lists.infradead.org,
+ Bradley Morgan <include@grrlz.net>
+References: <20260821-mpilaniy-v3-0-76b355399d2e@redhat.com>
+ <20260821-mpilaniy-v3-1-76b355399d2e@redhat.com>
+ <aoxQFxuzZ1AHmM8d@willie-the-truck>
+ <06a45c67-2642-4efa-994a-ee50cd40a697@redhat.com>
+ <ao2xc027TNYTwBA1@willie-the-truck>
+From: Mukesh Pilaniya <mpilaniy@redhat.com>
+In-Reply-To: <ao2xc027TNYTwBA1@willie-the-truck>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: BI6v3VyoVU7u2x_aUSL5vmFPeohe4eHGsu7jzNs0RHk_1787759471
+X-Mimecast-Originator: redhat.com
 Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <2vxza4qfznyo.fsf@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: YXY2Xiz6Hvm01ZOibYwHTzEeoO4EOAor
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODI2MDExMiBTYWx0ZWRfX6RTLr3wTAsDt
- Y7EvGdssfQuvW5+aFUqEv9T1/sToybXRDxrA53d2uueWT3FEQnhTkagTHFDQ3nw0IVRVN+2MBst
- JEktgYNY572U4ZiKBxiWnW8uRZvViyn+0jbBeE9Bgy2hdoqYQBXv936xGzcbT2htEwMSIaLEwzm
- pXZUgKGnYuGePm2A/CNMMpu0NXrA4YvbnZBWeu3c9Dc+ute5N+Gm4I/D5Z+aW32FUlL2lW2P3t0
- r1Su3Ek+9wbGoOwzqc5bhWkXva/0/PTwJeEwIstu2WonlUaDVfzvyde+EGEzXdfthx6bnLLZXwj
- 46/bqoYqY9l2R0yl48sdzCqu91YGA8wzpelSyfNQXKo1wkQQxzXuKd2c1sz+7Kfn9MNA3kdSgYz
- ug1VRzhmyE6ecYu5BHdkoltNg6li2/qrxicpEDgqgnN2oAt/LUMBEI1l3+/h/AESgDwb3lUu1RK
- wa2j44usJYNeuSnTi2g==
-X-Authority-Analysis: v=2.4 cv=Y/nIdBeN c=1 sm=1 tr=0 ts=6a8eeb4b cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=fkfyDzpKf0ij7gQ8ic8A:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=O8hF6Hzn-FEA:10
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODI2MDExMiBTYWx0ZWRfX11I2+C4s6hHS
- fszNZDli3VtmQMLNCjv2ZgA20RenF5889I4rF76OR6u1KHiT5Y6oXSPkLHkv62B1XEycsqTscEF
- M7Ti8un3q71Q6RXvxYdnTcUNVI22DnI=
-X-Proofpoint-ORIG-GUID: aQHARQU-IMpprAFetTNIObGSUFYg229f
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-26_03,2026-08-26_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 impostorscore=0 priorityscore=1501 adultscore=0 bulkscore=0
- suspectscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608260112
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260826_063418_682558_809CA546 
-X-CRM114-Status: GOOD (  47.01  )
+X-CRM114-CacheID: sfid-20260826_085115_615366_1D583FBA 
+X-CRM114-Status: GOOD (  17.12  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -138,198 +125,64 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello Pratyush,
+Hi Will,
 
-After looking at the x86 crashkernel and KHO scratch memory
-allocation order, I realized that the same issue should exist on x86
-as well. I ran the same experiment on an x86 guest, and the results
-confirmed this.
+On 25/08/26 8:44 pm, Will Deacon wrote:
+> On Tue, Aug 25, 2026 at 10:43:48AM +0530, Mukesh Pilaniya wrote:
+>> On 24/08/26 7:37 pm, Will Deacon wrote:
+>>> On Fri, Aug 21, 2026 at 07:19:57PM +0530, Mukesh Pilaniya wrote:
+>>>> Several kexec_file_load() image probe functions return -EINVAL when
+>>>> they do not recognize the image format.  A probe function that rejects
+>>>> an image should return -ENOEXEC to indicate that the image is not a
+>>>> recognized executable format.  -EINVAL implies a problem with the
+>>>> syscall parameters, not with image recognition.
+>>>>
+>>>> kexec_image_probe_default() iterates through registered loaders and
+>>>> returns the last probe's error code to the caller.  That error
+>>>> propagates as the kexec_file_load() return value to userspace.
+>>>> Returning -EINVAL from a probe when no loader matches is semantically
+>>>> incorrect and misleads userspace about the nature of the failure.
+>>>>
+>>>> Return -ENOEXEC from all probe functions and their helpers when the
+>>>> image format is not recognized.
+>>>>
+>>>> Signed-off-by: Mukesh Pilaniya <mpilaniy@redhat.com>
+>>>> Reviewed-by: Philipp Rudo <prudo@redhat.com>
+>>>> Reviewed-by: Pratyush Yadav <pratyush@kernel.org>
+>>>> Reviewed-by: Bradley Morgan <include@grrlz.net>
+>>>> ---
+>>>>  arch/arm64/kernel/kexec_image.c   | 4 ++--
+>>>>  arch/loongarch/kernel/kexec_efi.c | 4 ++--
+>>>>  arch/riscv/kernel/kexec_image.c   | 4 ++--
+>>>>  kernel/kexec_elf.c                | 4 ++--
+>>>>  4 files changed, 8 insertions(+), 8 deletions(-)
+>>>
+>>> Hmm, so after this patch, are there actually any implementations of .probe()
+>>> that return anything other than 0 or -ENOEXEC? I couldn't spot any after
+>>> a quick look.
+>>>
+>>> Willkexec_elf_probe() can return -ENOMEM if memory allocation (kzalloc())
+>> fails inside elf_read_phdrs(). This behavior was previously discussed in
+>> the first patch of this series [1].
+> 
+> Fair enough, but I'd have thought it would be easier to special-case the
+> one -ENOMEM path instead of changing all the backends to return
+> -ENOEXEC all over the place (and hoping people don't start returning
+> -EINVAL again in future).
+> 
+> Will
 
+Returning -EINVAL from a probe on format mismatch is semantically wrong
+on its own — independent of how kexec_image_probe_default() handles
+the return value.  x86 bzImage64_probe() and s390 s390_elf_probe()
+already return -ENOEXEC correctly; this patch just brings the remaining
+backends in line.
 
-[root@localhost ~]# dmesg | grep -i -e kho -e crashkernel
-[    0.000000] Command line: 
-BOOT_IMAGE=(hd0,gpt3)/boot/vmlinuz-6.19.10-300.fc44.x86_64 
-no_timer_check console=tty1 console=ttyS0,115200n8 systemd.firstboot=off 
-root=UUID=15c26993-ac30-424a-9c4b-faec4434d234 rootflags=subvol=root 
-kho=on crashkernel=1G
-[    0.004615] crashkernel reserved: 0x000000007f000000 - 
-0x00000000bf000000 (1024 MB)
-[    0.034746] Kernel command line: 
-BOOT_IMAGE=(hd0,gpt3)/boot/vmlinuz-6.19.10-300.fc44.x86_64 
-no_timer_check console=tty1 console=ttyS0,115200n8 systemd.firstboot=off 
-root=UUID=15c26993-ac30-424a-9c4b-faec4434d234 rootflags=subvol=root 
-kho=on crashkernel=1G
-[    0.095761] KHO: Failed to reserve scratch area, disabling kexec handover
+Also IMHO, checking for err != -ENOEXEC in kexec_image_probe_default()
+is more robust than special-casing err == -ENOMEM.
 
-I agree that this can be avoided by using the crashkernel=xxM,high option.
-However, I just wanted to share the same problem currently exists on x86 
-as well.
-
-While reading the KHO code, I came across the following commit, which 
-handles
-a somewhat similar problem with HugeTLB:
-
-fdd843f2be1a ("kho: exclude hugetlb memory from scratch size calculation")
-
-The approach is to first account for HugeTLB allocations as a separate 
-memblock
-reservation type and then exclude them when calculating the scratch memory
-reservation.
-
-How about using the same approach to avoid accounting for crashkernel memory
-when calculating the scratch memory size?
-
-- Sourabh Jain
-
-
-On 21/08/26 17:26, Pratyush Yadav wrote:
-> On Fri, Aug 21 2026, Sourabh Jain wrote:
->
->> Add the architecture bits needed to enable CONFIG_KEXEC_HANDOVER on
->> powerpc.
->>
->> Set ARCH_SUPPORTS_KEXEC_HANDOVER for PPC64, following the existing
->> pattern used by ARCH_SUPPORTS_KEXEC and ARCH_SUPPORTS_KEXEC_FILE.
->>
->> On the boot path, parse the "linux,kho-fdt" and "linux,kho-scratch"
->> properties from /chosen and pass them to kho_populate(). This lets a
->> kernel booted via KHO kexec recover the FDT and scratch region left
->> behind by the previous kernel. The call is placed early in
->> setup_arch(), before unflatten_device_tree().
->>
->> Open issues:
->> ============
->>
->> This patch also adds "depends on !CRASH_DUMP" to
->> ARCH_SUPPORTS_KEXEC_HANDOVER. This is needed because of an ordering
->> conflict between crashkernel reservation and KHO scratch reservation
->> on powerpc.
->>
->> Crashkernel memory is reserved very early in boot, from arch-specific
->> code: head.S -> early_setup() -> early_init_devtree() ->
->> arch_reserve_crashkernel() / fadump_reserve_mem(). KHO's scratch
->> region is reserved later, from generic code: start_kernel() ->
->> mm_core_init() -> kho_memory_init(). So on powerpc, crashkernel
->> memory is always reserved first.
->>
->> This ordering causes a real failure. In the common case, crashkernel
->> reservation on powerpc starts at a 512M offset (the exact offset can
->> vary, but 512M is typical). So with crashkernel=3G, the reservation
->> occupies memory from 512M up to 3.5G -- roughly 75% of the entire low
->> 4G area.
->>
->> Since crashkernel reservation always happens first, that 3G is
->> already committed by the time kho_memory_init() runs. It then tries
->> to reserve a low scratch region sized at 200% of whatever is already
->> reserved below 4G. With ~75% of that 4G area already taken by
->> crashkernel memory, 200% of that easily exceeds the remaining space
->> -- and since the low scratch region is itself capped at 4G, there's
->> no room left to fit it. The reservation fails.
-> crashkernel has the variant "crashkernel=size[KMG],high", which ensures
-> memory is allocated above 4G. Unless powerpc has some requirement for
-> strictly having the crashkernel below 4G, I think it will make a lot of
-> sense to enable support for this feature. So KHO users can specify this
-> to get crashkernel working with KHO.
->
-> Powerpc doesn't support this right now, but from a quick skim of the
-> code, I think it should be simple enough. From
-> arch_reserve_crashkernel() you just need to pass a bool * to
-> parse_crashkernel(), and then pass the result to
-> reserve_crashkernel_generic().
->
-> Solving the ordering of crash reservations and KHO is tricky and comes
-> with some difficult tradeoffs. Allocating crash from highmem should be a
-> lot simpler.
->
-> And on that note, I don't think you should do a depends on !CRASH_DUMP.
-> Even when CONFIG_KEXEC_HANDOVER is enabled, KHO isn't on by default
-> (well, unless KEXEC_HANDOVER_ENABLE_DEFAULT is set). You need to enable
-> it via cmdline. So it is entirely possible for people using KHO on PPC
-> to not use crash and vice versa. This decision can be made at deployment
-> time, not at compile time.
->
->> To work around this and get KHO working on powerpc, this patch:
->>
->> 1. Makes KHO usable on powerpc only when CRASH_DUMP is disabled.
->> 2. Calls kho_populate() from setup_arch(), so it runs before
->>     kho_memory_init() reserves the scratch region.
->>
->> The real fix would be to reserve the KHO scratch region before
->> crashkernel memory instead of after. But scratch reservation happens
->> in generic code (kho_memory_init(), called from mm_core_init()), so
->> this isn't something powerpc can address on its own -- it needs
->> discussion on how to influence the ordering between generic scratch
->> reservation and arch-specific crashkernel reservation. This patch
->> doesn't attempt that; it's meant as a starting point for that
->> discussion.
->>
-> [...]
->> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
->> index 2580e27e4328..61350d3e7a19 100644
->> --- a/arch/powerpc/Kconfig
->> +++ b/arch/powerpc/Kconfig
->> @@ -716,6 +716,11 @@ config ARCH_SELECTS_CRASH_DUMP
->>   	depends on CRASH_DUMP
->>   	select RELOCATABLE if PPC64 || 44x || PPC_85xx
->>   
->> +config ARCH_SUPPORTS_KEXEC_HANDOVER
->> +	def_bool y
->> +	depends on PPC64
->> +	depends on !CRASH_DUMP
->> +
->>   config ARCH_SUPPORTS_CRASH_HOTPLUG
->>   	def_bool y
->>   	depends on PPC64
->> diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
->> index 4afaba19b586..1fee743abdf2 100644
->> --- a/arch/powerpc/kernel/setup-common.c
->> +++ b/arch/powerpc/kernel/setup-common.c
-> [...]
->>   }
->>   #endif
->>   
->> +#ifdef CONFIG_PPC64
->> +static void __init init_kho(const void *fdt)
->> +{
->> +	unsigned long node;
->> +	u64 fdt_start, fdt_size, scratch_start, scratch_size;
->> +
->> +	if (!IS_ENABLED(CONFIG_KEXEC_HANDOVER))
->> +		return;
->> +
->> +	/* Find and verify the /chosen node, same as early_init_dt_scan_chosen() does */
->> +	node = fdt_path_offset(fdt, "/chosen");
->> +	if ((long)node < 0)
->> +		node = fdt_path_offset(fdt, "/chosen@0");
->> +	if ((long)node < 0)
->> +		return;
->> +
->> +	if (!of_flat_dt_get_addr_size(node, "linux,kho-fdt",
->> +				      &fdt_start, &fdt_size))
->> +		return;
->> +	if (!of_flat_dt_get_addr_size(node, "linux,kho-scratch",
->> +				      &scratch_start, &scratch_size))
->> +		return;
->> +
->> +	kho_populate(fdt_start, fdt_size, scratch_start, scratch_size);
->> +}
-> This looks pretty much a duplicate of early_init_dt_check_kho(). On
-> arm64 this is called via early_init_dt_scan(). But from a quick search I
-> don't see powerpc calling it.
->
-> Would it make sense to call this function (or
-> early_init_dt_scan_nodes()) for powerpc?
->
-> If not, I think it would be a better idea to expose
-> early_init_dt_check_kho() and call it from powerpc setup_arch() instead
-> of duplicating the logic.
->
->> +#endif
->> +
->>   /*
->>    * Called into from start_kernel this initializes memblock, which is used
->>    * to manage page allocation until mem_init is called.
-> [...]
->
+-- 
+Regards,
+Mukesh Pilaniya
 
 
