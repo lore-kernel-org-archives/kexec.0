@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 31B02C61DC7
-	for <kexec@archiver.kernel.org>; Wed, 26 Aug 2026 09:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2AC9AC5DF97
+	for <kexec@archiver.kernel.org>; Wed, 26 Aug 2026 09:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:
 	Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date
 	:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=AjFAkRrhVUTBFTsQMyUNsvLp/GHcd37S7PEMXZOcAZ4=; b=uVhOgCrzBPoAxTxSNEqUtx/0fD
-	vlxdrc73GG9+FnmybqT5tgQ7LAu0tSUM6Gitrqiyor0Lv2gN4OuSbX5yF3fPrggou1dGW1Sptrs4X
-	uSYVMgIBpoV2O2OzN3ttWwn1WVeHNxEAmvxQ24bpJvem40HTcfU6jAzFh+tENG5RsAXJ2FRcyEjXY
-	I1qf4CRHBZfWCHdA92/RFBvMLAqoSTqk0LCNDqoYJPTiF8rzNGq97M9Vnngb0HFXzgVEL248HJ9Jo
-	TWBlX5y112jCN2oco/HDUP+1ZDDcFHxyBE6Ol3uIEiFfoEFDxr8oKHs96LKQyVaWVmhmQhl5TUyyF
-	//zmqXNQ==;
+	bh=oXgq3/Gz7CGC/Wi4k6l57KKkgsMLlKANbfKYe/2S3+8=; b=ByV6zxu7W3Zfrtg5aNj/y/6xfN
+	Da9u5t8OoQbZ8My99HgE9ambYJ8wclOcaeDr8aLhSJtgEcfFrS8vTzslFQEhNDwE18yPon+AV//EC
+	kK16GH9vJnLDel6erwTAXsVtPTEiVJ8Y4yYrP2W/7OhraY4wN8MlOWdtYkdfHCNtfijNuGXScYO+d
+	gFFDNV7LWIdAnvOk7PTjEXQCspEZR1aEMERtl8R0Jk7dRg9XBh/Deg+GECPTUfuRHCB3Uyh3F27A7
+	duiJ1y0SBhoBkCLs7Ah9NiA+VHIYnvZ4i9yr+cDmcjH3nnv08OWO3e+p7x3F1ISFJvpBA7tABHdBQ
+	wGGcImQg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wz9tb-00000002BRC-3Jfk;
-	Wed, 26 Aug 2026 09:26:11 +0000
-Received: from canpmsgout03.his.huawei.com ([113.46.200.218])
+	id 1wz9tg-00000002BWG-01U8;
+	Wed, 26 Aug 2026 09:26:16 +0000
+Received: from canpmsgout06.his.huawei.com ([113.46.200.221])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wz9t4-00000002B2w-3hMw;
-	Wed, 26 Aug 2026 09:25:43 +0000
+	id 1wz9tA-00000002B5i-1jWP;
+	Wed, 26 Aug 2026 09:25:49 +0000
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=AjFAkRrhVUTBFTsQMyUNsvLp/GHcd37S7PEMXZOcAZ4=;
-	b=GB6QEE65ILKvCbQpXecQEb/ua/x3iezR7nE2mn7WyYvYlY4SUXxQ83iR38qyJiKIbAgDODNlH
-	MU8cWojiXPCrCQ5dhsBQrS1ENBNRxVIcl10fi/R92xWzffLm8zRiqYcpNm7ebeVpN3c6nk/FktV
-	hqwqWG9q2cn4HV8W9tiTxUc=
-Received: from mail.maildlp.com (unknown [172.19.162.144])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4hVJr24p4czpTHV;
-	Wed, 26 Aug 2026 17:14:26 +0800 (CST)
+	bh=oXgq3/Gz7CGC/Wi4k6l57KKkgsMLlKANbfKYe/2S3+8=;
+	b=M2WCjUV36RnHb5fNe4vvLb2ECdr0SMY463sjrUv623cM5rtnEGxtrh7Jm17vAKP9UZkTNrCdo
+	4xEpxcC38LZJXMGdX94QIQPU5uBerz/eQFv4Hc6UV3ZlxTKy/gxQTre5I4ALJj/5VKN0N7CO2JZ
+	Dri1ZnSNgYAZMZLggRJdoJE=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4hVJrf11brzRhR0;
+	Wed, 26 Aug 2026 17:14:58 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0D1434056D;
-	Wed, 26 Aug 2026 17:25:35 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id CE3AC40537;
+	Wed, 26 Aug 2026 17:25:41 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpemf500011.china.huawei.com
  (7.185.36.131) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 26 Aug
- 2026 17:25:32 +0800
+ 2026 17:25:39 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
@@ -65,9 +65,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
 	<linux-mm@kvack.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH v3 11/17] crash: Introduce crash_extra_elfcorehdr_size() helper
-Date: Wed, 26 Aug 2026 17:25:35 +0800
-Message-ID: <20260826092541.3905933-12-ruanjinjie@huawei.com>
+Subject: [PATCH v3 14/17] x86/crash: Simplify crash_load_segments() using crash_extra_elfcorehdr_size()
+Date: Wed, 26 Aug 2026 17:25:38 +0800
+Message-ID: <20260826092541.3905933-15-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260826092541.3905933-1-ruanjinjie@huawei.com>
 References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
@@ -78,8 +78,8 @@ X-Originating-IP: [10.90.53.73]
 X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
  dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260826_022541_299417_93A1AF15 
-X-CRM114-Status: GOOD (  14.06  )
+X-CRM114-CacheID: sfid-20260826_022544_999059_EF545FB2 
+X-CRM114-Status: GOOD (  13.98  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,104 +94,80 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Extract the elfcorehdr extra space calculation from powerpc into a
-generic helper crash_extra_elfcorehdr_size() for use by other
-architectures.
+Replace the open-coded elfcorehdr reservation logic in
+crash_load_segments() with the generic crash_extra_elfcorehdr_size()
+helper. The helper centralizes all PN_XNUM and memory range checks,
+reducing code duplication.
 
-The helper includes compile-time and runtime checks, it also checks
-whether the total number of program headers (including fixed headers for
-kernel_map, VMCOREINFO, and CPU notes) exceeds PN_XNUM, and provides a
-stub when crash/memory hotplug is disabled.
+The elfcorehdr_index is handled separately in crash_handle_hotplug_event()
+during the first hotplug event, so it does not need to be set in
+crash_load_segments().
 
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>
+Cc: Thomas Gleixner <tglx@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Baoquan He <baoquan.he@linux.dev>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>
-Cc: Dave Young <ruirui.yang@linux.dev>
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- arch/powerpc/kexec/file_load_64.c | 19 +------------------
- include/linux/crash_core.h        | 26 ++++++++++++++++++++++++++
- 2 files changed, 27 insertions(+), 18 deletions(-)
+ arch/x86/kernel/crash.c | 32 +++++---------------------------
+ 1 file changed, 5 insertions(+), 27 deletions(-)
 
-diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-index 6075b1c88511..2b0325e4a628 100644
---- a/arch/powerpc/kexec/file_load_64.c
-+++ b/arch/powerpc/kexec/file_load_64.c
-@@ -374,23 +374,6 @@ static int load_backup_segment(struct kimage *image, struct kexec_buf *kbuf)
- 	return 0;
- }
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index afe2aea19f47..99eb8583d932 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -348,42 +348,20 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
  
--static unsigned int kdump_extra_elfcorehdr_size(struct crash_mem *cmem)
--{
--#if defined(CONFIG_CRASH_HOTPLUG) && defined(CONFIG_MEMORY_HOTPLUG)
--	unsigned int extra_sz = 0;
+ int crash_load_segments(struct kimage *image)
+ {
+-	int ret;
+-	unsigned long pnum = 0;
+ 	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
+ 				  .buf_max = ULONG_MAX, .top_down = false };
++	unsigned long nr_ranges = 0;
++	int ret;
+ 
+ 	/* Prepare elf headers and add a segment */
+ 	ret = crash_prepare_headers(IS_ENABLED(CONFIG_X86_64), &kbuf.buffer,
+-				    &kbuf.bufsz, &pnum);
++				    &kbuf.bufsz, &nr_ranges);
+ 	if (ret)
+ 		return ret;
+ 
+ 	image->elf_headers	= kbuf.buffer;
+-	image->elf_headers_sz	= kbuf.bufsz;
+-	kbuf.memsz		= kbuf.bufsz;
 -
--	if (CONFIG_CRASH_MAX_MEMORY_RANGES > (unsigned int)PN_XNUM)
--		pr_warn("Number of Phdrs %u exceeds max\n", CONFIG_CRASH_MAX_MEMORY_RANGES);
--	else if (cmem->nr_ranges >= CONFIG_CRASH_MAX_MEMORY_RANGES)
--		pr_warn("Configured crash mem ranges may not be enough\n");
+-#ifdef CONFIG_CRASH_HOTPLUG
+-	/*
+-	 * The elfcorehdr segment size accounts for VMCOREINFO, kernel_map,
+-	 * maximum CPUs and maximum memory ranges.
+-	 */
+-	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
+-		pnum = 2 + num_possible_cpus() + CONFIG_CRASH_MAX_MEMORY_RANGES;
 -	else
--		extra_sz = (CONFIG_CRASH_MAX_MEMORY_RANGES - cmem->nr_ranges) * sizeof(Elf64_Phdr);
+-		pnum += 2 + num_possible_cpus();
 -
--	return extra_sz;
+-	if (pnum < (unsigned long)PN_XNUM) {
+-		kbuf.memsz = elf64_phdr_size(pnum);
+-
+-		image->elfcorehdr_index = image->nr_segments;
+-
+-		/* Mark as usable to crash kernel, else crash kernel fails on boot */
+-		image->elf_headers_sz = kbuf.memsz;
+-	} else {
+-		pr_err("number of Phdrs %lu exceeds max\n", pnum);
+-	}
 -#endif
--	return 0;
--}
--
- /**
-  * load_elfcorehdr_segment - Setup crash memory ranges and initialize elfcorehdr
-  *                           segment needed to load kdump kernel.
-@@ -428,7 +411,7 @@ static int load_elfcorehdr_segment(struct kimage *image, struct kexec_buf *kbuf)
- 	 * Account for extra space required to accommodate additional memory
- 	 * ranges in elfcorehdr due to memory hotplug events.
- 	 */
--	kbuf->memsz = headers_sz + kdump_extra_elfcorehdr_size(cmem);
-+	kbuf->memsz = headers_sz + crash_extra_elfcorehdr_size(cmem->nr_ranges);
- 	kbuf->top_down = false;
++	kbuf.memsz = kbuf.bufsz + crash_extra_elfcorehdr_size(nr_ranges);
++	image->elf_headers_sz	= kbuf.memsz;
  
- 	ret = kexec_add_buffer(kbuf);
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 6789ff0af39e..d5981008a812 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -106,4 +106,30 @@ ssize_t dm_crypt_keys_read(char *buf, size_t count, u64 *ppos);
- static inline int crash_load_dm_crypt_keys(struct kimage *image) {return 0; }
- #endif
- 
-+#if defined(CONFIG_CRASH_HOTPLUG) && defined(CONFIG_MEMORY_HOTPLUG)
-+static inline unsigned int crash_extra_elfcorehdr_size(unsigned int nr_mem_ranges)
-+{
-+	unsigned int total_phdrs = 2 + num_possible_cpus() + CONFIG_CRASH_MAX_MEMORY_RANGES;
-+
-+	BUILD_BUG_ON(CONFIG_CRASH_MAX_MEMORY_RANGES > (unsigned int)PN_XNUM);
-+
-+	if (nr_mem_ranges >= CONFIG_CRASH_MAX_MEMORY_RANGES) {
-+		pr_warn_once("Configured crash mem ranges may not be enough\n");
-+		return 0;
-+	}
-+
-+	if (total_phdrs >= (unsigned int)PN_XNUM) {
-+		pr_warn_once("number of Phdrs %u exceeds max\n", total_phdrs);
-+		return 0;
-+	}
-+
-+	return (CONFIG_CRASH_MAX_MEMORY_RANGES - nr_mem_ranges) * sizeof(Elf64_Phdr);
-+}
-+#else
-+static inline unsigned int crash_extra_elfcorehdr_size(unsigned int nr_mem_ranges)
-+{
-+	return 0;
-+}
-+#endif
-+
- #endif /* LINUX_CRASH_CORE_H */
+ 	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
+ 	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
 -- 
 2.34.1
 
