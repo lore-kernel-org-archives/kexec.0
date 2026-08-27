@@ -4,168 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 01FCFC61DB9
-	for <kexec@archiver.kernel.org>; Thu, 27 Aug 2026 07:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B8657C61DB9
+	for <kexec@archiver.kernel.org>; Thu, 27 Aug 2026 09:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:References:In-Reply-To:Message-ID:Date:Subject:Cc:
-	To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yQj70NK/8iluOdZ7+C0cw0X3MPBb4oJAeL49qqjrW2A=; b=Abc6f3YLviWhAGhVNzetSLEb7I
-	qiqJ7PcQqa+IRmsyQ4R2xoaoDhlcUDg51XxQFGaC/1wlyKnnMdq6CoVGy1NXsNgNXq6Fw374Dh+uY
-	UYEd/0dbsUY4tYVHi6v76nV+hHIN1upZvRdtVMwFMQgApCH7XIyO1xT4Riww/d3QXMvVZO1kCxOy4
-	Ou6J+fGaC2PRZT8sZuFKyBiN/OkKniSzkgbcbmI6Bjf/be82q8UByx/hi6x/4QJGt1He3BaQ/VKO2
-	ariXIAxB84cjG0HDcgPWR85kPggPB8DmUCeEeQlvkEhpRZyy9IluzadljWOxAYxB/GEYhJLAcf2GZ
-	tBuZMB8g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Message-ID:In-Reply-To:Subject:CC:To:From:Date:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:References:List-Owner;
+	bh=a1NsHoqwbDOf48Qmm21dp9rJ0H89tollm0qcEOxhzWM=; b=s5yT2M7uAsZYZ6yYbX3SGs0jiY
+	eU21T0VXuFnQmMk17BEfYD7zD3r9wTsr4BJnrGoNskWbWLdLuo/gqzqy9J2u+MH+O8bfwnw/Fk1eK
+	LP0xi/oQ7Dmn9HgydLxWIB3vetG9IWEf/x6gC9wcbWjnjcA5iK5tLhDms0qjB80SBUgB77M9+Lbzx
+	pv3zWZX2wXpNti1OS44VfH9KbnUEbPfvgwr7VdBXG8B8ddIwNEwNridfl2QgrhlyAHthwOfzns5+x
+	3jBOoRdbdh3KSS6vl0fNcLZ+cpZXT9a+WjLL3Sf4ukC3sQoUrv31GICmeGYe59wbUroLu3ZaZ2L/p
+	56V/4uvw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wzUJv-00000003XHS-0NOf;
-	Thu, 27 Aug 2026 07:14:43 +0000
-Received: from mx0b-0064b401.pphosted.com ([205.220.178.238])
+	id 1wzWoo-00000003msb-3sX1;
+	Thu, 27 Aug 2026 09:54:46 +0000
+Received: from mail.mainlining.org ([5.75.144.95])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wzUJp-00000003XGS-2j1L
+	id 1wzWoh-00000003mrt-2IQt
 	for kexec@lists.infradead.org;
-	Thu, 27 Aug 2026 07:14:41 +0000
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67R6Ruch1756211;
-	Thu, 27 Aug 2026 07:08:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=cc:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	PPS06212021; bh=yQj70NK/8iluOdZ7+C0cw0X3MPBb4oJAeL49qqjrW2A=; b=
-	gY/o/+k0sR6pgqR/Lt4BhlRN0U27bLG5vWtQu8rKJxKt6iOTvkKlJUv5c97NVMRI
-	Rf9uu4ejdis055RKK6nfInhwgukvK1uD66U387DXrpBWqgO2iup/ruAFcMXuiaus
-	A/wHH9a6NWPW8GNIz8MbiyWksF0dWZ2aAVVFK9VCPjCz5DCeKhdpn2DhrT2pMwUG
-	CI2rt/4XucgHchR+YGsW7WoKNjztl8YjwgkpHaW9ZYJQ9QW/wXe+7iiiCaD1fS3c
-	jwglApMgk3rVdtNhvocCwZUCrULoNKfjS2JDbiqhaht4v/nfw0M4ikKP44alJwcm
-	p258R1IwC/qvdAMPGCHEvQ==
-Received: from ch5pr02cu005.outbound.protection.outlook.com (mail-northcentralusazon11022122.outbound.protection.outlook.com [40.107.200.122])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4gaasd0b31-1
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Thu, 27 Aug 2026 07:08:45 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QWW3ryZbEArsoV1OwR233yS1crmQkF+yrREySluQ0v0Ry/KTc+OrnP6O16SoVI6jsyars9qNCpqecaJ4ofriEFh/4Ck1mwbWFT5hUhEKL0plK0l2AQz2KHyBFlMhmchx9elV7l6iLHmDya5LIkJTPbxMRXRStayjbujo8mL/rCZ/fg9PcwxP7G8Zes3Wi3N/hZL/M2/qn+3PynzhJ+Zl5ZxbXwF51fYIyTWVxi6VXM1WxMRtAF3Pw5UenmnNDfjpWergjk5PIEtAk64rK9+5wXqYdu+kpBUbL+w7n1xJ20lrJiZWlXOzB3Oomrt/2ImUw43KnyKO+ba5WU9N7661jA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yQj70NK/8iluOdZ7+C0cw0X3MPBb4oJAeL49qqjrW2A=;
- b=tKHEUXhrcoCGPnE9W333eZ05ONmg8wxce1wWkZRR4nhI43zJARHUH4acDFXlWFYhv+MVa8XxPezD2NvTP+4hdDtuSMR0cFcmjLC/2WRALwFJAMVuNh4ePA2qnn00l5TGAQpb0AfI1wngdA6oIcCLEXSacr+4aPqQTSSLo+SVwiyBeyQCi01163AMQi9veP1zqhg06nf5mgplX67kdq+3ALOVycp+HxO7CKJZzHNmR+6C/QZW88oL3sfQR08oPxCg+L+4sr+SMsZcXK3J3MGBHm/xYuIMk7B3dlNcoMbwXj96u6uR4dOjlhbOwYUgYIWphN77txds4wbD12wrG5uSPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from SJ2PR11MB7546.namprd11.prod.outlook.com (2603:10b6:a03:4cc::8)
- by DM3PPFF2E67D388.namprd11.prod.outlook.com (2603:10b6:f:fc00::f60) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.6; Thu, 27 Aug
- 2026 07:08:42 +0000
-Received: from SJ2PR11MB7546.namprd11.prod.outlook.com
- ([fe80::ca9b:dcf:8881:bced]) by SJ2PR11MB7546.namprd11.prod.outlook.com
- ([fe80::ca9b:dcf:8881:bced%3]) with mapi id 15.21.0339.012; Thu, 27 Aug 2026
- 07:08:42 +0000
-From: "Ionut Nechita (Wind River)" <ionut.nechita@windriver.com>
-To: x86@kernel.org, kexec@lists.infradead.org
-Cc: tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, akpm@linux-foundation.org,
-        baoquan.he@linux.dev, rppt@kernel.org, pasha.tatashin@soleen.com,
-        pratyush@kernel.org, ruirui.yang@linux.dev, eric.devolder@oracle.com,
-        hbathini@linux.ibm.com, sourabhjain@linux.ibm.com,
-        ruanjinjie@huawei.com, include@grrlz.net, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/2] x86/crash: reserve elfcorehdr for CONFIG_NR_CPUS, not CONFIG_NR_CPUS_DEFAULT
-Date: Thu, 27 Aug 2026 10:08:21 +0300
-Message-ID: <20260827070822.12651-2-ionut.nechita@windriver.com>
-X-Mailer: git-send-email 2.55.0
+	Thu, 27 Aug 2026 09:54:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; s=202507r; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1787824072; bh=a1NsHoqwbDOf48Qmm21dp9r
+	J0H89tollm0qcEOxhzWM=; b=ChZPJSFJXKedFrS2dCvs9xTrBJTq5wR1u/PmZC6LNICzwxOYc2
+	c0QH39imkm2Li+4rJzayDWY/I392VpOK3lyJ3DZvGFVC0V8OT4GuQBXj9T2qujm5beELGplfLOs
+	6rQAEjSjUjPmwx6ouCdNPmK5nNrxDCqZXTP38KAs81Rgp1TML4xKIwFNpWo4B8nWCww2FGYh4qQ
+	i+j4q/jwqfq8gI29u7GzKxNWnCP7vY9mAjF4dvAV+fhia6f0x4fSogiY3OnFc5yhmRm8kreZDko
+	kIUCmsM1k4IKIgM73gvQWGsOyl2mjkU6RdcCuv9MqubgfDm2eXiEklPFjI2+Bl9x/Tw==;
+DKIM-Signature: v=1; a=ed25519-sha256; s=202507e; d=mainlining.org; c=relaxed/relaxed;
+	h=Message-ID:Subject:To:From:Date; t=1787824072; bh=a1NsHoqwbDOf48Qmm21dp9r
+	J0H89tollm0qcEOxhzWM=; b=iJwlMI4OvVcbA7FgcUhslQFpHiuFB5m53LDjRiUXyw2J9R0pB5
+	lMjr5EE723fxp+05u10rOBDTvZ6DVialeHBw==;
+Date: Thu, 27 Aug 2026 10:47:52 +0100
+From: Bradley Morgan <brads@mainlining.org>
+To: ionut.nechita@windriver.com
+CC: akpm@linux-foundation.org, baoquan.he@linux.dev, bp@alien8.de,
+ dave.hansen@linux.intel.com, eric.devolder@oracle.com,
+ hbathini@linux.ibm.com, hpa@zytor.com, include@grrlz.net,
+ kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com,
+ pasha.tatashin@soleen.com, pratyush@kernel.org, rppt@kernel.org,
+ ruanjinjie@huawei.com, ruirui.yang@linux.dev, sourabhjain@linux.ibm.com,
+ tglx@kernel.org, x86@kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v4_0/2=5D_x86/crash=3A_size_th?=
+ =?US-ASCII?Q?e_elfcorehdr_reservation_with_NR=5FCPUS?=
 In-Reply-To: <20260827070822.12651-1-ionut.nechita@windriver.com>
-References: <20260827070822.12651-1-ionut.nechita@windriver.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR10CA0044.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:150::24) To SJ2PR11MB7546.namprd11.prod.outlook.com
- (2603:10b6:a03:4cc::8)
+Message-ID: <6755A837-E429-499E-B9E1-6679C595F717@mainlining.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7546:EE_|DM3PPFF2E67D388:EE_
-X-MS-Office365-Filtering-Correlation-Id: ed5c4b19-efcc-44be-3ff1-08df040a0718
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|52116014|7416014|376014|366016|10070799003|23010399003|1800799024|10067099003|56012099006|6133799003|11063799006|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info: g3OhNdtP4P0JnulVqm3W44zC9JnPt2x7yXnUWL6d6UrcHUaLAIpryFQSqmNg8PnTUYwWYNlkesiiGBFSmISonaciAayMBu9glePQCg/qHBy2fVyAnQ6dOyz0BaGf6t6iT1I5m3TCznQbHHjX1rnXVt8Eqwaq2swPDEaSPXFAE2QSf+l0Fin+pdPUAwuwFpRaLCx/+bqCL0yOFEbGzg+YgYfG/q8ppEW8FmLnjs1oaXFplHqVGYoN7SbxHD8ICqGSSa+L5yOwrYiK7dYCyhtNMtksrfi8nsFLEsqGv/UIqdluxRj7Y7TbRLnxGyKDmZG4dw2syMBRzjospSvEAJsCQhIzmxjIz6nSZnrmSXQVGsg+AOyIGyy8QiP1vPtZGqWbHkfHWFDwCveDvMxLoXzXUzRLJL3HlfGQ76VmlnFUy7xDGRWAA8lEfg6z5GB8f25Xh/+3LnRiRiu5PHONuo+ejGBexuQXXrU+G82CC+4Y1hR/+mBTTqwltsrq+MlFZcpkL6Ae11IrsiyYGEeUhMwvkQ2SOUbFP9W7OTEq5zniAkJLuI/fowf5OujVhzykloXpX35XzT9Q0siEMydDXcIzlZwjxUW5eXBCiulPRp7NidLoYuUleHzZ6RGkCiIdh2o6x+3wk26NtfIsgeh+B0MkFqbIesjdYIBoJJp32JbsKdE=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7546.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(366016)(10070799003)(23010399003)(1800799024)(10067099003)(56012099006)(6133799003)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xtGP+rGKjovimeSp/cnd8WIrDZDx8QKpw+2wIXzTT+l1WWES2PLGTHoKgADD?=
- =?us-ascii?Q?E+XwSy7AaCrVpOzlq+gQXiI46Y+K9rM3d46fKS5cPeG6PTgckzZJDQuIhcwP?=
- =?us-ascii?Q?Qz7cNrIfRRHmm0ikOR2aFACOzoumQHG3hQDo7Qyy4MF2CA79DA6v+fUe3PEn?=
- =?us-ascii?Q?iycmkccG2HRvMj39NN7vv7Ys2jsqvxzwq1/orKbIhSJttgU/Yrx19vPvmnw+?=
- =?us-ascii?Q?sdSrp+FgtTK7beflXNHxH6g4k2NN0UZAd9QuFect/oTbZdZrJR++dIT1zQ/M?=
- =?us-ascii?Q?Rx/eJcv8hzCEulJaK2e/QP1YL7A8m677V0eTXz5k7Baz3BZpde8Dt53Zmt6F?=
- =?us-ascii?Q?lxlKwH+EmxrEIyw5A7r3LS7aUl81BdRfqMUz9z9Y7WM8HXEaDpKuVoRDn35V?=
- =?us-ascii?Q?5JYUe10qBMZPvf6079KWnMOemLQozY7CWV/8NQ2e20iJ5R57+P0AgvRPEKsQ?=
- =?us-ascii?Q?828OSa6GQMWDA1XnVPnYBf7SQkq/bCYfvqg/sbqjKAdSHvcor6LvN2Dj0BUk?=
- =?us-ascii?Q?niMbdcdJqOirqezrFPFLKIMeCLuqhN3yvqcORJiY2C3yTldPZerX4fTnUt6x?=
- =?us-ascii?Q?X6aL0yEP/lycykCH1bwU4d82jeRPps0Z3KAFyoxrD0iCLffXzXqvgFcAAK7P?=
- =?us-ascii?Q?u2lWgVVROk3KF4MNY0Q0n0yv4UPbbMoGJd6TH9b3l7QNvFjf9l31hKRQVdjV?=
- =?us-ascii?Q?ZZTlSGJ8tCkq5iRirSUH69oFASAH4NqVoD5pHCxuNMOBPVu6BM/3bslcr7o4?=
- =?us-ascii?Q?IexPHk3P+VKblFBqiih/4Cx0yR1kRB7Pprbn6p7RhGkpWmJxh6mYhGv0PP63?=
- =?us-ascii?Q?PiQ/UzYhU9FaL3I7a8HtD7u2VVqu94fs+YWl6tL5mExM7TofhJmkQg3EG/GT?=
- =?us-ascii?Q?9GEXvZjJXV9d6hTKicbgpKswIPpd4ye5b5DtDVpdpX4OrT5cli9oJFAWUKYc?=
- =?us-ascii?Q?uV0ipptB8WFItDh4z13fzsw7jDE1+qd8YAlxT3hIrIO1brtJhGqHD9u5dno2?=
- =?us-ascii?Q?8+cLDuk7IkfVglNDo9O2ZAHm5Xhod/sutTmV8K0I8AWIXtz1fuygcFTWJlOR?=
- =?us-ascii?Q?a1131aSWIu/ycCx3EgCVwp17r1WBEJLZBWBseh812GhfIbp+oubWIsTAGpLR?=
- =?us-ascii?Q?NsrlpQnWb3m7MaZO6k/4aCJy8n9GLqwDimtvTMLFiwTjQ15jV8RBwBKyzhYT?=
- =?us-ascii?Q?ISP3KakmxXgcuFDziuu61srOL5TeBf2c4z/LW4KXZkHiDOPhsU89rkLQx3z7?=
- =?us-ascii?Q?xD8C5FWt/iPCEVoEujyTqgjd7+t3lT1vFaAhT0t+1kTYwLjmKjK+hzeyk7WH?=
- =?us-ascii?Q?0YHjwsdsBblcrIHv87CYgCmfMs2r3X0yMS7i9jmw2qzzKXKDnlJRJKpdWKWp?=
- =?us-ascii?Q?k5y354NAf8usSmwuFt8y8cac2QT1jTH4mjgtLhMHlwp89Nspgwg/V+GKEuf9?=
- =?us-ascii?Q?hWe+lPnjE+of6Zu08MThmrBefyb/uTIQE4Ib6f4vUjFXMts6GP0VMzOQOMKh?=
- =?us-ascii?Q?Np3QYKiVrGdL11U3uSYOpkwWtKTMZjvKp9Bt/hgy6fxC3fnsv9CCETIv2Bd/?=
- =?us-ascii?Q?rlPaR+fb/hL92TsUqOaH6eM+yB0GxYV9i6aovILQ+zs2droyqrMATV5HC0Sb?=
- =?us-ascii?Q?d48EHSDZx94J2VjPuB5TgMVqs162ff4fZarimgotBfagk26eebyByehNxjQE?=
- =?us-ascii?Q?Dxo9rx1TVEvUPosCSyAUD9kILEh6zaQ6UGCL8kr7SFR/uw33LGsa2eXHSN4I?=
- =?us-ascii?Q?9JXKgbKUKF2ebwUVPduuQl/pltUe+XOBfh38gqe5cjM3m2zS6Xs01rrXZ2Nc?=
-X-MS-Exchange-AntiSpam-MessageData-1: YYOTrY6ejezXccGnPULqJVlyZyry/YdFEIw=
-X-Exchange-RoutingPolicyChecked: mbQiZ+Wg0+v/rQ1YpLasXnfvYwyklmo8QIHJW2Kj/HcEEYOiVNdEMnlGbHboCrqfQFUgsiwt0MlSr7QNHq+AaQ6WzgoxPIP+5Fp6n0lquTtn9rY5aoUNWePWS3YryFCIpykrOD7glGW0pk41HB31ttbW/xtXfmsY/5JeOwGropWwXf0zW3dpaBBkCK45dpR7TSBBnIQiVoAzyuXPCMaKgvL2yDz1eBsNoIGqWFZMgwVV39CjLcvqYUpJtryHLym+29/XQNembw9UVFVp8d1vyr++P1JT/aEhYwG/EgIZElcH0RZM43vBBNBlR4w1tNVSF/wkaFAREPtQr2zx6+YHVQ==
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed5c4b19-efcc-44be-3ff1-08df040a0718
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7546.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2026 07:08:42.7212
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9J3pbynSNWx4DSoVTSIsL1eAOCTY3zM2qMggSn3K5YVygfCmVtQ5m2wzQJVrAoGuI5C5bvPIyfEcWoFRHdGNDUvQDEMeRCv0ABsdKT6aymM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPFF2E67D388
-X-Proofpoint-ORIG-GUID: VE2qtWAWh0J2UQWAgYeubMwNcp7PHkn6
-X-Authority-Analysis: v=2.4 cv=eLEjSnp1 c=1 sm=1 tr=0 ts=6a8fe27d cx=c_pps
- a=jsJx5cRpnMcsqjM19+T+dw==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19
- a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19
- a=xqWC_Br6kY4A:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=bi6dqmuHe4P4UrxVR6um:22 a=klDOsUkWDRETUCZYPvoE:22 a=t7CeM3EgAAAA:8
- a=i0EeH86SAAAA:8 a=jcFIXsoQAAAA:8 a=VnNF1IyMAAAA:8 a=m8V-6NWbVX9GoHuZUvMA:9
- a=FdTzh2GWekK77mhwV6Dw:22 a=M1-Q_cRM6PFdmZSamPpU:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODI3MDA1NyBTYWx0ZWRfX7iyUIUv8Ugrm
- Gj6pl7wFmmgbtyIUN4Yu44S6TluVbesI7Scx9AIC48yMjiaLPF4Hd35BNq1/MhTmKqTJGN/gOmA
- VGIGN+86TzjnITYBDF4MbZg1MefRydtql34Q0+MYtmJasLYp/Y/8P+ZSgCF3xCd/BQTaFscVh2O
- es2eHKftw3aeS9dNqlimK9PZwmpOY99eD9snOsM0oINkcytLx11a9xBgL9XR6XOkoDfspuyPjD3
- cQEQpc3w/OMeXbh4OYGA5pTioQdSvjcBCm0vic2ivaaJueKroth4qEZReNZRKpL7LGmt6nBsMQm
- oJBM3vA29ukIhEsGjyMYPWbmSAT2I3pb/DfdQtxWhv/npCQpu8C4mybIpOsySjDw5TLt9wvrVE9
- mKcsu7/Rk8qww3sG4V3QKnJDxhxZiyb0wUuYsfveREXv+eQGL5bI/Cuid2uT/qaQN+brP8GpfJd
- t9u51nNwmAYBIwonjFg==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODI3MDA1NyBTYWx0ZWRfX9TausGgXK/sI
- n5K+9vK+5UyXBh2RGzYqyqGq6dAsFnatMn+6SQ4f7EkloDWyAcT4A7UqUcxVFPoPAMczZ/VhSS6
- KpXnay8hWwXa92jXnI574c0PYtlLJXIpeurXfWoP2IepkmwD4IwJ
-X-Proofpoint-GUID: VE2qtWAWh0J2UQWAgYeubMwNcp7PHkn6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-27_03,2026-08-26_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 clxscore=1015 bulkscore=0 lowpriorityscore=0 spamscore=0
- phishscore=0 malwarescore=0 adultscore=0 impostorscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608270057
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8bit
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260827_001437_811697_C59965ED 
-X-CRM114-Status: GOOD (  11.71  )
+X-CRM114-CacheID: sfid-20260827_025439_741216_1F0A1153 
+X-CRM114-Status: GOOD (  13.90  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -180,60 +73,76 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Ionut Nechita <ionut.nechita@windriver.com>
-
-NR_CPUS_DEFAULT is purely a Kconfig thing.  Its entire purpose in life is
-to start NR_CPUS at a sane value.  There is precisely one (buggy)
-reference to it outside of Kconfig in the whole kernel: the x86 crash
-code.
-
-That code undersizes the elfcorehdr reservation whenever NR_CPUS exceeds
-NR_CPUS_DEFAULT, because the header carries one phdr per possible CPU and
-num_possible_cpus() is bounded by NR_CPUS.  kexec_file_load(2) then fails
-with -EINVAL from sanity_check_segment_list(), and kexec_load(2) silently
-truncates the elfcorehdr, which surfaces later as a bad or unusable dump.
-
-Size the elfcorehdr reservation with NR_CPUS instead.
-
-Fixes: ea53ad9cf73b ("x86/crash: add x86 crash hotplug support")
-Assisted-by: LLM
-Signed-off-by: Ionut Nechita <ionut.nechita@windriver.com>
-Reviewed-by: Jinjie Ruan <ruanjinjie@huawei.com>
-Reviewed-by: Bradley Morgan <include@grrlz.net>
-Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-Acked-by: Baoquan He <baoquan.he@linux.dev>
----
- arch/x86/kernel/crash.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index e681ec9cf1dc..e6f23933a6df 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -369,9 +369,9 @@ int crash_load_segments(struct kimage *image)
- 	 * maximum CPUs and maximum memory ranges.
- 	 */
- 	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
--		pnum = 2 + CONFIG_NR_CPUS_DEFAULT + CONFIG_CRASH_MAX_MEMORY_RANGES;
-+		pnum = 2 + CONFIG_NR_CPUS + CONFIG_CRASH_MAX_MEMORY_RANGES;
- 	else
--		pnum += 2 + CONFIG_NR_CPUS_DEFAULT;
-+		pnum += 2 + CONFIG_NR_CPUS;
- 
- 	if (pnum < (unsigned long)PN_XNUM) {
- 		kbuf.memsz = pnum * sizeof(Elf64_Phdr);
-@@ -430,7 +430,7 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
- 	unsigned int sz;
- 
- 	/* kernel_map, VMCOREINFO and maximum CPUs */
--	sz = 2 + CONFIG_NR_CPUS_DEFAULT;
-+	sz = 2 + CONFIG_NR_CPUS;
- 	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
- 		sz += CONFIG_CRASH_MAX_MEMORY_RANGES;
- 	sz *= sizeof(Elf64_Phdr);
-
-base-commit: f82a5da2f04960df9fb57489992d03dd5e64ec6f
--- 
-2.55.0
-
+On 27 August 2026 08:08:20 BST, "Ionut Nechita (Wind River)"
+<ionut.nechita@windriver.com> wrote:
+>From: Ionut Nechita <ionut.nechita@windriver.com>
+>
+>Hi,
+>
+>The x86 crash code sizes the elfcorehdr reservation with
+>CONFIG_NR_CPUS_DEFAULT, which is a Kconfig default and not an upper
+>bound.  The header itself carries one phdr per possible CPU, so the
+>reservation is too small whenever NR_CPUS exceeds NR_CPUS_DEFAULT.
+>
+>Patch 1 sizes it with CONFIG_NR_CPUS instead.  Patch 2 fixes the two
+>comments that still name NR_CPUS_DEFAULT.
+>
+>Based on linux-next (next-20260826, base-commit f82a5da2f0496).
+>
+>Changes since v3:
+>- Patch 1/2: cut the changelog down to what Dave Hansen suggested.  I
+>  kept one sentence he had dropped - that kexec_file_load(2) fails with
+>  -EINVAL - because that is the failure this was reported for and what
+>  the Fixes: tag addresses; the silent kexec_load(2) truncation is the
+>  other half.  Happy to trim further if that is still too much.
+>- Patch 2/2: changelog trimmed the same way.
+>- No code changes; the diff is byte-identical to v2 and v3.
+>- Rebased from next-20260825 onto next-20260826.
+>
+>Reviewers: the code has not moved since v2, so I carried the tags again.
+>
+>Reproducer, for the archive - single-socket Xeon 6776P, PREEMPT_RT, with
+>CONFIG_NR_CPUS_DEFAULT=64, CONFIG_NR_CPUS=256, CONFIG_MAXSMP and
+>CONFIG_MEMORY_HOTPLUG off, CONFIG_CRASH_MAX_MEMORY_RANGES=8192:
+>
+>- 144 possible CPUs: the buffer overshoots the reservation by
+>  (144 - 64) * 56 = 4480 bytes, more than the 4096 bytes of page
+>  padding, and 'kexec -p -s' fails with
+>  "kexec_file_load failed: Invalid argument"
+>- 72 possible CPUs (reduced via firmware): the overshoot is
+>  (72 - 64) * 56 = 448 bytes, still absorbed by the page rounding, and
+>  the load succeeds
+>
+>The two follow-ups Sourabh Jain raised on the v2 thread - the
+>add_segment_phys_virt() bufsz truncation in kexec-tools, and having
+>crash_load_segments() skip the kbuf.memsz update when the prepared
+>buffer is already larger - are still deliberately out of scope here.
+>
+>v1: https://lore.kernel.org/lkml/20260812170433.533845-1-ionut.nechita@windriver.com/
+>v2: https://lore.kernel.org/lkml/20260825075043.42041-1-ionut.nechita@windriver.com/
+>v3: https://lore.kernel.org/lkml/20260826073527.21487-1-ionut.nechita@windriver.com/
+>
+>Ionut Nechita (2):
+>  x86/crash: reserve elfcorehdr for CONFIG_NR_CPUS, not
+>    CONFIG_NR_CPUS_DEFAULT
+>  crash: update stale NR_CPUS_DEFAULT references in elfcorehdr sizing
+>    docs
+>
+> arch/x86/kernel/crash.c | 6 +++---
+> kernel/Kconfig.kexec    | 2 +-
+> kernel/crash_core.c     | 2 +-
+> 3 files changed, 5 insertions(+), 5 deletions(-)
+>
+>
+>base-commit: f82a5da2f04960df9fb57489992d03dd5e64ec6f
+>--
+>2.55.0
+>
+>
+>
+Mergers, could you use my new email (brads@mainlining.org) instead of my
+old one
+(include@grrlz.net) for This?
+--- Thanks!
+https://lore.kernel.org/all/EE579805-42F2-4C58-B752-F28779EEB717@grrlz.net/
 
