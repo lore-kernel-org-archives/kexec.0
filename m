@@ -4,103 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0C233C61DB9
-	for <kexec@archiver.kernel.org>; Fri, 28 Aug 2026 13:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E972C61DCB
+	for <kexec@archiver.kernel.org>; Fri, 28 Aug 2026 13:47:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=V2F7fOxUu4V0dP2Sv1iyT3HhBi0Yf+rjtTWsb6sJWmE=; b=d7qu/0qW3483TokWt/nH0WFY6M
-	JjSAa79HXNRNtcXZQjMJ5BkNfGwPDZQnUuKO2V8j21vnyH2uTqES3dWM8FciC72U5zdfcYPLTTw+X
-	TrH0jvvDciiTjDdCWSO4rjsGx7SRauUbPeGVOXoQ36/g4jk+WqZIWlNBIMdbzusL7Mh86yALtryV3
-	iSM00VnRuxEby8Mp6d4cpKJCklwhIDkKvTTYFHc883hXV7xsh7yoN1RHiP5AHFuhEOfvXU9jREkKm
-	XWYNRn1PSOqh/2oljRe34+blSD4eLHhHI6YKmqu2RmQZVSp/lw+W/5qpcPaKQUONqNry3xGvlV9tg
-	zfg57gXA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=q0eNhqvMX0/iJyiBrToLKqr6Y2gSqCXGI85V9zCEwnI=; b=ZtLLqalp/4Rmz//dZkxoa/0ih0
+	isojzStTpfXKrQRm3eYtZijf2lPnMyTVDcvAEnfjwO0Ilk3f8mb9bYZt2KUOYj7txfON44K2+J+1Q
+	tHtoWxco/eBkbWh8P8OI33+vmugtfNWOuQTyOWCr/GlkVDRVp2Qm1exhVadikLuq1/9AgRAb8rihg
+	g2/B7uRvgNj1uTml0/oW5fCaUTT1t1U6HzzDS9hJM34m00Gl27B8/QYwOJ6j3JcKxiYrJn9kaq5G5
+	9YxLPI/ckJWmf55DE3H2QWY5iVU7202HddDDZc+6h6T7FlwXwmdfdr9o6Zfqg7r0rDZgYRd22QfuW
+	sn/WV2WA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wzwW8-00000005oC3-0bXT;
-	Fri, 28 Aug 2026 13:21:12 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1wzwvt-00000005qvQ-1QK9;
+	Fri, 28 Aug 2026 13:47:49 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wzwW2-00000005oBL-3QHG
+	id 1wzwvs-00000005qvF-1Hjd
 	for kexec@lists.infradead.org;
-	Fri, 28 Aug 2026 13:21:08 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1787923264;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V2F7fOxUu4V0dP2Sv1iyT3HhBi0Yf+rjtTWsb6sJWmE=;
-	b=irF2wzFlIJWYm/XsFRjwKh2wJ7Av9bTqWrEU+3nEbBW0Lx6vls6iGHfCe7AgIyYmrtkkpf
-	+5v3QlaMlJu42m4SVYQNR14URMY/Ei7bQwlYwl2ofpy+yFGKDsmny9r+74hbeErWmE/FNx
-	hv5vPpkErX8jeLvINbziymHbz93qSLo=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-690-MUt7-PxIMSy8ERI5M8HJrw-1; Fri, 28 Aug 2026 09:21:02 -0400
-X-MC-Unique: MUt7-PxIMSy8ERI5M8HJrw-1
-X-Mimecast-MFC-AGG-ID: MUt7-PxIMSy8ERI5M8HJrw_1787923261
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2cc73f47bdcso12788175ad.3
-        for <kexec@lists.infradead.org>; Fri, 28 Aug 2026 06:21:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787923261; x=1788528061;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=V2F7fOxUu4V0dP2Sv1iyT3HhBi0Yf+rjtTWsb6sJWmE=;
-        b=pd0iJmVg/RghG/saPsGWG2cQMbMnW329XUNUa+38UYAet8C/8NSe8+E1aOY+/xGCpj
-         wxnsZDWK0EKFqODwO7dqjNxpewePFR9wmX0fquAD7nw9sh7h0vn0sNi53dt0HxRUUGs/
-         E1xCnhvFhVGhlkd0Mb4Akgjg4u4S4mXEA74NAP9c8SIH/uUa5/niybXaxGhp4U0H+nwO
-         +ulD2uafuk96lqrDi1Y4AO8+Dedn5b4LSXPWHg2Lyb6/l6aYrJ7eJb7d7/dxeMqg/YWX
-         mklIYEs+qNubdrXQg4CPuE02kB2PXOq6PWMxE877JeOVd0kRd2tznlMP2x5jsVIDJWho
-         ZOng==
-X-Forwarded-Encrypted: i=1; AHgh+Rqw7SMG4xCl6LRUeEfM85Ak1Qt8OizwFVDJZ4qTNP8iZBn9AToGtFlCBWC1DOW7qKgyNBpZFA==@lists.infradead.org
-X-Gm-Message-State: AFuF++kb6x9iMyVCimQucWzjWUI/fW8/pzU3XAEoXNa8smyhaIhfbst/
-	P2XVbCaV4T9JTujk2oLlFSYcoXe44cDUS+ywZs81Fp8nAjPNb6ut8OtsvWlYwfWDduWdCiDX6Wq
-	pLgwsG504IAcQ/KGsQc1Ywym5hCjmFgBhj5rOqxRc3k8nwLjJ0gF/0xuqYB0B5w==
-X-Gm-Gg: AR+sD12a/9cGH0xvokdtfYnrbiSGs1YneB5gydtx/AslhKy8x+R1VShutX1X94wMv4G
-	uK3DVDrPHJn31bMJo499Ja1waTuxV05c+EfLxvvuk63+IXk9ePNAkn1JUd5+IYLgA+szkYJJMPR
-	DH6jsRCOacOfCM1iNo9jtldAXYWUju6/IRcSfRkK+OjLPMwDkf9HMvnFfZ7pdAQ1JvNFyb8g62e
-	316/CNipi/kBe8tIEiMcpffSWqVXtqM4sqksZmnOVv76zrKQ6TxBjPP2ht+h1Iml2JbG5CqeaG3
-	tjE1NbArNEVTEusCzU8cKnLVxeQDYt204fJb6B+m+ABafSnKnQlwzr/Ks0lyuHGc6JzXKtflrSO
-	Qo820TPX0fYrWdwLH
-X-Received: by 2002:a17:902:ca13:b0:2cf:afe8:b722 with SMTP id d9443c01a7336-2d74deed25dmr102923975ad.11.1787923261369;
-        Fri, 28 Aug 2026 06:21:01 -0700 (PDT)
-X-Received: by 2002:a17:902:ca13:b0:2cf:afe8:b722 with SMTP id d9443c01a7336-2d74deed25dmr102923095ad.11.1787923260879;
-        Fri, 28 Aug 2026 06:21:00 -0700 (PDT)
-Received: from [192.168.1.2] ([122.171.16.35])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d75988b6c7sm5149255ad.60.2026.08.28.06.20.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Aug 2026 06:21:00 -0700 (PDT)
-Message-ID: <d16164ef-7211-4272-bc74-bc38efd8623e@redhat.com>
-Date: Fri, 28 Aug 2026 18:50:50 +0530
+	Fri, 28 Aug 2026 13:47:48 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id E4EBF408D3;
+	Fri, 28 Aug 2026 13:47:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C3CD1F00A3A;
+	Fri, 28 Aug 2026 13:47:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787924867;
+	bh=q0eNhqvMX0/iJyiBrToLKqr6Y2gSqCXGI85V9zCEwnI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=B8OVBi4twqUHT/S7twyHkWKJvi0Xty50bWZLsgLdUjH3nHQVyiaBK1AsPVPty6GY3
+	 CpLNAUUkFEyJ4+w/M1poxHibGE1QkZfvatu0qnlUkyLZ6sB5cRTVmGrT8v0XQDQITu
+	 o7t7HCrfJFnRBBj0/q5rE0t6eS5wSCG83cu/ZDFcV2U7x4JtmHAL9mKoaktAxwvPaI
+	 NYDwT5qjwRAZkfmmJP8yyRlSIRCkU31HEHBsdlYCRbUSD2/lsmL6OFuAYMqddqUtCz
+	 9e4DAviAQYM8qfJvDF2KYmTB4Efky7gFx9GpzI6j0wCr4ltT6ZBU9rIarIEnjsNY8r
+	 4KeEra8xa2S/Q==
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.ams.internal (Postfix) with ESMTP id 407C8198005A;
+	Fri, 28 Aug 2026 09:47:42 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Fri, 28 Aug 2026 09:47:45 -0400
+X-ME-Sender: <xms:fZGRajO8tbszWQe3PiKqVvkxLMsSZjlif2S9uYt-vjmJEpeOFvfHCw>
+    <xme:fZGRahH2nr9VObEBXt262phMqxEp4YMB8N3cIZaF2OTvfKvZa1goN1Mt3jlO2MLhR
+    XRBGh-yo1OqJZU_2scto5I2lWzjToiY8e-T_Jdwf5V-V1qBqKdNia54>
+X-ME-Received: <xmr:fZGRavucriFI5JGLOyzGMK7DHAHpqFqJWaIRUP3Pm9cs-8ugBLWe2PJg7Ws>
+X-ME-Proxy-Cause: dmFkZTGhuVEzINoxJX9iq+sBnTJn/YGfvUD4BbjHGtjEf0PAh/o/tXr2vuzbX9U8fMq0zF
+    J5YoWoO47NsZs3vKY4l9KIcKbSS0+BRZwuTUJ9JEu04yQDq/7Q2T0DrqDQ14+GS1y4+Kii
+    qbLumtOCdeF31VVkfQ15zMW49EJKPf9ai0w8NgPevT7/2tBdBdQF+5JevWefJ8gD9CFyC6
+    vy8t6c7nt9Z81+VYeNx6xVt0oCjgXOQEQ8R1XTjNdsxXQezprFGSM7EVxQoC61FUFtMtjl
+    j14I5/V5nIn5meZ617TWS99yg4QSmnCPaVaojmBd58z3obTWdBXUPQx6YOwdozC1RPkake
+    b7CQo7h8uFUrdwxo+a+KEEZRo+rgnaAsXWTX3FZp40gpI88PBF5pdoEJQoYaVNDsOYdDLv
+    nnOn00p8Mp1YDklKa5PNmImiyNBrjQq3pWispVkCYL/vHtE6rX0yKfGG/mSXj2CxL8wv4i
+    r0y0+WYSXNM3YyKgzh/zanZGTQ8dGkGWLsvQDqq9bBRVJpv+ELs7/2/XXATJ4u91Jmv4mc
+    tIbaJNv5r4NMz9B8LAhg6+b4cg8ASkvBonDuNoJuQ96vXhlmquzGIh0JUSLqN/uz6B0edi
+    gEefM8IBWm9PYMz+eSfeOcqLTGPPyW08nMQUgJOuQmELSCPiO+sNgH26i5Kg
+X-ME-Proxy: <xmx:fZGRasTX6KiaE4c_cg9PXtcf5lFwklOXMwCMJ8S4HpMKKGNHaatHcQ>
+    <xmx:fZGRaqEkizgCxDrFfZWtyhjb-WQ1yjdKVnYNxlNWXltvS36zBr81og>
+    <xmx:fZGRahciHnap5NePGxNCROZtKGgBB-XszR-01EHbjJXxOf2TXxTKDA>
+    <xmx:fZGRaqrf2oas2ahHPRsmyNxb7N__Av5_rVQJm6K2AU3sMslJ7AlTcQ>
+    <xmx:fZGRauGMdH0cmV4-9-yzqayTn6Pm4Cv2Uey5kNm71uwNCdeE6SiHXVPU>
+Feedback-ID: i10464835:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 28 Aug 2026 09:47:40 -0400 (EDT)
+Date: Fri, 28 Aug 2026 14:47:39 +0100
+From: Kiryl Shutsemau <kas@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	kexec@lists.infradead.org, David Hildenbrand <david@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, linux-efi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, rmikey@meta.com, riel@surriel.com, 
+	kernel-team@meta.com
+Subject: Re: [PATCH v3 1/5] mm/memory-failure: efi: add the
+ LINUX_EFI_POISONED_MEMORY configuration table
+Message-ID: <apGOr0BAFc1DMQe6@thinkstation>
+References: <20260826-hwpoison-kho-v3-0-6f79c4b605bc@debian.org>
+ <20260826-hwpoison-kho-v3-1-6f79c4b605bc@debian.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kexec_file: remove unused arch_kexec_locate_mem_hole hook
-To: Sourabh Jain <sourabhjain@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc: Albert Ou <aou@eecs.berkeley.edu>,
- Andrew Morton <akpm@linux-foundation.org>, Baoquan He
- <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
- Palmer Dabbelt <palmer@dabbelt.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Paul Walmsley <pjw@kernel.org>,
- Pratyush Yadav <pratyush@kernel.org>, linux-riscv@lists.infradead.org,
- kexec@lists.infradead.org
-References: <20260827144452.508328-1-sourabhjain@linux.ibm.com>
-From: Mukesh Pilaniya <mpilaniy@redhat.com>
-In-Reply-To: <20260827144452.508328-1-sourabhjain@linux.ibm.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: c_2cG4C0fbjJ9Uv9FG79QS-5Pa4zlv5uS2wxvYANMXE_1787923261
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260828_062106_933591_8BB658BB 
-X-CRM114-Status: GOOD (  20.47  )
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260826-hwpoison-kho-v3-1-6f79c4b605bc@debian.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -115,100 +104,27 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Sourabh,
-
-The patch touches three files across three subsystems so kexec: would be
-a more accurate prefix than kexec_file, for e.g.:
-
-kexec: remove unused arch_kexec_locate_mem_hole hook
-
-On 27/08/26 8:14 pm, Sourabh Jain wrote:
-> No architecture provides an implementation of
-> arch_kexec_locate_mem_hole(). Use kexec_locate_mem_hole() directly
-> and remove the unused fallback wrapper from the kexec header.
-> 
-> This simplifies the kexec memory allocation path without changing
-> its behavior.
-> 
-Also, it might be worth mentioning in the commit message that this hook
-was originally introduced by commit f891f19736bd and that the last arch
-override was removed in commit 6e5250eaa665; making it safe to remove now.
-
-Otherwise, the change looks good to me. Feel free to add:
-Reviewed-by: Mukesh Pilaniya <mpilaniy@redhat.com>
-
-> Cc: Albert Ou <aou@eecs.berkeley.edu>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Baoquan He <baoquan.he@linux.dev>
-> Cc: Mike Rapoport <rppt@kernel.org>
-> Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
-> Cc: Paul Walmsley <pjw@kernel.org>
-> Cc: Pratyush Yadav <pratyush@kernel.org>
-> Cc: linux-riscv@lists.infradead.org
-> Cc: kexec@lists.infradead.org
-> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-> ---
->  arch/riscv/kernel/kexec_elf.c |  2 +-
->  include/linux/kexec.h         | 15 ---------------
->  kernel/kexec_file.c           |  2 +-
->  3 files changed, 2 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/riscv/kernel/kexec_elf.c b/arch/riscv/kernel/kexec_elf.c
-> index 3e9a32acb8f2..ca5abbad59e5 100644
-> --- a/arch/riscv/kernel/kexec_elf.c
-> +++ b/arch/riscv/kernel/kexec_elf.c
-> @@ -91,7 +91,7 @@ static int elf_find_pbase(struct kimage *image, unsigned long kernel_len,
->  	kbuf.memsz = ALIGN(kernel_len, PAGE_SIZE);
->  	kbuf.cma = NULL;
->  	kbuf.top_down = false;
-> -	ret = arch_kexec_locate_mem_hole(&kbuf);
-> +	ret = kexec_locate_mem_hole(&kbuf);
->  	if (!ret) {
->  		*old_pbase = lowest_paddr;
->  		*new_pbase = kbuf.mem;
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 0af8ae4fdd08..e5f1cfc11fef 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -259,21 +259,6 @@ int kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len);
->  extern int kexec_add_buffer(struct kexec_buf *kbuf);
->  int kexec_locate_mem_hole(struct kexec_buf *kbuf);
+On Wed, Aug 26, 2026 at 05:03:52AM -0700, Breno Leitao wrote:
+> @@ -1271,6 +1274,16 @@ struct linux_efi_memreserve {
+>  #define EFI_MEMRESERVE_COUNT(size) (((size) - sizeof(struct linux_efi_memreserve)) \
+>  	/ sizeof_field(struct linux_efi_memreserve, entry[0]))
 >  
-> -#ifndef arch_kexec_locate_mem_hole
-> -/**
-> - * arch_kexec_locate_mem_hole - Find free memory to place the segments.
-> - * @kbuf:                       Parameters for the memory search.
-> - *
-> - * On success, kbuf->mem will have the start address of the memory region found.
-> - *
-> - * Return: 0 on success, negative errno on error.
-> - */
-> -static inline int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
-> -{
-> -	return kexec_locate_mem_hole(kbuf);
-> -}
-> -#endif
-> -
->  #ifndef arch_kexec_apply_relocations_add
->  /*
->   * arch_kexec_apply_relocations_add - apply relocations of type RELA
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 59fb9d71e9d8..9a981359addd 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -784,7 +784,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
->  	kbuf->cma = NULL;
->  
->  	/* Walk the RAM ranges and allocate a suitable range for the buffer */
-> -	ret = arch_kexec_locate_mem_hole(kbuf);
-> +	ret = kexec_locate_mem_hole(kbuf);
->  	if (ret)
->  		return ret;
->  
+> +/* Bit N covers unit N of physical address space, counting from address 0. */
+> +struct linux_efi_poisoned_memory {
+> +	u32		version;
+> +	u32		unit_size;	/* bytes of phys space per bitmap bit */
+> +	u64		size;		/* bitmap size in bytes */
+> +	unsigned long	bitmap[];
+> +};
+
+struct efi_unaccepted_memory has 'phys_base'. Do we want it here too?
+
+It can be helpful if physical memory starts very high for some reason.
+I believe it is common for risc-v.
+
+Tenstorrent Blackhole card has 4G of RAM based at 0x400030000000.
+Counting from address 0 that is a 4M bitmap for 4G of RAM. :-/
 
 -- 
-Regards,
-Mukesh Pilaniya
-
+  Kiryl Shutsemau / Kirill A. Shutemov
 
