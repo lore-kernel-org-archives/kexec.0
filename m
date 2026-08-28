@@ -4,72 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 982A1C61DCB
-	for <kexec@archiver.kernel.org>; Fri, 28 Aug 2026 13:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9DFAFC61DCB
+	for <kexec@archiver.kernel.org>; Fri, 28 Aug 2026 14:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=GMsq4s9H5sslOOoHpaDnzK693uMuIdL+zLKvHUgSCOw=; b=l6JHClpkRdknvY9r/ns/BFuDUL
-	gsAGOsoKAzU/h3SE/7udRHRng0aAmK/Io+lbpiSFXcWBkV7CvApA8t7KYW4w3AEVNQ0muo48HOor6
-	aJz1lwuEvRlrOFxOtSP4BfdFbbsLeo9mIoZtoTyUaGrvSibk1NkMUQFsnmiTXZatn+nAbQdCOMi30
-	iLTVlGIblcKnHkoNf4+yzO8Ydvl1y5rViFWqkSRDAwrCMZsMMYvTQ9XtomM+6x/GClOm5eDxnt99n
-	MqzGEy8JXFCOs5sByxNQKedZ3gkjA8V7QC5lg5aPxd/RwckHEAqtoDVRAxv4vteWv9z5yvT99tXXq
-	wxtIrxEA==;
+	bh=U7b6NXuQpbm+Bpwe770MpMgWC/+r6IvbVv/YGtdtPR8=; b=VRnZyUe3SQSxzSotDXtgNOVkHQ
+	Xm3lp5Bxwfeb7Y97xKkI5o6FlONE4XtLMRH4Tn5hHDZoKfdwHYVY+ZmLqC7Jo6obfT3vEjvgTwvZ1
+	Di+VMyc93y5sQ1zZdbZ0YTjrn+tngk1nyI+LjGqHbHu1hlFUZ78j+Pr7nvsKSX7aY3B9GKRy12R3o
+	0txJ8jPAWuZzKXKzzguyU90umqKKwvVt6gH9TsJ+iq59rdnYPiG4PvHOygdZv49HQF4ii8eISlkzH
+	7XACsbW9Z+oIbRzs845gVeWjj5AibwlGW9YulZlHCk5sbZ8hx3x6si+097yry3+AT86qFNV3UgbYI
+	jxDtG/Hw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wzx7Y-00000005vf8-0ks6;
-	Fri, 28 Aug 2026 13:59:52 +0000
+	id 1wzxIh-00000005x3m-2Tyv;
+	Fri, 28 Aug 2026 14:11:23 +0000
 Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wzx7X-00000005vew-1QMX
+	id 1wzxId-00000005x3c-3lgK
 	for kexec@lists.infradead.org;
-	Fri, 28 Aug 2026 13:59:51 +0000
+	Fri, 28 Aug 2026 14:11:20 +0000
 Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id 1E58743C21;
-	Fri, 28 Aug 2026 13:59:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14F231F00A3D;
-	Fri, 28 Aug 2026 13:59:49 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 95A0C436B9;
+	Fri, 28 Aug 2026 14:11:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DC541F000E9;
+	Fri, 28 Aug 2026 14:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787925591;
-	bh=GMsq4s9H5sslOOoHpaDnzK693uMuIdL+zLKvHUgSCOw=;
+	s=k20260515; t=1787926279;
+	bh=U7b6NXuQpbm+Bpwe770MpMgWC/+r6IvbVv/YGtdtPR8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=lDLgEYHxqyMExx7XGHQ1jMOssFVfuXXHoEzbBFpy5flN3Ib4Bd3XgGWIWJMp6arLJ
-	 uQVbfv7J5ZyA4dhS8/bZdYE+uBBMnrDV8e0fo5PloBITeSUDghfkfYw1D9c5wdWYwu
-	 XZQit9lHQy1bSrPTtaQxgXbGCzJ7ybYZKFJ2vKJmyZ3gfcQ9S9Zux7MV4EHTe8WKIF
-	 cQvwZk10zsIwVNSeF02O73cQgZkIW8VKvcKbmR4S3FO1bWytcWw/EKysYqo2DV0DeN
-	 8tK1MPeAD1ya67qILgrYnKWGC/cyVNaPzFTPrj302CK1H26FHwBHo62CzeDmiZRHiZ
-	 FnDhPRSM8Ictw==
-Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
-	by mailfauth.ams.internal (Postfix) with ESMTP id 8F1C61980045;
-	Fri, 28 Aug 2026 09:59:45 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Fri, 28 Aug 2026 09:59:48 -0400
-X-ME-Sender: <xms:UZSRapkyHK92xpfCc7gC34L_khXR3QDyMijHbidWAs220sKQ8lkFUg>
-    <xme:UZSRan8Dpwoy1eVqQ6ejwtpK5aDyWpuAHSF3GZvcF9ux2kRifDcfxgdrhN5UbMiT2
-    kcCkZeB7jDWyXr2cnergQkITcqHPmjzoSUgbqYkVaV59rMStIDBniI>
-X-ME-Received: <xmr:UZSRatEolRX4Ox6wFQ1OGkjYzS9-u6dOHl9Sw-ITv6dXf-KAx_Tttsv0TF8>
-X-ME-Proxy-Cause: dmFkZTFllgFcBPPxWyh7H7Ya97cPF2z+CaYPZAeFHJRUEOI7iP7NbK/RD+h7m0XG7mWy16
-    fIZCnkd80l4AcUG6PCl7E90y1FlqRmxxmociQ31S8wZQTE+r/ShOn2X3FGZoq2J0Vdf97p
-    nuFw4AqeM/WomfxoyRgLOaOyXPCImUEPhxoNz4O6fJf9J9swOyN5utIVT2r0XabJbA4HxF
-    oILQMURKy3DfTYUUGeeYdtTqPn4upMBcTfKSGqNc5c6xt9AM949lwP1kFNdph86l+6pYNc
-    RLrozyUVEmo7eSsWX5/dVPnhXM37BJYxN8ROLEVvUcuC0Xxxx2BGLKc00OiMUuXhlN+6X0
-    1vEX6V9DH/wtIWZy7pT2JUHc34pYq9bNE1mhzx6gPcCLaoh6ZOIx6UPo5fsw2jPVelT/oM
-    +RkCwxR1y6cCiBY7aJLTWgDUQPbYSswR7CrwcwhuhPYs7IJmoS7+ghC4sDkXaU/AkAnIJc
-    Gu0NQkXGvpCFrPL0K1sJJ0/HBEE6GTdYLrk1kEZpfjVXn0h1VASbWIyC8kJ92dmWrjl1FK
-    b/EgQHbOIgf+5hE5GMQ3LfKop5IEUj8L2oPdH4UNTLw/ZUAu52OAWj7ERMa3mq8u4Fpfvf
-    n43K7EzhAX+ZsBpBswrS7KKCqwtaiiqzNVHDXonWeXfntyQUnXrftzSFTLNg
-X-ME-Proxy: <xmx:UZSRauKl_CC_sQ4ifO52hn5UJgg2-F_7akOIxsy_CfM2VI_jq2wh2w>
-    <xmx:UZSRamfb0Cvb9NxgQOQKnEarX-NxrqGf7K4MrHcRGhmLSPArbpa-Mg>
-    <xmx:UZSRamXYit9R7Sub6lx6kW99a3nAu5AU_EaeCy2263Rn6OZWl3cyFA>
-    <xmx:UZSRauCS1sl_ngYBSDZMZE-MXPsW_dD3EDJf5Eky0u9G8cqeVWsMZA>
-    <xmx:UZSRat9eai9o-Upb0C9Q7D893HN4Q13Z1LausSAOpkC8N-eK7DnIl2aI>
+	b=URfLviro2w0VdJ4YO8neeZvUxtIdNwrPWpvPo48fNJ8y84NnI1SrupmK5IKxoSOny
+	 n+fC7M1OrWiec6Ar1qgigzfapw4D/MkkurtVnFwnp8FqLyTa5wd76JTmA+0klf8cx7
+	 I12MgxdC88orwWRC/waMtG3j6M5KsSimDuLC9jWVROYPDlF9kZ3Ib6yI3++Eg4yzl7
+	 m7fcdj1sN25g+P9JHwJF3gDCGg49Bpl5+94pckjbqGHpaKSvWDa9F+BQpv5O9GUZHM
+	 MdSKP7Cvh7/nBMkuA4W5AXbbiT5Y6lzR+bBK2JFFLQBJLP6Jr13EBYRjt8Yi+KAFet
+	 pKbM60O03S71w==
+Received: from phl-compute-07.internal (phl-compute-07.internal [10.202.2.47])
+	by mailfauth.ams.internal (Postfix) with ESMTP id E6CB4198003A;
+	Fri, 28 Aug 2026 10:11:12 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-07.internal (MEProxy); Fri, 28 Aug 2026 10:11:16 -0400
+X-ME-Sender: <xms:AJeRas1aZk9opjMSiGX5jElAqjZ4yIFj2k79pkjQWBBDs2rRAZz-GQ>
+    <xme:AJeRaqPZSBLSs0GN8Ma9LdPe9x3z3EXOw3X4xZZ3t6AdjbQEFNUAw03QHcz8KE-4c
+    gfOnZTcW8a2Jq_e4kyjWntEV2vEZ231XWkT4_Qb_6D4Pub9gbb2G14>
+X-ME-Received: <xmr:AJeRaiWuEV238jidr06ojGeBuk6qzsjid56OXlDDKuTMiedxTLZPhL_oZmY>
+X-ME-Proxy-Cause: dmFkZTGfMEtIdxK9TZhqZLeRbfNvLYXlwoNy36VBDoEf9Mft6xswYTLKr5+mL4ccPtdqIJ
+    +vUC/Jlk/xplE2julyVEiux1aCh0eTADY2ObZjiUqkrKT5Ef1K/Qc+X4X0h0mCPmpbKqPL
+    AjDnxuLaEDPB4g2sNEZHXSXz0it2PYy7eaS5EAF/3j8NDfbb1e2T+8R6ZWYLnhBvUGl17y
+    1sAzCDfz5CMOQDgVGhn24L+BZer5Uyqd71kfJ6/xMXI3m8JiQIMTFF4KPRsN79kPqDCBAY
+    w1NnkXoPPSuNed5UOjneSlrXRudTr2DT8EOVI2Rn2XM0JKcyccE5oUSCd89xeQcNPWIMqW
+    2o/KtmRCeONuaV8kcZ3bSQ9t3OqJhmCbPkO1VXJO6s3+D7dlY6dmU9D3tPPOqBhNvdtKTK
+    OlaIZTh4bSsVAY/aKs93BhArFKW2i3ZdUkEb81t3r9qa1ONHeB9sHjOY0dXWaLTARhkva4
+    vIi3zi/TNm4LExcwt8SOAO0b1TWucerQhHfZrj1XTyd44r1NHzSJG1WmyL7CUUMDkVGO6H
+    SpcvpmXTUDEpUJJ5+nx0UJxYbn1u7Wz+yOACY9/dhRipLWlz+rP1JSLvg/ZlrszAEwRUbV
+    tDHQCBk21ZXc2A2ldQQ9t4qy/RXSjvgl7kAflQd5gF1SRV3DvYJUOlXmZruw
+X-ME-Proxy: <xmx:AJeRaqbiOjLtG_O770h2bh6BHEdo4Bfr0xoea3h137RsTu7NgBpFug>
+    <xmx:AJeRatvSmGpff_pBo8O3gYONJARpaii_gjMdzsVD37p2L3pNXZ5jqw>
+    <xmx:AJeRasls8flkBSEysMaaYuVugCPUBY3Vj4AGw7dHVBnplXF-iqOgAw>
+    <xmx:AJeRanSZBbWnVQE4lXp4-_7P4acsvBKQPgaH-3fdXqdmG9QsGgIrXg>
+    <xmx:AJeRauMjyfqAE17oyt7EQXafma_xxc_kKuxVOfPciLs7NHoGagJ_eI5B>
 Feedback-ID: i10464835:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 28 Aug 2026 09:59:44 -0400 (EDT)
-Date: Fri, 28 Aug 2026 14:59:43 +0100
+ 28 Aug 2026 10:11:11 -0400 (EDT)
+Date: Fri, 28 Aug 2026 15:11:10 +0100
 From: Kiryl Shutsemau <kas@kernel.org>
 To: Breno Leitao <leitao@debian.org>
 Cc: Ard Biesheuvel <ardb@kernel.org>, 
@@ -81,15 +81,15 @@ Cc: Ard Biesheuvel <ardb@kernel.org>,
 	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, linux-efi@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org, rmikey@meta.com, riel@surriel.com, 
 	kernel-team@meta.com
-Subject: Re: [PATCH v3 2/5] mm/memory-failure: libstub: install the
- poisoned-memory EFI table
-Message-ID: <apGSy78NoCov0MWr@thinkstation>
+Subject: Re: [PATCH v3 3/5] mm/memory-failure: efi: record hardware-poisoned
+ frames into the poisoned-memory table
+Message-ID: <apGWUWi5-RbhFHpe@thinkstation>
 References: <20260826-hwpoison-kho-v3-0-6f79c4b605bc@debian.org>
- <20260826-hwpoison-kho-v3-2-6f79c4b605bc@debian.org>
+ <20260826-hwpoison-kho-v3-3-6f79c4b605bc@debian.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260826-hwpoison-kho-v3-2-6f79c4b605bc@debian.org>
+In-Reply-To: <20260826-hwpoison-kho-v3-3-6f79c4b605bc@debian.org>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,30 +104,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Aug 26, 2026 at 05:03:53AM -0700, Breno Leitao wrote:
-> A EFI config table can only be installed while boot services are still
-> up, so the stub has to create it; the running kernel can only flip bits
-> in a table that already exists.
-> 
-> Size the bitmap from the top of usable RAM, which efi_get_ram_top()
-> works out by walking the UEFI memory map, since the stub has no max_pfn.
-> Bit N covers unit N counting from address 0, so the table tracks
-> max_pfn. Memory the firmware hot-adds later sits above it and is not
-> carried across a kexec.
-> 
-> One table has to serve every architecture, so efi_get_ram_top() takes
-> the union of the memory types they turn into RAM: what setup_e820() maps
-> to E820_TYPE_RAM on x86, plus the EFI_ACPI_RECLAIM_MEMORY and
-> EFI_PERSISTENT_MEMORY that is_usable_memory() accepts on arm64. Sizing
-> wide only costs bitmap bytes; sizing narrow silently drops the records
-> for every frame above the top.
+On Wed, Aug 26, 2026 at 05:03:54AM -0700, Breno Leitao wrote:
+> diff --git a/drivers/firmware/efi/poison.c b/drivers/firmware/efi/poison.c
+> new file mode 100644
+> index 0000000000000..d6855e712832c
+> --- /dev/null
+> +++ b/drivers/firmware/efi/poison.c
+> @@ -0,0 +1,126 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Runtime side of the LINUX_EFI_POISONED_MEMORY table: one bit per
+> + * EFI_POISON_UNIT_SIZE, set here as frames go bad, honored by the next kernel.
+> + *
+> + * Copyright (c) 2026 Meta Platforms, Inc. and affiliates.
+> + * Copyright (c) 2026 Breno Leitao <leitao@debian.org>
+> + */
+> +
+> +#define pr_fmt(fmt) "efi: " fmt
+> +
+> +#include <linux/bitmap.h>
+> +#include <linux/efi.h>
+> +#include <linux/io.h>
+> +#include <linux/log2.h>
+> +#include <linux/memblock.h>
 
-x86 and ARM doesn't seem to agree what RAM is. On x86 it is by ->type
-and on ARM it is by ->attribute (anything WB/WC/WT).
+Is it leftover? I don't see any memblock usage.
 
-is_usable_memory() only decides nomap. Everything is_memory() lets in
-lands in memblock.memory, and max_pfn is PFN_DOWN(memblock_end_of_DRAM()),
-so the top of RAM there can be a type that is not on your list.
+> +#include <linux/mm.h>
+> +#include <linux/overflow.h>
+> +
+> +static struct linux_efi_poisoned_memory *efi_poison __ro_after_init;
+> +static u64 efi_poison_nbits __ro_after_init;
+> +
+> +static u64 __init
+> +efi_poison_usable_size(const struct linux_efi_poisoned_memory *pm)
+> +{
+> +	u64 nr_units = DIV_ROUND_UP(PFN_PHYS(max_pfn), pm->unit_size);
+> +	u64 bytes = DIV_ROUND_UP(nr_units, BITS_PER_BYTE);
+> +
+> +	/* Whole words: the bitmap is reached an unsigned long at a time. */
+> +	return min(round_up(bytes, sizeof(unsigned long)), pm->size);
+
+Hm. Why bother to clamp to max_pfn? What's what's wrong with just using
+pm->size directly?
+
+> +}
+> +
 
 -- 
   Kiryl Shutsemau / Kirill A. Shutemov
