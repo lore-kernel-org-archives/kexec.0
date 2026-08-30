@@ -4,118 +4,133 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AFC5FC61DB9
-	for <kexec@archiver.kernel.org>; Sun, 30 Aug 2026 05:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 390AAC61DD9
+	for <kexec@archiver.kernel.org>; Sun, 30 Aug 2026 06:01:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2I2ajYWCqKEQ9Cd+CeMHNLEbWOrhmNEJMlpAnHbushI=; b=289Dnh/54SWWr67cDmDPtVISSG
-	nIjr69TCIIUmipI78rOe2GXWYMWHV6OPVFuFsYNuPKdfconvVri4nsMhtQsswOVBXmzj8ZQboMi42
-	DFUMe8+D2E+4+XA30trjl4GRKTiqG/urn4QVK51wuLEj+UC0k951bg6vKtgv49V7ZM7sRjcQH2rI0
-	JI+2cJXapI9oOMYzB6+KmnpLRuwr+v8o+7fkFaz+vCDvs/TdzxB6cdSTz6gsE+5wRj/RT5zeENj75
-	jM2pQRcAT1PWBzWJjLoY00pZbfxMN7IVzK/z8lmSBBnRbp0yauAQJV3zLOU9OyHpGULzSaDRegdrf
-	pyNO+kSw==;
+	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=cUId8mVD0q8ArFhphi7F2d/4HgLaI29h9tmyckBAMNM=; b=bhEaoUUeB3jOWvwT3EnhElRTCf
+	H8AT4FM/ZqIobL9DqhzuAh34vV0GIqMf0aat3Zx4Vww16ZrQC6eoXkQiaC/L9FHhzH9jqeIciZorr
+	SFou/oEu9uGhiSqu66C5HkdpqAQu2uutu7az60SMFwfAm6zV5Nb0qqcagEk3cCun8GAhPtmMTapTX
+	8mQxjSd0AZ1zb97nQZTolH/GikYXoQBQQhG814QM/yhsfiJG8dsxR70NHGlFZ0XiGr7QJ1HIr0lr3
+	m66+OMI63m8TIvB55FAargniUbjSd8Ab6FwOrg5+G96H6zQyYm+cVYEwU1LItKHmiADpBKuDEF2k1
+	FHB0WXNg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x0YEq-00000007Vb0-3FYu;
-	Sun, 30 Aug 2026 05:37:52 +0000
+	id 1x0YbQ-00000007VyN-2BQs;
+	Sun, 30 Aug 2026 06:01:12 +0000
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x0YEl-00000007Vad-46Zi
-	for kexec@lists.infradead.org;
-	Sun, 30 Aug 2026 05:37:49 +0000
+	id 1x0YbN-00000007Vxy-2CXY;
+	Sun, 30 Aug 2026 06:01:11 +0000
 Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67U2VgQj2400412;
-	Sun, 30 Aug 2026 05:37:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=2I2ajY
-	WCqKEQ9Cd+CeMHNLEbWOrhmNEJMlpAnHbushI=; b=OJw5zDp5xewtqTZiC3YOmZ
-	tTYz/HMEs/r+OA6YRSQXIZvDiAZsYA4mMkW+Om89XUfCWBtb+47GJM93DYllGCsT
-	Qx8FkRyaNxAJaMjt0B/vN08AWRXuX7h7Dxui6azNRj8+aUMl2Rl+Fftb90g/0K2q
-	Qi6I01bJHS28F8xCEqUfF2HItk5TZhaOmjVhFWdKrSdS2JDs/Lhbp5Zk/w7fNddi
-	8ycukp2BENTPIVrICgFrDU/Yx3wZ7em0xmdiMcmoGlDdUPmTi+i4KVHrgiKb3u9u
-	DrKJ6AJTWshuPSgQyWPYxRRsrhBbBBvLEsYqTmdxFvsXTsXTwbA3/uiY4yhMnZcA
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67U2WDXN2400791;
+	Sun, 30 Aug 2026 06:00:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=cUId8m
+	VD0q8ArFhphi7F2d/4HgLaI29h9tmyckBAMNM=; b=cSkACYyBJLDRRx9opzknY4
+	y+yIFBl4Nutn5BApIR7IwEsytvC10dMjY8NV5y/ohqDUV6vHmeT+qDmM8kq5cVDQ
+	eaS8CiIyguiYz5y+NrqvStAVHykS0iHR4fg7m1iSTHhlif64lSPcRZVCFQGSaNJG
+	VPglpDjFY1/Y1/N4HKuHLw0HubPtnIyYDYkBNDp6tXJ6te62NnXIaTh8gbJ2qhTT
+	X2dsKTwQnuibJjWbek/LpedmeCY7IEb2oAkagEKbx6SPgppsqvcxPm8FqQTYbMKJ
+	ndy9jM34L7Vhnl8jR4KrtTMeNuoj4cRF4dCiNGMiQ2A9cW6RfNGYf9WjOErNZzRw
 	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gbpx53nct-1
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4gbpx53ptv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 30 Aug 2026 05:37:40 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67U5QItJ020171;
-	Sun, 30 Aug 2026 05:37:39 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4gcarjrgeb-1
+	Sun, 30 Aug 2026 06:00:15 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67U5vr4O029036;
+	Sun, 30 Aug 2026 06:00:13 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4gca4vrmb6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 30 Aug 2026 05:37:39 +0000 (GMT)
+	Sun, 30 Aug 2026 06:00:13 +0000 (GMT)
 Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67U5bbEJ35783086
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67U609Hq45679074
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 30 Aug 2026 05:37:37 GMT
+	Sun, 30 Aug 2026 06:00:09 GMT
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2E2B020043;
-	Sun, 30 Aug 2026 05:37:37 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 7C18A20065;
+	Sun, 30 Aug 2026 06:00:09 +0000 (GMT)
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2306720040;
-	Sun, 30 Aug 2026 05:37:33 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id F1B972004F;
+	Sun, 30 Aug 2026 05:59:45 +0000 (GMT)
 Received: from [9.67.21.115] (unknown [9.67.21.115])
 	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 30 Aug 2026 05:37:32 +0000 (GMT)
-Message-ID: <ccf3c0ae-f04b-4d81-b09e-daa5c785ec10@linux.ibm.com>
-Date: Sun, 30 Aug 2026 11:07:30 +0530
+	Sun, 30 Aug 2026 05:59:45 +0000 (GMT)
+Message-ID: <87186b8a-f68c-400b-97cf-8ea6129eba69@linux.ibm.com>
+Date: Sun, 30 Aug 2026 11:29:43 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/9] crash_dump: Disallow writing to dm-crypt configfs
- during kexec_file_load syscall
-To: Coiby Xu <coiby.xu@gmail.com>
-Cc: kexec@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <baoquan.he@linux.dev>, Dave Young <ruirui.yang@linux.dev>,
-        Pratyush Yadav <pratyush@kernel.org>, Mike Rapoport <rppt@kernel.org>,
-        Pasha Tatashin <pasha.tatashin@soleen.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20260828084900.1496839-1-coiby.xu@gmail.com>
- <20260828084900.1496839-3-coiby.xu@gmail.com>
- <86f3b10d-6fc2-4dbc-a20b-5d2365601be2@linux.ibm.com> <apLKk_P9wHc9uSZQ@Rk>
+Subject: Re: [PATCH v3 07/17] crash_dump: Fix potential double-free of
+ keys_header
+To: Jinjie Ruan <ruanjinjie@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mark.rutland@arm.com, chenhuacai@kernel.org,
+        kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au,
+        npiggin@gmail.com, chleroy@kernel.org, tglx@kernel.org,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, akpm@linux-foundation.org, baoquan.he@linux.dev,
+        rppt@kernel.org, pasha.tatashin@soleen.com, pratyush@kernel.org,
+        ruirui.yang@linux.dev, kees@kernel.org, thuth@redhat.com,
+        gshan@redhat.com, jic23@kernel.org, james.morse@arm.com,
+        ardb@kernel.org, leitao@debian.org, yeoreum.yun@arm.com,
+        coxu@redhat.com, tangyouling@kylinos.cn, hbathini@linux.ibm.com,
+        adityag@linux.ibm.com, ionut.nechita@windriver.com,
+        liaoyuanhong@vivo.com, seanjc@google.com, fuqiang.wang@easystack.cn,
+        makb@juniper.net, piliu@redhat.com, ebiggers@kernel.org,
+        jbouron@amazon.com, mclapinski@google.com, me@linux.beauty,
+        graf@amazon.com, bgwin@google.com, robh@kernel.org,
+        takahiro.akashi@linaro.org, palmer@rivosinc.com, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Coiby Xu <coiby.xu@gmail.com>
+References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
+ <20260826092541.3905933-8-ruanjinjie@huawei.com>
 Content-Language: en-US
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <apLKk_P9wHc9uSZQ@Rk>
+In-Reply-To: <20260826092541.3905933-8-ruanjinjie@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=PPc/P/qC c=1 sm=1 tr=0 ts=6a93c1a5 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+X-Authority-Analysis: v=2.4 cv=PPc/P/qC c=1 sm=1 tr=0 ts=6a93c6ef cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8
- a=pGLkceISAAAA:8 a=zrT50iyv3olL9t5bMM8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: mkVsZ8SwpwOXGIyRlQt0mIzvuPJlsdri
-X-Proofpoint-ORIG-GUID: xzYwBCdw7OZSbcWKYxgx9bhkX4Tcjt3O
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODMwMDA0NCBTYWx0ZWRfX/JqsCKTFy3uX
- g7VNxjk+7UuR/yP1AD7kTgDm/j1VxUDRQI9UP3XDe115XOZZUpDISiKMrxclbvZZG6kMgF/dDN5
- 6UDOaOe9aYYrmmFOj66c9o9Yyg7R4tQ=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODMwMDA0NCBTYWx0ZWRfX1mO7/atKZcVY
- E00wR+Q6vSPuAYmr88LHeujqzuQEfH+ByF1EATmvswwV109k4EjZCAa43nFYThodlKwRF6lfZXN
- ylikOYt4bwFPHi47vYObkpOPiQ+2pH8jep9IfcQAqkTYOUcp0Ktw81g+4pNK1GUgvRk7sxviBAE
- drG3/Lxoh89/629YaTDZnmlLKSypbRlsjD1KxFpZgKX3JZtD3XZDNk84fBPySWzJh/dk2vRQLxe
- E2PQRmduMcGyVhOJNVrEWOjwJpaWcoe9g3w2MDZNLl7x0pp0g4qptEzeUl56SlRCAES3GJU/lDu
- vQomvfhmsgjMhF7uIdoHryWQe+ifhm/S0P31t/KWCB3+xm2GRBzcl3Y78I94Rf+cq31WBjHedhg
- Qsftm+CxCSvnpGHQ+uSu5yuxLW1zPac/OvxRh8rBvaCn8/sAHhXEoT36koGipNqRhw3NSKc76Rw
- wGCHBIiLNTShFp8IwLA==
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
+ a=pGLkceISAAAA:8 a=Z4Rwk6OoAAAA:8 a=20KFwNOVAAAA:8 a=7ipKWUHlAAAA:8
+ a=i0EeH86SAAAA:8 a=701CVkoOzhNhLSDMr48A:9 a=QEXdDO2ut3YA:10
+ a=HkZW87K1Qel5hWWM3VKY:22 a=gpc5p9EgBqZVLdJeV_V1:22
+X-Proofpoint-GUID: VgyuYv1qmRcG1RUhv8Elbl7B939Neyl3
+X-Proofpoint-ORIG-GUID: Ipd0BTF3q-Kx16yAzRST5lJIyZJ6aY6-
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODMwMDA0NCBTYWx0ZWRfX6WdQnaMjbzZO
+ +vsf9opR0Aw4vftuFjHoTgPv0tiqXKxTJoFqX/mna1HUV5/x/Hd8t1lraC+Wap35uQc7BqfgpfX
+ 79DNFHmQwQFUUnTnv04xySvmAwYH+eg=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODMwMDA0NCBTYWx0ZWRfXxCR2SgGnG2ln
+ 0DIs1D4pJzx1bLvPEbmQWlt9WYJ4EN6ORjTdDAtj9FVMwsbLY1mJAqY9wFeXbjVx0Guu/PXN8mH
+ r5aVchZXCCYmviAw1t05jDAPTP/BmPnt49C9bHbNS0HDcMl9KnEA8ASaD2Az6SBMeEczNVWMC7w
+ VMUbxScqll0iizrX6hQWyJEADnxG9t1HKC1P0aZeS8Q+SRn+bl1j66HjK4LbhQSOX8QBkpvsVy7
+ nLT4NuZf6YNHJ4LeU5DSfpIVmsyIMgiTuONGAp0ogscqfbBpgW7Nc1nOMsmz2e/joUHX3cgP0Ib
+ WCotoOpIk1dhEEOCBBkAUW3xYD1FgeX1VScKe47iEGlbTYzCRup4JQLSmtLuH/Vmxhi3LgNcpT+
+ EBIBgNUelP8Vody5Fi6uDVQjdHb8h5thhRxPTn/W13iQlsx4Ywi/yOwFmWTDjlCOsKYrwU6ZOye
+ JxbVCJGpMDVq3dGCsBQ==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-08-30_01,2026-08-27_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 phishscore=0 adultscore=0 suspectscore=0 bulkscore=0
+ clxscore=1011 phishscore=0 adultscore=0 suspectscore=0 bulkscore=0
  spamscore=0 priorityscore=1501 impostorscore=0 malwarescore=0
  lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
  definitions=main-2608300044
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260829_223748_036253_644FE1E3 
-X-CRM114-Status: GOOD (  29.19  )
+X-CRM114-CacheID: sfid-20260829_230109_578757_C0710C80 
+X-CRM114-Status: GOOD (  24.29  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -130,179 +145,80 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Hello Jinjie,
 
+Coiby is handling this issue in the below patch series:
+https://lore.kernel.org/all/20260828084900.1496839-2-coiby.xu@gmail.com/
 
-On 29/08/26 17:47, Coiby Xu wrote:
-> On Sat, Aug 29, 2026 at 12:32:46PM +0530, Sourabh Jain wrote:
->>
->>
->> On 28/08/26 14:18, Coiby Xu wrote:
->>> If writing to the configfs group happens concurrently during
->>> kexec_file_load syscall, it may lead to the following issues,
->>>   - buffer overflow if dm-crypt keys are added after allocation
->>>   - stale total_keys if dm-crypt keys are removed during iteration
->>>   - keys_header will not be freed if config/crash_dm_crypt_key/reuse is
->>>     set true
->>>
->>> So hold config_keys_subsys.su_mutex for the entire sequence during the
->>> kexec_file_load syscall to ensure a consistent snapshot. To have serial
->>> access to config/crash_dm_crypt_key/reuse, use the kexec lock as we 
->>> also
->>> need to access kexec_crash_image serially.
->>>
->>> Fixes: 479e58549b0f ("crash_dump: store dm crypt keys in kdump 
->>> reserved memory")
->>> Suggested-by: Sourabh Jain <sourabhjain@linux.ibm.com>
->>> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
->>> ---
->>>  kernel/crash_dump_dm_crypt.c | 28 ++++++++++++++++++++++++----
->>>  1 file changed, 24 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/kernel/crash_dump_dm_crypt.c 
->>> b/kernel/crash_dump_dm_crypt.c
->>> index 4335b6cb1fc4..026c7de4ad85 100644
->>> --- a/kernel/crash_dump_dm_crypt.c
->>> +++ b/kernel/crash_dump_dm_crypt.c
->>> @@ -7,6 +7,7 @@
->>>  #include <linux/configfs.h>
->>>  #include <linux/module.h>
->>>  #include <linux/sysfs.h>
->>> +#include "kexec_internal.h"
->>>  #define KEY_NUM_MAX 128    /* maximum dm crypt keys */
->>>  #define KEY_SIZE_MAX 256    /* maximum dm crypt key size */
->>> @@ -296,14 +297,20 @@ static ssize_t config_keys_reuse_store(struct 
->>> config_item *item,
->>>      bool val;
->>>      int r;
->>> +    if (!kexec_trylock()) {
->>> +        r = -EBUSY;
->>> +        goto unlock;
->>
->>
->> Are we unlocking a lock that we didn't acquire? How about returning 
->> -EBUSY directly instead?
+Since the above patch series is all about crash_load_dm_crypt_keys, 
+could you
+please consider dropping this patch from your series and reviewing his patch
+instead?
+
+Thanks,
+Sourabh Jain
+
+On 26/08/26 14:55, Jinjie Ruan wrote:
+> `keys_header` was freed in `build_keys_header()` without being reset
+> to NULL, and the error path in `crash_load_dm_crypt_keys()` freed it
+> unconditionally even when reused, leading to double-free or
+> use-after-free.
 >
-> Ah, thanks for catching my mistake! And also thanks for prioritizing
-> reviewing my patch!
-
-No worries at all! Happy to help, and thanks for the patch.
-
-
+> Add `free_keys_header()` to centralize freeing and NULL-setting.
+> Use it in `build_keys_header()` and only free in the error path when
+> the header was newly built (`!is_dm_key_reused`).
 >
->>
->>
->>> +    }
->>> +
->>> +    r = -EINVAL;
->>>      if (!kexec_crash_image || 
->>> !kexec_crash_image->dm_crypt_keys_addr) {
->>>          kexec_dprintk(
->>>              "dm-crypt keys haven't be saved to crash-reserved 
->>> memory\n");
->>> -        return -EINVAL;
->>> +        goto unlock;
->>>      }
->>>      if (kstrtobool(page, &val) || !val)
->>> -        return -EINVAL;
->>> +        goto unlock;
->>>      if (is_dm_key_reused) {
->>>          pr_info("Already got dm-crypt keys, please continue with 
->>> kexec_file_load syscall\n");
->>> @@ -311,12 +318,15 @@ static ssize_t config_keys_reuse_store(struct 
->>> config_item *item,
->>>          r = get_keys_from_kdump_reserved_memory();
->>>          if (r) {
->>>              pr_warn("Failed to get dm-crypt keys from reserved 
->>> memory\n");
->>> -            return r;
->>> +            goto unlock;
->>>          }
->>>          is_dm_key_reused = true;
->> [...]
->>>      }
->>> -    return count;
->>> +    r = count;
->>> +unlock:
->>> +    kexec_unlock();
->>> +    return r;
->>>  }
->>>  CONFIGFS_ATTR(config_keys_, reuse);
->>> @@ -421,6 +431,8 @@ static int build_keys_header(void)
->>>      return 0;
->>>  }
->>> +static bool mutex_acquired;
->>> +
->>>  int crash_load_dm_crypt_keys(struct kimage *image)
->>>  {
->>>      struct kexec_buf kbuf = {
->>> @@ -432,6 +444,9 @@ int crash_load_dm_crypt_keys(struct kimage *image)
->>>      };
->>>      int r = 0;
->>> +    mutex_lock(&config_keys_subsys.su_mutex);
->>> +    mutex_acquired = true;
->>> +
->>>      if (key_count <= 0) {
->>>          kexec_dprintk("No dm-crypt keys\n");
->>>          return 0;
->>> @@ -481,6 +496,11 @@ void 
->>> kexec_file_post_load_cleanup_dm_crypt(struct kimage *image)
->>
->> I explored the kexec_file_load syscall entry path and noticed
->> that there is a path where the call to
->> kimage_file_post_load_cleanup() can be skipped.
->>
->> For example, if kexec_file_load is called and everything goes well
->> but kexec_post_load() fails, we skip
->> kimage_file_post_load_cleanup(), and consequently
->> kexec_file_post_load_cleanup_dm_crypt() as well.
->>
->> If that happens, the config_keys_subsys.su_mutex remains locked,
->> which could cause problems with the next kexec load, right?
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Mike Rapoport <rppt@kernel.org>
+> Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Cc: Pratyush Yadav <pratyush@kernel.org>
+> Cc: Dave Young <ruirui.yang@linux.dev>
+> Cc: stable@vger.kernel.org
+> Fixes: e3a84be1ec2f ("arm64,ppc64le/kdump: pass dm-crypt keys to kdump kernel")
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>   kernel/crash_dump_dm_crypt.c | 15 +++++++++++----
+>   1 file changed, 11 insertions(+), 4 deletions(-)
 >
-> Thanks for exploring the kexec_file_load syscall entry path! I took a
-> further look at it. Even though kimage_file_post_load_cleanup can be
-> skipped, kimage_free will be called regardless which will in turn call
-> kimage_file_post_load_cleanup.
-
-Ah yes, I missed that. That said, we are calling
-kimage_file_post_load_cleanup() twice for every kexec_file_load, so this
-needs to be looked into separately.
-
->     // kernel/kexec_core.c
->     void kimage_free(struct kimage *image)
->     {
->         /*
->          * Free up any temporary buffers allocated. This might hit if
->          * error occurred much later after buffer allocation.
->          */
->         if (image->file_mode)
->             kimage_file_post_load_cleanup(image);
->     }
->
-> But I realize by using kexec lock to ensure serial access to
-> is_dm_key_reused, we can actually release the mutex lock at the end of
-> crash_load_dm_crypt_keys function which can make the code simpler and
-> potentially more robust. Thanks for inspiring me to find a better
-> way!
-
-That will be good. Lock ownership will be with just one function, which 
-will make
-things easier to manage.
-
-- Sourabh Jain
-
->>
->>>          kfree_sensitive(keys_header);
->>>          keys_header = NULL;
->>>      }
->>> +
->>> +    if (mutex_acquired) {
->>> +        mutex_unlock(&config_keys_subsys.su_mutex);
->>> +        mutex_acquired = false;
->>> +    }
->>>  }
->>>  static int __init configfs_dmcrypt_keys_init(void)
->>
->
+> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+> index c685497cd470..ed0960ff0987 100644
+> --- a/kernel/crash_dump_dm_crypt.c
+> +++ b/kernel/crash_dump_dm_crypt.c
+> @@ -363,15 +363,21 @@ static struct configfs_subsystem config_keys_subsys = {
+>   	},
+>   };
+>   
+> +static void free_keys_header(void)
+> +{
+> +	if (keys_header) {
+> +		kvfree(keys_header);
+> +		keys_header = NULL;
+> +	}
+> +}
+> +
+>   static int build_keys_header(void)
+>   {
+>   	struct config_item *item = NULL;
+>   	struct config_key *key;
+>   	int i, r;
+>   
+> -	if (keys_header != NULL)
+> -		kvfree(keys_header);
+> -
+> +	free_keys_header();
+>   	keys_header = kzalloc(get_keys_header_size(key_count), GFP_KERNEL);
+>   	if (!keys_header)
+>   		return -ENOMEM;
+> @@ -441,7 +447,8 @@ int crash_load_dm_crypt_keys(struct kimage *image)
+>   	r = kexec_add_buffer(&kbuf);
+>   	if (r) {
+>   		pr_err("Failed to call kexec_add_buffer, ret=%d\n", r);
+> -		kvfree((void *)kbuf.buffer);
+> +		if (!is_dm_key_reused)
+> +			free_keys_header();
+>   		return r;
+>   	}
+>   	image->dm_crypt_keys_addr = kbuf.mem;
 
 
