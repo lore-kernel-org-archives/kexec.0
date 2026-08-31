@@ -4,70 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6F022C61DD3
-	for <kexec@archiver.kernel.org>; Mon, 31 Aug 2026 10:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D0543C61DFD
+	for <kexec@archiver.kernel.org>; Mon, 31 Aug 2026 11:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=F2wvnqeVRYzd2zCWHCSdsTWwa6nmQg/2AjbsKl/NI7w=; b=uwFu132mD07/2H5Gv8gke2uCNv
-	S1rRgn3S5AwzV31/YGYmWkz6UAyierff98hPJLzdZmTRVJSYqP8mqAargyo+VO6Y4oYCyaawcecdh
-	quncpNcVwGMzl6zL5Ck83218pQQg+72wvvn+Bn7lp6hm5dxhXZGQkc+eOVp7gvufRFxSIpeoOuBae
-	nEHvHpP0nDoLS+ySy3EJHtUcUkU+51bCa6g7bVLx4ZDArSZf7FU+1oGo1lVfDYqYjDTvUvyftS0zC
-	wOTgLx+Zd+tudYUq//p8ZV31VTxqqYsjj7Ce7Yy4EkXz3PdfoIOLS35MmS2H23K4p0ZCeK3DTfRL7
-	POAQUbgA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
+	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Gqj2K9+wp90YvEKZMSvL1LZpZwjNHSzCNuGCNxMefXo=; b=obiQek+46tUfhltTRD3XZjLHdV
+	Y1N0xXcwk5JcPESvNsW1dDbmKtiE5Se+UfGCFVR4JnbsZezxOm1VeURIY8m3EJGxGdJCudeQmnl/I
+	ZVoYnBz7mGPST6i0JbcScAH7cd/rE4Co0DdYz5iRAtKCIwT1jppFBh4rLF+wL3q+SOFQdpcA9vMX/
+	h8jBRwffyzAthX9PgNnMH8lA2Ftbsi7luP3QW8ipsZ1EFXGoeUmsug689TW9gom801/Tgd2SUvk92
+	f5D/Zr/LHmi2wTkZBu+k8vxG/arsQZVm3Y9bGrx/vWJD6TRi2tFUZj7iDALKrzzgXyt6GIHdM6kjl
+	YHX3vSvQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x0zIz-0000000976r-1t1v;
-	Mon, 31 Aug 2026 10:31:57 +0000
-Received: from pandora.armlinux.org.uk ([2001:4d48:ad52:32c8:5054:ff:fe00:142])
+	id 1x10C0-00000009Aq5-0BDp;
+	Mon, 31 Aug 2026 11:28:48 +0000
+Received: from tor.source.kernel.org ([172.105.4.254])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x0zIv-00000009761-3qlE
+	id 1x10By-00000009Apx-1G56
 	for kexec@lists.infradead.org;
-	Mon, 31 Aug 2026 10:31:56 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=F2wvnqeVRYzd2zCWHCSdsTWwa6nmQg/2AjbsKl/NI7w=; b=tGNjNZLCGJF/wYH1Fj2DqH0vFP
-	H995FlJYuunQY/xi8dYS5pQ4qWTdTFvsRpC1PuRIMVnyNRPJQ8d80093lz0KKNBI+PYGW+5FuB981
-	wx7lCLNF4G+4uloJUKPww/GjVJXHmR6dY2RpDS2ioFsi6uaG9SDKX5Adz4cahStMnPQCV4Vj2MGBM
-	374asVpfv21PGkHSVIQHCPJH47jSr9A/IwG7FpAJsRmCG4WwiofZGWJBCe9XLCwEryKR4Q+0p2CnH
-	9lwcKuTdItHTYcHYE65EdfyN1j4AmU/et0J5Zw9UZOD0yH46bxV8c05lDTsN/CngxEhZDuat+WHzG
-	IfP4wZWg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44374)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1x0zIq-000000004p6-06FW;
-	Mon, 31 Aug 2026 11:31:48 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.98.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1x0zIn-000000004Wg-0JNe;
-	Mon, 31 Aug 2026 11:31:45 +0100
-Date: Mon, 31 Aug 2026 11:31:44 +0100
-From: Russell King <linux@armlinux.org.uk>
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: kexec@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Simon Horman <horms@kernel.org>, j.neuschaefer@gmx.net
-Subject: Re: [PATCH kexec-tools] arm-zImage: prepare for more malloc
- requirements of zstd
-Message-ID: <apVYEC-uTnadmbnT@shell.armlinux.org.uk>
-References: <20260829094607.689485-1-andreas@kemnade.info>
+	Mon, 31 Aug 2026 11:28:46 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by tor.source.kernel.org (Postfix) with ESMTP id 7ABC960218;
+	Mon, 31 Aug 2026 11:28:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1151F1F000E9;
+	Mon, 31 Aug 2026 11:28:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788175725;
+	bh=Gqj2K9+wp90YvEKZMSvL1LZpZwjNHSzCNuGCNxMefXo=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date;
+	b=SB3scY7d63d/eJqv4Mh0utENg6FNoyxZgIZfYT9wskjSLb93/ewvpTUimcqX/GycD
+	 ea0MQ6BpzM0/16qegjhq+AUZrlZpEHHkiArnotvBjmtwdKodlaMy+08y3hHkQIK6AC
+	 kAbh/Rl8Kbbr3alcBNFvuwg7AztwQLn0+63qIN6qn0nB0HRxIEV6moLayEbXbib4m9
+	 wcds6YEC6MT4RzN0hGJlZgWRNfthKz7niDrcjOISOnnRkNo4A7wP2kMVd8VRT6RJC4
+	 iSDkFFPBdt7alnLg0sK3x/QULuPoYlRtjTIkKJcPOMir+/q1BUfoP+kPGj0atA8DXv
+	 am0ubi84jP7eg==
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260829094607.689485-1-andreas@kemnade.info>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260831_033154_258178_66DD751E 
-X-CRM114-Status: GOOD (  11.89  )
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH V2] kho: Convert error handling to immediate return
+ pattern
+From: Mike Rapoport <rppt@kernel.org>
+To: LongWei27 <longwei27@huawei.com>
+Cc: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>, 
+ Pasha Tatashin <pasha.tatashin@soleen.com>, 
+ Pratyush Yadav <pratyush@kernel.org>, kexec@lists.infradead.org, 
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, hewenliang4@huawei.com
+In-Reply-To: <20260824024448.550552-1-longwei27@huawei.com>
+References: <00c96a62-f783-497c-a7ac-1de495e4af06@huawei.com>
+ <20260824024448.550552-1-longwei27@huawei.com>
+Date: Mon, 31 Aug 2026 14:28:39 +0300
+Message-Id: <178817571946.3691424.3757525664520719609.b4-review@b4>
+X-Mailer: b4 0.17-dev
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,35 +73,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, Aug 29, 2026 at 11:46:07AM +0200, Andreas Kemnade wrote:
-> As there are plans for zstd in zImage for ARM, which requires more malloc
-> size fo, decompression, increase the space.
+Hi,
+
+
+> Replace the chained error accumulation (err |= func()) with immediate
+> per-step error checking and early return in kho_out_fdt_setup().
 > 
-> References:
-> https://lore.kernel.org/lkml/ZFDMRst2O+RJUYuu@shell.armlinux.org.uk/#t
-> https://lore.kernel.org/lkml/20260828-zstd2-v2-0-4d9ce7150877@kemnade.info/
+> Two problems with the current approach:
+> 1. It continues executing FDT operations even after a failure, which
+>    is pointless and potentially unsafe on an invalid FDT context.
+
+Did you actually see failures here or was it an LLM suggesting that they
+may happen?
+
+> 2. Bitwise OR of multiple negative error codes produces a result that
+>    may not represent any actual error, making debugging misleading.
 > 
-> Suggested-by: Russell King (Oracle) <linux@armlinux.org.uk>
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> Early return fails fast and preserves the original error code for
+> accurate diagnosis.
 
-There's a better way to deal with this, added in commit adc5f7029376
-("ARM: add malloc size to decompressor kexec size structure") in the
-kernel. An additional member was added to the magic structure which
-indicates the required malloc size.
-
-In kexec-tools, this structure can be found as "struct zimage_tag"
-but it is missing the extended entry in struct zimage_krnl_size.
-
-This still requires the 4k stack to be added, but will give you the
-size of the malloc. If this member is missing, then 64k should be
-assumed.
-
-Note that tag->hdr.size checks in kexec look incorrect, as this is
-the number of 32-bit words from the start of the tag. It also looks
-like find_extension_tag() assumes it's bytes rather than 32-bit
-words. :(
+The caller does not care about the exact error value, so the diagnosis
+statement is moot at best.
+Moreover, libfdt does not return Linux error values.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Sincerely yours,
+Mike.
+
 
