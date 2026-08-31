@@ -4,92 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DDF65C624CE
-	for <kexec@archiver.kernel.org>; Mon, 31 Aug 2026 13:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 840A0C624C6
+	for <kexec@archiver.kernel.org>; Mon, 31 Aug 2026 14:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:Date:From:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=QGck5j6NKMY1JnPT10nWl78AbcbhkttqeTGSe2kPwRs=; b=NEMG9a8bldGaUVzGuNPN1evfsd
-	M4bZ6B3dpUgB4EokxhgawaoEcRpK/kWqcPtqi9aG2pxMval4ObRYjtotykR1mWv5XeGKoUIljcDoK
-	A17RuYw+KpXRwIJEFRW1RwDnNUp5HUY54OZXGg/9ivTLPhqZ6r0oek9hrwAvIqIc6eq2Tk8jBQWoC
-	0LmOGXNJjSWyeQbKLtIWxRh+V0hTglFBX23n4s3ljjMiUsaCpbSM8f+tD6xMiIgcUoLFiY/Eu4Fjf
-	jm3wanTu43etNGldEJZ5EUxOZUitTgZia+ObXKK4HeSHp7z6HhXLt9fEb4jm+9zZq7OeARgjpu3Ur
-	NdfDQDtg==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=L1mNt+t9t3Mp1gIJn7MX5n0Mz44VISN4VLwL6b799Bs=; b=Cyq4oSLMPYoECNPis3P40hdmWn
+	gPXJo/aaXMijuBMrzI3WJTF91x+N23Tnt2CqiuI3ET5YfDrKavMpgskeflyQrOFKp4Mvndp23zVZC
+	Jcy8Aji6/tiwmE6Ur7uPye47tksOyjog1HLpusp1NqrMF0U1NdE6JxELTmoil0Eex9k4ByUBLKJBc
+	dni3tNSBx56MIH5lZjYVQywHc9iJoSjLxWX2V3Sj6VE+AUrpWjkSyyyzUWMgAMH8VP58QuGmho9Jd
+	W3FM7GPIDtgSmks7KcXlqh/DVRho3zHM4geSDocOCMasuUUUwewerwUACUXZ3UZWpEzJcNzBxh+bQ
+	uAinjY3w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x12Os-00000009Xqx-2lqU;
-	Mon, 31 Aug 2026 13:50:14 +0000
-Received: from mail-pg1-x52a.google.com ([2607:f8b0:4864:20::52a])
+	id 1x12hq-00000009avC-0Iou;
+	Mon, 31 Aug 2026 14:09:50 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x12On-00000009Xoc-0R4H
+	id 1x12hl-00000009aup-23Yk
 	for kexec@lists.infradead.org;
-	Mon, 31 Aug 2026 13:50:13 +0000
-Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-cc1bcdb3c4cso2596989a12.2
-        for <kexec@lists.infradead.org>; Mon, 31 Aug 2026 06:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788184208; x=1788789008; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=QGck5j6NKMY1JnPT10nWl78AbcbhkttqeTGSe2kPwRs=;
-        b=YjW3ofFJgd6JVpluL9lvdbw8110ERmZqn6ScepChOUaZoxRE/TlRd8nGnK8D2d5Q3s
-         5bIcIOXV7z9zNf/2ZAvk6NdZZ12nzxIwIdHYWnQDapzsif9r/wWlmJrvyzTRWKExFXEJ
-         wqq560smyZy+89HJQYvigEA1CnKbnbfBLMNp7Bezv3EndnwHlzreOVip25YEkdmnssAf
-         5d3UCnDBM/cRuGYNb8B3bJCFyhsSn2oTA3rSi+TIXWECOZToKDkI31p6AdBxiBoh3cJS
-         xq2ALYySrCTdDLmJDIuEtvovCSbbCxaIheblqanjWlDr0twbvVSrPYvuc8HVTn5psd/0
-         IRIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788184208; x=1788789008;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=QGck5j6NKMY1JnPT10nWl78AbcbhkttqeTGSe2kPwRs=;
-        b=U57rqP6iqv1pIYLxWF7LbS02C6JWScRkxRf5Wq1KF0a6W64abh5ObqzY2pKRnztEHC
-         6yzniJHCoc8nEv2iipm34EMtTsuWkrsKzrm2Syl1w6nvHTIoGvlZbYHseLCrgVJZGIYt
-         BEELN6aJ356UPTEnbLvb/Lu/8Z/JaNZt0+bn7m7l9BygtFkMRMV81dT5jpl4g1GQ/GbR
-         hyB1/FP2Z2ju0CIWJI9gGX2+IpXbKbkknrzc99jiyQ7GWKTkkbRSfnOxRplRWZJInTIZ
-         x7LrIOxvva8Ck+SFt9fHvKqPDnqEtpOudwK4J0jKts9SsRZ4l5lu2yqOR+R+4Q5/m347
-         U/GQ==
-X-Gm-Message-State: AFuF++nFPddT6dBNgL1yrSE5WSxk/85kKzmdfR/JRVAEj9J+tyxw+GC4
-	PPHeqskFzhkSqFFX5JcPV37M6ilHEv3BWUulmdjWSFbkRSdegLHk+K6n
-X-Gm-Gg: AYBFou3Yqu4DFppTAeIdpGI2NPU5nl03sv8+MNkFyq4Qt9jiVJYHme6vQA976omuHJv
-	JGeAd7DDJ0+geNJ9pB37WExfXE1XcMdIccZacj3gugXd6GmiIDRnbeNu3YWKALPWt1qUtbUVmZH
-	q6FmeAj4VO1si/zmMbQ4N4KN6atApXZ67UfXd08P/dIIk1F2YYXKawnICgVnDwTBjE8bERmpKaG
-	H8ENmGkKsSYJqRB8bCMrXzL9hHNIIqsurYrYd1UIv6Jeb3avWfjfeAPow3KxNnrqqE9iYS7eOdr
-	k9ns+KIWwxcbX/BiDq8yyBHli2zZshfINr5mZwGQ2C5F5/TA6n2jysWV5rV7mNX5tsWPCkqt7LD
-	kX68EES2zAR9O14KzdP4A147cOoLS3jMwMcLKpK7mAuUl3lb1W+tfrpZ1M+eLxhntctoiiZBNJI
-	AxqvfpGEt9klc5X3JJS+lyO/vO9erU0/yMkUwJ/Vhn7kLyWQ2jix5X8A==
-X-Received: by 2002:a17:90b:3c05:b0:396:5cdc:4bea with SMTP id 98e67ed59e1d1-39907ab0955mr1271319a91.5.1788184205245;
-        Mon, 31 Aug 2026 06:50:05 -0700 (PDT)
-Received: from localhost ([45.112.44.97])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3286f552473sm33354998eec.0.2026.08.31.06.50.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2026 06:50:04 -0700 (PDT)
-From: Coiby Xu <coiby.xu@gmail.com>
-X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
-Date: Mon, 31 Aug 2026 21:45:41 +0800
-To: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: kexec@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Baoquan He <baoquan.he@linux.dev>, Dave Young <ruirui.yang@linux.dev>, 
-	Pratyush Yadav <pratyush@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 3/9] crash_dump: Read the number of dm-crypt keys from
- reserved memory
-Message-ID: <apWDnUNUZSkvYY38@Rk>
-References: <20260828084900.1496839-1-coiby.xu@gmail.com>
- <20260828084900.1496839-4-coiby.xu@gmail.com>
- <859d4e5f-c491-4a0d-a7ea-0a16159f8059@linux.ibm.com>
+	Mon, 31 Aug 2026 14:09:45 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id CF97644022
+	for <kexec@lists.infradead.org>; Mon, 31 Aug 2026 14:09:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7A501F00ACF
+	for <kexec@lists.infradead.org>; Mon, 31 Aug 2026 14:09:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788185384;
+	bh=L1mNt+t9t3Mp1gIJn7MX5n0Mz44VISN4VLwL6b799Bs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=Vxa9oF/soWfIGx7X9eBymk6tUBTtSiGceTld0BHTg54XTE1uWopGPbiR5qAiDdjda
+	 iaJ3uvNfpOPmsRf222g18ht0Km7pm/98QZ3tlJNQjiOp3SaGMmyhyw9p/XFbPew558
+	 7tVYTzHuDm97oKg0HjVguFpsU2H9obvZ9W+/j6RGvcDs5jyZtgUqmkq8ESPWdMekxV
+	 d3j0zvnb5rRn9HJxwu8ZTDe6GNqARHZsq8wRDUFaq7Cjd+jP3t4AjfNlQD+ricbfQY
+	 t6b8GVYS/5XDQNQ+BqQfQROnn9n7hMkhuJImHAKQavStYE25THku2v1yfK8B7efNmp
+	 4dNZYg3inseBw==
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-c250c6a6a9aso564454266b.1
+        for <kexec@lists.infradead.org>; Mon, 31 Aug 2026 07:09:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RpazYDyjDd9bBLw1RVIcHbrETGvKFsq+TLH3kzUtC84Rm5ecMaPpeCuR8PhteRXgT69dIJhKg==@lists.infradead.org
+X-Gm-Message-State: AFuF++mFbAyqS/GBORszEh0VaX3Z65QJ03H0k3W0UvSnfDjoNQmMo0SA
+	G+O+J8Jckt/ARP9jWbKnTEDq6i+4uUlqw2TWl3KT9v5rmTGOCGzzF5ePKgf7M1p5NOQIclnyak5
+	4YiTsztM2IKIshkvK5ej/3RIFFrS0QUA=
+X-Received: by 2002:a17:906:4ed4:b0:c25:6c9a:88bc with SMTP id
+ a640c23a62f3a-c25b3d8a1d8mr44713366b.19.1788185382598; Mon, 31 Aug 2026
+ 07:09:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <859d4e5f-c491-4a0d-a7ea-0a16159f8059@linux.ibm.com>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260831_065009_153600_7F025EEB 
-X-CRM114-Status: GOOD (  14.53  )
+References: <20260826092541.3905933-1-ruanjinjie@huawei.com> <20260826092541.3905933-6-ruanjinjie@huawei.com>
+In-Reply-To: <20260826092541.3905933-6-ruanjinjie@huawei.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 31 Aug 2026 22:09:30 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7+dO2rnb4KxRvVo1w_Mx8Vfsdq7LAbkzPfNYrwUhEtfg@mail.gmail.com>
+X-Gm-Features: AcwNN1UnFQ4mMXEBOHuSLr0Mu3pUPtp_q9Do6p0Tl3kncID1TuZivoGd1AqJPW4
+Message-ID: <CAAhV-H7+dO2rnb4KxRvVo1w_Mx8Vfsdq7LAbkzPfNYrwUhEtfg@mail.gmail.com>
+Subject: Re: [PATCH v3 05/17] LoongArch: kexec: Fix CMA page leaks in segment
+ placement retry loops
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, 
+	kernel@xen0n.name, maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, 
+	chleroy@kernel.org, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, akpm@linux-foundation.org, 
+	baoquan.he@linux.dev, rppt@kernel.org, pasha.tatashin@soleen.com, 
+	pratyush@kernel.org, ruirui.yang@linux.dev, kees@kernel.org, thuth@redhat.com, 
+	gshan@redhat.com, jic23@kernel.org, james.morse@arm.com, ardb@kernel.org, 
+	leitao@debian.org, yeoreum.yun@arm.com, sourabhjain@linux.ibm.com, 
+	coxu@redhat.com, tangyouling@kylinos.cn, hbathini@linux.ibm.com, 
+	adityag@linux.ibm.com, ionut.nechita@windriver.com, liaoyuanhong@vivo.com, 
+	seanjc@google.com, fuqiang.wang@easystack.cn, makb@juniper.net, 
+	piliu@redhat.com, ebiggers@kernel.org, jbouron@amazon.com, 
+	mclapinski@google.com, me@linux.beauty, graf@amazon.com, bgwin@google.com, 
+	robh@kernel.org, takahiro.akashi@linaro.org, palmer@rivosinc.com, 
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,100 +96,80 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, Aug 30, 2026 at 12:49:42PM +0530, Sourabh Jain wrote:
->
->
->On 28/08/26 14:18, Coiby Xu wrote:
->>In case user adds/deletes the keys by mistake, it's safer to read the
->>number of keys from reserved memory.
->>
->>Fixes: 9ebfa8dcaea7 ("crash_dump: reuse saved dm crypt keys for CPU/memory hot-plugging")
->>Reported-and-Suggested-by: Sourabh Jain <sourabhjain@linux.ibm.com>
->>Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
->>---
->>  kernel/crash_dump_dm_crypt.c | 36 +++++++++++++++++++++++-------------
->>  1 file changed, 23 insertions(+), 13 deletions(-)
->>
->>diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
->>index 026c7de4ad85..0b9e09c60745 100644
->>--- a/kernel/crash_dump_dm_crypt.c
->>+++ b/kernel/crash_dump_dm_crypt.c
->>@@ -89,21 +89,31 @@ static int get_keys_from_kdump_reserved_memory(void)
->>  {
->>  	struct keys_header *keys_header_loaded;
->>  	size_t keys_header_size;
->>-
->>-	keys_header_size = get_keys_header_size(key_count);
->>-	keys_header = kzalloc(keys_header_size, GFP_KERNEL);
->>-	if (!keys_header)
->>-		return -ENOMEM;
->>+	int r = 0;
->>  	arch_kexec_unprotect_crashkres();
->>  	keys_header_loaded = kmap_local_page(pfn_to_page(
->>  		kexec_crash_image->dm_crypt_keys_addr >> PAGE_SHIFT));
->>+	if (keys_header_loaded->total_keys <= 0 ||
->>+	    keys_header_loaded->total_keys > KEY_NUM_MAX) {
->>+		pr_warn("keys_header saved to reserved memory may be corrupt\n");
->>+		r = -EINVAL;
->>+		goto kunmap;
->>+	}
->>+
->>+	keys_header_size = get_keys_header_size(keys_header_loaded->total_keys);
->>+	keys_header = kzalloc(keys_header_size, GFP_KERNEL);
->>+	if (!keys_header) {
->>+		r = -ENOMEM;
->>+		goto kunmap;
->>+	}
->>+
->>  	memcpy(keys_header, keys_header_loaded, keys_header_size);
->>+kunmap:
->>  	kunmap_local(keys_header_loaded);
->>  	arch_kexec_protect_crashkres();
->>-
->>-	return 0;
->>+	return r;
->>  }
->>  static int restore_dm_crypt_keys_to_thread_keyring(void)
->>@@ -447,12 +457,12 @@ int crash_load_dm_crypt_keys(struct kimage *image)
->>  	mutex_lock(&config_keys_subsys.su_mutex);
->>  	mutex_acquired = true;
->>-	if (key_count <= 0) {
->>-		kexec_dprintk("No dm-crypt keys\n");
->>-		return 0;
->>-	}
->>-
->>  	if (!is_dm_key_reused) {
->>+		if (key_count <= 0) {
->>+			kexec_dprintk("No dm-crypt keys\n");
->>+			return 0;
->>+		}
->>+
->
->Not directly related to this patch, but I have a query.
->
->Do we really need to take config_keys_subsys.su_mutex when keys are
->reused? If not, how about moving the acquisition and release of
->config_keys_subsys.su_mutex into build_keys_header()?
+Hi, Jinjie,
 
-Good suggestion! I'll try to apply it to next version.
+Why does the ARM64 version of this patch use "kexec_file" in the
+subject line but the LoongArch version uses "kexec"? It is better to
+keep consistency.
 
->
->
->- Sourabh Jain
->>  		r = build_keys_header();
->>  		if (r)
->>  			goto out;
->>@@ -463,7 +473,7 @@ int crash_load_dm_crypt_keys(struct kimage *image)
->>  	 * cleaned up at the end of kexec_file_load syscall
->>  	 */
->>  	kbuf.buffer = keys_header;
->>-	kbuf.bufsz = get_keys_header_size(key_count);
->>+	kbuf.bufsz = get_keys_header_size(keys_header->total_keys);
->>  	kbuf.memsz = kbuf.bufsz;
->>  	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
->
+Huacai
 
--- 
-Best regards,
-Coiby
+On Wed, Aug 26, 2026 at 5:25=E2=80=AFPM Jinjie Ruan <ruanjinjie@huawei.com>=
+ wrote:
+>
+> During kexec image placement retry loops, any midway failure causes
+> the loader to truncate `image->nr_segments` back to its initial state
+> to purge the failed segments.
+>
+> However, this truncation introduces a memory leak. The CMA pages
+> allocated via kexec_add_buffer() during the failed attempt are tracked
+> in the `image->segment_cma` array. Because the subsequent cleanup paths
+> only iterate up to the truncated `nr_segments` boundary, these allocated
+> CMA pages outside the new boundary are permanently leaked.
+>
+> Fix this by explicitly releasing the associated CMA buffers in
+> the failure paths before `image->nr_segments` is reduced.
+>
+> Cc: Huacai Chen <chenhuacai@kernel.org>
+> Cc: WANG Xuerui <kernel@xen0n.name>
+> Cc: Youling Tang <tangyouling@kylinos.cn>
+> Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+> Cc: Kees Cook <kees@kernel.org>
+> Cc: stable@vger.kernel.org
+> Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%=
+40huawei.com
+> Fixes: 55d990f0084c ("LoongArch: Add EFI binary support for kexec_file")
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> ---
+>  arch/loongarch/kernel/kexec_efi.c          | 1 +
+>  arch/loongarch/kernel/machine_kexec_file.c | 6 +++++-
+>  2 files changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/ke=
+xec_efi.c
+> index 5ee78ebb1546..15fd797ff3de 100644
+> --- a/arch/loongarch/kernel/kexec_efi.c
+> +++ b/arch/loongarch/kernel/kexec_efi.c
+> @@ -86,6 +86,7 @@ static void *efi_kexec_load(struct kimage *image,
+>                  * We couldn't find space for the other segments; erase t=
+he
+>                  * kernel segment and try the next available hole.
+>                  */
+> +               kexec_free_segment_cma(image, kernel_segment_number);
+>                 image->nr_segments -=3D 1;
+>                 kbuf.buf_min =3D kernel_segment->mem + kernel_segment->me=
+msz;
+>                 kbuf.mem =3D KEXEC_BUF_MEM_UNKNOWN;
+> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/=
+kernel/machine_kexec_file.c
+> index 5412aa9f3568..62a5be102065 100644
+> --- a/arch/loongarch/kernel/machine_kexec_file.c
+> +++ b/arch/loongarch/kernel/machine_kexec_file.c
+> @@ -217,7 +217,11 @@ int load_other_segments(struct kimage *image,
+>         return 0;
+>
+>  out_err:
+> -       image->nr_segments =3D orig_segments;
+> +       while (image->nr_segments > orig_segments) {
+> +               kexec_free_segment_cma(image, image->nr_segments - 1);
+> +               image->nr_segments--;
+> +       }
+> +
+>         kfree(modified_cmdline);
+>         return ret;
+>  }
+> --
+> 2.34.1
+>
 
