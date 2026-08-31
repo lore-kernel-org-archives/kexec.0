@@ -4,70 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4A146C61DD3
-	for <kexec@archiver.kernel.org>; Mon, 31 Aug 2026 11:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C991DC624A4
+	for <kexec@archiver.kernel.org>; Mon, 31 Aug 2026 12:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=aNbCjFVIuJYNB8+haqmfInpJlaQvl8qC6NDl65ZkQyw=; b=RZjqLteVLWpn2B71QEgbIWWWJ0
-	jBRKYi1PSdiDT2pjL2jZCeEFoRWSITIs/RVts33QL6j4fwCuITYi26FWB9dBb0n8uOwXD9wxQ+apg
-	yPhY62eGzg9E6FyXBzBtrZlvPh64eGdVyyDhdFfn3SJDCoM4bNhlcMKcJ9ToEMONWQXaKpkqXWdB1
-	aZcXoH8J2mGrQGU6QuvObgEnU1dCli2B0MmBjd1MUq41LwCfPKPEEGTM9gF5CPAyiN0hpNDWvUVEP
-	FfKiFZ/wQZVlcY+wYxwgQpwFnwG53HW0cnggwM1WdC1is/9KI0P9n2O1r0tMN+UfT5mcZJHd7CPTd
-	pHSuD6lA==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=rvMGQZrptl4rbELAmb9clWsM5sJH3hKzq91dfV8VKLo=; b=MAZP3ayYdftc5fQoqqe+c59DEy
+	NCaEJcq5DEYNv8RuFyXhg11G7jCjjR0Ipebv4a3Pw8hp+/qVxLSmh4oOV1QQp4JGJ/TXMABFqFv1N
+	rydEWr3Hz/0rYUQNNNBqO5OIlnY8UyCs1xaTbSfaoxuzs2HG0Z0bXUaJvSRPwwX3SxNTQTV+wHVxT
+	xctS7+n2vS1AESWTuCpd7b1OQXfGCgg3G84HyWj4P5O/yBwS1zbxvy1JbuFnjbg3cXjoC8Ypw0eeo
+	WVf/JOWalccaf6/vTtoC4f0xqz/jsftUMOb/7KVWWtmWO4+qDqoyekQrsWgjs5dWitKM772Necehj
+	XX9dugdw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x10fA-00000009FdG-3YJk;
-	Mon, 31 Aug 2026 11:58:56 +0000
-Received: from canpmsgout12.his.huawei.com ([113.46.200.227])
+	id 1x11bQ-00000009Lpm-0XXT;
+	Mon, 31 Aug 2026 12:59:08 +0000
+Received: from mx2.mythic-beasts.com ([2a00:1098:0:82:1000:0:2:1])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x10f8-00000009Fay-02eL
+	id 1x11bN-00000009Lp6-3qrv
 	for kexec@lists.infradead.org;
-	Mon, 31 Aug 2026 11:58:56 +0000
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=aNbCjFVIuJYNB8+haqmfInpJlaQvl8qC6NDl65ZkQyw=;
-	b=BHjc2uO+C6lYOZPaXhd34wLAcGOm9vn6mA5Kq60tW021U0S2nmIAhenp50eWh6RYp8b6IpuvJ
-	kqZAAt7dx6Lx+ReriWigIjmA9doIwpFm+5F8+koxw/XpvXuG0CtRTb5ZpDpnRtwn9Bs/JXkF0LI
-	t7VPNXWMN44+jREmH1JvF1c=
-Received: from mail.maildlp.com (unknown [172.19.163.200])
-	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hYS0F4SNkznTVd;
-	Mon, 31 Aug 2026 19:47:25 +0800 (CST)
-Received: from kwepemo200009.china.huawei.com (unknown [7.202.195.26])
-	by mail.maildlp.com (Postfix) with ESMTPS id DED7840563;
-	Mon, 31 Aug 2026 19:58:39 +0800 (CST)
-Received: from [10.174.186.187] (10.174.186.187) by
- kwepemo200009.china.huawei.com (7.202.195.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Mon, 31 Aug 2026 19:58:39 +0800
-Message-ID: <b5979755-6089-4e6e-844d-2e6f32f687a6@huawei.com>
-Date: Mon, 31 Aug 2026 19:58:35 +0800
+	Mon, 31 Aug 2026 12:59:07 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=tom-fitzhenry.me.uk; s=mythic-beasts-k1; h=Date:Subject:To:From;
+	bh=rvMGQZrptl4rbELAmb9clWsM5sJH3hKzq91dfV8VKLo=; b=jb/rHHv6FvD3QpfnYRkMdza6di
+	yiN6unUDw2ly4RCvUHemFl9Crm4B7aWT9+49ighEkN69vOd9SB5vc6JeyOuURdEV3pJWXdJ3IXABI
+	K2sFjLBXyLUzhSIf4dYqiFboorDdeii9LKULOmMWKFAGRsRFIZ730wCg6Ejm40O9UIaiGcy2PJ14U
+	tmANac/YqHKtwGjezZgbceSthND+Br+v5R1UneEjxCk7lKioIODLNjCSExFg7aDL8aFzKv14g3Kvb
+	8LaDLM5hbRtx8OM1L2NPDNVTygWUNkhiwMdNoy50V/vqiQn72XURzAX2DdpIu1lI+mCvKx3MKGxlW
+	4LacJG4w==;
+Received: by mailhub-hex-d.mythic-beasts.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <tom@tom-fitzhenry.me.uk>)
+	id 1x11bL-002Htd-1j;
+	Mon, 31 Aug 2026 13:59:04 +0100
+From: Tom Fitzhenry <tom@tom-fitzhenry.me.uk>
+To: kexec@lists.infradead.org
+Cc: Tom Fitzhenry <tom@tom-fitzhenry.me.uk>
+Subject: [PATCH] arm: use the zImage tag's real TEXT_OFFSET for kernel placement
+Date: Mon, 31 Aug 2026 12:58:27 +0000
+Message-ID: <20260831125828.1524463-1-tom@tom-fitzhenry.me.uk>
+X-Mailer: git-send-email 2.55.0
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] kho: Convert error handling to immediate return
- pattern
-To: Mike Rapoport <rppt@kernel.org>
-CC: Alexander Graf <graf@amazon.com>, Pasha Tatashin
-	<pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>,
-	<kexec@lists.infradead.org>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>, <hewenliang4@huawei.com>
-References: <00c96a62-f783-497c-a7ac-1de495e4af06@huawei.com>
- <20260824024448.550552-1-longwei27@huawei.com>
- <178817571946.3691424.3757525664520719609.b4-review@b4>
-From: "longwei (I)" <longwei27@huawei.com>
-In-Reply-To: <178817571946.3691424.3757525664520719609.b4-review@b4>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [10.174.186.187]
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemo200009.china.huawei.com (7.202.195.26)
+Content-Transfer-Encoding: 8bit
+X-BlackCat-Spam-Score: 14
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260831_045854_512705_1A46A76C 
-X-CRM114-Status: GOOD (  11.32  )
+X-CRM114-CacheID: sfid-20260831_055906_208048_1A336CCF 
+X-CRM114-Status: GOOD (  15.00  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,50 +67,105 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Mike Rapoport=EF=BC=8C
+The zImage loader assumes TEXT_OFFSET is 0x8000 and sizes the kernel
+reservation as if the decompressed kernel lands at RAM base + 0x8000.
+Multiplatform armv7 kernels, however, are built with a per-platform
+TEXT_OFFSET: arch/arm/Makefile warns that "this offset is critical to
+the functioning of kexec-tools", and e.g. ARCH_MESON uses 0x00208000.
 
-Thanks for the review.
-To be honest, I haven't observed any actual failures in this path in our =
-production environment.
-This change was identified during our internal team code review=E2=80=94t=
-he err |=3D func() pattern looked concerning to us at first glance, so we=
- attempted to clean it up.
+With such a kernel the decompressor places the inflated kernel ~2 MB
+higher than kexec-tools assumed, so the initrd placed at the estimated
+end of the kernel image lands inside the decompressor's scratch area
+or the new kernel's own reservation. The kexec'd kernel then fails
+with "RAMDISK: Couldn't find valid RAM disk image" or "INITRD: ...
+overlaps in-use memory region", as seen kexec'ing an armv7 NixOS
+kernel on a Netgear RN102 (its multiplatform config selects
+ARCH_MESON).
 
-However, I agree with your assessment: the caller doesn't care about the =
-exact error value, libfdt uses its own error codes, and this is a cold pa=
-th where failures are unlikely. The change is indeed unnecessary churn wi=
-thout a concrete bug to fix.
+The zImage extension tag has recorded TEXT_OFFSET since v5.10 (commit
+83dfeedb6663, "ARM: add TEXT_OFFSET to decompressor kexec image
+structure"), but the loader only reads size_ptr and bss_size from it.
+Read the real value and place the zImage there. Older kernels do not
+carry it and keep the historical 0x8000 default, just as the arm64
+loader falls back to 0x80000 for older kernels (commit 522df5f7217f,
+"arm64: Add arm64 kexec support").
 
-I'll drop this patch. Please ignore this submission.
+Note on tooling: this patch was developed with assistance from
+DeepSeek LLM, which helped diagnose the failure and draft the fix.
+Tested by kexec'ing arm zImages with non-default TEXT_OFFSET under
+QEMU with both a synthetic config and the affected RN102's config,
+asserting the kexec'd initrd runs.
 
-Thanks,
-Long Wei
+Signed-off-by: Tom Fitzhenry <tom@tom-fitzhenry.me.uk>
+Link: https://git.kernel.org/torvalds/c/83dfeedb6663
+Link: https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=522df5f7217fda01ece3f6ac3e9987b0320c2bb0
+---
+ kexec/arch/arm/kexec-zImage-arm.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
-=E5=9C=A8 2026/8/31 19:28, Mike Rapoport =E5=86=99=E9=81=93:
-> Hi,
->=20
->=20
->> Replace the chained error accumulation (err |=3D func()) with immediat=
-e
->> per-step error checking and early return in kho_out_fdt_setup().
->>
->> Two problems with the current approach:
->> 1. It continues executing FDT operations even after a failure, which
->>    is pointless and potentially unsafe on an invalid FDT context.
->=20
-> Did you actually see failures here or was it an LLM suggesting that the=
-y
-> may happen?
->=20
->> 2. Bitwise OR of multiple negative error codes produces a result that
->>    may not represent any actual error, making debugging misleading.
->>
->> Early return fails fast and preserves the original error code for
->> accurate diagnosis.
->=20
-> The caller does not care about the exact error value, so the diagnosis
-> statement is moot at best.
-> Moreover, libfdt does not return Linux error values.
->=20
+diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+index 8b474dd..892fca0 100644
+--- a/kexec/arch/arm/kexec-zImage-arm.c
++++ b/kexec/arch/arm/kexec-zImage-arm.c
+@@ -131,6 +131,7 @@ struct zimage_tag {
+ 		struct zimage_krnl_size {
+ 			uint32_t size_ptr;
+ 			uint32_t bss_size;
++			uint32_t text_offset;
+ 		} krnl_size;
+ 	} u;
+ };
+@@ -478,7 +479,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 	unsigned long page_size = getpagesize();
+ 	unsigned long base, kernel_base;
+ 	unsigned int atag_offset = 0x1000; /* 4k offset from memory start */
+-	unsigned int extra_size = 0x8000; /* TEXT_OFFSET */
++	unsigned int text_offset;
+ 	uint32_t address_cells, size_cells;
+ 	const struct zimage_tag *tag;
+ 	size_t kernel_buf_size;
+@@ -661,6 +662,21 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 	 */
+ 	tag = find_extension_tag(buf, len, ZIMAGE_TAG_KRNL_SIZE);
+ 
++	/*
++	 * The decompressor places the inflated kernel at
++	 * (zImage address & 0xf8000000) + TEXT_OFFSET, so load the
++	 * zImage at a 128 MiB-aligned base + TEXT_OFFSET.  The tag
++	 * table records the real value since v5.10 (commit
++	 * 83dfeedb6663, "ARM: add TEXT_OFFSET to decompressor kexec
++	 * image structure"); TEXT_OFFSET is the third payload word,
++	 * so a tag size of at least 5 means it is present.  Older
++	 * kernels keep the historical 0x8000 default.
++	 */
++	if (tag && le32_to_cpu(tag->hdr.size) >= 5)
++		text_offset = le32_to_cpu(tag->u.krnl_size.text_offset);
++	else
++		text_offset = 0x8000;
++
+ 	/*
+ 	 * The zImage length does not include its stack (4k) or its
+ 	 * malloc space (64k).  Include this.
+@@ -748,14 +764,14 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 		}
+ 		base = start;
+ 	} else {
+-		base = locate_hole(info, len + extra_size, 0, 0,
++		base = locate_hole(info, len + text_offset, 0, 0,
+ 				   ULONG_MAX, INT_MAX);
+ 	}
+ 
+ 	if (base == ULONG_MAX)
+ 		return -1;
+ 
+-	kernel_base = base + extra_size;
++	kernel_base = base + text_offset;
+ 
+ 	/*
+ 	 * Calculate the minimum address of the initrd, which must be
+
+base-commit: 43c5cba85ad23cc69c423527d9587c59b89fa437
+-- 
+2.55.0
 
 
