@@ -4,55 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C991DC624A4
-	for <kexec@archiver.kernel.org>; Mon, 31 Aug 2026 12:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A2968C624CE
+	for <kexec@archiver.kernel.org>; Mon, 31 Aug 2026 13:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=rvMGQZrptl4rbELAmb9clWsM5sJH3hKzq91dfV8VKLo=; b=MAZP3ayYdftc5fQoqqe+c59DEy
-	NCaEJcq5DEYNv8RuFyXhg11G7jCjjR0Ipebv4a3Pw8hp+/qVxLSmh4oOV1QQp4JGJ/TXMABFqFv1N
-	rydEWr3Hz/0rYUQNNNBqO5OIlnY8UyCs1xaTbSfaoxuzs2HG0Z0bXUaJvSRPwwX3SxNTQTV+wHVxT
-	xctS7+n2vS1AESWTuCpd7b1OQXfGCgg3G84HyWj4P5O/yBwS1zbxvy1JbuFnjbg3cXjoC8Ypw0eeo
-	WVf/JOWalccaf6/vTtoC4f0xqz/jsftUMOb/7KVWWtmWO4+qDqoyekQrsWgjs5dWitKM772Necehj
-	XX9dugdw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:Date:From:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=zG2Wsg/BzhPMjOE3JgOxdh5m31QBgm88y6qID8vV1kI=; b=pxEhHnZ8En3gB0I3vMFDlI8pTP
+	XkUc4pUQKJmDZzjksE+QQW1B+jS7fxEIZyu7ZtKSWIzKBYgAsW/h5fSu2++gbkF5oti5VAufOlwZk
+	Hmtbm5/qSyUS8+izaKA4qQVM/yZab7gD4ME/fLTzVe4P8itlB94GQmW6/FqLd6aS3ZxqPA9r05EYo
+	P4NdXXsJyhtMdYRHHSYYb/NAoxbyE8ytV4ryC0/c7TbrdB2xZ2I9r70AT06MYlez1O38TIMmAJOBs
+	8tbJN2yJYxK+s7d16BTVG04rlEQRjlxWT/yNWjDylaS1OcRSQ7hf0W1GEtKeKgDiMSCEMNE2dW7RZ
+	qdB7arzQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x11bQ-00000009Lpm-0XXT;
-	Mon, 31 Aug 2026 12:59:08 +0000
-Received: from mx2.mythic-beasts.com ([2a00:1098:0:82:1000:0:2:1])
+	id 1x12AI-00000009Qub-2CWh;
+	Mon, 31 Aug 2026 13:35:10 +0000
+Received: from mail-pf1-x436.google.com ([2607:f8b0:4864:20::436])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x11bN-00000009Lp6-3qrv
+	id 1x12AF-00000009QrZ-18Nd
 	for kexec@lists.infradead.org;
-	Mon, 31 Aug 2026 12:59:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=tom-fitzhenry.me.uk; s=mythic-beasts-k1; h=Date:Subject:To:From;
-	bh=rvMGQZrptl4rbELAmb9clWsM5sJH3hKzq91dfV8VKLo=; b=jb/rHHv6FvD3QpfnYRkMdza6di
-	yiN6unUDw2ly4RCvUHemFl9Crm4B7aWT9+49ighEkN69vOd9SB5vc6JeyOuURdEV3pJWXdJ3IXABI
-	K2sFjLBXyLUzhSIf4dYqiFboorDdeii9LKULOmMWKFAGRsRFIZ730wCg6Ejm40O9UIaiGcy2PJ14U
-	tmANac/YqHKtwGjezZgbceSthND+Br+v5R1UneEjxCk7lKioIODLNjCSExFg7aDL8aFzKv14g3Kvb
-	8LaDLM5hbRtx8OM1L2NPDNVTygWUNkhiwMdNoy50V/vqiQn72XURzAX2DdpIu1lI+mCvKx3MKGxlW
-	4LacJG4w==;
-Received: by mailhub-hex-d.mythic-beasts.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <tom@tom-fitzhenry.me.uk>)
-	id 1x11bL-002Htd-1j;
-	Mon, 31 Aug 2026 13:59:04 +0100
-From: Tom Fitzhenry <tom@tom-fitzhenry.me.uk>
-To: kexec@lists.infradead.org
-Cc: Tom Fitzhenry <tom@tom-fitzhenry.me.uk>
-Subject: [PATCH] arm: use the zImage tag's real TEXT_OFFSET for kernel placement
-Date: Mon, 31 Aug 2026 12:58:27 +0000
-Message-ID: <20260831125828.1524463-1-tom@tom-fitzhenry.me.uk>
-X-Mailer: git-send-email 2.55.0
+	Mon, 31 Aug 2026 13:35:09 +0000
+Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-853c947bfefso2794756b3a.0
+        for <kexec@lists.infradead.org>; Mon, 31 Aug 2026 06:35:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788183305; x=1788788105; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=zG2Wsg/BzhPMjOE3JgOxdh5m31QBgm88y6qID8vV1kI=;
+        b=Qy0UXMRDaRVrsnmDqI5lwhmUBjh3QYYPViZR2MWGQxov0g0QapWuObAGGowRNuAiUw
+         tp/HyiiprcmErzvzj7Ysy72NXb1xwBQDRhqkHTgeOGbmJPfrzoMrsX2X270KLmAvAJXb
+         zPjuk5eIkxX+69QfoobJ6FW4vP73EnZ9crbCYQNnfbz2kh53Cqcz6yOWciloGQpmroAq
+         gr/jylsV7lKb6iRNzrMzpOgHcwqYj631Vki7RSzQGam0ys+wz862Xqa5vhQlH9srVVC0
+         66k6HPwkz6w5UxJpUQlzVkVQfeS9AeCGLU0BgpWns2WqLQA8QPMKzwho7L+5x8SdkyFc
+         2QRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788183305; x=1788788105;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=zG2Wsg/BzhPMjOE3JgOxdh5m31QBgm88y6qID8vV1kI=;
+        b=AAsyvKzYbDW8/27axNBEdgXEpVCd0hV9K3vG7UjR+yjK1X7SwLBVc+9PQRBgUNUysQ
+         E5MozH6qharEHAH9KV6vswKStGOreb7ztkuxjJf14fNl7XAAUMUH3EOnCv4sWk8G7yuY
+         u9oGTmSi0JIk5l/w0uuOhR2QitlizNv61SysYBhx/3N/m+zsUgOyXDU6tzWpGA43qj/B
+         CAKNoAg68htu74BYjXxZqH2KK85lyifOuR+gbK6tHTa2VZQpMf4vbz14ZnYeCPYsKUWI
+         IYhoJpd9gbIKRlPNA+Z5r5C97pwfrrLAT5L6Rd37cLKJ/Fl5k7LiYw+gbHjxVuURk2Qc
+         DRiA==
+X-Gm-Message-State: AFuF++lQ9opk8Vxu/QfW5/ltS5sO2Fs7XAE0t05tc4su0+uG2VhUYAgC
+	ohJLtS2LK9F3B5SZG0mNFhWbWESXlWngTa0RANg7ZofMrYclnc02qcoR
+X-Gm-Gg: AR+sD13X/ri9mRvwTkjP/kFa4qkXx/z4iksXrlGSO6KW8kJwFOdzQfdXqtR9UrmhXGw
+	cx8QwrBKvZ/6gfgTUSJmbdh+YF9Qs/QsiYZy5vPGwmi8q+MvLqqp77RByHokEXzfN6Pi+fZbC33
+	bUBWIDpQKgNTXfmsc8OuPDcfJM0x3q0+j1Z+ltz7/2crtT4TfWdc9oVpIm1z+P3+6HUQhW/qnX6
+	H8gaKh+9YsmKk+1qKgxPqRDF5k4Tv7cCLxmWaVUH+H82uLh6vYaXseXVtA8MZyBVYqKHun7OKch
+	Gkx0DF1+X3WrxaPNDWYNFzRQKpY0pENbClWViS/grV6WQuTY/AUDBZbRSTLnTP1cbZCLTvlvQyG
+	koOtjYg/eoimTvIl9IyJCGd0Fd2y8NY2Rm4XLpYnUA/QJLAAugS9NY2OPiwFX5RST2OCooXKwaf
+	Nrz1MFREE09ad95N0GRM54gBWYqbaxfWaIoa+cGpDHaOgxrOC/Bng30g==
+X-Received: by 2002:a05:6a00:1390:b0:857:72f8:dca3 with SMTP id d2e1a72fcca58-859972b7fddmr6498579b3a.9.1788183305220;
+        Mon, 31 Aug 2026 06:35:05 -0700 (PDT)
+Received: from localhost ([45.112.44.97])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8569f49f50bsm3843564b3a.11.2026.08.31.06.35.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2026 06:35:04 -0700 (PDT)
+From: Coiby Xu <coiby.xu@gmail.com>
+X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
+Date: Mon, 31 Aug 2026 21:34:30 +0800
+To: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: kexec@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Baoquan He <baoquan.he@linux.dev>, Dave Young <ruirui.yang@linux.dev>, 
+	Pratyush Yadav <pratyush@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 8/9] crash_dump: Disallow
+ configfs/crash_dm_crypt_key/reuse if crash hotplug supported
+Message-ID: <apWAp7FamnxneZ3v@Rk>
+References: <20260828084900.1496839-1-coiby.xu@gmail.com>
+ <20260828084900.1496839-9-coiby.xu@gmail.com>
+ <38e371e9-1f0a-4e9f-a5e1-0b9d696379da@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-BlackCat-Spam-Score: 14
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <38e371e9-1f0a-4e9f-a5e1-0b9d696379da@linux.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260831_055906_208048_1A336CCF 
-X-CRM114-Status: GOOD (  15.00  )
+X-CRM114-CacheID: sfid-20260831_063507_433500_2B7EF248 
+X-CRM114-Status: GOOD (  21.58  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -67,105 +106,133 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The zImage loader assumes TEXT_OFFSET is 0x8000 and sizes the kernel
-reservation as if the decompressed kernel lands at RAM base + 0x8000.
-Multiplatform armv7 kernels, however, are built with a per-platform
-TEXT_OFFSET: arch/arm/Makefile warns that "this offset is critical to
-the functioning of kexec-tools", and e.g. ARCH_MESON uses 0x00208000.
+On Sun, Aug 30, 2026 at 01:28:59PM +0530, Sourabh Jain wrote:
+>
+>
+>On 28/08/26 14:18, Coiby Xu wrote:
+>>If crash hotplug is supported, dm-crypt keys saved to reserved memory
+>>will be taken care of automatically. Thus it doesn't make sense to use
+>>configfs/crash_dm_crypt_key/reuse. Not reserving
+>>image->dm_crypt_keys_addr makes it implicitly to disallow using this
+>>API. Currently x86_64 and ppc64le have implemented crash hotplug
+>>feature.
+>>
+>>Also update the doc accordingly. Note two doc issues are fixed as well.
+>>
+>>Fixes: 9ebfa8dcaea7 ("crash_dump: reuse saved dm crypt keys for CPU/memory hot-plugging")
+>>Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+>>---
+>>  Documentation/admin-guide/kdump/kdump.rst | 16 ++++++++++------
+>>  kernel/crash_dump_dm_crypt.c              | 13 +++++++++----
+>>  2 files changed, 19 insertions(+), 10 deletions(-)
+>>
+>>diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+>>index 7587caadbae1..0bf2eb100a05 100644
+>>--- a/Documentation/admin-guide/kdump/kdump.rst
+>>+++ b/Documentation/admin-guide/kdump/kdump.rst
+>>@@ -577,9 +577,10 @@ with /sys/kernel/config/crash_dm_crypt_keys for setup,
+>>  1. Tell the first kernel what logon keys are needed to unlock the disk volumes,
+>>      # Add key #1
+>>-    mkdir /sys/kernel/config/crash_dm_crypt_keys/7d26b7b4-e342-4d2d-b660-7426b0996720
+>>+    VOL1_UUID=7d26b7b4-e342-4d2d-b660-7426b0996720
+>>+    mkdir /sys/kernel/config/crash_dm_crypt_keys/$VOL1_UUID
+>>      # Add key #1's description
+>>-    echo cryptsetup:7d26b7b4-e342-4d2d-b660-7426b0996720 > /sys/kernel/config/crash_dm_crypt_keys/description
+>>+    echo cryptsetup:$VOL1_UUID > /sys/kernel/config/crash_dm_crypt_keys/$VOL1_UUID/description
+>>      # how many keys do we have now?
+>>      cat /sys/kernel/config/crash_dm_crypt_keys/count
+>>@@ -591,15 +592,18 @@ with /sys/kernel/config/crash_dm_crypt_keys for setup,
+>>      cat /sys/kernel/config/crash_dm_crypt_keys/count
+>>      2
+>>-    # To support CPU/memory hot-plugging, reuse keys already saved to reserved
+>>-    # memory
+>>-    echo true > /sys/kernel/config/crash_dm_crypt_key/reuse
+>>-
+>>  2. Load the dump-capture kernel
+>>  3. After the dump-capture kerne get booted, restore the keys to user keyring
+>>     echo yes > /sys/kernel/crash_dm_crypt_keys/restore
+>>+For CPU/memory hot-plugging, you can reuse keys already saved to reserved
+>>+memory before reloading the kdump image,
+>>+    echo true > /sys/kernel/config/crash_dm_crypt_keys/reuse
+>>+
+>>+Note if crash hotplug is supported, this API is totally unnecessary thus will
+>>+be disabled automatically.
+>>+
+>>  Contact
+>>  =======
+>>diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+>>index b7629174e4db..3aaa0f9c3117 100644
+>>--- a/kernel/crash_dump_dm_crypt.c
+>>+++ b/kernel/crash_dump_dm_crypt.c
+>>@@ -324,7 +324,7 @@ static ssize_t config_keys_reuse_store(struct config_item *item,
+>>  	r = -EINVAL;
+>>  	if (!kexec_crash_image || !kexec_crash_image->dm_crypt_keys_addr) {
+>>-		pr_debug("dm-crypt keys haven't be saved to crash-reserved memory\n");
+>>+		pr_debug("dm-crypt keys haven't be saved to crash-reserved memory or crash hotplug supported\n");
+>
+>Nit: the above line is more than 100 characters. There is no
+>complaint from checkpatch, but I feel we should reduce it to
+>below 100 characters.
 
-With such a kernel the decompressor places the inflated kernel ~2 MB
-higher than kexec-tools assumed, so the initrd placed at the estimated
-end of the kernel image lands inside the decompressor's scratch area
-or the new kernel's own reservation. The kexec'd kernel then fails
-with "RAMDISK: Couldn't find valid RAM disk image" or "INITRD: ...
-overlaps in-use memory region", as seen kexec'ing an armv7 NixOS
-kernel on a Netgear RN102 (its multiplatform config selects
-ARCH_MESON).
+Thanks for the reminder! Documentation/process/coding-style.rst
+explicitly states,
+     However, never break user-visible strings such as printk messages because
+     that breaks the ability to grep for them.
 
-The zImage extension tag has recorded TEXT_OFFSET since v5.10 (commit
-83dfeedb6663, "ARM: add TEXT_OFFSET to decompressor kexec image
-structure"), but the loader only reads size_ptr and bss_size from it.
-Read the real value and place the zImage there. Older kernels do not
-carry it and keep the historical 0x8000 default, just as the arm64
-loader falls back to 0x80000 for older kernels (commit 522df5f7217f,
-"arm64: Add arm64 kexec support").
+In fact, scripts/checkpatch.pl will issue a SPLIT_STRING warning if we
+break the user-visible strings. So I think this is accepted unless
+kexec/kdump subsystem has a hard column limit.
 
-Note on tooling: this patch was developed with assistance from
-DeepSeek LLM, which helped diagnose the failure and draft the fix.
-Tested by kexec'ing arm zImages with non-default TEXT_OFFSET under
-QEMU with both a synthetic config and the affected RN102's config,
-asserting the kexec'd initrd runs.
+>
+>Also, I checked that we don't have pr_fmt defined for this file,
+>but we do have pr_debug and other pr_* calls. See if defining
+>pr_fmt helps reduce the character count in the above line.
 
-Signed-off-by: Tom Fitzhenry <tom@tom-fitzhenry.me.uk>
-Link: https://git.kernel.org/torvalds/c/83dfeedb6663
-Link: https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=522df5f7217fda01ece3f6ac3e9987b0320c2bb0
----
- kexec/arch/arm/kexec-zImage-arm.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+If I'm not mistaken, pr_fmt only adds a prefix. So I don't think it will
+help reduce the character count in this particular case.
 
-diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-index 8b474dd..892fca0 100644
---- a/kexec/arch/arm/kexec-zImage-arm.c
-+++ b/kexec/arch/arm/kexec-zImage-arm.c
-@@ -131,6 +131,7 @@ struct zimage_tag {
- 		struct zimage_krnl_size {
- 			uint32_t size_ptr;
- 			uint32_t bss_size;
-+			uint32_t text_offset;
- 		} krnl_size;
- 	} u;
- };
-@@ -478,7 +479,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 	unsigned long page_size = getpagesize();
- 	unsigned long base, kernel_base;
- 	unsigned int atag_offset = 0x1000; /* 4k offset from memory start */
--	unsigned int extra_size = 0x8000; /* TEXT_OFFSET */
-+	unsigned int text_offset;
- 	uint32_t address_cells, size_cells;
- 	const struct zimage_tag *tag;
- 	size_t kernel_buf_size;
-@@ -661,6 +662,21 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 	 */
- 	tag = find_extension_tag(buf, len, ZIMAGE_TAG_KRNL_SIZE);
- 
-+	/*
-+	 * The decompressor places the inflated kernel at
-+	 * (zImage address & 0xf8000000) + TEXT_OFFSET, so load the
-+	 * zImage at a 128 MiB-aligned base + TEXT_OFFSET.  The tag
-+	 * table records the real value since v5.10 (commit
-+	 * 83dfeedb6663, "ARM: add TEXT_OFFSET to decompressor kexec
-+	 * image structure"); TEXT_OFFSET is the third payload word,
-+	 * so a tag size of at least 5 means it is present.  Older
-+	 * kernels keep the historical 0x8000 default.
-+	 */
-+	if (tag && le32_to_cpu(tag->hdr.size) >= 5)
-+		text_offset = le32_to_cpu(tag->u.krnl_size.text_offset);
-+	else
-+		text_offset = 0x8000;
-+
- 	/*
- 	 * The zImage length does not include its stack (4k) or its
- 	 * malloc space (64k).  Include this.
-@@ -748,14 +764,14 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 		}
- 		base = start;
- 	} else {
--		base = locate_hole(info, len + extra_size, 0, 0,
-+		base = locate_hole(info, len + text_offset, 0, 0,
- 				   ULONG_MAX, INT_MAX);
- 	}
- 
- 	if (base == ULONG_MAX)
- 		return -1;
- 
--	kernel_base = base + extra_size;
-+	kernel_base = base + text_offset;
- 
- 	/*
- 	 * Calculate the minimum address of the initrd, which must be
+>
+>But the overall idea of handling crash hotplug support with
+>crash dm-crypt looks good to me. So feel free to add:
+>
+>Reviewed-by: Sourabh Jain sourabhjain@linux.ibm.com
 
-base-commit: 43c5cba85ad23cc69c423527d9587c59b89fa437
+Thanks for reviewing and ack'ing the patch!
+
+>
+>Thanks,
+>Sourabh Jain
+>
+>
+>>  		goto unlock;
+>>  	}
+>>@@ -519,9 +519,9 @@ int crash_load_dm_crypt_keys(struct kimage *image)
+>>  void kexec_file_post_load_cleanup_dm_crypt(struct kimage *image)
+>>  {
+>>  	/*
+>>-	 * For CPU/memory hot-plugging, the kdump image will be reloaded. Prevent
+>>-	 * keys_header from being cleaned up during unloading when
+>>-	 * is_dm_key_reused=true
+>>+	 * For CPU/memory hot-plugging without CONFIG_CRASH_HOTPLUG, the whole kdump
+>>+	 * image will be reloaded. Prevent keys_header from being cleaned up during
+>>+	 * unloading when is_dm_key_reused=true
+>>  	 */
+>>  	if (!is_dm_key_reused) {
+>>  		kfree_sensitive(keys_header);
+>>@@ -532,6 +532,11 @@ void kexec_file_post_load_cleanup_dm_crypt(struct kimage *image)
+>>  		mutex_unlock(&config_keys_subsys.su_mutex);
+>>  		mutex_acquired = false;
+>>  	}
+>>+
+>>+#ifdef CONFIG_CRASH_HOTPLUG
+>>+	if (image->hotplug_support)
+>>+		image->dm_crypt_keys_addr = 0;
+>>+#endif
+>>  }
+>>  static int __init configfs_dmcrypt_keys_init(void)
+>
+
 -- 
-2.55.0
-
+Best regards,
+Coiby
 
