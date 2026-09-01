@@ -4,67 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A899DC624D6
-	for <kexec@archiver.kernel.org>; Tue,  1 Sep 2026 18:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 54D8CC624D8
+	for <kexec@archiver.kernel.org>; Tue,  1 Sep 2026 18:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:Mime-Version:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
-	bh=lAVN67JT5h8WIfFlQUOkXfv2BuxQF89IX1lkYdIpCWw=; b=yZDJIAC69J7dKpyIgyEnvg5e8u
-	hF+wRQJXvZN88yUGKe/H88I1lXGqTcXFKuPkBCbyEtNf10VeZ1zhSuubIS4jvvhwyUfLIKbKNh3cf
-	1GDwpmkhiRFTAv+1j6w9mBQxkmRIWwSfgS5Ng2maV/S5sdRL1oyv5DGB+Cw06zRxu95qHo9z4zAKQ
-	q6ByQ2+FJsAiaeBMHOTXP2duG5Yvg4vv8GYQgqm6RCDasd1neaq+yZHFXwUS7ChwEPX/UKKrbXhqM
-	hF1dU5peD8GQmlYVgtXePz7hhKqsd7+gIkIngSyxkz3kqXq2nrsdcjEZJCK7TqtyoO9vl9nAEcveA
-	vpwEkl6A==;
+	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=P31f4AxefLaMEsH/zGccMYrThdu9slSJRJY7f7YnBMU=; b=tKvD+Ll+YMJ7YpU/M+fBwyDfFs
+	W0Tkz/3PZvnYA6FsonJaLMIBGU7JzFuq8O4i0CbRCx5Im6HBDuBoC6e1m1nulwNbtiRROtiq/3Y/N
+	Smcj96EpJX47EmDp80BiAx7kBnojdMSV71qk0A5OwPRgPlFp0wzCepmVPf+3Efu7XxMbX+URjGgxm
+	yi11oRgSONlAYsZ+XC9OuzBk4A9xtjpXwc53g2dpHfgCNfmWVZHNoVPrU2WeSwfsbX5+uftfFuK7g
+	QlGIbCa42COjcZgK2gqLAXf0mhC+K3m6dS/3sJRadVRfFfGZdYyO/8DMlHZ6kFN9vXLwoiiFBoPUm
+	xJGGM33w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1StU-0000000CuyI-2gO5;
-	Tue, 01 Sep 2026 18:07:36 +0000
-Received: from mail-pj1-x1046.google.com ([2607:f8b0:4864:20::1046])
+	id 1x1StU-0000000CuzG-3rMM;
+	Tue, 01 Sep 2026 18:07:37 +0000
+Received: from mail-pg1-x546.google.com ([2607:f8b0:4864:20::546])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1StO-0000000CutH-2631
+	id 1x1StP-0000000Cutf-0tto
 	for kexec@lists.infradead.org;
-	Tue, 01 Sep 2026 18:07:34 +0000
-Received: by mail-pj1-x1046.google.com with SMTP id 98e67ed59e1d1-39533bb224cso159372a91.3
-        for <kexec@lists.infradead.org>; Tue, 01 Sep 2026 11:07:26 -0700 (PDT)
+	Tue, 01 Sep 2026 18:07:36 +0000
+Received: by mail-pg1-x546.google.com with SMTP id 41be03b00d2f7-cbb467e56aaso142598a12.1
+        for <kexec@lists.infradead.org>; Tue, 01 Sep 2026 11:07:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788286046; x=1788890846; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=lAVN67JT5h8WIfFlQUOkXfv2BuxQF89IX1lkYdIpCWw=;
-        b=vLpVEn7gRbC5rcmzOuSdXdSpAo+9yXgLImywQ7cr6NBoTN5DKt170jDYKWdOXcMNRK
-         TVH5S//gyTIMmzP4eUA+j/462tbTHVB4xw2+sdslj5C4fxN1NssZe18r7lGOJgpNFCyU
-         1azjv/dUBNA8KUH8Puu9/HpBBl81hhr4Xz0M/Kf9R2ZqmzrxMWpQFhTCNFqj1PYT7wNq
-         fbs0Eh0+5vU/hRC/W362/gOZs5MCokSlWsFZDIJkoyvDhBqhS0BpLL8tP0dVXH7qIcXM
-         zCZbS6LiwmQnqpQlgmc/qOH5s/r6yXBv6DwaLZO9l+v9MSZ8/sykI5QcbVSomKatot3a
-         kYQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788286046; x=1788890846;
-        h=content-type:cc:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20251104; t=1788286047; x=1788890847; darn=lists.infradead.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=lAVN67JT5h8WIfFlQUOkXfv2BuxQF89IX1lkYdIpCWw=;
-        b=rHU7hhqDPfo1TdeIrxb6oVzSfH+E6/rt3g8kuCXeB/9CjcvfUEuS71pOnrY9SYi7ww
-         LHKwoBRq90c68uGrxMesy9O1S+qKgPrs9kZH7R1g1ZgVxxeB1L1RQKBn3xero9JrtXUI
-         vcfjSpMGFY9FNMJkqpggIasoYBzb0K6FPfeXGl3bsaRxgZkiPMq2hNWugC1zIEXqFsZh
-         I1IXkFoQy2X3BKy5Ex1lA+3nLgIibGqFVGjUnDOt7G0aqKPXLkHL23atQlvASvGCXikX
-         V/9Al/cXxkyp6jg4P4VRjFvI1/4SO5E5XDFqYEJi8qhAQXdmkX/fEBmQ4iJXzUcK+FX9
-         QeIw==
-X-Gm-Message-State: AFuF++nhiLZ+KBpxE8ocp/Xx6khOswbtOisCbBGQXoQSCR429X4SyEwy
-	Ys0n0/iTx2bDzw9GwSLXzNN1Uox2Ie1PTat2KK71Ml80PGZQTdXwGiO0wFhN7n6MTd4t5NXTds9
-	tqX2yMO4E3x1yuBCKMeXDfY656SGnqzwawSzGh6npAnqCRZmeP51ACoT/HJD81ws+DEjno779Po
-	1SE6XXD/WUsLCNix2Yk392cGTtSgFXEsjyRbTXYIFpASrRwrBo5rI=
-X-Received: from pjbnu6.prod.google.com ([2002:a17:90b:1b06:b0:396:61d1:58c7])
+        bh=P31f4AxefLaMEsH/zGccMYrThdu9slSJRJY7f7YnBMU=;
+        b=SfOOsGvCamR+KSP351TMmDx4IpbYfk7t13OwDIyb0D76bLIGo3FTQHukT5V1CZqroO
+         s+B7L3jw5XE1HrFoXZl5fnSEI9zehs9IB9uKVszdpb+h7YA+1Eqahx5clvuLNAeJw27+
+         hIahj6PLbIQ17djvqMX3N3d5KIClavjJJc9QbPs6Nu3pdiGePUeb8IR6qVbx3PfDCEoO
+         Gy2yHPvzz7IztUiwmtXzBDXw5uIDBduVVaaWN65GYmKvzAy1NMzJM/RZEIsdIW81qVlG
+         g7+y5VSv0gDp8Tfu6t80w6k9KdS6+p4UJZhlsIhQfkpoDlh+aY3Cg+FHIEKZzxHdnlO6
+         cp0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788286047; x=1788890847;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=P31f4AxefLaMEsH/zGccMYrThdu9slSJRJY7f7YnBMU=;
+        b=TXdd2wwbTwHykg0TEaxrxdZKkx203oFCuAmhT/mY7/78hyiLWyBjXAQu6eBRHK31VU
+         GWtlUl83DLMPoLZyOd7/K9JMjRbuvlGDwxk1aWbNl71UhIAbEvEEgspWIuKl2N6rh2bZ
+         rlwSrPcNEWBrlQhKyDm5+EbHk35ta3uktEtKhzalAXY0mMDjbMw0H5KximWa3TRkM3o9
+         WNIbWnDcRbUquvGTpfwTiooJ9o6fOLMq6hVmKEWi2d+LsaB2DsSuXopxIa/H9/oJQqRW
+         DEtIzoiOSYtEZWEOBHoayskYEClypW7QEyO2S4fPdokFzr5j9gDFtC7m+n0hd4fBUp+R
+         W5OA==
+X-Gm-Message-State: AFuF++nhYnuSiqIGNZSM+g7Z3kZFN9s2JgNWhXONqIFe4RVtkzBsjsK3
+	M3JFhjZP0z/X3VLvK8W3EtTJDImPR7iaeqJuRcfcg7THQ0cSXVNsJ5fIJYx4+XsxQUif6EmU2za
+	zpBG99LvN4Sgt/O8xXUpp9zQhCig75KAIekpLveTs/LK/mjvCpMCBFI53wQ3tyabO3EsNIUnQ7m
+	KDoAa5ywxYpjH+lUILa22aamoE0HN+7r9exYlTfWNo4S0s4AMC8lw=
+X-Received: from pgea25.prod.google.com ([2002:a05:6a02:5399:b0:c88:b675:3609])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:5544:b0:398:bd37:6a49 with SMTP id 98e67ed59e1d1-398bd376c65mr32646461a91.12.1788286043659;
- Tue, 01 Sep 2026 11:07:23 -0700 (PDT)
-Date: Tue,  1 Sep 2026 18:07:08 +0000
+ 2002:a05:6a21:31c7:b0:3d3:adbf:777e with SMTP id adf61e73a8af0-3d7afe35cddmr15820173637.19.1788286046490;
+ Tue, 01 Sep 2026 11:07:26 -0700 (PDT)
+Date: Tue,  1 Sep 2026 18:07:11 +0000
+In-Reply-To: <20260901180713.4185641-1-dmatlack@google.com>
 Mime-Version: 1.0
+References: <20260901180713.4185641-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.55.0.966.g6673acef38-goog
-Message-ID: <20260901180713.4185641-1-dmatlack@google.com>
-Subject: [RFC PATCH 0/5] liveupdate: LIVEUPDATE_SESSION_RETRIEVE_INTO_FD
+Message-ID: <20260901180713.4185641-4-dmatlack@google.com>
+Subject: [RFC PATCH 3/5] mm/memfd_luo: Implement retrieve_into callback for
+ shmem folios
 From: David Matlack <dmatlack@google.com>
 To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org, linux-mm@kvack.org
@@ -74,8 +78,8 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
 	David Matlack <dmatlack@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260901_110730_541984_64E245E3 
-X-CRM114-Status: GOOD (  21.14  )
+X-CRM114-CacheID: sfid-20260901_110731_255648_5D92799E 
+X-CRM114-Status: GOOD (  15.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,72 +94,83 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This series adds support for LIVEUPDATE_SESSION_RETRIEVE_INTO_FD, a new
-UAPI to enable preserved files to be restored into a userspace-provided
-file instead of a kernel-allocated file, and uses this to support
-preserving tmpfs files in-place without any changes to the LUO ABI.
+Implement the .retrieve_into() file handler API for memfd/shmem files.
+This implementation uses the standalone logic extracted previously to
+securely drop physical memory into an empty target inode.
 
-The Live Update Orchestrator (LUO) API currently explicitly returns a
-new struct file for every preserved file during retrieve() (e.g. via
-memfd_alloc_file()). This then forces userspace to use anonymous memfds
-for all in-memory files it wants to preserve. This works reasonably well
-for VM guest memory but does not work well for other types of files that
-userspace may want to preserve (e.g. in-memory logs, binaries,
-configuration files, etc.).
+Userspace topology delegation requires injecting folios into existing
+file descriptors. This implementation verifies the target descriptor is
+a shmem file and strictly guarantees it is empty before locking the
+inode and bridging the KHO folios into its address space.
 
-Preserving entire tmpfs mounts in-place would require a large amount of
-kernel support and would effectively make tmpfs an ABI, which is a
-non-starter (or so I hear). Instead, we can delegate the reconstruction
-of the tmpfs mounts (directory structure, permissions, etc.) post-kexec
-to userspace. The kernel just needs to preserve the contents of tmpfs
-files and provide userspace a mechanism to restore those contents back
-into a specific file on the filesystem after the kexec. Hence,
-LIVEUPDATE_SESSION_RETRIEVE_INTO_FD.
+Signed-off-by: David Matlack <dmatlack@google.com>
+---
+ mm/memfd_luo.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-An alternative approach to restoring data to a named file would be
-supporting a zero-copy sendfile() that can be used to convert named
-tmpfs files to/from memfds across the kexec. But this poses significant
-challenges on the *preserve* side since the preserved file might still
-be actively in use. The benefit of the retrieve-into approach introduced
-in this series is that it does not require dealing with two different
-files. There is only ever one file that owns the preserved memory.
-
-By leaving file and metadata allocation purely in the purview of
-userspace, programs can create the target files where they want, with
-the names and security permissions they desire, before directing the
-kernel to restore the preserved folios into them.
-
-Currently, only tmpfs shmem files are allowed as valid target receptors.
-Attempting to target populated files, or anything other than an empty
-shmem file, will trigger -EINVAL. HugeTLBfs files could be supported in
-the future.
-
-The coding work for this series was done with assistance from Gemini. I
-am not sure what is the latest recommendation is with respect to adding
-Assisted-by tags, but I can add them when I send out the real patches if
-this RFC looks acceptable.
-
-David Matlack (5):
-  liveupdate: Extract luo_file token lookup logic into helper function
-  liveupdate: Introduce SESSION_RETRIEVE_INTO_FD API and core support
-  mm/memfd_luo: Implement retrieve_into callback for shmem folios
-  mm/memfd_luo: Expand support beyond memfd to all generic shmem inodes
-  selftests: liveupdate: Add multi-session test coverage for
-    session_retrieve_into
-
- include/linux/liveupdate.h                    |  1 +
- include/uapi/linux/liveupdate.h               | 21 ++++++
- kernel/liveupdate/luo_file.c                  | 66 ++++++++++++++----
- kernel/liveupdate/luo_internal.h              |  2 +
- kernel/liveupdate/luo_session.c               | 30 ++++++++
- mm/memfd_luo.c                                | 68 ++++++++++++++++---
- .../liveupdate/lib/include/libliveupdate.h    |  1 +
- .../selftests/liveupdate/lib/lu_utils.c       | 33 +++++++++
- .../selftests/liveupdate/luo_multi_session.c  | 56 +++++++++++++--
- 9 files changed, 249 insertions(+), 29 deletions(-)
-
-
-base-commit: 4e1b74c6004371b046338325011a47cd7ab9dcc1
+diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
+index 59de210bee5f..dcda5bf98646 100644
+--- a/mm/memfd_luo.c
++++ b/mm/memfd_luo.c
+@@ -590,10 +590,58 @@ static unsigned long memfd_luo_get_id(struct file *file)
+ 	return (unsigned long)file_inode(file);
+ }
+ 
++static int memfd_luo_retrieve_into(struct liveupdate_file_op_args *args, struct file *target_file)
++{
++	struct inode *inode = file_inode(target_file);
++	struct memfd_luo_folio_ser *folios_ser;
++	struct memfd_luo_ser *ser;
++	int err;
++
++	/* Security/Safety checks: Ensure it's a shmem file and is completely empty */
++	if (!shmem_mapping(target_file->f_mapping))
++		return -EINVAL;
++
++	inode_lock(inode);
++	if (i_size_read(inode) != 0) {
++		inode_unlock(inode);
++		return -EBUSY;
++	}
++
++	ser = phys_to_virt(args->serialized_data);
++	if (!ser) {
++		inode_unlock(inode);
++		return -EINVAL;
++	}
++
++	if (ser->nr_folios) {
++		folios_ser = kho_restore_vmalloc(&ser->folios);
++		if (!folios_ser) {
++			inode_unlock(inode);
++			return -EINVAL;
++		}
++
++		/* Inject the physical pages from KHO using the extracted helper */
++		err = memfd_luo_retrieve_folios(target_file, folios_ser, ser->nr_folios);
++		kho_restore_free(folios_ser);
++		if (err) {
++			inode_unlock(inode);
++			return err;
++		}
++	}
++
++	/* Fast-forward the kernel inode size to match the injected data */
++	vfs_setpos(target_file, ser->pos, MAX_LFS_FILESIZE);
++	i_size_write(inode, ser->size);
++
++	inode_unlock(inode);
++	return 0;
++}
++
+ static const struct liveupdate_file_ops memfd_luo_file_ops = {
+ 	.freeze = memfd_luo_freeze,
+ 	.finish = memfd_luo_finish,
+ 	.retrieve = memfd_luo_retrieve,
++	.retrieve_into = memfd_luo_retrieve_into,
+ 	.preserve = memfd_luo_preserve,
+ 	.unpreserve = memfd_luo_unpreserve,
+ 	.can_preserve = memfd_luo_can_preserve,
 -- 
 2.55.0.966.g6673acef38-goog
 
