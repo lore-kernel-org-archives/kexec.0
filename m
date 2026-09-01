@@ -4,75 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D30E4C61DD3
-	for <kexec@archiver.kernel.org>; Tue,  1 Sep 2026 20:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7C089C61DD3
+	for <kexec@archiver.kernel.org>; Tue,  1 Sep 2026 20:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
-	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=f1/Jwq5+t6tQe5v6CVe+ERoBwhfQo9XFyVXChFbscQ0=; b=v4868nKAhLA5+x8Q3QSLvHMJL6
-	88F4s0Du2no/1rQuCAL0imSXXbRpwaW3+z0enENHFY1P7tnEn7pptxCL5kfSFdBSCNNXsj8KdnMDJ
-	PvZohy71fkQFmBBpfo4EwCu23/ziMtXnvyzXnnwTLQe0oFYhYTeCssSBpyfNCXTxpB7d+M1YWlhun
-	IvDM7pb+In064Z7q8tEVM469UjDp/Z9DlFidr4lwkxa0fmxSWeo5we7x6jwLxvQMfIo/z6GDoZC59
-	6LxMjWCw/h/W8hKkhXhNW5jLTXeJG7LBA6l/p9RMuou7HbZZCWsc5gP8o3i7hp7TIn6VdFLfFORh8
-	5zvOiJcw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:Subject:
+	Message-ID:Date:From:MIME-Version:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=mfK6izrLfLkiHBzwxF34flt/9RhCVqgo4wqSf8tha6I=; b=SoQH/xWJa14mCKvRWkBMDT+YL6
+	GGSOxLJQnPGdjDf8q65+4otXMuPD8IgoTjJ9iRNz+2RGnSShbkwVZn7D8vgZK1i1vxYZV4D34ewlk
+	jE4gchPPPtJ06f+LxqdLK4SS73ruHh775rp+o3bormzD4iSt9oGFUYeFpa1bJbOMd+i4G9xcQQl/q
+	pliXjvz92VTKgR5VofTJjap9wcMgEN30CURwKBO4DVM7O5DHu1LEU/zIGZ/ToqKlmLZ47vPp0K67R
+	g0rUw7LrvAcqvkakzFVvZGg1gjspngPW7HntrXSh35uh+f7ZMXNrCXcYFqNoUDMJtbnLDgVP8391L
+	mGCXGtow==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1Usl-0000000DJ3R-0NFi;
-	Tue, 01 Sep 2026 20:14:59 +0000
-Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25])
+	id 1x1V5W-0000000DKJQ-3LvY;
+	Tue, 01 Sep 2026 20:28:10 +0000
+Received: from mail-ej1-x630.google.com ([2a00:1450:4864:20::630])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1Usj-0000000DJ3D-0zBc;
-	Tue, 01 Sep 2026 20:14:57 +0000
-Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
-	by sea.source.kernel.org (Postfix) with ESMTP id EF20D43345;
-	Tue,  1 Sep 2026 20:14:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17C7A1F00A3A;
-	Tue,  1 Sep 2026 20:14:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788293696;
-	bh=f1/Jwq5+t6tQe5v6CVe+ERoBwhfQo9XFyVXChFbscQ0=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date;
-	b=bur9NIA5VjZqJ3jA9kvUAsKCinpmhYAyRbr8Hb1A0OQctcuO7N9DscX1sNVWHL1V7
-	 T80F+vdakutewH2IMUKIulhBeYbTt74ZvhHoMosmzBE80N+qc3JJtFqfa+UOgi4b5H
-	 nhJt07pq+F5fJOJSXkLDfT4qSN/I+piV60qOEI6PAZyKdu1ycpYXmW4JdbL3YGBRSO
-	 QhxKekth0A8llYBOSGx9oqJNnoi3gtqRLBPJlVRvjImiywEubcsr5hoj1xB8ayZBwy
-	 q8rGlbxN+AW6qnyVN4sOrSL4v4mH+oG0IpyaHj57TG+k/Vbf4tA5+oKuV69TJt709Q
-	 ed/bhiUFFcOQA==
+	id 1x1V5T-0000000DKJ4-248t
+	for kexec@lists.infradead.org;
+	Tue, 01 Sep 2026 20:28:08 +0000
+Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-c160420289bso27884866b.0
+        for <kexec@lists.infradead.org>; Tue, 01 Sep 2026 13:28:05 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788294484; cv=none;
+        d=google.com; s=arc-20260327;
+        b=pFGcQa6HCWiowsb1771xAmxNc/w2nh5wFFow9MspkhL+hLg4T4G968yi7TYjZDUmLg
+         U2jBBlbVC98BnhswXzJRH3qIAvVcyBZf1EzhtXirvtQaZ9Qw9gO+0qcE7NGb7/yqBt4L
+         aGetml986L9zqssE8yrlashbFKZOoelDtjH/40xQutPjAU+3p7w72APJMLzJ8opSbtW0
+         SVFFYWneCIzIj1PmYODnVU/dWqrCyiEvUoGrF++KE/3iSKkMFQyH3InYBN3lUN/CXH9H
+         fnlkfMUb5f6wDlxpz++91/Cm1KO5liEGjG1fijlkjlOhzqTp1t6KR1S9pQhZy+pmUauu
+         9dhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=mfK6izrLfLkiHBzwxF34flt/9RhCVqgo4wqSf8tha6I=;
+        fh=aTgVlVjXYDQ8kBmWlTtDCL6TTKvruKCzQ0Vg/3A4YfM=;
+        b=R7o84mcts7X1/1Hd6fa1VIoAfLq6Ws75JyeU+hpVNVHDOmHB42rwRotpvxHrMwUw9j
+         r5hLXyg7KiGOSc1rXYsBS9RK2IQ7W1OrdQ3vX8pR1uDGjr9W0043RboJFu9vryx2mlKL
+         IdYAOoBl7U003vRFf8u6lON5RyLnVh0hVYLCHz+/BIZbI5O8R9ONvVeLISLSCbflIYTV
+         96C8GLsuy3squRRJT2x5KeVOm0+i7Wc7JJZXLOivp4dS3Alz62yj1m1titMOkJvs0Q6y
+         u16tnLoeNQ1+O2OHwASfovD6pbtlJWpWd4Wkro5JdN0tfdqjEY5JNppF19SvGlWdCh5h
+         j38g==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1788294484; x=1788899284; darn=lists.infradead.org;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=mfK6izrLfLkiHBzwxF34flt/9RhCVqgo4wqSf8tha6I=;
+        b=gWXMI1ehImJ3mQ9nnWtD1GHRTbxBVf8Mf8imxnJWdyDGpAX15OwfysRoOKUhvt2vDv
+         3nibgkdWSqs/MOA+w6jSN21TrZTVW+BuZqJeDmfRdvyzuTMe9bkREQc4ZHEOpziKPYXF
+         doPY3hy/lssBtSlYalIEbV6TBTQmD0Z60+N0qLQoYRQv0NX2lshJ008ZQjn1CeABUE/u
+         +uw4y3LvyLkrf2+7tvvnHFh9MnMN6SCQ8nJCekvdon0V1fZmDyMSS1O4nMthZwhSVjEe
+         Zd7ybHsFpcPsKkqRQ8SxRNVfS1FIbh2O9wytrmgGWH7+JiMwJ0hQBfZ9kQ+kUHPg3DHv
+         fHFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788294484; x=1788899284;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=mfK6izrLfLkiHBzwxF34flt/9RhCVqgo4wqSf8tha6I=;
+        b=s4cIuN0K6EtlFy9nNLqwyP3vPQR0sMYwwHH4UdQtUOixKiANOE4nH59dL9qWHcwKr9
+         j+KuByWQoOqYvU4jv8Ob0Gb1/73+EAv9IYHR8u+k7ex+KlXxu1evsOEKrPCxTrbBsNLy
+         f6loiTqg7Zgp3Y4niZUtQZX3RL0+gZzCBrlu0p6RiIxI5sVtttpBGuzhPEfU/cUr3wGX
+         QSQDWKC+fWQvZWOZNKz6Isv7TgYuNBh7Ol0sQS26bUHsF/MxFyUWwsXV51c8Ur+N+LiS
+         vFTqOpfCn3dqoaZ3777qKzw6tDXOaHVt4PDAGJTtjAUp+V4h7c8kMWgo4rSyww9MH6pD
+         z9fg==
+X-Gm-Message-State: AFuF++lXUDbo7gdA3mCK6ort7dQuzKsv9c/9vaqybm111+NIWbGem5ZN
+	2o+pedj0FzOpAfD/NZ5ThGWZZp/QXXPIq2YlLM9bg1+KbL9wMErEMaypNmkSgXKn/SYRpsXHbPY
+	9KTs8PEruHWPUXzQzJMT4Jthw6I6Y3upL4woUH7wfPE2QdMOZ7eXUopC8QuQ=
+X-Gm-Gg: AR+sD10tklulUw1tMc493gdir7E7cA9XVzciT3PlWpjF+r0QxS0+wnAjNCdJY8svBTB
+	zhBvqF39nnOBsxjaScVDuphAFmq8KGBZq2aFX0lq53DKHOhi2EmJBUUDMT//Y087GT+pelWHmI9
+	jT4WIJzTTGgkvk4hI/JxFAN1zUmRw7ZpaYehWM3mJ+i0DgzDgV973ZfHiqeZT92JRKz5X2uTNjj
+	FtWimMgIZ7ABYe6r5MyXdq2M/arbZ3kCTb12Rg2NjppIxNDFgKXfbt5h/jQTU0FWCFrzR4uc09J
+	mDRD22pjYoaYINMchtB3M6o2R2PN2CXF20SrjByNFEpQAQ==
+X-Received: by 2002:a17:907:1c28:b0:c25:2d27:5652 with SMTP id
+ a640c23a62f3a-c25b3cc9a35mr769868866b.11.1788294483990; Tue, 01 Sep 2026
+ 13:28:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v3 15/17] crash: Simplify CRASH_MAX_MEMORY_RANGES
- handling
-From: Mike Rapoport <rppt@kernel.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, 
- chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com, 
- mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, tglx@kernel.org, 
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
- akpm@linux-foundation.org, baoquan.he@linux.dev, rppt@kernel.org, 
- pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev, 
- kees@kernel.org, thuth@redhat.com, gshan@redhat.com, jic23@kernel.org, 
- james.morse@arm.com, ardb@kernel.org, leitao@debian.org, 
- yeoreum.yun@arm.com, sourabhjain@linux.ibm.com, coxu@redhat.com, 
- tangyouling@kylinos.cn, hbathini@linux.ibm.com, adityag@linux.ibm.com, 
- ionut.nechita@windriver.com, liaoyuanhong@vivo.com, seanjc@google.com, 
- fuqiang.wang@easystack.cn, makb@juniper.net, piliu@redhat.com, 
- ebiggers@kernel.org, jbouron@amazon.com, mclapinski@google.com, 
- me@linux.beauty, graf@amazon.com, bgwin@google.com, robh@kernel.org, 
- takahiro.akashi@linaro.org, palmer@rivosinc.com, x86@kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
- kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
- linux-mm@kvack.org
-In-Reply-To: <20260826092541.3905933-16-ruanjinjie@huawei.com>
-References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
- <20260826092541.3905933-16-ruanjinjie@huawei.com>
-Date: Tue, 01 Sep 2026 23:14:00 +0300
-Message-Id: <178829364021.3691424.12328056849597833403.b4-review@b4>
-X-Mailer: b4 0.17-dev
+From: David Matlack <dmatlack@google.com>
+Date: Tue, 1 Sep 2026 13:27:34 -0700
+X-Gm-Features: AcwNN1V4N1onRzX3h6LdZEVx9K8dpLeuQDd7RVnqczZMYgPrRcJGPrLqHA8BQSg
+Message-ID: <CALzav=eL-cARsaH4AO4PzeOPNDmTHpCZbYh9yX_U8pbz96qdTQ@mail.gmail.com>
+Subject: RFC: Enable Sashiko code reviews for kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Baoquan He <baoquan.he@linux.dev>, 
+	Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Pratyush Yadav <pratyush@kernel.org>, Dave Young <ruirui.yang@linux.dev>, 
+	Alexander Graf <graf@amazon.com>
+Content-Type: text/plain; charset="UTF-8"
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20260901_132807_538256_69BE9C88 
+X-CRM114-Status: UNSURE (   9.74  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,62 +113,21 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
+Hi kexec@ mailing list and maintainers,
 
-> Set CRASH_MAX_MEMORY_RANGES to 0 when MEMORY_HOTPLUG is disabled, then
-> remove the now unnecessary IS_ENABLED(CONFIG_MEMORY_HOTPLUG) checks in
-> powerpc and x86 arch_crash_get_elfcorehdr_size().
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
->
-> diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
-> index fc0105c7af4c3..c47e3f867ea1f 100644
-> --- a/arch/powerpc/kexec/crash.c
-> +++ b/arch/powerpc/kexec/crash.c
-> @@ -474,9 +474,7 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
->  	unsigned long phdr_cnt;
->  
->  	/* A program header for possible CPUs + vmcoreinfo */
-> -	phdr_cnt = num_possible_cpus() + 1;
-> -	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
-> -		phdr_cnt += CONFIG_CRASH_MAX_MEMORY_RANGES;
-> +	phdr_cnt = num_possible_cpus() + 1 + CONFIG_CRASH_MAX_MEMORY_RANGES;
->  
->  	return elf64_phdr_size(phdr_cnt);
->  }
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index 99eb8583d9321..116410ac90fb4 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -407,9 +407,7 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
->  	unsigned int sz;
->  
->  	/* kernel_map, VMCOREINFO and maximum CPUs */
-> -	sz = 2 + num_possible_cpus();
-> -	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
-> -		sz += CONFIG_CRASH_MAX_MEMORY_RANGES;
-> +	sz = 2 + num_possible_cpus() + CONFIG_CRASH_MAX_MEMORY_RANGES;
->  	sz *= sizeof(Elf64_Phdr);
->  	return sz;
->  }
-> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-> index a97ed9605602f..e6251dfe451a8 100644
-> --- a/kernel/Kconfig.kexec
-> +++ b/kernel/Kconfig.kexec
-> @@ -160,7 +160,8 @@ config CRASH_HOTPLUG
->  
->  config CRASH_MAX_MEMORY_RANGES
->  	int "Specify the maximum number of memory regions for the elfcorehdr"
-> -	default 8192
-> +	default 8192 if MEMORY_HOTPLUG
-> +	default 0 if !MEMORY_HOTPLUG
+I would like to enable Sashiko code reviews for patches sent to the
+kexec mailing list. I have found it useful for patches I have sent and
+reviewed on the kvm and linux-pci mailing lists, which have Sashiko
+enabled.
 
-This only sets the default, but a user can change the value explicitly.
+I sent a pull request to Sashiko to add kexec here:
 
--- 
-Sincerely yours,
-Mike.
+  https://github.com/sashiko-dev/sashiko/pull/474
 
+I wanted to start this thread to call attention to that pull request
+and see if there are any objections, or opinions about how it should
+be configured.
+
+Thanks.
+--David
 
