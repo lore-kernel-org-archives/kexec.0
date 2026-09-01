@@ -4,82 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D5D68C624D7
-	for <kexec@archiver.kernel.org>; Tue,  1 Sep 2026 18:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A9EE1C624D7
+	for <kexec@archiver.kernel.org>; Tue,  1 Sep 2026 20:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Type:Cc:To:From:
-	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=abQNPJxLdJSbNwggArhdklh2mCXd2+hz+eKc3bSV4GE=; b=yT0XTvBMJS+KEEoTCXOFNa8F7I
-	osjPcU+oZJJ+R0hQVErcXe9PLfuAhss78w9LZLhmkf50k+8xVvW7QgwrgHlApXcALWIDx032yDhq/
-	gJJvsjHi8bBZeU+x1XrTxdOIe4XTY7e5bdtjVlfsmlLxy1PGoEYcJGINmDdre1wNuLTyFFDhFfLSM
-	WiygUDxphDvCtx7Y+ae3itn2wn7U8+fZ/2gjz5slviaMOBX0igfu+R5q1s6NH/FxucEfbxmEf4Vfg
-	np0plYaAqKHxgnn6DNNi0ihMUJ3aBKtCveabLJP7bQs1JEC1Ap1gCHuBPy8p8i/nzTI8wcODr3D+i
-	B1mCZ+lw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:References:
+	In-Reply-To:Cc:To:From:Subject:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=P2Y/7R1nKNC3hVgJ6HVCLjPdj/LqygKXED195b8rx8I=; b=PmzU4XZ7cOwgJ/kUxwfbHkp15o
+	abBcN7AK2KzAOI9QNsAVKl4wezoYQwRmfWmWGDyO6J5NtCV2agXwYJA5GHE0g1LMaZQJCbgIz2Pee
+	eOQEaUyIlsANteqX/5b8cD9bq1HOiwcXKTVsWM4U2w6Py8rgX1nTyC0fzfsxSGF6YSDvFUvhu14Yb
+	NpMpG0sIBD//rv/EV1jYiyIazhjylRPnswuELwx8dXo7vg/BRs1hj0e4j1ZrgBl3WqwdvQE84tMOj
+	z366ZBgaEIB7EXRX4dt8jxxq2C1RmlFG7IFhTHq8RmHP0uctlj5R46AqRk/5fHjWhTF83ErZa0dnK
+	G5EEnszQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1StU-0000000CuyT-32uG;
-	Tue, 01 Sep 2026 18:07:36 +0000
-Received: from mail-pg1-x547.google.com ([2607:f8b0:4864:20::547])
+	id 1x1Us7-0000000DIrx-2V9K;
+	Tue, 01 Sep 2026 20:14:19 +0000
+Received: from sea.source.kernel.org ([172.234.252.31])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1StP-0000000Cutk-09XQ
-	for kexec@lists.infradead.org;
-	Tue, 01 Sep 2026 18:07:34 +0000
-Received: by mail-pg1-x547.google.com with SMTP id 41be03b00d2f7-cc21bc2923fso214697a12.2
-        for <kexec@lists.infradead.org>; Tue, 01 Sep 2026 11:07:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788286048; x=1788890848; darn=lists.infradead.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=abQNPJxLdJSbNwggArhdklh2mCXd2+hz+eKc3bSV4GE=;
-        b=fnX6qdggKpLUgnnDl13ld55saL9U2benOwtjhvDjU+coHJ5VYe4DhCzJKJDqVKBq8S
-         IjDZhDuCDHg/MmBmgPQlRjPG0KM0Fq63nvr57e1Psf/YXP8G64hixpQploH8u4d9u2IV
-         mr9UcOeHkZIYRI3O5CI4qHqL0sHygImAfIvVqiSnkMTP/RMHh3HNt2WfMGFaFQvK3u+G
-         Iy6Uu2BvFzZFrVwZpX/vxLTc/X/95pEPqfErYDeW0+wI4K0pgDOgoPMctAzycbwkOU5p
-         K+bHkr/67i2/gBTq8520VA2cX9WxZs3dLM5DpS3p6zFval1hRUSWfADYPyxDElY1EkMK
-         W1Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788286048; x=1788890848;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=abQNPJxLdJSbNwggArhdklh2mCXd2+hz+eKc3bSV4GE=;
-        b=GHQn6GgL+kUBtAL/5T3OYfrs4Ju1fQrTqMcT62+NkGunaSv45Fi/XTMPCvM5RBgdfg
-         u3zA9Si5Hk4wELfRN3q5WnVmq+2DBCkYz064bh/OEWwm2mFvjFo8X/wNk1dH7Pv2P8Rk
-         8d1JkwM6snudC+U+fAhXmPuYojpC8VS1+Ug/lrgyh+BxymnlOuFhozbDaxYrEyusuJYB
-         x2Khi5Ql9Bj0XZdjgtqRvemKTwuXH6li97n3vYX/0q4oxoA7voJocJCQ47MYOWq963LN
-         y0NsqLLfwLPy/Exlvm5r3DVFeWrW57oR9KLSbCAX5VD9CIl8N5Uoq13QeFFbgxVXkb4A
-         avqA==
-X-Gm-Message-State: AFuF++kinEzBnYEIoxslNsYTlfHs/8B40+tqF5Q8pawYXU2GUrtKtKtp
-	jBX8KQiypwGewcwmGyBrj+U3D9O0Ce7kbDoM8F15rI9dSCf595yfeVe68xUp1XG/3rnJUwv1prj
-	3UygdYrMf6toJyRugfMZsVLuPDbgPF1lrpWsp0UFAh9UEKMNJKbytZOa532qF6te4vSekMKHNmG
-	DKtbTpvLBX/w9vQuFFua1w8Eupawskm6adHwoLLHl9Ph+sfwY25Fs=
-X-Received: from pfux35.prod.google.com ([2002:a05:6a00:be3:b0:848:7bbd:284b])
- (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:3309:b0:835:6388:655d with SMTP id d2e1a72fcca58-8562ba7dae0mr58420543b3a.14.1788286047461;
- Tue, 01 Sep 2026 11:07:27 -0700 (PDT)
-Date: Tue,  1 Sep 2026 18:07:12 +0000
-In-Reply-To: <20260901180713.4185641-1-dmatlack@google.com>
-Mime-Version: 1.0
-References: <20260901180713.4185641-1-dmatlack@google.com>
-X-Mailer: git-send-email 2.55.0.966.g6673acef38-goog
-Message-ID: <20260901180713.4185641-5-dmatlack@google.com>
-Subject: [RFC PATCH 4/5] mm/memfd_luo: Expand support beyond memfd to all
- generic shmem inodes
-From: David Matlack <dmatlack@google.com>
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Samiullah Khawaja <skhawaja@google.com>, Shuah Khan <shuah@kernel.org>, 
-	David Matlack <dmatlack@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260901_110731_077645_17EDCB2A 
-X-CRM114-Status: GOOD (  15.74  )
+	id 1x1Us5-0000000DIrn-2Ft5;
+	Tue, 01 Sep 2026 20:14:17 +0000
+Received: from smtp.kernel.org (quasi.space.kernel.org [100.103.45.18])
+	by sea.source.kernel.org (Postfix) with ESMTP id 15579401E2;
+	Tue,  1 Sep 2026 20:14:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D3951F000E9;
+	Tue,  1 Sep 2026 20:14:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788293657;
+	bh=P2Y/7R1nKNC3hVgJ6HVCLjPdj/LqygKXED195b8rx8I=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date;
+	b=QEWxDwuklcAT5vpT/GCh8/tGOqL9zu9498j8F1chVU2f3pi31jaf21AraJN58Jaqg
+	 StWIeODS93d+9LhmpvfaD8yifmXFmiVhcmg/ozsZbRA8KGF5cx2pdfu1sEFrxVrNlO
+	 gv4OI7BfxFm9fkfmogqLl/Mllr/LdKuTAFHQsnDraEP2KJ1IOiVoXO0+IzcvwCuWLH
+	 kyTvnG7vAo/5CS2uCCGCKN1FNozw6LV7BkXmCcVBXJypXbHZGwXn6L5xH4Qw0A6JaS
+	 dNFnHQQDN7G6QsDXd10aYR9/IoAuU7u2pMRh5GFa8NKfwM9bJyjQIcXmoNAx7NRYYa
+	 LIxDGeBk/l7UQ==
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v3 01/17] kexec: Record allocated CMA pages to fix
+ release size mismatch
+From: Mike Rapoport <rppt@kernel.org>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, 
+ chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com, 
+ mpe@ellerman.id.au, npiggin@gmail.com, chleroy@kernel.org, tglx@kernel.org, 
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+ akpm@linux-foundation.org, baoquan.he@linux.dev, rppt@kernel.org, 
+ pasha.tatashin@soleen.com, pratyush@kernel.org, ruirui.yang@linux.dev, 
+ kees@kernel.org, thuth@redhat.com, gshan@redhat.com, jic23@kernel.org, 
+ james.morse@arm.com, ardb@kernel.org, leitao@debian.org, 
+ yeoreum.yun@arm.com, sourabhjain@linux.ibm.com, coxu@redhat.com, 
+ tangyouling@kylinos.cn, hbathini@linux.ibm.com, adityag@linux.ibm.com, 
+ ionut.nechita@windriver.com, liaoyuanhong@vivo.com, seanjc@google.com, 
+ fuqiang.wang@easystack.cn, makb@juniper.net, piliu@redhat.com, 
+ ebiggers@kernel.org, jbouron@amazon.com, mclapinski@google.com, 
+ me@linux.beauty, graf@amazon.com, bgwin@google.com, robh@kernel.org, 
+ takahiro.akashi@linaro.org, palmer@rivosinc.com, x86@kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+ kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, 
+ linux-mm@kvack.org
+In-Reply-To: <20260826092541.3905933-2-ruanjinjie@huawei.com>
+References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
+ <20260826092541.3905933-2-ruanjinjie@huawei.com>
+Date: Tue, 01 Sep 2026 23:14:00 +0300
+Message-Id: <178829364020.3691424.12323275610442178748.b4-review@b4>
+X-Mailer: b4 0.17-dev
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,76 +87,134 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Relax the early validation checks in the Live Update preservation path
-to allow general shmem-backed files, completely dropping the requirement
-that the file be unlinked (!inode->i_nlink).
+Hi,
 
-This officially enables userspace to push standard, path-backed tmpfs
-file descriptors through the LUO session ioctl instead of being
-artificially restricted strictly to anonymous memfd pseudofiles.
+> The CMA pages allocated for a kexec segment are released using the
+> segment's memsz to calculate the number of pages. However, some
+> architecture loaders modify the segment's memsz after allocation
+> (e.g. arm64 subtracts text_offset), causing the release function to
+> free fewer pages than were originally allocated, leaking the remaining
+> CMA pages.
+> 
+> Add a per-segment `segment_cma_pages` array to store the number of
+> pages actually allocated from CMA. Populate it during
+> kexec_add_buffer() using the aligned memsz, and use it in
+> kimage_free_cma() to accurately release all allocated pages.
+> 
+> This avoids relying on the potentially modified segment->memsz and
+> prevents silent CMA memory leaks.
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Baoquan He <baoquan.he@linux.dev>
+> Cc: Mike Rapoport <rppt@kernel.org>
+> Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+> Cc: Pratyush Yadav <pratyush@kernel.org>
+> Cc: Brian Mak <makb@juniper.net>
+> Cc: Pingfan Liu <piliu@redhat.com>
+> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
+> Cc: Justinien Bouron <jbouron@amazon.com>
+> Cc: Li Chen <me@linux.beauty>
+> Cc: stable@vger.kernel.org
+> Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%40huawei.com
+> Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+>
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 0af8ae4fdd087..83c296c0eb6cc 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -349,6 +349,7 @@ struct kimage {
+>  	unsigned long nr_segments;
+>  	struct kexec_segment segment[KEXEC_SEGMENT_MAX];
+>  	struct page *segment_cma[KEXEC_SEGMENT_MAX];
+> +	unsigned int segment_cma_pages[KEXEC_SEGMENT_MAX];
 
-Signed-off-by: David Matlack <dmatlack@google.com>
----
- mm/memfd_luo.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+Can we universally use unsigned long for number of pages?
 
-diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-index dcda5bf98646..107115c97bd8 100644
---- a/mm/memfd_luo.c
-+++ b/mm/memfd_luo.c
-@@ -9,14 +9,15 @@
-  */
- 
- /**
-- * DOC: Memfd Preservation via LUO
-+ * DOC: Memfd and Tmpfs Preservation via LUO
-  *
-  * Overview
-  * ========
-  *
-- * Memory file descriptors (memfd) can be preserved over a kexec using the Live
-- * Update Orchestrator (LUO) file preservation. This allows userspace to
-- * transfer its memory contents to the next kernel after a kexec.
-+ * Memory file descriptors (memfd) and generic tmpfs files can be preserved
-+ * over a kexec using the Live Update Orchestrator (LUO) file preservation.
-+ * This allows userspace to transfer its memory contents to the next kernel
-+ * after a kexec.
-  *
-  * The preservation is not intended to be transparent. Only select properties of
-  * the file are preserved. All others are reset to default. The preserved
-@@ -24,16 +25,17 @@
-  *
-  * .. note::
-  *    The LUO API is not stabilized yet, so the preserved properties of a memfd
-- *    are also not stable and are subject to backwards incompatible changes.
-+ *    or tmpfs file are also not stable and are subject to backwards
-+ *    incompatible changes.
-  *
-  * .. note::
-- *    Currently a memfd backed by Hugetlb is not supported. Memfds created
-+ *    Currently a file backed by Hugetlb is not supported. Memfds created
-  *    with ``MFD_HUGETLB`` will be rejected.
-  *
-  * Preserved Properties
-  * ====================
-  *
-- * The following properties of the memfd are preserved across kexec:
-+ * The following properties of the memfd/tmpfs file are preserved across kexec:
-  *
-  * File Contents
-  *   All data stored in the file is preserved.
-@@ -580,9 +582,7 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
- static bool memfd_luo_can_preserve(struct liveupdate_file_handler *handler,
- 				   struct file *file)
- {
--	struct inode *inode = file_inode(file);
--
--	return shmem_file(file) && !inode->i_nlink;
-+	return shmem_file(file) || shmem_mapping(file->f_mapping);
- }
- 
- static unsigned long memfd_luo_get_id(struct file *file)
+>  
+>  	struct list_head control_pages;
+>  	struct list_head dest_pages;
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index dc770b9a6d053..611b15bb1369e 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -560,7 +560,7 @@ static void kimage_free_cma(struct kimage *image)
+>  
+>  	for (i = 0; i < image->nr_segments; i++) {
+>  		struct page *cma = image->segment_cma[i];
+> -		u32 nr_pages = image->segment[i].memsz >> PAGE_SHIFT;
+> +		unsigned int nr_pages = image->segment_cma_pages[i];
+>  
+>  		if (!cma)
+>  			continue;
+> @@ -568,6 +568,7 @@ static void kimage_free_cma(struct kimage *image)
+>  		arch_kexec_pre_free_pages(page_address(cma), nr_pages);
+>  		dma_release_from_contiguous(NULL, cma, nr_pages);
+>  		image->segment_cma[i] = NULL;
+> +		image->segment_cma_pages[i] = 0;
+>  	}
+>  
+>  }
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 59fb9d71e9d86..bfae3fee7f2f9 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -670,7 +670,7 @@ static int kexec_walk_resources(struct kexec_buf *kbuf,
+>  
+>  static int kexec_alloc_contig(struct kexec_buf *kbuf)
+>  {
+> -	size_t nr_pages = kbuf->memsz >> PAGE_SHIFT;
+> +	size_t nr_pages = PFN_DOWN(kbuf->memsz);
+>  	unsigned long mem;
+>  	struct page *p;
+>  
+> @@ -756,6 +756,8 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+>   */
+>  int kexec_add_buffer(struct kexec_buf *kbuf)
+>  {
+> +	unsigned long nr_segments = kbuf->image->nr_segments;
+> +	size_t nr_pages;
+>  	struct kexec_segment *ksegment;
+>  	int ret;
+>  
+> @@ -763,7 +765,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+>  	if (!kbuf->image->file_mode)
+>  		return -EINVAL;
+>  
+> -	if (kbuf->image->nr_segments >= KEXEC_SEGMENT_MAX)
+> +	if (nr_segments >= KEXEC_SEGMENT_MAX)
+>  		return -EINVAL;
+>  
+>  	/*
+> @@ -789,12 +791,18 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+>  		return ret;
+>  
+>  	/* Found a suitable memory range */
+> -	ksegment = &kbuf->image->segment[kbuf->image->nr_segments];
+> +	ksegment = &kbuf->image->segment[nr_segments];
+>  	ksegment->kbuf = kbuf->buffer;
+>  	ksegment->bufsz = kbuf->bufsz;
+>  	ksegment->mem = kbuf->mem;
+>  	ksegment->memsz = kbuf->memsz;
+> -	kbuf->image->segment_cma[kbuf->image->nr_segments] = kbuf->cma;
+> +	kbuf->image->segment_cma[nr_segments] = kbuf->cma;
+> +	if (kbuf->cma) {
+> +		nr_pages = (unsigned int)(PFN_DOWN(kbuf->memsz));
+> +		kbuf->image->segment_cma_pages[nr_segments] = nr_pages;
+		kbuf->image->segment_cma_pages[nr_segments] = nr_pages;
+> +	} else {
+> +		kbuf->image->segment_cma_pages[nr_segments] = 0;
+> +	}
+
+I suggest to rename nr_pages to nr_cma_pages, initialize it to 0 at
+declaration time and make this
+
+	if (kbuf->cma)
+		nr_cma_pages = PFN_DOWN(kbuf->memsz);
+	kbuf->image->segment_cma_pages[nr_segments] = nr_cma_pages;
+
 -- 
-2.55.0.966.g6673acef38-goog
+Sincerely yours,
+Mike.
 
 
