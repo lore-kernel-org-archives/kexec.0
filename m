@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 24BBFC624D0
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D5D68C624D7
 	for <kexec@archiver.kernel.org>; Tue,  1 Sep 2026 18:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
@@ -12,63 +12,63 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Subject:Message-ID:References:Mime-Version:In-Reply-To:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=EEIZgCOB2hl947kqAMQSV91Zoox41yoYUfb/qDb9/EY=; b=NOBHItfCbFLlBO57/203rSPuzS
-	65qWZRWKlesHSzQphF9Dc9zWQW9PS1aUkt6GjQrd90lo/4iFzIgrO+X/5jUKhcItqFdyb8BAJmzoI
-	IXopsZnjF9oYmx8LJACgjvCvrM/lG9u7GvkAtmgmcjCReV3KJPj06VNLlJ7A0knFqhkV5r0Do3GFh
-	GY6y0mBFdfKhyXeL0kDovuOQtZFs6qB7Xp/nji5dMti8vD3SJ8iJbnjpxgQHjhN3ZvFW3IZb73AJH
-	7xH+hYs4mhpq9LgQ9mgrfavZMe+nTbbSoDERXGBRhbvDHwib8J8VbQvw7KOnuphKUuv6+fjL/pNfN
-	W3fhsXDw==;
+	bh=abQNPJxLdJSbNwggArhdklh2mCXd2+hz+eKc3bSV4GE=; b=yT0XTvBMJS+KEEoTCXOFNa8F7I
+	osjPcU+oZJJ+R0hQVErcXe9PLfuAhss78w9LZLhmkf50k+8xVvW7QgwrgHlApXcALWIDx032yDhq/
+	gJJvsjHi8bBZeU+x1XrTxdOIe4XTY7e5bdtjVlfsmlLxy1PGoEYcJGINmDdre1wNuLTyFFDhFfLSM
+	WiygUDxphDvCtx7Y+ae3itn2wn7U8+fZ/2gjz5slviaMOBX0igfu+R5q1s6NH/FxucEfbxmEf4Vfg
+	np0plYaAqKHxgnn6DNNi0ihMUJ3aBKtCveabLJP7bQs1JEC1Ap1gCHuBPy8p8i/nzTI8wcODr3D+i
+	B1mCZ+lw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1StU-0000000Cuyp-3Qjg;
+	id 1x1StU-0000000CuyT-32uG;
 	Tue, 01 Sep 2026 18:07:36 +0000
-Received: from mail-pj1-x1045.google.com ([2607:f8b0:4864:20::1045])
+Received: from mail-pg1-x547.google.com ([2607:f8b0:4864:20::547])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1StP-0000000Cuto-0ddY
+	id 1x1StP-0000000Cutk-09XQ
 	for kexec@lists.infradead.org;
-	Tue, 01 Sep 2026 18:07:35 +0000
-Received: by mail-pj1-x1045.google.com with SMTP id 98e67ed59e1d1-398dcfabbf8so284944a91.0
-        for <kexec@lists.infradead.org>; Tue, 01 Sep 2026 11:07:29 -0700 (PDT)
+	Tue, 01 Sep 2026 18:07:34 +0000
+Received: by mail-pg1-x547.google.com with SMTP id 41be03b00d2f7-cc21bc2923fso214697a12.2
+        for <kexec@lists.infradead.org>; Tue, 01 Sep 2026 11:07:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788286049; x=1788890849; darn=lists.infradead.org;
+        d=google.com; s=20251104; t=1788286048; x=1788890848; darn=lists.infradead.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=EEIZgCOB2hl947kqAMQSV91Zoox41yoYUfb/qDb9/EY=;
-        b=OCBuvXbYodub4m1LH/9MugdgqWC2oYb/hgQMuANEEGT1cTmqkWCyqJtzRc7UVcYqSZ
-         8VgLdzxVeO7EsTbEIpQULvS3rzc+nWIbWxghE4q2ovhmRteuJYUK14YstQeHUjoOxKxi
-         f8PTPgVNNIbeqiB7R+B4L/QfloIas7n/0kQ4XuYDGVkmOA+1GaH1f1sV7+EnCX63opPe
-         Yt0bNxSHyQmhuLh7mjjp6ZgJVz2lBoaVyh4mAeFxThvhUbZZxwCPg7iyEhoofnFXDzsM
-         ZBNDoMLcbHjzbpxk2ty6LTZI8g6vOCHqlNFUe2Jd0R5Udpu783tXSeSipBg3J04/LQow
-         61Vg==
+        bh=abQNPJxLdJSbNwggArhdklh2mCXd2+hz+eKc3bSV4GE=;
+        b=fnX6qdggKpLUgnnDl13ld55saL9U2benOwtjhvDjU+coHJ5VYe4DhCzJKJDqVKBq8S
+         IjDZhDuCDHg/MmBmgPQlRjPG0KM0Fq63nvr57e1Psf/YXP8G64hixpQploH8u4d9u2IV
+         mr9UcOeHkZIYRI3O5CI4qHqL0sHygImAfIvVqiSnkMTP/RMHh3HNt2WfMGFaFQvK3u+G
+         Iy6Uu2BvFzZFrVwZpX/vxLTc/X/95pEPqfErYDeW0+wI4K0pgDOgoPMctAzycbwkOU5p
+         K+bHkr/67i2/gBTq8520VA2cX9WxZs3dLM5DpS3p6zFval1hRUSWfADYPyxDElY1EkMK
+         W1Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788286049; x=1788890849;
+        d=1e100.net; s=20251104; t=1788286048; x=1788890848;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=EEIZgCOB2hl947kqAMQSV91Zoox41yoYUfb/qDb9/EY=;
-        b=bfvjF4W1Lq/7SITA1tHJWOfWVWEz+LhNx5m7csWJL+BGfUZXkHIeeuyi6HtzaVQi5m
-         GYVvR4eOk0bXMbam4iQhngrhU2YIHwnFWzDk6CGA3YGdU5vzI5XkaeFpCiFaU1D5F7yy
-         5NdULIZ8m/0yyU8g88RuiTTlqf+NqRcPDi34pVkYAt89ubyo071KtXzTD+aK1OhZGqS9
-         y/ust7eQKcv9IuG4RXlXTV2G7PkWGVSE5lTbiGLPto6aJMZR5As4PXSec1XxiCi9LeNc
-         m0taM5z/Ba9z0MrOlY2VbQ40mMbHjCAHSZjVh3ePLA6mivEqWyjQE29/TEyL3cHIu4ul
-         YVZQ==
-X-Gm-Message-State: AFuF++mdD1QG+KydSp+acicg1qwBHyMJy4GSczvVlfBPGa5BbKh3V5GG
-	PD7GvmX/yi0eEDNqniIHe8rkYfjNC0FgN4BPE5XNEqTN07zxuLhjTYIW2O4uu9oJh/yUdoPues6
-	HS3HvB0spgPkISNLi4isYY/2VruVJjqMjHSDx/ya3jUR6HgIwwSQ6AjL/NKA85Pw+WsECAo22Wo
-	QZkcgqlH1pIbKNXSeECpGKSKkVQMdiqwsRdnFF7gaECISI8hUiZNA=
-X-Received: from pjbiy13.prod.google.com ([2002:a17:90b:16cd:b0:38e:b470:e6db])
+        bh=abQNPJxLdJSbNwggArhdklh2mCXd2+hz+eKc3bSV4GE=;
+        b=GHQn6GgL+kUBtAL/5T3OYfrs4Ju1fQrTqMcT62+NkGunaSv45Fi/XTMPCvM5RBgdfg
+         u3zA9Si5Hk4wELfRN3q5WnVmq+2DBCkYz064bh/OEWwm2mFvjFo8X/wNk1dH7Pv2P8Rk
+         8d1JkwM6snudC+U+fAhXmPuYojpC8VS1+Ug/lrgyh+BxymnlOuFhozbDaxYrEyusuJYB
+         x2Khi5Ql9Bj0XZdjgtqRvemKTwuXH6li97n3vYX/0q4oxoA7voJocJCQ47MYOWq963LN
+         y0NsqLLfwLPy/Exlvm5r3DVFeWrW57oR9KLSbCAX5VD9CIl8N5Uoq13QeFFbgxVXkb4A
+         avqA==
+X-Gm-Message-State: AFuF++kinEzBnYEIoxslNsYTlfHs/8B40+tqF5Q8pawYXU2GUrtKtKtp
+	jBX8KQiypwGewcwmGyBrj+U3D9O0Ce7kbDoM8F15rI9dSCf595yfeVe68xUp1XG/3rnJUwv1prj
+	3UygdYrMf6toJyRugfMZsVLuPDbgPF1lrpWsp0UFAh9UEKMNJKbytZOa532qF6te4vSekMKHNmG
+	DKtbTpvLBX/w9vQuFFua1w8Eupawskm6adHwoLLHl9Ph+sfwY25Fs=
+X-Received: from pfux35.prod.google.com ([2002:a05:6a00:be3:b0:848:7bbd:284b])
  (user=dmatlack job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:3fcf:b0:398:9be5:b419 with SMTP id 98e67ed59e1d1-3989be5b4camr43204014a91.20.1788286048322;
- Tue, 01 Sep 2026 11:07:28 -0700 (PDT)
-Date: Tue,  1 Sep 2026 18:07:13 +0000
+ 2002:a05:6a00:3309:b0:835:6388:655d with SMTP id d2e1a72fcca58-8562ba7dae0mr58420543b3a.14.1788286047461;
+ Tue, 01 Sep 2026 11:07:27 -0700 (PDT)
+Date: Tue,  1 Sep 2026 18:07:12 +0000
 In-Reply-To: <20260901180713.4185641-1-dmatlack@google.com>
 Mime-Version: 1.0
 References: <20260901180713.4185641-1-dmatlack@google.com>
 X-Mailer: git-send-email 2.55.0.966.g6673acef38-goog
-Message-ID: <20260901180713.4185641-6-dmatlack@google.com>
-Subject: [RFC PATCH 5/5] selftests: liveupdate: Add multi-session test
- coverage for session_retrieve_into
+Message-ID: <20260901180713.4185641-5-dmatlack@google.com>
+Subject: [RFC PATCH 4/5] mm/memfd_luo: Expand support beyond memfd to all
+ generic shmem inodes
 From: David Matlack <dmatlack@google.com>
 To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org, linux-mm@kvack.org
@@ -78,8 +78,8 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
 	David Matlack <dmatlack@google.com>
 Content-Type: text/plain; charset="UTF-8"
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260901_110731_195595_2986C49D 
-X-CRM114-Status: GOOD (  17.17  )
+X-CRM114-CacheID: sfid-20260901_110731_077645_17EDCB2A 
+X-CRM114-Status: GOOD (  15.74  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,185 +94,75 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Extend the multi-session Live Update test to specifically verify the new
-LIVEUPDATE_SESSION_RETRIEVE_INTO_FD ioctl path. In Stage 2 of the kexec
-workflow, the test explicitly delegates topology by allocating a clean
-tmpfs target and driving the folios into it through the new API,
-verifying that the data preserves identically to the native KHO mapping.
+Relax the early validation checks in the Live Update preservation path
+to allow general shmem-backed files, completely dropping the requirement
+that the file be unlinked (!inode->i_nlink).
+
+This officially enables userspace to push standard, path-backed tmpfs
+file descriptors through the LUO session ioctl instead of being
+artificially restricted strictly to anonymous memfd pseudofiles.
 
 Signed-off-by: David Matlack <dmatlack@google.com>
 ---
- .../liveupdate/lib/include/libliveupdate.h    |  1 +
- .../selftests/liveupdate/lib/lu_utils.c       | 33 +++++++++++
- .../selftests/liveupdate/luo_multi_session.c  | 56 ++++++++++++++++---
- 3 files changed, 83 insertions(+), 7 deletions(-)
+ mm/memfd_luo.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
-index fa07fed08364..8ab1e662eeaa 100644
---- a/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
-+++ b/tools/testing/selftests/liveupdate/lib/include/libliveupdate.h
-@@ -33,6 +33,7 @@ int luo_session_retrieve_fd(int session_fd, __u64 token);
+diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
+index dcda5bf98646..107115c97bd8 100644
+--- a/mm/memfd_luo.c
++++ b/mm/memfd_luo.c
+@@ -9,14 +9,15 @@
+  */
  
- int create_and_preserve_memfd(int session_fd, int token, const char *data);
- int restore_and_verify_memfd(int session_fd, int token, const char *expected_data);
-+int luo_verify_retrieve_into_memfd(int session_fd, int token, int mfd, const char *expected_data);
- 
- void create_state_file(int luo_fd, const char *session_name, int token,
- 		       int next_stage);
-diff --git a/tools/testing/selftests/liveupdate/lib/lu_utils.c b/tools/testing/selftests/liveupdate/lib/lu_utils.c
-index 74d41115c281..8ed9c367f92e 100644
---- a/tools/testing/selftests/liveupdate/lib/lu_utils.c
-+++ b/tools/testing/selftests/liveupdate/lib/lu_utils.c
-@@ -324,3 +324,36 @@ int luo_test(int argc, char *argv[],
- 
- 	return 0;
- }
-+
-+int luo_verify_retrieve_into_memfd(int session_fd, int token, int mfd,
-+				   const char *expected_data)
-+{
-+	struct liveupdate_session_retrieve_into_fd retrieve_args = {
-+		.size = sizeof(retrieve_args),
-+		.token = token,
-+		.fd = mfd,
-+	};
-+	long page_size = getpagesize();
-+	void *map = MAP_FAILED;
-+	int ret = -1;
-+
-+	ret = ioctl(session_fd, LIVEUPDATE_SESSION_RETRIEVE_INTO_FD, &retrieve_args);
-+	if (ret < 0) {
-+		ksft_print_msg("ioctl LIVEUPDATE_SESSION_RETRIEVE_INTO_FD failed\n");
-+		return -errno;
-+	}
-+
-+	map = mmap(NULL, page_size, PROT_READ, MAP_SHARED, mfd, 0);
-+	if (map == MAP_FAILED)
-+		return -errno;
-+
-+	if (expected_data && strcmp(expected_data, map) != 0) {
-+		ksft_print_msg("Data mismatch! Expected '%s', Got '%s'\n",
-+			       expected_data, (char *)map);
-+		munmap(map, page_size);
-+		return -EINVAL;
-+	}
-+
-+	munmap(map, page_size);
-+	return 0;
-+}
-diff --git a/tools/testing/selftests/liveupdate/luo_multi_session.c b/tools/testing/selftests/liveupdate/luo_multi_session.c
-index aac24a5f5ce3..7882f49aadaf 100644
---- a/tools/testing/selftests/liveupdate/luo_multi_session.c
-+++ b/tools/testing/selftests/liveupdate/luo_multi_session.c
-@@ -1,4 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0-only
-+#include <sys/mman.h>
-+#include <fcntl.h>
-+#include <unistd.h>
-+#include <sys/mount.h>
-+#include <sys/stat.h>
- 
- /*
-  * Copyright (c) 2025, Google LLC.
-@@ -31,6 +36,8 @@
- static void run_stage_1(int luo_fd)
+ /**
+- * DOC: Memfd Preservation via LUO
++ * DOC: Memfd and Tmpfs Preservation via LUO
+  *
+  * Overview
+  * ========
+  *
+- * Memory file descriptors (memfd) can be preserved over a kexec using the Live
+- * Update Orchestrator (LUO) file preservation. This allows userspace to
+- * transfer its memory contents to the next kernel after a kexec.
++ * Memory file descriptors (memfd) and generic tmpfs files can be preserved
++ * over a kexec using the Live Update Orchestrator (LUO) file preservation.
++ * This allows userspace to transfer its memory contents to the next kernel
++ * after a kexec.
+  *
+  * The preservation is not intended to be transparent. Only select properties of
+  * the file are preserved. All others are reset to default. The preserved
+@@ -24,16 +25,17 @@
+  *
+  * .. note::
+  *    The LUO API is not stabilized yet, so the preserved properties of a memfd
+- *    are also not stable and are subject to backwards incompatible changes.
++ *    or tmpfs file are also not stable and are subject to backwards
++ *    incompatible changes.
+  *
+  * .. note::
+- *    Currently a memfd backed by Hugetlb is not supported. Memfds created
++ *    Currently a file backed by Hugetlb is not supported. Memfds created
+  *    with ``MFD_HUGETLB`` will be rejected.
+  *
+  * Preserved Properties
+  * ====================
+  *
+- * The following properties of the memfd are preserved across kexec:
++ * The following properties of the memfd/tmpfs file are preserved across kexec:
+  *
+  * File Contents
+  *   All data stored in the file is preserved.
+@@ -580,9 +582,7 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
+ static bool memfd_luo_can_preserve(struct liveupdate_file_handler *handler,
+ 				   struct file *file)
  {
- 	int s_empty1_fd, s_empty2_fd, s_files1_fd, s_files2_fd;
-+	int tmpfs_fd;
-+	void *map;
+-	struct inode *inode = file_inode(file);
+-
+-	return shmem_file(file) && !inode->i_nlink;
++	return shmem_file(file) || shmem_mapping(file->f_mapping);
+ }
  
- 	ksft_print_msg("[STAGE 1] Starting pre-kexec setup for multi-session test...\n");
- 
-@@ -53,25 +60,50 @@ static void run_stage_1(int luo_fd)
- 	s_files1_fd = luo_create_session(luo_fd, SESSION_FILES_1);
- 	if (s_files1_fd < 0)
- 		fail_exit("luo_create_session for '%s'", SESSION_FILES_1);
-+	ksft_print_msg("  -> Preserving memfd (token %#x, content: \"%s\")\n",
-+		       MFD1_TOKEN, MFD1_DATA);
- 	if (create_and_preserve_memfd(s_files1_fd, MFD1_TOKEN, MFD1_DATA) < 0) {
- 		fail_exit("create_and_preserve_memfd for token %#x",
- 			  MFD1_TOKEN);
- 	}
- 
--	ksft_print_msg("[STAGE 1] Creating session '%s' with two memfds...\n",
-+	ksft_print_msg("[STAGE 1] Creating session '%s' with memfd and tmpfs file...\n",
- 		       SESSION_FILES_2);
- 
- 	s_files2_fd = luo_create_session(luo_fd, SESSION_FILES_2);
- 	if (s_files2_fd < 0)
- 		fail_exit("luo_create_session for '%s'", SESSION_FILES_2);
-+	ksft_print_msg("  -> Preserving memfd (token %#x, content: \"%s\")\n",
-+		       MFD2_TOKEN, MFD2_DATA);
- 	if (create_and_preserve_memfd(s_files2_fd, MFD2_TOKEN, MFD2_DATA) < 0) {
- 		fail_exit("create_and_preserve_memfd for token %#x",
- 			  MFD2_TOKEN);
- 	}
--	if (create_and_preserve_memfd(s_files2_fd, MFD3_TOKEN, MFD3_DATA) < 0) {
--		fail_exit("create_and_preserve_memfd for token %#x",
--			  MFD3_TOKEN);
--	}
-+	ksft_print_msg("  -> Populating custom tmpfs file at /mnt/mfd3_source...\n");
-+	mkdir("/mnt", 0777);
-+	mount("tmpfs", "/mnt", "tmpfs", 0, NULL);
-+	tmpfs_fd = open("/mnt/mfd3_source", O_CREAT | O_RDWR, 0666);
-+	if (tmpfs_fd < 0)
-+		fail_exit("failed to open tmpfs_fd");
-+	ksft_print_msg("  -> Preserving generic tmpfs file (token %#x, content: \"%s\")\n",
-+		       MFD3_TOKEN, MFD3_DATA);
-+	if (ftruncate(tmpfs_fd, getpagesize()) < 0)
-+		fail_exit("ftruncate tmpfs_fd");
-+	map = mmap(NULL, getpagesize(), PROT_WRITE, MAP_SHARED, tmpfs_fd, 0);
-+	if (map == MAP_FAILED)
-+		fail_exit("mmap tmpfs_fd");
-+	strcpy(map, MFD3_DATA);
-+	munmap(map, getpagesize());
-+
-+	struct liveupdate_session_preserve_fd preserve_args = {
-+		.size = sizeof(preserve_args),
-+		.token = MFD3_TOKEN,
-+		.fd = tmpfs_fd,
-+	};
-+	if (ioctl(s_files2_fd, LIVEUPDATE_SESSION_PRESERVE_FD, &preserve_args) < 0)
-+		fail_exit("preserve tmpfs fd");
-+
-+	close(tmpfs_fd);
- 
- 	close(luo_fd);
- 	daemonize_and_wait();
-@@ -110,6 +142,7 @@ static void run_stage_2(int luo_fd, int state_session_fd)
- 
- 	ksft_print_msg("[STAGE 2] Verifying contents of session '%s'...\n",
- 		       SESSION_FILES_1);
-+	ksft_print_msg("  -> Retrieving memfd (token %#x) from session...\n", MFD1_TOKEN);
- 	mfd1 = restore_and_verify_memfd(s_files1_fd, MFD1_TOKEN, MFD1_DATA);
- 	if (mfd1 < 0)
- 		fail_exit("restore_and_verify_memfd for token %#x", MFD1_TOKEN);
-@@ -118,14 +151,23 @@ static void run_stage_2(int luo_fd, int state_session_fd)
- 	ksft_print_msg("[STAGE 2] Verifying contents of session '%s'...\n",
- 		       SESSION_FILES_2);
- 
-+	ksft_print_msg("  -> Retrieving memfd (token %#x) from session...\n", MFD2_TOKEN);
- 	mfd2 = restore_and_verify_memfd(s_files2_fd, MFD2_TOKEN, MFD2_DATA);
- 	if (mfd2 < 0)
- 		fail_exit("restore_and_verify_memfd for token %#x", MFD2_TOKEN);
- 	close(mfd2);
- 
--	mfd3 = restore_and_verify_memfd(s_files2_fd, MFD3_TOKEN, MFD3_DATA);
-+	ksft_print_msg("  -> Creating empty tmpfs file at /mnt/mfd3_target...\n");
-+	mkdir("/mnt", 0777);
-+	mount("tmpfs", "/mnt", "tmpfs", 0, NULL);
-+	mfd3 = open("/mnt/mfd3_target", O_CREAT | O_RDWR, 0666);
- 	if (mfd3 < 0)
--		fail_exit("restore_and_verify_memfd for token %#x", MFD3_TOKEN);
-+		fail_exit("open tmpfs target for retrieve_into");
-+
-+	ksft_print_msg("  -> Validating LIVEUPDATE_SESSION_RETRIEVE_INTO_FD (token %#x)...\n",
-+		       MFD3_TOKEN);
-+	if (luo_verify_retrieve_into_memfd(s_files2_fd, MFD3_TOKEN, mfd3, MFD3_DATA) < 0)
-+		fail_exit("luo_verify_retrieve_into_memfd for token %#x", MFD3_TOKEN);
- 	close(mfd3);
- 
- 	ksft_print_msg("[STAGE 2] Test data verified successfully.\n");
+ static unsigned long memfd_luo_get_id(struct file *file)
 -- 
 2.55.0.966.g6673acef38-goog
 
