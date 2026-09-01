@@ -4,85 +4,155 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 379E2C624CF
-	for <kexec@archiver.kernel.org>; Tue,  1 Sep 2026 01:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 24655C624CE
+	for <kexec@archiver.kernel.org>; Tue,  1 Sep 2026 02:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zPvP1K9EnRd/mao8eJm5iib0cl/6wBDf4gm9yBOU/uA=; b=LFrVhXAKyYvOWzrJE6ttNojfbN
-	pgduH26R73LqxkSePdMeYccfTUnn2XFHV+xQx3hCZuNg1sVjtDp0slpQHn6iTzKxmmWSdpagpl7cw
-	ulR0x+GCiH4FosxNFnzFRhDWgZWqCoTcA8JeyDoLQ2h8yvtTqSFjXunugG2rncA2otMcpCYUl6PAE
-	MBV+d2Czij4ZX/rnSj9G/pndQMcU1nvHCA2XRJM0n0k0/LT8eeKbtfOu6xSPkbXlU2UJYUkfqEGMi
-	PrWBmVtV0np0Bxp5PC6cAH+YAw8iXQG0TxdMmZhAmT7WWq00uYeK6Are9mRxFkKSeizJHPkZ6fmzC
-	wdKD026g==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:
+	References:From:To:Cc:Subject:Message-Id:Date:Content-Type:
+	Content-Transfer-Encoding:Reply-To:Content-ID:Content-Description:Resent-Date
+	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=wF1bxOQbi4a9+s6iNAwgCdnObG2CpbRj32aHiozIBeQ=; b=3g9QUAkwOcycUL4KniaTo5+JAM
+	a4FUuasomB3lbzkCv3eaxP84uez7rejk1z13fp5ClEXpQjYiJqN44kod+0Wr/rrVrVp8EVnRlnmVm
+	5g6bthQVWHlAfpuJ/jJCDFYrkhwYgGGBbCyzouKZsTj4WypqQTo3GprBYtIXvZYrC4noYCvE5iZRu
+	GWwIJ7PIQNX9d5U4Q08VjxYGBSiS5xRlFdF+c4/GrPp2q76tslro3XhYW1Q3k+wwpPsR0HsFAl3od
+	VIUPESJM420fwcO0YnOdRSSyzkcLNB0WSUajslay29H1V+ukZNmS+p5mOXQU7x0/m6EE1qoCBRDGJ
+	oZnRe/gQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1DVM-0000000Aoje-3S55;
-	Tue, 01 Sep 2026 01:41:40 +0000
-Received: from [113.46.200.221] (helo=canpmsgout06.his.huawei.com)
+	id 1x1E3q-0000000ArD5-2QcN;
+	Tue, 01 Sep 2026 02:17:18 +0000
+Received: from mail-centralusazlp170100005.outbound.protection.outlook.com ([2a01:111:f403:c111::5] helo=DM1PR04CU001.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1DVJ-0000000Aoj1-1ZHK;
-	Tue, 01 Sep 2026 01:41:39 +0000
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=zPvP1K9EnRd/mao8eJm5iib0cl/6wBDf4gm9yBOU/uA=;
-	b=Jml/HTTQck/emuqLeeU2tibQLYjU8fXxCCcdo3klXPgO8NzCaTkbd5ycSpoG64qAUTvikX/3F
-	607VcvF+fmYaem7r38R+LD9SNSgKkzUeX3TLkcP4y7zA0vceMDXkYNbj0KO3qWM1ZVKio3aaJuW
-	cW+wJefcVETqqA/xk+td/6E=
-Received: from mail.maildlp.com (unknown [172.19.163.0])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4hYpFv2FTwzRhVN;
-	Tue,  1 Sep 2026 09:30:27 +0800 (CST)
-Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 689A840561;
-	Tue,  1 Sep 2026 09:41:14 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 1 Sep 2026 09:41:10 +0800
-Message-ID: <fa771c74-c0b0-435d-9ebf-e52c00865c90@huawei.com>
-Date: Tue, 1 Sep 2026 09:41:09 +0800
+	id 1x1E3n-0000000ArC9-204T
+	for kexec@lists.infradead.org;
+	Tue, 01 Sep 2026 02:17:17 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qEB9EYfpM6XrtiJhLQt5BR/K0o4aFCFAi03ASG+07rjpfxxihQ4N95twrPeac+znx4InXCip1juB5zV3DlABCXiYG9MyLfsbf+5UGixHpKrOuzWek++gSQ4x/mnBQGW6xWlYcA/Siar9XDPwX1+ak0P4NRnwAFMFiBkvKveSF66tZeNzvuj/PNdlt285V/tpxDyEp9x/lqgVw/TCDpMyLgq6BA2jm8xtoYIRbxN5rdFARqVYyg7aQ6W2/Ol5/QMC+f3dchG1R6Ygh5tP4s3uzJqfFsiQMbCajoSlHGlvT5T5PKDEAgklkOVG55v89bALDVeNKtDSFeISbxfo2bQzIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wF1bxOQbi4a9+s6iNAwgCdnObG2CpbRj32aHiozIBeQ=;
+ b=ecjHZ38brn+uoH3uXL7QyNKEhjqeamUS0S/hvSzm8M2f4XlKqwsUH0/aRwOwZwUe45BDlOoPoWAuXvCH7T3CbuRtSKPATV+1hHbcBEHJU4cJBSXxnza0v68H91mW0bV5g+86fMPTc16iWJFAwiDjpKPKhieulCVnlvThkAgaPQPg7P59EdTo9BCAyEUVnqs6KpoCD3S1T5pObxPH693rjEHFDMkQxhYmxSa/bE2UoF8GZ5apVBOWgN6Lc82yDuwNWUW1SUJHhvU+gp3g0fhPGKSmW9x8sbvSHMuzMvjo9G60C6UXq1rVBgDuSwP2pcigNjrOSs6vS5qzC3jVOxv7OA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wF1bxOQbi4a9+s6iNAwgCdnObG2CpbRj32aHiozIBeQ=;
+ b=NI+EJDMr/XvrZ3Ls3jiK3reYqTUg9RAXq6VctDq73r7I/ctQCQOHCPIJZdcNu5+h6+qG4z9VnZOjvNNdPumxtqZCfFGKbwM3T03aPA6mv0aX9AYJbOnciih6zSPE1Wo3stfBcAjZEeDQHUsWK8jk9vBtsrQB5KanjNYIYWzCq9sjFrpYdpgWLXRM6YCbTmja8bnc9dLR2AE/5zSjjy/eVlpvB/Hs8iZgV4UdQE3iMCrbTD7GntkDXKABlAbNEIeprOIcxi5wrz/SbiEK734zah0bOeWg7DRx/Uwiqpk331kDawYeTB71wqf41O64n/CCdQtjd/Kp1EgPeCHmtfybgA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
+ by CH8PR12MB9790.namprd12.prod.outlook.com (2603:10b6:610:274::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.382.10; Tue, 1 Sep
+ 2026 02:17:03 +0000
+Received: from IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
+ ([fe80::d85f:4c87:ae84:3f16%5]) with mapi id 15.21.0360.008; Tue, 1 Sep 2026
+ 02:17:03 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 31 Aug 2026 22:17:01 -0400
+Message-Id: <DL3MA7GQBXUW.5L0DGZHLFDHW@nvidia.com>
+Subject: Re: [PATCH v2 14/14] mm/page-flags: remove PG_private
+Cc: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, "Zi Yan"
+ <ziy@nvidia.com>, "Baoquan He" <baoquan.he@linux.dev>, "Pasha Tatashin"
+ <pasha.tatashin@soleen.com>, "Pratyush Yadav" <pratyush@kernel.org>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Jan Kara" <jack@suse.cz>, "Steven
+ Rostedt" <rostedt@goodmis.org>, "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Dave Young" <ruirui.yang@linux.dev>, "Shuah Khan"
+ <skhan@linuxfoundation.org>, "Mathieu Desnoyers"
+ <mathieu.desnoyers@efficios.com>, <kexec@lists.infradead.org>,
+ <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>
+To: "David Hildenbrand" <david@kernel.org>, "Matthew Wilcox (Oracle)"
+ <willy@infradead.org>, "Andrew Morton" <akpm@linux-foundation.org>, "Muchun
+ Song" <muchun.song@linux.dev>, "Lorenzo Stoakes" <ljs@kernel.org>, "Liam R.
+ Howlett" <liam@infradead.org>, "Vlastimil Babka" <vbabka@kernel.org>, "Mike
+ Rapoport" <rppt@kernel.org>, "Suren Baghdasaryan" <surenb@google.com>,
+ "Michal Hocko" <mhocko@suse.com>, "Baolin Wang"
+ <baolin.wang@linux.alibaba.com>, "Nico Pache" <nico.pache@linux.dev>, "Ryan
+ Roberts" <ryan.roberts@arm.com>, "Dev Jain" <dev.jain@arm.com>, "Barry
+ Song" <baohua@kernel.org>, "Lance Yang" <lance.yang@linux.dev>, "Usama
+ Arif" <usama.arif@linux.dev>, "Gregory Price" <gourry@gourry.net>, "Ying
+ Huang" <ying.huang@linux.alibaba.com>, "Alistair Popple"
+ <apopple@nvidia.com>, "Johannes Weiner" <hannes@cmpxchg.org>, "Qi Zheng"
+ <qi.zheng@linux.dev>, "Shakeel Butt" <shakeel.butt@linux.dev>, "Kairui
+ Song" <kasong@tencent.com>
+From: "Zi Yan" <ziy@nvidia.com>
+X-Mailer: aerc 0.22.0
+References: <20260831-remove-pg_private-v2-0-3668159cd9e8@nvidia.com>
+ <20260831-remove-pg_private-v2-14-3668159cd9e8@nvidia.com>
+In-Reply-To: <20260831-remove-pg_private-v2-14-3668159cd9e8@nvidia.com>
+X-ClientProxiedBy: BL1PR13CA0082.namprd13.prod.outlook.com
+ (2603:10b6:208:2b8::27) To IA0PR12MB8374.namprd12.prod.outlook.com
+ (2603:10b6:208:40e::7)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/17] LoongArch: kexec: Fix CMA page leaks in segment
- placement retry loops
-To: Huacai Chen <chenhuacai@kernel.org>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
-	<kernel@xen0n.name>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
-	<npiggin@gmail.com>, <chleroy@kernel.org>, <tglx@kernel.org>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <akpm@linux-foundation.org>, <baoquan.he@linux.dev>,
-	<rppt@kernel.org>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
-	<ruirui.yang@linux.dev>, <kees@kernel.org>, <thuth@redhat.com>,
-	<gshan@redhat.com>, <jic23@kernel.org>, <james.morse@arm.com>,
-	<ardb@kernel.org>, <leitao@debian.org>, <yeoreum.yun@arm.com>,
-	<sourabhjain@linux.ibm.com>, <coxu@redhat.com>, <tangyouling@kylinos.cn>,
-	<hbathini@linux.ibm.com>, <adityag@linux.ibm.com>,
-	<ionut.nechita@windriver.com>, <liaoyuanhong@vivo.com>, <seanjc@google.com>,
-	<fuqiang.wang@easystack.cn>, <makb@juniper.net>, <piliu@redhat.com>,
-	<ebiggers@kernel.org>, <jbouron@amazon.com>, <mclapinski@google.com>,
-	<me@linux.beauty>, <graf@amazon.com>, <bgwin@google.com>, <robh@kernel.org>,
-	<takahiro.akashi@linaro.org>, <palmer@rivosinc.com>, <x86@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-	<kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-mm@kvack.org>
-References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
- <20260826092541.3905933-6-ruanjinjie@huawei.com>
- <CAAhV-H7+dO2rnb4KxRvVo1w_Mx8Vfsdq7LAbkzPfNYrwUhEtfg@mail.gmail.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <CAAhV-H7+dO2rnb4KxRvVo1w_Mx8Vfsdq7LAbkzPfNYrwUhEtfg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.109.254]
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- dggpemf500011.china.huawei.com (7.185.36.131)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|CH8PR12MB9790:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9270ab8a-7bd6-4fa8-9de4-08df07cf1c83
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|23010399003|366016|921020|10067099003|56012099006|4143699003|11063799006|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: n+1yViA+lU3IrsW7hn38MZ/T9TMXvgsV92owyTW79g2VRkfzxFLlSUOEldjVvYtQDbB3e+Wp1ZAVN4/6fklwbFVXayirbh4Hb3GCuuvVquUL+uiMCXxnwhY2ICFTIw2+FLK/ddwWDQWX4CZf9zR+HzrzEP9qPEW6Sc0QTnUcIwJ9Zjc5t0CA3+8YfpZTrH197l9nqHheTkD+GsnaZW8NbIsVxPYbWOu3yL4C7sunO1QsNaLS2FacEKdm0ADKQV99Y0GjI7zx+YgcVnkl1aWujZV8Y51uGWfDM6IH3AHcl96ToK/ZVnZVn9VnZkAOjuwCl0TCfljqORh+yd/hWAmjfbln9SJ3729S8ovNCxJT3FBWhoAGIwZWDoBetT68TPZ6vg7HO+FpNLJCTLyprGloRRhUtBQha9u95cn+ONJiZc9ofQJsm+ZohDfnRjB2jV5ZM9vh5tx7Ayq8XIoV2N4vg8vQH0Ws03JsCMWpEteSCzL/BHgF0TPU4HkPZf6crbHPpWGbwEvI3aiR7q88MgxC5MuJ4jacRG5qHK+kZcnENQAMr0knhSjfwJcV2ayZ/3y9lAeoL6K4ZV1NXy3Qj1GIxMEh4mk7G5RsTBMQBqkdbOLFv1l66RhnqBhGlJ9QaQTUpmDpbW1m/BmmCQWLgig/14iCw4PUMWffo0Gpjb/3OnQrVFEx2VNK7RdlcaxohZJuuEo1BCtD2/OPZquyjhZtMA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(23010399003)(366016)(921020)(10067099003)(56012099006)(4143699003)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VzNOQXZHOWFTWFk3Q3V2QTVjdGN3ZVZ0REdHc2pPNTc0bTJnOFR0K2ZzcU0v?=
+ =?utf-8?B?OVFrREZvUUYrdkVXRnBuRktXL1kxQXIyMnR0OXQ4cVhPVktKQXJjMk01ek1u?=
+ =?utf-8?B?b1dQQzBvRUl3U1kwVTFoRUVkY0xoOHJOY2cyUTY2L1p1SndUSEJBanBTWkNh?=
+ =?utf-8?B?akgxRXJXekFHSHlNMlJ2WnlTaVlGRm1vVm5WYlNtWksyaWJjWWUycCtnVy9w?=
+ =?utf-8?B?QWxTVjdSVzlYSUhsVGRDbW5ySGxoTGhkYkxkYjljMk9pNTFqRHBmOUVRNmFH?=
+ =?utf-8?B?NkxFbE5nNCtzSmpFZ0h0Q3JaUy9jdStFTnB2RjhmbytvRXdzWklIRU5qaGZm?=
+ =?utf-8?B?RkovaGNsdE5zdzI4VGVOVTJnVC9rTHFsL3pPUWFTcXR4czRsYU1mbTVnR21k?=
+ =?utf-8?B?cWYwSG5MdzVJZHBWODNtR213ejk2SE9RSHAxMkg5aXI0bTJWS3VyQzRIdTQv?=
+ =?utf-8?B?NFE3SzBKdHJ1TnpIS1hvTWtHcDdCR3JISlFyUEhrL1BiMDArZ0JRbkJ6aGZ2?=
+ =?utf-8?B?eStTYmFVU0lNN2xUbVYyaHhhOGhwc2orODNNRzlpcnlPaStuU3RFTzF3U0VF?=
+ =?utf-8?B?WGJBRS9yL0pBRlBLNTM5eDFFWkJ6MHlSMWlMbTVGY0V5MUJibTRmWmVNWGZn?=
+ =?utf-8?B?SnR4aHlHZnhXVVhKcTZMWEtlZU9PeTRLYVVHZHh0MUtDd2svVzI1S21LQkRl?=
+ =?utf-8?B?K0E0L3ltQUYvbVdWWHhzNFdRbDlTZEx2MHA5dHdRWHloekVFUm10U1ZUOTdW?=
+ =?utf-8?B?ZFEzcm5nZzIvNTBYOUpZbkNXbERFQ01DSXpvbHl1YlVad1d0bFZuY00vOU12?=
+ =?utf-8?B?YThsUEhOamZMMEhaR3FkRHI3ODFmRXZ0TXBtem51YTFiR0VwdlFlN3ljOHNz?=
+ =?utf-8?B?VWtFcVpZQjgxbDdKR0NWdUV0ZzJRYVJlQm14RGdUV0gxblZJenpDVEYyZXJ3?=
+ =?utf-8?B?RFVnNFBtY3VXTjZWREhjUmhQajBOckx4SkJva2o5UDRlbkJkaW8yMjlYRkJI?=
+ =?utf-8?B?SHNId1FPTnNqREJIajZtTUwrT2hEZDJuZTZEcC82VTlKNzBPMExTRklTUWo2?=
+ =?utf-8?B?WUR2NEJhVnk4bVE3WkZJcHQ1M2lPMHh3bURMVHNhWk50Um9RNVNKT2FiYWU3?=
+ =?utf-8?B?V3Fydzh0U01BQnJSd3RaNXdpMWc1U01XSnc3YWR0WnJlYVJKUm50VnczWkZa?=
+ =?utf-8?B?UCs4NXJMS2VlV2JnOWoxbnZsRm1sb1haZzB0NkxHeVNuUE83eUMrTnBWNVNV?=
+ =?utf-8?B?NlhNdWo0MW1PS0hCeThiN0w4a1RkcG9YUFp6K3FYZUxlUUdjRDBBSUp1ckt0?=
+ =?utf-8?B?dk9WMmVXTUM0UkRTZVMxWE1MRG5XTE5lQm16WVZkQ216Z0pZNCsyUW93OTB1?=
+ =?utf-8?B?c1pOOEx4OE1jbjU2L3kzbFVHSEY3UlBpcTB2cVRlR0VoNU5pMi9EakxFeC9X?=
+ =?utf-8?B?blUyM0d2dnFURzNLZU4zTjQzMURpdGZ0K1JtUnloR1czTk5BVk5XM3NiRE90?=
+ =?utf-8?B?Mzc0eFpCZW11R1NoVkF6OFlrb3ROekVJblVaY2xqdlkyQlpMWDFza1BydU42?=
+ =?utf-8?B?WWpPS2tpUHlWWnBYaGRnZ2E1Um5ZbXVGZFhyZFYycUI5S2t4QjR3Q3JMN1pv?=
+ =?utf-8?B?Tk5Bbm1PeHkwMXp3SHZ4WmFUU3pSNWxCVy80R2hSci9uS21OSFU4N1NsYzlN?=
+ =?utf-8?B?MllQRlpvcGpnME5qR0dzU0hyMGFnRHVTNzNmMVBJZlN2a2hrMTUyd0o4L0l1?=
+ =?utf-8?B?K3EzRWlaMysrOUV3R3llTUIwdUhHL1FpNGNCZ3NKZVpjVHR6VCtuODRHNzJi?=
+ =?utf-8?B?R2tQdWtpcXZEMWNrYnpyMEtaekI0TVJzeEErcDdUbzNzWFRGSDZQWkxGK3N0?=
+ =?utf-8?B?T2xKT3JLbFJoWUM1aUE3djRLVGw5R0hMYS9TT0N6Z1IyWkpIQmlKWWpMcmNZ?=
+ =?utf-8?B?b01seFhaeTByYmRtUzRMYzJYeThHdWZaVHdmbTlOcmZtMkxtTjg3czYycFB4?=
+ =?utf-8?B?cGlNNnBmSmM4VTBYOFg0RzZWQ0R0ZXdsbXdpWCszYjliVFEwSTdsNnFkWmJT?=
+ =?utf-8?B?VTRTMUU3bURrQ044ZCtuME4wa1dHVC8zYjd0R0hYRWJMZEZlTGpFSi9QTTR3?=
+ =?utf-8?B?YlovajhUaXVzOUlUYXQrVGxlTml3UkV3NjZsUy8vaEJaSUZKQjRaLzJlRDk0?=
+ =?utf-8?B?UnJkbUtaNXJ0OXBqSlNWdStxNG0wSXNOTTZWdFRIb1FIUmtDQ3ZKTDdYcGY2?=
+ =?utf-8?B?WlBFSUN3ZEdSTVVQekwrYndwb2dHZVhGZ1I3V3BpT0xHc0FSZk5QVGlGV1JH?=
+ =?utf-8?Q?TfKvR8mZVZvnWaA7Lh?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9270ab8a-7bd6-4fa8-9de4-08df07cf1c83
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2026 02:17:02.8978
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rUXDkbPvoqBcTT6A0UZFNKBDK/GELWsWjC6jEU9RV3xRE6jhvDnmg7WEtbxBgfRz
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH8PR12MB9790
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260831_184137_791867_5F59C70B 
-X-CRM114-Status: GOOD (  18.73  )
+X-CRM114-CacheID: sfid-20260831_191715_901792_D6E9A121 
+X-CRM114-Status: GOOD (  16.22  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,86 +167,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Mon Aug 31, 2026 at 3:25 PM EDT, Zi Yan wrote:
+> folio->private !=3D NULL indicates a folio carries private data, replacin=
+g
+> PG_private. All PG_private users are converted. Remove PG_private and
+> reserve the space as __PG_folio for future use.
+>
+> Also update files in Documentation. hugetlbfs_reserv.rst is outdated and
+> left unchanged. It should be rewritten.
+>
+<snip>
+
+> =20
+> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+> index 9b585e68127a2..eb2961ed61018 100644
+> --- a/include/linux/page-flags.h
+> +++ b/include/linux/page-flags.h
+> @@ -44,10 +44,6 @@
+>   * Consequently, PG_reserved for a page mapped into user space can indic=
+ate
+>   * the zero page, the vDSO, MMIO pages or device memory.
+>   *
+> - * The PG_private bitflag is set on pagecache pages if they contain file=
+system
+> - * specific data (which is normally at page->private). It can be used by
+> - * private allocations for its own usage.
+> - *
+>   * During initiation of disk I/O, PG_locked is set. This bit is set befo=
+re I/O
+>   * and cleared when writeback _starts_ or when read _completes_. PG_writ=
+eback
+>   * is set before writeback starts and cleared when it finishes.
+> @@ -105,7 +101,7 @@ enum pageflags {
+>  	PG_owner_2,		/* Owner use. If pagecache, fs may use */
+>  	PG_arch_1,
+>  	PG_reserved,
+> -	PG_private,		/* If pagecache, has fs-private data */
+> +	__PG_folio,		/* Do not use: reserved for folio identification */
+
+Sashiko asked how to detect leaked filesystem private data during page
+free time after PG_private is removed.
+
+Answer copied from RFC:
+
+After the conversion, folio/page should have an elevated refcount whenever
+->private is set. That would help detect leaked private data. I tried to
+enforce ->private needs to be NULL at page free time[1], but that might
+cause trouble for certain use cases.
+
+[1] https://lore.kernel.org/all/20260223032641.1859381-1-ziy@nvidia.com/
 
 
-在 2026/8/31 22:09, Huacai Chen 写道:
-> Hi, Jinjie,
-> 
-> Why does the ARM64 version of this patch use "kexec_file" in the
-> subject line but the LoongArch version uses "kexec"? It is better to
-> keep consistency.
-
-Hi Huacai,
-
-Thank you for the review. I will revise the subject in v4.
-
-Best regards,
-Jinjie
-
-> 
-> Huacai
-> 
-> On Wed, Aug 26, 2026 at 5:25 PM Jinjie Ruan <ruanjinjie@huawei.com> wrote:
->>
->> During kexec image placement retry loops, any midway failure causes
->> the loader to truncate `image->nr_segments` back to its initial state
->> to purge the failed segments.
->>
->> However, this truncation introduces a memory leak. The CMA pages
->> allocated via kexec_add_buffer() during the failed attempt are tracked
->> in the `image->segment_cma` array. Because the subsequent cleanup paths
->> only iterate up to the truncated `nr_segments` boundary, these allocated
->> CMA pages outside the new boundary are permanently leaked.
->>
->> Fix this by explicitly releasing the associated CMA buffers in
->> the failure paths before `image->nr_segments` is reduced.
->>
->> Cc: Huacai Chen <chenhuacai@kernel.org>
->> Cc: WANG Xuerui <kernel@xen0n.name>
->> Cc: Youling Tang <tangyouling@kylinos.cn>
->> Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
->> Cc: Kees Cook <kees@kernel.org>
->> Cc: stable@vger.kernel.org
->> Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%40huawei.com
->> Fixes: 55d990f0084c ("LoongArch: Add EFI binary support for kexec_file")
->> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
->> ---
->>  arch/loongarch/kernel/kexec_efi.c          | 1 +
->>  arch/loongarch/kernel/machine_kexec_file.c | 6 +++++-
->>  2 files changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/loongarch/kernel/kexec_efi.c b/arch/loongarch/kernel/kexec_efi.c
->> index 5ee78ebb1546..15fd797ff3de 100644
->> --- a/arch/loongarch/kernel/kexec_efi.c
->> +++ b/arch/loongarch/kernel/kexec_efi.c
->> @@ -86,6 +86,7 @@ static void *efi_kexec_load(struct kimage *image,
->>                  * We couldn't find space for the other segments; erase the
->>                  * kernel segment and try the next available hole.
->>                  */
->> +               kexec_free_segment_cma(image, kernel_segment_number);
->>                 image->nr_segments -= 1;
->>                 kbuf.buf_min = kernel_segment->mem + kernel_segment->memsz;
->>                 kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
->> diff --git a/arch/loongarch/kernel/machine_kexec_file.c b/arch/loongarch/kernel/machine_kexec_file.c
->> index 5412aa9f3568..62a5be102065 100644
->> --- a/arch/loongarch/kernel/machine_kexec_file.c
->> +++ b/arch/loongarch/kernel/machine_kexec_file.c
->> @@ -217,7 +217,11 @@ int load_other_segments(struct kimage *image,
->>         return 0;
->>
->>  out_err:
->> -       image->nr_segments = orig_segments;
->> +       while (image->nr_segments > orig_segments) {
->> +               kexec_free_segment_cma(image, image->nr_segments - 1);
->> +               image->nr_segments--;
->> +       }
->> +
->>         kfree(modified_cmdline);
->>         return ret;
->>  }
->> --
->> 2.34.1
->>
+--=20
+Best Regards,
+Yan, Zi
 
 
