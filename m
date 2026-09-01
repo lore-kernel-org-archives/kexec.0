@@ -4,155 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 02159C61DFD
-	for <kexec@archiver.kernel.org>; Mon, 31 Aug 2026 19:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4814FC61DFD
+	for <kexec@archiver.kernel.org>; Tue,  1 Sep 2026 01:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Cc:To:
-	In-Reply-To:References:Message-Id:Content-Transfer-Encoding:Content-Type:
-	Subject:Date:From:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=gmKfHB335PFvYjEbUGYN25bMarf1tk9j1nRdQmA714U=; b=2+8CFYiDZh1/5ORd7LYQ58joVP
-	8g+cWPcjST9NeFtXFG/ZLkDLFYMzFFW/AxWJtXrBSWWcLYgTwL21LZAjme+Jl1dgOJjav0WOA2eXO
-	McZf7u+b+0M+0IUeU4qxzWHyTkFqtxtUq9rABxTrpxj/6UCIwa99fsQSrym5qiHVIQPakmcdhizS/
-	Wu548F2SpRnsmCt35/62hH/B1C1P2XdJGG3/HtujAigsfx+dXVOeg5Ef++GPAfzhaOO6B75z7AH01
-	NEz8C2oNYOlSJ6b//2ERziPhd0IxGQQQMxYrOHtCchnEF+qYldo8SEkVkeFU7QG3AYnJOpjJ8s5GZ
-	1OOMKNIw==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=86qIo5v7jjY4HW3fkGNEhrjgiOH2gQXAnQ/w3mZCYX4=; b=VXW8L4PpNs1Qp7E88h9BCzDRZ/
+	J/vWxkGpdp/hV1JBfh2t5mJKPmHs5YtPfNKGoC5wmiEdxA5Jd4rvI8MQSxSLDAnuZIR7FEYl5D+RB
+	2PLah70PVqiMFcFCTU1vqctlNbdbxBeB8/Kb+RsDatPDI1cQqX06yD1T7N9uMZucN0Hk7Yu205V41
+	Q5Q9aDgWuahej0VOg2U7splFn16MTwO8XEr9Y4qGYRzlBzTLkpgPGiyAEXL+fsM1Jt4N++4yn6Ppn
+	AoFwshkXBjGT37dznqsIx+DZD87X466aQXqFJFo9ylxRS+zneFaNnFkva42MRzdgZRaUEeHqT1/jO
+	bKBNAk8g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x17dz-0000000AMcD-1YWa;
-	Mon, 31 Aug 2026 19:26:11 +0000
-Received: from mail-westus2azon11010064.outbound.protection.outlook.com ([52.101.46.64] helo=CO1PR03CU002.outbound.protection.outlook.com)
+	id 1x1DQT-0000000AoMH-0E8D;
+	Tue, 01 Sep 2026 01:36:37 +0000
+Received: from canpmsgout02.his.huawei.com ([113.46.200.217])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x17dw-0000000AMYw-2wCB
+	id 1x1DQP-0000000AoLT-3ELA
 	for kexec@lists.infradead.org;
-	Mon, 31 Aug 2026 19:26:10 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OkJ0bSMOyOf3HN4E4BLVEg55iFa6NuEJ5IvQTAuAwCxZELhsOoc8TchdjoMyNCOsRfQJ/UGgjc8IbGWdgQMmIiP1n6V1bDlG7rR+rZ/q+YuhOWivTtXxlJ6lIYol2I5tpd97jd4Ht7MWorQgWMxvxmUoM6EtbDR99RUWIe8LIJrg/6+tJfKJBQLUXidLB4eY1RCnVKlvhyBoYrWxCdz/TODXBgNBzawSvldc6OuMdJl2SmwmzJz3zgCp9XgCSySroUODxHVPQQbfG+d3SKyHqmVZQdY0zd4ScQy0cEnlG0APizCMvOm6wYqxf+ilyDoLlT11JPFWZxYuMTfkBghMSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gmKfHB335PFvYjEbUGYN25bMarf1tk9j1nRdQmA714U=;
- b=WUbkmMoeTk1p5CdL5Wy+E1bTX+kf8cfwOXEBExqPyiYIznMXV4oYTI0u3ofusnnpapQEfXbd4FOW5uD/Z1aJ0pDmO+saMcwH5D7I3jMpjcJrTlV+6cIwzlSd4YRsb4SZDwOyorRK5CGDCq8WfDQbwXP0L3G4GOJ49iu3zymCgiKeIZqKLzZSZmymmJM+UNUjPyzALchzNLPkVJbQiLHxZc+7B8v/fBHx3BFmpJmjzGg0biwtA5YNoMIGxsPkvb3BO0CQQNZRtqsaKC7UbRuybKeoXBgcI0JqG5ynSRtXaONTGZXaDX61lPGUw43Ie5+WO2XvoaLLeAkiQ3R2rgAgfw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gmKfHB335PFvYjEbUGYN25bMarf1tk9j1nRdQmA714U=;
- b=Ttqsa0F/QDFaape9r4uUt4I01dfXz1au0hAxhJ39Rbb5o8OFfMyZW9bwB35grvzxlKCPxD52QVzaGPaNC7cIsdjFpjfy20epAWRgGazsnedHINWEEZbD2hhtyH3icT1E7HZakvd9jDcy8ns0PVyIhX+VpgmwJ7Rv+7/9r/DcqyZNXj7Fr9dXxiH1xc/DHBBt6D4ayHIq6LX6+EuK3PB/anI6BEctvO0dA1KzThaZMvWYuV2UlLq4ryaypN8qx7p8JK3IZ07kTSl12bLYJCl/mfAXTUtgE5GxerpnwSz8/x5ds2PMJp7hOQEof7V0PJDSOkevzlS012Af3gORHn2X1w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
- by SJ5PPF0C60B25BF.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::98a) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.13; Mon, 31 Aug
- 2026 19:25:59 +0000
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16%5]) with mapi id 15.21.0360.008; Mon, 31 Aug 2026
- 19:25:59 +0000
-From: Zi Yan <ziy@nvidia.com>
-Date: Mon, 31 Aug 2026 15:25:37 -0400
-Subject: [PATCH v2 14/14] mm/page-flags: remove PG_private
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260831-remove-pg_private-v2-14-3668159cd9e8@nvidia.com>
-References: <20260831-remove-pg_private-v2-0-3668159cd9e8@nvidia.com>
-In-Reply-To: <20260831-remove-pg_private-v2-0-3668159cd9e8@nvidia.com>
-To: David Hildenbrand <david@kernel.org>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
- Michal Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>, 
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
- Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
- Gregory Price <gourry@gourry.net>, 
- Ying Huang <ying.huang@linux.alibaba.com>, 
- Alistair Popple <apopple@nvidia.com>, Johannes Weiner <hannes@cmpxchg.org>, 
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
- Kairui Song <kasong@tencent.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
- Zi Yan <ziy@nvidia.com>, Baoquan He <baoquan.he@linux.dev>, 
- Pasha Tatashin <pasha.tatashin@soleen.com>, 
- Pratyush Yadav <pratyush@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
- Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Dave Young <ruirui.yang@linux.dev>, 
- Shuah Khan <skhan@linuxfoundation.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-X-Mailer: b4 0.15.2
-X-ClientProxiedBy: BLAPR05CA0015.namprd05.prod.outlook.com
- (2603:10b6:208:36e::15) To IA0PR12MB8374.namprd12.prod.outlook.com
- (2603:10b6:208:40e::7)
+	Tue, 01 Sep 2026 01:36:35 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=86qIo5v7jjY4HW3fkGNEhrjgiOH2gQXAnQ/w3mZCYX4=;
+	b=Qjj5KFSWecCIt6dholXauErXASvKGekw610GO6dhVENlL/2e0knDpsbbOGR8vDKBV0lg8FPbE
+	TVFTeFCcakARlI56/Xq4+OQFB2l6FLeB4IllFRlEEyP/hIoTey8/EDltuPkC/jpuIqwKkmsOJCY
+	QpfQnD6mCb/v6wOxaHWhr+4=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4hYp886mTNzcb0f;
+	Tue,  1 Sep 2026 09:25:28 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 326E340561;
+	Tue,  1 Sep 2026 09:36:12 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 1 Sep 2026 09:36:11 +0800
+Message-ID: <dbfbccf8-8344-4893-a93f-ef6d316e0f7b@huawei.com>
+Date: Tue, 1 Sep 2026 09:36:10 +0800
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|SJ5PPF0C60B25BF:EE_
-X-MS-Office365-Filtering-Correlation-Id: b1c89649-0ff1-41a2-d995-08df0795afbf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|23010399003|7416014|376014|6133799003|18002099003|22082099003|56012099006|11063799006|5023799004|10067099003|921020;
-X-Microsoft-Antispam-Message-Info: yH6RBIwMfB8nK8nl5tZ890F8T/DQJgFJC7Ybgvqt4FcVSdqtV/uoM1dlxYXAdKmNvOT+AxV0gvNrSwjGu6PGxAA590uYHMlwOCmgFpilWqiulfdsc2hrOn2pVd2yv0zv18XpldAJZn3fBF9fwG/kuROO2cMyfCUmC+svj2v08bXKxZUkB2GU7iIWCFpMrGc1bz3Faly2UKeNQSrdIiI0CNuqofaNw7z/m6yW1XDCgHnNRHckw3WXDgU/roUpX5u5xD0vlEVhFIsrolMpTse+g63uxIs39ZYtgRe7Rtfd4kc5o9EL/Aoj3ThxYHMCzX4Ec55gLq/M1dizcPRiLVYdTOtI9VfMY1I6KCm/7lcV6zfWVcgm4Al7fsUvF9DN5vlkkZEL2bgPRd+unghwMfOojGAJEjRrNatD+qwIlYvmQ8ySMnrE2ofBFIy7ySrlVRi2RJOA51tx849rNlfWLT8orrjRi+KX0DFOsFo/5ytO2tNd3n/1Loo7I94gY3PWOidmVx3Y0Z1g1xE6H46x/Lg7Ya9yZhQj03Ch6yxg07DF0CLRujK/AY5MvvPQdKEnAskw6eL5mRbhndOtBGRF8oX4R1yFCojBc7w4jVKOyA9Bgd925hqgCaj5+LxTUR/j7xFFlfmDP3fhnxVQe+I7R3n6VBegF1f2OrW7g6LU4eUs/wHGRbk8fgo23gNG7fo8krVvHHIucwkq2tANHGFY5cvjsQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(23010399003)(7416014)(376014)(6133799003)(18002099003)(22082099003)(56012099006)(11063799006)(5023799004)(10067099003)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NVFmRHZXc0hOZjhaNHpnOHpJcVlacjV0WFYwUDRiY21QeW5XaHkxYmFLTU56?=
- =?utf-8?B?a1lKbXdKOXlKaHAyMWRHeHg1ZVNBN1R4UHpwc3pSZk9zWm9FbWUrU0QzUW0r?=
- =?utf-8?B?d0taNGo1SEFuZnhvQ0tZSTVVYmFhck1wUTVJaWhZTzViTEFSRCtudzc1aXMz?=
- =?utf-8?B?TWtleWViTDFDd09RVkZmSTNiNS80UlU0NjRYQ21oSDdYZUU0NVhXQkhhb1lM?=
- =?utf-8?B?SUxUL3YvZWJMYmlPK2FyVU11N2U5NnF0TFMvWkZvaHBNZk9lR1UxaUJ0TzF3?=
- =?utf-8?B?THE3RUI0MjdKd1RMQ1UrallWVTVEelZMbGhHYTJVZUtlbDZPRS9iekl6MUg3?=
- =?utf-8?B?T2NVRjFvT0FwalpGSXJyUFRYUUFIdVdXcnRJdUM2YkpnRDd6c0d2U2trR3JN?=
- =?utf-8?B?TG1aQTdCK0ROeHFJN3NMcXhNdnVaZTFGbUNZNVhLa3FyeVhPZGxDeDVsYWZ1?=
- =?utf-8?B?aVh5aWpsd0lPM1o4T2NITDQ0Z0FUUVVJSHNGcEFKWE5jaGhPTUZJZ3A2UkhN?=
- =?utf-8?B?SEhRZ2VKbzZueXNPY2kyTWZvYytEb25mczRpajRkaTVjSUhBTS9mN250N0h0?=
- =?utf-8?B?djFLbXN6QVovTVVTYVEvQUJNN250VTNkdUNHcGIyUUJVaXFRUHNFS0dEMVlX?=
- =?utf-8?B?eGNSdG9MTkFCT3AxMlV1a2IvVHRXZ0N3cWdYWG4yaHlXcU9rYmhpVHNRUy9D?=
- =?utf-8?B?VzI1S0N2MFlJQkpXWFFoVGxUYmp2RzZrWEtWMVJ5bVNSQWwyTXBpOEkzR04z?=
- =?utf-8?B?dkJZZHJyYmJ6TU9nRndwaGdmYXcrWS94d29yL25jbTJGNVVGWVZ4N0I5Y2FW?=
- =?utf-8?B?SFI1b25NOFhwZExkMCtibWJBMGsyRWkwZVY5N1Y0aS9kWDRhR0dwSzlkVjFx?=
- =?utf-8?B?bDBCS2p1U21nZkdPTGVjQVlKcEgwT3B0djJKRzY1Z25YbzdnRVdUcmQ0L3Zv?=
- =?utf-8?B?UjVjN2tUQjd2cEllcDc2ZTF6WS9NV1NGZjNKWGNQa05tSTFJSGNhdy9NcXpK?=
- =?utf-8?B?VHJVbkVkaExJczFSWmQ5U1ZHNlpwU2ZKVVAwQjQydG1yU212Y3RqKzdSam9t?=
- =?utf-8?B?UGNRTVZaWjJXN1ltZWxFTWptVWg0SmRZVGdIYWZrbG1HeGowTi9qakhCdDQy?=
- =?utf-8?B?ZzF5MlVCSy93cjlINWJLRENxMFZ3NlkrWXNzVkpKK2N2VmMrY25nYnVyWGdV?=
- =?utf-8?B?SkhyZm9YR2ZuTTd2K0tscXJhLzJXVkRqcWtlY3l1Z0R6VFNuaGVZWGg0OGNs?=
- =?utf-8?B?QVQ2MmZJbHh0bUZiOVZHaWNSZUx2dmJHNkhwUE45NDNRUFN6U0Vza2lhUUt2?=
- =?utf-8?B?WWxnbXFFVktWTWdCRUpuWWN0K2pYRzNvUURtT0k2VmhQSkk3eHdwNXhCTkd6?=
- =?utf-8?B?VmN0cVBjVHJEVDJOdVhoRW8wZlFURnJNZ0JTOUx0SndtMVpjWFoxUVlGYkUw?=
- =?utf-8?B?QW9LK0tzNXB0QUZLaEZ2RFZLKzZTd2p5aFlqMk0wY3hJU3ptTW5MOG5SZWcw?=
- =?utf-8?B?RUZiVXFCQ24wM1JDQldaM2ZyNW1QOHQ5Ny9KajZrK1lKTnhIZ09kbGordGlj?=
- =?utf-8?B?cStkOW95ZEdWejVLVFFWZlhhdTJRNmgyK0RMLzdyeWorRGNUdit0aEs3TEth?=
- =?utf-8?B?bll2VktXVEN0bit1U25DMndHRjdYbWtqaFI1OGpDS2tsdFVNamJpa3doV2Uv?=
- =?utf-8?B?TVJ5Ky9iQUkzLzVCbDQ0Z0lCQnI5R3dNMHFNVmtxWDVUbysydzNzMDZZVXNJ?=
- =?utf-8?B?NGZUNEQxRGVFRGhFRVQyQWNTU3IzN25WV3RtN1UwSXl6RnlNcURISHMxcml5?=
- =?utf-8?B?TmlOdjd4QkJtZmM2bHREWkF0TnBYSjB0OVVDZFg3c0lOM25nbVAzL0lIK3NB?=
- =?utf-8?B?dW5ublhWS0p2bUg5YXV5YnpPdnlIbFpsZTJIelgrNS8wcXQwNjd4QlNHUEFO?=
- =?utf-8?B?blU3bDFtSWk5dXJzOTFTemkxcDFuektKTGhmaHRzVXA5RVhwdkdUV2YrWXUv?=
- =?utf-8?B?aVRVa3J5WGhtdFk1Qm8zWXM5Z0R4VEFGV3ZzVnBkMFRsQUNUT2xkRmNWVWpJ?=
- =?utf-8?B?bkZ6anRvdTd6d0pua2IraGFRZ2hDdU5ZdEZUeWxVU085aE9MWndwQ25xMGFW?=
- =?utf-8?B?MVJCOGJFcWJnS084VHZIcEljMERhWGZTV1c5a0V6dFZ2TGI5ekRyLytUUk1h?=
- =?utf-8?B?MU5wNE9DVDMxcU9PSlc1bGMyUUhoUkt3Z09ENmxUd2FOekVpdGZDdWNod21V?=
- =?utf-8?B?VTRxb0gzWGRnUHVpb3ltRGhuYVpvcm1qSHhremQ5VWNQbGRqWEZQWG1wYUE0?=
- =?utf-8?Q?6uUnT1ETAhpwHZFJg1?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b1c89649-0ff1-41a2-d995-08df0795afbf
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2026 19:25:59.2423
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CHy2tnvWWo4sErCdmDvmN7g4PzCbS7rLMbcqy2wm/Xf9zilKseRwnBQVtB6qSUE7
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF0C60B25BF
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/9] crash_dump: Fix potential double free and UAF of
+ keys_header
+To: Coiby Xu <coiby.xu@gmail.com>
+CC: <kexec@lists.infradead.org>, Andrew Morton <akpm@linux-foundation.org>,
+	Sourabh Jain <sourabhjain@linux.ibm.com>, Baoquan He <baoquan.he@linux.dev>,
+	Dave Young <ruirui.yang@linux.dev>, Pratyush Yadav <pratyush@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+	open list <linux-kernel@vger.kernel.org>
+References: <20260828084900.1496839-1-coiby.xu@gmail.com>
+ <20260828084900.1496839-2-coiby.xu@gmail.com>
+ <76f634e3-9adb-4ae2-b2b0-a7e13a2f93c3@huawei.com> <apWEBBMz6aFBeefa@Rk>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <apWEBBMz6aFBeefa@Rk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.109.254]
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260831_122608_782541_9C92A644 
-X-CRM114-Status: GOOD (  19.47  )
+X-CRM114-CacheID: sfid-20260831_183634_197211_3BF2B0A9 
+X-CRM114-Status: GOOD (  22.94  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -167,164 +83,181 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-folio->private != NULL indicates a folio carries private data, replacing
-PG_private. All PG_private users are converted. Remove PG_private and
-reserve the space as __PG_folio for future use.
 
-Also update files in Documentation. hugetlbfs_reserv.rst is outdated and
-left unchanged. It should be rewritten.
 
-Assisted-by: Claude:claude-opus-4-8
-Assisted-by: Codex:gpt-5
-Signed-off-by: Zi Yan <ziy@nvidia.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-To: Baoquan He <baoquan.he@linux.dev>
-To: Mike Rapoport <rppt@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-To: Pratyush Yadav <pratyush@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To: Jan Kara <jack@suse.cz>
-To: David Hildenbrand <david@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Dave Young <ruirui.yang@linux.dev>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Lorenzo Stoakes <ljs@kernel.org>
-Cc: "Liam R. Howlett" <liam@infradead.org>
-Cc: Vlastimil Babka <vbabka@kernel.org>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: kexec@lists.infradead.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-trace-kernel@vger.kernel.org
----
- Documentation/admin-guide/kdump/vmcoreinfo.rst |  2 +-
- Documentation/filesystems/vfs.rst              |  6 +++---
- include/linux/page-flags.h                     | 19 ++-----------------
- include/trace/events/mmflags.h                 |  2 +-
- kernel/vmcore_info.c                           |  1 -
- 5 files changed, 7 insertions(+), 23 deletions(-)
+在 2026/8/31 21:44, Coiby Xu 写道:
+> On Mon, Aug 31, 2026 at 03:39:35PM +0800, Jinjie Ruan wrote:
+>>
+>>
+>> 在 2026/8/28 16:48, Coiby Xu 写道:
+>>> If kexec_add_buffer somehow fails, keys_header will be freed. Depending
+>>> on /sys/kernel/config/crash_dm_crypt_key/reuse, it will lead to the
+>>> following two problems if the kexec_file_load syscall is called again,
+>>>   1. Double free of keys_header if reuse=false
+>>>   2. UAF of keys_header if reuse=true
+>>>
+>>> To address these problems and also make it easier to reason about the
+>>> code, keep two invariants,
+>>>   1. keys_header will always be freed at the end of kexec_file_load
+>>>      syscall except during kdump image unloading for CPU/memory
+>>>      hot-plugging support
+>>>   2. There will always be valid keys_header if reuse=true
+>>>
+>>> Fixes: 479e58549b0f ("crash_dump: store dm crypt keys in kdump
+>>> reserved memory")
+>>> Fixes: 9ebfa8dcaea7 ("crash_dump: reuse saved dm crypt keys for CPU/
+>>> memory hot-plugging")
+>>> Reported-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>>> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+>>> ---
+>>>  include/linux/kexec.h        |  6 ++++
+>>>  kernel/crash_dump_dm_crypt.c | 66 ++++++++++++++++++++++++++----------
+>>>  kernel/kexec_file.c          |  2 ++
+>>>  3 files changed, 56 insertions(+), 18 deletions(-)
+>>>
 
-diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-index 7663c610fe901..5f1df6d080508 100644
---- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-+++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-@@ -325,7 +325,7 @@ NR_FREE_PAGES
- On linux-2.6.21 or later, the number of free pages is in
- vm_stat[NR_FREE_PAGES]. Used to get the number of free pages.
- 
--PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_hwpoison|PG_head_mask
-+PG_lru|PG_swapcache|PG_swapbacked|PG_hwpoison|PG_head_mask
- --------------------------------------------------------------------------
- 
- Page attributes. These flags are used to filter various unnecessary for
-diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
-index d3a93eec3945f..dec7816303c6a 100644
---- a/Documentation/filesystems/vfs.rst
-+++ b/Documentation/filesystems/vfs.rst
-@@ -649,8 +649,8 @@ Writeback.
- 
- The first can be used independently to the others.  The VM can try to
- release clean pages in order to reuse them.  To do this it can call
--->release_folio on clean folios with the private
--flag set.  Clean pages without PagePrivate and with no external references
-+->release_folio on clean folios with folio->private set. Clean pages
-+without folio->private set and with no external references
- will be released without notice being given to the address_space.
- 
- To achieve this functionality, pages need to be placed on an LRU with
-@@ -674,7 +674,7 @@ filemap_fdatawait_range, to wait for all writeback to complete.
- 
- An address_space handler may attach extra information to a page,
- typically using the 'private' field in the 'struct page'.  If such
--information is attached, the PG_Private flag should be set.  This will
-+information is attached, non-NULL 'private' field will
- cause various VM routines to make extra calls into the address_space
- handler to deal with that data.
- 
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 9b585e68127a2..eb2961ed61018 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -44,10 +44,6 @@
-  * Consequently, PG_reserved for a page mapped into user space can indicate
-  * the zero page, the vDSO, MMIO pages or device memory.
-  *
-- * The PG_private bitflag is set on pagecache pages if they contain filesystem
-- * specific data (which is normally at page->private). It can be used by
-- * private allocations for its own usage.
-- *
-  * During initiation of disk I/O, PG_locked is set. This bit is set before I/O
-  * and cleared when writeback _starts_ or when read _completes_. PG_writeback
-  * is set before writeback starts and cleared when it finishes.
-@@ -105,7 +101,7 @@ enum pageflags {
- 	PG_owner_2,		/* Owner use. If pagecache, fs may use */
- 	PG_arch_1,
- 	PG_reserved,
--	PG_private,		/* If pagecache, has fs-private data */
-+	__PG_folio,		/* Do not use: reserved for folio identification */
- 	PG_private_2,		/* If pagecache, has fs aux data */
- 	PG_reclaim,		/* To be reclaimed asap */
- 	PG_swapbacked,		/* Page is backed by RAM/swap */
-@@ -576,7 +572,7 @@ FOLIO_FLAG(swapbacked, FOLIO_HEAD_PAGE)
- /*
-  * Private page markings that may be used by the filesystem that owns the page
-  * for its own purposes.
-- * - PG_private and PG_private_2 cause release_folio() and co to be invoked
-+ * - folio->private and PG_private_2 cause release_folio() and co to be invoked
-  */
- 
- static __always_inline bool folio_test_private(const struct folio *folio)
-@@ -584,17 +580,6 @@ static __always_inline bool folio_test_private(const struct folio *folio)
- 	return folio->private;
- }
- 
--static __always_inline int PagePrivate(const struct page *page)
--{
--	return !!page->private;
--}
--
--/* no-ops during transition */
--static __always_inline void folio_set_private(struct folio *folio) { }
--static __always_inline void folio_clear_private(struct folio *folio) { }
--static __always_inline void SetPagePrivate(struct page *page) { }
--static __always_inline void ClearPagePrivate(struct page *page) { }
--
- FOLIO_FLAG(private_2, FOLIO_HEAD_PAGE)
- 
- /* owner_2 can be set on tail pages for anon memory */
-diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
-index 935893e5ea53b..caf090cd6f85e 100644
---- a/include/trace/events/mmflags.h
-+++ b/include/trace/events/mmflags.h
-@@ -144,7 +144,7 @@ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
- 	DEF_PAGEFLAG_NAME(owner_2),					\
- 	DEF_PAGEFLAG_NAME(arch_1),					\
- 	DEF_PAGEFLAG_NAME(reserved),					\
--	DEF_PAGEFLAG_NAME(private),					\
-+	{ 1UL << __PG_folio, "folio" },					\
- 	DEF_PAGEFLAG_NAME(private_2),					\
- 	DEF_PAGEFLAG_NAME(writeback),					\
- 	DEF_PAGEFLAG_NAME(head),					\
-diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
-index 8614430ca212a..5a417f8a922ab 100644
---- a/kernel/vmcore_info.c
-+++ b/kernel/vmcore_info.c
-@@ -216,7 +216,6 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
- 	VMCOREINFO_NUMBER(NR_FREE_PAGES);
- 	VMCOREINFO_NUMBER(PG_lru);
--	VMCOREINFO_NUMBER(PG_private);
- 	VMCOREINFO_NUMBER(PG_swapcache);
- 	VMCOREINFO_NUMBER(PG_swapbacked);
- #define PAGE_SLAB_MAPCOUNT_VALUE	(PGTY_slab << 24)
+[...]
 
--- 
-2.53.0
+>>> @@ -369,9 +387,6 @@ static int build_keys_header(void)
+>>>      struct config_key *key;
+>>>      int i, r;
+>>>
+>>> -    if (keys_header != NULL)
+>>> -        kvfree(keys_header);
+>>> -
+>>>      keys_header = kzalloc(get_keys_header_size(key_count), GFP_KERNEL);
+>>>      if (!keys_header)
+>>>          return -ENOMEM;
+>>> @@ -415,8 +430,7 @@ int crash_load_dm_crypt_keys(struct kimage *image)
+>>>          .top_down = false,
+>>>          .random = true,
+>>>      };
+>>> -    int r;
+>>> -
+>>> +    int r = 0;
+>>>
+>>>      if (key_count <= 0) {
+>>>          kexec_dprintk("No dm-crypt keys\n");
+>>> @@ -424,14 +438,15 @@ int crash_load_dm_crypt_keys(struct kimage *image)
+>>>      }
+>>>
+>>>      if (!is_dm_key_reused) {
+>>> -        image->dm_crypt_keys_addr = 0;
+>>>          r = build_keys_header();
+>>> -        if (r) {
+>>> -            pr_err("Failed to build dm-crypt keys header, ret=%d\n",
+>>> r);
+>>> -            return r;
+>>> -        }
+>>> +        if (r)
+>>> +            goto out;
+>>>      }
+>>>
+>>> +    /*
+>>> +     * keys_header will be copied to reserver memory later and then be
+>>> +     * cleaned up at the end of kexec_file_load syscall
+>>> +     */
+>>>      kbuf.buffer = keys_header;
+>>>      kbuf.bufsz = get_keys_header_size(key_count);
+>>>
+>>> @@ -441,18 +456,33 @@ int crash_load_dm_crypt_keys(struct kimage *image)
+>>>      r = kexec_add_buffer(&kbuf);
+>>>      if (r) {
+>>>          pr_err("Failed to call kexec_add_buffer, ret=%d\n", r);
+>>> -        kvfree((void *)kbuf.buffer);
+>>> -        return r;
+>>> +        goto out;
+>>>      }
+>>> +
+>>>      image->dm_crypt_keys_addr = kbuf.mem;
+>>>      image->dm_crypt_keys_sz = kbuf.bufsz;
+>>>      kexec_dprintk(
+>>>          "Loaded dm crypt keys to kexec_buffer bufsz=0x%lx
+>>> memsz=0x%lx\n",
+>>>          kbuf.bufsz, kbuf.memsz);
+>>>
+>>> +out:
+>>> +    is_dm_key_reused = false;
+>>
+>> I think there's still a bug for arm64 here.
+>>
+>> When is_dm_key_reused set to true, the outer while loop prematurely
+>> clears the is_dm_key_reused flag at the end of
+>> crash_load_dm_crypt_keys() in the very first iteration.
+>>
+>> Consequently, subsequent re-entrant calls to crash_load_dm_crypt_keys()
+>> falsely perceive the keys as not reused, forcing a redundant execution
+>> of build_keys_header() which overwrites the global keys_header pointer;
+>>
+>> This induces a silent kernel memory leak.
+> 
+> Thanks for reviewing this patch and raising the concern! Unless I miss
+> something, I don't think the global keys_header will be overwritten
+> because kexec_file_post_load_cleanup_dm_crypt will called to free the
+> memory during the end of kexec_file_load syscall.
+
+Hi Coiby,
+
+Not really on arm64, as below:
+
+kexec_file_load syscall
+-> kimage_file_alloc_init()
+   -> kimage_file_prepare_segments()
+      -> kexec_image_load_default()
+         -> arm64 image_load()
+            -> load_other_segments() while retry loop
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+               -> crash_load_dm_crypt_keys()  -> May be called
+repeatedly!!! Memory leak bug here as I described above,
+
+      -> kimage_file_post_load_cleanup()
+
+> 
+>>
+>> 92 >-------/*
+>> 93 >------- * The location of the kernel segment may make it impossible
+>> to satisfy
+>> 94 >------- * the other segment requirements, so we try repeatedly to
+>> find a
+>> 95 >------- * location that will work.
+>> 96 >------- */
+>> 97 >-------while ((ret = kexec_add_buffer(&kbuf)) == 0) {
+>> 98 >------->-------/* Try to load additional data */
+>> 99 >------->-------kernel_segment = &image-
+>> >segment[kernel_segment_number];
+>> 100 >------->-------ret = load_other_segments(image, kernel_segment->mem,
+>> 101 >------->------->------->------->-------  kernel_segment->memsz,
+>> initrd,
+>> 102 >------->------->------->------->-------  initrd_len, cmdline);
+>> 103 >------->-------if (!ret)
+>> 104 >------->------->-------break;
+>> 105
+>> 106 >------->-------/*
+>> 107 >------->------- * We couldn't find space for the other segments;
+>> erase the
+>> 108 >------->------- * kernel segment and try the next available hole.
+>> 109 >------->------- */
+>> 110 >------->-------image->nr_segments -= 1;
+>> 111 >------->-------kbuf.buf_min = kernel_segment->mem +
+>> kernel_segment->memsz;
+>> 112 >------->-------kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>> 113 >-------}
+> 
+> Btw, I assume the above text is not related to the discussion, right?
+
+The code closely related to my description above — the arm64
+crash_load_dm_crypt_keys() — is exactly called within the
+load_other_segments() in the while loop mentioned earlier. Therefore,
+crash_load_dm_crypt_keys() may be called repeatedly before
+kexec_file_post_load_cleanup_dm_crypt().
+
+We can refer to the arm64 commit 108aa503657e ("arm64: kexec_file: try
+more regions if loading segments fails") , which introduced the retry loop.
+
+Best regards,
+Jinjie
+
+> [...]
+> 
 
 
