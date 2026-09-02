@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 36D32C61DD6
-	for <kexec@archiver.kernel.org>; Wed,  2 Sep 2026 01:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A68BEC61DD3
+	for <kexec@archiver.kernel.org>; Wed,  2 Sep 2026 01:19:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
 	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:
 	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ueZfUdbICpbFc4QJdF1KNCrnQsrHgevLIv0afVFUmZM=; b=w33twRtf8ytGK45GHlrNn7qBvA
-	3wTrDyjWu534R3hhvDMkgoUDN2uqtBKg6irgwIri1yzwGseZkUxy0vPw4raU/NVh/HBCx/h6A+ef/
-	aWY0STygXRfgLzXXvjbnDN0finpSG+2tv+ikyMfWGoUVUMVHGB7CK6WGAlKCYnPEcL6l2uhG0iUR3
-	3gVAaz703YkgDHzyOiuQdh7MKTeZCh4Rj+nbs3zOyf4YElI18tirPqFqssV+9Gn8AE1rP+l7xnZlQ
-	xHbTaTeiQMV0XHQyPvZqjnH+W57MN0JHGXlAh51tS+T5fcswrvxrrV3RXd5QFQHtPxCxtbLEa18xy
-	2qDLle9w==;
+	bh=t9UK13JKhSsPM/Vc9steoJSl+OnutIzRnlZukeamK+o=; b=gygD3GgZv+F2aeL3dQcTVkSqLm
+	U9znIPidb9D8uDKXoHvgyKy/E0VSOs27aL19Kvw6puuvbKGeKNWO47LdVJiung+tUloF8j2+xCY/K
+	qq6d6ekRdEgcfu6k6BnhFztgP8fuPX030d3H8o3siJ52VeXps5JhhKdU5LQmVSt7CnNZjlmzrMQ7e
+	ueWWSWE0/sfs1p83PeG1KbO5lzAtsc5m3Jdz/mRNeiA9UlRiCvKQWT5xsS5timyUD/VQvMyH8F7AE
+	OGyPdC34xzG9tdf1RAkuKD6KsS1Zx3m4OexwW0ynhto7dxi4k8hKUeCcEk27q7okD6jsXCqVBbskB
+	vsOVgW1A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1ZUu-0000000DcOZ-2zhE;
-	Wed, 02 Sep 2026 01:10:40 +0000
-Received: from canpmsgout10.his.huawei.com ([113.46.200.225])
+	id 1x1Zdq-0000000Dctj-2BmM;
+	Wed, 02 Sep 2026 01:19:54 +0000
+Received: from [113.46.200.227] (helo=canpmsgout12.his.huawei.com)
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1ZUp-0000000DcNs-45D5;
-	Wed, 02 Sep 2026 01:10:39 +0000
+	id 1x1Zdo-0000000Dcsu-0dgt;
+	Wed, 02 Sep 2026 01:19:53 +0000
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=ueZfUdbICpbFc4QJdF1KNCrnQsrHgevLIv0afVFUmZM=;
-	b=gxQtifHkaLPw22BF6n0KMEk10IuxeqmsMYYop/hUPqKEf8knsZeKMkjksoN1EG/Q1sd/O9Di/
-	MWC9d9+IV55CGBmQmL79IAHmaox4lGW98FrA6ZXZh/7XOquukuCJCl9vL3nrYSwO4ytzpow/EiG
-	bZELp1KK04KMfSbcfFS8Feg=
-Received: from mail.maildlp.com (unknown [172.19.163.163])
-	by canpmsgout10.his.huawei.com (SkyGuard) with ESMTPS id 4hZPWl0vM1z1K96m;
-	Wed,  2 Sep 2026 08:59:31 +0800 (CST)
+	bh=t9UK13JKhSsPM/Vc9steoJSl+OnutIzRnlZukeamK+o=;
+	b=JSc/QrUEAnbPE7s6EK6aHXX4FMrI/ak+7N46GxWAYjo+hv4+e8IRFqw3R57vf10ZXvwgmTnw1
+	5LsKKvi+A3v/zJR4bWOVaYI3bbjz5k4AHVvkI67n+bm/COW12+QwJBDOanQFb2mbBv/tq3BctvX
+	qaDBA0HnMSM+ut7AmVDhzas=
+Received: from mail.maildlp.com (unknown [172.19.162.92])
+	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hZPjt2PDTznTVd;
+	Wed,  2 Sep 2026 09:08:18 +0800 (CST)
 Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
-	by mail.maildlp.com (Postfix) with ESMTPS id 13A854048B;
-	Wed,  2 Sep 2026 09:10:21 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B4C9C40565;
+	Wed,  2 Sep 2026 09:19:31 +0800 (CST)
 Received: from [10.67.109.254] (10.67.109.254) by
  dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 2 Sep 2026 09:10:18 +0800
-Message-ID: <bf0e158e-4bd0-4495-a9e2-983556e4041b@huawei.com>
-Date: Wed, 2 Sep 2026 09:10:16 +0800
+ 15.2.1544.11; Wed, 2 Sep 2026 09:19:29 +0800
+Message-ID: <96ba8924-b857-4dbc-9161-4c464901f974@huawei.com>
+Date: Wed, 2 Sep 2026 09:19:28 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/17] kexec: Record allocated CMA pages to fix release
- size mismatch
+Subject: Re: [PATCH v3 15/17] crash: Simplify CRASH_MAX_MEMORY_RANGES handling
 To: Mike Rapoport <rppt@kernel.org>
 CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <maddy@linux.ibm.com>,
@@ -71,18 +70,18 @@ CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
 	<kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
 	<linux-mm@kvack.org>
 References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
- <20260826092541.3905933-2-ruanjinjie@huawei.com>
- <178829364020.3691424.12323275610442178748.b4-review@b4>
+ <20260826092541.3905933-16-ruanjinjie@huawei.com>
+ <178829364021.3691424.12328056849597833403.b4-review@b4>
 From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <178829364020.3691424.12323275610442178748.b4-review@b4>
+In-Reply-To: <178829364021.3691424.12328056849597833403.b4-review@b4>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.67.109.254]
 X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
  dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260901_181036_647640_1A4A0569 
-X-CRM114-Status: GOOD (  18.83  )
+X-CRM114-CacheID: sfid-20260901_181952_580516_55F0D932 
+X-CRM114-Status: GOOD (  11.13  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,141 +101,60 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 在 2026/9/2 4:14, Mike Rapoport 写道:
 > Hi,
 > 
->> The CMA pages allocated for a kexec segment are released using the
->> segment's memsz to calculate the number of pages. However, some
->> architecture loaders modify the segment's memsz after allocation
->> (e.g. arm64 subtracts text_offset), causing the release function to
->> free fewer pages than were originally allocated, leaking the remaining
->> CMA pages.
+>> Set CRASH_MAX_MEMORY_RANGES to 0 when MEMORY_HOTPLUG is disabled, then
+>> remove the now unnecessary IS_ENABLED(CONFIG_MEMORY_HOTPLUG) checks in
+>> powerpc and x86 arch_crash_get_elfcorehdr_size().
 >>
->> Add a per-segment `segment_cma_pages` array to store the number of
->> pages actually allocated from CMA. Populate it during
->> kexec_add_buffer() using the aligned memsz, and use it in
->> kimage_free_cma() to accurately release all allocated pages.
+>> No functional change intended.
 >>
->> This avoids relying on the potentially modified segment->memsz and
->> prevents silent CMA memory leaks.
->>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Baoquan He <baoquan.he@linux.dev>
->> Cc: Mike Rapoport <rppt@kernel.org>
->> Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
->> Cc: Pratyush Yadav <pratyush@kernel.org>
->> Cc: Brian Mak <makb@juniper.net>
->> Cc: Pingfan Liu <piliu@redhat.com>
->> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
->> Cc: Justinien Bouron <jbouron@amazon.com>
->> Cc: Li Chen <me@linux.beauty>
->> Cc: stable@vger.kernel.org
->> Link: https://sashiko.dev/#/patchset/20260729031235.2840255-1-ruanjinjie%40huawei.com
->> Fixes: 07d24902977e ("kexec: enable CMA based contiguous allocation")
 >> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 >>
->> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->> index 0af8ae4fdd087..83c296c0eb6cc 100644
->> --- a/include/linux/kexec.h
->> +++ b/include/linux/kexec.h
->> @@ -349,6 +349,7 @@ struct kimage {
->>  	unsigned long nr_segments;
->>  	struct kexec_segment segment[KEXEC_SEGMENT_MAX];
->>  	struct page *segment_cma[KEXEC_SEGMENT_MAX];
->> +	unsigned int segment_cma_pages[KEXEC_SEGMENT_MAX];
-> 
-> Can we universally use unsigned long for number of pages?
-
-Hi Mike,
-
-unsigned int is used here because the second parameter of
-arch_kexec_pre_free_pages is unsigned int.
-
-static inline void arch_kexec_pre_free_pages(void *vaddr, unsigned int
-pages) { }
-
-> 
+>> diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
+>> index fc0105c7af4c3..c47e3f867ea1f 100644
+>> --- a/arch/powerpc/kexec/crash.c
+>> +++ b/arch/powerpc/kexec/crash.c
+>> @@ -474,9 +474,7 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
+>>  	unsigned long phdr_cnt;
 >>  
->>  	struct list_head control_pages;
->>  	struct list_head dest_pages;
->> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->> index dc770b9a6d053..611b15bb1369e 100644
->> --- a/kernel/kexec_core.c
->> +++ b/kernel/kexec_core.c
->> @@ -560,7 +560,7 @@ static void kimage_free_cma(struct kimage *image)
+>>  	/* A program header for possible CPUs + vmcoreinfo */
+>> -	phdr_cnt = num_possible_cpus() + 1;
+>> -	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
+>> -		phdr_cnt += CONFIG_CRASH_MAX_MEMORY_RANGES;
+>> +	phdr_cnt = num_possible_cpus() + 1 + CONFIG_CRASH_MAX_MEMORY_RANGES;
 >>  
->>  	for (i = 0; i < image->nr_segments; i++) {
->>  		struct page *cma = image->segment_cma[i];
->> -		u32 nr_pages = image->segment[i].memsz >> PAGE_SHIFT;
->> +		unsigned int nr_pages = image->segment_cma_pages[i];
->>  
->>  		if (!cma)
->>  			continue;
->> @@ -568,6 +568,7 @@ static void kimage_free_cma(struct kimage *image)
->>  		arch_kexec_pre_free_pages(page_address(cma), nr_pages);
->>  		dma_release_from_contiguous(NULL, cma, nr_pages);
->>  		image->segment_cma[i] = NULL;
->> +		image->segment_cma_pages[i] = 0;
->>  	}
->>  
+>>  	return elf64_phdr_size(phdr_cnt);
 >>  }
->> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
->> index 59fb9d71e9d86..bfae3fee7f2f9 100644
->> --- a/kernel/kexec_file.c
->> +++ b/kernel/kexec_file.c
->> @@ -670,7 +670,7 @@ static int kexec_walk_resources(struct kexec_buf *kbuf,
+>> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+>> index 99eb8583d9321..116410ac90fb4 100644
+>> --- a/arch/x86/kernel/crash.c
+>> +++ b/arch/x86/kernel/crash.c
+>> @@ -407,9 +407,7 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
+>>  	unsigned int sz;
 >>  
->>  static int kexec_alloc_contig(struct kexec_buf *kbuf)
->>  {
->> -	size_t nr_pages = kbuf->memsz >> PAGE_SHIFT;
->> +	size_t nr_pages = PFN_DOWN(kbuf->memsz);
->>  	unsigned long mem;
->>  	struct page *p;
+>>  	/* kernel_map, VMCOREINFO and maximum CPUs */
+>> -	sz = 2 + num_possible_cpus();
+>> -	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
+>> -		sz += CONFIG_CRASH_MAX_MEMORY_RANGES;
+>> +	sz = 2 + num_possible_cpus() + CONFIG_CRASH_MAX_MEMORY_RANGES;
+>>  	sz *= sizeof(Elf64_Phdr);
+>>  	return sz;
+>>  }
+>> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+>> index a97ed9605602f..e6251dfe451a8 100644
+>> --- a/kernel/Kconfig.kexec
+>> +++ b/kernel/Kconfig.kexec
+>> @@ -160,7 +160,8 @@ config CRASH_HOTPLUG
 >>  
->> @@ -756,6 +756,8 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
->>   */
->>  int kexec_add_buffer(struct kexec_buf *kbuf)
->>  {
->> +	unsigned long nr_segments = kbuf->image->nr_segments;
->> +	size_t nr_pages;
->>  	struct kexec_segment *ksegment;
->>  	int ret;
->>  
->> @@ -763,7 +765,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
->>  	if (!kbuf->image->file_mode)
->>  		return -EINVAL;
->>  
->> -	if (kbuf->image->nr_segments >= KEXEC_SEGMENT_MAX)
->> +	if (nr_segments >= KEXEC_SEGMENT_MAX)
->>  		return -EINVAL;
->>  
->>  	/*
->> @@ -789,12 +791,18 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
->>  		return ret;
->>  
->>  	/* Found a suitable memory range */
->> -	ksegment = &kbuf->image->segment[kbuf->image->nr_segments];
->> +	ksegment = &kbuf->image->segment[nr_segments];
->>  	ksegment->kbuf = kbuf->buffer;
->>  	ksegment->bufsz = kbuf->bufsz;
->>  	ksegment->mem = kbuf->mem;
->>  	ksegment->memsz = kbuf->memsz;
->> -	kbuf->image->segment_cma[kbuf->image->nr_segments] = kbuf->cma;
->> +	kbuf->image->segment_cma[nr_segments] = kbuf->cma;
->> +	if (kbuf->cma) {
->> +		nr_pages = (unsigned int)(PFN_DOWN(kbuf->memsz));
->> +		kbuf->image->segment_cma_pages[nr_segments] = nr_pages;
-> 		kbuf->image->segment_cma_pages[nr_segments] = nr_pages;
->> +	} else {
->> +		kbuf->image->segment_cma_pages[nr_segments] = 0;
->> +	}
+>>  config CRASH_MAX_MEMORY_RANGES
+>>  	int "Specify the maximum number of memory regions for the elfcorehdr"
+>> -	default 8192
+>> +	default 8192 if MEMORY_HOTPLUG
+>> +	default 0 if !MEMORY_HOTPLUG
 > 
-> I suggest to rename nr_pages to nr_cma_pages, initialize it to 0 at
-> declaration time and make this
+> This only sets the default, but a user can change the value explicitly.
 
-I agree with this.
+You're right. Let me drop this patch for now. Thanks for the review!
 
-> 
-> 	if (kbuf->cma)
-> 		nr_cma_pages = PFN_DOWN(kbuf->memsz);
-> 	kbuf->image->segment_cma_pages[nr_segments] = nr_cma_pages;
 > 
 
 
