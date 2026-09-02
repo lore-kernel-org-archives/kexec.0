@@ -4,147 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A1D84C624D6
-	for <kexec@archiver.kernel.org>; Wed,  2 Sep 2026 17:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E0D90C61DD6
+	for <kexec@archiver.kernel.org>; Wed,  2 Sep 2026 17:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:
-	Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Message-ID:Date
-	:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=BX+nrfmcjXNaxoIIwlqBQcZbjBTEfLxhDAVC8ShLeRY=; b=eqqXHQS1nYbXmVxHDca13xAwHm
-	zNywH6NGdB94fgD+z9ZXFU66H1ead5/3LNhhVRD3OB7WCtiSq+z7ZX6dGIlHvdaPAOu8Xv+GvbsDd
-	EJE0qkQPHFO/NOu5PN4fDmZ64ff59EZZur6sjEkwWpewDOGfprcJUjGzta7h52Yx84QE8dx4L1Csw
-	lnWK0A4OLvhm7coPjIAXo0oI74fyqHuTwRHRUp5FflA9m4zNJxMa2yAFXOXzWgy3TVt8F93BPdVIO
-	Zv0sGJC/SH3ZMEZADjxS8z+ZwQyICU2mNRVHKlSaTY8Vgn5jpZMnU+9/AiNMfjcl0hXZjxI0GxmzN
-	fyW+OD1A==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=aR6tUSKjEF7/JBVWyl2P7FkIEO8VNHl2TDvZxaecF/s=; b=wPmjdup+qqWL8j4tXY9iE9fW/g
+	3zpR6/AQsdCJEWDBumZzsXC5zSYEcFIZtVICsGOMB2Z5yWOJ53NNMW+gqPJxo2yw5FuyCGY2smhIZ
+	Mzhda7BtmDo4U6RqQVlPTmBqLmDcqG5xmU+e6sEEg1sRn1FPyO9SLmxj9uRw57M10fUCFHNr9k2D4
+	nCykUR3bT6UvueTb9qs6r08oNry23Dy/yddfgpIwZrlJT5kFt1EW4XyfDakE27g8p6mqzrv+1+nnY
+	hrKiZ30bJareV0CajBCbmCibiAWZqcvjk1QWaYbN3PlAcGElYvCrb4QbI/qfNdG/PIGWjYEyQRc4f
+	M5WZohOQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1pDI-0000000FVkJ-0mAc;
-	Wed, 02 Sep 2026 17:57:32 +0000
-Received: from mail-southcentralusazlp170120001.outbound.protection.outlook.com ([2a01:111:f403:c10d::1] helo=SN4PR2101CU001.outbound.protection.outlook.com)
+	id 1x1pEm-0000000FWQa-3Ob6;
+	Wed, 02 Sep 2026 17:59:04 +0000
+Received: from mail-ej1-x62a.google.com ([2a00:1450:4864:20::62a])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1pDF-0000000FVj9-2xW0
+	id 1x1pEi-0000000FWNS-1KrG
 	for kexec@lists.infradead.org;
-	Wed, 02 Sep 2026 17:57:31 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tMiBmahXk31agWsWFWn7Wth4QipRQg2TvmMu5QB7Y6x8+9YyN+rVqO/iDJEgNbr4Z8fFQLcLCWARD27khEjzx7WsUI7IOZ4c5EGD+W+45z7XikSaVmtRYaX9+iutey22U3kw4TbnhAnZ2vTB5RV/dk157FwIAcdvYk53ecActKL+huk6ugPihwd7RaLIcn7U1ihciOL2PORxnKpDliebK742oLGgX5E59i+wYpVdEEP6uAp6dIE4o8QbnJf5VoOad0HcSnz+cG5vG3ire5ZUR+iilxirkx3JgPt+aefm1wCmvknDNj8w5J7oyCJvK0BiOeiPaonRCvgw++T/p81S8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BX+nrfmcjXNaxoIIwlqBQcZbjBTEfLxhDAVC8ShLeRY=;
- b=nCN9IlW49vPipwSnyk/2kpfYL5Y1ZygDV2gO2dkpPNGboJcPoBQX7k2HQ7Nj/ANdGOi33s4iGf+My9llqxkhZ9BYO57mNHZDfb7KAAljhaBybB+2aBnXAZjBoYVaclNtDxLZ+73V2fKxZEAUWp5Ln2QTzDT3KROK/AmW+VzTYhKmSyrFC7KnSFmrekyPkhRwrki3lqwCW1VYXGkqFcxRa9W98UDYl4y3jjnSPoSp85KQxGFMQPm/8cuHMNvQ0anRBaqnNCJ0cLlvqxg1HyBORUdtOU1dnGMbo/pkUBsrfV2a6XYvV/IZByWJ8F9spv+HmHOCoV7n6GW0aXzZVdiX8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BX+nrfmcjXNaxoIIwlqBQcZbjBTEfLxhDAVC8ShLeRY=;
- b=OMJvBiQlgUbqvgPqUVkwAqAjfZny3ZYsS3YEneHMTzqA5UIUm+om56TyU+9um1AwhU+QDD3RcXym0nuAnPrW2r5PTR9CVLmCNYWzYBl9DXfvi32Qz75q2obcbSRGhA9SuZ65lM/5rDq4G8tYCMvc8zTJouEK/kowNIJE5VCWLZDcH41RDQAUgNt46rvmLOThX2AJWQyQwPF/6mbFP0E8/9SuHoVY/ns6c31a1wOnNFcZ+p3ZZp5siJVwKV2ObD6y9Puh8ijv8FzEBRRaEcAOBH3RYkBnFE2nr+W427sGRUnNjQ4RkMLugfHGaVVj65U2Znw6jYQAW5x2L4WUvlh+Lw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7)
- by LV3PR12MB9166.namprd12.prod.outlook.com (2603:10b6:408:19c::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.382.10; Wed, 2 Sep
- 2026 17:57:17 +0000
-Received: from IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16]) by IA0PR12MB8374.namprd12.prod.outlook.com
- ([fe80::d85f:4c87:ae84:3f16%5]) with mapi id 15.21.0360.008; Wed, 2 Sep 2026
- 17:57:15 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Usama Arif <usama.arif@linux.dev>
-Cc: David Hildenbrand <david@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Lance Yang <lance.yang@linux.dev>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>,
- Kairui Song <kasong@tencent.com>, bhe@redhat.com, vgoyal@redhat.com,
- dyoung@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Baoquan He <baoquan.he@linux.dev>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Dave Young <ruirui.yang@linux.dev>,
- Shuah Khan <skhan@linuxfoundation.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- kexec@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 14/14] mm/page-flags: remove PG_private
-Date: Wed, 02 Sep 2026 13:57:12 -0400
-X-Mailer: MailMate (3.0r7027)
-Message-ID: <9A7F8677-8B08-4E91-B311-DC8C8602830E@nvidia.com>
-In-Reply-To: <20260902170928.2227054-1-usama.arif@linux.dev>
-References: <20260902170928.2227054-1-usama.arif@linux.dev>
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-MS-Reactions: disallow
-X-ClientProxiedBy: BN9PR03CA0498.namprd03.prod.outlook.com
- (2603:10b6:408:130::23) To IA0PR12MB8374.namprd12.prod.outlook.com
- (2603:10b6:208:40e::7)
+	Wed, 02 Sep 2026 17:59:03 +0000
+Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-c2530cabcf4so224532966b.0
+        for <kexec@lists.infradead.org>; Wed, 02 Sep 2026 10:58:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788371938; cv=none;
+        d=google.com; s=arc-20260327;
+        b=RuWF+RpO0XeHjyONr7kNKxmCRcMvtg91aDfiQO/TFf/7/MymyFMkdiqMrERzC8Re16
+         yPEvevy8YOFFhLOVVQJvG0DXHkdEfR/FEppmJ1QfLthDZmuzr/f0ZKGZaVxqJ+iJrBvk
+         B8qMgYDstyNLDlZVWiPE31C/n8SPBwfBO/ptTVXAd/wKUCTqzwzYmpbecmMbo7YYVLuH
+         zOuCv8ydkHfYLVnXzJotLbQ0STXtOUnwRzdMC5o0Dcd15KBHD6/dZhnsbostXh/BUx7y
+         9fQ2dAidq/n40jCvWpg4tDGWjSI6xpf9nScv38Bw1iGBijGbODhajiKrEUYpbqC6RypL
+         kNkg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=aR6tUSKjEF7/JBVWyl2P7FkIEO8VNHl2TDvZxaecF/s=;
+        fh=07xlls52zBG6dkI1Y2CZ3A+waCJGLbslAp1sFb4aIpc=;
+        b=bB2T2NeIuWzoD7qDet4/cPhvUTon+Bkqn+J8ogVu8o+v0NMAY1eV17tRSW1wdpanoF
+         H6Hn3ofMwyB2An1w8hNnb773aHaYe5J5+LhJZxt9XjnIlYjcIDUO9mjfzxvbm31J3cV5
+         P8CNSeg3zNSAamdOwyRQ7s2npxr/oSwdpphio6bsMYSOzUGI202KL1uNCzpH0/TTlvg7
+         zTF6uutfyNTU3OShB9A3aB/dTbvw0hWXqYOfjKhIJnt5Btt8nTBsWRllaJK5tpWugEbf
+         r0XNjOteWKHe5gNBwsG6tOFN5AK933PpATXjpOnm5/qTBcZO4ebbXm1WXxj4B1yXDfJh
+         jLAg==;
+        darn=lists.infradead.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1788371938; x=1788976738; darn=lists.infradead.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=aR6tUSKjEF7/JBVWyl2P7FkIEO8VNHl2TDvZxaecF/s=;
+        b=hdRUryoTigpqDuRo3MglBtSvfuYOjhFnlSqKk9D7ukHhqZ9jauDW7a9ZaWXGH5vStS
+         8TUFN0ilVJIBP82cwNeYma5IraGH24l4jxo3QolemDRF7abi6H1aCCgRNTpivLgUSnEc
+         hfk7EU8tmUI2LDwKgtHhyQ6/CUbXz6bphsmqvfviQ/W207i4VWNQ//7c5eL34Rdg6d0W
+         XelPE6s5gmjUMcLsKirvZAvRPJ1Q8oMH/9TqZgw5fd8zcNFHQXAV5XPfAaYjkT+T+5WM
+         AQjUN2Lbkdp+aBOcCoTiQ0/IWeTe6lqPOXXLEnx0lONa6hLvtUvf0teg3YAus3uvuG/t
+         UA7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788371938; x=1788976738;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=aR6tUSKjEF7/JBVWyl2P7FkIEO8VNHl2TDvZxaecF/s=;
+        b=ByB7EEUt4GAOd0h+Gksj/LQvWyfO8HuuqJXKsKw5K/1qKGS7/CMubdarSaI12N1riG
+         7CKGnUiOycTrnxd3WTCMIkKDUm0ROHIMDnm2XbRbp/sKALj33jNgd7Nr5Qo7Hl5hYqhe
+         u8fJx1no4xCOa2/n/TR+LmhHZWMzVmTpvJmncPv3HlvF9AqIebucSfMkuLCMIngmi1Nn
+         5LXPVq1D9tZ+6JuU56JB4YUAe8KIWmb9Mcmw/fNDHThBXQVg5jcJKCW/f3ad+IfBih7R
+         4RrEbS3aLkqLc2mZXSph1uoVApB52sezPwmtQcGskbbuSX0SXy+6591cqE5fg7IPMH4l
+         oqAQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwAn7SPaKGIQJug15NcEy+FEV+KVeQLRQaBH+//dalUsvAdGTcTbt45PfJwktxLO1uul4M6ng==@lists.infradead.org
+X-Gm-Message-State: AFuF++mcYaOCneSw3jhksPY0HMBS521lqunPcug6d3n6yovg6JC1VyER
+	owseMcZ7G44nsXbzb3IEAGEc2Ys0pWjC3c564tUfCvXv+xTtJ4+tLkgpnahplQAJntQW+iefAsl
+	eAgPlVqYvXQ+r5wYZmBh2JtlalblIjeJN994bUAX5
+X-Gm-Gg: AYBFou3PuTjv6x/ctnCm8BpIUQH8Vn+tNZ/29RAsZbt4iD++ZxHATXVh7uvAxk+D33O
+	2lrotRO2pDD+ozbDI6ESxs15WKj8WdOCdaIawjEP8ik7zV16fiJYVu8NDZCrfDV6ggLIaK9fB8Q
+	uY9eLaxBNH31cc7R5uoh1jXfQWjByt6j+DZ1yOAS78Mmssu3Rg2b7Q3yuhJ/PcmbCBXDJMqXDua
+	Vz/NG/zjBNCNnSNn2iYZpLsLZdLZEucsR0/TUJdbMnJGEjlqeMFHrjIyL/XR/22W6HqzTnN6Jh0
+	A/QAnsZAz37lXw7eyCGx8Sic7FrS3j4PDq71La7YGDmy9A==
+X-Received: by 2002:a17:907:72c4:b0:c16:3074:657f with SMTP id
+ a640c23a62f3a-c25d52b487bmr386936566b.9.1788371937608; Wed, 02 Sep 2026
+ 10:58:57 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR12MB8374:EE_|LV3PR12MB9166:EE_
-X-MS-Office365-Filtering-Correlation-Id: 116ed408-a7b9-4568-ef53-08df091b9f8a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|23010399003|366016|7416014|10067099003|6133799003|18002099003|22082099003|56012099006|5023799004|11063799006;
-X-Microsoft-Antispam-Message-Info: mxEdFtoZCegLj1M18i8mALhHe87irVmplB+qc/mkWBN0CrVVYN50Ll2LqpuD49XtxANAiove8JsiMXMfAdGm02ooEZ7GdJ7P6+DJhikLgCDdU3dp/68xGgbYFQ+ev13ZaWQz9YD3h6qEwQBWgXEQyp5yOlbGci9XdXhrWCACe2qEaA+3Xp/7BPdy9MwDzHpuytL7V5iCQAQlU96+0fWZzCtU7OBDEPN7ydyQMsMsWrW2qjEa5lGnR4ZUnZqY3J0PsltFcR5xeO2Aga7WtvWZOwXwDiqOe0xrgaSVzLqauqGPMsmn6mekRWg/s4NLDQwWip9EtmDT0ky2/lCVsyXlqr5FYcymi1l95xjmJQtgoS3UCCu3fy2t5EHRzc5K9g5r8t2mO/yCcuVEcWFhSXb3ktFozp7157ujX0UKzFHXKJpCsZfvbGwmvb1Q4EL/tDv/mjKPEw9w7bLtxjrJ/MUgS3S5R2B/WnuMNa6hpsQgw7nbSNINhqJK3XiM/tVfCeNhkUDN+39k0ZJfKgI1swdG5t7S409VmB89ClB/fsd+wwihGSF6gvZ2YEcNoWAs8AErXUa0y4zVeBMpjfCjSY85eZT1wo60b6hMEn7z5swLQlOcWNNO5RKK6x4WsfBWuIfcBKh89htCkluInP7Vwwnb1ySLiyTGv/Ai+Fk3zVlG0jU=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8374.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(23010399003)(366016)(7416014)(10067099003)(6133799003)(18002099003)(22082099003)(56012099006)(5023799004)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?OWts1b110W0MyRegJjRax6wXrH3uoafA6h6xM+XFFsnVj7E4Rw4FArl4HRpN?=
- =?us-ascii?Q?6e/ie7UbmQgtPxsLLcv8HgllHH80oE2+m7Rt1hEwV6LdvNk4716raKiW/i6d?=
- =?us-ascii?Q?q9dwFVBpi38hv5XWu76DjA4170GQZwxyLtJYneY8k1PywWD+1ekCLcLMqCMk?=
- =?us-ascii?Q?VpTeiYhlBHvsjsPdWFMKC5PL4i7aWkDZ7A5SCl5lyhUNQrcqLap86NkAKrM8?=
- =?us-ascii?Q?AYBABgICIojd/NU9d7gydnA9q/H16IhpxkmueLMUiiYJRrstoaEnRaroghUJ?=
- =?us-ascii?Q?qwJh8GfjM1O2sKJxrwzMbleFaubFfVVKhpNXAWRh1gaMfkYBxzVOOyJllnpw?=
- =?us-ascii?Q?TYRh5QiLB8z3fNAKI42ytjbq9eW3Mhf1FGO6RlOUGSmAPf6bqYUmRkeOLLke?=
- =?us-ascii?Q?9J+B2fhaCBa+mjepCUmqVX8sA8O+bLFvAASlnNorcDQrRv9JCp7HaJ9ueF0c?=
- =?us-ascii?Q?bSIatBkBTYF0JfMhZir5DjN69jC8HjtIgY1lT1Ss06CvFgxUFriuU5wTZk+A?=
- =?us-ascii?Q?7N9+SxFpUQsdaFuskjQh2mZkCLRR8E8TbqLME1Ha/NMacbMAGt4aGsEGF903?=
- =?us-ascii?Q?zzZb6sg4UUutWpASiOkMrcD8UgY6iZBnMSvEgyaNHyWE83u8hexfmY1zV9Lp?=
- =?us-ascii?Q?CO8cDO0Ll0r/5PfMLXt8AfSEb7kbpV6Qp60k9vh9dAI9EkpPjV5pO2+l2v36?=
- =?us-ascii?Q?0orRO2Uhh7An75mIp5sB5TQzB0LiSJdTez62tViodQv58TUPPqth2l9jV0nF?=
- =?us-ascii?Q?AbwDm9XdKrEbX+YSYH5/itwE9mU0WR5rkPB9NdchC1Rr8r2CTWYT+QgNA61I?=
- =?us-ascii?Q?qbKcmG6AY46iDO7t3P3NKUw5pZs1jweAeDakc3ewmGS6qVoXmL0/Dd8uTGiG?=
- =?us-ascii?Q?3/geSmV/gZCyK4b6PHVLE+OjbXsVgYGrWKBE0lKmfX+NAtt6MeWkdSFNgKyt?=
- =?us-ascii?Q?ekLq5lX865XVYG21WCUdM5iqF7iVVHkLhN8tp57grgIQYofk0LVV0/EbhtOh?=
- =?us-ascii?Q?ive5iiC9g5bqeo+Ae6fnRpnkhS94qjehrI8ZzVBE1EoyYA9yUg5lSs4HMgl/?=
- =?us-ascii?Q?6MdYV8k+IEyaoDHtO9lkVDlXMCKLWYd8e59IQCXvGXrbYoFlcYtW+iNVN96O?=
- =?us-ascii?Q?ugz4Zs/VCP3/Ndyx/DdNbD23F7MfLBYOc1CfjZo4JHYoYfU7CApbKT/Iua13?=
- =?us-ascii?Q?JIm05AOCV0c3GGvDAbyLJz1Xp9r7CJX/CXM7Mmui5i85jSGanCADHVWisGwc?=
- =?us-ascii?Q?a1mlJJcmis0RRmQfleYAg6fOV6SbMC+7Snyt+XFnM3zR8EzV8Oq8CQmdPohr?=
- =?us-ascii?Q?3qJ0/qKH1sBnm8/lC2YIqxOa6ZeqfaWbO7xZ3zoZqow1pYZHzjpEBEDRNtqR?=
- =?us-ascii?Q?VddWAJ9VuTFF0iLg8sE8ZWZYRWYgDPna5hX5HHklunU19qkZGRruEtWxXK64?=
- =?us-ascii?Q?5obaxDkq4KTpdzBXl/W+PcPrUSWugOs2/pylNNoCBc+yekpHn4BJlS7ULjE+?=
- =?us-ascii?Q?4E8QaTK2CPncb3IHvvVCXHVntlXK7aomXazJmm+4LIRwGcKbRn2ARbDXB+ZA?=
- =?us-ascii?Q?tUW3Hjcxs+iLupkW0SAdQAP7Tqcbs8W4tqBnZvFaEiKIlhLDerkoknEb3D1z?=
- =?us-ascii?Q?qmw8E5xcIQLCXMnDptoZ1AmiJpbQHO2iw0i82rj/UmyZLvPAk0C2sDuwWvau?=
- =?us-ascii?Q?wNsmvIlv0V9ZOJsYmCHJS20SEBoeMae10eib14IBtuWPR/jNMIeO5VPw7/EY?=
- =?us-ascii?Q?xO0qoMZlVg=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 116ed408-a7b9-4568-ef53-08df091b9f8a
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8374.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2026 17:57:15.8213
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LAfb34tefFSDoffWUnF3I+upDhmdWwHhVmZt/CCxYCwsI4fStXyCjPgRd6cnsaho
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9166
+References: <CALzav=eL-cARsaH4AO4PzeOPNDmTHpCZbYh9yX_U8pbz96qdTQ@mail.gmail.com>
+ <apenOdHJmH_VeD-X@kernel.org> <ape5s5tdwV6WwPih@fedora> <apfYhLD0sHt2odi8@kernel.org>
+ <apfdhh0YYwo4am7A@fedora> <2vxzqzjcxb8r.fsf@kernel.org>
+In-Reply-To: <2vxzqzjcxb8r.fsf@kernel.org>
+From: David Matlack <dmatlack@google.com>
+Date: Wed, 2 Sep 2026 10:58:29 -0700
+X-Gm-Features: AcwNN1UuOv44xL9vMuNSoZmdDOtn5yCTuliGWAwyAN4y08Io6iZDQiK6ph6V1BA
+Message-ID: <CALzav=cE2AGXDAA4PCcohzqKwQNOZYEo4j33H6HxpMPX9Sdz0g@mail.gmail.com>
+Subject: Re: RFC: Enable Sashiko code reviews for kexec@lists.infradead.org
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Baoquan He <baoquan.he@linux.dev>, Mike Rapoport <rppt@kernel.org>, kexec@lists.infradead.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Dave Young <ruirui.yang@linux.dev>, Alexander Graf <graf@amazon.com>, 
+	Roman Gushchin <roman.gushchin@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260902_105729_802552_A213B792 
-X-CRM114-Status: GOOD (  22.63  )
+X-CRM114-CacheID: sfid-20260902_105900_406175_82E51C8A 
+X-CRM114-Status: GOOD (  54.97  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -159,211 +121,135 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2 Sep 2026, at 13:09, Usama Arif wrote:
-
-> On Mon, 31 Aug 2026 15:25:37 -0400 Zi Yan <ziy@nvidia.com> wrote:
+On Wed, Sep 2, 2026 at 2:18=E2=80=AFAM Pratyush Yadav <pratyush@kernel.org>=
+ wrote:
 >
->> folio->private !=3D NULL indicates a folio carries private data, repla=
-cing
->> PG_private. All PG_private users are converted. Remove PG_private and
->> reserve the space as __PG_folio for future use.
->>
->> Also update files in Documentation. hugetlbfs_reserv.rst is outdated a=
-nd
->> left unchanged. It should be rewritten.
->>
->> Assisted-by: Claude:claude-opus-4-8
->> Assisted-by: Codex:gpt-5
->> Signed-off-by: Zi Yan <ziy@nvidia.com>
->> To: Andrew Morton <akpm@linux-foundation.org>
->> To: Baoquan He <baoquan.he@linux.dev>
->> To: Mike Rapoport <rppt@kernel.org>
->> To: Pasha Tatashin <pasha.tatashin@soleen.com>
->> To: Pratyush Yadav <pratyush@kernel.org>
->> To: Jonathan Corbet <corbet@lwn.net>
->> To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
->> To: Jan Kara <jack@suse.cz>
->> To: David Hildenbrand <david@kernel.org>
->> To: Steven Rostedt <rostedt@goodmis.org>
->> To: Masami Hiramatsu <mhiramat@kernel.org>
->> Cc: Dave Young <ruirui.yang@linux.dev>
->> Cc: Shuah Khan <skhan@linuxfoundation.org>
->> Cc: Lorenzo Stoakes <ljs@kernel.org>
->> Cc: "Liam R. Howlett" <liam@infradead.org>
->> Cc: Vlastimil Babka <vbabka@kernel.org>
->> Cc: Suren Baghdasaryan <surenb@google.com>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
->> Cc: kexec@lists.infradead.org
->> Cc: linux-doc@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Cc: linux-fsdevel@vger.kernel.org
->> Cc: linux-mm@kvack.org
->> Cc: linux-trace-kernel@vger.kernel.org
->> ---
->>  Documentation/admin-guide/kdump/vmcoreinfo.rst |  2 +-
->>  Documentation/filesystems/vfs.rst              |  6 +++---
->>  include/linux/page-flags.h                     | 19 ++---------------=
---
->>  include/trace/events/mmflags.h                 |  2 +-
->>  kernel/vmcore_info.c                           |  1 -
->>  5 files changed, 7 insertions(+), 23 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Document=
-ation/admin-guide/kdump/vmcoreinfo.rst
->> index 7663c610fe901..5f1df6d080508 100644
->> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
->> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
->> @@ -325,7 +325,7 @@ NR_FREE_PAGES
->>  On linux-2.6.21 or later, the number of free pages is in
->>  vm_stat[NR_FREE_PAGES]. Used to get the number of free pages.
->>
->> -PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_hwpoison|PG_head_mask=
-
->> +PG_lru|PG_swapcache|PG_swapbacked|PG_hwpoison|PG_head_mask
->>  ---------------------------------------------------------------------=
------
->>
->>  Page attributes. These flags are used to filter various unnecessary f=
-or
->> diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesys=
-tems/vfs.rst
->> index d3a93eec3945f..dec7816303c6a 100644
->> --- a/Documentation/filesystems/vfs.rst
->> +++ b/Documentation/filesystems/vfs.rst
->> @@ -649,8 +649,8 @@ Writeback.
->>
->>  The first can be used independently to the others.  The VM can try to=
-
->>  release clean pages in order to reuse them.  To do this it can call
->> -->release_folio on clean folios with the private
->> -flag set.  Clean pages without PagePrivate and with no external refer=
-ences
->> +->release_folio on clean folios with folio->private set. Clean pages
->> +without folio->private set and with no external references
->>  will be released without notice being given to the address_space.
->>
->>  To achieve this functionality, pages need to be placed on an LRU with=
-
->> @@ -674,7 +674,7 @@ filemap_fdatawait_range, to wait for all writeback=
- to complete.
->>
->>  An address_space handler may attach extra information to a page,
->>  typically using the 'private' field in the 'struct page'.  If such
->> -information is attached, the PG_Private flag should be set.  This wil=
-l
->> +information is attached, non-NULL 'private' field will
->>  cause various VM routines to make extra calls into the address_space
->>  handler to deal with that data.
->>
->> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
->> index 9b585e68127a2..eb2961ed61018 100644
->> --- a/include/linux/page-flags.h
->> +++ b/include/linux/page-flags.h
->> @@ -44,10 +44,6 @@
->>   * Consequently, PG_reserved for a page mapped into user space can in=
-dicate
->>   * the zero page, the vDSO, MMIO pages or device memory.
->>   *
->> - * The PG_private bitflag is set on pagecache pages if they contain f=
-ilesystem
->> - * specific data (which is normally at page->private). It can be used=
- by
->> - * private allocations for its own usage.
->> - *
->>   * During initiation of disk I/O, PG_locked is set. This bit is set b=
-efore I/O
->>   * and cleared when writeback _starts_ or when read _completes_. PG_w=
-riteback
->>   * is set before writeback starts and cleared when it finishes.
->> @@ -105,7 +101,7 @@ enum pageflags {
->>  	PG_owner_2,		/* Owner use. If pagecache, fs may use */
->>  	PG_arch_1,
->>  	PG_reserved,
->> -	PG_private,		/* If pagecache, has fs-private data */
->> +	__PG_folio,		/* Do not use: reserved for folio identification */
->>  	PG_private_2,		/* If pagecache, has fs aux data */
->>  	PG_reclaim,		/* To be reclaimed asap */
->>  	PG_swapbacked,		/* Page is backed by RAM/swap */
->> @@ -576,7 +572,7 @@ FOLIO_FLAG(swapbacked, FOLIO_HEAD_PAGE)
->>  /*
->>   * Private page markings that may be used by the filesystem that owns=
- the page
->>   * for its own purposes.
->> - * - PG_private and PG_private_2 cause release_folio() and co to be i=
-nvoked
->> + * - folio->private and PG_private_2 cause release_folio() and co to =
-be invoked
->>   */
->>
->>  static __always_inline bool folio_test_private(const struct folio *fo=
-lio)
->> @@ -584,17 +580,6 @@ static __always_inline bool folio_test_private(co=
-nst struct folio *folio)
->>  	return folio->private;
->>  }
->>
->> -static __always_inline int PagePrivate(const struct page *page)
->> -{
->> -	return !!page->private;
->> -}
->> -
->> -/* no-ops during transition */
->> -static __always_inline void folio_set_private(struct folio *folio) { =
-}
->> -static __always_inline void folio_clear_private(struct folio *folio) =
-{ }
->> -static __always_inline void SetPagePrivate(struct page *page) { }
->> -static __always_inline void ClearPagePrivate(struct page *page) { }
->> -
->>  FOLIO_FLAG(private_2, FOLIO_HEAD_PAGE)
->>
->>  /* owner_2 can be set on tail pages for anon memory */
->> diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmf=
-lags.h
->> index 935893e5ea53b..caf090cd6f85e 100644
->> --- a/include/trace/events/mmflags.h
->> +++ b/include/trace/events/mmflags.h
->> @@ -144,7 +144,7 @@ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
->>  	DEF_PAGEFLAG_NAME(owner_2),					\
->>  	DEF_PAGEFLAG_NAME(arch_1),					\
->>  	DEF_PAGEFLAG_NAME(reserved),					\
->> -	DEF_PAGEFLAG_NAME(private),					\
->> +	{ 1UL << __PG_folio, "folio" },					\
->>  	DEF_PAGEFLAG_NAME(private_2),					\
->>  	DEF_PAGEFLAG_NAME(writeback),					\
->>  	DEF_PAGEFLAG_NAME(head),					\
->> diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
->> index 8614430ca212a..5a417f8a922ab 100644
->> --- a/kernel/vmcore_info.c
->> +++ b/kernel/vmcore_info.c
->> @@ -216,7 +216,6 @@ static int __init crash_save_vmcoreinfo_init(void)=
-
->>  	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
->>  	VMCOREINFO_NUMBER(NR_FREE_PAGES);
->>  	VMCOREINFO_NUMBER(PG_lru);
->> -	VMCOREINFO_NUMBER(PG_private);
->>  	VMCOREINFO_NUMBER(PG_swapcache);
->>  	VMCOREINFO_NUMBER(PG_swapbacked);
->>  #define PAGE_SLAB_MAPCOUNT_VALUE	(PGTY_slab << 24)
+> +Cc Roman because I am complaining about Sashiko ;-)
 >
-> + kdump maintainers and reviewers.
+> On Wed, Sep 02 2026, Baoquan He wrote:
+>
+> > On 09/02/26 at 11:04am, Mike Rapoport wrote:
+> >> Hi Baoquan,
+> >>
+> >> On Wed, Sep 02, 2026 at 01:52:51PM +0800, Baoquan He wrote:
+> >> > On 09/02/26 at 07:34am, Mike Rapoport wrote:
+> >> > > On Tue, Sep 01, 2026 at 01:27:34PM -0700, David Matlack wrote:
+> >> > > > Hi kexec@ mailing list and maintainers,
+> >> > > >
+> >> > > > I would like to enable Sashiko code reviews for patches sent to =
+the
+> >> > > > kexec mailing list. I have found it useful for patches I have se=
+nt and
+> >> > > > reviewed on the kvm and linux-pci mailing lists, which have Sash=
+iko
+> >> > > > enabled.
+> >> > > >
+> >> > > > I sent a pull request to Sashiko to add kexec here:
+> >> > > >
+> >> > > >   https://github.com/sashiko-dev/sashiko/pull/474
+> >> > >
+> >> > > diff --git a/sashiko.dev/email_policy.toml b/sashiko.dev/email_pol=
+icy.toml
+> >> > > index e6e4fb57f..e9ad97708 100644
+> >> > > --- a/sashiko.dev/email_policy.toml
+> >> > > +++ b/sashiko.dev/email_policy.toml
+> >> > > @@ -175,6 +175,12 @@ reply_to_author =3D false
+> >> > >  cc_individuals =3D false
+> >> > >  cc =3D ["Chuck Lever <cel@kernel.org>", "Jeff Layton <jlayton@ker=
+nel.org>", "Anna Schumaker <anna@kernel.org>"]
+> >> > >
+> >> > > +[subsystems.kexec]
+> >> > > +lists =3D ["kexec@lists.infradead.org"]
+> >> > > +reply_to_author =3D true
+> >> > > +send_positive_review =3D true
+> >> > >
+> >> > > Do we really want those?
+> >> >
+> >> > Some components don't want to CC list, then other people are welcome=
+ to
+> >> > drop any comment during reviewing, while cc to maintainer and author
+> >> > looks good to me. Just an input, no objection to any move.
+> >>
+> >> Sorry, I wasn't clear, I meant do we really want extra emails saying
+> >> sashiko is happy?
+> >
+> > Oh, sorry. I misunderstood, I thought you had agreed to introduce
+> > sashiko to part of list/author/maintainer or all.
+> >
+> > I think there are two different ways and they have different impact:
+> >
+> > 1) CC list (CC author and maintainer can be ignored beause all people
+> > can see it)
+>
+> This is a side topic, but if we only Cc the list then Sashiko won't Cc
+> the other people in the thread, like the usual "reply to all" every mail
+> clients does. It will _only_ Cc the list. See [0] for example.
+>
+> I don't think that is a good idea, because Sashiko might complain about
+> something, and then the patch author can reply to the complaint. People
+> who are not subscribed to the list will neither see Sashiko's complaint
+> nor the author's response. So they lose a useful part of the patch
+> review process.
+>
+> I am one of those people. I don't subscribe to any mailing lists and
+> instead use lei [1] to fetch them. I treat my inbox as the primary
+> stream of patches, and then glance at the lists every now and then. If I
+> get some patches in my inbox but then I don't get any of the follow-ups
+> from the author to Sashiko, that's annoying. Sure, I might see them on
+> the list later, but it is still annoying.
+>
+> And of course, there might be patches that touch multiple subsystems and
+> maintainers of that subsystem might not subscribe to or track kexec@ at
+> all. So they will entirely miss the conversation.
+>
+> If Sashiko is useful enough to send replies on the list, then I think it
+> is useful enough to reply to everyone.
 
-Thanks.
+It looks like this can be configured:
+
+ - reply_all=3Dtrue will have Sashiko reply to everyone on the To/Cc line.
+ - cc_individuals=3Dtrue will have Sashiko include all inidividuals from th=
+e
+   To/Cc line of the original patch.
 
 >
-> I believe makedumpfile reads VMCOREINFO. Removing it here, might cause =
-issues
-> for older makedumpfile versions at crashdump?
-
-The expectation is that kdump userspace tools will adapt to this change.
-Later, PG_folio will be added to identify folios and has the same value
-of PG_private, so preserving PG_private will not work then.
+> IIRC some people have complained in the past about automatically getting
+> replies from Sashiko so maybe that is why this behaviour exists? Roman,
+> is that correct? Is there any appetite yet to change that behaviour?
 >
-> Hopefully kdump folks will be able to comment better.
-
-
-
-Best Regards,
-Yan, Zi
+> Or could we perhaps have an unsubscribe mechanism where people who don't
+> want to see anything from Sashiko can unsubscribe themselves and Sashiko
+> will skip them when replying?
+>
+> [0] https://lore.kernel.org/kvm/20260902072059.90ADC1F000E9@smtp.kernel.o=
+rg/
+> [1] https://public-inbox.org/lei.txt
+>
+> >   This equals to cc author and push other reviewers away. And no
+> >   reviewers will be patient and curious enough to check the sashiko
+> >   report except of maintainers. Because maintainers need pick patch
+> >   and may check if all reported issues are handled;
+> >
+> > 2) Cc maintainers when patch is cooked
+> >   Maintainers tell patch author to check the report. Maybe CC patch
+> >   author directly can save maintainers' effort.
+> >
+> > I personally think 2) is good. About whether introducing sashiko,
+> > I would vote yes. I buy token by myself, sashiko would be a plus.
+>
+> FWIW, Sashiko already tracks the kexec@ list and you can see all the
+> patches in the web interface [2]. So you don't need to burn your tokens
+> on reviewing kexec patches ;-)
+>
+> What David is proposing is to send those reviews to the list.
+>
+> [2] https://sashiko.dev/#/?list=3Dorg.infradead.lists.kexec
+>
+> >
+> > Thanks
+> > Baoquan
+>
+> --
+> Regards,
+> Pratyush Yadav
 
