@@ -4,67 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0293CC624D0
-	for <kexec@archiver.kernel.org>; Wed,  2 Sep 2026 09:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 73260C624D0
+	for <kexec@archiver.kernel.org>; Wed,  2 Sep 2026 10:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ajHupntF/zlDXKUve2FSsO4qQJ74hiwygPHwpZqa29o=; b=firyvGvcLsTj21dZP0PZvvJ5TC
-	+A7C8onFUCFykJogX6xns1oJQdkfRO/g9wxKJ0ZJvE3RKPhRgH2kvdYbb8/+jrvD4e6hnKQ7eVyui
-	3uVYXCnlvYH93TPozuxD+lZ6Gkty9xvYUo2WZZdJHp3HK2Y770oeomoQuIIINd+XiPtznmxSlrAGK
-	23r8iI6EUQtBkug9F+Vz8nhKf2LMBFpzIIRROz2EEkDzCYaV2rQ4gYMpKu/UDiygu6gHwDDzHZoyT
-	xyKB1EpUhisyrOD1UV4Y1dp7oVP4BERrjmEu9rSUgUBW9CDNkf9WPjx8CNyd+2OUE2q4TpXVpa6aB
-	XqUO1GBA==;
+	:List-Post:List-Archive:List-Unsubscribe:List-Id:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=5muCGImxQEXCs9mgbU84wjK603R7oDB3KGXYhDYZoIc=; b=DCE7CuFk2NoDe4L7YyPz1zDZue
+	qG1P+dLd8x7dFD8DGYZPAOiCkDTGtOU/6LVOU5+Hm5bLnb827zZjVy2KefvaqvOurXACOYbHPrS7z
+	YoSYI4ltCAs9LY0I5lXF2rZDwMX72j5lPYH8akjZsPKo4pC0Pa1o1tDbHKb+7TTiaBWKzOoLSNmiw
+	V6ZUsVEqYShwvGHVwUIhtquzPAKGOZmzhfk14lzCyQ8L+80cxojTiaTWR/hNXYwFS+By3WMBXZQw6
+	JVNpzhyTxl/YKmSJDHGBnrsSJIaoP3psaIi/Bpd+OsO42HL5R8WbSxPaxBFMJ97pLqHhX6A8zdj+u
+	CKYj9TPA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1heo-0000000EGrr-0aJO;
-	Wed, 02 Sep 2026 09:53:26 +0000
-Received: from out-34.mta0.migadu.com ([2001:41d0:1004:224b::22] helo=mta0.migadu.com)
+	id 1x1hmV-0000000EIxy-2hzk;
+	Wed, 02 Sep 2026 10:01:23 +0000
+Received: from canpmsgout12.his.huawei.com ([113.46.200.227])
 	by bombadil.infradead.org with esmtps (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x1hek-0000000EGqd-1kNt
-	for kexec@lists.infradead.org;
-	Wed, 02 Sep 2026 09:53:24 +0000
-X-Envelope-To: kexec@lists.infradead.org
-DKIM-Signature: a=rsa-sha256; bh=rQTA5ht8YMdQlBcn0mb5vIvC0nr1C4Fz+07+l6/g1zE=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1788342799; v=1; x=1788947599;
- b=IYmj95Qw41i9dHv6k6UxEYihAuAD+sQO56Q++EDShRfHsVHV2pgFFFVfahH+18jzjsJdP0+E
- xqSlte6RgMV2+k6GoZDPzGpJJoT4uSyq57o0Jwp2OeAG00jjyMvLuPZDV5b4614j/octVTtplB2
- R/srN8B/Jj18OlXWzhx5QPw8=
-X-Envelope-To: kexec@lists.infradead.org
-Received: by mta11.migadu.com with ESMTPS id fa9db46d4987209e;
-	Wed, 02 Sep 2026 09:53:19 +0000
-X-Mizu-Trace-ID: fa9db46d4987209e
-X-Migadu-Flow: FLOW_OUT
-Date: Wed, 2 Sep 2026 17:53:11 +0800
-From: Baoquan He <baoquan.he@linux.dev>
-To: Pratyush Yadav <pratyush@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>, David Matlack <dmatlack@google.com>,
-	kexec@lists.infradead.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Dave Young <ruirui.yang@linux.dev>,
-	Alexander Graf <graf@amazon.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>
-Subject: Re: RFC: Enable Sashiko code reviews for kexec@lists.infradead.org
-Message-ID: <apfyB_5MIK7VieNw@fedora>
-References: <CALzav=eL-cARsaH4AO4PzeOPNDmTHpCZbYh9yX_U8pbz96qdTQ@mail.gmail.com>
- <apenOdHJmH_VeD-X@kernel.org>
- <ape5s5tdwV6WwPih@fedora>
- <apfYhLD0sHt2odi8@kernel.org>
- <apfdhh0YYwo4am7A@fedora>
- <2vxzqzjcxb8r.fsf@kernel.org>
+	id 1x1hmT-0000000EIxB-0nKW;
+	Wed, 02 Sep 2026 10:01:22 +0000
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=5muCGImxQEXCs9mgbU84wjK603R7oDB3KGXYhDYZoIc=;
+	b=1OKXC1WlAcuXvATuYy9843J+ts23aqDRPtEBmymokcm2wcDFN7n+VLXs5YlFtuuOI17YRGOle
+	AE1kaDyBL8Psb6qsvqP6GD+2KaR9IZFlJSaA9VKKZKh4vJ8pLjxN4lSw5BvQVM6ddEVaTK1WC49
+	5AuTsqZ1V1GNz92YBNN1IQA=
+Received: from mail.maildlp.com (unknown [172.19.163.163])
+	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hZdHw4T64znTwN;
+	Wed,  2 Sep 2026 17:50:04 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id C74E54057A;
+	Wed,  2 Sep 2026 18:01:17 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 2 Sep 2026 18:01:15 +0800
+Message-ID: <d12302b0-f0b3-4df6-963c-bf25b6e720c7@huawei.com>
+Date: Wed, 2 Sep 2026 18:01:14 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2vxzqzjcxb8r.fsf@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 12/17] x86/crash: Use num_possible_cpus() for
+ elfcorehdr size
+To: Sourabh Jain <sourabhjain@linux.ibm.com>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <mark.rutland@arm.com>, <chenhuacai@kernel.org>,
+	<kernel@xen0n.name>, <maddy@linux.ibm.com>, <mpe@ellerman.id.au>,
+	<npiggin@gmail.com>, <chleroy@kernel.org>, <tglx@kernel.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <akpm@linux-foundation.org>, <baoquan.he@linux.dev>,
+	<rppt@kernel.org>, <pasha.tatashin@soleen.com>, <pratyush@kernel.org>,
+	<ruirui.yang@linux.dev>, <kees@kernel.org>, <thuth@redhat.com>,
+	<gshan@redhat.com>, <jic23@kernel.org>, <james.morse@arm.com>,
+	<ardb@kernel.org>, <leitao@debian.org>, <yeoreum.yun@arm.com>,
+	<coxu@redhat.com>, <tangyouling@kylinos.cn>, <hbathini@linux.ibm.com>,
+	<adityag@linux.ibm.com>, <ionut.nechita@windriver.com>,
+	<liaoyuanhong@vivo.com>, <seanjc@google.com>, <fuqiang.wang@easystack.cn>,
+	<makb@juniper.net>, <piliu@redhat.com>, <ebiggers@kernel.org>,
+	<jbouron@amazon.com>, <mclapinski@google.com>, <me@linux.beauty>,
+	<graf@amazon.com>, <bgwin@google.com>, <robh@kernel.org>,
+	<takahiro.akashi@linaro.org>, <palmer@rivosinc.com>, <x86@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
+	<kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-mm@kvack.org>
+References: <20260826092541.3905933-1-ruanjinjie@huawei.com>
+ <20260826092541.3905933-13-ruanjinjie@huawei.com>
+ <99b1121d-4277-4764-8c3a-b3f6d9a47ab0@linux.ibm.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <99b1121d-4277-4764-8c3a-b3f6d9a47ab0@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.109.254]
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.9.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20260902_025322_883696_F5FE4069 
-X-CRM114-Status: GOOD (  52.64  )
+X-CRM114-CacheID: sfid-20260902_030121_545687_35F1E08A 
+X-CRM114-Status: GOOD (  15.68  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,125 +97,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 09/02/26 at 11:18am, Pratyush Yadav wrote:
-> +Cc Roman because I am complaining about Sashiko ;-)
-> 
-> On Wed, Sep 02 2026, Baoquan He wrote:
-> 
-> > On 09/02/26 at 11:04am, Mike Rapoport wrote:
-> >> Hi Baoquan,
-> >> 
-> >> On Wed, Sep 02, 2026 at 01:52:51PM +0800, Baoquan He wrote:
-> >> > On 09/02/26 at 07:34am, Mike Rapoport wrote:
-> >> > > On Tue, Sep 01, 2026 at 01:27:34PM -0700, David Matlack wrote:
-> >> > > > Hi kexec@ mailing list and maintainers,
-> >> > > > 
-> >> > > > I would like to enable Sashiko code reviews for patches sent to the
-> >> > > > kexec mailing list. I have found it useful for patches I have sent and
-> >> > > > reviewed on the kvm and linux-pci mailing lists, which have Sashiko
-> >> > > > enabled.
-> >> > > > 
-> >> > > > I sent a pull request to Sashiko to add kexec here:
-> >> > > > 
-> >> > > >   https://github.com/sashiko-dev/sashiko/pull/474
-> >> > > 
-> >> > > diff --git a/sashiko.dev/email_policy.toml b/sashiko.dev/email_policy.toml
-> >> > > index e6e4fb57f..e9ad97708 100644
-> >> > > --- a/sashiko.dev/email_policy.toml
-> >> > > +++ b/sashiko.dev/email_policy.toml
-> >> > > @@ -175,6 +175,12 @@ reply_to_author = false
-> >> > >  cc_individuals = false
-> >> > >  cc = ["Chuck Lever <cel@kernel.org>", "Jeff Layton <jlayton@kernel.org>", "Anna Schumaker <anna@kernel.org>"]
-> >> > >  
-> >> > > +[subsystems.kexec]
-> >> > > +lists = ["kexec@lists.infradead.org"]
-> >> > > +reply_to_author = true
-> >> > > +send_positive_review = true
-> >> > > 
-> >> > > Do we really want those?
-> >> > 
-> >> > Some components don't want to CC list, then other people are welcome to
-> >> > drop any comment during reviewing, while cc to maintainer and author
-> >> > looks good to me. Just an input, no objection to any move.
-> >> 
-> >> Sorry, I wasn't clear, I meant do we really want extra emails saying
-> >> sashiko is happy?
-> >
-> > Oh, sorry. I misunderstood, I thought you had agreed to introduce
-> > sashiko to part of list/author/maintainer or all.
-> >
-> > I think there are two different ways and they have different impact:
-> >
-> > 1) CC list (CC author and maintainer can be ignored beause all people
-> > can see it)
-> 
-> This is a side topic, but if we only Cc the list then Sashiko won't Cc
-> the other people in the thread, like the usual "reply to all" every mail
-> clients does. It will _only_ Cc the list. See [0] for example.
-> 
-> I don't think that is a good idea, because Sashiko might complain about
-> something, and then the patch author can reply to the complaint. People
-> who are not subscribed to the list will neither see Sashiko's complaint
-> nor the author's response. So they lose a useful part of the patch
-> review process.
-> 
-> I am one of those people. I don't subscribe to any mailing lists and
-> instead use lei [1] to fetch them. I treat my inbox as the primary
-> stream of patches, and then glance at the lists every now and then. If I
-> get some patches in my inbox but then I don't get any of the follow-ups
-> from the author to Sashiko, that's annoying. Sure, I might see them on
-> the list later, but it is still annoying.
-> 
-> And of course, there might be patches that touch multiple subsystems and
-> maintainers of that subsystem might not subscribe to or track kexec@ at
-> all. So they will entirely miss the conversation.
-> 
-> If Sashiko is useful enough to send replies on the list, then I think it
-> is useful enough to reply to everyone.
-> 
-> IIRC some people have complained in the past about automatically getting
-> replies from Sashiko so maybe that is why this behaviour exists? Roman,
-> is that correct? Is there any appetite yet to change that behaviour?
-> 
-> Or could we perhaps have an unsubscribe mechanism where people who don't
-> want to see anything from Sashiko can unsubscribe themselves and Sashiko
-> will skip them when replying?
-> 
-> [0] https://lore.kernel.org/kvm/20260902072059.90ADC1F000E9@smtp.kernel.org/
-> [1] https://public-inbox.org/lei.txt
-> 
-> >   This equals to cc author and push other reviewers away. And no
-> >   reviewers will be patient and curious enough to check the sashiko
-> >   report except of maintainers. Because maintainers need pick patch
-> >   and may check if all reported issues are handled;
-> >
-> > 2) Cc maintainers when patch is cooked
-> >   Maintainers tell patch author to check the report. Maybe CC patch
-> >   author directly can save maintainers' effort. 
-> >
-> > I personally think 2) is good. About whether introducing sashiko, 
-> > I would vote yes. I buy token by myself, sashiko would be a plus.
-> 
-> FWIW, Sashiko already tracks the kexec@ list and you can see all the
-> patches in the web interface [2]. So you don't need to burn your tokens
-> on reviewing kexec patches ;-)
 
-Thats's cool and it's enough. No, I am not saying sashiko will save
-tokens for maintainers. I meant if people post patches, sashiko can
-review and report from different models' side, that save patch authors'
-tokens to some extent. Maybe most of people don't need to consider
-this. :-)
+
+在 2026/9/2 14:14, Sourabh Jain 写道:
+> Hello Jinjie,
+> 
+> This patch makes the below patch redundant..
+> https://lore.kernel.org/all/20260826073527.21487-2-
+> ionut.nechita@windriver.com/
+> 
+> I suggest dropping the first patch from the above series and including
+> the second patch from that series in this patch series with the updated
+> comment.
+
+Agreed. This approach makes sense to me.
+
+I will update it in v4.
 
 > 
-> What David is proposing is to send those reviews to the list.
+> - Sourabh Jain
 > 
-> [2] https://sashiko.dev/#/?list=org.infradead.lists.kexec
 > 
-> >
-> > Thanks
-> > Baoquan
+> On 26/08/26 14:55, Jinjie Ruan wrote:
+>> Use num_possible_cpus() instead of CONFIG_NR_CPUS to calculate the
+>> elfcorehdr buffer size, matching what crash_prepare_elf64_headers()
+>> already uses for the actual header content.
+>>
+>> This avoids over-allocation when the system has fewer possible CPUs
+>> than the compile-time limit, and aligns x86 with PowerPC.
+>>
+>> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+>> ---
+>>   arch/x86/kernel/crash.c | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+>> index a3bf786286d4..afe2aea19f47 100644
+>> --- a/arch/x86/kernel/crash.c
+>> +++ b/arch/x86/kernel/crash.c
+>> @@ -369,9 +369,9 @@ int crash_load_segments(struct kimage *image)
+>>        * maximum CPUs and maximum memory ranges.
+>>        */
+>>       if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
+>> -        pnum = 2 + CONFIG_NR_CPUS + CONFIG_CRASH_MAX_MEMORY_RANGES;
+>> +        pnum = 2 + num_possible_cpus() + CONFIG_CRASH_MAX_MEMORY_RANGES;
+>>       else
+>> -        pnum += 2 + CONFIG_NR_CPUS;
+>> +        pnum += 2 + num_possible_cpus();
+>>         if (pnum < (unsigned long)PN_XNUM) {
+>>           kbuf.memsz = elf64_phdr_size(pnum);
+>> @@ -429,7 +429,7 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
+>>       unsigned int sz;
+>>         /* kernel_map, VMCOREINFO and maximum CPUs */
+>> -    sz = 2 + CONFIG_NR_CPUS;
+>> +    sz = 2 + num_possible_cpus();
+>>       if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
+>>           sz += CONFIG_CRASH_MAX_MEMORY_RANGES;
+>>       sz *= sizeof(Elf64_Phdr);
 > 
-> -- 
-> Regards,
-> Pratyush Yadav
+
 
